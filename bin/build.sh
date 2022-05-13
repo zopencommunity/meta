@@ -19,9 +19,19 @@ else
 	STDERR="/dev/null"
 	verbose=false
 fi
+PORT_CHECK="${PORT_ROOT}/portchk.sh"
+PORT_CREATE_ENV="${PORT_ROOT}/portcrtenv.sh"
 
 if [ "${PORT_ROOT}x" = "x" ]; then
 	echo "PORT_ROOT needs to be defined to the root directory of the tool being ported" >&2
+	exit 4
+fi
+if ! [ -x "${PORT_CHECK}" ]; then
+	echo "${PORT_CHECK} script needs to be provided to check the results. Exit with 0 if the build can be installed" >&2
+	exit 4
+fi
+if ! [ -x "${PORT_CREATE_ENV}" ]; then
+	echo "${PORT_CREATE_ENV} script needs to be provided to define the environment" >&2
 	exit 4
 fi
 if [ "${PORT_TARBALL}x" = "x" ] && [ "${PORT_GIT}x" = "x" ]; then
@@ -172,19 +182,48 @@ fi
 
 # Proceed to build
 
-set -x
 cd "${dir}" || exit 99
 
 if [ "${PORT_GIT}x" != "x" ] && [ -f ./bootstrap ]; then
-	if ! ./bootstrap >$STDOUT 2>$STDERR ; then
-		echo "Bootstrap failed." >&2 
-		exit 4
+	if [ -f bootstrap.success ] ; then
+		echo "Using previous successul bootstrap" >&2
+	else
+		if ! ./bootstrap >$STDOUT 2>$STDERR ; then
+			echo "Bootstrap failed." >&2 
+			exit 4
+		fi
+		touch bootstrap.success
 	fi
 fi
 
-export CONFIG_OPTS="--prefix=${HOME}/zot/prod/${dir}"
-if ! ./configure "${CONFIG_OPTS}" >$STDOUT 2>$STDERR ; then
+PROD_DIR="${HOME}/zot/prod/${dir}"
+if [ -f config.success ] ; then
+	echo "Using previous successful configuration" >&2
+else
+	export CONFIG_OPTS="--prefix=${PROD_DIR}"
+	if ! ./configure "${CONFIG_OPTS}" >$STDOUT 2>$STDERR ; then
+		echo "Configure failed." >&2
+		exit 4
+	fi
+	touch config.success
+fi
+
+if ! make >$STDOUT 2>$STDERR ; then
 	echo "Configure failed." >&2
 	exit 4
 fi
 	 
+make check >$STDOUT 2>$STDERR
+if ! "${PORT_CHECK}" "./${dir}"; then 
+	echo "Check failed." >&2
+	exit 4
+fi
+
+if ! make install >$STDOUT 2>$STDERR ; then
+	echo "Install failed." >&2
+	exit 4
+fi
+if ! "${PORT_CREATE_ENV}" "${PROD_DIR}"; then 
+	echo "Environment creation failed." >&2
+	exit 4
+fi
