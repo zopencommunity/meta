@@ -83,12 +83,14 @@ if ! [ -d "${PORT_ROOT}" ]; then
 	exit 8
 fi
 
-BASE_CFLAGS="-std=gnu11 -DNSIG=39 -D_XOPEN_SOURCE=600 -D_ALL_SOURCE -qascii -D_AE_BIMODAL=1 -D_ENHANCED_ASCII_EXT=0xFFFFFFFF -qfloat=ieee"
+BASE_CFLAGS="-DNSIG=39 -D_XOPEN_SOURCE=600 -D_ALL_SOURCE -qascii -D_AE_BIMODAL=1 -D_ENHANCED_ASCII_EXT=0xFFFFFFFF -qfloat=ieee"
+BASE_CXXFLAGS="-+ -DNSIG=39 -D_XOPEN_SOURCE=600 -D_ALL_SOURCE -qascii -D_AE_BIMODAL=1 -D_ENHANCED_ASCII_EXT=0xFFFFFFFF -qfloat=ieee"
 BASE_LDFLAGS="" 
 
 export CC=xlclang
-export CPP=xlclang++
+export CXX=xlclang++
 export CFLAGS="${BASE_CFLAGS} ${PORT_EXTRA_CFLAGS}"
+export CXXFLAGS="${BASE_CXXFLAGS} ${PORT_EXTRA_CXXFLAGS}"
 export LDFLAGS="${BASE_LDFLAGS} ${PORT_EXTRA_LDFLAGS}"
 
 for dep in $deps; do
@@ -155,7 +157,7 @@ if [ "${PORT_TARBALL}x" != "x" ]; then
 				exit 4
 			else
 				tarball=${tarballz%%.gz}
-				tar -xf "${tarball}" >$STDOUT 2>$STDERR
+				tar -xf "${tarball}" 2>&1 >/dev/null | grep -v FSUM7171 >$STDERR
 				if [ $? -gt 1 ]; then
 					echo "Unable to untar ${tarball}" >&2
 					exit 4
@@ -167,3 +169,22 @@ if [ "${PORT_TARBALL}x" != "x" ]; then
 		fi
 	fi
 fi	
+
+# Proceed to build
+
+set -x
+cd "${dir}" || exit 99
+
+if [ "${PORT_GIT}x" != "x" ] && [ -f ./bootstrap ]; then
+	if ! ./bootstrap >$STDOUT 2>$STDERR ; then
+		echo "Bootstrap failed." >&2 
+		exit 4
+	fi
+fi
+
+export CONFIG_OPTS="--prefix=${HOME}/zot/prod/${dir}"
+if ! ./configure "${CONFIG_OPTS}" >$STDOUT 2>$STDERR ; then
+	echo "Configure failed." >&2
+	exit 4
+fi
+	 
