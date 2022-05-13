@@ -89,7 +89,7 @@ if [ "${PORT_GIT}x" != "x" ]; then
 fi	
 if [ "${PORT_TARBALL}x" != "x" ]; then
 	echo "Checking if tarball directory already created"
-	dir=basename $PORT_TARBALL_URL
+	dir=$(basename $PORT_TARBALL_URL)
 	if ! [ -d "${dir}" ]; then
 		echo "Download and create"
 	fi
