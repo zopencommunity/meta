@@ -9,13 +9,27 @@
 # Each dependent tool will have it's corresponding environment set up by sourcing .env from the installation
 # directory. The .env will be searched for in $HOME/zot/prod/<tool>, /usr/zot/<tool>, $HOME/zot/boot/<tool>
 
-set -x
+set +x
+if [ "$1" = "-v" ]; then
+	verbose=true
+	STDOUT="/dev/fd1"
+	STDERR="/dev/fd2"
+else
+	STDOUT="/dev/null"
+	STDERR="/dev/null"
+	verbose=false
+fi
+
 if [ "${PORT_ROOT}x" = "x" ]; then
 	echo "PORT_ROOT needs to be defined to the root directory of the tool being ported" >&2
 	exit 4
 fi
 if [ "${PORT_TARBALL}x" = "x" ] && [ "${PORT_GIT}x" = "x" ]; then
 	echo "One of PORT_TARBALL or PORT_GIT needs to be defined to specify where to pull source from" >&2
+	exit 4
+fi
+if [ "${PORT_TARBALL}x" != "x" ] && [ "${PORT_GIT}x" != "x" ]; then
+	echo "Only one of PORT_TARBALL or PORT_GIT should be defined to specify where to pull source from (both are defined)" >&2
 	exit 4
 fi
 if [ "${PORT_TARBALL}x" != "x" ]; then
@@ -94,32 +108,43 @@ done
 cd "${PORT_ROOT}" || exit 99
 
 if [ "${PORT_GIT}x" != "x" ]; then
-	if ! git --version >/dev/null 2>&1 ; then
+	if ! git --version >$STDOUT 2>$STDERR ; then
 		echo "git is required to download from the git repo" >&2
 		exit 4
 	fi
 	echo "Checking if git directory already cloned"
 	gitname=$(basename $PORT_GIT_URL)
 	dir=${gitname%%.*}
-	if ! [ -d "${dir}" ]; then
-		echo "Clone"
+	if [ -d "${dir}" ]; then
+		echo "Using existing git clone'd directory ${dir}"
+	else
+		echo "Clone and create ${dir}"
+		if ! git clone "${PORT_GIT_URL}" >$STDOUT 2>$STDERR; then
+                        echo "Unable to clone ${gitname} from ${PORT_GIT_URL}" >&2
+                        exit 4
+		else
+			chtag -R -h -tcISO8859-1 "${dir}"
+		fi
 	fi
 fi	
+
 if [ "${PORT_TARBALL}x" != "x" ]; then
-	if ! curl --version >/dev/null 2>&1 ; then
+	if ! curl --version >$STDOUT 2>$STDERR ; then
 		echo "curl is required to download a tarball" >&2
 		exit 4
 	fi
-	if ! gunzip --version >/dev/null 2>&1 ; then
+	if ! gunzip --version >$STDOUT 2>$STDERR ; then
 		echo "gunzip is required to unzip a tarball" >&2
 		exit 4
 	fi
 	echo "Checking if tarball directory already created"
 	tarballz=$(basename $PORT_TARBALL_URL)
 	dir=${tarballz%%.tar.gz} 
-	if ! [ -d "${dir}" ]; then
-		echo "Download and create"
-		if ! curl -s -0 -o "${tarballz}" "${PORT_TARBALL_URL}"; then
+	if [ -d "${dir}" ]; then
+		echo "Using existing tarball directory ${dir}"
+	else
+		echo "Download and create ${dir}"
+		if ! curl -0 -o "${tarballz}" "${PORT_TARBALL_URL}" >$STDOUT 2>$STDERR; then
 			echo "Unable to download ${tarballz} from ${PORT_TARBALL_URL}" >&2
 			exit 4
 		else
@@ -130,7 +155,8 @@ if [ "${PORT_TARBALL}x" != "x" ]; then
 				exit 4
 			else
 				tarball=${tarballz%%.gz}
-				if [ tar -xf "${tarball}" 2>/dev/null -gt 1 ]; then
+				tar -xf "${tarball}" >$STDOUT 2>$STDERR
+				if [ $? -gt 1 ]; then
 					echo "Unable to untar ${tarball}" >&2
 					exit 4
 				else
