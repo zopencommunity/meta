@@ -9,6 +9,7 @@
 # Each dependent tool will have it's corresponding environment set up by sourcing .env from the installation
 # directory. The .env will be searched for in $HOME/zot/prod/<tool>, /usr/zot/<tool>, $HOME/zot/boot/<tool>
 
+set -x
 if [ "${PORT_ROOT}x" = "x" ]; then
 	echo "PORT_ROOT needs to be defined to the root directory of the tool being ported" >&2
 	exit 4
@@ -114,8 +115,29 @@ if [ "${PORT_TARBALL}x" != "x" ]; then
 		exit 4
 	fi
 	echo "Checking if tarball directory already created"
-	dir=$(basename $PORT_TARBALL_URL)
+	tarballz=$(basename $PORT_TARBALL_URL)
+	dir=${tarballz%%.tar.gz} 
 	if ! [ -d "${dir}" ]; then
 		echo "Download and create"
+		if ! curl -s -0 -o "${tarballz}" "${PORT_TARBALL_URL}"; then
+			echo "Unable to download ${tarballz} from ${PORT_TARBALL_URL}" >&2
+			exit 4
+		else
+			# curl tags the file as ISO8859-1 (oops) so the tag has to be removed
+			chtag -b "${tarballz}"
+			if ! gunzip "${tarballz}"; then
+				echo "Unable to unzip ${tarballz}" >&2
+				exit 4
+			else
+				tarball=${tarballz%%.gz}
+				if [ tar -xf "${tarball}" 2>/dev/null -gt 1 ]; then
+					echo "Unable to untar ${tarball}" >&2
+					exit 4
+				else
+					rm -f "${tarball}"
+					chtag -R -h -tcISO8859-1 "${dir}"
+				fi
+			fi
+		fi
 	fi
 fi	
