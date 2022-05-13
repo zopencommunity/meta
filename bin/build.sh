@@ -26,6 +26,12 @@ if [ "${PORT_TARBALL}x" != "x" ]; then
 		echo "PORT_TARBALL_DEPS needs to be defined to the ported tools this depends on" >&2
 		exit 4
 	fi
+	ca="${PORT_ROOT}/tarball.pem"
+	if ! [ -f "${ca}" ]; then
+		echo "Certificate ${ca} required to download tarball" >&2
+		exit 4
+	fi
+	export SSL_CERT_FILE="${ca}"
 	deps="${PORT_TARBALL_DEPS}"
 fi
 if [ "${PORT_GIT}x" != "x" ]; then
@@ -37,6 +43,12 @@ if [ "${PORT_GIT}x" != "x" ]; then
 		echo "PORT_GIT_DEPS needs to be defined to the ported tools this depends on" >&2
 		exit 4
 	fi
+	ca="${PORT_ROOT}/git.pem"
+	if ! [ -f "${ca}" ]; then
+		echo "Certificate ${ca} required to clone from git" >&2
+		exit 4
+	fi
+	export GIT_SSL_CAINFO="${ca}"
 	deps="${PORT_GIT_DEPS}"
 fi
 
@@ -66,20 +78,25 @@ export LDFLAGS="${BASE_LDFLAGS} ${PORT_EXTRA_LDFLAGS}"
 
 for dep in $deps; do
 	if [ -f "${HOME}/zot/prod/${dep}/.env" ]; then
-		. "${HOME}/zot/prod/${dep}/.env"
+		cd "${HOME}/zot/prod/${dep}"
 	elif [ -f "/usr/zot/${dep}/.env" ] ; then
-		. "/usr/zot/${dep}/.env"
+		cd "/usr/zot/${dep}"
 	elif [ -f "${HOME}/zot/boot/${dep}/.env" ]; then
-		. "${HOME}/zot/boot/${dep}/.env"
+		cd "${HOME}/zot/boot/${dep}"
 	else 
 		echo "Internal error. Unable to find .env but earlier check should have caught this" >&2
 		exit 16
 	fi
+	. ./.env
 done
 
 cd "${PORT_ROOT}" || exit 99
 
 if [ "${PORT_GIT}x" != "x" ]; then
+	if ! git --version >/dev/null 2>&1 ; then
+		echo "git is required to download from the git repo" >&2
+		exit 4
+	fi
 	echo "Checking if git directory already cloned"
 	gitname=$(basename $PORT_GIT_URL)
 	dir=${gitname%%.*}
@@ -88,6 +105,14 @@ if [ "${PORT_GIT}x" != "x" ]; then
 	fi
 fi	
 if [ "${PORT_TARBALL}x" != "x" ]; then
+	if ! curl --version >/dev/null 2>&1 ; then
+		echo "curl is required to download a tarball" >&2
+		exit 4
+	fi
+	if ! gunzip --version >/dev/null 2>&1 ; then
+		echo "gunzip is required to unzip a tarball" >&2
+		exit 4
+	fi
 	echo "Checking if tarball directory already created"
 	dir=$(basename $PORT_TARBALL_URL)
 	if ! [ -d "${dir}" ]; then
