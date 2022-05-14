@@ -5,9 +5,10 @@
 # PORT_ROOT must be defined to the root directory of the cloned ZOSOpenTools port 
 # Either PORT_TARBALL or PORT_GIT must be defined (but not both). This indicates where to pull source from
 # 
-# A certificate of the form: tarball.pem or git.pem must be in the PORT_ROOT directory 
 # Each dependent tool will have it's corresponding environment set up by sourcing .env from the installation
 # directory. The .env will be searched for in $HOME/zot/prod/<tool>, /usr/zot/<tool>, $HOME/zot/boot/<tool>
+
+myparentdir=$( cd $( dirname $0 )/../; echo $PWD )
 
 set +x
 if [ "$1" = "-v" ]; then
@@ -21,6 +22,7 @@ else
 fi
 PORT_CHECK="${PORT_ROOT}/portchk.sh"
 PORT_CREATE_ENV="${PORT_ROOT}/portcrtenv.sh"
+LOG_PFX=$(date '+%Y%m%d_%T')
 
 if [ "${PORT_ROOT}x" = "x" ]; then
 	echo "PORT_ROOT needs to be defined to the root directory of the tool being ported" >&2
@@ -42,6 +44,11 @@ if [ "${PORT_TARBALL}x" != "x" ] && [ "${PORT_GIT}x" != "x" ]; then
 	echo "Only one of PORT_TARBALL or PORT_GIT should be defined to specify where to pull source from (both are defined)" >&2
 	exit 4
 fi
+ca="${myparentdir}/cacert.pem"
+if ! [ -f "${ca}" ]; then
+	echo "Internal Error. Certificate ${ca} is required" >&2
+	exit 4
+fi
 if [ "${PORT_TARBALL}x" != "x" ]; then
 	if [ "${PORT_TARBALL_URL}x" = "x" ]; then
 		echo "PORT_TARBALL_URL needs to be defined to the root directory of the tool being ported" >&2
@@ -49,11 +56,6 @@ if [ "${PORT_TARBALL}x" != "x" ]; then
 	fi
 	if [ "${PORT_TARBALL_DEPS}x" = "x" ]; then
 		echo "PORT_TARBALL_DEPS needs to be defined to the ported tools this depends on" >&2
-		exit 4
-	fi
-	ca="${PORT_ROOT}/tarball.pem"
-	if ! [ -f "${ca}" ]; then
-		echo "Certificate ${ca} required to download tarball" >&2
 		exit 4
 	fi
 	export SSL_CERT_FILE="${ca}"
@@ -66,11 +68,6 @@ if [ "${PORT_GIT}x" != "x" ]; then
 	fi
 	if [ "${PORT_GIT_DEPS}x" = "x" ]; then
 		echo "PORT_GIT_DEPS needs to be defined to the ported tools this depends on" >&2
-		exit 4
-	fi
-	ca="${PORT_ROOT}/git.pem"
-	if ! [ -f "${ca}" ]; then
-		echo "Certificate ${ca} required to clone from git" >&2
 		exit 4
 	fi
 	export GIT_SSL_CAINFO="${ca}"
@@ -188,8 +185,9 @@ if [ "${PORT_GIT}x" != "x" ] && [ -f ./bootstrap ]; then
 	if [ -f bootstrap.success ] ; then
 		echo "Using previous successul bootstrap" >&2
 	else
-		if ! ./bootstrap >$STDOUT 2>$STDERR ; then
-			echo "Bootstrap failed." >&2 
+		bootlog="${LOG_PFX}_bootstrap.log"
+		if ! ./bootstrap >${bootlog} 2>&1 ; then
+			echo "Bootstrap failed. Log: ${bootlog}" >&2 
 			exit 4
 		fi
 		touch bootstrap.success
@@ -197,33 +195,41 @@ if [ "${PORT_GIT}x" != "x" ] && [ -f ./bootstrap ]; then
 fi
 
 PROD_DIR="${HOME}/zot/prod/${dir}"
+echo "Configure"
 if [ -f config.success ] ; then
 	echo "Using previous successful configuration" >&2
 else
 	export CONFIG_OPTS="--prefix=${PROD_DIR}"
-	if ! ./configure "${CONFIG_OPTS}" >$STDOUT 2>$STDERR ; then
-		echo "Configure failed." >&2
+	configlog="${LOG_PFX}_config.log"
+	if ! ./configure "${CONFIG_OPTS}" >"${configlog}" 2>&1 ; then
+		echo "Configure failed. Log: ${configlog}" >&2
 		exit 4
 	fi
 	touch config.success
 fi
 
-if ! make >$STDOUT 2>$STDERR ; then
-	echo "Configure failed." >&2
+makelog="${LOG_PFX}_make.log"
+echo "Make"
+if ! make >"${makelog}" 2>&1 ; then
+	echo "Make failed. Log: ${makelog}" >&2
 	exit 4
 fi
 	 
-make check >$STDOUT 2>$STDERR
-if ! "${PORT_CHECK}" "./${dir}"; then 
-	echo "Check failed." >&2
+checklog="${LOG_PFX}_check.log"
+echo "Check"
+make check >"${checklog}" 2>&1
+if ! "${PORT_CHECK}" "./${dir}" "${LOG_PFX}"; then 
+	echo "Check failed. Log: ${checklog}" >&2
 	exit 4
 fi
 
-if ! make install >$STDOUT 2>$STDERR ; then
-	echo "Install failed." >&2
+echo "Install"
+installlog="${LOG_PFX}_install.log"
+if ! make install >"${installlog}" 2>&1 ; then
+	echo "Install failed. Log: ${installlog}" >&2
 	exit 4
 fi
-if ! "${PORT_CREATE_ENV}" "${PROD_DIR}"; then 
+if ! "${PORT_CREATE_ENV}" "${PROD_DIR}" "${LOG_PFX}"; then 
 	echo "Environment creation failed." >&2
 	exit 4
 fi
