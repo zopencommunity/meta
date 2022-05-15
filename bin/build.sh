@@ -118,7 +118,17 @@ downloadtarball() {
 	echo "${dir}"
 }
 
-managepatches() {
+#
+# This function applies patches previously created.
+# To _create_ a patch, do the following:
+#  -If required, create a sub-directory in the ${PORT_ROOT}/patches directory called PR<x>, where <x> indicates 
+#   the order of the pull-request (e.g. if PR3 needs to be applied before your PR, make sure your PR
+#   is at least PR4)
+#  -Create, or update the PR readme called ${PORT_ROOT}/patches/PR<x>/README.md describing this patch
+#  -For each file you have changed:
+#   -cd to the code directory and perform git diff <filename> >${PORT_ROOT}/patches/PR<x>/<filename>.patch
+#
+applypatches() {
 	if [ "${PORT_TARBALL}x" != "x" ] ; then
 		tarballz=$(basename $PORT_TARBALL_URL)
 		code_dir="${PORT_ROOT}/${tarballz%%.tar.gz}"
@@ -128,7 +138,7 @@ managepatches() {
 	fi
 
 	if ! [ -d "${code_dir}/.git" ] ; then
-		echo "managepatches requires ${code_dir} to be git-managed but there is no .git directory" >&2
+		echo "applypatches requires ${code_dir} to be git-managed but there is no .git directory" >&2
 		exit 4
 	fi
 
@@ -142,7 +152,7 @@ managepatches() {
 	results=`(cd ${code_dir} && git status --porcelain --untracked-files=no 2>&1)`
 	if [ "${results}" != '' ]; then
 		echo "Existing Changes are active in ${code_dir}." >$STDERR
-		echo "To re-apply patches, perform a git reset on ${code_dir} prior to running managepatches again." >$STDERR
+		echo "To re-apply patches, perform a git reset on ${code_dir} prior to running applypatches again." >$STDERR
 		exit 4
 	fi
 
@@ -270,7 +280,7 @@ if [ "${PORT_TARBALL}x" != "x" ]; then
 	dir=$( downloadtarball )
 fi	
 
-managepatches 
+applypatches 
 
 cd "${PORT_ROOT}/${dir}" || exit 99
 
