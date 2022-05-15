@@ -133,6 +133,7 @@ if [ "${PORT_GIT}x" != "x" ]; then
                         exit 4
 		else
 			chtag -R -h -tcISO8859-1 "${dir}"
+			cd "${dir}" || exit 99
 		fi
 	fi
 fi	
@@ -171,6 +172,11 @@ if [ "${PORT_TARBALL}x" != "x" ]; then
 				else
 					rm -f "${tarball}"
 					chtag -R -h -tcISO8859-1 "${dir}"
+					cd "${dir}" || exit 99
+					if ! git init . && git add . && git commit --allow-empty -m "Create Repository for patch management" ; then
+						echo "Unable to initialize git repository for tarball" >&2
+						exit 4
+					fi
 				fi
 			fi
 		fi
@@ -178,8 +184,6 @@ if [ "${PORT_TARBALL}x" != "x" ]; then
 fi	
 
 # Proceed to build
-
-cd "${dir}" || exit 99
 
 if [ "${PORT_GIT}x" != "x" ] && [ -f ./bootstrap ]; then
 	if [ -f bootstrap.success ] ; then
