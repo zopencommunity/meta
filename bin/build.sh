@@ -133,7 +133,6 @@ if [ "${PORT_GIT}x" != "x" ]; then
                         exit 4
 		else
 			chtag -R -h -tcISO8859-1 "${dir}"
-			cd "${dir}" || exit 99
 		fi
 	fi
 fi	
@@ -173,7 +172,16 @@ if [ "${PORT_TARBALL}x" != "x" ]; then
 					rm -f "${tarball}"
 					chtag -R -h -tcISO8859-1 "${dir}"
 					cd "${dir}" || exit 99
-					if ! git init . && git add . && git commit --allow-empty -m "Create Repository for patch management" ; then
+					if ! echo "* text working-tree-encoding=ISO8859-1" >.gitattributes ; then
+						echo "Unable to set gitattributes for tarball" >&2
+						exit 4
+					fi
+					iconv -f IBM-1047 -tISO8859-1 <.gitattributes >.gitattrascii
+					chtag -tcISO8859-1 .gitattrascii
+					mv .gitattrascii .gitattributes
+
+					echo "Initialize git repository for tarball"
+					if ! ( git init . && git add . >/dev/null && git commit --allow-empty -m "Create Repository for patch management" >/dev/null ) ; then
 						echo "Unable to initialize git repository for tarball" >&2
 						exit 4
 					fi
@@ -182,6 +190,7 @@ if [ "${PORT_TARBALL}x" != "x" ]; then
 		fi
 	fi
 fi	
+cd "${PORT_ROOT}/${dir}" || exit 99
 
 # Proceed to build
 
