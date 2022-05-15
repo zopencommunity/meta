@@ -8,6 +8,171 @@
 # Each dependent tool will have it's corresponding environment set up by sourcing .env from the installation
 # directory. The .env will be searched for in $HOME/zot/prod/<tool>, /usr/zot/<tool>, $HOME/zot/boot/<tool>
 
+checkdeps() {
+	deps=$*
+	fail=false
+	for dep in $deps; do
+		if ! [ -f "${HOME}/zot/prod/${dep}/.env" ] && ! [ -f "${HOME}/zot/boot/${dep}/.env" ] && ! [ -f "/usr/zot/${dep}/.env" ] ; then
+			echo "Unable to find .env for dependency ${dep}" >&2
+			fail=true
+		fi
+	done
+	if $fail ; then
+		exit 4
+	fi
+}
+
+setdepsenv() {
+	for dep in $deps; do
+		if [ -f "${HOME}/zot/prod/${dep}/.env" ]; then
+			cd "${HOME}/zot/prod/${dep}"
+		elif [ -f "/usr/zot/${dep}/.env" ] ; then
+			cd "/usr/zot/${dep}"
+		elif [ -f "${HOME}/zot/boot/${dep}/.env" ]; then
+			cd "${HOME}/zot/boot/${dep}"
+		else 
+			echo "Internal error. Unable to find .env but earlier check should have caught this" >&2
+			exit 16
+		fi
+		. ./.env
+	done
+}
+
+gitclone() {
+	if ! git --version >$STDOUT 2>$STDERR ; then
+		echo "git is required to download from the git repo" >&2
+		exit 4
+	fi
+	gitname=$(basename $PORT_GIT_URL)
+	dir=${gitname%%.*}
+	if [ -d "${dir}" ]; then
+		echo "Using existing git clone'd directory ${dir}" >$STDERR
+	else
+		echo "Clone and create ${dir}" >$STDERR
+		if ! git clone "${PORT_GIT_URL}" 2>$STDERR; then
+                        echo "Unable to clone ${gitname} from ${PORT_GIT_URL}" >&2
+                        exit 4
+		fi
+		chtag -R -h -tcISO8859-1 "${dir}"
+	fi
+	echo "${dir}"
+}
+
+extracttarball() {
+	tarballz="$1"
+	dir="$2"
+
+	if ! gunzip "${tarballz}"; then
+		echo "Unable to unzip ${tarballz}" >&2
+		exit 4
+	fi
+
+	tarball=${tarballz%%.gz}
+	tar -xf "${tarball}" 2>&1 >/dev/null | grep -v FSUM7171 >$STDERR
+	if [ $? -gt 1 ]; then
+		echo "Unable to untar ${tarball}" >&2
+		exit 4
+	fi
+	rm -f "${tarball}"
+
+	chtag -R -h -tcISO8859-1 "${dir}"
+	cd "${dir}" || exit 99
+	if ! echo "* text working-tree-encoding=ISO8859-1" >.gitattributes ; then
+		echo "Unable to create .gitattributes for tarball" >&2
+		exit 4
+	fi
+	if ! iconv -f IBM-1047 -tISO8859-1 <.gitattributes >.gitattrascii || ! chtag -tcISO8859-1 .gitattrascii || ! mv .gitattrascii .gitattributes ; then
+		echo "Unable to make .gitattributes ascii for tarball" >&2
+		exit 4
+	fi
+
+	if ! git init . >$STDERR || ! git add . >$STDERR || ! git commit --allow-empty -m "Create Repository for patch management" >$STDERR ; then
+		echo "Unable to initialize git repository for tarball" >&2
+		exit 4
+	fi
+}
+
+downloadtarball() {
+	if ! curl --version >$STDOUT 2>$STDERR ; then
+		echo "curl is required to download a tarball" >&2
+		exit 4
+	fi
+	if ! gunzip --version >$STDOUT 2>$STDERR ; then
+		echo "gunzip is required to unzip a tarball" >&2
+		exit 4
+	fi
+	tarballz=$(basename $PORT_TARBALL_URL)
+	dir=${tarballz%%.tar.gz} 
+	if [ -d "${dir}" ]; then
+		echo "Using existing tarball directory ${dir}" >&2
+	else
+		if ! curl -0 -o "${tarballz}" "${PORT_TARBALL_URL}" >$STDOUT 2>$STDERR; then
+			echo "Unable to download ${tarballz} from ${PORT_TARBALL_URL}" >&2
+			exit 4
+		fi 
+		# curl tags the file as ISO8859-1 (oops) so the tag has to be removed
+		chtag -b "${tarballz}"
+
+		extracttarball "${tarballz}" "${dir}"
+	fi
+	echo "${dir}"
+}
+
+managepatches() {
+	if [ "${PORT_TARBALL}x" != "x" ] ; then
+		tarballz=$(basename $PORT_TARBALL_URL)
+		code_dir="${PORT_ROOT}/${tarballz%%.tar.gz}"
+	else 
+		gitname=$(basename $PORT_GIT_URL)
+		code_dir="${PORT_ROOT}/${gitname%%.*}"
+	fi
+
+	if ! [ -d "${code_dir}/.git" ] ; then
+		echo "managepatches requires ${code_dir} to be git-managed but there is no .git directory" >&2
+		exit 4
+	fi
+
+	patch_dir="${PORT_ROOT}/patches"
+	if ! [ -d "${patch_dir}" ] ; then
+		echo "${patch_dir} does not exist - no patches to apply" >$STDERR
+		return 0
+	fi
+
+	patches=`(cd ${patch_dir} && find . -name "*.patch")`
+	results=`(cd ${code_dir} && git status --porcelain --untracked-files=no 2>&1)`
+	if [ "${results}" != '' ]; then
+		echo "Existing Changes are active in ${code_dir}." >$STDERR
+		echo "To re-apply patches, perform a git reset on ${code_dir} prior to running managepatches again." >$STDERR
+		exit 4
+	fi
+
+	failedcount=0
+	for patch in $patches; do
+		p="${patch_dir}/${patch}"
+
+		patchsize=`wc -c "${p}" | awk '{ print $1 }'`
+		if [ $patchsize -eq 0 ]; then
+			echo "Warning: patch file ${p} is empty - nothing to be done" >$STDERR
+		else
+			echo "Applying ${p}"
+			out=`(cd ${code_dir} && git apply "${p}" 2>&1)`
+			if [ $? -gt 0 ]; then
+				echo "Patch of make tree failed (${p})." >&2
+				echo "${out}" >&2
+				failedcount=$((failedcount+1))
+			fi
+		fi
+	done
+
+	if [ $failedcount -ne 0 ]; then
+		exit $failedcount
+	fi
+	return 0
+}
+
+#
+# Start of 'main'
+#
 myparentdir=$( cd $( dirname $0 )/../; echo $PWD )
 
 set +x
@@ -28,6 +193,11 @@ if [ "${PORT_ROOT}x" = "x" ]; then
 	echo "PORT_ROOT needs to be defined to the root directory of the tool being ported" >&2
 	exit 4
 fi
+if ! [ -d "${PORT_ROOT}" ]; then
+	echo "PORT_ROOT ${PORT_ROOT} is not a directory" >&2
+	exit 8
+fi
+
 if ! [ -x "${PORT_CHECK}" ]; then
 	echo "${PORT_CHECK} script needs to be provided to check the results. Exit with 0 if the build can be installed" >&2
 	exit 4
@@ -74,21 +244,7 @@ if [ "${PORT_GIT}x" != "x" ]; then
 	deps="${PORT_GIT_DEPS}"
 fi
 
-fail=false
-for dep in $deps; do
-	if ! [ -f "${HOME}/zot/prod/${dep}/.env" ] && ! [ -f "${HOME}/zot/boot/${dep}/.env" ] && ! [ -f "/usr/zot/${dep}/.env" ] ; then
-		echo "Unable to find .env for dependency ${dep}" >&2
-		fail=true
-	fi
-done
-if $fail ; then
-	exit 4
-fi
-
-if ! [ -d "${PORT_ROOT}" ]; then
-	echo "PORT_ROOT ${PORT_ROOT} is not a directory" >&2
-	exit 8
-fi
+checkdeps ${deps}
 
 BASE_CFLAGS="-DNSIG=39 -D_XOPEN_SOURCE=600 -D_ALL_SOURCE -qascii -D_AE_BIMODAL=1 -D_ENHANCED_ASCII_EXT=0xFFFFFFFF -qfloat=ieee"
 BASE_CXXFLAGS="-+ -DNSIG=39 -D_XOPEN_SOURCE=600 -D_ALL_SOURCE -qascii -D_AE_BIMODAL=1 -D_ENHANCED_ASCII_EXT=0xFFFFFFFF -qfloat=ieee"
@@ -100,96 +256,22 @@ export CFLAGS="${BASE_CFLAGS} ${PORT_EXTRA_CFLAGS}"
 export CXXFLAGS="${BASE_CXXFLAGS} ${PORT_EXTRA_CXXFLAGS}"
 export LDFLAGS="${BASE_LDFLAGS} ${PORT_EXTRA_LDFLAGS}"
 
-for dep in $deps; do
-	if [ -f "${HOME}/zot/prod/${dep}/.env" ]; then
-		cd "${HOME}/zot/prod/${dep}"
-	elif [ -f "/usr/zot/${dep}/.env" ] ; then
-		cd "/usr/zot/${dep}"
-	elif [ -f "${HOME}/zot/boot/${dep}/.env" ]; then
-		cd "${HOME}/zot/boot/${dep}"
-	else 
-		echo "Internal error. Unable to find .env but earlier check should have caught this" >&2
-		exit 16
-	fi
-	. ./.env
-done
+setdepsenv $deps
 
 cd "${PORT_ROOT}" || exit 99
 
 if [ "${PORT_GIT}x" != "x" ]; then
-	if ! git --version >$STDOUT 2>$STDERR ; then
-		echo "git is required to download from the git repo" >&2
-		exit 4
-	fi
 	echo "Checking if git directory already cloned"
-	gitname=$(basename $PORT_GIT_URL)
-	dir=${gitname%%.*}
-	if [ -d "${dir}" ]; then
-		echo "Using existing git clone'd directory ${dir}"
-	else
-		echo "Clone and create ${dir}"
-		if ! git clone "${PORT_GIT_URL}" >$STDOUT 2>$STDERR; then
-                        echo "Unable to clone ${gitname} from ${PORT_GIT_URL}" >&2
-                        exit 4
-		else
-			chtag -R -h -tcISO8859-1 "${dir}"
-		fi
-	fi
+	dir=$( gitclone )
 fi	
 
 if [ "${PORT_TARBALL}x" != "x" ]; then
-	if ! curl --version >$STDOUT 2>$STDERR ; then
-		echo "curl is required to download a tarball" >&2
-		exit 4
-	fi
-	if ! gunzip --version >$STDOUT 2>$STDERR ; then
-		echo "gunzip is required to unzip a tarball" >&2
-		exit 4
-	fi
-	echo "Checking if tarball directory already created"
-	tarballz=$(basename $PORT_TARBALL_URL)
-	dir=${tarballz%%.tar.gz} 
-	if [ -d "${dir}" ]; then
-		echo "Using existing tarball directory ${dir}"
-	else
-		echo "Download and create ${dir}"
-		if ! curl -0 -o "${tarballz}" "${PORT_TARBALL_URL}" >$STDOUT 2>$STDERR; then
-			echo "Unable to download ${tarballz} from ${PORT_TARBALL_URL}" >&2
-			exit 4
-		else
-			# curl tags the file as ISO8859-1 (oops) so the tag has to be removed
-			chtag -b "${tarballz}"
-			if ! gunzip "${tarballz}"; then
-				echo "Unable to unzip ${tarballz}" >&2
-				exit 4
-			else
-				tarball=${tarballz%%.gz}
-				tar -xf "${tarball}" 2>&1 >/dev/null | grep -v FSUM7171 >$STDERR
-				if [ $? -gt 1 ]; then
-					echo "Unable to untar ${tarball}" >&2
-					exit 4
-				else
-					rm -f "${tarball}"
-					chtag -R -h -tcISO8859-1 "${dir}"
-					cd "${dir}" || exit 99
-					if ! echo "* text working-tree-encoding=ISO8859-1" >.gitattributes ; then
-						echo "Unable to set gitattributes for tarball" >&2
-						exit 4
-					fi
-					iconv -f IBM-1047 -tISO8859-1 <.gitattributes >.gitattrascii
-					chtag -tcISO8859-1 .gitattrascii
-					mv .gitattrascii .gitattributes
-
-					echo "Initialize git repository for tarball"
-					if ! ( git init . && git add . >/dev/null && git commit --allow-empty -m "Create Repository for patch management" >/dev/null ) ; then
-						echo "Unable to initialize git repository for tarball" >&2
-						exit 4
-					fi
-				fi
-			fi
-		fi
-	fi
+	echo "Checking if tarball already downloaded"
+	dir=$( downloadtarball )
 fi	
+
+managepatches 
+
 cd "${PORT_ROOT}/${dir}" || exit 99
 
 # Proceed to build
