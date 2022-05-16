@@ -38,6 +38,16 @@ setdepsenv() {
 	done
 }
 
+#
+# 'Quick' way to find untagged non-binary files. If the list of extensions grows, something more 
+# elegant is required
+#
+tagtree() {
+	dir="$1"
+	find "${dir}" -name "*.pdf" -o -name "*.png" ! -type d | xargs chtag -b
+	find "${dir}" ! -type d | xargs chtag -qp | awk '{ if ($1 == "-") { print $4; }}' | xargs chtag -tcISO8859-1
+}
+		
 gitclone() {
 	if ! git --version >$STDOUT 2>$STDERR ; then
 		echo "git is required to download from the git repo" >&2
@@ -53,7 +63,7 @@ gitclone() {
                         echo "Unable to clone ${gitname} from ${PORT_GIT_URL}" >&2
                         exit 4
 		fi
-		chtag -R -h -tcISO8859-1 "${dir}"
+		tagtree "${dir}"
 	fi
 	echo "${dir}"
 }
@@ -75,7 +85,7 @@ extracttarball() {
 	fi
 	rm -f "${tarball}"
 
-	chtag -R -h -tcISO8859-1 "${dir}"
+	tagtree "${dir}"
 	cd "${dir}" || exit 99
 	if ! echo "* text working-tree-encoding=ISO8859-1" >.gitattributes ; then
 		echo "Unable to create .gitattributes for tarball" >&2
@@ -86,7 +96,8 @@ extracttarball() {
 		exit 4
 	fi
 
-	if ! git init . >$STDERR || ! git add . >$STDERR || ! git commit --allow-empty -m "Create Repository for patch management" >$STDERR ; then
+	files=$(find . ! -name "*.pdf" ! -name "*.png" ! -type d)
+	if ! git init . >$STDERR || ! git add ${files} >$STDERR || ! git commit --allow-empty -m "Create Repository for patch management" >$STDERR ; then
 		echo "Unable to initialize git repository for tarball" >&2
 		exit 4
 	fi
