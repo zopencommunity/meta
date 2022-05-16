@@ -6,13 +6,13 @@
 # Either PORT_TARBALL or PORT_GIT must be defined (but not both). This indicates where to pull source from
 # 
 # Each dependent tool will have it's corresponding environment set up by sourcing .env from the installation
-# directory. The .env will be searched for in $HOME/zot/prod/<tool>, /usr/zot/<tool>, $HOME/zot/boot/<tool>
+# directory. The .env will be searched for in $HOME/zot/prod/<tool>, /usr/bin/zot/prod/<tool>, $HOME/zot/boot/<tool>
 
 checkdeps() {
 	deps=$*
 	fail=false
 	for dep in $deps; do
-		if ! [ -f "${HOME}/zot/prod/${dep}/.env" ] && ! [ -f "${HOME}/zot/boot/${dep}/.env" ] && ! [ -f "/usr/zot/${dep}/.env" ] ; then
+		if ! [ -r "${HOME}/zot/prod/${dep}/.env" ] && ! [ -r "${HOME}/zot/boot/${dep}/.env" ] && ! [ -r "/usr/bin/zot/${dep}/.env" ] ; then
 			echo "Unable to find .env for dependency ${dep}" >&2
 			fail=true
 		fi
@@ -24,11 +24,11 @@ checkdeps() {
 
 setdepsenv() {
 	for dep in $deps; do
-		if [ -f "${HOME}/zot/prod/${dep}/.env" ]; then
+		if [ -r "${HOME}/zot/prod/${dep}/.env" ]; then
 			cd "${HOME}/zot/prod/${dep}"
-		elif [ -f "/usr/zot/${dep}/.env" ] ; then
-			cd "/usr/zot/${dep}"
-		elif [ -f "${HOME}/zot/boot/${dep}/.env" ]; then
+		elif [ -r "/usr/bin/zot/${dep}/.env" ] ; then
+			cd "/usr/bin/zot/${dep}"
+		elif [ -r "${HOME}/zot/boot/${dep}/.env" ]; then
 			cd "${HOME}/zot/boot/${dep}"
 		else 
 			echo "Internal error. Unable to find .env but earlier check should have caught this" >&2
@@ -228,7 +228,7 @@ if [ "${PORT_TARBALL}x" != "x" ] && [ "${PORT_GIT}x" != "x" ]; then
 	exit 4
 fi
 ca="${myparentdir}/cacert.pem"
-if ! [ -f "${ca}" ]; then
+if ! [ -r "${ca}" ]; then
 	echo "Internal Error. Certificate ${ca} is required" >&2
 	exit 4
 fi
@@ -289,9 +289,9 @@ cd "${PORT_ROOT}/${dir}" || exit 99
 
 # Proceed to build
 
-if [ "${PORT_GIT}x" != "x" ] && [ -f ./bootstrap ]; then
-	if [ -f bootstrap.success ] ; then
-		echo "Using previous successul bootstrap" >&2
+if [ "${PORT_GIT}x" != "x" ] && [ -r ./bootstrap ]; then
+	if [ -r bootstrap.success ] ; then
+		echo "Using previous successful bootstrap" >&2
 	else
 		bootlog="${LOG_PFX}_bootstrap.log"
 		if ! ./bootstrap >${bootlog} 2>&1 ; then
@@ -304,7 +304,7 @@ fi
 
 PROD_DIR="${HOME}/zot/prod/${dir}"
 echo "Configure"
-if [ -f config.success ] ; then
+if [ -r config.success ] ; then
 	echo "Using previous successful configuration" >&2
 else
 	export CONFIG_OPTS="--prefix=${PROD_DIR}"
