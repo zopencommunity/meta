@@ -106,7 +106,10 @@ downloadtarball() {
 	if [ -d "${dir}" ]; then
 		echo "Using existing tarball directory ${dir}" >&2
 	else
-		if ! curl -0 -o "${tarballz}" "${PORT_TARBALL_URL}" >$STDOUT 2>$STDERR; then
+		if ! curl -L -0 -o "${tarballz}" "${PORT_TARBALL_URL}" >$STDOUT 2>$STDERR; then
+			if [ $(wc -c "${tarballz}" | awk '{print $1}') -lt 1024 ]; then
+				cat "${tarballz}" >$STDERR
+			fi
 			echo "Unable to download ${tarballz} from ${PORT_TARBALL_URL}" >&2
 			exit 4
 		fi 
