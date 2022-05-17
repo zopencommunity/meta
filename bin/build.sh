@@ -72,18 +72,33 @@ extracttarball() {
 	tarballz="$1"
 	dir="$2"
 
-	if ! gunzip "${tarballz}"; then
-		echo "Unable to unzip ${tarballz}" >&2
-		exit 4
+	ext=${tarballz##*.}
+	if [ "${ext}x" = "xzx" ]; then
+		if ! xz -d "${tarballz}"; then
+			echo "Unable to use xz to decompress ${tarballz}" >&2
+			exit 4
+		fi
+		tarball=${tarballz%%.xz}
+	elif [ "${ext}x" = "gzx" ]; then 
+		if ! gunzip "${tarballz}"; then
+			echo "Unable to use gunzip to decompress ${tarballz}" >&2
+			exit 4
+		fi
+		tarball=${tarballz%%.gz}
+	else
+		echo "Extension ${ext} is an unsupported compression technique. Add code" >&2
+		exit 8
 	fi
 
-	tarball=${tarballz%%.gz}
 	tar -xf "${tarball}" 2>&1 >/dev/null | grep -v FSUM7171 >$STDERR
 	if [ $? -gt 1 ]; then
 		echo "Unable to untar ${tarball}" >&2
 		exit 4
 	fi
 	rm -f "${tarball}"
+
+	# tar will incorrectly tag files as 1047, so just clear the tags
+	chtag -R -r "${dir}"
 
 	tagtree "${dir}"
 	cd "${dir}" || exit 99
@@ -108,12 +123,8 @@ downloadtarball() {
 		echo "curl is required to download a tarball" >&2
 		exit 4
 	fi
-	if ! gunzip --version >$STDOUT 2>$STDERR ; then
-		echo "gunzip is required to unzip a tarball" >&2
-		exit 4
-	fi
 	tarballz=$(basename $PORT_TARBALL_URL)
-	dir=${tarballz%%.tar.gz} 
+	dir=${tarballz%%.tar.*} 
 	if [ -d "${dir}" ]; then
 		echo "Using existing tarball directory ${dir}" >&2
 	else
@@ -145,7 +156,7 @@ downloadtarball() {
 applypatches() {
 	if [ "${PORT_TARBALL}x" != "x" ] ; then
 		tarballz=$(basename $PORT_TARBALL_URL)
-		code_dir="${PORT_ROOT}/${tarballz%%.tar.gz}"
+		code_dir="${PORT_ROOT}/${tarballz%%.tar.*}"
 	else 
 		gitname=$(basename $PORT_GIT_URL)
 		code_dir="${PORT_ROOT}/${gitname%%.*}"
