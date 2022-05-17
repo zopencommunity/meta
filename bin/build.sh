@@ -102,12 +102,12 @@ extracttarball() {
 
 	tagtree "${dir}"
 	cd "${dir}" || exit 99
-	if ! echo "* text working-tree-encoding=ISO8859-1" >.gitattributes ; then
-		echo "Unable to create .gitattributes for tarball" >&2
-		exit 4
-	fi
 	if [ -f .gitattributes ]; then
 		echo "No support for existing .gitattributes file. Write some code" >&2
+		exit 4
+	fi
+	if ! echo "* text working-tree-encoding=ISO8859-1" >.gitattributes ; then
+		echo "Unable to create .gitattributes for tarball" >&2
 		exit 4
 	fi
 
@@ -244,12 +244,21 @@ if [ "${PORT_TARBALL}x" = "x" ] && [ "${PORT_GIT}x" = "x" ]; then
 		exit 4
 	elif [ "${PORT_TYPE}x" = "TARBALLx" ]; then
 		export PORT_TARBALL='Y'
-		export PORT_TARBALL_URL="${PORT_URL}"
-		export PORT_TARBALL_DEPS="${PORT_DEPS}"
-	elif [ "${PORT_TYPE}x" = "GIT" ]; then
+		if [ "${PORT_TARBALL_URL}x" = "x" ]; then 
+			export PORT_TARBALL_URL="${PORT_URL}"
+		fi
+		if [ "${PORT_TARBALL_DEPS}x" = "x" ]; then 
+			export PORT_TARBALL_DEPS="${PORT_DEPS}"
+		fi
+	elif [ "${PORT_TYPE}x" = "GITx" ]; then
 		export PORT_GIT='Y'
-		export PORT_GIT_URL="${PORT_URL}"
-		export PORT_GIT_DEPS="${PORT_DEPS}"
+		if [ "${PORT_GIT_URL}x" = "x" ]; then
+			export PORT_GIT_URL="${PORT_URL}"
+		fi
+
+		if [ "${PORT_GIT_DEPS}x" = "x" ]; then
+			export PORT_GIT_DEPS="${PORT_DEPS}"
+		fi
 	else
 		echo "PORT_TYPE must be one of TARBALL or GIT. PORT_TYPE=${PORT_TYPE} was specified" >&2
 		exit 4
