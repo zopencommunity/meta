@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ZOS Open Tools Docs</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="description" content="Description">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify-darklight-theme@3/dist/docsify-themeable/style.min.css" type="text/css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple.css" title="light">
+  <link rel="stylesheet alternative" href="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple-dark.css" title="dark">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/sidebar.min.css" />
+  <link rel="stylesheet" href="https://unpkg.com/docsify-toc@1.0.0/dist/toc.css">
+  <link rel="stylesheet" href="styles.css">
+
+  <link rel="icon" type="image/svg+xml" href="images/modernization-140.svg">
+  <link rel="icon" type="image/png" href="images/zos.png">
+</head>
+<body>
+  <div id="app"></div>
+  <script src="//cdn.jsdelivr.net/npm/docsify-edit-on-github"></script>
+  <script>
+    window.$docsify = {
+      loadSidebar: true,
+      // Fixes all image links to default to the /image directory, preventing
+      // issues that may arise if documents are moved into different folders
+      markdown: {
+        renderer: {
+          image: function(href, title) {
+            if (href.charAt(0) == "/") {
+              href = href.substring(1)
+              console.log(`Fixing image link: ${href}`)
+            }
+            return `<img src="${href}" data-origin="${href}" alt="${title}">`
+          }
+        }
+      },
+      name: '<img src="images/zos.png" height="140"><br>ZOS Open Tools',
+      plugins: [
+        EditOnGithubPlugin.create('TBD/docs/blob/gh-pages/', null, 'Edit this page'),
+      ],
+      repo: 'https://github.com/ZOSOpenTools/meta/docs',
+      search: 'auto',
+      toc: {
+        tocMaxLevel: 5,
+        target: 'h2, h3, h4, h5, h6'
+      },
+      relativePath: true
+    }
+  </script>
+  <!-- Docsify v4 -->
+  <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
+  <script src="//unpkg.com/docsify-plugin-toc"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify-copy-code"></script>
+  <script src="//unpkg.com/docsify/lib/plugins/zoom-image.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/docsify-sidebar-collapse.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify-darklight-theme@3/dist/docsify-themeable/main.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify-darklight-theme@3/dist/docsify-themeable/index.min.js"></script> 
+</body>
+</html>
