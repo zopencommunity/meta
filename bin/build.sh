@@ -183,7 +183,7 @@ applypatches() {
 	if [ "${results}" != '' ]; then
 		echo "Existing Changes are active in ${code_dir}." >$STDERR
 		echo "To re-apply patches, perform a git reset on ${code_dir} prior to running applypatches again." >$STDERR
-		return 0
+		return 0 
 	fi
 
 	failedcount=0
