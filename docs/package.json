@@ -1,0 +1,14 @@
+{
+  "name": "zosopentools",
+  "version": "0.0.1",
+  "description": "ZOS Open Tools Docs",
+  "scripts": {
+    "serve": "docsify serve",
+    "update-sidebar": "docsify-auto-sidebar -d ."
+  },
+  "author": "",
+  "dependencies": {
+    "docsify-cli": "^4.4.3",
+    "docsify-tools": "^1.0.20"
+  }
+}

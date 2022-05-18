@@ -1,0 +1,47 @@
+:root {
+  --toc-width: 20rem;
+}
+
+.sidebar-nav>ul>li>ul>li>ul>li.active>a:before {
+  content: none;
+  color: none;
+}
+
+.sidebar-nav>ul>li>ul>li>ul>li>a:before {
+  content: none;
+  margin: none;
+  color: none;
+}
+
+.sidebar-nav li.active>a[href^="#/"]:not([href*="?id="]):not(:only-child) {
+    background-image: none;
+    background-position: none;
+}
+.sidebar-nav li>a[href^="#/"]:not([href*="?id="]):not(:only-child) {
+    background-image: none;
+    background-position: none;
+}
+.sidebar-nav li>a[href^="#/"]:not([href*="?id="]):only-child {
+  background-image: none;
+  background-position: none;
+}
+.sidebar-nav li>a[href^="#/"]:not([href*="?id="]), .sidebar-nav li>a[href^="#/"]:not([href*="?id="]) ~ ul a {
+  padding: 1px;
+}
+
+.page_toc ul a {
+  color: var(--base-color, var(--text-color-base, white));
+  text-decoration: none;
+  font-weight: 300;
+  line-height: 1.6em;
+}
+
+.page_toc {
+  border-left-color: var(--base-color, rgba(0,0,0,0.07))
+}
+
+#docsify-darklight-theme {
+  position: absolute;
+  top: 25px;
+  left: 0;
+}
