@@ -121,6 +121,10 @@ extracttarball() {
 		echo "Unable to initialize git repository for tarball" >&2
 		exit 4
 	fi
+	# Having the directory git-managed exposes some problems in the current git for software like autoconf,
+	# so move .git to the side and just use it for applying patches
+	# (you will also need to move it back to do a 'git diff' on any new patches you want to develop)
+	mv .git .git-for-patches
 }
 
 downloadtarball() {
@@ -167,14 +171,16 @@ applypatches() {
 		code_dir="${PORT_ROOT}/${gitname%%.*}"
 	fi
 
-	if ! [ -d "${code_dir}/.git" ] ; then
-		echo "applypatches requires ${code_dir} to be git-managed but there is no .git directory" >&2
-		exit 4
-	fi
-
 	patch_dir="${PORT_ROOT}/patches"
 	if ! [ -d "${patch_dir}" ] ; then
 		echo "${patch_dir} does not exist - no patches to apply" >$STDERR
+		return 0
+	fi
+
+	mv "${code_dir}/.git-for-patches" "${code_dir}/.git" || exit 99
+
+	if ! [ -d "${code_dir}/.git" ] ; then
+		echo "applypatches requires ${code_dir} to be git-managed but there is no .git directory. No patches applied" >&2
 		return 0
 	fi
 
@@ -183,26 +189,26 @@ applypatches() {
 	if [ "${results}" != '' ]; then
 		echo "Existing Changes are active in ${code_dir}." >$STDERR
 		echo "To re-apply patches, perform a git reset on ${code_dir} prior to running applypatches again." >$STDERR
-		return 0 
-	fi
+	else
+		failedcount=0
+		for patch in $patches; do
+			p="${patch_dir}/${patch}"
 
-	failedcount=0
-	for patch in $patches; do
-		p="${patch_dir}/${patch}"
-
-		patchsize=`wc -c "${p}" | awk '{ print $1 }'`
-		if [ $patchsize -eq 0 ]; then
-			echo "Warning: patch file ${p} is empty - nothing to be done" >$STDERR
-		else
-			echo "Applying ${p}"
-			out=`(cd ${code_dir} && git apply "${p}" 2>&1)`
-			if [ $? -gt 0 ]; then
-				echo "Patch of make tree failed (${p})." >&2
-				echo "${out}" >&2
-				failedcount=$((failedcount+1))
+			patchsize=`wc -c "${p}" | awk '{ print $1 }'`
+			if [ $patchsize -eq 0 ]; then
+				echo "Warning: patch file ${p} is empty - nothing to be done" >$STDERR
+			else
+				echo "Applying ${p}"
+				out=`(cd ${code_dir} && git apply "${p}" 2>&1)`
+				if [ $? -gt 0 ]; then
+					echo "Patch of make tree failed (${p})." >&2
+					echo "${out}" >&2
+					failedcount=$((failedcount+1))
+				fi
 			fi
-		fi
-	done
+		done
+	fi
+	mv "${code_dir}/.git" "${code_dir}/.git-for-patches" || exit 99
 
 	if [ $failedcount -ne 0 ]; then
 		exit $failedcount
@@ -370,21 +376,32 @@ fi
 if [ "${PORT_BOOTSTRAP}x" = "x" ]; then
 	export PORT_BOOTSTRAP="./bootstrap"
 fi
+if [ "${PORT_BOOTSTRAP_OPTS}x" = "x" ]; then
+	export PORT_BOOTSTRAP_OPTS=""
+fi
 if [ "${PORT_CONFIGURE}x" = "x" ]; then
 	export PORT_CONFIGURE="./configure"
+fi
+if [ "${PORT_CONFIGURE_OPTS}x" = "x" ]; then
 	PROD_DIR="${HOME}/zot/prod/${dir}"
 	export PORT_CONFIGURE_OPTS="--prefix=${PROD_DIR}"
 fi
 if [ "${PORT_MAKE}x" = "x" ]; then
 	export PORT_MAKE=$(whence make)
+fi
+if [ "${PORT_MAKE_OPTS}x" = "x" ]; then
 	export PORT_MAKE_OPTS=""
 fi
 if [ "${PORT_CHECK}x" = "x" ]; then
 	export PORT_CHECK=$(whence make)
+fi
+if [ "${PORT_CHECK_OPTS}x" = "x" ]; then
 	export PORT_CHECK_OPTS="check"
 fi
 if [ "${PORT_INSTALL}x" = "x" ]; then
 	export PORT_INSTALL=$(whence make)
+fi
+if [ "${PORT_INSTALL_OPTS}x" = "x" ]; then
 	export PORT_INSTALL_OPTS="install"
 fi
 
@@ -400,7 +417,7 @@ if [ "${PORT_BOOTSTRAP}x" != "skipx" ] && [ -x "${PORT_BOOTSTRAP}" ]; then
 		echo "Using previous successful bootstrap" >&2
 	else
 		bootlog="${LOG_PFX}_bootstrap.log"
-		if ! "${PORT_BOOTSTRAP}" >${bootlog} 2>&1 ; then
+		if ! "${PORT_BOOTSTRAP}" ${PORT_BOOTSTRAP_OPTS} >${bootlog} 2>&1 ; then
 			echo "Bootstrap failed. Log: ${bootlog}" >&2 
 			exit 4
 		fi
@@ -414,7 +431,7 @@ if [ "${PORT_CONFIGURE}x" != "skipx" ] && [ -x "${PORT_CONFIGURE}" ]; then
 		echo "Using previous successful configuration" >&2
 	else
 		configlog="${LOG_PFX}_config.log"
-		if ! "${PORT_CONFIGURE}" "${PORT_CONFIGURE_OPTS}" >"${configlog}" 2>&1 ; then
+		if ! "${PORT_CONFIGURE}" ${PORT_CONFIGURE_OPTS} >"${configlog}" 2>&1 ; then
 			echo "Configure failed. Log: ${configlog}" >&2
 			exit 4
 		fi
@@ -425,7 +442,7 @@ fi
 makelog="${LOG_PFX}_make.log"
 if [ "${PORT_MAKE}x" != "skipx" ] && [ -x "${PORT_MAKE}" ]; then
 	echo "Make"
-	if ! make >"${makelog}" 2>&1 ; then
+	if ! "${PORT_MAKE}" ${PORT_MAKE_OPTS} >"${makelog}" 2>&1 ; then
 		echo "Make failed. Log: ${makelog}" >&2
 		exit 4
 	fi
@@ -434,7 +451,7 @@ fi
 checklog="${LOG_PFX}_check.log"
 if [ "${PORT_CHECK}x" != "skipx" ] && [ -x "${PORT_CHECK}" ]; then
 	echo "Check"
-	"${PORT_CHECK}" "${PORT_CHECK_OPTS}" >"${checklog}" 2>&1
+	"${PORT_CHECK}" ${PORT_CHECK_OPTS} >"${checklog}" 2>&1
 	if ! "${PORT_CHECK_RESULTS}" "./${dir}" "${LOG_PFX}"; then 
 		echo "Check failed. Log: ${checklog}" >&2
 		exit 4
@@ -444,12 +461,12 @@ fi
 if [ "${PORT_INSTALL}x" != "skipx" ] && [ -x "${PORT_INSTALL}" ]; then
 	echo "Install"
 	installlog="${LOG_PFX}_install.log"
-	if ! "${PORT_INSTALL}" "${PORT_INSTALL_OPTS}" >"${installlog}" 2>&1 ; then
+	if ! "${PORT_INSTALL}" ${PORT_INSTALL_OPTS} >"${installlog}" 2>&1 ; then
 		echo "Install failed. Log: ${installlog}" >&2
 		exit 4
 	fi
-fi
-if ! "${PORT_CREATE_ENV}" "${PROD_DIR}" "${LOG_PFX}"; then 
-	echo "Environment creation failed." >&2
-	exit 4
+	if ! "${PORT_CREATE_ENV}" "${PROD_DIR}" "${LOG_PFX}"; then 
+		echo "Environment creation failed." >&2
+		exit 4
+	fi
 fi
