@@ -171,18 +171,18 @@ applypatches() {
 		code_dir="${PORT_ROOT}/${gitname%%.*}"
 	fi
 
-	if ! [ -d "${code_dir}/.git" ] ; then
-		echo "applypatches requires ${code_dir} to be git-managed but there is no .git directory. No patches applied" >&2
-		return 0
-	fi
-
 	patch_dir="${PORT_ROOT}/patches"
 	if ! [ -d "${patch_dir}" ] ; then
 		echo "${patch_dir} does not exist - no patches to apply" >$STDERR
 		return 0
 	fi
 
-	mv "${patch_dir}/.git-for-patches" "${patch_dir}/.git" || exit 99
+	mv "${code_dir}/.git-for-patches" "${code_dir}/.git" || exit 99
+
+	if ! [ -d "${code_dir}/.git" ] ; then
+		echo "applypatches requires ${code_dir} to be git-managed but there is no .git directory. No patches applied" >&2
+		return 0
+	fi
 
 	patches=`(cd ${patch_dir} && find . -name "*.patch")`
 	results=`(cd ${code_dir} && git status --porcelain --untracked-files=no 2>&1)`
@@ -208,7 +208,7 @@ applypatches() {
 			fi
 		done
 	fi
-	mv "${patch_dir}/.git" "${patch_dir}/.git-for-patches" || exit 99
+	mv "${code_dir}/.git" "${code_dir}/.git-for-patches" || exit 99
 
 	if [ $failedcount -ne 0 ]; then
 		exit $failedcount
