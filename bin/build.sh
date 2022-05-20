@@ -177,7 +177,9 @@ applypatches() {
 		return 0
 	fi
 
-	mv "${code_dir}/.git-for-patches" "${code_dir}/.git" || exit 99
+	if [ -d "${code_dir}/.git-for-patches" ] && ! [ -d "${code_dir}/.git" ]; then
+		mv "${code_dir}/.git-for-patches" "${code_dir}/.git" || exit 99
+	fi
 
 	if ! [ -d "${code_dir}/.git" ] ; then
 		echo "applypatches requires ${code_dir} to be git-managed but there is no .git directory. No patches applied" >&2
@@ -186,11 +188,11 @@ applypatches() {
 
 	patches=`(cd ${patch_dir} && find . -name "*.patch")`
 	results=`(cd ${code_dir} && git status --porcelain --untracked-files=no 2>&1)`
+	failedcount=0
 	if [ "${results}" != '' ]; then
 		echo "Existing Changes are active in ${code_dir}." >$STDERR
 		echo "To re-apply patches, perform a git reset on ${code_dir} prior to running applypatches again." >$STDERR
 	else
-		failedcount=0
 		for patch in $patches; do
 			p="${patch_dir}/${patch}"
 
