@@ -63,7 +63,9 @@ In the example above, assume the only installed version of `m4` is `${HOME}/zot/
 - `. ./env`
 to set up the environment for `m4`. If the `.env` file does not exist, the build will fail. 
 
-The `.env` files for each tool can be retrieved from running the `portcrtenv.sh` script that is provided either from the respective tool's repository, or the `utils` repository in the `env/` directory.
+The `.env` files for each tool can be retrieved by running the `portcrtenv.sh` script that is provided either from the respective tool's repository, or the `utils` repository in the `env/` directory.  The `portcrtenv.sh` script can be run manually but it is also driven by the `build.sh` script to generate the `.env` file for tools built into the `prod/` directory (see more on `portcrtenv.sh` below).
+
+To generate the `.env` within `/target/dir` run the script like so: `portcrtenv.sh /target/dir`
 
 ### Requirements to use build.sh
 
