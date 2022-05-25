@@ -63,6 +63,8 @@ In the example above, assume the only installed version of `m4` is `${HOME}/zot/
 - `. ./env`
 to set up the environment for `m4`. If the `.env` file does not exist, the build will fail. 
 
+The `.env` files for each tool can be retrieved from running the `portcrtenv.sh` script that is provided either from the respective tool's repository, or the `utils` repository in the `env/` directory.
+
 ### Requirements to use build.sh
 
 For a software package to be built with `build.sh`, it needs to provide the following:
@@ -84,5 +86,13 @@ accordingly if you prefer. See (https://github.com/ZOSOpenTools/autoconfport/blo
 There are several additional environment variables that can be specified to provide finer-grained control of the build process. 
 For details see: (https://github.com/ZOSOpenTools/utils/blob/main/bin/build.sh). 
 
+### Running build.sh
+
+Run `build.sh` from the root directory of the git repo you would like to build.  For example, m4:
+```
+cd ${HOME}/zot/dev/m4
+. setenv.sh
+${HOME}/zot/dev/utils/bin/build.sh
+```
 
 
