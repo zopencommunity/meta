@@ -344,21 +344,21 @@ if [ "${CXX}x" = "x" ] && [ "${CXXFLAGS}x" != "x" ]; then
 	exit 4
 fi
 
+if [ "${CPPFLAGS}x" = "x" ]; then
+	export CPPFLAGS="-DNSIG=9 -D_XOPEN_SOURCE=600 -D_ALL_SOURCE -D_OPEN_SYS_FILE_EXT=1 -D_AE_BIMODAL=1 -D_ENHANCED_ASCII_EXT=0xFFFFFFFF"
+fi
 if [ "${CC}x" = "x" ]; then
 	export CC=xlclang
-	BASE_CFLAGS="-qascii -DNSIG=39 -D_XOPEN_SOURCE=600 -D_ALL_SOURCE -D_OPEN_SYS_FILE_EXT=1 -D_AE_BIMODAL=1 -D_ENHANCED_ASCII_EXT=0xFFFFFFFF"
-	export CFLAGS="${BASE_CFLAGS} ${PORT_EXTRA_CFLAGS}"
+	export CFLAGS="-qascii ${PORT_EXTRA_CFLAGS}"
 fi
 
 if [ "${CXX}x" = "x" ]; then
 	export CXX=xlclang++
-	BASE_CXXFLAGS="-+ -qascii -DNSIG=39 -D_XOPEN_SOURCE=600 -D_ALL_SOURCE -D_OPEN_SYS_FILE_EXT=1 -D_AE_BIMODAL=1 -D_ENHANCED_ASCII_EXT=0xFFFFFFFF"
-	export CXXFLAGS="${BASE_CXXFLAGS} ${PORT_EXTRA_CXXFLAGS}"
+	export CXXFLAGS="-+ -qascii ${PORT_EXTRA_CXXFLAGS}"
 fi
 
 if [ "${LDFLAGS}x" = "x" ]; then
-	BASE_LDFLAGS="" 
-	export LDFLAGS="${BASE_LDFLAGS} ${PORT_EXTRA_LDFLAGS}"
+	export LDFLAGS="${PORT_EXTRA_LDFLAGS}"
 fi
 
 setdepsenv $deps
@@ -427,13 +427,14 @@ if [ "${PORT_BOOTSTRAP}x" != "skipx" ] && [ -x "${PORT_BOOTSTRAP}" ]; then
 	fi
 fi
 
+set -x
 if [ "${PORT_CONFIGURE}x" != "skipx" ] && [ -x "${PORT_CONFIGURE}" ]; then
 	echo "Configure"
 	if [ -r config.success ] ; then
 		echo "Using previous successful configuration" >&2
 	else
 		configlog="${LOG_PFX}_config.log"
-		if ! "${PORT_CONFIGURE}" ${PORT_CONFIGURE_OPTS} >"${configlog}" 2>&1 ; then
+		if ! "${PORT_CONFIGURE}" CC=${CC} "CPPFLAGS=${CPPFLAGS}" "CFLAGS=${CFLAGS}" CXX=${CXX} "CXXFLAGS=${CXXFLAGS}" "LDFLAGS=${LDFLAGS}" ${PORT_CONFIGURE_OPTS} >"${configlog}" 2>&1 ; then
 			echo "Configure failed. Log: ${configlog}" >&2
 			exit 4
 		fi
