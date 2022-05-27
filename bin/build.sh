@@ -374,6 +374,7 @@ if [ "${PORT_TARBALL}x" != "x" ]; then
 	echo "Checking if tarball already downloaded"
 	dir=$( downloadtarball )
 fi	
+PROD_DIR="${HOME}/zot/prod/${dir}"
 
 if [ "${PORT_BOOTSTRAP}x" = "x" ]; then
 	export PORT_BOOTSTRAP="./bootstrap"
@@ -385,7 +386,6 @@ if [ "${PORT_CONFIGURE}x" = "x" ]; then
 	export PORT_CONFIGURE="./configure"
 fi
 if [ "${PORT_CONFIGURE_OPTS}x" = "x" ]; then
-	PROD_DIR="${HOME}/zot/prod/${dir}"
 	export PORT_CONFIGURE_OPTS="--prefix=${PROD_DIR}"
 fi
 if [ "${PORT_MAKE}x" = "x" ]; then
@@ -427,7 +427,6 @@ if [ "${PORT_BOOTSTRAP}x" != "skipx" ] && [ -x "${PORT_BOOTSTRAP}" ]; then
 	fi
 fi
 
-set -x
 if [ "${PORT_CONFIGURE}x" != "skipx" ] && [ -x "${PORT_CONFIGURE}" ]; then
 	echo "Configure"
 	if [ -r config.success ] ; then
