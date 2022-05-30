@@ -44,8 +44,8 @@ setdepsenv() {
 #
 tagtree() {
 	dir="$1"
-	find "${dir}" -name "*.pdf" -o -name "*.png" ! -type d | xargs chtag -b
-	find "${dir}" ! -type d | xargs chtag -qp | awk '{ if ($1 == "-") { print $4; }}' | xargs chtag -tcISO8859-1
+	find "${dir}" -name "*.pdf" -o -name "*.png" ! -type d ! -type l | xargs chtag -b
+	find "${dir}" ! -type d ! -type l | xargs chtag -qp | awk '{ if ($1 == "-") { print $4; }}' | xargs chtag -tcISO8859-1
 }
 		
 gitclone() {
@@ -62,6 +62,12 @@ gitclone() {
 		if ! git clone "${PORT_GIT_URL}" 2>$STDERR; then
                         echo "Unable to clone ${gitname} from ${PORT_GIT_URL}" >&2
                         exit 4
+		fi
+		if [ "${PORT_GIT_BRANCH}x" != "x" ]; then
+			if ! git -C "${dir}" checkout "${PORT_GIT_BRANCH}" >$STDOUT; then
+				echo "Unable to checkout ${PORT_GIT_URL} branch ${PORT_GIT_BRANCH}" <&2
+				exit 4
+			fi
 		fi
 		tagtree "${dir}"
 	fi
