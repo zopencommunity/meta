@@ -183,8 +183,10 @@ applypatches() {
 		return 0
 	fi
 
+	moved=false
 	if [ -d "${code_dir}/.git-for-patches" ] && ! [ -d "${code_dir}/.git" ]; then
 		mv "${code_dir}/.git-for-patches" "${code_dir}/.git" || exit 99
+		moved=true
 	fi
 
 	if ! [ -d "${code_dir}/.git" ] ; then
@@ -216,7 +218,9 @@ applypatches() {
 			fi
 		done
 	fi
-	mv "${code_dir}/.git" "${code_dir}/.git-for-patches" || exit 99
+	if ${moved}; then
+		mv "${code_dir}/.git" "${code_dir}/.git-for-patches" || exit 99
+	fi
 
 	if [ $failedcount -ne 0 ]; then
 		exit $failedcount
