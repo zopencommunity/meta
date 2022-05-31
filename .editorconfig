@@ -1,0 +1,7 @@
+[*.sh]
+indent_style = space
+indent_size = 2
+
+shell_variant      = posix # like -ln=posix
+switch_case_indent = true  # like -ci
+function_next_line = true  # like -fn
