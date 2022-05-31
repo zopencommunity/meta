@@ -71,21 +71,21 @@ checkdeps()
 
 setdepsenv()
 {
+  orig="${PWD}"
   for dep in $deps; do
     if [ -r "${HOME}/zot/prod/${dep}/.env" ]; then
-      cd "${HOME}/zot/prod/${dep}"
+      depdir="${HOME}/zot/prod/${dep}"
     elif [ -r "/usr/bin/zot/${dep}/.env" ]; then
-      cd "/usr/bin/zot/${dep}"
+      depdir="/usr/bin/zot/${dep}"
     elif [ -r "${HOME}/zot/boot/${dep}/.env" ]; then
-      cd "${HOME}/zot/boot/${dep}"
+      depdir="${HOME}/zot/boot/${dep}"
     else
       printError "Internal error. Unable to find .env but earlier check should have caught this"
     fi
-    . ./.env
+    printVerbose "Setting up environment for: ${depdir}"
+    cd ${depdir} && . ./.env
   done
-  if $fail; then
-    exit 4
-  fi
+  cd "${orig}"
 }
 
 #
@@ -282,6 +282,7 @@ myparentdir=$(
 set +x
 if [ "$1" = "-v" ]; then
   verbose=true
+  PORT_VERBOSE='Y'
   STDOUT="/dev/fd1"
   STDERR="/dev/fd2"
 else
@@ -406,6 +407,8 @@ if [ "${LDFLAGS}x" = "x" ]; then
   BASE_LDFLAGS=""
   export LDFLAGS="${BASE_LDFLAGS} ${PORT_EXTRA_LDFLAGS}"
 fi
+
+setdepsenv $deps
 
 cd "${PORT_ROOT}" || exit 99
 
