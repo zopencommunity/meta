@@ -8,18 +8,54 @@
 # Each dependent tool will have it's corresponding environment set up by sourcing .env from the installation
 # directory. The .env will be searched for in $HOME/zot/prod/<tool>, /usr/bin/zot/prod/<tool>, $HOME/zot/boot/<tool>
 
+if [ ! ${_BPX_TERMPATH-x} = "OMVS" ] && [ -z ${NO_COLOR} ] && [ ! ${FORCE_COLOR-x} = "0" ]; then
+  esc="\047"
+  RED="${esc}[31m"
+  GREEN="${esc}[32m"
+  YELLOW="${esc}[33m"
+  BOLD="${esc}[1m"
+  UNDERLINE="${esc}[4m"
+  NC="${esc}[0m"
+else
+  unset esc RED GREEN YELLOW BOLD UNDERLINE NC
+fi
+
+printVerbose() {
+  if [ ! "${PORT_VERBOSE}x" = "x" ]; then 
+    print "${NC}${GREEN}${BOLD}VERBOSE${NC}: '${1}'"
+  fi
+}
+
+printHeader() {
+  print "${NC}${UNDERLINE}${1}...${NC}"
+}
+
+runAndLog() {
+  printVerbose "$1"
+  eval "$1"
+}
+
+printSoftError() {
+  print "${NC}${RED}${BOLD}***ERROR: ${NC}${RED}${1}${NC}" >&2
+}
+
+printError() {
+  printSoftError "${1}"
+  exit 4
+}
+
+printWarning() {
+  print "${NC}${YELLOW}${BOLD}***WARNING: ${NC}${YELLOW}${1}${NC}" >&2
+}
+
 checkdeps() {
 	deps=$*
 	fail=false
 	for dep in $deps; do
 		if ! [ -r "${HOME}/zot/prod/${dep}/.env" ] && ! [ -r "${HOME}/zot/boot/${dep}/.env" ] && ! [ -r "/usr/bin/zot/${dep}/.env" ] ; then
-			echo "Unable to find .env for dependency ${dep}" >&2
-			fail=true
+			printError "Unable to find .env for dependency ${dep}"
 		fi
 	done
-	if $fail ; then
-		exit 4
-	fi
 }
 
 setdepsenv() {
@@ -31,8 +67,7 @@ setdepsenv() {
 		elif [ -r "${HOME}/zot/boot/${dep}/.env" ]; then
 			cd "${HOME}/zot/boot/${dep}"
 		else 
-			echo "Internal error. Unable to find .env but earlier check should have caught this" >&2
-			exit 16
+			printError "Internal error. Unable to find .env but earlier check should have caught this"
 		fi
 		. ./.env
 	done
@@ -50,8 +85,7 @@ tagtree() {
 		
 gitclone() {
 	if ! git --version >$STDOUT 2>$STDERR ; then
-		echo "git is required to download from the git repo" >&2
-		exit 4
+		printError "git is required to download from the git repo"
 	fi
 	gitname=$(basename $PORT_GIT_URL)
 	dir=${gitname%%.*}
@@ -60,8 +94,7 @@ gitclone() {
 	else
 		echo "Clone and create ${dir}" >$STDERR
 		if ! git clone "${PORT_GIT_URL}" 2>$STDERR; then
-                        echo "Unable to clone ${gitname} from ${PORT_GIT_URL}" >&2
-                        exit 4
+      printError "Unable to clone ${gitname} from ${PORT_GIT_URL}"
 		fi
 		tagtree "${dir}"
 	fi
@@ -75,25 +108,21 @@ extracttarball() {
 	ext=${tarballz##*.}
 	if [ "${ext}x" = "xzx" ]; then
 		if ! xz -d "${tarballz}"; then
-			echo "Unable to use xz to decompress ${tarballz}" >&2
-			exit 4
+			printError "Unable to use xz to decompress ${tarballz}"
 		fi
 		tarball=${tarballz%%.xz}
 	elif [ "${ext}x" = "gzx" ]; then 
 		if ! gunzip "${tarballz}"; then
-			echo "Unable to use gunzip to decompress ${tarballz}" >&2
-			exit 4
+		  printError "Unable to use gunzip to decompress ${tarballz}"
 		fi
 		tarball=${tarballz%%.gz}
 	else
-		echo "Extension ${ext} is an unsupported compression technique. Add code" >&2
-		exit 8
+		printError "Extension ${ext} is an unsupported compression technique. Add code"
 	fi
 
 	tar -xf "${tarball}" 2>&1 >/dev/null | grep -v FSUM7171 >$STDERR
 	if [ $? -gt 1 ]; then
-		echo "Unable to untar ${tarball}" >&2
-		exit 4
+		printError "Unable to untar ${tarball}"
 	fi
 	rm -f "${tarball}"
 
@@ -101,25 +130,21 @@ extracttarball() {
 	chtag -R -r "${dir}"
 
 	tagtree "${dir}"
-	cd "${dir}" || exit 99
+	cd "${dir}" || printError "Cannot cd to ${dir}"
 	if [ -f .gitattributes ]; then
-		echo "No support for existing .gitattributes file. Write some code" >&2
-		exit 4
+		printError "No support for existing .gitattributes file. Write some code"
 	fi
 	if ! echo "* text working-tree-encoding=ISO8859-1" >.gitattributes ; then
-		echo "Unable to create .gitattributes for tarball" >&2
-		exit 4
+		printError "Unable to create .gitattributes for tarball"
 	fi
 
 	if ! iconv -f IBM-1047 -tISO8859-1 <.gitattributes >.gitattrascii || ! chtag -tcISO8859-1 .gitattrascii || ! mv .gitattrascii .gitattributes ; then
-		echo "Unable to make .gitattributes ascii for tarball" >&2
-		exit 4
+		printError "Unable to make .gitattributes ascii for tarball"
 	fi
 
 	files=$(find . ! -name "*.pdf" ! -name "*.png" ! -type d)
 	if ! git init . >$STDERR || ! git add ${files} >$STDERR || ! git commit --allow-empty -m "Create Repository for patch management" >$STDERR ; then
-		echo "Unable to initialize git repository for tarball" >&2
-		exit 4
+		printError "Unable to initialize git repository for tarball"
 	fi
 	# Having the directory git-managed exposes some problems in the current git for software like autoconf,
 	# so move .git to the side and just use it for applying patches
@@ -129,8 +154,7 @@ extracttarball() {
 
 downloadtarball() {
 	if ! curl --version >$STDOUT 2>$STDERR ; then
-		echo "curl is required to download a tarball" >&2
-		exit 4
+		printError "curl is required to download a tarball"
 	fi
 	tarballz=$(basename $PORT_TARBALL_URL)
 	dir=${tarballz%%.tar.*} 
@@ -141,8 +165,7 @@ downloadtarball() {
 			if [ $(wc -c "${tarballz}" | awk '{print $1}') -lt 1024 ]; then
 				cat "${tarballz}" >$STDERR
 			fi
-			echo "Unable to download ${tarballz} from ${PORT_TARBALL_URL}" >&2
-			exit 4
+			printError "Unable to download ${tarballz} from ${PORT_TARBALL_URL}"
 		fi 
 		# curl tags the file as ISO8859-1 (oops) so the tag has to be removed
 		chtag -b "${tarballz}"
@@ -163,6 +186,7 @@ downloadtarball() {
 #   -cd to the code directory and perform git diff <filename> >${PORT_ROOT}/patches/PR<x>/<filename>.patch
 #
 applypatches() {
+  printHeader "Applying patches"
 	if [ "${PORT_TARBALL}x" != "x" ] ; then
 		tarballz=$(basename $PORT_TARBALL_URL)
 		code_dir="${PORT_ROOT}/${tarballz%%.tar.*}"
@@ -173,7 +197,7 @@ applypatches() {
 
 	patch_dir="${PORT_ROOT}/patches"
 	if ! [ -d "${patch_dir}" ] ; then
-		echo "${patch_dir} does not exist - no patches to apply" >$STDERR
+		printWarning "${patch_dir} does not exist - no patches to apply"
 		return 0
 	fi
 
@@ -182,7 +206,7 @@ applypatches() {
 	fi
 
 	if ! [ -d "${code_dir}/.git" ] ; then
-		echo "applypatches requires ${code_dir} to be git-managed but there is no .git directory. No patches applied" >&2
+		printWarning "applypatches requires ${code_dir} to be git-managed but there is no .git directory. No patches applied"
 		return 0
 	fi
 
@@ -198,13 +222,13 @@ applypatches() {
 
 			patchsize=`wc -c "${p}" | awk '{ print $1 }'`
 			if [ $patchsize -eq 0 ]; then
-				echo "Warning: patch file ${p} is empty - nothing to be done" >$STDERR
+				printWarning "Warning: patch file ${p} is empty - nothing to be done"
 			else
 				echo "Applying ${p}"
 				out=`(cd ${code_dir} && git apply "${p}" 2>&1)`
 				if [ $? -gt 0 ]; then
-					echo "Patch of make tree failed (${p})." >&2
-					echo "${out}" >&2
+					printSoftError "Patch of make tree failed (${p})."
+					printSoftError "${out}"
 					failedcount=$((failedcount+1))
 				fi
 			fi
@@ -235,7 +259,7 @@ else
 fi
 PORT_CHECK_RESULTS="${PORT_ROOT}/portchk.sh"
 PORT_CREATE_ENV="${PORT_ROOT}/portcrtenv.sh"
-LOG_PFX=$(date '+%Y%m%d_%T')
+LOG_PFX=$(date +%C%y%m%d_%H%M%S)
 
 #
 # Temporary - support PORT_TARBALL / PORT_GIT _and_ PORT_TYPE until I switch everything over to use PORT_TYPE
@@ -246,10 +270,10 @@ LOG_PFX=$(date '+%Y%m%d_%T')
 # PORT_TYPE=GIT|URL (e.g. only one line needs to be changed).
 # For software packages that only support one type, you can just specify PORT_URL, PORT_DEPS, and PORT_TYPE.
 #
+printHeader "Checking setup"
 if [ "${PORT_TARBALL}x" = "x" ] && [ "${PORT_GIT}x" = "x" ]; then
 	if [ "${PORT_TYPE}x" = "x" ]; then
-		echo "One of PORT_TARBALL, PORT_GIT, or PORT_TYPE needs to be defined to specify where to pull source from" >&2
-		exit 4
+		printError "One of PORT_TARBALL, PORT_GIT, or PORT_TYPE needs to be defined to specify where to pull source from"
 	elif [ "${PORT_TYPE}x" = "TARBALLx" ]; then
 		export PORT_TARBALL='Y'
 		if [ "${PORT_TARBALL_URL}x" = "x" ]; then 
@@ -268,67 +292,53 @@ if [ "${PORT_TARBALL}x" = "x" ] && [ "${PORT_GIT}x" = "x" ]; then
 			export PORT_GIT_DEPS="${PORT_DEPS}"
 		fi
 	else
-		echo "PORT_TYPE must be one of TARBALL or GIT. PORT_TYPE=${PORT_TYPE} was specified" >&2
-		exit 4
+		printError "PORT_TYPE must be one of TARBALL or GIT. PORT_TYPE=${PORT_TYPE} was specified"
 	fi
 fi
 
 if [ "${PORT_ROOT}x" = "x" ]; then
-	echo "PORT_ROOT needs to be defined to the root directory of the tool being ported" >&2
-	exit 4
+	printError "PORT_ROOT needs to be defined to the root directory of the tool being ported"
 fi
 if ! [ -d "${PORT_ROOT}" ]; then
-	echo "PORT_ROOT ${PORT_ROOT} is not a directory" >&2
-	exit 8
+	printError "PORT_ROOT ${PORT_ROOT} is not a directory"
 fi
 
 if ! [ -x "${PORT_CHECK_RESULTS}" ]; then
-	echo "${PORT_CHECK_RESULTS} script needs to be provided to check the results. Exit with 0 if the build can be installed" >&2
-	exit 4
+	printError "${PORT_CHECK_RESULTS} script needs to be provided to check the results. Exit with 0 if the build can be installed"
 fi
 if ! [ -x "${PORT_CREATE_ENV}" ]; then
-	echo "${PORT_CREATE_ENV} script needs to be provided to define the environment" >&2
-	exit 4
+	printError "${PORT_CREATE_ENV} script needs to be provided to define the environment"
 fi
 if [ "${PORT_TARBALL}x" = "x" ] && [ "${PORT_GIT}x" = "x" ]; then
-	echo "One of PORT_TARBALL or PORT_GIT needs to be defined to specify where to pull source from" >&2
-	exit 4
+	printError "One of PORT_TARBALL or PORT_GIT needs to be defined to specify where to pull source from"
 fi
 if [ "${PORT_TARBALL}x" != "x" ] && [ "${PORT_GIT}x" != "x" ]; then
-	echo "Only one of PORT_TARBALL or PORT_GIT should be defined to specify where to pull source from (both are defined)" >&2
-	exit 4
+	printError "Only one of PORT_TARBALL or PORT_GIT should be defined to specify where to pull source from (both are defined)"
 fi
 ca="${myparentdir}/cacert.pem"
 if ! [ -r "${ca}" ]; then
-	echo "Internal Error. Certificate ${ca} is required" >&2
-	exit 4
+	printError "Internal Error. Certificate ${ca} is required"
 fi
 if [ "${PORT_TARBALL}x" != "x" ]; then
 	if [ "${PORT_TARBALL_URL}x" = "x" ]; then
-		echo "PORT_URL or PORT_TARBALL_URL needs to be defined to the root directory of the tool being ported" >&2
-		exit 4
+		printError "PORT_URL or PORT_TARBALL_URL needs to be defined to the root directory of the tool being ported"
 	fi
 	if [ "${PORT_TARBALL_DEPS}x" = "x" ]; then
-		echo "PORT_DEPS or PORT_TARBALL_DEPS needs to be defined to the ported tools this depends on" >&2
-		exit 4
+		printError "PORT_DEPS or PORT_TARBALL_DEPS needs to be defined to the ported tools this depends on"
 	fi
 	export SSL_CERT_FILE="${ca}"
 	deps="${PORT_TARBALL_DEPS}"
 fi
 if [ "${PORT_GIT}x" != "x" ]; then
 	if [ "${PORT_GIT_URL}x" = "x" ]; then
-		echo "PORT_URL or PORT_GIT_URL needs to be defined to the root directory of the tool being ported" >&2
-		exit 4
+		printError "PORT_URL or PORT_GIT_URL needs to be defined to the root directory of the tool being ported"
 	fi
 	if [ "${PORT_GIT_DEPS}x" = "x" ]; then
-		echo "PORT_DEPS or PORT_GIT_DEPS needs to be defined to the ported tools this depends on" >&2
-		exit 4
+		printError "PORT_DEPS or PORT_GIT_DEPS needs to be defined to the ported tools this depends on"
 	fi
 	export GIT_SSL_CAINFO="${ca}"
 	deps="${PORT_GIT_DEPS}"
 fi
-
-checkdeps ${deps}
 
 #
 # For the compilers and corresponding flags, you need to either specify both the compiler and flag, or neither
@@ -336,12 +346,10 @@ checkdeps ${deps}
 #
 
 if [ "${CC}x" = "x" ] && [ "${CFLAGS}x" != "x" ]; then
-	echo "Either specify both CC and CFLAGS or neither, but not just one" >&2
-	exit 4
+	printError "Either specify both CC and CFLAGS or neither, but not just one"
 fi
 if [ "${CXX}x" = "x" ] && [ "${CXXFLAGS}x" != "x" ]; then
-	echo "Either specify both CXX and CXXFLAGS or neither, but not just one" >&2
-	exit 4
+	printError "Either specify both CXX and CXXFLAGS or neither, but not just one"
 fi
 
 if [ "${CC}x" = "x" ]; then
@@ -360,8 +368,6 @@ if [ "${LDFLAGS}x" = "x" ]; then
 	BASE_LDFLAGS="" 
 	export LDFLAGS="${BASE_LDFLAGS} ${PORT_EXTRA_LDFLAGS}"
 fi
-
-setdepsenv $deps
 
 cd "${PORT_ROOT}" || exit 99
 
@@ -414,28 +420,26 @@ cd "${PORT_ROOT}/${dir}" || exit 99
 # Proceed to build
 
 if [ "${PORT_BOOTSTRAP}x" != "skipx" ] && [ -x "${PORT_BOOTSTRAP}" ]; then
-	echo "Bootstrap"
+	printHeader "Running Bootstrap"
 	if [ -r bootstrap.success ] ; then
 		echo "Using previous successful bootstrap" >&2
 	else
 		bootlog="${LOG_PFX}_bootstrap.log"
-		if ! "${PORT_BOOTSTRAP}" ${PORT_BOOTSTRAP_OPTS} >${bootlog} 2>&1 ; then
-			echo "Bootstrap failed. Log: ${bootlog}" >&2 
-			exit 4
+		if ! runAndLog "\"${PORT_BOOTSTRAP}\" ${PORT_BOOTSTRAP_OPTS} >${bootlog} 2>&1" ; then
+			printError "Bootstrap failed. Log: ${bootlog}" >&2 
 		fi
 		touch bootstrap.success
 	fi
 fi
 
 if [ "${PORT_CONFIGURE}x" != "skipx" ] && [ -x "${PORT_CONFIGURE}" ]; then
-	echo "Configure"
+	printHeader "Running Configure"
 	if [ -r config.success ] ; then
 		echo "Using previous successful configuration" >&2
 	else
 		configlog="${LOG_PFX}_config.log"
-		if ! "${PORT_CONFIGURE}" ${PORT_CONFIGURE_OPTS} >"${configlog}" 2>&1 ; then
-			echo "Configure failed. Log: ${configlog}" >&2
-			exit 4
+		if ! runAndLog "\"${PORT_CONFIGURE}\" ${PORT_CONFIGURE_OPTS} >\"${configlog}\" 2>&1";  then
+			printError "Configure failed. Log: ${configlog}"
 		fi
 		touch config.success
 	fi
@@ -443,32 +447,28 @@ fi
 
 makelog="${LOG_PFX}_make.log"
 if [ "${PORT_MAKE}x" != "skipx" ] && [ -x "${PORT_MAKE}" ]; then
-	echo "Make"
+  printHeader "Running Make"
 	if ! "${PORT_MAKE}" ${PORT_MAKE_OPTS} >"${makelog}" 2>&1 ; then
-		echo "Make failed. Log: ${makelog}" >&2
-		exit 4
+		printError "Make failed. Log: ${makelog}"
 	fi
 fi
 	 
 checklog="${LOG_PFX}_check.log"
 if [ "${PORT_CHECK}x" != "skipx" ] && [ -x "${PORT_CHECK}" ]; then
-	echo "Check"
+  printHeader "Running Check"
 	"${PORT_CHECK}" ${PORT_CHECK_OPTS} >"${checklog}" 2>&1
 	if ! "${PORT_CHECK_RESULTS}" "./${dir}" "${LOG_PFX}"; then 
-		echo "Check failed. Log: ${checklog}" >&2
-		exit 4
+		printError "Check failed. Log: ${checklog}"
 	fi
 fi
 
 if [ "${PORT_INSTALL}x" != "skipx" ] && [ -x "${PORT_INSTALL}" ]; then
-	echo "Install"
+  printHeader "Running Install"
 	installlog="${LOG_PFX}_install.log"
 	if ! "${PORT_INSTALL}" ${PORT_INSTALL_OPTS} >"${installlog}" 2>&1 ; then
-		echo "Install failed. Log: ${installlog}" >&2
-		exit 4
+		printError "Install failed. Log: ${installlog}"
 	fi
 	if ! "${PORT_CREATE_ENV}" "${PROD_DIR}" "${LOG_PFX}"; then 
-		echo "Environment creation failed." >&2
-		exit 4
+		printError "Environment creation failed."
 	fi
 fi
