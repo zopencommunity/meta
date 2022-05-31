@@ -53,7 +53,8 @@ checkdeps() {
 	fail=false
 	for dep in $deps; do
 		if ! [ -r "${HOME}/zot/prod/${dep}/.env" ] && ! [ -r "${HOME}/zot/boot/${dep}/.env" ] && ! [ -r "/usr/bin/zot/${dep}/.env" ] ; then
-			printError "Unable to find .env for dependency ${dep}"
+      fail=true
+			printSoftError "Unable to find .env for dependency ${dep}"
 		fi
 	done
 }
@@ -71,6 +72,9 @@ setdepsenv() {
 		fi
 		. ./.env
 	done
+  if $fail ; then
+    exit 4
+  fi
 }
 
 #
