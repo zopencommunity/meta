@@ -64,6 +64,9 @@ checkdeps()
       printSoftError "Unable to find .env for dependency ${dep}"
     fi
   done
+  if $fail ; then
+    exit 4
+  fi
 }
 
 setdepsenv()
