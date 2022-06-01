@@ -71,21 +71,21 @@ checkdeps()
 
 setdepsenv()
 {
+  orig="${PWD}"
   for dep in $deps; do
     if [ -r "${HOME}/zot/prod/${dep}/.env" ]; then
-      cd "${HOME}/zot/prod/${dep}"
+      depdir="${HOME}/zot/prod/${dep}"
     elif [ -r "/usr/bin/zot/${dep}/.env" ]; then
-      cd "/usr/bin/zot/${dep}"
+      depdir="/usr/bin/zot/${dep}"
     elif [ -r "${HOME}/zot/boot/${dep}/.env" ]; then
-      cd "${HOME}/zot/boot/${dep}"
+      depdir="${HOME}/zot/boot/${dep}"
     else
       printError "Internal error. Unable to find .env but earlier check should have caught this"
     fi
-    . ./.env
+    printVerbose "Setting up environment for: ${depdir}"
+    cd ${depdir} && . ./.env
   done
-  if $fail; then
-    exit 4
-  fi
+  cd "${orig}"
 }
 
 #
@@ -95,8 +95,8 @@ setdepsenv()
 tagtree()
 {
   dir="$1"
-  find "${dir}" -name "*.pdf" -o -name "*.png" ! -type d | xargs chtag -b
-  find "${dir}" ! -type d | xargs chtag -qp | awk '{ if ($1 == "-") { print $4; }}' | xargs chtag -tcISO8859-1
+  find "${dir}" -name "*.pdf" -o -name "*.png" ! -type d ! -type l | xargs chtag -b
+  find "${dir}" ! -type d ! -type l | xargs chtag -qp | awk '{ if ($1 == "-") { print $4; }}' | xargs chtag -tcISO8859-1
 }
 
 gitclone()
@@ -112,6 +112,11 @@ gitclone()
     echo "Clone and create ${dir}" >$STDERR
     if ! git clone "${PORT_GIT_URL}" 2>$STDERR; then
       printError "Unable to clone ${gitname} from ${PORT_GIT_URL}"
+    fi
+    if [ "${PORT_GIT_BRANCH}x" != "x" ]; then
+      if ! git -C "${dir}" checkout "${PORT_GIT_BRANCH}" >$STDOUT; then
+        printError"Unable to checkout ${PORT_GIT_URL} branch ${PORT_GIT_BRANCH}"
+      fi
     fi
     tagtree "${dir}"
   fi
@@ -221,8 +226,10 @@ applypatches()
     return 0
   fi
 
+  moved=false
   if [ -d "${code_dir}/.git-for-patches" ] && ! [ -d "${code_dir}/.git" ]; then
     mv "${code_dir}/.git-for-patches" "${code_dir}/.git" || exit 99
+    moved=true
   fi
 
   if ! [ -d "${code_dir}/.git" ]; then
@@ -254,7 +261,9 @@ applypatches()
       fi
     done
   fi
-  mv "${code_dir}/.git" "${code_dir}/.git-for-patches" || exit 99
+  if ${moved}; then
+    mv "${code_dir}/.git" "${code_dir}/.git-for-patches" || exit 99
+  fi
 
   if [ $failedcount -ne 0 ]; then
     exit $failedcount
@@ -273,6 +282,7 @@ myparentdir=$(
 set +x
 if [ "$1" = "-v" ]; then
   verbose=true
+  PORT_VERBOSE='Y'
   STDOUT="/dev/fd1"
   STDERR="/dev/fd2"
 else
@@ -375,22 +385,27 @@ if [ "${CXX}x" = "x" ] && [ "${CXXFLAGS}x" != "x" ]; then
   printError "Either specify both CXX and CXXFLAGS or neither, but not just one"
 fi
 
+if [ "${CPPFLAGS}x" = "x" ]; then
+  export CPPFLAGS="-DNSIG=9 -D_XOPEN_SOURCE=600 -D_ALL_SOURCE -D_OPEN_SYS_FILE_EXT=1 -D_AE_BIMODAL=1 -D_ENHANCED_ASCII_EXT=0xFFFFFFFF"
+fi
 if [ "${CC}x" = "x" ]; then
   export CC=xlclang
+  export CFLAGS="-qascii ${PORT_EXTRA_CFLAGS}"
   BASE_CFLAGS="-qascii -DNSIG=39 -D_XOPEN_SOURCE=600 -D_ALL_SOURCE -D_OPEN_SYS_FILE_EXT=1 -D_AE_BIMODAL=1 -D_ENHANCED_ASCII_EXT=0xFFFFFFFF"
   export CFLAGS="${BASE_CFLAGS} ${PORT_EXTRA_CFLAGS}"
 fi
 
 if [ "${CXX}x" = "x" ]; then
   export CXX=xlclang++
-  BASE_CXXFLAGS="-+ -qascii -DNSIG=39 -D_XOPEN_SOURCE=600 -D_ALL_SOURCE -D_OPEN_SYS_FILE_EXT=1 -D_AE_BIMODAL=1 -D_ENHANCED_ASCII_EXT=0xFFFFFFFF"
-  export CXXFLAGS="${BASE_CXXFLAGS} ${PORT_EXTRA_CXXFLAGS}"
+  export CXXFLAGS="-+ -qascii ${PORT_EXTRA_CXXFLAGS}"
 fi
 
 if [ "${LDFLAGS}x" = "x" ]; then
   BASE_LDFLAGS=""
   export LDFLAGS="${BASE_LDFLAGS} ${PORT_EXTRA_LDFLAGS}"
 fi
+
+setdepsenv $deps
 
 cd "${PORT_ROOT}" || exit 99
 
@@ -403,6 +418,7 @@ if [ "${PORT_TARBALL}x" != "x" ]; then
   echo "Checking if tarball already downloaded"
   dir=$(downloadtarball)
 fi
+PROD_DIR="${HOME}/zot/prod/${dir}"
 
 if [ "${PORT_BOOTSTRAP}x" = "x" ]; then
   export PORT_BOOTSTRAP="./bootstrap"
@@ -414,7 +430,6 @@ if [ "${PORT_CONFIGURE}x" = "x" ]; then
   export PORT_CONFIGURE="./configure"
 fi
 if [ "${PORT_CONFIGURE_OPTS}x" = "x" ]; then
-  PROD_DIR="${HOME}/zot/prod/${dir}"
   export PORT_CONFIGURE_OPTS="--prefix=${PROD_DIR}"
 fi
 if [ "${PORT_MAKE}x" = "x" ]; then
@@ -461,7 +476,7 @@ if [ "${PORT_CONFIGURE}x" != "skipx" ] && [ -x "${PORT_CONFIGURE}" ]; then
     echo "Using previous successful configuration" >&2
   else
     configlog="${LOG_PFX}_config.log"
-    if ! runAndLog "\"${PORT_CONFIGURE}\" ${PORT_CONFIGURE_OPTS} >\"${configlog}\" 2>&1"; then
+    if ! runAndLog "\"${PORT_CONFIGURE}\" CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\" ${PORT_CONFIGURE_OPTS} >\"${configlog}\" 2>&1"; then
       printError "Configure failed. Log: ${configlog}"
     fi
     touch config.success
