@@ -333,9 +333,6 @@ if [ "${PORT_ROOT}x" = "x" ]; then
   printError "PORT_ROOT needs to be defined to the root directory of the tool being ported"
 fi
 if ! [ -d "${PORT_ROOT}" ]; then
-  printError "PORT_ROOT needs to be defined to the root directory of the tool being ported"
-fi
-if ! [ -d "${PORT_ROOT}" ]; then
   printError "PORT_ROOT ${PORT_ROOT} is not a directory"
 fi
 
