@@ -80,7 +80,7 @@ setdepsenv()
     elif [ -r "${HOME}/zot/boot/${dep}/.env" ]; then
       depdir="${HOME}/zot/boot/${dep}"
     else
-      printError "Internal error. Unable to find .env but earlier check should have caught this"
+      printError "Internal error. Unable to find .env for ${deps} but earlier check should have caught this"
     fi
     printVerbose "Setting up environment for: ${depdir}"
     cd ${depdir} && . ./.env
