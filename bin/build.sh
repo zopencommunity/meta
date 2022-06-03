@@ -279,6 +279,11 @@ myparentdir=$(
   echo $PWD
 )
 
+mydir=$(
+  cd $(dirname $0)/
+  echo $PWD
+)
+
 set +x
 if [ "$1" = "-v" ]; then
   verbose=true
@@ -420,6 +425,18 @@ if [ "${PORT_TARBALL}x" != "x" ]; then
 fi
 PROD_DIR="${HOME}/zot/prod/${dir}"
 
+
+if [ "${PORT_NUM_JOBS}x" = "x" ]; then
+  PORT_NUM_JOBS=$("${mydir}/numcpus.rexx")
+
+  # Use half of the CPUs by default
+  export PORT_NUM_JOBS=$((PORT_NUM_JOBS / 2))
+fi
+
+if [ $PORT_NUM_JOBS -lt 1 ]; then
+  export PORT_NUM_JOBS=1
+fi
+
 if [ "${PORT_BOOTSTRAP}x" = "x" ]; then
   export PORT_BOOTSTRAP="./bootstrap"
 fi
@@ -436,7 +453,7 @@ if [ "${PORT_MAKE}x" = "x" ]; then
   export PORT_MAKE=$(whence make)
 fi
 if [ "${PORT_MAKE_OPTS}x" = "x" ]; then
-  export PORT_MAKE_OPTS=""
+  export PORT_MAKE_OPTS="-j${PORT_NUM_JOBS}"
 fi
 if [ "${PORT_CHECK}x" = "x" ]; then
   export PORT_CHECK=$(whence make)
