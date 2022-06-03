@@ -417,11 +417,19 @@ cd "${PORT_ROOT}" || exit 99
 if [ "${PORT_GIT}x" != "x" ]; then
   echo "Checking if git directory already cloned"
   dir=$(gitclone)
+  rc=$?
+  if [ $rc -gt 0 ]; then
+    exit $rc;
+  fi
 fi
 
 if [ "${PORT_TARBALL}x" != "x" ]; then
   echo "Checking if tarball already downloaded"
   dir=$(downloadtarball)
+  rc=$?
+  if [ $rc -gt 0 ]; then
+    exit $rc;
+  fi
 fi
 PROD_DIR="${HOME}/zot/prod/${dir}"
 
