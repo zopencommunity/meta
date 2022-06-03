@@ -372,11 +372,13 @@ if [ "${PORT_GIT}x" != "x" ]; then
     printError "PORT_URL or PORT_GIT_URL needs to be defined to the root directory of the tool being ported"
   fi
   if [ "${PORT_GIT_DEPS}x" = "x" ]; then
-    printError "PORT_DEPS or PORT_GIT_DEPS needs to be defined to the ported tools this depends on"
+    #printError "PORT_DEPS or PORT_GIT_DEPS needs to be defined to the ported tools this depends on"
   fi
   export GIT_SSL_CAINFO="${ca}"
   deps="${PORT_GIT_DEPS}"
 fi
+
+checkdeps ${deps}
 
 #
 # For the compilers and corresponding flags, you need to either specify both the compiler and flag, or neither
@@ -416,19 +418,15 @@ cd "${PORT_ROOT}" || exit 99
 
 if [ "${PORT_GIT}x" != "x" ]; then
   echo "Checking if git directory already cloned"
-  dir=$(gitclone)
-  rc=$?
-  if [ $rc -gt 0 ]; then
-    exit $rc;
+  if ! dir=$(gitclone) ; then 
+    exit 4
   fi
 fi
 
 if [ "${PORT_TARBALL}x" != "x" ]; then
   echo "Checking if tarball already downloaded"
-  dir=$(downloadtarball)
-  rc=$?
-  if [ $rc -gt 0 ]; then
-    exit $rc;
+  if ! dir=$(downloadtarball) ; then 
+    exit 4
   fi
 fi
 PROD_DIR="${HOME}/zot/prod/${dir}"
