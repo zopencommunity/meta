@@ -166,7 +166,7 @@ extracttarball()
   fi
 
   files=$(find . ! -name "*.pdf" ! -name "*.png" ! -type d)
-  if ! git init . >$STDERR || ! git add ${files} >$STDERR || ! git commit --allow-empty -m "Create Repository for patch management" >$STDERR; then
+  if ! git init . >$STDERR || ! git add -f ${files} >$STDERR || ! git commit --allow-empty -m "Create Repository for patch management" >$STDERR; then
     printError "Unable to initialize git repository for tarball"
   fi
   # Having the directory git-managed exposes some problems in the current git for software like autoconf,
