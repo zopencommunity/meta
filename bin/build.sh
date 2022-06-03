@@ -372,7 +372,7 @@ if [ "${PORT_GIT}x" != "x" ]; then
     printError "PORT_URL or PORT_GIT_URL needs to be defined to the root directory of the tool being ported"
   fi
   if [ "${PORT_GIT_DEPS}x" = "x" ]; then
-    #printError "PORT_DEPS or PORT_GIT_DEPS needs to be defined to the ported tools this depends on"
+    printError "PORT_DEPS or PORT_GIT_DEPS needs to be defined to the ported tools this depends on"
   fi
   export GIT_SSL_CAINFO="${ca}"
   deps="${PORT_GIT_DEPS}"
