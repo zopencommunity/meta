@@ -80,7 +80,7 @@ setdepsenv()
     elif [ -r "${HOME}/zot/boot/${dep}/.env" ]; then
       depdir="${HOME}/zot/boot/${dep}"
     else
-      printError "Internal error. Unable to find .env but earlier check should have caught this"
+      printError "Internal error. Unable to find .env for ${deps} but earlier check should have caught this"
     fi
     printVerbose "Setting up environment for: ${depdir}"
     cd ${depdir} && . ./.env
@@ -166,7 +166,7 @@ extracttarball()
   fi
 
   files=$(find . ! -name "*.pdf" ! -name "*.png" ! -type d)
-  if ! git init . >$STDERR || ! git add ${files} >$STDERR || ! git commit --allow-empty -m "Create Repository for patch management" >$STDERR; then
+  if ! git init . >$STDERR || ! git add -f ${files} >$STDERR || ! git commit --allow-empty -m "Create Repository for patch management" >$STDERR; then
     printError "Unable to initialize git repository for tarball"
   fi
   # Having the directory git-managed exposes some problems in the current git for software like autoconf,
@@ -279,6 +279,11 @@ myparentdir=$(
   echo $PWD
 )
 
+mydir=$(
+  cd $(dirname $0)/
+  echo $PWD
+)
+
 set +x
 if [ "$1" = "-v" ]; then
   verbose=true
@@ -373,6 +378,8 @@ if [ "${PORT_GIT}x" != "x" ]; then
   deps="${PORT_GIT_DEPS}"
 fi
 
+checkdeps ${deps}
+
 #
 # For the compilers and corresponding flags, you need to either specify both the compiler and flag, or neither
 # since the flags are not compatible across compilers, and only the xlclang and xlclang++ compilers are used by default
@@ -411,14 +418,30 @@ cd "${PORT_ROOT}" || exit 99
 
 if [ "${PORT_GIT}x" != "x" ]; then
   echo "Checking if git directory already cloned"
-  dir=$(gitclone)
+  if ! dir=$(gitclone) ; then 
+    exit 4
+  fi
 fi
 
 if [ "${PORT_TARBALL}x" != "x" ]; then
   echo "Checking if tarball already downloaded"
-  dir=$(downloadtarball)
+  if ! dir=$(downloadtarball) ; then 
+    exit 4
+  fi
 fi
 PROD_DIR="${HOME}/zot/prod/${dir}"
+
+
+if [ "${PORT_NUM_JOBS}x" = "x" ]; then
+  PORT_NUM_JOBS=$("${mydir}/numcpus.rexx")
+
+  # Use half of the CPUs by default
+  export PORT_NUM_JOBS=$((PORT_NUM_JOBS / 2))
+fi
+
+if [ $PORT_NUM_JOBS -lt 1 ]; then
+  export PORT_NUM_JOBS=1
+fi
 
 if [ "${PORT_BOOTSTRAP}x" = "x" ]; then
   export PORT_BOOTSTRAP="./bootstrap"
@@ -436,7 +459,7 @@ if [ "${PORT_MAKE}x" = "x" ]; then
   export PORT_MAKE=$(whence make)
 fi
 if [ "${PORT_MAKE_OPTS}x" = "x" ]; then
-  export PORT_MAKE_OPTS=""
+  export PORT_MAKE_OPTS="-j${PORT_NUM_JOBS}"
 fi
 if [ "${PORT_CHECK}x" = "x" ]; then
   export PORT_CHECK=$(whence make)
