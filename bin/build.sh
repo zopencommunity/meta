@@ -12,6 +12,58 @@
 # Functions section
 #
 
+printEnvVar()
+{
+  echo "\
+PORT_ROOT           The directory the port repo was extracted into (defaults to current directory)
+PORT_TYPE           The type of package to download. Valid types are TARBALL and GIT (required)
+PORT_TARBALL_URL    The fully qualified URL that the tarball should be downloaded from (required if PORT_TYPE=TARBALL)
+PORT_TARBALL_DEPS   Space-delimited set of source packages this git package depends on to build (required if PORT_TYPE=TARBALL)
+PORT_GIT_URL        The fully qualified URL that the git repo should be cloned from (required if PORT_TYPE=GIT)
+PORT_GIT_DEPS       Space-delimited set of source packages this tarball package depends on to build (required if PORT_TYPE=GIT)
+PORT_URL            Alternate environment variable instead of PORT_TARBALL_URL or PORT_GIT_URL (alternate to PORT_TARBALL_URL or PORT_GIT_URL) 
+PORT_DEPS           Alternate environment variable instead of PORT_TARBALL_DEPS or PORT_GIT_DEPS (alternate to PORT_TARBALL_DEPS or PORT_GIT_DEPS)  
+CC                  C compiler (defaults to '${PORT_CCD}')
+CXX                 C++ compiler (defaults to '${PORT_CXXD}')
+CPPFLAGS            C/C++ pre-processor flags (defaults to '${PORT_CPPFLAGSD}')
+CFLAGS              C compiler flags (defaults to '${PORT_CFLAGSD}')
+CXXFLAGS            C++ compiler flags (defaults to '${PORT_CXXFLAGSD}')
+LDFLAGS             C/C++ linker flags (defaults to '${PORT_LDFLAGSD}')
+PORT_EXTRA_CPPFLAGS C/C++ pre-processor flags to append to CPPFLAGS (defaults to '')
+PORT_EXTRA_CFLAGS   C compiler flags to append to CFLAGS (defaults to '')
+PORT_EXTRA_CXXFLAGS C++ compiler flags to append to CXXFLAGS (defaults to '')
+PORT_EXTRA_LDFLAGS  C/C++ linker flags to append to LDFLAGS (defaults to '')
+PORT_NUM_JOBS       Number of jobs that can be run in parallel (defaults to 1/2 the CPUs on the system)
+PORT_BOOTSTRAP      Bootstrap program to run. If skip is specified, no bootstrap step is performed (defaults to '${PORT_BOOTSTRAPD}')
+PORT_BOOTSTRAP_OPTS Options to pass to bootstrap program (defaults to '${PORT_BOOTSTRAP_OPTSD}')
+PORT_CONFIGURE      Configuration program to run. If skip is specified, no configuration step is performed (defaults to '${PORT_CONFIGURED}')
+PORT_CONFIGURE_OPTS Options to pass to configuration program (defaults to '--prefix=\${HOME}/zot/prod/<pkg>')
+PORT_MAKE           Build program to run. If skip is specified, no build step is performed (defaults to '${PORT_MAKED}')
+PORT_MAKE_OPTS      Options to pass to build program (defaults to '-j\${PORT_NUM_JOBS}')
+PORT_CHECK          Check program to run. If skip is specified, no check step is performed (defaults to '${PORT_CHECKD}') 
+PORT_CHECK_OPTS     Options to pass to check program (defaults to '${PORT_CHECK_OPTSD}')
+PORT_INSTALL        Installation program to run. If skip is specified, no installation step is performed (defaults to '${PORT_INSTALLD}')
+PORT_INSTALL_OPTS   Options to pass to installation program (defaults to '${PORT_INSTALL_OPTSD}')"
+
+}
+
+setDefaults()
+{
+	export PORT_CCD="xlclang"
+	export PORT_CXXD="xlclang++"
+  export PORT_CPPFLAGSD="-DNSIG=9 -D_XOPEN_SOURCE=600 -D_ALL_SOURCE -D_OPEN_SYS_FILE_EXT=1 -D_AE_BIMODAL=1 -D_ENHANCED_ASCII_EXT=0xFFFFFFFF"
+  export PORT_CFLAGSD="-qascii"
+  export PORT_CXXFLAGSD="-+ -qascii"
+	export PORT_BOOSTRAPD="./bootstrap"
+	export PORT_BOOSTRAP_OPTSD=""
+	export PORT_CONFIGURED="./configure"
+	export PORT_MAKED="make"
+	export PORT_CHECKD="make"
+	export PORT_CHECK_OPTSD="check"
+	export PORT_INSTALLD="install"
+	export PORT_INSTALL_OPTSD=""
+}
+
 printSyntax() 
 {
   args=$*
@@ -20,6 +72,8 @@ printSyntax()
   echo "  where <option> may be one or more of:" >&2
   echo "  -h: print this information" >&2
   echo "  -v: run in verbose mode" >&2
+  opts=$(printEnvVar)
+  echo "${opts}" >&2
 }
 
 processOptions() 
@@ -257,8 +311,6 @@ setEnv()
   export GIT_SSL_CAINFO="${PORT_CA}"
 
   setDepsEnv
-
-  PROD_DIR="${HOME}/zot/prod/${dir}"
 
   if [ "${PORT_NUM_JOBS}x" = "x" ]; then
     PORT_NUM_JOBS=$("${utildir}/numcpus.rexx")
@@ -604,9 +656,14 @@ export utilparentdir
 
 set +x 
 
+if ! setDefaults; then
+  exit 4
+fi
+
 if ! processOptions "$*" ; then
   exit 4
 fi
+
 if ! defineColors; then
   exit 4
 fi
@@ -622,6 +679,8 @@ fi
 if ! dir=$(getCode); then
   exit 4
 fi
+
+export PROD_DIR="${HOME}/zot/prod/${dir}"
 
 if ! applyPatches; then
   exit 4
