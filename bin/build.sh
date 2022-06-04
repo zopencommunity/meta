@@ -288,23 +288,21 @@ setDepsEnv()
 setEnv()
 {
   if [ "${CPPFLAGS}x" = "x" ]; then
-    export CPPFLAGS="-DNSIG=9 -D_XOPEN_SOURCE=600 -D_ALL_SOURCE -D_OPEN_SYS_FILE_EXT=1 -D_AE_BIMODAL=1 -D_ENHANCED_ASCII_EXT=0xFFFFFFFF"
+    export CPPFLAGS="${PORT_CPPFLAGSD}"
   fi
   if [ "${CC}x" = "x" ]; then
-    export CC=xlclang
-    export CFLAGS="-qascii ${PORT_EXTRA_CFLAGS}"
-    BASE_CFLAGS="-qascii -DNSIG=39 -D_XOPEN_SOURCE=600 -D_ALL_SOURCE -D_OPEN_SYS_FILE_EXT=1 -D_AE_BIMODAL=1 -D_ENHANCED_ASCII_EXT=0xFFFFFFFF"
-    export CFLAGS="${BASE_CFLAGS} ${PORT_EXTRA_CFLAGS}"
+    export CC="${PORT_CCD}"
+    export CFLAGS="${PORT_CFLAGSD}"
+    export CFLAGS="${PORT_CFLAGSD} ${PORT_EXTRA_CFLAGS}"
   fi
 
   if [ "${CXX}x" = "x" ]; then
-    export CXX=xlclang++
-    export CXXFLAGS="-+ -qascii ${PORT_EXTRA_CXXFLAGS}"
+    export CXX="${PORT_CXXD}"
+    export CXXFLAGS="${PORT_CXXFLAGSD} ${PORT_EXTRA_CXXFLAGS}"
   fi
 
   if [ "${LDFLAGS}x" = "x" ]; then
-    BASE_LDFLAGS=""
-    export LDFLAGS="${BASE_LDFLAGS} ${PORT_EXTRA_LDFLAGS}"
+    export LDFLAGS="${PORT_LDFLAGSD} ${PORT_EXTRA_LDFLAGS}"
   fi
 
   export SSL_CERT_FILE="${PORT_CA}"
@@ -324,37 +322,34 @@ setEnv()
   fi
 
   if [ "${PORT_BOOTSTRAP}x" = "x" ]; then
-    export PORT_BOOTSTRAP="./bootstrap"
+    export PORT_BOOTSTRAP="${PORT_BOOSTRAPD}"
   fi
   if [ "${PORT_BOOTSTRAP_OPTS}x" = "x" ]; then
-    export PORT_BOOTSTRAP_OPTS=""
+    export PORT_BOOTSTRAP_OPTS="${PORT_BOOTSTRAP_OPTSD}"
   fi
   if [ "${PORT_CONFIGURE}x" = "x" ]; then
-    export PORT_CONFIGURE="./configure"
+    export PORT_CONFIGURE="${PORT_CONFIGURED}"
   fi
   if [ "${PORT_CONFIGURE_OPTS}x" = "x" ]; then
     export PORT_CONFIGURE_OPTS="--prefix=${PROD_DIR}"
   fi
   if [ "${PORT_MAKE}x" = "x" ]; then
-    PORT_MAKE="$(whence make)"
-    export PORT_MAKE
+    export PORT_MAKE="${PORT_MAKED}"
   fi
   if [ "${PORT_MAKE_OPTS}x" = "x" ]; then
     export PORT_MAKE_OPTS="-j${PORT_NUM_JOBS}"
   fi
   if [ "${PORT_CHECK}x" = "x" ]; then
-    PORT_CHECK="$(whence make)"
-    export PORT_MAKE
+    export PORT_CHECK="${PORT_CHECKD}"
   fi
   if [ "${PORT_CHECK_OPTS}x" = "x" ]; then
-    export PORT_CHECK_OPTS="check"
+    export PORT_CHECK_OPTS="${PORT_CHECK_OPTSD}"
   fi
   if [ "${PORT_INSTALL}x" = "x" ]; then
-    PORT_INSTALL="$(whence make)"
-		export PORT_INSTALL
+    export PORT_INSTALL="${PORT_INSTALLD}"
   fi
   if [ "${PORT_INSTALL_OPTS}x" = "x" ]; then
-    export PORT_INSTALL_OPTS="install"
+    export PORT_INSTALL_OPTS="${PORT_INSTALL_OPTSD}"
   fi
   LOG_PFX=$(date +%C%y%m%d_%H%M%S)
 }
