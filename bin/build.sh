@@ -14,7 +14,7 @@
 
 printSyntax() 
 {
-  args=$@
+  args=$*
   echo "" >&2
   echo "build.sh [<option>]*" >&2
   echo "  where <option> may be one or more of:" >&2
@@ -24,7 +24,7 @@ printSyntax()
 
 processOptions() 
 {
-  args=$@
+  args=$*
   verbose=false
   for arg in $args; do
     case $arg in
@@ -53,7 +53,7 @@ processOptions()
 
 defineColors() 
 {
-  if [ ! "${_BPX_TERMPATH-x}" = "OMVS" ] && [ -z ${NO_COLOR} ] && [ ! "${FORCE_COLOR-x}" = "0" ]; then
+  if [ ! "${_BPX_TERMPATH-x}" = "OMVS" ] && [ -z "${NO_COLOR}" ] && [ ! "${FORCE_COLOR-x}" = "0" ]; then
     esc="\047"
     RED="${esc}[31m"
     GREEN="${esc}[32m"
@@ -116,7 +116,7 @@ checkDeps()
     fi
   done
   if $fail ; then
-    exit 4
+    return 4
   fi
 }
 
@@ -132,6 +132,13 @@ checkEnv()
   # For software packages that only support one type, you can just specify PORT_URL, PORT_DEPS, and PORT_TYPE.
   #
   printHeader "Checking environment configuration"
+
+  if [ "${PORT_ROOT}x" = "x" ]; then
+    printError "PORT_ROOT needs to be defined to the root directory of the tool being ported"
+  fi
+  if ! [ -d "${PORT_ROOT}" ]; then
+    printError "PORT_ROOT ${PORT_ROOT} is not a directory"
+  fi
 
   if [ "${PORT_TYPE}x" = "TARBALLx" ]; then
     if [ "${PORT_TARBALL_URL}x" = "x" ]; then
@@ -152,15 +159,8 @@ checkEnv()
     printError "PORT_TYPE must be one of TARBALL or GIT. PORT_TYPE=${PORT_TYPE} was specified"
   fi
 
-  if [ "${PORT_ROOT}x" = "x" ]; then
-    printError "PORT_ROOT needs to be defined to the root directory of the tool being ported"
-  fi
-  if ! [ -d "${PORT_ROOT}" ]; then
-    printError "PORT_ROOT ${PORT_ROOT} is not a directory"
-  fi
-
-  PORT_CHECK_RESULTS="${PORT_ROOT}/portchk.sh"
-  PORT_CREATE_ENV="${PORT_ROOT}/portcrtenv.sh"
+  export PORT_CHECK_RESULTS="${PORT_ROOT}/portchk.sh"
+  export PORT_CREATE_ENV="${PORT_ROOT}/portcrtenv.sh"
   if ! [ -x "${PORT_CHECK_RESULTS}" ]; then
     printError "${PORT_CHECK_RESULTS} script needs to be provided to check the results. Exit with 0 if the build can be installed"
   fi
@@ -168,7 +168,7 @@ checkEnv()
     printError "${PORT_CREATE_ENV} script needs to be provided to define the environment"
   fi
 
-  if [ "${PORT_TARBALL}x" != "x" ]; then
+  if [ "${PORT_TYPE}x" = "TARBALLx" ]; then
     if [ "${PORT_TARBALL_URL}x" = "x" ]; then
       printError "PORT_URL or PORT_TARBALL_URL needs to be defined to the root directory of the tool being ported"
     fi
@@ -176,8 +176,7 @@ checkEnv()
       printError "PORT_DEPS or PORT_TARBALL_DEPS needs to be defined to the ported tools this depends on"
     fi
     deps="${PORT_TARBALL_DEPS}"
-  fi
-  if [ "${PORT_GIT}x" != "x" ]; then
+  elif [ "${PORT_TYPE}x" = "GITx" ]; then
     if [ "${PORT_GIT_URL}x" = "x" ]; then
       printError "PORT_URL or PORT_GIT_URL needs to be defined to the root directory of the tool being ported"
     fi
@@ -187,11 +186,11 @@ checkEnv()
     deps="${PORT_GIT_DEPS}"
   fi
 
-  checkDeps ${deps}
+  checkDeps "${deps}"    
 
-  ca="${myparentdir}/cacert.pem"
-  if ! [ -r "${ca}" ]; then
-    printError "Internal Error. Certificate ${ca} is required"
+  export PORT_CA="${utilparentdir}/cacert.pem"
+  if ! [ -r "${PORT_CA}" ]; then
+    printError "Internal Error. Certificate ${PORT_CA} is required"
   fi
 
   #
@@ -209,6 +208,12 @@ checkEnv()
 
 setDepsEnv()
 {
+  if [ "${PORT_TYPE}x" = "TARBALLx" ]; then
+    deps="${PORT_TARBALL_DEPS}"
+  else
+    deps="${PORT_GIT_DEPS}"
+  fi
+
   orig="${PWD}"
   for dep in $deps; do
     if [ -r "${HOME}/zot/prod/${dep}/.env" ]; then
@@ -220,10 +225,10 @@ setDepsEnv()
     else
       printError "Internal error. Unable to find .env for ${deps} but earlier check should have caught this"
     fi
-    printVerbose "Setting up environment for: ${depdir}"
-    cd ${depdir} && . ./.env
+    printVerbose "Setting up ${depdir} dependency environment"
+    cd "${depdir}" && . ./.env
   done
-  cd "${orig}"
+  cd "${orig}" || exit 99
 }
 
 setEnv()
@@ -248,15 +253,15 @@ setEnv()
     export LDFLAGS="${BASE_LDFLAGS} ${PORT_EXTRA_LDFLAGS}"
   fi
 
-  export SSL_CERT_FILE="${ca}"
-  export GIT_SSL_CAINFO="${ca}"
+  export SSL_CERT_FILE="${PORT_CA}"
+  export GIT_SSL_CAINFO="${PORT_CA}"
 
-  setDepsEnv $deps
+  setDepsEnv
 
   PROD_DIR="${HOME}/zot/prod/${dir}"
 
   if [ "${PORT_NUM_JOBS}x" = "x" ]; then
-    PORT_NUM_JOBS=$("${mydir}/numcpus.rexx")
+    PORT_NUM_JOBS=$("${utildir}/numcpus.rexx")
 
     # Use half of the CPUs by default
     export PORT_NUM_JOBS=$((PORT_NUM_JOBS / 2))
@@ -279,19 +284,22 @@ setEnv()
     export PORT_CONFIGURE_OPTS="--prefix=${PROD_DIR}"
   fi
   if [ "${PORT_MAKE}x" = "x" ]; then
-    export PORT_MAKE=$(whence make)
+    PORT_MAKE="$(whence make)"
+    export PORT_MAKE
   fi
   if [ "${PORT_MAKE_OPTS}x" = "x" ]; then
     export PORT_MAKE_OPTS="-j${PORT_NUM_JOBS}"
   fi
   if [ "${PORT_CHECK}x" = "x" ]; then
-    export PORT_CHECK=$(whence make)
+    PORT_CHECK="$(whence make)"
+    export PORT_MAKE
   fi
   if [ "${PORT_CHECK_OPTS}x" = "x" ]; then
     export PORT_CHECK_OPTS="check"
   fi
   if [ "${PORT_INSTALL}x" = "x" ]; then
-    export PORT_INSTALL=$(whence make)
+    PORT_INSTALL="$(whence make)"
+		export PORT_INSTALL
   fi
   if [ "${PORT_INSTALL_OPTS}x" = "x" ]; then
     export PORT_INSTALL_OPTS="install"
@@ -306,8 +314,8 @@ setEnv()
 tagTree()
 {
   dir="$1"
-  find "${dir}" -name "*.pdf" -o -name "*.png" ! -type d ! -type l | xargs chtag -b
-  find "${dir}" ! -type d ! -type l | xargs chtag -qp | awk '{ if ($1 == "-") { print $4; }}' | xargs chtag -tcISO8859-1
+  find "${dir}" -name "*.pdf" -o -name "*.png" -o -name "*.bat" ! -type d ! -type l -print0 | xargs chtag -b
+  find "${dir}" ! -type d ! -type l -print0 | xargs chtag -qp | awk '{ if ($1 == "-") { print $4; }}' | xargs chtag -tcISO8859-1
 }
 
 gitClone()
@@ -316,7 +324,7 @@ gitClone()
     printError "git is required to download from the git repo"
   fi
 
-  gitname=$(basename $PORT_GIT_URL)
+  gitname=$(basename "$PORT_GIT_URL")
   dir=${gitname%%.*}
   if [ -d "${dir}" ]; then
     printInfo "Using existing git clone'd directory ${dir}" 
@@ -378,7 +386,7 @@ extractTarBall()
   fi
 
   files=$(find . ! -name "*.pdf" ! -name "*.png" ! -type d)
-  if ! git init . >$STDERR || ! git add -f ${files} >$STDERR || ! git commit --allow-empty -m "Create Repository for patch management" >$STDERR; then
+  if ! git init . >$STDERR || ! git add -f "${files}" >$STDERR || ! git commit --allow-empty -m "Create Repository for patch management" >$STDERR; then
     printError "Unable to initialize git repository for tarball"
   fi
   # Having the directory git-managed exposes some problems in the current git for software like autoconf,
@@ -392,7 +400,7 @@ downloadTarBall()
   if ! curl --version >$STDOUT 2>$STDERR; then
     printError "curl is required to download a tarball"
   fi
-  tarballz=$(basename $PORT_TARBALL_URL)
+  tarballz=$(basename "$PORT_TARBALL_URL")
   dir=${tarballz%%.tar.*}
   if [ -d "${dir}" ]; then
     echo "Using existing tarball directory ${dir}" >&2
@@ -424,11 +432,11 @@ downloadTarBall()
 applyPatches()
 {
   printHeader "Applying patches"
-  if [ "${PORT_TARBALL}x" != "x" ]; then
-    tarballz=$(basename $PORT_TARBALL_URL)
+  if [ "${PORT_TYPE}x" = "TARBALLx" ]; then
+    tarballz=$(basename "$PORT_TARBALL_URL")
     code_dir="${PORT_ROOT}/${tarballz%%.tar.*}"
   else
-    gitname=$(basename $PORT_GIT_URL)
+    gitname=$(basename "$PORT_GIT_URL")
     code_dir="${PORT_ROOT}/${gitname%%.*}"
   fi
 
@@ -449,8 +457,8 @@ applyPatches()
     return 0
   fi
 
-  patches=$( (cd ${patch_dir} && find . -name "*.patch"))
-  results=$( (cd ${code_dir} && git status --porcelain --untracked-files=no 2>&1))
+  patches=$( (cd "${patch_dir}" && find . -name "*.patch"))
+  results=$( (cd "${code_dir}" && git status --porcelain --untracked-files=no 2>&1))
   failedcount=0
   if [ "${results}" != '' ]; then
     printInfo "Existing Changes are active in ${code_dir}."
@@ -460,12 +468,11 @@ applyPatches()
       p="${patch_dir}/${patch}"
 
       patchsize=$(wc -c "${p}" | awk '{ print $1 }')
-      if [ $patchsize -eq 0 ]; then
+      if [ ${patchsize} -eq 0 ]; then
         printWarning "Warning: patch file ${p} is empty - nothing to be done"
       else
         printInfo "Applying ${p}"
-        out=$( (cd ${code_dir} && git apply "${p}" 2>&1))
-        if [ $? -gt 0 ]; then
+        if ! out=$( (cd "${code_dir}" && git apply "${p}" 2>&1)); then
           printSoftError "Patch of make tree failed (${p})."
           printSoftError "${out}"
           failedcount=$((failedcount + 1))
@@ -543,7 +550,7 @@ configure()
 
 build()
 {
-  makelog="${LOG_PFX}_make.log"
+  makelog="${LOG_PFX}_build.log"
   if [ "${PORT_MAKE}x" != "skipx" ] && [ -x "${PORT_MAKE}" ]; then
     printHeader "Running Build"
     if ! "${PORT_MAKE}" ${PORT_MAKE_OPTS} >"${makelog}" 2>&1; then
@@ -588,27 +595,29 @@ install()
 # Start of 'main'
 #
 
-# set -x
+echo "" 
 
-if ! processOptions $@ ; then
+utildir=$( cd $(dirname "$0")/ || exit; echo $PWD)
+export utildir
+utilparentdir=$( cd $(dirname "$0")/../ || exit; echo $PWD)
+export utilparentdir
+
+set +x 
+
+if ! processOptions "$*" ; then
+  exit 4
+fi
+if ! defineColors; then
   exit 4
 fi
 
-mydir=$(
-  cd $(dirname $0)/
-  echo $PWD
-)
+if ! checkEnv; then
+	exit 4
+fi
 
-myparentdir=$(
-  cd $(dirname $0)/../
-  echo $PWD
-)
-
-defineColors
-
-checkEnv
-
-setEnv
+if ! setEnv; then
+	exit 4
+fi
 
 if ! dir=$(getCode); then
   exit 4
