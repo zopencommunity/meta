@@ -8,28 +8,74 @@
 # Each dependent tool will have it's corresponding environment set up by sourcing .env from the installation
 # directory. The .env will be searched for in $HOME/zot/prod/<tool>, /usr/bin/zot/prod/<tool>, $HOME/zot/boot/<tool>
 
-if [ ! ${_BPX_TERMPATH-x} = "OMVS" ] && [ -z ${NO_COLOR} ] && [ ! ${FORCE_COLOR-x} = "0" ]; then
-  esc="\047"
-  RED="${esc}[31m"
-  GREEN="${esc}[32m"
-  YELLOW="${esc}[33m"
-  BOLD="${esc}[1m"
-  UNDERLINE="${esc}[4m"
-  NC="${esc}[0m"
-else
-  unset esc RED GREEN YELLOW BOLD UNDERLINE NC
-fi
+#
+# Functions section
+#
+
+printSyntax() 
+{
+  args=$@
+  echo "" >&2
+  echo "build.sh [<option>]*" >&2
+  echo "  where <option> may be one or more of:" >&2
+  echo "  -h: print this information" >&2
+  echo "  -v: run in verbose mode" >&2
+}
+
+processOptions() 
+{
+  args=$@
+  verbose=false
+  for arg in $args; do
+    case $arg in
+      "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
+        printSyntax "${args}"
+        return 4
+        ;;
+      "-v" | "--v" | "-verbose" | "--verbose")
+        verbose=true
+        ;;
+      *)
+        printError "Unknown option ${arg} specified"
+        return 4
+        ;;
+    esac
+  done
+
+  if ${verbose}; then
+    STDOUT="/dev/fd1"
+    STDERR="/dev/fd2"
+  else
+    STDOUT="/dev/null"
+    STDERR="/dev/null"
+  fi
+}
+
+defineColors() 
+{
+  if [ ! "${_BPX_TERMPATH-x}" = "OMVS" ] && [ -z ${NO_COLOR} ] && [ ! "${FORCE_COLOR-x}" = "0" ]; then
+    esc="\047"
+    RED="${esc}[31m"
+    GREEN="${esc}[32m"
+    YELLOW="${esc}[33m"
+    BOLD="${esc}[1m"
+    UNDERLINE="${esc}[4m"
+    NC="${esc}[0m"
+  else
+    unset esc RED GREEN YELLOW BOLD UNDERLINE NC
+  fi
+}
 
 printVerbose()
 {
-  if [ ! "${PORT_VERBOSE}x" = "x" ]; then
-    print "${NC}${GREEN}${BOLD}VERBOSE${NC}: '${1}'"
+  if ${verbose}; then
+    print "${NC}${GREEN}${BOLD}VERBOSE${NC}: '${1}'" >&2
   fi
 }
 
 printHeader()
 {
-  print "${NC}${UNDERLINE}${1}...${NC}"
+  print "${NC}${UNDERLINE}${1}...${NC}" >&2
 }
 
 runAndLog()
@@ -54,7 +100,12 @@ printWarning()
   print "${NC}${YELLOW}${BOLD}***WARNING: ${NC}${YELLOW}${1}${NC}" >&2
 }
 
-checkdeps()
+printInfo()
+{
+  print "$1" >&2
+}
+
+checkDeps()
 {
   deps=$*
   fail=false
@@ -69,7 +120,94 @@ checkdeps()
   fi
 }
 
-setdepsenv()
+checkEnv()
+{
+  #
+  # Specify PORT_TYPE as either TARBALL or GIT
+  # To specify a URL, you can either be specific (e.g. PORT_TARBALL_URL or PORT_GIT_URL) or you can be general (e.g. PORT_URL)
+  # and to specify DEPS, you can either be specific (e.g. PORT_TARBALL_DEPS or PORT_GIT_DEPS) or you can be general (e.g. PORT_DEPS).
+  # This flexibility is nice so that for software packages that support both types (e.g. gnu make), you can provide all of
+  # PORT_TARBALL_URL, PORT_TARBALL_DEPS, PORT_GIT_URL, PORT_GIT_DEPS in your environment set up and then specify the type using
+  # PORT_TYPE=GIT|URL (e.g. only one line needs to be changed).
+  # For software packages that only support one type, you can just specify PORT_URL, PORT_DEPS, and PORT_TYPE.
+  #
+  printHeader "Checking environment configuration"
+
+  if [ "${PORT_TYPE}x" = "TARBALLx" ]; then
+    if [ "${PORT_TARBALL_URL}x" = "x" ]; then
+      export PORT_TARBALL_URL="${PORT_URL}"
+    fi
+    if [ "${PORT_TARBALL_DEPS}x" = "x" ]; then
+      export PORT_TARBALL_DEPS="${PORT_DEPS}"
+    fi
+  elif [ "${PORT_TYPE}x" = "GITx" ]; then
+    if [ "${PORT_GIT_URL}x" = "x" ]; then
+      export PORT_GIT_URL="${PORT_URL}"
+    fi
+
+    if [ "${PORT_GIT_DEPS}x" = "x" ]; then
+      export PORT_GIT_DEPS="${PORT_DEPS}"
+    fi
+  else
+    printError "PORT_TYPE must be one of TARBALL or GIT. PORT_TYPE=${PORT_TYPE} was specified"
+  fi
+
+  if [ "${PORT_ROOT}x" = "x" ]; then
+    printError "PORT_ROOT needs to be defined to the root directory of the tool being ported"
+  fi
+  if ! [ -d "${PORT_ROOT}" ]; then
+    printError "PORT_ROOT ${PORT_ROOT} is not a directory"
+  fi
+
+  PORT_CHECK_RESULTS="${PORT_ROOT}/portchk.sh"
+  PORT_CREATE_ENV="${PORT_ROOT}/portcrtenv.sh"
+  if ! [ -x "${PORT_CHECK_RESULTS}" ]; then
+    printError "${PORT_CHECK_RESULTS} script needs to be provided to check the results. Exit with 0 if the build can be installed"
+  fi
+  if ! [ -x "${PORT_CREATE_ENV}" ]; then
+    printError "${PORT_CREATE_ENV} script needs to be provided to define the environment"
+  fi
+
+  if [ "${PORT_TARBALL}x" != "x" ]; then
+    if [ "${PORT_TARBALL_URL}x" = "x" ]; then
+      printError "PORT_URL or PORT_TARBALL_URL needs to be defined to the root directory of the tool being ported"
+    fi
+    if [ "${PORT_TARBALL_DEPS}x" = "x" ]; then
+      printError "PORT_DEPS or PORT_TARBALL_DEPS needs to be defined to the ported tools this depends on"
+    fi
+    deps="${PORT_TARBALL_DEPS}"
+  fi
+  if [ "${PORT_GIT}x" != "x" ]; then
+    if [ "${PORT_GIT_URL}x" = "x" ]; then
+      printError "PORT_URL or PORT_GIT_URL needs to be defined to the root directory of the tool being ported"
+    fi
+    if [ "${PORT_GIT_DEPS}x" = "x" ]; then
+      printError "PORT_DEPS or PORT_GIT_DEPS needs to be defined to the ported tools this depends on"
+    fi
+    deps="${PORT_GIT_DEPS}"
+  fi
+
+  checkDeps ${deps}
+
+  ca="${myparentdir}/cacert.pem"
+  if ! [ -r "${ca}" ]; then
+    printError "Internal Error. Certificate ${ca} is required"
+  fi
+
+  #
+  # For the compilers and corresponding flags, you need to either specify both the compiler and flag, or neither
+  # since the flags are not compatible across compilers, and only the xlclang and xlclang++ compilers are used by default
+  #
+
+  if [ "${CC}x" = "x" ] && [ "${CFLAGS}x" != "x" ]; then
+    printError "Either specify both CC and CFLAGS or neither, but not just one"
+  fi
+  if [ "${CXX}x" = "x" ] && [ "${CXXFLAGS}x" != "x" ]; then
+    printError "Either specify both CXX and CXXFLAGS or neither, but not just one"
+  fi
+}
+
+setDepsEnv()
 {
   orig="${PWD}"
   for dep in $deps; do
@@ -88,28 +226,102 @@ setdepsenv()
   cd "${orig}"
 }
 
+setEnv()
+{
+  if [ "${CPPFLAGS}x" = "x" ]; then
+    export CPPFLAGS="-DNSIG=9 -D_XOPEN_SOURCE=600 -D_ALL_SOURCE -D_OPEN_SYS_FILE_EXT=1 -D_AE_BIMODAL=1 -D_ENHANCED_ASCII_EXT=0xFFFFFFFF"
+  fi
+  if [ "${CC}x" = "x" ]; then
+    export CC=xlclang
+    export CFLAGS="-qascii ${PORT_EXTRA_CFLAGS}"
+    BASE_CFLAGS="-qascii -DNSIG=39 -D_XOPEN_SOURCE=600 -D_ALL_SOURCE -D_OPEN_SYS_FILE_EXT=1 -D_AE_BIMODAL=1 -D_ENHANCED_ASCII_EXT=0xFFFFFFFF"
+    export CFLAGS="${BASE_CFLAGS} ${PORT_EXTRA_CFLAGS}"
+  fi
+
+  if [ "${CXX}x" = "x" ]; then
+    export CXX=xlclang++
+    export CXXFLAGS="-+ -qascii ${PORT_EXTRA_CXXFLAGS}"
+  fi
+
+  if [ "${LDFLAGS}x" = "x" ]; then
+    BASE_LDFLAGS=""
+    export LDFLAGS="${BASE_LDFLAGS} ${PORT_EXTRA_LDFLAGS}"
+  fi
+
+  export SSL_CERT_FILE="${ca}"
+  export GIT_SSL_CAINFO="${ca}"
+
+  setDepsEnv $deps
+
+  PROD_DIR="${HOME}/zot/prod/${dir}"
+
+  if [ "${PORT_NUM_JOBS}x" = "x" ]; then
+    PORT_NUM_JOBS=$("${mydir}/numcpus.rexx")
+
+    # Use half of the CPUs by default
+    export PORT_NUM_JOBS=$((PORT_NUM_JOBS / 2))
+  fi
+
+  if [ $PORT_NUM_JOBS -lt 1 ]; then
+    export PORT_NUM_JOBS=1
+  fi
+
+  if [ "${PORT_BOOTSTRAP}x" = "x" ]; then
+    export PORT_BOOTSTRAP="./bootstrap"
+  fi
+  if [ "${PORT_BOOTSTRAP_OPTS}x" = "x" ]; then
+    export PORT_BOOTSTRAP_OPTS=""
+  fi
+  if [ "${PORT_CONFIGURE}x" = "x" ]; then
+    export PORT_CONFIGURE="./configure"
+  fi
+  if [ "${PORT_CONFIGURE_OPTS}x" = "x" ]; then
+    export PORT_CONFIGURE_OPTS="--prefix=${PROD_DIR}"
+  fi
+  if [ "${PORT_MAKE}x" = "x" ]; then
+    export PORT_MAKE=$(whence make)
+  fi
+  if [ "${PORT_MAKE_OPTS}x" = "x" ]; then
+    export PORT_MAKE_OPTS="-j${PORT_NUM_JOBS}"
+  fi
+  if [ "${PORT_CHECK}x" = "x" ]; then
+    export PORT_CHECK=$(whence make)
+  fi
+  if [ "${PORT_CHECK_OPTS}x" = "x" ]; then
+    export PORT_CHECK_OPTS="check"
+  fi
+  if [ "${PORT_INSTALL}x" = "x" ]; then
+    export PORT_INSTALL=$(whence make)
+  fi
+  if [ "${PORT_INSTALL_OPTS}x" = "x" ]; then
+    export PORT_INSTALL_OPTS="install"
+  fi
+  LOG_PFX=$(date +%C%y%m%d_%H%M%S)
+}
+
 #
 # 'Quick' way to find untagged non-binary files. If the list of extensions grows, something more
 # elegant is required
 #
-tagtree()
+tagTree()
 {
   dir="$1"
   find "${dir}" -name "*.pdf" -o -name "*.png" ! -type d ! -type l | xargs chtag -b
   find "${dir}" ! -type d ! -type l | xargs chtag -qp | awk '{ if ($1 == "-") { print $4; }}' | xargs chtag -tcISO8859-1
 }
 
-gitclone()
+gitClone()
 {
   if ! git --version >$STDOUT 2>$STDERR; then
     printError "git is required to download from the git repo"
   fi
+
   gitname=$(basename $PORT_GIT_URL)
   dir=${gitname%%.*}
   if [ -d "${dir}" ]; then
-    echo "Using existing git clone'd directory ${dir}" >$STDERR
+    printInfo "Using existing git clone'd directory ${dir}" 
   else
-    echo "Clone and create ${dir}" >$STDERR
+    printInfo "Clone and create ${dir}" 
     if ! git clone "${PORT_GIT_URL}" 2>$STDERR; then
       printError "Unable to clone ${gitname} from ${PORT_GIT_URL}"
     fi
@@ -118,12 +330,12 @@ gitclone()
         printError"Unable to checkout ${PORT_GIT_URL} branch ${PORT_GIT_BRANCH}"
       fi
     fi
-    tagtree "${dir}"
+    tagTree "${dir}"
   fi
   echo "${dir}"
 }
 
-extracttarball()
+extractTarBall()
 {
   tarballz="$1"
   dir="$2"
@@ -152,7 +364,7 @@ extracttarball()
   # tar will incorrectly tag files as 1047, so just clear the tags
   chtag -R -r "${dir}"
 
-  tagtree "${dir}"
+  tagTree "${dir}"
   cd "${dir}" || printError "Cannot cd to ${dir}"
   if [ -f .gitattributes ]; then
     printError "No support for existing .gitattributes file. Write some code"
@@ -175,7 +387,7 @@ extracttarball()
   mv .git .git-for-patches
 }
 
-downloadtarball()
+downloadTarBall()
 {
   if ! curl --version >$STDOUT 2>$STDERR; then
     printError "curl is required to download a tarball"
@@ -194,7 +406,7 @@ downloadtarball()
     # curl tags the file as ISO8859-1 (oops) so the tag has to be removed
     chtag -b "${tarballz}"
 
-    extracttarball "${tarballz}" "${dir}"
+    extractTarBall "${tarballz}" "${dir}"
   fi
   echo "${dir}"
 }
@@ -209,7 +421,7 @@ downloadtarball()
 #  -For each file you have changed:
 #   -cd to the code directory and perform git diff <filename> >${PORT_ROOT}/patches/PR<x>/<filename>.patch
 #
-applypatches()
+applyPatches()
 {
   printHeader "Applying patches"
   if [ "${PORT_TARBALL}x" != "x" ]; then
@@ -233,7 +445,7 @@ applypatches()
   fi
 
   if ! [ -d "${code_dir}/.git" ]; then
-    printWarning "applypatches requires ${code_dir} to be git-managed but there is no .git directory. No patches applied"
+    printWarning "applyPatches requires ${code_dir} to be git-managed but there is no .git directory. No patches applied"
     return 0
   fi
 
@@ -241,8 +453,8 @@ applypatches()
   results=$( (cd ${code_dir} && git status --porcelain --untracked-files=no 2>&1))
   failedcount=0
   if [ "${results}" != '' ]; then
-    echo "Existing Changes are active in ${code_dir}." >$STDERR
-    echo "To re-apply patches, perform a git reset on ${code_dir} prior to running applypatches again." >$STDERR
+    printInfo "Existing Changes are active in ${code_dir}."
+    printInfo "To re-apply patches, perform a git reset on ${code_dir} prior to running applyPatches again."
   else
     for patch in $patches; do
       p="${patch_dir}/${patch}"
@@ -251,7 +463,7 @@ applypatches()
       if [ $patchsize -eq 0 ]; then
         printWarning "Warning: patch file ${p} is empty - nothing to be done"
       else
-        echo "Applying ${p}"
+        printInfo "Applying ${p}"
         out=$( (cd ${code_dir} && git apply "${p}" 2>&1))
         if [ $? -gt 0 ]; then
           printSoftError "Patch of make tree failed (${p})."
@@ -271,265 +483,161 @@ applypatches()
   return 0
 }
 
+getCode()
+{
+  printHeader "Building ${PORT_ROOT}"
+  cd "${PORT_ROOT}" || exit 99
+
+  if [ "${PORT_TYPE}x" = "GITx" ]; then
+    printInfo "Checking if git directory already cloned"
+    if ! dir=$(gitClone) ; then 
+      return 4
+    fi
+  elif [ "${PORT_TYPE}x" = "TARBALLx" ]; then
+    printInfo "Checking if tarball already downloaded"
+    if ! dir=$(downloadTarBall) ; then 
+      return 4
+    fi
+  else
+    printError "PORT_TYPE should be one of GIT or TARBALL"
+    return 4
+  fi
+  echo "${dir}"
+}
+
+bootstrap()
+{
+  if [ "${PORT_BOOTSTRAP}x" != "skipx" ] && [ -x "${PORT_BOOTSTRAP}" ]; then
+    printHeader "Running Bootstrap"
+    if [ -r bootstrap.success ]; then
+      echo "Using previous successful bootstrap" >&2
+    else
+      bootlog="${LOG_PFX}_bootstrap.log"
+      if ! runAndLog "\"${PORT_BOOTSTRAP}\" ${PORT_BOOTSTRAP_OPTS} >${bootlog} 2>&1"; then
+        printError "Bootstrap failed. Log: ${bootlog}" >&2
+      fi
+      touch bootstrap.success
+    fi
+  else
+    printHeader "Skip Bootstrap"
+  fi
+}
+
+configure()
+{
+  if [ "${PORT_CONFIGURE}x" != "skipx" ] && [ -x "${PORT_CONFIGURE}" ]; then
+    printHeader "Running Configure"
+    if [ -r config.success ]; then
+      echo "Using previous successful configuration" >&2
+    else
+      configlog="${LOG_PFX}_config.log"
+      if ! runAndLog "\"${PORT_CONFIGURE}\" CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\" ${PORT_CONFIGURE_OPTS} >\"${configlog}\" 2>&1"; then
+        printError "Configure failed. Log: ${configlog}"
+      fi
+      touch config.success
+    fi
+  else
+    printHeader "Skip Configure"
+  fi
+}
+
+build()
+{
+  makelog="${LOG_PFX}_make.log"
+  if [ "${PORT_MAKE}x" != "skipx" ] && [ -x "${PORT_MAKE}" ]; then
+    printHeader "Running Build"
+    if ! "${PORT_MAKE}" ${PORT_MAKE_OPTS} >"${makelog}" 2>&1; then
+      printError "Make failed. Log: ${makelog}"
+    fi
+  else
+    printHeader "Skipping Build"
+  fi
+}
+
+check()
+{
+  checklog="${LOG_PFX}_check.log"
+  if [ "${PORT_CHECK}x" != "skipx" ] && [ -x "${PORT_CHECK}" ]; then
+    printHeader "Running Check"
+    "${PORT_CHECK}" ${PORT_CHECK_OPTS} >"${checklog}" 2>&1
+    if ! "${PORT_CHECK_RESULTS}" "./${dir}" "${LOG_PFX}"; then
+      printError "Check failed. Log: ${checklog}"
+    fi
+  else
+    printHeader "Skipping Check"
+  fi
+}
+
+install()
+{
+  if [ "${PORT_INSTALL}x" != "skipx" ] && [ -x "${PORT_INSTALL}" ]; then
+    printHeader "Running Install"
+    installlog="${LOG_PFX}_install.log"
+    if ! "${PORT_INSTALL}" ${PORT_INSTALL_OPTS} >"${installlog}" 2>&1; then
+      printError "Install failed. Log: ${installlog}"
+    fi
+    if ! "${PORT_CREATE_ENV}" "${PROD_DIR}" "${LOG_PFX}"; then
+      printError "Environment creation failed."
+    fi
+  else 
+    printHeader "Skipping Install"
+  fi
+}
+
 #
 # Start of 'main'
 #
-myparentdir=$(
-  cd $(dirname $0)/../
-  echo $PWD
-)
+
+# set -x
+
+if ! processOptions $@ ; then
+  exit 4
+fi
 
 mydir=$(
   cd $(dirname $0)/
   echo $PWD
 )
 
-set +x
-if [ "$1" = "-v" ]; then
-  verbose=true
-  PORT_VERBOSE='Y'
-  STDOUT="/dev/fd1"
-  STDERR="/dev/fd2"
-else
-  STDOUT="/dev/null"
-  STDERR="/dev/null"
-  verbose=false
-fi
-PORT_CHECK_RESULTS="${PORT_ROOT}/portchk.sh"
-PORT_CREATE_ENV="${PORT_ROOT}/portcrtenv.sh"
-LOG_PFX=$(date +%C%y%m%d_%H%M%S)
+myparentdir=$(
+  cd $(dirname $0)/../
+  echo $PWD
+)
 
-#
-# Temporary - support PORT_TARBALL / PORT_GIT _and_ PORT_TYPE until I switch everything over to use PORT_TYPE
-# To specify a URL, you can either be specific (e.g. PORT_TARBALL_URL or PORT_GIT_URL) or you can be general (e.g. PORT_URL)
-# and to specify DEPS, you can either be specific (e.g. PORT_TARBALL_DEPS or PORT_GIT_DEPS) or you can be general (e.g. PORT_DEPS).
-# This flexibility is nice so that for software packages that support both types (e.g. gnu make), you can provide all of
-# PORT_TARBALL_URL, PORT_TARBALL_DEPS, PORT_GIT_URL, PORT_GIT_DEPS in your environment set up and then specify the type using
-# PORT_TYPE=GIT|URL (e.g. only one line needs to be changed).
-# For software packages that only support one type, you can just specify PORT_URL, PORT_DEPS, and PORT_TYPE.
-#
-printHeader "Checking setup"
-if [ "${PORT_TARBALL}x" = "x" ] && [ "${PORT_GIT}x" = "x" ]; then
-  if [ "${PORT_TYPE}x" = "x" ]; then
-    printError "One of PORT_TARBALL, PORT_GIT, or PORT_TYPE needs to be defined to specify where to pull source from"
-  elif [ "${PORT_TYPE}x" = "TARBALLx" ]; then
-    export PORT_TARBALL='Y'
-    if [ "${PORT_TARBALL_URL}x" = "x" ]; then
-      export PORT_TARBALL_URL="${PORT_URL}"
-    fi
-    if [ "${PORT_TARBALL_DEPS}x" = "x" ]; then
-      export PORT_TARBALL_DEPS="${PORT_DEPS}"
-    fi
-  elif [ "${PORT_TYPE}x" = "GITx" ]; then
-    export PORT_GIT='Y'
-    if [ "${PORT_GIT_URL}x" = "x" ]; then
-      export PORT_GIT_URL="${PORT_URL}"
-    fi
+defineColors
 
-    if [ "${PORT_GIT_DEPS}x" = "x" ]; then
-      export PORT_GIT_DEPS="${PORT_DEPS}"
-    fi
-  else
-    printError "PORT_TYPE must be one of TARBALL or GIT. PORT_TYPE=${PORT_TYPE} was specified"
-  fi
+checkEnv
+
+setEnv
+
+if ! dir=$(getCode); then
+  exit 4
 fi
 
-if [ "${PORT_ROOT}x" = "x" ]; then
-  printError "PORT_ROOT needs to be defined to the root directory of the tool being ported"
+if ! applyPatches; then
+  exit 4
 fi
-if ! [ -d "${PORT_ROOT}" ]; then
-  printError "PORT_ROOT ${PORT_ROOT} is not a directory"
-fi
-
-if ! [ -x "${PORT_CHECK_RESULTS}" ]; then
-  printError "${PORT_CHECK_RESULTS} script needs to be provided to check the results. Exit with 0 if the build can be installed"
-fi
-if ! [ -x "${PORT_CREATE_ENV}" ]; then
-  printError "${PORT_CREATE_ENV} script needs to be provided to define the environment"
-fi
-if [ "${PORT_TARBALL}x" = "x" ] && [ "${PORT_GIT}x" = "x" ]; then
-  printError "One of PORT_TARBALL or PORT_GIT needs to be defined to specify where to pull source from"
-fi
-if [ "${PORT_TARBALL}x" != "x" ] && [ "${PORT_GIT}x" != "x" ]; then
-  printError "Only one of PORT_TARBALL or PORT_GIT should be defined to specify where to pull source from (both are defined)"
-fi
-ca="${myparentdir}/cacert.pem"
-if ! [ -r "${ca}" ]; then
-  printError "Internal Error. Certificate ${ca} is required"
-fi
-if [ "${PORT_TARBALL}x" != "x" ]; then
-  if [ "${PORT_TARBALL_URL}x" = "x" ]; then
-    printError "PORT_URL or PORT_TARBALL_URL needs to be defined to the root directory of the tool being ported"
-  fi
-  if [ "${PORT_TARBALL_DEPS}x" = "x" ]; then
-    printError "PORT_DEPS or PORT_TARBALL_DEPS needs to be defined to the ported tools this depends on"
-  fi
-  export SSL_CERT_FILE="${ca}"
-  deps="${PORT_TARBALL_DEPS}"
-fi
-if [ "${PORT_GIT}x" != "x" ]; then
-  if [ "${PORT_GIT_URL}x" = "x" ]; then
-    printError "PORT_URL or PORT_GIT_URL needs to be defined to the root directory of the tool being ported"
-  fi
-  if [ "${PORT_GIT_DEPS}x" = "x" ]; then
-    printError "PORT_DEPS or PORT_GIT_DEPS needs to be defined to the ported tools this depends on"
-  fi
-  export GIT_SSL_CAINFO="${ca}"
-  deps="${PORT_GIT_DEPS}"
-fi
-
-checkdeps ${deps}
-
-#
-# For the compilers and corresponding flags, you need to either specify both the compiler and flag, or neither
-# since the flags are not compatible across compilers, and only the xlclang and xlclang++ compilers are used by default
-#
-
-if [ "${CC}x" = "x" ] && [ "${CFLAGS}x" != "x" ]; then
-  printError "Either specify both CC and CFLAGS or neither, but not just one"
-fi
-if [ "${CXX}x" = "x" ] && [ "${CXXFLAGS}x" != "x" ]; then
-  printError "Either specify both CXX and CXXFLAGS or neither, but not just one"
-fi
-
-if [ "${CPPFLAGS}x" = "x" ]; then
-  export CPPFLAGS="-DNSIG=9 -D_XOPEN_SOURCE=600 -D_ALL_SOURCE -D_OPEN_SYS_FILE_EXT=1 -D_AE_BIMODAL=1 -D_ENHANCED_ASCII_EXT=0xFFFFFFFF"
-fi
-if [ "${CC}x" = "x" ]; then
-  export CC=xlclang
-  export CFLAGS="-qascii ${PORT_EXTRA_CFLAGS}"
-  BASE_CFLAGS="-qascii -DNSIG=39 -D_XOPEN_SOURCE=600 -D_ALL_SOURCE -D_OPEN_SYS_FILE_EXT=1 -D_AE_BIMODAL=1 -D_ENHANCED_ASCII_EXT=0xFFFFFFFF"
-  export CFLAGS="${BASE_CFLAGS} ${PORT_EXTRA_CFLAGS}"
-fi
-
-if [ "${CXX}x" = "x" ]; then
-  export CXX=xlclang++
-  export CXXFLAGS="-+ -qascii ${PORT_EXTRA_CXXFLAGS}"
-fi
-
-if [ "${LDFLAGS}x" = "x" ]; then
-  BASE_LDFLAGS=""
-  export LDFLAGS="${BASE_LDFLAGS} ${PORT_EXTRA_LDFLAGS}"
-fi
-
-setdepsenv $deps
-
-cd "${PORT_ROOT}" || exit 99
-
-if [ "${PORT_GIT}x" != "x" ]; then
-  echo "Checking if git directory already cloned"
-  if ! dir=$(gitclone) ; then 
-    exit 4
-  fi
-fi
-
-if [ "${PORT_TARBALL}x" != "x" ]; then
-  echo "Checking if tarball already downloaded"
-  if ! dir=$(downloadtarball) ; then 
-    exit 4
-  fi
-fi
-PROD_DIR="${HOME}/zot/prod/${dir}"
-
-
-if [ "${PORT_NUM_JOBS}x" = "x" ]; then
-  PORT_NUM_JOBS=$("${mydir}/numcpus.rexx")
-
-  # Use half of the CPUs by default
-  export PORT_NUM_JOBS=$((PORT_NUM_JOBS / 2))
-fi
-
-if [ $PORT_NUM_JOBS -lt 1 ]; then
-  export PORT_NUM_JOBS=1
-fi
-
-if [ "${PORT_BOOTSTRAP}x" = "x" ]; then
-  export PORT_BOOTSTRAP="./bootstrap"
-fi
-if [ "${PORT_BOOTSTRAP_OPTS}x" = "x" ]; then
-  export PORT_BOOTSTRAP_OPTS=""
-fi
-if [ "${PORT_CONFIGURE}x" = "x" ]; then
-  export PORT_CONFIGURE="./configure"
-fi
-if [ "${PORT_CONFIGURE_OPTS}x" = "x" ]; then
-  export PORT_CONFIGURE_OPTS="--prefix=${PROD_DIR}"
-fi
-if [ "${PORT_MAKE}x" = "x" ]; then
-  export PORT_MAKE=$(whence make)
-fi
-if [ "${PORT_MAKE_OPTS}x" = "x" ]; then
-  export PORT_MAKE_OPTS="-j${PORT_NUM_JOBS}"
-fi
-if [ "${PORT_CHECK}x" = "x" ]; then
-  export PORT_CHECK=$(whence make)
-fi
-if [ "${PORT_CHECK_OPTS}x" = "x" ]; then
-  export PORT_CHECK_OPTS="check"
-fi
-if [ "${PORT_INSTALL}x" = "x" ]; then
-  export PORT_INSTALL=$(whence make)
-fi
-if [ "${PORT_INSTALL_OPTS}x" = "x" ]; then
-  export PORT_INSTALL_OPTS="install"
-fi
-
-applypatches
 
 cd "${PORT_ROOT}/${dir}" || exit 99
 
-# Proceed to build
-
-if [ "${PORT_BOOTSTRAP}x" != "skipx" ] && [ -x "${PORT_BOOTSTRAP}" ]; then
-  printHeader "Running Bootstrap"
-  if [ -r bootstrap.success ]; then
-    echo "Using previous successful bootstrap" >&2
-  else
-    bootlog="${LOG_PFX}_bootstrap.log"
-    if ! runAndLog "\"${PORT_BOOTSTRAP}\" ${PORT_BOOTSTRAP_OPTS} >${bootlog} 2>&1"; then
-      printError "Bootstrap failed. Log: ${bootlog}" >&2
-    fi
-    touch bootstrap.success
-  fi
+if ! bootstrap; then
+  exit 4
 fi
 
-if [ "${PORT_CONFIGURE}x" != "skipx" ] && [ -x "${PORT_CONFIGURE}" ]; then
-  printHeader "Running Configure"
-  if [ -r config.success ]; then
-    echo "Using previous successful configuration" >&2
-  else
-    configlog="${LOG_PFX}_config.log"
-    if ! runAndLog "\"${PORT_CONFIGURE}\" CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\" ${PORT_CONFIGURE_OPTS} >\"${configlog}\" 2>&1"; then
-      printError "Configure failed. Log: ${configlog}"
-    fi
-    touch config.success
-  fi
+if ! configure; then
+  exit 4
 fi
 
-makelog="${LOG_PFX}_make.log"
-if [ "${PORT_MAKE}x" != "skipx" ] && [ -x "${PORT_MAKE}" ]; then
-  printHeader "Running Make"
-  if ! "${PORT_MAKE}" ${PORT_MAKE_OPTS} >"${makelog}" 2>&1; then
-    printError "Make failed. Log: ${makelog}"
-  fi
+if ! build; then
+  exit 4
 fi
 
-checklog="${LOG_PFX}_check.log"
-if [ "${PORT_CHECK}x" != "skipx" ] && [ -x "${PORT_CHECK}" ]; then
-  printHeader "Running Check"
-  "${PORT_CHECK}" ${PORT_CHECK_OPTS} >"${checklog}" 2>&1
-  if ! "${PORT_CHECK_RESULTS}" "./${dir}" "${LOG_PFX}"; then
-    printError "Check failed. Log: ${checklog}"
-  fi
+if ! check; then
+  exit 4
 fi
 
-if [ "${PORT_INSTALL}x" != "skipx" ] && [ -x "${PORT_INSTALL}" ]; then
-  printHeader "Running Install"
-  installlog="${LOG_PFX}_install.log"
-  if ! "${PORT_INSTALL}" ${PORT_INSTALL_OPTS} >"${installlog}" 2>&1; then
-    printError "Install failed. Log: ${installlog}"
-  fi
-  if ! "${PORT_CREATE_ENV}" "${PROD_DIR}" "${LOG_PFX}"; then
-    printError "Environment creation failed."
-  fi
+if ! install; then
+  exit 4
 fi
+
+exit 0
