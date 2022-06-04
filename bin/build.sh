@@ -1,4 +1,4 @@
-OD/bin/sh
+#!/bin/sh
 #
 # General purpose build script for ZOSOpenTools ports
 #
@@ -57,10 +57,10 @@ setDefaults()
 	export PORT_BOOSTRAPD="./bootstrap"
 	export PORT_BOOSTRAP_OPTSD=""
 	export PORT_CONFIGURED="./configure"
-	export PORT_MAKED="$(whence make)"
-	export PORT_CHECKD="$(whence make)"
+	export PORT_MAKED="make"
+	export PORT_CHECKD="make"
 	export PORT_CHECK_OPTSD="check"
-	export PORT_INSTALLD="$(whence make)"
+	export PORT_INSTALLD="make"
 	export PORT_INSTALL_OPTSD="install"
 }
 
@@ -123,13 +123,13 @@ defineColors()
 printVerbose()
 {
   if ${verbose}; then
-    printf "${NC}${GREEN}${BOLD}VERBOSE${NC}: '${1}'" >&2
+    printf "${NC}${GREEN}${BOLD}VERBOSE${NC}: '${1}'\n" >&2
   fi
 }
 
 printHeader()
 {
-  printf "${NC}${UNDERLINE}${1}...${NC}" >&2
+  printf "${NC}${UNDERLINE}${1}...${NC}\n" >&2
 }
 
 runAndLog()
@@ -140,7 +140,7 @@ runAndLog()
 
 printSoftError()
 {
-  printf "${NC}${RED}${BOLD}***ERROR: ${NC}${RED}${1}${NC}" >&2
+  printf "${NC}${RED}${BOLD}***ERROR: ${NC}${RED}${1}${NC}\n" >&2
 }
 
 printError()
@@ -151,12 +151,12 @@ printError()
 
 printWarning()
 {
-  printf "${NC}${YELLOW}${BOLD}***WARNING: ${NC}${YELLOW}${1}${NC}" >&2
+  printf "${NC}${YELLOW}${BOLD}***WARNING: ${NC}${YELLOW}${1}${NC}\n" >&2
 }
 
 printInfo()
 {
-  printf "$1" >&2
+  printf "$1\n" >&2
 }
 
 checkDeps()
@@ -429,8 +429,8 @@ extractTarBall()
     printError "Unable to make .gitattributes ascii for tarball"
   fi
 
-  files=$(find . ! -name "*.pdf" ! -name "*.png" ! -type d)
-  if ! git init . >$STDERR || ! git add -f "${files}" >$STDERR || ! git commit --allow-empty -m "Create Repository for patch management" >$STDERR; then
+  files=$(find . ! -name "*.pdf" ! -name "*.png" ! -name "*.bat" ! -type d)
+  if ! git init . >$STDERR || ! git add -f ${files} >$STDERR || ! git commit --allow-empty -m "Create Repository for patch management" >$STDERR; then
     printError "Unable to initialize git repository for tarball"
   fi
   # Having the directory git-managed exposes some problems in the current git for software like autoconf,
@@ -595,7 +595,7 @@ configure()
 build()
 {
   makelog="${LOG_PFX}_build.log"
-  if [ "${PORT_MAKE}x" != "skipx" ] && [ -x "${PORT_MAKE}" ]; then
+  if [ "${PORT_MAKE}x" != "skipx" ] ; then
     printHeader "Running Build"
     if ! "${PORT_MAKE}" ${PORT_MAKE_OPTS} >"${makelog}" 2>&1; then
       printError "Make failed. Log: ${makelog}"
@@ -646,7 +646,7 @@ export utildir
 utilparentdir=$( cd $(dirname "$0")/../ || exit; echo $PWD)
 export utilparentdir
 
-set -x 
+set +x 
 
 if ! setDefaults; then
   exit 4
