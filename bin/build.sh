@@ -1,4 +1,4 @@
-#!/bin/sh
+OD/bin/sh
 #
 # General purpose build script for ZOSOpenTools ports
 #
@@ -57,11 +57,11 @@ setDefaults()
 	export PORT_BOOSTRAPD="./bootstrap"
 	export PORT_BOOSTRAP_OPTSD=""
 	export PORT_CONFIGURED="./configure"
-	export PORT_MAKED="make"
-	export PORT_CHECKD="make"
+	export PORT_MAKED="$(whence make)"
+	export PORT_CHECKD="$(whence make)"
 	export PORT_CHECK_OPTSD="check"
-	export PORT_INSTALLD="install"
-	export PORT_INSTALL_OPTSD=""
+	export PORT_INSTALLD="$(whence make)"
+	export PORT_INSTALL_OPTSD="install"
 }
 
 printSyntax() 
@@ -97,7 +97,7 @@ processOptions()
   done
 
   if ${verbose}; then
-    STDOUT="/dev/fd1"
+    STDOUT="/dev/fd2"
     STDERR="/dev/fd2"
   else
     STDOUT="/dev/null"
@@ -123,13 +123,13 @@ defineColors()
 printVerbose()
 {
   if ${verbose}; then
-    print "${NC}${GREEN}${BOLD}VERBOSE${NC}: '${1}'" >&2
+    printf "${NC}${GREEN}${BOLD}VERBOSE${NC}: '${1}'" >&2
   fi
 }
 
 printHeader()
 {
-  print "${NC}${UNDERLINE}${1}...${NC}" >&2
+  printf "${NC}${UNDERLINE}${1}...${NC}" >&2
 }
 
 runAndLog()
@@ -140,7 +140,7 @@ runAndLog()
 
 printSoftError()
 {
-  print "${NC}${RED}${BOLD}***ERROR: ${NC}${RED}${1}${NC}" >&2
+  printf "${NC}${RED}${BOLD}***ERROR: ${NC}${RED}${1}${NC}" >&2
 }
 
 printError()
@@ -151,12 +151,12 @@ printError()
 
 printWarning()
 {
-  print "${NC}${YELLOW}${BOLD}***WARNING: ${NC}${YELLOW}${1}${NC}" >&2
+  printf "${NC}${YELLOW}${BOLD}***WARNING: ${NC}${YELLOW}${1}${NC}" >&2
 }
 
 printInfo()
 {
-  print "$1" >&2
+  printf "$1" >&2
 }
 
 checkDeps()
@@ -330,9 +330,6 @@ setEnv()
   if [ "${PORT_CONFIGURE}x" = "x" ]; then
     export PORT_CONFIGURE="${PORT_CONFIGURED}"
   fi
-  if [ "${PORT_CONFIGURE_OPTS}x" = "x" ]; then
-    export PORT_CONFIGURE_OPTS="--prefix=${PROD_DIR}"
-  fi
   if [ "${PORT_MAKE}x" = "x" ]; then
     export PORT_MAKE="${PORT_MAKED}"
   fi
@@ -361,8 +358,8 @@ setEnv()
 tagTree()
 {
   dir="$1"
-  find "${dir}" -name "*.pdf" -o -name "*.png" -o -name "*.bat" ! -type d ! -type l -print0 | xargs chtag -b
-  find "${dir}" ! -type d ! -type l -print0 | xargs chtag -qp | awk '{ if ($1 == "-") { print $4; }}' | xargs chtag -tcISO8859-1
+  find "${dir}" -name "*.pdf" -o -name "*.png" -o -name "*.bat" ! -type d ! -type l | xargs chtag -b
+  find "${dir}" ! -type d ! -type l | xargs chtag -qp | awk '{ if ($1 == "-") { print $4; }}' | xargs chtag -tcISO8859-1
 }
 
 gitClone()
@@ -649,7 +646,7 @@ export utildir
 utilparentdir=$( cd $(dirname "$0")/../ || exit; echo $PWD)
 export utilparentdir
 
-set +x 
+set -x 
 
 if ! setDefaults; then
   exit 4
@@ -675,7 +672,16 @@ if ! dir=$(getCode); then
   exit 4
 fi
 
+#
+# These variables can not be set until the 
+# software package name is determined
+# Perhaps we should glean this from the name
+# of the git package, e.g. makeport?
+#
 export PROD_DIR="${HOME}/zot/prod/${dir}"
+if [ "${PORT_CONFIGURE_OPTS}x" = "x" ]; then
+	export PORT_CONFIGURE_OPTS="--prefix=${PROD_DIR}"
+fi
 
 if ! applyPatches; then
   exit 4
