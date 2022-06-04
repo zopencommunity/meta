@@ -608,7 +608,7 @@ build()
 check()
 {
   checklog="${LOG_PFX}_check.log"
-  if [ "${PORT_CHECK}x" != "skipx" ] && [ -x "${PORT_CHECK}" ]; then
+  if [ "${PORT_CHECK}x" != "skipx" ] ; then
     printHeader "Running Check"
     "${PORT_CHECK}" ${PORT_CHECK_OPTS} >"${checklog}" 2>&1
     if ! "${PORT_CHECK_RESULTS}" "./${dir}" "${LOG_PFX}"; then
@@ -621,7 +621,7 @@ check()
 
 install()
 {
-  if [ "${PORT_INSTALL}x" != "skipx" ] && [ -x "${PORT_INSTALL}" ]; then
+  if [ "${PORT_INSTALL}x" != "skipx" ] ; then
     printHeader "Running Install"
     installlog="${LOG_PFX}_install.log"
     if ! "${PORT_INSTALL}" ${PORT_INSTALL_OPTS} >"${installlog}" 2>&1; then
