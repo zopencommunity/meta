@@ -3,10 +3,10 @@
 # General purpose build script for ZOSOpenTools ports
 #
 # PORT_ROOT must be defined to the root directory of the cloned ZOSOpenTools port
-# Either PORT_TARBALL or PORT_GIT must be defined (but not both). This indicates where to pull source from
+# PORT_TYPE must be defined to either TARBALL or GIT. This indicates the type of package to build
 #
-# Each dependent tool will have it's corresponding environment set up by sourcing .env from the installation
-# directory. The .env will be searched for in $HOME/zot/prod/<tool>, /usr/bin/zot/prod/<tool>, $HOME/zot/boot/<tool>
+# For more details, see the help which you can get by issuing:
+# build.sh -h
 
 #
 # Functions section
@@ -68,10 +68,20 @@ printSyntax()
 {
   args=$*
   echo "" >&2
-  echo "build.sh [<option>]*" >&2
+  echo "build.sh is a general purpose build script to be used with the ZOSOpenTools ports." >&2
+  echo "The specifics of how the tool works can be controlled through environment variables." >&2
+  echo "The only environment variables you _must_ specify are to tell build.sh where the " >&2 
+  echo "  source is, and in what format type the source is stored." >&2
+  echo "By default, the environment variables are defined in a file named setenv in the " >&2 
+  echo "  root directory of the <package>port github repository" >&2
+  echo "To see a fully functioning z/OSOpenTools sample port" >&2
+  echo "  see: https://github.com/ZOSOpenTools/zotaxmpport" >&2
+  echo "" >&2
+  echo "Syntax: build.sh [<option>]*" >&2
   echo "  where <option> may be one or more of:" >&2
   echo "  -h: print this information" >&2
   echo "  -v: run in verbose mode" >&2
+  echo "  -e <env file>: source <env file> instead of setenv to establish build environment" >&2
   opts=$(printEnvVar)
   echo "${opts}" >&2
 }
@@ -88,6 +98,10 @@ processOptions()
         ;;
       "-v" | "--v" | "-verbose" | "--verbose")
         verbose=true
+        ;;
+      "-e" | "--env")
+        printError "-e option not implemented yet"
+        return 4
         ;;
       *)
         printError "Unknown option ${arg} specified"
