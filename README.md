@@ -20,10 +20,12 @@ The `setenv.sh` file _must_ set the following environment variables:
 - `PORT_URL`: the URL where the source should be pulled from, including the `package.git` or `package-V.R.M.tar.gz` extension
 - `PORT_DEPS`: a space-separated list of all software dependencies this package has.
 Note that you can choose the fully-qualified environment variables PORT_GIT_URL, PORT_GIT_DEPS and PORT_TARBALL_URL, PORT_TARBALL_DEPS 
-accordingly if you prefer. See (https://github.com/ZOSOpenTools/autoconfport/blob/main/setenv.sh) for an example.
+accordingly if you prefer. See (https://github.com/ZOSOpenTools/zotsampleport/blob/main/setenv.sh) for an example.
 
 There are several additional environment variables that can be specified to provide finer-grained control of the build process. 
-For details see: (https://github.com/ZOSOpenTools/utils/blob/main/bin/build.sh). 
+For details
+- Run `build.sh -h` for a description of all the environment variables
+- Read the code: (https://github.com/ZOSOpenTools/utils/blob/main/bin/build.sh). 
 
 ### Running build.sh
 
