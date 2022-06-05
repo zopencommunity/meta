@@ -75,7 +75,7 @@ printSyntax()
   echo "By default, the environment variables are defined in a file named setenv in the " >&2 
   echo "  root directory of the <package>port github repository" >&2
   echo "To see a fully functioning z/OSOpenTools sample port" >&2
-  echo "  see: https://github.com/ZOSOpenTools/zotaxmpport" >&2
+  echo "  see: https://github.com/ZOSOpenTools/zotsampleport" >&2
   echo "" >&2
   echo "Syntax: build.sh [<option>]*" >&2
   echo "  where <option> may be one or more of:" >&2
