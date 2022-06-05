@@ -5,7 +5,8 @@
 ### Leveraging the ZOS Open Tools utils repo
 
 The utils repo (https://github.com/ZOSOpenTools/utils) consists of common tools and files that aid
-in the porting process.
+in the porting process, including `build.sh` which provides a common way to bootstrap, configure, build, check,
+and install a software package.
 
 Before you begin to build code, ensure that your environment is correctly configured
 
@@ -54,12 +55,5 @@ to share builds between developers on a system, if desired.
 
 Each tool is responsible for knowing how to set it's own environment up (e.g. PATH, LIBPATH, and any other environment variables).
 Each tool needs to provide a `.env` program that can be source'd from it's directory to set up it's environment. 
-In the example above, assume the only installed version of `m4` is `${HOME}/zot/boot/m4`. `build.sh` will:
-- `cd ${HOME}/zot/boot/m4`
-- `. ./env`
-to set up the environment for `m4`. If the `.env` file does not exist, the build will fail. 
-
-The `.env` files for each tool can be retrieved by running the `portcrtenv.sh` script that is provided either from the respective tool's repository, or the `utils` repository in the `env/` directory.  The `portcrtenv.sh` script can be run manually but it is also driven by the `build.sh` script to generate the `.env` file for tools built into the `prod/` directory (see more on `portcrtenv.sh` below).
-
-To generate the `.env` within `/target/dir` run the script like so: `portcrtenv.sh /target/dir`
-
+If you are building from a ZOSOpenTools port, this `.env` file will be created as part of the install process, but if you
+are providing a `boot` version of the tool (e.g. cURL), then you will need to provide your own version of `.env`. 
