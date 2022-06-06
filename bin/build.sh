@@ -37,7 +37,8 @@ PORT_NUM_JOBS       Number of jobs that can be run in parallel (defaults to 1/2 
 PORT_BOOTSTRAP      Bootstrap program to run. If skip is specified, no bootstrap step is performed (defaults to '${PORT_BOOTSTRAPD}')
 PORT_BOOTSTRAP_OPTS Options to pass to bootstrap program (defaults to '${PORT_BOOTSTRAP_OPTSD}')
 PORT_CONFIGURE      Configuration program to run. If skip is specified, no configuration step is performed (defaults to '${PORT_CONFIGURED}')
-PORT_CONFIGURE_OPTS Options to pass to configuration program (defaults to '--prefix=\${HOME}/zot/prod/<pkg>')
+PORT_CONFIGURE_OPTS Options to pass to configuration program (defaults to '--prefix=\${PORT_INSTALL_DIR}')
+PORT_INSTALL_DIR    Installation directory to pass to configuration (defaults to '\${HOME}/zot/prod/<pkg>')
 PORT_MAKE           Build program to run. If skip is specified, no build step is performed (defaults to '${PORT_MAKED}')
 PORT_MAKE_OPTS      Options to pass to build program (defaults to '-j\${PORT_NUM_JOBS}')
 PORT_CHECK          Check program to run. If skip is specified, no check step is performed (defaults to '${PORT_CHECKD}') 
@@ -67,6 +68,7 @@ setDefaults()
 printSyntax() 
 {
   args=$*
+  echo "" >&2
   echo "build.sh is a general purpose build script to be used with the ZOSOpenTools ports." >&2
   echo "The specifics of how the tool works can be controlled through environment variables." >&2
   echo "The only environment variables you _must_ specify are to tell build.sh where the " >&2 
@@ -644,7 +646,7 @@ install()
     if ! "${PORT_INSTALL}" ${PORT_INSTALL_OPTS} >"${installlog}" 2>&1; then
       printError "Install failed. Log: ${installlog}"
     fi
-    if ! "${PORT_CREATE_ENV}" "${PROD_DIR}" "${LOG_PFX}"; then
+    if ! "${PORT_CREATE_ENV}" "${PORT_INSTALL_DIR}" "${LOG_PFX}"; then
       printError "Environment creation failed."
     fi
   else 
@@ -663,6 +665,7 @@ export utilparentdir
 
 set +x 
 
+echo ""
 if ! setDefaults; then
   exit 4
 fi
@@ -693,9 +696,11 @@ fi
 # Perhaps we should glean this from the name
 # of the git package, e.g. makeport?
 #
-export PROD_DIR="${HOME}/zot/prod/${dir}"
+if [ "${PORT_INSTALL_DIR}x" = "x" ]; then
+	export PORT_INSTALL_DIR="${HOME}/zot/prod/${dir}"
+fi
 if [ "${PORT_CONFIGURE_OPTS}x" = "x" ]; then
-	export PORT_CONFIGURE_OPTS="--prefix=${PROD_DIR}"
+	export PORT_CONFIGURE_OPTS="--prefix=${PORT_INSTALL_DIR}"
 fi
 
 if ! applyPatches; then
