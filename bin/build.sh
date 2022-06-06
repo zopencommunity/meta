@@ -67,7 +67,6 @@ setDefaults()
 printSyntax() 
 {
   args=$*
-  echo "" >&2
   echo "build.sh is a general purpose build script to be used with the ZOSOpenTools ports." >&2
   echo "The specifics of how the tool works can be controlled through environment variables." >&2
   echo "The only environment variables you _must_ specify are to tell build.sh where the " >&2 
@@ -109,14 +108,6 @@ processOptions()
         ;;
     esac
   done
-
-  if ${verbose}; then
-    STDOUT="/dev/fd2"
-    STDERR="/dev/fd2"
-  else
-    STDOUT="/dev/null"
-    STDERR="/dev/null"
-  fi
 }
 
 defineColors() 
@@ -130,7 +121,15 @@ defineColors()
     UNDERLINE="${esc}[4m"
     NC="${esc}[0m"
   else
-    unset esc RED GREEN YELLOW BOLD UNDERLINE NC
+#    unset esc RED GREEN YELLOW BOLD UNDERLINE NC
+
+    esc=''
+    RED=''
+    GREEN=''
+    YELLOW=''
+    BOLD=''
+    UNDERLINE=''
+    NC=''
   fi
 }
 
@@ -315,6 +314,10 @@ setEnv()
     export CXXFLAGS="${PORT_CXXFLAGSD} ${PORT_EXTRA_CXXFLAGS}"
   fi
 
+	# For compatibility with the default 'make' /etc/startup.mk on z/OS
+	export CCC="${CXX}"
+	export CCCFLAGS="${CXXFLAGS}"
+
   if [ "${LDFLAGS}x" = "x" ]; then
     export LDFLAGS="${PORT_LDFLAGSD} ${PORT_EXTRA_LDFLAGS}"
   fi
@@ -378,7 +381,7 @@ tagTree()
 
 gitClone()
 {
-  if ! git --version >$STDOUT 2>$STDERR; then
+  if ! git --version >/dev/null 2>/dev/null; then
     printError "git is required to download from the git repo"
   fi
 
@@ -388,11 +391,11 @@ gitClone()
     printInfo "Using existing git clone'd directory ${dir}" 
   else
     printInfo "Clone and create ${dir}" 
-    if ! git clone "${PORT_GIT_URL}" 2>$STDERR; then
+    if ! git clone "${PORT_GIT_URL}" 2>/dev/null; then
       printError "Unable to clone ${gitname} from ${PORT_GIT_URL}"
     fi
     if [ "${PORT_GIT_BRANCH}x" != "x" ]; then
-      if ! git -C "${dir}" checkout "${PORT_GIT_BRANCH}" >$STDOUT; then
+      if ! git -C "${dir}" checkout "${PORT_GIT_BRANCH}" >/dev/null; then
         printError"Unable to checkout ${PORT_GIT_URL} branch ${PORT_GIT_BRANCH}"
       fi
     fi
@@ -421,7 +424,7 @@ extractTarBall()
     printError "Extension ${ext} is an unsupported compression technique. Add code"
   fi
 
-  tar -xf "${tarball}" 2>&1 >/dev/null | grep -v FSUM7171 >$STDERR
+  tar -xf "${tarball}" 2>&1 >/dev/null | grep -v FSUM7171 >/dev/null
   if [ $? -gt 1 ]; then
     printError "Unable to untar ${tarball}"
   fi
@@ -444,7 +447,7 @@ extractTarBall()
   fi
 
   files=$(find . ! -name "*.pdf" ! -name "*.png" ! -name "*.bat" ! -type d)
-  if ! git init . >$STDERR || ! git add -f ${files} >$STDERR || ! git commit --allow-empty -m "Create Repository for patch management" >$STDERR; then
+  if ! git init . >/dev/null || ! git add -f ${files} >/dev/null || ! git commit --allow-empty -m "Create Repository for patch management" >/dev/null; then
     printError "Unable to initialize git repository for tarball"
   fi
   # Having the directory git-managed exposes some problems in the current git for software like autoconf,
@@ -455,7 +458,7 @@ extractTarBall()
 
 downloadTarBall()
 {
-  if ! curl --version >$STDOUT 2>$STDERR; then
+  if ! curl --version >/dev/null; then
     printError "curl is required to download a tarball"
   fi
   tarballz=$(basename "$PORT_TARBALL_URL")
@@ -463,9 +466,9 @@ downloadTarBall()
   if [ -d "${dir}" ]; then
     echo "Using existing tarball directory ${dir}" >&2
   else
-    if ! curl -L -0 -o "${tarballz}" "${PORT_TARBALL_URL}" >$STDOUT 2>$STDERR; then
+    if ! curl -L -0 -o "${tarballz}" "${PORT_TARBALL_URL}" 2>/dev/null ; then
       if [ $(wc -c "${tarballz}" | awk '{print $1}') -lt 1024 ]; then
-        cat "${tarballz}" >$STDERR
+        cat "${tarballz}" >/dev/null
       fi
       printError "Unable to download ${tarballz} from ${PORT_TARBALL_URL}"
     fi
@@ -596,7 +599,7 @@ configure()
       echo "Using previous successful configuration" >&2
     else
       configlog="${LOG_PFX}_config.log"
-      if ! runAndLog "\"${PORT_CONFIGURE}\" CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\" ${PORT_CONFIGURE_OPTS} >\"${configlog}\" 2>&1"; then
+      if ! runAndLog "\"${PORT_CONFIGURE}\" ${PORT_CONFIGURE_OPTS} CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\" >\"${configlog}\" 2>&1"; then
         printError "Configure failed. Log: ${configlog}"
       fi
       touch config.success
@@ -625,7 +628,7 @@ check()
   if [ "${PORT_CHECK}x" != "skipx" ] ; then
     printHeader "Running Check"
     "${PORT_CHECK}" ${PORT_CHECK_OPTS} >"${checklog}" 2>&1
-    if ! "${PORT_CHECK_RESULTS}" "./${dir}" "${LOG_PFX}"; then
+    if ! "${PORT_CHECK_RESULTS}" "${PORT_ROOT}/${dir}" "${LOG_PFX}"; then
       printError "Check failed. Log: ${checklog}"
     fi
   else
@@ -652,8 +655,6 @@ install()
 #
 # Start of 'main'
 #
-
-echo "" 
 
 utildir=$( cd $(dirname "$0")/ || exit; echo $PWD)
 export utildir
