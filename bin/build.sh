@@ -616,7 +616,7 @@ build()
   makelog="${LOG_PFX}_build.log"
   if [ "${PORT_MAKE}x" != "skipx" ] ; then
     printHeader "Running Build"
-    if ! "${PORT_MAKE}" ${PORT_MAKE_OPTS} >"${makelog}" 2>&1; then
+    if ! runAndLog "\"${PORT_MAKE}\" ${PORT_MAKE_OPTS} >\"${makelog}\""; then
       printError "Make failed. Log: ${makelog}"
     fi
   else
@@ -629,8 +629,7 @@ check()
   checklog="${LOG_PFX}_check.log"
   if [ "${PORT_CHECK}x" != "skipx" ] ; then
     printHeader "Running Check"
-    "${PORT_CHECK}" ${PORT_CHECK_OPTS} >"${checklog}" 2>&1
-    if ! "${PORT_CHECK_RESULTS}" "${PORT_ROOT}/${dir}" "${LOG_PFX}"; then
+    if ! runAndLog "\"${PORT_CHECK_RESULTS}\" \"${PORT_ROOT}/${dir}\" \"${LOG_PFX}\""; then
       printError "Check failed. Log: ${checklog}"
     fi
   else
@@ -643,11 +642,22 @@ install()
   if [ "${PORT_INSTALL}x" != "skipx" ] ; then
     printHeader "Running Install"
     installlog="${LOG_PFX}_install.log"
-    if ! "${PORT_INSTALL}" ${PORT_INSTALL_OPTS} >"${installlog}" 2>&1; then
+    if ! runAndLog "\"${PORT_INSTALL}\" ${PORT_INSTALL_OPTS} >\"${installlog}\""; then
       printError "Install failed. Log: ${installlog}"
     fi
-    if ! "${PORT_CREATE_ENV}" "${PORT_INSTALL_DIR}" "${LOG_PFX}"; then
+    if ! runAndLog "\"${PORT_CREATE_ENV}\" \"${PORT_INSTALL_DIR}\" \"${LOG_PFX}\""; then
       printError "Environment creation failed."
+    fi
+  
+    PORT_NAME="${dir}"
+    if [ "${PORT_TYPE}x" = "GITx" ]; then
+      branch=$(git rev-parse --abbrev-ref HEAD 2>&1)
+      PORT_NAME="${dir}.${branch}"
+    fi
+
+    paxFileName="${PORT_NAME}.${LOG_PFX}.zos.pax.Z";
+    if ! runAndLog "pax -w -z -x pax -f \"${paxFileName}\" \"${PORT_INSTALL_DIR}/\""; then
+      printError "Could not generate pax \"${paxFileName}\""
     fi
   else 
     printHeader "Skipping Install"
@@ -702,6 +712,7 @@ fi
 if [ "${PORT_CONFIGURE_OPTS}x" = "x" ]; then
 	export PORT_CONFIGURE_OPTS="--prefix=${PORT_INSTALL_DIR}"
 fi
+
 
 if ! applyPatches; then
   exit 4
