@@ -713,7 +713,6 @@ if [ "${PORT_CONFIGURE_OPTS}x" = "x" ]; then
 	export PORT_CONFIGURE_OPTS="--prefix=${PORT_INSTALL_DIR}"
 fi
 
-
 if ! applyPatches; then
   exit 4
 fi
