@@ -38,15 +38,15 @@ expanded_repo = "ZOSOpenTools";
 print("# z/OS Open Tools Latest Packages");
 print("| Package | Port Repo | Latest Binary | Releases Link | |")
 print("|---|---|---|---|---|")
-for port in SupportedPorts:
-	r = g.get_repo(expanded_repo + "/" + SupportedPorts[port])
-	releases = r.get_releases()
 
-	print("|" + port, end='')
+for r in g.get_user().get_repos(sort='desc'):
+	if not re.search("port$", r.name):
+		continue
+	print("|" + r.name, end='')
 	print("| [Repo Link](" + r.html_url + ")", end='')
+	releases = r.get_releases()
 	if (releases.totalCount):
 		print("| [" + releases[0].title + "](" + releases[0].html_url + ")", end='')
 	else:
 		print("| None", end='')
-	print("| [Repo Link](" + r.html_url + ")", end='')
 	print("| [Releases Link](" + r.html_url + "/releases)|")
