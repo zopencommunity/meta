@@ -185,7 +185,7 @@ checkDeps()
     fi
   done
   if $fail ; then
-    return 4
+    #return 4
   fi
 }
 
@@ -292,7 +292,7 @@ setDepsEnv()
     elif [ -r "${HOME}/zot/boot/${dep}/.env" ]; then
       depdir="${HOME}/zot/boot/${dep}"
     else
-      printError "Internal error. Unable to find .env for ${deps} but earlier check should have caught this"
+      #printError "Internal error. Unable to find .env for ${deps} but earlier check should have caught this"
     fi
     printVerbose "Setting up ${depdir} dependency environment"
     cd "${depdir}" && . ./.env
@@ -631,6 +631,7 @@ check()
   checklog="${LOG_PFX}_check.log"
   if [ "${PORT_CHECK}x" != "skipx" ] ; then
     printHeader "Running Check"
+    runAndLog "\"${PORT_CHECK}\" ${PORT_CHECK_OPTS} >\"${checklog}\""
     if ! runAndLog "\"${PORT_CHECK_RESULTS}\" \"${PORT_ROOT}/${dir}\" \"${LOG_PFX}\""; then
       printError "Check failed. Log: ${checklog}"
     fi
