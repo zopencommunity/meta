@@ -444,8 +444,10 @@ extractTarBall()
     printError "Unable to create .gitattributes for tarball"
   fi
 
-  if ! iconv -f IBM-1047 -tISO8859-1 <.gitattributes >.gitattrascii || ! chtag -tcISO8859-1 .gitattrascii || ! mv .gitattrascii .gitattributes; then
-    printError "Unable to make .gitattributes ascii for tarball"
+  if [ "$(chtag -p .gitattributes | cut -f2 -d' ')" != "ISO8859-1" ]; then
+    if ! iconv -f IBM-1047 -tISO8859-1 <.gitattributes >.gitattrascii || ! chtag -tcISO8859-1 .gitattrascii || ! mv .gitattrascii .gitattributes; then
+      printError "Unable to make .gitattributes ascii for tarball"
+    fi
   fi
 
   files=$(find . ! -name "*.pdf" ! -name "*.png" ! -name "*.bat" ! -type d)
