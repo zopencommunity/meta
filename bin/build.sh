@@ -330,10 +330,13 @@ setEnv()
   setDepsEnv
 
   if [ "${PORT_NUM_JOBS}x" = "x" ]; then
-    PORT_NUM_JOBS=$("${utildir}/numcpus.rexx")
+    numcpus="${utildir}/numcpus.rexx"
+    if [ -x ${numcpus} ]; then
+      PORT_NUM_JOBS=$(${numcpus})
 
-    # Use half of the CPUs by default
-    export PORT_NUM_JOBS=$((PORT_NUM_JOBS / 2))
+      # Use half of the CPUs by default
+      export PORT_NUM_JOBS=$((PORT_NUM_JOBS / 2))
+    fi
   fi
 
   if [ $PORT_NUM_JOBS -lt 1 ]; then
