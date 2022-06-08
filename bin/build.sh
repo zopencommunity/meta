@@ -330,13 +330,10 @@ setEnv()
   setDepsEnv
 
   if [ "${PORT_NUM_JOBS}x" = "x" ]; then
-    numcpus="${utildir}/numcpus.rexx"
-    if [ -x ${numcpus} ]; then
-      PORT_NUM_JOBS=$(${numcpus})
+    PORT_NUM_JOBS=$(${utildir}/numcpus.rexx)
 
-      # Use half of the CPUs by default
-      export PORT_NUM_JOBS=$((PORT_NUM_JOBS / 2))
-    fi
+    # Use half of the CPUs by default
+    export PORT_NUM_JOBS=$((PORT_NUM_JOBS / 2))
   fi
 
   if [ $PORT_NUM_JOBS -lt 1 ]; then
@@ -674,10 +671,8 @@ install()
 # Start of 'main'
 #
 
-utildir=$( cd $(dirname "$0")/ || exit; echo $PWD)
-export utildir
-utilparentdir=$( cd $(dirname "$0")/../ || exit; echo $PWD)
-export utilparentdir
+export utildir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
+export utilparentdir="$( cd "$(dirname "$0")/../" >/dev/null 2>&1 && pwd -P )"
 
 set +x 
 
