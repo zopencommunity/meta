@@ -393,7 +393,7 @@ gitClone()
     printInfo "Using existing git clone'd directory ${dir}" 
   else
     printInfo "Clone and create ${dir}" 
-    if ! git clone "${PORT_GIT_URL}" 2>/dev/null; then
+    if ! runAndLog "git clone \"${PORT_GIT_URL}\""; then
       printError "Unable to clone ${gitname} from ${PORT_GIT_URL}"
     fi
     if [ "${PORT_GIT_BRANCH}x" != "x" ]; then
@@ -444,8 +444,10 @@ extractTarBall()
     printError "Unable to create .gitattributes for tarball"
   fi
 
-  if ! iconv -f IBM-1047 -tISO8859-1 <.gitattributes >.gitattrascii || ! chtag -tcISO8859-1 .gitattrascii || ! mv .gitattrascii .gitattributes; then
-    printError "Unable to make .gitattributes ascii for tarball"
+  if [ "$(chtag -p .gitattributes | cut -f2 -d' ')" != "ISO8859-1" ]; then
+    if ! iconv -f IBM-1047 -tISO8859-1 <.gitattributes >.gitattrascii || ! chtag -tcISO8859-1 .gitattrascii || ! mv .gitattrascii .gitattributes; then
+      printError "Unable to make .gitattributes ascii for tarball"
+    fi
   fi
 
   files=$(find . ! -name "*.pdf" ! -name "*.png" ! -name "*.bat" ! -type d)
@@ -629,6 +631,7 @@ check()
   checklog="${LOG_PFX}_check.log"
   if [ "${PORT_CHECK}x" != "skipx" ] ; then
     printHeader "Running Check"
+    runAndLog "\"${PORT_CHECK}\" ${PORT_CHECK_OPTS} >\"${checklog}\""
     if ! runAndLog "\"${PORT_CHECK_RESULTS}\" \"${PORT_ROOT}/${dir}\" \"${LOG_PFX}\""; then
       printError "Check failed. Log: ${checklog}"
     fi
@@ -656,7 +659,7 @@ install()
     fi
 
     paxFileName="${PORT_NAME}.${LOG_PFX}.zos.pax.Z";
-    if ! runAndLog "pax -w -z -x pax -f \"${paxFileName}\" \"${PORT_INSTALL_DIR}/\""; then
+    if ! runAndLog "pax -w -z -x pax \"-s#${PORT_INSTALL_DIR}/#${PORT_NAME}.${LOG_PFX}.zos/#\" -f \"${paxFileName}\" \"${PORT_INSTALL_DIR}/\""; then
       printError "Could not generate pax \"${paxFileName}\""
     fi
   else 
@@ -668,10 +671,8 @@ install()
 # Start of 'main'
 #
 
-utildir=$( cd $(dirname "$0")/ || exit; echo $PWD)
-export utildir
-utilparentdir=$( cd $(dirname "$0")/../ || exit; echo $PWD)
-export utilparentdir
+export utildir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
+export utilparentdir="$( cd "$(dirname "$0")/../" >/dev/null 2>&1 && pwd -P )"
 
 set +x 
 
