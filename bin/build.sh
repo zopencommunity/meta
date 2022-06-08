@@ -393,7 +393,7 @@ gitClone()
     printInfo "Using existing git clone'd directory ${dir}" 
   else
     printInfo "Clone and create ${dir}" 
-    if ! git clone "${PORT_GIT_URL}" 2>/dev/null; then
+    if ! runAndLog "git clone \"${PORT_GIT_URL}\""; then
       printError "Unable to clone ${gitname} from ${PORT_GIT_URL}"
     fi
     if [ "${PORT_GIT_BRANCH}x" != "x" ]; then
