@@ -39,7 +39,7 @@ print("# z/OS Open Tools - Packages");
 print("| Package | Port Repo | All Releases | Latest Release | Description | |")
 print("|---|---|---|---|---|---|")
 
-for r in g.get_user().get_repos(sort='asc'):
+for r in g.get_user().get_repos():
 	if not re.search("port$", r.name):
 		continue
 	print("|" + r.name, end='')
