@@ -659,7 +659,7 @@ install()
     fi
 
     paxFileName="${PORT_NAME}.${LOG_PFX}.zos.pax.Z";
-    if ! runAndLog "pax -w -z -x pax -f \"${paxFileName}\" \"${PORT_INSTALL_DIR}/\""; then
+    if ! runAndLog "pax -w -z -x pax \"-s#${PORT_INSTALL_DIR}/#${PORT_NAME}.${LOG_PFX}.zos/#\" -f \"${paxFileName}\" \"${PORT_INSTALL_DIR}/\""; then
       printError "Could not generate pax \"${paxFileName}\""
     fi
   else 
