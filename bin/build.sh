@@ -38,6 +38,7 @@ PORT_BOOTSTRAP      Bootstrap program to run. If skip is specified, no bootstrap
 PORT_BOOTSTRAP_OPTS Options to pass to bootstrap program (defaults to '${PORT_BOOTSTRAP_OPTSD}')
 PORT_CONFIGURE      Configuration program to run. If skip is specified, no configuration step is performed (defaults to '${PORT_CONFIGURED}')
 PORT_CONFIGURE_OPTS Options to pass to configuration program (defaults to '--prefix=\${PORT_INSTALL_DIR}')
+PORT_EXTRA_CONFIGURE_OPTS Extra configure options to pass to configuration program (defaults to '')
 PORT_INSTALL_DIR    Installation directory to pass to configuration (defaults to '\${HOME}/zot/prod/<pkg>')
 PORT_MAKE           Build program to run. If skip is specified, no build step is performed (defaults to '${PORT_MAKED}')
 PORT_MAKE_OPTS      Options to pass to build program (defaults to '-j\${PORT_NUM_JOBS}')
@@ -102,11 +103,9 @@ processOptions()
         ;;
       "-e" | "--env")
         printError "-e option not implemented yet"
-        return 4
         ;;
       *)
         printError "Unknown option ${arg} specified"
-        return 4
         ;;
     esac
   done
@@ -303,7 +302,7 @@ setDepsEnv()
 setEnv()
 {
   if [ "${CPPFLAGS}x" = "x" ]; then
-    export CPPFLAGS="${PORT_CPPFLAGSD}"
+    export CPPFLAGS="${PORT_CPPFLAGSD} ${PORT_EXTRA_CPPFLAGS}"
   fi
   if [ "${CC}x" = "x" ]; then
     export CC="${PORT_CCD}"
@@ -377,8 +376,8 @@ setEnv()
 tagTree()
 {
   dir="$1"
-  find "${dir}" -name "*.pdf" -o -name "*.png" -o -name "*.bat" ! -type d ! -type l | xargs chtag -b
-  find "${dir}" ! -type d ! -type l | xargs chtag -qp | awk '{ if ($1 == "-") { print $4; }}' | xargs chtag -tcISO8859-1
+  find "${dir}" -name "*.pdf" -o -name "*.png" -o -name "*.bat" ! -type d ! -type l | xargs -I {} chtag -b {}
+  find "${dir}" ! -type d ! -type l | xargs -I {} chtag -qp {} | awk '{ if ($1 == "-") { print $4; }}' | xargs -I {} chtag -tcISO8859-1 {}
 }
 
 gitClone()
@@ -711,7 +710,7 @@ if [ "${PORT_INSTALL_DIR}x" = "x" ]; then
 	export PORT_INSTALL_DIR="${HOME}/zot/prod/${dir}"
 fi
 if [ "${PORT_CONFIGURE_OPTS}x" = "x" ]; then
-	export PORT_CONFIGURE_OPTS="--prefix=${PORT_INSTALL_DIR}"
+	export PORT_CONFIGURE_OPTS="--prefix=${PORT_INSTALL_DIR} ${PORT_EXTRA_CONFIGURE_OPTS}"
 fi
 
 if ! applyPatches; then
