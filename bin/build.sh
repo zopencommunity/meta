@@ -495,33 +495,6 @@ downloadTarBall()
 }
 
 #
-# This function adds code from the 'additions' directory, if it exists
-#
-addCode()
-{
-  printHeader "Adding code"
-  if [ "${PORT_TYPE}x" = "TARBALLx" ]; then
-    tarballz=$(basename "$PORT_TARBALL_URL")
-    code_dir="${PORT_ROOT}/${tarballz%%.tar.*}"
-  else
-    gitname=$(basename "$PORT_GIT_URL")
-    code_dir="${PORT_ROOT}/${gitname%%.*}"
-  fi
-
-  add_dir="${PORT_ROOT}/additions"
-  if ! [ -d "${add_dir}" ]; then
-    # Most code does not have additions - so no noisy 'warning' unless verbose
-		if ${verbose}; then
-			printWarning "${add_dir} does not exist - no patches to apply"
-		fi
-    return 0
-  fi
-
-	cp -rf "${add_dir}"/* "${code_dir}"
-	return $?
-}
-
-#
 # This function applies patches previously created.
 # To _create_ a patch, do the following:
 #  -If required, create a sub-directory in the ${PORT_ROOT}/patches directory called PR<x>, where <x> indicates
@@ -750,10 +723,6 @@ if [ "${PORT_INSTALL_DIR}x" = "x" ]; then
 fi
 if [ "${PORT_CONFIGURE_OPTS}x" = "x" ]; then
 	export PORT_CONFIGURE_OPTS="--prefix=${PORT_INSTALL_DIR} ${PORT_EXTRA_CONFIGURE_OPTS}"
-fi
-
-if ! addCode; then
-  exit 4
 fi
 
 if ! applyPatches; then
