@@ -559,7 +559,7 @@ applyPatches()
     return 0
   fi
 
-  patches=$( (cd "${patch_dir}" && find . -name "*.patch"))
+  patches=$( (cd "${patch_dir}" && find . -name "*.patch" | sort))
   results=$( (cd "${code_dir}" && git status --porcelain --untracked-files=no 2>&1))
   failedcount=0
   if [ "${results}" != '' ]; then
