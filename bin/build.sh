@@ -472,6 +472,11 @@ downloadTarBall()
     if ${verbose}; then
 			printVerbose "curl -L -0 -o ${tarballz} ${PORT_TARBALL_URL}"
 		fi
+		#
+		# Some older tarballs (openssl) contain a pax_global_header file. Remove it 
+		# in advance so that unzip won't fail
+		#
+		rm -f pax_global_header
     if ! curl -L -0 -o "${tarballz}" "${PORT_TARBALL_URL}" 2>/dev/null ; then
       if [ -f "${tarballz}" ] && [ $(wc -c "${tarballz}" | awk '{print $1}') -lt 1024 ]; then
         cat "${tarballz}" >/dev/null
