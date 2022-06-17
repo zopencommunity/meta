@@ -1,0 +1,21 @@
+#!/bin/sh
+#
+# This tool needs to run 'off Z' (it runs successfully on a Mac)
+# It requires the openssl-1.1.1o tarball to be in the directory
+# you run this from
+#
+set +x
+rm -rf openssl-1.1.1o
+tar -xvf openssl-1.1.1o.tar.gz
+cd openssl-1.1.1o
+git init 
+git add .
+git commit -m "main"
+git checkout -b openssl
+
+for p in /tmp/gitpatches/*; do
+#	if ! git am "${p}"; then
+	if ! git apply "${p}"; then
+		break
+	fi
+done
