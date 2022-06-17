@@ -1,0 +1,17 @@
+#!/bin/sh
+#
+# simple utility to apply a traditional patch (meant to be run on Mac)
+# TBD: remove hardcoded directories
+#
+patchdir='/Users/fultonm@ca.ibm.com/Downloads/opensslpatch/1.1.1o'
+patch="$1"
+if ! patchfile=`ls ${patchdir}/${patch}` || ! [ -f "${patchfile}" ]; then
+	echo "Unable to find ${patchfile}" >&2
+	exit 4
+fi
+if ! patch --dry-run -p1 <"${patchfile}"; then
+	echo "Unable to perform patch for ${patchfile}" >&2
+	exit 4
+fi
+
+patch -p1 <"${patchfile}"
