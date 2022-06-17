@@ -470,9 +470,15 @@ downloadTarBall()
   if [ -d "${dir}" ]; then
     echo "Using existing tarball directory ${dir}" >&2
   else
+    if ${verbose}; then
+			printVerbose "curl -L -0 -o ${tarballz} ${PORT_TARBALL_URL}"
+		fi
     if ! curl -L -0 -o "${tarballz}" "${PORT_TARBALL_URL}" 2>/dev/null ; then
-      if [ $(wc -c "${tarballz}" | awk '{print $1}') -lt 1024 ]; then
+      if [ -f "${tarballz}" ] && [ $(wc -c "${tarballz}" | awk '{print $1}') -lt 1024 ]; then
         cat "${tarballz}" >/dev/null
+			else
+				printError "Re-try curl for diagnostics"
+				curl -L -0 -o /dev/null "${PORT_TARBALL_URL}"
       fi
       printError "Unable to download ${tarballz} from ${PORT_TARBALL_URL}"
     fi
@@ -482,6 +488,33 @@ downloadTarBall()
     extractTarBall "${tarballz}" "${dir}"
   fi
   echo "${dir}"
+}
+
+#
+# This function adds code from the 'additions' directory, if it exists
+#
+addCode()
+{
+  printHeader "Adding code"
+  if [ "${PORT_TYPE}x" = "TARBALLx" ]; then
+    tarballz=$(basename "$PORT_TARBALL_URL")
+    code_dir="${PORT_ROOT}/${tarballz%%.tar.*}"
+  else
+    gitname=$(basename "$PORT_GIT_URL")
+    code_dir="${PORT_ROOT}/${gitname%%.*}"
+  fi
+
+  add_dir="${PORT_ROOT}/additions"
+  if ! [ -d "${add_dir}" ]; then
+    # Most code does not have additions - so no noisy 'warning' unless verbose
+		if ${verbose}; then
+			printWarning "${add_dir} does not exist - no patches to apply"
+		fi
+    return 0
+  fi
+
+	cp -rf "${add_dir}"/* "${code_dir}"
+	return $?
 }
 
 #
@@ -537,10 +570,11 @@ applyPatches()
         printWarning "Warning: patch file ${p} is empty - nothing to be done"
       else
         printInfo "Applying ${p}"
-        if ! out=$( (cd "${code_dir}" && git apply "${p}" 2>&1)); then
+        if ! out=$( (cd "${code_dir}" && git apply --check --ignore-whitespace "${p}" 2>&1 && git apply --ignore-whitespace "${p}")); then
           printSoftError "Patch of make tree failed (${p})."
           printSoftError "${out}"
           failedcount=$((failedcount + 1))
+					break
         fi
       fi
     done
@@ -712,6 +746,10 @@ if [ "${PORT_INSTALL_DIR}x" = "x" ]; then
 fi
 if [ "${PORT_CONFIGURE_OPTS}x" = "x" ]; then
 	export PORT_CONFIGURE_OPTS="--prefix=${PORT_INSTALL_DIR}"
+fi
+
+if ! addCode; then
+  exit 4
 fi
 
 if ! applyPatches; then
