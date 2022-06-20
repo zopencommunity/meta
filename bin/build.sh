@@ -254,7 +254,9 @@ checkEnv()
     deps="${PORT_GIT_DEPS}"
   fi
 
-  checkDeps "${deps}"    
+  if ! checkDeps "${deps}"; then
+		printError "One or more dependent products aren't available"
+	fi
 
   export PORT_CA="${utilparentdir}/cacert.pem"
   if ! [ -r "${PORT_CA}" ]; then
