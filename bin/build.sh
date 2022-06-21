@@ -21,6 +21,8 @@ PORT_TARBALL_URL    The fully qualified URL that the tarball should be downloade
 PORT_TARBALL_DEPS   Space-delimited set of source packages this git package depends on to build (required if PORT_TYPE=TARBALL)
 PORT_GIT_URL        The fully qualified URL that the git repo should be cloned from (required if PORT_TYPE=GIT)
 PORT_GIT_DEPS       Space-delimited set of source packages this tarball package depends on to build (required if PORT_TYPE=GIT)
+PORT_GIT_BRANCH     The branch that the git repo should checkout (optional, takes precedence over PORT_GIT_TAG)
+PORT_GIT_TAG        The tag that the git repo should checkout as a branch (optional)
 PORT_URL            Alternate environment variable instead of PORT_TARBALL_URL or PORT_GIT_URL (alternate to PORT_TARBALL_URL or PORT_GIT_URL) 
 PORT_DEPS           Alternate environment variable instead of PORT_TARBALL_DEPS or PORT_GIT_DEPS (alternate to PORT_TARBALL_DEPS or PORT_GIT_DEPS)  
 CC                  C compiler (defaults to '${PORT_CCD}')
