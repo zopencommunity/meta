@@ -21,6 +21,8 @@ PORT_TARBALL_URL    The fully qualified URL that the tarball should be downloade
 PORT_TARBALL_DEPS   Space-delimited set of source packages this git package depends on to build (required if PORT_TYPE=TARBALL)
 PORT_GIT_URL        The fully qualified URL that the git repo should be cloned from (required if PORT_TYPE=GIT)
 PORT_GIT_DEPS       Space-delimited set of source packages this tarball package depends on to build (required if PORT_TYPE=GIT)
+PORT_GIT_BRANCH     The branch that the git repo should checkout (optional, takes precedence over PORT_GIT_TAG)
+PORT_GIT_TAG        The tag that the git repo should checkout as a branch (optional)
 PORT_URL            Alternate environment variable instead of PORT_TARBALL_URL or PORT_GIT_URL (alternate to PORT_TARBALL_URL or PORT_GIT_URL) 
 PORT_DEPS           Alternate environment variable instead of PORT_TARBALL_DEPS or PORT_GIT_DEPS (alternate to PORT_TARBALL_DEPS or PORT_GIT_DEPS)  
 CC                  C compiler (defaults to '${PORT_CCD}')
@@ -56,8 +58,8 @@ setDefaults()
   export PORT_CPPFLAGSD="-DNSIG=9 -D_XOPEN_SOURCE=600 -D_ALL_SOURCE -D_OPEN_SYS_FILE_EXT=1 -D_AE_BIMODAL=1 -D_ENHANCED_ASCII_EXT=0xFFFFFFFF"
   export PORT_CFLAGSD="-qascii"
   export PORT_CXXFLAGSD="-+ -qascii"
-	export PORT_BOOSTRAPD="./bootstrap"
-	export PORT_BOOSTRAP_OPTSD=""
+  export PORT_BOOTSTRAPD="./bootstrap"
+  export PORT_BOOTSTRAP_OPTSD=""
 	export PORT_CONFIGURED="./configure"
 	export PORT_MAKED="make"
 	export PORT_CHECKD="make"
@@ -340,7 +342,7 @@ setEnv()
   fi
 
   if [ "${PORT_BOOTSTRAP}x" = "x" ]; then
-    export PORT_BOOTSTRAP="${PORT_BOOSTRAPD}"
+    export PORT_BOOTSTRAP="${PORT_BOOTSTRAPD}"
   fi
   if [ "${PORT_BOOTSTRAP_OPTS}x" = "x" ]; then
     export PORT_BOOTSTRAP_OPTS="${PORT_BOOTSTRAP_OPTSD}"
@@ -398,6 +400,10 @@ gitClone()
     if [ "${PORT_GIT_BRANCH}x" != "x" ]; then
       if ! git -C "${dir}" checkout "${PORT_GIT_BRANCH}" >/dev/null; then
         printError"Unable to checkout ${PORT_GIT_URL} branch ${PORT_GIT_BRANCH}"
+      fi
+    elif [ "${PORT_GIT_TAG}x" != "x" ]; then
+      if ! git -C "${dir}" checkout tags/"${PORT_GIT_TAG}" -b "${PORT_GIT_TAG}" >/dev/null; then
+        printError"Unable to checkout ${PORT_GIT_URL} tag ${PORT_GIT_TAG}"
       fi
     fi
     tagTree "${dir}"
@@ -687,7 +693,7 @@ install()
   
     PORT_NAME="${dir}"
     if [ "${PORT_TYPE}x" = "GITx" ]; then
-      branch=$(git rev-parse --abbrev-ref HEAD 2>&1)
+      branch=$(git rev-parse --abbrev-ref HEAD 2>&1 | sed "s/\//./g")
       PORT_NAME="${dir}.${branch}"
     fi
 
