@@ -1,0 +1,53 @@
+#!/bin/bash
+#
+# Downloads the latest ported release from GitHub
+
+printSoftError()
+{
+  printf "${NC}${RED}${BOLD}***ERROR: ${NC}${RED}${1}${NC}\n" >&2
+}
+
+printError()
+{
+  printSoftError "${1}"
+  exit 4
+}
+
+while [[ $# -gt 0 ]]; do
+  #TODO: add support to download specific ports
+  case "$1" in
+    "-d")
+      download=$2;
+      shift
+      ;;
+    "-t")
+      toolrepo=$2;
+      shift
+      ;;
+    *)
+      printError "Unknown option ${arg} specified"
+      ;;
+  esac
+  shift;
+done
+
+if [ ! -z ${download} -a -d ${download} ]; then
+  pushd ${download}
+fi
+exit 0
+
+#FIXME: Once jq is ported, rewrite with jq
+for repo in $(curl -s "https://api.github.com/users/ZOSOpenTools/repos?per_page=100" | grep "\"name\":" | cut -d '"' -f 4); do
+  echo $repo
+  if [ ! -z "${toolrepo}" -a "${toolrepo}" == "${repo}" ]; then
+    URL=$(curl -s https://api.github.com/repos/ZOSOpenTools/${repo}/releases/latest | grep browser_download_url | cut -d '"' -f 4)
+    if [ "${URL}" == "" ]; then
+      continue;
+    fi
+    curl -L ${URL} -O
+  fi
+done
+
+if [ ! -z ${download} -a -d ${download} ]; do
+  popd ${download}
+done

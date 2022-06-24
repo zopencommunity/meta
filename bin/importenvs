@@ -1,0 +1,18 @@
+#!/bin/sh
+#
+# Used for development to source all the boot .envs
+# . importenvs
+
+if [ ! -d "${HOME}/zot/boot/" ]; then
+  echo "boot directory does not exist.  Existing"
+  exit 4;
+fi
+
+for deps in $(find "${HOME}/zot/boot/" -name "*.env")
+do
+  echo "Found ${deps}"
+  depdir=$(dirname "${deps}")
+  pushd $depdir
+  . ./.env
+  popd
+done
