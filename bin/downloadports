@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Downloads the latest ported release from GitHub
+# Downloads and extracts the latest ported releases from GitHub
 
 printSoftError()
 {
@@ -25,7 +25,7 @@ while [[ $# -gt 0 ]]; do
       shift
       ;;
     *)
-      printError "Unknown option ${arg} specified"
+      printError "Unknown option ${1} specified"
       ;;
   esac
   shift;
@@ -34,10 +34,10 @@ done
 if [ ! -z ${download} -a -d ${download} ]; then
   pushd ${download}
 fi
-exit 0
 
 #FIXME: Once jq is ported, rewrite with jq
-for repo in $(curl -s "https://api.github.com/users/ZOSOpenTools/repos?per_page=100" | grep "\"name\":" | cut -d '"' -f 4); do
+for repo in $(curl -s "https://api.github.com/users/ZOSOpenTools/repos?per_page=100" | grep "\"full_name\":" | cut -d '"' -f 4); do
+  repo=${repo#"ZOSOpenTools/"}
   echo $repo
   if [ ! -z "${toolrepo}" -a "${toolrepo}" == "${repo}" ]; then
     URL=$(curl -s https://api.github.com/repos/ZOSOpenTools/${repo}/releases/latest | grep browser_download_url | cut -d '"' -f 4)
@@ -45,9 +45,11 @@ for repo in $(curl -s "https://api.github.com/users/ZOSOpenTools/repos?per_page=
       continue;
     fi
     curl -L ${URL} -O
+    pax=$(basename ${URL})
+    pax -rf $pax
   fi
 done
 
-if [ ! -z ${download} -a -d ${download} ]; do
-  popd ${download}
-done
+if [ ! -z ${download} -a -d ${download} ]; then
+  popd
+fi
