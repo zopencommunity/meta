@@ -39,7 +39,7 @@ fi
 for repo in $(curl -s "https://api.github.com/users/ZOSOpenTools/repos?per_page=100" | grep "\"full_name\":" | cut -d '"' -f 4); do
   repo=${repo#"ZOSOpenTools/"}
   echo $repo
-  if [ ! -z "${toolrepo}" -a "${toolrepo}" == "${repo}" ]; then
+  if [ -z "${toolrepo}" -o "${toolrepo}" == "${repo}" ]; then
     URL=$(curl -s https://api.github.com/repos/ZOSOpenTools/${repo}/releases/latest | grep browser_download_url | cut -d '"' -f 4)
     if [ "${URL}" == "" ]; then
       continue;
@@ -47,6 +47,9 @@ for repo in $(curl -s "https://api.github.com/users/ZOSOpenTools/repos?per_page=
     curl -L ${URL} -O
     pax=$(basename ${URL})
     pax -rf $pax
+    dirname=${pax%.pax.Z}
+    name=${repo%port}
+    ln -s $dirname $name
   fi
 done
 
