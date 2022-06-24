@@ -12,22 +12,24 @@ if [ $# -lt 2 ]; then
 	exit 4
 fi
 tarball="$1"
-patchdir="$2"
-tarball_dir=${tarball%%.tar.gz}
-if ! [ -f "${tarball}" ] || [ "${tarball_dir}" = "${tarball}" ] ; then
+gitpatchdir="$2"
+tarballdir=${tarball%%.tar.gz}
+if ! [ -f "${tarball}" ] || [ "${tarballdir}" = "${tarball}" ] ; then
 	echo "Tarball ${tarball} does not exist or is not in the format <file>.tar.gz " >&2
 	exit 4
 fi
 
-if ! [ -d "${patchdir}" ]; then
-	echo "Patch directory ${patchdir} does not exist" >&2
+if ! [ -d "${gitpatchdir}" ]; then
+	echo "Patch directory ${gitpatchdir} does not exist" >&2
 	exit 4
 fi
+tarballdir=$(cd ${tarballdir} && echo ${PWD})
+gitpatchdir=$(cd ${gitpatchdir} && echo ${PWD})
 
-rm -rf "${tarball_dir}"
+rm -rf "${tarballdir}"
 tar -xvf "${tarball}"
-if ! cd "${tarball_dir}"; then
-	echo "Extract of tarball ${tarball} did not create ${tarball_dir}" >&2
+if ! cd "${tarballdir}"; then
+	echo "Extract of tarball ${tarball} did not create ${tarballdir}" >&2
 	exit 4
 fi
 if ! git init || ! git add . || ! git commit -m "main" || ! git checkout -b openssl ; then
@@ -35,9 +37,9 @@ if ! git init || ! git add . || ! git commit -m "main" || ! git checkout -b open
 	exit 4
 fi
 
-for p in "${patchdir}"/*; do
+for p in ${gitpatchdir}/*.patch; do
 	if ! git apply "${p}"; then
-		echo "Unable to apply patch ${p} from ${patchdir}" >&2
+		echo "Unable to apply patch ${p} from ${gitpatchdir}" >&2
 		break
 	fi
 done
