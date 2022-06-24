@@ -412,6 +412,7 @@ extractTarBall()
   tarballz="$1"
   dir="$2"
 
+	printInfo "Extract tarball ${tarballz} into ${dir}"
   ext=${tarballz##*.}
   if [ "${ext}x" = "xzx" ]; then
     if ! xz -d "${tarballz}"; then
@@ -472,7 +473,7 @@ downloadTarBall()
     echo "Using existing tarball directory ${dir}" >&2
   else
     if ${verbose}; then
-			printVerbose "curl -L -0 -o ${tarballz} ${PORT_TARBALL_URL}"
+			printVerbose "curl -L -o ${tarballz} ${PORT_TARBALL_URL}"
 		fi
 		#
 		# Some older tarballs (openssl) contain a pax_global_header file. Remove it 
