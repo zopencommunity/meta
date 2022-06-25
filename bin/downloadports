@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Downloads and extracts the latest ZOSOpenTools releases from GitHub
 
 export utildir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
