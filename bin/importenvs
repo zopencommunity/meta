@@ -8,11 +8,11 @@ if [ ! -d "${HOME}/zot/boot/" ]; then
   exit 4;
 fi
 
-for deps in $(find "${HOME}/zot/boot/" -name "*.env")
+for deps in $(find "${HOME}/zot/boot/" -name ".env")
 do
   echo "Found ${deps}"
   depdir=$(dirname "${deps}")
-  pushd $depdir
+  cd $depdir
   . ./.env
-  popd
+  cd -
 done
