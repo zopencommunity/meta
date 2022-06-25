@@ -1,0 +1,88 @@
+#!/bin/bash
+# Downloads and extracts the latest ZOSOpenTools releases from GitHub
+
+export utildir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
+
+. "${utildir}/common.inc"
+
+printSyntax() 
+{
+  args=$*
+  echo "downloadports is a tool that downloads and extracts the latest z/OS Open Tools releases from GitHub Releases." >&2
+  echo "Syntax: downloadports [<option>]*" >&2
+  echo "  where <option> may be one or more of:" >&2
+  echo "  -d: print this information" >&2
+  echo "  -t: run in verbose mode" >&2
+}
+
+args=$*
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    "-d")
+      download=$2;
+      shift
+      ;;
+    "-t")
+      toolrepo=$2;
+      shift
+      ;;
+    "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
+      printSyntax "${args}"
+      exit 4
+      ;;
+    *)
+      printError "Unknown option ${arg} specified"
+      ;;
+  esac
+  shift;
+done
+
+if [ ! -z ${download} -a -d ${download} ]; then
+  cd ${download}
+fi
+
+#FIXME: Once jq is ported, rewrite with jq
+if ! repo_results=$(curl -s "https://api.github.com/users/ZOSOpenTools/repos?per_page=100" 2>/dev/null | grep "\"full_name\":" | cut -d '"' -f 4); then
+  printError "curl command could not download the z/OS Open Tools repository list"
+fi
+
+for repo in $(echo ${repo_results}); do
+  echo $repo
+  repo=${repo#"ZOSOpenTools/"}
+  if [ -z "${toolrepo}" -o "${toolrepo}" == "${repo}" ]; then
+    printHeader "Downloading latest release from $repo"
+    if ! latest_url=$(curl -s https://api.github.com/repos/ZOSOpenTools/${repo}/releases/latest 2>/dev/null | grep browser_download_url | cut -d '"' -f 4); then
+      printError "Could not find the latest url for $repo"
+    fi
+
+    if [ "${latest_url}" == "" ]; then
+      printWarning "No releases published for $repo"
+      continue
+    fi
+
+    if ! curl -L ${latest_url} -O 2>/dev/null; then
+      printError "Could not download ${latest_url}"
+    fi
+
+    pax=$(basename ${latest_url})
+    if [ ! -f "${pax}" ]; then
+      printError "${pax} was not actually downloaded?"
+    fi
+
+    printHeader "Extracting $pax"
+    if ! pax -rf $pax 2>/dev/null; then
+      printError "Could not extract $pax"
+    fi
+    rm -f "${pax}"
+    dirname=${pax%.pax.Z}
+    name=${repo%port}
+    if [ -L $name ]; then
+      rm $name
+    fi 
+    if ! ln -s $dirname $name; then
+      printError "Could not create symbolic link name"
+    fi 
+  else
+    printHeader "Skipping download of latest release from $repo"
+  fi
+done
