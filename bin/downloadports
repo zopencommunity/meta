@@ -51,7 +51,6 @@ for repo in $(echo ${repo_results}); do
   repo=${repo#"ZOSOpenTools/"}
   if [ -z "${toolrepo}" -o "${toolrepo}" == "${repo}" ]; then
     printHeader "Downloading latest release from $repo"
-    URL=$(curl -s https://api.github.com/repos/ZOSOpenTools/${repo}/releases/latest | grep browser_download_url | cut -d '"' -f 4)
     if ! latest_url=$(curl -s https://api.github.com/repos/ZOSOpenTools/${repo}/releases/latest 2>/dev/null | grep browser_download_url | cut -d '"' -f 4); then
       printError "Could not find the latest url for $repo"
     fi
