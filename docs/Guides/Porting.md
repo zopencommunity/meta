@@ -57,3 +57,22 @@ Each tool is responsible for knowing how to set it's own environment up (e.g. PA
 Each tool needs to provide a `.env` program that can be source'd from it's directory to set up it's environment. 
 If you are building from a ZOSOpenTools port, this `.env` file will be created as part of the install process, but if you
 are providing a `boot` version of the tool (e.g. cURL), then you will need to provide your own version of `.env`. 
+
+### Creating a repository under ZOSOpenTools
+
+After you have a working z/OS prototype for your tool, you will need to create a repository to hold your contents.
+
+Send an email to itodorov@ca.ibm.com or fultonm@ca.ibm.com with the following information:
+* Name of the tool
+* Current repository where contents reside
+* List of Collaborators
+
+Once your repository is created, you will be invited as a collaborator.
+
+Proceed to clone the repository and submit a Pull Request including the initial contents of your z/OS port.
+
+### Setting up the CI/CD pipeline
+
+Once you have a working build of your z/OS Open Source tool, then you may add it to the z/OS Open Source Jenkins CI/CD pipeline.
+
+View [CI/CD Pipeline](/Guides/Pipeline.md) for more details
