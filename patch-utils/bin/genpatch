@@ -1,0 +1,71 @@
+#!/bin/sh
+#
+# This tool needs to run 'off Z' (it runs successfully on a Mac)
+# This tool takes as input a tarball and a directory of patches created
+# with 'patch' (not git diff). 
+# On output, it will write to the specified directory, 
+# a set of patches that can be applied with
+# 'git apply'
+#
+set +x
+if [ $# -lt 3 ]; then
+        echo "Syntax: $0 <tarball> <patch dir> <git patch dir>" >&2
+        echo "  where <tarball name> is the name of a source tarball" >&2
+        echo "  and <patch dir> is the name of a directory to apply standard patches from" >&2
+        echo "  and <git patch dir> is the name of a directory to git patches to" >&2
+        exit 4
+fi
+tarball="$1"
+patchdir="$2"
+gitpatchdir="$3"
+tarballdir=${tarball%%.tar.gz}
+if ! [ -f "${tarball}" ] || [ "${tarballdir}" = "${tarball}" ] ; then
+        echo "Tarball ${tarball} does not exist or is not in the format <file>.tar.gz " >&2
+        exit 4
+fi
+
+if ! [ -d "${patchdir}" ]; then
+        echo "Patch directory ${patchdir} does not exist" >&2
+        exit 4
+fi
+
+if ! [ -d "${gitpatchdir}" ]; then
+        echo "git patch directory ${gitpatchdir} does not exist" >&2
+        exit 4
+fi
+tarballdir=$(cd ${tarballdir} && echo ${PWD})
+patchdir=$(cd ${patchdir} && echo ${PWD})
+gitpatchdir=$(cd ${gitpatchdir} && echo ${PWD})
+
+rm -rf "${tarballdir}"
+if ! tar -xvf "${tarball}"; then
+	echo "Unable to extract tarball ${tarball}" >&2
+	exit 4
+fi
+
+if ! cd "${tarballdir}"; then
+        echo "Extract of tarball ${tarball} did not create ${tarballdir}" >&2
+        exit 4
+fi
+if ! git init || ! git add . || ! git commit -m "main" || ! git checkout -b patches ; then
+        echo "Unable to initialize a git repository for the tarball" >&2
+        exit 4
+fi
+
+list=`(cd "${patchdir}" && ls *.patch)`
+for p in $list; do
+	if ! dopatch "${patchdir}" "$p" ; then
+		echo "Patch failed" >&2
+		exit 4
+	fi
+	if ! git add . ; then 
+		echo "Unable to git add files from patch $p" >&2
+		exit 4
+	fi
+	name=${p%%.patch}
+	if ! git commit -m "${name}" ; then
+		echo "Unable to commit changes from patch $p" >&2
+		exit 4
+	fi
+done
+git format-patch main -o "${gitpatchdir}"

@@ -199,7 +199,9 @@ checkEnv()
     deps="${PORT_GIT_DEPS}"
   fi
 
-  checkDeps "${deps}"    
+  if ! checkDeps "${deps}"; then
+		printError "One or more dependent products aren't available"
+	fi
 
   export PORT_CA="${utilparentdir}/cacert.pem"
   if ! [ -r "${PORT_CA}" ]; then
@@ -359,6 +361,7 @@ extractTarBall()
   tarballz="$1"
   dir="$2"
 
+	printInfo "Extract tarball ${tarballz} into ${dir}"
   ext=${tarballz##*.}
   if [ "${ext}x" = "xzx" ]; then
     if ! xz -d "${tarballz}"; then
@@ -419,8 +422,13 @@ downloadTarBall()
     echo "Using existing tarball directory ${dir}" >&2
   else
     if ${verbose}; then
-			printVerbose "curl -L -0 -o ${tarballz} ${PORT_TARBALL_URL}"
+			printVerbose "curl -L -o ${tarballz} ${PORT_TARBALL_URL}"
 		fi
+		#
+		# Some older tarballs (openssl) contain a pax_global_header file. Remove it 
+		# in advance so that unzip won't fail
+		#
+		rm -f pax_global_header
     if ! curl -L -0 -o "${tarballz}" "${PORT_TARBALL_URL}" 2>/dev/null ; then
       if [ -f "${tarballz}" ] && [ $(wc -c "${tarballz}" | awk '{print $1}') -lt 1024 ]; then
         cat "${tarballz}" >/dev/null
@@ -436,33 +444,6 @@ downloadTarBall()
     extractTarBall "${tarballz}" "${dir}"
   fi
   echo "${dir}"
-}
-
-#
-# This function adds code from the 'additions' directory, if it exists
-#
-addCode()
-{
-  printHeader "Adding code"
-  if [ "${PORT_TYPE}x" = "TARBALLx" ]; then
-    tarballz=$(basename "$PORT_TARBALL_URL")
-    code_dir="${PORT_ROOT}/${tarballz%%.tar.*}"
-  else
-    gitname=$(basename "$PORT_GIT_URL")
-    code_dir="${PORT_ROOT}/${gitname%%.*}"
-  fi
-
-  add_dir="${PORT_ROOT}/additions"
-  if ! [ -d "${add_dir}" ]; then
-    # Most code does not have additions - so no noisy 'warning' unless verbose
-		if ${verbose}; then
-			printWarning "${add_dir} does not exist - no patches to apply"
-		fi
-    return 0
-  fi
-
-	cp -rf "${add_dir}"/* "${code_dir}"
-	return $?
 }
 
 #
@@ -503,7 +484,7 @@ applyPatches()
     return 0
   fi
 
-  patches=$( (cd "${patch_dir}" && find . -name "*.patch"))
+  patches=$( (cd "${patch_dir}" && find . -name "*.patch" | sort))
   results=$( (cd "${code_dir}" && git status --porcelain --untracked-files=no 2>&1))
   failedcount=0
   if [ "${results}" != '' ]; then
@@ -518,7 +499,7 @@ applyPatches()
         printWarning "Warning: patch file ${p} is empty - nothing to be done"
       else
         printInfo "Applying ${p}"
-        if ! out=$( (cd "${code_dir}" && git apply --check --ignore-whitespace "${p}" 2>&1 && git apply --ignore-whitespace "${p}")); then
+        if ! out=$( (cd "${code_dir}" && git apply --check "${p}" 2>&1 && git apply "${p}")); then
           printSoftError "Patch of make tree failed (${p})."
           printSoftError "${out}"
           failedcount=$((failedcount + 1))
@@ -691,10 +672,6 @@ if [ "${PORT_INSTALL_DIR}x" = "x" ]; then
 fi
 if [ "${PORT_CONFIGURE_OPTS}x" = "x" ]; then
 	export PORT_CONFIGURE_OPTS="--prefix=${PORT_INSTALL_DIR} ${PORT_EXTRA_CONFIGURE_OPTS}"
-fi
-
-if ! addCode; then
-  exit 4
 fi
 
 if ! applyPatches; then
