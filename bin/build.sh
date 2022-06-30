@@ -91,6 +91,7 @@ printSyntax()
   echo "  -h: print this information" >&2
   echo "  -v: run in verbose mode" >&2
   echo "  -e <env file>: source <env file> instead of setenv to establish build environment" >&2
+  echo "  -s: exec a shell before running configure.  Useful when manually building ports." >&2
   opts=$(printEnvVar)
   echo "${opts}" >&2
 }
@@ -99,6 +100,7 @@ processOptions()
 {
   args=$*
   verbose=false
+  startShell=false
   for arg in $args; do
     case $arg in
       "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
@@ -110,6 +112,9 @@ processOptions()
         ;;
       "-e" | "--env")
         printError "-e option not implemented yet"
+        ;;
+      "-s" | "--shell")
+        startShell=true
         ;;
       *)
         printError "Unknown option ${arg} specified"
@@ -679,6 +684,10 @@ if ! applyPatches; then
 fi
 
 cd "${PORT_ROOT}/${dir}" || exit 99
+
+if ${startShell}; then
+  exec /bin/sh
+fi
 
 if ! bootstrap; then
   exit 4
