@@ -1,0 +1,26 @@
+// Generic pipeline that drives the build, test, and promotion of a ZOSOpenTools project
+// This pipeline is called via https://128.168.139.253:8443/view/Framework/job/Port-Pipeline/
+// Inputs:
+//   PORT_GITHUB_REPO : Github repository (e.g. https://github.com/ZOSOpenTools/makeport.git)
+//   PORT_BRANCH : (default: main)
+//   PORT_DESCRIPTION : Description of the project
+def repo = params.get("PORT_GITHUB_REPO") 
+def branch = params.get("PORT_BRANCH") 
+def description = params.get("PORT_DESCRIPTION") 
+
+//TODO: Store results into vars if we want to publish to Slack in the future
+def buildResult = [:]
+def promoteResult = [:]
+
+node('linux') 
+{
+  stage('Build and Test') {
+    // Build Job : https://128.168.139.253:8443/view/Framework/job/Port-Build/
+    buildResult = build job: 'Port-Build', parameters: [string(name: 'PORT_GITHUB_REPO', value: "${repo}"), string(name: 'PORT_BRANCH', value: "${branch}")]
+  }
+  
+  stage('Promote') {
+    // Publish Job : https://128.168.139.253:8443/view/Framework/job/Port-Publish/
+    promoteResult = build job: 'Port-Publish', parameters: [string(name: 'BUILD_SELECTOR', value: "<SpecificBuildSelector plugin=\"copyartifact@1.46.2\">  <buildNumber>${buildResult.number.toString()}</buildNumber></SpecificBuildSelector>"), string(name: 'PORT_GITHUB_REPO', value: "${repo}"), string(name: 'PORT_DESCRIPTION', value: "${description}")]
+  }
+}
