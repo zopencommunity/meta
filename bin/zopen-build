@@ -25,12 +25,12 @@ ZOPEN_GIT_BRANCH     The branch that the git repo should checkout (optional, tak
 ZOPEN_GIT_TAG        The tag that the git repo should checkout as a branch (optional)
 ZOPEN_URL            Alternate environment variable instead of ZOPEN_TARBALL_URL or ZOPEN_GIT_URL (alternate to ZOPEN_TARBALL_URL or ZOPEN_GIT_URL) 
 ZOPEN_DEPS           Alternate environment variable instead of ZOPEN_TARBALL_DEPS or ZOPEN_GIT_DEPS (alternate to ZOPEN_TARBALL_DEPS or ZOPEN_GIT_DEPS)  
-CC                  C compiler (defaults to '${ZOPEN_CCD}')
-CXX                 C++ compiler (defaults to '${ZOPEN_CXXD}')
-CPPFLAGS            C/C++ pre-processor flags (defaults to '${ZOPEN_CPPFLAGSD}')
-CFLAGS              C compiler flags (defaults to '${ZOPEN_CFLAGSD}')
-CXXFLAGS            C++ compiler flags (defaults to '${ZOPEN_CXXFLAGSD}')
-LDFLAGS             C/C++ linker flags (defaults to '${ZOPEN_LDFLAGSD}')
+CC                   C compiler (defaults to '${ZOPEN_CCD}')
+CXX                  C++ compiler (defaults to '${ZOPEN_CXXD}')
+CPPFLAGS             C/C++ pre-processor flags (defaults to '${ZOPEN_CPPFLAGSD}')
+CFLAGS               C compiler flags (defaults to '${ZOPEN_CFLAGSD}')
+CXXFLAGS             C++ compiler flags (defaults to '${ZOPEN_CXXFLAGSD}')
+LDFLAGS              C/C++ linker flags (defaults to '${ZOPEN_LDFLAGSD}')
 ZOPEN_EXTRA_CPPFLAGS C/C++ pre-processor flags to append to CPPFLAGS (defaults to '')
 ZOPEN_EXTRA_CFLAGS   C compiler flags to append to CFLAGS (defaults to '')
 ZOPEN_EXTRA_CXXFLAGS C++ compiler flags to append to CXXFLAGS (defaults to '')
@@ -102,6 +102,7 @@ processOptions()
   verbose=false
   startShell=false
   buildEnvFile="./buildenv"
+  depsPath="$HOME/zot/prod|$HOME/zot/boot|/usr/bin/zot/"
   while [[ $# -gt 0 ]]; do
     case $1 in
       "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
@@ -110,6 +111,10 @@ processOptions()
         ;;
       "-v" | "--v" | "-verbose" | "--verbose")
         verbose=true
+        ;;
+      "-d" | "--depspath")
+        shift
+        depsPath="${1}|${depsPath}"
         ;;
       "-e" | "--env")
         shift
@@ -129,16 +134,17 @@ processOptions()
 checkDeps()
 {
   deps=$*
-  fail=false
   for dep in $deps; do
-    if ! [ -r "${HOME}/zot/prod/${dep}/.env" ] && ! [ -r "${HOME}/zot/boot/${dep}/.env" ] && ! [ -r "/usr/bin/zot/${dep}/.env" ]; then
-      fail=true
-      printSoftError "Unable to find .env for dependency ${dep}"
+    fail=true
+    for path in `echo ${depsPath} | tr '|' '\n'` ; do
+      if [ -r "$path/${dep}/.env" ]; then
+        fail=false
+      fi
+    done
+    if $fail; then
+      printError "Unable to find .env for dependency ${dep}"
     fi
   done
-  if $fail; then
-    return 4
-  fi
 }
 
 loadBuildEnv()
@@ -248,17 +254,13 @@ setDepsEnv()
 
   orig="${PWD}"
   for dep in $deps; do
-    if [ -r "${HOME}/zot/prod/${dep}/.env" ]; then
-      depdir="${HOME}/zot/prod/${dep}"
-    elif [ -r "/usr/bin/zot/${dep}/.env" ]; then
-      depdir="/usr/bin/zot/${dep}"
-    elif [ -r "${HOME}/zot/boot/${dep}/.env" ]; then
-      depdir="${HOME}/zot/boot/${dep}"
-    else
-      printError "Internal error. Unable to find .env for ${deps} but earlier check should have caught this"
-    fi
-    printVerbose "Setting up ${depdir} dependency environment"
-    cd "${depdir}" && . ./.env
+    for path in `echo ${depsPath} | tr '|' '\n'` ; do
+      if [ -r "$path/${dep}/.env" ]; then
+        depdir="$path/${dep}"
+        printVerbose "Setting up ${depdir} dependency environment"
+        cd "${depdir}" && . ./.env
+      fi
+    done
   done
   cd "${orig}" || exit 99
 }
