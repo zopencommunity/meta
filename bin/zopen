@@ -1,0 +1,46 @@
+#!/bin/sh
+#
+# General purpose zopen script
+#
+
+printSyntax() 
+{
+  args=$*
+  echo "zopen is a general purpose script to be used with the ZOSOpenTools ports." >&2
+  echo "" >&2
+  echo "Syntax: zopen <command>" >&2
+  echo "where <command> may be one of the following:" >&2
+  echo " build: invokes the build script." >&2
+  echo " download: downloads binaries" >&2
+  echo "" >&2
+  echo "Example usage:" >&2
+  echo " # Build a port" >&2
+  echo " zopen build -v # Build port" >&2
+  echo " # Download binaries from Github" >&2
+  echo " zopen download" >&2
+}
+
+export bindir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
+. "${bindir}/common.inc"
+
+args=$*
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    "build")
+      shift
+      exec "${bindir}/zopen-build" $@
+      ;;
+    "download")
+      shift
+      exec "${bindir}/zopen-download" $@
+      ;;
+    "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
+      printSyntax "${args}"
+      exit 4
+      ;;
+    *)
+      printError "Unknown option ${1} specified"
+      ;;
+  esac
+  shift;
+done
