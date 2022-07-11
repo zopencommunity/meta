@@ -547,7 +547,7 @@ getCode()
 
 bootstrap()
 {
-  if [ "${PORT_BOOTSTRAP}x" != "skipx" ] && [ -x "${PORT_BOOTSTRAP}" ]; then
+  if [ "${PORT_BOOTSTRAP}x" != "skipx" ]; then
     printHeader "Running Bootstrap"
     if [ -r bootstrap.success ]; then
       echo "Using previous successful bootstrap" >&2
@@ -565,7 +565,7 @@ bootstrap()
 
 configure()
 {
-  if [ "${PORT_CONFIGURE}x" != "skipx" ] && [ -x "${PORT_CONFIGURE}" ]; then
+  if [ "${PORT_CONFIGURE}x" != "skipx" ]; then
     printHeader "Running Configure"
     if [ -r config.success ]; then
       echo "Using previous successful configuration" >&2
@@ -586,7 +586,7 @@ build()
   makelog="${LOG_PFX}_build.log"
   if [ "${PORT_MAKE}x" != "skipx" ] ; then
     printHeader "Running Build"
-    if ! runAndLog "\"${PORT_MAKE}\" ${PORT_MAKE_OPTS} >\"${makelog}\""; then
+    if ! runAndLog "\"${PORT_MAKE}\" ${PORT_MAKE_OPTS} CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\" >\"${makelog}\""; then
       printError "Make failed. Log: ${makelog}"
     fi
   else
@@ -599,7 +599,7 @@ check()
   checklog="${LOG_PFX}_check.log"
   if [ "${PORT_CHECK}x" != "skipx" ] ; then
     printHeader "Running Check"
-    runAndLog "\"${PORT_CHECK}\" ${PORT_CHECK_OPTS} >\"${checklog}\""
+    runAndLog "\"${PORT_CHECK}\" ${PORT_CHECK_OPTS} CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\" >\"${checklog}\""
     if ! runAndLog "\"${PORT_CHECK_RESULTS}\" \"${PORT_ROOT}/${dir}\" \"${LOG_PFX}\""; then
       printError "Check failed. Log: ${checklog}"
     fi
