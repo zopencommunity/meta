@@ -41,7 +41,7 @@ ZOPEN_BOOTSTRAP_OPTS Options to pass to bootstrap program (defaults to '${ZOPEN_
 ZOPEN_CONFIGURE      Configuration program to run. If skip is specified, no configuration step is performed (defaults to '${ZOPEN_CONFIGURED}')
 ZOPEN_CONFIGURE_OPTS Options to pass to configuration program (defaults to '--prefix=\${ZOPEN_INSTALL_DIR}')
 ZOPEN_EXTRA_CONFIGURE_OPTS Extra configure options to pass to configuration program (defaults to '')
-ZOPEN_INSTALL_DIR    Installation directory to pass to configuration (defaults to '\${HOME}/zot/prod/<pkg>')
+ZOPEN_INSTALL_DIR    Installation directory to pass to configuration (defaults to '\${HOME}/zopen/prod/<pkg>')
 ZOPEN_MAKE           Build program to run. If skip is specified, no build step is performed (defaults to '${ZOPEN_MAKED}')
 ZOPEN_MAKE_OPTS      Options to pass to build program (defaults to '-j\${ZOPEN_NUM_JOBS}')
 ZOPEN_CHECK          Check program to run. If skip is specified, no check step is performed (defaults to '${ZOPEN_CHECKD}') 
@@ -102,7 +102,7 @@ processOptions()
   verbose=false
   startShell=false
   buildEnvFile="./buildenv"
-  depsPath="$HOME/zot/prod|$HOME/zot/boot|/usr/bin/zot/"
+  depsPath="$HOME/zopen/prod|$HOME/zopen/boot|/usr/bin/zopen/"
   while [[ $# -gt 0 ]]; do
     case $1 in
       "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
@@ -691,7 +691,7 @@ fi
 # of the git package, e.g. makeport?
 #
 if [ "${ZOPEN_INSTALL_DIR}x" = "x" ]; then
-  export ZOPEN_INSTALL_DIR="${HOME}/zot/prod/${dir}"
+  export ZOPEN_INSTALL_DIR="${HOME}/zopen/prod/${dir}"
 fi
 if [ "${ZOPEN_CONFIGURE_OPTS}x" = "x" ]; then
   export ZOPEN_CONFIGURE_OPTS="--prefix=${ZOPEN_INSTALL_DIR} ${ZOPEN_EXTRA_CONFIGURE_OPTS}"
