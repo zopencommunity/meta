@@ -3,12 +3,12 @@
 # Used for development to source all the boot .envs
 # . importenvs
 
-if [ ! -d "${HOME}/zot/boot/" ]; then
+if [ ! -d "${HOME}/zopen/boot/" ]; then
   echo "boot directory does not exist.  Existing"
   exit 4;
 fi
 
-for deps in $(find "${HOME}/zot/boot/" -name ".env")
+for deps in $(find "${HOME}/zopen/boot/" -name ".env")
 do
   echo "Found ${deps}"
   depdir=$(dirname "${deps}")

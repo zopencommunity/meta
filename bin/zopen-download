@@ -8,21 +8,22 @@ export utildir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
 printSyntax() 
 {
   args=$*
-  echo "downloadports is a tool that downloads and extracts the latest z/OS Open Tools releases from GitHub Releases." >&2
-  echo "Syntax: downloadports [<option>]*" >&2
+  echo "zopen-download is a tool that downloads and extracts the latest z/OS Open Tools releases from GitHub Releases." >&2
+  echo "Syntax: zopen-download [<option>]*" >&2
   echo "  where <option> may be one or more of:" >&2
-  echo "  -d: print this information" >&2
-  echo "  -t: run in verbose mode" >&2
+  echo "  -d <dir>: directory to download binaries to.  Uses current working directory if not specified." >&2
+  echo "  -r <repo>: specific repo name to download. Downloads all ZOSOpenTools if not specified." >&2
 }
 
 args=$*
+download=$PWD
 while [[ $# -gt 0 ]]; do
   case "$1" in
     "-d")
       download=$2;
       shift
       ;;
-    "-t")
+    "-r")
       toolrepo=$2;
       shift
       ;;
@@ -47,15 +48,14 @@ if ! repo_results=$(curl -s "https://api.github.com/users/ZOSOpenTools/repos?per
 fi
 
 for repo in $(echo ${repo_results}); do
-  echo $repo
   repo=${repo#"ZOSOpenTools/"}
-  if [ -z "${toolrepo}" -o "${toolrepo}" == "${repo}" ]; then
+  if [ -z $toolrepo ] || [ "${toolrepo}" = "${repo}" ]; then
     printHeader "Downloading latest release from $repo"
     if ! latest_url=$(curl -s https://api.github.com/repos/ZOSOpenTools/${repo}/releases/latest 2>/dev/null | grep browser_download_url | cut -d '"' -f 4); then
       printError "Could not find the latest url for $repo"
     fi
 
-    if [ "${latest_url}" == "" ]; then
+    if [ -z $latest_url ]; then
       printWarning "No releases published for $repo"
       continue
     fi
