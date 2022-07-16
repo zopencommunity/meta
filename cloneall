@@ -1,0 +1,20 @@
+#!/bin/sh
+#
+# Run this script from your $HOME/zot/dev directory and ensure you already have utils cloned
+# The script will pull down the repos, iterate through them, and do a clone of all the repos
+# that have 'port' in them.
+# Note the 'rm' of the old repo is commented out so this isn't destructive. If you want a fresh
+# start, uncomment the 'rm'
+#
+mydir=$( cd $( dirname $0 )/; echo $PWD )
+export SSL_CERT_FILE="${mydir}/utils/cacert.pem"
+export GIT_SSL_CAINFO="${mydir}/utils/cacert.pem"
+repos=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/users/zosopentools/repos | grep '"url"' | grep -v "ZOSOpenTools\"" | awk '{print $2; }' | tr ',' " " | tr '"' " ") 
+(cd "${mydir}/../boot/git/"; . ./.env)
+for repo in $repos; do
+	reponame=${repo##*/}
+	if [ "${reponame%%port*}" != "${reponame}" ]; then
+		#rm -rf "${reponame}";
+		git clone "git@github.com:ZOSOpenTools/${reponame}.git"
+	fi
+done
