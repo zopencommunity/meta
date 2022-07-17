@@ -7,10 +7,15 @@
 # start, uncomment the 'rm'
 #
 mydir=$( cd $( dirname $0 )/; echo $PWD )
-export SSL_CERT_FILE="${mydir}/utils/cacert.pem"
-export GIT_SSL_CAINFO="${mydir}/utils/cacert.pem"
+CACERT="${mydir}/utils/cacert.pem"
+if [ -f "${CACERT}" ]; then
+	export SSL_CERT_FILE="${CA}"
+	export GIT_SSL_CAINFO="${CA}"
+fi
 repos=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/users/zosopentools/repos | grep '"url"' | grep -v "ZOSOpenTools\"" | awk '{print $2; }' | tr ',' " " | tr '"' " ") 
-(cd "${mydir}/../boot/git/"; . ./.env)
+if ! command -v git ; then
+	(cd "${mydir}/../boot/git/"; . ./.env)
+fi
 for repo in $repos; do
 	reponame=${repo##*/}
 	if [ "${reponame%%port*}" != "${reponame}" ]; then
