@@ -41,6 +41,7 @@ ZOPEN_BOOTSTRAP_OPTS Options to pass to bootstrap program (defaults to '${ZOPEN_
 ZOPEN_CONFIGURE      Configuration program to run. If skip is specified, no configuration step is performed (defaults to '${ZOPEN_CONFIGURED}')
 ZOPEN_CONFIGURE_OPTS Options to pass to configuration program (defaults to '--prefix=\${ZOPEN_INSTALL_DIR}')
 ZOPEN_EXTRA_CONFIGURE_OPTS Extra configure options to pass to configuration program (defaults to '')
+ZOPEN_SRC_DIR        Source directory relative to root to build from (defaults to ./)
 ZOPEN_INSTALL_DIR    Installation directory to pass to configuration (defaults to '\${HOME}/zopen/prod/<pkg>')
 ZOPEN_MAKE           Build program to run. If skip is specified, no build step is performed (defaults to '${ZOPEN_MAKED}')
 ZOPEN_MAKE_OPTS      Options to pass to build program (defaults to '-j\${ZOPEN_NUM_JOBS}')
@@ -304,6 +305,10 @@ setEnv()
   if [ $ZOPEN_NUM_JOBS -lt 1 ]; then
     export ZOPEN_NUM_JOBS=1
   fi
+
+	if [ "${ZOPEN_SRC_DIR}x" = "x" ]; then
+		export ZOPEN_SRC_DIR="./"
+	fi
 
   if [ "${ZOPEN_BOOTSTRAP}x" = "x" ]; then
     export ZOPEN_BOOTSTRAP="${ZOPEN_BOOTSTRAPD}"
@@ -707,7 +712,7 @@ if ! applyPatches; then
   exit 4
 fi
 
-cd "${ZOPEN_ROOT}/${dir}" || exit 99
+cd "${ZOPEN_ROOT}/${dir}/${ZOPEN_SRC_DIR}" || exit 99
 
 if ${startShell}; then
   exec /bin/sh
