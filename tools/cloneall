@@ -1,16 +1,19 @@
 #!/bin/sh
 #
-# Run this script from your $HOME/zot/dev directory and ensure you already have utils cloned
+# Run this script from your $HOME/zopen/dev directory and ensure you already have utils cloned
 # The script will pull down the repos, iterate through them, and do a clone of all the repos
 # that have 'port' in them.
 # Note the 'rm' of the old repo is commented out so this isn't destructive. If you want a fresh
 # start, uncomment the 'rm'
 #
-mydir=$( cd $( dirname $0 )/; echo $PWD )
+mydir=${PWD}
 CACERT="${mydir}/utils/cacert.pem"
 if [ -f "${CACERT}" ]; then
-	export SSL_CERT_FILE="${CA}"
-	export GIT_SSL_CAINFO="${CA}"
+	export SSL_CERT_FILE="${CACERT}"
+	export GIT_SSL_CAINFO="${CACERT}"
+else
+	echo "Unable to find cert files - are you in $HOME/zopen/dev and have you already cloned utils?" >&2
+	exit 4
 fi
 repos=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/users/zosopentools/repos | grep '"url"' | grep -v "ZOSOpenTools\"" | awk '{print $2; }' | tr ',' " " | tr '"' " ") 
 if ! command -v git ; then
