@@ -64,7 +64,7 @@ To build from scratch, start with the tarballs of the following tools:
  - autoconf: additionally requires libz in prod.
  - automake: additionally requires autoconf in prod.
  
-One you either have these tools built, or have downloaded a pre-built pax file for the build, you may want to build other tools.
+Once you either have these tools built, or have downloaded a pre-built pax file for the build, you may want to build other tools.
 Each tool has a _buildenv_ file and one of the entries will describe the tools it requires to build, depending
 on where the source is from (currently TARBALL or GIT clone). So for example m4 requires:
  - ZOPEN_TARBALL_DEPS="curl gzip make m4"
