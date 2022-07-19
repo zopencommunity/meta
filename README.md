@@ -45,7 +45,7 @@ Both IBM and Rocket provide supported versions of the software above for a fee.
 
 Taking the defaults will mean there are less variables for you to configure. We recommend you structure your sandbox as follows:
 
- - Have the root of your development file system be $HOME/zot (you will want to have several gigabytes of storage for use - we recommend at least 15GB)
+ - Have the root of your development file system be $HOME/zopen (you will want to have several gigabytes of storage for use - we recommend at least 15GB)
  - Have sub-directories called _boot_, _prod_, _dev_.
     - _boot_: sub-directory for each tool required to bootstrap (make, git, curl, gunzip, m4)
     - _prod_: sub-directory for tools to be installed once built. These tools will be used by downstream software, e.g. make build process will use the Perl prod build
