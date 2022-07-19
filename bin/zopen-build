@@ -342,13 +342,14 @@ setEnv()
 
 #
 # 'Quick' way to find untagged non-binary files. If the list of extensions grows, something more
-# elegant is required
+# elegant is required.
+# Note the directory might be a symbolic link, so 'cd' into it first so that avoiding symbolic links doesn't eliminate everything
 #
 tagTree()
 {
   dir="$1"
-  find "${dir}" -name "*.pdf" -o -name "*.png" -o -name "*.bat" ! -type d ! -type l | xargs -I {} chtag -b {}
-  find "${dir}" ! -type d ! -type l | xargs -I {} chtag -qp {} | awk '{ if ($1 == "-") { print $4; }}' | xargs -I {} chtag -tcISO8859-1 {}
+  ( cd "${dir}" && find . -name "*.pdf" -o -name "*.png" -o -name "*.bat" ! -type d ! -type l | xargs -I {} chtag -b {} )
+  ( cd "${dir}" && find . ! -type d ! -type l | xargs -I {} chtag -qp {} | awk '{ if ($1 == "-") { print $4; }}' | xargs -I {} chtag -tcISO8859-1 {} )
 }
 
 gitClone()
@@ -413,8 +414,8 @@ extractTarBall()
   tagTree "${dir}"
   cd "${dir}" || printError "Cannot cd to ${dir}"
   if [ -f .gitattributes ]; then
-    printWarning "Existing .gitattributes file moved to .gitattributes-orig."
-    mv .gitattributes .gitattributes-orig
+    printWarning "Existing .git* files and .travis.yml files being removed."
+    rm -rf .git* .travis.yml
   fi
   if ! echo "* text working-tree-encoding=ISO8859-1" >.gitattributes; then
     printError "Unable to create .gitattributes for tarball"
