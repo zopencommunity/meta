@@ -100,6 +100,7 @@ processOptions()
 {
   args=$*
   verbose=false
+  skipcheck=false
   startShell=false
   buildEnvFile="./buildenv"
   depsPath="$HOME/zopen/prod|$HOME/zopen/boot|/usr/bin/zopen/"
@@ -111,6 +112,9 @@ processOptions()
         ;;
       "-v" | "--v" | "-verbose" | "--verbose")
         verbose=true
+        ;;
+      "-sc" | "--skipcheck")
+        skipcheck=true
         ;;
       "-d" | "--depspath")
         shift
@@ -611,7 +615,7 @@ build()
 check()
 {
   checklog="${LOG_PFX}_check.log"
-  if [ "${ZOPEN_CHECK}x" != "skipx" ] ; then
+  if [ "${ZOPEN_CHECK}x" != "skipx" ] && ! ${skipcheck}; then
     printHeader "Running Check"
     runAndLog "\"${ZOPEN_CHECK}\" ${ZOPEN_CHECK_OPTS} CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\" >\"${checklog}\""
     if ! runAndLog "\"${ZOPEN_CHECK_RESULTS}\" \"${ZOPEN_ROOT}/${dir}\" \"${LOG_PFX}\""; then

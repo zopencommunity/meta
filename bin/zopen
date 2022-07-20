@@ -34,7 +34,7 @@ while [[ $# -gt 0 ]]; do
       shift
       exec "${bindir}/zopen-download" $@
       ;;
-    "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
+    "help" | "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
       printSyntax "${args}"
       exit 4
       ;;
@@ -44,3 +44,5 @@ while [[ $# -gt 0 ]]; do
   esac
   shift;
 done
+
+printSyntax
