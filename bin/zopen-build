@@ -522,7 +522,7 @@ applyPatches()
         printWarning "Warning: patch file ${p} is empty - nothing to be done"
       else
         printInfo "Applying ${p}"
-        if ! out=$( (cd "${code_dir}" && git apply --check "${p}" 2>&1 && git apply "${p}")); then
+        if ! out=$( (cd "${code_dir}" && git apply --check "${p}" 2>&1 && git apply "${p}" 2>&1 )); then
           printSoftError "Patch of make tree failed (${p})."
           printSoftError "${out}"
           failedcount=$((failedcount + 1))
@@ -531,6 +531,9 @@ applyPatches()
       fi
     done
   fi
+
+  # Tag the files that were just updated (again) as ASCII (hopefully can remove after we build our own git)
+  (cd "${code_dir}" && git status --untracked-files=no -s | awk '{ $1=""; print; }' | xargs chtag -tcISO8859-1)
   if ${moved}; then
     mv "${code_dir}/.git" "${code_dir}/.git-for-patches" || exit 99
   fi
