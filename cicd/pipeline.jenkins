@@ -19,7 +19,7 @@ node('linux')
     // Build Job : https://128.168.139.253:8443/view/Framework/job/Port-Build/
     buildResult = build job: 'Port-Build', parameters: [string(name: 'PORT_GITHUB_REPO', value: "${repo}"), string(name: 'PORT_BRANCH', value: "${branch}")]
     } catch (Exception e) {
-      handleError(e)
+      handleError(e, repo)
     }
   }
   
@@ -28,7 +28,7 @@ node('linux')
       // Publish Job : https://128.168.139.253:8443/view/Framework/job/Port-Publish/
       promoteResult = build job: 'Port-Publish', parameters: [string(name: 'BUILD_SELECTOR', value: "<SpecificBuildSelector plugin=\"copyartifact@1.46.2\">  <buildNumber>${buildResult.number.toString()}</buildNumber></SpecificBuildSelector>"), string(name: 'PORT_GITHUB_REPO', value: "${repo}"), string(name: 'PORT_DESCRIPTION', value: "${description}")]
     } catch (Exception e) {
-      handleError(e)
+      handleError(e, repo)
     }
   }
 
@@ -39,7 +39,7 @@ node('linux')
   }
 }
 
-def handleError(e, reason="unknown") {
+def handleError(e, repo, reason="unknown") {
   if (e && e.getMessage()) {
     reason = e.getMessage()
   } else if (env.STAGE_NAME) {
