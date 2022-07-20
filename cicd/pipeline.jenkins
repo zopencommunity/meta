@@ -30,7 +30,7 @@ node('linux')
     }
 
     failure {
-      slackSend failOnError:true message:"Build for ${repo} failed  - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
+      slackSend failOnError:true, message:"Build for ${repo} failed  - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
     }
   }
 }
