@@ -19,7 +19,8 @@ export NO_COLOR=1
 . /jenkins/.env
 
 # Add cloned utils dir to PATH
-export PATH="$PWD/bin:$PATH"
+git clone https://github.com/ZOSOpenTools/utils.git
+export PATH="$PWD/utils/bin:$PATH"
 
 # Get port name based on git repo
 PORT_NAME=$(basename "${PORT_GITHUB_REPO}")
