@@ -41,7 +41,6 @@ ZOPEN_BOOTSTRAP_OPTS Options to pass to bootstrap program (defaults to '${ZOPEN_
 ZOPEN_CONFIGURE      Configuration program to run. If skip is specified, no configuration step is performed (defaults to '${ZOPEN_CONFIGURED}')
 ZOPEN_CONFIGURE_OPTS Options to pass to configuration program (defaults to '--prefix=\${ZOPEN_INSTALL_DIR}')
 ZOPEN_EXTRA_CONFIGURE_OPTS Extra configure options to pass to configuration program (defaults to '')
-ZOPEN_SRC_DIR        Source directory relative to root to build from (defaults to ./)
 ZOPEN_INSTALL_DIR    Installation directory to pass to configuration (defaults to '\${HOME}/zopen/prod/<pkg>')
 ZOPEN_MAKE           Build program to run. If skip is specified, no build step is performed (defaults to '${ZOPEN_MAKED}')
 ZOPEN_MAKE_OPTS      Options to pass to build program (defaults to '-j\${ZOPEN_NUM_JOBS}')
@@ -306,10 +305,6 @@ setEnv()
     export ZOPEN_NUM_JOBS=1
   fi
 
-	if [ "${ZOPEN_SRC_DIR}x" = "x" ]; then
-		export ZOPEN_SRC_DIR="./"
-	fi
-
   if [ "${ZOPEN_BOOTSTRAP}x" = "x" ]; then
     export ZOPEN_BOOTSTRAP="${ZOPEN_BOOTSTRAPD}"
   fi
@@ -342,14 +337,13 @@ setEnv()
 
 #
 # 'Quick' way to find untagged non-binary files. If the list of extensions grows, something more
-# elegant is required.
-# Note the directory might be a symbolic link, so 'cd' into it first so that avoiding symbolic links doesn't eliminate everything
+# elegant is required
 #
 tagTree()
 {
   dir="$1"
-  ( cd "${dir}" && find . -name "*.pdf" -o -name "*.png" -o -name "*.bat" ! -type d ! -type l | xargs -I {} chtag -b {} )
-  ( cd "${dir}" && find . ! -type d ! -type l | xargs -I {} chtag -qp {} | awk '{ if ($1 == "-") { print $4; }}' | xargs -I {} chtag -tcISO8859-1 {} )
+  find "${dir}" -name "*.pdf" -o -name "*.png" -o -name "*.bat" ! -type d ! -type l | xargs -I {} chtag -b {}
+  find "${dir}" ! -type d ! -type l | xargs -I {} chtag -qp {} | awk '{ if ($1 == "-") { print $4; }}' | xargs -I {} chtag -tcISO8859-1 {}
 }
 
 gitClone()
@@ -414,8 +408,7 @@ extractTarBall()
   tagTree "${dir}"
   cd "${dir}" || printError "Cannot cd to ${dir}"
   if [ -f .gitattributes ]; then
-    printWarning "Existing .git* files and .travis.yml files being removed."
-    rm -rf .git* .travis.yml
+    printError "No support for existing .gitattributes file. Write some code"
   fi
   if ! echo "* text working-tree-encoding=ISO8859-1" >.gitattributes; then
     printError "Unable to create .gitattributes for tarball"
@@ -525,7 +518,7 @@ applyPatches()
         printWarning "Warning: patch file ${p} is empty - nothing to be done"
       else
         printInfo "Applying ${p}"
-        if ! out=$( (cd "${code_dir}" && git apply --check "${p}" 2>&1 && git apply "${p}")); then
+        if ! out=$( (cd "${code_dir}" && git apply --check "${p}" 2>&1 && git apply "${p}" 2>&1 )); then
           printSoftError "Patch of make tree failed (${p})."
           printSoftError "${out}"
           failedcount=$((failedcount + 1))
@@ -534,6 +527,9 @@ applyPatches()
       fi
     done
   fi
+
+  # Tag the files that were just updated (again) as ASCII (hopefully can remove after we build our own git)
+  (cd "${code_dir}" && git status --untracked-files=no -s | awk '{ $1=""; print; }' | xargs chtag -tcISO8859-1)
   if ${moved}; then
     mv "${code_dir}/.git" "${code_dir}/.git-for-patches" || exit 99
   fi
@@ -568,7 +564,7 @@ getCode()
 
 bootstrap()
 {
-  if [ "${ZOPEN_BOOTSTRAP}x" != "skipx" ] && ([ `command -v "${ZOPEN_BOOTSTRAP}"` ] || [ -x "${ZOPEN_BOOTSTRAP}" ]); then
+  if [ "${ZOPEN_BOOTSTRAP}x" != "skipx" ]; then
     printHeader "Running Bootstrap"
     if [ -r bootstrap.success ]; then
       echo "Using previous successful bootstrap" >&2
@@ -586,7 +582,7 @@ bootstrap()
 
 configure()
 {
-  if [ "${ZOPEN_CONFIGURE}x" != "skipx" ] && ([ `command -v "${ZOPEN_CONFIGURE}"` ] || [ -x "${ZOPEN_CONFIGURE}" ]); then
+  if [ "${ZOPEN_CONFIGURE}x" != "skipx" ]; then
     printHeader "Running Configure"
     if [ -r config.success ]; then
       echo "Using previous successful configuration" >&2
@@ -605,7 +601,7 @@ configure()
 build()
 {
   makelog="${LOG_PFX}_build.log"
-  if [ "${ZOPEN_MAKE}x" != "skipx" ] && ([ `command -v "${ZOPEN_MAKE}"` ] || [ -x "${ZOPEN_MAKE}" ]); then
+  if [ "${ZOPEN_MAKE}x" != "skipx" ] ; then
     printHeader "Running Build"
     if ! runAndLog "\"${ZOPEN_MAKE}\" ${ZOPEN_MAKE_OPTS} CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\" >\"${makelog}\""; then
       printError "Make failed. Log: ${makelog}"
@@ -618,7 +614,7 @@ build()
 check()
 {
   checklog="${LOG_PFX}_check.log"
-  if [ "${ZOPEN_CHECK}x" != "skipx" ] && ([ `command -v "${ZOPEN_CHECK}"` ] || [ -x "${ZOPEN_CHECK}" ]); then
+  if [ "${ZOPEN_CHECK}x" != "skipx" ] ; then
     printHeader "Running Check"
     runAndLog "\"${ZOPEN_CHECK}\" ${ZOPEN_CHECK_OPTS} CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\" >\"${checklog}\""
     if ! runAndLog "\"${ZOPEN_CHECK_RESULTS}\" \"${ZOPEN_ROOT}/${dir}\" \"${LOG_PFX}\""; then
@@ -631,7 +627,7 @@ check()
 
 install()
 {
-  if [ "${ZOPEN_INSTALL}x" != "skipx" ] && ([ `command -v "${ZOPEN_INSTALL}"` ] || [ -x "${ZOPEN_INSTALL}" ]); then
+  if [ "${ZOPEN_INSTALL}x" != "skipx" ]; then
     printHeader "Running Install"
     installlog="${LOG_PFX}_install.log"
     if ! runAndLog "\"${ZOPEN_INSTALL}\" ${ZOPEN_INSTALL_OPTS} >\"${installlog}\""; then
@@ -661,11 +657,6 @@ install()
 #
 
 set +x
-
-#
-# Suppress a message being produced for trap 13 (which is common in ported programs)
-#
-export _EDC_SIG_DFLT=1
 
 echo ""
 if ! setDefaults; then
@@ -713,7 +704,7 @@ if ! applyPatches; then
   exit 4
 fi
 
-cd "${ZOPEN_ROOT}/${dir}/${ZOPEN_SRC_DIR}" || exit 99
+cd "${ZOPEN_ROOT}/${dir}" || exit 99
 
 if ${startShell}; then
   exec /bin/sh
