@@ -32,7 +32,7 @@ mkdir -p ${PORT_INSTALL_DIR}
 
 git clone -b "${PORT_BRANCH}" "${PORT_GITHUB_REPO}" ${PORT_NAME} && cd ${PORT_NAME}
 
-zopen build -v
+zopen build -sc -v
 
 # Copy package to builds dir
 mkdir -p /jenkins/builds/
