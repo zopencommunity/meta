@@ -23,4 +23,14 @@ node('linux')
     // Publish Job : https://128.168.139.253:8443/view/Framework/job/Port-Publish/
     promoteResult = build job: 'Port-Publish', parameters: [string(name: 'BUILD_SELECTOR', value: "<SpecificBuildSelector plugin=\"copyartifact@1.46.2\">  <buildNumber>${buildResult.number.toString()}</buildNumber></SpecificBuildSelector>"), string(name: 'PORT_GITHUB_REPO', value: "${repo}"), string(name: 'PORT_DESCRIPTION', value: "${description}")]
   }
+
+  post {
+    success {
+      slackSend "Build for ${repo} successful - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
+    }
+
+    failure {
+      slackSend failOnError:true message:"Build for ${repo} failed  - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
+    }
+  }
 }
