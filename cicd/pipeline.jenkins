@@ -44,6 +44,6 @@ def handleError(e, repo, reason="unknown") {
     reason = "failure in ${env.STAGE_NAME.toLowerCase()} stage"
   }
   slackSend color: 'danger',
-            message: "${repo}: <${currentBuild.absoluteUrl}|Build #${currentBuild.number}> </b>	Failed</b>\n<b>Reason:</b> ${reason}"
+            message: "${repo}:\b<${currentBuild.absoluteUrl}|Build #${currentBuild.number}> *Failed*\n*Reason:* _${reason}_"
   throw e
 }
