@@ -568,7 +568,7 @@ getCode()
 
 bootstrap()
 {
-  if [ "${ZOPEN_BOOTSTRAP}x" != "skipx" ]; then
+  if [ "${ZOPEN_BOOTSTRAP}x" != "skipx" ] && [ ! -z "$(command -v ${ZOPEN_BOOTSTRAP})" ]; then
     printHeader "Running Bootstrap"
     if [ -r bootstrap.success ]; then
       echo "Using previous successful bootstrap" >&2
@@ -586,7 +586,7 @@ bootstrap()
 
 configure()
 {
-  if [ "${ZOPEN_CONFIGURE}x" != "skipx" ]; then
+  if [ "${ZOPEN_CONFIGURE}x" != "skipx" ] && [ ! -z "$(command -v ${ZOPEN_CONFIGURE})" ]; then
     printHeader "Running Configure"
     if [ -r config.success ]; then
       echo "Using previous successful configuration" >&2
@@ -605,7 +605,7 @@ configure()
 build()
 {
   makelog="${LOG_PFX}_build.log"
-  if [ "${ZOPEN_MAKE}x" != "skipx" ] ; then
+  if [ "${ZOPEN_MAKE}x" != "skipx" ] && [ ! -z "$(command -v ${ZOPEN_MAKE})" ] ; then
     printHeader "Running Build"
     if ! runAndLog "\"${ZOPEN_MAKE}\" ${ZOPEN_MAKE_OPTS} CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\" >\"${makelog}\""; then
       printError "Make failed. Log: ${makelog}"
@@ -618,7 +618,7 @@ build()
 check()
 {
   checklog="${LOG_PFX}_check.log"
-  if [ "${ZOPEN_CHECK}x" != "skipx" ] && ! ${skipcheck}; then
+  if [ "${ZOPEN_CHECK}x" != "skipx" ] && [ ! -z "$(command -v ${ZOPEN_CHECK})" ] && ! ${skipcheck}; then
     printHeader "Running Check"
     runAndLog "\"${ZOPEN_CHECK}\" ${ZOPEN_CHECK_OPTS} CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\" >\"${checklog}\""
     if ! runAndLog "\"${ZOPEN_CHECK_RESULTS}\" \"${ZOPEN_ROOT}/${dir}\" \"${LOG_PFX}\""; then
@@ -631,7 +631,7 @@ check()
 
 install()
 {
-  if [ "${ZOPEN_INSTALL}x" != "skipx" ]; then
+  if [ "${ZOPEN_INSTALL}x" != "skipx" ] && [ ! -z "$(command -v ${ZOPEN_INSTALL})" ]; then
     printHeader "Running Install"
     installlog="${LOG_PFX}_install.log"
     if ! runAndLog "\"${ZOPEN_INSTALL}\" ${ZOPEN_INSTALL_OPTS} >\"${installlog}\""; then
