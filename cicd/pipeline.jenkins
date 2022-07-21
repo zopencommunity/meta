@@ -31,11 +31,9 @@ node('linux')
       handleError(e, repo)
     }
   }
-
-  post {
-    success {
-      slackSend "Build for ${repo} successful <${currentBuild.absoluteUrl}|Build #${currentBuild.number}>"
-    }
+ 
+  stage ('Cleanup') {
+    slackSend "Build for ${repo} successful <${currentBuild.absoluteUrl}|Build #${currentBuild.number}>"
   }
 }
 
@@ -46,6 +44,6 @@ def handleError(e, repo, reason="unknown") {
     reason = "failure in ${env.STAGE_NAME.toLowerCase()} stage"
   }
   slackSend color: 'danger',
-            message: "${repo}: <${currentBuild.absoluteUrl}|Build #${currentBuild.number}> Failed*\nReason: ${reason}"
+            message: "${repo}: <${currentBuild.absoluteUrl}|Build #${currentBuild.number}> </b>	Failed</b>\n<b>Reason:</b> ${reason}"
   throw e
 }
