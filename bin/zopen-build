@@ -39,6 +39,7 @@ ZOPEN_NUM_JOBS       Number of jobs that can be run in parallel (defaults to 1/2
 ZOPEN_BOOTSTRAP      Bootstrap program to run. If skip is specified, no bootstrap step is performed (defaults to '${ZOPEN_BOOTSTRAPD}')
 ZOPEN_BOOTSTRAP_OPTS Options to pass to bootstrap program (defaults to '${ZOPEN_BOOTSTRAP_OPTSD}')
 ZOPEN_CONFIGURE      Configuration program to run. If skip is specified, no configuration step is performed (defaults to '${ZOPEN_CONFIGURED}')
+ZOPEN_CONFIGURE_MINIMAL Configuration program will not be passed CFLAGS, LDFLAGS, CPPFLAGS options but will just get them from env vars
 ZOPEN_CONFIGURE_OPTS Options to pass to configuration program (defaults to '--prefix=\${ZOPEN_INSTALL_DIR}')
 ZOPEN_EXTRA_CONFIGURE_OPTS Extra configure options to pass to configuration program (defaults to '')
 ZOPEN_INSTALL_DIR    Installation directory to pass to configuration (defaults to '\${HOME}/zopen/prod/<pkg>')
@@ -592,11 +593,17 @@ configure()
       echo "Using previous successful configuration" >&2
     else
       configlog="${LOG_PFX}_config.log"
-      if ! runAndLog "\"${ZOPEN_CONFIGURE}\" ${ZOPEN_CONFIGURE_OPTS} CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\" >\"${configlog}\" 2>&1"; then
-        printError "Configure failed. Log: ${configlog}"
-      fi
+			if [ "${ZOPEN_CONFIGURE_MINIMAL}x" = "x" ]; then
+				if ! runAndLog "\"${ZOPEN_CONFIGURE}\" ${ZOPEN_CONFIGURE_OPTS} CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\" >\"${configlog}\" 2>&1"; then
+					printError "Configure (full) failed. Log: ${configlog}"
+				fi
+			else # do not pass compiler/flags/etc
+				if ! runAndLog "\"${ZOPEN_CONFIGURE}\" ${ZOPEN_CONFIGURE_OPTS} >\"${configlog}\" 2>&1"; then
+					printError "Configure (minimal) failed. Log: ${configlog}"
+				fi
+			fi
       touch config.success
-    fi
+		fi
   else
     printHeader "Skip Configure"
   fi
