@@ -667,18 +667,11 @@ install()
 # Start of 'main'
 #
 
-set +x
-
-echo ""
 if ! setDefaults; then
   exit 4
 fi
 
 if ! processOptions $*; then
-  exit 4
-fi
-
-if ! defineColors; then
   exit 4
 fi
 
