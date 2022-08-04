@@ -795,7 +795,7 @@ LABEL specification=1.0.0"
   cd ${ZOPEN_INSTALL_DIR}
   rm -f zosadkfile
   for file in *; do
-    dockerfilecontents="${dockerfilecontents}\nCOPY $file @{CONTAINER_READWRITE}$file"
+    dockerfilecontents="${dockerfilecontents}\nCOPY $file @{CONTAINER_READWRITE}/$file"
   done
 
   # zosadk does not support gid greater than 2097151
