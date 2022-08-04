@@ -776,6 +776,14 @@ generateOCI()
   name=$(echo $package | cut -d "-" -f 1)
   version=$(echo $package | cut -d "-" -f 2)
 
+  # Make the version OCI compat
+  case "$version" in
+      *.*.*.*) ;;
+      *.*.*)  version="$version.0";;
+      *.*)  version="$version.0.0";;
+      *) version="1.0.0.0";;
+  esac
+
   dockerfilecontents="
 FROM scratch
 
@@ -790,7 +798,6 @@ LABEL specification=1.0.0"
     dockerfilecontents="${dockerfilecontents}\nCOPY $file @{CONTAINER_READWRITE}$file"
   done
 
-  
   # zosadk does not support gid greater than 2097151
   gid=$(id | cut -f2 -d' ' | cut -f2 -d'=' | cut -f1 -d'(')
   gid2=$(id | cut -f3 -d' ' | cut -f2 -d'=' | cut -f2 -d'(' | cut -f1 -d')')
