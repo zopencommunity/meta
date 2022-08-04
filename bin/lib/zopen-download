@@ -55,7 +55,7 @@ for repo in $(echo ${repo_results}); do
   repo=${repo#"ZOSOpenTools/"}
   if [ -z $toolrepo ] || [ "${toolrepo}" = "${repo}" ]; then
     name=${repo%port}
-    if [ "${repo}" == "${name}" ]; then
+    if [ "${repo}" = "${name}" ]; then
       continue;
     fi
     printHeader "Downloading latest release from $repo"
