@@ -794,11 +794,12 @@ LABEL specification=1.0.0"
 
   cd ${ZOPEN_INSTALL_DIR}
   rm -f zosadkfile
-  mkdir -p .zpm
-  cp .env .zpm/.env
   for file in *; do
     dockerfilecontents="${dockerfilecontents}\nCOPY $file @{CONTAINER_READWRITE}/$file"
   done
+  mkdir -p .zpm
+  cp .env .zpm/.env
+  dockerfilecontents="${dockerfilecontents}\nCOPY .zpm @{CONTAINER_READWRITE}/.zpm"
 
   # zosadk does not support gid greater than 2097151
   gid=$(id | cut -f2 -d' ' | cut -f2 -d'=' | cut -f1 -d'(')
