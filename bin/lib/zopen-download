@@ -47,15 +47,20 @@ if [ ! -z "${download}" -a -d "${download}" ]; then
 fi
 
 #FIXME: Once jq is ported, rewrite with jq
-if ! repo_results=$(curl -s "https://api.github.com/users/ZOSOpenTools/repos?per_page=100" 2>/dev/null | grep "\"full_name\":" | cut -d '"' -f 4); then
+if ! repo_results=$(curl -k -s "https://api.github.com/users/ZOSOpenTools/repos?per_page=100" 2>/dev/null | grep "\"full_name\":" | cut -d '"' -f 4); then
   printError "curl command could not download the z/OS Open Tools repository list"
 fi
 
 for repo in $(echo ${repo_results}); do
   repo=${repo#"ZOSOpenTools/"}
   if [ -z $toolrepo ] || [ "${toolrepo}" = "${repo}" ]; then
+    name=${repo%port}
+    if [ "${repo}" == "${name}" ]; then
+      continue;
+    fi
+    if test "${string#*$substring}" != "$string"
     printHeader "Downloading latest release from $repo"
-    if ! latest_url=$(curl -s https://api.github.com/repos/ZOSOpenTools/${repo}/releases/latest 2>/dev/null | grep browser_download_url | cut -d '"' -f 4); then
+    if ! latest_url=$(curl -k -s https://api.github.com/repos/ZOSOpenTools/${repo}/releases/latest 2>/dev/null | grep browser_download_url | cut -d '"' -f 4); then
       printError "Could not find the latest url for $repo"
     fi
 
@@ -64,7 +69,7 @@ for repo in $(echo ${repo_results}); do
       continue
     fi
 
-    if ! curl -L ${latest_url} -O 2>/dev/null; then
+    if ! curl -k -L ${latest_url} -O 2>/dev/null; then
       printError "Could not download ${latest_url}"
     fi
 
@@ -80,7 +85,6 @@ for repo in $(echo ${repo_results}); do
     fi
     rm -f "${pax}"
     dirname=${pax%.pax.Z}
-    name=${repo%port}
     if [ -L $name ]; then
       rm $name
     fi 
