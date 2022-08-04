@@ -696,6 +696,7 @@ install()
     if ! runAndLog "${ZOPEN_PAX_CMD}"; then
       printError "Could not generate pax \"${paxFileName}\""
     fi
+    generateOCI $ZOPEN_NAME
   else
     printHeader "Skipping Install"
   fi
@@ -746,7 +747,7 @@ resolveCommands()
     ZOPEN_NAME="${dir}"
     if [ "${ZOPEN_TYPE}x" = "GITx" ]; then
       branch=$(git rev-parse --abbrev-ref HEAD 2>&1 | sed "s/\//./g")
-      ZOPEN_NAME="${dir}.${branch}"
+      ZOPEN_NAME="${dir}-${branch}"
     fi
     paxFileName="${ZOPEN_NAME}.${LOG_PFX}.zos.pax.Z"
     export ZOPEN_PAX_CMD="pax -w -z -x pax \"-s#${ZOPEN_INSTALL_DIR}/#${ZOPEN_NAME}.${LOG_PFX}.zos/#\" -f \"${paxFileName}\" \"${ZOPEN_INSTALL_DIR}/\""
@@ -756,6 +757,51 @@ resolveCommands()
     unset ZOPEN_PAX_CMD
   fi
   return 0
+}
+
+generateOCI()
+{
+  package=$1
+  name=$(echo $package | cut -d "-" -f 1)
+  version=$(echo $package | cut -d "-" -f 2)
+
+  dockerfilecontents="
+FROM scratch
+
+LABEL name=${name}
+LABEL vendor=OSS
+LABEL version=${version}
+LABEL specification=1.0.0"
+
+  cd ${ZOPEN_INSTALL_DIR}
+  rm -f zosadkfile
+  for file in *; do
+    dockerfilecontents="${dockerfilecontents}\nCOPY $file @{CONTAINER_READWRITE}$file"
+  done
+
+  
+  # zosadk does not support gid greater than 2097151
+  gid=$(id | cut -f2 -d' ' | cut -f2 -d'=' | cut -f1 -d'(')
+  gid2=$(id | cut -f3 -d' ' | cut -f2 -d'=' | cut -f2 -d'(' | cut -f1 -d')')
+  if [ $gid -gt 2097151 ] && [ ! -z $gid ] ; then
+    # Choose a known GID that is less than 2097151
+    chgrp -R $gid2 *
+  fi
+  
+  echo "$dockerfilecontents" > "zosadkfile"
+  if ! iconv -f IBM-1047 -tISO8859-1 <zosadkfile >.zosadkfileascii || ! chtag -tcISO8859-1 .zosadkfileascii || ! mv .zosadkfileascii zosadkfile; then
+    printError "Unable to make .gitattributes ascii for tarball"
+  fi
+
+  zpm config set products_dir $ZPM_PRODUCT_DIR
+  zpm config set products_hlq $LOGNAME
+  zpm config set java_home /usr/lpp/java/IBM/J8.0_64
+  zpm config set registry_credential AKCp8mZwMqw3THJjP1x3uoyNKxuZvqBWTvavY96UTJ4tQuDyormQ2sEQZU4sd5R3P2BgEapFh
+  zpm config set registry_user zosopentools@ibm.com
+  zpm config set registry sys-zosopentools-team-oci-registry-docker-local.artifactory.swg-devops.com
+  zosadk build -t "${name}:${version}" .
+  zosadk push "${name}:${version}" -i sys-zosopentools-team-oci-registry-docker-local.artifactory.swg-devops.com -u zosopentools@ibm.com -p AKCp8mZwMqw3THJjP1x3uoyNKxuZvqBWTvavY96UTJ4tQuDyormQ2sEQZU4sd5R3P2BgEapFh
+  cd -
 }
 
 #
