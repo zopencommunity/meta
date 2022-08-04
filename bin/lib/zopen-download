@@ -58,7 +58,6 @@ for repo in $(echo ${repo_results}); do
     if [ "${repo}" == "${name}" ]; then
       continue;
     fi
-    if test "${string#*$substring}" != "$string"
     printHeader "Downloading latest release from $repo"
     if ! latest_url=$(curl -k -s https://api.github.com/repos/ZOSOpenTools/${repo}/releases/latest 2>/dev/null | grep browser_download_url | cut -d '"' -f 4); then
       printError "Could not find the latest url for $repo"
