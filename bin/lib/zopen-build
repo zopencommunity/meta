@@ -95,7 +95,7 @@ printSyntax()
   echo "  where <option> may be one or more of:" >&2
   echo "  -h: print this information" >&2
   echo "  -v: run in verbose mode" >&2
-  echo "  --oci: publish OCI to \$ZOPEN_IMAGE_REGISTRY" >&2
+  echo "  --oci: build and publish an OCI image to \$ZOPEN_IMAGE_REGISTRY" >&2
   echo "  -e <env file>: source <env file> instead of buildenv to establish build environment" >&2
   echo "  -s: exec a shell before running configure.  Useful when manually building ports." >&2
   opts=$(printEnvVar)
