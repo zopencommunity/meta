@@ -286,6 +286,34 @@ setEnv()
     export CXXFLAGS="${ZOPEN_CXXFLAGSD} ${ZOPEN_EXTRA_CXXFLAGS}"
   fi
 
+  if [ "${CC}x" = "xlclangx" ]; then
+    # Confirm xlclang is at least 1.0.0
+    ccraw=$(xlclang -qversion | grep 'IBM C/C++ for Open Enterprise Languages on z/OS' | awk '{print substr($9,2)}')
+    if [ "${ccraw}x" = "x" ]; then
+      printError "xlclang compiler specified, but it is not a 'IBM C/C++ for Open Enterprise Languages on z/OS' compiler"
+    fi 
+    v=${ccraw%%.*}
+    vr=${ccraw%.*}
+    r=${vr##*.}
+    if [ ${v} -lt 1 ] ; then
+      printError "Need to be running at least IBM C for Open Enterprise Languages on z/OS 1"
+    fi
+  fi
+
+  if [ "${CXX}x" = "xlclang++x" ]; then
+    # Confirm xlclang++ is at least 1.0.0
+    ccraw=$(xlclang++ -qversion | grep 'IBM C/C++ for Open Enterprise Languages on z/OS' | awk '{print substr($9,2)}')
+    if [ "${ccraw}x" = "x" ]; then
+      printError "xlclang++ compiler specified, but it is not a 'IBM C/C++ for Open Enterprise Languages on z/OS' compiler"
+    fi 
+    v=${ccraw%%.*}
+    vr=${ccraw%.*}
+    r=${vr##*.}
+    if [ ${v} -lt 1 ] ; then
+      printError "Need to be running at least IBM C++ for Open Enterprise Languages on z/OS 1"
+    fi
+  fi
+
   # For compatibility with the default 'make' /etc/startup.mk on z/OS
   export CCC="${CXX}"
   export CCCFLAGS="${CXXFLAGS}"
@@ -355,6 +383,13 @@ gitClone()
 {
   if ! git --version >/dev/null 2>/dev/null; then
     printError "git is required to download from the git repo"
+  fi
+  gitraw=$(git --version | awk '{print $3;}')
+  v=${gitraw%%.*}
+  vr=${gitraw%.*}
+  r=${vr##*.}
+  if [ ${v} -lt 2 ] || [ ${r} -lt 26 ]; then 
+    printError "Need to be running at least git 2.26"
   fi
 
   gitname=$(basename "$ZOPEN_GIT_URL")
