@@ -28,15 +28,15 @@ PORT_NAME=${PORT_NAME%%.*}
 PORT_NAME=${PORT_NAME%%port}
 
 # Set install dir to workspace/install
-export PORT_INSTALL_DIR="${PWD}/install"
-mkdir -p ${PORT_INSTALL_DIR}
+export ZOPEN_INSTALL_DIR="${PWD}/install"
+mkdir -p "${ZOPEN_INSTALL_DIR}"
 
 git clone -b "${PORT_BRANCH}" "${PORT_GITHUB_REPO}" ${PORT_NAME} && cd ${PORT_NAME}
 
 zopen build -sc -v
 
-# Copy package to builds dir
+# Copy package to /jenkins/builds dir
 mkdir -p /jenkins/builds/
-cp -r "${PORT_INSTALL_DIR}" "/jenkins/builds/${PORT_NAME}.${BUILD_TIMESTAMP}"
+cp -r "${ZOPEN_INSTALL_DIR}" "/jenkins/builds/${PORT_NAME}.${BUILD_TIMESTAMP}"
 rm -f "/jenkins/builds/${PORT_NAME}"
 ln -s "/jenkins/builds/${PORT_NAME}.${BUILD_TIMESTAMP}" "/jenkins/builds/${PORT_NAME}"

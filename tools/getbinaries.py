@@ -34,8 +34,8 @@ if os.getenv('GITHUB_OAUTH_TOKEN') is None:
 g = Github(os.getenv('GITHUB_OAUTH_TOKEN'))
 
 expanded_repo = "ZOSOpenTools";
-
-print("# z/OS Open Tools - Packages");
+print("# z/OS Open Tools - Packages\n")
+print("Note: to download the latest packages, use the `zopen download` script from the [utils repo](https://github.com/ZOSOpenTools/utils)\n")
 print("| Package | Port Repo | All Releases | Latest Release | Description | |")
 print("|---|---|---|---|---|---|")
 
