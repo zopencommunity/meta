@@ -569,7 +569,7 @@ applyPatches()
   fi
 
   # Tag the files that were just updated (again) as ASCII (hopefully can remove after we build our own git)
-  (cd "${code_dir}" && git status --untracked-files=no -s | awk '{ $1=""; print; }' | xargs chtag -tcISO8859-1)
+  (cd "${code_dir}" && git status --untracked-files -s | awk '{ $1=""; print; }' | xargs chtag -tcISO8859-1)
   if ${moved}; then
     mv "${code_dir}/.git" "${code_dir}/.git-for-patches" || exit 99
   fi
