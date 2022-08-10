@@ -375,8 +375,9 @@ setEnv()
 tagTree()
 {
   dir="$1"
-  find "${dir}" -name "*.pdf" -o -name "*.png" -o -name "*.bat" ! -type d ! -type l | xargs -I {} chtag -b {}
-  find "${dir}" ! -type d ! -type l | xargs -I {} chtag -qp {} | awk '{ if ($1 == "-") { print $4; }}' | xargs -I {} chtag -tcISO8859-1 {}
+  absdir=$(cd ${dir} && echo "${PWD}")
+  (cd "${absdir}" && find . -name "*.pdf" -o -name "*.png" -o -name "*.bat" ! -type d ! -type l | xargs -I {} chtag -b {})
+  (cd "${absdir}" && find . ! -type d ! -type l | xargs -I {} chtag -qp {} | awk '{ if ($1 == "-") { print $4; }}' | xargs -I {} chtag -tcISO8859-1 {})
 }
 
 gitClone()
@@ -447,13 +448,14 @@ extractTarBall()
 
   tagTree "${dir}"
   cd "${dir}" || printError "Cannot cd to ${dir}"
-  if [ -f .gitattributes ]; then
-    printError "No support for existing .gitattributes file. Write some code"
-  fi
+
+  # Clean up .git* files since we will be creating our own local git repo for applying patches
+  rm -rf .git* .travis*
+
+  # Create .gitattributes file 
   if ! echo "* text working-tree-encoding=ISO8859-1" >.gitattributes; then
     printError "Unable to create .gitattributes for tarball"
   fi
-
   if [ "$(chtag -p .gitattributes | cut -f2 -d' ')" != "ISO8859-1" ]; then
     if ! iconv -f IBM-1047 -tISO8859-1 <.gitattributes >.gitattrascii || ! chtag -tcISO8859-1 .gitattrascii || ! mv .gitattrascii .gitattributes; then
       printError "Unable to make .gitattributes ascii for tarball"
@@ -464,6 +466,8 @@ extractTarBall()
   if ! git init . >/dev/null || ! git add -f ${files} >/dev/null || ! git commit --allow-empty -m "Create Repository for patch management" >/dev/null; then
     printError "Unable to initialize git repository for tarball"
   fi
+ 
+
   # Having the directory git-managed exposes some problems in the current git for software like autoconf,
   # so move .git to the side and just use it for applying patches
   # (you will also need to move it back to do a 'git diff' on any new patches you want to develop)
@@ -488,6 +492,14 @@ downloadTarBall()
     # in advance so that unzip won't fail
     #
     rm -f pax_global_header
+
+    # 
+    # Some sites fail on the first call because the name resolver hasn't resolved.
+    # Make a first call to just get the headers and toss everything out just to
+    # set up the cache (requirec for openssl)
+    #
+    curl -I -k "${ZOPEN_TARBALL_URL}" >/dev/null 2>&1
+
     if ! curl -k -L -0 -o "${tarballz}" "${ZOPEN_TARBALL_URL}" 2>/dev/null; then
       if [ -f "${tarballz}" ] && [ $(wc -c "${tarballz}" | awk '{print $1}') -lt 1024 ]; then
         cat "${tarballz}" >/dev/null
