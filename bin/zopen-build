@@ -498,7 +498,7 @@ downloadTarBall()
     # Make a first call to just get the headers and toss everything out just to
     # set up the cache (requirec for openssl)
     #
-    curl -I -k "${tarballz}" >/dev/null 2>&1
+    curl -I -k "${ZOPEN_TARBALL_URL}" >/dev/null 2>&1
 
     if ! curl -k -L -0 -o "${tarballz}" "${ZOPEN_TARBALL_URL}" 2>/dev/null; then
       if [ -f "${tarballz}" ] && [ $(wc -c "${tarballz}" | awk '{print $1}') -lt 1024 ]; then
