@@ -1,0 +1,13 @@
+#!/bin/sh
+echo "This script will setup your environment so you can do development on"
+echo " any of the Open Source software packages on z/OS."
+echo "The script will do the following:"
+echo " - Ask what file system you want to use for development"
+echo " - The script will then create a link from $HOME/zopen to the file system location"
+echo " - The file system will then have a 'boot', 'prod', and 'dev' directory created at this location"
+echo " - The latest versions of the software packages will be downloaded from ZOSOpenTools to your 'boot' directory"
+echo " - A file called .bootenv will be created in your 'boot' directory."
+echo "You can now source the .bootenv file, e.g. cd $HOME/zopen/boot; . ./.bootenv"
+echo "This boot environment will provide the tools necessary to be able to do development"
+echo "Currently, the boot environment tools are:"
+echo "  xlclang 1.0.0, git a.b.c, curl c.d.e, gzip f.g.h"
