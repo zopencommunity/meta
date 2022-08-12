@@ -616,13 +616,13 @@ getCode()
 
 bootstrap()
 {
-  if [ "${ZOPEN_BOOTSTRAP}x" != "skipx" ] && [ ! -z "$(command -v ${ZOPEN_BOOTSTRAP})" ]; then
+  if [ -n "${ZOPEN_BOOTSTRAP_CMD}" ] ; then
     printHeader "Running Bootstrap"
     if [ -r bootstrap.success ]; then
       echo "Using previous successful bootstrap" >&2
     else
       bootlog="${LOG_PFX}_bootstrap.log"
-      if ! runAndLog "\"${ZOPEN_BOOTSTRAP}\" ${ZOPEN_BOOTSTRAP_OPTS} >${bootlog} 2>&1"; then
+      if ! runAndLog "${ZOPEN_BOOTSTRAP_CMD} >${bootlog} 2>&1"; then
         printError "Bootstrap failed. Log: ${bootlog}" >&2
       fi
       touch bootstrap.success
@@ -634,23 +634,21 @@ bootstrap()
 
 configure()
 {
-  if [ "${ZOPEN_CONFIGURE}x" != "skipx" ] && [ ! -z "$(command -v ${ZOPEN_CONFIGURE})" ]; then
+  if [ -n "${ZOPEN_CONFIGURE_CMD}" ] ; then
     printHeader "Running Configure"
     if [ -r config.success ]; then
       echo "Using previous successful configuration" >&2
     else
       configlog="${LOG_PFX}_config.log"
-			if [ "${ZOPEN_CONFIGURE_MINIMAL}x" = "x" ]; then
-				if ! runAndLog "\"${ZOPEN_CONFIGURE}\" ${ZOPEN_CONFIGURE_OPTS} CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\" >\"${configlog}\" 2>&1"; then
-					printError "Configure (full) failed. Log: ${configlog}"
-				fi
-			else # do not pass compiler/flags/etc
-				if ! runAndLog "\"${ZOPEN_CONFIGURE}\" ${ZOPEN_CONFIGURE_OPTS} >\"${configlog}\" 2>&1"; then
-					printError "Configure (minimal) failed. Log: ${configlog}"
-				fi
-			fi
+      if ! runAndLog "${ZOPEN_CONFIGURE_CMD} >\"${configlog}\" 2>&1"; then
+        if [ "${ZOPEN_CONFIGURE_MINIMAL}" = "yes" ]; then
+          printError "Configure (minimal) failed. Log: ${configlog}"
+        else
+          printError "Configure (full) failed. Log: ${configlog}"
+        fi
+      fi
       touch config.success
-		fi
+    fi
   else
     printHeader "Skip Configure"
   fi
@@ -659,9 +657,9 @@ configure()
 build()
 {
   makelog="${LOG_PFX}_build.log"
-  if [ "${ZOPEN_MAKE}x" != "skipx" ] && [ ! -z "$(command -v ${ZOPEN_MAKE})" ] ; then
+  if [ -n "${ZOPEN_MAKE_CMD}" ]; then
     printHeader "Running Build"
-    if ! runAndLog "\"${ZOPEN_MAKE}\" ${ZOPEN_MAKE_OPTS} CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\" >\"${makelog}\""; then
+    if ! runAndLog "${ZOPEN_MAKE_CMD} >\"${makelog}\""; then
       printError "Make failed. Log: ${makelog}"
     fi
   else
@@ -672,10 +670,10 @@ build()
 check()
 {
   checklog="${LOG_PFX}_check.log"
-  if [ "${ZOPEN_CHECK}x" != "skipx" ] && [ ! -z "$(command -v ${ZOPEN_CHECK})" ] && ! ${skipcheck}; then
+  if [ -n "${ZOPEN_CHECK_CMD}" ]; then
     printHeader "Running Check"
-    runAndLog "\"${ZOPEN_CHECK}\" ${ZOPEN_CHECK_OPTS} CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\" >\"${checklog}\""
-    if ! runAndLog "\"${ZOPEN_CHECK_RESULTS}\" \"${ZOPEN_ROOT}/${dir}\" \"${LOG_PFX}\""; then
+    runAndLog "${ZOPEN_CHECK_CMD} >\"${checklog}\""
+    if ! runAndLog "${ZOPEN_CHECK_RESULTS_CMD}"; then
       printError "Check failed. Log: ${checklog}"
     fi
   else
@@ -685,29 +683,78 @@ check()
 
 install()
 {
-  if [ "${ZOPEN_INSTALL}x" != "skipx" ] && [ ! -z "$(command -v ${ZOPEN_INSTALL})" ]; then
+  if [ -n "${ZOPEN_INSTALL_CMD}" ]; then
     printHeader "Running Install"
     installlog="${LOG_PFX}_install.log"
-    if ! runAndLog "\"${ZOPEN_INSTALL}\" ${ZOPEN_INSTALL_OPTS} >\"${installlog}\""; then
+    if ! runAndLog "${ZOPEN_INSTALL_CMD} >\"${installlog}\""; then
       printError "Install failed. Log: ${installlog}"
     fi
-    if ! runAndLog "\"${ZOPEN_CREATE_ENV}\" \"${ZOPEN_INSTALL_DIR}\" \"${LOG_PFX}\""; then
+    if ! runAndLog "${ZOPEN_CREATE_ENV_CMD}"; then
       printError "Environment creation failed."
     fi
-
-    ZOPEN_NAME="${dir}"
-    if [ "${ZOPEN_TYPE}x" = "GITx" ]; then
-      branch=$(git rev-parse --abbrev-ref HEAD 2>&1 | sed "s/\//./g")
-      ZOPEN_NAME="${dir}.${branch}"
-    fi
-
-    paxFileName="${ZOPEN_NAME}.${LOG_PFX}.zos.pax.Z"
-    if ! runAndLog "pax -w -z -x pax \"-s#${ZOPEN_INSTALL_DIR}/#${ZOPEN_NAME}.${LOG_PFX}.zos/#\" -f \"${paxFileName}\" \"${ZOPEN_INSTALL_DIR}/\""; then
+    if ! runAndLog "${ZOPEN_PAX_CMD}"; then
       printError "Could not generate pax \"${paxFileName}\""
     fi
   else
     printHeader "Skipping Install"
   fi
+}
+
+#
+# Figure out the 'bootstrap', 'configure', 'make', 'check', and 'install' commands here so that
+# they are available within an interactive shell environment using --shell.
+#
+resolveCommands()
+{
+  if [ "${ZOPEN_BOOTSTRAP}x" != "skipx" ] && [ ! -z "$(command -v ${ZOPEN_BOOTSTRAP})" ]; then
+    export ZOPEN_BOOTSTRAP_CMD="\"${ZOPEN_BOOTSTRAP}\" ${ZOPEN_BOOTSTRAP_OPTS}"
+  else
+    unset ZOPEN_BOOTSTRAP_CMD
+  fi
+
+  if [ "${ZOPEN_CONFIGURE}x" != "skipx" ] && [ ! -z "$(command -v ${ZOPEN_CONFIGURE})" ]; then
+    if [ "${ZOPEN_CONFIGURE_MINIMAL}x" = "x" ]; then
+      export ZOPEN_CONFIGURE_CMD="\"${ZOPEN_CONFIGURE}\" ${ZOPEN_CONFIGURE_OPTS} CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\""
+      export ZOPEN_CONFIGURE_MINIMAL="no"
+    else
+      export ZOPEN_CONFIGURE_CMD="\"${ZOPEN_CONFIGURE}\" ${ZOPEN_CONFIGURE_OPTS}"
+      export ZOPEN_CONFIGURE_MINIMAL="yes"
+    fi
+  else
+    unset ZOPEN_CONFIGURE_CMD
+    unset ZOPEN_CONFIGURE_MINIMAL_CMD
+  fi
+  
+  if [ "${ZOPEN_MAKE}x" != "skipx" ] && [ ! -z "$(command -v ${ZOPEN_MAKE})" ] ; then
+    export ZOPEN_MAKE_CMD="\"${ZOPEN_MAKE}\" ${ZOPEN_MAKE_OPTS} CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\""
+  else
+    unset ZOPEN_MAKE_CMD
+  fi
+
+  if [ "${ZOPEN_CHECK}x" != "skipx" ] && [ ! -z "$(command -v ${ZOPEN_CHECK})" ] && ! ${skipcheck}; then
+    export ZOPEN_CHECK_CMD="\"${ZOPEN_CHECK}\" ${ZOPEN_CHECK_OPTS} CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\""
+    export ZOPEN_CHECK_RESULTS_CMD="\"${ZOPEN_CHECK_RESULTS}\" \"${ZOPEN_ROOT}/${dir}\" \"${LOG_PFX}\""
+  else
+    unset ZOPEN_CHECK_CMD
+    unset ZOPEN_CHECK_RESULTS_CMD
+  fi
+
+  if [ "${ZOPEN_INSTALL}x" != "skipx" ] && [ ! -z "$(command -v ${ZOPEN_INSTALL})" ]; then
+    export ZOPEN_INSTALL_CMD="${ZOPEN_INSTALL} ${ZOPEN_INSTALL_OPTS}"
+    export ZOPEN_CREATE_ENV_CMD="${ZOPEN_CREATE_ENV} \"${ZOPEN_INSTALL_DIR}\" \"${LOG_PFX}\""
+    ZOPEN_NAME="${dir}"
+    if [ "${ZOPEN_TYPE}x" = "GITx" ]; then
+      branch=$(git rev-parse --abbrev-ref HEAD 2>&1 | sed "s/\//./g")
+      ZOPEN_NAME="${dir}.${branch}"
+    fi
+    paxFileName="${ZOPEN_NAME}.${LOG_PFX}.zos.pax.Z"
+    export ZOPEN_PAX_CMD="pax -w -z -x pax \"-s#${ZOPEN_INSTALL_DIR}/#${ZOPEN_NAME}.${LOG_PFX}.zos/#\" -f \"${paxFileName}\" \"${ZOPEN_INSTALL_DIR}/\""
+  else
+    unset ZOPEN_INSTALL_CMD
+    unset ZOPEN_CREATE_ENV_CMD
+    unset ZOPEN_PAX_CMD
+  fi
+  return 0
 }
 
 #
@@ -756,6 +803,10 @@ if ! applyPatches; then
 fi
 
 cd "${ZOPEN_ROOT}/${dir}" || exit 99
+
+if ! resolveCommands; then
+  exit 4
+fi
 
 if ${startShell}; then
   exec /bin/sh
