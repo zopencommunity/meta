@@ -1,0 +1,56 @@
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <stdio.h>
+#include "createdirs.h"
+
+#define REASONABLE_PATH_MAX 1023
+
+static int createsubdir(const char* rootdir, const char* subdir) {
+  char fulldir[REASONABLE_PATH_MAX+1];
+  struct stat stfull = {0};
+
+  if (snprintf(fulldir, REASONABLE_PATH_MAX, "%s/%s", rootdir, subdir)) {
+    return ZOPEN_CREATEDIR_DIR_TOO_LONG;
+  }
+  if (stat(fulldir, &stfull) == -1) {
+    if (mkdir(fulldir, S_IRWXU|S_IRGRP)) {
+      return ZOPEN_CREATEDIR_CREATE_FAILED;
+    } else {
+      return 0;
+    }
+  } else {
+    return ZOPEN_CREATEDIR_DIR_EXISTS;
+  }
+}
+
+
+/*
+ * Create the directories needed for a z/OS Open Tools
+ * development environment relative to the root directory
+ * passed in.
+ *
+ * If a directory already exists, it will not be modified,
+ * and this will not be considered a 'failure' 
+ * 
+ * Returns non-zero if the directories can not be created
+ */
+
+int createdirs(const char* rootdir) {
+  struct stat stroot = {0};
+  const char* subdir[] = { "dev", "prod", "boot", NULL };
+  int i,rc;
+
+  if (stat(rootdir, &stroot) == -1) {
+    fprintf(stderr, "root directory %s does not exist. No directories created\n");
+    return ZOPEN_CREATEDIR_ROOT_NOT_EXIST;
+  }
+
+  for (i=0; subdir[i] != NULL; ++i ) {
+    if (rc = createsubdir(rootdir, subdir[i])) {
+      return rc;
+    }
+  }
+
+  return 0;
+}
