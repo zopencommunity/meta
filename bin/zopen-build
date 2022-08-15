@@ -31,6 +31,7 @@ CPPFLAGS             C/C++ pre-processor flags (defaults to '${ZOPEN_CPPFLAGSD}'
 CFLAGS               C compiler flags (defaults to '${ZOPEN_CFLAGSD}')
 CXXFLAGS             C++ compiler flags (defaults to '${ZOPEN_CXXFLAGSD}')
 LDFLAGS              C/C++ linker flags (defaults to '${ZOPEN_LDFLAGSD}')
+ZOPEN_SRC_DIR        specify a relative source directory to cd to for bootstrap, configure, build, check, install (defaults to '.')
 ZOPEN_EXTRA_CPPFLAGS C/C++ pre-processor flags to append to CPPFLAGS (defaults to '')
 ZOPEN_EXTRA_CFLAGS   C compiler flags to append to CFLAGS (defaults to '')
 ZOPEN_EXTRA_CXXFLAGS C++ compiler flags to append to CXXFLAGS (defaults to '')
@@ -756,6 +757,10 @@ if ! applyPatches; then
 fi
 
 cd "${ZOPEN_ROOT}/${dir}" || exit 99
+
+if [ "${ZOPEN_SRC_DIR}x" != "x" ]; then
+  cd "${ZOPEN_SRC_DIR}" || exit 99
+fi
 
 if ${startShell}; then
   exec /bin/sh
