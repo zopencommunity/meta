@@ -374,6 +374,7 @@ int toolkitSetOption( HWTH_RETURNCODE_TYPE *rcPtr,
    strncpy(downloadParms.requestUri, uri, MAX_URI_LEN+1);
    strncpy(downloadParms.fileOrDsname, file, MAX_PATH_LEN+1);
    strncpy(downloadParms.sslKeyring, "*AUTH*/*", MAX_PATH_LEN+1);
+   downloadParms.sslOption = 1;
 #endif
 
 	 if ( setupConnection( &connectHandle, &downloadParms ) )
