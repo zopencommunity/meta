@@ -21,18 +21,18 @@ printSyntax()
 }
 
 export bindir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
-. "${bindir}/common.inc"
+. "${bindir}/lib/common.inc"
 
 args=$*
 while [[ $# -gt 0 ]]; do
   case "$1" in
     "build")
       shift
-      exec "${bindir}/zopen-build" $@
+      exec "${bindir}/lib/zopen-build" $@
       ;;
     "download")
       shift
-      exec "${bindir}/zopen-download" $@
+      exec "${bindir}/lib/zopen-download" $@
       ;;
     "help" | "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
       printSyntax "${args}"

@@ -10,7 +10,7 @@ defineColors()
     UNDERLINE="${esc}[4m"
     NC="${esc}[0m"
   else
-#    unset esc RED GREEN YELLOW BOLD UNDERLINE NC
+# unset esc RED GREEN YELLOW BOLD UNDERLINE NC
 
     esc=''
     RED=''
@@ -53,6 +53,9 @@ runAndLog()
 {
   printVerbose "$1"
   eval "$1"
+  rc=$?
+  chtag -r $SSH_TTY
+  return $rc
 }
 
 printSoftError()
