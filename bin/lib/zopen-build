@@ -63,7 +63,7 @@ setDefaults()
   export ZOPEN_CCD="xlclang"
   export ZOPEN_CXXD="xlclang++"
   export ZOPEN_CPPFLAGSD="-DNSIG=9 -D_XOPEN_SOURCE=600 -D_ALL_SOURCE -D_OPEN_SYS_FILE_EXT=1 -D_AE_BIMODAL=1 -D_ENHANCED_ASCII_EXT=0xFFFFFFFF"
-  export ZOPEN_CFLAGSD="-qascii -std=c11"
+  export ZOPEN_CFLAGSD="-qascii -std=gnu11"
   export ZOPEN_CXXFLAGSD="-+ -qascii"
   export ZOPEN_BOOTSTRAPD="./bootstrap"
   export ZOPEN_BOOTSTRAP_OPTSD=""
