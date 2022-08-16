@@ -87,7 +87,5 @@ for repo in $(echo ${repo_results}); do
     if ! ln -s $dirname $name; then
       printError "Could not create symbolic link name"
     fi 
-  else
-    printHeader "Skipping download of latest release from $repo"
   fi
 done

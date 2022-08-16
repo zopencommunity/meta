@@ -31,6 +31,7 @@ CPPFLAGS             C/C++ pre-processor flags (defaults to '${ZOPEN_CPPFLAGSD}'
 CFLAGS               C compiler flags (defaults to '${ZOPEN_CFLAGSD}')
 CXXFLAGS             C++ compiler flags (defaults to '${ZOPEN_CXXFLAGSD}')
 LDFLAGS              C/C++ linker flags (defaults to '${ZOPEN_LDFLAGSD}')
+ZOPEN_SRC_DIR        specify a relative source directory to cd to for bootstrap, configure, build, check, install (defaults to '.')
 ZOPEN_EXTRA_CPPFLAGS C/C++ pre-processor flags to append to CPPFLAGS (defaults to '')
 ZOPEN_EXTRA_CFLAGS   C compiler flags to append to CFLAGS (defaults to '')
 ZOPEN_EXTRA_CXXFLAGS C++ compiler flags to append to CXXFLAGS (defaults to '')
@@ -53,7 +54,7 @@ ZOPEN_INSTALL_OPTS   Options to pass to installation program (defaults to '${ZOP
 }
 
 export utildir="$(cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P)"
-export utilparentdir="$(cd "$(dirname "$0")/../" >/dev/null 2>&1 && pwd -P)"
+export utilparentdir="$(cd "$(dirname "$0")/../.." >/dev/null 2>&1 && pwd -P)"
 
 . "${utildir}/common.inc"
 
@@ -62,7 +63,7 @@ setDefaults()
   export ZOPEN_CCD="xlclang"
   export ZOPEN_CXXD="xlclang++"
   export ZOPEN_CPPFLAGSD="-DNSIG=9 -D_XOPEN_SOURCE=600 -D_ALL_SOURCE -D_OPEN_SYS_FILE_EXT=1 -D_AE_BIMODAL=1 -D_ENHANCED_ASCII_EXT=0xFFFFFFFF"
-  export ZOPEN_CFLAGSD="-qascii -std=c11"
+  export ZOPEN_CFLAGSD="-qascii -std=gnu11"
   export ZOPEN_CXXFLAGSD="-+ -qascii"
   export ZOPEN_BOOTSTRAPD="./bootstrap"
   export ZOPEN_BOOTSTRAP_OPTSD=""
@@ -806,6 +807,10 @@ cd "${ZOPEN_ROOT}/${dir}" || exit 99
 
 if ! resolveCommands; then
   exit 4
+fi
+
+if [ "${ZOPEN_SRC_DIR}x" != "x" ]; then
+  cd "${ZOPEN_SRC_DIR}" || exit 99
 fi
 
 if ${startShell}; then
