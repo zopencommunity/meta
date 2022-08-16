@@ -54,7 +54,7 @@ ZOPEN_INSTALL_OPTS   Options to pass to installation program (defaults to '${ZOP
 }
 
 export utildir="$(cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P)"
-export utilparentdir="$(cd "$(dirname "$0")/../" >/dev/null 2>&1 && pwd -P)"
+export utilparentdir="$(cd "$(dirname "$0")/../.." >/dev/null 2>&1 && pwd -P)"
 
 . "${utildir}/common.inc"
 
