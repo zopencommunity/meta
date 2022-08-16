@@ -4,14 +4,29 @@ Utilities (common tools) repository used by other repos in ZOSOpenTools
 The following is a description of the utilities provided in the utils repo.
 For an overview	of ZOSOpenTools, see [ZOSOpenTools docs](https://zosopentools.github.io/meta/)
 
+## zopen download
+
+To download and install the latest software packages, you can use `zopen download`. By default it will download all of the binaries hosted on ZOSOpenTools.
+
+To download and install a specific package, you can specify the `-r` option as follows:
+```
+zopen download -r makeport
+```
+
+This will download it to the current working directory. To change the destination directory, you can specify the `-d` option as follows:
+
+```
+zopen download -r makeport -d $HOME/zopen
+```
+
 ## zopen build
 
-For a software package to be built with `zopen build`, it needs to provide the following:
-- a script called: `buildenv`, located in the root directory of the git repo, which the `zopen build` will automatically source.  If you would like to source another file, you can specify it via the `-e` option as in: `zopen build -e mybuildenv`
-- a script called: `portchk.sh`, located in the root directory of the git repo, so that the test process can check
-that the build is _good enough_ to be considered for installation.
-- a script called: `portcrtenv.sh`, located in the root directory of the git repo, so that the install process can 
-create the corresponding `.env` file for the software product.  For _boot_ products from Rocket, the developer will need to create the corresponding `.env` file (or copy one already made by another developer). 
+To build a software package, you can use `zopen build`.
+
+`zopen build` requires the files scripts in the project's root directory:
+-  `buildenv`, which `zopen build` will automatically source.  If you would like to source another file, you can specify it via the `-e` option as in: `zopen build -e mybuildenv`
+- `portchk.sh`, so that the test process can check that the build is _good enough_ to be considered for installation.
+- `portcrtenv.sh`, so that the install process can create the corresponding `.env` file for the software product.  For _boot_ products from Rocket, the developer will need to create the corresponding `.env` file (or copy one already made by another developer). 
 
 The `buildenv` file _must_ set the following environment variables:
 - `ZOPEN_ROOT`: this environment variable is the absolute directory of the location the repo was clone'd to
