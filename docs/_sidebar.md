@@ -1,6 +1,8 @@
-  - Guides
-    - [Porting](/Guides/Porting.md)
-    - [Common Solutions](/Guides/CommonSolutions.md)
+  - [Latest Releases](/Latest.md)
+  - Developing
+    - [Porting to z/OS Guide](/Guides/Porting.md)
+    - [Common Problems/Solutions](/Guides/CommonSolutions.md)
     - [CI/CD Pipeline](/Guides/Pipeline.md)
-  - Ported Tools
-    - [Latest Ports](/Latest.md)
+   - Links
+     - [z/OS Open Tools Repos](https://github.com/ZOSOpenTools)
+     - [Discussions](https://github.com/ZOSOpenTools/meta/discussions)
