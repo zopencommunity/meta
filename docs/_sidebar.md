@@ -1,6 +1,6 @@
-  - Guides
+  - Developing
     - [Porting](/Guides/Porting.md)
     - [Common Solutions](/Guides/CommonSolutions.md)
     - [CI/CD Pipeline](/Guides/Pipeline.md)
-  - Ported Tools
+  - Releases
     - [Latest Ports](/Latest.md)

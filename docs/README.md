@@ -1,11 +1,7 @@
-# ZOSOpenTools docs
+## Welcome to z/OS Open Tools
 
-To make changes to the docs, please:
- - `git clone git@github.com:ZOSOpenTools/meta.git`
- - `cd docs`
- - make updates
- - validate your changes, locally on port 3000, as follows:
-   - `npm install`
-   - `npm run serve`
-   - bring up your browser on localhost:3000 and validate
- - create a PR as you would for any other code for your changes
+Welcome to the z/OS Open Tools documentation. 
+
+If you're interested in consuming z/OS Open Tools, visit the [Latest Ports](/Latest.md) page.
+
+If you're interested in developing and contributing to the z/OS Open Source, visit the [Latest Ports](/Guides/Porting.md) page.

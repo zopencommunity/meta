@@ -2,7 +2,7 @@
 
 ## Getting Started
 
-### Leveraging the ZOS Open Tools utils repo
+### Leveraging the z/OS Open Tools utils repo
 
 The utils repo (https://github.com/ZOSOpenTools/utils) consists of common tools and files that aid
 in the porting process, including the `zopen` suite of tools.  Specifically, `zopen build` provides a common way to bootstrap, configure, build, check,

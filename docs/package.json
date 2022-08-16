@@ -1,7 +1,7 @@
 {
   "name": "zosopentools",
   "version": "0.0.1",
-  "description": "ZOS Open Tools Docs",
+  "description": "z/OS Open Tools Docs",
   "scripts": {
     "serve": "docsify serve",
     "update-sidebar": "docsify-auto-sidebar -d ."
