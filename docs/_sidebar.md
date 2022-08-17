@@ -1,8 +1,6 @@
-  - [Latest Releases](/Latest.md)
-  - Developing
-    - [Porting to z/OS Guide](/Guides/Porting.md)
-    - [Common Problems/Solutions](/Guides/CommonSolutions.md)
-    - [CI/CD Pipeline](/Guides/Pipeline.md)
-   - Links
-     - [z/OS Open Tools Repos](https://github.com/ZOSOpenTools)
-     - [Discussions](https://github.com/ZOSOpenTools/meta/discussions)
+  - [Available ports](/Latest.md)
+  - [Porting to z/OS guide](/Guides/Porting.md)
+  - [CI/CD pipeline](/Guides/Pipeline.md)
+  - [Troubleshooting](/Guides/CommonSolutions.md)
+  - [z/OS Open Tools Repos](https://github.com/ZOSOpenTools)
+  - [Discussions](https://github.com/ZOSOpenTools/meta/discussions)

@@ -1,4 +1,4 @@
-# ZOSOpenTools docs
+# Updating the docs
 
 To make changes to the docs, please:
  - `git clone git@github.com:ZOSOpenTools/meta.git`
