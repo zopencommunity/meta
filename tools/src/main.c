@@ -14,7 +14,7 @@ int main() {
     return rc;
   }
    
-  if (0 && (rc = download(host, uri, file))) {
+  if (rc = download(host, uri, file)) {
     fprintf(stderr, "error downloading  https://%s%s to %s: %d\n", host, uri, file, rc);
     return rc;
   }

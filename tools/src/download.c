@@ -19,10 +19,9 @@
  */
 
 /*
- * This code is derived from: 
+ * This code is derived from:
  *   https://github.com/IBM/zOS-Client-Web-Enablement-Toolkit/tree/master/Example-Download
  * and has been restricted to just support a download of a binary file from an https URL
-
  ***********************************************************************
  *                                                                     *
  *    DESCRIPTIVE NAME=  Download to File using the Web                *
@@ -143,6 +142,7 @@ char *DS_TYPE = "blocked";         /* TRSMAIN convention */
  ****************************/
 #define HTTP_RC_OK       200
 #define HTTP_RC_CREATED  201
+#define HTTP_RC_REDIRECT 302       /* @GG*/
 
 /********************************
  * variables and constants which
@@ -340,6 +340,9 @@ int toolkitSetOption( HWTH_RETURNCODE_TYPE *rcPtr,
 		HWTH_DIAGAREA_TYPE   *diagAreaPtr );
 
 
+#define MAX_TOKEN_PAYLOAD 16536       /* generous */
+#define MAX_URI_LEN        511        /* generous */
+#define MAX_PATH_LEN       255        /* reasonable */
 
 /**************
  * Callbacks
@@ -359,7 +362,7 @@ int toolkitSetOption( HWTH_RETURNCODE_TYPE *rcPtr,
 	 HWTH_RETURNCODE_TYPE  toolkitRc;
 #ifdef HAS_MAIN
 	 struct parmStruct downloadParms;
-#else 
+#else
 	 struct parmStruct downloadParms = { false, IOTYPE_FILE, SCHEME_HTTPS };
 #endif
 	 char  msgBuf[80];
@@ -374,8 +377,8 @@ int toolkitSetOption( HWTH_RETURNCODE_TYPE *rcPtr,
    strncpy(downloadParms.requestUri, uri, MAX_URI_LEN+1);
    strncpy(downloadParms.fileOrDsname, file, MAX_PATH_LEN+1);
    strncpy(downloadParms.sslKeyring, "*AUTH*/*", MAX_PATH_LEN+1);
+   downloadParms.traceToolkit = false;
    downloadParms.sslOption = true;
-   downloadParms.traceToolkit = true;
 #endif
 
 	 if ( setupConnection( &connectHandle, &downloadParms ) )
@@ -622,8 +625,6 @@ int toolkitSetOption( HWTH_RETURNCODE_TYPE *rcPtr,
 	 HWTH_RETURNCODE_TYPE  rc = HWTH_OK;
 	 HWTH_DIAGAREA_TYPE    diagArea;
 
-	 uint32_t   traceOption;
-	 uint32_t  *traceOptionPtr = &traceOption;
 	 uint32_t   intOption;
 	 uint32_t  *intOptionPtr = &intOption;
 	 int        connectPort;
@@ -648,40 +649,19 @@ int toolkitSetOption( HWTH_RETURNCODE_TYPE *rcPtr,
 	  * server you'll be connection to, this is also
 	  * where you'd turn on tracing.
 	  ************************************************/
-	 if ( true ) { /* msf - hack */
-	         intOption = HWTH_OPT_MAX_REDIRECTS;
- 
-                 if ( toolkitSetOption( &rc,
-                                 connectHandlePtr,
-                                 5,
-                                 (void **)&intOptionPtr,               
-                                 sizeof(intOption),                    
-                                 &diagArea ) )
-                         return -1;
-
-	         intOption = HWTH_OPT_XDOMAIN_REDIRECTS;
- 
-                 if ( toolkitSetOption( &rc,
-                                 connectHandlePtr,
-                                 HWTH_XDOMAIN_REDIRS_ALLOWED,
-                                 (void **)&intOptionPtr,               
-                                 sizeof(intOption),                    
-                                 &diagArea ) )
-                         return -1;
-	 }
-
 	 if ( parmsPtr->traceToolkit ) {
 
-		 traceOption = HWTH_VERBOSE_ON;
+		 intOption = HWTH_VERBOSE_UNREDACTED;
 
 		 if ( toolkitSetOption( &rc,
 				 connectHandlePtr,
 				 HWTH_OPT_VERBOSE,
-				 (void **)&traceOptionPtr,
-				 sizeof(traceOption),
+				 (void **)&intOptionPtr,
+				 sizeof(intOption),
 				 &diagArea ) )
 			 return -1;
-	 }
+     }
+
 	 /************************************************************
 	  * Form and set the connection URI (Note that the toolkit
 	  * handles the PORT independently, and we *may* do that next)
@@ -712,6 +692,26 @@ int toolkitSetOption( HWTH_RETURNCODE_TYPE *rcPtr,
 				 &diagArea ) )
 			 return -1;
 	 }
+
+     /* @GG just in case, set max redirects to the max */
+     intOption = 50;
+     if ( toolkitSetOption( &rc,
+				 connectHandlePtr,
+				 HWTH_OPT_MAX_REDIRECTS,
+				 (void **)&intOptionPtr,
+				 sizeof(intOption),
+				 &diagArea ) )
+			 return -1;
+
+     /* @GG allow for cross domain redirects */
+	 intOption = HWTH_XDOMAIN_REDIRS_ALLOWED;
+     if ( toolkitSetOption( &rc,
+				 connectHandlePtr,
+				 HWTH_OPT_XDOMAIN_REDIRECTS,
+				 (void **)&intOptionPtr,
+				 sizeof(intOption),
+				 &diagArea ) )
+			 return -1;
 
 	 /*************************************************
 	  * If the user has provided explicit ssl-related
@@ -855,7 +855,6 @@ int toolkitSetOption( HWTH_RETURNCODE_TYPE *rcPtr,
 	 return 0;
  }
 
-
  /*******************************************************
   * Function:  toolkitInitHandle()
   *
@@ -880,8 +879,6 @@ int toolkitSetOption( HWTH_RETURNCODE_TYPE *rcPtr,
 	 surfaceToolkitDiag( rcPtr, diagAreaPtr );
 	 return -1;
  }
-
-
 
  /****************************************************************
   * Function: toolkitConnect()
@@ -945,8 +942,15 @@ int toolkitSetOption( HWTH_RETURNCODE_TYPE *rcPtr,
 			 *connectHandlePtr,
 			 *requestHandlePtr,
 			 &diagArea );
-	 if ( rc != HWTH_OK )
-		 surfaceToolkitDiag( &rc, &diagArea );
+	 if ( rc != HWTH_OK ) {
+		 /* @GG the HWTH_WARNING with reason code 1 is due to a redirect*/
+		 if (rc == HWTH_WARNING & diagArea.HWTH_reasonCode == 1) {
+			trace("*INFO*: The request was successful, however FYI it involved a redirect.");
+		 } else {
+		   trace("hwthrqst did not return an acceptable RC");
+		   surfaceToolkitDiag( &rc, &diagArea );
+		 }
+	 }
 	 return rc;
 
  }
@@ -1013,7 +1017,7 @@ int toolkitSetOption( HWTH_RETURNCODE_TYPE *rcPtr,
 		 struct receiveUserData *pRecvData,
 		 HWTH_RETURNCODE_TYPE toolkitRc ) {
 
-	 char msgBuf[160];
+	 char msgBuf[256];
 	 int64_t downloadSize;
 
 	 /***********************************************
@@ -1504,16 +1508,21 @@ int toolkitSetOption( HWTH_RETURNCODE_TYPE *rcPtr,
 	 int rc = -1;
 	 char msgBuf[80];
 
+     /* @GG - need to also handle the successful
+              case of redirect
+     */
 	 switch ( httpStatusCode ) {
 	 case HTTP_RC_CREATED:
 	 case HTTP_RC_OK:
+	 case HTTP_RC_REDIRECT:
 		 rc = 0;
 		 break;
 	 default:
 		 sprintf( msgBuf,
-				 "Unexpected Http response code %d received",
+				 "Unexpected Http response code %d received continuing though",
 				 httpStatusCode );
 		 rxtrace( msgBuf );
+         rc = 0; /* @GG */
 		 break;
 	 } /* end switch */
 
@@ -2572,4 +2581,3 @@ int toolkitSetOption( HWTH_RETURNCODE_TYPE *rcPtr,
 	 return ( setUserid( credBuf, &pParms->userid[0] ) +
 			 setPassword( pDelim, &pParms->password[0] ) );
  }
-
