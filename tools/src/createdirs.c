@@ -10,7 +10,7 @@ static int createsubdir(const char* rootdir, const char* subdir) {
   char fulldir[REASONABLE_PATH_MAX+1];
   struct stat stfull = {0};
 
-  if (snprintf(fulldir, REASONABLE_PATH_MAX, "%s/%s", rootdir, subdir)) {
+  if (snprintf(fulldir, REASONABLE_PATH_MAX, "%s/%s", rootdir, subdir) > REASONABLE_PATH_MAX) {
     return ZOPEN_CREATEDIR_DIR_TOO_LONG;
   }
   if (stat(fulldir, &stfull) == -1) {
@@ -38,7 +38,7 @@ static int createsubdir(const char* rootdir, const char* subdir) {
 
 int createdirs(const char* rootdir) {
   struct stat stroot = {0};
-  const char* subdir[] = { "dev", "prod", "boot", NULL };
+  const char* subdir[] = { ZOPEN_DEV, ZOPEN_BOOT, ZOPEN_PROD, NULL };
   int i,rc;
 
   if (stat(rootdir, &stroot) == -1) {
@@ -48,7 +48,9 @@ int createdirs(const char* rootdir) {
 
   for (i=0; subdir[i] != NULL; ++i ) {
     if (rc = createsubdir(rootdir, subdir[i])) {
-      return rc;
+      if (rc != ZOPEN_CREATEDIR_DIR_EXISTS) {
+        return rc;
+      }
     }
   }
 

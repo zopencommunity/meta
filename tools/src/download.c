@@ -374,7 +374,8 @@ int toolkitSetOption( HWTH_RETURNCODE_TYPE *rcPtr,
    strncpy(downloadParms.requestUri, uri, MAX_URI_LEN+1);
    strncpy(downloadParms.fileOrDsname, file, MAX_PATH_LEN+1);
    strncpy(downloadParms.sslKeyring, "*AUTH*/*", MAX_PATH_LEN+1);
-   downloadParms.sslOption = 1;
+   downloadParms.sslOption = true;
+   downloadParms.traceToolkit = true;
 #endif
 
 	 if ( setupConnection( &connectHandle, &downloadParms ) )
@@ -621,6 +622,8 @@ int toolkitSetOption( HWTH_RETURNCODE_TYPE *rcPtr,
 	 HWTH_RETURNCODE_TYPE  rc = HWTH_OK;
 	 HWTH_DIAGAREA_TYPE    diagArea;
 
+	 uint32_t   traceOption;
+	 uint32_t  *traceOptionPtr = &traceOption;
 	 uint32_t   intOption;
 	 uint32_t  *intOptionPtr = &intOption;
 	 int        connectPort;
@@ -645,19 +648,40 @@ int toolkitSetOption( HWTH_RETURNCODE_TYPE *rcPtr,
 	  * server you'll be connection to, this is also
 	  * where you'd turn on tracing.
 	  ************************************************/
+	 if ( true ) { /* msf - hack */
+	         intOption = HWTH_OPT_MAX_REDIRECTS;
+ 
+                 if ( toolkitSetOption( &rc,
+                                 connectHandlePtr,
+                                 5,
+                                 (void **)&intOptionPtr,               
+                                 sizeof(intOption),                    
+                                 &diagArea ) )
+                         return -1;
+
+	         intOption = HWTH_OPT_XDOMAIN_REDIRECTS;
+ 
+                 if ( toolkitSetOption( &rc,
+                                 connectHandlePtr,
+                                 HWTH_XDOMAIN_REDIRS_ALLOWED,
+                                 (void **)&intOptionPtr,               
+                                 sizeof(intOption),                    
+                                 &diagArea ) )
+                         return -1;
+	 }
+
 	 if ( parmsPtr->traceToolkit ) {
 
-		 intOption = HWTH_VERBOSE_ON;
+		 traceOption = HWTH_VERBOSE_ON;
 
 		 if ( toolkitSetOption( &rc,
 				 connectHandlePtr,
 				 HWTH_OPT_VERBOSE,
-				 (void **)&intOptionPtr,
-				 sizeof(intOption),
+				 (void **)&traceOptionPtr,
+				 sizeof(traceOption),
 				 &diagArea ) )
 			 return -1;
 	 }
-
 	 /************************************************************
 	  * Form and set the connection URI (Note that the toolkit
 	  * handles the PORT independently, and we *may* do that next)
