@@ -780,6 +780,7 @@ generateOCI()
   if ! ${publishOCI}; then
     return 0;
   fi
+  printHeader "Generating OCI Image"
   package=$1
   name=$(echo $package | cut -d "-" -f 1)
   version=$(echo $package | cut -d "-" -f 2)
@@ -801,10 +802,10 @@ LABEL version=${version}
 LABEL specification=1.0.0"
 
   cd ${ZOPEN_INSTALL_DIR}
-  echo "${ZOPEN_IMAGE_DOCKERFILE_NAME}"
   if [ -f "${ZOPEN_IMAGE_DOCKERFILE_NAME}" ]; then
     rm -f "${ZOPEN_IMAGE_DOCKERFILE_NAME}"
   fi
+  printVerbose "Generating ${ZOPEN_IMAGE_DOCKERFILE_NAME}"
   for file in *; do
     dockerfilecontents="${dockerfilecontents}\nCOPY $file @{CONTAINER_READWRITE}/$file"
   done
@@ -835,6 +836,7 @@ LABEL specification=1.0.0"
     printWarning "${ZOPEN_IMAGE_DOCKER_NAME} is not present on your system"
     return 4
   fi
+  printVerbose "Generating OCI Image"
   "${ZOPEN_IMAGE_DOCKER_NAME}" build -t "${name}:${version}" .
   "${ZOPEN_IMAGE_DOCKER_NAME}"push "${name}:${version}" -i $ZOPEN_IMAGE_REGISTRY -u $ZOPEN_IMAGE_REGISTRY_ID -p @$ZOPEN_IMAGE_REGISTRY_KEY_FILE
   cd -
