@@ -49,6 +49,8 @@ ZOPEN_MAKE_OPTS      Options to pass to build program (defaults to '-j\${ZOPEN_N
 ZOPEN_CHECK          Check program to run. If skip is specified, no check step is performed (defaults to '${ZOPEN_CHECKD}') 
 ZOPEN_CHECK_OPTS     Options to pass to check program (defaults to '${ZOPEN_CHECK_OPTSD}')
 ZOPEN_IMAGE_REGISTRY Docker image registry to an OCI image to (use with --oci option)
+ZOPEN_IMAGE_DOCKERFILE_NAME Dockerfile name (default: Dockerfile)
+ZOPEN_IMAGE_DOCKER_NAME Docker/podman tool name (default: podman)
 ZOPEN_IMAGE_REGISTRY_ID The ID to authenticate to the Docker image registry (use with --oci option)
 ZOPEN_IMAGE_REGISTRY_KEY_FILE The file containing the key to authenticate to the Docker image registry (use with --oci option)
 ZOPEN_INSTALL        Installation program to run. If skip is specified, no installation step is performed (defaults to '${ZOPEN_INSTALLD}')
@@ -76,6 +78,12 @@ setDefaults()
   export ZOPEN_CHECK_OPTSD="check"
   export ZOPEN_INSTALLD="make"
   export ZOPEN_INSTALL_OPTSD="install"
+  if [ -z "$ZOPEN_IMAGE_DOCKERFILE_NAME" ]; then
+    export ZOPEN_IMAGE_DOCKERFILE_NAME="Dockerfile"
+  fi
+  if [ -z "$ZOPEN_IMAGE_DOCKER_NAME" ]; then
+    export ZOPEN_IMAGE_DOCKER_NAME="podman"
+  fi
 }
 
 printSyntax()
@@ -793,25 +801,22 @@ LABEL version=${version}
 LABEL specification=1.0.0"
 
   cd ${ZOPEN_INSTALL_DIR}
-  rm -f zosadkfile
+  echo "${ZOPEN_IMAGE_DOCKERFILE_NAME}"
+  if [ -f "${ZOPEN_IMAGE_DOCKERFILE_NAME}" ]; then
+    rm -f "${ZOPEN_IMAGE_DOCKERFILE_NAME}"
+  fi
   for file in *; do
     dockerfilecontents="${dockerfilecontents}\nCOPY $file @{CONTAINER_READWRITE}/$file"
   done
+
+  # Add required .env file
   mkdir -p .zpm
   cp .env .zpm/.env
   dockerfilecontents="${dockerfilecontents}\nCOPY .zpm @{CONTAINER_READWRITE}/.zpm"
 
-  # zosadk does not support gid greater than 2097151
-  gid=$(id | cut -f2 -d' ' | cut -f2 -d'=' | cut -f1 -d'(')
-  gid2=$(id | cut -f3 -d' ' | cut -f2 -d'=' | cut -f2 -d'(' | cut -f1 -d')')
-  if [ $gid -gt 2097151 ] && [ ! -z $gid2 ] ; then
-    # Choose a known GID that is less than 2097151
-    chgrp -R $gid2 *
-  fi
-  
-  echo "$dockerfilecontents" > "zosadkfile"
-  if ! iconv -f IBM-1047 -tISO8859-1 <zosadkfile >.zosadkfileascii || ! chtag -tcISO8859-1 .zosadkfileascii || ! mv .zosadkfileascii zosadkfile; then
-    printError "Unable to make .gitattributes ascii for tarball"
+  echo "$dockerfilecontents" > "${ZOPEN_IMAGE_DOCKERFILE_NAME}"
+  if ! iconv -f IBM-1047 -tISO8859-1 <"${ZOPEN_IMAGE_DOCKERFILE_NAME}">".${ZOPEN_IMAGE_DOCKERFILE_NAME}ascii" || ! chtag -tcISO8859-1 ".${ZOPEN_IMAGE_DOCKERFILE_NAME}ascii" || ! mv ".${ZOPEN_IMAGE_DOCKERFILE_NAME}ascii" ${ZOPEN_IMAGE_DOCKERFILE_NAME}; then
+    printError "Unable to make ${ZOPEN_IMAGE_DOCKERFILE_NAME}"
   fi
 
   if [ -z $ZOPEN_IMAGE_REGISTRY ]; then
@@ -826,12 +831,12 @@ LABEL specification=1.0.0"
     printWarning "Environment variable ZOPEN_IMAGE_REGISTRY_KEY_FILE is needed to push an OCI image"
     return 4;
   fi
-  if [ -z "$(command -v zosadk)" ]; then
-    printWarning "zosadk is not present on your system"
+  if [ -z "$(command -v ${ZOPEN_IMAGE_DOCKER_NAME})" ]; then
+    printWarning "${ZOPEN_IMAGE_DOCKER_NAME} is not present on your system"
     return 4
   fi
-  zosadk build -t "${name}:${version}" .
-  zosadk push "${name}:${version}" -i $ZOPEN_IMAGE_REGISTRY -u $ZOPEN_IMAGE_REGISTRY_ID -p @$ZOPEN_IMAGE_REGISTRY_KEY_FILE
+  "${ZOPEN_IMAGE_DOCKER_NAME}" build -t "${name}:${version}" .
+  "${ZOPEN_IMAGE_DOCKER_NAME}"push "${name}:${version}" -i $ZOPEN_IMAGE_REGISTRY -u $ZOPEN_IMAGE_REGISTRY_ID -p @$ZOPEN_IMAGE_REGISTRY_KEY_FILE
   cd -
 }
 
