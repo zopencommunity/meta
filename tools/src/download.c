@@ -354,7 +354,7 @@ int toolkitSetOption( HWTH_RETURNCODE_TYPE *rcPtr,
  int main( int argc, char **argv ) {
 #else
  #include "download.h"
- int download(const char* host, const char* uri, const char* file) {
+ int download(const char* host, const char* uri, const char* output, const char* keyring, const char* stashfile) {
 #endif
 
 	 HWTH_HANDLE_TYPE  connectHandle;
@@ -375,8 +375,9 @@ int toolkitSetOption( HWTH_RETURNCODE_TYPE *rcPtr,
 #else
    strncpy(downloadParms.connectHost, host, MAX_HOSTNAME_LEN+1);
    strncpy(downloadParms.requestUri, uri, MAX_URI_LEN+1);
-   strncpy(downloadParms.fileOrDsname, file, MAX_PATH_LEN+1);
-   strncpy(downloadParms.sslKeyring, "*AUTH*/*", MAX_PATH_LEN+1);
+   strncpy(downloadParms.fileOrDsname, output, MAX_PATH_LEN+1);
+   strncpy(downloadParms.sslKeyring, keyring, MAX_PATH_LEN+1);
+   strncpy(downloadParms.sslStashfile, stashfile, MAX_PATH_LEN+1);
    downloadParms.traceToolkit = false;
    downloadParms.sslOption = true;
 #endif
