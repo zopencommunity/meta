@@ -3,16 +3,15 @@
 #include <stdlib.h>
 #include <string.h>
 
-int removedb(const char* tmppem, const char* keydb, const char* reqdb, const char* stashfile) {
+int removedb(const char* keydb, const char* reqdb, const char* stashfile) {
   int rc1 = remove(keydb);
   int rc2 = remove(reqdb);
-  int rc3 = remove(tmppem);
-  int rc4 = remove(stashfile);
+  int rc3 = remove(stashfile);
 
-  return rc1 | rc2 | rc3 | rc4;
+  return rc1 | rc2 | rc3;
 }
   
-int createdb(const char* tmppem, const char* keydb, const char* reqdb, const char* stashfile) {
+int createdb(const char* pem, const char* keydb, const char* reqdb, const char* stashfile) {
   char dbcmdstreambuff[256];
   char dbcmdbuff[256];
   int rc;
@@ -58,7 +57,7 @@ int createdb(const char* tmppem, const char* keydb, const char* reqdb, const cha
    */
  
   if ((rc = snprintf(dbcmdstreambuff, sizeof(dbcmdstreambuff), "%s%s%s%s%s%s%s%s%s", OPEN_DB, keydb, "\n", 
-    DB_PASSWORD_NL, IMPORT_CA, tmppem, "\n", CA_LABEL, RETURN, EXIT)) > sizeof(dbcmdstreambuff)) {
+    DB_PASSWORD_NL, IMPORT_CA, pem, "\n", CA_LABEL, RETURN, EXIT)) > sizeof(dbcmdstreambuff)) {
     fprintf(stderr, "Internal error: buffer too small\n");
     return 4;
   }

@@ -13,5 +13,5 @@ hwthic.h:
 
 headers: hwthic.h
 
-zopen-setup: main.o download.o createdirs.o createdb.o createpem.o
+zopen-setup: main.o download.o createdirs.o createdb.o createpem.o httpsget.o
 	$(LD) $(LDFLAGS) -o$@ $^ 
