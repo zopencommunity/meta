@@ -946,7 +946,7 @@ int toolkitSetOption( HWTH_RETURNCODE_TYPE *rcPtr,
 	 if ( rc != HWTH_OK ) {
 		 /* @GG the HWTH_WARNING with reason code 1 is due to a redirect*/
 		 if (rc == HWTH_WARNING & diagArea.HWTH_reasonCode == 1) {
-			trace("*INFO*: The request was successful, however FYI it involved a redirect.");
+			; /* MSF - this is expected trace("*INFO*: The request was successful, however FYI it involved a redirect."); */
 		 } else {
 		   trace("hwthrqst did not return an acceptable RC");
 		   surfaceToolkitDiag( &rc, &diagArea );

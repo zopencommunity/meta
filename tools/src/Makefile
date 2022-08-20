@@ -13,11 +13,5 @@ hwthic.h:
 
 headers: hwthic.h
 
-#download.o: download.c
-#	xlc -c -qdll -qrent -qlongname -Wl,DYNAM=DLL $^
-
-#main.o: main.c
-#	xlc -c -qdll -qrent -qlongname -Wl,DYNAM=DLL $^
-
-zopen-setup: main.o download.o createdirs.o
+zopen-setup: main.o download.o createdirs.o createdb.o createpem.o
 	$(LD) $(LDFLAGS) -o$@ $^ 
