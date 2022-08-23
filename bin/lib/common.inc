@@ -29,6 +29,7 @@ defineEnvironment()
   export _TAG_REDIR_ERR=txt
   export _TAG_REDIR_IN=txt
   export _TAG_REDIR_OUT=txt
+  export _C89_CCMODE=1
 }
 
 zopenInitialize()
