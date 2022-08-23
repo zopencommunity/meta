@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "createdb.h"
 #include "httpsget.h"
-#include "pathmax.h"
+#include "zopenio.h"
 
 int httpsget(const char* host, const char* uri, const char* pem, const char* output) {
   char* keydb;

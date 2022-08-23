@@ -1,24 +1,8 @@
 #include "createdb.h"
+#include "zopenio.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-static int genfilename(const char* extension, char* buffer, size_t bufflen) {
-  pid_t pid = getpid();
-  char* tmpdir;
-  int rc;
-  if (! ((tmpdir = getenv("TMP")) || (tmpdir = getenv("TMPDIR"))) ) {
-    tmpdir = "/tmp";
-  }
-  
-  rc = snprintf(buffer, bufflen, "%s/zopengskkey_%d.%s", tmpdir, pid, extension);
-
-  if (rc > bufflen) {
-    fprintf(stderr, "Unable to generate temporary file name for %s (bufflen %d, rc %d)\n", extension, bufflen, rc);
-    return 4;
-  }
-  return 0;
-}
 
 static int genfilenames(char* kdb, size_t kdblen, char* rdb, size_t reqdblen, char* stashfile, size_t stashfilelen) {
   if (genfilename("kdb", kdb, kdblen)) {

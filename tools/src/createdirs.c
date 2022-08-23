@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include "createdirs.h"
-#include "pathmax.h"
+#include "zopenio.h"
 
 static int createsubdir(const char* rootdir, const char* subdir) {
   char fulldir[ZOPEN_PATH_MAX+1];
@@ -41,7 +41,7 @@ int createdirs(const char* rootdir) {
   int i,rc;
 
   if (stat(rootdir, &stroot) == -1) {
-    fprintf(stderr, "root directory %s does not exist. No directories created\n");
+    fprintf(stderr, "root directory %s does not exist. No directories created\n", rootdir);
     return ZOPEN_CREATEDIR_ROOT_NOT_EXIST;
   }
 
