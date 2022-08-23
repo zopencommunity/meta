@@ -48,6 +48,11 @@ ZOPEN_MAKE           Build program to run. If skip is specified, no build step i
 ZOPEN_MAKE_OPTS      Options to pass to build program (defaults to '-j\${ZOPEN_NUM_JOBS}')
 ZOPEN_CHECK          Check program to run. If skip is specified, no check step is performed (defaults to '${ZOPEN_CHECKD}') 
 ZOPEN_CHECK_OPTS     Options to pass to check program (defaults to '${ZOPEN_CHECK_OPTSD}')
+ZOPEN_IMAGE_REGISTRY Docker image registry to an OCI image to (use with --oci option)
+ZOPEN_IMAGE_DOCKERFILE_NAME Dockerfile name (default: Dockerfile)
+ZOPEN_IMAGE_DOCKER_NAME Docker/podman tool name (default: podman)
+ZOPEN_IMAGE_REGISTRY_ID The ID to authenticate to the Docker image registry (use with --oci option)
+ZOPEN_IMAGE_REGISTRY_KEY_FILE The file containing the key to authenticate to the Docker image registry (use with --oci option)
 ZOPEN_INSTALL        Installation program to run. If skip is specified, no installation step is performed (defaults to '${ZOPEN_INSTALLD}')
 ZOPEN_INSTALL_OPTS   Options to pass to installation program (defaults to '${ZOPEN_INSTALL_OPTSD}')"
 
@@ -73,6 +78,12 @@ setDefaults()
   export ZOPEN_CHECK_OPTSD="check"
   export ZOPEN_INSTALLD="make"
   export ZOPEN_INSTALL_OPTSD="install"
+  if [ -z "$ZOPEN_IMAGE_DOCKERFILE_NAME" ]; then
+    export ZOPEN_IMAGE_DOCKERFILE_NAME="Dockerfile"
+  fi
+  if [ -z "$ZOPEN_IMAGE_DOCKER_NAME" ]; then
+    export ZOPEN_IMAGE_DOCKER_NAME="podman"
+  fi
 }
 
 printSyntax()
@@ -92,6 +103,7 @@ printSyntax()
   echo "  where <option> may be one or more of:" >&2
   echo "  -h: print this information" >&2
   echo "  -v: run in verbose mode" >&2
+  echo "  --oci: build and publish an OCI image to \$ZOPEN_IMAGE_REGISTRY" >&2
   echo "  -e <env file>: source <env file> instead of buildenv to establish build environment" >&2
   echo "  -s: exec a shell before running configure.  Useful when manually building ports." >&2
   opts=$(printEnvVar)
@@ -102,6 +114,7 @@ processOptions()
 {
   args=$*
   verbose=false
+  publishOCI=false
   skipcheck=false
   startShell=false
   buildEnvFile="./buildenv"
@@ -114,6 +127,9 @@ processOptions()
         ;;
       "-v" | "--v" | "-verbose" | "--verbose")
         verbose=true
+        ;;
+      "-oci" | "--oci")
+        publishOCI=true
         ;;
       "-sc" | "--skipcheck")
         skipcheck=true
@@ -696,6 +712,7 @@ install()
     if ! runAndLog "${ZOPEN_PAX_CMD}"; then
       printError "Could not generate pax \"${paxFileName}\""
     fi
+    generateOCI $ZOPEN_NAME
   else
     printHeader "Skipping Install"
   fi
@@ -746,7 +763,7 @@ resolveCommands()
     ZOPEN_NAME="${dir}"
     if [ "${ZOPEN_TYPE}x" = "GITx" ]; then
       branch=$(git rev-parse --abbrev-ref HEAD 2>&1 | sed "s/\//./g")
-      ZOPEN_NAME="${dir}.${branch}"
+      ZOPEN_NAME="${dir}-${branch}"
     fi
     paxFileName="${ZOPEN_NAME}.${LOG_PFX}.zos.pax.Z"
     export ZOPEN_PAX_CMD="pax -w -z -x pax \"-s#${ZOPEN_INSTALL_DIR}/#${ZOPEN_NAME}.${LOG_PFX}.zos/#\" -f \"${paxFileName}\" \"${ZOPEN_INSTALL_DIR}/\""
@@ -756,6 +773,73 @@ resolveCommands()
     unset ZOPEN_PAX_CMD
   fi
   return 0
+}
+
+generateOCI()
+{
+  if ! ${publishOCI}; then
+    return 0;
+  fi
+  printHeader "Generating OCI Image"
+  package=$1
+  name=$(echo $package | cut -d "-" -f 1)
+  version=$(echo $package | cut -d "-" -f 2)
+
+  # Make the version OCI compat
+  case "$version" in
+      *.*.*.*) ;;
+      *.*.*)  version="$version.0";;
+      *.*)  version="$version.0.0";;
+      *) version="1.0.0.0";;
+  esac
+
+  dockerfilecontents="
+FROM scratch
+
+LABEL name=${name}
+LABEL vendor=OSS
+LABEL version=${version}
+LABEL specification=1.0.0"
+
+  cd ${ZOPEN_INSTALL_DIR}
+  if [ -f "${ZOPEN_IMAGE_DOCKERFILE_NAME}" ]; then
+    rm -f "${ZOPEN_IMAGE_DOCKERFILE_NAME}"
+  fi
+  printVerbose "Generating ${ZOPEN_IMAGE_DOCKERFILE_NAME}"
+  for file in *; do
+    dockerfilecontents="${dockerfilecontents}\nCOPY $file @{CONTAINER_READWRITE}/$file"
+  done
+
+  # Add required .env file
+  mkdir -p .zpm
+  cp .env .zpm/.env
+  dockerfilecontents="${dockerfilecontents}\nCOPY .zpm @{CONTAINER_READWRITE}/.zpm"
+
+  echo "$dockerfilecontents" > "${ZOPEN_IMAGE_DOCKERFILE_NAME}"
+  if ! iconv -f IBM-1047 -tISO8859-1 <"${ZOPEN_IMAGE_DOCKERFILE_NAME}">".${ZOPEN_IMAGE_DOCKERFILE_NAME}ascii" || ! chtag -tcISO8859-1 ".${ZOPEN_IMAGE_DOCKERFILE_NAME}ascii" || ! mv ".${ZOPEN_IMAGE_DOCKERFILE_NAME}ascii" ${ZOPEN_IMAGE_DOCKERFILE_NAME}; then
+    printError "Unable to make ${ZOPEN_IMAGE_DOCKERFILE_NAME}"
+  fi
+
+  if [ -z $ZOPEN_IMAGE_REGISTRY ]; then
+    printWarning "Environment variable ZOPEN_IMAGE_REGISTRY is needed to push an OCI image"
+    return 4;
+  fi
+  if [ -z $ZOPEN_IMAGE_REGISTRY_ID ]; then
+    printWarning "Environment variable ZOPEN_IMAGE_REGISTRY_ID is needed to push an OCI image"
+    return 4;
+  fi
+  if [ -z $ZOPEN_IMAGE_REGISTRY_KEY_FILE ] || [ ! -r $ZOPEN_IMAGE_REGISTRY_KEY_FILE ]; then
+    printWarning "Environment variable ZOPEN_IMAGE_REGISTRY_KEY_FILE is needed to push an OCI image"
+    return 4;
+  fi
+  if [ -z "$(command -v ${ZOPEN_IMAGE_DOCKER_NAME})" ]; then
+    printWarning "${ZOPEN_IMAGE_DOCKER_NAME} is not present on your system"
+    return 4
+  fi
+  printVerbose "Generating OCI Image"
+  "${ZOPEN_IMAGE_DOCKER_NAME}" build -t "${name}:${version}" .
+  "${ZOPEN_IMAGE_DOCKER_NAME}"push "${name}:${version}" -i $ZOPEN_IMAGE_REGISTRY -u $ZOPEN_IMAGE_REGISTRY_ID -p @$ZOPEN_IMAGE_REGISTRY_KEY_FILE
+  cd -
 }
 
 #
