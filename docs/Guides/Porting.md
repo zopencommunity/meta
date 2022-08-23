@@ -2,13 +2,9 @@
 
 ## Getting Started
 
-### Leveraging the z/OS Open Tools utils repo
+The z/OS Open Tools porting projects reside in https://github.com/ZOSOpenTools.
 
-The utils repo (https://github.com/ZOSOpenTools/utils) consists of common tools and files that aid
-in the porting process, including the `zopen` suite of tools.  Specifically, `zopen build` provides a common way to bootstrap, configure, build, check,
-and install a software package.  `zopen download` provides a mechanism to download the latest published z/OS Open Tools.
-
-Before you begin to build code, ensure that your environment is correctly configured
+Before you begin to build code, ensure that you have access to a z/OS UNIX environment and that your environment is correctly configured.
 
 ### Set up your environment
 
@@ -25,24 +21,34 @@ export _TAG_REDIR_IN=txt
 export _TAG_REDIR_OUT=txt
 ```
 
-The z/OS Open Tools reside in https://github.com/ZOSOpenTools. You need to configure your user.email and user.name to check in code to the
-repositories:
+It is recommended that you add the above environment variables to your `.profile` or `.bashrc` startup script.
+
+You need to configure your user.email and user.name to check in code to the repositories:
 
 ```
 git config --global user.email "<Your E-Mail>"
 git config --global user.name "<Your Name>"
 ```
+This assumes that you have the latest version of [Git](https://my.rocketsoftware.com/RocketCommunity#/downloads) on your z/OS system.
+
+
+### Leveraging the z/OS Open Tools utils repo
+
+The utils repo (https://github.com/ZOSOpenTools/utils) consists of common tools and files that aid
+in the porting process, including the `zopen` suite of tools.  Specifically, `zopen build` provides a common way to bootstrap, configure, build, check,
+and install a software package.  `zopen download` provides a mechanism to download the latest published z/OS Open Tools.
 
 Many tools depend on other tools to be able to build or run. You will need to provide both _bootstrap_ tools 
 (i.e. binary tools not from source), as well as _prod_ tools (i.e. _production_ level tools previously built 
 from another z/OS Open Tools repository). 
+
 Our goal is to eventually have our own version of all the _bootstrap_ tools, but right now, we rely on some 
-tools from Rocket. These Rocket tools can be downloaded from (https://my.rocketsoftware.com/RocketCommunity#/downloads). 
+tools from Rocket. These Rocket tools can be downloaded [here](https://my.rocketsoftware.com/RocketCommunity#/downloads). 
 
 Many tools require a C or C++ compiler (or both). xlclang 2.4.1 or higher should be used for C/C++ compilation
-and can be downloaded from (https://www.ibm.com/servers/resourcelink/svc00100.nsf/pages/xlCC++V241ForZOsV24). 
+and can be downloaded [here](https://www.ibm.com/servers/resourcelink/svc00100.nsf/pages/xlCC++V241ForZOsV24). 
 
-In order for the tools to be able to locate dependent tools, they need to be in well-defined locations. 
+In order for zopen to be able to locate dependent tools, they need to be in well-defined locations. 
 Tools will be searched for in the following locations, in order:
 - `${HOME}/zopen/prod/<tool>`
 - `/usr/bin/zopen/<tool>`
@@ -63,10 +69,10 @@ are providing a `boot` version of the tool (e.g. cURL), then you will need to pr
 
 ### Create your first z/OS port leveraging the zopen framework
 
-Before you begin porting a tool to z/OS, you must first identify the tool or library that you wish to port. For the sake of this guide, let's assume we are porting [jq](https://stedolan.github.io/jq/), a lightweight and flexible json parser. Next, check if the tool already exists under https://github.com/ZOSOpenTools. If it does exist, then please collaborate with the existing author.
+Before you begin porting a tool to z/OS, you must first identify the tool or library that you wish to port. For the sake of this guide, let's assume we are porting [jq](https://stedolan.github.io/jq/), a lightweight and flexible json parser. Next, check if the tool already exists under https://github.com/ZOSOpenTools. If it does exist, then please collaborate with the existing contributors.
 
-Begin first by cloning the example repository [zotsamplerepo](https://github.com/ZOSOpenTools/zotsampleport).  
-This repository contains the essential elements required to begin porting your application or library to z/OS.
+Begin first by cloning the example repository [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport). 
+This repository contains the essential elements required to begin porting your application or library to z/OS. We will use it as a template for our new project.
 
 In addition to the zotsamplerepo, you must also clone the https://github.com/ZOSOpenTools/utils repo.  This repo contains the `zopen` framework and it is what we will use to build, test, and install our port.
 
@@ -78,7 +84,7 @@ git clone git@github.com:ZOSOpenTools/zotsampleport.git jqport # make sure to na
 
 Next, in order to use the `zopen` suite of tools, you must set your path environment variable to the `utils/bin` directory. 
 ```bash
-export PATH=$PWD/utils/bin:$PATH
+export PATH=<pathtozopen>/utils/bin:$PATH
 ```
 
 Ok, now you are ready to begin porting. Change your current directory to the `jqport` directory: `cd jqport`. You will notice several files. The key files of interest are:
@@ -94,7 +100,7 @@ In the `buildenv` file, we'll erase the existing contents and the following:
 export ZOPEN_ROOT=$PWD
 export ZOPEN_TYPE="TARBALL"
 export ZOPEN_TARBALL_URL="https://github.com/stedolan/jq/releases/download/jq-1.6/jq-1.6.tar.gz"
-export ZOPEN_TARBALL_DEPS="make" 
+export ZOPEN_TARBALL_DEPS="make curl gzip" 
 ```
 ZOPEN_TARBALL_DEPS represents the set of dependencies that jq needs. We're currently only aware of `make` since it contains a Makefile.
 
@@ -104,6 +110,8 @@ zopen build -v
 ```
 
 The `-v` option above specifies verbose output.
+
+
 
 *Creating Patches*
 As you may have noticed, `zopen build` downloads the `tar.gz` file, and then attempts to patch it with the patch contents in the `patches` directory.
