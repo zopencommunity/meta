@@ -307,7 +307,7 @@ setEnv()
     # Confirm xlclang is at least 1.0.0
     ccraw=$(xlclang -qversion | grep 'IBM C/C++ for Open Enterprise Languages on z/OS' | awk '{print substr($9,2)}')
     if [ "${ccraw}x" = "x" ]; then
-      printError "xlclang compiler specified, but it is not a 'IBM C/C++ for Open Enterprise Languages on z/OS' compiler"
+      printWarning "xlclang compiler specified, but it is not a 'IBM C/C++ for Open Enterprise Languages on z/OS' compiler"
     fi 
     v=${ccraw%%.*}
     vr=${ccraw%.*}
@@ -327,7 +327,7 @@ setEnv()
     vr=${ccraw%.*}
     r=${vr##*.}
     if [ ${v} -lt 1 ] ; then
-      printError "Need to be running at least IBM C++ for Open Enterprise Languages on z/OS 1"
+      printWarning "Need to be running at least IBM C++ for Open Enterprise Languages on z/OS 1"
     fi
   fi
 
