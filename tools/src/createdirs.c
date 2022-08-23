@@ -3,14 +3,13 @@
 #include <unistd.h>
 #include <stdio.h>
 #include "createdirs.h"
-
-#define REASONABLE_PATH_MAX 1023
+#include "pathmax.h"
 
 static int createsubdir(const char* rootdir, const char* subdir) {
-  char fulldir[REASONABLE_PATH_MAX+1];
+  char fulldir[ZOPEN_PATH_MAX+1];
   struct stat stfull = {0};
 
-  if (snprintf(fulldir, REASONABLE_PATH_MAX, "%s/%s", rootdir, subdir) > REASONABLE_PATH_MAX) {
+  if (snprintf(fulldir, ZOPEN_PATH_MAX, "%s/%s", rootdir, subdir) > ZOPEN_PATH_MAX) {
     return ZOPEN_CREATEDIR_DIR_TOO_LONG;
   }
   if (stat(fulldir, &stfull) == -1) {

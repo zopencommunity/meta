@@ -4,7 +4,7 @@
 CC=xlc
 CFLAGS=-c -qdll -qrent -qlongname -Wl,DYNAM=DLL
 
-all: headers zopen-setup
+all: headers zopen-setup httpsget
 clean:
 	rm -f *.o zopen-setup
 
@@ -13,5 +13,8 @@ hwthic.h:
 
 headers: hwthic.h
 
-zopen-setup: main.o download.o createdirs.o createdb.o createpem.o httpsget.o
+httpsget: httpsgetmain.o httpsget.o createdb.o createpem.o download.o
+	$(LD) $(LDFLAGS) -o$@ $^
+    
+zopen-setup: zopensetupmain.o download.o createdirs.o createdb.o createpem.o httpsget.o
 	$(LD) $(LDFLAGS) -o$@ $^ 
