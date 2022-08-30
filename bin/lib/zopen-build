@@ -217,14 +217,15 @@ checkEnv()
     printError "ZOPEN_TYPE must be one of TARBALL or GIT. ZOPEN_TYPE=${ZOPEN_TYPE} was specified"
   fi
 
-  export ZOPEN_CHECK_RESULTS="${ZOPEN_ROOT}/portchk.sh"
-  export ZOPEN_CREATE_ENV="${ZOPEN_ROOT}/portcrtenv.sh"
-  if ! [ -x "${ZOPEN_CHECK_RESULTS}" ]; then
-    printError "${ZOPEN_CHECK_RESULTS} script needs to be provided to check the results. Exit with 0 if the build can be installed"
+  export ZOPEN_CHECK_RESULTS="zopen_check_results"
+  if command -V "${ZOPEN_CHECK_RESULTS}" >/dev/null 2>&1; then
+    export ZOPEN_CHECK_RESULTS="${ZOPEN_ROOT}/portchk.sh"
+    if ! [ -x "${ZOPEN_CHECK_RESULTS}" ]; then
+      printError "${ZOPEN_CHECK_RESULTS} script needs to be provided to check the results. Exit with 0 for Green, 1 for Yellow, and 2 for Red"
+    fi
   fi
-  if ! [ -x "${ZOPEN_CREATE_ENV}" ]; then
-    printError "${ZOPEN_CREATE_ENV} script needs to be provided to define the environment"
-  fi
+
+  export ZOPEN_APPEND_TO_ENV="zopen_append_to_env"
 
   if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
     if [ "${ZOPEN_TARBALL_URL}x" = "x" ]; then
@@ -687,15 +688,51 @@ build()
 check()
 {
   checklog="${LOG_PFX}_check.log"
+  results=2 # Assume the worst
   if [ -n "${ZOPEN_CHECK_CMD}" ]; then
     printHeader "Running Check"
     runAndLog "${ZOPEN_CHECK_CMD} >\"${checklog}\""
-    if ! runAndLog "${ZOPEN_CHECK_RESULTS_CMD}"; then
-      printError "Check failed. Log: ${checklog}"
+    if command -V "${ZOPEN_CHECK_RESULTS}" >/dev/null 2>&1; then
+      ${ZOPEN_CHECK_RESULTS} "${ZOPEN_ROOT}/${dir}" "${LOG_PFX}"
+      results=$?
     fi
   else
     printHeader "Skipping Check"
   fi
+  case "$results" in
+    0) status="Green" ;;
+    1) status="Yellow" ;;
+    2) status="Red" ;;
+    *) status="Red" ;;
+  esac
+  echo "$status" >> "${ZOPEN_INSTALL_DIR}/build.status"
+}
+
+createEnv()
+{
+  cat <<zz >"${ZOPEN_INSTALL_DIR}/.env"
+if ! [ -f ./.env ]; then
+  echo "Need to source from the .env directory" >&2
+  return 0
+fi
+export _BPXK_AUTOCVT=ON
+export _CEE_RUNOPTS="\$_CEE_RUNOPTS FILETAG(AUTOCVT,AUTOTAG) POSIX(ON)"
+export _TAG_REDIR_IN=txt
+export _TAG_REDIR_ERR=txt
+export _TAG_REDIR_OUT=txt
+zz
+
+  if [ -d "${ZOPEN_INSTALL_DIR}/bin" ]; then
+    echo "export PATH=\"\${PWD}/bin:\$PATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
+  fi
+  if [ -d "${ZOPEN_INSTALL_DIR}/lib" ]; then
+    echo "export LIBPATH=\"\${PWD}/lib:\$LIBPATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
+  fi
+  if command -V "${ZOPEN_APPEND_TO_ENV}" >/dev/null 2>&1; then
+    append_to_env="$(${ZOPEN_APPEND_TO_ENV})"
+    echo "$append_to_env" >> "${ZOPEN_INSTALL_DIR}/.env"
+  fi
+  exit 0
 }
 
 install()
@@ -706,9 +743,7 @@ install()
     if ! runAndLog "${ZOPEN_INSTALL_CMD} >\"${installlog}\""; then
       printError "Install failed. Log: ${installlog}"
     fi
-    if ! runAndLog "${ZOPEN_CREATE_ENV_CMD}"; then
-      printError "Environment creation failed."
-    fi
+    createEnv
     if ! runAndLog "${ZOPEN_PAX_CMD}"; then
       printError "Could not generate pax \"${paxFileName}\""
     fi
@@ -750,7 +785,8 @@ resolveCommands()
   fi
 
   if [ "${ZOPEN_CHECK}x" != "skipx" ] && [ ! -z "$(command -v ${ZOPEN_CHECK})" ] && ! ${skipcheck}; then
-    export ZOPEN_CHECK_CMD="\"${ZOPEN_CHECK}\" ${ZOPEN_CHECK_OPTS} CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\""
+    export ZOPEN_CHECK_CMD="\"${ZOPEN_CHECK}\" ${ZOPEN_CHECK_OPTS} CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"L
+DFLAGS=${LDFLAGS}\""
     export ZOPEN_CHECK_RESULTS_CMD="\"${ZOPEN_CHECK_RESULTS}\" \"${ZOPEN_ROOT}/${dir}\" \"${LOG_PFX}\""
   else
     unset ZOPEN_CHECK_CMD
@@ -759,7 +795,6 @@ resolveCommands()
 
   if [ "${ZOPEN_INSTALL}x" != "skipx" ] && [ ! -z "$(command -v ${ZOPEN_INSTALL})" ]; then
     export ZOPEN_INSTALL_CMD="${ZOPEN_INSTALL} ${ZOPEN_INSTALL_OPTS}"
-    export ZOPEN_CREATE_ENV_CMD="${ZOPEN_CREATE_ENV} \"${ZOPEN_INSTALL_DIR}\" \"${LOG_PFX}\""
     ZOPEN_NAME="${dir}"
     if [ "${ZOPEN_TYPE}x" = "GITx" ]; then
       branch=$(git rev-parse --abbrev-ref HEAD 2>&1 | sed "s/\//./g")
@@ -769,7 +804,6 @@ resolveCommands()
     export ZOPEN_PAX_CMD="pax -w -z -x pax \"-s#${ZOPEN_INSTALL_DIR}/#${ZOPEN_NAME}.${LOG_PFX}.zos/#\" -f \"${paxFileName}\" \"${ZOPEN_INSTALL_DIR}/\""
   else
     unset ZOPEN_INSTALL_CMD
-    unset ZOPEN_CREATE_ENV_CMD
     unset ZOPEN_PAX_CMD
   fi
   return 0
