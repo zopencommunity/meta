@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <fcntl.h>
 #include "createdb.h"
 #include "httpsget.h"
 #include "zopenio.h"
@@ -12,6 +13,21 @@ int httpsget(const char* host, const char* uri, const char* pem, const char* out
   size_t reqdblen = ZOPEN_PATH_MAX+1;
   size_t stashfilelen = ZOPEN_PATH_MAX+1;
   int rc;
+  int fd;
+
+  if ((fd = open(pem, O_RDONLY)) > 0) {
+    close(fd);
+  } else {
+    fprintf(stderr, "Unable to open PEM file %s for read\n", pem);
+    return 4;
+  }
+  if ((fd = open(output, O_CREAT|O_WRONLY|O_TRUNC)) > 0) {
+    close(fd);
+  } else {
+    fprintf(stderr, "Unable to open output file %s for write\n", output);
+    return 4;
+  }
+
 
   keydb = malloc(ZOPEN_PATH_MAX+1);
   reqdb = malloc(ZOPEN_PATH_MAX+1);
