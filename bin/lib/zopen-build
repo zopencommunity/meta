@@ -780,8 +780,7 @@ resolveCommands()
   fi
 
   if [ "${ZOPEN_CHECK}x" != "skipx" ] && [ ! -z "$(command -v ${ZOPEN_CHECK})" ] && ! ${skipcheck}; then
-    export ZOPEN_CHECK_CMD="\"${ZOPEN_CHECK}\" ${ZOPEN_CHECK_OPTS} CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"L
-DFLAGS=${LDFLAGS}\""
+    export ZOPEN_CHECK_CMD="\"${ZOPEN_CHECK}\" ${ZOPEN_CHECK_OPTS} CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\""
     export ZOPEN_CHECK_RESULTS_CMD="\"${ZOPEN_CHECK_RESULTS}\" \"${ZOPEN_ROOT}/${dir}\" \"${LOG_PFX}\""
   else
     unset ZOPEN_CHECK_CMD
@@ -949,3 +948,5 @@ fi
 if ! install; then
   exit 4
 fi
+
+exit 0
