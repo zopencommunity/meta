@@ -12,6 +12,11 @@
 # Functions section
 #
 
+# Temporary files:
+temp_c_file="/tmp/$LOGNAME.$RANDOM.c"
+
+trap "/bin/rm -rf $temp_c_file && exit" EXIT INT TERM QUIT HUP
+
 printEnvVar()
 {
   echo "\
@@ -304,31 +309,26 @@ setEnv()
     export CXXFLAGS="${ZOPEN_CXXFLAGSD} ${ZOPEN_EXTRA_CXXFLAGS}"
   fi
 
+  temp_c_file="/tmp/$LOGNAME.c"
   if [ "${CC}x" = "xlclangx" ]; then
-    # Confirm xlclang is at least 1.0.0
-    ccraw=$(xlclang -qversion | grep 'IBM C/C++ for Open Enterprise Languages on z/OS' | awk '{print substr($9,2)}')
+    # Confirm xlclang is at least 1.0.0 (aka __COMPILER_VER__=42040001)
+    ccraw=$(touch $temp_c_file && xlclang -E -qshowmacros $temp_c_file | grep '__COMPILER_VER__' | awk '{print substr($3,3)}')
     if [ "${ccraw}x" = "x" ]; then
-      printWarning "xlclang compiler specified, but it is not a 'IBM C/C++ for Open Enterprise Languages on z/OS' compiler"
+      printError "xlclang compiler specified, but it is not a 'IBM C/C++ for Open Enterprise Languages on z/OS' compiler"
     fi 
-    v=${ccraw%%.*}
-    vr=${ccraw%.*}
-    r=${vr##*.}
-    if [ ${v} -lt 1 ] ; then
-      printWarning "Need to be running at least IBM C for Open Enterprise Languages on z/OS 1"
+    if [ ${ccraw} -lt 42040001 ] ; then
+      printError "Need to be running at least IBM C for Open Enterprise Languages on z/OS 1"
     fi
   fi
 
   if [ "${CXX}x" = "xlclang++x" ]; then
-    # Confirm xlclang++ is at least 1.0.0
-    ccraw=$(xlclang++ -qversion | grep 'IBM C/C++ for Open Enterprise Languages on z/OS' | awk '{print substr($9,2)}')
+    # Confirm xlclang is at least 1.0.0 (aka __COMPILER_VER__=42040001)
+    ccraw=$(touch $temp_c_file && xlclang++ -+ -E -qshowmacros $temp_c_file | grep '__COMPILER_VER__' | awk '{print substr($3,3)}')
     if [ "${ccraw}x" = "x" ]; then
-      printWarning "xlclang++ compiler specified, but it is not a 'IBM C/C++ for Open Enterprise Languages on z/OS' compiler"
+      printError "xlclang compiler specified, but it is not a 'IBM C/C++ for Open Enterprise Languages on z/OS' compiler"
     fi 
-    v=${ccraw%%.*}
-    vr=${ccraw%.*}
-    r=${vr##*.}
-    if [ ${v} -lt 1 ] ; then
-      printWarning "Need to be running at least IBM C++ for Open Enterprise Languages on z/OS 1"
+    if [ ${ccraw} -lt 42040001 ] ; then
+      printError "Need to be running at least IBM C for Open Enterprise Languages on z/OS 1"
     fi
   fi
 
@@ -688,7 +688,7 @@ build()
 check()
 {
   checklog="${LOG_PFX}_check.log"
-  results=2 # Assume the worst
+  results=4 # Unknown results
   if [ -n "${ZOPEN_CHECK_CMD}" ]; then
     printHeader "Running Check"
     runAndLog "${ZOPEN_CHECK_CMD} >\"${checklog}\""
@@ -700,10 +700,11 @@ check()
     printHeader "Skipping Check"
   fi
   case "$results" in
-    0) status="Green" ;;
-    1) status="Yellow" ;;
-    2) status="Red" ;;
-    *) status="Red" ;;
+    0) status="Green" ;; # All tests passed
+    1) status="Blue" ;; # Most tests passed
+    2) status="Yellow" ;; # Most tests failed
+    3) status="Red" ;; # Pretty much non-functional
+    *) status="Unknown" ;; # Skipped or bad return code from check results
   esac
   echo "$status" >> "${ZOPEN_INSTALL_DIR}/build.status"
 }
@@ -727,6 +728,9 @@ zz
   fi
   if [ -d "${ZOPEN_INSTALL_DIR}/lib" ]; then
     echo "export LIBPATH=\"\${PWD}/lib:\$LIBPATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
+  fi
+  if [ -d "${ZOPEN_INSTALL_DIR}/share/man" ]; then
+    echo "export MANPATH=\"\${PWD}/share/man:\$MANPATH" >> "${ZOPEN_INSTALL_DIR}/.env"
   fi
   if command -V "${ZOPEN_APPEND_TO_ENV}" >/dev/null 2>&1; then
     append_to_env="$(${ZOPEN_APPEND_TO_ENV})"
