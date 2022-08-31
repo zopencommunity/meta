@@ -2,7 +2,6 @@
 #
 # General purpose build script for ZOSOpenTools ports
 #
-# ZOPEN_ROOT must be defined to the root directory of the cloned ZOSOpenTools port
 # ZOPEN_TYPE must be defined to either TARBALL or GIT. This indicates the type of package to build
 #
 # For more details, see the help which you can get by issuing:
@@ -12,15 +11,9 @@
 # Functions section
 #
 
-# Temporary files:
-temp_c_file="/tmp/$LOGNAME.$RANDOM.c"
-
-trap "/bin/rm -rf $temp_c_file && exit" EXIT INT TERM QUIT HUP
-
 printEnvVar()
 {
   echo "\
-ZOPEN_ROOT           The directory the port repo was extracted into (defaults to current directory)
 ZOPEN_TYPE           The type of package to download. Valid types are TARBALL and GIT (required)
 ZOPEN_TARBALL_URL    The fully qualified URL that the tarball should be downloaded from (required if ZOPEN_TYPE=TARBALL)
 ZOPEN_TARBALL_DEPS   Space-delimited set of source packages this git package depends on to build (required if ZOPEN_TYPE=TARBALL)
@@ -50,6 +43,9 @@ ZOPEN_CONFIGURE_OPTS Options to pass to configuration program (defaults to '--pr
 ZOPEN_EXTRA_CONFIGURE_OPTS Extra configure options to pass to configuration program (defaults to '')
 ZOPEN_INSTALL_DIR    Installation directory to pass to configuration (defaults to '\${HOME}/zopen/prod/<pkg>')
 ZOPEN_MAKE           Build program to run. If skip is specified, no build step is performed (defaults to '${ZOPEN_MAKED}')
+ZOPEN_MAKE_OPTS      Options to pass to build program (defaults to '-j\${ZOPEN_NUM_JOBS}')
+ZOPEN_CHECK          Check program to run. If skip is specified, no check step is performed (defaults to '${ZOPEN_CHECKD}') 
+ZOPEN_CHECK_OPTS     Options to pass to check program (defaults to '${ZOPEN_CHECK_OPTSD}')
 ZOPEN_MAKE_OPTS      Options to pass to build program (defaults to '-j\${ZOPEN_NUM_JOBS}')
 ZOPEN_CHECK          Check program to run. If skip is specified, no check step is performed (defaults to '${ZOPEN_CHECKD}') 
 ZOPEN_CHECK_OPTS     Options to pass to check program (defaults to '${ZOPEN_CHECK_OPTSD}')
@@ -196,12 +192,7 @@ checkEnv()
   #
   printHeader "Checking environment configuration"
 
-  if [ "${ZOPEN_ROOT}x" = "x" ]; then
-    printError "ZOPEN_ROOT needs to be defined to the root directory of the tool being ported"
-  fi
-  if ! [ -d "${ZOPEN_ROOT}" ]; then
-    printError "ZOPEN_ROOT ${ZOPEN_ROOT} is not a directory"
-  fi
+  export ZOPEN_ROOT=$(cd "$(dirname "$buildEnvFile")"; pwd)
 
   if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
     if [ "${ZOPEN_TARBALL_URL}x" = "x" ]; then
@@ -226,7 +217,7 @@ checkEnv()
   if command -V "${ZOPEN_CHECK_RESULTS}" >/dev/null 2>&1; then
     export ZOPEN_CHECK_RESULTS="${ZOPEN_ROOT}/portchk.sh"
     if ! [ -x "${ZOPEN_CHECK_RESULTS}" ]; then
-      printError "${ZOPEN_CHECK_RESULTS} script needs to be provided to check the results. Exit with 0 for Green, 1 for Yellow, and 2 for Red"
+      printError "zopen_check_results script needs to be provided to check the results."
     fi
   fi
 
@@ -958,5 +949,3 @@ fi
 if ! install; then
   exit 4
 fi
-
-exit 0

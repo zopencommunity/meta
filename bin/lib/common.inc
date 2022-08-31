@@ -80,4 +80,10 @@ printInfo()
   printf "$1\n" >&2
 }
 
+getInput()
+{
+  read zopen_input
+  echo $zopen_input
+}
+
 zopenInitialize

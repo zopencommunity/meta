@@ -12,6 +12,7 @@ printSyntax()
   echo "where <command> may be one of the following:" >&2
   echo " build: invokes the build script." >&2
   echo " download: downloads binaries" >&2
+  echo " generate: generate a zopen project" >&2
   echo "" >&2
   echo "Example usage:" >&2
   echo " # Build a port" >&2
@@ -33,6 +34,10 @@ while [[ $# -gt 0 ]]; do
     "download")
       shift
       exec "${bindir}/lib/zopen-download" $@
+      ;;
+    "generate")
+      shift
+      exec "${bindir}/lib/zopen-generate" $@
       ;;
     "help" | "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
       printSyntax "${args}"
