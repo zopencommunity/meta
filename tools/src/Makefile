@@ -2,7 +2,7 @@
 # Simple compile and link of zopen-setup program
 #
 CC=xlc
-CFLAGS=-c -qdll -qrent -qlongname -Wl,DYNAM=DLL
+CFLAGS=-c -qdll -qrent -qlongname -Wl,DYNAM=DLL -Wc,GONUM
 
 all: headers zopen-setup httpsget
 clean:

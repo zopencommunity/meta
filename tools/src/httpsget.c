@@ -21,7 +21,7 @@ int httpsget(const char* host, const char* uri, const char* pem, const char* out
     fprintf(stderr, "Unable to open PEM file %s for read\n", pem);
     return 4;
   }
-  if ((fd = open(output, O_CREAT|O_WRONLY|O_TRUNC)) > 0) {
+  if ((fd = open(output, O_CREAT|O_WRONLY|O_TRUNC, S_IRWXU)) > 0) {
     close(fd);
   } else {
     fprintf(stderr, "Unable to open output file %s for write\n", output);

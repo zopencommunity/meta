@@ -10,11 +10,12 @@
 
 int main(int argc, char* argv[]) {
   const char* host = "github.com";
-  const char* uri[] = ZOPEN_BOOT_URI;
+  const char* bootpkg[] = ZOPEN_BOOT_PKG;
   const char* pemdata = GITHUB_PEM_CA;
   const char* root;
   char* output = malloc(ZOPEN_PATH_MAX+1);
   char* tmppem = malloc(ZOPEN_PATH_MAX+1);
+  char uri[ZOPEN_PATH_MAX+1];
   int rc;
   int i;
 
@@ -45,15 +46,24 @@ int main(int argc, char* argv[]) {
     fprintf(stderr, "error creating pem file: %d\n", rc);
     return rc;
   }
-
-  for (i=0; uri[i]; ++i) {
-    if (!output || genfilename("pax.Z", output, ZOPEN_PATH_MAX)) {
+  for (i=0; bootpkg[i]; ++i) {
+    if ((rc = snprintf(uri, sizeof(uri), "%s/%s.%s", ZOPEN_BOOT_URI_ROOT, bootpkg[i], ZOPEN_BOOT_URI_TYPE)) > sizeof(uri)) {
+      fprintf(stderr, "error building uri for %s/%s.%s", ZOPEN_BOOT_URI_ROOT, bootpkg[i], ZOPEN_BOOT_URI_TYPE);
+      return 4;
+    }   
+    if (!output || genfilenameinsubdir("pax.Z", root, ZOPEN_BOOT, bootpkg[i], output, ZOPEN_PATH_MAX)) {
       fprintf(stderr, "error acquiring storage (2)\n");
       return 4;
     }
-    if (rc = httpsget(host, uri[i], tmppem, output)) {
+    if (rc = httpsget(host, uri, tmppem, output)) {
       fprintf(stderr, "error downloading https://%s%s with PEM file %s to %s\n", host, uri, tmppem, output);
       return rc;
     }
   }
+  
+  if (remove(tmppem)) {
+    fprintf(stderr, "error removing temporary pem file: %s\n", tmppem);
+    return 4;
+  }
+  return 0;
 }

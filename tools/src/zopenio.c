@@ -25,3 +25,15 @@ int genfilename(const char* extension, char* buffer, size_t bufflen) {
   }
   return 0;
 }
+
+int genfilenameinsubdir(const char* extension, const char* dir, const char* subdir, const char* prefix, char* buffer, size_t bufflen) {
+  int rc;
+
+  rc = snprintf(buffer, bufflen, "%s/%s/%s.%s", dir, subdir, prefix, extension);
+
+  if (rc > bufflen) {
+    fprintf(stderr, "Unable to generate temporary file name in %s/%s for %s (bufflen %d, rc %d)\n", dir, subdir, extension, bufflen, rc);
+    return 4;
+  }
+  return 0;
+}
