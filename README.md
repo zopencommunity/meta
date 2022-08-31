@@ -38,6 +38,8 @@ To help guage the health of the port, a zopen_check_results function can be prov
 - 3 - Red - All tests failed or check is broken
 - 4 - Unknown - Skipped or something went wrong
 
+To get started, generate a zopen project with `zopen generate`
+
 `zopen build` will generate a .env file in the install location with support for environment variables such as PATH, LIBPATH, and MANPATH.
 To add your own, you can append environment variables by echo'ing them in a function called zopen_append_to_env.
 
