@@ -27,7 +27,6 @@ To build a software package, you can use `zopen build`.
 -  `buildenv`, which `zopen build` will automatically source.  If you would like to source another file, you can specify it via the `-e` option as in: `zopen build -e mybuildenv`
 
 The `buildenv` file _must_ set the following environment variables:
-- `ZOPEN_ROOT`: this environment variable is the absolute directory of the location the repo was clone'd to
 - `ZOPEN_TYPE`: one of _TARBALL_ or _GIT_ indicating where the source should be pulled from (a source tarball or git repository)
 - `ZOPEN_URL`: the URL where the source should be pulled from, including the `package.git` or `package-V.R.M.tar.gz` extension
 - `ZOPEN_DEPS`: a space-separated list of all software dependencies this package has.
@@ -59,4 +58,3 @@ Run `zopen build` from the root directory of the git repo you would like to buil
 cd ${HOME}/zot/dev/m4
 ${HOME}/zot/dev/utils/bin/zopen build
 ```
-
