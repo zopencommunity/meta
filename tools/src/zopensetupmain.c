@@ -13,19 +13,19 @@ int main(int argc, char* argv[]) {
   const char* bootpkg[] = ZOPEN_BOOT_PKG;
   const char* pemdata = GITHUB_PEM_CA;
   const char* root;
-  char* output = malloc(ZOPEN_PATH_MAX+1);
-  char* tmppem = malloc(ZOPEN_PATH_MAX+1);
-  char uri[ZOPEN_PATH_MAX+1];
-  int rc;
-  int i;
+  char  output[ZOPEN_PATH_MAX+1];
+  char  tmppem[ZOPEN_PATH_MAX+1];
+  char  uri[ZOPEN_PATH_MAX+1];
+  int   rc;
+  int   i;
 
   if (argc != 2) {
     fprintf(stderr, "Syntax: %s <root>\n"
-                    "  where <root> is the root directory where:\n"
-                    "    a symbolic link from ${HOME}/zopen  to <root> will be created\n"
-                    "    a boot, prod, and dev directory created\n"
+                    "  <root> is the root directory where:\n"
+                    "    a symbolic link from ${HOME}/zopen to <root> will be created\n"
+                    "    boot, prod, and dev directories will be created\n"
                     "  The boot subdirectory will have:\n"
-                    "    sub-directories for each of the tools needed for running the zopen utility\n"
+                    "    sub-directories created for each of the tools needed for running the zopen utility\n"
                     "  The dev subdirectory will have:\n"
                     "    a 'git clone' of both the utils and meta repositories\n", argv[0]);
     return 4; 
@@ -46,8 +46,9 @@ int main(int argc, char* argv[]) {
     fprintf(stderr, "error creating pem file: %d\n", rc);
     return rc;
   }
+#define ZOPEN_BOOT_URI_ROOT "/ZOSOpenTools/curlport/releases/download/boot"
   for (i=0; bootpkg[i]; ++i) {
-    if ((rc = snprintf(uri, sizeof(uri), "%s/%s.%s", ZOPEN_BOOT_URI_ROOT, bootpkg[i], ZOPEN_BOOT_URI_TYPE)) > sizeof(uri)) {
+    if ((rc = snprintf(uri, sizeof(uri), "/%s/%sport/%s/%s.%s", ZOPEN_BOOT_URI_PREFIX, bootpkg[i], ZOPEN_BOOT_URI_SUFFIX, bootpkg[i], ZOPEN_BOOT_URI_TYPE)) > sizeof(uri)) {
       fprintf(stderr, "error building uri for %s/%s.%s", ZOPEN_BOOT_URI_ROOT, bootpkg[i], ZOPEN_BOOT_URI_TYPE);
       return 4;
     }   
