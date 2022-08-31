@@ -889,12 +889,12 @@ fi
 
 cd "${ZOPEN_ROOT}/${dir}" || exit 99
 
-if ! resolveCommands; then
-  exit 4
-fi
-
 if [ "${ZOPEN_SRC_DIR}x" != "x" ]; then
   cd "${ZOPEN_SRC_DIR}" || exit 99
+fi
+
+if ! resolveCommands; then
+  exit 4
 fi
 
 if ${startShell}; then
