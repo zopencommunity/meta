@@ -727,7 +727,6 @@ zz
     append_to_env="$(${ZOPEN_APPEND_TO_ENV})"
     echo "$append_to_env" >> "${ZOPEN_INSTALL_DIR}/.env"
   fi
-  exit 0
 }
 
 install()
@@ -739,6 +738,9 @@ install()
       printError "Install failed. Log: ${installlog}"
     fi
     createEnv
+    if command -V "zopen_post_install" >/dev/null 2>&1; then
+      zopen_post_install ${ZOPEN_INSTALL_DIR}
+    fi
     if ! runAndLog "${ZOPEN_PAX_CMD}"; then
       printError "Could not generate pax \"${paxFileName}\""
     fi
