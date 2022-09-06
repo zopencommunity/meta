@@ -19,6 +19,8 @@ printSyntax()
   echo " zopen build -v # Build port" >&2
   echo " # Download binaries from Github" >&2
   echo " zopen download" >&2
+  echo " # Generate a zopen template project" >&2
+  echo " zopen generate" >&2
 }
 
 export bindir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
