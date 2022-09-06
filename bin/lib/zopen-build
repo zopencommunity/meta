@@ -2,7 +2,6 @@
 #
 # General purpose build script for ZOSOpenTools ports
 #
-# ZOPEN_ROOT must be defined to the root directory of the cloned ZOSOpenTools port
 # ZOPEN_TYPE must be defined to either TARBALL or GIT. This indicates the type of package to build
 #
 # For more details, see the help which you can get by issuing:
@@ -15,7 +14,6 @@
 printEnvVar()
 {
   echo "\
-ZOPEN_ROOT           The directory the port repo was extracted into (defaults to current directory)
 ZOPEN_TYPE           The type of package to download. Valid types are TARBALL and GIT (required)
 ZOPEN_TARBALL_URL    The fully qualified URL that the tarball should be downloaded from (required if ZOPEN_TYPE=TARBALL)
 ZOPEN_TARBALL_DEPS   Space-delimited set of source packages this git package depends on to build (required if ZOPEN_TYPE=TARBALL)
@@ -62,6 +60,24 @@ export utildir="$(cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P)"
 export utilparentdir="$(cd "$(dirname "$0")/../.." >/dev/null 2>&1 && pwd -P)"
 
 . "${utildir}/common.inc"
+
+# Temporary files
+for tmp in "$TMPDIR" "$TMP" /tmp
+do
+  if [ ! -z $tmp ] && [ -d $tmp ]; then
+    temp_c_file="$tmp/$LOGNAME.c"
+    break
+  fi
+done
+
+# Remove temoraries on exit
+cleanup() {
+    rv=$?
+    [ -f $temp_c_file ] && /bin/rm -rf $temp_c_file
+    exit $rv
+}
+
+trap "cleanup" EXIT INT TERM QUIT HUP
 
 setDefaults()
 {
@@ -191,12 +207,7 @@ checkEnv()
   #
   printHeader "Checking environment configuration"
 
-  if [ "${ZOPEN_ROOT}x" = "x" ]; then
-    printError "ZOPEN_ROOT needs to be defined to the root directory of the tool being ported"
-  fi
-  if ! [ -d "${ZOPEN_ROOT}" ]; then
-    printError "ZOPEN_ROOT ${ZOPEN_ROOT} is not a directory"
-  fi
+  export ZOPEN_ROOT=$(cd "$(dirname "$buildEnvFile")"; pwd)
 
   if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
     if [ "${ZOPEN_TARBALL_URL}x" = "x" ]; then
@@ -217,14 +228,15 @@ checkEnv()
     printError "ZOPEN_TYPE must be one of TARBALL or GIT. ZOPEN_TYPE=${ZOPEN_TYPE} was specified"
   fi
 
-  export ZOPEN_CHECK_RESULTS="${ZOPEN_ROOT}/portchk.sh"
-  export ZOPEN_CREATE_ENV="${ZOPEN_ROOT}/portcrtenv.sh"
-  if ! [ -x "${ZOPEN_CHECK_RESULTS}" ]; then
-    printError "${ZOPEN_CHECK_RESULTS} script needs to be provided to check the results. Exit with 0 if the build can be installed"
+  ZOPEN_CHECK_RESULTS="zopen_check_results"
+  if command -V "${ZOPEN_CHECK_RESULTS}" >/dev/null 2>&1; then
+    export ZOPEN_CHECK_RESULTS="${ZOPEN_ROOT}/portchk.sh"
+    if ! [ -x "${ZOPEN_CHECK_RESULTS}" ]; then
+      printError "zopen_check_results script needs to be provided to check the results."
+    fi
   fi
-  if ! [ -x "${ZOPEN_CREATE_ENV}" ]; then
-    printError "${ZOPEN_CREATE_ENV} script needs to be provided to define the environment"
-  fi
+
+  ZOPEN_APPEND_TO_ENV="zopen_append_to_env"
 
   if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
     if [ "${ZOPEN_TARBALL_URL}x" = "x" ]; then
@@ -304,30 +316,24 @@ setEnv()
   fi
 
   if [ "${CC}x" = "xlclangx" ]; then
-    # Confirm xlclang is at least 1.0.0
-    ccraw=$(xlclang -qversion | grep 'IBM C/C++ for Open Enterprise Languages on z/OS' | awk '{print substr($9,2)}')
+    # Confirm xlclang is at least 1.0.0 (aka __COMPILER_VER__=42040001)
+    ccraw=$(touch $temp_c_file && xlclang -E -qshowmacros $temp_c_file | grep '__COMPILER_VER__' | awk '{print substr($3,3)}')
     if [ "${ccraw}x" = "x" ]; then
-      printWarning "xlclang compiler specified, but it is not a 'IBM C/C++ for Open Enterprise Languages on z/OS' compiler"
+      printError "xlclang compiler specified, but it is not a 'IBM C/C++ for Open Enterprise Languages on z/OS' compiler"
     fi 
-    v=${ccraw%%.*}
-    vr=${ccraw%.*}
-    r=${vr##*.}
-    if [ ${v} -lt 1 ] ; then
-      printWarning "Need to be running at least IBM C for Open Enterprise Languages on z/OS 1"
+    if [ ${ccraw} -lt 42040001 ] ; then
+      printError "Need to be running at least IBM C for Open Enterprise Languages on z/OS 1"
     fi
   fi
 
   if [ "${CXX}x" = "xlclang++x" ]; then
-    # Confirm xlclang++ is at least 1.0.0
-    ccraw=$(xlclang++ -qversion | grep 'IBM C/C++ for Open Enterprise Languages on z/OS' | awk '{print substr($9,2)}')
+    # Confirm xlclang is at least 1.0.0 (aka __COMPILER_VER__=42040001)
+    ccraw=$(touch $temp_c_file && xlclang++ -+ -E -qshowmacros $temp_c_file | grep '__COMPILER_VER__' | awk '{print substr($3,3)}')
     if [ "${ccraw}x" = "x" ]; then
-      printWarning "xlclang++ compiler specified, but it is not a 'IBM C/C++ for Open Enterprise Languages on z/OS' compiler"
+      printError "xlclang compiler specified, but it is not a 'IBM C/C++ for Open Enterprise Languages on z/OS' compiler"
     fi 
-    v=${ccraw%%.*}
-    vr=${ccraw%.*}
-    r=${vr##*.}
-    if [ ${v} -lt 1 ] ; then
-      printWarning "Need to be running at least IBM C++ for Open Enterprise Languages on z/OS 1"
+    if [ ${ccraw} -lt 42040001 ] ; then
+      printError "Need to be running at least IBM C for Open Enterprise Languages on z/OS 1"
     fi
   fi
 
@@ -687,14 +693,54 @@ build()
 check()
 {
   checklog="${LOG_PFX}_check.log"
+  results=4 # Unknown results
   if [ -n "${ZOPEN_CHECK_CMD}" ]; then
     printHeader "Running Check"
     runAndLog "${ZOPEN_CHECK_CMD} >\"${checklog}\""
-    if ! runAndLog "${ZOPEN_CHECK_RESULTS_CMD}"; then
-      printError "Check failed. Log: ${checklog}"
+    if command -V "${ZOPEN_CHECK_RESULTS}" >/dev/null 2>&1; then
+      ${ZOPEN_CHECK_RESULTS} "${ZOPEN_ROOT}/${dir}" "${LOG_PFX}"
+      results=$?
     fi
   else
     printHeader "Skipping Check"
+  fi
+  case "$results" in
+    0) ZOPEN_STATUS="Green" ;; # All tests passed
+    1) ZOPEN_STATUS="Blue" ;; # Most tests passed
+    2) ZOPEN_STATUS="Yellow" ;; # Most tests failed
+    3) ZOPEN_STATUS="Red" ;; # Pretty much non-functional
+    *) ZOPEN_STATUS="Unknown" ;; # Skipped or bad return code from check results
+  esac
+}
+
+createEnv()
+{
+  projectName=$(echo $ZOPEN_NAME | cut -d "-" -f 1 | awk '{print toupper($0)}')
+  cat <<zz >"${ZOPEN_INSTALL_DIR}/.env"
+if ! [ -f ./.env ]; then
+  echo "Need to source from the .env directory" >&2
+  return 0
+fi
+export _BPXK_AUTOCVT=ON
+export _CEE_RUNOPTS="\$_CEE_RUNOPTS FILETAG(AUTOCVT,AUTOTAG) POSIX(ON)"
+export _TAG_REDIR_IN=txt
+export _TAG_REDIR_ERR=txt
+export _TAG_REDIR_OUT=txt
+export ${projectName}_HOME=\${PWD}
+zz
+
+  if [ -d "${ZOPEN_INSTALL_DIR}/bin" ]; then
+    echo "export PATH=\"\${PWD}/bin:\$PATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
+  fi
+  if [ -d "${ZOPEN_INSTALL_DIR}/lib" ]; then
+    echo "export LIBPATH=\"\${PWD}/lib:\$LIBPATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
+  fi
+  if [ -d "${ZOPEN_INSTALL_DIR}/share/man" ]; then
+    echo "export MANPATH=\"\${PWD}/share/man:\$MANPATH" >> "${ZOPEN_INSTALL_DIR}/.env"
+  fi
+  if command -V "${ZOPEN_APPEND_TO_ENV}" >/dev/null 2>&1; then
+    append_to_env="$(${ZOPEN_APPEND_TO_ENV})"
+    echo "$append_to_env" >> "${ZOPEN_INSTALL_DIR}/.env"
   fi
 }
 
@@ -706,8 +752,10 @@ install()
     if ! runAndLog "${ZOPEN_INSTALL_CMD} >\"${installlog}\""; then
       printError "Install failed. Log: ${installlog}"
     fi
-    if ! runAndLog "${ZOPEN_CREATE_ENV_CMD}"; then
-      printError "Environment creation failed."
+    createEnv
+    echo "$ZOPEN_STATUS" >> "${ZOPEN_INSTALL_DIR}/build.status"
+    if command -V "zopen_post_install" >/dev/null 2>&1; then
+      zopen_post_install ${ZOPEN_INSTALL_DIR}
     fi
     if ! runAndLog "${ZOPEN_PAX_CMD}"; then
       printError "Could not generate pax \"${paxFileName}\""
@@ -759,7 +807,6 @@ resolveCommands()
 
   if [ "${ZOPEN_INSTALL}x" != "skipx" ] && [ ! -z "$(command -v ${ZOPEN_INSTALL})" ]; then
     export ZOPEN_INSTALL_CMD="${ZOPEN_INSTALL} ${ZOPEN_INSTALL_OPTS}"
-    export ZOPEN_CREATE_ENV_CMD="${ZOPEN_CREATE_ENV} \"${ZOPEN_INSTALL_DIR}\" \"${LOG_PFX}\""
     ZOPEN_NAME="${dir}"
     if [ "${ZOPEN_TYPE}x" = "GITx" ]; then
       branch=$(git rev-parse --abbrev-ref HEAD 2>&1 | sed "s/\//./g")
@@ -769,7 +816,6 @@ resolveCommands()
     export ZOPEN_PAX_CMD="pax -w -z -x pax \"-s#${ZOPEN_INSTALL_DIR}/#${ZOPEN_NAME}.${LOG_PFX}.zos/#\" -f \"${paxFileName}\" \"${ZOPEN_INSTALL_DIR}/\""
   else
     unset ZOPEN_INSTALL_CMD
-    unset ZOPEN_CREATE_ENV_CMD
     unset ZOPEN_PAX_CMD
   fi
   return 0
