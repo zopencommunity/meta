@@ -736,7 +736,7 @@ zz
     echo "export LIBPATH=\"\${PWD}/lib:\$LIBPATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
   fi
   if [ -d "${ZOPEN_INSTALL_DIR}/share/man" ]; then
-    echo "export MANPATH=\"\${PWD}/share/man:\$MANPATH" >> "${ZOPEN_INSTALL_DIR}/.env"
+    echo "export MANPATH=\"\${PWD}/share/man:\$MANPATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
   fi
   if command -V "${ZOPEN_APPEND_TO_ENV}" >/dev/null 2>&1; then
     append_to_env="$(${ZOPEN_APPEND_TO_ENV})"
