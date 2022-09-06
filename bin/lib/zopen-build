@@ -46,8 +46,6 @@ ZOPEN_MAKE           Build program to run. If skip is specified, no build step i
 ZOPEN_MAKE_OPTS      Options to pass to build program (defaults to '-j\${ZOPEN_NUM_JOBS}')
 ZOPEN_CHECK          Check program to run. If skip is specified, no check step is performed (defaults to '${ZOPEN_CHECKD}') 
 ZOPEN_CHECK_OPTS     Options to pass to check program (defaults to '${ZOPEN_CHECK_OPTSD}')
-ZOPEN_MAKE_OPTS      Options to pass to build program (defaults to '-j\${ZOPEN_NUM_JOBS}')
-ZOPEN_CHECK          Check program to run. If skip is specified, no check step is performed (defaults to '${ZOPEN_CHECKD}') 
 ZOPEN_CHECK_OPTS     Options to pass to check program (defaults to '${ZOPEN_CHECK_OPTSD}')
 ZOPEN_IMAGE_REGISTRY Docker image registry to an OCI image to (use with --oci option)
 ZOPEN_IMAGE_DOCKERFILE_NAME Dockerfile name (default: Dockerfile)
@@ -63,6 +61,24 @@ export utildir="$(cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P)"
 export utilparentdir="$(cd "$(dirname "$0")/../.." >/dev/null 2>&1 && pwd -P)"
 
 . "${utildir}/common.inc"
+
+# Temporary files
+for tmp in "$TMPDIR" "$TMP" /tmp
+do
+  if [ ! -z $tmp ] && [ -d $tmp ]; then
+    temp_c_file="$tmp/$LOGNAME.c"
+    break
+  fi
+done
+
+# Remove temoraries on exit
+cleanup() {
+    rv=$?
+    [ -f $temp_c_file ] && /bin/rm -rf $temp_c_file
+    exit $rv
+}
+
+trap "cleanup" EXIT INT TERM QUIT HUP
 
 setDefaults()
 {
@@ -213,7 +229,7 @@ checkEnv()
     printError "ZOPEN_TYPE must be one of TARBALL or GIT. ZOPEN_TYPE=${ZOPEN_TYPE} was specified"
   fi
 
-  export ZOPEN_CHECK_RESULTS="zopen_check_results"
+  ZOPEN_CHECK_RESULTS="zopen_check_results"
   if command -V "${ZOPEN_CHECK_RESULTS}" >/dev/null 2>&1; then
     export ZOPEN_CHECK_RESULTS="${ZOPEN_ROOT}/portchk.sh"
     if ! [ -x "${ZOPEN_CHECK_RESULTS}" ]; then
@@ -221,7 +237,7 @@ checkEnv()
     fi
   fi
 
-  export ZOPEN_APPEND_TO_ENV="zopen_append_to_env"
+  ZOPEN_APPEND_TO_ENV="zopen_append_to_env"
 
   if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
     if [ "${ZOPEN_TARBALL_URL}x" = "x" ]; then
@@ -300,7 +316,6 @@ setEnv()
     export CXXFLAGS="${ZOPEN_CXXFLAGSD} ${ZOPEN_EXTRA_CXXFLAGS}"
   fi
 
-  temp_c_file="/tmp/$LOGNAME.c"
   if [ "${CC}x" = "xlclangx" ]; then
     # Confirm xlclang is at least 1.0.0 (aka __COMPILER_VER__=42040001)
     ccraw=$(touch $temp_c_file && xlclang -E -qshowmacros $temp_c_file | grep '__COMPILER_VER__' | awk '{print substr($3,3)}')
@@ -691,17 +706,17 @@ check()
     printHeader "Skipping Check"
   fi
   case "$results" in
-    0) status="Green" ;; # All tests passed
-    1) status="Blue" ;; # Most tests passed
-    2) status="Yellow" ;; # Most tests failed
-    3) status="Red" ;; # Pretty much non-functional
-    *) status="Unknown" ;; # Skipped or bad return code from check results
+    0) ZOPEN_STATUS="Green" ;; # All tests passed
+    1) ZOPEN_STATUS="Blue" ;; # Most tests passed
+    2) ZOPEN_STATUS="Yellow" ;; # Most tests failed
+    3) ZOPEN_STATUS="Red" ;; # Pretty much non-functional
+    *) ZOPEN_STATUS="Unknown" ;; # Skipped or bad return code from check results
   esac
-  echo "$status" >> "${ZOPEN_INSTALL_DIR}/build.status"
 }
 
 createEnv()
 {
+  projectName=$(echo $ZOPEN_NAME | cut -d "-" -f 1 | awk '{print toupper($0)}')
   cat <<zz >"${ZOPEN_INSTALL_DIR}/.env"
 if ! [ -f ./.env ]; then
   echo "Need to source from the .env directory" >&2
@@ -712,6 +727,7 @@ export _CEE_RUNOPTS="\$_CEE_RUNOPTS FILETAG(AUTOCVT,AUTOTAG) POSIX(ON)"
 export _TAG_REDIR_IN=txt
 export _TAG_REDIR_ERR=txt
 export _TAG_REDIR_OUT=txt
+export ${projectName}_HOME=\${PWD}
 zz
 
   if [ -d "${ZOPEN_INSTALL_DIR}/bin" ]; then
@@ -738,6 +754,7 @@ install()
       printError "Install failed. Log: ${installlog}"
     fi
     createEnv
+    echo "$ZOPEN_STATUS" >> "${ZOPEN_INSTALL_DIR}/build.status"
     if command -V "zopen_post_install" >/dev/null 2>&1; then
       zopen_post_install ${ZOPEN_INSTALL_DIR}
     fi

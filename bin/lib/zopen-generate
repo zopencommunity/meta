@@ -15,6 +15,8 @@ printSyntax()
 printHeader "Generate a zopen project"
 echo "* What is the project name?"
 name=$(getInput)
+echo "* Provided a description of the project:"
+description=$(getInput)
 echo "* Enter the ${name}'s Git location: (if none, press enter)"
 gitpath=$(getInput)
 echo "* Enter ${name}'s build dependencies for the Git source: (example: curl make)"
@@ -83,4 +85,21 @@ zopen_append_to_env()
   # echo extra envars here:
 }
 EOT
-printHeader "${name} project is ready!"
+printHeader "$buildenv created"
+
+cat <<EOT >> "${name}port/README.md"
+${name}
+
+${description}
+EOT
+printHeader "${name}port/README.md created"
+
+cat <<EOT >> "${name}port/cicd.groovy"
+node('linux')
+{
+  stage('Build') {
+    build job: 'Port-Pipeline', parameters: [string(name: 'PORT_GITHUB_REPO', value: 'https://github.com/ZOSOpenTools/${name}port.git'), string(name: 'PORT_DESCRIPTION', value: '${description}' )]
+  }
+}
+EOT
+printHeader "${name} project is ready! Contact Mike Fulton (fultonm@ca.ibm.com) to create https://github.com/ZOSOpenTools/${name}port.git"
