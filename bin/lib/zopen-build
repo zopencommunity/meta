@@ -713,8 +713,17 @@ check()
   esac
 }
 
+replaceHardcodedPaths()
+{
+  printHeader "Replacing hardcoded ${ZOPEN_INSTALL_DIR} path"
+  for f in $(find ${ZOPEN_INSTALL_DIR} -type f | xargs grep -l "${ZOPEN_INSTALL_DIR}"); do
+    printVerbose "Processing $f" && fullpath="$(cd $(dirname $f) && pwd)" && sed -e "s#$fullpath#ZOPEN_REPLACE_ME#g" $f > $f.tmp && mv $f.tmp $f;
+  done
+}
+
 createEnv()
 {
+  printHeader "Creating ${ZOPEN_INSTALL_DIR}/.env"
   projectName=$(echo $ZOPEN_NAME | cut -d "-" -f 1 | awk '{print toupper($0)}')
   cat <<zz >"${ZOPEN_INSTALL_DIR}/.env"
 if ! [ -f ./.env ]; then
@@ -727,6 +736,9 @@ export _TAG_REDIR_IN=txt
 export _TAG_REDIR_ERR=txt
 export _TAG_REDIR_OUT=txt
 export ${projectName}_HOME=\${PWD}
+for f in \$(find \$PWD -type f | xargs grep -l \"ZOPEN_REPLACE_ME\"); do
+  echo \"Processing \$f\" && fullpath=\"\$(cd \$(dirname \$f) && pwd)\" && sed -e \"s#ZOPEN_REPLACE_ME#\${PWD}#g\" \$f > \$f.tmp && mv \$f.tmp \$f;
+done
 zz
 
   if [ -d "${ZOPEN_INSTALL_DIR}/bin" ]; then
@@ -739,6 +751,7 @@ zz
     echo "export MANPATH=\"\${PWD}/share/man:\$MANPATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
   fi
   if command -V "${ZOPEN_APPEND_TO_ENV}" >/dev/null 2>&1; then
+    printVerbose "Appending additional environment variables..."
     append_to_env="$(${ZOPEN_APPEND_TO_ENV})"
     echo "$append_to_env" >> "${ZOPEN_INSTALL_DIR}/.env"
   fi
@@ -753,8 +766,10 @@ install()
       printError "Install failed. Log: ${installlog}"
     fi
     createEnv
+    replaceHardcodedPaths
     echo "$ZOPEN_STATUS" >> "${ZOPEN_INSTALL_DIR}/build.status"
     if command -V "zopen_post_install" >/dev/null 2>&1; then
+      printVerbose "Running zopen_post_install"
       zopen_post_install ${ZOPEN_INSTALL_DIR}
     fi
     if ! runAndLog "${ZOPEN_PAX_CMD}"; then
