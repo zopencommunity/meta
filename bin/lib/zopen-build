@@ -717,7 +717,7 @@ replaceHardcodedPaths()
 {
   printHeader "Replacing hardcoded ${ZOPEN_INSTALL_DIR} path"
   for f in $(find ${ZOPEN_INSTALL_DIR} -type f | xargs grep -l "${ZOPEN_INSTALL_DIR}" 2>/dev/null); do
-    printVerbose "Processing $f" && fullpath="$(cd $(dirname $f) && pwd)" && sed -e "s#$fullpath#ZOPEN_INSTALL_ROOT#g" $f > $f.tmp && mv $f.tmp $f;
+    printVerbose "Processing $f" && fullpath="$(cd $(dirname $f) && pwd)" && cp $f $f.tmp && sed -e "s#$fullpath#ZOPEN_INSTALL_ROOT#g" $f.tmp > $f && rm $f.tmp;
   done
 }
 
@@ -737,7 +737,7 @@ export _TAG_REDIR_ERR=txt
 export _TAG_REDIR_OUT=txt
 export ${projectName}_HOME=\${PWD}
 for f in \$(find \$PWD -type f | xargs grep -l \"ZOPEN_INSTALL_ROOT" 2>/dev/null); do
-  echo \"Processing \$f\" && fullpath=\"\$(cd \$(dirname \$f) && pwd)\" && sed -e \"s#ZOPEN_INSTALL_ROOT#\${PWD}#g\" \$f > \$f.tmp && mv \$f.tmp \$f;
+  echo \"Processing \$f\" && fullpath=\"\$(cd \$(dirname \$f) && pwd)\" && cp \$f \$f.tmp && sed -e \"s#ZOPEN_INSTALL_ROOT#\${PWD}#g\" \$f.tmp  > \$f && rm \$f.tmp;
 done
 zz
 
@@ -767,7 +767,7 @@ install()
     fi
     createEnv
     replaceHardcodedPaths
-    echo "$ZOPEN_STATUS" >> "${ZOPEN_INSTALL_DIR}/build.status"
+    echo "$ZOPEN_STATUS" > "${ZOPEN_INSTALL_DIR}/build.status"
     if command -V "zopen_post_install" >/dev/null 2>&1; then
       printVerbose "Running zopen_post_install"
       zopen_post_install ${ZOPEN_INSTALL_DIR}
