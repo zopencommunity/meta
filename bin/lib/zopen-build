@@ -717,7 +717,7 @@ replaceHardcodedPaths()
 {
   printHeader "Replacing hardcoded ${ZOPEN_INSTALL_DIR} path"
   for f in $(find ${ZOPEN_INSTALL_DIR} -type f | xargs grep -l "${ZOPEN_INSTALL_DIR}"); do
-    printVerbose "Processing $f" && fullpath="$(cd $(dirname $f) && pwd)" && sed -e "s#$fullpath#ZOPEN_REPLACE_ME#g" $f > $f.tmp && mv $f.tmp $f;
+    printVerbose "Processing $f" && fullpath="$(cd $(dirname $f) && pwd)" && sed -e "s#$fullpath#ZOPEN_INSTALL_ROOT#g" $f > $f.tmp && mv $f.tmp $f;
   done
 }
 
@@ -736,8 +736,8 @@ export _TAG_REDIR_IN=txt
 export _TAG_REDIR_ERR=txt
 export _TAG_REDIR_OUT=txt
 export ${projectName}_HOME=\${PWD}
-for f in \$(find \$PWD -type f | xargs grep -l \"ZOPEN_REPLACE_ME\"); do
-  echo \"Processing \$f\" && fullpath=\"\$(cd \$(dirname \$f) && pwd)\" && sed -e \"s#ZOPEN_REPLACE_ME#\${PWD}#g\" \$f > \$f.tmp && mv \$f.tmp \$f;
+for f in \$(find \$PWD -type f | xargs grep -l \"ZOPEN_INSTALL_ROOT"); do
+  echo \"Processing \$f\" && fullpath=\"\$(cd \$(dirname \$f) && pwd)\" && sed -e \"s#ZOPEN_INSTALL_ROOT#\${PWD}#g\" \$f > \$f.tmp && mv \$f.tmp \$f;
 done
 zz
 
