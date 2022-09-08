@@ -27,6 +27,9 @@ while [[ $# -gt 0 ]]; do
       toolrepo=$2;
       shift
       ;;
+    "--list")
+      list=1;
+      ;;
     "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
       printSyntax "${args}"
       exit 4
@@ -56,6 +59,10 @@ for repo in $(echo ${repo_results}); do
   if [ -z $toolrepo ] || [ "${toolrepo}" = "${repo}" ]; then
     name=${repo%port}
     if [ "${repo}" = "${name}" ]; then
+      continue;
+    fi
+    if [ ! -z "$list" ]; then
+      echo "$repo"
       continue;
     fi
     printHeader "Downloading latest release from $repo"
