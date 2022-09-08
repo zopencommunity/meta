@@ -1,3 +1,4 @@
+
 #!/bin/sh
 #
 # General purpose build script for ZOSOpenTools ports
@@ -787,6 +788,19 @@ install()
 #
 resolveCommands()
 {
+  if [ -z "${ZOPEN_NAME}" ]; then
+    ZOPEN_NAME="${dir}"
+    if [ "${ZOPEN_TYPE}x" = "GITx" ]; then
+      branch=$(git rev-parse --abbrev-ref HEAD 2>&1 | sed "s/\//./g")
+      ZOPEN_NAME="${dir}-${branch}"
+    fi
+  fi
+  if [ "${ZOPEN_INSTALL_DIR}x" = "x" ]; then
+    export ZOPEN_INSTALL_DIR="${HOME}/zopen/prod/${ZOPEN_NAME}"
+  fi
+  if [ "${ZOPEN_CONFIGURE_OPTS}x" = "x" ]; then
+    export ZOPEN_CONFIGURE_OPTS="--prefix=${ZOPEN_INSTALL_DIR} ${ZOPEN_EXTRA_CONFIGURE_OPTS}"
+  fi
   if [ "${ZOPEN_BOOTSTRAP}x" != "skipx" ] && [ ! -z "$(command -v ${ZOPEN_BOOTSTRAP})" ]; then
     export ZOPEN_BOOTSTRAP_CMD="\"${ZOPEN_BOOTSTRAP}\" ${ZOPEN_BOOTSTRAP_OPTS}"
   else
@@ -822,11 +836,6 @@ resolveCommands()
 
   if [ "${ZOPEN_INSTALL}x" != "skipx" ] && [ ! -z "$(command -v ${ZOPEN_INSTALL})" ]; then
     export ZOPEN_INSTALL_CMD="${ZOPEN_INSTALL} ${ZOPEN_INSTALL_OPTS}"
-    ZOPEN_NAME="${dir}"
-    if [ "${ZOPEN_TYPE}x" = "GITx" ]; then
-      branch=$(git rev-parse --abbrev-ref HEAD 2>&1 | sed "s/\//./g")
-      ZOPEN_NAME="${dir}-${branch}"
-    fi
     paxFileName="${ZOPEN_NAME}.${LOG_PFX}.zos.pax.Z"
     export ZOPEN_PAX_CMD="pax -w -z -x pax \"-s#${ZOPEN_INSTALL_DIR}/#${ZOPEN_NAME}.${LOG_PFX}.zos/#\" -f \"${paxFileName}\" \"${ZOPEN_INSTALL_DIR}/\""
   else
@@ -929,19 +938,6 @@ fi
 
 if ! dir=$(getCode); then
   exit 4
-fi
-
-#
-# These variables can not be set until the
-# software package name is determined
-# Perhaps we should glean this from the name
-# of the git package, e.g. makeport?
-#
-if [ "${ZOPEN_INSTALL_DIR}x" = "x" ]; then
-  export ZOPEN_INSTALL_DIR="${HOME}/zopen/prod/${dir}"
-fi
-if [ "${ZOPEN_CONFIGURE_OPTS}x" = "x" ]; then
-  export ZOPEN_CONFIGURE_OPTS="--prefix=${ZOPEN_INSTALL_DIR} ${ZOPEN_EXTRA_CONFIGURE_OPTS}"
 fi
 
 if ! applyPatches; then
