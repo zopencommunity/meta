@@ -1,9 +1,15 @@
 # Common Issues and their solutions
 
 ## C pipe, C open do not tag newly created file descriptors
+
 A common problem when porting code to z/OS and building with ASCII is that when files are created, the contents are written out in ASCII
 but by default the files are not tagged to indicate the content is in ASCII. Subsequently, other tools have to _guess_ what codepage the contents are in, and often the tools _guess_ EBCDIC. 
-The solution is to tag the file when it is opened for write, and to tag it ASCII. Here is a typical sequence:
+There are many ways that people describe an encoding:
+- ASCII, EBCDIC, Single-byte, Double-byte, Multi-byte are fairly generic terms. When people refer to an ASCII encoding, it represents a small number of the complete 256 single-byte character mappings, and typically refers to one of the ISO8859 code pages. The same is true when people refer to an EBCDIC encoding. There are a small number of the complete single-byte character mappings that are constant across the EBCDIC code pages. 
+- When specifying an ASCII or EBCDIC format, the more precise _coded character set identifier_ (CCSID) is used. We code to CCSID _ISO8859-1_, also known as _819_, because z/OS is optimized for this particular ASCII CCSID, and it is consistent with what people on other platforms equate to _ASCII_. 
+
+The following C code tags a file when it is opened for write as 819 (ISO8859-1):
+
 ```
 fd = open(...); /* open new file for WRITE */
 if (fd < 0) { ... } /* unable to open file */
@@ -13,11 +19,25 @@ if (fd < 0) { ... } /* unable to open file */
   #endif
 #endif
 ```
+
+You can also tag a file as 819 using the shell as follows:
+
+```
+chtag -tc819 <file>
+```
+
+or alternately:
+
+```
+chtag -tcISO8859-1 <file>
+```
+
 The z/OS specific code needs to be double-protected. The `#ifdef __MVS__` ensures that this is specific to z/OS. 
 The `#if (__CHARSET_LIB == 1)` ensures that this code is only active when being built with `-qascii`, so that if others want to build with 
 EBCDIC, they won't get this behaviour.
 The function `setccsid` is also required. This can be either a static function if all the calls to setccsid are in one file, or an external function.
 Here is a simple version - you may need something more complex if you want to check how the file is opened first (e.g. to prevent setting the CCSID if the file is being opened for READ):
+
 ```
 #ifdef __MVS__
  #if (__CHARSET_LIB == 1)
@@ -40,6 +60,13 @@ Here is a simple version - you may need something more complex if you want to ch
   #endif
 #endif
 ```
+
+Further reading:
+- [chtag - Change file tag information](https://www.ibm.com/docs/en/zos/latest?topic=descriptions-chtag-change-file-tag-information)
+- [ASCII and EBCDIC on z/OS](https://makingdeveloperslivesbetter.wordpress.com/2022/01/07/is-z-os-ascii-or-ebcdic-yes/)
+- [Character sets](https://www.ibm.com/docs/en/ztpf/latest?topic=support-character-sets) 
+- [CCSID](https://en.wikipedia.org/wiki/CCSID)
+- [ASCII 8859-1](https://en.wikipedia.org/wiki/ISO/IEC_8859-1)
 
 ## FSUM7327 signal number XX not conventional
 See: [FSUM7327](https://tech.mikefulton.ca/FSUM7327) which is relatively cryptic and [kill](https://tech.mikefulton.ca/POSIXSignalNumbers).
