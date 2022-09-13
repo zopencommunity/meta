@@ -178,6 +178,8 @@ As you port your application to z/OS, you will identify a set of _patches_. Thes
 ```bash
 cd jq-1.6
 # Make your changes
+# If there are any new files added, make sure to track them using git add
+git add <newfiles>
 git diff HEAD > ../patches/initial_zos.patch
 ```
 
