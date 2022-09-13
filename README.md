@@ -8,6 +8,11 @@ For an overview	of ZOSOpenTools, see [ZOSOpenTools docs](https://zosopentools.gi
 
 To download and install the latest software packages, you can use `zopen download`. By default it will download all of the binaries hosted on ZOSOpenTools.
 
+To list the available packages, specify the `--list` option as follows:
+```
+zopen download --list
+```
+
 To download and install a specific package, you can specify the `-r` option as follows:
 ```
 zopen download -r makeport
