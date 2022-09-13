@@ -645,7 +645,7 @@ bootstrap()
       echo "Using previous successful bootstrap" >&2
     else
       bootlog="${LOG_PFX}_bootstrap.log"
-      if ! runAndLog "${ZOPEN_BOOTSTRAP_CMD} >${bootlog} 2>&1"; then
+      if ! runAndLog "${ZOPEN_BOOTSTRAP_CMD} 2>&1 | tee ${bootlog}"; then
         printError "Bootstrap failed. Log: ${bootlog}" >&2
       fi
       touch bootstrap.success
@@ -663,7 +663,7 @@ configure()
       echo "Using previous successful configuration" >&2
     else
       configlog="${LOG_PFX}_config.log"
-      if ! runAndLog "${ZOPEN_CONFIGURE_CMD} >\"${configlog}\" 2>&1"; then
+      if ! runAndLog "${ZOPEN_CONFIGURE_CMD} 2>&1 | tee \"${configlog}\""; then
         if [ "${ZOPEN_CONFIGURE_MINIMAL}" = "yes" ]; then
           printError "Configure (minimal) failed. Log: ${configlog}"
         else
@@ -682,7 +682,7 @@ build()
   makelog="${LOG_PFX}_build.log"
   if [ -n "${ZOPEN_MAKE_CMD}" ]; then
     printHeader "Running Build"
-    if ! runAndLog "${ZOPEN_MAKE_CMD} >\"${makelog}\""; then
+    if ! runAndLog "${ZOPEN_MAKE_CMD} 2>&1 | tee \"${makelog}\""; then
       printError "Make failed. Log: ${makelog}"
     fi
   else
@@ -696,7 +696,7 @@ check()
   results=4 # Unknown results
   if [ -n "${ZOPEN_CHECK_CMD}" ]; then
     printHeader "Running Check"
-    runAndLog "${ZOPEN_CHECK_CMD} >\"${checklog}\""
+    runAndLog "${ZOPEN_CHECK_CMD} 2>&1 | tee \"${checklog}\""
     if command -V "${ZOPEN_CHECK_RESULTS}" >/dev/null 2>&1; then
       ${ZOPEN_CHECK_RESULTS} "${ZOPEN_ROOT}/${dir}" "${LOG_PFX}"
       results=$?
@@ -765,7 +765,7 @@ install()
   if [ -n "${ZOPEN_INSTALL_CMD}" ]; then
     printHeader "Running Install"
     installlog="${LOG_PFX}_install.log"
-    if ! runAndLog "${ZOPEN_INSTALL_CMD} >\"${installlog}\""; then
+    if ! runAndLog "${ZOPEN_INSTALL_CMD} 2>&1 | tee \"${installlog}\""; then
       printError "Install failed. Log: ${installlog}"
     fi
     createEnv

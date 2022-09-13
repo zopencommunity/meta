@@ -55,7 +55,9 @@ runAndLog()
   printVerbose "$1"
   eval "$1"
   rc=$?
-  chtag -r $SSH_TTY
+  if [ ! -z "${SSH_TTY}" ]; then
+    chtag -r $SSH_TTY
+  fi
   return $rc
 }
 
