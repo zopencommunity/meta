@@ -95,7 +95,7 @@ Begin first by generating a port template project by entering the following comm
 zopen generate
 ```
 
-`zopen generate` will ask you a series of questions.  Answer them as follows:
+`zopen generate` will ask you a series of questions. Answer them as follows:
 ```
 Generate a zopen project...
 * What is the project name?
@@ -120,19 +120,20 @@ jqport project is ready! Contact Mike Fulton (fultonm@ca.ibm.com) to create http
 
 Change your current directory to the `jqport` directory: `cd jqport`. You will notice several files:
 * README.md - A description of the project
-* buildenv - The configuration file that drives the build, testing, and installation of the project.
+* buildenv - The zopen configuration file that drives the build, testing, and installation of the project.
 * cicd.groovy - The CI/CD configuration file used in the Jenkins pipeline
 For more information, please visit the [zopen build README](https://github.com/ZOSOpenTools/utils)
 
 Note: `zopen build` supports projects based in github repositories or tarball locations. Since autoconf/automake are not currently functioning on z/OS, we typically choose the tarball location because it contains a `configure` script pre-packaged. Let's go ahead and do this for `jq`.
 
-In the `buildenv` file, you'll notice the following contents
+In the `buildenv` file, you'll notice the following contents:
 ```bash
 export ZOPEN_GIT_URL="git@github.com:stedolan/jq.git"
 export ZOPEN_GIT_DEPS="git make autoconf"
 export ZOPEN_TARBALL_URL="https://github.com/stedolan/jq/releases/download/jq-1.6/jq-1.6.tar.gz"
 export ZOPEN_TARBALL_DEPS="make"
 export ZOPEN_TYPE="TARBALL"
+
 zopen_check_results()
 {
   dir="$1"
@@ -146,7 +147,7 @@ zopen_append_to_env()
   # echo extra envars here:
 }
 ```
-ZOPEN_TARBALL_DEPS/ZOPEN_GIT_DEPS are used to identify the non-standard dependencies needed to build the project.
+ZOPEN_TARBALL_DEPS/ZOPEN_GIT_DEPS are used to identify the non-standard dependencies needed to build the project. 
 
 You are expected to modify `zopen_check_results()` with logic to analyze the test results and return the following return codes:
 ```
@@ -165,6 +166,8 @@ zopen build -v
 ```
 
 The `-v` option above specifies verbose output.
+
+Once finished, you will notice that your project was built and installed under `$HOME/zopen/prod/jq`.
 
 *Creating Patches*
 
