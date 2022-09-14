@@ -8,6 +8,11 @@ For an overview	of ZOSOpenTools, see [ZOSOpenTools docs](https://zosopentools.gi
 
 To download and install the latest software packages, you can use `zopen download`. By default it will download all of the binaries hosted on ZOSOpenTools.
 
+To list the available packages, specify the `--list` option as follows:
+```
+zopen download --list
+```
+
 To download and install a specific package, you can specify the `-r` option as follows:
 ```
 zopen download -r makeport
@@ -31,17 +36,17 @@ The `buildenv` file _must_ set the following environment variables:
 - `ZOPEN_URL`: the URL where the source should be pulled from, including the `package.git` or `package-V.R.M.tar.gz` extension
 - `ZOPEN_DEPS`: a space-separated list of all software dependencies this package has.
 
-To help guage the health of the port, a zopen_check_results function can be provided inside the buildenv. The following return codes map to a given status:
+To help guage the health of the port, a `zopen_check_results()` function can be provided inside the buildenv. The following return codes map to a given status:
 - 0 - Green - All tests passed
 - 1 - Blue - Most tests passed
 - 2 - Yellow - Most tests failed
 - 3 - Red - All tests failed or check is broken
 - 4 - Unknown - Skipped or something went wrong
 
-To get started, generate a zopen project with `zopen generate`
-
 `zopen build` will generate a .env file in the install location with support for environment variables such as PATH, LIBPATH, and MANPATH.
-To add your own, you can append environment variables by echo'ing them in a function called zopen_append_to_env.
+To add your own, you can append environment variables by echo'ing them in a function called `zopen_append_to_env()`.
+
+After the build is successful, `zopen build` will install the project to `$HOME/zopen/projectname`. To perform post-processing on the installed contents, such as modifying hardcoded path contents, you can write a `zopen_post_install()` function which takes the installed path as the first argument.
 
 Note that you can choose the fully-qualified environment variables ZOPEN_GIT_URL, ZOPEN_GIT_DEPS and ZOPEN_TARBALL_URL, ZOPEN_TARBALL_DEPS 
 accordingly if you prefer. See (https://github.com/ZOSOpenTools/zotsampleport/blob/main/setenv.sh) for an example.
@@ -52,6 +57,10 @@ For details
 - Read the code: (https://github.com/ZOSOpenTools/utils/blob/main/bin/zopen-build). 
 
 For a sample port, visit the [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) repo.
+
+
+## zopen generate
+You can generate a zopen template project with `zopen generate`. It will ask you a series of questions and then generate the zopen file structure, including a `buildenv` file that will help you get started with your project.
 
 ### Running zopen build
 
