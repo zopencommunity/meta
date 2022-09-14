@@ -65,15 +65,17 @@ export utilparentdir="$(cd "$(dirname "$0")/../.." >/dev/null 2>&1 && pwd -P)"
 for tmp in "$TMPDIR" "$TMP" /tmp
 do
   if [ ! -z $tmp ] && [ -d $tmp ]; then
-    temp_c_file="$tmp/$LOGNAME.c"
+    TEMP_C_FILE="$tmp/$LOGNAME.c"
     break
   fi
 done
+TMP_FIFO_PIPE="$tmp/$LOGNAME.pipe"
 
 # Remove temoraries on exit
 cleanup() {
     rv=$?
-    [ -f $temp_c_file ] && /bin/rm -rf $temp_c_file
+    [ -f $TEMP_C_FILE ] && rm -rf $TEMP_C_FILE
+    [ -f $TMP_FIFO_PIPE ] && rm -rf $TMP_FIFO_PIPE
     exit $rv
 }
 
@@ -317,7 +319,7 @@ setEnv()
 
   if [ "${CC}x" = "xlclangx" ]; then
     # Confirm xlclang is at least 1.0.0 (aka __COMPILER_VER__=42040001)
-    ccraw=$(touch $temp_c_file && xlclang -E -qshowmacros $temp_c_file | grep '__COMPILER_VER__' | awk '{print substr($3,3)}')
+    ccraw=$(touch $TEMP_C_FILE && xlclang -E -qshowmacros $TEMP_C_FILE | grep '__COMPILER_VER__' | awk '{print substr($3,3)}')
     if [ "${ccraw}x" = "x" ]; then
       printError "xlclang compiler specified, but it is not a 'IBM C/C++ for Open Enterprise Languages on z/OS' compiler"
     fi 
@@ -328,7 +330,7 @@ setEnv()
 
   if [ "${CXX}x" = "xlclang++x" ]; then
     # Confirm xlclang is at least 1.0.0 (aka __COMPILER_VER__=42040001)
-    ccraw=$(touch $temp_c_file && xlclang++ -+ -E -qshowmacros $temp_c_file | grep '__COMPILER_VER__' | awk '{print substr($3,3)}')
+    ccraw=$(touch $TEMP_C_FILE && xlclang++ -+ -E -qshowmacros $TEMP_C_FILE | grep '__COMPILER_VER__' | awk '{print substr($3,3)}')
     if [ "${ccraw}x" = "x" ]; then
       printError "xlclang compiler specified, but it is not a 'IBM C/C++ for Open Enterprise Languages on z/OS' compiler"
     fi 
@@ -637,6 +639,18 @@ getCode()
   echo "${dir}"
 }
 
+create_fifo_pipe()
+{
+  file="$1"
+  if [ -f $TMP_FIFO_PIPE ]; then
+    rm $TMP_FIFO_PIPE
+  fi
+  mkfifo $TMP_FIFO_PIPE
+  chtag -tc 819 $TMP_FIFO_PIPE
+  touch ${file} && chtag -tc 819 ${file}
+  tee ${file} < $TMP_FIFO_PIPE &
+}
+
 bootstrap()
 {
   if [ -n "${ZOPEN_BOOTSTRAP_CMD}" ] ; then
@@ -645,7 +659,8 @@ bootstrap()
       echo "Using previous successful bootstrap" >&2
     else
       bootlog="${LOG_PFX}_bootstrap.log"
-      if ! runAndLog "${ZOPEN_BOOTSTRAP_CMD} 2>&1 | tee ${bootlog}"; then
+      create_fifo_pipe "${bootlog}"
+      if ! runAndLog "${ZOPEN_BOOTSTRAP_CMD} >$TMP_FIFO_PIPE 2>&1"; then
         printError "Bootstrap failed. Log: ${bootlog}" >&2
       fi
       touch bootstrap.success
@@ -663,7 +678,8 @@ configure()
       echo "Using previous successful configuration" >&2
     else
       configlog="${LOG_PFX}_config.log"
-      if ! runAndLog "${ZOPEN_CONFIGURE_CMD} 2>&1 | tee \"${configlog}\""; then
+      create_fifo_pipe "${configlog}"
+      if ! runAndLog "${ZOPEN_CONFIGURE_CMD} >$TMP_FIFO_PIPE 2>&1"; then
         if [ "${ZOPEN_CONFIGURE_MINIMAL}" = "yes" ]; then
           printError "Configure (minimal) failed. Log: ${configlog}"
         else
@@ -682,7 +698,8 @@ build()
   makelog="${LOG_PFX}_build.log"
   if [ -n "${ZOPEN_MAKE_CMD}" ]; then
     printHeader "Running Build"
-    if ! runAndLog "${ZOPEN_MAKE_CMD} 2>&1 | tee \"${makelog}\""; then
+    create_fifo_pipe "${makelog}"
+    if ! runAndLog "${ZOPEN_MAKE_CMD} > $TMP_FIFO_PIPE"; then
       printError "Make failed. Log: ${makelog}"
     fi
   else
@@ -696,7 +713,8 @@ check()
   results=4 # Unknown results
   if [ -n "${ZOPEN_CHECK_CMD}" ]; then
     printHeader "Running Check"
-    runAndLog "${ZOPEN_CHECK_CMD} 2>&1 | tee \"${checklog}\""
+    create_fifo_pipe "${checklog}"
+    runAndLog "${ZOPEN_CHECK_CMD} > $TMP_FIFO_PIPE"
     if command -V "${ZOPEN_CHECK_RESULTS}" >/dev/null 2>&1; then
       ${ZOPEN_CHECK_RESULTS} "${ZOPEN_ROOT}/${dir}" "${LOG_PFX}"
       results=$?
@@ -765,7 +783,8 @@ install()
   if [ -n "${ZOPEN_INSTALL_CMD}" ]; then
     printHeader "Running Install"
     installlog="${LOG_PFX}_install.log"
-    if ! runAndLog "${ZOPEN_INSTALL_CMD} 2>&1 | tee \"${installlog}\""; then
+    create_fifo_pipe "${installlog}"
+    if ! runAndLog "${ZOPEN_INSTALL_CMD} > $TMP_FIFO_PIPE"; then
       printError "Install failed. Log: ${installlog}"
     fi
     createEnv
