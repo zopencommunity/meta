@@ -75,7 +75,7 @@ TMP_FIFO_PIPE="$tmp/$LOGNAME.pipe"
 cleanup() {
     rv=$?
     [ -f $TEMP_C_FILE ] && rm -rf $TEMP_C_FILE
-    [ -f $TMP_FIFO_PIPE ] && rm -rf $TMP_FIFO_PIPE
+    [ -p $TMP_FIFO_PIPE ] && rm -rf $TMP_FIFO_PIPE
     exit $rv
 }
 
@@ -642,7 +642,7 @@ getCode()
 create_fifo_pipe()
 {
   file="$1"
-  if [ -f $TMP_FIFO_PIPE ]; then
+  if [ -p $TMP_FIFO_PIPE ]; then
     rm $TMP_FIFO_PIPE
   fi
   mkfifo $TMP_FIFO_PIPE
