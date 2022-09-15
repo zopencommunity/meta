@@ -584,6 +584,7 @@ applyPatches()
   if [ "${results}" != '' ]; then
     printInfo "Existing Changes are active in ${code_dir}."
     printInfo "To re-apply patches, perform a git reset on ${code_dir} prior to running applyPatches again."
+    return 0
   else
     for patch in $patches; do
       p="${patch_dir}/${patch}"
