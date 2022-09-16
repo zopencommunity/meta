@@ -209,8 +209,6 @@ checkEnv()
   #
   printHeader "Checking environment configuration"
 
-  export ZOPEN_ROOT=$(cd "$(dirname "$buildEnvFile")"; pwd)
-
   if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
     if [ "${ZOPEN_TARBALL_URL}x" = "x" ]; then
       export ZOPEN_TARBALL_URL="${ZOPEN_URL}"
@@ -848,7 +846,7 @@ resolveCommands()
     unset ZOPEN_MAKE_CMD
   fi
 
-  if [ "${ZOPEN_CHECK}x" != "skipx" ] && [ ! -z "$(command -v ${ZOPEN_CHECK})" ] && ! ${skipcheck}; then
+  if [ "${ZOPEN_CHECK}x" != "skipx" ] && [ ! -z "$(command -V ${ZOPEN_CHECK})" ] && ! ${skipcheck}; then
     export ZOPEN_CHECK_CMD="\"${ZOPEN_CHECK}\" ${ZOPEN_CHECK_OPTS} CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\""
     export ZOPEN_CHECK_RESULTS_CMD="\"${ZOPEN_CHECK_RESULTS}\" \"${ZOPEN_ROOT}/${dir}\" \"${LOG_PFX}\""
   else
@@ -945,6 +943,8 @@ fi
 if ! processOptions $*; then
   exit 4
 fi
+
+export ZOPEN_ROOT=$(cd "$(dirname "$buildEnvFile")"; pwd)
 
 if ! loadBuildEnv; then
   exit 4
