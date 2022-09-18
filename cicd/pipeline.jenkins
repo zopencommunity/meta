@@ -11,15 +11,24 @@ def description = params.get("PORT_DESCRIPTION")
 //TODO: Store results into vars if we want to publish to Slack in the future
 def buildResult = [:]
 def promoteResult = [:]
+def testStatus = "Skipped"
 
 node('linux') 
 {
   stage('Build and Test') {
     try {
     // Build Job : https://128.168.139.253:8443/view/Framework/job/Port-Build/
-    buildResult = build job: 'Port-Build', parameters: [string(name: 'PORT_GITHUB_REPO', value: "${repo}"), string(name: 'PORT_BRANCH', value: "${branch}")]
+    buildResult = build job: 'Port-Build', parameters: [string(name: 'PORT_GITHUB_REPO', value: "${repo}"), string(name: 'PORT_BRANCH', value: "${branch}"), booleanParam(name: 'RUN_TESTS', value: params.RUN_TESTS) ]
     } catch (Exception e) {
       handleError(e, repo)
+    }
+    copyArtifacts filter: 'test.status',
+	fingerprintArtifacts: true,
+	projectName: 'Port-Build',
+	selector: specific(buildResult.number.toString()),
+	optional: true
+    if (fileExists('test.status')) {
+    	testStatus = readFile file: 'test.status'
     }
   }
   
@@ -33,7 +42,7 @@ node('linux')
   }
  
   stage ('Cleanup') {
-    slackSend message: "Build for ${repo} successful <${currentBuild.absoluteUrl}|Build #${currentBuild.number}>"
+    slackSend message: "Build for ${repo} successful <${currentBuild.absoluteUrl}|Build #${currentBuild.number}>\nTest Status: ${testStatus}""
   }
 }
 
