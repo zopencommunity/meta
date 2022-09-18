@@ -728,11 +728,12 @@ check()
     printHeader "Skipping Check"
   fi
   case "$results" in
-    $ZOPEN_TEST_STATUS_ALL_PASSED) ZOPEN_STATUS="Green" ;; # All tests passed
-    $ZOPEN_TEST_STATUS_MOST_PASSED) ZOPEN_STATUS="Blue" ;; # Most tests passed
-    $ZOPEN_TEST_STATUS_SOME_PASSED) ZOPEN_STATUS="Yellow" ;; # Most tests failed
-    $ZOPEN_TEST_STATUS_NONE_PASSED) ZOPEN_STATUS="Red" ;; # Pretty much non-functional
-    $ZOPEN_TEST_STATUS_ERROR) ZOPEN_STATUS="Error" ;; # Skipped or bad return code from check results
+    $ZOPEN_TEST_STATUS_ALL_PASSED) ZOPEN_STATUS="Green (all tests passed)" ;; # All tests passed
+    $ZOPEN_TEST_STATUS_MOST_PASSED) ZOPEN_STATUS="Blue (most tests passed)" ;; # Most tests passed
+    $ZOPEN_TEST_STATUS_SOME_PASSED) ZOPEN_STATUS="Yellow (most tests failed)" ;; # Most tests failed
+    $ZOPEN_TEST_STATUS_NONE_PASSED) ZOPEN_STATUS="Red (all tests failed)" ;; # Pretty much non-functional
+    $ZOPEN_TEST_STATUS_ERROR) ZOPEN_STATUS="Error (could not run tests)" ;; # bad return code from check results
+    $ZOPEN_TEST_STATUS_SKIPPED) ZOPEN_STATUS="Skipped (tests skipped)" ;; # Skipped tests
   esac
 }
 
@@ -796,8 +797,10 @@ install()
     replaceHardcodedPaths
 
     # Store test.status into installed dir and build dir for cicd
+    touch "${ZOPEN_INSTALL_DIR}/test.status"
+    chtag -tc 819 "${ZOPEN_INSTALL_DIR}/test.status"
     echo "$ZOPEN_STATUS" > "${ZOPEN_INSTALL_DIR}/test.status"
-    echo "$ZOPEN_STATUS" > "test.status"
+    cp "${ZOPEN_INSTALL_DIR}/test.status" "test.status"
 
     if command -V "zopen_post_install" >/dev/null 2>&1; then
       printVerbose "Running zopen_post_install"
