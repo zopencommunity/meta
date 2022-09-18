@@ -102,6 +102,12 @@ setDefaults()
   if [ -z "$ZOPEN_IMAGE_DOCKER_NAME" ]; then
     export ZOPEN_IMAGE_DOCKER_NAME="podman"
   fi
+  export ZOPEN_TEST_STATUS_ALL_PASSED=0
+  export ZOPEN_TEST_STATUS_MOST_PASSED=1
+  export ZOPEN_TEST_STATUS_SOME_PASSED=2
+  export ZOPEN_TEST_STATUS_NONE_PASSED=3
+  export ZOPEN_TEST_STATUS_ERROR=4
+  export ZOPEN_TEST_STATUS_SKIPPED=5
 }
 
 printSyntax()
@@ -709,7 +715,7 @@ build()
 check()
 {
   checklog="${LOG_PFX}_check.log"
-  results=4 # Unknown results
+  results=$ZOPEN_TEST_STATUS_SKIPPED # skipped
   if [ -n "${ZOPEN_CHECK_CMD}" ]; then
     printHeader "Running Check"
     create_fifo_pipe "${checklog}"
@@ -722,11 +728,11 @@ check()
     printHeader "Skipping Check"
   fi
   case "$results" in
-    0) ZOPEN_STATUS="Green" ;; # All tests passed
-    1) ZOPEN_STATUS="Blue" ;; # Most tests passed
-    2) ZOPEN_STATUS="Yellow" ;; # Most tests failed
-    3) ZOPEN_STATUS="Red" ;; # Pretty much non-functional
-    *) ZOPEN_STATUS="Unknown" ;; # Skipped or bad return code from check results
+    $ZOPEN_TEST_STATUS_ALL_PASSED) ZOPEN_STATUS="Green" ;; # All tests passed
+    $ZOPEN_TEST_STATUS_MOST_PASSED) ZOPEN_STATUS="Blue" ;; # Most tests passed
+    $ZOPEN_TEST_STATUS_SOME_PASSED) ZOPEN_STATUS="Yellow" ;; # Most tests failed
+    $ZOPEN_TEST_STATUS_NONE_PASSED) ZOPEN_STATUS="Red" ;; # Pretty much non-functional
+    $ZOPEN_TEST_STATUS_ERROR) ZOPEN_STATUS="Error" ;; # Skipped or bad return code from check results
   esac
 }
 
@@ -788,7 +794,11 @@ install()
     fi
     createEnv
     replaceHardcodedPaths
-    echo "$ZOPEN_STATUS" > "${ZOPEN_INSTALL_DIR}/build.status"
+
+    # Store test.status into installed dir and build dir for cicd
+    echo "$ZOPEN_STATUS" > "${ZOPEN_INSTALL_DIR}/test.status"
+    echo "$ZOPEN_STATUS" > "test.status"
+
     if command -V "zopen_post_install" >/dev/null 2>&1; then
       printVerbose "Running zopen_post_install"
       zopen_post_install ${ZOPEN_INSTALL_DIR}
