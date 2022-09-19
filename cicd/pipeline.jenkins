@@ -22,7 +22,7 @@ node('linux')
     } catch (Exception e) {
       handleError(e, repo)
     }
-    copyArtifacts filter: 'test.status',
+    copyArtifacts filter: 'install/test.status',
 	fingerprintArtifacts: true,
 	projectName: 'Port-Build',
 	selector: specific(buildResult.number.toString()),
