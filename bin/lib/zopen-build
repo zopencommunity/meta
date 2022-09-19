@@ -46,7 +46,7 @@ ZOPEN_MAKE           Build program to run. If skip is specified, no build step i
 ZOPEN_MAKE_OPTS      Options to pass to build program (defaults to '-j\${ZOPEN_NUM_JOBS}')
 ZOPEN_CHECK          Check program to run. If skip is specified, no check step is performed (defaults to '${ZOPEN_CHECKD}') 
 ZOPEN_CHECK_OPTS     Options to pass to check program (defaults to '${ZOPEN_CHECK_OPTSD}')
-ZOPEN_EXPECTED_FAILURES Number of expected faiures. If the failures is greater than this number, fail. If not set, ignore.
+ZOPEN_EXPECTED_FAILURES Number of expected failures. If the failures is greater than this number, fail. If not set, ignore.
 ZOPEN_IMAGE_REGISTRY Docker image registry to an OCI image to (use with --oci option)
 ZOPEN_IMAGE_DOCKERFILE_NAME Dockerfile name (default: Dockerfile)
 ZOPEN_IMAGE_DOCKER_NAME Docker/podman tool name (default: podman)
