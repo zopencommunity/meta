@@ -37,7 +37,9 @@ The `buildenv` file _must_ set the following environment variables:
 - `ZOPEN_DEPS`: a space-separated list of all software dependencies this package has.
 
 To help guage the health of the port, a `zopen_check_results()` function can be provided inside the buildenv. This function should process
-the test results and emit a report of the failures vs total number of tests to stdout as in the following format:
+the test results and emit a report of the failures vs total number of tests to stdout as in the following format: failures|totalTests.
+
+Example:
 ```
 failures=# count failures
 totalTests=# count total tests
