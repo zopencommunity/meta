@@ -42,7 +42,7 @@ node('linux')
   }
  
   stage ('Cleanup') {
-    slackSend message: "Build for ${repo} successful <${currentBuild.absoluteUrl}|Build #${currentBuild.number}>\nTest Status: ${testStatus}""
+    slackSend message: "Build for ${repo} successful <${currentBuild.absoluteUrl}|Build #${currentBuild.number}>\nTest Status: ${testStatus}"
   }
 }
 
