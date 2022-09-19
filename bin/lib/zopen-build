@@ -722,9 +722,9 @@ check()
     create_fifo_pipe "${checklog}"
     runAndLog "${ZOPEN_CHECK_CMD} > $TMP_FIFO_PIPE"
     if command -V "${ZOPEN_CHECK_RESULTS}" >/dev/null 2>&1; then
-      testStatus="$(${ZOPEN_CHECK_RESULTS} \"${ZOPEN_ROOT}/${dir}\" \"${LOG_PFX}\")"
-      failures="$(echo $testStatus | cut -f1 -d'|')"
-      totalTests="$(echo $testStatus | cut -f2 -d'|')"
+      testStatus="$(${ZOPEN_CHECK_RESULTS} "${ZOPEN_ROOT}/${dir}" "${LOG_PFX}")"
+      failures="$(echo $testStatus | cut -f1 -d'|' | tr -d ' ')"
+      totalTests="$(echo $testStatus | cut -f2 -d'|' | tr -d ' ')"
       success="$((totalTests-failures))"
       percent=$(awk "BEGIN { pc=100*${success}/${totalTests}; i=int(pc); print (pc-i<0.5)?i:i+1 }")
       summary="$success tests pass out of $totalTests tests - ${percent}% success rate"
