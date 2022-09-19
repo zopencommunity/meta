@@ -18,6 +18,7 @@ GITHUB_REPO=$RELEASE_PREFIX
 
 # PAX file should be a copied artifact
 PAX=`find . -name "*zos.pax.Z"`
+BUILD_STATUS=`find . -name "test.status" | xargs cat`
 
 if [ ! -f "$PAX" ]; then
   echo "Port pax file does not exist";
@@ -32,16 +33,11 @@ BUILD_ID=${BUILD_NUMBER}
 unset http_proxy
 unset https_proxy
 
-#TODO: Add test suite results summary
-#if [ $numfailures -lt $FAILURE_THRESHOLD ]; then
-#  DESCRIPTION="${MAKE_DESCRIPTION}<li><b>Stable</b> &#9989;</li></ul>"
-#else
-#  DESCRIPTION="${MAKE_DESCRIPTION}<li><b>Unstable</b> &#10060;</li></ul>"
-#fi
 DESCRIPTION="${PORT_DESCRIPTION}"
+DESCRIPTION="${DESCRIPTION}<br /><b>Test Status:</b> ${BUILD_STATUS}"
 
 URL_LINE="https://github.com/ZOSOpenTools/${GITHUB_REPO}/releases/download/${GITHUB_REPO}_${BUILD_ID}/$PAX_BASENAME"
-DESCRIPTION="${DESCRIPTION}<br/><b>Command to download and install on z/OS:</b> <pre>pax -rf <(curl -o - -L ${URL_LINE}) && cd $DIR_NAME && . ./.env</pre>"
+DESCRIPTION="${DESCRIPTION}<br /><b>Command to download and install on z/OS:</b> <pre>pax -rf <(curl -o - -L ${URL_LINE}) && cd $DIR_NAME && . ./.env</pre>"
 
 exists=$(github-release info -u ${GITHUB_ORGANIZATION} -r ${GITHUB_REPO}  -j)
 if [ $? -gt 0 ]; then
