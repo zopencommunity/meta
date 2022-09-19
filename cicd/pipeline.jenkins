@@ -27,8 +27,8 @@ node('linux')
 	projectName: 'Port-Build',
 	selector: specific(buildResult.number.toString()),
 	optional: true
-    if (fileExists('test.status')) {
-    	testStatus = readFile file: 'test.status'
+    if (fileExists('install/test.status')) {
+    	testStatus = readFile file: 'install/test.status'
     }
   }
   
