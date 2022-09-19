@@ -36,12 +36,13 @@ The `buildenv` file _must_ set the following environment variables:
 - `ZOPEN_URL`: the URL where the source should be pulled from, including the `package.git` or `package-V.R.M.tar.gz` extension
 - `ZOPEN_DEPS`: a space-separated list of all software dependencies this package has.
 
-To help guage the health of the port, a `zopen_check_results()` function can be provided inside the buildenv. The following return codes map to a given status:
-- 0 - Green - All tests passed
-- 1 - Blue - Most tests passed
-- 2 - Yellow - Most tests failed
-- 3 - Red - All tests failed or check is broken
-- 4 - Unknown - Skipped or something went wrong
+To help guage the health of the port, a `zopen_check_results()` function can be provided inside the buildenv. This function should process
+the test results and emit a report of the failures vs total number of tests to stdout as in the following format:
+```
+failures=# count failures
+totalTests=# count total tests
+echo "$failures|$totalTests"
+```
 
 `zopen build` will generate a .env file in the install location with support for environment variables such as PATH, LIBPATH, and MANPATH.
 To add your own, you can append environment variables by echo'ing them in a function called `zopen_append_to_env()`.

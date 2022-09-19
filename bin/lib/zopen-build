@@ -46,6 +46,7 @@ ZOPEN_MAKE           Build program to run. If skip is specified, no build step i
 ZOPEN_MAKE_OPTS      Options to pass to build program (defaults to '-j\${ZOPEN_NUM_JOBS}')
 ZOPEN_CHECK          Check program to run. If skip is specified, no check step is performed (defaults to '${ZOPEN_CHECKD}') 
 ZOPEN_CHECK_OPTS     Options to pass to check program (defaults to '${ZOPEN_CHECK_OPTSD}')
+ZOPEN_EXPECTED_FAILURES Number of expected faiures. If the failures is greater than this number, fail. If not set, ignore.
 ZOPEN_IMAGE_REGISTRY Docker image registry to an OCI image to (use with --oci option)
 ZOPEN_IMAGE_DOCKERFILE_NAME Dockerfile name (default: Dockerfile)
 ZOPEN_IMAGE_DOCKER_NAME Docker/podman tool name (default: podman)
@@ -721,20 +722,43 @@ check()
     create_fifo_pipe "${checklog}"
     runAndLog "${ZOPEN_CHECK_CMD} > $TMP_FIFO_PIPE"
     if command -V "${ZOPEN_CHECK_RESULTS}" >/dev/null 2>&1; then
-      ${ZOPEN_CHECK_RESULTS} "${ZOPEN_ROOT}/${dir}" "${LOG_PFX}"
-      results=$?
+      testStatus="$(${ZOPEN_CHECK_RESULTS} \"${ZOPEN_ROOT}/${dir}\" \"${LOG_PFX}\")"
+      failures="$(echo $testStatus | cut -f1 -d'|')"
+      totalTests="$(echo $testStatus | cut -f2 -d'|')"
+      success="$((totalTests-failures))"
+      percent=$(awk "BEGIN { pc=100*${success}/${totalTests}; i=int(pc); print (pc-i<0.5)?i:i+1 }")
+      summary="$success tests pass out of $totalTests tests - ${percent}% success rate"
+      printVerbose "Test results: $summary"
+      if ! [ $percent -eq $percent ]; then # not a number
+        results=$ZOPEN_TEST_STATUS_ERROR
+        ZOPEN_STATUS="Error (could not run tests)" # bad return code from check results
+      else
+        if [ $percent -eq 100 ]; then
+          results=$ZOPEN_TEST_STATUS_ALL_PASSED
+          ZOPEN_STATUS="Green ($summary)" # All tests passed
+        elif [ $percent -ge 50 ]; then
+          results=$ZOPEN_TEST_STATUS_MOST_PASSED
+          ZOPEN_STATUS="Blue ($summary)" # Most tests passed
+        elif [ $percent -eq 0 ]; then
+          results=$ZOPEN_TEST_STATUS_NONE_PASSED
+          ZOPEN_STATUS="Red ($summary)" # Pretty much non-functional
+        elif [ $percent -lt 50 ]; then
+          results=$ZOPEN_TEST_STATUS_SOME_PASSED
+          ZOPEN_STATUS="Yellow ($summary)" # Most tests failed
+        fi
+      fi
+    fi
+    if [ ! -z "${ZOPEN_EXPECTED_FAILURES}" ]; then
+      if [ $failures -le $ZOPEN_EXPECTED_FAILURES ]; then
+        return 0
+      else
+        printError "Failures ($failures) not less than than \$ZOPEN_EXPECTED_FAILURES ($ZOPEN_EXPECTED_FAILURES). Failing...";
+      fi
     fi
   else
     printHeader "Skipping Check"
+    ZOPEN_STATUS="Skipped (tests skipped)" # Skipped tests
   fi
-  case "$results" in
-    $ZOPEN_TEST_STATUS_ALL_PASSED) ZOPEN_STATUS="Green (all tests passed)" ;; # All tests passed
-    $ZOPEN_TEST_STATUS_MOST_PASSED) ZOPEN_STATUS="Blue (most tests passed)" ;; # Most tests passed
-    $ZOPEN_TEST_STATUS_SOME_PASSED) ZOPEN_STATUS="Yellow (most tests failed)" ;; # Most tests failed
-    $ZOPEN_TEST_STATUS_NONE_PASSED) ZOPEN_STATUS="Red (all tests failed)" ;; # Pretty much non-functional
-    $ZOPEN_TEST_STATUS_ERROR) ZOPEN_STATUS="Error (could not run tests)" ;; # bad return code from check results
-    $ZOPEN_TEST_STATUS_SKIPPED) ZOPEN_STATUS="Skipped (tests skipped)" ;; # Skipped tests
-  esac
 }
 
 replaceHardcodedPaths()
