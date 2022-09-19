@@ -71,5 +71,44 @@ Further reading:
 ## FSUM7327 signal number XX not conventional
 See: [FSUM7327](https://tech.mikefulton.ca/FSUM7327) which is relatively cryptic and [kill](https://tech.mikefulton.ca/POSIXSignalNumbers).
 
-Only _some_ signals have a well-defined number that can be used when specifying an action (such as kill or trap). In particular, signal number 13 (which is SIGPIPE) is _not_ a well-defined signal number.
-As such, code that specifies signal 13 gets the cryptic error message above and can be re-coded to use SIGPIPE instead (see signal.h if the signal number in question isn't 13, in which case you will need to see what a Linux signal XX is and then re-code it with a name)
+Only _some_ signals have a well-defined number that can be used when specifying an action (such as kill or trap). In particular, signal number 13 (which is PIPE) is _not_ a well-defined signal number.
+As such, code that specifies signal 13 gets the cryptic error message above and can be re-coded to use PIPE instead (see signal.h if the signal number in question isn't 13, 
+in which case you will need to see what a Linux signal XX is and then re-code it with a name. Note that you need to drop the _SIG_ part at the start of the name to be conformant).
+
+Here is a common code sequence you might see in a shell script for testing or configuring:
+
+```
+do_exit='rm -f $log_file $trs_file; (exit $st); exit $st'
+trap "st=129; $do_exit" 1
+trap "st=130; $do_exit" 2
+trap "st=141; $do_exit" 13
+trap "st=143; $do_exit" 15
+```
+
+The trap lines might vary as might the variables and exit codes. The thing to change, which is _no less portable than the 13, but not required to work_, is to instead say:
+
+```
+do_exit='rm -f $log_file $trs_file; (exit $st); exit $st'
+trap "st=129; $do_exit" 1
+trap "st=130; $do_exit" 2
+trap "st=141; $do_exit" PIPE
+trap "st=143; $do_exit" 15
+```
+
+For Linux, the signal numbers can be found under [signal(7)](https://www.man7.org/linux/man-pages/man7/signal.7.html).
+For POSIX, a number of signals (but not SIGPIPE) have well-defined names: [POSIX trap](https://www.unix.com/man-page/POSIX/1posix/trap/).
+For Linux, here is a similar doc: [Linux trap](https://www.man7.org/linux/man-pages/man1/trap.1p.html).
+Note that _HUP_ is a POSIX supported name, but _SIGHUP_ might also work. Also note that neither _PIPE_ nor 13 is officially supported... 
+
+This will make z/OS happy and is arguably more clear. Ideally, you could change the other trap values as well to use their names, e.g.
+
+```
+do_exit='rm -f $log_file $trs_file; (exit $st); exit $st'
+trap "st=129; $do_exit" HUP
+trap "st=130; $do_exit" INT
+trap "st=141; $do_exit" PIPE
+trap "st=143; $do_exit" TERM 
+```
+
+On z/OS, you can find these values in `/usr/include/le/signals.h`
+
