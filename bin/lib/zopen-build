@@ -46,7 +46,6 @@ ZOPEN_MAKE           Build program to run. If skip is specified, no build step i
 ZOPEN_MAKE_OPTS      Options to pass to build program (defaults to '-j\${ZOPEN_NUM_JOBS}')
 ZOPEN_CHECK          Check program to run. If skip is specified, no check step is performed (defaults to '${ZOPEN_CHECKD}') 
 ZOPEN_CHECK_OPTS     Options to pass to check program (defaults to '${ZOPEN_CHECK_OPTSD}')
-ZOPEN_EXPECTED_FAILURES Number of expected failures. If the failures is greater than this number, fail. If not set, ignore.
 ZOPEN_IMAGE_REGISTRY Docker image registry to an OCI image to (use with --oci option)
 ZOPEN_IMAGE_DOCKERFILE_NAME Dockerfile name (default: Dockerfile)
 ZOPEN_IMAGE_DOCKER_NAME Docker/podman tool name (default: podman)
@@ -309,18 +308,26 @@ setDepsEnv()
 setEnv()
 {
   if [ "${CPPFLAGS}x" = "x" ]; then
-    export CPPFLAGS="${ZOPEN_CPPFLAGSD} ${ZOPEN_EXTRA_CPPFLAGS}"
+    export CPPFLAGS="${ZOPEN_CPPFLAGSD}" 
   fi
+  export CPPFLAGS="${CPPFLAGS} ${ZOPEN_EXTRA_CPPFLAGS}"
+
   if [ "${CC}x" = "x" ]; then
     export CC="${ZOPEN_CCD}"
-    export CFLAGS="${ZOPEN_CFLAGSD}"
-    export CFLAGS="${ZOPEN_CFLAGSD} ${ZOPEN_EXTRA_CFLAGS}"
   fi
+  if [ "${CFLAGS}x" = "x" ]; then
+    export CFLAGS="${ZOPEN_CFLAGSD}"
+  fi
+  export CFLAGS="${CFLAGS} ${ZOPEN_EXTRA_CFLAGS}"
 
   if [ "${CXX}x" = "x" ]; then
     export CXX="${ZOPEN_CXXD}"
-    export CXXFLAGS="${ZOPEN_CXXFLAGSD} ${ZOPEN_EXTRA_CXXFLAGS}"
   fi
+
+  if [ "${CXXFLAGS}x" = "x" ]; then
+    export CXXFLAGS="${ZOPEN_CXXFLAGSD}"
+  fi
+  export CXXFLAGS="${CXXFLAGS} ${ZOPEN_EXTRA_CXXFLAGS}"
 
   if [ "${CC}x" = "xlclangx" ]; then
     # Confirm xlclang is at least 1.0.0 (aka __COMPILER_VER__=42040001)
@@ -723,8 +730,22 @@ check()
     runAndLog "${ZOPEN_CHECK_CMD} > $TMP_FIFO_PIPE"
     if command -V "${ZOPEN_CHECK_RESULTS}" >/dev/null 2>&1; then
       testStatus="$(${ZOPEN_CHECK_RESULTS} "${ZOPEN_ROOT}/${dir}" "${LOG_PFX}")"
-      failures="$(echo $testStatus | cut -f1 -d'|' | tr -d ' ')"
-      totalTests="$(echo $testStatus | cut -f2 -d'|' | tr -d ' ')"
+      if echo "$testStatus" | grep -q "actualFailures:"; then
+        failures=$(echo "$testStatus" | grep "actualFailures:" | sed -e "s/.*actualFailures://" | tr -d ' ')
+      else
+        printError "${ZOPEN_CHECK_RESULTS} needs to emit an actualFailures:<number> line"
+      fi
+      if echo "$testStatus" | grep -q "expectedFailures:"; then
+        expected=$(echo "$testStatus" | grep "expectedFailures:" | sed -e "s/.*expectedFailures://" | tr -d ' ')
+        echo "EXPECTED: $expected"
+      else
+        printError "${ZOPEN_CHECK_RESULTS} needs to emit an expectedFailures:<number> line"
+      fi
+      if echo "$testStatus" | grep -q "totalTests:"; then
+        totalTests=$(echo "$testStatus" | grep "totalTests:" | sed -e "s/.*totalTests://" | tr -d ' ')
+      else
+        printError "${ZOPEN_CHECK_RESULTS} needs to emit an totalTests:<number> line"
+      fi
       success="$((totalTests-failures))"
       percent=$(awk "BEGIN { pc=100*${success}/${totalTests}; i=int(pc); print (pc-i<0.5)?i:i+1 }")
       summary="$success tests pass out of $totalTests tests - ${percent}% success rate"
@@ -747,12 +768,10 @@ check()
           ZOPEN_STATUS="Yellow ($summary)" # Most tests failed
         fi
       fi
-    fi
-    if [ ! -z "${ZOPEN_EXPECTED_FAILURES}" ]; then
-      if [ $failures -le $ZOPEN_EXPECTED_FAILURES ]; then
+      if [ $failures -le $expected ]; then
         return 0
       else
-        printError "Failures ($failures) not less than than \$ZOPEN_EXPECTED_FAILURES ($ZOPEN_EXPECTED_FAILURES). Failing...";
+        printError "Failures ($failures) not less than than expected ($expected). Failing...";
       fi
     fi
   else

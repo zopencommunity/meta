@@ -13,19 +13,19 @@ printSyntax()
 }
 
 printHeader "Generate a zopen project"
-echo "* What is the project name?"
+echo "What is the project name?"
 name=$(getInput)
-echo "* Provided a description of the project:"
+echo "Provided a description of the project:"
 description=$(getInput)
-echo "* Enter the ${name}'s Git location: (if none, press enter)"
+echo "Enter ${name}'s Git location: (if none, press enter)"
 gitpath=$(getInput)
-echo "* Enter ${name}'s build dependencies for the Git source: (example: curl make)"
+echo "Enter ${name}'s build dependencies for the Git source: (example: curl make)"
 gitdeps=$(getInput)
-echo "* Enter the ${name}'s Tarball location? (if none, press enter)"
+echo "Enter ${name}'s Tarball location? (if none, press enter)"
 tarpath=$(getInput)
-echo "* Enter ${name}'s build dependencies for the Tar source: (example: curl make)"
+echo "Enter ${name}'s build dependencies for the Tar source: (example: curl make)"
 tardeps=$(getInput)
-echo "* Enter the default build type: (tar or git)"
+echo "Enter the default build type: (tar or git)"
 buildtype=$(getInput)
 
 project_path="${name}port"
@@ -41,15 +41,9 @@ if [ -d $project_path ]; then
 fi
 
 printHeader "Generating $project_path zopen project"
-mkdir ${name}port
+mkdir -p ${name}port/patches
 
 buildenv="${name}port/buildenv"
-cat <<EOT >> $buildenv
-if ! [ -f ./buildenv]; then
-  echo "Need to source from the buildenv directory" >&2
-  return 0
-fi
-EOT
 
 if [ ! -z "$gitpath" ]; then
   echo "export ZOPEN_GIT_URL=\"$gitpath\"" >> $buildenv
@@ -77,22 +71,27 @@ zopen_check_results()
   dir="\$1"
   pfx="\$2"
   chk="\$1/\$2_check.log"
-  grep "All tests passed"
+
+  # Echo the following information to guage build health
+  echo "actualFailures:0"
+  echo "totalTests:1"
+  echo "expectedFailures:0"
+  
 }
 
 zopen_append_to_env()
 {
-  # echo extra envars here:
+  # echo envars outside of PATH, MANPATH, LIBPATH
 }
 EOT
-printHeader "$buildenv created"
+printInfo "$buildenv created"
 
 cat <<EOT >> "${name}port/README.md"
 ${name}
 
 ${description}
 EOT
-printHeader "${name}port/README.md created"
+printInfo "${name}port/README.md created"
 
 cat <<EOT >> "${name}port/cicd.groovy"
 node('linux')
@@ -102,4 +101,7 @@ node('linux')
   }
 }
 EOT
-printHeader "${name} project is ready! Contact Mike Fulton (fultonm@ca.ibm.com) to create https://github.com/ZOSOpenTools/${name}port.git"
+printHeader "${name} project is ready!"
+printInfo "Create patches under the ${name}port/patches directory"
+printInfo "Run zopen build to build ${name}port"
+printInfo "Contact Mike Fulton (fultonm@ca.ibm.com) to create https://github.com/ZOSOpenTools/${name}port.git"
