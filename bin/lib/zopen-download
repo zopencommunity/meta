@@ -9,14 +9,19 @@ printSyntax()
 {
   args=$*
   echo "zopen-download is a tool that downloads and extracts the latest z/OS Open Tools releases from GitHub Releases." >&2
+  echo "If you have a Github OAUTH token, export the environment variable ZOPEN_GIT_OAUTH_TOKEN" >&2
   echo "Syntax: zopen-download [<option>]*" >&2
   echo "  where <option> may be one or more of:" >&2
+  echo "  --list: list all available z/OS Open Tools"  >&2
+#TODO: future option
+#  echo "  --filter <color>: filter based on quality (green - all tests passing, blue - most tests passing, yellow - some tests passing, red - no tests passing, none (default))"  >&2
   echo "  -d <dir>: directory to download binaries to.  Uses current working directory if not specified." >&2
   echo "  -r <repo>: specific repo name to download. Downloads all ZOSOpenTools if not specified." >&2
 }
 
 args=$*
 download=$PWD
+filter=none
 while [[ $# -gt 0 ]]; do
   case "$1" in
     "-d")
@@ -29,6 +34,9 @@ while [[ $# -gt 0 ]]; do
       ;;
     "--list")
       list=1;
+      ;;
+    "--filter")
+      filter=$2;
       ;;
     "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
       printSyntax "${args}"
@@ -49,11 +57,21 @@ if [ ! -z "${download}" -a -d "${download}" ]; then
   cd "${download}"
 fi
 
-#FIXME: Once jq is ported, rewrite with jq
-if ! repo_results=$(curl -k -s "https://api.github.com/users/ZOSOpenTools/repos?per_page=100" 2>/dev/null | grep "\"full_name\":" | cut -d '"' -f 4); then
-  printError "curl command could not download the z/OS Open Tools repository list"
+if [ ! -z "${ZOPEN_GIT_OAUTH_TOKEN}" ]; then
+  OAUTH_TOKEN_OPTION='-H'
+  OAUTH_TOKEN="Authorization: Bearer ${ZOPEN_GIT_OAUTH_TOKEN}" 
 fi
 
+if ! repo_results=$(curl $OAUTH_TOKEN_OPTION "$OAUTH_TOKEN" -k -s "https://api.github.com/users/ZOSOpenTools/repos?per_page=100"); then
+  printError "curl command could not download the z/OS Open Tools repository list"
+fi
+repo_results=$(echo "$repo_results" | grep "\"full_name\":" | cut -d '"' -f 4)
+
+if [ ! -z "$list" ]; then
+  printf "${NC}${UNDERLINE}${1}%-25s %-25s\n${NC}" "Repo" "Build Status"
+fi
+
+foundPort=false
 for repo in $(echo ${repo_results}); do
   repo=${repo#"ZOSOpenTools/"}
   if [ -z $toolrepo ] || [ "${toolrepo}" = "${repo}" ]; then
@@ -61,12 +79,17 @@ for repo in $(echo ${repo_results}); do
     if [ "${repo}" = "${name}" ]; then
       continue;
     fi
+    testStatus=$(curl $OAUTH_TOKEN_OPTION "$OAUTH_TOKEN" -k -s https://api.github.com/repos/ZOSOpenTools/${repo}/releases/latest | grep "\"body\":.*Test Status:" | sed -e "s#.*Test Status:<\/b>##" -e "s#[ ]*(.*##" | tr -d ' ')
+    if [ -z "$testStatus" ]; then
+      testStatus="Untested";
+    fi
     if [ ! -z "$list" ]; then
-      echo "$repo"
+      printf '%-25s %-25s\n' "$repo" "$testStatus"
       continue;
     fi
+    foundPort=true
     printHeader "Downloading latest release from $repo"
-    if ! latest_url=$(curl -k -s https://api.github.com/repos/ZOSOpenTools/${repo}/releases/latest 2>/dev/null | grep browser_download_url | cut -d '"' -f 4); then
+    if ! latest_url=$(curl $OAUTH_TOKEN_OPTION "$OAUTH_TOKEN" -k -s https://api.github.com/repos/ZOSOpenTools/${repo}/releases/latest | grep browser_download_url | cut -d '"' -f 4); then
       printError "Could not find the latest url for $repo"
     fi
 
@@ -99,3 +122,7 @@ for repo in $(echo ${repo_results}); do
     fi 
   fi
 done
+
+if ! $foundPort && test -z $list; then
+  printError "Could not find $toolrepo. Run with --list option to view the available ports"
+fi
