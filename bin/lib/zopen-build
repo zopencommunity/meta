@@ -308,18 +308,26 @@ setDepsEnv()
 setEnv()
 {
   if [ "${CPPFLAGS}x" = "x" ]; then
-    export CPPFLAGS="${ZOPEN_CPPFLAGSD} ${ZOPEN_EXTRA_CPPFLAGS}"
+    export CPPFLAGS="${ZOPEN_CPPFLAGSD}" 
   fi
+  export CPPFLAGS="${CPPFLAGS} ${ZOPEN_EXTRA_CPPFLAGS}"
+
   if [ "${CC}x" = "x" ]; then
     export CC="${ZOPEN_CCD}"
-    export CFLAGS="${ZOPEN_CFLAGSD}"
-    export CFLAGS="${ZOPEN_CFLAGSD} ${ZOPEN_EXTRA_CFLAGS}"
   fi
+  if [ "${CFLAGS}x" = "x" ]; then
+    export CFLAGS="${ZOPEN_CFLAGSD}"
+  fi
+  export CFLAGS="${CFLAGS} ${ZOPEN_EXTRA_CFLAGS}"
 
   if [ "${CXX}x" = "x" ]; then
     export CXX="${ZOPEN_CXXD}"
-    export CXXFLAGS="${ZOPEN_CXXFLAGSD} ${ZOPEN_EXTRA_CXXFLAGS}"
   fi
+
+  if [ "${CXXFLAGS}x" = "x" ]; then
+    export CXXFLAGS="${ZOPEN_CXXFLAGSD}"
+  fi
+  export CXXFLAGS="${CXXFLAGS} ${ZOPEN_EXTRA_CXXFLAGS}"
 
   if [ "${CC}x" = "xlclangx" ]; then
     # Confirm xlclang is at least 1.0.0 (aka __COMPILER_VER__=42040001)
@@ -721,20 +729,55 @@ check()
     create_fifo_pipe "${checklog}"
     runAndLog "${ZOPEN_CHECK_CMD} > $TMP_FIFO_PIPE"
     if command -V "${ZOPEN_CHECK_RESULTS}" >/dev/null 2>&1; then
-      ${ZOPEN_CHECK_RESULTS} "${ZOPEN_ROOT}/${dir}" "${LOG_PFX}"
-      results=$?
+      testStatus="$(${ZOPEN_CHECK_RESULTS} "${ZOPEN_ROOT}/${dir}" "${LOG_PFX}")"
+      if echo "$testStatus" | grep -q "actualFailures:"; then
+        failures=$(echo "$testStatus" | grep "actualFailures:" | sed -e "s/.*actualFailures://" | tr -d ' ')
+      else
+        printError "${ZOPEN_CHECK_RESULTS} needs to emit an actualFailures:<number> line"
+      fi
+      if echo "$testStatus" | grep -q "expectedFailures:"; then
+        expected=$(echo "$testStatus" | grep "expectedFailures:" | sed -e "s/.*expectedFailures://" | tr -d ' ')
+        echo "EXPECTED: $expected"
+      else
+        printError "${ZOPEN_CHECK_RESULTS} needs to emit an expectedFailures:<number> line"
+      fi
+      if echo "$testStatus" | grep -q "totalTests:"; then
+        totalTests=$(echo "$testStatus" | grep "totalTests:" | sed -e "s/.*totalTests://" | tr -d ' ')
+      else
+        printError "${ZOPEN_CHECK_RESULTS} needs to emit an totalTests:<number> line"
+      fi
+      success="$((totalTests-failures))"
+      percent=$(awk "BEGIN { pc=100*${success}/${totalTests}; i=int(pc); print (pc-i<0.5)?i:i+1 }")
+      summary="$success tests pass out of $totalTests tests - ${percent}% success rate"
+      printVerbose "Test results: $summary"
+      if ! [ $percent -eq $percent ]; then # not a number
+        results=$ZOPEN_TEST_STATUS_ERROR
+        ZOPEN_STATUS="Error (could not run tests)" # bad return code from check results
+      else
+        if [ $percent -eq 100 ]; then
+          results=$ZOPEN_TEST_STATUS_ALL_PASSED
+          ZOPEN_STATUS="Green ($summary)" # All tests passed
+        elif [ $percent -ge 50 ]; then
+          results=$ZOPEN_TEST_STATUS_MOST_PASSED
+          ZOPEN_STATUS="Blue ($summary)" # Most tests passed
+        elif [ $percent -eq 0 ]; then
+          results=$ZOPEN_TEST_STATUS_NONE_PASSED
+          ZOPEN_STATUS="Red ($summary)" # Pretty much non-functional
+        elif [ $percent -lt 50 ]; then
+          results=$ZOPEN_TEST_STATUS_SOME_PASSED
+          ZOPEN_STATUS="Yellow ($summary)" # Most tests failed
+        fi
+      fi
+      if [ $failures -le $expected ]; then
+        return 0
+      else
+        printError "Failures ($failures) not less than than expected ($expected). Failing...";
+      fi
     fi
   else
     printHeader "Skipping Check"
+    ZOPEN_STATUS="Skipped (tests skipped)" # Skipped tests
   fi
-  case "$results" in
-    $ZOPEN_TEST_STATUS_ALL_PASSED) ZOPEN_STATUS="Green (all tests passed)" ;; # All tests passed
-    $ZOPEN_TEST_STATUS_MOST_PASSED) ZOPEN_STATUS="Blue (most tests passed)" ;; # Most tests passed
-    $ZOPEN_TEST_STATUS_SOME_PASSED) ZOPEN_STATUS="Yellow (most tests failed)" ;; # Most tests failed
-    $ZOPEN_TEST_STATUS_NONE_PASSED) ZOPEN_STATUS="Red (all tests failed)" ;; # Pretty much non-functional
-    $ZOPEN_TEST_STATUS_ERROR) ZOPEN_STATUS="Error (could not run tests)" ;; # bad return code from check results
-    $ZOPEN_TEST_STATUS_SKIPPED) ZOPEN_STATUS="Skipped (tests skipped)" ;; # Skipped tests
-  esac
 }
 
 replaceHardcodedPaths()
