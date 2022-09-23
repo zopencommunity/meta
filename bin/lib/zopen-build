@@ -46,6 +46,7 @@ ZOPEN_MAKE           Build program to run. If skip is specified, no build step i
 ZOPEN_MAKE_OPTS      Options to pass to build program (defaults to '-j\${ZOPEN_NUM_JOBS}')
 ZOPEN_CHECK          Check program to run. If skip is specified, no check step is performed (defaults to '${ZOPEN_CHECKD}') 
 ZOPEN_CHECK_OPTS     Options to pass to check program (defaults to '${ZOPEN_CHECK_OPTSD}')
+ZOPEN_CHECK_TIMEOUT  Timeout limit in seconds for the check program (defaults to '${ZOPEN_CHECK_TIMEOUTD}')
 ZOPEN_IMAGE_REGISTRY Docker image registry to an OCI image to (use with --oci option)
 ZOPEN_IMAGE_DOCKERFILE_NAME Dockerfile name (default: Dockerfile)
 ZOPEN_IMAGE_DOCKER_NAME Docker/podman tool name (default: podman)
@@ -94,6 +95,7 @@ setDefaults()
   export ZOPEN_MAKED="make"
   export ZOPEN_CHECKD="make"
   export ZOPEN_CHECK_OPTSD="check"
+  export ZOPEN_CHECK_TIMEOUTD="12600" # 3.5 hours
   export ZOPEN_INSTALLD="make"
   export ZOPEN_INSTALL_OPTSD="install"
   if [ -z "$ZOPEN_IMAGE_DOCKERFILE_NAME" ]; then
@@ -403,6 +405,9 @@ setEnv()
   fi
   if [ "${ZOPEN_CHECK}x" = "x" ]; then
     export ZOPEN_CHECK="${ZOPEN_CHECKD}"
+  fi
+  if [ "${ZOPEN_CHECK_TIMEOUT}x" = "x" ]; then
+    export ZOPEN_CHECK_TIMEOUT="${ZOPEN_CHECK_TIMEOUTD}"
   fi
   if [ "${ZOPEN_CHECK_OPTS}x" = "x" ]; then
     export ZOPEN_CHECK_OPTS="${ZOPEN_CHECK_OPTSD}"
@@ -732,7 +737,7 @@ check()
   if [ -n "${ZOPEN_CHECK_CMD}" ]; then
     printHeader "Running Check"
     create_fifo_pipe "${checklog}"
-    runInBackgroundWithTimeoutAndLog "${ZOPEN_CHECK_CMD} > $TMP_FIFO_PIPE" 12600 # 3.5 hour timeout 
+    runInBackgroundWithTimeoutAndLog "${ZOPEN_CHECK_CMD} > $TMP_FIFO_PIPE" "${ZOPEN_CHECK_TIMEOUT}"
     if command -V "${ZOPEN_CHECK_RESULTS}" >/dev/null 2>&1; then
       testStatus="$(${ZOPEN_CHECK_RESULTS} "${ZOPEN_ROOT}/${dir}" "${LOG_PFX}")"
       if echo "$testStatus" | grep -q "actualFailures:"; then
