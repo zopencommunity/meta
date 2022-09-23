@@ -37,21 +37,32 @@ The `buildenv` file _must_ set the following environment variables:
 - `ZOPEN_DEPS`: a space-separated list of all software dependencies this package has.
 
 To help guage the build quality of the port, a `zopen_check_results()` function needs to be provided inside the buildenv. This function should process
-the test results and emit a report of the failures, total number of tests, and expected number of failures to stdout as in the following format: failures|totalTests.
+the test results and emit a report of the failures, total number of tests, and expected number of failures to stdout as in the following format: 
+```
+actualFailures:<numberoffailures>
+totalTests:<totalnumberoftests>
+expectedFailures:<expectednumberoffailures>
+```
 
-Example:
+The build will fail to proceed to the install step if `expectedFailures` is greater than `actualFailures`.
+
+Here is an example implementation of `zopen_check_results()`:
+
 ```bash
-failures=# count failures
-totalTests=# count total tests
+zopen_check_results()
+{
+chk="$2_check.log"
+
+failures=$(grep ".* Test.*in .* Categories Failed" ${chk} | cut -f1 -d' ')
+totalTests=$(grep ".* Test.*in .* Categories Failed" ${chk} | cut -f5 -d' ')
 
 cat <<ZZ
 actualFailures:$failures
 totalTests:$totalTests
 expectedFailures:0
 ZZ
+}
 ```
-
-The build will fail to proceed to the install step if the expectedFailures is greater than the actual failures.
 
 `zopen build` will generate a .env file in the install location with support for environment variables such as PATH, LIBPATH, and MANPATH.
 To add your own, you can append environment variables by echo'ing them in a function called `zopen_append_to_env()`.
