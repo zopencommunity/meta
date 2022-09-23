@@ -503,12 +503,6 @@ extractTarBall()
   if ! git init . >/dev/null || ! git add -f ${files} >/dev/null || ! git commit --allow-empty -m "Create Repository for patch management" >/dev/null; then
     printError "Unable to initialize git repository for tarball"
   fi
- 
-
-  # Having the directory git-managed exposes some problems in the current git for software like autoconf,
-  # so move .git to the side and just use it for applying patches
-  # (you will also need to move it back to do a 'git diff' on any new patches you want to develop)
-  mv .git .git-for-patches
 }
 
 downloadTarBall()
@@ -619,7 +613,7 @@ applyPatches()
   fi
 
   # Tag the files that were just updated (again) as ASCII (hopefully can remove after we build our own git)
-  (cd "${code_dir}" && git status --untracked-files -s | awk '{ $1=""; print; }' | xargs chtag -tcISO8859-1)
+  (cd "${code_dir}" && git status --untracked-files -s | awk '{ $1=""; print; }' | xargs -I {} chtag -tcISO8859-1)
   if ${moved}; then
     mv "${code_dir}/.git" "${code_dir}/.git-for-patches" || exit 99
   fi

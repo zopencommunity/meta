@@ -108,7 +108,7 @@ for repo in $(echo ${repo_results}); do
     fi
 
     printHeader "Extracting $pax"
-    if ! pax -rf $pax 2>/dev/null; then
+    if ! pax -rf $pax -p p 2>/dev/null; then
       printWarning "Could not extract $pax. Skipping"
       continue;
     fi
