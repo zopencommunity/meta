@@ -67,6 +67,34 @@ runAndLog()
   return $rc
 }
 
+runInBackgroundWithTimeoutAndLog()
+{
+  command="$1"
+  timeout="$2"
+
+  printVerbose "$command with timeout of ${timeout}s"
+  eval "$command &; TEEPID=$!"
+  PID=$!
+  n=0
+  while [ $n -le $timeout ]; do
+    kill -0 $PID 2>/dev/null
+    if [ $? != 0 ]; then
+      wait $PID
+      if [ ! -z "${SSH_TTY}" ]; then
+        chtag -r $SSH_TTY
+      fi
+      rc=$?
+      return $rc
+    else
+      sleep 1
+      n=`expr $n + 1`
+    fi
+  done
+  kill -9 $PID
+  kill -9 $TEEPID
+  printError "TIMEOUT: (PID: $PID): $command"
+}
+
 printSoftError()
 {
   echo "${NC}${RED}${BOLD}***ERROR: ${NC}${RED}${1}${NC}" >&2

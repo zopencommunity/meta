@@ -29,21 +29,39 @@ zopen download -r makeport -d $HOME/zopen
 To build a software package, you can use `zopen build`.
 
 `zopen build` requires the files scripts in the project's root directory:
--  `buildenv`, which `zopen build` will automatically source.  If you would like to source another file, you can specify it via the `-e` option as in: `zopen build -e mybuildenv`
+- `buildenv`, which `zopen build` will automatically source.  If you would like to source another file, you can specify it via the `-e` option as in: `zopen build -e mybuildenv`
 
 The `buildenv` file _must_ set the following environment variables:
 - `ZOPEN_TYPE`: one of _TARBALL_ or _GIT_ indicating where the source should be pulled from (a source tarball or git repository)
 - `ZOPEN_URL`: the URL where the source should be pulled from, including the `package.git` or `package-V.R.M.tar.gz` extension
 - `ZOPEN_DEPS`: a space-separated list of all software dependencies this package has.
 
-To help guage the health of the port, a `zopen_check_results()` function can be provided inside the buildenv. This function should process
-the test results and emit a report of the failures vs total number of tests to stdout as in the following format: failures|totalTests.
-
-Example:
+To help guage the build quality of the port, a `zopen_check_results()` function needs to be provided inside the buildenv. This function should process
+the test results and emit a report of the failures, total number of tests, and expected number of failures to stdout as in the following format: 
 ```
-failures=# count failures
-totalTests=# count total tests
-echo "$failures|$totalTests"
+actualFailures:<numberoffailures>
+totalTests:<totalnumberoftests>
+expectedFailures:<expectednumberoffailures>
+```
+
+The build will fail to proceed to the install step if `expectedFailures` is greater than `actualFailures`.
+
+Here is an example implementation of `zopen_check_results()`:
+
+```bash
+zopen_check_results()
+{
+chk="$2_check.log"
+
+failures=$(grep ".* Test.*in .* Categories Failed" ${chk} | cut -f1 -d' ')
+totalTests=$(grep ".* Test.*in .* Categories Failed" ${chk} | cut -f5 -d' ')
+
+cat <<ZZ
+actualFailures:$failures
+totalTests:$totalTests
+expectedFailures:0
+ZZ
+}
 ```
 
 `zopen build` will generate a .env file in the install location with support for environment variables such as PATH, LIBPATH, and MANPATH.

@@ -46,6 +46,7 @@ ZOPEN_MAKE           Build program to run. If skip is specified, no build step i
 ZOPEN_MAKE_OPTS      Options to pass to build program (defaults to '-j\${ZOPEN_NUM_JOBS}')
 ZOPEN_CHECK          Check program to run. If skip is specified, no check step is performed (defaults to '${ZOPEN_CHECKD}') 
 ZOPEN_CHECK_OPTS     Options to pass to check program (defaults to '${ZOPEN_CHECK_OPTSD}')
+ZOPEN_CHECK_TIMEOUT  Timeout limit in seconds for the check program (defaults to '${ZOPEN_CHECK_TIMEOUTD}')
 ZOPEN_IMAGE_REGISTRY Docker image registry to an OCI image to (use with --oci option)
 ZOPEN_IMAGE_DOCKERFILE_NAME Dockerfile name (default: Dockerfile)
 ZOPEN_IMAGE_DOCKER_NAME Docker/podman tool name (default: podman)
@@ -86,14 +87,15 @@ setDefaults()
   export ZOPEN_CCD="xlclang"
   export ZOPEN_CXXD="xlclang++"
   export ZOPEN_CPPFLAGSD="-DNSIG=9 -D_XOPEN_SOURCE=600 -D_ALL_SOURCE -D_OPEN_SYS_FILE_EXT=1 -D_AE_BIMODAL=1 -D_ENHANCED_ASCII_EXT=0xFFFFFFFF"
-  export ZOPEN_CFLAGSD="-qascii -std=gnu11"
-  export ZOPEN_CXXFLAGSD="-+ -qascii"
+  export ZOPEN_CFLAGSD="-qascii -std=gnu11 -qnocsect"
+  export ZOPEN_CXXFLAGSD="-+ -qascii -qnocsect"
   export ZOPEN_BOOTSTRAPD="./bootstrap"
   export ZOPEN_BOOTSTRAP_OPTSD=""
   export ZOPEN_CONFIGURED="./configure"
   export ZOPEN_MAKED="make"
   export ZOPEN_CHECKD="make"
   export ZOPEN_CHECK_OPTSD="check"
+  export ZOPEN_CHECK_TIMEOUTD="12600" # 3.5 hours
   export ZOPEN_INSTALLD="make"
   export ZOPEN_INSTALL_OPTSD="install"
   if [ -z "$ZOPEN_IMAGE_DOCKERFILE_NAME" ]; then
@@ -127,6 +129,7 @@ printSyntax()
   echo "  where <option> may be one or more of:" >&2
   echo "  -h: print this information" >&2
   echo "  -v: run in verbose mode" >&2
+  echo "  --buildtype: release|debug" >&2
   echo "  --oci: build and publish an OCI image to \$ZOPEN_IMAGE_REGISTRY" >&2
   echo "  -e <env file>: source <env file> instead of buildenv to establish build environment" >&2
   echo "  -s: exec a shell before running configure.  Useful when manually building ports." >&2
@@ -140,6 +143,7 @@ processOptions()
   verbose=false
   publishOCI=false
   skipcheck=false
+  buildInReleaseMode=false
   startShell=false
   buildEnvFile="./buildenv"
   depsPath="$HOME/zopen/prod|$HOME/zopen/boot|/usr/bin/zopen/"
@@ -151,6 +155,15 @@ processOptions()
         ;;
       "-v" | "--v" | "-verbose" | "--verbose")
         verbose=true
+        ;;
+      "-buildtype" | "--buildtype" | "-b")
+        shift
+        btype=$(echo "$1" | awk '{print toupper($0)}')
+        if [ "$btype" = "RELEASE" ]; then
+          buildInReleaseMode=true
+          ZOPEN_CFLAGSD="${ZOPEN_CFLAGSD} -O3";
+          ZOPEN_CXXFLAGSD="${ZOPEN_CXXFLAGSD} -O3";
+        fi
         ;;
       "-oci" | "--oci")
         publishOCI=true
@@ -393,6 +406,9 @@ setEnv()
   if [ "${ZOPEN_CHECK}x" = "x" ]; then
     export ZOPEN_CHECK="${ZOPEN_CHECKD}"
   fi
+  if [ "${ZOPEN_CHECK_TIMEOUT}x" = "x" ]; then
+    export ZOPEN_CHECK_TIMEOUT="${ZOPEN_CHECK_TIMEOUTD}"
+  fi
   if [ "${ZOPEN_CHECK_OPTS}x" = "x" ]; then
     export ZOPEN_CHECK_OPTS="${ZOPEN_CHECK_OPTSD}"
   fi
@@ -503,12 +519,6 @@ extractTarBall()
   if ! git init . >/dev/null || ! git add -f ${files} >/dev/null || ! git commit --allow-empty -m "Create Repository for patch management" >/dev/null; then
     printError "Unable to initialize git repository for tarball"
   fi
- 
-
-  # Having the directory git-managed exposes some problems in the current git for software like autoconf,
-  # so move .git to the side and just use it for applying patches
-  # (you will also need to move it back to do a 'git diff' on any new patches you want to develop)
-  mv .git .git-for-patches
 }
 
 downloadTarBall()
@@ -619,7 +629,7 @@ applyPatches()
   fi
 
   # Tag the files that were just updated (again) as ASCII (hopefully can remove after we build our own git)
-  (cd "${code_dir}" && git status --untracked-files -s | awk '{ $1=""; print; }' | xargs chtag -tcISO8859-1)
+  (cd "${code_dir}" && git status --untracked-files -s | awk '{ $1=""; print; }' | xargs -I {} chtag -tcISO8859-1)
   if ${moved}; then
     mv "${code_dir}/.git" "${code_dir}/.git-for-patches" || exit 99
   fi
@@ -727,7 +737,7 @@ check()
   if [ -n "${ZOPEN_CHECK_CMD}" ]; then
     printHeader "Running Check"
     create_fifo_pipe "${checklog}"
-    runAndLog "${ZOPEN_CHECK_CMD} > $TMP_FIFO_PIPE"
+    runInBackgroundWithTimeoutAndLog "${ZOPEN_CHECK_CMD} > $TMP_FIFO_PIPE" "${ZOPEN_CHECK_TIMEOUT}"
     if command -V "${ZOPEN_CHECK_RESULTS}" >/dev/null 2>&1; then
       testStatus="$(${ZOPEN_CHECK_RESULTS} "${ZOPEN_ROOT}/${dir}" "${LOG_PFX}")"
       if echo "$testStatus" | grep -q "actualFailures:"; then
