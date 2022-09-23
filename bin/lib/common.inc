@@ -70,15 +70,19 @@ runAndLog()
 runInBackgroundWithTimeoutAndLog()
 {
   command="$1"
-  printVerbose "$command"
-  eval "$command &"
   timeout="$2"
+
+  printVerbose "$command with timeout of ${timeout}s"
+  eval "$command &; TEEPID=$!"
   PID=$!
   n=0
   while [ $n -le $timeout ]; do
     kill -0 $PID 2>/dev/null
     if [ $? != 0 ]; then
       wait $PID
+      if [ ! -z "${SSH_TTY}" ]; then
+        chtag -r $SSH_TTY
+      fi
       rc=$?
       return $rc
     else
@@ -87,6 +91,7 @@ runInBackgroundWithTimeoutAndLog()
     fi
   done
   kill -9 $PID
+  kill -9 $TEEPID
   printError "TIMEOUT: (PID: $PID): $command"
 }
 
