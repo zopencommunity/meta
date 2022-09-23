@@ -86,8 +86,8 @@ setDefaults()
   export ZOPEN_CCD="xlclang"
   export ZOPEN_CXXD="xlclang++"
   export ZOPEN_CPPFLAGSD="-DNSIG=9 -D_XOPEN_SOURCE=600 -D_ALL_SOURCE -D_OPEN_SYS_FILE_EXT=1 -D_AE_BIMODAL=1 -D_ENHANCED_ASCII_EXT=0xFFFFFFFF"
-  export ZOPEN_CFLAGSD="-qascii -std=gnu11"
-  export ZOPEN_CXXFLAGSD="-+ -qascii"
+  export ZOPEN_CFLAGSD="-qascii -std=gnu11 -qnocsect"
+  export ZOPEN_CXXFLAGSD="-+ -qascii -qnocsect"
   export ZOPEN_BOOTSTRAPD="./bootstrap"
   export ZOPEN_BOOTSTRAP_OPTSD=""
   export ZOPEN_CONFIGURED="./configure"
@@ -127,6 +127,7 @@ printSyntax()
   echo "  where <option> may be one or more of:" >&2
   echo "  -h: print this information" >&2
   echo "  -v: run in verbose mode" >&2
+  echo "  --buildtype: release|debug" >&2
   echo "  --oci: build and publish an OCI image to \$ZOPEN_IMAGE_REGISTRY" >&2
   echo "  -e <env file>: source <env file> instead of buildenv to establish build environment" >&2
   echo "  -s: exec a shell before running configure.  Useful when manually building ports." >&2
@@ -140,6 +141,7 @@ processOptions()
   verbose=false
   publishOCI=false
   skipcheck=false
+  buildInReleaseMode=false
   startShell=false
   buildEnvFile="./buildenv"
   depsPath="$HOME/zopen/prod|$HOME/zopen/boot|/usr/bin/zopen/"
@@ -151,6 +153,15 @@ processOptions()
         ;;
       "-v" | "--v" | "-verbose" | "--verbose")
         verbose=true
+        ;;
+      "-buildtype" | "--buildtype" | "-b")
+        shift
+        btype=$(echo "$1" | awk '{print toupper($0)}')
+        if [ "$btype" = "RELEASE" ]; then
+          buildInReleaseMode=true
+          ZOPEN_CFLAGSD="${ZOPEN_CFLAGSD} -O3";
+          ZOPEN_CXXFLAGSD="${ZOPEN_CXXFLAGSD} -O3";
+        fi
         ;;
       "-oci" | "--oci")
         publishOCI=true
