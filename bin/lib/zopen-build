@@ -732,7 +732,7 @@ check()
   if [ -n "${ZOPEN_CHECK_CMD}" ]; then
     printHeader "Running Check"
     create_fifo_pipe "${checklog}"
-    runAndLog "${ZOPEN_CHECK_CMD} > $TMP_FIFO_PIPE"
+    runInBackgroundWithTimeoutAndLog "${ZOPEN_CHECK_CMD} > $TMP_FIFO_PIPE" 12600 # 3.5 hour timeout 
     if command -V "${ZOPEN_CHECK_RESULTS}" >/dev/null 2>&1; then
       testStatus="$(${ZOPEN_CHECK_RESULTS} "${ZOPEN_ROOT}/${dir}" "${LOG_PFX}")"
       if echo "$testStatus" | grep -q "actualFailures:"; then

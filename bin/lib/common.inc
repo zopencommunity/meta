@@ -67,6 +67,29 @@ runAndLog()
   return $rc
 }
 
+runInBackgroundWithTimeoutAndLog()
+{
+  command="$1"
+  printVerbose "$command"
+  eval "$command &"
+  timeout="$2"
+  PID=$!
+  n=0
+  while [ $n -le $timeout ]; do
+    kill -0 $PID 2>/dev/null
+    if [ $? != 0 ]; then
+      wait $PID
+      rc=$?
+      return $rc
+    else
+      sleep 1
+      n=`expr $n + 1`
+    fi
+  done
+  kill -9 $PID
+  printError "TIMEOUT: (PID: $PID): $command"
+}
+
 printSoftError()
 {
   echo "${NC}${RED}${BOLD}***ERROR: ${NC}${RED}${1}${NC}" >&2
