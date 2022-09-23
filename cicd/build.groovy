@@ -31,14 +31,14 @@ PORT_NAME=${PORT_NAME%%port}
 export ZOPEN_INSTALL_DIR="${PWD}/install"
 mkdir -p "${ZOPEN_INSTALL_DIR}"
 
+# Set TMPDIR to a local tmp directory
+export TMPDIR="${PWD}/tmp"
+mkdir -p "${TMPDIR}"
+
 git clone -b "${PORT_BRANCH}" "${PORT_GITHUB_REPO}" ${PORT_NAME} && cd ${PORT_NAME}
 
-if $RUN_TESTS; then
-  zopen build -v
-else
-  zopen build -sc -v
-fi
-	
+# Always run tests
+zopen build -v -b release
 
 # Copy package to /jenkins/builds dir
 mkdir -p /jenkins/builds/
