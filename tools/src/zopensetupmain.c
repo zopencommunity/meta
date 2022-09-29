@@ -13,6 +13,7 @@ int main(int argc, char* argv[]) {
   const char* bootpkg[] = ZOPEN_BOOT_PKG;
   const char* pemdata = GITHUB_PEM_CA;
   const char* root;
+  char* pkgsfx;
   char  output[ZOPEN_PATH_MAX+1];
   char  tmppem[ZOPEN_PATH_MAX+1];
   char  uri[ZOPEN_PATH_MAX+1];
@@ -46,10 +47,14 @@ int main(int argc, char* argv[]) {
     fprintf(stderr, "error creating pem file: %d\n", rc);
     return rc;
   }
-#define ZOPEN_BOOT_URI_ROOT "/ZOSOpenTools/curlport/releases/download/boot"
   for (i=0; bootpkg[i]; ++i) {
-    if ((rc = snprintf(uri, sizeof(uri), "/%s/%sport/%s/%s.%s", ZOPEN_BOOT_URI_PREFIX, bootpkg[i], ZOPEN_BOOT_URI_SUFFIX, bootpkg[i], ZOPEN_BOOT_URI_TYPE)) > sizeof(uri)) {
-      fprintf(stderr, "error building uri for %s/%s.%s", ZOPEN_BOOT_URI_ROOT, bootpkg[i], ZOPEN_BOOT_URI_TYPE);
+    if (strcmp(bootpkg[i], "utils")) {
+      pkgsfx="port";
+    } else {
+      pkgsfx="";
+    }
+    if ((rc = snprintf(uri, sizeof(uri), "/%s/%s%s/%s/%s.%s", ZOPEN_BOOT_URI_PREFIX, bootpkg[i], pkgsfx, ZOPEN_BOOT_URI_SUFFIX, bootpkg[i], ZOPEN_BOOT_URI_TYPE)) > sizeof(uri)) {
+      fprintf(stderr, "error building uri for /%s/%s%s/%s/%s.%s", ZOPEN_BOOT_URI_PREFIX, bootpkg[i], pkgsfx, ZOPEN_BOOT_URI_SUFFIX, bootpkg[i], ZOPEN_BOOT_URI_TYPE);
       return 4;
     }   
     if (!output || genfilenameinsubdir("pax.Z", root, ZOPEN_BOOT, bootpkg[i], output, ZOPEN_PATH_MAX)) {
