@@ -1,18 +1,87 @@
-#!/bin/sh
-#
+#!/bin/bash
 # Used for development to source all the boot .envs
-# . importenvs
+#. ./zopen-importenvs <path to buildenv to fetch dependency>
 
-if [ ! -d "${HOME}/zopen/boot/" ]; then
-  echo "boot directory does not exist.  Existing"
-  exit 4;
+
+#below code fetches the ~/code/utils/bin path where the common.inc file is under its lib dir
+export bindir="$( cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P )"
+. "${bindir}/lib/common.inc"
+
+#depsPath has the details of the location of ports whose env files are consumed for sourcing 
+depsPath="$HOME/zopen/prod|$HOME/zopen/boot"
+
+# if the number of arguments passed to script is 0,
+# then , the dirs are fetched from zopen/prod and zopen/boot directory
+# then its env files are fetched and sourced, if they are not already sourced.
+if [ $# -eq 0 ]
+then
+     echo "buildenv path is not provided"
+     
+     # arrOfDirs, is an array which holds the names of dirs whose env is set
+     declare -a arrOfDirs
+     unset arrOfDirs[@]
+
+     #Loop through zopen/boot & zopen/prod
+     for path in $(echo ${depsPath} | sed "s/|/ /g") ; do
+         for deps in $(find "${path}" -name ".env")
+         do
+          depdir=$(dirname "${deps}")
+          dirName="$(basename ${depdir})"
+
+          #If env from this directory is not sourced then, fetch the env file and source it 
+          if [[ ! " ${arrOfDirs[*]} " =~ " ${dirName} " ]]; then
+             # array doesn't contain hence, source the env file
+             echo "Setting up ${depdir} dependency environment"
+             cd $depdir
+             . ./.env
+
+             # If sourcing is successful then, add to array
+             if [ $? -eq 0 ]; then
+                arrOfDirs+=($dirName)
+             fi
+             cd - 
+           else
+             echo "Skipping the set path = $dirName, as it is already sourced" 
+           fi
+         done
+      done 
+else 
+    #If path is provided then builedenv file is fetched from the provided path 
+    pathForBuild=$1
+    if [ ! -d "${HOME}/zopen/boot/" ] && [ ! -d "${HOME}/zopen/prod/" ]; then
+       echo "boot & prod directories does not exist.  Existing"
+    fi
+
+    if [ -f ${pathForBuild}/buildenv ]
+    then
+       ZOPEN_GIT_DEPS=$(. ${pathForBuild}/buildenv; echo $ZOPEN_GIT_DEPS); 
+       ZOPEN_TARBALL_DEPS=$(. ${pathForBuild}/buildenv; echo $ZOPEN_TARBALL_DEPS); 
+       ZOPEN_TYPE=$(. ${pathForBuild}/buildenv; echo $ZOPEN_TYPE); 
+       
+       if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
+          deps="${ZOPEN_TARBALL_DEPS}"
+       else
+          deps="${ZOPEN_GIT_DEPS}"
+       fi
+
+       #loop through the dependencies based on if it is tarball or git
+       #and source the env files 
+       for dep in $deps; do
+           fail=true
+           for path in $(echo ${depsPath} | sed "s/|/ /g") ; do
+               if [ -r "$path/${dep}/.env" ]; then
+                  fail=false
+                  depdir="$path/${dep}"
+                  echo "Setting up ${depdir} dependency environment"
+                  cd "${depdir}" && . ./.env 
+
+                  #donot check in next dep path as the env for this dependency port is foudn and sourced.
+                  break;
+               fi
+           done
+           if $fail; then
+              echo "Unable to find .env for dependency ${dep}"
+           fi
+       done 
+    fi
 fi
-
-for deps in $(find "${HOME}/zopen/boot/" -name ".env")
-do
-  echo "Found ${deps}"
-  depdir=$(dirname "${deps}")
-  cd $depdir
-  . ./.env
-  cd -
-done
