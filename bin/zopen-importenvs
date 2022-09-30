@@ -1,9 +1,18 @@
-#!/bin/bash
-# Used for development to source all the boot .envs
-#. ./zopen-importenvs <path to buildenv to fetch dependency>
+#!/bin/env bash
+# bash is required because BASH_SOURCE is used here to locate the sourced script 
+# Used for development to source all the boot/prod .envs
 
 
-#below code fetches the ~/code/utils/bin path where the common.inc file is under its lib dir
+(return 0 2>/dev/null) && sourced=1 
+# What exit code did that give?
+if [[ $sourced -ne 1 ]]
+then
+    echo "This script is not sourced."
+    echo "USAGE: . ./zopen-importenvs <path to buildenv to fetch dependency>"
+    exit 6     
+fi
+
+# below code fetches the ~/code/utils/bin path where the common.inc file is under its lib dir
 export bindir="$( cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P )"
 . "${bindir}/lib/common.inc"
 
@@ -11,11 +20,11 @@ export bindir="$( cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P 
 depsPath="$HOME/zopen/prod|$HOME/zopen/boot"
 
 # if the number of arguments passed to script is 0,
-# then , the dirs are fetched from zopen/prod and zopen/boot directory
+# then , the ports are fetched from $HOME/zopen/prod and $HOME/zopen/boot directory
 # then its env files are fetched and sourced, if they are not already sourced.
 if [ $# -eq 0 ]
 then
-     echo "buildenv path is not provided"
+     echo "Sourcing projects from $HOME/zopen/prod and $HOME/zopen/boot"
      
      # arrOfDirs, is an array which holds the names of dirs whose env is set
      declare -a arrOfDirs
@@ -49,19 +58,19 @@ else
     #If path is provided then builedenv file is fetched from the provided path 
     pathForBuild=$1
     if [ ! -d "${HOME}/zopen/boot/" ] && [ ! -d "${HOME}/zopen/prod/" ]; then
-       echo "boot & prod directories does not exist.  Existing"
+       echo "boot & prod directories do not exist.  Exiting"
     fi
 
     if [ -f ${pathForBuild}/buildenv ]
     then
-       ZOPEN_GIT_DEPS=$(. ${pathForBuild}/buildenv; echo $ZOPEN_GIT_DEPS); 
-       ZOPEN_TARBALL_DEPS=$(. ${pathForBuild}/buildenv; echo $ZOPEN_TARBALL_DEPS); 
-       ZOPEN_TYPE=$(. ${pathForBuild}/buildenv; echo $ZOPEN_TYPE); 
+       GIT_DEPS=$(. ${pathForBuild}/buildenv; echo $ZOPEN_GIT_DEPS); 
+       TARBALL_DEPS=$(. ${pathForBuild}/buildenv; echo $ZOPEN_TARBALL_DEPS); 
+       TYPE=$(. ${pathForBuild}/buildenv; echo $ZOPEN_TYPE); 
        
-       if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
-          deps="${ZOPEN_TARBALL_DEPS}"
+       if [ "${TYPE}x" = "TARBALLx" ]; then
+          deps="${TARBALL_DEPS}"
        else
-          deps="${ZOPEN_GIT_DEPS}"
+          deps="${GIT_DEPS}"
        fi
 
        #loop through the dependencies based on if it is tarball or git
