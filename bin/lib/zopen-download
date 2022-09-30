@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # Downloads and extracts the latest ZOSOpenTools releases from GitHub
 
 export utildir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
@@ -43,11 +43,38 @@ while [[ $# -gt 0 ]]; do
       exit 4
       ;;
     *)
-      printError "Unknown option ${arg} specified"
+      printError "Unknown option ${1} specified"
       ;;
   esac
   shift;
 done
+
+if [ ! -z "${ZOPEN_GIT_OAUTH_TOKEN}" ]; then
+  OAUTH_TOKEN_OPTION='-H'
+  OAUTH_TOKEN="Authorization: Bearer ${ZOPEN_GIT_OAUTH_TOKEN}" 
+fi
+
+getContentsFromGithub()
+{
+  url=$1
+  if ! repo_results=$(curl $OAUTH_TOKEN_OPTION "$OAUTH_TOKEN" -k -s "$url"); then
+    printError "curl command could not download $url"
+  fi
+  
+  if echo $repo_results | grep -q "API rate limit exceeded for"; then
+    printError "API rate limit exceeded for github.\n1. Generate a token (https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token).\n2. Set ZOPEN_GIT_OAUTH_TOKEN and rerun"
+  fi
+  echo "$repo_results";
+}
+
+if ! repo_results="$(getContentsFromGithub "https://api.github.com/users/ZOSOpenTools/repos?per_page=100")"; then
+  exit 4;
+fi
+repo_results=$(echo "$repo_results" | grep "\"full_name\":" | cut -d '"' -f 4)
+
+if [ ! -z "$list" ]; then
+  printf "${NC}${UNDERLINE}${1}%-25s %-25s %-25s\n${NC}" "Repo" "Build Status" "Quality Report"
+fi
 
 if [ ! -d "${download}" ]; then
   mkdir -p "${download}"
@@ -55,20 +82,6 @@ fi
 
 if [ ! -z "${download}" -a -d "${download}" ]; then
   cd "${download}"
-fi
-
-if [ ! -z "${ZOPEN_GIT_OAUTH_TOKEN}" ]; then
-  OAUTH_TOKEN_OPTION='-H'
-  OAUTH_TOKEN="Authorization: Bearer ${ZOPEN_GIT_OAUTH_TOKEN}" 
-fi
-
-if ! repo_results=$(curl $OAUTH_TOKEN_OPTION "$OAUTH_TOKEN" -k -s "https://api.github.com/users/ZOSOpenTools/repos?per_page=100"); then
-  printError "curl command could not download the z/OS Open Tools repository list"
-fi
-repo_results=$(echo "$repo_results" | grep "\"full_name\":" | cut -d '"' -f 4)
-
-if [ ! -z "$list" ]; then
-  printf "${NC}${UNDERLINE}${1}%-25s %-25s\n${NC}" "Repo" "Build Status"
 fi
 
 foundPort=false
@@ -79,19 +92,26 @@ for repo in $(echo ${repo_results}); do
     if [ "${repo}" = "${name}" ]; then
       continue;
     fi
-    testStatus=$(curl $OAUTH_TOKEN_OPTION "$OAUTH_TOKEN" -k -s https://api.github.com/repos/ZOSOpenTools/${repo}/releases/latest | grep "\"body\":.*Test Status:" | sed -e "s#.*Test Status:<\/b>##" -e "s#[ ]*(.*##" | tr -d ' ')
-    if [ -z "$testStatus" ]; then
-      testStatus="Untested";
-    fi
     if [ ! -z "$list" ]; then
-      printf '%-25s %-25s\n' "$repo" "$testStatus"
+      if ! contents="$(getContentsFromGithub "https://api.github.com/repos/ZOSOpenTools/${repo}/releases/latest")"; then
+        exit 4;
+      fi
+      statusline="$(echo "$contents" | grep "\"body\":.*Test Status:.*(.*)<br />")"
+      buildQuality="$(echo "$statusline" | sed -e "s#.*Test Status:<\/b>##" -e "s#[ ]*(.*##" | tr -d ' ')"
+      testStatus="$(echo "$statusline" | sed -e "s#.*Test Status:<\/b>[^(]*(##" -e "s#).*##")"
+      if [ -z "$buildQuality" ]; then
+        buildQuality="Untested"
+        testStatus="N/A";
+      fi
+      printf '%-25s %-25s %-25s\n' "$repo" "$buildQuality" "$testStatus"
       continue;
     fi
     foundPort=true
     printHeader "Downloading latest release from $repo"
-    if ! latest_url=$(curl $OAUTH_TOKEN_OPTION "$OAUTH_TOKEN" -k -s https://api.github.com/repos/ZOSOpenTools/${repo}/releases/latest | grep browser_download_url | cut -d '"' -f 4); then
-      printError "Could not find the latest url for $repo"
+    if ! latest_url="$(getContentsFromGithub "https://api.github.com/repos/ZOSOpenTools/${repo}/releases/latest")"; then
+      exit 4;
     fi
+    latest_url="$(echo "$latest_url" | grep browser_download_url | cut -d '"' -f 4)"
 
     if [ -z $latest_url ]; then
       printWarning "No releases published for $repo"

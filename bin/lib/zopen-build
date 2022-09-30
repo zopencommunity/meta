@@ -747,7 +747,6 @@ check()
       fi
       if echo "$testStatus" | grep -q "expectedFailures:"; then
         expected=$(echo "$testStatus" | grep "expectedFailures:" | sed -e "s/.*expectedFailures://" | tr -d ' ')
-        echo "EXPECTED: $expected"
       else
         printError "${ZOPEN_CHECK_RESULTS} needs to emit an expectedFailures:<number> line"
       fi
@@ -849,16 +848,17 @@ install()
     createEnv
     replaceHardcodedPaths
 
+    if command -V "zopen_post_install" >/dev/null 2>&1; then
+      printVerbose "Running zopen_post_install"
+      zopen_post_install ${ZOPEN_INSTALL_DIR}
+    fi
+
     # Store test.status into installed dir and build dir for cicd
     touch "${ZOPEN_INSTALL_DIR}/test.status"
     chtag -tc 819 "${ZOPEN_INSTALL_DIR}/test.status"
     echo "$ZOPEN_STATUS" > "${ZOPEN_INSTALL_DIR}/test.status"
     cp "${ZOPEN_INSTALL_DIR}/test.status" "test.status"
 
-    if command -V "zopen_post_install" >/dev/null 2>&1; then
-      printVerbose "Running zopen_post_install"
-      zopen_post_install ${ZOPEN_INSTALL_DIR}
-    fi
     if ! runAndLog "${ZOPEN_PAX_CMD}"; then
       printError "Could not generate pax \"${paxFileName}\""
     fi
@@ -994,7 +994,7 @@ LABEL specification=1.0.0"
   fi
   printVerbose "Generating OCI Image"
   "${ZOPEN_IMAGE_DOCKER_NAME}" build -t "${name}:${version}" .
-  "${ZOPEN_IMAGE_DOCKER_NAME}"push "${name}:${version}" -i $ZOPEN_IMAGE_REGISTRY -u $ZOPEN_IMAGE_REGISTRY_ID -p @$ZOPEN_IMAGE_REGISTRY_KEY_FILE
+  "${ZOPEN_IMAGE_DOCKER_NAME}" push "${name}:${version}" -i $ZOPEN_IMAGE_REGISTRY -u $ZOPEN_IMAGE_REGISTRY_ID -p @$ZOPEN_IMAGE_REGISTRY_KEY_FILE
   cd -
 }
 

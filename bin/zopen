@@ -17,6 +17,8 @@ printSyntax()
   echo "Example usage:" >&2
   echo " # Build a port" >&2
   echo " zopen build -v # Build port" >&2
+  echo " # List available ports to download" >&2
+  echo " zopen download --list" >&2
   echo " # Download binaries from Github" >&2
   echo " zopen download" >&2
   echo " # Generate a zopen template project" >&2

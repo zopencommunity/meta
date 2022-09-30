@@ -8,6 +8,9 @@ For an overview	of ZOSOpenTools, see [ZOSOpenTools docs](https://zosopentools.gi
 
 To download and install the latest software packages, you can use `zopen download`. By default it will download all of the binaries hosted on ZOSOpenTools.
 
+It is recommended that you generate a [github personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token).
+Then set `export ZOPEN_GIT_OAUTH_TOKEN=<yourapitoken>`
+
 To list the available packages, specify the `--list` option as follows:
 ```
 zopen download --list

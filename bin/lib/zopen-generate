@@ -5,6 +5,16 @@ export utildir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
 
 . "${utildir}/common.inc"
 
+buildLicenseLookup()
+{
+  licensesCSV="${utildir}/../data/licenses.csv"
+  if [ ! -r "$licensesCSV" ]; then
+    return 4;
+  fi
+
+  validLicenseNames="$(cat $licensesCSV | tail +1 | cut -f1 -d',' | xargs)"
+}
+
 printSyntax() 
 {
   args=$*
@@ -12,11 +22,28 @@ printSyntax()
   echo "Syntax: zopen-generate" >&2
 }
 
+buildLicenseLookup
+
 printHeader "Generate a zopen project"
 echo "What is the project name?"
 name=$(getInput)
 echo "Provided a description of the project:"
 description=$(getInput)
+
+valid=false
+while ! $valid; do
+  echo "Provide project's license: (select from $validLicenseNames)"
+  license_name="$(getInput | tr -d ' ')"
+  if ! echo " $validLicenseNames" | grep -q " $license_name"; then
+    printWarning "License is not valid, please enter a license from one of these names: $validLicenseNames)"
+  else
+    licenseName="$(cat $licensesCSV | grep "\"$license_name\"" | cut -f2 -d',')"
+    licenseUrl="$(cat $licensesCSV | grep "\"$license_name\"" | cut -f4 -d',')"
+    valid=true
+  fi
+done
+echo $licenseUrl
+
 echo "Enter ${name}'s Git location: (if none, press enter)"
 gitpath=$(getInput)
 echo "Enter ${name}'s build dependencies for the Git source: (example: curl make)"
@@ -43,6 +70,9 @@ fi
 printHeader "Generating $project_path zopen project"
 mkdir -p ${name}port/patches
 
+# Download external LICENSE
+echo "${licenseName}\nView license contents at ${licenseUrl}" > "${name}port/patches/LICENSE"
+
 buildenv="${name}port/buildenv"
 
 if [ ! -z "$gitpath" ]; then
@@ -66,6 +96,7 @@ else
 fi
 
 cat <<EOT >> $buildenv
+
 zopen_check_results()
 {
   dir="\$1"
@@ -76,7 +107,6 @@ zopen_check_results()
   echo "actualFailures:0"
   echo "totalTests:1"
   echo "expectedFailures:0"
-  
 }
 
 zopen_append_to_env()
@@ -101,6 +131,7 @@ node('linux')
   }
 }
 EOT
+cp "${utildir}/../../LICENSE" "${name}port/LICENSE"
 printHeader "${name} project is ready!"
 printInfo "Create patches under the ${name}port/patches directory"
 printInfo "Run zopen build to build ${name}port"
