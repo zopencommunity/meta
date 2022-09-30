@@ -289,10 +289,10 @@ checkEnv()
   # since the flags are not compatible across compilers, and only the xlclang and xlclang++ compilers are used by default
   #
 
-  if [ "${CC}x" = "x" ] && [ "${CFLAGS}x" != "x" ]; then
+  if { [ "${CC}x" = "x" ] && [ "${CFLAGS}x" != "x" ]; } || { [ "${CC}x" != "x" ] && [ "${CFLAGS}x" = "x" ]; } then
     printError "Either specify both CC and CFLAGS or neither, but not just one"
   fi
-  if [ "${CXX}x" = "x" ] && [ "${CXXFLAGS}x" != "x" ]; then
+  if { [ "${CXX}x" = "x" ] && [ "${CXXFLAGS}x" != "x" ]; } || { [ "${CXX}x" != "x" ] && [ "${CXXFLAGS}x" = "x" ]; } then
     printError "Either specify both CXX and CXXFLAGS or neither, but not just one"
   fi
 }
