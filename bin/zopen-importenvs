@@ -1,5 +1,4 @@
-#!/bin/env bash
-# bash is required because BASH_SOURCE is used here to locate the sourced script 
+#!/bin/sh
 # Used for development to source all the boot/prod .envs
 
 
@@ -8,13 +7,9 @@
 if [[ $sourced -ne 1 ]]
 then
     echo "This script is not sourced."
-    echo "USAGE: . ./zopen-importenvs <path to buildenv to fetch dependency>"
-    exit 6     
+    echo "USAGE: . ./zopen-importenvs [path to buildenv to fetch dependency]"
+    exit 1     
 fi
-
-# below code fetches the ~/code/utils/bin path where the common.inc file is under its lib dir
-export bindir="$( cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P )"
-. "${bindir}/lib/common.inc"
 
 #depsPath has the details of the location of ports whose env files are consumed for sourcing 
 depsPath="$HOME/zopen/prod|$HOME/zopen/boot"
@@ -58,19 +53,24 @@ else
     #If path is provided then builedenv file is fetched from the provided path 
     pathForBuild=$1
     if [ ! -d "${HOME}/zopen/boot/" ] && [ ! -d "${HOME}/zopen/prod/" ]; then
-       echo "boot & prod directories do not exist.  Exiting"
+       echo "${HOME}/zopen/boot & ${HOME}/zopen/prod directories do not exist.  Exiting"
+       exit 1 
     fi
 
     if [ -f ${pathForBuild}/buildenv ]
     then
-       GIT_DEPS=$(. ${pathForBuild}/buildenv; echo $ZOPEN_GIT_DEPS); 
-       TARBALL_DEPS=$(. ${pathForBuild}/buildenv; echo $ZOPEN_TARBALL_DEPS); 
-       TYPE=$(. ${pathForBuild}/buildenv; echo $ZOPEN_TYPE); 
+       unset ZOPEN_GIT_DEPS
+       unset ZOPEN_TARBALL_DEPS
+       unset ZOPEN_TYPE
+ 
+       ZOPEN_GIT_DEPS=$(. ${pathForBuild}/buildenv; echo $ZOPEN_GIT_DEPS); 
+       ZOPEN_TARBALL_DEPS=$(. ${pathForBuild}/buildenv; echo $ZOPEN_TARBALL_DEPS); 
+       ZOPEN_TYPE=$(. ${pathForBuild}/buildenv; echo $ZOPEN_TYPE); 
        
-       if [ "${TYPE}x" = "TARBALLx" ]; then
-          deps="${TARBALL_DEPS}"
+       if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
+          deps="${ZOPEN_TARBALL_DEPS}"
        else
-          deps="${GIT_DEPS}"
+          deps="${ZOPEN_GIT_DEPS}"
        fi
 
        #loop through the dependencies based on if it is tarball or git
