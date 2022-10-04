@@ -38,6 +38,11 @@ defineEnvironment()
   export _UNIX03=YES
 }
 
+printColors()
+{
+  echo "$1"
+}
+
 zopenInitialize()
 {
   defineEnvironment
@@ -47,13 +52,13 @@ zopenInitialize()
 printVerbose()
 {
   if ${verbose}; then
-    print "${NC}${GREEN}${BOLD}VERBOSE${NC}: '${1}'" >&2
+    printColors "${NC}${GREEN}${BOLD}VERBOSE${NC}: '${1}'" >&2
   fi
 }
 
 printHeader()
 {
-  print "${NC}${UNDERLINE}${1}...${NC}" >&2
+  printColors "${NC}${UNDERLINE}${1}...${NC}" >&2
 }
 
 runAndLog()
@@ -97,7 +102,7 @@ runInBackgroundWithTimeoutAndLog()
 
 printSoftError()
 {
-  print "${NC}${RED}${BOLD}***ERROR: ${NC}${RED}${1}${NC}" >&2
+  printColors "${NC}${RED}${BOLD}***ERROR: ${NC}${RED}${1}${NC}" >&2
 }
 
 printError()
@@ -108,12 +113,12 @@ printError()
 
 printWarning()
 {
-  print "${NC}${YELLOW}${BOLD}***WARNING: ${NC}${YELLOW}${1}${NC}" >&2
+  printColors "${NC}${YELLOW}${BOLD}***WARNING: ${NC}${YELLOW}${1}${NC}" >&2
 }
 
 printInfo()
 {
-  print "$1" >&2
+  printColors "$1" >&2
 }
 
 getInput()

@@ -740,6 +740,7 @@ check()
     runInBackgroundWithTimeoutAndLog "${ZOPEN_CHECK_CMD} > $TMP_FIFO_PIPE" "${ZOPEN_CHECK_TIMEOUT}"
     if command -V "${ZOPEN_CHECK_RESULTS}" >/dev/null 2>&1; then
       testStatus="$(${ZOPEN_CHECK_RESULTS} "${ZOPEN_ROOT}/${dir}" "${LOG_PFX}")"
+      printVerbose "Test status: $testStatus"
       if echo "$testStatus" | grep -q "actualFailures:"; then
         failures=$(echo "$testStatus" | grep "actualFailures:" | sed -e "s/.*actualFailures://" | tr -d ' ')
       else
@@ -756,6 +757,9 @@ check()
         printError "${ZOPEN_CHECK_RESULTS} needs to emit an totalTests:<number> line"
       fi
       success="$((totalTests-failures))"
+      if [ $totalTests -eq 0 ]; then
+        printError "Total tests is 0"
+      fi
       percent=$(awk "BEGIN { pc=100*${success}/${totalTests}; i=int(pc); print (pc-i<0.5)?i:i+1 }")
       summary="$success tests pass out of $totalTests tests - ${percent}% success rate"
       printVerbose "Test results: $summary"
