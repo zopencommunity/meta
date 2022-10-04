@@ -47,13 +47,13 @@ zopenInitialize()
 printVerbose()
 {
   if ${verbose}; then
-    print "${NC}${GREEN}${BOLD}VERBOSE${NC}: '${1}'"
+    print "${NC}${GREEN}${BOLD}VERBOSE${NC}: '${1}'" >&2
   fi
 }
 
 printHeader()
 {
-  print "${NC}${UNDERLINE}${1}...${NC}"
+  print "${NC}${UNDERLINE}${1}...${NC}" >&2
 }
 
 runAndLog()
@@ -97,7 +97,7 @@ runInBackgroundWithTimeoutAndLog()
 
 printSoftError()
 {
-  echo "${NC}${RED}${BOLD}***ERROR: ${NC}${RED}${1}${NC}"
+  print "${NC}${RED}${BOLD}***ERROR: ${NC}${RED}${1}${NC}" >&2
 }
 
 printError()
@@ -108,12 +108,12 @@ printError()
 
 printWarning()
 {
-  echo "${NC}${YELLOW}${BOLD}***WARNING: ${NC}${YELLOW}${1}${NC}"
+  print "${NC}${YELLOW}${BOLD}***WARNING: ${NC}${YELLOW}${1}${NC}" >&2
 }
 
 printInfo()
 {
-  print "$1"
+  print "$1" >&2
 }
 
 getInput()
