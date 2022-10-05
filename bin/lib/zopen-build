@@ -741,27 +741,28 @@ check()
     if command -V "${ZOPEN_CHECK_RESULTS}" >/dev/null 2>&1; then
       testStatus="$(${ZOPEN_CHECK_RESULTS} "${ZOPEN_ROOT}/${dir}" "${LOG_PFX}")"
       printVerbose "Test status: $testStatus"
-      if echo "$testStatus" | grep -q "actualFailures:"; then
+      if echo "$testStatus" | grep -q -E "actualFailures:[0-9]+"; then
         failures=$(echo "$testStatus" | grep "actualFailures:" | sed -e "s/.*actualFailures://" | tr -d ' ')
       else
         printError "${ZOPEN_CHECK_RESULTS} needs to emit an actualFailures:<number> line"
       fi
-      if echo "$testStatus" | grep -q "expectedFailures:"; then
+      if echo "$testStatus" | grep -q -E "expectedFailures:[0-9]+"; then
         expected=$(echo "$testStatus" | grep "expectedFailures:" | sed -e "s/.*expectedFailures://" | tr -d ' ')
       else
         printError "${ZOPEN_CHECK_RESULTS} needs to emit an expectedFailures:<number> line"
       fi
-      if echo "$testStatus" | grep -q "totalTests:"; then
+      if echo "$testStatus" | grep -q -E "totalTests:[0-9]+"; then
         totalTests=$(echo "$testStatus" | grep "totalTests:" | sed -e "s/.*totalTests://" | tr -d ' ')
       else
         printError "${ZOPEN_CHECK_RESULTS} needs to emit an totalTests:<number> line"
       fi
-      success="$((totalTests-failures))"
       if [ $totalTests -eq 0 ]; then
         printError "Total tests is 0"
       fi
-      percent=$(awk "BEGIN { pc=100*${success}/${totalTests}; i=int(pc); print (pc-i<0.5)?i:i+1 }")
-      summary="$success tests pass out of $totalTests tests - ${percent}% success rate"
+      success="$((totalTests-failures))"
+      percent="$(echo "$success" "$totalTests" | awk '{printf "%.0f", $1 * 100 / $2}')"
+      percenthundreth="$(echo "$success" "$totalTests" | awk '{printf "%.2f", $1 * 100 / $2}')"
+      summary="$success tests pass out of $totalTests tests - ${percenthundreth}% success rate"
       printVerbose "Test results: $summary"
       if ! [ $percent -eq $percent ]; then # not a number
         results=$ZOPEN_TEST_STATUS_ERROR
