@@ -47,6 +47,7 @@ tools from Rocket. These Rocket tools can be downloaded [here](https://my.rocket
 
 Many tools require a C or C++ compiler (or both). xlclang 2.4.1 or higher should be used for C/C++ compilation
 and can be downloaded [here](https://www.ibm.com/servers/resourcelink/svc00100.nsf/pages/xlCC++V241ForZOsV24).
+Please note that this compiler does require that you have purchased the XL C/C++ compiler (an optionally priced feature) on z/OS V2.4 (or later).
 
 In order for zopen to be able to locate dependent tools, they need to be in well-defined locations.
 Tools will be searched for in the following locations, in order:
