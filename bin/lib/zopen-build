@@ -434,7 +434,7 @@ tagTree()
   dir="$1"
   absdir=$(cd ${dir} && echo "${PWD}")
   (cd "${absdir}" && find . -name "*.pdf" -o -name "*.png" -o -name "*.bat" ! -type d ! -type l | xargs -I {} chtag -b {})
-  (cd "${absdir}" && find . ! -type d ! -type l | xargs -I {} chtag -qp {} | awk '{ if ($1 == "-") { print $4; }}' | xargs -I {} chtag -tcISO8859-1 {})
+  (cd "${absdir}" && find . ! -type d ! -type l | xargs -I {} chtag -qp {} | awk '{ if ($1 == "-") { sub(/^[ ]*([^ ]+ +){3}/, ""); print $0; }}' | xargs -I {} chtag -tcISO8859-1 {})
 }
 
 gitClone()
