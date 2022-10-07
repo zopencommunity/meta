@@ -29,11 +29,13 @@ CPPFLAGS             C/C++ pre-processor flags (defaults to '${ZOPEN_CPPFLAGSD}'
 CFLAGS               C compiler flags (defaults to '${ZOPEN_CFLAGSD}')
 CXXFLAGS             C++ compiler flags (defaults to '${ZOPEN_CXXFLAGSD}')
 LDFLAGS              C/C++ linker flags (defaults to '${ZOPEN_LDFLAGSD}')
+LIBS                 C/C++ libraries (defaults to '')
 ZOPEN_SRC_DIR        specify a relative source directory to cd to for bootstrap, configure, build, check, install (defaults to '.')
 ZOPEN_EXTRA_CPPFLAGS C/C++ pre-processor flags to append to CPPFLAGS (defaults to '')
 ZOPEN_EXTRA_CFLAGS   C compiler flags to append to CFLAGS (defaults to '')
 ZOPEN_EXTRA_CXXFLAGS C++ compiler flags to append to CXXFLAGS (defaults to '')
 ZOPEN_EXTRA_LDFLAGS  C/C++ linker flags to append to LDFLAGS (defaults to '')
+ZOPEN_EXTRA_LIBS     C/C++ libraries to append to LIBS (defaults to '')
 ZOPEN_NUM_JOBS       Number of jobs that can be run in parallel (defaults to 1/2 the CPUs on the system)
 ZOPEN_BOOTSTRAP      Bootstrap program to run. If skip is specified, no bootstrap step is performed (defaults to '${ZOPEN_BOOTSTRAPD}')
 ZOPEN_BOOTSTRAP_OPTS Options to pass to bootstrap program (defaults to '${ZOPEN_BOOTSTRAP_OPTSD}')
@@ -290,10 +292,10 @@ checkEnv()
   #
 
   if { [ "${CC}x" = "x" ] && [ "${CFLAGS}x" != "x" ]; } || { [ "${CC}x" != "x" ] && [ "${CFLAGS}x" = "x" ]; } then
-    printError "Either specify both CC and CFLAGS or neither, but not just one"
+    printWarning "Either specify both CC and CFLAGS or neither, but not just one"
   fi
   if { [ "${CXX}x" = "x" ] && [ "${CXXFLAGS}x" != "x" ]; } || { [ "${CXX}x" != "x" ] && [ "${CXXFLAGS}x" = "x" ]; } then
-    printError "Either specify both CXX and CXXFLAGS or neither, but not just one"
+    printWarning "Either specify both CXX and CXXFLAGS or neither, but not just one"
   fi
 }
 
@@ -323,16 +325,12 @@ setEnv()
   if [ "${CPPFLAGS}x" = "x" ]; then
     export CPPFLAGS="${ZOPEN_CPPFLAGSD}" 
   fi
-  export CPPFLAGS="${CPPFLAGS} ${ZOPEN_EXTRA_CPPFLAGS}"
-
   if [ "${CC}x" = "x" ]; then
     export CC="${ZOPEN_CCD}"
   fi
   if [ "${CFLAGS}x" = "x" ]; then
     export CFLAGS="${ZOPEN_CFLAGSD}"
   fi
-  export CFLAGS="${CFLAGS} ${ZOPEN_EXTRA_CFLAGS}"
-
   if [ "${CXX}x" = "x" ]; then
     export CXX="${ZOPEN_CXXD}"
   fi
@@ -340,7 +338,10 @@ setEnv()
   if [ "${CXXFLAGS}x" = "x" ]; then
     export CXXFLAGS="${ZOPEN_CXXFLAGSD}"
   fi
-  export CXXFLAGS="${CXXFLAGS} ${ZOPEN_EXTRA_CXXFLAGS}"
+
+  if [ "${LDFLAGS}x" = "x" ]; then
+    export LDFLAGS="${ZOPEN_LDFLAGSD}"
+  fi
 
   if [ "${CC}x" = "xlclangx" ]; then
     # Confirm xlclang is at least 1.0.0 (aka __COMPILER_VER__=42040001)
@@ -364,18 +365,21 @@ setEnv()
     fi
   fi
 
-  # For compatibility with the default 'make' /etc/startup.mk on z/OS
-  export CCC="${CXX}"
-  export CCCFLAGS="${CXXFLAGS}"
-
-  if [ "${LDFLAGS}x" = "x" ]; then
-    export LDFLAGS="${ZOPEN_LDFLAGSD} ${ZOPEN_EXTRA_LDFLAGS}"
-  fi
-
   export SSL_CERT_FILE="${ZOPEN_CA}"
   export GIT_SSL_CAINFO="${ZOPEN_CA}"
 
   setDepsEnv
+
+  # Dependencies such as libraries can override these flags 
+  export CPPFLAGS="${CPPFLAGS} ${ZOPEN_EXTRA_CPPFLAGS}"
+  export CFLAGS="${CFLAGS} ${ZOPEN_EXTRA_CFLAGS}"
+  export CXXFLAGS="${CXXFLAGS} ${ZOPEN_EXTRA_CXXFLAGS}"
+  export LDFLAGS="${LDFLAGS} ${ZOPEN_EXTRA_LDFLAGS}"
+  export LIBS="${ZOPEN_EXTRA_LIBS}"
+
+  # For compatibility with the default 'make' /etc/startup.mk on z/OS
+  export CCC="${CXX}"
+  export CCCFLAGS="${CXXFLAGS}"
 
   if [ "${ZOPEN_NUM_JOBS}x" = "x" ]; then
     ZOPEN_NUM_JOBS=$("${utildir}/numcpus.rexx")
@@ -900,7 +904,7 @@ resolveCommands()
 
   if [ "${ZOPEN_CONFIGURE}x" != "skipx" ] && [ ! -z "$(command -v ${ZOPEN_CONFIGURE})" ]; then
     if [ "${ZOPEN_CONFIGURE_MINIMAL}x" = "x" ]; then
-      export ZOPEN_CONFIGURE_CMD="\"${ZOPEN_CONFIGURE}\" ${ZOPEN_CONFIGURE_OPTS} CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\""
+      export ZOPEN_CONFIGURE_CMD="\"${ZOPEN_CONFIGURE}\" ${ZOPEN_CONFIGURE_OPTS} CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\" \"LIBS=${LIBS}\""
       export ZOPEN_CONFIGURE_MINIMAL="no"
     else
       export ZOPEN_CONFIGURE_CMD="\"${ZOPEN_CONFIGURE}\" ${ZOPEN_CONFIGURE_OPTS}"
@@ -917,7 +921,7 @@ resolveCommands()
     unset ZOPEN_MAKE_CMD
   fi
 
-  if [ "${ZOPEN_CHECK}x" != "skipx" ] && [ ! -z "$(command -V ${ZOPEN_CHECK})" ] && ! ${skipcheck}; then
+  if [ "${ZOPEN_CHECK}x" != "skipx" ] && ! ${skipcheck}; then
     export ZOPEN_CHECK_CMD="\"${ZOPEN_CHECK}\" ${ZOPEN_CHECK_OPTS} CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\""
     export ZOPEN_CHECK_RESULTS_CMD="\"${ZOPEN_CHECK_RESULTS}\" \"${ZOPEN_ROOT}/${dir}\" \"${LOG_PFX}\""
   else
