@@ -90,3 +90,14 @@ Run `zopen build` from the root directory of the git repo you would like to buil
 cd ${HOME}/zot/dev/m4
 ${HOME}/zot/dev/utils/bin/zopen build
 ```
+
+## zopen-importenvs
+   This script is used to source the .env from ~/zopen/prod or ~/zopen/boot direectoy as explained below:
+
+   Usage of script is: ". ./zopen-importenvs [path to buildenv to fetch dependency]"
+   The path to buildenv is optional.
+
+   If path is provided: the dependencies from the buildenv file are read and the env is sourced from prod/boot directory.
+   Else if path is not provided then env from each of the directory in prod & boot directories are sourced.
+```
+
