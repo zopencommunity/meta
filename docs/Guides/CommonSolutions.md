@@ -112,3 +112,30 @@ trap "st=143; $do_exit" TERM
 
 On z/OS, you can find these values in `/usr/include/le/signals.h`
 
+## CEE3728S The use of a function, which is not supported by this release of Language Environment was detected.
+
+LE provides stubs for some functions that are not yet implemented. This means that they exist in the DLL and side deck, but if you call them they just put out the CEE3728S error message. This causes a problem for builds which detect the available functions on the target OS and conditionally include source based on the detected fuctions. Since these stub fuctions are detected, the built component will try to use them.
+
+The issue can be addressed with a workaround which removes the stub functions from the side deck so that the builds fail to detect them. Changing the side deck in the system library is not advisable, so the following steps allow a copy to be used.
+
+- Clone the https://github.com/MikeFultonDev/sbin repository to your z/OS system.
+- Run the rmceertfm script to produce an edited side deck in /tmp.
+- Take your own copy of the CEE.SCEELIB dataset with all members.
+- Replace the CELQS003 member with the modified version created by rmceertfm.
+```
+cp /tmp/celqs003.x "//'FRED.ZOPEN.ZOS204.SCEELIB(CELQS003)'"
+```
+- Take your own copy of the xlclang configuration file.
+```
+cp /usr/lpp/cbclib/xlclang/etc/xlclang.cfg /u/fred/xlclang.cfg.zos204.noceertfm
+```
+- Edit the copy of the config file, updating exportlist_c_64 and exportlist_cpp_64 to point to the modified SCEELIB dataset.
+```
+              exportlist_c_64   = fred.zopen.zos204.sceelib(celqs003)
+              exportlist_cpp_64 = fred.zopen.zos204.sceelib(celqs003,celqscpp,cxxrt64)
+```
+- Tell the compiler to use the modified config file.
+```
+export CLC_CONFIG=/u/fred/xlclang.cfg.zos204.noceertfm
+```
+
