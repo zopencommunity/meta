@@ -18,13 +18,16 @@ No pull request can be merged without being reviewed and approved.
 
 ## Validate your changes
 
-Verify that the project is working by running `zopen build`
+Verify that the project is working by running `zopen build`.
 
 ## Coding Guidelines
 
 When contributing your changes, please follow the following coding guidelines:
-* patches: patches should adhere to the coding guidelines from the original project repository
+* patches: patches should adhere to the coding guidelines from the original project repository. Make sure to add the original project's LICENSE file within the patches
+directory.
 * zopen framework files: (e.g. buildenv) - It is recommended that you follow the [Google Shell Style Guide](https://google.github.io/styleguide/shellguide.html)
+
+If you are generating a new project, we recommend that you use `zopen generate` to create the correct zopen file and directory structure.
 
 ### Commit message
 
