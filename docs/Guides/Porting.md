@@ -45,8 +45,12 @@ from another z/OS Open Tools repository).
 Our goal is to eventually have our own version of all the _bootstrap_ tools, but right now, we rely on some
 tools from Rocket. These Rocket tools can be downloaded [here](https://my.rocketsoftware.com/RocketCommunity#/downloads).
 
-Many tools require a C or C++ compiler (or both). xlclang 2.4.1 or higher should be used for C/C++ compilation
-and can be downloaded [here](https://www.ibm.com/servers/resourcelink/svc00100.nsf/pages/xlCC++V241ForZOsV24).
+Many tools require a C or C++ compiler (or both). 
+You can download a web deliverable add-on feature to your XL C/C++ compiler 
+[here](https://www.ibm.com/servers/resourcelink/svc00100.nsf/pages/xlCC++V241ForZOsV24).
+Alternatively, you can install and manage _C/C++ for Open Enterprise Languages on z/OS_ using _RedHat OpenShift Container Platform_ and _IBM Z and Cloud Modernization Stack_ 
+[here](https://github.com/IBM/z-and-cloud-modernization-stack-community). 
+Please note that these compilers are comparable, but how you perform installation and maintenance and pricing is different.
 
 In order for zopen to be able to locate dependent tools, they need to be in well-defined locations.
 Tools will be searched for in the following locations, in order:
