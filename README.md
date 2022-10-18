@@ -98,6 +98,6 @@ ${HOME}/zot/dev/utils/bin/zopen build
    The path to buildenv is optional.
 
    If path is provided: the dependencies from the buildenv file are read and the env is sourced from prod/boot directory.
-   Else if path is not provided then env from each of the directory in prod & boot directories are sourced.
+   Else if path is not provided then the .env from each project directory in the ~/zopen/prod & ~/zopen/boot directories are sourced.
 ```
 
