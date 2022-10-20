@@ -251,10 +251,12 @@ checkEnv()
 
   ZOPEN_CHECK_RESULTS="zopen_check_results"
   if ! command -V "${ZOPEN_CHECK_RESULTS}" >/dev/null 2>&1; then
-    export ZOPEN_CHECK_RESULTS="${ZOPEN_ROOT}/portchk.sh"
-    if ! [ -x "${ZOPEN_CHECK_RESULTS}" ]; then
-      printError "zopen_check_results script needs to be provided to check the results."
-    fi
+    if [ "${ZOPEN_CHECK}x" != "skipx" ] && ! ${skipcheck}; then
+       export ZOPEN_CHECK_RESULTS="${ZOPEN_ROOT}/portchk.sh"
+       if ! [ -x "${ZOPEN_CHECK_RESULTS}" ]; then
+          printError "zopen_check_results script needs to be provided to check the results."
+       fi
+    fi 
   fi
 
   ZOPEN_APPEND_TO_ENV="zopen_append_to_env"
