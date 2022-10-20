@@ -25,8 +25,16 @@ printSyntax()
 buildLicenseLookup
 
 printHeader "Generate a zopen project"
-echo "What is the project name?"
-name=$(getInput)
+valid=false
+while ! $valid; do
+  echo "What is the project name?"
+  name=$(getInput)
+  if ! echo "$name" | grep -q -E "port$"; then
+    valid=true
+  else
+    printWarning "$name must not end with port"
+  fi
+done
 echo "Provided a description of the project:"
 description=$(getInput)
 
@@ -70,60 +78,66 @@ fi
 printHeader "Generating $project_path zopen project"
 mkdir -p ${name}port/patches
 
-# Download external LICENSE
+# Create external LICENSE
+touch "${name}port/patches/LICENSE" && chtag -tc 819 "${name}port/patches/LICENSE"
 echo "${licenseName}\nView license contents at ${licenseUrl}" > "${name}port/patches/LICENSE"
 
 buildenv="${name}port/buildenv"
+touch $buildenv && chtag -tc 819 $buildenv
+
+cp "${utildir}/../data/CONTRIBUTING.md" "${name}port/CONTRIBUTING.md"
 
 if [ ! -z "$gitpath" ]; then
-  echo "export ZOPEN_GIT_URL=\"$gitpath\"" >> $buildenv
+  buildenvContents="export ZOPEN_GIT_URL=\"$gitpath\"\n"
 fi
 if [ ! -z "$gitdeps" ]; then
-  echo "export ZOPEN_GIT_DEPS=\"$gitdeps\"" >> $buildenv
+  buildenvContents="${buildenvContents}export ZOPEN_GIT_DEPS=\"$gitdeps\"\n"
 fi
 
 if [ ! -z "$tarpath" ]; then
-  echo "export ZOPEN_TARBALL_URL=\"$tarpath\"" >> $buildenv
+  buildenvContents="${buildenvContents}export ZOPEN_TARBALL_URL=\"$tarpath\"\n"
 fi
 if [ ! -z "$tardeps" ]; then
-  echo "export ZOPEN_TARBALL_DEPS=\"$tardeps\"" >> $buildenv
+  buildenvContents="${buildenvContents}export ZOPEN_TARBALL_DEPS=\"$tardeps\"\n"
 fi
 
 if [ ! -z "$buildtype" ] && [ "$buildtype" = "git" ]; then
-  echo "export ZOPEN_TYPE=\"GIT\"" >> $buildenv
+  buildenvContents="${buildenvContents}export ZOPEN_TYPE=\"GIT\"\n"
 else
-  echo "export ZOPEN_TYPE=\"TARBALL\"" >> $buildenv
+  buildenvContents="${buildenvContents}export ZOPEN_TYPE=\"TARBALL\"\n"
 fi
 
-cat <<EOT >> $buildenv
-
-zopen_check_results()
+buildenvContents="${buildenvContents}\nzopen_check_results()
 {
-  dir="\$1"
-  pfx="\$2"
-  chk="\$1/\$2_check.log"
+  dir=\"\$1\"
+  pfx=\"\$2\"
+  chk=\"\$1/\$2_check.log\"
 
   # Echo the following information to guage build health
-  echo "actualFailures:0"
-  echo "totalTests:1"
-  echo "expectedFailures:0"
+  echo \"actualFailures:0\"
+  echo \"totalTests:1\"
+  echo \"expectedFailures:0\"
 }
 
 zopen_append_to_env()
 {
   # echo envars outside of PATH, MANPATH, LIBPATH
-}
-EOT
+}"
+
+echo "$buildenvContents" > $buildenv
+
 printInfo "$buildenv created"
 
-cat <<EOT >> "${name}port/README.md"
+touch "${name}port/README.md" && chtag -tc 819 "${name}port/README.md"
+cat <<EOT > "${name}port/README.md"
 ${name}
 
 ${description}
 EOT
 printInfo "${name}port/README.md created"
 
-cat <<EOT >> "${name}port/cicd.groovy"
+touch "${name}port/cicd.groovy" && chtag -tc 819 "${name}port/cicd.groovy"
+cat <<EOT > "${name}port/cicd.groovy"
 node('linux')
 {
   stage('Build') {
@@ -132,7 +146,8 @@ node('linux')
 }
 EOT
 cp "${utildir}/../../LICENSE" "${name}port/LICENSE"
-printHeader "${name} project is ready!"
+cp "${utildir}/../../.gitattributes" "${name}port/.gitattributes"
+printHeader "${name} project is ready! ${name}port/"
 printInfo "Create patches under the ${name}port/patches directory"
 printInfo "Run zopen build to build ${name}port"
 printInfo "Contact Mike Fulton (fultonm@ca.ibm.com) to create https://github.com/ZOSOpenTools/${name}port.git"
