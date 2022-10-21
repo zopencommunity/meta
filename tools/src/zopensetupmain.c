@@ -24,8 +24,8 @@ int main(int argc, char* argv[]) {
   const char* host = "github.com";
   const char* bootpkg[] = ZOPEN_BOOT_PKG;
   const char* pemdata = GITHUB_PEM_CA;
-  const char* root;
   char* pkgsfx;
+  char  root[ZOPEN_PATH_MAX+1];
   char  output[ZOPEN_PATH_MAX+1];
   char  tmppem[ZOPEN_PATH_MAX+1];
   char  uri[ZOPEN_PATH_MAX+1];
@@ -43,7 +43,10 @@ int main(int argc, char* argv[]) {
                     "    a 'git clone' of both the utils and meta repositories\n", argv[0]);
     return 4; 
   }
-  root = argv[1];
+  if (!realpath(argv[1], root)) {
+    fprintf(stderr, "error determining absolute path for %s\n", argv[1]);
+    return 4;
+  }
  
   if (!tmppem || genfilename("pem", tmppem, ZOPEN_PATH_MAX)) {
     fprintf(stderr, "error acquiring storage\n");
@@ -83,7 +86,7 @@ int main(int argc, char* argv[]) {
     }
   }
 
-  if (rc = createbootenv(root, ZOPEN_BOOT, ZOPEN_BOOT_ENV, bootpkg)) {
+  if (rc = createbootenv(root, ZOPEN_BOOT, bootpkg)) {
     fprintf(stderr, "error creating %s in directory %s/%s\n", ZOPEN_BOOT_ENV, root, ZOPEN_BOOT);
     return rc;
   }
