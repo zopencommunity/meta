@@ -7,6 +7,18 @@
 #include "github_pem_ca.h"
 #include "zopen_boot_uri.h"
 #include "httpsget.h"
+#include "syscmd.h"
+#include "createbootenv.h"
+
+/*
+ * This program does the following:
+ * - creates the directories for z/OS Open Source Tools from the 'root' directory provided (boot, prod, dev)
+ * - creates a temporary PEM file that will be used to connect to the github.com site to download bootstrap tools (e.g. curl)
+ * - download each of the packages into the bootstrap directory as pax.Z files
+ * - unpax the pax files
+ * - generate a .bootenv script to be sourced in the 'boot' directory for subsequent setup of the boot environment
+ * - git clone utils and meta repositories into the 'dev' directory
+ */
 
 int main(int argc, char* argv[]) {
   const char* host = "github.com";
@@ -65,8 +77,17 @@ int main(int argc, char* argv[]) {
       fprintf(stderr, "error downloading https://%s%s with PEM file %s to %s\n", host, uri, tmppem, output);
       return rc;
     }
+    if (rc = unpaxandlink(root, ZOPEN_BOOT, output, bootpkg[i])) {
+      fprintf(stderr, "error unpaxing %s in directory %s/%s\n", output, root, ZOPEN_BOOT);
+      return rc;
+    }
   }
-  
+
+  if (rc = createbootenv(root, ZOPEN_BOOT, ZOPEN_BOOT_ENV, bootpkg)) {
+    fprintf(stderr, "error creating %s in directory %s/%s\n", ZOPEN_BOOT_ENV, root, ZOPEN_BOOT);
+    return rc;
+  }
+    
   if (remove(tmppem)) {
     fprintf(stderr, "error removing temporary pem file: %s\n", tmppem);
     return 4;
