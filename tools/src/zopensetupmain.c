@@ -16,8 +16,8 @@
  * - creates a temporary PEM file that will be used to connect to the github.com site to download bootstrap tools (e.g. curl)
  * - download each of the packages into the bootstrap directory as pax.Z files
  * - unpax the pax files
- * - generate a .bootenv script to be sourced in the 'boot' directory for subsequent setup of the boot environment
- * - git clone utils and meta repositories into the 'dev' directory
+ * - generate a .bootenv script that can later be sourced in the 'boot' directory for subsequent setup of the boot environment
+ * - create symbolic link from $HOME/zopen to 'root' directory provided
  */
 
 int main(int argc, char* argv[]) {
@@ -90,7 +90,12 @@ int main(int argc, char* argv[]) {
     fprintf(stderr, "error creating %s in directory %s/%s\n", ZOPEN_BOOT_ENV, root, ZOPEN_BOOT);
     return rc;
   }
-    
+
+  if (createhomelink(ZOPEN_HOME, ZOPEN_HOME_NAME, root)) {
+    fprintf(stderr, "error creating symbolic link from %s/%s to %s\n", ZOPEN_HOME, ZOPEN_HOME_NAME, root);
+    return rc;
+  }
+   
   if (remove(tmppem)) {
     fprintf(stderr, "error removing temporary pem file: %s\n", tmppem);
     return 4;

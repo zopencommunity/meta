@@ -11,5 +11,7 @@
   #define ZOPEN_PROD "prod"
   #define ZOPEN_BOOT "boot"
   #define ZOPEN_DEV  "dev"
+  #define ZOPEN_HOME  "$HOME"
+  #define ZOPEN_HOME_NAME  "zopen"
   int createdirs(const char* root);
 #endif

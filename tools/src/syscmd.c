@@ -33,3 +33,22 @@ int unpaxandlink(const char* root, const char* subdir, const char* pkg, const ch
 
   return rc;
 }
+
+int createhomelink(const char* home, const char* name, const char* root) {
+  char ln_format[] = "/bin/sh -c \"cd %s && /bin/rm -f %s && /bin/ln -s %s %s\"";
+  char ln[ZOPEN_CMD_MAX+1];
+  int rc;
+  if ((rc = snprintf(ln, sizeof(ln), ln_format, home, name, root, home)) > sizeof(ln)) {
+    fprintf(stderr, "error building command for symbolic link of %s from %s/%s\n", root, home, name);
+    return rc;
+  }
+  rc = system(ln);
+  if (rc == 0) {
+    fprintf(stdout, "Successfully performed symbolic link: %s\n", ln);
+  } else {
+    fprintf(stderr, "non zero rc of %d from system %s\n", rc, ln);
+  }
+
+  return rc;
+}
+
