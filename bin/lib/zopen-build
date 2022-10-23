@@ -545,9 +545,14 @@ extractTarBall()
       printError "Unable to initialize empty git repository for tarball"
     fi
   else
-    files=$(find . ! -name "*.pdf" ! -name "*.png" ! -name "*.bat" ! -name "*.jpg" ! -name "*.gif" ! -name "*.ttf" ! -name "*.wbmp" ! -type d ! -type l)
-    if ! git init . >/dev/null || ! git add -f ${files} >/dev/null || ! git commit --allow-empty -m "Create Repository for patch management" >/dev/null; then
+    find . ! -name "*.pdf" ! -name "*.png" ! -name "*.bat" ! -name "*.jpg" ! -name "*.gif" ! -name "*.ttf" ! -name "*.wbmp" ! -type d ! -type l | xargs -I {} git add -f "{}"
+
+    if ! git init . >/dev/null; then
       printError "Unable to initialize git repository for tarball"
+    fi
+
+    if ! git commit --allow-empty -m "Create Repository for patch management" >/dev/null; then
+      printError "Unable to commit git repository"
     fi
   fi
 }
