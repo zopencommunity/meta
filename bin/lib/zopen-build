@@ -639,6 +639,10 @@ applyPatches()
   fi
 
   patches=$( (cd "${patch_dir}" && find . -name "*.patch" | sort))
+  if [ "${patches}x" = "x" ]; then
+    printWarning "No patches in ${patch_dir} to apply"
+    return 0
+  fi
   results=$( (cd "${code_dir}" && git status --porcelain --untracked-files=no 2>&1))
   failedcount=0
   if [ "${results}" != '' ]; then
