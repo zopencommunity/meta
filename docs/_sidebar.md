@@ -1,6 +1,9 @@
+  - [Pre-requisites](/Guides/Pre-req.md)
   - [Available ports](/Latest.md)
+    - [Current Status](/Progress.md)
   - [Porting to z/OS guide](/Guides/Porting.md)
-  - [CI/CD pipeline](/Guides/Pipeline.md)
-  - [Troubleshooting](/Guides/CommonSolutions.md)
-  - [z/OS Open Tools Repos](https://github.com/ZOSOpenTools)
-  - [Discussions](https://github.com/ZOSOpenTools/meta/discussions)
+    - [CI/CD pipeline](/Guides/Pipeline.md)
+    - [Troubleshooting](/Guides/CommonSolutions.md)
+  - Resources
+    - [z/OS Open Tools Repos](https://github.com/ZOSOpenTools)
+    - [Discussions](https://github.com/ZOSOpenTools/meta/discussions)
