@@ -545,10 +545,17 @@ extractTarBall()
       printError "Unable to initialize empty git repository for tarball"
     fi
   else
-    find . ! -name "*.pdf" ! -name "*.png" ! -name "*.bat" ! -name "*.jpg" ! -name "*.gif" ! -name "*.ttf" ! -name "*.wbmp" ! -type d ! -type l | xargs -I {} git add -f "{}"
-
     if ! git init . >/dev/null; then
       printError "Unable to initialize git repository for tarball"
+    fi
+
+    echo '\n*.jpg\n*.jpeg\n*.png\n*.gif\n*.bat\n*.pdf\n*.ttf\n*.wbmp' >> .gitignore
+    if ! iconv -f IBM-1047 -tISO8859-1 <.gitignore >.gitignoreascii || ! chtag -tcISO8859-1 .gitignoreascii || ! mv .gitignoreascii .gitignore; then
+      printError "Unable to make .gitignore ascii for tarball"
+    fi
+
+    if ! git add -f . >/dev/null; then
+      printError "Unable to add files for git repository"
     fi
 
     if ! git commit --allow-empty -m "Create Repository for patch management" >/dev/null; then

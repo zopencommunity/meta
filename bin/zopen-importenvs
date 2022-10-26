@@ -1,14 +1,21 @@
-#!/bin/sh
+#!/bin/env bash
 # Used for development to source all the boot/prod .envs
 
 
 (return 0 2>/dev/null) && sourced=1 
 # What exit code did that give?
-if [[ $sourced -ne 1 ]]
+if [[ $sourced -ne 1 ]] || [[ "$2" -eq "-h" ]]
 then
-    echo "This script is not sourced."
+    echo "zopen-importenvs must be sourced via the . (dot) shell builtin"
     echo "USAGE: . ./zopen-importenvs [path to buildenv to fetch dependency]"
-    exit 1     
+    echo "If no argument is specified, zopen-importenvs will source all .env files from $HOME/zopen/prod and $HOME/zopen/boot"
+    echo "If an argument is specified and it represents a buildenv file, zopen-importenvs will source the ZOPEN_*_DEPS specified dependencies from $HOME/zopen/prod and $HOME/zopen/boot"
+    if [[ $sourced -ne 1 ]]; then
+      exit 1     
+    fi
+    if [[ "$2" -eq "-h" ]]; then
+      return 1     
+    fi
 fi
 
 #depsPath has the details of the location of ports whose env files are consumed for sourcing 
@@ -53,8 +60,8 @@ else
     #If path is provided then builedenv file is fetched from the provided path 
     pathForBuild=$1
     if [ ! -d "${HOME}/zopen/boot/" ] && [ ! -d "${HOME}/zopen/prod/" ]; then
-       echo "${HOME}/zopen/boot & ${HOME}/zopen/prod directories do not exist.  Exiting"
-       exit 1 
+       echo "${HOME}/zopen/boot & ${HOME}/zopen/prod directories do not exist. Exiting"
+       return 1 
     fi
 
     if [ -f ${pathForBuild}/buildenv ]
