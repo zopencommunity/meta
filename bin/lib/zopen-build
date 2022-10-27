@@ -69,6 +69,7 @@ ZOPEN_CONFIGURE_OPTS Options to pass to configuration program (defaults to '--pr
 ZOPEN_EXTRA_CONFIGURE_OPTS Extra configure options to pass to configuration program (defaults to '')
 ZOPEN_INSTALL_DIR    Installation directory to pass to configuration (defaults to '\${HOME}/zopen/prod/<pkg>')
 ZOPEN_MAKE           Build program to run. If skip is specified, no build step is performed (defaults to '${ZOPEN_MAKED}')
+ZOPEN_MAKE_MINIMAL   Build program will not be passed CFLAGS, LDFLAGS, CPPFLAGS options but will just get them from env vars
 ZOPEN_MAKE_OPTS      Options to pass to build program (defaults to '-j\${ZOPEN_NUM_JOBS}')
 ZOPEN_CHECK          Check program to run. If skip is specified, no check step is performed (defaults to '${ZOPEN_CHECKD}') 
 ZOPEN_CHECK_OPTS     Options to pass to check program (defaults to '${ZOPEN_CHECK_OPTSD}')
@@ -796,7 +797,11 @@ build()
     printHeader "Running Build"
     create_fifo_pipe "${makelog}"
     if ! runAndLog "${ZOPEN_MAKE_CMD} > $TMP_FIFO_PIPE"; then
-      printError "Make failed. Log: ${makelog}"
+      if [ "${ZOPEN_MAKE_MINIMAL}" = "yes" ]; then
+        printError "Make (minimal) failed. Log: ${configlog}"
+      else
+        printError "Make (full) failed. Log: ${configlog}"
+      fi
     fi
   else
     printHeader "Skipping Build"
@@ -993,7 +998,13 @@ resolveCommands()
   fi
   
   if [ "${ZOPEN_MAKE}x" != "skipx" ] && [ ! -z "$(command -v ${ZOPEN_MAKE})" ] ; then
-    export ZOPEN_MAKE_CMD="\"${ZOPEN_MAKE}\" ${ZOPEN_MAKE_OPTS} CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\""
+    if [ "${ZOPEN_MAKE_MINIMAL}x" = "x" ]; then
+      export ZOPEN_MAKE_CMD="\"${ZOPEN_MAKE}\" ${ZOPEN_MAKE_OPTS} CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\""
+      export ZOPEN_MAKE_MINIMAL="no"
+    else
+      export ZOPEN_MAKE_CMD="\"${ZOPEN_MAKE}\" ${ZOPEN_MAKE_OPTS}"
+      export ZOPEN_MAKE_MINIMAL="yes"
+    fi
   else
     unset ZOPEN_MAKE_CMD
   fi
