@@ -38,9 +38,13 @@ defineEnvironment()
   export _UNIX03=YES
 }
 
+#
+# For now, explicitly specify /bin/echo to ensure we get the EBCDIC echo since the escape
+# sequences are EBCDIC escape sequences
+#
 printColors()
 {
-  echo "$1"
+  /bin/echo "$1"
 }
 
 zopenInitialize()

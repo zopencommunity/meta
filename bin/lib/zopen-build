@@ -11,6 +11,29 @@
 # Functions section
 #
 
+#
+# asciiecho: we are in the process of starting to use 'echo' from coreutils.
+# This echo will have a slightly different behaviour than the standard echo in that
+# the file will now be tagged as ascii instead of ebcdic
+# For compatibility, check the tag of the file after the echo and iconv the file IFF it is IBM-1047
+#
+asciiecho()
+{
+  text="$1"
+  file="$2"
+
+  if ! echo "${text}" >"${file}"; then
+    echo "Unable to echo text to ${file}" >&2
+    return 2
+  fi
+  if [ "$(chtag -p "${file}" | cut -f2 -d' ')" = "IBM-1047" ]; then
+    if ! iconv -f IBM-1047 -tISO8859-1 <"${file}" >"${file}_ascii" || ! chtag -tcISO8859-1 "${file}_ascii" || ! mv "${file}_ascii" "${file}"; then
+      printError "Unable to convert EBCDIC text to ASCII for ${file}" >&2
+    fi
+  fi
+  return 0
+}
+  
 printEnvVar()
 {
   echo "\
@@ -527,13 +550,8 @@ extractTarBall()
   rm -rf .git* .travis*
 
   # Create .gitattributes file 
-  if ! echo "* text working-tree-encoding=ISO8859-1" >.gitattributes; then
+  if ! asciiecho "* text working-tree-encoding=ISO8859-1" ".gitattributes"; then
     printError "Unable to create .gitattributes for tarball"
-  fi
-  if [ "$(chtag -p .gitattributes | cut -f2 -d' ')" != "ISO8859-1" ]; then
-    if ! iconv -f IBM-1047 -tISO8859-1 <.gitattributes >.gitattrascii || ! chtag -tcISO8859-1 .gitattrascii || ! mv .gitattrascii .gitattributes; then
-      printError "Unable to make .gitattributes ascii for tarball"
-    fi
   fi
 
   #
@@ -549,12 +567,20 @@ extractTarBall()
       printError "Unable to initialize git repository for tarball"
     fi
 
-    echo '\n*.jpg\n*.jpeg\n*.png\n*.gif\n*.bat\n*.pdf\n*.ttf\n*.wbmp' >> .gitignore
-    if ! iconv -f IBM-1047 -tISO8859-1 <.gitignore >.gitignoreascii || ! chtag -tcISO8859-1 .gitignoreascii || ! mv .gitignoreascii .gitignore; then
-      printError "Unable to make .gitignore ascii for tarball"
+    if ! asciiecho "
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.bat
+*.pdf
+*.ttf
+*.wbmp
+" ".gitignore"; then
+      printError "Unable to create .gitignore for tarball"
     fi
 
-    if ! git add -f . >/dev/null; then
+    if ! git add . >/dev/null; then
       printError "Unable to add files for git repository"
     fi
 
@@ -1031,8 +1057,7 @@ LABEL specification=1.0.0"
   cp .env .zpm/.env
   dockerfilecontents="${dockerfilecontents}\nCOPY .zpm @{CONTAINER_READWRITE}/.zpm"
 
-  echo "$dockerfilecontents" > "${ZOPEN_IMAGE_DOCKERFILE_NAME}"
-  if ! iconv -f IBM-1047 -tISO8859-1 <"${ZOPEN_IMAGE_DOCKERFILE_NAME}">".${ZOPEN_IMAGE_DOCKERFILE_NAME}ascii" || ! chtag -tcISO8859-1 ".${ZOPEN_IMAGE_DOCKERFILE_NAME}ascii" || ! mv ".${ZOPEN_IMAGE_DOCKERFILE_NAME}ascii" ${ZOPEN_IMAGE_DOCKERFILE_NAME}; then
+  if ! asciiecho "$dockerfilecontents" "${ZOPEN_IMAGE_DOCKERFILE_NAME}"; then
     printError "Unable to make ${ZOPEN_IMAGE_DOCKERFILE_NAME}"
   fi
 
