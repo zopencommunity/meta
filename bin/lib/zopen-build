@@ -979,7 +979,7 @@ resolveCommands()
     unset ZOPEN_BOOTSTRAP_CMD
   fi
 
-  if [ "${ZOPEN_CONFIGURE}x" != "skipx" ] && [ ! -z "$(command -v ${ZOPEN_CONFIGURE})" ]; then
+  if [ "${ZOPEN_CONFIGURE}x" != "skipx" ]; then
     if [ "${ZOPEN_CONFIGURE_MINIMAL}x" = "x" ]; then
       export ZOPEN_CONFIGURE_CMD="\"${ZOPEN_CONFIGURE}\" ${ZOPEN_CONFIGURE_OPTS} CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\" \"LIBS=${LIBS}\""
       export ZOPEN_CONFIGURE_MINIMAL="no"
