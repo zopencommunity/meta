@@ -8,15 +8,16 @@ export utildir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
 printSyntax() 
 {
   args=$*
-  echo "zopen-download is a package manager for z/OS Open Tools. The default action is to download all packages." >&2
+  echo "zopen-download is a package manager for z/OS Open Tools. The default action is to download/update all packages." >&2
   echo "If you have a Github OAUTH token, export the environment variable ZOPEN_GIT_OAUTH_TOKEN" >&2
   echo "Syntax: zopen-download [<option>]*" >&2
   echo "  where <option> may be one or more of:" >&2
   echo "  --list: list all available z/OS Open Tools"  >&2
-  echo "  --update: update all available z/OS Open Tools packages"  >&2
-  echo "  --filter <color>: filter based on quality (green - all tests passing, blue - most tests passing, yellow - some tests passing, red - no tests passing, none (default))"  >&2
+  echo "  --update: update z/OS Open Tools packages. On by default."  >&2
+  echo "  --force: force downloads all z/OS Open Tools packages."  >&2
+  echo "  <coming soon> --filter <color>: filter based on quality (green - all tests passing, blue - most tests passing, yellow - some tests passing, red - no tests passing, none (default))"  >&2
   echo "  -d <dir>: directory to download binaries to.  Uses current working directory if not specified." >&2
-  echo "  -r <repo>: specific repo name to download. Downloads all ZOSOpenTools if not specified." >&2
+  echo "  -r <repo,...>: a set of comman delimited projects to download. Downloads all ZOSOpenTools if not specified." >&2
 }
 
 getContentsFromGithub()
@@ -35,31 +36,27 @@ getContentsFromGithub()
 printListEntries()
 {
   printf "${NC}${UNDERLINE}${1}%-20s %-20s %-20s %-10s %-25s\n${NC}" "Repo" "Your version" "Latest Tag" "Status" "Quality"
-  echo "$repoArray" | xargs| tr ' ' '\n' | sort | while read repo; do
-      name=${repo%port}
-      if ! contents="$(getContentsFromGithub "https://api.github.com/repos/ZOSOpenTools/${repo}/releases/latest")"; then
-        exit 4;
-      fi
-      latestTag="$(echo "$contents" | grep "\"tag_name\":" | cut -d '"' -f 4)"
-      statusline="$(echo "$contents" | grep "\"body\":.*Test Status:.*(.*)<br />")"
-      buildQuality="$(echo "$statusline" | sed -e "s#.*Test Status:<\/b>##" -e "s#[ ]*(.*##" | tr -d ' ')"
-      testStatus="$(echo "$statusline" | sed -e "s#.*Test Status:<\/b>[^(]*(##" -e "s#).*##")"
-      if [ -z "$buildQuality" ]; then
-        buildQuality="Untested"
-        testStatus="N/A";
-      fi
+  echo "$repoArray" | xargs | tr ' ' '\n' | sort | while read repo; do
+    name=${repo%port}
+    if ! contents="$(getContentsFromGithub "https://api.github.com/repos/ZOSOpenTools/${repo}/releases/latest")"; then
+      exit 4;
+    fi
+    latestTag="$(echo "$contents" | grep "\"tag_name\":" | cut -d '"' -f 4)"
+    statusline="$(echo "$contents" | grep "\"body\":.*Test Status:.*(.*)<br />")"
+    buildQuality="$(echo "$statusline" | sed -e "s#.*Test Status:<\/b>##" -e "s#[ ]*(.*##" | tr -d ' ')"
+    testStatus="$(echo "$statusline" | sed -e "s#.*Test Status:<\/b>[^(]*(##" -e "s#).*##")"
+    if [ -z "$buildQuality" ]; then
+      buildQuality="Untested"
+      testStatus="N/A";
+    fi
 
-	if [ -e "${name}/.releaseinfo" ]; then
-	  originalTag=$(cat "${name}/.releaseinfo" | xargs) 
-        else
-	  originalTag="Not installed"
-	fi
-	if [ "${latestTag}" = "${originalTag}" ]; then
-	  printInfo "${repo} with tag ${latestTag} already present. Skipping..."
-	  continue;
-	fi
-      printf '%-20s %-20s %-20s %-10s %-25s\n' "$repo" "$originalTag" "$latestTag" "$buildQuality" "$testStatus"
-      continue;
+    if [ -e "${name}/.releaseinfo" ]; then
+      originalTag=$(cat "${name}/.releaseinfo" | xargs) 
+    else
+      originalTag="Not installed"
+    fi
+    printf '%-20s %-20s %-20s %-10s %-25s\n' "$repo" "$originalTag" "$latestTag" "$buildQuality" "$testStatus"
+    continue;
   done
 }
 
@@ -79,13 +76,13 @@ downloadRepos()
 
     latestTag="$(echo "$latest_url" | grep "\"tag_name\":" | cut -d '"' -f 4)"
     if $updateOnly; then
-	if [ -e "${name}/.releaseinfo" ]; then
-	  originalTag=$(cat "${name}/.releaseinfo" | xargs) 
-	fi
-	if [ "${latestTag}" = "${originalTag}" ]; then
-      	  printInfo "${repo} with tag ${latestTag} already present. Skipping..."
-	  continue;
-	fi
+      if [ -e "${name}/.releaseinfo" ]; then
+        originalTag=$(cat "${name}/.releaseinfo" | xargs) 
+      fi
+      if [ "${latestTag}" = "${originalTag}" ]; then
+        printInfo "${repo} with tag ${latestTag} already present. Skipping..."
+        continue;
+      fi
     fi
     latest_url="$(echo "$latest_url" | grep "\"browser_download_url\":" | cut -d '"' -f 4)"
     printHeader "Downloading latest release from $repo"
@@ -105,12 +102,17 @@ downloadRepos()
     fi
     rm -f "${pax}"
     dirname=${pax%.pax.Z}
+
+    # Remove old symlink and recreate
     if [ -L $name ]; then
       rm $name
     fi 
     if ! ln -s $dirname $name; then
       printError "Could not create symbolic link name"
     fi 
+
+    # Add tag information as a .releaseinfo file
+    echo "$latestTag" > "${name}/.releaseinfo"
 done
 }
 
@@ -118,8 +120,7 @@ done
 # Main code start here
 args=$*
 downloadDir=$PWD
-filter=none
-updateOnly=false
+updateOnly=true
 while [[ $# -gt 0 ]]; do
   case "$1" in
     "-d")
@@ -127,11 +128,14 @@ while [[ $# -gt 0 ]]; do
       shift
       ;;
     "-r")
-      toolrepo=$2;
+      chosenRepos=$2;
       shift
       ;;
     "-u" | "--update" | "-update")
       updateOnly=true
+      ;;
+    "-force" | "--force")
+      updateOnly=false
       ;;
     "--list")
       list=1;
@@ -180,12 +184,19 @@ repoArray=""
 for repo in $(echo ${repo_results}); do
   repo=${repo#"ZOSOpenTools/"}
   name=${repo%port}
-  if [ -z $toolrepo ] || [ "${toolrepo}" = "${repo}" ] || [ "${toolrepo}" = "${name}" ]; then
-    # Skip if the repo does not end with port
-    if [ "${repo}" = "${name}" ]; then
-      continue;
-    fi
+
+  if [ -z "${chosenRepos}" ]; then
     repoArray="$repoArray $repo"
+  else
+    for toolrepo in $(echo ${chosenRepos} | tr ',' '\n'); do
+      if [ "${toolrepo}" = "${repo}" ] || [ "${toolrepo}" = "${name}" ]; then
+        # Skip if the repo does not end with port
+        if [ "${repo}" = "${name}" ]; then
+          continue;
+        fi
+        repoArray="$repoArray $repo"
+      fi
+    done
   fi
 done
 
