@@ -1,5 +1,5 @@
 #!/bin/sh
-# Package Manager for z/OS Open Tools - https://github.com/ZOSOpenTools
+# Download utility for z/OS Open Tools - https://github.com/ZOSOpenTools
 
 export utildir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
 
@@ -8,7 +8,7 @@ export utildir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
 printSyntax() 
 {
   args=$*
-  echo "zopen-download is a package manager for z/OS Open Tools. The default action is to download/update all packages." >&2
+  echo "zopen-download is a download utility for z/OS Open Tools. The default action is to download/update all packages." >&2
   echo "If you have a Github OAUTH token, export the environment variable ZOPEN_GIT_OAUTH_TOKEN" >&2
   echo "Syntax: zopen-download [<option>]*" >&2
   echo "  where <option> may be one or more of:" >&2
