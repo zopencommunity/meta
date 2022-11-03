@@ -23,7 +23,7 @@ printSyntax()
 getContentsFromGithub()
 {
   url=$1
-  if ! repo_results=$(curl $OAUTH_TOKEN_OPTION "$OAUTH_TOKEN" -k -s "$url"); then
+  if ! repo_results=$(curl $OAUTH_TOKEN_OPTION "$OAUTH_TOKEN" -s "$url"); then
     printError "curl command could not download $url"
   fi
   
@@ -86,7 +86,7 @@ downloadRepos()
     fi
     latest_url="$(echo "$latest_url" | grep "\"browser_download_url\":" | cut -d '"' -f 4)"
     printHeader "Downloading latest release from $repo"
-    if ! curl -k -L ${latest_url} -O 2>/dev/null; then
+    if ! curl -L ${latest_url} -O 2>/dev/null; then
       printError "Could not download ${latest_url}"
     fi
 
@@ -142,23 +142,32 @@ while [[ $# -gt 0 ]]; do
       ;;
     "-f" | "-filter" | "--filter")
       filter=$2;
+      shift
       ;;
     "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
       printSyntax "${args}"
       exit 4
       ;;
     *)
-      printError "Unknown option ${1} specified"
+      chosenRepos=$1;
       ;;
   esac
   shift;
 done
 
+export ZOPEN_CA="${utildir}/../../cacert.pem"
+if ! [ -r "${ZOPEN_CA}" ]; then
+  printError "Internal Error. Certificate ${ZOPEN_CA} is required"
+fi
+export SSL_CERT_FILE="${ZOPEN_CA}"
+export GIT_SSL_CAINFO="${ZOPEN_CA}"
+export CURL_CA_BUNDLE="${ZOPEN_CA}"
+
 if [ ! -z "${ZOPEN_GIT_OAUTH_TOKEN}" ]; then
   OAUTH_TOKEN_OPTION='-H'
   OAUTH_TOKEN="Authorization: Bearer ${ZOPEN_GIT_OAUTH_TOKEN}" 
 else
-  printWarning "Setting ZOPEN_GIT_OAUTH_TOKEN is recommended to ensure that you do not hit the GitHub API cap"
+  printWarning "Setting ZOPEN_GIT_OAUTH_TOKEN is recommended to ensure that you do not hit the GitHub API cap. See --help for more details."
 fi
 
 # Retrieve all repositories
