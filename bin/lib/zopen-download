@@ -16,8 +16,9 @@ printSyntax()
   echo "  --update: update z/OS Open Tools packages. On by default."  >&2
   echo "  --force: force downloads all z/OS Open Tools packages."  >&2
   echo "  <coming soon> --filter <color>: filter based on quality (green - all tests passing, blue - most tests passing, yellow - some tests passing, red - no tests passing, none (default))"  >&2
+  echo "  -v: run in verbose mode" >&2
   echo "  -d <dir>: directory to download binaries to.  Uses current working directory if not specified." >&2
-  echo "  -r <repo,...>: a set of comman delimited projects to download. Downloads all ZOSOpenTools if not specified." >&2
+  echo "  -r <repo,...>: a set of comma delimited projects to download. Downloads all ZOSOpenTools if not specified." >&2
 }
 
 getContentsFromGithub()
@@ -62,10 +63,9 @@ printListEntries()
 
 downloadRepos()
 {
-  printHeader "Checking ZOSOpenTools repos..."
   echo "$repoArray" | xargs | tr ' ' '\n' | sort | while read repo; do
     name=${repo%port}
-    printHeader "Checking $repo"
+    printHeader "Preparing to download $repo"
     if ! latest_url="$(getContentsFromGithub "https://api.github.com/repos/ZOSOpenTools/${repo}/releases/latest")"; then
       exit 4;
     fi
@@ -80,13 +80,16 @@ downloadRepos()
         originalTag=$(cat "${name}/.releaseinfo" | xargs) 
       fi
       if [ "${latestTag}" = "${originalTag}" ]; then
-        printInfo "${repo} with tag ${latestTag} already present. Skipping..."
+        printInfo "${downloadDir}/${name} with tag ${latestTag} already installed. Skipping..."
         continue;
       fi
     fi
     latest_url="$(echo "$latest_url" | grep "\"browser_download_url\":" | cut -d '"' -f 4)"
-    printHeader "Downloading latest release from $repo"
-    if ! curl -L ${latest_url} -O 2>/dev/null; then
+    printInfo "Downloading latest release from $repo..."
+    if ! $verbose; then
+      redirectToDevNull="2>/dev/null"
+    fi 
+    if ! runAndLog "curl -L ${latest_url} -O ${redirectToDevNull}"; then
       printError "Could not download ${latest_url}"
     fi
 
@@ -95,8 +98,8 @@ downloadRepos()
       printError "${pax} was not actually downloaded?"
     fi
 
-    printHeader "Extracting $pax"
-    if ! pax -rf $pax -p p 2>/dev/null; then
+    printInfo "Extracting $pax..."
+    if ! runAndLog "pax -rf $pax -p p ${redirectToDevNull}"; then
       printWarning "Could not extract $pax. Skipping"
       continue;
     fi
@@ -107,12 +110,14 @@ downloadRepos()
     if [ -L $name ]; then
       rm $name
     fi 
+
     if ! ln -s $dirname $name; then
       printError "Could not create symbolic link name"
     fi 
 
     # Add tag information as a .releaseinfo file
     echo "$latestTag" > "${name}/.releaseinfo"
+    printInfo "Successfully downloaded $name to $downloadDir/$name/"
 done
 }
 
@@ -121,6 +126,7 @@ done
 args=$*
 downloadDir=$PWD
 updateOnly=true
+verbose=false
 while [[ $# -gt 0 ]]; do
   case "$1" in
     "-d")
@@ -134,19 +140,22 @@ while [[ $# -gt 0 ]]; do
     "-u" | "--update" | "-update")
       updateOnly=true
       ;;
-    "-force" | "--force")
+    "-f" | "-force" | "--force")
       updateOnly=false
       ;;
     "--list")
       list=1;
       ;;
-    "-f" | "-filter" | "--filter")
+    "-filter" | "--filter")
       filter=$2;
       shift
       ;;
     "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
       printSyntax "${args}"
       exit 4
+      ;;
+    "-v" | "--v" | "-verbose" | "--verbose")
+       verbose=true
       ;;
     *)
       chosenRepos=$1;
@@ -197,7 +206,7 @@ for repo in $(echo ${repo_results}); do
   if [ -z "${chosenRepos}" ]; then
     repoArray="$repoArray $repo"
   else
-    for toolrepo in $(echo ${chosenRepos} | tr ',' '\n'); do
+    for toolrepo in $(echo "${chosenRepos}" | tr ',' '\n'); do
       if [ "${toolrepo}" = "${repo}" ] || [ "${toolrepo}" = "${name}" ]; then
         # Skip if the repo does not end with port
         if [ "${repo}" = "${name}" ]; then
