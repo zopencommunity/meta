@@ -1143,6 +1143,11 @@ if ! resolveCommands; then
   exit 4
 fi
 
+if command -V "zopen_init" >/dev/null 2>&1; then
+  printVerbose "Running zopen_init"
+  zopen_init "${ZOPEN_INSTALL_DIR}"
+fi
+
 if ${startShell}; then
   exec /bin/sh
 fi
