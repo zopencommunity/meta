@@ -4,7 +4,7 @@
 
 (return 0 2>/dev/null) && sourced=1 
 # What exit code did that give?
-if [[ $sourced -ne 1 ]] || [[ "$2" -eq "-h" ]]
+if [[ $sourced -ne 1 ]] || [[ "$1" == "-h" ]]
 then
     echo "zopen-importenvs must be sourced via the . (dot) shell builtin"
     echo "USAGE: . ./zopen-importenvs [path to buildenv to fetch dependency]"
@@ -13,7 +13,7 @@ then
     if [[ $sourced -ne 1 ]]; then
       exit 1     
     fi
-    if [[ "$2" -eq "-h" ]]; then
+    if [[ "$1" == "-h" ]]; then
       return 1     
     fi
 fi
