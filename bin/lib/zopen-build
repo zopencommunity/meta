@@ -815,6 +815,10 @@ build()
 
 check()
 {
+  if command -V "zopen_pre_check" >/dev/null 2>&1; then
+    printVerbose "Running zopen_pre_check"
+    zopen_pre_check "${ZOPEN_INSTALL_DIR}"
+  fi
   checklog="${LOG_PFX}_check.log"
   results=$ZOPEN_TEST_STATUS_SKIPPED # skipped
   if [ -n "${ZOPEN_CHECK_CMD}" ]; then
