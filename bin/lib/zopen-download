@@ -192,8 +192,8 @@ if [ ! -d "${downloadDir}" ]; then
   fi
 fi
 
-if [ ! -z "${download}" -a -d "${download}" ]; then
-  cd "${download}"
+if [ ! -z "${downloadDir}" ] && [ -d "${downloadDir}" ]; then
+  cd "${downloadDir}"
 fi
 
 # Parse repositories for zopen framework repos
