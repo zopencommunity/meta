@@ -24,7 +24,7 @@ It is recommended that you add the above environment variables to your `.profile
 
 If you interested in leveraging `zopen download` to download and install the z/OS Open Source tools, then you will require the following tools on your z/OS system. Alternatively, you can manually download the pax.Z releases from Github and transfer them over to your z/OS system without any additional tooling requirements.
 
-* Obtain from Rocket: Git
+* Obtain from Rocket: git, curl (7.77 or later if downloading releases directly without `zopen download`)
 * Obtain from z/OS Open Source: curl, gzip, tar, which you can download from the [available releases](../Latest.md).
 
 Our goal is to eventually have our own version of all the _bootstrap_ tools, but right now, we rely on some
