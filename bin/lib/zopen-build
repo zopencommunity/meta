@@ -771,7 +771,7 @@ bootstrap()
   if [ -n "${ZOPEN_BOOTSTRAP_CMD}" ] ; then
     printHeader "Running Bootstrap"
     if [ -r "${ZOPEN_LOG_DIR}/bootstrap.success" ] && ! $forceRebuild; then
-      echo "Using previous successful bootstrap. Specify to force a bootstrap." >&2
+      echo "Using previous successful bootstrap. Specify -f to force a bootstrap." >&2
     else
       bootlog="${ZOPEN_LOG_DIR}/${LOG_PFX}_bootstrap.log"
       create_fifo_pipe "${bootlog}"
