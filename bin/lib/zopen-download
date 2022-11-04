@@ -1,5 +1,5 @@
 #!/bin/sh
-# Downloads and extracts the latest ZOSOpenTools releases from GitHub
+# Download utility for z/OS Open Tools - https://github.com/ZOSOpenTools
 
 export utildir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
 
@@ -8,56 +8,23 @@ export utildir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
 printSyntax() 
 {
   args=$*
-  echo "zopen-download is a tool that downloads and extracts the latest z/OS Open Tools releases from GitHub Releases." >&2
+  echo "zopen-download is a download utility for z/OS Open Tools. The default action is to download/update all packages." >&2
   echo "If you have a Github OAUTH token, export the environment variable ZOPEN_GIT_OAUTH_TOKEN" >&2
   echo "Syntax: zopen-download [<option>]*" >&2
   echo "  where <option> may be one or more of:" >&2
   echo "  --list: list all available z/OS Open Tools"  >&2
-#TODO: future option
-#  echo "  --filter <color>: filter based on quality (green - all tests passing, blue - most tests passing, yellow - some tests passing, red - no tests passing, none (default))"  >&2
+  echo "  --update: update z/OS Open Tools packages. On by default."  >&2
+  echo "  --force: force downloads all z/OS Open Tools packages."  >&2
+  echo "  <coming soon> --filter <color>: filter based on quality (green - all tests passing, blue - most tests passing, yellow - some tests passing, red - no tests passing, none (default))"  >&2
+  echo "  -v: run in verbose mode" >&2
   echo "  -d <dir>: directory to download binaries to.  Uses current working directory if not specified." >&2
-  echo "  -r <repo>: specific repo name to download. Downloads all ZOSOpenTools if not specified." >&2
+  echo "  -r <repo,...>: a set of comma delimited projects to download. Downloads all ZOSOpenTools if not specified." >&2
 }
-
-args=$*
-download=$PWD
-filter=none
-while [[ $# -gt 0 ]]; do
-  case "$1" in
-    "-d")
-      download=$2;
-      shift
-      ;;
-    "-r")
-      toolrepo=$2;
-      shift
-      ;;
-    "--list")
-      list=1;
-      ;;
-    "--filter")
-      filter=$2;
-      ;;
-    "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
-      printSyntax "${args}"
-      exit 4
-      ;;
-    *)
-      printError "Unknown option ${1} specified"
-      ;;
-  esac
-  shift;
-done
-
-if [ ! -z "${ZOPEN_GIT_OAUTH_TOKEN}" ]; then
-  OAUTH_TOKEN_OPTION='-H'
-  OAUTH_TOKEN="Authorization: Bearer ${ZOPEN_GIT_OAUTH_TOKEN}" 
-fi
 
 getContentsFromGithub()
 {
   url=$1
-  if ! repo_results=$(curl $OAUTH_TOKEN_OPTION "$OAUTH_TOKEN" -k -s "$url"); then
+  if ! repo_results=$(curl $OAUTH_TOKEN_OPTION "$OAUTH_TOKEN" -s "$url"); then
     printError "curl command could not download $url"
   fi
   
@@ -67,58 +34,62 @@ getContentsFromGithub()
   echo "$repo_results";
 }
 
-if ! repo_results="$(getContentsFromGithub "https://api.github.com/users/ZOSOpenTools/repos?per_page=100")"; then
-  exit 4;
-fi
-repo_results=$(echo "$repo_results" | grep "\"full_name\":" | cut -d '"' -f 4)
-
-if [ ! -z "$list" ]; then
-  printf "${NC}${UNDERLINE}${1}%-25s %-25s %-25s\n${NC}" "Repo" "Build Status" "Quality Report"
-fi
-
-if [ ! -d "${download}" ]; then
-  mkdir -p "${download}"
-fi
-
-if [ ! -z "${download}" -a -d "${download}" ]; then
-  cd "${download}"
-fi
-
-foundPort=false
-for repo in $(echo ${repo_results}); do
-  repo=${repo#"ZOSOpenTools/"}
-  if [ -z $toolrepo ] || [ "${toolrepo}" = "${repo}" ]; then
+printListEntries()
+{
+  printf "${NC}${UNDERLINE}${1}%-20s %-20s %-20s %-10s %-25s\n${NC}" "Repo" "Your version" "Latest Tag" "Status" "Quality"
+  echo "$repoArray" | xargs | tr ' ' '\n' | sort | while read repo; do
     name=${repo%port}
-    if [ "${repo}" = "${name}" ]; then
-      continue;
+    if ! contents="$(getContentsFromGithub "https://api.github.com/repos/ZOSOpenTools/${repo}/releases/latest")"; then
+      exit 4;
     fi
-    if [ ! -z "$list" ]; then
-      if ! contents="$(getContentsFromGithub "https://api.github.com/repos/ZOSOpenTools/${repo}/releases/latest")"; then
-        exit 4;
-      fi
-      statusline="$(echo "$contents" | grep "\"body\":.*Test Status:.*(.*)<br />")"
-      buildQuality="$(echo "$statusline" | sed -e "s#.*Test Status:<\/b>##" -e "s#[ ]*(.*##" | tr -d ' ')"
-      testStatus="$(echo "$statusline" | sed -e "s#.*Test Status:<\/b>[^(]*(##" -e "s#).*##")"
-      if [ -z "$buildQuality" ]; then
-        buildQuality="Untested"
-        testStatus="N/A";
-      fi
-      printf '%-25s %-25s %-25s\n' "$repo" "$buildQuality" "$testStatus"
-      continue;
+    latestTag="$(echo "$contents" | grep "\"tag_name\":" | cut -d '"' -f 4)"
+    statusline="$(echo "$contents" | grep "\"body\":.*Test Status:.*(.*)<br />")"
+    buildQuality="$(echo "$statusline" | sed -e "s#.*Test Status:<\/b>##" -e "s#[ ]*(.*##" | tr -d ' ')"
+    testStatus="$(echo "$statusline" | sed -e "s#.*Test Status:<\/b>[^(]*(##" -e "s#).*##")"
+    if [ -z "$buildQuality" ]; then
+      buildQuality="Untested"
+      testStatus="N/A";
     fi
-    foundPort=true
-    printHeader "Downloading latest release from $repo"
+
+    if [ -e "${name}/.releaseinfo" ]; then
+      originalTag=$(cat "${name}/.releaseinfo" | xargs) 
+    else
+      originalTag="Not installed"
+    fi
+    printf '%-20s %-20s %-20s %-10s %-25s\n' "$repo" "$originalTag" "$latestTag" "$buildQuality" "$testStatus"
+    continue;
+  done
+}
+
+downloadRepos()
+{
+  echo "$repoArray" | xargs | tr ' ' '\n' | sort | while read repo; do
+    name=${repo%port}
+    printHeader "Preparing to download $repo"
     if ! latest_url="$(getContentsFromGithub "https://api.github.com/repos/ZOSOpenTools/${repo}/releases/latest")"; then
       exit 4;
     fi
-    latest_url="$(echo "$latest_url" | grep browser_download_url | cut -d '"' -f 4)"
-
-    if [ -z $latest_url ]; then
-      printWarning "No releases published for $repo"
+    if [ -z "$latest_url" ]; then
+      printInfo "No releases published for $repo"
       continue
     fi
 
-    if ! curl -k -L ${latest_url} -O 2>/dev/null; then
+    latestTag="$(echo "$latest_url" | grep "\"tag_name\":" | cut -d '"' -f 4)"
+    if $updateOnly; then
+      if [ -e "${name}/.releaseinfo" ]; then
+        originalTag=$(cat "${name}/.releaseinfo" | xargs) 
+      fi
+      if [ "${latestTag}" = "${originalTag}" ]; then
+        printInfo "${downloadDir}/${name} with tag ${latestTag} already installed. Skipping..."
+        continue;
+      fi
+    fi
+    latest_url="$(echo "$latest_url" | grep "\"browser_download_url\":" | cut -d '"' -f 4)"
+    printInfo "Downloading latest release from $repo..."
+    if ! $verbose; then
+      redirectToDevNull="2>/dev/null"
+    fi 
+    if ! runAndLog "curl -L ${latest_url} -O ${redirectToDevNull}"; then
       printError "Could not download ${latest_url}"
     fi
 
@@ -127,22 +98,133 @@ for repo in $(echo ${repo_results}); do
       printError "${pax} was not actually downloaded?"
     fi
 
-    printHeader "Extracting $pax"
-    if ! pax -rf $pax -p p 2>/dev/null; then
+    printInfo "Extracting $pax..."
+    if ! runAndLog "pax -rf $pax -p p ${redirectToDevNull}"; then
       printWarning "Could not extract $pax. Skipping"
       continue;
     fi
     rm -f "${pax}"
     dirname=${pax%.pax.Z}
+
+    # Remove old symlink and recreate
     if [ -L $name ]; then
       rm $name
     fi 
+
     if ! ln -s $dirname $name; then
       printError "Could not create symbolic link name"
     fi 
+
+    # Add tag information as a .releaseinfo file
+    echo "$latestTag" > "${name}/.releaseinfo"
+    printInfo "Successfully downloaded $name to $downloadDir/$name/"
+done
+}
+
+
+# Main code start here
+args=$*
+downloadDir=$PWD
+updateOnly=true
+verbose=false
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    "-d")
+      downloadDir=$2;
+      shift
+      ;;
+    "-r")
+      chosenRepos=$2;
+      shift
+      ;;
+    "-u" | "--update" | "-update")
+      updateOnly=true
+      ;;
+    "-f" | "-force" | "--force")
+      updateOnly=false
+      ;;
+    "--list")
+      list=1;
+      ;;
+    "-filter" | "--filter")
+      filter=$2;
+      shift
+      ;;
+    "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
+      printSyntax "${args}"
+      exit 4
+      ;;
+    "-v" | "--v" | "-verbose" | "--verbose")
+       verbose=true
+      ;;
+    *)
+      chosenRepos=$1;
+      ;;
+  esac
+  shift;
+done
+
+export ZOPEN_CA="${utildir}/../../cacert.pem"
+if ! [ -r "${ZOPEN_CA}" ]; then
+  printError "Internal Error. Certificate ${ZOPEN_CA} is required"
+fi
+export SSL_CERT_FILE="${ZOPEN_CA}"
+export GIT_SSL_CAINFO="${ZOPEN_CA}"
+export CURL_CA_BUNDLE="${ZOPEN_CA}"
+
+if [ ! -z "${ZOPEN_GIT_OAUTH_TOKEN}" ]; then
+  OAUTH_TOKEN_OPTION='-H'
+  OAUTH_TOKEN="Authorization: Bearer ${ZOPEN_GIT_OAUTH_TOKEN}" 
+else
+  printWarning "Setting ZOPEN_GIT_OAUTH_TOKEN is recommended to ensure that you do not hit the GitHub API cap. See --help for more details."
+fi
+
+# Retrieve all repositories
+if ! repo_results="$(getContentsFromGithub "https://api.github.com/users/ZOSOpenTools/repos?per_page=100")"; then
+  exit 4;
+fi
+repo_results=$(echo "$repo_results" | grep "\"full_name\":" | cut -d '"' -f 4)
+
+if [ ! -d "${downloadDir}" ]; then
+  mkdir -p "${downloadDir}"
+  if $?; then
+    printError "Could not create download directory: $downloadDir"
+  fi
+fi
+
+if [ ! -z "${download}" -a -d "${download}" ]; then
+  cd "${download}"
+fi
+
+# Parse repositories for zopen framework repos
+foundPort=false
+repoArray=""
+for repo in $(echo ${repo_results}); do
+  repo=${repo#"ZOSOpenTools/"}
+  name=${repo%port}
+
+  if [ -z "${chosenRepos}" ]; then
+    repoArray="$repoArray $repo"
+  else
+    for toolrepo in $(echo "${chosenRepos}" | tr ',' '\n'); do
+      if [ "${toolrepo}" = "${repo}" ] || [ "${toolrepo}" = "${name}" ]; then
+        # Skip if the repo does not end with port
+        if [ "${repo}" = "${name}" ]; then
+          continue;
+        fi
+        repoArray="$repoArray $repo"
+      fi
+    done
   fi
 done
 
-if ! $foundPort && test -z $list; then
-  printError "Could not find $toolrepo. Run with --list option to view the available ports"
+if [ -z "$repoArray" ]; then
+  printError "Could not find specified $toolrepo. Run with --list option to view the available ports"
 fi
+
+if [ ! -z "$list" ]; then
+  printListEntries
+  exit 0;
+fi
+
+downloadRepos

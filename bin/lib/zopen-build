@@ -156,6 +156,7 @@ printSyntax()
   echo "  where <option> may be one or more of:" >&2
   echo "  -h: print this information" >&2
   echo "  -v: run in verbose mode" >&2
+  echo "  -u|--updatedeps: update all dependencies by running zopen download" >&2
   echo "  --buildtype: release|debug" >&2
   echo "  --oci: build and publish an OCI image to \$ZOPEN_IMAGE_REGISTRY" >&2
   echo "  -e <env file>: source <env file> instead of buildenv to establish build environment" >&2
@@ -174,6 +175,7 @@ processOptions()
   startShell=false
   buildEnvFile="./buildenv"
   depsPath="$HOME/zopen/prod|$HOME/zopen/boot|/usr/bin/zopen/"
+  forceUpdateDeps=false
   while [[ $# -gt 0 ]]; do
     case $1 in
       "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
@@ -182,6 +184,9 @@ processOptions()
         ;;
       "-v" | "--v" | "-verbose" | "--verbose")
         verbose=true
+        ;;
+      "-u" | "--updateDeps")
+        forceUpdateDeps=true
         ;;
       "-buildtype" | "--buildtype" | "-b")
         shift
@@ -214,22 +219,6 @@ processOptions()
         ;;
     esac
     shift
-  done
-}
-
-checkDeps()
-{
-  deps=$*
-  for dep in $deps; do
-    fail=true
-    for path in `echo ${depsPath} | tr '|' '\n'` ; do
-      if [ -r "$path/${dep}/.env" ]; then
-        fail=false
-      fi
-    done
-    if $fail; then
-      printError "Unable to find .env for dependency ${dep}"
-    fi
   done
 }
 
@@ -304,10 +293,6 @@ checkEnv()
     deps="${ZOPEN_GIT_DEPS}"
   fi
 
-  if ! checkDeps "${deps}"; then
-    printError "One or more dependent products aren't available"
-  fi
-
   export ZOPEN_CA="${utilparentdir}/cacert.pem"
   if ! [ -r "${ZOPEN_CA}" ]; then
     printError "Internal Error. Certificate ${ZOPEN_CA} is required"
@@ -336,13 +321,32 @@ setDepsEnv()
 
   orig="${PWD}"
   for dep in $deps; do
-    for path in `echo ${depsPath} | tr '|' '\n'` ; do
-      if [ -r "$path/${dep}/.env" ]; then
-        depdir="$path/${dep}"
-        printVerbose "Setting up ${depdir} dependency environment"
-        cd "${depdir}" && . ./.env
+    foundDep=false
+    if ! $forceUpdateDeps; then
+      for path in `echo ${depsPath} | tr '|' '\n'` ; do
+        if [ -r "$path/${dep}/.env" ]; then
+          depdir="$path/${dep}"
+          printVerbose "Setting up ${depdir} dependency environment"
+          cd "${depdir}" && . ./.env
+          foundDep=true
+          break
+        fi
+      done
+    fi
+    if ! $foundDep; then
+      if ! $forceUpdateDeps; then
+        printWarning "Dependency $dep not found. Downloading via zopen-download"
+      else
+        printHeader "Updating dependency $dep. Downloading via zopen-download"
       fi
-    done
+      path=$(echo ${depsPath} | tr '|' '\n' | head -1)
+      printVerbose "Running zopen download -r $dep -d $path"
+      if ! zopen download -r $dep -d $path; then
+        printError "zopen download command failed"
+      fi
+      printVerbose "Setting up ${path}/${dep} dependency environment"
+      cd "${path}/${dep}" && . ./.env
+    fi
   done
   cd "${orig}" || exit 99
 }
@@ -394,6 +398,7 @@ setEnv()
 
   export SSL_CERT_FILE="${ZOPEN_CA}"
   export GIT_SSL_CAINFO="${ZOPEN_CA}"
+  export CURL_CA_BUNDLE="${ZOPEN_CA}"
 
   setDepsEnv
 
@@ -602,7 +607,7 @@ downloadTarBall()
     echo "Using existing tarball directory ${dir}" >&2
   else
     if ${verbose}; then
-      printVerbose "curl -k -L -o ${tarballz} ${ZOPEN_TARBALL_URL}"
+      printVerbose "curl -L -o ${tarballz} ${ZOPEN_TARBALL_URL}"
     fi
     #
     # Some older tarballs (openssl) contain a pax_global_header file. Remove it
@@ -615,9 +620,9 @@ downloadTarBall()
     # Make a first call to just get the headers and toss everything out just to
     # set up the cache (requirec for openssl)
     #
-    curl -I -k "${ZOPEN_TARBALL_URL}" >/dev/null 2>&1
+    curl -I "${ZOPEN_TARBALL_URL}" >/dev/null 2>&1
 
-    if ! curl -k -L -0 -o "${tarballz}" "${ZOPEN_TARBALL_URL}" 2>/dev/null; then
+    if ! curl -L -0 -o "${tarballz}" "${ZOPEN_TARBALL_URL}";  then
       if [ -f "${tarballz}" ] && [ $(wc -c "${tarballz}" | awk '{print $1}') -lt 1024 ]; then
         cat "${tarballz}" >/dev/null
       else
@@ -810,6 +815,10 @@ build()
 
 check()
 {
+  if command -V "zopen_pre_check" >/dev/null 2>&1; then
+    printVerbose "Running zopen_pre_check"
+    zopen_pre_check "${ZOPEN_INSTALL_DIR}"
+  fi
   checklog="${LOG_PFX}_check.log"
   results=$ZOPEN_TEST_STATUS_SKIPPED # skipped
   if [ -n "${ZOPEN_CHECK_CMD}" ]; then
@@ -1136,6 +1145,11 @@ fi
 
 if ! resolveCommands; then
   exit 4
+fi
+
+if command -V "zopen_init" >/dev/null 2>&1; then
+  printVerbose "Running zopen_init"
+  zopen_init "${ZOPEN_INSTALL_DIR}"
 fi
 
 if ${startShell}; then
