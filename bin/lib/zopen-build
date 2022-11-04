@@ -516,6 +516,7 @@ gitClone()
     if ! runAndLog "git clone \"${ZOPEN_GIT_URL}\""; then
       printError "Unable to clone ${gitname} from ${ZOPEN_GIT_URL}"
     fi
+    forceRebuild=true
     if [ "${ZOPEN_GIT_BRANCH}x" != "x" ]; then
       if ! git -C "${dir}" checkout "${ZOPEN_GIT_BRANCH}" >/dev/null; then
         printError"Unable to checkout ${ZOPEN_GIT_URL} branch ${ZOPEN_GIT_BRANCH}"
@@ -617,6 +618,7 @@ downloadTarBall()
   if [ -d "${dir}" ]; then
     echo "Using existing tarball directory ${dir}" >&2
   else
+    forceRebuild=true
     if ${verbose}; then
       printVerbose "curl -L -o ${tarballz} ${ZOPEN_TARBALL_URL}"
     fi
@@ -1017,7 +1019,7 @@ resolveCommands()
           export ZOPEN_CONFIGURE_CMD="\"${ZOPEN_CONFIGURE}\" ${ZOPEN_CONFIGURE_OPTS} -DCMAKE_C_COMPILER=${CC} -DCMAKE_C_FLAGS=\"${CPPFLAGS} ${CFLAGS}\" -DCMAKE_CXX_COMPILER=${CXX} -DCMAKE_CXX_FLAGS=\"${CPPFLAGS} ${CXXFLAGS}\" -DCMAKE_CXX_LINK_LIBRARY_FLAG=\"${LDFLAGS}\" -DCMAKE_C_LINK_LIBRARY_FLAG=\"${LDFLAGS}\" -DCMAKE_CXX_STANDARD_LIBRARIES=\"${LIBS}\" -DCMAKE_C_STANDARD_LIBRARIES=\"${LIBS}\""
           ;;
         (*)
-          export ZOPEN_CONFIGURE_CMD="\"${ZOPEN_CONFIGURE}\" ${ZOPEN_CONFIGURE_OPTS} CC=${CC} -DCPPFLAGS=\"${CPPFLAGS}\" CFLAGS=\"${CFLAGS}\" CXX=${CXX} CXXFLAGS=\"${CXXFLAGS}\" LDFLAGS=\"${LDFLAGS}\" LIBS=\"${LIBS}\""
+          export ZOPEN_CONFIGURE_CMD="\"${ZOPEN_CONFIGURE}\" ${ZOPEN_CONFIGURE_OPTS} CC=${CC} CPPFLAGS=\"${CPPFLAGS}\" CFLAGS=\"${CFLAGS}\" CXX=${CXX} CXXFLAGS=\"${CXXFLAGS}\" LDFLAGS=\"${LDFLAGS}\" LIBS=\"${LIBS}\""
           ;;
       esac
       export ZOPEN_CONFIGURE_MINIMAL="no"
