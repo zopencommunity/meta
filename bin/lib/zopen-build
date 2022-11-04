@@ -322,18 +322,23 @@ setDepsEnv()
   orig="${PWD}"
   for dep in $deps; do
     foundDep=false
-    if ! $forceUpdateDeps; then
-      for path in `echo ${depsPath} | tr '|' '\n'` ; do
-        if [ -r "$path/${dep}/.env" ]; then
-          depdir="$path/${dep}"
-          printVerbose "Setting up ${depdir} dependency environment"
-          cd "${depdir}" && . ./.env
-          foundDep=true
-          break
-        fi
-      done
-    fi
-    if ! $foundDep; then
+    for path in `echo ${depsPath} | tr '|' '\n'` ; do
+      if [ -r "$path/${dep}/.env" ]; then
+        depdir="$path/${dep}"
+        printVerbose "Setting up ${depdir} dependency environment"
+        cd "${depdir}" && . ./.env
+        foundDep=true
+        break
+      fi
+    done
+    if ! $foundDep || $forceUpdateDeps; then
+      #TODO: remove when git is successfully ported
+      if [ ! $foundDep -a $dep = "git" ]; then
+        printError "git not found, the Rocket Git must be manually downloaded"
+      elif [ $foundDep -a $dep = "git" ]; then
+        printWarning "The z/OS Open tools Git is not fully functional, skipping update"
+        continue
+      fi
       if ! $forceUpdateDeps; then
         printWarning "Dependency $dep not found. Downloading via zopen-download"
       else
@@ -344,7 +349,7 @@ setDepsEnv()
       if ! zopen download -r $dep -d $path; then
         printError "zopen download command failed"
       fi
-      printVerbose "Setting up ${path}/${dep} dependency environment"
+      printVerbose "Setting up updated ${path}/${dep} dependency environment"
       cd "${path}/${dep}" && . ./.env
     fi
   done
