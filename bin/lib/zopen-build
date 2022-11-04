@@ -381,7 +381,7 @@ setEnv()
 
   if [ "${CC}x" = "xlclangx" ]; then
     # Confirm xlclang is at least 1.0.0 (aka __COMPILER_VER__=42040001)
-    ccraw=$(touch $TEMP_C_FILE && xlclang -E -qshowmacros $TEMP_C_FILE | grep '__COMPILER_VER__' | awk '{print substr($3,3)}')
+    ccraw=$(touch $TEMP_C_FILE && ${CC} -E -qshowmacros $TEMP_C_FILE | grep '__COMPILER_VER__' | awk '{print substr($3,3)}')
     if [ "${ccraw}x" = "x" ]; then
       printError "xlclang compiler specified, but it is not a 'IBM C/C++ for Open Enterprise Languages on z/OS' compiler"
     fi 
@@ -392,9 +392,9 @@ setEnv()
 
   if [ "${CXX}x" = "xlclang++x" ]; then
     # Confirm xlclang is at least 1.0.0 (aka __COMPILER_VER__=42040001)
-    ccraw=$(touch $TEMP_C_FILE && xlclang++ -+ -E -qshowmacros $TEMP_C_FILE | grep '__COMPILER_VER__' | awk '{print substr($3,3)}')
+    ccraw=$(touch $TEMP_C_FILE && ${CXX} -+ -E -qshowmacros $TEMP_C_FILE | grep '__COMPILER_VER__' | awk '{print substr($3,3)}')
     if [ "${ccraw}x" = "x" ]; then
-      printError "xlclang compiler specified, but it is not a 'IBM C/C++ for Open Enterprise Languages on z/OS' compiler"
+      printError "xlclang++ compiler specified, but it is not a 'IBM C/C++ for Open Enterprise Languages on z/OS' compiler"
     fi 
     if [ ${ccraw} -lt 42040001 ] ; then
       printError "Need to be running at least IBM C for Open Enterprise Languages on z/OS 1"
@@ -762,15 +762,15 @@ bootstrap()
 {
   if [ -n "${ZOPEN_BOOTSTRAP_CMD}" ] ; then
     printHeader "Running Bootstrap"
-    if [ -r bootstrap.success ]; then
+    if [ -r ${ZOPEN_ROOT}/log/bootstrap.success ]; then
       echo "Using previous successful bootstrap" >&2
     else
-      bootlog="${LOG_PFX}_bootstrap.log"
+      bootlog="${ZOPEN_ROOT}/log/${LOG_PFX}_bootstrap.log"
       create_fifo_pipe "${bootlog}"
       if ! runAndLog "${ZOPEN_BOOTSTRAP_CMD} >$TMP_FIFO_PIPE 2>&1"; then
         printError "Bootstrap failed. Log: ${bootlog}" >&2
       fi
-      touch bootstrap.success
+      touch ${ZOPEN_ROOT}/log/bootstrap.success
     fi
   else
     printHeader "Skip Bootstrap"
@@ -781,10 +781,10 @@ configure()
 {
   if [ -n "${ZOPEN_CONFIGURE_CMD}" ] ; then
     printHeader "Running Configure"
-    if [ -r config.success ]; then
+    if [ -r ${ZOPEN_ROOT}/log/config.success ]; then
       echo "Using previous successful configuration" >&2
     else
-      configlog="${LOG_PFX}_config.log"
+      configlog="${ZOPEN_ROOT}/log/${LOG_PFX}_config.log"
       create_fifo_pipe "${configlog}"
       if ! runAndLog "${ZOPEN_CONFIGURE_CMD} >$TMP_FIFO_PIPE 2>&1"; then
         if [ "${ZOPEN_CONFIGURE_MINIMAL}" = "yes" ]; then
@@ -793,7 +793,7 @@ configure()
           printError "Configure (full) failed. Log: ${configlog}"
         fi
       fi
-      touch config.success
+      touch ${ZOPEN_ROOT}/log/config.success
     fi
   else
     printHeader "Skip Configure"
@@ -802,7 +802,7 @@ configure()
 
 build()
 {
-  makelog="${LOG_PFX}_build.log"
+  makelog="${ZOPEN_ROOT}/log/${LOG_PFX}_build.log"
   if [ -n "${ZOPEN_MAKE_CMD}" ]; then
     printHeader "Running Build"
     create_fifo_pipe "${makelog}"
@@ -824,14 +824,14 @@ check()
     printVerbose "Running zopen_pre_check"
     zopen_pre_check "${ZOPEN_INSTALL_DIR}"
   fi
-  checklog="${LOG_PFX}_check.log"
+  checklog="${ZOPEN_ROOT}/log/${LOG_PFX}_check.log"
   results=$ZOPEN_TEST_STATUS_SKIPPED # skipped
   if [ -n "${ZOPEN_CHECK_CMD}" ]; then
     printHeader "Running Check"
     create_fifo_pipe "${checklog}"
     runInBackgroundWithTimeoutAndLog "${ZOPEN_CHECK_CMD} > $TMP_FIFO_PIPE 2>&1" "${ZOPEN_CHECK_TIMEOUT}"
     if command -V "${ZOPEN_CHECK_RESULTS}" >/dev/null 2>&1; then
-      testStatus="$(${ZOPEN_CHECK_RESULTS} "${ZOPEN_ROOT}/${dir}" "${LOG_PFX}")"
+      testStatus="$(${ZOPEN_CHECK_RESULTS} "${ZOPEN_ROOT}/log" "${LOG_PFX}")"
       printVerbose "Test status:\n$testStatus"
       testStatusError=false
       if echo "$testStatus" | grep -q -E "actualFailures:[ ]*[0-9]+"; then
@@ -945,7 +945,7 @@ install()
 {
   if [ -n "${ZOPEN_INSTALL_CMD}" ]; then
     printHeader "Running Install"
-    installlog="${LOG_PFX}_install.log"
+    installlog="${ZOPEN_ROOT}/log/${LOG_PFX}_install.log"
     create_fifo_pipe "${installlog}"
     if ! runAndLog "${ZOPEN_INSTALL_CMD} > $TMP_FIFO_PIPE"; then
       printError "Install failed. Log: ${installlog}"
@@ -1000,7 +1000,14 @@ resolveCommands()
 
   if [ "${ZOPEN_CONFIGURE}x" != "skipx" ]; then
     if [ "${ZOPEN_CONFIGURE_MINIMAL}x" = "x" ]; then
-      export ZOPEN_CONFIGURE_CMD="\"${ZOPEN_CONFIGURE}\" ${ZOPEN_CONFIGURE_OPTS} CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\" \"LIBS=${LIBS}\""
+      case "${ZOPEN_CONFIGURE}" in
+        (*cmake*)
+          export ZOPEN_CONFIGURE_CMD="\"${ZOPEN_CONFIGURE}\" ${ZOPEN_CONFIGURE_OPTS} -DCMAKE_C_COMPILER=${CC} -DCMAKE_C_FLAGS=\"${CPPFLAGS} ${CFLAGS}\" -DCMAKE_CXX_COMPILER=${CXX} -DCMAKE_CXX_FLAGS=\"${CPPFLAGS} ${CXXFLAGS}\" -DCMAKE_CXX_LINK_LIBRARY_FLAG=\"${LDFLAGS}\" -DCMAKE_C_LINK_LIBRARY_FLAG=\"${LDFLAGS}\" -DCMAKE_CXX_STANDARD_LIBRARIES=\"${LIBS}\" -DCMAKE_C_STANDARD_LIBRARIES=\"${LIBS}\""
+          ;;
+        (*)
+          export ZOPEN_CONFIGURE_CMD="\"${ZOPEN_CONFIGURE}\" ${ZOPEN_CONFIGURE_OPTS} CC=${CC} -DCPPFLAGS=\"${CPPFLAGS}\" CFLAGS=\"${CFLAGS}\" CXX=${CXX} CXXFLAGS=\"${CXXFLAGS}\" LDFLAGS=\"${LDFLAGS}\" LIBS=\"${LIBS}\""
+          ;;
+      esac
       export ZOPEN_CONFIGURE_MINIMAL="no"
     else
       export ZOPEN_CONFIGURE_CMD="\"${ZOPEN_CONFIGURE}\" ${ZOPEN_CONFIGURE_OPTS}"
@@ -1025,7 +1032,7 @@ resolveCommands()
 
   if [ "${ZOPEN_CHECK}x" != "skipx" ] && ! ${skipcheck}; then
     export ZOPEN_CHECK_CMD="\"${ZOPEN_CHECK}\" ${ZOPEN_CHECK_OPTS} CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\""
-    export ZOPEN_CHECK_RESULTS_CMD="\"${ZOPEN_CHECK_RESULTS}\" \"${ZOPEN_ROOT}/${dir}\" \"${LOG_PFX}\""
+    export ZOPEN_CHECK_RESULTS_CMD="\"${ZOPEN_CHECK_RESULTS}\" \"${ZOPEN_ROOT}/log\" \"${LOG_PFX}\""
   else
     unset ZOPEN_CHECK_CMD
     unset ZOPEN_CHECK_RESULTS_CMD
@@ -1033,7 +1040,8 @@ resolveCommands()
 
   if [ "${ZOPEN_INSTALL}x" != "skipx" ] && [ ! -z "$(command -v ${ZOPEN_INSTALL})" ]; then
     export ZOPEN_INSTALL_CMD="${ZOPEN_INSTALL} ${ZOPEN_INSTALL_OPTS}"
-    paxFileName="${ZOPEN_NAME}.${LOG_PFX}.zos.pax.Z"
+    [[ -d ${ZOPEN_ROOT}/install ]] || mkdir -p ${ZOPEN_ROOT}/install
+    paxFileName="${ZOPEN_ROOT}/install/${ZOPEN_NAME}.${LOG_PFX}.zos.pax.Z"
     export ZOPEN_PAX_CMD="pax -w -z -x pax \"-s#${ZOPEN_INSTALL_DIR}/#${ZOPEN_NAME}.${LOG_PFX}.zos/#\" -f \"${paxFileName}\" \"${ZOPEN_INSTALL_DIR}/\""
   else
     unset ZOPEN_INSTALL_CMD
@@ -1121,6 +1129,8 @@ if ! processOptions $*; then
 fi
 
 export ZOPEN_ROOT=$(cd "$(dirname "$buildEnvFile")"; pwd)
+
+[[ -d ${ZOPEN_ROOT}/log ]] || mkdir -p ${ZOPEN_ROOT}/log
 
 if ! loadBuildEnv; then
   exit 4
