@@ -1,6 +1,8 @@
 #include "syscmd.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
 
 int unpaxandlink(const char* root, const char* subdir, const char* pkg, const char* shortname) { 
   char pax_format[] = "cd %s/%s && /bin/pax -rf %s && rm %s";
@@ -50,5 +52,38 @@ int createhomelink(const char* home, const char* name, const char* root) {
   }
 
   return rc;
+}
+
+int getpkgname(const char* temprawpkg, const char* temppkg, char* buffer, size_t bufflen) {
+  char getpkg_format[] = "/bin/sh -c \"grep '\\\"name\\\":' %s | grep 'pax.Z' | awk ' { print $2; }' | tr -d '\\\",' >%s\"";
+  char getpkg[ZOPEN_CMD_MAX+1];
+  int rc;
+  ssize_t len;
+  int fd; 
+
+  if ((rc = snprintf(getpkg, sizeof(getpkg), getpkg_format, temprawpkg, temppkg)) > sizeof(getpkg)) {
+    fprintf(stderr, "error building command to get package from %s and write it to %s\n", temprawpkg, temppkg);
+    return rc;
+  }
+  rc = system(getpkg);
+  if (rc) {
+    fprintf(stderr, "non zero rc of %d from system %s\n", rc, getpkg);
+    return rc;
+  }
+  fprintf(stderr, "call:%s\n", getpkg);
+
+  if (!(fd = open(temppkg, O_RDONLY))) {
+    fprintf(stderr, "Unable to open %s for read after system call\n", temppkg);
+    return 4;
+  }
+  if ((len = read(fd, buffer, bufflen)) < 0) {
+    fprintf(stderr, "Unable to read %s after system call\n", temppkg);
+    return 4;
+  }
+  close(fd);
+  
+  buffer[len] = '\0';
+
+  return 0;
 }
 

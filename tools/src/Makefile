@@ -17,5 +17,5 @@ headers: hwthic.h
 httpsget: httpsgetmain.o httpsget.o createdb.o createpem.o download.o zopenio.o
 	$(LD) $(LDFLAGS) -o$@ $^
     
-zopen-setup: zopensetupmain.o download.o createdirs.o createdb.o createpem.o httpsget.o zopenio.o syscmd.o createbootenv.o
+zopen-setup: zopensetupmain.o download.o createdirs.o createdb.o createpem.o httpsget.o zopenio.o syscmd.o createbootenv.o httpspkg.o
 	$(LD) $(LDFLAGS) -o$@ $^ 

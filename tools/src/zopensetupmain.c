@@ -26,6 +26,7 @@ int main(int argc, char* argv[]) {
   const char* pemdata = GITHUB_PEM_CA;
   char* pkgsfx;
   char  root[ZOPEN_PATH_MAX+1];
+  char  filename[ZOPEN_PATH_MAX+1];
   char  output[ZOPEN_PATH_MAX+1];
   char  tmppem[ZOPEN_PATH_MAX+1];
   char  uri[ZOPEN_PATH_MAX+1];
@@ -68,11 +69,16 @@ int main(int argc, char* argv[]) {
     } else {
       pkgsfx="";
     }
+
     if ((rc = snprintf(uri, sizeof(uri), "/%s/%s%s/%s/%s.%s", ZOPEN_BOOT_URI_PREFIX, bootpkg[i], pkgsfx, ZOPEN_BOOT_URI_SUFFIX, bootpkg[i], ZOPEN_BOOT_URI_TYPE)) > sizeof(uri)) {
       fprintf(stderr, "error building uri for /%s/%s%s/%s/%s.%s", ZOPEN_BOOT_URI_PREFIX, bootpkg[i], pkgsfx, ZOPEN_BOOT_URI_SUFFIX, bootpkg[i], ZOPEN_BOOT_URI_TYPE);
       return 4;
     }   
-    if (!output || genfilenameinsubdir("pax.Z", root, ZOPEN_BOOT, bootpkg[i], output, ZOPEN_PATH_MAX)) {
+    if (getfilenamefrompkg(bootpkg[i], pkgsfx, tmppem, filename, ZOPEN_PATH_MAX)) {
+      fprintf(stderr, "error acquiring storage (3)\n");
+      return 4;
+    }
+    if (genfilenameinsubdir(root, ZOPEN_BOOT, filename, output, ZOPEN_PATH_MAX)) {
       fprintf(stderr, "error acquiring storage (2)\n");
       return 4;
     }
