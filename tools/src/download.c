@@ -1054,11 +1054,13 @@ int toolkitSetOption( HWTH_RETURNCODE_TYPE *rcPtr,
 		  * Announce the successful download
 		  ************************************/
 		 if ( pRecvData->numBytesWritten == pRecvData->numBytesReceived ) {
+     #ifdef VERBOSE
 			 sprintf( msgBuf,
 					 "File successfully downloaded to %s (%lld bytes)",
 					 pParms->fileOrDsname,
 					 pRecvData->numBytesWritten );
 			 trace( msgBuf );
+     #endif
 			 return;
 		 }  /* endif successful download */
 

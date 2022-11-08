@@ -17,7 +17,9 @@ int unpaxandlink(const char* root, const char* subdir, const char* pkg, const ch
   }
   rc = system(pax);
   if (rc == 0) {
+  #if VERBOSE
     fprintf(stdout, "Successfully performed unpax: %s\n", pax);
+  #endif
   } else {
     fprintf(stderr, "non zero rc of %d from system %s\n", rc, pax);
   }
@@ -28,7 +30,9 @@ int unpaxandlink(const char* root, const char* subdir, const char* pkg, const ch
   }
   rc = system(ln);
   if (rc == 0) {
+  #if VERBOSE
     fprintf(stdout, "Successfully performed symbolic link: %s\n", ln);
+  #endif
   } else {
     fprintf(stderr, "non zero rc of %d from system %s\n", rc, ln);
   }
@@ -46,7 +50,9 @@ int createhomelink(const char* home, const char* name, const char* root) {
   }
   rc = system(ln);
   if (rc == 0) {
+  #if VERBOSE
     fprintf(stdout, "Successfully performed symbolic link: %s\n", ln);
+  #endif
   } else {
     fprintf(stderr, "non zero rc of %d from system %s\n", rc, ln);
   }
@@ -55,13 +61,13 @@ int createhomelink(const char* home, const char* name, const char* root) {
 }
 
 int getpkgname(const char* temprawpkg, const char* temppkg, char* buffer, size_t bufflen) {
-  char getpkg_format[] = "/bin/sh -c \"grep '\\\"name\\\":' %s | grep 'pax.Z' | awk ' { print $2; }' | tr -d '\\\",' >%s\"";
+  char getpkg_format[] = "/bin/sh -c \"chtag -t %s && chtag -cISO8859-1 %s && grep 'pax.Z' %s | sed -e 's/.*https/https/g' -e 's/<\\/a>.*//g' -e 's/.*\\///g' >%s\"";
   char getpkg[ZOPEN_CMD_MAX+1];
   int rc;
   ssize_t len;
   int fd; 
 
-  if ((rc = snprintf(getpkg, sizeof(getpkg), getpkg_format, temprawpkg, temppkg)) > sizeof(getpkg)) {
+  if ((rc = snprintf(getpkg, sizeof(getpkg), getpkg_format, temprawpkg, temprawpkg, temprawpkg, temppkg)) > sizeof(getpkg)) {
     fprintf(stderr, "error building command to get package from %s and write it to %s\n", temprawpkg, temppkg);
     return rc;
   }
@@ -70,7 +76,6 @@ int getpkgname(const char* temprawpkg, const char* temppkg, char* buffer, size_t
     fprintf(stderr, "non zero rc of %d from system %s\n", rc, getpkg);
     return rc;
   }
-  fprintf(stderr, "call:%s\n", getpkg);
 
   if (!(fd = open(temppkg, O_RDONLY))) {
     fprintf(stderr, "Unable to open %s for read after system call\n", temppkg);
@@ -81,8 +86,8 @@ int getpkgname(const char* temprawpkg, const char* temppkg, char* buffer, size_t
     return 4;
   }
   close(fd);
-  
-  buffer[len] = '\0';
+  buffer[len-1] = '\0'; /* remove newline */
+
 
   return 0;
 }

@@ -8,7 +8,7 @@
  */
 
 int getfilenamefrompkg(const char* pkg, const char* pkgsfx, const char* tmppem, char* buffer, size_t bufflen) {
-  const char* apihost = "api.github.com";
+  const char* apihost = "github.com";
   char temprawpkg[ZOPEN_PATH_MAX+1];
   char temppkg[ZOPEN_PATH_MAX+1];
   char uri[ZOPEN_PATH_MAX+1];
@@ -25,7 +25,6 @@ int getfilenamefrompkg(const char* pkg, const char* pkgsfx, const char* tmppem, 
     fprintf(stderr, "error building uri for /%s/%s%s/%s", ZOPEN_REPO_URI_PREFIX, pkg, pkgsfx, ZOPEN_REPO_URI_SUFFIX);
     return 4;
   }
-  fprintf(stderr, "httpsget %s%s\n", apihost, uri);
   if (rc = httpsget(apihost, uri, tmppem, temprawpkg)) {
     fprintf(stderr, "error downloading https://%s%s with PEM file %s to %s\n", apihost, uri, tmppem, temprawpkg);
     return rc;
@@ -34,5 +33,8 @@ int getfilenamefrompkg(const char* pkg, const char* pkgsfx, const char* tmppem, 
     fprintf(stderr, "error extracting package name from %s\n", temprawpkg);
     return 4;
   }
+  remove(temprawpkg);
+  remove(temppkg);
+
   return 0;
 }
