@@ -145,6 +145,14 @@ node('linux')
   }
 }
 EOT
+
+touch "${name}port/.gitignore" && chtag -tc 819 "${name}port/.gitignore"
+cat <<EOT > "${name}port/.gitignore"
+log/
+install/
+EOT
+printInfo "${name}port/.gitignore created"
+
 cp "${utildir}/../../LICENSE" "${name}port/LICENSE"
 cp "${utildir}/../../.gitattributes" "${name}port/.gitattributes"
 printHeader "${name} project is ready! ${name}port/"
