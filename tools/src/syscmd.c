@@ -35,7 +35,7 @@ int unpaxandlink(const char* root, const char* subdir, const char* pkg, const ch
 }
 
 int createhomelink(const char* home, const char* name, const char* root) {
-  char ln_format[] = "/bin/sh -c \"cd %s && /bin/rm -f %s && /bin/ln -s %s %s\"";
+  char ln_format[] = "/bin/sh -c \"cd %s && /bin/rm -f %s && /bin/ln -s %s %s/zopen\"";
   char ln[ZOPEN_CMD_MAX+1];
   int rc;
   if ((rc = snprintf(ln, sizeof(ln), ln_format, home, name, root, home)) > sizeof(ln)) {
