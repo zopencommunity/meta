@@ -15,7 +15,7 @@ printSyntax()
   echo "  --list: list all available z/OS Open Tools"  >&2
   echo "  --update: update z/OS Open Tools packages. On by default."  >&2
   echo "  --force: force downloads all z/OS Open Tools packages."  >&2
-  echo "  <coming soon> --filter <color>: filter based on quality (green - all tests passing, blue - most tests passing, yellow - some tests passing, red - no tests passing, none (default))"  >&2
+  echo "  --filter <color>: filter based on quality (green - all tests passing, blue - most tests passing, yellow - some tests passing, red - no tests passing, or skipped (no filter by default))"  >&2
   echo "  -v: run in verbose mode" >&2
   echo "  -d <dir>: directory to download binaries to.  Uses current working directory if not specified." >&2
   echo "  -r <repo,...>: a set of comma delimited projects to download. Downloads all ZOSOpenTools if not specified." >&2
@@ -42,6 +42,7 @@ printListEntries()
     if ! contents="$(getContentsFromGithub "https://api.github.com/repos/ZOSOpenTools/${repo}/releases/latest")"; then
       exit 4;
     fi
+    #FIXME: use jq to parse
     latestTag="$(echo "$contents" | grep "\"tag_name\":" | cut -d '"' -f 4)"
     statusline="$(echo "$contents" | grep "\"body\":.*Test Status:.*(.*)<br />")"
     buildQuality="$(echo "$statusline" | sed -e "s#.*Test Status:<\/b>##" -e "s#[ ]*(.*##" | tr -d ' ')"
@@ -49,6 +50,12 @@ printListEntries()
     if [ -z "$buildQuality" ]; then
       buildQuality="Untested"
       testStatus="N/A";
+    fi
+    if [ ! -z "$filter" ]; then
+      qualityLower=$(echo "$buildQuality" | awk '{print tolower($0)}')
+      if [ "$filter" != "$qualityLower" ]; then
+        continue;
+      fi
     fi
 
     if [ -e "${name}/.releaseinfo" ]; then
@@ -65,10 +72,24 @@ downloadRepos()
 {
   echo "$repoArray" | xargs | tr ' ' '\n' | sort | while read repo; do
     name=${repo%port}
-    printHeader "Preparing to download $repo"
     if ! latest_url="$(getContentsFromGithub "https://api.github.com/repos/ZOSOpenTools/${repo}/releases/latest")"; then
       exit 4;
     fi
+
+    #FIXME: use jq to parse
+    statusline="$(echo "$latest_url" | grep "\"body\":.*Test Status:.*(.*)<br />")"
+    buildQuality="$(echo "$statusline" | sed -e "s#.*Test Status:<\/b>##" -e "s#[ ]*(.*##" | tr -d ' ')"
+    if [ -z "$buildQuality" ]; then
+      buildQuality="Untested"
+    fi
+    if [ ! -z "$filter" ]; then
+      qualityLower=$(echo "$buildQuality" | awk '{print tolower($0)}')
+      if [ "$filter" != "$qualityLower" ]; then
+        continue;
+      fi
+    fi
+
+    printHeader "Preparing to download $repo"
     if [ -z "$latest_url" ]; then
       printInfo "No releases published for $repo"
       continue
@@ -179,6 +200,14 @@ else
   printWarning "Setting ZOPEN_GIT_OAUTH_TOKEN is recommended to ensure that you do not hit the GitHub API cap. See --help for more details."
 fi
 
+if [ ! -z "$filter" ]; then
+  filter=$(echo "$filter" | awk '{print tolower($0)}')
+  case "$filter" in
+      blue|green|yellow|red|skipped) ;;
+      *) printError "The filter must be one of blue|green|yellow|red"
+  esac
+fi
+
 # Retrieve all repositories
 if ! repo_results="$(getContentsFromGithub "https://api.github.com/users/ZOSOpenTools/repos?per_page=100")"; then
   exit 4;
@@ -202,6 +231,11 @@ repoArray=""
 for repo in $(echo ${repo_results}); do
   repo=${repo#"ZOSOpenTools/"}
   name=${repo%port}
+
+  # Skip repos that do not end with port
+  if [ "${name}" = "${repo}" ]; then
+    continue;
+  fi
 
   if [ -z "${chosenRepos}" ]; then
     repoArray="$repoArray $repo"
