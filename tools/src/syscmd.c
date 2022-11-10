@@ -62,7 +62,7 @@ int createhomelink(const char* home, const char* name, const char* root) {
 }
 
 int getpkgname(const char* temprawpkg, const char* temppkg, char* buffer, size_t bufflen) {
-  char getpkg_format[] = "/bin/sh -c \"/bin/chtag -t %s && /bin/chtag -cISO8859-1 %s && /bin/grep 'pax.Z' %s | /bin/sed -e 's/.*https/https/g' -e 's/<\\/a>.*//g' -e 's/.*\\///g' >%s\"";
+  char getpkg_format[] = "/bin/sh -c \"chtag -t %s && chtag -cISO8859-1 %s && cat %s | awk ' BEGIN { RS=\\\",\\\" } { print }' | grep '\\\"name\\\":' | grep pax.Z | tr '\\\"' ' ' | /bin/awk '{ print \\$3 }' >%s\"";
   char getpkg[ZOPEN_CMD_MAX+1];
   int rc;
   ssize_t len;
@@ -72,6 +72,7 @@ int getpkgname(const char* temprawpkg, const char* temppkg, char* buffer, size_t
     fprintf(stderr, "error building command to get package from %s and write it to %s\n", temprawpkg, temppkg);
     return rc;
   }
+printf("system command: %s\n", getpkg);
   rc = system(getpkg);
   if (rc) {
     fprintf(stderr, "non zero rc of %d from system %s\n", rc, getpkg);

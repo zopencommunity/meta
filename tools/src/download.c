@@ -339,6 +339,20 @@ int toolkitSetOption( HWTH_RETURNCODE_TYPE *rcPtr,
 		uint32_t              optionValueLength,
 		HWTH_DIAGAREA_TYPE   *diagAreaPtr );
 
+/* @GG start*/
+int  setRequestHeaders( HWTH_RETURNCODE_TYPE *rcPtr,
+                        HWTH_HANDLE_TYPE     *requestHandlePtr,
+                        HWTH_DIAGAREA_TYPE   *diagAreaPtr );
+char  **getRequestHeaders();
+void  freeRequestHeaders( char **headersList );
+int toolkitSlistOperation( HWTH_RETURNCODE_TYPE    *rcPtr,
+                           HWTH_HANDLE_TYPE        *handlePtr,
+                           HWTH_SLST_FUNCTION_TYPE  whichFunction,
+                           HWTH_SLIST_TYPE         *sListPtr,
+                           char                   **stringRef,
+                           uint32_t                 stringLength,
+                           HWTH_DIAGAREA_TYPE      *diagAreaPtr );
+/* @GG end*/
 
 #define MAX_TOKEN_PAYLOAD 16536       /* generous */
 #define MAX_URI_LEN        511        /* generous */
@@ -783,6 +797,19 @@ int toolkitSetOption( HWTH_RETURNCODE_TYPE *rcPtr,
 			 sizeof(intOption),
 			 &diagArea ) )
 		 return -1;
+
+    /* @GG insert call to create request headers */
+   /*********************************************
+   * Set the request headers.  This involves
+   * SList processing, done in called routines.
+   *********************************************/
+  	trace( "Set the request header(s) as HWTH_OPT_HTTPHEADERS" );
+  	if ( setRequestHeaders( &rc,
+                          requestHandlePtr,
+                         &diagArea) ) {
+    	 trace( "Unable to set request header(s)" );
+    	 return -1;
+     }
 
 	 /************************************************************
 	  * If the user specified a credential (anticipating that the
@@ -2587,3 +2614,186 @@ int toolkitSetOption( HWTH_RETURNCODE_TYPE *rcPtr,
 	 return ( setUserid( credBuf, &pParms->userid[0] ) +
 			 setPassword( pDelim, &pParms->password[0] ) );
  }
+
+
+ /******************************************************************
+ * Function:  setRequestHeaders()
+ *
+ * Use toolkit SList processing to provide any request header(s)
+ * which are appropriate.
+ *
+ * Returns: 0 if successful, -1 if not
+ *****************************************************************/
+int setRequestHeaders( HWTH_RETURNCODE_TYPE *rcPtr,
+                 HWTH_HANDLE_TYPE     *requestHandlePtr,
+                 HWTH_DIAGAREA_TYPE   *diagAreaPtr ) {
+
+  char **headerStringArray = NULL;
+  int  i;
+
+  HWTH_SLIST_TYPE SList;
+  HWTH_SLIST_TYPE *SListPtr = &SList;
+  char  **stringRef;
+
+  /*******************************************************************
+   * It might typically be the case that the caller has no request
+   * header(s) to supply.  However in this particular sample they
+   * will turn out to be required (see the commentary for function
+   * getRequestHeaders()), and failure to produce them is fatal.
+   *******************************************************************/
+  headerStringArray = getRequestHeaders();
+  if ( headerStringArray == NULL || headerStringArray[0] == NULL ) {
+     trace( "No Request header(s) supplied" );
+     return -1;
+     }
+
+  trace( "Create a new Slist" );
+  stringRef = &headerStringArray[0];
+  *SListPtr = NULL;
+  trace( *stringRef );
+  if ( toolkitSlistOperation( rcPtr,
+                              requestHandlePtr,
+                              HWTH_SLST_NEW,
+                              SListPtr,
+                              stringRef,
+                              (uint32_t)strlen(*stringRef),
+                              diagAreaPtr ) ) {
+      trace( "Slist create failure" );
+      return -1;
+      } /* endif slist create failure */
+  else
+      trace( "Slist created" );
+
+  i = 1;
+  while ( ( headerStringArray[i] != NULL ) &&
+          ( strlen(headerStringArray[i]) > 0 ) ) {
+     trace( "Append next request header to the Slist" );
+     stringRef = &headerStringArray[i++];
+     trace( *stringRef );
+     if ( toolkitSlistOperation( rcPtr,
+                                 requestHandlePtr,
+                                 HWTH_SLST_APPEND,
+                                 SListPtr,
+                                 stringRef,
+                                 (uint32_t)strlen(*stringRef),
+                                 diagAreaPtr ) ) {
+         trace( "Slist append failure" );
+         return -1;
+         } /* endif slist append failed */
+      else
+         trace( "Next request header appended" );
+      }  /* endloop thru remaining headers */
+
+ trace( "Set the completed Slist as Request Headers" );
+ trace( SList );
+ if ( toolkitSetOption( rcPtr,
+                        requestHandlePtr,
+                        HWTH_OPT_HTTPHEADERS,
+                        (void **)&SListPtr,
+                        sizeof(SList),
+                        diagAreaPtr ) ) {
+    trace( "Unable to set Request Headers" );
+    return -1;
+    } /* endif set headers ok */
+
+ trace( "Request Headers set" );
+ freeRequestHeaders( headerStringArray );
+ return 0;
+} /* end function */
+
+
+/*******************************************************************
+ * Function:  getRequestHeaders()
+ *
+ * Callers may choose to supply request headers to influence how
+ * the request is sent, or how the endpoint processes the sent
+ * request body.  If the caller has neither of these considerations
+ * then no request headers need be specified at all (the toolkit
+ * supplies any headers on the caller's behalf should they omit
+ * any strictly required by the protocol).
+ *
+ * In particular, the toolkit will supply a default of:
+ *           <Transfer-Encoding: chunked>
+ * with a streamed request body, causing the toolkit to send the
+ * body using chunked encoding, which will be fine for most endpoints.
+ *
+ * However in this *particular* sample, the chosen endpoint happens
+ * *NOT* to do well with input data sent using chunked encoding.
+ * And so instead we create and supply a <Content-Length: NN> header
+ * where NN is the size (in bytes) of the request body being sent by
+ * the streaming send exit.  This will still cause the toolkit to
+ * stream the request body data, but without chunked encoding.
+ *
+ * Returns: Address of heap-allocated ptr array
+ ****************************************************************/
+char **getRequestHeaders() {
+ char buf[80];
+ char **headers = NULL;
+ int NUM_HEADERS = 1;
+
+/***************************************************
+ * Allocate an array of pointers to string, and
+ * build a string for each of the headers.  Use a
+ * NULL last array element to indicate end of array.
+ ***************************************************/
+ headers = (char **)calloc( 1+NUM_HEADERS, sizeof(char *) );
+ sprintf( buf,
+          "%s:%s",
+          "User-Agent",
+          "toolkit" );
+ headers[0] = (char *)strdup(buf);
+ headers[1] = NULL;
+return ( headers);
+} /* end function */
+
+
+/*******************************************************************
+ * Function:  freeRequestHeaders()
+ *
+ * Free the string array produced by an earlier getRequestHeaders()
+ *
+ * Returns: (void)
+ ****************************************************************/
+void freeRequestHeaders( char **headersList ) {
+
+ int i = 0;
+ if ( headersList == NULL )
+  return;
+
+ while ( headersList[i] != NULL ) {
+    free( headersList[i] );
+    ++i;
+    }
+
+ free( headersList );
+} /* end function */
+
+
+/***************************************************************
+ * Function: toolkitSlistOperation()
+ *
+ * Thin wrapper for hwthslst() toolkit service, which should
+ * set the the designated value for the designated list option
+ * associated with the intput handle.
+ *
+ * Returns:  0 if successful, -1 if not
+ ***************************************************************/
+int toolkitSlistOperation( HWTH_RETURNCODE_TYPE    *rcPtr,
+                           HWTH_HANDLE_TYPE        *handlePtr,
+                           HWTH_SLST_FUNCTION_TYPE  whichFunction,
+                           HWTH_SLIST_TYPE         *sListPtr,
+                           char                   **stringRef,
+                           uint32_t                 stringLength,
+                           HWTH_DIAGAREA_TYPE      *diagAreaPtr ) {
+
+  trace( "toolkitSlistOperation() -> HWTHSLST()" );
+  hwthslst( rcPtr,
+            *handlePtr,
+            whichFunction,
+            sListPtr,
+            stringRef,
+            stringLength,
+            diagAreaPtr );
+  return ( ( *rcPtr == HWTH_OK ) ? 0: -1 );
+
+ } /* end function */

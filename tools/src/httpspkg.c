@@ -9,7 +9,7 @@
  */
 
 int getfilenamefrompkg(const char* pkg, const char* pkgsfx, const char* tmppem, char* buffer, size_t bufflen) {
-  const char* apihost = "github.com";
+  const char* apihost = "api.github.com";
   char temprawpkg[ZOPEN_PATH_MAX+1];
   char temppkg[ZOPEN_PATH_MAX+1];
   char uri[ZOPEN_PATH_MAX+1];
