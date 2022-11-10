@@ -25,7 +25,7 @@ getContentsFromGithub()
 {
   url=$1
   if ! repo_results=$(curl $OAUTH_TOKEN_OPTION "$OAUTH_TOKEN" -s "$url"); then
-    printError "curl command could not download $url"
+    printWarning "curl command could not download $url"
   fi
   
   if echo $repo_results | grep -q "API rate limit exceeded for"; then
@@ -111,7 +111,8 @@ downloadRepos()
       redirectToDevNull="2>/dev/null"
     fi 
     if ! runAndLog "curl -L ${latest_url} -O ${redirectToDevNull}"; then
-      printError "Could not download ${latest_url}"
+      printWarning "Could not download ${latest_url}"
+      continue;
     fi
 
     pax=$(basename ${latest_url})
