@@ -2,6 +2,7 @@
 #include "httpspkg.h"
 #include "zopen_boot_uri.h"
 
+
 /*
  This is the URI pattern we want to generate:
  https://api.github.com/repos/ZOSOpenTools/<pkg>/releases/tags/boot
@@ -21,6 +22,9 @@ int getfilenamefrompkg(const char* pkg, const char* pkgsfx, const char* tmppem, 
     return 4;
   }
 
+  remove(temprawpkg);
+  remove(temppkg);
+
   if ((rc = snprintf(uri, sizeof(uri), "/%s/%s%s/%s", ZOPEN_REPO_URI_PREFIX, pkg, pkgsfx, ZOPEN_REPO_URI_SUFFIX)) > sizeof(uri)) {
     fprintf(stderr, "error building uri for /%s/%s%s/%s", ZOPEN_REPO_URI_PREFIX, pkg, pkgsfx, ZOPEN_REPO_URI_SUFFIX);
     return 4;
@@ -33,8 +37,13 @@ int getfilenamefrompkg(const char* pkg, const char* pkgsfx, const char* tmppem, 
     fprintf(stderr, "error extracting package name from %s\n", temprawpkg);
     return 4;
   }
+
+#if VERBOSE
+  printf("Package name:%s\n", buffer);
+#else
   remove(temprawpkg);
   remove(temppkg);
+#endif
 
   return 0;
 }

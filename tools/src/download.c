@@ -382,6 +382,10 @@ int toolkitSetOption( HWTH_RETURNCODE_TYPE *rcPtr,
    downloadParms.sslOption = true;
 #endif
 
+#if VERBOSE
+         printf("Download https:%s/%s to %s\n", host, uri, output);
+#endif
+
 	 if ( setupConnection( &connectHandle, &downloadParms ) )
 		 return ( fatalError( "Setup (connection)" ) );
 
@@ -400,8 +404,7 @@ int toolkitSetOption( HWTH_RETURNCODE_TYPE *rcPtr,
 	 summarize( &downloadParms,
 			 &receiveData,
 			 toolkitRc );
-
-	 return 0;
+	 return toolkitRc;
  }  /* end main */
 
 
@@ -947,6 +950,7 @@ int toolkitSetOption( HWTH_RETURNCODE_TYPE *rcPtr,
 		 /* @GG the HWTH_WARNING with reason code 1 is due to a redirect*/
 		 if (rc == HWTH_WARNING & diagArea.HWTH_reasonCode == 1) {
 			; /* MSF - this is expected trace("*INFO*: The request was successful, however FYI it involved a redirect."); */
+                        rc = HWTH_OK;
 		 } else {
 		   trace("hwthrqst did not return an acceptable RC");
 		   surfaceToolkitDiag( &rc, &diagArea );
@@ -1522,10 +1526,9 @@ int toolkitSetOption( HWTH_RETURNCODE_TYPE *rcPtr,
 		 break;
 	 default:
 		 sprintf( msgBuf,
-				 "Unexpected Http response code %d received continuing though",
+				 "Unexpected Http response code %d received",
 				 httpStatusCode );
 		 rxtrace( msgBuf );
-         rc = 0; /* @GG */
 		 break;
 	 } /* end switch */
 

@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 
+
 int unpaxandlink(const char* root, const char* subdir, const char* pkg, const char* shortname) { 
   char pax_format[] = "cd %s/%s && /bin/pax -rf %s && rm %s";
   char pax[ZOPEN_CMD_MAX+1];
@@ -61,7 +62,7 @@ int createhomelink(const char* home, const char* name, const char* root) {
 }
 
 int getpkgname(const char* temprawpkg, const char* temppkg, char* buffer, size_t bufflen) {
-  char getpkg_format[] = "/bin/sh -c \"chtag -t %s && chtag -cISO8859-1 %s && grep 'pax.Z' %s | sed -e 's/.*https/https/g' -e 's/<\\/a>.*//g' -e 's/.*\\///g' >%s\"";
+  char getpkg_format[] = "/bin/sh -c \"/bin/chtag -t %s && /bin/chtag -cISO8859-1 %s && /bin/grep 'pax.Z' %s | /bin/sed -e 's/.*https/https/g' -e 's/<\\/a>.*//g' -e 's/.*\\///g' >%s\"";
   char getpkg[ZOPEN_CMD_MAX+1];
   int rc;
   ssize_t len;
@@ -78,16 +79,15 @@ int getpkgname(const char* temprawpkg, const char* temppkg, char* buffer, size_t
   }
 
   if (!(fd = open(temppkg, O_RDONLY))) {
-    fprintf(stderr, "Unable to open %s for read after system call\n", temppkg);
+    fprintf(stderr, "Unable to open %s for read after system call (check that %s has a 'pax.Z' asset in it)\n", temppkg, temprawpkg);
     return 4;
   }
-  if ((len = read(fd, buffer, bufflen)) < 0) {
-    fprintf(stderr, "Unable to read %s after system call\n", temppkg);
+  if ((len = read(fd, buffer, bufflen)) <= 0) {
+    fprintf(stderr, "Unable to read %s after system call (check that %s has a 'pax.Z' asset in it)\n", temppkg, temprawpkg);
     return 4;
   }
   close(fd);
   buffer[len-1] = '\0'; /* remove newline */
-
 
   return 0;
 }

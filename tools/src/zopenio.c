@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <stdio.h>
 
+
 static char* zopentmpdir() {
   char* tmpdir;
   int rc;
@@ -36,6 +37,11 @@ int genfilenameinsubdir(const char* dir, const char* subdir, const char* filenam
     fprintf(stderr, "Unable to generate temporary file name in %s/%s (bufflen %d, rc %d)\n", dir, subdir, bufflen, rc);
     return 4;
   }
+
+#if VERBOSE
+  printf("filename in subdir:%s\n", buffer);
+#endif
+
   return 0;
 }
 
