@@ -70,10 +70,6 @@ int main(int argc, char* argv[]) {
       pkgsfx="";
     }
 
-    if ((rc = snprintf(uri, sizeof(uri), "/%s/%s%s/%s/%s.%s", ZOPEN_BOOT_URI_PREFIX, bootpkg[i], pkgsfx, ZOPEN_BOOT_URI_SUFFIX, bootpkg[i], ZOPEN_BOOT_URI_TYPE)) > sizeof(uri)) {
-      fprintf(stderr, "error building uri for /%s/%s%s/%s/%s.%s", ZOPEN_BOOT_URI_PREFIX, bootpkg[i], pkgsfx, ZOPEN_BOOT_URI_SUFFIX, bootpkg[i], ZOPEN_BOOT_URI_TYPE);
-      return 4;
-    }   
     if (getfilenamefrompkg(bootpkg[i], pkgsfx, tmppem, filename, ZOPEN_PATH_MAX)) {
       fprintf(stderr, "error acquiring storage (3)\n");
       return 4;
@@ -82,6 +78,10 @@ int main(int argc, char* argv[]) {
       fprintf(stderr, "error acquiring storage (2)\n");
       return 4;
     }
+    if ((rc = snprintf(uri, sizeof(uri), "/%s/%s%s/%s/%s", ZOPEN_BOOT_URI_PREFIX, bootpkg[i], pkgsfx, ZOPEN_BOOT_URI_SUFFIX, filename)) > sizeof(uri)) {
+      fprintf(stderr, "error building uri for /%s/%s%s/%s/%s", ZOPEN_BOOT_URI_PREFIX, bootpkg[i], pkgsfx, ZOPEN_BOOT_URI_SUFFIX, filename);
+      return 4;
+    }   
     if (rc = httpsget(host, uri, tmppem, output)) {
       fprintf(stderr, "error downloading https://%s%s with PEM file %s to %s\n", host, uri, tmppem, output);
       return rc;

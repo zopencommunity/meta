@@ -72,7 +72,6 @@ int getpkgname(const char* temprawpkg, const char* temppkg, char* buffer, size_t
     fprintf(stderr, "error building command to get package from %s and write it to %s\n", temprawpkg, temppkg);
     return rc;
   }
-printf("system command: %s\n", getpkg);
   rc = system(getpkg);
   if (rc) {
     fprintf(stderr, "non zero rc of %d from system %s\n", rc, getpkg);

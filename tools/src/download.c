@@ -397,7 +397,7 @@ int toolkitSlistOperation( HWTH_RETURNCODE_TYPE    *rcPtr,
 #endif
 
 #if VERBOSE
-         printf("Download https:%s/%s to %s\n", host, uri, output);
+         printf("HTTPS Download https:%s/%s to %s\n", host, uri, output);
 #endif
 
 	 if ( setupConnection( &connectHandle, &downloadParms ) )
@@ -803,7 +803,6 @@ int toolkitSlistOperation( HWTH_RETURNCODE_TYPE    *rcPtr,
    * Set the request headers.  This involves
    * SList processing, done in called routines.
    *********************************************/
-  	trace( "Set the request header(s) as HWTH_OPT_HTTPHEADERS" );
   	if ( setRequestHeaders( &rc,
                           requestHandlePtr,
                          &diagArea) ) {
@@ -2647,10 +2646,8 @@ int setRequestHeaders( HWTH_RETURNCODE_TYPE *rcPtr,
      return -1;
      }
 
-  trace( "Create a new Slist" );
   stringRef = &headerStringArray[0];
   *SListPtr = NULL;
-  trace( *stringRef );
   if ( toolkitSlistOperation( rcPtr,
                               requestHandlePtr,
                               HWTH_SLST_NEW,
@@ -2661,15 +2658,11 @@ int setRequestHeaders( HWTH_RETURNCODE_TYPE *rcPtr,
       trace( "Slist create failure" );
       return -1;
       } /* endif slist create failure */
-  else
-      trace( "Slist created" );
 
   i = 1;
   while ( ( headerStringArray[i] != NULL ) &&
           ( strlen(headerStringArray[i]) > 0 ) ) {
-     trace( "Append next request header to the Slist" );
      stringRef = &headerStringArray[i++];
-     trace( *stringRef );
      if ( toolkitSlistOperation( rcPtr,
                                  requestHandlePtr,
                                  HWTH_SLST_APPEND,
@@ -2684,8 +2677,6 @@ int setRequestHeaders( HWTH_RETURNCODE_TYPE *rcPtr,
          trace( "Next request header appended" );
       }  /* endloop thru remaining headers */
 
- trace( "Set the completed Slist as Request Headers" );
- trace( SList );
  if ( toolkitSetOption( rcPtr,
                         requestHandlePtr,
                         HWTH_OPT_HTTPHEADERS,
@@ -2696,7 +2687,6 @@ int setRequestHeaders( HWTH_RETURNCODE_TYPE *rcPtr,
     return -1;
     } /* endif set headers ok */
 
- trace( "Request Headers set" );
  freeRequestHeaders( headerStringArray );
  return 0;
 } /* end function */
@@ -2786,7 +2776,6 @@ int toolkitSlistOperation( HWTH_RETURNCODE_TYPE    *rcPtr,
                            uint32_t                 stringLength,
                            HWTH_DIAGAREA_TYPE      *diagAreaPtr ) {
 
-  trace( "toolkitSlistOperation() -> HWTHSLST()" );
   hwthslst( rcPtr,
             *handlePtr,
             whichFunction,
