@@ -93,6 +93,8 @@ int createbootenv(const char* root, const char* subdir, const char* bootpkg[]) {
     fprintf(stderr, "Unable to close %s\n", absbootenv);
     return 4;
   } 
+#ifdef VERY_VERBOSE
   fprintf(stdout, "Successfully created boot environment file for sourcing: %s\n", absbootenv);
+#endif
   return 0;
 }

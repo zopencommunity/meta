@@ -396,7 +396,7 @@ int toolkitSlistOperation( HWTH_RETURNCODE_TYPE    *rcPtr,
    downloadParms.sslOption = true;
 #endif
 
-#if VERBOSE
+#if VERY_VERBOSE
          printf("HTTPS Download https:%s/%s to %s\n", host, uri, output);
 #endif
 
@@ -1084,7 +1084,7 @@ int toolkitSlistOperation( HWTH_RETURNCODE_TYPE    *rcPtr,
 		  * Announce the successful download
 		  ************************************/
 		 if ( pRecvData->numBytesWritten == pRecvData->numBytesReceived ) {
-     #ifdef VERBOSE
+     #ifdef VERY_VERBOSE
 			 sprintf( msgBuf,
 					 "File successfully downloaded to %s (%lld bytes)",
 					 pParms->fileOrDsname,

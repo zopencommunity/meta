@@ -18,7 +18,7 @@ int unpaxandlink(const char* root, const char* subdir, const char* pkg, const ch
   }
   rc = system(pax);
   if (rc == 0) {
-  #if VERBOSE
+  #if VERY_VERBOSE
     fprintf(stdout, "Successfully performed unpax: %s\n", pax);
   #endif
   } else {
@@ -31,7 +31,7 @@ int unpaxandlink(const char* root, const char* subdir, const char* pkg, const ch
   }
   rc = system(ln);
   if (rc == 0) {
-  #if VERBOSE
+  #if VERY_VERBOSE
     fprintf(stdout, "Successfully performed symbolic link: %s\n", ln);
   #endif
   } else {
@@ -51,7 +51,7 @@ int createhomelink(const char* home, const char* name, const char* root) {
   }
   rc = system(ln);
   if (rc == 0) {
-  #if VERBOSE
+  #if VERY_VERBOSE
     fprintf(stdout, "Successfully performed symbolic link: %s\n", ln);
   #endif
   } else {

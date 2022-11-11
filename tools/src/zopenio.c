@@ -38,7 +38,7 @@ int genfilenameinsubdir(const char* dir, const char* subdir, const char* filenam
     return 4;
   }
 
-#if VERBOSE
+#if VERY_VERBOSE
   printf("filename in subdir:%s\n", buffer);
 #endif
 

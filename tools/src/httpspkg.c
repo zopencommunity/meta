@@ -38,7 +38,7 @@ int getfilenamefrompkg(const char* pkg, const char* pkgsfx, const char* tmppem, 
     return 4;
   }
 
-#if VERBOSE
+#if VERY_VERBOSE
   printf("Package name:%s\n", buffer);
 #else
   remove(temprawpkg);
