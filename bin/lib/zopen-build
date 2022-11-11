@@ -949,6 +949,16 @@ zz
   fi
 }
 
+createReadme()
+{
+  printHeader "Creating ${ZOPEN_INSTALL_DIR}/README.md"
+  cp "${utildir}/../data/README_header.md" "${ZOPEN_INSTALL_DIR}/README.md"
+  if [ -f "${ZOPEN_ROOT}/README.md" ]; then
+    cat "${ZOPEN_ROOT}/README.md" >> "${ZOPEN_INSTALL_DIR}/README.md"
+  fi
+  cat "${utildir}/../data/README_footer.md" >> "${ZOPEN_INSTALL_DIR}/README.md"
+}
+
 install()
 {
   if [ -n "${ZOPEN_INSTALL_CMD}" ]; then
@@ -965,6 +975,8 @@ install()
       printVerbose "Running zopen_post_install"
       zopen_post_install ${ZOPEN_INSTALL_DIR}
     fi
+
+    createReadme
 
     # Store test.status into installed dir and build dir for cicd
     touch "${ZOPEN_INSTALL_DIR}/test.status"
