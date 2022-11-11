@@ -50,7 +50,7 @@ zopen download --list
 To download and install specific packages, specify them as a comma delimited list as follows:
 
 ```bash
-zopen download make,cur,gzip
+zopen download make,curl,gzip
 ```
 
 For more details, visit https://github.com/ZOSOpenTools/utils.
