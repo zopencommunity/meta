@@ -47,7 +47,7 @@ Note: to download the latest packages, use the `zopen download` script from the 
 | [sedport](https://github.com/ZOSOpenTools/sedport)| No status| N/A| None | |
 | [shufport](https://github.com/ZOSOpenTools/shufport)| No status| N/A| None | |
 | [sshpassport](https://github.com/ZOSOpenTools/sshpassport)| No status| N/A| None | |
-| [tarport](https://github.com/ZOSOpenTools/tarport)|Yellow|44.39%| [tarport_273](https://github.com/ZOSOpenTools/tarport/releases/tag/tarport_273)| tar saves many files together into a single tape or disk archive, and can restore individual files from the archive.<br /><b>Test Status:</b> Yellow (91 tests pass out of 205 tests - 44.39% success rate)<br /><b>Command to download and install on z/OS:</b> <pre>pax -rf <(curl -o - -L https://github.com/ZOSOpenTools/tarport/releases/download/tarport_273/tar-1.34.20221108_232952.zos.pax.Z) && cd tar-1.34.20221108_232952.zos && . ./.env</pre>
+| [tarport](https://github.com/ZOSOpenTools/tarport)|Yellow|44.39%| [tarport_290](https://github.com/ZOSOpenTools/tarport/releases/tag/tarport_290)| tar saves many files together into a single tape or disk archive, and can restore individual files from the archive.<br /><b>Test Status:</b> Yellow (91 tests pass out of 205 tests - 44.39% success rate)<br /><b>Command to download and install on z/OS:</b> <pre>pax -rf <(curl -o - -L https://github.com/ZOSOpenTools/tarport/releases/download/tarport_290/tar-1.34.20221111_175140.zos.pax.Z) && cd tar-1.34.20221111_175140.zos && . ./.env</pre>
 | [tclport](https://github.com/ZOSOpenTools/tclport)| No status| N/A| None | |
 | [texinfoport](https://github.com/ZOSOpenTools/texinfoport)| No status| N/A| None | |
 | [topport](https://github.com/ZOSOpenTools/topport)| No status| N/A| None | |
