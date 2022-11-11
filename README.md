@@ -16,15 +16,15 @@ To list the available packages, specify the `--list` option as follows:
 zopen download --list
 ```
 
-To download and install a specific package, you can specify the `-r` option as follows:
+To download and install specfic packages, you can specify the packages as a comma seperated list as follows:
 ```
-zopen download -r makeport
+zopen download make,gzip
 ```
 
 This will download it to the current working directory. To change the destination directory, you can specify the `-d` option as follows:
 
 ```
-zopen download -r makeport -d $HOME/zopen
+zopen download make -d $HOME/zopen/prod
 ```
 
 ## zopen build
@@ -37,7 +37,7 @@ To build a software package, you can use `zopen build`.
 The `buildenv` file _must_ set the following environment variables:
 - `ZOPEN_TYPE`: one of _TARBALL_ or _GIT_ indicating where the source should be pulled from (a source tarball or git repository)
 - `ZOPEN_URL`: the URL where the source should be pulled from, including the `package.git` or `package-V.R.M.tar.gz` extension
-- `ZOPEN_DEPS`: a space-separated list of all software dependencies this package has.
+- `ZOPEN_DEPS`: a space-separated list of all software dependencies this package has. These packages will automatically be downloaded if they are not present in your $HOME/zopen/prod or $HOME/zopen/boot directories.
 
 To help guage the build quality of the port, a `zopen_check_results()` function needs to be provided inside the buildenv. This function should process
 the test results and emit a report of the failures, total number of tests, and expected number of failures to stdout as in the following format: 
@@ -54,7 +54,7 @@ Here is an example implementation of `zopen_check_results()`:
 ```bash
 zopen_check_results()
 {
-chk="$2_check.log"
+chk="$1/$2_check.log"
 
 failures=$(grep ".* Test.*in .* Categories Failed" ${chk} | cut -f1 -d' ')
 totalTests=$(grep ".* Test.*in .* Categories Failed" ${chk} | cut -f5 -d' ')
