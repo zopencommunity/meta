@@ -75,5 +75,3 @@
 
 * [unzipport](https://github.com/ZOSOpenTools/unzipport)
 
-* [wgetport](https://github.com/ZOSOpenTools/wgetport)
-
