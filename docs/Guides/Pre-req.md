@@ -22,24 +22,24 @@ It is recommended that you add the above environment variables to your `.profile
 
 #### If you're consuming z/OS Open Source:
 
-If you interested in leveraging `zopen download` to download and install the z/OS Open Source tools, then you will require the following tools on your z/OS system. Alternatively, you can manually download the pax.Z releases from Github and transfer them over to your z/OS system without any additional tooling requirements.
+If you are interested in leveraging `zopen download` to download and install z/OS Open Source packages, then you will require the following tools on your z/OS system. You can also manually download the pax releases of the packages from Github and transfer them over to your z/OS system without any additional tooling requirements.
 
 * Obtain from Rocket: git, curl (7.77 or later if downloading releases directly without `zopen download`)
-* Obtain from z/OS Open Source: curl, gzip, tar, which you can download from the [available releases](../Latest.md).
+* Obtain from z/OS Open Source: curl, gzip, and tar which you can download from the [available releases](../Latest.md).
 
 Our goal is to eventually have our own version of all the _bootstrap_ tools, but right now, we rely on some
 tools from Rocket. These Rocket tools can be downloaded [here](https://my.rocketsoftware.com/RocketCommunity#/downloads).
 
-Once you have the above pre-requisites set up, you can then clone the z/OS Open Source [utils repo](https://github.com/ZOSOpenTools/utils) as follows:
+Once you have the above tools set up, you can then clone and set up z/OS Open Source [utils repo](https://github.com/ZOSOpenTools/utils) as follows:
 ```bash
 git clone https://github.com/ZOSOpenTools/utils.git
 cd utils
-export PATH=$PWD/bin:$PATH
+. ./.env
 ```
 
-To download and install the latest software packages, you can enter the command `zopen download`. By default it will download all of the binaries hosted on ZOSOpenTools.
+To download and install the latest software packages, enter the command `zopen download`. By default it will download all of the tools hosted on ZOSOpenTools.
 
-It is recommended that you generate a github personal access token. Then set export `ZOPEN_GIT_OAUTH_TOKEN=<yourapitoken>`
+Before running the `zopen download` command, it is recommended that you generate a github personal access token. Then set export `ZOPEN_GIT_OAUTH_TOKEN=<yourapitoken>`
 
 To list the available packages, specify the --list option as follows:
 
@@ -47,10 +47,10 @@ To list the available packages, specify the --list option as follows:
 zopen download --list
 ```
 
-To download and install a specific package, you can specify the -r option as follows:
+To download and install specific packages, specify them as a comma delimited list as follows:
 
 ```bash
-zopen download -r makeport
+zopen download make,curl,gzip
 ```
 
 For more details, visit https://github.com/ZOSOpenTools/utils.
@@ -64,3 +64,5 @@ You can download a web deliverable add-on feature to your XL C/C++ compiler
 Alternatively, you can install and manage _C/C++ for Open Enterprise Languages on z/OS_ using _RedHat OpenShift Container Platform_ and _IBM Z and Cloud Modernization Stack_ 
 [here](https://github.com/IBM/z-and-cloud-modernization-stack-community). 
 Please note that these compilers are comparable, but how you perform installation and maintenance and pricing is different.
+
+For more details on porting, visit the [porting to z/OS guide](Guides/Porting.md).
