@@ -117,6 +117,7 @@ setDefaults()
   export ZOPEN_CPPFLAGSD="-DNSIG=42 -D_XOPEN_SOURCE=600 -D_ALL_SOURCE -D_OPEN_SYS_FILE_EXT=1 -D_AE_BIMODAL=1 -D_ENHANCED_ASCII_EXT=0xFFFFFFFF"
   export ZOPEN_CFLAGSD="-qascii -std=gnu11 -qnocsect -qenum=int"
   export ZOPEN_CXXFLAGSD="-+ -qascii -qnocsect -qenum=int"
+  export ZOPEN_LDFLAGSD="-Wl,edit=no"
   export ZOPEN_BOOTSTRAPD="./bootstrap"
   export ZOPEN_BOOTSTRAP_OPTSD=""
   export ZOPEN_CONFIGURED="./configure"
@@ -157,6 +158,7 @@ printSyntax()
   echo "  where <option> may be one or more of:" >&2
   echo "  -h: print this information" >&2
   echo "  -v: run in verbose mode" >&2
+  echo "  -vv: run in very verbose mode (sets environment variables V=1 and VERBOSE=1)" >&2
   echo "  -u|--updatedeps: update all dependencies by running zopen download" >&2
   echo "  --buildtype: release|debug" >&2
   echo "  --oci: build and publish an OCI image to \$ZOPEN_IMAGE_REGISTRY" >&2
@@ -186,6 +188,11 @@ processOptions()
         return 4
         ;;
       "-v" | "--v" | "-verbose" | "--verbose")
+        verbose=true
+        ;;
+      "-vv" | "--vv" | "-veryverbose" | "--veryverbose")
+        export V=1
+        export VERBOSE=1
         verbose=true
         ;;
       "-u" | "--updateDeps")
