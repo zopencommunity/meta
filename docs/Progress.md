@@ -19,6 +19,8 @@
 
 * [coreutilsport](https://github.com/ZOSOpenTools/coreutilsport)
 
+* [curlport](https://github.com/ZOSOpenTools/curlport)
+
 * [gdbmport](https://github.com/ZOSOpenTools/gdbmport)
 
 * [gettextport](https://github.com/ZOSOpenTools/gettextport)
@@ -53,6 +55,8 @@
 
 * [man-dbport](https://github.com/ZOSOpenTools/man-dbport)
 
+* [nanoport](https://github.com/ZOSOpenTools/nanoport)
+
 * [ninjaport](https://github.com/ZOSOpenTools/ninjaport)
 
 * [phpport](https://github.com/ZOSOpenTools/phpport)
@@ -72,6 +76,4 @@
 * [texinfoport](https://github.com/ZOSOpenTools/texinfoport)
 
 * [topport](https://github.com/ZOSOpenTools/topport)
-
-* [unzipport](https://github.com/ZOSOpenTools/unzipport)
 
