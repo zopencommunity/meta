@@ -49,7 +49,8 @@ with open('docs/Latest.md', 'w') as f:
 		dependentOn[r.name] = 0
 		releases = r.get_releases()
 		if (releases.totalCount):
-			status = releases[0].body
+			latestRelease = r.get_latest_release()
+			status = latestRelease.body
 			m = re.search(".*Test Status:</b>[ ]+([^ ]+)[ ]+\(([^)]*)", status)
 			if m:
 				progressPerStatus[m.group(1)] += 1;
@@ -74,8 +75,9 @@ with open('docs/Latest.md', 'w') as f:
 		#print("| [Releases](" + r.html_url + "/releases)", end='')
 		
 		if (releases.totalCount):
-			print("| [" + releases[0].tag_name + "](" + releases[0].html_url + ")", end='')
-			print("| " + releases[0].body)
+			latestRelease = r.get_latest_release()
+			print("| [" + latestRelease.tag_name + "](" + latestRelease.html_url + ")", end='')
+			print("| " + latestRelease.body)
 		else:
 			print("| None | |")
 
