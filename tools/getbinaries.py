@@ -1,14 +1,18 @@
 #!/usr/bin/env python3
 from github import Github
+from datetime import datetime
 import os
 import sys
 import argparse
 import subprocess
 import re
 import numpy as np
+import requests
 import matplotlib.pyplot as plt
 from matplotlib import rcParams
 rcParams.update({'figure.autolayout': True})
+
+todaysDate = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
 progressPerStatus = {
 	"Green": 0,
@@ -19,6 +23,7 @@ progressPerStatus = {
 }
 
 statusPerPort = {}
+dependentOn = {}
 
 # using an access token
 g = Github("access_token")
@@ -41,6 +46,7 @@ with open('docs/Latest.md', 'w') as f:
 		if not re.search("port$", r.name):
 			continue
 		print("| [" + r.name + "](" + r.html_url + ")", end='')
+		dependentOn[r.name] = 0
 		releases = r.get_releases()
 		if (releases.totalCount):
 			status = releases[0].body
@@ -73,6 +79,19 @@ with open('docs/Latest.md', 'w') as f:
 		else:
 			print("| None | |")
 
+	print("Last updated: ", todaysDate);
+
+for rname, y in dependentOn.items():
+	response = requests.get("https://raw.githubusercontent.com/ZOSOpenTools/" + rname + "/main/buildenv")
+	if response.status_code == 200:
+		name=re.sub('port$', '', rname)
+		matches = re.findall('export\s+ZOPEN.*DEPS\s*=\s*"([^"]*)"', response.text)
+		dependencies = []
+		for match in matches:
+			dependencies += match.split();
+		dependencies = list(set(dependencies))
+		for x in dependencies:	
+			dependentOn[x + "port"] += 1
 # Data to plot
 labels = []
 sizes = []
@@ -117,26 +136,44 @@ plt.savefig('docs/images/quality.png',  bbox_inches="tight")
 with open('docs/Progress.md', 'w') as f:
 	sys.stdout = f # Change the standard output to the file we created.
 	print("""
-# Overall Status
-* Green: All tests passing
-* Blue: Most tests passing
-* Yellow: Some tests passing
-* Red: No tests passing
-* Skipped: Tests are not run
+## Overall Status
+* <span style="color:green">Green</a>: All tests passing
+* <span style="color:blue">Blue</a>: Most tests passing
+* <span style="color:#fee12b">Yellow</a>: Some tests passing
+* <span style="color:red">Red</a>: No tests passing
+* <span style="color:grey">Grey</a>: Skipped or Tests are not enabled
 
 ![image info](./images/progress.png)
 
 ## Breakdown of Status
 ![image info](./images/quality.png)
 
-## Projects with tests not enabled
+## Projects with skipped or no tests (grey)
 	""");
 	for x, y in sorted(statusPerPort.items(), key=lambda x: x[1]):
 		if y == -1:
-			print("* [" + x + "](https://github.com/ZOSOpenTools/" + x + ")\n");
+			print("* [" + x + "](https://github.com/ZOSOpenTools/" + x + ")");
 
 	print("## Projects that do not have builds\n");
 	for x, y in sorted(statusPerPort.items(), key=lambda x: x[1]):
 		if y == -2:
-			print("* [" + x + "](https://github.com/ZOSOpenTools/" + x + ")\n");
+			print("* [" + x + "](https://github.com/ZOSOpenTools/" + x + ")");
+
+	print("""
+## Projects with the most dependencies
+""");
+	print("| Package | # of Dependent Projects | Test Success Rate |");
+	print("|---|---|---|");
+	for x,y in sorted(dependentOn.items(), reverse=True, key=lambda x: x[1]):
+		status = statusPerPort[x]	
+		if status == -1:
+			status = "Skipped"
+		elif status == -2:
+			status = "No builds"
+		else:
+			status = str(status) + "%"
+		statusPerPort[x];
+		print("| [" + x + "](https://github.com/ZOSOpenTools/" + x + ") | " + str(y) + " | " + status + " |");
+
+	print("\nLast updated: ", todaysDate);
 
