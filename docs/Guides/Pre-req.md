@@ -1,6 +1,4 @@
-# Pre-requisites
-
-## Getting Started with z/OS Open Source
+# Getting Started with z/OS Open Source
 
 Before you begin to build or consume the z/OS Open Source tools, ensure that you have access to a z/OS UNIX environment and that your environment is correctly configured.
 
@@ -20,49 +18,45 @@ It is recommended that you add the above environment variables to your `.profile
 
 ### Required tools
 
-#### If you're consuming z/OS Open Source:
+#### If you only want to _use_ Open Source Tools
 
-If you are interested in leveraging `zopen download` to download and install z/OS Open Source packages, then you will require the following tools on your z/OS system. You can also manually download the pax releases of the packages from Github and transfer them over to your z/OS system without any additional tooling requirements.
+**PLEASE NOTE:** These are unsupported tools. Use at your own discretion. While we find them extremely helpful, they have bugs and are unsupported. 
+If you do find problems, please tell us by opening issues in the github repository for the tool you are having issues with. For general problems,
+open an issue in the [meta](https://github.com/ZOSOpenTools/meta/issues) repository.
 
-* Obtain from Rocket: git, curl (7.77 or later if downloading releases directly without `zopen download`)
-* Obtain from z/OS Open Source: curl, gzip, and tar which you can download from the [available releases](../Latest.md).
+#### Install curl on z/OS
 
-Our goal is to eventually have our own version of all the _bootstrap_ tools, but right now, we rely on some
-tools from Rocket. These Rocket tools can be downloaded [here](https://my.rocketsoftware.com/RocketCommunity#/downloads).
+You will need _curl 7.77_ or later on your z/OS system so that you can download the individual Open Source packages from github. 
+If you don't have curl on z/OS, you will need to download it to your desktop then use _sftp_ to upload it to z/OS and then use _pax_ to decompress it:
+- Download ['boot curl'](https://github.com/ZOSOpenTools/curlport/releases/tag/boot)
+- Upload the pax file: `sftp <your host>`
+- decompress the pax file: `pax -rf <pax file>`
+- `cd curl*`
+- add curl to your environment: `. ./.env`
 
-Once you have the above tools set up, you can then clone and set up z/OS Open Source [utils repo](https://github.com/ZOSOpenTools/utils) as follows:
-```bash
-git clone https://github.com/ZOSOpenTools/utils.git
-cd utils
-. ./.env
-```
+Once you have curl, you can now install other tools from the community:
 
-To download and install the latest software packages, enter the command `zopen download`. By default it will download all of the tools hosted on ZOSOpenTools.
+#### Install other tools:
 
-Before running the `zopen download` command, it is recommended that you generate a github personal access token. Then set export `ZOPEN_GIT_OAUTH_TOKEN=<yourapitoken>`
+All the tools are at: [ZOSOpenTools](https://github.com/ZOSOpenTools?tab=repositories)
 
-To list the available packages, specify the --list option as follows:
+- Click on the repository of the tool you want. For example, the [bashport](https://github.com/ZOSOpenTools/bashport) has bash.
+- Click on the _tag_ link to see the tagged releases. For example, the [bashport tags](https://github.com/ZOSOpenTools/bashport/tags) shows the builds for bash.
+- Click the tag of the release you want (likely the most recent). For example: [bashport build 223](https://github.com/ZOSOpenTools/bashport/releases/tag/bashport_223)
+- Cut and paste the download and install command to your z/OS system to install the tool on z/OS
+  - This command will use curl to download the pax file, unpax the file, cd into the tool directory and source `.env` in that directory to set up your environment
 
-```bash
-zopen download --list
-```
+#### If you want to improve the Open Source Tools 
 
-To download and install specific packages, specify them as a comma delimited list as follows:
-
-```bash
-zopen download make,curl,gzip
-```
-
-For more details, visit https://github.com/ZOSOpenTools/utils.
-
-#### If you're building z/OS Open Source:
-* Obtain from Rocket: Git
-* Obtain from z/OS Open Source: make, curl, gzip, tar, which you can download from the [available releases](Latest.md). 
-* Obtain from IBM: C or C++ compiler (or both). 
+You will need the IBM C/C++ compiler. 
 You can download a web deliverable add-on feature to your XL C/C++ compiler 
 [here](https://www.ibm.com/servers/resourcelink/svc00100.nsf/pages/xlCC++V241ForZOsV24).
 Alternatively, you can install and manage _C/C++ for Open Enterprise Languages on z/OS_ using _RedHat OpenShift Container Platform_ and _IBM Z and Cloud Modernization Stack_ 
-[here](https://github.com/IBM/z-and-cloud-modernization-stack-community). 
-Please note that these compilers are comparable, but how you perform installation and maintenance and pricing is different.
 
-For more details on porting, visit the [porting to z/OS guide](Guides/Porting.md).
+All the other tools you need are available from [ZOSOpenTools](https://github.com/ZOSOpenTools?tab=repositories), but instead of downloading them one at a time, there is an easier way. 
+Download [zopen-setup](https://github.com/ZOSOpenTools/meta/releases/tag/v1.0.0) to z/OS and then run it, [following the instructions](https://github.com/ZOSOpenTools/meta/releases/tag/v1.0.0)
+
+This will create your own development environment with a `boot`, `prod`, and `dev` set of directories. The `boot` directory has everything you need to get started with porting.
+
+For more details on porting, visit the [porting to z/OS guide](Porting.md).
+
