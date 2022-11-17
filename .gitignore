@@ -1,1 +1,4 @@
-#
+tools/src/zopen-setup
+tools/src/httpsget
+tools/src/*.o
+tools/src/hwthic.h

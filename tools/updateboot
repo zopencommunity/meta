@@ -1,0 +1,71 @@
+#!/bin/sh
+
+if [ $# -ne 2 ]; then
+  echo "Syntax: $0 <repo> <release>" >&2
+  echo "  Update the 'boot' tag to be the same commit level as the <release> tag" >&2
+  echo "  If the 'boot' tag is already in use it will first be deleted and then re-created" >&2
+  exit 4
+fi
+
+repo="$1"
+release="$2"
+repourl="git@github.com:ZOSOpenTools/${repo}.git"
+
+if ! results=$(git ls-remote --tags "${repourl}" 2>/dev/null); then
+  echo "Unable to find releases with repository ${repo}." >&2
+  exit 99
+fi
+
+if ! newboot=$(echo "${results}" | grep "refs/tags/${release}"); then
+  echo "Unable to find release ${release} in repo ${repo}" >&2
+  exit 99
+fi
+
+oldboot=$(echo "${results}" | grep "refs/tags/boot")
+
+#
+# to make changes that can be tracked, pull down the code, create a branch, fix the tags, and push
+#
+tmpgit=/tmp/$$_gitboot
+
+if ! mkdir "${tmpgit}" ; then
+  echo "Unable to create ${tmpgit}" >&2
+  exit 99
+fi
+
+if ! cd "${tmpgit}" ; then
+  echo "Unable to cd into ${tmpgit}" >&2
+  exit 99
+fi
+
+if ! git clone "${repourl}"; then 
+  echo "Unable to clone ${repourl}" >&2
+  exit 99
+fi
+
+if ! cd "${repo}"; then
+  echo "Unable to cd into ${repo}" >&2
+  exit 99
+fi
+
+if [ "${oldboot}x" != "x" ]; then
+  if ! git tag -d "boot" ; then
+    echo "Unable to delete old boot tag in local repo ${repo}" >&2
+    exit 99
+  fi 
+  if ! git push --delete origin boot; then
+    echo "Unable to delete old boot tag in remote repo" >&2
+    exit 99
+  fi
+fi
+
+commitsha=$(echo ${newboot} | awk '{ print $1; }')
+if ! git tag -a boot "${commitsha}" -m "boot commit" ; then
+  echo "Unable to create boot tag for ${release}" >&2
+  exit 99
+fi
+
+if ! git push --tags ; then
+  echo "Unable to push new boot tag for ${release} to remote repo" >&2
+  exit 99
+fi
