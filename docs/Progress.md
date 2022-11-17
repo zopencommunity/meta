@@ -14,7 +14,6 @@
 ## Projects with skipped or no tests (grey)
 	
 * [bisonport](https://github.com/ZOSOpenTools/bisonport)
-* [cmakeport](https://github.com/ZOSOpenTools/cmakeport)
 * [coreutilsport](https://github.com/ZOSOpenTools/coreutilsport)
 * [gdbmport](https://github.com/ZOSOpenTools/gdbmport)
 * [gettextport](https://github.com/ZOSOpenTools/gettextport)
@@ -70,7 +69,7 @@
 | [libtoolport](https://github.com/ZOSOpenTools/libtoolport) | 5 | 80% |
 | [opensslport](https://github.com/ZOSOpenTools/opensslport) | 5 | 90% |
 | [zlibport](https://github.com/ZOSOpenTools/zlibport) | 5 | Skipped |
-| [cmakeport](https://github.com/ZOSOpenTools/cmakeport) | 4 | Skipped |
+| [cmakeport](https://github.com/ZOSOpenTools/cmakeport) | 4 | 74% |
 | [diffutilsport](https://github.com/ZOSOpenTools/diffutilsport) | 2 | 91% |
 | [bashport](https://github.com/ZOSOpenTools/bashport) | 1 | 64% |
 | [bisonport](https://github.com/ZOSOpenTools/bisonport) | 1 | Skipped |
@@ -109,4 +108,4 @@
 | [wgetport](https://github.com/ZOSOpenTools/wgetport) | 0 | 100% |
 | [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 100% |
 
-Last updated:  2022-11-16 18:42:49
+Last updated:  2022-11-17 01:46:22
