@@ -25,7 +25,6 @@
 * [screenport](https://github.com/ZOSOpenTools/screenport)
 * [vimport](https://github.com/ZOSOpenTools/vimport)
 * [xxhashport](https://github.com/ZOSOpenTools/xxhashport)
-* [zlibport](https://github.com/ZOSOpenTools/zlibport)
 * [zstdport](https://github.com/ZOSOpenTools/zstdport)
 ## Projects that do not have builds
 
@@ -68,7 +67,7 @@
 | [gettextport](https://github.com/ZOSOpenTools/gettextport) | 5 | Skipped |
 | [libtoolport](https://github.com/ZOSOpenTools/libtoolport) | 5 | 80% |
 | [opensslport](https://github.com/ZOSOpenTools/opensslport) | 5 | 90% |
-| [zlibport](https://github.com/ZOSOpenTools/zlibport) | 5 | Skipped |
+| [zlibport](https://github.com/ZOSOpenTools/zlibport) | 5 | 100% |
 | [cmakeport](https://github.com/ZOSOpenTools/cmakeport) | 4 | 74% |
 | [diffutilsport](https://github.com/ZOSOpenTools/diffutilsport) | 2 | 91% |
 | [bashport](https://github.com/ZOSOpenTools/bashport) | 1 | 64% |
@@ -108,4 +107,4 @@
 | [wgetport](https://github.com/ZOSOpenTools/wgetport) | 0 | 100% |
 | [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 100% |
 
-Last updated:  2022-11-17 01:46:22
+Last updated:  2022-11-18 07:14:01
