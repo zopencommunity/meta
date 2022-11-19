@@ -81,7 +81,9 @@ ZOPEN_IMAGE_REGISTRY_ID The ID to authenticate to the Docker image registry (use
 ZOPEN_IMAGE_REGISTRY_KEY_FILE The file containing the key to authenticate to the Docker image registry (use with --oci option)
 ZOPEN_LOG_DIR        The directory to store build logs (defaults to '${ZOPEN_ROOT}/log')
 ZOPEN_INSTALL        Installation program to run. If skip is specified, no installation step is performed (defaults to '${ZOPEN_INSTALLD}')
-ZOPEN_INSTALL_OPTS   Options to pass to installation program (defaults to '${ZOPEN_INSTALL_OPTSD}')"
+ZOPEN_INSTALL_OPTS   Options to pass to installation program (defaults to '${ZOPEN_INSTALL_OPTSD}')
+ZOPEN_CLEAN          Clean up program to run (defaults to '${ZOPEN_CLEAND}')
+ZOPEN_CLEAN_OPTS     Options to pass to clean up  program (defaults to '${ZOPEN_CLEAN_OPTSD}')"
 
 }
 
@@ -101,14 +103,14 @@ done
 TMP_FIFO_PIPE="$tmp/$LOGNAME.pipe"
 
 # Remove temoraries on exit
-cleanup() {
+cleanupOnExit() {
     rv=$?
     [ -f $TEMP_C_FILE ] && rm -rf $TEMP_C_FILE
     [ -p $TMP_FIFO_PIPE ] && rm -rf $TMP_FIFO_PIPE
     exit $rv
 }
 
-trap "cleanup" EXIT INT TERM QUIT HUP
+trap "cleanupOnExit" EXIT INT TERM QUIT HUP
 
 setDefaults()
 {
@@ -127,6 +129,8 @@ setDefaults()
   export ZOPEN_CHECK_TIMEOUTD="12600" # 3.5 hours
   export ZOPEN_INSTALLD="make"
   export ZOPEN_INSTALL_OPTSD="install"
+  export ZOPEN_CLEAND="make"
+  export ZOPEN_CLEAN_OPTSD="clean"
   if [ -z "$ZOPEN_IMAGE_DOCKERFILE_NAME" ]; then
     export ZOPEN_IMAGE_DOCKERFILE_NAME="Dockerfile"
   fi
@@ -163,6 +167,7 @@ printSyntax()
   echo "  --buildtype: release|debug" >&2
   echo "  --oci: build and publish an OCI image to \$ZOPEN_IMAGE_REGISTRY" >&2
   echo "  -e <env file>: source <env file> instead of buildenv to establish build environment" >&2
+  echo "  -c|--clean: Deletes all of the build output and forces reconfigure with next build" >&2
   echo "  -f|--force-rebuild: forces a rebuild, including running bootstrap and configure again" >&2
   echo "  -s: exec a shell before running configure.  Useful when manually building ports." >&2
   opts=$(printEnvVar)
@@ -177,6 +182,7 @@ processOptions()
   skipcheck=false
   buildInReleaseMode=false
   startShell=false
+  cleanupBuild=false
   forceRebuild=false
   buildEnvFile="./buildenv"
   depsPath="$HOME/zopen/prod|$HOME/zopen/boot|/usr/bin/zopen/"
@@ -220,6 +226,9 @@ processOptions()
       "-e" | "--env")
         shift
         buildEnvFile=$1
+        ;;
+      "-c" | "--clean")
+        cleanupBuild=true
         ;;
       "-f" | "--force-rebuild")
         forceRebuild=true
@@ -471,6 +480,12 @@ setEnv()
   fi
   if [ "${ZOPEN_INSTALL_OPTS}x" = "x" ]; then
     export ZOPEN_INSTALL_OPTS="${ZOPEN_INSTALL_OPTSD}"
+  fi
+  if [ "${ZOPEN_CLEAN}x" = "x" ]; then
+    export ZOPEN_CLEAN="${ZOPEN_CLEAND}"
+  fi
+  if [ "${ZOPEN_CLEAN_OPTS}x" = "x" ]; then
+    export ZOPEN_CLEAN_OPTS="${ZOPEN_CLEAN_OPTSD}"
   fi
   LOG_PFX=$(date +%C%y%m%d_%H%M%S)
 }
@@ -773,11 +788,26 @@ create_fifo_pipe()
   tee ${file} < $TMP_FIFO_PIPE &
 }
 
+
+cleanup()
+{
+  if [ -n "${ZOPEN_CLEAN_CMD}" ] && [ -f "${ZOPEN_LOG_DIR}/config.success" ] ; then
+    printHeader "Running Cleanup"
+    cleanlog="${ZOPEN_LOG_DIR}/${LOG_PFX}_clean.log"
+    create_fifo_pipe "${bootlog}"
+    if ! runAndLog "${ZOPEN_CLEAN_CMD} >$TMP_FIFO_PIPE 2>&1"; then
+      printError "Cleanup failed. Log: ${cleanlog}" >&2
+    fi
+  fi
+  [[ ! -f "${ZOPEN_LOG_DIR}/bootstrap.success" ]] || rm ${ZOPEN_LOG_DIR}/bootstrap.success
+  [[ ! -f "${ZOPEN_LOG_DIR}/config.success" ]] || rm ${ZOPEN_LOG_DIR}/config.success
+}
+
 bootstrap()
 {
   if [ -n "${ZOPEN_BOOTSTRAP_CMD}" ] ; then
     printHeader "Running Bootstrap"
-    if [ -r "${ZOPEN_LOG_DIR}/bootstrap.success" ] && ! $forceRebuild; then
+    if [ -r "${ZOPEN_LOG_DIR}/bootstrap.success" ]; then
       echo "Using previous successful bootstrap. Specify -f to force a bootstrap." >&2
     else
       bootlog="${ZOPEN_LOG_DIR}/${LOG_PFX}_bootstrap.log"
@@ -796,7 +826,7 @@ configure()
 {
   if [ -n "${ZOPEN_CONFIGURE_CMD}" ] ; then
     printHeader "Running Configure"
-    if [ -r "${ZOPEN_LOG_DIR}/config.success" ] && ! $forceRebuild; then
+    if [ -r "${ZOPEN_LOG_DIR}/config.success" ]; then
       echo "Using previous successful configuration. Specify -f to force a configure." >&2
     else
       configlog="${ZOPEN_LOG_DIR}/${LOG_PFX}_config.log"
@@ -989,7 +1019,6 @@ install()
     touch "${ZOPEN_INSTALL_DIR}/test.status"
     chtag -tc 819 "${ZOPEN_INSTALL_DIR}/test.status"
     echo "$ZOPEN_STATUS" > "${ZOPEN_INSTALL_DIR}/test.status"
-    cp "${ZOPEN_INSTALL_DIR}/test.status" "test.status"
 
     if ! runAndLog "${ZOPEN_PAX_CMD}"; then
       printError "Could not generate pax \"${paxFileName}\""
@@ -1022,15 +1051,22 @@ resolveCommands()
 
   [[ -d ${ZOPEN_LOG_DIR} ]] || mkdir -p ${ZOPEN_LOG_DIR}
 
-  if [ "${ZOPEN_CONFIGURE_OPTS}x" = "x" ]; then
-    export ZOPEN_CONFIGURE_OPTS="--prefix=${ZOPEN_INSTALL_DIR} ${ZOPEN_EXTRA_CONFIGURE_OPTS}"
-  fi
   if [ "${ZOPEN_BOOTSTRAP}x" != "skipx" ] && [ ! -z "$(command -v ${ZOPEN_BOOTSTRAP})" ]; then
     export ZOPEN_BOOTSTRAP_CMD="\"${ZOPEN_BOOTSTRAP}\" ${ZOPEN_BOOTSTRAP_OPTS}"
   else
     unset ZOPEN_BOOTSTRAP_CMD
   fi
 
+  if [ "${ZOPEN_CONFIGURE_OPTS}x" = "x" ]; then
+      case "${ZOPEN_CONFIGURE}" in
+        (*cmake*)
+          export ZOPEN_CONFIGURE_OPTS="--install-prefix ${ZOPEN_INSTALL_DIR} ${ZOPEN_EXTRA_CONFIGURE_OPTS}"
+          ;;
+        (*)
+          export ZOPEN_CONFIGURE_OPTS="--prefix=${ZOPEN_INSTALL_DIR} ${ZOPEN_EXTRA_CONFIGURE_OPTS}"
+          ;;
+      esac
+  fi
   if [ "${ZOPEN_CONFIGURE}x" != "skipx" ]; then
     if [ "${ZOPEN_CONFIGURE_MINIMAL}x" = "x" ]; then
       case "${ZOPEN_CONFIGURE}" in
@@ -1080,6 +1116,13 @@ resolveCommands()
     unset ZOPEN_INSTALL_CMD
     unset ZOPEN_PAX_CMD
   fi
+
+  if [ "${ZOPEN_CLEAN}x" != "skipx" ] && [ ! -z "$(command -v ${ZOPEN_CLEAN})" ]; then
+    export ZOPEN_CLEAN_CMD="\"${ZOPEN_CLEAN}\" ${ZOPEN_CLEAN_OPTS}"
+  else
+    unset ZOPEN_CLEAN_CMD
+  fi
+
   return 0
 }
 
@@ -1200,6 +1243,13 @@ fi
 
 if ${startShell}; then
   exec /bin/sh
+fi
+
+if $cleanupBuild || $forceRebuild; then
+  cleanup
+  if  ! $forceRebuild ; then
+    exit 0
+  fi
 fi
 
 if ! bootstrap; then
