@@ -47,7 +47,7 @@ totalTests:<totalnumberoftests>
 expectedFailures:<expectednumberoffailures>
 ```
 
-The build will fail to proceed to the install step if `expectedFailures` is greater than `actualFailures`.
+The build will fail to proceed to the install step if `actualFailures` is greater than `expectedFailures`.
 
 Here is an example implementation of `zopen_check_results()`:
 
@@ -70,7 +70,7 @@ ZZ
 `zopen build` will generate a .env file in the install location with support for environment variables such as PATH, LIBPATH, and MANPATH.
 To add your own, you can append environment variables by echo'ing them in a function called `zopen_append_to_env()`.
 
-After the build is successful, `zopen build` will install the project to `$HOME/zopen/projectname`. To perform post-processing on the installed contents, such as modifying hardcoded path contents, you can write a `zopen_post_install()` function which takes the installed path as the first argument.
+After the build is successful, `zopen build` will install the project to `$HOME/zopen/prod/projectname`. To perform post-processing on the installed contents, such as modifying hardcoded path contents, you can write a `zopen_post_install()` function which takes the installed path as the first argument.
 
 Note that you can choose the fully-qualified environment variables ZOPEN_GIT_URL, ZOPEN_GIT_DEPS and ZOPEN_TARBALL_URL, ZOPEN_TARBALL_DEPS 
 accordingly if you prefer. See (https://github.com/ZOSOpenTools/zotsampleport/blob/main/setenv.sh) for an example.
