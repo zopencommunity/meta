@@ -250,6 +250,9 @@ loadBuildEnv()
     printError "Build environment file '$buildEnvFile' does not exist or is not readable"
   fi
 
+  # Indicates to .env script that we're in zopen build
+  export ZOPEN_IN_ZOPEN_BUILD=1
+
   . $buildEnvFile
 }
 
