@@ -2,11 +2,8 @@
 #
 # General purpose zopen script
 #
-
-printSyntax() 
+printSyntax()
 {
-  args=$*
-  echo "zopen is a general purpose script to be used with the ZOSOpenTools ports." >&2
   echo "" >&2
   echo "Syntax: zopen <command>" >&2
   echo "where <command> may be one of the following:" >&2
@@ -14,6 +11,13 @@ printSyntax()
   echo " download: downloads binaries" >&2
   echo " generate: generate a zopen project" >&2
   echo "" >&2
+}
+
+printHelp() 
+{
+  args=$*
+  echo "zopen is a general purpose script to be used with the ZOSOpenTools ports." >&2
+  printSyntax
   echo "Example usage:" >&2
   echo " # Build a port" >&2
   echo " zopen build -v # Build port" >&2
@@ -44,14 +48,16 @@ while [[ $# -gt 0 ]]; do
       exec "${bindir}/lib/zopen-generate" $@
       ;;
     "help" | "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
-      printSyntax "${args}"
-      exit 4
+      printHelp "${args}"
+      exit 0
       ;;
     *)
-      printError "Unknown option ${1} specified"
+      printSoftError "Unknown option ${1} specified"
+      printSyntax "${args}"
+      exit 8
       ;;
   esac
   shift;
 done
 
-printSyntax
+printHelp

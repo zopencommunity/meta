@@ -856,9 +856,9 @@ build()
     create_fifo_pipe "${makelog}"
     if ! runAndLog "${ZOPEN_MAKE_CMD} > $TMP_FIFO_PIPE"; then
       if [ "${ZOPEN_MAKE_MINIMAL}" = "yes" ]; then
-        printError "Make (minimal) failed. Log: ${configlog}"
+        printError "Make (minimal) failed. Log: ${makelog}"
       else
-        printError "Make (full) failed. Log: ${configlog}"
+        printError "Make (full) failed. Log: ${makelog}"
       fi
     fi
   else
