@@ -573,6 +573,11 @@ extractTarBall()
       printError "Unable to use gunzip to decompress ${tarballz}"
     fi
     tarball=${tarballz%%.gz}
+  elif [ "${ext}x" = "bz2x" ]; then
+    if ! bunzip2 "${tarballz}"; then
+      printError "Unable to use bunzip2 to decompress ${tarballz}"
+    fi
+    tarball=${tarballz%%.bz2}
   else
     printError "Extension ${ext} is an unsupported compression technique. Add code"
   fi
