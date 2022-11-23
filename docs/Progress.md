@@ -53,7 +53,7 @@
 | [perlport](https://github.com/ZOSOpenTools/perlport) | 24 | 100% |
 | [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 23 | 100% |
 | [autoconfport](https://github.com/ZOSOpenTools/autoconfport) | 21 | 98% |
-| [automakeport](https://github.com/ZOSOpenTools/automakeport) | 21 | 66% |
+| [automakeport](https://github.com/ZOSOpenTools/automakeport) | 21 | 71% |
 | [m4port](https://github.com/ZOSOpenTools/m4port) | 21 | 98% |
 | [tarport](https://github.com/ZOSOpenTools/tarport) | 18 | 44% |
 | [xzport](https://github.com/ZOSOpenTools/xzport) | 17 | 88% |
@@ -105,4 +105,4 @@
 | [wgetport](https://github.com/ZOSOpenTools/wgetport) | 0 | 100% |
 | [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 100% |
 
-Last updated:  2022-11-23 18:42:06
+Last updated:  2022-11-23 22:37:43
