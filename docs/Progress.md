@@ -16,7 +16,6 @@
 * [bisonport](https://github.com/ZOSOpenTools/bisonport)
 * [coreutilsport](https://github.com/ZOSOpenTools/coreutilsport)
 * [gdbmport](https://github.com/ZOSOpenTools/gdbmport)
-* [gettextport](https://github.com/ZOSOpenTools/gettextport)
 * [gperfport](https://github.com/ZOSOpenTools/gperfport)
 * [jqport](https://github.com/ZOSOpenTools/jqport)
 * [lz4port](https://github.com/ZOSOpenTools/lz4port)
@@ -61,9 +60,9 @@
 | [makeinfoport](https://github.com/ZOSOpenTools/makeinfoport) | 15 | 35% |
 | [help2manport](https://github.com/ZOSOpenTools/help2manport) | 11 | 100% |
 | [coreutilsport](https://github.com/ZOSOpenTools/coreutilsport) | 9 | Skipped |
+| [ncursesport](https://github.com/ZOSOpenTools/ncursesport) | 7 | 100% |
 | [gawkport](https://github.com/ZOSOpenTools/gawkport) | 6 | 93% |
-| [ncursesport](https://github.com/ZOSOpenTools/ncursesport) | 6 | 100% |
-| [gettextport](https://github.com/ZOSOpenTools/gettextport) | 5 | Skipped |
+| [gettextport](https://github.com/ZOSOpenTools/gettextport) | 5 | 50% |
 | [libtoolport](https://github.com/ZOSOpenTools/libtoolport) | 5 | 80% |
 | [opensslport](https://github.com/ZOSOpenTools/opensslport) | 5 | 90% |
 | [zlibport](https://github.com/ZOSOpenTools/zlibport) | 5 | 100% |
@@ -106,4 +105,4 @@
 | [wgetport](https://github.com/ZOSOpenTools/wgetport) | 0 | 100% |
 | [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 100% |
 
-Last updated:  2022-11-21 19:07:15
+Last updated:  2022-11-23 00:03:13
