@@ -26,9 +26,10 @@
 * [zstdport](https://github.com/ZOSOpenTools/zstdport)
 ## Projects that do not have builds
 
+* [cscopeport](https://github.com/ZOSOpenTools/cscopeport)
 * [ctagsport](https://github.com/ZOSOpenTools/ctagsport)
 * [findutilsport](https://github.com/ZOSOpenTools/findutilsport)
-* [flexport](https://github.com/ZOSOpenTools/flexport)
+* [gnulibport](https://github.com/ZOSOpenTools/gnulibport)
 * [grepport](https://github.com/ZOSOpenTools/grepport)
 * [groffport](https://github.com/ZOSOpenTools/groffport)
 * [man-dbport](https://github.com/ZOSOpenTools/man-dbport)
@@ -48,29 +49,29 @@
 
 | Package | # of Dependent Projects | Test Success Rate |
 |---|---|---|
-| [makeport](https://github.com/ZOSOpenTools/makeport) | 54 | 100% |
+| [makeport](https://github.com/ZOSOpenTools/makeport) | 55 | 100% |
 | [curlport](https://github.com/ZOSOpenTools/curlport) | 44 | 99% |
-| [gzipport](https://github.com/ZOSOpenTools/gzipport) | 38 | 76% |
-| [gitport](https://github.com/ZOSOpenTools/gitport) | 35 | 96% |
+| [gzipport](https://github.com/ZOSOpenTools/gzipport) | 39 | 76% |
+| [gitport](https://github.com/ZOSOpenTools/gitport) | 36 | 96% |
+| [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 25 | 100% |
 | [perlport](https://github.com/ZOSOpenTools/perlport) | 24 | 100% |
-| [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 24 | 100% |
-| [m4port](https://github.com/ZOSOpenTools/m4port) | 22 | 98% |
-| [autoconfport](https://github.com/ZOSOpenTools/autoconfport) | 21 | 98% |
-| [automakeport](https://github.com/ZOSOpenTools/automakeport) | 21 | 71% |
-| [tarport](https://github.com/ZOSOpenTools/tarport) | 19 | 44% |
+| [m4port](https://github.com/ZOSOpenTools/m4port) | 23 | 98% |
+| [autoconfport](https://github.com/ZOSOpenTools/autoconfport) | 22 | 98% |
+| [automakeport](https://github.com/ZOSOpenTools/automakeport) | 22 | 71% |
+| [tarport](https://github.com/ZOSOpenTools/tarport) | 20 | 44% |
 | [xzport](https://github.com/ZOSOpenTools/xzport) | 17 | 88% |
 | [makeinfoport](https://github.com/ZOSOpenTools/makeinfoport) | 15 | 35% |
 | [help2manport](https://github.com/ZOSOpenTools/help2manport) | 11 | 100% |
 | [coreutilsport](https://github.com/ZOSOpenTools/coreutilsport) | 9 | Skipped |
 | [ncursesport](https://github.com/ZOSOpenTools/ncursesport) | 7 | 100% |
 | [gawkport](https://github.com/ZOSOpenTools/gawkport) | 6 | 93% |
-| [gettextport](https://github.com/ZOSOpenTools/gettextport) | 5 | 50% |
+| [gettextport](https://github.com/ZOSOpenTools/gettextport) | 6 | 50% |
 | [libtoolport](https://github.com/ZOSOpenTools/libtoolport) | 5 | 80% |
 | [opensslport](https://github.com/ZOSOpenTools/opensslport) | 5 | 90% |
 | [zlibport](https://github.com/ZOSOpenTools/zlibport) | 5 | 100% |
 | [cmakeport](https://github.com/ZOSOpenTools/cmakeport) | 4 | 74% |
+| [bashport](https://github.com/ZOSOpenTools/bashport) | 2 | 64% |
 | [diffutilsport](https://github.com/ZOSOpenTools/diffutilsport) | 2 | 91% |
-| [bashport](https://github.com/ZOSOpenTools/bashport) | 1 | 64% |
 | [bisonport](https://github.com/ZOSOpenTools/bisonport) | 1 | Skipped |
 | [expatport](https://github.com/ZOSOpenTools/expatport) | 1 | 100% |
 | [lz4port](https://github.com/ZOSOpenTools/lz4port) | 1 | Skipped |
@@ -80,10 +81,12 @@
 | [zipport](https://github.com/ZOSOpenTools/zipport) | 1 | 71% |
 | [zstdport](https://github.com/ZOSOpenTools/zstdport) | 1 | Skipped |
 | [bzip2port](https://github.com/ZOSOpenTools/bzip2port) | 0 | 100% |
+| [cscopeport](https://github.com/ZOSOpenTools/cscopeport) | 0 | No builds |
 | [ctagsport](https://github.com/ZOSOpenTools/ctagsport) | 0 | No builds |
 | [findutilsport](https://github.com/ZOSOpenTools/findutilsport) | 0 | No builds |
-| [flexport](https://github.com/ZOSOpenTools/flexport) | 0 | No builds |
+| [flexport](https://github.com/ZOSOpenTools/flexport) | 0 | 100% |
 | [gdbmport](https://github.com/ZOSOpenTools/gdbmport) | 0 | Skipped |
+| [gnulibport](https://github.com/ZOSOpenTools/gnulibport) | 0 | No builds |
 | [gperfport](https://github.com/ZOSOpenTools/gperfport) | 0 | Skipped |
 | [grepport](https://github.com/ZOSOpenTools/grepport) | 0 | No builds |
 | [groffport](https://github.com/ZOSOpenTools/groffport) | 0 | No builds |
@@ -109,4 +112,4 @@
 | [wgetport](https://github.com/ZOSOpenTools/wgetport) | 0 | 100% |
 | [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 100% |
 
-Last updated:  2022-11-25 16:13:08
+Last updated:  2022-11-25 22:58:13
