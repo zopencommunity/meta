@@ -49,20 +49,20 @@
 
 | Package | # of Dependent Projects | Test Success Rate |
 |---|---|---|
-| [makeport](https://github.com/ZOSOpenTools/makeport) | 55 | 100% |
-| [curlport](https://github.com/ZOSOpenTools/curlport) | 44 | 99% |
+| [makeport](https://github.com/ZOSOpenTools/makeport) | 56 | 100% |
+| [curlport](https://github.com/ZOSOpenTools/curlport) | 45 | 99% |
 | [gzipport](https://github.com/ZOSOpenTools/gzipport) | 39 | 76% |
-| [gitport](https://github.com/ZOSOpenTools/gitport) | 36 | 96% |
+| [gitport](https://github.com/ZOSOpenTools/gitport) | 37 | 96% |
+| [perlport](https://github.com/ZOSOpenTools/perlport) | 25 | 100% |
 | [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 25 | 100% |
-| [perlport](https://github.com/ZOSOpenTools/perlport) | 24 | 100% |
-| [m4port](https://github.com/ZOSOpenTools/m4port) | 23 | 98% |
+| [m4port](https://github.com/ZOSOpenTools/m4port) | 24 | 98% |
 | [autoconfport](https://github.com/ZOSOpenTools/autoconfport) | 22 | 98% |
 | [automakeport](https://github.com/ZOSOpenTools/automakeport) | 22 | 71% |
 | [tarport](https://github.com/ZOSOpenTools/tarport) | 20 | 44% |
 | [xzport](https://github.com/ZOSOpenTools/xzport) | 17 | 88% |
 | [makeinfoport](https://github.com/ZOSOpenTools/makeinfoport) | 15 | 35% |
 | [help2manport](https://github.com/ZOSOpenTools/help2manport) | 11 | 100% |
-| [coreutilsport](https://github.com/ZOSOpenTools/coreutilsport) | 9 | Skipped |
+| [coreutilsport](https://github.com/ZOSOpenTools/coreutilsport) | 10 | Skipped |
 | [ncursesport](https://github.com/ZOSOpenTools/ncursesport) | 7 | 100% |
 | [gawkport](https://github.com/ZOSOpenTools/gawkport) | 6 | 93% |
 | [gettextport](https://github.com/ZOSOpenTools/gettextport) | 6 | 50% |
@@ -70,8 +70,8 @@
 | [opensslport](https://github.com/ZOSOpenTools/opensslport) | 5 | 90% |
 | [zlibport](https://github.com/ZOSOpenTools/zlibport) | 5 | 100% |
 | [cmakeport](https://github.com/ZOSOpenTools/cmakeport) | 4 | 74% |
+| [diffutilsport](https://github.com/ZOSOpenTools/diffutilsport) | 3 | 91% |
 | [bashport](https://github.com/ZOSOpenTools/bashport) | 2 | 64% |
-| [diffutilsport](https://github.com/ZOSOpenTools/diffutilsport) | 2 | 91% |
 | [bisonport](https://github.com/ZOSOpenTools/bisonport) | 1 | Skipped |
 | [expatport](https://github.com/ZOSOpenTools/expatport) | 1 | 100% |
 | [lz4port](https://github.com/ZOSOpenTools/lz4port) | 1 | Skipped |
@@ -112,4 +112,4 @@
 | [wgetport](https://github.com/ZOSOpenTools/wgetport) | 0 | 100% |
 | [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 100% |
 
-Last updated:  2022-11-25 22:58:13
+Last updated:  2022-11-26 04:32:14
