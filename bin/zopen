@@ -10,6 +10,7 @@ printSyntax()
   echo " build: invokes the build script." >&2
   echo " download: downloads binaries" >&2
   echo " generate: generate a zopen project" >&2
+  echo " update-cacert: update the cacert.pem file" >&2
   echo "" >&2
 }
 
@@ -46,6 +47,10 @@ while [[ $# -gt 0 ]]; do
     "generate")
       shift
       exec "${bindir}/lib/zopen-generate" $@
+      ;;
+    "update-cacert")
+      shift
+      exec "${bindir}/lib/zopen-update-cacert" $@
       ;;
     "help" | "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
       printHelp "${args}"

@@ -164,7 +164,7 @@ printSyntax()
   echo "  -v: run in verbose mode" >&2
   echo "  -vv: run in very verbose mode (sets environment variables V=1 and VERBOSE=1)" >&2
   echo "  -u|--updatedeps: update all dependencies by running zopen download" >&2
-  echo "  --buildtype: release|debug" >&2
+  echo "  --buildtype: release|debug. The default is release" >&2
   echo "  --oci: build and publish an OCI image to \$ZOPEN_IMAGE_REGISTRY" >&2
   echo "  -e <env file>: source <env file> instead of buildenv to establish build environment" >&2
   echo "  -c|--clean: Deletes all of the build output and forces reconfigure with next build" >&2
@@ -180,7 +180,7 @@ processOptions()
   verbose=false
   publishOCI=false
   skipcheck=false
-  buildInReleaseMode=false
+  buildInReleaseMode=true
   startShell=false
   cleanupBuild=false
   forceRebuild=false
@@ -207,10 +207,8 @@ processOptions()
       "-buildtype" | "--buildtype" | "-b")
         shift
         btype=$(echo "$1" | awk '{print toupper($0)}')
-        if [ "$btype" = "RELEASE" ]; then
-          buildInReleaseMode=true
-          ZOPEN_CFLAGSD="${ZOPEN_CFLAGSD} -O3";
-          ZOPEN_CXXFLAGSD="${ZOPEN_CXXFLAGSD} -O3";
+        if [ "$btype" = "DEBUG" ]; then
+          buildInReleaseMode=false
         fi
         ;;
       "-oci" | "--oci")
@@ -398,6 +396,11 @@ setEnv()
 
   if [ "${CXXFLAGS}x" = "x" ]; then
     export CXXFLAGS="${ZOPEN_CXXFLAGSD}"
+  fi
+
+  if $buildInReleaseMode; then
+    CFLAGS="${CFLAGS} -O3";
+    CXXFLAGS="${CXXFLAGS} -O3";
   fi
 
   if [ "${LDFLAGS}x" = "x" ]; then

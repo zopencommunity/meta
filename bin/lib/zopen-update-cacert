@@ -1,0 +1,93 @@
+#!/bin/sh
+#
+# Updates the cacert in zopen
+#
+export mydir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
+
+. "${mydir}/common.inc"
+
+ZOPEN_CA="${mydir}/../../cacert.pem"
+
+# Temporary files
+for tmp in "$TMPDIR" "$TMP" /tmp
+do
+  if [ ! -z $tmp ] && [ -d $tmp ]; then
+    TEMP_CACERT="$tmp/$LOGNAME.$RANDOM.cacert.pem"
+    break
+  fi
+done
+
+cleanupOnExit() {
+    rv=$?
+    [ -f $TEMP_CACERT ] && rm -rf $TEMP_CACERT
+    exit $rv
+}
+
+trap "cleanupOnExit" EXIT INT TERM QUIT HUP
+
+printHelp() 
+{
+  args=$*
+  echo "zopen-update-cacert will update your $ZOPEN_CA file to the latest curl CA certificates extracted from Mozilla"
+}
+
+getCACertFromCurl()
+{
+  # Get latest CACert from Mozilla through Curl
+  printVerbose "Downloading https://curl.se/ca/cacert.pem"
+  if ! curl -L -o "$TEMP_CACERT" "https://curl.se/ca/cacert.pem"; then
+    printError "curl command could not download $url"
+  fi
+}
+
+updateCACert()
+{
+  printInfo "Re-creating $ZOPEN_CA"
+  cp "$TEMP_CACERT" $ZOPEN_CA
+}
+
+# Main code start here
+args=$*
+forceUpdate=false
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    "-f" | "-force" | "--force")
+      forceUpdate=true;
+      ;;
+    "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
+      printHelp "${args}"
+      exit 4
+      ;;
+    "-v" | "--v" | "-verbose" | "--verbose")
+      verbose=true
+      ;;
+  esac
+  shift;
+done
+
+if ! [ -r "${ZOPEN_CA}" ]; then
+  forceUpdate=true 
+fi
+export SSL_CERT_FILE="${ZOPEN_CA}"
+export CURL_CA_BUNDLE="${ZOPEN_CA}"
+
+printHeader "Getting latest CA Certificate from Curl"
+getCACertFromCurl
+
+if $forceUpdate; then
+  updateCACert
+elif ! diff "$TEMP_CACERT" $ZOPEN_CA >/dev/null; then
+  while true; do
+    printWarning "Your local cacert ($ZOPEN_CA) is outdated or does not exist. Would you like to update it? (y, n)"
+    update=$(getInput)
+    if [ "$update" = "n" ]; then
+      exit 0
+    elif [ "$update" = "y" ]; then
+      break
+    fi
+  done
+
+  updateCACert
+else
+  printInfo "Your cacert ($ZOPEN_CA) is already up to date"
+fi
