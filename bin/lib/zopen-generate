@@ -113,7 +113,7 @@ buildenvContents="${buildenvContents}\nzopen_check_results()
   pfx=\"\$2\"
   chk=\"\$1/\$2_check.log\"
 
-  # Echo the following information to guage build health
+  # Echo the following information to gauge build health
   echo \"actualFailures:0\"
   echo \"totalTests:1\"
   echo \"expectedFailures:0\"
