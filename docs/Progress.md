@@ -50,21 +50,21 @@
 
 | Package | # of Dependent Projects | Test Success Rate |
 |---|---|---|
-| [makeport](https://github.com/ZOSOpenTools/makeport) | 58 | 100% |
-| [curlport](https://github.com/ZOSOpenTools/curlport) | 47 | 99% |
-| [gzipport](https://github.com/ZOSOpenTools/gzipport) | 41 | 76% |
-| [gitport](https://github.com/ZOSOpenTools/gitport) | 38 | 96% |
-| [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 27 | 100% |
+| [makeport](https://github.com/ZOSOpenTools/makeport) | 59 | 100% |
+| [curlport](https://github.com/ZOSOpenTools/curlport) | 48 | 99% |
+| [gzipport](https://github.com/ZOSOpenTools/gzipport) | 42 | 76% |
+| [gitport](https://github.com/ZOSOpenTools/gitport) | 39 | 96% |
+| [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 28 | 100% |
 | [perlport](https://github.com/ZOSOpenTools/perlport) | 26 | 100% |
 | [m4port](https://github.com/ZOSOpenTools/m4port) | 25 | 98% |
-| [autoconfport](https://github.com/ZOSOpenTools/autoconfport) | 23 | 98% |
-| [automakeport](https://github.com/ZOSOpenTools/automakeport) | 23 | 71% |
-| [tarport](https://github.com/ZOSOpenTools/tarport) | 22 | 44% |
+| [autoconfport](https://github.com/ZOSOpenTools/autoconfport) | 24 | 98% |
+| [automakeport](https://github.com/ZOSOpenTools/automakeport) | 24 | 71% |
+| [tarport](https://github.com/ZOSOpenTools/tarport) | 23 | 44% |
 | [xzport](https://github.com/ZOSOpenTools/xzport) | 17 | 88% |
 | [makeinfoport](https://github.com/ZOSOpenTools/makeinfoport) | 15 | 35% |
 | [coreutilsport](https://github.com/ZOSOpenTools/coreutilsport) | 12 | Skipped |
 | [help2manport](https://github.com/ZOSOpenTools/help2manport) | 12 | 100% |
-| [ncursesport](https://github.com/ZOSOpenTools/ncursesport) | 8 | 100% |
+| [ncursesport](https://github.com/ZOSOpenTools/ncursesport) | 9 | 100% |
 | [gawkport](https://github.com/ZOSOpenTools/gawkport) | 6 | 93% |
 | [gettextport](https://github.com/ZOSOpenTools/gettextport) | 6 | 50% |
 | [libtoolport](https://github.com/ZOSOpenTools/libtoolport) | 5 | 80% |
@@ -115,4 +115,4 @@
 | [vimport](https://github.com/ZOSOpenTools/vimport) | 0 | Skipped |
 | [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 100% |
 
-Last updated:  2022-11-28 16:54:35
+Last updated:  2022-11-28 18:13:25
