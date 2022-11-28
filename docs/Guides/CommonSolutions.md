@@ -2,6 +2,8 @@
 
 ## C pipe, C open do not tag newly created file descriptors
 
+Note: in most cases you can use the zoslibport package for ASCII/EBCDIC issues. See [zoslib](https://github.com/ZOSOpenTools/zoslibport) for details.
+
 A common problem when porting code to z/OS and building with ASCII is that when files are created, the contents are written out in ASCII
 but by default the files are not tagged to indicate the content is in ASCII. Subsequently, other tools have to _guess_ what codepage the contents are in, and often the tools _guess_ EBCDIC. 
 There are many ways that people describe an encoding:
@@ -69,6 +71,9 @@ Further reading:
 - [ASCII 8859-1](https://en.wikipedia.org/wiki/ISO/IEC_8859-1)
 
 ## FSUM7327 signal number XX not conventional
+
+Note: If you are seeing this error in a source file from gnulib tools package, a fix for this has been [upstreamed](https://git.savannah.gnu.org/gitweb/?p=gnulib.git;a=commit;h=835b3ea801782fcf72ef1f9397bb112cac0e2f50) on November 26, 2022 and so the 'fix' is probably to get the software package to pick up a new version of gnulib tools.
+
 See: [FSUM7327](https://tech.mikefulton.ca/FSUM7327) which is relatively cryptic and [kill](https://tech.mikefulton.ca/POSIXSignalNumbers).
 
 Only _some_ signals have a well-defined number that can be used when specifying an action (such as kill or trap). In particular, signal number 13 (which is PIPE) is _not_ a well-defined signal number.
