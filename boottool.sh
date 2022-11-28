@@ -61,9 +61,16 @@ processOptions()
 #process the options passed by user
 processOptions $*
 
+#Print Syntax
+printSyntax()
+{
+  echo "Pass repo/release name -- usage: boottool.sh --repo <repo> --release <releasename> --uname [ownername]" 
+  exit 1;
+}
+
 [ -z $OWNERNAME ] && OWNERNAME=$DEFAULT_OWNER && echo "Using default owner name ZOSOpenTools";
-[ -z $REPO ] && echo "Pass repo name -- usage: boottool.sh --repo <repo> --release <releasename> --uname [ownername]" && exit 1;
-[ -z $RELEASENAME ] && echo "Pass release name -- usage: boottool.sh --repo <repo> --release <releasename> --uname [ownername]" && exit 1;
+[ -z $REPO ] && printSyntax
+[ -z $RELEASENAME ] && printSyntax
 
 
 echo "Ownername = $OWNERNAME, Repo = $REPO, Release = $RELEASENAME"
