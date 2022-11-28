@@ -1,5 +1,17 @@
 #! /bin/env bash
 echo $BASH_VERSION
+
+########################################################################
+##PRE_REQUISITES 
+## Bash version to be >= 4 as the associative arrays are used here
+## jq library is required for parsing
+########################################################################
+
+
+if ((BASH_VERSINFO < 4)); then
+   echo "use bash version >= 4"
+   exit 1
+fi
 echo "number of args = $#"
 TOKEN="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"
 DEFAULT_OWNER="ZOSOpenTools"
@@ -11,24 +23,30 @@ CURL_REPO_SUCCESS="200"
 DELETE_RELEASE_CODE="204"
 CRT_UPLOAD_REL_SUCCESS="201"
 
+
+if ! jq --version >/dev/null 2>/dev/null; then
+    echo "jq is required to run this script"
+    exit 1
+fi
+
 processOptions()
 {
   args=$*
   while [[ $# -gt 0 ]]; do
     case $1 in
-        "-uname")
+        "--uname")
           shift
           OWNERNAME="${1}"
           ;;
-        "-release")
+        "--release")
           shift
           RELEASENAME="${1}"
           ;;
-        "-repo")
+        "--repo")
           shift
           REPO="${1}"
           ;;
-        "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
+        "--h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
           echo "Usage: boottool.sh -repo <repo> -release <releasename> -uname [ownername]";
           exit 0
           ;;
@@ -44,8 +62,8 @@ processOptions()
 processOptions $*
 
 [ -z $OWNERNAME ] && OWNERNAME=$DEFAULT_OWNER && echo "Using default owner name ZOSOpenTools";
-[ -z $REPO ] && echo "Pass repo name -- usage: boottool.sh -repo <repo> -release <releasename> -uname [ownername]" && exit 1;
-[ -z $RELEASENAME ] && echo "Pass release name -- usage: boottool.sh -repo <repo> -release <releasename> -uname [ownername]" && exit 1;
+[ -z $REPO ] && echo "Pass repo name -- usage: boottool.sh --repo <repo> --release <releasename> --uname [ownername]" && exit 1;
+[ -z $RELEASENAME ] && echo "Pass release name -- usage: boottool.sh --repo <repo> --release <releasename> --uname [ownername]" && exit 1;
 
 
 echo "Ownername = $OWNERNAME, Repo = $REPO, Release = $RELEASENAME"
