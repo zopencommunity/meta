@@ -40,7 +40,7 @@ description=$(getInput)
 
 valid=false
 while ! $valid; do
-  echo "Provide project's license: (select from $validLicenseNames)"
+  echo "Provide the community license to use for $name's patches: (select from $validLicenseNames)"
   license_name="$(getInput | tr -d ' ')"
   if ! echo " $validLicenseNames" | grep -q " $license_name"; then
     printWarning "License is not valid, please enter a license from one of these names: $validLicenseNames)"
@@ -66,13 +66,15 @@ buildtype=$(getInput)
 project_path="${name}port"
 
 if [ -d $project_path ]; then
-  echo "Directory $project_path already exists. Clobber it? (y, n)"
-  clobber=$(getInput)
-  if [ "$clobber" = "y" ]; then
-    rm -rf $project_path
-  else
-    exit 0
-  fi
+  while true; do
+    echo "Directory $project_path already exists. Update it? (y, n)"
+    clobber=$(getInput)
+    if [ "$clobber" = "n" ]; then
+      exit 0
+    elif [ "$clobber" = "y" ]; then
+      break
+    fi
+  done
 fi
 
 printHeader "Generating $project_path zopen project"
