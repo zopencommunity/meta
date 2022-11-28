@@ -24,6 +24,8 @@ It is recommended that you add the above environment variables to your `.profile
 If you do find problems, please tell us by opening issues in the github repository for the tool you are having issues with. For general problems,
 open an issue in the [meta](https://github.com/ZOSOpenTools/meta/issues) repository.
 
+For new ideas, general feedback or to start a discussion, please see our [discussions](https://github.com/ZOSOpenTools/meta/discussions).
+
 #### Install curl on z/OS
 
 You will need _curl 7.77_ or later on your z/OS system so that you can download the individual Open Source packages from github. 
@@ -59,4 +61,23 @@ Download [zopen-setup](https://github.com/ZOSOpenTools/meta/releases/tag/v1.0.0)
 This will create your own development environment with a `boot`, `prod`, and `dev` set of directories. The `boot` directory has everything you need to get started with porting.
 
 For more details on porting, visit the [porting to z/OS guide](Porting.md).
+
+### Downloading tools from z/OS:
+
+Once you have your development environment set up, you can download tools directly to z/OS with `zopen download`
+
+To download and install the latest software packages, enter the command `zopen download`. By default it will download all of the tools hosted on ZOSOpenTools.
+
+To list the available packages, specify the --list option as follows:
+
+```bash
+zopen download --list
+```
+
+To download and install specific packages, specify them as a comma delimited list as follows:
+```bash
+zopen download make,curl,gzip
+```
+
+For more details, visit https://github.com/ZOSOpenTools/utils.
 

@@ -8,7 +8,7 @@
   },
   "author": "",
   "dependencies": {
-    "docsify-cli": "^4.4.3",
+    "docsify-cli": "^4.4.2",
     "docsify-tools": "^1.0.20"
   }
 }
