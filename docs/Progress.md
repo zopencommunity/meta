@@ -63,7 +63,7 @@
 | [ncursesport](https://github.com/ZOSOpenTools/ncursesport) | 9 | 100% |
 | [gawkport](https://github.com/ZOSOpenTools/gawkport) | 6 | 93% |
 | [gettextport](https://github.com/ZOSOpenTools/gettextport) | 6 | 50% |
-| [libtoolport](https://github.com/ZOSOpenTools/libtoolport) | 5 | 80% |
+| [libtoolport](https://github.com/ZOSOpenTools/libtoolport) | 5 | 79% |
 | [opensslport](https://github.com/ZOSOpenTools/opensslport) | 5 | 90% |
 | [zlibport](https://github.com/ZOSOpenTools/zlibport) | 5 | 100% |
 | [cmakeport](https://github.com/ZOSOpenTools/cmakeport) | 4 | 74% |
@@ -111,4 +111,4 @@
 | [vimport](https://github.com/ZOSOpenTools/vimport) | 0 | 100% |
 | [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 100% |
 
-Last updated:  2022-11-30 07:32:30
+Last updated:  2022-11-30 15:17:51
