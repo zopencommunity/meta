@@ -62,7 +62,7 @@ This will create your own development environment with a `boot`, `prod`, and `de
 
 For more details on porting, visit the [porting to z/OS guide](Porting.md).
 
-### Downloading tools from z/OS:
+### Downloading tools to z/OS:
 
 Once you have your development environment set up, you can download tools directly to z/OS with `zopen download`
 
