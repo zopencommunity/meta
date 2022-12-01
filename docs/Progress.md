@@ -37,6 +37,7 @@
 * [pkg-configport](https://github.com/ZOSOpenTools/pkg-configport)
 * [re2cport](https://github.com/ZOSOpenTools/re2cport)
 * [shufport](https://github.com/ZOSOpenTools/shufport)
+* [sqliteport](https://github.com/ZOSOpenTools/sqliteport)
 * [sshpassport](https://github.com/ZOSOpenTools/sshpassport)
 * [tclport](https://github.com/ZOSOpenTools/tclport)
 * [texinfoport](https://github.com/ZOSOpenTools/texinfoport)
@@ -103,6 +104,7 @@
 | [screenport](https://github.com/ZOSOpenTools/screenport) | 0 | Skipped |
 | [sedport](https://github.com/ZOSOpenTools/sedport) | 0 | 82% |
 | [shufport](https://github.com/ZOSOpenTools/shufport) | 0 | No builds |
+| [sqliteport](https://github.com/ZOSOpenTools/sqliteport) | 0 | No builds |
 | [sshpassport](https://github.com/ZOSOpenTools/sshpassport) | 0 | No builds |
 | [tclport](https://github.com/ZOSOpenTools/tclport) | 0 | No builds |
 | [texinfoport](https://github.com/ZOSOpenTools/texinfoport) | 0 | No builds |
@@ -111,4 +113,4 @@
 | [vimport](https://github.com/ZOSOpenTools/vimport) | 0 | 100% |
 | [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 100% |
 
-Last updated:  2022-11-30 15:17:51
+Last updated:  2022-12-01 23:52:02
