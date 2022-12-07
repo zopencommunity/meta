@@ -222,7 +222,7 @@ processOptions()
         ;;
       "-comp" | "--comp")
         shift
-        ZOPEN_COMP=$1 # We will uppercase this latter
+        ZOPEN_COMP=$1 # We will uppercase this later
         ;;
       "-oci" | "--oci")
         publishOCI=true
