@@ -1,4 +1,4 @@
-#! /bin/env bash
+#! /usr/local/bin/bash
 echo $BASH_VERSION
 
 ########################################################################
@@ -13,7 +13,6 @@ if ((BASH_VERSINFO < 4)); then
    exit 1
 fi
 echo "number of args = $#"
-TOKEN="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"
 DEFAULT_OWNER="ZOSOpenTools"
 OWNERNAME=""
 REPO=""
@@ -22,6 +21,7 @@ CURL_POST="curl -sw "%{http_code}" -X POST -H \"Accept: application/vnd.github+j
 CURL_REPO_SUCCESS="200"
 DELETE_RELEASE_CODE="204"
 CRT_UPLOAD_REL_SUCCESS="201"
+DEL_TAG_VALIDATION_FAIL="422"
 
 
 if ! jq --version >/dev/null 2>/dev/null; then
@@ -64,7 +64,7 @@ processOptions $*
 #Print Syntax
 printSyntax()
 {
-  echo "Pass repo/release name -- usage: boottool.sh --repo <repo> --release <releasename> --uname [ownername]" 
+  echo "Pass repo/releasename -- usage: boottool.sh --repo <repo> --release <releasename> --uname [ownername]" 
   exit 1;
 }
 
@@ -74,7 +74,14 @@ printSyntax()
 
 
 echo "Ownername = $OWNERNAME, Repo = $REPO, Release = $RELEASENAME"
+
+if [ "$RELEASENAME" == "boot-release" ]; then
+    echo "Release name in argument is boot-release , no action taken"
+    exit 0
+fi
+
 url="https://api.github.com/repos/$OWNERNAME/$REPO/releases"
+repourl="https://api.github.com/repos/$OWNERNAME/$REPO/"
 
 declare -A releaseNameIDMap
 declare -A releaseIDToReleaseNameMap
@@ -112,6 +119,8 @@ populateReleaseMaps()
 #uses the maps populated above to check if the release name passed in arguments actually exists in repo
 function checkReleaseNameExists {
     releaseID=""
+    tagNameOfRelease=""
+
     var=$(declare -p "$1")
     echo $var
     eval "declare -A _arr="${var#*=}
@@ -127,6 +136,56 @@ function checkReleaseNameExists {
         fi
     done
     return 1;
+}
+
+#Method below is used to fetch the tag name of the release passed as arg
+getTagNameOfRelease ()
+{
+
+  releaseUrl=$url"/""$1"
+  echo "getTagNameOfRelease releaseUrl = $releaseUrl"
+
+  response=$(curl -sw "%{http_code}" -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $GITHUB_OAUTH_TOKEN" -H "X-GitHub-Api-Version: 2022-11-28" $releaseUrl )
+  http_code=$(tail -n1 <<< "$response")
+
+  if [ "$http_code" == "$CURL_REPO_SUCCESS" ]; then
+    releaseListData=$(sed '$ d' <<< "$response") 
+    repo_json=`jq '.' <<< "$releaseListData"`
+    tag_name=$(echo $repo_json | jq -r ".tag_name")
+    [ -z $tag_name ] && echo "No tag name" && exit 1;
+    tagNameOfRelease=$tag_name
+
+    echo "tag name final = $tagNameOfRelease"
+  else
+    echo "Couldn't fetch release repo - error occured - return code = $http_code"
+    exit 1
+  fi
+  
+  #Get the SHA for the tag to retain the commit ID
+  getSHAOfTag $tagNameOfRelease
+}
+
+#This method is used to fetch the SHA associated with the tag
+getSHAOfTag()
+{
+  releaseTagUrl=$repourl"git/ref/tags/""$1"
+  echo "getSHAOfTag releaseTagUrl = $releaseTagUrl"
+  response=$(curl -sw "%{http_code}" -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $GITHUB_OAUTH_TOKEN" $releaseTagUrl )
+  shaOfTag=""  
+
+  http_code=$(tail -n1 <<< "$response")
+
+  if [ "$http_code" == "$CURL_REPO_SUCCESS" ]; then
+    releaseListData=$(sed '$ d' <<< "$response") 
+    repo_json=`jq '.' <<< "$releaseListData"`
+    sha=$(echo $repo_json | jq -r ".object.sha")
+    [ -z $sha ] && echo "No commit ID" && exit 1;
+    shaOfTag=$sha
+    echo "sha of tag = $shaOfTag"
+  else
+    echo "Couldn't fetch SHA of tag - error occured - return code = $http_code"
+    exit 1
+  fi
 }
 
 #downloads the assets of the releasedId passed in arg $1
@@ -181,10 +240,9 @@ downloadAssetsOfRelease()
 }
 
 
-###CHANGE COMMENT DH/ dh
 # check if the releasename in argument is part of repo, else return without processing
-# If yes, c
-    #download its asset and delete the release 
+# If yes, 
+    #download its asset and delete the release and the tag "boot"
     # create a new release with name as "boot-release" and tag "boot" 
       #(not latest and commit level to same as the release in the arg )
     # and upload the assets
@@ -195,7 +253,9 @@ processPassedReleaseName()
   
   if [ $? -eq 0 ]; then
      downloadAssetsOfRelease "$releaseID"
+     getTagNameOfRelease $releaseID
      deleteTheRelease
+     deleteBootTag
   else
      echo "release name doesnot exist"
   fi
@@ -208,21 +268,35 @@ deleteTheRelease()
 {
   deleteRepoUrl="https://api.github.com/repos/$OWNERNAME/$REPO/releases/$releaseID"
   echo "deleteTheRelease in url = $deleteRepoUrl"
-  response=$(curl -sw "%{http_code}" -X DELETE -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $TOKEN" $deleteRepoUrl)
+  response=$(curl -sw "%{http_code}" -X DELETE -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $GITHUB_OAUTH_TOKEN" $deleteRepoUrl)
   http_code=$(tail -n1 <<< "$response")
   delReleaseTagData=$(sed '$ d' <<< "$response") 
   
-  echo "http_code = $http_code"
   if [ "$http_code" == "$DELETE_RELEASE_CODE" ]; then
      echo "Delete successful"
   fi
 }
 
+
+# the tag "boot" is deleted here
+deleteBootTag()
+{
+  tagUrl=$repourl"git/refs/tags/boot"
+  echo "deleteBootTag in url = $tagUrl"
+  response=$(curl -sw "%{http_code}" -X DELETE -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $GITHUB_OAUTH_TOKEN" $tagUrl)
+  http_code=$(tail -n1 <<< "$response")
+  echo "deleteBootTag response= $response"
+  if [ "$http_code" == "$DEL_TAG_VALIDATION_FAIL" ]; then
+      echo "The endpoint has been spammed - return code - $http_code"
+  fi
+}
+
+
 # All releases in the repo tagged as "boot" are deleted here.
 deleteBootTaggedReleases()
 {
   bootTagUrl="https://api.github.com/repos/$OWNERNAME/$REPO/releases/tags/boot"
-  response=$(curl -sw "%{http_code}" -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $TOKEN" $bootTagUrl)
+  response=$(curl -sw "%{http_code}" -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $GITHUB_OAUTH_TOKEN" $bootTagUrl)
   http_code=$(tail -n1 <<< "$response")
   
   if [ "$http_code" == "$CURL_REPO_SUCCESS" ]; then
@@ -240,10 +314,10 @@ deleteBootTaggedReleases()
         downloadAssetsOfRelease "$releaseID"
     fi
 
-    response=$(curl -sw "%{http_code}" -X DELETE -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $TOKEN" $deleteRepoUrl)
+    response=$(curl -sw "%{http_code}" -X DELETE -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $GITHUB_OAUTH_TOKEN" $deleteRepoUrl)
     http_code=$(tail -n1 <<< "$response")
     delReleaseTagData=$(sed '$ d' <<< "$response") 
-    
+    deleteBootTag
     #This call refreshes the maps as boot releases are deleted 
     populateReleaseMaps
   else 
@@ -256,12 +330,17 @@ deleteBootTaggedReleases()
 createRelease()
 {
   createRepoUrl="https://api.github.com/repos/$OWNERNAME/$REPO/releases"
+  bodyData="This is boot-release of "$REPO
   QUOTE="'"
   echo "new release name = $1"
-  response=$(curl -sw "%{http_code}" -X POST -H "Accept: application/vnd.github+json" \
-             -H "Authorization: Bearer $TOKEN" \
+  echo "sha of new release = $shaOfTag"
+  response=$(curl -sw "%{http_code}" \
+             -X POST \
+             -H "Accept: application/vnd.github+json" \
+             -H "Authorization: Bearer $GITHUB_OAUTH_TOKEN" \
               $createRepoUrl \
-              -d  '{"tag_name":"boot","name":'\"$1\"',"body":"This is boot-release of '$REPO'", "make_latest":"false"}')
+              -d  '{"tag_name":"boot","target_commitish":'\"$shaOfTag\"',"name":'\"$1\"',"body":"This is boot-release","make_latest":"false"}')
+              
   http_code=$(tail -n1 <<< "$response")
 
   if [ "$http_code" == "$CRT_UPLOAD_REL_SUCCESS" ]; then
@@ -298,7 +377,7 @@ uploadAsset()
     response=$(curl -sw "%{http_code}" \
     -X POST \
     -H "Accept: application/vnd.github+json" \
-    -H "Authorization: Bearer $TOKEN" \
+    -H "Authorization: Bearer $GITHUB_OAUTH_TOKEN" \
     -H "Content-Type: application/octet-stream" \
     -d "Content-Length: $fileSize" \
     "https://uploads.github.com/repos/$OWNERNAME/$REPO/releases/$1/assets?name=$assetName"
@@ -314,6 +393,8 @@ uploadAsset()
 }
 
 releaseID=""
+tagNameOfRelease=""
+shaOfTag=""
 
 #fetch all the releases from repo and maintain a map of name to release Id
 # we need this step because processing is possible only on release IDs 
