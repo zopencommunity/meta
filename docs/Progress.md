@@ -31,7 +31,6 @@
 * [helloport](https://github.com/ZOSOpenTools/helloport)
 * [htopport](https://github.com/ZOSOpenTools/htopport)
 * [man-dbport](https://github.com/ZOSOpenTools/man-dbport)
-* [nanoport](https://github.com/ZOSOpenTools/nanoport)
 * [ninjaport](https://github.com/ZOSOpenTools/ninjaport)
 * [phpport](https://github.com/ZOSOpenTools/phpport)
 * [pkg-configport](https://github.com/ZOSOpenTools/pkg-configport)
@@ -95,7 +94,7 @@
 | [jqport](https://github.com/ZOSOpenTools/jqport) | 0 | Skipped |
 | [lessport](https://github.com/ZOSOpenTools/lessport) | 0 | 100% |
 | [man-dbport](https://github.com/ZOSOpenTools/man-dbport) | 0 | No builds |
-| [nanoport](https://github.com/ZOSOpenTools/nanoport) | 0 | No builds |
+| [nanoport](https://github.com/ZOSOpenTools/nanoport) | 0 | 100% |
 | [ncduport](https://github.com/ZOSOpenTools/ncduport) | 0 | Skipped |
 | [ninjaport](https://github.com/ZOSOpenTools/ninjaport) | 0 | No builds |
 | [phpport](https://github.com/ZOSOpenTools/phpport) | 0 | No builds |
@@ -113,4 +112,4 @@
 | [vimport](https://github.com/ZOSOpenTools/vimport) | 0 | 100% |
 | [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 100% |
 
-Last updated:  2022-12-05 18:24:01
+Last updated:  2022-12-07 14:52:54
