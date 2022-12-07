@@ -1,4 +1,4 @@
-#! /usr/local/bin/bash
+#! /bin/env bash
 echo $BASH_VERSION
 
 ########################################################################
@@ -64,7 +64,7 @@ processOptions $*
 #Print Syntax
 printSyntax()
 {
-  echo "Pass repo/releasename -- usage: boottool.sh --repo <repo> --release <releasename> --uname [ownername]" 
+  echo "Pass repo/release name -- usage: boottool.sh --repo <repo> --release <releasename> --uname [ownername]" 
   exit 1;
 }
 
