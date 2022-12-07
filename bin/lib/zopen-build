@@ -406,7 +406,7 @@ setEnv()
     export ZOPEN_COMP="${ZOPEN_COMPD}"
   else
     # user specified, so normalize in upper case
-    ZOPEN_COMP=$(echo "${ZOPEN_COMP}" | tr '[a-z]' '[A-Z')
+    ZOPEN_COMP=$(echo "${ZOPEN_COMP}" | tr '[a-z]' '[A-Z]')
   fi
 
   # Use the right set of default options
