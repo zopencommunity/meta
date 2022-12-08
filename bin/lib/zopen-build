@@ -151,6 +151,11 @@ setDefaults()
   export ZOPEN_TEST_STATUS_NONE_PASSED=3
   export ZOPEN_TEST_STATUS_ERROR=4
   export ZOPEN_TEST_STATUS_SKIPPED=5
+  unset ZOPEN_EXTRA_CPPFLAGS
+  unset ZOPEN_EXTRA_CFLAGS
+  unset ZOPEN_EXTRA_CXXFLAGS
+  unset ZOPEN_EXTRA_LDFLAGS
+  unset ZOPEN_EXTRA_LIBS
 }
 
 printSyntax()
@@ -323,7 +328,17 @@ checkEnv()
     if [ "${ZOPEN_TARBALL_DEPS}x" = "x" ]; then
       printError "ZOPEN_DEPS or ZOPEN_TARBALL_DEPS needs to be defined to the ported tools this depends on"
     fi
-    deps="${ZOPEN_TARBALL_DEPS}"
+    implicitDeps="curl tar"
+    ext=${ZOPEN_TARBALL_URL##*.}
+    if [ "${ext}x" = "xzx" ]; then
+      implicitDeps="${implicitDeps} xz"
+    elif [ "${ext}x" = "gzx" ]; then
+      implicitDeps="${implicitDeps} gzip"
+    elif [ "${ext}x" = "bz2x" ]; then
+      implicitDeps="${implicitDeps} bzip2"
+    fi
+    printVerbose "Implicitly adding tarball dependencies: ${implicitDeps}"
+    ZOPEN_TARBALL_DEPS="${implicitDeps} ${ZOPEN_TARBALL_DEPS}"
   elif [ "${ZOPEN_TYPE}x" = "GITx" ]; then
     if [ "${ZOPEN_GIT_URL}x" = "x" ]; then
       printError "ZOPEN_URL or ZOPEN_GIT_URL needs to be defined to the root directory of the tool being ported"
@@ -331,19 +346,20 @@ checkEnv()
     if [ "${ZOPEN_GIT_DEPS}x" = "x" ]; then
       printError "ZOPEN_DEPS or ZOPEN_GIT_DEPS needs to be defined to the ported tools this depends on"
     fi
-    deps="${ZOPEN_GIT_DEPS}"
+    implicitDeps="git"
+    printVerbose "Implicitly adding git dependencies: ${implicitDeps}"
+    ZOPEN_GIT_DEPS="${implicitDeps} ${ZOPEN_GIT_DEPS}"
   fi
 
   export ZOPEN_CA="${utilparentdir}/cacert.pem"
   if ! [ -r "${ZOPEN_CA}" ]; then
-    printError "Internal Error. Certificate ${ZOPEN_CA} is required"
+    printError "Internal Error. Certificate ${ZOPEN_CA} is required. Use zopen update-cacert to update."
   fi
 
   #
   # For the compilers and corresponding flags, you need to either specify both the compiler and flag, or neither
   # since the flags are not compatible across compilers, and only the xlclang and xlclang++ compilers are used by default
   #
-
   if { [ "${CC}x" = "x" ] && [ "${CFLAGS}x" != "x" ]; } || { [ "${CC}x" != "x" ] && [ "${CFLAGS}x" = "x" ]; } then
     printWarning "Either specify both CC and CFLAGS or neither, but not just one"
   fi
@@ -361,6 +377,8 @@ setDepsEnv()
   fi
 
   orig="${PWD}"
+  # Filter out duplicate deps
+  deps=$(echo "$deps" | xargs | tr ' ' '\n' | sort -u)
   for dep in $deps; do
     foundDep=false
     for path in `echo ${depsPath} | tr '|' '\n'` ; do
