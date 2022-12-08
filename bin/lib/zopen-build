@@ -178,6 +178,7 @@ printSyntax()
   echo "  -e <env file>: source <env file> instead of buildenv to establish build environment"
   echo "  -c|--clean: Deletes all of the build output and forces reconfigure with next build"
   echo "  -f|--force-rebuild: forces a rebuild, including running bootstrap and configure again"
+  echo "  -g|--get-source: get the source and apply patch without building"
   echo "  -s: exec a shell before running configure.  Useful when manually building ports."
   opts=$(printEnvVar)
   echo "${opts}" )>&2
@@ -194,6 +195,7 @@ processOptions()
   cleanupBuild=false
   forceRebuild=false
   buildEnvFile="./buildenv"
+  getSourceOnly=false
   depsPath="$HOME/zopen/prod|$HOME/zopen/boot|/usr/bin/zopen/"
   forceUpdateDeps=false
   while [[ $# -gt 0 ]]; do
@@ -243,6 +245,9 @@ processOptions()
         ;;
       "-f" | "--force-rebuild")
         forceRebuild=true
+        ;;
+      "-g" | "--get-source")
+        getSourceOnly=true
         ;;
       "-s" | "--shell")
         startShell=true
@@ -1311,6 +1316,10 @@ fi
 
 if ! applyPatches; then
   exit 4
+fi
+
+if $getSourceOnly; then
+  exit 0
 fi
 
 cd "${ZOPEN_ROOT}/${dir}" || exit 99
