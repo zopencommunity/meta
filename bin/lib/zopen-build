@@ -156,6 +156,7 @@ setDefaults()
   unset ZOPEN_EXTRA_CXXFLAGS
   unset ZOPEN_EXTRA_LDFLAGS
   unset ZOPEN_EXTRA_LIBS
+  return 0
 }
 
 printSyntax()
