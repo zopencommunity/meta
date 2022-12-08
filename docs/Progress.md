@@ -24,7 +24,6 @@
 * [zstdport](https://github.com/ZOSOpenTools/zstdport)
 ## Projects that do not have builds
 
-* [findutilsport](https://github.com/ZOSOpenTools/findutilsport)
 * [gnulibport](https://github.com/ZOSOpenTools/gnulibport)
 * [grepport](https://github.com/ZOSOpenTools/grepport)
 * [groffport](https://github.com/ZOSOpenTools/groffport)
@@ -83,7 +82,7 @@
 | [bzip2port](https://github.com/ZOSOpenTools/bzip2port) | 0 | 100% |
 | [cscopeport](https://github.com/ZOSOpenTools/cscopeport) | 0 | 100% |
 | [ctagsport](https://github.com/ZOSOpenTools/ctagsport) | 0 | 100% |
-| [findutilsport](https://github.com/ZOSOpenTools/findutilsport) | 0 | No builds |
+| [findutilsport](https://github.com/ZOSOpenTools/findutilsport) | 0 | 50% |
 | [gdbmport](https://github.com/ZOSOpenTools/gdbmport) | 0 | Skipped |
 | [gnulibport](https://github.com/ZOSOpenTools/gnulibport) | 0 | No builds |
 | [gperfport](https://github.com/ZOSOpenTools/gperfport) | 0 | Skipped |
@@ -112,4 +111,4 @@
 | [vimport](https://github.com/ZOSOpenTools/vimport) | 0 | 100% |
 | [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 100% |
 
-Last updated:  2022-12-08 17:46:11
+Last updated:  2022-12-08 18:13:57
