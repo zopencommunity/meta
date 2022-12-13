@@ -7,19 +7,20 @@ VIM is a popular and powerful text editor that is often used by programmers for 
 To obtain VIM on z/OS, download it from [VIM Github Release page](https://github.com/ZOSOpenTools/vimport/releases).
 
 Alternatively, you can use `zopen download` to download vim as follows:
-```bash
-zopen download vim
 ```
+zopen download vim ncurses
+```
+Since VIM depends on ncurses, we also need to download [ncurses](https://github.com/ZOSOpenTools/ncursesport/releases) and source the .env file.
 
 ## How to use VIM?
 To use VIM on z/OS, first source the .env file provided with the VIM on z/OS release as follows:
-```bash
+```
 . ./.env
 ```
 This will set the appropriate PATH, VIM, MANPATH environment variables.
 
 Now, you can use VIM to edit new or existing files:
-```bash
+```
 vim new.txt # create a new file
 vim ~/.profile # edit an existing file
 ```
