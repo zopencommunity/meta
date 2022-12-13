@@ -41,6 +41,14 @@ cscope -b -i cscope.files # Create the cscope db file
 
 Now, load up VIM from your project root directory. You can now use the `:cscope` tool to search the references to a definition.
 
+For example:
+```
+:cscope find main all
+```
+Will locate all references to main
+
+To map the cscope to shortcut keys, the following vim script is recommended: https://github.com/joe-skb7/cscope-maps/blob/master/plugin/cscope_maps.vim. You can copy and paste it to your .vimrc.
+
 ### CTags
 Another useful tool is **ctags**, which is similar to cscope but operates at a lower level. Ctags generates a list of tags for a codebase, which can then be used by VIM to quickly navigate to specific functions and other code constructs. This can be a huge time-saver when working with complex codebases on z/OS.
 
