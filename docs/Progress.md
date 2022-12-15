@@ -31,7 +31,6 @@
 * [helloport](https://github.com/ZOSOpenTools/helloport)
 * [htopport](https://github.com/ZOSOpenTools/htopport)
 * [man-dbport](https://github.com/ZOSOpenTools/man-dbport)
-* [ninjaport](https://github.com/ZOSOpenTools/ninjaport)
 * [phpport](https://github.com/ZOSOpenTools/phpport)
 * [pkg-configport](https://github.com/ZOSOpenTools/pkg-configport)
 * [re2cport](https://github.com/ZOSOpenTools/re2cport)
@@ -45,7 +44,7 @@
 
 | Package | # of Dependent Projects | Test Success Rate |
 |---|---|---|
-| [makeport](https://github.com/ZOSOpenTools/makeport) | 61 | 100% |
+| [makeport](https://github.com/ZOSOpenTools/makeport) | 62 | 100% |
 | [curlport](https://github.com/ZOSOpenTools/curlport) | 48 | 99% |
 | [gzipport](https://github.com/ZOSOpenTools/gzipport) | 43 | 76% |
 | [gitport](https://github.com/ZOSOpenTools/gitport) | 41 | 96% |
@@ -95,7 +94,7 @@
 | [man-dbport](https://github.com/ZOSOpenTools/man-dbport) | 0 | No builds |
 | [nanoport](https://github.com/ZOSOpenTools/nanoport) | 0 | 100% |
 | [ncduport](https://github.com/ZOSOpenTools/ncduport) | 0 | Skipped |
-| [ninjaport](https://github.com/ZOSOpenTools/ninjaport) | 0 | No builds |
+| [ninjaport](https://github.com/ZOSOpenTools/ninjaport) | 0 | 98% |
 | [phpport](https://github.com/ZOSOpenTools/phpport) | 0 | No builds |
 | [pipelineport](https://github.com/ZOSOpenTools/pipelineport) | 0 | 100% |
 | [pkg-configport](https://github.com/ZOSOpenTools/pkg-configport) | 0 | No builds |
@@ -111,4 +110,4 @@
 | [vimport](https://github.com/ZOSOpenTools/vimport) | 0 | 100% |
 | [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 100% |
 
-Last updated:  2022-12-15 11:16:29
+Last updated:  2022-12-15 15:29:04
