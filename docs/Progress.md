@@ -48,13 +48,13 @@
 | [makeport](https://github.com/ZOSOpenTools/makeport) | 61 | 100% |
 | [curlport](https://github.com/ZOSOpenTools/curlport) | 48 | 99% |
 | [gzipport](https://github.com/ZOSOpenTools/gzipport) | 43 | 76% |
-| [gitport](https://github.com/ZOSOpenTools/gitport) | 40 | 96% |
+| [gitport](https://github.com/ZOSOpenTools/gitport) | 41 | 96% |
 | [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 32 | 100% |
+| [autoconfport](https://github.com/ZOSOpenTools/autoconfport) | 26 | 98% |
+| [automakeport](https://github.com/ZOSOpenTools/automakeport) | 26 | 71% |
+| [m4port](https://github.com/ZOSOpenTools/m4port) | 26 | 98% |
 | [perlport](https://github.com/ZOSOpenTools/perlport) | 26 | 100% |
-| [autoconfport](https://github.com/ZOSOpenTools/autoconfport) | 25 | 98% |
-| [automakeport](https://github.com/ZOSOpenTools/automakeport) | 25 | 71% |
-| [m4port](https://github.com/ZOSOpenTools/m4port) | 25 | 98% |
-| [tarport](https://github.com/ZOSOpenTools/tarport) | 24 | 44% |
+| [tarport](https://github.com/ZOSOpenTools/tarport) | 23 | 44% |
 | [xzport](https://github.com/ZOSOpenTools/xzport) | 17 | 88% |
 | [makeinfoport](https://github.com/ZOSOpenTools/makeinfoport) | 15 | 35% |
 | [coreutilsport](https://github.com/ZOSOpenTools/coreutilsport) | 12 | 18% |
@@ -75,7 +75,7 @@
 | [lz4port](https://github.com/ZOSOpenTools/lz4port) | 1 | Skipped |
 | [patchport](https://github.com/ZOSOpenTools/patchport) | 1 | 50% |
 | [re2cport](https://github.com/ZOSOpenTools/re2cport) | 1 | No builds |
-| [wgetport](https://github.com/ZOSOpenTools/wgetport) | 1 | 100% |
+| [wgetport](https://github.com/ZOSOpenTools/wgetport) | 1 | 18% |
 | [xxhashport](https://github.com/ZOSOpenTools/xxhashport) | 1 | Skipped |
 | [zipport](https://github.com/ZOSOpenTools/zipport) | 1 | 71% |
 | [zstdport](https://github.com/ZOSOpenTools/zstdport) | 1 | Skipped |
@@ -111,4 +111,4 @@
 | [vimport](https://github.com/ZOSOpenTools/vimport) | 0 | 100% |
 | [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 100% |
 
-Last updated:  2022-12-13 21:34:36
+Last updated:  2022-12-15 01:52:01
