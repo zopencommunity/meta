@@ -31,6 +31,9 @@ getContentsFromGithub()
   if echo $repo_results | grep -q "API rate limit exceeded for" 2>/dev/null; then
     printError "API rate limit exceeded for github.\n1. Generate a token (https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token).\n2. Set ZOPEN_GIT_OAUTH_TOKEN and rerun"
   fi
+  if echo $repo_results | grep -q "Bad credentials" 2>/dev/null; then
+    printError "Your ZOPEN_GIT_OAUTH_TOKEN is invalid. Please validate that it is correct and re-run."
+  fi
   echo "$repo_results";
 }
 
