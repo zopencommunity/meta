@@ -602,7 +602,7 @@ setEnv()
 tagBinaryFiles()
 {
   absdir="$1"
-  (cd "${absdir}" && find . -name "*.pdf" -o -name "*.png" -o -name "*.bat" -o -name "*.jpg" -o -name "*.gif" -o -name "*.ttf" -o -name "*.wbmp" ! -type d ! -type l | xargs -I {} chtag -b {})
+  (cd "${absdir}" && find . -name "*.pdf" -o -name "*.png" -o -name "*.bat" -o -name "*.jpg" -o -name "*.gif" -o -name "*.ttf" -o -name "*.wbmp" -name "*.gmo" -name "*.po" -name "*.der" ! -type d ! -type l | xargs -I {} chtag -b {})
 }
 
 tagUntaggedFilesAsISO8859_1()
@@ -727,6 +727,9 @@ extractTarBall()
 *.pdf
 *.ttf
 *.wbmp
+*.gmo
+*.po
+*.der
 " ".gitignore"; then
       printError "Unable to create .gitignore for tarball"
     fi
