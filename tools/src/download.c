@@ -2719,7 +2719,12 @@ int setRequestHeaders( HWTH_RETURNCODE_TYPE *rcPtr,
 char **getRequestHeaders() {
  char buf[80];
  char **headers = NULL;
- int NUM_HEADERS = 1;
+ int NUM_HEADERS = 2;
+
+ char *token = getenv("ZOPEN_GIT_OAUTH_TOKEN");
+ if (token == NULL) {
+	token = "";
+ }
 
 /***************************************************
  * Allocate an array of pointers to string, and
@@ -2727,12 +2732,17 @@ char **getRequestHeaders() {
  * NULL last array element to indicate end of array.
  ***************************************************/
  headers = (char **)calloc( 1+NUM_HEADERS, sizeof(char *) );
- sprintf( buf,
+ snprintf( buf, sizeof buf,
           "%s:%s",
           "User-Agent",
           "toolkit" );
- headers[0] = (char *)strdup(buf);
- headers[1] = NULL;
+ headers[0] = strdup(buf);
+
+ snprintf(buf, sizeof buf,"%s:%s %s",
+          "Authorization", "Bearer",token);
+ headers[1] = strdup(buf);
+
+ headers[2] = NULL;
 return ( headers);
 } /* end function */
 
