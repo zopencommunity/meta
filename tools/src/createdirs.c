@@ -13,7 +13,7 @@ static int createsubdir(const char* rootdir, const char* subdir) {
     return ZOPEN_CREATEDIR_DIR_TOO_LONG;
   }
   if (stat(fulldir, &stfull) == -1) {
-    if (mkdir(fulldir, S_IRWXU|S_IRGRP)) {
+    if (mkdir(fulldir, S_IRWXU|S_IRGRP|S_IXGRP|S_IROTH|S_IXOTH)) {
       return ZOPEN_CREATEDIR_CREATE_FAILED;
     } else {
       return 0;
