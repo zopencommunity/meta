@@ -1,7 +1,12 @@
+#define _ISOC99_SOURCE
+#include <stdio.h>
+
 #include "zopenio.h"
 #include "httpspkg.h"
-#include "zopen_boot_uri.h"
+#include "httpsget.h"
+#include "syscmd.h"
 
+#include "zopen_boot_uri.h"
 
 /*
  This is the URI pattern we want to generate:
