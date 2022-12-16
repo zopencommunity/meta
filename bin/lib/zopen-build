@@ -185,6 +185,8 @@ printSyntax()
   echo "  -c|--clean: Deletes all of the build output and forces reconfigure with next build"
   echo "  -f|--force-rebuild: forces a rebuild, including running bootstrap and configure again"
   echo "  -g|--get-source: get the source and apply patch without building"
+  echo "  -gp|--generate-pax: generate a pax.Z file based on the install contents"
+  echo "  -sym|--symlink: generate a symlink from the project name to \${ZOPEN_INSTALL_DIR}"
   echo "  -s: exec a shell before running configure.  Useful when manually building ports."
   opts=$(printEnvVar)
   echo "${opts}" )>&2
@@ -202,6 +204,8 @@ processOptions()
   forceRebuild=false
   buildEnvFile="./buildenv"
   getSourceOnly=false
+  generatePax=false
+  generateSymLink=false
   depsPath="$HOME/zopen/prod|$HOME/zopen/boot|/usr/bin/zopen/"
   forceUpdateDeps=false
   while [[ $# -gt 0 ]]; do
@@ -254,6 +258,12 @@ processOptions()
         ;;
       "-g" | "--get-source")
         getSourceOnly=true
+        ;;
+      "-gp" | "--generate-pax")
+        generatePax=true
+        ;;
+      "-sym" | "--symlink")
+        generateSymLink=true
         ;;
       "-s" | "--shell")
         startShell=true
@@ -1134,8 +1144,17 @@ install()
     chtag -tc 819 "${ZOPEN_INSTALL_DIR}/test.status"
     echo "$ZOPEN_STATUS" > "${ZOPEN_INSTALL_DIR}/test.status"
 
-    if ! runAndLog "${ZOPEN_PAX_CMD}"; then
-      printError "Could not generate pax \"${paxFileName}\""
+    if $generatePax; then
+      printHeader "Generating pax.Z from ${ZOPEN_INSTALL_DIR}"
+      if ! runAndLog "${ZOPEN_PAX_CMD}"; then
+        printError "Could not generate pax \"${paxFileName}\""
+      fi
+    fi
+    if [ -n "${ZOPEN_LINK_CMD}" ]; then
+      printHeader "Generating symlink from ${linkPath} to ${ZOPEN_INSTALL_DIR}"
+      if ! runAndLog "${ZOPEN_LINK_CMD}"; then
+        printError "Link command failed"
+      fi
     fi
     generateOCI $ZOPEN_NAME
   else
@@ -1226,9 +1245,17 @@ resolveCommands()
     [[ -d ${ZOPEN_ROOT}/install ]] || mkdir -p ${ZOPEN_ROOT}/install
     paxFileName="${ZOPEN_ROOT}/install/${ZOPEN_NAME}.${LOG_PFX}.zos.pax.Z"
     export ZOPEN_PAX_CMD="pax -w -z -x pax \"-s#${ZOPEN_INSTALL_DIR}/#${ZOPEN_NAME}.${LOG_PFX}.zos/#\" -f \"${paxFileName}\" \"${ZOPEN_INSTALL_DIR}/\""
+    if $generateSymLink; then
+      PROJECT_NAME="$(echo ${ZOPEN_NAME} | cut -d'-' -f1)"
+      if [ "${PROJECT_NAME}" != "${ZOPEN_NAME}" ]; then
+        linkPath="$(dirname ${ZOPEN_INSTALL_DIR})/${PROJECT_NAME}"
+        export ZOPEN_LINK_CMD="if [ -h ${linkPath} ]; then rm ${linkPath}; fi && ln -s ${ZOPEN_INSTALL_DIR} ${linkPath}"
+      fi
+    fi
   else
     unset ZOPEN_INSTALL_CMD
     unset ZOPEN_PAX_CMD
+    unset ZOPEN_LINK_CMD
   fi
 
   if [ "${ZOPEN_CLEAN}x" != "skipx" ] && [ ! -z "$(command -v ${ZOPEN_CLEAN})" ]; then
