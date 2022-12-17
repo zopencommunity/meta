@@ -1,11 +1,12 @@
-#include "syscmd.h"
+#define _ISOC99_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
 
+#include "syscmd.h"
 
-int unpaxandlink(const char* root, const char* subdir, const char* pkg, const char* shortname) { 
+int unpaxandlink(const char* root, const char* subdir, const char* pkg, const char* shortname) {
   char pax_format[] = "cd %s/%s && /bin/pax -rf %s && rm %s";
   char pax[ZOPEN_CMD_MAX+1];
   char ln_format[] = "/bin/sh -c \"cd %s/%s && /bin/rm -f %s && /bin/ln -s %s* %s\"";
@@ -66,7 +67,7 @@ int getpkgname(const char* temprawpkg, const char* temppkg, char* buffer, size_t
   char getpkg[ZOPEN_CMD_MAX+1];
   int rc;
   ssize_t len;
-  int fd; 
+  int fd;
 
   if ((rc = snprintf(getpkg, sizeof(getpkg), getpkg_format, temprawpkg, temprawpkg, temprawpkg, temppkg)) > sizeof(getpkg)) {
     fprintf(stderr, "error building command to get package from %s and write it to %s\n", temprawpkg, temppkg);

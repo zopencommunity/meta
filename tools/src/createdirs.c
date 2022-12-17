@@ -1,8 +1,10 @@
+#define _ISOC99_SOURCE
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <errno.h>
 #include <unistd.h>
 #include <stdio.h>
+
 #include "createdirs.h"
 #include "zopenio.h"
 

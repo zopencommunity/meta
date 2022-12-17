@@ -80,6 +80,8 @@
 #pragma langlvl(extc99)
 #define _ALL_SOURCE
 #define _LARGE_FILES
+#define  _XOPEN_SOURCE_EXTENDED 1
+#include <strings.h>
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -343,7 +345,7 @@ int toolkitSetOption( HWTH_RETURNCODE_TYPE *rcPtr,
 int  setRequestHeaders( HWTH_RETURNCODE_TYPE *rcPtr,
                         HWTH_HANDLE_TYPE     *requestHandlePtr,
                         HWTH_DIAGAREA_TYPE   *diagAreaPtr );
-char  **getRequestHeaders();
+char  **getRequestHeaders(void);
 void  freeRequestHeaders( char **headersList );
 int toolkitSlistOperation( HWTH_RETURNCODE_TYPE    *rcPtr,
                            HWTH_HANDLE_TYPE        *handlePtr,
