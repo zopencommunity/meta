@@ -2716,24 +2716,45 @@ int setRequestHeaders( HWTH_RETURNCODE_TYPE *rcPtr,
  *
  * Returns: Address of heap-allocated ptr array
  ****************************************************************/
-char **getRequestHeaders() {
+char **getRequestHeaders(void) {
  char buf[80];
  char **headers = NULL;
- int NUM_HEADERS = 1;
+ int num_headers = 1;
+
+ char *token = getenv("ZOPEN_GIT_OAUTH_TOKEN");
+ if (token != NULL) {
+	num_headers++;
+ }
 
 /***************************************************
  * Allocate an array of pointers to string, and
  * build a string for each of the headers.  Use a
  * NULL last array element to indicate end of array.
  ***************************************************/
- headers = (char **)calloc( 1+NUM_HEADERS, sizeof(char *) );
- sprintf( buf,
-          "%s:%s",
-          "User-Agent",
-          "toolkit" );
- headers[0] = (char *)strdup(buf);
- headers[1] = NULL;
-return ( headers);
+ int idx = 0;
+ headers = (char **)calloc(1 + num_headers, sizeof(char *));
+ if (headers == NULL) {
+	char msgBuf[80];
+	snprintf(msgBuf, sizeof msgBuf,
+			"Unexpected calloc() failure (%d)", errno);
+
+	rxtrace(msgBuf);
+	return NULL;
+ }
+
+ snprintf(buf, sizeof buf, "%s:%s", "User-Agent", "toolkit" );
+ headers[idx++] = strdup(buf);
+
+ if (token != NULL) {
+	snprintf(buf, sizeof buf,"%s:%s %s",
+			 "Authorization", "Bearer",token);
+	headers[idx++] = strdup(buf);
+ }
+
+ /* Terminate the header array */
+ headers[idx] = NULL;
+
+return headers;
 } /* end function */
 
 
