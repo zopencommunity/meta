@@ -133,4 +133,23 @@ getInput()
   echo $zopen_input
 }
 
+printElapsedTime()
+{
+  printType=$1
+  functionName=$2
+  startTime=$3
+  elapsedTime=$(( $SECONDS - $startTime ))
+
+  elapsedTimeOutput="$functionName completed in $elapsedTime seconds."
+
+  case $printType in
+    "info")
+      printInfo "$elapsedTimeOutput"
+      ;;
+    "verbose")
+      printVerbose "$elapsedTimeOutput"
+      ;;
+  esac
+}
+
 zopenInitialize

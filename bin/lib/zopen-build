@@ -102,11 +102,16 @@ do
 done
 TMP_FIFO_PIPE="$tmp/$LOGNAME.pipe"
 
-# Remove temoraries on exit
+
+# Capture start time before setting trap
+fullBuildStartTime=$SECONDS
+
+# Remove temoraries on exit and report elapsed time
 cleanupOnExit() {
     rv=$?
     [ -f $TEMP_C_FILE ] && rm -rf $TEMP_C_FILE
     [ -p $TMP_FIFO_PIPE ] && rm -rf $TMP_FIFO_PIPE
+    printElapsedTime info "zopen-build" $fullBuildStartTime
     exit $rv
 }
 
@@ -919,6 +924,7 @@ cleanup()
 
 bootstrap()
 {
+  bootstrapStartTime=$SECONDS
   if [ -n "${ZOPEN_BOOTSTRAP_CMD}" ] ; then
     printHeader "Running Bootstrap"
     if [ -r "${ZOPEN_LOG_DIR}/bootstrap.success" ]; then
@@ -934,10 +940,13 @@ bootstrap()
   else
     printHeader "Skip Bootstrap"
   fi
+  printElapsedTime verbose "bootstap" $bootstrapStartTime
+  
 }
 
 configure()
 {
+  configureStartTime=$SECONDS
   if [ -n "${ZOPEN_CONFIGURE_CMD}" ] ; then
     printHeader "Running Configure"
     if [ -r "${ZOPEN_LOG_DIR}/config.success" ]; then
@@ -957,10 +966,12 @@ configure()
   else
     printHeader "Skip Configure"
   fi
+  printElapsedTime verbose "configure" $configureStartTime
 }
 
 build()
 {
+  buildStartTime=$SECONDS
   makelog="${ZOPEN_LOG_DIR}/${LOG_PFX}_build.log"
   if [ -n "${ZOPEN_MAKE_CMD}" ]; then
     printHeader "Running Build"
@@ -975,10 +986,12 @@ build()
   else
     printHeader "Skipping Build"
   fi
+  printElapsedTime verbose "build" $buildStartTime
 }
 
 check()
 {
+  checkStartTime=$SECONDS
   if command -V "zopen_pre_check" >/dev/null 2>&1; then
     printVerbose "Running zopen_pre_check"
     zopen_pre_check "${ZOPEN_INSTALL_DIR}"
@@ -1042,8 +1055,10 @@ check()
         fi
       fi
       if [ $failures -le $expected ]; then
+        printElapsedTime verbose "check" $checkStartTime
         return 0
       else
+        printElapsedTime verbose "check" $checkStartTime
         printError "Failures ($failures) not less than than expected ($expected). Failing...";
       fi
     fi
@@ -1051,6 +1066,7 @@ check()
     printHeader "Skipping Check"
     ZOPEN_STATUS="Skipped (tests skipped)" # Skipped tests
   fi
+  printElapsedTime verbose "check" $checkStartTime
 }
 
 replaceHardcodedPaths()
@@ -1112,6 +1128,7 @@ createReadme()
 
 install()
 {
+  installStartTime=$SECONDS
   if [ -n "${ZOPEN_INSTALL_CMD}" ]; then
     printHeader "Running Install"
     installlog="${ZOPEN_LOG_DIR}/${LOG_PFX}_install.log"
@@ -1141,6 +1158,7 @@ install()
   else
     printHeader "Skipping Install"
   fi
+  printElapsedTime verbose "install" $installStartTime
 }
 
 #
