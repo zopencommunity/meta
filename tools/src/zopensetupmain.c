@@ -1,4 +1,9 @@
+#define _ISOC99_SOURCE
+#define _XOPEN_SOURCE_EXTENDED 1
+#include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
+
 #include "download.h"
 #include "zopenio.h"
 #include "createpem.h"
@@ -7,6 +12,7 @@
 #include "github_pem_ca.h"
 #include "zopen_boot_uri.h"
 #include "httpsget.h"
+#include "httpspkg.h"
 #include "syscmd.h"
 #include "createbootenv.h"
 
@@ -22,7 +28,7 @@ static const char* lastpos(const char* str, int c) {
   }
   return NULL;
 }
- 
+
 static void syntax(const char* pgm) {
   const char* base;
   if (base = lastpos(pgm, '/')) {
@@ -36,7 +42,7 @@ static void syntax(const char* pgm) {
                   "  The boot subdirectory will have:\n"
                   "    sub-directories created for each of the tools needed for running the zopen utility\n"
                   "  The dev subdirectory will have:\n"
-                  "    a 'git clone' of both the utils and meta repositories\n" 
+                  "    a 'git clone' of both the utils and meta repositories\n"
                   "Options:\n"
                   " -v : print out verbose messages\n"
                   " -q : only print out errors\n",
@@ -70,7 +76,7 @@ int main(int argc, char* argv[]) {
 
   if (argc < 2) {
     syntax(argv[0]);
-    return 4; 
+    return 4;
   }
   for (i=1; i<argc; ++i) {
     if (!strcmp(argv[i], "-v")) {
@@ -99,7 +105,7 @@ int main(int argc, char* argv[]) {
     syntax(argv[0]);
     return 4;
   }
- 
+
   if (!tmppem || genfilename("pem", tmppem, ZOPEN_PATH_MAX)) {
     fprintf(stderr, "error acquiring storage\n");
     return 4;
@@ -139,7 +145,7 @@ int main(int argc, char* argv[]) {
     if ((rc = snprintf(uri, sizeof(uri), "/%s/%s%s/%s/%s", ZOPEN_BOOT_URI_PREFIX, bootpkg[i], pkgsfx, ZOPEN_BOOT_URI_SUFFIX, filename)) > sizeof(uri)) {
       fprintf(stderr, "error building uri for /%s/%s%s/%s/%s", ZOPEN_BOOT_URI_PREFIX, bootpkg[i], pkgsfx, ZOPEN_BOOT_URI_SUFFIX, filename);
       return 4;
-    }   
+    }
     if (rc = httpsget(host, uri, tmppem, output)) {
       fprintf(stderr, "error downloading https://%s%s with PEM file %s to %s\n", host, uri, tmppem, output);
       return rc;
@@ -165,7 +171,7 @@ int main(int argc, char* argv[]) {
     fprintf(stderr, "error creating symbolic link from %s/%s to %s\n", ZOPEN_HOME, ZOPEN_HOME_NAME, root);
     return rc;
   }
-   
+
   if (remove(tmppem)) {
     fprintf(stderr, "error removing temporary pem file: %s\n", tmppem);
     return 4;

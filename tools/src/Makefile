@@ -3,7 +3,8 @@
 #
 CC=xlc
 LD=xlc
-CFLAGS=-c -qdll -qrent -qlongname -Wl,DYNAM=DLL -Wc,GONUM
+INFO = 'info(cmp,cnv,cns,enu,lan,por,pro,ret)'
+CFLAGS=-c -qdll -qrent -qlongname -Wl,DYNAM=DLL -Wc,GONUM,${INFO}
 
 all: headers zopen-setup httpsget
 clean:
