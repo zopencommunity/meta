@@ -186,7 +186,7 @@ printSyntax()
   echo "  -f|--force-rebuild: forces a rebuild, including running bootstrap and configure again"
   echo "  -g|--get-source: get the source and apply patch without building"
   echo "  -gp|--generate-pax: generate a pax.Z file based on the install contents"
-  echo "  -sym|--symlink: generate a symlink from the project name to \${ZOPEN_INSTALL_DIR}"
+  echo "  -nosym|--nosymlink: da not generate a symlink from the project name to \${ZOPEN_INSTALL_DIR}"
   echo "  -s: exec a shell before running configure.  Useful when manually building ports."
   opts=$(printEnvVar)
   echo "${opts}" )>&2
@@ -205,7 +205,7 @@ processOptions()
   buildEnvFile="./buildenv"
   getSourceOnly=false
   generatePax=false
-  generateSymLink=false
+  generateSymLink=true
   depsPath="$HOME/zopen/prod|$HOME/zopen/boot|/usr/bin/zopen/"
   forceUpdateDeps=false
   while [[ $# -gt 0 ]]; do
@@ -262,8 +262,8 @@ processOptions()
       "-gp" | "--generate-pax")
         generatePax=true
         ;;
-      "-sym" | "--symlink")
-        generateSymLink=true
+      "-nosym" | "--nosymlink")
+        generateSymLink=false
         ;;
       "-s" | "--shell")
         startShell=true
@@ -531,6 +531,9 @@ setEnv()
   if $buildInReleaseMode; then
     CFLAGS="${CFLAGS} ${optflags}";
     CXXFLAGS="${CXXFLAGS} ${optflags}";
+  else
+    # In debug mode, do not set linker edit=no option so that we can inspect symbols
+    ZOPEN_LDFLAGSD=""
   fi
 
   if [ "${LDFLAGS}x" = "x" ]; then
