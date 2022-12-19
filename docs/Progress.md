@@ -57,12 +57,12 @@
 | [tarport](https://github.com/ZOSOpenTools/tarport) | 23 | 44% |
 | [xzport](https://github.com/ZOSOpenTools/xzport) | 17 | 88% |
 | [makeinfoport](https://github.com/ZOSOpenTools/makeinfoport) | 15 | 35% |
-| [coreutilsport](https://github.com/ZOSOpenTools/coreutilsport) | 12 | 60% |
+| [coreutilsport](https://github.com/ZOSOpenTools/coreutilsport) | 13 | 60% |
 | [help2manport](https://github.com/ZOSOpenTools/help2manport) | 12 | 100% |
 | [ncursesport](https://github.com/ZOSOpenTools/ncursesport) | 10 | 100% |
 | [gettextport](https://github.com/ZOSOpenTools/gettextport) | 7 | 50% |
 | [gawkport](https://github.com/ZOSOpenTools/gawkport) | 6 | 93% |
-| [libtoolport](https://github.com/ZOSOpenTools/libtoolport) | 6 | 80% |
+| [libtoolport](https://github.com/ZOSOpenTools/libtoolport) | 5 | 80% |
 | [opensslport](https://github.com/ZOSOpenTools/opensslport) | 5 | 90% |
 | [zlibport](https://github.com/ZOSOpenTools/zlibport) | 5 | 100% |
 | [cmakeport](https://github.com/ZOSOpenTools/cmakeport) | 4 | 74% |
@@ -111,4 +111,4 @@
 | [vimport](https://github.com/ZOSOpenTools/vimport) | 0 | 100% |
 | [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 100% |
 
-Last updated:  2022-12-19 20:43:47
+Last updated:  2022-12-19 22:17:32
