@@ -77,7 +77,7 @@
 | [re2cport](https://github.com/ZOSOpenTools/re2cport) | 1 | No builds |
 | [wgetport](https://github.com/ZOSOpenTools/wgetport) | 1 | 18% |
 | [xxhashport](https://github.com/ZOSOpenTools/xxhashport) | 1 | Skipped |
-| [zipport](https://github.com/ZOSOpenTools/zipport) | 1 | 71% |
+| [zipport](https://github.com/ZOSOpenTools/zipport) | 1 | 100% |
 | [zstdport](https://github.com/ZOSOpenTools/zstdport) | 1 | Skipped |
 | [bzip2port](https://github.com/ZOSOpenTools/bzip2port) | 0 | 100% |
 | [cscopeport](https://github.com/ZOSOpenTools/cscopeport) | 0 | 100% |
@@ -111,4 +111,4 @@
 | [vimport](https://github.com/ZOSOpenTools/vimport) | 0 | 100% |
 | [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 100% |
 
-Last updated:  2022-12-19 16:13:22
+Last updated:  2022-12-19 16:21:54
