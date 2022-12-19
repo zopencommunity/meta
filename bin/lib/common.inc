@@ -53,6 +53,7 @@ zopenInitialize()
 {
   defineEnvironment
   defineColors
+  processConfig
 }
 
 printVerbose()
@@ -150,6 +151,13 @@ printElapsedTime()
       printVerbose "$elapsedTimeOutput"
       ;;
   esac
+}
+
+processConfig()
+{
+  if [ -f "$HOME/.zopen-config" ]; then
+    . "$HOME/.zopen-config"
+  fi
 }
 
 zopenInitialize
