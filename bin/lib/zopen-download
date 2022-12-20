@@ -149,7 +149,11 @@ done
 
 # Main code start here
 args=$*
-downloadDir=$PWD
+if [ ! -z "$ZOPEN_SEARCH_PATH" ]; then
+  downloadDir="$ZOPEN_SEARCH_PATH/prod"
+else
+  downloadDir=$PWD
+fi
 updateOnly=true
 verbose=false
 while [[ $# -gt 0 ]]; do
@@ -228,6 +232,8 @@ fi
 if [ ! -z "${downloadDir}" ] && [ -d "${downloadDir}" ]; then
   cd "${downloadDir}"
 fi
+
+printVerbose "Download directory: ${downloadDir}"
 
 # Parse repositories for zopen framework repos
 foundPort=false

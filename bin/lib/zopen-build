@@ -212,6 +212,9 @@ processOptions()
   generatePax=false
   generateSymLink=true
   depsPath="$HOME/zopen/prod|$HOME/zopen/boot|/usr/bin/zopen/"
+  if [ ! -z "$ZOPEN_SEARCH_PATH" ]; then
+    depsPath="$ZOPEN_SEARCH_PATH/prod|$ZOPEN_SEARCH_PATH/boot|$depsPath"
+  fi
   forceUpdateDeps=false
   while [[ $# -gt 0 ]]; do
     case $1 in
@@ -400,25 +403,22 @@ setDepsEnv()
     for path in `echo ${depsPath} | tr '|' '\n'` ; do
       if [ -r "$path/${dep}/.env" ]; then
         depdir="$path/${dep}"
-        printVerbose "Setting up ${depdir} dependency environment"
-        cd "${depdir}" && . ./.env
+        # Avoid double sourcing the .env if we're forcing an update it
+        if ! $forceUpdateDeps; then
+          printVerbose "Setting up ${depdir} dependency environment"
+          cd "${depdir}" && . ./.env
+        fi
         foundDep=true
         break
       fi
     done
     if ! $foundDep || $forceUpdateDeps; then
-      #TODO: remove when git is successfully ported
-      if [ ! $foundDep -a $dep = "git" ]; then
-        printError "git not found, the Rocket Git must be manually downloaded"
-      elif [ $foundDep -a $dep = "git" ]; then
-        printWarning "The z/OS Open tools Git is not fully functional, skipping update"
-        continue
-      fi
       if ! $forceUpdateDeps; then
         printWarning "Dependency $dep not found. Downloading via zopen-download"
       else
         printHeader "Updating dependency $dep. Downloading via zopen-download"
       fi
+      # Use the first path specified in the dependency search list
       path=$(echo ${depsPath} | tr '|' '\n' | head -1)
       printVerbose "Running zopen download -r $dep -d $path"
       if ! zopen download -r $dep -d $path; then

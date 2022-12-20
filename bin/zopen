@@ -52,6 +52,10 @@ while [[ $# -gt 0 ]]; do
       shift
       exec "${bindir}/lib/zopen-update-cacert" $@
       ;;
+    "init")
+      shift
+      exec "${bindir}/lib/zopen-init" $@
+      ;;
     "help" | "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
       printHelp "${args}"
       exit 0
