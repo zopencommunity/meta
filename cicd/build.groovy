@@ -38,7 +38,7 @@ mkdir -p "${TMPDIR}"
 git clone -b "${PORT_BRANCH}" "${PORT_GITHUB_REPO}" ${PORT_NAME} && cd ${PORT_NAME}
 
 # Always run tests and update dependencies and generate pax file
-zopen build -v -b release -u -gp
+zopen build -v -b release -u -gp -nosym
 
 # Copy package to /jenkins/builds dir
 mkdir -p /jenkins/builds/
