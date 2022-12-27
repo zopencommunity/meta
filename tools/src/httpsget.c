@@ -1,9 +1,13 @@
+#define _POSIX_SOURCE
+#include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <fcntl.h>
+
 #include "createdb.h"
 #include "httpsget.h"
 #include "zopenio.h"
+#include "download.h"
 
 int httpsget(const char* host, const char* uri, const char* pem, const char* output) {
   char* keydb;
@@ -41,12 +45,12 @@ int httpsget(const char* host, const char* uri, const char* pem, const char* out
     fprintf(stderr, "error creating temporary key db %s\n", keydb);
     return rc;
   }
-   
+
   if (rc = download(host, uri, output, keydb, stashfile)) {
-    fprintf(stderr, "error downloading  https://%s%s to %s: %d\n", host, uri, output, keydb, stashfile, rc);
+    fprintf(stderr, "error downloading  https://%s%s to %s: %d\n", host, uri, output, rc);
     return rc;
   }
-    
+
   if (rc = removedb(keydb, reqdb, stashfile)) {
     fprintf(stderr, "error removing temporary key db file %s\n", keydb);
     return rc;

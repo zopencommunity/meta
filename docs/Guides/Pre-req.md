@@ -38,7 +38,7 @@ If you don't have curl on z/OS, you will need to download it to your desktop the
 
 Once you have curl, you can now install other tools from the community:
 
-#### Install other tools:
+#### Install other tools
 
 All the tools are at: [ZOSOpenTools](https://github.com/ZOSOpenTools?tab=repositories)
 
@@ -62,7 +62,7 @@ This will create your own development environment with a `boot`, `prod`, and `de
 
 For more details on porting, visit the [porting to z/OS guide](Porting.md).
 
-### Downloading tools to z/OS:
+### Downloading tools to z/OS
 
 Once you have your development environment set up, you can download tools directly to z/OS with `zopen download`
 

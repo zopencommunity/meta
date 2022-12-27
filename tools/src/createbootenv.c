@@ -1,13 +1,15 @@
 #define _POSIX_SOURCE
 #define _OPEN_SYS_FILE_EXT 1
-
-#include "createbootenv.h"
-#include "zopenio.h"
+#define _ISOC99_SOURCE
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
+#include <string.h>
+
+#include "createbootenv.h"
+#include "zopenio.h"
 
 static int setccsid(int fd, int ccsid) {
   attrib_t attr;
@@ -32,8 +34,8 @@ int createbootenv(const char* root, const char* subdir, const char* bootpkg[]) {
 	           "  return 0\n"
                    "fi\n"
                    "bootdir=\"${PWD}\"\n"
-                   "for p in ";  
- 
+                   "for p in ";
+
   char trailer[] = "; do\n"
                    "  cd \"${p}\"\n  "
                    "  . ./.env\n"
@@ -61,11 +63,11 @@ int createbootenv(const char* root, const char* subdir, const char* bootpkg[]) {
   if (!(fd = open(absbootenv, O_CREAT|O_WRONLY, S_IRUSR | S_IWUSR))) {
     fprintf(stderr, "Unable to create %s\n", absbootenv);
     return 4;
-  } 
+  }
   if (setccsid(fd, ccsid)) {
     fprintf(stderr, "Unable to tag %s\n", absbootenv);
     return 4;
-  } 
+  }
 
   if (write(fd, header, sizeof(header)-1) < sizeof(header)-1) {
     fprintf(stderr, "Unable to write header to %s\n", absbootenv);
@@ -74,25 +76,25 @@ int createbootenv(const char* root, const char* subdir, const char* bootpkg[]) {
 
   for (i=0; bootpkg[i]; ++i) {
     size_t bootlen = strlen(bootpkg[i]);
-    if (write(fd, bootpkg[i], bootlen) < bootlen) { 
+    if (write(fd, bootpkg[i], bootlen) < bootlen) {
       fprintf(stderr, "Unable to write pkg %s to %s\n", bootpkg[i], absbootenv);
       return 4;
-    } 
-    if (write(fd, " ", 1) < 1) { 
+    }
+    if (write(fd, " ", 1) < 1) {
       fprintf(stderr, "Unable to write space to %s\n", absbootenv);
       return 4;
-    } 
+    }
   }
 
   if (write(fd, trailer, sizeof(trailer)-1) < sizeof(trailer)-1) {
     fprintf(stderr, "Unable to write trailer to %s\n", absbootenv);
     return 4;
   }
- 
+
   if (close(fd)) {
     fprintf(stderr, "Unable to close %s\n", absbootenv);
     return 4;
-  } 
+  }
 #ifdef VERY_VERBOSE
   fprintf(stdout, "Successfully created boot environment file for sourcing: %s\n", absbootenv);
 #endif
