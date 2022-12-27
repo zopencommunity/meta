@@ -40,7 +40,7 @@ First, you need to have some tools installed on your system:
 
 [^gpl]: [GPL Version 3 or later](https://www.gnu.org/licenses/gpl-3.0.html)
 [^lgpl]: [GNU Lesser Public License](https://git.kernel.org/pub/scm/git/git.git/tree/LGPL-2.1)
-[^curl-license][Curl license](https://github.com/curl/curl/blob/master/COPYING)
+[^curl-license][Curl license]: (https://github.com/curl/curl/blob/master/COPYING)
 ### Recommended software:
  - [bash](https://www.gnu.org/software/bash/)[^gpl] - Download unsupported binary from Rocket
 
