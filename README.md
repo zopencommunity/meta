@@ -40,7 +40,7 @@ First, you need to have some tools installed on your system:
 
 [^gpl]: [GPL Version 3 or later](https://www.gnu.org/licenses/gpl-3.0.html)
 [^lgpl]: [GNU Lesser Public License](https://git.kernel.org/pub/scm/git/git.git/tree/LGPL-2.1)
-[^curl-license][Curl license]: (https://github.com/curl/curl/blob/master/COPYING)
+[^curl-license]: [Curl license](https://github.com/curl/curl/blob/master/COPYING)
 ### Recommended software:
  - [bash](https://www.gnu.org/software/bash/)[^gpl] - Download unsupported binary from Rocket
 
@@ -75,14 +75,3 @@ and:
  - ZOPEN_GIT_DEPS="git make m4 help2man perl makeinfo xz autoconf automake gettext"
 
 If you want to build from the GIT clone, you can see you will need to have more software pre-installed.
-
-## A note about licenses
-
-We are dealing with Open Source technologies here - but they do have
-a variety of licenses.
-
-### GPL V3.0
-
-- m4
-- 
-
