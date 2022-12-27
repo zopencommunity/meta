@@ -60,12 +60,12 @@ The tools have dependencies on other tools, and there are also typically 2 ways 
  - one that is not pre-reconfigured and therefore does require autoconf/automake and associated tools
 
 To build from scratch, start with the tarballs of the following tools:
- - m4: requires m4, curl in boot and xlclang installed on the system.
- - perl: additionally requires make, git in boot and m4 in prod.
- - make: additionally requires perl in prod for running test cases.
+ - [m4](https://www.gnu.org/software/m4/m4.html)[^gpl] requires m4, curl in boot and xlclang installed on the system.
+ - [perl](https://dev.perl.org/)[^gpl] additionally requires make, git in boot and m4 in prod.
+ - [make](https://www.gnu.org/software/make/)[^gpl] additionally requires perl in prod for running test cases.
  - libz: additional requires make in prod
- - autoconf: additionally requires libz in prod.
- - automake: additionally requires autoconf in prod.
+ - [autoconf](https://www.gnu.org/software/autoconf/)[^gpl] additionally requires libz in prod.
+ - [automake](https://www.gnu.org/software/automake/)[^gpl] additionally requires autoconf in prod.
  
 Once you either have these tools built, or have downloaded a pre-built pax file for the build, you may want to build other tools.
 Each tool has a _buildenv_ file and one of the entries will describe the tools it requires to build, depending
