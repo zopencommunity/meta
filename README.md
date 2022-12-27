@@ -33,13 +33,14 @@ First, you need to have some tools installed on your system:
 ### System Pre-reqs:
 
  - [gnu make 4.1](https://www.gnu.org/software/make/)[^gpl] - Download unsupported binary from Rocket
- - xlclang 2.4.1: Download unsupported binary from IBM
+ - [IBM XL C/C++ V2.4.1](https://www-40.ibm.com/servers/resourcelink/svc00100.nsf/pages/xlCC++V241ForZOsV24)[^ibm] - a no-charge add-on feature for clients that have enabled the XL C/C++ compiler (an optionally priced feature) on z/OS
  - [git](https://git.kernel.org/pub/scm/git/git.git/)[^lgpl] - Download unsupported binary from Rocket
  - [curl](https://github.com/curl/curl)[^curl-license] - Download unsupported binary from Rocket
  - [gunzip](https://www.gnu.org/software/gzip/)[^gpl]- Download unsupported binary from Rocket
 
 [^gpl]: [GPL Version 3 or later](https://www.gnu.org/licenses/gpl-3.0.html)
 [^lgpl]: [GNU Lesser Public License 2.1](https://git.kernel.org/pub/scm/git/git.git/tree/LGPL-2.1)
+[^ibm]: web deliverable
 [^curl-license]: [Curl license](https://github.com/curl/curl/blob/master/COPYING)
 ### Recommended software:
  - [bash](https://www.gnu.org/software/bash/)[^gpl] - Download unsupported binary from Rocket
