@@ -1,8 +1,7 @@
 # meta
-Meta repository to tie together the various underlying z/OS Open Source tools repositories here
+Meta repository to tie together the various underlying z/OS Open Source tools repositories here.
 
 View our documentation at https://zosopentools.github.io/meta/
-
 
 ## Background
 
@@ -33,20 +32,23 @@ First, you need to have some tools installed on your system:
 
 ### System Pre-reqs:
 
- - gnu make 4.1: Download unsupported binary from Rocket
+ - [gnu make 4.1](https://www.gnu.org/software/make/)[^gpl] - Download unsupported binary from Rocket
  - xlclang 2.4.1: Download unsupported binary from IBM
- - git: Download unsupported binary from Rocket
- - curl: Download unsupported binary from Rocket
- - gunzip: Download unsupported binary from Rocket
+ - [git](https://git.kernel.org/pub/scm/git/git.git/)[^lgpl] - Download unsupported binary from Rocket
+ - [curl](https://github.com/curl/curl)[^curl-license] - Download unsupported binary from Rocket
+ - [gunzip](https://www.gnu.org/software/gzip/)[^gpl]- Download unsupported binary from Rocket
 
+[^gpl]: [GPL Version 3 or later](https://www.gnu.org/licenses/gpl-3.0.html)
+[^lgpl]: [GNU Lesser Public License](https://git.kernel.org/pub/scm/git/git.git/tree/LGPL-2.1)
+[^curl-license][Curl license](https://github.com/curl/curl/blob/master/COPYING)
 ### Recommended software:
- - bash: Download unsupported binary from Rocket
+ - [bash](https://www.gnu.org/software/bash/)[^gpl] - Download unsupported binary from Rocket
 
 Both IBM and Rocket provide supported versions of the software above for a fee.
 
 Taking the defaults will mean there are less variables for you to configure. We recommend you structure your sandbox as follows:
 
- - Have the root of your development file system be $HOME/zopen (you will want to have several gigabytes of storage for use - we recommend at least 15GB)
+ - Have the root of your development file system be `$HOME/zopen` (you will want to have several gigabytes of storage for use - we recommend at least 15GB)
  - Have sub-directories called _boot_, _prod_, _dev_.
     - _boot_: sub-directory for each tool required to bootstrap (make, git, curl, gunzip, m4)
     - _prod_: sub-directory for tools to be installed once built. These tools will be used by downstream software, e.g. make build process will use the Perl prod build
@@ -73,4 +75,14 @@ and:
  - ZOPEN_GIT_DEPS="git make m4 help2man perl makeinfo xz autoconf automake gettext"
 
 If you want to build from the GIT clone, you can see you will need to have more software pre-installed.
+
+## A note about licenses
+
+We are dealing with Open Source technologies here - but they do have
+a variety of licenses.
+
+### GPL V3.0
+
+- m4
+- 
 
