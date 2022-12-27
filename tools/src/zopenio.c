@@ -1,11 +1,13 @@
-#include "zopenio.h"
-#include "zopen_boot_uri.h"
+
+#define _ISOC99_SOURCE
+#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <stdio.h>
 
+#include "zopenio.h"
+#include "zopen_boot_uri.h"
 
-static char* zopentmpdir() {
+static char* zopentmpdir(void) {
   char* tmpdir;
   int rc;
   if (! ((tmpdir = getenv("TMP")) || (tmpdir = getenv("TMPDIR"))) ) {

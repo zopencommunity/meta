@@ -10,6 +10,9 @@ import numpy as np
 import requests
 import matplotlib.pyplot as plt
 from matplotlib import rcParams
+import matplotlib as mpl
+import matplotlib.cm as cm
+from matplotlib.colors import LinearSegmentedColormap
 rcParams.update({'figure.autolayout': True})
 
 todaysDate = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -119,9 +122,14 @@ for x, y in sorted(statusPerPort.items(), key=lambda x: x[1]):
 		labels.append(x)
 		sizes.append(y)
 fig = plt.figure()
+fig.set_size_inches(20, 12)
 ax = fig.add_axes([0,0,1,1])
-ax.set_ylabel('Success Rate (%)')
-ax.set_title("Project Test Quality")
+cmap = cm.get_cmap('Greens')
+color_norm = mpl.colors.Normalize(vmin=min(sizes), vmax=max(sizes))
+colors = cmap(color_norm(sizes))
+ax.set_xlabel('Success Rate (%)', fontsize=18)
+ax.set_title("Project Test Quality", fontsize=24)
+ax.tick_params(axis='both', labelsize=18)
 col = []
 for val in sizes:
     if val == 100:
@@ -131,7 +139,7 @@ for val in sizes:
     else:
         col.append('#FFEF00')
 
-bars = ax.barh(labels, sizes, color = col);
+bars = ax.barh(labels, sizes, color = col, height = 0.6, align='edge');
 ax.bar_label(bars)
 plt.savefig('docs/images/quality.png',  bbox_inches="tight")
 

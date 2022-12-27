@@ -1,7 +1,10 @@
+#define _ISOC99_SOURCE
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <errno.h>
 #include <unistd.h>
 #include <stdio.h>
+
 #include "createdirs.h"
 #include "zopenio.h"
 
@@ -13,7 +16,7 @@ static int createsubdir(const char* rootdir, const char* subdir) {
     return ZOPEN_CREATEDIR_DIR_TOO_LONG;
   }
   if (stat(fulldir, &stfull) == -1) {
-    if (mkdir(fulldir, S_IRWXU|S_IRGRP)) {
+    if (mkdir(fulldir, S_IRWXU|S_IRGRP|S_IXGRP|S_IROTH|S_IXOTH)) {
       return ZOPEN_CREATEDIR_CREATE_FAILED;
     } else {
       return 0;
@@ -30,8 +33,8 @@ static int createsubdir(const char* rootdir, const char* subdir) {
  * passed in.
  *
  * If a directory already exists, it will not be modified,
- * and this will not be considered a 'failure' 
- * 
+ * and this will not be considered a 'failure'
+ *
  * Returns non-zero if the directories can not be created
  */
 
@@ -48,6 +51,7 @@ int createdirs(const char* rootdir) {
   for (i=0; subdir[i] != NULL; ++i ) {
     if (rc = createsubdir(rootdir, subdir[i])) {
       if (rc != ZOPEN_CREATEDIR_DIR_EXISTS) {
+        fprintf(stderr, "Could not create subdirectory '%s': %s\n", subdir[i], strerror(errno));
         return rc;
       }
     }
