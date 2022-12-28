@@ -32,18 +32,20 @@ First, you need to have some tools installed on your system:
 
 ### System Pre-reqs:
 
- - [gnu make 4.1](https://www.gnu.org/software/make/)[^gpl] - Download unsupported binary from Rocket
- - [IBM XL C/C++ V2.4.1](https://www-40.ibm.com/servers/resourcelink/svc00100.nsf/pages/xlCC++V241ForZOsV24)[^ibm] - a no-charge add-on feature for clients that have enabled the XL C/C++ compiler (an optionally priced feature) on z/OS
- - [git](https://git.kernel.org/pub/scm/git/git.git/)[^lgpl] - Download unsupported binary from Rocket
- - [curl](https://github.com/curl/curl)[^curl-license] - Download unsupported binary from Rocket
- - [gunzip](https://www.gnu.org/software/gzip/)[^gpl]- Download unsupported binary from Rocket
+| Project | License | Download link |
+|---------|---------|------------------------|
+| [gnu make 4.1](https://www.gnu.org/software/make/) | [GPL V3 ](https://www.gnu.org/licenses/gpl-3.0.html) | https://github.com/ZOSOpenTools/makeport/releases/tag/boot |
+| [IBM XL C/C++ V2.4.1](https://www-40.ibm.com/servers/resourcelink/svc00100.nsf/pages/xlCC++V241ForZOsV24) | IBM [^ibm] | [ibm.com web download](https://www.ibm.com/marketing/iwm/iwm/web/dispatcher.do?source=swg-zosxlcc) |
+| [git](https://git.kernel.org/pub/scm/git/git.git/) | [LGPL V2.1](https://git.kernel.org/pub/scm/git/git.git/tree/LGPL-2.1) | https://github.com/ZOSOpenTools/gitport/releases/tag/boot  |
+| [curl](https://github.com/curl/curl) | [curl-license](https://github.com/curl/curl/blob/master/COPYING) | https://github.com/ZOSOpenTools/curlport/releases/tag/boot |
+| [gunzip](https://www.gnu.org/software/gzip/) | [GPL V3 ](https://www.gnu.org/licenses/gpl-3.0.html) | https://github.com/ZOSOpenTools/unzipport/releases/tag/boot |
 
-[^gpl]: [GPL Version 3 or later](https://www.gnu.org/licenses/gpl-3.0.html)
-[^lgpl]: [GNU Lesser Public License 2.1](https://git.kernel.org/pub/scm/git/git.git/tree/LGPL-2.1)
-[^ibm]: web deliverable
-[^curl-license]: [Curl license](https://github.com/curl/curl/blob/master/COPYING)
+[^ibm]: a no-charge add-on feature for clients that have enabled the XL C/C++ compiler (an optionally priced feature) on z/OS
 ### Recommended software:
- - [bash](https://www.gnu.org/software/bash/)[^gpl] - Download unsupported binary from Rocket
+
+| Project | License | Download link |
+|---------|---------|------------------------|
+| [bash](https://www.gnu.org/software/bash/) | [GPL V3 ](https://www.gnu.org/licenses/gpl-3.0.html) | https://github.com/ZOSOpenTools/bashport/releases/ |
 
 Both IBM and Rocket provide supported versions of the software above for a fee.
 
@@ -61,12 +63,15 @@ The tools have dependencies on other tools, and there are also typically 2 ways 
  - one that is not pre-reconfigured and therefore does require autoconf/automake and associated tools
 
 To build from scratch, start with the tarballs of the following tools:
- - [m4](https://www.gnu.org/software/m4/m4.html)[^gpl] requires m4, curl in boot and xlclang installed on the system.
- - [perl](https://dev.perl.org/)[^gpl] additionally requires make, git in boot and m4 in prod.
- - [make](https://www.gnu.org/software/make/)[^gpl] additionally requires perl in prod for running test cases.
- - libz: additional requires make in prod
- - [autoconf](https://www.gnu.org/software/autoconf/)[^gpl] additionally requires libz in prod.
- - [automake](https://www.gnu.org/software/automake/)[^gpl] additionally requires autoconf in prod.
+
+| Project | License | Pre-requisites |
+|---------|---------|------------------------|
+| [m4](https://www.gnu.org/software/m4/m4.html) | [GPL V3 ](https://www.gnu.org/licenses/gpl-3.0.html) | m4, curl in boot and xlclang installed on the system |
+| [perl](https://dev.perl.org/) | [GPL V3 ](https://www.gnu.org/licenses/gpl-3.0.html) | additionally requires make, git in boot and m4 in prod |
+| [make](https://www.gnu.org/software/make/) | [GPL V3 ](https://www.gnu.org/licenses/gpl-3.0.html) | perl in prod for running test cases |
+| libz | | make in prod |
+| [autoconf](https://www.gnu.org/software/autoconf/) | [GPL V3 ](https://www.gnu.org/licenses/gpl-3.0.html) | libz in prod |
+| [automake](https://www.gnu.org/software/automake/) | [GPL V3 ](https://www.gnu.org/licenses/gpl-3.0.html) | autoconf in prod |
  
 Once you either have these tools built, or have downloaded a pre-built pax file for the build, you may want to build other tools.
 Each tool has a _buildenv_ file and one of the entries will describe the tools it requires to build, depending
