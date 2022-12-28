@@ -13,8 +13,9 @@ if ((BASH_VERSINFO < 4)); then
    exit 1
 fi
 
+
 GITHUB_OAUTH_TOKEN="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"
-#GITHUB_OAUTH_TOKEN="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"
+
 echo "Number of args = $#"
 DEFAULT_OWNER="ZOSOpenTools"
 OWNERNAME=""
