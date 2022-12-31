@@ -34,18 +34,18 @@ First, you need to have some tools installed on your system:
 
 | Project | License | Download link |
 |---------|---------|------------------------|
-| [gnu make 4.1](https://www.gnu.org/software/make/) | [GPL V3 ](https://www.gnu.org/licenses/gpl-3.0.html) | https://github.com/ZOSOpenTools/makeport/releases/tag/boot |
+| [gnu make 4.1](https://www.gnu.org/software/make/) | [GPL V3 ](https://www.gnu.org/licenses/gpl-3.0.html) | [z/OS Open Tools release](https://github.com/ZOSOpenTools/makeport/releases/tag/boot) |
 | [IBM XL C/C++ V2.4.1](https://www-40.ibm.com/servers/resourcelink/svc00100.nsf/pages/xlCC++V241ForZOsV24) | IBM [^ibm] | [ibm.com web download](https://www.ibm.com/marketing/iwm/iwm/web/dispatcher.do?source=swg-zosxlcc) |
-| [git](https://git.kernel.org/pub/scm/git/git.git/) | [LGPL V2.1](https://git.kernel.org/pub/scm/git/git.git/tree/LGPL-2.1) | https://github.com/ZOSOpenTools/gitport/releases/tag/boot  |
-| [curl](https://github.com/curl/curl) | [curl-license](https://github.com/curl/curl/blob/master/COPYING) | https://github.com/ZOSOpenTools/curlport/releases/tag/boot |
-| [gunzip](https://www.gnu.org/software/gzip/) | [GPL V3 ](https://www.gnu.org/licenses/gpl-3.0.html) | https://github.com/ZOSOpenTools/unzipport/releases/tag/boot |
+| [git](https://git.kernel.org/pub/scm/git/git.git/) | [LGPL V2.1](https://git.kernel.org/pub/scm/git/git.git/tree/LGPL-2.1) | [z/OS Open Tools release](https://github.com/ZOSOpenTools/gitport/releases/tag/boot)  |
+| [curl](https://github.com/curl/curl) | [curl-license](https://github.com/curl/curl/blob/master/COPYING) | [z/OS Open Tools release](https://github.com/ZOSOpenTools/curlport/releases/tag/boot) |
+| [gunzip](https://www.gnu.org/software/gzip/) | [GPL V3 ](https://www.gnu.org/licenses/gpl-3.0.html) | [z/OS Open Tools release](https://github.com/ZOSOpenTools/unzipport/releases/tag/boot) |
 
 [^ibm]: a no-charge add-on feature for clients that have enabled the XL C/C++ compiler (an optionally priced feature) on z/OS
 ### Recommended software:
 
 | Project | License | Download link |
 |---------|---------|------------------------|
-| [bash](https://www.gnu.org/software/bash/) | [GPL V3 ](https://www.gnu.org/licenses/gpl-3.0.html) | https://github.com/ZOSOpenTools/bashport/releases/ |
+| [bash](https://www.gnu.org/software/bash/) | [GPL V3 ](https://www.gnu.org/licenses/gpl-3.0.html) | [z/OS Open Tools release](https://github.com/ZOSOpenTools/bashport/releases/) |
 
 Both IBM and Rocket provide supported versions of the software above for a fee.
 
@@ -69,7 +69,7 @@ To build from scratch, start with the tarballs of the following tools:
 | [m4](https://www.gnu.org/software/m4/m4.html) | [GPL V3 ](https://www.gnu.org/licenses/gpl-3.0.html) | m4, curl in boot and xlclang installed on the system |
 | [perl](https://dev.perl.org/) | [GPL V3 ](https://www.gnu.org/licenses/gpl-3.0.html) | additionally requires make, git in boot and m4 in prod |
 | [make](https://www.gnu.org/software/make/) | [GPL V3 ](https://www.gnu.org/licenses/gpl-3.0.html) | perl in prod for running test cases |
-| libz | | make in prod |
+| [zlib](https://zlib.net/) | [zlib license](https://zlib.net/zlib_license.html) | make in prod |
 | [autoconf](https://www.gnu.org/software/autoconf/) | [GPL V3 ](https://www.gnu.org/licenses/gpl-3.0.html) | libz in prod |
 | [automake](https://www.gnu.org/software/automake/) | [GPL V3 ](https://www.gnu.org/licenses/gpl-3.0.html) | autoconf in prod |
  
