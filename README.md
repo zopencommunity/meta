@@ -1,8 +1,7 @@
 # meta
-Meta repository to tie together the various underlying z/OS Open Source tools repositories here
+Meta repository to tie together the various underlying z/OS Open Source tools repositories here.
 
 View our documentation at https://zosopentools.github.io/meta/
-
 
 ## Background
 
@@ -33,20 +32,26 @@ First, you need to have some tools installed on your system:
 
 ### System Pre-reqs:
 
- - gnu make 4.1: Download unsupported binary from Rocket
- - xlclang 2.4.1: Download unsupported binary from IBM
- - git: Download unsupported binary from Rocket
- - curl: Download unsupported binary from Rocket
- - gunzip: Download unsupported binary from Rocket
+| Project | License | Download link |
+|---------|---------|------------------------|
+| [gnu make 4.1](https://www.gnu.org/software/make/) | [GPL V3 ](https://www.gnu.org/licenses/gpl-3.0.html) | [z/OS Open Tools release](https://github.com/ZOSOpenTools/makeport/releases/tag/boot) |
+| [IBM XL C/C++ V2.4.1](https://www-40.ibm.com/servers/resourcelink/svc00100.nsf/pages/xlCC++V241ForZOsV24) | IBM [^ibm] | [ibm.com web download](https://www.ibm.com/marketing/iwm/iwm/web/dispatcher.do?source=swg-zosxlcc) |
+| [git](https://git.kernel.org/pub/scm/git/git.git/) | [LGPL V2.1](https://git.kernel.org/pub/scm/git/git.git/tree/LGPL-2.1) | [z/OS Open Tools release](https://github.com/ZOSOpenTools/gitport/releases/tag/boot)  |
+| [curl](https://github.com/curl/curl) | [curl-license](https://github.com/curl/curl/blob/master/COPYING) | [z/OS Open Tools release](https://github.com/ZOSOpenTools/curlport/releases/tag/boot) |
+| [gunzip](https://www.gnu.org/software/gzip/) | [GPL V3 ](https://www.gnu.org/licenses/gpl-3.0.html) | [z/OS Open Tools release](https://github.com/ZOSOpenTools/unzipport/releases/tag/boot) |
 
+[^ibm]: a no-charge add-on feature for clients that have enabled the XL C/C++ compiler (an optionally priced feature) on z/OS
 ### Recommended software:
- - bash: Download unsupported binary from Rocket
+
+| Project | License | Download link |
+|---------|---------|------------------------|
+| [bash](https://www.gnu.org/software/bash/) | [GPL V3 ](https://www.gnu.org/licenses/gpl-3.0.html) | [z/OS Open Tools release](https://github.com/ZOSOpenTools/bashport/releases/) |
 
 Both IBM and Rocket provide supported versions of the software above for a fee.
 
 Taking the defaults will mean there are less variables for you to configure. We recommend you structure your sandbox as follows:
 
- - Have the root of your development file system be $HOME/zopen (you will want to have several gigabytes of storage for use - we recommend at least 15GB)
+ - Have the root of your development file system be `$HOME/zopen` (you will want to have several gigabytes of storage for use - we recommend at least 15GB)
  - Have sub-directories called _boot_, _prod_, _dev_.
     - _boot_: sub-directory for each tool required to bootstrap (make, git, curl, gunzip, m4)
     - _prod_: sub-directory for tools to be installed once built. These tools will be used by downstream software, e.g. make build process will use the Perl prod build
@@ -58,12 +63,15 @@ The tools have dependencies on other tools, and there are also typically 2 ways 
  - one that is not pre-reconfigured and therefore does require autoconf/automake and associated tools
 
 To build from scratch, start with the tarballs of the following tools:
- - m4: requires m4, curl in boot and xlclang installed on the system.
- - perl: additionally requires make, git in boot and m4 in prod.
- - make: additionally requires perl in prod for running test cases.
- - libz: additional requires make in prod
- - autoconf: additionally requires libz in prod.
- - automake: additionally requires autoconf in prod.
+
+| Project | License | Pre-requisites |
+|---------|---------|------------------------|
+| [m4](https://www.gnu.org/software/m4/m4.html) | [GPL V3 ](https://www.gnu.org/licenses/gpl-3.0.html) | m4, curl in boot and xlclang installed on the system |
+| [perl](https://dev.perl.org/) | [GPL V3 ](https://www.gnu.org/licenses/gpl-3.0.html) | additionally requires make, git in boot and m4 in prod |
+| [make](https://www.gnu.org/software/make/) | [GPL V3 ](https://www.gnu.org/licenses/gpl-3.0.html) | perl in prod for running test cases |
+| [zlib](https://zlib.net/) | [zlib license](https://zlib.net/zlib_license.html) | make in prod |
+| [autoconf](https://www.gnu.org/software/autoconf/) | [GPL V3 ](https://www.gnu.org/licenses/gpl-3.0.html) | libz in prod |
+| [automake](https://www.gnu.org/software/automake/) | [GPL V3 ](https://www.gnu.org/licenses/gpl-3.0.html) | autoconf in prod |
  
 Once you either have these tools built, or have downloaded a pre-built pax file for the build, you may want to build other tools.
 Each tool has a _buildenv_ file and one of the entries will describe the tools it requires to build, depending
@@ -73,4 +81,3 @@ and:
  - ZOPEN_GIT_DEPS="git make m4 help2man perl makeinfo xz autoconf automake gettext"
 
 If you want to build from the GIT clone, you can see you will need to have more software pre-installed.
-
