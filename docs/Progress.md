@@ -22,7 +22,6 @@
 * [ncduport](https://github.com/ZOSOpenTools/ncduport)
 * [screenport](https://github.com/ZOSOpenTools/screenport)
 * [sqliteport](https://github.com/ZOSOpenTools/sqliteport)
-* [unzipport](https://github.com/ZOSOpenTools/unzipport)
 * [xxhashport](https://github.com/ZOSOpenTools/xxhashport)
 * [zstdport](https://github.com/ZOSOpenTools/zstdport)
 ## Projects that do not have builds
@@ -78,7 +77,7 @@
 | [re2cport](https://github.com/ZOSOpenTools/re2cport) | 1 | No builds |
 | [wgetport](https://github.com/ZOSOpenTools/wgetport) | 1 | 18% |
 | [xxhashport](https://github.com/ZOSOpenTools/xxhashport) | 1 | Skipped |
-| [zipport](https://github.com/ZOSOpenTools/zipport) | 1 | 100% |
+| [zipport](https://github.com/ZOSOpenTools/zipport) | 1 | 71% |
 | [zstdport](https://github.com/ZOSOpenTools/zstdport) | 1 | Skipped |
 | [bzip2port](https://github.com/ZOSOpenTools/bzip2port) | 0 | 100% |
 | [cscopeport](https://github.com/ZOSOpenTools/cscopeport) | 0 | 100% |
@@ -109,8 +108,8 @@
 | [tclport](https://github.com/ZOSOpenTools/tclport) | 0 | No builds |
 | [texinfoport](https://github.com/ZOSOpenTools/texinfoport) | 0 | No builds |
 | [topport](https://github.com/ZOSOpenTools/topport) | 0 | No builds |
-| [unzipport](https://github.com/ZOSOpenTools/unzipport) | 0 | Skipped |
+| [unzipport](https://github.com/ZOSOpenTools/unzipport) | 0 | 100% |
 | [vimport](https://github.com/ZOSOpenTools/vimport) | 0 | 100% |
 | [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 100% |
 
-Last updated:  2023-01-03 22:49:21
+Last updated:  2023-01-04 14:50:37
