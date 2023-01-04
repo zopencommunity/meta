@@ -738,6 +738,9 @@ extractTarBall()
 
     if ! asciiecho "
 *.jpg
+*.dvi
+*.xz
+*.gz
 *.jpeg
 *.png
 *.gif
