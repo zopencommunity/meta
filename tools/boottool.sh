@@ -13,9 +13,6 @@ if ((BASH_VERSINFO < 4)); then
    exit 1
 fi
 
-
-GITHUB_OAUTH_TOKEN="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"
-
 echo "Number of args = $#"
 DEFAULT_OWNER="ZOSOpenTools"
 OWNERNAME=""
@@ -242,6 +239,7 @@ downloadAssetsOfRelease()
       #(not latest and commit level to same as the release in the arg )
     # and upload the assets
 
+releaseDescription=""
 processPassedReleaseName()
 {
   checkReleaseNameExists "releaseNameIDMap" "${RELEASENAME}"
@@ -249,15 +247,46 @@ processPassedReleaseName()
   if [ $? -eq 0 ]; then
      downloadAssetsOfRelease "$releaseID"
      getTagNameOfRelease $releaseID
+     releaseDescription=""
+     getDescriptionOfRelease "$releaseID"
      deleteTheRelease
      deleteBootTag
   else
      echo "Release name doesnot exist"
   fi
 
-  descriptionData=$(echo ${RELEASENAME} | tr -d "(" | tr -d ")")
-  echo "DescriptionData = $descriptionData"
-  createRelease "boot-release" "boot" "${descriptionData}"
+  echo "DescriptionData for processing release= $releaseDescription"
+  echo "isBootReleaseLatest = $isBootReleaseLatest"
+  
+  #createRelease "boot-release" "boot" "${releaseDescription}" "${isBootReleaseLatest}"
+  createRelease "boot-release" "boot" "${releaseDescription}"
+}
+
+getDescriptionOfRelease()
+{
+  releaseUrl=$url"/""$1"
+
+  response=$(curl -sw "%{http_code}" -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $GITHUB_OAUTH_TOKEN" -H "X-GitHub-Api-Version: 2022-11-28" $releaseUrl )
+  http_code=$(tail -n1 <<< "$response")
+
+  if [ "$http_code" == "$CURL_REPO_SUCCESS" ]; then
+    releaseTagData=$(sed '$ d' <<< "$response") 
+    
+    id=`jq -r ".id"  <<< "$releaseTagData"`
+    name=`jq -r ".name"  <<< "$releaseTagData"`
+    bodyData=`jq -r ".body"  <<< "$releaseTagData"`
+
+    echo "id in renameBootTaggedReleases = $id , $?"
+    echo "bodyData in renameBootTaggedReleases = $bodyData"
+
+    descriptionData=$(echo ${name} | tr -d "(" | tr -d ")")
+    descriptionData="This is ""$descriptionData"" release"
+    echo "DescriptionData = $descriptionData"
+
+    [ "$bodyData" = "null" ] && echo "no body for the release $name" && (bodyData="${descriptionData}");
+    releaseDescription=${bodyData}
+    echo "Final bodyData in getDescriptionOfRelease = $releaseDescription"
+  fi
 }
 
 # the release with id $releaseID (populated in checkReleaseNameExists) is deleted here
@@ -282,7 +311,7 @@ deleteBootTag()
   #echo "deleteBootTag in url = $tagUrl"
   response=$(curl -sw "%{http_code}" -X DELETE -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $GITHUB_OAUTH_TOKEN" $tagUrl)
   http_code=$(tail -n1 <<< "$response")
-  echo "DeleteBootTag response= $response"
+
   if [ "$http_code" == "$DEL_TAG_VALIDATION_FAIL" ]; then
       echo "The endpoint has been spammed - return code - $http_code"
   fi
@@ -334,11 +363,15 @@ renameBootTaggedReleases()
     
     id=`jq -r ".id"  <<< "$releaseTagData"`
     name=`jq -r ".name"  <<< "$releaseTagData"`
+    bodyData=`jq -r ".body"  <<< "$releaseTagData"`
 
-    echo "id in renameBootTaggedReleases = $id , $?"
+    #echo "id in renameBootTaggedReleases = $id , $?"
+    origId=${id}
+    #echo "bodyData in renameBootTaggedReleases = $bodyData"
     [ "$id" = "null" ] && echo "no tagged releases" && return 0;
 
-    downloadAssetsOfRelease "$id"
+    IsPrevBootReleaseLatest "$id"
+    downloadAssetsOfRelease "$origId"
     dateVal=$(date +%C%y%m%d_%H%M%S)
     releaseName=${name}"_"$dateVal
     tagName="boot_"$dateVal
@@ -348,9 +381,14 @@ renameBootTaggedReleases()
     echo "TagName in renameBootTaggedReleases = ${tagName}"
 
     descriptionData=$(echo ${name} | tr -d "(" | tr -d ")")
-    echo "DescriptionData = $descriptionData"
+    #echo "DescriptionData = $descriptionData"
 
-    createRelease "${releaseName}" "${tagName}" "${descriptionData}"
+
+    [ "$bodyData" = "null" ] && echo "no body for the release $name" && (bodyData="${descriptionData}");
+
+    echo "Final bodyData in renameBootTaggedReleases = $bodyData"
+    #createRelease "${releaseName}" "${tagName}" "${bodyData}" "false"
+    createRelease "${releaseName}" "${tagName}" "${bodyData}"
     creatRelVal=$?
     if [ "$creatRelVal" != "$CRT_UPLOAD_REL_SUCCESS" ]; then
         echo "ERROR: couldnot rename the boot tagged release"
@@ -372,8 +410,15 @@ createRelease()
 {
   createRepoUrl="https://api.github.com/repos/$OWNERNAME/$REPO/releases"
 
-  bodyData="This is ""$3"" release"
-  QUOTE="'"
+  #echo "old bodyData = $3"
+  #echo "old bodyData start --------------------------------------->"
+  #printf %s "$3" | od -vtc -to1
+
+  body=$(echo $bodyData | tr -d '\n' | sed 's/\r/\\r\\n/g' )
+
+  #echo "old bodyData end ------------------------------------------> "
+  #printf %s "$body" | od -vtc -to1
+
   echo "new release name = $1"
   echo "new tag name = $2"
   echo "sha of new release = $shaOfTag"
@@ -382,9 +427,10 @@ createRelease()
               -H "Accept: application/vnd.github+json" \
               -H "Authorization: Bearer $GITHUB_OAUTH_TOKEN" \
               $createRepoUrl \
-              -d  '{"tag_name":"'"${2}"'","target_commitish":"'"${shaOfTag}"'","name":"'"${1}"'","body":"'"${bodyData}"'","make_latest":"false"}')
+              -d  '{"tag_name":"'"${2}"'","target_commitish":"'"${shaOfTag}"'","name":"'"${1}"'","body":"'"${body}"'","make_latest":"false"}')
 
   http_code=$(tail -n1 <<< "$response")
+  #echo "create release response = $response"
   echo "create release http_code = $http_code"
   if [ "$http_code" == "$CRT_UPLOAD_REL_SUCCESS" ]; then
     
@@ -407,6 +453,7 @@ createRelease()
   return $http_code;
 }
 
+#This function uploads the assets to release id passed as argument
 uploadAsset()
 {
   for assetName in "${assetNameArray[@]}"
@@ -436,9 +483,37 @@ uploadAsset()
   done
 }
 
+#This function checks if current boot release in a repo - marked as latest or not
+IsPrevBootReleaseLatest()
+{
+  latestRepoUrl="https://api.github.com/repos/$OWNERNAME/$REPO/releases/latest"
+
+  isBootReleaseLatest="false"
+  
+  response=$(curl -sw "%{http_code}" \
+              -H "Accept: application/vnd.github+json" \
+              -H "Authorization: Bearer $GITHUB_OAUTH_TOKEN" \
+              $latestRepoUrl ) 
+
+  http_code=$(tail -n1 <<< "$response")
+  if [ "$http_code" == "$CURL_REPO_SUCCESS" ]; then
+    newReleaseData=$(sed '$ d' <<< "$response") 
+    
+    repo_json=`jq '.' <<< "$newReleaseData"`
+    latId=$(echo $repo_json | jq -r ".id")
+    echo "Latest release id =$latId"
+    echo "comparing id of latest release =$id and id of release in arg = $1"
+    if [ "$latId" == "$1" ]; then
+        isBootReleaseLatest="true"
+    fi
+  fi
+  echo "isBootReleaseLatest = ${isBootReleaseLatest}"
+}
+
 releaseID=""
 tagNameOfRelease=""
 shaOfTag=""
+isBootReleaseLatest="false"
 
 #fetch all the releases from repo and maintain a map of name to release Id
 # we need this step because processing is possible only on release IDs 
