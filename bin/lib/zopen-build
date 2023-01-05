@@ -111,7 +111,13 @@ cleanupOnExit() {
     rv=$?
     [ -f $TEMP_C_FILE ] && rm -rf $TEMP_C_FILE
     [ -p $TMP_FIFO_PIPE ] && rm -rf $TMP_FIFO_PIPE
+    if [ ! -z "$TEE_PID" ]; then
+      if kill -0 $TEE_PID; then
+        kill -9 $TEE_PID;
+      fi
+    fi
     printElapsedTime info "zopen-build" $fullBuildStartTime
+    trap - EXIT # clear the EXIT trap so that it's not double called
     exit $rv
 }
 
@@ -921,6 +927,7 @@ create_fifo_pipe()
   chtag -tc 819 $TMP_FIFO_PIPE
   touch ${file} && chtag -tc 819 ${file}
   tee ${file} < $TMP_FIFO_PIPE &
+  TEE_PID=$!
 }
 
 
