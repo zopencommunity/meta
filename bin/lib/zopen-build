@@ -112,7 +112,7 @@ cleanupOnExit() {
     [ -f $TEMP_C_FILE ] && rm -rf $TEMP_C_FILE
     [ -p $TMP_FIFO_PIPE ] && rm -rf $TMP_FIFO_PIPE
     if [ ! -z "$TEE_PID" ]; then
-      if kill -0 $TEE_PID; then
+      if kill -0 $TEE_PID 2>/dev/null; then
         kill -9 $TEE_PID;
       fi
     fi
