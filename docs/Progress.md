@@ -14,7 +14,6 @@
 ## Projects with skipped or no tests (grey)
 	
 * [bisonport](https://github.com/ZOSOpenTools/bisonport)
-* [curlport](https://github.com/ZOSOpenTools/curlport)
 * [gdbmport](https://github.com/ZOSOpenTools/gdbmport)
 * [gperfport](https://github.com/ZOSOpenTools/gperfport)
 * [jqport](https://github.com/ZOSOpenTools/jqport)
@@ -47,7 +46,7 @@
 | Package | # of Dependent Projects | Test Success Rate |
 |---|---|---|
 | [makeport](https://github.com/ZOSOpenTools/makeport) | 63 | 100% |
-| [curlport](https://github.com/ZOSOpenTools/curlport) | 48 | Skipped |
+| [curlport](https://github.com/ZOSOpenTools/curlport) | 48 | 99% |
 | [gzipport](https://github.com/ZOSOpenTools/gzipport) | 43 | 76% |
 | [gitport](https://github.com/ZOSOpenTools/gitport) | 41 | 96% |
 | [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 33 | 100% |
@@ -113,4 +112,4 @@
 | [vimport](https://github.com/ZOSOpenTools/vimport) | 0 | 100% |
 | [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 100% |
 
-Last updated:  2023-01-06 04:32:49
+Last updated:  2023-01-06 05:05:15
