@@ -14,7 +14,6 @@
 ## Projects with skipped or no tests (grey)
 	
 * [bisonport](https://github.com/ZOSOpenTools/bisonport)
-* [gdbmport](https://github.com/ZOSOpenTools/gdbmport)
 * [gperfport](https://github.com/ZOSOpenTools/gperfport)
 * [jqport](https://github.com/ZOSOpenTools/jqport)
 * [lz4port](https://github.com/ZOSOpenTools/lz4port)
@@ -83,7 +82,7 @@
 | [cscopeport](https://github.com/ZOSOpenTools/cscopeport) | 0 | 100% |
 | [ctagsport](https://github.com/ZOSOpenTools/ctagsport) | 0 | 100% |
 | [findutilsport](https://github.com/ZOSOpenTools/findutilsport) | 0 | 50% |
-| [gdbmport](https://github.com/ZOSOpenTools/gdbmport) | 0 | Skipped |
+| [gdbmport](https://github.com/ZOSOpenTools/gdbmport) | 0 | 100% |
 | [gnulibport](https://github.com/ZOSOpenTools/gnulibport) | 0 | No builds |
 | [gperfport](https://github.com/ZOSOpenTools/gperfport) | 0 | Skipped |
 | [grepport](https://github.com/ZOSOpenTools/grepport) | 0 | No builds |
@@ -111,4 +110,4 @@
 | [vimport](https://github.com/ZOSOpenTools/vimport) | 0 | 100% |
 | [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 100% |
 
-Last updated:  2023-01-06 19:51:40
+Last updated:  2023-01-07 01:15:12
