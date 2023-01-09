@@ -249,7 +249,6 @@ processPassedReleaseName()
      getTagNameOfRelease $releaseID
      releaseDescription=""
      getDescriptionOfRelease "$releaseID"
-     deleteTheRelease
      deleteBootTag
   else
      echo "Release name doesnot exist"
@@ -275,9 +274,6 @@ getDescriptionOfRelease()
     id=`jq -r ".id"  <<< "$releaseTagData"`
     name=`jq -r ".name"  <<< "$releaseTagData"`
     bodyData=`jq -r ".body"  <<< "$releaseTagData"`
-
-    echo "id in renameBootTaggedReleases = $id , $?"
-    echo "bodyData in renameBootTaggedReleases = $bodyData"
 
     descriptionData=$(echo ${name} | tr -d "(" | tr -d ")")
     descriptionData="This is ""$descriptionData"" release"
@@ -483,12 +479,9 @@ uploadAsset()
   done
 }
 
-#This function checks if current boot release in a repo - marked as latest or not
-IsPrevBootReleaseLatest()
+getLatestReleaseID()
 {
   latestRepoUrl="https://api.github.com/repos/$OWNERNAME/$REPO/releases/latest"
-
-  isBootReleaseLatest="false"
   
   response=$(curl -sw "%{http_code}" \
               -H "Accept: application/vnd.github+json" \
@@ -500,20 +493,59 @@ IsPrevBootReleaseLatest()
     newReleaseData=$(sed '$ d' <<< "$response") 
     
     repo_json=`jq '.' <<< "$newReleaseData"`
-    latId=$(echo $repo_json | jq -r ".id")
-    echo "Latest release id =$latId"
-    echo "comparing id of latest release =$id and id of release in arg = $1"
-    if [ "$latId" == "$1" ]; then
-        isBootReleaseLatest="true"
-    fi
+    latestReleaseId=$(echo $repo_json | jq -r ".id")
+    echo "Latest release id =$latestReleaseId"
   fi
+}
+
+
+#This function checks if current boot release in a repo - marked as latest or not
+IsPrevBootReleaseLatest()
+{
+  isBootReleaseLatest="false"
+  [ -z "$latestReleaseId" ] && echo "No release marked as latest" && return 0;
+
+  echo "comparing id of latest release =$latestReleaseId and id of release in arg = $1"
+  if [ "$latestReleaseId" == "$1" ]; then
+      isBootReleaseLatest="true"
+  fi
+  
   echo "isBootReleaseLatest = ${isBootReleaseLatest}"
+}
+
+#On creating backup of boot-release, the latest release is set to it, hence, we reset the latest release here
+resetLatestRelease()
+{
+  echo "latestReleaseId in resetLatestRelease = $latestReleaseId"
+  relRepoUrl="https://api.github.com/repos/$OWNERNAME/$REPO/releases/$latestReleaseId"
+
+  response=$(curl -sw "%{http_code}" \
+  -X PATCH \
+  -H "Accept: application/vnd.github+json" \
+  -H "Authorization: Bearer $GITHUB_OAUTH_TOKEN"\
+  -H "X-GitHub-Api-Version: 2022-11-28" \
+  $relRepoUrl \
+  -d '{"make_latest":"true"}')
+
+  http_code=$(tail -n1 <<< "$response")
+
+  echo "http_code = $http_code"
+
+  if [ "$http_code" == "$CURL_REPO_SUCCESS" ]; then
+    echo "Release marked as latest"
+  else
+    echo "Release not marked as latest"
+  fi
+
 }
 
 releaseID=""
 tagNameOfRelease=""
 shaOfTag=""
 isBootReleaseLatest="false"
+
+latestReleaseId=""
+getLatestReleaseID
 
 #fetch all the releases from repo and maintain a map of name to release Id
 # we need this step because processing is possible only on release IDs 
@@ -533,4 +565,4 @@ populateReleaseMaps
 #The release name , repo and owner name passed as args - is processed to name the given release as boot-release and tag as "boot"
 processPassedReleaseName
 
-
+resetLatestRelease
