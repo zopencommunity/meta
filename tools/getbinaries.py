@@ -49,7 +49,7 @@ with open('docs/Latest.md', 'w') as f:
 		if not re.search("port$", r.name):
 			continue
 		print("| [" + r.name + "](" + r.html_url + ")", end='')
-		dependentOn[r.name] = 0
+		dependentOn[r.name] = []
 		releases = r.get_releases()
 		if (releases.totalCount):
 			latestRelease = r.get_latest_release()
@@ -96,7 +96,7 @@ for rname, y in dependentOn.items():
 			dependencies += match.split();
 		dependencies = list(set(dependencies))
 		for x in dependencies:	
-			dependentOn[x + "port"] += 1
+			dependentOn[x + "port"] += [name]
 # Data to plot
 labels = []
 sizes = []
@@ -172,9 +172,9 @@ with open('docs/Progress.md', 'w') as f:
 	print("""
 ## Projects with the most dependencies
 """);
-	print("| Package | # of Dependent Projects | Test Success Rate |");
-	print("|---|---|---|");
-	for x,y in sorted(dependentOn.items(), reverse=True, key=lambda x: x[1]):
+	print("| Package | # of Dependent Projects | Test Success Rate | Dependent projects");
+	print("|---|---|---|--|");
+	for x,y in sorted(dependentOn.items(), reverse=True, key=lambda x: len(x[1])):
 		status = statusPerPort[x]	
 		if status == -1:
 			status = "Skipped"
@@ -182,8 +182,7 @@ with open('docs/Progress.md', 'w') as f:
 			status = "No builds"
 		else:
 			status = str(status) + "%"
-		statusPerPort[x];
-		print("| [" + x + "](https://github.com/ZOSOpenTools/" + x + ") | " + str(y) + " | " + status + " |");
+		print("| [" + x + "](https://github.com/ZOSOpenTools/" + x + ") | " + str(len(y)) + " | " + status + " |"  + ", ".join(str(e) for e in y));
 
 	print("\nLast updated: ", todaysDate);
 
