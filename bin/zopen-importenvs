@@ -20,6 +20,22 @@ fi
 
 #depsPath has the details of the location of ports whose env files are consumed for sourcing 
 depsPath="$HOME/zopen/prod|$HOME/zopen/boot"
+configFile=~/.zopen-config
+if [ -f "$configFile" ]
+then
+    while read -r line
+    do
+      val=$(echo $line | grep "ZOPEN_SEARCH_PATH") 
+      if [ -z $val ] &> /dev/null
+      then
+         continue;
+      else
+         path=$(echo $val | cut -d "=" -f 2) 
+         [ ! -z $path ] && depsPath=$path"/prod|"$path"/boot" && break
+      fi
+    done < "$configFile"
+fi
+  echo "final depsPath = $depsPath"
 
 # if the number of arguments passed to script is 0,
 # then , the ports are fetched from $HOME/zopen/prod and $HOME/zopen/boot directory
@@ -34,6 +50,7 @@ then
 
      #Loop through zopen/boot & zopen/prod
      for path in $(echo ${depsPath} | sed "s/|/ /g") ; do
+         [ ! -d "$path" ] && echo "Directory $path DOES NOT exist skipping." && continue
          for deps in $(find "${path}" -name ".env")
          do
           depdir=$(dirname "${deps}")
@@ -51,7 +68,7 @@ then
                 arrOfDirs+=($dirName)
              fi
              cd - 
-           else
+          else
              echo "Skipping the set path = $dirName, as it is already sourced" 
            fi
          done
