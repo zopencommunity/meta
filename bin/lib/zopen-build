@@ -1,0 +1,1451 @@
+#!/bin/sh
+#
+# General purpose build script for ZOSOpenTools ports
+#
+# ZOPEN_TYPE must be defined to either TARBALL or GIT. This indicates the type of package to build
+#
+# For more details, see the help which you can get by issuing:
+# zopen-build -h
+
+#
+# Functions section
+#
+
+#
+# asciiecho: we are in the process of starting to use 'echo' from coreutils.
+# This echo will have a slightly different behaviour than the standard echo in that
+# the file will now be tagged as ascii instead of ebcdic
+# For compatibility, check the tag of the file after the echo and iconv the file IFF it is IBM-1047
+#
+asciiecho()
+{
+  text="$1"
+  file="$2"
+
+  if ! echo "${text}" >"${file}"; then
+    echo "Unable to echo text to ${file}" >&2
+    return 2
+  fi
+  if [ "$(chtag -p "${file}" | cut -f2 -d' ')" = "IBM-1047" ]; then
+    if ! iconv -f IBM-1047 -tISO8859-1 <"${file}" >"${file}_ascii" || ! chtag -tcISO8859-1 "${file}_ascii" || ! mv "${file}_ascii" "${file}"; then
+      printError "Unable to convert EBCDIC text to ASCII for ${file}" >&2
+    fi
+  fi
+  return 0
+}
+  
+printEnvVar()
+{
+  echo "\
+CC                   C compiler (defaults to '${ZOPEN_XL_CCD}')
+CXX                  C++ compiler (defaults to '${ZOPEN_XL_CXXD}')
+CPPFLAGS             C/C++ pre-processor flags (defaults to '${ZOPEN_XL_CPPFLAGSD}')
+CFLAGS               C compiler flags (defaults to '${ZOPEN_XL_CFLAGSD}')
+CXXFLAGS             C++ compiler flags (defaults to '${ZOPEN_XL_CXXFLAGSD}')
+LDFLAGS              C/C++ linker flags (defaults to '${ZOPEN_XL_LDFLAGSD}')
+LIBS                 C/C++ libraries (defaults to '')
+ZOPEN_TYPE           The type of package to download. Valid types are TARBALL and GIT (required)
+ZOPEN_TARBALL_URL    The fully qualified URL that the tarball should be downloaded from (required if ZOPEN_TYPE=TARBALL)
+ZOPEN_TARBALL_DEPS   Space-delimited set of source packages this git package depends on to build (required if ZOPEN_TYPE=TARBALL)
+ZOPEN_GIT_URL        The fully qualified URL that the git repo should be cloned from (required if ZOPEN_TYPE=GIT)
+ZOPEN_GIT_DEPS       Space-delimited set of source packages this tarball package depends on to build (required if ZOPEN_TYPE=GIT)
+ZOPEN_GIT_BRANCH     The branch that the git repo should checkout (optional, takes precedence over ZOPEN_GIT_TAG)
+ZOPEN_GIT_TAG        The tag that the git repo should checkout as a branch (optional)
+ZOPEN_URL            Alternate environment variable instead of ZOPEN_TARBALL_URL or ZOPEN_GIT_URL (alternate to ZOPEN_TARBALL_URL or ZOPEN_GIT_URL) 
+ZOPEN_DEPS           Alternate environment variable instead of ZOPEN_TARBALL_DEPS or ZOPEN_GIT_DEPS (alternate to ZOPEN_TARBALL_DEPS or ZOPEN_GIT_DEPS)  
+ZOPEN_GIT_SETUP      Specify whether git files should be added to a local repo or if this will be done manually (defaults to Y)
+ZOPEN_SRC_DIR        specify a relative source directory to cd to for bootstrap, configure, build, check, install (defaults to '.')
+ZOPEN_EXTRA_CPPFLAGS C/C++ pre-processor flags to append to CPPFLAGS (defaults to '')
+ZOPEN_EXTRA_CFLAGS   C compiler flags to append to CFLAGS (defaults to '')
+ZOPEN_EXTRA_CXXFLAGS C++ compiler flags to append to CXXFLAGS (defaults to '')
+ZOPEN_EXTRA_LDFLAGS  C/C++ linker flags to append to LDFLAGS (defaults to '')
+ZOPEN_EXTRA_LIBS     C/C++ libraries to append to LIBS (defaults to '')
+ZOPEN_NUM_JOBS       Number of jobs that can be run in parallel (defaults to 1/2 the CPUs on the system)
+ZOPEN_BOOTSTRAP      Bootstrap program to run. If skip is specified, no bootstrap step is performed (defaults to '${ZOPEN_BOOTSTRAPD}')
+ZOPEN_BOOTSTRAP_OPTS Options to pass to bootstrap program (defaults to '${ZOPEN_BOOTSTRAP_OPTSD}')
+ZOPEN_CONFIGURE      Configuration program to run. If skip is specified, no configuration step is performed (defaults to '${ZOPEN_CONFIGURED}')
+ZOPEN_CONFIGURE_MINIMAL Configuration program will not be passed CFLAGS, LDFLAGS, CPPFLAGS options but will just get them from env vars
+ZOPEN_CONFIGURE_OPTS Options to pass to configuration program (defaults to '--prefix=\${ZOPEN_INSTALL_DIR}')
+ZOPEN_EXTRA_CONFIGURE_OPTS Extra configure options to pass to configuration program (defaults to '')
+ZOPEN_INSTALL_DIR    Installation directory to pass to configuration (defaults to '\${HOME}/zopen/prod/<pkg>')
+ZOPEN_MAKE           Build program to run. If skip is specified, no build step is performed (defaults to '${ZOPEN_MAKED}')
+ZOPEN_MAKE_MINIMAL   Build program will not be passed CFLAGS, LDFLAGS, CPPFLAGS options but will just get them from env vars
+ZOPEN_MAKE_OPTS      Options to pass to build program (defaults to '-j\${ZOPEN_NUM_JOBS}')
+ZOPEN_CHECK          Check program to run. If skip is specified, no check step is performed (defaults to '${ZOPEN_CHECKD}') 
+ZOPEN_CHECK_OPTS     Options to pass to check program (defaults to '${ZOPEN_CHECK_OPTSD}')
+ZOPEN_CHECK_TIMEOUT  Timeout limit in seconds for the check program (defaults to '${ZOPEN_CHECK_TIMEOUTD}')
+ZOPEN_IMAGE_REGISTRY Docker image registry to an OCI image to (use with --oci option)
+ZOPEN_IMAGE_DOCKERFILE_NAME Dockerfile name (default: Dockerfile)
+ZOPEN_IMAGE_DOCKER_NAME Docker/podman tool name (default: podman)
+ZOPEN_IMAGE_REGISTRY_ID The ID to authenticate to the Docker image registry (use with --oci option)
+ZOPEN_IMAGE_REGISTRY_KEY_FILE The file containing the key to authenticate to the Docker image registry (use with --oci option)
+ZOPEN_LOG_DIR        The directory to store build logs (defaults to '${ZOPEN_ROOT}/log')
+ZOPEN_INSTALL        Installation program to run. If skip is specified, no installation step is performed (defaults to '${ZOPEN_INSTALLD}')
+ZOPEN_INSTALL_OPTS   Options to pass to installation program (defaults to '${ZOPEN_INSTALL_OPTSD}')
+ZOPEN_CLEAN          Clean up program to run (defaults to '${ZOPEN_CLEAND}')
+ZOPEN_CLEAN_OPTS     Options to pass to clean up  program (defaults to '${ZOPEN_CLEAN_OPTSD}')"
+
+}
+
+export utildir="$(cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P)"
+export utilparentdir="$(cd "$(dirname "$0")/../.." >/dev/null 2>&1 && pwd -P)"
+
+. "${utildir}/common.inc"
+
+# Temporary files
+for tmp in "$TMPDIR" "$TMP" /tmp
+do
+  if [ ! -z $tmp ] && [ -d $tmp ]; then
+    TEMP_C_FILE="$tmp/$LOGNAME.c"
+    break
+  fi
+done
+TMP_FIFO_PIPE="$tmp/$LOGNAME.pipe"
+
+
+# Capture start time before setting trap
+fullBuildStartTime=$SECONDS
+
+# Remove temoraries on exit and report elapsed time
+cleanupOnExit() {
+    rv=$?
+    [ -f $TEMP_C_FILE ] && rm -rf $TEMP_C_FILE
+    [ -p $TMP_FIFO_PIPE ] && rm -rf $TMP_FIFO_PIPE
+    if [ ! -z "$TEE_PID" ]; then
+      if kill -0 $TEE_PID 2>/dev/null; then
+        kill -9 $TEE_PID;
+      fi
+    fi
+    printElapsedTime info "zopen-build" $fullBuildStartTime
+    trap - EXIT # clear the EXIT trap so that it's not double called
+    exit $rv
+}
+
+trap "cleanupOnExit" EXIT INT TERM QUIT HUP
+
+setDefaults()
+{
+  export ZOPEN_XL_CCD="xlclang"
+  export ZOPEN_XL_CXXD="xlclang++"
+  export ZOPEN_XL_CPPFLAGSD="-DNSIG=42 -D_XOPEN_SOURCE=600 -D_ALL_SOURCE -D_OPEN_SYS_FILE_EXT=1 -D_AE_BIMODAL=1 -D_ENHANCED_ASCII_EXT=0xFFFFFFFF"
+  export ZOPEN_XL_CFLAGSD="-qascii -std=gnu11 -qnocsect -qenum=int"
+  export ZOPEN_XL_CXXFLAGSD="-+ -qascii -qnocsect -qenum=int"
+  export ZOPEN_XL_LDFLAGSD="-Wl,edit=no"
+  export ZOPEN_CLANG_CCD="clang"
+  export ZOPEN_CLANG_CXXD="clang++"
+  export ZOPEN_CLANG_CPPFLAGSD="-DNSIG=42 -D_XOPEN_SOURCE=600 -D_ALL_SOURCE -D_OPEN_SYS_FILE_EXT=1 -D_AE_BIMODAL=1 -D_ENHANCED_ASCII_EXT=0xFFFFFFFF"
+  export ZOPEN_CLANG_CFLAGSD="-fzos-le-char-mode=ascii -std=gnu11 -mnocsect -fno-short-enums"
+  export ZOPEN_CLANG_CXXFLAGSD="-fzos-le-char-mode=ascii -mnocsect -fno-short-enums"
+  export ZOPEN_CLANG_LDFLAGSD="-Wl,-bedit=no"
+  export ZOPEN_COMPD=XL
+
+  export ZOPEN_BOOTSTRAPD="./bootstrap"
+  export ZOPEN_BOOTSTRAP_OPTSD=""
+  export ZOPEN_CONFIGURED="./configure"
+  export ZOPEN_MAKED="make"
+  export ZOPEN_CHECKD="make"
+  export ZOPEN_CHECK_OPTSD="check"
+  export ZOPEN_CHECK_TIMEOUTD="12600" # 3.5 hours
+  export ZOPEN_INSTALLD="make"
+  export ZOPEN_INSTALL_OPTSD="install"
+  export ZOPEN_CLEAND="make"
+  export ZOPEN_CLEAN_OPTSD="clean"
+  if [ -z "$ZOPEN_IMAGE_DOCKERFILE_NAME" ]; then
+    export ZOPEN_IMAGE_DOCKERFILE_NAME="Dockerfile"
+  fi
+  if [ -z "$ZOPEN_IMAGE_DOCKER_NAME" ]; then
+    export ZOPEN_IMAGE_DOCKER_NAME="podman"
+  fi
+  export ZOPEN_TEST_STATUS_ALL_PASSED=0
+  export ZOPEN_TEST_STATUS_MOST_PASSED=1
+  export ZOPEN_TEST_STATUS_SOME_PASSED=2
+  export ZOPEN_TEST_STATUS_NONE_PASSED=3
+  export ZOPEN_TEST_STATUS_ERROR=4
+  export ZOPEN_TEST_STATUS_SKIPPED=5
+  unset ZOPEN_EXTRA_CPPFLAGS
+  unset ZOPEN_EXTRA_CFLAGS
+  unset ZOPEN_EXTRA_CXXFLAGS
+  unset ZOPEN_EXTRA_LDFLAGS
+  unset ZOPEN_EXTRA_LIBS
+  return 0
+}
+
+printSyntax()
+{
+  args=$*
+  (echo ""
+  echo "zopen-build is a general purpose build script to be used with the ZOSOpenTools ports."
+  echo "The specifics of how the tool works can be controlled through environment variables."
+  echo "The only environment variables you _must_ specify are to tell zopen-build where the "
+  echo "  source is, and in what format type the source is stored."
+  echo "By default, the environment variables are defined in a file named buildenv in the "
+  echo "  root directory of the <package>port github repository"
+  echo "To see a fully functioning z/OSOpenTools sample port"
+  echo "  see: https://github.com/ZOSOpenTools/zotsampleport"
+  echo ""
+  echo "Syntax: zopen-build [<option>]*"
+  echo "  where <option> may be one or more of:"
+  echo "  -h: print this information"
+  echo "  -v: run in verbose mode"
+  echo "  -vv: run in very verbose mode (sets environment variables V=1 and VERBOSE=1)"
+  echo "  -u|--updatedeps: update all dependencies by running zopen download"
+  echo "  --buildtype: release|debug. The default is release"
+  echo "  --comp: xl|clang.  The compiler used for building.  The default is xl."
+  echo "  --oci: build and publish an OCI image to \$ZOPEN_IMAGE_REGISTRY"
+  echo "  -e <env file>: source <env file> instead of buildenv to establish build environment"
+  echo "  -c|--clean: Deletes all of the build output and forces reconfigure with next build"
+  echo "  -f|--force-rebuild: forces a rebuild, including running bootstrap and configure again"
+  echo "  -g|--get-source: get the source and apply patch without building"
+  echo "  -gp|--generate-pax: generate a pax.Z file based on the install contents"
+  echo "  -nosym|--nosymlink: da not generate a symlink from the project name to \${ZOPEN_INSTALL_DIR}"
+  echo "  -s: exec a shell before running configure.  Useful when manually building ports."
+  opts=$(printEnvVar)
+  echo "${opts}" )>&2
+}
+
+processOptions()
+{
+  args=$*
+  verbose=false
+  publishOCI=false
+  skipcheck=false
+  buildInReleaseMode=true
+  startShell=false
+  cleanupBuild=false
+  forceRebuild=false
+  buildEnvFile="./buildenv"
+  getSourceOnly=false
+  generatePax=false
+  generateSymLink=true
+  depsPath="$HOME/zopen/prod|$HOME/zopen/boot|/usr/bin/zopen/"
+  if [ ! -z "$ZOPEN_SEARCH_PATH" ]; then
+    depsPath="$ZOPEN_SEARCH_PATH/prod|$ZOPEN_SEARCH_PATH/boot|$depsPath"
+  fi
+  forceUpdateDeps=false
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+      "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
+        printSyntax "${args}"
+        return 4
+        ;;
+      "-v" | "--v" | "-verbose" | "--verbose")
+        verbose=true
+        ;;
+      "-vv" | "--vv" | "-veryverbose" | "--veryverbose")
+        export V=1
+        export VERBOSE=1
+        verbose=true
+        ;;
+      "-u" | "--updateDeps")
+        forceUpdateDeps=true
+        ;;
+      "-buildtype" | "--buildtype" | "-b")
+        shift
+        btype=$(echo "$1" | awk '{print toupper($0)}')
+        if [ "$btype" = "DEBUG" ]; then
+          buildInReleaseMode=false
+        fi
+        ;;
+      "-comp" | "--comp")
+        shift
+        ZOPEN_COMP=$1 # We will uppercase this later
+        ;;
+      "-oci" | "--oci")
+        publishOCI=true
+        ;;
+      "-sc" | "--skipcheck")
+        skipcheck=true
+        ;;
+      "-d" | "--depspath")
+        shift
+        depsPath="${1}|${depsPath}"
+        ;;
+      "-e" | "--env")
+        shift
+        buildEnvFile=$1
+        ;;
+      "-c" | "--clean")
+        cleanupBuild=true
+        ;;
+      "-f" | "--force-rebuild")
+        forceRebuild=true
+        ;;
+      "-g" | "--get-source")
+        getSourceOnly=true
+        ;;
+      "-gp" | "--generate-pax")
+        generatePax=true
+        ;;
+      "-nosym" | "--nosymlink")
+        generateSymLink=false
+        ;;
+      "-s" | "--shell")
+        startShell=true
+        ;;
+      *)
+        printError "Unknown option ${arg} specified"
+        ;;
+    esac
+    shift
+  done
+}
+
+loadBuildEnv()
+{
+  if [ ! -r $buildEnvFile ]; then
+    printError "Build environment file '$buildEnvFile' does not exist or is not readable"
+  fi
+
+  # Indicates to .env script that we're in zopen build
+  export ZOPEN_IN_ZOPEN_BUILD=1
+
+  . $buildEnvFile
+}
+
+checkEnv()
+{
+  #
+  # Specify ZOPEN_TYPE as either TARBALL or GIT
+  # To specify a URL, you can either be specific (e.g. ZOPEN_TARBALL_URL or ZOPEN_GIT_URL) or you can be general (e.g. ZOPEN_URL)
+  # and to specify DEPS, you can either be specific (e.g. ZOPEN_TARBALL_DEPS or ZOPEN_GIT_DEPS) or you can be general (e.g. ZOPEN_DEPS).
+  # This flexibility is nice so that for software packages that support both types (e.g. gnu make), you can provide all of
+  # ZOPEN_TARBALL_URL, ZOPEN_TARBALL_DEPS, ZOPEN_GIT_URL, ZOPEN_GIT_DEPS in your environment set up and then specify the type using
+  # ZOPEN_TYPE=GIT|URL (e.g. only one line needs to be changed).
+  # For software packages that only support one type, you can just specify ZOPEN_URL, ZOPEN_DEPS, and ZOPEN_TYPE.
+  #
+  printHeader "Checking environment configuration"
+
+  if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
+    if [ "${ZOPEN_TARBALL_URL}x" = "x" ]; then
+      export ZOPEN_TARBALL_URL="${ZOPEN_URL}"
+    fi
+    if [ "${ZOPEN_TARBALL_DEPS}x" = "x" ]; then
+      export ZOPEN_TARBALL_DEPS="${ZOPEN_DEPS}"
+    fi
+  elif [ "${ZOPEN_TYPE}x" = "GITx" ]; then
+    if [ "${ZOPEN_GIT_URL}x" = "x" ]; then
+      export ZOPEN_GIT_URL="${ZOPEN_URL}"
+    fi
+
+    if [ "${ZOPEN_GIT_DEPS}x" = "x" ]; then
+      export ZOPEN_GIT_DEPS="${ZOPEN_DEPS}"
+    fi
+  else
+    printError "ZOPEN_TYPE must be one of TARBALL or GIT. ZOPEN_TYPE=${ZOPEN_TYPE} was specified"
+  fi
+
+  ZOPEN_CHECK_RESULTS="zopen_check_results"
+  if ! command -V "${ZOPEN_CHECK_RESULTS}" >/dev/null 2>&1; then
+    if [ "${ZOPEN_CHECK}x" != "skipx" ] && ! ${skipcheck}; then
+       export ZOPEN_CHECK_RESULTS="${ZOPEN_ROOT}/portchk.sh"
+       if ! [ -x "${ZOPEN_CHECK_RESULTS}" ]; then
+          printError "zopen_check_results script needs to be provided to check the results."
+       fi
+    fi 
+  fi
+
+  ZOPEN_APPEND_TO_ENV="zopen_append_to_env"
+
+  if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
+    if [ "${ZOPEN_TARBALL_URL}x" = "x" ]; then
+      printError "ZOPEN_URL or ZOPEN_TARBALL_URL needs to be defined to the root directory of the tool being ported"
+    fi
+    if [ "${ZOPEN_TARBALL_DEPS}x" = "x" ]; then
+      printError "ZOPEN_DEPS or ZOPEN_TARBALL_DEPS needs to be defined to the ported tools this depends on"
+    fi
+    implicitDeps="curl tar"
+    ext=${ZOPEN_TARBALL_URL##*.}
+    if [ "${ext}x" = "xzx" ]; then
+      implicitDeps="${implicitDeps} xz"
+    elif [ "${ext}x" = "gzx" ]; then
+      implicitDeps="${implicitDeps} gzip"
+    elif [ "${ext}x" = "bz2x" ]; then
+      implicitDeps="${implicitDeps} bzip2"
+    fi
+    printVerbose "Implicitly adding tarball dependencies: ${implicitDeps}"
+    ZOPEN_TARBALL_DEPS="${implicitDeps} ${ZOPEN_TARBALL_DEPS}"
+  elif [ "${ZOPEN_TYPE}x" = "GITx" ]; then
+    if [ "${ZOPEN_GIT_URL}x" = "x" ]; then
+      printError "ZOPEN_URL or ZOPEN_GIT_URL needs to be defined to the root directory of the tool being ported"
+    fi
+    if [ "${ZOPEN_GIT_DEPS}x" = "x" ]; then
+      printError "ZOPEN_DEPS or ZOPEN_GIT_DEPS needs to be defined to the ported tools this depends on"
+    fi
+    implicitDeps="git"
+    printVerbose "Implicitly adding git dependencies: ${implicitDeps}"
+    ZOPEN_GIT_DEPS="${implicitDeps} ${ZOPEN_GIT_DEPS}"
+  fi
+
+  export ZOPEN_CA="${utilparentdir}/cacert.pem"
+  if ! [ -r "${ZOPEN_CA}" ]; then
+    printError "Internal Error. Certificate ${ZOPEN_CA} is required. Use zopen update-cacert to update."
+  fi
+
+  #
+  # For the compilers and corresponding flags, you need to either specify both the compiler and flag, or neither
+  # since the flags are not compatible across compilers, and only the xlclang and xlclang++ compilers are used by default
+  #
+  if { [ "${CC}x" = "x" ] && [ "${CFLAGS}x" != "x" ]; } || { [ "${CC}x" != "x" ] && [ "${CFLAGS}x" = "x" ]; } then
+    printWarning "Either specify both CC and CFLAGS or neither, but not just one"
+  fi
+  if { [ "${CXX}x" = "x" ] && [ "${CXXFLAGS}x" != "x" ]; } || { [ "${CXX}x" != "x" ] && [ "${CXXFLAGS}x" = "x" ]; } then
+    printWarning "Either specify both CXX and CXXFLAGS or neither, but not just one"
+  fi
+}
+
+setDepsEnv()
+{
+  if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
+    deps="${ZOPEN_TARBALL_DEPS}"
+  else
+    deps="${ZOPEN_GIT_DEPS}"
+  fi
+
+  orig="${PWD}"
+  # Filter out duplicate deps
+  deps=$(echo "$deps" | xargs | tr ' ' '\n' | sort -u)
+  for dep in $deps; do
+    foundDep=false
+    for path in `echo ${depsPath} | tr '|' '\n'` ; do
+      if [ -r "$path/${dep}/.env" ]; then
+        depdir="$path/${dep}"
+        # Avoid double sourcing the .env if we're forcing an update it
+        if ! $forceUpdateDeps; then
+          printVerbose "Setting up ${depdir} dependency environment"
+          cd "${depdir}" && . ./.env
+        fi
+        foundDep=true
+        break
+      fi
+    done
+    if ! $foundDep || $forceUpdateDeps; then
+      if ! $forceUpdateDeps; then
+        printWarning "Dependency $dep not found. Downloading via zopen-download"
+      else
+        printHeader "Updating dependency $dep. Downloading via zopen-download"
+      fi
+      # Use the first path specified in the dependency search list
+      path=$(echo ${depsPath} | tr '|' '\n' | head -1)
+      printVerbose "Running zopen download -r $dep -d $path"
+      if ! zopen download -r $dep -d $path; then
+        printError "zopen download command failed"
+      fi
+      printVerbose "Setting up updated ${path}/${dep} dependency environment"
+      cd "${path}/${dep}" && . ./.env
+    fi
+  done
+  cd "${orig}" || exit 99
+}
+
+setEnv()
+{
+  # Set up the compiler and option variables
+  # CC - the C compiler
+  # CXX - the C++ compiler
+  # CPPFLAGS - preprocessing options, common to CC & CXX
+  # CFLAGS - options for CC
+  # CXXFLAGS - options for CXX
+
+  # Decide which compiler is being used XL or CLANG
+  if [ "${ZOPEN_COMP}x" = "x" ]; then
+    export ZOPEN_COMP="${ZOPEN_COMPD}"
+  else
+    # user specified, so normalize in upper case
+    ZOPEN_COMP=$(echo "${ZOPEN_COMP}" | tr '[a-z]' '[A-Z]')
+  fi
+
+  # Use the right set of default options
+  case "${ZOPEN_COMP}" in 
+    XL)
+      export ZOPEN_CCD="${ZOPEN_XL_CCD}"
+      export ZOPEN_CXXD="${ZOPEN_XL_CXXD}"
+      export ZOPEN_CPPFLAGSD="${ZOPEN_XL_CPPFLAGSD}"
+      export ZOPEN_CFLAGSD="${ZOPEN_XL_CFLAGSD}"
+      export ZOPEN_CXXFLAGSD="${ZOPEN_XL_CXXFLAGSD}"
+      export ZOPEN_LDFLAGSD="${ZOPEN_XL_LDFLAGSD}"
+      optflags="-O3"
+      ;;
+    CLANG)
+      export ZOPEN_CCD="${ZOPEN_CLANG_CCD}"
+      export ZOPEN_CXXD="${ZOPEN_CLANG_CXXD}"
+      export ZOPEN_CPPFLAGSD="${ZOPEN_CLANG_CPPFLAGSD}"
+      export ZOPEN_CFLAGSD="${ZOPEN_CLANG_CFLAGSD}"
+      export ZOPEN_CXXFLAGSD="${ZOPEN_CLANG_CXXFLAGSD}"
+      export ZOPEN_LDFLAGSD="${ZOPEN_CLANG_LDFLAGSD}"
+      optflags="-O3"
+      ;;
+    *)
+      printError "Unrecognize compiler '${ZOPEN_COMP}'"
+      ;;
+  esac
+
+
+  if [ "${CC}x" = "x" ]; then
+    export CC="${ZOPEN_CCD}"
+  fi
+  if [ "${CXX}x" = "x" ]; then
+    export CXX="${ZOPEN_CXXD}"
+  fi
+
+  case "${ZOPEN_COMP}" in 
+    XL)
+      # Confirm xlclang is OEL 1.0.0 (aka __COMPILER_VER__=42040001)
+      ccraw=$(touch $TEMP_C_FILE && ${CC} -E -qshowmacros $TEMP_C_FILE | grep '__COMPILER_VER__' | awk '{print substr($3,3)}')
+      if [ "${ccraw}x" = "x" ]; then
+        printError "xlclang compiler specified, but it is not a 'IBM C/C++ for Open Enterprise Languages on z/OS' compiler"
+      fi 
+      if [ ${ccraw} -lt 42040001 ] ; then
+        printError "xlclang compiler specified, need to be running IBM C for Open Enterprise Languages on z/OS 1"
+      fi
+
+      # Confirm xlclang is OEL 1.0.0 (aka __COMPILER_VER__=42040001)
+      ccraw=$(touch $TEMP_C_FILE && ${CXX} -+ -E -qshowmacros $TEMP_C_FILE | grep '__COMPILER_VER__' | awk '{print substr($3,3)}')
+      if [ "${ccraw}x" = "x" ]; then
+        printError "xlclang++ compiler specified, but it is not a 'IBM C/C++ for Open Enterprise Languages on z/OS' compiler"
+      fi 
+      if [ ${ccraw} -lt 42040001 ] ; then
+        printError "xlclang++ compiler specified, need to be running IBM C for Open Enterprise Languages on z/OS 1"
+      fi
+      ;;
+    CLANG)
+      # Confirm clang is at least OEL 2.0.0 (aka __COMPILER_VER__=50000000)
+      ccraw=$(${CC} -E -dM - </dev/null | grep '__COMPILER_VER__' | awk '{print substr($3,3)}')
+      if [ "${ccraw}x" = "x" ]; then
+        printError "clang compiler specified, but it is not a 'IBM C/C++ for Open Enterprise Languages on z/OS' compiler"
+      fi 
+      if [ ${ccraw} -lt 50000000 ] ; then
+        printError "clang compiler specified, need to be running at least IBM C for Open Enterprise Languages on z/OS 2"
+      fi
+
+      # Confirm clang++ is at least OEL 2.0.0 (aka __COMPILER_VER__=50000000)
+      ccraw=$(${CXX} -x c++ -E -dM - </dev/null | grep '__COMPILER_VER__' | awk '{print substr($3,3)}')
+      if [ "${ccraw}x" = "x" ]; then
+        printError "clang++ compiler specified, but it is not a 'IBM C/C++ for Open Enterprise Languages on z/OS' compiler"
+      fi 
+      if [ ${ccraw} -lt 50000000 ] ; then
+        printError "clang compiler specified, need to be running at least IBM C for Open Enterprise Languages on z/OS 2"
+      fi
+      ;;
+  esac
+
+  if [ "${CPPFLAGS}x" = "x" ]; then
+    export CPPFLAGS="${ZOPEN_CPPFLAGSD}" 
+  fi
+  if [ "${CFLAGS}x" = "x" ]; then
+    export CFLAGS="${ZOPEN_CFLAGSD}"
+  fi
+
+  if [ "${CXXFLAGS}x" = "x" ]; then
+    export CXXFLAGS="${ZOPEN_CXXFLAGSD}"
+  fi
+
+  if $buildInReleaseMode; then
+    CFLAGS="${CFLAGS} ${optflags}";
+    CXXFLAGS="${CXXFLAGS} ${optflags}";
+  else
+    # In debug mode, do not set linker edit=no option so that we can inspect symbols
+    ZOPEN_LDFLAGSD=""
+  fi
+
+  if [ "${LDFLAGS}x" = "x" ]; then
+    export LDFLAGS="${ZOPEN_LDFLAGSD}"
+  fi
+
+  # For compatibility with the default 'make' /etc/startup.mk on z/OS
+  export CCC="${CXX}"
+  export CCCFLAGS="${CXXFLAGS}"
+
+  # Certificate information
+  export SSL_CERT_FILE="${ZOPEN_CA}"
+  export GIT_SSL_CAINFO="${ZOPEN_CA}"
+  export CURL_CA_BUNDLE="${ZOPEN_CA}"
+
+  setDepsEnv
+
+  # Dependencies such as libraries may add flags 
+  export CPPFLAGS="${CPPFLAGS} ${ZOPEN_EXTRA_CPPFLAGS}"
+  export CFLAGS="${CFLAGS} ${ZOPEN_EXTRA_CFLAGS}"
+  export CXXFLAGS="${CXXFLAGS} ${ZOPEN_EXTRA_CXXFLAGS}"
+  export LDFLAGS="${LDFLAGS} ${ZOPEN_EXTRA_LDFLAGS}"
+  export LIBS="${ZOPEN_EXTRA_LIBS}"
+
+
+  if [ "${ZOPEN_NUM_JOBS}x" = "x" ]; then
+    ZOPEN_NUM_JOBS=$("${utildir}/numcpus.rexx")
+
+    # Use half of the CPUs by default
+    export ZOPEN_NUM_JOBS=$((ZOPEN_NUM_JOBS / 2))
+  fi
+
+  if [ $ZOPEN_NUM_JOBS -lt 1 ]; then
+    export ZOPEN_NUM_JOBS=1
+  fi
+
+  if [ "${ZOPEN_BOOTSTRAP}x" = "x" ]; then
+    export ZOPEN_BOOTSTRAP="${ZOPEN_BOOTSTRAPD}"
+  fi
+  if [ "${ZOPEN_BOOTSTRAP_OPTS}x" = "x" ]; then
+    export ZOPEN_BOOTSTRAP_OPTS="${ZOPEN_BOOTSTRAP_OPTSD}"
+  fi
+  if [ "${ZOPEN_CONFIGURE}x" = "x" ]; then
+    export ZOPEN_CONFIGURE="${ZOPEN_CONFIGURED}"
+  fi
+  if [ "${ZOPEN_MAKE}x" = "x" ]; then
+    export ZOPEN_MAKE="${ZOPEN_MAKED}"
+  fi
+  if [ "${ZOPEN_MAKE_OPTS}x" = "x" ]; then
+    export ZOPEN_MAKE_OPTS="-j${ZOPEN_NUM_JOBS}"
+  fi
+  if [ "${ZOPEN_CHECK}x" = "x" ]; then
+    export ZOPEN_CHECK="${ZOPEN_CHECKD}"
+  fi
+  if [ "${ZOPEN_CHECK_TIMEOUT}x" = "x" ]; then
+    export ZOPEN_CHECK_TIMEOUT="${ZOPEN_CHECK_TIMEOUTD}"
+  fi
+  if [ "${ZOPEN_CHECK_OPTS}x" = "x" ]; then
+    export ZOPEN_CHECK_OPTS="${ZOPEN_CHECK_OPTSD}"
+  fi
+  if [ "${ZOPEN_INSTALL}x" = "x" ]; then
+    export ZOPEN_INSTALL="${ZOPEN_INSTALLD}"
+  fi
+  if [ "${ZOPEN_INSTALL_OPTS}x" = "x" ]; then
+    export ZOPEN_INSTALL_OPTS="${ZOPEN_INSTALL_OPTSD}"
+  fi
+  if [ "${ZOPEN_CLEAN}x" = "x" ]; then
+    export ZOPEN_CLEAN="${ZOPEN_CLEAND}"
+  fi
+  if [ "${ZOPEN_CLEAN_OPTS}x" = "x" ]; then
+    export ZOPEN_CLEAN_OPTS="${ZOPEN_CLEAN_OPTSD}"
+  fi
+  LOG_PFX=$(date +%C%y%m%d_%H%M%S)
+}
+
+#
+# Tag files that we do not plan to put under 'git' for patching as binary
+#
+tagBinaryFiles()
+{
+  absdir="$1"
+  (cd "${absdir}" && find . -name "*.pdf" -o -name "*.png" -o -name "*.bat" -o -name "*.jpg" -o -name "*.gif" -o -name "*.ttf" -o -name "*.wbmp" -name "*.gmo" -name "*.po" -name "*.der" ! -type d ! -type l | xargs -I {} chtag -b {})
+}
+
+tagUntaggedFilesAsISO8859_1()
+{
+  absdir="$1"
+  (cd "${absdir}" && chtag -qpR . | awk '{ if ($1 == "-") { if (NF == 4) { print $4 } else { sub(/^[ ]*([^ ]+ +){3}/, ""); print $0; }}}' | xargs -I {} chtag -tcISO8859-1 {})
+}
+#
+# 'Quick' way to find untagged non-binary files. If the list of extensions grows, something more
+# elegant is required
+#
+tagTree()
+{
+  dir="$1"
+  absdir=$(cd ${dir} && echo "${PWD}")
+  tagBinaryFiles "${absdir}"
+  tagUntaggedFilesAsISO8859_1 "${absdir}"
+}
+
+gitClone()
+{
+  if ! git --version >/dev/null 2>/dev/null; then
+    printError "git is required to download from the git repo"
+  fi
+  gitraw=$(git --version | awk '{print $3;}')
+  v=${gitraw%%.*}
+  vr=${gitraw%.*}
+  r=${vr##*.}
+  if [ ${v} -lt 2 ] || [ ${r} -lt 26 ]; then 
+    printError "Need to be running at least git 2.26"
+  fi
+
+  gitname=$(basename "$ZOPEN_GIT_URL")
+  dir=${gitname%%.*}
+  if [ -d "${dir}" ]; then
+    printInfo "Using existing git clone'd directory ${dir}"
+  else
+    printInfo "Clone and create ${dir}"
+    if ! runAndLog "git clone \"${ZOPEN_GIT_URL}\""; then
+      printError "Unable to clone ${gitname} from ${ZOPEN_GIT_URL}"
+    fi
+    forceRebuild=true
+    if [ "${ZOPEN_GIT_BRANCH}x" != "x" ]; then
+      if ! git -C "${dir}" checkout "${ZOPEN_GIT_BRANCH}" >/dev/null; then
+        printError"Unable to checkout ${ZOPEN_GIT_URL} branch ${ZOPEN_GIT_BRANCH}"
+      fi
+    elif [ "${ZOPEN_GIT_TAG}x" != "x" ]; then
+      if ! git -C "${dir}" checkout tags/"${ZOPEN_GIT_TAG}" -b "${ZOPEN_GIT_TAG}" >/dev/null; then
+        printError"Unable to checkout ${ZOPEN_GIT_URL} tag ${ZOPEN_GIT_TAG}"
+      fi
+    fi
+    tagTree "${dir}"
+  fi
+  echo "${dir}"
+}
+
+extractTarBall()
+{
+  tarballz="$1"
+  dir="$2"
+
+  printInfo "Extract tarball ${tarballz} into ${dir}"
+  ext=${tarballz##*.}
+  if [ "${ext}x" = "xzx" ]; then
+    if ! xz -d "${tarballz}"; then
+      printError "Unable to use xz to decompress ${tarballz}"
+    fi
+    tarball=${tarballz%%.xz}
+  elif [ "${ext}x" = "gzx" ]; then
+    if ! gunzip "${tarballz}"; then
+      printError "Unable to use gunzip to decompress ${tarballz}"
+    fi
+    tarball=${tarballz%%.gz}
+  elif [ "${ext}x" = "bz2x" ]; then
+    if ! bunzip2 "${tarballz}"; then
+      printError "Unable to use bunzip2 to decompress ${tarballz}"
+    fi
+    tarball=${tarballz%%.bz2}
+  else
+    printError "Extension ${ext} is an unsupported compression technique. Add code"
+  fi
+
+  tar -xf "${tarball}" 2>&1 >/dev/null | grep -v FSUM7171 >/dev/null
+  if [ $? -gt 1 ]; then
+    printError "Unable to untar ${tarball}"
+  fi
+  rm -f "${tarball}"
+
+  # tar will incorrectly tag files as 1047, so just clear the tags
+  chtag -R -r "${dir}"
+
+  tagTree "${dir}"
+  cd "${dir}" || printError "Cannot cd to ${dir}"
+
+  # Clean up .git* files since we will be creating our own local git repo for applying patches
+  rm -rf .git* .travis*
+
+  # Create .gitattributes file 
+  if ! asciiecho "* text working-tree-encoding=ISO8859-1" ".gitattributes"; then
+    printError "Unable to create .gitattributes for tarball"
+  fi
+
+  #
+  # Need to keep this line and 'tagFilesAsBinary' in sync
+  # Perhaps this can be done with a function but be aware of blanks, newlines, etc. in file names
+  #
+  if [ "${ZOPEN_GIT_SETUP}x" = "Nx" ]; then
+    if ! git init . >/dev/null || ! git commit --allow-empty -m "Create Empty Repository for patch management" >/dev/null; then
+      printError "Unable to initialize empty git repository for tarball"
+    fi
+  else
+    if ! git init . >/dev/null; then
+      printError "Unable to initialize git repository for tarball"
+    fi
+
+    if ! asciiecho "
+*.jpg
+*.dvi
+*.xz
+*.gz
+*.jpeg
+*.png
+*.gif
+*.bat
+*.pdf
+*.ttf
+*.wbmp
+*.gmo
+*.po
+*.der
+" ".gitignore"; then
+      printError "Unable to create .gitignore for tarball"
+    fi
+
+    if ! git add . >/dev/null; then
+      printError "Unable to add files for git repository"
+    fi
+
+    if ! git commit --allow-empty -m "Create Repository for patch management" >/dev/null; then
+      printError "Unable to commit git repository"
+    fi
+  fi
+}
+
+downloadTarBall()
+{
+  if ! curl --version >/dev/null; then
+    printError "curl is required to download a tarball"
+  fi
+  tarballz=$(basename "$ZOPEN_TARBALL_URL")
+  dir=${tarballz%%.tar.*}
+  if [ -d "${dir}" ]; then
+    echo "Using existing tarball directory ${dir}" >&2
+  else
+    forceRebuild=true
+    if ${verbose}; then
+      printVerbose "curl -L -o ${tarballz} ${ZOPEN_TARBALL_URL}"
+    fi
+    #
+    # Some older tarballs (openssl) contain a pax_global_header file. Remove it
+    # in advance so that unzip won't fail
+    #
+    rm -f pax_global_header
+
+    # 
+    # Some sites fail on the first call because the name resolver hasn't resolved.
+    # Make a first call to just get the headers and toss everything out just to
+    # set up the cache (requirec for openssl)
+    #
+    curl -I "${ZOPEN_TARBALL_URL}" >/dev/null 2>&1
+
+    if ! curl -L -0 -o "${tarballz}" "${ZOPEN_TARBALL_URL}";  then
+      if [ -f "${tarballz}" ] && [ $(wc -c "${tarballz}" | awk '{print $1}') -lt 1024 ]; then
+        cat "${tarballz}" >/dev/null
+      else
+        printError "Re-try curl for diagnostics"
+        curl -L -0 -o /dev/null "${ZOPEN_TARBALL_URL}"
+      fi
+      printError "Unable to download ${tarballz} from ${ZOPEN_TARBALL_URL}"
+    fi
+    # curl tags the file as ISO8859-1 (oops) so the tag has to be removed
+    chtag -b "${tarballz}"
+
+    extractTarBall "${tarballz}" "${dir}"
+  fi
+  echo "${dir}"
+}
+
+#
+# This function applies patches previously created.
+# To _create_ a patch, do the following:
+#  -If required, create a sub-directory in the ${ZOPEN_ROOT}/patches directory called PR<x>, where <x> indicates
+#   the order of the pull-request (e.g. if PR3 needs to be applied before your PR, make sure your PR
+#   is at least PR4)
+#  -Create, or update the PR readme called ${ZOPEN_ROOT}/patches/PR<x>/README.md describing this patch
+#  -For each file you have changed:
+#   -cd to the code directory and perform git diff <filename> >${ZOPEN_ROOT}/patches/PR<x>/<filename>.patch
+#
+applyPatches()
+{
+  printHeader "Applying patches"
+  if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
+    tarballz=$(basename "$ZOPEN_TARBALL_URL")
+    code_dir="${ZOPEN_ROOT}/${tarballz%%.tar.*}"
+  else
+    gitname=$(basename "$ZOPEN_GIT_URL")
+    code_dir="${ZOPEN_ROOT}/${gitname%%.*}"
+  fi
+
+  patch_dir="${ZOPEN_ROOT}/patches"
+  if ! [ -d "${patch_dir}" ]; then
+    printWarning "${patch_dir} does not exist - no patches to apply"
+    return 0
+  fi
+
+  moved=false
+  if [ -d "${code_dir}/.git-for-patches" ] && ! [ -d "${code_dir}/.git" ]; then
+    mv "${code_dir}/.git-for-patches" "${code_dir}/.git" || exit 99
+    moved=true
+  fi
+
+  if ! [ -d "${code_dir}/.git" ]; then
+    printWarning "applyPatches requires ${code_dir} to be git-managed but there is no .git directory. No patches applied"
+    return 0
+  fi
+
+  patches=$( (cd "${patch_dir}" && find . -name "*.patch" | sort))
+  if [ "${patches}x" = "x" ]; then
+    printWarning "No patches in ${patch_dir} to apply"
+    return 0
+  fi
+  results=$( (cd "${code_dir}" && git status --porcelain --untracked-files=no 2>&1))
+  failedcount=0
+  if [ "${results}" != '' ]; then
+    printInfo "Existing Changes are active in ${code_dir}."
+    printInfo "To re-apply patches, perform a git reset on ${code_dir} prior to running applyPatches again."
+    return 0
+  else
+    for patch in $patches; do
+      p="${patch_dir}/${patch}"
+
+      patchsize=$(wc -c "${p}" | awk '{ print $1 }')
+      if [ ${patchsize} -eq 0 ]; then
+        printWarning "Warning: patch file ${p} is empty - nothing to be done"
+      else
+        printInfo "Applying ${p}"
+        if ! out=$( (cd "${code_dir}" && git apply --check "${p}" 2>&1 && git apply "${p}" 2>&1 )); then
+          printSoftError "Patch of make tree failed (${p})."
+          printSoftError "${out}"
+          failedcount=$((failedcount + 1))
+          break
+        fi
+      fi
+    done
+  fi
+
+  # Tag the files that were just updated (again) as ASCII (hopefully can remove after we build our own git)
+  (cd "${code_dir}" && git status --untracked-files -s | awk '{ $1=""; print; }' | xargs -I {} chtag -tcISO8859-1 {})
+  if ${moved}; then
+    mv "${code_dir}/.git" "${code_dir}/.git-for-patches" || exit 99
+  fi
+
+  if [ $failedcount -ne 0 ]; then
+    exit $failedcount
+  fi
+  return 0
+}
+
+getCode()
+{
+  printHeader "Building ${ZOPEN_ROOT}"
+  cd "${ZOPEN_ROOT}" || exit 99
+
+  if [ "${ZOPEN_TYPE}x" = "GITx" ]; then
+    printInfo "Checking if git directory already cloned"
+    if ! dir=$(gitClone); then
+      return 4
+    fi
+  elif [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
+    printInfo "Checking if tarball already downloaded"
+    if ! dir=$(downloadTarBall); then
+      return 4
+    fi
+  else
+    printError "ZOPEN_TYPE should be one of GIT or TARBALL"
+    return 4
+  fi
+  echo "${dir}"
+}
+
+create_fifo_pipe()
+{
+  file="$1"
+  if [ -p $TMP_FIFO_PIPE ]; then
+    rm $TMP_FIFO_PIPE
+  fi
+  mkfifo $TMP_FIFO_PIPE
+  chtag -tc 819 $TMP_FIFO_PIPE
+  touch ${file} && chtag -tc 819 ${file}
+  tee ${file} < $TMP_FIFO_PIPE &
+  TEE_PID=$!
+}
+
+
+cleanup()
+{
+  if [ -n "${ZOPEN_CLEAN_CMD}" ] && [ -f "${ZOPEN_LOG_DIR}/config.success" ] ; then
+    printHeader "Running Cleanup"
+    cleanlog="${ZOPEN_LOG_DIR}/${LOG_PFX}_clean.log"
+    create_fifo_pipe "${cleanlog}"
+    if ! runAndLog "${ZOPEN_CLEAN_CMD} >$TMP_FIFO_PIPE 2>&1"; then
+      printError "Cleanup failed. Log: ${cleanlog}" >&2
+    fi
+  fi
+  [[ ! -f "${ZOPEN_LOG_DIR}/bootstrap.success" ]] || rm ${ZOPEN_LOG_DIR}/bootstrap.success
+  [[ ! -f "${ZOPEN_LOG_DIR}/config.success" ]] || rm ${ZOPEN_LOG_DIR}/config.success
+}
+
+bootstrap()
+{
+  bootstrapStartTime=$SECONDS
+  if [ -n "${ZOPEN_BOOTSTRAP_CMD}" ] ; then
+    printHeader "Running Bootstrap"
+    if [ -r "${ZOPEN_LOG_DIR}/bootstrap.success" ]; then
+      echo "Using previous successful bootstrap. Specify -f to force a bootstrap." >&2
+    else
+      bootlog="${ZOPEN_LOG_DIR}/${LOG_PFX}_bootstrap.log"
+      create_fifo_pipe "${bootlog}"
+      if ! runAndLog "${ZOPEN_BOOTSTRAP_CMD} >$TMP_FIFO_PIPE 2>&1"; then
+        printError "Bootstrap failed. Log: ${bootlog}" >&2
+      fi
+      touch ${ZOPEN_LOG_DIR}/bootstrap.success
+    fi
+  else
+    printHeader "Skip Bootstrap"
+  fi
+  printElapsedTime verbose "bootstap" $bootstrapStartTime
+  
+}
+
+configure()
+{
+  configureStartTime=$SECONDS
+  if [ -n "${ZOPEN_CONFIGURE_CMD}" ] ; then
+    printHeader "Running Configure"
+    if [ -r "${ZOPEN_LOG_DIR}/config.success" ]; then
+      echo "Using previous successful configuration. Specify -f to force a configure." >&2
+    else
+      configlog="${ZOPEN_LOG_DIR}/${LOG_PFX}_config.log"
+      create_fifo_pipe "${configlog}"
+      if ! runAndLog "${ZOPEN_CONFIGURE_CMD} >$TMP_FIFO_PIPE 2>&1"; then
+        if [ "${ZOPEN_CONFIGURE_MINIMAL}" = "yes" ]; then
+          printError "Configure (minimal) failed. Log: ${configlog}"
+        else
+          printError "Configure (full) failed. Log: ${configlog}"
+        fi
+      fi
+      touch ${ZOPEN_LOG_DIR}/config.success
+    fi
+  else
+    printHeader "Skip Configure"
+  fi
+  printElapsedTime verbose "configure" $configureStartTime
+}
+
+build()
+{
+  buildStartTime=$SECONDS
+  makelog="${ZOPEN_LOG_DIR}/${LOG_PFX}_build.log"
+  if [ -n "${ZOPEN_MAKE_CMD}" ]; then
+    printHeader "Running Build"
+    create_fifo_pipe "${makelog}"
+    if ! runAndLog "${ZOPEN_MAKE_CMD} > $TMP_FIFO_PIPE"; then
+      if [ "${ZOPEN_MAKE_MINIMAL}" = "yes" ]; then
+        printError "Make (minimal) failed. Log: ${makelog}"
+      else
+        printError "Make (full) failed. Log: ${makelog}"
+      fi
+    fi
+  else
+    printHeader "Skipping Build"
+  fi
+  printElapsedTime verbose "build" $buildStartTime
+}
+
+check()
+{
+  checkStartTime=$SECONDS
+  if command -V "zopen_pre_check" >/dev/null 2>&1; then
+    printVerbose "Running zopen_pre_check"
+    zopen_pre_check "${ZOPEN_INSTALL_DIR}"
+  fi
+  checklog="${ZOPEN_LOG_DIR}/${LOG_PFX}_check.log"
+  results=$ZOPEN_TEST_STATUS_SKIPPED # skipped
+  if [ -n "${ZOPEN_CHECK_CMD}" ]; then
+    printHeader "Running Check"
+    create_fifo_pipe "${checklog}"
+    runInBackgroundWithTimeoutAndLog "${ZOPEN_CHECK_CMD} > $TMP_FIFO_PIPE 2>&1" "${ZOPEN_CHECK_TIMEOUT}"
+    if command -V "${ZOPEN_CHECK_RESULTS}" >/dev/null 2>&1; then
+      testStatus="$(${ZOPEN_CHECK_RESULTS} "${ZOPEN_LOG_DIR}" "${LOG_PFX}")"
+      printVerbose "Test status:\n$testStatus"
+      testStatusError=false
+      if echo "$testStatus" | grep -q -E "actualFailures:[ ]*[0-9]+"; then
+        failures=$(echo "$testStatus" | grep "actualFailures:" | sed -e "s/.*actualFailures://" | tr -d ' ')
+      else
+        printSoftError "${ZOPEN_CHECK_RESULTS} needs to emit an actualFailures:<number> line"
+        testStatusError=true
+      fi
+      if echo "$testStatus" | grep -q -E "expectedFailures:[ ]*[0-9]+"; then
+        expected=$(echo "$testStatus" | grep "expectedFailures:" | sed -e "s/.*expectedFailures://" | tr -d ' ')
+      else
+        printSoftError "${ZOPEN_CHECK_RESULTS} needs to emit an expectedFailures:<number> line"
+      	testStatusError=true
+      fi
+      if echo "$testStatus" | grep -q -E "totalTests:[ ]*[0-9]+"; then
+        totalTests=$(echo "$testStatus" | grep "totalTests:" | sed -e "s/.*totalTests://" | tr -d ' ')
+        if [ $totalTests -eq 0 ]; then
+          printSoftError "Total tests is 0"
+          testStatusError=true
+        fi
+      else
+        printSoftError "${ZOPEN_CHECK_RESULTS} needs to emit an totalTests:<number> line"
+      	testStatusError=true
+      fi
+      if ${testStatusError}; then
+        printError "Test Status:\n$testStatus"
+      fi 
+      success="$((totalTests-failures))"
+      percent="$(echo "$success" "$totalTests" | awk '{printf "%.0f", $1 * 100 / $2}')"
+      percenthundreth="$(echo "$success" "$totalTests" | awk '{printf "%.2f", $1 * 100 / $2}')"
+      summary="$success tests pass out of $totalTests tests - ${percenthundreth}% success rate"
+      printVerbose "Test results: $summary"
+      if ! [ $percent -eq $percent ]; then # not a number
+        results=$ZOPEN_TEST_STATUS_ERROR
+        ZOPEN_STATUS="Error (could not run tests)" # bad return code from check results
+      else
+        if [ $percent -eq 100 ]; then
+          results=$ZOPEN_TEST_STATUS_ALL_PASSED
+          ZOPEN_STATUS="Green ($summary)" # All tests passed
+        elif [ $percent -ge 50 ]; then
+          results=$ZOPEN_TEST_STATUS_MOST_PASSED
+          ZOPEN_STATUS="Blue ($summary)" # Most tests passed
+        elif [ $percent -eq 0 ]; then
+          results=$ZOPEN_TEST_STATUS_NONE_PASSED
+          ZOPEN_STATUS="Red ($summary)" # Pretty much non-functional
+        elif [ $percent -lt 50 ]; then
+          results=$ZOPEN_TEST_STATUS_SOME_PASSED
+          ZOPEN_STATUS="Yellow ($summary)" # Most tests failed
+        fi
+      fi
+      if [ $failures -le $expected ]; then
+        printElapsedTime verbose "check" $checkStartTime
+        return 0
+      else
+        printElapsedTime verbose "check" $checkStartTime
+        printError "Failures ($failures) not less than than expected ($expected). Failing...";
+      fi
+    fi
+  else
+    printHeader "Skipping Check"
+    ZOPEN_STATUS="Skipped (tests skipped)" # Skipped tests
+  fi
+  printElapsedTime verbose "check" $checkStartTime
+}
+
+replaceHardcodedPaths()
+{
+  printHeader "Replacing hardcoded ${ZOPEN_INSTALL_DIR} path"
+  for f in $(find ${ZOPEN_INSTALL_DIR}/ -type f | xargs grep -l "${ZOPEN_INSTALL_DIR}" 2>/dev/null); do
+    printVerbose "Processing $f"
+    cp $f $f.tmp && sed -e "s#${ZOPEN_INSTALL_DIR}#ZOPEN_INSTALL_ROOT#g" $f.tmp > $f && rm $f.tmp;
+  done
+}
+
+createEnv()
+{
+  printHeader "Creating ${ZOPEN_INSTALL_DIR}/.env"
+  projectName=$(echo $ZOPEN_NAME | cut -d "-" -f 1 | awk '{print toupper($0)}')
+  cat <<zz >"${ZOPEN_INSTALL_DIR}/.env"
+if ! [ -f ./.env ]; then
+  echo "Need to source from the .env directory" >&2
+  return 0
+fi
+export _BPXK_AUTOCVT=ON
+export _CEE_RUNOPTS="\$_CEE_RUNOPTS FILETAG(AUTOCVT,AUTOTAG) POSIX(ON)"
+export _TAG_REDIR_IN=txt
+export _TAG_REDIR_ERR=txt
+export _TAG_REDIR_OUT=txt
+export ${projectName}_HOME=\${PWD}
+for f in \$(find \$PWD/ -type f | xargs grep -l \"ZOPEN_INSTALL_ROOT\" 2>/dev/null); do
+  if [ \"\$f\" != \"\${PWD}/.env\" ]; then
+    cp \$f \$f.tmp && sed -e \"s#ZOPEN_INSTALL_ROOT#\${PWD}#g\" \$f.tmp  > \$f && rm \$f.tmp;
+  fi
+done
+zz
+
+  if [ -d "${ZOPEN_INSTALL_DIR}/bin" ]; then
+    echo "export PATH=\"\${PWD}/bin:\$PATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
+  fi
+  if [ -d "${ZOPEN_INSTALL_DIR}/lib" ]; then
+    echo "export LIBPATH=\"\${PWD}/lib:\$LIBPATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
+  fi
+  if [ -d "${ZOPEN_INSTALL_DIR}/share/man" ]; then
+    echo "export MANPATH=\"\${PWD}/share/man:\$MANPATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
+  fi
+  if command -V "${ZOPEN_APPEND_TO_ENV}" >/dev/null 2>&1; then
+    printVerbose "Appending additional environment variables..."
+    append_to_env="$(${ZOPEN_APPEND_TO_ENV})"
+    echo "$append_to_env" >> "${ZOPEN_INSTALL_DIR}/.env"
+  fi
+}
+
+createReadme()
+{
+  printHeader "Creating ${ZOPEN_INSTALL_DIR}/README.md"
+  cp "${utildir}/../data/README_header.md" "${ZOPEN_INSTALL_DIR}/README.md"
+  if [ -f "${ZOPEN_ROOT}/README.md" ]; then
+    cat "${ZOPEN_ROOT}/README.md" >> "${ZOPEN_INSTALL_DIR}/README.md"
+  fi
+  cat "${utildir}/../data/README_footer.md" >> "${ZOPEN_INSTALL_DIR}/README.md"
+}
+
+install()
+{
+  installStartTime=$SECONDS
+  if [ -n "${ZOPEN_INSTALL_CMD}" ]; then
+    printHeader "Running Install"
+    installlog="${ZOPEN_LOG_DIR}/${LOG_PFX}_install.log"
+    create_fifo_pipe "${installlog}"
+    if ! runAndLog "${ZOPEN_INSTALL_CMD} > $TMP_FIFO_PIPE"; then
+      printError "Install failed. Log: ${installlog}"
+    fi
+    createEnv
+    replaceHardcodedPaths
+
+    if command -V "zopen_post_install" >/dev/null 2>&1; then
+      printVerbose "Running zopen_post_install"
+      zopen_post_install ${ZOPEN_INSTALL_DIR}
+    fi
+
+    createReadme
+
+    # Store test.status into installed dir and build dir for cicd
+    touch "${ZOPEN_INSTALL_DIR}/test.status"
+    chtag -tc 819 "${ZOPEN_INSTALL_DIR}/test.status"
+    echo "$ZOPEN_STATUS" > "${ZOPEN_INSTALL_DIR}/test.status"
+
+    if $generatePax; then
+      printHeader "Generating pax.Z from ${ZOPEN_INSTALL_DIR}"
+      if ! runAndLog "${ZOPEN_PAX_CMD}"; then
+        printError "Could not generate pax \"${paxFileName}\""
+      fi
+    fi
+    if [ -n "${ZOPEN_LINK_CMD}" ]; then
+      printHeader "Generating symlink from ${linkPath} to ${ZOPEN_INSTALL_DIR}"
+      if ! runAndLog "${ZOPEN_LINK_CMD}"; then
+        printError "Link command failed"
+      fi
+    fi
+    generateOCI $ZOPEN_NAME
+  else
+    printHeader "Skipping Install"
+  fi
+  printElapsedTime verbose "install" $installStartTime
+}
+
+#
+# Figure out the 'bootstrap', 'configure', 'make', 'check', and 'install' commands here so that
+# they are available within an interactive shell environment using --shell.
+#
+resolveCommands()
+{
+  if [ -z "${ZOPEN_NAME}" ]; then
+    ZOPEN_NAME="${dir}"
+    if [ "${ZOPEN_TYPE}x" = "GITx" ]; then
+      branch=$(git rev-parse --abbrev-ref HEAD 2>&1 | sed "s/\//./g")
+      ZOPEN_NAME="${dir}-${branch}"
+    fi
+  fi
+  if [ "${ZOPEN_INSTALL_DIR}x" = "x" ]; then
+    export ZOPEN_INSTALL_DIR="${HOME}/zopen/prod/${ZOPEN_NAME}"
+  fi
+  if [ "${ZOPEN_LOG_DIR}x" = "x" ]; then
+    export ZOPEN_LOG_DIR="${ZOPEN_ROOT}/log"
+  fi
+
+  [[ -d ${ZOPEN_LOG_DIR} ]] || mkdir -p ${ZOPEN_LOG_DIR}
+
+  if [ "${ZOPEN_BOOTSTRAP}x" != "skipx" ] && [ ! -z "$(command -v ${ZOPEN_BOOTSTRAP})" ]; then
+    export ZOPEN_BOOTSTRAP_CMD="\"${ZOPEN_BOOTSTRAP}\" ${ZOPEN_BOOTSTRAP_OPTS}"
+  else
+    unset ZOPEN_BOOTSTRAP_CMD
+  fi
+
+  if [ "${ZOPEN_CONFIGURE_OPTS}x" = "x" ]; then
+      case "${ZOPEN_CONFIGURE}" in
+        (*cmake*)
+          export ZOPEN_CONFIGURE_OPTS="--install-prefix ${ZOPEN_INSTALL_DIR} ${ZOPEN_EXTRA_CONFIGURE_OPTS}"
+          ;;
+        (*)
+          export ZOPEN_CONFIGURE_OPTS="--prefix=${ZOPEN_INSTALL_DIR} ${ZOPEN_EXTRA_CONFIGURE_OPTS}"
+          ;;
+      esac
+  fi
+  if [ "${ZOPEN_CONFIGURE}x" != "skipx" ]; then
+    if [ "${ZOPEN_CONFIGURE_MINIMAL}x" = "x" ]; then
+      case "${ZOPEN_CONFIGURE}" in
+        (*cmake*)
+          export ZOPEN_CONFIGURE_CMD="\"${ZOPEN_CONFIGURE}\" ${ZOPEN_CONFIGURE_OPTS} -DCMAKE_C_COMPILER=${CC} -DCMAKE_C_FLAGS=\"${CPPFLAGS} ${CFLAGS}\" -DCMAKE_CXX_COMPILER=${CXX} -DCMAKE_CXX_FLAGS=\"${CPPFLAGS} ${CXXFLAGS}\" -DCMAKE_CXX_LINK_LIBRARY_FLAG=\"${LDFLAGS}\" -DCMAKE_C_LINK_LIBRARY_FLAG=\"${LDFLAGS}\" -DCMAKE_CXX_STANDARD_LIBRARIES=\"${LIBS}\" -DCMAKE_C_STANDARD_LIBRARIES=\"${LIBS}\""
+          ;;
+        (*)
+          export ZOPEN_CONFIGURE_CMD="\"${ZOPEN_CONFIGURE}\" ${ZOPEN_CONFIGURE_OPTS} CC=${CC} CPPFLAGS=\"${CPPFLAGS}\" CFLAGS=\"${CFLAGS}\" CXX=${CXX} CXXFLAGS=\"${CXXFLAGS}\" LDFLAGS=\"${LDFLAGS}\" LIBS=\"${LIBS}\" LDLIBS=\"${LIBS}\""
+          ;;
+      esac
+      export ZOPEN_CONFIGURE_MINIMAL="no"
+    else
+      export ZOPEN_CONFIGURE_CMD="\"${ZOPEN_CONFIGURE}\" ${ZOPEN_CONFIGURE_OPTS}"
+      export ZOPEN_CONFIGURE_MINIMAL="yes"
+    fi
+  else
+    unset ZOPEN_CONFIGURE_CMD
+    unset ZOPEN_CONFIGURE_MINIMAL_CMD
+  fi
+  
+  if [ "${ZOPEN_MAKE}x" != "skipx" ] && [ ! -z "$(command -v ${ZOPEN_MAKE})" ] ; then
+    if [ "${ZOPEN_MAKE_MINIMAL}x" = "x" ]; then
+      export ZOPEN_MAKE_CMD="\"${ZOPEN_MAKE}\" ${ZOPEN_MAKE_OPTS} CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\""
+      export ZOPEN_MAKE_MINIMAL="no"
+    else
+      export ZOPEN_MAKE_CMD="\"${ZOPEN_MAKE}\" ${ZOPEN_MAKE_OPTS}"
+      export ZOPEN_MAKE_MINIMAL="yes"
+    fi
+  else
+    unset ZOPEN_MAKE_CMD
+  fi
+
+  if [ "${ZOPEN_CHECK}x" != "skipx" ] && ! ${skipcheck}; then
+    export ZOPEN_CHECK_CMD="\"${ZOPEN_CHECK}\" ${ZOPEN_CHECK_OPTS} CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\""
+    export ZOPEN_CHECK_RESULTS_CMD="\"${ZOPEN_CHECK_RESULTS}\" \"${ZOPEN_LOG_DIR}\" \"${LOG_PFX}\""
+  else
+    unset ZOPEN_CHECK_CMD
+    unset ZOPEN_CHECK_RESULTS_CMD
+  fi
+
+  if [ "${ZOPEN_INSTALL}x" != "skipx" ] && [ ! -z "$(command -v ${ZOPEN_INSTALL})" ]; then
+    export ZOPEN_INSTALL_CMD="${ZOPEN_INSTALL} ${ZOPEN_INSTALL_OPTS}"
+    [[ -d ${ZOPEN_ROOT}/install ]] || mkdir -p ${ZOPEN_ROOT}/install
+    paxFileName="${ZOPEN_ROOT}/install/${ZOPEN_NAME}.${LOG_PFX}.zos.pax.Z"
+    export ZOPEN_PAX_CMD="pax -w -z -x pax \"-s#${ZOPEN_INSTALL_DIR}/#${ZOPEN_NAME}.${LOG_PFX}.zos/#\" -f \"${paxFileName}\" \"${ZOPEN_INSTALL_DIR}/\""
+    if $generateSymLink; then
+      PROJECT_NAME="$(echo ${ZOPEN_NAME} | cut -d'-' -f1)"
+      if [ "${PROJECT_NAME}" != "${ZOPEN_NAME}" ]; then
+        linkPath="$(dirname ${ZOPEN_INSTALL_DIR})/${PROJECT_NAME}"
+        export ZOPEN_LINK_CMD="if [ -h ${linkPath} ]; then rm ${linkPath}; fi && ln -s ${ZOPEN_INSTALL_DIR} ${linkPath}"
+      fi
+    fi
+  else
+    unset ZOPEN_INSTALL_CMD
+    unset ZOPEN_PAX_CMD
+    unset ZOPEN_LINK_CMD
+  fi
+
+  if [ "${ZOPEN_CLEAN}x" != "skipx" ] && [ ! -z "$(command -v ${ZOPEN_CLEAN})" ]; then
+    export ZOPEN_CLEAN_CMD="\"${ZOPEN_CLEAN}\" ${ZOPEN_CLEAN_OPTS}"
+  else
+    unset ZOPEN_CLEAN_CMD
+  fi
+
+  return 0
+}
+
+generateOCI()
+{
+  if ! ${publishOCI}; then
+    return 0;
+  fi
+  printHeader "Generating OCI Image"
+  package=$1
+  name=$(echo $package | cut -d "-" -f 1)
+  version=$(echo $package | cut -d "-" -f 2)
+
+  # Make the version OCI compat
+  case "$version" in
+      *.*.*.*) ;;
+      *.*.*)  version="$version.0";;
+      *.*)  version="$version.0.0";;
+      *) version="1.0.0.0";;
+  esac
+
+  dockerfilecontents="
+FROM scratch
+
+LABEL name=${name}
+LABEL vendor=OSS
+LABEL version=${version}
+LABEL specification=1.0.0"
+
+  cd ${ZOPEN_INSTALL_DIR}
+  if [ -f "${ZOPEN_IMAGE_DOCKERFILE_NAME}" ]; then
+    rm -f "${ZOPEN_IMAGE_DOCKERFILE_NAME}"
+  fi
+  printVerbose "Generating ${ZOPEN_IMAGE_DOCKERFILE_NAME}"
+  for file in *; do
+    dockerfilecontents="${dockerfilecontents}\nCOPY $file @{CONTAINER_READWRITE}/$file"
+  done
+
+  # Add required .env file
+  mkdir -p .zpm
+  cp .env .zpm/.env
+  dockerfilecontents="${dockerfilecontents}\nCOPY .zpm @{CONTAINER_READWRITE}/.zpm"
+
+  if ! asciiecho "$dockerfilecontents" "${ZOPEN_IMAGE_DOCKERFILE_NAME}"; then
+    printError "Unable to make ${ZOPEN_IMAGE_DOCKERFILE_NAME}"
+  fi
+
+  if [ -z $ZOPEN_IMAGE_REGISTRY ]; then
+    printWarning "Environment variable ZOPEN_IMAGE_REGISTRY is needed to push an OCI image"
+    return 4;
+  fi
+  if [ -z $ZOPEN_IMAGE_REGISTRY_ID ]; then
+    printWarning "Environment variable ZOPEN_IMAGE_REGISTRY_ID is needed to push an OCI image"
+    return 4;
+  fi
+  if [ -z $ZOPEN_IMAGE_REGISTRY_KEY_FILE ] || [ ! -r $ZOPEN_IMAGE_REGISTRY_KEY_FILE ]; then
+    printWarning "Environment variable ZOPEN_IMAGE_REGISTRY_KEY_FILE is needed to push an OCI image"
+    return 4;
+  fi
+  if [ -z "$(command -v ${ZOPEN_IMAGE_DOCKER_NAME})" ]; then
+    printWarning "${ZOPEN_IMAGE_DOCKER_NAME} is not present on your system"
+    return 4
+  fi
+  printVerbose "Generating OCI Image"
+  "${ZOPEN_IMAGE_DOCKER_NAME}" build -t "${name}:${version}" .
+  "${ZOPEN_IMAGE_DOCKER_NAME}" push "${name}:${version}" -i $ZOPEN_IMAGE_REGISTRY -u $ZOPEN_IMAGE_REGISTRY_ID -p @$ZOPEN_IMAGE_REGISTRY_KEY_FILE
+  cd -
+}
+
+#
+# Start of 'main'
+#
+
+if ! setDefaults; then
+  exit 4
+fi
+
+if ! processOptions $*; then
+  exit 4
+fi
+
+export ZOPEN_ROOT=$(cd "$(dirname "$buildEnvFile")"; pwd)
+
+if ! loadBuildEnv; then
+  exit 4
+fi
+
+if ! checkEnv; then
+  exit 4
+fi
+
+if ! setEnv; then
+  exit 4
+fi
+
+if ! dir=$(getCode); then
+  exit 4
+fi
+
+if ! applyPatches; then
+  exit 4
+fi
+
+if $getSourceOnly; then
+  exit 0
+fi
+
+cd "${ZOPEN_ROOT}/${dir}" || exit 99
+
+if [ "${ZOPEN_SRC_DIR}x" != "x" ]; then
+  cd "${ZOPEN_SRC_DIR}" || exit 99
+fi
+
+if ! resolveCommands; then
+  exit 4
+fi
+
+if command -V "zopen_init" >/dev/null 2>&1; then
+  printVerbose "Running zopen_init"
+  zopen_init "${ZOPEN_INSTALL_DIR}"
+fi
+
+if ${startShell}; then
+  exec /bin/sh
+fi
+
+if $cleanupBuild || $forceRebuild; then
+  cleanup
+  if  ! $forceRebuild ; then
+    exit 0
+  fi
+fi
+
+if ! bootstrap; then
+  exit 4
+fi
+
+if ! configure; then
+  exit 4
+fi
+
+if ! build; then
+  exit 4
+fi
+
+if ! check; then
+  exit 4
+fi
+
+if ! install; then
+  exit 4
+fi
+
+exit 0

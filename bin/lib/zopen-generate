@@ -1,0 +1,163 @@
+#!/bin/sh
+# Generates a zopen compatible project
+
+export utildir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
+
+. "${utildir}/common.inc"
+
+buildLicenseLookup()
+{
+  licensesCSV="${utildir}/../data/licenses.csv"
+  if [ ! -r "$licensesCSV" ]; then
+    return 4;
+  fi
+
+  validLicenseNames="$(cat $licensesCSV | tail +1 | cut -f1 -d',' | xargs)"
+}
+
+printSyntax() 
+{
+  args=$*
+  echo "zopen-generate will generate a zopen compatible project" >&2
+  echo "Syntax: zopen-generate" >&2
+}
+
+buildLicenseLookup
+
+printHeader "Generate a zopen project"
+valid=false
+while ! $valid; do
+  echo "What is the project name?"
+  name=$(getInput)
+  if ! echo "$name" | grep -q -E "port$"; then
+    valid=true
+  else
+    printWarning "$name must not end with port"
+  fi
+done
+echo "Provided a description of the project:"
+description=$(getInput)
+
+valid=false
+while ! $valid; do
+  echo "Provide the community license to use for $name's patches: (select from $validLicenseNames)"
+  license_name="$(getInput | tr -d ' ')"
+  if ! echo " $validLicenseNames" | grep -q " $license_name"; then
+    printWarning "License is not valid, please enter a license from one of these names: $validLicenseNames)"
+  else
+    licenseName="$(cat $licensesCSV | grep "\"$license_name\"" | cut -f2 -d',')"
+    licenseUrl="$(cat $licensesCSV | grep "\"$license_name\"" | cut -f4 -d',')"
+    valid=true
+  fi
+done
+echo $licenseUrl
+
+echo "Enter ${name}'s Git location: (if none, press enter)"
+gitpath=$(getInput)
+echo "Enter ${name}'s build dependencies for the Git source: (example: curl make)"
+gitdeps=$(getInput)
+echo "Enter ${name}'s Tarball location? (if none, press enter)"
+tarpath=$(getInput)
+echo "Enter ${name}'s build dependencies for the Tar source: (example: curl make)"
+tardeps=$(getInput)
+echo "Enter the default build type: (tar or git)"
+buildtype=$(getInput)
+
+project_path="${name}port"
+
+if [ -d $project_path ]; then
+  while true; do
+    echo "Directory $project_path already exists. Update it? (y, n)"
+    clobber=$(getInput)
+    if [ "$clobber" = "n" ]; then
+      exit 0
+    elif [ "$clobber" = "y" ]; then
+      break
+    fi
+  done
+fi
+
+printHeader "Generating $project_path zopen project"
+mkdir -p ${name}port/patches
+
+# Create external LICENSE
+touch "${name}port/patches/LICENSE" && chtag -tc 819 "${name}port/patches/LICENSE"
+echo "${licenseName}\nView license contents at ${licenseUrl}" > "${name}port/patches/LICENSE"
+
+buildenv="${name}port/buildenv"
+touch $buildenv && chtag -tc 819 $buildenv
+
+cp "${utildir}/../data/CONTRIBUTING.md" "${name}port/CONTRIBUTING.md"
+
+if [ ! -z "$gitpath" ]; then
+  buildenvContents="export ZOPEN_GIT_URL=\"$gitpath\"\n"
+fi
+if [ ! -z "$gitdeps" ]; then
+  buildenvContents="${buildenvContents}export ZOPEN_GIT_DEPS=\"$gitdeps\"\n"
+fi
+
+if [ ! -z "$tarpath" ]; then
+  buildenvContents="${buildenvContents}export ZOPEN_TARBALL_URL=\"$tarpath\"\n"
+fi
+if [ ! -z "$tardeps" ]; then
+  buildenvContents="${buildenvContents}export ZOPEN_TARBALL_DEPS=\"$tardeps\"\n"
+fi
+
+if [ ! -z "$buildtype" ] && [ "$buildtype" = "git" ]; then
+  buildenvContents="${buildenvContents}export ZOPEN_TYPE=\"GIT\"\n"
+else
+  buildenvContents="${buildenvContents}export ZOPEN_TYPE=\"TARBALL\"\n"
+fi
+
+buildenvContents="${buildenvContents}\nzopen_check_results()
+{
+  dir=\"\$1\"
+  pfx=\"\$2\"
+  chk=\"\$1/\$2_check.log\"
+
+  # Echo the following information to gauge build health
+  echo \"actualFailures:0\"
+  echo \"totalTests:1\"
+  echo \"expectedFailures:0\"
+}
+
+zopen_append_to_env()
+{
+  # echo envars outside of PATH, MANPATH, LIBPATH
+}"
+
+echo "$buildenvContents" > $buildenv
+
+printInfo "$buildenv created"
+
+touch "${name}port/README.md" && chtag -tc 819 "${name}port/README.md"
+cat <<EOT > "${name}port/README.md"
+${name}
+
+${description}
+EOT
+printInfo "${name}port/README.md created"
+
+touch "${name}port/cicd.groovy" && chtag -tc 819 "${name}port/cicd.groovy"
+cat <<EOT > "${name}port/cicd.groovy"
+node('linux')
+{
+  stage('Build') {
+    build job: 'Port-Pipeline', parameters: [string(name: 'PORT_GITHUB_REPO', value: 'https://github.com/ZOSOpenTools/${name}port.git'), string(name: 'PORT_DESCRIPTION', value: '${description}' )]
+  }
+}
+EOT
+
+touch "${name}port/.gitignore" && chtag -tc 819 "${name}port/.gitignore"
+cat <<EOT > "${name}port/.gitignore"
+log/
+install/
+EOT
+printInfo "${name}port/.gitignore created"
+
+cp "${utildir}/../../LICENSE" "${name}port/LICENSE"
+cp "${utildir}/../../.gitattributes" "${name}port/.gitattributes"
+printHeader "${name} project is ready! ${name}port/"
+printInfo "Create patches under the ${name}port/patches directory"
+printInfo "Run zopen build to build ${name}port"
+printInfo "Contact Mike Fulton (fultonm@ca.ibm.com) to create https://github.com/ZOSOpenTools/${name}port.git"

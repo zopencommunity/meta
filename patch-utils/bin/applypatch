@@ -1,0 +1,45 @@
+#!/bin/sh
+#
+# This tool needs to run 'off Z' (it runs successfully on a Mac)
+# It requires the tarball to be in the directory
+# you run this from
+#
+set +x
+if [ $# -lt 2 ]; then
+	echo "Syntax: $0 <tarball> <patch dir>" >&2
+	echo "  where <tarball name> is the name of a source tarball" >&2
+	echo "  and <patch dir> is the name of a directory to apply git patches from" >&2
+	exit 4
+fi
+tarball="$1"
+gitpatchdir="$2"
+tarballdir=${tarball%%.tar.gz}
+if ! [ -f "${tarball}" ] || [ "${tarballdir}" = "${tarball}" ] ; then
+	echo "Tarball ${tarball} does not exist or is not in the format <file>.tar.gz " >&2
+	exit 4
+fi
+
+if ! [ -d "${gitpatchdir}" ]; then
+	echo "Patch directory ${gitpatchdir} does not exist" >&2
+	exit 4
+fi
+tarballdir=$(cd ${tarballdir} && echo ${PWD})
+gitpatchdir=$(cd ${gitpatchdir} && echo ${PWD})
+
+rm -rf "${tarballdir}"
+tar -xvf "${tarball}"
+if ! cd "${tarballdir}"; then
+	echo "Extract of tarball ${tarball} did not create ${tarballdir}" >&2
+	exit 4
+fi
+if ! git init || ! git add . || ! git commit -m "main" || ! git checkout -b openssl ; then
+	echo "Unable to initialize a git repository for the tarball" >&2 
+	exit 4
+fi
+
+for p in ${gitpatchdir}/*.patch; do
+	if ! git apply "${p}"; then
+		echo "Unable to apply patch ${p} from ${gitpatchdir}" >&2
+		break
+	fi
+done

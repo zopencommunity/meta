@@ -1,0 +1,34 @@
+#!/bin/sh
+# Initialize zopen
+
+export utildir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
+
+. "${utildir}/common.inc"
+
+printSyntax() 
+{
+  args=$*
+  echo "zopen-init will initialize zopen (create a $HOME/.zopen-config file)" >&2
+}
+
+printHeader "Initialize zopen framework"
+
+echo "Enter the path to your zopen install directory (default: $HOME/zopen)"
+zopen_path=$(getInput)
+
+# If the user did not enter a path, use the default
+if [ -z "$zopen_path" ]; then
+  zopen_path="$HOME/zopen"
+fi
+
+if [ ! -e "$zopen_path/prod" ]; then
+  mkdir -p "$zopen_path/prod"
+fi
+if [ ! -e "$zopen_path/boot" ]; then
+  mkdir -p "$zopen_path/boot"
+fi
+
+# Save the configuration to the file
+echo "export ZOPEN_SEARCH_PATH=$zopen_path" > "$HOME/.zopen-config"
+
+printInfo "Creating config in $HOME/.zopen-config"

@@ -1,0 +1,29 @@
+#!/bin/sh
+#
+# simple utility to apply a traditional patch (meant to be run on Mac)
+#
+set +x
+if [ $# -lt 2 ]; then
+        echo "Syntax: $0 <patch dir> <patch file>" >&2
+        echo "  and <patch dir> is the name of a directory to apply standard patch to" >&2
+        echo "  and <patch> is the patch file to apply" >&2
+        exit 4
+fi
+patchdir="$1"
+patch="$2"
+if ! [ -f "${patchdir}/${patch}" ] ; then
+        echo "Patch file ${patch} does not exist " >&2
+        exit 4
+fi
+
+if ! [ -d "${patchdir}" ]; then
+        echo "Patch directory ${patchdir} does not exist" >&2
+        exit 4
+fi
+
+if ! patch --dry-run -p1 <"${patchdir}/${patch}"; then
+	echo "Unable to perform patch for ${patchdir}/${patch}" >&2
+	exit 4
+fi
+
+patch -p1 <"${patchdir}/${patch}"
