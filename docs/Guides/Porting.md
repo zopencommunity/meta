@@ -32,9 +32,9 @@ git config --global user.name "<Your Name>"
 This assumes that you have the latest version of [Git](https://my.rocketsoftware.com/RocketCommunity#/downloads) on your z/OS system.
 
 
-### Leveraging the z/OS Open Tools utils repo
+### Leveraging the z/OS Open Tools meta repo
 
-The utils repo (https://github.com/ZOSOpenTools/utils) consists of common tools and files that aid
+The meta repo (https://github.com/ZOSOpenTools/meta) consists of common tools and files that aid
 in the porting process, including the `zopen` suite of tools.  Specifically, `zopen build` provides a common way to bootstrap, configure, build, check,
 and install a software package.  `zopen download` provides a mechanism to download the latest published z/OS Open Tools.
 
@@ -80,16 +80,16 @@ are providing a `boot` version of the tool (e.g. cURL), then you will need to pr
 
 Before you begin porting a tool to z/OS, you must first identify the tool or library that you wish to port. For the sake of this guide, let's assume we are porting [jq](https://stedolan.github.io/jq/), a lightweight and flexible json parser. Before porting a tool, check if the project already exists under https://github.com/ZOSOpenTools. If it does exist, then please collaborate with the existing contributors.
 
-Begin first by cloning the https://github.com/ZOSOpenTools/utils repo.  This repo contains the `zopen` framework and it is what we will use to build, test, and install our port.
+Begin first by cloning the https://github.com/ZOSOpenTools/meta repo.  This repo contains the `zopen` framework and it is what we will use to build, test, and install our port.
 
 ```bash
 # Clone the required repositories
-git clone git@github.com:ZOSOpenTools/utils.git
+git clone git@github.com:ZOSOpenTools/meta.git
 ```
 
-Next, in order to use the `zopen` suite of tools, you must set your path environment variable to the `utils/bin` directory.
+Next, in order to use the `zopen` suite of tools, you must set your path environment variable to the `meta/bin` directory.
 ```bash
-export PATH=<pathtozopen>/utils/bin:$PATH
+export PATH=<pathtozopen>/meta/bin:$PATH
 ```
 
 Ok, now you are ready to begin porting. 
@@ -126,7 +126,7 @@ Change your current directory to the `jqport` directory: `cd jqport`. You will n
 * README.md - A description of the project
 * buildenv - The zopen configuration file that drives the build, testing, and installation of the project.
 * cicd.groovy - The CI/CD configuration file used in the Jenkins pipeline
-For more information, please visit the [zopen build README](https://github.com/ZOSOpenTools/utils)
+For more information, please visit the [zopen build README](https://github.com/ZOSOpenTools/meta)
 
 Note: `zopen build` supports projects based in github repositories or tarball locations. Since autoconf/automake are not currently functioning on z/OS, we typically choose the tarball location because it contains a `configure` script pre-packaged. Let's go ahead and do this for `jq`.
 

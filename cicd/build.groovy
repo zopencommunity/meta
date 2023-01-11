@@ -1,6 +1,6 @@
 # Build Job : https://128.168.139.253:8443/view/Framework/job/Port-Build/
-# This build job will build a https://github.com/ZOSOpenTools/utils compatible project and archive the pax.Z artifact
-# This job is configured to clone the utils repo at the outset into the current working directory.
+# This build job will build a https://github.com/ZOSOpenTools/meta compatible project and archive the pax.Z artifact
+# This job is configured to clone the meta repo at the outset into the current working directory.
 # This job must run on the z/OS zot system
 # Inputs: 
 #   - PORT_GITHUB_REPO : e.g: https://github.com/ZOSOpenTools/makeport.git
@@ -18,9 +18,9 @@ export NO_COLOR=1
 # source Jenkins environment variables on zot
 . /jenkins/.env
 
-# Add cloned utils dir to PATH
-git clone https://github.com/ZOSOpenTools/utils.git
-export PATH="$PWD/utils/bin:$PATH"
+# Add cloned meta dir to PATH
+git clone https://github.com/ZOSOpenTools/meta.git
+export PATH="$PWD/meta/bin:$PATH"
 
 # Get port name based on git repo
 PORT_NAME=$(basename "${PORT_GITHUB_REPO}")
