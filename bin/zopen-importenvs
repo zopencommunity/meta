@@ -50,7 +50,7 @@ then
 
      #Loop through zopen/boot & zopen/prod
      for path in $(echo ${depsPath} | sed "s/|/ /g") ; do
-         [ ! -d "$path" ] && echo "Directory $path DOES NOT exist skipping." && continue
+         [ ! -d "$path" ] && echo "Directory $path does not exist. Skipping." && continue
          for deps in $(find "${path}" -name ".env")
          do
           depdir=$(dirname "${deps}")
