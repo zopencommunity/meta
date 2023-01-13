@@ -1,2 +1,3 @@
 *	text	working-tree-encoding=ISO8859-1
+*.pem   text working-tree-encoding=UTF-8
 *.png   binary  working-tree-encoding=UTF-8
