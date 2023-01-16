@@ -30,6 +30,7 @@
 * [htopport](https://github.com/ZOSOpenTools/htopport)
 * [iconvport](https://github.com/ZOSOpenTools/iconvport)
 * [man-dbport](https://github.com/ZOSOpenTools/man-dbport)
+* [metaport](https://github.com/ZOSOpenTools/metaport)
 * [phpport](https://github.com/ZOSOpenTools/phpport)
 * [pkg-configport](https://github.com/ZOSOpenTools/pkg-configport)
 * [re2cport](https://github.com/ZOSOpenTools/re2cport)
@@ -46,7 +47,7 @@
 | [makeport](https://github.com/ZOSOpenTools/makeport) | 63 | 100% |autoconf, automake, bash, bison, bzip2, cmake, coreutils, cscope, ctags, curl, diffutils, expat, findutils, flex, gawk, gdbm, gettext, git, gnulib, gperf, grep, groff, gzip, hello, help2man, htop, jq, less, libtool, lua, lz4, m4, makeinfo, make, man-db, nano, ncdu, ncurses, ninja, openssl, patch, perl, php, pipeline, re2c, rsync, screen, sed, sqlite, tar, tcl, texinfo, top, unzip, vim, wget, xxhash, xz, zip, zlib, zoslib, zotsample, zstd
 | [curlport](https://github.com/ZOSOpenTools/curlport) | 48 | 99% |autoconf, automake, bash, bison, bzip2, coreutils, cscope, curl, diffutils, expat, findutils, gawk, gettext, git, gnulib, gperf, grep, groff, gzip, hello, help2man, htop, jq, less, libtool, lz4, m4, makeinfo, make, man-db, ncdu, ncurses, openssl, patch, php, pipeline, rsync, screen, sed, tar, tcl, texinfo, top, wget, xxhash, xz, zotsample, zstd
 | [gzipport](https://github.com/ZOSOpenTools/gzipport) | 43 | 76% |autoconf, automake, bash, bison, bzip2, coreutils, cscope, ctags, curl, findutils, flex, gawk, gettext, git, gperf, hello, htop, jq, less, libtool, lz4, m4, makeinfo, make, man-db, ncdu, ncurses, openssl, patch, php, rsync, screen, sed, sqlite, tar, tcl, texinfo, top, wget, xxhash, xz, zotsample, zstd
-| [gitport](https://github.com/ZOSOpenTools/gitport) | 41 | 96% |autoconf, automake, bash, bison, cmake, ctags, curl, expat, gdbm, gettext, git, gnulib, gzip, hello, help2man, htop, libtool, m4, makeinfo, make, man-db, ncdu, ncurses, ninja, openssl, patch, perl, php, pipeline, re2c, rsync, sqlite, tar, unzip, vim, wget, xz, zip, zlib, zoslib, zotsample
+| [gitport](https://github.com/ZOSOpenTools/gitport) | 42 | 96% |autoconf, automake, bash, bison, cmake, ctags, curl, expat, gdbm, gettext, git, gnulib, gzip, hello, help2man, htop, libtool, m4, makeinfo, make, man-db, meta, ncdu, ncurses, ninja, openssl, patch, perl, php, pipeline, re2c, rsync, sqlite, tar, unzip, vim, wget, xz, zip, zlib, zoslib, zotsample
 | [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 37 | 100% |bash, bzip2, coreutils, cscope, ctags, curl, diffutils, findutils, flex, gawk, git, groff, gzip, hello, htop, iconv, jq, less, lua, makeinfo, make, man-db, nano, ncdu, ninja, openssl, re2c, screen, sed, sqlite, tar, unzip, vim, wget, xz, zip, zlib
 | [m4port](https://github.com/ZOSOpenTools/m4port) | 27 | 98% |autoconf, automake, bison, ctags, curl, expat, flex, gettext, git, gnulib, groff, gzip, help2man, libtool, m4, makeinfo, make, man-db, openssl, php, re2c, rsync, screen, sed, tar, top, wget
 | [perlport](https://github.com/ZOSOpenTools/perlport) | 27 | 100% |autoconf, automake, bison, coreutils, curl, expat, gettext, git, gnulib, groff, gzip, hello, help2man, libtool, m4, makeinfo, make, man-db, openssl, php, re2c, rsync, screen, sed, tar, texinfo, wget
@@ -95,6 +96,7 @@
 | [lessport](https://github.com/ZOSOpenTools/lessport) | 0 | 100% |
 | [luaport](https://github.com/ZOSOpenTools/luaport) | 0 | 100% |
 | [man-dbport](https://github.com/ZOSOpenTools/man-dbport) | 0 | No builds |
+| [metaport](https://github.com/ZOSOpenTools/metaport) | 0 | No builds |
 | [nanoport](https://github.com/ZOSOpenTools/nanoport) | 0 | 100% |
 | [ncduport](https://github.com/ZOSOpenTools/ncduport) | 0 | Skipped |
 | [ninjaport](https://github.com/ZOSOpenTools/ninjaport) | 0 | 98% |
@@ -111,4 +113,4 @@
 | [vimport](https://github.com/ZOSOpenTools/vimport) | 0 | 100% |
 | [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 100% |
 
-Last updated:  2023-01-16 04:09:30
+Last updated:  2023-01-16 21:42:55
