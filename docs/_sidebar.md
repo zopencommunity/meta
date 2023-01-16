@@ -1,4 +1,5 @@
   - [Getting Started](/Guides/Pre-req.md)
+    - [Using the zopen tools](/Guides/zopen.md)
   - [Porting to z/OS guide](/Guides/Porting.md)
     - [Leveraging the zoslib library](/Guides/Zoslib.md)
     - [CI/CD pipeline](/Guides/Pipeline.md)

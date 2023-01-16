@@ -78,4 +78,4 @@ To download and install specific packages, specify them as a comma delimited lis
 ```bash
 zopen download make,curl,gzip
 ```
-For more details, visit https://github.com/ZOSOpenTools/meta.
+For more details, see the section on [zopen tools](zopen.md).
