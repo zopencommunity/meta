@@ -5,6 +5,7 @@
     - [Leveraging the zoslib library](/Guides/Zoslib.md)
     - [CI/CD pipeline](/Guides/Pipeline.md)
     - [Troubleshooting](/Guides/CommonSolutions.md)
+  - [FAQ](/Guides/FAQ.md)
   - Articles
     - [Using Vim on z/OS](/Guides/VimOnZOS.md)
   - Resources
