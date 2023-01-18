@@ -64,7 +64,7 @@
 | [zlibport](https://github.com/ZOSOpenTools/zlibport) | 5 | 100% |autoconf, curl, expat, git, wget
 | [cmakeport](https://github.com/ZOSOpenTools/cmakeport) | 4 | 74% |ninja, unzip, zip, zoslib
 | [bashport](https://github.com/ZOSOpenTools/bashport) | 3 | 84% |flex, git, re2c
-| [sedport](https://github.com/ZOSOpenTools/sedport) | 3 | 82% |bash, groff, re2c
+| [sedport](https://github.com/ZOSOpenTools/sedport) | 3 | 84% |bash, groff, re2c
 | [rsyncport](https://github.com/ZOSOpenTools/rsyncport) | 2 | 88% |m4, sed
 | [wgetport](https://github.com/ZOSOpenTools/wgetport) | 2 | 18% |man-db, sed
 | [bisonport](https://github.com/ZOSOpenTools/bisonport) | 1 | Skipped |php
@@ -110,4 +110,4 @@
 | [vimport](https://github.com/ZOSOpenTools/vimport) | 0 | 100% |
 | [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 100% |
 
-Last updated:  2023-01-18 10:14:16
+Last updated:  2023-01-18 10:17:33
