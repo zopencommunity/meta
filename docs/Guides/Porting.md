@@ -46,8 +46,8 @@ zopen build -d $HOME/mytools
 ```
 
 Each tool is responsible for knowing how to set it's own environment up (e.g. PATH, LIBPATH, and any other environment variables).
-By default, `zopen build` will automatically add PATH, LIBPATH, and MANPATH environment variables. If other environment variables are needed, then you canappend them by defining a `zopen_append_to_env` function as in the case of [gitport](https://github.com/ZOSOpenTools/gitport/blob/main/buildenv#LL66-L66C20).
-Once the tool is installed, it needs to that can be source'd from it install directory to set up its environment.
+By default, `zopen build` will automatically add PATH, LIBPATH, and MANPATH environment variables. If other environment variables are needed, then you can append them by defining a `zopen_append_to_env` function as in the case of [gitport](https://github.com/ZOSOpenTools/gitport/blob/main/buildenv#LL66-L66C20).
+Once the tool is installed, the .env file needs to be source'd from its install directory to set up the environment.
 If you are building from a ZOSOpenTools port, this `.env` file will be created as part of the install process.
 
 ### Create your first z/OS port leveraging the zopen framework
@@ -176,6 +176,11 @@ cd jq-1.6
 # If there are any new files added, make sure to track them using git add
 git add <newfiles>
 git diff HEAD > ../patches/initial_zos.patch
+```
+
+Our preference is to keep patches small and to have seperate patches for each file or each group of changes. In order to filter a diff based on a filename, you can run:
+```
+git diff HEAD -- myfile.c > ../patches/myfile.c.patch
 ```
 
 In some cases, the tool directory will not be tracked by git (when using a tarball and/or the tool directory is included in .gitignore). In this case, you will need to create the patch by hand using diff and an untouched copy of the tool directory.

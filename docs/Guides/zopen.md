@@ -8,6 +8,8 @@ cd meta
 . ./.env
 ```
 
+Alternatively, you can download meta, along with the foundational set of tools via [zopen-setup](https://github.com/ZOSOpenTools/meta/releases/tag/v1.0.0#Running%20zopen-setup).
+
 ## If you are using z/OS Open Tools
 
 ### zopen init
@@ -54,7 +56,7 @@ The `buildenv` file _must_ set the following environment variables:
 - `ZOPEN_URL`: the URL where the source should be pulled from, including the `package.git` or `package-V.R.M.tar.gz` extension
 - `ZOPEN_DEPS`: a space-separated list of all software dependencies this package has. These packages will automatically be downloaded if they are not present in your $HOME/zopen/prod or $HOME/zopen/boot directories.
 
-To help guage the build quality of the port, a `zopen_check_results()` function needs to be provided inside the buildenv. This function should process
+To help gauge the build quality of the port, a `zopen_check_results()` function needs to be provided inside the buildenv. This function should process
 the test results and emit a report of the failures, total number of tests, and expected number of failures to stdout as in the following format: 
 ```
 actualFailures:<numberoffailures>
@@ -109,11 +111,12 @@ zopen build
 You can generate a zopen template project with `zopen generate`. It will ask you a series of questions and then generate the zopen file structure, including a `buildenv` file that will help you get started with your project.
 
 ### zopen-importenvs
-This script is used to source the .env from zopen prod/boot directory as explained below:
+If you want to source the .env files from all of the installed zopen products under the zopen prod and boot directories, then you can use `zopen-importenvs`. 
 
 Usage of script is: ". ./zopen-importenvs [path to buildenv to fetch dependency]"
+
 The path to buildenv is optional.
 
-If the path is provided, the dependencies from the buildenv file are read and the env is sourced from prod/boot directory.
+If the buildenv path is provided, the dependencies from the buildenv file are read and the env is sourced from prod/boot directory. This is useful if you want to have the same environment as zopen build in order to reproduce a problem with the build.
 Otherwise if the path is not provided then the .env from each project directory in the zopen prod/boot directories are sourced.
 ```
