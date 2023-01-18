@@ -1118,7 +1118,7 @@ export _TAG_REDIR_ERR=txt
 export _TAG_REDIR_OUT=txt
 export ${projectName}_HOME=\${PWD}
 # Run setup.sh if it hasn't been run yet
-if [ ! -f \"./.installed\" ] && [ -e \"./setup.sh\" ]; then
+if [ ! -f \".installed\" ] && [ -x \"setup.sh\" ]; then
   ./setup.sh
 fi
 zz
@@ -1139,17 +1139,23 @@ zz
   fi
 
   # Create setup.sh script
+  projectName_lower=$(echo "${projectName}" | tr '[A-Z]' '[a-z]')
   cat <<zz >"${ZOPEN_INSTALL_DIR}/setup.sh"
-echo \"Setting up ${projectName}...\"
-touch \"\${PWD}/.installed\"
+#!/bin/sh
+echo \"Setting up ${projectName_lower}...\"
 zz
   if $hasHardcodedPaths; then
   cat <<zz >>"${ZOPEN_INSTALL_DIR}/setup.sh"
-for f in \$(find \$PWD/ -type f | xargs grep -l \"ZOPEN_INSTALL_ROOT\" 2>/dev/null); do
-  if [ \"\$f\" != \"\${PWD}/.env\" ]; then
-    cp \$f \$f.tmp && sed -e \"s#ZOPEN_INSTALL_ROOT#\${PWD}#g\" \$f.tmp  > \$f && rm \$f.tmp;
+for f in \$(/bin/find \$PWD/ -type f | /bin/xargs grep -l \"ZOPEN_INSTALL_ROOT\" 2>/dev/null); do
+  if [ \"\$f\" != \"\${PWD}/setup.sh\" ] && [ \"\$f\" != \"\${PWD}/.env\" ]; then
+    cp \$f \$f.tmp
+    /bin/sed -e \"s#ZOPEN_INSTALL_ROOT#\${PWD}#g\" \$f.tmp > \$f
+    rm \$f.tmp;
   fi
 done
+touch \"\${PWD}/.installed\"
+echo \"Setup completed.\"
+
 zz
   fi
   chmod 755 "${ZOPEN_INSTALL_DIR}/setup.sh"
