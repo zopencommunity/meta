@@ -12,13 +12,14 @@ printSyntax()
   echo "If you have a Github OAUTH token, export the environment variable ZOPEN_GIT_OAUTH_TOKEN" >&2
   echo "Syntax: zopen-download [<option>]*" >&2
   echo "  where <option> may be one or more of:" >&2
-  echo "  --list: list all available z/OS Open Tools"  >&2
-  echo "  --update: update z/OS Open Tools packages. On by default."  >&2
-  echo "  --force: force downloads all z/OS Open Tools packages."  >&2
+  echo "  --list: list all available z/OS Open Tools. If no parameters are specified, --list is the default."  >&2
+  echo "  -u|--update|--upgrade: updates installed z/OS Open Tools packages."  >&2
+  echo "  --reinstall: reinstall already installed z/OS Open Tools packages."  >&2
+  echo "  --all: downloads all z/OS Open Tools packages."  >&2
+  echo "  -v: run in verbose mode." >&2
+  echo "  -d <dir>: directory to download binaries to.  Uses current working directory or path from ~/.zopen-config (generated via zopen init) if not specified." >&2
+  echo "  <project,...>: a set of comma delimited projects to download." >&2
   echo "  --filter <color>: filter based on quality (green - all tests passing, blue - most tests passing, yellow - some tests passing, red - no tests passing, or skipped (no filter by default))"  >&2
-  echo "  -v: run in verbose mode" >&2
-  echo "  -d <dir>: directory to download binaries to.  Uses current working directory if not specified." >&2
-  echo "  -r <repo,...>: a set of comma delimited projects to download. Downloads all ZOSOpenTools if not specified." >&2
 }
 
 getContentsFromGithub()
@@ -92,22 +93,26 @@ downloadRepos()
       fi
     fi
 
+    latestTag="$(echo "$latest_url" | grep "\"tag_name\":" | cut -d '"' -f 4)"
+    if $updateInstalled; then
+      if [ -e "${name}/.releaseinfo" ]; then
+        originalTag=$(cat "${name}/.releaseinfo" | xargs) 
+      else
+        # We're only updating alreaady installed products
+        printInfo "${downloadDir}/${name} will not be updated as it is not installed."
+        continue;
+      fi
+      if [ "${latestTag}" = "${originalTag}" ] && ! $reinstall; then
+        printInfo "${downloadDir}/${name} with latest release tag \"${latestTag}\" already installed. Skipping..."
+        continue;
+      fi
+    fi
     printHeader "Preparing to download $repo"
     if [ -z "$latest_url" ]; then
       printInfo "No releases published for $repo"
       continue
     fi
 
-    latestTag="$(echo "$latest_url" | grep "\"tag_name\":" | cut -d '"' -f 4)"
-    if $updateOnly; then
-      if [ -e "${name}/.releaseinfo" ]; then
-        originalTag=$(cat "${name}/.releaseinfo" | xargs) 
-      fi
-      if [ "${latestTag}" = "${originalTag}" ]; then
-        printInfo "${downloadDir}/${name} with tag ${latestTag} already installed. Skipping..."
-        continue;
-      fi
-    fi
     latest_url="$(echo "$latest_url" | grep "\"browser_download_url\":" | cut -d '"' -f 4)"
     printInfo "Downloading latest release from $repo..."
     if ! $verbose; then
@@ -154,23 +159,24 @@ if [ ! -z "$ZOPEN_SEARCH_PATH" ]; then
 else
   downloadDir=$PWD
 fi
-updateOnly=true
+updateInstalled=false
 verbose=false
+reinstall=false
+downloadAll=false
+if [[ $# -eq 0 ]]; then
+  list=1
+fi
 while [[ $# -gt 0 ]]; do
   case "$1" in
     "-d")
       downloadDir=$2;
       shift
       ;;
-    "-r")
-      chosenRepos=$2;
-      shift
+    "-u" | "--update" | "-update" | "-upgrade" | "--upgrade")
+      updateInstalled=true
       ;;
-    "-u" | "--update" | "-update")
-      updateOnly=true
-      ;;
-    "-f" | "-force" | "--force")
-      updateOnly=false
+    "-reinstall" | "--reinstall")
+      reinstall=true
       ;;
     "--list")
       list=1;
@@ -183,8 +189,11 @@ while [[ $# -gt 0 ]]; do
       printSyntax "${args}"
       exit 4
       ;;
+    "--all")
+      downloadAll=true
+      ;;
     "-v" | "--v" | "-verbose" | "--verbose")
-       verbose=true
+      verbose=true
       ;;
     *)
       chosenRepos=$1;
@@ -192,6 +201,10 @@ while [[ $# -gt 0 ]]; do
   esac
   shift;
 done
+
+if $downloadAll; then
+  unset chosenRepos
+fi
 
 export ZOPEN_CA="${utildir}/../../cacert.pem"
 if ! [ -r "${ZOPEN_CA}" ]; then

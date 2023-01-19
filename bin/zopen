@@ -7,10 +7,12 @@ printSyntax()
   echo "" >&2
   echo "Syntax: zopen <command>" >&2
   echo "where <command> may be one of the following:" >&2
+  echo " init: generate a $HOME/.zopen-config file." >&2
   echo " build: invokes the build script." >&2
-  echo " download: downloads binaries" >&2
+  echo " download: downloads z/OS Open Tools" >&2
   echo " generate: generate a zopen project" >&2
   echo " update-cacert: update the cacert.pem file" >&2
+  echo " update|upgrade: updates already installed tools" >&2
   echo "" >&2
 }
 
@@ -43,6 +45,10 @@ while [[ $# -gt 0 ]]; do
     "download")
       shift
       exec "${bindir}/lib/zopen-download" $@
+      ;;
+    "update" | "upgrade")
+      shift
+      exec "${bindir}/lib/zopen-download" -u $@
       ;;
     "generate")
       shift
