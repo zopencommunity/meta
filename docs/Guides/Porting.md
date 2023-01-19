@@ -2,26 +2,9 @@
 
 ## Getting Started
 
-The z/OS Open Tools porting projects reside in https://github.com/ZOSOpenTools.
+Before you get started with porting open source to z/OS, read the [Getting Started Guide](Pre-req.md) to set up your environment.
 
-Before you begin to build code, ensure that you have access to a z/OS UNIX environment and that your environment is correctly configured.
-
-### Set up your environment
-
-This is the most cumbersome step, but is only required to be done once.
-
-The tools assume an ASCII/UTF-8 environment, and so you should ensure that you have the following environment
-variables set:
-
-```
-export _BPXK_AUTOCVT=ON
-export _CEE_RUNOPTS="$_CEE_RUNOPTS FILETAG(AUTOCVT,AUTOTAG) POSIX(ON)"
-export _TAG_REDIR_ERR=txt
-export _TAG_REDIR_IN=txt
-export _TAG_REDIR_OUT=txt
-```
-
-It is recommended that you add the above environment variables to your `.profile` or `.bashrc` startup script.
+Once you have a z/OS system set up with the required zopen directory structure and pre-requisite boot tools, you will then need to set up Git as follows:
 
 You need to configure your user.email and user.name to check in code to the repositories:
 
@@ -29,62 +12,53 @@ You need to configure your user.email and user.name to check in code to the repo
 git config --global user.email "<Your E-Mail>"
 git config --global user.name "<Your Name>"
 ```
-This assumes that you have the latest version of [Git](https://my.rocketsoftware.com/RocketCommunity#/downloads) on your z/OS system.
+This assumes that you have the latest version of [Git](https://github.com/ZOSOpenTools/gitport/releases) on your z/OS system.
 
 
 ### Leveraging the z/OS Open Tools meta repo
 
-The meta repo (https://github.com/ZOSOpenTools/meta) consists of common tools and files that aid
-in the porting process, including the `zopen` suite of tools.  Specifically, `zopen build` provides a common way to bootstrap, configure, build, check,
-and install a software package.  `zopen download` provides a mechanism to download the latest published z/OS Open Tools.
+The meta repo (https://github.com/ZOSOpenTools/meta) consists of common tools and files that aid in the porting process, including the `zopen` suite of tools.  Specifically, `zopen build` provides a common way to bootstrap, configure, build, check,
+and install a software package. `zopen download` provides a mechanism to download the latest published z/OS Open Tools packages.
 
 Many tools depend on other tools to be able to build or run. You will need to provide both _bootstrap_ tools
 (i.e. binary tools not from source), as well as _prod_ tools (i.e. _production_ level tools previously built
 from another z/OS Open Tools repository).
 
-Our goal is to eventually have our own version of all the _bootstrap_ tools, but right now, we rely on some
-tools from Rocket. These Rocket tools can be downloaded [here](https://my.rocketsoftware.com/RocketCommunity#/downloads).
-
-Many tools require a C or C++ compiler (or both). 
-You can download a web deliverable add-on feature to your XL C/C++ compiler 
+Many tools require a C or C++ compiler (or both) to build. There a couple of options to obtain the C/C++ compiler:
+* You can download a web deliverable add-on feature to your XL C/C++ compiler 
 [here](https://www.ibm.com/servers/resourcelink/svc00100.nsf/pages/xlCC++V241ForZOsV24).
-Alternatively, you can install and manage _C/C++ for Open Enterprise Languages on z/OS_ using _RedHat OpenShift Container Platform_ and _IBM Z and Cloud Modernization Stack_ 
+* You can install and manage _C/C++ for Open Enterprise Languages on z/OS_ using _RedHat OpenShift Container Platform_ and _IBM Z and Cloud Modernization Stack_ 
 [here](https://github.com/IBM/z-and-cloud-modernization-stack-community). 
 Please note that these compilers are comparable, but how you perform installation and maintenance and pricing is different.
 
 In order for zopen to be able to locate dependent tools, they need to be in well-defined locations.
-Tools will be searched for in the following locations, in order:
+Tools will be searched for in the following default locations, in order:
 - `${HOME}/zopen/prod/<tool>`
-- `/usr/bin/zopen/<tool>`
 - `${HOME}/zopen/boot/<tool>`
 
-A convenience script, ` zopen-importenvs` can be used to source the environments of each of the tools:
+You can configure this location by running `zopen init` to reconfigure the location.
 
-```bash
-. zopen-importenvs
-```
-
-So for example, `make` depends on `m4` to build. `zopen build` will search for `m4` first in the
-personal _prod_ build from `${HOME}/zopen/prod/m4`, then the system-wide build in `/usr/bin/zopen/m4`, and
-finally in the personal _boot_ directory `${HOME}/zopen/boot/m4`. Symbolic links can be used as required to share builds between developers on a system, if desired.  You can also add your own directories to the search path by specifying the -d option to `zopen build` as follows:
+Let's take a look at an example. `git` depends on `make` to build, as specified in the [gitport dependencies](https://github.com/ZOSOpenTools/gitport/blob/main/buildenv#L10). 
+`zopen build` will search for `make` first in the
+personal _prod_ build from `${HOME}/zopen/prod/m4`, then finally in the personal _boot_ directory `${HOME}/zopen/boot/m4`. Symbolic links can be used as required to share builds between developers on a system, if desired.  You can also add your own directories to the search path by specifying the -d option to `zopen build` as follows:
 ```bash
 zopen build -d $HOME/mytools
 ```
 
 Each tool is responsible for knowing how to set it's own environment up (e.g. PATH, LIBPATH, and any other environment variables).
-Each tool needs to provide a `.env` program that can be source'd from it's directory to set up it's environment.
-If you are building from a ZOSOpenTools port, this `.env` file will be created as part of the install process, but if you
-are providing a `boot` version of the tool (e.g. cURL), then you will need to provide your own version of `.env`.
+By default, `zopen build` will automatically add PATH, LIBPATH, and MANPATH environment variables. If other environment variables are needed, then you can append them by defining a `zopen_append_to_env` function as in the case of [gitport](https://github.com/ZOSOpenTools/gitport/blob/main/buildenv#LL66-L66C20).
+Once the tool is installed, the .env file needs to be source'd from its install directory to set up the environment.
+If you are building from a ZOSOpenTools port, this `.env` file will be created as part of the install process.
 
 ### Create your first z/OS port leveraging the zopen framework
 
 Before you begin porting a tool to z/OS, you must first identify the tool or library that you wish to port. For the sake of this guide, let's assume we are porting [jq](https://stedolan.github.io/jq/), a lightweight and flexible json parser. Before porting a tool, check if the project already exists under https://github.com/ZOSOpenTools. If it does exist, then please collaborate with the existing contributors.
 
-Begin first by cloning the https://github.com/ZOSOpenTools/meta repo.  This repo contains the `zopen` framework and it is what we will use to build, test, and install our port.
+Begin first by cloning the https://github.com/ZOSOpenTools/meta repo.  This repo contains the `zopen` framework under the `bin/` directory and it is what we will use to build, test, and install our port.
 
 ```bash
-# Clone the required repositories
-git clone git@github.com:ZOSOpenTools/meta.git
+# Clone the required repositories (using Git from https://github.com/ZOSOpenTools/gitport)
+git clone git@github.com:ZOSOpenTools/utils.git
 ```
 
 Next, in order to use the `zopen` suite of tools, you must set your path environment variable to the `meta/bin` directory.
@@ -128,7 +102,7 @@ Change your current directory to the `jqport` directory: `cd jqport`. You will n
 * cicd.groovy - The CI/CD configuration file used in the Jenkins pipeline
 For more information, please visit the [zopen build README](https://github.com/ZOSOpenTools/meta)
 
-Note: `zopen build` supports projects based in github repositories or tarball locations. Since autoconf/automake are not currently functioning on z/OS, we typically choose the tarball location because it contains a `configure` script pre-packaged. Let's go ahead and do this for `jq`.
+Note: `zopen build` supports projects based in github repositories or tarball locations. Since autoconf/automake are not currently 100% functional on z/OS, we typically choose the tarball location because it contains a `configure` script pre-packaged. Let's go ahead and do this for `jq`.
 
 In the `buildenv` file, you'll notice the following contents:
 ```bash
@@ -153,16 +127,33 @@ zopen_append_to_env()
 ```
 ZOPEN_TARBALL_DEPS/ZOPEN_GIT_DEPS are used to identify the non-standard dependencies needed to build the project. 
 
-You are expected to modify `zopen_check_results()` with logic to analyze the test results and return the following return codes:
+`zopen_append_to_env()` can be used to add additional environment variables outside of the normal environment variables. (e.g. PATH, LIBPATH, MANPATH)
+
+To help gauge the build quality of the port, a zopen_check_results() function needs to be provided inside the buildenv. This function should process the test results and emit a report of the failures, total number of tests, and expected number of failures to stdout as in the following format:
+
 ```
-0 - Green - All tests passed
-1 - Blue - Most tests passed
-2 - Yellow - Most tests failed
-3 - Red - All tests failed or check is broken
-4 - Unknown - Skipped or something went wrong
+actualFailures:<numberoffailures>
+totalTests:<totalnumberoftests>
+expectedFailures:<expectednumberoffailures>
+The build will fail to proceed to the install step if actualFailures is greater than expectedFailures.
 ```
 
-`zopen_append_to_env()` can be used to add additional environment variables outside of the normal environment variables. (e.g. PATH, LIBPATH, MANPATH)
+Here is an example implementation of zopen_check_results():
+
+```
+zopen_check_results()
+{
+chk="$1/$2_check.log"
+
+failures=$(grep ".* Test.*in .* Categories Failed" ${chk} | cut -f1 -d' ')
+totalTests=$(grep ".* Test.*in .* Categories Failed" ${chk} | cut -f5 -d' ')
+
+cat <<ZZ
+actualFailures:$failures
+totalTests:$totalTests
+expectedFailures:0
+ZZ
+```
 
 Next, we can go ahead and test our build.  Run the following:
 ```bash
@@ -173,7 +164,7 @@ The `-v` option above specifies verbose output.
 
 Once finished, you will notice that your project was built and installed under `$HOME/zopen/prod/jq`.
 
-*Creating Patches*
+#### Creating Patches
 
 As you may have noticed, `zopen build` downloads the `tar.gz` file, and then attempts to patch it with the patch contents in the `patches` directory.
 
@@ -185,6 +176,11 @@ cd jq-1.6
 # If there are any new files added, make sure to track them using git add
 git add <newfiles>
 git diff HEAD > ../patches/initial_zos.patch
+```
+
+Our preference is to keep patches small and to have seperate patches for each file or each group of changes. In order to filter a diff based on a filename, you can run:
+```
+git diff HEAD -- myfile.c > ../patches/myfile.c.patch
 ```
 
 In some cases, the tool directory will not be tracked by git (when using a tarball and/or the tool directory is included in .gitignore). In this case, you will need to create the patch by hand using diff and an untouched copy of the tool directory.
