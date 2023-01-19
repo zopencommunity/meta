@@ -99,15 +99,16 @@ downloadRepos()
         originalTag=$(cat "${name}/.releaseinfo" | xargs) 
       else
         # We're only updating alreaady installed products
-        printInfo "${downloadDir}/${name} will not be updated as it is not installed."
+        printVerbose "${downloadDir}/${name} will not be updated as it is not installed."
         continue;
       fi
       if [ "${latestTag}" = "${originalTag}" ] && ! $reinstall; then
-        printInfo "${downloadDir}/${name} with latest release tag \"${latestTag}\" already installed. Skipping..."
+        printVerbose "${downloadDir}/${name} with latest release tag \"${latestTag}\" already installed. Skipping..."
         continue;
       fi
+      printInfo "New release with tag \"${latestTag}\" found for $repo"
     fi
-    printHeader "Preparing to download $repo"
+    printInfo "Preparing to download $repo"
     if [ -z "$latest_url" ]; then
       printInfo "No releases published for $repo"
       continue
