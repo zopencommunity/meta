@@ -345,6 +345,7 @@ checkEnv()
   fi
 
   ZOPEN_APPEND_TO_ENV="zopen_append_to_env"
+  ZOPEN_APPEND_TO_SETUP="zopen_append_to_setup"
 
   if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
     if [ "${ZOPEN_TARBALL_URL}x" = "x" ]; then
@@ -1145,6 +1146,7 @@ zz
 touch \".installing\"
 . ./.env
 echo \"Setting up ${projectName_lower}...\"
+touch \"\${PWD}/.installed\"
 zz
   if $hasHardcodedPaths; then
     cat <<zz >>"${ZOPEN_INSTALL_DIR}/setup.sh"
@@ -1155,14 +1157,18 @@ for f in \$(/bin/find \$${projectName}_HOME/ -type f | /bin/xargs grep -l \"ZOPE
     rm \$f.tmp;
   fi
 done
+echo \"Setup completed.\"
+touch \".installed\"
+rm \".installing\"
+
 zz
   fi
 
-  cat <<zz >>"${ZOPEN_INSTALL_DIR}/setup.sh"
-touch \".installed\"
-rm \".installing\"
-echo \"Setup completed.\"
-zz
+  if command -V "${ZOPEN_APPEND_TO_SETUP}" >/dev/null 2>&1; then
+    printVerbose "Appending additional setup code..."
+    append_to_setup="$(${ZOPEN_APPEND_TO_SETUP})"
+    echo "$append_to_setup" >> "${ZOPEN_INSTALL_DIR}/setup.sh"
+  fi
 
   chmod 755 "${ZOPEN_INSTALL_DIR}/setup.sh"
 }
