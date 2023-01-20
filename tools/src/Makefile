@@ -11,7 +11,7 @@ clean:
 	rm -f *.o zopen-setup
 
 hwthic.h:
-	cp "//'sys1.sieahdrv.h(hwthic)'" hwthic.h
+	/bin/cp "//'sys1.sieahdrv.h(hwthic)'" hwthic.h
 
 headers: hwthic.h
 
