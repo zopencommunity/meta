@@ -8,12 +8,12 @@ export utildir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
 printSyntax() 
 {
   args=$*
-  echo "zopen-download is a download utility for z/OS Open Tools. The default action is to download/update all packages." >&2
+  echo "zopen-download is a download utility for z/OS Open Tools. The default action is to download/upgrade all packages." >&2
   echo "If you have a Github OAUTH token, export the environment variable ZOPEN_GIT_OAUTH_TOKEN" >&2
   echo "Syntax: zopen-download [<option>]*" >&2
   echo "  where <option> may be one or more of:" >&2
   echo "  --list: list all available z/OS Open Tools. If no parameters are specified, --list is the default."  >&2
-  echo "  -u|--update|--upgrade: updates installed z/OS Open Tools packages."  >&2
+  echo "  -u|--upgrade: upgrades installed z/OS Open Tools packages."  >&2
   echo "  --reinstall: reinstall already installed z/OS Open Tools packages."  >&2
   echo "  --all: downloads all z/OS Open Tools packages."  >&2
   echo "  -v: run in verbose mode." >&2
@@ -94,12 +94,12 @@ downloadRepos()
     fi
 
     latestTag="$(echo "$latest_url" | grep "\"tag_name\":" | cut -d '"' -f 4)"
-    if $updateInstalled; then
+    if $upgradeInstalled; then
       if [ -e "${name}/.releaseinfo" ]; then
         originalTag=$(cat "${name}/.releaseinfo" | xargs) 
       else
         # We're only updating alreaady installed products
-        printVerbose "${downloadDir}/${name} will not be updated as it is not installed."
+        printVerbose "${downloadDir}/${name} will not be upgraded as it is not installed."
         continue;
       fi
       if [ "${latestTag}" = "${originalTag}" ] && ! $reinstall; then
@@ -148,6 +148,9 @@ downloadRepos()
 
     # Add tag information as a .releaseinfo file
     echo "$latestTag" > "${name}/.releaseinfo"
+
+    # Delete the .installed file if it was previously there
+    rm -f "${name}/.installed"
     printInfo "Successfully downloaded $name to $downloadDir/$name/"
 done
 }
@@ -160,7 +163,7 @@ if [ ! -z "$ZOPEN_SEARCH_PATH" ]; then
 else
   downloadDir=$PWD
 fi
-updateInstalled=false
+upgradeInstalled=false
 verbose=false
 reinstall=false
 downloadAll=false
@@ -173,8 +176,8 @@ while [[ $# -gt 0 ]]; do
       downloadDir=$2;
       shift
       ;;
-    "-u" | "--update" | "-update" | "-upgrade" | "--upgrade")
-      updateInstalled=true
+    "-u" | "--upgrade" | "-upgrade" | "-upgrade" | "--upgrade")
+      upgradeInstalled=true
       ;;
     "-reinstall" | "--reinstall")
       reinstall=true

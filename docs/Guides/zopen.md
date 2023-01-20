@@ -15,7 +15,7 @@ Alternatively, you can download meta, along with the foundational set of tools v
 ### zopen init
 To initialize the zopen installation directory to a location other than the default ($HOME/zopen), you can run the command zopen init and specify the desired directory. This will configure the directory for future use. Subsequently, tools like zopen download will download and install files to this specified directory."
 
-### zopen cacert
+### zopen update-cacacert
 
 To update the cacert.pem file, you can use `zopen update-cacert`. This will download the latest cacert.pem file https://curl.se/docs/caextract.html. This cacert.pem file is then used by other tools such as `zopen download` and `zopen build`.
 
@@ -40,6 +40,21 @@ This will download it to the current working directory. To change the destinatio
 
 ```
 zopen download make -d $HOME/zopen/prod
+```
+
+You can then change to the install directory and source the .env file: `. ./.env` to setup the tool.
+
+### zopen upgrade
+
+To upgrade already installed software packages, you can use `zopen upgrade`.
+
+```
+zopen upgrade
+```
+
+To upgrade a specific set of packages, you can specify the packages as a comma seperated list as follows:
+```
+zopen upgrade make,gzip
 ```
 
 ## If you are contributing to or developing z/OS Open Tools

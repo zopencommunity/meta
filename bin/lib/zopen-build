@@ -188,7 +188,7 @@ printSyntax()
   echo "  -h: print this information"
   echo "  -v: run in verbose mode"
   echo "  -vv: run in very verbose mode (sets environment variables V=1 and VERBOSE=1)"
-  echo "  -u|--updatedeps: update all dependencies by running zopen download"
+  echo "  -u|--upgradedeps: upgrade all dependencies by running zopen download"
   echo "  --buildtype: release|debug. The default is release"
   echo "  --comp: xl|clang.  The compiler used for building.  The default is xl."
   echo "  --oci: build and publish an OCI image to \$ZOPEN_IMAGE_REGISTRY"
@@ -221,7 +221,7 @@ processOptions()
   if [ ! -z "$ZOPEN_SEARCH_PATH" ]; then
     depsPath="$ZOPEN_SEARCH_PATH/prod|$ZOPEN_SEARCH_PATH/boot|$depsPath"
   fi
-  forceUpdateDeps=false
+  forceUpgradeDeps=false
   while [[ $# -gt 0 ]]; do
     case $1 in
       "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
@@ -236,8 +236,8 @@ processOptions()
         export VERBOSE=1
         verbose=true
         ;;
-      "-u" | "--updateDeps")
-        forceUpdateDeps=true
+      "-u" | "--upgradeDeps")
+        forceUpgradeDeps=true
         ;;
       "-buildtype" | "--buildtype" | "-b")
         shift
@@ -409,8 +409,8 @@ setDepsEnv()
     for path in `echo ${depsPath} | tr '|' '\n'` ; do
       if [ -r "$path/${dep}/.env" ]; then
         depdir="$path/${dep}"
-        # Avoid double sourcing the .env if we're forcing an update it
-        if ! $forceUpdateDeps; then
+        # Avoid double sourcing the .env if we're forcing an upgrade on it
+        if ! $forceUpgradeDeps; then
           printVerbose "Setting up ${depdir} dependency environment"
           cd "${depdir}" && . ./.env
         fi
@@ -418,11 +418,11 @@ setDepsEnv()
         break
       fi
     done
-    if ! $foundDep || $forceUpdateDeps; then
-      if ! $forceUpdateDeps; then
+    if ! $foundDep || $forceUpgradeDeps; then
+      if ! $forceUpgradeDeps; then
         printWarning "Dependency $dep not found. Downloading via zopen-download"
       else
-        printHeader "Updating dependency $dep. Downloading via zopen-download"
+        printHeader "Upgrading dependency $dep. Downloading via zopen-download"
       fi
       # Use the first path specified in the dependency search list
       path=$(echo ${depsPath} | tr '|' '\n' | head -1)
@@ -430,7 +430,7 @@ setDepsEnv()
       if ! zopen download -r $dep -d $path; then
         printError "zopen download command failed"
       fi
-      printVerbose "Setting up updated ${path}/${dep} dependency environment"
+      printVerbose "Setting up upgraded ${path}/${dep} dependency environment"
       cd "${path}/${dep}" && . ./.env
     fi
   done

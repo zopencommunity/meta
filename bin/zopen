@@ -12,7 +12,7 @@ printSyntax()
   echo " download: downloads z/OS Open Tools" >&2
   echo " generate: generate a zopen project" >&2
   echo " update-cacert: update the cacert.pem file" >&2
-  echo " update|upgrade: updates already installed tools" >&2
+  echo " upgrade: upgrades already installed tools" >&2
   echo "" >&2
 }
 
@@ -46,7 +46,7 @@ while [[ $# -gt 0 ]]; do
       shift
       exec "${bindir}/lib/zopen-download" $@
       ;;
-    "update" | "upgrade")
+    "upgrade")
       shift
       exec "${bindir}/lib/zopen-download" -u $@
       ;;
