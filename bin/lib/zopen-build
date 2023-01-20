@@ -1124,13 +1124,13 @@ fi
 zz
 
   if [ -d "${ZOPEN_INSTALL_DIR}/bin" ]; then
-    echo "export PATH=\"\${PWD}/bin:\$PATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
+    echo "export PATH=\"\${${projectName}_HOME}/bin:\$PATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
   fi
   if [ -d "${ZOPEN_INSTALL_DIR}/lib" ]; then
-    echo "export LIBPATH=\"\${PWD}/lib:\$LIBPATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
+    echo "export LIBPATH=\"\${${projectName}_HOME}/lib:\$LIBPATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
   fi
   if [ -d "${ZOPEN_INSTALL_DIR}/share/man" ]; then
-    echo "export MANPATH=\"\${PWD}/share/man:\$MANPATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
+    echo "export MANPATH=\"\${${projectName}_HOME}/share/man:\$MANPATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
   fi
   if command -V "${ZOPEN_APPEND_TO_ENV}" >/dev/null 2>&1; then
     printVerbose "Appending additional environment variables..."
