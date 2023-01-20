@@ -2675,8 +2675,6 @@ int setRequestHeaders( HWTH_RETURNCODE_TYPE *rcPtr,
          trace( "Slist append failure" );
          return -1;
          } /* endif slist append failed */
-      else
-         trace( "Next request header appended" );
       }  /* endloop thru remaining headers */
 
  if ( toolkitSetOption( rcPtr,
