@@ -21,12 +21,12 @@ To update the cacert.pem file, you can use `zopen update-cacert`. This will down
 
 ### zopen download
 
-To download and install the latest software packages, you can use `zopen download`. By default it will download all of the binaries hosted on ZOSOpenTools.
+To download and install the latest software packages, you can use `zopen download`. By default it will list all of the packages hosted on ZOSOpenTools.
 
 It is recommended that you generate a [github personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token).
 Then set `export ZOPEN_GIT_OAUTH_TOKEN=<yourapitoken>`
 
-To list the available packages, specify the `--list` option as follows:
+To list the available packages, specify no parameters or the `--list` option as follows:
 ```
 zopen download --list
 ```
@@ -36,7 +36,7 @@ To download and install specfic packages, you can specify the packages as a comm
 zopen download make,gzip
 ```
 
-This will download it to the current working directory. To change the destination directory, you can specify the `-d` option as follows:
+This will download it to the directory specified by your ~/.zopen-config. To change the destination directory, you can specify the `-d` option as follows:
 
 ```
 zopen download make -d $HOME/zopen/prod
