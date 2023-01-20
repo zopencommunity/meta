@@ -1,6 +1,7 @@
 #!/bin/sh
-# Initialize zopen
-
+#
+# Creates a $HOME/.zopen-config file
+#
 export utildir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
 
 . "${utildir}/common.inc"
@@ -28,7 +29,18 @@ if [ ! -e "$zopen_path/boot" ]; then
   mkdir -p "$zopen_path/boot"
 fi
 
+echo "Enter the github oauth token for use in zopen-download. If none, press enter"
+zopen_oauth=$(getInput)
+if [ ! -z "$zopen_oauth" ]; then
+  zopen_oauth="export ZOPEN_GIT_OAUTH_TOKEN=$zopen_oauth"
+fi
+
+
 # Save the configuration to the file
-echo "export ZOPEN_SEARCH_PATH=$zopen_path" > "$HOME/.zopen-config"
+
+cat <<zz >"${HOME}/.zopen-config"
+export ZOPEN_SEARCH_PATH=$zopen_path
+$zopen_oauth
+zz
 
 printInfo "Creating config in $HOME/.zopen-config"
