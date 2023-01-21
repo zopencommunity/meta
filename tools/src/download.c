@@ -145,6 +145,7 @@ char *DS_TYPE = "blocked";         /* TRSMAIN convention */
 #define HTTP_RC_OK        200
 #define HTTP_RC_CREATED   201
 #define HTTP_RC_REDIRECT  302 
+#define HTTP_RC_UNAUTHORIZED 401
 #define HTTP_RC_FORBIDDEN 403
 
 /********************************
@@ -382,6 +383,7 @@ int toolkitSlistOperation( HWTH_RETURNCODE_TYPE    *rcPtr,
 	 struct parmStruct downloadParms = { false, IOTYPE_FILE, SCHEME_HTTPS };
 #endif
 	 char  msgBuf[80];
+   int rc;
 
 #ifdef HAS_MAIN
 	 if ( getDownloadParms( argc, argv, &downloadParms ) ) {
@@ -419,7 +421,8 @@ int toolkitSlistOperation( HWTH_RETURNCODE_TYPE    *rcPtr,
 
 	 summarize( &downloadParms, &receiveData, toolkitRc );
 
-	 return checkHttpStatus(httpStatusCode);
+	 rc = checkHttpStatus(httpStatusCode);
+   return (rc == HTTP_RC_OK) ? 0 : rc; 
  }  /* end main */
 
 
@@ -1061,7 +1064,6 @@ int toolkitSlistOperation( HWTH_RETURNCODE_TYPE    *rcPtr,
 	 if ( pRecvData->numBytesReceived )
 		 downloadSize = pRecvData->numBytesReceived;
 	 else {
-		 trace( "A full response was not received" );
 		 if ( toolkitRc == HWTH_OK ) {
 			 sprintf( msgBuf,
 					 "Http response code %d was received",
@@ -1069,10 +1071,13 @@ int toolkitSlistOperation( HWTH_RETURNCODE_TYPE    *rcPtr,
 			 trace( msgBuf );
 		 }
 		 else {
+     #if 0
+       /* for things like forbidden or redirect, no message needed */
 			 sprintf( msgBuf,
 					 "Toolkit failure rc %d was received",
 					 toolkitRc );
 			 trace( msgBuf );
+     #endif
 		 }
 		 downloadSize = pRecvData->knownContentLength;
 	 } /* endif lacking (full) response */
@@ -1362,7 +1367,7 @@ int toolkitSlistOperation( HWTH_RETURNCODE_TYPE    *rcPtr,
 		 pStatusLine = pReceiveProgress->HWTH_responseStatusLine;
 		 pUserData->httpStatusCode = (int)(pStatusLine->HWTH_statusCode);
      httpStatusCode = pUserData->httpStatusCode; 
-		 if (checkHttpStatus( pUserData->httpStatusCode ) ) {
+		 if (checkHttpStatus( pUserData->httpStatusCode ) != HTTP_RC_OK) {
 			 *pReceiveState = HWTH_STREAM_RECEIVE_ABORT;
 			 return;
 		 } /* endif unacceptable http status code */
@@ -1550,6 +1555,9 @@ int toolkitSlistOperation( HWTH_RETURNCODE_TYPE    *rcPtr,
 		 break;
 	 case HTTP_RC_FORBIDDEN:
      rc = HTTP_RC_FORBIDDEN;
+     break; /* this is an error - but we will not print a message about it */
+	 case HTTP_RC_UNAUTHORIZED:
+     rc = HTTP_RC_UNAUTHORIZED;
      break; /* this is an error - but we will not print a message about it */
 	 default:
 		 sprintf( msgBuf,

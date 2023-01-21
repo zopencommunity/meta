@@ -106,8 +106,8 @@ int main(int argc, char* argv[]) {
     return 4;
   }
 
-  if (!tmppem || genfilename("pem", tmppem, ZOPEN_PATH_MAX)) {
-    fprintf(stderr, "error acquiring storage\n");
+  if (genfilename("pem", tmppem, ZOPEN_PATH_MAX)) {
+    /* genfilename issues specific errors */
     return 4;
   }
 
@@ -131,11 +131,9 @@ int main(int argc, char* argv[]) {
       fprintf(STDTRC, "Download %s into %s/%s\n", bootpkg[i], root,  ZOPEN_BOOT);
     }
     if (getfilenamefrompkg(bootpkg[i], pkgsfx, tmppem, filename, ZOPEN_PATH_MAX)) {
-      fprintf(stderr, "error acquiring storage (3)\n");
       return 4;
     }
     if (genfilenameinsubdir(root, ZOPEN_BOOT, filename, output, ZOPEN_PATH_MAX)) {
-      fprintf(stderr, "error acquiring storage (2)\n");
       return 4;
     }
     if ((rc = snprintf(uri, sizeof(uri), "/%s/%s%s/%s/%s", ZOPEN_BOOT_URI_PREFIX, bootpkg[i], pkgsfx, ZOPEN_BOOT_URI_SUFFIX, filename)) > sizeof(uri)) {
@@ -147,7 +145,6 @@ int main(int argc, char* argv[]) {
       return rc;
     }
     if (rc = unpaxandlink(root, ZOPEN_BOOT, output, bootpkg[i])) {
-      fprintf(stderr, "error unpaxing %s in directory %s/%s\n", output, root, ZOPEN_BOOT);
       return rc;
     }
   }
@@ -156,7 +153,6 @@ int main(int argc, char* argv[]) {
     fprintf(STDTRC, "Create %s for source'ing in %s/%s\n", ZOPEN_BOOT_ENV, root, ZOPEN_BOOT);
   }
   if (rc = createbootenv(root, ZOPEN_BOOT, bootpkg)) {
-    fprintf(stderr, "error creating %s in directory %s/%s\n", ZOPEN_BOOT_ENV, root, ZOPEN_BOOT);
     return rc;
   }
 
