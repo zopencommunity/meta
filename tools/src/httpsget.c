@@ -47,7 +47,19 @@ int httpsget(const char* host, const char* uri, const char* pem, const char* out
   }
 
   if (rc = download(host, uri, output, keydb, stashfile)) {
-    fprintf(stderr, "error downloading  https://%s%s to %s: %d\n", host, uri, output, rc);
+    if (rc == 403) {
+      fprintf(stderr, "You have received a 403 Forbidden error from %s%s\n", host, uri);
+      fprintf(stderr, "This is likely because you have exceeded your download quota from github.\n");
+      fprintf(stderr, "Please see: https://zosopentools.link/github-oauth for instructions on how to set up a github OAUTH id.\n");
+      fprintf(stderr, "Once your OAUTH id is set, export ZOPEN_GIT_OAUTH_TOKEN=<your token> and then re-run zopen-setup.\n");
+    } else if (rc == 401) {
+      fprintf(stderr, "You have received a 401 Unauthorized error from %s%s\n", host, uri);
+      fprintf(stderr, "This is likely because you have an expired or invalid github OAUTH id.\n");
+      fprintf(stderr, "Please see: https://zosopentools.link/github-oauth for instructions on how to set up a new github OAUTH id.\n");
+      fprintf(stderr, "Once your OAUTH id is reset, export ZOPEN_GIT_OAUTH_TOKEN=<your token> and then re-run zopen-setup.\n");
+    } else {
+      fprintf(stderr, "error downloading  https://%s%s to %s: %d\n", host, uri, output, rc);
+    }
     return rc;
   }
 

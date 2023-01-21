@@ -142,9 +142,11 @@ char *DS_TYPE = "blocked";         /* TRSMAIN convention */
 /****************************
  * constants for http status
  ****************************/
-#define HTTP_RC_OK       200
-#define HTTP_RC_CREATED  201
-#define HTTP_RC_REDIRECT 302       /* @GG*/
+#define HTTP_RC_OK        200
+#define HTTP_RC_CREATED   201
+#define HTTP_RC_REDIRECT  302 
+#define HTTP_RC_UNAUTHORIZED 401
+#define HTTP_RC_FORBIDDEN 403
 
 /********************************
  * variables and constants which
@@ -341,7 +343,6 @@ int toolkitSetOption( HWTH_RETURNCODE_TYPE *rcPtr,
 		uint32_t              optionValueLength,
 		HWTH_DIAGAREA_TYPE   *diagAreaPtr );
 
-/* @GG start*/
 int  setRequestHeaders( HWTH_RETURNCODE_TYPE *rcPtr,
                         HWTH_HANDLE_TYPE     *requestHandlePtr,
                         HWTH_DIAGAREA_TYPE   *diagAreaPtr );
@@ -354,7 +355,6 @@ int toolkitSlistOperation( HWTH_RETURNCODE_TYPE    *rcPtr,
                            char                   **stringRef,
                            uint32_t                 stringLength,
                            HWTH_DIAGAREA_TYPE      *diagAreaPtr );
-/* @GG end*/
 
 #define MAX_TOKEN_PAYLOAD 16536       /* generous */
 #define MAX_URI_LEN        511        /* generous */
@@ -364,6 +364,7 @@ int toolkitSlistOperation( HWTH_RETURNCODE_TYPE    *rcPtr,
  * Callbacks
  **************/
  HWTHRCVX  recvexit;                  /* streaming receive */
+ int       httpStatusCode;            /* http status       */
  HWTHHDRX  rhdrexit;                  /* response headers  */
 
 #ifdef HAS_MAIN
@@ -382,6 +383,7 @@ int toolkitSlistOperation( HWTH_RETURNCODE_TYPE    *rcPtr,
 	 struct parmStruct downloadParms = { false, IOTYPE_FILE, SCHEME_HTTPS };
 #endif
 	 char  msgBuf[80];
+   int rc;
 
 #ifdef HAS_MAIN
 	 if ( getDownloadParms( argc, argv, &downloadParms ) ) {
@@ -417,10 +419,10 @@ int toolkitSlistOperation( HWTH_RETURNCODE_TYPE    *rcPtr,
 	 toolkitDisconnect( &connectHandle );
 	 toolkitTerminate( &connectHandle );
 
-	 summarize( &downloadParms,
-			 &receiveData,
-			 toolkitRc );
-	 return toolkitRc;
+	 summarize( &downloadParms, &receiveData, toolkitRc );
+
+	 rc = checkHttpStatus(httpStatusCode);
+   return (rc == HTTP_RC_OK) ? 0 : rc; 
  }  /* end main */
 
 
@@ -713,7 +715,6 @@ int toolkitSlistOperation( HWTH_RETURNCODE_TYPE    *rcPtr,
 			 return -1;
 	 }
 
-     /* @GG just in case, set max redirects to the max */
      intOption = 50;
      if ( toolkitSetOption( &rc,
 				 connectHandlePtr,
@@ -723,7 +724,7 @@ int toolkitSlistOperation( HWTH_RETURNCODE_TYPE    *rcPtr,
 				 &diagArea ) )
 			 return -1;
 
-     /* @GG allow for cross domain redirects */
+   /* allow for cross domain redirects */
 	 intOption = HWTH_XDOMAIN_REDIRS_ALLOWED;
      if ( toolkitSetOption( &rc,
 				 connectHandlePtr,
@@ -800,7 +801,6 @@ int toolkitSlistOperation( HWTH_RETURNCODE_TYPE    *rcPtr,
 			 &diagArea ) )
 		 return -1;
 
-    /* @GG insert call to create request headers */
    /*********************************************
    * Set the request headers.  This involves
    * SList processing, done in called routines.
@@ -975,13 +975,15 @@ int toolkitSlistOperation( HWTH_RETURNCODE_TYPE    *rcPtr,
 			 *requestHandlePtr,
 			 &diagArea );
 	 if ( rc != HWTH_OK ) {
-		 /* @GG the HWTH_WARNING with reason code 1 is due to a redirect*/
-		 if (rc == HWTH_WARNING & diagArea.HWTH_reasonCode == 1) {
-			; /* MSF - this is expected trace("*INFO*: The request was successful, however FYI it involved a redirect."); */
-                        rc = HWTH_OK;
+		 /* The HWTH_WARNING with reason code 1 is due to a redirect        */
+     /* This is not an issue - redirects are normal - no message needed */
+		 if (rc == HWTH_WARNING && diagArea.HWTH_reasonCode == 1) {
+      rc = HWTH_OK;
 		 } else {
-		   trace("hwthrqst did not return an acceptable RC");
-		   surfaceToolkitDiag( &rc, &diagArea );
+       if (rc != HWTH_WARNING) {
+		     trace("hwthrqst did not return an acceptable RC");
+		     surfaceToolkitDiag( &rc, &diagArea );
+       }
 		 }
 	 }
 	 return rc;
@@ -1062,7 +1064,6 @@ int toolkitSlistOperation( HWTH_RETURNCODE_TYPE    *rcPtr,
 	 if ( pRecvData->numBytesReceived )
 		 downloadSize = pRecvData->numBytesReceived;
 	 else {
-		 trace( "A full response was not received" );
 		 if ( toolkitRc == HWTH_OK ) {
 			 sprintf( msgBuf,
 					 "Http response code %d was received",
@@ -1070,10 +1071,13 @@ int toolkitSlistOperation( HWTH_RETURNCODE_TYPE    *rcPtr,
 			 trace( msgBuf );
 		 }
 		 else {
+     #if 0
+       /* for things like forbidden or redirect, no message needed */
 			 sprintf( msgBuf,
 					 "Toolkit failure rc %d was received",
 					 toolkitRc );
 			 trace( msgBuf );
+     #endif
 		 }
 		 downloadSize = pRecvData->knownContentLength;
 	 } /* endif lacking (full) response */
@@ -1362,8 +1366,8 @@ int toolkitSlistOperation( HWTH_RETURNCODE_TYPE    *rcPtr,
 	 if ( pUserData->httpStatusCode == 0 ) {
 		 pStatusLine = pReceiveProgress->HWTH_responseStatusLine;
 		 pUserData->httpStatusCode = (int)(pStatusLine->HWTH_statusCode);
-		 if ( checkHttpStatus( pUserData->httpStatusCode ) ) {
-			 rxtrace( "aborting (unacceptable Http status)" );
+     httpStatusCode = pUserData->httpStatusCode; 
+		 if (checkHttpStatus( pUserData->httpStatusCode ) != HTTP_RC_OK) {
 			 *pReceiveState = HWTH_STREAM_RECEIVE_ABORT;
 			 return;
 		 } /* endif unacceptable http status code */
@@ -1537,25 +1541,30 @@ int toolkitSlistOperation( HWTH_RETURNCODE_TYPE    *rcPtr,
   * code (returned in the response headers) warrants
   * receipt of the response body.
   *
-  * Returns: 0 if acceptable status, -1 if not
+  * Returns: 0 if acceptable status, httpStatusCode if not
   *******************************************************/
  int  checkHttpStatus( int httpStatusCode ) {
 	 int rc = -1;
 	 char msgBuf[80];
 
-     /* @GG - need to also handle the successful
-              case of redirect
-     */
 	 switch ( httpStatusCode ) {
 	 case HTTP_RC_CREATED:
 	 case HTTP_RC_OK:
 	 case HTTP_RC_REDIRECT:
-		 rc = 0;
+		 rc = HTTP_RC_OK; /* map 'ok' stuff to rc_ok */
 		 break;
+	 case HTTP_RC_FORBIDDEN:
+     rc = HTTP_RC_FORBIDDEN;
+     break; /* this is an error - but we will not print a message about it */
+	 case HTTP_RC_UNAUTHORIZED:
+     rc = HTTP_RC_UNAUTHORIZED;
+     break; /* this is an error - but we will not print a message about it */
 	 default:
 		 sprintf( msgBuf,
 				 "Unexpected Http response code %d received",
 				 httpStatusCode );
+     rc = httpStatusCode;
+       
 		 rxtrace( msgBuf );
 		 break;
 	 } /* end switch */
@@ -2105,7 +2114,8 @@ int toolkitSlistOperation( HWTH_RETURNCODE_TYPE    *rcPtr,
 	  * additional level(s) to increase the likelihood
 	  * of acceptance by your web server.
 	  **************************************************/
-	 //HWTH_SSLVERSION_DEFAULT @GG
+	 /* HWTH_SSLVERSION_DEFAULT is the default */
+
 	 intOption = HWTH_SSLVERSION_TLSV12;
 	 if ( toolkitSetOption( &rc,
 			 connectHandlePtr,
@@ -2675,8 +2685,6 @@ int setRequestHeaders( HWTH_RETURNCODE_TYPE *rcPtr,
          trace( "Slist append failure" );
          return -1;
          } /* endif slist append failed */
-      else
-         trace( "Next request header appended" );
       }  /* endloop thru remaining headers */
 
  if ( toolkitSetOption( rcPtr,
