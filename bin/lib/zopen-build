@@ -427,7 +427,7 @@ setDepsEnv()
       fi
       # Use the first path specified in the dependency search list
       path=$(echo ${depsPath} | tr '|' '\n' | head -1)
-      printVerbose "Running zopen download -r $dep -d $path"
+      printVerbose "Running zopen download --install-or-upgrade -r $dep -d $path -v"
       if ! zopen download -r $dep -d $path; then
         printError "zopen download command failed"
       fi
@@ -1306,7 +1306,14 @@ resolveCommands()
   fi
 
   if [ "${ZOPEN_INSTALL}x" != "skipx" ] && [ ! -z "$(command -v ${ZOPEN_INSTALL})" ]; then
-    export ZOPEN_INSTALL_CMD="${ZOPEN_INSTALL} ${ZOPEN_INSTALL_OPTS}"
+    case "${ZOPEN_CONFIGURE}" in
+      (*cmake*)
+        export ZOPEN_INSTALL_CMD="\"${ZOPEN_INSTALL}\" ${ZOPEN_INSTALL_OPTS}"
+        ;;
+      (*)
+        export ZOPEN_INSTALL_CMD="\"${ZOPEN_INSTALL}\" ${ZOPEN_INSTALL_OPTS} CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\""
+        ;;
+    esac
     [[ -d ${ZOPEN_ROOT}/install ]] || mkdir -p ${ZOPEN_ROOT}/install
     paxFileName="${ZOPEN_ROOT}/install/${ZOPEN_NAME}.${LOG_PFX}.zos.pax.Z"
     export ZOPEN_PAX_CMD="pax -w -z -x pax \"-s#${ZOPEN_INSTALL_DIR}/#${ZOPEN_NAME}.${LOG_PFX}.zos/#\" -f \"${paxFileName}\" \"${ZOPEN_INSTALL_DIR}/\""
