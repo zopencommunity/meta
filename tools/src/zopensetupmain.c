@@ -130,8 +130,9 @@ int main(int argc, char* argv[]) {
     if (verbose) {
       fprintf(STDTRC, "Download %s into %s/%s\n", bootpkg[i], root,  ZOPEN_BOOT);
     }
-    if (getfilenamefrompkg(bootpkg[i], pkgsfx, tmppem, filename, ZOPEN_PATH_MAX)) {
-      return 4;
+    if (rc = getfilenamefrompkg(bootpkg[i], pkgsfx, tmppem, filename, ZOPEN_PATH_MAX)) {
+      /* If the boot package isn't found (404), keep going */
+      if (rc == 404) { continue; }
     }
     if (genfilenameinsubdir(root, ZOPEN_BOOT, filename, output, ZOPEN_PATH_MAX)) {
       return 4;
@@ -141,8 +142,7 @@ int main(int argc, char* argv[]) {
       return 4;
     }
     if (rc = httpsget(host, uri, tmppem, output)) {
-      fprintf(stderr, "error downloading https://%s%s with PEM file %s to %s\n", host, uri, tmppem, output);
-      return rc;
+      fprintf(stderr, "error %d downloading https://%s%s with PEM file %s to %s\n", rc, host, uri, tmppem, output);
     }
     if (rc = unpaxandlink(root, ZOPEN_BOOT, output, bootpkg[i])) {
       return rc;

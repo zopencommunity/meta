@@ -147,6 +147,7 @@ char *DS_TYPE = "blocked";         /* TRSMAIN convention */
 #define HTTP_RC_REDIRECT  302 
 #define HTTP_RC_UNAUTHORIZED 401
 #define HTTP_RC_FORBIDDEN 403
+#define HTTP_RC_NOTFOUND 404
 
 /********************************
  * variables and constants which
@@ -1555,6 +1556,9 @@ int toolkitSlistOperation( HWTH_RETURNCODE_TYPE    *rcPtr,
 		 break;
 	 case HTTP_RC_FORBIDDEN:
      rc = HTTP_RC_FORBIDDEN;
+     break; /* this is an error - but we will not print a message about it */
+	 case HTTP_RC_NOTFOUND:
+     rc = HTTP_RC_NOTFOUND;
      break; /* this is an error - but we will not print a message about it */
 	 case HTTP_RC_UNAUTHORIZED:
      rc = HTTP_RC_UNAUTHORIZED;

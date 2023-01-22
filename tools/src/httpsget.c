@@ -57,6 +57,10 @@ int httpsget(const char* host, const char* uri, const char* pem, const char* out
       fprintf(stderr, "This is likely because you have an expired or invalid github OAUTH id.\n");
       fprintf(stderr, "Please see: https://zosopentools.link/github-oauth for instructions on how to set up a new github OAUTH id.\n");
       fprintf(stderr, "Once your OAUTH id is reset, export ZOPEN_GIT_OAUTH_TOKEN=<your token> and then re-run zopen-setup.\n");
+    } else if (rc == 404) {
+      fprintf(stderr, "You have received a 404 Not Found error from %s%s\n", host, uri);
+      fprintf(stderr, "This is likely because there is no release currently tagged as 'boot' for this package\n");
+      fprintf(stderr, "Open an issue at https://github.com/ZOSOpenTools/<pkg>port/issues\n");
     } else {
       fprintf(stderr, "error downloading  https://%s%s to %s: %d\n", host, uri, output, rc);
     }
