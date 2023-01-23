@@ -688,6 +688,17 @@ extractTarBall()
   tarballz="$1"
   dir="$2"
 
+  if ! find --version >/dev/null 2>/dev/null; then
+    printError "The findutils open source package is required by zopen-build. The z/OS default 'find' is insufficient"
+  fi
+  findraw=$(find --version | head -1 | awk '{print $4;}')
+  v=${findraw%%.*}
+  vr=${findraw%.*}
+  r=${vr##*.}
+  if [ ${v} -lt 4 ] || [ ${r} -lt 9 ]; then
+    printError "Need to be running at least find 4.9.0"
+  fi
+
   printInfo "Extract tarball ${tarballz} into ${dir}"
   ext=${tarballz##*.}
   if [ "${ext}x" = "xzx" ]; then
