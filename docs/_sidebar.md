@@ -7,6 +7,7 @@
   - [Available ports](/Latest.md)
     - [Current Status](/Progress.md)
   - [FAQ](/Guides/FAQ.md)
+  - [Common Solutions](/Guides/CommonSolutions.md)
   - Articles
     - [Using Git on z/OS](/Guides/GitOnZOS.md)
     - [Using Vim on z/OS](/Guides/VimOnZOS.md)

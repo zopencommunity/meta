@@ -144,3 +144,49 @@ cp /usr/lpp/cbclib/xlclang/etc/xlclang.cfg /u/fred/xlclang.cfg.zos204.noceertfm
 export CLC_CONFIG=/u/fred/xlclang.cfg.zos204.noceertfm
 ```
 
+## S_TYPEISSHM macro gives an error when compiled
+
+The error might be something like: `called object type 'int' is not a function or function pointer`
+
+This is due to a bug in the LE header file `sys/modes.h` which defines the macros as follows:
+
+```
+       #ifdef __SUSV3_POSIX                                  /*#5@D1A*/
+         #define S_TYPEISMQ  (0)         /* Test for a message queue */
+         #define S_TYPEISSEM (0)         /* Test for a semaphore     */
+         #define S_TYPEISSHM (0)         /* Test for a shared memory */
+                                         /* object                   */
+       #endif /* __SUSV3_POSIX */
+```
+
+This is unfortunately wrong because the macro expects a parameter to be passed to it
+(the z/OS team has been notified and hopefully a fix will be provided soon).
+
+The simplest work-around is to provide a patch to the open source package. `findutils` currently has a patch 
+for this:
+
+```
++#ifdef __MVS__
++  /* z/OS incorrectly defined these macros - if they are present,
++   * redefined them
++   */
++  #ifdef S_TYPEISSEM
++     #undef S_TYPEISSEM
++     #define S_TYPEISSEM(x) (0)
++  #endif
++  #ifdef S_TYPEISMQ
++     #undef S_TYPEISMQ
++     #define S_TYPEISMQ(x) (0)
++  #endif
++  #ifdef S_TYPEISSHM
++     #undef S_TYPEISSHM
++     #define S_TYPEISSHM(x) (0)
++  #endif
++  #ifdef S_TYPEISTMO
++     #undef S_TYPEISTMO
++     #define S_TYPEISTMO(x) (0)
++  #endif
++#endif
+```
+
+
