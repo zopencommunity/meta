@@ -25,7 +25,6 @@
 ## Projects that do not have builds
 
 * [gnulibport](https://github.com/ZOSOpenTools/gnulibport)
-* [grepport](https://github.com/ZOSOpenTools/grepport)
 * [helloport](https://github.com/ZOSOpenTools/helloport)
 * [htopport](https://github.com/ZOSOpenTools/htopport)
 * [libxml2port](https://github.com/ZOSOpenTools/libxml2port)
@@ -86,7 +85,7 @@
 | [ctagsport](https://github.com/ZOSOpenTools/ctagsport) | 0 | 100% |
 | [gnulibport](https://github.com/ZOSOpenTools/gnulibport) | 0 | No builds |
 | [gperfport](https://github.com/ZOSOpenTools/gperfport) | 0 | Skipped |
-| [grepport](https://github.com/ZOSOpenTools/grepport) | 0 | No builds |
+| [grepport](https://github.com/ZOSOpenTools/grepport) | 0 | 90% |
 | [helloport](https://github.com/ZOSOpenTools/helloport) | 0 | No builds |
 | [htopport](https://github.com/ZOSOpenTools/htopport) | 0 | No builds |
 | [jqport](https://github.com/ZOSOpenTools/jqport) | 0 | 57% |
@@ -111,4 +110,4 @@
 | [vimport](https://github.com/ZOSOpenTools/vimport) | 0 | 100% |
 | [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 100% |
 
-Last updated:  2023-01-23 14:44:46
+Last updated:  2023-01-23 15:07:15
