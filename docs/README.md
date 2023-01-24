@@ -8,4 +8,4 @@ The [z/OS Open Tools community](https://github.com/ZOSOpenTools) is here to enco
 
 <hr />
 
-<sup>You can update this page. Learn more at [Updating docs](/README_docs.md).</sup>
+<sup>You can update this page. Learn more at [Updating docs](./README_docs.md).</sup>
