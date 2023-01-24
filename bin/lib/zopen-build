@@ -626,16 +626,11 @@ setEnv()
 tagBinaryFiles()
 {
   absdir="$1"
-  (cd "${absdir}" && find . -name "*.pdf" -o -name "*.png" -o -name "*.bat" -o -name "*.jpg" -o -name "*.gif" -o -name "*.ttf" -o -name "*.wbmp" -name "*.gmo" -name "*.po" -name "*.der" ! -type d ! -type l | xargs -I {} chtag -b {})
+  (cd "${absdir}" && find . -name "*.pdf" -o -name "*.png" -o -name "*.jpg" -o -name "*.gif" -o -name "*.ttf" -o -name "*.wbmp" -o -name "*.gmo" -o -name "*.po" -o -name "*.der"  -o -name "*.xz" -o -name "*.gz" ! -type d ! -type l | xargs -I {} chtag -b {})
 }
 
-tagUntaggedFilesAsISO8859_1()
-{
-  absdir="$1"
-  (cd "${absdir}" && chtag -qpR . | awk '{ if ($1 == "-") { if (NF == 4) { print $4 } else { sub(/^[ ]*([^ ]+ +){3}/, ""); print $0; }}}' | xargs -I {} chtag -tcISO8859-1 {})
-}
 #
-# 'Quick' way to find untagged non-binary files. If the list of extensions grows, something more
+# 'Quick' way to tag binary files. If the list of extensions grows, something more
 # elegant is required
 #
 tagTree()
@@ -643,7 +638,6 @@ tagTree()
   dir="$1"
   absdir=$(cd ${dir} && echo "${PWD}")
   tagBinaryFiles "${absdir}"
-  tagUntaggedFilesAsISO8859_1 "${absdir}"
 }
 
 gitClone()
@@ -688,35 +682,23 @@ extractTarBall()
   tarballz="$1"
   dir="$2"
 
+  if ! tar --version >/dev/null 2>/dev/null; then
+    printError "The tar open source package is required by zopen-build. The z/OS default 'tar' is insufficient"
+  fi
+  tarraw=$(tar --version | head -1 | awk '{print $4;}')
+  v=${tarraw%%.*}
+  r=${tarraw##*.}
+  if [ ${v} -lt 1 ] || [ ${r} -lt 34 ]; then
+    printError "Need to be running at least tar 1.34"
+  fi
+
   printInfo "Extract tarball ${tarballz} into ${dir}"
-  ext=${tarballz##*.}
-  if [ "${ext}x" = "xzx" ]; then
-    if ! xz -d "${tarballz}"; then
-      printError "Unable to use xz to decompress ${tarballz}"
-    fi
-    tarball=${tarballz%%.xz}
-  elif [ "${ext}x" = "gzx" ]; then
-    if ! gunzip "${tarballz}"; then
-      printError "Unable to use gunzip to decompress ${tarballz}"
-    fi
-    tarball=${tarballz%%.gz}
-  elif [ "${ext}x" = "bz2x" ]; then
-    if ! bunzip2 "${tarballz}"; then
-      printError "Unable to use bunzip2 to decompress ${tarballz}"
-    fi
-    tarball=${tarballz%%.bz2}
-  else
-    printError "Extension ${ext} is an unsupported compression technique. Add code"
-  fi
 
-  tar -xf "${tarball}" 2>&1 >/dev/null | grep -v FSUM7171 >/dev/null
-  if [ $? -gt 1 ]; then
-    printError "Unable to untar ${tarball}"
+  tar -axf "${tarballz}"  
+  if [ $? -gt 0 ]; then
+    printError "Unable to untar ${tarballz}"
   fi
-  rm -f "${tarball}"
-
-  # tar will incorrectly tag files as 1047, so just clear the tags
-  chtag -R -r "${dir}"
+  rm -f "${tarballz}"
 
   tagTree "${dir}"
   cd "${dir}" || printError "Cannot cd to ${dir}"
@@ -730,7 +712,7 @@ extractTarBall()
   fi
 
   #
-  # Need to keep this line and 'tagFilesAsBinary' in sync
+  # Need to keep this line and 'tagBinaryFiles' in sync
   # Perhaps this can be done with a function but be aware of blanks, newlines, etc. in file names
   #
   if [ "${ZOPEN_GIT_SETUP}x" = "Nx" ]; then
@@ -750,7 +732,6 @@ extractTarBall()
 *.jpeg
 *.png
 *.gif
-*.bat
 *.pdf
 *.ttf
 *.wbmp
