@@ -126,7 +126,7 @@ zopen_append_to_env()
   # echo envars outside of PATH, MANPATH, LIBPATH
 }"
 
-echo "$buildenvContents" > $buildenv
+/bin/echo "$buildenvContents" > $buildenv
 
 printInfo "$buildenv created"
 
