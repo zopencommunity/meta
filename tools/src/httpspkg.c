@@ -20,10 +20,10 @@ int getfilenamefrompkg(const char* pkg, const char* pkgsfx, const char* tmppem, 
   char uri[ZOPEN_PATH_MAX+1];
   int rc;
 
-  if (genfilename("raw", temprawpkg, ZOPEN_PATH_MAX)) {
+  if (gentmpfilename("raw", temprawpkg, ZOPEN_PATH_MAX)) {
     return 4;
   }
-  if (genfilename("pkg", temppkg, ZOPEN_PATH_MAX)) {
+  if (gentmpfilename("pkg", temppkg, ZOPEN_PATH_MAX)) {
     return 4;
   }
 

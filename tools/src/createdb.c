@@ -6,14 +6,14 @@
 #include "createdb.h"
 #include "zopenio.h"
 
-static int genfilenames(char* kdb, size_t kdblen, char* rdb, size_t reqdblen, char* stashfile, size_t stashfilelen) {
-  if (genfilename("kdb", kdb, kdblen)) {
+static int gentmpfilenames(char* kdb, size_t kdblen, char* rdb, size_t reqdblen, char* stashfile, size_t stashfilelen) {
+  if (gentmpfilename("kdb", kdb, kdblen)) {
     return 4;
   }
-  if (genfilename("rdb", rdb, reqdblen)) {
+  if (gentmpfilename("rdb", rdb, reqdblen)) {
     return 4;
   }
-  if (genfilename("sth", stashfile, stashfilelen)) {
+  if (gentmpfilename("sth", stashfile, stashfilelen)) {
     return 4;
   }
   return 0;
@@ -52,7 +52,7 @@ int createdb(const char* pem, char** keydb, size_t keydblen, char** reqdb, size_
   #define IMPORT_CA "7\n"
   #define CA_LABEL "zopen-ca\n"
 
-  if (genfilenames(*keydb, keydblen, *reqdb, reqdblen, *stashfile, stashfilelen)) {
+  if (gentmpfilenames(*keydb, keydblen, *reqdb, reqdblen, *stashfile, stashfilelen)) {
     return 4;
   }
 
@@ -96,7 +96,7 @@ int createdb(const char* pem, char** keydb, size_t keydblen, char** reqdb, size_
   /*
    * Now we can use a more natural command line to import the pem file and export the stash file
    * The reqdb file and stashfile will be created in the same directory with the same file name but a
-   * different extension. It is unfortunate this can not be controlled but the genfilenames() above
+   * different extension. It is unfortunate this can not be controlled but the gentmpfilenames() above
    * does the right thing and will ensure the kdb, reqdb, stashfile names are all consistent
    * (same directory, same file name, different extension)
    */

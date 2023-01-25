@@ -69,10 +69,13 @@ int main(int argc, char* argv[]) {
   char  filename[ZOPEN_PATH_MAX+1];
   char  output[ZOPEN_PATH_MAX+1];
   char  tmppem[ZOPEN_PATH_MAX+1];
+  char  zopenhome[ZOPEN_PATH_MAX+1];
+  char  realpathbuffer[ZOPEN_PATH_MAX+1];
   char  uri[ZOPEN_PATH_MAX+1];
   int   rc;
   int   i;
   int parmsok=0;
+  char* zopen_c_home_var = getenv("HOME");
 
   if (argc < 2) {
     syntax(argv[0]);
@@ -100,14 +103,27 @@ int main(int argc, char* argv[]) {
     syntax(argv[0]);
     return 8;
   }
+  if (!zopen_c_home_var) {
+    fprintf(stderr, "Unable to determine $HOME location - this is required to create the symbolic link\n");
+    return 8;
+  }
   if (!realpath(argv[argc-1], root)) {
     fprintf(stderr, "Directory %s does not exist, or is not writable\n", argv[argc-1]);
     syntax(argv[0]);
     return 4;
   }
+  if (genfilename(zopen_c_home_var, ZOPEN_HOME_NAME, zopenhome, ZOPEN_PATH_MAX)) {
+    return 4;
+  }
 
-  if (genfilename("pem", tmppem, ZOPEN_PATH_MAX)) {
-    /* genfilename issues specific errors */
+  if (realpath(zopenhome, realpathbuffer)) {
+    fprintf(stderr, "File or directory %s exists. Please move this file before running since a symbolic link will be created\n", zopenhome);
+    syntax(argv[0]);
+    return 4;
+  }
+
+  if (gentmpfilename("pem", tmppem, ZOPEN_PATH_MAX)) {
+    /* gentmpfilename issues specific errors */
     return 4;
   }
 
@@ -157,10 +173,10 @@ int main(int argc, char* argv[]) {
   }
 
   if (verbose) {
-    fprintf(STDTRC, "Create symbolic link from %s/%s to %s\n", ZOPEN_HOME, ZOPEN_HOME_NAME, root);
+    fprintf(STDTRC, "Create symbolic link from %s to %s\n", zopenhome, ZOPEN_HOME_NAME, root);
   }
-  if (createhomelink(ZOPEN_HOME, ZOPEN_HOME_NAME, root)) {
-    fprintf(stderr, "error creating symbolic link from %s/%s to %s\n", ZOPEN_HOME, ZOPEN_HOME_NAME, root);
+  if (createhomelink(zopenhome, root)) {
+    fprintf(stderr, "error creating symbolic link from %s to %s\n", zopenhome, root);
     return rc;
   }
 
