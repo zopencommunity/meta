@@ -81,6 +81,9 @@
 #define _ALL_SOURCE
 #define _LARGE_FILES
 #define  _XOPEN_SOURCE_EXTENDED 1
+#ifndef _EXT
+#define _EXT
+#endif
 #include <strings.h>
 #include <ctype.h>
 #include <stdio.h>
