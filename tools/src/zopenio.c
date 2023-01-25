@@ -16,7 +16,7 @@ static char* zopentmpdir(void) {
   return tmpdir;
 }
 
-int genfilename(const char* extension, char* buffer, size_t bufflen) {
+int gentmpfilename(const char* extension, char* buffer, size_t bufflen) {
   pid_t pid = getpid();
   char* tmpdir = zopentmpdir();
   int rc;
@@ -30,13 +30,30 @@ int genfilename(const char* extension, char* buffer, size_t bufflen) {
   return 0;
 }
 
+int genfilename(const char* dir, const char* filename, char* buffer, size_t bufflen) {
+  int rc;
+
+  rc = snprintf(buffer, bufflen, "%s/%s", dir, filename);
+
+  if (rc > bufflen) {
+    fprintf(stderr, "Unable to generate file name %s in %s/%s (bufflen %d, rc %d)\n", filename, dir, bufflen, rc);
+    return 4;
+  }
+
+#if VERY_VERBOSE
+  printf("filename in dir:%s\n", buffer);
+#endif
+
+  return 0;
+}
+
 int genfilenameinsubdir(const char* dir, const char* subdir, const char* filename, char* buffer, size_t bufflen) {
   int rc;
 
   rc = snprintf(buffer, bufflen, "%s/%s/%s", dir, subdir, filename);
 
   if (rc > bufflen) {
-    fprintf(stderr, "Unable to generate temporary file name in %s/%s (bufflen %d, rc %d)\n", dir, subdir, bufflen, rc);
+    fprintf(stderr, "Unable to generate file name %s in directory %s/%s (bufflen %d, rc %d)\n", filename, dir, subdir, bufflen, rc);
     return 4;
   }
 
