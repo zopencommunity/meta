@@ -2734,7 +2734,13 @@ int setRequestHeaders( HWTH_RETURNCODE_TYPE *rcPtr,
  * Returns: Address of heap-allocated ptr array
  ****************************************************************/
 char **getRequestHeaders(void) {
- char buf[80];
+ /* See https://github.blog/changelog/2021-03-31-authentication-token-format-updates-are-generally-available/
+  * The GitHub token can be up to 255 characters in length.
+    Size the buffer accordingly:
+    255 (max token length) + 20 (string Authorization:Bearer)
+    + a couple of spare bytes for zero terminator etc.
+  */
+ char buf[255 + 20 + 5];
  char **headers = NULL;
  int num_headers = 1;
 
