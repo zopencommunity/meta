@@ -2731,7 +2731,7 @@ int setRequestHeaders( HWTH_RETURNCODE_TYPE *rcPtr,
  * Returns: Address of heap-allocated ptr array
  ****************************************************************/
 char **getRequestHeaders(void) {
- char buf[80];
+ char buf[280];
  char **headers = NULL;
  int num_headers = 1;
 
