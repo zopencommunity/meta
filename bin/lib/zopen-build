@@ -1134,10 +1134,6 @@ for f in \$(/bin/find \$${projectName}_HOME/ -type f | /bin/xargs grep -l \"ZOPE
     rm \$f.tmp;
   fi
 done
-echo \"Setup completed.\"
-touch \".installed\"
-rm \".installing\"
-
 zz
   fi
 
@@ -1146,6 +1142,12 @@ zz
     append_to_setup="$(${ZOPEN_APPEND_TO_SETUP})"
     echo "$append_to_setup" >> "${ZOPEN_INSTALL_DIR}/setup.sh"
   fi
+
+  cat <<zz >>"${ZOPEN_INSTALL_DIR}/setup.sh"
+echo \"Setup completed.\"
+touch \".installed\"
+rm \".installing\"
+zz
 
 # Add call to setup.sh
 cat <<zz >>"${ZOPEN_INSTALL_DIR}/.env"
