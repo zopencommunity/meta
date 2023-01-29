@@ -1099,10 +1099,6 @@ export _TAG_REDIR_IN=txt
 export _TAG_REDIR_ERR=txt
 export _TAG_REDIR_OUT=txt
 export ${projectName}_HOME=\${PWD}
-# Run setup.sh if it hasn't been run yet
-if [ ! -f \".installed\" ] && [ ! -f \".installing\" ] && [ -x \"setup.sh\" ]; then
-  ./setup.sh
-fi
 zz
 
   if [ -d "${ZOPEN_INSTALL_DIR}/bin" ]; then
@@ -1127,8 +1123,8 @@ zz
 touch \".installing\"
 . ./.env
 echo \"Setting up ${projectName_lower}...\"
-touch \"\${PWD}/.installed\"
 zz
+
   if $hasHardcodedPaths; then
     cat <<zz >>"${ZOPEN_INSTALL_DIR}/setup.sh"
 for f in \$(/bin/find \$${projectName}_HOME/ -type f | /bin/xargs grep -l \"ZOPEN_INSTALL_ROOT\" 2>/dev/null); do
@@ -1138,10 +1134,6 @@ for f in \$(/bin/find \$${projectName}_HOME/ -type f | /bin/xargs grep -l \"ZOPE
     rm \$f.tmp;
   fi
 done
-echo \"Setup completed.\"
-touch \".installed\"
-rm \".installing\"
-
 zz
   fi
 
@@ -1150,6 +1142,20 @@ zz
     append_to_setup="$(${ZOPEN_APPEND_TO_SETUP})"
     echo "$append_to_setup" >> "${ZOPEN_INSTALL_DIR}/setup.sh"
   fi
+
+  cat <<zz >>"${ZOPEN_INSTALL_DIR}/setup.sh"
+echo \"Setup completed.\"
+touch \".installed\"
+rm \".installing\"
+zz
+
+# Add call to setup.sh
+cat <<zz >>"${ZOPEN_INSTALL_DIR}/.env"
+# Run setup.sh if it hasn't been run yet
+if [ ! -f \".installed\" ] && [ ! -f \".installing\" ] && [ -x \"setup.sh\" ]; then
+  ./setup.sh
+fi
+zz
 
   chmod 755 "${ZOPEN_INSTALL_DIR}/setup.sh"
 }
