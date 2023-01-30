@@ -38,6 +38,9 @@ defineEnvironment()
 
   # Required for proper operation of (USS shipped) sed
   export _UNIX03=YES
+
+  # Use /bin/cat as the pager in case xlclang help is displayed, we don't want to wait for input
+  export PAGER=/bin/cat
 }
 
 #
