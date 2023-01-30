@@ -130,13 +130,18 @@ downloadRepos()
       printError "${pax} was not actually downloaded?"
     fi
 
+    dirname=${pax%.pax.Z}
+    if [ -d "$dirname" ]; then
+      printInfo "Deleting existing $dirname..."
+      rm -rf "$dirname"
+    fi
+
     printInfo "Extracting $pax..."
     if ! runAndLog "pax -rf $pax -p p ${redirectToDevNull}"; then
       printWarning "Could not extract $pax. Skipping"
       continue;
     fi
     rm -f "${pax}"
-    dirname=${pax%.pax.Z}
 
     # Remove old symlink and recreate
     if [ -L $name ]; then

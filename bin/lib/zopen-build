@@ -649,8 +649,8 @@ gitClone()
   v=${gitraw%%.*}
   vr=${gitraw%.*}
   r=${vr##*.}
-  if [ ${v} -lt 2 ] || [ ${r} -lt 26 ]; then 
-    printError "Need to be running at least git 2.26"
+  if [ ${v} -lt 2 ] || [ ${r} -lt 39 ]; then 
+    printError "Need to be running at least git 2.39"
   fi
 
   gitname=$(basename "$ZOPEN_GIT_URL")
@@ -706,11 +706,6 @@ extractTarBall()
   # Clean up .git* files since we will be creating our own local git repo for applying patches
   rm -rf .git* .travis*
 
-  # Create .gitattributes file 
-  if ! asciiecho "* text working-tree-encoding=ISO8859-1" ".gitattributes"; then
-    printError "Unable to create .gitattributes for tarball"
-  fi
-
   #
   # Need to keep this line and 'tagBinaryFiles' in sync
   # Perhaps this can be done with a function but be aware of blanks, newlines, etc. in file names
@@ -725,21 +720,21 @@ extractTarBall()
     fi
 
     if ! asciiecho "
-*.jpg
-*.dvi
-*.xz
-*.gz
-*.jpeg
-*.png
-*.gif
-*.pdf
-*.ttf
-*.wbmp
-*.gmo
-*.po
-*.der
-" ".gitignore"; then
-      printError "Unable to create .gitignore for tarball"
+*.jpg binary
+*.dvi binary
+*.xz binary
+*.gz binary
+*.jpeg binary
+*.png binary
+*.gif binary
+*.pdf binary
+*.ttf binary
+*.wbmp binary
+*.gmo binary
+*.po binary
+*.der binary
+" ".gitattributes"; then
+      printError "Unable to create .gitattributes for tarball"
     fi
 
     if ! git add . >/dev/null; then
