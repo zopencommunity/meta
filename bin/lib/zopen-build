@@ -354,7 +354,7 @@ checkEnv()
     if [ "${ZOPEN_TARBALL_DEPS}x" = "x" ]; then
       printError "ZOPEN_DEPS or ZOPEN_TARBALL_DEPS needs to be defined to the ported tools this depends on"
     fi
-    implicitDeps="curl tar"
+    implicitDeps="git curl tar"
     ext=${ZOPEN_TARBALL_URL##*.}
     if [ "${ext}x" = "xzx" ]; then
       implicitDeps="${implicitDeps} xz"
@@ -640,7 +640,7 @@ tagTree()
   tagBinaryFiles "${absdir}"
 }
 
-gitClone()
+checkGitVersion()
 {
   if ! git --version >/dev/null 2>/dev/null; then
     printError "git is required to download from the git repo"
@@ -652,7 +652,10 @@ gitClone()
   if [ ${v} -lt 2 ] || [ ${r} -lt 39 ]; then 
     printError "Need to be running at least git 2.39"
   fi
+}
 
+gitClone()
+{
   gitname=$(basename "$ZOPEN_GIT_URL")
   dir=${gitname%%.*}
   if [ -d "${dir}" ]; then
@@ -875,6 +878,8 @@ getCode()
 {
   printHeader "Building ${ZOPEN_ROOT}"
   cd "${ZOPEN_ROOT}" || exit 99
+
+  checkGitVersion
 
   if [ "${ZOPEN_TYPE}x" = "GITx" ]; then
     printInfo "Checking if git directory already cloned"
