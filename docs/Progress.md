@@ -20,7 +20,6 @@
 * [sqliteport](https://github.com/ZOSOpenTools/sqliteport)
 * [tclport](https://github.com/ZOSOpenTools/tclport)
 * [texinfoport](https://github.com/ZOSOpenTools/texinfoport)
-* [zstdport](https://github.com/ZOSOpenTools/zstdport)
 ## Projects that do not have builds
 
 * [gnulibport](https://github.com/ZOSOpenTools/gnulibport)
@@ -78,7 +77,7 @@
 | [re2cport](https://github.com/ZOSOpenTools/re2cport) | 1 | No builds |php
 | [xxhashport](https://github.com/ZOSOpenTools/xxhashport) | 1 | 100% |rsync
 | [zipport](https://github.com/ZOSOpenTools/zipport) | 1 | 71% |unzip
-| [zstdport](https://github.com/ZOSOpenTools/zstdport) | 1 | Skipped |rsync
+| [zstdport](https://github.com/ZOSOpenTools/zstdport) | 1 | 100% |rsync
 | [bzip2port](https://github.com/ZOSOpenTools/bzip2port) | 0 | 100% |
 | [cscopeport](https://github.com/ZOSOpenTools/cscopeport) | 0 | 100% |
 | [ctagsport](https://github.com/ZOSOpenTools/ctagsport) | 0 | 100% |
@@ -109,4 +108,4 @@
 | [vimport](https://github.com/ZOSOpenTools/vimport) | 0 | 100% |
 | [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 100% |
 
-Last updated:  2023-01-31 17:52:37
+Last updated:  2023-01-31 18:02:12
