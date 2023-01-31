@@ -354,7 +354,7 @@ checkEnv()
     if [ "${ZOPEN_TARBALL_DEPS}x" = "x" ]; then
       printError "ZOPEN_DEPS or ZOPEN_TARBALL_DEPS needs to be defined to the ported tools this depends on"
     fi
-    implicitDeps="curl tar"
+    implicitDeps="git curl tar"
     ext=${ZOPEN_TARBALL_URL##*.}
     if [ "${ext}x" = "xzx" ]; then
       implicitDeps="${implicitDeps} xz"
