@@ -83,7 +83,7 @@
 | [ctagsport](https://github.com/ZOSOpenTools/ctagsport) | 0 | 100% |
 | [gnulibport](https://github.com/ZOSOpenTools/gnulibport) | 0 | No builds |
 | [gperfport](https://github.com/ZOSOpenTools/gperfport) | 0 | Skipped |
-| [grepport](https://github.com/ZOSOpenTools/grepport) | 0 | 90% |
+| [grepport](https://github.com/ZOSOpenTools/grepport) | 0 | 94% |
 | [helloport](https://github.com/ZOSOpenTools/helloport) | 0 | No builds |
 | [htopport](https://github.com/ZOSOpenTools/htopport) | 0 | No builds |
 | [jqport](https://github.com/ZOSOpenTools/jqport) | 0 | 57% |
@@ -108,4 +108,4 @@
 | [vimport](https://github.com/ZOSOpenTools/vimport) | 0 | 100% |
 | [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 100% |
 
-Last updated:  2023-01-31 18:50:35
+Last updated:  2023-01-31 19:35:37
