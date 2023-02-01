@@ -48,6 +48,15 @@ static void syntax(const char* pgm) {
   return;
 }
 
+#define _CVTSTATE_OFF     0
+#define _CVTSTATE_ON      1
+#define _CVTSTATE_ALL     4
+
+#define _CVTSTATE_SWAP    2
+#define _CVTSTATE_QUERY   3
+
+int __ae_autoconvert_state(int action);
+
 /*
  * This program does the following:
  * - creates the directories for z/OS Open Source Tools from the 'root' directory provided (boot, prod, dev)
@@ -74,6 +83,8 @@ int main(int argc, char* argv[]) {
   int   i;
   int parmsok=0;
   char* zopen_c_home_var = getenv("HOME");
+
+  __ae_autoconvert_state(_CVTSTATE_ON); 
 
   if (argc < 2) {
     syntax(argv[0]);
