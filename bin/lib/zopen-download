@@ -157,7 +157,11 @@ downloadRepos()
 
     # Delete the .installed file if it was previously there
     rm -f "${name}/.installed"
-    printInfo "Successfully downloaded $name to $downloadDir/$name/"
+
+    printVerbose "Installing"
+    #TODO: when we rebuild all the tools, simply call setup.sh
+    (cd "${name}" && . ./.env)
+    printInfo "Successfully installed $name to $downloadDir/$name/"
 done
 }
 
