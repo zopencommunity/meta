@@ -394,6 +394,35 @@ checkEnv()
   fi
 }
 
+parseDeps()
+{
+  dep="$1"
+  version=$(echo $dep | awk -F '[>=<]+' '{print $2}')
+  if [ -z "$version" ]; then
+    operator=""
+    dep=$(echo $dep | awk -F '[>=<]+' '{print $1}')
+  else
+    operator=$(echo $dep | awk -F '[0-9.]+' '{print $1}' | awk -F '^[a-zA-Z]+' '{print $2}')
+    dep=$(echo $dep | awk -F '[>=<]+' '{print $1}')
+    case $operator in
+      ">=") ;;
+      "=") ;;
+      *) printError "$operator is not supported."
+    esac
+    major=$(echo $version | awk -F. '{print $1}')
+    minor=$(echo $version | awk -F. '{print $2}')
+    if [ -z "$minor" ]; then
+      patch=0
+    fi
+    patch=$(echo $version | awk -F. '{print $3}')
+    if [ -z "$patch" ]; then
+      patch=0
+    fi
+  fi
+
+  echo "$dep|$operator|$major|$minor|$patch"
+}
+
 setDepsEnv()
 {
   if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
@@ -406,10 +435,17 @@ setDepsEnv()
   # Filter out duplicate deps
   deps=$(echo "$deps" | xargs | tr ' ' '\n' | sort -u)
   for dep in $deps; do
+    parseline=$(parseDeps $dep)
+    dep=$(echo $parseline | awk -F'|' '{print $1}')
+    operator=$(echo $parseline | awk -F'|' '{print $2}')
+    major=$(echo $parseline | awk -F'|' '{print $3}')
+    minor=$(echo $parseline | awk -F'|' '{print $4}')
+    patch=$(echo $parseline | awk -F'|' '{print $5}')
     foundDep=false
     for path in `echo ${depsPath} | tr '|' '\n'` ; do
       if [ -r "$path/${dep}/.env" ]; then
         depdir="$path/${dep}"
+        # TODO: Check if version requested is satisfied by dependency
         # Avoid double sourcing the .env if we're forcing an upgrade on it
         if ! $forceUpgradeDeps; then
           printVerbose "Setting up ${depdir} dependency environment"
@@ -980,7 +1016,7 @@ build()
   if [ -n "${ZOPEN_MAKE_CMD}" ]; then
     printHeader "Running Build"
     create_fifo_pipe "${makelog}"
-    if ! runAndLog "${ZOPEN_MAKE_CMD} > $TMP_FIFO_PIPE"; then
+    if ! runAndLog "${ZOPEN_MAKE_CMD} > $TMP_FIFO_PIPE 2>&1"; then
       if [ "${ZOPEN_MAKE_MINIMAL}" = "yes" ]; then
         printError "Make (minimal) failed. Log: ${makelog}"
       else
@@ -1093,8 +1129,17 @@ if ! [ -f ./.env ]; then
   echo "Need to source from the .env directory" >&2
   return 0
 fi
-export _BPXK_AUTOCVT=ON
-export _CEE_RUNOPTS="\$_CEE_RUNOPTS FILETAG(AUTOCVT,AUTOTAG) POSIX(ON)"
+
+cleanup_envars() 
+{
+  value=\$1
+  delim=\$2
+  echo "\$value" | awk -v RS="\$delim" '!(\$0 in a) {a[\$0]; printf("%s%s", col, \$0); col=RS; }'
+}
+
+_CEE_RUNOPTS="\$_CEE_RUNOPTS FILETAG(AUTOCVT,AUTOTAG) POSIX(ON)"
+export _CEE_RUNOPTS="\$(cleanup_envars "\$_CEE_RUNOPTS" " ")"
+
 export _TAG_REDIR_IN=txt
 export _TAG_REDIR_ERR=txt
 export _TAG_REDIR_OUT=txt
@@ -1102,13 +1147,16 @@ export ${projectName}_HOME=\${PWD}
 zz
 
   if [ -d "${ZOPEN_INSTALL_DIR}/bin" ]; then
-    echo "export PATH=\"\${${projectName}_HOME}/bin:\$PATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
+    echo "PATH=\"\${${projectName}_HOME}/bin:\$PATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
+    echo "export PATH=\$(cleanup_envars \"\$PATH\" \":\")" >> "${ZOPEN_INSTALL_DIR}/.env"
   fi
   if [ -d "${ZOPEN_INSTALL_DIR}/lib" ]; then
     echo "export LIBPATH=\"\${${projectName}_HOME}/lib:\$LIBPATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
+    echo "export LIBPATH=\$(cleanup_envars \"\$LIBPATH\" \":\")" >> "${ZOPEN_INSTALL_DIR}/.env"
   fi
   if [ -d "${ZOPEN_INSTALL_DIR}/share/man" ]; then
     echo "export MANPATH=\"\${${projectName}_HOME}/share/man:\$MANPATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
+    echo "export MANPATH=\$(cleanup_envars \"\$MANPATH\" \":\")" >> "${ZOPEN_INSTALL_DIR}/.env"
   fi
   if command -V "${ZOPEN_APPEND_TO_ENV}" >/dev/null 2>&1; then
     printVerbose "Appending additional environment variables..."
@@ -1177,7 +1225,7 @@ install()
     printHeader "Running Install"
     installlog="${ZOPEN_LOG_DIR}/${LOG_PFX}_install.log"
     create_fifo_pipe "${installlog}"
-    if ! runAndLog "${ZOPEN_INSTALL_CMD} > $TMP_FIFO_PIPE"; then
+    if ! runAndLog "${ZOPEN_INSTALL_CMD} > $TMP_FIFO_PIPE 2>&1"; then
       printError "Install failed. Log: ${installlog}"
     fi
     replaceHardcodedPaths
