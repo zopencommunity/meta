@@ -63,7 +63,7 @@ int createhomelink(const char* home, const char* root) {
 }
 
 int getpkgname(const char* temprawpkg, const char* temppkg, char* buffer, size_t bufflen) {
-  char getpkg_format[] = "/bin/sh -c \"chtag -t %s && chtag -cISO8859-1 %s && cat %s | awk ' BEGIN { RS=\\\",\\\" } { print }' | grep '\\\"name\\\":' | grep pax.Z | tr '\\\"' ' ' | /bin/awk '{ print \\$3 }' >%s\"";
+  char getpkg_format[] = "/bin/sh -c \"export _BPXK_AUTOCVT=ON && /bin/chtag -r %s && /bin/chtag -tcISO8859-1 %s && /bin/cat %s | /bin/awk ' BEGIN { RS=\\\",\\\" } { print }' | /bin/grep '\\\"name\\\":' | /bin/grep pax.Z | /bin/tr '\\\"' ' ' | /bin/awk '{ print \\$3 }' >%s\"";
   char getpkg[ZOPEN_CMD_MAX+1];
   int rc;
   ssize_t len;
