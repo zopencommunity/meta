@@ -168,6 +168,7 @@ int main(int argc, char* argv[]) {
     if (rc = getfilenamefrompkg(bootpkg[i], pkgsfx, tmppem, filename, ZOPEN_PATH_MAX)) {
       /* If the boot package isn't found (404), keep going */
       if (rc == 404) { continue; }
+      return rc;
     }
     if (genfilenameinsubdir(root, ZOPEN_BOOT, filename, output, ZOPEN_PATH_MAX)) {
       return 4;
@@ -178,6 +179,7 @@ int main(int argc, char* argv[]) {
     }
     if (rc = httpsget(host, uri, tmppem, output)) {
       fprintf(stderr, "error %d downloading https://%s%s with PEM file %s to %s\n", rc, host, uri, tmppem, output);
+      return rc;
     }
     if (rc = unpaxandlink(root, ZOPEN_BOOT, output, bootpkg[i])) {
       return rc;
