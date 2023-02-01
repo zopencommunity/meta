@@ -43,7 +43,9 @@ static void syntax(const char* pgm) {
                   "    sub-directories created for each of the tools needed for running the zopen utility\n"
                   "Options:\n"
                   " -v : print out verbose messages\n"
-                  " -q : only print out errors\n",
+                  " -q : only print out errors\n"
+                  "Note:\n"
+                  " Special consideration is made if <root> is ${HOME}/zopen in which case no link is created\n",
                   pgm, ZOPEN_TOOLS_URL, pgm);
   return;
 }
