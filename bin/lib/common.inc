@@ -192,16 +192,52 @@ parseDeps()
   echo "$dep|$operator|$major|$minor|$patch"
 }
 
+compareVersions()
+{
+ v1="$1"
+  v2="$2"
+  result=$(awk -v v1="$v1" -v v2="$v2" '
+  function vercmp(v1, v2) {
+    n1 = split(v1, v1_array, ".")
+    n2 = split(v2, v2_array, ".")
+
+    for (i = 1; i <= n1 || i <= n2; i++) {
+      if (i > n1) {
+        return -1
+      }
+      if (i > n2) {
+        return 1
+      }
+      if (v1_array[i] != v2_array[i]) {
+        return (v1_array[i] < v2_array[i] ? -1 : 1)
+      }
+    }
+    return 0
+  }
+
+  BEGIN {
+    if (vercmp(v1, v2) >= 0) {
+      exit 0
+    } else {
+      exit 1
+    }
+  }
+  ')
+
+  return $result
+}
+
 validateVersion()
 {
   version=$1
   operator=$2
   requestedVersion=$3
+  dependency=$4
   if [ ! -z "$operator" ] && [ -z "$version" ]; then
-    printWarning "$operator ${requestedVersion} requsted, but no version file found in $versionPath." 
+    printVerbose "$operator ${requestedVersion} requsted, but no version file found in $versionPath." 
     return 1
-  elif [ ! -z "$operator" ] && [ ! $(echo "${version} $operator \"${requestedVersion}\"" | bc -l) -eq 1 ]; then
-    printWarning "Dependency does not satisfy ${version} $operator \"${requestedVersion}\""
+  elif [ ! -z "$operator" ] && ! compareVersions "${version}" "${requestedVersion}"; then
+    printVerbose "$dependency does not satisfy ${version} $operator ${requestedVersion}"
     return 1
   fi
   return 0

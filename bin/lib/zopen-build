@@ -406,6 +406,7 @@ setDepsEnv()
   # Filter out duplicate deps
   deps=$(echo "$deps" | xargs | tr ' ' '\n' | sort -u)
   for dep in $deps; do
+    printVerbose "Searching for dependency $dep"
     parseline=$(parseDeps $dep)
     dep=$(echo $parseline | awk -F'|' '{print $1}')
     operator=$(echo $parseline | awk -F'|' '{print $2}')
@@ -423,7 +424,7 @@ setDepsEnv()
         fi
         # Avoid double sourcing the .env if we're forcing an upgrade on it
         if ! $forceUpgradeDeps; then
-          if ! validateVersion "${version}" "$operator" "${requestedVersion}"; then
+          if ! validateVersion "${version}" "$operator" "${requestedVersion}" "$depdir"; then
             continue
           fi
 
@@ -436,7 +437,11 @@ setDepsEnv()
     done
     if ! $foundDep || $forceUpgradeDeps; then
       if ! $forceUpgradeDeps; then
-        printWarning "Dependency $dep not found. Installing via zopen install"
+        if [ -z "$operator" ]; then
+          printWarning "Dependency $dep not found. Downloading via zopen install"
+        else
+          printWarning "Dependency $dep $operator ${requestedVersion} not found. Downloading via zopen install"
+        fi
       else
         printHeader "Upgrading dependency $dep. Installing via zopen install"
       fi
@@ -446,15 +451,15 @@ setDepsEnv()
       if ! zopen install -r $dep -d $path; then
         printError "zopen install command failed"
       fi
-      printVerbose "Setting up upgraded ${path}/${dep} dependency environment"
       depdir="$path/${dep}"
+      printVerbose "Setting up upgraded $depdir dependency environment"
       cd "$depdir" && . ./.env
       versionPath="$depdir/.version"
       if [ -r "$versionPath" ]; then
         version=$(cat "$versionPath");
       fi
-      if ! validateVersion "${version}" "$operator" "${requestedVersion}"; then
-        continue
+      if ! validateVersion "${version}" "$operator" "${requestedVersion}" "$depdir"; then
+        printError "Dependency $depdir upgraded, but does not satisfy \"$operator\" \"${requestedVersion}\"" 
       fi
     fi
   done
@@ -1117,7 +1122,7 @@ if ! [ -f ./.env ]; then
   return 0
 fi
 
-cleanup_envars() 
+deleteDuplicateEntries() 
 {
   value=\$1
   delim=\$2
@@ -1125,7 +1130,7 @@ cleanup_envars()
 }
 
 _CEE_RUNOPTS="\$_CEE_RUNOPTS FILETAG(AUTOCVT,AUTOTAG) POSIX(ON)"
-export _CEE_RUNOPTS="\$(cleanup_envars "\$_CEE_RUNOPTS" " ")"
+export _CEE_RUNOPTS="\$(deleteDuplicateEntries "\$_CEE_RUNOPTS" " ")"
 
 export _TAG_REDIR_IN=txt
 export _TAG_REDIR_ERR=txt
@@ -1135,15 +1140,15 @@ zz
 
   if [ -d "${ZOPEN_INSTALL_DIR}/bin" ]; then
     echo "PATH=\"\${${projectName}_HOME}/bin:\$PATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
-    echo "export PATH=\$(cleanup_envars \"\$PATH\" \":\")" >> "${ZOPEN_INSTALL_DIR}/.env"
+    echo "export PATH=\$(deleteDuplicateEntries \"\$PATH\" \":\")" >> "${ZOPEN_INSTALL_DIR}/.env"
   fi
   if [ -d "${ZOPEN_INSTALL_DIR}/lib" ]; then
     echo "export LIBPATH=\"\${${projectName}_HOME}/lib:\$LIBPATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
-    echo "export LIBPATH=\$(cleanup_envars \"\$LIBPATH\" \":\")" >> "${ZOPEN_INSTALL_DIR}/.env"
+    echo "export LIBPATH=\$(deleteDuplicateEntries \"\$LIBPATH\" \":\")" >> "${ZOPEN_INSTALL_DIR}/.env"
   fi
   if [ -d "${ZOPEN_INSTALL_DIR}/share/man" ]; then
     echo "export MANPATH=\"\${${projectName}_HOME}/share/man:\$MANPATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
-    echo "export MANPATH=\$(cleanup_envars \"\$MANPATH\" \":\")" >> "${ZOPEN_INSTALL_DIR}/.env"
+    echo "export MANPATH=\$(deleteDuplicateEntries \"\$MANPATH\" \":\")" >> "${ZOPEN_INSTALL_DIR}/.env"
   fi
   if command -V "${ZOPEN_APPEND_TO_ENV}" >/dev/null 2>&1; then
     printVerbose "Appending additional environment variables..."
@@ -1230,6 +1235,39 @@ install()
     chtag -tc 819 "${ZOPEN_INSTALL_DIR}/test.status"
     echo "$ZOPEN_STATUS" > "${ZOPEN_INSTALL_DIR}/test.status"
 
+    if [ -z "$(command -v zopen_get_version)" ]; then
+      printWarning "A zopen_get_version() function should be defined in the buildenv to extract the version contents"
+    else
+      versionString=$(zopen_get_version)
+      echo $versionString | awk -F. '{
+        if (NF < 2 || NF > 4) {
+          exit 1
+        }
+        if ($1 ~ /[^0-9]/) {
+          exit 1
+        }
+        if ($2 ~ /[^0-9]/) {
+          exit 1
+        }
+        if (NF >= 3 && $3 ~ /[^0-9A-Za-z-]+/) {
+          exit 1
+        }
+        if (NF == 4 && $4 !~ /[0-9A-Za-z-]+/) {
+          exit 1
+        }
+        exit 0
+      }'
+
+      if [ $? -ne 0 ]; then
+        printError "$versionString uses an invalid version format"
+      fi 
+      echo "$versionString" > "${ZOPEN_INSTALL_DIR}/.version"
+    fi
+
+    if [ ! -z "$ZOPEN_RUNTIME_DEPS" ]; then
+      echo "$ZOPEN_RUNTIME_DEPS" > "${ZOPEN_INSTALL_DIR}/.deps"
+    fi
+
     if $generatePax; then
       printHeader "Generating pax.Z from ${ZOPEN_INSTALL_DIR}"
       if ! runAndLog "${ZOPEN_PAX_CMD}"; then
@@ -1306,7 +1344,7 @@ resolveCommands()
     unset ZOPEN_CONFIGURE_CMD
     unset ZOPEN_CONFIGURE_MINIMAL_CMD
   fi
-  
+
   if [ "${ZOPEN_MAKE}x" != "skipx" ] && [ ! -z "$(command -v ${ZOPEN_MAKE})" ] ; then
     if [ "${ZOPEN_MAKE_MINIMAL}x" = "x" ]; then
       export ZOPEN_MAKE_CMD="\"${ZOPEN_MAKE}\" ${ZOPEN_MAKE_OPTS} CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\" \"LDLIBS=${LIBS}\""
