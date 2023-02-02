@@ -394,35 +394,6 @@ checkEnv()
   fi
 }
 
-parseDeps()
-{
-  dep="$1"
-  version=$(echo $dep | awk -F '[>=<]+' '{print $2}')
-  if [ -z "$version" ]; then
-    operator=""
-    dep=$(echo $dep | awk -F '[>=<]+' '{print $1}')
-  else
-    operator=$(echo $dep | awk -F '[0-9.]+' '{print $1}' | awk -F '^[a-zA-Z]+' '{print $2}')
-    dep=$(echo $dep | awk -F '[>=<]+' '{print $1}')
-    case $operator in
-      ">=") ;;
-      "=") ;;
-      *) printError "$operator is not supported."
-    esac
-    major=$(echo $version | awk -F. '{print $1}')
-    minor=$(echo $version | awk -F. '{print $2}')
-    if [ -z "$minor" ]; then
-      patch=0
-    fi
-    patch=$(echo $version | awk -F. '{print $3}')
-    if [ -z "$patch" ]; then
-      patch=0
-    fi
-  fi
-
-  echo "$dep|$operator|$major|$minor|$patch"
-}
-
 setDepsEnv()
 {
   if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
@@ -438,16 +409,24 @@ setDepsEnv()
     parseline=$(parseDeps $dep)
     dep=$(echo $parseline | awk -F'|' '{print $1}')
     operator=$(echo $parseline | awk -F'|' '{print $2}')
-    major=$(echo $parseline | awk -F'|' '{print $3}')
-    minor=$(echo $parseline | awk -F'|' '{print $4}')
-    patch=$(echo $parseline | awk -F'|' '{print $5}')
+    requestedMajor=$(echo $parseline | awk -F'|' '{print $3}')
+    requestedMinor=$(echo $parseline | awk -F'|' '{print $4}')
+    requstedPatch=$(echo $parseline | awk -F'|' '{print $5}')
+    requestedVersion="${requestedMajor}.${requestedMinor}.${requstedPatch}"
     foundDep=false
     for path in `echo ${depsPath} | tr '|' '\n'` ; do
       if [ -r "$path/${dep}/.env" ]; then
         depdir="$path/${dep}"
-        # TODO: Check if version requested is satisfied by dependency
+        versionPath="$depdir/.version"
+        if [ -r "$versionPath" ]; then
+          version=$(cat "$versionPath");
+        fi
         # Avoid double sourcing the .env if we're forcing an upgrade on it
         if ! $forceUpgradeDeps; then
+          if ! validateVersion "${version}" "$operator" "${requestedVersion}"; then
+            continue
+          fi
+
           printVerbose "Setting up ${depdir} dependency environment"
           cd "${depdir}" && . ./.env
         fi
@@ -468,7 +447,15 @@ setDepsEnv()
         printError "zopen install command failed"
       fi
       printVerbose "Setting up upgraded ${path}/${dep} dependency environment"
-      cd "${path}/${dep}" && . ./.env
+      depdir="$path/${dep}"
+      cd "$depdir" && . ./.env
+      versionPath="$depdir/.version"
+      if [ -r "$versionPath" ]; then
+        version=$(cat "$versionPath");
+      fi
+      if ! validateVersion "${version}" "$operator" "${requestedVersion}"; then
+        continue
+      fi
     fi
   done
   cd "${orig}" || exit 99

@@ -163,4 +163,48 @@ processConfig()
   fi
 }
 
+parseDeps()
+{
+  dep="$1"
+  version=$(echo $dep | awk -F '[>=<]+' '{print $2}')
+  if [ -z "$version" ]; then
+    operator=""
+    dep=$(echo $dep | awk -F '[>=<]+' '{print $1}')
+  else
+    operator=$(echo $dep | awk -F '[0-9.]+' '{print $1}' | awk -F '^[a-zA-Z]+' '{print $2}')
+    dep=$(echo $dep | awk -F '[>=<]+' '{print $1}')
+    case $operator in
+      ">=") ;;
+      "=") ;;
+      *) printError "$operator is not supported."
+    esac
+    major=$(echo $version | awk -F. '{print $1}')
+    minor=$(echo $version | awk -F. '{print $2}')
+    if [ -z "$minor" ]; then
+      patch=0
+    fi
+    patch=$(echo $version | awk -F. '{print $3}')
+    if [ -z "$patch" ]; then
+      patch=0
+    fi
+  fi
+
+  echo "$dep|$operator|$major|$minor|$patch"
+}
+
+validateVersion()
+{
+  version=$1
+  operator=$2
+  requestedVersion=$3
+  if [ ! -z "$operator" ] && [ -z "$version" ]; then
+    printWarning "$operator ${requestedVersion} requsted, but no version file found in $versionPath." 
+    return 1
+  elif [ ! -z "$operator" ] && [ ! $(echo "${version} $operator \"${requestedVersion}\"" | bc -l) -eq 1 ]; then
+    printWarning "Dependency does not satisfy ${version} $operator \"${requestedVersion}\""
+    return 1
+  fi
+  return 0
+}
+
 zopenInitialize
