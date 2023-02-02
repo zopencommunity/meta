@@ -27,7 +27,7 @@ asciiecho()
     return 2
   fi
   if [ "$(chtag -p "${file}" | cut -f2 -d' ')" = "IBM-1047" ]; then
-    if ! iconv -f IBM-1047 -tISO8859-1 <"${file}" >"${file}_ascii" || ! chtag -tcISO8859-1 "${file}_ascii" || ! mv "${file}_ascii" "${file}"; then
+    if ! /bin/iconv -f IBM-1047 -tISO8859-1 <"${file}" >"${file}_ascii" || ! chtag -tcISO8859-1 "${file}_ascii" || ! mv "${file}_ascii" "${file}"; then
       printError "Unable to convert EBCDIC text to ASCII for ${file}" >&2
     fi
   fi
