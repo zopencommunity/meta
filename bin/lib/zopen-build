@@ -412,8 +412,9 @@ setDepsEnv()
     operator=$(echo $parseline | awk -F'|' '{print $2}')
     requestedMajor=$(echo $parseline | awk -F'|' '{print $3}')
     requestedMinor=$(echo $parseline | awk -F'|' '{print $4}')
-    requstedPatch=$(echo $parseline | awk -F'|' '{print $5}')
-    requestedVersion="${requestedMajor}.${requestedMinor}.${requstedPatch}"
+    requestedPatch=$(echo $parseline | awk -F'|' '{print $5}')
+    requestedSubrelease=$(echo $parseline | awk -F'|' '{print $6}')
+    requestedVersion="${requestedMajor}.${requestedMinor}.${requestedPatch}.${requestedSubrelease}"
     foundDep=false
     for path in `echo ${depsPath} | tr '|' '\n'` ; do
       if [ -r "$path/${dep}/.env" ]; then
@@ -1240,7 +1241,7 @@ install()
     else
       versionString=$(zopen_get_version)
       echo $versionString | awk -F. '{
-        if (NF < 2 || NF > 4) {
+        if (NF < 1 || NF > 4) {
           exit 1
         }
         if ($1 ~ /[^0-9]/) {

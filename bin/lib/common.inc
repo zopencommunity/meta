@@ -181,33 +181,31 @@ parseDeps()
     major=$(echo $version | awk -F. '{print $1}')
     minor=$(echo $version | awk -F. '{print $2}')
     if [ -z "$minor" ]; then
-      patch=0
+      minor=0
     fi
     patch=$(echo $version | awk -F. '{print $3}')
     if [ -z "$patch" ]; then
       patch=0
     fi
+    prerelease=$(echo $version | awk -F. '{print $4}')
+    if [ -z "$prerelease" ]; then
+      prerelease=0
+    fi
   fi
 
-  echo "$dep|$operator|$major|$minor|$patch"
+  echo "$dep|$operator|$major|$minor|$patch|$prerelease"
 }
 
 compareVersions()
 {
- v1="$1"
+  v1="$1"
   v2="$2"
-  result=$(awk -v v1="$v1" -v v2="$v2" '
+  awk -v v1="$v1" -v v2="$v2" '
   function vercmp(v1, v2) {
     n1 = split(v1, v1_array, ".")
     n2 = split(v2, v2_array, ".")
 
     for (i = 1; i <= n1 || i <= n2; i++) {
-      if (i > n1) {
-        return -1
-      }
-      if (i > n2) {
-        return 1
-      }
       if (v1_array[i] != v2_array[i]) {
         return (v1_array[i] < v2_array[i] ? -1 : 1)
       }
@@ -222,9 +220,9 @@ compareVersions()
       exit 1
     }
   }
-  ')
+  '
 
-  return $result
+  return $?
 }
 
 validateVersion()
