@@ -1,5 +1,5 @@
 #!/bin/sh
-# Download utility for z/OS Open Tools - https://github.com/ZOSOpenTools
+# Install utility for z/OS Open Tools - https://github.com/ZOSOpenTools
 
 export utildir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
 
@@ -8,18 +8,18 @@ export utildir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
 printSyntax() 
 {
   args=$*
-  echo "zopen-download is a download utility for z/OS Open Tools. The default action is to list all packages." >&2
+  echo "zopen install is a install utility for z/OS Open Tools. The default action is to list all packages." >&2
   echo "If you have a Github OAUTH token, export the environment variable ZOPEN_GIT_OAUTH_TOKEN" >&2
-  echo "Syntax: zopen-download [<option>]*" >&2
+  echo "Syntax: zopen install [<option>]*" >&2
   echo "  where <option> may be one or more of:" >&2
   echo "  --list: list all available z/OS Open Tools. If no parameters are specified, --list is the default."  >&2
   echo "  -u|--upgrade: upgrades installed z/OS Open Tools packages."  >&2
   echo "  --install-or-upgrade: installs the package if not installed, or upgrades the package if installed."  >&2
   echo "  --reinstall: reinstall already installed z/OS Open Tools packages."  >&2
-  echo "  --all: downloads all z/OS Open Tools packages."  >&2
+  echo "  --all: installs all z/OS Open Tools packages."  >&2
   echo "  -v: run in verbose mode." >&2
-  echo "  -d <dir>: directory to download binaries to.  Uses current working directory or path from ~/.zopen-config (generated via zopen init) if not specified." >&2
-  echo "  <project,...>: a set of comma delimited projects to download." >&2
+  echo "  -d <dir>: directory to install binaries to.  Uses current working directory or path from ~/.zopen-config (generated via zopen init) if not specified." >&2
+  echo "  <project,...>: a set of comma delimited projects to install." >&2
   echo "  --filter <color>: filter based on quality (green - all tests passing, blue - most tests passing, yellow - some tests passing, red - no tests passing, or skipped (no filter by default))"  >&2
 }
 
@@ -73,7 +73,7 @@ printListEntries()
   done
 }
 
-downloadRepos()
+installRepos()
 {
   echo "$repoArray" | xargs | tr ' ' '\n' | sort | while read repo; do
     name=${repo%port}
@@ -158,7 +158,7 @@ downloadRepos()
     # Delete the .installed file if it was previously there
     rm -f "${name}/.installed"
 
-    printVerbose "Installing"
+    printVerbose "Installing ${name}..."
     #TODO: when we rebuild all the tools, simply call setup.sh
     (cd "${name}" && . ./.env)
     printInfo "Successfully installed $name to $downloadDir/$name/"
@@ -256,7 +256,7 @@ repo_results=$(echo "$repo_results" | grep "\"full_name\":" 2>/dev/null | cut -d
 if [ ! -d "${downloadDir}" ]; then
   mkdir -p "${downloadDir}"
   if $?; then
-    printError "Could not create download directory: $downloadDir"
+    printError "Could not create install directory: $downloadDir"
   fi
 fi
 
@@ -264,7 +264,7 @@ if [ ! -z "${downloadDir}" ] && [ -d "${downloadDir}" ]; then
   cd "${downloadDir}"
 fi
 
-printVerbose "Download directory: ${downloadDir}"
+printVerbose "Install directory: ${downloadDir}"
 
 # Parse repositories for zopen framework repos
 foundPort=false
@@ -302,4 +302,4 @@ if [ ! -z "$list" ]; then
   exit 0;
 fi
 
-downloadRepos
+installRepos

@@ -41,7 +41,7 @@ g = Github(os.getenv('GITHUB_OAUTH_TOKEN'))
 with open('docs/Latest.md', 'w') as f:
 	sys.stdout = f # Change the standard output to the file we created.
 	print("# z/OS Open Tools - Packages\n")
-	print("Note: to download the latest packages, use the `zopen download` script from the [meta repo](https://github.com/ZOSOpenTools/meta)\n")
+	print("Note: to download the latest packages, use the `zopen install` script from the [meta repo](https://github.com/ZOSOpenTools/meta)\n")
 	print("| Package | Status | Test Success Rate | Latest Release | Description |")
 	print("|---|---|---|---|---|")
 

@@ -9,7 +9,7 @@ printSyntax()
   echo "where <command> may be one of the following:" >&2
   echo " init: generate a $HOME/.zopen-config file." >&2
   echo " build: invokes the build script." >&2
-  echo " download: downloads z/OS Open Tools" >&2
+  echo " download: downloads z/OS Open Tools (deprecated)" >&2
   echo " install: downloads and installs z/OS Open Tools" >&2
   echo " generate: generate a zopen project" >&2
   echo " update-cacert: update the cacert.pem file" >&2
@@ -26,9 +26,9 @@ printHelp()
   echo " # Build a port" >&2
   echo " zopen build -v # Build port" >&2
   echo " # List available ports to download" >&2
-  echo " zopen download --list" >&2
+  echo " zopen install" >&2
   echo " # Download binaries from Github" >&2
-  echo " zopen download" >&2
+  echo " zopen install --all" >&2
   echo " # Generate a zopen template project" >&2
   echo " zopen generate" >&2
 }
@@ -45,15 +45,16 @@ while [[ $# -gt 0 ]]; do
       ;;
     "download")
       shift
-      exec "${bindir}/lib/zopen-download" $@
+      printWarning "zopen download is deprecated and will be removed March 1, 2023. Please use zopen install instead."
+      exec "${bindir}/lib/zopen-install" $@
       ;;
     "install")
       shift
-      exec "${bindir}/lib/zopen-download" $@
+      exec "${bindir}/lib/zopen-install" $@
       ;;
     "upgrade")
       shift
-      exec "${bindir}/lib/zopen-download" -u $@
+      exec "${bindir}/lib/zopen-install" -u $@
       ;;
     "generate")
       shift

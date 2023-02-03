@@ -13,33 +13,33 @@ Alternatively, you can download meta, along with the foundational set of tools v
 ## If you are using z/OS Open Tools
 
 ### zopen init
-To initialize the zopen installation directory to a location other than the default ($HOME/zopen), you can run the command zopen init and specify the desired directory. This will configure the directory for future use. Subsequently, tools like zopen download will download and install files to this specified directory."
+To initialize the zopen installation directory to a location other than the default ($HOME/zopen), you can run the command zopen init and specify the desired directory. This will configure the directory for future use. Subsequently, tools like `zopen install` will download and install files to this specified directory."
 
 ### zopen update-cacacert
 
-To update the cacert.pem file, you can use `zopen update-cacert`. This will download the latest cacert.pem file https://curl.se/docs/caextract.html. This cacert.pem file is then used by other tools such as `zopen download` and `zopen build`.
+To update the cacert.pem file, you can use `zopen update-cacert`. This will download the latest cacert.pem file https://curl.se/docs/caextract.html. This cacert.pem file is then used by other tools such as `zopen install` and `zopen build`.
 
-### zopen download
+### zopen install
 
-To download and install the latest software packages, you can use `zopen download`. By default it will list all of the packages hosted on ZOSOpenTools.
+To download and install the latest software packages, you can use `zopen install`. By default it will list all of the packages hosted on ZOSOpenTools.
 
 It is recommended that you generate a [github personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token).
 Then set `export ZOPEN_GIT_OAUTH_TOKEN=<yourapitoken>`
 
 To list the available packages, specify no parameters or the `--list` option as follows:
 ```
-zopen download --list
+zopen install --list
 ```
 
 To download and install specfic packages, you can specify the packages as a comma seperated list as follows:
 ```
-zopen download make,gzip
+zopen install make,gzip
 ```
 
 This will download it to the directory specified by your ~/.zopen-config. To change the destination directory, you can specify the `-d` option as follows:
 
 ```
-zopen download make -d $HOME/zopen/prod
+zopen install make -d $HOME/zopen/prod
 ```
 
 You can then change to the install directory and source the .env file: `. ./.env` to setup the tool.
