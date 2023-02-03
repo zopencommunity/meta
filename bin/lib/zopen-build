@@ -448,8 +448,7 @@ setDepsEnv()
       fi
       # Use the first path specified in the dependency search list
       path=$(echo ${depsPath} | tr '|' '\n' | head -1)
-      printVerbose "Running zopen install --install-or-upgrade -r $dep -d $path -v"
-      if ! zopen install -r $dep -d $path; then
+      if ! runAndLog "zopen install --install-or-upgrade -r $dep -d $path -v"; then
         printError "zopen install command failed"
       fi
       depdir="$path/${dep}"
