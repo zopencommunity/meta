@@ -60,9 +60,9 @@
 | [opensslport](https://github.com/ZOSOpenTools/opensslport) | 5 | 90% |curl, expat, git, rsync, wget
 | [zlibport](https://github.com/ZOSOpenTools/zlibport) | 5 | 100% |autoconf, curl, expat, git, wget
 | [cmakeport](https://github.com/ZOSOpenTools/cmakeport) | 4 | 74% |ninja, unzip, zip, zoslib
+| [sedport](https://github.com/ZOSOpenTools/sedport) | 4 | 84% |bash, git, groff, re2c
 | [bashport](https://github.com/ZOSOpenTools/bashport) | 3 | 83% |flex, git, re2c
 | [findutilsport](https://github.com/ZOSOpenTools/findutilsport) | 3 | 50% |grep, re2c, texinfo
-| [sedport](https://github.com/ZOSOpenTools/sedport) | 3 | 84% |bash, groff, re2c
 | [libiconvport](https://github.com/ZOSOpenTools/libiconvport) | 2 | 100% |libxml2, man-db
 | [rsyncport](https://github.com/ZOSOpenTools/rsyncport) | 2 | 88% |m4, sed
 | [wgetport](https://github.com/ZOSOpenTools/wgetport) | 2 | 18% |man-db, sed
@@ -72,6 +72,7 @@
 | [gdbmport](https://github.com/ZOSOpenTools/gdbmport) | 1 | 100% |man-db
 | [grepport](https://github.com/ZOSOpenTools/grepport) | 1 | 94% |libpcre
 | [groffport](https://github.com/ZOSOpenTools/groffport) | 1 | 100% |man-db
+| [lessport](https://github.com/ZOSOpenTools/lessport) | 1 | 100% |git
 | [lz4port](https://github.com/ZOSOpenTools/lz4port) | 1 | 100% |rsync
 | [patchport](https://github.com/ZOSOpenTools/patchport) | 1 | 50% |m4
 | [pipelineport](https://github.com/ZOSOpenTools/pipelineport) | 1 | 100% |man-db
@@ -87,7 +88,6 @@
 | [helloport](https://github.com/ZOSOpenTools/helloport) | 0 | 20% |
 | [htopport](https://github.com/ZOSOpenTools/htopport) | 0 | No builds |
 | [jqport](https://github.com/ZOSOpenTools/jqport) | 0 | 57% |
-| [lessport](https://github.com/ZOSOpenTools/lessport) | 0 | 100% |
 | [libpcreport](https://github.com/ZOSOpenTools/libpcreport) | 0 | 66% |
 | [libxml2port](https://github.com/ZOSOpenTools/libxml2port) | 0 | No builds |
 | [luaport](https://github.com/ZOSOpenTools/luaport) | 0 | 100% |
@@ -110,4 +110,4 @@
 | [zigiport](https://github.com/ZOSOpenTools/zigiport) | 0 | Skipped |
 | [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 100% |
 
-Last updated:  2023-02-03 21:04:55
+Last updated:  2023-02-03 21:25:22
