@@ -188,7 +188,7 @@ printSyntax()
   echo "  -h: print this information"
   echo "  -v: run in verbose mode"
   echo "  -vv: run in very verbose mode (sets environment variables V=1 and VERBOSE=1)"
-  echo "  -u|--upgradedeps: upgrade all dependencies by running zopen download"
+  echo "  -u|--upgradedeps: upgrade all dependencies by running zopen install"
   echo "  --buildtype: release|debug. The default is release"
   echo "  --comp: xl|clang.  The compiler used for building.  The default is xl."
   echo "  --oci: build and publish an OCI image to \$ZOPEN_IMAGE_REGISTRY"
@@ -421,15 +421,15 @@ setDepsEnv()
     done
     if ! $foundDep || $forceUpgradeDeps; then
       if ! $forceUpgradeDeps; then
-        printWarning "Dependency $dep not found. Downloading via zopen-download"
+        printWarning "Dependency $dep not found. Installing via zopen install"
       else
-        printHeader "Upgrading dependency $dep. Downloading via zopen-download"
+        printHeader "Upgrading dependency $dep. Installing via zopen install"
       fi
       # Use the first path specified in the dependency search list
       path=$(echo ${depsPath} | tr '|' '\n' | head -1)
-      printVerbose "Running zopen download --install-or-upgrade -r $dep -d $path -v"
-      if ! zopen download -r $dep -d $path; then
-        printError "zopen download command failed"
+      printVerbose "Running zopen install --install-or-upgrade -r $dep -d $path -v"
+      if ! zopen install -r $dep -d $path; then
+        printError "zopen install command failed"
       fi
       printVerbose "Setting up upgraded ${path}/${dep} dependency environment"
       cd "${path}/${dep}" && . ./.env

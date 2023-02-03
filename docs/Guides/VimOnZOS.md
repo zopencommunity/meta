@@ -6,9 +6,9 @@ VIM is a popular and powerful text editor that is often used by programmers for 
 ## How to obtain VIM on z/OS?
 To obtain VIM on z/OS, download it from [VIM Github Release page](https://github.com/ZOSOpenTools/vimport/releases).
 
-Alternatively, you can use `zopen download` to download vim as follows:
+Alternatively, you can use `zopen install` to download vim as follows:
 ```
-zopen download vim ncurses
+zopen install vim ncurses
 ```
 Since VIM depends on ncurses, we also need to download [ncurses](https://github.com/ZOSOpenTools/ncursesport/releases) and source the .env file.
 
@@ -32,7 +32,7 @@ VIM on z/OS currently understands the `IBM-1047` and `ISO8959-1` file tags. If y
 ### Cscope
 **Cscope** is a tool that allows users to search for symbols, functions, and other code constructs in a codebase. This can be incredibly useful when working with large codebases on z/OS, as it allows users to quickly navigate and find the code they need.
 
-To use Cscope, first download it using `zopen download cscope` and then source the .env file as follows: `. ./.env`
+To use Cscope, first download it using `zopen install cscope` and then source the .env file as follows: `. ./.env`
 
 Now, navigate to a codebase. Let's take the Git source as an example. Since Git is a C-based project, we'll use Cscope to a cscope database for all of the C source files and headers.
 ```
@@ -53,7 +53,7 @@ To map the cscope to shortcut keys, the following vim script is recommended: htt
 ### CTags
 Another useful tool is **ctags**, which is similar to cscope but operates at a lower level. Ctags generates a list of tags for a codebase, which can then be used by VIM to quickly navigate to specific functions and other code constructs. This can be a huge time-saver when working with complex codebases on z/OS.
 
-To use CTags, first download it using `zopen download ctags` and then source the .env file as follows: `. ./.env`
+To use CTags, first download it using `zopen install ctags` and then source the .env file as follows: `. ./.env`
 
 Now, navigate to a codebase. Let's take the Git source as an example.
 ```
