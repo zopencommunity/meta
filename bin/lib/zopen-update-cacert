@@ -2,21 +2,6 @@
 #
 # Updates the cacert in zopen meta root directory
 #
-export mydir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
-
-. "${mydir}/common.inc"
-
-export zopen_ca_dir="$( cd "${mydir}/../../" && pwd -P )"
-ZOPEN_CA="${zopen_ca_dir}/cacert.pem"
-
-# Temporary files
-for tmp in "$TMPDIR" "$TMP" /tmp
-do
-  if [ ! -z $tmp ] && [ -d $tmp ]; then
-    TEMP_CACERT="$tmp/$LOGNAME.$RANDOM.cacert.pem"
-    break
-  fi
-done
 
 cleanupOnExit() {
     rv=$?
@@ -30,20 +15,23 @@ printHelp()
 {
   args=$*
   echo "zopen-update-cacert:"
-  echo "  Update your $ZOPEN_CA file to the latest curl CA certificates extracted from Mozilla"
+  echo "  Update your cacert.pem file to the latest curl CA certificates extracted from Mozilla"
   echo "Syntax:"
-  echo "  zopen-update-cacert [-fhv]"
+  echo "  zopen-update-cacert [-fhv] [<directory>]"
   echo "Options:"
-  echo "  -f|--force: update $ZOPEN_CA file even if it may be up to date"
+  echo "  -f|--force: update cacert.pem file even if it may be up to date"
   echo "  -h|--help: print this help"
   echo "  -v|--verbose: print verbose messages"
+  echo "Parameters:"
+  echo "  <directory>: the directory where the cacert.pem will be updated"
+  echo "    The default directory location is: ${default_dir}"
 }
 
 getCACertFromCurl()
 {
   # Get latest CACert from Mozilla through Curl
-  printVerbose "Downloading https://curl.se/ca/cacert.pem"
-  if ! curl -L -o "$TEMP_CACERT" "https://curl.se/ca/cacert.pem"; then
+  printVerbose "Downloading ${cacert_update_url}"
+  if ! curl -L -o "$TEMP_CACERT" "${cacert_update_url}"; then
     printError "curl command could not download $url"
   fi
 }
@@ -55,6 +43,23 @@ updateCACert()
 }
 
 # Main code start here
+export mydir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
+
+. "${mydir}/common.inc"
+
+export default_dir="$( cd "${mydir}/../../" && pwd -P )"
+export cacert_update_url="https://curl.se/ca/cacert.pem"
+
+# Temporary files
+for tmp in "$TMPDIR" "$TMP" /tmp
+do
+  if [ ! -z $tmp ] && [ -d $tmp ]; then
+    TEMP_CACERT="$tmp/$LOGNAME.$RANDOM.cacert.pem"
+    break
+  fi
+done
+
+dir="${default_dir}"
 args=$*
 forceUpdate=false
 while [[ $# -gt 0 ]]; do
@@ -69,17 +74,26 @@ while [[ $# -gt 0 ]]; do
     "-v" | "--v" | "-verbose" | "--verbose")
       verbose=true
       ;;
+    *)
+      if [ "${1#-*}" = "$1" ]; then
+        dir="$1"
+      else
+        echo "Unknown option: $1"
+        printHelp "${args}"
+        exit 8
+      fi
+      ;;
   esac
   shift;
 done
 
+ZOPEN_CA="${dir}/cacert.pem"
+
 if ! [ -r "${ZOPEN_CA}" ]; then
   forceUpdate=true 
 fi
-export SSL_CERT_FILE="${ZOPEN_CA}"
-export CURL_CA_BUNDLE="${ZOPEN_CA}"
 
-printHeader "Getting latest CA Certificate from Curl"
+printHeader "Getting latest CA Certificate"
 getCACertFromCurl
 
 if $forceUpdate; then
