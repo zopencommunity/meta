@@ -1,12 +1,13 @@
 #!/bin/sh
 #
-# Updates the cacert in zopen
+# Updates the cacert in zopen meta root directory
 #
 export mydir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
 
 . "${mydir}/common.inc"
 
-ZOPEN_CA="${mydir}/../../cacert.pem"
+export zopen_ca_dir="$( cd "${mydir}/../../" && pwd -P )"
+ZOPEN_CA="${zopen_ca_dir}/cacert.pem"
 
 # Temporary files
 for tmp in "$TMPDIR" "$TMP" /tmp
@@ -28,7 +29,14 @@ trap "cleanupOnExit" EXIT INT TERM QUIT HUP
 printHelp() 
 {
   args=$*
-  echo "zopen-update-cacert will update your $ZOPEN_CA file to the latest curl CA certificates extracted from Mozilla"
+  echo "zopen-update-cacert:"
+  echo "  Update your $ZOPEN_CA file to the latest curl CA certificates extracted from Mozilla"
+  echo "Syntax:"
+  echo "  zopen-update-cacert [-fhv]"
+  echo "Options:"
+  echo "  -f|--force: update $ZOPEN_CA file even if it may be up to date"
+  echo "  -h|--help: print this help"
+  echo "  -v|--verbose: print verbose messages"
 }
 
 getCACertFromCurl()
