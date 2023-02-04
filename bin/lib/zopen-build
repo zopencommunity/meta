@@ -1187,7 +1187,7 @@ done
 for f in \$(/bin/find \$${projectName}_HOME/ -type f | /bin/xargs grep -l \"ZOPEN_INSTALL_PREFIX\" 2>/dev/null); do
   if [ \"\$f\" != \"\$${projectName}_HOME/setup.sh\" ] && [ \"\$f\" != \"\$${projectName}_HOME/.env\" ]; then
     cp \$f \$f.tmp
-    /bin/sed -e \"s#ZOPEN_INSTALL_PREFIX#\$${ZOPEN_INSTALL_PREFIX}#g\" \$f.tmp > \$f
+    /bin/sed -e \"s#ZOPEN_INSTALL_PREFIX#\${ZOPEN_INSTALL_PREFIX}#g\" \$f.tmp > \$f
     rm \$f.tmp;
   fi
 done
