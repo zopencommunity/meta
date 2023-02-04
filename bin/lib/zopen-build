@@ -1175,7 +1175,7 @@ zz
 
   if $hasHardcodedPaths; then
     cat <<zz >>"${ZOPEN_INSTALL_DIR}/setup.sh"
-ZOPEN_INSTALL_PREFIX="\${projectName}_HOME/../"
+ZOPEN_INSTALL_PREFIX="\$${projectName}_HOME/../"
 ZOPEN_INSTALL_PREFIX=\$(cd "\${ZOPEN_INSTALL_PREFIX}" >/dev/null 2>&1 && pwd -P)
 for f in \$(/bin/find \$${projectName}_HOME/ -type f | /bin/xargs grep -l \"ZOPEN_INSTALL_ROOT\" 2>/dev/null); do
   if [ \"\$f\" != \"\$${projectName}_HOME/setup.sh\" ] && [ \"\$f\" != \"\$${projectName}_HOME/.env\" ]; then
