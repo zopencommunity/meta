@@ -96,7 +96,8 @@ for rname, y in dependentOn.items():
 			dependencies += match.split();
 		dependencies = list(set(dependencies))
 		for x in dependencies:	
-			dependentOn[x + "port"] += [name]
+			if x + "port" in dependentOn:
+				dependentOn[x + "port"] += [name]
 # Data to plot
 labels = []
 sizes = []
