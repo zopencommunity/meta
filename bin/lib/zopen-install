@@ -5,6 +5,27 @@ export utildir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
 
 . "${utildir}/common.inc"
 
+# Temporary files
+for tmp in "$TMPDIR" "$TMP" /tmp
+do
+  if [ ! -z $tmp ] && [ -d $tmp ]; then
+    TMP_DEP_STATS="$tmp/$LOGNAME.$RANDOM.file"
+    break
+  fi
+done
+
+touch $TMP_DEP_STATS
+
+# Remove temoraries on exit and report elapsed time
+cleanupOnExit() {
+  rv=$?
+  [ -f $TMP_DEP_STATS ] && rm -rf $TMP_DEP_STATS
+  trap - EXIT # clear the EXIT trap so that it's not double called
+  exit $rv
+}
+
+trap "cleanupOnExit" EXIT INT TERM QUIT HUP
+
 printSyntax() 
 {
   args=$*
@@ -41,7 +62,7 @@ getContentsFromGithub()
 
 printListEntries()
 {
-  printf "${NC}${UNDERLINE}${1}%-20s %-20s %-20s %-10s %-25s\n${NC}" "Repo" "Your version" "Latest Tag" "Status" "Quality"
+  printf "${NC}${UNDERLINE}${1}%-20s %-20s %-20s %-30s %-10s %-25s\n${NC}" "Repo" "Your version" "Latest Tag" "Dependencies" "Status" "Quality"
   echo "$repoArray" | xargs | tr ' ' '\n' | sort | while read repo; do
     name=${repo%port}
     if ! contents="$(getContentsFromGithub "https://api.github.com/repos/ZOSOpenTools/${repo}/releases/latest")"; then
@@ -52,6 +73,11 @@ printListEntries()
     statusline="$(echo "$contents" | grep "\"body\":.*Test Status:.*(.*)<br />")"
     buildQuality="$(echo "$statusline" | sed -e "s#.*Test Status:<\/b>##" -e "s#[ ]*(.*##" | tr -d ' ')"
     testStatus="$(echo "$statusline" | sed -e "s#.*Test Status:<\/b>[^(]*(##" -e "s#).*##")"
+    if echo "$statusline" | grep "Runtime Dependencies:" >/dev/null; then
+      dependencies="$(echo "$statusline" | sed -e "s#.*Runtime Dependencies:<\/b> ##" -e "s#<br />.*##")"
+    else
+      dependencies="No dependencies"
+    fi
     if [ -z "$buildQuality" ]; then
       buildQuality="Untested"
       testStatus="N/A";
@@ -68,12 +94,130 @@ printListEntries()
     else
       originalTag="Not installed"
     fi
-    printf '%-20s %-20s %-20s %-10s %-25s\n' "$repo" "$originalTag" "$latestTag" "$buildQuality" "$testStatus"
+    printf '%-20s %-20s %-20s %-30s %-10s %-25s\n' "$repo" "$originalTag" "$latestTag" "$dependencies" "$buildQuality" "$testStatus"
     continue;
   done
 }
 
-installRepos()
+installPort()
+{
+  name=$1
+  if grep -q "^$name=" $TMP_DEP_STATS; then
+    printVerbose "Already processed $name...skipping"
+    return
+  fi
+  repo="${name}port"
+
+  printHeader "Installing $name..."
+  if ! latest_url="$(getContentsFromGithub "https://api.github.com/repos/ZOSOpenTools/${repo}/releases/latest")"; then
+    exit 4;
+  fi
+
+  #FIXME: use jq to parse
+  statusline="$(echo "$latest_url" | grep "\"body\":.*Test Status:.*(.*)<br />")"
+  if echo "$statusline" | grep "Runtime Dependencies:" >/dev/null; then
+    dependencies="$(echo "$statusline" | sed -e "s#.*Runtime Dependencies:<\/b> ##" -e "s#<br />.*##")"
+  else
+    dependencies="No dependencies"
+  fi
+
+  buildQuality="$(echo "$statusline" | sed -e "s#.*Test Status:<\/b>##" -e "s#[ ]*(.*##" | tr -d ' ')"
+  if [ -z "$buildQuality" ]; then
+    buildQuality="Untested"
+  fi
+  if [ ! -z "$filter" ]; then
+    qualityLower=$(echo "$buildQuality" | awk '{print tolower($0)}')
+    if [ "$filter" != "$qualityLower" ]; then
+      continue;
+    fi
+  fi
+
+  latestTag="$(echo "$latest_url" | grep "\"tag_name\":" | cut -d '"' -f 4)"
+  if $upgradeInstalled || $installOrUpgrade || ! $reinstall; then
+    if [ -e "${name}/.releaseinfo" ]; then
+      originalTag=$(cat "${name}/.releaseinfo" | xargs) 
+    elif ! $installOrUpgrade; then
+      # We're only updating alreaady installed products
+      printVerbose "${downloadDir}/${name} will not be upgraded as it is not installed."
+      continue;
+    fi
+    if [ "${latestTag}" = "${originalTag}" ] && ! $reinstall; then
+      printVerbose "${downloadDir}/${name} with latest release tag \"${latestTag}\" already installed. Skipping..."
+      continue;
+    fi
+    printInfo "New release with tag \"${latestTag}\" found for $repo"
+  fi
+  printInfo "Preparing to download $name"
+  if [ -z "$latest_url" ]; then
+    printInfo "No releases published for $name"
+    continue
+  fi
+
+  latest_url="$(echo "$latest_url" | grep "\"browser_download_url\":" | cut -d '"' -f 4)"
+  printInfo "Downloading latest release from $repo..."
+  if ! $verbose; then
+    redirectToDevNull="2>/dev/null"
+  fi 
+  if ! runAndLog "curl -L ${latest_url} -O ${redirectToDevNull}"; then
+    printWarning "Could not download ${latest_url}"
+    continue;
+  fi
+
+  pax=$(basename ${latest_url})
+  if [ ! -f "${pax}" ]; then
+    printError "${pax} was not actually downloaded?"
+  fi
+
+  dirname=${pax%.pax.Z}
+  if [ -d "$dirname" ]; then
+    printInfo "Deleting existing $dirname..."
+    rm -rf "$dirname"
+  fi
+
+  printInfo "Extracting $pax..."
+  if ! runAndLog "pax -rf $pax -p p ${redirectToDevNull}"; then
+    printWarning "Could not extract $pax. Skipping"
+    continue;
+  fi
+  rm -f "${pax}"
+
+  # Remove old symlink and recreate
+  if [ -L $name ]; then
+    rm $name
+  fi 
+
+  if ! ln -s $dirname $name; then
+    printError "Could not create symbolic link name"
+  fi 
+
+  # Add tag information as a .releaseinfo file
+  echo "$latestTag" > "${name}/.releaseinfo"
+
+  # Delete the .installed file if it was previously there
+  rm -f "${name}/.installed"
+
+  printVerbose "Installing ${name}..."
+  #TODO: when we rebuild all the tools, simply call setup.sh
+  (cd "${name}" && . ./.env)
+  versionPath="$name/.version"
+  if [ -r "$versionPath" ]; then
+    version=$(cat "$versionPath");
+  fi
+  printInfo "Successfully installed $name to $downloadDir/$name/"
+  if ! grep -q "^$name=" $TMP_DEP_STATS; then
+    echo "$name=$version" >> $TMP_DEP_STATS
+  fi
+
+  if [ "$dependencies" != "No dependencies" ]; then
+    printHeader "Installing dependencies for $name: $dependencies..."
+    
+    echo "$dependencies" | xargs | tr ' ' '\n' | sort | while read dep; do
+      installPort $dep
+    done
+  fi
+}
+
+installPorts()
 {
   echo "$repoArray" | xargs | tr ' ' '\n' | sort | while read repo; do
     name=${repo%port}
@@ -81,87 +225,7 @@ installRepos()
       exit 4;
     fi
 
-    #FIXME: use jq to parse
-    statusline="$(echo "$latest_url" | grep "\"body\":.*Test Status:.*(.*)<br />")"
-    buildQuality="$(echo "$statusline" | sed -e "s#.*Test Status:<\/b>##" -e "s#[ ]*(.*##" | tr -d ' ')"
-    if [ -z "$buildQuality" ]; then
-      buildQuality="Untested"
-    fi
-    if [ ! -z "$filter" ]; then
-      qualityLower=$(echo "$buildQuality" | awk '{print tolower($0)}')
-      if [ "$filter" != "$qualityLower" ]; then
-        continue;
-      fi
-    fi
-
-    latestTag="$(echo "$latest_url" | grep "\"tag_name\":" | cut -d '"' -f 4)"
-    if $upgradeInstalled || $installOrUpgrade; then
-      if [ -e "${name}/.releaseinfo" ]; then
-        originalTag=$(cat "${name}/.releaseinfo" | xargs) 
-      elif ! $installOrUpgrade; then
-        # We're only updating alreaady installed products
-        printVerbose "${downloadDir}/${name} will not be upgraded as it is not installed."
-        continue;
-      fi
-      if [ "${latestTag}" = "${originalTag}" ] && ! $reinstall; then
-        printVerbose "${downloadDir}/${name} with latest release tag \"${latestTag}\" already installed. Skipping..."
-        continue;
-      fi
-      printInfo "New release with tag \"${latestTag}\" found for $repo"
-    fi
-    printInfo "Preparing to download $repo"
-    if [ -z "$latest_url" ]; then
-      printInfo "No releases published for $repo"
-      continue
-    fi
-
-    latest_url="$(echo "$latest_url" | grep "\"browser_download_url\":" | cut -d '"' -f 4)"
-    printInfo "Downloading latest release from $repo..."
-    if ! $verbose; then
-      redirectToDevNull="2>/dev/null"
-    fi 
-    if ! runAndLog "curl -L ${latest_url} -O ${redirectToDevNull}"; then
-      printWarning "Could not download ${latest_url}"
-      continue;
-    fi
-
-    pax=$(basename ${latest_url})
-    if [ ! -f "${pax}" ]; then
-      printError "${pax} was not actually downloaded?"
-    fi
-
-    dirname=${pax%.pax.Z}
-    if [ -d "$dirname" ]; then
-      printInfo "Deleting existing $dirname..."
-      rm -rf "$dirname"
-    fi
-
-    printInfo "Extracting $pax..."
-    if ! runAndLog "pax -rf $pax -p p ${redirectToDevNull}"; then
-      printWarning "Could not extract $pax. Skipping"
-      continue;
-    fi
-    rm -f "${pax}"
-
-    # Remove old symlink and recreate
-    if [ -L $name ]; then
-      rm $name
-    fi 
-
-    if ! ln -s $dirname $name; then
-      printError "Could not create symbolic link name"
-    fi 
-
-    # Add tag information as a .releaseinfo file
-    echo "$latestTag" > "${name}/.releaseinfo"
-
-    # Delete the .installed file if it was previously there
-    rm -f "${name}/.installed"
-
-    printVerbose "Installing ${name}..."
-    #TODO: when we rebuild all the tools, simply call setup.sh
-    (cd "${name}" && . ./.env)
-    printInfo "Successfully installed $name to $downloadDir/$name/"
+  installPort $name
 done
 }
 
@@ -302,4 +366,4 @@ if [ ! -z "$list" ]; then
   exit 0;
 fi
 
-installRepos
+installPorts
