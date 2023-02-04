@@ -16,7 +16,7 @@ done
 
 touch $TMP_DEP_STATS
 
-# Remove temoraries on exit and report elapsed time
+# Remove temoraries on exit
 cleanupOnExit() {
   rv=$?
   [ -f $TMP_DEP_STATS ] && rm -rf $TMP_DEP_STATS
