@@ -49,7 +49,7 @@ if [ "$action" != "restart-if-down" ] && [ "$action" != "restart" ] && [ "$actio
     exit 1
 fi
 
-if [ ! -z "$IBMCLOUD_API_KEY" ]; then
+if [ -z "$IBMCLOUD_API_KEY" ]; then
     echo "You must set the IBMCLOUD_API_KEY environment variable."
     exit 1
 fi
