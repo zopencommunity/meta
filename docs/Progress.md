@@ -54,14 +54,14 @@
 | [help2manport](https://github.com/ZOSOpenTools/help2manport) | 12 | 100% |autoconf, automake, bison, curl, expat, gettext, git, hello, libtool, m4, make, openssl
 | [diffutilsport](https://github.com/ZOSOpenTools/diffutilsport) | 10 | 92% |bash, coreutils, gawk, git, gnulib, grep, groff, libpcre, re2c, texinfo
 | [ncursesport](https://github.com/ZOSOpenTools/ncursesport) | 10 | 100% |bash, cscope, gettext, git, htop, less, nano, ncdu, screen, vim
-| [gettextport](https://github.com/ZOSOpenTools/gettextport) | 8 | 50% |ctags, expat, git, hello, libiconv, m4, man-db, nano
+| [gettextport](https://github.com/ZOSOpenTools/gettextport) | 8 | 81% |ctags, expat, git, hello, libiconv, m4, man-db, nano
 | [gawkport](https://github.com/ZOSOpenTools/gawkport) | 6 | 93% |automake, curl, expat, gzip, ncurses, rsync
 | [libtoolport](https://github.com/ZOSOpenTools/libtoolport) | 6 | 80% |expat, gdbm, makeinfo, man-db, php, re2c
 | [opensslport](https://github.com/ZOSOpenTools/opensslport) | 5 | 90% |curl, expat, git, rsync, wget
 | [zlibport](https://github.com/ZOSOpenTools/zlibport) | 5 | 100% |autoconf, curl, expat, git, wget
+| [bashport](https://github.com/ZOSOpenTools/bashport) | 4 | 83% |flex, git, libxml2, re2c
 | [cmakeport](https://github.com/ZOSOpenTools/cmakeport) | 4 | 74% |ninja, unzip, zip, zoslib
 | [sedport](https://github.com/ZOSOpenTools/sedport) | 4 | 84% |bash, git, groff, re2c
-| [bashport](https://github.com/ZOSOpenTools/bashport) | 3 | 83% |flex, git, re2c
 | [findutilsport](https://github.com/ZOSOpenTools/findutilsport) | 3 | 50% |grep, re2c, texinfo
 | [libiconvport](https://github.com/ZOSOpenTools/libiconvport) | 2 | 100% |libxml2, man-db
 | [rsyncport](https://github.com/ZOSOpenTools/rsyncport) | 2 | 88% |m4, sed
@@ -110,4 +110,4 @@
 | [zigiport](https://github.com/ZOSOpenTools/zigiport) | 0 | Skipped |
 | [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 100% |
 
-Last updated:  2023-02-04 05:58:53
+Last updated:  2023-02-04 09:34:51
