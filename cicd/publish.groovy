@@ -20,7 +20,8 @@ GITHUB_REPO=$RELEASE_PREFIX
 # PAX file should be a copied artifact
 PAX=`find . -name "*zos.pax.Z"`
 BUILD_STATUS=`find . -name "test.status" | xargs cat`
-DEPENDENCIES=`find . -name ".deps" | xargs cat`
+DEPENDENCIES=`find . -name ".runtimedeps" | xargs cat`
+BUILD_DEPENDENCIES=`find . -name ".builddeps" | xargs cat`
 VERSION=`find . -name ".version" | xargs cat`
 
 if [ ! -f "$PAX" ]; then
@@ -30,6 +31,10 @@ fi
 
 if [ -z "$DEPENDENCIES" ]; then
   DEPENDENCIES="No dependencies";
+fi
+
+if [ -z "$BUILD_DEPENDENCIES" ]; then
+  BUILD_DEPENDENCIES="No dependencies";
 fi
 
 if [ ! -z "$VERSION" ]; then
@@ -47,6 +52,7 @@ unset https_proxy
 DESCRIPTION="${PORT_DESCRIPTION}"
 DESCRIPTION="${DESCRIPTION}<br /><b>Test Status:</b> ${BUILD_STATUS}<br />"
 DESCRIPTION="${DESCRIPTION}<b>Runtime Dependencies:</b> ${DEPENDENCIES}<br />"
+DESCRIPTION="${DESCRIPTION}<b>Build Dependencies:</b> ${BUILD_DEPENDENCIES}<br />"
 
 URL_LINE="https://github.com/ZOSOpenTools/${GITHUB_REPO}/releases/download/${GITHUB_REPO}_${BUILD_ID}/$PAX_BASENAME"
 DESCRIPTION="${DESCRIPTION}<br /><b>Command to download and install on z/OS:</b> <pre>pax -rf <(curl -o - -L ${URL_LINE}) && cd $DIR_NAME && . ./.env</pre>"
