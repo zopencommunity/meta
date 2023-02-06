@@ -34,6 +34,10 @@ getCACertFromCurl()
   if ! curl -L -o "$TEMP_CACERT" "${cacert_update_url}"; then
     printError "curl command could not download $url"
   fi
+
+  if [ ! -f $TEMP_CACERT ]; then
+    printError "$TEMP_CACERT was not downloaded"
+  fi
 }
 
 updateCACert()
@@ -58,6 +62,10 @@ do
     break
   fi
 done
+
+if [ -z "$TEMP_CACERT" ]; then
+  printError "Could not find a temporary write location in \$TMPDIR, \$TMP, or /tmp"
+fi
 
 dir="${default_dir}"
 args=$*
