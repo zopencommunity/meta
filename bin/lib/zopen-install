@@ -14,6 +14,10 @@ do
   fi
 done
 
+if [ -z "$TMP_DEP_STATS" ]; then
+  printError "Could not find a temporary write location in \$TMPDIR, \$TMP, or /tmp"
+fi
+
 touch $TMP_DEP_STATS
 
 # Remove temoraries on exit
@@ -37,6 +41,7 @@ printSyntax()
   echo "  -u|--upgrade: upgrades installed z/OS Open Tools packages."  >&2
   echo "  --install-or-upgrade: installs the package if not installed, or upgrades the package if installed."  >&2
   echo "  --reinstall: reinstall already installed z/OS Open Tools packages."  >&2
+  echo "  --nodeps: do not install dependencies.do not install dependencies."  >&2
   echo "  --all: installs all z/OS Open Tools packages."  >&2
   echo "  -v: run in verbose mode." >&2
   echo "  -d <dir>: directory to install binaries to.  Uses current working directory or path from ~/.zopen-config (generated via zopen init) if not specified." >&2
@@ -99,6 +104,22 @@ printListEntries()
   done
 }
 
+installDependencies()
+{
+  name=$1
+  dependencies=$2
+  if $doNotInstallDeps; then
+    return 0;
+  fi
+  if [ "$dependencies" != "No dependencies" ]; then
+    printHeader "Installing dependencies for $name: $dependencies..."
+    
+    echo "$dependencies" | xargs | tr ' ' '\n' | sort | while read dep; do
+      installPort $dep
+    done
+  fi
+}
+
 installPort()
 {
   name=$1
@@ -136,13 +157,19 @@ installPort()
   if $upgradeInstalled || $installOrUpgrade || ! $reinstall; then
     if [ -e "${name}/.releaseinfo" ]; then
       originalTag=$(cat "${name}/.releaseinfo" | xargs) 
-    elif ! $installOrUpgrade; then
-      # We're only updating alreaady installed products
+      if ! $upgradeInstalled && ! $installOrUpgrade && ! $reinstall; then
+        printInfo "$name already installed, skipping. To upgrade, use zopen upgrade."
+        installDependencies "$name" "$dependencies"
+        continue
+      fi
+    elif $upgradeInstalled;  then
       printVerbose "${downloadDir}/${name} will not be upgraded as it is not installed."
+      installDependencies "$name" "$dependencies"
       continue;
     fi
     if [ "${latestTag}" = "${originalTag}" ] && ! $reinstall; then
       printVerbose "${downloadDir}/${name} with latest release tag \"${latestTag}\" already installed. Skipping..."
+      installDependencies "$name" "$dependencies"
       continue;
     fi
     printInfo "New release with tag \"${latestTag}\" found for $repo"
@@ -208,13 +235,7 @@ installPort()
     echo "$name=$version" >> $TMP_DEP_STATS
   fi
 
-  if [ "$dependencies" != "No dependencies" ]; then
-    printHeader "Installing dependencies for $name: $dependencies..."
-    
-    echo "$dependencies" | xargs | tr ' ' '\n' | sort | while read dep; do
-      installPort $dep
-    done
-  fi
+  installDependencies "$name" "$dependencies"
 }
 
 installPorts()
@@ -232,14 +253,11 @@ done
 
 # Main code start here
 args=$*
-if [ ! -z "$ZOPEN_SEARCH_PATH" ]; then
-  downloadDir="$ZOPEN_SEARCH_PATH/prod"
-else
-  downloadDir=$PWD
-fi
+specifiedDownloadDir=false
 upgradeInstalled=false
 verbose=false
 reinstall=false
+doNotInstallDeps=false
 downloadAll=false
 installOrUpgrade=false
 if [[ $# -eq 0 ]]; then
@@ -248,7 +266,8 @@ fi
 while [[ $# -gt 0 ]]; do
   case "$1" in
     "-d")
-      downloadDir=$2;
+      downloadDir=$2
+      specifiedDownloadDir=true
       shift
       ;;
     "-u" | "--upgrade" | "-upgrade" | "-upgrade" | "--upgrade")
@@ -274,6 +293,9 @@ while [[ $# -gt 0 ]]; do
     "--all")
       downloadAll=true
       ;;
+    "--nodeps")
+      doNotInstallDeps=true
+      ;;
     "-v" | "--v" | "-verbose" | "--verbose")
       verbose=true
       ;;
@@ -283,6 +305,15 @@ while [[ $# -gt 0 ]]; do
   esac
   shift;
 done
+
+if ! $specifiedDownloadDir; then
+  if [ ! -z "$ZOPEN_SEARCH_PATH" ]; then
+    downloadDir="$ZOPEN_SEARCH_PATH/prod"
+  else
+    printWarning "Run zopen init to configure the install location. Using current working directory..."
+    downloadDir=$PWD
+  fi
+fi
 
 if $downloadAll; then
   unset chosenRepos
@@ -319,7 +350,8 @@ repo_results=$(echo "$repo_results" | grep "\"full_name\":" 2>/dev/null | cut -d
 
 if [ ! -d "${downloadDir}" ]; then
   mkdir -p "${downloadDir}"
-  if $?; then
+   
+  if [ $? -gt 0 ]; then
     printError "Could not create install directory: $downloadDir"
   fi
 fi
