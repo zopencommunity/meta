@@ -1137,18 +1137,18 @@ deleteDuplicateEntries()
 {
   value=\$1
   delim=\$2
-  echo "\$value\$delim" | awk -v RS="\$delim" '!(\$0 in a) {a[\$0]; printf("%s%s", col, \$0); col=RS; }'
+  echo "\$value\$delim" | awk -v RS="\$delim" '!(\$0 in a) {a[\$0]; printf("%s%s", col, \$0); col=RS; }' | sed "s/\${delim}$//"
 }
 
 _CEE_RUNOPTS="\$_CEE_RUNOPTS FILETAG(AUTOCVT,AUTOTAG) POSIX(ON)"
 # Remove spaces in between brackets
-_CEE_RUNOPTS=\"\$(echo "\$_CEE_RUNOPTS | awk '{gsub(/\([ \t]*/, "("); gsub(/[ \t]*\)/, ")"); gsub(/[ \t]*,[ \t]*/, ","); print}')\"
+_CEE_RUNOPTS="\$(echo "\$_CEE_RUNOPTS" | awk '{gsub(/\([ \t]*/, "("); gsub(/[ \t]*\)/, ")"); gsub(/[ \t]*,[ \t]*/, ","); print}')"
 export _CEE_RUNOPTS="\$(deleteDuplicateEntries "\$_CEE_RUNOPTS" " ")"
 
 export _TAG_REDIR_IN=txt
 export _TAG_REDIR_ERR=txt
 export _TAG_REDIR_OUT=txt
-export ${projectName}_HOME=\${PWD}
+export ${projectName}_HOME="\${PWD}"
 zz
 
   if [ -d "${ZOPEN_INSTALL_DIR}/bin" ]; then
