@@ -41,7 +41,8 @@ printSyntax()
   echo "  -u|--upgrade: upgrades installed z/OS Open Tools packages."  >&2
   echo "  --install-or-upgrade: installs the package if not installed, or upgrades the package if installed."  >&2
   echo "  --reinstall: reinstall already installed z/OS Open Tools packages."  >&2
-  echo "  --nodeps: do not install dependencies.do not install dependencies."  >&2
+  echo "  --nodeps: do not install dependencies."  >&2
+  echo "  --download-only: download the package without setting it up." >&2
   echo "  --all: installs all z/OS Open Tools packages."  >&2
   echo "  -v: run in verbose mode." >&2
   echo "  -d <dir>: directory to install binaries to.  Uses current working directory or path from ~/.zopen-config (generated via zopen init) if not specified." >&2
@@ -105,7 +106,7 @@ printListEntries()
 }
 
 installDependencies()
-{
+(
   name=$1
   dependencies=$2
   if $doNotInstallDeps; then
@@ -114,14 +115,21 @@ installDependencies()
   if [ "$dependencies" != "No dependencies" ]; then
     printHeader "Installing dependencies for $name: $dependencies..."
     
+    # Remove an old one if it exists
+    rm -f "${name}/.depsenv"
     echo "$dependencies" | xargs | tr ' ' '\n' | sort | while read dep; do
+      cat <<ZZ >> "${name}/.depsenv"
+if [ -f "../${dep}/.env" ]; then
+  cd "../${dep}" && . ./.env; cd -
+fi
+ZZ
       installPort $dep
     done
   fi
-}
+)
 
 installPort()
-{
+(
   name=$1
   if grep -q "^$name=" $TMP_DEP_STATS; then
     printVerbose "Already processed $name...skipping"
@@ -224,8 +232,19 @@ installPort()
   rm -f "${name}/.installed"
 
   printVerbose "Installing ${name}..."
-  #TODO: when we rebuild all the tools, simply call setup.sh
-  (cd "${name}" && . ./.env)
+  if ! $downloadOnly; then
+    #TODO: when we rebuild all the tools, simply call setup.sh
+    (cd "${name}" && . ./.env)
+  fi
+
+  # Append deps env include
+    cat <<ZZ >> "${name}/.env"
+if [ -f ".depsenv" ] && [ -z "\$ZOPEN_SOURCING_DEPS" ] ; then
+  ZOPEN_SOURCING_DEPS=1
+  . ./.depsenv
+fi
+  unset ZOPEN_SOURCING_DEPS
+ZZ
   versionPath="$name/.version"
   if [ -r "$versionPath" ]; then
     version=$(cat "$versionPath");
@@ -236,7 +255,7 @@ installPort()
   fi
 
   installDependencies "$name" "$dependencies"
-}
+)
 
 installPorts()
 {
@@ -260,6 +279,7 @@ reinstall=false
 doNotInstallDeps=false
 downloadAll=false
 installOrUpgrade=false
+downloadOnly=false
 if [[ $# -eq 0 ]]; then
   list=1
 fi
@@ -295,6 +315,9 @@ while [[ $# -gt 0 ]]; do
       ;;
     "--nodeps")
       doNotInstallDeps=true
+      ;;
+    "--download-only")
+      downloadOnly=true
       ;;
     "-v" | "--v" | "-verbose" | "--verbose")
       verbose=true
