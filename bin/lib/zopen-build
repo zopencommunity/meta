@@ -689,11 +689,11 @@ gitClone()
   if [ -d "${dir}" ]; then
     printInfo "Using existing git clone'd directory ${dir}"
   else
+    forceRebuild=true
     printInfo "Clone and create ${dir}"
     if ! runAndLog "git clone \"${ZOPEN_GIT_URL}\""; then
       printError "Unable to clone ${gitname} from ${ZOPEN_GIT_URL}"
     fi
-    forceRebuild=true
     if [ "${ZOPEN_GIT_BRANCH}x" != "x" ]; then
       if ! git -C "${dir}" checkout "${ZOPEN_GIT_BRANCH}" >/dev/null; then
         printError"Unable to checkout ${ZOPEN_GIT_URL} branch ${ZOPEN_GIT_BRANCH}"
@@ -819,7 +819,6 @@ downloadTarBall()
 
     extractTarBall "${tarballz}" "${dir}"
   fi
-  echo "${dir}"
 }
 
 #
@@ -911,19 +910,18 @@ getCode()
 
   if [ "${ZOPEN_TYPE}x" = "GITx" ]; then
     printInfo "Checking if git directory already cloned"
-    if ! dir=$(gitClone); then
+    if ! gitClone; then
       return 4
     fi
   elif [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
     printInfo "Checking if tarball already downloaded"
-    if ! dir=$(downloadTarBall); then
+    if ! downloadTarBall; then
       return 4
     fi
   else
     printError "ZOPEN_TYPE should be one of GIT or TARBALL"
     return 4
   fi
-  echo "${dir}"
 }
 
 create_fifo_pipe()
@@ -939,7 +937,6 @@ create_fifo_pipe()
   TEE_PID=$!
 }
 
-
 cleanup()
 {
   if [ -n "${ZOPEN_CLEAN_CMD}" ] && [ -f "${ZOPEN_LOG_DIR}/config.success" ] ; then
@@ -950,8 +947,8 @@ cleanup()
       printError "Cleanup failed. Log: ${cleanlog}" >&2
     fi
   fi
-  [[ ! -f "${ZOPEN_LOG_DIR}/bootstrap.success" ]] || rm ${ZOPEN_LOG_DIR}/bootstrap.success
-  [[ ! -f "${ZOPEN_LOG_DIR}/config.success" ]] || rm ${ZOPEN_LOG_DIR}/config.success
+  rm -f ${ZOPEN_LOG_DIR}/bootstrap.success
+  rm -f ${ZOPEN_LOG_DIR}/config.success
 }
 
 bootstrap()
@@ -1110,7 +1107,7 @@ replaceHardcodedPaths()
   hasHardcodedPaths=false
   for f in $(find ${ZOPEN_INSTALL_DIR}/ -type f | xargs grep -l "${ZOPEN_INSTALL_DIR}" 2>/dev/null); do
     hasHardcodedPaths=true
-    printVerbose "Processing $f"
+    printVerbose "Replacing ${ZOPEN_INSTALL_DIR} in $f"
     # only substitute text
     if /bin/sed -e "" $f 2>/dev/null 1>&2; then
       cp $f $f.tmp && sed -e "s#${ZOPEN_INSTALL_DIR}#ZOPEN_INSTALL_ROOT#g" $f.tmp > $f && rm $f.tmp;
@@ -1118,7 +1115,7 @@ replaceHardcodedPaths()
   done
   for f in $(find ${ZOPEN_INSTALL_DIR}/ -type f | xargs grep -l "${ZOPEN_INSTALL_PREFIX}" 2>/dev/null); do
     hasHardcodedPaths=true
-    printVerbose "Processing $f"
+    printVerbose "Replacing ${ZOPEN_INSTALL_PREFIX} in $f"
     # only substitute text
     if /bin/sed -e "" $f 2>/dev/null 1>&2; then
       cp $f $f.tmp && sed -e "s#${ZOPEN_INSTALL_PREFIX}#ZOPEN_INSTALL_PREFIX#g" $f.tmp > $f && rm $f.tmp;
@@ -1140,29 +1137,31 @@ deleteDuplicateEntries()
 {
   value=\$1
   delim=\$2
-  echo "\$value" | awk -v RS="\$delim" '!(\$0 in a) {a[\$0]; printf("%s%s", col, \$0); col=RS; }'
+  echo "\$value\$delim" | awk -v RS="\$delim" '!(\$0 in a) {a[\$0]; printf("%s%s", col, \$0); col=RS; }' | sed "s/\${delim}$//"
 }
 
 _CEE_RUNOPTS="\$_CEE_RUNOPTS FILETAG(AUTOCVT,AUTOTAG) POSIX(ON)"
+# Remove spaces in between brackets
+_CEE_RUNOPTS="\$(echo "\$_CEE_RUNOPTS" | awk '{gsub(/\([ \t]*/, "("); gsub(/[ \t]*\)/, ")"); gsub(/[ \t]*,[ \t]*/, ","); print}')"
 export _CEE_RUNOPTS="\$(deleteDuplicateEntries "\$_CEE_RUNOPTS" " ")"
 
 export _TAG_REDIR_IN=txt
 export _TAG_REDIR_ERR=txt
 export _TAG_REDIR_OUT=txt
-export ${projectName}_HOME=\${PWD}
+export ${projectName}_HOME="\${PWD}"
 zz
 
   if [ -d "${ZOPEN_INSTALL_DIR}/bin" ]; then
     echo "PATH=\"\${${projectName}_HOME}/bin:\$PATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
-    echo "export PATH=\$(deleteDuplicateEntries \"\$PATH\" \":\")" >> "${ZOPEN_INSTALL_DIR}/.env"
+    echo "export PATH=\"\$(deleteDuplicateEntries \"\$PATH\" \":\")\"" >> "${ZOPEN_INSTALL_DIR}/.env"
   fi
   if [ -d "${ZOPEN_INSTALL_DIR}/lib" ]; then
-    echo "export LIBPATH=\"\${${projectName}_HOME}/lib:\$LIBPATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
-    echo "export LIBPATH=\$(deleteDuplicateEntries \"\$LIBPATH\" \":\")" >> "${ZOPEN_INSTALL_DIR}/.env"
+    echo "LIBPATH=\"\${${projectName}_HOME}/lib:\$LIBPATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
+    echo "export LIBPATH=\"\$(deleteDuplicateEntries \"\$LIBPATH\" \":\")\"" >> "${ZOPEN_INSTALL_DIR}/.env"
   fi
   if [ -d "${ZOPEN_INSTALL_DIR}/share/man" ]; then
-    echo "export MANPATH=\"\${${projectName}_HOME}/share/man:\$MANPATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
-    echo "export MANPATH=\$(deleteDuplicateEntries \"\$MANPATH\" \":\")" >> "${ZOPEN_INSTALL_DIR}/.env"
+    echo "MANPATH=\"\${${projectName}_HOME}/share/man:\$MANPATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
+    echo "export MANPATH=\"\$(deleteDuplicateEntries \"\$MANPATH\" \":\")\"" >> "${ZOPEN_INSTALL_DIR}/.env"
   fi
   if command -V "${ZOPEN_APPEND_TO_ENV}" >/dev/null 2>&1; then
     printVerbose "Appending additional environment variables..."
@@ -1288,7 +1287,7 @@ install()
     fi
 
     if [ ! -z "$ZOPEN_RUNTIME_DEPS" ]; then
-      asciiecho "$ZOPEN_RUNTIME_DEPS" "${ZOPEN_INSTALL_DIR}/.runtimedeps"
+      asciiecho "$(echo "$ZOPEN_RUNTIME_DEPS" | xargs | tr ' ' '\n' | sort -u | xargs)" "${ZOPEN_INSTALL_DIR}/.runtimedeps"
     fi
 
     buildDeps=""
@@ -1297,7 +1296,7 @@ install()
     elif [ "${ZOPEN_TYPE}x" = "GITx" ]; then
         buildDeps="${ZOPEN_GIT_DEPS}"
     fi
-    asciiecho "$buildDeps" "${ZOPEN_INSTALL_DIR}/.builddeps"
+    asciiecho "$(echo "$buildDeps" | xargs | tr ' ' '\n' | sort -u | xargs)" "${ZOPEN_INSTALL_DIR}/.builddeps"
 
     if $generatePax; then
       printHeader "Generating pax.Z from ${ZOPEN_INSTALL_DIR}"
@@ -1522,7 +1521,7 @@ if ! setEnv; then
   exit 4
 fi
 
-if ! dir=$(getCode); then
+if ! getCode; then
   exit 4
 fi
 
