@@ -243,7 +243,9 @@ if [ -f ".depsenv" ] && [ -z "\$ZOPEN_SOURCING_DEPS" ] ; then
   ZOPEN_SOURCING_DEPS=1
   . ./.depsenv
 fi
-  unset ZOPEN_SOURCING_DEPS
+  if [ ! -z "\$ZOPEN_SOURCING_DEPS" ]; then
+    unset ZOPEN_SOURCING_DEPS
+  fi
 ZZ
   versionPath="$name/.version"
   if [ -r "$versionPath" ]; then
