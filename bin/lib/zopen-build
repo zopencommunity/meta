@@ -1236,6 +1236,11 @@ install()
 {
   installStartTime=$SECONDS
   if [ -n "${ZOPEN_INSTALL_CMD}" ]; then
+    if command -V "zopen_pre_install" >/dev/null 2>&1; then
+      printVerbose "Running zopen_pre_install"
+      zopen_pre_install ${ZOPEN_INSTALL_DIR}
+    fi
+
     printHeader "Running Install"
     installlog="${ZOPEN_LOG_DIR}/${LOG_PFX}_install.log"
     create_fifo_pipe "${installlog}"
