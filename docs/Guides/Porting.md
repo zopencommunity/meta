@@ -18,7 +18,7 @@ This assumes that you have the latest version of [Git](https://github.com/ZOSOpe
 ### Leveraging the z/OS Open Tools meta repo
 
 The meta repo (https://github.com/ZOSOpenTools/meta) consists of common tools and files that aid in the porting process, including the `zopen` suite of tools.  Specifically, `zopen build` provides a common way to bootstrap, configure, build, check,
-and install a software package. `zopen download` provides a mechanism to download the latest published z/OS Open Tools packages.
+and install a software package. `zopen install` provides a mechanism to download the latest published z/OS Open Tools packages.
 
 Many tools depend on other tools to be able to build or run. You will need to provide both _bootstrap_ tools
 (i.e. binary tools not from source), as well as _prod_ tools (i.e. _production_ level tools previously built

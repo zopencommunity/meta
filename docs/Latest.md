@@ -1,6 +1,6 @@
 # z/OS Open Tools - Packages
 
-Note: to download the latest packages, use the `zopen download` script from the [meta repo](https://github.com/ZOSOpenTools/meta)
+Note: to download the latest packages, use the `zopen install` script from the [meta repo](https://github.com/ZOSOpenTools/meta)
 
 | Package | Status | Test Success Rate | Latest Release | Description |
 |---|---|---|---|---|
