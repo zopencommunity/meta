@@ -13,16 +13,32 @@ GITHUB_ORGANIZATION="ZOSOpenTools"
 RELEASE_PREFIX=$(basename "${PORT_GITHUB_REPO}")
 # Used for Release/Tag name
 RELEASE_PREFIX=${RELEASE_PREFIX%%.*}
+PORT_NAME=${RELEASE_PREFIX%%port}
 # Get the REPO name
 GITHUB_REPO=$RELEASE_PREFIX
 
 # PAX file should be a copied artifact
 PAX=`find . -name "*zos.pax.Z"`
 BUILD_STATUS=`find . -name "test.status" | xargs cat`
+DEPENDENCIES=`find . -name ".runtimedeps" | xargs cat`
+BUILD_DEPENDENCIES=`find . -name ".builddeps" | xargs cat`
+VERSION=`find . -name ".version" | xargs cat`
 
 if [ ! -f "$PAX" ]; then
   echo "Port pax file does not exist";
   exit 1;
+fi
+
+if [ -z "$DEPENDENCIES" ]; then
+  DEPENDENCIES="No dependencies";
+fi
+
+if [ -z "$BUILD_DEPENDENCIES" ]; then
+  BUILD_DEPENDENCIES="No dependencies";
+fi
+
+if [ ! -z "$VERSION" ]; then
+  VERSION="$VERSION ";
 fi
 
 PAX_BASENAME=$(basename "${PAX}")
@@ -34,10 +50,13 @@ unset http_proxy
 unset https_proxy
 
 DESCRIPTION="${PORT_DESCRIPTION}"
-DESCRIPTION="${DESCRIPTION}<br /><b>Test Status:</b> ${BUILD_STATUS}"
+DESCRIPTION="${DESCRIPTION}<br /><b>Test Status:</b> ${BUILD_STATUS}<br />"
+DESCRIPTION="${DESCRIPTION}<b>Runtime Dependencies:</b> ${DEPENDENCIES}<br />"
+DESCRIPTION="${DESCRIPTION}<b>Build Dependencies:</b> ${BUILD_DEPENDENCIES}<br />"
 
 URL_LINE="https://github.com/ZOSOpenTools/${GITHUB_REPO}/releases/download/${GITHUB_REPO}_${BUILD_ID}/$PAX_BASENAME"
 DESCRIPTION="${DESCRIPTION}<br /><b>Command to download and install on z/OS:</b> <pre>pax -rf <(curl -o - -L ${URL_LINE}) && cd $DIR_NAME && . ./.env</pre>"
+DESCRIPTION="${DESCRIPTION}<br /><b>Or use:</b> <pre>zopen install ${PORT_NAME}</pre>"
 
 exists=$(github-release info -u ${GITHUB_ORGANIZATION} -r ${GITHUB_REPO}  -j)
 if [ $? -gt 0 ]; then
@@ -48,11 +67,11 @@ fi
 exists=$(github-release info -u ${GITHUB_ORGANIZATION} -r ${GITHUB_REPO} --tag "${RELEASE_PREFIX}_${BUILD_ID}" -j)
 if [ $? -gt 0 ]; then
   echo "Creating a new tag in github"
-  github-release -v release --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --tag "${RELEASE_PREFIX}_${BUILD_ID}" --name "${RELEASE_PREFIX} (Build ${BUILD_ID})" --description "${DESCRIPTION}"
+  github-release -v release --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --tag "${RELEASE_PREFIX}_${BUILD_ID}" --name "${PORT_NAME} ${VERSION}(Build ${BUILD_ID})" --description "${DESCRIPTION}"
 else
   echo "Deleting and creating new tag"
   github-release -v delete --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --tag "${RELEASE_PREFIX}_${BUILD_ID}"
-  github-release -v release --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --tag "${RELEASE_PREFIX}_${BUILD_ID}" --name "${RELEASE_PREFIX} (Build ${BUILD_ID})" --description "${DESCRIPTION}"
+  github-release -v release --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --tag "${RELEASE_PREFIX}_${BUILD_ID}" --name "${PORT_NAME} ${VERSION}(Build ${BUILD_ID})" --description "${DESCRIPTION}"
 
 fi
 

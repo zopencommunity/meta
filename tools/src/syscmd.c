@@ -42,12 +42,12 @@ int unpaxandlink(const char* root, const char* subdir, const char* pkg, const ch
   return rc;
 }
 
-int createhomelink(const char* home, const char* name, const char* root) {
-  char ln_format[] = "/bin/sh -c \"/bin/rm -rf %s/%s/* && /bin/ln -s %s %s/%s\"";
+int createhomelink(const char* home, const char* root) {
+  char ln_format[] = "/bin/sh -c \"/bin/ln -s %s %s\"";
   char ln[ZOPEN_CMD_MAX+1];
   int rc;
-  if ((rc = snprintf(ln, sizeof(ln), ln_format, home, name, root, home, name)) > sizeof(ln)) {
-    fprintf(stderr, "error building command for symbolic link to %s from %s/%s\n", root, home, name);
+  if ((rc = snprintf(ln, sizeof(ln), ln_format, root, home)) > sizeof(ln)) {
+    fprintf(stderr, "error building command for symbolic link to %s from %ss\n", root, home);
     return rc;
   }
   rc = system(ln);
@@ -63,7 +63,7 @@ int createhomelink(const char* home, const char* name, const char* root) {
 }
 
 int getpkgname(const char* temprawpkg, const char* temppkg, char* buffer, size_t bufflen) {
-  char getpkg_format[] = "/bin/sh -c \"chtag -t %s && chtag -cISO8859-1 %s && cat %s | awk ' BEGIN { RS=\\\",\\\" } { print }' | grep '\\\"name\\\":' | grep pax.Z | tr '\\\"' ' ' | /bin/awk '{ print \\$3 }' >%s\"";
+  char getpkg_format[] = "/bin/sh -c \"export _BPXK_AUTOCVT=ON && /bin/chtag -r %s && /bin/chtag -tcISO8859-1 %s && /bin/cat %s | /bin/awk ' BEGIN { RS=\\\",\\\" } { print }' | /bin/grep '\\\"name\\\":' | /bin/grep pax.Z | /bin/tr '\\\"' ' ' | /bin/awk '{ print \\$3 }' >%s\"";
   char getpkg[ZOPEN_CMD_MAX+1];
   int rc;
   ssize_t len;

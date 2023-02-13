@@ -13,7 +13,8 @@ Alternatively, you can download meta, along with the foundational set of tools v
 ## If you are using z/OS Open Tools
 
 ### zopen init
-To initialize the zopen installation directory to a location other than the default ($HOME/zopen), you can run the command zopen init and specify the desired directory. This will configure the directory for future use. Subsequently, tools like zopen install will download and install files to this specified directory."
+
+To initialize the zopen installation directory to a location other than the default ($HOME/zopen), you can run the command zopen init and specify the desired directory. This will configure the directory for future use. Subsequently, tools like `zopen install` will download and install files to this specified directory."
 
 ### zopen update-cacacert
 

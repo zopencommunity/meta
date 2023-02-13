@@ -41,14 +41,23 @@ static void syntax(const char* pgm) {
                   "    boot, prod, and dev directories will be created\n"
                   "  The boot subdirectory will have:\n"
                   "    sub-directories created for each of the tools needed for running the zopen utility\n"
-                  "  The dev subdirectory will have:\n"
-                  "    a 'git clone' of both the meta repositories\n"
                   "Options:\n"
                   " -v : print out verbose messages\n"
-                  " -q : only print out errors\n",
+                  " -q : only print out errors\n"
+                  "Note:\n"
+                  " Special consideration is made if <root> is ${HOME}/zopen in which case no link is created\n",
                   pgm, ZOPEN_TOOLS_URL, pgm);
   return;
 }
+
+#define _CVTSTATE_OFF     0
+#define _CVTSTATE_ON      1
+#define _CVTSTATE_ALL     4
+
+#define _CVTSTATE_SWAP    2
+#define _CVTSTATE_QUERY   3
+
+int __ae_autoconvert_state(int action);
 
 /*
  * This program does the following:
@@ -69,10 +78,16 @@ int main(int argc, char* argv[]) {
   char  filename[ZOPEN_PATH_MAX+1];
   char  output[ZOPEN_PATH_MAX+1];
   char  tmppem[ZOPEN_PATH_MAX+1];
+  char  zopenhome[ZOPEN_PATH_MAX+1];
+  char  realpathhome[ZOPEN_PATH_MAX+1];
   char  uri[ZOPEN_PATH_MAX+1];
   int   rc;
   int   i;
+  int symlink;
   int parmsok=0;
+  char* zopen_c_home_var = getenv("HOME");
+
+  __ae_autoconvert_state(_CVTSTATE_ON); 
 
   if (argc < 2) {
     syntax(argv[0]);
@@ -100,14 +115,34 @@ int main(int argc, char* argv[]) {
     syntax(argv[0]);
     return 8;
   }
+  if (!zopen_c_home_var) {
+    fprintf(stderr, "Unable to determine $HOME location - this is required to create the symbolic link\n");
+    return 8;
+  }
   if (!realpath(argv[argc-1], root)) {
     fprintf(stderr, "Directory %s does not exist, or is not writable\n", argv[argc-1]);
     syntax(argv[0]);
     return 4;
   }
+  if (genfilename(zopen_c_home_var, ZOPEN_HOME_NAME, zopenhome, ZOPEN_PATH_MAX)) {
+    return 4;
+  }
 
-  if (genfilename("pem", tmppem, ZOPEN_PATH_MAX)) {
-    /* genfilename issues specific errors */
+  if (realpath(zopenhome, realpathhome)) {
+    if (strcmp(root, realpathhome)) {
+      fprintf(stderr, "File or directory %s exists. Please move this file before running since a symbolic link will be created\n", zopenhome);
+      syntax(argv[0]);
+      return 4;
+    } else {
+      /* Special case - if zopenhome and realpathhome are the same, recognize this and skip creating a symbolic link */
+      symlink=0;
+    }
+  } else {
+    symlink=1;
+  }
+
+  if (gentmpfilename("pem", tmppem, ZOPEN_PATH_MAX)) {
+    /* gentmpfilename issues specific errors */
     return 4;
   }
 
@@ -133,6 +168,7 @@ int main(int argc, char* argv[]) {
     if (rc = getfilenamefrompkg(bootpkg[i], pkgsfx, tmppem, filename, ZOPEN_PATH_MAX)) {
       /* If the boot package isn't found (404), keep going */
       if (rc == 404) { continue; }
+      return rc;
     }
     if (genfilenameinsubdir(root, ZOPEN_BOOT, filename, output, ZOPEN_PATH_MAX)) {
       return 4;
@@ -143,6 +179,7 @@ int main(int argc, char* argv[]) {
     }
     if (rc = httpsget(host, uri, tmppem, output)) {
       fprintf(stderr, "error %d downloading https://%s%s with PEM file %s to %s\n", rc, host, uri, tmppem, output);
+      return rc;
     }
     if (rc = unpaxandlink(root, ZOPEN_BOOT, output, bootpkg[i])) {
       return rc;
@@ -156,13 +193,20 @@ int main(int argc, char* argv[]) {
     return rc;
   }
 
-  if (verbose) {
-    fprintf(STDTRC, "Create symbolic link from %s/%s to %s\n", ZOPEN_HOME, ZOPEN_HOME_NAME, root);
+  if (symlink) {
+    if (verbose) {
+      fprintf(STDTRC, "Create symbolic link from %s to %s\n", zopenhome, root);
+    }
+    if (createhomelink(zopenhome, root)) {
+      fprintf(stderr, "error creating symbolic link from %s to %s\n", zopenhome, root);
+      return rc;
+    }
+  } else {
+    if (verbose) {
+      fprintf(STDTRC, "No symbolic link from %s to %s required\n", zopenhome, root);
+    }
   }
-  if (createhomelink(ZOPEN_HOME, ZOPEN_HOME_NAME, root)) {
-    fprintf(stderr, "error creating symbolic link from %s/%s to %s\n", ZOPEN_HOME, ZOPEN_HOME_NAME, root);
-    return rc;
-  }
+
 
   if (remove(tmppem)) {
     fprintf(stderr, "error removing temporary pem file: %s\n", tmppem);

@@ -62,16 +62,16 @@ Download [zopen-setup](https://github.com/ZOSOpenTools/meta/releases/tag/v1.0.0)
 
 For more details on porting, visit the [porting to z/OS guide](Porting.md).
 
-## Downloading tools to z/OS
+## Installing tools to z/OS
 
-Once you have your development environment set up, you can download tools directly to z/OS with `zopen install`.
+Once you have your development environment set up, you can install tools directly to z/OS with `zopen install`.
 
-To download and install the latest software packages, enter the command `zopen install`. By default it will download all of the tools hosted on ZOSOpenTools.
+To download and install the latest software packages, enter the command `zopen install`. By default it will list all of the tools hosted on ZOSOpenTools.
 
-To list the available packages, specify the --list option as follows:
+To download the available packages, specify the --all option as follows:
 
 ```bash
-zopen install --list
+zopen install --all
 ```
 
 To download and install specific packages, specify them as a comma delimited list as follows:

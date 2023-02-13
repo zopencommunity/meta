@@ -38,6 +38,9 @@ defineEnvironment()
 
   # Required for proper operation of (USS shipped) sed
   export _UNIX03=YES
+
+  # Use /bin/cat as the pager in case xlclang help is displayed, we don't want to wait for input
+  export PAGER=/bin/cat
 }
 
 #
@@ -158,6 +161,84 @@ processConfig()
   if [ -f "$HOME/.zopen-config" ]; then
     . "$HOME/.zopen-config"
   fi
+}
+
+parseDeps()
+{
+  dep="$1"
+  version=$(echo $dep | awk -F '[>=<]+' '{print $2}')
+  if [ -z "$version" ]; then
+    operator=""
+    dep=$(echo $dep | awk -F '[>=<]+' '{print $1}')
+  else
+    operator=$(echo $dep | awk -F '[0-9.]+' '{print $1}' | awk -F '^[a-zA-Z]+' '{print $2}')
+    dep=$(echo $dep | awk -F '[>=<]+' '{print $1}')
+    case $operator in
+      ">=") ;;
+      "=") ;;
+      *) printError "$operator is not supported."
+    esac
+    major=$(echo $version | awk -F. '{print $1}')
+    minor=$(echo $version | awk -F. '{print $2}')
+    if [ -z "$minor" ]; then
+      minor=0
+    fi
+    patch=$(echo $version | awk -F. '{print $3}')
+    if [ -z "$patch" ]; then
+      patch=0
+    fi
+    prerelease=$(echo $version | awk -F. '{print $4}')
+    if [ -z "$prerelease" ]; then
+      prerelease=0
+    fi
+  fi
+
+  echo "$dep|$operator|$major|$minor|$patch|$prerelease"
+}
+
+compareVersions()
+{
+  v1="$1"
+  v2="$2"
+  awk -v v1="$v1" -v v2="$v2" '
+  function vercmp(v1, v2) {
+    n1 = split(v1, v1_array, ".")
+    n2 = split(v2, v2_array, ".")
+
+    for (i = 1; i <= n1 || i <= n2; i++) {
+      if (v1_array[i] != v2_array[i]) {
+        return (v1_array[i] < v2_array[i] ? -1 : 1)
+      }
+    }
+    return 0
+  }
+
+  BEGIN {
+    if (vercmp(v1, v2) >= 0) {
+      exit 0
+    } else {
+      exit 1
+    }
+  }
+  '
+
+  return $?
+}
+
+validateVersion()
+{
+  version=$1
+  operator=$2
+  requestedVersion=$3
+  dependency=$4
+  if [ ! -z "$operator" ] && [ -z "$version" ]; then
+    printVerbose "$operator ${requestedVersion} requsted, but no version file found in $versionPath." 
+    return 1
+  elif [ ! -z "$operator" ] && ! compareVersions "${version}" "${requestedVersion}"; then
+    printVerbose "$dependency does not satisfy ${version} $operator ${requestedVersion}"
+    return 1
+  fi
+  return 0
 }
 
 zopenInitialize
