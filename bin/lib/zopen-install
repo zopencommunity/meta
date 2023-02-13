@@ -120,7 +120,13 @@ installDependencies()
     echo "$dependencies" | xargs | tr ' ' '\n' | sort | while read dep; do
       cat <<ZZ >> "${name}/.depsenv"
 if [ -f "../${dep}/.env" ]; then
-  cd "../${dep}" && . ./.env; cd -
+  if [[ \$(type echo) == 'echo is a shell builtin' ]]; then
+    pushd "../${dep}"
+    . ./.env
+    popd
+  else
+    cd "../${dep}" && . ./.env; cd -
+  fi
 fi
 ZZ
       installPort $dep
