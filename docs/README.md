@@ -1,11 +1,12 @@
 ## Welcome to z/OS Open Tools
 
-The [z/OS Open Tools community](https://github.com/ZOSOpenTools) is here to encourage z/OS open source development. We currently host **70+ z/OS Open Source projects** and we're looking for more! 
+The [z/OS Open Tools community](https://zosopentools.link/community) is here to provide popular Open Source tools and to encourage z/OS Open Source tools development. 
+We currently host **70+ z/OS Open Source projects** and we're looking for more! 
 
-* To find tools or libraries that you can download and use right now, see [Available Ports](/Latest.md).
-* To begin porting tools today, start with the [Porting to z/OS Guide](/Guides/Porting.md)
-* On related GitHub pages you'll find our [z/OS Open Tools Repos](https://github.com/ZOSOpenTools) and [helpful community discussions](https://github.com/ZOSOpenTools/meta/discussions)
+* Our [z/OS Open Tools repositories](https://zosopentools.link/repos) shows what's available
+ * Want to see the latest [build status and quality](Guides/../Latest.md) ?
+* [Getting Started](/Guides/QuickStart.md) will get you going fast.
+ * Want to [use the tools](/Guides/using.md) ?
+ * Want to [develop the tools](/Guides/developing.md) ?
+ * Want to [improve our documentation](./UpdateDocs.md) ?
 
-<hr />
-
-<sup>You can update this page. Learn more at [Updating docs](./README_docs.md).</sup>

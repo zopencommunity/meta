@@ -1,43 +1,59 @@
-# zopen framework 
+# Developing z/OS Open Tools
 
-The following is a description of the zopen tools provided in the meta repo. To obtain the latest tools, you can clone and set up the environment as follows:
+Please read [Getting Started](/Guides/QuickStart.md) and [Using tools](/Guides/using.md) if you haven't already done so.
+
+## zopen directory structure
+
+After running `zopen-setup`, you will see the following directories:
+```
+$HOME
+ + zopen
+   + boot
+   + prod
+   + dev
+```
+
+The _boot_ directory is meant for tools required by _zopen_. In general, you won't need to make updates after you have 
+run `zopen-setup`. 
+
+The _prod_ directory is where the tools you build will be installed into for your own use. It is also where tools that 
+are dependencies will be installed. For example, if you build `m4` as a git build, you will require a number of other tools. 
+`zopen build` will automatically install these tools for you in your _prod_ directory if you don't already have them.
+
+The _dev_ directory is where you will do your development. For example, if you wanted to make enhancements to the `zotsampleport` 
+tool, you would do the following:
 
 ```
-git clone git@github.com:ZOSOpenTools/meta.git
-cd meta
-. ./.env
+cd $HOME/zopen/dev
+git clone git@github.com:ZOSOpenTools/zotsampleport.git
+cd zotsampleport
+zopen build
 ```
 
-Alternatively, you can download meta, along with the foundational set of tools via [zopen-setup](https://github.com/ZOSOpenTools/meta/releases/tag/v1.0.0#Running%20zopen-setup).
+This will install `zotsampleport` into your `$HOME/zopen/prod` directory.
 
-## If you are using z/OS Open Tools
+We provide a number of tools after you run `zopen-setup`, all under `zopen`. To see the list of tools:
+- `zopen -?`
 
-### zopen init
-
-To initialize the zopen installation directory to a location other than the default ($HOME/zopen), you can run the command zopen init and specify the desired directory. This will configure the directory for future use. Subsequently, tools like `zopen install` will download and install files to this specified directory."
-
-### zopen update-cacacert
-
-To update the cacert.pem file, you can use `zopen update-cacert`. This will download the latest cacert.pem file https://curl.se/docs/caextract.html. This cacert.pem file is then used by other tools such as `zopen install` and `zopen build`.
+The following is a description of the zopen tools provided in the `meta` repo. 
 
 ### zopen install
 
 To download and install the latest software packages, you can use `zopen install`. By default it will list all of the packages hosted on ZOSOpenTools.
 
-It is recommended that you generate a [github personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token).
-Then set `export ZOPEN_GIT_OAUTH_TOKEN=<yourapitoken>`
+It is recommended that you generate a [github personal access token](https://zosopentools.link/github-oauth) and then set `export ZOPEN_GIT_OAUTH_TOKEN=<yourapitoken>`
 
-To list the available packages, specify no parameters or the `--list` option as follows:
+To list the available packages, specify the `--list` option as follows:
 ```
 zopen install --list
 ```
 
-To download and install specfic packages, you can specify the packages as a comma seperated list as follows:
+To download and install specific packages, you can specify the packages as a comma seperated list as follows:
 ```
 zopen install make,gzip
 ```
 
-This will download it to the directory specified by your ~/.zopen-config. To change the destination directory, you can specify the `-d` option as follows:
+This will download and install to your current directory. To change the destination directory, you can specify the `-d` option as follows:
 
 ```
 zopen install make -d $HOME/zopen/prod
@@ -70,9 +86,9 @@ To build a software package, you can use `zopen build`.
 The `buildenv` file _must_ set the following environment variables:
 - `ZOPEN_TYPE`: one of _TARBALL_ or _GIT_ indicating where the source should be pulled from (a source tarball or git repository)
 - `ZOPEN_URL`: the URL where the source should be pulled from, including the `package.git` or `package-V.R.M.tar.gz` extension
-- `ZOPEN_DEPS`: a space-separated list of all software dependencies this package has. These packages will automatically be downloaded if they are not present in your $HOME/zopen/prod or $HOME/zopen/boot directories.
+- `ZOPEN_DEPS`: a space-separated list of all software dependencies this package has. These packages will automatically be downloaded if they are not present in your `$HOME/zopen/prod` or `$HOME/zopen/boot` directories.
 
-To help gauge the build quality of the port, a `zopen_check_results()` function needs to be provided inside the buildenv. This function should process
+To determine the build quality of the port, a `zopen_check_results()` function needs to be provided inside _buildenv_. This function should process
 the test results and emit a report of the failures, total number of tests, and expected number of failures to stdout as in the following format: 
 ```
 actualFailures:<numberoffailures>
@@ -119,20 +135,23 @@ For a sample port, visit the [zotsampleport](https://github.com/ZOSOpenTools/zot
 
 Run `zopen build` from the root directory of the git repo you would like to build.  For example, m4:
 ```
-cd ${HOME}/zopen/dev/m4
+cd ${HOME}/zopen/dev/m4port
 zopen build
 ```
 
 ### zopen generate
 You can generate a zopen template project with `zopen generate`. It will ask you a series of questions and then generate the zopen file structure, including a `buildenv` file that will help you get started with your project.
 
+### zopen update-cacacert
+
+To update the cacert.pem file, you can use `zopen update-cacert`. This will download the latest cacert.pem file https://curl.se/docs/caextract.html. This cacert.pem file is then used by other tools such as `zopen install` and `zopen build`.
+
 ### zopen-importenvs
 If you want to source the .env files from all of the installed zopen products under the zopen prod and boot directories, then you can use `zopen-importenvs`. 
 
-Usage of script is: ". ./zopen-importenvs [path to buildenv to fetch dependency]"
+Usage of script is: `. ./zopen-importenvs`
 
 The path to buildenv is optional.
 
 If the buildenv path is provided, the dependencies from the buildenv file are read and the env is sourced from prod/boot directory. This is useful if you want to have the same environment as zopen build in order to reproduce a problem with the build.
 Otherwise if the path is not provided then the .env from each project directory in the zopen prod/boot directories are sourced.
-```

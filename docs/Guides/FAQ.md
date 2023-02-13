@@ -7,6 +7,7 @@ The z/OS Open Tools initiative was started to help modernize z/OS and encourage 
 If you have access to a z/OS system, you can get started with porting [here](https://zosopentools.github.io/meta/contributing/). Not sure what to work on? Start with the [help wanted issues](https://github.com/ZOSOpenTools/meta/labels/help%20wanted). If you do not have access to a z/OS system, speak to [@Mike Fulton](https://github.com/MikeFultonDev) or [@Igor Todorovski](https://github.com/IgorTodorovskiIBM).
 
 ## How do I consume the z/OS Open Tools?
+
 You can install them directly from the zOS Open Tools repo's [GitHub releases](https://github.com/ZOSOpenTools/meta/releases). All z/OS Open Tools releases are consolidated into a [table here](https://zosopentools.github.io/meta/#/Latest). Or you can use the [zopen install tool](https://github.com/ZOSOpenTools/meta/blob/main/bin/lib/zopen-install) from the [meta repository](https://github.com/ZOSOpenTools/meta) to install the tools, [documented here](https://zosopentools.github.io/meta/#/Guides/zopen).
 
 ## How do I raise issues?
