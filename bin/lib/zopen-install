@@ -203,29 +203,18 @@ installPort()
     printError "${pax} was not actually downloaded?"
   fi
 
-  # get extracted directory
-  dirname=$(pax -vf $pax -o listopt="%(name)s" | head -1 | sed -e "s#/\$##")
-  printVerbose "Directory name: $dirname"
+  dirname=${pax%.pax.Z}
   if [ -d "$dirname" ]; then
     printInfo "Deleting existing $dirname..."
     rm -rf "$dirname"
   fi
-  
+
   printInfo "Extracting $pax..."
   if ! runAndLog "pax -rf $pax -p p ${redirectToDevNull}"; then
     printWarning "Could not extract $pax. Skipping"
     continue;
   fi
   rm -f "${pax}"
-
-  newDir=$(echo "$dirname" | sed -e "s/\.202[0-9]*_[0-9]*\.zos/.zos/g")
-  # Using new directory name
-  if [ "$newDir" != "$dirname" ]; then
-    printVerbose "Moving $dirname to $newDir"
-    rm -rf "$newDir"
-    mv "$dirname" "$newDir"
-    dirname="$newDir"
-  fi
 
   # Remove old symlink and recreate
   if [ -L $name ]; then
