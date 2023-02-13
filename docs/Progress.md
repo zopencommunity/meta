@@ -25,7 +25,6 @@
 
 * [gnulibport](https://github.com/ZOSOpenTools/gnulibport)
 * [htopport](https://github.com/ZOSOpenTools/htopport)
-* [libxml2port](https://github.com/ZOSOpenTools/libxml2port)
 * [libxsltport](https://github.com/ZOSOpenTools/libxsltport)
 * [man-dbport](https://github.com/ZOSOpenTools/man-dbport)
 * [phpport](https://github.com/ZOSOpenTools/phpport)
@@ -77,7 +76,7 @@
 | [gperfport](https://github.com/ZOSOpenTools/gperfport) | 1 | Skipped |hello
 | [groffport](https://github.com/ZOSOpenTools/groffport) | 1 | 100% |man-db
 | [libpipelineport](https://github.com/ZOSOpenTools/libpipelineport) | 1 | 100% |man-db
-| [libxml2port](https://github.com/ZOSOpenTools/libxml2port) | 1 | No builds |php
+| [libxml2port](https://github.com/ZOSOpenTools/libxml2port) | 1 | 99% |php
 | [lz4port](https://github.com/ZOSOpenTools/lz4port) | 1 | 100% |rsync
 | [patchport](https://github.com/ZOSOpenTools/patchport) | 1 | 50% |m4
 | [re2cport](https://github.com/ZOSOpenTools/re2cport) | 1 | No builds |php
@@ -114,4 +113,4 @@
 | [zigiport](https://github.com/ZOSOpenTools/zigiport) | 0 | Skipped |
 | [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 100% |
 
-Last updated:  2023-02-13 19:26:32
+Last updated:  2023-02-13 19:51:25
