@@ -14,7 +14,7 @@ You can install them directly from the zOS Open Tools repo's [GitHub releases](h
 If the issue pertains to a given project, open the issue in the project's Github repository. If you have a general issue or discussion item, [create a discussion](https://github.com/ZOSOpenTools/meta/discussions).
 
 ## What is the current porting status?
-Overall status for the z/OS Open Tools initiative is available [here](https://zosopentools.github.io/meta/status/).
+Overall status for the z/OS Open Tools initiative is available [here](https://zosopentools.github.io/meta/#/Progress).
 
 ## How do I view the status of my build in Jenkins?
 The external Jenkins page can be accessed [here](https://128.168.139.253:8443/).
