@@ -124,11 +124,11 @@ ZZ
       cat <<ZZ >> "${name}/.depsenv"
 if [ -f "../${dep}/.env" ]; then
   if [[ \$(type echo) == 'echo is a shell builtin' ]]; then
-    pushd "../${dep}"
+    pushd "../${dep}" >/dev/null
     . ./.env
-    popd
+    popd >/dev/null
   else
-    cd "../${dep}" && . ./.env; cd -
+    cd "../${dep}" && . ./.env; cd - >/dev/null
   fi
 fi
 ZZ
