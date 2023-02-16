@@ -22,13 +22,13 @@ node('linux')
     } catch (Exception e) {
       handleError(e, repo)
     }
-    copyArtifacts filter: 'install/test.status',
+    copyArtifacts filter: 'test.status',
 	fingerprintArtifacts: true,
 	projectName: 'Port-Build',
 	selector: specific(buildResult.number.toString()),
 	optional: true
-    if (fileExists('install/test.status')) {
-    	testStatus = readFile file: 'install/test.status'
+    if (fileExists('test.status')) {
+    	testStatus = readFile file: 'test.status'
     }
   }
   
