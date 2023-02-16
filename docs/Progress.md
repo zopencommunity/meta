@@ -15,6 +15,7 @@
 	
 * [bisonport](https://github.com/ZOSOpenTools/bisonport)
 * [gperfport](https://github.com/ZOSOpenTools/gperfport)
+* [nanoport](https://github.com/ZOSOpenTools/nanoport)
 * [ncduport](https://github.com/ZOSOpenTools/ncduport)
 * [screenport](https://github.com/ZOSOpenTools/screenport)
 * [sqliteport](https://github.com/ZOSOpenTools/sqliteport)
@@ -95,7 +96,7 @@
 | [luaport](https://github.com/ZOSOpenTools/luaport) | 0 | 100% |
 | [man-dbport](https://github.com/ZOSOpenTools/man-dbport) | 0 | No builds |
 | [metaport](https://github.com/ZOSOpenTools/metaport) | 0 | 100% |
-| [nanoport](https://github.com/ZOSOpenTools/nanoport) | 0 | 100% |
+| [nanoport](https://github.com/ZOSOpenTools/nanoport) | 0 | Skipped |
 | [ncduport](https://github.com/ZOSOpenTools/ncduport) | 0 | Skipped |
 | [ninjaport](https://github.com/ZOSOpenTools/ninjaport) | 0 | 98% |
 | [phpport](https://github.com/ZOSOpenTools/phpport) | 0 | No builds |
@@ -112,4 +113,4 @@
 | [zigiport](https://github.com/ZOSOpenTools/zigiport) | 0 | Skipped |
 | [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 100% |
 
-Last updated:  2023-02-16 00:20:33
+Last updated:  2023-02-16 00:33:06
