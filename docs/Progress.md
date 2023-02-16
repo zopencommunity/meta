@@ -22,6 +22,7 @@
 * [tclport](https://github.com/ZOSOpenTools/tclport)
 * [texinfoport](https://github.com/ZOSOpenTools/texinfoport)
 * [zigiport](https://github.com/ZOSOpenTools/zigiport)
+* [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport)
 ## Projects that do not have builds
 
 * [gnulibport](https://github.com/ZOSOpenTools/gnulibport)
@@ -111,6 +112,6 @@
 | [vimport](https://github.com/ZOSOpenTools/vimport) | 0 | 100% |
 | [xmltoport](https://github.com/ZOSOpenTools/xmltoport) | 0 | 100% |
 | [zigiport](https://github.com/ZOSOpenTools/zigiport) | 0 | Skipped |
-| [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 100% |
+| [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | Skipped |
 
-Last updated:  2023-02-16 03:04:01
+Last updated:  2023-02-16 20:52:57
