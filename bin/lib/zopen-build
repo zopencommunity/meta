@@ -1241,6 +1241,9 @@ install()
       zopen_pre_install ${ZOPEN_INSTALL_DIR}
     fi
 
+    # Delete the existing .releaseinfo file because it is no longer an official release
+    rm -f "${ZOPEN_INSTALL_DIR}/.releaseinfo"
+
     printHeader "Running Install"
     installlog="${ZOPEN_LOG_DIR}/${LOG_PFX}_install.log"
     create_fifo_pipe "${installlog}"
