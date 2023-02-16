@@ -1250,6 +1250,11 @@ install()
       zopen_pre_install ${ZOPEN_INSTALL_DIR}
     fi
 
+    # Delete the existing hidden files
+    rm -f "${ZOPEN_INSTALL_DIR}/.releaseinfo"
+    rm -f "${ZOPEN_INSTALL_DIR}/.installed"
+    rm -f "${ZOPEN_INSTALL_DIR}/.replacedpath"
+
     printHeader "Running Install"
     installlog="${ZOPEN_LOG_DIR}/${LOG_PFX}_install.log"
     create_fifo_pipe "${installlog}"
@@ -1422,7 +1427,7 @@ resolveCommands()
     esac
     [[ -d ${ZOPEN_ROOT}/install ]] || mkdir -p ${ZOPEN_ROOT}/install
     paxFileName="${ZOPEN_ROOT}/install/${ZOPEN_NAME}.${LOG_PFX}.zos.pax.Z"
-    export ZOPEN_PAX_CMD="pax -w -z -x pax \"-s#${ZOPEN_INSTALL_DIR}/#${ZOPEN_NAME}.zos/#\" -f \"${paxFileName}\" \"${ZOPEN_INSTALL_DIR}/\""
+    export ZOPEN_PAX_CMD="pax -w -z -x pax \"-s#${ZOPEN_INSTALL_DIR}/#${ZOPEN_NAME}/#\" -f \"${paxFileName}\" \"${ZOPEN_INSTALL_DIR}/\""
     if $generateSymLink; then
       PROJECT_NAME="$(echo ${ZOPEN_NAME} | cut -d'-' -f1)"
       if [ "${PROJECT_NAME}" != "${ZOPEN_NAME}" ]; then

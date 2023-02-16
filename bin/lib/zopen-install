@@ -231,7 +231,7 @@ installPort()
   fi
   rm -f "${pax}"
 
-  newDir=$(echo "$dirname" | sed -e "s/\.202[0-9]*_[0-9]*\.zos/.zos/g")
+  newDir=$(echo "$dirname" | sed -e "s/\.202[0-9]*_[0-9]*\.zos//g" -e "s/\.zos//g")
   # Using new directory name
   if [ "$newDir" != "$dirname" ]; then
     printVerbose "Moving $dirname to $newDir"
