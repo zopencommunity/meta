@@ -1250,8 +1250,10 @@ install()
       zopen_pre_install ${ZOPEN_INSTALL_DIR}
     fi
 
-    # Delete the existing .releaseinfo file because it is no longer an official release
+    # Delete the existing hidden files
     rm -f "${ZOPEN_INSTALL_DIR}/.releaseinfo"
+    rm -f "${ZOPEN_INSTALL_DIR}/.installed"
+    rm -f "${ZOPEN_INSTALL_DIR}/.replacedpath"
 
     printHeader "Running Install"
     installlog="${ZOPEN_LOG_DIR}/${LOG_PFX}_install.log"
