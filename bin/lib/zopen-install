@@ -254,6 +254,7 @@ installPort()
 
   # Delete the .installed file if it was previously there
   rm -f "${name}/.installed"
+  rm -f "${name}/.replacedpath"
 
   printVerbose "Installing ${name}..."
   if ! $downloadOnly; then
