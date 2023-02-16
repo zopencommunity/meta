@@ -1272,8 +1272,8 @@ install()
     createReadme
 
     # Store test.status into installed dir and build dir for cicd
-    touch "${ZOPEN_INSTALL_DIR}/test.status"
-    chtag -tc 819 "${ZOPEN_INSTALL_DIR}/test.status"
+    touch "${ZOPEN_ROOT}/install/test.status"
+    chtag -tc 819 "${ZOPEN_ROOT}/install/test.status"
     echo "$ZOPEN_STATUS" > "${ZOPEN_INSTALL_DIR}/test.status"
 
     if [ -z "$(command -v zopen_get_version)" ]; then
