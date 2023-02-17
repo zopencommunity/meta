@@ -26,7 +26,6 @@
 
 * [gnulibport](https://github.com/ZOSOpenTools/gnulibport)
 * [htopport](https://github.com/ZOSOpenTools/htopport)
-* [man-dbport](https://github.com/ZOSOpenTools/man-dbport)
 * [phpport](https://github.com/ZOSOpenTools/phpport)
 * [pkg-configport](https://github.com/ZOSOpenTools/pkg-configport)
 * [re2cport](https://github.com/ZOSOpenTools/re2cport)
@@ -51,19 +50,19 @@
 | [tarport](https://github.com/ZOSOpenTools/tarport) | 26 | 89% |automake, bash, bzip2, coreutils, cscope, ctags, curl, findutils, flex, gettext, git, grep, hello, htop, jq, less, m4, makeinfo, make, ncdu, ncurses, openssl, re2c, screen, sqlite, zotsample
 | [xzport](https://github.com/ZOSOpenTools/xzport) | 17 | 88% |autoconf, automake, bison, curl, diffutils, expat, findutils, gettext, git, gzip, help2man, libtool, m4, makeinfo, make, man-db, openssl
 | [makeinfoport](https://github.com/ZOSOpenTools/makeinfoport) | 16 | 35% |autoconf, automake, bison, curl, expat, gettext, git, groff, gzip, hello, libtool, m4, make, openssl, sed, tar
-| [diffutilsport](https://github.com/ZOSOpenTools/diffutilsport) | 14 | 92% |bash, coreutils, gawk, getopt, git, gnulib, grep, groff, libpcre, libxml2, libxslt, re2c, texinfo, xmlto
+| [diffutilsport](https://github.com/ZOSOpenTools/diffutilsport) | 15 | 92% |bash, coreutils, gawk, getopt, git, gnulib, grep, groff, libpcre, libxml2, libxslt, man-db, re2c, texinfo, xmlto
 | [help2manport](https://github.com/ZOSOpenTools/help2manport) | 12 | 100% |autoconf, automake, bison, curl, expat, gettext, git, hello, libtool, m4, make, openssl
 | [ncursesport](https://github.com/ZOSOpenTools/ncursesport) | 11 | 100% |bash, cscope, gettext, git, htop, less, man-db, nano, ncdu, screen, vim
 | [gettextport](https://github.com/ZOSOpenTools/gettextport) | 9 | 81% |ctags, expat, getopt, git, hello, libiconv, m4, man-db, nano
+| [sedport](https://github.com/ZOSOpenTools/sedport) | 8 | 84% |bash, git, groff, libxml2, libxslt, man-db, ncurses, re2c
 | [libtoolport](https://github.com/ZOSOpenTools/libtoolport) | 7 | 80% |expat, gdbm, hello, makeinfo, man-db, php, re2c
-| [sedport](https://github.com/ZOSOpenTools/sedport) | 7 | 84% |bash, git, groff, libxml2, libxslt, ncurses, re2c
 | [gawkport](https://github.com/ZOSOpenTools/gawkport) | 6 | 93% |automake, curl, expat, gzip, ncurses, rsync
 | [bashport](https://github.com/ZOSOpenTools/bashport) | 5 | 83% |flex, git, libxml2, re2c, xmlto
 | [opensslport](https://github.com/ZOSOpenTools/opensslport) | 5 | 90% |curl, expat, git, rsync, wget
 | [zlibport](https://github.com/ZOSOpenTools/zlibport) | 5 | 100% |autoconf, curl, expat, git, wget
 | [cmakeport](https://github.com/ZOSOpenTools/cmakeport) | 4 | 74% |ninja, unzip, zip, zoslib
 | [findutilsport](https://github.com/ZOSOpenTools/findutilsport) | 4 | 50% |grep, libxml2, re2c, texinfo
-| [grepport](https://github.com/ZOSOpenTools/grepport) | 3 | 94% |libpcre, libxslt, xmlto
+| [grepport](https://github.com/ZOSOpenTools/grepport) | 4 | 94% |libpcre, libxslt, man-db, xmlto
 | [wgetport](https://github.com/ZOSOpenTools/wgetport) | 3 | 18% |hello, man-db, sed
 | [lessport](https://github.com/ZOSOpenTools/lessport) | 2 | 100% |git, man-db
 | [libiconvport](https://github.com/ZOSOpenTools/libiconvport) | 2 | 100% |libxml2, man-db
@@ -94,7 +93,7 @@
 | [libpcreport](https://github.com/ZOSOpenTools/libpcreport) | 0 | 66% |
 | [libxsltport](https://github.com/ZOSOpenTools/libxsltport) | 0 | 100% |
 | [luaport](https://github.com/ZOSOpenTools/luaport) | 0 | 100% |
-| [man-dbport](https://github.com/ZOSOpenTools/man-dbport) | 0 | No builds |
+| [man-dbport](https://github.com/ZOSOpenTools/man-dbport) | 0 | 93% |
 | [metaport](https://github.com/ZOSOpenTools/metaport) | 0 | 100% |
 | [nanoport](https://github.com/ZOSOpenTools/nanoport) | 0 | Skipped |
 | [ncduport](https://github.com/ZOSOpenTools/ncduport) | 0 | Skipped |
@@ -113,4 +112,4 @@
 | [zigiport](https://github.com/ZOSOpenTools/zigiport) | 0 | Skipped |
 | [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 100% |
 
-Last updated:  2023-02-17 19:50:34
+Last updated:  2023-02-17 22:45:04
