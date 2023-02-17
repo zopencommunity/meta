@@ -45,3 +45,15 @@
   top: 25px;
   left: 0;
 }
+
+/* Allow docsify-themeable tables to scroll horizontally when necessary */
+.markdown-section .table-wrapper {
+  overflow-x: auto;
+}
+
+/* Prevent docsify-themeable responsive table cells from overflowing (unscrollable) */
+@media (max-width: 30em) {
+  .markdown-section .table-wrapper td {
+    flex-wrap: wrap;
+  }
+}
