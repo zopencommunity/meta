@@ -77,7 +77,7 @@
 | [groffport](https://github.com/ZOSOpenTools/groffport) | 1 | 100% |man-db
 | [libpipelineport](https://github.com/ZOSOpenTools/libpipelineport) | 1 | 100% |man-db
 | [lz4port](https://github.com/ZOSOpenTools/lz4port) | 1 | 100% |rsync
-| [patchport](https://github.com/ZOSOpenTools/patchport) | 1 | 50% |m4
+| [patchport](https://github.com/ZOSOpenTools/patchport) | 1 | 91% |m4
 | [re2cport](https://github.com/ZOSOpenTools/re2cport) | 1 | No builds |php
 | [sqliteport](https://github.com/ZOSOpenTools/sqliteport) | 1 | Skipped |php
 | [xxhashport](https://github.com/ZOSOpenTools/xxhashport) | 1 | 100% |rsync
@@ -112,4 +112,4 @@
 | [zigiport](https://github.com/ZOSOpenTools/zigiport) | 0 | Skipped |
 | [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 100% |
 
-Last updated:  2023-02-18 00:14:41
+Last updated:  2023-02-18 05:14:48
