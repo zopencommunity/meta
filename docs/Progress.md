@@ -55,7 +55,7 @@
 | [ncursesport](https://github.com/ZOSOpenTools/ncursesport) | 11 | 100% |bash, cscope, gettext, git, htop, less, man-db, nano, ncdu, screen, vim
 | [gettextport](https://github.com/ZOSOpenTools/gettextport) | 9 | 81% |ctags, expat, getopt, git, hello, libiconv, m4, man-db, nano
 | [sedport](https://github.com/ZOSOpenTools/sedport) | 8 | 84% |bash, git, groff, libxml2, libxslt, man-db, ncurses, re2c
-| [libtoolport](https://github.com/ZOSOpenTools/libtoolport) | 7 | 80% |expat, gdbm, hello, makeinfo, man-db, php, re2c
+| [libtoolport](https://github.com/ZOSOpenTools/libtoolport) | 7 | 81% |expat, gdbm, hello, makeinfo, man-db, php, re2c
 | [gawkport](https://github.com/ZOSOpenTools/gawkport) | 6 | 93% |automake, curl, expat, gzip, ncurses, rsync
 | [bashport](https://github.com/ZOSOpenTools/bashport) | 5 | 81% |flex, git, libxml2, re2c, xmlto
 | [opensslport](https://github.com/ZOSOpenTools/opensslport) | 5 | 90% |curl, expat, git, rsync, wget
@@ -112,4 +112,4 @@
 | [zigiport](https://github.com/ZOSOpenTools/zigiport) | 0 | Skipped |
 | [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 100% |
 
-Last updated:  2023-02-18 07:25:40
+Last updated:  2023-02-18 20:15:07
