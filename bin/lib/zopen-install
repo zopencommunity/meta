@@ -117,8 +117,9 @@ installDependencies()
     
     # Remove an old one if it exists
     rm -f "${name}/.depsenv"
+    varName=$(echo "$name" | sed -e "s/-/_/g")
     cat <<ZZ >> "${name}/.depsenv"
-${name}_originalDir="\$OLDPWD"
+${varName}_originalDir="\$OLDPWD"
 ZZ
     echo "$dependencies" | xargs | tr ' ' '\n' | sort | while read dep; do
       cat <<ZZ >> "${name}/.depsenv"
@@ -136,7 +137,7 @@ ZZ
     done
 
     cat <<ZZ >> "${name}/.depsenv"
-OLDPWD="\$${name}_originalDir"
+OLDPWD="\$${varName}_originalDir"
 ZZ
   fi
 )
