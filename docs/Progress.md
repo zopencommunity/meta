@@ -81,7 +81,7 @@
 | [re2cport](https://github.com/ZOSOpenTools/re2cport) | 1 | No builds |php
 | [sqliteport](https://github.com/ZOSOpenTools/sqliteport) | 1 | Skipped |php
 | [xxhashport](https://github.com/ZOSOpenTools/xxhashport) | 1 | 100% |rsync
-| [zipport](https://github.com/ZOSOpenTools/zipport) | 1 | 71% |unzip
+| [zipport](https://github.com/ZOSOpenTools/zipport) | 1 | 100% |unzip
 | [zstdport](https://github.com/ZOSOpenTools/zstdport) | 1 | 100% |rsync
 | [bzip2port](https://github.com/ZOSOpenTools/bzip2port) | 0 | 100% |
 | [cscopeport](https://github.com/ZOSOpenTools/cscopeport) | 0 | 100% |
@@ -112,4 +112,4 @@
 | [zigiport](https://github.com/ZOSOpenTools/zigiport) | 0 | Skipped |
 | [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 100% |
 
-Last updated:  2023-02-18 07:10:11
+Last updated:  2023-02-18 07:12:22
