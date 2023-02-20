@@ -725,7 +725,7 @@ extractTarBall()
 
   printInfo "Extract tarball ${tarballz} into ${dir}"
 
-  tar -axf "${tarballz}"  
+  tar -axmf "${tarballz}"
   if [ $? -gt 0 ]; then
     printError "Unable to untar ${tarballz}"
   fi
