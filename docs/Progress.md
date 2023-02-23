@@ -51,7 +51,7 @@
 | [xzport](https://github.com/ZOSOpenTools/xzport) | 18 | 88% |autoconf, automake, bison, curl, diffutils, expat, findutils, gettext, git, gzip, help2man, libtool, m4, makeinfo, make, man-db, openssl, texinfo
 | [texinfoport](https://github.com/ZOSOpenTools/texinfoport) | 16 | Skipped |autoconf, automake, bison, curl, expat, gettext, git, groff, gzip, hello, libtool, m4, make, openssl, sed, tar
 | [diffutilsport](https://github.com/ZOSOpenTools/diffutilsport) | 15 | 92% |bash, coreutils, gawk, getopt, git, gnulib, grep, groff, libpcre, libxml2, libxslt, man-db, re2c, texinfo, xmlto
-| [help2manport](https://github.com/ZOSOpenTools/help2manport) | 12 | 100% |autoconf, automake, bison, curl, expat, gettext, git, hello, libtool, m4, make, openssl
+| [help2manport](https://github.com/ZOSOpenTools/help2manport) | 13 | 100% |autoconf, automake, bison, curl, expat, gettext, git, hello, libtool, m4, make, openssl, texinfo
 | [ncursesport](https://github.com/ZOSOpenTools/ncursesport) | 11 | 100% |bash, cscope, gettext, git, htop, less, man-db, nano, ncdu, screen, vim
 | [gettextport](https://github.com/ZOSOpenTools/gettextport) | 10 | 81% |coreutils, ctags, expat, getopt, git, hello, libiconv, m4, man-db, nano
 | [sedport](https://github.com/ZOSOpenTools/sedport) | 9 | 84% |bash, coreutils, git, groff, libxml2, libxslt, man-db, ncurses, re2c
@@ -112,4 +112,4 @@
 | [zigiport](https://github.com/ZOSOpenTools/zigiport) | 0 | Skipped |
 | [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 100% |
 
-Last updated:  2023-02-22 02:23:28
+Last updated:  2023-02-23 04:23:48
