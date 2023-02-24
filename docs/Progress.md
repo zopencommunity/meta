@@ -94,7 +94,7 @@
 | [libxsltport](https://github.com/ZOSOpenTools/libxsltport) | 0 | 100% |
 | [luaport](https://github.com/ZOSOpenTools/luaport) | 0 | 100% |
 | [makeinfoport](https://github.com/ZOSOpenTools/makeinfoport) | 0 | 35% |
-| [man-dbport](https://github.com/ZOSOpenTools/man-dbport) | 0 | 93% |
+| [man-dbport](https://github.com/ZOSOpenTools/man-dbport) | 0 | 96% |
 | [metaport](https://github.com/ZOSOpenTools/metaport) | 0 | 100% |
 | [nanoport](https://github.com/ZOSOpenTools/nanoport) | 0 | Skipped |
 | [ncduport](https://github.com/ZOSOpenTools/ncduport) | 0 | Skipped |
@@ -112,4 +112,4 @@
 | [zigiport](https://github.com/ZOSOpenTools/zigiport) | 0 | Skipped |
 | [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 100% |
 
-Last updated:  2023-02-23 21:11:05
+Last updated:  2023-02-24 03:03:42
