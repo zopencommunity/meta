@@ -241,4 +241,13 @@ validateVersion()
   return 0
 }
 
+initDefaultEnvironment()
+{
+  export PATH="$(getconf PATH)"
+  export MANPATH=/usr/man/%L
+  export LIBPATH=/usr/lib
+  export _CEE_RUNOPTS="FILETAG(AUTOCVT,AUTOTAG) POSIX(ON)"
+  unset STEPLIB
+}
+
 zopenInitialize
