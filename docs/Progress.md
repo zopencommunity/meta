@@ -56,7 +56,7 @@
 | [gettextport](https://github.com/ZOSOpenTools/gettextport) | 10 | 81% |coreutils, ctags, expat, getopt, git, hello, libiconv, m4, man-db, nano
 | [sedport](https://github.com/ZOSOpenTools/sedport) | 9 | 84% |bash, coreutils, git, groff, libxml2, libxslt, man-db, ncurses, re2c
 | [libtoolport](https://github.com/ZOSOpenTools/libtoolport) | 8 | 80% |expat, gdbm, hello, makeinfo, man-db, php, re2c, texinfo
-| [bashport](https://github.com/ZOSOpenTools/bashport) | 6 | 83% |expat, flex, git, libxml2, re2c, xmlto
+| [bashport](https://github.com/ZOSOpenTools/bashport) | 6 | 81% |expat, flex, git, libxml2, re2c, xmlto
 | [gawkport](https://github.com/ZOSOpenTools/gawkport) | 6 | 93% |automake, curl, expat, gzip, ncurses, rsync
 | [findutilsport](https://github.com/ZOSOpenTools/findutilsport) | 5 | 50% |gnulib, grep, libxml2, re2c, texinfo
 | [grepport](https://github.com/ZOSOpenTools/grepport) | 5 | 94% |gnulib, libpcre, libxslt, man-db, xmlto
@@ -112,4 +112,4 @@
 | [zigiport](https://github.com/ZOSOpenTools/zigiport) | 0 | Skipped |
 | [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 100% |
 
-Last updated:  2023-02-24 23:18:31
+Last updated:  2023-02-27 00:53:45
