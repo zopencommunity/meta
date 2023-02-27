@@ -742,11 +742,11 @@ extractTarBall()
   # Perhaps this can be done with a function but be aware of blanks, newlines, etc. in file names
   #
   if [ "${ZOPEN_GIT_SETUP}x" = "Nx" ]; then
-    if ! git init . >/dev/null || ! git commit --allow-empty -m "Create Empty Repository for patch management" >/dev/null; then
+    if ! git init -b main . >/dev/null || ! git commit --allow-empty -m "Create Empty Repository for patch management" >/dev/null; then
       printError "Unable to initialize empty git repository for tarball"
     fi
   else
-    if ! git init . >/dev/null; then
+    if ! git init -b main . >/dev/null; then
       printError "Unable to initialize git repository for tarball"
     fi
 

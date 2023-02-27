@@ -47,7 +47,7 @@ if ! cd "${tarballdir}"; then
         echo "Extract of tarball ${tarball} did not create ${tarballdir}" >&2
         exit 4
 fi
-if ! git init || ! git add . || ! git commit -m "main" || ! git checkout -b patches ; then
+if ! git init -b main || ! git add . || ! git commit -m "main" || ! git checkout -b patches ; then
         echo "Unable to initialize a git repository for the tarball" >&2
         exit 4
 fi
