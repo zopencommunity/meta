@@ -245,9 +245,8 @@ initDefaultEnvironment()
 {
   export PATH="$(getconf PATH)"
   export _CEE_RUNOPTS="FILETAG(AUTOCVT,AUTOTAG) POSIX(ON)"
-  # from /samples/profile
-  export MANPATH=/usr/man/%L
-  export LIBPATH="/lib:/usr/lib:."
+  unset MANPATH
+  export LIBPATH="/usr/lib"
   export STEPLIB=none
 }
 

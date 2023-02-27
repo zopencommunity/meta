@@ -1250,15 +1250,14 @@ install()
 {
   installStartTime=$SECONDS
   if [ -n "${ZOPEN_INSTALL_CMD}" ]; then
+    if [ -d "${ZOPEN_INSTALL_DIR}" ]; then
+      printVerbose "${ZOPEN_INSTALL_DIR} already exists, deleting..."
+      rm -rf "${ZOPEN_INSTALL_DIR}"
+    fi
     if command -V "zopen_pre_install" >/dev/null 2>&1; then
       printVerbose "Running zopen_pre_install"
       zopen_pre_install ${ZOPEN_INSTALL_DIR}
     fi
-
-    # Delete the existing hidden files
-    rm -f "${ZOPEN_INSTALL_DIR}/.releaseinfo"
-    rm -f "${ZOPEN_INSTALL_DIR}/.installed"
-    rm -f "${ZOPEN_INSTALL_DIR}/.replacedpath"
 
     printHeader "Running Install"
     installlog="${ZOPEN_LOG_DIR}/${LOG_PFX}_install.log"
