@@ -725,9 +725,11 @@ extractTarBall()
 
   printInfo "Extract tarball ${tarballz} into ${dir}"
 
-  tar -axmf "${tarballz}"
+  tarOutput=$(tar -axf "${tarballz}" 2>&1)
   if [ $? -gt 0 ]; then
-    printError "Unable to untar ${tarballz}"
+    if ! echo "$tarOutput" | grep -q "Cannot utime: EDC5121I Invalid argument"; then
+      printError "Unable to untar ${tarballz}"
+    fi
   fi
   rm -f "${tarballz}"
 
