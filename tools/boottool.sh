@@ -107,7 +107,7 @@ populateReleaseMaps()
   name=""
   releaseNameIDMap=()
   releaseIDToReleaseNameMap=()
-  response=$(curl -sw "%{http_code}" -k -H "Accept: application/vnd.github+json" $url)
+  response=$(curl -sw "%{http_code}" -k -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $GITHUB_OAUTH_TOKEN" $url)
   http_code=$(tail -n1 <<< "$response")
 
   if [ "$http_code" == "$CURL_REPO_SUCCESS" ]; then
@@ -213,7 +213,7 @@ downloadAssetsOfRelease()
   assetNameArray=()
   assetUrl=$url"/""$1""/""assets"
   #echo "downloadAssetsOfRelease assetsurl = $assetUrl"
-  response=$(curl -sw "%{http_code}" -k -H "Accept: application/vnd.github+json" $assetUrl)
+  response=$(curl -sw "%{http_code}" -k -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $GITHUB_OAUTH_TOKEN" $assetUrl)
   http_code=$(tail -n1 <<< "$response")
 
   if [ "$http_code" == "$CURL_REPO_SUCCESS" ]; then

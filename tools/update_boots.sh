@@ -1,8 +1,13 @@
 #!/bin/sh
 
-tools="curl,make,git,less,perl,jq,bash,diffutils,findutils,coreutils,tar,gzip,xz,bzip2,vim,ncurses"
+# Script to automatically update all or a select number of boot tools
 
-for tool in $(echo "$tools" | tr ',' ' '); do
+if [ -z "$boottools" ]; then
+  echo "Updating all boot tools"
+  boottools="meta,curl,make,git,less,perl,jq,bash,diffutils,findutils,coreutils,tar,gzip,xz,bzip2,vim,ncurses"
+fi
+
+for tool in $(echo "$boottools" | tr ',' ' '); do
   ./boottool.sh --repo "${tool}port" --uname ZOSOpenTools
   if [ $? -ne 0 ]; then
     echo "boottool.sh failed for $tool"
