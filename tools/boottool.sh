@@ -1,4 +1,4 @@
-#! /bin/env bash
+#!/usr/bin/env bash
 echo $BASH_VERSION
 
 ########################################################################
@@ -10,6 +10,11 @@ echo $BASH_VERSION
 
 if ((BASH_VERSINFO < 4)); then
    echo "Use bash version >= 4"
+   exit 1
+fi
+
+if [ -z "$GITHUB_OAUTH_TOKEN" ]; then
+   echo "GITHUB_OAUTH_TOKEN must be set."
    exit 1
 fi
 
@@ -46,6 +51,26 @@ processOptions()
   echo "Repo=$REPO"
 }
 
+getLatestReleaseName()
+{
+  latestRepoUrl="https://api.github.com/repos/$OWNERNAME/$REPO/releases/latest"
+  echo $latestRepoUrl
+  
+  response=$(curl -sw "%{http_code}" \
+              -H "Accept: application/vnd.github+json" \
+              -H "Authorization: Bearer $GITHUB_OAUTH_TOKEN" \
+              $latestRepoUrl ) 
+
+  http_code=$(tail -n1 <<< "$response")
+  if [ "$http_code" == "$CURL_REPO_SUCCESS" ]; then
+    newReleaseData=$(sed '$ d' <<< "$response") 
+    
+    repo_json=`jq '.' <<< "$newReleaseData"`
+    RELEASENAME=$(echo $repo_json | jq -r ".name")
+    echo "Latest release name=$RELEASENAME"
+  fi
+}
+
 #process the options passed by user
 processOptions $*
 
@@ -53,12 +78,13 @@ processOptions $*
 printSyntax()
 {
   echo "Pass repo/release name -- usage: boottool.sh --repo <repo> --release <releasename> --uname [ownername]" 
+  echo "If --release is not passed, it will use the latest release"
   exit 1;
 }
 
 [ -z "${OWNERNAME}" ] && OWNERNAME=$DEFAULT_OWNER && echo "Using default owner name ZOSOpenTools";
 [ -z "${REPO}" ] && (printSyntax)
-[ -z "${RELEASENAME}" ] && printSyntax
+[ -z "${RELEASENAME}" ] && getLatestReleaseName
 
 
 echo "Ownername = ${OWNERNAME}, Repo = ${REPO}, Release = ${RELEASENAME}"
