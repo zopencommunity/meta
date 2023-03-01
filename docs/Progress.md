@@ -47,7 +47,7 @@
 | [automakeport](https://github.com/ZOSOpenTools/automakeport) | 29 | 71% |autoconf, automake, bison, coreutils, ctags, curl, expat, gettext, git, gnulib, gzip, hello, help2man, htop, libtool, m4, makeinfo, make, man-db, nano, openssl, php, re2c, rsync, screen, sed, tar, texinfo, wget
 | [perlport](https://github.com/ZOSOpenTools/perlport) | 27 | 100% |autoconf, automake, bison, coreutils, curl, expat, gettext, git, gnulib, groff, gzip, hello, help2man, libtool, m4, makeinfo, make, man-db, openssl, php, re2c, rsync, screen, sed, tar, texinfo, wget
 | [coreutilsport](https://github.com/ZOSOpenTools/coreutilsport) | 26 | 84% |automake, bash, expat, gdbm, getopt, gettext, git, gnulib, grep, groff, gzip, hello, jq, libpcre, libtool, libxml2, lua, lz4, man-db, ncurses, patch, re2c, sed, texinfo, xxhash, zstd
-| [tarport](https://github.com/ZOSOpenTools/tarport) | 26 | 89% |automake, bash, bzip2, coreutils, cscope, ctags, curl, findutils, flex, gettext, git, grep, hello, htop, jq, less, m4, makeinfo, make, ncdu, ncurses, openssl, re2c, screen, sqlite, zotsample
+| [tarport](https://github.com/ZOSOpenTools/tarport) | 26 | 92% |automake, bash, bzip2, coreutils, cscope, ctags, curl, findutils, flex, gettext, git, grep, hello, htop, jq, less, m4, makeinfo, make, ncdu, ncurses, openssl, re2c, screen, sqlite, zotsample
 | [xzport](https://github.com/ZOSOpenTools/xzport) | 18 | 88% |autoconf, automake, bison, curl, diffutils, expat, findutils, gettext, git, gzip, help2man, libtool, m4, makeinfo, make, man-db, openssl, texinfo
 | [texinfoport](https://github.com/ZOSOpenTools/texinfoport) | 16 | Skipped |autoconf, automake, bison, curl, expat, gettext, git, groff, gzip, hello, libtool, m4, make, openssl, sed, tar
 | [diffutilsport](https://github.com/ZOSOpenTools/diffutilsport) | 15 | 92% |bash, coreutils, gawk, getopt, git, gnulib, grep, groff, libpcre, libxml2, libxslt, man-db, re2c, texinfo, xmlto
@@ -112,4 +112,4 @@
 | [zigiport](https://github.com/ZOSOpenTools/zigiport) | 0 | Skipped |
 | [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 100% |
 
-Last updated:  2023-02-28 19:54:20
+Last updated:  2023-03-01 01:12:08
