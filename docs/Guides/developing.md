@@ -41,7 +41,7 @@ The following is a description of the zopen tools provided in the `meta` repo.
 
 To download and install the latest software packages, you can use `zopen install`. By default it will list all of the packages hosted on ZOSOpenTools.
 
-It is recommended that you generate a [github personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/authorizing-oauth-apps) and then set `export ZOPEN_GIT_OAUTH_TOKEN=<yourapitoken>`
+It is recommended that you generate a [github personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/authorizing-oauth-apps) and then set `export ZOPEN_GITHUB_OAUTH_TOKEN=<yourapitoken>`
 
 To list the available packages, specify the `--list` option as follows:
 ```

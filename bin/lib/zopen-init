@@ -32,7 +32,7 @@ fi
 echo "Enter the github oauth token for use in zopen-download. If none, press enter"
 zopen_oauth=$(getInput)
 if [ ! -z "$zopen_oauth" ]; then
-  zopen_oauth="export ZOPEN_GIT_OAUTH_TOKEN=$zopen_oauth"
+  zopen_oauth="export ZOPEN_GITHUB_OAUTH_TOKEN=$zopen_oauth"
 fi
 
 
