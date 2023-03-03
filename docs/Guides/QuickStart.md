@@ -5,11 +5,11 @@ Whether you want to strictly _use_ the tools or also _improve_ the tools is up t
 
 The easiest way to install and build software packages from z/OS Open Tools is to setup the _zopen tools_ on your z/OS system.
 
-We provide a program called `zopen-setup` so you can _bootstrap_ your z/OS system. Your z/OS system will need external connectivity since `zopen-setup` will connect to [z/OS Open Tools repositories](https://zosopentools.link/repos). 
+We provide a program called `zopen-setup` so you can _bootstrap_ your z/OS system. Your z/OS system will need external connectivity since `zopen-setup` will connect to [z/OS Open Tools repositories](https://github.com/ZOSOpenTools). 
 
 ## Getting zopen-setup
 
-Download [zopen-setup](https://zosopentools.link/setup-program) to z/OS, mark the program executable, and run it. Detailed instructions follow.
+Download [zopen-setup](https://github.com/ZOSOpenTools/meta/releases/download/v1.0.0/zopen-setup) to z/OS, mark the program executable, and run it. Detailed instructions follow.
 
 ### Getting zopen-setup to your z/OS system
 
@@ -17,7 +17,7 @@ Note: In the documentation that follows, text inside `< ... >` indicates a value
 
 To get started, you need to get the _zopen-setup_ program to your z/OS system. Here is one approach:
 - Log on to your desktop system
-- Download [zopen-setup](https://zosopentools.link/setup-program)
+- Download [zopen-setup](https://github.com/ZOSOpenTools/meta/releases/download/v1.0.0/zopen-setup)
 - Open a terminal window on your desktop 
 - `cd` into the directory you downloaded the file to
 - `sftp <z/OS system>`
