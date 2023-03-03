@@ -24,7 +24,6 @@
 * [zigiport](https://github.com/ZOSOpenTools/zigiport)
 ## Projects that do not have builds
 
-* [gnulibport](https://github.com/ZOSOpenTools/gnulibport)
 * [htopport](https://github.com/ZOSOpenTools/htopport)
 * [phpport](https://github.com/ZOSOpenTools/phpport)
 * [pkg-configport](https://github.com/ZOSOpenTools/pkg-configport)
@@ -86,7 +85,7 @@
 | [bzip2port](https://github.com/ZOSOpenTools/bzip2port) | 0 | 100% |
 | [cscopeport](https://github.com/ZOSOpenTools/cscopeport) | 0 | 100% |
 | [ctagsport](https://github.com/ZOSOpenTools/ctagsport) | 0 | 100% |
-| [gnulibport](https://github.com/ZOSOpenTools/gnulibport) | 0 | No builds |
+| [gnulibport](https://github.com/ZOSOpenTools/gnulibport) | 0 | 100% |
 | [helloport](https://github.com/ZOSOpenTools/helloport) | 0 | 20% |
 | [htopport](https://github.com/ZOSOpenTools/htopport) | 0 | No builds |
 | [jqport](https://github.com/ZOSOpenTools/jqport) | 0 | 57% |
@@ -112,4 +111,4 @@
 | [zigiport](https://github.com/ZOSOpenTools/zigiport) | 0 | Skipped |
 | [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 100% |
 
-Last updated:  2023-03-02 12:37:56
+Last updated:  2023-03-03 02:01:23
