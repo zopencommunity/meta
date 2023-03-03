@@ -1589,7 +1589,7 @@ fi
 
 if command -V "${ZOPEN_INIT_CODE}" >/dev/null 2>&1; then
   printVerbose "Running ${ZOPEN_INIT_CODE}"
-  ${ZOPEN_INIT_CODE} "${ZOPEN_SRC_DIR}"
+  "${ZOPEN_INIT_CODE}" "${PWD}"
 fi
 
 if ${startShell}; then
