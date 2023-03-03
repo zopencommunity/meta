@@ -98,6 +98,7 @@ echo "User-Provided functions:
   zopen_pre_install        This function runs before the 'install' step of the build is run.
   zopen_post_install       This function runs after the 'install' step of the build is run.
   zopen_check_results      This function runs after the 'check' step of the build is run and must print out expected and actual failures."
+  zopen_get_version        This function returns the version of the tool in accordance with semantic versioning
 }
 
 export utildir="$(cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P)"
