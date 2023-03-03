@@ -1,6 +1,6 @@
 ## Welcome to z/OS Open Tools
 
-The [z/OS Open Tools community](https://zosopentools.link/community) is here to provide popular Open Source tools and to encourage z/OS Open Source tools development. 
+The [z/OS Open Tools community](https://github.com/ZOSOpenTools/meta/discussions) is here to provide popular Open Source tools and to encourage z/OS Open Source tools development. 
 We currently host **70+ z/OS Open Source projects** and we're looking for more! 
 
 <section class="layout">
@@ -11,7 +11,7 @@ We currently host **70+ z/OS Open Source projects** and we're looking for more!
 <div class="grow1" style="float: left; width: 50%">
 
 
-* Our [z/OS Open Tools repositories](https://zosopentools.link/repos) shows what's available
+* Our [z/OS Open Tools repositories](https://github.com/ZOSOpenTools) shows what's available
  * Want to see the latest [build status and quality](Guides/../Latest.md) ?
 * [Getting Started](/Guides/QuickStart.md) will get you going fast.
  * Want to [use the tools](/Guides/using.md) ?
