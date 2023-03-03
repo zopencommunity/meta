@@ -1588,8 +1588,12 @@ if ! resolveCommands; then
 fi
 
 if command -V "${ZOPEN_INIT_CODE}" >/dev/null 2>&1; then
-  printVerbose "Running ${ZOPEN_INIT_CODE}"
-  "${ZOPEN_INIT_CODE}" "${PWD}"
+  if [ -r "${ZOPEN_LOG_DIR}/config.success" ]; then
+    echo "Using previous successful run of ${ZOPEN_INIT_CODE}. Specify -f to re-run" >&2
+  else
+    printVerbose "Running ${ZOPEN_INIT_CODE}"
+    "${ZOPEN_INIT_CODE}" "${PWD}"
+  fi
 fi
 
 if ${startShell}; then
