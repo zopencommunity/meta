@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 from github import Github
 from datetime import datetime
+from itertools import chain
+import shutil
 import os
 import sys
 import argparse
@@ -86,22 +88,28 @@ with open('docs/Latest.md', 'w') as f:
     else:
       print("| None | |")
 
-          # Clone the repo
-    subprocess.run(['git', 'clone', r.clone_url])
+    if os.path.exists(r.name):
+        # If the directory exists, delete it recursively
+        shutil.rmtree(r.name);
+
+    subprocess.run(['git', 'clone', r.clone_url, r.name])
 
     # Count the number of .patch files and total lines in patches directory
     num_patches = 0
     total_lines = 0
-    if os.path.isdir(r.name):
-      patch_dir = os.path.join(r.name, 'patches')
-      if os.path.isdir(patch_dir):
-        for filename in os.listdir(patch_dir):
+    paths = ('patches', 'tarballpatches', 'gitpatches')
+    for root, dirs, files in chain.from_iterable(os.walk(r.name + "/" + path) for path in paths):
+        for filename in files:
             if filename.endswith('.patch'):
-              num_patches += 1
-              with open(os.path.join(patch_dir, filename), 'r') as patch_file:
-                  total_lines += len(patch_file.readlines())
+                num_patches += 1
+                with open(os.path.join(root, filename), 'r') as patch_file:
+                    total_lines += len(patch_file.readlines())
     patchesPerPort[r.name] = num_patches
     totalPatchLinesPerPort[r.name] = total_lines
+
+    if os.path.exists(r.name):
+        # If the directory exists, delete it recursively
+        shutil.rmtree(r.name);
 
   print("Last updated: ", todaysDate);
 
@@ -207,12 +215,15 @@ with open('docs/Progress.md', 'w') as f:
   print("""
 ## Projects with the most patches
 """);
-  print("| Package | # of Patches Lines | # of Patches");
+  print("| Package | # of Patched Lines | # of Patches");
   print("|---|---|--|");
   for x,y in sorted(totalPatchLinesPerPort.items(), reverse=True, key=lambda x: x[1]):
     patches = patchesPerPort[x]
     patchLines = totalPatchLinesPerPort[x]
-    print("| [" + x + "](https://github.com/ZOSOpenTools/" + x + ") | " + str(patchLines) + " | " + str(patches));
+    checkMark = ""
+    if patches == 0:
+        checkMark = "&#10003;"
+    print("| " + checkMark + " [" + x + "](https://github.com/ZOSOpenTools/" + x + ") | " + str(patchLines) + " | " + str(patches));
 
   print("\nLast updated: ", todaysDate);
 
