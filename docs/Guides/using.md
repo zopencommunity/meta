@@ -10,7 +10,7 @@ To install new tools on your system, use the `zopen install` command to install 
 - `zopen install <tool>`
 
 `zopen install` will download the code, setup the tool, and then update your environment so you can run the tool. 
-This requires connectivity to our [z/OS Open Tools repositories](https://zosopentools.link/repos).
+This requires connectivity to our [z/OS Open Tools repositories](https://github.com/ZOSOpenTools).
 
 Some tools require other tools to function. For example, _git_ also requires _Perl_ and _bash_. `zopen install` will install
 all the tools you need automatically.

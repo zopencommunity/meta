@@ -26,7 +26,7 @@ VERSION=`find . -name ".version" | xargs cat`
 
 if [ ! -f "$PAX" ]; then
   echo "Port pax file does not exist";
-  exit 1;
+  exit 0;
 fi
 
 if [ -z "$DEPENDENCIES" ]; then
