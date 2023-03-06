@@ -418,6 +418,9 @@ checkEnv()
 
 setDepsEnv()
 {
+  initDefaultEnvironment
+  export PATH="$ZOPEN_COMPILER_PATH:$PATH"
+
   if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
     deps="${ZOPEN_TARBALL_DEPS}"
   else
@@ -578,6 +581,8 @@ setEnv()
       fi
       ;;
   esac
+
+  ZOPEN_COMPILER_PATH=$(dirname "$(type ${CC} | cut -f3 -d' ')")
 
   if [ "${CPPFLAGS}x" = "x" ]; then
     export CPPFLAGS="${ZOPEN_CPPFLAGSD}" 
@@ -1267,15 +1272,14 @@ install()
 {
   installStartTime=$SECONDS
   if [ -n "${ZOPEN_INSTALL_CMD}" ]; then
+    if [ -d "${ZOPEN_INSTALL_DIR}" ]; then
+      printVerbose "${ZOPEN_INSTALL_DIR} already exists, deleting..."
+      rm -rf "${ZOPEN_INSTALL_DIR}"
+    fi
     if command -V "${ZOPEN_PRE_INSTALL_CODE}" >/dev/null 2>&1; then
       printVerbose "Running ${ZOPEN_PRE_INSTALL_CODE}"
       "${ZOPEN_PRE_INSTALL_CODE}" "${ZOPEN_INSTALL_DIR}"
     fi
-
-    # Delete the existing hidden files
-    rm -f "${ZOPEN_INSTALL_DIR}/.releaseinfo"
-    rm -f "${ZOPEN_INSTALL_DIR}/.installed"
-    rm -f "${ZOPEN_INSTALL_DIR}/.replacedpath"
 
     printHeader "Running Install"
     installlog="${ZOPEN_LOG_DIR}/${LOG_PFX}_install.log"
