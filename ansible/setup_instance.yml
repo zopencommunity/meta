@@ -6,6 +6,11 @@
     - cicd_vars.yml
 
   tasks:
+    - fail:
+        msg: "instance_name variable is required"
+      when: instance_name is not defined or instance_name is none
+
+  tasks:
     - name: Log in to IBM Cloud
       shell: ibmcloud login -r "{{ region }}"
       environment:
@@ -45,7 +50,16 @@
       shell: ibmcloud is instance "{{ instance_name }}" --output json | jq -r '.network_interfaces[].floating_ips[] | select(.name == "{{ instance_name }}-ip").address'
       register: floating_ip_address
 
-    - name: SSH to Instance
-      shell: ssh -o "StrictHostKeyChecking no" ibmuser@"{{ floating_ip_address.stdout }}"
+    - name: Create data volume
+      shell:  ibmcloud is instance-volume-attachment-add "{{ instance_name }}-data" "{{ instance_name }}" --profile general-purpose --capacity 250 --auto-delete true
+      register: data_volume
 
+    - name: SSH to Instance
+      shell: ssh -i "{{ private_key_file }}" -o "StrictHostKeyChecking no" ibmuser@"{{ floating_ip_address.stdout }}" exit
+      register: sshconnection 
+      until:
+        - sshconnection.rc is defined
+        - sshconnection.rc == 0
+      delay: 60
+      retries: 50
 

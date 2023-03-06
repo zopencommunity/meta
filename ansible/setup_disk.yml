@@ -1,0 +1,136 @@
+- hosts: localhost
+  gather_facts: no
+
+  vars_files:
+    - cicd_vars.yml
+
+  environment: 
+    _BPXK_AUTOCVT: "ON"
+    _TAG_REDIR_IN: "TXT"
+    _TAG_REDIR_OUT: "TXT"
+    _TAG_REDIR_ERR: "TXT"
+    _CEE_RUNOPTS: "FILETAG(AUTOCVT,AUTOTAG) POSIX(ON)"
+    _BPXK_AUTOCVT: "ON"
+    PATH: "/usr/lpp/IBM/zoautil/bin/:{{ ansible_env.PATH }}:/sbin:/usr/sbin:/usr/lpp/IBM/zoautil/bin/"
+    LIBPATH: /usr/lpp/IBM/zoautil/lib:$LIBPATH
+
+  tasks:
+    - fail:
+        msg: "instance_ip variable is required"
+      when: instance_ip is not defined or instance_ip is none
+
+    - fail:
+        msg: "jenkins_ssh_key variable is required"
+      when: jenkins_ssh_key is not defined or jenkins_ssh_key is none
+
+    - name: Add host to inventory
+      add_host:
+        name: "myhost"
+        ansible_host: "{{ instance_ip }}"
+        ansible_user: ibmuser
+        interpreter_python: /usr/lpp/IBM/cyp/v3r10/pyz/bin/python3
+        ansible_python_interpreter: /usr/lpp/IBM/cyp/v3r10/pyz/bin/python3
+
+    - name: Add host to inventory
+      add_host:
+        name: "jenkinshost"
+        ansible_host: "{{ instance_ip }}"
+        ansible_user: jenkins
+        interpreter_python: /usr/lpp/IBM/cyp/v3r10/pyz/bin/python3
+        ansible_python_interpreter: /usr/lpp/IBM/cyp/v3r10/pyz/bin/python3
+
+    - name: Copy volinfo file
+      ansible.builtin.copy:
+        src: sbin/*
+        dest: ./sbin/
+      delegate_to: myhost
+
+    - name: Chtag to 819
+      shell: chtag -tc 819 sbin/volfunc
+      delegate_to: "myhost"
+
+    - name: Wait attached address to become available
+      shell: export PATH=/usr/lpp/IBM/zoautil/bin:$PATH; pcon -d | egrep  'Attached block storage .*on address'
+      delegate_facts: true
+      delegate_to: "myhost"
+      register: attach
+      until:
+        - attach.rc is defined
+        - attach.rc == 0
+      delay: 100
+      retries: 50
+
+    - name: Grab the address
+      shell: export PATH=/usr/lpp/IBM/zoautil/bin:$PATH; pcon -d | egrep  'Attached block storage .*on address' | awk '{print $NF}')
+      register: address
+
+    - name: Runs vol_init 
+      shell: |
+        export PATH=/usr/lpp/IBM/zoautil/bin:$PATH
+        . ./sbin/volfunc
+        vol_init "{{ address.stdout }}" "USER"
+      delegate_to: "myhost"
+
+    - name: Runs dev_online
+      shell: |
+        export PATH=/usr/lpp/IBM/zoautil/bin:$PATH
+        . ./sbin/volfunc
+        dev_online "{{ address.stdout }}"
+      delegate_to: "myhost"
+
+    - name: Creates Jenkins user
+      shell: |
+        echo "{{ jenkins_public_key }}" | crtuser jenkins user
+      delegate_to: "myhost"
+
+    - name: Make / writeable
+      shell: |
+        chmount -w /
+      delegate_to: "myhost"
+
+    - name: Download zopen-setup
+      get_url:
+        url: https://github.com/ZOSOpenTools/meta/releases/download/v1.0.0/zopen-setup
+        dest: /tmp/zopen-setup  
+        mode: '0755'
+
+    - name: Copy Java pax
+      ansible.builtin.copy:
+        src: ibm-semeru-certified-jdk_s390x_zos_11.0.18.0.pax.Z
+        dest: ./ibm-semeru-certified-jdk_s390x_zos_11.0.18.0.pax.Z
+      delegate_to: myhost
+
+    - name: Install Java
+      shell: |
+        cd /
+        pax -rf ~/ibm-semeru-certified-jdk_s390x_zos_11.0.18.0.pax.Z
+      delegate_to: myhost
+
+    - name: Copy Clang pax
+      ansible.builtin.copy:
+        src: C_C++_for_Open_Enterprise_Languages.nonsmpe.pax.Z
+        dest: ./C_C++_for_Open_Enterprise_Languages.nonsmpe.pax.Z
+      delegate_to: myhost
+
+    - name: Install Clang
+      shell: |
+        cd /
+        pax -rf ~/C_C++_for_Open_Enterprise_Languages.nonsmpe.pax.Z
+      delegate_to: myhost
+
+    - name: Runs zopen-setup
+      shell: |
+        zopen-setup /jenkins/zopen
+      delegate_to: "jenkinshost"
+
+    - name: Copy zopen-setup to myhost
+      ansible.builtin.copy:
+        src: /tmp/zopen-setup
+        dest: /bin/zopen-setup
+        mode: '0755'
+      delegate_to: "jenkinshost"
+
+    - name: Runs zopen-setup
+      shell: |
+        zopen-setup /jenkins/zopen
+      delegate_to: "jenkinshost"
