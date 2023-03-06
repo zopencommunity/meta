@@ -418,8 +418,16 @@ checkEnv()
 
 setDepsEnv()
 {
+  if $forceUpgradeDeps; then
+    curlpath=$(dirname "$(type curl | cut -f3 -d' ')")
+  fi
   initDefaultEnvironment
-  export PATH="$ZOPEN_COMPILER_PATH:$PATH"
+  # Add base dependencies:
+  # zopen bin, compiler, and curl
+  export PATH="$ZOPEN_COMPILER_PATH:$utilparentdir/bin:$PATH"
+  if $forceUpgradeDeps; then
+    export PATH="$curlpath:$PATH"
+  fi
 
   if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
     deps="${ZOPEN_TARBALL_DEPS}"
