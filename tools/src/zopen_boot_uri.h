@@ -12,5 +12,5 @@
    * We may want to trim down the list of tools a bit. In particular vim and ncurses are not _required_
    * but they sure are nice.
    */
-  #define ZOPEN_BOOT_PKG { "meta", "curl", "make", "git", "less", "perl", "jq", "bash", "diffutils", "findutils", "coreutils", "tar", "gzip", "xz", "bzip2", "vim", "ncurses", NULL }
+  #define ZOPEN_BOOT_PKG { "meta", "curl", "make", "git", "less", "perl", "jq", "bash", "diffutils", "findutils", "coreutils", "tar", "gzip", "xz", "bzip2", "vim", "ncurses", "sed", "grep", "gawk", NULL }
 #endif
