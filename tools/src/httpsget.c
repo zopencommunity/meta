@@ -52,12 +52,12 @@ int httpsget(const char* host, const char* uri, const char* pem, const char* out
       fprintf(stderr, "You have received a 403 Forbidden error from %s%s\n", host, uri);
       fprintf(stderr, "This is likely because you have exceeded your download quota from github.\n");
       fprintf(stderr, "Please see: %s for instructions on how to set up a github OAUTH id.\n", github_oauth_help);
-      fprintf(stderr, "Once your OAUTH id is set, export ZOPEN_GIT_OAUTH_TOKEN=<your token> and then re-run zopen-setup.\n");
+      fprintf(stderr, "Once your OAUTH id is set, export ZOPEN_GITHUB_OAUTH_TOKEN=<your token> and then re-run zopen-setup.\n");
     } else if (rc == 401) {
       fprintf(stderr, "You have received a 401 Unauthorized error from %s%s\n", host, uri);
       fprintf(stderr, "This is likely because you have an expired or invalid github OAUTH id.\n");
       fprintf(stderr, "Please see: %s for instructions on how to set up a new github OAUTH id.\n", github_oauth_help);
-      fprintf(stderr, "Once your OAUTH id is reset, export ZOPEN_GIT_OAUTH_TOKEN=<your token> and then re-run zopen-setup.\n");
+      fprintf(stderr, "Once your OAUTH id is reset, export ZOPEN_GITHUB_OAUTH_TOKEN=<your token> and then re-run zopen-setup.\n");
     } else if (rc == 404) {
       fprintf(stderr, "You have received a 404 Not Found error from %s%s\n", host, uri);
       fprintf(stderr, "This is likely because there is no release currently tagged as 'boot' for this package\n");

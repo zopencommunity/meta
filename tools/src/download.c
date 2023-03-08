@@ -2744,7 +2744,7 @@ char **getRequestHeaders(void) {
  char **headers = NULL;
  int num_headers = 1;
 
- char *token = getenv("ZOPEN_GIT_OAUTH_TOKEN");
+ char *token = getenv("ZOPEN_GITHUB_OAUTH_TOKEN");
  if (token != NULL) {
 	num_headers++;
  }

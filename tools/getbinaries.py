@@ -35,12 +35,12 @@ totalPatchLinesPerPort = {}
 # using an access token
 g = Github("access_token")
 
-if os.getenv('GITHUB_OAUTH_TOKEN') is None:
-  print("error: environment variable GITHUB_OAUTH_TOKEN must be defined");
+if os.getenv('ZOPEN_GITHUB_OAUTH_TOKEN') is None:
+  print("error: environment variable ZOPEN_GITHUB_OAUTH_TOKEN must be defined");
   sys.exit(1);
 
 # Github Enterprise with custom hostname
-g = Github(os.getenv('GITHUB_OAUTH_TOKEN'))
+g = Github(os.getenv('ZOPEN_GITHUB_OAUTH_TOKEN'))
 
 with open('docs/Latest.md', 'w') as f:
   sys.stdout = f # Change the standard output to the file we created.
