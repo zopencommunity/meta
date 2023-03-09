@@ -9,6 +9,9 @@
     - fail:
         msg: "instance_name variable is required"
       when: instance_name is not defined or instance_name is none
+    - fail:
+        msg: "private_key_file variable is required"
+      when: private_key_file is not defined or private_key_file is none
 
   tasks:
     - name: Log in to IBM Cloud

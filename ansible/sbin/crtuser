@@ -1,0 +1,144 @@
+#!/bin/sh
+#
+# Create a new user with a 15G HOME file system, no TSO access,
+# and no password, specifying ssh public key to use from stdin
+#
+#set -x
+if [ $# -lt 1 ]; then
+	echo "Syntax: crtuser <userid> [<volser>]" >&2
+	echo "  where <userid> is a 7 character or less username" >&2
+	echo "  and <volser> is a 6 character or less volser to user (defaults to USERS)" >&2
+	echo "  and the ssh public key to be used is passed in via stdin" >&2
+	exit 4
+fi
+id=$1
+unixid=$(echo $1 | tr '[:upper:]' '[:lower:]')
+mvsid=$(echo $1 | tr '[:lower:]' '[:upper:]')
+sshkey=''
+while read line
+do
+	sshkey="${sshkey}${line}"
+done
+if [ $# -eq 1 ]; then
+	volser="USERS"
+else
+	volser=$2
+fi
+
+tsocmd "rlist facility bpx.next.user" >/dev/null 2>/dev/null
+if [ $? -gt 0 ]; then
+	rdefout=`tsocmd "rdefine facility bpx.next.user appldata('1000/1000')" 2>/dev/null`
+	rc=$?
+	if [ $rc -gt 0 ]; then
+		echo "${rdefout}" >&2
+		exit $rc
+	fi
+	tsocmd "setropts raclist(facility) refresh" 2>/dev/null
+fi
+
+tsocmd "listgrp zotgrp" >/dev/null 2>/dev/null
+if [ $? -gt 0 ]; then
+	addout=`tsocmd "addgroup zotgrp supgroup(sys1) owner(sys1) omvs(autogid)" 2>/dev/null`
+	rc=$?
+	if [ $rc -gt 0 ]; then
+		echo "${addout}" >&2
+		exit $rc
+	fi
+fi
+
+if ! id ${mvsid}; then
+	addout=`tsocmd "adduser ${mvsid} dfltgrp(zotgrp)" 2>/dev/null`
+	rc=$?
+	if [ $rc -gt 0 ]; then
+		echo "${addout}" >&2
+		exit $rc
+	fi
+
+	altout=`tsocmd "altuser ${mvsid} omvs(home(/u/${unixid}) program(/bin/sh) autouid)"`
+	rc=$?
+	if [ $rc -gt 0 ]; then
+		echo "${altout}" >&2
+		exit $rc
+	fi
+fi
+
+setrout=`tsocmd "setropts raclist(facility) refresh"`
+rc=$?
+if [ $rc -gt 0 ]; then
+	echo "${setrout}" >&2
+	exit $rc
+fi
+
+mkdir -p "/u/${unixid}/.ssh"
+rc=$?
+if [ $rc -gt 0 ]; then
+	echo "Unable to make /u/${unixid} home directory" >&2
+	exit $rc
+fi
+
+echo "${sshkey}" > "/u/${unixid}/.ssh/authorized_keys"
+rc=$?
+if [ $rc -gt 0 ]; then
+	echo "Unable to copy ssh key to ${unixid} ssh directory" >&2
+	exit $rc
+fi
+chmod -R 700 "/u/${unixid}/.ssh"
+rc=$?
+if [ $rc -gt 0 ]; then
+	echo "Unable to restrict who can read /u/${unixid}/.ssh directory" >&2
+	exit $rc
+fi
+
+chown -R "${unixid}:zotgrp" "/u/${unixid}"
+rc=$?
+if [ $rc -gt 0 ]; then
+	echo "Unable to change group of /u/${unixid} home directory" >&2
+	exit $rc
+fi
+
+if ! [ -d "/${unixid}" ]; then
+	zfsadm define -aggregate "ZFS.${mvsid}" -dataclas dceattr -storageclas scnosms -megabytes 30000 -volumes ${volser}
+	rc=$?
+	#FIXME: check for duplicate
+	rc=0
+	if [ $rc -gt 0 ]; then
+		echo "Unable to allocate 30G file system for ZFS.${mvsid} from volume ${volser}" >&2
+		exit $rc
+	fi
+	chmount -w /
+	rc=$?
+	if [ $rc -gt 0 ]; then
+		echo "Unable to chmount / to writable" >&2
+		exit $rc
+	fi
+	mkdir -p /${unixid}
+	rc=$?
+	if [ $rc -gt 0 ]; then
+		echo "Unable to make /${unixid} directory (personal work file system)" >&2
+		exit $rc
+	fi
+
+	mount -tzfs -f "ZFS.${mvsid}" "/${unixid}"
+	rc=$?
+	if [ $rc -gt 0 ]; then
+		echo "Unable to mount /${unixid} from ZFS.${mvsid}" >&2
+		exit $rc
+	fi
+fi
+
+chown -R "${unixid}:zotgrp" "/${unixid}"
+rc=$?
+if [ $rc -gt 0 ]; then
+	echo "Unable to change group of /${unixid} (personal work file system)" >&2
+	exit $rc
+fi
+
+. ./volfunc >/dev/null
+mntout=`automntzfs 01 /${unixid}`
+rc=$?
+if [ $rc -gt 0 ]; then
+	echo "Unable to add /${unixid} to automount on IPL" >&2
+	exit $rc
+fi
+
+exit 0

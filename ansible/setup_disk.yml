@@ -16,12 +16,28 @@
 
   tasks:
     - fail:
-        msg: "instance_ip variable is required"
-      when: instance_ip is not defined or instance_ip is none
+        msg: "instance_name variable is required"
+      when: instance_name is not defined or instance_name is none
 
     - fail:
-        msg: "jenkins_ssh_key variable is required"
-      when: jenkins_ssh_key is not defined or jenkins_ssh_key is none
+        msg: "jenkins_public_key variable is required"
+      when: jenkins_public_key is not defined or jenkins_ssh_key is none
+
+    - name: Log in to IBM Cloud
+      shell: ibmcloud login -r "{{ region }}"
+      environment:
+        IBMCLOUD_API_KEY: "{{ lookup('env', 'IBMCLOUD_API_KEY') }}"
+      register: login_result
+      changed_when: false
+      failed_when: login_result.rc != 0
+    - name: Get Floating IP Address
+      shell: ibmcloud is instance "{{ instance_name }}" --output json | jq -r '.network_interfaces[].floating_ips[] | select(.name == "{{ instance_name }}-ip").address'
+      register: instance_ip_result
+
+    - set_fact: 
+        instance_ip={{ instance_ip_result.stdout }}
+      when:
+        instance_ip is not defined
 
     - name: Add host to inventory
       add_host:
@@ -39,14 +55,18 @@
         interpreter_python: /usr/lpp/IBM/cyp/v3r10/pyz/bin/python3
         ansible_python_interpreter: /usr/lpp/IBM/cyp/v3r10/pyz/bin/python3
 
-    - name: Copy volinfo file
-      ansible.builtin.copy:
-        src: sbin/*
+    - name: Copy sbin directory
+      copy:
+        src: "{{ item.src }}"
         dest: ./sbin/
+        mode: 0755
+      loop:
+        - src: sbin/crtuser
+        - src: sbin/volfunc
       delegate_to: myhost
 
-    - name: Chtag to 819
-      shell: chtag -tc 819 sbin/volfunc
+    - name: Chtag files to 819
+      shell: chtag -tc 819 sbin/*
       delegate_to: "myhost"
 
     - name: Wait attached address to become available
@@ -57,35 +77,68 @@
       until:
         - attach.rc is defined
         - attach.rc == 0
+      when:
+        address is not defined
       delay: 100
       retries: 50
 
     - name: Grab the address
-      shell: export PATH=/usr/lpp/IBM/zoautil/bin:$PATH; pcon -d | egrep  'Attached block storage .*on address' | awk '{print $NF}')
-      register: address
+      shell: |
+        export PATH=/usr/lpp/IBM/zoautil/bin:$PATH;
+        pcon -d | egrep  'Attached block storage .*on address' | head -1 | sed "s/.*storage.*on address //" | sed -e "s/'.*//g"
+      register: address_result
+      delegate_to: "myhost"
+
+    - set_fact: 
+        address={{ address_result.stdout }}
+      when:
+        address is not defined
+
+    - name: Runs vols_online
+      shell: |
+        export PATH=/usr/lpp/IBM/zoautil/bin:$PATH
+        cd sbin
+        . ./volfunc 2>/dev/null >/dev/null
+        vols_online | grep USER 
+      register: isUserOnline
+      ignore_errors: True
+      delegate_to: "myhost"
+
+    - name: Runs df
+      shell: |
+        export PATH=/usr/lpp/IBM/zoautil/bin:$PATH
+        df -k | grep "^/jenkins"
+      register: hasJenkins
+      ignore_errors: True
+      delegate_to: "myhost"
 
     - name: Runs vol_init 
       shell: |
         export PATH=/usr/lpp/IBM/zoautil/bin:$PATH
-        . ./sbin/volfunc
-        vol_init "{{ address.stdout }}" "USER"
+        cd sbin
+        . ./volfunc
+        vol_init "{{ address }}" "USER"
+      when:
+        - isUserOnline.rc == 1
       delegate_to: "myhost"
 
     - name: Runs dev_online
       shell: |
         export PATH=/usr/lpp/IBM/zoautil/bin:$PATH
-        . ./sbin/volfunc
-        dev_online "{{ address.stdout }}"
+        cd sbin
+        . ./volfunc
+        dev_online "{{ address }}"
+      when:
+        - isUserOnline.rc == 1
       delegate_to: "myhost"
 
     - name: Creates Jenkins user
       shell: |
-        echo "{{ jenkins_public_key }}" | crtuser jenkins user
-      delegate_to: "myhost"
-
-    - name: Make / writeable
-      shell: |
-        chmount -w /
+        export PATH=/usr/lpp/IBM/zoautil/bin:/usr/sbin:$PATH
+        cd sbin/
+        echo "{{ jenkins_public_key }}" | ./crtuser jenkins user
+      when:
+        - hasJenkins.rc == 1
       delegate_to: "myhost"
 
     - name: Download zopen-setup
@@ -93,17 +146,20 @@
         url: https://github.com/ZOSOpenTools/meta/releases/download/v1.0.0/zopen-setup
         dest: /tmp/zopen-setup  
         mode: '0755'
+      when:
+        - skipZopenSetup is not defined
 
-    - name: Copy Java pax
-      ansible.builtin.copy:
-        src: ibm-semeru-certified-jdk_s390x_zos_11.0.18.0.pax.Z
-        dest: ./ibm-semeru-certified-jdk_s390x_zos_11.0.18.0.pax.Z
-      delegate_to: myhost
-
-    - name: Install Java
+    - name: Make / writeable
       shell: |
-        cd /
-        pax -rf ~/ibm-semeru-certified-jdk_s390x_zos_11.0.18.0.pax.Z
+        export PATH=/usr/sbin:$PATH
+        chmount -w /
+      delegate_to: "myhost"
+
+    - name: Copy zopen-setup to /bin
+      copy:
+        src: /tmp/zopen-setup
+        dest: /bin/zopen-setup
+        mode: 0755
       delegate_to: myhost
 
     - name: Copy Clang pax
@@ -120,17 +176,23 @@
 
     - name: Runs zopen-setup
       shell: |
+        mkdir -p /jenkins/zopen
         zopen-setup /jenkins/zopen
       delegate_to: "jenkinshost"
+      when:
+        - skipZopenSetup is not defined
 
-    - name: Copy zopen-setup to myhost
-      ansible.builtin.copy:
-        src: /tmp/zopen-setup
-        dest: /bin/zopen-setup
-        mode: '0755'
-      delegate_to: "jenkinshost"
-
-    - name: Runs zopen-setup
+    - name: Creates /jenkins/.env file
       shell: |
+        mkdir -p /jenkins/zopen
         zopen-setup /jenkins/zopen
       delegate_to: "jenkinshost"
+      when:
+        - skipZopenSetup is not defined
+
+    - name: Copy .env file
+      ansible.builtin.copy:
+        src: jenkins_env
+        dest: /jenkins/.env
+      delegate_to: "jenkinshost"
+
