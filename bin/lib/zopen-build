@@ -418,16 +418,13 @@ checkEnv()
 
 setDepsEnv()
 {
-  if $forceUpgradeDeps; then
-    curlpath=$(dirname "$(type curl | cut -f3 -d' ')")
+  if command -V curl >/dev/null 2>&1; then
+    curlpath=$(dirname "$(command -V curl | cut -f3 -d' ')")
   fi
   initDefaultEnvironment
   # Add base dependencies:
   # zopen bin, compiler, and curl
   export PATH="$ZOPEN_COMPILER_PATH:$utilparentdir/bin:$PATH"
-  if $forceUpgradeDeps; then
-    export PATH="$curlpath:$PATH"
-  fi
 
   if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
     deps="${ZOPEN_TARBALL_DEPS}"
@@ -479,9 +476,12 @@ setDepsEnv()
       else
         printHeader "Upgrading dependency $dep. Installing via zopen install"
       fi
+      if [ -z "$curlpath" ]; then
+        printError "Need curl to proceed with installation"
+      fi
       # Use the first path specified in the dependency search list
       path=$(echo ${depsPath} | tr '|' '\n' | head -1)
-      if ! runAndLog "zopen install --install-or-upgrade -r $dep -d $path -v"; then
+      if ! runAndLog "PATH=\"$curlpath:$PATH\" zopen install --install-or-upgrade -r $dep -d $path -v"; then
         printError "zopen install command failed"
       fi
       depdir="$path/${dep}"
