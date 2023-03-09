@@ -29,7 +29,7 @@ static const char* lastpos(const char* str, int c) {
   return NULL;
 }
 
-static void syntax(const char* pgm) {
+static void syntax(const char* pgm, const char** bootpkg) {
   const char* base;
   if (base = lastpos(pgm, '/')) {
     pgm = &base[1];
@@ -47,6 +47,14 @@ static void syntax(const char* pgm) {
                   "Note:\n"
                   " Special consideration is made if <root> is ${HOME}/zopen in which case no link is created\n",
                   pgm, ZOPEN_TOOLS_URL, pgm);
+
+  fprintf(stderr, "Tools to be installed:\n ");
+  for (int i=0; bootpkg[i]; ++i) {
+    if (bootpkg[i+1])
+      fprintf(stderr, "%s, ", bootpkg[i]);
+    else
+      fprintf(stderr, "%s\n", bootpkg[i]);
+  }
   return;
 }
 
@@ -90,7 +98,7 @@ int main(int argc, char* argv[]) {
   __ae_autoconvert_state(_CVTSTATE_ON); 
 
   if (argc < 2) {
-    syntax(argv[0]);
+    syntax(argv[0], bootpkg);
     return 4;
   }
   for (i=1; i<argc; ++i) {
@@ -100,11 +108,11 @@ int main(int argc, char* argv[]) {
       verbose =	0;
     } else if (argv[i][0] == '-') {
       fprintf(stderr, "Unknown option: %s specified\n", argv[i]);
-      syntax(argv[0]);
+      syntax(argv[0], bootpkg);
       return 8;
     } else if (i != (argc-1)) {
       fprintf(stderr, "Too many parameters specified\n");
-      syntax(argv[0]);
+      syntax(argv[0], bootpkg);
       return 8;
     } else {
       parmsok=1;
@@ -112,7 +120,7 @@ int main(int argc, char* argv[]) {
   }
   if (!parmsok) {
     fprintf(stderr, "Specify a directory to install into\n");
-    syntax(argv[0]);
+    syntax(argv[0], bootpkg);
     return 8;
   }
   if (!zopen_c_home_var) {
@@ -121,7 +129,7 @@ int main(int argc, char* argv[]) {
   }
   if (!realpath(argv[argc-1], root)) {
     fprintf(stderr, "Directory %s does not exist, or is not writable\n", argv[argc-1]);
-    syntax(argv[0]);
+    syntax(argv[0], bootpkg);
     return 4;
   }
   if (genfilename(zopen_c_home_var, ZOPEN_HOME_NAME, zopenhome, ZOPEN_PATH_MAX)) {
@@ -131,7 +139,7 @@ int main(int argc, char* argv[]) {
   if (realpath(zopenhome, realpathhome)) {
     if (strcmp(root, realpathhome)) {
       fprintf(stderr, "File or directory %s exists. Please move this file before running since a symbolic link will be created\n", zopenhome);
-      syntax(argv[0]);
+      syntax(argv[0], bootpkg);
       return 4;
     } else {
       /* Special case - if zopenhome and realpathhome are the same, recognize this and skip creating a symbolic link */
