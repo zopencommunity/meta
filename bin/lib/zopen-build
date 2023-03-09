@@ -418,8 +418,8 @@ checkEnv()
 
 setDepsEnv()
 {
-  if type curl; then
-    curlpath=$(dirname "$(type curl | cut -f3 -d' ')")
+  if command -V curl >/dev/null 2>&1; then
+    curlpath=$(dirname "$(command -V curl | cut -f3 -d' ')")
   fi
   initDefaultEnvironment
   # Add base dependencies:
