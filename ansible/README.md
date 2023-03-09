@@ -17,3 +17,6 @@ ansible-playbook setup_disk.yml -vv -e "instance_name=zopen-ci5" -e "jenkins_pub
 ## Required variables:
 * `instance_name`: This is the name of the instance to be created
 * `jenkins_public_key`: This is the vpc ssh key. 
+
+## Create the Jenkins Node
+https://128.168.139.253:8443/manage/computer/new
