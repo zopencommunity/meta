@@ -75,6 +75,7 @@
 | [gdbmport](https://github.com/ZOSOpenTools/gdbmport) | 1 | 100% |man-db
 | [gperfport](https://github.com/ZOSOpenTools/gperfport) | 1 | Skipped |hello
 | [groffport](https://github.com/ZOSOpenTools/groffport) | 1 | 100% |man-db
+| [libpcreport](https://github.com/ZOSOpenTools/libpcreport) | 1 | 66% |git
 | [libpipelineport](https://github.com/ZOSOpenTools/libpipelineport) | 1 | 100% |man-db
 | [lz4port](https://github.com/ZOSOpenTools/lz4port) | 1 | 100% |rsync
 | [patchport](https://github.com/ZOSOpenTools/patchport) | 1 | 91% |m4
@@ -90,7 +91,6 @@
 | [helloport](https://github.com/ZOSOpenTools/helloport) | 0 | 20% |
 | [htopport](https://github.com/ZOSOpenTools/htopport) | 0 | No builds |
 | [jqport](https://github.com/ZOSOpenTools/jqport) | 0 | 57% |
-| [libpcreport](https://github.com/ZOSOpenTools/libpcreport) | 0 | 66% |
 | [libxsltport](https://github.com/ZOSOpenTools/libxsltport) | 0 | 100% |
 | [luaport](https://github.com/ZOSOpenTools/luaport) | 0 | 100% |
 | [lynxport](https://github.com/ZOSOpenTools/lynxport) | 0 | 100% |
@@ -195,4 +195,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-03-10 04:45:25
+Last updated:  2023-03-10 04:56:28
