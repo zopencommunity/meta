@@ -421,10 +421,18 @@ setDepsEnv()
   if command -V curl >/dev/null 2>&1; then
     curlpath=$(dirname "$(command -V curl | cut -f3 -d' ')")
   fi
+  python3path=$(dirname "$(type python3 | cut -f3 -d' ')")
   initDefaultEnvironment
   # Add base dependencies:
   # zopen bin, compiler, and curl
   export PATH="$ZOPEN_COMPILER_PATH:$utilparentdir/bin:$PATH"
+  # Add python
+  if [ ! -z "$python3path" ]; then
+    export PATH="$python3path:$PATH"
+  fi
+  if $forceUpgradeDeps; then
+    export PATH="$curlpath:$PATH"
+  fi
 
   if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
     deps="${ZOPEN_TARBALL_DEPS}"
