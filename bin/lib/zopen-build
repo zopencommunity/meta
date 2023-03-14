@@ -1168,6 +1168,10 @@ if ! [ -f ./.env ]; then
   return 0
 fi
 
+export _TAG_REDIR_IN=txt
+export _TAG_REDIR_ERR=txt
+export _TAG_REDIR_OUT=txt
+
 deleteDuplicateEntries() 
 {
   value=\$1
@@ -1180,9 +1184,6 @@ _CEE_RUNOPTS="\$_CEE_RUNOPTS FILETAG(AUTOCVT,AUTOTAG) POSIX(ON)"
 _CEE_RUNOPTS="\$(echo "\$_CEE_RUNOPTS" | awk '{gsub(/\([ \t]*/, "("); gsub(/[ \t]*\)/, ")"); gsub(/[ \t]*,[ \t]*/, ","); print}')"
 export _CEE_RUNOPTS="\$(deleteDuplicateEntries "\$_CEE_RUNOPTS" " ")"
 
-export _TAG_REDIR_IN=txt
-export _TAG_REDIR_ERR=txt
-export _TAG_REDIR_OUT=txt
 export ${projectName}_HOME="\${PWD}"
 zz
 
