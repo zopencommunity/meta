@@ -786,6 +786,7 @@ extractTarBall()
     fi
 
     if ! asciiecho "
+* text  working-tree-encoding=UTF-8
 *.jpg binary
 *.dvi binary
 *.xz binary
