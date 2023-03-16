@@ -1142,6 +1142,29 @@ check()
   printElapsedTime verbose "check" $checkStartTime
 }
 
+replaceHardcodedPath()
+{
+  orig=$1
+  replaced=$2
+  f=$3
+  hasHardcodedPaths=true
+  printVerbose "Replacing $orig in $f"
+  # only substitute text
+  if /bin/sed -e "" $f 2>/dev/null 1>&2; then
+    isWritable=true
+    if [ ! -w "$f" ]; then
+      isWriteable=false
+      chmod "+w" $f
+    fi
+    cp $f $f.tmp && \
+    sed -e "s#${orig}#${replaced}#g" $f.tmp > $f &&  \
+    rm $f.tmp;
+    if ! $isWriteable; then
+      chmod "-w" $f
+    fi
+  fi
+}
+
 replaceHardcodedPaths()
 {
   ZOPEN_INSTALL_PREFIX="${ZOPEN_INSTALL_DIR}/../"
@@ -1150,20 +1173,11 @@ replaceHardcodedPaths()
   printHeader "Replacing hardcoded ${ZOPEN_INSTALL_DIR} and ${ZOPEN_INSTALL_PREFIX} path"
   hasHardcodedPaths=false
   for f in $(find ${ZOPEN_INSTALL_DIR}/ -type f | xargs grep -l "${ZOPEN_INSTALL_DIR}" 2>/dev/null); do
-    hasHardcodedPaths=true
-    printVerbose "Replacing ${ZOPEN_INSTALL_DIR} in $f"
-    # only substitute text
-    if /bin/sed -e "" $f 2>/dev/null 1>&2; then
-      cp $f $f.tmp && sed -e "s#${ZOPEN_INSTALL_DIR}#ZOPEN_INSTALL_ROOT#g" $f.tmp > $f && rm $f.tmp;
-    fi
+    replaceHardcodedPath "${ZOPEN_INSTALL_DIR}" "ZOPEN_INSTALL_ROOT" "$f"
   done
   for f in $(find ${ZOPEN_INSTALL_DIR}/ -type f | xargs grep -l "${ZOPEN_INSTALL_PREFIX}" 2>/dev/null); do
     hasHardcodedPaths=true
-    printVerbose "Replacing ${ZOPEN_INSTALL_PREFIX} in $f"
-    # only substitute text
-    if /bin/sed -e "" $f 2>/dev/null 1>&2; then
-      cp $f $f.tmp && sed -e "s#${ZOPEN_INSTALL_PREFIX}#ZOPEN_INSTALL_PREFIX#g" $f.tmp > $f && rm $f.tmp;
-    fi
+    replaceHardcodedPath "${ZOPEN_INSTALL_PREFIX}" "ZOPEN_INSTALL_PREFIX" "$f"
   done
 }
 
@@ -1231,21 +1245,33 @@ else
   REPLACE_ROOT_PATH="ZOPEN_INSTALL_ROOT"
   REPLACE_PREFIX_PATH="ZOPEN_INSTALL_PREFIX"
 fi
+
+replaceHardcodedPath() {
+  orig=\$1
+  replaced=\$2
+  root=\$3
+  f=\$4
+  if [ \"\$f\" != \"\${root}/setup.sh\" ] && [ \"\$f\" != \"\${root}/.env\" ]; then
+    isWritable=true
+    if [ ! -w "\$f" ]; then
+      isWriteable=false
+      chmod "+w" \$f
+    fi
+    cp \$f \$f.tmp && \\
+    /bin/sed -e \"s#\${orig}#\${replaced}#g\" \$f.tmp > \$f && \\
+    rm \$f.tmp;
+    if ! \$isWriteable; then
+      chmod "-w" \$f
+    fi
+  fi
+}
 ZOPEN_INSTALL_PREFIX="\$${projectName}_HOME/../"
 ZOPEN_INSTALL_PREFIX=\$(cd "\${ZOPEN_INSTALL_PREFIX}" >/dev/null 2>&1 && pwd -P)
 for f in \$(/bin/find \$${projectName}_HOME/ -type f | /bin/xargs grep -l \"\$REPLACE_ROOT_PATH\" 2>/dev/null); do
-  if [ \"\$f\" != \"\$${projectName}_HOME/setup.sh\" ] && [ \"\$f\" != \"\$${projectName}_HOME/.env\" ]; then
-    cp \$f \$f.tmp
-    /bin/sed -e \"s#\$REPLACE_ROOT_PATH#\$${projectName}_HOME#g\" \$f.tmp > \$f
-    rm \$f.tmp;
-  fi
+  replaceHardcodedPath "\$REPLACE_ROOT_PATH" "\$${projectName}_HOME" "\$${projectName}_HOME" \$f
 done
 for f in \$(/bin/find \$${projectName}_HOME/ -type f | /bin/xargs grep -l \"\$REPLACE_PREFIX_PATH\" 2>/dev/null); do
-  if [ \"\$f\" != \"\$${projectName}_HOME/setup.sh\" ] && [ \"\$f\" != \"\$${projectName}_HOME/.env\" ]; then
-    cp \$f \$f.tmp
-    /bin/sed -e \"s#\$REPLACE_PREFIX_PATH#\${ZOPEN_INSTALL_PREFIX}#g\" \$f.tmp > \$f
-    rm \$f.tmp;
-  fi
+  replaceHardcodedPath "\$REPLACE_PREFIX_PATH" "\${ZOPEN_INSTALL_PREFIX}" "\$${projectName}_HOME" \$f
 done
 echo "\$${projectName}_HOME" > .replacedpath
 echo "\${ZOPEN_INSTALL_PREFIX}" >> .replacedpath
