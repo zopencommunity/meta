@@ -91,14 +91,15 @@ User-Provided environment variables:
 printFunctions() 
 {
 echo "User-Provided functions:
-  zopen_init               This function runs after code is downloaded and patched but before the code is built. 
-  zopen_pre_check          This function runs before the 'check' step of the build is run.
-  zopen_append_to_env      This function runs as part of generation of the .env file. The output of the function is appended to .env
-  zopen_append_to_setup    This function runs as part of generation of the setup.sh file. The output of the function is appended to setup.sh
-  zopen_pre_install        This function runs before the 'install' step of the build is run.
-  zopen_post_install       This function runs after the 'install' step of the build is run.
-  zopen_check_results      This function runs after the 'check' step of the build is run and must print out expected and actual failures."
-  zopen_get_version        This function returns the version of the tool in accordance with semantic versioning
+  zopen_init                  This function runs after code is downloaded and patched but before the code is built. 
+  zopen_pre_check             This function runs before the 'check' step of the build is run.
+  zopen_append_to_env         This function runs as part of generation of the .env file. The output of the function is appended to .env
+  zopen_append_to_zoslib_env  This function runs as part of generation of the .zoslib_env file. The output of the function is appended to .zoslib_env
+  zopen_append_to_setup       This function runs as part of generation of the setup.sh file. The output of the function is appended to setup.sh
+  zopen_pre_install           This function runs before the 'install' step of the build is run.
+  zopen_post_install          This function runs after the 'install' step of the build is run.
+  zopen_check_results         This function runs after the 'check' step of the build is run and must print out expected and actual failures."
+  zopen_get_version           This function returns the version of the tool in accordance with semantic versioning
 }
 
 export utildir="$(cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P)"
@@ -354,6 +355,7 @@ checkEnv()
   ZOPEN_INIT_CODE="zopen_init"
   ZOPEN_PRE_CHECK_CODE="zopen_pre_check"
   ZOPEN_APPEND_TO_ENV_CODE="zopen_append_to_env"
+  ZOPEN_APPEND_TO_ZOSLIB_ENV_CODE="zopen_append_to_zoslib_env"
   ZOPEN_APPEND_TO_SETUP_CODE="zopen_append_to_setup"
   ZOPEN_PRE_INSTALL_CODE="zopen_pre_install"
   ZOPEN_POST_INSTALL_CODE="zopen_post_install"
@@ -1210,22 +1212,31 @@ export _CEE_RUNOPTS="\$(deleteDuplicateEntries "\$_CEE_RUNOPTS" " ")"
 export ${projectName}_HOME="\${PWD}"
 zz
 
+  touch "${ZOPEN_INSTALL_DIR}/.zoslib_env" && chtag -tc 819 "${ZOPEN_INSTALL_DIR}/.zoslib_env"
   if [ -d "${ZOPEN_INSTALL_DIR}/bin" ]; then
     echo "PATH=\"\${${projectName}_HOME}/bin:\$PATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
     echo "export PATH=\"\$(deleteDuplicateEntries \"\$PATH\" \":\")\"" >> "${ZOPEN_INSTALL_DIR}/.env"
+    echo "PATH|prepend|PROJECT_ROOT/bin" >> "${ZOPEN_INSTALL_DIR}/.zoslib_env"
   fi
   if [ -d "${ZOPEN_INSTALL_DIR}/lib" ]; then
     echo "LIBPATH=\"\${${projectName}_HOME}/lib:\$LIBPATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
     echo "export LIBPATH=\"\$(deleteDuplicateEntries \"\$LIBPATH\" \":\")\"" >> "${ZOPEN_INSTALL_DIR}/.env"
+    echo "LIBPATH|prepend|PROJECT_ROOT/lib" >> "${ZOPEN_INSTALL_DIR}/.zoslib_env"
   fi
   if [ -d "${ZOPEN_INSTALL_DIR}/share/man" ]; then
     echo "MANPATH=\"\${${projectName}_HOME}/share/man:\$MANPATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
     echo "export MANPATH=\"\$(deleteDuplicateEntries \"\$MANPATH\" \":\")\"" >> "${ZOPEN_INSTALL_DIR}/.env"
+    echo "MANPATH|prepend|PROJECT_ROOT/share/man" >> "${ZOPEN_INSTALL_DIR}/.zoslib_env"
   fi
   if command -V "${ZOPEN_APPEND_TO_ENV_CODE}" >/dev/null 2>&1; then
     printVerbose "Appending additional environment variables..."
     append_to_env="$(${ZOPEN_APPEND_TO_ENV_CODE})"
     echo "$append_to_env" >> "${ZOPEN_INSTALL_DIR}/.env"
+  fi
+  if command -V "${ZOPEN_APPEND_TO_ZOSLIB_ENV_CODE}" >/dev/null 2>&1; then
+    printVerbose "Appending additional environment zoslib variables..."
+    append_to_zoslib_env="$(${ZOPEN_APPEND_TO_ZOSLIB_ENV_CODE})"
+    echo "$append_to_zoslib_env" >> "${ZOPEN_INSTALL_DIR}/.zoslib_env"
   fi
 
   # Create setup.sh script
