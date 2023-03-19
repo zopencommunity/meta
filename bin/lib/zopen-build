@@ -84,7 +84,8 @@ User-Provided environment variables:
   ZOPEN_INSTALL        Installation program to run. If skip is specified, no installation step is performed (defaults to '${ZOPEN_INSTALLD}')
   ZOPEN_INSTALL_OPTS   Options to pass to installation program (defaults to '${ZOPEN_INSTALL_OPTSD}')
   ZOPEN_CLEAN          Clean up program to run (defaults to '${ZOPEN_CLEAND}')
-  ZOPEN_CLEAN_OPTS     Options to pass to clean up  program (defaults to '${ZOPEN_CLEAN_OPTSD}')"
+  ZOPEN_CLEAN_OPTS     Options to pass to clean up  program (defaults to '${ZOPEN_CLEAN_OPTSD}')
+  ZOPEN_SHELL          Specify an alternate shell to use if -s option specified (defaults to /bin/sh)"
 
 }
 
@@ -1646,7 +1647,11 @@ if command -V "${ZOPEN_INIT_CODE}" >/dev/null 2>&1; then
 fi
 
 if ${startShell}; then
-  exec /bin/sh
+  if [ "${ZOPEN_SHELL}x" != "x" ]; then
+    exec "${ZOPEN_SHELL}"
+  else
+    exec /bin/sh
+  fi
 fi
 
 if $cleanupBuild || $forceRebuild; then
