@@ -1219,7 +1219,7 @@ zz
     echo "LIBPATH=\"\${${projectName}_HOME}/lib:\$LIBPATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
     echo "export LIBPATH=\"\$(deleteDuplicateEntries \"\$LIBPATH\" \":\")\"" >> "${ZOPEN_INSTALL_DIR}/.env"
   fi
-  if [ -d "${ZOPEN_INSTALL_DIR}/share/man" ]; then
+  if [ -d "${ZOPEN_INSTALL_DIR}/share/man" ] || [ "${projectName}" = "GIT" ]; then
     echo "MANPATH=\"\${${projectName}_HOME}/share/man:\$MANPATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
     echo "export MANPATH=\"\$(deleteDuplicateEntries \"\$MANPATH\" \":\")\"" >> "${ZOPEN_INSTALL_DIR}/.env"
   fi
