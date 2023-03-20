@@ -1337,7 +1337,9 @@ install()
 
     if command -V "${ZOPEN_POST_INSTALL_CODE}" >/dev/null 2>&1; then
       printVerbose "Running ${ZOPEN_POST_INSTALL_CODE}"
-      "${ZOPEN_POST_INSTALL_CODE}" "${ZOPEN_INSTALL_DIR}"
+      if ! "${ZOPEN_POST_INSTALL_CODE}" "${ZOPEN_INSTALL_DIR}" ; then
+        printError "Post install failed.${installlog}"
+      fi
     fi
 
     createReadme
