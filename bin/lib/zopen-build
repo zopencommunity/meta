@@ -84,7 +84,8 @@ User-Provided environment variables:
   ZOPEN_INSTALL        Installation program to run. If skip is specified, no installation step is performed (defaults to '${ZOPEN_INSTALLD}')
   ZOPEN_INSTALL_OPTS   Options to pass to installation program (defaults to '${ZOPEN_INSTALL_OPTSD}')
   ZOPEN_CLEAN          Clean up program to run (defaults to '${ZOPEN_CLEAND}')
-  ZOPEN_CLEAN_OPTS     Options to pass to clean up  program (defaults to '${ZOPEN_CLEAN_OPTSD}')"
+  ZOPEN_CLEAN_OPTS     Options to pass to clean up  program (defaults to '${ZOPEN_CLEAN_OPTSD}')
+  ZOPEN_SHELL          Specify an alternate shell to use if -s option specified (defaults to /bin/sh)"
 
 }
 
@@ -1218,7 +1219,7 @@ zz
     echo "LIBPATH=\"\${${projectName}_HOME}/lib:\$LIBPATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
     echo "export LIBPATH=\"\$(deleteDuplicateEntries \"\$LIBPATH\" \":\")\"" >> "${ZOPEN_INSTALL_DIR}/.env"
   fi
-  if [ -d "${ZOPEN_INSTALL_DIR}/share/man" ]; then
+  if [ -d "${ZOPEN_INSTALL_DIR}/share/man" ] || [ "${projectName}" = "GIT" ]; then
     echo "MANPATH=\"\${${projectName}_HOME}/share/man:\$MANPATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
     echo "export MANPATH=\"\$(deleteDuplicateEntries \"\$MANPATH\" \":\")\"" >> "${ZOPEN_INSTALL_DIR}/.env"
   fi
@@ -1336,7 +1337,9 @@ install()
 
     if command -V "${ZOPEN_POST_INSTALL_CODE}" >/dev/null 2>&1; then
       printVerbose "Running ${ZOPEN_POST_INSTALL_CODE}"
-      "${ZOPEN_POST_INSTALL_CODE}" "${ZOPEN_INSTALL_DIR}"
+      if ! "${ZOPEN_POST_INSTALL_CODE}" "${ZOPEN_INSTALL_DIR}" ; then
+        printError "Post install failed.${installlog}"
+      fi
     fi
 
     createReadme
@@ -1646,7 +1649,11 @@ if command -V "${ZOPEN_INIT_CODE}" >/dev/null 2>&1; then
 fi
 
 if ${startShell}; then
-  exec /bin/sh
+  if [ "${ZOPEN_SHELL}x" != "x" ]; then
+    exec "${ZOPEN_SHELL}"
+  else
+    exec /bin/sh
+  fi
 fi
 
 if $cleanupBuild || $forceRebuild; then
