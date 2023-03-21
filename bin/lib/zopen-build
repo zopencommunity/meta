@@ -94,6 +94,7 @@ printFunctions()
 echo "User-Provided functions:
   zopen_init               This function runs after code is downloaded and patched but before the code is built. 
   zopen_pre_check          This function runs before the 'check' step of the build is run.
+  zopen_pre_build          This function runs before the 'make' step of the build is run
   zopen_append_to_env      This function runs as part of generation of the .env file. The output of the function is appended to .env
   zopen_append_to_setup    This function runs as part of generation of the setup.sh file. The output of the function is appended to setup.sh
   zopen_pre_install        This function runs before the 'install' step of the build is run.
@@ -357,6 +358,7 @@ checkEnv()
   ZOPEN_APPEND_TO_ENV_CODE="zopen_append_to_env"
   ZOPEN_APPEND_TO_SETUP_CODE="zopen_append_to_setup"
   ZOPEN_PRE_INSTALL_CODE="zopen_pre_install"
+  ZOPEN_PRE_BUILD_CODE="zopen_pre_build"
   ZOPEN_POST_INSTALL_CODE="zopen_post_install"
   ZOPEN_CHECK_RESULTS_CODE="zopen_check_results"
 
@@ -1046,6 +1048,10 @@ configure()
 build()
 {
   buildStartTime=$SECONDS
+  if command -V "${ZOPEN_PRE_BUILD_CODE}" >/dev/null 2>&1; then
+    printVerbose "Running ${ZOPEN_PRE_BUILD_CODE}"
+   "${ZOPEN_PRE_BUILD_CODE}" "${ZOPEN_SRC_DIR}"
+  fi
   makelog="${ZOPEN_LOG_DIR}/${LOG_PFX}_build.log"
   if [ -n "${ZOPEN_MAKE_CMD}" ]; then
     printHeader "Running Build"
