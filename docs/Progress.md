@@ -54,19 +54,20 @@
 | [texinfoport](https://github.com/ZOSOpenTools/texinfoport) | 16 | 35% |autoconf, automake, bison, curl, expat, gettext, git, groff, gzip, hello, libtool, m4, make, openssl, sed, tar
 | [help2manport](https://github.com/ZOSOpenTools/help2manport) | 13 | 100% |autoconf, automake, bison, curl, expat, gettext, git, hello, libtool, m4, make, openssl, texinfo
 | [ncursesport](https://github.com/ZOSOpenTools/ncursesport) | 12 | 100% |bash, cscope, gettext, git, htop, less, lynx, man-db, nano, ncdu, screen, vim
-| [sedport](https://github.com/ZOSOpenTools/sedport) | 11 | 84% |bash, coreutils, git, groff, libxml2, libxslt, man-db, ncurses, perl, php, re2c
+| [sedport](https://github.com/ZOSOpenTools/sedport) | 12 | 84% |bash, coreutils, git, groff, libxml2, libxslt, m4, man-db, ncurses, perl, php, re2c
 | [gettextport](https://github.com/ZOSOpenTools/gettextport) | 10 | 82% |coreutils, ctags, expat, getopt, git, hello, libiconv, m4, man-db, nano
+| [libtoolport](https://github.com/ZOSOpenTools/libtoolport) | 8 | 80% |expat, gdbm, hello, m4, man-db, php, re2c, texinfo
 | [bashport](https://github.com/ZOSOpenTools/bashport) | 7 | 80% |expat, flex, git, libxml2, re2c, texinfo, xmlto
-| [libtoolport](https://github.com/ZOSOpenTools/libtoolport) | 7 | 80% |expat, gdbm, hello, man-db, php, re2c, texinfo
 | [gawkport](https://github.com/ZOSOpenTools/gawkport) | 6 | 93% |automake, curl, expat, gzip, ncurses, rsync
+| [grepport](https://github.com/ZOSOpenTools/grepport) | 6 | 94% |gnulib, libpcre, libxslt, m4, man-db, xmlto
 | [opensslport](https://github.com/ZOSOpenTools/opensslport) | 6 | 90% |curl, expat, git, lynx, rsync, wget
 | [findutilsport](https://github.com/ZOSOpenTools/findutilsport) | 5 | 50% |gnulib, grep, libxml2, re2c, texinfo
-| [grepport](https://github.com/ZOSOpenTools/grepport) | 5 | 94% |gnulib, libpcre, libxslt, man-db, xmlto
 | [zlibport](https://github.com/ZOSOpenTools/zlibport) | 5 | 100% |autoconf, curl, expat, git, wget
 | [cmakeport](https://github.com/ZOSOpenTools/cmakeport) | 4 | 74% |ninja, unzip, zip, zoslib
 | [libiconvport](https://github.com/ZOSOpenTools/libiconvport) | 3 | 100% |libxml2, man-db, php
 | [wgetport](https://github.com/ZOSOpenTools/wgetport) | 3 | 18% |hello, man-db, sed
 | [getoptport](https://github.com/ZOSOpenTools/getoptport) | 2 | 52% |flex, xmlto
+| [gperfport](https://github.com/ZOSOpenTools/gperfport) | 2 | Skipped |hello, m4
 | [lessport](https://github.com/ZOSOpenTools/lessport) | 2 | 100% |git, man-db
 | [libxml2port](https://github.com/ZOSOpenTools/libxml2port) | 2 | 99% |libxslt, php
 | [rsyncport](https://github.com/ZOSOpenTools/rsyncport) | 2 | 88% |m4, sed
@@ -75,7 +76,6 @@
 | [flexport](https://github.com/ZOSOpenTools/flexport) | 1 | 100% |cscope
 | [gdbmport](https://github.com/ZOSOpenTools/gdbmport) | 1 | 100% |man-db
 | [gnulibport](https://github.com/ZOSOpenTools/gnulibport) | 1 | 100% |htop
-| [gperfport](https://github.com/ZOSOpenTools/gperfport) | 1 | Skipped |hello
 | [groffport](https://github.com/ZOSOpenTools/groffport) | 1 | 100% |man-db
 | [libpcreport](https://github.com/ZOSOpenTools/libpcreport) | 1 | 66% |git
 | [libpipelineport](https://github.com/ZOSOpenTools/libpipelineport) | 1 | 100% |man-db
@@ -198,4 +198,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-03-21 15:20:37
+Last updated:  2023-03-22 00:49:43
