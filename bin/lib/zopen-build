@@ -545,6 +545,15 @@ setEnv()
       export ZOPEN_LDFLAGSD="${ZOPEN_CLANG_LDFLAGSD}"
       optflags="-O3"
       ;;
+    GO)
+      export ZOPEN_CCD=""
+      export ZOPEN_CXXD=""
+      export ZOPEN_CPPFLAGSD=""
+      export ZOPEN_CFLAGSD=""
+      export ZOPEN_CXXFLAGSD=""
+      export ZOPEN_LDFLAGSD=""
+      optflags=""
+      ;;
     *)
       printError "Unrecognize compiler '${ZOPEN_COMP}'"
       ;;
@@ -577,6 +586,7 @@ setEnv()
       if [ ${ccraw} -lt 42040001 ] ; then
         printError "xlclang++ compiler specified, need to be running IBM C for Open Enterprise Languages on z/OS 1"
       fi
+      ZOPEN_COMPILER_PATH=$(dirname "$(type ${CC} | cut -f3 -d' ')")
       ;;
     CLANG)
       # Confirm clang is at least OEL 2.0.0 (aka __COMPILER_VER__=50000000)
@@ -596,10 +606,24 @@ setEnv()
       if [ ${ccraw} -lt 50000000 ] ; then
         printError "clang compiler specified, need to be running at least IBM C for Open Enterprise Languages on z/OS 2"
       fi
+      ZOPEN_COMPILER_PATH=$(dirname "$(type ${CC} | cut -f3 -d' ')")
+      ;;
+    GO)
+      # Confirm Go is present
+      if ! type go 2>/dev/null >/dev/null; then
+        printError "Go compiler is required, not found."
+      fi
+      if ! type clang-wrapper 2>/dev/null >/dev/null; then
+        printError "Go clang-wrapper is required for cgo, not found."
+      fi
+
+      if ! go version | grep "zos/s390x"; then
+        printError "A working go is required, not found"
+      fi
+      ZOPEN_COMPILER_PATH="$(dirname "$(type go | cut -f3 -d' ')"):$(dirname "$(type clang-wrapper | cut -f3 -d' ')")"
       ;;
   esac
 
-  ZOPEN_COMPILER_PATH=$(dirname "$(type ${CC} | cut -f3 -d' ')")
 
   if [ "${CPPFLAGS}x" = "x" ]; then
     export CPPFLAGS="${ZOPEN_CPPFLAGSD}" 
