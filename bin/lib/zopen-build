@@ -378,7 +378,7 @@ checkEnv()
     if [ "${ZOPEN_TARBALL_DEPS}x" = "x" ]; then
       printError "ZOPEN_DEPS or ZOPEN_TARBALL_DEPS needs to be defined to the ported tools this depends on"
     fi
-    implicitDeps="git curl tar"
+    implicitDeps="git curl tar zoslib"
     ext=${ZOPEN_TARBALL_URL##*.}
     if [ "${ext}x" = "xzx" ]; then
       implicitDeps="${implicitDeps} xz"
@@ -396,7 +396,7 @@ checkEnv()
     if [ "${ZOPEN_GIT_DEPS}x" = "x" ]; then
       printError "ZOPEN_DEPS or ZOPEN_GIT_DEPS needs to be defined to the ported tools this depends on"
     fi
-    implicitDeps="git"
+    implicitDeps="git zoslib"
     printVerbose "Implicitly adding git dependencies: ${implicitDeps}"
     ZOPEN_GIT_DEPS="${implicitDeps} ${ZOPEN_GIT_DEPS}"
   fi
@@ -1212,31 +1212,22 @@ export _CEE_RUNOPTS="\$(deleteDuplicateEntries "\$_CEE_RUNOPTS" " ")"
 export ${projectName}_HOME="\${PWD}"
 zz
 
-  touch "${ZOPEN_INSTALL_DIR}/.zoslib_env" && chtag -tc 819 "${ZOPEN_INSTALL_DIR}/.zoslib_env"
   if [ -d "${ZOPEN_INSTALL_DIR}/bin" ]; then
     echo "PATH=\"\${${projectName}_HOME}/bin:\$PATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
     echo "export PATH=\"\$(deleteDuplicateEntries \"\$PATH\" \":\")\"" >> "${ZOPEN_INSTALL_DIR}/.env"
-    echo "PATH|prepend|PROJECT_ROOT/bin" >> "${ZOPEN_INSTALL_DIR}/.zoslib_env"
   fi
   if [ -d "${ZOPEN_INSTALL_DIR}/lib" ]; then
     echo "LIBPATH=\"\${${projectName}_HOME}/lib:\$LIBPATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
     echo "export LIBPATH=\"\$(deleteDuplicateEntries \"\$LIBPATH\" \":\")\"" >> "${ZOPEN_INSTALL_DIR}/.env"
-    echo "LIBPATH|prepend|PROJECT_ROOT/lib" >> "${ZOPEN_INSTALL_DIR}/.zoslib_env"
   fi
   if [ -d "${ZOPEN_INSTALL_DIR}/share/man" ]; then
     echo "MANPATH=\"\${${projectName}_HOME}/share/man:\$MANPATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
     echo "export MANPATH=\"\$(deleteDuplicateEntries \"\$MANPATH\" \":\")\"" >> "${ZOPEN_INSTALL_DIR}/.env"
-    echo "MANPATH|prepend|PROJECT_ROOT/share/man" >> "${ZOPEN_INSTALL_DIR}/.zoslib_env"
   fi
   if command -V "${ZOPEN_APPEND_TO_ENV_CODE}" >/dev/null 2>&1; then
     printVerbose "Appending additional environment variables..."
     append_to_env="$(${ZOPEN_APPEND_TO_ENV_CODE})"
     echo "$append_to_env" >> "${ZOPEN_INSTALL_DIR}/.env"
-  fi
-  if command -V "${ZOPEN_APPEND_TO_ZOSLIB_ENV_CODE}" >/dev/null 2>&1; then
-    printVerbose "Appending additional environment zoslib variables..."
-    append_to_zoslib_env="$(${ZOPEN_APPEND_TO_ZOSLIB_ENV_CODE})"
-    echo "$append_to_zoslib_env" >> "${ZOPEN_INSTALL_DIR}/.zoslib_env"
   fi
 
   # Create setup.sh script
@@ -1599,6 +1590,126 @@ LABEL specification=1.0.0"
   cd -
 }
 
+generateZOSLIBHooks() 
+{
+printHeader "Generating ZOSLIB Environment Hooks"
+zoslib_env="PATH|prepend|PROJECT_ROOT/bin
+LIBPATH|prepend|PROJECT_ROOT/lib
+"
+
+if command -V "${ZOPEN_APPEND_TO_ZOSLIB_ENV_CODE}" >/dev/null 2>&1; then
+  printVerbose "Appending additional environment zoslib variables..."
+  zoslib_env="${zoslib_env}$(${ZOPEN_APPEND_TO_ZOSLIB_ENV_CODE})"
+fi
+
+# Generate directories
+mkdir -p .zoslib_hooks
+cd .zoslib_hooks
+
+output="zoslib_env_hook.c"
+
+# Defines zoslib_env_hook
+
+cat <<zz >$output
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+__attribute__((visibility("default"))) int zoslib_env_hook(char*) __attribute__((used));
+
+__attribute__((visibility("default"))) int zoslib_env_hook(char* root_dir) {
+char* envar_value;
+char* value_str;
+char* pos;
+long size;
+zz
+
+
+# Process input
+echo "$zoslib_env" | while read line; do
+  var=$(echo $line | cut -d '|' -f 1)
+  action=$(echo $line | cut -d '|' -f 2)
+  value=$(echo $line | cut -d '|' -f 3)
+
+  if [ "$action" = "unset" ]; then
+    echo "unsetenv(\"$var\");" >> $output
+  elif [ "$action" = "set" ]; then
+    cat <<zz >>$output
+    value_str = "$value";
+    size = PATH_MAX;
+    envar_value = (char*)malloc(size);
+    memset(envar_value, 0, size);
+
+    // Substitute PROJECT_ROOT with root_dir
+    pos = strstr(value_str, "PROJECT_ROOT");
+    if (pos != NULL) {
+      int len = pos - value_str;
+      strncat(envar_value, value_str, len);
+      strcat(envar_value, root_dir);
+      strcat(envar_value, pos + strlen("PROJECT_ROOT"));
+    } else {
+      strcpy(envar_value, value_str);
+    }
+
+#ifdef __ZOPEN_DEBUG
+    fprintf(stderr, "Setting variable %s=%s\n", "$var", envar_value);
+#endif
+    if (!getenv("$var")) {
+      if (setenv("$var", envar_value, 1) != 0) {
+        fprintf(stderr, "Error: Setting environment variable %s=%s\n", "$var", envar_value);
+      }
+    }
+    free(envar_value);
+zz
+  elif [ "$action" = "prepend" ]; then
+    cat <<zz >>$output
+    value_str = "$value";
+    size = strlen(getenv("$var")) + strlen(value_str) + strlen(root_dir) + 2;
+    envar_value = (char*)malloc(size);
+    memset(envar_value, 0, size);
+
+    // Substitute PROJECT_ROOT with root_dir
+    pos = strstr(value_str, "PROJECT_ROOT");
+    if (pos != NULL) {
+      int len = pos - value_str;
+      strncat(envar_value, value_str, len);
+      strcat(envar_value, root_dir);
+      strcat(envar_value, pos + strlen("PROJECT_ROOT"));
+    } else {
+      strcpy(envar_value, value_str);
+    }
+
+    strcat(envar_value, ":");
+    strcat(envar_value, getenv("$var"));
+#ifdef __ZOPEN_DEBUG
+    fprintf(stderr, "Prepending variable %s=%s\n", "$var", envar_value);
+#endif
+    if (setenv("$var", envar_value, 1) != 0) {
+      fprintf(stderr, "Error: prepending environment variable %s=%s\n", "$var", envar_value);
+    }
+    free(envar_value);
+zz
+  fi
+done
+
+echo "" >> $output
+echo "return 0;" >> $output
+echo "}" >> $output
+
+if [ "$CC" = "xlclang" ]; then
+  extraOptions="-qexportall"
+fi
+if ! runAndLog "$CC $CFLAGS $CPPFLAGS -DPATH_MAX=1024 $extraOptions -c $output -o ${output}.o"; then
+  printError "Compiler command failed to compile"
+fi
+
+# Apply it in both LIB envars because some ports use ZOPEN_EXTRA_LIBS directly
+export ZOPEN_EXTRA_LIBS="${ZOPEN_EXTRA_LIBS} $PWD/${output}.o"
+export LIBS="${LIBS} $PWD/${output}.o"
+
+cd ..
+}
+
 #
 # Start of 'main'
 #
@@ -1642,6 +1753,8 @@ cd "${ZOPEN_ROOT}/${dir}" || exit 99
 if [ "${ZOPEN_SRC_DIR}x" != "x" ]; then
   cd "${ZOPEN_SRC_DIR}" || exit 99
 fi
+
+generateZOSLIBHooks
 
 if ! resolveCommands; then
   exit 4
