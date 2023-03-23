@@ -94,7 +94,7 @@ echo "User-Provided functions:
   zopen_init                  This function runs after code is downloaded and patched but before the code is built. 
   zopen_pre_check             This function runs before the 'check' step of the build is run.
   zopen_append_to_env         This function runs as part of generation of the .env file. The output of the function is appended to .env
-  zopen_append_to_zoslib_env  This function runs as part of generation of the .zoslib_env file. The output of the function is appended to .zoslib_env
+  zopen_append_to_zoslib_env  This function runs as part of generation of the zoslib_env_hook, which can be used to set environment variables before main is run
   zopen_append_to_setup       This function runs as part of generation of the setup.sh file. The output of the function is appended to setup.sh
   zopen_pre_install           This function runs before the 'install' step of the build is run.
   zopen_post_install          This function runs after the 'install' step of the build is run.
