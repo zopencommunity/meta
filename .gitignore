@@ -65,3 +65,6 @@ tools/src/hwthic.h
 
 # Vim backup files
 *~
+
+# VSCode settings
+.vscode
