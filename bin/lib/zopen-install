@@ -113,7 +113,7 @@ installDependencies()
     return 0;
   fi
   if [ "$dependencies" != "No dependencies" ]; then
-    printHeader "Installing dependencies for $name: $dependencies..."
+    printHeader "Checking dependencies for $name: $dependencies..."
     
     # Remove an old one if it exists
     rm -f "${name}/.depsenv"
@@ -151,10 +151,11 @@ installPort()
   fi
   repo="${name}port"
 
-  printHeader "Installing $name..."
   if ! latest_url="$(getContentsFromGithub "https://api.github.com/repos/ZOSOpenTools/${repo}/releases/latest")"; then
     exit 4;
   fi
+
+  printHeader "Checking $name..."
 
   #FIXME: use jq to parse
   statusline="$(echo "$latest_url" | grep "\"body\":.*Test Status:.*(.*)<br />")"
@@ -196,6 +197,7 @@ installPort()
     fi
     printInfo "New release with tag \"${latestTag}\" found for $repo"
   fi
+
   printInfo "Preparing to download $name"
   if [ -z "$latest_url" ]; then
     printInfo "No releases published for $name"
