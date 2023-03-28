@@ -94,7 +94,7 @@
 | [emacsport](https://github.com/ZOSOpenTools/emacsport) | 0 | No builds |
 | [expectport](https://github.com/ZOSOpenTools/expectport) | 0 | Skipped |
 | [fzfport](https://github.com/ZOSOpenTools/fzfport) | 0 | No builds |
-| [helloport](https://github.com/ZOSOpenTools/helloport) | 0 | 20% |
+| [helloport](https://github.com/ZOSOpenTools/helloport) | 0 | 100% |
 | [htopport](https://github.com/ZOSOpenTools/htopport) | 0 | No builds |
 | [jqport](https://github.com/ZOSOpenTools/jqport) | 0 | 57% |
 | [libxsltport](https://github.com/ZOSOpenTools/libxsltport) | 0 | 100% |
@@ -123,7 +123,7 @@
 
 | Package | # of Patched Lines | # of Patches
 |---|---|--|
-|  [bashport](https://github.com/ZOSOpenTools/bashport) | 2799 | 25
+|  [bashport](https://github.com/ZOSOpenTools/bashport) | 2821 | 25
 |  [cmakeport](https://github.com/ZOSOpenTools/cmakeport) | 2328 | 1
 |  [htopport](https://github.com/ZOSOpenTools/htopport) | 1258 | 16
 |  [gitport](https://github.com/ZOSOpenTools/gitport) | 938 | 28
@@ -203,4 +203,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-03-28 14:23:40
+Last updated:  2023-03-28 21:07:37
