@@ -92,14 +92,15 @@ User-Provided environment variables:
 printFunctions() 
 {
 echo "User-Provided functions:
-  zopen_init               This function runs after code is downloaded and patched but before the code is built. 
-  zopen_pre_check          This function runs before the 'check' step of the build is run.
-  zopen_append_to_env      This function runs as part of generation of the .env file. The output of the function is appended to .env
-  zopen_append_to_setup    This function runs as part of generation of the setup.sh file. The output of the function is appended to setup.sh
-  zopen_pre_install        This function runs before the 'install' step of the build is run.
-  zopen_post_install       This function runs after the 'install' step of the build is run.
-  zopen_check_results      This function runs after the 'check' step of the build is run and must print out expected and actual failures."
-  zopen_get_version        This function returns the version of the tool in accordance with semantic versioning
+  zopen_init                  This function runs after code is downloaded and patched but before the code is built. 
+  zopen_pre_check             This function runs before the 'check' step of the build is run.
+  zopen_append_to_env         This function runs as part of generation of the .env file. The output of the function is appended to .env
+  zopen_append_to_setup       This function runs as part of generation of the setup.sh file. The output of the function is appended to setup.sh
+  zopen_pre_install           This function runs before the 'install' step of the build is run.
+  zopen_post_install          This function runs after the 'install' step of the build is run.
+  zopen_check_results         This function runs after the 'check' step of the build is run and must print out expected and actual failures.
+  zopen_get_version           This function returns the version of the tool in accordance with semantic versioning
+  zopen_append_to_zoslib_env  This function runs as part of generation of the C function zoslib_env_hook, which can be used to set environment variables before main is run."
 }
 
 export utildir="$(cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P)"
@@ -355,6 +356,7 @@ checkEnv()
   ZOPEN_INIT_CODE="zopen_init"
   ZOPEN_PRE_CHECK_CODE="zopen_pre_check"
   ZOPEN_APPEND_TO_ENV_CODE="zopen_append_to_env"
+  ZOPEN_APPEND_TO_ZOSLIB_ENV_CODE="zopen_append_to_zoslib_env"
   ZOPEN_APPEND_TO_SETUP_CODE="zopen_append_to_setup"
   ZOPEN_PRE_INSTALL_CODE="zopen_pre_install"
   ZOPEN_POST_INSTALL_CODE="zopen_post_install"
@@ -1591,6 +1593,167 @@ LABEL specification=1.0.0"
   cd -
 }
 
+generateZOSLIBHooks() 
+{
+# Background:
+#  As part of the build/install process, various tools may require application specific environment variables to be set.
+#  This function generates a C hook zoslib_env_hook() that will be called by ZOSLIB before main is entered.
+#  The function's purpose is to automatically set environment variables before main.
+#  Taking Git as an example, unless Git is installed in the standard location, (e.g. /usr/local/zopen),
+#  it has a requirement to set the following environment variables, GIT_TEMPLATE_DIR, GIT_EXEC_PATH, and 
+#  GIT_SSL_CAINFO.
+#  This function takes input from zopen_append_to_zoslib_env. For Git, this looks like:
+# GIT_TEMPLATE_DIR|set|PROJECT_ROOT/share/git-core/templates
+# GIT_EXEC_PATH|set|PROJECT_ROOT/libexec/git-core
+# GIT_SSL_CAINFO|set|PROJECT_ROOT/cacert.pem
+#  The first field is the environment variable. The second field is the action, which is one of set, unset, or prepend.
+#  The last field is the value. For unset, this is left empty. PROJECT_ROOT is replaced by the root directory of where the project is installed to.
+
+zoslib_env=""
+#TODO: In the future, consider locating all shared libraries and adding the LIBPATH automatically
+#zoslib_env="PATH|prepend|PROJECT_ROOT/bin
+#LIBPATH|prepend|PROJECT_ROOT/lib
+#"
+
+if command -V "${ZOPEN_APPEND_TO_ZOSLIB_ENV_CODE}" >/dev/null 2>&1; then
+  printVerbose "Appending additional environment zoslib variables..."
+  zoslib_env="${zoslib_env}$(${ZOPEN_APPEND_TO_ZOSLIB_ENV_CODE})"
+else
+  # Nothing to add, return
+  return;
+fi
+
+printHeader "Generating ZOSLIB Environment Hooks"
+
+# Generate directories
+mkdir -p .zoslib_hooks
+cd .zoslib_hooks
+
+output="zoslib_env_hook.c"
+
+# Defines zoslib_env_hook
+
+cat <<zz >$output
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define PROJECT_ROOT_STR "PROJECT_ROOT"
+
+__attribute__((visibility("default"))) int zoslib_env_hook(char*) __attribute__((used));
+
+__attribute__((visibility("default"))) int zoslib_env_hook(char* root_dir) {
+char* envar_value;
+char* value_str;
+char* pos;
+long size;
+
+// Do not use when running under zopen
+// To avoid test specific settings
+if (getenv("ZOPEN_IN_ZOPEN_BUILD")) {
+  return 0;
+}
+zz
+
+
+# Process input
+echo "$zoslib_env" | while read line; do
+  if [ $(echo "$line" | awk -F '|' '{print NF-1}') -ne 2 ]; then
+    printError "$line must have 2 '|' seperators only"
+  fi
+  var=$(echo $line | cut -d '|' -f 1)
+  action=$(echo $line | cut -d '|' -f 2)
+  value=$(echo $line | cut -d '|' -f 3)
+
+  if [ "$action" = "unset" ]; then
+    echo "unsetenv(\"$var\");" >> $output
+  elif [ "$action" = "set" ]; then
+    cat <<zz >>$output
+    value_str = "$value";
+    size = PATH_MAX;
+    envar_value = (char*)malloc(size);
+    memset(envar_value, 0, size);
+
+    // Substitute PROJECT_ROOT with root_dir (actual project directory)
+    pos = strstr(value_str, PROJECT_ROOT_STR);
+    if (pos != NULL) {
+      int length_before_project_root = pos - value_str;
+      strncat(envar_value, value_str, length_before_project_root);
+      // Append actual project root directory
+      strcat(envar_value, root_dir);
+      // Append rest of the value
+      strcat(envar_value, pos + sizeof(PROJECT_ROOT_STR)-1);
+    } else {
+      strcpy(envar_value, value_str);
+    }
+
+#ifdef __ZOPEN_DEBUG
+    fprintf(stderr, "Setting variable %s=%s\n", "$var", envar_value);
+#endif
+    if (!getenv("$var")) {
+      if (setenv("$var", envar_value, 1) != 0) {
+        fprintf(stderr, "Error: Setting environment variable %s=%s\n", "$var", envar_value);
+        exit(1);
+      }
+    }
+    free(envar_value);
+zz
+  elif [ "$action" = "prepend" ]; then
+    cat <<zz >>$output
+    value_str = "$value";
+    size = strlen(getenv("$var")) + strlen(value_str) + strlen(root_dir) + 2;
+    envar_value = (char*)malloc(size);
+    memset(envar_value, 0, size);
+
+    // Substitute PROJECT_ROOT with root_dir (actual project directory)
+    pos = strstr(value_str, PROJECT_ROOT_STR);
+    if (pos != NULL) {
+      int length_before_project_root = pos - value_str;
+      strncat(envar_value, value_str, length_before_project_root);
+      // Append actual project root directory
+      strcat(envar_value, root_dir);
+      // Append rest of the value
+      strcat(envar_value, pos + sizeof(PROJECT_ROOT_STR)-1);
+    } else {
+      strcpy(envar_value, value_str);
+    }
+
+    strcat(envar_value, ":");
+    strcat(envar_value, getenv("$var"));
+#ifdef __ZOPEN_DEBUG
+    fprintf(stderr, "Prepending variable %s=%s\n", "$var", envar_value);
+#endif
+    if (setenv("$var", envar_value, 1) != 0) {
+      fprintf(stderr, "Error: prepending environment variable %s=%s\n", "$var", envar_value);
+      exit(1);
+    }
+    free(envar_value);
+zz
+  else
+    printError "$action is not valid, must be one of set, unset, or prepend"
+  fi
+  
+done
+
+echo "" >> $output
+echo "return 0;" >> $output
+echo "}" >> $output
+
+# xlclang pragma linkage does not work
+if [ "$CC" = "xlclang" ]; then
+  extraOptions="-qexportall"
+fi
+if ! runAndLog "$CC $CFLAGS $CPPFLAGS -DPATH_MAX=1024 $extraOptions -c $output -o ${output}.o"; then
+  printError "Compiler command for $output failed to compile"
+fi
+
+# Apply it in both LIB envars because some ports use ZOPEN_EXTRA_LIBS directly
+export ZOPEN_EXTRA_LIBS="${ZOPEN_EXTRA_LIBS} $PWD/${output}.o"
+export LIBS="${LIBS} $PWD/${output}.o"
+
+cd ..
+}
+
 #
 # Start of 'main'
 #
@@ -1634,6 +1797,8 @@ cd "${ZOPEN_ROOT}/${dir}" || exit 99
 if [ "${ZOPEN_SRC_DIR}x" != "x" ]; then
   cd "${ZOPEN_SRC_DIR}" || exit 99
 fi
+
+generateZOSLIBHooks
 
 if ! resolveCommands; then
   exit 4
