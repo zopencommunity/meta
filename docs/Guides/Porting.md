@@ -124,10 +124,21 @@ zopen_append_to_env()
 {
   # echo extra envars here:
 }
+
+zopen_append_to_zoslib_env()
+{
+  echo "envar|set|value"
+}
 ```
 ZOPEN_TARBALL_DEPS/ZOPEN_GIT_DEPS are used to identify the non-standard dependencies needed to build the project. 
 
 `zopen_append_to_env()` can be used to add additional environment variables outside of the normal environment variables. (e.g. PATH, LIBPATH, MANPATH)
+
+Similarly, `zopen_append_to_zoslib_env()` can be used to set program specific environment variables.
+It accepts the following format:
+  envar|action|value
+Where envar is the environment variable, action is either set, unset, or prepend, and value is the environment variable value.
+The string `PROJECT_HOME` represents a special value and is replaced with the root path of the project"
 
 To help gauge the build quality of the port, a zopen_check_results() function needs to be provided inside the buildenv. This function should process the test results and emit a report of the failures, total number of tests, and expected number of failures to stdout as in the following format:
 
