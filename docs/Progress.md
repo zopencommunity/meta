@@ -14,6 +14,7 @@
 ## Projects with skipped or no tests (grey)
   
 * [bisonport](https://github.com/ZOSOpenTools/bisonport)
+* [expectport](https://github.com/ZOSOpenTools/expectport)
 * [gperfport](https://github.com/ZOSOpenTools/gperfport)
 * [nanoport](https://github.com/ZOSOpenTools/nanoport)
 * [ncduport](https://github.com/ZOSOpenTools/ncduport)
@@ -24,7 +25,6 @@
 ## Projects that do not have builds
 
 * [emacsport](https://github.com/ZOSOpenTools/emacsport)
-* [expectport](https://github.com/ZOSOpenTools/expectport)
 * [fzfport](https://github.com/ZOSOpenTools/fzfport)
 * [htopport](https://github.com/ZOSOpenTools/htopport)
 * [phpport](https://github.com/ZOSOpenTools/phpport)
@@ -93,7 +93,7 @@
 | [cscopeport](https://github.com/ZOSOpenTools/cscopeport) | 0 | 100% |
 | [ctagsport](https://github.com/ZOSOpenTools/ctagsport) | 0 | 100% |
 | [emacsport](https://github.com/ZOSOpenTools/emacsport) | 0 | No builds |
-| [expectport](https://github.com/ZOSOpenTools/expectport) | 0 | No builds |
+| [expectport](https://github.com/ZOSOpenTools/expectport) | 0 | Skipped |
 | [fzfport](https://github.com/ZOSOpenTools/fzfport) | 0 | No builds |
 | [helloport](https://github.com/ZOSOpenTools/helloport) | 0 | 20% |
 | [htopport](https://github.com/ZOSOpenTools/htopport) | 0 | No builds |
@@ -204,4 +204,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-03-28 02:46:01
+Last updated:  2023-03-28 03:33:54
