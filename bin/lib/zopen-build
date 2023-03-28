@@ -1050,8 +1050,11 @@ build()
   buildStartTime=$SECONDS
   if command -V "${ZOPEN_PRE_BUILD_CODE}" >/dev/null 2>&1; then
     printVerbose "Running ${ZOPEN_PRE_BUILD_CODE}"
-   "${ZOPEN_PRE_BUILD_CODE}" "${ZOPEN_SRC_DIR}"
+    if ! "${ZOPEN_PRE_BUILD_CODE}" ; then
+        printError "Pre build failed."
+   fi
   fi
+  
   makelog="${ZOPEN_LOG_DIR}/${LOG_PFX}_build.log"
   if [ -n "${ZOPEN_MAKE_CMD}" ]; then
     printHeader "Running Build"
