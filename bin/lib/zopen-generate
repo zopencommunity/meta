@@ -126,6 +126,7 @@ buildenvContents="${buildenvContents}\nzopen_check_results()
   echo \"actualFailures:0\"
   echo \"totalTests:1\"
   echo \"expectedFailures:0\"
+  echo \"expectedTotalTests:1\"
 }
 
 zopen_append_to_env()
