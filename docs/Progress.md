@@ -62,8 +62,8 @@
 | [grepport](https://github.com/ZOSOpenTools/grepport) | 7 | 94% |gnulib, libpcre, libxslt, m4, man-db, which, xmlto
 | [gawkport](https://github.com/ZOSOpenTools/gawkport) | 6 | 93% |automake, curl, expat, gzip, ncurses, rsync
 | [opensslport](https://github.com/ZOSOpenTools/opensslport) | 6 | 90% |curl, expat, git, lynx, rsync, wget
+| [zlibport](https://github.com/ZOSOpenTools/zlibport) | 6 | 100% |autoconf, curl, expat, git, lynx, wget
 | [findutilsport](https://github.com/ZOSOpenTools/findutilsport) | 5 | 50% |gnulib, grep, libxml2, re2c, texinfo
-| [zlibport](https://github.com/ZOSOpenTools/zlibport) | 5 | 100% |autoconf, curl, expat, git, wget
 | [cmakeport](https://github.com/ZOSOpenTools/cmakeport) | 4 | 74% |ninja, unzip, zip, zoslib
 | [libiconvport](https://github.com/ZOSOpenTools/libiconvport) | 3 | 100% |libxml2, man-db, php
 | [wgetport](https://github.com/ZOSOpenTools/wgetport) | 3 | 18% |hello, man-db, sed
@@ -203,4 +203,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-03-28 23:42:14
+Last updated:  2023-03-29 00:42:09
