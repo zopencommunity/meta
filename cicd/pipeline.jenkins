@@ -4,16 +4,16 @@
 //   PORT_GITHUB_REPO : Github repository (e.g. https://github.com/ZOSOpenTools/makeport.git)
 //   PORT_BRANCH : (default: main)
 //   PORT_DESCRIPTION : Description of the project
-def repo = params.get("PORT_GITHUB_REPO") 
-def branch = params.get("PORT_BRANCH") 
-def description = params.get("PORT_DESCRIPTION") 
+def repo = params.get("PORT_GITHUB_REPO")
+def branch = params.get("PORT_BRANCH")
+def description = params.get("PORT_DESCRIPTION")
 
 //TODO: Store results into vars if we want to publish to Slack in the future
 def buildResult = [:]
 def promoteResult = [:]
 def testStatus = "Skipped"
 
-node('linux') 
+node('linux')
 {
   stage('Build and Test') {
     try {
@@ -31,7 +31,7 @@ node('linux')
     	testStatus = readFile file: 'test.status'
     }
   }
-  
+
   stage('Promote') {
     try {
       // Publish Job : https://128.168.139.253:8443/view/Framework/job/Port-Publish/
@@ -40,9 +40,10 @@ node('linux')
       handleError(e, repo)
     }
   }
- 
+
   stage ('Cleanup') {
-    slackSend message: "Build for ${repo} successful <${currentBuild.absoluteUrl}|Build #${currentBuild.number}>\nTest Status: ${testStatus}"
+    slackSend color: 'good',
+              message: "Build for ${repo} successful <${currentBuild.absoluteUrl}|Build #${currentBuild.number}>\nTest Status: ${testStatus}"
   }
 }
 
