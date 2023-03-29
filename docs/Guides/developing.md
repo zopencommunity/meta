@@ -89,14 +89,15 @@ The `buildenv` file _must_ set the following environment variables:
 - `ZOPEN_DEPS`: a space-separated list of all software dependencies this package has. These packages will automatically be downloaded if they are not present in your `$HOME/zopen/prod` or `$HOME/zopen/boot` directories.
 
 To determine the build quality of the port, a `zopen_check_results()` function needs to be provided inside _buildenv_. This function should process
-the test results and emit a report of the failures, total number of tests, and expected number of failures to stdout as in the following format: 
+the test results and emit a report of the failures, total number of tests, expected number of failures and expected number of tests to stdout as in the following format: 
 ```
 actualFailures:<numberoffailures>
 totalTests:<totalnumberoftests>
 expectedFailures:<expectednumberoffailures>
+expectedTotalTests:<expectednumberoftests>
 ```
 
-The build will fail to proceed to the install step if `actualFailures` is greater than `expectedFailures`.
+The build will fail to proceed to the install step if `totalTests` is less than `expectedTotalTests` or if `actualFailures` is greater than `expectedFailures`.
 
 Here is an example implementation of `zopen_check_results()`:
 
@@ -112,6 +113,7 @@ cat <<ZZ
 actualFailures:$failures
 totalTests:$totalTests
 expectedFailures:0
+expectedTotalTests:1
 ZZ
 }
 ```

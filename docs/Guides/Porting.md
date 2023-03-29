@@ -140,14 +140,15 @@ It accepts the following format:
 Where envar is the environment variable, action is either set, unset, or prepend, and value is the environment variable value.
 The string `PROJECT_HOME` represents a special value and is replaced with the root path of the project"
 
-To help gauge the build quality of the port, a zopen_check_results() function needs to be provided inside the buildenv. This function should process the test results and emit a report of the failures, total number of tests, and expected number of failures to stdout as in the following format:
+To help gauge the build quality of the port, a zopen_check_results() function needs to be provided inside the buildenv. This function should process the test results and emit a report of the failures, total number of tests, expected number of failures and expected number of tests to stdout as in the following format:
 
 ```
 actualFailures:<numberoffailures>
 totalTests:<totalnumberoftests>
 expectedFailures:<expectednumberoffailures>
-The build will fail to proceed to the install step if actualFailures is greater than expectedFailures.
+expectedTotalTests:<expectednumberoftests>
 ```
+The build will fail to proceed to the install step if totalTests is less than expectedTotalTests or actualFailures is greater than expectedFailures.
 
 Here is an example implementation of zopen_check_results():
 
@@ -163,6 +164,7 @@ cat <<ZZ
 actualFailures:$failures
 totalTests:$totalTests
 expectedFailures:0
+expectedTotalTests:1
 ZZ
 ```
 
