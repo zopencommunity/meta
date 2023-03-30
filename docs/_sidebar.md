@@ -13,6 +13,7 @@
   - Articles
     - [Using Git on z/OS](/Guides/GitOnZOS.md)
     - [Using Vim on z/OS](/Guides/VimOnZOS.md)
+    - [Terminal Settings on z/OS](/Guides/TerminalOnZOS.md)
   - Resources
     - [z/OS Open Tools Repos](https://github.com/ZOSOpenTools)
     - [Discussions](https://github.com/ZOSOpenTools/meta/discussions)
