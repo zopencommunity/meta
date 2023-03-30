@@ -1082,6 +1082,7 @@ check()
       testStatus="$(${ZOPEN_CHECK_RESULTS_CODE} "${ZOPEN_LOG_DIR}" "${LOG_PFX}")"
       printVerbose "Test status:\n$testStatus"
       testStatusError=false
+      checkTotalTests=false
       if echo "$testStatus" | grep -q -E "actualFailures:[ ]*[0-9]+"; then
         failures=$(echo "$testStatus" | grep "actualFailures:" | sed -e "s/.*actualFailures://" | tr -d ' ')
       else
@@ -1089,7 +1090,7 @@ check()
         testStatusError=true
       fi
       if echo "$testStatus" | grep -q -E "expectedFailures:[ ]*[0-9]+"; then
-        expected=$(echo "$testStatus" | grep "expectedFailures:" | sed -e "s/.*expectedFailures://" | tr -d ' ')
+        expectedFailures=$(echo "$testStatus" | grep "expectedFailures:" | sed -e "s/.*expectedFailures://" | tr -d ' ')
       else
         printSoftError "${ZOPEN_CHECK_RESULTS_CODE} needs to emit an expectedFailures:<number> line"
       	testStatusError=true
@@ -1103,6 +1104,10 @@ check()
       else
         printSoftError "${ZOPEN_CHECK_RESULTS_CODE} needs to emit an totalTests:<number> line"
       	testStatusError=true
+      fi
+      if echo "$testStatus" | grep -q -E "expectedTotalTests:[ ]*[0-9]+"; then
+        expectedTotalTests=$(echo "$testStatus" | grep "expectedTotalTests:" | sed -e "s/.*expectedTotalTests://" | tr -d ' ')
+        checkTotalTests=true
       fi
       if ${testStatusError}; then
         printError "Test Status:\n$testStatus"
@@ -1130,12 +1135,18 @@ check()
           ZOPEN_STATUS="Yellow ($summary)" # Most tests failed
         fi
       fi
-      if [ $failures -le $expected ]; then
+      if ${checkTotalTests}; then
+        if [ $totalTests -lt $expectedTotalTests ]; then
+          printElapsedTime verbose "check" $checkStartTime
+          printError "Executed tests ($totalTests) is less than expected ($expectedTotalTests). Failing...";
+        fi
+      fi
+      if [ $failures -le $expectedFailures ]; then
         printElapsedTime verbose "check" $checkStartTime
         return 0
       else
         printElapsedTime verbose "check" $checkStartTime
-        printError "Failures ($failures) not less than than expected ($expected). Failing...";
+        printError "Failures ($failures) not less than than expected ($expectedFailures). Failing...";
       fi
     fi
   else
