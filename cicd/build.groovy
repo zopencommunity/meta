@@ -5,6 +5,8 @@
 # Inputs: 
 #   - PORT_GITHUB_REPO : e.g: https://github.com/ZOSOpenTools/makeport.git
 #   - PORT_BRANCH : (default: main)
+#   - RELEASE_LEVEL: Release level to build off of. # FUTURE TODO
+#   - FORCE_CLANG : Build using clang
 # Output:
 #   - pax.Z artifact is published as a Jenkins artifact
 #   - package is copied to /jenkins/build on z/OS zot system
@@ -30,7 +32,12 @@ PORT_NAME=${PORT_NAME%%port}
 export TMPDIR="${PWD}/tmp"
 mkdir -p "${TMPDIR}"
 
+extraOptions=""
+if $FORCE_CLANG; then
+  extraOptions="--comp clang"
+fi
+
 git clone -b "${PORT_BRANCH}" "${PORT_GITHUB_REPO}" ${PORT_NAME} && cd ${PORT_NAME}
 
 # Always run tests and update dependencies and generate pax file
-zopen build -v -b release -u -gp -nosym
+zopen build -v -b release -u -gp -nosym $extraOptions
