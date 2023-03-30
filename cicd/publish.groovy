@@ -3,6 +3,7 @@
 # Inputs: 
 #   - PORT_GITHUB_REPO :  Github repoistory to publish the artifact to e.g: https://github.com/ZOSOpenTools/xzport.git
 #   - PORT_DESCRIPTION : Description of the tool that is presented in the Github release page
+#   - RELEASE_LEVEL: Main or Release line
 #  zos.pax.Z artifact is copied as input
 #  requires a GITHUB_TOKEN environment variable (already configured in Jenkins)
 # Output:
@@ -59,27 +60,30 @@ URL_LINE="https://github.com/ZOSOpenTools/${GITHUB_REPO}/releases/download/${GIT
 DESCRIPTION="${DESCRIPTION}<br /><b>Command to download and install on z/OS (if you have curl)</b> <pre>curl -o ${PAX_BASENAME} -L ${URL_LINE} && pax -rf ${PAX_BASENAME} && cd $DIR_NAME && . ./.env</pre>"
 DESCRIPTION="${DESCRIPTION}<br /><b>Or use:</b> <pre>zopen install ${PORT_NAME}</pre>"
 
+TAG="${RELEASE_LEVEL}_${RELEASE_PREFIX}_${BUILD_ID}"
+NAME="${PORT_NAME} ${VERSION}(Build ${BUILD_ID})"
+
 exists=$(github-release info -u ${GITHUB_ORGANIZATION} -r ${GITHUB_REPO}  -j)
 if [ $? -gt 0 ]; then
   echo "Creating a new release in github"
   github-release -v release --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --name "z/OS Release"
 fi
 
-exists=$(github-release info -u ${GITHUB_ORGANIZATION} -r ${GITHUB_REPO} --tag "${RELEASE_PREFIX}_${BUILD_ID}" -j)
+exists=$(github-release info -u ${GITHUB_ORGANIZATION} -r ${GITHUB_REPO} --tag "${TAG}" -j)
 if [ $? -gt 0 ]; then
   echo "Creating a new tag in github"
-  github-release -v release --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --tag "${RELEASE_PREFIX}_${BUILD_ID}" --name "${PORT_NAME} ${VERSION}(Build ${BUILD_ID})" --description "${DESCRIPTION}"
+  github-release -v release --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --tag "${TAG}" --name "${NAME}" --description "${DESCRIPTION}"
 else
   echo "Deleting and creating new tag"
-  github-release -v delete --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --tag "${RELEASE_PREFIX}_${BUILD_ID}"
-  github-release -v release --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --tag "${RELEASE_PREFIX}_${BUILD_ID}" --name "${PORT_NAME} ${VERSION}(Build ${BUILD_ID})" --description "${DESCRIPTION}"
+  github-release -v delete --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --tag "${TAG}"
+  github-release -v release --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --tag "${TAG}" --name "${NAME}" --description "${DESCRIPTION}"
 
 fi
 
 sleep 10 # Let github register the release
 
 echo "Release should now exist"
-github-release info -u ${GITHUB_ORGANIZATION} -r ${GITHUB_REPO} --tag "${RELEASE_PREFIX}_${BUILD_ID}" -j
+github-release info -u ${GITHUB_ORGANIZATION} -r ${GITHUB_REPO} --tag "${TAG}" -j
 
 echo "Uploading the artifacts into github"
-github-release -v upload --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --tag "${RELEASE_PREFIX}_${BUILD_ID}" --name "${PAX_BASENAME}" --file "${PAX}"
+github-release -v upload --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --tag "${TAG}" --name "${PAX_BASENAME}" --file "${PAX}"

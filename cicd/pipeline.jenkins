@@ -1,59 +1,81 @@
-// Generic pipeline that drives the build, test, and promotion of a ZOSOpenTools project
-// This pipeline is called via https://128.168.139.253:8443/view/Framework/job/Port-Pipeline/
 // Inputs:
 //   PORT_GITHUB_REPO : Github repository (e.g. https://github.com/ZOSOpenTools/makeport.git)
 //   PORT_BRANCH : (default: main)
 //   PORT_DESCRIPTION : Description of the project
+//   RELEASE_LEVEL: Main or Release line to build against (default: Release)
+//   FORCE_CLANG : Boolean to enforce building with Clang vs xlclang
+//   NO_PROMOTE : Boolean, if true, avoid promotion
+import org.jenkinsci.plugins.workflow.support.steps.build.RunWrapper
+
+@NonCPS
+String getLogFromRunWrapper(RunWrapper runWrapper, int logLines) {
+    runWrapper.getRawBuild().getLog(logLines).join('\n')
+}
+
 def repo = params.get("PORT_GITHUB_REPO")
 def branch = params.get("PORT_BRANCH")
 def description = params.get("PORT_DESCRIPTION")
+def releaseLevel = params.get("RELEASE_LEVEL")  // Mainline or Release
 
-//TODO: Store results into vars if we want to publish to Slack in the future
-def buildResult = [:]
-def promoteResult = [:]
+RunWrapper buildResult;
+RunWrapper promoteResult;
 def testStatus = "Skipped"
 
 node('linux')
 {
   stage('Build and Test') {
-    try {
     // Build Job : https://128.168.139.253:8443/view/Framework/job/Port-Build/
-    buildResult = build job: 'Port-Build', parameters: [string(name: 'PORT_GITHUB_REPO', value: "${repo}"), string(name: 'PORT_BRANCH', value: "${branch}"), booleanParam(name: 'RUN_TESTS', value: params.RUN_TESTS) ]
-    } catch (Exception e) {
-      handleError(e, repo)
+    buildResult = build job: 'Port-Build', propagate: false, parameters: [string(name: 'PORT_GITHUB_REPO', value: "${repo}"), 
+                   string(name: 'PORT_BRANCH', value: "${branch}"), 
+                   booleanParam(name: 'FORCE_CLANG', value: params.FORCE_CLANG),
+                   string(name: 'RELEASE_LEVEL', value: "${releaseLevel}"), 
+		   ]
+    def result = buildResult.getResult()
+    if(result == "FAILURE"){
+      handleError("Build/Test stage failed. View details in ${buildResult.absoluteUrl}", repo, getLogFromRunWrapper(buildResult, 50));
     }
-    copyArtifacts filter: 'test.status',
-	fingerprintArtifacts: true,
-	projectName: 'Port-Build',
-	selector: specific(buildResult.number.toString()),
-	optional: true
-    if (fileExists('test.status')) {
-    	testStatus = readFile file: 'test.status'
+    copyArtifacts filter: '**/test.status',
+        fingerprintArtifacts: true,
+        projectName: 'Port-Build',
+        selector: specific(buildResult.number.toString()),
+        optional: true
+    def testStatusFile = sh(script: 'find . -name test.status | head -n 1', returnStdout: true).trim()
+    if (testStatusFile != '') {
+        testStatus = readFile file: testStatusFile
     }
+    deleteDir()
   }
 
   stage('Promote') {
-    try {
-      // Publish Job : https://128.168.139.253:8443/view/Framework/job/Port-Publish/
-      promoteResult = build job: 'Port-Publish', parameters: [string(name: 'BUILD_SELECTOR', value: "<SpecificBuildSelector plugin=\"copyartifact@1.46.2\">  <buildNumber>${buildResult.number.toString()}</buildNumber></SpecificBuildSelector>"), string(name: 'PORT_GITHUB_REPO', value: "${repo}"), string(name: 'PORT_DESCRIPTION', value: "${description}")]
-    } catch (Exception e) {
-      handleError(e, repo)
-    }
+      if(params.NO_PROMOTE) {
+	      // Publish Job : https://128.168.139.253:8443/view/Framework/job/Port-Publish/
+	      promoteResult = build job: 'Port-Publish', propagate: false, parameters: 
+		 [string(name: 'BUILD_SELECTOR', value: "<SpecificBuildSelector plugin=\"copyartifact@1.46.2\">  <buildNumber>${buildResult.number.toString()}</buildNumber></SpecificBuildSelector>"), 
+		 string(name: 'PORT_GITHUB_REPO', value: "${repo}"), string(name: 'PORT_DESCRIPTION', value: "${description}")
+		 string(name: 'RELEASE_LEVEL', value: "${releaseLevel}")
+		 ]
+	      result = promoteResult.getResult()
+	      if(result == "FAILURE"){
+		handleError("Promote stage failed. View details in <${promoteResult.absoluteUrl}", repo, getLogFromRunWrapper(promoteResult, 50));
+	      }
+	}
   }
 
   stage ('Cleanup') {
-    slackSend color: 'good',
-              message: "Build for ${repo} successful <${currentBuild.absoluteUrl}|Build #${currentBuild.number}>\nTest Status: ${testStatus}"
+     def latestRelease = repo.replaceAll('.git$', "/releases/latest")
+     def slackResponse = slackSend color: 'good', message: "Build for ${repo} *successful* <${currentBuild.absoluteUrl}|Build #${currentBuild.number}>\n*Test Status:* ${testStatus}\nRelease published to: ${latestRelease}\nProgress page updated: https://zosopentools.github.io/meta/#/Progress"
   }
 }
 
-def handleError(e, repo, reason="unknown") {
-  if (e && e.getMessage()) {
-    reason = e.getMessage()
-  } else if (env.STAGE_NAME) {
-    reason = "failure in ${env.STAGE_NAME.toLowerCase()} stage"
-  }
-  slackSend color: 'danger',
-            message: "${repo}:\n<${currentBuild.absoluteUrl}|Build #${currentBuild.number}> *Failed*\n*Reason:* _${reason}_"
-  throw e
+def handleError(reason, repo, output="none") {
+  def message = "${repo}-${releaseLevel}:\n<${currentBuild.absoluteUrl}|Build #${currentBuild.number}> *Failed*\n*Reason:* ${reason}\nLast 50 lines of output:\n```${output}```"
+  def attachments = [
+    [
+      text: message,
+      fallback: 'Fallback',
+      color: 'danger'
+    ]
+  ]
+  slackSend(attachments: attachments)
+  error "Job failed..."
 }
