@@ -134,7 +134,7 @@
 |  [flexport](https://github.com/ZOSOpenTools/flexport) | 340 | 2
 |  [sudoport](https://github.com/ZOSOpenTools/sudoport) | 329 | 1
 |  [ninjaport](https://github.com/ZOSOpenTools/ninjaport) | 274 | 1
-|  [man-dbport](https://github.com/ZOSOpenTools/man-dbport) | 243 | 9
+|  [man-dbport](https://github.com/ZOSOpenTools/man-dbport) | 254 | 9
 |  [screenport](https://github.com/ZOSOpenTools/screenport) | 227 | 1
 |  [zstdport](https://github.com/ZOSOpenTools/zstdport) | 221 | 3
 |  [autoconfport](https://github.com/ZOSOpenTools/autoconfport) | 175 | 7
@@ -172,11 +172,11 @@
 |  [sqliteport](https://github.com/ZOSOpenTools/sqliteport) | 21 | 1
 |  [fzfport](https://github.com/ZOSOpenTools/fzfport) | 20 | 1
 |  [bzip2port](https://github.com/ZOSOpenTools/bzip2port) | 17 | 1
+|  [curlport](https://github.com/ZOSOpenTools/curlport) | 15 | 1
 |  [zlibport](https://github.com/ZOSOpenTools/zlibport) | 14 | 1
 |  [automakeport](https://github.com/ZOSOpenTools/automakeport) | 12 | 1
 | &#10003; [cscopeport](https://github.com/ZOSOpenTools/cscopeport) | 0 | 0
 | &#10003; [ctagsport](https://github.com/ZOSOpenTools/ctagsport) | 0 | 0
-| &#10003; [curlport](https://github.com/ZOSOpenTools/curlport) | 0 | 0
 | &#10003; [gnulibport](https://github.com/ZOSOpenTools/gnulibport) | 0 | 0
 | &#10003; [gperfport](https://github.com/ZOSOpenTools/gperfport) | 0 | 0
 | &#10003; [gzipport](https://github.com/ZOSOpenTools/gzipport) | 0 | 0
@@ -203,4 +203,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-03-31 16:38:32
+Last updated:  2023-03-31 20:38:31
