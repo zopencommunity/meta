@@ -5,7 +5,7 @@ encoding, you might have problems if you choose the wrong terminal character enc
 Character encodings are a complex issue, so I will restrict this to the basics of ISO8859-1 and
 UTF-8 encodings and setting up your terminal emulator correctly.
 
-I noticed when I tried to to issue:
+I noticed when I tried to issue:
 ```
 man --locale=fr vim
 ```
