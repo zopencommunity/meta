@@ -150,8 +150,8 @@ setDefaults()
   export ZOPEN_CLANG_CCD="clang"
   export ZOPEN_CLANG_CXXD="clang++"
   export ZOPEN_CLANG_CPPFLAGSD="-DNSIG=42 -D_XOPEN_SOURCE=600 -D_ALL_SOURCE -D_OPEN_SYS_FILE_EXT=1 -D_AE_BIMODAL=1 -D_ENHANCED_ASCII_EXT=0xFFFFFFFF"
-  export ZOPEN_CLANG_CFLAGSD="-fzos-le-char-mode=ascii -std=gnu11 -mnocsect -fno-short-enums"
-  export ZOPEN_CLANG_CXXFLAGSD="-fzos-le-char-mode=ascii -mnocsect -fno-short-enums"
+  export ZOPEN_CLANG_CFLAGSD="-fzos-le-char-mode=ascii -std=gnu11 -mnocsect -fno-short-enums -Wno-error"
+  export ZOPEN_CLANG_CXXFLAGSD="-fzos-le-char-mode=ascii -mnocsect -fno-short-enums -Wno-error"
   export ZOPEN_CLANG_LDFLAGSD="-Wl,-bedit=no"
   export ZOPEN_COMPD=XL
 
