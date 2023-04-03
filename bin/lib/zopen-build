@@ -1052,7 +1052,7 @@ build()
     printVerbose "Running ${ZOPEN_PRE_BUILD_CODE}"
     if ! "${ZOPEN_PRE_BUILD_CODE}" ; then
         printError "Pre build failed."
-   fi
+    fi
   fi
   
   makelog="${ZOPEN_LOG_DIR}/${LOG_PFX}_build.log"
