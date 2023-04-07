@@ -65,7 +65,7 @@
 | [zlibport](https://github.com/ZOSOpenTools/zlibport) | 6 | 100% |autoconf, curl, expat, git, lynx, wget
 | [cmakeport](https://github.com/ZOSOpenTools/cmakeport) | 4 | 74% |ninja, unzip, zip, zoslib
 | [gperfport](https://github.com/ZOSOpenTools/gperfport) | 3 | 100% |hello, libiconv, m4
-| [libiconvport](https://github.com/ZOSOpenTools/libiconvport) | 3 | 100% |libxml2, man-db, php
+| [libiconvport](https://github.com/ZOSOpenTools/libiconvport) | 3 | 99% |libxml2, man-db, php
 | [wgetport](https://github.com/ZOSOpenTools/wgetport) | 3 | 18% |hello, man-db, sed
 | [getoptport](https://github.com/ZOSOpenTools/getoptport) | 2 | 52% |flex, xmlto
 | [groffport](https://github.com/ZOSOpenTools/groffport) | 2 | 100% |libiconv, man-db
@@ -202,4 +202,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-04-06 17:44:12
+Last updated:  2023-04-07 00:47:18
