@@ -166,7 +166,6 @@
 |  [getoptport](https://github.com/ZOSOpenTools/getoptport) | 25 | 1
 |  [groffport](https://github.com/ZOSOpenTools/groffport) | 25 | 2
 |  [wgetport](https://github.com/ZOSOpenTools/wgetport) | 22 | 1
-|  [whichport](https://github.com/ZOSOpenTools/whichport) | 22 | 1
 |  [sqliteport](https://github.com/ZOSOpenTools/sqliteport) | 21 | 1
 |  [fzfport](https://github.com/ZOSOpenTools/fzfport) | 20 | 1
 |  [bzip2port](https://github.com/ZOSOpenTools/bzip2port) | 17 | 1
@@ -196,10 +195,11 @@
 | &#10003; [shufport](https://github.com/ZOSOpenTools/shufport) | 0 | 0
 | &#10003; [sshpassport](https://github.com/ZOSOpenTools/sshpassport) | 0 | 0
 | &#10003; [topport](https://github.com/ZOSOpenTools/topport) | 0 | 0
+| &#10003; [whichport](https://github.com/ZOSOpenTools/whichport) | 0 | 0
 | &#10003; [xzport](https://github.com/ZOSOpenTools/xzport) | 0 | 0
 | &#10003; [zigiport](https://github.com/ZOSOpenTools/zigiport) | 0 | 0
 | &#10003; [zipport](https://github.com/ZOSOpenTools/zipport) | 0 | 0
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-04-10 11:09:42
+Last updated:  2023-04-10 11:57:02
