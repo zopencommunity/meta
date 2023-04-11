@@ -28,7 +28,6 @@
 * [htopport](https://github.com/ZOSOpenTools/htopport)
 * [phpport](https://github.com/ZOSOpenTools/phpport)
 * [pkg-configport](https://github.com/ZOSOpenTools/pkg-configport)
-* [re2cport](https://github.com/ZOSOpenTools/re2cport)
 * [shufport](https://github.com/ZOSOpenTools/shufport)
 * [sshpassport](https://github.com/ZOSOpenTools/sshpassport)
 * [sudoport](https://github.com/ZOSOpenTools/sudoport)
@@ -81,7 +80,7 @@
 | [libpipelineport](https://github.com/ZOSOpenTools/libpipelineport) | 1 | 100% |man-db
 | [lz4port](https://github.com/ZOSOpenTools/lz4port) | 1 | 100% |rsync
 | [patchport](https://github.com/ZOSOpenTools/patchport) | 1 | 91% |m4
-| [re2cport](https://github.com/ZOSOpenTools/re2cport) | 1 | No builds |php
+| [re2cport](https://github.com/ZOSOpenTools/re2cport) | 1 | 80% |php
 | [sqliteport](https://github.com/ZOSOpenTools/sqliteport) | 1 | Skipped |php
 | [tclport](https://github.com/ZOSOpenTools/tclport) | 1 | Skipped |expect
 | [xxhashport](https://github.com/ZOSOpenTools/xxhashport) | 1 | 100% |rsync
@@ -202,4 +201,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-04-11 12:47:29
+Last updated:  2023-04-11 14:10:19
