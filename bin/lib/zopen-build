@@ -1194,6 +1194,11 @@ if ! [ -f ./.env ]; then
   return 0
 fi
 
+dropTagRedirEnvar=false
+if [ "\${_BPX_TERMPATH-x}" = "OMVS" ] && [ -z "\$_TAG_REDIR_OUT" ]; then
+  dropTagRedirEnvar=true;
+fi
+
 export _TAG_REDIR_IN=txt
 export _TAG_REDIR_ERR=txt
 export _TAG_REDIR_OUT=txt
@@ -1231,11 +1236,9 @@ zz
     echo "$append_to_env" >> "${ZOPEN_INSTALL_DIR}/.env"
   fi
 
-  cat <<zz >"${ZOPEN_INSTALL_DIR}/.env"
-if [ "\${_BPX_TERMPATH-x}" = "OMVS" ]; then
+  cat <<zz >>"${ZOPEN_INSTALL_DIR}/.env"
+if \$dropTagRedirEnvar; then
   unset _TAG_REDIR_OUT 
-  unset _TAG_REDIR_ERR
-  unset _TAG_REDIR_IN 
 fi
 zz
 
