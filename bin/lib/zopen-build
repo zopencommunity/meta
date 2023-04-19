@@ -27,7 +27,7 @@ asciiecho()
     return 2
   fi
   if [ "$(chtag -p "${file}" | cut -f2 -d' ')" = "IBM-1047" ]; then
-    if ! /bin/iconv -f IBM-1047 -tISO8859-1 <"${file}" >"${file}_ascii" || ! chtag -tcISO8859-1 "${file}_ascii" || ! mv "${file}_ascii" "${file}"; then
+    if ! /bin/iconv -f IBM-1047 -t ISO8859-1 <"${file}" >"${file}_ascii" || ! chtag -tc ISO8859-1 "${file}_ascii" || ! mv "${file}_ascii" "${file}"; then
       printError "Unable to convert EBCDIC text to ASCII for ${file}" >&2
     fi
   fi
@@ -1214,6 +1214,11 @@ if ! [ -f ./.env ]; then
   return 0
 fi
 
+dropTagRedirEnvar=false
+if [ "\${_BPX_TERMPATH-x}" = "OMVS" ] && [ -z "\$_TAG_REDIR_OUT" ]; then
+  dropTagRedirEnvar=true;
+fi
+
 export _TAG_REDIR_IN=txt
 export _TAG_REDIR_ERR=txt
 export _TAG_REDIR_OUT=txt
@@ -1250,6 +1255,13 @@ zz
     append_to_env="$(${ZOPEN_APPEND_TO_ENV_CODE})"
     echo "$append_to_env" >> "${ZOPEN_INSTALL_DIR}/.env"
   fi
+
+  cat <<zz >>"${ZOPEN_INSTALL_DIR}/.env"
+if \$dropTagRedirEnvar; then
+  unset _TAG_REDIR_OUT 
+fi
+zz
+
 
   # Create setup.sh script
   projectName_lower=$(echo "${projectName}" | tr '[A-Z]' '[a-z]')
