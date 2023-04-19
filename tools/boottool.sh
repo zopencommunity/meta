@@ -1,5 +1,4 @@
-#! /bin/env bash
-echo $BASH_VERSION
+#!/usr/bin/env bash
 
 ########################################################################
 ##PRE_REQUISITES 
@@ -13,12 +12,16 @@ if ((BASH_VERSINFO < 4)); then
    exit 1
 fi
 
+if [ -z "$GITHUB_OAUTH_TOKEN" ]; then
+   echo "GITHUB_OAUTH_TOKEN must be set."
+   exit 1
+fi
+
 echo "Number of args = $#"
 DEFAULT_OWNER="ZOSOpenTools"
 OWNERNAME=""
 REPO=""
 RELEASENAME=""
-CURL_POST="curl -sw "%{http_code}" -X POST -H \"Accept: application/vnd.github+json\""
 CURL_REPO_SUCCESS="200"
 DELETE_RELEASE_CODE="204"
 CRT_UPLOAD_REL_SUCCESS="201"
@@ -46,6 +49,29 @@ processOptions()
   echo "Repo=$REPO"
 }
 
+getLatestReleaseName()
+{
+  latestRepoUrl="https://api.github.com/repos/$OWNERNAME/$REPO/releases/latest"
+  
+  response=$(curl -sw "%{http_code}" \
+              -H "Accept: application/vnd.github+json" \
+              -H "Authorization: Bearer $GITHUB_OAUTH_TOKEN" \
+              $latestRepoUrl ) 
+  if [ $? -gt 0 ]; then
+    echo "curl command failed for getLatestReleaseName()"
+    exit 1
+  fi
+
+  http_code=$(tail -n1 <<< "$response")
+  if [ "$http_code" == "$CURL_REPO_SUCCESS" ]; then
+    newReleaseData=$(sed '$ d' <<< "$response") 
+    
+    repo_json=`jq '.' <<< "$newReleaseData"`
+    RELEASENAME=$(echo $repo_json | jq -r ".name")
+    echo "Latest release name=$RELEASENAME"
+  fi
+}
+
 #process the options passed by user
 processOptions $*
 
@@ -53,12 +79,13 @@ processOptions $*
 printSyntax()
 {
   echo "Pass repo/release name -- usage: boottool.sh --repo <repo> --release <releasename> --uname [ownername]" 
+  echo "If --release is not passed, it will use the latest release"
   exit 1;
 }
 
 [ -z "${OWNERNAME}" ] && OWNERNAME=$DEFAULT_OWNER && echo "Using default owner name ZOSOpenTools";
 [ -z "${REPO}" ] && (printSyntax)
-[ -z "${RELEASENAME}" ] && printSyntax
+[ -z "${RELEASENAME}" ] && getLatestReleaseName
 
 
 echo "Ownername = ${OWNERNAME}, Repo = ${REPO}, Release = ${RELEASENAME}"
@@ -81,7 +108,11 @@ populateReleaseMaps()
   name=""
   releaseNameIDMap=()
   releaseIDToReleaseNameMap=()
-  response=$(curl -sw "%{http_code}" -k -H "Accept: application/vnd.github+json" $url)
+  response=$(curl -sw "%{http_code}" -k -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $GITHUB_OAUTH_TOKEN" $url)
+  if [ $? -gt 0 ]; then
+    echo "curl command failed for populateReleaseMaps()"
+    exit 1
+  fi
   http_code=$(tail -n1 <<< "$response")
 
   if [ "$http_code" == "$CURL_REPO_SUCCESS" ]; then
@@ -136,6 +167,10 @@ getTagNameOfRelease ()
   #echo "GetTagNameOfRelease releaseUrl = $releaseUrl"
 
   response=$(curl -sw "%{http_code}" -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $ZOPEN_GITHUB_OAUTH_TOKEN" -H "X-GitHub-Api-Version: 2022-11-28" $releaseUrl )
+  if [ $? -gt 0 ]; then
+    echo "curl command failed for getTagNameOfRelease()"
+    exit 1
+  fi
   http_code=$(tail -n1 <<< "$response")
   echo "GetTagNameOfRelease , http_code = ${http_code}"
   
@@ -162,6 +197,10 @@ getSHAOfTag()
   releaseTagUrl=$repourl"git/ref/tags/""$1"
   #echo "getSHAOfTag releaseTagUrl = $releaseTagUrl"
   response=$(curl -sw "%{http_code}" -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $ZOPEN_GITHUB_OAUTH_TOKEN" $releaseTagUrl )
+  if [ $? -gt 0 ]; then
+    echo "curl command failed for getSHAOfTag()"
+    exit 1
+  fi
   shaOfTag=""  
 
   http_code=$(tail -n1 <<< "$response")
@@ -187,7 +226,11 @@ downloadAssetsOfRelease()
   assetNameArray=()
   assetUrl=$url"/""$1""/""assets"
   #echo "downloadAssetsOfRelease assetsurl = $assetUrl"
-  response=$(curl -sw "%{http_code}" -k -H "Accept: application/vnd.github+json" $assetUrl)
+  response=$(curl -sw "%{http_code}" -k -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $GITHUB_OAUTH_TOKEN" $assetUrl)
+  if [ $? -gt 0 ]; then
+    echo "curl command failed for downloadAssetsOfRelease()"
+    exit 1
+  fi
   http_code=$(tail -n1 <<< "$response")
 
   if [ "$http_code" == "$CURL_REPO_SUCCESS" ]; then
@@ -221,6 +264,10 @@ downloadAssetsOfRelease()
         assetNameArray+=($assetName)
         
         response=$(curl -sw "%{http_code}" -L "$downloadUrl" --output $assetName)
+        if [ $? -gt 0 ]; then
+          echo "curl command failed for downloadAssetsOfRelease()"
+          exit 1
+        fi
         http_code=$(tail -n1 <<< "$response")
         repo_results=$(sed '$ d' <<< "$response") 
   
@@ -266,6 +313,10 @@ getDescriptionOfRelease()
   releaseUrl=$url"/""$1"
 
   response=$(curl -sw "%{http_code}" -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $ZOPEN_GITHUB_OAUTH_TOKEN" -H "X-GitHub-Api-Version: 2022-11-28" $releaseUrl )
+  if [ $? -gt 0 ]; then
+    echo "curl command failed for getDescriptionOfRelease()"
+    exit 1
+  fi
   http_code=$(tail -n1 <<< "$response")
 
   if [ "$http_code" == "$CURL_REPO_SUCCESS" ]; then
@@ -291,6 +342,10 @@ deleteTheRelease()
   deleteRepoUrl="https://api.github.com/repos/$OWNERNAME/$REPO/releases/$releaseID"
   echo "DeleteTheRelease in url = $deleteRepoUrl"
   response=$(curl -sw "%{http_code}" -X DELETE -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $ZOPEN_GITHUB_OAUTH_TOKEN" $deleteRepoUrl)
+  if [ $? -gt 0 ]; then
+    echo "curl command failed for deleteTheRelease()"
+    exit 1
+  fi
   http_code=$(tail -n1 <<< "$response")
   delReleaseTagData=$(sed '$ d' <<< "$response") 
   
@@ -306,6 +361,10 @@ deleteBootTag()
   tagUrl=$repourl"git/refs/tags/boot"
   #echo "deleteBootTag in url = $tagUrl"
   response=$(curl -sw "%{http_code}" -X DELETE -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $ZOPEN_GITHUB_OAUTH_TOKEN" $tagUrl)
+  if [ $? -gt 0 ]; then
+    echo "curl command failed for deleteBootTag()"
+    exit 1
+  fi
   http_code=$(tail -n1 <<< "$response")
 
   if [ "$http_code" == "$DEL_TAG_VALIDATION_FAIL" ]; then
@@ -319,6 +378,10 @@ deleteBootTaggedReleases()
 {
   bootTagUrl="https://api.github.com/repos/$OWNERNAME/$REPO/releases/tags/boot"
   response=$(curl -sw "%{http_code}" -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $ZOPEN_GITHUB_OAUTH_TOKEN" $bootTagUrl)
+  if [ $? -gt 0 ]; then
+    echo "curl command failed for deleteBootTaggedReleases()"
+    exit 1
+  fi
   http_code=$(tail -n1 <<< "$response")
   
   if [ "$http_code" == "$CURL_REPO_SUCCESS" ]; then
@@ -337,6 +400,10 @@ deleteBootTaggedReleases()
     fi
 
     response=$(curl -sw "%{http_code}" -X DELETE -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $ZOPEN_GITHUB_OAUTH_TOKEN" $deleteRepoUrl)
+    if [ $? -gt 0 ]; then
+      echo "curl command failed for deleteBootTaggedReleases()"
+      exit 1
+    fi
     http_code=$(tail -n1 <<< "$response")
     delReleaseTagData=$(sed '$ d' <<< "$response") 
     deleteBootTag
@@ -352,6 +419,10 @@ renameBootTaggedReleases()
 {
   bootTagUrl="https://api.github.com/repos/$OWNERNAME/$REPO/releases/tags/boot"
   response=$(curl -sw "%{http_code}" -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $ZOPEN_GITHUB_OAUTH_TOKEN" $bootTagUrl)
+  if [ $? -gt 0 ]; then
+    echo "curl command failed for renameBootTaggedReleases()"
+    exit 1
+  fi
   http_code=$(tail -n1 <<< "$response")
   
   if [ "$http_code" == "$CURL_REPO_SUCCESS" ]; then
@@ -424,6 +495,10 @@ createRelease()
               -H "Authorization: Bearer $ZOPEN_GITHUB_OAUTH_TOKEN" \
               $createRepoUrl \
               -d  '{"tag_name":"'"${2}"'","target_commitish":"'"${shaOfTag}"'","name":"'"${1}"'","body":"'"${body}"'","make_latest":"false"}')
+  if [ $? -gt 0 ]; then
+    echo "curl command failed for createRelease()"
+    exit 1
+  fi
 
   http_code=$(tail -n1 <<< "$response")
   #echo "create release response = $response"
@@ -468,6 +543,10 @@ uploadAsset()
     -H "Authorization: Bearer $ZOPEN_GITHUB_OAUTH_TOKEN" \
     -H "Content-Type: application/octet-stream" \
    --data-binary @${curDir})
+    if [ $? -gt 0 ]; then
+      echo "curl command failed for uploadAsset()"
+      exit 1
+    fi
 
     http_code=$(awk -F "}" '{print $NF}' <<< "$response")
     if [ "$http_code" == "$CRT_UPLOAD_REL_SUCCESS" ]; then
@@ -487,6 +566,10 @@ getLatestReleaseID()
               -H "Accept: application/vnd.github+json" \
               -H "Authorization: Bearer $ZOPEN_GITHUB_OAUTH_TOKEN" \
               $latestRepoUrl ) 
+  if [ $? -gt 0 ]; then
+    echo "curl command failed for getLatestReleaseID()"
+    exit 1
+  fi
 
   http_code=$(tail -n1 <<< "$response")
   if [ "$http_code" == "$CURL_REPO_SUCCESS" ]; then
@@ -526,6 +609,10 @@ resetLatestRelease()
   -H "X-GitHub-Api-Version: 2022-11-28" \
   $relRepoUrl \
   -d '{"make_latest":"true"}')
+  if [ $? -gt 0 ]; then
+    echo "curl command failed for resetLatestRelease()"
+    exit 1
+  fi
 
   http_code=$(tail -n1 <<< "$response")
 
