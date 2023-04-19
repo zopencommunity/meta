@@ -8,7 +8,6 @@ printSyntax()
   echo "Syntax: zopen <command>" >&2
   echo "where <command> is one of the following:" >&2
   echo "  build          Invokes the build script" >&2
-  echo "  download       Downloads z/OS Open Tools (deprecated)" >&2
   echo "  generate       Generate a zopen project" >&2
   echo "  init           Generate a $HOME/.zopen-config file" >&2
   echo "  install        Downloads and installs z/OS Open Tools" >&2
@@ -25,9 +24,9 @@ printHelp()
   echo "Example usage:" >&2
   echo "  # Build a port" >&2
   echo "  zopen build -v # Build port" >&2
-  echo "  # List available ports to download" >&2
+  echo "  # List available ports to install" >&2
   echo "  zopen install" >&2
-  echo "  # Download binaries from Github" >&2
+  echo "  # Install all the ports from Github" >&2
   echo "  zopen install --all" >&2
   echo "  # Generate a zopen template project" >&2
   echo "  zopen generate" >&2
@@ -42,11 +41,6 @@ while [[ $# -gt 0 ]]; do
     "build")
       shift
       exec "${bindir}/lib/zopen-build" $@
-      ;;
-    "download")
-      shift
-      printWarning "'zopen download' is deprecated and will be removed. Use 'zopen install' instead."
-      exec "${bindir}/lib/zopen-install" $@
       ;;
     "install")
       shift
