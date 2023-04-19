@@ -67,7 +67,7 @@ while [[ $# -gt 0 ]]; do
       exit 0
       ;;
     *)
-      printSoftError "Unknown option ${1} specified"
+      printSoftError "Unknown option specified: '${1}'"
       printSyntax "${args}"
       exit 8
       ;;
