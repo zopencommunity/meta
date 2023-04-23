@@ -1,6 +1,6 @@
 # Bash on z/OS
 
-Bash, short for "Bourne-Again SHell," is a popular command-line interface and scripting language used primarily in Unix-based systems, such as Linux and macOS.
+Bash, short for "Bourne-Again SHell," is a popular command-line interface and scripting language used primarily in Unix-based systems.
 
 It is an alternative shell to the default Bourne shell (/bin/sh).
 
@@ -32,7 +32,7 @@ If Bash is not installed, you can install it using the following command:
 ```
 zopen install bash
 ```
-For more details on how to use and setup zopen, see the [zopen guide](/using).
+For more details on how to use and setup zopen, see the [zopen guide](/Guides/using).
 
 Alternatively, you can download bash directly from https://github.com/ZOSOpenTools/bashport/releases.
 
