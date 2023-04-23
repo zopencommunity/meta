@@ -13,8 +13,8 @@
   - Articles
     - [Using Git on z/OS](/Guides/GitOnZOS.md)
     - [Using Vim on z/OS](/Guides/VimOnZOS.md)
+    - [Using Bash on z/OS](/Guides/BashOnZOS.md)
     - [Terminal Settings on z/OS](/Guides/TerminalOnZOS.md)
-    - [Setting Bash as your default Shell](/Guides/BashOnZOS.md)
   - Resources
     - [z/OS Open Tools Repos](https://github.com/ZOSOpenTools)
     - [Discussions](https://github.com/ZOSOpenTools/meta/discussions)
