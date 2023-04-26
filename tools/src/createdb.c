@@ -27,7 +27,7 @@ int removedb(const char* keydb, const char* reqdb, const char* stashfile) {
   return rc1 | rc2 | rc3;
 }
 
-int createdb(const char* pem, char** keydb, size_t keydblen, char** reqdb, size_t reqdblen, char** stashfile, size_t stashfilelen) {
+int createdb(const char* pem, const char* pem2, char** keydb, size_t keydblen, char** reqdb, size_t reqdblen, char** stashfile, size_t stashfilelen) {
   char dbcmdstreambuff[256];
   char dbcmdbuff[256];
   int rc;
@@ -80,6 +80,21 @@ int createdb(const char* pem, char** keydb, size_t keydblen, char** reqdb, size_
 
   if ((rc = snprintf(dbcmdstreambuff, sizeof(dbcmdstreambuff), "%s%s%s%s%s%s%s%s%s", OPEN_DB, *keydb, "\n",
     DB_PASSWORD_NL, IMPORT_CA, pem, "\n", CA_LABEL, RETURN, EXIT)) > sizeof(dbcmdstreambuff)) {
+    fprintf(stderr, "Internal error: buffer too small\n");
+    return 4;
+  }
+
+  if ((rc = snprintf(dbcmdbuff, sizeof(dbcmdbuff), "echo \"%s\" | gskkyman >/dev/null 2>&1", dbcmdstreambuff)) > sizeof(dbcmdbuff)) {
+    fprintf(stderr, "Internal error: buffer too small\n");
+    return 4;
+  }
+  if (rc = (system(dbcmdbuff) & 0xFF)) {
+    fprintf(stderr, "Failure (%d) trying to import certificate file into database %s with <%s>\n", rc, *keydb, dbcmdbuff);
+    return 4;
+  }
+
+  if ((rc = snprintf(dbcmdstreambuff, sizeof(dbcmdstreambuff), "%s%s%s%s%s%s%s%s%s", OPEN_DB, *keydb, "\n",
+    DB_PASSWORD_NL, IMPORT_CA, pem2, "\n", "zopen", RETURN, EXIT)) > sizeof(dbcmdstreambuff)) {
     fprintf(stderr, "Internal error: buffer too small\n");
     return 4;
   }

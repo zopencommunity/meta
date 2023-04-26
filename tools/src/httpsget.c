@@ -9,7 +9,7 @@
 #include "zopenio.h"
 #include "download.h"
 
-int httpsget(const char* host, const char* uri, const char* pem, const char* output) {
+int httpsget(const char* host, const char* uri, const char* pem, const char* pem2, const char* output) {
   const char* github_oauth_help = "https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/authorizing-oauth-apps";
   char* keydb;
   char* reqdb;
@@ -32,6 +32,18 @@ int httpsget(const char* host, const char* uri, const char* pem, const char* out
     fprintf(stderr, "Unable to open output file %s for write\n", output);
     return 4;
   }
+  if ((fd = open(pem2, O_RDONLY)) > 0) {
+    close(fd);
+  } else {
+    fprintf(stderr, "Unable to open PEM file %s for read\n", pem2);
+    return 4;
+  }
+  if ((fd = open(output, O_CREAT|O_WRONLY|O_TRUNC, S_IRWXU)) > 0) {
+    close(fd);
+  } else {
+    fprintf(stderr, "Unable to open output file %s for write\n", output);
+    return 4;
+  }
 
 
   keydb = malloc(ZOPEN_PATH_MAX+1);
@@ -42,7 +54,7 @@ int httpsget(const char* host, const char* uri, const char* pem, const char* out
     return 4;
   }
 
-  if (rc = createdb(pem, &keydb, keydblen, &reqdb, reqdblen, &stashfile, stashfilelen)) {
+  if (rc = createdb(pem, pem2, &keydb, keydblen, &reqdb, reqdblen, &stashfile, stashfilelen)) {
     fprintf(stderr, "error creating temporary key db %s\n", keydb);
     return rc;
   }

@@ -13,7 +13,7 @@
  https://api.github.com/repos/ZOSOpenTools/<pkg>/releases/tags/boot
  */
 
-int getfilenamefrompkg(const char* pkg, const char* pkgsfx, const char* tmppem, char* buffer, size_t bufflen) {
+int getfilenamefrompkg(const char* pkg, const char* pkgsfx, const char* tmppem, const char* tmppem2,  char* buffer, size_t bufflen) {
   const char* apihost = "api.github.com";
   char temprawpkg[ZOPEN_PATH_MAX+1];
   char temppkg[ZOPEN_PATH_MAX+1];
@@ -34,8 +34,8 @@ int getfilenamefrompkg(const char* pkg, const char* pkgsfx, const char* tmppem, 
     fprintf(stderr, "error building uri for /%s/%s%s/%s", ZOPEN_REPO_URI_PREFIX, pkg, pkgsfx, ZOPEN_REPO_URI_SUFFIX);
     return 4;
   }
-  if (rc = httpsget(apihost, uri, tmppem, temprawpkg)) {
-    fprintf(stderr, "error downloading https://%s%s with PEM file %s to %s\n", apihost, uri, tmppem, temprawpkg);
+  if (rc = httpsget(apihost, uri, tmppem, tmppem2, temprawpkg)) {
+    fprintf(stderr, "error downloading https://%s%s with PEM files %s, %s to %s\n", apihost, uri, tmppem, tmppem2, temprawpkg);
     return rc;
   }
   if (getpkgname(temprawpkg, temppkg, buffer, bufflen)) {
