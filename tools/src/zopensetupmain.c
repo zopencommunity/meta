@@ -81,11 +81,13 @@ int main(int argc, char* argv[]) {
   const char* host = "github.com";
   const char* bootpkg[] = ZOPEN_BOOT_PKG;
   const char* pemdata = GITHUB_PEM_CA;
+  const char* pemdata2 = GITHUB_OBJECT_PEM_CA;
   char* pkgsfx;
   char  root[ZOPEN_PATH_MAX+1];
   char  filename[ZOPEN_PATH_MAX+1];
   char  output[ZOPEN_PATH_MAX+1];
   char  tmppem[ZOPEN_PATH_MAX+1];
+  char  tmppem2[ZOPEN_PATH_MAX+1];
   char  zopenhome[ZOPEN_PATH_MAX+1];
   char  realpathhome[ZOPEN_PATH_MAX+1];
   char  uri[ZOPEN_PATH_MAX+1];
@@ -153,6 +155,11 @@ int main(int argc, char* argv[]) {
     /* gentmpfilename issues specific errors */
     return 4;
   }
+  if (gentmpfilename("pem2", tmppem2, ZOPEN_PATH_MAX)) {
+    /* gentmpfilename issues specific errors */
+    return 4;
+  }
+
 
   if (verbose) {
     fprintf(STDTRC, "Creating directories under %s\n", root);
@@ -167,13 +174,17 @@ int main(int argc, char* argv[]) {
     fprintf(stderr, "error creating pem file: %d\n", rc);
     return rc;
   }
+  if (rc = createpem(pemdata2, tmppem2)) {
+    fprintf(stderr, "error creating pem file: %d\n", rc);
+    return rc;
+  }
   for (i=0; bootpkg[i]; ++i) {
     pkgsfx="port";
 
     if (verbose) {
       fprintf(STDTRC, "Download %s into %s/%s\n", bootpkg[i], root,  ZOPEN_BOOT);
     }
-    if (rc = getfilenamefrompkg(bootpkg[i], pkgsfx, tmppem, filename, ZOPEN_PATH_MAX)) {
+    if (rc = getfilenamefrompkg(bootpkg[i], pkgsfx, tmppem, tmppem2, filename, ZOPEN_PATH_MAX)) {
       /* If the boot package isn't found (404), keep going */
       if (rc == 404) { continue; }
       return rc;
@@ -185,8 +196,8 @@ int main(int argc, char* argv[]) {
       fprintf(stderr, "error building uri for /%s/%s%s/%s/%s", ZOPEN_BOOT_URI_PREFIX, bootpkg[i], pkgsfx, ZOPEN_BOOT_URI_SUFFIX, filename);
       return 4;
     }
-    if (rc = httpsget(host, uri, tmppem, output)) {
-      fprintf(stderr, "error %d downloading https://%s%s with PEM file %s to %s\n", rc, host, uri, tmppem, output);
+    if (rc = httpsget(host, uri, tmppem, tmppem2, output)) {
+      fprintf(stderr, "error %d downloading https://%s%s with PEM files %s,%s to %s\n", rc, host, uri, tmppem, tmppem2, output);
       return rc;
     }
     if (rc = unpaxandlink(root, ZOPEN_BOOT, output, bootpkg[i])) {
@@ -218,6 +229,10 @@ int main(int argc, char* argv[]) {
 
   if (remove(tmppem)) {
     fprintf(stderr, "error removing temporary pem file: %s\n", tmppem);
+    return 4;
+  }
+  if (remove(tmppem2)) {
+    fprintf(stderr, "error removing temporary pem file: %s\n", tmppem2);
     return 4;
   }
   return 0;

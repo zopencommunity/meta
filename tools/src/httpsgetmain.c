@@ -26,7 +26,7 @@ int main(int argc, char* argv[]) {
   pem = argv[3];
   out = argv[4]; 
 
-  if (rc = httpsget(host, uri, pem, out)) {
+  if (rc = httpsget(host, uri, pem, pem, out)) {
     fprintf(stderr, "error downloading https://%s%s with PEM file %s to %s\n", host, uri, pem, out);
     return rc;
   }
