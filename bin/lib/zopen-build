@@ -233,6 +233,7 @@ processOptions()
   startShell=false
   cleanupBuild=false
   forceRebuild=false
+  freshBuild=false
   buildEnvFile="./buildenv"
   getSourceOnly=false
   generatePax=false
@@ -737,7 +738,7 @@ gitClone()
   if [ -d "${dir}" ]; then
     printInfo "Using existing git clone'd directory ${dir}"
   else
-    forceRebuild=true
+    freshBuild=true
     printInfo "Clone and create ${dir}"
     if ! runAndLog "git clone \"${ZOPEN_GIT_URL}\""; then
       printError "Unable to clone ${gitname} from ${ZOPEN_GIT_URL}"
@@ -837,7 +838,7 @@ downloadTarBall()
   if [ -d "${dir}" ]; then
     echo "Using existing tarball directory ${dir}" >&2
   else
-    forceRebuild=true
+    freshBuild=true
     if ${verbose}; then
       printVerbose "curl -L -o ${tarballz} ${ZOPEN_TARBALL_URL}"
     fi
@@ -988,7 +989,7 @@ create_fifo_pipe()
 
 cleanup()
 {
-  if [ -n "${ZOPEN_CLEAN_CMD}" ] && [ -f "${ZOPEN_LOG_DIR}/config.success" ] ; then
+  if [ -n "${ZOPEN_CLEAN_CMD}" ] && [ -f "${ZOPEN_LOG_DIR}/config.success" ] && !$freshBuild; then
     printHeader "Running Cleanup"
     cleanlog="${ZOPEN_LOG_DIR}/${LOG_PFX}_clean.log"
     create_fifo_pipe "${cleanlog}"
@@ -1853,9 +1854,9 @@ if ${startShell}; then
   fi
 fi
 
-if $cleanupBuild || $forceRebuild; then
+if $cleanupBuild || $forceRebuild || $freshBuild; then
   cleanup
-  if  ! $forceRebuild ; then
+  if $cleanupBuild; then
     exit 0
   fi
 fi
