@@ -243,6 +243,7 @@ validateVersion()
 
 initDefaultEnvironment()
 {
+  export ZOPEN_OLD_PATH=$PATH # Preserve PATH in case scripts need to access it
   export PATH="$(getconf PATH)"
   export _CEE_RUNOPTS="FILETAG(AUTOCVT,AUTOTAG) POSIX(ON)"
   unset MANPATH
