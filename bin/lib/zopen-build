@@ -325,7 +325,7 @@ loadBuildEnv()
 checkEnv()
 {
   #
-  # Specify ZOPEN_TYPE as either TARBALL or GIT
+  # Specify ZOPEN_TYPE as either TARBALL or GIT or BARE
   # To specify a URL, you can either be specific (e.g. ZOPEN_TARBALL_URL or ZOPEN_GIT_URL) or you can be general (e.g. ZOPEN_URL)
   # and to specify DEPS, you can either be specific (e.g. ZOPEN_TARBALL_DEPS or ZOPEN_GIT_DEPS) or you can be general (e.g. ZOPEN_DEPS).
   # This flexibility is nice so that for software packages that support both types (e.g. gnu make), you can provide all of
