@@ -2,7 +2,7 @@
 #
 # General purpose build script for ZOSOpenTools ports
 #
-# ZOPEN_TYPE must be defined to either TARBALL or GIT. This indicates the type of package to build
+# ZOPEN_TYPE must be defined to either TARBALL, GIT, or BARE. This indicates the type of package to build
 #
 # For more details, see the help which you can get by issuing:
 # zopen-build -h
@@ -45,7 +45,7 @@ User-Provided environment variables:
   CXXFLAGS             C++ compiler flags (defaults to '${ZOPEN_XL_CXXFLAGSD}')
   LDFLAGS              C/C++ linker flags (defaults to '${ZOPEN_XL_LDFLAGSD}')
   LIBS                 C/C++ libraries (defaults to '')
-  ZOPEN_TYPE           The type of package to download. Valid types are TARBALL and GIT (required)
+  ZOPEN_TYPE           The type of package to download. Valid types are TARBALL, BARE and GIT (required)
   ZOPEN_TARBALL_URL    The fully qualified URL that the tarball should be downloaded from (required if ZOPEN_TYPE=TARBALL)
   ZOPEN_TARBALL_DEPS   Space-delimited set of source packages this git package depends on to build (required if ZOPEN_TYPE=TARBALL)
   ZOPEN_GIT_URL        The fully qualified URL that the git repo should be cloned from (required if ZOPEN_TYPE=GIT)
@@ -350,6 +350,8 @@ checkEnv()
     if [ "${ZOPEN_GIT_DEPS}x" = "x" ]; then
       export ZOPEN_GIT_DEPS="${ZOPEN_DEPS}"
     fi
+  elif [ "${ZOPEN_TYPE}x" = "BAREx" ]; then
+    printHeader "Using bare environment"
   else
     printError "ZOPEN_TYPE must be one of TARBALL or GIT. ZOPEN_TYPE=${ZOPEN_TYPE} was specified"
   fi
@@ -426,15 +428,10 @@ setDepsEnv()
   if command -V curl >/dev/null 2>&1; then
     curlpath=$(dirname "$(command -V curl | cut -f3 -d' ')")
   fi
-  python3path=$(dirname "$(type python3 | cut -f3 -d' ')")
   initDefaultEnvironment
   # Add base dependencies:
   # zopen bin, compiler, and curl
   export PATH="$ZOPEN_COMPILER_PATH:$utilparentdir/bin:$PATH"
-  # Add python
-  if [ ! -z "$python3path" ]; then
-    export PATH="$python3path:$PATH"
-  fi
   if $forceUpgradeDeps; then
     export PATH="$curlpath:$PATH"
   fi
@@ -473,7 +470,10 @@ setDepsEnv()
           fi
 
           printVerbose "Setting up ${depdir} dependency environment"
-          cd "${depdir}" && . ./.env
+          cd "${depdir}" && . ./.env 
+          if [ $? -gt 0 ]; then
+            printError "Failed to source ${depdir} .env"
+          fi
         fi
         foundDep=true
         break
@@ -500,6 +500,9 @@ setDepsEnv()
       depdir="$path/${dep}"
       printVerbose "Setting up upgraded $depdir dependency environment"
       cd "$depdir" && . ./.env
+      if [ $? -gt 0 ]; then
+        printError "Failed to source ${depdir} .env"
+      fi
       versionPath="$depdir/.version"
       if [ -r "$versionPath" ]; then
         version=$(cat "$versionPath");
@@ -882,6 +885,9 @@ downloadTarBall()
 #
 applyPatches()
 {
+  if [ "${ZOPEN_TYPE}x" = "BAREx" ]; then
+    return 0
+  fi
   printHeader "Applying patches"
   if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
     tarballz=$(basename "$ZOPEN_TARBALL_URL")
@@ -954,6 +960,10 @@ getCode()
 {
   printHeader "Building ${ZOPEN_ROOT}"
   cd "${ZOPEN_ROOT}" || exit 99
+
+  if [ "${ZOPEN_TYPE}x" = "BAREx" ]; then
+      return 0
+  fi
 
   checkGitVersion
 
