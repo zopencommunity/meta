@@ -33,7 +33,7 @@ asciiecho()
   fi
   return 0
 }
-  
+
 printEnvVar()
 {
   echo "
@@ -52,8 +52,8 @@ User-Provided environment variables:
   ZOPEN_GIT_DEPS       Space-delimited set of source packages this tarball package depends on to build (required if ZOPEN_TYPE=GIT)
   ZOPEN_GIT_BRANCH     The branch that the git repo should checkout (optional, takes precedence over ZOPEN_GIT_TAG)
   ZOPEN_GIT_TAG        The tag that the git repo should checkout as a branch (optional)
-  ZOPEN_URL            Alternate environment variable instead of ZOPEN_TARBALL_URL or ZOPEN_GIT_URL (alternate to ZOPEN_TARBALL_URL or ZOPEN_GIT_URL) 
-  ZOPEN_DEPS           Alternate environment variable instead of ZOPEN_TARBALL_DEPS or ZOPEN_GIT_DEPS (alternate to ZOPEN_TARBALL_DEPS or ZOPEN_GIT_DEPS)  
+  ZOPEN_URL            Alternate environment variable instead of ZOPEN_TARBALL_URL or ZOPEN_GIT_URL (alternate to ZOPEN_TARBALL_URL or ZOPEN_GIT_URL)
+  ZOPEN_DEPS           Alternate environment variable instead of ZOPEN_TARBALL_DEPS or ZOPEN_GIT_DEPS (alternate to ZOPEN_TARBALL_DEPS or ZOPEN_GIT_DEPS)
   ZOPEN_GIT_SETUP      Specify whether git files should be added to a local repo or if this will be done manually (defaults to Y)
   ZOPEN_SRC_DIR        specify a relative source directory to cd to for bootstrap, configure, build, check, install (defaults to '.')
   ZOPEN_EXTRA_CPPFLAGS C/C++ pre-processor flags to append to CPPFLAGS (defaults to '')
@@ -72,7 +72,7 @@ User-Provided environment variables:
   ZOPEN_MAKE           Build program to run. If skip is specified, no build step is performed (defaults to '${ZOPEN_MAKED}')
   ZOPEN_MAKE_MINIMAL   Build program will not be passed CFLAGS, LDFLAGS, CPPFLAGS options but will just get them from env vars
   ZOPEN_MAKE_OPTS      Options to pass to build program (defaults to '-j\${ZOPEN_NUM_JOBS}')
-  ZOPEN_CHECK          Check program to run. If skip is specified, no check step is performed (defaults to '${ZOPEN_CHECKD}') 
+  ZOPEN_CHECK          Check program to run. If skip is specified, no check step is performed (defaults to '${ZOPEN_CHECKD}')
   ZOPEN_CHECK_OPTS     Options to pass to check program (defaults to '${ZOPEN_CHECK_OPTSD}')
   ZOPEN_CHECK_TIMEOUT  Timeout limit in seconds for the check program (defaults to '${ZOPEN_CHECK_TIMEOUTD}')
   ZOPEN_IMAGE_REGISTRY Docker image registry to an OCI image to (use with --oci option)
@@ -89,10 +89,10 @@ User-Provided environment variables:
 
 }
 
-printFunctions() 
+printFunctions()
 {
 echo "User-Provided functions:
-  zopen_init                  This function runs after code is downloaded and patched but before the code is built. 
+  zopen_init                  This function runs after code is downloaded and patched but before the code is built.
   zopen_pre_check             This function runs before the 'check' step of the build is run.
   zopen_pre_build             This function runs before the 'make' step of the build is run.
   zopen_append_to_env         This function runs as part of generation of the .env file. The output of the function is appended to .env
@@ -218,7 +218,7 @@ printSyntax()
   echo "  -s: exec a shell before running configure.  Useful when manually building ports."
 
   opts=$(printEnvVar)
-  echo "${opts}" 
+  echo "${opts}"
   fns=$(printFunctions)
   echo "${fns}" ) >&2
 }
@@ -373,7 +373,7 @@ checkEnv()
        if ! [ -x "${ZOPEN_CHECK_RESULTS_CODE}" ]; then
           printError "zopen_check_results script needs to be provided to check the results."
        fi
-    fi 
+    fi
   fi
 
 
@@ -471,7 +471,7 @@ setDepsEnv()
           fi
 
           printVerbose "Setting up ${depdir} dependency environment"
-          cd "${depdir}" && . ./.env 
+          cd "${depdir}" && . ./.env
           if [ $? -gt 0 ]; then
             printError "Failed to source ${depdir} .env"
           fi
@@ -509,7 +509,7 @@ setDepsEnv()
         version=$(cat "$versionPath");
       fi
       if ! validateVersion "${version}" "$operator" "${requestedVersion}" "$depdir"; then
-        printError "Dependency $depdir upgraded, but does not satisfy \"$operator\" \"${requestedVersion}\"" 
+        printError "Dependency $depdir upgraded, but does not satisfy \"$operator\" \"${requestedVersion}\""
       fi
     fi
   done
@@ -534,7 +534,7 @@ setEnv()
   fi
 
   # Use the right set of default options
-  case "${ZOPEN_COMP}" in 
+  case "${ZOPEN_COMP}" in
     XL)
       export ZOPEN_CCD="${ZOPEN_XL_CCD}"
       export ZOPEN_CXXD="${ZOPEN_XL_CXXD}"
@@ -566,13 +566,13 @@ setEnv()
     export CXX="${ZOPEN_CXXD}"
   fi
 
-  case "${ZOPEN_COMP}" in 
+  case "${ZOPEN_COMP}" in
     XL)
       # Confirm xlclang is OEL 1.0.0 (aka __COMPILER_VER__=42040001)
       ccraw=$(touch $TEMP_C_FILE && ${CC} -E -qshowmacros $TEMP_C_FILE | grep '__COMPILER_VER__' | awk '{print substr($3,3)}')
       if [ "${ccraw}x" = "x" ]; then
         printError "xlclang compiler specified, but it is not a 'IBM C/C++ for Open Enterprise Languages on z/OS' compiler"
-      fi 
+      fi
       if [ ${ccraw} -lt 42040001 ] ; then
         printError "xlclang compiler specified, need to be running IBM C for Open Enterprise Languages on z/OS 1"
       fi
@@ -581,7 +581,7 @@ setEnv()
       ccraw=$(touch $TEMP_C_FILE && ${CXX} -+ -E -qshowmacros $TEMP_C_FILE | grep '__COMPILER_VER__' | awk '{print substr($3,3)}')
       if [ "${ccraw}x" = "x" ]; then
         printError "xlclang++ compiler specified, but it is not a 'IBM C/C++ for Open Enterprise Languages on z/OS' compiler"
-      fi 
+      fi
       if [ ${ccraw} -lt 42040001 ] ; then
         printError "xlclang++ compiler specified, need to be running IBM C for Open Enterprise Languages on z/OS 1"
       fi
@@ -591,7 +591,7 @@ setEnv()
       ccraw=$(${CC} -E -dM - </dev/null | grep '__COMPILER_VER__' | awk '{print substr($3,3)}')
       if [ "${ccraw}x" = "x" ]; then
         printError "clang compiler specified, but it is not a 'IBM C/C++ for Open Enterprise Languages on z/OS' compiler"
-      fi 
+      fi
       if [ ${ccraw} -lt 50000000 ] ; then
         printError "clang compiler specified, need to be running at least IBM C for Open Enterprise Languages on z/OS 2"
       fi
@@ -600,7 +600,7 @@ setEnv()
       ccraw=$(${CXX} -x c++ -E -dM - </dev/null | grep '__COMPILER_VER__' | awk '{print substr($3,3)}')
       if [ "${ccraw}x" = "x" ]; then
         printError "clang++ compiler specified, but it is not a 'IBM C/C++ for Open Enterprise Languages on z/OS' compiler"
-      fi 
+      fi
       if [ ${ccraw} -lt 50000000 ] ; then
         printError "clang compiler specified, need to be running at least IBM C for Open Enterprise Languages on z/OS 2"
       fi
@@ -610,7 +610,7 @@ setEnv()
   ZOPEN_COMPILER_PATH=$(dirname "$(type ${CC} | cut -f3 -d' ')")
 
   if [ "${CPPFLAGS}x" = "x" ]; then
-    export CPPFLAGS="${ZOPEN_CPPFLAGSD}" 
+    export CPPFLAGS="${ZOPEN_CPPFLAGSD}"
   fi
   if [ "${CFLAGS}x" = "x" ]; then
     export CFLAGS="${ZOPEN_CFLAGSD}"
@@ -643,7 +643,7 @@ setEnv()
 
   setDepsEnv
 
-  # Dependencies such as libraries may add flags 
+  # Dependencies such as libraries may add flags
   export CPPFLAGS="${CPPFLAGS} ${ZOPEN_EXTRA_CPPFLAGS}"
   export CFLAGS="${CFLAGS} ${ZOPEN_EXTRA_CFLAGS}"
   export CXXFLAGS="${CXXFLAGS} ${ZOPEN_EXTRA_CXXFLAGS}"
@@ -729,7 +729,7 @@ checkGitVersion()
   v=${gitraw%%.*}
   vr=${gitraw%.*}
   r=${vr##*.}
-  if [ ${v} -lt 2 ] || [ ${r} -lt 39 ]; then 
+  if [ ${v} -lt 2 ] || [ ${r} -lt 39 ]; then
     printError "Need to be running at least git 2.39"
   fi
 }
@@ -851,7 +851,7 @@ downloadTarBall()
     #
     rm -f pax_global_header
 
-    # 
+    #
     # Some sites fail on the first call because the name resolver hasn't resolved.
     # Make a first call to just get the headers and toss everything out just to
     # set up the cache (requirec for openssl)
@@ -1029,8 +1029,8 @@ bootstrap()
   else
     printHeader "Skip Bootstrap"
   fi
-  printElapsedTime verbose "bootstap" $bootstrapStartTime
-  
+  printElapsedTime verbose "bootstrap" $bootstrapStartTime
+
 }
 
 configure()
@@ -1131,7 +1131,7 @@ check()
       fi
       if ${testStatusError}; then
         printError "Test Status:\n$testStatus"
-      fi 
+      fi
       success="$((totalTests-failures))"
       percent="$(echo "$success" "$totalTests" | awk '{printf "%.0f", $1 * 100 / $2}')"
       percenthundreth="$(echo "$success" "$totalTests" | awk '{printf "%.2f", $1 * 100 / $2}')"
@@ -1234,7 +1234,7 @@ export _TAG_REDIR_IN=txt
 export _TAG_REDIR_ERR=txt
 export _TAG_REDIR_OUT=txt
 
-deleteDuplicateEntries() 
+deleteDuplicateEntries()
 {
   value=\$1
   delim=\$2
@@ -1269,7 +1269,7 @@ zz
 
   cat <<zz >>"${ZOPEN_INSTALL_DIR}/.env"
 if \$dropTagRedirEnvar; then
-  unset _TAG_REDIR_OUT 
+  unset _TAG_REDIR_OUT
 fi
 zz
 
@@ -1418,7 +1418,7 @@ install()
 
       if [ $? -ne 0 ]; then
         printError "$versionString uses an invalid version format"
-      fi 
+      fi
       asciiecho "$versionString" "${ZOPEN_INSTALL_DIR}/.version"
       cp "${ZOPEN_INSTALL_DIR}/.version" "${ZOPEN_ROOT}/install/"
     fi
@@ -1636,14 +1636,14 @@ LABEL specification=1.0.0"
   cd -
 }
 
-generateZOSLIBHooks() 
+generateZOSLIBHooks()
 {
 # Background:
 #  As part of the build/install process, various tools may require application specific environment variables to be set.
 #  This function generates a C hook zoslib_env_hook() that will be called by ZOSLIB before main is entered.
 #  The function's purpose is to automatically set environment variables before main.
 #  Taking Git as an example, unless Git is installed in the standard location, (e.g. /usr/local/zopen),
-#  it has a requirement to set the following environment variables, GIT_TEMPLATE_DIR, GIT_EXEC_PATH, and 
+#  it has a requirement to set the following environment variables, GIT_TEMPLATE_DIR, GIT_EXEC_PATH, and
 #  GIT_SSL_CAINFO.
 #  This function takes input from zopen_append_to_zoslib_env. For Git, this looks like:
 # GIT_TEMPLATE_DIR|set|PROJECT_ROOT/share/git-core/templates
@@ -1775,7 +1775,7 @@ zz
   else
     printError "$action is not valid, must be one of set, unset, or prepend"
   fi
-  
+
 done
 
 echo "" >> $output
