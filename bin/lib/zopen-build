@@ -114,7 +114,7 @@ export utilparentdir="$(cd "$(dirname "$0")/../.." >/dev/null 2>&1 && pwd -P)"
 for tmp in "$TMPDIR" "$TMP" /tmp
 do
   if [ ! -z $tmp ] && [ -d $tmp ]; then
-    TEMP_C_FILE="$tmp/$LOGNAME.c"
+    export ZOPEN_TEMP_C_FILE="$tmp/$LOGNAME.c"
     break
   fi
 done
@@ -127,7 +127,7 @@ fullBuildStartTime=$SECONDS
 # Remove temoraries on exit and report elapsed time
 cleanupOnExit() {
     rv=$?
-    [ -f $TEMP_C_FILE ] && rm -rf $TEMP_C_FILE
+    [ -f $ZOPEN_TEMP_C_FILE ] && rm -rf $ZOPEN_TEMP_C_FILE
     [ -p $TMP_FIFO_PIPE ] && rm -rf $TMP_FIFO_PIPE
     if [ ! -z "$TEE_PID" ]; then
       if kill -0 $TEE_PID 2>/dev/null; then
@@ -376,6 +376,25 @@ checkEnv()
     fi
   fi
 
+  # Decide which compiler is being used XL or CLANG
+  if [ "${ZOPEN_COMP}x" = "x" ]; then
+    export ZOPEN_COMP="XL" # Change the default to clang
+  else
+    # user specified, so normalize in upper case
+    ZOPEN_COMP=$(echo "${ZOPEN_COMP}" | tr '[a-z]' '[A-Z]')
+  fi
+
+  echo "IN ${ZOPEN_COMP}"
+  case "${ZOPEN_COMP}" in 
+    XL)
+      implicitDeps="$implicitDeps ibm_xlclang"  
+    ;;
+    CLANG)
+      implicitDeps="$implicitDeps ibm_clang"  
+    ;;
+  esac
+  echo "$implicitDeps"
+
 
   if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
     if [ "${ZOPEN_TARBALL_URL}x" = "x" ]; then
@@ -384,7 +403,7 @@ checkEnv()
     if [ "${ZOPEN_TARBALL_DEPS}x" = "x" ]; then
       printError "ZOPEN_DEPS or ZOPEN_TARBALL_DEPS needs to be defined to the ported tools this depends on"
     fi
-    implicitDeps="git curl tar"
+    implicitDeps="$implicitDeps git curl tar"
     ext=${ZOPEN_TARBALL_URL##*.}
     if [ "${ext}x" = "xzx" ]; then
       implicitDeps="${implicitDeps} xz"
@@ -402,7 +421,7 @@ checkEnv()
     if [ "${ZOPEN_GIT_DEPS}x" = "x" ]; then
       printError "ZOPEN_DEPS or ZOPEN_GIT_DEPS needs to be defined to the ported tools this depends on"
     fi
-    implicitDeps="git"
+    implicitDeps="$implicitDeps git"
     printVerbose "Implicitly adding git dependencies: ${implicitDeps}"
     ZOPEN_GIT_DEPS="${implicitDeps} ${ZOPEN_GIT_DEPS}"
   fi
@@ -420,8 +439,8 @@ setDepsEnv()
   fi
   initDefaultEnvironment
   # Add base dependencies:
-  # zopen bin, compiler, and curl
-  export PATH="$ZOPEN_COMPILER_PATH:$utilparentdir/bin:$PATH"
+  # zopen bin, and curl
+  export PATH="$utilparentdir/bin:$PATH"
   if $forceUpgradeDeps; then
     export PATH="$curlpath:$PATH"
   fi
