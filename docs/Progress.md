@@ -29,6 +29,8 @@
 * [emacsport](https://github.com/ZOSOpenTools/emacsport)
 * [fzfport](https://github.com/ZOSOpenTools/fzfport)
 * [htopport](https://github.com/ZOSOpenTools/htopport)
+* [ibm_clangport](https://github.com/ZOSOpenTools/ibm_clangport)
+* [ibm_xlclangport](https://github.com/ZOSOpenTools/ibm_xlclangport)
 * [libassuanport](https://github.com/ZOSOpenTools/libassuanport)
 * [libgcryptport](https://github.com/ZOSOpenTools/libgcryptport)
 * [libgpgerrorport](https://github.com/ZOSOpenTools/libgpgerrorport)
@@ -106,7 +108,9 @@
 | [fzfport](https://github.com/ZOSOpenTools/fzfport) | 0 | No builds |
 | [helloport](https://github.com/ZOSOpenTools/helloport) | 0 | 100% |
 | [htopport](https://github.com/ZOSOpenTools/htopport) | 0 | No builds |
+| [ibm_clangport](https://github.com/ZOSOpenTools/ibm_clangport) | 0 | No builds |
 | [ibm_pythonport](https://github.com/ZOSOpenTools/ibm_pythonport) | 0 | Skipped |
+| [ibm_xlclangport](https://github.com/ZOSOpenTools/ibm_xlclangport) | 0 | No builds |
 | [jqport](https://github.com/ZOSOpenTools/jqport) | 0 | 57% |
 | [libassuanport](https://github.com/ZOSOpenTools/libassuanport) | 0 | No builds |
 | [libgcryptport](https://github.com/ZOSOpenTools/libgcryptport) | 0 | No builds |
@@ -199,8 +203,10 @@
 | &#10003; [gzipport](https://github.com/ZOSOpenTools/gzipport) | 0 | 0
 | &#10003; [helloport](https://github.com/ZOSOpenTools/helloport) | 0 | 0
 | &#10003; [help2manport](https://github.com/ZOSOpenTools/help2manport) | 0 | 0
+| &#10003; [ibm_clangport](https://github.com/ZOSOpenTools/ibm_clangport) | 0 | 0
 | &#10003; [ibm_goport](https://github.com/ZOSOpenTools/ibm_goport) | 0 | 0
 | &#10003; [ibm_pythonport](https://github.com/ZOSOpenTools/ibm_pythonport) | 0 | 0
+| &#10003; [ibm_xlclangport](https://github.com/ZOSOpenTools/ibm_xlclangport) | 0 | 0
 | &#10003; [libassuanport](https://github.com/ZOSOpenTools/libassuanport) | 0 | 0
 | &#10003; [libgcryptport](https://github.com/ZOSOpenTools/libgcryptport) | 0 | 0
 | &#10003; [libiconvport](https://github.com/ZOSOpenTools/libiconvport) | 0 | 0
@@ -228,4 +234,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-05-01 02:20:59
+Last updated:  2023-05-01 19:53:01
