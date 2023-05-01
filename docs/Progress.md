@@ -22,6 +22,7 @@
 * [screenport](https://github.com/ZOSOpenTools/screenport)
 * [sqliteport](https://github.com/ZOSOpenTools/sqliteport)
 * [tclport](https://github.com/ZOSOpenTools/tclport)
+* [yqport](https://github.com/ZOSOpenTools/yqport)
 * [zigiport](https://github.com/ZOSOpenTools/zigiport)
 ## Projects that do not have builds
 
@@ -40,7 +41,6 @@
 * [sshpassport](https://github.com/ZOSOpenTools/sshpassport)
 * [sudoport](https://github.com/ZOSOpenTools/sudoport)
 * [topport](https://github.com/ZOSOpenTools/topport)
-* [yqport](https://github.com/ZOSOpenTools/yqport)
 
 ## Projects with the most dependencies
 
@@ -131,7 +131,7 @@
 | [vimport](https://github.com/ZOSOpenTools/vimport) | 0 | 100% |
 | [whichport](https://github.com/ZOSOpenTools/whichport) | 0 | 100% |
 | [xmltoport](https://github.com/ZOSOpenTools/xmltoport) | 0 | 100% |
-| [yqport](https://github.com/ZOSOpenTools/yqport) | 0 | No builds |
+| [yqport](https://github.com/ZOSOpenTools/yqport) | 0 | Skipped |
 | [zigiport](https://github.com/ZOSOpenTools/zigiport) | 0 | Skipped |
 | [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 100% |
 
@@ -228,4 +228,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-05-01 02:17:16
+Last updated:  2023-05-01 02:20:59
