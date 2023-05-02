@@ -12,8 +12,8 @@ if ((BASH_VERSINFO < 4)); then
    exit 1
 fi
 
-if [ -z "$GITHUB_OAUTH_TOKEN" ]; then
-   echo "GITHUB_OAUTH_TOKEN must be set."
+if [ -z "$ZOPEN_GITHUB_OAUTH_TOKEN" ]; then
+   echo "ZOPEN_GITHUB_OAUTH_TOKEN must be set."
    exit 1
 fi
 
@@ -37,7 +37,7 @@ fi
 processOptions()
 {
   args=$*
-  OWNERNAME="$(echo $args | awk -F "--uname " '{print $2}' |  awk -F "--" '{print $1}')"
+  OWNERNAME="$(echo $args | awk -F "--org" '{print $2}' |  awk -F "--" '{print $1}')"
   RELEASENAME="$(echo $args | awk -F "--release " '{print $2}' |  awk -F "--" '{print $1}' )"
   REPO="$(echo $args | awk -F "--repo " '{print $2}' |  awk -F "--" '{print $1}' )"
 
@@ -72,26 +72,25 @@ getLatestReleaseName()
   fi
 }
 
-#process the options passed by user
 processOptions $*
 
 #Print Syntax
 printSyntax()
 {
-  echo "Pass repo/release name -- usage: boottool.sh --repo <repo> --release <releasename> --uname [ownername]" 
+  echo "Pass repo/release name -- usage: create_stable_release.sh --repo <repo> --release <releasename> --org [organization]" 
   echo "If --release is not passed, it will use the latest release"
   exit 1;
 }
 
-[ -z "${OWNERNAME}" ] && OWNERNAME=$DEFAULT_OWNER && echo "Using default owner name ZOSOpenTools";
+[ -z "${OWNERNAME}" ] && OWNERNAME=$DEFAULT_OWNER && echo "Using default organization name ZOSOpenTools";
 [ -z "${REPO}" ] && (printSyntax)
 [ -z "${RELEASENAME}" ] && getLatestReleaseName
 
 
 echo "Ownername = ${OWNERNAME}, Repo = ${REPO}, Release = ${RELEASENAME}"
 
-if [ "${RELEASENAME}" == "boot-release" ]; then
-    echo "Release name in argument is boot-release , no action taken"
+if [ "${RELEASENAME}" == "stable-release" ]; then
+    echo "Release name in argument is stable-release, no action taken"
     exit 0
 fi
 
@@ -166,7 +165,8 @@ getTagNameOfRelease ()
   releaseUrl=$url"/""$1"
   #echo "GetTagNameOfRelease releaseUrl = $releaseUrl"
 
-  response=$(curl -sw "%{http_code}" -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $ZOPEN_GITHUB_OAUTH_TOKEN" -H "X-GitHub-Api-Version: 2022-11-28" $releaseUrl )
+  response=$(curl -sw "%{http_code}" -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $ZOPEN_GITHUB_OAUTH_TOKEN" $releaseUrl )
+  echo "curl -sw "%{http_code}" -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $ZOPEN_GITHUB_OAUTH_TOKEN" $releaseUrl"
   if [ $? -gt 0 ]; then
     echo "curl command failed for getTagNameOfRelease()"
     exit 1
@@ -281,8 +281,8 @@ downloadAssetsOfRelease()
 
 # check if the releasename in argument is part of repo, else return without processing
 # If yes, 
-    #download its asset and delete the release and the tag "boot"
-    # create a new release with name as "boot-release" and tag "boot" 
+    #download its asset and delete the release and the tag "stable"
+    # create a new release with name as "stable-release" and tag "stable" 
       #(not latest and commit level to same as the release in the arg )
     # and upload the assets
 
@@ -304,8 +304,7 @@ processPassedReleaseName()
   echo "DescriptionData for processing release= $releaseDescription"
   echo "isBootReleaseLatest = $isBootReleaseLatest"
   
-  #createRelease "boot-release" "boot" "${releaseDescription}" "${isBootReleaseLatest}"
-  createRelease "boot-release" "boot" "${releaseDescription}"
+  createRelease "stable-release" "stable" "${releaseDescription}"
 }
 
 getDescriptionOfRelease()
@@ -355,10 +354,10 @@ deleteTheRelease()
 }
 
 
-# the tag "boot" is deleted here
+# the tag "stable" is deleted here
 deleteBootTag()
 {
-  tagUrl=$repourl"git/refs/tags/boot"
+  tagUrl=$repourl"git/refs/tags/stable"
   #echo "deleteBootTag in url = $tagUrl"
   response=$(curl -sw "%{http_code}" -X DELETE -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $ZOPEN_GITHUB_OAUTH_TOKEN" $tagUrl)
   if [ $? -gt 0 ]; then
@@ -373,11 +372,11 @@ deleteBootTag()
 }
 
 
-# All releases in the repo tagged as "boot" are deleted here.
+# All releases in the repo tagged as "stable" are deleted here.
 deleteBootTaggedReleases()
 {
-  bootTagUrl="https://api.github.com/repos/$OWNERNAME/$REPO/releases/tags/boot"
-  response=$(curl -sw "%{http_code}" -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $ZOPEN_GITHUB_OAUTH_TOKEN" $bootTagUrl)
+  stableTagUrl="https://api.github.com/repos/$OWNERNAME/$REPO/releases/tags/stable"
+  response=$(curl -sw "%{http_code}" -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $ZOPEN_GITHUB_OAUTH_TOKEN" $stableTagUrl)
   if [ $? -gt 0 ]; then
     echo "curl command failed for deleteBootTaggedReleases()"
     exit 1
@@ -407,18 +406,18 @@ deleteBootTaggedReleases()
     http_code=$(tail -n1 <<< "$response")
     delReleaseTagData=$(sed '$ d' <<< "$response") 
     deleteBootTag
-    #This call refreshes the maps as boot releases are deleted 
+    #This call refreshes the maps as stable releases are deleted 
     populateReleaseMaps
   else 
-    echo "No boot tagged releases found during deletion-  return code $http_code"
+    echo "No stable tagged releases found during deletion-  return code $http_code"
   fi
 }
 
 
 renameBootTaggedReleases()
 {
-  bootTagUrl="https://api.github.com/repos/$OWNERNAME/$REPO/releases/tags/boot"
-  response=$(curl -sw "%{http_code}" -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $ZOPEN_GITHUB_OAUTH_TOKEN" $bootTagUrl)
+  stableTagUrl="https://api.github.com/repos/$OWNERNAME/$REPO/releases/tags/stable"
+  response=$(curl -sw "%{http_code}" -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $ZOPEN_GITHUB_OAUTH_TOKEN" $stableTagUrl)
   if [ $? -gt 0 ]; then
     echo "curl command failed for renameBootTaggedReleases()"
     exit 1
@@ -441,8 +440,8 @@ renameBootTaggedReleases()
     downloadAssetsOfRelease "$origId"
     dateVal=$(date +%C%y%m%d_%H%M%S)
     releaseName=${name}"_"$dateVal
-    tagName="boot_"$dateVal
-    getSHAOfTag "boot"
+    tagName="stable_"$dateVal
+    getSHAOfTag "stable"
 
     echo "Name of renaming releaseName = ${releaseName}"
     echo "TagName in renameBootTaggedReleases = ${tagName}"
@@ -458,21 +457,21 @@ renameBootTaggedReleases()
     createRelease "${releaseName}" "${tagName}" "${bodyData}"
     creatRelVal=$?
     if [ "$creatRelVal" != "$CRT_UPLOAD_REL_SUCCESS" ]; then
-        echo "ERROR: couldnot rename the boot tagged release"
+        echo "ERROR: couldnot rename the stable tagged release"
         exit 1;
     fi
 
-    #Delete releases tagged as boot , as the script tags the release mentioned in argument as boot
+    #Delete releases tagged as stable, as the script tags the release mentioned in argument as stable
     deleteBootTaggedReleases
 
-     #This call refreshes the maps as boot releases are deleted 
+     #This call refreshes the maps as stable releases are deleted 
     populateReleaseMaps
   else 
-    echo "No boot tagged releases found -  return code $http_code"
+    echo "No stable tagged releases found -  return code $http_code"
   fi
 }
 
-# The function is used to create new release with name "boot-release" and tag as boot
+# The function is used to create new release with name "stable-release" and tag as stable
 createRelease()
 {
   createRepoUrl="https://api.github.com/repos/$OWNERNAME/$REPO/releases"
@@ -582,7 +581,7 @@ getLatestReleaseID()
 }
 
 
-#This function checks if current boot release in a repo - marked as latest or not
+#This function checks if current stable release in a repo - marked as latest or not
 IsPrevBootReleaseLatest()
 {
   isBootReleaseLatest="false"
@@ -596,7 +595,7 @@ IsPrevBootReleaseLatest()
   echo "isBootReleaseLatest = ${isBootReleaseLatest}"
 }
 
-#On creating backup of boot-release, the latest release is set to it, hence, we reset the latest release here
+#On creating backup of stable-release, the latest release is set to it, hence, we reset the latest release here
 resetLatestRelease()
 {
   echo "latestReleaseId in resetLatestRelease = $latestReleaseId"
@@ -634,7 +633,7 @@ isBootReleaseLatest="false"
 latestReleaseId=""
 getLatestReleaseID
 
-#fetch all the releases from repo and maintain a map of name to release Id
+# fetch all the releases from repo and maintain a map of name to release Id
 # we need this step because processing is possible only on release IDs 
 populateReleaseMaps
 
@@ -642,14 +641,14 @@ checkReleaseNameExists "releaseNameIDMap" "${RELEASENAME}"
 
 [ $? -eq 1 ] && echo "No release with name ${RELEASENAME} found in repo $REPO" && exit 1;
 
-#Rename releases tagged as boot and delete them, as the script tags the release mentioned in argument as boot
+# Rename releases tagged as stable and delete them, as the script tags the release mentioned in argument as stable
 renameBootTaggedReleases
 
-#fetch all the releases from repo and maintain a map of name to release Id
+# fetch all the releases from repo and maintain a map of name to release Id
 # we need this step because processing is possible only on release IDs 
 populateReleaseMaps
 
-#The release name , repo and owner name passed as args - is processed to name the given release as boot-release and tag as "boot"
+# The release name , repo and owner name passed as args - is processed to name the given release as stable-release and tag as "stable"
 processPassedReleaseName
 
 resetLatestRelease
