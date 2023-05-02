@@ -71,7 +71,7 @@
 | [findutilsport](https://github.com/ZOSOpenTools/findutilsport) | 7 | 50% |gnulib, grep, libiconv, libxml2, re2c, texinfo, vim
 | [gawkport](https://github.com/ZOSOpenTools/gawkport) | 7 | 93% |automake, curl, expat, gzip, ncurses, rsync, vim
 | [grepport](https://github.com/ZOSOpenTools/grepport) | 7 | 94% |gnulib, libpcre, libxslt, m4, man-db, which, xmlto
-| [opensslport](https://github.com/ZOSOpenTools/opensslport) | 6 | 90% |curl, expat, git, lynx, rsync, wget
+| [opensslport](https://github.com/ZOSOpenTools/opensslport) | 6 | 96% |curl, expat, git, lynx, rsync, wget
 | [zlibport](https://github.com/ZOSOpenTools/zlibport) | 6 | 100% |autoconf, curl, expat, git, lynx, wget
 | [cmakeport](https://github.com/ZOSOpenTools/cmakeport) | 5 | 74% |neovim, ninja, unzip, zip, zoslib
 | [bzip2port](https://github.com/ZOSOpenTools/bzip2port) | 3 | 100% |libgpgerror, libksba, npth
@@ -234,4 +234,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-05-01 22:46:08
+Last updated:  2023-05-02 00:04:25
