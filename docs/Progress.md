@@ -77,7 +77,7 @@
 | [bzip2port](https://github.com/ZOSOpenTools/bzip2port) | 4 | 100% |libgcrypt, libgpgerror, libksba, npth
 | [gperfport](https://github.com/ZOSOpenTools/gperfport) | 3 | 100% |hello, libiconv, m4
 | [libgpgerrorport](https://github.com/ZOSOpenTools/libgpgerrorport) | 3 | No builds |libgcrypt, libksba, npth
-| [libiconvport](https://github.com/ZOSOpenTools/libiconvport) | 3 | 99% |libxml2, man-db, php
+| [libiconvport](https://github.com/ZOSOpenTools/libiconvport) | 3 | 100% |libxml2, man-db, php
 | [wgetport](https://github.com/ZOSOpenTools/wgetport) | 3 | 18% |hello, man-db, sed
 | [getoptport](https://github.com/ZOSOpenTools/getoptport) | 2 | 52% |flex, xmlto
 | [groffport](https://github.com/ZOSOpenTools/groffport) | 2 | 100% |libiconv, man-db
@@ -234,4 +234,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-05-02 08:14:15
+Last updated:  2023-05-02 14:55:41
