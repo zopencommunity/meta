@@ -167,6 +167,7 @@
 |  [grepport](https://github.com/ZOSOpenTools/grepport) | 88 | 2
 |  [patchport](https://github.com/ZOSOpenTools/patchport) | 86 | 3
 |  [gawkport](https://github.com/ZOSOpenTools/gawkport) | 81 | 4
+|  [curlport](https://github.com/ZOSOpenTools/curlport) | 74 | 2
 |  [xmltoport](https://github.com/ZOSOpenTools/xmltoport) | 74 | 1
 |  [libtoolport](https://github.com/ZOSOpenTools/libtoolport) | 71 | 3
 |  [libgcryptport](https://github.com/ZOSOpenTools/libgcryptport) | 59 | 4
@@ -193,7 +194,6 @@
 |  [fzfport](https://github.com/ZOSOpenTools/fzfport) | 20 | 1
 |  [bzip2port](https://github.com/ZOSOpenTools/bzip2port) | 17 | 1
 |  [makeport](https://github.com/ZOSOpenTools/makeport) | 16 | 1
-|  [curlport](https://github.com/ZOSOpenTools/curlport) | 15 | 1
 |  [libksbaport](https://github.com/ZOSOpenTools/libksbaport) | 15 | 1
 |  [libgpgerrorport](https://github.com/ZOSOpenTools/libgpgerrorport) | 14 | 1
 |  [automakeport](https://github.com/ZOSOpenTools/automakeport) | 12 | 1
@@ -234,4 +234,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-05-02 17:49:31
+Last updated:  2023-05-02 22:58:40
