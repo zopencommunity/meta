@@ -194,8 +194,8 @@ printSyntax()
   echo "  -vv: run in very verbose mode (sets environment variables V=1 and VERBOSE=1)"
   echo "  -u|--upgradedeps: upgrade all dependencies by running zopen install"
   echo "  --buildtype: release|debug. The default is release"
-  echo "  --comp: xl|clang.  The compiler used for building.  The default is xl."
   echo "  --type: tarball|git|bare."
+  echo "  --comp: <compiler dependency>.  The compiler(s) used for building.  The default is comp_xlclang."
   echo "  --oci: build and publish an OCI image to \$ZOPEN_IMAGE_REGISTRY"
   echo "  -e <env file>: source <env file> instead of buildenv to establish build environment"
   echo "  -c|--clean: Deletes all of the build output and forces reconfigure with next build"
@@ -376,25 +376,13 @@ checkEnv()
     fi
   fi
 
-  # Decide which compiler is being used XL or CLANG
   if [ "${ZOPEN_COMP}x" = "x" ]; then
-    export ZOPEN_COMP="XL" # Change the default to clang
+    implicitDeps="$implicitDeps ibm_xlclang"  
   else
-    # user specified, so normalize in upper case
-    ZOPEN_COMP=$(echo "${ZOPEN_COMP}" | tr '[a-z]' '[A-Z]')
+    # user specified, so normalize in lower case
+    ZOPEN_COMP=$(echo "${ZOPEN_COMP}" | tr '[A-Z]' '[a-z]')
+    implicitDeps="$implicitDeps $ZOPEN_COMP"
   fi
-
-  echo "IN ${ZOPEN_COMP}"
-  case "${ZOPEN_COMP}" in 
-    XL)
-      implicitDeps="$implicitDeps ibm_xlclang"  
-    ;;
-    CLANG)
-      implicitDeps="$implicitDeps ibm_clang"  
-    ;;
-  esac
-  echo "$implicitDeps"
-
 
   if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
     if [ "${ZOPEN_TARBALL_URL}x" = "x" ]; then
