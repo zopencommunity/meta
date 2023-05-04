@@ -38,7 +38,7 @@ printEnvVar()
 {
   echo "
 User-Provided environment variables:
-  ZOPEN_CC             C compiler (default set by dependency (e.g. ibm_clang or ibm_xlclang)
+  ZOPEN_CC             C compiler (default set by dependency)
   ZOPEN_CXX            C++ compiler (default set by dependency)
   ZOPEN_CPPFLAGS       C/C++ pre-processor flags (default set by dependency)
   ZOPEN_CFLAGS         C compiler flags (default set by dependency)
@@ -377,11 +377,11 @@ checkEnv()
   fi
 
   if [ "${ZOPEN_COMP}x" = "x" ]; then
-    implicitDeps="$implicitDeps ibm_xlclang"  
+    implicitDeps="$implicitDeps comp_xlclang"  
   else
     # user specified, so normalize in lower case
     ZOPEN_COMP=$(echo "${ZOPEN_COMP}" | tr '[A-Z]' '[a-z]')
-    implicitDeps="$implicitDeps $ZOPEN_COMP"
+    implicitDeps="$implicitDeps comp_$ZOPEN_COMP"
   fi
 
   if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
