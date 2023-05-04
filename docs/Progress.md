@@ -14,6 +14,7 @@
 ## Projects with skipped or no tests (grey)
   
 * [bisonport](https://github.com/ZOSOpenTools/bisonport)
+* [comp_clangport](https://github.com/ZOSOpenTools/comp_clangport)
 * [comp_goport](https://github.com/ZOSOpenTools/comp_goport)
 * [comp_xlclangport](https://github.com/ZOSOpenTools/comp_xlclangport)
 * [expectport](https://github.com/ZOSOpenTools/expectport)
@@ -27,7 +28,6 @@
 * [zigiport](https://github.com/ZOSOpenTools/zigiport)
 ## Projects that do not have builds
 
-* [comp_clangport](https://github.com/ZOSOpenTools/comp_clangport)
 * [emacsport](https://github.com/ZOSOpenTools/emacsport)
 * [fzfport](https://github.com/ZOSOpenTools/fzfport)
 * [htopport](https://github.com/ZOSOpenTools/htopport)
@@ -100,7 +100,7 @@
 | [xxhashport](https://github.com/ZOSOpenTools/xxhashport) | 1 | 100% |rsync
 | [zipport](https://github.com/ZOSOpenTools/zipport) | 1 | 100% |unzip
 | [zstdport](https://github.com/ZOSOpenTools/zstdport) | 1 | 100% |rsync
-| [comp_clangport](https://github.com/ZOSOpenTools/comp_clangport) | 0 | No builds |
+| [comp_clangport](https://github.com/ZOSOpenTools/comp_clangport) | 0 | Skipped |
 | [comp_goport](https://github.com/ZOSOpenTools/comp_goport) | 0 | Skipped |
 | [comp_xlclangport](https://github.com/ZOSOpenTools/comp_xlclangport) | 0 | Skipped |
 | [cscopeport](https://github.com/ZOSOpenTools/cscopeport) | 0 | 100% |
@@ -234,4 +234,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-05-04 01:56:59
+Last updated:  2023-05-04 02:01:08
