@@ -39,7 +39,9 @@ It will be much easier to work with USS using ssh, scp, and sftp.
 
 ### Set up the zopen tools
 
-Your zopen tools environment has been downloaded but not yet set up. To set up the environment:
+Your zopen tools environment has been downloaded but not yet set up. Before starting the setup, make sure that the environment variable `_BPXK_AUTOCVT` is set to ON.
+
+To set up the environment:
 - `cd $HOME/zopen/boot`
 - `. ./.bootenv` # add the tools zopen needs to function, as well as zopen (don't forget the leading '.' which sources the script)
 
