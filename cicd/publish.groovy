@@ -47,6 +47,28 @@ DIR_NAME=${PAX_BASENAME%%.pax.Z}
 DIR_NAME=$(echo "$DIR_NAME" | sed -e "s/\.202[0-9]*_[0-9]*\.zos/.zos/g" -e "s/\.zos//g")
 BUILD_ID=${BUILD_NUMBER}
 
+# Check for python dependencies
+if pip3 show numpy &> /dev/null; then
+    echo "NumPy is already installed."
+else
+    echo "NumPy is not installed. Installing now..."
+    pip3 install numpy
+fi
+
+if pip3 show PyGithub &> /dev/null; then
+    echo "PyGithub is already installed."
+else
+    echo "PyGithub is not installed. Installing now..."
+    pip3 install PyGithub
+fi
+
+if pip3 show matplotlib &> /dev/null; then
+    echo "matplotlib is already installed."
+else
+    echo "matplotlib is not installed. Installing now..."
+    pip3 install matplotlib
+fi
+
 # Needed for uploading releases
 unset http_proxy
 unset https_proxy
@@ -88,3 +110,15 @@ github-release info -u ${GITHUB_ORGANIZATION} -r ${GITHUB_REPO} --tag "${TAG}" -
 
 echo "Uploading the artifacts into github"
 github-release -v upload --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --tag "${TAG}" --name "${PAX_BASENAME}" --file "${PAX}"
+
+
+# Update Progress page in documentation
+git clone git@github.com:ZOSOpenTools/meta.git meta_update
+cd meta_update
+python3 tools/getbinaries.py
+git config --global user.email "zosopentools@ibm.com"
+git config --global user.name "ZOS Open Tools"
+git add docs/*.md
+git add docs/images/*.png
+git commit -m "Updating docs page"
+git push origin
