@@ -55,7 +55,7 @@ getLatestReleaseName()
   
   response=$(curl -sw "%{http_code}" \
               -H "Accept: application/vnd.github+json" \
-              -H "Authorization: Bearer $GITHUB_OAUTH_TOKEN" \
+              -H "Authorization: Bearer $ZOPEN_GITHUB_OAUTH_TOKEN" \
               $latestRepoUrl ) 
   if [ $? -gt 0 ]; then
     echo "curl command failed for getLatestReleaseName()"
@@ -107,7 +107,7 @@ populateReleaseMaps()
   name=""
   releaseNameIDMap=()
   releaseIDToReleaseNameMap=()
-  response=$(curl -sw "%{http_code}" -k -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $GITHUB_OAUTH_TOKEN" $url)
+  response=$(curl -sw "%{http_code}" -k -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $ZOPEN_GITHUB_OAUTH_TOKEN" $url)
   if [ $? -gt 0 ]; then
     echo "curl command failed for populateReleaseMaps()"
     exit 1
@@ -226,7 +226,7 @@ downloadAssetsOfRelease()
   assetNameArray=()
   assetUrl=$url"/""$1""/""assets"
   #echo "downloadAssetsOfRelease assetsurl = $assetUrl"
-  response=$(curl -sw "%{http_code}" -k -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $GITHUB_OAUTH_TOKEN" $assetUrl)
+  response=$(curl -sw "%{http_code}" -k -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $ZOPEN_GITHUB_OAUTH_TOKEN" $assetUrl)
   if [ $? -gt 0 ]; then
     echo "curl command failed for downloadAssetsOfRelease()"
     exit 1
