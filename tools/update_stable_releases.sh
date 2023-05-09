@@ -4,7 +4,7 @@
 
 if [ -z "$stabletools" ]; then
   echo "Updating all stable tools"
-  stabletools="sed,grep,gawk,man-db,groff,gdbm,curl,make,git,less,perl,jq,bash,diffutils,findutils,coreutils,tar,gzip,xz,bzip2,vim,ncurses"
+  stabletools="sed,grep,gawk,man-db,groff,gdbm,curl,make,git,less,perl,jq,bash,diffutils,findutils,coreutils,tar,gzip,xz,bzip2,vim,ncurses,libiconv"
 fi
 
 for tool in $(echo "$stabletools" | tr ',' ' '); do
