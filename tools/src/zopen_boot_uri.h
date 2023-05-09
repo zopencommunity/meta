@@ -15,5 +15,5 @@
   #define ZOPEN_BOOT_PKG { "meta", "curl", "make", "git", "less", "perl", \
                            "jq",  "bash", "diffutils", "findutils", "coreutils", \
                            "tar", "gzip", "xz", "bzip2", "vim", "ncurses", "sed", \
-                           "grep", "gawk", "man-db", "groff", "gdbm", "libiconv", NULL }
+                           "grep", "gawk", "man-db", "groff", "libiconv", NULL }
 #endif
