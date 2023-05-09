@@ -28,6 +28,7 @@
 * [zigiport](https://github.com/ZOSOpenTools/zigiport)
 ## Projects that do not have builds
 
+* [direnvport](https://github.com/ZOSOpenTools/direnvport)
 * [emacsport](https://github.com/ZOSOpenTools/emacsport)
 * [fzfport](https://github.com/ZOSOpenTools/fzfport)
 * [htopport](https://github.com/ZOSOpenTools/htopport)
@@ -105,6 +106,7 @@
 | [comp_xlclangport](https://github.com/ZOSOpenTools/comp_xlclangport) | 0 | Skipped |
 | [cscopeport](https://github.com/ZOSOpenTools/cscopeport) | 0 | 100% |
 | [ctagsport](https://github.com/ZOSOpenTools/ctagsport) | 0 | 100% |
+| [direnvport](https://github.com/ZOSOpenTools/direnvport) | 0 | No builds |
 | [emacsport](https://github.com/ZOSOpenTools/emacsport) | 0 | No builds |
 | [expectport](https://github.com/ZOSOpenTools/expectport) | 0 | Skipped |
 | [fzfport](https://github.com/ZOSOpenTools/fzfport) | 0 | No builds |
@@ -116,7 +118,7 @@
 | [libksbaport](https://github.com/ZOSOpenTools/libksbaport) | 0 | No builds |
 | [libxsltport](https://github.com/ZOSOpenTools/libxsltport) | 0 | 100% |
 | [lynxport](https://github.com/ZOSOpenTools/lynxport) | 0 | 100% |
-| [man-dbport](https://github.com/ZOSOpenTools/man-dbport) | 0 | 96% |
+| [man-dbport](https://github.com/ZOSOpenTools/man-dbport) | 0 | 93% |
 | [metaport](https://github.com/ZOSOpenTools/metaport) | 0 | 100% |
 | [nanoport](https://github.com/ZOSOpenTools/nanoport) | 0 | Skipped |
 | [ncduport](https://github.com/ZOSOpenTools/ncduport) | 0 | Skipped |
@@ -145,7 +147,7 @@
 |---|---|--|
 |  [bashport](https://github.com/ZOSOpenTools/bashport) | 2821 | 25
 |  [cmakeport](https://github.com/ZOSOpenTools/cmakeport) | 2328 | 1
-|  [gitport](https://github.com/ZOSOpenTools/gitport) | 1572 | 30
+|  [gitport](https://github.com/ZOSOpenTools/gitport) | 1573 | 30
 |  [htopport](https://github.com/ZOSOpenTools/htopport) | 1258 | 16
 |  [perlport](https://github.com/ZOSOpenTools/perlport) | 619 | 1
 |  [coreutilsport](https://github.com/ZOSOpenTools/coreutilsport) | 610 | 7
@@ -153,8 +155,8 @@
 |  [phpport](https://github.com/ZOSOpenTools/phpport) | 369 | 11
 |  [flexport](https://github.com/ZOSOpenTools/flexport) | 340 | 2
 |  [sudoport](https://github.com/ZOSOpenTools/sudoport) | 329 | 1
+|  [man-dbport](https://github.com/ZOSOpenTools/man-dbport) | 275 | 10
 |  [ninjaport](https://github.com/ZOSOpenTools/ninjaport) | 274 | 1
-|  [man-dbport](https://github.com/ZOSOpenTools/man-dbport) | 254 | 9
 |  [screenport](https://github.com/ZOSOpenTools/screenport) | 227 | 1
 |  [zstdport](https://github.com/ZOSOpenTools/zstdport) | 221 | 3
 |  [autoconfport](https://github.com/ZOSOpenTools/autoconfport) | 175 | 7
@@ -202,6 +204,7 @@
 | &#10003; [comp_xlclangport](https://github.com/ZOSOpenTools/comp_xlclangport) | 0 | 0
 | &#10003; [cscopeport](https://github.com/ZOSOpenTools/cscopeport) | 0 | 0
 | &#10003; [ctagsport](https://github.com/ZOSOpenTools/ctagsport) | 0 | 0
+| &#10003; [direnvport](https://github.com/ZOSOpenTools/direnvport) | 0 | 0
 | &#10003; [gnulibport](https://github.com/ZOSOpenTools/gnulibport) | 0 | 0
 | &#10003; [gperfport](https://github.com/ZOSOpenTools/gperfport) | 0 | 0
 | &#10003; [gzipport](https://github.com/ZOSOpenTools/gzipport) | 0 | 0
@@ -234,4 +237,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-05-04 02:01:08
+Last updated:  2023-05-09 15:27:53
