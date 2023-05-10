@@ -89,6 +89,7 @@
 | [expatport](https://github.com/ZOSOpenTools/expatport) | 1 | 100% |git
 | [flexport](https://github.com/ZOSOpenTools/flexport) | 1 | 100% |cscope
 | [gnulibport](https://github.com/ZOSOpenTools/gnulibport) | 1 | 100% |htop
+| [libgdbmport](https://github.com/ZOSOpenTools/libgdbmport) | 1 | 100% |man-db
 | [libpcreport](https://github.com/ZOSOpenTools/libpcreport) | 1 | 66% |git
 | [libpipelineport](https://github.com/ZOSOpenTools/libpipelineport) | 1 | 100% |man-db
 | [luaport](https://github.com/ZOSOpenTools/luaport) | 1 | 100% |neovim
@@ -114,7 +115,6 @@
 | [jqport](https://github.com/ZOSOpenTools/jqport) | 0 | 57% |
 | [libassuanport](https://github.com/ZOSOpenTools/libassuanport) | 0 | No builds |
 | [libgcryptport](https://github.com/ZOSOpenTools/libgcryptport) | 0 | No builds |
-| [libgdbmport](https://github.com/ZOSOpenTools/libgdbmport) | 0 | 100% |
 | [libksbaport](https://github.com/ZOSOpenTools/libksbaport) | 0 | No builds |
 | [libxsltport](https://github.com/ZOSOpenTools/libxsltport) | 0 | 100% |
 | [lynxport](https://github.com/ZOSOpenTools/lynxport) | 0 | 100% |
@@ -237,4 +237,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-05-09 16:55:42
+Last updated:  2023-05-10 03:35:08
