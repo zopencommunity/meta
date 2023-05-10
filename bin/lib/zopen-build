@@ -73,6 +73,7 @@ User-Provided environment variables:
   ZOPEN_MAKE_MINIMAL   Build program will not be passed CFLAGS, LDFLAGS, CPPFLAGS options but will just get them from env vars
   ZOPEN_MAKE_OPTS      Options to pass to build program (defaults to '-j\${ZOPEN_NUM_JOBS}')
   ZOPEN_CHECK          Check program to run. If skip is specified, no check step is performed (defaults to '${ZOPEN_CHECKD}')
+  ZOPEN_CHECK_MINIMAL  Check program will not be passed CFLAGS, LDFLAGS, CPPFLAGS options but will just get them from env vars
   ZOPEN_CHECK_OPTS     Options to pass to check program (defaults to '${ZOPEN_CHECK_OPTSD}')
   ZOPEN_CHECK_TIMEOUT  Timeout limit in seconds for the check program (defaults to '${ZOPEN_CHECK_TIMEOUTD}')
   ZOPEN_IMAGE_REGISTRY Docker image registry to an OCI image to (use with --oci option)
@@ -649,6 +650,14 @@ setEnv()
   export CXXFLAGS="${CXXFLAGS} ${ZOPEN_EXTRA_CXXFLAGS}"
   export LDFLAGS="${LDFLAGS} ${ZOPEN_EXTRA_LDFLAGS}"
   export LIBS="${ZOPEN_EXTRA_LIBS}"
+
+  # Some configure scripts act on *_FOR_BUILD flags
+  export CC_FOR_BUILD="${CC}"
+  export CXX_FOR_BUILD="${CXX}"
+  export CPPFLAGS_FOR_BUILD="${CPPFLAGS}"
+  export CFLAGS_FOR_BUILD="${CFLAGS}"
+  export LDFLAGS_FOR_BUILD="${LDFLAGS}"
+  export LIBS_FOR_BUILD="${LIBS}"
 
   if [ "${ZOPEN_NUM_JOBS}x" = "x" ]; then
     ZOPEN_NUM_JOBS=$("${utildir}/numcpus.rexx")
@@ -1529,7 +1538,11 @@ resolveCommands()
   fi
 
   if [ "${ZOPEN_CHECK}x" != "skipx" ] && ! ${skipcheck}; then
-    export ZOPEN_CHECK_CMD="\"${ZOPEN_CHECK}\" ${ZOPEN_CHECK_OPTS} CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\""
+    if [ "${ZOPEN_MAKE_MINIMAL}x" = "x" ]; then
+      export ZOPEN_CHECK_CMD="\"${ZOPEN_CHECK}\" ${ZOPEN_CHECK_OPTS} CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\""
+    else
+      export ZOPEN_CHECK_CMD="\"${ZOPEN_CHECK}\" ${ZOPEN_CHECK_OPTS}"
+    fi
     export ZOPEN_CHECK_RESULTS_CMD="\"${ZOPEN_CHECK_RESULTS_CODE}\" \"${ZOPEN_LOG_DIR}\" \"${LOG_PFX}\""
   else
     unset ZOPEN_CHECK_CMD
