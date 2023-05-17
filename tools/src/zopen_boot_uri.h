@@ -8,7 +8,6 @@
   #define ZOPEN_BOOT_URI_TYPE "zos.pax.Z"
 
   /*
-   * Make sure 'meta' is first - we should make all packages independent, but they are not quite yet
    * We may want to trim down the list of tools a bit. In particular vim and ncurses are not _required_
    * but they sure are nice.
    */
