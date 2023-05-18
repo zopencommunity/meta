@@ -396,10 +396,26 @@ if [ ! -z "$filter" ]; then
 fi
 
 # Retrieve all repositories
-if ! repo_results="$(getContentsFromGithub "https://api.github.com/users/ZOSOpenTools/repos?per_page=100")"; then
-  exit 4;
-fi
-repo_results=$(echo "$repo_results" | grep "\"full_name\":" 2>/dev/null | cut -d '"' -f 4)
+page=1
+all_repos=""
+
+while true; do
+  # Retrieve repositories for the current page
+  if ! repo_results="$(getContentsFromGithub "https://api.github.com/users/ZOSOpenTools/repos?per_page=100&page=$page")"; then
+    exit 4
+  fi
+
+  current_repos=$(echo "$repo_results" | grep "\"full_name\":" 2>/dev/null | cut -d '"' -f 4)
+
+  if [ -z "$current_repos" ]; then
+    break
+  fi
+
+  # Append current repositories to the list
+  all_repos="$all_repos$current_repos "
+
+  page=$((page+1))
+done
 
 if [ ! -d "${downloadDir}" ]; then
   mkdir -p "${downloadDir}"
@@ -418,7 +434,7 @@ printVerbose "Install directory: ${downloadDir}"
 # Parse repositories for zopen framework repos
 foundPort=false
 repoArray=""
-for repo in $(echo ${repo_results}); do
+for repo in $(echo ${all_repos}); do
   repo=${repo#"ZOSOpenTools/"}
   name=${repo%port}
 
