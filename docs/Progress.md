@@ -30,20 +30,24 @@
 ## Projects that do not have builds
 
 * [direnvport](https://github.com/ZOSOpenTools/direnvport)
+* [duckdbport](https://github.com/ZOSOpenTools/duckdbport)
 * [emacsport](https://github.com/ZOSOpenTools/emacsport)
 * [fzfport](https://github.com/ZOSOpenTools/fzfport)
 * [gpgport](https://github.com/ZOSOpenTools/gpgport)
 * [htopport](https://github.com/ZOSOpenTools/htopport)
 * [libassuanport](https://github.com/ZOSOpenTools/libassuanport)
 * [libgcryptport](https://github.com/ZOSOpenTools/libgcryptport)
+* [libgit2port](https://github.com/ZOSOpenTools/libgit2port)
 * [libgpgerrorport](https://github.com/ZOSOpenTools/libgpgerrorport)
 * [libksbaport](https://github.com/ZOSOpenTools/libksbaport)
 * [neovimport](https://github.com/ZOSOpenTools/neovimport)
 * [npthport](https://github.com/ZOSOpenTools/npthport)
 * [opensshport](https://github.com/ZOSOpenTools/opensshport)
 * [phpport](https://github.com/ZOSOpenTools/phpport)
+* [powerline-goport](https://github.com/ZOSOpenTools/powerline-goport)
 * [shufport](https://github.com/ZOSOpenTools/shufport)
 * [sudoport](https://github.com/ZOSOpenTools/sudoport)
+* [terraformport](https://github.com/ZOSOpenTools/terraformport)
 * [topport](https://github.com/ZOSOpenTools/topport)
 
 ## Projects with the most dependencies
@@ -108,6 +112,7 @@
 | [cscopeport](https://github.com/ZOSOpenTools/cscopeport) | 0 | 100% |
 | [ctagsport](https://github.com/ZOSOpenTools/ctagsport) | 0 | 100% |
 | [direnvport](https://github.com/ZOSOpenTools/direnvport) | 0 | No builds |
+| [duckdbport](https://github.com/ZOSOpenTools/duckdbport) | 0 | No builds |
 | [emacsport](https://github.com/ZOSOpenTools/emacsport) | 0 | No builds |
 | [expectport](https://github.com/ZOSOpenTools/expectport) | 0 | Skipped |
 | [fzfport](https://github.com/ZOSOpenTools/fzfport) | 0 | No builds |
@@ -117,6 +122,7 @@
 | [jqport](https://github.com/ZOSOpenTools/jqport) | 0 | 57% |
 | [libassuanport](https://github.com/ZOSOpenTools/libassuanport) | 0 | No builds |
 | [libgcryptport](https://github.com/ZOSOpenTools/libgcryptport) | 0 | No builds |
+| [libgit2port](https://github.com/ZOSOpenTools/libgit2port) | 0 | No builds |
 | [libksbaport](https://github.com/ZOSOpenTools/libksbaport) | 0 | No builds |
 | [libssh2port](https://github.com/ZOSOpenTools/libssh2port) | 0 | 100% |
 | [libxsltport](https://github.com/ZOSOpenTools/libxsltport) | 0 | 100% |
@@ -131,11 +137,13 @@
 | [opensshport](https://github.com/ZOSOpenTools/opensshport) | 0 | No builds |
 | [phpport](https://github.com/ZOSOpenTools/phpport) | 0 | No builds |
 | [pkg-configport](https://github.com/ZOSOpenTools/pkg-configport) | 0 | 100% |
+| [powerline-goport](https://github.com/ZOSOpenTools/powerline-goport) | 0 | No builds |
 | [pythonport](https://github.com/ZOSOpenTools/pythonport) | 0 | Skipped |
 | [screenport](https://github.com/ZOSOpenTools/screenport) | 0 | Skipped |
 | [shufport](https://github.com/ZOSOpenTools/shufport) | 0 | No builds |
 | [sshpassport](https://github.com/ZOSOpenTools/sshpassport) | 0 | Skipped |
 | [sudoport](https://github.com/ZOSOpenTools/sudoport) | 0 | No builds |
+| [terraformport](https://github.com/ZOSOpenTools/terraformport) | 0 | No builds |
 | [topport](https://github.com/ZOSOpenTools/topport) | 0 | No builds |
 | [unzipport](https://github.com/ZOSOpenTools/unzipport) | 0 | 100% |
 | [vimport](https://github.com/ZOSOpenTools/vimport) | 0 | 100% |
@@ -212,6 +220,7 @@
 | &#10003; [cscopeport](https://github.com/ZOSOpenTools/cscopeport) | 0 | 0
 | &#10003; [ctagsport](https://github.com/ZOSOpenTools/ctagsport) | 0 | 0
 | &#10003; [direnvport](https://github.com/ZOSOpenTools/direnvport) | 0 | 0
+| &#10003; [duckdbport](https://github.com/ZOSOpenTools/duckdbport) | 0 | 0
 | &#10003; [gnulibport](https://github.com/ZOSOpenTools/gnulibport) | 0 | 0
 | &#10003; [gperfport](https://github.com/ZOSOpenTools/gperfport) | 0 | 0
 | &#10003; [gpgport](https://github.com/ZOSOpenTools/gpgport) | 0 | 0
@@ -219,6 +228,7 @@
 | &#10003; [helloport](https://github.com/ZOSOpenTools/helloport) | 0 | 0
 | &#10003; [help2manport](https://github.com/ZOSOpenTools/help2manport) | 0 | 0
 | &#10003; [libassuanport](https://github.com/ZOSOpenTools/libassuanport) | 0 | 0
+| &#10003; [libgit2port](https://github.com/ZOSOpenTools/libgit2port) | 0 | 0
 | &#10003; [libiconvport](https://github.com/ZOSOpenTools/libiconvport) | 0 | 0
 | &#10003; [libpcreport](https://github.com/ZOSOpenTools/libpcreport) | 0 | 0
 | &#10003; [libpipelineport](https://github.com/ZOSOpenTools/libpipelineport) | 0 | 0
@@ -229,11 +239,13 @@
 | &#10003; [ncduport](https://github.com/ZOSOpenTools/ncduport) | 0 | 0
 | &#10003; [neovimport](https://github.com/ZOSOpenTools/neovimport) | 0 | 0
 | &#10003; [opensslport](https://github.com/ZOSOpenTools/opensslport) | 0 | 0
+| &#10003; [powerline-goport](https://github.com/ZOSOpenTools/powerline-goport) | 0 | 0
 | &#10003; [pythonport](https://github.com/ZOSOpenTools/pythonport) | 0 | 0
 | &#10003; [re2cport](https://github.com/ZOSOpenTools/re2cport) | 0 | 0
 | &#10003; [sedport](https://github.com/ZOSOpenTools/sedport) | 0 | 0
 | &#10003; [shufport](https://github.com/ZOSOpenTools/shufport) | 0 | 0
 | &#10003; [sshpassport](https://github.com/ZOSOpenTools/sshpassport) | 0 | 0
+| &#10003; [terraformport](https://github.com/ZOSOpenTools/terraformport) | 0 | 0
 | &#10003; [topport](https://github.com/ZOSOpenTools/topport) | 0 | 0
 | &#10003; [whichport](https://github.com/ZOSOpenTools/whichport) | 0 | 0
 | &#10003; [xzport](https://github.com/ZOSOpenTools/xzport) | 0 | 0
@@ -244,4 +256,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-05-17 20:36:34
+Last updated:  2023-05-18 02:26:35
