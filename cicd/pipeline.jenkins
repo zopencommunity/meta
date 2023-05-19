@@ -24,7 +24,7 @@ def testStatus = "Skipped"
 node('linux')
 {
   stage('Build and Test') {
-    // Build Job : https://128.168.139.253:8443/view/Framework/job/Port-Build/
+    // Build Job : https://163.74.88.212:8443/view/Framework/job/Port-Build/
     buildResult = build job: 'Port-Build', propagate: false, parameters: [string(name: 'PORT_GITHUB_REPO', value: "${repo}"),
                    string(name: 'PORT_BRANCH', value: "${branch}"),
                    booleanParam(name: 'FORCE_CLANG', value: params.FORCE_CLANG),
@@ -48,7 +48,7 @@ node('linux')
   
   stage('Promote') {
       if(!params.NO_PROMOTE) {
-              // Publish Job : https://128.168.139.253:8443/view/Framework/job/Port-Publish/
+              // Publish Job : https://163.74.88.212:8443/view/Framework/job/Port-Publish/
               promoteResult = build job: 'Port-Publish', propagate: false, parameters:
                  [string(name: 'BUILD_SELECTOR', value: "<SpecificBuildSelector plugin=\"copyartifact@1.46.2\">  <buildNumber>${buildResult.number.toString()}</buildNumber></SpecificBuildSelector>"),
                  string(name: 'PORT_GITHUB_REPO', value: "${repo}"), string(name: 'PORT_DESCRIPTION', value: "${description}"),
