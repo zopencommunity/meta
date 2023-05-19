@@ -44,6 +44,7 @@
 * [npthport](https://github.com/ZOSOpenTools/npthport)
 * [opensshport](https://github.com/ZOSOpenTools/opensshport)
 * [phpport](https://github.com/ZOSOpenTools/phpport)
+* [pinentryport](https://github.com/ZOSOpenTools/pinentryport)
 * [powerline-goport](https://github.com/ZOSOpenTools/powerline-goport)
 * [shufport](https://github.com/ZOSOpenTools/shufport)
 * [sudoport](https://github.com/ZOSOpenTools/sudoport)
@@ -54,7 +55,7 @@
 
 | Package | # of Dependent Projects | Test Success Rate | Dependent projects
 |---|---|---|--|
-| [makeport](https://github.com/ZOSOpenTools/makeport) | 82 | 100% |autoconf, automake, bash, bison, bzip2, cmake, coreutils, cscope, ctags, curl, diffutils, expat, expect, findutils, flex, fzf, gawk, getopt, gettext, git, gnulib, gperf, grep, groff, gzip, hello, help2man, htop, jq, less, libgcrypt, libgdbm, libgpgerror, libiconv, libksba, libpcre, libpipeline, libssh2, libtool, libxml2, libxslt, lua, lynx, lz4, m4, make, man-db, nano, ncdu, ncurses, neovim, ninja, npth, openssh, openssl, patch, perl, php, pkg-config, re2c, rsync, screen, sed, sqlite, sshpass, sudo, tar, tcl, texinfo, top, unzip, vim, wget, which, xmlto, xxhash, xz, zip, zlib, zoslib, zotsample, zstd
+| [makeport](https://github.com/ZOSOpenTools/makeport) | 83 | 100% |autoconf, automake, bash, bison, bzip2, cmake, coreutils, cscope, ctags, curl, diffutils, direnv, expat, expect, findutils, flex, fzf, gawk, getopt, gettext, git, gnulib, gperf, grep, groff, gzip, hello, help2man, htop, jq, less, libgcrypt, libgdbm, libgpgerror, libiconv, libksba, libpcre, libpipeline, libssh2, libtool, libxml2, libxslt, lua, lynx, lz4, m4, make, man-db, nano, ncdu, ncurses, neovim, ninja, npth, openssh, openssl, patch, perl, php, pkg-config, re2c, rsync, screen, sed, sqlite, sshpass, sudo, tar, tcl, texinfo, top, unzip, vim, wget, which, xmlto, xxhash, xz, zip, zlib, zoslib, zotsample, zstd
 | [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 69 | 100% |bash, bison, bzip2, coreutils, cscope, ctags, curl, diffutils, expat, expect, findutils, flex, gawk, getopt, gettext, git, gnulib, gperf, grep, groff, gzip, hello, htop, jq, less, libgcrypt, libgdbm, libgpgerror, libksba, libpcre, libpipeline, libssh2, libtool, libxml2, libxslt, lua, lynx, make, man-db, nano, ncdu, ncurses, ninja, npth, openssh, openssl, patch, perl, php, pkg-config, re2c, rsync, screen, sed, sqlite, sshpass, sudo, tar, tcl, texinfo, unzip, vim, wget, xmlto, xz, zip, zlib, zotsample, zstd
 | [curlport](https://github.com/ZOSOpenTools/curlport) | 52 | 99% |autoconf, automake, bash, bison, bzip2, coreutils, cscope, curl, diffutils, expat, findutils, gawk, gettext, git, gnulib, gperf, grep, groff, gzip, hello, help2man, jq, less, libgcrypt, libgpgerror, libksba, libpipeline, libtool, lz4, m4, make, man-db, ncdu, ncurses, neovim, npth, openssl, patch, php, rsync, screen, sed, tar, tcl, texinfo, top, wget, which, xxhash, xz, zotsample, zstd
 | [gzipport](https://github.com/ZOSOpenTools/gzipport) | 45 | 76% |autoconf, automake, bash, bison, bzip2, coreutils, cscope, ctags, curl, findutils, flex, gawk, gettext, git, gperf, hello, htop, jq, less, libtool, lz4, m4, make, man-db, ncdu, ncurses, openssh, openssl, patch, php, rsync, screen, sed, sqlite, sshpass, tar, tcl, texinfo, top, wget, which, xxhash, xz, zotsample, zstd
@@ -72,9 +73,9 @@
 | [gettextport](https://github.com/ZOSOpenTools/gettextport) | 15 | 82% |coreutils, ctags, expat, getopt, git, hello, libgcrypt, libgpgerror, libiconv, libksba, m4, man-db, nano, npth, which
 | [help2manport](https://github.com/ZOSOpenTools/help2manport) | 13 | 100% |autoconf, automake, bison, curl, expat, gettext, git, hello, libtool, m4, make, openssl, texinfo
 | [ncursesport](https://github.com/ZOSOpenTools/ncursesport) | 12 | 100% |bash, cscope, gettext, git, htop, less, lynx, man-db, nano, ncdu, screen, vim
+| [bashport](https://github.com/ZOSOpenTools/bashport) | 9 | 80% |direnv, expat, flex, git, libiconv, libxml2, re2c, texinfo, xmlto
 | [opensslport](https://github.com/ZOSOpenTools/opensslport) | 9 | 96% |curl, expat, git, libssh2, lynx, openssh, rsync, sudo, wget
 | [zlibport](https://github.com/ZOSOpenTools/zlibport) | 9 | 100% |autoconf, curl, expat, git, libssh2, lynx, openssh, sudo, wget
-| [bashport](https://github.com/ZOSOpenTools/bashport) | 8 | 80% |expat, flex, git, libiconv, libxml2, re2c, texinfo, xmlto
 | [findutilsport](https://github.com/ZOSOpenTools/findutilsport) | 8 | 50% |gnulib, grep, libiconv, libxml2, pkg-config, re2c, texinfo, vim
 | [libtoolport](https://github.com/ZOSOpenTools/libtoolport) | 8 | 80% |expat, hello, libgdbm, m4, man-db, php, re2c, texinfo
 | [gawkport](https://github.com/ZOSOpenTools/gawkport) | 7 | 93% |automake, curl, expat, gzip, ncurses, rsync, vim
@@ -136,6 +137,7 @@
 | [npthport](https://github.com/ZOSOpenTools/npthport) | 0 | No builds |
 | [opensshport](https://github.com/ZOSOpenTools/opensshport) | 0 | No builds |
 | [phpport](https://github.com/ZOSOpenTools/phpport) | 0 | No builds |
+| [pinentryport](https://github.com/ZOSOpenTools/pinentryport) | 0 | No builds |
 | [pkg-configport](https://github.com/ZOSOpenTools/pkg-configport) | 0 | 100% |
 | [powerline-goport](https://github.com/ZOSOpenTools/powerline-goport) | 0 | No builds |
 | [pythonport](https://github.com/ZOSOpenTools/pythonport) | 0 | Skipped |
@@ -239,6 +241,7 @@
 | &#10003; [ncduport](https://github.com/ZOSOpenTools/ncduport) | 0 | 0
 | &#10003; [neovimport](https://github.com/ZOSOpenTools/neovimport) | 0 | 0
 | &#10003; [opensslport](https://github.com/ZOSOpenTools/opensslport) | 0 | 0
+| &#10003; [pinentryport](https://github.com/ZOSOpenTools/pinentryport) | 0 | 0
 | &#10003; [powerline-goport](https://github.com/ZOSOpenTools/powerline-goport) | 0 | 0
 | &#10003; [pythonport](https://github.com/ZOSOpenTools/pythonport) | 0 | 0
 | &#10003; [re2cport](https://github.com/ZOSOpenTools/re2cport) | 0 | 0
@@ -256,4 +259,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-05-18 02:26:35
+Last updated:  2023-05-18 23:18:20
