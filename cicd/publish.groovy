@@ -1,5 +1,5 @@
-# Publish Job : https://128.168.139.253:8443/view/Framework/job/Port-Publish/
-# This publish job will a pax.Z artifact from the Port-Build (https://128.168.139.253:8443/view/Framework/job/Port-Build/)
+# Publish Job : https://163.74.88.212:8443/view/Framework/job/Port-Publish/
+# This publish job will a pax.Z artifact from the Port-Build (https://163.74.88.212:8443/view/Framework/job/Port-Build/)
 # Inputs: 
 #   - PORT_GITHUB_REPO :  Github repoistory to publish the artifact to e.g: https://github.com/ZOSOpenTools/xzport.git
 #   - PORT_DESCRIPTION : Description of the tool that is presented in the Github release page
