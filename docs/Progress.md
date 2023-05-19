@@ -163,7 +163,7 @@
 |  [cmakeport](https://github.com/ZOSOpenTools/cmakeport) | 2328 | 1
 |  [gitport](https://github.com/ZOSOpenTools/gitport) | 1573 | 30
 |  [htopport](https://github.com/ZOSOpenTools/htopport) | 1258 | 16
-|  [sudoport](https://github.com/ZOSOpenTools/sudoport) | 1170 | 1
+|  [sudoport](https://github.com/ZOSOpenTools/sudoport) | 1210 | 1
 |  [perlport](https://github.com/ZOSOpenTools/perlport) | 619 | 1
 |  [coreutilsport](https://github.com/ZOSOpenTools/coreutilsport) | 610 | 9
 |  [rsyncport](https://github.com/ZOSOpenTools/rsyncport) | 381 | 7
@@ -259,4 +259,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-05-19 08:07:53
+Last updated:  2023-05-19 15:16:53
