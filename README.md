@@ -22,10 +22,6 @@ m4 requires a c99 compiler with c11 features, so make sure you have the latest C
 
 GNU make requires GNU m4, automake, autoconf, Perl, and a C compiler that is gcc compatible.
 
-Perl requires a c89 compiler.
-
-ncurses requires an ANSI C compiler.
-
 ## Order to Build _from scratch_
 
 If you want to build the tools from scratch and not use the binary pax files available, you will want
@@ -33,6 +29,9 @@ to tackle this in a particular order.
 First, you need to have some tools installed on your system:
 
 ### System Prerequisites
+
+Use `zopen-setup` to download the bootstrap environment.  This will provide you with the
+minimum required set of tools to get started.  Otherwise you can download the tools individually at the below links.
 
 | Project | License | Download link |
 |---------|---------|------------------------|
