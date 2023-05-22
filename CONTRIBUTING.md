@@ -23,6 +23,7 @@ Verify that the project is working by running `zopen build`.
 ## Coding Guidelines
 
 When contributing your changes, please follow the following coding guidelines:
+
 * patches: patches should adhere to the coding guidelines from the original project repository. Make sure to add the original project's LICENSE file within the patches
 directory.
 * zopen framework files: (e.g. buildenv) - It is recommended that you follow the [Google Shell Style Guide](https://google.github.io/styleguide/shellguide.html)
@@ -34,20 +35,21 @@ If you are generating a new project, we recommend that you use `zopen generate` 
 A good commit message should describe what changed and why.
 
 It should:
-  * contain a short description of the change
-  * be entirely in lowercase with the exception of proper nouns, acronyms, and the words that refer to code, like function/variable names
-  * be prefixed with one of the following words:
-    * fix: bug fix
-    * hotfix: urgent bug fix
-    * feat: new or updated feature
-    * docs: documentation updates
-    * refactor: code refactoring (no functional change)
-    * perf: performance improvement
-    * test: tests and CI updates
+
+* contain a short description of the change
+* be entirely in lowercase with the exception of proper nouns, acronyms, and the words that refer to code, like function/variable names
+* be prefixed with one of the following words:
+  * fix: bug fix
+  * hotfix: urgent bug fix
+  * feat: new or updated feature
+  * docs: documentation updates
+  * refactor: code refactoring (no functional change)
+  * perf: performance improvement
+  * test: tests and CI updates
 
 ### Developer's Certificate of Origin 1.1
 
-<pre>
+```text
 By making a contribution to this project, I certify that:
 
  (a) The contribution was created in whole or in part by me and I
@@ -71,4 +73,4 @@ By making a contribution to this project, I certify that:
      personal information I submit with it, including my sign-off) is
      maintained indefinitely and may be redistributed consistent with
      this project or the open source license(s) involved.
-</pre>
+```
