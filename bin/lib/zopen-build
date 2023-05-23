@@ -209,6 +209,7 @@ printSyntax()
   echo "  -u|--upgradedeps: upgrade all dependencies by running zopen install"
   echo "  --buildtype: release|debug. The default is release"
   echo "  --comp: xl|clang.  The compiler used for building.  The default is xl."
+  echo "  --type: tarball|git|bare."
   echo "  --oci: build and publish an OCI image to \$ZOPEN_IMAGE_REGISTRY"
   echo "  -e <env file>: source <env file> instead of buildenv to establish build environment"
   echo "  -c|--clean: Deletes all of the build output and forces reconfigure with next build"
@@ -271,6 +272,10 @@ processOptions()
       "-comp" | "--comp")
         shift
         ZOPEN_COMP=$1 # We will uppercase this later
+        ;;
+      "-type" | "--type")
+        shift
+        ZOPEN_FORCE_TYPE=$1 # We will uppercase this later
         ;;
       "-oci" | "--oci")
         publishOCI=true
@@ -337,6 +342,12 @@ checkEnv()
   #
   printHeader "Checking environment configuration"
 
+
+  if [ ! -z "$ZOPEN_FORCE_TYPE" ]; then
+    # user specified, so normalize in upper case
+    ZOPEN_TYPE=$(echo "${ZOPEN_FORCE_TYPE}" | tr '[a-z]' '[A-Z]')
+  fi
+
   if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
     if [ "${ZOPEN_TARBALL_URL}x" = "x" ]; then
       export ZOPEN_TARBALL_URL="${ZOPEN_URL}"
@@ -344,6 +355,7 @@ checkEnv()
     if [ "${ZOPEN_TARBALL_DEPS}x" = "x" ]; then
       export ZOPEN_TARBALL_DEPS="${ZOPEN_DEPS}"
     fi
+    printHeader "Using tarball environment"
   elif [ "${ZOPEN_TYPE}x" = "GITx" ]; then
     if [ "${ZOPEN_GIT_URL}x" = "x" ]; then
       export ZOPEN_GIT_URL="${ZOPEN_URL}"
@@ -352,6 +364,7 @@ checkEnv()
     if [ "${ZOPEN_GIT_DEPS}x" = "x" ]; then
       export ZOPEN_GIT_DEPS="${ZOPEN_DEPS}"
     fi
+    printHeader "Using git environment"
   elif [ "${ZOPEN_TYPE}x" = "BAREx" ]; then
     printHeader "Using bare environment"
   else
