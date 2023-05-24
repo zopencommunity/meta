@@ -1,0 +1,29 @@
+#!/bin/sh
+set +x
+#
+# Remove functions that are implemented to just print out an 
+# error message at runtime from the definition side deck
+#
+input="//'CEE.SCEELIB(CELQS003)'"
+output="/tmp/celqs003.x"
+tmp="/tmp/working.x"
+list="aio_fsync lio_listio dladdr shm_open shm_unlink __getthent freeifaddrs getifaddrs posix_fallocate posix_memalign sizeof_alloc resize_alloc fread_noupdate fread_noupdate_unlocked fgetpos64 fseek64 fseeko64 fsetpos64 ftell64 ftello64 fgetpos64_unlocked fseek64_unlocked fseeko64_unlocked fsetpos64_unlocked ftell64_unlocked ftello64_unlocked fopen_unlocked freopen_unlocked fdopen_unlocked tmpfile_unlocked __locale_ctl fopen64 fopen64_unlocked freopen64 freopen64_unlocked tmpfile64 tmpfile64_unlocked gettimeofday64_tz newlocale freelocale uselocale duplocale accept4 copyfilerange clock_gettime dup3 epoll_create epoll_create1 epoll_ctl epoll_wait epoll_pwait eventfd inotify_init inotify_init1 inotify_add_watch inotify_rm_watch pipe2 pivot_root prctl prlimit sethostname setresuid setresgid pthread_condattr_getclock flock fgetxattr flistxattr fremovexattr fsetxattr getxattr lgetxattr listxattr llistxattr lremovexattr lsetxattr removexattr setxattr syncfs futimesat getrandom gettid memfd_create faccessat fchmodat fchownat fstatat linkat mkdirat mkfifoat mknodat openat openat2 readlinkat renameat renameat2 symlinkat unlinkat wait4 clone unshare setns capget capset open_by_handle_at mount1 umount1 umount2 sysinfo"
+
+if ! cp "${input}" "${output}"; then
+  echo "Unable to copy ${input} to ${output} for update" >&2
+  exit 4
+fi
+
+#
+# Not the most efficient. Could find all the lines, sort form last to first, and delete all of them 
+# in one 'edit' session
+#
+for e in $list; do
+  line=$(grep -n "'$e'" "${output}" | awk -F':' ' { print $1; }' )
+  if [ "${line}x" != "x" ]; then
+    if ! sed -e "${line}d" "${output}" >"${tmp}" || ! cp "${tmp}" "${output}" || ! rm "${tmp}"; then
+      echo "deletion of line ${line} (exported symbol ${e}) failed" >&2
+      exit 4
+    fi
+  fi
+done

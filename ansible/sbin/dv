@@ -1,0 +1,68 @@
+#!/bin/sh
+#
+# dv - print out online volumes, showing available/total space (in K)
+# Syntax: dv [<volser>]*
+# If no volser specified, all volumes printed
+#
+# Output Format:
+#  <volser> <available>/<total>
+#set -x
+MY_DIR=$(cd `dirname $0`; echo $PWD)
+
+volfunc="${MY_DIR}/volfunc"
+if ! [ -f "${volfunc}" ]; then
+	echo "Unable to source volfunc" >&2
+	exit 16
+fi
+
+cd ${MY_DIR} && . "${volfunc}" >/dev/null && cd $OLDPWD
+
+if [ "$1" = "-?" ] || [ "$1" = "-h" ]; then
+	echo "Syntax:" >&2
+	echo "  $0 [<volser>]*" >&2
+	echo "where:" >&2
+	echo "  <volser> : volume serial number to dislay information about" >&2
+	echo "  If no <volser> specified, display all volumes" >&2 
+	echo "Output format:" >&2
+	echo "<volser> <free space> <allocated space> <device number>" >&2
+	exit 16
+fi
+
+if [ $# -gt 0 ]; then
+	volsers=$(echo $* | tr '[:lower:]' '[:upper:]')
+	volsers=" ${volsers} "
+else
+	volsers=""
+fi
+
+tmp=$(mvstmp `hlq`)
+drm -f ${tmp}
+dtouch -tseq -rvb -l255 ${tmp}
+rawvolout=`echo ' DCOLLECT NOD OFILE(ODS) VOLUMES(*)' | mvscmdauth --pgm=IDCAMS --ods=${tmp} --sysprint=* --sysin=stdin`
+if [ $? -gt 4 ]; then
+	echo "${rawvolout}" >&2
+fi
+
+lines=`${MY_DIR}/volinfo "//'${tmp}'"`
+rc=$?
+if [ $rc -gt 0 ]; then
+	exit $rc
+fi
+drm -f ${tmp}
+if [ "${volsers}" = "" ]; then
+	echo "${lines}"
+	exit 0
+fi
+
+#
+# Only print out volumes that match list given
+#
+echo "${lines}" | while IFS= read -r line; do
+	volser=${line%%\ *}
+	check=${volsers%%\ ${volser}\ *} 
+	if [ "${check}" != "${volsers}" ]; then
+		echo "${line}"
+	fi
+done
+exit 0
+	

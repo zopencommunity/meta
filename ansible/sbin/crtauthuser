@@ -1,0 +1,49 @@
+#!/bin/sh
+#
+#
+# Please Note: this should NEVER be used for anything other than
+# a simple dev/test system. Giving one id this much authority
+# would not be acceptable for any form of non-dev/test system
+#
+# Create a new user via 'crtuser' script (see crtuser for details)
+# Subsequently, 
+# the user will also be added to the SYS1 group and an ALTUSER
+# to add SPECIAL OPERATIONS will be performed. 
+#
+#set -x
+if [ $# -lt 1 ]; then
+	echo "Syntax: crtauthuser <userid> [<volser>]" >&2
+	echo "  where <userid> is a 7 character or less username" >&2
+	echo "  and <volser> is a 6 character or less volser to user (defaults to USERS)" >&2
+	echo "  and the ssh public key to be used is passed in via stdin" >&2
+	exit 4
+fi
+id=$1
+unixid=$(echo $1 | tr '[:upper:]' '[:lower:]')
+mvsid=$(echo $1 | tr '[:lower:]' '[:upper:]')
+
+mydir=$( cd $( dirname $0 ); echo $PWD )
+if ! "${mydir}/crtuser" $* ; then
+	echo "no user was created" >&2
+	exit 16
+fi
+
+out=$( tsocmd ALTUSER ${mvsid} SPECIAL OPERATIONS )
+if [ $? -gt 0 ]; then
+	echo "${out}" >&2
+	exit 16
+fi
+
+out=$( tsocmd CONNECT ${mvsid} GROUP(SYS1) )
+if [ $?	-gt 0 ]; then
+	echo "${out}" >&2
+	echo "Unable to connect ${mvsid} to GROUP(SYS1). Removing SPECIAL OPERATIONS for ${mvsid}" >&2
+	out=$( tsocmd ALTUSER ${mvsid} NOSPECIAL NOOPERATIONS )
+	if [ $? -gt 0 ]; then
+		echo "${out}" >&2
+		echo "Unable to remove SPECIAL OPERATIONS for ${mvsid}. Please do this manually." >&2
+		exit 16
+	fi
+	exit 16
+fi
+exit 0

@@ -1,0 +1,8 @@
+_BPXK_AUTOCVT: "ON"
+_TAG_REDIR_IN: "TXT"
+_TAG_REDIR_OUT: "TXT"
+_TAG_REDIR_ERR: "TXT"
+_CEE_RUNOPTS: "FILETAG(AUTOCVT,AUTOTAG) POSIX(ON)"
+_BPXK_AUTOCVT: "ON"
+PATH: "/usr/lpp/IBM/zoautil/bin/:{{ ansible_env.PATH }}:/sbin:/usr/sbin:/usr/lpp/IBM/zoautil/bin/"
+LIBPATH: "/usr/lpp/IBM/zoautil/lib:$LIBPATH"

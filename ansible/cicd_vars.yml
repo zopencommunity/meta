@@ -1,0 +1,7 @@
+region: jp-tok
+zone: jp-tok-2
+vpc_name: Default
+profile: mz2o-2x16
+capacity: 250
+image_name: ibm-zos-2-4-s390x-dev-test-wazi-7
+subnet_name: Default

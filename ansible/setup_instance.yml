@@ -1,0 +1,72 @@
+- hosts: localhost
+  connection: local
+  gather_facts: no
+
+  vars_files:
+    - cicd_vars.yml
+
+  tasks:
+    - fail:
+        msg: "instance_name variable is required"
+      when: instance_name is not defined or instance_name is none
+
+    - fail:
+        msg: "private_key_file variable is required"
+      when: private_key_file is not defined or private_key_file is none
+
+    - fail:
+        msg: "key_name variable is required"
+      when: key_name is not defined or key_name is none
+
+    - name: Log in to IBM Cloud
+      shell: ibmcloud login -r "{{ region }}"
+      environment:
+        IBMCLOUD_API_KEY: "{{ lookup('env', 'IBMCLOUD_API_KEY') }}"
+      register: login_result
+      changed_when: false
+      failed_when: login_result.rc != 0
+
+    - name: Get VPC ID
+      shell: ibmcloud is vpcs --output JSON | jq -r '.[] | select(.resource_group.name == "{{ vpc_name }}") | .id'
+      register: vpc_id
+
+    - name: Get Image ID
+      shell: ibmcloud is images --output JSON | jq -r '.[] | select(.name == "{{ image_name }}") | .id'
+      register: image_id
+
+    - name: Get Subnet ID
+      shell: ibmcloud is subnets --output JSON | jq -r '.[] | select(.resource_group.name == "{{ subnet_name }}") | .id'
+      register: subnet_id
+
+    - name: Create Instance
+      shell: ibmcloud is instance-create "{{ instance_name }}" "{{ vpc_id.stdout }}" "{{ zone }}" "{{ profile }}" "{{ subnet_id.stdout }}" --image "{{ image_id.stdout }}" --keys "{{ key_name }}"  
+      register: instance
+
+    - name: Wait for Instance to be Ready
+      shell: ibmcloud is instance "{{ instance_name }}" --output JSON | jq -r '.status'
+      register: instance_status
+      until: instance_status.stdout == "running"
+      retries: 30
+      delay: 10
+
+    - name: Reserve Floating IP
+      shell: ibmcloud is floating-ip-reserve "{{ instance_name }}-ip" --nic primary --in "{{ instance_name }}"
+      register: floating_ip
+
+    - name: Get Floating IP Address
+      shell: ibmcloud is instance "{{ instance_name }}" --output json | jq -r '.network_interfaces[].floating_ips[] | select(.name == "{{ instance_name }}-ip").address'
+      register: floating_ip_address
+
+    - name: Create data volume
+      shell:  ibmcloud is instance-volume-attachment-add "{{ instance_name }}-data" "{{ instance_name }}" --profile general-purpose --capacity "{{ capacity }}" --auto-delete true
+      register: data_volume
+
+    - name: SSH to Instance
+      shell: ssh -i "{{ private_key_file }}" -o "StrictHostKeyChecking no" ibmuser@"{{ floating_ip_address.stdout }}" exit
+      register: sshconnection 
+      until:
+        - sshconnection.rc is defined
+        - sshconnection.rc == 0
+      delay: 60
+      retries: 50
+

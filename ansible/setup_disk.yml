@@ -1,0 +1,221 @@
+- hosts: localhost
+  gather_facts: no
+
+  vars_files:
+    - cicd_vars.yml
+
+  environment: 
+    _BPXK_AUTOCVT: "ON"
+    _TAG_REDIR_IN: "TXT"
+    _TAG_REDIR_OUT: "TXT"
+    _TAG_REDIR_ERR: "TXT"
+    _CEE_RUNOPTS: "FILETAG(AUTOCVT,AUTOTAG) POSIX(ON)"
+    _BPXK_AUTOCVT: "ON"
+    PATH: "/usr/lpp/IBM/zoautil/bin/:{{ ansible_env.PATH }}:/sbin:/usr/sbin:/usr/lpp/IBM/zoautil/bin/"
+    LIBPATH: "/usr/lpp/IBM/zoautil/lib:$LIBPATH"
+
+  tasks:
+    - fail:
+        msg: "instance_name variable is required"
+      when: instance_name is not defined or instance_name is none
+
+    - fail:
+        msg: "jenkins_public_key variable is required"
+      when: jenkins_public_key is not defined or jenkins_ssh_key is none
+
+    - name: Log in to IBM Cloud
+      shell: ibmcloud login -r "{{ region }}"
+      environment:
+        IBMCLOUD_API_KEY: "{{ lookup('env', 'IBMCLOUD_API_KEY') }}"
+      register: login_result
+      changed_when: false
+      failed_when: login_result.rc != 0
+    - name: Get Floating IP Address
+      shell: ibmcloud is instance "{{ instance_name }}" --output json | jq -r '.network_interfaces[].floating_ips[] | select(.name == "{{ instance_name }}-ip").address'
+      register: instance_ip_result
+
+    - set_fact: 
+        instance_ip={{ instance_ip_result.stdout }}
+      when:
+        instance_ip is not defined
+
+    - name: Add host to inventory
+      add_host:
+        name: "myhost"
+        ansible_host: "{{ instance_ip }}"
+        ansible_user: ibmuser
+        interpreter_python: /usr/lpp/IBM/cyp/v3r10/pyz/bin/python3
+        ansible_python_interpreter: /usr/lpp/IBM/cyp/v3r10/pyz/bin/python3
+
+    - name: Add host to inventory
+      add_host:
+        name: "jenkinshost"
+        ansible_host: "{{ instance_ip }}"
+        ansible_user: jenkins
+        interpreter_python: /usr/lpp/IBM/cyp/v3r10/pyz/bin/python3
+        ansible_python_interpreter: /usr/lpp/IBM/cyp/v3r10/pyz/bin/python3
+
+    - name: Copy sbin directory
+      copy:
+        src: "{{ item.src }}"
+        dest: ./sbin/
+        mode: 0755
+      loop:
+        - src: sbin/crtuser
+        - src: sbin/volfunc
+      delegate_to: myhost
+
+    - name: Chtag files to 819
+      shell: chtag -tc 819 sbin/*
+      delegate_to: "myhost"
+
+    - name: Wait attached address to become available
+      shell: export PATH=/usr/lpp/IBM/zoautil/bin:$PATH; pcon -d | egrep  'Attached block storage .*on address'
+      delegate_facts: true
+      delegate_to: "myhost"
+      register: attach
+      until:
+        - attach.rc is defined
+        - attach.rc == 0
+      when:
+        address is not defined
+      delay: 100
+      retries: 50
+
+    - name: Grab the address
+      shell: |
+        export PATH=/usr/lpp/IBM/zoautil/bin:$PATH;
+        pcon -d | egrep  'Attached block storage .*on address' | head -1 | sed "s/.*storage.*on address //" | sed -e "s/'.*//g"
+      register: address_result
+      delegate_to: "myhost"
+
+    - set_fact: 
+        address={{ address_result.stdout }}
+      when:
+        address is not defined
+
+    - name: Runs vols_online
+      shell: |
+        export PATH=/usr/lpp/IBM/zoautil/bin:$PATH
+        cd sbin
+        . ./volfunc 2>/dev/null >/dev/null
+        vols_online | grep USER 
+      register: isUserOnline
+      ignore_errors: True
+      delegate_to: "myhost"
+
+    - name: Runs df
+      shell: |
+        export PATH=/usr/lpp/IBM/zoautil/bin:$PATH
+        df -k | grep "^/jenkins"
+      register: hasJenkins
+      ignore_errors: True
+      delegate_to: "myhost"
+
+    - name: Runs vol_init 
+      shell: |
+        export PATH=/usr/lpp/IBM/zoautil/bin:$PATH
+        cd sbin
+        . ./volfunc
+        vol_init "{{ address }}" "USER"
+      when:
+        - isUserOnline.rc == 1
+      delegate_to: "myhost"
+
+    - name: Runs dev_online
+      shell: |
+        export PATH=/usr/lpp/IBM/zoautil/bin:$PATH
+        cd sbin
+        . ./volfunc
+        dev_online "{{ address }}"
+      when:
+        - isUserOnline.rc == 1
+      delegate_to: "myhost"
+
+    - name: Creates Jenkins user
+      shell: |
+        export PATH=/usr/lpp/IBM/zoautil/bin:/usr/sbin:$PATH
+        cd sbin/
+        echo "{{ jenkins_public_key }}" | ./crtuser jenkins user
+      when:
+        - hasJenkins.rc == 1
+      delegate_to: "myhost"
+
+    - name: Download zopen-setup
+      get_url:
+        url: https://github.com/ZOSOpenTools/meta/releases/download/v1.0.0/zopen-setup
+        dest: /tmp/zopen-setup  
+        mode: '0755'
+      when:
+        - skipZopenSetup is not defined
+
+    - name: Make / writeable
+      shell: |
+        export PATH=/usr/sbin:$PATH
+        chmount -w /
+      delegate_to: "myhost"
+
+    - name: Copy zopen-setup to /bin
+      copy:
+        src: /tmp/zopen-setup
+        dest: /bin/zopen-setup
+        mode: 0755
+      delegate_to: myhost
+
+    - name: Copy Clang pax
+      ansible.builtin.copy:
+        src: C_C++_for_Open_Enterprise_Languages.nonsmpe.pax.Z
+        dest: ./C_C++_for_Open_Enterprise_Languages.nonsmpe.pax.Z
+      delegate_to: myhost
+
+    - name: Install Clang
+      shell: |
+        cd /
+        pax -rf ~/C_C++_for_Open_Enterprise_Languages.nonsmpe.pax.Z
+      delegate_to: myhost
+
+    - name: Runs zopen-setup and initializes environment
+      shell: |
+        mkdir -p /jenkins/zopen
+        zopen-setup /jenkins/zopen
+        cd /jenkins/zopen/boot
+        . ./.bootenv
+        git config --global user.email "jenkins@ibm.com"
+        git config --global user.name "Jenkins"
+      delegate_to: "jenkinshost"
+
+    - name: Copy .env file
+      ansible.builtin.copy:
+        src: jenkins_env
+        dest: /jenkins/.env
+      delegate_to: "jenkinshost"
+
+    - name: Chtag .env to 819
+      shell: chtag -tc 819 /jenkins/.env
+      delegate_to: "jenkinshost"
+
+    - name: Copy scripts directory
+      copy:
+        src: "{{ item.src }}"
+        dest: ./scripts/
+        mode: 0755
+      loop:
+        - src: scripts/system_setup/update_parmlib.sh
+        - src: scripts/system_setup/bpxprm00.patch
+      delegate_to: myhost
+
+    - name: Chtag files to 819
+      shell: chtag -R -tc 819 scripts/
+      delegate_to: "myhost"
+
+    - name: Runs patcher
+      shell: |
+        export PATH=/usr/lpp/IBM/zoautil/bin:$PATH;
+        cd scripts/
+        ./update_parmlib.sh
+      delegate_to: "myhost"
+
+    - name: Make /var/lib/sudo
+      shell: |
+        mkdir -p /var/lib/sudo
+      delegate_to: "myhost"

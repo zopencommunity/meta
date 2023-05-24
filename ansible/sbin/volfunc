@@ -1,0 +1,307 @@
+#
+# meant to be sourced to provide functions (do not mark this code as 'executable')
+#
+ME="./volfunc"
+if ! [ -f "${ME}" ]; then
+	echo "Need to source from the volfunc directory" >&2
+	return 8
+fi
+
+#
+# Initialize volume for subsequent use
+#
+vol_init() {
+	if [ $# -ne 2 ]; then
+		echo "vol_init requires ucb and volser" >&2
+		return 8
+	fi
+	ucb=$(echo ${1} | tr '[:lower:]' '[:upper:]')
+	volser=$(echo ${2} | tr '[:lower:]' '[:upper:]')
+	mvscmdauth --pgm=ICKDSF --args='NOREPLYU,FORCE' --sysprint=* --sysin=stdin <<zz
+  INIT UNIT(${ucb}) NOVERIFY VOLID(${volser}) VTOC(0,1,14)
+zz
+	return $?
+}
+
+#
+# List the VTOC for a particular volume.
+# IEHLIST requires that you provide a DDname for the volume, so we specify the VTOC
+#
+vol_list() {
+	if [ $# -ne 1 ]; then
+		echo "vol_list requires volser to list" >&2
+		return 8
+	fi
+	vol="$1"
+	vol=$(echo ${vol} | tr '[:lower:]' '[:upper:]')
+	volds="SYS1.VVDS.V"${vol}
+
+	echo "  LISTVTOC FORMAT,VOL=3390=${vol}" | mvscmd --pgm=iehlist --sysprint=* --dd=${volds} --sysin=stdin 2>/dev/null
+	return $?
+}
+
+dev_vol() {
+	if [ $# -ne 1 ]; then
+		echo "dev_vol requires device number to print volser for" >&2
+		return 8
+	fi
+	dev="$1"
+	dev=$(echo ${dev} | tr '[:lower:]' '[:upper:]')
+
+	info=`opercmd "display u,dasd,online,${dev},1"`
+	echo "${info}" | grep 'IEE455I' >/dev/null
+	if [ $? -eq 0 ]; then
+		echo "Device ${dev} not online" >&2
+		return 8
+	fi
+	echo "${info}" | tail +5 | cut -c 68-74 | tr -d ' '
+	return $?
+}
+
+vol_dev() {
+	if [ $# -ne 1 ]; then
+		echo "vol_dev requires volser to print device number for" >&2
+		return 8
+	fi
+	vol="$1"
+	vol=$(echo ${vol} | tr '[:lower:]' '[:upper:]')
+
+	info=`opercmd "display u,vol=${vol}"`
+	echo "${info}" | grep 'IEE455I' >/dev/null
+	if [ $? -eq 0 ]; then
+		echo "VOLSER ${vol} not online" >&2
+		return 8
+	fi
+	echo "${info}" | tail +5 | cut -c 44-48 | tr -d ' '
+	return $?
+}
+	
+#
+# print out the volume total space (in bytes)
+#
+vol_total_space() {
+	if [ $# -ne 1 ]; then
+		echo "vol_total_space requires volser to check" >&2
+		return 8
+	fi
+	vol="$1"
+	vol=$(echo ${vol} | tr '[:lower:]' '[:upper:]')
+	details=`vol_list ${vol}`
+	rc=$?
+	if [ $rc -gt 0 ]; then
+		return $rc
+	fi
+	cyls=$(echo "${details}" | head -11 | tail -1 | awk '{print $1}') 
+	bpc=$(bytes_per_cylinder)
+	echo $((cyls*bpc))
+	return $?
+}
+
+#
+# print out the volume free space (in bytes)
+#
+vol_free_space() {
+	if [ $# -ne 1 ]; then
+		echo "vol_free_space requires volser to check" >&2
+		return 8
+	fi
+	vol="$1"
+	vol=$(echo ${vol} | tr '[:lower:]' '[:upper:]')
+	details=`vol_list ${vol}`
+	rc=$?
+	if [ $rc -gt 0 ]; then
+		return $rc
+	fi
+	cyls=$(echo "${details}" | grep 'ON THIS VOLUME' | grep 'EMPTY CYLINDERS' | awk ' { print $3; }')
+	bpc=$(bytes_per_cylinder)
+	echo $((cyls*bpc))
+	return $?
+}
+
+#
+# print out who is using a volume
+#
+
+vol_usage() {
+	if [ $# -ne 1 ]; then
+		echo "vol_usage requires volser to check" >&2
+		return 8
+	fi
+	vol="$1"
+	vol=$(echo ${vol} | tr '[:lower:]' '[:upper:]')
+	ucb=`online_vols | grep ${vol} | awk ' { print $1; }'`
+	opercmd "d u,,alloc,${ucb},1"
+	return $?
+}
+
+vol_offline() {
+        if [ $# -ne 1 ]; then
+	        echo "vol_offline requires volser to vary offline" >&2
+                return 8
+	fi
+	vol="$1"
+	vol=$(echo ${vol} | tr '[:lower:]' '[:upper:]')
+	dev=`vol_dev ${vol}`
+	if [ $? -eq 0 ]; then
+		opercmd "vary ${dev},offline"
+	fi
+	return $?
+}
+
+dev_offline() {
+        if [ $# -ne 1 ]; then
+	        echo "dev_offline requires device numberr to vary offline" >&2
+                return 8
+	fi
+	dev="$1"
+	dev=$(echo ${dev} | tr '[:lower:]' '[:upper:]')
+	opercmd "vary ${dev},offline"
+	return $?
+}
+
+dev_online() {
+        if [ $# -ne 1 ]; then
+	        echo "dev_online requires device number to vary online" >&2
+                return 8
+	fi
+	dev="$1"
+	dev=$(echo ${dev} | tr '[:lower:]' '[:upper:]')
+	opercmd "vary ${dev},online"
+	return $?
+}
+
+vol_defrag() {
+        if [ $# -ne 1 ]; then
+	        echo "vol_defrag requires volser to defragment" >&2
+                return 8
+	fi
+	vol="$1"
+	vol=$(echo ${vol} | tr '[:lower:]' '[:upper:]')
+	echo "  DEFRAG DDNAME(DASD)" | mvscmdauth --pgm=adrdssu --sysprint=* --dasd=${vol},vol --sysin=stdin
+	return $?
+}
+ 
+#
+# print out device number and VOLSER for all online volumes
+#	
+vols_online() {
+	opercmd 'd u,dasd,online,,65536' | tail +5 | sed '$d' | cut -c 44-48,68-74
+	return $?
+}
+
+#
+# print bytes per cylinder for 3390 dasd
+#
+bytes_per_cylinder() {
+	echo $((56664*15))
+	return 0
+}
+
+crtzfs() {
+        if [ $# -ne 3 ]; then
+	        echo "crtzfs requires ZFS dataset, volser to allocate from, and size (in megabytes)" >&2
+                return 8
+	fi
+        ds=$(echo ${1} | tr '[:lower:]' '[:upper:]')
+        volser=$(echo ${2} | tr '[:lower:]' '[:upper:]')
+        meg=$3
+
+	dev=`vol_dev ${volser}`
+	if [ $? -eq 0 ]; then
+		zfsadm define -aggregate ${ds} -dataclas dceattr -storageclas scnosms -megabytes ${meg} -volumes ${volser}
+	fi
+	return $?
+}
+
+mntzfs() {
+        if [ $# -ne 2 ]; then
+	        echo "mntzfs requires ZFS dataset, directory to mount to" >&2
+                return 8
+	fi
+        ds=$(echo ${1} | tr '[:lower:]' '[:upper:]')
+        dir="${2}"
+
+	mount -t zfs -f "${ds}" "${dir}"
+	return $?
+}
+
+#
+# automntzfs: add the file system so it will be mounted on IPL the same way it is currently mounted
+#             a backup file will be written to $TMPDIR/<member> of the original file (/tmp used if TMPDIR not set)
+#
+# New entry written to BPXPRMxx will be of the form:
+#  MOUNT FILESYSTEM('<ds>')
+#        MOUNTPOINT('<dir>')
+#        TYPE(ZFS) MODE(<mode>)
+#
+automntzfs() {
+#set -x
+        if [ $# -ne 2 ]; then
+	        echo "Syntax: automntzfs <xx> <directory>" >&2
+	        echo "automntzfs requires 'xx' of BPXPRMxx member to be updated and <directory> of already mounted file system" >&2
+                return 8
+	fi
+        sfx=$(echo ${1} | tr '[:lower:]' '[:upper:]')
+        dir="${2}"
+	
+	if ! mount_details=$( df "${dir}" ) ; then 
+		echo "Unable to find ${dir}. Is it mounted?" >&2
+		return 16
+	fi
+	if ! mount_verbose=$( df -v "${dir}" ) ; then
+		echo "Unable to get verbose information for mount point ${dir}" >&2
+		return 16
+	fi
+	mount_type=$( echo "${mount_verbose}" | head -3 | tail -1 | tr ',' ' ' | awk '{print $2; }' )
+	case $mount_type in 
+		Read) mode='READ';;
+		Read/Write) mode='RDWR';;
+		*) echo "Unexpected mount type of ${mount_type}. No action performed" >&2; return 16;;
+	esac
+	mnt_ds=$( echo "${mount_details}" | tail -1 | tr "()" "  " | awk ' { print $2 }' )
+	
+	tmpdir=${TMPDIR:-/tmp}
+	mem="BPXPRM${sfx}"
+	if ! parmlib_ds=$( parmwhence "${mem}" ) ; then
+		echo "Dataset member ${mem} is not in the parmlib concatenation. No action performed" >&2
+		return 16
+	fi
+	mountline_1="MOUNT FILESYSTEM('${mnt_ds}')"
+	mountline_2="      MOUNTPOINT('${dir}')"
+	mountline_3="      TYPE(ZFS) MODE(${mode})"
+
+	dsmem="${parmlib_ds}(${mem})"
+	tmpfile="${tmpdir}/${parmlib_ds}(${mem})"
+	if ! dcp "${dsmem}" "${tmpfile}" ; then
+		echo "Unable to make backup copy of ${dsmem} to ${tmpfile}. No action performed" >&2
+		return 16
+	fi
+	if grep "${mountline_1}" "${tmpfile}" >/dev/null ; then
+		echo "There is already an entry for dataset ${mnt_ds} in ${dsmem}. No action performed" >&2
+		rm "${tmpfile}"
+		return 16
+	fi	
+
+	if ! decho -a "${mountline_1}
+${mountline_2}
+${mountline_3}" "${dsmem}" ; then
+		echo "Failure trying to update ${dsmem}. Backup copy of original is at ${tmpfile}" >&2
+		return 32
+	fi	
+
+	if ! check_parmlib=$( opercmd "SETOMVS SYNTAXCHECK=(${sfx})" ) ; then
+		echo "Unable to issue SETOMVS SYNTAXCHECK on ${mem}. Validate dataset before IPL. Backup copy of original is at ${tmpfile}" >&2
+		echo "${check_parmlib}" >&2
+		return 16
+	fi
+	if ! $( echo "${check_parmlib}" | grep BPXO039I >/dev/null ) ; then
+		echo "Possible failure in SETOMVS SYNTAXCHECK on ${mem}. Validate dataset before IPL. Backup copy of original is at ${tmpfile}" >&2
+		echo "${check_parmlib}"	>&2
+		return 16
+	fi
+	rm -f "${tmpfile}"
+	return 0
+}
+
+echo 'Functions: '
+grep '() {' "${ME}" | tr -d '()\ {' | sed '$d' # print out functions in this file by looking for '() {' and delete this line
