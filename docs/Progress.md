@@ -47,7 +47,6 @@
 * [pinentryport](https://github.com/ZOSOpenTools/pinentryport)
 * [powerline-goport](https://github.com/ZOSOpenTools/powerline-goport)
 * [shufport](https://github.com/ZOSOpenTools/shufport)
-* [sudoport](https://github.com/ZOSOpenTools/sudoport)
 * [terraformport](https://github.com/ZOSOpenTools/terraformport)
 * [topport](https://github.com/ZOSOpenTools/topport)
 
@@ -144,7 +143,7 @@
 | [screenport](https://github.com/ZOSOpenTools/screenport) | 0 | Skipped |
 | [shufport](https://github.com/ZOSOpenTools/shufport) | 0 | No builds |
 | [sshpassport](https://github.com/ZOSOpenTools/sshpassport) | 0 | Skipped |
-| [sudoport](https://github.com/ZOSOpenTools/sudoport) | 0 | No builds |
+| [sudoport](https://github.com/ZOSOpenTools/sudoport) | 0 | 91% |
 | [terraformport](https://github.com/ZOSOpenTools/terraformport) | 0 | No builds |
 | [topport](https://github.com/ZOSOpenTools/topport) | 0 | No builds |
 | [unzipport](https://github.com/ZOSOpenTools/unzipport) | 0 | 100% |
@@ -259,4 +258,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-05-23 22:33:50
+Last updated:  2023-05-23 22:38:58
