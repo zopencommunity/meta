@@ -5,7 +5,14 @@
     - cicd_vars.yml
 
   environment: 
-    - environment.yml
+    _BPXK_AUTOCVT: "ON"
+    _TAG_REDIR_IN: "TXT"
+    _TAG_REDIR_OUT: "TXT"
+    _TAG_REDIR_ERR: "TXT"
+    _CEE_RUNOPTS: "FILETAG(AUTOCVT,AUTOTAG) POSIX(ON)"
+    _BPXK_AUTOCVT: "ON"
+    PATH: "/usr/lpp/IBM/zoautil/bin/:{{ ansible_env.PATH }}:/sbin:/usr/sbin:/usr/lpp/IBM/zoautil/bin/"
+    LIBPATH: "/usr/lpp/IBM/zoautil/lib:$LIBPATH"
 
   tasks:
     - fail:
@@ -175,5 +182,40 @@
         . ./.bootenv
         git config --global user.email "jenkins@ibm.com"
         git config --global user.name "Jenkins"
-        touch /jenkins/.env
       delegate_to: "jenkinshost"
+
+    - name: Copy .env file
+      ansible.builtin.copy:
+        src: jenkins_env
+        dest: /jenkins/.env
+      delegate_to: "jenkinshost"
+
+    - name: Chtag .env to 819
+      shell: chtag -tc 819 /jenkins/.env
+      delegate_to: "jenkinshost"
+
+    - name: Copy scripts directory
+      copy:
+        src: "{{ item.src }}"
+        dest: ./scripts/
+        mode: 0755
+      loop:
+        - src: scripts/system_setup/update_parmlib.sh
+        - src: scripts/system_setup/bpxprm00.patch
+      delegate_to: myhost
+
+    - name: Chtag files to 819
+      shell: chtag -R -tc 819 scripts/
+      delegate_to: "myhost"
+
+    - name: Runs patcher
+      shell: |
+        export PATH=/usr/lpp/IBM/zoautil/bin:$PATH;
+        cd scripts/
+        ./update_parmlib.sh
+      delegate_to: "myhost"
+
+    - name: Make /var/lib/sudo
+      shell: |
+        mkdir -p /var/lib/sudo
+      delegate_to: "myhost"

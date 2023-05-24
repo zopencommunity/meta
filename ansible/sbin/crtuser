@@ -97,12 +97,12 @@ if [ $rc -gt 0 ]; then
 fi
 
 if ! [ -d "/${unixid}" ]; then
-	zfsadm define -aggregate "ZFS.${mvsid}" -dataclas dceattr -storageclas scnosms -megabytes 30000 -volumes ${volser}
+	zfsadm define -aggregate "ZFS.${mvsid}" -dataclas dceattr -storageclas scnosms -megabytes 50000 -volumes ${volser}
 	rc=$?
 	#FIXME: check for duplicate
 	rc=0
 	if [ $rc -gt 0 ]; then
-		echo "Unable to allocate 30G file system for ZFS.${mvsid} from volume ${volser}" >&2
+		echo "Unable to allocate 50G file system for ZFS.${mvsid} from volume ${volser}" >&2
 		exit $rc
 	fi
 	chmount -w /

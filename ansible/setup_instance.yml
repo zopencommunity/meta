@@ -9,11 +9,15 @@
     - fail:
         msg: "instance_name variable is required"
       when: instance_name is not defined or instance_name is none
+
     - fail:
         msg: "private_key_file variable is required"
       when: private_key_file is not defined or private_key_file is none
 
-  tasks:
+    - fail:
+        msg: "key_name variable is required"
+      when: key_name is not defined or key_name is none
+
     - name: Log in to IBM Cloud
       shell: ibmcloud login -r "{{ region }}"
       environment:
@@ -54,7 +58,7 @@
       register: floating_ip_address
 
     - name: Create data volume
-      shell:  ibmcloud is instance-volume-attachment-add "{{ instance_name }}-data" "{{ instance_name }}" --profile general-purpose --capacity 250 --auto-delete true
+      shell:  ibmcloud is instance-volume-attachment-add "{{ instance_name }}-data" "{{ instance_name }}" --profile general-purpose --capacity "{{ capacity }}" --auto-delete true
       register: data_volume
 
     - name: SSH to Instance
