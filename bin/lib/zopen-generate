@@ -172,6 +172,7 @@ touch "${name}port/.gitignore" && chtag -tc 819 "${name}port/.gitignore"
 cat <<EOT > "${name}port/.gitignore"
 log/
 install/
+${name}/
 EOT
 printInfo "${name}port/.gitignore created"
 
