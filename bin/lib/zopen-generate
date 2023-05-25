@@ -162,6 +162,14 @@ touch "${name}port/cicd.groovy" && chtag -tc 819 "${name}port/cicd.groovy"
 cat <<EOT > "${name}port/cicd.groovy"
 node('linux')
 {
+  stage ('Poll') {
+    checkout([
+      \$class: 'GitSCM',
+      branches: [[name: '*/main']],
+      doGenerateSubmoduleConfigurations: false,
+      extensions: [],
+      userRemoteConfigs: [[url: 'https://github.com/ZOSOpenTools/${name}port.git']]])
+  }
   stage('Build') {
     build job: 'Port-Pipeline', parameters: [string(name: 'PORT_GITHUB_REPO', value: 'https://github.com/ZOSOpenTools/${name}port.git'), string(name: 'PORT_DESCRIPTION', value: '${description}' )]
   }
