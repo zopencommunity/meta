@@ -1,0 +1,554 @@
+#!/bin/sh
+# Install utility for z/OS Open Tools - https://github.com/ZOSOpenTools
+
+export utildir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
+
+. "${utildir}/common.inc"
+
+VERSION=1.0.0
+printVersion(){
+  ver="$VERSION"
+  echo "$(basename "$0") (z/OS Tools)  ${ver}" 
+}
+printSyntax() 
+{
+  args=$*
+  echo "zopen download is a utility to download/install a z/OS Open Tools package."
+  echo "If you have a Github OAUTH token, export the environment variable ZOPEN_GIT_OAUTH_TOKEN" >&2
+  echo "Syntax: zopen download [<option>]* <package, ...>" >&2
+  echo "  where <option> may be one or more of:" >&2
+  echo "  -u|--update|--upgrade: updates installed z/OS Open Tools packages."  >&2
+  echo "  --install-or-upgrade: installs the package if not installed, or upgrades the package if installed."  >&2
+  echo "  --reinstall: reinstall already installed z/OS Open Tools packages."  >&2
+  echo "  --nosymlink: do not integrate into filesystem through symlink redirection. " >&2
+  echo "  -v: run in verbose mode" >&2
+  echo "  --download-only: download package to current directory" >&2
+  echo "  --local-install: download and unpackage to current directory" >&2
+  echo "  and <package> is a list of one or more projects to install" >&2
+}
+
+getContentsFromGithub()
+{
+  url="$1"
+  printVerbose "Requesting from url: ${url} "
+  if ! repo_results=$(curl "$OAUTH_TOKEN_OPTION" "$OAUTH_TOKEN" -s "$url"); then
+    printError "Unable to download from url: '$url'. Resolve reported issue and retry" 
+  fi
+  
+  if echo "$repo_results" | grep -q "API rate limit exceeded for" 2>/dev/null; then
+    printError "API rate limit exceeded for github.\n1. Generate a token (https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token).\n2. Set ZOPEN_GIT_OAUTH_TOKEN and rerun"
+  fi
+  if echo $repo_results | grep -q "Bad credentials" 2>/dev/null; then
+    printError "Your ZOPEN_GIT_OAUTH_TOKEN is invalid. Please validate that it is correct and re-run."
+  fi
+  echo "$repo_results";
+}
+
+installDependencies()
+(
+  name=$1
+  printVerbose "List of dependencies to install: $dependencies"
+  skipupgrade_lcl=$skipupgrade
+  skipupgrade=true
+  echo "$dependencies" | xargs | tr ' ' '\n' | sort | while read dep; do
+    printVerbose "Removing '$dep' from dependency queue '$dependencies'"
+    dependencies=$(echo "$dependencies" | sed -e "s/$dep//" | tr -s ' ')
+    handlePackageInstall "$dep"
+  done
+  skipupgrade=$skipupgrade_lcl
+)
+
+handlePackageInstall(){
+
+  fullname="$1"
+  printVerbose "Name to install: $fullname, parsing any version ('=') or tag ('%') has been specified"
+  name=$(echo "$fullname" | sed -e 's#[=%].*##')
+  repo="${name}port"
+  versioned=$(echo "$fullname" | cut -s -d '=' -f 2)
+  tagged=$(echo "$fullname" | cut -s -d '%' -f 2)
+  printVerbose "Name:$name;version:$versioned;tag:$tagged;repo:$repo"
+  printHeader "Installing package: $name"
+
+  releaseURL="https://api.github.com/repos/ZOSOpenTools/${repo}/releases"
+  printVerbose "Grabbing list of all releases from $releaseURL"
+  
+  if ! contents="$(getContentsFromGithub $releaseURL)"; then
+    exit 4;
+  fi
+
+  #printVerbose "Contents returned: $contents"
+  trimmed=$(echo "$contents" | tr -d ' []{}\t\r\n')
+  if [ -z "$trimmed" ]; then
+    printInfo "- No releases published for $name"
+    return
+  fi
+
+  originalFileVersion=""
+  printVerbose "Checking for meta file at: ${ZOPEN_PKGINSTALL}/${name}/.releaseinfo"
+  if [ -e "${ZOPEN_PKGINSTALL}/${name}/.releaseinfo" ]; then
+    originalFileVersion=$(cat "${ZOPEN_PKGINSTALL}/${name}/.releaseinfo")
+    printVerbose "Found originalFileVersion=$originalFileVersion (port is already installed)"
+  elif [ -e "${ZOPEN_PKGINSTALL}/${name}/.version" ]; then
+    originalFileVersion=$(cat "${ZOPEN_PKGINSTALL}/${name}/.version")
+    printVerbose "Found originalFileVersion=$originalFileVersion (port is already installed)"
+  else
+    printVerbose "Could not detect existing installation at ${ZOPEN_PKGINSTALL}/${name}"
+  fi
+
+  downloadURL=""
+  if [ ! "x" = "x$versioned" ]; then
+    printVerbose "Specific version $versioned requested - checking existence and URL"
+    requestedMajor=$(echo "$versioned" | awk -F'.' '{print $1}')
+    requestedMinor=$(echo "$versioned" | awk -F'.' '{print $2}')
+    requestedPatch=$(echo "$versioned" | awk -F'.' '{print $3}')
+    requestedSubrelease=$(echo "$versioned" | awk -F'.' '{print $4}')
+    requestedVersion="${requestedMajor}.${requestedMinor}.${requestedPatch}.${requestedSubrelease}"
+    printVerbose "Finding URL for latest release matching version prefix: requestedVersion:$requestedVersion"
+    # list all released filenames, sort them and grab the last (which should be the newest file starting with the
+    # specified prefix (fuzzy find rather than exact match)
+    latestfiledetails=$(echo "$contents" | awk -F'/' -v PORT=$name -v REQVER=$versioned '
+      BEGIN{regex = "browser_download_url.*"PORT"-"REQVER".*\.pax\.Z"} {if ( $0 ~ regex ){ print $NF"#@#"$0}}
+    ' | sort -u | tail -n 1 | tr -d '\"')
+     downloadURL=$(echo "$latestfiledetails" | sed -E 's/.*url: (https.*)/\1/')
+  elif [ ! "x" = "x$tagged" ]; then
+    printVerbose "Tagged release $tagged requested - checking existence and URL"
+    taggeddetails=$(echo "$contents" | awk -F'/' -v PORT=$name -v TAG=$tagged '
+      BEGIN{regex = "\"tag_name\": \""PORT"port_"TAG"\""; output=0}
+       { if ( $0 ~ regex ) {output=1;}}
+      /browser_download_url/ {  if (output==1) {print; output=0} }
+      
+    ' | sort -u | tail -n 1 | tr -d '\"')
+    downloadURL="$(echo $taggeddetails | tr -d "\"" | sed -E 's/.*url: (https.*)/\1/')"
+  elif $selectVersion; then
+    # Explicitly allow the user to select a release to install; useful if there are broken installs
+    # as a known good release can be found, selected and pinned!
+    printVerbose "List individual releases and allow selection"
+    i=0
+    printVerbose "Generating fifo"
+    TMP_FIFO_PIPE="$HOME/altselect.pipe"
+    [ -p "$TMP_FIFO_PIPE" ] && rm -f "$TMP_FIFO_PIPE"
+    mkfifo "$TMP_FIFO_PIPE"
+    printVerbose "Getting list of versions"
+    latestfiledetails=$(echo "$contents" | awk -F'/' -v PORT=$name -v REQVER=$versioned '
+      BEGIN{regex = "browser_download_url.*"PORT"-"REQVER".*\.pax\.Z"} {if ( $0 ~ regex ){ sub(/\"browser_download_url\":/, ""); print}}
+    ' | sort -u | tr -d " ")
+
+    printInfo "Versions available for install:"
+    echo "$latestfiledetails" | xargs | tr ' ' '\n'>> "$TMP_FIFO_PIPE" &
+      while read repo; do
+        i=$(expr $i + 1)
+        printInfo "  $i: $(echo $repo | sed -E 's/.*-(.*)\.zos\.pax\.Z/\1/')"
+      done < "$TMP_FIFO_PIPE"
+    [ -p "$TMP_FIFO_PIPE" ] && rm -f "$TMP_FIFO_PIPE"
+    printVerbose "Getting user selection"
+    valid=false
+    while ! $valid; do
+      echo "Enter version to install (1-$i): "
+      selection=$(getInput)
+      if [[ ! -z $(echo "$selection" | sed -e 's/[0-9]*//') ]]; then
+        echo "Invalid input, must be a number between 1 and $i"
+      elif [ "$selection" -ge 1 ] && [ "$selection" -le "$i" ]; then
+        valid=true
+      fi
+    done
+    downloadURL=$(echo "$latestfiledetails" | awk -v RS= -v selection="$selection" '
+      BEGIN {count=0}
+            {count = count + 1; if (count=selection) { print $(selection)} }
+    ' | tr -d "\"" )
+    printInfo "- Using version: $selection: $downloadURL"
+  else
+    printVerbose "No explicit version/tag, using latest"
+    if ! contents="$(getContentsFromGithub "https://api.github.com/repos/ZOSOpenTools/${repo}/releases/latest")"; then
+      exit 4;
+    fi
+    if [ -z "$contents" ]; then
+      printInfo "- No latest release published for $name"
+      exit 4
+    else
+      statusline="$(echo "$contents" | grep "\"body\":.*Test Status:.*(.*)<br />")"
+      downloadURL="$(echo "$contents" | grep "\"browser_download_url\":" | cut -d '"' -f 4)"
+      printVerbose "Check for browser_download_url tag returned: $downloadURL"
+      if [ "" = "${downloadURL}" ]; then
+        printVerbose "Could not locate 'browser_download_url'. Parse 'body'..."
+        downloadURL="$(echo "$statusline" | sed -e "s#.*curl -o - -L ##" -e "s#\.zos\.pax\.Z.*#\.zos\.pax\.Z#")"
+      fi
+    fi
+  fi
+
+  if [ "x" = "x$downloadURL" ]; then
+    printError "Unable to determine download location for ${name}"
+  fi
+  downloadFile=$(basename "$downloadURL")
+  downloadFileVer=$(echo "$downloadFile" |sed -E 's/.*-(.*)\.zos\.pax\.Z/\1/')
+  printVerbose "Downloading port from URL: $downloadURL to file: $downloadFile (ver=$downloadFileVer)"
+
+  printVerbose "Install=${downloadFileVer};Original=${originalFileVersion};${upgradeInstalled};${installOrUpgrade};${reinstall}"
+  if [ "${downloadFileVer}" = "${originalFileVersion}" ]; then
+    if ! $reinstall; then
+      printInfo "${NC}${GREEN}Package ${name} is already installed at the requested version: ${downloadFileVer}${NC}"
+      return;
+    fi
+    printInfo "- Reinstalling version '$downloadFileVer' of ${name}..."
+  fi
+
+  printVerbose "Checking if package is not installed but scheduled for upgrade"
+  if [ "x" = "x$originalFileVersion" ]; then
+    printVerbose "No previous version found"
+    if $installOrUpgrade; then
+      printVerbose "Package ${name} was not installed so not upgrading but installing"
+    elif $upgradeInstalled; then
+      printError "Package ${name} can not be upgraded as it is not installed!"
+      continue;
+    fi
+    unInstallOldVersion=false
+    printInfo "- Installing ${name}..."
+  elif $skipupgrade; then
+    printInfo "Package ${name} has a newer release '${downloadFileVer}' but explicitly skipping"
+    continue;
+  elif ! $setactive; then
+    printVerbose "Current version '${originalFileVersion}' will remain active"
+    unInstallOldVersion=false
+  else
+    printVerbose "Previous version '${originalFileVersion}' installed"
+    if [ -e "${ZOPEN_PKGINSTALL}/${name}/.pinned" ]; then
+      printWarning "- Version '${originalFileVersion}' has been pinned; upgrade to '${downloadFileVer}' skipped"
+      syslog "$ZOPEN_LOG_PATH/audit.log" "$LOG_A" "$CAT_PACKAGE,$CAT_INSTALL" "DOWNLOAD" "handlePackageInstall" "Attempt to change pinned package '${name}' skipped"
+      continue;
+    else
+      printInfo "- Replacing ${name} version '${originalFileVersion}' with '${downloadFileVer}'"
+      unInstallOldVersion=true
+      currentversiondir=$(cd "$ZOPEN_PKGINSTALL/$name" && pwd -P)
+      currentlinkfile="$currentversiondir/.links"
+    fi
+  fi
+
+  printVerbose "Checking cache for already downloaded package [file name comparison]"
+  pax=$downloadFile
+  if [ -f "$pax" ]; then
+    printInfo "- Found existing file '${pax}' in download cache."
+  else
+    printInfo "- Downloading $pax to cache..."
+    if ! $verbose; then
+      redirectToDevNull="2>/dev/null"
+    fi
+
+    progressHandler "network" "- Downloaded $pax to cache" &
+    ph=$!
+    killph="kill -HUP $ph"
+    addCleanupTrapCmd "$killph"
+    if ! runAndLog "curl -L ${downloadURL} -O ${redirectToDevNull}"; then
+      printError "Could not download from ${downloadURL}. Correct any errors and potentially retry"
+      continue;
+    fi
+    $killph 2>/dev/null  # if the timer is not running, the kill will fail
+    syslog "$ZOPEN_LOG_PATH/audit.log" "$LOG_A" "$CAT_NETWORK,$CAT_PACKAGE,$CAT_FILE" "DOWNLOAD" "handlePackageInstall" "Downloaded remote file '$pax' to cache"
+  fi
+  if [ ! -f "${pax}" ]; then
+    printError "${pax} was not found after downloaded!?!"
+  fi
+
+  if ! $downloadOnly & ! $cacheOnly; then
+    installdirname="${pax%.pax.Z}" # Use full pax name as default
+
+    printInfo "- Processing $pax..."
+    baseinstalldir="."
+    paxredirect=""
+    if ! $localInstall; then
+      baseinstalldir=$ZOPEN_PKGINSTALL
+      paxredirect="-s %[^/]*/%$ZOPEN_PKGINSTALL/$installdirname/%"
+      printVerbose "Non-local install, extracting with '$paxredirect'"
+    else
+      printInfo "- Local install specified, expanding pax to ."
+    fi
+  
+    printVerbose "Check for existing directory for version '$installdirname'"
+    if [ -d "$baseinstalldir/$installdirname" ]; then 
+      printInfo "- Clearing existing directory and contents"
+      rm -rf "$baseinstalldir/$installdirname"
+    fi
+
+    if ! runLogProgress "pax -rf $pax -p p $paxredirect ${redirectToDevNull}" "Expanding $pax" "Expanded"; then
+      printWarning "Errors unpaxing, package directory state unknown"
+      printInfo    "Use zopen alt to select previous version"
+      continue;
+    fi
+    if $localInstall; then
+      rm -f "${pax}"
+    fi
+
+    if $setactive; then
+      if [ -L "$baseinstalldir/$name" ]; then
+        printVerbose "Removing old symlink '$baseinstalldir/$name'"
+        rm -f "$baseinstalldir/$name"
+      fi
+      if ! ln -s "$baseinstalldir/$installdirname" "$baseinstalldir/$name"; then
+        printError "Could not create symbolic link name"
+      fi 
+    fi 
+
+    printVerbose "Adding version '${downloadFileVer}' to info file"
+    # Add file version information as a .releaseinfo file
+    echo "$downloadFileVer" > "${baseinstalldir}/$installdirname/.releaseinfo"
+
+    # Check for a .version file from the pax - if present good, if not
+    # generate one from the file name as the tag isn't granular enough to really
+    # be used in dependency checks
+    if [ ! -f "${baseinstalldir}/$installdirname/.version" ]; then
+      echo "$downloadFileVer" > "${baseinstalldir}/$installdirname/.version"
+    fi
+    if $setactive; then
+      if ! $nosymlink; then
+        mergeIntoSystem "$name" "${baseinstalldir}/$installdirname" "$ZOPEN_ROOTFS" 
+        misrc=$?
+        printVerbose "The merge complete with: $misrc"
+      fi
+
+      printInfo "- Checking for env file"
+      if [ -f ${baseinstalldir}/${name}/.env ]; then
+        printInfo "- .env file found, adding to profiled processing"
+        mkdir -p "$ZOPEN_ROOTFS/etc/profiled/$name"
+        cat << EOF > "$ZOPEN_ROOTFS/etc/profiled/$name/dotenv"
+curdir=\$(pwd)
+cd "$baseinstalldir/$name" >/dev/null 2>&1
+if [ -f ".env" ]; then
+  . .env
+fi
+cd \$curdir  >/dev/null 2>&1
+EOF
+        printInfo "- Sourcing environment to run any setup"
+        . "$ZOPEN_ROOTFS/etc/profiled/$name/dotenv"
+      fi
+    fi
+    if $unInstallOldVersion; then
+      printVerbose "New version merged; checking for orphaned files from previous version"
+      # This will remove any old symlinks or dirs that might have changed in an upgrade
+      # as the merge process overwrites existing files to point to different version
+      unsymlinkFromSystem "$name" "$ZOPEN_ROOTFS" "$currentlinkfile"
+    fi
+    if $setactive; then
+      printVerbose "Marking this version as installed"
+      touch "${baseinstalldir}/${name}/.active"
+      installedList="$name $installedList"
+      syslog "$ZOPEN_LOG_PATH/audit.log" "$LOG_A" "$CAT_INSTALL,$CAT_PACKAGE" "DOWNLOAD" "handlePackageInstall" "Installed package:'$name';version:$downloadFileVer;install_dir='$baseinstalldir/$installdirname';"
+    fi
+
+    if $doNotInstallDeps; then
+        printInfo "- Skipping dependency installation"
+    elif $reinstall; then
+      printVerbose "- Reinstalling so no dependency reinstall (unless explicitly listed)"
+    else
+      printInfo "- Checking for runtime dependencies"
+      printVerbose "Checking for .runtimedeps file"
+      if [ -e "${baseinstalldir}/${name}/.runtimedeps" ]; then
+        dependencies=$(cat "${baseinstalldir}/${name}/.runtimedeps")
+      fi
+      printVerbose "Checking for runtime dependencies from the git metadata"
+      if echo "$statusline" | grep "Runtime Dependencies:" >/dev/null; then
+        gitmetadependencies="$(echo "$statusline" | sed -e "s#.*Runtime Dependencies:<\/b> ##" -e "s#<br />.*##")"
+        if [ ! "$gitmetadependencies" = "No dependencies" ]; then
+          dependencies="$dependencies $gitmetadependencies"
+        fi
+      fi
+      dependencies=$(deleteDuplicateEntries "$dependencies" " ")
+      if [ ! "x" = "x$dependencies" ]; then
+        printInfo "- $name depends on: $dependencies"
+        printInfo "- Installing dependencies"
+        installDependencies "$name" "$dependencies"
+      else
+        printInfo "- No runtime dependencies found"
+      fi
+    fi
+    printInfo "${NC}${GREEN}Successfully installed $name${NC}"
+  fi # (download only)
+}
+
+installPorts()
+(
+  ports="$1"
+  printVerbose "Ports to install: $ports"
+  echo "$ports" | xargs | tr ' ' '\n' | while read port; do
+    mutexReq "zopen" "zopen"
+    handlePackageInstall "$port"
+    mutexFree "zopen"
+  done
+)
+
+# Main code start here
+args=$*
+upgradeInstalled=false
+verbose=false
+selectVersion=false
+setActive=true
+cacheOnly=false
+downloadOnly=false
+localInstall=false
+reinstall=false
+installOrUpgrade=false
+nosymlink=false
+skipupgrade=false
+doNotInstallDeps=false
+all=false
+chosenRepos=""
+while [ $# -gt 0 ]; do
+  case "$1" in
+    "-u" | "--update" | "-update" | "-upgrade" | "--upgrade")
+      upgradeInstalled=true
+      ;;
+    "-r" | "-reinstall" | "--reinstall")
+      reinstall=true
+      ;;
+    "--install-or-upgrade")
+      installOrUpgrade=true
+      ;;
+    "--local-install")
+      localInstall=true
+      ;;
+    "--no-symlink")
+      nosymlink=true
+      ;;
+    "--no-deps")
+      doNotInstallDeps=true
+      ;;
+    "--cache-only")
+      cacheOnly=true
+      ;;
+    "--download-only")
+      downloadOnly=true
+      ;;
+    "--no-set-active")
+      setactive=false
+      ;;
+    "--skip-upgrade")
+      skipupgrade=true
+      ;;
+    "--all")
+      all=true
+      ;;
+    "--select")
+      selectVersion=true
+      ;;
+    "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
+      printSyntax "${args}"
+      exit 4
+      ;;
+    "-v" | "--v" | "-verbose" | "--verbose")
+      verbose=true
+      ;;
+    "--version")
+      printVersion
+      exit 4
+      ;;
+    *)
+      chosenRepos="$chosenRepos $1";
+      ;;
+  esac
+  shift;
+done
+
+if [ -z "${chosenRepos}" ]; then
+  if ! $all && ! $upgradeInstalled; then
+    printInfo "No ports selected for installation"
+    exit 4
+  fi
+  if $upgradeInstalled; then
+    printVerbose "No specific port to upgrade, upgrade all installed packages"
+    printInfo "- Querying for installed packages"
+    progressHandler "spinner" "- Query complete" &
+    ph=$!
+    killph="kill -HUP $ph"
+    addCleanupTrapCmd "$killph"
+    chosenRepos="$(${utildir}/zopen-query list --installed --no-header --no-versions)"
+    $killph 2>/dev/null  # if the timer is not running, the kill will fail
+  elif $all; then
+    printInfo "Enter 'all' to confirm full installation [takes a long time so be sure!]:"
+    confirmall=$(getInput)
+    if [ ! "xall" = "x${confirmall}" ]; then
+      printError "Cancelling full installation"
+    fi
+  fi
+fi
+
+[ -z "${ZOPEN_CA}" ] && printError "\$ZOPEN_CA was not set. Ensure zopen init has run and \$HOME\zopen-config has been sourced."
+[ -r "${ZOPEN_CA}" ] || printError "Certificate at ${ZOPEN_CA} could not be accessed. Ensure zopen init has run and \$HOME\zopen-config has been sourced. "
+
+export SSL_CERT_FILE="${ZOPEN_CA}"
+export GIT_SSL_CAINFO="${ZOPEN_CA}"
+export CURL_CA_BUNDLE="${ZOPEN_CA}"
+
+if [ -n "${ZOPEN_GIT_OAUTH_TOKEN}" ]; then
+  OAUTH_TOKEN_OPTION='-H'
+  OAUTH_TOKEN="Authorization: Bearer ${ZOPEN_GIT_OAUTH_TOKEN}" 
+else
+  printWarning "Setting ZOPEN_GIT_OAUTH_TOKEN is recommended to ensure that you do not hit the GitHub API cap. See --help for more details."
+fi
+
+if $downloadOnly | $localInstall; then
+  downloadDir=$PWD
+else
+  if [ -z "$ZOPEN_ROOTFS" ]; then
+    printError "Unable to locate zopen file system, \$ZOPEN_ROOTFS is undefined"
+  fi
+  downloadDir=$ZOPEN_ROOTFS/var/cache/zopen
+fi
+
+if [ ! -d "${downloadDir}" ]; then
+  mkdir -p "${downloadDir}"
+  if [ $? -gt 0 ]; then
+    printError "Could not create download directory: $downloadDir"
+  fi
+fi
+
+if [ -n "${downloadDir}" ] && [ -d "${downloadDir}" ]; then
+  cd "${downloadDir}"
+fi
+
+printVerbose "Working directory: ${downloadDir}"
+# Parse passed in repositories and check if valid zopen framework repos
+printInfo "- Querying remote repo for latest package information"
+progressHandler "network" "- Latest information downloaded" &
+ph=$!
+killph="kill -HUP $ph"
+addCleanupTrapCmd "$killph"
+if ! repo_results="$(getContentsFromGithub "https://api.github.com/users/ZOSOpenTools/repos?per_page=250")"; then
+  exit 4;
+fi
+$killph 2>/dev/null  # if the timer is not running, the kill will fail
+repo_results=$(echo "$repo_results" | grep "\"full_name\":" 2>/dev/null | cut -d '"' -f 4)
+
+foundPort=false
+installArray=""
+
+if $all; then
+  for repo in $(echo ${repo_results}); do
+    repo=${repo#"ZOSOpenTools/"}
+    name=${repo%port}
+    # Skip repos that do not end with port
+    if [ "${name}" = "${repo}" ]; then
+      printVerbose "Found non-port repo: ${repo}"
+      continue;
+    fi
+    installArray="$installArray $name"
+  done
+else
+  for chosenRepo in $(echo "${chosenRepos}" | tr ',' '\n'); do
+    printVerbose "Processing repo: $chosenrepo"
+    printVerbose "Stripping any version (%), tag (#) or port suffixes"
+    toolrepo=$(echo "$chosenRepo" | sed -e 's#%.*##' -e 's#=.*##' -e 's#.*port##')
+    printVerbose "Adding prefix and 'port' suffix" # quicker than testing for presence!
+    toolrepo="ZOSOpenTools/${toolrepo}port"
+    toolfound=$(echo "${repo_results}" | awk -vtoolrepo="$toolrepo" '$0 ~ toolrepo {print}') 
+    if [ "$toolfound" = "$toolrepo" ]; then
+      printVerbose "Adding '$chosenRepo' to the install queue"
+      installArray="$installArray $chosenRepo"
+      printVerbose "Removing valid port from input list"
+      chosenRepos=$(echo "$chosenRepos" | sed -e "s#$chosenRepo##")
+    fi
+  done
+fi
+printVerbose "Checking whether any ports remain in the input list"
+chosenRepos=$(strtrim "$chosenRepos")
+if [ -n "$chosenRepos" ]; then
+  printError "The following requested port(s) do not exist:\n\t$(echo $chosenRepos | tr -s '[:space:]')"
+fi
+
+installPorts "$installArray"
