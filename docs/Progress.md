@@ -190,7 +190,6 @@
 |  [libtoolport](https://github.com/ZOSOpenTools/libtoolport) | 71 | 3
 |  [libgcryptport](https://github.com/ZOSOpenTools/libgcryptport) | 59 | 4
 |  [tarport](https://github.com/ZOSOpenTools/tarport) | 55 | 1
-|  [jqport](https://github.com/ZOSOpenTools/jqport) | 54 | 2
 |  [unzipport](https://github.com/ZOSOpenTools/unzipport) | 54 | 1
 |  [libgdbmport](https://github.com/ZOSOpenTools/libgdbmport) | 52 | 1
 |  [nanoport](https://github.com/ZOSOpenTools/nanoport) | 52 | 1
@@ -199,6 +198,7 @@
 |  [pinentryport](https://github.com/ZOSOpenTools/pinentryport) | 46 | 3
 |  [luaport](https://github.com/ZOSOpenTools/luaport) | 45 | 1
 |  [bisonport](https://github.com/ZOSOpenTools/bisonport) | 41 | 2
+|  [jqport](https://github.com/ZOSOpenTools/jqport) | 40 | 2
 |  [xxhashport](https://github.com/ZOSOpenTools/xxhashport) | 38 | 2
 |  [expatport](https://github.com/ZOSOpenTools/expatport) | 37 | 1
 |  [texinfoport](https://github.com/ZOSOpenTools/texinfoport) | 33 | 2
@@ -215,6 +215,7 @@
 |  [makeport](https://github.com/ZOSOpenTools/makeport) | 16 | 1
 |  [libksbaport](https://github.com/ZOSOpenTools/libksbaport) | 15 | 1
 |  [libssh2port](https://github.com/ZOSOpenTools/libssh2port) | 15 | 1
+|  [xzport](https://github.com/ZOSOpenTools/xzport) | 15 | 1
 |  [libgpgerrorport](https://github.com/ZOSOpenTools/libgpgerrorport) | 14 | 1
 |  [automakeport](https://github.com/ZOSOpenTools/automakeport) | 12 | 1
 | &#10003; [comp_clangport](https://github.com/ZOSOpenTools/comp_clangport) | 0 | 0
@@ -250,7 +251,6 @@
 | &#10003; [terraformport](https://github.com/ZOSOpenTools/terraformport) | 0 | 0
 | &#10003; [topport](https://github.com/ZOSOpenTools/topport) | 0 | 0
 | &#10003; [whichport](https://github.com/ZOSOpenTools/whichport) | 0 | 0
-| &#10003; [xzport](https://github.com/ZOSOpenTools/xzport) | 0 | 0
 | &#10003; [yqport](https://github.com/ZOSOpenTools/yqport) | 0 | 0
 | &#10003; [zigiport](https://github.com/ZOSOpenTools/zigiport) | 0 | 0
 | &#10003; [zipport](https://github.com/ZOSOpenTools/zipport) | 0 | 0
@@ -258,4 +258,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-05-26 14:46:40
+Last updated:  2023-05-26 15:34:34
