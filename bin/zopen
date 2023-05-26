@@ -4,70 +4,119 @@
 #
 printSyntax()
 {
-  echo "" >&2
-  echo "Syntax: zopen <command>" >&2
-  echo "where <command> is one of the following:" >&2
-  echo "  build          Invokes the build script" >&2
-  echo "  generate       Generate a zopen project" >&2
-  echo "  init           Generate a $HOME/.zopen-config file" >&2
-  echo "  install        Downloads and installs z/OS Open Tools" >&2
-  echo "  update-cacert  Updates the cacert.pem file" >&2
-  echo "  upgrade        Upgrades already installed tools" >&2
+  printInfo "" >&2
+  printInfo "Syntax: ${NC}${BOLD}zopen <command>${NC}" >&2
+  printInfo "where ${NC}${BOLD}<command>${NC} may be one of the following:" >&2
+  printInfo "  ${NC}${BOLD}init         ${NC}   generate \$HOME/.zopen-config, creates file structure and bootstraps" >&2
+  printInfo "  ${NC}${BOLD}build        ${NC}   invokes the build script." >&2
+  printInfo "  ${NC}${BOLD}download     ${NC}   downloads z/OS Open Tools package(s)" >&2
+  printInfo "  ${NC}${BOLD}install      ${NC}   installs z/OS Open Tools package(s))" >&2
+  printInfo "  ${NC}${BOLD}generate     ${NC}   generate a zopen project" >&2
+  printInfo "  ${NC}${BOLD}update-cacert${NC}   update the cacert.pem file" >&2
+  printInfo "  ${NC}${BOLD}upgrade      ${NC}   upgrades already installed tools" >&2
+  printInfo "  ${NC}${BOLD}list         ${NC}   lists information about z/OS Open Tools packages" >&2
+  printInfo "  ${NC}${BOLD}query        ${NC}   queries z/OS Open Tools packages" >&2
+  printInfo "  ${NC}${BOLD}search       ${NC}   searches remote repo for z/OS Open Tools package" >&2
+  printInfo "  ${NC}${BOLD}remove       ${NC}   removes installed z/OS Open Tools packages" >&2
+  printInfo "  ${NC}${BOLD}alt          ${NC}   switch local versions of z/OS Open Tools packages" >&2
+  printInfo "  ${NC}${BOLD}clean        ${NC}   cleans various aspects of z/OS Open Tools packages" >&2
   echo "" >&2
 }
 
-printHelp()
+printHelp() 
 {
   args=$*
-  echo "zopen is a general purpose script to be used with the ZOSOpenTools ports." >&2
+  echo "zopen is a general purpose script to be used with the z/OS Open Tools ports." >&2
   printSyntax
   echo "Example usage:" >&2
-  echo "  # Build a port" >&2
-  echo "  zopen build -v # Build port" >&2
-  echo "  # List available ports to install" >&2
-  echo "  zopen install" >&2
-  echo "  # Install all the ports from Github" >&2
-  echo "  zopen install --all" >&2
-  echo "  # Generate a zopen template project" >&2
-  echo "  zopen generate" >&2
+  echo " # Install athe 'which' utility package" >&2
+  echo " zopen install which" >&2
+  echo " # List available packages to download" >&2
+  echo " zopen list" >&2
+  echo " # List currently installed packages" >&2
+  echo " zopen list --installed" >&2
+  echo " # Generate a zopen template project" >&2
+  echo " zopen generate" >&2
 }
 
 export bindir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
 . "${bindir}/lib/common.inc"
 
 args=$*
+legacy=false
 while [[ $# -gt 0 ]]; do
   case "$1" in
+    "--legacy")
+      shift
+      legacy=true
+    ;;
+    "alt")
+      shift
+      exec "${bindir}/lib/zopen-alt" $@
+      ;;
     "build")
       shift
+      [ ! $legacy; ] && printError "Building ports currently requires the --legacy parameter to use legacy packaging system"
       exec "${bindir}/lib/zopen-build" $@
       ;;
-    "install")
+    "clean")
       shift
-      exec "${bindir}/lib/zopen-install" $@
+      exec "${bindir}/lib/zopen-clean" $@
       ;;
-    "upgrade")
+    "download")
       shift
-      exec "${bindir}/lib/zopen-install" -u $@
+      exec "${bindir}/lib/zopen-download" $@
       ;;
     "generate")
       shift
       exec "${bindir}/lib/zopen-generate" $@
       ;;
-    "update-cacert")
-      shift
-      exec "${bindir}/lib/zopen-update-cacert" $@
-      ;;
-    "init")
-      shift
-      exec "${bindir}/lib/zopen-init" $@
-      ;;
     "help" | "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
       printHelp "${args}"
       exit 0
       ;;
+    "init")
+      shift
+      if $legacy; then
+        exec "${bindir}/lib/zopen-init --legacy" $@
+      else
+        exec "${bindir}/lib/zopen-init" $@
+      fi
+      ;;
+    "install" | "-i")
+      shift
+      if $legacy; then
+        exec "${bindir}/lib/zopen-install" $@
+      else
+        exec "${bindir}/lib/zopen-download" $@
+      fi
+      ;;
+    "list" | "-l")
+      shift
+      exec "${bindir}/lib/zopen-query" "--list" $@
+      ;;
+    "query" | "-q")
+      shift
+      exec "${bindir}/lib/zopen-query" $@
+      ;;
+    "remove" | "-r" | "uninstall" | "un" | "erase" | "e")
+      shift
+      exec "${bindir}/lib/zopen-remove" $@
+      ;;
+    "search" | "-s")
+      shift
+      exec "${bindir}/lib/zopen-query" --remote-search $@
+      ;;
+    "update-cacert")
+      shift
+      exec "${bindir}/lib/zopen-update-cacert" $@
+      ;;
+    "upgrade" | "up")
+      shift
+      exec "${bindir}/lib/zopen-download" -u $@
+      ;;
     *)
-      printSoftError "Unknown option specified: '${1}'"
+      printSoftError "Unknown option ${1} specified"
       printSyntax "${args}"
       exit 8
       ;;
