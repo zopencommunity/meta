@@ -1,0 +1,148 @@
+#!/bin/sh
+# "Alternatives" utility for z/OS Open Tools - https://github.com/ZOSOpenTools
+
+export utildir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
+
+. "${utildir}/common.inc"
+
+printSyntax() 
+{
+  args=$*
+  echo "zopen alt is a utility for z/OS Open Tools to switch package versions for currently installed packages" >&2
+  echo "Syntax: zopen-alt [<option>]* [<package]" >&2
+  echo "  where <option> may be one or more of:" >&2
+  echo "  --set: set version" >&2
+  echo "  -v: run in verbose mode." >&2
+  echo " and <package> is a package name." >&2
+}
+
+setAlt(){
+  i=$1
+  needle=$2
+  printVerbose "Setting alternative"
+    valid=false
+    while ! $valid; do
+      echo "Enter alternative version to use (1-$i): "
+      selection=$(getInput)
+      if [[ ! -z "$(echo $selection | sed -e 's/[0-9]*//')" ]]; then
+        echo "Invalid input, must be a number between 1 and $i"
+      elif [ "$selection" -ge 1 ] && [ "$selection" -le "$i" ]; then
+        valid=true
+      fi
+    done
+    if [ ! $selection -eq $current ]; then
+      newver="$(echo $found | awk -v selection=$selection '
+        BEGIN {count=0}
+              {count = count + 1; if (count=selection) { print $(selection)} }
+      ')"
+      printInfo "Setting alternative: $selection: $newver"
+      [ -d $ZOPEN_PKGINSTALL/$newver ] || printError "Mismatch found, no version directory at $newver" 
+      [ -n "$needle" ] || printError "$ZOPEN_PKGINSTALL/$needle not found"
+      if [ -e $ZOPEN_PKGINSTALL/$needle ]; then
+        printVerbose "Removing master link"
+        rm -rf $ZOPEN_PKGINSTALL/$needle
+      fi
+
+      mergeIntoSystem "$needle" "$ZOPEN_PKGINSTALL/$newver" "$ZOPEN_ROOTFS" 
+      printVerbose "New version merged; checking for orphaned files from previous version"
+      # This will remove any old symlinks or dirs that might have changed in an up/downgrade
+      # as the merge process overwrites existing files to point to different version. If there was
+      # no other version, then $deref will be empty so nothing to uninstall
+      if [ -n "$deref" ]; then
+        unsymlinkFromSystem "$needle" "$ZOPEN_ROOTFS" "${ZOPEN_PKGINSTALL}/$deref/.links"
+      else
+        printVerbose "No previous version found (no .links) - no unlinking performed"
+      fi 
+      
+      misrc=$?
+      printVerbose "The merge complete with: $misrc"
+      printVerbose "Generating main link from $needle to version: $newver"
+      if ! ln -sf $newver $ZOPEN_PKGINSTALL/$needle; then
+        printError "Could not create symbolic link name"
+      fi
+      touch "${ZOPEN_PKGINSTALL}/${needle}/.active"
+      version="unknown"
+      if [ -e "${ZOPEN_PKGINSTALL}/${needle}/.releaseinfo" ]; then
+        version=$(cat "${ZOPEN_PKGINSTALL}/${needle}/.releaseinfo")
+      fi
+      syslog $ZOPEN_LOG_PATH/audit.log $LOG_A "$CAT_PACKAGE" "ALT" "setAlt" "Set '${needle}' to version:$version;"
+    else
+      printInfo "Selection is already current version."
+      exit 0
+    fi
+}
+
+listAlts(){
+  sett=$1
+  needle=$2
+
+  found=$(zosfind $ZOPEN_PKGINSTALL -type d -o -type l| grep "$needle-[^/]*$" | sed -e "s#$ZOPEN_PKGINSTALL/##")
+  if [[ -z $found ]]; then
+    printInfo "No currently available version of package '${needle}'"
+    exit 4
+  fi
+  if [ -e $ZOPEN_PKGINSTALL/$needle ]; then
+    deref=$(ls -l $ZOPEN_PKGINSTALL/$needle | awk '{ print $(NF) }')
+    printVerbose "Current version: ${deref#$ZOPEN_PKGINSTALL/}"
+  fi
+
+  i=0
+  current=0
+# just the below would be simpler, but creates a subshell so can't get the number of entries outside!  
+#  echo "$found" | xargs | tr ' ' '\n' | while read repo; do
+  TMP_FIFO_PIPE="$HOME/altselect.pipe"
+  [[ ! -p $TMP_FIFO_PIPE ]] || rm -f $TMP_FIFO_PIPE
+  mkfifo $TMP_FIFO_PIPE
+  echo "$found" | xargs | tr ' ' '\n' >> $TMP_FIFO_PIPE &
+  while read repo; do
+    printVerbose "Parsing repo: '$repo' as '${repo#$ZOPEN_PKGINSTALL/}'"
+    i=$(expr $i + 1)
+    if [[ "${deref#$ZOPEN_PKGINSTALL/}" = "${repo#$ZOPEN_PKGINSTALL/}" ]]; then
+      current=$i
+      printInfo "${NC}${GREEN}$i: ${repo#$ZOPEN_PKGINSTALL/}  <-  current${NC}"
+    else
+      printInfo "$i: ${repo#$ZOPEN_PKGINSTALL/}"
+    fi
+  done < $TMP_FIFO_PIPE
+  [[ ! -p $TMP_FIFO_PIPE ]] || rm -rf $TMP_FIFO_PIPE
+
+  if $sett; then
+    mutexReq "zopen" "zopen"
+    setAlt "$i" "$needle" "$deref"
+    unset $sett
+    mutexFree "zopen"
+    listAlts false "$needle"
+  fi
+  exit 0
+}
+
+
+# Main code start here
+args=$*
+verbose=false
+sett=false
+if [[ $# -eq 0 ]]; then
+  printError "No option provided for query"
+fi
+while [[ $# -gt 0 ]]; do
+  printVerbose "Parsing option: $1"
+  case "$1" in
+    "-s" | "--set")
+      sett=true
+      ;;
+    "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
+      printSyntax "${args}"
+      exit 4
+      ;;
+    "-v" | "--v" | "-verbose" | "--verbose")
+      verbose=true
+      ;;
+    *)
+      packageList="$packageList $1";
+      ;;
+  esac
+  shift;
+done
+
+[[ -z "$packageList" ]] || listAlts $sett $packageList
+printError "No action verb specified"
