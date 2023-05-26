@@ -114,11 +114,16 @@ export utilparentdir="$(cd "$(dirname "$0")/../.." >/dev/null 2>&1 && pwd -P)"
 for tmp in "$TMPDIR" "$TMP" /tmp
 do
   if [ ! -z $tmp ] && [ -d $tmp ]; then
-    export ZOPEN_TEMP_C_FILE="$tmp/$LOGNAME.c"
     break
   fi
 done
+
+if [ ! -d "$tmp" ]; then
+  printError "Temporary directory not found. Please specify \$TMPDIR, \$TMP or have a valid /tmp directory"
+fi
+
 TMP_FIFO_PIPE="$tmp/$LOGNAME.pipe"
+ZOPEN_TEMP_C_FILE="$tmp/$LOGNAME.c"
 
 
 # Capture start time before setting trap
@@ -166,6 +171,11 @@ setDefaults()
   export ZOPEN_TEST_STATUS_NONE_PASSED=3
   export ZOPEN_TEST_STATUS_ERROR=4
   export ZOPEN_TEST_STATUS_SKIPPED=5
+  unset ZOPEN_CPPFLAGS
+  unset ZOPEN_CFLAGS
+  unset ZOPEN_CXXFLAGS
+  unset ZOPEN_LDFLAGS
+  unset ZOPEN_LIBS
   unset ZOPEN_EXTRA_CPPFLAGS
   unset ZOPEN_EXTRA_CFLAGS
   unset ZOPEN_EXTRA_CXXFLAGS
@@ -1420,7 +1430,7 @@ resolveCommands()
   fi
 
   if [ "${ZOPEN_CHECK}x" != "skipx" ] && ! ${skipcheck}; then
-    if [ "${ZOPEN_MAKE_MINIMAL}x" = "x" ]; then
+    if [ "${ZOPEN_CHECK_MINIMAL}x" = "x" ]; then
       export ZOPEN_CHECK_CMD="\"${ZOPEN_CHECK}\" ${ZOPEN_CHECK_OPTS} CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\""
     else
       export ZOPEN_CHECK_CMD="\"${ZOPEN_CHECK}\" ${ZOPEN_CHECK_OPTS}"
