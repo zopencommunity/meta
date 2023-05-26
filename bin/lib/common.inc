@@ -507,4 +507,35 @@ deleteDuplicateEntriesRedux()
   echo "$value" | awk -v RS="$delim" -v ORS="$delim" ' {gsub("^[ ]+|[ ]$", "", $0); if (NF>0 && !a[$0]++) {print } }' | sed "s/${delim}$//"
 }
 
+# Logging Types
+LOG_E="ERROR"    # If there was a failure and a command failed
+LOG_W="WARNING"  # If an error occurred but there was a workaround/fallback
+LOG_I="INFO"     # General information
+LOG_A="AUDIT"    # Security-type log for admin activities
+
+# Logging Categories - more than one possible for a log entry
+CAT_CONFIG="C"    # Configuration change
+CAT_FILE="F"      # File handling (eg. downloading)
+CAT_INSTALL="I"   # Install processing
+CAT_NETWORK="N"   # Network processing
+CAT_PKG="P"       # Package handling
+CAT_QUERY="Q"     # Query processing
+CAT_REMOVE="R"    # Removal handling
+CAT_SYS="S"       # Related to the underlying native z/OS system
+CAT_ZOPEN="Z"     # Related to the zopen system itself
+
+syslog() {
+  fd=$1
+  type=$2
+  categories=$3
+  module=$4
+  location=$5
+  msg=$6
+  if [ ! -e "$fd" ]; then
+    mkdir -p "$(dirname "$fd")"
+    touch "$fd"
+  fi
+  echo $(date +"%F %T") $(id | cut -d' ' -f1)::$module:$type:$categories:$location:$msg >> $fd
+
+}
 zopenInitialize
