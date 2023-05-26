@@ -1,90 +1,89 @@
-# meta
+# meta-dt
+A reworking of the main meta project to add additional package management facilities, similar to utilities like apt, dpkg, yum, yast2, emerge .... just written in pure shell script (and a tiny bit of REXX) to remove any pre-reqs (like python/perl/bash etc).
+This fork is designed for everyday usage of the zos Open Tools ports within the USS environment or for those who wish to download the tools; users who are interested in building and/or porting packages from scratch should use the main release of meta at this time.
 
-Meta repository to tie together the various underlying z/OS Open Source tools repositories here.
+## Installation
+Clone the repo or download/expand a release pax.  From the bin directory run the following command, answering the questions appropriately:
+```
+>zopen init
+```
+Note that initialization will ask the question "Setting alternative: 1: meta-dt"; the correct answer is ```1<enter>```  - this is used to ensure that the currently installing fork of meta is copied and used.  See the section regarding the ```alt``` parameter below for more details.
 
-View our documentation at https://zosopentools.github.io/meta/.
+## Sample usage
+```
+>./zopen init
+>. $HOME/.zopen-config
+>./zopen list --installed
+>zopen install which
+>zopen list --installed
+>which which
+>zopen upgrade
+```
 
-## Background
 
-There are some key 'foundational' Open Source technologies needed to port software. The goal of this set of repositories is to provide minimal 'port' repositories
-that can be used to get a foundational software package building on z/OS.
-We are starting with what we view as some 'foundational' technologies. One is the stack of technology to be able to build [zsh](https://sourceforge.net/projects/zsh/postdownload). Another is to
-be able to build [protocol buffers](https://github.com/protocolbuffers/protobuf/releases).
+## Restrictions
+Currently, the zopen build capability **DOES NOT** work with the fork due to the way package dependencies and post-built installation occurs.  This is on the roadmap...
 
-But - there is a _transitive closure_ problem to address with porting a software package, namely understanding what packages are pre-requisites
-for the software package you want to port. As an example, for zsh, we see the following:
 
-zsh requires autoconf to configure the build scripts, GNU make to run Makefiles, ncurses
-zsh is easier to develop (but doesn't require) curl and git natively on z/OS, and GNU techinfo for documentation.
+## Important usage notes
+- As zopen utilises Github for package repositories, it is strongly advised to set up a [Github API token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) . Github throttles the number of anonymous access requests to repositories; with an API token, that number is significantly increased.
 
-autoconf requires m4, automake, and GNU make
-m4 requires a c99 compiler with c11 features, so make sure you have the latest C/C++ compilers installed on your system.
+- On first run, ```zopen init``` will copy this forked version of meta into the "package" area of zopen (ie. where packages are expanded and accessed from).  It will also be pinned to this release to prevent any possible updates from the "real" meta package. Removing the .pinned file from the meta-dt directory will allow for the main meta port to be installed however this will cause incompatabilities if run.
 
-GNU make requires GNU m4, automake, autoconf, Perl, and a C compiler that is gcc compatible.
+- Remote respositores utilise the suffix ```port``` - where required, packages should be specified with**OUT** the suffix. eg using ```zopen install which``` rather than ```zopen install whichport```
 
-## Order to Build _from scratch_
 
-If you want to build the tools from scratch and not use the binary pax files available, you will want
-to tackle this in a particular order.
-First, you need to have some tools installed on your system:
+## Problem resolution
+If the meta package does get updated to a non-dt version, then running ```./zopen alt meta -s``` from the meta-dt/bin directory within the z/OS Open Tools root filesystem should allow selection of the dt-forked meta; running any other non-forked zopen commands might break the installation or cause unexpected behaviour! 
+zopen commands take a ```--verbose``` parameter to produce additional messages that can be used to aid problem diagnosis.
 
-### System Prerequisites
+## Basic command introduction
+Most commands have extended help available using the ```--help``` parameter.  The following usage guidance should be sufficient to get a system running
 
-Use `zopen-setup` to download the bootstrap environment.  This will provide you with the
-minimum required set of tools to get started.  Otherwise you can download the tools individually at the below links.
+>zopen init
 
-| Project | License | Download link |
-|---------|---------|------------------------|
-| [gnu make 4.1](https://www.gnu.org/software/make/) | [GPL V3](https://www.gnu.org/licenses/gpl-3.0.html) | [z/OS Open Tools release](https://github.com/ZOSOpenTools/makeport/releases/tag/boot) |
-| [IBM XL C/C++ V2.4.1](https://www-40.ibm.com/servers/resourcelink/svc00100.nsf/pages/xlCC++V241ForZOsV24) | IBM [^ibm] | [ibm.com web download](https://www.ibm.com/marketing/iwm/iwm/web/dispatcher.do?source=swg-zosxlcc) |
-| [git](https://git.kernel.org/pub/scm/git/git.git/) | [LGPL V2.1](https://git.kernel.org/pub/scm/git/git.git/tree/LGPL-2.1) | [z/OS Open Tools release](https://github.com/ZOSOpenTools/gitport/releases/tag/boot)  |
-| [curl](https://github.com/curl/curl) | [curl-license](https://github.com/curl/curl/blob/master/COPYING) | [z/OS Open Tools release](https://github.com/ZOSOpenTools/curlport/releases/tag/boot) |
-| [gunzip](https://www.gnu.org/software/gzip/) | [GPL V3](https://www.gnu.org/licenses/gpl-3.0.html) | [z/OS Open Tools release](https://github.com/ZOSOpenTools/unzipport/releases/tag/boot) |
+Used to initialise a z/OS Open Tools environment. By default, this will create a ```zopen``` directory in your ```$HOME``` directory as the root filesystem (rootfs).  The rootfs holds the various packages, configuration and environment for z/OS Open Tools packages - removing this directory will revert the system without a trace.  A z/OS Open Tools main configuration file is generated in ```$HOME/.zopen-config``` - to enable the z/OS Open Tools, this will either need to be sourced after logon to the system or the following line can be added to ```$HOME/.profile``` (or .bash_profile or...) to automatically source the z/OS Open Tools configuration file
+>[ -e "$HOME/.zopen-config" ] && . $HOME/.zopen-config
+It is possible to reinitialize a system using the ```re-init``` option - doing so will remove the previous configuration though the rootfs can overlap the old filesystem to reuse installed and/or cached packages for example.  Initialisation on a system that has previously had a z/OS Open Tools configuration should allow some parameters to be copied across, such as Github tokens.
 
-[^ibm]: a no-charge add-on feature for clients that have enabled the XL C/C++ compiler (an optionally priced feature) on z/OS
+>zopen install <package>...
 
-### Recommended software
+Used to install a z/OS Open Tools package.  By default, the latest version is installed although options are available to install specific versions, tags or to pick from a selection [see ```--help``` for more]
 
-| Project | License | Download link |
-|---------|---------|------------------------|
-| [bash](https://www.gnu.org/software/bash/) | [GPL V3](https://www.gnu.org/licenses/gpl-3.0.html) | [z/OS Open Tools release](https://github.com/ZOSOpenTools/bashport/releases/) |
+>zopen upgrade
 
-Both IBM and Rocket provide supported versions of the software above for a fee.
+Used to upgrade z/OS Open Tools packages.  Without parameters, all installed packages will be upgraded; individual packages can be specified on the command line to upgrade only those packages.  Packages can be "pinned" to prevent upgrading in case a later release is found to be broken or incompatible - creating a ```.pinned``` file in the package directory prevents the upgrade; removing the file allows upgrades to occur.
 
-Taking the defaults will mean there are less variables for you to configure. We recommend you structure your sandbox as follows:
+>zopen clean [--cache] [--unused] [--dangling] [--all]
 
-- Have the root of your development file system be `$HOME/zopen` (you will want to have several gigabytes of storage for use - we recommend at least 15GB)
-- Have sub-directories called _boot_, _prod_, _dev_.
-  - _boot_: sub-directory for each tool required to bootstrap (make, git, curl, gunzip, m4)
-  - _prod_: sub-directory for tools to be installed once built. These tools will be used by downstream software, e.g. make build process will use the Perl prod build
-  - _dev_: sub-directory for tools you are building
+Used to remove resources on the system.  zopen will retain old versions of packages to allow for switching versions or quick re-installs; downloaded pax files are held in a cache while the specific version files are maintained in the directory configured during initialisation.  Using the ```clean``` option removes those unused resources.  In addition, zopen utilises symlinks for maintaining the appropriate file structure - should a problem occur during package installation, removal or version change, danling symlinks might be present; the ``--dangling`` option will (slowly) analyse the rootfs and prune any dangling symlinks.
 
-### Build Order
+>zopen alt [package] [-s]
 
-The tools have dependencies on other tools, and there are also typically 2 ways the tools are packaged:
+Used to list versions of a package if there are multiple versions present; using the ```-s``` parameter allows for the active version to be changed
 
-- one that is pre-configured and therefore doesn't need autoconf/automake and associated tools
-- one that is not pre-reconfigured and therefore does require autoconf/automake and associated tools
+>zopen remove <package>...
 
-To build from scratch, start with the tarballs of the following tools:
+Removes a package from the system, leaving the version on the system for re-use later; the ```---purge`` directory will also remove the versioned directory, requiring a potential download and/or an unpax to occur to re-install that version
 
-| Project | License | Pre-requisites |
-|---------|---------|------------------------|
-| [m4](https://www.gnu.org/software/m4/m4.html) | [GPL V3 ](https://www.gnu.org/licenses/gpl-3.0.html) | m4, curl in boot and xlclang installed on the system |
-| [perl](https://dev.perl.org/) | [GPL V3 ](https://www.gnu.org/licenses/gpl-3.0.html) | additionally requires make, git in boot and m4 in prod |
-| [make](https://www.gnu.org/software/make/) | [GPL V3 ](https://www.gnu.org/licenses/gpl-3.0.html) | perl in prod for running test cases |
-| [zlib](https://zlib.net/) | [zlib license](https://zlib.net/zlib_license.html) | make in prod |
-| [autoconf](https://www.gnu.org/software/autoconf/) | [GPL V3](https://www.gnu.org/licenses/gpl-3.0.html) | libz in prod |
-| [automake](https://www.gnu.org/software/automake/) | [GPL V3](https://www.gnu.org/licenses/gpl-3.0.html) | autoconf in prod |
 
-Once you either have these tools built, or have downloaded a pre-built pax file for the build, you may want to build other tools.
-Each tool has a _buildenv_ file and one of the entries will describe the tools it requires to build, depending
-on where the source is from (currently TARBALL or GIT clone). So for example m4 requires:
+>zopen list [--installed]
 
-`ZOPEN_TARBALL_DEPS="curl gzip make m4"`
+With no parameters, will list the available packages against the currently installed versions; more usefully, using the ```--installed``` parameter lists the actually locally-installed packages rather than all potential packages
 
-and:
+>zopen search <package>
 
-`ZOPEN_GIT_DEPS="git make m4 help2man perl makeinfo xz autoconf automake gettext"`
+Searches the remote repositiory for the specified package, returning appropriate meta-data about the package if found
 
-If you want to build from the `git` clone, you can see you will need to have more software pre-installed.
+>zopen query <option>
+
+Queries the local z/OS Open Tools sytem. See ```---help``` for more details
+
+
+
+
+### Useful resources
+- View the z/OS Open Tools project home: https://github.com/ZOSOpenTools
+- View the main Meta documentation at https://zosopentools.github.io/meta/
+
+
