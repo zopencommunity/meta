@@ -1,0 +1,142 @@
+#!/bin/sh
+# Cleanup utility for z/OS Open Tools - https://github.com/ZOSOpenTools
+
+export utildir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
+
+. "${utildir}/common.inc"
+
+printSyntax() 
+{
+  args=$*
+  echo "zopen clean is a utility for z/OS Open Tools to switch package versions for currently installed packages" >&2
+  echo "Syntax: zopen-clean [<option>]* [<package]" >&2
+  echo "  where <option> may be one or more of:" >&2
+  echo "      -u : --unused: removes unused package versions" >&2
+  echo "      -d : --dangling: removes dangling symlinks" >&2
+  echo "      -c : --cache: cleans package cache" >&2
+  echo "      -a : --all:  equivalent to -u -d -c" 
+  echo "  -v: run in verbose mode." >&2
+  echo "TODO and <package> is a package name." >&2
+}
+
+
+cleanUnused(){
+  needle=$1
+  found=$(zosfind $ZOPEN_PKGINSTALL -name "*/${needle}-*" -prune -type d  | grep "/${needle}-[^/]*")
+  if [[ -z $found ]]; then
+    printInfo "No currently installed version of package '${needle}'"
+    return
+  fi
+  if [ -e "$ZOPEN_PKGINSTALL/$needle" ]; then
+    deref=$(ls -l $ZOPEN_PKGINSTALL/$needle | awk '{ print $(NF) }')
+    printVerbose "Current version: ${deref#$ZOPEN_PKGINSTALL/}"
+  else
+    printInfo "No current version of $needle installed. Removing all unused versions"
+  fi
+
+  i=0
+  current=0
+# the below would be simpler, but creates a subshell so can't get the number of entries outside!  
+#  echo "$found" | xargs | tr ' ' '\n' | while read repo; do
+  TMP_FIFO_PIPE="$HOME/altselect.pipe"
+  [[ ! -p $TMP_FIFO_PIPE ]] || rm -f $TMP_FIFO_PIPE
+  mkfifo $TMP_FIFO_PIPE
+  echo "$found" | xargs | tr ' ' '\n'>> $TMP_FIFO_PIPE &
+  while read repo; do
+    printVerbose "Parsing repo: '$repo' as '${repo#$ZOPEN_PKGINSTALL/}'"
+    if [[ "${repo}" = "${repo#$ZOPEN_PKGINSTALL/}" ]]; then
+      printVerbose "Working around possible bug in FIFO that converts initial char to alert/bell 0x07/'\a'"
+      if ! $(type od); then
+        printVerbose "Displaying erroneous string"
+        out=$(echo "${repo}" | od -cx)
+        printVerbose "String details:\n '$out'"
+      fi
+      repo="/$(echo $repo | cut -b 2-)"
+      printVerbose "Repo:='$repo'"
+      syslog $ZOPEN_LOG_PATH/audit.log $LOG_W "$CAT_FILE,$CAT_SYS" "CLEAN" "cleanUnused" "FIFO character issue while reading from $TMP_FIFO_PIPE. Workaround applied"
+    fi
+    i=$(expr $i + 1)
+    if [[ "${deref#$ZOPEN_PKGINSTALL/}" = "${repo#$ZOPEN_PKGINSTALL/}" ]]; then
+      current=$i
+      printInfo "${NC}${GREEN}$i: ${repo#$ZOPEN_PKGINSTALL/}  <-  current${NC}"
+    else
+      printInfo "Command to run rm -rf $repo" 
+      printInfo "$i: ${repo#$ZOPEN_PKGINSTALL/} <- Removed"
+      syslog $ZOPEN_LOG_PATH/audit.log $LOG_A "$CAT_FILE,$CAT_PACKAGE,$CAT_REMOVE" "CLEAN" "cleanUnused" "Removed unused package at ${repo#$ZOPEN_PKGINSTALL/} "
+    fi
+  done < $TMP_FIFO_PIPE
+  [[ ! -p $TMP_FIFO_PIPE ]] || rm -f $TMP_FIFO_PIPE
+}
+cleanDangling(){
+  printVerbose "Removing dangling symlinks from the file structure"
+  progressHandler "spinner" "- Dangling link removal complete" &
+  ph=$!
+  killph="kill -HUP $ph"
+  addCleanupTrapCmd "$killph"
+  flecnt=0
+  zosfind $ZOPEN_ROOTFS -type l -exec test ! -e {} \; -print | while read sl; do
+    printVerbose "Removing symlink '$sl'"
+    rm -f $sl
+    flecnt=$(expr $flecnt + 1)
+  done
+  $killph 2>/dev/null  # if the timer is not running, the kill will fail
+  syslog $ZOPEN_LOG_PATH/audit.log $LOG_A "$CAT_FILE" "CLEAN" "cleanDangling" "zopen system scanned for dangling symlinks; $flecnt link(s) removed"
+}
+cleanCache(){
+  printVerbose "Cleaning $ZOPEN_ROOTFS/var/cache/zopen"
+  rm -rf $ZOPEN_ROOTFS/var/cache/zopen/*
+  syslog $ZOPEN_LOG_PATH/audit.log $LOG_A "$CAT_FILE" "CLEAN" "cleanCache" "Main cache in $ZOPEN_ROOTFS/var/cache/zopen cleared"
+}
+
+# Main code start here
+args=$*
+verbose=false
+unused=false
+dangling=false
+cache=false
+package=""
+
+if [[ $# -eq 0 ]]; then
+  printError "No option provided for cleaning"
+fi
+while [[ $# -gt 0 ]]; do
+  printVerbose "Parsing option: $1"
+  case "$1" in
+      "-u" | "--unused")
+      unused=true
+      ;;
+      "-d" | "--dangling")
+      dangling=true
+      ;;
+      "-c" | "--cache")
+      cache=true
+      ;;
+      "-a" | "--all")
+      unsed=true
+      dangling=true
+      cache=true
+      ;;
+    "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
+      printSyntax "${args}"
+      exit 4
+      ;;
+    "-v" | "--v" | "-verbose" | "--verbose")
+      verbose=true
+      ;;
+    *)
+      package="$1";
+      ;;
+  esac
+  shift;
+done
+
+if $unused; then 
+  cleanUnused $package
+fi
+if $dangling; then 
+  cleanDangling
+fi
+if $cache; then
+  cleanCache
+fi
+
