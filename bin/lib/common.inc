@@ -77,6 +77,28 @@ getScreenCols(){
   stty | awk -F'[/=;]' '/columns/ { print $4}' | tr -d " "
 }
 
+zosfind(){
+  # Use the standard z/OS find utility; If the findutils package is installed,
+  # the installed find command takes precedence but is not compatible with the
+  # standard zos find [regex searches for "-name" are not allowed, but
+  # "-wholename" is not available on standard zosfind. For the tooling to be
+  # consistent across platforms (where findutils is/is not installed) use the
+  # standard zos version
+  /bin/find $*
+}
+
+findrev () {
+  haystack="$1"
+  needle="$2"
+  while [[ "$haystack" != "" && "$haystack" != "/" && "$haystack" != "./" && ! -e "$haystack/$needle" ]]; do
+    haystack=${haystack%/*}
+  done
+  echo "$haystack"
+}
+
+strtrim(){
+  echo "$1" | sed -e 's/^[ ]*//' -e 's/[ ]*$//'
+}
 
 defineEnvironment()
 {
@@ -108,6 +130,95 @@ printColors()
   /bin/echo "$@"
 }
 
+mutexReq(){
+  mutex=$1
+  lockdir="$ZOPEN_ROOTFS/var/lock"
+  [ -e lockdir ] || mkdir -p $lockdir
+  mutex="$lockdir/$mutex"
+  mypid=$(exec sh -c 'echo $PPID')
+  if [ -e "$mutex" ]; then
+    lockedpid=$(cat $mutex)
+    { [ ! "$lockedpid" = "$mypid" ] && [ ! "$lockedpid" = "$PPID" ]; } && echo "Aborting, Process '$lockedpid' holds the '$2' lock: '$mutex'" && exit -1
+  fi
+  addCleanupTrapCmd "rm -rf $mutex"
+  echo "$mypid" > $mutex
+}
+mutexFree(){
+  mutex=$1
+  lockdir="$ZOPEN_ROOTFS/var/lock"
+  mutex="$lockdir/$mutex"
+  [ -e "$mutex" ] && rm -f $mutex
+}
+# Calculate the relative path from $1 to $2
+relativePath(){
+  sourcePath=$1
+  targetPath=$2
+  currentIFS="$IFS"
+  IFS="/"
+  relativePath=''
+  set -- $targetPath
+  for elem in $sourcePath; do
+    if [ -z "$relativePath" ]; then
+      if [ -z "$elem" ]; then
+        relativePath="$1"
+      elif [ "$1" = "$elem" ]; then
+      else
+        relativePath="../$1"
+      fi
+    else
+      if [ -n "$elem" ]; then
+        relativePath="../$relativePath"
+      else
+        relativePath="$relativePath/$1"
+      fi
+    fi
+    if [ $# -gt 0 ]; then
+      shift
+    fi
+  done
+  # if the target is longer than the source, there might be some additional
+  # elements in the shifted $0 to append
+  if [ $# -gt 0 ]; then
+     relativePath=$relativePath/$(echo $* | sed "s/ /\//g")
+  fi
+
+  IFS="$currentIFS"
+  echo "$relativePath"
+}
+relativePath2(){
+  sourcePath=$1
+  targetPath=$2
+  currentIFS="$IFS"
+  IFS="/"
+  relativePath=''
+  set -- $targetPath
+  for elem in $sourcePath; do
+      if [ -z "$relativePath" ]; then
+        if [ "$1" = "$elem" ]; then
+            shift
+            continue
+        else
+          relativePath="../$elem"
+        fi
+      else
+        if [ -z "$1" ]; then
+          relativePath="$relativePath/$elem"
+        else
+          relativePath="../$relativePath/$elem"
+        fi
+      fi
+    if [ $# -gt 0 ]; then
+      shift
+    fi
+  done
+  # if the target is longer than the source, there might be some additional
+  # elements in the shifted $0 to append
+  if [ $# -gt 0 ]; then
+     relativePath=$relativePath/$(echo $* | sed "s/ /\//g")
+  fi
+  IFS="$currentIFS"
+  echo "$relativePath"
+}
 zopenInitialize()
 {
   defineEnvironment
@@ -372,7 +483,7 @@ validateVersion()
   operator=$2
   requestedVersion=$3
   dependency=$4
-  if [ ! -z "$operator" ] && [ -z "$version" ]; then
+  if [ -n "$operator" ] && [ -z "$version" ]; then
     printVerbose "$operator ${requestedVersion} requsted, but no version file found in $versionPath." 
     return 1
   elif [ ! -z "$operator" ] && ! compareVersions "${version}" "${requestedVersion}"; then
@@ -382,14 +493,18 @@ validateVersion()
   return 0
 }
 
-initDefaultEnvironment()
+deleteDuplicateEntries() 
 {
-  export ZOPEN_OLD_PATH=$PATH # Preserve PATH in case scripts need to access it
-  export PATH="$(getconf PATH)"
-  export _CEE_RUNOPTS="FILETAG(AUTOCVT,AUTOTAG) POSIX(ON)"
-  unset MANPATH
-  export LIBPATH="/usr/lib"
-  export STEPLIB=none
+  value=$1
+  delim=$2
+  echo "$value$delim" | awk -v RS="$delim" '!($0 in a) {a[$0]; printf("%s%s", col, $0); col=RS; }' | sed "s/${delim}$//"
+}
+# reworked version of above to strip blank elements between delims
+deleteDuplicateEntriesRedux() 
+{
+  value=$1
+  delim=$2
+  echo "$value" | awk -v RS="$delim" -v ORS="$delim" ' {gsub("^[ ]+|[ ]$", "", $0); if (NF>0 && !a[$0]++) {print } }' | sed "s/${delim}$//"
 }
 
 zopenInitialize
