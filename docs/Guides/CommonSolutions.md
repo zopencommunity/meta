@@ -189,4 +189,30 @@ for this:
 +#endif
 ```
 
+# Libtool complains that passing .o object files as libraries is not allowed
+By default, projects that use libtool during the build phase will complain about the use of .o files as libraries when they are passed in via the LIBS variable. Here's an example of the error message:
 
+```
+libtool:   error: cannot build libtool library 'liblzma.la' from non-libtool objects on this host: /home/itodoro/zopen-data/prod/zoslib-autocvt_tty/lib/celquopt.s.o
+```
+
+When zoslib is included as a dependency, it automatically adds .o files to the `ZOPEN_EXTRA_LIBS` environment variable, which will eventually be passed as the LIBS variable.
+
+To override this, you can modify the configure script as follows:
+
+```
++openedition)
++  lt_cv_deplibs_check_method=pass_all
++  ;;
+```
+
+Here's an example pull request that was done for man-db: https://github.com/ZOSOpenTools/man-dbport/pull/23/files
+
+# Displaying compile commands in the build output
+When building projects, it can be helpful to see the actual compile commands being executed. This can aid in understanding the build process, diagnosing issues, or debugging. The zopen build tool provides an option, -vv, for very verbose output. By using this option with the zopen build command, you can enable the display of the compile commands.
+
+Internally, zopen sets the `V` and `VERBOSE` environment variables to 1 when the -vv option is specified. GNU Make, and other build systems, respects these variables and display the executed commands during the build process.
+
+```
+zopen build -vv
+```
