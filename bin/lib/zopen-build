@@ -38,13 +38,13 @@ printEnvVar()
 {
   echo "
 User-Provided environment variables:
-  CC                   C compiler (defaults to '${ZOPEN_XL_CCD}')
-  CXX                  C++ compiler (defaults to '${ZOPEN_XL_CXXD}')
-  CPPFLAGS             C/C++ pre-processor flags (defaults to '${ZOPEN_XL_CPPFLAGSD}')
-  CFLAGS               C compiler flags (defaults to '${ZOPEN_XL_CFLAGSD}')
-  CXXFLAGS             C++ compiler flags (defaults to '${ZOPEN_XL_CXXFLAGSD}')
-  LDFLAGS              C/C++ linker flags (defaults to '${ZOPEN_XL_LDFLAGSD}')
-  LIBS                 C/C++ libraries (defaults to '')
+  ZOPEN_CC             C compiler (default set by dependency)
+  ZOPEN_CXX            C++ compiler (default set by dependency)
+  ZOPEN_CPPFLAGS       C/C++ pre-processor flags (default set by dependency)
+  ZOPEN_CFLAGS         C compiler flags (default set by dependency)
+  ZOPEN_CXXFLAGS       C++ compiler flags (default set by dependency)
+  ZOPEN_LDFLAGS        C/C++ linker flags (default set by dependency)
+  ZOPEN_LIBS           C/C++ libraries (default set by dependency)
   ZOPEN_TYPE           The type of package to download. Valid types are TARBALL, BARE and GIT (required)
   ZOPEN_TARBALL_URL    The fully qualified URL that the tarball should be downloaded from (required if ZOPEN_TYPE=TARBALL)
   ZOPEN_TARBALL_DEPS   Space-delimited set of source packages this git package depends on to build (required if ZOPEN_TYPE=TARBALL)
@@ -114,11 +114,16 @@ export utilparentdir="$(cd "$(dirname "$0")/../.." >/dev/null 2>&1 && pwd -P)"
 for tmp in "$TMPDIR" "$TMP" /tmp
 do
   if [ ! -z $tmp ] && [ -d $tmp ]; then
-    TEMP_C_FILE="$tmp/$LOGNAME.c"
     break
   fi
 done
+
+if [ ! -d "$tmp" ]; then
+  printError "Temporary directory not found. Please specify \$TMPDIR, \$TMP or have a valid /tmp directory"
+fi
+
 TMP_FIFO_PIPE="$tmp/$LOGNAME.pipe"
+ZOPEN_TEMP_C_FILE="$tmp/$LOGNAME.c"
 
 
 # Capture start time before setting trap
@@ -127,7 +132,7 @@ fullBuildStartTime=$SECONDS
 # Remove temoraries on exit and report elapsed time
 cleanupOnExit() {
     rv=$?
-    [ -f $TEMP_C_FILE ] && rm -rf $TEMP_C_FILE
+    [ -f $ZOPEN_TEMP_C_FILE ] && rm -rf $ZOPEN_TEMP_C_FILE
     [ -p $TMP_FIFO_PIPE ] && rm -rf $TMP_FIFO_PIPE
     if [ ! -z "$TEE_PID" ]; then
       if kill -0 $TEE_PID 2>/dev/null; then
@@ -143,20 +148,6 @@ trap "cleanupOnExit" EXIT INT TERM QUIT HUP
 
 setDefaults()
 {
-  export ZOPEN_XL_CCD="xlclang"
-  export ZOPEN_XL_CXXD="xlclang++"
-  export ZOPEN_XL_CPPFLAGSD="-DNSIG=42 -D_XOPEN_SOURCE=600 -D_ALL_SOURCE -D_OPEN_SYS_FILE_EXT=1 -D_AE_BIMODAL=1 -D_ENHANCED_ASCII_EXT=0xFFFFFFFF"
-  export ZOPEN_XL_CFLAGSD="-qascii -std=gnu11 -qnocsect -qenum=int -qgonumber"
-  export ZOPEN_XL_CXXFLAGSD="-+ -qascii -qnocsect -qenum=int -qgonumber"
-  export ZOPEN_XL_LDFLAGSD="-Wl,edit=no"
-  export ZOPEN_CLANG_CCD="clang"
-  export ZOPEN_CLANG_CXXD="clang++"
-  export ZOPEN_CLANG_CPPFLAGSD="-DNSIG=42 -D_XOPEN_SOURCE=600 -D_ALL_SOURCE -D_OPEN_SYS_FILE_EXT=1 -D_AE_BIMODAL=1 -D_ENHANCED_ASCII_EXT=0xFFFFFFFF"
-  export ZOPEN_CLANG_CFLAGSD="-fzos-le-char-mode=ascii -std=gnu11 -mnocsect -fno-short-enums -Wno-error"
-  export ZOPEN_CLANG_CXXFLAGSD="-fzos-le-char-mode=ascii -mnocsect -fno-short-enums -Wno-error"
-  export ZOPEN_CLANG_LDFLAGSD="-Wl,-bedit=no"
-  export ZOPEN_COMPD=XL
-
   export ZOPEN_BOOTSTRAPD="./bootstrap"
   export ZOPEN_BOOTSTRAP_OPTSD=""
   export ZOPEN_CONFIGURED="./configure"
@@ -180,6 +171,11 @@ setDefaults()
   export ZOPEN_TEST_STATUS_NONE_PASSED=3
   export ZOPEN_TEST_STATUS_ERROR=4
   export ZOPEN_TEST_STATUS_SKIPPED=5
+  unset ZOPEN_CPPFLAGS
+  unset ZOPEN_CFLAGS
+  unset ZOPEN_CXXFLAGS
+  unset ZOPEN_LDFLAGS
+  unset ZOPEN_LIBS
   unset ZOPEN_EXTRA_CPPFLAGS
   unset ZOPEN_EXTRA_CFLAGS
   unset ZOPEN_EXTRA_CXXFLAGS
@@ -208,8 +204,8 @@ printSyntax()
   echo "  -vv: run in very verbose mode (sets environment variables V=1 and VERBOSE=1)"
   echo "  -u|--upgradedeps: upgrade all dependencies by running zopen install"
   echo "  --buildtype: release|debug. The default is release"
-  echo "  --comp: xl|clang.  The compiler used for building.  The default is xl."
   echo "  --type: tarball|git|bare."
+  echo "  --comp: <compiler dependency>.  The compiler(s) used for building.  The default is comp_xlclang."
   echo "  --oci: build and publish an OCI image to \$ZOPEN_IMAGE_REGISTRY"
   echo "  -e <env file>: source <env file> instead of buildenv to establish build environment"
   echo "  -c|--clean: Deletes all of the build output and forces reconfigure with next build"
@@ -390,6 +386,13 @@ checkEnv()
     fi
   fi
 
+  if [ "${ZOPEN_COMP}x" = "x" ]; then
+    implicitDeps="$implicitDeps comp_xlclang"  
+  else
+    # user specified, so normalize in lower case
+    ZOPEN_COMP=$(echo "${ZOPEN_COMP}" | tr '[A-Z]' '[a-z]')
+    implicitDeps="$implicitDeps comp_$ZOPEN_COMP"
+  fi
 
   if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
     if [ "${ZOPEN_TARBALL_URL}x" = "x" ]; then
@@ -398,11 +401,11 @@ checkEnv()
     if [ "${ZOPEN_TARBALL_DEPS}x" = "x" ]; then
       printError "ZOPEN_DEPS or ZOPEN_TARBALL_DEPS needs to be defined to the ported tools this depends on"
     fi
-    implicitDeps="git curl tar"
+    implicitDeps="$implicitDeps git curl tar"
     ext=${ZOPEN_TARBALL_URL##*.}
     if [ "${ext}x" = "xzx" ]; then
       implicitDeps="${implicitDeps} xz"
-    elif [ "${ext}x" = "gzx" ]; then
+    elif [ "${ext}x" = "gzx" -o  "${ext}x" = "tgzx" ]; then
       implicitDeps="${implicitDeps} gzip"
     elif [ "${ext}x" = "bz2x" ]; then
       implicitDeps="${implicitDeps} bzip2"
@@ -416,7 +419,7 @@ checkEnv()
     if [ "${ZOPEN_GIT_DEPS}x" = "x" ]; then
       printError "ZOPEN_DEPS or ZOPEN_GIT_DEPS needs to be defined to the ported tools this depends on"
     fi
-    implicitDeps="git"
+    implicitDeps="$implicitDeps git"
     printVerbose "Implicitly adding git dependencies: ${implicitDeps}"
     ZOPEN_GIT_DEPS="${implicitDeps} ${ZOPEN_GIT_DEPS}"
   fi
@@ -424,17 +427,6 @@ checkEnv()
   export ZOPEN_CA="${utilparentdir}/cacert.pem"
   if ! [ -r "${ZOPEN_CA}" ]; then
     printError "Internal Error. Certificate ${ZOPEN_CA} is required. Use zopen update-cacert to update."
-  fi
-
-  #
-  # For the compilers and corresponding flags, you need to either specify both the compiler and flag, or neither
-  # since the flags are not compatible across compilers, and only the xlclang and xlclang++ compilers are used by default
-  #
-  if { [ "${CC}x" = "x" ] && [ "${CFLAGS}x" != "x" ]; } || { [ "${CC}x" != "x" ] && [ "${CFLAGS}x" = "x" ]; } then
-    printWarning "Either specify both CC and CFLAGS or neither, but not just one"
-  fi
-  if { [ "${CXX}x" = "x" ] && [ "${CXXFLAGS}x" != "x" ]; } || { [ "${CXX}x" != "x" ] && [ "${CXXFLAGS}x" = "x" ]; } then
-    printWarning "Either specify both CXX and CXXFLAGS or neither, but not just one"
   fi
 }
 
@@ -445,8 +437,8 @@ setDepsEnv()
   fi
   initDefaultEnvironment
   # Add base dependencies:
-  # zopen bin, compiler, and curl
-  export PATH="$ZOPEN_COMPILER_PATH:$utilparentdir/bin:$PATH"
+  # zopen bin, and curl
+  export PATH="$utilparentdir/bin:$PATH"
   if $forceUpgradeDeps; then
     export PATH="$curlpath:$PATH"
   fi
@@ -532,123 +524,6 @@ setDepsEnv()
 
 setEnv()
 {
-  # Set up the compiler and option variables
-  # CC - the C compiler
-  # CXX - the C++ compiler
-  # CPPFLAGS - preprocessing options, common to CC & CXX
-  # CFLAGS - options for CC
-  # CXXFLAGS - options for CXX
-
-  # Decide which compiler is being used XL or CLANG
-  if [ "${ZOPEN_COMP}x" = "x" ]; then
-    export ZOPEN_COMP="${ZOPEN_COMPD}"
-  else
-    # user specified, so normalize in upper case
-    ZOPEN_COMP=$(echo "${ZOPEN_COMP}" | tr '[a-z]' '[A-Z]')
-  fi
-
-  # Use the right set of default options
-  case "${ZOPEN_COMP}" in
-    XL)
-      export ZOPEN_CCD="${ZOPEN_XL_CCD}"
-      export ZOPEN_CXXD="${ZOPEN_XL_CXXD}"
-      export ZOPEN_CPPFLAGSD="${ZOPEN_XL_CPPFLAGSD}"
-      export ZOPEN_CFLAGSD="${ZOPEN_XL_CFLAGSD}"
-      export ZOPEN_CXXFLAGSD="${ZOPEN_XL_CXXFLAGSD}"
-      export ZOPEN_LDFLAGSD="${ZOPEN_XL_LDFLAGSD}"
-      optflags="-O3"
-      ;;
-    CLANG)
-      export ZOPEN_CCD="${ZOPEN_CLANG_CCD}"
-      export ZOPEN_CXXD="${ZOPEN_CLANG_CXXD}"
-      export ZOPEN_CPPFLAGSD="${ZOPEN_CLANG_CPPFLAGSD}"
-      export ZOPEN_CFLAGSD="${ZOPEN_CLANG_CFLAGSD}"
-      export ZOPEN_CXXFLAGSD="${ZOPEN_CLANG_CXXFLAGSD}"
-      export ZOPEN_LDFLAGSD="${ZOPEN_CLANG_LDFLAGSD}"
-      optflags="-O3"
-      ;;
-    *)
-      printError "Unrecognize compiler '${ZOPEN_COMP}'"
-      ;;
-  esac
-
-
-  if [ "${CC}x" = "x" ]; then
-    export CC="${ZOPEN_CCD}"
-  fi
-  if [ "${CXX}x" = "x" ]; then
-    export CXX="${ZOPEN_CXXD}"
-  fi
-
-  case "${ZOPEN_COMP}" in
-    XL)
-      # Confirm xlclang is OEL 1.0.0 (aka __COMPILER_VER__=42040001)
-      ccraw=$(touch $TEMP_C_FILE && ${CC} -E -qshowmacros $TEMP_C_FILE | grep '__COMPILER_VER__' | awk '{print substr($3,3)}')
-      if [ "${ccraw}x" = "x" ]; then
-        printError "xlclang compiler specified, but it is not a 'IBM C/C++ for Open Enterprise Languages on z/OS' compiler"
-      fi
-      if [ ${ccraw} -lt 42040001 ] ; then
-        printError "xlclang compiler specified, need to be running IBM C for Open Enterprise Languages on z/OS 1"
-      fi
-
-      # Confirm xlclang is OEL 1.0.0 (aka __COMPILER_VER__=42040001)
-      ccraw=$(touch $TEMP_C_FILE && ${CXX} -+ -E -qshowmacros $TEMP_C_FILE | grep '__COMPILER_VER__' | awk '{print substr($3,3)}')
-      if [ "${ccraw}x" = "x" ]; then
-        printError "xlclang++ compiler specified, but it is not a 'IBM C/C++ for Open Enterprise Languages on z/OS' compiler"
-      fi
-      if [ ${ccraw} -lt 42040001 ] ; then
-        printError "xlclang++ compiler specified, need to be running IBM C for Open Enterprise Languages on z/OS 1"
-      fi
-      ;;
-    CLANG)
-      # Confirm clang is at least OEL 2.0.0 (aka __COMPILER_VER__=50000000)
-      ccraw=$(${CC} -E -dM - </dev/null | grep '__COMPILER_VER__' | awk '{print substr($3,3)}')
-      if [ "${ccraw}x" = "x" ]; then
-        printError "clang compiler specified, but it is not a 'IBM C/C++ for Open Enterprise Languages on z/OS' compiler"
-      fi
-      if [ ${ccraw} -lt 50000000 ] ; then
-        printError "clang compiler specified, need to be running at least IBM C for Open Enterprise Languages on z/OS 2"
-      fi
-
-      # Confirm clang++ is at least OEL 2.0.0 (aka __COMPILER_VER__=50000000)
-      ccraw=$(${CXX} -x c++ -E -dM - </dev/null | grep '__COMPILER_VER__' | awk '{print substr($3,3)}')
-      if [ "${ccraw}x" = "x" ]; then
-        printError "clang++ compiler specified, but it is not a 'IBM C/C++ for Open Enterprise Languages on z/OS' compiler"
-      fi
-      if [ ${ccraw} -lt 50000000 ] ; then
-        printError "clang compiler specified, need to be running at least IBM C for Open Enterprise Languages on z/OS 2"
-      fi
-      ;;
-  esac
-
-  ZOPEN_COMPILER_PATH=$(dirname "$(type ${CC} | cut -f3 -d' ')")
-
-  if [ "${CPPFLAGS}x" = "x" ]; then
-    export CPPFLAGS="${ZOPEN_CPPFLAGSD}"
-  fi
-  if [ "${CFLAGS}x" = "x" ]; then
-    export CFLAGS="${ZOPEN_CFLAGSD}"
-  fi
-
-  if [ "${CXXFLAGS}x" = "x" ]; then
-    export CXXFLAGS="${ZOPEN_CXXFLAGSD}"
-  fi
-
-  if $buildInReleaseMode; then
-    CFLAGS="${CFLAGS} ${optflags}";
-    CXXFLAGS="${CXXFLAGS} ${optflags}";
-  else
-    # In debug mode, do not set linker edit=no option so that we can inspect symbols
-    ZOPEN_LDFLAGSD=""
-  fi
-
-  if [ "${LDFLAGS}x" = "x" ]; then
-    export LDFLAGS="${ZOPEN_LDFLAGSD}"
-  fi
-
-  # For compatibility with the default 'make' /etc/startup.mk on z/OS
-  export CCC="${CXX}"
-  export CCCFLAGS="${CXXFLAGS}"
 
   # Certificate information
   export SSL_CERT_FILE="${ZOPEN_CA}"
@@ -657,12 +532,16 @@ setEnv()
 
   setDepsEnv
 
-  # Dependencies such as libraries may add flags
-  export CPPFLAGS="${CPPFLAGS} ${ZOPEN_EXTRA_CPPFLAGS}"
-  export CFLAGS="${CFLAGS} ${ZOPEN_EXTRA_CFLAGS}"
-  export CXXFLAGS="${CXXFLAGS} ${ZOPEN_EXTRA_CXXFLAGS}"
-  export LDFLAGS="${LDFLAGS} ${ZOPEN_EXTRA_LDFLAGS}"
-  export LIBS="${ZOPEN_EXTRA_LIBS}"
+  # Dependencies such as libraries may add flags 
+  export CPPFLAGS="${ZOPEN_CPPFLAGS} ${ZOPEN_EXTRA_CPPFLAGS}"
+  export CFLAGS="${ZOPEN_CFLAGS} ${ZOPEN_EXTRA_CFLAGS}"
+  export CXXFLAGS="${ZOPEN_CXXFLAGS} ${ZOPEN_EXTRA_CXXFLAGS}"
+  export LDFLAGS="${ZOPEN_LDFLAGS} ${ZOPEN_EXTRA_LDFLAGS}"
+  export LIBS="${ZOPEN_LIBS} ${ZOPEN_EXTRA_LIBS}"
+
+  # For compatibility with the default 'make' /etc/startup.mk on z/OS
+  export CCC="${CXX}"
+  export CCCFLAGS="${CXXFLAGS}"
 
   # Some configure scripts act on *_FOR_BUILD flags
   export CC_FOR_BUILD="${CC}"
@@ -860,6 +739,7 @@ downloadTarBall()
   fi
   tarballz=$(basename "$ZOPEN_TARBALL_URL")
   dir=${tarballz%%.tar.*}
+  dir=${dir%%.tgz}
   if [ -d "${dir}" ]; then
     echo "Using existing tarball directory ${dir}" >&2
   else
@@ -1551,7 +1431,7 @@ resolveCommands()
   fi
 
   if [ "${ZOPEN_CHECK}x" != "skipx" ] && ! ${skipcheck}; then
-    if [ "${ZOPEN_MAKE_MINIMAL}x" = "x" ]; then
+    if [ "${ZOPEN_CHECK_MINIMAL}x" = "x" ]; then
       export ZOPEN_CHECK_CMD="\"${ZOPEN_CHECK}\" ${ZOPEN_CHECK_OPTS} CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\""
     else
       export ZOPEN_CHECK_CMD="\"${ZOPEN_CHECK}\" ${ZOPEN_CHECK_OPTS}"
@@ -1874,12 +1754,8 @@ if ! resolveCommands; then
 fi
 
 if command -V "${ZOPEN_INIT_CODE}" >/dev/null 2>&1; then
-  if [ -r "${ZOPEN_LOG_DIR}/config.success" ]; then
-    echo "Using previous successful run of ${ZOPEN_INIT_CODE}. Specify -f to re-run" >&2
-  else
-    printVerbose "Running ${ZOPEN_INIT_CODE}"
-    "${ZOPEN_INIT_CODE}" "${PWD}"
-  fi
+  printVerbose "Running ${ZOPEN_INIT_CODE}"
+  "${ZOPEN_INIT_CODE}" "${PWD}"
 fi
 
 if ${startShell}; then
