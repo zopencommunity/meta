@@ -405,7 +405,7 @@ checkEnv()
     ext=${ZOPEN_TARBALL_URL##*.}
     if [ "${ext}x" = "xzx" ]; then
       implicitDeps="${implicitDeps} xz"
-    elif [ "${ext}x" = "gzx" ]; then
+    elif [ "${ext}x" = "gzx" -o  "${ext}x" = "tgzx" ]; then
       implicitDeps="${implicitDeps} gzip"
     elif [ "${ext}x" = "bz2x" ]; then
       implicitDeps="${implicitDeps} bzip2"
@@ -739,6 +739,7 @@ downloadTarBall()
   fi
   tarballz=$(basename "$ZOPEN_TARBALL_URL")
   dir=${tarballz%%.tar.*}
+  dir=${dir%%.tgz}
   if [ -d "${dir}" ]; then
     echo "Using existing tarball directory ${dir}" >&2
   else
@@ -1753,12 +1754,8 @@ if ! resolveCommands; then
 fi
 
 if command -V "${ZOPEN_INIT_CODE}" >/dev/null 2>&1; then
-  if [ -r "${ZOPEN_LOG_DIR}/config.success" ]; then
-    echo "Using previous successful run of ${ZOPEN_INIT_CODE}. Specify -f to re-run" >&2
-  else
-    printVerbose "Running ${ZOPEN_INIT_CODE}"
-    "${ZOPEN_INIT_CODE}" "${PWD}"
-  fi
+  printVerbose "Running ${ZOPEN_INIT_CODE}"
+  "${ZOPEN_INIT_CODE}" "${PWD}"
 fi
 
 if ${startShell}; then
