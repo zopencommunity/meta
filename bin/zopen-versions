@@ -1,0 +1,65 @@
+#!/bin/env bash
+
+#
+# Print out installed version of z/OS tool and corresponding BREW latest version
+#
+syntax()
+{
+  echo "$0: Print out installed version of z/OS tool and corresponding BREW latest version" >&2
+  echo "$0 [<directory>]" >&2
+  echo "  where <directory> is the root directory where z/OS Open Source packages are checked" >&2
+  echo "  default: ~/zopen/prod" >&2
+  exit 4
+}
+
+if [ $# -eq 0 ]; then
+  root="$HOME/zopen/prod"
+else
+  root="$1"
+fi
+
+if [ -d "${root}" ]; then
+  echo "Using ${root} for determining z/OS tarball versions" >&2
+else 
+  if [ "x${root}" = "x-?" ] || [ "x${root}" = "x-help" ]; then
+    :
+  else 
+    echo "Unable to find ${root} for determining z/OS tarball versions" >&2
+  fi
+  syntax
+fi
+
+#
+# The following is a hack if you don't want to wait around
+# for zopen install --list to run...
+# Just do zopen install --list >tool.list before you run
+#
+if [ -f "tool.list" ]; then
+  tools=$(cat tool.list)
+else
+  tools=$(zopen install --list | awk ' { print $1; }')
+fi
+
+cd "${root}"
+
+version_files=$(find . -name ".version")
+brew_version_info=$(curl https://formulae.brew.sh/formula/ 2>/dev/null | grep '<td>')
+for rawtool in ${tools}; do
+  tool=${rawtool%%port}
+  version_file=$(echo "${version_files}" | grep "${tool}-" | head -n 1)
+  if [ "x${version_file}" = "x" ]; then
+    :
+    #echo "No version file for ${tool}. ${tool} skipped" >&2
+  else
+    version="$(cat ${version_file})"
+    brew_line=$(echo "${brew_version_info}" | grep -n ">${tool}<" | awk -F: '{print $1}')
+    if [ "x${brew_line}" = "x" ]; then
+      brew_version="unknown"
+    else
+      next_brew_line=$((brew_line+1))
+      brew_version=$(echo "${brew_version_info}" | sed -n "${next_brew_line}p" | awk -F '<|>' '{print $3}')
+    fi
+    echo "${tool} zos-version ${version} brew-version ${brew_version}"
+  fi
+done
+
