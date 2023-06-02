@@ -1,0 +1,73 @@
+#!/bin/env bash
+
+#
+# Print out build dependencies (transitive closure) for a given tool
+#
+
+syntax()
+{
+  echo "$0: Print out build dependencies (transitive closure) for a given tool" >&2
+  echo "Syntax: $0 <tool>" >&2
+  exit 4
+}
+
+primary_type="TARBALL"
+secondary_type="GIT"
+verbose=true
+
+if [ $# -eq 0 ]; then
+  echo "Need to specify a package name" >&2
+  syntax
+fi
+
+rootpkg="$1"
+
+tmpdir="/tmp/blddep_$$"
+
+if ! mkdir "${tmpdir}" ; then
+  echo "Unable to create temporary directory for computing transitive closure" >&2
+  syntax
+fi
+
+if ! cd "${tmpdir}"; then
+  echo "Unable to cd into temporary directory ${tmpdir}" >&2
+  exit 4
+fi
+
+deps="${rootpkg}"
+declare -A scanned
+
+changed=true
+
+while ${changed}; do
+  changed=false
+  for pkg in ${deps}; do
+    if ! [[ -v scanned["${pkg}"] ]] ; then
+      if ! git clone "git@github.com:ZOSOpenTools/${pkg}port.git" ; then
+        echo "Unable to clone package ${pkg}" >&2
+        exit 4
+      else
+        scanned["${pkg}"]=true
+        changed=true
+      fi
+      newpkgs=$(grep "ZOPEN_${primary_type}_DEPS" "${pkg}port/buildenv" | awk -F '"' '{print $2; }')
+      if [ "x${newpkgs}" = "x" ]; then
+        # try again with secondary type
+        newpkgs=$(grep "ZOPEN_${secondary_type}_DEPS" "${pkg}port/buildenv" | awk -F '"' '{print $2; }')
+      fi
+      if $verbose; then
+        echo "${pkg} needs ${newpkgs}"
+      fi
+      for newpkg in ${newpkgs}; do
+        if ! [[ -v scanned["${newpkg}"] ]] ; then
+          deps="${deps} ${newpkg}"
+        fi
+      done
+    fi
+  done
+done
+echo "Transitive closure of build dependencies for ${rootpkg}:"
+for pkg in ${!scanned[@]}; do
+  echo "${pkg}"
+done
+rm -rf "${tmpdir}"
