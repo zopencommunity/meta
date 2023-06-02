@@ -13,7 +13,6 @@
 
 ## Projects with skipped or no tests (grey)
   
-* [bisonport](https://github.com/ZOSOpenTools/bisonport)
 * [expectport](https://github.com/ZOSOpenTools/expectport)
 * [nanoport](https://github.com/ZOSOpenTools/nanoport)
 * [ncduport](https://github.com/ZOSOpenTools/ncduport)
@@ -91,7 +90,7 @@
 | [libassuanport](https://github.com/ZOSOpenTools/libassuanport) | 2 | No builds |gpg, pinentry
 | [libxml2port](https://github.com/ZOSOpenTools/libxml2port) | 2 | 99% |libxslt, php
 | [rsyncport](https://github.com/ZOSOpenTools/rsyncport) | 2 | 88% |m4, sed
-| [bisonport](https://github.com/ZOSOpenTools/bisonport) | 1 | Skipped |php
+| [bisonport](https://github.com/ZOSOpenTools/bisonport) | 1 | 98% |php
 | [comp_clangport](https://github.com/ZOSOpenTools/comp_clangport) | 1 | 100% |duckdb
 | [expatport](https://github.com/ZOSOpenTools/expatport) | 1 | 100% |git
 | [gnulibport](https://github.com/ZOSOpenTools/gnulibport) | 1 | 100% |htop
@@ -258,4 +257,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-06-01 15:55:40
+Last updated:  2023-06-01 21:00:39
