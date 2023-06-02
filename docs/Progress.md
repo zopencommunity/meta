@@ -16,7 +16,6 @@
 * [expectport](https://github.com/ZOSOpenTools/expectport)
 * [nanoport](https://github.com/ZOSOpenTools/nanoport)
 * [ncduport](https://github.com/ZOSOpenTools/ncduport)
-* [pythonport](https://github.com/ZOSOpenTools/pythonport)
 * [screenport](https://github.com/ZOSOpenTools/screenport)
 * [sqliteport](https://github.com/ZOSOpenTools/sqliteport)
 * [sshpassport](https://github.com/ZOSOpenTools/sshpassport)
@@ -136,7 +135,7 @@
 | [opensshport](https://github.com/ZOSOpenTools/opensshport) | 0 | No builds |
 | [phpport](https://github.com/ZOSOpenTools/phpport) | 0 | No builds |
 | [powerline-goport](https://github.com/ZOSOpenTools/powerline-goport) | 0 | No builds |
-| [pythonport](https://github.com/ZOSOpenTools/pythonport) | 0 | Skipped |
+| [pythonport](https://github.com/ZOSOpenTools/pythonport) | 0 | 100% |
 | [screenport](https://github.com/ZOSOpenTools/screenport) | 0 | Skipped |
 | [shufport](https://github.com/ZOSOpenTools/shufport) | 0 | No builds |
 | [sshpassport](https://github.com/ZOSOpenTools/sshpassport) | 0 | Skipped |
@@ -256,4 +255,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-06-02 13:27:36
+Last updated:  2023-06-02 15:43:11
