@@ -40,9 +40,7 @@ else
   tools=$(zopen install --list | awk ' { print $1; }')
 fi
 
-cd "${root}"
-
-version_files=$(find . -name ".version")
+version_files=$(find "${root}" -name ".version")
 brew_version_info=$(curl https://formulae.brew.sh/formula/ 2>/dev/null | grep '<td>')
 for rawtool in ${tools}; do
   tool=${rawtool%%port}
