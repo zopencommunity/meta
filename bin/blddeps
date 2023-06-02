@@ -11,7 +11,9 @@ syntax()
   exit 4
 }
 
-type="TARBALL"
+primary_type="TARBALL"
+secondary_type="GIT"
+verbose=true
 
 if [ $# -eq 0 ]; then
   echo "Need to specify a package name" >&2
@@ -48,7 +50,14 @@ while ${changed}; do
         scanned["${pkg}"]=true
         changed=true
       fi
-      newpkgs=$(grep "ZOPEN_${type}_DEPS" "${pkg}port/buildenv" | awk -F '"' '{print $2; }')
+      newpkgs=$(grep "ZOPEN_${primary_type}_DEPS" "${pkg}port/buildenv" | awk -F '"' '{print $2; }')
+      if [ "x${newpkgs}" = "x" ]; then
+        # try again with secondary type
+        newpkgs=$(grep "ZOPEN_${secondary_type}_DEPS" "${pkg}port/buildenv" | awk -F '"' '{print $2; }')
+      fi
+      if $verbose; then
+        echo "${pkg} needs ${newpkgs}"
+      fi
       for newpkg in ${newpkgs}; do
         if ! [[ -v scanned["${newpkg}"] ]] ; then
           deps="${deps} ${newpkg}"
