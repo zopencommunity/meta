@@ -68,7 +68,7 @@
 | [help2manport](https://github.com/ZOSOpenTools/help2manport) | 13 | 100% |autoconf, automake, bison, curl, expat, gettext, git, hello, libtool, m4, make, openssl, texinfo
 | [bashport](https://github.com/ZOSOpenTools/bashport) | 12 | 80% |bison, diffutils, direnv, expat, flex, git, libiconv, libxml2, powerline-go, re2c, texinfo, xmlto
 | [ncursesport](https://github.com/ZOSOpenTools/ncursesport) | 12 | 100% |bash, cscope, gettext, git, htop, less, lynx, man-db, nano, ncdu, screen, vim
-| [opensslport](https://github.com/ZOSOpenTools/opensslport) | 9 | 96% |curl, expat, git, libssh2, lynx, openssh, rsync, sudo, wget
+| [opensslport](https://github.com/ZOSOpenTools/opensslport) | 9 | 97% |curl, expat, git, libssh2, lynx, openssh, rsync, sudo, wget
 | [zlibport](https://github.com/ZOSOpenTools/zlibport) | 9 | 100% |autoconf, curl, expat, git, libssh2, lynx, openssh, sudo, wget
 | [findutilsport](https://github.com/ZOSOpenTools/findutilsport) | 8 | 50% |gnulib, grep, libiconv, libxml2, pkgconfig, re2c, texinfo, vim
 | [grepport](https://github.com/ZOSOpenTools/grepport) | 8 | 94% |byacc, gnulib, libpcre, libxslt, m4, man-db, which, xmlto
@@ -255,4 +255,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-06-02 21:46:10
+Last updated:  2023-06-05 00:16:38
