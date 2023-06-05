@@ -72,7 +72,7 @@
 | [opensslport](https://github.com/ZOSOpenTools/opensslport) | 9 | 97% |curl, expat, git, libssh2, lynx, openssh, rsync, sudo, wget
 | [zlibport](https://github.com/ZOSOpenTools/zlibport) | 9 | 100% |autoconf, curl, expat, git, libssh2, lynx, openssh, sudo, wget
 | [findutilsport](https://github.com/ZOSOpenTools/findutilsport) | 8 | 91% |gnulib, grep, libiconv, libxml2, pkgconfig, re2c, texinfo, vim
-| [grepport](https://github.com/ZOSOpenTools/grepport) | 8 | 94% |byacc, gnulib, libpcre, libxslt, m4, man-db, which, xmlto
+| [grepport](https://github.com/ZOSOpenTools/grepport) | 8 | 95% |byacc, gnulib, libpcre, libxslt, m4, man-db, which, xmlto
 | [libtoolport](https://github.com/ZOSOpenTools/libtoolport) | 8 | 80% |expat, hello, libgdbm, m4, man-db, php, re2c, texinfo
 | [bzip2port](https://github.com/ZOSOpenTools/bzip2port) | 7 | 100% |gpg, libassuan, libgcrypt, libgpgerror, libksba, npth, pinentry
 | [gawkport](https://github.com/ZOSOpenTools/gawkport) | 7 | 93% |automake, curl, expat, gzip, ncurses, rsync, vim
@@ -258,4 +258,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-06-05 14:51:35
+Last updated:  2023-06-05 15:40:20
