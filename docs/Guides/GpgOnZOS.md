@@ -1,7 +1,7 @@
-# **GPG ON ZOS**
+# **GPG ON z/OS**
 
 
-### What is Gpg?
+### What is GPG?
 
 GPG stands for "GNU Privacy Guard," which is a free and open-source software application used for encrypting and decrypting data. It is based on the OpenPGP (Pretty Good Privacy) standard, which provides cryptographic privacy and authentication for data communication.
 
@@ -15,7 +15,7 @@ Overall, GPG is commonly used for secure communication, email encryption, file e
 
 
 
-### How to generate GPG key?
+### How do I generate a GPG key?
 
 In the terminal, enter the following command to generate a new GPG key pair:
 
@@ -35,7 +35,7 @@ Once the key generation process is complete, GPG will display information about 
 	uid                      John Doe (ZOS Open tools) <johndoe@example.com>
 	sub   rsa3072 2021-02-09 [E] [expires: 2022-02-09]
 
-### How to view key fingerprint ?
+### How do I view key fingerprint ?
 
 A key fingerprint is a representation of the key's characteristics and serves as a reliable way to verify the integrity and authenticity of a key. To display the fingerprint at any time, use this command, substituting your email address
 
@@ -43,57 +43,76 @@ A key fingerprint is a representation of the key's characteristics and serves as
 	
 Your GPG key ID consists of 8 hex digits identifying the public key. In the example above, the GPG key ID is `36BF353A`. 
 
-### How to get your public key and store it?
+### How do I get your public key and store it?
 
 
 If you want to give or send a file copy of your key to someone, use this command to write it to an ASCII text file:
 
 `gpg --export --armor <email id> > <name>-pubkey.asc`	
 
-### How to Sign Git commits using GPG key?
+### How do I Sign Git commits using GPG key?
 
 1. Add your public GPG Key to your account on github.com and refer the [link](https://docs.github.com/en/authentication/managing-commit-signature-verification/adding-a-gpg-key-to-your-github-account) for steps.
 
 2. Tell git about your public key which will be used for signing. You can get steps from [here](https://docs.github.com/en/authentication/managing-commit-signature-verification/telling-git-about-your-signing-key#telling-git-about-your-gpg-key)
 
 3. Now you can sign your commit using command (provide your phrase on prompt)
+
 	`git commit -S -m "YOUR_COMMIT_MESSAGE"`
 	
-1. 	When you've finished creating commits locally, push them to your remote repository on GitHub:
+4. 	When you've finished creating commits locally, push them to your remote repository on GitHub:
 
 	`git push `
-1. 	On GitHub, navigate to your pull requestO and on the pull request, click  Commits. To view more detailed information about the verified signature, click `Verified`.
+5. 	On GitHub, navigate to your pull requestO and on the pull request, click  Commits. To view more detailed information about the verified signature, click `Verified`.
 
 
-### How to sign images?
+### How do I sign images?
 1. Any file or image can be signed using command below.
+
 	`gpg --output <image.name>.sig --sign <image-name>`
 	
-1. 	Signed file/image can be verified using:
+2. 	Signed file/image can be verified using:
+
 	`gpg --verify <image.name>.sig`
 	
-1. 	To verify the signature and extract the file/image use the --decrypt option. The signed file/image to verify and recover is input and the recovered document is output.
+3. 	To verify the signature and extract the file/image use the --decrypt option. The signed file/image to verify and recover is input and the recovered document is output.
+
 	`gpg --output zoslib-zopen.20230511_114620.zos.pax.Z --decrypt zoslib-zopen.20230511_114620.zos.pax.Z.gpg`
 	
 
-### How to	create detached signature and sign an image?
+### How do I create detached signature and sign an image?
 
-1. A detahced signature can be created and an image/file can signed using the follwing commad:
+1. A detached signature can be created and an image/file can signed using the following commad:
+
 	`gpg --output <image.name>.sig --detach-sig <image-name>` 
 	
-1. 	Both image/file and the detached signature are needed to verify the signature using --verify option:
+2. 	Both image/file and the detached signature are needed to verify the signature using --verify option:
+
 	`gpg --verify <image.name>.sig <image.name>`
 	
 ### Example:
 
-1. Download signed bash tool in tar.gz format using command shown below:
+1. Download signed bash tool in tar.gz.sig format using command shown below:
+
 	`curl -k -O http://ftp.vim.org/ftp/ftp/gnu/bash/bash-5.2.15.tar.gz.sig`
+
+2. Download the bash tool in tar.gs format using command below:
+
+	`curl -k -O http://ftp.vim.org/ftp/ftp/gnu/bash/bash-5.2.15.tar.gz`
 	
-1. 	Download the keyring for the same, using command shown below:
+3. 	Download the public GNU keyring using command shown below:
+
 	`curl -k -O https://ftp.gnu.org/gnu/gnu-keyring.gpg` 
 	
-1. 	Verify the downloaded tar file , using command:
+4. 	Verify the downloaded tar file , using command:
+
 	`gpg --verify --keyring ./gnu-keyring.gpg bash-5.2.15.tar.gz.sig`
+	
+5. 	The output of the step 4 is:
+
+	`gpg: Signature made Tue Dec 13 12:13:54 2022 EST`
+	`gpg:                using DSA key 7C0135FB088AAF6C66C650B9BB5869F064EA74AB`
+	`gpg: Good signature from "Chet Ramey <chet@cwru.edu>" [unknown]`
 	
 
 
