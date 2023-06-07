@@ -34,7 +34,6 @@
 * [libassuanport](https://github.com/ZOSOpenTools/libassuanport)
 * [libgcryptport](https://github.com/ZOSOpenTools/libgcryptport)
 * [libgit2port](https://github.com/ZOSOpenTools/libgit2port)
-* [libgpgerrorport](https://github.com/ZOSOpenTools/libgpgerrorport)
 * [libksbaport](https://github.com/ZOSOpenTools/libksbaport)
 * [neovimport](https://github.com/ZOSOpenTools/neovimport)
 * [npthport](https://github.com/ZOSOpenTools/npthport)
@@ -77,7 +76,7 @@
 | [bzip2port](https://github.com/ZOSOpenTools/bzip2port) | 7 | 100% |gpg, libassuan, libgcrypt, libgpgerror, libksba, npth, pinentry
 | [gawkport](https://github.com/ZOSOpenTools/gawkport) | 7 | 93% |automake, curl, expat, gzip, ncurses, rsync, vim
 | [cmakeport](https://github.com/ZOSOpenTools/cmakeport) | 6 | 74% |duckdb, neovim, ninja, unzip, zip, zoslib
-| [libgpgerrorport](https://github.com/ZOSOpenTools/libgpgerrorport) | 6 | No builds |gpg, libassuan, libgcrypt, libksba, npth, pinentry
+| [libgpgerrorport](https://github.com/ZOSOpenTools/libgpgerrorport) | 6 | 100% |gpg, libassuan, libgcrypt, libksba, npth, pinentry
 | [libiconvport](https://github.com/ZOSOpenTools/libiconvport) | 4 | 100% |bison, libxml2, man-db, php
 | [flexport](https://github.com/ZOSOpenTools/flexport) | 3 | 100% |bison, cscope, man-db
 | [gperfport](https://github.com/ZOSOpenTools/gperfport) | 3 | 100% |hello, libiconv, m4
@@ -204,6 +203,7 @@
 |  [lynxport](https://github.com/ZOSOpenTools/lynxport) | 30 | 1
 |  [lz4port](https://github.com/ZOSOpenTools/lz4port) | 30 | 3
 |  [npthport](https://github.com/ZOSOpenTools/npthport) | 28 | 2
+|  [libgpgerrorport](https://github.com/ZOSOpenTools/libgpgerrorport) | 27 | 2
 |  [getoptport](https://github.com/ZOSOpenTools/getoptport) | 25 | 1
 |  [groffport](https://github.com/ZOSOpenTools/groffport) | 25 | 2
 |  [wgetport](https://github.com/ZOSOpenTools/wgetport) | 22 | 1
@@ -215,7 +215,6 @@
 |  [libpipelineport](https://github.com/ZOSOpenTools/libpipelineport) | 15 | 1
 |  [libssh2port](https://github.com/ZOSOpenTools/libssh2port) | 15 | 1
 |  [xzport](https://github.com/ZOSOpenTools/xzport) | 15 | 1
-|  [libgpgerrorport](https://github.com/ZOSOpenTools/libgpgerrorport) | 14 | 1
 |  [bisonport](https://github.com/ZOSOpenTools/bisonport) | 13 | 1
 |  [automakeport](https://github.com/ZOSOpenTools/automakeport) | 12 | 1
 | &#10003; [bumpport](https://github.com/ZOSOpenTools/bumpport) | 0 | 0
@@ -258,4 +257,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-06-06 01:03:05
+Last updated:  2023-06-07 03:49:41
