@@ -34,7 +34,6 @@
 * [libassuanport](https://github.com/ZOSOpenTools/libassuanport)
 * [libgcryptport](https://github.com/ZOSOpenTools/libgcryptport)
 * [libgit2port](https://github.com/ZOSOpenTools/libgit2port)
-* [libksbaport](https://github.com/ZOSOpenTools/libksbaport)
 * [neovimport](https://github.com/ZOSOpenTools/neovimport)
 * [opensshport](https://github.com/ZOSOpenTools/opensshport)
 * [phpport](https://github.com/ZOSOpenTools/phpport)
@@ -93,7 +92,7 @@
 | [gnulibport](https://github.com/ZOSOpenTools/gnulibport) | 1 | 100% |htop
 | [libgcryptport](https://github.com/ZOSOpenTools/libgcryptport) | 1 | No builds |gpg
 | [libgdbmport](https://github.com/ZOSOpenTools/libgdbmport) | 1 | 100% |man-db
-| [libksbaport](https://github.com/ZOSOpenTools/libksbaport) | 1 | No builds |gpg
+| [libksbaport](https://github.com/ZOSOpenTools/libksbaport) | 1 | 100% |gpg
 | [libpcreport](https://github.com/ZOSOpenTools/libpcreport) | 1 | 66% |git
 | [libpipelineport](https://github.com/ZOSOpenTools/libpipelineport) | 1 | 100% |man-db
 | [luaport](https://github.com/ZOSOpenTools/luaport) | 1 | 100% |neovim
@@ -181,10 +180,10 @@
 |  [grepport](https://github.com/ZOSOpenTools/grepport) | 88 | 2
 |  [patchport](https://github.com/ZOSOpenTools/patchport) | 86 | 3
 |  [gawkport](https://github.com/ZOSOpenTools/gawkport) | 81 | 4
+|  [libassuanport](https://github.com/ZOSOpenTools/libassuanport) | 79 | 3
 |  [curlport](https://github.com/ZOSOpenTools/curlport) | 74 | 2
 |  [xmltoport](https://github.com/ZOSOpenTools/xmltoport) | 74 | 1
 |  [libtoolport](https://github.com/ZOSOpenTools/libtoolport) | 71 | 3
-|  [libassuanport](https://github.com/ZOSOpenTools/libassuanport) | 66 | 2
 |  [libgcryptport](https://github.com/ZOSOpenTools/libgcryptport) | 59 | 4
 |  [tarport](https://github.com/ZOSOpenTools/tarport) | 55 | 1
 |  [unzipport](https://github.com/ZOSOpenTools/unzipport) | 54 | 1
@@ -202,6 +201,7 @@
 |  [expectport](https://github.com/ZOSOpenTools/expectport) | 31 | 2
 |  [lynxport](https://github.com/ZOSOpenTools/lynxport) | 30 | 1
 |  [lz4port](https://github.com/ZOSOpenTools/lz4port) | 30 | 3
+|  [libksbaport](https://github.com/ZOSOpenTools/libksbaport) | 28 | 2
 |  [npthport](https://github.com/ZOSOpenTools/npthport) | 28 | 2
 |  [libgpgerrorport](https://github.com/ZOSOpenTools/libgpgerrorport) | 27 | 2
 |  [getoptport](https://github.com/ZOSOpenTools/getoptport) | 25 | 1
@@ -210,7 +210,6 @@
 |  [fzfport](https://github.com/ZOSOpenTools/fzfport) | 20 | 1
 |  [bzip2port](https://github.com/ZOSOpenTools/bzip2port) | 17 | 1
 |  [makeport](https://github.com/ZOSOpenTools/makeport) | 16 | 1
-|  [libksbaport](https://github.com/ZOSOpenTools/libksbaport) | 15 | 1
 |  [libpipelineport](https://github.com/ZOSOpenTools/libpipelineport) | 15 | 1
 |  [libssh2port](https://github.com/ZOSOpenTools/libssh2port) | 15 | 1
 |  [xzport](https://github.com/ZOSOpenTools/xzport) | 15 | 1
@@ -256,4 +255,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-06-07 14:27:04
+Last updated:  2023-06-08 02:12:56
