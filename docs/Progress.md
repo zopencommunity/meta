@@ -31,7 +31,6 @@
 * [fzfport](https://github.com/ZOSOpenTools/fzfport)
 * [gpgport](https://github.com/ZOSOpenTools/gpgport)
 * [htopport](https://github.com/ZOSOpenTools/htopport)
-* [libgcryptport](https://github.com/ZOSOpenTools/libgcryptport)
 * [libgit2port](https://github.com/ZOSOpenTools/libgit2port)
 * [neovimport](https://github.com/ZOSOpenTools/neovimport)
 * [opensshport](https://github.com/ZOSOpenTools/opensshport)
@@ -89,7 +88,7 @@
 | [comp_clangport](https://github.com/ZOSOpenTools/comp_clangport) | 1 | 100% |duckdb
 | [expatport](https://github.com/ZOSOpenTools/expatport) | 1 | 100% |git
 | [gnulibport](https://github.com/ZOSOpenTools/gnulibport) | 1 | 100% |htop
-| [libgcryptport](https://github.com/ZOSOpenTools/libgcryptport) | 1 | No builds |gpg
+| [libgcryptport](https://github.com/ZOSOpenTools/libgcryptport) | 1 | 100% |gpg
 | [libgdbmport](https://github.com/ZOSOpenTools/libgdbmport) | 1 | 100% |man-db
 | [libksbaport](https://github.com/ZOSOpenTools/libksbaport) | 1 | 100% |gpg
 | [libpcreport](https://github.com/ZOSOpenTools/libpcreport) | 1 | 66% |git
@@ -178,12 +177,12 @@
 |  [lessport](https://github.com/ZOSOpenTools/lessport) | 94 | 5
 |  [grepport](https://github.com/ZOSOpenTools/grepport) | 88 | 2
 |  [patchport](https://github.com/ZOSOpenTools/patchport) | 86 | 3
+|  [libgcryptport](https://github.com/ZOSOpenTools/libgcryptport) | 85 | 5
 |  [gawkport](https://github.com/ZOSOpenTools/gawkport) | 81 | 4
 |  [libassuanport](https://github.com/ZOSOpenTools/libassuanport) | 79 | 3
 |  [curlport](https://github.com/ZOSOpenTools/curlport) | 74 | 2
 |  [xmltoport](https://github.com/ZOSOpenTools/xmltoport) | 74 | 1
 |  [libtoolport](https://github.com/ZOSOpenTools/libtoolport) | 71 | 3
-|  [libgcryptport](https://github.com/ZOSOpenTools/libgcryptport) | 59 | 4
 |  [tarport](https://github.com/ZOSOpenTools/tarport) | 55 | 1
 |  [unzipport](https://github.com/ZOSOpenTools/unzipport) | 54 | 1
 |  [libgdbmport](https://github.com/ZOSOpenTools/libgdbmport) | 52 | 1
@@ -254,4 +253,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-06-08 02:29:02
+Last updated:  2023-06-08 10:25:02
