@@ -31,7 +31,6 @@
 * [fzfport](https://github.com/ZOSOpenTools/fzfport)
 * [gpgport](https://github.com/ZOSOpenTools/gpgport)
 * [htopport](https://github.com/ZOSOpenTools/htopport)
-* [libassuanport](https://github.com/ZOSOpenTools/libassuanport)
 * [libgcryptport](https://github.com/ZOSOpenTools/libgcryptport)
 * [libgit2port](https://github.com/ZOSOpenTools/libgit2port)
 * [neovimport](https://github.com/ZOSOpenTools/neovimport)
@@ -83,7 +82,7 @@
 | [getoptport](https://github.com/ZOSOpenTools/getoptport) | 2 | 52% |flex, xmlto
 | [groffport](https://github.com/ZOSOpenTools/groffport) | 2 | 100% |libiconv, man-db
 | [lessport](https://github.com/ZOSOpenTools/lessport) | 2 | 100% |git, man-db
-| [libassuanport](https://github.com/ZOSOpenTools/libassuanport) | 2 | No builds |gpg, pinentry
+| [libassuanport](https://github.com/ZOSOpenTools/libassuanport) | 2 | 100% |gpg, pinentry
 | [libxml2port](https://github.com/ZOSOpenTools/libxml2port) | 2 | 99% |libxslt, php
 | [rsyncport](https://github.com/ZOSOpenTools/rsyncport) | 2 | 88% |m4, sed
 | [bisonport](https://github.com/ZOSOpenTools/bisonport) | 1 | 98% |php
@@ -255,4 +254,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-06-08 02:24:32
+Last updated:  2023-06-08 02:29:02
