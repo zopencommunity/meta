@@ -114,6 +114,11 @@ If you want to give or send a file copy of your key to someone, use this command
 	`gpg:                using DSA key 7C0135FB088AAF6C66C650B9BB5869F064EA74AB`
 	`gpg: Good signature from "Chet Ramey <chet@cwru.edu>" [unknown]`
 	
+	
+### Resources 
+* [GPG Home Page](https://gnupg.org/index.html)
+* To install GPG on z/OS systems [visit](https://github.com/ZOSOpenTools/gpgport/releases)
+	
 
 
 
