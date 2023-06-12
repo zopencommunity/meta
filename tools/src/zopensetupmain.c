@@ -133,6 +133,7 @@ int main(int argc, char* argv[]) {
         /* relative root directory was specified */
         char currentworkingdir[ZOPEN_PATH_MAX+1];
         getcwd(currentworkingdir, sizeof(currentworkingdir));
+        /* create absolute root directory */
         snprintf(root, ZOPEN_PATH_MAX, "%s/%s", currentworkingdir, argv[i]);
       } else {
         /* absolute root directory was specified */
