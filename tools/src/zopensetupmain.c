@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <unistd.h>
 
 #include "download.h"
 #include "zopenio.h"
@@ -36,7 +35,7 @@ static void syntax(const char* pgm, const char** bootpkg) {
     pgm = &base[1];
   }
   fprintf(stderr, "%s : Install the z/OS Open Source Tools 'starter' environment by downloading from %s\n"
-                  "Syntax: %s [-vq] [<root>]\n"
+                  "Syntax: %s [-vq] <root>\n"
                   "  <root> is the root directory where:\n"
                   "    a symbolic link from ${HOME}/zopen to <root> will be created\n"
                   "    boot, prod, and dev directories will be created\n"
@@ -114,6 +113,10 @@ int main(int argc, char* argv[]) {
   elementsbootpkg = (sizeof(bootpkg)/sizeof(bootpkg[0]))-1;
   sortbootpkg(bootpkg, elementsbootpkg);
 
+  if (argc < 2) {
+    syntax(argv[0], bootpkg);
+    return 4;
+  }
   for (i=1; i<argc; ++i) {
     if (!strcmp(argv[i], "-v")) {
       verbose = 1;
@@ -129,33 +132,26 @@ int main(int argc, char* argv[]) {
       return 8;
     } else {
       parmsok=1;
-      if (strncmp(argv[i], ZOPEN_DIR_DELIMITER, 1) != 0) {
-        /* relative root directory was specified */
-        char currentworkingdir[ZOPEN_PATH_MAX+1];
-        getcwd(currentworkingdir, sizeof(currentworkingdir));
-        /* create absolute root directory */
-        snprintf(root, ZOPEN_PATH_MAX, "%s/%s", currentworkingdir, argv[i]);
-      } else {
-        /* absolute root directory was specified */
-        strcpy(root, argv[i]);
-      }
     }
-  }
-  
-  if (!zopen_c_home_var) {
-    fprintf(stderr, "Unable to determine $HOME location - this is required to create the default root directory or the symbolic link\n");
-    return 8;
   }
   if (!parmsok) {
-    /* no root directory was specified - defaults to $HOME/zopen */
-    strcpy(root, ZOPEN_HOME_NAME);
-    if (genfilename(zopen_c_home_var, ZOPEN_HOME_NAME, root, ZOPEN_PATH_MAX)) {
-      return 4;
-    }
+    fprintf(stderr, "Specify a directory to install into\n");
+    syntax(argv[0], bootpkg);
+    return 8;
+  }
+  if (!zopen_c_home_var) {
+    fprintf(stderr, "Unable to determine $HOME location - this is required to create the symbolic link\n");
+    return 8;
+  }
+  if (!realpath(argv[argc-1], root)) {
+    fprintf(stderr, "Directory %s does not exist, or is not writable\n", argv[argc-1]);
+    syntax(argv[0], bootpkg);
+    return 4;
   }
   if (genfilename(zopen_c_home_var, ZOPEN_HOME_NAME, zopenhome, ZOPEN_PATH_MAX)) {
     return 4;
   }
+
   if (realpath(zopenhome, realpathhome)) {
     if (strcmp(root, realpathhome)) {
       fprintf(stderr, "File or directory %s exists. Please move this file before running since a symbolic link will be created\n", zopenhome);
@@ -167,14 +163,6 @@ int main(int argc, char* argv[]) {
     }
   } else {
     symlink=1;
-  }
-
-  if (verbose) {
-    fprintf(STDTRC, "Creating directories under %s\n", root);
-  }
-  if (rc = createdirs(root)) {
-    fprintf(stderr, "error creating directories: %d\n", rc);      
-    return rc;
   }
 
   if (gentmpfilename("pem", tmppem, ZOPEN_PATH_MAX)) {

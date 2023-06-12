@@ -27,9 +27,10 @@ static int createsubdir(const char* rootdir, const char* subdir) {
   }
 }
 
+
 /*
  * Create the directories needed for a z/OS Open Tools
- * development environment including the root directory
+ * development environment relative to the root directory
  * passed in.
  *
  * If a directory already exists, it will not be modified,
@@ -41,36 +42,15 @@ static int createsubdir(const char* rootdir, const char* subdir) {
 int createdirs(const char* rootdir) {
   struct stat stroot = {0};
   const char* subdir[] = { ZOPEN_DEV, ZOPEN_BOOT, ZOPEN_PROD, NULL };
-  const char *rootsubdir;
-  char dir[ZOPEN_PATH_MAX+1];
-  char dirtokbuf[ZOPEN_PATH_MAX+1];
-  int rc;
-  int i;
+  int i,rc;
 
-  memset(dir, 0x00, sizeof(dir));
-  sprintf(dir, "%s", ZOPEN_DIR_DELIMITER);
-  strcpy(dirtokbuf, rootdir);
-  rootsubdir=strtok(dirtokbuf, ZOPEN_DIR_DELIMITER);
-
-  /* create root directory tree */
-  while (rootsubdir != NULL) {
-    strcat(dir, rootsubdir);
-    if (stat(dir, &stroot) == -1) {
-      /* root subdirectory doesn't exist - create it */
-      if (rc = createsubdir(dir, "")) {
-        if (rc != ZOPEN_CREATEDIR_DIR_EXISTS) {
-          fprintf(stderr, "Could not create root subdirectory '%s': %s\n", dir, strerror(errno));
-          return rc;
-        }
-      }
-    }
-    strcat(dir, ZOPEN_DIR_DELIMITER);
-    rootsubdir=strtok(NULL, ZOPEN_DIR_DELIMITER);
+  if (stat(rootdir, &stroot) == -1) {
+    fprintf(stderr, "root directory %s does not exist. No directories created\n", rootdir);
+    return ZOPEN_CREATEDIR_ROOT_NOT_EXIST;
   }
-   
-  /* create predefined subdirectories */
+
   for (i=0; subdir[i] != NULL; ++i ) {
-    if (rc = createsubdir(dir, subdir[i])) {
+    if (rc = createsubdir(rootdir, subdir[i])) {
       if (rc != ZOPEN_CREATEDIR_DIR_EXISTS) {
         fprintf(stderr, "Could not create subdirectory '%s': %s\n", subdir[i], strerror(errno));
         return rc;
