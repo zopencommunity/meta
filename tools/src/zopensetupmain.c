@@ -185,6 +185,16 @@ int main(int argc, char* argv[]) {
     return 4;
   }
 
+
+  if (verbose) {
+    fprintf(STDTRC, "Creating directories under %s\n", root);
+  }
+
+  if (rc = createdirs(root))  {
+    fprintf(stderr, "error creating directories: %d\n", rc);
+    return rc;
+  }
+
   if (rc = createpem(pemdata, tmppem)) {
     fprintf(stderr, "error creating pem file: %d\n", rc);
     return rc;
