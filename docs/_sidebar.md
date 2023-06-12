@@ -11,6 +11,7 @@
   - [FAQ](/Guides/FAQ.md)
   - [Common Solutions](/Guides/CommonSolutions.md)
   - Articles
+    - [Using GPG on z/OS](/Guides/GpgOnZOS.md)  
     - [Using Git on z/OS](/Guides/GitOnZOS.md)
     - [Using Vim on z/OS](/Guides/VimOnZOS.md)
     - [Using Bash on z/OS](/Guides/BashOnZOS.md)
