@@ -35,7 +35,7 @@ It will be much easier to work with USS using ssh, scp, and sftp.
 ### Running zopen-setup
 
 - `cd $HOME`
-- `./zopen-setup  <file system>` # file system is the location where the zopen tools will be installed
+- `./zopen-setup` # The zopen tools will be installed into `$HOME/zopen`. If a path parameter is specified, the zopen tools will be installed there. The specified path can either be an absolute path or a relative path. If the specified path does not exist, it will be created as part of the setup process.
 
 ### Set up the zopen tools
 
