@@ -58,6 +58,16 @@ static void syntax(const char* pgm, const char** bootpkg) {
   return;
 }
 
+static int stringcompare(const void *str1, const void *str2) {
+  char *const *pp1=str1;
+  char *const *pp2=str2;
+  return strcmp(*pp1, *pp2);
+}
+
+static void sortbootpkg(const char* elements[], int count) {
+  qsort(elements, count, sizeof(*elements), stringcompare);
+}
+
 #define _CVTSTATE_OFF     0
 #define _CVTSTATE_ON      1
 #define _CVTSTATE_ALL     4
@@ -95,9 +105,13 @@ int main(int argc, char* argv[]) {
   int   i;
   int symlink;
   int parmsok=0;
+  int elementsbootpkg;
   char* zopen_c_home_var = getenv("HOME");
 
   __ae_autoconvert_state(_CVTSTATE_ON); 
+
+  elementsbootpkg = (sizeof(bootpkg)/sizeof(bootpkg[0]))-1;
+  sortbootpkg(bootpkg, elementsbootpkg);
 
   if (argc < 2) {
     syntax(argv[0], bootpkg);
