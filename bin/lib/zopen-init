@@ -344,7 +344,7 @@ else
   chmod -R 755 "$rootfs/boot/$curldir"
   curwd=$PWD
   cd "$rootfs/boot/$curldir/" || printError "Could not access boot curl directory. Re-run 'zopen init' to retry"
-  . .env
+  . ./.env
   cd "$curwd"  || printError "Could not change to $curwd. Re-run 'zopen init' to retry"
   
   printInfo "- Updating CA cert"
