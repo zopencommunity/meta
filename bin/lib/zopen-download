@@ -27,23 +27,6 @@ printSyntax()
   echo "  and <package> is a list of one or more projects to install" >&2
 }
 
-getContentsFromGithub()
-{
-  url="$1"
-  printVerbose "Requesting from url: ${url} "
-  if ! repo_results=$(curl "$OAUTH_TOKEN_OPTION" "$OAUTH_TOKEN" -s "$url"); then
-    printError "Unable to download from url: '$url'. Resolve reported issue and retry" 
-  fi
-  
-  if echo "$repo_results" | grep -q "API rate limit exceeded for" 2>/dev/null; then
-    printError "API rate limit exceeded for github.\n1. Generate a token (https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token).\n2. Set ZOPEN_GIT_OAUTH_TOKEN and rerun"
-  fi
-  if echo $repo_results | grep -q "Bad credentials" 2>/dev/null; then
-    printError "Your ZOPEN_GIT_OAUTH_TOKEN is invalid. Please validate that it is correct and re-run."
-  fi
-  echo "$repo_results";
-}
-
 installDependencies()
 (
   name=$1
@@ -69,15 +52,9 @@ handlePackageInstall(){
   printVerbose "Name:$name;version:$versioned;tag:$tagged;repo:$repo"
   printHeader "Installing package: $name"
 
-  releaseURL="https://api.github.com/repos/ZOSOpenTools/${repo}/releases"
-  printVerbose "Grabbing list of all releases from $releaseURL"
-  
-  if ! contents="$(getContentsFromGithub $releaseURL)"; then
-    exit 4;
-  fi
-
-  #printVerbose "Contents returned: $contents"
-  trimmed=$(echo "$contents" | tr -d ' []{}\t\r\n')
+  getAllReleasesFromGithub "${repo}"
+  [ 200 -ne "$?" ] && printError "Unable to get list of releases for repo: ${repo}"
+  trimmed=$(echo "$responseBody" | tr -d ' []{}\t\r\n')
   if [ -z "$trimmed" ]; then
     printInfo "- No releases published for $name"
     return
@@ -509,11 +486,10 @@ progressHandler "network" "- Latest information downloaded" &
 ph=$!
 killph="kill -HUP $ph"
 addCleanupTrapCmd "$killph"
-if ! repo_results="$(getContentsFromGithub "https://api.github.com/users/ZOSOpenTools/repos?per_page=250")"; then
-  exit 4;
-fi
+repo_results="$(getReposFromGithub)"
+grfgRc=$?
 $killph 2>/dev/null  # if the timer is not running, the kill will fail
-repo_results=$(echo "$repo_results" | grep "\"full_name\":" 2>/dev/null | cut -d '"' -f 4)
+[ 0 -ne $grfgRc ] && exit $grfgRc;
 
 foundPort=false
 installArray=""

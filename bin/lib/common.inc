@@ -724,6 +724,118 @@ syslog() {
     touch "$fd"
   fi
   echo $(date +"%F %T") $(id | cut -d' ' -f1)::$module:$type:$categories:$location:$msg >> $fd
-
 }
+
+parseResponseHeaders(){
+  responseHeaders=$(echo "$httpresponse" | awk '/^[ ]*[a-zA-Z0-9]/ {print} ')
+}
+parseResponseBody(){
+  responseBody=$(echo "$httpresponse" | awk '!/^[ ]*[a-zA-Z0-9]/ {print} ')
+}
+parseHttpRc(){
+  if [ -z "$responseHeaders" ]; then
+    parseResponseHeaders
+  fi
+  responseRc=$(echo "$responseHeaders" | head -n 1 | cut -d' ' -f 2)
+}
+
+httprequest() {
+  url="$1"
+  expectedRc="$2" # Space separated list of http rcs that are handled by caller
+  printVerbose "Requesting from url: ${url} "
+  uricmd="curl --include $OAUTH_TOKEN_OPTION $OAUTH_TOKEN -s $url"
+  if ! httpresponse=$(curl --include "$OAUTH_TOKEN_OPTION" "$OAUTH_TOKEN" -s "$url"); then
+    printError "Unable to download from url: '$url'. Resolve reported issue and retry"
+  fi
+  parseResponseHeaders
+  parseResponseBody
+  parseHttpRc
+  case "$expectedRc" in
+    *$responseRc*) printVerbose "Request completed as expected ($responseRc)";;
+    *) printVerbose "Request completed with response: $responseRc";
+       case "$responseRc" in
+         '200') printVerbose "Request completed successfully to URL: $url";;
+         '401') printError "Your ZOPEN_GIT_OAUTH_TOKEN is invalid. Please validate that it is correct and re-run.";;
+         '403') if echo "$httpresponse" | grep -q "API rate limit exceeded for" 2>/dev/null; then
+                  printError "API rate limit exceeded for github.\n1. Generate a token (https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token).\n2. Set ZOPEN_GIT_OAUTH_TOKEN and rerun"
+                else
+                  printError "Unable to access URL: $url"
+                fi
+                return 8;;
+         '404') printError "URL $url not found";;
+         * ) printError "Bad response code $responseRc when accessing URL: $url";;
+       esac;;
+  esac
+  return $responseRc
+}
+
+parseJsonRepos(){
+   [ -z "$jsonResponse" ] && echo "" && return
+   echo "$jsonResponse" | awk -F'"' ' /full_name/ { print $4 }'
+}
+
+getReposFromGithub(){
+  url="https://api.github.com/users/ZOSOpenTools/repos?per_page=50"
+  httprequest "$url"
+  hrc=$?
+  [ 200 -ne $hrc ] && return $hrc;
+  done=false
+
+  while ! $done; do
+    jsonResponse="$jsonResponse $responseBody"
+    printVerbose "Checking for pagination"
+    paginationLinkLine=$(echo "$responseHeaders" | grep "Link:")
+    if [ -z "$paginationLinkLine" ]; then
+      printVerbose "No pagination, no more results"
+      done=true
+    else
+      nextLinkRegex='s/.*\(http[^>]*\)[^"]*["]next.*/\1/'
+      #nextLinkRegex='s/.*Link:.*<\(http[^>]*\)>; rel="Next".*/\1/'
+      hasNext=$(echo "$paginationLinkLine" | sed "$nextLinkRegex" )
+      if [ "$hasNext" = "$paginationLinkLine" ]; then
+        printVerbose "No pagination 'next' link found"
+        done=true
+      fi
+      if [ ! "$hasNext" = "$paginationLinkLine" ]; then
+        url="$hasNext"
+        httprequest "$url"
+        hrc=$?
+        [ 200 -ne $hrc ] && return $hrc;
+      fi
+    fi
+  done
+  parseJsonRepos "$jsonResponse"
+}
+
+getLatestReleaseFromGithub(){
+  repo="$1"
+  url="https://api.github.com/repos/ZOSOpenTools/${repo}/releases/latest"
+  httprequest "$url" "200 404"
+  hrc=$?
+  return hrc
+}
+
+getAllReleasesFromGithub(){
+  repo="$1"
+  url="https://api.github.com/repos/ZOSOpenTools/${repo}/releases"
+  httprequest "$url" "200"
+  hrc=$?
+  return hrc
+}
+
+getContentsFromGithub(){
+  url="$1"
+  printVerbose "Requesting from url: ${url} "
+  if ! repo_results=$(curl --include "$OAUTH_TOKEN_OPTION" "$OAUTH_TOKEN" -s "$url"); then
+    printError "Unable to download from url: '$url'. Resolve reported issue and retry" 
+  fi
+  if echo "$repo_results" | grep -q "API rate limit exceeded for" 2>/dev/null; then
+    printError "API rate limit exceeded for github.\n1. Generate a token (https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token).\n2. Set ZOPEN_GIT_OAUTH_TOKEN and rerun"
+  fi
+  if echo $repo_results | grep -q "Bad credentials" 2>/dev/null; then
+    printError "Your ZOPEN_GIT_OAUTH_TOKEN is invalid. Please validate that it is correct and re-run."
+  fi
+  echo "$repo_results";
+}
+
 zopenInitialize
