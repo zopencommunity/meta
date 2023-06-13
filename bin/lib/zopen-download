@@ -311,7 +311,7 @@ handlePackageInstall(){
 curdir=\$(pwd)
 cd "$baseinstalldir/$name" >/dev/null 2>&1
 if [ -f ".env" ]; then
-  . .env
+  . ./.env
 fi
 cd \$curdir  >/dev/null 2>&1
 EOF
