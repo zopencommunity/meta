@@ -26,38 +26,26 @@ printSyntax()
   echo " and <package> is an optional list of one or more packages." >&2
 }
 
-getContentsFromGithub()
-{
-  url=$1
-  if ! repo_results=$(curl $OAUTH_TOKEN_OPTION "$OAUTH_TOKEN" -s "$url"); then
-    printWarning "curl command could not download $url"
-  fi
-  
-  if echo $repo_results | grep -q "API rate limit exceeded for" 2>/dev/null; then
-    printError "API rate limit exceeded for github.\n1. Generate a token (https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token).\n2. Set ZOPEN_GIT_OAUTH_TOKEN and rerun"
-  fi
-  if echo $repo_results | grep -q "Bad credentials" 2>/dev/null; then
-    printError "Your ZOPEN_GIT_OAUTH_TOKEN is invalid. Please validate that it is correct and re-run."
-  fi
-  echo "$repo_results";
-}
-
 printDetailListEntries()
 {
   details=$1
   needle=$2
 
-  if [[ $details -eq 0 ]]; then
-    if ! $noheader; then
-      printf "${NC}${UNDERLINE}%-15s %-15s %-15s %-15s\n${NC}" "Package" "Your version" ".version" "Latest Tag"
+  if [ $details -eq 0 ]; then
+    scrcols=$(getScreenCols)
+    numcols=4
+    colwidth=$(($scrcols / $numcols -1 ))
+    if [ ! -z "$1" ] && ! $noheader; then
+      printf "${NC}${UNDERLINE}%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s\n${NC}" "Package" "Your version" ".version" "Latest Tag"
     fi
     echo "$repoArray" | xargs | tr ' ' '\n' | sort | while read repo; do
       name=${repo%port}
       if [ -z $needle ] || [ "${name}" = "${needle}" ]; then
-        if ! contents="$(getContentsFromGithub "https://api.github.com/repos/ZOSOpenTools/${repo}/releases/latest")"; then
-          exit 4;
+        latest=$(getLatestReleaseFromGithub "$repo")
+        if [ $? -ne 0 ]; then
+          printError "Unable to retrieve remote information"
         fi
-        latestTag="$(echo "$contents" | grep "\"tag_name\":" | cut -d '"' -f 4)"
+        latestTag=$(echo "$responseBody" | awk -F'"' ' /tag_name/ { print $4 }')
         if [ -e "${ZOPEN_PKGINSTALL}/${name}/.releaseinfo" ]; then
           originalTag=$(cat "${ZOPEN_PKGINSTALL}/${name}/.releaseinfo")
         else
@@ -69,7 +57,7 @@ printDetailListEntries()
           dotversion="N/a"
         fi
         if ! $noversions; then
-          printf "%-15s %-15s %-15s %-15s\n" "$repo" "$originalTag" "$dotversion" "$latestTag"
+          printf "%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s\n" "$repo" "$originalTag" "$dotversion" "$latestTag"
         else
           printf "%s\n" "$repo"
         fi
@@ -77,55 +65,55 @@ printDetailListEntries()
     done
   else
     printVerbose "Checking repoArray: $repoArray"
+    scrcols=$(getScreenCols)
+    numcols=5 
+    colwidth=$(($scrcols / $numcols -1 ))
     if ! $noheader; then
-      printf "${NC}${UNDERLINE}%-15s %-15s %-15s %-10s %-25s\n${NC}" "Package" "Your version" "Latest Tag" "Status" "Quality"
+      printf "${NC}${UNDERLINE}%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s\n${NC}" "Package" "Your version" "Latest Tag" "Status" "Quality"
     fi
     echo "$repoArray" | xargs | tr ' ' '\n' | sort | while read repo; do
       name=${repo%port}
       if [ -z $needle ] || [ "${name}" = "${needle}" ]; then
-        if ! contents="$(getContentsFromGithub "https://api.github.com/repos/ZOSOpenTools/${repo}/releases/latest")"; then
-          exit 4;
-        fi
-        #FIXME: use jq to parse
-        latestTag="$(echo "$contents" | grep "\"tag_name\":" | cut -d '"' -f 4)"
-        statusline="$(echo "$contents" | grep "\"body\":.*Test Status:.*(.*)<br />")"
-        buildQuality="$(echo "$statusline" | sed -e "s#.*Test Status:<\/b>##" -e "s#[ ]*(.*##" | tr -d ' ')"
-        testStatus="$(echo "$statusline" | sed -e "s#.*Test Status:<\/b>[^(]*(##" -e "s#).*##")"
-        if [ -z "$buildQuality" ]; then
-          buildQuality="Untested"
-          testStatus="N/A";
-        fi
-        if [ ! -z "$filter" ]; then
-          qualityLower=$(echo "$buildQuality" | awk '{print tolower($0)}')
-          if [ "$filter" != "$qualityLower" ]; then
-            continue;
-          fi
-        fi
-        
         if [ -e "${ZOPEN_PKGINSTALL}/${name}/.releaseinfo" ]; then
           originalTag=$(cat "${ZOPEN_PKGINSTALL}/${name}/.releaseinfo")
         else
           originalTag="Not installed"
         fi
-        printf "%-15s %-15s %-15s " "$repo" "$originalTag" "$latestTag" 
-         case $buildQuality in
-          "Green")
-          printf "${NC}${GREEN}${1}%-10s${NC}" "$buildQuality"
-          ;;
-          "Red" | "Untested" | "Skipped" )
-          printf "${NC}${RED}${1}%-10s${NC}" "$buildQuality"
-          ;;
-          "Blue")
-          printf "${NC}${BLUE}${1}%-10s${NC}" "$buildQuality"
-          ;;
-          "Yellow")
-          printf "${NC}${YELLOW}${1}%-10s${NC}" "$buildQuality"
-          ;;
-          *)
-          printf "%-10s" "$buildQuality"
-          ;;
-         esac
-        printf " %-25s\n"  "$testStatus"
+        getLatestReleaseFromGithub "$repo"
+        case $? in
+          404) printVerbose "No latest release for port";
+               printf "%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s ${NC}${RED}%-${colwidth}s${NC}\n" "$name" "$originalTag" "Unknown" "Unknown" "Unknown"
+               ;;
+          200) printVerbose "Latest release request successful";  
+               latestTag="$(echo "$responseBody" | grep "\"tag_name\":" | cut -d '"' -f 4)"
+               statusline="$(echo "$responseBody" | grep "\"body\":.*Test Status:.*(.*)<br />")"
+               buildQuality="$(echo "$statusline" | sed -e "s#.*Test Status:<\/b>##" -e "s#[ ]*(.*##" | tr -d ' ')"
+               testStatus="$(echo "$statusline" | sed -e "s#.*Test Status:<\/b>[^(]*(##" -e "s#).*##")"
+               if [ -z "$buildQuality" ]; then
+                 buildQuality="Untested"
+                 testStatus="N/A";
+               fi
+               if [ ! -z "$filter" ]; then
+                 qualityLower=$(echo "$buildQuality" | awk '{print tolower($0)}')
+                 if [ "$filter" != "$qualityLower" ]; then
+                   continue;
+                 fi
+               fi
+               printf "%-${colwidth}s %-${colwidth}s %-${colwidth}s " "$name" "$originalTag" "$latestTag" 
+               testStatus=$(echo $testStatus | sed 's/^[ ]\?\([0-9]\+\).*of \([0-9]\+\) tests.*- \([0-9\.]\+\).*/\1 of \2 tests passed (\3%)/') 
+               printf " %-${colwidth}s"  "$testStatus"
+               case $buildQuality in
+                 "Green") printf "${NC}${GREEN}%-${colwidth}s${NC}" "$buildQuality";;
+                 "Red" | "Untested" | "Skipped" ) printf "${NC}${RED}%-${colwidth}s${NC}" "$buildQuality" ;;
+                 "Blue") printf "${NC}${BLUE}%-${colwidth}s${NC}" "$buildQuality" ;;
+                 "Yellow") printf "${NC}${YELLOW}%-${colwidth}s${NC}" "$buildQuality" ;;
+                 *) printf "%-${colwidth}s" "$buildQuality" ;;
+               esac
+               printf "\n"
+               ;;
+          *) printError "Error $httpResponseCode while trying to retrieve latest repo release";;
+        esac
+
       fi
       continue;   
     done
@@ -153,7 +141,7 @@ printInstalledEntries(){
     else
       dotversion="N/a"
     fi
-        
+
     printVerbose "Original tag: $originalTag for repo: $repo"
     if [ -z "$1" ]; then
       printInfo "$originalTag"
@@ -170,88 +158,6 @@ printInstalledEntries(){
   exit 0
 }
 
-downloadRepos()
-{
-    printVerbose "Downloading latest information from repo(s): $repoArray"
-    echo "$repoArray" | xargs | tr ' ' '\n' | sort | while read repo; do
-    name=${repo%port}
-    if ! latest_url="$(getContentsFromGithub "https://api.github.com/repos/ZOSOpenTools/${repo}/releases/latest")"; then
-      exit 4;
-    fi
-
-    #FIXME: use jq to parse
-    statusline="$(echo "$latest_url" | grep "\"body\":.*Test Status:.*(.*)<br />")"
-    buildQuality="$(echo "$statusline" | sed -e "s#.*Test Status:<\/b>##" -e "s#[ ]*(.*##" | tr -d ' ')"
-    if [ -z "$buildQuality" ]; then
-      buildQuality="Untested"
-    fi
-    if [ ! -z "$filter" ]; then
-      qualityLower=$(echo "$buildQuality" | awk '{print tolower($0)}')
-      if [ "$filter" != "$qualityLower" ]; then
-        continue;
-      fi
-    fi
-
-    latestTag="$(echo "$latest_url" | grep "\"tag_name\":" | cut -d '"' -f 4)"
-    if $updateInstalled; then
-      if [ -e "${name}/.releaseinfo" ]; then
-        originalTag=$(cat "${name}/.releaseinfo" | xargs) 
-      else
-        # We're only updating alreaady installed products
-        printVerbose "${downloadDir}/${name} will not be updated as it is not installed."
-        continue;
-      fi
-      if [ "${latestTag}" = "${originalTag}" ] && ! $reinstall; then
-        printVerbose "${downloadDir}/${name} with latest release tag \"${latestTag}\" already installed. Skipping..."
-        continue;
-      fi
-      printInfo "New release with tag \"${latestTag}\" found for $repo"
-    fi
-    printInfo "Preparing to download $repo"
-    if [ -z "$latest_url" ]; then
-      printInfo "No releases published for $repo"
-      continue
-    fi
-
-    latest_url="$(echo "$latest_url" | grep "\"browser_download_url\":" | cut -d '"' -f 4)"
-    printInfo "Downloading latest release from $repo..."
-    if ! $verbose; then
-      redirectToDevNull="2>/dev/null"
-    fi 
-    if ! runAndLog "curl -L ${latest_url} -O ${redirectToDevNull}"; then
-      printWarning "Could not download ${latest_url}"
-      continue;
-    fi
-
-    pax=$(basename ${latest_url})
-    if [ ! -f "${pax}" ]; then
-      printError "${pax} was not actually downloaded?"
-    fi
-
-    printInfo "Extracting $pax..."
-    if ! runAndLog "pax -rf $pax -p p ${redirectToDevNull}"; then
-      printWarning "Could not extract $pax. Skipping"
-      continue;
-    fi
-    rm -f "${pax}"
-    dirname=${pax%.pax.Z}
-
-    printVerbose "Removing old symlink and recreating"
-    # Remove old symlink and recreate
-    if [ -L $name ]; then
-      rm $name
-    fi 
-
-    if ! ln -s $dirname $name; then
-      printError "Could not create symbolic link name"
-    fi 
-
-    # Add tag information as a .releaseinfo file
-    printVerbose "Adding tag information: $latestTag"
-    echo "$latestTag" > "${name}/.releaseinfo"
-    printInfo "Successfully downloaded $name to $downloadDir/$name/"
-done
-}
 
 whatProvides(){
   needle=$1
@@ -371,19 +277,25 @@ if [ ! -z "$filter" ]; then
 fi
 
 if ! $localoption; then
+
   # Retrieve all repositories
-  if ! repo_results="$(getContentsFromGithub "https://api.github.com/users/ZOSOpenTools/repos?per_page=250")"; then
-    exit 4;
-  fi
-  repo_results=$(echo "$repo_results" | grep "\"full_name\":" 2>/dev/null | cut -d '"' -f 4)
-  
+  progressHandler "network" "- Retrieved remote details" &
+  ph=$!
+  killph="kill -HUP $ph"
+  addCleanupTrapCmd "$killph"
+  #getReposFromGithub
+  repo_results="$(getReposFromGithub)"
+  grfgRc=$?
+  $killph 2>/dev/null  # if the timer is not running, the kill will fail
+  [ 0 -ne $grfgRc ] && exit $grfgRc;
+
   # Parse repositories for zopen framework repos
   foundPort=false
   repoArray=""
   for repo in $(echo ${repo_results}); do
     repo=${repo#"ZOSOpenTools/"}
     name=${repo%port}
-    printVerbose "Checking repo '$repo' with name:'$name'"
+    printVerbose "Checking repo suffixes for '$repo' with name:'$name'"
     # Skip repos that do not end with port
     if [ "${name}" = "${repo}" ]; then
       printVerbose "Skipping ${name}"
@@ -407,8 +319,7 @@ if ! $localoption; then
   done
 fi
 
-[[ -z "$remotesearch" ]] || printDetailListEntries $details $needle
-[[ -z "$list" ]] || printDetailListEntries $details
-[[ -z "$installed" ]] || printInstalledEntries $details
-[[ -z "$whatprovides" ]] || whatProvides $needle
-downloadRepos
+[ -z "$remotesearch" ] || printDetailListEntries $details $needle
+[ -z "$list" ] || printDetailListEntries $details
+[ -z "$installed" ] || printInstalledEntries $details
+[ -z "$whatprovides" ] || whatProvides $needle
