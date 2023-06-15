@@ -112,6 +112,16 @@ else
     printInfo "- Stripping trailing '/' char"
     rootfs="${rootfs%})"
   fi
+  if [ "$rootfs" = "/" ]; then
+    printInfo "- Installing into system root; are you sure (y/N)?"
+    read sysrootok < /dev/tty
+    if [ -n "$sysrootok" ] && [ "y" = "${sysrootok}" ]; then
+      printInfo "- Using '/'as root filesystem"
+      rootfs="/." # references below take a root directory
+    else
+      exit 4
+    fi
+  fi
 fi
 
 if [ -n "$ZOPEN_GIT_OAUTH_TOKEN" ]; then
