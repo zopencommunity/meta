@@ -282,67 +282,22 @@ mergeIntoSystem(){
   printVerbose "Merge symlinks into main filesystem using tmp tar file $tarfile"
   
   printVerbose "Generating intermediary tar file"
-  $(cd "$processingDir" && tar -cf "$tarfile" "usr")
+  # Need '-S' to allow long symlinks
+  $(cd "$processingDir" && tar -S -cf "$tarfile" "usr")
 
   printVerbose "Generating listing for remove processing (including main symlink)"
   listing=$(tar tf "$processingDir/$tarfile" 2>/dev/null| sort -r)
   echo "Installed files:" > "$versioneddir/.links"
   echo "$listing" >>  "$versioneddir/.links"
+  
+  printVerbose "Extracting tar to rootfs"
   cd "$processingDir" && tar xf "$tarfile" -C "$rootfs" 2>/dev/null
+
+  printVerbose "Cleaning temp resources"
+  rm -rf "$processingDir" 2>/dev/null
 
   printInfo "- Integration complete"
   return 0
-}
-
-symlinkIntoSystem(){
-  name=$1
-  baseinstalldir=$2
-
-  printInfo "- Integrating package into file system"
-  basedir=$baseinstalldir/$name/
-  printVerbose "Changing working directory to the install dir for the package"
-  cd $basedir
-
-  target="$ZOPEN_ROOTFS/usr"
-  dirs=$(zosfind "$basedir" -type d | grep -v "\.git" | sort -r)
-  ndirs=$(echo "$dirs" | wc -l | tr -d ' ')
-  dircnt=0
-  echo "# Installed links by package: $name" > $basedir/.links
-  printInfo "${ERASELINE}- Processing ${dircnt} of ${ndirs}: ${pct}% (${flecnt}/${nfiles})"
-  echo "$dirs" | while read dir; do
-    dircnt=$(expr $dircnt + 1)
-    trimdir=$(echo "$dir" | sed "s#^$basedir##")
-    if [[ ! "x$trimdir" = "x" ]]; then 
-      mkdir -p "$target/$trimdir"
-      filestolink=$(zosfind "$dir" -type f)
-      nfiles=$(echo "$filestolink" | wc -l | tr -d ' ')
-      flecnt=0
-      pct=0
-      ansiline 1 0 "${ERASELINE}- Processing ${dircnt} of ${ndirs}: ${pct}% (${flecnt}/${nfiles})"
-      echo "$filestolink" | while read filetolink; do
-        flecnt=$(expr $flecnt + 1)
-        pct=`expr $flecnt \* 100`
-        pct=`expr $pct / $nfiles`
-        ansiline 1 0 "${ERASELINE}- Processing ${dircnt} of ${ndirs}: ${pct}% (${flecnt}/${nfiles})"
-        trimfile=$(echo $filetolink | sed "s#^$basedir##")
-        if [ ! -z $trimfile ]; then
-          relpath=$(relativePath "$target/$trimfile" "$filetolink" )
-          exename="$(basename $filetolink)"
-          rootdir="$(dirname $target/$trimfile)"
-          if cd $rootdir && ln -fs $relpath $exename; then
-            abspath=$(echo "$target/$trimfile" | sed "s#^$ZOPEN_ROOTFS/##")
-            printVerbose "Converted relative path '$relpath' to absolute under zopen_rootfs: $abspath"
-            echo "$abspath " >> $basedir/.links
-          else
-            printInfo "${ERASELINE}- ${NC}${RED}Issue with linking '$filetolink' to '$target/$trimfile'${NC}"
-            printInfo "\n${ERASELINE}- Processing ${dircnt} of ${ndirs}: ${pct}% (${flecnt}/${nfiles})"
-          fi
-        fi
-      done
-    fi
-  done
-  ansiline 1 0 "${ERASELINE}- Processed ${ndirs} of ${ndirs}"
-  printInfo "- Integration complete"
 }
 
 # The following function will remove any orphaned symlinks left after either:
@@ -363,27 +318,97 @@ unsymlinkFromSystem(){
     nfiles=$(sed '1d;$d' "$dotlinks" | wc -l  | tr -d ' ')
     flecnt=0
     pct=0
-    printInfo "- Processing ${pct}% (${flecnt}/${nfiles})"
-    sed '1d;$d' "$dotlinks"| while read filetounlink; do
-      flecnt=$(expr $flecnt + 1)
-      pct=`expr $flecnt \* 100`
-      pct=`expr $pct / $nfiles`
-      ansiline 1 0 "${ERASELINE}- Processing ${pct}% (${flecnt}/${nfiles})"
-      filetounlink="${filetounlink% symbolic.*}"
-      if [ -d "$ZOPEN_ROOTFS/$filetounlink" ]; then
-        # rmdir will fail if the directory is not empty - which is what is required,
-        # we either need to remove the empty directory or leave it in place as it is 
-        # still in use
-        rmdir "$rootfs/$filetounlink" 2>/dev/null
-      elif [ -L "$rootfs/$filetounlink" ] && [ ! -e $rootfs/$filetounlink ]; then
-        # the linked-to file no longer exists (ie. the symlink is dangling)
-        rm -f "$rootfs/$filetounlink"
+
+    printVerbose "Creating Temporary dirname file"
+    tempDirFile="$ZOPEN_ROOTFS/tmp/zopen.rmdir.$RANDOM"
+    tempTrash="$tempDirFile.trash"
+    [ -e "$tempDirFile" ] && rm -f "$tempDirFile" >/dev/null 2>&1
+    touch "$tempDirFile"
+    addCleanupTrapCmd "rm -rf $tempDirFile"
+    printVerbose "Using temporary file $tempDirFile"
+    printInfo "- Checking ${nfiles} potential links"
+
+    rm_fileprocs=15
+    [ -e "$rootfs/etc/zopen/rm_fileprocs" ] && rm_fileprocs=$(cat "$rootfs/etc/zopen/rm_fileprocs")
+    threshold=$(( nfiles / rm_fileprocs))
+    threshold=$(( threshold + 1 ))
+    printVerbose "Threshold of files per worker [files/procs] calculated as: $threshold"
+    [ $threshold -le 50 ] && threshold=50 && printVerbose "Threshold below min: using 50" # Don't spawn too many
+    printVerbose "Starting spinner..."
+    progressHandler "spinner" "- Complete" &
+    ph=$!
+    killph="kill -HUP $ph"
+    addCleanupTrapCmd "$killph"
+
+    printVerbose "Spawning as subshell to handle threading"
+    # Note that this all must happen in a subshell as the above started
+    # progressHandler is a signal-terminated process - and a wait issued in 
+    # the parent will never complete until that ph is signalled/terminated!
+    deletethreads=$(
+      tid=0
+      filenames=""
+      while read filetounlink; do
+        tid=$(( tid + 1 ))
+        filenames="$filenames\n$filetounlink"
+        if [ "$(( tid % threshold ))" -eq 0 ]; then
+          deletethread "$filenames" "$tempDirFile" &
+          printVerbose "Started delete thread: $!"
+          filenames=""
+        fi
+      done <<EOF
+$(sed '1d;$d' "$dotlinks")
+EOF
+      if [ -n "$filenames" ]; then
+        # Handle when there are not enough to trigger the threshold of a new thread above,
+        # there will still be items in the "array"
+        deletethread "$filenames" "$tempDirFile" #&
+        printVerbose "Started delete thread: $!"
       fi
-    done
-    ansiline 1 0 "${ERASELINE}- Processed 100% (${nfiles}/${nfiles})"
+      wait 
+    )
+    $killph 2>/dev/null  # if the timer is not running, the kill will fail
+    if [ -e "$tempDirFile" ]; then
+      ndirs=$(cat "$tempDirFile" | uniq | wc -l  | tr -d ' ')
+      printInfo "- Checking ${ndirs} dir links"
+      for d in $(cat "$tempDirFile" | uniq | sort -r) ; do 
+        [ -d "$d" ] && rmdir "$d" >/dev/null 2>&1
+      done
+    fi
   else
     printError "Could not locate list of current links to verify, dangling links might be present; run 'zopen clean'"
   fi
+}
+
+deletethread(){
+  filestodelete="$1"
+  tempDirFile="$2"
+  echo "$filestodelete"| while read filetounlink; do
+    deletetask "$tempDirFile" "$filetounlink" 
+  done
+}
+
+deletetask () {
+    tempDirFile="$1"
+    filename="$2"
+    [ -z "$filename" ] && return 0
+    filename=$(echo "$filename" | sed 's/\(.*\).symbolic.*/\1/')
+    filename="$ZOPEN_ROOTFS/$filename"
+    if [ -d "$filename" ]; then
+        # Add to the queue for checking once files are gone if unique
+        ispresent=$(grep "^$filename[ ]*$" "$tempDirFile")
+        if [ -z "$ispresent" ]; then
+          echo " $filename " >> "$tempDirFile"
+        else
+          alreadyfound=""
+        fi
+    elif [ -L "$filename" ]; then
+      if [ ! -f "$filename" ]; then
+        # the linked-to file no longer exists (ie. the symlink is dangling)
+        rm -f "$filename" >/dev/null 2>&1
+      fi
+    else 
+      echo "Unprocessable file: $filename" >> "$tempTrash" 
+    fi
 }
 
 zopenInitialize()
