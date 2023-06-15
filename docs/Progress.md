@@ -65,10 +65,10 @@
 | [opensslport](https://github.com/ZOSOpenTools/opensslport) | 9 | 97% |curl, expat, git, libssh2, lynx, openssh, rsync, sudo, wget
 | [zlibport](https://github.com/ZOSOpenTools/zlibport) | 9 | 100% |autoconf, curl, expat, git, libssh2, lynx, openssh, sudo, wget
 | [findutilsport](https://github.com/ZOSOpenTools/findutilsport) | 8 | 91% |gnulib, grep, libiconv, libxml2, pkgconfig, re2c, texinfo, vim
+| [gawkport](https://github.com/ZOSOpenTools/gawkport) | 8 | 93% |automake, curl, expat, gzip, ncurses, rsync, sudo, vim
 | [grepport](https://github.com/ZOSOpenTools/grepport) | 8 | 95% |byacc, gnulib, libpcre, libxslt, m4, man-db, which, xmlto
 | [libtoolport](https://github.com/ZOSOpenTools/libtoolport) | 8 | 80% |expat, hello, libgdbm, m4, man-db, php, re2c, texinfo
 | [bzip2port](https://github.com/ZOSOpenTools/bzip2port) | 7 | 100% |gpg, libassuan, libgcrypt, libgpgerror, libksba, npth, pinentry
-| [gawkport](https://github.com/ZOSOpenTools/gawkport) | 7 | 93% |automake, curl, expat, gzip, ncurses, rsync, vim
 | [cmakeport](https://github.com/ZOSOpenTools/cmakeport) | 6 | 74% |duckdb, neovim, ninja, unzip, zip, zoslib
 | [libgpgerrorport](https://github.com/ZOSOpenTools/libgpgerrorport) | 6 | 100% |gpg, libassuan, libgcrypt, libksba, npth, pinentry
 | [libiconvport](https://github.com/ZOSOpenTools/libiconvport) | 4 | 100% |bison, libxml2, man-db, php
@@ -151,9 +151,9 @@
 |---|---|--|
 |  [bashport](https://github.com/ZOSOpenTools/bashport) | 2821 | 25
 |  [cmakeport](https://github.com/ZOSOpenTools/cmakeport) | 2328 | 1
+|  [sudoport](https://github.com/ZOSOpenTools/sudoport) | 1547 | 1
 |  [gitport](https://github.com/ZOSOpenTools/gitport) | 1536 | 24
 |  [htopport](https://github.com/ZOSOpenTools/htopport) | 1258 | 16
-|  [sudoport](https://github.com/ZOSOpenTools/sudoport) | 1210 | 1
 |  [perlport](https://github.com/ZOSOpenTools/perlport) | 619 | 1
 |  [coreutilsport](https://github.com/ZOSOpenTools/coreutilsport) | 610 | 9
 |  [duckdbport](https://github.com/ZOSOpenTools/duckdbport) | 405 | 8
@@ -251,4 +251,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-06-13 09:14:42
+Last updated:  2023-06-15 11:05:31
