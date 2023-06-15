@@ -60,7 +60,7 @@ cleanUnused(){
       current=$i
       printInfo "${NC}${GREEN}$i: ${repo#$ZOPEN_PKGINSTALL/}  <-  current${NC}"
     else
-      printInfo "Command to run rm -rf $repo" 
+      rm -rf "$repo" >/dev/null 2>&1 
       printInfo "$i: ${repo#$ZOPEN_PKGINSTALL/} <- Removed"
       syslog $ZOPEN_LOG_PATH/audit.log $LOG_A "$CAT_FILE,$CAT_PACKAGE,$CAT_REMOVE" "CLEAN" "cleanUnused" "Removed unused package at ${repo#$ZOPEN_PKGINSTALL/} "
     fi
@@ -69,6 +69,20 @@ cleanUnused(){
 }
 cleanDangling(){
   printVerbose "Removing dangling symlinks from the file structure"
+  if [ "$ZOPEN_ROOTFS" = "/." ]; then
+    printWarning "With zopen's root set as '/', traversal to find dangling symlinks"
+    printWarning "will occur on ALL mounted file systems, ALL sub-directories and will"
+    printWarning "attempt to remove any dangling symlinks it finds, regardless of how they"
+    printWarning "were created or which package/product/install mechanism was used and if "
+    printWarning "the user has permission to do so (errors will be reported if not)."
+    printWarning "Are you absolutely sure you want to run this option (y/N)?"
+    read absolutely < /dev/tty
+    if [ -n "$absolutely" ] && [ "y" = "${absolutely}" ]; then
+      printInfo "- Checking for any dangling symlinks across system"
+    else
+      exit 4
+    fi
+  fi
   progressHandler "spinner" "- Dangling link removal complete" &
   ph=$!
   killph="kill -HUP $ph"
