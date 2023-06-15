@@ -29,7 +29,7 @@ printHelp()
   echo "zopen is a general purpose script to be used with the z/OS Open Tools ports." >&2
   printSyntax
   echo "Example usage:" >&2
-  echo " # Install athe 'which' utility package" >&2
+  echo " # Install the 'which' utility package" >&2
   echo " zopen install which" >&2
   echo " # List available packages to download" >&2
   echo " zopen list" >&2
