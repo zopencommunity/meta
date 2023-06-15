@@ -293,7 +293,7 @@ fi
 cd \$curdir  >/dev/null 2>&1
 EOF
         printInfo "- Sourcing environment to run any setup"
-        . "$ZOPEN_ROOTFS/etc/profiled/$name/dotenv"
+        cd "$ZOPEN_ROOTFS" && . "$ZOPEN_ROOTFS/etc/profiled/$name/dotenv"
       fi
     fi
     if $unInstallOldVersion; then
