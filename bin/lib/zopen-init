@@ -391,8 +391,9 @@ else
     cp -RT "${utildir}/../../"  "$metadtInstDir" 
   fi
 
-  printInfo "- Running alternative utility to allow selection of forked meta"
-  metaInstall=$(runAndLog "${utildir}/zopen-alt meta -s")
+  printInfo "- Running alternative utility to force selection of forked meta"
+  # Can use "1" as the default since there should be no other options during init!
+  metaInstall=$(runAndLog "${utildir}/zopen-alt meta -s -d 1")
   metaInstall=$?
   [ $metaInstall -ne 0 ] && printError "Unable to install meta; see previous errors and retry the initilisation using the '--re-init' parameter"
 
