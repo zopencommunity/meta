@@ -74,7 +74,7 @@ if $clone; then
 elif [ -e "$configFile" ]; then
   if ! $reinitExisting; then
     printWarning "- Existing configuration file found; re-initializing might lose access to previously installed packages. Continue (y/n)?"
-    reinit=$(getInput)
+    read reinit < /dev/tty
   fi
   if $reinitExisting || { [ -n "$reinit" ] && [ "y" = "${reinit}" ]; }; then
     printInfo "- Re-initializing; removing existing .zopen-config"
@@ -96,7 +96,7 @@ if [ -z "$rootfs" ]; then
   else
     printInfo "- Enter fully-qualified path to your zopen root directory (default: $HOME/zopen)"
   fi
-  rootfs=$(getInput)
+  read rootfs < /dev/tty
 else
   printInfo "- Setting root directory from cli: $rootfs"
 fi
@@ -126,17 +126,20 @@ fi
 
 if [ -n "$ZOPEN_GIT_OAUTH_TOKEN" ]; then
   printInfo "- Found existing envvar: ZOPEN_GIT_OAUTH_TOKEN; reuse value (y/n)?"
-   foundGitOauth=$(getInput)
-   if [ -n "$foundGitOauth" ] && [ "y" = "${foundGitOauth}" ]; then
-     zopen_oauth="export ZOPEN_GIT_OAUTH_TOKEN=$ZOPEN_GIT_OAUTH_TOKEN"
-   else
-     unset ZOPEN_GIT_OAUTH_TOKEN
-   fi
+  read foundGitOauth < /dev/tty
+  if [ -n "$foundGitOauth" ] && [ "y" = "${foundGitOauth}" ]; then
+    zopen_oauth="export ZOPEN_GIT_OAUTH_TOKEN=$ZOPEN_GIT_OAUTH_TOKEN"
+  else
+    unset ZOPEN_GIT_OAUTH_TOKEN
+  fi
 fi
 
 if [ -z "$ZOPEN_GIT_OAUTH_TOKEN" ]; then
   printInfo "- Enter the github oauth token for use in zopen-download. If none (not recommended), press enter"
-  zopen_oauth=$(getInputHidden)
+  addCleanupTrapCmd "stty echo"
+  stty -echo
+  read zopen_oauth < /dev/tty
+  stty echo
   if [ -n "$zopen_oauth" ]; then
     zopen_oauth="export ZOPEN_GIT_OAUTH_TOKEN=$zopen_oauth"
   else
@@ -194,7 +197,7 @@ if ! $clone; then
 else
   printVerbose "Grabbing pkginstall location from within cloned env"
   if [ -e "$ZOPEN_ROOTFS/etc/zopen/fstype" ]; then
-    zopen_pkginstall="$(cat $rootfs/etc/zopen/fstype)"
+    zopen_pkginstall=$(cat "$rootfs/etc/zopen/fstype")
   else
     printError "Unable to locate $ZOPEN_ROOTFS/etc/zopen/fstype; cannot clone unrecognisable file system"
   fi
@@ -202,14 +205,15 @@ fi
 
 if [ "$ZOPEN_PKGINSTALL" = "$rootfs" ]; then
    printWarning "Package install location is the zopen root location; this is not recommended. Continue (y/n)"
-   pkgoverlaysrootfs=$(getInput)
+   read pkgoverlaysrootfs < /dev/tty
    if [ -n "$pkgoverlaysrootfs" ] && [ "y" = "${pkgoverlaysrootfs}" ]; then
      printInfo "- Continuing. Packages will be installed into the zopen root location: $rootfs"
    else
      printWarning "- Stopping. Existing configuration will be preserved"
      exit 8
    fi
-fi 
+fi
+
 ZOPEN_CA_DIR="etc/pki/tls/certs"  # TODO: Work out "proper" location
 if ! $clone; then
     printInfo "- Creating path for certificate lookups"
@@ -313,6 +317,9 @@ if $clone; then
 else
   export ZOPEN_ROOTFS="$rootfs"
 
+  # Generate any system values that can be user changed
+  echo "15" > "$rootfs/etc/zopen/rm_fileprocs"
+
   printInfo "- Check for shipped curl pax"
   curlpax="curl-7.83.1.20230120_231325.zos.pax.Z"
 
@@ -414,7 +421,7 @@ else
   printInfo "- zopen bootstrapping complete"
 
   printInfo "- Configure .profile to automatically source zopen environment (y/n)?"
-  profileEnable=$(getInput)
+  read profileEnable < /dev/tty
   if [ -n "$profileEnable" ] && [ "y" = "${profileEnable}" ]; then
     if ! grep -q ". \$HOME/.zopen-config" "$HOME/.profile"; then
       printVerbose "Line not present (grep returned non-0)"
