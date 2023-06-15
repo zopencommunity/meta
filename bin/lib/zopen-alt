@@ -22,8 +22,13 @@ setAlt(){
   printVerbose "Setting alternative"
     valid=false
     while ! $valid; do
-      echo "Enter alternative version to use (1-$i): "
-      selection=$(getInput)
+      if [ -n "defaultoption" ]; then
+        selection="$defaultoption"
+        defaultoption="" # Only try it once
+      else 
+        echo "Enter alternative version to use (1-$i): "
+        selection=$(getInput)
+      fi
       if [[ ! -z "$(echo $selection | sed -e 's/[0-9]*//')" ]]; then
         echo "Invalid input, must be a number between 1 and $i"
       elif [ "$selection" -ge 1 ] && [ "$selection" -le "$i" ]; then
@@ -121,6 +126,7 @@ listAlts(){
 args=$*
 verbose=false
 sett=false
+defaultoption=""
 if [[ $# -eq 0 ]]; then
   printError "No option provided for query"
 fi
@@ -137,6 +143,9 @@ while [[ $# -gt 0 ]]; do
     "-v" | "--v" | "-verbose" | "--verbose")
       verbose=true
       ;;
+    "-d") defaultoption="$2"
+          shift
+          ;;
     *)
       packageList="$packageList $1";
       ;;
