@@ -68,7 +68,7 @@ getContentsFromGithub()
 
 printListEntries()
 {
-  printf "${NC}${UNDERLINE}${1}%-20s %-20s %-20s %-30s %-10s %-25s\n${NC}" "Repo" "Your version" "Latest Tag" "Dependencies" "Status" "Quality"
+  printf "${NC}${UNDERLINE}${1}%-20s %-35s %-35s %-25s %-10s %-25s\n${NC}" "Repo" "Your version" "Latest Tag" "Dependencies" "Status" "Quality"
   echo "$repoArray" | xargs | tr ' ' '\n' | sort | while read repo; do
     name=${repo%port}
     if ! contents="$(getContentsFromGithub "https://api.github.com/repos/ZOSOpenTools/${repo}/releases/latest")"; then
@@ -100,7 +100,7 @@ printListEntries()
     else
       originalTag="Not installed"
     fi
-    printf '%-20s %-20s %-20s %-30s %-10s %-25s\n' "$repo" "$originalTag" "$latestTag" "$dependencies" "$buildQuality" "$testStatus"
+    printf '%-20s %-35s %-35s %-25s %-10s %-25s\n' "$repo" "$originalTag" "$latestTag" "$dependencies" "$buildQuality" "$testStatus"
     continue;
   done
 }
@@ -265,16 +265,6 @@ installPort()
     (cd "${name}" && . ./.env)
   fi
 
-  # Append deps env include
-    cat <<ZZ >> "${name}/.env"
-if [ -f ".depsenv" ] && [ -z "\$ZOPEN_SOURCING_DEPS" ] ; then
-  ZOPEN_SOURCING_DEPS=1
-  . ./.depsenv
-fi
-  if [ ! -z "\$ZOPEN_SOURCING_DEPS" ]; then
-    unset ZOPEN_SOURCING_DEPS
-  fi
-ZZ
   versionPath="$name/.version"
   if [ -r "$versionPath" ]; then
     version=$(cat "$versionPath");

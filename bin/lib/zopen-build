@@ -1239,6 +1239,42 @@ touch \".installed\"
 rm \".installing\"
 zz
 
+if [ ! -z "$ZOPEN_RUNTIME_DEPS" ]; then
+cat <<ZZ >> "${ZOPEN_INSTALL_DIR}/.env"
+if [ -f ".depsenv" ] && [ -z "\$ZOPEN_SOURCING_DEPS" ] ; then
+  ZOPEN_SOURCING_DEPS=1
+  . ./.depsenv
+fi
+if [ ! -z "\$ZOPEN_SOURCING_DEPS" ]; then
+  unset ZOPEN_SOURCING_DEPS
+fi
+ZZ
+  printHeader "Install dependencies: $ZOPEN_RUNTIME_DEPS"
+  varName=$(echo "$projectName" | sed -e "s/-/_/g")
+    cat <<ZZ >> "${ZOPEN_INSTALL_DIR}/.depsenv"
+${varName}_originalDir="\$OLDPWD"
+ZZ
+  echo "$ZOPEN_RUNTIME_DEPS" | xargs | tr ' ' '\n' | sort | while read dep; do
+    if ! runAndLog "PATH=\"$curlpath:$PATH\" zopen install $dep -v --nodeps"; then
+      printError "Failed to install dependencies"
+    fi
+    cat <<ZZ >> "${ZOPEN_INSTALL_DIR}/.depsenv"
+if [ -f "../${dep}/.env" ]; then
+  if [[ \$(type echo) == 'echo is a shell builtin' ]]; then
+    pushd "../${dep}" >/dev/null
+    . ./.env
+    popd >/dev/null
+  else
+    cd "../${dep}" && . ./.env; cd - >/dev/null
+  fi
+fi
+ZZ
+   done
+   cat <<ZZ >> "${ZOPEN_INSTALL_DIR}/.depsenv"
+OLDPWD="\$${varName}_originalDir"
+ZZ
+fi
+
 # Add call to setup.sh
 cat <<zz >>"${ZOPEN_INSTALL_DIR}/.env"
 # Run setup.sh if it hasn't been run yet
