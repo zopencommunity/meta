@@ -18,6 +18,7 @@ then
     fi
 fi
 
+oldWorkDir=`pwd`
 #depsPath has the details of the location of ports whose env files are consumed for sourcing 
 depsPath="$HOME/zopen/prod|$HOME/zopen/boot"
 configFile=~/.zopen-config
@@ -37,19 +38,18 @@ then
 fi
   echo "final depsPath = $depsPath"
 
-# if the number of arguments passed to script is 0,
-# then , the ports are fetched from $HOME/zopen/prod and $HOME/zopen/boot directory
-# then its env files are fetched and sourced, if they are not already sourced.
-if [ $# -eq 0 ]
-then
-     echo "Sourcing projects from $HOME/zopen/prod and $HOME/zopen/boot"
-     
-     # arrOfDirs, is an array which holds the names of dirs whose env is set
+
+sourceEnvFromPath () {
+    echo "sourceEnvFromPath enter, called with arg - $1"
+    # arrOfDirs, is an array which holds the names of dirs whose env is set
      declare -a arrOfDirs
      unset arrOfDirs[@]
 
-     #Loop through zopen/boot & zopen/prod
-     for path in $(echo ${depsPath} | sed "s/|/ /g") ; do
+    #Loop through zopen/boot & zopen/prod
+     for path in $(echo "$1" | sed "s/|/ /g") ; do
+         if [[ -L "$path" ]]; then
+            path="${path}/"
+         fi
          [ ! -d "$path" ] && echo "Directory $path does not exist. Skipping." && continue
          for deps in $(find "${path}" -name ".env")
          do
@@ -73,6 +73,17 @@ then
            fi
          done
       done 
+}
+
+# if the number of arguments passed to script is 0,
+# then , the ports are fetched from $HOME/zopen/prod and $HOME/zopen/boot directory
+# then its env files are fetched and sourced, if they are not already sourced.
+if [ $# -eq 0 ]
+then
+     echo "Sourcing projects from $HOME/zopen/prod and $HOME/zopen/boot"
+     
+     sourceEnvFromPath ${depsPath}
+     
 else 
     #If path is provided then builedenv file is fetched from the provided path 
     pathForBuild=$1
@@ -81,40 +92,47 @@ else
        return 1 
     fi
 
-    if [ -f ${pathForBuild}/buildenv ]
+    if [ -f ${pathForBuild} ]
     then
-       unset ZOPEN_GIT_DEPS
-       unset ZOPEN_TARBALL_DEPS
-       unset ZOPEN_TYPE
- 
-       ZOPEN_GIT_DEPS=$(. ${pathForBuild}/buildenv; echo $ZOPEN_GIT_DEPS); 
-       ZOPEN_TARBALL_DEPS=$(. ${pathForBuild}/buildenv; echo $ZOPEN_TARBALL_DEPS); 
-       ZOPEN_TYPE=$(. ${pathForBuild}/buildenv; echo $ZOPEN_TYPE); 
+       filenameInPath="$(basename ${pathForBuild})"
+       if [ "${filenameInPath}" = "buildenv" ]; then
+           ZOPEN_GIT_DEPS=$(. ${pathForBuild}; echo $ZOPEN_GIT_DEPS); 
+           ZOPEN_TARBALL_DEPS=$(. ${pathForBuild}; echo $ZOPEN_TARBALL_DEPS); 
+           ZOPEN_TYPE=$(. ${pathForBuild}; echo $ZOPEN_TYPE); 
        
-       if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
-          deps="${ZOPEN_TARBALL_DEPS}"
-       else
-          deps="${ZOPEN_GIT_DEPS}"
-       fi
-
-       #loop through the dependencies based on if it is tarball or git
-       #and source the env files 
-       for dep in $deps; do
-           fail=true
-           for path in $(echo ${depsPath} | sed "s/|/ /g") ; do
-               if [ -r "$path/${dep}/.env" ]; then
-                  fail=false
-                  depdir="$path/${dep}"
-                  echo "Setting up ${depdir} dependency environment"
-                  cd "${depdir}" && . ./.env 
-
-                  #donot check in next dep path as the env for this dependency port is foudn and sourced.
-                  break;
-               fi
-           done
-           if $fail; then
-              echo "Unable to find .env for dependency ${dep}"
+           if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
+              deps="${ZOPEN_TARBALL_DEPS}"
+           else
+              deps="${ZOPEN_GIT_DEPS}"
            fi
-       done 
+
+           #loop through the dependencies based on if it is tarball or git
+           #and source the env files 
+           for dep in $deps; do
+               fail=true
+               for path in $(echo ${depsPath} | sed "s/|/ /g") ; do
+                   if [ -r "$path/${dep}/.env" ]; then
+                      fail=false
+                      depdir="$path/${dep}"
+                      echo "Setting up ${depdir} dependency environment"
+                      cd "${depdir}"
+                      if [ -x .env ]; then
+                        . ./.env 
+                        #donot check in next dep path as the env for this dependency port is foudn and sourced.
+                        break;
+                      fi
+                   fi
+               done
+               if $fail; then
+                  echo "Unable to find .env for dependency ${dep}"
+               fi
+           done 
+       else 
+           echo "Pass the absolute path to buildenv" 
+       fi
+    else
+        sourceEnvFromPath $1
     fi
 fi
+
+cd ${oldWorkDir}
