@@ -22,7 +22,7 @@ setAlt(){
   printVerbose "Setting alternative"
     valid=false
     while ! $valid; do
-      if [ -n "defaultoption" ]; then
+      if [ -n "$defaultoption" ]; then
         selection="$defaultoption"
         defaultoption="" # Only try it once
       else 
