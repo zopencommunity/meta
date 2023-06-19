@@ -156,6 +156,7 @@ if ! $clone; then
   printInfo "- Populating standard file system"
   [ -e "$rootfs/bin" ] || mkdir -p "$rootfs/bin"
   [ -e "$rootfs/etc" ] || mkdir -p "$rootfs/etc"
+  [ -e "$rootfs/etc/skel" ] || mkdir -p "$rootfs/etc/skel"
   [ -e "$rootfs/include" ] || mkdir -p "$rootfs/include"
   [ -e "$rootfs/usr/share" ] || mkdir -p "$rootfs/usr/share"
   [ -e "$rootfs/usr/share/man" ] || mkdir -p "$rootfs/usr/share/man"
@@ -254,7 +255,6 @@ deleteDuplicateEntries()
   delim=\$2
   echo "\$value\$delim" | awk -v RS="\$delim" '!(\$0 in a) {a[\$0]; printf("%s%s", col, \$0); col=RS; }' | sed "s/\${delim}$//"
 }
-$zopen_oauth
 ZOPEN_PKGINSTALL=\$ZOPEN_ROOTFS/$zopen_pkginstall
 export ZOPEN_PKGINSTALL
 ZOPEN_SEARCH_PATH=\$ZOPEN_ROOTFS/usr/share/zopen/
@@ -298,11 +298,39 @@ MANPATH="\$MANPATH:"
 export MANPATH
 export LIBPATH
 export PATH
+EOF
+
+# The skeleton configuration file should NOT hold the installer's GIT oauth
+# token but should supply their own; only write any oauth token to the real not
+# skeleton file
+skeletonDir="$rootfs/etc/skel"
+skelcfg="$skeletonDir/.zopen-config"
+printVerbose "Copying configuration file to $skeletonDir for backup/distribution"
+cp "$configFile" "$skelcfg"
+printVerbose "Adding git oauth token placeholder and footer to skeleton file"
+cat << EOF >>  "$skelcfg"
+# It is strongly advised to setup and use a Github Access Token
+export ZOPEN_GIT_OAUTH_TOKEN=
+/bin/echo "- \$zot configuration completed in \$(( \$SECONDS - \$configStartTime )) seconds."
+EOF
+perms="744"
+printVerbose "Giving world read access to skel config file"
+chmod "$perms" "$skelcfg"
+
+printVerbose "Adding 'real' git oauth token (or placeholder) and footer to user config file"
+cat << EOF >>  "$configFile"
+$zopen_oauth
 /bin/echo "- \$zot configuration completed in \$(( \$SECONDS - \$configStartTime )) seconds."
 EOF
 
-printVerbose "Setting configuration file as read-only to user, no access to others"
-chmod 400 "$configFile"
+perms="400"
+printVerbose "Setting user configuration file [$configFile] as read-only for user, no access to others [$perms]"
+chmod "$perms" "$configFile"
+effuid=$(logname)
+effgid=$(id -gn $effuid)
+printVerbose "Ensuring correct uid [$effuid] & gid [$effgid] for configfile if !installing as user (ie su/root/etc)"
+chown "$effuid" "$configFile"
+chgrp "$effgid" "$configFile"
 printInfo "- Created config in $configFile."
 
 printInfo "- Root FS available at $rootfs"

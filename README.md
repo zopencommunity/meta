@@ -3,11 +3,22 @@ A reworking of the main meta project to add additional package management facili
 This fork is designed for everyday usage of the zos Open Tools ports within the USS environment or for those who wish to download the tools; users who are interested in building and/or porting packages from scratch should use the main release of meta at this time.
 
 ## Installation
-Clone the repo or download/expand a release pax.  From the bin directory run the following command, answering the questions appropriately:
+- Clone the repo or download/expand a release pax. 
+- From the ```meta-<ver>/bin``` directory run the following command, answering the questions appropriately:
 ```
 >zopen init
 ```
-Note that initialization will ask the question "Setting alternative: 1: meta-dt"; the correct answer is ```1<enter>```  - this is used to ensure that the currently installing fork of meta is copied and used.  See the section regarding the ```alt``` parameter below for more details.
+
+
+## Pre-config
+It is advised to have the following set on the system to ensure correct operation:
+```
+export _BPXK_AUTOCVT=ON
+export _CEE_RUNOPTS="$_CEE_RUNOPTS FILETAG(AUTOCVT,AUTOTAG) POSIX(ON)"
+export _TAG_REDIR_ERR=txt
+export _TAG_REDIR_IN=txt
+export _TAG_REDIR_OUT=txt
+```
 
 ## Sample usage
 ```
@@ -30,7 +41,11 @@ Currently, the zopen build capability **DOES NOT** work with the fork due to the
 
 - On first run, ```zopen init``` will copy this forked version of meta into the "package" area of zopen (ie. where packages are expanded and accessed from).  It will also be pinned to this release to prevent any possible updates from the "real" meta package. Removing the .pinned file from the meta-dt directory will allow for the main meta port to be installed however this will cause incompatabilities if run.
 
-- Remote respositores utilise the suffix ```port``` - where required, packages should be specified with**OUT** the suffix. eg using ```zopen install which``` rather than ```zopen install whichport```
+- Remote respositores utilise the suffix ```port``` - where required, packages should be specified **withOUT** the suffix. eg using ```zopen install which``` rather than ```zopen install whichport```
+
+## System install
+- Selecting ```'/' ``` as the root filesystem will allow the tools to be available system wide for all users who configure their usage. The install needs to be done by a sysadmin [or someone with sufficient rights using the sudo port for example] as the installer will write files to the /usr tree and configuration information to /etc.  The installing sysadmin will have a `.zopen-config` generated in their ```$HOME``` directory, specific to their install properties - their GitHub Access Token for example.  There will also be a "skeleton" configuration file written as ```/etc/skel/.zopen-config``` - this can be used as a template for individual users.  The skeleton template does not contain the installer's GH token (if configured during install) but inserts a placeholder should the user have their own GH token.  Copying the ```/etc/skel/.zopen-config``` to a user's $HOME directory will allow them to source it easily on login using ```. $HOME/.zopen-config```.
+- Removing zopen and the z/OS Open Tools once installed involves: uninstalling all installed packages; removing any copies of ```.zopen-config```; removing the configured zopen root directory (by default ```/usr/local/zopen``` but is set during installation); and then running a command to find any final orphaned symlinks on the system, such as: ```/bin/find $ZOPEN_ROOTFS -type l -exec test ! -e {} \; -print```  where $ZOPEN_ROOTFS is '/' [replace `-print` with `rm -rf` to actually remove symlinks, the example command should only list what was found - care should be taken when removing any files with sysadmin authority to prevent removing critial files!]
 
 
 ## Problem resolution
