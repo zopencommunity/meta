@@ -80,10 +80,7 @@ sourceEnvFromPath () {
 # then its env files are fetched and sourced, if they are not already sourced.
 if [ $# -eq 0 ]
 then
-     echo "Sourcing projects from $HOME/zopen/prod and $HOME/zopen/boot"
-     
      sourceEnvFromPath ${depsPath}
-     
 else 
     #If path is provided then builedenv file is fetched from the provided path 
     pathForBuild=$1
@@ -129,6 +126,7 @@ else
            done 
        else 
            echo "Pass the absolute path to buildenv" 
+	   return 2
        fi
     else
         sourceEnvFromPath $1
