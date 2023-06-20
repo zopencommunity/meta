@@ -29,10 +29,12 @@ printHelp()
 
 getCACertFromCurl()
 {
+  curlOptions="$1"
   # Get latest CACert from Mozilla through Curl
+  printVerbose "Using $(type curl)"
   printVerbose "Downloading ${cacert_update_url}"
-  if ! curl -L -o "$TEMP_CACERT" "${cacert_update_url}"; then
-    printError "curl command could not download $url"
+  if ! curl -L $curlOptions -o "$TEMP_CACERT" "${cacert_update_url}"; then
+    return 1
   fi
 
   if [ ! -f $TEMP_CACERT ]; then
@@ -102,7 +104,12 @@ if ! [ -r "${ZOPEN_CA}" ]; then
 fi
 
 printHeader "Getting latest CA Certificate"
-getCACertFromCurl
+if ! getCACertFromCurl; then
+  if ! getCACertFromCurl -4; then # Try again with ipv4
+    printError "Curl failed to download CA Certificate"
+  fi
+fi
+
 
 if $forceUpdate; then
   updateCACert
