@@ -3,7 +3,8 @@ A reworking of the main meta project to add additional package management facili
 This fork is designed for everyday usage of the zos Open Tools ports within the USS environment or for those who wish to download the tools; users who are interested in building and/or porting packages from scratch should use the main release of meta at this time.
 
 ## Installation
-- Clone the repo or download/expand a release pax. 
+- Download the pax to a suitable location (for example /tmp).
+- Expand the pax using the command ```pax -rvf <filename>.pax```.  This will expand the pax to the current directory, listing the various included files as it does so.
 - From the ```meta-<ver>/bin``` directory run the following command, answering the questions appropriately:
 ```
 >zopen init
