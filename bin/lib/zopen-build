@@ -1454,9 +1454,14 @@ resolveCommands()
     unset ZOPEN_CONFIGURE_MINIMAL_CMD
   fi
 
+  verboseOpts=""
+  if [ $VERBOSE -eq 1 ]; then
+    verboseOpts="V=1"
+  fi
+
   if [ "${ZOPEN_MAKE}x" != "skipx" ] && [ ! -z "$(command -v ${ZOPEN_MAKE})" ] ; then
     if [ "${ZOPEN_MAKE_MINIMAL}x" = "x" ]; then
-      export ZOPEN_MAKE_CMD="\"${ZOPEN_MAKE}\" ${ZOPEN_MAKE_OPTS} CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\" \"LDLIBS=${LIBS}\""
+      export ZOPEN_MAKE_CMD="\"${ZOPEN_MAKE}\" ${ZOPEN_MAKE_OPTS} $verboseOpts CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\" \"LDLIBS=${LIBS}\""
       export ZOPEN_MAKE_MINIMAL="no"
     else
       export ZOPEN_MAKE_CMD="\"${ZOPEN_MAKE}\" ${ZOPEN_MAKE_OPTS}"
@@ -1468,7 +1473,7 @@ resolveCommands()
 
   if [ "${ZOPEN_CHECK}x" != "skipx" ] && ! ${skipcheck}; then
     if [ "${ZOPEN_CHECK_MINIMAL}x" = "x" ]; then
-      export ZOPEN_CHECK_CMD="\"${ZOPEN_CHECK}\" ${ZOPEN_CHECK_OPTS} CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\""
+      export ZOPEN_CHECK_CMD="\"${ZOPEN_CHECK}\" ${ZOPEN_CHECK_OPTS} $verboseOpts CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\""
     else
       export ZOPEN_CHECK_CMD="\"${ZOPEN_CHECK}\" ${ZOPEN_CHECK_OPTS}"
     fi
@@ -1484,7 +1489,7 @@ resolveCommands()
         export ZOPEN_INSTALL_CMD="\"${ZOPEN_INSTALL}\" ${ZOPEN_INSTALL_OPTS}"
         ;;
       (*)
-        export ZOPEN_INSTALL_CMD="\"${ZOPEN_INSTALL}\" ${ZOPEN_INSTALL_OPTS} CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\""
+        export ZOPEN_INSTALL_CMD="\"${ZOPEN_INSTALL}\" ${ZOPEN_INSTALL_OPTS} $verboseOpts CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\""
         ;;
     esac
     [[ -d ${ZOPEN_ROOT}/install ]] || mkdir -p ${ZOPEN_ROOT}/install
