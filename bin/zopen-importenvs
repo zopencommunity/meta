@@ -36,11 +36,8 @@ then
       fi
     done < "$configFile"
 fi
-  echo "final depsPath = $depsPath"
-
 
 sourceEnvFromPath () {
-    echo "sourceEnvFromPath enter, called with arg - $1"
     # arrOfDirs, is an array which holds the names of dirs whose env is set
      declare -a arrOfDirs
      unset arrOfDirs[@]
