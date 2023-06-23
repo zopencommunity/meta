@@ -1458,8 +1458,6 @@ resolveCommands()
 
   verboseOpts=""
   if [ "$VERBOSE" -eq 1 ]; then
-    echo "VERBOSE"
-    exit 1
     verboseOpts="V=1"
   fi
 
