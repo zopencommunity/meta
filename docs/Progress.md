@@ -124,7 +124,7 @@
 | [libssh2port](https://github.com/ZOSOpenTools/libssh2port) | 0 | 100% |
 | [libxsltport](https://github.com/ZOSOpenTools/libxsltport) | 0 | 100% |
 | [lynxport](https://github.com/ZOSOpenTools/lynxport) | 0 | 100% |
-| [man-dbport](https://github.com/ZOSOpenTools/man-dbport) | 0 | 93% |
+| [man-dbport](https://github.com/ZOSOpenTools/man-dbport) | 0 | 83% |
 | [metaport](https://github.com/ZOSOpenTools/metaport) | 0 | 100% |
 | [nanoport](https://github.com/ZOSOpenTools/nanoport) | 0 | Skipped |
 | [ncduport](https://github.com/ZOSOpenTools/ncduport) | 0 | Skipped |
@@ -255,4 +255,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-06-23 07:19:40
+Last updated:  2023-06-23 10:03:36
