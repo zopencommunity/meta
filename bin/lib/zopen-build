@@ -794,7 +794,9 @@ applyPatches()
   printHeader "Applying patches"
   if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
     tarballz=$(basename "$ZOPEN_TARBALL_URL")
-    code_dir="${ZOPEN_ROOT}/${tarballz%%.tar.*}"
+    root_loc=${tarballz%%.tar.*}
+    root_loc=${root_loc%%.tgz}
+    code_dir="${ZOPEN_ROOT}/${root_loc}"
   else
     gitname=$(basename "$ZOPEN_GIT_URL")
     code_dir="${ZOPEN_ROOT}/${gitname%%.*}"
