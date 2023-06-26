@@ -115,14 +115,18 @@ installDependencies()
   if [ "$dependencies" != "No dependencies" ]; then
     printHeader "Checking dependencies for $name: $dependencies..."
     
-    # Remove an old one if it exists
-    rm -f "${name}/.depsenv"
-    varName=$(echo "$name" | sed -e "s/-/_/g")
-    cat <<ZZ >> "${name}/.depsenv"
+    # Update .depsenv 
+    if [ -d "${name}" ]; then
+      # Remove an old one if it exists
+      rm -f "${name}/.depsenv"
+      varName=$(echo "$name" | sed -e "s/-/_/g")
+      cat <<ZZ >> "${name}/.depsenv"
 ${varName}_originalDir="\$OLDPWD"
 ZZ
+    fi
     echo "$dependencies" | xargs | tr ' ' '\n' | sort | while read dep; do
-      cat <<ZZ >> "${name}/.depsenv"
+      if [ -d "${name}" ]; then
+       cat <<ZZ >> "${name}/.depsenv"
 if [ -f "../${dep}/.env" ]; then
   if [[ \$(type echo) == 'echo is a shell builtin' ]]; then
     pushd "../${dep}" >/dev/null
@@ -133,12 +137,15 @@ if [ -f "../${dep}/.env" ]; then
   fi
 fi
 ZZ
+      fi
       installPort $dep
-    done
+   done
 
-    cat <<ZZ >> "${name}/.depsenv"
+    if [ -d "${name}" ]; then
+      cat <<ZZ >> "${name}/.depsenv"
 OLDPWD="\$${varName}_originalDir"
 ZZ
+    fi
   fi
 )
 
