@@ -903,7 +903,7 @@ create_fifo_pipe()
 
 cleanup()
 {
-  if [ -n "${ZOPEN_CLEAN_CMD}" ] && [ -f "${ZOPEN_LOG_DIR}/config.success" ] && !$freshBuild; then
+  if [ -n "${ZOPEN_CLEAN_CMD}" ] && [ -f "${ZOPEN_LOG_DIR}/config.success" ] && ! $freshBuild; then
     printHeader "Running Cleanup"
     cleanlog="${ZOPEN_LOG_DIR}/${LOG_PFX}_clean.log"
     create_fifo_pipe "${cleanlog}"
@@ -1457,7 +1457,7 @@ resolveCommands()
   fi
 
   verboseOpts=""
-  if [ $VERBOSE -eq 1 ]; then
+  if [ "$VERBOSE" -eq 1 ]; then
     verboseOpts="V=1"
   fi
 
