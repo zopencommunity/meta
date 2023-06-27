@@ -1257,7 +1257,9 @@ ZZ
 ${varName}_originalDir="\$OLDPWD"
 ZZ
   echo "$ZOPEN_RUNTIME_DEPS" | xargs | tr ' ' '\n' | sort | while read dep; do
-    if ! runAndLog "PATH=\"$curlpath:$PATH\" zopen install $dep -v --nodeps"; then
+    # Use the first path specified in the dependency search list to install to
+    path=$(echo ${depsPath} | tr '|' '\n' | head -1)
+    if ! runAndLog "PATH=\"$curlpath:$PATH\" zopen install $dep -v -d $path --nodeps"; then
       printError "Failed to install dependencies"
     fi
     cat <<ZZ >> "${ZOPEN_INSTALL_DIR}/.depsenv"
