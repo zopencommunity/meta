@@ -212,6 +212,7 @@ printSyntax()
   echo "  -f|--force-rebuild: forces a rebuild, including running bootstrap and configure again"
   echo "  -g|--get-source: get the source and apply patch without building"
   echo "  -gp|--generate-pax: generate a pax.Z file based on the install contents"
+  echo "  --forcepatchapply: force apply the patches, where rejected patches are placed into a corresponding file of the same name, with the .rej extension"
   echo "  -nosym|--nosymlink: do not generate a symlink from the project name to \${ZOPEN_INSTALL_DIR}"
   echo "  -s: exec a shell before running configure.  Useful when manually building ports."
 
@@ -236,6 +237,7 @@ processOptions()
   getSourceOnly=false
   generatePax=false
   generateSymLink=true
+  forcePatchApply=false
   depsPath="$HOME/zopen/prod|$HOME/zopen/boot|/usr/bin/zopen/"
   if [ ! -z "$ZOPEN_SEARCH_PATH" ]; then
     depsPath="$ZOPEN_SEARCH_PATH/prod|$ZOPEN_SEARCH_PATH/boot|$depsPath"
@@ -257,6 +259,9 @@ processOptions()
         ;;
       "-u" | "--upgradeDeps")
         forceUpgradeDeps=true
+        ;;
+      "--forcepatchapply")
+        forcePatchApply=true
         ;;
       "-buildtype" | "--buildtype" | "-b")
         shift
@@ -839,11 +844,15 @@ applyPatches()
         printWarning "Warning: patch file ${p} is empty - nothing to be done"
       else
         printInfo "Applying ${p}"
-        if ! out=$( (cd "${code_dir}" && git apply --check "${p}" 2>&1 && git apply "${p}" 2>&1 )); then
-          printSoftError "Patch of make tree failed (${p})."
-          printSoftError "${out}"
-          failedcount=$((failedcount + 1))
-          break
+        if $forcePatchApply; then
+          (cd "${code_dir}" && git apply --reject "${p}" 2>&1 )
+        else
+          if ! out=$( (cd "${code_dir}" && git apply --check "${p}" 2>&1 && git apply "${p}" 2>&1 )); then
+            printSoftError "Patch of make tree failed (${p})."
+            printSoftError "${out}"
+            failedcount=$((failedcount + 1))
+            break
+          fi
         fi
       fi
     done
