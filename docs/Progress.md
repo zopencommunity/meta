@@ -58,7 +58,7 @@
 | [diffutilsport](https://github.com/ZOSOpenTools/diffutilsport) | 29 | 93% |bash, bison, byacc, coreutils, flex, gawk, getopt, git, gnulib, gpg, grep, groff, libassuan, libgcrypt, libgpgerror, libiconv, libksba, libpcre, libxml2, libxslt, man-db, npth, ntbtls, php, pinentry, re2c, texinfo, vim, xmlto
 | [sedport](https://github.com/ZOSOpenTools/sedport) | 27 | 84% |bash, byacc, coreutils, git, gpg, groff, libassuan, libgcrypt, libgpgerror, libiconv, libksba, libssh2, libxml2, libxslt, m4, man-db, ncurses, npth, ntbtls, openssh, perl, php, pinentry, pkgconfig, re2c, vim, which
 | [gettextport](https://github.com/ZOSOpenTools/gettextport) | 19 | 85% |coreutils, ctags, expat, getopt, git, gpg, hello, libassuan, libgcrypt, libgpgerror, libiconv, libksba, m4, man-db, nano, npth, ntbtls, pinentry, which
-| [texinfoport](https://github.com/ZOSOpenTools/texinfoport) | 18 | 35% |autoconf, automake, bison, curl, expat, gettext, git, gpg, groff, gzip, hello, libtool, m4, make, ntbtls, openssl, sed, tar
+| [texinfoport](https://github.com/ZOSOpenTools/texinfoport) | 18 | 57% |autoconf, automake, bison, curl, expat, gettext, git, gpg, groff, gzip, hello, libtool, m4, make, ntbtls, openssl, sed, tar
 | [xzport](https://github.com/ZOSOpenTools/xzport) | 17 | 77% |autoconf, automake, bison, curl, diffutils, expat, findutils, gettext, git, gzip, help2man, libtool, m4, make, man-db, openssl, texinfo
 | [ncursesport](https://github.com/ZOSOpenTools/ncursesport) | 15 | 100% |bash, c3270, cscope, gettext, git, gpg, htop, less, lynx, man-db, nano, ncdu, screen, tig, vim
 | [help2manport](https://github.com/ZOSOpenTools/help2manport) | 13 | 100% |autoconf, automake, bison, curl, expat, gettext, git, hello, libtool, m4, make, openssl, texinfo
@@ -260,4 +260,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-06-30 14:23:11
+Last updated:  2023-06-30 14:25:52
