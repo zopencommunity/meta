@@ -33,7 +33,6 @@
 * [htopport](https://github.com/ZOSOpenTools/htopport)
 * [libgit2port](https://github.com/ZOSOpenTools/libgit2port)
 * [neovimport](https://github.com/ZOSOpenTools/neovimport)
-* [ntbtlsport](https://github.com/ZOSOpenTools/ntbtlsport)
 * [phpport](https://github.com/ZOSOpenTools/phpport)
 * [powerline-goport](https://github.com/ZOSOpenTools/powerline-goport)
 * [shufport](https://github.com/ZOSOpenTools/shufport)
@@ -96,7 +95,7 @@
 | [lz4port](https://github.com/ZOSOpenTools/lz4port) | 1 | 100% |rsync
 | [ninjaport](https://github.com/ZOSOpenTools/ninjaport) | 1 | 98% |duckdb
 | [npthport](https://github.com/ZOSOpenTools/npthport) | 1 | 100% |gpg
-| [ntbtlsport](https://github.com/ZOSOpenTools/ntbtlsport) | 1 | No builds |gpg
+| [ntbtlsport](https://github.com/ZOSOpenTools/ntbtlsport) | 1 | 100% |gpg
 | [patchport](https://github.com/ZOSOpenTools/patchport) | 1 | 91% |m4
 | [pinentryport](https://github.com/ZOSOpenTools/pinentryport) | 1 | 100% |gpg
 | [pkgconfigport](https://github.com/ZOSOpenTools/pkgconfigport) | 1 | 100% |man-db
@@ -260,4 +259,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-06-30 16:36:18
+Last updated:  2023-07-05 02:59:28
