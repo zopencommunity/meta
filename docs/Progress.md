@@ -20,6 +20,7 @@
 * [sqliteport](https://github.com/ZOSOpenTools/sqliteport)
 * [sshpassport](https://github.com/ZOSOpenTools/sshpassport)
 * [tclport](https://github.com/ZOSOpenTools/tclport)
+* [wharfport](https://github.com/ZOSOpenTools/wharfport)
 * [yqport](https://github.com/ZOSOpenTools/yqport)
 * [zigiport](https://github.com/ZOSOpenTools/zigiport)
 ## Projects that do not have builds
@@ -38,7 +39,6 @@
 * [shufport](https://github.com/ZOSOpenTools/shufport)
 * [terraformport](https://github.com/ZOSOpenTools/terraformport)
 * [topport](https://github.com/ZOSOpenTools/topport)
-* [wharfport](https://github.com/ZOSOpenTools/wharfport)
 
 ## Projects with the most dependencies
 
@@ -73,7 +73,7 @@
 | [libgpgerrorport](https://github.com/ZOSOpenTools/libgpgerrorport) | 7 | 100% |gpg, libassuan, libgcrypt, libksba, npth, ntbtls, pinentry
 | [cmakeport](https://github.com/ZOSOpenTools/cmakeport) | 6 | 74% |duckdb, neovim, ninja, unzip, zip, zoslib
 | [libiconvport](https://github.com/ZOSOpenTools/libiconvport) | 5 | 100% |bison, libxml2, man-db, php, tig
-| [comp_goport](https://github.com/ZOSOpenTools/comp_goport) | 3 | 100% |bump, direnv, powerline-go
+| [comp_goport](https://github.com/ZOSOpenTools/comp_goport) | 4 | 100% |bump, direnv, powerline-go, wharf
 | [flexport](https://github.com/ZOSOpenTools/flexport) | 3 | 100% |bison, cscope, man-db
 | [gperfport](https://github.com/ZOSOpenTools/gperfport) | 3 | 100% |hello, libiconv, m4
 | [wgetport](https://github.com/ZOSOpenTools/wgetport) | 3 | 18% |hello, man-db, sed
@@ -144,7 +144,7 @@
 | [topport](https://github.com/ZOSOpenTools/topport) | 0 | No builds |
 | [unzipport](https://github.com/ZOSOpenTools/unzipport) | 0 | 100% |
 | [vimport](https://github.com/ZOSOpenTools/vimport) | 0 | 100% |
-| [wharfport](https://github.com/ZOSOpenTools/wharfport) | 0 | No builds |
+| [wharfport](https://github.com/ZOSOpenTools/wharfport) | 0 | Skipped |
 | [whichport](https://github.com/ZOSOpenTools/whichport) | 0 | 100% |
 | [xmltoport](https://github.com/ZOSOpenTools/xmltoport) | 0 | 100% |
 | [yqport](https://github.com/ZOSOpenTools/yqport) | 0 | Skipped |
@@ -262,4 +262,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-07-07 14:39:38
+Last updated:  2023-07-07 15:47:53
