@@ -94,6 +94,7 @@ printFunctions()
 {
 echo "User-Provided functions:
   zopen_init                  This function runs after code is downloaded and patched but before the code is built.
+  zopen_post_buildenv         This function runs after the 'buildenv' iis processed.s processed.
   zopen_pre_check             This function runs before the 'check' step of the build is run.
   zopen_pre_build             This function runs before the 'make' step of the build is run.
   zopen_append_to_env         This function runs as part of generation of the .env file. The output of the function is appended to .env
@@ -145,6 +146,17 @@ cleanupOnExit() {
 }
 
 trap "cleanupOnExit" EXIT INT TERM QUIT HUP
+
+setDefaultBuild()
+{
+  if [ ! -z "$ZOPEN_BUILD_LEVEL_OPT" ]; then
+    ZOPEN_BUILD_LEVEL=$(echo "${ZOPEN_BUILD_LEVEL_OPT}" | tr '[a-z]' '[A-Z]')
+  fi
+
+  if [ ! -z "$ZOPEN_BUILD_LEVEL" ]; then
+    printVerbose "Setting build to $ZOPEN_BUILD_LEVEL"
+  fi
+}
 
 setDefaults()
 {
@@ -204,7 +216,7 @@ printSyntax()
   echo "  -vv: run in very verbose mode (sets environment variables V=1 and VERBOSE=1)"
   echo "  -u|--upgradedeps: upgrade all dependencies by running zopen install"
   echo "  --buildtype: release|debug. The default is release"
-  echo "  --type: tarball|git|bare."
+  echo "  --build: dev|stable. This is the build level to build off of. If no build level is specified, it will use ZOPEN_BUILD_LEVEL or ZOPEN_TYPE."
   echo "  --comp: <compiler dependency>.  The compiler(s) used for building.  The default is comp_xlclang."
   echo "  --oci: build and publish an OCI image to \$ZOPEN_IMAGE_REGISTRY"
   echo "  -e <env file>: source <env file> instead of buildenv to establish build environment"
@@ -274,9 +286,9 @@ processOptions()
         shift
         ZOPEN_COMP=$1 # We will uppercase this later
         ;;
-      "-type" | "--type")
+      "-build" | "--build")
         shift
-        ZOPEN_FORCE_TYPE=$1 # We will uppercase this later
+        ZOPEN_BUILD_LEVEL_OPT=$1
         ;;
       "-oci" | "--oci")
         publishOCI=true
@@ -328,6 +340,13 @@ loadBuildEnv()
   export ZOPEN_IN_ZOPEN_BUILD=1
 
   . $buildEnvFile
+
+  setDefaultBuild
+
+  if command -V "zopen_post_buildenv" >/dev/null 2>&1; then
+    printVerbose "Running zopen_post_buildenv"
+    zopen_post_buildenv
+  fi
 }
 
 checkEnv()
@@ -343,33 +362,74 @@ checkEnv()
   #
   printHeader "Checking environment configuration"
 
-
-  if [ ! -z "$ZOPEN_FORCE_TYPE" ]; then
-    # user specified, so normalize in upper case
-    ZOPEN_TYPE=$(echo "${ZOPEN_FORCE_TYPE}" | tr '[a-z]' '[A-Z]')
-  fi
-
-  if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
-    if [ "${ZOPEN_TARBALL_URL}x" = "x" ]; then
-      export ZOPEN_TARBALL_URL="${ZOPEN_URL}"
+  if [ ! -z "$ZOPEN_BUILD_LEVEL" ]; then
+    if [ "${ZOPEN_BUILD_LEVEL}x" = "DEVx" ]; then
+      if [ -z "$ZOPEN_DEV_DEPS" ]; then
+        printError "Building from dev, but ZOPEN_DEV_DEPS not specified"
+      fi
+      ZOPEN_DEPS="$ZOPEN_DEV_DEPS"  
+      if [ -z "$ZOPEN_DEV_URL" ]; then
+        printError "Building from dev, but ZOPEN_DEV_URL not specified"
+      fi
+      ZOPEN_URL="$ZOPEN_DEV_URL"  
+      if [ ! -z "$ZOPEN_DEV_BRANCH" ]; then
+        export ZOPEN_GIT_BRANCH="$ZOPEN_DEV_BRANCH"
+      fi
+      if [ ! -z "$ZOPEN_DEV_TAG" ]; then
+        export ZOPEN_GIT_TAG="$ZOPEN_DEV_TAG"
+      fi
+    elif [ "${ZOPEN_BUILD_LEVEL}x" = "STABLEx" ]; then
+      if [ -z "$ZOPEN_STABLE_DEPS" ]; then
+        printError "Building from stable, but ZOPEN_STABLE_DEPS not specified"
+      fi
+      ZOPEN_DEPS="$ZOPEN_STABLE_DEPS"  
+      if [ -z "$ZOPEN_STABLE_URL" ]; then
+        printError "Building from stable, but ZOPEN_STABLE_URL not specified"
+      fi
+      ZOPEN_URL="$ZOPEN_STABLE_URL"  
+      if [ ! -z "$ZOPEN_STABLE_BRANCH" ]; then
+        export ZOPEN_GIT_BRANCH="$ZOPEN_STABLE_BRANCH"
+      fi
+      if [ ! -z "$ZOPEN_STABLE_TAG" ]; then
+        export ZOPEN_GIT_TAG="$ZOPEN_STABLE_TAG"
+      fi
+    else
+      printError "Unrecognized build level ${ZOPEN_BUILD_LEVEL}"
+    fi 
+    extension="${ZOPEN_URL##*.}"
+    if [ "$extension" = "git" ]; then
+      ZOPEN_TYPE="GIT"
+    else
+      ZOPEN_TYPE="TARBALL"
     fi
-    if [ "${ZOPEN_TARBALL_DEPS}x" = "x" ]; then
-      export ZOPEN_TARBALL_DEPS="${ZOPEN_DEPS}"
-    fi
-    printHeader "Using tarball environment"
-  elif [ "${ZOPEN_TYPE}x" = "GITx" ]; then
-    if [ "${ZOPEN_GIT_URL}x" = "x" ]; then
-      export ZOPEN_GIT_URL="${ZOPEN_URL}"
-    fi
-
-    if [ "${ZOPEN_GIT_DEPS}x" = "x" ]; then
-      export ZOPEN_GIT_DEPS="${ZOPEN_DEPS}"
-    fi
-    printHeader "Using git environment"
-  elif [ "${ZOPEN_TYPE}x" = "BAREx" ]; then
-    printHeader "Using bare environment"
   else
-    printError "ZOPEN_TYPE must be one of TARBALL or GIT. ZOPEN_TYPE=${ZOPEN_TYPE} was specified"
+    if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
+      if [ ! -z "${ZOPEN_TARBALL_URL}" ]; then
+        export ZOPEN_URL="${ZOPEN_TARBALL_URL}"
+      fi
+      if [ ! -z "${ZOPEN_TARBALL_DEPS}" ]; then
+        export ZOPEN_DEPS="${ZOPEN_TARBALL_DEPS}"
+      fi
+      printHeader "Using tarball environment"
+    elif [ "${ZOPEN_TYPE}x" = "GITx" ]; then
+      if [ ! -z "${ZOPEN_GIT_URL}" ]; then
+        export ZOPEN_URL="${ZOPEN_GIT_URL}"
+      fi
+      if [ ! -z "${ZOPEN_GIT_DEPS}" ]; then
+        export ZOPEN_DEPS="${ZOPEN_GIT_DEPS}"
+      fi
+      printHeader "Using tarball environment"
+      printHeader "Using git environment"
+    elif [ "${ZOPEN_TYPE}x" = "BAREx" ]; then
+      printHeader "Using bare environment"
+    else
+      extension="${ZOPEN_URL##*.}"
+      if [ "$extension" = "git" ]; then
+        ZOPEN_TYPE="GIT"
+      else
+        ZOPEN_TYPE="TARBALL"
+      fi
+    fi
   fi
 
   ZOPEN_INIT_CODE="zopen_init"
@@ -400,14 +460,14 @@ checkEnv()
   fi
 
   if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
-    if [ "${ZOPEN_TARBALL_URL}x" = "x" ]; then
+    if [ "${ZOPEN_URL}x" = "x" ]; then
       printError "ZOPEN_URL or ZOPEN_TARBALL_URL needs to be defined to the root directory of the tool being ported"
     fi
-    if [ "${ZOPEN_TARBALL_DEPS}x" = "x" ]; then
+    if [ "${ZOPEN_DEPS}x" = "x" ]; then
       printError "ZOPEN_DEPS or ZOPEN_TARBALL_DEPS needs to be defined to the ported tools this depends on"
     fi
     implicitDeps="$implicitDeps git curl tar"
-    ext=${ZOPEN_TARBALL_URL##*.}
+    ext=${ZOPEN_URL##*.}
     if [ "${ext}x" = "xzx" ]; then
       implicitDeps="${implicitDeps} xz"
     elif [ "${ext}x" = "gzx" -o  "${ext}x" = "tgzx" ]; then
@@ -416,17 +476,17 @@ checkEnv()
       implicitDeps="${implicitDeps} bzip2"
     fi
     printVerbose "Implicitly adding tarball dependencies: ${implicitDeps}"
-    ZOPEN_TARBALL_DEPS="${implicitDeps} ${ZOPEN_TARBALL_DEPS}"
+    ZOPEN_DEPS="${implicitDeps} ${ZOPEN_DEPS}"
   elif [ "${ZOPEN_TYPE}x" = "GITx" ]; then
-    if [ "${ZOPEN_GIT_URL}x" = "x" ]; then
+    if [ "${ZOPEN_URL}x" = "x" ]; then
       printError "ZOPEN_URL or ZOPEN_GIT_URL needs to be defined to the root directory of the tool being ported"
     fi
-    if [ "${ZOPEN_GIT_DEPS}x" = "x" ]; then
+    if [ "${ZOPEN_DEPS}x" = "x" ]; then
       printError "ZOPEN_DEPS or ZOPEN_GIT_DEPS needs to be defined to the ported tools this depends on"
     fi
     implicitDeps="$implicitDeps git"
     printVerbose "Implicitly adding git dependencies: ${implicitDeps}"
-    ZOPEN_GIT_DEPS="${implicitDeps} ${ZOPEN_GIT_DEPS}"
+    ZOPEN_DEPS="${implicitDeps} ${ZOPEN_DEPS}"
   fi
 
   export ZOPEN_CA="${utilparentdir}/cacert.pem"
@@ -448,11 +508,7 @@ setDepsEnv()
     export PATH="$curlpath:$PATH"
   fi
 
-  if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
-    deps="${ZOPEN_TARBALL_DEPS}"
-  else
-    deps="${ZOPEN_GIT_DEPS}"
-  fi
+  deps="${ZOPEN_DEPS}"
 
   orig="${PWD}"
   # Filter out duplicate deps
@@ -642,23 +698,23 @@ checkGitVersion()
 
 gitClone()
 {
-  gitname=$(basename "$ZOPEN_GIT_URL")
+  gitname=$(basename "$ZOPEN_URL")
   dir=${gitname%%.*}
   if [ -d "${dir}" ]; then
     printInfo "Using existing git clone'd directory ${dir}"
   else
     freshBuild=true
     printInfo "Clone and create ${dir}"
-    if ! runAndLog "git clone \"${ZOPEN_GIT_URL}\""; then
-      printError "Unable to clone ${gitname} from ${ZOPEN_GIT_URL}"
+    if ! runAndLog "git clone \"${ZOPEN_URL}\""; then
+      printError "Unable to clone ${gitname} from ${ZOPEN_URL}"
     fi
     if [ "${ZOPEN_GIT_BRANCH}x" != "x" ]; then
       if ! git -C "${dir}" checkout "${ZOPEN_GIT_BRANCH}" >/dev/null; then
-        printError"Unable to checkout ${ZOPEN_GIT_URL} branch ${ZOPEN_GIT_BRANCH}"
+        printError"Unable to checkout ${ZOPEN_URL} branch ${ZOPEN_GIT_BRANCH}"
       fi
     elif [ "${ZOPEN_GIT_TAG}x" != "x" ]; then
       if ! git -C "${dir}" checkout tags/"${ZOPEN_GIT_TAG}" -b "${ZOPEN_GIT_TAG}" >/dev/null; then
-        printError"Unable to checkout ${ZOPEN_GIT_URL} tag ${ZOPEN_GIT_TAG}"
+        printError"Unable to checkout ${ZOPEN_URL} tag ${ZOPEN_GIT_TAG}"
       fi
     fi
     tagTree "${dir}"
@@ -742,7 +798,7 @@ downloadTarBall()
   if ! curl --version >/dev/null; then
     printError "curl is required to download a tarball"
   fi
-  tarballz=$(basename "$ZOPEN_TARBALL_URL")
+  tarballz=$(basename "$ZOPEN_URL")
   dir=${tarballz%%.tar.*}
   dir=${dir%%.tgz}
   if [ -d "${dir}" ]; then
@@ -750,7 +806,7 @@ downloadTarBall()
   else
     freshBuild=true
     if ${verbose}; then
-      printVerbose "curl -L -o ${tarballz} ${ZOPEN_TARBALL_URL}"
+      printVerbose "curl -L -o ${tarballz} ${ZOPEN_URL}"
     fi
     #
     # Some older tarballs (openssl) contain a pax_global_header file. Remove it
@@ -763,16 +819,16 @@ downloadTarBall()
     # Make a first call to just get the headers and toss everything out just to
     # set up the cache (requirec for openssl)
     #
-    curl -I "${ZOPEN_TARBALL_URL}" >/dev/null 2>&1
+    curl -I "${ZOPEN_URL}" >/dev/null 2>&1
 
-    if ! curl -L -0 -o "${tarballz}" "${ZOPEN_TARBALL_URL}";  then
+    if ! curl -L -0 -o "${tarballz}" "${ZOPEN_URL}";  then
       if [ -f "${tarballz}" ] && [ $(wc -c "${tarballz}" | awk '{print $1}') -lt 1024 ]; then
         cat "${tarballz}" >/dev/null
       else
         printError "Re-try curl for diagnostics"
-        curl -L -0 -o /dev/null "${ZOPEN_TARBALL_URL}"
+        curl -L -0 -o /dev/null "${ZOPEN_URL}"
       fi
-      printError "Unable to download ${tarballz} from ${ZOPEN_TARBALL_URL}"
+      printError "Unable to download ${tarballz} from ${ZOPEN_URL}"
     fi
     # curl tags the file as ISO8859-1 (oops) so the tag has to be removed
     chtag -b "${tarballz}"
@@ -798,20 +854,32 @@ applyPatches()
   fi
   printHeader "Applying patches"
   if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
-    tarballz=$(basename "$ZOPEN_TARBALL_URL")
+    tarballz=$(basename "$ZOPEN_URL")
     root_loc=${tarballz%%.tar.*}
     root_loc=${root_loc%%.tgz}
     code_dir="${ZOPEN_ROOT}/${root_loc}"
   else
-    gitname=$(basename "$ZOPEN_GIT_URL")
+    gitname=$(basename "$ZOPEN_URL")
     code_dir="${ZOPEN_ROOT}/${gitname%%.*}"
   fi
 
-  patch_dir="${ZOPEN_ROOT}/patches"
-  if ! [ -d "${patch_dir}" ]; then
-    printWarning "${patch_dir} does not exist - no patches to apply"
-    return 0
+  if [ ! -z "$ZOPEN_BUILD_LEVEL" ]; then
+    buildtype_lower=$(echo "${ZOPEN_BUILD_LEVEL}" | tr '[A-Z]' '[a-z]')
+    patch_try_dir="${ZOPEN_ROOT}/${buildtype_lower}-patches"
+    if [ -d "$patch_try_dir" ]; then
+      patch_dir="$patch_try_dir"
+    fi
   fi
+
+  if [ -z "$patch_dir" ]; then 
+    patch_dir="${ZOPEN_ROOT}/patches"
+    if ! [ -d "${patch_dir}" ]; then
+      printWarning "${patch_dir} does not exist - no patches to apply"
+      return 0
+    fi
+  fi
+
+  printVerbose "Using patch directory $patch_dir"
 
   moved=false
   if [ -d "${code_dir}/.git-for-patches" ] && ! [ -d "${code_dir}/.git" ]; then
@@ -1344,6 +1412,11 @@ install()
     asciiecho "$ZOPEN_STATUS" "${ZOPEN_ROOT}/install/test.status"
     cp "${ZOPEN_ROOT}/install/test.status" "${ZOPEN_INSTALL_DIR}/test.status"
 
+
+    if [ ! -z "${ZOPEN_BUILD_LEVEL}" ]; then
+      asciiecho "${ZOPEN_BUILD_LEVEL}" "${ZOPEN_INSTALL_DIR}/.buildlevel"
+    fi
+
     if [ -z "$(command -v zopen_get_version)" ]; then
       printWarning "A zopen_get_version() function should be defined in the buildenv to extract the version contents"
     else
@@ -1379,12 +1452,7 @@ install()
       cp "${ZOPEN_INSTALL_DIR}/.runtimedeps" "${ZOPEN_ROOT}/install/"
     fi
 
-    buildDeps=""
-    if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
-        buildDeps="${ZOPEN_TARBALL_DEPS}"
-    elif [ "${ZOPEN_TYPE}x" = "GITx" ]; then
-        buildDeps="${ZOPEN_GIT_DEPS}"
-    fi
+    buildDeps="$ZOPEN_DEPS"
     asciiecho "$(echo "$buildDeps" | xargs | tr ' ' '\n' | sort -u | xargs)" "${ZOPEN_INSTALL_DIR}/.builddeps"
     cp "${ZOPEN_INSTALL_DIR}/.builddeps" "${ZOPEN_ROOT}/install/"
 
@@ -1427,6 +1495,9 @@ resolveCommands()
   fi
   if [ "${ZOPEN_LOG_DIR}x" = "x" ]; then
     export ZOPEN_LOG_DIR="${ZOPEN_ROOT}/log"
+    if [ ! -z "${ZOPEN_BUILD_LEVEL}" ]; then
+      ZOPEN_LOG_DIR="${ZOPEN_LOG_DIR}.${ZOPEN_BUILD_LEVEL}"
+    fi 
   fi
 
   [[ -d ${ZOPEN_LOG_DIR} ]] || mkdir -p ${ZOPEN_LOG_DIR}
@@ -1454,7 +1525,7 @@ resolveCommands()
           export ZOPEN_CONFIGURE_CMD="\"${ZOPEN_CONFIGURE}\" ${ZOPEN_CONFIGURE_OPTS} -DCMAKE_C_COMPILER=${CC} -DCMAKE_C_FLAGS=\"${CPPFLAGS} ${CFLAGS}\" -DCMAKE_CXX_COMPILER=${CXX} -DCMAKE_CXX_FLAGS=\"${CPPFLAGS} ${CXXFLAGS}\" -DCMAKE_CXX_LINK_LIBRARY_FLAG=\"${LDFLAGS}\" -DCMAKE_C_LINK_LIBRARY_FLAG=\"${LDFLAGS}\" -DCMAKE_CXX_STANDARD_LIBRARIES=\"${LIBS}\" -DCMAKE_C_STANDARD_LIBRARIES=\"${LIBS}\""
           ;;
         (*)
-          export ZOPEN_CONFIGURE_CMD="\"${ZOPEN_CONFIGURE}\" ${ZOPEN_CONFIGURE_OPTS} CC=${CC} CPPFLAGS=\"${CPPFLAGS}\" CFLAGS=\"${CFLAGS}\" CXX=${CXX} CXXFLAGS=\"${CXXFLAGS}\" LDFLAGS=\"${LDFLAGS}\" LIBS=\"${LIBS}\" LDLIBS=\"${LIBS}\""
+          export ZOPEN_CONFIGURE_CMD="\"${ZOPEN_CONFIGURE}\" ${ZOPEN_CONFIGURE_OPTS} CC=${CC} CPPFLAGS=\"${CPPFLAGS}\" CFLAGS=\"${CFLAGS}\" CXX=${CXX} CXXFLAGS=\"${CXXFLAGS}\" LDFLAGS=\"${LDFLAGS}\" LIBS=\"${LIBS}\" LDLIBS=\"${LIBS}\" LIBS_FOR_BUILDS=\"${LIBS}\""
           ;;
       esac
       export ZOPEN_CONFIGURE_MINIMAL="no"
