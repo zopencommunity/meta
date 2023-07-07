@@ -164,7 +164,7 @@
 |  [rsyncport](https://github.com/ZOSOpenTools/rsyncport) | 381 | 7
 |  [phpport](https://github.com/ZOSOpenTools/phpport) | 369 | 11
 |  [flexport](https://github.com/ZOSOpenTools/flexport) | 340 | 2
-|  [gpgport](https://github.com/ZOSOpenTools/gpgport) | 317 | 6
+|  [gpgport](https://github.com/ZOSOpenTools/gpgport) | 316 | 6
 |  [opensshport](https://github.com/ZOSOpenTools/opensshport) | 279 | 1
 |  [ninjaport](https://github.com/ZOSOpenTools/ninjaport) | 274 | 1
 |  [zstdport](https://github.com/ZOSOpenTools/zstdport) | 221 | 3
@@ -259,4 +259,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-07-07 09:08:18
+Last updated:  2023-07-07 10:17:53
