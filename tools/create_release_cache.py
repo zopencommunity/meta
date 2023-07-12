@@ -64,20 +64,16 @@ def process_asset(asset):
 
         # Extract metadata information 
         body = release.body
-        build_quality = "Untested"
-        test_status = "N/A"
-        runtime_dependencies = "No dependencies"
+        total_tests = -1
+        passed_tests = -1
+        runtime_dependencies = None
 
         if body:
-            # Extract build quality
-            build_quality_match = re.search(r"Test Status:</b>\s*(\w+)", body)
-            if build_quality_match:
-                build_quality = build_quality_match.group(1)
-
             # Extract test status
-            test_status_match = re.search(r"Test Status:</b>\s*\w+\s*\(([^)]*)\)", body)
+            test_status_match = re.search(r"Test Status:</b>\s*\w+\s*\((\d+) tests pass out of (\d+) tests[^)]*\)", body)
             if test_status_match:
-                test_status = test_status_match.group(1)
+                passed_tests = test_status_match.group(1)
+                total_tests = test_status_match.group(2)
 
             # Extract runtime dependencies
             dependencies_match = re.search(r"Runtime Dependencies:</b>\s*(.*?)<br>", body)
@@ -89,9 +85,10 @@ def process_asset(asset):
             "size": asset_size,
             "expanded_size": total_size,
             "runtime_dependencies": runtime_dependencies,
-            "quality": build_quality,
-            "test_status": test_status
+            "total_tests": total_tests,
+            "passed_tests": passed_tests 
         }
+        print(filtered_asset);
 
         # Remove the temporary directory
         os.remove(asset_path)
@@ -110,16 +107,22 @@ for repo in repositories:
 
     releases = repo.get_releases()
 
-    # Filter and process the releases
+    # Filter the releases based on the maximum number of assets per release
     filtered_releases = []
+    i = 0;
     for release in releases:
         assets = release.get_assets()
 
-        # Process assets in parallel with limited number of threads
-        with concurrent.futures.ThreadPoolExecutor(max_workers=num_threads) as executor:
-            results = executor.map(process_asset, assets)
+        # Consider maximum number of assets per release if specified
+        if i > args.max_assets:
+            break
+        i=i+1
 
-        filtered_assets = [result for result in results if result is not None]
+        filtered_assets = []
+        for asset in assets:
+            filtered_asset = process_asset(asset)
+            if filtered_asset:
+                filtered_assets.append(filtered_asset)
 
         if filtered_assets:
             filtered_release = {
@@ -130,16 +133,29 @@ for repo in repositories:
 
             filtered_releases.append(filtered_release)
 
-        # Stop processing further releases if the maximum number of assets per repository is reached
-        if args.max_assets is not None and len(filtered_assets) >= args.max_assets:
-            break
-
     if filtered_releases:
         release_data[repo_name] = filtered_releases
 
+# Process assets in parallel with limited number of threads
+with concurrent.futures.ThreadPoolExecutor(max_workers=num_threads) as executor:
+    futures = []
+    for release in release_data.values():
+        for asset in release['assets']:
+            future = executor.submit(process_asset, asset)
+            futures.append(future)
+
+    for future in concurrent.futures.as_completed(futures):
+        result = future.result()
+        if result:
+            for release in release_data.values():
+                for asset in release['assets']:
+                    if asset['name'] == result['name']:
+                        asset.update(result)
+                        break
+
 # Add timestamp to the JSON data
 json_data = {
-    "timestamp": datetime.now().isoformat(),
+    "timestamp": datetime.datetime.now().isoformat(),
     "release_data": release_data
 }
 
