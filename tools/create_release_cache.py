@@ -1,4 +1,3 @@
-from github import Github
 import sys
 import multiprocessing
 import concurrent.futures
@@ -101,9 +100,10 @@ num_threads = max(int(multiprocessing.cpu_count() / 2), 1)
 # Iterate through the repositories and fetch releases for each
 for repo in repositories:
     repo_name = repo.name
+    project_name = repo_name.rstrip("port");
 
     if args.verbose:
-        print(f"Fetching releases for repository: {repo_name}")
+        print(f"Fetching releases for repository: {project_name}")
 
     releases = repo.get_releases()
 
@@ -114,7 +114,7 @@ for repo in repositories:
         assets = release.get_assets()
 
         # Consider maximum number of assets per release if specified
-        if i > args.max_assets:
+        if i >= args.max_assets:
             break
         i=i+1
 
@@ -134,33 +134,15 @@ for repo in repositories:
             filtered_releases.append(filtered_release)
 
     if filtered_releases:
-        release_data[repo_name] = filtered_releases
+        release_data[project_name] = filtered_releases
 
-# Process assets in parallel with limited number of threads
-with concurrent.futures.ThreadPoolExecutor(max_workers=num_threads) as executor:
-    futures = []
-    for release in release_data.values():
-        for asset in release['assets']:
-            future = executor.submit(process_asset, asset)
-            futures.append(future)
-
-    for future in concurrent.futures.as_completed(futures):
-        result = future.result()
-        if result:
-            for release in release_data.values():
-                for asset in release['assets']:
-                    if asset['name'] == result['name']:
-                        asset.update(result)
-                        break
-
-# Add timestamp to the JSON data
 json_data = {
     "timestamp": datetime.datetime.now().isoformat(),
     "release_data": release_data
 }
 
 with open(args.output_file, "w") as json_file:
-    json.dump(release_data, json_file, indent=4)
+    json.dump(release_data, json_file, indent=2)
 
 print("JSON cache file created successfully.")
 

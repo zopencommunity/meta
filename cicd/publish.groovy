@@ -116,15 +116,11 @@ github-release -v upload --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --t
 git clone git@github.com:ZOSOpenTools/meta.git meta_update
 cd meta_update
 python3 tools/getbinaries.py
-
-# Generate zopen releases json cache
-mkdir -p docs/api/
-python3 tools/getbinaries.py --verbose --output-file docs/api/zopen_releases.json
-
 git config --global user.email "zosopentools@ibm.com"
 git config --global user.name "ZOS Open Tools"
 git add docs/*.md
 git add docs/images/*.png
 git add docs/api/*
 git commit -m "Updating docs page"
+git pull --rebase
 git push origin
