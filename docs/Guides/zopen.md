@@ -68,9 +68,9 @@ To build a software package, you can use `zopen build`.
 - `buildenv`, which `zopen build` will automatically source.  If you would like to source another file, you can specify it via the `-e` option as in: `zopen build -e mybuildenv`
 
 The `buildenv` file _must_ set the following environment variables:
-- `ZOPEN_TYPE`: one of _TARBALL_ or _GIT_ indicating where the source should be pulled from (a source tarball or git repository)
-- `ZOPEN_URL`: the URL where the source should be pulled from, including the `package.git` or `package-V.R.M.tar.gz` extension
-- `ZOPEN_DEPS`: a space-separated list of all software dependencies this package has. These packages will automatically be downloaded if they are not present in your $HOME/zopen/prod or $HOME/zopen/boot directories.
+- `ZOPEN_BUILD_LINE`: one of DEV or STABLE indicating which build line to build off of.
+- `ZOPEN_DEV_URL` or `ZOPEN_STABLE_URL`: the URL where the source should be pulled from, including the `package.git` or `package-V.R.M.tar.gz` extension
+- `ZOPEN_DEV_DEPS` or `ZOPEN_STABLE_DEPS`: a space-separated list of all software dependencies this package has. These packages will automatically be downloaded if they are not present in your `$HOME/zopen/prod` or `$HOME/zopen/boot` directories.
 
 To help gauge the build quality of the port, a `zopen_check_results()` function needs to be provided inside the buildenv. This function should process
 the test results and emit a report of the failures, total number of tests, expected number of failures and expected number of tests to stdout as in the following format: 
@@ -107,7 +107,7 @@ To add your own, you can append environment variables by echo'ing them in a func
 
 After the build is successful, `zopen build` will install the project to `$HOME/zopen/prod/projectname`. To perform post-processing on the installed contents, such as modifying hardcoded path contents, you can write a `zopen_post_install()` function which takes the installed path as the first argument.
 
-Note that you can choose the fully-qualified environment variables ZOPEN_GIT_URL, ZOPEN_GIT_DEPS and ZOPEN_TARBALL_URL, ZOPEN_TARBALL_DEPS 
+Note that you can choose the fully-qualified environment variables ZOPEN_DEV_URL, ZOPEN_DEV_DEPS and ZOPEN_STABLE_URL, ZOPEN_STABLE_DEPS 
 accordingly if you prefer. See (https://github.com/ZOSOpenTools/zotsampleport/blob/main/setenv.sh) for an example.
 
 There are several additional environment variables that can be specified to provide finer-grained control of the build process. 

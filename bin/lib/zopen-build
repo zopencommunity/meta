@@ -2,7 +2,7 @@
 #
 # General purpose build script for ZOSOpenTools ports
 #
-# ZOPEN_TYPE must be defined to either TARBALL, GIT, or BARE. This indicates the type of package to build
+# ZOPEN_BUILD_LINE must be defined to either STABLE or DEV. This indicates the type of package to build
 #
 # For more details, see the help which you can get by issuing:
 # zopen-build -h
@@ -45,20 +45,26 @@ User-Provided environment variables:
   ZOPEN_CXXFLAGS       C++ compiler flags (default set by dependency)
   ZOPEN_LDFLAGS        C/C++ linker flags (default set by dependency)
   ZOPEN_LIBS           C/C++ libraries (default set by dependency)
-  ZOPEN_TYPE           The type of package to download. Valid types are TARBALL, BARE and GIT (required)
-  ZOPEN_TARBALL_URL    The fully qualified URL that the tarball should be downloaded from (required if ZOPEN_TYPE=TARBALL)
-  ZOPEN_TARBALL_DEPS   Space-delimited set of source packages this git package depends on to build (required if ZOPEN_TYPE=TARBALL)
-  ZOPEN_GIT_URL        The fully qualified URL that the git repo should be cloned from (required if ZOPEN_TYPE=GIT)
-  ZOPEN_GIT_DEPS       Space-delimited set of source packages this tarball package depends on to build (required if ZOPEN_TYPE=GIT)
-  ZOPEN_GIT_BRANCH     The branch that the git repo should checkout (optional, takes precedence over ZOPEN_GIT_TAG)
-  ZOPEN_GIT_TAG        The tag that the git repo should checkout as a branch (optional)
-  ZOPEN_URL            Alternate environment variable instead of ZOPEN_TARBALL_URL or ZOPEN_GIT_URL (alternate to ZOPEN_TARBALL_URL or ZOPEN_GIT_URL)
-  ZOPEN_DEPS           Alternate environment variable instead of ZOPEN_TARBALL_DEPS or ZOPEN_GIT_DEPS (alternate to ZOPEN_TARBALL_DEPS or ZOPEN_GIT_DEPS)
+  ZOPEN_TYPE           (Deprecated) The type of package to download. Valid types are TARBALL, BARE and GIT (required)
+  ZOPEN_TARBALL_URL    (Deprecated) The fully qualified URL that the tarball should be downloaded from (required if ZOPEN_TYPE=TARBALL)
+  ZOPEN_TARBALL_DEPS   (Deprecated) Space-delimited set of source packages this git package depends on to build (required if ZOPEN_TYPE=TARBALL)
+  ZOPEN_GIT_URL        (Deprecated) The fully qualified URL that the git repo should be cloned from (required if ZOPEN_TYPE=GIT)
+  ZOPEN_GIT_DEPS       (Deprecated) Space-delimited set of source packages this tarball package depends on to build (required if ZOPEN_TYPE=GIT)
+  ZOPEN_GIT_BRANCH     (Deprecated) The branch that the git repo should checkout (optional, takes precedence over ZOPEN_GIT_TAG)
+  ZOPEN_GIT_TAG        (Deprecated) The tag that the git repo should checkout as a branch (optional)
+  ZOPEN_URL            (Deprecated) Alternate environment variable instead of ZOPEN_TARBALL_URL or ZOPEN_GIT_URL (alternate to ZOPEN_TARBALL_URL or ZOPEN_GIT_URL)
+  ZOPEN_DEPS           (Deprecated) Alternate environment variable instead of ZOPEN_TARBALL_DEPS or ZOPEN_GIT_DEPS (alternate to ZOPEN_TARBALL_DEPS or ZOPEN_GIT_DEPS)
   ZOPEN_BUILD_LEVEL    Specify the default build level, either 'DEV' or 'STABLE'
   ZOPEN_DEV_URL        Specify the dev build url (either a git url or tarball url)
   ZOPEN_STABLE_URL     Specify the stable build url (either a git url or tarball url)
   ZOPEN_DEV_DEPS       Specify the dev build dependencies
   ZOPEN_STABLE_DEPS    Specify the stable build dependencies
+  ZOPEN_DEV_BRANCH     The branch that the git repo should checkout (optional, takes precedence over ZOPEN_DEV_TAG)
+  ZOPEN_DEV_TAG        The tag that the git repo should checkout as a branch (optional)
+  ZOPEN_DEV_TYPE       The type of package to download. Valid types are TARBALL, BARE and GIT (optional)
+  ZOPEN_STABLE_BRANCH  The branch that the stable repo should checkout (optional, takes precedence over ZOPEN_STABLE_TAG)
+  ZOPEN_STABLE_TAG     The tag that the git repo should checkout as a branch (optional)
+  ZOPEN_STABLE_TYPE    The type of package to download. Valid types are TARBALL, BARE and GIT (optional)
   ZOPEN_GIT_SETUP      Specify whether git files should be added to a local repo or if this will be done manually (defaults to Y)
   ZOPEN_SRC_DIR        specify a relative source directory to cd to for bootstrap, configure, build, check, install (defaults to '.')
   ZOPEN_EXTRA_CPPFLAGS C/C++ pre-processor flags to append to CPPFLAGS (defaults to '')
@@ -356,18 +362,9 @@ loadBuildEnv()
 
 checkEnv()
 {
-  #
-  # Specify ZOPEN_TYPE as either TARBALL or GIT or BARE
-  # To specify a URL, you can either be specific (e.g. ZOPEN_TARBALL_URL or ZOPEN_GIT_URL) or you can be general (e.g. ZOPEN_URL)
-  # and to specify DEPS, you can either be specific (e.g. ZOPEN_TARBALL_DEPS or ZOPEN_GIT_DEPS) or you can be general (e.g. ZOPEN_DEPS).
-  # This flexibility is nice so that for software packages that support both types (e.g. gnu make), you can provide all of
-  # ZOPEN_TARBALL_URL, ZOPEN_TARBALL_DEPS, ZOPEN_GIT_URL, ZOPEN_GIT_DEPS in your environment set up and then specify the type using
-  # ZOPEN_TYPE=GIT|URL (e.g. only one line needs to be changed).
-  # For software packages that only support one type, you can just specify ZOPEN_URL, ZOPEN_DEPS, and ZOPEN_TYPE.
-  #
   printHeader "Checking environment configuration"
 
-  if [ ! -z "$ZOPEN_BUILD_LEVEL" ]; then
+  if [ ! -z "${ZOPEN_BUILD_LEVEL}" ]; then
     if [ "${ZOPEN_BUILD_LEVEL}x" = "DEVx" ]; then
       if [ -z "$ZOPEN_DEV_DEPS" ]; then
         printError "Building from dev, but ZOPEN_DEV_DEPS not specified"
@@ -382,6 +379,16 @@ checkEnv()
       fi
       if [ ! -z "$ZOPEN_DEV_TAG" ]; then
         export ZOPEN_GIT_TAG="$ZOPEN_DEV_TAG"
+      fi
+      if [ ! -z "$ZOPEN_DEV_TYPE" ]; then
+        export ZOPEN_TYPE="$ZOPEN_DEV_TYPE"
+      else
+        extension="${ZOPEN_URL##*.}"
+        if [ "$extension" = "git" ]; then
+          ZOPEN_TYPE="GIT"
+        else
+          ZOPEN_TYPE="TARBALL"
+        fi
       fi
     elif [ "${ZOPEN_BUILD_LEVEL}x" = "STABLEx" ]; then
       if [ -z "$ZOPEN_STABLE_DEPS" ]; then
@@ -398,15 +405,19 @@ checkEnv()
       if [ ! -z "$ZOPEN_STABLE_TAG" ]; then
         export ZOPEN_GIT_TAG="$ZOPEN_STABLE_TAG"
       fi
+      if [ ! -z "$ZOPEN_STABLE_TYPE" ]; then
+        export ZOPEN_TYPE="$ZOPEN_STABLE_TYPE"
+      else
+        extension="${ZOPEN_URL##*.}"
+        if [ "$extension" = "git" ]; then
+          ZOPEN_TYPE="GIT"
+        else
+          ZOPEN_TYPE="TARBALL"
+        fi
+      fi
     else
       printError "Unrecognized build level ${ZOPEN_BUILD_LEVEL}"
     fi 
-    extension="${ZOPEN_URL##*.}"
-    if [ "$extension" = "git" ]; then
-      ZOPEN_TYPE="GIT"
-    else
-      ZOPEN_TYPE="TARBALL"
-    fi
   else
     if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
       if [ ! -z "${ZOPEN_TARBALL_URL}" ]; then
