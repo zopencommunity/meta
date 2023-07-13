@@ -609,14 +609,14 @@ printElapsedTime()
 
   elapsedTimeOutput="$functionName completed in $elapsedTime seconds."
 
-  case $printType in
-    "info")
-      printInfo "$elapsedTimeOutput"
-      ;;
-    "verbose")
-      printVerbose "$elapsedTimeOutput"
-      ;;
-  esac
+#  case $printType in
+#    "info")
+#      printInfo "$elapsedTimeOutput"
+#      ;;
+#    "verbose")
+#      printVerbose "$elapsedTimeOutput"
+#      ;;
+#  esac
 }
 
 processConfig()
@@ -861,6 +861,16 @@ getContentsFromGithub(){
     printError "Your ZOPEN_GIT_OAUTH_TOKEN is invalid. Please validate that it is correct and re-run."
   fi
   echo "$repo_results";
+}
+
+initDefaultEnvironment()
+{
+  export ZOPEN_OLD_PATH=$PATH # Preserve PATH in case scripts need to access it
+  export PATH="$(getconf PATH)"
+  export _CEE_RUNOPTS="FILETAG(AUTOCVT,AUTOTAG) POSIX(ON)"
+  unset MANPATH
+  export LIBPATH="/usr/lib"
+  export STEPLIB=none
 }
 
 zopenInitialize
