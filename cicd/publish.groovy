@@ -110,17 +110,3 @@ github-release info -u ${GITHUB_ORGANIZATION} -r ${GITHUB_REPO} --tag "${TAG}" -
 
 echo "Uploading the artifacts into github"
 github-release -v upload --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --tag "${TAG}" --name "${PAX_BASENAME}" --file "${PAX}"
-
-
-# Update Progress page in documentation
-git clone git@github.com:ZOSOpenTools/meta.git meta_update
-cd meta_update
-python3 tools/getbinaries.py
-git config --global user.email "zosopentools@ibm.com"
-git config --global user.name "ZOS Open Tools"
-git add docs/*.md
-git add docs/images/*.png
-git add docs/api/*
-git commit -m "Updating docs page"
-git pull --rebase
-git push origin
