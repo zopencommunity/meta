@@ -35,7 +35,7 @@
 * [libgit2port](https://github.com/ZOSOpenTools/libgit2port)
 * [neovimport](https://github.com/ZOSOpenTools/neovimport)
 * [phpport](https://github.com/ZOSOpenTools/phpport)
-* [powerline-goport](https://github.com/ZOSOpenTools/powerline-goport)
+* [powerlinegoport](https://github.com/ZOSOpenTools/powerlinegoport)
 * [shufport](https://github.com/ZOSOpenTools/shufport)
 * [terraformport](https://github.com/ZOSOpenTools/terraformport)
 * [topport](https://github.com/ZOSOpenTools/topport)
@@ -61,8 +61,8 @@
 | [texinfoport](https://github.com/ZOSOpenTools/texinfoport) | 17 | 57% |autoconf, automake, bison, curl, expat, gettext, git, gpg, groff, gzip, hello, libtool, m4, make, ntbtls, sed, tar
 | [xzport](https://github.com/ZOSOpenTools/xzport) | 16 | 77% |autoconf, automake, bison, curl, diffutils, expat, findutils, gettext, git, gzip, help2man, libtool, m4, make, man-db, texinfo
 | [ncursesport](https://github.com/ZOSOpenTools/ncursesport) | 15 | 100% |bash, c3270, cscope, gettext, git, gpg, htop, less, lynx, man-db, nano, ncdu, screen, tig, vim
-| [bashport](https://github.com/ZOSOpenTools/bashport) | 12 | 80% |bison, diffutils, direnv, expat, flex, git, libiconv, libxml2, powerline-go, re2c, texinfo, xmlto
 | [help2manport](https://github.com/ZOSOpenTools/help2manport) | 12 | 100% |autoconf, automake, bison, curl, expat, gettext, git, hello, libtool, m4, make, texinfo
+| [bashport](https://github.com/ZOSOpenTools/bashport) | 11 | 80% |bison, diffutils, direnv, expat, flex, git, libiconv, libxml2, re2c, texinfo, xmlto
 | [opensslport](https://github.com/ZOSOpenTools/opensslport) | 10 | 97% |c3270, curl, expat, git, libssh2, lynx, openssh, rsync, sudo, wget
 | [zlibport](https://github.com/ZOSOpenTools/zlibport) | 10 | 100% |autoconf, curl, expat, git, libssh2, lynx, openssh, sudo, tig, wget
 | [grepport](https://github.com/ZOSOpenTools/grepport) | 9 | 95% |byacc, gnulib, libpcre, libxslt, m4, man-db, ntbtls, which, xmlto
@@ -72,7 +72,7 @@
 | [libtoolport](https://github.com/ZOSOpenTools/libtoolport) | 8 | 80% |expat, hello, libgdbm, m4, man-db, php, re2c, texinfo
 | [libgpgerrorport](https://github.com/ZOSOpenTools/libgpgerrorport) | 7 | 100% |gpg, libassuan, libgcrypt, libksba, npth, ntbtls, pinentry
 | [cmakeport](https://github.com/ZOSOpenTools/cmakeport) | 6 | 74% |duckdb, neovim, ninja, unzip, zip, zoslib
-| [comp_goport](https://github.com/ZOSOpenTools/comp_goport) | 5 | 100% |bump, direnv, gum, powerline-go, wharf
+| [comp_goport](https://github.com/ZOSOpenTools/comp_goport) | 5 | 100% |bump, direnv, gum, powerlinego, wharf
 | [libiconvport](https://github.com/ZOSOpenTools/libiconvport) | 5 | 100% |bison, libxml2, man-db, php, tig
 | [flexport](https://github.com/ZOSOpenTools/flexport) | 3 | 100% |bison, cscope, man-db
 | [gperfport](https://github.com/ZOSOpenTools/gperfport) | 3 | 100% |hello, libiconv, m4
@@ -135,7 +135,7 @@
 | [neovimport](https://github.com/ZOSOpenTools/neovimport) | 0 | No builds |
 | [opensshport](https://github.com/ZOSOpenTools/opensshport) | 0 | 100% |
 | [phpport](https://github.com/ZOSOpenTools/phpport) | 0 | No builds |
-| [powerline-goport](https://github.com/ZOSOpenTools/powerline-goport) | 0 | No builds |
+| [powerlinegoport](https://github.com/ZOSOpenTools/powerlinegoport) | 0 | No builds |
 | [screenport](https://github.com/ZOSOpenTools/screenport) | 0 | Skipped |
 | [shufport](https://github.com/ZOSOpenTools/shufport) | 0 | No builds |
 | [sshpassport](https://github.com/ZOSOpenTools/sshpassport) | 0 | Skipped |
@@ -205,7 +205,7 @@
 |  [sqliteport](https://github.com/ZOSOpenTools/sqliteport) | 32 | 1
 |  [lynxport](https://github.com/ZOSOpenTools/lynxport) | 30 | 1
 |  [lz4port](https://github.com/ZOSOpenTools/lz4port) | 30 | 3
-|  [powerline-goport](https://github.com/ZOSOpenTools/powerline-goport) | 29 | 1
+|  [powerlinegoport](https://github.com/ZOSOpenTools/powerlinegoport) | 29 | 1
 |  [libksbaport](https://github.com/ZOSOpenTools/libksbaport) | 28 | 2
 |  [npthport](https://github.com/ZOSOpenTools/npthport) | 28 | 2
 |  [libgpgerrorport](https://github.com/ZOSOpenTools/libgpgerrorport) | 27 | 2
@@ -262,4 +262,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-07-13 12:29:31
+Last updated:  2023-07-13 12:55:39
