@@ -326,7 +326,7 @@ EOF
 perms="400"
 printVerbose "Setting user configuration file [$configFile] as read-only for user, no access to others [$perms]"
 chmod "$perms" "$configFile"
-effuid=$(logname)
+effuid=$LOGNAME
 effgid=$(id -gn $effuid)
 printVerbose "Ensuring correct uid [$effuid] & gid [$effgid] for configfile if !installing as user (ie su/root/etc)"
 chown "$effuid" "$configFile"
@@ -349,7 +349,7 @@ else
   echo "15" > "$rootfs/etc/zopen/rm_fileprocs"
 
   printInfo "- Check for shipped curl pax"
-  curlpax="curl-7.83.1.20230120_231325.zos.pax.Z"
+  curlpax="curl-8.1.2.20230707_145137.zos.pax.Z"
 
   curllcn=$(findrev "${utildir}" "$curlpax")
   if [ -e "$curllcn/$curlpax" ]; then
@@ -357,7 +357,7 @@ else
     cp "$curllcn/$curlpax" "$rootfs/var/cache/zopen"
   else
     printInfo "- Downloading curl to cache using HWT"
-    curlurl="https://github.com/ZOSOpenTools/curlport/releases/download/curlport_420/$curlpax"
+    curlurl="https://github.com/ZOSOpenTools/curlport/releases/download/Releaseline_curlport_1136/$curlpax"
     printInfo "- Running REXX bootstrap"
     bootstrap=$($utildir/zopen-bootstrap.rexx $curlurl)
     printInfo "- Bootstrapped curl downloaded. Configuring for use..."
@@ -366,6 +366,23 @@ else
   cachedir="$rootfs/var/cache/zopen"
   [ -e "$cachedir/$curlpax" ] || printError "Could not locate bootstrap curl pax."
   paxrc=$(pax -rf "$cachedir/$curlpax" -s##$rootfs/boot/#)
+
+  printInfo "- Check for shipped jq pax"
+  jqpax="jq-1.6.20230705_132543.zos.pax.Z"
+
+  jqlcn=$(findrev "${utildir}" "$jqpax")
+  echo "HERE: $jqlcn/$jqpax"
+  if [ -e "$jqlcn/$jqpax" ]; then
+    printInfo "- Found $jqpax. Adding to zopen cache to install as bootstrap"
+    cp "$jqlcn/$jqpax" "$rootfs/var/cache/zopen"
+  else
+    printError "jqpax not found"
+  fi
+  printVerbose "- Expanding jq to bootstrap dir..."
+  cachedir="$rootfs/var/cache/zopen"
+  [ -e "$cachedir/$jqpax" ] || printError "Could not locate bootstrap jq pax."
+  paxrc=$(pax -rf "$cachedir/$jqpax" -s##$rootfs/boot/#)
+  echo $rootfs/boot/
 
   cacertlcn=$(findrev "${utildir}" "cacert.pem")
   if [ -e "$cacertlcn/cacert.pem" ]; then
@@ -391,6 +408,14 @@ else
   cd "$rootfs/boot/$curldir/" || printError "Could not access boot curl directory. Re-run 'zopen init' to retry"
   . ./.env
   cd "$curwd"  || printError "Could not change to $curwd. Re-run 'zopen init' to retry"
+
+  jqdir="$(ls $rootfs/boot |grep jq)"
+  [ -e "$rootfs/boot/$jqdir" ] || printError "Could not locate jq for bootstrap. Re-run 'zopen init' to retry"
+  chmod -R 755 "$rootfs/boot/$jqdir"
+  curwd=$PWD
+  cd "$rootfs/boot/$jqdir/" || printError "Could not access boot curl directory. Re-run 'zopen init' to retry"
+  . ./.env
+  cd "$curwd"  || printError "Could not change to $curwd. Re-run 'zopen init' to retry"
   
   printInfo "- Updating CA cert"
   ZOPEN_CA="$ZOPEN_ROOTFS/$ZOPEN_CA_DIR"
@@ -400,10 +425,10 @@ else
   runAndLog "${utildir}/zopen-update-cacert -f"
   printInfo "- Sourcing environment"
   . "$configFile"
-  printInfo "- Using bootstrapped curl to install latest release of itself (if available)"
-  curlInstall=$(runAndLog "${utildir}/zopen-download curl")
+  printInfo "- Using bootstrapped curl and jq to install latest release of itself (if available)"
+  curlInstall=$(runAndLog "${utildir}/zopen-download curl jq")
   curlInstall=$?
-  [ $curlInstall -ne 0 ] && printError "Unable to install curl; see previous errors and retry the initilisation using the '--re-init' parameter"
+  [ $curlInstall -ne 0 ] && printError "Unable to install curl and jq; see previous errors and retry the initilisation using the '--re-init' parameter"
   . "$configFile"
 
   # Code to use this version of meta as "official" install - pin to ensure no overwriting
