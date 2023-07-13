@@ -54,7 +54,7 @@ User-Provided environment variables:
   ZOPEN_GIT_TAG        (Deprecated) The tag that the git repo should checkout as a branch (optional)
   ZOPEN_URL            (Deprecated) Alternate environment variable instead of ZOPEN_TARBALL_URL or ZOPEN_GIT_URL (alternate to ZOPEN_TARBALL_URL or ZOPEN_GIT_URL)
   ZOPEN_DEPS           (Deprecated) Alternate environment variable instead of ZOPEN_TARBALL_DEPS or ZOPEN_GIT_DEPS (alternate to ZOPEN_TARBALL_DEPS or ZOPEN_GIT_DEPS)
-  ZOPEN_BUILD_LEVEL    Specify the default build level, either 'DEV' or 'STABLE'
+  ZOPEN_BUILD_LINE     Specify the default build line, either 'DEV' or 'STABLE'
   ZOPEN_DEV_URL        Specify the dev build url (either a git url or tarball url)
   ZOPEN_STABLE_URL     Specify the stable build url (either a git url or tarball url)
   ZOPEN_DEV_DEPS       Specify the dev build dependencies
@@ -160,12 +160,12 @@ trap "cleanupOnExit" EXIT INT TERM QUIT HUP
 
 setDefaultBuild()
 {
-  if [ ! -z "$ZOPEN_BUILD_LEVEL_OPT" ]; then
-    ZOPEN_BUILD_LEVEL=$(echo "${ZOPEN_BUILD_LEVEL_OPT}" | tr '[a-z]' '[A-Z]')
+  if [ ! -z "$ZOPEN_BUILD_LINE_OPT" ]; then
+    ZOPEN_BUILD_LINE=$(echo "${ZOPEN_BUILD_LINE_OPT}" | tr '[a-z]' '[A-Z]')
   fi
 
-  if [ ! -z "$ZOPEN_BUILD_LEVEL" ]; then
-    printVerbose "Setting build to $ZOPEN_BUILD_LEVEL"
+  if [ ! -z "$ZOPEN_BUILD_LINE" ]; then
+    printVerbose "Setting build to $ZOPEN_BUILD_LINE"
   fi
 }
 
@@ -227,7 +227,7 @@ printSyntax()
   echo "  -vv: run in very verbose mode (sets environment variables V=1 and VERBOSE=1)"
   echo "  -u|--upgradedeps: upgrade all dependencies by running zopen install"
   echo "  --buildtype: release|debug. The default is release"
-  echo "  --build: dev|stable. This is the build level to build off of. If no build level is specified, it will use the ZOPEN_BUILD_LEVEL specified in the build, otherwise it will fallback to ZOPEN_TYPE."
+  echo "  --build: dev|stable. This is the build line to build off of. If no build line is specified, it will use the ZOPEN_BUILD_LINE specified in the build, otherwise it will fallback to ZOPEN_TYPE."
   echo "  --comp: <compiler dependency>.  The compiler(s) used for building.  The default is comp_xlclang."
   echo "  --oci: build and publish an OCI image to \$ZOPEN_IMAGE_REGISTRY"
   echo "  -e <env file>: source <env file> instead of buildenv to establish build environment"
@@ -299,7 +299,7 @@ processOptions()
         ;;
       "-build" | "--build")
         shift
-        ZOPEN_BUILD_LEVEL_OPT=$1
+        ZOPEN_BUILD_LINE_OPT=$1
         ;;
       "-oci" | "--oci")
         publishOCI=true
@@ -364,8 +364,8 @@ checkEnv()
 {
   printHeader "Checking environment configuration"
 
-  if [ ! -z "${ZOPEN_BUILD_LEVEL}" ]; then
-    if [ "${ZOPEN_BUILD_LEVEL}x" = "DEVx" ]; then
+  if [ ! -z "${ZOPEN_BUILD_LINE}" ]; then
+    if [ "${ZOPEN_BUILD_LINE}x" = "DEVx" ]; then
       if [ -z "$ZOPEN_DEV_DEPS" ]; then
         printError "Building from dev, but ZOPEN_DEV_DEPS not specified"
       fi
@@ -390,7 +390,7 @@ checkEnv()
           ZOPEN_TYPE="TARBALL"
         fi
       fi
-    elif [ "${ZOPEN_BUILD_LEVEL}x" = "STABLEx" ]; then
+    elif [ "${ZOPEN_BUILD_LINE}x" = "STABLEx" ]; then
       if [ -z "$ZOPEN_STABLE_DEPS" ]; then
         printError "Building from stable, but ZOPEN_STABLE_DEPS not specified"
       fi
@@ -416,7 +416,7 @@ checkEnv()
         fi
       fi
     else
-      printError "Unrecognized build level ${ZOPEN_BUILD_LEVEL}"
+      printError "Unrecognized build line ${ZOPEN_BUILD_LINE}"
     fi 
   else
     if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
@@ -878,8 +878,8 @@ applyPatches()
     code_dir="${ZOPEN_ROOT}/${gitname%%.*}"
   fi
 
-  if [ ! -z "$ZOPEN_BUILD_LEVEL" ]; then
-    buildtype_lower=$(echo "${ZOPEN_BUILD_LEVEL}" | tr '[A-Z]' '[a-z]')
+  if [ ! -z "$ZOPEN_BUILD_LINE" ]; then
+    buildtype_lower=$(echo "${ZOPEN_BUILD_LINE}" | tr '[A-Z]' '[a-z]')
     patch_try_dir="${ZOPEN_ROOT}/${buildtype_lower}-patches"
     if [ -d "$patch_try_dir" ]; then
       patch_dir="$patch_try_dir"
@@ -1428,8 +1428,8 @@ install()
     cp "${ZOPEN_ROOT}/install/test.status" "${ZOPEN_INSTALL_DIR}/test.status"
 
 
-    if [ ! -z "${ZOPEN_BUILD_LEVEL}" ]; then
-      asciiecho "${ZOPEN_BUILD_LEVEL}" "${ZOPEN_INSTALL_DIR}/.buildlevel"
+    if [ ! -z "${ZOPEN_BUILD_LINE}" ]; then
+      asciiecho "${ZOPEN_BUILD_LINE}" "${ZOPEN_INSTALL_DIR}/.buildline"
     fi
 
     if [ -z "$(command -v zopen_get_version)" ]; then
@@ -1510,8 +1510,8 @@ resolveCommands()
   fi
   if [ "${ZOPEN_LOG_DIR}x" = "x" ]; then
     export ZOPEN_LOG_DIR="${ZOPEN_ROOT}/log"
-    if [ ! -z "${ZOPEN_BUILD_LEVEL}" ]; then
-      ZOPEN_LOG_DIR="${ZOPEN_LOG_DIR}.${ZOPEN_BUILD_LEVEL}"
+    if [ ! -z "${ZOPEN_BUILD_LINE}" ]; then
+      ZOPEN_LOG_DIR="${ZOPEN_LOG_DIR}.${ZOPEN_BUILD_LINE}"
     fi 
   fi
 

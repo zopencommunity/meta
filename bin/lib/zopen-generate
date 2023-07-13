@@ -106,9 +106,9 @@ if [ ! -z "$devDeps" ]; then
 fi
 
 if [ ! -z "$buildline" ] && [ "$buildline" = "dev" ]; then
-  buildenvContents="${buildenvContents}export ZOPEN_BUILD_LEVEL=\"DEV\"\n"
+  buildenvContents="${buildenvContents}export ZOPEN_BUILD_LINE=\"DEV\"\n"
 else
-  buildenvContents="${buildenvContents}export ZOPEN_BUILD_LEVEL=\"STABLE\"\n"
+  buildenvContents="${buildenvContents}export ZOPEN_BUILD_LINE=\"STABLE\"\n"
 fi
 
 if [ ! -z "$runtimedeps" ]; then
