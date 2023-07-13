@@ -21,6 +21,11 @@ printSyntax()
   echo "  --install-or-upgrade: installs the package if not installed, or upgrades the package if installed."  >&2
   echo "  --reinstall: reinstall already installed z/OS Open Tools packages."  >&2
   echo "  --nosymlink: do not integrate into filesystem through symlink redirection. " >&2
+  echo "  --no-deps: do not install dependencies."  >&2
+  echo "  --cache-only: do not install dependencies."  >&2
+  echo "  --no-set-active: do not change the pinned version"  >&2
+  echo "  --skip-upgrade: do not upgrade."  >&2
+  echo "  --select: select a version to install."  >&2
   echo "  -v: run in verbose mode" >&2
   echo "  --download-only: download package to current directory" >&2
   echo "  --local-install: download and unpackage to current directory" >&2
