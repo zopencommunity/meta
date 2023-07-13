@@ -476,10 +476,10 @@ checkEnv()
 
   if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
     if [ "${ZOPEN_URL}x" = "x" ]; then
-      printError "ZOPEN_URL or ZOPEN_TARBALL_URL needs to be defined to the root directory of the tool being ported"
+      printError "ZOPEN_STABLE_URL, ZOPEN_DEV_URL, ZOPEN_URL or ZOPEN_TARBALL_URL needs to be defined"
     fi
     if [ "${ZOPEN_DEPS}x" = "x" ]; then
-      printError "ZOPEN_DEPS or ZOPEN_TARBALL_DEPS needs to be defined to the ported tools this depends on"
+      printError "ZOPEN_STABLE_DEPS, ZOPEN_DEV_DEPS, ZOPEN_DEPS or ZOPEN_TARBALL_DEPS needs to be defined"
     fi
     implicitDeps="$implicitDeps git curl tar"
     ext=${ZOPEN_URL##*.}
@@ -494,10 +494,10 @@ checkEnv()
     ZOPEN_DEPS="${implicitDeps} ${ZOPEN_DEPS}"
   elif [ "${ZOPEN_TYPE}x" = "GITx" ]; then
     if [ "${ZOPEN_URL}x" = "x" ]; then
-      printError "ZOPEN_URL or ZOPEN_GIT_URL needs to be defined to the root directory of the tool being ported"
+      printError "ZOPEN_STABLE_URL, ZOPEN_DEV_URL, ZOPEN_URL or ZOPEN_GIT_URL needs to be defined"
     fi
     if [ "${ZOPEN_DEPS}x" = "x" ]; then
-      printError "ZOPEN_DEPS or ZOPEN_GIT_DEPS needs to be defined to the ported tools this depends on"
+      printError "ZOPEN_STABLE_DEPS, ZOPEN_DEV_DEPS, ZOPEN_DEPS or ZOPEN_GIT_DEPS needs to be defined"
     fi
     implicitDeps="$implicitDeps git"
     printVerbose "Implicitly adding git dependencies: ${implicitDeps}"
