@@ -1,3 +1,4 @@
+from github import Github
 import sys
 import multiprocessing
 import concurrent.futures
@@ -11,6 +12,7 @@ import datetime
 import requests
 import subprocess
 import shutil
+from collections import OrderedDict
 
 """
 GitHub Releases JSON Cache
@@ -21,7 +23,7 @@ The cache file contains information about the releases, including assets, sizes,
 
 parser = argparse.ArgumentParser(description='GitHub Releases JSON Cache')
 parser.add_argument('--verbose', action='store_true', help='Enable verbose output')
-parser.add_argument('--max-assets', type=int, default=None, help='Maximum number of assets to consider per repository (default: consider all assets)')
+#parser.add_argument('--max-releases', type=int, default=None, help='Maximum number of releases to consider per repository (default: consider all releases)')
 parser.add_argument('--output-file', dest='output_file', required=True, help='The full path to store the json file to')
 args = parser.parse_args()
 
@@ -31,7 +33,7 @@ if os.getenv('ZOPEN_GITHUB_OAUTH_TOKEN') is None:
     print("error: environment variable ZOPEN_GITHUB_OAUTH_TOKEN must be defined")
     sys.exit(1)
 
-release_data = {}
+release_data = OrderedDict()
 
 g = Github(os.getenv('ZOPEN_GITHUB_OAUTH_TOKEN'))
 
@@ -61,7 +63,7 @@ def process_asset(asset):
         output = p2.communicate()[0].strip().decode()
         total_size = int(output)
 
-        # Extract metadata information 
+        # Extract metadata information
         body = release.body
         total_tests = -1
         passed_tests = -1
@@ -85,9 +87,9 @@ def process_asset(asset):
             "expanded_size": total_size,
             "runtime_dependencies": runtime_dependencies,
             "total_tests": total_tests,
-            "passed_tests": passed_tests 
+            "passed_tests": passed_tests
         }
-        print(filtered_asset);
+        print(filtered_asset)
 
         # Remove the temporary directory
         os.remove(asset_path)
@@ -97,52 +99,61 @@ def process_asset(asset):
 # Determine the number of threads to use (half the number of CPUs)
 num_threads = max(int(multiprocessing.cpu_count() / 2), 1)
 
-# Iterate through the repositories and fetch releases for each
-for repo in repositories:
-    repo_name = repo.name
-    project_name = repo_name.rstrip("port");
+# Process a single release
+def process_release(repo_name, release):
+    assets = release.get_assets()
 
-    if args.verbose:
-        print(f"Fetching releases for repository: {project_name}")
+    filtered_assets = []
+    for asset in assets:
+        filtered_asset = process_asset(asset)
+        if filtered_asset:
+            filtered_assets.append(filtered_asset)
 
-    releases = repo.get_releases()
+    if filtered_assets:
+        filtered_release = {
+            "name": release.title,
+            "date": release.published_at,
+            "tag_name": release.tag_name,
+            "assets": filtered_assets
+        }
 
-    # Filter the releases based on the maximum number of assets per release
-    filtered_releases = []
-    i = 0;
-    for release in releases:
-        assets = release.get_assets()
+        return filtered_release, repo_name
+    return None, repo_name
 
-        # Consider maximum number of assets per release if specified
-        if i >= args.max_assets:
-            break
-        i=i+1
+# Process releases in parallel with limited number of threads
+with concurrent.futures.ThreadPoolExecutor(max_workers=num_threads) as executor:
+    futures = []
+    for repo in repositories:
+        repo_name = repo.name
+        project_name = repo_name.rstrip("port")
 
-        filtered_assets = []
-        for asset in assets:
-            filtered_asset = process_asset(asset)
-            if filtered_asset:
-                filtered_assets.append(filtered_asset)
+        if args.verbose:
+            print(f"Fetching releases for repository: {project_name}")
 
-        if filtered_assets:
-            filtered_release = {
-                "name": release.title,
-                "tag_name": release.tag_name,
-                "assets": filtered_assets
-            }
+        releases = repo.get_releases()
 
-            filtered_releases.append(filtered_release)
+        for release in releases:
+            future = executor.submit(process_release, project_name, release)
+            futures.append(future)
 
-    if filtered_releases:
-        release_data[project_name] = filtered_releases
+    for future in concurrent.futures.as_completed(futures):
+        filtered_release, repo_name = future.result()
+        if filtered_release:
+            if repo_name not in release_data:
+                release_data[repo_name] = []
+            release_data[repo_name].append(filtered_release)
 
+for _, entries in release_data.items():
+    entries.sort(key=lambda entry: entry['date'], reverse=True)
+
+# Add timestamp to the JSON data
 json_data = {
     "timestamp": datetime.datetime.now().isoformat(),
     "release_data": release_data
 }
 
 with open(args.output_file, "w") as json_file:
-    json.dump(release_data, json_file, indent=2)
+    json.dump(json_data, json_file, indent=2, default=str)
 
 print("JSON cache file created successfully.")
 
@@ -151,5 +162,3 @@ if args.verbose:
     print(f"Organization: {organization}")
     print(f"Total repositories: {repositories.totalCount}")
     print(f"Total releases: {sum(len(releases) for releases in release_data.values())}")
-    print("Release data:")
-    print(json.dumps(release_data, indent=4))
