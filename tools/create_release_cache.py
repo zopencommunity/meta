@@ -83,6 +83,7 @@ def process_asset(asset):
 
         filtered_asset = {
             "name": asset_name,
+            "url": download_url,
             "size": asset_size,
             "expanded_size": total_size,
             "runtime_dependencies": runtime_dependencies,
@@ -125,7 +126,7 @@ with concurrent.futures.ThreadPoolExecutor(max_workers=num_threads) as executor:
     futures = []
     for repo in repositories:
         repo_name = repo.name
-        project_name = repo_name.rstrip("port")
+        project_name = re.sub(r"port$", "", repo_name)
 
         if args.verbose:
             print(f"Fetching releases for repository: {project_name}")
