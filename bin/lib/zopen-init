@@ -124,30 +124,6 @@ else
   fi
 fi
 
-if [ -n "$ZOPEN_GIT_OAUTH_TOKEN" ]; then
-  printInfo "- Found existing envvar: ZOPEN_GIT_OAUTH_TOKEN; reuse value (y/n)?"
-  read foundGitOauth < /dev/tty
-  if [ -n "$foundGitOauth" ] && [ "y" = "${foundGitOauth}" ]; then
-    zopen_oauth="export ZOPEN_GIT_OAUTH_TOKEN=$ZOPEN_GIT_OAUTH_TOKEN"
-  else
-    unset ZOPEN_GIT_OAUTH_TOKEN
-  fi
-fi
-
-if [ -z "$ZOPEN_GIT_OAUTH_TOKEN" ]; then
-  printInfo "- Enter the github oauth token for use in zopen-download. If none (not recommended), press enter"
-  addCleanupTrapCmd "stty echo"
-  stty -echo
-  read zopen_oauth < /dev/tty
-  stty echo
-  if [ -n "$zopen_oauth" ]; then
-    zopen_oauth="export ZOPEN_GIT_OAUTH_TOKEN=$zopen_oauth"
-  else
-    # Placeholder in the .zopen-config
-    zopen_oauth="export ZOPEN_GIT_OAUTH_TOKEN="
-  fi
-fi
-
 if ! $clone; then
   printInfo "Checking for existence of specified root: '$rootfs'"
   [ -e "$rootfs" ] || mkdir -p "$rootfs" || printError "Unable to create zopen root filesystem at '$rootfs'"
@@ -300,17 +276,12 @@ export LIBPATH
 export PATH
 EOF
 
-# The skeleton configuration file should NOT hold the installer's GIT oauth
-# token but should supply their own; only write any oauth token to the real not
-# skeleton file
 skeletonDir="$rootfs/etc/skel"
 skelcfg="$skeletonDir/.zopen-config"
 printVerbose "Copying configuration file to $skeletonDir for backup/distribution"
 cp "$configFile" "$skelcfg"
 printVerbose "Adding git oauth token placeholder and footer to skeleton file"
 cat << EOF >>  "$skelcfg"
-# It is strongly advised to setup and use a Github Access Token
-export ZOPEN_GIT_OAUTH_TOKEN=
 /bin/echo "- \$zot configuration completed in \$(( \$SECONDS - \$configStartTime )) seconds."
 EOF
 perms="744"

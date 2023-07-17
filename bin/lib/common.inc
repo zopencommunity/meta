@@ -11,6 +11,9 @@ addCleanupTrapCmd(){
 cleanupFunction() {
   [ -n "$ZOPEN_CLEANUP" ] && $(eval "$ZOPEN_CLEANUP" 2>/dev/null)
   trap - EXIT INT TERM QUIT HUP
+  if [ -f "$JSON_CACHE" ]; then
+    rm -f $JSON_CACHE
+  fi
   unset ZOPEN_CLEANUP
 }
 trap "cleanupFunction" EXIT INT TERM QUIT HUP
@@ -800,52 +803,24 @@ parseJsonRepos(){
 }
 
 getReposFromGithub(){
-  url="https://api.github.com/users/ZOSOpenTools/repos?per_page=50"
-  httprequest "$url"
-  hrc=$?
-  [ 200 -ne $hrc ] && return $hrc;
-  done=false
-
-  while ! $done; do
-    jsonResponse="$jsonResponse $responseBody"
-    printVerbose "Checking for pagination"
-    paginationLinkLine=$(echo "$responseHeaders" | grep "Link:")
-    if [ -z "$paginationLinkLine" ]; then
-      printVerbose "No pagination, no more results"
-      done=true
-    else
-      nextLinkRegex='s/.*\(http[^>]*\)[^"]*["]next.*/\1/'
-      #nextLinkRegex='s/.*Link:.*<\(http[^>]*\)>; rel="Next".*/\1/'
-      hasNext=$(echo "$paginationLinkLine" | sed "$nextLinkRegex" )
-      if [ "$hasNext" = "$paginationLinkLine" ]; then
-        printVerbose "No pagination 'next' link found"
-        done=true
-      fi
-      if [ ! "$hasNext" = "$paginationLinkLine" ]; then
-        url="$hasNext"
-        httprequest "$url"
-        hrc=$?
-        [ 200 -ne $hrc ] && return $hrc;
-      fi
-    fi
-  done
-  parseJsonRepos "$jsonResponse"
-}
-
-getLatestReleaseFromGithub(){
-  repo="$1"
-  url="https://api.github.com/repos/ZOSOpenTools/${repo}/releases/latest"
-  httprequest "$url" "200 404"
-  hrc=$?
-  return hrc
+  if [ -z "$JSON_CACHE" ]; then
+    JSON_CACHE="/tmp/zopen.$RANDOM.$LOGNAME.json"
+    url="https://zosopentools.github.io/meta/api/zopen_releases.json"
+    curl -L -s -o "$JSON_CACHE" "$url" 
+    chtag -tc 819 "$JSON_CACHE"
+  fi
+  if [ ! -f "$JSON_CACHE" ]; then
+    printError "Could not download cache"
+  fi
+  repo_results="$(cat "$JSON_CACHE" | jq -r '.release_data | keys[]')"
 }
 
 getAllReleasesFromGithub(){
   repo="$1"
-  url="https://api.github.com/repos/ZOSOpenTools/${repo}/releases"
-  httprequest "$url" "200"
-  hrc=$?
-  return hrc
+  releases="$(jq -e -r '.release_data."'$repo'"' "$JSON_CACHE")"
+  if [ $? -ne 0 ]; then
+    printError "Could not get all releases for $repo"
+  fi
 }
 
 getContentsFromGithub(){

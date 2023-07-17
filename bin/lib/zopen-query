@@ -9,7 +9,6 @@ printSyntax()
 {
   args=$*
   echo "zopen query is a utility for z/OS Open Tools to query packages and repos." >&2
-  echo "If you have a Github OAUTH token, export the environment variable ZOPEN_GIT_OAUTH_TOKEN" >&2
   echo "Syntax: zopen-query [<option>]* [<package]*" >&2
   echo "  where <option> may be one or more of:" >&2
   echo "  --list: list all available z/OS Open Tools."  >&2
@@ -39,20 +38,19 @@ printDetailListEntries()
       printf "${NC}${UNDERLINE}%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s\n${NC}" "Package" "Your version" ".version" "Latest Tag"
     fi
     echo "$repoArray" | xargs | tr ' ' '\n' | sort | while read repo; do
-      name=${repo%port}
-      if [ -z $needle ] || [ "${name}" = "${needle}" ]; then
-        latest=$(getLatestReleaseFromGithub "$repo")
+      if [ -z $needle ] || [ "${repo}" = "${needle}" ]; then
+        latest=$(jq -e -r '.release_data."'$repo'"[0]' "$JSON_CACHE")
         if [ $? -ne 0 ]; then
           printError "Unable to retrieve remote information"
         fi
-        latestTag=$(echo "$responseBody" | awk -F'"' ' /tag_name/ { print $4 }')
-        if [ -e "${ZOPEN_PKGINSTALL}/${name}/.releaseinfo" ]; then
-          originalTag=$(cat "${ZOPEN_PKGINSTALL}/${name}/.releaseinfo")
+        latestTag=$(jq -e -r '.release_data."'$repo'"[0].tag_name' "$JSON_CACHE")
+        if [ -e "${ZOPEN_PKGINSTALL}/${repo}/.releaseinfo" ]; then
+          originalTag=$(cat "${ZOPEN_PKGINSTALL}/${repo}/.releaseinfo")
         else
           originalTag="Not installed"
         fi
-        if [ -e "${ZOPEN_PKGINSTALL}/${name}/.version" ]; then
-          dotversion=$(cat "${ZOPEN_PKGINSTALL}/${name}/.version")
+        if [ -e "${ZOPEN_PKGINSTALL}/${repo}/.version" ]; then
+          dotversion=$(cat "${ZOPEN_PKGINSTALL}/${repo}/.version")
         else
           dotversion="N/a"
         fi
@@ -69,39 +67,31 @@ printDetailListEntries()
     numcols=5 
     colwidth=$(($scrcols / $numcols -1 ))
     if ! $noheader; then
-      printf "${NC}${UNDERLINE}%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s\n${NC}" "Package" "Your version" "Latest Tag" "Status" "Quality"
+      printf "${NC}${UNDERLINE}%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s\n${NC}" "Package" "Your version" "Latest Tag" "Download Size" "Expanded Size" "Status" "Quality"
     fi
     echo "$repoArray" | xargs | tr ' ' '\n' | sort | while read repo; do
-      name=${repo%port}
-      if [ -z $needle ] || [ "${name}" = "${needle}" ]; then
-        if [ -e "${ZOPEN_PKGINSTALL}/${name}/.releaseinfo" ]; then
-          originalTag=$(cat "${ZOPEN_PKGINSTALL}/${name}/.releaseinfo")
+      if [ -z $needle ] || [ "${repo}" = "${needle}" ]; then
+        if [ -e "${ZOPEN_PKGINSTALL}/${repo}/.releaseinfo" ]; then
+          originalTag=$(cat "${ZOPEN_PKGINSTALL}/${repo}/.releaseinfo")
         else
           originalTag="Not installed"
         fi
-        getLatestReleaseFromGithub "$repo"
+        latest=$(jq -e -r '.release_data."'$repo'"[0]' "$JSON_CACHE")
         case $? in
-          404) printVerbose "No latest release for port";
-               printf "%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s ${NC}${RED}%-${colwidth}s${NC}\n" "$name" "$originalTag" "Unknown" "Unknown" "Unknown"
+          1) printVerbose "No latest release for port";
+               printf "%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s ${NC}${RED}%-${colwidth}s${NC}\n" "$repo" "$originalTag" "Unknown" "Unknown" "Unknown" "Unknown" "Unknown"
                ;;
-          200) printVerbose "Latest release request successful";  
-               latestTag="$(echo "$responseBody" | grep "\"tag_name\":" | cut -d '"' -f 4)"
-               statusline="$(echo "$responseBody" | grep "\"body\":.*Test Status:.*(.*)<br />")"
-               buildQuality="$(echo "$statusline" | sed -e "s#.*Test Status:<\/b>##" -e "s#[ ]*(.*##" | tr -d ' ')"
-               testStatus="$(echo "$statusline" | sed -e "s#.*Test Status:<\/b>[^(]*(##" -e "s#).*##")"
-               if [ -z "$buildQuality" ]; then
-                 buildQuality="Untested"
-                 testStatus="N/A";
-               fi
-               if [ ! -z "$filter" ]; then
-                 qualityLower=$(echo "$buildQuality" | awk '{print tolower($0)}')
-                 if [ "$filter" != "$qualityLower" ]; then
-                   continue;
-                 fi
-               fi
-               printf "%-${colwidth}s %-${colwidth}s %-${colwidth}s " "$name" "$originalTag" "$latestTag" 
-               testStatus=$(echo $testStatus | sed 's/^[ ]\?\([0-9]\+\).*of \([0-9]\+\) tests.*- \([0-9\.]\+\).*/\1 of \2 tests passed (\3%)/') 
-               printf " %-${colwidth}s"  "$testStatus"
+          0) printVerbose "Latest release request successful";  
+               latestTag="$(jq -e -r '.release_data."'$repo'"[0].tag_name' "$JSON_CACHE")"
+               passed="$(jq -e -r '.release_data."'$repo'"[0].assets[0].passed_tests' "$JSON_CACHE")"
+               failed="$(jq -e -r '.release_data."'$repo'"[0].assets[0].failed_tests' "$JSON_CACHE")"
+               expandedsize="$(jq -e -r '.release_data."'$repo'"[0].assets[0].expanded_size' "$JSON_CACHE")"
+               downloadsize="$(jq -e -r '.release_data."'$repo'"[0].assets[0].size' "$JSON_CACHE")"
+               printf "%-${colwidth}s %-${colwidth}s %-${colwidth}s " "$repo" "$originalTag" "$latestTag" 
+               printf " %-${colwidth}s"  "$passed passed, $failed failed"
+               printf " %-${colwidth}s"  "$expandedsize"
+               printf " %-${colwidth}s"  "$downloadsize"
+               # TODO
                case $buildQuality in
                  "Green") printf "${NC}${GREEN}%-${colwidth}s${NC}" "$buildQuality";;
                  "Red" | "Untested" | "Skipped" ) printf "${NC}${RED}%-${colwidth}s${NC}" "$buildQuality" ;;
@@ -261,13 +251,6 @@ export SSL_CERT_FILE="${ZOPEN_CA}"
 export GIT_SSL_CAINFO="${ZOPEN_CA}"
 export CURL_CA_BUNDLE="${ZOPEN_CA}"
 
-if [ ! -z "${ZOPEN_GIT_OAUTH_TOKEN}" ]; then
-  OAUTH_TOKEN_OPTION='-H'
-  OAUTH_TOKEN="Authorization: Bearer ${ZOPEN_GIT_OAUTH_TOKEN}" 
-else
-  printWarning "Setting ZOPEN_GIT_OAUTH_TOKEN is recommended to ensure that you do not hit the GitHub API cap. See --help for more details."
-fi
-
 if [ ! -z "$filter" ]; then
   filter=$(echo "$filter" | awk '{print tolower($0)}')
   case "$filter" in
@@ -278,13 +261,13 @@ fi
 
 if ! $localoption; then
 
-  # Retrieve all repositories
-  progressHandler "network" "- Retrieved remote details" &
-  ph=$!
-  killph="kill -HUP $ph"
-  addCleanupTrapCmd "$killph"
-  #getReposFromGithub
-  repo_results="$(getReposFromGithub)"
+ # Retrieve all repositories
+ # TODO: These are causing early exists???
+ # progressHandler "network" "- Retrieved remote details" &
+ # ph=$!
+ # killph="kill -HUP $ph"
+ # addCleanupTrapCmd "$killph"
+  getReposFromGithub
   grfgRc=$?
   $killph 2>/dev/null  # if the timer is not running, the kill will fail
   [ 0 -ne $grfgRc ] && exit $grfgRc;
@@ -296,11 +279,6 @@ if ! $localoption; then
     repo=${repo#"ZOSOpenTools/"}
     name=${repo%port}
     printVerbose "Checking repo suffixes for '$repo' with name:'$name'"
-    # Skip repos that do not end with port
-    if [ "${name}" = "${repo}" ]; then
-      printVerbose "Skipping ${name}"
-      continue;
-    fi
   
     if [ -z "${chosenRepos}" ]; then
       repoArray="$repoArray $repo"
