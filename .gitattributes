@@ -2,3 +2,4 @@
 *.pem   text working-tree-encoding=UTF-8
 *.png   binary  working-tree-encoding=UTF-8
 *.gif binary
+*.pax.Z binary
