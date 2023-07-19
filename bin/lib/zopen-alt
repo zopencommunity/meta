@@ -82,6 +82,7 @@ setAlt(){
 listAlts(){
   sett=$1
   needle=$2
+
   found=$(zosfind $ZOPEN_PKGINSTALL -type d -o -type l| grep "$needle-[^/]*$" | sed -e "s#$ZOPEN_PKGINSTALL/##")
   if [[ -z $found ]]; then
     printInfo "No currently available version of package '${needle}'"
