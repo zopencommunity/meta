@@ -22,7 +22,7 @@ printSyntax()
   echo "  --re-init - re-initialize a previous installation (if present).  Re-initializing over a previous installation will re-use existing package structures and configurations." >&2
   echo "  --clone - clones the current installation to a different location" >&2
   echo "  -v: run in verbose mode" >&2
-  echo "  -?: display help" >&2
+  echo "  -?|-h|--help: display help" >&2
 }
 
 args=$*
@@ -74,7 +74,7 @@ if $clone; then
 elif [ -e "$configFile" ]; then
   if ! $reinitExisting; then
     printWarning "- Existing configuration file found; re-initializing might lose access to previously installed packages. Continue (y/n)?"
-    read reinit < /dev/tty
+    reinit=$(getInput)
   fi
   if $reinitExisting || { [ -n "$reinit" ] && [ "y" = "${reinit}" ]; }; then
     printInfo "- Re-initializing; removing existing .zopen-config"
@@ -96,7 +96,7 @@ if [ -z "$rootfs" ]; then
   else
     printInfo "- Enter fully-qualified path to your zopen root directory (default: $HOME/zopen)"
   fi
-  read rootfs < /dev/tty
+  rootfs=$(getInput)
 else
   printInfo "- Setting root directory from cli: $rootfs"
 fi
@@ -114,11 +114,12 @@ else
   fi
   if [ "$rootfs" = "/" ]; then
     printInfo "- Installing into system root; are you sure (y/N)?"
-    read sysrootok < /dev/tty
+    sysrootok=$(getInput)
     if [ -n "$sysrootok" ] && [ "y" = "${sysrootok}" ]; then
-      printInfo "- Using '/'as root filesystem"
+      printInfo "- Using '/' as root filesystem"
       rootfs="/." # references below take a root directory
     else
+      printWarning "- Stopping. Existing configuration will be preserved"
       exit 4
     fi
   fi
@@ -129,6 +130,7 @@ if ! $clone; then
   [ -e "$rootfs" ] || mkdir -p "$rootfs" || printError "Unable to create zopen root filesystem at '$rootfs'"
   [ -d "$rootfs" ] || printError "Specified location '$rootfs' is not a directoryUnable to access root file system at '$rootfs'; check permissions"  
   [ -w "$rootfs" ] || printError "Unable to access root file system at '$rootfs'; check permissions"  
+
   printInfo "- Populating standard file system"
   [ -e "$rootfs/bin" ] || mkdir -p "$rootfs/bin"
   [ -e "$rootfs/etc" ] || mkdir -p "$rootfs/etc"
@@ -182,7 +184,7 @@ fi
 
 if [ "$ZOPEN_PKGINSTALL" = "$rootfs" ]; then
    printWarning "Package install location is the zopen root location; this is not recommended. Continue (y/n)"
-   read pkgoverlaysrootfs < /dev/tty
+   pkgoverlaysrootfs=$(getInput)
    if [ -n "$pkgoverlaysrootfs" ] && [ "y" = "${pkgoverlaysrootfs}" ]; then
      printInfo "- Continuing. Packages will be installed into the zopen root location: $rootfs"
    else
@@ -218,6 +220,7 @@ atExit() {
 }
 
 trap "atExit" EXIT INT TERM QUIT HUP
+
 sanitizeEnvVar(){
   #remove any envvar entries that match the specified regex
   value=\$1
@@ -274,6 +277,9 @@ MANPATH="\$MANPATH:"
 export MANPATH
 export LIBPATH
 export PATH
+
+# Unset traps
+trap - EXIT INT TERM QUIT HUP
 EOF
 
 skeletonDir="$rootfs/etc/skel"
@@ -287,12 +293,6 @@ EOF
 perms="744"
 printVerbose "Giving world read access to skel config file"
 chmod "$perms" "$skelcfg"
-
-printVerbose "Adding 'real' git oauth token (or placeholder) and footer to user config file"
-cat << EOF >>  "$configFile"
-$zopen_oauth
-/bin/echo "- \$zot configuration completed in \$(( \$SECONDS - \$configStartTime )) seconds."
-EOF
 
 perms="400"
 printVerbose "Setting user configuration file [$configFile] as read-only for user, no access to others [$perms]"
@@ -441,7 +441,7 @@ else
   printInfo "- zopen bootstrapping complete"
 
   printInfo "- Configure .profile to automatically source zopen environment (y/n)?"
-  read profileEnable < /dev/tty
+  profileEnable=$(getInput)
   if [ -n "$profileEnable" ] && [ "y" = "${profileEnable}" ]; then
     if ! grep -q ". \$HOME/.zopen-config" "$HOME/.profile"; then
       printVerbose "Line not present (grep returned non-0)"
