@@ -11,8 +11,10 @@ printSyntax()
   echo "zopen alt is a utility for z/OS Open Tools to switch package versions for currently installed packages" >&2
   echo "Syntax: zopen-alt [<option>]* [<package]" >&2
   echo "  where <option> may be one or more of:" >&2
-  echo "  --set: set version" >&2
-  echo "  -v: run in verbose mode." >&2
+  echo "  -s | --set: set version" >&2
+  echo "  -v | --v | -verbose | --verbose: run in verbose mode." >&2
+  echo "  -h | --h | -help | --help | -? | -syntax: print this information" >&2
+  echo "  -d: specify default option for an alternative" >&2
   echo " and <package> is a package name." >&2
 }
 
@@ -80,7 +82,6 @@ setAlt(){
 listAlts(){
   sett=$1
   needle=$2
-
   found=$(zosfind $ZOPEN_PKGINSTALL -type d -o -type l| grep "$needle-[^/]*$" | sed -e "s#$ZOPEN_PKGINSTALL/##")
   if [[ -z $found ]]; then
     printInfo "No currently available version of package '${needle}'"
