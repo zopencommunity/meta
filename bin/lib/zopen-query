@@ -117,19 +117,19 @@ printInstalledEntries(){
   if [ ! -z "$1" ] && ! $noheader; then
     printf "${NC}${UNDERLINE}%-${colwidth}s %-${colwidth}s %-${colwidth}s\n${NC}" "Package" "Installed version" "File version"
   fi
-  installedPackages="$(zosfind $ZOPEN_PKGINSTALL -name .active -follow 2>/dev/null | grep -v "[^-]*-.*")"
+  installedPackages="$(zosfind $ZOPEN_PKGINSTALL -name .active 2>/dev/null)"
   printVerbose "Packages: $installedPackages"
   echo "$installedPackages" | xargs | tr ' ' '\n' | sort | while read repo; do
     pkghome=$(dirname "${repo}")
     if [ -e "${pkghome}/.releaseinfo" ]; then
       originalTag=$(cat "${pkghome}/.releaseinfo")
     else
-      originalTag="N/a"
+      originalTag="N/A"
     fi
     if [ -e "${pkghome}/.version" ]; then
       dotversion=$(cat "${pkghome}/.version")
     else
-      dotversion="N/a"
+      dotversion="N/A"
     fi
 
     printVerbose "Original tag: $originalTag for repo: $repo"
