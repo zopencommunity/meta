@@ -129,7 +129,7 @@
 | [gumport](https://github.com/ZOSOpenTools/gumport) | 0 | Skipped |
 | [helloport](https://github.com/ZOSOpenTools/helloport) | 0 | 100% |
 | [htopport](https://github.com/ZOSOpenTools/htopport) | 0 | No builds |
-| [jqport](https://github.com/ZOSOpenTools/jqport) | 0 | 57% |
+| [jqport](https://github.com/ZOSOpenTools/jqport) | 0 | 71% |
 | [libgit2port](https://github.com/ZOSOpenTools/libgit2port) | 0 | No builds |
 | [libpcre2port](https://github.com/ZOSOpenTools/libpcre2port) | 0 | 66% |
 | [librdkafkaport](https://github.com/ZOSOpenTools/librdkafkaport) | 0 | No builds |
@@ -208,12 +208,12 @@
 |  [ncursesport](https://github.com/ZOSOpenTools/ncursesport) | 46 | 1
 |  [pinentryport](https://github.com/ZOSOpenTools/pinentryport) | 46 | 3
 |  [luaport](https://github.com/ZOSOpenTools/luaport) | 45 | 1
-|  [jqport](https://github.com/ZOSOpenTools/jqport) | 40 | 2
 |  [xxhashport](https://github.com/ZOSOpenTools/xxhashport) | 38 | 2
 |  [expatport](https://github.com/ZOSOpenTools/expatport) | 37 | 1
 |  [ntbtlsport](https://github.com/ZOSOpenTools/ntbtlsport) | 33 | 1
 |  [texinfoport](https://github.com/ZOSOpenTools/texinfoport) | 33 | 2
 |  [sqliteport](https://github.com/ZOSOpenTools/sqliteport) | 32 | 1
+|  [jqport](https://github.com/ZOSOpenTools/jqport) | 30 | 2
 |  [lynxport](https://github.com/ZOSOpenTools/lynxport) | 30 | 1
 |  [powerlinegoport](https://github.com/ZOSOpenTools/powerlinegoport) | 29 | 1
 |  [libksbaport](https://github.com/ZOSOpenTools/libksbaport) | 28 | 2
@@ -276,4 +276,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-07-20 15:55:37
+Last updated:  2023-07-20 16:40:34

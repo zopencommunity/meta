@@ -1,5 +1,5 @@
 {
-  "timestamp": "2023-07-20T16:05:39.328595",
+  "timestamp": "2023-07-20T16:50:42.298686",
   "release_data": {
     "automake": [
       {
@@ -13,8 +13,8 @@
             "size": 999936,
             "expanded_size": 2455462,
             "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
+            "total_tests": "2",
+            "passed_tests": "2"
           }
         ]
       },
@@ -29,8 +29,8 @@
             "size": 999936,
             "expanded_size": 2455395,
             "runtime_dependencies": null,
-            "total_tests": "3",
-            "passed_tests": "2"
+            "total_tests": "1",
+            "passed_tests": "1"
           }
         ]
       },
@@ -45,8 +45,8 @@
             "size": 999936,
             "expanded_size": 2455289,
             "runtime_dependencies": null,
-            "total_tests": "1",
-            "passed_tests": "1"
+            "total_tests": -1,
+            "passed_tests": -1
           }
         ]
       },
@@ -61,8 +61,8 @@
             "size": 999936,
             "expanded_size": 2455445,
             "runtime_dependencies": null,
-            "total_tests": "1",
-            "passed_tests": "1"
+            "total_tests": -1,
+            "passed_tests": -1
           }
         ]
       },
@@ -77,8 +77,8 @@
             "size": 999936,
             "expanded_size": 2455541,
             "runtime_dependencies": null,
-            "total_tests": "1",
-            "passed_tests": "1"
+            "total_tests": -1,
+            "passed_tests": -1
           }
         ]
       },
@@ -93,7 +93,7 @@
             "size": 999936,
             "expanded_size": 2455369,
             "runtime_dependencies": null,
-            "total_tests": "1",
+            "total_tests": "2",
             "passed_tests": "1"
           }
         ]
@@ -109,8 +109,8 @@
             "size": 999936,
             "expanded_size": 2455420,
             "runtime_dependencies": null,
-            "total_tests": "1",
-            "passed_tests": "1"
+            "total_tests": "7",
+            "passed_tests": "5"
           }
         ]
       },
@@ -125,8 +125,8 @@
             "size": 999936,
             "expanded_size": 2455748,
             "runtime_dependencies": null,
-            "total_tests": "1",
-            "passed_tests": "1"
+            "total_tests": -1,
+            "passed_tests": -1
           }
         ]
       },
@@ -141,8 +141,8 @@
             "size": 999936,
             "expanded_size": 2455712,
             "runtime_dependencies": null,
-            "total_tests": "1",
-            "passed_tests": "1"
+            "total_tests": "110",
+            "passed_tests": "110"
           }
         ]
       },
@@ -157,7 +157,7 @@
             "size": 999936,
             "expanded_size": 2455661,
             "runtime_dependencies": null,
-            "total_tests": "1",
+            "total_tests": "5",
             "passed_tests": "1"
           }
         ]
@@ -173,7 +173,7 @@
             "size": 999936,
             "expanded_size": 2455287,
             "runtime_dependencies": null,
-            "total_tests": "1",
+            "total_tests": "5",
             "passed_tests": "1"
           }
         ]
@@ -221,8 +221,8 @@
             "size": 999936,
             "expanded_size": 2422598,
             "runtime_dependencies": null,
-            "total_tests": "1",
-            "passed_tests": "1"
+            "total_tests": "2737",
+            "passed_tests": "2735"
           }
         ]
       },
@@ -237,8 +237,8 @@
             "size": 999936,
             "expanded_size": 2433371,
             "runtime_dependencies": null,
-            "total_tests": "1",
-            "passed_tests": "1"
+            "total_tests": "3",
+            "passed_tests": "2"
           }
         ]
       },
@@ -253,8 +253,8 @@
             "size": 999936,
             "expanded_size": 2432974,
             "runtime_dependencies": null,
-            "total_tests": "1",
-            "passed_tests": "1"
+            "total_tests": "23",
+            "passed_tests": "12"
           }
         ]
       },
@@ -285,8 +285,8 @@
             "size": 999936,
             "expanded_size": 2433110,
             "runtime_dependencies": null,
-            "total_tests": "1",
-            "passed_tests": "1"
+            "total_tests": "261",
+            "passed_tests": "238"
           }
         ]
       },
@@ -381,8 +381,8 @@
             "size": 967680,
             "expanded_size": 2422381,
             "runtime_dependencies": null,
-            "total_tests": "1",
-            "passed_tests": "1"
+            "total_tests": -1,
+            "passed_tests": -1
           }
         ]
       },
@@ -413,8 +413,8 @@
             "size": 999936,
             "expanded_size": 2431164,
             "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
+            "total_tests": "1",
+            "passed_tests": "1"
           }
         ]
       },
@@ -461,8 +461,8 @@
             "size": 999936,
             "expanded_size": 2400831,
             "runtime_dependencies": null,
-            "total_tests": "1",
-            "passed_tests": "1"
+            "total_tests": -1,
+            "passed_tests": -1
           }
         ]
       },
@@ -477,8 +477,8 @@
             "size": 3419136,
             "expanded_size": 8742382,
             "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
+            "total_tests": "1",
+            "passed_tests": "1"
           }
         ]
       }
@@ -559,8 +559,8 @@
             "size": 451584,
             "expanded_size": 968648,
             "runtime_dependencies": null,
-            "total_tests": "31",
-            "passed_tests": "29"
+            "total_tests": "91",
+            "passed_tests": "88"
           }
         ]
       },
@@ -575,8 +575,8 @@
             "size": 612864,
             "expanded_size": 1590774,
             "runtime_dependencies": null,
-            "total_tests": "31",
-            "passed_tests": "29"
+            "total_tests": -1,
+            "passed_tests": -1
           }
         ]
       },
@@ -607,8 +607,8 @@
             "size": 612864,
             "expanded_size": 1591194,
             "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
+            "total_tests": "91",
+            "passed_tests": "88"
           }
         ]
       },
@@ -623,8 +623,8 @@
             "size": 612864,
             "expanded_size": 1591166,
             "runtime_dependencies": null,
-            "total_tests": "2",
-            "passed_tests": "2"
+            "total_tests": "1",
+            "passed_tests": "1"
           }
         ]
       },
@@ -639,8 +639,8 @@
             "size": 612864,
             "expanded_size": 1590650,
             "runtime_dependencies": null,
-            "total_tests": "2",
-            "passed_tests": "2"
+            "total_tests": -1,
+            "passed_tests": -1
           }
         ]
       },
@@ -655,8 +655,8 @@
             "size": 612864,
             "expanded_size": 1783666,
             "runtime_dependencies": null,
-            "total_tests": "2",
-            "passed_tests": "2"
+            "total_tests": "30",
+            "passed_tests": "30"
           }
         ]
       },
@@ -671,8 +671,8 @@
             "size": 612864,
             "expanded_size": 1783796,
             "runtime_dependencies": null,
-            "total_tests": "2",
-            "passed_tests": "2"
+            "total_tests": "30",
+            "passed_tests": "30"
           }
         ]
       },
@@ -703,8 +703,8 @@
             "size": 612864,
             "expanded_size": 1783790,
             "runtime_dependencies": null,
-            "total_tests": "77",
-            "passed_tests": "50"
+            "total_tests": -1,
+            "passed_tests": -1
           }
         ]
       },
@@ -719,8 +719,8 @@
             "size": 612864,
             "expanded_size": 1784073,
             "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
+            "total_tests": "2",
+            "passed_tests": "2"
           }
         ]
       },
@@ -735,8 +735,8 @@
             "size": 612864,
             "expanded_size": 1784198,
             "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
+            "total_tests": "2",
+            "passed_tests": "2"
           }
         ]
       },
@@ -769,8 +769,8 @@
             "size": 1419264,
             "expanded_size": 3614512,
             "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
+            "total_tests": "77",
+            "passed_tests": "64"
           }
         ]
       },
@@ -817,8 +817,8 @@
             "size": 1419264,
             "expanded_size": 3614332,
             "runtime_dependencies": null,
-            "total_tests": "121",
-            "passed_tests": "110"
+            "total_tests": -1,
+            "passed_tests": -1
           }
         ]
       },
@@ -865,8 +865,8 @@
             "size": 1419264,
             "expanded_size": 3583303,
             "runtime_dependencies": null,
-            "total_tests": "3",
-            "passed_tests": "3"
+            "total_tests": -1,
+            "passed_tests": -1
           }
         ]
       },
@@ -897,8 +897,8 @@
             "size": 1419264,
             "expanded_size": 3583265,
             "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
+            "total_tests": "58",
+            "passed_tests": "49"
           }
         ]
       },
@@ -913,8 +913,8 @@
             "size": 1419264,
             "expanded_size": 3583402,
             "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
+            "total_tests": "121",
+            "passed_tests": "110"
           }
         ]
       },
@@ -929,8 +929,8 @@
             "size": 1419264,
             "expanded_size": 3583515,
             "runtime_dependencies": null,
-            "total_tests": "1",
-            "passed_tests": "1"
+            "total_tests": -1,
+            "passed_tests": -1
           }
         ]
       },
@@ -945,8 +945,8 @@
             "size": 1419264,
             "expanded_size": 3583649,
             "runtime_dependencies": null,
-            "total_tests": "2",
-            "passed_tests": "2"
+            "total_tests": -1,
+            "passed_tests": -1
           }
         ]
       },
@@ -961,8 +961,8 @@
             "size": 1419264,
             "expanded_size": 3582596,
             "runtime_dependencies": null,
-            "total_tests": "2",
-            "passed_tests": "2"
+            "total_tests": "3",
+            "passed_tests": "3"
           }
         ]
       },
@@ -977,8 +977,8 @@
             "size": 1419264,
             "expanded_size": 3583737,
             "runtime_dependencies": null,
-            "total_tests": "7",
-            "passed_tests": "5"
+            "total_tests": -1,
+            "passed_tests": -1
           }
         ]
       },
@@ -1025,8 +1025,8 @@
             "size": 1419264,
             "expanded_size": 3583588,
             "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
+            "total_tests": "1",
+            "passed_tests": "1"
           }
         ]
       },
@@ -1041,8 +1041,8 @@
             "size": 2483712,
             "expanded_size": 6400751,
             "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
+            "total_tests": "5",
+            "passed_tests": "4"
           }
         ]
       }
@@ -1075,8 +1075,8 @@
             "size": 26707968,
             "expanded_size": 82487527,
             "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
+            "total_tests": "1",
+            "passed_tests": "1"
           }
         ]
       },
@@ -8727,7 +8727,7 @@
             "name": "man-db-2.11.2.20230627_230209.zos.pax.Z",
             "url": "https://github.com/ZOSOpenTools/man-dbport/releases/download/Releaseline_man-dbport_1102/man-db-2.11.2.20230627_230209.zos.pax.Z",
             "size": 14289408,
-            "expanded_size": 0,
+            "expanded_size": 26128342,
             "runtime_dependencies": null,
             "total_tests": "1",
             "passed_tests": "1"
@@ -8775,7 +8775,7 @@
             "name": "man-db-2.10.2.20230508_164551.zos.pax.Z",
             "url": "https://github.com/ZOSOpenTools/man-dbport/releases/download/stable/man-db-2.10.2.20230508_164551.zos.pax.Z",
             "size": 14160384,
-            "expanded_size": 0,
+            "expanded_size": 25741906,
             "runtime_dependencies": null,
             "total_tests": "1",
             "passed_tests": "1"
@@ -12104,6 +12104,22 @@
       }
     ],
     "jq": [
+      {
+        "name": "jq 1.6 (Build 1160)",
+        "date": "2023-07-20 20:40:07",
+        "tag_name": "Releaseline_jqport_1160",
+        "assets": [
+          {
+            "name": "jq-1.6.20230720_160648.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/jqport/releases/download/Releaseline_jqport_1160/jq-1.6.20230720_160648.zos.pax.Z",
+            "size": 1612800,
+            "expanded_size": 3689461,
+            "runtime_dependencies": null,
+            "total_tests": "1",
+            "passed_tests": "1"
+          }
+        ]
+      },
       {
         "name": "jq 1.6 (Build 1159)",
         "date": "2023-07-20 19:55:11",
@@ -18071,24 +18087,6 @@
         ]
       }
     ],
-    "yq": [
-      {
-        "name": "yq 4.33.3 (Build 971)",
-        "date": "2023-05-01 02:20:38",
-        "tag_name": "Releaseline_yqport_971",
-        "assets": [
-          {
-            "name": "yq-master.20230430_221841.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/yqport/releases/download/Releaseline_yqport_971/yq-master.20230430_221841.zos.pax.Z",
-            "size": 11999232,
-            "expanded_size": 34593029,
-            "runtime_dependencies": null,
-            "total_tests": "1",
-            "passed_tests": "1"
-          }
-        ]
-      }
-    ],
     "libgpgerror": [
       {
         "name": "libgpgerror 1.47 (Build 1125)",
@@ -18116,6 +18114,24 @@
             "url": "https://github.com/ZOSOpenTools/libgpgerrorport/releases/download/Releaseline_libgpgerrorport_1066/libgpgerror.20230607_033049.zos.pax.Z",
             "size": 999936,
             "expanded_size": 2554466,
+            "runtime_dependencies": null,
+            "total_tests": "1",
+            "passed_tests": "1"
+          }
+        ]
+      }
+    ],
+    "yq": [
+      {
+        "name": "yq 4.33.3 (Build 971)",
+        "date": "2023-05-01 02:20:38",
+        "tag_name": "Releaseline_yqport_971",
+        "assets": [
+          {
+            "name": "yq-master.20230430_221841.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/yqport/releases/download/Releaseline_yqport_971/yq-master.20230430_221841.zos.pax.Z",
+            "size": 11999232,
+            "expanded_size": 34593029,
             "runtime_dependencies": null,
             "total_tests": "1",
             "passed_tests": "1"
