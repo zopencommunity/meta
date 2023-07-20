@@ -82,12 +82,12 @@ handlePackageInstall(){
     # list all released filenames, sort them and grab the last (which should be the newest file starting with the
     # specified prefix (fuzzy find rather than exact match)
     #FIXME: Igor - jq needs oniguruma to support regex
-    latestfiledetails=$(echo "$releases" | awk -F'/' -v PORT=$name -v REQVER=$versioned '
+    latestfiledetails=$(/bin/printf "%s" "$releases" | awk -F'/' -v PORT=$name -v REQVER=$versioned '
       BEGIN{regex = ".*"PORT"-"REQVER".*\.pax\.Z"} {if ( $0 ~ regex ){ print $NF"#@#"$0}}
     ' | sort -u | tail -n 1 | tr -d '\"')
     downloadURL=$(echo "$latestfiledetails" | sed -E 's/.*url: (https.*)/\1/')
   elif [ ! "x" = "x$tagged" ]; then
-    downloadURL=$(echo "$releases" | jq -e -r '.[] | select(.tag_name == "'$tagged'").assets[0].url')
+    downloadURL=$(/bin/printf "%s" "$releases" | jq -e -r '.[] | select(.tag_name == "'$tagged'").assets[0].url')
     if [ $? -ne 0 ]; then
       printError "Could not find tag $tagged for repo $repo"
     fi
@@ -130,7 +130,7 @@ handlePackageInstall(){
     ' | tr -d "\"" )
     printInfo "- Using version: $selection: $downloadURL"
   else
-    downloadURL=$(echo "$releases" | jq -e -r ".[0].assets[0].url")
+    downloadURL="$(/bin/printf "%s" "$releases" | jq -e -r ".[0].assets[0].url")"
     printVerbose "No explicit version/tag, using latest"
     
     if [ -z "$downloadURL" ]; then
