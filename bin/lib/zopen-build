@@ -162,6 +162,8 @@ setDefaultBuild()
 {
   if [ ! -z "$ZOPEN_BUILD_LINE_OPT" ]; then
     ZOPEN_BUILD_LINE=$(echo "${ZOPEN_BUILD_LINE_OPT}" | tr '[a-z]' '[A-Z]')
+  else
+    ZOPEN_BUILD_LINE=$(echo "${ZOPEN_BUILD_LINE}" | tr '[a-z]' '[A-Z]')
   fi
 
   if [ ! -z "$ZOPEN_BUILD_LINE" ]; then
