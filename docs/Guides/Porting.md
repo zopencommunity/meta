@@ -106,11 +106,11 @@ Note: `zopen build` supports projects based in github repositories or tarball lo
 
 In the `buildenv` file, you'll notice the following contents:
 ```bash
-export ZOPEN_GIT_URL="git@github.com:stedolan/jq.git"
-export ZOPEN_GIT_DEPS="git make autoconf"
-export ZOPEN_TARBALL_URL="https://github.com/stedolan/jq/releases/download/jq-1.6/jq-1.6.tar.gz"
-export ZOPEN_TARBALL_DEPS="make"
-export ZOPEN_TYPE="TARBALL"
+export ZOPEN_DEV_URL="git@github.com:stedolan/jq.git"
+export ZOPEN_DEV_DEPS="git make autoconf"
+export ZOPEN_STABLE_URL="https://github.com/stedolan/jq/releases/download/jq-1.6/jq-1.6.tar.gz"
+export ZOPEN_STABLE_DEPS="make"
+export ZOPEN_BUILD_LINE="STABLE"
 
 zopen_check_results()
 {
@@ -130,7 +130,7 @@ zopen_append_to_zoslib_env()
   echo "envar|set|value"
 }
 ```
-ZOPEN_TARBALL_DEPS/ZOPEN_GIT_DEPS are used to identify the non-standard dependencies needed to build the project. 
+ZOPEN_STABLE_DEPS/ZOPEN_STABLE_DEPS are used to identify the non-standard z/OS Open Tools dependencies needed to build the project. 
 
 `zopen_append_to_env()` can be used to add additional environment variables outside of the normal environment variables. (e.g. PATH, LIBPATH, MANPATH)
 
