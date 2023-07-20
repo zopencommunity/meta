@@ -38,7 +38,6 @@
 * [libpcreport](https://github.com/ZOSOpenTools/libpcreport)
 * [librdkafkaport](https://github.com/ZOSOpenTools/librdkafkaport)
 * [neovimport](https://github.com/ZOSOpenTools/neovimport)
-* [ntbtlsport](https://github.com/ZOSOpenTools/ntbtlsport)
 * [phpport](https://github.com/ZOSOpenTools/phpport)
 * [shufport](https://github.com/ZOSOpenTools/shufport)
 * [terraformport](https://github.com/ZOSOpenTools/terraformport)
@@ -104,7 +103,7 @@
 | [lz4port](https://github.com/ZOSOpenTools/lz4port) | 1 | 100% |rsync
 | [ninjaport](https://github.com/ZOSOpenTools/ninjaport) | 1 | 98% |duckdb
 | [npthport](https://github.com/ZOSOpenTools/npthport) | 1 | 100% |gpg
-| [ntbtlsport](https://github.com/ZOSOpenTools/ntbtlsport) | 1 | No builds |gpg
+| [ntbtlsport](https://github.com/ZOSOpenTools/ntbtlsport) | 1 | 100% |gpg
 | [patchport](https://github.com/ZOSOpenTools/patchport) | 1 | 91% |m4
 | [pinentryport](https://github.com/ZOSOpenTools/pinentryport) | 1 | 100% |gpg
 | [re2cport](https://github.com/ZOSOpenTools/re2cport) | 1 | 80% |php
@@ -178,7 +177,7 @@
 |  [gpgport](https://github.com/ZOSOpenTools/gpgport) | 316 | 6
 |  [opensshport](https://github.com/ZOSOpenTools/opensshport) | 275 | 2
 |  [ninjaport](https://github.com/ZOSOpenTools/ninjaport) | 274 | 1
-|  [zstdport](https://github.com/ZOSOpenTools/zstdport) | 221 | 3
+|  [zstdport](https://github.com/ZOSOpenTools/zstdport) | 237 | 4
 |  [findutilsport](https://github.com/ZOSOpenTools/findutilsport) | 209 | 8
 |  [gettextport](https://github.com/ZOSOpenTools/gettextport) | 206 | 7
 |  [autoconfport](https://github.com/ZOSOpenTools/autoconfport) | 175 | 7
@@ -275,4 +274,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-07-20 11:11:21
+Last updated:  2023-07-20 11:22:06
