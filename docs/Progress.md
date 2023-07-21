@@ -89,7 +89,6 @@
 | [libassuanport](https://github.com/ZOSOpenTools/libassuanport) | 2 | 100% |gpg, pinentry
 | [libgcryptport](https://github.com/ZOSOpenTools/libgcryptport) | 2 | 100% |gpg, ntbtls
 | [libksbaport](https://github.com/ZOSOpenTools/libksbaport) | 2 | 100% |gpg, ntbtls
-| [libpcreport](https://github.com/ZOSOpenTools/libpcreport) | 2 | No builds |git, thesilversearcher
 | [libxml2port](https://github.com/ZOSOpenTools/libxml2port) | 2 | 99% |libxslt, php
 | [pkgconfigport](https://github.com/ZOSOpenTools/pkgconfigport) | 2 | 100% |man-db, thesilversearcher
 | [pythonport](https://github.com/ZOSOpenTools/pythonport) | 2 | 100% |curl, lz4
@@ -99,6 +98,8 @@
 | [comp_clangport](https://github.com/ZOSOpenTools/comp_clangport) | 1 | 100% |duckdb
 | [expatport](https://github.com/ZOSOpenTools/expatport) | 1 | 100% |git
 | [libgdbmport](https://github.com/ZOSOpenTools/libgdbmport) | 1 | 100% |man-db
+| [libpcre2port](https://github.com/ZOSOpenTools/libpcre2port) | 1 | 66% |git
+| [libpcreport](https://github.com/ZOSOpenTools/libpcreport) | 1 | No builds |thesilversearcher
 | [libpipelineport](https://github.com/ZOSOpenTools/libpipelineport) | 1 | 100% |man-db
 | [luaport](https://github.com/ZOSOpenTools/luaport) | 1 | 100% |neovim
 | [lz4port](https://github.com/ZOSOpenTools/lz4port) | 1 | 100% |rsync
@@ -132,7 +133,6 @@
 | [htopport](https://github.com/ZOSOpenTools/htopport) | 0 | No builds |
 | [jqport](https://github.com/ZOSOpenTools/jqport) | 0 | 71% |
 | [libgit2port](https://github.com/ZOSOpenTools/libgit2port) | 0 | No builds |
-| [libpcre2port](https://github.com/ZOSOpenTools/libpcre2port) | 0 | 66% |
 | [librdkafkaport](https://github.com/ZOSOpenTools/librdkafkaport) | 0 | No builds |
 | [libssh2port](https://github.com/ZOSOpenTools/libssh2port) | 0 | 100% |
 | [libxsltport](https://github.com/ZOSOpenTools/libxsltport) | 0 | 100% |
@@ -279,4 +279,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-07-21 15:27:06
+Last updated:  2023-07-21 15:50:07
