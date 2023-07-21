@@ -320,7 +320,7 @@ else
   echo "15" > "$rootfs/etc/zopen/rm_fileprocs"
 
   printInfo "- Check for shipped curl pax"
-  curlpax="curl-8.1.2.20230707_145137.zos.pax.Z"
+  curlpax="packages/curl-8.1.2.20230707_145137.zos.pax.Z"
 
   curllcn=$(findrev "${utildir}" "$curlpax")
   if [ -e "$curllcn/$curlpax" ]; then
@@ -335,15 +335,14 @@ else
   paxrc=$(pax -rf "$cachedir/$curlpax" -s##$rootfs/boot/#)
 
   printInfo "- Check for shipped jq pax"
-  jqpax="jq-1.6.20230705_132543.zos.pax.Z"
+  jqpax="packages/jq-1.6.20230705_132543.zos.pax.Z"
 
   jqlcn=$(findrev "${utildir}" "$jqpax")
-  echo "HERE: $jqlcn/$jqpax"
   if [ -e "$jqlcn/$jqpax" ]; then
     printInfo "- Found $jqpax. Adding to zopen cache to install as bootstrap"
     cp "$jqlcn/$jqpax" "$rootfs/var/cache/zopen"
   else
-    printError "jqpax not found"
+    printError "$jqpax not found"
   fi
   printVerbose "- Expanding jq to bootstrap dir..."
   cachedir="$rootfs/var/cache/zopen"
