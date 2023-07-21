@@ -77,15 +77,9 @@ handlePackageInstall(){
     requestedMinor=$(echo "$versioned" | awk -F'.' '{print $2}')
     requestedPatch=$(echo "$versioned" | awk -F'.' '{print $3}')
     requestedSubrelease=$(echo "$versioned" | awk -F'.' '{print $4}')
-    requestedVersion="${requestedMajor}.${requestedMinor}.${requestedPatch}.${requestedSubrelease}"
-    printVerbose "Finding URL for latest release matching version prefix: requestedVersion:$requestedVersion"
-    # list all released filenames, sort them and grab the last (which should be the newest file starting with the
-    # specified prefix (fuzzy find rather than exact match)
-    #FIXME: Igor - jq needs oniguruma to support regex
-    latestfiledetails=$(/bin/printf "%s" "$releases" | awk -F'/' -v PORT=$name -v REQVER=$versioned '
-      BEGIN{regex = ".*"PORT"-"REQVER".*\.pax\.Z"} {if ( $0 ~ regex ){ print $NF"#@#"$0}}
-    ' | sort -u | tail -n 1 | tr -d '\"')
-    downloadURL=$(echo "$latestfiledetails" | sed -E 's/.*url: (https.*)/\1/')
+    requestedVersion="${requestedMajor}\\\.${requestedMinor}\\\.${requestedPatch}\\\.${requestedSubrelease}"
+    printVerbose "Finding URL for latest release matching version prefix: requestedVersion: $requestedVersion"
+    downloadURL=$(/bin/printf "%s" "$releases" | jq -e -r '. | map(select(.assets[].name | test("'$requestedVersion'")))[0].assets[0].url')
   elif [ ! "x" = "x$tagged" ]; then
     downloadURL=$(/bin/printf "%s" "$releases" | jq -e -r '.[] | select(.tag_name == "'$tagged'").assets[0].url')
     if [ $? -ne 0 ]; then
@@ -95,40 +89,22 @@ handlePackageInstall(){
     # Explicitly allow the user to select a release to install; useful if there are broken installs
     # as a known good release can be found, selected and pinned!
     printVerbose "List individual releases and allow selection"
-    i=0
-    printVerbose "Generating fifo"
-    TMP_FIFO_PIPE="$HOME/altselect.pipe"
-    [ -p "$TMP_FIFO_PIPE" ] && rm -f "$TMP_FIFO_PIPE"
-    mkfifo "$TMP_FIFO_PIPE"
-    printVerbose "Getting list of versions"
-    #FIXME: jq needs oniguruma 
-    latestfiledetails=$(echo "$contents" | awk -F'/' -v PORT=$name -v REQVER=$versioned '
-      BEGIN{regex = "browser_download_url.*"PORT"-"REQVER".*\.pax\.Z"} {if ( $0 ~ regex ){ sub(/\"browser_download_url\":/, ""); print}}
-    ' | sort -u | tr -d " ")
-
+    i=$(/bin/printf "%s" "$releases" | jq -r 'length - 1')
     printInfo "Versions available for install:"
-    echo "$latestfiledetails" | xargs | tr ' ' '\n'>> "$TMP_FIFO_PIPE" &
-      while read repo; do
-        i=$(expr $i + 1)
-        printInfo "  $i: $(echo $repo | sed -E 's/.*-(.*)\.zos\.pax\.Z/\1/')"
-      done < "$TMP_FIFO_PIPE"
-    [ -p "$TMP_FIFO_PIPE" ] && rm -f "$TMP_FIFO_PIPE"
+    /bin/printf "%s" "$releases" | jq -e -r 'to_entries | map("\(.key): \(.value.tag_name) - \(.value.assets[0].name) - size: \(.value.assets[0].expanded_size/ (1024 * 1024))mb")[]'
+
     printVerbose "Getting user selection"
     valid=false
     while ! $valid; do
-      echo "Enter version to install (1-$i): "
-      selection=$(getInput)
+      echo "Enter version to install (0-$i): "
+      read selection < /dev/tty
       if [[ ! -z $(echo "$selection" | sed -e 's/[0-9]*//') ]]; then
-        echo "Invalid input, must be a number between 1 and $i"
-      elif [ "$selection" -ge 1 ] && [ "$selection" -le "$i" ]; then
+        echo "Invalid input, must be a number between 0 and $i"
+      elif [ "$selection" -ge 0 ] && [ "$selection" -le "$i" ]; then
         valid=true
       fi
     done
-    downloadURL=$(echo "$latestfiledetails" | awk -v RS= -v selection="$selection" '
-      BEGIN {count=0}
-            {count = count + 1; if (count=selection) { print $(selection)} }
-    ' | tr -d "\"" )
-    printInfo "- Using version: $selection: $downloadURL"
+    downloadURL="$(/bin/printf "%s" "$releases" | jq -e -r ".[$selection].assets[0].url")"
   else
     downloadURL="$(/bin/printf "%s" "$releases" | jq -e -r ".[0].assets[0].url")"
     printVerbose "No explicit version/tag, using latest"

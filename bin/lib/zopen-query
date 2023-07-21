@@ -43,7 +43,7 @@ printDetailListEntries()
         if [ $? -ne 0 ]; then
           printError "Unable to retrieve remote information"
         fi
-        latestTag=$(jq -e -r '.release_data."'$repo'"[0].tag_name' "$JSON_CACHE")
+        latestTag=$(/bin/printf "%s" "$latest" | jq -e -r '.tag_name')
         if [ -e "${ZOPEN_PKGINSTALL}/${repo}/.releaseinfo" ]; then
           originalTag=$(cat "${ZOPEN_PKGINSTALL}/${repo}/.releaseinfo")
         else
@@ -52,7 +52,7 @@ printDetailListEntries()
         if [ -e "${ZOPEN_PKGINSTALL}/${repo}/.version" ]; then
           dotversion=$(cat "${ZOPEN_PKGINSTALL}/${repo}/.version")
         else
-          dotversion="N/a"
+          dotversion="N/A"
         fi
         if ! $noversions; then
           printf "%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s\n" "$repo" "$originalTag" "$dotversion" "$latestTag"
@@ -64,10 +64,10 @@ printDetailListEntries()
   else
     printVerbose "Checking repoArray: $repoArray"
     scrcols=$(getScreenCols)
-    numcols=5 
+    numcols=6
     colwidth=$(($scrcols / $numcols -1 ))
     if ! $noheader; then
-      printf "${NC}${UNDERLINE}%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s\n${NC}" "Package" "Your version" "Latest Tag" "Download Size" "Expanded Size" "Status" "Quality"
+      printf "${NC}${UNDERLINE}%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s\n${NC}" "Package" "Your version" "Latest Tag" "Download Size" "Expanded Size" "Quality"
     fi
     echo "$repoArray" | xargs | tr ' ' '\n' | sort | while read repo; do
       if [ -z $needle ] || [ "${repo}" = "${needle}" ]; then
@@ -79,26 +79,32 @@ printDetailListEntries()
         latest=$(jq -e -r '.release_data."'$repo'"[0]' "$JSON_CACHE")
         case $? in
           1) printVerbose "No latest release for port";
-               printf "%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s ${NC}${RED}%-${colwidth}s${NC}\n" "$repo" "$originalTag" "Unknown" "Unknown" "Unknown" "Unknown" "Unknown"
+               printf "%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s ${NC}${RED}%-${colwidth}s${NC}\n" "$repo" "$originalTag" "Unknown" "Unknown" "Unknown" "Unknown" 
                ;;
           0) printVerbose "Latest release request successful";  
-               latestTag="$(jq -e -r '.release_data."'$repo'"[0].tag_name' "$JSON_CACHE")"
-               passed="$(jq -e -r '.release_data."'$repo'"[0].assets[0].passed_tests' "$JSON_CACHE")"
-               failed="$(jq -e -r '.release_data."'$repo'"[0].assets[0].failed_tests' "$JSON_CACHE")"
-               expandedsize="$(jq -e -r '.release_data."'$repo'"[0].assets[0].expanded_size' "$JSON_CACHE")"
-               downloadsize="$(jq -e -r '.release_data."'$repo'"[0].assets[0].size' "$JSON_CACHE")"
+               latestTag="$(/bin/printf "%s" "$latest" | jq -e -r '.tag_name')"
+               passed="$(/bin/printf "%s" "$latest" | jq -e -r '.assets[0].passed_tests')"
+               total="$(/bin/printf "%s" "$latest" | jq -e -r '.assets[0].total_tests')"
+               expandedsize="$(/bin/printf "%s" "$latest" | jq -e -r '.assets[0].expanded_size')"
+               downloadsize="$(/bin/printf "%s" "$latest" | jq -e -r '.assets[0].size')"
+              echo $total
+               if [ $total -gt 0 ]; then
+                percentage="$(awk -v passed="$passed" -v total="$total" 'BEGIN { printf "%.2f\n", (passed / total) * 100 }')%"
+               fi
                printf "%-${colwidth}s %-${colwidth}s %-${colwidth}s " "$repo" "$originalTag" "$latestTag" 
-               printf " %-${colwidth}s"  "$passed passed, $failed failed"
+               if [ -z "$percentage" ]; then
+                printf "${NC}${RED}%-${colwidth}s${NC}" "No tests"
+               elif [ $percentage -eq 100 ]; then
+                printf "${NC}${GREEN}%-${colwidth}s${NC}" "$percentage"
+               elif [ $percentage -gt 50 ]; then
+                printf "${NC}${BLUE}%-${colwidth}s${NC}" "$percentage"
+               elif [ $percentage -gt 0 ]; then
+                printf "${NC}${YELLOW}%-${colwidth}s${NC}" "$percentage"
+               else
+                printf "${NC}${RED}%-${colwidth}s${NC}" "$percentage"
+               fi
                printf " %-${colwidth}s"  "$expandedsize"
                printf " %-${colwidth}s"  "$downloadsize"
-               # TODO
-               case $buildQuality in
-                 "Green") printf "${NC}${GREEN}%-${colwidth}s${NC}" "$buildQuality";;
-                 "Red" | "Untested" | "Skipped" ) printf "${NC}${RED}%-${colwidth}s${NC}" "$buildQuality" ;;
-                 "Blue") printf "${NC}${BLUE}%-${colwidth}s${NC}" "$buildQuality" ;;
-                 "Yellow") printf "${NC}${YELLOW}%-${colwidth}s${NC}" "$buildQuality" ;;
-                 *) printf "%-${colwidth}s" "$buildQuality" ;;
-               esac
                printf "\n"
                ;;
           *) printError "Error $httpResponseCode while trying to retrieve latest repo release";;
