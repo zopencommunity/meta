@@ -1,5 +1,5 @@
 {
-  "timestamp": "2023-07-21T00:37:58.334059",
+  "timestamp": "2023-07-21T01:04:07.200219",
   "release_data": {
     "automake": [
       {
@@ -45,7 +45,7 @@
             "size": 999936,
             "expanded_size": 2455289,
             "runtime_dependencies": null,
-            "total_tests": "5",
+            "total_tests": "1",
             "passed_tests": "1"
           }
         ]
@@ -93,8 +93,8 @@
             "size": 999936,
             "expanded_size": 2455369,
             "runtime_dependencies": null,
-            "total_tests": "1",
-            "passed_tests": "1"
+            "total_tests": -1,
+            "passed_tests": -1
           }
         ]
       },
@@ -125,8 +125,8 @@
             "size": 999936,
             "expanded_size": 2455748,
             "runtime_dependencies": null,
-            "total_tests": "1",
-            "passed_tests": "1"
+            "total_tests": -1,
+            "passed_tests": -1
           }
         ]
       },
@@ -157,8 +157,8 @@
             "size": 999936,
             "expanded_size": 2455661,
             "runtime_dependencies": null,
-            "total_tests": "23",
-            "passed_tests": "12"
+            "total_tests": "2737",
+            "passed_tests": "2735"
           }
         ]
       },
@@ -189,8 +189,8 @@
             "size": 999936,
             "expanded_size": 2455392,
             "runtime_dependencies": null,
-            "total_tests": "261",
-            "passed_tests": "238"
+            "total_tests": "1",
+            "passed_tests": "1"
           }
         ]
       },
@@ -221,8 +221,8 @@
             "size": 999936,
             "expanded_size": 2422598,
             "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
+            "total_tests": "1",
+            "passed_tests": "1"
           }
         ]
       },
@@ -237,8 +237,8 @@
             "size": 999936,
             "expanded_size": 2433371,
             "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
+            "total_tests": "1",
+            "passed_tests": "1"
           }
         ]
       },
@@ -285,8 +285,8 @@
             "size": 999936,
             "expanded_size": 2433110,
             "runtime_dependencies": null,
-            "total_tests": "1",
-            "passed_tests": "1"
+            "total_tests": -1,
+            "passed_tests": -1
           }
         ]
       },
@@ -317,8 +317,8 @@
             "size": 999936,
             "expanded_size": 2433242,
             "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
+            "total_tests": "1",
+            "passed_tests": "1"
           }
         ]
       },
@@ -349,8 +349,8 @@
             "size": 999936,
             "expanded_size": 2432819,
             "runtime_dependencies": null,
-            "total_tests": "1",
-            "passed_tests": "1"
+            "total_tests": -1,
+            "passed_tests": -1
           }
         ]
       },
@@ -381,8 +381,8 @@
             "size": 967680,
             "expanded_size": 2422381,
             "runtime_dependencies": null,
-            "total_tests": "344",
-            "passed_tests": "157"
+            "total_tests": "1",
+            "passed_tests": "1"
           }
         ]
       },
@@ -397,8 +397,8 @@
             "size": 967680,
             "expanded_size": 2422857,
             "runtime_dependencies": null,
-            "total_tests": "344",
-            "passed_tests": "157"
+            "total_tests": -1,
+            "passed_tests": -1
           }
         ]
       },
@@ -445,8 +445,8 @@
             "size": 999936,
             "expanded_size": 2400912,
             "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
+            "total_tests": "1",
+            "passed_tests": "1"
           }
         ]
       },
@@ -477,8 +477,8 @@
             "size": 3419136,
             "expanded_size": 8742382,
             "runtime_dependencies": null,
-            "total_tests": "1",
-            "passed_tests": "1"
+            "total_tests": -1,
+            "passed_tests": -1
           }
         ]
       }
@@ -591,8 +591,8 @@
             "size": 1419264,
             "expanded_size": 3583303,
             "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
+            "total_tests": "121",
+            "passed_tests": "110"
           }
         ]
       },
@@ -639,8 +639,8 @@
             "size": 1419264,
             "expanded_size": 3583402,
             "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
+            "total_tests": "3",
+            "passed_tests": "3"
           }
         ]
       },
@@ -655,8 +655,8 @@
             "size": 1419264,
             "expanded_size": 3583515,
             "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
+            "total_tests": "24",
+            "passed_tests": "24"
           }
         ]
       },
@@ -703,8 +703,8 @@
             "size": 1419264,
             "expanded_size": 3583737,
             "runtime_dependencies": null,
-            "total_tests": "5",
-            "passed_tests": "4"
+            "total_tests": "1",
+            "passed_tests": "1"
           }
         ]
       },
@@ -735,8 +735,8 @@
             "size": 1419264,
             "expanded_size": 3583534,
             "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
+            "total_tests": "2",
+            "passed_tests": "2"
           }
         ]
       },
@@ -833,8 +833,8 @@
             "size": 451584,
             "expanded_size": 968528,
             "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
+            "total_tests": "2460",
+            "passed_tests": "2448"
           }
         ]
       },
@@ -849,8 +849,8 @@
             "size": 451584,
             "expanded_size": 968648,
             "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
+            "total_tests": "1",
+            "passed_tests": "1"
           }
         ]
       },
@@ -865,8 +865,8 @@
             "size": 612864,
             "expanded_size": 1590774,
             "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
+            "total_tests": "91",
+            "passed_tests": "88"
           }
         ]
       },
@@ -897,8 +897,8 @@
             "size": 612864,
             "expanded_size": 1591194,
             "runtime_dependencies": null,
-            "total_tests": "91",
-            "passed_tests": "88"
+            "total_tests": "31",
+            "passed_tests": "29"
           }
         ]
       },
@@ -913,8 +913,8 @@
             "size": 612864,
             "expanded_size": 1591166,
             "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
+            "total_tests": "30",
+            "passed_tests": "30"
           }
         ]
       },
@@ -929,8 +929,8 @@
             "size": 612864,
             "expanded_size": 1590650,
             "runtime_dependencies": null,
-            "total_tests": "30",
-            "passed_tests": "30"
+            "total_tests": -1,
+            "passed_tests": -1
           }
         ]
       },
@@ -1025,8 +1025,8 @@
             "size": 612864,
             "expanded_size": 1784198,
             "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
+            "total_tests": "77",
+            "passed_tests": "64"
           }
         ]
       },
@@ -1041,8 +1041,8 @@
             "size": 612864,
             "expanded_size": 1784214,
             "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
+            "total_tests": "77",
+            "passed_tests": "64"
           }
         ]
       }
@@ -13159,7 +13159,7 @@
             "name": "diffutils-3.8.20230409_225605.zos.pax.Z",
             "url": "https://github.com/ZOSOpenTools/diffutilsport/releases/download/Releaseline_diffutilsport_881/diffutils-3.8.20230409_225605.zos.pax.Z",
             "size": 1741824,
-            "expanded_size": 4498716,
+            "expanded_size": 0,
             "runtime_dependencies": null,
             "total_tests": "1",
             "passed_tests": "1"
@@ -16583,24 +16583,6 @@
         ]
       }
     ],
-    "gnulib": [
-      {
-        "name": "gnulib 0.1.5861-2ba7c (Build 668)",
-        "date": "2023-03-03 02:00:55",
-        "tag_name": "gnulibport_668",
-        "assets": [
-          {
-            "name": "gnulib-master.20230302_204906.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/gnulibport/releases/download/gnulibport_668/gnulib-master.20230302_204906.zos.pax.Z",
-            "size": 110412288,
-            "expanded_size": 137995810,
-            "runtime_dependencies": null,
-            "total_tests": "1",
-            "passed_tests": "1"
-          }
-        ]
-      }
-    ],
     "sqlite": [
       {
         "name": "sqlite 3.42.0 (Build 1075)",
@@ -16660,6 +16642,24 @@
             "url": "https://github.com/ZOSOpenTools/sqliteport/releases/download/sqliteport_340/sqlite-autoconf-3400000.20221208_151405.zos.pax.Z",
             "size": 3096576,
             "expanded_size": 5914733,
+            "runtime_dependencies": null,
+            "total_tests": "1",
+            "passed_tests": "1"
+          }
+        ]
+      }
+    ],
+    "gnulib": [
+      {
+        "name": "gnulib 0.1.5861-2ba7c (Build 668)",
+        "date": "2023-03-03 02:00:55",
+        "tag_name": "gnulibport_668",
+        "assets": [
+          {
+            "name": "gnulib-master.20230302_204906.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/gnulibport/releases/download/gnulibport_668/gnulib-master.20230302_204906.zos.pax.Z",
+            "size": 110412288,
+            "expanded_size": 137995810,
             "runtime_dependencies": null,
             "total_tests": "1",
             "passed_tests": "1"
@@ -17900,6 +17900,22 @@
       }
     ],
     "libxslt": [
+      {
+        "name": "libxslt 1.0.0 (Build 1162)",
+        "date": "2023-07-21 04:54:08",
+        "tag_name": "Releaseline_libxsltport_1162",
+        "assets": [
+          {
+            "name": "libxslt-1.1.37.20230721_000527.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/libxsltport/releases/download/Releaseline_libxsltport_1162/libxslt-1.1.37.20230721_000527.zos.pax.Z",
+            "size": 3709440,
+            "expanded_size": 7716550,
+            "runtime_dependencies": null,
+            "total_tests": "1",
+            "passed_tests": "1"
+          }
+        ]
+      },
       {
         "name": "libxslt 1.0.0 (Build 547)",
         "date": "2023-02-15 19:22:31",
