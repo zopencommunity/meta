@@ -228,6 +228,7 @@
 |  [libpcre2port](https://github.com/ZOSOpenTools/libpcre2port) | 15 | 1
 |  [libpipelineport](https://github.com/ZOSOpenTools/libpipelineport) | 15 | 1
 |  [libssh2port](https://github.com/ZOSOpenTools/libssh2port) | 15 | 1
+|  [libxsltport](https://github.com/ZOSOpenTools/libxsltport) | 15 | 1
 |  [xzport](https://github.com/ZOSOpenTools/xzport) | 15 | 1
 |  [bisonport](https://github.com/ZOSOpenTools/bisonport) | 13 | 1
 |  [automakeport](https://github.com/ZOSOpenTools/automakeport) | 12 | 1
@@ -252,7 +253,6 @@
 | &#10003; [libpcreport](https://github.com/ZOSOpenTools/libpcreport) | 0 | 0
 | &#10003; [librdkafkaport](https://github.com/ZOSOpenTools/librdkafkaport) | 0 | 0
 | &#10003; [libxml2port](https://github.com/ZOSOpenTools/libxml2port) | 0 | 0
-| &#10003; [libxsltport](https://github.com/ZOSOpenTools/libxsltport) | 0 | 0
 | &#10003; [m4port](https://github.com/ZOSOpenTools/m4port) | 0 | 0
 | &#10003; [man-dbport](https://github.com/ZOSOpenTools/man-dbport) | 0 | 0
 | &#10003; [metaport](https://github.com/ZOSOpenTools/metaport) | 0 | 0
@@ -276,4 +276,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-07-20 16:40:34
+Last updated:  2023-07-21 00:27:40
