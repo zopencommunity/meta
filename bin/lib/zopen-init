@@ -323,6 +323,7 @@ else
   curlpax="packages/curl-8.1.2.20230707_145137.zos.pax.Z"
 
   curllcn=$(findrev "${utildir}" "$curlpax")
+  echo "$curllcn/$curlpax"
   if [ -e "$curllcn/$curlpax" ]; then
     printInfo "- Found $curlpax. Adding to zopen cache to install as bootstrap"
     cp "$curllcn/$curlpax" "$rootfs/var/cache/zopen"
@@ -331,11 +332,12 @@ else
   fi
   printVerbose "- Expanding curl to bootstrap dir..."
   cachedir="$rootfs/var/cache/zopen"
-  [ -e "$cachedir/$curlpax" ] || printError "Could not locate bootstrap curl pax."
-  paxrc=$(pax -rf "$cachedir/$curlpax" -s##$rootfs/boot/#)
+  basecurlpax=$(basename $curlpax)
+  [ -e "$cachedir/$basecurlpax" ] || printError "Could not locate bootstrap curl pax."
+  paxrc=$(pax -rf "$cachedir/$basecurlpax" -s##$rootfs/boot/#)
 
   printInfo "- Check for shipped jq pax"
-  jqpax="packages/jq-1.6.20230705_132543.zos.pax.Z"
+  jqpax="packages/jq-1.6.20230720_160648.zos.pax.Z"
 
   jqlcn=$(findrev "${utildir}" "$jqpax")
   if [ -e "$jqlcn/$jqpax" ]; then
@@ -346,9 +348,9 @@ else
   fi
   printVerbose "- Expanding jq to bootstrap dir..."
   cachedir="$rootfs/var/cache/zopen"
-  [ -e "$cachedir/$jqpax" ] || printError "Could not locate bootstrap jq pax."
-  paxrc=$(pax -rf "$cachedir/$jqpax" -s##$rootfs/boot/#)
-  echo $rootfs/boot/
+  basejqpax=$(basename $jqpax)
+  [ -e "$cachedir/$basejqpax" ] || printError "Could not locate bootstrap jq pax."
+  paxrc=$(pax -rf "$cachedir/$basejqpax" -s##$rootfs/boot/#)
 
   cacertlcn=$(findrev "${utildir}" "cacert.pem")
   if [ -e "$cacertlcn/cacert.pem" ]; then
@@ -367,7 +369,7 @@ else
   
   # Need to source the .env file from within the actual curl directory and cannot
   # spawn sub-process otherwise no access to environment from this script so run inline
-  curldir="$(ls $rootfs/boot |grep curl)"
+  curldir="$(ls $rootfs/boot | grep curl)"
   [ -e "$rootfs/boot/$curldir" ] || printError "Could not locate curl for bootstrap. Re-run 'zopen init' to retry"
   chmod -R 755 "$rootfs/boot/$curldir"
   curwd=$PWD
@@ -375,7 +377,7 @@ else
   . ./.env
   cd "$curwd"  || printError "Could not change to $curwd. Re-run 'zopen init' to retry"
 
-  jqdir="$(ls $rootfs/boot |grep jq)"
+  jqdir="$(ls $rootfs/boot | grep jq)"
   [ -e "$rootfs/boot/$jqdir" ] || printError "Could not locate jq for bootstrap. Re-run 'zopen init' to retry"
   chmod -R 755 "$rootfs/boot/$jqdir"
   curwd=$PWD
