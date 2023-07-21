@@ -356,7 +356,7 @@ else
     printInfo "- Found $curlpax. Adding to zopen cache to install as bootstrap"
     cp "$curllcn/$curlpax" "$rootfs/var/cache/zopen"
   else
-    printError "curl pax not found"
+    printError "Could not locate curl pax in the zopen cache"
   fi
   printVerbose "- Expanding curl to bootstrap dir..."
   cachedir="$rootfs/var/cache/zopen"
