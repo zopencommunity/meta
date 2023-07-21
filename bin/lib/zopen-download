@@ -438,10 +438,6 @@ fi
 printVerbose "Working directory: ${downloadDir}"
 # Parse passed in repositories and check if valid zopen framework repos
 printInfo "- Querying remote repo for latest package information"
-#progressHandler "network" "- Latest information downloaded" &
-#ph=$!
-#killph="kill -HUP $ph"
-#addCleanupTrapCmd "$killph"
 getReposFromGithub
 grfgRc=$?
 $killph 2>/dev/null  # if the timer is not running, the kill will fail
