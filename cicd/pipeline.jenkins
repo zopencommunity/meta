@@ -2,7 +2,7 @@
 //   PORT_GITHUB_REPO : Github repository (e.g. https://github.com/ZOSOpenTools/makeport.git)
 //   PORT_BRANCH : (default: main)
 //   PORT_DESCRIPTION : Description of the project
-//   RELEASE_LEVEL: Main or Release line to build against (default: Release)
+//   BUILD_LINE: dev or stable line to build against (default: stable)
 //   FORCE_CLANG : Boolean to enforce building with Clang vs xlclang
 //   NO_PROMOTE : Boolean, if true, avoid promotion
 import org.jenkinsci.plugins.workflow.support.steps.build.RunWrapper
@@ -15,7 +15,7 @@ String getLogFromRunWrapper(RunWrapper runWrapper, int logLines) {
 def repo = params.get("PORT_GITHUB_REPO")
 def branch = params.get("PORT_BRANCH")
 def description = params.get("PORT_DESCRIPTION")
-def release_level = params.get("RELEASE_LEVEL")  // Mainline or Releaseline
+def build_line = params.get("BUILD_LINE")  // DEV or STABLE
 
 RunWrapper buildResult;
 RunWrapper promoteResult;
@@ -24,11 +24,11 @@ def testStatus = "Skipped"
 node('linux')
 {
   stage('Build and Test') {
-    // Build Job : https://163.74.88.212:8443/view/Framework/job/Port-Build/
+    // Build Job : https://128.168.139.253:8443/view/Framework/job/Port-Build/
     buildResult = build job: 'Port-Build', propagate: false, parameters: [string(name: 'PORT_GITHUB_REPO', value: "${repo}"),
                    string(name: 'PORT_BRANCH', value: "${branch}"),
                    booleanParam(name: 'FORCE_CLANG', value: params.FORCE_CLANG),
-                   string(name: 'RELEASE_LEVEL', value: "${release_level}"),
+                   string(name: 'BUILD_LINE', value: "${build_line}"),
                    ]
     def result = buildResult.getResult()
     if(result == "FAILURE"){
@@ -48,11 +48,11 @@ node('linux')
   
   stage('Promote') {
       if(!params.NO_PROMOTE) {
-              // Publish Job : https://163.74.88.212:8443/view/Framework/job/Port-Publish/
+              // Publish Job : https://128.168.139.253:8443/view/Framework/job/Port-Publish/
               promoteResult = build job: 'Port-Publish', propagate: false, parameters:
                  [string(name: 'BUILD_SELECTOR', value: "<SpecificBuildSelector plugin=\"copyartifact@1.46.2\">  <buildNumber>${buildResult.number.toString()}</buildNumber></SpecificBuildSelector>"),
                  string(name: 'PORT_GITHUB_REPO', value: "${repo}"), string(name: 'PORT_DESCRIPTION', value: "${description}"),
-                 string(name: 'RELEASE_LEVEL', value: "${release_level}")
+                 string(name: 'BUILD_LINE', value: "${build_line}")
                  ]
               result = promoteResult.getResult()
               if(result == "FAILURE"){
@@ -60,10 +60,16 @@ node('linux')
               }
         }
   }
+  
+  stage('UpdateDocs') {
+      if(!params.NO_PROMOTE) {
+              updateDocsResult = build job: 'Port-Update-Docs', propagate: false, wait: false, parameters: []
+        }
+  }
 
   stage ('Cleanup') {
-     def latestRelease = repo.replaceAll('.git$', "/releases/latest")
-     def extraText;
+    def latestRelease = repo.replaceAll('.git$', "/releases/latest")
+    def extraText;
     if (params.NO_PROMOTE)
         extraText = "\nBuilt with NO_PROMOTE set to true."
     else
@@ -72,7 +78,7 @@ node('linux')
     if (params.FORCE_CLANG)
         extraText += "\nBuilt with FORCE_CLANG set to true."
      def slackResponse = slackSend color: 'good', 
-        message: "Build for ${repo} (${release_level}) *successful* <${currentBuild.absoluteUrl}|Build #${currentBuild.number}>\n*Test Status:* ${testStatus}${extraText}"
+        message: "Build for ${repo} (${build_line}) *successful* <${currentBuild.absoluteUrl}|Build #${currentBuild.number}>\n*Test Status:* ${testStatus}${extraText}"
   }
 }
 
@@ -80,7 +86,7 @@ def handleError(reason, repo, output="none") {
   def extraText = ""
   if (params.FORCE_CLANG)
     extraText += "\nBuilt with FORCE_CLANG set to true."
-  def message = "${repo} (${release_level}):${extraText}\n<${currentBuild.absoluteUrl}|Build #${currentBuild.number}> *Failed*\n*Reason:* ${reason}\nLast 50 lines of output:\n```${output}```"
+  def message = "${repo} (${build_line}):${extraText}\n<${currentBuild.absoluteUrl}|Build #${currentBuild.number}> *Failed*\n*Reason:* ${reason}\nLast 50 lines of output:\n```${output}```"
   def attachments = [
     [
       text: message,
