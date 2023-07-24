@@ -107,7 +107,7 @@
 | [npthport](https://github.com/ZOSOpenTools/npthport) | 1 | 100% |gpg
 | [ntbtlsport](https://github.com/ZOSOpenTools/ntbtlsport) | 1 | 100% |gpg
 | [onigurumaport](https://github.com/ZOSOpenTools/onigurumaport) | 1 | 100% |jq
-| [patchport](https://github.com/ZOSOpenTools/patchport) | 1 | 91% |m4
+| [patchport](https://github.com/ZOSOpenTools/patchport) | 1 | 94% |m4
 | [pinentryport](https://github.com/ZOSOpenTools/pinentryport) | 1 | 100% |gpg
 | [re2cport](https://github.com/ZOSOpenTools/re2cport) | 1 | 80% |php
 | [sqliteport](https://github.com/ZOSOpenTools/sqliteport) | 1 | Skipped |php
@@ -279,4 +279,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-07-21 23:17:04
+Last updated:  2023-07-23 22:19:34
