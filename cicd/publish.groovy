@@ -84,7 +84,7 @@ URL_LINE="https://github.com/ZOSOpenTools/${GITHUB_REPO}/releases/download/${TAG
 DESCRIPTION="${DESCRIPTION}<br /><b>Command to download and install on z/OS (if you have curl)</b> <pre>curl -o ${PAX_BASENAME} -L ${URL_LINE} && pax -rf ${PAX_BASENAME} && cd $DIR_NAME && . ./.env</pre>"
 DESCRIPTION="${DESCRIPTION}<br /><b>Or use:</b> <pre>zopen install ${PORT_NAME}</pre>"
 
-NAME="${PORT_NAME} ${VERSION}(Build ${BUILD_ID})"
+NAME="${PORT_NAME} ${VERSION}(Build ${BUILD_ID}) - ($BUILD_LINE)"
 
 exists=$(github-release info -u ${GITHUB_ORGANIZATION} -r ${GITHUB_REPO}  -j)
 if [ $? -gt 0 ]; then
