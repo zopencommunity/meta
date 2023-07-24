@@ -5,7 +5,7 @@
 # Inputs: 
 #   - PORT_GITHUB_REPO : e.g: https://github.com/ZOSOpenTools/makeport.git
 #   - PORT_BRANCH : (default: main)
-#   - RELEASE_LEVEL: Release level to build off of. # FUTURE TODO
+#   - BUILD_LINE: dev or stable
 #   - FORCE_CLANG : Build using clang
 # Output:
 #   - pax.Z artifact is published as a Jenkins artifact
@@ -35,6 +35,9 @@ mkdir -p "${TMPDIR}"
 extraOptions=""
 if $FORCE_CLANG; then
   extraOptions="--comp clang"
+fi
+if [ ! -z "$BUILD_LINE" ]; then
+  extraOptions="$extraOptions --build $BUILD_LINE"
 fi
 
 git clone -b "${PORT_BRANCH}" "${PORT_GITHUB_REPO}" ${PORT_NAME} && cd ${PORT_NAME}
