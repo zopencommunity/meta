@@ -74,6 +74,9 @@ node('linux')
         extraText = "\nBuilt with NO_PROMOTE set to true."
     else
         extraText = "\nRelease published to: ${latestRelease}\nProgress page updated: https://zosopentools.github.io/meta/#/Progress"
+
+    if (build_line)
+      build_line = "STABLE"
         
     if (params.FORCE_CLANG)
         extraText += "\nBuilt with FORCE_CLANG set to true."
@@ -86,6 +89,8 @@ def handleError(reason, repo, output="none") {
   def extraText = ""
   if (params.FORCE_CLANG)
     extraText += "\nBuilt with FORCE_CLANG set to true."
+  if (build_line)
+    build_line = "STABLE"
   def message = "${repo} (${build_line}):${extraText}\n<${currentBuild.absoluteUrl}|Build #${currentBuild.number}> *Failed*\n*Reason:* ${reason}\nLast 50 lines of output:\n```${output}```"
   def attachments = [
     [

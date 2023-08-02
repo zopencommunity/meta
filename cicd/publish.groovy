@@ -78,6 +78,10 @@ DESCRIPTION="${DESCRIPTION}<br /><b>Test Status:</b> ${BUILD_STATUS}<br />"
 DESCRIPTION="${DESCRIPTION}<b>Runtime Dependencies:</b> ${DEPENDENCIES}<br />"
 DESCRIPTION="${DESCRIPTION}<b>Build Dependencies:</b> ${BUILD_DEPENDENCIES}<br />"
 
+if [ -z "$BUILD_LINE" ]; then
+  BUILD_LINE="STABLE"
+fi
+
 TAG="${BUILD_LINE}_${RELEASE_PREFIX}_${BUILD_ID}"
 
 URL_LINE="https://github.com/ZOSOpenTools/${GITHUB_REPO}/releases/download/${TAG}/$PAX_BASENAME"
