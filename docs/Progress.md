@@ -34,12 +34,14 @@
 * [emacsport](https://github.com/ZOSOpenTools/emacsport)
 * [fzfport](https://github.com/ZOSOpenTools/fzfport)
 * [htopport](https://github.com/ZOSOpenTools/htopport)
+* [janssonport](https://github.com/ZOSOpenTools/janssonport)
 * [libbsdport](https://github.com/ZOSOpenTools/libbsdport)
 * [libgit2port](https://github.com/ZOSOpenTools/libgit2port)
 * [libmdport](https://github.com/ZOSOpenTools/libmdport)
 * [multitailport](https://github.com/ZOSOpenTools/multitailport)
 * [neovimport](https://github.com/ZOSOpenTools/neovimport)
 * [phpport](https://github.com/ZOSOpenTools/phpport)
+* [redisport](https://github.com/ZOSOpenTools/redisport)
 * [shufport](https://github.com/ZOSOpenTools/shufport)
 * [terraformport](https://github.com/ZOSOpenTools/terraformport)
 * [thesilversearcherport](https://github.com/ZOSOpenTools/thesilversearcherport)
@@ -131,6 +133,7 @@
 | [gumport](https://github.com/ZOSOpenTools/gumport) | 0 | Skipped |
 | [helloport](https://github.com/ZOSOpenTools/helloport) | 0 | 100% |
 | [htopport](https://github.com/ZOSOpenTools/htopport) | 0 | No builds |
+| [janssonport](https://github.com/ZOSOpenTools/janssonport) | 0 | No builds |
 | [jqport](https://github.com/ZOSOpenTools/jqport) | 0 | 71% |
 | [libbsdport](https://github.com/ZOSOpenTools/libbsdport) | 0 | No builds |
 | [libgit2port](https://github.com/ZOSOpenTools/libgit2port) | 0 | No builds |
@@ -148,6 +151,7 @@
 | [opensshport](https://github.com/ZOSOpenTools/opensshport) | 0 | 100% |
 | [phpport](https://github.com/ZOSOpenTools/phpport) | 0 | No builds |
 | [powerlinegoport](https://github.com/ZOSOpenTools/powerlinegoport) | 0 | Skipped |
+| [redisport](https://github.com/ZOSOpenTools/redisport) | 0 | No builds |
 | [screenport](https://github.com/ZOSOpenTools/screenport) | 0 | Skipped |
 | [shufport](https://github.com/ZOSOpenTools/shufport) | 0 | No builds |
 | [sshpassport](https://github.com/ZOSOpenTools/sshpassport) | 0 | Skipped |
@@ -255,6 +259,7 @@
 | &#10003; [gzipport](https://github.com/ZOSOpenTools/gzipport) | 0 | 0
 | &#10003; [helloport](https://github.com/ZOSOpenTools/helloport) | 0 | 0
 | &#10003; [help2manport](https://github.com/ZOSOpenTools/help2manport) | 0 | 0
+| &#10003; [janssonport](https://github.com/ZOSOpenTools/janssonport) | 0 | 0
 | &#10003; [libbsdport](https://github.com/ZOSOpenTools/libbsdport) | 0 | 0
 | &#10003; [libgit2port](https://github.com/ZOSOpenTools/libgit2port) | 0 | 0
 | &#10003; [libiconvport](https://github.com/ZOSOpenTools/libiconvport) | 0 | 0
@@ -269,6 +274,7 @@
 | &#10003; [opensslport](https://github.com/ZOSOpenTools/opensslport) | 0 | 0
 | &#10003; [pythonport](https://github.com/ZOSOpenTools/pythonport) | 0 | 0
 | &#10003; [re2cport](https://github.com/ZOSOpenTools/re2cport) | 0 | 0
+| &#10003; [redisport](https://github.com/ZOSOpenTools/redisport) | 0 | 0
 | &#10003; [sedport](https://github.com/ZOSOpenTools/sedport) | 0 | 0
 | &#10003; [shufport](https://github.com/ZOSOpenTools/shufport) | 0 | 0
 | &#10003; [sshpassport](https://github.com/ZOSOpenTools/sshpassport) | 0 | 0
@@ -283,4 +289,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-08-01 15:02:35
+Last updated:  2023-08-02 13:44:39
