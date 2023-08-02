@@ -10,6 +10,7 @@
     - [Troubleshooting](/Guides/CommonSolutions.md)
   - [FAQ](/Guides/FAQ.md)
   - [Common Solutions](/Guides/CommonSolutions.md)
+  - [Success Stories](SuccessStories.md)
   - Articles
     - [Using GPG on z/OS](/Guides/GpgOnZOS.md)  
     - [Using Git on z/OS](/Guides/GitOnZOS.md)
