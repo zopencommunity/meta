@@ -106,6 +106,7 @@ printFunctions()
 echo "User-Provided functions:
   zopen_init                  This function runs after code is downloaded and patched but before the code is built.
   zopen_post_buildenv         This function runs after the 'buildenv' is processed.
+  zopen_pre_patch             This function runs before the 'patch' step of the build is run.
   zopen_pre_check             This function runs before the 'check' step of the build is run.
   zopen_pre_build             This function runs before the 'make' step of the build is run.
   zopen_append_to_env         This function runs as part of generation of the .env file. The output of the function is appended to .env
@@ -722,7 +723,10 @@ gitClone()
   else
     freshBuild=true
     printInfo "Clone and create ${dir}"
-    if ! runAndLog "git clone \"${ZOPEN_URL}\""; then
+    if [ "$ZOPEN_CLONE_SUBMODULES" = "yes" ]; then
+      gitOptions=" --recurse-submodules"
+    fi
+    if ! runAndLog "git clone \"${ZOPEN_URL}\" $gitOptions"; then
       printError "Unable to clone ${gitname} from ${ZOPEN_URL}"
     fi
     if [ "${ZOPEN_GIT_BRANCH}x" != "x" ]; then
@@ -1873,6 +1877,11 @@ fi
 
 if ! getCode; then
   exit 4
+fi
+
+if command -V "zopen_pre_patch" >/dev/null 2>&1; then
+  printVerbose "Running zopen_pre_patch"
+  "zopen_pre_patch" "${PWD}"
 fi
 
 if ! applyPatches; then
