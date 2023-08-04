@@ -111,6 +111,7 @@ echo "User-Provided functions:
   zopen_pre_build             This function runs before the 'make' step of the build is run.
   zopen_append_to_env         This function runs as part of generation of the .env file. The output of the function is appended to .env
   zopen_append_to_setup       This function runs as part of generation of the setup.sh file. The output of the function is appended to setup.sh
+  zopen_append_to_validate_install This function runs as part of generation of the install_test.sh file. The output of the function is appended to install_test.sh script.
   zopen_pre_install           This function runs before the 'install' step of the build is run.
   zopen_post_install          This function runs after the 'install' step of the build is run.
   zopen_check_results         This function runs after the 'check' step of the build is run and must print out expected and actual failures.
@@ -455,6 +456,7 @@ checkEnv()
   ZOPEN_APPEND_TO_ENV_CODE="zopen_append_to_env"
   ZOPEN_APPEND_TO_ZOSLIB_ENV_CODE="zopen_append_to_zoslib_env"
   ZOPEN_APPEND_TO_SETUP_CODE="zopen_append_to_setup"
+  ZOPEN_APPEND_TO_VALIDATE_CODE="zopen_append_to_validate_install"
   ZOPEN_PRE_BUILD_CODE="zopen_pre_build"
   ZOPEN_PRE_INSTALL_CODE="zopen_pre_install"
   ZOPEN_POST_INSTALL_CODE="zopen_post_install"
@@ -1339,6 +1341,16 @@ touch \".installed\"
 rm \".installing\"
 zz
 
+  echo "#!/bin/sh" > "${ZOPEN_INSTALL_DIR}/install_test.sh" 
+  if command -V "${ZOPEN_APPEND_TO_VALIDATE_CODE}" >/dev/null 2>&1; then
+    printVerbose "Appending additional validate code..."
+    append_to_validate="$(${ZOPEN_APPEND_TO_VALIDATE_CODE})"
+    echo "$append_to_validate" >> "${ZOPEN_INSTALL_DIR}/install_test.sh"
+  fi
+  cat <<zz >>"${ZOPEN_INSTALL_DIR}/install_test.sh"
+exit 0;
+zz
+
 if [ ! -z "$ZOPEN_RUNTIME_DEPS" ]; then
 cat <<ZZ >> "${ZOPEN_INSTALL_DIR}/.env"
 if [ -f ".depsenv" ] && [ -z "\$ZOPEN_SOURCING_DEPS" ] ; then
@@ -1425,7 +1437,9 @@ cat <<zz >> "${ZOPEN_INSTALL_DIR}/properties.json"
 }}
 zz
 
-  cp "${ZOPEN_INSTALL_DIR}/properties.json" "${ZOPEN_ROOT}/install/properties.json"
+  # Convert to ASCII so that it can be consumed by jenkins
+  iconv -f IBM-1047 -t ISO8859-1 < "${ZOPEN_INSTALL_DIR}/properties.json" > "${ZOPEN_ROOT}/install/properties.json"
+  chtag -tc 819 "${ZOPEN_ROOT}/install/properties.json"
 }
 
 install()
