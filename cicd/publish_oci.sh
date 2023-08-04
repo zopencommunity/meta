@@ -78,23 +78,22 @@ LABEL vendor=\"ZOSOpenTools\""
   fi
 }
 
-  if [ -z $ZOPEN_IMAGE_REGISTRY ]; then
-    echo "Environment variable ZOPEN_IMAGE_REGISTRY is needed to push an OCI image"
-    exit 4;
-  fi
-  if [ -z $ZOPEN_IMAGE_REGISTRY_ID ]; then
-    echo "Environment variable ZOPEN_IMAGE_REGISTRY_ID is needed to push an OCI image"
-    exit 4;
-  fi
-  if [ -z $ZOPEN_IMAGE_REGISTRY_KEY_FILE ] || [ ! -r $ZOPEN_IMAGE_REGISTRY_KEY_FILE ]; then
-    echo "Environment variable ZOPEN_IMAGE_REGISTRY_KEY_FILE is needed to push an OCI image"
-    exit 4;
-  fi
-  if [ -z "$(command -v ${ZOPEN_PODMAN_BINARY})" ]; then
-    echo "${ZOPEN_PODMAN_BINARY} is not present on your system"
-    exit 4
-  fi
-  set -x
+if [ -z $ZOPEN_IMAGE_REGISTRY ]; then
+  echo "Environment variable ZOPEN_IMAGE_REGISTRY is needed to push an OCI image"
+  exit 4;
+fi
+if [ -z $ZOPEN_IMAGE_REGISTRY_ID ]; then
+  echo "Environment variable ZOPEN_IMAGE_REGISTRY_ID is needed to push an OCI image"
+  exit 4;
+fi
+if [ -z $ZOPEN_IMAGE_REGISTRY_KEY_FILE ] || [ ! -r $ZOPEN_IMAGE_REGISTRY_KEY_FILE ]; then
+  echo "Environment variable ZOPEN_IMAGE_REGISTRY_KEY_FILE is needed to push an OCI image"
+  exit 4;
+fi
+if [ -z "$(command -v ${ZOPEN_PODMAN_BINARY})" ]; then
+  echo "${ZOPEN_PODMAN_BINARY} is not present on your system"
+  exit 4
+fi
 
 # try logging in first to make sure we're ok
 cat $ZOPEN_IMAGE_REGISTRY_KEY_FILE | "${ZOPEN_PODMAN_BINARY}" login $ZOPEN_IMAGE_REGISTRY -u $ZOPEN_IMAGE_REGISTRY_ID --password-stdin
