@@ -1398,6 +1398,36 @@ createReadme()
   cat "${utildir}/../data/README_footer.md" >> "${ZOPEN_INSTALL_DIR}/README.md"
 }
 
+generatePropertiesJSON()
+{
+  printHeader "Creating Properties JSON"
+  package=$ZOPEN_NAME
+  name=$(echo $package | cut -d "-" -f 1)
+  version=$(echo $package | cut -d "-" -f 2)
+
+  # Make the version OCI compat
+  case "$version" in
+      *.*.*.*) ;;
+      *.*.*)  version="$version.0";;
+      *.*)  version="$version.0.0";;
+      *) version="1.0.0.0";;
+  esac
+
+cat <<zz >> "${ZOPEN_INSTALL_DIR}/properties.json"  
+{
+"product": {
+  "pax": "${ZOPEN_NAME}.${LOG_PFX}.zos.pax.Z",
+  "name": "$name",
+  "version": "$version",
+  "release": "$LOG_PFX",
+  "summary": "$name on z/OS",
+  "description": "TODO"
+}}
+zz
+
+  cp "${ZOPEN_INSTALL_DIR}/properties.json" "${ZOPEN_ROOT}/install/properties.json"
+}
+
 install()
 {
   installStartTime=$SECONDS
@@ -1478,6 +1508,8 @@ install()
     cp "${ZOPEN_INSTALL_DIR}/.builddeps" "${ZOPEN_ROOT}/install/"
 
     asciiecho "$LOG_PFX" "${ZOPEN_INSTALL_DIR}/.buildtimestamp"
+
+    generatePropertiesJSON
 
     if $generatePax; then
       printHeader "Generating pax.Z from ${ZOPEN_INSTALL_DIR}"
