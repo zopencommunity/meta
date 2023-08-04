@@ -1424,6 +1424,8 @@ cat <<zz >> "${ZOPEN_INSTALL_DIR}/properties.json"
   "description": "TODO"
 }}
 zz
+
+  cp "${ZOPEN_INSTALL_DIR}/properties.json" "${ZOPEN_ROOT}/install/properties.json"
 }
 
 install()
