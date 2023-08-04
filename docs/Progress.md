@@ -130,7 +130,7 @@
 | [emacsport](https://github.com/ZOSOpenTools/emacsport) | 0 | No builds |
 | [expectport](https://github.com/ZOSOpenTools/expectport) | 0 | Skipped |
 | [fzfport](https://github.com/ZOSOpenTools/fzfport) | 0 | No builds |
-| [gpgport](https://github.com/ZOSOpenTools/gpgport) | 0 | 100% |
+| [gpgport](https://github.com/ZOSOpenTools/gpgport) | 0 | 84% |
 | [gumport](https://github.com/ZOSOpenTools/gumport) | 0 | Skipped |
 | [helloport](https://github.com/ZOSOpenTools/helloport) | 0 | 100% |
 | [htopport](https://github.com/ZOSOpenTools/htopport) | 0 | No builds |
@@ -293,4 +293,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-08-04 10:59:59
+Last updated:  2023-08-04 11:15:37
