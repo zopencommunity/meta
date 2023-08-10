@@ -378,7 +378,7 @@ EOF
       done
     fi
   else
-    printError "Could not locate list of current links to verify, dangling links might be present; run 'zopen clean'"
+    printError "Could not locate list of current links to verify, dangling links might be present; run 'zopen clean -d'"
   fi
 }
 
@@ -566,6 +566,7 @@ printError()
   [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
   printColors "${NC}${RED}${BOLD}***ERROR: ${NC}${RED}${1}${NC}" >&2
   [ -n "$xtrc" ] && set -x
+  mutexFree "zopen" # prevent lock from lingering around after an error
   cleanupFunction
   exit 4
 }
