@@ -19,8 +19,9 @@ printSyntax()
   echo "      ibm  - /usr/lpp;" >&2
   echo "      fhs  - File Hierarchical Standard (/opt)"  >&2
   echo "      usrlcl - /usr/local;">&2
-  echo "  --re-init - re-initialize a previous installation (if present).  Re-initializing over a previous installation will re-use existing package structures and configurations." >&2
-  echo "  --clone - clones the current installation to a different location" >&2
+  echo "  --re-init: re-initialize a previous installation (if present).  Re-initializing over a previous installation will re-use existing package structures and configurations." >&2
+  echo "  --clone: clones the current installation to a different location" >&2
+  echo "  --append-to-profile: appends sourcing of .zopen-config to .profile" >&2
   echo "  -v: run in verbose mode" >&2
   echo "  -?|-h|--help: display help" >&2
 }
@@ -30,6 +31,7 @@ args=$*
 verbose=false
 reinitExisting=false
 clone=false
+appendToProfile=false
 fslayout="usrlclz"
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -42,6 +44,9 @@ while [ $# -gt 0 ]; do
       ;;
     "--clone" )
       clone=true
+      ;;
+    "--append-to-profile" )
+      appendToProfile=true
       ;;
     "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
       printSyntax "${args}"
@@ -441,9 +446,7 @@ else
 
   printInfo "- zopen bootstrapping complete"
 
-  printInfo "- Configure .profile to automatically source zopen environment (y/n)?"
-  profileEnable=$(getInput)
-  if [ -n "$profileEnable" ] && [ "y" = "${profileEnable}" ]; then
+  if $appendToProfile; then
     if ! grep -q ". \$HOME/.zopen-config" "$HOME/.profile"; then
       printVerbose "Line not present (grep returned non-0)"
   cat << EOF >>  "$HOME/.profile"
