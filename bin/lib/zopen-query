@@ -14,7 +14,7 @@ printSyntax()
   echo "  --list: list all available z/OS Open Tools."  >&2
   echo "  --remote-search: check for package in z/OS Open Tools repo" >&2
   echo "  -i : --installed: list install z/OS Open Tools." >&2
-#TODO echo " --upgradeable: list packages where an upgrade is available." >&2
+  echo " --upgradeable: list packages where an upgrade is available." >&2
 #TODO echo "  --provides: list the files that an installed package provides." >&2
   echo "  -wp : --whatprovides: which installed package provided a file." >&2
   echo "  -v: run in verbose mode." >&2
@@ -29,6 +29,7 @@ printDetailListEntries()
 {
   details=$1
   needle=$2
+  onlyUpgradesAvailable=$3
 
   if [ $details -eq 0 ]; then
     scrcols=$(getScreenCols)
@@ -53,6 +54,11 @@ printDetailListEntries()
           dotversion=$(cat "${ZOPEN_PKGINSTALL}/${repo}/.version")
         else
           dotversion="N/A"
+        fi
+        if [ $onlyUpgradesAvailable -gt 0 ]; then
+          if [ "$originalTag" = "Not installed" -o "$originalTag" = "$latestTag" ]; then
+            continue;
+          fi 
         fi
         if ! $noversions; then
           printf "%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s\n" "$repo" "$originalTag" "$dotversion" "$latestTag"
@@ -87,21 +93,25 @@ printDetailListEntries()
                total="$(/bin/printf "%s" "$latest" | jq -e -r '.assets[0].total_tests')"
                expandedsize="$(/bin/printf "%s" "$latest" | jq -e -r '.assets[0].expanded_size')"
                downloadsize="$(/bin/printf "%s" "$latest" | jq -e -r '.assets[0].size')"
-              echo $total
+               if [ $onlyUpgradesAvailable -gt 0 ]; then
+                 if [ "$originalTag" = "Not installed" -o "$originalTag" = "$latestTag" ]; then
+                   continue;
+                 fi 
+               fi
                if [ $total -gt 0 ]; then
-                percentage="$(awk -v passed="$passed" -v total="$total" 'BEGIN { printf "%.2f\n", (passed / total) * 100 }')%"
+                 percentage=$(echo "scale=0; 100 * ($passed) / $total" | bc)
                fi
                printf "%-${colwidth}s %-${colwidth}s %-${colwidth}s " "$repo" "$originalTag" "$latestTag" 
                if [ -z "$percentage" ]; then
                 printf "${NC}${RED}%-${colwidth}s${NC}" "No tests"
                elif [ $percentage -eq 100 ]; then
-                printf "${NC}${GREEN}%-${colwidth}s${NC}" "$percentage"
+                printf "${NC}${GREEN}%-${colwidth}s${NC}" "$percentage%"
                elif [ $percentage -gt 50 ]; then
-                printf "${NC}${BLUE}%-${colwidth}s${NC}" "$percentage"
+                printf "${NC}${BLUE}%-${colwidth}s${NC}" "$percentage%"
                elif [ $percentage -gt 0 ]; then
-                printf "${NC}${YELLOW}%-${colwidth}s${NC}" "$percentage"
+                printf "${NC}${YELLOW}%-${colwidth}s${NC}" "$percentage%"
                else
-                printf "${NC}${RED}%-${colwidth}s${NC}" "$percentage"
+                printf "${NC}${RED}%-${colwidth}s${NC}" "$percentage%"
                fi
                printf " %-${colwidth}s"  "$expandedsize"
                printf " %-${colwidth}s"  "$downloadsize"
@@ -186,6 +196,7 @@ verbose=false
 noheader=false
 noversions=false
 localoption=true
+upgradeable=false
 details=0
 needle=
 if [[ $# -eq 0 ]]; then
@@ -220,6 +231,9 @@ while [[ $# -gt 0 ]]; do
     ;;
     "--no-header")
       noheader=true;
+    ;;
+    "--upgradeable")
+      upgradeable=true;
     ;;
     "--no-versions")
       noversions=true;
@@ -303,7 +317,8 @@ if ! $localoption; then
   done
 fi
 
-[ -z "$remotesearch" ] || printDetailListEntries $details $needle
-[ -z "$list" ] || printDetailListEntries $details
-[ -z "$installed" ] || printInstalledEntries $details
+! $upgradeable || printDetailListEntries $details "" 1
+[ -z "$remotesearch" ] || printDetailListEntries $details $needle 0
+[ -z "$list" ] || printDetailListEntries $details "" 0
+[ -z "$installed" ] || printInstalledEntries $details "" 0
 [ -z "$whatprovides" ] || whatProvides $needle
