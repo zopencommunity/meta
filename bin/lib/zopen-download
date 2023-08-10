@@ -24,6 +24,7 @@ printSyntax()
   echo "  --cache-only: do not install dependencies."  >&2
   echo "  --no-set-active: do not change the pinned version"  >&2
   echo "  --skip-upgrade: do not upgrade."  >&2
+  echo "  --yes|-y: automatically answer yes to prompts."  >&2
   echo "  --select: select a version to install."  >&2
   echo "  -v: run in verbose mode" >&2
   echo "  --download-only: download package to current directory" >&2
@@ -80,9 +81,9 @@ handlePackageInstall(){
     requestedSubrelease=$(echo "$versioned" | awk -F'.' '{print $4}')
     requestedVersion="${requestedMajor}\\\.${requestedMinor}\\\.${requestedPatch}\\\.${requestedSubrelease}"
     printVerbose "Finding URL for latest release matching version prefix: requestedVersion: $requestedVersion"
-    downloadURL=$(/bin/printf "%s" "$releases" | jq -e -r '. | map(select(.assets[].name | test("'$requestedVersion'")))[0].assets[0].url')
+    asset=$(/bin/printf "%s" "$releases" | jq -e -r '. | map(select(.assets[].name | test("'$requestedVersion'")))[0].assets[0]')
   elif [ ! "x" = "x$tagged" ]; then
-    downloadURL=$(/bin/printf "%s" "$releases" | jq -e -r '.[] | select(.tag_name == "'$tagged'").assets[0].url')
+    asset=$(/bin/printf "%s" "$releases" | jq -e -r '.[] | select(.tag_name == "'$tagged'").assets[0]')
     if [ $? -ne 0 ]; then
       printError "Could not find tag $tagged for repo $repo"
     fi
@@ -105,16 +106,18 @@ handlePackageInstall(){
         valid=true
       fi
     done
-    downloadURL="$(/bin/printf "%s" "$releases" | jq -e -r ".[$selection].assets[0].url")"
+    asset="$(/bin/printf "%s" "$releases" | jq -e -r ".[$selection].assets[0]")"
   else
-    downloadURL="$(/bin/printf "%s" "$releases" | jq -e -r ".[0].assets[0].url")"
+    asset="$(/bin/printf "%s" "$releases" | jq -e -r ".[0].assets[0]")"
     printVerbose "No explicit version/tag, using latest"
-    
-    if [ -z "$downloadURL" ]; then
-      printInfo "- No latest release published for $name"
-      exit 4
-    fi
   fi
+
+  if [ "x" = "x$asset" ]; then
+    printError "Unable to determine download asset for ${name}"
+  fi
+
+  downloadURL=$(/bin/printf "%s" "$asset" | jq -e -r '.url')
+  size=$(/bin/printf "%s" "$asset" | jq -e -r '.expanded_size')
 
   if [ "x" = "x$downloadURL" ]; then
     printError "Unable to determine download location for ${name}"
@@ -206,6 +209,23 @@ handlePackageInstall(){
     if [ -d "$baseinstalldir/$installdirname" ]; then 
       printInfo "- Clearing existing directory and contents"
       rm -rf "$baseinstalldir/$installdirname"
+    fi
+
+    megabytes=$(echo "scale=2; $size / (1024 * 1024)" | bc)
+    printInfo "After this operation, $megabytes MB of additional disk space will be used."
+    if ! $yesToPrompts; then
+      while true; do
+        printInfo "Do you want to continue? [y/n]"
+        read continueInstall < /dev/tty
+        if [ "y" = "${continueInstall}" ]; then
+          break;
+        fi
+        if [ "n" = "${continueInstall}" ]; then
+          mutexFree "zopen"
+          printInfo "Exiting..."
+          exit 0
+        fi
+      done
     fi
 
     if ! runLogProgress "pax -rf $pax -p p $paxredirect ${redirectToDevNull}" "Expanding $pax" "Expanded"; then
@@ -329,6 +349,7 @@ nosymlink=false
 skipupgrade=false
 doNotInstallDeps=false
 all=false
+yesToPrompts=false
 chosenRepos=""
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -352,6 +373,9 @@ while [ $# -gt 0 ]; do
       ;;
     "--cache-only")
       cacheOnly=true
+      ;;
+    "--yes" | "-y")
+      yesToPrompts=true
       ;;
     "--download-only")
       downloadOnly=true
