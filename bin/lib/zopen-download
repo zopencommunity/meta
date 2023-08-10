@@ -28,6 +28,7 @@ printSyntax()
   echo "  -v: run in verbose mode" >&2
   echo "  --download-only: download package to current directory" >&2
   echo "  --local-install: download and unpackage to current directory" >&2
+  echo "  --all: download/install all z/OS Open Tools packages" >&2
   echo "  and <package> is a list of one or more projects to install" >&2
 }
 
