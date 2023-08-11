@@ -313,7 +313,7 @@ printInfo "- Root FS available at $rootfs"
 
 if $clone; then
   printInfo "- Cloning from $ZOPEN_ROOTFS to $rootfs"
-  cp -RT "$ZOPEN_ROOTFS" "$rootfs"
+  cp -fRT "$ZOPEN_ROOTFS" "$rootfs"
   printInfo "${NC}${CYAN}- Run '. $configFile' to enable cloned environment for current session${NC}"
   printInfo "${NC}${CYAN}- or manually copy cloned configuration to required location and/or modify .profile"
   syslog "$ZOPEN_LOG_PATH/audit.log" "$LOG_A" "$CAT_PACKAGE,$CAT_FILE" "INIT" "" "zopen environment cloned to $rootfs"
@@ -331,7 +331,7 @@ else
   echo "$curllcn/$curlpax"
   if [ -e "$curllcn/$curlpax" ]; then
     printInfo "- Found $curlpax. Adding to zopen cache to install as bootstrap"
-    cp "$curllcn/$curlpax" "$rootfs/var/cache/zopen"
+    cp -f "$curllcn/$curlpax" "$rootfs/var/cache/zopen"
   else
     printError "Could not locate curl pax in the zopen cache"
   fi
@@ -347,7 +347,7 @@ else
   jqlcn=$(findrev "${utildir}" "$jqpax")
   if [ -e "$jqlcn/$jqpax" ]; then
     printInfo "- Found $jqpax. Adding to zopen cache to install as bootstrap"
-    cp "$jqlcn/$jqpax" "$rootfs/var/cache/zopen"
+    cp -f "$jqlcn/$jqpax" "$rootfs/var/cache/zopen"
   else
     printError "$jqpax not found"
   fi
@@ -360,7 +360,7 @@ else
   cacertlcn=$(findrev "${utildir}" "cacert.pem")
   if [ -e "$cacertlcn/cacert.pem" ]; then
     printInfo "- Found default cacert.pem; copying to zopen file system"
-    cp "$cacertlcn/cacert.pem" "$ZOPEN_ROOTFS/$ZOPEN_CA_DIR"
+    cp -f "$cacertlcn/cacert.pem" "$ZOPEN_ROOTFS/$ZOPEN_CA_DIR"
   else
     printError "Could not locate default cacert.pem at '../cacert.pem'."
   fi
@@ -426,12 +426,12 @@ else
       printInfo "- Re-initialising target is current; no action required"
     else
       printInfo "- Copying existing meta to re-initialised location"
-      cp -RT "$deref/"  "$metadtInstDir"
+      cp -fRT "$deref/"  "$metadtInstDir"
     fi
     
   else
     printVerbose "Copying local meta; work out where to find all files"
-    cp -RT "${utildir}/../../"  "$metadtInstDir" 
+    cp -fRT "${utildir}/../../"  "$metadtInstDir" 
   fi
 
   printInfo "- Running alternative utility to force selection of forked meta"
