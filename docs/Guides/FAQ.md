@@ -16,9 +16,6 @@ If the issue pertains to a given project, open the issue in the project's Github
 ## What is the current porting status?
 Overall status for the z/OS Open Tools initiative is available [here](https://zosopentools.github.io/meta/#/Progress).
 
-## How do I view the status of my build in Jenkins?
-The external Jenkins page can be accessed [here](https://163.74.88.212:8443/).
-
 ## What are the z/OS Open Source Guild Meetings?
 The z/OS Open Source Guild meetings are monthly meetings where we cover highlights in z/OS Open Source. To view past recordings and slides, visit [https://github.com/ZOSOpenTools/meta/discussions/categories/guild](https://github.com/ZOSOpenTools/meta/discussions/categories/guild).
 

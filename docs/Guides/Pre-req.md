@@ -18,35 +18,7 @@ We recommend adding these environment variables to your `.profile` or `.bashrc` 
 
 ## Required Tools
 
-### If you only want to _use_ Open Source Tools
-
-**NOTE:** These tools are unsupported. Use them at your own discretion. While we find them extremely helpful, they have bugs and are unsupported. If you encounter problems, please tell us by opening issues in the GitHub repository for the tool you are having issues with. For general problems, open an issue in the [meta](https://github.com/ZOSOpenTools/meta/issues) repository.
-
-For new ideas, general feedback, or to start a discussion, please see our [discussions](https://github.com/ZOSOpenTools/meta/discussions).
-
-#### Install curl on z/OS
-
-You will need _curl 7.77_ or later on your z/OS system so that you can download the individual Open Source packages from github. 
-If you don't have curl on z/OS, you will need to download it to your desktop then use _sftp_ to upload it to z/OS and then use _pax_ to decompress it:
-- Download ['boot curl'](https://github.com/ZOSOpenTools/curlport/releases/tag/boot)
-- Upload the pax file: `sftp <your host>`
-- decompress the pax file: `pax -rf <pax file>`
-- `cd curl*`
-- add curl to your environment: `. ./.env`
-
-Once you have curl, you can now install other tools from the community.
-
-#### Install other tools
-
-All the tools are at: [ZOSOpenTools](https://github.com/ZOSOpenTools?tab=repositories)
-
-- Click on the repository of the tool you want. For example, the [bashport](https://github.com/ZOSOpenTools/bashport) has bash.
-- Click on the _tag_ link to see the tagged releases. For example, the [bashport tags](https://github.com/ZOSOpenTools/bashport/tags) shows the builds for bash.
-- Click the tag of the release you want (likely the most recent). For example: [bashport build 223](https://github.com/ZOSOpenTools/bashport/releases/tag/bashport_223)
-- Cut and paste the download and install command to your z/OS system to install the tool on z/OS
-  - This command will use curl to download the pax file, unpax the file, cd into the tool directory and source `.env` in that directory to set up your environment
-
-For more details, visit https://github.com/ZOSOpenTools/meta.
+To consume z/OS Open Tools, all you need is a z/OS UNIX system and unrestricted access to github.com.
 
 ### If you want to contribute and improve the z/OS Open Source Tools 
 
@@ -66,16 +38,21 @@ For more details on porting, visit the [porting to z/OS guide](Porting.md).
 
 Once you have your development environment set up, you can install tools directly to z/OS with `zopen install`.
 
-To download and install the latest software packages, enter the command `zopen install`. By default it will list all of the tools hosted on ZOSOpenTools.
+Prior to installing tools, you need to initialize your z/OS Open Tools environment:
+```bash
+zopen init
+```
+
+To download and install the latest software packages, enter the command `zopen install`.
+
+To download and install specific packages, specify them as a comma delimited list as follows:
+```bash
+zopen install make,curl,gzip
+```
 
 To download the available packages, specify the --all option as follows:
 
 ```bash
 zopen install --all
-```
-
-To download and install specific packages, specify them as a comma delimited list as follows:
-```bash
-zopen install make,curl,gzip
 ```
 For more details, see the section on [zopen tools](zopen.md).

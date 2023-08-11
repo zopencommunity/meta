@@ -32,14 +32,7 @@ export _TAG_REDIR_OUT=txt
 >zopen upgrade
 ```
 
-
-## Restrictions
-Currently, the zopen build capability **DOES NOT** work with the fork due to the way package dependencies and post-built installation occurs.  This is on the roadmap...
-
-
 ## Important usage notes
-- As zopen utilises Github for package repositories, it is strongly advised to set up a [Github API token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) . Github throttles the number of anonymous access requests to repositories; with an API token, that number is significantly increased.
-
 - On first run, ```zopen init``` will copy this forked version of meta into the "package" area of zopen (ie. where packages are expanded and accessed from).  It will also be pinned to this release to prevent any possible updates from the "real" meta package. Removing the .pinned file from the meta-dt directory will allow for the main meta port to be installed however this will cause incompatabilities if run.
 
 - Remote respositores utilise the suffix ```port``` - where required, packages should be specified **withOUT** the suffix. eg using ```zopen install which``` rather than ```zopen install whichport```
