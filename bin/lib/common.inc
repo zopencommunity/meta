@@ -625,6 +625,7 @@ printElapsedTime()
 
 processConfig()
 {
+  export ZOPEN_QUICK_LOAD=1
   if [ -z "$ZOPEN_ROOTFS" ]; then
     if [ -f "$HOME/.zopen-config" ]; then
       . "$HOME/.zopen-config"
