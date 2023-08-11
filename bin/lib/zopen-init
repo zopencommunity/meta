@@ -254,6 +254,7 @@ LIBPATH=\$(deleteDuplicateEntries \"\$LIBPATH\" \":\")
 MANPATH=\$ZOPEN_ROOTFS/usr/share/man:\$ZOPEN_ROOTFS/usr/share/man/\%L:\$(sanitizeEnvVar \"\$MANPATH\" \":\" \"^\$ZOPEN_PKGINSTALL/.*\$\")
 MANPATH=\$(deleteDuplicateEntries \"\$MANPATH\" \":\")
 
+if [ -z "\$ZOPEN_QUICK_LOAD" ]; then
 if [ -e "\$ZOPEN_ROOTFS/etc/profiled" ]; then
   dotenvs=\$(find "\$ZOPEN_ROOTFS/etc/profiled" -type f -name 'dotenv' -print)
   dotenvcnt=\$(echo "\$dotenvs" | wc -l | tr -d ' ')
@@ -277,6 +278,7 @@ if [ -e "\$ZOPEN_ROOTFS/etc/profiled" ]; then
   [ ! -p \$TMP_FIFO_PIPE ] || rm -f \$TMP_FIFO_PIPE
   /bin/echo "\047[1A\047[\$30D\047[2K- Processed \$zot configuration: 100% (\${dotenvcnt}/\${dotenvcnt})"
   unset dotenvs dotenvcnt flecnt
+fi
 fi
 MANPATH="\$MANPATH:"
 export MANPATH
