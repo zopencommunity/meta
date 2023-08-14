@@ -20,6 +20,7 @@ printSyntax()
   echo "  --install-or-upgrade: installs the package if not installed, or upgrades the package if installed."  >&2
   echo "  --reinstall: reinstall already installed z/OS Open Tools packages."  >&2
   echo "  --nosymlink: do not integrate into filesystem through symlink redirection. " >&2
+  echo "  --release-line <stable|dev>: the release line to build off of." >&2
   echo "  --no-deps: do not install dependencies."  >&2
   echo "  --cache-only: do not install dependencies."  >&2
   echo "  --no-set-active: do not change the pinned version"  >&2
@@ -73,7 +74,12 @@ handlePackageInstall(){
   fi
 
   downloadURL=""
-  if [ ! "x" = "x$versioned" ]; then
+  if [ ! -z "$releaseLine" ]; then  
+    asset="$(/bin/printf "%s" "$releases" | jq -e -r '. | map(select(.tag_name | startswith("'$releaseLine'")))[0].assets[0]')"
+    if [ $? -ne 0 ]; then
+      printError "Could not find release-line $releaseLine for repo $repo"
+    fi
+  elif [ ! "x" = "x$versioned" ]; then
     printVerbose "Specific version $versioned requested - checking existence and URL"
     requestedMajor=$(echo "$versioned" | awk -F'.' '{print $1}')
     requestedMinor=$(echo "$versioned" | awk -F'.' '{print $2}')
@@ -180,7 +186,7 @@ handlePackageInstall(){
     ph=$!
     killph="kill -HUP $ph"
     addCleanupTrapCmd "$killph"
-    if ! runAndLog "curl -L ${downloadURL} -O ${redirectToDevNull}"; then
+    if ! runAndLog "curl -L '${downloadURL}' -O ${redirectToDevNull}"; then
       printError "Could not download from ${downloadURL}. Correct any errors and potentially retry"
       continue;
     fi
@@ -373,6 +379,10 @@ while [ $# -gt 0 ]; do
       ;;
     "--cache-only")
       cacheOnly=true
+      ;;
+    "--release-line")
+      shift
+      releaseLine=$(echo "$1" | awk '{print toupper($0)}')
       ;;
     "--yes" | "-y")
       yesToPrompts=true
