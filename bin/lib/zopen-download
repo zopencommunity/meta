@@ -481,7 +481,7 @@ else
     printVerbose "Stripping any version (%), tag (#) or port suffixes"
     toolrepo=$(echo "$chosenRepo" | sed -e 's#%.*##' -e 's#=.*##' -e 's#.*port##')
     printVerbose "Adding prefix and 'port' suffix" # quicker than testing for presence!
-    toolfound=$(echo "${repo_results}" | awk -vtoolrepo="$toolrepo" '$0 ~ toolrepo {print}') 
+    toolfound=$(echo "${repo_results}" | awk -vtoolrepo="$toolrepo" '$0 == toolrepo {print}') 
     if [ "$toolfound" = "$toolrepo" ]; then
       printVerbose "Adding '$chosenRepo' to the install queue"
       installArray="$installArray $chosenRepo"
