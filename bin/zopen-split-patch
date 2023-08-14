@@ -1,0 +1,52 @@
+#!/bin/env bash
+
+pd='split-patches'
+
+if [ $# -lt 1 ]; then
+  printf "Syntax: %s [<patch file>]\n" "${0}" >&2
+  exit 4
+fi
+
+if ! mkdir -p "${pd}" ; then
+  printf 'Unable to create patch directory: %s. No patch files created\n' "${pd}" >&2
+  exit 8
+fi
+
+for aggregate in $@ ; do
+  info=$(grep -n '^diff --git' "${aggregate}")
+  lastline=$(wc -l "$1" | awk '{ print $1; }')
+  lines=$(printf "%s" "${info}" | awk -F: ' { print $1; }')
+  lines=$(printf '%s\n%s\n' "${lines}" "${lastline}")
+
+  fileA=$(printf "%s" "${info}" | awk ' { i=index($3,"/"); s=substr($3,i+1); print s; }')
+  fileB=$(printf "%s" "${info}" | awk ' { i=index($3,"/"); s=substr($3,i+1); print s; }')
+  if [ "x${fileA}" != "x${fileB}" ]; then
+    printf 'Error. %s does not match the strict requires for a patch file to be split. File skipped\n' "${aggregate}" >&2
+    continue
+  fi
+  file=(${fileA})
+
+  start=''
+  i=-1
+  printf '%s\n' "${lines}" | while IFS= read -r end; do
+    if [ "x${start}" != "x" ]; then
+      af="${file[i]}.patch"
+      d=$(dirname "${af}")
+      rf=$(basename "${af}")
+      if ! mkdir -p "${pd}/${d}" ; then
+        printf 'Unable to create directory %s. Partial splitting has been performed under %s', "${d}" "${pd}" >&2
+        exit 8
+      fi
+      #printf "%s/%s/%s %d %d\n" "${pd}" "${d}" "${rf}" "${start}" "${end}"
+      taillines=$((end-start))
+      headlines=$((end-1))
+      content=$(head -n "${headlines}" "${aggregate}" | tail -n "${taillines}")
+      if ! printf '%s\n' "${content}" >"${pd}/${d}/${rf}" ; then
+        printf 'Unable to write patch file to %s. Partial splitting has been performed under %s', "${pd}/${d}/${rf}" "${pd}" >&2
+        exit 8
+      fi
+    fi
+    start="${end}"
+    i=$((i+1))
+  done
+done
