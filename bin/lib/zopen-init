@@ -304,6 +304,8 @@ export MANPATH
 export LIBPATH
 export PATH
 
+unset tmp TMP_FIFO_PIPE
+
 # Unset traps
 trap - EXIT INT TERM QUIT HUP
 EOF
