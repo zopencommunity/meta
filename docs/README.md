@@ -1,7 +1,7 @@
 ## Welcome to z/OS Open Tools
 
 The [z/OS Open Tools community](https://github.com/ZOSOpenTools/meta/discussions) is here to provide popular Open Source tools and to encourage z/OS Open Source tools development. 
-We currently host **70+ z/OS Open Source projects** and we're looking for more! 
+We currently host **120+ z/OS Open Source projects** and we're looking for more! 
 
 <section class="layout">
 <div style="float: right; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); width: 50%">
