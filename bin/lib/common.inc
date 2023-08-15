@@ -229,6 +229,7 @@ mergeIntoSystem(){
   versioneddir=$2  # The directory where the unpax occurred
   rootfs="$3"
 
+  currentDir="$PWD"
   targetdir="$rootfs/usr"     # The main rootfs/usr location
 
   printVerbose "Calculating the offset path to store from root"
@@ -298,6 +299,9 @@ mergeIntoSystem(){
 
   printVerbose "Cleaning temp resources"
   rm -rf "$processingDir" 2>/dev/null
+
+  printVerbose "Switching to previous cwd - current work dir was purged"
+  cd "$currentDir"
 
   printInfo "- Integration complete"
   return 0
