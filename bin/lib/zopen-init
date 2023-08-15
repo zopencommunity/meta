@@ -216,7 +216,20 @@ echo "zot=\"z/OS Open Tools\"" >> "$configFile"
 
 # Add the profiled processing first so the zopen paths are added first
 cat << EOF >>  "$configFile"
-TMP_FIFO_PIPE="\$configFile.pipe"
+# Temporary file location
+for tmp in "\$TMPDIR" "\$TMP" /tmp
+do
+  if [ ! -z \$tmp ] && [ -d \$tmp ]; then
+    break
+  fi
+done
+
+if [ ! -d "\$tmp" ]; then
+  echo "Temporary directory not found. Specify \$TMPDIR, \$TMP or have a valid /tmp directory"
+fi
+TMP_FIFO_PIPE="\$tmp/zopen_\$LOGNAME.configFile.pipe"
+
+# Set Traps
 atExit() {
   sig=\$?
   [ -p \$TMP_FIFO_PIPE ] && rm -rf \$TMP_FIFO_PIPE
@@ -227,18 +240,21 @@ atExit() {
 trap "atExit" EXIT INT TERM QUIT HUP
 
 sanitizeEnvVar(){
-  #remove any envvar entries that match the specified regex
+  # remove any envvar entries that match the specified regex
   value=\$1
   delim=\$2
   prefix=\$3
   echo "\$value" | awk -v RS="\$delim" -v DLIM="\$delim" -v PRFX="\$prefix" '{ if (match(\$1, PRFX)==0) {printf("%s%s",\$1,DLIM)}}'
 }
+
 deleteDuplicateEntries() 
 {
   value=\$1
   delim=\$2
   echo "\$value\$delim" | awk -v RS="\$delim" '!(\$0 in a) {a[\$0]; printf("%s%s", col, \$0); col=RS; }' | sed "s/\${delim}$//"
 }
+
+# z/OS Open Tools environment variables
 ZOPEN_PKGINSTALL=\$ZOPEN_ROOTFS/$zopen_pkginstall
 export ZOPEN_PKGINSTALL
 ZOPEN_SEARCH_PATH=\$ZOPEN_ROOTFS/usr/share/zopen/
@@ -247,6 +263,8 @@ ZOPEN_CA=\$ZOPEN_ROOTFS/$ZOPEN_CA_DIR/cacert.pem
 export ZOPEN_CA
 ZOPEN_LOG_PATH=\$ZOPEN_ROOTFS/var/log
 export ZOPEN_LOG_PATH
+
+# Environment variables
 PATH=\$ZOPEN_ROOTFS/usr/bin:\$ZOPEN_ROOTFS/bin:\$ZOPEN_ROOTFS/boot:\$(sanitizeEnvVar \"\$PATH\" \":\" \"^\$ZOPEN_PKGINSTALL/.*\$\")
 PATH=\$(deleteDuplicateEntries \"\$PATH\" \":\")
 LIBPATH=\$ZOPEN_ROOTFS/usr/lib:\$(sanitizeEnvVar "\$LIBPATH" ":" "^\$ZOPEN_PKGINSTALL/.*\$")
@@ -255,30 +273,31 @@ MANPATH=\$ZOPEN_ROOTFS/usr/share/man:\$ZOPEN_ROOTFS/usr/share/man/\%L:\$(sanitiz
 MANPATH=\$(deleteDuplicateEntries \"\$MANPATH\" \":\")
 
 if [ -z "\$ZOPEN_QUICK_LOAD" ]; then
-if [ -e "\$ZOPEN_ROOTFS/etc/profiled" ]; then
-  dotenvs=\$(find "\$ZOPEN_ROOTFS/etc/profiled" -type f -name 'dotenv' -print)
-  dotenvcnt=\$(echo "\$dotenvs" | wc -l | tr -d ' ')
-  flecnt=0
-  [ ! -p \$TMP_FIFO_PIPE ] || rm -f \$TMP_FIFO_PIPE
-  mkfifo \$TMP_FIFO_PIPE
-  echo "\$dotenvs" | xargs | tr ' ' '\n'>>\$TMP_FIFO_PIPE &
-  while read FILE; do
-      flecnt=\$(expr \$flecnt + 1)
-      pct=\$(expr \$flecnt \* 100)
+  if [ -e "\$ZOPEN_ROOTFS/etc/profiled" ]; then
+    dotenvs=\$(find "\$ZOPEN_ROOTFS/etc/profiled" -type f -name 'dotenv' -print)
+    dotenvcnt=\$(echo "\$dotenvs" | wc -l | tr -d ' ')
+    filecnt=0
+    [ ! -p \$TMP_FIFO_PIPE ] || rm -f \$TMP_FIFO_PIPE
+    mkfifo \$TMP_FIFO_PIPE
+    chtag -tc 819 \$TMP_FIFO_PIPE
+    /bin/echo "\$dotenvs" | xargs | tr ' ' '\n'>>\$TMP_FIFO_PIPE &
+    while read FILE; do
+      filecnt=\$(expr \$filecnt + 1)
+      pct=\$(expr \$filecnt \* 100)
       pct=\$(expr \$pct / \$dotenvcnt)
-    /bin/echo "\047[1A\047[$30D\047[2K- Processing \$zot configuration: \${pct}% (\${flecnt}/\${dotenvcnt})"
-    [ -e \$FILE ] && . \$FILE
-    PATH=\$ZOPEN_ROOTFS/usr/bin:\$ZOPEN_ROOTFS/bin:\$ZOPEN_ROOTFS/boot:\$(sanitizeEnvVar \"\$PATH\" \":\" \"^\$ZOPEN_PKGINSTALL/.*\$\")
-    PATH=\$(deleteDuplicateEntries \"\$PATH\" \":\")
-    LIBPATH=\$ZOPEN_ROOTFS/usr/lib:\$(sanitizeEnvVar "\$LIBPATH" ":" "^\$ZOPEN_PKGINSTALL/.*\$")
-    LIBPATH=\$(deleteDuplicateEntries \"\$LIBPATH\" \":\")
-    MANPATH=\$ZOPEN_ROOTFS/usr/share/man:\$ZOPEN_ROOTFS/usr/share/man/\%L:\$(sanitizeEnvVar \"\$MANPATH\" \":\" \"^\$ZOPEN_PKGINSTALL/.*\$\")
-    MANPATH=\$(deleteDuplicateEntries \"\$MANPATH\" \":\")
-  done < \$TMP_FIFO_PIPE
-  [ ! -p \$TMP_FIFO_PIPE ] || rm -f \$TMP_FIFO_PIPE
-  /bin/echo "\047[1A\047[\$30D\047[2K- Processed \$zot configuration: 100% (\${dotenvcnt}/\${dotenvcnt})"
-  unset dotenvs dotenvcnt flecnt
-fi
+      /bin/echo "\047[1A\047[$30D\047[2K- Processing \$zot configuration: \${pct}% (\${filecnt}/\${dotenvcnt})"
+      [ -e \$FILE ] && . \$FILE
+      PATH=\$ZOPEN_ROOTFS/usr/bin:\$ZOPEN_ROOTFS/bin:\$ZOPEN_ROOTFS/boot:\$(sanitizeEnvVar \"\$PATH\" \":\" \"^\$ZOPEN_PKGINSTALL/.*\$\")
+      PATH=\$(deleteDuplicateEntries \"\$PATH\" \":\")
+      LIBPATH=\$ZOPEN_ROOTFS/usr/lib:\$(sanitizeEnvVar "\$LIBPATH" ":" "^\$ZOPEN_PKGINSTALL/.*\$")
+      LIBPATH=\$(deleteDuplicateEntries \"\$LIBPATH\" \":\")
+      MANPATH=\$ZOPEN_ROOTFS/usr/share/man:\$ZOPEN_ROOTFS/usr/share/man/\%L:\$(sanitizeEnvVar \"\$MANPATH\" \":\" \"^\$ZOPEN_PKGINSTALL/.*\$\")
+      MANPATH=\$(deleteDuplicateEntries \"\$MANPATH\" \":\")
+    done < \$TMP_FIFO_PIPE
+    [ ! -p \$TMP_FIFO_PIPE ] || rm -f \$TMP_FIFO_PIPE
+    /bin/echo "\047[1A\047[\$30D\047[2K- Processed \$zot configuration: 100% (\${dotenvcnt}/\${dotenvcnt})"
+    unset dotenvs dotenvcnt filecnt
+  fi
 fi
 MANPATH="\$MANPATH:"
 export MANPATH
