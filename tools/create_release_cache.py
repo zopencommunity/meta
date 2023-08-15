@@ -41,7 +41,7 @@ org = g.get_organization(organization)
 repositories = org.get_repos()
 
 # Process a single asset
-def process_asset(asset):
+def process_asset(asset, body):
     if asset.name.endswith("pax.Z"):
         asset_name = asset.name
         asset_size = asset.size
@@ -64,7 +64,6 @@ def process_asset(asset):
         total_size = int(output)
 
         # Extract metadata information
-        body = release.body
         total_tests = -1
         passed_tests = -1
         runtime_dependencies = None
@@ -106,7 +105,7 @@ def process_release(repo_name, release):
 
     filtered_assets = []
     for asset in assets:
-        filtered_asset = process_asset(asset)
+        filtered_asset = process_asset(asset, release.body)
         if filtered_asset:
             filtered_assets.append(filtered_asset)
 
