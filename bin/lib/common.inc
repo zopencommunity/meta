@@ -11,9 +11,6 @@ addCleanupTrapCmd(){
 cleanupFunction() {
   [ -n "$ZOPEN_CLEANUP" ] && $(eval "$ZOPEN_CLEANUP" 2>/dev/null)
   trap - EXIT INT TERM QUIT HUP
-  if [ -f "$JSON_CACHE" ]; then
-    rm -f $JSON_CACHE
-  fi
   unset ZOPEN_CLEANUP
 }
 trap "cleanupFunction" EXIT INT TERM QUIT HUP
@@ -422,6 +419,8 @@ zopenInitialize()
   defineEnvironment
   defineANSI
   processConfig
+
+  ZOPEN_JSON_CACHE_URL="https://zosopentools.github.io/meta/api/zopen_releases.json"
 }
 
 printVerbose()
@@ -430,7 +429,9 @@ printVerbose()
   if ${verbose}; then
     printColors "${NC}${GREEN}${BOLD}VERBOSE${NC}: '${1}'" >&2
   fi
+  echo $?
   [ ! -z "$xtrc" ] && set -x
+  echo $?
 }
 
 printHeader()
@@ -807,20 +808,39 @@ parseJsonRepos(){
    echo "$jsonResponse" | awk -F'"' ' /full_name/ { print $4 }'
 }
 
-getReposFromGithub(){
+downloadJSONCache() {
   if [ -z "$JSON_CACHE" ]; then
-    JSON_CACHE="/tmp/zopen.$RANDOM.$LOGNAME.json"
-    url="https://zosopentools.github.io/meta/api/zopen_releases.json"
-    curl -L -s -o "$JSON_CACHE" "$url" 
+    JSON_CACHE="$ZOPEN_ROOTFS/var/cache/zopen/zopen_releases.json"
+    JSON_TIMESTAMP="$ZOPEN_ROOTFS/var/cache/zopen/zopen_releases.timestamp"
+    JSON_TIMESTAMP_CURRENT="$ZOPEN_ROOTFS/var/cache/zopen/zopen_releases.timestamp.current"
+    if ! curl -L -s -I "$ZOPEN_JSON_CACHE_URL" -o "$JSON_TIMESTAMP_CURRENT"; then
+      printError "Failed to obtain json cache timestamp from $ZOPEN_JSON_CACHE_URL"
+    fi
+    chtag -tc 819 "$JSON_TIMESTAMP_CURRENT"
+
+    if [ -f "$JSON_CACHE" ] && [ -f "$JSON_TIMESTAMP" ] && [ "$(grep 'Last-Modified' "$JSON_TIMESTAMP_CURRENT")" = "$(grep 'Last-Modified' "$JSON_TIMESTAMP")" ]; then
+      return;
+    fi
+
+    mv "$JSON_TIMESTAMP_CURRENT" "$JSON_TIMESTAMP"
+    if ! curl -L -s -o "$JSON_CACHE" "$ZOPEN_JSON_CACHE_URL" ; then
+      printError "Failed to obtain json cache from $ZOPEN_JSON_CACHE_URL"
+    fi
     chtag -tc 819 "$JSON_CACHE"
   fi
+
   if [ ! -f "$JSON_CACHE" ]; then
-    printError "Could not download cache"
+    printError "Could not download json cache from $ZOPEN_JSON_CACHE_URL"
   fi
+}
+
+getReposFromGithub(){
+  downloadJSONCache
   repo_results="$(cat "$JSON_CACHE" | jq -r '.release_data | keys[]')"
 }
 
 getAllReleasesFromGithub(){
+  downloadJSONCache
   repo="$1"
   releases="$(jq -e -r '.release_data."'$repo'"' "$JSON_CACHE")"
   if [ $? -ne 0 ]; then
