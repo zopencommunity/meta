@@ -429,9 +429,7 @@ printVerbose()
   if ${verbose}; then
     printColors "${NC}${GREEN}${BOLD}VERBOSE${NC}: '${1}'" >&2
   fi
-  echo $?
   [ ! -z "$xtrc" ] && set -x
-  echo $?
 }
 
 printHeader()
