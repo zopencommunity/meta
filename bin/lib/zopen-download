@@ -61,16 +61,24 @@ handlePackageInstall(){
 
   getAllReleasesFromGithub "${repo}"
 
+  if $localInstall; then
+    printVerbose "Local install to current directory"
+    rootInstallDir="$PWD"
+  else
+    printVerbose "Setting install root to: ${ZOPEN_PKGINSTALL}"
+    rootInstallDir="${ZOPEN_PKGINSTALL}"
+  fi
+
   originalFileVersion=""
-  printVerbose "Checking for meta file at: ${ZOPEN_PKGINSTALL}/${name}/.releaseinfo"
-  if [ -e "${ZOPEN_PKGINSTALL}/${name}/.releaseinfo" ]; then
-    originalFileVersion=$(cat "${ZOPEN_PKGINSTALL}/${name}/.releaseinfo")
+  printVerbose "Checking for meta file at: ${rootInstallDir}/${name}/.releaseinfo"
+  if [ -e "${rootInstallDir}/${name}/.releaseinfo" ]; then
+    originalFileVersion=$(cat "${rootInstallDir}/${name}/.releaseinfo")
     printVerbose "Found originalFileVersion=$originalFileVersion (port is already installed)"
-  elif [ -e "${ZOPEN_PKGINSTALL}/${name}/.version" ]; then
-    originalFileVersion=$(cat "${ZOPEN_PKGINSTALL}/${name}/.version")
+  elif [ -e "${rootInstallDir}/${name}/.version" ]; then
+    originalFileVersion=$(cat "${rootInstallDir}/${name}/.version")
     printVerbose "Found originalFileVersion=$originalFileVersion (port is already installed)"
   else
-    printVerbose "Could not detect existing installation at ${ZOPEN_PKGINSTALL}/${name}"
+    printVerbose "Could not detect existing installation at ${rootInstallDir}/${name}"
   fi
 
   downloadURL=""
@@ -113,9 +121,20 @@ handlePackageInstall(){
       fi
     done
     asset="$(/bin/printf "%s" "$releases" | jq -e -r ".[$selection].assets[0]")"
+  elif [ ! -z "$releaseLine" ]; then  
+      asset="$(/bin/printf "%s" "$releases" | jq -e -r '. | map(select(.tag_name | startswith("'$releaseLine'")))[0].assets[0]')"
+      if [ $? -ne 0 ]; then
+        printError "Could not find release-line $releaseLine for repo: $repo"
+      fi
   else
-    asset="$(/bin/printf "%s" "$releases" | jq -e -r ".[0].assets[0]")"
-    printVerbose "No explicit version/tag, using latest"
+    printVerbose "No explicit version/tag/releaseline, checking for latest on system releaseline"
+    sysrelline=$(cat "$ZOPEN_ROOTFS/etc/zopen/releaseline" | awk ' {print toupper($1)}')
+    printVerbose "zopen system configured to use releaseline '$sysrelline'; checking for release..."
+    asset="$(/bin/printf "%s" "$releases" | jq -e -r '. | map(select(.tag_name | startswith("'$sysrelline'")))[0].assets[0]')"
+    if [ $? -ne 0 ]; then
+      printVerbose "Could not locate a specific release-line tagged version; installing latest"
+      asset="$(/bin/printf "%s" "$releases" | jq -e -r ".[0].assets[0]")"
+    fi
   fi
 
   if [ "x" = "x$asset" ]; then
@@ -132,57 +151,70 @@ handlePackageInstall(){
   downloadFileVer=$(echo "$downloadFile" |sed -E 's/.*-(.*)\.zos\.pax\.Z/\1/')
   printVerbose "Downloading port from URL: $downloadURL to file: $downloadFile (ver=$downloadFileVer)"
 
-  printVerbose "Install=${downloadFileVer};Original=${originalFileVersion};${upgradeInstalled};${installOrUpgrade};${reinstall}"
-  if [ "${downloadFileVer}" = "${originalFileVersion}" ]; then
-    if ! $reinstall; then
-      printInfo "${NC}${GREEN}Package ${name} is already installed at the requested version: ${downloadFileVer}${NC}"
-      return;
-    fi
-    printInfo "- Reinstalling version '$downloadFileVer' of ${name}..."
-  fi
-
-  printVerbose "Checking if package is not installed but scheduled for upgrade"
-  if [ "x" = "x$originalFileVersion" ]; then
-    printVerbose "No previous version found"
-    if $installOrUpgrade; then
-      printVerbose "Package ${name} was not installed so not upgrading but installing"
-    elif $upgradeInstalled; then
-      printError "Package ${name} can not be upgraded as it is not installed!"
-      continue;
-    fi
-    unInstallOldVersion=false
-    printInfo "- Installing ${name}..."
-  elif $skipupgrade; then
-    printInfo "Package ${name} has a newer release '${downloadFileVer}' but explicitly skipping"
-    continue;
-  elif ! $setactive; then
-    printVerbose "Current version '${originalFileVersion}' will remain active"
-    unInstallOldVersion=false
+  if $downloadOnly; then
+    printVerbose "Skipping installation, downloading only"
   else
-    printVerbose "Previous version '${originalFileVersion}' installed"
-    if [ -e "${ZOPEN_PKGINSTALL}/${name}/.pinned" ]; then
-      printWarning "- Version '${originalFileVersion}' has been pinned; upgrade to '${downloadFileVer}' skipped"
-      syslog "$ZOPEN_LOG_PATH/audit.log" "$LOG_A" "$CAT_PACKAGE,$CAT_INSTALL" "DOWNLOAD" "handlePackageInstall" "Attempt to change pinned package '${name}' skipped"
+    printVerbose "Install=${downloadFileVer};Original=${originalFileVersion};${upgradeInstalled};${installOrUpgrade};${reinstall}"
+    if [ "${downloadFileVer}" = "${originalFileVersion}" ]; then
+      if ! $reinstall; then
+        printInfo "${NC}${GREEN}Package ${name} is already installed at the requested version: ${downloadFileVer}${NC}"
+        return;
+      fi
+      printInfo "- Reinstalling version '$downloadFileVer' of ${name}..."
+    fi
+
+    printVerbose "Checking if package is not installed but scheduled for upgrade"
+    if [ "x" = "x$originalFileVersion" ]; then
+      printVerbose "No previous version found"
+      if $installOrUpgrade; then
+        printVerbose "Package ${name} was not installed so not upgrading but installing"
+      elif $upgradeInstalled; then
+        printError "Package ${name} can not be upgraded as it is not installed!"
+        continue;
+      fi
+      unInstallOldVersion=false
+      printInfo "- Installing ${name}..."
+    elif $skipupgrade; then
+      printInfo "Package ${name} has a newer release '${downloadFileVer}' but explicitly skipping"
       continue;
+    elif ! $setactive; then
+      printVerbose "Current version '${originalFileVersion}' will remain active"
+      unInstallOldVersion=false
     else
-      printInfo "- Replacing ${name} version '${originalFileVersion}' with '${downloadFileVer}'"
-      unInstallOldVersion=true
-      currentversiondir=$(cd "$ZOPEN_PKGINSTALL/$name" && pwd -P)
-      currentlinkfile="$currentversiondir/.links"
+      printVerbose "Previous version '${originalFileVersion}' installed"
+      if [ -e "${rootInstallDir}/${name}/.pinned" ]; then
+        printWarning "- Version '${originalFileVersion}' has been pinned; upgrade to '${downloadFileVer}' skipped"
+        syslog "$ZOPEN_LOG_PATH/audit.log" "$LOG_A" "$CAT_PACKAGE,$CAT_INSTALL" "DOWNLOAD" "handlePackageInstall" "Attempt to change pinned package '${name}' skipped"
+        continue;
+      else
+        printInfo "- Replacing ${name} version '${originalFileVersion}' with '${downloadFileVer}'"
+        unInstallOldVersion=true
+        currentversiondir=$(cd "$rootInstallDir/$name" && pwd -P)
+        currentlinkfile="$currentversiondir/.links"
+      fi
     fi
   fi
 
-  printVerbose "Checking cache for already downloaded package [file name comparison]"
+  printVerbose "Ensuring we are in the correct working download location '${downloadDir}'"
+  cd "${downloadDir}"
+  if [ ! $downloadOnly ] || [ ! $localInstall ]; then
+    printVerbose "Checking current directory for already downloaded package [file name comparison]"
+    location="current directory"
+  else
+    printVerbose "Checking cache for already downloaded package [file name comparison]"
+    location="zopen package cache"
+  fi
+
   pax=$downloadFile
   if [ -f "$pax" ]; then
-    printInfo "- Found existing file '${pax}' in download cache."
+    printInfo "- Found existing file '${pax}'in ${location}"
   else
-    printInfo "- Downloading $pax to cache..."
+    printInfo "- Downloading $pax file from remote to ${location}..."
     if ! $verbose; then
       redirectToDevNull="2>/dev/null"
     fi
 
-    progressHandler "network" "- Downloaded $pax to cache" &
+    progressHandler "network" "- Downloaded $pax file from remote to ${location}." &
     ph=$!
     killph="kill -HUP $ph"
     addCleanupTrapCmd "$killph"
@@ -191,30 +223,31 @@ handlePackageInstall(){
       continue;
     fi
     $killph 2>/dev/null  # if the timer is not running, the kill will fail
-    syslog "$ZOPEN_LOG_PATH/audit.log" "$LOG_A" "$CAT_NETWORK,$CAT_PACKAGE,$CAT_FILE" "DOWNLOAD" "handlePackageInstall" "Downloaded remote file '$pax' to cache"
+    syslog "$ZOPEN_LOG_PATH/audit.log" "$LOG_A" "$CAT_NETWORK,$CAT_PACKAGE,$CAT_FILE" "DOWNLOAD" "handlePackageInstall" "Downloaded remote file '$pax'"
   fi
   if [ ! -f "${pax}" ]; then
-    printError "${pax} was not found after downloaded!?!"
+    printError "${pax} was not found after download!?!"
   fi
 
-  if ! $downloadOnly & ! $cacheOnly; then
+  if $downloadOnly; then
+    printVerbose "Pax was downloaded to local dir '$downloadDir'"
+  elif $cacheOnly; then
+    printVerbose "Pax was downloaded to zopen cache '$downloadDir'"
+  else
+    printVerbose "Installing $pax"
     installdirname="${pax%.pax.Z}" # Use full pax name as default
 
     printInfo "- Processing $pax..."
     baseinstalldir="."
     paxredirect=""
     if ! $localInstall; then
-      baseinstalldir=$ZOPEN_PKGINSTALL
-      paxredirect="-s %[^/]*/%$ZOPEN_PKGINSTALL/$installdirname/%"
+      baseinstalldir="$rootInstallDir"
+      paxredirect="-s %[^/]*/%$rootInstallDir/$installdirname/%"
       printVerbose "Non-local install, extracting with '$paxredirect'"
     else
-      printInfo "- Local install specified, expanding pax to ."
-    fi
-  
-    printVerbose "Check for existing directory for version '$installdirname'"
-    if [ -d "$baseinstalldir/$installdirname" ]; then 
-      printInfo "- Clearing existing directory and contents"
-      rm -rf "$baseinstalldir/$installdirname"
+      printInfo "- Local install specified"
+      paxredirect="-s %[^/]*/%$installdirname/%"
+      printVerbose "Non-local install, extracting with '$paxredirect'"
     fi
 
     megabytes=$(echo "scale=2; $size / (1024 * 1024)" | bc)
@@ -232,6 +265,12 @@ handlePackageInstall(){
           exit 0
         fi
       done
+    fi
+
+    printVerbose "Check for existing directory for version '$installdirname'"
+    if [ -d "$baseinstalldir/$installdirname" ]; then 
+      printInfo "- Clearing existing directory and contents"
+      rm -rf "$baseinstalldir/$installdirname"
     fi
 
     if ! runLogProgress "pax -rf $pax -p p $paxredirect ${redirectToDevNull}" "Expanding $pax" "Expanded"; then
@@ -360,47 +399,51 @@ chosenRepos=""
 while [ $# -gt 0 ]; do
   case "$1" in
     "-u" | "--update" | "-update" | "-upgrade" | "--upgrade")
-      upgradeInstalled=true
+      upgradeInstalled=true  # Upgrade packages
       ;;
     "-r" | "-reinstall" | "--reinstall")
-      reinstall=true
+      reinstall=true  # If package already installed, reinstall
       ;;
     "--install-or-upgrade")
-      installOrUpgrade=true
+      installOrUpgrade=true  # Upgrade package or install if not present
       ;;
     "--local-install")
-      localInstall=true
+      localInstall=true # Install the package into current directory
       ;;
     "--no-symlink")
-      nosymlink=true
+      nosymlink=true  # Do not mesh the package into the file system; leave as stand-alone
       ;;
     "--no-deps")
       doNotInstallDeps=true
       ;;
     "--cache-only")
-      cacheOnly=true
+      cacheOnly=true  # Download remote pax file to cache only (no install)
+      ;;
+    "--release-line")
+      shift
+      releaseLine=$(echo "$1" | awk '{print toupper($0)}')
       ;;
     "--release-line")
       shift
       releaseLine=$(echo "$1" | awk '{print toupper($0)}')
       ;;
     "--yes" | "-y")
-      yesToPrompts=true
+      yesToPrompts=true  # Automatically answer 'yes' to any questions
       ;;
     "--download-only")
-      downloadOnly=true
+      downloadOnly=true  # Download remote pax file to current directory only
       ;;
     "--no-set-active")
-      setactive=false
+      setactive=false  # Install package as normal but keep existing installation as active
       ;;
     "--skip-upgrade")
-      skipupgrade=true
+      skipupgrade=true  # Do not upgrade any packages
       ;;
     "--all")
-      all=true
+      all=true  # Install all packages
       ;;
     "--select")
-      selectVersion=true
+      selectVersion=true  # Display a selction table to allow version picking
       ;;
     "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
       printSyntax "${args}"
@@ -450,13 +493,18 @@ export SSL_CERT_FILE="${ZOPEN_CA}"
 export GIT_SSL_CAINFO="${ZOPEN_CA}"
 export CURL_CA_BUNDLE="${ZOPEN_CA}"
 
-if $downloadOnly | $localInstall; then
-  downloadDir=$PWD
+if $downloadOnly; then
+  downloadDir="$PWD"
+  printVerbose "Downloading pax to current directory '$downloadDir'"
+elif $localInstall; then
+  downloadDir="$PWD"
+  printVerbose "Installing to current directory '$downloadDir'"
 else
+  printVerbose "Installing to zopen file system: $ZOPEN_ROOTFS"
   if [ -z "$ZOPEN_ROOTFS" ]; then
     printError "Unable to locate zopen file system, \$ZOPEN_ROOTFS is undefined"
   fi
-  downloadDir=$ZOPEN_ROOTFS/var/cache/zopen
+  downloadDir="$ZOPEN_ROOTFS/var/cache/zopen"
 fi
 
 if [ ! -d "${downloadDir}" ]; then
