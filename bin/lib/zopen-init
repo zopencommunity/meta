@@ -285,7 +285,11 @@ if [ -z "\$ZOPEN_QUICK_LOAD" ]; then
       filecnt=\$(expr \$filecnt + 1)
       pct=\$(expr \$filecnt \* 100)
       pct=\$(expr \$pct / \$dotenvcnt)
-      /bin/echo "\047[1A\047[$30D\047[2K- Processing \$zot configuration: \${pct}% (\${filecnt}/\${dotenvcnt})"
+      if [ ! "\${_BPX_TERMPATH-x}" = "OMVS" ];  then
+        /bin/echo "\047[1A\047[\$30D\047[2K- Processing \$zot configuration: \${pct}% (\${filecnt}/\${dotenvcnt})"
+      else
+        /bin/echo "Processing \$zot configuration...: \${pct}% (\${filecnt}/\${dotenvcnt})"
+      fi
       [ -e \$FILE ] && . \$FILE
       PATH=\$ZOPEN_ROOTFS/usr/bin:\$ZOPEN_ROOTFS/bin:\$ZOPEN_ROOTFS/boot:\$(sanitizeEnvVar \"\$PATH\" \":\" \"^\$ZOPEN_PKGINSTALL/.*\$\")
       PATH=\$(deleteDuplicateEntries \"\$PATH\" \":\")
@@ -295,7 +299,11 @@ if [ -z "\$ZOPEN_QUICK_LOAD" ]; then
       MANPATH=\$(deleteDuplicateEntries \"\$MANPATH\" \":\")
     done < \$TMP_FIFO_PIPE
     [ ! -p \$TMP_FIFO_PIPE ] || rm -f \$TMP_FIFO_PIPE
-    /bin/echo "\047[1A\047[\$30D\047[2K- Processed \$zot configuration: 100% (\${dotenvcnt}/\${dotenvcnt})"
+    if [ ! "\${_BPX_TERMPATH-x}" = "OMVS" ];  then
+      /bin/echo "\047[1A\047[\$30D\047[2K- Processed \$zot configuration: 100% (\${dotenvcnt}/\${dotenvcnt})"
+    else
+      /bin/echo "Processing \$zot configuration...: 100% (\${filecnt}/\${dotenvcnt})"
+    fi
     unset dotenvs dotenvcnt filecnt
   fi
 fi
