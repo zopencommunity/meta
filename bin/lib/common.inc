@@ -580,6 +580,7 @@ printWarning()
   [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
   printColors "${NC}${YELLOW}${BOLD}***WARNING: ${NC}${YELLOW}${1}${NC}" >&2
   [ -n "$xtrc" ] && set -x
+  return 0;
 }
 
 printInfo()
@@ -587,6 +588,7 @@ printInfo()
   [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
   printColors "$1" >&2
   [ -n "$xtrc" ] && set -x
+  return 0;
 }
 
 # Used to input sensitive data - turns off echo to the screen for the input
