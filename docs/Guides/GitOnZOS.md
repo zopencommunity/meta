@@ -4,7 +4,7 @@
 
 **Announcement:** Please be aware that Git has disclosed two security vulnerabilities affecting v2.39.0 and older releases: https://github.blog/2023-01-17-git-security-vulnerabilities-announced-2/
 
-We have therefore updated the z/OS Open Tools package of Git on z/OS to v2.39.1. 
+Make sure you update to [z/OS Open Tools package of Git on z/OS release](https://github.com/ZOSOpenTools/gitport/releases) at least at the v2.39.1 level (which was available 24/02/2023).
  
 Instructions on how to download and install the update are available at: https://github.com/ZOSOpenTools/gitport/releases/tag/gitport_407.
 
