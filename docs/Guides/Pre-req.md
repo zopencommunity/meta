@@ -27,7 +27,7 @@ You will need the IBM C/C++ compiler on your system. There are two options:
 [here](https://www.ibm.com/servers/resourcelink/svc00100.nsf/pages/xlCC++V241ForZOsV24).
 - Alternatively, you can install and manage _C/C++ for Open Enterprise Languages on z/OS_ using _RedHat OpenShift Container Platform_ and _IBM Z and Cloud Modernization Stack_ 
 
-In addition, to use the zopen framework set of tools like `zopen-build` and `zopen-download`, you will need git, tar, gzip, make installed. All of these tools are available from [ZOSOpenTools](https://github.com/ZOSOpenTools?tab=repositories), but instead of downloading them one at a time, there is an easier way. 
+In addition, to use the zopen framework set of tools like `zopen-build` and `zopen-install`, you will need git, tar, gzip, make installed. All of these tools are available from [ZOSOpenTools](https://github.com/ZOSOpenTools?tab=repositories), but instead of downloading them one at a time, there is an easier way. 
 Download [zopen-setup](https://github.com/ZOSOpenTools/meta/releases/tag/v1.0.0) to z/OS and then run it, [following the instructions](https://github.com/ZOSOpenTools/meta/releases/tag/v1.0.0)
 
 `zopen-setup` will create your own development environment with a `boot`, `prod`, and `dev` set of directories. The `boot` directory has everything you need to get started with porting.
