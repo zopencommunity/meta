@@ -64,7 +64,7 @@ while [[ $# -gt 0 ]]; do
       ;;
     "download")
       shift
-      exec "${bindir}/lib/zopen-download" $@
+      exec "${bindir}/lib/zopen-install" $@
       ;;
     "generate")
       shift
@@ -84,11 +84,7 @@ while [[ $# -gt 0 ]]; do
       ;;
     "install" | "-i")
       shift
-      if $legacy; then
-        exec "${bindir}/lib/zopen-install" $@
-      else
-        exec "${bindir}/lib/zopen-download" $@
-      fi
+      exec "${bindir}/lib/zopen-install" $@
       ;;
     "list" | "-l")
       shift
@@ -112,7 +108,7 @@ while [[ $# -gt 0 ]]; do
       ;;
     "upgrade" | "up")
       shift
-      exec "${bindir}/lib/zopen-download" -u $@
+      exec "${bindir}/lib/zopen-install" -u $@
       ;;
     *)
       printSoftError "Unknown option ${1} specified"

@@ -582,7 +582,7 @@ setDepsEnv()
       fi
       # Use the first path specified in the dependency search list
       path=$(echo ${depsPath} | tr '|' '\n' | head -1)
-      if ! runAndLog "PATH=\"$curlpath:$PATH\" $utildir/zopen-download --install-or-upgrade -r $dep -v -y"; then
+      if ! runAndLog "PATH=\"$curlpath:$PATH\" $utildir/zopen-install --install-or-upgrade -r $dep -v -y"; then
         printError "zopen install command failed"
       fi
       depdir="$path/${dep}"
@@ -1369,7 +1369,7 @@ ZZ
   echo "$ZOPEN_RUNTIME_DEPS" | xargs | tr ' ' '\n' | sort | while read dep; do
     # Use the first path specified in the dependency search list to install to
     path=$(echo ${depsPath} | tr '|' '\n' | head -1)
-    if ! runAndLog "PATH=\"$curlpath:$PATH\" $utildir/zopen-download $dep -v --no-deps -y"; then
+    if ! runAndLog "PATH=\"$curlpath:$PATH\" $utildir/zopen-install $dep -v --no-deps -y"; then
       printError "Failed to install dependencies"
     fi
     cat <<ZZ >> "${ZOPEN_INSTALL_DIR}/.depsenv"

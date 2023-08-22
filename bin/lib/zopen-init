@@ -430,7 +430,7 @@ else
   printInfo "- Sourcing environment"
   . "$configFile"
   printInfo "- Using bootstrapped curl and jq to install latest release of itself (if available)"
-  curlInstall=$(runAndLog "${utildir}/zopen-download curl jq")
+  curlInstall=$(runAndLog "${utildir}/zopen-install curl jq")
   curlInstall=$?
   [ $curlInstall -ne 0 ] && printError "Unable to install curl and jq; see previous errors and retry the initilisation using the '--re-init' parameter"
   . "$configFile"
@@ -473,7 +473,7 @@ else
 
   #TODO: Reinstate following code should this fork merge
   #printInfo "- Installing latest version of meta package into zopen system"
-  #runAndLog "${utildir}/zopen-download meta"
+  #runAndLog "${utildir}/zopen-install meta"
 
   printInfo "- zopen bootstrapping complete"
 
