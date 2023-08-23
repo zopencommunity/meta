@@ -70,7 +70,8 @@ handlePackageInstall(){
   fi
 
   originalFileVersion=""
-  printVerbose "Checking for meta file at: ${rootInstallDir}/${name}/.releaseinfo"
+  printVerbose "Checking for meta files in '${rootInstallDir}/${name}'"
+  printVerbose "Finding version/release information"
   if [ -e "${rootInstallDir}/${name}/.releaseinfo" ]; then
     originalFileVersion=$(cat "${rootInstallDir}/${name}/.releaseinfo")
     printVerbose "Found originalFileVersion=$originalFileVersion (port is already installed)"
@@ -81,13 +82,20 @@ handlePackageInstall(){
     printVerbose "Could not detect existing installation at ${rootInstallDir}/${name}"
   fi
 
+  printVerbose "Finding releaseline information"
+  installedReleaseLine=""
+  if [ -e "${rootInstallDir}/${name}/.releaseline" ]; then
+    installedReleaseLine=$(cat "${rootInstallDir}/${name}/.releaseline")
+    printVerbose "Installed product from releaseline: $installedReleaseLine"
+  else
+    printVerbose "No current releaseline for package"
+  fi
+  
+  releasemetadata=""
   downloadURL=""
-  if [ ! -z "$releaseLine" ]; then  
-    asset="$(/bin/printf "%s" "$releases" | jq -e -r '. | map(select(.tag_name | startswith("'$releaseLine'")))[0].assets[0]')"
-    if [ $? -ne 0 ]; then
-      printError "Could not find release-line $releaseLine for repo $repo"
-    fi
-  elif [ ! "x" = "x$versioned" ]; then
+  # Options where the user explicitly sets a version/tag/releaseline currently ignore any configured release-line,
+  # either for a previous package install or system default
+  if [ ! "x" = "x$versioned" ]; then
     printVerbose "Specific version $versioned requested - checking existence and URL"
     requestedMajor=$(echo "$versioned" | awk -F'.' '{print $1}')
     requestedMinor=$(echo "$versioned" | awk -F'.' '{print $2}')
@@ -95,11 +103,14 @@ handlePackageInstall(){
     requestedSubrelease=$(echo "$versioned" | awk -F'.' '{print $4}')
     requestedVersion="${requestedMajor}\\\.${requestedMinor}\\\.${requestedPatch}\\\.${requestedSubrelease}"
     printVerbose "Finding URL for latest release matching version prefix: requestedVersion: $requestedVersion"
-    asset=$(/bin/printf "%s" "$releases" | jq -e -r '. | map(select(.assets[].name | test("'$requestedVersion'")))[0].assets[0]')
+    releasemetadata=$(/bin/printf "%s" "$releases" | jq -e -r '. | map(select(.assets[].name | test("'$requestedVersion'")))[0]')
   elif [ ! "x" = "x$tagged" ]; then
-    asset=$(/bin/printf "%s" "$releases" | jq -e -r '.[] | select(.tag_name == "'$tagged'").assets[0]')
+    printVerbose "Explicit tagger version '$tagged' specified. Checking for match"
+    releaseMetadata=$(/bin/printf "%s" "$releases" | jq -e -r '.[] | select(.tag_name == "'$tagged'")')
+    printVerbose "Use quick check for asset to check for existence of metadata for specific messages"
+    asset=$(/bin/printf "%s" "$releaseMetadata" | jq -e -r '.assets[0]')
     if [ $? -ne 0 ]; then
-      printError "Could not find tag $tagged for repo $repo"
+      printError "Could not find release tagged '$tagged' in repo '$repo'"
     fi
   elif $selectVersion; then
     # Explicitly allow the user to select a release to install; useful if there are broken installs
@@ -120,26 +131,94 @@ handlePackageInstall(){
         valid=true
       fi
     done
-    asset="$(/bin/printf "%s" "$releases" | jq -e -r ".[$selection].assets[0]")"
+    printVerbose "Selecting item $selection from array"
+    releaseMetadata="$(/bin/printf "%s" "$releases" | jq -e -r ".[$selection]")"
   elif [ ! -z "$releaseLine" ]; then  
-      asset="$(/bin/printf "%s" "$releases" | jq -e -r '. | map(select(.tag_name | startswith("'$releaseLine'")))[0].assets[0]')"
-      if [ $? -ne 0 ]; then
-        printError "Could not find release-line $releaseLine for repo: $repo"
-      fi
-  else
-    printVerbose "No explicit version/tag/releaseline, checking for latest on system releaseline"
-    sysrelline=$(cat "$ZOPEN_ROOTFS/etc/zopen/releaseline" | awk ' {print toupper($1)}')
-    printVerbose "zopen system configured to use releaseline '$sysrelline'; checking for release..."
-    asset="$(/bin/printf "%s" "$releases" | jq -e -r '. | map(select(.tag_name | startswith("'$sysrelline'")))[0].assets[0]')"
+    printVerbose "Install from release line '$releaseLine' specified"
+    validatedReleaseLine=$(validateReleaseLine "$releaseLine")
+    if [ -z "$validatedReleaseLine" ]; then
+      printError "Invalid releaseline specified: '$releaseLine'; Valid values: DEV or STABLE"
+    fi
+    printVerbose "Finding latest asset on the release line"
+    releasemetadata="$(/bin/printf "%s" "$releases" | jq -e -r '. | map(select(.tag_name | startswith("'$releaseLine'")))[0]')"
+    printVerbose "Use quick check for asset to check for existence of metadata"
+    asset="$(/bin/printf "%s" "$releasemetadata" | jq -e -r '.assets[0]')"
     if [ $? -ne 0 ]; then
-      printVerbose "Could not locate a specific release-line tagged version; installing latest"
-      asset="$(/bin/printf "%s" "$releases" | jq -e -r ".[0].assets[0]")"
+      printError "Could not find release-line $releaseLine for repo: $repo"
+    fi
+    
+  else
+set -x
+    printVerbose "No explicit version/tag/releaseline, checking for pre-existing package&releaseline"
+    if [ -n $installedReleaseLine ]; then
+      printVerbose "Found existing releaseline '$installedReleaseLine', restricting to only that releaseline"
+      validatedReleaseLine="$installedReleaseLine"  # Already validated when stored
+    else 
+      sysrelline=$(cat "$ZOPEN_ROOTFS/etc/zopen/releaseline" | awk ' {print toupper($1)}')
+      printVerbose "Validating value: $sysrelline"
+      validatedReleaseLine=$(validateReleaseLine "$sysrelline")
+      if [ -z "$(validatedReleaseLine)" ]; then
+        printVerbose "zopen system configured to use releaseline '$sysrelline'; restricting to that releaseline"
+      else
+        printWarning "zopen misconfigured to use an unknown releaseline of '$sysrelline'; defaulting to STABLE packages"
+        printWarning "Set the contents of '$ZOPEN_ROOTFS/etc/zopen/releaseline' to a valid value to remove this message"
+        printWarning "Valid values are: DEV | STABLE"
+        validatedReleaseLine="STABLE"
+      fi
+    fi
+    # We have some situations that could arise
+      # 1. the port being installed has no releaseline tagging yet (ie. no releases tagged STABLE_* or DEV_*)
+      # 2. system is configured for STABLE but only has DEV stream available
+      # 3. system is configured for DEV but only has DEV stream available
+      # 4. the port being installed has got full releaseline tagging
+      # The issue could arise that the user has switched the system from DEV->STABLE or vice-versa so package
+      # stream mismatches could arise but in normal case, once a package is installed [that has releaseline tagging]
+      # then that specific releaseline will be used
+    printVerbose "Finding any releases tagged with $validatedReleaseLine and getting the first (newest/latest)"
+    releaseMetadata="$(/bin/printf "%s" "$releases" | jq -e -r '. | map(select(.tag_name | startswith("'$validatedReleaseLine'")))[0]')"
+    #releaseMetadata="$(/bin/printf "%s" "$releases" | jq -e -r '. | map(select(.tag_name | test("^$validatedReleaseLine"; "i")))[0]')"
+    printVerbose "Use quick check for asset to check for existence of metadata"
+    asset="$(/bin/printf "%s" "$releaseMetadata" | jq -e -r '.assets[0]')"
+    if [ $? -eq 0 ]; then
+      # Case 4...
+      printVerbose "Found a specific '$validatedReleaseLine' release-line tagged version; installing..."
+    else
+      # Case 2 & 3
+      printVerbose "No releases on releaseline '$validatedReleaseLine'; checking alternative releaseline"
+      alt=$(echo "$validatedReleaseLine" | awk ' /DEV/ { print "STABLE" } /STABLE/ { print "DEV" }')
+      releaseMetadata="$(/bin/printf "%s" "$releases" | jq -e -r '. | map(select(.tag_name | startswith("'$alt'")))[0]')"
+      #releaseMetadata="$(/bin/printf "%s" "$releases" | jq -e -r '. | map(select(.tag_name | test("^$alt"; "i")))[0]')"
+      printVerbose "Use quick check for asset to check for existence of metadata"
+      asset="$(/bin/printf "%s" "$releaseMetadata" | jq -e -r '.assets[0]')"
+      if [ $? -eq 0 ]; then
+        printVerbose "Found a release on the '$alt' release line so release tagging is active"
+        if [ "DEV" = "$validatedReleaseLine" ]; then
+          # The system will be configured to use DEV packages where available but if none, use latest
+          printInfo "No specific DEV releaseline package, using latest available"
+          releasemetadata="$(/bin/printf "%s" "$releases" | jq -e -r ".[0]")"
+        else
+          printVerbose "The system is configured to only use STABLE releaseline packages but there are none"
+          printInfo "No release available on the '$validatedReleaseLine' releaseline."
+        fi
+      else
+        # Case 1 - old package that has no release tagging yet (no DEV or STABLE), just install latest
+        printVerbose "Installing latest release"
+        releasemetadata="$(/bin/printf "%s" "$releases" | jq -e -r ".[0]")"
+      fi
     fi
   fi
 
+  printVerbose "Getting specific asset details from metadata: $releasemetadata"
+  if [ -z "$asset" ]; then
+    printVerbose "Asset not found during previous logic; setting now"
+    asset=$(/bin/printf "%s" "$releasemetadata" | jq -e -r '.assets[0]')
+  fi
   if [ "x" = "x$asset" ]; then
     printError "Unable to determine download asset for ${name}"
   fi
+
+  tagname=$(/bin/printf "%s" "$releasemetadata" | jq -e -r ".tag_name" | sed "s/\([^_]*\)_.*/\1/")
+  installedReleaseLine=$(validateReleaseLine "$tagname" )
 
   downloadURL=$(/bin/printf "%s" "$asset" | jq -e -r '.url')
   size=$(/bin/printf "%s" "$asset" | jq -e -r '.expanded_size')
@@ -207,7 +286,7 @@ handlePackageInstall(){
 
   pax=$downloadFile
   if [ -f "$pax" ]; then
-    printInfo "- Found existing file '${pax}'in ${location}"
+    printInfo "- Found existing file '${pax}' in ${location}"
   else
     printInfo "- Downloading $pax file from remote to ${location}..."
     if ! $verbose; then
@@ -302,6 +381,10 @@ handlePackageInstall(){
     if [ ! -f "${baseinstalldir}/$installdirname/.version" ]; then
       echo "$downloadFileVer" > "${baseinstalldir}/$installdirname/.version"
     fi
+
+    printVerbose "Adding releaseline '$installedReleaseLine' metadata to ${baseinstalldir}/$installdirname/.releaseline"
+    echo "$installedReleaseLine" > "${baseinstalldir}/$installdirname/.releaseline"
+
     if $setactive; then
       if ! $nosymlink; then
         mergeIntoSystem "$name" "${baseinstalldir}/$installdirname" "$ZOPEN_ROOTFS" 
@@ -418,10 +501,6 @@ while [ $# -gt 0 ]; do
       ;;
     "--cache-only")
       cacheOnly=true  # Download remote pax file to cache only (no install)
-      ;;
-    "--release-line")
-      shift
-      releaseLine=$(echo "$1" | awk '{print toupper($0)}')
       ;;
     "--release-line")
       shift
