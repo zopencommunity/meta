@@ -19,10 +19,10 @@ Now initialize your environment with zopen init:
 zopen init
 ```
 
-This will create a $HOME/.zopen-config configuration. You can source this in your envrionment or add it to your .bashrc or .profile.
+This will create a .zopen-config configuration `<zopen_root>/etc/`. You can source this in your envrionment or add it to your .bashrc or .profile.
 
 ```bash
-. $HOME/.zopen-config
+. <zopen_root>/etc/.zopen-config
 ```
 
 You are now free to install any z/OS Open Tools via `zopen install`.
