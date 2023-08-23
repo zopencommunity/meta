@@ -7,7 +7,7 @@ printSyntax()
   printInfo "" >&2
   printInfo "Syntax: ${NC}${BOLD}zopen <command>${NC}" >&2
   printInfo "where ${NC}${BOLD}<command>${NC} may be one of the following:" >&2
-  printInfo "  ${NC}${BOLD}init         ${NC}   generate \$HOME/.zopen-config, creates file structure and bootstraps" >&2
+  printInfo "  ${NC}${BOLD}init         ${NC}   generate \$rootfs/etc/.zopen-config, creates file structure and bootstraps" >&2
   printInfo "  ${NC}${BOLD}build        ${NC}   invokes the build script." >&2
   printInfo "  ${NC}${BOLD}download     ${NC}   downloads z/OS Open Tools package(s)" >&2
   printInfo "  ${NC}${BOLD}install      ${NC}   installs z/OS Open Tools package(s))" >&2
@@ -40,6 +40,7 @@ printHelp()
 }
 
 export bindir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
+ZOPEN_DONT_PROCESS_CONFIG=1
 . "${bindir}/lib/common.inc"
 
 args=$*

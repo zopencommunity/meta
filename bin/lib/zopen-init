@@ -1,24 +1,26 @@
-#!/bin/sh
+#! !/bin/sh
 # Initialize zopen
 
 if [ -z "$utildir" ]; then
   export utildir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
 fi
+
+ZOPEN_DONT_PROCESS_CONFIG=1
 . "${utildir}/common.inc"
 
 printSyntax() 
 {
   args=$*
-  echo "zopen init will initialize the zopen filesystem and configuration (create a $HOME/.zopen-config file)" >&2
+  echo "zopen init will initialize the zopen filesystem and configuration (create a <root-dir>/etc/.zopen-config file)" >&2
   echo "Syntax: zopen init [<option>] [<root-dir>]" >&2
   echo "  where <option> can be one or more of:" >&2
   echo "  -f <type>: virtual filesystem location for package management; packages will be installed to this location under the <root-dir>" >&2
-  echo "      usrlclz - /usr/local/zopen (default);" >&2 
-  echo "      zopen - /usr/zopen (default);" >&2
-  echo "      prod - zopen standard;" >&2
-  echo "      ibm  - /usr/lpp;" >&2
+  echo "      usrlclz - /usr/local/zopen (default)" >&2 
+  echo "      zopen - /usr/zopen" >&2
+  echo "      prod - zopen standard" >&2
+  echo "      ibm  - /usr/lpp" >&2
   echo "      fhs  - File Hierarchical Standard (/opt)"  >&2
-  echo "      usrlcl - /usr/local;">&2
+  echo "      usrlcl - /usr/local">&2
   echo "  --re-init: re-initialize a previous installation (if present).  Re-initializing over a previous installation will re-use existing package structures and configurations." >&2
   echo "  --clone: clones the current installation to a different location" >&2
   echo "  --append-to-profile: appends sourcing of .zopen-config to .profile" >&2
@@ -75,25 +77,26 @@ case "$fslayout" in
 esac
 printHeader "Initialize zopen framework"
 
-configFile="$HOME/.zopen-config"
-
-if $clone; then
-  [ ! -e "$configFile" ] && printError "- Unable to clone existing configuration; configuration file $configFile could not be read"
-  printInfo "- Cloning existing configuration"
-  configFile=".zopen-config.clone"
-elif [ -e "$configFile" ]; then
-  if ! $reinitExisting; then
-    printWarning "- Existing configuration file found; re-initializing might lose access to previously installed packages. Continue (y/n)?"
-    reinit=$(getInput)
-  fi
-  if $reinitExisting || { [ -n "$reinit" ] && [ "y" = "${reinit}" ]; }; then
-    printInfo "- Re-initializing; removing existing .zopen-config"
-    rmrf=$(rm -rf "$configFile")
-  else
-    printWarning "- Stopping. Pre-existing configuration will be preserved"
-    exit 8
-  fi
-fi
+case "$fslayout" in
+  "usrlclz")
+    zopen_pkginstall="usr/local/zopen"
+  ;;
+  "usrlcl")
+    zopen_pkginstall="usr/local"
+  ;;
+  "fhs")
+    zopen_pkginstall="opt"
+  ;;
+  "ibm")
+    zopen_pkginstall="usr/lpp"
+  ;;
+  "prod")
+    zopen_pkginstall="prod"
+  ;;
+  "zopen")
+    zopen_pkginstall="usr/zopen"
+  ;;
+esac
 
 if [ -n "$ZOPEN_ROOT_PATH" ]; then
   rootfs="$ZOPEN_ROOT_PATH"
@@ -104,12 +107,47 @@ if [ -z "$rootfs" ]; then
   if $clone; then
     printInfo "- Enter fully-qualified path to clone-target directory:"
   else
-    printInfo "- Enter fully-qualified path to your zopen root directory (default: $HOME/zopen)"
+    printInfo "- Enter fully-qualified path to your zopen root directory (default: $HOME/zopen):"
   fi
   rootfs=$(getInput)
 else
   printInfo "- Setting root directory from cli: $rootfs"
 fi
+
+printInfo "- Binaries will be available under \"$rootfs/usr/bin\". Libraries will be available under \"$rootfs/usr/lib"
+printInfo "- Packages will be maintained under the directory structure $fslayout ($rootfs/$zopen_pkginstall). To change, re-run with the -f <layout> option."
+while true; do
+  printInfo "Do you want to proceed? [y/n]"
+  read continueInstall < /dev/tty
+  if [ "y" = "${continueInstall}" ]; then
+    break;
+  fi
+  if [ "n" = "${continueInstall}" ]; then
+    exit 0
+  fi
+done
+
+configFile="$rootfs/etc/.zopen-config"
+if [ -f "$configFile" ]; then
+  if $clone; then
+    [ ! -e "$configFile" ] && printError "- Unable to clone existing configuration; configuration file $configFile could not be read"
+    printInfo "- Cloning existing configuration"
+    configFile=".zopen-config.clone"
+  elif [ -e "$configFile" ]; then
+    if ! $reinitExisting; then
+      printWarning "- Existing configuration file found; re-initializing might lose access to previously installed packages. Continue (y/n)?"
+      reinit=$(getInput)
+    fi
+    if $reinitExisting || { [ -n "$reinit" ] && [ "y" = "${reinit}" ]; }; then
+      printInfo "- Re-initializing; removing existing .zopen-config"
+      rmrf=$(rm -rf "$configFile")
+    else
+      printWarning "- Stopping. Pre-existing configuration will be preserved"
+      exit 8
+    fi
+  fi
+fi
+
 
 if [ -z "$rootfs" ]; then
   if $clone; then
@@ -138,13 +176,12 @@ fi
 if ! $clone; then
   printInfo "Checking for existence of specified root: '$rootfs'"
   [ -e "$rootfs" ] || mkdir -p "$rootfs" || printError "Unable to create zopen root filesystem at '$rootfs'"
-  [ -d "$rootfs" ] || printError "Specified location '$rootfs' is not a directoryUnable to access root file system at '$rootfs'; check permissions"  
-  [ -w "$rootfs" ] || printError "Unable to access root file system at '$rootfs'; check permissions"  
+  [ -d "$rootfs" ] || printError "Specified location '$rootfs' is not a directory. Unable to access root file system at '$rootfs'; check permissions"  
+  [ -w "$rootfs" ] || printError "Unable to write to root file system at '$rootfs'; check permissions"  
 
   printInfo "- Populating standard file system"
   [ -e "$rootfs/bin" ] || mkdir -p "$rootfs/bin"
   [ -e "$rootfs/etc" ] || mkdir -p "$rootfs/etc"
-  [ -e "$rootfs/etc/skel" ] || mkdir -p "$rootfs/etc/skel"
   [ -e "$rootfs/include" ] || mkdir -p "$rootfs/include"
   [ -e "$rootfs/usr/share" ] || mkdir -p "$rootfs/usr/share"
   [ -e "$rootfs/usr/share/man" ] || mkdir -p "$rootfs/usr/share/man"
@@ -158,26 +195,6 @@ if ! $clone; then
   
   printInfo "- Creating symbolic path for prod redirect files"
   [ -e "$rootfs/usr/share/zopen/boot" ] || ln -s "$rootfs/boot" "$rootfs/usr/share/zopen/boot"
-  case "$fslayout" in
-    "usrlclz")
-      zopen_pkginstall="usr/local/zopen"
-    ;;
-    "usrlcl")
-      zopen_pkginstall="usr/local"
-    ;;
-    "fhs")
-      zopen_pkginstall="opt"
-    ;;
-    "ibm")
-      zopen_pkginstall="usr/lpp"
-    ;;
-    "prod")
-      zopen_pkginstall="prod"
-    ;;
-    "zopen")
-      zopen_pkginstall="usr/zopen"
-    ;;
-  esac
   [ -e "$rootfs/etc/zopen" ] || mkdir -p "$rootfs/etc/zopen"
   echo "$zopen_pkginstall" > "$rootfs/etc/zopen/fstype"
   
@@ -323,17 +340,9 @@ unset tmp TMP_FIFO_PIPE
 trap - EXIT INT TERM QUIT HUP
 EOF
 
-skeletonDir="$rootfs/etc/skel"
-skelcfg="$skeletonDir/.zopen-config"
-printVerbose "Copying configuration file to $skeletonDir for backup/distribution"
-cp "$configFile" "$skelcfg"
-printVerbose "Adding git oauth token placeholder and footer to skeleton file"
-cat << EOF >>  "$skelcfg"
-/bin/echo "- \$zot configuration completed in \$(( \$SECONDS - \$configStartTime )) seconds."
-EOF
 perms="744"
-printVerbose "Giving world read access to skel config file"
-chmod "$perms" "$skelcfg"
+printVerbose "Giving world read access to config file"
+chmod "$perms" "$configFile"
 
 perms="400"
 printVerbose "Setting user configuration file [$configFile] as read-only for user, no access to others [$perms]"
@@ -492,14 +501,14 @@ else
   printInfo "- zopen bootstrapping complete"
 
   if $appendToProfile; then
-    if ! grep -q ". \$HOME/.zopen-config" "$HOME/.profile"; then
+    if ! grep -q ". $rootfs/etc/.zopen-config" "$HOME/.profile"; then
       printVerbose "Line not present (grep returned non-0)"
   cat << EOF >>  "$HOME/.profile"
-  [ -e "\$HOME/.zopen-config" ] && . \$HOME/.zopen-config
+  [ -e "$rootfs/etc/.zopen-config" ] && . $rootfs/etc/.zopen-config
 EOF
     fi
   fi
-  printInfo "${NC}${YELLOW}- Run '. \$HOME/.zopen-config' to enable zopen environment for current session${NC}"
+  printInfo "${NC}${YELLOW}- Run '. $rootfs/etc/.zopen-config' to enable zopen environment for current session${NC}"
   syslog "$ZOPEN_LOG_PATH/audit.log" "$LOG_A" "$CAT_PACKAGE,$CAT_FILE" "INIT" "" "zopen environment initialised as $ZOPEN_ROOTFS"
   printInfo "${NC}${GREEN}zopen initialization complete.${NC}"
 fi

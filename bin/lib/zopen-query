@@ -333,8 +333,8 @@ while [[ $# -gt 0 ]]; do
   shift;
 done
 
-[[ ! -z "${ZOPEN_CA}" ]] || printError "\$ZOPEN_CA was not set. Ensure zopen init has run and \$HOME\zopen-config has been sourced."
-[[ -r "${ZOPEN_CA}" ]] ||   printError "Certificate at ${ZOPEN_CA} could not be accessed. Ensure zopen init has run and \$HOME\zopen-config has been sourced. "
+[[ ! -z "${ZOPEN_CA}" ]] || printError "\$ZOPEN_CA was not set. Ensure zopen init has run and .zopen-config has been sourced."
+[[ -r "${ZOPEN_CA}" ]] ||   printError "Certificate at ${ZOPEN_CA} could not be accessed. Ensure zopen init has run and .zopen-config has been sourced. "
 
 export SSL_CERT_FILE="${ZOPEN_CA}"
 export GIT_SSL_CAINFO="${ZOPEN_CA}"
