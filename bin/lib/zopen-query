@@ -12,10 +12,9 @@ printSyntax()
   echo "Syntax: zopen-query [<option>]* [<package]*" >&2
   echo "  where <option> may be one or more of:" >&2
   echo "  --list: list all available z/OS Open Tools."  >&2
-  echo "  --remote-search: check for package in z/OS Open Tools repo" >&2
+  echo "  --remote-search: regex match package against available z/OS Open Tools" >&2
   echo "  -i : --installed: list install z/OS Open Tools." >&2
   echo " --upgradeable: list packages where an upgrade is available." >&2
-#TODO echo "  --provides: list the files that an installed package provides." >&2
   echo "  -wp : --whatprovides: which installed package provided a file." >&2
   echo "  -v: run in verbose mode." >&2
   echo "  -d | --details: include full details for listings." >&2
@@ -23,6 +22,24 @@ printSyntax()
   echo "  --no-version:  suppress version information, return package names." >&2
   echo "  --filter <color>: apply filter based on quality (green - all tests passing, blue - most tests passing, yellow - some tests passing, red - no tests passing, or skipped (no filter by default))"  >&2
   echo " and <package> is an optional list of one or more packages." >&2
+}
+
+colorizepct(){
+  percentage=$1
+  if [ -z "$percentage" ]; then
+    colored="${RED}"
+  elif [ ! "$percentage" = "${percentage#Skipped}" ]; then
+    colored="${RED}"
+  elif [ $percentage -eq 100 ]; then
+    colored="${GREEN}"
+  elif [ $percentage -gt 50 ]; then
+    colored="${BLUE}"
+  elif [ $percentage -gt 0 ]; then
+    colored="{YELLOW}"
+  else
+    colored="${RED}"
+  fi
+  echo "$colored"
 }
 
 printDetailListEntries()
@@ -35,11 +52,22 @@ printDetailListEntries()
     scrcols=$(getScreenCols)
     numcols=4
     colwidth=$(($scrcols / $numcols -1 ))
+    printVerbose "Screen width: $scrcols; colwidth:$colwidth"
     if [ ! -z "$1" ] && ! $noheader; then
-      printf "${NC}${UNDERLINE}%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s\n${NC}" "Package" "Installed" "Available" "Latest Tag"
+      printf "${NC}${UNDERLINE}%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s${NC}\n" "Package" "Installed" "Available" "Latest Tag"
     fi
     echo "$repoArray" | xargs | tr ' ' '\n' | sort | while read repo; do
-      if [ -z $needle ] || [ "${repo}" = "${needle}" ]; then
+      listport=false
+      if [ -z "$needle" ]; then
+        listport=true
+      else
+        printVerbose "Attempting regex find with needle: '$needle'"
+        if expr "$repo" : "$needle" 1>/dev/null; then
+          listport=true
+        fi
+      fi
+    
+      if $listport; then
         latest=$(jq -e -r '.release_data."'$repo'"[0]' "$JSON_CACHE")
         if [ $? -ne 0 ]; then
           printError "Unable to retrieve remote information"
@@ -72,11 +100,22 @@ printDetailListEntries()
     scrcols=$(getScreenCols)
     numcols=6
     colwidth=$(($scrcols / $numcols -1 ))
+    printVerbose "Screen width: $scrcols; colwidth:$colwidth"
     if ! $noheader; then
-      printf "${NC}${UNDERLINE}%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s\n${NC}" "Package" "Your version" "Latest Tag" "Download Size" "Expanded Size" "Quality"
+      printf "${NC}${UNDERLINE}%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s${NC}\n" "Package" "Installed" "Latest Tag" "Download Size" "Expanded Size" "Quality"
     fi
     echo "$repoArray" | xargs | tr ' ' '\n' | sort | while read repo; do
-      if [ -z $needle ] || [ "${repo}" = "${needle}" ]; then
+      listport=false
+      if [ -z "$needle" ]; then
+        listport=true
+      else
+        printVerbose "Attempting regex find with needle: '$needle'"
+        if expr "$repo" : "$needle" 1>/dev/null; then
+          listport=true
+        fi
+      fi
+    
+      if $listport; then
         if [ -e "${ZOPEN_PKGINSTALL}/${repo}/.releaseinfo" ]; then
           originalTag=$(cat "${ZOPEN_PKGINSTALL}/${repo}/.releaseinfo")
         else
@@ -102,19 +141,14 @@ printDetailListEntries()
                  percentage=$(echo "scale=0; 100 * ($passed) / $total" | bc)
                fi
                printf "%-${colwidth}s %-${colwidth}s %-${colwidth}s " "$repo" "$originalTag" "$latestTag" 
-               if [ -z "$percentage" ]; then
-                printf "${NC}${RED}%-${colwidth}s${NC}" "No tests"
-               elif [ $percentage -eq 100 ]; then
-                printf "${NC}${GREEN}%-${colwidth}s${NC}" "$percentage%"
-               elif [ $percentage -gt 50 ]; then
-                printf "${NC}${BLUE}%-${colwidth}s${NC}" "$percentage%"
-               elif [ $percentage -gt 0 ]; then
-                printf "${NC}${YELLOW}%-${colwidth}s${NC}" "$percentage%"
-               else
-                printf "${NC}${RED}%-${colwidth}s${NC}" "$percentage%"
-               fi
-               printf " %-${colwidth}s"  "$expandedsize"
                printf " %-${colwidth}s"  "$downloadsize"
+               printf " %-${colwidth}s"  "$expandedsize"
+
+               if [ -z "$percentage" ]; then
+                 printf "${NC}${RED}%-${colwidth}s${NC}" "No tests"
+               else
+                 printf "${NC}%s%-${colwidth}s${NC}" $(colorizepct "$percentage" ) "$percentage%"
+               fi
                printf "\n"
                ;;
           *) printError "Error $httpResponseCode while trying to retrieve latest repo release";;
@@ -128,14 +162,18 @@ printDetailListEntries()
 }
 printInstalledEntries(){
   scrcols=$(getScreenCols)
-  numcols=4
+  [ $details -eq 0 ] && numcols=4 || numcols=6
   colwidth=$(($scrcols / $numcols -1 ))
   printVerbose "Screen width: $scrcols; colwidth:$colwidth"
   if [ ! -z "$1" ] && ! $noheader; then
-    printf "${NC}${UNDERLINE}%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s\n${NC}" "Package" "Installed" "File" "Releaseline"
+    if [ $details -eq 0 ]; then
+      printf "${NC}${UNDERLINE}%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s${NC}\n" "Package" "Installed" "File" "Releaseline"
+    else
+      printf "${NC}${UNDERLINE}%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s${NC}\n" "Package" "Installed" "File" "Releaseline" "Expanded Size" "Quality"
+    fi
   fi
   printVerbose "Getting list of symlinks in the package install directory (that point to specific versions)"
-  installedPackages=$(zosfind . -type d \! -name . -prune -o -type l -print)
+  installedPackages=$(cd "$ZOPEN_PKGINSTALL" && zosfind . -type d \! -name . -prune -o -type l -print)
   printVerbose "Packages: $installedPackages"
   echo "$installedPackages" | xargs | tr ' ' '\n' | sort | while read repo; do
     pkghome="$ZOPEN_PKGINSTALL/${repo}"
@@ -161,43 +199,60 @@ printInstalledEntries(){
       dotversion="N/A"
     fi
 
+    releaseline=""
     if [ -e "${pkghome}/.releaseline" ]; then
       releaseline=$(cat "${pkghome}/.releaseline")
-    else
-      releaseline="N/A"
     fi
-
+    if [ -z "$releaseline" ]; then
+      releaseline="n/a"
+    fi
+  
     printVerbose "Original tag: $originalTag for repo: $repo"
     if [ -z "$1" ]; then
       printInfo "$originalTag"
     else
       fileversion="$( cd "$ZOPEN_PKGINSTALL/${repo}" >/dev/null 2>&1 && pwd -P | xargs basename)"
-      printf "%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s\n" "$reponame" "$dotversion" "$fileversion" "$releaseline"
+      printf "%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s" "$reponame" "$dotversion" "$fileversion" "$releaseline"
+      if [ $details -eq 1 ]; then
+        # Extra headers: disk size and quality
+        disksizestr=$(du "$ZOPEN_PKGINSTALL/${repo}" |tail -n 1 )
+        disksizestr=$(echo $disksizestr | sed 's#\([0-9]*\).*#\1#')
+        disksize=$(( $disksizestr * 512 ))
+        printf "%-${colwidth}d" $(( $disksizestr * 512 ))
+
+        if [ -e "${pkghome}/test.status" ]; then
+          teststatus=$(cat "${pkghome}/test.status")
+          percentage=$(echo "$teststatus" | sed 's/[^-]*-\([^%\.]*\).*/\1/')
+          printf "${NC}$s%-${colwidth}s${NC}" $(colorizepct "$percentage") "$percentage"
+        else
+           printf "${NC}${RED}%-${colwidth}s${NC}" "No tests"
+        fi
+      fi
+      
+      printf "\n"
     fi
   done
   exit 0
 }
 
-
 whatProvides(){
-  needle=$1
-  printVerbose "Finding matches outside the ZOPEN_PKGINSTALL ($ZOPEN_PKGINSTALL)"
-  # Find any symlinks that match the name and can then be dereferenced
-  found=$(zosfind $ZOPEN_ROOTFS/usr -type l | grep "${needle}")
-  printVerbose "Found? '$found'"
-  if [[ -z $found ]]; then
+  needle="$1"
+  printVerbose "Finding matches outside of ZOPEN_PKGINSTALL ($ZOPEN_PKGINSTALL)"
+  # Find any symlinks that match the needle and can then be dereferenced
+  found=$(zosfind "$ZOPEN_ROOTFS" -name "$ZOPEN_PKGINSTALL/\*" -prune -o -type l -print | grep "${needle}") 
+  printVerbose "Found list: '$found'"
+  if [[ -z "$found" ]]; then
     printInfo "No package provides '${needle}'"
   else
     matches=$(echo "$found"| wc -w | tr -d ' ' ) 
     printInfo "Found ${matches} match$([ $matches = 1 ] && echo "" || echo "es") for regex '${needle}' on the system"
     echo "$found" | xargs | tr ' ' '\n' | while read foundmatch; do
-      printVerbose "Parsing $foundmatch"
-      if [ ! -d $foundmatch ]; then
-        deref=$(ls -l $foundmatch | awk '{ print $(NF) }')
-        printVerbose "$ZOPEN_PKGINSTALL  -> $deref"
-        printVerbose "${deref#$ZOPEN_PKGINSTALL}"
-        pkg=$(echo "${deref#$ZOPEN_PKGINSTALL}" | awk -F/ '{print $2}')
-        printInfo "$pkg provides '$foundmatch'"
+      printVerbose "Parsing '$foundmatch'"
+      if [ ! -d "$foundmatch" ]; then
+      dereferenced=$(deref "$foundmatch")
+      fullpackage=$(echo "$dereferenced" | sed "s#$ZOPEN_PKGINSTALL/\([^/]*\).*#\1#")
+      
+      printInfo "Package '$fullpackage' provides: '$foundmatch'"
       fi
     done
   fi
@@ -294,45 +349,15 @@ if [ ! -z "$filter" ]; then
 fi
 
 if ! $localoption; then
-
- # Retrieve all repositories
- # TODO: These are causing early exists???
- # progressHandler "network" "- Retrieved remote details" &
- # ph=$!
- # killph="kill -HUP $ph"
- # addCleanupTrapCmd "$killph"
+  # Retrieve all repositories
   getReposFromGithub
   grfgRc=$?
-  $killph 2>/dev/null  # if the timer is not running, the kill will fail
   [ 0 -ne $grfgRc ] && exit $grfgRc;
-
-  # Parse repositories for zopen framework repos
-  foundPort=false
-  repoArray=""
-  for repo in $(echo ${repo_results}); do
-    repo=${repo#"ZOSOpenTools/"}
-    name=${repo%port}
-    printVerbose "Checking repo suffixes for '$repo' with name:'$name'"
-  
-    if [ -z "${chosenRepos}" ]; then
-      repoArray="$repoArray $repo"
-    else
-      printVerbose "Testing ${chosenRepos}"
-      for toolrepo in $(echo "${chosenRepos}" | tr ',' '\n'); do
-        if [ "${toolrepo}" = "${repo}" ] || [ "${toolrepo}" = "${name}" ]; then
-          # Skip if the repo does not end with port
-          if [ "${repo}" = "${name}" ]; then
-            continue;
-          fi
-          repoArray="$repoArray $repo"
-        fi
-      done
-    fi
-  done
+  repoArray="$repo_results"
 fi
 
 ! $upgradeable || printDetailListEntries $details "" 1
-[ -z "$remotesearch" ] || printDetailListEntries $details $needle 0
+[ -z "$remotesearch" ] || printDetailListEntries $details "$needle" 0
 [ -z "$list" ] || printDetailListEntries $details "" 0
 [ -z "$installed" ] || printInstalledEntries $details "" 0
-[ -z "$whatprovides" ] || whatProvides $needle
+[ -z "$whatprovides" ] || whatProvides "$needle"
