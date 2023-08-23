@@ -446,7 +446,6 @@ deletetask () {
 
 zopenInitialize()
 {
-  withoutConfig=$1
   defineEnvironment
   defineANSI
   if [ -z "$ZOPEN_DONT_PROCESS_CONFIG" ]; then

@@ -1,4 +1,4 @@
-#! !/bin/sh
+#!/bin/sh
 # Initialize zopen
 
 if [ -z "$utildir" ]; then
@@ -344,9 +344,6 @@ perms="744"
 printVerbose "Giving world read access to config file"
 chmod "$perms" "$configFile"
 
-perms="400"
-printVerbose "Setting user configuration file [$configFile] as read-only for user, no access to others [$perms]"
-chmod "$perms" "$configFile"
 effuid=$LOGNAME
 effgid=$(id -gn $effuid)
 printVerbose "Ensuring correct uid [$effuid] & gid [$effgid] for configfile if !installing as user (ie su/root/etc)"
