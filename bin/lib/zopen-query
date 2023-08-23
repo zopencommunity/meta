@@ -36,7 +36,7 @@ printDetailListEntries()
     numcols=4
     colwidth=$(($scrcols / $numcols -1 ))
     if [ ! -z "$1" ] && ! $noheader; then
-      printf "${NC}${UNDERLINE}%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s\n${NC}" "Package" "Your version" ".version" "Latest Tag"
+      printf "${NC}${UNDERLINE}%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s\n${NC}" "Package" "Installed" "Available" "Latest Tag"
     fi
     echo "$repoArray" | xargs | tr ' ' '\n' | sort | while read repo; do
       if [ -z $needle ] || [ "${repo}" = "${needle}" ]; then
@@ -128,15 +128,28 @@ printDetailListEntries()
 }
 printInstalledEntries(){
   scrcols=$(getScreenCols)
-  numcols=3
+  numcols=4
   colwidth=$(($scrcols / $numcols -1 ))
+  printVerbose "Screen width: $scrcols; colwidth:$colwidth"
   if [ ! -z "$1" ] && ! $noheader; then
-    printf "${NC}${UNDERLINE}%-${colwidth}s %-${colwidth}s %-${colwidth}s\n${NC}" "Package" "Installed version" "File version"
+    printf "${NC}${UNDERLINE}%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s\n${NC}" "Package" "Installed" "File" "Releaseline"
   fi
-  installedPackages="$(zosfind $ZOPEN_PKGINSTALL -name .active 2>/dev/null)"
+  printVerbose "Getting list of symlinks in the package install directory (that point to specific versions)"
+  installedPackages=$(zosfind . -type d \! -name . -prune -o -type l -print)
   printVerbose "Packages: $installedPackages"
   echo "$installedPackages" | xargs | tr ' ' '\n' | sort | while read repo; do
-    pkghome=$(dirname "${repo}")
+    pkghome="$ZOPEN_PKGINSTALL/${repo}"
+    if [ ! -e "${pkghome}/.active" ]; then
+      printVerbose "Symlink '$repo' in '$ZOPEN_PKGINSTALL' is not active; skipping"
+      continue
+    fi
+
+    reponame=$(echo "${repo#./}") 
+    if $noversions; then
+      printf "%s\n" "$reponame"
+      continue
+    fi
+
     if [ -e "${pkghome}/.releaseinfo" ]; then
       originalTag=$(cat "${pkghome}/.releaseinfo")
     else
@@ -148,17 +161,18 @@ printInstalledEntries(){
       dotversion="N/A"
     fi
 
+    if [ -e "${pkghome}/.releaseline" ]; then
+      releaseline=$(cat "${pkghome}/.releaseline")
+    else
+      releaseline="N/A"
+    fi
+
     printVerbose "Original tag: $originalTag for repo: $repo"
     if [ -z "$1" ]; then
       printInfo "$originalTag"
     else
-      fileversion="$( cd "$(dirname "$repo")" >/dev/null 2>&1 && pwd -P | xargs basename)"
-      reponame=$(dirname "$repo" | xargs basename)
-      if ! $noversions; then
-        printf "%-${colwidth}s %-${colwidth}s %-${colwidth}s\n" "$reponame" "$dotversion" "$fileversion"
-      else
-        printf "%s\n" "$reponame"
-      fi
+      fileversion="$( cd "$ZOPEN_PKGINSTALL/${repo}" >/dev/null 2>&1 && pwd -P | xargs basename)"
+      printf "%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s\n" "$reponame" "$dotversion" "$fileversion" "$releaseline"
     fi
   done
   exit 0

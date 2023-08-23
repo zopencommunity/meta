@@ -15,6 +15,14 @@ cleanupFunction() {
 }
 trap "cleanupFunction" EXIT INT TERM QUIT HUP
 
+validateReleaseLine(){
+  echo "$1" | awk '
+    toupper($1)=="DEV"    {print toupper($0)}
+    toupper($1)=="STABLE" {print toupper($0)}
+                          { print ""}
+  '
+}
+
 defineANSI() 
 {
   # Standard tty codes
@@ -356,7 +364,8 @@ unsymlinkFromSystem(){
       filenames=""
       while read filetounlink; do
         tid=$(( tid + 1 ))
-        filenames="$filenames\n$filetounlink"
+        filetounlink=$(echo "$filetounlink" | sed 's/\(.*\).symbolic.*/\1/')
+        filenames=$(/bin/printf "%s\n%s" "$filenames" "$filetounlink")
         if [ "$(( tid % threshold ))" -eq 0 ]; then
           deletethread "$filenames" "$tempDirFile" &
           printVerbose "Started delete thread: $!"
@@ -398,7 +407,6 @@ deletetask () {
     tempDirFile="$1"
     filename="$2"
     [ -z "$filename" ] && return 0
-    filename=$(echo "$filename" | sed 's/\(.*\).symbolic.*/\1/')
     filename="$ZOPEN_ROOTFS/$filename"
     if [ -d "$filename" ]; then
         # Add to the queue for checking once files are gone if unique
@@ -414,7 +422,7 @@ deletetask () {
         rm -f "$filename" >/dev/null 2>&1
       fi
     else 
-      echo "Unprocessable file: $filename" >> "$tempTrash" 
+      echo "Unprocessable file: '$filename'" >> "$tempTrash" 
     fi
 }
 

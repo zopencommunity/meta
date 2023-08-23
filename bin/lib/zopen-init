@@ -22,6 +22,7 @@ printSyntax()
   echo "  --re-init: re-initialize a previous installation (if present).  Re-initializing over a previous installation will re-use existing package structures and configurations." >&2
   echo "  --clone: clones the current installation to a different location" >&2
   echo "  --append-to-profile: appends sourcing of .zopen-config to .profile" >&2
+  echo "  --releaseline-dev: whether to globally enable Development packages" >&2 
   echo "  -v: run in verbose mode" >&2
   echo "  -?|-h|--help: display help" >&2
 }
@@ -32,6 +33,7 @@ verbose=false
 reinitExisting=false
 clone=false
 appendToProfile=false
+releaselineDev=false
 fslayout="usrlclz"
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -47,6 +49,9 @@ while [ $# -gt 0 ]; do
       ;;
     "--append-to-profile" )
       appendToProfile=true
+      ;;
+    "--releaseline-dev" )
+      releaselineDev=true
       ;;
     "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
       printSyntax "${args}"
@@ -355,6 +360,15 @@ else
   # Generate any system values that can be user changed
   echo "15" > "$rootfs/etc/zopen/rm_fileprocs"
 
+  if $releaselineDev; then
+    releaseLine="DEV"
+    printInfo "- Configured zopen to use development (DEV) releaseline packages where available" 
+  else
+    releaseLine="STABLE"
+    printInfo "- Configured zopen to use stable releaseline packages"
+  fi
+  echo "$releaseLine" > "$rootfs/etc/zopen/releaseline"
+
   printInfo "- Check for shipped curl pax"
   curlpax="packages/curl-8.1.2.20230707_145137.zos.pax.Z"
 
@@ -430,7 +444,7 @@ else
   printInfo "- Sourcing environment"
   . "$configFile"
   printInfo "- Using bootstrapped curl and jq to install latest release of itself (if available)"
-  curlInstall=$(runAndLog "${utildir}/zopen-install curl jq")
+  curlInstall=$(runAndLog "${utildir}/zopen-install -y curl jq")
   curlInstall=$?
   [ $curlInstall -ne 0 ] && printError "Unable to install curl and jq; see previous errors and retry the initilisation using the '--re-init' parameter"
   . "$configFile"
