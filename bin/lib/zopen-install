@@ -148,7 +148,6 @@ handlePackageInstall(){
     fi
     
   else
-set -x
     printVerbose "No explicit version/tag/releaseline, checking for pre-existing package&releaseline"
     if [ -n $installedReleaseLine ]; then
       printVerbose "Found existing releaseline '$installedReleaseLine', restricting to only that releaseline"

@@ -23,6 +23,24 @@ validateReleaseLine(){
   '
 }
 
+# Attempt to fully dereference a symlink without any bashisms or arcane set logic
+# using some simplistic (recursive!) logic
+deref(){
+  testpath="$1"
+  if [ -L "$testpath" ]; then
+    child=$(basename "$testpath")
+    symlink=$(ls -l "$testpath" | sed 's/.*-> \(.*\)/\1/')
+    parent=$(dirname "$testpath")
+    relpath="$parent/$symlink"
+    relparent=$(dirname "$relpath")
+    abspath=$(cd "$relparent" && pwd -P)
+    testpath="$abspath/$child"
+    deref "$testpath"
+  else
+    [ -n "$testpath" ] && echo "$testpath" && unset testpath
+  fi
+}
+
 defineANSI() 
 {
   # Standard tty codes
@@ -149,7 +167,7 @@ mutexReq(){
   mypid=$(exec sh -c 'echo $PPID')
   if [ -e "$mutex" ]; then
     lockedpid=$(cat $mutex)
-    { [ ! "$lockedpid" = "$mypid" ] && [ ! "$lockedpid" = "$PPID" ]; } && echo "Aborting, Process '$lockedpid' holds the '$2' lock: '$mutex'" && exit -1
+    { [ ! "$lockedpid" = "$mypid" ] && [ ! "$lockedpid" = "$PPID" ]; } && kill -0 "$lockedpid" 2>/dev/null && echo "Aborting, Active process '$lockedpid' holds the '$2' lock: '$mutex'" && exit -1
   fi
   addCleanupTrapCmd "rm -rf $mutex"
   echo "$mypid" > $mutex
