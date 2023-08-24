@@ -114,6 +114,30 @@ else
   printInfo "- Setting root directory from cli: $rootfs"
 fi
 
+if [ -z "$rootfs" ]; then
+  if $clone; then
+    printError "- No target location for clone. Stopping."
+  fi
+  printInfo "- No explicit root set, using default: \$HOME/zopen"
+  rootfs="$HOME/zopen"
+else
+  if [ "${rootfs%/}" = '/' ]; then
+    printInfo "- Stripping trailing '/' char"
+    rootfs="${rootfs%})"
+  fi
+  if [ "$rootfs" = "/" ]; then
+    printInfo "- Installing into system root; are you sure (y/N)?"
+    sysrootok=$(getInput)
+    if [ -n "$sysrootok" ] && [ "y" = "${sysrootok}" ]; then
+      printInfo "- Using '/' as root filesystem"
+      rootfs="/." # references below take a root directory
+    else
+      printWarning "- Stopping. Existing configuration will be preserved"
+      exit 4
+    fi
+  fi
+fi
+
 printInfo "- Binaries will be symlinked under \"$rootfs/usr/bin\". Libraries will be symlinked under \"$rootfs/usr/lib\""
 printInfo "- Packages will be installed and maintained under the directory structure $fslayout ($rootfs/$zopen_pkginstall). To change, re-run with the -f <layout> option."
 while true; do
@@ -144,31 +168,6 @@ if [ -f "$configFile" ]; then
     else
       printWarning "- Stopping. Pre-existing configuration will be preserved"
       exit 8
-    fi
-  fi
-fi
-
-
-if [ -z "$rootfs" ]; then
-  if $clone; then
-    printError "- No target location for clone. Stopping."
-  fi
-  printInfo "- No explicit root set, using default: \$HOME/zopen"
-  rootfs="$HOME/zopen"
-else
-  if [ "${rootfs%/}" = '/' ]; then
-    printInfo "- Stripping trailing '/' char"
-    rootfs="${rootfs%})"
-  fi
-  if [ "$rootfs" = "/" ]; then
-    printInfo "- Installing into system root; are you sure (y/N)?"
-    sysrootok=$(getInput)
-    if [ -n "$sysrootok" ] && [ "y" = "${sysrootok}" ]; then
-      printInfo "- Using '/' as root filesystem"
-      rootfs="/." # references below take a root directory
-    else
-      printWarning "- Stopping. Existing configuration will be preserved"
-      exit 4
     fi
   fi
 fi
