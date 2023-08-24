@@ -31,7 +31,6 @@
 * [avro-c-libport](https://github.com/ZOSOpenTools/avro-c-libport)
 * [bumpport](https://github.com/ZOSOpenTools/bumpport)
 * [direnvport](https://github.com/ZOSOpenTools/direnvport)
-* [duckdbport](https://github.com/ZOSOpenTools/duckdbport)
 * [dufport](https://github.com/ZOSOpenTools/dufport)
 * [emacsport](https://github.com/ZOSOpenTools/emacsport)
 * [fzfport](https://github.com/ZOSOpenTools/fzfport)
@@ -130,7 +129,7 @@
 | [comp_xlclangport](https://github.com/ZOSOpenTools/comp_xlclangport) | 0 | 100% |
 | [cscopeport](https://github.com/ZOSOpenTools/cscopeport) | 0 | 100% |
 | [direnvport](https://github.com/ZOSOpenTools/direnvport) | 0 | No builds |
-| [duckdbport](https://github.com/ZOSOpenTools/duckdbport) | 0 | No builds |
+| [duckdbport](https://github.com/ZOSOpenTools/duckdbport) | 0 | 100% |
 | [dufport](https://github.com/ZOSOpenTools/dufport) | 0 | No builds |
 | [emacsport](https://github.com/ZOSOpenTools/emacsport) | 0 | No builds |
 | [expectport](https://github.com/ZOSOpenTools/expectport) | 0 | Skipped |
@@ -240,7 +239,6 @@
 |  [npthport](https://github.com/ZOSOpenTools/npthport) | 28 | 2
 |  [libgpgerrorport](https://github.com/ZOSOpenTools/libgpgerrorport) | 27 | 2
 |  [groffport](https://github.com/ZOSOpenTools/groffport) | 25 | 2
-|  [duckdbport](https://github.com/ZOSOpenTools/duckdbport) | 24 | 1
 |  [wgetport](https://github.com/ZOSOpenTools/wgetport) | 22 | 1
 |  [fzfport](https://github.com/ZOSOpenTools/fzfport) | 20 | 1
 |  [bzip2port](https://github.com/ZOSOpenTools/bzip2port) | 17 | 1
@@ -263,6 +261,7 @@
 | &#10003; [cscopeport](https://github.com/ZOSOpenTools/cscopeport) | 0 | 0
 | &#10003; [ctagsport](https://github.com/ZOSOpenTools/ctagsport) | 0 | 0
 | &#10003; [direnvport](https://github.com/ZOSOpenTools/direnvport) | 0 | 0
+| &#10003; [duckdbport](https://github.com/ZOSOpenTools/duckdbport) | 0 | 0
 | &#10003; [dufport](https://github.com/ZOSOpenTools/dufport) | 0 | 0
 | &#10003; [gnulibport](https://github.com/ZOSOpenTools/gnulibport) | 0 | 0
 | &#10003; [gperfport](https://github.com/ZOSOpenTools/gperfport) | 0 | 0
@@ -302,4 +301,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-08-23 00:38:26
+Last updated:  2023-08-24 12:04:08
