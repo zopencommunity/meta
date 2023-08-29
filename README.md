@@ -6,8 +6,9 @@ This fork is designed for everyday usage of the zos Open Tools ports within the 
 - Download the pax to a suitable location (for example /tmp).
 - Expand the pax using the command ```pax -rvf <filename>.pax```.  This will expand the pax to the current directory, listing the various included files as it does so.
 - From the ```meta-<ver>/bin``` directory run the following command, answering the questions appropriately:
-```
->zopen init
+```bash
+. ./.env
+zopen init
 ```
 
 
@@ -22,14 +23,15 @@ export _TAG_REDIR_OUT=txt
 ```
 
 ## Sample usage
-```
->./zopen init
->. <zopen_root_path>/etc/.zopen-config
->./zopen list --installed
->zopen install which
->zopen list --installed
->which which
->zopen upgrade
+```bash
+. ./.env # Source the .env from meta
+zopen init
+. <zopen_root_path>/etc/.zopen-config
+zopen list --installed
+zopen install which
+zopen list --installed
+which which
+zopen upgrade
 ```
 
 ## Important usage notes
