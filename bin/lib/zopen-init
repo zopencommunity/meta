@@ -219,7 +219,8 @@ if [ "$ZOPEN_PKGINSTALL" = "$rootfs" ]; then
    fi
 fi
 
-ZOPEN_CA_DIR="etc/pki/tls/certs"  # TODO: Work out "proper" location
+ZOPEN_CA_DIR="etc/pki/tls/certs"  # Mimic location on some Linux distributions
+certFileName="cacert.pem"
 if ! $clone; then
     printInfo "- Creating path for certificate lookups"
     [ -e "$rootfs/$ZOPEN_CA_DIR" ] || mkdir -p "$rootfs/$ZOPEN_CA_DIR"
@@ -230,7 +231,7 @@ echo "# z/OS Open Tools Configuration file" > "$configFile"
 echo "# Main root location for the zopen installation; can be changed if the " >> "$configFile"
 echo "# underlying root location is copied/moved elsewhere as locations are " >> "$configFile"
 echo "# relative to this envvar value" >> "$configFile"
-echo "ZOPEN_ROOTFS=$rootfs" >> "$configFile"
+echo "ZOPEN_ROOTFS=\"$rootfs\"" >> "$configFile"
 echo "export ZOPEN_ROOTFS" >> "$configFile"
 echo "configStartTime=\$SECONDS" >> "$configFile"
 echo "zot=\"z/OS Open Tools\"" >> "$configFile"
@@ -280,7 +281,7 @@ ZOPEN_PKGINSTALL=\$ZOPEN_ROOTFS/$zopen_pkginstall
 export ZOPEN_PKGINSTALL
 ZOPEN_SEARCH_PATH=\$ZOPEN_ROOTFS/usr/share/zopen/
 export ZOPEN_SEARCH_PATH
-ZOPEN_CA=\$ZOPEN_ROOTFS/$ZOPEN_CA_DIR/cacert.pem
+ZOPEN_CA=\"\$ZOPEN_ROOTFS/$ZOPEN_CA_DIR/$certFileName\"
 export ZOPEN_CA
 ZOPEN_LOG_PATH=\$ZOPEN_ROOTFS/var/log
 export ZOPEN_LOG_PATH
@@ -407,19 +408,29 @@ else
   [ -e "$cachedir/$basejqpax" ] || printError "Could not locate bootstrap jq pax."
   paxrc=$(pax -rf "$cachedir/$basejqpax" -s##$rootfs/boot/#)
 
-  cacertlcn=$(findrev "${utildir}" "cacert.pem")
-  if [ -e "$cacertlcn/cacert.pem" ]; then
-    printInfo "- Found default cacert.pem; copying to zopen file system"
-    cp -f "$cacertlcn/cacert.pem" "$ZOPEN_ROOTFS/$ZOPEN_CA_DIR"
+  if [ -n "$ZOPEN_CA" ]; then
+    printVerbose "Existing envvar for ZOPEN_CA found; running within a zopen environment"
+    if [ -r "$ZOPEN_CA" ]; then
+      printInfo "- Found existing setting for ZOPEN_CA '$ZOPEN_CA'; reusing certificate"
+      cp -f "$ZOPEN_CA" "$ZOPEN_ROOTFS/$ZOPEN_CA_DIR"
+    else
+      printError "Could not use certificate file '$certFileName' from ZOPEN_CA='$ZOPEN_CA'"
+    fi
   else
-    printError "Could not locate default cacert.pem at '../cacert.pem'."
+    printVerbose "Checking '${utildir}' directory tree for certificate file '$certFileName'"
+    cacertlcn="$(findrev "${utildir}" "$certFileName")"
+    if [ -e "$cacertlcn/$certFileName" ]; then
+      printInfo "- Found default certificate file '$certFileName'; copying to zopen file system"
+      cp -f "$cacertlcn/$certFileName" "$ZOPEN_ROOTFS/$ZOPEN_CA_DIR"
+    else
+      printError "Could not locate default certificate file '$certFileName' in directory structure above ${utildir}"
+    fi
   fi
-
-  if [ -r "$ZOPEN_ROOTFS/$ZOPEN_CA_DIR/cacert.pem" ]; then
-    printInfo "- Setting certificate envvar"
-    export SSL_CERT_FILE="$ZOPEN_ROOTFS/$ZOPEN_CA_DIR/cacert.pem"
+  if [ -r "$ZOPEN_ROOTFS/$ZOPEN_CA_DIR/$certFileName" ]; then
+    printInfo "- Setting certificate environment variable"
+    export SSL_CERT_FILE="$ZOPEN_ROOTFS/$ZOPEN_CA_DIR/$certFileName"
   else
-    printError "- Could not locate cacert.pem at '$ZOPEN_ROOTFS/$ZOPEN_CA_DIR'"
+    printError "- Could not locate '$certFileName' in '$ZOPEN_ROOTFS/$ZOPEN_CA_DIR'"
   fi
   
   # Need to source the .env file from within the actual curl directory and cannot
@@ -446,6 +457,8 @@ else
   ZOPEN_CA="$ZOPEN_CA/cacert.pem"
   export ZOPEN_CA
   runAndLog "${utildir}/zopen-update-cacert -f"
+  [ $? -ne 0 ] && exit $?
+
   printInfo "- Sourcing environment"
   . "$configFile"
   printInfo "- Using bootstrapped curl and jq to install latest release of itself (if available)"
