@@ -39,6 +39,7 @@
 * [libbsdport](https://github.com/ZOSOpenTools/libbsdport)
 * [libgit2port](https://github.com/ZOSOpenTools/libgit2port)
 * [libmdport](https://github.com/ZOSOpenTools/libmdport)
+* [libserdesport](https://github.com/ZOSOpenTools/libserdesport)
 * [multitailport](https://github.com/ZOSOpenTools/multitailport)
 * [neovimport](https://github.com/ZOSOpenTools/neovimport)
 * [phpport](https://github.com/ZOSOpenTools/phpport)
@@ -144,6 +145,7 @@
 | [libgit2port](https://github.com/ZOSOpenTools/libgit2port) | 0 | No builds |
 | [libmdport](https://github.com/ZOSOpenTools/libmdport) | 0 | No builds |
 | [librdkafkaport](https://github.com/ZOSOpenTools/librdkafkaport) | 0 | 100% |
+| [libserdesport](https://github.com/ZOSOpenTools/libserdesport) | 0 | No builds |
 | [libssh2port](https://github.com/ZOSOpenTools/libssh2port) | 0 | 100% |
 | [libxsltport](https://github.com/ZOSOpenTools/libxsltport) | 0 | 100% |
 | [llamacppport](https://github.com/ZOSOpenTools/llamacppport) | 0 | Skipped |
@@ -273,6 +275,7 @@
 | &#10003; [libbsdport](https://github.com/ZOSOpenTools/libbsdport) | 0 | 0
 | &#10003; [libgit2port](https://github.com/ZOSOpenTools/libgit2port) | 0 | 0
 | &#10003; [libiconvport](https://github.com/ZOSOpenTools/libiconvport) | 0 | 0
+| &#10003; [libserdesport](https://github.com/ZOSOpenTools/libserdesport) | 0 | 0
 | &#10003; [libxml2port](https://github.com/ZOSOpenTools/libxml2port) | 0 | 0
 | &#10003; [luarocksport](https://github.com/ZOSOpenTools/luarocksport) | 0 | 0
 | &#10003; [m4port](https://github.com/ZOSOpenTools/m4port) | 0 | 0
@@ -301,4 +304,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-08-29 10:35:44
+Last updated:  2023-08-30 14:57:00
