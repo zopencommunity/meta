@@ -509,9 +509,12 @@ checkEnv()
     ZOPEN_DEPS="${implicitDeps} ${ZOPEN_DEPS}"
   fi
 
-  export ZOPEN_CA="${utilparentdir}/cacert.pem"
   if ! [ -r "${ZOPEN_CA}" ]; then
-    printError "Internal Error. Certificate ${ZOPEN_CA} is required. Use zopen update-cacert to update."
+    # Check local clone
+    export ZOPEN_CA="${utilparentdir}/cacert.pem"
+    if ! [ -r "${ZOPEN_CA}" ]; then
+      printError "Internal Error. Certificate ${ZOPEN_CA} is required. Use zopen update-cacert to update."
+    fi
   fi
 }
 
