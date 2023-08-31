@@ -48,10 +48,10 @@ printDetailListEntries()
   needle=$2
   onlyUpgradesAvailable=$3
 
-  if [ $details -eq 0 ]; then
+  if [ "$details" -eq 0 ]; then
     scrcols=$(getScreenCols)
     numcols=4
-    colwidth=$(($scrcols / $numcols -1 ))
+    colwidth=$((scrcols / numcols -1 ))
     printVerbose "Screen width: $scrcols; colwidth:$colwidth"
     if [ ! -z "$1" ] && ! $noheader; then
       printf "${NC}${UNDERLINE}%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s${NC}\n" "Package" "Installed" "Available" "Latest Tag"
@@ -73,17 +73,18 @@ printDetailListEntries()
           printError "Unable to retrieve remote information"
         fi
         latestTag=$(/bin/printf "%s" "$latest" | jq -e -r '.tag_name')
-        if [ -e "${ZOPEN_PKGINSTALL}/${repo}/.releaseinfo" ]; then
-          originalTag=$(cat "${ZOPEN_PKGINSTALL}/${repo}/.releaseinfo")
+        pkghome="$ZOPEN_PKGINSTALL/${repo}/${repo}"
+        if [ -e "${pkghome}/.releaseinfo" ]; then
+          originalTag=$(cat "${pkghome}/.releaseinfo")
         else
           originalTag="Not installed"
         fi
-        if [ -e "${ZOPEN_PKGINSTALL}/${repo}/.version" ]; then
-          dotversion=$(cat "${ZOPEN_PKGINSTALL}/${repo}/.version")
+        if [ -e "${pkghome}/.version" ]; then
+          dotversion=$(cat "${pkghome}/.version")
         else
           dotversion="N/A"
         fi
-        if [ $onlyUpgradesAvailable -gt 0 ]; then
+        if [ "$onlyUpgradesAvailable" -gt 0 ]; then
           if [ "$originalTag" = "Not installed" -o "$originalTag" = "$latestTag" ]; then
             continue;
           fi 
@@ -99,7 +100,7 @@ printDetailListEntries()
     printVerbose "Checking repoArray: $repoArray"
     scrcols=$(getScreenCols)
     numcols=6
-    colwidth=$(($scrcols / $numcols -1 ))
+    colwidth=$((scrcols / numcols -1 ))
     printVerbose "Screen width: $scrcols; colwidth:$colwidth"
     if ! $noheader; then
       printf "${NC}${UNDERLINE}%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s${NC}\n" "Package" "Installed" "Latest Tag" "Download Size" "Expanded Size" "Quality"
@@ -116,8 +117,9 @@ printDetailListEntries()
       fi
     
       if $listport; then
-        if [ -e "${ZOPEN_PKGINSTALL}/${repo}/.releaseinfo" ]; then
-          originalTag=$(cat "${ZOPEN_PKGINSTALL}/${repo}/.releaseinfo")
+        pkghome="$ZOPEN_PKGINSTALL/${repo}/${repo}"
+        if [ -e "${pkghome}/.releaseinfo" ]; then
+          originalTag=$(cat "${pkghome}/.releaseinfo")
         else
           originalTag="Not installed"
         fi
@@ -132,7 +134,7 @@ printDetailListEntries()
                total="$(/bin/printf "%s" "$latest" | jq -e -r '.assets[0].total_tests')"
                expandedsize="$(/bin/printf "%s" "$latest" | jq -e -r '.assets[0].expanded_size')"
                downloadsize="$(/bin/printf "%s" "$latest" | jq -e -r '.assets[0].size')"
-               if [ $onlyUpgradesAvailable -gt 0 ]; then
+               if [ "$onlyUpgradesAvailable" -gt 0 ]; then
                  if [ "$originalTag" = "Not installed" -o "$originalTag" = "$latestTag" ]; then
                    continue;
                  fi 
@@ -147,11 +149,11 @@ printDetailListEntries()
                if [ -z "$percentage" ]; then
                  printf "${NC}${RED}%-${colwidth}s${NC}" "No tests"
                else
-                 printf "${NC}%s%-${colwidth}s${NC}" $(colorizepct "$percentage" ) "$percentage%"
+                 printf "${NC}%s%-${colwidth}s${NC}" "$(colorizepct "$percentage" )" "$percentage%"
                fi
                printf "\n"
                ;;
-          *) printError "Error $httpResponseCode while trying to retrieve latest repo release";;
+          *) printError "Error while trying to retrieve latest repo release";;
         esac
 
       fi
@@ -173,18 +175,18 @@ printInstalledEntries(){
     fi
   fi
   printVerbose "Getting list of symlinks in the package install directory (that point to specific versions)"
-  installedPackages=$(cd "$ZOPEN_PKGINSTALL" && zosfind . -type d \! -name . -prune -o -type l -print)
+  installedPackages=$(cd "$ZOPEN_PKGINSTALL" && zosfind . -type l)
   printVerbose "Packages: $installedPackages"
   echo "$installedPackages" | xargs | tr ' ' '\n' | sort | while read repo; do
-    pkghome="$ZOPEN_PKGINSTALL/${repo}"
+    repo="${repo##*/}"
+    pkghome="$ZOPEN_PKGINSTALL/${repo}/${repo}"
     if [ ! -e "${pkghome}/.active" ]; then
       printVerbose "Symlink '$repo' in '$ZOPEN_PKGINSTALL' is not active; skipping"
       continue
     fi
 
-    reponame=$(echo "${repo#./}") 
     if $noversions; then
-      printf "%s\n" "$reponame"
+      printf "%s\n" "$repo"
       continue
     fi
 
@@ -211,19 +213,19 @@ printInstalledEntries(){
     if [ -z "$1" ]; then
       printInfo "$originalTag"
     else
-      fileversion="$( cd "$ZOPEN_PKGINSTALL/${repo}" >/dev/null 2>&1 && pwd -P | xargs basename)"
-      printf "%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s" "$reponame" "$dotversion" "$fileversion" "$releaseline"
+      fileversion="$( cd "$ZOPEN_PKGINSTALL/${repo}/${repo}" >/dev/null 2>&1 && pwd -P | xargs basename)"
+      printf "%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s" "$repo" "$dotversion" "$fileversion" "$releaseline"
       if [ $details -eq 1 ]; then
         # Extra headers: disk size and quality
         disksizestr=$(du "$ZOPEN_PKGINSTALL/${repo}" |tail -n 1 )
         disksizestr=$(echo $disksizestr | sed 's#\([0-9]*\).*#\1#')
         disksize=$(( $disksizestr * 512 ))
-        printf "%-${colwidth}d" $(( $disksizestr * 512 ))
+        printf "%-${colwidth}d" $disksize
 
         if [ -e "${pkghome}/test.status" ]; then
           teststatus=$(cat "${pkghome}/test.status")
           percentage=$(echo "$teststatus" | sed 's/[^-]*-\([^%\.]*\).*/\1/')
-          printf "${NC}$s%-${colwidth}s${NC}" $(colorizepct "$percentage") "$percentage"
+          printf "${NC}$s%-${colwidth}s${NC}" "$(colorizepct "$percentage")" "$percentage"
         else
            printf "${NC}${RED}%-${colwidth}s${NC}" "No tests"
         fi

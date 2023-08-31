@@ -70,22 +70,22 @@ handlePackageInstall(){
   fi
 
   originalFileVersion=""
-  printVerbose "Checking for meta files in '${rootInstallDir}/${name}'"
+  printVerbose "Checking for meta files in '${rootInstallDir}/${name}/${name}'"
   printVerbose "Finding version/release information"
-  if [ -e "${rootInstallDir}/${name}/.releaseinfo" ]; then
-    originalFileVersion=$(cat "${rootInstallDir}/${name}/.releaseinfo")
+  if [ -e "${rootInstallDir}/${name}/${name}/.releaseinfo" ]; then
+    originalFileVersion=$(cat "${rootInstallDir}/${name}/${name}/.releaseinfo")
     printVerbose "Found originalFileVersion=$originalFileVersion (port is already installed)"
-  elif [ -e "${rootInstallDir}/${name}/.version" ]; then
-    originalFileVersion=$(cat "${rootInstallDir}/${name}/.version")
+  elif [ -e "${rootInstallDir}/${name}/${name}/.version" ]; then
+    originalFileVersion=$(cat "${rootInstallDir}/${name}/${name}/.version")
     printVerbose "Found originalFileVersion=$originalFileVersion (port is already installed)"
   else
-    printVerbose "Could not detect existing installation at ${rootInstallDir}/${name}"
+    printVerbose "Could not detect existing installation at ${rootInstallDir}/${name}/${name}"
   fi
 
   printVerbose "Finding releaseline information"
   installedReleaseLine=""
-  if [ -e "${rootInstallDir}/${name}/.releaseline" ]; then
-    installedReleaseLine=$(cat "${rootInstallDir}/${name}/.releaseline")
+  if [ -e "${rootInstallDir}/${name}/${name}/.releaseline" ]; then
+    installedReleaseLine=$(cat "${rootInstallDir}/${name}/${name}/.releaseline")
     printVerbose "Installed product from releaseline: $installedReleaseLine"
   else
     printVerbose "No current releaseline for package"
@@ -105,7 +105,7 @@ handlePackageInstall(){
     printVerbose "Finding URL for latest release matching version prefix: requestedVersion: $requestedVersion"
     releasemetadata=$(/bin/printf "%s" "$releases" | jq -e -r '. | map(select(.assets[].name | test("'$requestedVersion'")))[0]')
   elif [ ! "x" = "x$tagged" ]; then
-    printVerbose "Explicit tagger version '$tagged' specified. Checking for match"
+    printVerbose "Explicit tagged version '$tagged' specified. Checking for match"
     releaseMetadata=$(/bin/printf "%s" "$releases" | jq -e -r '.[] | select(.tag_name == "'$tagged'")')
     printVerbose "Use quick check for asset to check for existence of metadata for specific messages"
     asset=$(/bin/printf "%s" "$releaseMetadata" | jq -e -r '.assets[0]')
@@ -149,14 +149,15 @@ handlePackageInstall(){
     
   else
     printVerbose "No explicit version/tag/releaseline, checking for pre-existing package&releaseline"
-    if [ -n $installedReleaseLine ]; then
+    if [ -n "$installedReleaseLine" ]; then
       printVerbose "Found existing releaseline '$installedReleaseLine', restricting to only that releaseline"
       validatedReleaseLine="$installedReleaseLine"  # Already validated when stored
     else 
+      printVerbose "Checking for system-configured releaseline"
       sysrelline=$(cat "$ZOPEN_ROOTFS/etc/zopen/releaseline" | awk ' {print toupper($1)}')
       printVerbose "Validating value: $sysrelline"
       validatedReleaseLine=$(validateReleaseLine "$sysrelline")
-      if [ -z "$(validatedReleaseLine)" ]; then
+      if [ -n "$validatedReleaseLine" ]; then
         printVerbose "zopen system configured to use releaseline '$sysrelline'; restricting to that releaseline"
       else
         printWarning "zopen misconfigured to use an unknown releaseline of '$sysrelline'; defaulting to STABLE packages"
@@ -208,7 +209,7 @@ handlePackageInstall(){
   fi
 
   printVerbose "Getting specific asset details from metadata: $releasemetadata"
-  if [ -z "$asset" ]; then
+  if [ -z "$asset" ] || [ "null" = "$asset" ]; then
     printVerbose "Asset not found during previous logic; setting now"
     asset=$(/bin/printf "%s" "$releasemetadata" | jq -e -r '.assets[0]')
   fi
@@ -260,14 +261,14 @@ handlePackageInstall(){
       unInstallOldVersion=false
     else
       printVerbose "Previous version '${originalFileVersion}' installed"
-      if [ -e "${rootInstallDir}/${name}/.pinned" ]; then
+      if [ -e "${rootInstallDir}/${name}/${name}/.pinned" ]; then
         printWarning "- Version '${originalFileVersion}' has been pinned; upgrade to '${downloadFileVer}' skipped"
         syslog "$ZOPEN_LOG_PATH/audit.log" "$LOG_A" "$CAT_PACKAGE,$CAT_INSTALL" "DOWNLOAD" "handlePackageInstall" "Attempt to change pinned package '${name}' skipped"
         continue;
       else
         printInfo "- Replacing ${name} version '${originalFileVersion}' with '${downloadFileVer}'"
         unInstallOldVersion=true
-        currentversiondir=$(cd "$rootInstallDir/$name" && pwd -P)
+        currentversiondir=$(cd "$rootInstallDir/$name/${name}" && pwd -P)
         currentlinkfile="$currentversiondir/.links"
       fi
     fi
@@ -313,7 +314,7 @@ handlePackageInstall(){
     printVerbose "Pax was downloaded to zopen cache '$downloadDir'"
   else
     printVerbose "Installing $pax"
-    installdirname="${pax%.pax.Z}" # Use full pax name as default
+    installdirname="${name}/${pax%.pax.Z}" # Use full pax name as default
 
     printInfo "- Processing $pax..."
     baseinstalldir="."
@@ -360,16 +361,17 @@ handlePackageInstall(){
       rm -f "${pax}"
     fi
 
+set -x
     if $setactive; then
-      if [ -L "$baseinstalldir/$name" ]; then
-        printVerbose "Removing old symlink '$baseinstalldir/$name'"
-        rm -f "$baseinstalldir/$name"
+      if [ -L "$baseinstalldir/$name/${name}" ]; then
+        printVerbose "Removing old symlink '$baseinstalldir/$name/${name}'"
+        rm -f "$baseinstalldir/$name/${name}"
       fi
-      if ! ln -s "$baseinstalldir/$installdirname" "$baseinstalldir/$name"; then
+      if ! ln -s "$baseinstalldir/$installdirname" "$baseinstalldir/$name/${name}"; then
         printError "Could not create symbolic link name"
       fi 
     fi 
-
+set +x
     printVerbose "Adding version '${downloadFileVer}' to info file"
     # Add file version information as a .releaseinfo file
     echo "$downloadFileVer" > "${baseinstalldir}/$installdirname/.releaseinfo"
@@ -392,7 +394,7 @@ handlePackageInstall(){
       fi
 
       printInfo "- Checking for env file"
-      if [ -f ${baseinstalldir}/${name}/.env ]; then
+      if [ -f ${baseinstalldir}/${name}/${name}/.env ]; then
         printInfo "- .env file found, adding to profiled processing"
         mkdir -p "$ZOPEN_ROOTFS/etc/profiled/$name"
         cat << EOF > "$ZOPEN_ROOTFS/etc/profiled/$name/dotenv"
@@ -413,13 +415,14 @@ EOF
       # as the merge process overwrites existing files to point to different version
       unsymlinkFromSystem "$name" "$ZOPEN_ROOTFS" "$currentlinkfile"
     fi
+set -x    
     if $setactive; then
       printVerbose "Marking this version as installed"
-      touch "${baseinstalldir}/${name}/.active"
+      touch "${baseinstalldir}/${name}/${name}/.active"
       installedList="$name $installedList"
       syslog "$ZOPEN_LOG_PATH/audit.log" "$LOG_A" "$CAT_INSTALL,$CAT_PACKAGE" "DOWNLOAD" "handlePackageInstall" "Installed package:'$name';version:$downloadFileVer;install_dir='$baseinstalldir/$installdirname';"
     fi
-
+set +x
     if $doNotInstallDeps; then
         printInfo "- Skipping dependency installation"
     elif $reinstall; then
@@ -427,8 +430,8 @@ EOF
     else
       printInfo "- Checking for runtime dependencies"
       printVerbose "Checking for .runtimedeps file"
-      if [ -e "${baseinstalldir}/${name}/.runtimedeps" ]; then
-        dependencies=$(cat "${baseinstalldir}/${name}/.runtimedeps")
+      if [ -e "${baseinstalldir}/${name}/${name}/.runtimedeps" ]; then
+        dependencies=$(cat "${baseinstalldir}/${name}/${name}/.runtimedeps")
       fi
       printVerbose "Checking for runtime dependencies from the git metadata"
       if echo "$statusline" | grep "Runtime Dependencies:" >/dev/null; then

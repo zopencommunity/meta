@@ -22,29 +22,29 @@ removePackages(){
   echo "$pkglist" | xargs | tr ' ' '\n' | sort | while read pkg; do
     printHeader "Removing package: $pkg"
     printInfo "- Checking status of package '$pkg'"
-    if [ ! -f $ZOPEN_PKGINSTALL/$pkg/.active ]; then 
+    if [ ! -f $ZOPEN_PKGINSTALL/$pkg/$pkg/.active ]; then 
       printInfo "${NC}${YELLOW}Package '$pkg' is not installed${NC}"
     else
       printInfo "- Package installed, unmeshing from system"
       version="unknown"
-      if [ -e "${ZOPEN_PKGINSTALL}/${pkg}/.releaseinfo" ]; then
-        version=$(cat "${ZOPEN_PKGINSTALL}/${pkg}/.releaseinfo")
+      if [ -e "${ZOPEN_PKGINSTALL}/${pkg}/$pkg/.releaseinfo" ]; then
+        version=$(cat "${ZOPEN_PKGINSTALL}/${pkg}/$pkg/.releaseinfo")
       fi
 
-      if [ -e "$ZOPEN_PKGINSTALL/$pkg" ]; then
-        deref=$(cd $ZOPEN_PKGINSTALL/$pkg && pwd -P | awk -F/ '{ print $(NF)}')
-        installedlinksfile="$ZOPEN_PKGINSTALL/$deref/.links"
+      if [ -e "$ZOPEN_PKGINSTALL/$pkg/$pkg" ]; then
+        deref=$(cd "$ZOPEN_PKGINSTALL/$pkg/$pkg" && pwd -P | awk -F/ '{ print $(NF)}')
+        installedlinksfile="$ZOPEN_PKGINSTALL/$pkg/$deref/.links"
         if $purge; then
           printInfo "- Purging package"
           printVerbose "Checking if we are currently in a directory that is to be purged"
-          [ "${PWD##$ZOPEN_PKGINSTALL/$pkg}" != "$PWD" ] && cd $ZOPEN_PKGINSTALL
-          rm -rf $(cd $ZOPEN_PKGINSTALL/$pkg && pwd -P)
+          [ "${PWD##$ZOPEN_PKGINSTALL/$pkg/$pkg}" != "$PWD" ] && cd $ZOPEN_PKGINSTALL
+          rm -rf $(cd "$ZOPEN_PKGINSTALL/$pkg/$pkg" && pwd -P)
           syslog $ZOPEN_LOG_PATH/audit.log $LOG_A "$CAT_PACKAGE,$CAT_REMOVE" "REMOVE" "removePackage" "Purging package:'${needle};version:$version;"
         else
           printInfo "- Removing metadata file to mark uninstall"
-          rm -f $ZOPEN_PKGINSTALL/$pkg/.active
+          rm -f "$ZOPEN_PKGINSTALL/$pkg/$pkg/.active"
           printInfo "- Breaking link from current to versioned"
-          rm -f "$ZOPEN_PKGINSTALL/$pkg/"
+          rm -f "$ZOPEN_PKGINSTALL/$pkg/$pkg"
         fi
         printVerbose "Main symlink removed, removing dangling symlinks"
         unsymlinkFromSystem "$pkg" "$ZOPEN_ROOTFS" "$installedlinksfile"

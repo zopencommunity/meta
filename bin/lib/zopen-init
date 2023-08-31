@@ -75,6 +75,7 @@ case "$fslayout" in
     printError "${NC}${RED}The filesystem layout $fslayout is unrecognised"
     ;;
 esac
+
 printHeader "Initialize zopen framework"
 
 case "$fslayout" in
@@ -494,7 +495,7 @@ else
   # Code to use this version of meta as "official" install - pin to ensure no overwriting
   printInfo "- Installing and pinning currently running version of meta" 
   printVerbose "Current dir: $utildir"
-  metadtInstDir="$ZOPEN_ROOTFS/$zopen_pkginstall/meta-dt"
+  metadtInstDir="$ZOPEN_ROOTFS/$zopen_pkginstall/meta/meta-dt"
   printVerbose "Meta will be installed to $metadtInstDir"
   mkdir -p "$metadtInstDir"
 
