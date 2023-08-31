@@ -302,7 +302,7 @@ if [ -z "\$ZOPEN_QUICK_LOAD" ]; then
     [ ! -p \$TMP_FIFO_PIPE ] || rm -f \$TMP_FIFO_PIPE
     mkfifo \$TMP_FIFO_PIPE
     chtag -tc 819 \$TMP_FIFO_PIPE
-    /bin/echo "\$dotenvs" | xargs | tr ' ' '\n'>>\$TMP_FIFO_PIPE &
+    (/bin/echo "\$dotenvs" | xargs | tr ' ' '\n'>>\$TMP_FIFO_PIPE &)
     while read FILE; do
       filecnt=\$(expr \$filecnt + 1)
       pct=\$(expr \$filecnt \* 100)
@@ -408,33 +408,57 @@ else
   [ -e "$cachedir/$basejqpax" ] || printError "Could not locate bootstrap jq pax."
   paxrc=$(pax -rf "$cachedir/$basejqpax" -s##$rootfs/boot/#)
 
+  printVerbose "Configuring CA certificate file '$certFileName'"
+  cacertFound=false
+  printVerbose "Check for existing ZOPEN_CA environment variable: $ZOPEN_CA"
   if [ -n "$ZOPEN_CA" ]; then
-    printVerbose "Existing envvar for ZOPEN_CA found; running within a zopen environment"
+    printVerbose "Existing envvar for ZOPEN_CA found"
     if [ -r "$ZOPEN_CA" ]; then
       printInfo "- Found existing setting for ZOPEN_CA '$ZOPEN_CA'; reusing certificate"
       cp -f "$ZOPEN_CA" "$ZOPEN_ROOTFS/$ZOPEN_CA_DIR"
+      cacertFound=true
     else
-      printError "Could not use certificate file '$certFileName' from ZOPEN_CA='$ZOPEN_CA'"
+      printVerbose "Unable to use Certificate file '$certFileName' specified in environment variable ZOPEN_CA='$ZOPEN_CA'. "
     fi
   else
+    printVerbose "No current value for ZOPEN_CA environment variable"
+  fi
+  if ! $cacertFound; then
     printVerbose "Checking '${utildir}' directory tree for certificate file '$certFileName'"
     cacertlcn="$(findrev "${utildir}" "$certFileName")"
     if [ -e "$cacertlcn/$certFileName" ]; then
       printInfo "- Found default certificate file '$certFileName'; copying to zopen file system"
       cp -f "$cacertlcn/$certFileName" "$ZOPEN_ROOTFS/$ZOPEN_CA_DIR"
+      cacertFound=true
     else
-      printError "Could not locate default certificate file '$certFileName' in directory structure above ${utildir}"
+      printVerbose "Could not locate certificate file in directory structure"
     fi
   fi
+  if ! $cacertFound; then
+    cacertlcn="$utildir/../../../$ZOPEN_CA_DIR/$certFileName"
+    printVerbose "Attempting relative search for certificate file at '$cacertlcn'"
+    if [ -r "$cacertlcn" ]; then
+      printInfo "- Found existing certificate file $certFileName'; copying to zopen file system"
+      cp -f "$cacertlcn" "$ZOPEN_ROOTFS/$ZOPEN_CA_DIR"
+      cacertFound=true
+    else
+      printVerbose "Relative search did not locate certificate file"
+    fi
+  fi
+  if ! $cacertFound; then
+    printError "Could not find '$certFileName' to copy to new environment. Re-run 'zopen init' with the '--verbose' option for more details"
+  fi
+
   if [ -r "$ZOPEN_ROOTFS/$ZOPEN_CA_DIR/$certFileName" ]; then
     printInfo "- Setting certificate environment variable"
     export SSL_CERT_FILE="$ZOPEN_ROOTFS/$ZOPEN_CA_DIR/$certFileName"
   else
-    printError "- Could not locate '$certFileName' in '$ZOPEN_ROOTFS/$ZOPEN_CA_DIR'"
+    printError "- Could not access '$certFileName' in '$ZOPEN_ROOTFS/$ZOPEN_CA_DIR'"
   fi
   
   # Need to source the .env file from within the actual curl directory and cannot
   # spawn sub-process otherwise no access to environment from this script so run inline
+  printVerbose "Sourcing environment to trigger any setup required for packages"
   curldir="$(ls $rootfs/boot | grep curl)"
   [ -e "$rootfs/boot/$curldir" ] || printError "Could not locate curl for bootstrap. Re-run 'zopen init' to retry"
   chmod -R 755 "$rootfs/boot/$curldir"
