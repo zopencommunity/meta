@@ -348,8 +348,8 @@ chmod "$perms" "$configFile"
 effuid=$LOGNAME
 effgid=$(id -gn $effuid)
 printVerbose "Ensuring correct uid [$effuid] & gid [$effgid] for configfile if !installing as user (ie su/root/etc)"
-chown "$effuid" "$configFile"
-chgrp "$effgid" "$configFile"
+chown "$effuid" "$configFile" 2>/dev/null # suppress if not permitted
+chgrp "$effgid" "$configFile" 2>/dev/null # suppress if not permitted
 printInfo "- Created config in $configFile."
 
 printInfo "- Root FS available at $rootfs"
@@ -416,7 +416,9 @@ else
     printVerbose "Existing envvar for ZOPEN_CA found"
     if [ -r "$ZOPEN_CA" ]; then
       printInfo "- Found existing setting for ZOPEN_CA '$ZOPEN_CA'; reusing certificate"
-      cp -f "$ZOPEN_CA" "$ZOPEN_ROOTFS/$ZOPEN_CA_DIR"
+      if [ "$ZOPEN_CA" != "$ZOPEN_ROOTFS/$ZOPEN_CA_DIR/$certFileName" ]; then # avoid cp error
+        cp -f "$ZOPEN_CA" "$ZOPEN_ROOTFS/$ZOPEN_CA_DIR"
+      fi
       cacertFound=true
     else
       printVerbose "Unable to use Certificate file '$certFileName' specified in environment variable ZOPEN_CA='$ZOPEN_CA'. "
