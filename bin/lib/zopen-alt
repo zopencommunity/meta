@@ -37,8 +37,8 @@ setAlt(){
         valid=true
       fi
     done
-    if [ ! $selection -eq $current ]; then
-      newver="$(echo $found | awk -v selection=$selection '
+    if [ ! "$selection" -eq "$current" ]; then
+      newver="$(echo $found | awk -v selection="$selection" '
         BEGIN {count=0}
               {count = count + 1; if (count=selection) { print $(selection)} }
       ')"
@@ -46,7 +46,8 @@ setAlt(){
       [ -d "$ZOPEN_PKGINSTALL/$needle/$newver" ] || printError "Mismatch found, no version directory at $newver" 
       [ -n "$needle" ] || printError "$ZOPEN_PKGINSTALL/$needle not found"
       if [ -e "$ZOPEN_PKGINSTALL/$needle/$needle" ]; then
-        printVerbose "Removing master link"
+        printVerbose "Removing main link"
+        
         rm -rf "$ZOPEN_PKGINSTALL/$needle/$needle"
       fi
 
@@ -62,9 +63,9 @@ setAlt(){
       fi 
       
       misrc=$?
-      printVerbose "The merge complete with: $misrc"
+      printVerbose "The merge completed with: $misrc"
       printVerbose "Generating main link from $needle to version: $newver"
-      if ! ln -sf $newver $ZOPEN_PKGINSTALL/$needle/$needle; then
+      if ! ln -sf "$newver" "$ZOPEN_PKGINSTALL/$needle/$needle"; then
         printError "Could not create symbolic link name"
       fi
       touch "${ZOPEN_PKGINSTALL}/${needle}/${needle}/.active"
@@ -72,7 +73,7 @@ setAlt(){
       if [ -e "${ZOPEN_PKGINSTALL}/${needle}/${needle}/.releaseinfo" ]; then
         version=$(cat "${ZOPEN_PKGINSTALL}/${needle}/${needle}/.releaseinfo")
       fi
-      syslog $ZOPEN_LOG_PATH/audit.log $LOG_A "$CAT_PACKAGE" "ALT" "setAlt" "Set '${needle}' to version:$version;"
+      syslog "$ZOPEN_LOG_PATH/audit.log" "$LOG_A" "$CAT_PACKAGE" "ALT" "setAlt" "Set '${needle}' to version:$version;"
     else
       printInfo "Selection is already current version."
       exit 0
@@ -81,9 +82,10 @@ setAlt(){
 
 listAlts(){
   sett=$1
-  needle=$2
+  needle="$2"
 
-  printVerbose "Checking for the existence of the $needle package directory within PKGINSTALL"
+  printVerbose "Checking for the existence of the '$needle' package directory within PKGINSTALL"
+  needle=$(echo "$needle" | awk '{$1=$1};1')
   if [ -e "$ZOPEN_PKGINSTALL/$needle/" ]; then
     printVerbose "$needle is either installed or has been previously"
     found=$(zosfind "$ZOPEN_PKGINSTALL/$needle/" -type l -prune -o -type d -print | sed -e "s#$ZOPEN_PKGINSTALL/$needle/\([^/]*\).*#\1#" | uniq)
@@ -94,8 +96,8 @@ listAlts(){
     printInfo "No currently available version of package '${needle}'"
     exit 4
   fi
-  if [ -e $ZOPEN_PKGINSTALL/$needle/$needle ]; then
-    deref=$(ls -l $ZOPEN_PKGINSTALL/$needle/$needle | awk '{ print $(NF) }')
+  if [ -e "$ZOPEN_PKGINSTALL/$needle/$needle" ]; then
+    deref=$(ls -l "$ZOPEN_PKGINSTALL/$needle/$needle" | awk '{ print $(NF) }')
     printVerbose "Current version: ${deref#$ZOPEN_PKGINSTALL/}"
   fi
 
@@ -104,9 +106,9 @@ listAlts(){
 # just the below would be simpler, but creates a subshell so can't get the number of entries outside!  
 #  echo "$found" | xargs | tr ' ' '\n' | while read repo; do
   TMP_FIFO_PIPE="$HOME/altselect.pipe"
-  [[ ! -p $TMP_FIFO_PIPE ]] || rm -f $TMP_FIFO_PIPE
+  [[ ! -p "$TMP_FIFO_PIPE" ]] || rm -f "$TMP_FIFO_PIPE"
   mkfifo $TMP_FIFO_PIPE
-  echo "$found" | xargs | tr ' ' '\n' >> $TMP_FIFO_PIPE &
+  echo "$found" | xargs | tr ' ' '\n' >> "$TMP_FIFO_PIPE" &
   while read repo; do
     printVerbose "Parsing repo: '$repo' as '${repo#$ZOPEN_PKGINSTALL/}'"
     i=$(expr $i + 1)
@@ -116,13 +118,13 @@ listAlts(){
     else
       printInfo "$i: ${repo#$ZOPEN_PKGINSTALL/}"
     fi
-  done < $TMP_FIFO_PIPE
-  [[ ! -p $TMP_FIFO_PIPE ]] || rm -rf $TMP_FIFO_PIPE
+  done < "$TMP_FIFO_PIPE"
+  [[ ! -p $TMP_FIFO_PIPE ]] || rm -rf "$TMP_FIFO_PIPE"
 
   if $sett; then
     mutexReq "zopen" "zopen"
     setAlt "$i" "$needle" "$deref"
-    unset $sett
+    unset sett
     mutexFree "zopen"
     listAlts false "$needle"
   fi
@@ -161,5 +163,5 @@ while [[ $# -gt 0 ]]; do
   shift;
 done
 
-[[ -z "$packageList" ]] || listAlts $sett $packageList
+[[ -z "$packageList" ]] || listAlts $sett "$packageList"
 printError "No action verb specified"

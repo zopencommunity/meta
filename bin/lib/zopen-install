@@ -132,7 +132,8 @@ handlePackageInstall(){
       fi
     done
     printVerbose "Selecting item $selection from array"
-    releaseMetadata="$(/bin/printf "%s" "$releases" | jq -e -r ".[$selection]")"
+    releasemetadata="$(/bin/printf "%s" "$releases" | jq -e -r ".[$selection]")"
+
   elif [ ! -z "$releaseLine" ]; then  
     printVerbose "Install from release line '$releaseLine' specified"
     validatedReleaseLine=$(validateReleaseLine "$releaseLine")
@@ -176,7 +177,6 @@ handlePackageInstall(){
       # then that specific releaseline will be used
     printVerbose "Finding any releases tagged with $validatedReleaseLine and getting the first (newest/latest)"
     releaseMetadata="$(/bin/printf "%s" "$releases" | jq -e -r '. | map(select(.tag_name | startswith("'$validatedReleaseLine'")))[0]')"
-    #releaseMetadata="$(/bin/printf "%s" "$releases" | jq -e -r '. | map(select(.tag_name | test("^$validatedReleaseLine"; "i")))[0]')"
     printVerbose "Use quick check for asset to check for existence of metadata"
     asset="$(/bin/printf "%s" "$releaseMetadata" | jq -e -r '.assets[0]')"
     if [ $? -eq 0 ]; then
@@ -187,7 +187,6 @@ handlePackageInstall(){
       printVerbose "No releases on releaseline '$validatedReleaseLine'; checking alternative releaseline"
       alt=$(echo "$validatedReleaseLine" | awk ' /DEV/ { print "STABLE" } /STABLE/ { print "DEV" }')
       releaseMetadata="$(/bin/printf "%s" "$releases" | jq -e -r '. | map(select(.tag_name | startswith("'$alt'")))[0]')"
-      #releaseMetadata="$(/bin/printf "%s" "$releases" | jq -e -r '. | map(select(.tag_name | test("^$alt"; "i")))[0]')"
       printVerbose "Use quick check for asset to check for existence of metadata"
       asset="$(/bin/printf "%s" "$releaseMetadata" | jq -e -r '.assets[0]')"
       if [ $? -eq 0 ]; then
@@ -361,7 +360,6 @@ handlePackageInstall(){
       rm -f "${pax}"
     fi
 
-set -x
     if $setactive; then
       if [ -L "$baseinstalldir/$name/${name}" ]; then
         printVerbose "Removing old symlink '$baseinstalldir/$name/${name}'"
@@ -371,7 +369,7 @@ set -x
         printError "Could not create symbolic link name"
       fi 
     fi 
-set +x
+
     printVerbose "Adding version '${downloadFileVer}' to info file"
     # Add file version information as a .releaseinfo file
     echo "$downloadFileVer" > "${baseinstalldir}/$installdirname/.releaseinfo"
@@ -415,14 +413,14 @@ EOF
       # as the merge process overwrites existing files to point to different version
       unsymlinkFromSystem "$name" "$ZOPEN_ROOTFS" "$currentlinkfile"
     fi
-set -x    
+
     if $setactive; then
       printVerbose "Marking this version as installed"
       touch "${baseinstalldir}/${name}/${name}/.active"
       installedList="$name $installedList"
       syslog "$ZOPEN_LOG_PATH/audit.log" "$LOG_A" "$CAT_INSTALL,$CAT_PACKAGE" "DOWNLOAD" "handlePackageInstall" "Installed package:'$name';version:$downloadFileVer;install_dir='$baseinstalldir/$installdirname';"
     fi
-set +x
+
     if $doNotInstallDeps; then
         printInfo "- Skipping dependency installation"
     elif $reinstall; then
