@@ -66,7 +66,7 @@ getCACertFromCurl()
   [ $crc -ne 0 ] && printError "Could not locate curl to download certificate."
 
   printVerbose "Type of curl: $curlver"
-  if ! curl -L "$nocertverify" -o "$TEMP_CACERT" ${cacert_update_url} ; then
+  if ! curl -L $nocertverify -o "$TEMP_CACERT" ${cacert_update_url} ; then
     printError "curl command could not download from: ${cacert_update_url}"
   fi
 

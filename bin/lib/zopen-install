@@ -397,7 +397,7 @@ handlePackageInstall(){
         mkdir -p "$ZOPEN_ROOTFS/etc/profiled/$name"
         cat << EOF > "$ZOPEN_ROOTFS/etc/profiled/$name/dotenv"
 curdir=\$(pwd)
-cd "$baseinstalldir/$name" >/dev/null 2>&1
+cd "$baseinstalldir/$name/$name" >/dev/null 2>&1
 if [ -f ".env" ]; then
   . ./.env
 fi
