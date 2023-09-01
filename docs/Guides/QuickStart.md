@@ -3,6 +3,15 @@
 z/OS Open Tools lets you install unsupported Open Source tools that run native on your z/OS system. 
 Whether you want to strictly _use_ the tools or also _improve_ the tools is up to you.
 
+# UPDATE: New zopen framework is now available!
+
+The new zopen package manager is not compatible with the previous version of zopen. Migration involves creating a new directory structure for zopen tools. This is accomplished via the `zopen init` command, documented below.
+
+## Before you migrate
+* Identify the tools you have already installed. Use `zopen install --list`.
+* If you plan to reuse the existing zopen root directory for installing the new tools, then make sure to back it up to a different directory.
+* Follow the steps below and install each of the tools again via `zopen install`
+
 ## Getting meta
 
 Download [meta](https://github.com/ZOSOpenTools/meta/releases/download/TDB) to z/OS.
