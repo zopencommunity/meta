@@ -46,18 +46,18 @@ zopen install git vim # install both git and vim
 ## Important usage notes
 - On first run, ```zopen init``` will copy meta into the "package" area of zopen (ie. where packages are expanded and accessed from).  It will also be pinned to this release to prevent any possible updates from the "real" meta package. Removing the .pinned file from the meta directory will allow for the main meta port to be installed however this will cause incompatabilities if run.
 
-- Remote respositores utilise the suffix ```port``` - where required, packages should be specified **without** the suffix. eg using ```zopen install which``` rather than ```zopen install whichport```
+- Remote respositores utilise the suffix `port` - where required, packages should be specified **without** the suffix. eg using `zopen install which` rather than `zopen install whichport`
 
 ## Root filesystem install
-- Selecting ```'/' ``` as the root filesystem will allow the tools to be available system wide for all users who configure their usage. The install needs to be done by a sysadmin [or someone with sufficient rights using the sudo port for example] as the installer will write files to the /usr tree and configuration information to /etc. There will also be a configuration file written as ```/etc/.zopen-config``` - this can be sourced by other users.
-- Removing zopen and the z/OS Open Tools once installed involves: uninstalling all installed packages; removing any copies of ```.zopen-config```; removing the configured zopen root directory (by default ```/usr/local/zopen``` but is set during installation); and then running a command to find any final orphaned symlinks on the system, such as: ```/bin/find $ZOPEN_ROOTFS -type l -exec test ! -e {} \; -print```  where $ZOPEN_ROOTFS is '/' [replace `-print` with `rm -rf` to actually remove symlinks, the example command should only list what was found - care should be taken when removing any files with sysadmin authority to prevent removing critial files!]
+- Selecting `'/' ` as the root filesystem will allow the tools to be available system wide for all users who configure their usage. The install needs to be done by a sysadmin [or someone with sufficient rights using the sudo port for example] as the installer will write files to the /usr tree and configuration information to /etc. There will also be a configuration file written as ```/etc/.zopen-config``` - this can be sourced by other users.
+- Removing zopen and the z/OS Open Tools once installed involves: uninstalling all installed packages; removing any copies of `.zopen-config`; removing the configured zopen root directory (by default ```/usr/local/zopen``` but is set during installation); and then running a command to find any final orphaned symlinks on the system, such as: `/bin/find $ZOPEN_ROOTFS -type l -exec test ! -e {} \; -print`  where $ZOPEN_ROOTFS is '/' [replace `-print` with `rm -rf` to actually remove symlinks, the example command should only list what was found - care should be taken when removing any files with sysadmin authority to prevent removing critial files!]
 
 ## Basic command introduction
-Most commands have extended help available using the ```--help``` parameter.  The following usage guidance should be sufficient to get a system running.
+Most commands have extended help available using the `--help` parameter.  The following usage guidance should be sufficient to get a system running.
 
 ```bash
 zopen init
-``
+```
 
 Used to initialise a z/OS Open Tools environment. By default, this will create a ```zopen``` directory in your ```$HOME``` directory as the root filesystem (rootfs).  The rootfs holds the various packages, configuration and environment for z/OS Open Tools packages - removing this directory will revert the system without a trace.  A z/OS Open Tools main configuration file is generated in ```$rootfs/etc/.zopen-config``` - to enable the z/OS Open Tools, this will either need to be sourced after logon to the system or the following line can be added to ```$HOME/.profile``` (or .bash_profile or...) to automatically source the z/OS Open Tools configuration file.
 ```bash
