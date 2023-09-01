@@ -7,8 +7,8 @@ The new zopen package manager is not compatible with the previous version of zop
 * If you plan to reuse the existing zopen root directory for installing the new tools, then make sure to back it up to a different directory.
 * Follow the steps below and install each of the tools again via `zopen install`
 
-# meta
-Meta adds package management facilities to z/OS, similar to utilities like apt, dpkg, yum, yast2, emerge. It is written in pure shell script to remove any pre-reqs (like python/perl/bash etc).
+# meta - Introducing the zopen package manager
+Meta adds package management facilities to z/OS, via zopen. It is similar to utilities like apt, dpkg, yum, yast2, emerge. It is written in pure shell script to remove any pre-reqs (like python/perl/bash etc).
 This package manager is designed for everyday usage of the z/OS Open Tools ports within the USS environment or for those who wish to download the tools.
 
 ## Pre-config
@@ -22,7 +22,7 @@ export _TAG_REDIR_OUT=txt
 ```
 
 ## Installation
-- Download the pax to a suitable location (for example /tmp).
+- Download the meta pax to a suitable location (for example /tmp).
 - Expand the pax using the command ```pax -rvf <filename>.pax```.  This will expand the pax to the current directory, listing the various included files as it does so.
 - From the ```meta-<ver>/bin``` directory run the following command, answering the questions appropriately:
 ```bash
