@@ -544,6 +544,7 @@ progressSpinner(){
   done
 }
 progressHandler() {
+    if [ ! "${_BPX_TERMPATH-x}" = "OMVS" ] && [ -z "${NO_COLOR}" ] && [ ! "${FORCE_COLOR-x}" = "0" ] && [ -t 1 ] && [ -t 2 ]; then
     [ -z "${-%%*x*}" ] && set +x  # Disable -x debug if set for this process
     type=$1
     completiontext=$2  # Custom end text (when the process is complete)
@@ -559,6 +560,7 @@ progressHandler() {
       "network") progressNetwork;;
       *)         progressSpinner;;
     esac
+		fi
 }
 
 
