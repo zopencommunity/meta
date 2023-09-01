@@ -266,8 +266,8 @@ processOptions()
   generateSymLink=true
   forcePatchApply=false
   depsPath="$HOME/zopen/prod|$HOME/zopen/boot|/usr/bin/zopen/"
-  if [ ! -z "$ZOPEN_SEARCH_PATH" ]; then
-    depsPath="$ZOPEN_SEARCH_PATH/prod|$ZOPEN_SEARCH_PATH/boot|$depsPath"
+  if [ ! -z "$ZOPEN_PKGINSTALL" ]; then
+    depsPath="$ZOPEN_PKGINSTALL|$depsPath"
   fi
   forceUpgradeDeps=false
   while [[ $# -gt 0 ]]; do
@@ -509,9 +509,12 @@ checkEnv()
     ZOPEN_DEPS="${implicitDeps} ${ZOPEN_DEPS}"
   fi
 
-  export ZOPEN_CA="${utilparentdir}/cacert.pem"
   if ! [ -r "${ZOPEN_CA}" ]; then
-    printError "Internal Error. Certificate ${ZOPEN_CA} is required. Use zopen update-cacert to update."
+    # Check local clone
+    export ZOPEN_CA="${utilparentdir}/cacert.pem"
+    if ! [ -r "${ZOPEN_CA}" ]; then
+      printError "Internal Error. Certificate ${ZOPEN_CA} is required. Use zopen update-cacert to update."
+    fi
   fi
 }
 
@@ -582,7 +585,7 @@ setDepsEnv()
       fi
       # Use the first path specified in the dependency search list
       path=$(echo ${depsPath} | tr '|' '\n' | head -1)
-      if ! runAndLog "PATH=\"$curlpath:$PATH\" zopen install --install-or-upgrade -r $dep -d $path -v"; then
+      if ! runAndLog "PATH=\"$curlpath:$PATH\" $utildir/zopen-install --install-or-upgrade -r $dep -v -y"; then
         printError "zopen install command failed"
       fi
       depdir="$path/${dep}"
@@ -1369,7 +1372,7 @@ ZZ
   echo "$ZOPEN_RUNTIME_DEPS" | xargs | tr ' ' '\n' | sort | while read dep; do
     # Use the first path specified in the dependency search list to install to
     path=$(echo ${depsPath} | tr '|' '\n' | head -1)
-    if ! runAndLog "PATH=\"$curlpath:$PATH\" zopen install $dep -v -d $path --nodeps"; then
+    if ! runAndLog "PATH=\"$curlpath:$PATH\" $utildir/zopen-install $dep -v --no-deps -y"; then
       printError "Failed to install dependencies"
     fi
     cat <<ZZ >> "${ZOPEN_INSTALL_DIR}/.depsenv"
@@ -1558,7 +1561,7 @@ resolveCommands()
     fi
   fi
   if [ "${ZOPEN_INSTALL_DIR}x" = "x" ]; then
-    export ZOPEN_INSTALL_DIR="${HOME}/zopen/prod/${ZOPEN_NAME}"
+    export ZOPEN_INSTALL_DIR="$ZOPEN_PKGINSTALL/${ZOPEN_NAME}"
   fi
   if [ "${ZOPEN_LOG_DIR}x" = "x" ]; then
     export ZOPEN_LOG_DIR="${ZOPEN_ROOT}/log"

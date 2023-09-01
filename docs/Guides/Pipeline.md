@@ -6,11 +6,9 @@
 
 The z/OS Open Tools CI/CD pipeline leverages Wazi as a Service instances to be able to build, test, and deploy ported packages to Github Releases.
 
-There is currently one z/OS node set up under the ip address `128.168.143.139`. 
-
 ### z/OS Open Tools Jenkins CI/CD Pipeline
 
-Access the Jenkins CI/CD Pipeline at https://163.74.88.212:8443.  To be able to view/launch Jenkins CI/CD jobs, you must first log-in with your w3id (currently IBM Internal)
+Access to the Jenkins CI/CD Pipeline is currently restricted.  To be able to view/launch Jenkins CI/CD jobs, you must first log-in with your w3id (currently IBM Internal)
 
 ### Overview of Jenkins CI/CD jobs
 
@@ -39,11 +37,7 @@ Once you have checked in the `cicd.groovy` script, inform Igor Todorovski at ito
 ### Launch a Jenkins CI/CD build for your project
 If you have sufficient access, then you can launch a build of your z/OS Open Source port via Jenkins. Alternatively, you can initiate a build automatically via a commit to the corresponding repository.
 
-To manually start a build, locate your port from the _Port_ view: `https://163.74.88.212:8443/view/Ports/`
+If you have access, to start a build, locate your port from the _Port_ view: `https://163.74.88.212:8443/view/Ports/`
 
 Click on the arrow pointing downwards and select *Build Now*. This will launch a build of your port.
-
-
-### Slack Build Status Notifications
-A slack notification is currently set up to post build status on the [#zos-opentools-builds](https://ibm-systems-z.slack.com/archives/C03QBPC863E) slack channel.
 

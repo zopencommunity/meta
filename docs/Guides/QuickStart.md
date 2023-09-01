@@ -3,51 +3,49 @@
 z/OS Open Tools lets you install unsupported Open Source tools that run native on your z/OS system. 
 Whether you want to strictly _use_ the tools or also _improve_ the tools is up to you.
 
-The easiest way to install and build software packages from z/OS Open Tools is to setup the _zopen tools_ on your z/OS system.
+# UPDATE: New zopen framework is now available!
 
-We provide a program called `zopen-setup` so you can _bootstrap_ your z/OS system. Your z/OS system will need external connectivity since `zopen-setup` will connect to [z/OS Open Tools repositories](https://github.com/ZOSOpenTools). 
+The new zopen package manager is not compatible with the previous version of zopen. Migration involves creating a new directory structure for zopen tools. This is accomplished via the `zopen init` command, documented below.
 
-## Getting zopen-setup
+## Before you migrate
+* Identify the tools you have already installed. Use `zopen install --list`.
+* If you plan to reuse the existing zopen root directory for installing the new tools, then make sure to back it up to a different directory.
+* Follow the steps below and install each of the tools again via `zopen install`
 
-Download [zopen-setup](https://github.com/ZOSOpenTools/meta/releases/download/v1.0.0/zopen-setup) to z/OS, mark the program executable, and run it. Detailed instructions follow.
+## Getting meta
 
-### Getting zopen-setup to your z/OS system
+Download [meta](https://github.com/ZOSOpenTools/meta/releases/download/TDB) to z/OS.
 
-Note: In the documentation that follows, text inside `< ... >` indicates a value you need to provide, e.g. `<z/OS system>` would be replaced with the name of the z/OS system you are using.
+Expand the pax using the command ```pax -rvf <filename>.pax```.  This will expand the pax to the current directory, listing the various included files as it does so.
 
-To get started, you need to get the _zopen-setup_ program to your z/OS system. Here is one approach:
-- Log on to your desktop system
-- Download [zopen-setup](https://github.com/ZOSOpenTools/meta/releases/download/v1.0.0/zopen-setup)
-- Open a terminal window on your desktop 
-- `cd` into the directory you downloaded the file to
-- `sftp <z/OS system>`
-- Log in if required
-- `put zopen-setup`
-- `quit`
-- `ssh <z/OS system>`
-- log in if required
-- `cd $HOME`
-- `chmod u+x zopen-setup` # mark the program executable
+Source the .env to pick up the zopen environment:
+```bash
+. ./..env
+```
 
-If you don't have ssh, scp, sftp access to your z/OS system, we would encourage you to set it up. 
-It will be much easier to work with USS using ssh, scp, and sftp.
+Now initialize your environment with zopen init:
+```bash
+zopen init
+```
 
-### Running zopen-setup
+This will create a .zopen-config configuration `<zopen_root>/etc/`. You can source this in your envrionment or add it to your .bashrc or .profile.
 
-- `cd $HOME`
-- `./zopen-setup  <file system>` # file system is the location where the zopen tools will be installed
+```bash
+. <zopen_root>/etc/.zopen-config
+```
 
-### Set up the zopen tools
+You are now free to install any z/OS Open Tools via `zopen install`.
 
-Your zopen tools environment has been downloaded but not yet set up. Before starting the setup, make sure that the environment variable `_BPXK_AUTOCVT` is set to ON.
-
-To set up the environment:
-- `cd $HOME/zopen/boot`
-- `. ./.bootenv` # add the tools zopen needs to function, as well as zopen (don't forget the leading '.' which sources the script)
-
-Each time you log on, you will need to set up your boot environment before you can use zopen. You do this the same way as your initial setup:
-- `cd $HOME/zopen/boot`
-- `. ./.bootenv`
+## Sample usage
+```
+>./zopen init
+>. $HOME/.zopen-config
+>./zopen list --installed
+>zopen install which
+>zopen list --installed
+>which which
+>zopen upgrade
+```
 
 You are now ready to _use_ or _improve_ the tools you want.
 

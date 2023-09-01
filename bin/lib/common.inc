@@ -1,11 +1,65 @@
 #!/bin/sh
-defineColors() 
+export ZOPEN_CLEANUP="stty echo" # set this as a default to ensure line visibility!
+addCleanupTrapCmd(){
+  newCmd=$(echo "$1" | sed -e 's/^[ ]*//' -e 's/[ ]*$//')
+  if [ -z "$ZOPEN_CLEANUP" ]; then
+    export ZOPEN_CLEANUP="$newCmd"
+  else
+    export ZOPEN_CLEANUP="$(deleteDuplicateEntriesRedux "$ZOPEN_CLEANUP; $newCmd" ";")"
+  fi
+}
+cleanupFunction() {
+  [ -n "$ZOPEN_CLEANUP" ] && $(eval "$ZOPEN_CLEANUP" 2>/dev/null)
+  trap - EXIT INT TERM QUIT HUP
+  unset ZOPEN_CLEANUP
+}
+trap "cleanupFunction" EXIT INT TERM QUIT HUP
+
+validateReleaseLine(){
+  echo "$1" | awk '
+    toupper($1)=="DEV"    {print toupper($0)}
+    toupper($1)=="STABLE" {print toupper($0)}
+                          { print ""}
+  '
+}
+
+# Attempt to fully dereference a symlink without any bashisms or arcane set logic
+# using some simplistic (recursive!) logic
+deref(){
+  testpath="$1"
+  if [ -L "$testpath" ]; then
+    child=$(basename "$testpath")
+    symlink=$(ls -l "$testpath" | sed 's/.*-> \(.*\)/\1/')
+    parent=$(dirname "$testpath")
+    relpath="$parent/$symlink"
+    relparent=$(dirname "$relpath")
+    abspath=$(cd "$relparent" && pwd -P)
+    testpath="$abspath/$child"
+    deref "$testpath"
+  else
+    [ -n "$testpath" ] && echo "$testpath" && unset testpath
+  fi
+}
+
+defineANSI() 
 {
+  # Standard tty codes
+  ESC="\047"
+  ERASELINE="${ESC}[2K"
+  CRSRHIDE="${ESC}[?25l"
+  CRSRSHOW="${ESC}[?25h"
+
+  # Color-type codes, needs explicit terminal settings
   if [ ! "${_BPX_TERMPATH-x}" = "OMVS" ] && [ -z "${NO_COLOR}" ] && [ ! "${FORCE_COLOR-x}" = "0" ] && [ -t 1 ] && [ -t 2 ]; then
     esc="\047"
+    BLACK="${esc}[30m"
     RED="${esc}[31m"
     GREEN="${esc}[32m"
     YELLOW="${esc}[33m"
+    BLUE="${esc}[34m"
+    MAGENTA="${esc}[35m"
+    CYAN="${esc}[36m"
+    GRAY="${esc}[37m"
     BOLD="${esc}[1m"
     UNDERLINE="${esc}[4m"
     NC="${esc}[0m"
@@ -13,13 +67,63 @@ defineColors()
 # unset esc RED GREEN YELLOW BOLD UNDERLINE NC
 
     esc=''
+    BLACK=''
     RED=''
     GREEN=''
     YELLOW=''
+    BLUE=''
+    MAGENTA=''
+    CYAN=''
+    GRAY=''
     BOLD=''
     UNDERLINE=''
     NC=''
   fi
+}
+ansiline(){
+  deltax=$1
+  deltay=$2
+  echostr=$3
+  if [ $deltax -gt 0 ]; then
+    echostr="${ESC}[${deltax}A$echostr"
+  elif [ $deltax -lt 0 ]; then
+    echostr="${ESC}[$(expr $deltax \* -1)A$echostr"
+  fi
+  if [ $deltay -gt 0 ]; then
+    echostr="${ESC}[${deltax}C$echostr"
+  elif [ $deltay -lt 0 ]; then
+    echostr="${ESC}[$(expr $deltax \* -1)D$echostr"
+  fi
+ /bin/echo "${echostr}"
+
+}
+
+getScreenCols(){
+  # Note tput does not handle ssh sessions too well...
+  stty | awk -F'[/=;]' '/columns/ { print $4}' | tr -d " "
+}
+
+zosfind(){
+  # Use the standard z/OS find utility; If the findutils package is installed,
+  # the installed find command takes precedence but is not compatible with the
+  # standard zos find [regex searches for "-name" are not allowed, but
+  # "-wholename" is not available on standard zosfind. For the tooling to be
+  # consistent across platforms (where findutils is/is not installed) use the
+  # standard zos version
+  /bin/find $*
+}
+
+findrev () {
+  haystack="$1"
+  needle="$2"
+  while [[ "$haystack" != "" && "$haystack" != "/" && "$haystack" != "./" && ! -e "$haystack/$needle" ]]; do
+    haystack=${haystack%/*}
+  done
+  echo "$haystack"
+}
+
+strtrim(){
+  echo "$1" | sed -e 's/^[ ]*//' -e 's/[ ]*$//'
 }
 
 defineEnvironment()
@@ -41,6 +145,9 @@ defineEnvironment()
 
   # Use /bin/cat as the pager in case xlclang help is displayed, we don't want to wait for input
   export PAGER=/bin/cat
+
+  # Set a default umask of full permissions to owner and group.
+  umask 0002
 }
 
 #
@@ -49,26 +156,321 @@ defineEnvironment()
 #
 printColors()
 {
-  /bin/echo "$1"
+  /bin/echo "$@"
+}
+
+mutexReq(){
+  mutex=$1
+  lockdir="$ZOPEN_ROOTFS/var/lock"
+  [ -e lockdir ] || mkdir -p $lockdir
+  mutex="$lockdir/$mutex"
+  mypid=$(exec sh -c 'echo $PPID')
+  if [ -e "$mutex" ]; then
+    lockedpid=$(cat $mutex)
+    { [ ! "$lockedpid" = "$mypid" ] && [ ! "$lockedpid" = "$PPID" ]; } && kill -0 "$lockedpid" 2>/dev/null && echo "Aborting, Active process '$lockedpid' holds the '$2' lock: '$mutex'" && exit -1
+  fi
+  addCleanupTrapCmd "rm -rf $mutex"
+  echo "$mypid" > $mutex
+}
+mutexFree(){
+  mutex=$1
+  lockdir="$ZOPEN_ROOTFS/var/lock"
+  mutex="$lockdir/$mutex"
+  [ -e "$mutex" ] && rm -f $mutex
+}
+# Calculate the relative path from $1 to $2
+relativePath(){
+  sourcePath=$1
+  targetPath=$2
+  currentIFS="$IFS"
+  IFS="/"
+  relativePath=''
+  set -- $targetPath
+  for elem in $sourcePath; do
+    if [ -z "$relativePath" ]; then
+      if [ -z "$elem" ]; then
+        relativePath="$1"
+      elif [ "$1" = "$elem" ]; then
+      else
+        relativePath="../$1"
+      fi
+    else
+      if [ -n "$elem" ]; then
+        relativePath="../$relativePath"
+      else
+        relativePath="$relativePath/$1"
+      fi
+    fi
+    if [ $# -gt 0 ]; then
+      shift
+    fi
+  done
+  # if the target is longer than the source, there might be some additional
+  # elements in the shifted $0 to append
+  if [ $# -gt 0 ]; then
+     relativePath=$relativePath/$(echo $* | sed "s/ /\//g")
+  fi
+
+  IFS="$currentIFS"
+  echo "$relativePath"
+}
+relativePath2(){
+  sourcePath=$1
+  targetPath=$2
+  currentIFS="$IFS"
+  IFS="/"
+  relativePath=''
+  set -- $targetPath
+  for elem in $sourcePath; do
+      if [ -z "$relativePath" ]; then
+        if [ "$1" = "$elem" ]; then
+            shift
+            continue
+        else
+          relativePath="../$elem"
+        fi
+      else
+        if [ -z "$1" ]; then
+          relativePath="$relativePath/$elem"
+        else
+          relativePath="../$relativePath/$elem"
+        fi
+      fi
+    if [ $# -gt 0 ]; then
+      shift
+    fi
+  done
+  # if the target is longer than the source, there might be some additional
+  # elements in the shifted $0 to append
+  if [ $# -gt 0 ]; then
+     relativePath=$relativePath/$(echo $* | sed "s/ /\//g")
+  fi
+  IFS="$currentIFS"
+  echo "$relativePath"
+}
+
+# Merges a package directory's symlinks into the main zopen root filesystem
+mergeIntoSystem(){
+  name=$1          # Name of the package being processed
+  versioneddir=$2  # The directory where the unpax occurred
+  rootfs="$3"
+
+  currentDir="$PWD"
+  targetdir="$rootfs/usr"     # The main rootfs/usr location
+
+  printVerbose "Calculating the offset path to store from root"
+  offset=$(dirname "${versioneddir#$rootfs/}")
+  version=$(basename $versioneddir)
+  tmptime=$(date +%Y%m%d%H%M%S)
+  processingDir="$rootfs/tmp/zopen.$tmptime"
+  printVerbose "Temporary processing dir evaluated to: $processingDir"
+
+  virtualStore="$processingDir/$offset"
+  printVerbose "Creating virtual store at: $virtualStore"
+  mkdir -p "$virtualStore"
+
+  printVerbose "Moving from main store location (unpax-dir) to processing store"
+  mv "$versioneddir" "$virtualStore"
+
+  printVerbose "Creating main linked directory in store"
+  $(cd "$virtualStore" && ln -s "$version" "$name")
+
+  printVerbose "Creating virtual root directory structure"
+  mkdir -p "$processingDir/usr"
+
+  printVerbose "Generating relative symlinks in processing location"
+  relpath=$(relativePath2 "$virtualStore/$name" "$processingDir/usr")
+  [ "$relpath" = "/" ] && printError "Relative path calculated as root directory itself!?!"
+
+  printVerbose "Generating symlink tree"
+  
+  printVerbose "Creating directory structure"
+  curdir="$PWD"
+  cd "$virtualStore/$name"
+   # since 'ln *' doesn't invoke globbing to allow multiple files at once,
+   # abuse the Recurse option; this results in "already exists" errors but 
+   # ignore them as the first call should generate the correct link but 
+   # subsequent calls would generate a symlink that has incorrect dereferencing 
+   # and ignoring them is actually faster than individually creating the links!
+  zosfind . -type d | sort -r | while read dir; do
+    dir=$(echo "$dir" | sed "s#^./##")
+    printVerbose "Processing dir: $dir" 
+    [ $dir = "." ] && continue;
+    mkdir -p "$processingDir/usr/$dir"
+    cd "$processingDir/usr/$dir"
+    dirrelpath=$(relativePath2 "$virtualStore/$name/$dir" "$processingDir/usr/$dir")
+    ln -Rs "$dirrelpath/" "." 2>/dev/null
+  done 
+
+  printVerbose "Moving unpaxed processing-directory back to main rootfs store"
+  # this *must* be done before the merge step below or relative symlinks can't
+  # work
+  versioneddirname=$(basename "$versioneddir")
+  mv "$virtualStore/$versioneddirname" "$rootfs/$offset"
+
+  tarfile="$name.usr.tar"
+  printVerbose "Merge symlinks into main filesystem using tmp tar file $tarfile"
+  
+  printVerbose "Generating intermediary tar file"
+  # Need '-S' to allow long symlinks
+  $(cd "$processingDir" && tar -S -cf "$tarfile" "usr")
+
+  printVerbose "Generating listing for remove processing (including main symlink)"
+  listing=$(tar tf "$processingDir/$tarfile" 2>/dev/null| sort -r)
+  echo "Installed files:" > "$versioneddir/.links"
+  echo "$listing" >>  "$versioneddir/.links"
+  
+  printVerbose "Extracting tar to rootfs"
+  cd "$processingDir" && tar xf "$tarfile" -C "$rootfs" 2>/dev/null
+
+  printVerbose "Cleaning temp resources"
+  rm -rf "$processingDir" 2>/dev/null
+
+  printVerbose "Switching to previous cwd - current work dir was purged"
+  cd "$currentDir"
+
+  printInfo "- Integration complete"
+  return 0
+}
+
+# The following function will remove any orphaned symlinks left after either:
+# - a different version has been installed (where the old symlinks are not reused for
+#   that different version  version ie. the file has been removed from updated version
+# - the main package->version-dir symlink has been removed (which renders any symlinks to
+#   it as dangling so removable)
+unsymlinkFromSystem(){
+  pkg=$1
+  rootfs=$2
+  dotlinks=$3
+  if [ -e "$dotlinks" ]; then
+    printInfo "- Checking for obsoleted files in $rootfs/usr/ tree from $pkg"
+    # Use sed to skip header line in .links file
+    # Note that the contents of the links file are ordered such that
+    # processing occurs depth-first; if, after removing orphaned symlinks,
+    # a directory is empty, then it can be removed.
+    nfiles=$(sed '1d;$d' "$dotlinks" | wc -l  | tr -d ' ')
+    flecnt=0
+    pct=0
+
+    printVerbose "Creating Temporary dirname file"
+    tempDirFile="$ZOPEN_ROOTFS/tmp/zopen.rmdir.$RANDOM"
+    tempTrash="$tempDirFile.trash"
+    [ -e "$tempDirFile" ] && rm -f "$tempDirFile" >/dev/null 2>&1
+    touch "$tempDirFile"
+    addCleanupTrapCmd "rm -rf $tempDirFile"
+    printVerbose "Using temporary file $tempDirFile"
+    printInfo "- Checking ${nfiles} potential links"
+
+    rm_fileprocs=15
+    [ -e "$rootfs/etc/zopen/rm_fileprocs" ] && rm_fileprocs=$(cat "$rootfs/etc/zopen/rm_fileprocs")
+    threshold=$(( nfiles / rm_fileprocs))
+    threshold=$(( threshold + 1 ))
+    printVerbose "Threshold of files per worker [files/procs] calculated as: $threshold"
+    [ $threshold -le 50 ] && threshold=50 && printVerbose "Threshold below min: using 50" # Don't spawn too many
+    printVerbose "Starting spinner..."
+    progressHandler "spinner" "- Complete" &
+    ph=$!
+    killph="kill -HUP $ph"
+    addCleanupTrapCmd "$killph"
+
+    printVerbose "Spawning as subshell to handle threading"
+    # Note that this all must happen in a subshell as the above started
+    # progressHandler is a signal-terminated process - and a wait issued in 
+    # the parent will never complete until that ph is signalled/terminated!
+    deletethreads=$(
+      tid=0
+      filenames=""
+      while read filetounlink; do
+        tid=$(( tid + 1 ))
+        filetounlink=$(echo "$filetounlink" | sed 's/\(.*\).symbolic.*/\1/')
+        filenames=$(/bin/printf "%s\n%s" "$filenames" "$filetounlink")
+        if [ "$(( tid % threshold ))" -eq 0 ]; then
+          deletethread "$filenames" "$tempDirFile" &
+          printVerbose "Started delete thread: $!"
+          filenames=""
+        fi
+      done <<EOF
+$(sed '1d;$d' "$dotlinks")
+EOF
+      if [ -n "$filenames" ]; then
+        # Handle when there are not enough to trigger the threshold of a new thread above,
+        # there will still be items in the "array"
+        deletethread "$filenames" "$tempDirFile" #&
+        printVerbose "Started delete thread: $!"
+      fi
+      wait 
+    )
+    $killph 2>/dev/null  # if the timer is not running, the kill will fail
+    if [ -e "$tempDirFile" ]; then
+      ndirs=$(cat "$tempDirFile" | uniq | wc -l  | tr -d ' ')
+      printInfo "- Checking ${ndirs} dir links"
+      for d in $(cat "$tempDirFile" | uniq | sort -r) ; do 
+        [ -d "$d" ] && rmdir "$d" >/dev/null 2>&1
+      done
+    fi
+  else
+    printError "Could not locate list of current links to verify, dangling links might be present; run 'zopen clean -d'"
+  fi
+}
+
+deletethread(){
+  filestodelete="$1"
+  tempDirFile="$2"
+  echo "$filestodelete"| while read filetounlink; do
+    deletetask "$tempDirFile" "$filetounlink" 
+  done
+}
+
+deletetask () {
+    tempDirFile="$1"
+    filename="$2"
+    [ -z "$filename" ] && return 0
+    filename="$ZOPEN_ROOTFS/$filename"
+    if [ -d "$filename" ]; then
+        # Add to the queue for checking once files are gone if unique
+        ispresent=$(grep "^$filename[ ]*$" "$tempDirFile")
+        if [ -z "$ispresent" ]; then
+          echo " $filename " >> "$tempDirFile"
+        else
+          alreadyfound=""
+        fi
+    elif [ -L "$filename" ]; then
+      if [ ! -f "$filename" ]; then
+        # the linked-to file no longer exists (ie. the symlink is dangling)
+        rm -f "$filename" >/dev/null 2>&1
+      fi
+    else 
+      echo "Unprocessable file: '$filename'" >> "$tempTrash" 
+    fi
 }
 
 zopenInitialize()
 {
   defineEnvironment
-  defineColors
-  processConfig
+  defineANSI
+  if [ -z "$ZOPEN_DONT_PROCESS_CONFIG" ]; then
+    processConfig
+  fi
+
+  ZOPEN_JSON_CACHE_URL="https://zosopentools.github.io/meta/api/zopen_releases.json"
 }
 
 printVerbose()
 {
+  [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
   if ${verbose}; then
     printColors "${NC}${GREEN}${BOLD}VERBOSE${NC}: '${1}'" >&2
   fi
+  [ ! -z "$xtrc" ] && set -x
+  return 0;
 }
 
 printHeader()
 {
+  [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
   printColors "${NC}${YELLOW}${BOLD}${UNDERLINE}${1}${NC}" >&2
+  [ ! -z "$xtrc" ] && set -x
+  return 0;
 }
 
 runAndLog()
@@ -81,6 +483,82 @@ runAndLog()
   fi
   return $rc
 }
+
+runLogProgress(){
+  printVerbose "$1"
+  if [ -n "$2" ]; then
+    printInfo "- $2"
+  else
+    printInfo "- Running"
+  fi
+  if [ -n "$3" ]; then
+    completeText="$3"
+  else
+    completeText="Complete"
+  fi
+  progressHandler "spinner" "- $completeText" &
+  ph=$!
+  killph="kill -HUP $ph"
+  addCleanupTrapCmd "$killph"
+  eval "$1"
+  rc=$?
+  if [ ! -z "${SSH_TTY}" ]; then
+    chtag -r $SSH_TTY
+  fi
+  $killph 2>/dev/null  # if the timer is not running, the kill will fail
+  return $rc
+}
+
+spinloop(){
+  # in the absence of generic ms/ns reporting, spin-loop instead - not ideal
+  # but without pre-reqing packages...
+  i=$1
+  while [ $i -ge 0 ]; do
+    true > /dev/null
+    i=$(( i - 1 ))
+  done
+}
+progressNetwork(){
+  # Loop until signal received
+  icon="-----"
+  ansiline 0 0 "$icon"
+  while : ; do
+    spinloop 1000
+    case "$icon" in
+      '-----') icon='>----';; '>----') icon='->---';; '->---') icon='-->--';; '-->--') icon='--->-';; '--->-') icon='---->';;
+      '---->') icon='----<';; '----<') icon='---<-';; '---<-') icon='--<--';; '--<--') icon='-<---';; '-<---') icon='<----';; '<----') icon='-----';;
+    esac
+    ansiline 1 -1 "$icon"
+  done
+}
+progressSpinner(){
+  # Loop until signal received
+  icon="-"
+  ansiline 0 0 "$icon"
+  while : ; do
+    spinloop 1000
+    case "$icon" in
+      '-') icon='\';; '\') icon='|';; '|') icon='/';; '/') icon='-';;
+    esac
+    ansiline 1 -1 "$icon"
+  done
+}
+progressHandler() {
+    if [ ! "${_BPX_TERMPATH-x}" = "OMVS" ] && [ -z "${NO_COLOR}" ] && [ ! "${FORCE_COLOR-x}" = "0" ] && [ -t 1 ] && [ -t 2 ]; then
+      [ -z "${-%%*x*}" ] && set +x  # Disable -x debug if set for this process
+      type=$1
+      completiontext=$2  # Custom end text (when the process is complete)
+      
+      trapcmd="exit;"
+      [ -n "$completiontext" ] && trapcmd="/bin/echo \"\047[1A\047[30D\047[2K$completiontext\"; $trapcmd"
+      trap "$trapcmd" HUP
+      case "$type" in
+        "network") progressNetwork;;
+        *)         progressSpinner;;
+      esac
+		fi
+}
+
 
 runInBackgroundWithTimeoutAndLog()
 {
@@ -112,23 +590,48 @@ runInBackgroundWithTimeoutAndLog()
 
 printSoftError()
 {
+  [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
   printColors "${NC}${RED}${BOLD}***ERROR: ${NC}${RED}${1}${NC}" >&2
+  [ -n "$xtrc" ] && set -x
 }
 
 printError()
 {
-  printSoftError "${1}"
+  [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
+  printColors "${NC}${RED}${BOLD}***ERROR: ${NC}${RED}${1}${NC}" >&2
+  [ -n "$xtrc" ] && set -x
+  mutexFree "zopen" # prevent lock from lingering around after an error
+  cleanupFunction
   exit 4
 }
 
 printWarning()
 {
+  [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
   printColors "${NC}${YELLOW}${BOLD}***WARNING: ${NC}${YELLOW}${1}${NC}" >&2
+  [ -n "$xtrc" ] && set -x
+  return 0;
 }
 
 printInfo()
 {
+  [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
   printColors "$1" >&2
+  [ -n "$xtrc" ] && set -x
+  return 0;
+}
+
+# Used to input sensitive data - turns off echo to the screen for the input
+getInputHidden()
+{
+  # Register trap-handler to try and ensure that we restore the screen to display 
+  # chars in the event the script is terminated early (eg. user hits CTRL-C instead of 
+  # answering the masked question)
+  addCleanupTrapCmd "stty echo"
+  stty -echo
+  read zopen_input
+  echo $zopen_input
+  stty echo
 }
 
 getInput()
@@ -158,8 +661,14 @@ printElapsedTime()
 
 processConfig()
 {
-  if [ -f "$HOME/.zopen-config" ]; then
-    . "$HOME/.zopen-config"
+  export ZOPEN_QUICK_LOAD=1
+  if [ -z "$ZOPEN_ROOTFS" ]; then
+    relativeRootDir="$(cd "$(dirname "$0")/../.." >/dev/null 2>&1 && pwd -P)"
+    if [ -f "$relativeRootDir/etc/.zopen-config" ]; then
+      . "$relativeRootDir/etc/.zopen-config"
+    else
+      printError "Source the .zopen-config prior to running $0"
+    fi
   fi
 }
 
@@ -231,7 +740,7 @@ validateVersion()
   operator=$2
   requestedVersion=$3
   dependency=$4
-  if [ ! -z "$operator" ] && [ -z "$version" ]; then
+  if [ -n "$operator" ] && [ -z "$version" ]; then
     printVerbose "$operator ${requestedVersion} requsted, but no version file found in $versionPath." 
     return 1
   elif [ ! -z "$operator" ] && ! compareVersions "${version}" "${requestedVersion}"; then
@@ -239,6 +748,154 @@ validateVersion()
     return 1
   fi
   return 0
+}
+
+deleteDuplicateEntries() 
+{
+  value=$1
+  delim=$2
+  echo "$value$delim" | awk -v RS="$delim" '!($0 in a) {a[$0]; printf("%s%s", col, $0); col=RS; }' | sed "s/${delim}$//"
+}
+# reworked version of above to strip blank elements between delims
+deleteDuplicateEntriesRedux() 
+{
+  value=$1
+  delim=$2
+  echo "$value" | awk -v RS="$delim" -v ORS="$delim" ' {gsub("^[ ]+|[ ]$", "", $0); if (NF>0 && !a[$0]++) {print } }' | sed "s/${delim}$//"
+}
+
+# Logging Types
+LOG_E="ERROR"    # If there was a failure and a command failed
+LOG_W="WARNING"  # If an error occurred but there was a workaround/fallback
+LOG_I="INFO"     # General information
+LOG_A="AUDIT"    # Security-type log for admin activities
+
+# Logging Categories - more than one possible for a log entry
+CAT_CONFIG="C"    # Configuration change
+CAT_FILE="F"      # File handling (eg. downloading)
+CAT_INSTALL="I"   # Install processing
+CAT_NETWORK="N"   # Network processing
+CAT_PKG="P"       # Package handling
+CAT_QUERY="Q"     # Query processing
+CAT_REMOVE="R"    # Removal handling
+CAT_SYS="S"       # Related to the underlying native z/OS system
+CAT_ZOPEN="Z"     # Related to the zopen system itself
+
+syslog() {
+  fd=$1
+  type=$2
+  categories=$3
+  module=$4
+  location=$5
+  msg=$6
+  if [ ! -e "$fd" ]; then
+    mkdir -p "$(dirname "$fd")"
+    touch "$fd"
+  fi
+  echo $(date +"%F %T") $(id | cut -d' ' -f1)::$module:$type:$categories:$location:$msg >> $fd
+}
+
+parseResponseHeaders(){
+  responseHeaders=$(echo "$httpresponse" | awk '/^[ ]*[a-zA-Z0-9]/ {print} ')
+}
+parseResponseBody(){
+  responseBody=$(echo "$httpresponse" | awk '!/^[ ]*[a-zA-Z0-9]/ {print} ')
+}
+parseHttpRc(){
+  if [ -z "$responseHeaders" ]; then
+    parseResponseHeaders
+  fi
+  responseRc=$(echo "$responseHeaders" | head -n 1 | cut -d' ' -f 2)
+}
+
+httprequest() {
+  url="$1"
+  expectedRc="$2" # Space separated list of http rcs that are handled by caller
+  printVerbose "Requesting from url: ${url} "
+  uricmd="curl --include $OAUTH_TOKEN_OPTION $OAUTH_TOKEN -s $url"
+  if ! httpresponse=$(curl --include "$OAUTH_TOKEN_OPTION" "$OAUTH_TOKEN" -s "$url"); then
+    printError "Unable to download from url: '$url'. Resolve reported issue and retry"
+  fi
+  parseResponseHeaders
+  parseResponseBody
+  parseHttpRc
+  case "$expectedRc" in
+    *$responseRc*) printVerbose "Request completed as expected ($responseRc)";;
+    *) printVerbose "Request completed with response: $responseRc";
+       case "$responseRc" in
+         '200') printVerbose "Request completed successfully to URL: $url";;
+         '401') printError "Your ZOPEN_GIT_OAUTH_TOKEN is invalid. Please validate that it is correct and re-run.";;
+         '403') if echo "$httpresponse" | grep -q "API rate limit exceeded for" 2>/dev/null; then
+                  printError "API rate limit exceeded for github.\n1. Generate a token (https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token).\n2. Set ZOPEN_GIT_OAUTH_TOKEN and rerun"
+                else
+                  printError "Unable to access URL: $url"
+                fi
+                return 8;;
+         '404') printError "URL $url not found";;
+         * ) printError "Bad response code $responseRc when accessing URL: $url";;
+       esac;;
+  esac
+  return $responseRc
+}
+
+parseJsonRepos(){
+   [ -z "$jsonResponse" ] && echo "" && return
+   echo "$jsonResponse" | awk -F'"' ' /full_name/ { print $4 }'
+}
+
+downloadJSONCache() {
+  if [ -z "$JSON_CACHE" ]; then
+    JSON_CACHE="$ZOPEN_ROOTFS/var/cache/zopen/zopen_releases.json"
+    JSON_TIMESTAMP="$ZOPEN_ROOTFS/var/cache/zopen/zopen_releases.timestamp"
+    JSON_TIMESTAMP_CURRENT="$ZOPEN_ROOTFS/var/cache/zopen/zopen_releases.timestamp.current"
+    if ! curl -L -s -I "$ZOPEN_JSON_CACHE_URL" -o "$JSON_TIMESTAMP_CURRENT"; then
+      printError "Failed to obtain json cache timestamp from $ZOPEN_JSON_CACHE_URL"
+    fi
+    chtag -tc 819 "$JSON_TIMESTAMP_CURRENT"
+
+    if [ -f "$JSON_CACHE" ] && [ -f "$JSON_TIMESTAMP" ] && [ "$(grep 'Last-Modified' "$JSON_TIMESTAMP_CURRENT")" = "$(grep 'Last-Modified' "$JSON_TIMESTAMP")" ]; then
+      return;
+    fi
+
+    mv "$JSON_TIMESTAMP_CURRENT" "$JSON_TIMESTAMP"
+    if ! curl -L -s -o "$JSON_CACHE" "$ZOPEN_JSON_CACHE_URL" ; then
+      printError "Failed to obtain json cache from $ZOPEN_JSON_CACHE_URL"
+    fi
+    chtag -tc 819 "$JSON_CACHE"
+  fi
+
+  if [ ! -f "$JSON_CACHE" ]; then
+    printError "Could not download json cache from $ZOPEN_JSON_CACHE_URL"
+  fi
+}
+
+getReposFromGithub(){
+  downloadJSONCache
+  repo_results="$(cat "$JSON_CACHE" | jq -r '.release_data | keys[]')"
+}
+
+getAllReleasesFromGithub(){
+  downloadJSONCache
+  repo="$1"
+  releases="$(jq -e -r '.release_data."'$repo'"' "$JSON_CACHE")"
+  if [ $? -ne 0 ]; then
+    printError "Could not get all releases for $repo"
+  fi
+}
+
+getContentsFromGithub(){
+  url="$1"
+  printVerbose "Requesting from url: ${url} "
+  if ! repo_results=$(curl --include "$OAUTH_TOKEN_OPTION" "$OAUTH_TOKEN" -s "$url"); then
+    printError "Unable to download from url: '$url'. Resolve reported issue and retry" 
+  fi
+  if echo "$repo_results" | grep -q "API rate limit exceeded for" 2>/dev/null; then
+    printError "API rate limit exceeded for github.\n1. Generate a token (https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token).\n2. Set ZOPEN_GIT_OAUTH_TOKEN and rerun"
+  fi
+  if echo $repo_results | grep -q "Bad credentials" 2>/dev/null; then
+    printError "Your ZOPEN_GIT_OAUTH_TOKEN is invalid. Please validate that it is correct and re-run."
+  fi
+  echo "$repo_results";
 }
 
 initDefaultEnvironment()

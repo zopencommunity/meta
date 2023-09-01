@@ -32,18 +32,13 @@ Many tools require a C or C++ compiler (or both) to build. There a couple of opt
 Please note that these compilers are comparable, but how you perform installation and maintenance and pricing is different.
 
 In order for zopen to be able to locate dependent tools, they need to be in well-defined locations.
-Tools will be searched for in the following default locations, in order:
-- `${HOME}/zopen/prod/<tool>`
-- `${HOME}/zopen/boot/<tool>`
 
-You can configure this location by running `zopen init` to reconfigure the location.
+Dependencies will be searched for in the following default locations:
+- `${ZOPEN_PKGINSTALL}` as configured in your <path_to_zopen_rootfs>/etc/.zopen-config configuration.
 
-Let's take a look at an example. `git` depends on `make` to build, as specified in the [gitport dependencies](https://github.com/ZOSOpenTools/gitport/blob/main/buildenv#L10). 
-`zopen build` will search for `make` first in the
-personal _prod_ build from `${HOME}/zopen/prod/m4`, then finally in the personal _boot_ directory `${HOME}/zopen/boot/m4`. Symbolic links can be used as required to share builds between developers on a system, if desired.  You can also add your own directories to the search path by specifying the -d option to `zopen build` as follows:
-```bash
-zopen build -d $HOME/mytools
-```
+You can change this location by running `zopen init` to reconfigure the install directory.
+
+If the tool is not found, then `zopen build` will automatically install it.
 
 Each tool is responsible for knowing how to set it's own environment up (e.g. PATH, LIBPATH, and any other environment variables).
 By default, `zopen build` will automatically add PATH, LIBPATH, and MANPATH environment variables. If other environment variables are needed, then you can append them by defining a `zopen_append_to_env` function as in the case of [gitport](https://github.com/ZOSOpenTools/gitport/blob/main/buildenv#LL66-L66C20).
@@ -58,12 +53,12 @@ Begin first by cloning the https://github.com/ZOSOpenTools/meta repo.  This repo
 
 ```bash
 # Clone the required repositories (using Git from https://github.com/ZOSOpenTools/gitport)
-git clone git@github.com:ZOSOpenTools/utils.git
+git clone git@github.com:ZOSOpenTools/meta.git && cd meta
 ```
 
-Next, in order to use the `zopen` suite of tools, you must set your path environment variable to the `meta/bin` directory.
+Next, in order to use the `zopen` suite of tools, you must set your path environment variable to the `meta/bin` directory.  
 ```bash
-export PATH=<pathtozopen>/meta/bin:$PATH
+. ./.env
 ```
 
 Ok, now you are ready to begin porting. 

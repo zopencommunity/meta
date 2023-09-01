@@ -18,35 +18,35 @@ We recommend adding these environment variables to your `.profile` or `.bashrc` 
 
 ## Required Tools
 
-### If you only want to _use_ Open Source Tools
+To consume z/OS Open Tools, all you need is a z/OS UNIX system and unrestricted access to github.com.
 
-**NOTE:** These tools are unsupported. Use them at your own discretion. While we find them extremely helpful, they have bugs and are unsupported. If you encounter problems, please tell us by opening issues in the GitHub repository for the tool you are having issues with. For general problems, open an issue in the [meta](https://github.com/ZOSOpenTools/meta/issues) repository.
+Next, download the meta pax to a suitable location (for example /tmp).
+- Expand the pax using the command ```pax -rvf <filename>.pax```.  This will expand the pax to the current directory, listing the various included files as it does so.
+- From the ```meta-<ver>/bin``` directory run the following command, answering the questions appropriately:
+```bash
+. ./.env
+```
 
-For new ideas, general feedback, or to start a discussion, please see our [discussions](https://github.com/ZOSOpenTools/meta/discussions).
+## Installing tools to z/OS
 
-#### Install curl on z/OS
+Prior to installing tools, you need to initialize your z/OS Open Tools environment:
+```bash
+zopen init
+```
 
-You will need _curl 7.77_ or later on your z/OS system so that you can download the individual Open Source packages from github. 
-If you don't have curl on z/OS, you will need to download it to your desktop then use _sftp_ to upload it to z/OS and then use _pax_ to decompress it:
-- Download ['boot curl'](https://github.com/ZOSOpenTools/curlport/releases/tag/boot)
-- Upload the pax file: `sftp <your host>`
-- decompress the pax file: `pax -rf <pax file>`
-- `cd curl*`
-- add curl to your environment: `. ./.env`
+Once you have your development environment set up, you can install tools directly to z/OS with `zopen install`.
 
-Once you have curl, you can now install other tools from the community.
+To download and install specific packages, specify them as a comma delimited list as follows:
+```bash
+zopen install make,curl,gzip
+```
 
-#### Install other tools
+To download the available packages, specify the --all option as follows:
 
-All the tools are at: [ZOSOpenTools](https://github.com/ZOSOpenTools?tab=repositories)
-
-- Click on the repository of the tool you want. For example, the [bashport](https://github.com/ZOSOpenTools/bashport) has bash.
-- Click on the _tag_ link to see the tagged releases. For example, the [bashport tags](https://github.com/ZOSOpenTools/bashport/tags) shows the builds for bash.
-- Click the tag of the release you want (likely the most recent). For example: [bashport build 223](https://github.com/ZOSOpenTools/bashport/releases/tag/bashport_223)
-- Cut and paste the download and install command to your z/OS system to install the tool on z/OS
-  - This command will use curl to download the pax file, unpax the file, cd into the tool directory and source `.env` in that directory to set up your environment
-
-For more details, visit https://github.com/ZOSOpenTools/meta.
+```bash
+zopen install --all
+```
+For more details, see the section on [zopen tools](zopen.md).
 
 ### If you want to contribute and improve the z/OS Open Source Tools 
 
@@ -55,27 +55,6 @@ You will need the IBM C/C++ compiler on your system. There are two options:
 [here](https://www.ibm.com/servers/resourcelink/svc00100.nsf/pages/xlCC++V241ForZOsV24).
 - Alternatively, you can install and manage _C/C++ for Open Enterprise Languages on z/OS_ using _RedHat OpenShift Container Platform_ and _IBM Z and Cloud Modernization Stack_ 
 
-In addition, to use the zopen framework set of tools like `zopen-build` and `zopen-download`, you will need git, tar, gzip, make installed. All of these tools are available from [ZOSOpenTools](https://github.com/ZOSOpenTools?tab=repositories), but instead of downloading them one at a time, there is an easier way. 
-Download [zopen-setup](https://github.com/ZOSOpenTools/meta/releases/tag/v1.0.0) to z/OS and then run it, [following the instructions](https://github.com/ZOSOpenTools/meta/releases/tag/v1.0.0)
-
-`zopen-setup` will create your own development environment with a `boot`, `prod`, and `dev` set of directories. The `boot` directory has everything you need to get started with porting.
+In addition, to use the zopen framework set of tools like `zopen-build` and `zopen-install`, you will need git, tar, gzip, make installed. All of these tools are available from [ZOSOpenTools](https://github.com/ZOSOpenTools?tab=repositories), but instead of downloading them one at a time, there is an easier way. `zopen build` will automatically download the necessary dependendies onto your system if they are missing.
 
 For more details on porting, visit the [porting to z/OS guide](Porting.md).
-
-## Installing tools to z/OS
-
-Once you have your development environment set up, you can install tools directly to z/OS with `zopen install`.
-
-To download and install the latest software packages, enter the command `zopen install`. By default it will list all of the tools hosted on ZOSOpenTools.
-
-To download the available packages, specify the --all option as follows:
-
-```bash
-zopen install --all
-```
-
-To download and install specific packages, specify them as a comma delimited list as follows:
-```bash
-zopen install make,curl,gzip
-```
-For more details, see the section on [zopen tools](zopen.md).

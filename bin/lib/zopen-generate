@@ -183,8 +183,29 @@ install/
 EOT
 printInfo "${name}port/.gitignore created"
 
-cp "${utildir}/../../LICENSE" "${name}port/LICENSE"
-cp "${utildir}/../../.gitattributes" "${name}port/.gitattributes"
+if [ -e "${utildir}/../../LICENSE" ]; then
+  cp "${utildir}/../../LICENSE" "${name}port/LICENSE"
+elif [ -n "$ZOPEN_ROOTFS" ]; then
+  pkgInstallDir="$(cat "$ZOPEN_ROOTFS/etc/zopen/fstype")"
+  if [ -e "${utildir}/../../../$pkgInstallDir/meta/meta/LICENSE" ]; then
+    cp "${utildir}/../../../$pkgInstallDir/meta/meta/LICENSE" "${name}port/LICENSE"
+  else
+    printError "Could not locate LICENSE file to copy for project"
+  fi
+fi
+if [ -e "${utildir}/../../.gitattributes" ]; then
+  cp "${utildir}/../../.gitattributes" "${name}port/.gitattributes"
+elif [ -n "$ZOPEN_ROOTFS" ]; then
+  pkgInstallDir="$(cat "$ZOPEN_ROOTFS/etc/zopen/fstype")"
+  if [ -e "${utildir}/../../../$pkgInstallDir/meta/meta/.gitattributes" ]; then
+    cp "${utildir}/../../../$pkgInstallDir/meta/meta/.gitattributes" "${name}port/.gitattributes"
+  else
+    printError "Could not locate .gitattributes file to copy for project"
+  fi
+fi
+
+
+
 printHeader "${name} project is ready! ${name}port/"
 printInfo "Create patches under the ${name}port/patches directory"
 printInfo "Run zopen build to build ${name}port"

@@ -1,0 +1,365 @@
+#!/bin/sh
+# Query utility for z/OS Open Tools - https://github.com/ZOSOpenTools
+
+export utildir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
+
+. "${utildir}/common.inc"
+
+printSyntax() 
+{
+  args=$*
+  echo "zopen query is a utility for z/OS Open Tools to query packages and repos." >&2
+  echo "Syntax: zopen-query [<option>]* [<package]*" >&2
+  echo "  where <option> may be one or more of:" >&2
+  echo "  --list: list all available z/OS Open Tools."  >&2
+  echo "  --remote-search: regex match package against available z/OS Open Tools" >&2
+  echo "  -i : --installed: list install z/OS Open Tools." >&2
+  echo " --upgradeable: list packages where an upgrade is available." >&2
+  echo "  -wp : --whatprovides: which installed package provided a file." >&2
+  echo "  -v: run in verbose mode." >&2
+  echo "  -d | --details: include full details for listings." >&2
+  echo "  --no-header: suppress the header for the output." >&2
+  echo "  --no-version:  suppress version information, return package names." >&2
+  echo "  --filter <color>: apply filter based on quality (green - all tests passing, blue - most tests passing, yellow - some tests passing, red - no tests passing, or skipped (no filter by default))"  >&2
+  echo " and <package> is an optional list of one or more packages." >&2
+}
+
+colorizepct(){
+  percentage=$1
+  if [ -z "$percentage" ]; then
+    colored="${RED}"
+  elif [ ! "$percentage" = "${percentage#Skipped}" ]; then
+    colored="${RED}"
+  elif [ $percentage -eq 100 ]; then
+    colored="${GREEN}"
+  elif [ $percentage -gt 50 ]; then
+    colored="${BLUE}"
+  elif [ $percentage -gt 0 ]; then
+    colored="{YELLOW}"
+  else
+    colored="${RED}"
+  fi
+  echo "$colored"
+}
+
+printDetailListEntries()
+{
+  details=$1
+  needle=$2
+  onlyUpgradesAvailable=$3
+
+  if [ "$details" -eq 0 ]; then
+    scrcols=$(getScreenCols)
+    numcols=4
+    colwidth=$((scrcols / numcols -1 ))
+    printVerbose "Screen width: $scrcols; colwidth:$colwidth"
+    if [ ! -z "$1" ] && ! $noheader; then
+      printf "${NC}${UNDERLINE}%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s${NC}\n" "Package" "Installed" "Available" "Latest Tag"
+    fi
+    echo "$repoArray" | xargs | tr ' ' '\n' | sort | while read repo; do
+      listport=false
+      if [ -z "$needle" ]; then
+        listport=true
+      else
+        printVerbose "Attempting regex find with needle: '$needle'"
+        if expr "$repo" : "$needle" 1>/dev/null; then
+          listport=true
+        fi
+      fi
+    
+      if $listport; then
+        latest=$(jq -e -r '.release_data."'$repo'"[0]' "$JSON_CACHE")
+        if [ $? -ne 0 ]; then
+          printError "Unable to retrieve remote information"
+        fi
+        latestTag=$(/bin/printf "%s" "$latest" | jq -e -r '.tag_name')
+        pkghome="$ZOPEN_PKGINSTALL/${repo}/${repo}"
+        if [ -e "${pkghome}/.releaseinfo" ]; then
+          originalTag=$(cat "${pkghome}/.releaseinfo")
+        else
+          originalTag="Not installed"
+        fi
+        if [ -e "${pkghome}/.version" ]; then
+          dotversion=$(cat "${pkghome}/.version")
+        else
+          dotversion="N/A"
+        fi
+        if [ "$onlyUpgradesAvailable" -gt 0 ]; then
+          if [ "$originalTag" = "Not installed" -o "$originalTag" = "$latestTag" ]; then
+            continue;
+          fi 
+        fi
+        if ! $noversions; then
+          printf "%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s\n" "$repo" "$originalTag" "$dotversion" "$latestTag"
+        else
+          printf "%s\n" "$repo"
+        fi
+      fi 
+    done
+  else
+    printVerbose "Checking repoArray: $repoArray"
+    scrcols=$(getScreenCols)
+    numcols=6
+    colwidth=$((scrcols / numcols -1 ))
+    printVerbose "Screen width: $scrcols; colwidth:$colwidth"
+    if ! $noheader; then
+      printf "${NC}${UNDERLINE}%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s${NC}\n" "Package" "Installed" "Latest Tag" "Download Size" "Expanded Size" "Quality"
+    fi
+    echo "$repoArray" | xargs | tr ' ' '\n' | sort | while read repo; do
+      listport=false
+      if [ -z "$needle" ]; then
+        listport=true
+      else
+        printVerbose "Attempting regex find with needle: '$needle'"
+        if expr "$repo" : "$needle" 1>/dev/null; then
+          listport=true
+        fi
+      fi
+    
+      if $listport; then
+        pkghome="$ZOPEN_PKGINSTALL/${repo}/${repo}"
+        if [ -e "${pkghome}/.releaseinfo" ]; then
+          originalTag=$(cat "${pkghome}/.releaseinfo")
+        else
+          originalTag="Not installed"
+        fi
+        latest=$(jq -e -r '.release_data."'$repo'"[0]' "$JSON_CACHE")
+        case $? in
+          1) printVerbose "No latest release for port";
+               printf "%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s ${NC}${RED}%-${colwidth}s${NC}\n" "$repo" "$originalTag" "Unknown" "Unknown" "Unknown" "Unknown" 
+               ;;
+          0) printVerbose "Latest release request successful";  
+               latestTag="$(/bin/printf "%s" "$latest" | jq -e -r '.tag_name')"
+               passed="$(/bin/printf "%s" "$latest" | jq -e -r '.assets[0].passed_tests')"
+               total="$(/bin/printf "%s" "$latest" | jq -e -r '.assets[0].total_tests')"
+               expandedsize="$(/bin/printf "%s" "$latest" | jq -e -r '.assets[0].expanded_size')"
+               downloadsize="$(/bin/printf "%s" "$latest" | jq -e -r '.assets[0].size')"
+               if [ "$onlyUpgradesAvailable" -gt 0 ]; then
+                 if [ "$originalTag" = "Not installed" -o "$originalTag" = "$latestTag" ]; then
+                   continue;
+                 fi 
+               fi
+               if [ $total -gt 0 ]; then
+                 percentage=$(echo "scale=0; 100 * ($passed) / $total" | bc)
+               fi
+               printf "%-${colwidth}s %-${colwidth}s %-${colwidth}s " "$repo" "$originalTag" "$latestTag" 
+               printf " %-${colwidth}s"  "$downloadsize"
+               printf " %-${colwidth}s"  "$expandedsize"
+
+               if [ -z "$percentage" ]; then
+                 printf "${NC}${RED}%-${colwidth}s${NC}" "No tests"
+               else
+                 printf "${NC}%s%-${colwidth}s${NC}" "$(colorizepct "$percentage" )" "$percentage%"
+               fi
+               printf "\n"
+               ;;
+          *) printError "Error while trying to retrieve latest repo release";;
+        esac
+
+      fi
+      continue;   
+    done
+  fi
+  exit 0
+}
+printInstalledEntries(){
+  scrcols=$(getScreenCols)
+  [ $details -eq 0 ] && numcols=4 || numcols=6
+  colwidth=$(($scrcols / $numcols -1 ))
+  printVerbose "Screen width: $scrcols; colwidth:$colwidth"
+  if [ ! -z "$1" ] && ! $noheader; then
+    if [ $details -eq 0 ]; then
+      printf "${NC}${UNDERLINE}%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s${NC}\n" "Package" "Installed" "File" "Releaseline"
+    else
+      printf "${NC}${UNDERLINE}%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s${NC}\n" "Package" "Installed" "File" "Releaseline" "Expanded Size" "Quality"
+    fi
+  fi
+  printVerbose "Getting list of symlinks in the package install directory (that point to specific versions)"
+  installedPackages=$(cd "$ZOPEN_PKGINSTALL" && zosfind . -type l)
+  printVerbose "Packages: $installedPackages"
+  echo "$installedPackages" | xargs | tr ' ' '\n' | sort | while read repo; do
+    repo="${repo##*/}"
+    pkghome="$ZOPEN_PKGINSTALL/${repo}/${repo}"
+    if [ ! -e "${pkghome}/.active" ]; then
+      printVerbose "Symlink '$repo' in '$ZOPEN_PKGINSTALL' is not active; skipping"
+      continue
+    fi
+
+    if $noversions; then
+      printf "%s\n" "$repo"
+      continue
+    fi
+
+    if [ -e "${pkghome}/.releaseinfo" ]; then
+      originalTag=$(cat "${pkghome}/.releaseinfo")
+    else
+      originalTag="N/A"
+    fi
+    if [ -e "${pkghome}/.version" ]; then
+      dotversion=$(cat "${pkghome}/.version")
+    else
+      dotversion="N/A"
+    fi
+
+    releaseline=""
+    if [ -e "${pkghome}/.releaseline" ]; then
+      releaseline=$(cat "${pkghome}/.releaseline")
+    fi
+    if [ -z "$releaseline" ]; then
+      releaseline="n/a"
+    fi
+  
+    printVerbose "Original tag: $originalTag for repo: $repo"
+    if [ -z "$1" ]; then
+      printInfo "$originalTag"
+    else
+      fileversion="$( cd "$ZOPEN_PKGINSTALL/${repo}/${repo}" >/dev/null 2>&1 && pwd -P | xargs basename)"
+      printf "%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s" "$repo" "$dotversion" "$fileversion" "$releaseline"
+      if [ $details -eq 1 ]; then
+        # Extra headers: disk size and quality
+        disksizestr=$(du "$ZOPEN_PKGINSTALL/${repo}" |tail -n 1 )
+        disksizestr=$(echo $disksizestr | sed 's#\([0-9]*\).*#\1#')
+        disksize=$(( $disksizestr * 512 ))
+        printf "%-${colwidth}d" $disksize
+
+        if [ -e "${pkghome}/test.status" ]; then
+          teststatus=$(cat "${pkghome}/test.status")
+          percentage=$(echo "$teststatus" | sed 's/[^-]*-\([^%\.]*\).*/\1/')
+          printf "${NC}$s%-${colwidth}s${NC}" "$(colorizepct "$percentage")" "$percentage"
+        else
+           printf "${NC}${RED}%-${colwidth}s${NC}" "No tests"
+        fi
+      fi
+      
+      printf "\n"
+    fi
+  done
+  exit 0
+}
+
+whatProvides(){
+  needle="$1"
+  printVerbose "Finding matches outside of ZOPEN_PKGINSTALL ($ZOPEN_PKGINSTALL)"
+  # Find any symlinks that match the needle and can then be dereferenced
+  found=$(zosfind "$ZOPEN_ROOTFS" -name "$ZOPEN_PKGINSTALL/\*" -prune -o -type l -print | grep "${needle}") 
+  printVerbose "Found list: '$found'"
+  if [[ -z "$found" ]]; then
+    printInfo "No package provides '${needle}'"
+  else
+    matches=$(echo "$found"| wc -w | tr -d ' ' ) 
+    printInfo "Found ${matches} match$([ $matches = 1 ] && echo "" || echo "es") for regex '${needle}' on the system"
+    echo "$found" | xargs | tr ' ' '\n' | while read foundmatch; do
+      printVerbose "Parsing '$foundmatch'"
+      if [ ! -d "$foundmatch" ]; then
+      dereferenced=$(deref "$foundmatch")
+      fullpackage=$(echo "$dereferenced" | sed "s#$ZOPEN_PKGINSTALL/\([^/]*\).*#\1#")
+      
+      printInfo "Package '$fullpackage' provides: '$foundmatch'"
+      fi
+    done
+  fi
+  exit 0
+}
+
+# Main code start here
+args=$*
+verbose=false
+noheader=false
+noversions=false
+localoption=true
+upgradeable=false
+details=0
+needle=
+if [[ $# -eq 0 ]]; then
+  printError "No option provided for query"
+fi
+
+while [[ $# -gt 0 ]]; do
+  printVerbose "Parsing option: $1"
+  case "$1" in
+    "--list")
+      list=1;
+      localoption=false;
+      ;;
+    "-i" | "--installed")
+      localoption=true;
+      installed=1;
+      list=;
+    ;;
+    "-wp" | "--whatprovides")
+      localoption=true;
+      whatprovides=1;
+      shift;
+      [ ! -z $1 ] || printError "Missing file argument";
+      needle=$1;
+    ;;
+    "--remote-search")
+      localoption=false;
+      remotesearch=1;
+      shift;
+      [ ! -z $1 ] || printError "Missing package argument";
+      needle=$1;
+    ;;
+    "--no-header")
+      noheader=true;
+    ;;
+    "--upgradeable")
+      upgradeable=true;
+    ;;
+    "--no-versions")
+      noversions=true;
+      noheader=true; # headers do not mean anything without versions!
+    ;;
+    "-f" | "--filter")
+      filter=$2;
+      shift
+      ;;
+    "-d"  | "--details")
+      details=1;
+    ;;
+    "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
+      printSyntax "${args}"
+      exit 4
+      ;;
+    "-v" | "--v" | "-verbose" | "--verbose")
+      verbose=true
+      ;;
+    -*)
+      printError "Unknown option '$1'"
+      ;;
+     
+    *)
+      chosenRepos="$chosenRepos $1";
+      ;;
+  esac
+  shift;
+done
+
+[[ ! -z "${ZOPEN_CA}" ]] || printError "\$ZOPEN_CA was not set. Ensure zopen init has run and .zopen-config has been sourced."
+[[ -r "${ZOPEN_CA}" ]] ||   printError "Certificate at ${ZOPEN_CA} could not be accessed. Ensure zopen init has run and .zopen-config has been sourced. "
+
+export SSL_CERT_FILE="${ZOPEN_CA}"
+export GIT_SSL_CAINFO="${ZOPEN_CA}"
+export CURL_CA_BUNDLE="${ZOPEN_CA}"
+
+if [ ! -z "$filter" ]; then
+  filter=$(echo "$filter" | awk '{print tolower($0)}')
+  case "$filter" in
+      blue|green|yellow|red|skipped) ;;
+      *) printError "The filter must be one of blue|green|yellow|red"
+  esac
+fi
+
+if ! $localoption; then
+  # Retrieve all repositories
+  getReposFromGithub
+  grfgRc=$?
+  [ 0 -ne $grfgRc ] && exit $grfgRc;
+  repoArray="$repo_results"
+fi
+
+! $upgradeable || printDetailListEntries $details "" 1
+[ -z "$remotesearch" ] || printDetailListEntries $details "$needle" 0
+[ -z "$list" ] || printDetailListEntries $details "" 0
+[ -z "$installed" ] || printInstalledEntries $details "" 0
+[ -z "$whatprovides" ] || whatProvides "$needle"

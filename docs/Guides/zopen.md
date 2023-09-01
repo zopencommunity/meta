@@ -14,7 +14,11 @@ Alternatively, you can download meta, along with the foundational set of tools v
 
 ### zopen init
 
-To initialize the zopen installation directory to a location other than the default ($HOME/zopen), you can run the command zopen init and specify the desired directory. This will configure the directory for future use. Subsequently, tools like `zopen install` will download and install files to this specified directory."
+Used to initialise a z/OS Open Tools environment. By default, this will create a ```zopen``` directory in your ```$HOME``` directory as the root filesystem (rootfs).  The rootfs holds the various packages, configuration and environment for z/OS Open Tools packages - removing this directory will revert the system without a trace.  A z/OS Open Tools main configuration file is generated in ```$rootfs/etc/.zopen-config``` - to enable the z/OS Open Tools, this will either need to be sourced after logon to the system or the following line can be added to ```$HOME/.profile``` (or .bash_profile or...) to automatically source the z/OS Open Tools configuration file.
+```bash
+[ -e "$rootfs/etc/.zopen-config" ] && . $rootfs/etc/.zopen-config
+```
+It is possible to reinitialize a system using the ```re-init``` option - doing so will remove the previous configuration though the rootfs can overlap the old filesystem to reuse installed and/or cached packages for example.  Initialisation on a system that has previously had a z/OS Open Tools configuration should allow some parameters to be copied across, such as Github tokens.
 
 ### zopen update-cacacert
 
@@ -22,28 +26,18 @@ To update the cacert.pem file, you can use `zopen update-cacert`. This will down
 
 ### zopen install
 
-To download and install the latest software packages, you can use `zopen install`. By default it will list all of the packages hosted on ZOSOpenTools.
+To download and install the latest software packages, you can use `zopen install`. 
 
-It is recommended that you generate a [github personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token).
-Then set `export ZOPEN_GITHUB_OAUTH_TOKEN=<yourapitoken>`
-
+### zopen list
 To list the available packages, specify no parameters or the `--list` option as follows:
 ```
-zopen install --list
+zopen list
 ```
 
 To download and install specfic packages, you can specify the packages as a comma seperated list as follows:
 ```
-zopen install make,gzip
+zopen install make,vim
 ```
-
-This will download it to the directory specified by your ~/.zopen-config. To change the destination directory, you can specify the `-d` option as follows:
-
-```
-zopen install make -d $HOME/zopen/prod
-```
-
-You can then change to the install directory and source the .env file: `. ./.env` to setup the tool.
 
 ### zopen upgrade
 
@@ -55,7 +49,7 @@ zopen upgrade
 
 To upgrade a specific set of packages, you can specify the packages as a comma seperated list as follows:
 ```
-zopen upgrade make,gzip
+zopen upgrade make
 ```
 
 ## If you are contributing to or developing z/OS Open Tools
