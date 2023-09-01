@@ -545,21 +545,17 @@ progressSpinner(){
 }
 progressHandler() {
     if [ ! "${_BPX_TERMPATH-x}" = "OMVS" ] && [ -z "${NO_COLOR}" ] && [ ! "${FORCE_COLOR-x}" = "0" ] && [ -t 1 ] && [ -t 2 ]; then
-    [ -z "${-%%*x*}" ] && set +x  # Disable -x debug if set for this process
-    type=$1
-    completiontext=$2  # Custom end text (when the process is complete)
-    
-    # Check if there is a file redirect for stdout (where we echo progress to)
-    # If so, then adding progress to the file will cause large volumes of tty commands
-    # to be written - best to have no progress so ignore
-    [ ! -t 1 ] && return
-    trapcmd="exit;"
-    [ -n "$completiontext" ] && trapcmd="/bin/echo \"\047[1A\047[30D\047[2K$completiontext\"; $trapcmd"
-    trap "$trapcmd" HUP
-    case "$type" in
-      "network") progressNetwork;;
-      *)         progressSpinner;;
-    esac
+      [ -z "${-%%*x*}" ] && set +x  # Disable -x debug if set for this process
+      type=$1
+      completiontext=$2  # Custom end text (when the process is complete)
+      
+      trapcmd="exit;"
+      [ -n "$completiontext" ] && trapcmd="/bin/echo \"\047[1A\047[30D\047[2K$completiontext\"; $trapcmd"
+      trap "$trapcmd" HUP
+      case "$type" in
+        "network") progressNetwork;;
+        *)         progressSpinner;;
+      esac
 		fi
 }
 
