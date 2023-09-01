@@ -37,7 +37,7 @@ Once you have checked in the `cicd.groovy` script, inform Igor Todorovski at ito
 ### Launch a Jenkins CI/CD build for your project
 If you have sufficient access, then you can launch a build of your z/OS Open Source port via Jenkins. Alternatively, you can initiate a build automatically via a commit to the corresponding repository.
 
-To manually start a build, locate your port from the _Port_ view: `https://163.74.88.212:8443/view/Ports/`
+If you have access, to start a build, locate your port from the _Port_ view: `https://163.74.88.212:8443/view/Ports/`
 
 Click on the arrow pointing downwards and select *Build Now*. This will launch a build of your port.
 

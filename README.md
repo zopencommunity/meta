@@ -59,7 +59,7 @@ It is possible to reinitialize a system using the ```re-init``` option - doing s
 zopen install <package>...
 ```
 
-Used to install a z/OS Open Tools package.  By default, the latest version is installed although options are available to install specific versions, tags or to pick from a selection [see ```--help``` for more]
+Used to install a z/OS Open Tools package.  By default, the latest stable version is installed although options are available to install specific versions, tags or to pick from a selection [see ```--help``` for more]
 
 ```
 zopen upgrade

@@ -34,7 +34,7 @@ Please note that these compilers are comparable, but how you perform installatio
 In order for zopen to be able to locate dependent tools, they need to be in well-defined locations.
 
 Dependencies will be searched for in the following default locations:
-- `${ZOPEN_PKGINSTALL}` as configured in your $HOME/.zopen-config configuration.
+- `${ZOPEN_PKGINSTALL}` as configured in your <path_to_zopen_rootfs>/etc/.zopen-config configuration.
 
 You can change this location by running `zopen init` to reconfigure the install directory.
 
@@ -53,12 +53,12 @@ Begin first by cloning the https://github.com/ZOSOpenTools/meta repo.  This repo
 
 ```bash
 # Clone the required repositories (using Git from https://github.com/ZOSOpenTools/gitport)
-git clone git@github.com:ZOSOpenTools/utils.git
+git clone git@github.com:ZOSOpenTools/meta.git && cd meta
 ```
 
-Next, in order to use the `zopen` suite of tools, you must set your path environment variable to the `meta/bin` directory.
+Next, in order to use the `zopen` suite of tools, you must set your path environment variable to the `meta/bin` directory.  
 ```bash
-export PATH=<pathtozopen>/meta/bin:$PATH
+. ./.env
 ```
 
 Ok, now you are ready to begin porting. 
