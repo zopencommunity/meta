@@ -12,15 +12,15 @@ The new zopen package manager is not compatible with the previous version of zop
 * If you plan to reuse the existing zopen root directory for installing the new tools, then make sure to back it up to a different directory.
 * Follow the steps below and install each of the tools again via `zopen install`
 
-## Getting meta
+## Getting the zopen package manager
 
-Download [meta](https://github.com/ZOSOpenTools/meta/releases/download/TDB) to z/OS.
+Download the latest [meta pax](https://github.com/ZOSOpenTools/meta/releases) to z/OS.
 
 Expand the pax using the command ```pax -rvf <filename>.pax```.  This will expand the pax to the current directory, listing the various included files as it does so.
 
 Source the .env to pick up the zopen environment:
 ```bash
-. ./..env
+. ./.env
 ```
 
 Now initialize your environment with zopen init:
