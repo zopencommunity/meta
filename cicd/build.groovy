@@ -11,14 +11,14 @@
 #   - pax.Z artifact is published as a Jenkins artifact
 #   - package is copied to /jenkins/build on z/OS zot system
 
-set -e # Fail on error
-set -x # Display verbose output
-
 # Jenkins cannot interpret colours
 export NO_COLOR=1
 
 # source Jenkins environment variables on zot
 . /jenkins/.env
+
+set -e # Fail on error
+set -x # Display verbose output
 
 # Add cloned meta dir to PATH
 export PATH="$PWD/bin:$PATH"
