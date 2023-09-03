@@ -10,10 +10,6 @@ fi
 
 . "${mydir}/common.inc"
 
-if [ -z "$ZOPEN_CA" ]; then
-  ZOPEN_CA="${mydir}/../../cacert.pem"
-fi
-
 # Temporary files
 for tmp in "$TMPDIR" "$TMP" /tmp
 do
@@ -133,6 +129,8 @@ while [[ $# -gt 0 ]]; do
   esac
   shift;
 done
+
+ZOPEN_CA="${dir}/cacert.pem"
 
 if ! [ -r "${ZOPEN_CA}" ]; then
   forceUpdate=true 

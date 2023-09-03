@@ -481,10 +481,9 @@ else
   printInfo "- Updating CA cert"
   ZOPEN_CA="$ZOPEN_ROOTFS/$ZOPEN_CA_DIR"
   mkdir -p "$ZOPEN_CA"
-  ZOPEN_CA="$ZOPEN_CA/cacert.pem"
-  export ZOPEN_CA
-  runAndLog "${utildir}/zopen-update-cacert -f"
+  runAndLog "${utildir}/zopen-update-cacert -f $ZOPEN_CA -v"
   [ $? -ne 0 ] && exit $?
+  export ZOPEN_CA="$ZOPEN_CA/cacert.pem"
 
   printInfo "- Sourcing environment"
   . "$configFile"
