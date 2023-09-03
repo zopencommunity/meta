@@ -548,8 +548,8 @@ setDepsEnv()
     requestedVersion="${requestedMajor}.${requestedMinor}.${requestedPatch}.${requestedSubrelease}"
     foundDep=false
     for path in `echo ${depsPath} | tr '|' '\n'` ; do
-      if [ -r "$path/${dep}/.env" ]; then
-        depdir="$path/${dep}"
+      if [ -r "$path/${dep}/${dep}/.env" ]; then
+        depdir="$path/${dep}/${dep}"
         versionPath="$depdir/.version"
         if [ -r "$versionPath" ]; then
           version=$(cat "$versionPath");
@@ -588,7 +588,7 @@ setDepsEnv()
       if ! runAndLog "PATH=\"$curlpath:$PATH\" $utildir/zopen-install --install-or-upgrade -r $dep -v -y"; then
         printError "zopen install command failed"
       fi
-      depdir="$path/${dep}"
+      depdir="$path/${dep}/${dep}"
       printVerbose "Setting up upgraded $depdir dependency environment"
       cd "$depdir" && . ./.env
       if [ $? -gt 0 ]; then
@@ -1376,13 +1376,13 @@ ZZ
       printError "Failed to install dependencies"
     fi
     cat <<ZZ >> "${ZOPEN_INSTALL_DIR}/.depsenv"
-if [ -f "../${dep}/.env" ]; then
+if [ -f "../../${dep}/${dep}/.env" ]; then
   if [[ \$(type echo) == 'echo is a shell builtin' ]]; then
-    pushd "../${dep}" >/dev/null
+    pushd "../../${dep}/${dep}" >/dev/null
     . ./.env
     popd >/dev/null
   else
-    cd "../${dep}" && . ./.env; cd - >/dev/null
+    cd "../../${dep}/${dep}" && . ./.env; cd - >/dev/null
   fi
 fi
 ZZ
