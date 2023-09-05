@@ -1,14 +1,18 @@
 # UPDATE: New zopen framework is now available!
 
-The new zopen package manager is not compatible with the previous version of zopen. Migration involves creating a new directory structure for zopen tools. This is accomplished via the `zopen init` command, documented below.
+Get the new zopen framework [here](https://github.com/ZOSOpenTools/meta/releases).
+
+**Note:** The new zopen package manager is not compatible with previous versions of zopen. Migration involves creating a new directory structure for zopen tools. This is accomplished via the `zopen init` command, documented below.
 
 ## Before you migrate
 * Identify the tools you have already installed. Use `zopen install --list`.
 * If you plan to reuse the existing zopen root directory for installing the new tools, then make sure to back it up to a different directory.
 * Follow the steps below and install each of the tools again via `zopen install`
 
-# meta - Introducing the zopen package manager
-Meta adds package management facilities to z/OS, via zopen. It is similar to utilities like apt, dpkg, yum, yast2, emerge. It is written in pure shell script to remove any pre-reqs (like python/perl/bash etc).
+---
+
+# Meta - Introducing the zopen package manager
+Meta adds package management facilities to z/OS, via `zopen`. It is similar to utilities like apt, dpkg, yum, yast2, emerge. It is written in pure shell script to remove any pre-reqs (like python/perl/bash etc).
 This package manager is designed for everyday usage of the z/OS Open Tools ports within the USS environment or for those who wish to download the tools.
 
 ## Pre-config
