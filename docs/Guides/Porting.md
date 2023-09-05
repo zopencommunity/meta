@@ -34,7 +34,7 @@ Please note that these compilers are comparable, but how you perform installatio
 In order for zopen to be able to locate dependent tools, they need to be in well-defined locations.
 
 Dependencies will be searched for in the following default locations:
-- `${ZOPEN_PKGINSTALL}` as configured in your <path_to_zopen_rootfs>/etc/.zopen-config configuration.
+- `${ZOPEN_PKGINSTALL}` as configured in your <path_to_zopen_rootfs>/etc/zopen-config configuration.
 
 You can change this location by running `zopen init` to reconfigure the install directory.
 
