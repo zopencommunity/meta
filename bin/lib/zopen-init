@@ -543,7 +543,7 @@ else
 EOF
     fi
   fi
-  printInfo "${NC}${YELLOW}- Run '. $rootfs/etc/.zopen-config' to enable zopen environment for current session${NC}"
+  printInfo "${NC}${YELLOW}IMPORTANT: Run '. $rootfs/etc/.zopen-config' to enable zopen environment for current session or add it to your .profile.${NC}"
   syslog "$ZOPEN_LOG_PATH/audit.log" "$LOG_A" "$CAT_PACKAGE,$CAT_FILE" "INIT" "" "zopen environment initialised as $ZOPEN_ROOTFS"
   printInfo "${NC}${GREEN}zopen initialization complete.${NC}"
 fi
