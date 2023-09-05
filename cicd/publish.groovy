@@ -19,11 +19,13 @@ PORT_NAME=${RELEASE_PREFIX%%port}
 GITHUB_REPO=$RELEASE_PREFIX
 
 # PAX file should be a copied artifact
-PAX=`find . -name "*zos.pax.Z"`
+PAX=`find install -name "*zos.pax.Z"`
 BUILD_STATUS=`find . -name "test.status" | xargs cat`
 DEPENDENCIES=`find . -name ".runtimedeps" | xargs cat`
 BUILD_DEPENDENCIES=`find . -name ".builddeps" | xargs cat`
 VERSION=`find . -name ".version" | xargs cat`
+
+echo $PAX
 
 if [ ! -f "$PAX" ]; then
   echo "Port pax file does not exist";
