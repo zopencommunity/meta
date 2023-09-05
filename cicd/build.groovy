@@ -22,6 +22,7 @@ set -x # Display verbose output
 
 # Add cloned meta dir to PATH
 export PATH="$PWD/bin:$PATH"
+rm -rf packages # Remove packages pax.Z files
 
 # Get port name based on git repo
 PORT_NAME=$(basename "${PORT_GITHUB_REPO}")
