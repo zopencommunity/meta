@@ -21,7 +21,7 @@ fi
 oldWorkDir=`pwd`
 #depsPath has the details of the location of ports whose env files are consumed for sourcing 
 depsPath="$HOME/zopen/prod|$HOME/zopen/boot"
-configFile=~/.zopen-config
+configFile=~/zopen-config
 if [ -f "$configFile" ]
 then
     while read -r line
