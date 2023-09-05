@@ -11,7 +11,7 @@ ZOPEN_DONT_PROCESS_CONFIG=1
 printSyntax() 
 {
   args=$*
-  echo "zopen init will initialize the zopen filesystem and configuration (create a <root-dir>/etc/.zopen-config file)" >&2
+  echo "zopen init will initialize the zopen filesystem and configuration (create a <root-dir>/etc/zopen-config file)" >&2
   echo "Syntax: zopen init [<option>] [<root-dir>]" >&2
   echo "  where <option> can be one or more of:" >&2
   echo "  -f <type>: virtual filesystem location for package management; packages will be installed to this location under the <root-dir>" >&2
@@ -23,7 +23,7 @@ printSyntax()
   echo "      usrlcl - /usr/local">&2
   echo "  --re-init: re-initialize a previous installation (if present).  Re-initializing over a previous installation will re-use existing package structures and configurations." >&2
   echo "  --clone: clones the current installation to a different location" >&2
-  echo "  --append-to-profile: appends sourcing of .zopen-config to .profile" >&2
+  echo "  --append-to-profile: appends sourcing of zopen-config to .profile" >&2
   echo "  --releaseline-dev: whether to globally enable Development packages" >&2 
   echo "  -v: run in verbose mode" >&2
   echo "  -?|-h|--help: display help" >&2
@@ -152,19 +152,19 @@ while true; do
   fi
 done
 
-configFile="$rootfs/etc/.zopen-config"
+configFile="$rootfs/etc/zopen-config"
 if [ -f "$configFile" ]; then
   if $clone; then
     [ ! -e "$configFile" ] && printError "- Unable to clone existing configuration; configuration file $configFile could not be read"
     printInfo "- Cloning existing configuration"
-    configFile=".zopen-config.clone"
+    configFile="zopen-config.clone"
   elif [ -e "$configFile" ]; then
     if ! $reinitExisting; then
       printWarning "- Existing configuration file found; re-initializing might lose access to previously installed packages. Continue (y/n)?"
       reinit=$(getInput)
     fi
     if $reinitExisting || { [ -n "$reinit" ] && [ "y" = "${reinit}" ]; }; then
-      printInfo "- Re-initializing; removing existing .zopen-config"
+      printInfo "- Re-initializing; removing existing zopen-config"
       rmrf=$(rm -rf "$configFile")
     else
       printWarning "- Stopping. Pre-existing configuration will be preserved"
@@ -536,14 +536,14 @@ else
   printInfo "- zopen bootstrapping complete"
 
   if $appendToProfile; then
-    if ! grep -q ". $rootfs/etc/.zopen-config" "$HOME/.profile"; then
+    if ! grep -q ". $rootfs/etc/zopen-config" "$HOME/.profile"; then
       printVerbose "Line not present (grep returned non-0)"
   cat << EOF >>  "$HOME/.profile"
-  [ -e "$rootfs/etc/.zopen-config" ] && . $rootfs/etc/.zopen-config
+  [ -e "$rootfs/etc/zopen-config" ] && . $rootfs/etc/zopen-config
 EOF
     fi
   fi
-  printInfo "${NC}${YELLOW}- Run '. $rootfs/etc/.zopen-config' to enable zopen environment for current session${NC}"
+  printInfo "${NC}${YELLOW}- Run '. $rootfs/etc/zopen-config' to enable zopen environment for current session${NC}"
   syslog "$ZOPEN_LOG_PATH/audit.log" "$LOG_A" "$CAT_PACKAGE,$CAT_FILE" "INIT" "" "zopen environment initialised as $ZOPEN_ROOTFS"
   printInfo "${NC}${GREEN}zopen initialization complete.${NC}"
 fi

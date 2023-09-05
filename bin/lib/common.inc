@@ -664,10 +664,10 @@ processConfig()
   export ZOPEN_QUICK_LOAD=1
   if [ -z "$ZOPEN_ROOTFS" ]; then
     relativeRootDir="$(cd "$(dirname "$0")/../.." >/dev/null 2>&1 && pwd -P)"
-    if [ -f "$relativeRootDir/etc/.zopen-config" ]; then
-      . "$relativeRootDir/etc/.zopen-config"
+    if [ -f "$relativeRootDir/etc/zopen-config" ]; then
+      . "$relativeRootDir/etc/zopen-config"
     else
-      printError "Source the .zopen-config prior to running $0"
+      printError "Source the zopen-config prior to running $0"
     fi
   fi
 }
