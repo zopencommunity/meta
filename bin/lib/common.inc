@@ -674,14 +674,14 @@ processConfig()
 
 checkIfConfigLoaded() {
   if [ -z "${ZOPEN_CA}" ]; then
-    errorMessage="\$ZOPEN_CA was not set. Ensure zopen init has run and .zopen-config has been sourced."
+    errorMessage="\$ZOPEN_CA was not set. Ensure zopen init has run and zopen-config has been sourced."
     if [ -r "$utildir/../../../etc/zopen-config" ]; then
       errorMessage="${errorMessage} Run '. $utildir/../../../etc/zopen-config' or add it to your .profile."
     fi
     printError "${errorMessage}"
   fi
   if [ ! -r "${ZOPEN_CA}" ]; then
-    errorMessage="Certificate at ${ZOPEN_CA} could not be accessed. Ensure zopen init has run and .zopen-config has been sourced."
+    errorMessage="Certificate at ${ZOPEN_CA} could not be accessed. Ensure zopen init has run and zopen-config has been sourced."
     if [ -r "$utildir/../../../etc/zopen-config" ]; then
       errorMessage="${errorMessage} Run '. $utildir/../../../etc/zopen-config' or add it to your .profile."
     fi
