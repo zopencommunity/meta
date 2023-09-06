@@ -398,7 +398,10 @@ handlePackageInstall(){
         cat << EOF > "$ZOPEN_ROOTFS/etc/profiled/$name/dotenv"
 curdir=\$(pwd)
 cd "$baseinstalldir/$name/$name" >/dev/null 2>&1
-if [ -f ".env" ]; then
+# If .appenv exists, source it as it's quicker
+if [ -f ".appenv" ]; then
+  . ./.appenv
+elif [ -f ".env" ]; then
   . ./.env
 fi
 cd \$curdir  >/dev/null 2>&1
