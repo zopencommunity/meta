@@ -1268,9 +1268,12 @@ zz
   if command -V "${ZOPEN_APPEND_TO_ENV_CODE}" >/dev/null 2>&1; then
     printVerbose "Appending additional environment variables..."
     append_to_env="$(${ZOPEN_APPEND_TO_ENV_CODE})"
-    echo "$append_to_env" > "${ZOPEN_INSTALL_DIR}/.appenv"
-    echo ". ./.appenv" >> "${ZOPEN_INSTALL_DIR}/.env"
+  else
+    append_to_env="# nothing to do"
   fi
+
+  echo "$append_to_env" > "${ZOPEN_INSTALL_DIR}/.appenv"
+  echo ". ./.appenv" >> "${ZOPEN_INSTALL_DIR}/.env"
 
   cat <<zz >>"${ZOPEN_INSTALL_DIR}/.env"
 if \$dropTagRedirEnvar; then
