@@ -25,6 +25,8 @@ export _TAG_REDIR_IN=txt
 export _TAG_REDIR_OUT=txt
 ```
 
+Make sure the character device `/dev/tty` is untagged or you may experience unexpected behaviour. Run `chtag -r /dev/tty` to remove any tags.
+
 ## Installation
 - Download the meta pax to a suitable location (for example /tmp).
 - Expand the pax using the command ```pax -rvf <filename>.pax```.  This will expand the pax to the current directory, listing the various included files as it does so.
