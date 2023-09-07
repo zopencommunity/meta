@@ -288,12 +288,6 @@ ZOPEN_LOG_PATH=\$ZOPEN_ROOTFS/var/log
 export ZOPEN_LOG_PATH
 
 # Environment variables
-PATH=\$ZOPEN_ROOTFS/usr/bin:\$ZOPEN_ROOTFS/bin:\$ZOPEN_ROOTFS/boot:\$(sanitizeEnvVar \"\$PATH\" \":\" \"^\$ZOPEN_PKGINSTALL/.*\$\")
-PATH=\$(deleteDuplicateEntries \"\$PATH\" \":\")
-LIBPATH=\$ZOPEN_ROOTFS/usr/lib:\$(sanitizeEnvVar "\$LIBPATH" ":" "^\$ZOPEN_PKGINSTALL/.*\$")
-LIBPATH=\$(deleteDuplicateEntries \"\$LIBPATH\" \":\")
-MANPATH=\$ZOPEN_ROOTFS/usr/share/man:\$ZOPEN_ROOTFS/usr/share/man/\%L:\$(sanitizeEnvVar \"\$MANPATH\" \":\" \"^\$ZOPEN_PKGINSTALL/.*\$\")
-MANPATH=\$(deleteDuplicateEntries \"\$MANPATH\" \":\")
 
 if [ -z "\$ZOPEN_QUICK_LOAD" ]; then
   if [ -e "\$ZOPEN_ROOTFS/etc/profiled" ]; then
@@ -314,12 +308,6 @@ if [ -z "\$ZOPEN_QUICK_LOAD" ]; then
         /bin/echo "Processing \$zot configuration...: \${pct}% (\${filecnt}/\${dotenvcnt})"
       fi
       [ -e \$FILE ] && . \$FILE
-      PATH=\$ZOPEN_ROOTFS/usr/bin:\$ZOPEN_ROOTFS/bin:\$ZOPEN_ROOTFS/boot:\$(sanitizeEnvVar \"\$PATH\" \":\" \"^\$ZOPEN_PKGINSTALL/.*\$\")
-      PATH=\$(deleteDuplicateEntries \"\$PATH\" \":\")
-      LIBPATH=\$ZOPEN_ROOTFS/usr/lib:\$(sanitizeEnvVar "\$LIBPATH" ":" "^\$ZOPEN_PKGINSTALL/.*\$")
-      LIBPATH=\$(deleteDuplicateEntries \"\$LIBPATH\" \":\")
-      MANPATH=\$ZOPEN_ROOTFS/usr/share/man:\$ZOPEN_ROOTFS/usr/share/man/\%L:\$(sanitizeEnvVar \"\$MANPATH\" \":\" \"^\$ZOPEN_PKGINSTALL/.*\$\")
-      MANPATH=\$(deleteDuplicateEntries \"\$MANPATH\" \":\")
     done < \$TMP_FIFO_PIPE
     [ ! -p \$TMP_FIFO_PIPE ] || rm -f \$TMP_FIFO_PIPE
     if [ ! "\${_BPX_TERMPATH-x}" = "OMVS" ];  then
@@ -330,10 +318,12 @@ if [ -z "\$ZOPEN_QUICK_LOAD" ]; then
     unset dotenvs dotenvcnt filecnt
   fi
 fi
-MANPATH="\$MANPATH:"
-export MANPATH
-export LIBPATH
-export PATH
+PATH=\$ZOPEN_ROOTFS/usr/bin:\$ZOPEN_ROOTFS/bin:\$ZOPEN_ROOTFS/boot:\$(sanitizeEnvVar \"\$PATH\" \":\" \"^\$ZOPEN_PKGINSTALL/.*\$\")
+export PATH=\$(deleteDuplicateEntries \"\$PATH\" \":\")
+LIBPATH=\$ZOPEN_ROOTFS/usr/lib:\$(sanitizeEnvVar "\$LIBPATH" ":" "^\$ZOPEN_PKGINSTALL/.*\$")
+export LIBPATH=\$(deleteDuplicateEntries \"\$LIBPATH\" \":\")
+MANPATH=\$ZOPEN_ROOTFS/usr/share/man:\$ZOPEN_ROOTFS/usr/share/man/\%L:\$(sanitizeEnvVar \"\$MANPATH\" \":\" \"^\$ZOPEN_PKGINSTALL/.*\$\")
+export MANPATH=\$(deleteDuplicateEntries \"\$MANPATH\" \":\")
 
 unset tmp TMP_FIFO_PIPE
 
