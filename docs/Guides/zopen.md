@@ -1,6 +1,6 @@
 # zopen framework 
 
-The following is a description of the zopen tools provided in the meta repo. To obtain the latest tools, you can clone and set up the environment as follows:
+The following is a description of the zopen framework provided in the meta repo. To obtain the latest meta tools, you can clone and set up the environment as follows:
 
 ```
 git clone git@github.com:ZOSOpenTools/meta.git
@@ -8,19 +8,19 @@ cd meta
 . ./.env
 ```
 
-Alternatively, you can download meta, along with the foundational set of tools via [zopen-setup](https://github.com/ZOSOpenTools/meta/releases/tag/v1.0.0#Running%20zopen-setup).
+Alternatively, you can download meta via [here](https://github.com/ZOSOpenTools/meta/releases/)
 
 ## If you are using z/OS Open Tools
 
 ### zopen init
 
-Used to initialise a z/OS Open Tools environment. By default, this will create a ```zopen``` directory in your ```$HOME``` directory as the root filesystem (rootfs).  The rootfs holds the various packages, configuration and environment for z/OS Open Tools packages - removing this directory will revert the system without a trace.  A z/OS Open Tools main configuration file is generated in ```$rootfs/etc/zopen-config``` - to enable the z/OS Open Tools, this will either need to be sourced after logon to the system or the following line can be added to ```$HOME/.profile``` (or .bash_profile or...) to automatically source the z/OS Open Tools configuration file.
+`zopen init` is used to initialise a z/OS Open Tools environment. By default, this will create a ```zopen``` directory in your ```$HOME``` directory as the root filesystem (rootfs).  The rootfs holds the various packages, configuration and environment for z/OS Open Tools packages - removing this directory will revert the system without a trace.  A z/OS Open Tools main configuration file is generated in ```$rootfs/etc/zopen-config``` - to enable the z/OS Open Tools, this will either need to be sourced after logon to the system or the following line can be added to ```$HOME/.profile``` (or .bash_profile or...) to automatically source the z/OS Open Tools configuration file.
 ```bash
 [ -e "$rootfs/etc/zopen-config" ] && . $rootfs/etc/zopen-config
 ```
 It is possible to reinitialize a system using the ```re-init``` option - doing so will remove the previous configuration though the rootfs can overlap the old filesystem to reuse installed and/or cached packages for example.  Initialisation on a system that has previously had a z/OS Open Tools configuration should allow some parameters to be copied across, such as Github tokens.
 
-### zopen update-cacacert
+### zopen update-cacert
 
 To update the cacert.pem file, you can use `zopen update-cacert`. This will download the latest cacert.pem file https://curl.se/docs/caextract.html. This cacert.pem file is then used by other tools such as `zopen install` and `zopen build`.
 

@@ -1,5 +1,6 @@
 # Links to external blogs on z/OS Open Tools
 
+* [AI on z/OS: LLaMa and LLaMa.cpp - August 22, 2023](https://igortodorovskiibm.github.io/blog/2023/08/22/llama-cpp/)
 * [Streamlining z/OS Interactions: Merging z/OS UNIX and TSO/ISPF with c3270 - June 25, 2023](https://igortodorovskiibm.github.io/blog/2023/06/25/c3270-on-zos/)
 * [Bash on z/OS: My Journey and Contributions - June 13, 2023](https://igortodorovskiibm.github.io/blog/2023/06/13/bash-on-zos/)
 * [The Wonderful World of man(ual pages) - May 29, 2023](https://makingdeveloperslivesbetter.wordpress.com/2023/05/29/the-wonderful-world-of-man-uals/)
