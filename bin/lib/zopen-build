@@ -79,7 +79,7 @@ User-Provided environment variables:
   ZOPEN_CONFIGURE_MINIMAL Configuration program will not be passed CFLAGS, LDFLAGS, CPPFLAGS options but will just get them from env vars
   ZOPEN_CONFIGURE_OPTS Options to pass to configuration program (defaults to '--prefix=\${ZOPEN_INSTALL_DIR}')
   ZOPEN_EXTRA_CONFIGURE_OPTS Extra configure options to pass to configuration program (defaults to '')
-  ZOPEN_INSTALL_DIR    Installation directory to pass to configuration (defaults to '\${PKGINSTALL}/zopen/prod/<pkg>/<pkg>')
+  ZOPEN_INSTALL_DIR    Installation directory to pass to configuration (defaults to '\${ZOPEN_PKGINSTALL}/dev/<pkg>/<pkg>')
   ZOPEN_MAKE           Build program to run. If skip is specified, no build step is performed (defaults to '${ZOPEN_MAKED}')
   ZOPEN_MAKE_MINIMAL   Build program will not be passed CFLAGS, LDFLAGS, CPPFLAGS options but will just get them from env vars
   ZOPEN_MAKE_OPTS      Options to pass to build program (defaults to '-j\${ZOPEN_NUM_JOBS}')
@@ -265,7 +265,7 @@ processOptions()
   generatePax=false
   generateSymLink=true
   forcePatchApply=false
-  depsPath="$ZOPEN_PKGINSTALL"
+  depsPath="$ZOPEN_PKGINSTALL/dev|$ZOPEN_PKGINSTALL"
   forceUpgradeDeps=false
   while [[ $# -gt 0 ]]; do
     case $1 in
@@ -580,8 +580,7 @@ setDepsEnv()
       if [ -z "$curlpath" ]; then
         printError "Need curl to proceed with installation"
       fi
-      # Use the first path specified in the dependency search list
-      path=$(echo ${depsPath} | tr '|' '\n' | head -1)
+      path=$ZOPEN_PKGINSTALL # Install location
       if ! runAndLog "PATH=\"$curlpath:$PATH\" $utildir/zopen-install --install-or-upgrade $dep -v -y"; then
         printError "zopen install command failed"
       fi
@@ -1372,8 +1371,7 @@ ${varName}_originalDir="\$OLDPWD"
 ZZ
   echo "$ZOPEN_RUNTIME_DEPS" | xargs | tr ' ' '\n' | sort | while read dep; do
     # Use the first path specified in the dependency search list to install to
-    path=$(echo ${depsPath} | tr '|' '\n' | head -1)
-    if ! runAndLog "PATH=\"$curlpath:$PATH\" $utildir/zopen-install $dep -v --no-deps -y"; then
+    if ! runAndLog "PATH=\"$curlpath:$PATH\" $utildir/zopen-install --install-or-upgrade $dep -v --no-deps -y"; then
       printError "Failed to install dependencies"
     fi
     cat <<ZZ >> "${ZOPEN_INSTALL_DIR}/.depsenv"
@@ -1562,7 +1560,8 @@ resolveCommands()
     fi
   fi
   if [ "${ZOPEN_INSTALL_DIR}x" = "x" ]; then
-    export ZOPEN_INSTALL_DIR="$ZOPEN_PKGINSTALL/${ZOPEN_NAME}/${ZOPEN_NAME}" # Follow new zopen format
+    PROJECT_NAME="$(echo ${ZOPEN_NAME} | cut -d'-' -f1)"
+    export ZOPEN_INSTALL_DIR="$ZOPEN_PKGINSTALL/dev/${PROJECT_NAME}/${ZOPEN_NAME}" # Install into dev location
   fi
   if [ "${ZOPEN_LOG_DIR}x" = "x" ]; then
     export ZOPEN_LOG_DIR="${ZOPEN_ROOT}/log"
