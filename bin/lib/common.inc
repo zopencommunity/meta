@@ -409,7 +409,7 @@ EOF
       done
     fi
   else
-    printError "Could not locate list of current links to verify, dangling links might be present; run 'zopen clean -d'"
+    printWarning "Could not locate list of current links to verify, dangling links might be present; run 'zopen clean -d'"
   fi
 }
 
