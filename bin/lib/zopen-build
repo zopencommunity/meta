@@ -580,8 +580,7 @@ setDepsEnv()
       if [ -z "$curlpath" ]; then
         printError "Need curl to proceed with installation"
       fi
-      # Use the first path specified in the dependency search list
-      path=$(echo ${depsPath} | tr '|' '\n' | head -1)
+      path=$ZOPEN_PKGINSTALL # Install location
       if ! runAndLog "PATH=\"$curlpath:$PATH\" $utildir/zopen-install --install-or-upgrade $dep -v -y"; then
         printError "zopen install command failed"
       fi
