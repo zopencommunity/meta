@@ -72,12 +72,12 @@ printDetailListEntries()
         if [ $? -ne 0 ]; then
           printError "Unable to retrieve remote information"
         fi
-        latestTag=$(/bin/printf "%s" "$latest" | jq -e -r '.tag_name')
+        latestVersion=$(/bin/printf "%s" "$latest" | jq -e -r '.assets[0].name' | sed -E 's/.*-(.*)\.zos\.pax\.Z/\1/')
         pkghome="$ZOPEN_PKGINSTALL/${repo}/${repo}"
         if [ -e "${pkghome}/.releaseinfo" ]; then
-          originalTag=$(cat "${pkghome}/.releaseinfo")
+          originalVersion=$(cat "${pkghome}/.releaseinfo")
         else
-          originalTag="Not installed"
+          originalVersion="Not installed"
         fi
         if [ -e "${pkghome}/.version" ]; then
           dotversion=$(cat "${pkghome}/.version")
@@ -85,12 +85,12 @@ printDetailListEntries()
           dotversion="N/A"
         fi
         if [ "$onlyUpgradesAvailable" -gt 0 ]; then
-          if [ "$originalTag" = "Not installed" -o "$originalTag" = "$latestTag" ]; then
+          if [ "$originalVersion" = "Not installed" -o "$originalVersion" = "$latestVersion" ]; then
             continue;
           fi 
         fi
         if ! $noversions; then
-          printf "%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s\n" "$repo" "$originalTag" "$dotversion" "$latestTag"
+          printf "%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s\n" "$repo" "$originalVersion" "$dotversion" "$latestVersion"
         else
           printf "%s\n" "$repo"
         fi
