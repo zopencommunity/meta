@@ -256,8 +256,9 @@ TMP_FIFO_PIPE="\$tmp/zopen_\$LOGNAME.configFile.pipe"
 atExit() {
   sig=\$?
   [ -p \$TMP_FIFO_PIPE ] && rm -rf \$TMP_FIFO_PIPE
+  unset TMP_FIFO_PIPE
   trap - EXIT INT TERM QUIT HUP
-  exit \$sig
+  return $sig
 }
 
 trap "atExit" EXIT INT TERM QUIT HUP
@@ -299,6 +300,7 @@ if [ -z "\$ZOPEN_QUICK_LOAD" ]; then
     chtag -tc 819 \$TMP_FIFO_PIPE
     (/bin/echo "\$dotenvs" | xargs | tr ' ' '\n'>>\$TMP_FIFO_PIPE &)
     while read FILE; do
+      [ -z "\$TMP_FIFO_PIPE" ] && break
       filecnt=\$(expr \$filecnt + 1)
       pct=\$(expr \$filecnt \* 100)
       pct=\$(expr \$pct / \$dotenvcnt)
@@ -309,7 +311,7 @@ if [ -z "\$ZOPEN_QUICK_LOAD" ]; then
       fi
       [ -e \$FILE ] && . \$FILE
     done < \$TMP_FIFO_PIPE
-    [ ! -p \$TMP_FIFO_PIPE ] || rm -f \$TMP_FIFO_PIPE
+    [ ! -z "\$TMP_FIFO_PIPE" -a ! -p \$TMP_FIFO_PIPE ] || rm -f \$TMP_FIFO_PIPE
     if [ ! "\${_BPX_TERMPATH-x}" = "OMVS" ];  then
       /bin/echo "\047[1A\047[\$30D\047[2K- Processed \$zot configuration: 100% (\${dotenvcnt}/\${dotenvcnt})"
     else
