@@ -204,7 +204,7 @@
 |  [autoconfport](https://github.com/ZOSOpenTools/autoconfport) | 175 | 7
 |  [diffutilsport](https://github.com/ZOSOpenTools/diffutilsport) | 140 | 8
 |  [tclport](https://github.com/ZOSOpenTools/tclport) | 130 | 5
-|  [vimport](https://github.com/ZOSOpenTools/vimport) | 125 | 6
+|  [vimport](https://github.com/ZOSOpenTools/vimport) | 99 | 5
 |  [pkgconfigport](https://github.com/ZOSOpenTools/pkgconfigport) | 98 | 1
 |  [lessport](https://github.com/ZOSOpenTools/lessport) | 94 | 5
 |  [grepport](https://github.com/ZOSOpenTools/grepport) | 88 | 2
@@ -304,4 +304,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-09-11 17:10:29
+Last updated:  2023-09-12 09:29:48
