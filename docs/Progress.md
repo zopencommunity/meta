@@ -79,15 +79,16 @@
 | [opensslport](https://github.com/ZOSOpenTools/opensslport) | 11 | 96% |c3270, curl, expat, git, librdkafka, libssh2, lynx, openssh, rsync, sudo, wget
 | [cmakeport](https://github.com/ZOSOpenTools/cmakeport) | 9 | 74% |avro-c-lib, duckdb, llamacpp, neovim, ninja, protobuf, unzip, zip, zoslib
 | [bzip2port](https://github.com/ZOSOpenTools/bzip2port) | 8 | 100% |gpg, libassuan, libgcrypt, libgpgerror, libksba, npth, ntbtls, pinentry
+| [comp_goport](https://github.com/ZOSOpenTools/comp_goport) | 8 | 100% |bump, direnv, duf, gum, powerlinego, termenv, wharf, yq
 | [findutilsport](https://github.com/ZOSOpenTools/findutilsport) | 8 | 91% |gnulib, grep, libiconv, libxml2, pkgconfig, re2c, texinfo, vim
 | [gawkport](https://github.com/ZOSOpenTools/gawkport) | 8 | 93% |automake, curl, expat, gzip, ncurses, rsync, sudo, vim
-| [comp_goport](https://github.com/ZOSOpenTools/comp_goport) | 7 | 100% |bump, direnv, duf, gum, powerlinego, termenv, wharf
 | [libgpgerrorport](https://github.com/ZOSOpenTools/libgpgerrorport) | 7 | 100% |gpg, libassuan, libgcrypt, libksba, npth, ntbtls, pinentry
 | [libiconvport](https://github.com/ZOSOpenTools/libiconvport) | 5 | 100% |bison, libxml2, man-db, php, tig
 | [pkgconfigport](https://github.com/ZOSOpenTools/pkgconfigport) | 4 | 100% |avro-c-lib, librdkafka, man-db, thesilversearcher
 | [flexport](https://github.com/ZOSOpenTools/flexport) | 3 | 100% |bison, cscope, man-db
 | [getoptport](https://github.com/ZOSOpenTools/getoptport) | 3 | 52% |avro-c-lib, flex, xmlto
 | [gperfport](https://github.com/ZOSOpenTools/gperfport) | 3 | 100% |hello, libiconv, m4
+| [pythonport](https://github.com/ZOSOpenTools/pythonport) | 3 | 100% |curl, lz4, zstd
 | [wgetport](https://github.com/ZOSOpenTools/wgetport) | 3 | 18% |hello, man-db, sed
 | [wharfport](https://github.com/ZOSOpenTools/wharfport) | 3 | Skipped |duf, gum, termenv
 | [comp_clangport](https://github.com/ZOSOpenTools/comp_clangport) | 2 | 100% |duckdb, m4
@@ -100,7 +101,6 @@
 | [libxml2port](https://github.com/ZOSOpenTools/libxml2port) | 2 | 99% |libxslt, php
 | [luaport](https://github.com/ZOSOpenTools/luaport) | 2 | 100% |luarocks, neovim
 | [lz4port](https://github.com/ZOSOpenTools/lz4port) | 2 | 100% |librdkafka, rsync
-| [pythonport](https://github.com/ZOSOpenTools/pythonport) | 2 | 100% |curl, lz4
 | [rsyncport](https://github.com/ZOSOpenTools/rsyncport) | 2 | 88% |m4, sed
 | [zipport](https://github.com/ZOSOpenTools/zipport) | 2 | 100% |luarocks, unzip
 | [zstdport](https://github.com/ZOSOpenTools/zstdport) | 2 | 100% |librdkafka, rsync
@@ -304,4 +304,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-09-13 15:55:39
+Last updated:  2023-09-13 16:25:35
