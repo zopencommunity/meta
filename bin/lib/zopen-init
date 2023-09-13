@@ -25,6 +25,7 @@ printSyntax()
   echo "  --clone: clones the current installation to a different location" >&2
   echo "  --append-to-profile: appends sourcing of zopen-config to .profile" >&2
   echo "  --releaseline-dev: whether to globally enable Development packages" >&2 
+  echo "  --yes|-y: automatically answer yes to prompts."  >&2
   echo "  -v: run in verbose mode" >&2
   echo "  -?|-h|--help: display help" >&2
 }
@@ -32,6 +33,7 @@ printSyntax()
 args=$*
 
 verbose=false
+yesToPrompts=false
 reinitExisting=false
 clone=false
 appendToProfile=false
@@ -60,7 +62,10 @@ while [ $# -gt 0 ]; do
       exit 4
       ;;
     "-v" | "--v" | "-verbose" | "--verbose")
-       verbose=true
+      verbose=true
+      ;;
+    "--yes" | "-y")
+      yesToPrompts=true  # Automatically answer 'yes' to any questions
       ;;
     *)
       rootfs=$1;
@@ -141,16 +146,19 @@ fi
 
 printInfo "- Binaries will be symlinked under \"$rootfs/usr/bin\". Libraries will be symlinked under \"$rootfs/usr/lib\""
 printInfo "- Packages will be installed and maintained under the directory structure $fslayout ($rootfs/$zopen_pkginstall). To change, re-run with the -f <layout> option."
-while true; do
-  printInfo "Do you want to proceed? [y/n]"
-  read continueInstall < /dev/tty
-  if [ "y" = "${continueInstall}" ]; then
-    break;
-  fi
-  if [ "n" = "${continueInstall}" ]; then
-    exit 0
-  fi
-done
+if ! $yesToPrompts; then
+  while true; do
+    printInfo "Do you want to continue? [y/n]"
+    read continueInstall < /dev/tty
+    if [ "y" = "${continueInstall}" ]; then
+      break;
+    fi
+    if [ "n" = "${continueInstall}" ]; then
+      printInfo "Exiting..."
+      exit 0
+    fi
+  done
+fi
 
 configFile="$rootfs/etc/zopen-config"
 if [ -f "$configFile" ]; then
