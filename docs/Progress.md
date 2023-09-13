@@ -105,6 +105,7 @@
 | [zipport](https://github.com/ZOSOpenTools/zipport) | 2 | 100% |luarocks, unzip
 | [zstdport](https://github.com/ZOSOpenTools/zstdport) | 2 | 100% |librdkafka, rsync
 | [bisonport](https://github.com/ZOSOpenTools/bisonport) | 1 | 99% |php
+| [c3270port](https://github.com/ZOSOpenTools/c3270port) | 1 | 100% |zigi
 | [ctagsport](https://github.com/ZOSOpenTools/ctagsport) | 1 | 100% |libmd
 | [expatport](https://github.com/ZOSOpenTools/expatport) | 1 | 100% |git
 | [janssonport](https://github.com/ZOSOpenTools/janssonport) | 1 | No builds |avro-c-lib
@@ -127,7 +128,6 @@
 | [avro-c-libport](https://github.com/ZOSOpenTools/avro-c-libport) | 0 | No builds |
 | [bumpport](https://github.com/ZOSOpenTools/bumpport) | 0 | No builds |
 | [byaccport](https://github.com/ZOSOpenTools/byaccport) | 0 | 45% |
-| [c3270port](https://github.com/ZOSOpenTools/c3270port) | 0 | 100% |
 | [comp_xlclangport](https://github.com/ZOSOpenTools/comp_xlclangport) | 0 | 100% |
 | [cscopeport](https://github.com/ZOSOpenTools/cscopeport) | 0 | 100% |
 | [direnvport](https://github.com/ZOSOpenTools/direnvport) | 0 | No builds |
@@ -304,4 +304,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-09-13 14:41:05
+Last updated:  2023-09-13 15:17:03
