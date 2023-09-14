@@ -1,19 +1,7 @@
-# Quick Start to z/OS Open Tools
-
-z/OS Open Tools provides a package manager for 
-installation of unsupported Open Source tools that run native on your z/OS system. 
-
-z/OS Open Tools also provides an easy to use tool for building these same tools from 
-source code on your z/OS system. 
-
-Whether you want to strictly _use_ the tools or also _improve_ the tools is up to you.
-
-If you have installed a version of the zopen package manager prior to September 2023, 
-please note you will need to [migrate to the new package manager](Guides/Migration.md). 
-
 ## Getting the zopen package manager
 
-Download the latest [meta pax](https://github.com/ZOSOpenTools/meta/releases) to z/OS.
+Download the latest [meta pax](https://github.com/ZOSOpenTools/meta/releases) to z/OS. 
+This will likely involve first downloading the file to your desktop and then using `sftp` to upload the pax file to z/OS.
 
 Expand the pax using the command ```pax -rvf <filename>.pax```.  This will expand the pax to the current directory, listing the various included files as it does so.
 
@@ -47,8 +35,3 @@ You are now free to install any z/OS Open Tools via `zopen install`.
 >zopen list --upgradeable # list all tools that have upgrades available
 >zopen upgrade
 ```
-
-You are now ready to _use_ or _improve_ the tools you want.
-
-Our docs are improving all the time. See ['Updating the docs'](../UpdateDocs.md) if you would like to help.
-
