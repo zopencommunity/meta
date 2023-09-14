@@ -2,7 +2,7 @@
 
 To make changes to the docs, please:
  - `git clone git@github.com:ZOSOpenTools/meta.git`
- - `cd docs`
+ - `cd meta/docs`
  - make updates
  - validate your changes, locally on port 3000, as follows:
    - `npm install`
