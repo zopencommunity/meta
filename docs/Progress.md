@@ -75,7 +75,7 @@
 | [help2manport](https://github.com/ZOSOpenTools/help2manport) | 12 | 100% |autoconf, automake, bison, curl, expat, gettext, git, hello, libtool, m4, make, texinfo
 | [zlibport](https://github.com/ZOSOpenTools/zlibport) | 12 | 100% |autoconf, avro-c-lib, curl, expat, git, librdkafka, libssh2, lynx, openssh, sudo, tig, wget
 | [grepport](https://github.com/ZOSOpenTools/grepport) | 11 | 95% |byacc, gnulib, libpcre2, libpcre, librdkafka, libxslt, m4, man-db, ntbtls, which, xmlto
-| [libtoolport](https://github.com/ZOSOpenTools/libtoolport) | 11 | 80% |expat, hello, libgdbm, libmd, libpcre, m4, man-db, oniguruma, php, re2c, texinfo
+| [libtoolport](https://github.com/ZOSOpenTools/libtoolport) | 11 | 81% |expat, hello, libgdbm, libmd, libpcre, m4, man-db, oniguruma, php, re2c, texinfo
 | [opensslport](https://github.com/ZOSOpenTools/opensslport) | 11 | 96% |c3270, curl, expat, git, librdkafka, libssh2, lynx, openssh, rsync, sudo, wget
 | [cmakeport](https://github.com/ZOSOpenTools/cmakeport) | 9 | 74% |avro-c-lib, duckdb, llamacpp, neovim, ninja, protobuf, unzip, zip, zoslib
 | [bzip2port](https://github.com/ZOSOpenTools/bzip2port) | 8 | 100% |gpg, libassuan, libgcrypt, libgpgerror, libksba, npth, ntbtls, pinentry
@@ -304,4 +304,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-09-13 17:30:10
+Last updated:  2023-09-13 20:44:21
