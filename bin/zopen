@@ -28,6 +28,9 @@ printHelp()
   args=$*
   echo "zopen is a general purpose script to be used with the z/OS Open Tools ports." >&2
   printSyntax
+  echo "Notes:" >&2
+  echo "The 'list' and 'search' commands are synonyms for 'query' and pass additional parameters" >&2
+  echo "" >&2
   echo "Example usage:" >&2
   echo " # Install the 'which' utility package" >&2
   echo " zopen install which" >&2

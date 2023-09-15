@@ -15,6 +15,37 @@ cleanupFunction() {
 }
 trap "cleanupFunction" EXIT INT TERM QUIT HUP
 
+colorizepct(){
+  percentage=$1
+  if [ -z "$percentage" ]; then
+    colored="${RED}"
+  elif [ ! "$percentage" = "${percentage#Skipped}" ]; then
+    colored="${RED}"
+  elif [ $percentage -eq 100 ]; then
+    colored="${GREEN}"
+  elif [ $percentage -gt 50 ]; then
+    colored="${BLUE}"
+  elif [ $percentage -gt 0 ]; then
+    colored="${YELLOW}"
+  else
+    colored="${RED}"
+  fi
+  echo "$colored"
+}
+
+isfiltered(){
+  percentage=$1
+  color=$2
+  case "$color" in
+    "red")   [ $percentage -eq 0 ] return 0;;
+    "green") [ $percentage -eq 100 ] && return 0 || return 1 ;;
+    "blue")  [ $percentage -gt 50 -a $percentage -lt 100 ] && return 0 || return 1;;
+    "yellow")[ $percentage -gt 0 -a $precentage -lt 50 ] && return 0 || return 1 ;;
+    *);;
+  esac
+  return 1
+}
+
 curlCmd(){
   # Take the list of parameters and concat them with  
   # any custom parameters the user requires in ZOPEN_CURL_PARAMS

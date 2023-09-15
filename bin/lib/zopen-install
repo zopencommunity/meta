@@ -558,7 +558,7 @@ if [ -z "${chosenRepos}" ]; then
     ph=$!
     killph="kill -HUP $ph"
     addCleanupTrapCmd "$killph"
-    chosenRepos="$(${utildir}/zopen-query list --installed --no-header --no-versions)"
+    chosenRepos="$(${utildir}/zopen-query --list --installed --no-header --no-versions)"
     $killph 2>/dev/null  # if the timer is not running, the kill will fail
   elif $all; then
     printInfo "Enter 'all' to confirm full installation [takes a long time so be sure!]:"
