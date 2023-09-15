@@ -11,22 +11,24 @@ printSyntax()
   echo "zopen query is a utility for z/OS Open Tools to query packages and repos." >&2
   echo "Syntax: zopen query [<option>]* [<package]*" >&2
   echo "  where <option> may be one or more of:" >&2
-  echo "  --list: list available z/OS Open Tools; all tools listed unless <package> is specified."  >&2
-  echo "  --remote-search: regex match package against available z/OS Open Tools" >&2
-  echo "  -i : --installed: list installed z/OS Open Tools." >&2
-  echo " --upgradeable: list packages where an upgrade is available." >&2
-  echo "  -wp : --whatprovides: which installed package provides a file." >&2
-  echo "  -v: run in verbose mode." >&2
-  echo "  -d | --details: include full details for listings." >&2
-  echo "  --no-header: suppress the header for the output." >&2
-  echo "  --no-versions:  suppress version information, only return package names." >&2
-  echo "  --filter <greenblue|yellow|red>: Show packages with test results within the color-range:" >&2
-  echo "                  : green  - all tests passing (100%)" >&2
-  echo "                  : blue   - most tests passing (50-99%)" >&2
-  echo "                  : yellow - some tests passing (1-49%)" >&2
-  echo "                  : red    - no tests passing, or skipped (no filter by default))"  >&2
+  echo "    --list                      list available z/OS Open Tools"  >&2
+  echo "    --remote-search             regex match package against available z/OS Open Tools" >&2
+  echo "    -i, --installed             list installed z/OS Open Tools." >&2
+  echo "    --upgradeable               list packages where an upgrade is available." >&2
+  echo "    -wp, --whatprovides <file>  list packages which provide a file." >&2
+  echo "    -v                          enable verbose mode." >&2
+  echo "    -d, --details               include full details for listings." >&2
+  echo "    --no-header                 suppress the header for the output." >&2
+  echo "    --no-versions               suppress version information, only return package names." >&2
+  echo "    --filter <green|blue|yellow|red>  Show packages with test results within the range:" >&2
+  echo "                  green  - all tests passing (100%)" >&2
+  echo "                  blue   - most tests passing (50-99%)" >&2
+  echo "                  yellow - some tests passing (1-49%)" >&2
+  echo "                  red    - no tests passing, or skipped (no filter by default))"  >&2
   echo " and <package> is an optional list of one or more packages." >&2
-  echo " Where <package>* is specified, options that return multiple entries will be limited to those listed." >&2
+  echo ""
+  echo "Notes:"
+  echo " Where <package>* is specified and the option accepts a package list, options that return multiple entries will be limited to those specified." >&2
 }
 
 printDetailListEntries()
