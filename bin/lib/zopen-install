@@ -470,6 +470,7 @@ installPorts()
 args=$*
 upgradeInstalled=false
 verbose=false
+debug=false
 selectVersion=false
 setActive=true
 cacheOnly=false
@@ -531,6 +532,10 @@ while [ $# -gt 0 ]; do
     "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
       printSyntax "${args}"
       exit 4
+      ;;
+    "--debug")
+      verbose=true
+      debug=true
       ;;
     "-v" | "--v" | "-verbose" | "--verbose")
       verbose=true
