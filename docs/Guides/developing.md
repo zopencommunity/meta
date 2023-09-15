@@ -1,80 +1,32 @@
 # Developing z/OS Open Tools
 
-Please read [Getting Started](/Guides/QuickStart.md) and [Using tools](/Guides/using.md) if you haven't already done so.
+Please read [Quick Start](QuickStart.md) and [The package manager](ThePackageManager.md) if you haven't already done so.
 
 ## zopen directory structure
 
-After running `zopen-setup`, you will see the following directories:
-```
-$HOME
- + zopen
-   + boot
-   + prod
-   + dev
-```
+After running `zopen init`, you are able to install tools under the tools directory you chose, i.e. `$ZOPEN_HOME` 
 
-The _boot_ directory is meant for tools required by _zopen_. In general, you won't need to make updates after you have 
-run `zopen-setup`. 
-
-The _prod_ directory is where the tools you build will be installed into for your own use. It is also where tools that 
-are dependencies will be installed. For example, if you build `m4` as a git build, you will require a number of other tools. 
-`zopen build` will automatically install these tools for you in your _prod_ directory if you don't already have them.
+You can develop z/OS Open Tools out of any directory you want, but we recommend creating a directory under `$ZOPEN_HOME/dev`. 
 
 The _dev_ directory is where you will do your development. For example, if you wanted to make enhancements to the `zotsampleport` 
 tool, you would do the following:
 
-```
-cd $HOME/zopen/dev
+```bash
+cd $ZOPEN_HOME/dev
 git clone git@github.com:ZOSOpenTools/zotsampleport.git
 cd zotsampleport
 zopen build
 ```
 
-This will install `zotsampleport` into your `$HOME/zopen/prod` directory.
+This will build `zotsampleport` and then install it into `$ZOPEN_HOME/zopen/prod` directory.
 
-We provide a number of tools after you run `zopen-setup`, all under `zopen`. To see the list of tools:
-- `zopen -?`
-
-The following is a description of the zopen tools provided in the `meta` repo. 
-
-### zopen install
-
-To download and install the latest software packages, you can use `zopen install`. By default it will list all of the packages hosted on ZOSOpenTools.
-
-It is recommended that you generate a [github personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/authorizing-oauth-apps) and then set `export ZOPEN_GITHUB_OAUTH_TOKEN=<yourapitoken>`
-
-To list the available packages, specify the `--list` option as follows:
-```
-zopen install --list
+We provide a number of tools under `zopen` in addition to `install` and `build`. 
+To see the list of tools:
+```bash
+`zopen -?`
 ```
 
-To download and install specific packages, you can specify the packages as a comma seperated list as follows:
-```
-zopen install make,gzip
-```
-
-This will download and install to your current directory. To change the destination directory, you can specify the `-d` option as follows:
-
-```
-zopen install make -d $HOME/zopen/prod
-```
-
-You can then change to the install directory and source the .env file: `. ./.env` to setup the tool.
-
-### zopen upgrade
-
-To upgrade already installed software packages, you can use `zopen upgrade`.
-
-```
-zopen upgrade
-```
-
-To upgrade a specific set of packages, you can specify the packages as a comma seperated list as follows:
-```
-zopen upgrade make,gzip
-```
-
-## If you are contributing to or developing z/OS Open Tools
+## To Develop z/OS Open Tools
 
 ### zopen build
 
