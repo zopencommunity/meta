@@ -23,6 +23,7 @@ progressPerStatus = {
   "Green": 0,
   "Blue": 0,
   "Yellow": 0,
+  "Red": 0,
   "Skipped": 0,
   "Not built": 0
 }
