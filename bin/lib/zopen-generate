@@ -158,8 +158,12 @@ ${description}
 EOT
 printInfo "${name}port/README.md created"
 
-touch "${name}port/cicd.groovy" && chtag -tc 819 "${name}port/cicd.groovy"
-cat <<EOT > "${name}port/cicd.groovy"
+createCICD()
+{
+buildline=$1
+touch "${name}port/cicd-$buildline.groovy" && chtag -tc 819 "${name}port/cicd-$buildline.groovy"
+buildlineUpper=$(echo "$buildline" | awk '{print toupper($0)}')
+cat <<EOT > "${name}port/cicd-$buildline.groovy"
 node('linux')
 {
   stage ('Poll') {
@@ -171,14 +175,21 @@ node('linux')
       userRemoteConfigs: [[url: 'https://github.com/ZOSOpenTools/${name}port.git']]])
   }
   stage('Build') {
-    build job: 'Port-Pipeline', parameters: [string(name: 'PORT_GITHUB_REPO', value: 'https://github.com/ZOSOpenTools/${name}port.git'), string(name: 'PORT_DESCRIPTION', value: '${description}' )]
+    build job: 'Port-Pipeline', parameters: [string(name: 'PORT_GITHUB_REPO', value: 'https://github.com/ZOSOpenTools/${name}port.git'), string(name: 'PORT_DESCRIPTION', value: '${description}' ), string(name: 'BUILD_LINE', value: '$buildlineUpper') ]
   }
 }
 EOT
+}
+
+createCICD "stable"
+createCICD "dev"
 
 touch "${name}port/.gitignore" && chtag -tc 819 "${name}port/.gitignore"
 cat <<EOT > "${name}port/.gitignore"
 log/
+log.DEV/
+log.STABLE/
+build/
 install/
 EOT
 printInfo "${name}port/.gitignore created"
@@ -193,18 +204,6 @@ elif [ -n "$ZOPEN_ROOTFS" ]; then
     printError "Could not locate LICENSE file to copy for project"
   fi
 fi
-if [ -e "${utildir}/../../.gitattributes" ]; then
-  cp "${utildir}/../../.gitattributes" "${name}port/.gitattributes"
-elif [ -n "$ZOPEN_ROOTFS" ]; then
-  pkgInstallDir="$(cat "$ZOPEN_ROOTFS/etc/zopen/fstype")"
-  if [ -e "${utildir}/../../../$pkgInstallDir/meta/meta/.gitattributes" ]; then
-    cp "${utildir}/../../../$pkgInstallDir/meta/meta/.gitattributes" "${name}port/.gitattributes"
-  else
-    printError "Could not locate .gitattributes file to copy for project"
-  fi
-fi
-
-
 
 printHeader "${name} project is ready! ${name}port/"
 printInfo "Create patches under the ${name}port/patches directory"
