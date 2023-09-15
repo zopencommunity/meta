@@ -15,6 +15,12 @@ cleanupFunction() {
 }
 trap "cleanupFunction" EXIT INT TERM QUIT HUP
 
+curlCmd(){
+  # Take the list of parameters and concat them with  
+  # any custom parameters the user requires in ZOPEN_CURL_PARAMS
+  curl $ZOPEN_CURL_PARAMS $*
+}
+
 validateReleaseLine(){
   echo "$1" | awk '
     toupper($1)=="DEV"    {print toupper($0)}
@@ -177,42 +183,6 @@ mutexFree(){
   lockdir="$ZOPEN_ROOTFS/var/lock"
   mutex="$lockdir/$mutex"
   [ -e "$mutex" ] && rm -f $mutex
-}
-# Calculate the relative path from $1 to $2
-relativePath(){
-  sourcePath=$1
-  targetPath=$2
-  currentIFS="$IFS"
-  IFS="/"
-  relativePath=''
-  set -- $targetPath
-  for elem in $sourcePath; do
-    if [ -z "$relativePath" ]; then
-      if [ -z "$elem" ]; then
-        relativePath="$1"
-      elif [ "$1" = "$elem" ]; then
-      else
-        relativePath="../$1"
-      fi
-    else
-      if [ -n "$elem" ]; then
-        relativePath="../$relativePath"
-      else
-        relativePath="$relativePath/$1"
-      fi
-    fi
-    if [ $# -gt 0 ]; then
-      shift
-    fi
-  done
-  # if the target is longer than the source, there might be some additional
-  # elements in the shifted $0 to append
-  if [ $# -gt 0 ]; then
-     relativePath=$relativePath/$(echo $* | sed "s/ /\//g")
-  fi
-
-  IFS="$currentIFS"
-  echo "$relativePath"
 }
 relativePath2(){
   sourcePath=$1
@@ -453,6 +423,16 @@ zopenInitialize()
   fi
 
   ZOPEN_JSON_CACHE_URL="https://zosopentools.github.io/meta/api/zopen_releases.json"
+}
+
+printDebug()
+{
+  [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
+  if ${debug}; then
+    printColors "${NC}${BLUE}${BOLD}:DEBUG:${NC}: '${1}'" >&2
+  fi
+  [ ! -z "$xtrc" ] && set -x
+  return 0;
 }
 
 printVerbose()
@@ -812,60 +792,12 @@ syslog() {
   echo $(date +"%F %T") $(id | cut -d' ' -f1)::$module:$type:$categories:$location:$msg >> $fd
 }
 
-parseResponseHeaders(){
-  responseHeaders=$(echo "$httpresponse" | awk '/^[ ]*[a-zA-Z0-9]/ {print} ')
-}
-parseResponseBody(){
-  responseBody=$(echo "$httpresponse" | awk '!/^[ ]*[a-zA-Z0-9]/ {print} ')
-}
-parseHttpRc(){
-  if [ -z "$responseHeaders" ]; then
-    parseResponseHeaders
-  fi
-  responseRc=$(echo "$responseHeaders" | head -n 1 | cut -d' ' -f 2)
-}
-
-httprequest() {
-  url="$1"
-  expectedRc="$2" # Space separated list of http rcs that are handled by caller
-  printVerbose "Requesting from url: ${url} "
-  uricmd="curl --include $OAUTH_TOKEN_OPTION $OAUTH_TOKEN -s $url"
-  if ! httpresponse=$(curl --include "$OAUTH_TOKEN_OPTION" "$OAUTH_TOKEN" -s "$url"); then
-    printError "Unable to download from url: '$url'. Resolve reported issue and retry"
-  fi
-  parseResponseHeaders
-  parseResponseBody
-  parseHttpRc
-  case "$expectedRc" in
-    *$responseRc*) printVerbose "Request completed as expected ($responseRc)";;
-    *) printVerbose "Request completed with response: $responseRc";
-       case "$responseRc" in
-         '200') printVerbose "Request completed successfully to URL: $url";;
-         '401') printError "Your ZOPEN_GIT_OAUTH_TOKEN is invalid. Please validate that it is correct and re-run.";;
-         '403') if echo "$httpresponse" | grep -q "API rate limit exceeded for" 2>/dev/null; then
-                  printError "API rate limit exceeded for github.\n1. Generate a token (https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token).\n2. Set ZOPEN_GIT_OAUTH_TOKEN and rerun"
-                else
-                  printError "Unable to access URL: $url"
-                fi
-                return 8;;
-         '404') printError "URL $url not found";;
-         * ) printError "Bad response code $responseRc when accessing URL: $url";;
-       esac;;
-  esac
-  return $responseRc
-}
-
-parseJsonRepos(){
-   [ -z "$jsonResponse" ] && echo "" && return
-   echo "$jsonResponse" | awk -F'"' ' /full_name/ { print $4 }'
-}
-
 downloadJSONCache() {
   if [ -z "$JSON_CACHE" ]; then
     JSON_CACHE="$ZOPEN_ROOTFS/var/cache/zopen/zopen_releases.json"
     JSON_TIMESTAMP="$ZOPEN_ROOTFS/var/cache/zopen/zopen_releases.timestamp"
     JSON_TIMESTAMP_CURRENT="$ZOPEN_ROOTFS/var/cache/zopen/zopen_releases.timestamp.current"
-    if ! curl -L -s -I "$ZOPEN_JSON_CACHE_URL" -o "$JSON_TIMESTAMP_CURRENT"; then
+    if ! curlCmd -L -s -I "$ZOPEN_JSON_CACHE_URL" -o "$JSON_TIMESTAMP_CURRENT"; then
       printError "Failed to obtain json cache timestamp from $ZOPEN_JSON_CACHE_URL"
     fi
     chtag -tc 819 "$JSON_TIMESTAMP_CURRENT"
@@ -875,7 +807,7 @@ downloadJSONCache() {
     fi
 
     mv "$JSON_TIMESTAMP_CURRENT" "$JSON_TIMESTAMP"
-    if ! curl -L -s -o "$JSON_CACHE" "$ZOPEN_JSON_CACHE_URL" ; then
+    if ! curlCmd -L -s -o "$JSON_CACHE" "$ZOPEN_JSON_CACHE_URL" ; then
       printError "Failed to obtain json cache from $ZOPEN_JSON_CACHE_URL"
     fi
     chtag -tc 819 "$JSON_CACHE"
@@ -898,21 +830,6 @@ getAllReleasesFromGithub(){
   if [ $? -ne 0 ]; then
     printError "Could not get all releases for $repo"
   fi
-}
-
-getContentsFromGithub(){
-  url="$1"
-  printVerbose "Requesting from url: ${url} "
-  if ! repo_results=$(curl --include "$OAUTH_TOKEN_OPTION" "$OAUTH_TOKEN" -s "$url"); then
-    printError "Unable to download from url: '$url'. Resolve reported issue and retry" 
-  fi
-  if echo "$repo_results" | grep -q "API rate limit exceeded for" 2>/dev/null; then
-    printError "API rate limit exceeded for github.\n1. Generate a token (https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token).\n2. Set ZOPEN_GIT_OAUTH_TOKEN and rerun"
-  fi
-  if echo $repo_results | grep -q "Bad credentials" 2>/dev/null; then
-    printError "Your ZOPEN_GIT_OAUTH_TOKEN is invalid. Please validate that it is correct and re-run."
-  fi
-  echo "$repo_results";
 }
 
 initDefaultEnvironment()

@@ -296,7 +296,8 @@ handlePackageInstall(){
     ph=$!
     killph="kill -HUP $ph"
     addCleanupTrapCmd "$killph"
-    if ! runAndLog "curl -L '${downloadURL}' -O ${redirectToDevNull}"; then
+
+    if ! runAndLog "curlCmd -L '${downloadURL}' -O ${redirectToDevNull}"; then
       printError "Could not download from ${downloadURL}. Correct any errors and potentially retry"
       continue;
     fi

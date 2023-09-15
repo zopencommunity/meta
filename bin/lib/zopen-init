@@ -287,6 +287,10 @@ export ZOPEN_CA
 ZOPEN_LOG_PATH=\$ZOPEN_ROOTFS/var/log
 export ZOPEN_LOG_PATH
 
+# Custom parameters for zopen tooling
+# Add any custom parameters for curl
+ZOPEN_CURL_PARAMS=""
+
 # Environment variables
 
 if [ -z "\$ZOPEN_QUICK_LOAD" ]; then
