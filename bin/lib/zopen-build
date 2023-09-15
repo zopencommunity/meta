@@ -829,7 +829,7 @@ downloadTarBall()
   else
     freshBuild=true
     if ${verbose}; then
-      printVerbose "$curlCmd -L -o ${tarballz} ${ZOPEN_URL}"
+      printVerbose "curl $ZOPEN_CURL_PARAMS -L -o ${tarballz} ${ZOPEN_URL}"
     fi
     #
     # Some older tarballs (openssl) contain a pax_global_header file. Remove it
@@ -842,7 +842,7 @@ downloadTarBall()
     # Make a first call to just get the headers and toss everything out just to
     # set up the cache (requirec for openssl)
     #
-    curl -I "${ZOPEN_URL}" >/dev/null 2>&1
+    curlCmd -I "${ZOPEN_URL}" >/dev/null 2>&1
 
     if ! curlCmd -L -0 -o "${tarballz}" "${ZOPEN_URL}";  then
       if [ -f "${tarballz}" ] && [ $(wc -c "${tarballz}" | awk '{print $1}') -lt 1024 ]; then
