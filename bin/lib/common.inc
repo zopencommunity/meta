@@ -224,37 +224,40 @@ mergeIntoSystem(){
   name=$1          # Name of the package being processed
   versioneddir=$2  # The directory where the unpax occurred
   rootfs="$3"
+  rebaseusr="$4"
+
+  [ -z "$rebaseusr" ] && rebaseusr="usr/local"
 
   currentDir="$PWD"
-  targetdir="$rootfs/usr"     # The main rootfs/usr location
+  targetdir="$rootfs/$rebaseusr"     # The main rootfs/usr location
 
-  printVerbose "Calculating the offset path to store from root"
+  printDebug "Calculating the offset path to store from root"
   offset=$(dirname "${versioneddir#$rootfs/}")
   version=$(basename $versioneddir)
   tmptime=$(date +%Y%m%d%H%M%S)
   processingDir="$rootfs/tmp/zopen.$tmptime"
-  printVerbose "Temporary processing dir evaluated to: $processingDir"
+  printDebug "Temporary processing dir evaluated to: $processingDir"
 
   virtualStore="$processingDir/$offset"
-  printVerbose "Creating virtual store at: $virtualStore"
+  printDebug "Creating virtual store at: $virtualStore"
   mkdir -p "$virtualStore"
 
-  printVerbose "Moving from main store location (unpax-dir) to processing store"
+  printDebug "Moving from main store location (unpax-dir) to processing store"
   mv "$versioneddir" "$virtualStore"
 
-  printVerbose "Creating main linked directory in store"
+  printDebug "Creating main linked directory in store"
   $(cd "$virtualStore" && ln -s "$version" "$name")
 
-  printVerbose "Creating virtual root directory structure"
-  mkdir -p "$processingDir/usr"
+  printDebug "Creating virtual root directory structure"
+  mkdir -p "$processingDir/$rebaseusr"
 
-  printVerbose "Generating relative symlinks in processing location"
-  relpath=$(relativePath2 "$virtualStore/$name" "$processingDir/usr")
+  printDebug "Generating relative symlinks in processing location"
+  relpath=$(relativePath2 "$virtualStore/$name" "$processingDir/$rebaseusr")
   [ "$relpath" = "/" ] && printError "Relative path calculated as root directory itself!?!"
 
-  printVerbose "Generating symlink tree"
+  printDebug "Generating symlink tree"
   
-  printVerbose "Creating directory structure"
+  printDebug "Creating directory structure"
   curdir="$PWD"
   cd "$virtualStore/$name"
    # since 'ln *' doesn't invoke globbing to allow multiple files at once,
@@ -264,39 +267,39 @@ mergeIntoSystem(){
    # and ignoring them is actually faster than individually creating the links!
   zosfind . -type d | sort -r | while read dir; do
     dir=$(echo "$dir" | sed "s#^./##")
-    printVerbose "Processing dir: $dir" 
+    printDebug "Processing dir: $dir" 
     [ $dir = "." ] && continue;
-    mkdir -p "$processingDir/usr/$dir"
-    cd "$processingDir/usr/$dir"
-    dirrelpath=$(relativePath2 "$virtualStore/$name/$dir" "$processingDir/usr/$dir")
+    mkdir -p "$processingDir/$rebaseusr/$dir"
+    cd "$processingDir/$rebaseusr/$dir"
+    dirrelpath=$(relativePath2 "$virtualStore/$name/$dir" "$processingDir/$rebaseusr/$dir")
     ln -Rs "$dirrelpath/" "." 2>/dev/null
   done 
 
-  printVerbose "Moving unpaxed processing-directory back to main rootfs store"
+  printDebug "Moving unpaxed processing-directory back to main rootfs store"
   # this *must* be done before the merge step below or relative symlinks can't
   # work
   versioneddirname=$(basename "$versioneddir")
   mv "$virtualStore/$versioneddirname" "$rootfs/$offset"
 
   tarfile="$name.usr.tar"
-  printVerbose "Merge symlinks into main filesystem using tmp tar file $tarfile"
+  printDebug "Merge symlinks into main filesystem using tmp tar file $tarfile"
   
-  printVerbose "Generating intermediary tar file"
+  printDebug "Generating intermediary tar file"
   # Need '-S' to allow long symlinks
   $(cd "$processingDir" && tar -S -cf "$tarfile" "usr")
 
-  printVerbose "Generating listing for remove processing (including main symlink)"
+  printDebug "Generating listing for remove processing (including main symlink)"
   listing=$(tar tf "$processingDir/$tarfile" 2>/dev/null| sort -r)
   echo "Installed files:" > "$versioneddir/.links"
   echo "$listing" >>  "$versioneddir/.links"
   
-  printVerbose "Extracting tar to rootfs"
+  printDebug "Extracting tar to rootfs"
   cd "$processingDir" && tar xf "$tarfile" -C "$rootfs" 2>/dev/null
 
-  printVerbose "Cleaning temp resources"
+  printDebug "Cleaning temp resources"
   rm -rf "$processingDir" 2>/dev/null
 
-  printVerbose "Switching to previous cwd - current work dir was purged"
+  printDebug "Switching to previous cwd - current work dir was purged"
   cd "$currentDir"
 
   printInfo "- Integration complete"
@@ -322,28 +325,28 @@ unsymlinkFromSystem(){
     flecnt=0
     pct=0
 
-    printVerbose "Creating Temporary dirname file"
+    printDebug "Creating Temporary dirname file"
     tempDirFile="$ZOPEN_ROOTFS/tmp/zopen.rmdir.$RANDOM"
     tempTrash="$tempDirFile.trash"
     [ -e "$tempDirFile" ] && rm -f "$tempDirFile" >/dev/null 2>&1
     touch "$tempDirFile"
     addCleanupTrapCmd "rm -rf $tempDirFile"
-    printVerbose "Using temporary file $tempDirFile"
+    printDebug "Using temporary file $tempDirFile"
     printInfo "- Checking ${nfiles} potential links"
 
     rm_fileprocs=15
     [ -e "$rootfs/etc/zopen/rm_fileprocs" ] && rm_fileprocs=$(cat "$rootfs/etc/zopen/rm_fileprocs")
     threshold=$(( nfiles / rm_fileprocs))
     threshold=$(( threshold + 1 ))
-    printVerbose "Threshold of files per worker [files/procs] calculated as: $threshold"
+    printDebug "Threshold of files per worker [files/procs] calculated as: $threshold"
     [ $threshold -le 50 ] && threshold=50 && printVerbose "Threshold below min: using 50" # Don't spawn too many
-    printVerbose "Starting spinner..."
+    printDebug "Starting spinner..."
     progressHandler "spinner" "- Complete" &
     ph=$!
     killph="kill -HUP $ph"
     addCleanupTrapCmd "$killph"
 
-    printVerbose "Spawning as subshell to handle threading"
+    printDebug "Spawning as subshell to handle threading"
     # Note that this all must happen in a subshell as the above started
     # progressHandler is a signal-terminated process - and a wait issued in 
     # the parent will never complete until that ph is signalled/terminated!
@@ -356,7 +359,7 @@ unsymlinkFromSystem(){
         filenames=$(/bin/printf "%s\n%s" "$filenames" "$filetounlink")
         if [ "$(( tid % threshold ))" -eq 0 ]; then
           deletethread "$filenames" "$tempDirFile" &
-          printVerbose "Started delete thread: $!"
+          printDebug "Started delete thread: $!"
           filenames=""
         fi
       done <<EOF
@@ -366,7 +369,7 @@ EOF
         # Handle when there are not enough to trigger the threshold of a new thread above,
         # there will still be items in the "array"
         deletethread "$filenames" "$tempDirFile" #&
-        printVerbose "Started delete thread: $!"
+        printDebug "Started delete thread: $!"
       fi
       wait 
     )
