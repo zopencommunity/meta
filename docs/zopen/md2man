@@ -1,9 +1,25 @@
 #!/bin/sh
-# Generate man1/zopen.1.gz from man1/README.md
+# Generate man1/xxx.1.gz from man1/xxx.md
 
 set -e
-
+zopen_version='0.6.3' ## add code to perform zopen --version once supported
+zopen_date=$(date "+%B %d %Y")
 curdir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
 mandir="${curdir}/man1"
-docker run -ti -v ${mandir}:/tmp/ dantesignal31/markdown2man:latest /tmp/README.md zopen
-rm -rf ${mandir}/tmp*
+
+for f in "${mandir}"/*.md; do
+	bf=$(basename $f)
+	zopen_tool=${bf%%.md}
+
+header="---
+title: ${zopen_tool}
+section: 1
+header: User Manual
+footer: ${zopen_version}
+date: ${zopen_date}
+---
+"
+	body=$(cat ${f})
+	manfile=${f%%.md}.1.gz
+	echo "${header}${body}" | pandoc -s -f markdown -t man | gzip >${manfile}
+done
