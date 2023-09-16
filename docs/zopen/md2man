@@ -1,0 +1,9 @@
+#!/bin/sh
+# Generate man1/zopen.1.gz from man1/README.md
+
+set -x
+
+curdir=$(cd $(dirname $0); echo $PWD)
+mandir="${curdir}/man1"
+docker run -ti -v ${mandir}:/tmp/ dantesignal31/markdown2man:latest /tmp/README.md zopen
+rm -rf ${mandir}/tmp*
