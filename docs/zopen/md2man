@@ -21,6 +21,6 @@ date: ${zopen_date}
 ---
 "
 	body=$(cat ${mdf})
-	manfile=${mandir}/${zopen_tool}.1.gz"
+	manfile="${mandir}/${zopen_tool}.1.gz"
 	echo "${header}${body}" | pandoc -s -f markdown -t man | gzip >${manfile}
 done
