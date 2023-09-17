@@ -217,6 +217,50 @@ z/OSOpenTools sample port.
   **ZOPEN_SHELL** 
   : Specify an alternate shell to use if -s option specified (defaults to /bin/sh)
 
+## FUNCTIONS
+
+ Functions can be specified that will run as part of the build process, to give you
+ more control over the build process. 
+
+ **zopen_init**
+ : This function runs after code is downloaded and patched but before the code is built.
+
+ **zopen_post_buildenv**
+ : This function runs after the 'buildenv' is processed.
+
+ **zopen_pre_patch**
+ : This function runs before the 'patch' step of the build is run.
+
+ **zopen_pre_check**
+ : This function runs before the 'check' step of the build is run.
+
+ **zopen_pre_build**
+ : This function runs before the 'make' step of the build is run.
+
+ **zopen_append_to_env**
+ : This function runs as part of generation of the .env file. The output of the function is appended to .env
+
+ **zopen_append_to_setup**
+ : This function runs as part of generation of the setup.sh file. The output of the function is appended to setup.sh
+
+ **zopen_append_to_validate_install**
+ : This function runs as part of generation of the install_test.sh file. The output of the function is appended to install_test.sh script.
+
+ **zopen_pre_install**
+ : This function runs before the 'install' step of the build is run.
+
+ **zopen_post_install**
+ : This function runs after the 'install' step of the build is run.
+
+ **zopen_check_results**
+ : This function runs after the 'check' step of the build is run and must print out expected and actual failures.
+
+ **zopen_get_version**
+ : This function returns the version of the tool in accordance with semantic versioning
+
+ **zopen_append_to_zoslib_env**
+ : This function runs as part of generation of the C function zoslib_env_hook, which can be used to set environment variables before main is run.
+
 ## FILES
 
 ## SEE ALSO
