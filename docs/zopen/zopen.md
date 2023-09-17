@@ -17,21 +17,43 @@ We divide zopen into high level ("porcelain") commands and low level ("plumbing"
 
 ### HIGH-LEVEL COMMANDS (PORCELAIN)
 
-  git-build           builds the software package of the repository you are in
-  git-init            initialize the zopen tooling so you can subsequently use the other `zopen` commands
-  git-generate        generate the skeleton files for a z/OS Open Tools project
-  git-install         installs one or more z/OS Open Tools packages into your z/OS system
-  git-list            lists information about z/OS Open Tools packages
-  git-remove          remove z/OS Open Tools packages installed on your z/OS system
-  git-alt             switch local versions of z/OS Open Tools packages
-  git-clean           cleans various aspects of z/OS Open Tools packages
+ **git-build(1)**
+ : builds the software package of the repository you are in
+
+ **git-init(1)**
+ : initialize the zopen tooling so you can subsequently use the other `zopen` commands
+
+ **git-generate(1)**       
+ : generate the skeleton files for a z/OS Open Tools project
+
+ **git-install(1)**        
+ : installs one or more z/OS Open Tools packages into your z/OS system
+
+ **git-list(1)**           
+ : lists information about z/OS Open Tools packages
+
+ **git-remove(1)**         
+ : remove z/OS Open Tools packages installed on your z/OS system
+
+ **git-alt(1)**
+ : switch local versions of z/OS Open Tools packages
+
+ **git-clean(1)**          
+ : cleans various aspects of z/OS Open Tools packages
 
 #### Ancillary Commands
 
-  git-download        this is an alias for git-install 
-  git-query           this is an alias for git-list
-  git-upgrade         this is an alias for git-install
-  git-search          this is an alias for git-list
+ **git-download(1)**       
+ : this is an alias for git-install 
+
+ **git-query(1)**          
+ : this is an alias for git-list
+
+ **git-upgrade(1)**        
+ : this is an alias for git-install
+
+ **git-search(1)**         
+ : this is an alias for git-list
 
 ### LOW-LEVEL COMMANDS (PLUMBING)
 
@@ -42,7 +64,7 @@ We divide zopen into high level ("porcelain") commands and low level ("plumbing"
 ## FILES
 
 ## SEE ALSO
-zopen-init(1) zopen-install(1) zopen-list(1)  
+zopen-init(1) zopen-install(1) zopen-list(1) 
 
 zopen-build(1) zopen-alt(1) zopen-generate(1) zopen-remove(1) zopen-clean(1)
 
