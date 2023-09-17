@@ -79,7 +79,7 @@ User-Provided environment variables:
   ZOPEN_CONFIGURE_MINIMAL Configuration program will not be passed CFLAGS, LDFLAGS, CPPFLAGS options but will just get them from env vars
   ZOPEN_CONFIGURE_OPTS Options to pass to configuration program (defaults to '--prefix=\${ZOPEN_INSTALL_DIR}')
   ZOPEN_EXTRA_CONFIGURE_OPTS Extra configure options to pass to configuration program (defaults to '')
-  ZOPEN_INSTALL_DIR    Installation directory to pass to configuration (defaults to '\${ZOPEN_PKGINSTALL}/dev/<pkg>/<pkg>')
+  ZOPEN_INSTALL_DIR    Installation directory to pass to configuration (defaults to '\${ZOPEN_PKGINSTALL}/<pkg>/<pkg>')
   ZOPEN_MAKE           Build program to run. If skip is specified, no build step is performed (defaults to '${ZOPEN_MAKED}')
   ZOPEN_MAKE_MINIMAL   Build program will not be passed CFLAGS, LDFLAGS, CPPFLAGS options but will just get them from env vars
   ZOPEN_MAKE_OPTS      Options to pass to build program (defaults to '-j\${ZOPEN_NUM_JOBS}')
@@ -241,6 +241,7 @@ printSyntax()
   echo "  -gp|--generate-pax: generate a pax.Z file based on the install contents"
   echo "  --forcepatchapply: force apply the patches, where rejected patches are placed into a corresponding file of the same name, with the .rej extension"
   echo "  -nosym|--nosymlink: do not generate a symlink from the project name to \${ZOPEN_INSTALL_DIR}"
+  echo "  --no-set-active: do not change the pinned version"  >&2
   echo "  -s: exec a shell before running configure.  Useful when manually building ports."
 
   opts=$(printEnvVar)
@@ -264,8 +265,9 @@ processOptions()
   getSourceOnly=false
   generatePax=false
   generateSymLink=true
+  setActive=true
   forcePatchApply=false
-  depsPath="$ZOPEN_PKGINSTALL/dev|$ZOPEN_PKGINSTALL"
+  depsPath="$ZOPEN_PKGINSTALL"
   forceUpgradeDeps=false
   while [[ $# -gt 0 ]]; do
     case $1 in
@@ -311,6 +313,9 @@ processOptions()
       "-d" | "--depspath")
         shift
         depsPath="${1}|${depsPath}"
+        ;;
+      "--no-set-active")
+        setActive=false  # Install package as normal but keep existing installation as active
         ;;
       "-e" | "--env")
         shift
@@ -1194,7 +1199,7 @@ replaceHardcodedPath()
       chmod "+w" $f
     fi
     cp $f $f.tmp && \
-    sed -e "s#${orig}#${replaced}#g" $f.tmp > $f &&  \
+    sed -e "s#\(${orig}\)/\([^/]*\)[^-]*-[^/]*#${replaced}/\2/\2#g" $f.tmp > $f && \
     rm $f.tmp;
     if ! $isWriteable; then
       chmod "-w" $f
@@ -1204,14 +1209,11 @@ replaceHardcodedPath()
 
 replaceHardcodedPaths()
 {
-  ZOPEN_INSTALL_PREFIX="${ZOPEN_INSTALL_DIR}/../"
+  ZOPEN_INSTALL_PREFIX="${ZOPEN_INSTALL_DIR}/../../"
   ZOPEN_INSTALL_PREFIX=$(cd "${ZOPEN_INSTALL_PREFIX}" >/dev/null 2>&1 && pwd -P)
 
-  printHeader "Replacing hardcoded ${ZOPEN_INSTALL_DIR} and ${ZOPEN_INSTALL_PREFIX} path"
+  printHeader "Replacing hardcoded ${ZOPEN_INSTALL_PREFIX} path"
   hasHardcodedPaths=false
-  for f in $(find ${ZOPEN_INSTALL_DIR}/ -type f | xargs grep -l "${ZOPEN_INSTALL_DIR}" 2>/dev/null); do
-    replaceHardcodedPath "${ZOPEN_INSTALL_DIR}" "ZOPEN_INSTALL_ROOT" "$f"
-  done
   for f in $(find ${ZOPEN_INSTALL_DIR}/ -type f | xargs grep -l "${ZOPEN_INSTALL_PREFIX}" 2>/dev/null); do
     hasHardcodedPaths=true
     replaceHardcodedPath "${ZOPEN_INSTALL_PREFIX}" "ZOPEN_INSTALL_PREFIX" "$f"
@@ -1293,10 +1295,8 @@ zz
   if $hasHardcodedPaths; then
     cat <<zz >>"${ZOPEN_INSTALL_DIR}/setup.sh"
 if [ -f .replacedpath ]; then
-  REPLACE_ROOT_PATH="\$(cat .replacedpath | head -1)"
-  REPLACE_PREFIX_PATH="\$(cat .replacedpath | head -2 | tail -1)"
+  REPLACE_PREFIX_PATH="\$(cat .replacedpath | head -1)"
 else
-  REPLACE_ROOT_PATH="ZOPEN_INSTALL_ROOT"
   REPLACE_PREFIX_PATH="ZOPEN_INSTALL_PREFIX"
 fi
 
@@ -1319,16 +1319,12 @@ replaceHardcodedPath() {
     fi
   fi
 }
-ZOPEN_INSTALL_PREFIX="\$${projectName}_HOME/../"
+ZOPEN_INSTALL_PREFIX="\$${projectName}_HOME/../../"
 ZOPEN_INSTALL_PREFIX=\$(cd "\${ZOPEN_INSTALL_PREFIX}" >/dev/null 2>&1 && pwd -P)
-for f in \$(/bin/find \$${projectName}_HOME/ -type f | /bin/xargs grep -l \"\$REPLACE_ROOT_PATH\" 2>/dev/null); do
-  replaceHardcodedPath "\$REPLACE_ROOT_PATH" "\$${projectName}_HOME" "\$${projectName}_HOME" \$f
-done
 for f in \$(/bin/find \$${projectName}_HOME/ -type f | /bin/xargs grep -l \"\$REPLACE_PREFIX_PATH\" 2>/dev/null); do
   replaceHardcodedPath "\$REPLACE_PREFIX_PATH" "\${ZOPEN_INSTALL_PREFIX}" "\$${projectName}_HOME" \$f
 done
-echo "\$${projectName}_HOME" > .replacedpath
-echo "\${ZOPEN_INSTALL_PREFIX}" >> .replacedpath
+echo "\${ZOPEN_INSTALL_PREFIX}" > .replacedpath
 zz
   fi
 
@@ -1533,11 +1529,22 @@ install()
         printError "Could not generate pax \"${paxFileName}\""
       fi
     fi
-    if [ -n "${ZOPEN_LINK_CMD}" ]; then
-      printHeader "Generating symlink from ${linkPath} to ${ZOPEN_INSTALL_DIR}"
-      if ! runAndLog "${ZOPEN_LINK_CMD}"; then
-        printError "Link command failed"
-      fi
+    if $setActive; then
+      PROJECT_NAME="$(echo ${ZOPEN_NAME} | cut -d'-' -f1)"
+      mergeIntoSystem "$PROJECT_NAME" "${ZOPEN_INSTALL_DIR}" "$ZOPEN_ROOTFS" 
+      mkdir -p "$ZOPEN_ROOTFS/etc/profiled/$name"
+      cat << EOF > "$ZOPEN_ROOTFS/etc/profiled/$name/dotenv"
+curdir=\$(pwd)
+cd "${ZOPEN_INSTALL_DIR}" >/dev/null 2>&1
+if [ -f ".appenv" ]; then
+  . ./.appenv
+fi
+cd \$curdir  >/dev/null 2>&1
+EOF
+      printInfo "- Sourcing environment to run any setup"
+      cd "${ZOPEN_INSTALL_DIR}" && ./setup.sh
+      printVerbose "Marking this version as installed"
+      touch "${ZOPEN_INSTALL_DIR}/.active"
     fi
     generateOCI $ZOPEN_NAME
   else
@@ -1561,7 +1568,7 @@ resolveCommands()
   fi
   if [ "${ZOPEN_INSTALL_DIR}x" = "x" ]; then
     PROJECT_NAME="$(echo ${ZOPEN_NAME} | cut -d'-' -f1)"
-    export ZOPEN_INSTALL_DIR="$ZOPEN_PKGINSTALL/dev/${PROJECT_NAME}/${ZOPEN_NAME}" # Install into dev location
+    export ZOPEN_INSTALL_DIR="$ZOPEN_PKGINSTALL/${PROJECT_NAME}/${ZOPEN_NAME}" # Install into dev location
   fi
   if [ "${ZOPEN_LOG_DIR}x" = "x" ]; then
     export ZOPEN_LOG_DIR="${ZOPEN_ROOT}/log"
@@ -1649,13 +1656,6 @@ resolveCommands()
     [[ -d ${ZOPEN_ROOT}/install ]] || mkdir -p ${ZOPEN_ROOT}/install
     paxFileName="${ZOPEN_ROOT}/install/${ZOPEN_NAME}.${LOG_PFX}.zos.pax.Z"
     export ZOPEN_PAX_CMD="pax -w -z -x pax \"-s#${ZOPEN_INSTALL_DIR}/#${ZOPEN_NAME}/#\" -f \"${paxFileName}\" \"${ZOPEN_INSTALL_DIR}/\""
-    if $generateSymLink; then
-      PROJECT_NAME="$(echo ${ZOPEN_NAME} | cut -d'-' -f1)"
-      if [ "${PROJECT_NAME}" != "${ZOPEN_NAME}" ]; then
-        linkPath="$(dirname ${ZOPEN_INSTALL_DIR})/${PROJECT_NAME}"
-        export ZOPEN_LINK_CMD="if [ -h ${linkPath} ]; then rm ${linkPath}; fi && ln -s ${ZOPEN_INSTALL_DIR} ${linkPath}"
-      fi
-    fi
   else
     unset ZOPEN_INSTALL_CMD
     unset ZOPEN_PAX_CMD

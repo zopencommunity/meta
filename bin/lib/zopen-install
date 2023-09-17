@@ -389,11 +389,11 @@ handlePackageInstall(){
       if ! $nosymlink; then
         mergeIntoSystem "$name" "${baseinstalldir}/$installdirname" "$ZOPEN_ROOTFS" 
         misrc=$?
-        printVerbose "The merge complete with: $misrc"
+        printVerbose "The merge completed with: $misrc"
       fi
 
       printInfo "- Checking for env file"
-      if [ -f ${baseinstalldir}/${name}/${name}/.env ]; then
+      if [ -f ${baseinstalldir}/${name}/${name}/.env -o -f ${baseinstalldir}/${name}/${name}/.appenv ]; then
         printInfo "- .env file found, adding to profiled processing"
         mkdir -p "$ZOPEN_ROOTFS/etc/profiled/$name"
         cat << EOF > "$ZOPEN_ROOTFS/etc/profiled/$name/dotenv"
@@ -408,7 +408,7 @@ fi
 cd \$curdir  >/dev/null 2>&1
 EOF
         printInfo "- Sourcing environment to run any setup"
-        cd "$ZOPEN_ROOTFS" && . "$ZOPEN_ROOTFS/etc/profiled/$name/dotenv"
+        cd "${baseinstalldir}/${name}/${name}" && ./setup.sh
       fi
     fi
     if $unInstallOldVersion; then
