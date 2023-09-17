@@ -9,7 +9,7 @@ installs one or more z/OS Open Tools packages into your z/OS system
 
 ## OPTIONS
 
-    --all:                       download/install all z/OS Open Tools packages
+    --all:                       download/install all z/OS Open Tools packages.
     --cache-only:                do not install dependencies.
     --download-only:             download package to current directory
     --install-or-upgrade:        installs the package if not installed, or upgrades the package if installed.
@@ -22,7 +22,7 @@ installs one or more z/OS Open Tools packages into your z/OS system
     --skip-upgrade:              do not upgrade.
     --select:                    select a version to install.
     -u|--update|--upgrade:       updates installed z/OS Open Tools packages.
-    -v:                          run in verbose mode
+    -v:                          run in verbose mode.
     -y|--yes:                    automatically answer yes to prompts.
 
 ## EXIT STATUS
