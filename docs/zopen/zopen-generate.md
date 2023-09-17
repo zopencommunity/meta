@@ -16,7 +16,7 @@ generate the skeleton files for a z/OS Open Tools project
 ## FILES
 
 ## SEE ALSO
-zopen-init(1) zopen-install(1) zopen-list(1) zopen-upgrade(1) 
+zopen-init(1) zopen-install(1) zopen-list(1)  
 
 zopen-build(1) zopen-alt(1) zopen-generate(1) zopen-remove(1) zopen-clean(1)
 
