@@ -2,12 +2,41 @@
 zopen-init
  
 ## SYNOPSIS
-`zopen init [options]` 
+`zopen init [options] [<root dir>]` 
 
 ## DESCRIPTION
-initialize the zopen tooling so you can subsequently use the other `zopen` tools
+initialize the zopen tooling so you can subsequently use the other `zopen` tools.
+`<root dir>` specifies the root directory that zopen will install under. `<root dir>` defaults to `${HOME}/zopen`
 
 ## OPTIONS
+
+  **\-\-append-to-profile**
+  : appends sourcing of zopen configuration to `.profile`
+
+  **\-\-clone**
+  : clones the current installation to a different location
+
+  **-f `<type>`**
+  : virtual filesystem location for package management; packages will be installed to this location under the `<root-dir>`. Where `<type>` is one of:
+
+  - usrlclz - /usr/local/zopen (default)
+  - zopen - /usr/zopen
+  - prod - zopen standard
+  - ibm  - /usr/lpp
+  - fhs  - File Hierarchical Standard (/opt)
+  - usrlcl - /usr/local
+
+  **\-\-re-init**
+  : re-initialize a previous installation (if present).  Re-initializing over a previous installation will re-use existing package structures and configurations.
+
+  **\-\-releaseline-dev**
+  : whether to globally enable Development packages
+
+  **-v**
+  : run in verbose mode
+
+  **-?|-h|\-\-help**
+  : display help
 
 ## EXIT STATUS
 
