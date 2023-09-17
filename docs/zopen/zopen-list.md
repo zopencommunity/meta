@@ -9,6 +9,36 @@ lists information about z/OS Open Tools packages
 
 ## OPTIONS
 
+  **-d | \-\-details**
+  : include full details for listings.
+
+  **\-\-filter <color>**
+  : apply filter based on quality (green - all tests passing, blue - most tests passing, yellow - some tests passing, red - no tests passing, or skipped (no filter by default))
+
+  **-i|\-\-installed**
+  : list install z/OS Open Tools.
+
+  **\-\-list**
+  : list all available z/OS Open Tools.
+
+  **\-\-no-header**
+  : suppress the header for the output.
+
+  **\-\-no-version**
+  :  suppress version information, return package names.
+
+  **\-\-remote-search**
+  : regex match package against available z/OS Open Tools
+
+  **\-\-upgradeable**
+  : list packages where an upgrade is available.
+
+  **-v**
+  : run in verbose mode.
+
+  **-wp|\-\-whatprovides**
+  : which installed package provided a file.
+
 ## EXIT STATUS
 
 ## ENVIRONMENT
