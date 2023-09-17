@@ -240,7 +240,6 @@ printSyntax()
   echo "  -g|--get-source: get the source and apply patch without building"
   echo "  -gp|--generate-pax: generate a pax.Z file based on the install contents"
   echo "  --forcepatchapply: force apply the patches, where rejected patches are placed into a corresponding file of the same name, with the .rej extension"
-  echo "  -nosym|--nosymlink: do not generate a symlink from the project name to \${ZOPEN_INSTALL_DIR}"
   echo "  --no-set-active: do not change the pinned version"  >&2
   echo "  -s: exec a shell before running configure.  Useful when manually building ports."
 
@@ -264,7 +263,6 @@ processOptions()
   buildEnvFile="./buildenv"
   getSourceOnly=false
   generatePax=false
-  generateSymLink=true
   setActive=true
   forcePatchApply=false
   depsPath="$ZOPEN_PKGINSTALL"
@@ -332,9 +330,6 @@ processOptions()
         ;;
       "-gp" | "--generate-pax")
         generatePax=true
-        ;;
-      "-nosym" | "--nosymlink")
-        generateSymLink=false
         ;;
       "-s" | "--shell")
         startShell=true
@@ -1199,6 +1194,7 @@ replaceHardcodedPath()
       chmod "+w" $f
     fi
     cp $f $f.tmp && \
+    # replace hardcoded path and strip out the -suffix in name to match active
     sed -e "s#\(${orig}\)/\([^/]*\)[^-]*-[^/]*#${replaced}/\2/\2#g" $f.tmp > $f && \
     rm $f.tmp;
     if ! $isWriteable; then
@@ -1659,7 +1655,6 @@ resolveCommands()
   else
     unset ZOPEN_INSTALL_CMD
     unset ZOPEN_PAX_CMD
-    unset ZOPEN_LINK_CMD
   fi
 
   if [ "${ZOPEN_CLEAN}x" != "skipx" ] && [ ! -z "$(command -v ${ZOPEN_CLEAN})" ]; then
