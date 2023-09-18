@@ -1,5 +1,4 @@
-#!/bin/bash
-set -e
+#!/bin/env bash
 
 # Check if the jq command is available
 if ! command -v jq > /dev/null; then
