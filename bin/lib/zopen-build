@@ -1427,7 +1427,7 @@ generatePropertiesJSON()
       *) version="1.0.0.0";;
   esac
 
-cat <<zz >> "${ZOPEN_INSTALL_DIR}/properties.json"  
+cat <<zz > "${ZOPEN_INSTALL_DIR}/properties.json"  
 {
 "product": {
   "pax": "${ZOPEN_NAME}.${LOG_PFX}.zos.pax.Z",
@@ -1438,10 +1438,6 @@ cat <<zz >> "${ZOPEN_INSTALL_DIR}/properties.json"
   "description": "TODO"
 }}
 zz
-
-  # Convert to ASCII so that it can be consumed by jenkins
-  iconv -f IBM-1047 -t ISO8859-1 < "${ZOPEN_INSTALL_DIR}/properties.json" > "${ZOPEN_ROOT}/install/properties.json"
-  chtag -tc 819 "${ZOPEN_ROOT}/install/properties.json"
 }
 
 install()
