@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 
 # Check if the jq command is available
@@ -46,13 +46,15 @@ LABEL name=\"${PRODUCT_NAME}\"
 LABEL version=\"${PRODUCT_VERSION}\"
 LABEL release=\"${PRODUCT_RELEASE}\"
 LABEL description=\"${PRODUCT_DESCRIPTION}\"
-LABEL specification=1.0.3
+LABEL specification=2.0.0
 LABEL summary=\"${PRODUCT_SUMMARY}\"
+LABEL community_unsupported=true
 LABEL vendor=\"ZOSOpenTools\""
 
+
   mkdir -p ".zpm"
-  cp "${DIR_NAME}/setup.sh" ".zpm/install.sh"
-  cp "${DIR_NAME}/.env" ".zpm/.env"
+  cat "${DIR_NAME}/setup.sh" | sed -e "s#\. ./.env#cd \$INSTALL_DIR; . ./.env; cd -#" -e "s#\${root}/setup.sh#\${root}/.env/install.sh#"  > .zpm/install.sh
+  cp "${DIR_NAME}/.env" .zpm/.env
 
   if [ -f "${ZOPEN_IMAGE_CONTAINERFILE_NAME}" ]; then
     rm -f "${ZOPEN_IMAGE_CONTAINERFILE_NAME}"
