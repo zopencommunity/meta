@@ -2,12 +2,22 @@
 zopen-alt
  
 ## SYNOPSIS
-`zopen alt [options]` 
+`zopen alt [options] <package>` 
 
 ## DESCRIPTION
-switch local versions of z/OS Open Tools packages
+switch local versions of z/OS Open Tools packages. 
+If no options are specified, the list of alternatives is printed out, with the current alternative highlighted
 
 ## OPTIONS
+
+  -s | \-\-set
+  : set version
+
+  -v | \-\-v | -verbose | \-\-verbose
+  : run in verbose mode
+
+  -h | \-\-h | -help | \-\-help | -? | -syntax
+  : print this information
 
 ## EXIT STATUS
 
