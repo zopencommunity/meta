@@ -154,7 +154,6 @@ while [[ $# -gt 0 ]]; do
       verbose=true
       ;;
     "-d") defaultoption="$2"
-          sett=true
           shift
           ;;
     *)
