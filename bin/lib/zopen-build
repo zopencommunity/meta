@@ -1813,17 +1813,17 @@ echo "$zoslib_env" | while read line; do
     envar_value = (char*)malloc(size);
     memset(envar_value, 0, size);
 
-    // Substitute PROJECT_ROOT with root_dir (actual project directory)
-    pos = strstr(value_str, PROJECT_ROOT_STR);
-    if (pos != NULL) {
-      int length_before_project_root = pos - value_str;
-      strncat(envar_value, value_str, length_before_project_root);
-      // Append actual project root directory
-      strcat(envar_value, root_dir);
-      // Append rest of the value
-      strcat(envar_value, pos + sizeof(PROJECT_ROOT_STR)-1);
-    } else {
-      strcpy(envar_value, value_str);
+    while (1) {
+      const char* pos = strstr(value_str, PROJECT_ROOT_STR);
+      if (pos != NULL) {
+        size_t length_before_project_root = pos - value_str;
+        strncat(envar_value, value_str, length_before_project_root);
+        strcat(envar_value, root_dir);
+        value_str = pos + sizeof(PROJECT_ROOT_STR) - 1;
+      } else {
+        strcat(envar_value, value_str);
+        break;
+      }
     }
 
 #ifdef __ZOPEN_DEBUG
@@ -1845,16 +1845,17 @@ zz
     memset(envar_value, 0, size);
 
     // Substitute PROJECT_ROOT with root_dir (actual project directory)
-    pos = strstr(value_str, PROJECT_ROOT_STR);
-    if (pos != NULL) {
-      int length_before_project_root = pos - value_str;
-      strncat(envar_value, value_str, length_before_project_root);
-      // Append actual project root directory
-      strcat(envar_value, root_dir);
-      // Append rest of the value
-      strcat(envar_value, pos + sizeof(PROJECT_ROOT_STR)-1);
-    } else {
-      strcpy(envar_value, value_str);
+    while (1) {
+      const char* pos = strstr(value_str, PROJECT_ROOT_STR);
+      if (pos != NULL) {
+        size_t length_before_project_root = pos - value_str;
+        strncat(envar_value, value_str, length_before_project_root);
+        strcat(envar_value, root_dir);
+        value_str = pos + sizeof(PROJECT_ROOT_STR) - 1;
+      } else {
+        strcat(envar_value, value_str);
+        break;
+      }
     }
 
     strcat(envar_value, ":");
