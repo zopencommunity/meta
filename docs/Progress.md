@@ -33,6 +33,7 @@
 * [direnvport](https://github.com/ZOSOpenTools/direnvport)
 * [dufport](https://github.com/ZOSOpenTools/dufport)
 * [emacsport](https://github.com/ZOSOpenTools/emacsport)
+* [esbuildport](https://github.com/ZOSOpenTools/esbuildport)
 * [fzfport](https://github.com/ZOSOpenTools/fzfport)
 * [htopport](https://github.com/ZOSOpenTools/htopport)
 * [janssonport](https://github.com/ZOSOpenTools/janssonport)
@@ -134,6 +135,7 @@
 | [duckdbport](https://github.com/ZOSOpenTools/duckdbport) | 0 | 100% |
 | [dufport](https://github.com/ZOSOpenTools/dufport) | 0 | No builds |
 | [emacsport](https://github.com/ZOSOpenTools/emacsport) | 0 | No builds |
+| [esbuildport](https://github.com/ZOSOpenTools/esbuildport) | 0 | No builds |
 | [expectport](https://github.com/ZOSOpenTools/expectport) | 0 | Skipped |
 | [fzfport](https://github.com/ZOSOpenTools/fzfport) | 0 | No builds |
 | [gpgport](https://github.com/ZOSOpenTools/gpgport) | 0 | 84% |
@@ -267,6 +269,7 @@
 | &#10003; [direnvport](https://github.com/ZOSOpenTools/direnvport) | 0 | 0
 | &#10003; [duckdbport](https://github.com/ZOSOpenTools/duckdbport) | 0 | 0
 | &#10003; [dufport](https://github.com/ZOSOpenTools/dufport) | 0 | 0
+| &#10003; [esbuildport](https://github.com/ZOSOpenTools/esbuildport) | 0 | 0
 | &#10003; [gnulibport](https://github.com/ZOSOpenTools/gnulibport) | 0 | 0
 | &#10003; [gperfport](https://github.com/ZOSOpenTools/gperfport) | 0 | 0
 | &#10003; [gumport](https://github.com/ZOSOpenTools/gumport) | 0 | 0
@@ -306,4 +309,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-09-18 12:15:58
+Last updated:  2023-09-19 13:57:09
