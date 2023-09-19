@@ -1814,7 +1814,7 @@ echo "$zoslib_env" | while read line; do
     memset(envar_value, 0, size);
 
     while (1) {
-      const char* pos = strstr(value_str, PROJECT_ROOT_STR);
+      pos = strstr(value_str, PROJECT_ROOT_STR);
       if (pos != NULL) {
         size_t length_before_project_root = pos - value_str;
         strncat(envar_value, value_str, length_before_project_root);
@@ -1846,7 +1846,7 @@ zz
 
     // Substitute PROJECT_ROOT with root_dir (actual project directory)
     while (1) {
-      const char* pos = strstr(value_str, PROJECT_ROOT_STR);
+      pos = strstr(value_str, PROJECT_ROOT_STR);
       if (pos != NULL) {
         size_t length_before_project_root = pos - value_str;
         strncat(envar_value, value_str, length_before_project_root);
