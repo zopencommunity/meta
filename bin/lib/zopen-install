@@ -566,10 +566,12 @@ if [ -z "${chosenRepos}" ]; then
     chosenRepos="$(${utildir}/zopen-query list --installed --no-header --no-versions)"
     $killph 2>/dev/null  # if the timer is not running, the kill will fail
   elif $all; then
-    printInfo "Enter 'all' to confirm full installation [takes a long time so be sure!]:"
-    confirmall=$(getInput)
-    if [ ! "xall" = "x${confirmall}" ]; then
-      printError "Cancelling full installation"
+    if ! $yesToPrompts; then
+      printInfo "Enter 'all' to confirm full installation [takes a long time so be sure!]:"
+      confirmall=$(getInput)
+      if [ ! "xall" = "x${confirmall}" ]; then
+        printError "Cancelling full installation"
+      fi
     fi
   fi
 fi
@@ -618,8 +620,9 @@ installArray=""
 
 if $all; then
   for repo in $(echo ${repo_results}); do
-    installArray="$installArray $name"
+    installArray="$installArray $repo"
   done
+  installArray=$(strtrim "$installArray")
 else
   for chosenRepo in $(echo "${chosenRepos}" | tr ',' '\n'); do
     printVerbose "Processing repo: $chosenrepo"
