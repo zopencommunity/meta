@@ -11,8 +11,6 @@ Whether you want to _use_ the tools or also _improve_ the tools is up to you.
 If you have installed a version of the zopen package manager prior to September 2023, 
 please note you will need to [migrate to the new package manager](Migration.md). 
 
-If you like learning through watching, check out our [Getting Started Video](https://ibm.box.com/s/xh9a6tld8z51a5x3qauhnk0idp7vgkrw). 
-
 ## Getting the zopen package manager
 
 - Download the latest [meta pax](https://github.com/ZOSOpenTools/meta/releases) to your desktop, then upload to z/OS
@@ -24,3 +22,9 @@ If you like learning through watching, check out our [Getting Started Video](htt
 - Access the tools you installed by sourcing your configuration: `. <zopen_root>/etc/zopen-config`. 
 
 See [The package manager](ThePackageManager.md) and [Developing Tools](developing.md) for more details.
+
+## Getting Started Video
+If you like learning through watching, check out our getting started Video:
+<video height="1080" controls>
+  <source src="https://github.com/ZOSOpenTools/collateral/raw/main/ZOSOpenToolsIntroV2-cropped.mp4" type="video/mp4">
+</video>
