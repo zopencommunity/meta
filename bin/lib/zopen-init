@@ -33,6 +33,7 @@ printSyntax()
 args=$*
 
 verbose=false
+debug=false
 yesToPrompts=false
 reinitExisting=false
 clone=false
@@ -63,6 +64,9 @@ while [ $# -gt 0 ]; do
       ;;
     "-v" | "--v" | "-verbose" | "--verbose")
       verbose=true
+      ;;
+    "--debug") 
+      debug=true
       ;;
     "--yes" | "-y")
       yesToPrompts=true  # Automatically answer 'yes' to any questions
@@ -491,51 +495,11 @@ else
 
   printInfo "- Sourcing environment"
   . "$configFile"
-  printInfo "- Using bootstrapped curl and jq to install latest release of itself (if available)"
-  curlInstall=$(runAndLog "${utildir}/zopen-install -y curl jq")
-  curlInstall=$?
-  [ $curlInstall -ne 0 ] && printError "Unable to install curl and jq; see previous errors and retry the initilisation using the '--re-init' parameter"
+  printInfo "- Using bootstrapped curl and jq to install updated versions (if available)"
+  toolInstall=$(runAndLog "${utildir}/zopen-install -y curl jq meta")
+  toolInstall=$?
+  [ $toolInstall -ne 0 ] && printError "Unable to install curl, jq and/or meta; see previous errors and retry the initilisation using the '--re-init' parameter"
   . "$configFile"
-
-  # Code to use this version of meta as "official" install - pin to ensure no overwriting
-  printInfo "- Installing and pinning currently running version of meta" 
-  printVerbose "Current dir: $utildir"
-  metadtInstDir="$ZOPEN_ROOTFS/$zopen_pkginstall/meta/meta-dt"
-  printVerbose "Meta will be installed to $metadtInstDir"
-  mkdir -p "$metadtInstDir"
-
-  if [ -L "$0" ]; then
-    printVerbose "Found a link"
-    # We are running zopen from within a zopen-environment already
-    # De-reference symlinks to get the actual meta location. On a re-init,
-    # this might correlate to the existing location so we can reuse it; otherwise
-    # we need to copy the existing meta to the new location
-    physical="$(ls -l "$0" | sed -e "s/.*-> //")" 
-    full="$(dirname $0)/$physical"
-    real="$(dirname $full)"
-    deref="$( cd "$real/../.." >/dev/null 2>&1 && pwd -P )"
-    
-    if [ "$deref" = "$metadtInstDir" ]; then
-      printInfo "- Re-initialising target is current; no action required"
-    else
-      printInfo "- Copying existing meta to re-initialised location"
-      cp -fRT "$deref/"  "$metadtInstDir"
-    fi
-    
-  else
-    printVerbose "Copying local meta; work out where to find all files"
-    cp -fRT "${utildir}/../../"  "$metadtInstDir" 
-  fi
-
-  printInfo "- Running alternative utility to force selection of forked meta"
-  # Can use "1" as the default since there should be no other options during init!
-  metaInstall=$(runAndLog "${utildir}/zopen-alt meta -s -d 1")
-  metaInstall=$?
-  [ $metaInstall -ne 0 ] && printError "Unable to install meta; see previous errors and retry the initilisation using the '--re-init' parameter"
-
-  #TODO: Reinstate following code should this fork merge
-  #printInfo "- Installing latest version of meta package into zopen system"
-  #runAndLog "${utildir}/zopen-install meta"
 
   printInfo "- zopen bootstrapping complete"
 
