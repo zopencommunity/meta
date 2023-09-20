@@ -1,0 +1,11 @@
+#!/bin/sh
+#
+# simple sed script to change over env vars in a buildenv from 'old style' to 'new style'
+# By no means bullet-proof but might save some typing
+#
+sed -i 's/ZOPEN_TARBALL/ZOPEN_STABLE/' buildenv
+sed -i 's/ZOPEN_GIT/ZOPEN_DEV/' buildenv
+sed -i 's/ZOPEN_TYPE/ZOPEN_BUILD_LINE/' buildenv
+sed -i 's/="TARBALL"/="STABLE"/' buildenv
+sed -i 's/="GIT"/="DEV"/' buildenv
+sed -i 's/egrep /grep -E /' buildenv

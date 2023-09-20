@@ -1,0 +1,66 @@
+#!/bin/sh
+#
+# simple script to create a cicd-dev.groovy and cicd-stable.groovy from a cicd.groovy.
+# By no means bullet-proof but might save some typing
+# Has no checks in it and requires you fill in the ...'s in the generated files.
+# Also, spacing is a bit off - but easy enough to change post-processing in the editor.
+#
+class=$(cat cicd.groovy | grep "class: ")
+branches=$(cat cicd.groovy | grep "branches: ")
+url=$(cat cicd.groovy | grep "userRemoteConfigs")
+job=$(cat cicd.groovy | grep "build job:")
+desc=$(cat cicd.groovy | grep "PORT_DESCRIPTION")
+
+stable="
+node('linux')
+{
+  stage ('Poll') {
+                // Poll for local changes
+                checkout([
+${class}
+${branches}
+                        doGenerateSubmoduleConfigurations: false,
+                        extensions: [],
+${url}
+  }
+
+  stage('Build') {
+${job}
+${description}
+  string(name: 'BUILD_LINE', value: 'STABLE')]
+  }
+}
+"
+
+dev="
+node('linux')
+{
+  stage ('Poll') {
+               // Poll from upstream:
+               checkout([
+                       $class: 'GitSCM',
+                       branches: [[name: '*/...']],
+                       doGenerateSubmoduleConfigurations: false,
+                       extensions: [],
+                       userRemoteConfigs: [[url: 'https://...']]])
+
+                // Poll for local changes
+                checkout([
+${class}
+${branches}
+                        doGenerateSubmoduleConfigurations: false,
+                        extensions: [],
+${url}
+  }
+
+  stage('Build') {
+${job}
+${description}
+  string(name: 'BUILD_LINE', value: 'DEV')]
+  }
+}
+"
+
+echo "${dev}" >cicd-dev.groovy
+echo "${stable}" >cicd-stable.groovy
+
