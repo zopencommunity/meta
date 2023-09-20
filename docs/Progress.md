@@ -86,10 +86,10 @@
 | [libgpgerrorport](https://github.com/ZOSOpenTools/libgpgerrorport) | 7 | 100% |gpg, libassuan, libgcrypt, libksba, npth, ntbtls, pinentry
 | [libiconvport](https://github.com/ZOSOpenTools/libiconvport) | 5 | 100% |bison, libxml2, man-db, php, tig
 | [pkgconfigport](https://github.com/ZOSOpenTools/pkgconfigport) | 4 | 100% |avro-c-lib, librdkafka, man-db, thesilversearcher
+| [pythonport](https://github.com/ZOSOpenTools/pythonport) | 4 | 100% |curl, lz4, rsync, zstd
 | [flexport](https://github.com/ZOSOpenTools/flexport) | 3 | 100% |bison, cscope, man-db
 | [getoptport](https://github.com/ZOSOpenTools/getoptport) | 3 | 52% |avro-c-lib, flex, xmlto
 | [gperfport](https://github.com/ZOSOpenTools/gperfport) | 3 | 100% |hello, libiconv, m4
-| [pythonport](https://github.com/ZOSOpenTools/pythonport) | 3 | 100% |curl, lz4, zstd
 | [wgetport](https://github.com/ZOSOpenTools/wgetport) | 3 | 18% |hello, man-db, sed
 | [wharfport](https://github.com/ZOSOpenTools/wharfport) | 3 | Skipped |duf, gum, termenv
 | [comp_clangport](https://github.com/ZOSOpenTools/comp_clangport) | 2 | 100% |duckdb, m4
@@ -309,4 +309,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-09-19 20:46:16
+Last updated:  2023-09-19 21:21:30

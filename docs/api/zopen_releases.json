@@ -1,5 +1,5 @@
 {
-  "timestamp": "2023-09-19T20:56:45.660956",
+  "timestamp": "2023-09-19T21:32:26.646012",
   "release_data": {
     "automake": [
       {
@@ -798,6 +798,986 @@
             "url": "https://github.com/ZOSOpenTools/m4port/releases/download/m4port_32/m4-1.4.19.20220720_174801.zos.pax.Z",
             "size": 612864,
             "expanded_size": 1784214,
+            "runtime_dependencies": null,
+            "total_tests": -1,
+            "passed_tests": -1
+          }
+        ]
+      }
+    ],
+    "perl": [
+      {
+        "name": "stable-release",
+        "date": "2023-08-04 16:13:07",
+        "tag_name": "stable",
+        "assets": [
+          {
+            "name": "perl5-blead.20230605_161457.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/stable/perl5-blead.20230605_161457.zos.pax.Z",
+            "size": 26707968,
+            "expanded_size": 82464710,
+            "runtime_dependencies": null,
+            "total_tests": "2488",
+            "passed_tests": "2467"
+          }
+        ]
+      },
+      {
+        "name": "stable-release_20230804_121149",
+        "date": "2023-08-04 16:11:50",
+        "tag_name": "stable_20230804_121149",
+        "assets": [
+          {
+            "name": "perl5-blead.20230423_232726.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/stable_20230804_121149/perl5-blead.20230423_232726.zos.pax.Z",
+            "size": 26707968,
+            "expanded_size": 82550901,
+            "runtime_dependencies": null,
+            "total_tests": "2488",
+            "passed_tests": "2467"
+          }
+        ]
+      },
+      {
+        "name": "perl (Build 1060)",
+        "date": "2023-06-05 22:42:02",
+        "tag_name": "Releaseline_perlport_1060",
+        "assets": [
+          {
+            "name": "perl5-blead.20230605_161457.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/Releaseline_perlport_1060/perl5-blead.20230605_161457.zos.pax.Z",
+            "size": 26707968,
+            "expanded_size": 82464710,
+            "runtime_dependencies": null,
+            "total_tests": "2488",
+            "passed_tests": "2467"
+          }
+        ]
+      },
+      {
+        "name": "perl (Build 1007)",
+        "date": "2023-05-19 19:16:36",
+        "tag_name": "Releaseline_perlport_1007",
+        "assets": [
+          {
+            "name": "perl5-blead.20230519_100037.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/Releaseline_perlport_1007/perl5-blead.20230519_100037.zos.pax.Z",
+            "size": 26707968,
+            "expanded_size": 82487527,
+            "runtime_dependencies": null,
+            "total_tests": "2488",
+            "passed_tests": "2467"
+          }
+        ]
+      },
+      {
+        "name": "perl (Build 950)",
+        "date": "2023-04-24 06:14:52",
+        "tag_name": "Releaseline_perlport_950",
+        "assets": [
+          {
+            "name": "perl5-blead.20230423_232726.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/Releaseline_perlport_950/perl5-blead.20230423_232726.zos.pax.Z",
+            "size": 26707968,
+            "expanded_size": 82550901,
+            "runtime_dependencies": null,
+            "total_tests": "2488",
+            "passed_tests": "2467"
+          }
+        ]
+      },
+      {
+        "name": "perl (Build 922)",
+        "date": "2023-04-17 15:04:14",
+        "tag_name": "Releaseline_perlport_922",
+        "assets": [
+          {
+            "name": "perl5-blead.20230417_074329.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/Releaseline_perlport_922/perl5-blead.20230417_074329.zos.pax.Z",
+            "size": 26675712,
+            "expanded_size": 82512257,
+            "runtime_dependencies": null,
+            "total_tests": "2489",
+            "passed_tests": "2468"
+          }
+        ]
+      },
+      {
+        "name": "perl (Build 904)",
+        "date": "2023-04-14 23:53:59",
+        "tag_name": "Releaseline_perlport_904",
+        "assets": [
+          {
+            "name": "perl5-blead.20230414_163403.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/Releaseline_perlport_904/perl5-blead.20230414_163403.zos.pax.Z",
+            "size": 26707968,
+            "expanded_size": 82525136,
+            "runtime_dependencies": null,
+            "total_tests": "2488",
+            "passed_tests": "2467"
+          }
+        ]
+      },
+      {
+        "name": "perl (Build 886)",
+        "date": "2023-04-10 09:56:37",
+        "tag_name": "Releaseline_perlport_886",
+        "assets": [
+          {
+            "name": "perl5-blead.20230410_023927.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/Releaseline_perlport_886/perl5-blead.20230410_023927.zos.pax.Z",
+            "size": 26707968,
+            "expanded_size": 82523405,
+            "runtime_dependencies": null,
+            "total_tests": "2487",
+            "passed_tests": "2466"
+          }
+        ]
+      },
+      {
+        "name": "perl (Build 846)",
+        "date": "2023-04-03 04:41:42",
+        "tag_name": "Releaseline_perlport_846",
+        "assets": [
+          {
+            "name": "perl5-blead.20230402_213118.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/Releaseline_perlport_846/perl5-blead.20230402_213118.zos.pax.Z",
+            "size": 26707968,
+            "expanded_size": 82520099,
+            "runtime_dependencies": null,
+            "total_tests": "2488",
+            "passed_tests": "2467"
+          }
+        ]
+      },
+      {
+        "name": "perl (Build 814)",
+        "date": "2023-03-27 03:37:08",
+        "tag_name": "perlport_814",
+        "assets": [
+          {
+            "name": "perl5-blead.20230326_212006.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_814/perl5-blead.20230326_212006.zos.pax.Z",
+            "size": 26675712,
+            "expanded_size": 82480867,
+            "runtime_dependencies": null,
+            "total_tests": "2488",
+            "passed_tests": "2467"
+          }
+        ]
+      },
+      {
+        "name": "perl (Build 775)",
+        "date": "2023-03-20 04:20:28",
+        "tag_name": "perlport_775",
+        "assets": [
+          {
+            "name": "perl5-blead.20230319_215052.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_775/perl5-blead.20230319_215052.zos.pax.Z",
+            "size": 26675712,
+            "expanded_size": 82446778,
+            "runtime_dependencies": null,
+            "total_tests": "2477",
+            "passed_tests": "2456"
+          }
+        ]
+      },
+      {
+        "name": "perl (Build 761)",
+        "date": "2023-03-17 05:34:07",
+        "tag_name": "perlport_761",
+        "assets": [
+          {
+            "name": "perl5-blead.20230316_225400.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_761/perl5-blead.20230316_225400.zos.pax.Z",
+            "size": 26643456,
+            "expanded_size": 82414907,
+            "runtime_dependencies": null,
+            "total_tests": "2146",
+            "passed_tests": "2127"
+          }
+        ]
+      },
+      {
+        "name": "perl (Build 686)",
+        "date": "2023-03-06 12:13:52",
+        "tag_name": "perlport_686",
+        "assets": [
+          {
+            "name": "perl5-blead.20230306_051235.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_686/perl5-blead.20230306_051235.zos.pax.Z",
+            "size": 26449920,
+            "expanded_size": 82319236,
+            "runtime_dependencies": null,
+            "total_tests": "2452",
+            "passed_tests": "2452"
+          }
+        ]
+      },
+      {
+        "name": "boot-release",
+        "date": "2023-03-01 19:46:17",
+        "tag_name": "boot",
+        "assets": [
+          {
+            "name": "perl5-blead.20230301_115029.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/boot/perl5-blead.20230301_115029.zos.pax.Z",
+            "size": 26546688,
+            "expanded_size": 82740124,
+            "runtime_dependencies": null,
+            "total_tests": "2453",
+            "passed_tests": "2453"
+          }
+        ]
+      },
+      {
+        "name": "boot-release_20230301_144551",
+        "date": "2023-03-01 19:45:51",
+        "tag_name": "boot_20230301_144551",
+        "assets": [
+          {
+            "name": "perl5-blead.20230207_155857.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/boot_20230301_144551/perl5-blead.20230207_155857.zos.pax.Z",
+            "size": 26417664,
+            "expanded_size": 82126884,
+            "runtime_dependencies": null,
+            "total_tests": "2453",
+            "passed_tests": "2453"
+          }
+        ]
+      },
+      {
+        "name": "perl (Build 664)",
+        "date": "2023-03-01 18:47:37",
+        "tag_name": "perlport_664",
+        "assets": [
+          {
+            "name": "perl5-blead.20230301_115029.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_664/perl5-blead.20230301_115029.zos.pax.Z",
+            "size": 26546688,
+            "expanded_size": 82740124,
+            "runtime_dependencies": null,
+            "total_tests": "2453",
+            "passed_tests": "2453"
+          }
+        ]
+      },
+      {
+        "name": "perl (Build 656)",
+        "date": "2023-02-27 10:55:28",
+        "tag_name": "perlport_656",
+        "assets": [
+          {
+            "name": "perl5-blead.20230227_035335.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_656/perl5-blead.20230227_035335.zos.pax.Z",
+            "size": 52803072,
+            "expanded_size": 164551641,
+            "runtime_dependencies": null,
+            "total_tests": "2452",
+            "passed_tests": "2452"
+          }
+        ]
+      },
+      {
+        "name": "perl (Build 616)",
+        "date": "2023-02-19 08:49:53",
+        "tag_name": "perlport_616",
+        "assets": [
+          {
+            "name": "perl5-blead.20230219_015449.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_616/perl5-blead.20230219_015449.zos.pax.Z",
+            "size": 26482176,
+            "expanded_size": 82644235,
+            "runtime_dependencies": null,
+            "total_tests": "2454",
+            "passed_tests": "2454"
+          }
+        ]
+      },
+      {
+        "name": "perl (Build 577)",
+        "date": "2023-02-17 03:48:34",
+        "tag_name": "perlport_577",
+        "assets": [
+          {
+            "name": "perl5-blead.20230216_204201.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_577/perl5-blead.20230216_204201.zos.pax.Z",
+            "size": 26449920,
+            "expanded_size": 82259682,
+            "runtime_dependencies": null,
+            "total_tests": "2453",
+            "passed_tests": "2453"
+          }
+        ]
+      },
+      {
+        "name": "perl (Build 531)",
+        "date": "2023-02-11 04:32:58",
+        "tag_name": "perlport_531",
+        "assets": [
+          {
+            "name": "perl5-blead.20230210_213003.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_531/perl5-blead.20230210_213003.zos.pax.Z",
+            "size": 26449920,
+            "expanded_size": 82253043,
+            "runtime_dependencies": null,
+            "total_tests": "2452",
+            "passed_tests": "2452"
+          }
+        ]
+      },
+      {
+        "name": "boot-release_20230210_094711",
+        "date": "2023-02-10 04:17:12",
+        "tag_name": "boot_20230210_094711",
+        "assets": [
+          {
+            "name": "perl5-blead.20221109_001219.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/boot_20230210_094711/perl5-blead.20221109_001219.zos.pax.Z",
+            "size": 26224128,
+            "expanded_size": 81480955,
+            "runtime_dependencies": null,
+            "total_tests": "2434",
+            "passed_tests": "2434"
+          }
+        ]
+      },
+      {
+        "name": "perl (Build 504)",
+        "date": "2023-02-07 23:06:59",
+        "tag_name": "perlport_504",
+        "assets": [
+          {
+            "name": "perl5-blead.20230207_155857.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_504/perl5-blead.20230207_155857.zos.pax.Z",
+            "size": 26417664,
+            "expanded_size": 82126884,
+            "runtime_dependencies": null,
+            "total_tests": "2453",
+            "passed_tests": "2453"
+          }
+        ]
+      },
+      {
+        "name": "perl (Build 489)",
+        "date": "2023-02-07 06:37:10",
+        "tag_name": "perlport_489",
+        "assets": [
+          {
+            "name": "perl5-blead.20230206_233504.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_489/perl5-blead.20230206_233504.zos.pax.Z",
+            "size": 26417664,
+            "expanded_size": 82131518,
+            "runtime_dependencies": null,
+            "total_tests": "2452",
+            "passed_tests": "2452"
+          }
+        ]
+      },
+      {
+        "name": "perl (Build 484)",
+        "date": "2023-02-07 02:22:12",
+        "tag_name": "perlport_484",
+        "assets": [
+          {
+            "name": "perl5-blead.20230206_192643.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_484/perl5-blead.20230206_192643.zos.pax.Z",
+            "size": 26417664,
+            "expanded_size": 82131214,
+            "runtime_dependencies": null,
+            "total_tests": "2452",
+            "passed_tests": "2452"
+          }
+        ]
+      },
+      {
+        "name": "perl (Build 479)",
+        "date": "2023-02-06 21:36:13",
+        "tag_name": "perlport_479",
+        "assets": [
+          {
+            "name": "perl5-blead.20230206_143238.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_479/perl5-blead.20230206_143238.zos.pax.Z",
+            "size": 26417664,
+            "expanded_size": 82132105,
+            "runtime_dependencies": null,
+            "total_tests": "2456",
+            "passed_tests": "2456"
+          }
+        ]
+      },
+      {
+        "name": "perlport (Build 438)",
+        "date": "2023-01-30 05:54:22",
+        "tag_name": "perlport_438",
+        "assets": [
+          {
+            "name": "perl5-blead.20230129_230130.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_438/perl5-blead.20230129_230130.zos.pax.Z",
+            "size": 26385408,
+            "expanded_size": 82076203,
+            "runtime_dependencies": null,
+            "total_tests": "2458",
+            "passed_tests": "2458"
+          }
+        ]
+      },
+      {
+        "name": "perlport (Build 274)",
+        "date": "2022-11-09 06:59:47",
+        "tag_name": "perlport_274",
+        "assets": [
+          {
+            "name": "perl5-blead.20221109_001219.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_274/perl5-blead.20221109_001219.zos.pax.Z",
+            "size": 26224128,
+            "expanded_size": 81480955,
+            "runtime_dependencies": null,
+            "total_tests": "2434",
+            "passed_tests": "2434"
+          }
+        ]
+      },
+      {
+        "name": "perlport (Build 257)",
+        "date": "2022-11-07 13:25:20",
+        "tag_name": "perlport_257",
+        "assets": [
+          {
+            "name": "perl5-blead.20221107_022515.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_257/perl5-blead.20221107_022515.zos.pax.Z",
+            "size": 26224128,
+            "expanded_size": 81483954,
+            "runtime_dependencies": null,
+            "total_tests": "2435",
+            "passed_tests": "2435"
+          }
+        ]
+      },
+      {
+        "name": "perlport (Build 256)",
+        "date": "2022-11-07 10:03:02",
+        "tag_name": "perlport_256",
+        "assets": [
+          {
+            "name": "perl5-blead.20221107_022515.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_256/perl5-blead.20221107_022515.zos.pax.Z",
+            "size": 26224128,
+            "expanded_size": 81483954,
+            "runtime_dependencies": null,
+            "total_tests": "2435",
+            "passed_tests": "2435"
+          }
+        ]
+      },
+      {
+        "name": "perlport (Build 207)",
+        "date": "2022-10-22 04:20:13",
+        "tag_name": "perlport_207",
+        "assets": [
+          {
+            "name": "perl5-blead.20221021_222335.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_207/perl5-blead.20221021_222335.zos.pax.Z",
+            "size": 26224128,
+            "expanded_size": 81393859,
+            "runtime_dependencies": null,
+            "total_tests": "2433",
+            "passed_tests": "2433"
+          }
+        ]
+      },
+      {
+        "name": "perlport (Build 188)",
+        "date": "2022-10-06 03:42:56",
+        "tag_name": "perlport_188",
+        "assets": [
+          {
+            "name": "perl5-blead.20221005_215746.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_188/perl5-blead.20221005_215746.zos.pax.Z",
+            "size": 26224128,
+            "expanded_size": 81394237,
+            "runtime_dependencies": null,
+            "total_tests": "2460",
+            "passed_tests": "2448"
+          }
+        ]
+      },
+      {
+        "name": "perlport (Build 187)",
+        "date": "2022-10-05 21:43:45",
+        "tag_name": "perlport_187",
+        "assets": [
+          {
+            "name": "perl5-blead.20221005_155649.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_187/perl5-blead.20221005_155649.zos.pax.Z",
+            "size": 26191872,
+            "expanded_size": 81383667,
+            "runtime_dependencies": null,
+            "total_tests": "2460",
+            "passed_tests": "2448"
+          }
+        ]
+      },
+      {
+        "name": "perlport (Build 180)",
+        "date": "2022-10-04 19:02:49",
+        "tag_name": "perlport_180",
+        "assets": [
+          {
+            "name": "perl5-blead.20221004_131349.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_180/perl5-blead.20221004_131349.zos.pax.Z",
+            "size": 26191872,
+            "expanded_size": 81382060,
+            "runtime_dependencies": null,
+            "total_tests": "2460",
+            "passed_tests": "2448"
+          }
+        ]
+      },
+      {
+        "name": "perlport (Build 137)",
+        "date": "2022-09-08 22:18:17",
+        "tag_name": "perlport_137",
+        "assets": [
+          {
+            "name": "perl5-blead.20220908_174239.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_137/perl5-blead.20220908_174239.zos.pax.Z",
+            "size": 26095104,
+            "expanded_size": 81193753,
+            "runtime_dependencies": null,
+            "total_tests": -1,
+            "passed_tests": -1
+          }
+        ]
+      },
+      {
+        "name": "perlport (Build 136)",
+        "date": "2022-09-08 15:28:45",
+        "tag_name": "perlport_136",
+        "assets": [
+          {
+            "name": "perl5-blead.20220908_105003.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_136/perl5-blead.20220908_105003.zos.pax.Z",
+            "size": 26191872,
+            "expanded_size": 81196942,
+            "runtime_dependencies": null,
+            "total_tests": -1,
+            "passed_tests": -1
+          }
+        ]
+      },
+      {
+        "name": "perlport (Build 132)",
+        "date": "2022-09-08 12:22:29",
+        "tag_name": "perlport_132",
+        "assets": [
+          {
+            "name": "perl5-blead.20220908_074305.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_132/perl5-blead.20220908_074305.zos.pax.Z",
+            "size": 26095104,
+            "expanded_size": 81167676,
+            "runtime_dependencies": null,
+            "total_tests": -1,
+            "passed_tests": -1
+          }
+        ]
+      },
+      {
+        "name": "perlport (Build 131)",
+        "date": "2022-09-08 00:20:57",
+        "tag_name": "perlport_131",
+        "assets": [
+          {
+            "name": "perl5-blead.20220907_194331.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_131/perl5-blead.20220907_194331.zos.pax.Z",
+            "size": 26095104,
+            "expanded_size": 81167607,
+            "runtime_dependencies": null,
+            "total_tests": -1,
+            "passed_tests": -1
+          }
+        ]
+      },
+      {
+        "name": "perlport (Build 94)",
+        "date": "2022-08-19 15:19:51",
+        "tag_name": "perlport_94",
+        "assets": [
+          {
+            "name": "perl5.blead.20220819_104302.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_94/perl5.blead.20220819_104302.zos.pax.Z",
+            "size": 26095104,
+            "expanded_size": 81102129,
+            "runtime_dependencies": null,
+            "total_tests": -1,
+            "passed_tests": -1
+          }
+        ]
+      },
+      {
+        "name": "perlport (Build 64)",
+        "date": "2022-08-10 03:14:00",
+        "tag_name": "perlport_64",
+        "assets": [
+          {
+            "name": "perl5.blead.20220809_223700.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_64/perl5.blead.20220809_223700.zos.pax.Z",
+            "size": 26095104,
+            "expanded_size": 81103212,
+            "runtime_dependencies": null,
+            "total_tests": -1,
+            "passed_tests": -1
+          }
+        ]
+      },
+      {
+        "name": "perlport (Build 63)",
+        "date": "2022-08-09 18:01:32",
+        "tag_name": "perlport_63",
+        "assets": [
+          {
+            "name": "perl5.blead.20220809_132435.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_63/perl5.blead.20220809_132435.zos.pax.Z",
+            "size": 26095104,
+            "expanded_size": 81104179,
+            "runtime_dependencies": null,
+            "total_tests": -1,
+            "passed_tests": -1
+          }
+        ]
+      },
+      {
+        "name": "PERL_CI (BUILD91)",
+        "date": "2022-05-31 14:31:36",
+        "tag_name": "PERL_CI_BUILD91",
+        "assets": [
+          {
+            "name": "perl5.37.1.zos.blead.64.dynamic.ascii.BUILD91.202205310121.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/PERL_CI_BUILD91/perl5.37.1.zos.blead.64.dynamic.ascii.BUILD91.202205310121.pax.Z",
+            "size": 25708032,
+            "expanded_size": 79815671,
+            "runtime_dependencies": null,
+            "total_tests": -1,
+            "passed_tests": -1
+          }
+        ]
+      },
+      {
+        "name": "PERL_CI (BUILD84)",
+        "date": "2022-04-27 00:22:16",
+        "tag_name": "PERL_CI_BUILD84",
+        "assets": [
+          {
+            "name": "perl5.35.12.zos.blead.64.dynamic.ascii.BUILD84.202204262237.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/PERL_CI_BUILD84/perl5.35.12.zos.blead.64.dynamic.ascii.BUILD84.202204262237.pax.Z",
+            "size": 25708032,
+            "expanded_size": 79814928,
+            "runtime_dependencies": null,
+            "total_tests": -1,
+            "passed_tests": -1
+          }
+        ]
+      },
+      {
+        "name": "PERL_CI (BUILD83)",
+        "date": "2022-04-26 01:48:59",
+        "tag_name": "PERL_CI_BUILD83",
+        "assets": [
+          {
+            "name": "perl5.35.12.zos.blead.64.dynamic.ascii.BUILD83.202204251812.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/PERL_CI_BUILD83/perl5.35.12.zos.blead.64.dynamic.ascii.BUILD83.202204251812.pax.Z",
+            "size": 25708032,
+            "expanded_size": 79815273,
+            "runtime_dependencies": null,
+            "total_tests": -1,
+            "passed_tests": -1
+          }
+        ]
+      }
+    ],
+    "autoconf": [
+      {
+        "name": "autoconf 2.71 (Build 1043)",
+        "date": "2023-06-05 09:59:30",
+        "tag_name": "Releaseline_autoconfport_1043",
+        "assets": [
+          {
+            "name": "autoconf-2.71.20230604_225130.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/Releaseline_autoconfport_1043/autoconf-2.71.20230604_225130.zos.pax.Z",
+            "size": 1419264,
+            "expanded_size": 3614512,
+            "runtime_dependencies": null,
+            "total_tests": "599",
+            "passed_tests": "586"
+          }
+        ]
+      },
+      {
+        "name": "autoconf 2.71 (Build 963)",
+        "date": "2023-04-25 07:44:29",
+        "tag_name": "Releaseline_autoconfport_963",
+        "assets": [
+          {
+            "name": "autoconf-2.71.20230424_201410.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/Releaseline_autoconfport_963/autoconf-2.71.20230424_201410.zos.pax.Z",
+            "size": 1419264,
+            "expanded_size": 3614567,
+            "runtime_dependencies": null,
+            "total_tests": "599",
+            "passed_tests": "586"
+          }
+        ]
+      },
+      {
+        "name": "autoconf 2.71 (Build 828)",
+        "date": "2023-03-28 06:45:26",
+        "tag_name": "autoconfport_828",
+        "assets": [
+          {
+            "name": "autoconf-2.71.20230327_202120.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_828/autoconf-2.71.20230327_202120.zos.pax.Z",
+            "size": 1419264,
+            "expanded_size": 3614263,
+            "runtime_dependencies": null,
+            "total_tests": "599",
+            "passed_tests": "586"
+          }
+        ]
+      },
+      {
+        "name": "autoconf 2.71 (Build 699)",
+        "date": "2023-03-07 08:53:11",
+        "tag_name": "autoconfport_699",
+        "assets": [
+          {
+            "name": "autoconf-2.71.20230306_203846.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_699/autoconf-2.71.20230306_203846.zos.pax.Z",
+            "size": 1419264,
+            "expanded_size": 3614332,
+            "runtime_dependencies": null,
+            "total_tests": "599",
+            "passed_tests": "586"
+          }
+        ]
+      },
+      {
+        "name": "autoconf 2.71 (Build 633)",
+        "date": "2023-02-21 19:55:12",
+        "tag_name": "autoconfport_633",
+        "assets": [
+          {
+            "name": "autoconf-2.71.20230221_083918.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_633/autoconf-2.71.20230221_083918.zos.pax.Z",
+            "size": 1419264,
+            "expanded_size": 3614402,
+            "runtime_dependencies": null,
+            "total_tests": "599",
+            "passed_tests": "586"
+          }
+        ]
+      },
+      {
+        "name": "autoconfport (Build 276)",
+        "date": "2022-11-09 08:24:12",
+        "tag_name": "autoconfport_276",
+        "assets": [
+          {
+            "name": "autoconf-2.71.20221108_204804.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_276/autoconf-2.71.20221108_204804.zos.pax.Z",
+            "size": 1419264,
+            "expanded_size": 3583457,
+            "runtime_dependencies": null,
+            "total_tests": "599",
+            "passed_tests": "587"
+          }
+        ]
+      },
+      {
+        "name": "autoconfport (Build 190)",
+        "date": "2022-10-07 10:16:36",
+        "tag_name": "autoconfport_190",
+        "assets": [
+          {
+            "name": "autoconf-2.71.20221007_003454.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_190/autoconf-2.71.20221007_003454.zos.pax.Z",
+            "size": 1419264,
+            "expanded_size": 3583303,
+            "runtime_dependencies": null,
+            "total_tests": "599",
+            "passed_tests": "587"
+          }
+        ]
+      },
+      {
+        "name": "autoconfport (Build 173)",
+        "date": "2022-10-01 00:41:37",
+        "tag_name": "autoconfport_173",
+        "assets": [
+          {
+            "name": "autoconf-2.71.20220930_144332.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_173/autoconf-2.71.20220930_144332.zos.pax.Z",
+            "size": 1419264,
+            "expanded_size": 3583396,
+            "runtime_dependencies": null,
+            "total_tests": "599",
+            "passed_tests": "587"
+          }
+        ]
+      },
+      {
+        "name": "autoconfport (Build 139)",
+        "date": "2022-09-09 01:30:36",
+        "tag_name": "autoconfport_139",
+        "assets": [
+          {
+            "name": "autoconf-2.71.20220908_213001.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_139/autoconf-2.71.20220908_213001.zos.pax.Z",
+            "size": 1419264,
+            "expanded_size": 3583265,
+            "runtime_dependencies": null,
+            "total_tests": -1,
+            "passed_tests": -1
+          }
+        ]
+      },
+      {
+        "name": "autoconfport (Build 138)",
+        "date": "2022-09-08 23:16:27",
+        "tag_name": "autoconfport_138",
+        "assets": [
+          {
+            "name": "autoconf-2.71.20220908_191549.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_138/autoconf-2.71.20220908_191549.zos.pax.Z",
+            "size": 1419264,
+            "expanded_size": 3583402,
+            "runtime_dependencies": null,
+            "total_tests": -1,
+            "passed_tests": -1
+          }
+        ]
+      },
+      {
+        "name": "autoconfport (Build 133)",
+        "date": "2022-09-08 12:23:39",
+        "tag_name": "autoconfport_133",
+        "assets": [
+          {
+            "name": "autoconf-2.71.20220908_082302.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_133/autoconf-2.71.20220908_082302.zos.pax.Z",
+            "size": 1419264,
+            "expanded_size": 3583515,
+            "runtime_dependencies": null,
+            "total_tests": -1,
+            "passed_tests": -1
+          }
+        ]
+      },
+      {
+        "name": "autoconfport (Build 124)",
+        "date": "2022-09-07 14:17:05",
+        "tag_name": "autoconfport_124",
+        "assets": [
+          {
+            "name": "autoconf-2.71.20220907_101629.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_124/autoconf-2.71.20220907_101629.zos.pax.Z",
+            "size": 1419264,
+            "expanded_size": 3583649,
+            "runtime_dependencies": null,
+            "total_tests": -1,
+            "passed_tests": -1
+          }
+        ]
+      },
+      {
+        "name": "autoconfport (Build 109)",
+        "date": "2022-09-06 23:24:52",
+        "tag_name": "autoconfport_109",
+        "assets": [
+          {
+            "name": "autoconf-2.71.20220906_164434.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_109/autoconf-2.71.20220906_164434.zos.pax.Z",
+            "size": 1419264,
+            "expanded_size": 3582596,
+            "runtime_dependencies": null,
+            "total_tests": -1,
+            "passed_tests": -1
+          }
+        ]
+      },
+      {
+        "name": "autoconfport (Build 100)",
+        "date": "2022-09-02 20:26:12",
+        "tag_name": "autoconfport_100",
+        "assets": [
+          {
+            "name": "autoconf-2.71.20220902_162511.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_100/autoconf-2.71.20220902_162511.zos.pax.Z",
+            "size": 1419264,
+            "expanded_size": 3583737,
+            "runtime_dependencies": null,
+            "total_tests": -1,
+            "passed_tests": -1
+          }
+        ]
+      },
+      {
+        "name": "autoconfport (Build 98)",
+        "date": "2022-08-30 17:23:46",
+        "tag_name": "autoconfport_98",
+        "assets": [
+          {
+            "name": "autoconf-2.71.20220830_132303.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_98/autoconf-2.71.20220830_132303.zos.pax.Z",
+            "size": 1419264,
+            "expanded_size": 3584134,
+            "runtime_dependencies": null,
+            "total_tests": -1,
+            "passed_tests": -1
+          }
+        ]
+      },
+      {
+        "name": "autoconfport (Build 68)",
+        "date": "2022-08-14 01:42:24",
+        "tag_name": "autoconfport_68",
+        "assets": [
+          {
+            "name": "autoconf-2.71.20220813_214144.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_68/autoconf-2.71.20220813_214144.zos.pax.Z",
+            "size": 1419264,
+            "expanded_size": 3583534,
+            "runtime_dependencies": null,
+            "total_tests": -1,
+            "passed_tests": -1
+          }
+        ]
+      },
+      {
+        "name": "autoconfport (Build 39)",
+        "date": "2022-07-22 05:59:33",
+        "tag_name": "autoconfport_39",
+        "assets": [
+          {
+            "name": "autoconf-2.71.20220722_015902.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_39/autoconf-2.71.20220722_015902.zos.pax.Z",
+            "size": 1419264,
+            "expanded_size": 3583588,
+            "runtime_dependencies": null,
+            "total_tests": -1,
+            "passed_tests": -1
+          }
+        ]
+      },
+      {
+        "name": "autoconfport (Build 15)",
+        "date": "2022-06-07 17:49:54",
+        "tag_name": "autoconfport_15",
+        "assets": [
+          {
+            "name": "autoconf-2.71.20220607_134926.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_15/autoconf-2.71.20220607_134926.zos.pax.Z",
+            "size": 2483712,
+            "expanded_size": 6400751,
             "runtime_dependencies": null,
             "total_tests": -1,
             "passed_tests": -1
@@ -1635,986 +2615,6 @@
             "runtime_dependencies": null,
             "total_tests": "1",
             "passed_tests": "1"
-          }
-        ]
-      }
-    ],
-    "autoconf": [
-      {
-        "name": "autoconf 2.71 (Build 1043)",
-        "date": "2023-06-05 09:59:30",
-        "tag_name": "Releaseline_autoconfport_1043",
-        "assets": [
-          {
-            "name": "autoconf-2.71.20230604_225130.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/Releaseline_autoconfport_1043/autoconf-2.71.20230604_225130.zos.pax.Z",
-            "size": 1419264,
-            "expanded_size": 3614512,
-            "runtime_dependencies": null,
-            "total_tests": "599",
-            "passed_tests": "586"
-          }
-        ]
-      },
-      {
-        "name": "autoconf 2.71 (Build 963)",
-        "date": "2023-04-25 07:44:29",
-        "tag_name": "Releaseline_autoconfport_963",
-        "assets": [
-          {
-            "name": "autoconf-2.71.20230424_201410.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/Releaseline_autoconfport_963/autoconf-2.71.20230424_201410.zos.pax.Z",
-            "size": 1419264,
-            "expanded_size": 3614567,
-            "runtime_dependencies": null,
-            "total_tests": "599",
-            "passed_tests": "586"
-          }
-        ]
-      },
-      {
-        "name": "autoconf 2.71 (Build 828)",
-        "date": "2023-03-28 06:45:26",
-        "tag_name": "autoconfport_828",
-        "assets": [
-          {
-            "name": "autoconf-2.71.20230327_202120.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_828/autoconf-2.71.20230327_202120.zos.pax.Z",
-            "size": 1419264,
-            "expanded_size": 3614263,
-            "runtime_dependencies": null,
-            "total_tests": "599",
-            "passed_tests": "586"
-          }
-        ]
-      },
-      {
-        "name": "autoconf 2.71 (Build 699)",
-        "date": "2023-03-07 08:53:11",
-        "tag_name": "autoconfport_699",
-        "assets": [
-          {
-            "name": "autoconf-2.71.20230306_203846.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_699/autoconf-2.71.20230306_203846.zos.pax.Z",
-            "size": 1419264,
-            "expanded_size": 3614332,
-            "runtime_dependencies": null,
-            "total_tests": "599",
-            "passed_tests": "586"
-          }
-        ]
-      },
-      {
-        "name": "autoconf 2.71 (Build 633)",
-        "date": "2023-02-21 19:55:12",
-        "tag_name": "autoconfport_633",
-        "assets": [
-          {
-            "name": "autoconf-2.71.20230221_083918.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_633/autoconf-2.71.20230221_083918.zos.pax.Z",
-            "size": 1419264,
-            "expanded_size": 3614402,
-            "runtime_dependencies": null,
-            "total_tests": "599",
-            "passed_tests": "586"
-          }
-        ]
-      },
-      {
-        "name": "autoconfport (Build 276)",
-        "date": "2022-11-09 08:24:12",
-        "tag_name": "autoconfport_276",
-        "assets": [
-          {
-            "name": "autoconf-2.71.20221108_204804.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_276/autoconf-2.71.20221108_204804.zos.pax.Z",
-            "size": 1419264,
-            "expanded_size": 3583457,
-            "runtime_dependencies": null,
-            "total_tests": "599",
-            "passed_tests": "587"
-          }
-        ]
-      },
-      {
-        "name": "autoconfport (Build 190)",
-        "date": "2022-10-07 10:16:36",
-        "tag_name": "autoconfport_190",
-        "assets": [
-          {
-            "name": "autoconf-2.71.20221007_003454.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_190/autoconf-2.71.20221007_003454.zos.pax.Z",
-            "size": 1419264,
-            "expanded_size": 3583303,
-            "runtime_dependencies": null,
-            "total_tests": "599",
-            "passed_tests": "587"
-          }
-        ]
-      },
-      {
-        "name": "autoconfport (Build 173)",
-        "date": "2022-10-01 00:41:37",
-        "tag_name": "autoconfport_173",
-        "assets": [
-          {
-            "name": "autoconf-2.71.20220930_144332.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_173/autoconf-2.71.20220930_144332.zos.pax.Z",
-            "size": 1419264,
-            "expanded_size": 3583396,
-            "runtime_dependencies": null,
-            "total_tests": "599",
-            "passed_tests": "587"
-          }
-        ]
-      },
-      {
-        "name": "autoconfport (Build 139)",
-        "date": "2022-09-09 01:30:36",
-        "tag_name": "autoconfport_139",
-        "assets": [
-          {
-            "name": "autoconf-2.71.20220908_213001.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_139/autoconf-2.71.20220908_213001.zos.pax.Z",
-            "size": 1419264,
-            "expanded_size": 3583265,
-            "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
-          }
-        ]
-      },
-      {
-        "name": "autoconfport (Build 138)",
-        "date": "2022-09-08 23:16:27",
-        "tag_name": "autoconfport_138",
-        "assets": [
-          {
-            "name": "autoconf-2.71.20220908_191549.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_138/autoconf-2.71.20220908_191549.zos.pax.Z",
-            "size": 1419264,
-            "expanded_size": 3583402,
-            "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
-          }
-        ]
-      },
-      {
-        "name": "autoconfport (Build 133)",
-        "date": "2022-09-08 12:23:39",
-        "tag_name": "autoconfport_133",
-        "assets": [
-          {
-            "name": "autoconf-2.71.20220908_082302.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_133/autoconf-2.71.20220908_082302.zos.pax.Z",
-            "size": 1419264,
-            "expanded_size": 3583515,
-            "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
-          }
-        ]
-      },
-      {
-        "name": "autoconfport (Build 124)",
-        "date": "2022-09-07 14:17:05",
-        "tag_name": "autoconfport_124",
-        "assets": [
-          {
-            "name": "autoconf-2.71.20220907_101629.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_124/autoconf-2.71.20220907_101629.zos.pax.Z",
-            "size": 1419264,
-            "expanded_size": 3583649,
-            "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
-          }
-        ]
-      },
-      {
-        "name": "autoconfport (Build 109)",
-        "date": "2022-09-06 23:24:52",
-        "tag_name": "autoconfport_109",
-        "assets": [
-          {
-            "name": "autoconf-2.71.20220906_164434.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_109/autoconf-2.71.20220906_164434.zos.pax.Z",
-            "size": 1419264,
-            "expanded_size": 3582596,
-            "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
-          }
-        ]
-      },
-      {
-        "name": "autoconfport (Build 100)",
-        "date": "2022-09-02 20:26:12",
-        "tag_name": "autoconfport_100",
-        "assets": [
-          {
-            "name": "autoconf-2.71.20220902_162511.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_100/autoconf-2.71.20220902_162511.zos.pax.Z",
-            "size": 1419264,
-            "expanded_size": 3583737,
-            "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
-          }
-        ]
-      },
-      {
-        "name": "autoconfport (Build 98)",
-        "date": "2022-08-30 17:23:46",
-        "tag_name": "autoconfport_98",
-        "assets": [
-          {
-            "name": "autoconf-2.71.20220830_132303.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_98/autoconf-2.71.20220830_132303.zos.pax.Z",
-            "size": 1419264,
-            "expanded_size": 3584134,
-            "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
-          }
-        ]
-      },
-      {
-        "name": "autoconfport (Build 68)",
-        "date": "2022-08-14 01:42:24",
-        "tag_name": "autoconfport_68",
-        "assets": [
-          {
-            "name": "autoconf-2.71.20220813_214144.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_68/autoconf-2.71.20220813_214144.zos.pax.Z",
-            "size": 1419264,
-            "expanded_size": 3583534,
-            "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
-          }
-        ]
-      },
-      {
-        "name": "autoconfport (Build 39)",
-        "date": "2022-07-22 05:59:33",
-        "tag_name": "autoconfport_39",
-        "assets": [
-          {
-            "name": "autoconf-2.71.20220722_015902.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_39/autoconf-2.71.20220722_015902.zos.pax.Z",
-            "size": 1419264,
-            "expanded_size": 3583588,
-            "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
-          }
-        ]
-      },
-      {
-        "name": "autoconfport (Build 15)",
-        "date": "2022-06-07 17:49:54",
-        "tag_name": "autoconfport_15",
-        "assets": [
-          {
-            "name": "autoconf-2.71.20220607_134926.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_15/autoconf-2.71.20220607_134926.zos.pax.Z",
-            "size": 2483712,
-            "expanded_size": 6400751,
-            "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
-          }
-        ]
-      }
-    ],
-    "perl": [
-      {
-        "name": "stable-release",
-        "date": "2023-08-04 16:13:07",
-        "tag_name": "stable",
-        "assets": [
-          {
-            "name": "perl5-blead.20230605_161457.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/stable/perl5-blead.20230605_161457.zos.pax.Z",
-            "size": 26707968,
-            "expanded_size": 82464710,
-            "runtime_dependencies": null,
-            "total_tests": "2488",
-            "passed_tests": "2467"
-          }
-        ]
-      },
-      {
-        "name": "stable-release_20230804_121149",
-        "date": "2023-08-04 16:11:50",
-        "tag_name": "stable_20230804_121149",
-        "assets": [
-          {
-            "name": "perl5-blead.20230423_232726.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/stable_20230804_121149/perl5-blead.20230423_232726.zos.pax.Z",
-            "size": 26707968,
-            "expanded_size": 82550901,
-            "runtime_dependencies": null,
-            "total_tests": "2488",
-            "passed_tests": "2467"
-          }
-        ]
-      },
-      {
-        "name": "perl (Build 1060)",
-        "date": "2023-06-05 22:42:02",
-        "tag_name": "Releaseline_perlport_1060",
-        "assets": [
-          {
-            "name": "perl5-blead.20230605_161457.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/Releaseline_perlport_1060/perl5-blead.20230605_161457.zos.pax.Z",
-            "size": 26707968,
-            "expanded_size": 82464710,
-            "runtime_dependencies": null,
-            "total_tests": "2488",
-            "passed_tests": "2467"
-          }
-        ]
-      },
-      {
-        "name": "perl (Build 1007)",
-        "date": "2023-05-19 19:16:36",
-        "tag_name": "Releaseline_perlport_1007",
-        "assets": [
-          {
-            "name": "perl5-blead.20230519_100037.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/Releaseline_perlport_1007/perl5-blead.20230519_100037.zos.pax.Z",
-            "size": 26707968,
-            "expanded_size": 82487527,
-            "runtime_dependencies": null,
-            "total_tests": "2488",
-            "passed_tests": "2467"
-          }
-        ]
-      },
-      {
-        "name": "perl (Build 950)",
-        "date": "2023-04-24 06:14:52",
-        "tag_name": "Releaseline_perlport_950",
-        "assets": [
-          {
-            "name": "perl5-blead.20230423_232726.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/Releaseline_perlport_950/perl5-blead.20230423_232726.zos.pax.Z",
-            "size": 26707968,
-            "expanded_size": 82550901,
-            "runtime_dependencies": null,
-            "total_tests": "2488",
-            "passed_tests": "2467"
-          }
-        ]
-      },
-      {
-        "name": "perl (Build 922)",
-        "date": "2023-04-17 15:04:14",
-        "tag_name": "Releaseline_perlport_922",
-        "assets": [
-          {
-            "name": "perl5-blead.20230417_074329.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/Releaseline_perlport_922/perl5-blead.20230417_074329.zos.pax.Z",
-            "size": 26675712,
-            "expanded_size": 82512257,
-            "runtime_dependencies": null,
-            "total_tests": "2489",
-            "passed_tests": "2468"
-          }
-        ]
-      },
-      {
-        "name": "perl (Build 904)",
-        "date": "2023-04-14 23:53:59",
-        "tag_name": "Releaseline_perlport_904",
-        "assets": [
-          {
-            "name": "perl5-blead.20230414_163403.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/Releaseline_perlport_904/perl5-blead.20230414_163403.zos.pax.Z",
-            "size": 26707968,
-            "expanded_size": 82525136,
-            "runtime_dependencies": null,
-            "total_tests": "2488",
-            "passed_tests": "2467"
-          }
-        ]
-      },
-      {
-        "name": "perl (Build 886)",
-        "date": "2023-04-10 09:56:37",
-        "tag_name": "Releaseline_perlport_886",
-        "assets": [
-          {
-            "name": "perl5-blead.20230410_023927.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/Releaseline_perlport_886/perl5-blead.20230410_023927.zos.pax.Z",
-            "size": 26707968,
-            "expanded_size": 82523405,
-            "runtime_dependencies": null,
-            "total_tests": "2487",
-            "passed_tests": "2466"
-          }
-        ]
-      },
-      {
-        "name": "perl (Build 846)",
-        "date": "2023-04-03 04:41:42",
-        "tag_name": "Releaseline_perlport_846",
-        "assets": [
-          {
-            "name": "perl5-blead.20230402_213118.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/Releaseline_perlport_846/perl5-blead.20230402_213118.zos.pax.Z",
-            "size": 26707968,
-            "expanded_size": 82520099,
-            "runtime_dependencies": null,
-            "total_tests": "2488",
-            "passed_tests": "2467"
-          }
-        ]
-      },
-      {
-        "name": "perl (Build 814)",
-        "date": "2023-03-27 03:37:08",
-        "tag_name": "perlport_814",
-        "assets": [
-          {
-            "name": "perl5-blead.20230326_212006.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_814/perl5-blead.20230326_212006.zos.pax.Z",
-            "size": 26675712,
-            "expanded_size": 82480867,
-            "runtime_dependencies": null,
-            "total_tests": "2488",
-            "passed_tests": "2467"
-          }
-        ]
-      },
-      {
-        "name": "perl (Build 775)",
-        "date": "2023-03-20 04:20:28",
-        "tag_name": "perlport_775",
-        "assets": [
-          {
-            "name": "perl5-blead.20230319_215052.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_775/perl5-blead.20230319_215052.zos.pax.Z",
-            "size": 26675712,
-            "expanded_size": 82446778,
-            "runtime_dependencies": null,
-            "total_tests": "2477",
-            "passed_tests": "2456"
-          }
-        ]
-      },
-      {
-        "name": "perl (Build 761)",
-        "date": "2023-03-17 05:34:07",
-        "tag_name": "perlport_761",
-        "assets": [
-          {
-            "name": "perl5-blead.20230316_225400.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_761/perl5-blead.20230316_225400.zos.pax.Z",
-            "size": 26643456,
-            "expanded_size": 82414907,
-            "runtime_dependencies": null,
-            "total_tests": "2146",
-            "passed_tests": "2127"
-          }
-        ]
-      },
-      {
-        "name": "perl (Build 686)",
-        "date": "2023-03-06 12:13:52",
-        "tag_name": "perlport_686",
-        "assets": [
-          {
-            "name": "perl5-blead.20230306_051235.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_686/perl5-blead.20230306_051235.zos.pax.Z",
-            "size": 26449920,
-            "expanded_size": 82319236,
-            "runtime_dependencies": null,
-            "total_tests": "2452",
-            "passed_tests": "2452"
-          }
-        ]
-      },
-      {
-        "name": "boot-release",
-        "date": "2023-03-01 19:46:17",
-        "tag_name": "boot",
-        "assets": [
-          {
-            "name": "perl5-blead.20230301_115029.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/boot/perl5-blead.20230301_115029.zos.pax.Z",
-            "size": 26546688,
-            "expanded_size": 82740124,
-            "runtime_dependencies": null,
-            "total_tests": "2453",
-            "passed_tests": "2453"
-          }
-        ]
-      },
-      {
-        "name": "boot-release_20230301_144551",
-        "date": "2023-03-01 19:45:51",
-        "tag_name": "boot_20230301_144551",
-        "assets": [
-          {
-            "name": "perl5-blead.20230207_155857.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/boot_20230301_144551/perl5-blead.20230207_155857.zos.pax.Z",
-            "size": 26417664,
-            "expanded_size": 82126884,
-            "runtime_dependencies": null,
-            "total_tests": "2453",
-            "passed_tests": "2453"
-          }
-        ]
-      },
-      {
-        "name": "perl (Build 664)",
-        "date": "2023-03-01 18:47:37",
-        "tag_name": "perlport_664",
-        "assets": [
-          {
-            "name": "perl5-blead.20230301_115029.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_664/perl5-blead.20230301_115029.zos.pax.Z",
-            "size": 26546688,
-            "expanded_size": 82740124,
-            "runtime_dependencies": null,
-            "total_tests": "2453",
-            "passed_tests": "2453"
-          }
-        ]
-      },
-      {
-        "name": "perl (Build 656)",
-        "date": "2023-02-27 10:55:28",
-        "tag_name": "perlport_656",
-        "assets": [
-          {
-            "name": "perl5-blead.20230227_035335.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_656/perl5-blead.20230227_035335.zos.pax.Z",
-            "size": 52803072,
-            "expanded_size": 164551641,
-            "runtime_dependencies": null,
-            "total_tests": "2452",
-            "passed_tests": "2452"
-          }
-        ]
-      },
-      {
-        "name": "perl (Build 616)",
-        "date": "2023-02-19 08:49:53",
-        "tag_name": "perlport_616",
-        "assets": [
-          {
-            "name": "perl5-blead.20230219_015449.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_616/perl5-blead.20230219_015449.zos.pax.Z",
-            "size": 26482176,
-            "expanded_size": 82644235,
-            "runtime_dependencies": null,
-            "total_tests": "2454",
-            "passed_tests": "2454"
-          }
-        ]
-      },
-      {
-        "name": "perl (Build 577)",
-        "date": "2023-02-17 03:48:34",
-        "tag_name": "perlport_577",
-        "assets": [
-          {
-            "name": "perl5-blead.20230216_204201.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_577/perl5-blead.20230216_204201.zos.pax.Z",
-            "size": 26449920,
-            "expanded_size": 82259682,
-            "runtime_dependencies": null,
-            "total_tests": "2453",
-            "passed_tests": "2453"
-          }
-        ]
-      },
-      {
-        "name": "perl (Build 531)",
-        "date": "2023-02-11 04:32:58",
-        "tag_name": "perlport_531",
-        "assets": [
-          {
-            "name": "perl5-blead.20230210_213003.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_531/perl5-blead.20230210_213003.zos.pax.Z",
-            "size": 26449920,
-            "expanded_size": 82253043,
-            "runtime_dependencies": null,
-            "total_tests": "2452",
-            "passed_tests": "2452"
-          }
-        ]
-      },
-      {
-        "name": "boot-release_20230210_094711",
-        "date": "2023-02-10 04:17:12",
-        "tag_name": "boot_20230210_094711",
-        "assets": [
-          {
-            "name": "perl5-blead.20221109_001219.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/boot_20230210_094711/perl5-blead.20221109_001219.zos.pax.Z",
-            "size": 26224128,
-            "expanded_size": 81480955,
-            "runtime_dependencies": null,
-            "total_tests": "2434",
-            "passed_tests": "2434"
-          }
-        ]
-      },
-      {
-        "name": "perl (Build 504)",
-        "date": "2023-02-07 23:06:59",
-        "tag_name": "perlport_504",
-        "assets": [
-          {
-            "name": "perl5-blead.20230207_155857.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_504/perl5-blead.20230207_155857.zos.pax.Z",
-            "size": 26417664,
-            "expanded_size": 82126884,
-            "runtime_dependencies": null,
-            "total_tests": "2453",
-            "passed_tests": "2453"
-          }
-        ]
-      },
-      {
-        "name": "perl (Build 489)",
-        "date": "2023-02-07 06:37:10",
-        "tag_name": "perlport_489",
-        "assets": [
-          {
-            "name": "perl5-blead.20230206_233504.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_489/perl5-blead.20230206_233504.zos.pax.Z",
-            "size": 26417664,
-            "expanded_size": 82131518,
-            "runtime_dependencies": null,
-            "total_tests": "2452",
-            "passed_tests": "2452"
-          }
-        ]
-      },
-      {
-        "name": "perl (Build 484)",
-        "date": "2023-02-07 02:22:12",
-        "tag_name": "perlport_484",
-        "assets": [
-          {
-            "name": "perl5-blead.20230206_192643.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_484/perl5-blead.20230206_192643.zos.pax.Z",
-            "size": 26417664,
-            "expanded_size": 82131214,
-            "runtime_dependencies": null,
-            "total_tests": "2452",
-            "passed_tests": "2452"
-          }
-        ]
-      },
-      {
-        "name": "perl (Build 479)",
-        "date": "2023-02-06 21:36:13",
-        "tag_name": "perlport_479",
-        "assets": [
-          {
-            "name": "perl5-blead.20230206_143238.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_479/perl5-blead.20230206_143238.zos.pax.Z",
-            "size": 26417664,
-            "expanded_size": 82132105,
-            "runtime_dependencies": null,
-            "total_tests": "2456",
-            "passed_tests": "2456"
-          }
-        ]
-      },
-      {
-        "name": "perlport (Build 438)",
-        "date": "2023-01-30 05:54:22",
-        "tag_name": "perlport_438",
-        "assets": [
-          {
-            "name": "perl5-blead.20230129_230130.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_438/perl5-blead.20230129_230130.zos.pax.Z",
-            "size": 26385408,
-            "expanded_size": 82076203,
-            "runtime_dependencies": null,
-            "total_tests": "2458",
-            "passed_tests": "2458"
-          }
-        ]
-      },
-      {
-        "name": "perlport (Build 274)",
-        "date": "2022-11-09 06:59:47",
-        "tag_name": "perlport_274",
-        "assets": [
-          {
-            "name": "perl5-blead.20221109_001219.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_274/perl5-blead.20221109_001219.zos.pax.Z",
-            "size": 26224128,
-            "expanded_size": 81480955,
-            "runtime_dependencies": null,
-            "total_tests": "2434",
-            "passed_tests": "2434"
-          }
-        ]
-      },
-      {
-        "name": "perlport (Build 257)",
-        "date": "2022-11-07 13:25:20",
-        "tag_name": "perlport_257",
-        "assets": [
-          {
-            "name": "perl5-blead.20221107_022515.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_257/perl5-blead.20221107_022515.zos.pax.Z",
-            "size": 26224128,
-            "expanded_size": 81483954,
-            "runtime_dependencies": null,
-            "total_tests": "2435",
-            "passed_tests": "2435"
-          }
-        ]
-      },
-      {
-        "name": "perlport (Build 256)",
-        "date": "2022-11-07 10:03:02",
-        "tag_name": "perlport_256",
-        "assets": [
-          {
-            "name": "perl5-blead.20221107_022515.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_256/perl5-blead.20221107_022515.zos.pax.Z",
-            "size": 26224128,
-            "expanded_size": 81483954,
-            "runtime_dependencies": null,
-            "total_tests": "2435",
-            "passed_tests": "2435"
-          }
-        ]
-      },
-      {
-        "name": "perlport (Build 207)",
-        "date": "2022-10-22 04:20:13",
-        "tag_name": "perlport_207",
-        "assets": [
-          {
-            "name": "perl5-blead.20221021_222335.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_207/perl5-blead.20221021_222335.zos.pax.Z",
-            "size": 26224128,
-            "expanded_size": 81393859,
-            "runtime_dependencies": null,
-            "total_tests": "2433",
-            "passed_tests": "2433"
-          }
-        ]
-      },
-      {
-        "name": "perlport (Build 188)",
-        "date": "2022-10-06 03:42:56",
-        "tag_name": "perlport_188",
-        "assets": [
-          {
-            "name": "perl5-blead.20221005_215746.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_188/perl5-blead.20221005_215746.zos.pax.Z",
-            "size": 26224128,
-            "expanded_size": 81394237,
-            "runtime_dependencies": null,
-            "total_tests": "2460",
-            "passed_tests": "2448"
-          }
-        ]
-      },
-      {
-        "name": "perlport (Build 187)",
-        "date": "2022-10-05 21:43:45",
-        "tag_name": "perlport_187",
-        "assets": [
-          {
-            "name": "perl5-blead.20221005_155649.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_187/perl5-blead.20221005_155649.zos.pax.Z",
-            "size": 26191872,
-            "expanded_size": 81383667,
-            "runtime_dependencies": null,
-            "total_tests": "2460",
-            "passed_tests": "2448"
-          }
-        ]
-      },
-      {
-        "name": "perlport (Build 180)",
-        "date": "2022-10-04 19:02:49",
-        "tag_name": "perlport_180",
-        "assets": [
-          {
-            "name": "perl5-blead.20221004_131349.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_180/perl5-blead.20221004_131349.zos.pax.Z",
-            "size": 26191872,
-            "expanded_size": 81382060,
-            "runtime_dependencies": null,
-            "total_tests": "2460",
-            "passed_tests": "2448"
-          }
-        ]
-      },
-      {
-        "name": "perlport (Build 137)",
-        "date": "2022-09-08 22:18:17",
-        "tag_name": "perlport_137",
-        "assets": [
-          {
-            "name": "perl5-blead.20220908_174239.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_137/perl5-blead.20220908_174239.zos.pax.Z",
-            "size": 26095104,
-            "expanded_size": 81193753,
-            "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
-          }
-        ]
-      },
-      {
-        "name": "perlport (Build 136)",
-        "date": "2022-09-08 15:28:45",
-        "tag_name": "perlport_136",
-        "assets": [
-          {
-            "name": "perl5-blead.20220908_105003.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_136/perl5-blead.20220908_105003.zos.pax.Z",
-            "size": 26191872,
-            "expanded_size": 81196942,
-            "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
-          }
-        ]
-      },
-      {
-        "name": "perlport (Build 132)",
-        "date": "2022-09-08 12:22:29",
-        "tag_name": "perlport_132",
-        "assets": [
-          {
-            "name": "perl5-blead.20220908_074305.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_132/perl5-blead.20220908_074305.zos.pax.Z",
-            "size": 26095104,
-            "expanded_size": 81167676,
-            "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
-          }
-        ]
-      },
-      {
-        "name": "perlport (Build 131)",
-        "date": "2022-09-08 00:20:57",
-        "tag_name": "perlport_131",
-        "assets": [
-          {
-            "name": "perl5-blead.20220907_194331.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_131/perl5-blead.20220907_194331.zos.pax.Z",
-            "size": 26095104,
-            "expanded_size": 81167607,
-            "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
-          }
-        ]
-      },
-      {
-        "name": "perlport (Build 94)",
-        "date": "2022-08-19 15:19:51",
-        "tag_name": "perlport_94",
-        "assets": [
-          {
-            "name": "perl5.blead.20220819_104302.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_94/perl5.blead.20220819_104302.zos.pax.Z",
-            "size": 26095104,
-            "expanded_size": 81102129,
-            "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
-          }
-        ]
-      },
-      {
-        "name": "perlport (Build 64)",
-        "date": "2022-08-10 03:14:00",
-        "tag_name": "perlport_64",
-        "assets": [
-          {
-            "name": "perl5.blead.20220809_223700.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_64/perl5.blead.20220809_223700.zos.pax.Z",
-            "size": 26095104,
-            "expanded_size": 81103212,
-            "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
-          }
-        ]
-      },
-      {
-        "name": "perlport (Build 63)",
-        "date": "2022-08-09 18:01:32",
-        "tag_name": "perlport_63",
-        "assets": [
-          {
-            "name": "perl5.blead.20220809_132435.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/perlport_63/perl5.blead.20220809_132435.zos.pax.Z",
-            "size": 26095104,
-            "expanded_size": 81104179,
-            "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
-          }
-        ]
-      },
-      {
-        "name": "PERL_CI (BUILD91)",
-        "date": "2022-05-31 14:31:36",
-        "tag_name": "PERL_CI_BUILD91",
-        "assets": [
-          {
-            "name": "perl5.37.1.zos.blead.64.dynamic.ascii.BUILD91.202205310121.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/PERL_CI_BUILD91/perl5.37.1.zos.blead.64.dynamic.ascii.BUILD91.202205310121.pax.Z",
-            "size": 25708032,
-            "expanded_size": 79815671,
-            "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
-          }
-        ]
-      },
-      {
-        "name": "PERL_CI (BUILD84)",
-        "date": "2022-04-27 00:22:16",
-        "tag_name": "PERL_CI_BUILD84",
-        "assets": [
-          {
-            "name": "perl5.35.12.zos.blead.64.dynamic.ascii.BUILD84.202204262237.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/PERL_CI_BUILD84/perl5.35.12.zos.blead.64.dynamic.ascii.BUILD84.202204262237.pax.Z",
-            "size": 25708032,
-            "expanded_size": 79814928,
-            "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
-          }
-        ]
-      },
-      {
-        "name": "PERL_CI (BUILD83)",
-        "date": "2022-04-26 01:48:59",
-        "tag_name": "PERL_CI_BUILD83",
-        "assets": [
-          {
-            "name": "perl5.35.12.zos.blead.64.dynamic.ascii.BUILD83.202204251812.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/PERL_CI_BUILD83/perl5.35.12.zos.blead.64.dynamic.ascii.BUILD83.202204251812.pax.Z",
-            "size": 25708032,
-            "expanded_size": 79815273,
-            "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
           }
         ]
       }
@@ -16980,6 +16980,22 @@
       }
     ],
     "groff": [
+      {
+        "name": "groff 0.3.0-dt-stable\n1.22.4 (Build 1304) - (STABLE)",
+        "date": "2023-09-20 01:21:05",
+        "tag_name": "STABLE_groffport_1304",
+        "assets": [
+          {
+            "name": "groff-1.22.4.20230920_005231.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/groffport/releases/download/STABLE_groffport_1304/groff-1.22.4.20230920_005231.zos.pax.Z",
+            "size": 16063488,
+            "expanded_size": 46525088,
+            "runtime_dependencies": null,
+            "total_tests": "2",
+            "passed_tests": "2"
+          }
+        ]
+      },
       {
         "name": "groff 0.3.0-dt-stable\n1.22.4 (Build 1299) - (STABLE)",
         "date": "2023-09-19 17:56:44",
