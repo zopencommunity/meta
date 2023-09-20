@@ -1823,10 +1823,9 @@ echo "$zoslib_env" | while read line; do
       }
     }
 
-#ifdef __ZOPEN_DEBUG
-    fprintf(stderr, "Setting variable %s=%s\n", "$var", envar_value);
-#endif
     if (!getenv("$var")) {
+      if (getenv("__ZOPEN_DEBUG"))
+        fprintf(stderr, "Setting variable %s=%s\n", "$var", envar_value);
       if (setenv("$var", envar_value, 1) != 0) {
         fprintf(stderr, "Error: Setting environment variable %s=%s\n", "$var", envar_value);
         exit(1);
@@ -1857,9 +1856,8 @@ zz
 
     strcat(envar_value, ":");
     strcat(envar_value, getenv("$var"));
-#ifdef __ZOPEN_DEBUG
-    fprintf(stderr, "Prepending variable %s=%s\n", "$var", envar_value);
-#endif
+    if (getenv("__ZOPEN_DEBUG"))
+      fprintf(stderr, "Prepending variable %s=%s\n", "$var", envar_value);
     if (setenv("$var", envar_value, 1) != 0) {
       fprintf(stderr, "Error: prepending environment variable %s=%s\n", "$var", envar_value);
       exit(1);
