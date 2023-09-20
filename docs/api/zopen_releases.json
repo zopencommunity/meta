@@ -1,5 +1,5 @@
 {
-  "timestamp": "2023-09-20T18:55:17.637090",
+  "timestamp": "2023-09-20T19:25:46.161382",
   "release_data": {
     "perl": [
       {
@@ -1480,6 +1480,22 @@
       }
     ],
     "m4": [
+      {
+        "name": "m4 0.3.0-dt-stable\n1.4.19\n1.4.19 (Build 1312) - (STABLE)",
+        "date": "2023-09-20 23:14:45",
+        "tag_name": "STABLE_m4port_1312",
+        "assets": [
+          {
+            "name": "m4-1.4.19.20230920_223415.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/STABLE_m4port_1312/m4-1.4.19.20230920_223415.zos.pax.Z",
+            "size": 612864,
+            "expanded_size": 1462741,
+            "runtime_dependencies": null,
+            "total_tests": "237",
+            "passed_tests": "233"
+          }
+        ]
+      },
       {
         "name": "m4 0.3.0-dt-stable\n1.4.19\n1.4.19 (Build 1228) - (STABLE)",
         "date": "2023-09-09 01:23:31",
@@ -9199,22 +9215,6 @@
         ]
       },
       {
-        "name": "zotsample (Build 1180) - (STABLE)",
-        "date": "2023-08-02 17:44:04",
-        "tag_name": "STABLE_zotsampleport_1180",
-        "assets": [
-          {
-            "name": "zotsample-1.0.20230802_134401.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/zotsampleport/releases/download/STABLE_zotsampleport_1180/zotsample-1.0.20230802_134401.zos.pax.Z",
-            "size": 32256,
-            "expanded_size": 78851,
-            "runtime_dependencies": null,
-            "total_tests": "1",
-            "passed_tests": "1"
-          }
-        ]
-      },
-      {
         "name": "zotsample (Build 1140)",
         "date": "2023-07-13 16:55:17",
         "tag_name": "Releaseline_zotsampleport_1140",
@@ -9320,22 +9320,6 @@
             "url": "https://github.com/ZOSOpenTools/zotsampleport/releases/download/Releaseline_zotsampleport_892/zotsample-1.0.20230410_090437.zos.pax.Z",
             "size": 32256,
             "expanded_size": 78947,
-            "runtime_dependencies": null,
-            "total_tests": "1",
-            "passed_tests": "1"
-          }
-        ]
-      },
-      {
-        "name": "zotsample (Build 839)",
-        "date": "2023-03-30 18:15:38",
-        "tag_name": "Releaseline_zotsampleport_839",
-        "assets": [
-          {
-            "name": "zotsample-1.0.20230330_141537.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/zotsampleport/releases/download/Releaseline_zotsampleport_839/zotsample-1.0.20230330_141537.zos.pax.Z",
-            "size": 32256,
-            "expanded_size": 78956,
             "runtime_dependencies": null,
             "total_tests": "1",
             "passed_tests": "1"
@@ -9487,22 +9471,6 @@
         ]
       },
       {
-        "name": "zotsampleport (Build 442)",
-        "date": "2023-01-31 18:50:17",
-        "tag_name": "zotsampleport_442",
-        "assets": [
-          {
-            "name": "zotsample-1.0.20230131_135018.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/zotsampleport/releases/download/zotsampleport_442/zotsample-1.0.20230131_135018.zos.pax.Z",
-            "size": 32256,
-            "expanded_size": 48186,
-            "runtime_dependencies": null,
-            "total_tests": "1",
-            "passed_tests": "1"
-          }
-        ]
-      },
-      {
         "name": "zotsampleport (Build 399)",
         "date": "2023-01-18 03:49:08",
         "tag_name": "zotsampleport_399",
@@ -9583,6 +9551,22 @@
         ]
       },
       {
+        "name": "zotsampleport (Build 375)",
+        "date": "2023-01-12 20:25:24",
+        "tag_name": "zotsampleport_375",
+        "assets": [
+          {
+            "name": "zotsample-1.0.20230112_152524.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/zotsampleport/releases/download/zotsampleport_375/zotsample-1.0.20230112_152524.zos.pax.Z",
+            "size": 32256,
+            "expanded_size": 48276,
+            "runtime_dependencies": null,
+            "total_tests": "1",
+            "passed_tests": "1"
+          }
+        ]
+      },
+      {
         "name": "zotsampleport (Build 358)",
         "date": "2022-12-21 15:28:01",
         "tag_name": "zotsampleport_358",
@@ -9590,6 +9574,38 @@
           {
             "name": "zotsample-1.0.20221221_102804.zos.pax.Z",
             "url": "https://github.com/ZOSOpenTools/zotsampleport/releases/download/zotsampleport_358/zotsample-1.0.20221221_102804.zos.pax.Z",
+            "size": 32256,
+            "expanded_size": 48276,
+            "runtime_dependencies": null,
+            "total_tests": "1",
+            "passed_tests": "1"
+          }
+        ]
+      },
+      {
+        "name": "zotsampleport (Build 358)",
+        "date": "2022-12-21 15:28:01",
+        "tag_name": "zotsampleport_358",
+        "assets": [
+          {
+            "name": "zotsample-1.0.20221221_102804.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/zotsampleport/releases/download/zotsampleport_358/zotsample-1.0.20221221_102804.zos.pax.Z",
+            "size": 32256,
+            "expanded_size": 48276,
+            "runtime_dependencies": null,
+            "total_tests": "1",
+            "passed_tests": "1"
+          }
+        ]
+      },
+      {
+        "name": "zotsampleport (Build 356)",
+        "date": "2022-12-20 18:37:32",
+        "tag_name": "zotsampleport_356",
+        "assets": [
+          {
+            "name": "zotsample-1.0.20221220_133736.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/zotsampleport/releases/download/zotsampleport_356/zotsample-1.0.20221220_133736.zos.pax.Z",
             "size": 32256,
             "expanded_size": 48276,
             "runtime_dependencies": null,
@@ -20863,6 +20879,24 @@
         ]
       }
     ],
+    "duckdb": [
+      {
+        "name": "duckdb 0.8.1 (Build 1199) - (STABLE)",
+        "date": "2023-08-24 16:03:37",
+        "tag_name": "STABLE_duckdbport_1199",
+        "assets": [
+          {
+            "name": "duckdb-main.20230824_104945.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/duckdbport/releases/download/STABLE_duckdbport_1199/duckdb-main.20230824_104945.zos.pax.Z",
+            "size": 56189952,
+            "expanded_size": 146703511,
+            "runtime_dependencies": null,
+            "total_tests": "1",
+            "passed_tests": "1"
+          }
+        ]
+      }
+    ],
     "powerlinego": [
       {
         "name": "powerlinego 1.24 (Build 1141)",
@@ -20908,24 +20942,6 @@
             "url": "https://github.com/ZOSOpenTools/pinentryport/releases/download/Releaseline_pinentryport_1073/pinentry-1.2.1.20230608_120105.zos.pax.Z",
             "size": 1096704,
             "expanded_size": 2550257,
-            "runtime_dependencies": null,
-            "total_tests": "1",
-            "passed_tests": "1"
-          }
-        ]
-      }
-    ],
-    "duckdb": [
-      {
-        "name": "duckdb 0.8.1 (Build 1199) - (STABLE)",
-        "date": "2023-08-24 16:03:37",
-        "tag_name": "STABLE_duckdbport_1199",
-        "assets": [
-          {
-            "name": "duckdb-main.20230824_104945.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/duckdbport/releases/download/STABLE_duckdbport_1199/duckdb-main.20230824_104945.zos.pax.Z",
-            "size": 56189952,
-            "expanded_size": 146703511,
             "runtime_dependencies": null,
             "total_tests": "1",
             "passed_tests": "1"
@@ -21153,24 +21169,6 @@
         ]
       }
     ],
-    "librdkafka": [
-      {
-        "name": "librdkafka 1.0.0 (Build 1176) - ()",
-        "date": "2023-07-31 05:40:58",
-        "tag_name": "_librdkafkaport_1176",
-        "assets": [
-          {
-            "name": "librdkafka-master.20230731_012743.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/librdkafkaport/releases/download/_librdkafkaport_1176/librdkafka-master.20230731_012743.zos.pax.Z",
-            "size": 13418496,
-            "expanded_size": 29353723,
-            "runtime_dependencies": null,
-            "total_tests": "1",
-            "passed_tests": "1"
-          }
-        ]
-      }
-    ],
     "libpcre": [
       {
         "name": "libpcre 8.45 (Build 1178) - ()",
@@ -21185,6 +21183,24 @@
             "runtime_dependencies": null,
             "total_tests": "5",
             "passed_tests": "4"
+          }
+        ]
+      }
+    ],
+    "librdkafka": [
+      {
+        "name": "librdkafka 1.0.0 (Build 1176) - ()",
+        "date": "2023-07-31 05:40:58",
+        "tag_name": "_librdkafkaport_1176",
+        "assets": [
+          {
+            "name": "librdkafka-master.20230731_012743.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/librdkafkaport/releases/download/_librdkafkaport_1176/librdkafka-master.20230731_012743.zos.pax.Z",
+            "size": 13418496,
+            "expanded_size": 29353723,
+            "runtime_dependencies": null,
+            "total_tests": "1",
+            "passed_tests": "1"
           }
         ]
       }
