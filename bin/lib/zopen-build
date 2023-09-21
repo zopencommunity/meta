@@ -1559,6 +1559,11 @@ resolveCommands()
       ZOPEN_NAME="${dir}-${branch}"
     fi
   fi
+  # Check if ZOPEN_NAME contains a "-"
+  if [ -z "$(echo "$ZOPEN_NAME" | grep '-')" ]; then
+    # If not, add the '-DEV' suffix so as not to collide with zopen installed packages
+    ZOPEN_NAME="${ZOPEN_NAME}-DEV"
+  fi
   if [ "${ZOPEN_INSTALL_DIR}x" = "x" ]; then
     PROJECT_NAME="$(echo ${ZOPEN_NAME} | cut -d'-' -f1)"
     export ZOPEN_INSTALL_DIR="$ZOPEN_PKGINSTALL/${PROJECT_NAME}/${ZOPEN_NAME}" # Install into dev location
