@@ -71,7 +71,7 @@
 | [gettextport](https://github.com/ZOSOpenTools/gettextport) | 19 | 84% |coreutils, ctags, expat, getopt, git, gpg, hello, libassuan, libgcrypt, libgpgerror, libiconv, libksba, m4, man-db, nano, npth, ntbtls, pinentry, which
 | [ncursesport](https://github.com/ZOSOpenTools/ncursesport) | 17 | 100% |bash, c3270, cscope, gettext, git, gpg, htop, less, lynx, man-db, multitail, nano, ncdu, screen, thesilversearcher, tig, vim
 | [texinfoport](https://github.com/ZOSOpenTools/texinfoport) | 17 | 57% |autoconf, automake, bison, curl, expat, gettext, git, gpg, groff, gzip, hello, libtool, m4, make, ntbtls, sed, tar
-| [xzport](https://github.com/ZOSOpenTools/xzport) | 17 | 100% |autoconf, automake, bison, curl, diffutils, expat, findutils, gettext, git, gzip, help2man, libtool, m4, make, man-db, texinfo, thesilversearcher
+| [xzport](https://github.com/ZOSOpenTools/xzport) | 17 | 88% |autoconf, automake, bison, curl, diffutils, expat, findutils, gettext, git, gzip, help2man, libtool, m4, make, man-db, texinfo, thesilversearcher
 | [bashport](https://github.com/ZOSOpenTools/bashport) | 15 | 80% |avro-c-lib, bison, diffutils, direnv, expat, flex, git, jansson, libiconv, librdkafka, libxml2, oniguruma, re2c, texinfo, xmlto
 | [help2manport](https://github.com/ZOSOpenTools/help2manport) | 12 | 100% |autoconf, automake, bison, curl, expat, gettext, git, hello, libtool, m4, make, texinfo
 | [libtoolport](https://github.com/ZOSOpenTools/libtoolport) | 12 | 81% |expat, hello, jansson, libgdbm, libmd, libpcre, m4, man-db, oniguruma, php, re2c, texinfo
@@ -309,4 +309,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-09-20 22:15:30
+Last updated:  2023-09-21 09:17:21
