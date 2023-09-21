@@ -12,7 +12,7 @@ inputs:
     description: 'Bumpfile to read'
     required: false
     default: 'Bumpfile'
-  bump_files:
+  files:
     description: 'Files with embedded configuration or versions to update'
     required: false
     default: 'buildenv'
