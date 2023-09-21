@@ -148,7 +148,7 @@ else
   fi
 fi
 
-printInfo "- Binaries will be symlinked under \"$rootfs/usr/bin\". Libraries will be symlinked under \"$rootfs/usr/lib\""
+printInfo "- Binaries will be symlinked under \"$rootfs/usr/local/bin\". Libraries will be symlinked under \"$rootfs/usr/lib\""
 printInfo "- Packages will be installed and maintained under the directory structure $fslayout ($rootfs/$zopen_pkginstall). To change, re-run with the -f <layout> option."
 if ! $yesToPrompts; then
   while true; do
