@@ -1,0 +1,3 @@
+#!/bin/sh
+
+echo "zopen 1.0.1"

@@ -5,7 +5,10 @@
 printSyntax()
 {
   printInfo "" >&2
-  printInfo "Syntax: ${NC}${BOLD}zopen <command>${NC}" >&2
+  printInfo "Syntax: ${NC}${BOLD}zopen [options] <command>${NC}" >&2
+  printInfo "where ${NC}${BOLD}<options>${NC} may be one of the following:" >&2
+  printInfo "  ${NC}${BOLD}--version    ${NC}   print product version" >&2
+  printInfo "  ${NC}${BOLD}--help       ${NC}   print this help" >&2
   printInfo "where ${NC}${BOLD}<command>${NC} may be one of the following:" >&2
   printInfo "  ${NC}${BOLD}init         ${NC}   generate \$rootfs/etc/zopen-config, creates file structure and bootstraps" >&2
   printInfo "  ${NC}${BOLD}build        ${NC}   invokes the build script." >&2
@@ -40,6 +43,8 @@ printHelp()
 }
 
 export bindir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
+
+export PATH="${bindir}:${PATH}"
 ZOPEN_DONT_PROCESS_CONFIG=1
 . "${bindir}/lib/common.inc"
 
@@ -110,6 +115,9 @@ while [[ $# -gt 0 ]]; do
     "upgrade" | "up")
       shift
       exec "${bindir}/lib/zopen-install" -u $@
+      ;;
+    "--version")
+      exec "${bindir}/lib/zopen-version" 
       ;;
     *)
       printSoftError "Unknown option ${1} specified"
