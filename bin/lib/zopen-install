@@ -91,7 +91,7 @@ handlePackageInstall(){
     printVerbose "No current releaseline for package"
   fi
   
-  releasemetadata=""
+  releaseMetadata=""
   downloadURL=""
   # Options where the user explicitly sets a version/tag/releaseline currently ignore any configured release-line,
   # either for a previous package install or system default
@@ -103,7 +103,7 @@ handlePackageInstall(){
     requestedSubrelease=$(echo "$versioned" | awk -F'.' '{print $4}')
     requestedVersion="${requestedMajor}\\\.${requestedMinor}\\\.${requestedPatch}\\\.${requestedSubrelease}"
     printVerbose "Finding URL for latest release matching version prefix: requestedVersion: $requestedVersion"
-    releasemetadata=$(/bin/printf "%s" "$releases" | jq -e -r '. | map(select(.assets[].name | test("'$requestedVersion'")))[0]')
+    releaseMetadata=$(/bin/printf "%s" "$releases" | jq -e -r '. | map(select(.assets[].name | test("'$requestedVersion'")))[0]')
   elif [ ! "x" = "x$tagged" ]; then
     printVerbose "Explicit tagged version '$tagged' specified. Checking for match"
     releaseMetadata=$(/bin/printf "%s" "$releases" | jq -e -r '.[] | select(.tag_name == "'$tagged'")')
@@ -132,7 +132,7 @@ handlePackageInstall(){
       fi
     done
     printVerbose "Selecting item $selection from array"
-    releasemetadata="$(/bin/printf "%s" "$releases" | jq -e -r ".[$selection]")"
+    releaseMetadata="$(/bin/printf "%s" "$releases" | jq -e -r ".[$selection]")"
 
   elif [ ! -z "$releaseLine" ]; then  
     printVerbose "Install from release line '$releaseLine' specified"
@@ -141,9 +141,9 @@ handlePackageInstall(){
       printError "Invalid releaseline specified: '$releaseLine'; Valid values: DEV or STABLE"
     fi
     printVerbose "Finding latest asset on the release line"
-    releasemetadata="$(/bin/printf "%s" "$releases" | jq -e -r '. | map(select(.tag_name | startswith("'$releaseLine'")))[0]')"
+    releaseMetadata="$(/bin/printf "%s" "$releases" | jq -e -r '. | map(select(.tag_name | startswith("'$releaseLine'")))[0]')"
     printVerbose "Use quick check for asset to check for existence of metadata"
-    asset="$(/bin/printf "%s" "$releasemetadata" | jq -e -r '.assets[0]')"
+    asset="$(/bin/printf "%s" "$releaseMetadata" | jq -e -r '.assets[0]')"
     if [ $? -ne 0 ]; then
       printError "Could not find release-line $releaseLine for repo: $repo"
     fi
@@ -194,7 +194,7 @@ handlePackageInstall(){
         if [ "DEV" = "$validatedReleaseLine" ]; then
           # The system will be configured to use DEV packages where available but if none, use latest
           printInfo "No specific DEV releaseline package, using latest available"
-          releasemetadata="$(/bin/printf "%s" "$releases" | jq -e -r ".[0]")"
+          releaseMetadata="$(/bin/printf "%s" "$releases" | jq -e -r ".[0]")"
         else
           printVerbose "The system is configured to only use STABLE releaseline packages but there are none"
           printInfo "No release available on the '$validatedReleaseLine' releaseline."
@@ -202,21 +202,21 @@ handlePackageInstall(){
       else
         # Case 1 - old package that has no release tagging yet (no DEV or STABLE), just install latest
         printVerbose "Installing latest release"
-        releasemetadata="$(/bin/printf "%s" "$releases" | jq -e -r ".[0]")"
+        releaseMetadata="$(/bin/printf "%s" "$releases" | jq -e -r ".[0]")"
       fi
     fi
   fi
 
-  printVerbose "Getting specific asset details from metadata: $releasemetadata"
+  printVerbose "Getting specific asset details from metadata: $releaseMetadata"
   if [ -z "$asset" ] || [ "null" = "$asset" ]; then
     printVerbose "Asset not found during previous logic; setting now"
-    asset=$(/bin/printf "%s" "$releasemetadata" | jq -e -r '.assets[0]')
+    asset=$(/bin/printf "%s" "$releaseMetadata" | jq -e -r '.assets[0]')
   fi
   if [ "x" = "x$asset" ]; then
     printError "Unable to determine download asset for ${name}"
   fi
 
-  tagname=$(/bin/printf "%s" "$releasemetadata" | jq -e -r ".tag_name" | sed "s/\([^_]*\)_.*/\1/")
+  tagname=$(/bin/printf "%s" "$releaseMetadata" | jq -e -r ".tag_name" | sed "s/\([^_]*\)_.*/\1/")
   installedReleaseLine=$(validateReleaseLine "$tagname" )
 
   downloadURL=$(/bin/printf "%s" "$asset" | jq -e -r '.url')
