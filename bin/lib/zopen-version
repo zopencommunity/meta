@@ -1,3 +1,11 @@
 #!/bin/sh
+set -e
+export libdir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
+export rootdir="$( cd "$libdir/../../" && dirname "$PWD" >/dev/null 2>&1 && pwd -P )"
 
-echo "zopen 0.7.0"
+if [ "x${libdir}" = "x" ] || [ "x${rootdir}" = "x" ]; then
+  echo "Internal error. Unable to determine version information" >&2
+  exit 8
+fi
+
+cat "${rootdir}/.version"
