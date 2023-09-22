@@ -2,6 +2,8 @@
 #
 # General purpose zopen script
 #
+ME=$(basename $0)
+
 printSyntax()
 {
   printInfo "" >&2
@@ -117,7 +119,12 @@ while [[ $# -gt 0 ]]; do
       exec "${bindir}/lib/zopen-install" -u $@
       ;;
     "--version")
-      exec "${bindir}/lib/zopen-version" 
+      if [ "x$2" = "x" ]; then
+        name=$ME
+      else
+        name="$2"
+      fi
+      exec "${bindir}/lib/zopen-version" $name 
       ;;
     *)
       printSoftError "Unknown option ${1} specified"

@@ -1,5 +1,6 @@
 #!/bin/sh
 # Cleanup utility for z/OS Open Tools - https://github.com/ZOSOpenTools
+ME=$(basename $0)
 
 export utildir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
 
@@ -165,7 +166,7 @@ while [ $# -gt 0 ]; do
       exit 0
       ;;
     "--version" )
-      zopen --version
+      zopen --version $ME
       exit 0
       ;;
     "-v" | "--verbose")

@@ -17,6 +17,8 @@
 # the file will now be tagged as ascii instead of ebcdic
 # For compatibility, check the tag of the file after the echo and iconv the file IFF it is IBM-1047
 #
+ME=$(basename $0)
+
 asciiecho()
 {
   text="$1"
@@ -276,7 +278,7 @@ processOptions()
         ;;
       "--version")
         trap - EXIT 
-        zopen --version 
+        zopen --version $ME
         exit 0
         ;;
       "-v" | "--v" | "-verbose" | "--verbose")

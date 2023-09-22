@@ -1,5 +1,6 @@
 #!/bin/sh
 # Generates a zopen compatible project
+ME=$(basename $0)
 
 export utildir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
 
@@ -27,7 +28,7 @@ if [[ $# -eq 1 ]]; then
     printSyntax
     exit 0
   elif [ "x$1" = "x--version" ]; then
-    zopen --version
+    zopen --version $ME
     exit 0
   else
     echo "Unrecognized option $1. Processing terminated" >&2

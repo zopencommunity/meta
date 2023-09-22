@@ -1,5 +1,6 @@
 #!/bin/sh
 # Initialize zopen
+ME=$(basename $0)
 
 if [ -z "$utildir" ]; then
   export utildir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
@@ -66,7 +67,7 @@ while [ $# -gt 0 ]; do
       verbose=true
       ;;
     "--version")
-      zopen --version
+      zopen --version $ME
       exit 0
       ;;
     "--debug") 

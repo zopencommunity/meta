@@ -3,6 +3,7 @@
 #
 # Print out build dependencies (transitive closure) for a given tool
 #
+ME=$(basename $0)
 
 syntax()
 {
@@ -25,7 +26,7 @@ if [[ $# -eq 1 ]]; then
     syntax
     exit 0
   elif [ "x$1" = "x--version" ]; then
-    zopen --version
+    zopen --version $ME
     exit 0
   else
     echo "Unrecognized option $1. Processing terminated" >&2

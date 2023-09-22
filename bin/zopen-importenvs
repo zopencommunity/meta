@@ -1,9 +1,11 @@
 #!/bin/env bash
 # Used for development to source all the boot/prod .envs
 
+ME=$(basename $0)
+
 printSyntax()
 {
-  echo "USAGE: . ./zopen-importenvs [path to buildenv to fetch dependency]" >&2
+  echo "USAGE: . ./$ME [path to buildenv to fetch dependency]" >&2
   echo "If no argument is specified, zopen-importenvs will source all .env files from $HOME/zopen/prod and $HOME/zopen/boot" >&2
   echo "If an argument is specified and it represents a buildenv file, zopen-importenvs will source the ZOPEN_*_DEPS specified dependencies from $HOME/zopen/prod and $HOME/zopen/boot" >&2
 }
@@ -13,7 +15,7 @@ if [[ $# -eq 1 ]]; then
     printSyntax
     exit 0
   elif [ "x$1" = "x--version" ]; then
-    zopen --version
+    zopen --version $ME
     exit 0
   else
     echo "Unrecognized option $1. Processing terminated" >&2
