@@ -37,6 +37,7 @@ printHelp()
   echo "Options:"
   echo "  -f|--force: update cacert.pem file even if it may be up to date"
   echo "  -h|--help: print this help"
+  echo "  --version: print version"
   echo "  -v|--verbose: print verbose messages"
   echo "Parameters:"
   echo "  <directory>: the directory where the cacert.pem will be updated"
@@ -109,7 +110,11 @@ while [[ $# -gt 0 ]]; do
       ;;
     "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
       printHelp "${args}"
-      exit 4
+      exit 0
+      ;;
+    "--version")
+      zopen --version
+      exit 0
       ;;
     "-i" | "--insecure-fallback")
       insecureFallback=true

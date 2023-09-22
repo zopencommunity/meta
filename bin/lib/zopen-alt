@@ -19,6 +19,7 @@ Options:
                     select the active version for PACKAGE from a list
   -v, --verbose     run in verbose mode
   -h,-?, --help     display this help and exit
+  --version         print version
 
 Examples:
   zopen alt foo     list the available alternatives for package 'foo'
@@ -196,7 +197,11 @@ while [ $# -gt 0 ]; do
       ;;
     "-h" | "--help" | "-?")
       printHelp "${args}"
-      exit 4
+      exit 0
+      ;;
+    "--version")
+      zopen --version
+      exit 0
       ;;
     "-v" | "--verbose")
       verbose=true

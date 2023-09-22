@@ -1,4 +1,28 @@
 #!/bin/sh
+
+
+printSyntax()
+{
+  echo "zopen-version: print version information" >&2
+  echo "Syntax: zopen-version [OPTIONS]" >&2
+  echo "where OPTIONS can be:" >&2
+  echo "  --help: print this help" >&2
+  echo "  --version: print version" >&2
+}
+
+if [[ $# -eq 1 ]]; then
+  if [ "x$1" = "x--help" ]; then
+    printSyntax
+    exit 0
+  elif [ "x$1" = "x--version" ]; then
+    : # fall-through
+  else
+    echo "Unrecognized option $1. Processing terminated" >&2
+    printSyntax
+    exit 8
+  fi
+fi
+
 set -e
 export libdir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
 export rootdir="$( cd "$libdir/../../" && dirname "$PWD" >/dev/null 2>&1 && pwd -P )"

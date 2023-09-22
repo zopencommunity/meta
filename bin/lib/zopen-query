@@ -11,6 +11,8 @@ printSyntax()
   echo "zopen query is a utility for z/OS Open Tools to query packages and repos." >&2
   echo "Syntax: zopen-query [<option>]* [<package]*" >&2
   echo "  where <option> may be one or more of:" >&2
+  echo "  --help: print this help"  >&2
+  echo "  --version: print version"  >&2
   echo "  --list: list all available z/OS Open Tools."  >&2
   echo "  --remote-search: regex match package against available z/OS Open Tools" >&2
   echo "  -i : --installed: list install z/OS Open Tools." >&2
@@ -319,7 +321,11 @@ while [[ $# -gt 0 ]]; do
     ;;
     "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
       printSyntax "${args}"
-      exit 4
+      exit 0
+      ;;
+    "--version")
+      zopen --version
+      exit 0
       ;;
     "-v" | "--v" | "-verbose" | "--verbose")
       verbose=true

@@ -22,6 +22,20 @@ printSyntax()
   echo "Syntax: zopen-generate" >&2
 }
 
+if [[ $# -eq 1 ]]; then
+  if [ "x$1" = "x--help" ]; then
+    printSyntax
+    exit 0
+  elif [ "x$1" = "x--version" ]; then
+    zopen --version
+    exit 0
+  else
+    echo "Unrecognized option $1. Processing terminated" >&2
+    printSyntax
+    exit 8
+  fi
+fi
+ 
 buildLicenseLookup
 
 printHeader "Generate a zopen project"

@@ -6,5 +6,60 @@
 # We may choose to use --extendedhelp if the --help output is too long for folks
 #
 
-tooldirs="bin bin/lib"
-rootdir=
+printSyntax()
+{
+  echo "zopen-help2man will generate man pages from help and version information for zopen and zopen-* tools" >&2
+  echo "Syntax: zopen-help" >&2
+}
+
+if [[ $# -eq 1 ]]; then
+  if [ "x$1" = "x--help" ]; then
+    printSyntax
+    exit 0
+  elif [ "x$1" = "x--version" ]; then
+    zopen --version
+    exit 0
+  else
+    echo "Unrecognized option $1. Processing terminated" >&2
+    printSyntax
+    exit 8
+  fi
+fi
+
+set -e
+export mydir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
+export rootdir="$( cd "$mydir/../../" && dirname "$PWD" >/dev/null 2>&1 && pwd -P )"
+
+help2manopts="--no-discard-stderr"
+mandir="${rootdir}/docs/zopen/man/man.1"
+
+if [ "x${mydir}" = "x" ] || [ "x${rootdir}" = "x" ]; then
+  echo "Internal error. Unable to determine version information" >&2
+  exit 8
+fi
+
+tooldirs="${rootdir}/bin ${rootdir}/bin/lib"
+
+for tooldir in ${tooldirs}; do
+  for tool in $tooldir/zopen*; do
+    basetool=$(basename ${tool})
+    if  $( "${tool}" --help >/dev/null 2>&1 ) ; then
+      # Tool has implemented --help
+      if  $( "${tool}" --version >/dev/null 2>&1 ) ; then
+        echo "${tool} supports --help and --version options. Generating man page to ${mandir}/${basetool}"
+      else 
+        echo "${tool} supports --help but not --version options. man page generation skipped." >&2
+      fi
+    else 
+      # Tool has NOT implemented --help
+      if  $( "${tool}" --version >/dev/null 2>&1 ) ; then
+        echo "${tool} does not support --help but does support man page generation skipped." >&2
+      else 
+        echo "${tool} does not support --help nor --version options. man page generation skipped." >&2
+      fi
+    fi
+  done
+done
+
+
+

@@ -270,8 +270,14 @@ processOptions()
   while [[ $# -gt 0 ]]; do
     case $1 in
       "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
+        trap - EXIT 
         printSyntax "${args}"
-        return 4
+        exit 0
+        ;;
+      "--version")
+        trap - EXIT 
+        zopen --version 
+        exit 0
         ;;
       "-v" | "--v" | "-verbose" | "--verbose")
         verbose=true

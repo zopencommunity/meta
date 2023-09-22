@@ -8,7 +8,7 @@ syntax()
 {
   echo "$0: Print out build dependencies (transitive closure) for a given tool" >&2
   echo "Syntax: $0 <tool>" >&2
-  exit 4
+  exit 0
 }
 
 primary_type="TARBALL"
@@ -18,6 +18,20 @@ verbose=true
 if [ $# -eq 0 ]; then
   echo "Need to specify a package name" >&2
   syntax
+fi
+
+if [[ $# -eq 1 ]]; then
+  if [ "x$1" = "x--help" ]; then
+    syntax
+    exit 0
+  elif [ "x$1" = "x--version" ]; then
+    zopen --version
+    exit 0
+  else
+    echo "Unrecognized option $1. Processing terminated" >&2
+    printSyntax
+    exit 8
+  fi
 fi
 
 rootpkg="$1"

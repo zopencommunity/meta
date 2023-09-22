@@ -60,10 +60,14 @@ while [ $# -gt 0 ]; do
       ;;
     "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
       printSyntax "${args}"
-      exit 4
+      exit 0
       ;;
     "-v" | "--v" | "-verbose" | "--verbose")
       verbose=true
+      ;;
+    "--version")
+      zopen --version
+      exit 0
       ;;
     "--debug") 
       debug=true

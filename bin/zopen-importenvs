@@ -1,21 +1,41 @@
 #!/bin/env bash
 # Used for development to source all the boot/prod .envs
 
+printSyntax()
+{
+  echo "USAGE: . ./zopen-importenvs [path to buildenv to fetch dependency]" >&2
+  echo "If no argument is specified, zopen-importenvs will source all .env files from $HOME/zopen/prod and $HOME/zopen/boot" >&2
+  echo "If an argument is specified and it represents a buildenv file, zopen-importenvs will source the ZOPEN_*_DEPS specified dependencies from $HOME/zopen/prod and $HOME/zopen/boot" >&2
+}
+
+if [[ $# -eq 1 ]]; then
+  if [ "x$1" = "x--help" ]; then
+    printSyntax
+    exit 0
+  elif [ "x$1" = "x--version" ]; then
+    zopen --version
+    exit 0
+  else
+    echo "Unrecognized option $1. Processing terminated" >&2
+    printSyntax
+    exit 8
+  fi
+fi
 
 (return 0 2>/dev/null) && sourced=1 
 # What exit code did that give?
-if [[ $sourced -ne 1 ]] || [[ "$1" == "-h" ]]
+if [[ $sourced -ne 1 ]] 
 then
-    echo "zopen-importenvs must be sourced via the . (dot) shell builtin"
-    echo "USAGE: . ./zopen-importenvs [path to buildenv to fetch dependency]"
-    echo "If no argument is specified, zopen-importenvs will source all .env files from $HOME/zopen/prod and $HOME/zopen/boot"
-    echo "If an argument is specified and it represents a buildenv file, zopen-importenvs will source the ZOPEN_*_DEPS specified dependencies from $HOME/zopen/prod and $HOME/zopen/boot"
     if [[ $sourced -ne 1 ]]; then
+      echo "zopen-importenvs must be sourced via the . (dot) shell builtin" >&2
+      printSyntax
       exit 1     
     fi
-    if [[ "$1" == "-h" ]]; then
-      return 1     
-    fi
+fi
+
+if [ $# -eq 0 ]; then
+  echo "Need to specify a package name" >&2
+  syntax
 fi
 
 oldWorkDir=`pwd`

@@ -5,17 +5,14 @@ export utildir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
 
 . "${utildir}/common.inc"
 
-VERSION=1.0.0
-printVersion(){
-  ver="$VERSION"
-  echo "$(basename "$0") (z/OS Tools)  ${ver}" 
-}
 printSyntax() 
 {
   args=$*
   echo "zopen install is a utility to download/install a z/OS Open Tools package."
   echo "Syntax: zopen install [<option>]* <package, ...>" >&2
   echo "  where <option> may be one or more of:" >&2
+  echo "  --help: print this help." >&2
+  echo "  --version: print version" >&2
   echo "  -u|--update|--upgrade: updates installed z/OS Open Tools packages."  >&2
   echo "  --install-or-upgrade: installs the package if not installed, or upgrades the package if installed."  >&2
   echo "  --reinstall: reinstall already installed z/OS Open Tools packages."  >&2
@@ -531,7 +528,7 @@ while [ $# -gt 0 ]; do
       ;;
     "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
       printSyntax "${args}"
-      exit 4
+      exit 0
       ;;
     "--debug")
       verbose=true
@@ -541,8 +538,8 @@ while [ $# -gt 0 ]; do
       verbose=true
       ;;
     "--version")
-      printVersion
-      exit 4
+      zopen --version
+      exit 0
       ;;
     *)
       chosenRepos="$chosenRepos $1";
