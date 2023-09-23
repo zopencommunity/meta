@@ -9,8 +9,9 @@ ME=$(basename $0)
 
 printSyntax()
 {
-  echo "zopen-help2man will generate man pages from help and version information for zopen and zopen-* tools" >&2
-  echo "Syntax: zopen-help" >&2
+  echo "$ME will generate man pages from help and version information for zopen and zopen-* tools" >&2
+  echo "Syntax: $ME DIRECTORY" >&2
+  echo "  where DIRECTORY is the directory to write the man pages to (the directory needs to already exist)" >&2
 }
 
 if [[ $# -eq 1 ]]; then
@@ -21,18 +22,25 @@ if [[ $# -eq 1 ]]; then
     zopen --version $ME
     exit 0
   else
-    echo "Unrecognized option $1. Processing terminated" >&2
-    printSyntax
-    exit 8
+    mandir="$1"
   fi
+else
+  echo "Expected one parameter to be passed to $ME. $# were passed in. No action performed" >&2
+  printSyntax
+  exit 8
 fi
 
 set -e
 export mydir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
 export rootdir="$( cd "$mydir/../../" && dirname "$PWD" >/dev/null 2>&1 && pwd -P )"
 
-help2manopts="--no-discard-stderr"
-mandir="${rootdir}/docs/zopen/man/man.1"
+help2manopts="--no-discard-stderr -N"
+
+if ! [ -d "${mandir}" ]; then
+  echo "The directory ${mandir} is invalid. No action performed" >&2
+  printSyntax
+  exit 8
+fi
 
 if [ "x${mydir}" = "x" ] || [ "x${rootdir}" = "x" ]; then
   echo "Internal error. Unable to determine version information" >&2
@@ -41,13 +49,15 @@ fi
 
 tooldirs="${rootdir}/bin ${rootdir}/bin/lib"
 
+echo "Man pages will be written to: ${mandir}"
 for tooldir in ${tooldirs}; do
   for tool in $tooldir/zopen*; do
     basetool=$(basename ${tool})
+    help2man ${help2manopts} "${tool}" >"${mandir}/${basetool}.1"
     if  $( "${tool}" --help >/dev/null 2>&1 ) ; then
       # Tool has implemented --help
       if  $( "${tool}" --version >/dev/null 2>&1 ) ; then
-        echo "${tool} supports --help and --version options. Generating man page to ${mandir}/${basetool}"
+        echo "${basetool}"
       else 
         echo "${tool} supports --help but not --version options. man page generation skipped." >&2
       fi

@@ -3,14 +3,22 @@ ME=$(basename $0)
 
 printSyntax()
 {
-  echo "zopen-version: print version information" >&2
-  echo "Syntax: zopen-version [OPTIONS]" >&2
-  echo "where OPTIONS can be:" >&2
-  echo "  --help: print this help" >&2
-  echo "  --version: print version" >&2
+  echo "$ME prints version information for ${package}"
+  echo "Usage: $ME [OPTION] tool"
+  echo "   or: $ME [OPTION]"
+  echo "Syntax: zopen-version [OPTIONS]"
+  echo "where OPTIONS can be:"
+  echo "  --help: print this help"
+  echo "  --version: print version"
 }
 
 tool='zopen' # Default name
+package="zopen tools"
+copyright="Copyright (C) 2023 zOS Open Tools Community."
+license="License Apache: The Apache Software Foundation license, <https://directory.fsf.org/wiki/License:Apache2.0>"
+freesw="This is free software: you are free to change and redistribute it."
+warranty="There is NO WARRANTY, to the extent permitted by law."
+authors="Written by contributors to the z/OS Open Tools Community <https://github.com/ZOSOpenTools/meta/graphs/contributors>."
 
 if [[ $# -eq 1 ]]; then
   if [ "x$1" = "x--help" ]; then
@@ -33,11 +41,5 @@ if [ "x${libdir}" = "x" ] || [ "x${rootdir}" = "x" ]; then
 fi
 
 version=$(cat "${rootdir}/.version")
-package="zopen tools"
-copyright="Copyright (C) 2023 z/OS Open Tools Community"
-license="License Apache Version 2.0, January 2004 <https://www.apache.org/licenses>"
-freesw="This is free software: you are free to change and redistribute it."
-warranty="There is NO WARRANTY, to the extent permitted by law."
-authors="Written by contributors to the z/OS Open Tools Community <https://github.com/ZOSOpenTools/meta/graphs/contributors>"
 
-printf "%s %s %s\n%s\n%s\n%s\n%s\n\n%s\n" "${tool}" "(${package})" "${version}" "${copyright}" "${license}" "${freesw}" "${warranty}" "${authors}"
+printf "%s %s %s\n%s\n\n%s\n%s\n%s\n\n\n%s\n" "${tool}" "(${package})" "${version}" "${copyright}" "${license}" "${freesw}" "${warranty}" "${authors}"
