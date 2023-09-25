@@ -161,8 +161,8 @@ defineEnvironment()
   # Use /bin/cat as the pager in case xlclang help is displayed, we don't want to wait for input
   export PAGER=/bin/cat
 
-  # Set a default umask of full permissions to owner and group.
-  umask 0002
+  # Set a default umask of read and execute for user and group
+  umask 0022
 }
 
 #
