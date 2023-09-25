@@ -40,6 +40,6 @@ if [ "x${libdir}" = "x" ] || [ "x${rootdir}" = "x" ]; then
   exit 8
 fi
 
-version=$(cat "${rootdir}/.version")
+version=$(cat "${rootdir}/zopen-version")
 
 printf "%s %s %s\n%s\n\n%s\n%s\n%s\n\n\n%s\n" "${tool}" "(${package})" "${version}" "${copyright}" "${license}" "${freesw}" "${warranty}" "${authors}"
