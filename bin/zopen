@@ -1,47 +1,50 @@
 #!/bin/sh
 #
-# General purpose zopen script
+# zopen wrapper script to allow single point of entry to zopen
+# tooling
 #
 ME=$(basename $0)
+printHelp(){
+cat << HELPDOC
+zopen alt is a utility for z/OS Open Tools to switch package versions 
+for currently installed packages.
 
-printSyntax()
-{
-  printInfo "" >&2
-  printInfo "Syntax: ${NC}${BOLD}zopen [options] <command>${NC}" >&2
-  printInfo "where ${NC}${BOLD}<options>${NC} may be one of the following:" >&2
-  printInfo "  ${NC}${BOLD}--version    ${NC}   print product version" >&2
-  printInfo "  ${NC}${BOLD}--help       ${NC}   print this help" >&2
-  printInfo "where ${NC}${BOLD}<command>${NC} may be one of the following:" >&2
-  printInfo "  ${NC}${BOLD}init         ${NC}   generate \$rootfs/etc/zopen-config, creates file structure and bootstraps" >&2
-  printInfo "  ${NC}${BOLD}build        ${NC}   invokes the build script." >&2
-  printInfo "  ${NC}${BOLD}download     ${NC}   downloads z/OS Open Tools package(s)" >&2
-  printInfo "  ${NC}${BOLD}install      ${NC}   installs z/OS Open Tools package(s))" >&2
-  printInfo "  ${NC}${BOLD}generate     ${NC}   generate a zopen project" >&2
-  printInfo "  ${NC}${BOLD}update-cacert${NC}   update the cacert.pem file" >&2
-  printInfo "  ${NC}${BOLD}upgrade      ${NC}   upgrades already installed tools" >&2
-  printInfo "  ${NC}${BOLD}list         ${NC}   lists information about z/OS Open Tools packages" >&2
-  printInfo "  ${NC}${BOLD}query        ${NC}   queries z/OS Open Tools packages" >&2
-  printInfo "  ${NC}${BOLD}search       ${NC}   searches remote repo for z/OS Open Tools package" >&2
-  printInfo "  ${NC}${BOLD}remove       ${NC}   removes installed z/OS Open Tools packages" >&2
-  printInfo "  ${NC}${BOLD}alt          ${NC}   switch local versions of z/OS Open Tools packages" >&2
-  printInfo "  ${NC}${BOLD}clean        ${NC}   cleans various aspects of z/OS Open Tools packages" >&2
-  echo "" >&2
-}
+Usage: zopen [COMMAND] [OPTION] [PARAMETERS]...
 
-printHelp() 
-{
-  args=$*
-  echo "zopen is a general purpose script to be used with the z/OS Open Tools ports." >&2
-  printSyntax
-  echo "Example usage:" >&2
-  echo " # Install the 'which' utility package" >&2
-  echo " zopen install which" >&2
-  echo " # List available packages to download" >&2
-  echo " zopen list" >&2
-  echo " # List currently installed packages" >&2
-  echo " zopen list --installed" >&2
-  echo " # Generate a zopen template project" >&2
-  echo " zopen generate" >&2
+Command:
+  init              generate \$rootfs/etc/zopen-config, creates file structure and bootstraps
+  build             invokes the build script
+  clone             clone a z/OS Open Tools environment
+  download          downloads z/OS Open Tools package(s)
+  install           installs z/OS Open Tools package(s))
+  generate          generate a zopen project
+  update-cacert     update the cacert.pem file
+  upgrade           upgrades already installed tools
+  list              lists information about z/OS Open Tools packages
+  query             queries z/OS Open Tools packages
+  search            searches remote repo for z/OS Open Tools package
+  remove            removes installed z/OS Open Tools packages
+  alt               switch local versions of z/OS Open Tools packages
+  clean             cleans various aspects of z/OS Open Tools packages
+
+Option:
+  -v, --verbose     run in verbose mode
+  -h,-?, --help     display this help and exit
+
+Examples:
+  zopen alt foo     list the available alternatives for package 'foo'
+  zopen --help      display help for zopen
+  zopen install foo 
+                    install package foo
+  zopen alt --select foo
+                    list the available alternatives for package 'foo'
+                    and allow the user to select an alternative version
+
+
+
+Report bugs at https://github.com/ZOSOpenTools/meta/issues .
+
+HELPDOC
 }
 
 export bindir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
@@ -50,76 +53,36 @@ export PATH="${bindir}:${PATH}"
 ZOPEN_DONT_PROCESS_CONFIG=1
 . "${bindir}/lib/common.inc"
 
-args=$*
-legacy=false
-while [[ $# -gt 0 ]]; do
+while [ $# -gt 0 ]; do
   case "$1" in
-    "--legacy")
+    "alt"|"build"|"clean"|"clone"|"generate"|"init"|"install"|\
+    "query"|"remove"|"update-cacert")
+      verb="$1"
       shift
-      legacy=true
-    ;;
-    "alt")
-      shift
-      exec "${bindir}/lib/zopen-alt" $@
-      ;;
-    "build")
-      shift
-      exec "${bindir}/lib/zopen-build" $@
-      ;;
-    "clean")
-      shift
-      exec "${bindir}/lib/zopen-clean" $@
+      exec "${bindir}/lib/zopen-$verb" "$@"
       ;;
     "download")
       shift
-      exec "${bindir}/lib/zopen-install" $@
+      exec "${bindir}/lib/zopen-install" "$@"
       ;;
-    "generate")
-      shift
-      exec "${bindir}/lib/zopen-generate" $@
-      ;;
-    "help" | "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
-      printHelp "${args}"
+    "-h"| "--help" | "-?")
+      printHelp
       exit 0
       ;;
-    "init")
+    "list")
       shift
-      if $legacy; then
-        exec "${bindir}/lib/zopen-init --legacy" $@
-      else
-        exec "${bindir}/lib/zopen-init" $@
-      fi
+      exec "${bindir}/lib/zopen-query" "--list" "$@"
       ;;
-    "install" | "-i")
+    "search")
       shift
-      exec "${bindir}/lib/zopen-install" $@
+      exec "${bindir}/lib/zopen-query" --remote-search "$@"
       ;;
-    "list" | "-l")
+    "upgrade")
       shift
-      exec "${bindir}/lib/zopen-query" "--list" $@
-      ;;
-    "query" | "-q")
-      shift
-      exec "${bindir}/lib/zopen-query" $@
-      ;;
-    "remove" | "-r" | "uninstall" | "un" | "erase" | "e")
-      shift
-      exec "${bindir}/lib/zopen-remove" $@
-      ;;
-    "search" | "-s")
-      shift
-      exec "${bindir}/lib/zopen-query" --remote-search $@
-      ;;
-    "update-cacert")
-      shift
-      exec "${bindir}/lib/zopen-update-cacert" $@
-      ;;
-    "upgrade" | "up")
-      shift
-      exec "${bindir}/lib/zopen-install" -u $@
+      exec "${bindir}/lib/zopen-install" -u "$@"
       ;;
     "--version")
-      if [ "x$2" = "x" ]; then
+      if [ -z "$2" ]; then
         name=$ME
       else
         name="$2"
@@ -127,9 +90,7 @@ while [[ $# -gt 0 ]]; do
       exec "${bindir}/lib/zopen-version" $name 
       ;;
     *)
-      printSoftError "Unknown option ${1} specified"
-      printSyntax "${args}"
-      exit 8
+      printError "Unknown option ${1} specified"
       ;;
   esac
   shift;
