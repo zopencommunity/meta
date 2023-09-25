@@ -5,6 +5,7 @@
 //   BUILD_LINE: dev or stable line to build against (default: stable)
 //   FORCE_CLANG : Boolean to enforce building with Clang vs xlclang
 //   NO_PROMOTE : Boolean, if true, avoid promotion
+//   NODE_LABEL : A label for the node to build on, default is "zos"
 import org.jenkinsci.plugins.workflow.support.steps.build.RunWrapper
 
 @NonCPS
@@ -16,6 +17,7 @@ def repo = params.get("PORT_GITHUB_REPO")
 def branch = params.get("PORT_BRANCH")
 def description = params.get("PORT_DESCRIPTION")
 def build_line = params.get("BUILD_LINE")  // DEV or STABLE
+def node_label = params.get("NODE_LABEL")  
 
 RunWrapper buildResult;
 RunWrapper promoteResult;
@@ -27,6 +29,7 @@ node('linux')
     // Build Job : https://128.168.139.253:8443/view/Framework/job/Port-Build/
     buildResult = build job: 'Port-Build', propagate: false, parameters: [string(name: 'PORT_GITHUB_REPO', value: "${repo}"),
                    string(name: 'PORT_BRANCH', value: "${branch}"),
+                   string(name: 'node', value: "${node_label}"),
                    booleanParam(name: 'FORCE_CLANG', value: params.FORCE_CLANG),
                    string(name: 'BUILD_LINE', value: "${build_line}"),
                    ]
