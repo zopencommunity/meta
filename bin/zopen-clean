@@ -134,10 +134,13 @@ cleanDangling(){
 }
 
 cleanCache(){
-  printVerbose "Cleaning $ZOPEN_ROOTFS/var/cache/zopen"
-  rm -rf "$ZOPEN_ROOTFS/var/cache/zopen/*"
-  syslog "$ZOPEN_LOG_PATH/audit.log" "$LOG_A" "$CAT_FILE" "CLEAN" "cleanCache" "Main cache in $ZOPEN_ROOTFS/var/cache/zopen cleaned"
-  printInfo "- Cache at '$ZOPEN_ROOTFS/var/cache/zopen' cleaned"
+  cacheDir="$ZOPEN_ROOTFS/var/cache/zopen"
+  printVerbose "Cleaning cache at '$cacheDir'"
+  # Remove directory as script+shell-globbing can cause issues with 
+  # deleting with wildcards
+  rm -rf "$cacheDir" && mkdir -p "$cacheDir"  # no redirection to /dev/null - let errors surface
+  syslog "$ZOPEN_LOG_PATH/audit.log" "$LOG_A" "$CAT_FILE" "CLEAN" "cleanCache" "Main cache at '$cacheDir' cleaned"
+  printInfo "- Cache at '$cacheDir' cleaned"
 }
 
 # Main code start here
