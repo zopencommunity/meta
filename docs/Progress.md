@@ -149,7 +149,7 @@
 | [librdkafkaport](https://github.com/ZOSOpenTools/librdkafkaport) | 0 | 100% |
 | [libserdesport](https://github.com/ZOSOpenTools/libserdesport) | 0 | No builds |
 | [libssh2port](https://github.com/ZOSOpenTools/libssh2port) | 0 | 100% |
-| [libuvport](https://github.com/ZOSOpenTools/libuvport) | 0 | 0% |
+| [libuvport](https://github.com/ZOSOpenTools/libuvport) | 0 | 98% |
 | [libxsltport](https://github.com/ZOSOpenTools/libxsltport) | 0 | 100% |
 | [llamacppport](https://github.com/ZOSOpenTools/llamacppport) | 0 | Skipped |
 | [luarocksport](https://github.com/ZOSOpenTools/luarocksport) | 0 | 100% |
@@ -309,4 +309,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-09-24 17:57:52
+Last updated:  2023-09-24 21:10:48
