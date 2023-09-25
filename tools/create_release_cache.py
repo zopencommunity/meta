@@ -125,6 +125,10 @@ with concurrent.futures.ThreadPoolExecutor(max_workers=num_threads) as executor:
     futures = []
     for repo in repositories:
         repo_name = repo.name
+
+        if not repo_name.endswith("port"):
+            continue
+
         project_name = re.sub(r"port$", "", repo_name)
 
         if args.verbose:
