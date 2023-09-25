@@ -1,0 +1,239 @@
+#!/bin/sh
+# Clone a zopen instance
+
+#
+# All zopen-* scripts MUST start with this code to maintain consistency
+#
+setupMyself()
+{
+  ME=$(basename $0)
+  MYDIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
+  INCDIR="${MYDIR}/../include"
+  if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
+    echo "Internal Error. Unable to find common.sh file to source" >&2
+    exit 8
+  fi
+  . "${INCDIR}/common.sh"
+}
+setupMyself
+
+printHelp(){
+cat << HELPDOC
+zopen clone is a utility for z/OS Open Tools to generate a clone
+an existing zopen environment. For example a user can install
+to a test area and when content that the behaviour is correct, clone
+to a production area.
+
+Usage: zopen clone [OPTION] [DESTINATION]...
+
+Options:
+  -f, --from        the zopen envionrment to copy from; if not present,
+                    the default is taken from ZOPEN_ROOTFS (the current
+                    zopen environment)
+  -y, --yes         automatically answer 'yes' to prompts; existing 
+                    target filesystems will be purged before clone
+                    occurs
+  -v, --verbose     run in verbose mode
+  -h, -?, --help    display this help and exit
+
+Examples:
+  zopen init        interactively bootstrap a zopen environment
+  zopen init --releaseline-dev
+                    interactively bootstrap a zopen environment that
+                    will use Development Releaseline packages
+  zopen --clone /prod
+                    clone the currently active zopen environment to
+                    the '/prod' location
+  zopen --yes --append-to-profile --fs-layout fhs /zopen
+                    non-interactively create a zopen environment at 
+                    location '/zopen' on disk, with packages installed
+                    to '/zopen/opt'. The user's .profile will be
+                    updated to source the configuration file at
+                    '/zopen/etc/zopen-config' when new terminal 
+                    sessions start
+
+Report bugs at https://github.com/ZOSOpenTools/meta/issues 
+
+HELPDOC
+}
+
+args=$*
+
+printHeader "Cloning zopen environment"
+
+verbose=false
+debug=false
+yesToPrompts=false
+while [ $# -gt 0 ]; do
+  case "$1" in
+    "-f" | "--from")
+      shift
+      [ $# -lt 1 ] && printError "Missing 'from' directory"    
+      fromDir="$1"
+      ;;
+    "-h" | "--help" | "-?")
+      printHelp "${args}"
+      exit 0
+      ;;
+    "-v" | "--verbose")
+      verbose=true
+      ;;
+    "--debug") 
+      verbose=true
+      debug=true
+      ;;
+    "--xdebug")
+      set -x
+      ;;
+    "--yes" | "-y")
+      yesToPrompts=true  # Automatically answer 'yes' to any questions
+      ;;
+    *)
+      clonefs="$1";
+      ;;
+  esac
+  shift;
+done
+
+printDebug "Validating input parameters"
+if [ -z "$fromDir" ] && [ -n "$ZOPEN_ROOTFS" ]; then
+  rootfs="$ZOPEN_ROOTFS"
+  printVerbose "- Setting init directory from ZOPEN_ROOTFS envvar: $rootfs"
+elif [ -n "$fromDir" ]; then
+  printVerbose "- Setting init directory from cli value: fromDir"
+  rootfs="$fromDir"
+else
+  printError "Could not locate existing installation, ZOPEN_ROOTFS envvar not defined and no --from parameter]. Correct error and retry command"
+fi
+
+if [ -z "$clonefs" ]; then
+  printInfo "- Enter fully-qualified path to your cloned target directory:"
+  clonefs=$(getInput)
+else
+  printVerbose "- Clone directory from cli: $clonefs"
+fi
+
+if [ -z "$clonefs" ]; then
+  printError "- No target location for clone. Stopping."
+fi
+
+if [ -e "$clonefs" ];then
+  printDebug "Target filesystem already exists"
+  deref=$(cd "$clonefs" && pwd -P)
+  if [ "$deref" = "/" ]; then
+    if ! $yesToPrompts; then
+      printInfo "- Cloning into system root; are you sure (y/N)?"
+      sysrootok=$(getInput)
+      if [ -n "$sysrootok" ] && [ "y" = "${sysrootok}" ]; then
+        printInfo "- Using '/' as target filesystem"
+        clonefs="/."
+      else
+        printInfo "- Clone operation stopped" && exit 0
+      fi
+    fi
+  else
+    overwrite=$yesToPrompts
+    purge=false
+    if ! $overwrite; then
+      printWarning "Existing file system found at '$clonefs'"
+      while true; do
+        printWarning "Overwrite, Purge existing or Abort (o/p/a)"
+        read existingAction < /dev/tty
+        case "$existingAction" in
+         "o") break;;
+         "p") purge=true; break;;
+         "a") printInfo "Clone operation aborted" && exit 0;;
+         *) continue;;
+        esac
+      done
+    fi
+    if $purge; then
+      printDebug "Removing existing clone dir at '$clonefs' and recreating"
+      rm -rf "$clonefs" && mkdir -p "$clonefs"
+    fi
+  fi
+else
+  printVerbose "Stripping any trailing '/' char"
+  clonefs="${clonefs%/}"
+  mkdir -p "$clonefs"
+fi
+
+#clonefs="$clonefs/"
+printInfo "- Cloning from '$rootfs' to '$clonefs'..."
+progressHandler "spinner" "- Clone complete" &
+ph=$!
+killph="kill -HUP $ph"
+addCleanupTrapCmd "$killph"
+#cp -fRT "$rootfs/"  Fails to keep some relative symlinks correct
+
+printDebug "Need to pax old dir and unpax to new dest to keep symlink structure"
+# Some files are set with permission -r--r--r-- which means they cannot be copied
+# over without some work.  Rather than search for these files, attempt to copy
+# and catch the errors, forcibly re-copying the file over afterwards. 
+# Temporary file location
+for tmp in "$TMPDIR" "$TMP" /tmp; do
+  [ ! -z "$tmp" ] && [ -d "$tmp" ] && break
+done
+[ ! -d "$tmp" ] && printError "Could not locate suitable temporary directory [tried \$TMPDIR \$TMP & /tmp]. Define a temporary location and retry command"
+FIFO_PIPE_STDOUT="$tmp/zopen_clone.stdout.pipe"
+[ ! -p "$FIFO_PIPE_STDOUT" ] || rm -f "$FIFO_PIPE_STDOUT"
+mkfifo "$FIFO_PIPE_STDOUT" && chtag -tc 819 "$FIFO_PIPE_STDOUT"
+cd "$rootfs" && pax -rw -p p "." "$clonefs"  2>>"$FIFO_PIPE_STDOUT" &
+while read OUTMSG; do
+set -x
+  printDebug "Parsing output: '$OUTMSG'"
+  #destFile=$(echo "$OUTMSG" | sed 's#.*FSUM7148.*"\([^"]+\)": EDC5111I.*#\1#')
+  destFile=$(echo "$OUTMSG" | sed 's#.*FSUM7148.*"\(.*\)".*EDC5111I.*#\1#')
+  if [ "$destFile" = "$OUTMSG" ]; then
+    printWarning "$destFile"
+  else
+    printDebug "Permission fail; trying to force copy to '$destFile'"
+    srcFile="$rootfs${destFile#"$clonefs"}"
+    printDebug "Copying sourcefile '$srcFile' to '$destFile'"
+    cp -f "$srcFile" "$destFile"
+    echo "$?"
+  fi
+  printError "Early exit"
+  #pax: FSUM7148 cannot create file "/u.../EventFacet/Render.pm": EDC5111I Permission denied.
+done < "$FIFO_PIPE_STDOUT"
+[ -n "$FIFO_PIPE_STDOUT" ] && [ -e "$FIFO_PIPE_STDOUT" ] && rm -f "$FIFO_PIPE_STDOUT"
+$killph 2>/dev/null  # if the timer is not running, the kill will fail
+
+printVerbose "Grabbing pkginstall location from within cloned env"
+if [ -e "$clonefs/etc/zopen/fstype" ]; then
+  zopen_pkginstall=$(cat "$clonefs/etc/zopen/fstype")
+else
+  printError "Unable to locate '$clonefs/etc/zopen/fstype'; unrecognisable file system. Check permissions"
+fi
+
+printDebug "Calculating certificate location"
+ZOPEN_CA_DIR="etc/pki/tls/certs"  # Mimic location on some Linux distributions
+certFileName="cacert.pem"
+ZOPEN_CA="$ZOPEN_CA_DIR/$certFileName"
+configFile="$clonefs/etc/zopen-config"
+printInfo "- Creating configuration for cloned environment"
+
+printDebug "Removing existing configuration file"
+[ -e "$configFile" ] && rm "$configFile"
+writeConfigFile "$configFile" "$clonefs" "$zopen_pkginstall" "$ZOPEN_CA"
+
+[ ! -r "$configFile" ] && printError "Config file '$configFile' was not created as expected. Correct any reported errors or run with --verbose option for more details"
+
+perms="744"
+printVerbose "Giving world read access to config file"
+chmod "$perms" "$configFile"
+
+effuid=$LOGNAME
+effgid=$(id -gn $effuid)
+printVerbose "Ensuring correct uid [$effuid] & gid [$effgid] for configfile if !installing as user (ie su/root/etc)"
+chown "$effuid" "$configFile" 2>/dev/null # suppress if not permitted
+chgrp "$effgid" "$configFile" 2>/dev/null # suppress if not permitted
+printInfo "- Created config in $configFile."
+
+printDebug "Moving the new config file created above into cloned environment"
+[ ! -r "$configFile" ] && printError "Cannot locate new configuration file '$configfile'. etc/zopen-config in cloned environment will need manual update to reference cloned location"
+mv "$configFile" "$clonefs/etc/zopen-config" >/dev/null 2>&1
+printInfo "${NC}${CYAN}- Run '. $configFile' to enable cloned environment for current session${NC}"
+printInfo "${NC}${CYAN}- or manually copy cloned configuration to required location and/or modify .profile"
+syslog "$ZOPEN_LOG_PATH/audit.log" "$LOG_A" "$CAT_PACKAGE,$CAT_FILE" "INIT" "" "zopen environment cloned to $rootfs"
+printInfo "${NC}${GREEN}zopen clone complete.${NC}"

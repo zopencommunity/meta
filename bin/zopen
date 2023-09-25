@@ -1,6 +1,7 @@
 #!/bin/sh
 #
-# General purpose zopen script
+# zopen wrapper script to allow single point of entry to zopen
+# tooling
 #
 ZOPEN_DONT_PROCESS_CONFIG=1 
 #
@@ -19,44 +20,50 @@ setupMyself()
 }
 setupMyself
 
-printSyntax()
-{
-  printInfo "" >&2
-  printInfo "Syntax: zopen [options] <command>" >&2
-  printInfo "where <options> may be one of the following:" >&2
-  printInfo "  --version       print product version" >&2
-  printInfo "  --help          print this help" >&2
-  printInfo "where <command> may be one of the following:" >&2
-  printInfo "  init            generate \$rootfs/etc/zopen-config, creates file structure and bootstraps" >&2
-  printInfo "  build           invokes the build script." >&2
-  printInfo "  download        downloads z/OS Open Tools package(s)" >&2
-  printInfo "  install         installs z/OS Open Tools package(s))" >&2
-  printInfo "  generate        generate a zopen project" >&2
-  printInfo "  update-cacert   update the cacert.pem file" >&2
-  printInfo "  upgrade         upgrades already installed tools" >&2
-  printInfo "  list            lists information about z/OS Open Tools packages" >&2
-  printInfo "  query           queries z/OS Open Tools packages" >&2
-  printInfo "  search          searches remote repo for z/OS Open Tools package" >&2
-  printInfo "  remove          removes installed z/OS Open Tools packages" >&2
-  printInfo "  alt             switch local versions of z/OS Open Tools packages" >&2
-  printInfo "  clean           cleans various aspects of z/OS Open Tools packages" >&2
-  echo "" >&2
+
+printHelp(){
+cat << HELPDOC
+zopen alt is a utility for z/OS Open Tools to switch package versions 
+for currently installed packages.
+
+Usage: zopen [COMMAND] [OPTION] [PARAMETERS]...
+
+Command:
+  init              generate \$rootfs/etc/zopen-config, creates file structure and bootstraps
+  build             invokes the build script
+  clone             clone a z/OS Open Tools environment
+  download          downloads z/OS Open Tools package(s)
+  install           installs z/OS Open Tools package(s))
+  generate          generate a zopen project
+  update-cacert     update the cacert.pem file
+  upgrade           upgrades already installed tools
+  list              lists information about z/OS Open Tools packages
+  query             queries z/OS Open Tools packages
+  search            searches remote repo for z/OS Open Tools package
+  remove            removes installed z/OS Open Tools packages
+  alt               switch local versions of z/OS Open Tools packages
+  clean             cleans various aspects of z/OS Open Tools packages
+
+Option:
+  -v, --verbose     run in verbose mode
+  -h,-?, --help     display this help and exit
+
+Examples:
+  zopen alt foo     list the available alternatives for package 'foo'
+  zopen --help      display help for zopen
+  zopen install foo 
+                    install package foo
+  zopen alt --select foo
+                    list the available alternatives for package 'foo'
+                    and allow the user to select an alternative version
+
+
+
+Report bugs at https://github.com/ZOSOpenTools/meta/issues .
+
+HELPDOC
 }
 
-printHelp() 
-{
-  echo "zopen is a general purpose script to be used with the z/OS Open Tools ports." >&2
-  printSyntax
-  echo "Example usage:" >&2
-  echo " # Install the 'which' utility package" >&2
-  echo " zopen install which" >&2
-  echo " # List available packages to download" >&2
-  echo " zopen list" >&2
-  echo " # List currently installed packages" >&2
-  echo " zopen list --installed" >&2
-  echo " # Generate a zopen template project" >&2
-  echo " zopen generate" >&2
-}
 
 export PATH="${MYDIR}:${PATH}"
 
@@ -67,29 +74,15 @@ version=false
 
 for arg in $*; do
   case "$arg" in
-    "alt")
-      subcmd='zopen-alt'
-      ;;
-    "build")
-      subcmd='zopen-build'
-      ;;
-    "clean")
-      subcmd='zopen-clean'
+    "alt"|"build"|"clean"|"clone"|"generate"|"init"|"install"|\
+    "query"|"remove"|"update-cacert")
+      subcmd="zopen-$arg"
       ;;
     "download")
       subcmd='zopen-install'
       ;;
-    "generate")
-      subcmd='zopen-generate'
-      ;;
     "init")
       subcmd='zopen-init'
-      ;;
-    "install")
-      subcmd='zopen-install'
-      ;;
-    "query")
-      subcmd='zopen-query'
       ;;
     "list")
       subcmd='zopen-query'
@@ -98,12 +91,6 @@ for arg in $*; do
     "search")
       subcmd='zopen-query'
       subopts="${subopts} --remote-search"
-      ;;
-    "remove")
-      subcmd='zopen-remove'
-      ;;
-    "update-cacert")
-      subcmd='zopen-update-cacert'
       ;;
     "upgrade")
       subcmd='zopen-install'
@@ -116,8 +103,7 @@ for arg in $*; do
       help=true
       ;;
     *)
-      # let unknown stuff through
-      subopts="${subopts} ${arg}"
+      printError "Unknown option '$arg' specified"
       ;;
   esac
 done
