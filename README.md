@@ -50,7 +50,6 @@ zopen install git vim # install both git and vim
 ```
 
 ## Important usage notes
-- On first run, ```zopen init``` will copy meta into the "package" area of zopen (ie. where packages are expanded and accessed from).  It will also be pinned to this release to prevent any possible updates from the "real" meta package. Removing the .pinned file from the meta directory will allow for the main meta port to be installed however this will cause incompatabilities if run.
 
 - Remote respositores utilise the suffix `port` - where required, packages should be specified **without** the suffix. eg using `zopen install which` rather than `zopen install whichport`
 
