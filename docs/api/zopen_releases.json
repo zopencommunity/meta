@@ -3165,24 +3165,6 @@
         ]
       }
     ],
-    "utils": [
-      {
-        "name": "bootstrap level of utils for 'getting started'",
-        "date": "2022-08-31 04:33:33",
-        "tag_name": "boot",
-        "assets": [
-          {
-            "name": "utils-0.1.20221111_160600.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/utils/releases/download/boot/utils-0.1.20221111_160600.zos.pax.Z",
-            "size": 1161216,
-            "expanded_size": 1367885,
-            "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
-          }
-        ]
-      }
-    ],
     "curl": [
       {
         "name": "curl 0.3.0-dt-stable\n8.1.2 (Build 1245) - (STABLE)",
