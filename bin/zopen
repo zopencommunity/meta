@@ -7,24 +7,24 @@ ME=$(basename $0)
 printSyntax()
 {
   printInfo "" >&2
-  printInfo "Syntax: ${NC}${BOLD}zopen [options] <command>${NC}" >&2
-  printInfo "where ${NC}${BOLD}<options>${NC} may be one of the following:" >&2
-  printInfo "  ${NC}${BOLD}--version    ${NC}   print product version" >&2
-  printInfo "  ${NC}${BOLD}--help       ${NC}   print this help" >&2
-  printInfo "where ${NC}${BOLD}<command>${NC} may be one of the following:" >&2
-  printInfo "  ${NC}${BOLD}init         ${NC}   generate \$rootfs/etc/zopen-config, creates file structure and bootstraps" >&2
-  printInfo "  ${NC}${BOLD}build        ${NC}   invokes the build script." >&2
-  printInfo "  ${NC}${BOLD}download     ${NC}   downloads z/OS Open Tools package(s)" >&2
-  printInfo "  ${NC}${BOLD}install      ${NC}   installs z/OS Open Tools package(s))" >&2
-  printInfo "  ${NC}${BOLD}generate     ${NC}   generate a zopen project" >&2
-  printInfo "  ${NC}${BOLD}update-cacert${NC}   update the cacert.pem file" >&2
-  printInfo "  ${NC}${BOLD}upgrade      ${NC}   upgrades already installed tools" >&2
-  printInfo "  ${NC}${BOLD}list         ${NC}   lists information about z/OS Open Tools packages" >&2
-  printInfo "  ${NC}${BOLD}query        ${NC}   queries z/OS Open Tools packages" >&2
-  printInfo "  ${NC}${BOLD}search       ${NC}   searches remote repo for z/OS Open Tools package" >&2
-  printInfo "  ${NC}${BOLD}remove       ${NC}   removes installed z/OS Open Tools packages" >&2
-  printInfo "  ${NC}${BOLD}alt          ${NC}   switch local versions of z/OS Open Tools packages" >&2
-  printInfo "  ${NC}${BOLD}clean        ${NC}   cleans various aspects of z/OS Open Tools packages" >&2
+  printInfo "Syntax: zopen [options] <command>" >&2
+  printInfo "where <options> may be one of the following:" >&2
+  printInfo "  --version       print product version" >&2
+  printInfo "  --help          print this help" >&2
+  printInfo "where <command> may be one of the following:" >&2
+  printInfo "  init            generate \$rootfs/etc/zopen-config, creates file structure and bootstraps" >&2
+  printInfo "  build           invokes the build script." >&2
+  printInfo "  download        downloads z/OS Open Tools package(s)" >&2
+  printInfo "  install         installs z/OS Open Tools package(s))" >&2
+  printInfo "  generate        generate a zopen project" >&2
+  printInfo "  update-cacert   update the cacert.pem file" >&2
+  printInfo "  upgrade         upgrades already installed tools" >&2
+  printInfo "  list            lists information about z/OS Open Tools packages" >&2
+  printInfo "  query           queries z/OS Open Tools packages" >&2
+  printInfo "  search          searches remote repo for z/OS Open Tools package" >&2
+  printInfo "  remove          removes installed z/OS Open Tools packages" >&2
+  printInfo "  alt             switch local versions of z/OS Open Tools packages" >&2
+  printInfo "  clean           cleans various aspects of z/OS Open Tools packages" >&2
   echo "" >&2
 }
 
