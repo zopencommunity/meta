@@ -33,13 +33,12 @@ fi
 
 set -e
 export libdir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
-export rootdir="$( cd "$libdir/../../" && dirname "$PWD" >/dev/null 2>&1 && pwd -P )"
 
-if [ "x${libdir}" = "x" ] || [ "x${rootdir}" = "x" ]; then
+if [ "x${libdir}" = "x" ] ; then
   echo "Internal error. Unable to determine version information" >&2
   exit 8
 fi
 
-version=$(cat "${rootdir}/zopen-version")
+version=$(cat "${libdir}/zopen_version")
 
 printf "%s %s %s\n%s\n\n%s\n%s\n%s\n\n\n%s\n" "${tool}" "(${package})" "${version}" "${copyright}" "${license}" "${freesw}" "${warranty}" "${authors}"
