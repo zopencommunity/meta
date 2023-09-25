@@ -20,6 +20,9 @@ export NO_COLOR=1
 set -e # Fail on error
 set -x # Display verbose output
 
+# Upgrade meta if updated are available
+zopen upgrade meta -y
+
 # Add cloned meta dir to PATH
 export PATH="$PWD/bin:$PATH"
 rm -rf packages # Remove packages pax.Z files
@@ -45,3 +48,6 @@ git clone -b "${PORT_BRANCH}" "${PORT_GITHUB_REPO}" ${PORT_NAME} && cd ${PORT_NA
 
 # Always run tests and update dependencies and generate pax file
 zopen build -v -b release -u -gp --no-set-active $extraOptions
+
+# Clean the cache after build is complete
+zopen clean -c -v
