@@ -206,6 +206,7 @@ log.DEV/
 log.STABLE/
 build/
 install/
+${name}*/
 EOT
 printInfo "${name}port/.gitignore created"
 
