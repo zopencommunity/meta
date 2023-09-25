@@ -1,0 +1,48 @@
+#!/bin/sh
+# Generate man1/xxx.1.gz from xxx.md
+# Probably throw-away since we are going to use help2man instead
+ME=$(basename $0)
+
+printSyntax()
+{
+  echo "zopen-md2man will generate man pages from markdown (to be removed)" >&2
+  echo "Syntax: zopen-md2man" >&2
+}
+
+if [[ $# -eq 1 ]]; then
+  if [ "x$1" = "x--help" ]; then
+    printSyntax
+    exit 0
+  elif [ "x$1" = "x--version" ]; then
+    zopen --version $ME
+    exit 0
+  else
+    echo "Unrecognized option $1. Processing terminated" >&2
+    printSyntax
+    exit 8
+  fi
+fi
+
+set -e
+zopen_version='0.7.0' ## add code to perform zopen --version once supported
+zopen_date=$(date "+%B %d %Y")
+curdir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
+
+mandir="${curdir}/man1" ## may want this elsewhere
+
+for mdf in "${curdir}"/*.md; do
+	bf=$(basename $mdf)
+	zopen_tool=${bf%%.md}
+
+header="---
+title: ${zopen_tool}
+section: 1
+header: User Manual
+footer: ${zopen_version}
+date: ${zopen_date}
+---
+"
+	body=$(cat ${mdf})
+	manfile="${mandir}/${zopen_tool}.1.gz"
+	echo "${header}${body}" | pandoc -s -f markdown -t man | gzip >${manfile}
+done

@@ -17,6 +17,8 @@
 # the file will now be tagged as ascii instead of ebcdic
 # For compatibility, check the tag of the file after the echo and iconv the file IFF it is IBM-1047
 #
+ME=$(basename $0)
+
 asciiecho()
 {
   text="$1"
@@ -270,8 +272,14 @@ processOptions()
   while [[ $# -gt 0 ]]; do
     case $1 in
       "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
+        trap - EXIT 
         printSyntax "${args}"
-        return 4
+        exit 0
+        ;;
+      "--version")
+        trap - EXIT 
+        zopen --version $ME
+        exit 0
         ;;
       "-v" | "--v" | "-verbose" | "--verbose")
         verbose=true

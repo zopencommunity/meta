@@ -68,3 +68,7 @@ tools/src/hwthic.h
 
 # VSCode settings
 .vscode
+
+# Generated files from md2man tooling
+
+docs/zopen/man1/zopen*.gz

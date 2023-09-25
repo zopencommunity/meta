@@ -1,5 +1,6 @@
 #!/bin/sh
 # "Alternatives" utility for z/OS Open Tools - https://github.com/ZOSOpenTools
+ME=$(basename $0)
 
 export utildir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
 
@@ -19,6 +20,7 @@ Options:
                     select the active version for PACKAGE from a list
   -v, --verbose     run in verbose mode
   -h,-?, --help     display this help and exit
+  --version         print version
 
 Examples:
   zopen alt foo     list the available alternatives for package 'foo'
@@ -196,7 +198,11 @@ while [ $# -gt 0 ]; do
       ;;
     "-h" | "--help" | "-?")
       printHelp "${args}"
-      exit 4
+      exit 0
+      ;;
+    "--version")
+      zopen --version $ME
+      exit 0
       ;;
     "-v" | "--verbose")
       verbose=true

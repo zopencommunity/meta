@@ -1,4 +1,5 @@
 #!/bin/env bash
+ME=$(basename $0)
 
 #
 # Print out installed version of z/OS tool and corresponding BREW latest version
@@ -9,8 +10,21 @@ syntax()
   echo "$0 [<directory>]" >&2
   echo "  where <directory> is the root directory where z/OS Open Source packages are checked" >&2
   echo "  default: ~/zopen/prod" >&2
-  exit 4
 }
+
+if [[ $# -eq 1 ]]; then
+  if [ "x$1" = "x--help" ]; then
+    printSyntax
+    exit 0
+  elif [ "x$1" = "x--version" ]; then
+    zopen --version $ME
+    exit 0
+  else
+    echo "Unrecognized option $1. Processing terminated" >&2
+    printSyntax
+    exit 8
+  fi
+fi
 
 if [ $# -eq 0 ]; then
   root="$HOME/zopen/prod"
