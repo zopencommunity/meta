@@ -20,7 +20,7 @@ export NO_COLOR=1
 set -e # Fail on error
 set -x # Display verbose output
 
-# Upgrade meta if updated are available
+# Upgrade meta if updates are available
 zopen upgrade meta -y
 
 # Add cloned meta dir to PATH
