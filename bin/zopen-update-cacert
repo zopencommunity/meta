@@ -17,6 +17,7 @@ setupMyself()
         . "${INCDIR}/common.sh"
 }
 setupMyself
+checkWritable
 
 # Temporary files
 for tmp in "$TMPDIR" "$TMP" /tmp

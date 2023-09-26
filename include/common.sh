@@ -890,4 +890,22 @@ initDefaultEnvironment()
   export STEPLIB=none
 }
 
+#
+# checkWritable prints a message and exits if the directory above INCDIR
+# is not writable. This is a safe location to check for and should be 
+# writable on a 'dev' environment 
+#
+checkWritable()
+{
+  if [ "x$INCDIR" = "x" ]; then
+    echo "Internal error. Caller has to have set INCDIR" >&2
+    exit 16
+  fi
+  ROOTDIR="$( cd "${INCDIR}/../" >/dev/null 2>&1 && pwd -P )"
+  if ! [ -w "${ROOTDIR}" ]; then
+    printError "Tried to run an update operation (${ME}) in a read-only tools distribution" >&2
+    exit 8
+  fi
+}
+
 zopenInitialize
