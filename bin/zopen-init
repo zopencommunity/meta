@@ -16,6 +16,7 @@ setupMyself()
         . "${INCDIR}/common.sh"
 }
 setupMyself
+checkWritable
 
 printSyntax() 
 {
