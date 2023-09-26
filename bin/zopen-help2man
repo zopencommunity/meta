@@ -60,7 +60,7 @@ if [ "x${MYDIR}" = "x" ] || [ "x${rootdir}" = "x" ]; then
   exit 8
 fi
 
-tooldirs="${rootdir}/bin ${rootdir}/bin/lib"
+tooldirs="${rootdir}/bin"
 
 echo "Man pages will be written to: ${mandir}"
 for tooldir in ${tooldirs}; do
