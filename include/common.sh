@@ -1,6 +1,10 @@
-#!/bin/sh
+#
+# This file is only meant to be source'd
+#
+
 export ZOPEN_CLEANUP="stty echo" # set this as a default to ensure line visibility!
-addCleanupTrapCmd(){
+addCleanupTrapCmd()
+{
   newCmd=$(echo "$1" | sed -e 's/^[ ]*//' -e 's/[ ]*$//')
   if [ -z "$ZOPEN_CLEANUP" ]; then
     export ZOPEN_CLEANUP="$newCmd"
@@ -8,14 +12,17 @@ addCleanupTrapCmd(){
     export ZOPEN_CLEANUP="$(deleteDuplicateEntriesRedux "$ZOPEN_CLEANUP; $newCmd" ";")"
   fi
 }
-cleanupFunction() {
+
+cleanupFunction() 
+{
   [ -n "$ZOPEN_CLEANUP" ] && $(eval "$ZOPEN_CLEANUP" 2>/dev/null)
   trap - EXIT INT TERM QUIT HUP
   unset ZOPEN_CLEANUP
 }
 trap "cleanupFunction" EXIT INT TERM QUIT HUP
 
-isPackageActive(){
+isPackageActive()
+{
   pkg="$1"
   printDebug "Checking if '$pkg' is installed and active"
   installedPackage=$(cd "$ZOPEN_PKGINSTALL" && zosfind . -name ".active" | grep "/$pkg/")
@@ -24,13 +31,15 @@ isPackageActive(){
   [ $cmdrc -eq 0 ] && return 1 || return 0
 }
 
-curlCmd(){
+curlCmd()
+{
   # Take the list of parameters and concat them with  
   # any custom parameters the user requires in ZOPEN_CURL_PARAMS
   curl $ZOPEN_CURL_PARAMS $*
 }
 
-validateReleaseLine(){
+validateReleaseLine()
+{
   echo "$1" | awk '
     toupper($1)=="DEV"    {print toupper($0)}
     toupper($1)=="STABLE" {print toupper($0)}
@@ -40,7 +49,8 @@ validateReleaseLine(){
 
 # Attempt to fully dereference a symlink without any bashisms or arcane set logic
 # using some simplistic (recursive!) logic
-deref(){
+deref()
+{
   testpath="$1"
   if [ -L "$testpath" ]; then
     child=$(basename "$testpath")
@@ -95,7 +105,9 @@ defineANSI()
     NC=''
   fi
 }
-ansiline(){
+
+ansiline()
+{
   deltax=$1
   deltay=$2
   echostr=$3
@@ -113,12 +125,14 @@ ansiline(){
 
 }
 
-getScreenCols(){
+getScreenCols()
+{
   # Note tput does not handle ssh sessions too well...
   stty | awk -F'[/=;]' '/columns/ { print $4}' | tr -d " "
 }
 
-zosfind(){
+zosfind()
+{
   # Use the standard z/OS find utility; If the findutils package is installed,
   # the installed find command takes precedence but is not compatible with the
   # standard zos find [regex searches for "-name" are not allowed, but
@@ -128,7 +142,8 @@ zosfind(){
   /bin/find $*
 }
 
-findrev () {
+findrev() 
+{
   haystack="$1"
   needle="$2"
   while [[ "$haystack" != "" && "$haystack" != "/" && "$haystack" != "./" && ! -e "$haystack/$needle" ]]; do
@@ -137,7 +152,8 @@ findrev () {
   echo "$haystack"
 }
 
-strtrim(){
+strtrim()
+{
   echo "$1" | sed -e 's/^[ ]*//' -e 's/[ ]*$//'
 }
 
@@ -174,7 +190,8 @@ printColors()
   /bin/echo "$@"
 }
 
-mutexReq(){
+mutexReq()
+{
   mutex=$1
   lockdir="$ZOPEN_ROOTFS/var/lock"
   [ -e lockdir ] || mkdir -p $lockdir
@@ -187,12 +204,15 @@ mutexReq(){
   addCleanupTrapCmd "rm -rf $mutex"
   echo "$mypid" > $mutex
 }
-mutexFree(){
+
+mutexFree()
+{
   mutex=$1
   lockdir="$ZOPEN_ROOTFS/var/lock"
   mutex="$lockdir/$mutex"
   [ -e "$mutex" ] && rm -f $mutex
 }
+
 relativePath2(){
   sourcePath=$1
   targetPath=$2
@@ -229,7 +249,8 @@ relativePath2(){
 }
 
 # Merges a package directory's symlinks into the main zopen root filesystem
-mergeIntoSystem(){
+mergeIntoSystem()
+{
   name=$1          # Name of the package being processed
   versioneddir=$2  # The directory where the unpax occurred
   rootfs="$3"
@@ -320,7 +341,8 @@ mergeIntoSystem(){
 #   that different version  version ie. the file has been removed from updated version
 # - the main package->version-dir symlink has been removed (which renders any symlinks to
 #   it as dangling so removable)
-unsymlinkFromSystem(){
+unsymlinkFromSystem()
+{
   pkg=$1
   rootfs=$2
   dotlinks=$3
@@ -395,7 +417,8 @@ EOF
   fi
 }
 
-deletethread(){
+deletethread()
+{
   filestodelete="$1"
   tempDirFile="$2"
   echo "$filestodelete"| while read filetounlink; do
@@ -403,7 +426,8 @@ deletethread(){
   done
 }
 
-deletetask () {
+deletetask() 
+{
     tempDirFile="$1"
     filename="$2"
     [ -z "$filename" ] && return 0
@@ -476,7 +500,8 @@ runAndLog()
   return $rc
 }
 
-runLogProgress(){
+runLogProgress()
+{
   printVerbose "$1"
   if [ -n "$2" ]; then
     printInfo "- $2"
@@ -501,7 +526,8 @@ runLogProgress(){
   return $rc
 }
 
-spinloop(){
+spinloop()
+{
   # in the absence of generic ms/ns reporting, spin-loop instead - not ideal
   # but without pre-reqing packages...
   i=$1
@@ -510,7 +536,9 @@ spinloop(){
     i=$(( i - 1 ))
   done
 }
-progressNetwork(){
+
+progressNetwork()
+{
   # Loop until signal received
   icon="-----"
   ansiline 0 0 "$icon"
@@ -523,7 +551,9 @@ progressNetwork(){
     ansiline 1 -1 "$icon"
   done
 }
-progressSpinner(){
+
+progressSpinner()
+{
   # Loop until signal received
   icon="-"
   ansiline 0 0 "$icon"
@@ -535,7 +565,9 @@ progressSpinner(){
     ansiline 1 -1 "$icon"
   done
 }
-progressHandler() {
+
+progressHandler() 
+{
     if [ ! "${_BPX_TERMPATH-x}" = "OMVS" ] && [ -z "${NO_COLOR}" ] && [ ! "${FORCE_COLOR-x}" = "0" ] && [ -t 1 ] && [ -t 2 ]; then
       [ -z "${-%%*x*}" ] && set +x  # Disable -x debug if set for this process
       type=$1
@@ -550,7 +582,6 @@ progressHandler() {
       esac
 		fi
 }
-
 
 runInBackgroundWithTimeoutAndLog()
 {
@@ -673,8 +704,8 @@ checkIfConfigLoaded() {
   fi
   
   if [ ! -z "${errorMessage}" ]; then
-    if [ -r "$utildir/../../../etc/zopen-config" ]; then
-      relativeConfigDir="$(cd "$(dirname "$utildir")/../../etc/" >/dev/null 2>&1 && pwd -P)"
+    if [ -r "$mydir/../../../etc/zopen-config" ]; then
+      relativeConfigDir="$(cd "$(dirname "$mydir")/../../etc/" >/dev/null 2>&1 && pwd -P)"
       errorMessage="${errorMessage} Run '. ${relativeConfigDir}/zopen-config'  or add it to your .profile."
     fi
     printError "${errorMessage}"
@@ -765,6 +796,7 @@ deleteDuplicateEntries()
   delim=$2
   echo "$value$delim" | awk -v RS="$delim" '!($0 in a) {a[$0]; printf("%s%s", col, $0); col=RS; }' | sed "s/${delim}$//"
 }
+
 # reworked version of above to strip blank elements between delims
 deleteDuplicateEntriesRedux() 
 {
@@ -790,7 +822,8 @@ CAT_REMOVE="R"    # Removal handling
 CAT_SYS="S"       # Related to the underlying native z/OS system
 CAT_ZOPEN="Z"     # Related to the zopen system itself
 
-syslog() {
+syslog() 
+{
   fd=$1
   type=$2
   categories=$3
@@ -804,7 +837,8 @@ syslog() {
   echo $(date +"%F %T") $(id | cut -d' ' -f1)::$module:$type:$categories:$location:$msg >> $fd
 }
 
-downloadJSONCache() {
+downloadJSONCache() 
+{
   if [ -z "$JSON_CACHE" ]; then
     JSON_CACHE="$ZOPEN_ROOTFS/var/cache/zopen/zopen_releases.json"
     JSON_TIMESTAMP="$ZOPEN_ROOTFS/var/cache/zopen/zopen_releases.timestamp"
@@ -830,7 +864,8 @@ downloadJSONCache() {
   fi
 }
 
-getReposFromGithub(){
+getReposFromGithub()
+{
   downloadJSONCache
   repo_results="$(cat "$JSON_CACHE" | jq -r '.release_data | keys[]')"
 }

@@ -1,5 +1,19 @@
 #!/bin/sh
-ME=$(basename $0)
+#
+# All zopen-* scripts MUST start with this code to maintain consistency
+#
+setupMyself()
+{
+        ME=$(basename $0)
+        MYDIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
+        INCDIR="${MYDIR}/../include"
+        if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
+                echo "Internal Error. Unable to find common.sh file to source" >&2
+                exit 8
+        fi
+        . "${INCDIR}/common.sh"
+}
+setupMyself
 
 #
 # Routine to generate man pages from the --help and --version for the various tools
@@ -31,8 +45,7 @@ else
 fi
 
 set -e
-export mydir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
-export rootdir="$( cd "$mydir/../../" && dirname "$PWD" >/dev/null 2>&1 && pwd -P )"
+export rootdir="$( cd "$MYDIR/../../" && dirname "$PWD" >/dev/null 2>&1 && pwd -P )"
 
 help2manopts="--no-discard-stderr -N"
 
@@ -42,7 +55,7 @@ if ! [ -d "${mandir}" ]; then
   exit 8
 fi
 
-if [ "x${mydir}" = "x" ] || [ "x${rootdir}" = "x" ]; then
+if [ "x${MYDIR}" = "x" ] || [ "x${rootdir}" = "x" ]; then
   echo "Internal error. Unable to determine version information" >&2
   exit 8
 fi

@@ -1,7 +1,22 @@
 #!/bin/sh
 # Generate man1/xxx.1.gz from xxx.md
 # Probably throw-away since we are going to use help2man instead
-ME=$(basename $0)
+#
+#
+# All zopen-* scripts MUST start with this code to maintain consistency
+#
+setupMyself()
+{
+        ME=$(basename $0)
+        MYDIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
+        INCDIR="${MYDIR}/../include"
+        if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
+                echo "Internal Error. Unable to find common.sh file to source" >&2
+                exit 8
+        fi
+        . "${INCDIR}/common.sh"
+}
+setupMyself
 
 printSyntax()
 {
@@ -26,9 +41,8 @@ fi
 set -e
 zopen_version='0.7.0' ## add code to perform zopen --version once supported
 zopen_date=$(date "+%B %d %Y")
-curdir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
 
-mandir="${curdir}/man1" ## may want this elsewhere
+mandir="${MYDIR}/man1" ## may want this elsewhere
 
 for mdf in "${curdir}"/*.md; do
 	bf=$(basename $mdf)

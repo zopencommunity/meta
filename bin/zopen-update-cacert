@@ -2,15 +2,21 @@
 #
 # Updates the cacert in zopen meta root directory
 #
-ME=$(basename $0)
-
-if [ -z "$utildir" ]; then
-  export mydir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
-else
-  mydir="$utildir"
-fi
-
-. "${mydir}/common.inc"
+#
+# All zopen-* scripts MUST start with this code to maintain consistency
+#
+setupMyself()
+{
+        ME=$(basename $0)
+        MYDIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
+        INCDIR="${MYDIR}/../include"
+        if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
+                echo "Internal Error. Unable to find common.sh file to source" >&2
+                exit 8
+        fi
+        . "${INCDIR}/common.sh"
+}
+setupMyself
 
 # Temporary files
 for tmp in "$TMPDIR" "$TMP" /tmp
@@ -81,11 +87,8 @@ updateCACert()
 }
 
 # Main code start here
-export mydir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
-
-. "${mydir}/common.inc"
 verbose=false
-export default_dir="$( cd "${mydir}/../../" && pwd -P )"
+export default_dir="$( cd "${MYDIR}/../" && pwd -P )"
 export cacert_update_url="https://curl.se/ca/cacert.pem"
 
 # Temporary files

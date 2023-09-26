@@ -1,14 +1,25 @@
 #!/bin/sh
 # Generates a zopen compatible project
-ME=$(basename $0)
-
-export utildir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
-
-. "${utildir}/common.inc"
+#
+#
+# All zopen-* scripts MUST start with this code to maintain consistency
+#
+setupMyself()
+{
+        ME=$(basename $0)
+        MYDIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
+        INCDIR="${MYDIR}/../include"
+        if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
+                echo "Internal Error. Unable to find common.sh file to source" >&2
+                exit 8
+        fi
+        . "${INCDIR}/common.sh"
+}
+setupMyself
 
 buildLicenseLookup()
 {
-  licensesCSV="${utildir}/../data/licenses.csv"
+  licensesCSV="${MYDIR}/../data/licenses.csv"
   if [ ! -r "$licensesCSV" ]; then
     return 4;
   fi
@@ -104,7 +115,7 @@ echo "${licenseName}\nView license contents at ${licenseUrl}" > "${name}port/pat
 buildenv="${name}port/buildenv"
 touch $buildenv && chtag -tc 819 $buildenv
 
-cp "${utildir}/../data/CONTRIBUTING.md" "${name}port/CONTRIBUTING.md"
+cp "${MYDIR}/../data/CONTRIBUTING.md" "${name}port/CONTRIBUTING.md"
 
 if [ ! -z "$stablePath" ]; then
   buildenvContents="export ZOPEN_STABLE_URL=\"$stablePath\"\n"
@@ -209,12 +220,12 @@ install/
 EOT
 printInfo "${name}port/.gitignore created"
 
-if [ -e "${utildir}/../../LICENSE" ]; then
-  cp "${utildir}/../../LICENSE" "${name}port/LICENSE"
+if [ -e "${MYDIR}/../../LICENSE" ]; then
+  cp "${MYDIR}/../../LICENSE" "${name}port/LICENSE"
 elif [ -n "$ZOPEN_ROOTFS" ]; then
   pkgInstallDir="$(cat "$ZOPEN_ROOTFS/etc/zopen/fstype")"
-  if [ -e "${utildir}/../../../$pkgInstallDir/meta/meta/LICENSE" ]; then
-    cp "${utildir}/../../../$pkgInstallDir/meta/meta/LICENSE" "${name}port/LICENSE"
+  if [ -e "${MYDIR}/../../../$pkgInstallDir/meta/meta/LICENSE" ]; then
+    cp "${MYDIR}/../../../$pkgInstallDir/meta/meta/LICENSE" "${name}port/LICENSE"
   else
     printError "Could not locate LICENSE file to copy for project"
   fi
