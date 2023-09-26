@@ -459,7 +459,7 @@ else
     fi
   fi
   if ! $cacertFound; then
-    cacertlcn="$MYDIR/../../../$ZOPEN_CA_DIR/$certFileName"
+    cacertlcn="$MYDIR/../../$ZOPEN_CA_DIR/$certFileName"
     printVerbose "Attempting relative search for certificate file at '$cacertlcn'"
     if [ -r "$cacertlcn" ]; then
       printInfo "- Found existing certificate file $certFileName'; copying to zopen file system"
