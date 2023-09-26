@@ -220,8 +220,8 @@ install/
 EOT
 printInfo "${name}port/.gitignore created"
 
-if [ -e "${MYDIR}/../../LICENSE" ]; then
-  cp "${MYDIR}/../../LICENSE" "${name}port/LICENSE"
+if [ -e "${MYDIR}/../LICENSE" ]; then
+  cp "${MYDIR}/../LICENSE" "${name}port/LICENSE"
 elif [ -n "$ZOPEN_ROOTFS" ]; then
   pkgInstallDir="$(cat "$ZOPEN_ROOTFS/etc/zopen/fstype")"
   if [ -e "${MYDIR}/../../../$pkgInstallDir/meta/meta/LICENSE" ]; then
