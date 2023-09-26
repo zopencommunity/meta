@@ -116,9 +116,8 @@ for arg in $*; do
       help=true
       ;;
     *)
-      printSoftError "Unknown option ${arg} specified"
-      printSyntax
-      exit 8
+      # let unknown stuff through
+      subopts="${subopts} ${arg}"
       ;;
   esac
 done
