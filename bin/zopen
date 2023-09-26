@@ -71,23 +71,23 @@ while [[ $# -gt 0 ]]; do
     ;;
     "alt")
       shift
-      exec "${MYDIR}/lib/zopen-alt" $@
+      exec "${MYDIR}/zopen-alt" $@
       ;;
     "build")
       shift
-      exec "${MYDIR}/lib/zopen-build" $@
+      exec "${MYDIR}/zopen-build" $@
       ;;
     "clean")
       shift
-      exec "${MYDIR}/lib/zopen-clean" $@
+      exec "${MYDIR}/zopen-clean" $@
       ;;
     "download")
       shift
-      exec "${MYDIR}/lib/zopen-install" $@
+      exec "${MYDIR}/zopen-install" $@
       ;;
     "generate")
       shift
-      exec "${MYDIR}/lib/zopen-generate" $@
+      exec "${MYDIR}/zopen-generate" $@
       ;;
     "help" | "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
       printHelp "${args}"
@@ -96,38 +96,38 @@ while [[ $# -gt 0 ]]; do
     "init")
       shift
       if $legacy; then
-        exec "${MYDIR}/lib/zopen-init --legacy" $@
+        exec "${MYDIR}/zopen-init --legacy" $@
       else
-        exec "${MYDIR}/lib/zopen-init" $@
+        exec "${MYDIR}/zopen-init" $@
       fi
       ;;
     "install" | "-i")
       shift
-      exec "${MYDIR}/lib/zopen-install" $@
+      exec "${MYDIR}/zopen-install" $@
       ;;
     "list" | "-l")
       shift
-      exec "${MYDIR}/lib/zopen-query" "--list" $@
+      exec "${MYDIR}/zopen-query" "--list" $@
       ;;
     "query" | "-q")
       shift
-      exec "${MYDIR}/lib/zopen-query" $@
+      exec "${MYDIR}/zopen-query" $@
       ;;
     "remove" | "-r" | "uninstall" | "un" | "erase" | "e")
       shift
-      exec "${MYDIR}/lib/zopen-remove" $@
+      exec "${MYDIR}/zopen-remove" $@
       ;;
     "search" | "-s")
       shift
-      exec "${MYDIR}/lib/zopen-query" --remote-search $@
+      exec "${MYDIR}/zopen-query" --remote-search $@
       ;;
     "update-cacert")
       shift
-      exec "${MYDIR}/lib/zopen-update-cacert" $@
+      exec "${MYDIR}/zopen-update-cacert" $@
       ;;
     "upgrade" | "up")
       shift
-      exec "${MYDIR}/lib/zopen-install" -u $@
+      exec "${MYDIR}/zopen-install" -u $@
       ;;
     "--version")
       if [ "x$2" = "x" ]; then
@@ -135,7 +135,7 @@ while [[ $# -gt 0 ]]; do
       else
         name="$2"
       fi
-      exec "${MYDIR}/lib/zopen-version" $name 
+      exec "${MYDIR}/zopen-version" $name 
       ;;
     *)
       printSoftError "Unknown option ${1} specified"
