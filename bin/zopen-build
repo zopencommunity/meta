@@ -6,6 +6,22 @@
 #
 # For more details, see the help which you can get by issuing:
 # zopen-build -h
+#
+#
+# All zopen-* scripts MUST start with this code to maintain consistency
+#
+setupMyself()
+{
+        ME=$(basename $0)
+        MYDIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
+        INCDIR="${MYDIR}/../include"
+        if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
+                echo "Internal Error. Unable to find common.sh file to source" >&2
+                exit 8
+        fi
+        . "${INCDIR}/common.sh"
+}
+setupMyself
 
 #
 # Functions section
@@ -17,7 +33,6 @@
 # the file will now be tagged as ascii instead of ebcdic
 # For compatibility, check the tag of the file after the echo and iconv the file IFF it is IBM-1047
 #
-ME=$(basename $0)
 
 asciiecho()
 {
@@ -120,11 +135,6 @@ echo "User-Provided functions:
   zopen_get_version           This function returns the version of the tool in accordance with semantic versioning
   zopen_append_to_zoslib_env  This function runs as part of generation of the C function zoslib_env_hook, which can be used to set environment variables before main is run."
 }
-
-export utildir="$(cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P)"
-export utilparentdir="$(cd "$(dirname "$0")/../.." >/dev/null 2>&1 && pwd -P)"
-
-. "${utildir}/common.inc"
 
 # Temporary files
 for tmp in "$TMPDIR" "$TMP" /tmp
@@ -589,7 +599,7 @@ setDepsEnv()
         printError "Need curl to proceed with installation"
       fi
       path=$ZOPEN_PKGINSTALL # Install location
-      if ! runAndLog "PATH=\"$curlpath:$PATH\" $utildir/zopen-install --install-or-upgrade $dep -v -y"; then
+      if ! runAndLog "PATH=\"$curlpath:$PATH\" $MYDIR/zopen-install --install-or-upgrade $dep -v -y"; then
         printError "zopen install command failed"
       fi
       depdir="$path/${dep}/${dep}"
@@ -640,7 +650,7 @@ setEnv()
   export LIBS_FOR_BUILD="${LIBS}"
 
   if [ "${ZOPEN_NUM_JOBS}x" = "x" ]; then
-    ZOPEN_NUM_JOBS=$("${utildir}/numcpus.rexx")
+    ZOPEN_NUM_JOBS=$("${MYDIR}/numcpus.rexx")
 
     # Use half of the CPUs by default
     export ZOPEN_NUM_JOBS=$((ZOPEN_NUM_JOBS / 2))
@@ -1371,7 +1381,7 @@ ${varName}_originalDir="\$OLDPWD"
 ZZ
   echo "$ZOPEN_RUNTIME_DEPS" | xargs | tr ' ' '\n' | sort | while read dep; do
     # Use the first path specified in the dependency search list to install to
-    if ! runAndLog "PATH=\"$curlpath:$PATH\" $utildir/zopen-install --install-or-upgrade $dep -v --no-deps -y"; then
+    if ! runAndLog "PATH=\"$curlpath:$PATH\" $MYDIR/zopen-install --install-or-upgrade $dep -v --no-deps -y"; then
       printError "Failed to install dependencies"
     fi
     cat <<ZZ >> "${ZOPEN_INSTALL_DIR}/.depsenv"
@@ -1405,11 +1415,11 @@ zz
 createReadme()
 {
   printHeader "Creating ${ZOPEN_INSTALL_DIR}/README.md"
-  cp "${utildir}/../data/README_header.md" "${ZOPEN_INSTALL_DIR}/README.md"
+  cp "${MYDIR}/../data/README_header.md" "${ZOPEN_INSTALL_DIR}/README.md"
   if [ -f "${ZOPEN_ROOT}/README.md" ]; then
     cat "${ZOPEN_ROOT}/README.md" >> "${ZOPEN_INSTALL_DIR}/README.md"
   fi
-  cat "${utildir}/../data/README_footer.md" >> "${ZOPEN_INSTALL_DIR}/README.md"
+  cat "${MYDIR}/../data/README_footer.md" >> "${ZOPEN_INSTALL_DIR}/README.md"
 }
 
 generatePropertiesJSON()

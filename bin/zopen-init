@@ -1,13 +1,21 @@
 #!/bin/sh
 # Initialize zopen
-ME=$(basename $0)
-
-if [ -z "$utildir" ]; then
-  export utildir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
-fi
-
 ZOPEN_DONT_PROCESS_CONFIG=1
-. "${utildir}/common.inc"
+#
+# All zopen-* scripts MUST start with this code to maintain consistency
+#
+setupMyself()
+{
+        ME=$(basename $0)
+        MYDIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
+        INCDIR="${MYDIR}/../include"
+        if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
+                echo "Internal Error. Unable to find common.sh file to source" >&2
+                exit 8
+        fi
+        . "${INCDIR}/common.sh"
+}
+setupMyself
 
 printSyntax() 
 {
@@ -392,7 +400,7 @@ else
   printInfo "- Check for shipped curl pax"
   curlpax="packages/curl-8.1.2.20230707_145137.zos.pax.Z"
 
-  curllcn=$(findrev "${utildir}" "$curlpax")
+  curllcn=$(findrev "${MYDIR}" "$curlpax")
   echo "$curllcn/$curlpax"
   if [ -e "$curllcn/$curlpax" ]; then
     printInfo "- Found $curlpax. Adding to zopen cache to install as bootstrap"
@@ -409,7 +417,7 @@ else
   printInfo "- Check for shipped jq pax"
   jqpax="packages/jq-1.6.20230720_160648.zos.pax.Z"
 
-  jqlcn=$(findrev "${utildir}" "$jqpax")
+  jqlcn=$(findrev "${MYDIR}" "$jqpax")
   if [ -e "$jqlcn/$jqpax" ]; then
     printInfo "- Found $jqpax. Adding to zopen cache to install as bootstrap"
     cp -f "$jqlcn/$jqpax" "$rootfs/var/cache/zopen"
@@ -440,8 +448,8 @@ else
     printVerbose "No current value for ZOPEN_CA environment variable"
   fi
   if ! $cacertFound; then
-    printVerbose "Checking '${utildir}' directory tree for certificate file '$certFileName'"
-    cacertlcn="$(findrev "${utildir}" "$certFileName")"
+    printVerbose "Checking '${MYDIR}' directory tree for certificate file '$certFileName'"
+    cacertlcn="$(findrev "${MYDIR}" "$certFileName")"
     if [ -e "$cacertlcn/$certFileName" ]; then
       printInfo "- Found default certificate file '$certFileName'; copying to zopen file system"
       cp -f "$cacertlcn/$certFileName" "$ZOPEN_ROOTFS/$ZOPEN_CA_DIR"
@@ -451,7 +459,7 @@ else
     fi
   fi
   if ! $cacertFound; then
-    cacertlcn="$utildir/../../../$ZOPEN_CA_DIR/$certFileName"
+    cacertlcn="$MYDIR/../../$ZOPEN_CA_DIR/$certFileName"
     printVerbose "Attempting relative search for certificate file at '$cacertlcn'"
     if [ -r "$cacertlcn" ]; then
       printInfo "- Found existing certificate file $certFileName'; copying to zopen file system"
@@ -494,14 +502,14 @@ else
   printInfo "- Updating CA cert"
   ZOPEN_CA="$ZOPEN_ROOTFS/$ZOPEN_CA_DIR"
   mkdir -p "$ZOPEN_CA"
-  runAndLog "${utildir}/zopen-update-cacert -f $ZOPEN_CA -v"
+  runAndLog "${MYDIR}/zopen-update-cacert -f $ZOPEN_CA -v"
   [ $? -ne 0 ] && exit $?
   export ZOPEN_CA="$ZOPEN_CA/cacert.pem"
 
   printInfo "- Sourcing environment"
   . "$configFile"
   printInfo "- Using bootstrapped curl and jq to install updated versions (if available)"
-  toolInstall=$(runAndLog "${utildir}/zopen-install -y curl jq meta")
+  toolInstall=$(runAndLog "${MYDIR}/zopen-install -y curl jq meta")
   toolInstall=$?
   [ $toolInstall -ne 0 ] && printError "Unable to install curl, jq and/or meta; see previous errors and retry the initilisation using the '--re-init' parameter"
   . "$configFile"

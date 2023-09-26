@@ -3,7 +3,21 @@
 #
 # Print out build dependencies (transitive closure) for a given tool
 #
-ME=$(basename $0)
+#
+# All zopen-* scripts MUST start with this code to maintain consistency
+#
+setupMyself()
+{
+        ME=$(basename $0)
+        MYDIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
+        INCDIR="${MYDIR}/../include"
+        if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
+                echo "Internal Error. Unable to find common.sh file to source" >&2
+                exit 8
+        fi
+        . "${INCDIR}/common.sh"
+}
+setupMyself
 
 syntax()
 {

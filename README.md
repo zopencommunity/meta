@@ -37,6 +37,7 @@ zopen init
 ```
 
 ## Sample usage
+
 ```bash
 . ./.env # Source the .env from meta
 zopen init
