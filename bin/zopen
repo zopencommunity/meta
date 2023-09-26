@@ -8,14 +8,14 @@ ZOPEN_DONT_PROCESS_CONFIG=1
 #
 setupMyself()
 {
-        ME=$(basename $0)
-        MYDIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
-        INCDIR="${MYDIR}/../include"
-        if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
-                echo "Internal Error. Unable to find common.sh file to source" >&2
-                exit 8
-        fi
-        . "${INCDIR}/common.sh"
+  ME=$(basename $0)
+  MYDIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
+  INCDIR="${MYDIR}/../include"
+  if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
+    echo "Internal Error. Unable to find common.sh file to source" >&2
+    exit 8
+  fi
+  . "${INCDIR}/common.sh"
 }
 setupMyself
 
@@ -45,7 +45,6 @@ printSyntax()
 
 printHelp() 
 {
-  args=$*
   echo "zopen is a general purpose script to be used with the z/OS Open Tools ports." >&2
   printSyntax
   echo "Example usage:" >&2
@@ -61,89 +60,92 @@ printHelp()
 
 export PATH="${MYDIR}:${PATH}"
 
-args=$*
-legacy=false
-while [[ $# -gt 0 ]]; do
-  case "$1" in
-    "--legacy")
-      shift
-      legacy=true
-    ;;
+subopts=""
+subcmd=""
+help=false
+version=false
+
+for arg in $*; do
+  case "$arg" in
     "alt")
-      shift
-      exec "${MYDIR}/zopen-alt" $@
+      subcmd='zopen-alt'
       ;;
     "build")
-      shift
-      exec "${MYDIR}/zopen-build" $@
+      subcmd='zopen-build'
       ;;
     "clean")
-      shift
-      exec "${MYDIR}/zopen-clean" $@
+      subcmd='zopen-clean'
       ;;
     "download")
-      shift
-      exec "${MYDIR}/zopen-install" $@
+      subcmd='zopen-install'
       ;;
     "generate")
-      shift
-      exec "${MYDIR}/zopen-generate" $@
-      ;;
-    "help" | "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
-      printHelp "${args}"
-      exit 0
+      subcmd='zopen-generate'
       ;;
     "init")
-      shift
-      if $legacy; then
-        exec "${MYDIR}/zopen-init --legacy" $@
-      else
-        exec "${MYDIR}/zopen-init" $@
-      fi
+      subcmd='zopen-init'
       ;;
-    "install" | "-i")
-      shift
-      exec "${MYDIR}/zopen-install" $@
+    "install")
+      subcmd='zopen-install'
       ;;
-    "list" | "-l")
-      shift
-      exec "${MYDIR}/zopen-query" "--list" $@
+    "query")
+      subcmd='zopen-query'
       ;;
-    "query" | "-q")
-      shift
-      exec "${MYDIR}/zopen-query" $@
+    "list")
+      subcmd='zopen-query'
+      subopts="${subopts} --list"
       ;;
-    "remove" | "-r" | "uninstall" | "un" | "erase" | "e")
-      shift
-      exec "${MYDIR}/zopen-remove" $@
+    "search")
+      subcmd='zopen-query'
+      subopts="${subopts} --remote-search"
       ;;
-    "search" | "-s")
-      shift
-      exec "${MYDIR}/zopen-query" --remote-search $@
+    "remove")
+      subcmd='zopen-remove'
       ;;
     "update-cacert")
-      shift
-      exec "${MYDIR}/zopen-update-cacert" $@
+      subcmd='zopen-update-cacert'
       ;;
-    "upgrade" | "up")
-      shift
-      exec "${MYDIR}/zopen-install" -u $@
+    "upgrade")
+      subcmd='zopen-install'
+      subopts="${subopts} -u"
       ;;
     "--version")
-      if [ "x$2" = "x" ]; then
-        name=$ME
-      else
-        name="$2"
-      fi
-      exec "${MYDIR}/zopen-version" $name 
+      version=true
+      ;;
+    "--help")
+      help=true
       ;;
     *)
-      printSoftError "Unknown option ${1} specified"
-      printSyntax "${args}"
+      printSoftError "Unknown option ${arg} specified"
+      printSyntax
       exit 8
       ;;
   esac
-  shift;
 done
 
-printHelp
+if [ "x${subcmd}" = "x" ]; then
+  if $help; then
+    printHelp
+    exit 0
+  elif $version; then
+    : # fall through
+  else
+    printSyntax
+    exit 4
+  fi
+fi
+
+if $help; then
+  subopts="--help"
+fi
+
+if $version; then
+  if [ "x${subcmd}" = "x" ]; then
+    subopts="$ME"
+  else
+    subopts="${subcmd}"
+  fi
+  subcmd='zopen-version'
+fi
+
+${subcmd} ${subopts}
