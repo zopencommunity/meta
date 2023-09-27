@@ -106,10 +106,9 @@ else
   echo "Deleting and creating new tag"
   github-release -v delete --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --tag "${TAG}"
   github-release -v release --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --tag "${TAG}" --name "${NAME}" --description "${DESCRIPTION}"
-
 fi
 
-sleep 10 # Let github register the release
+sleep 30 # Let github register the release
 
 echo "Release should now exist"
 github-release info -u ${GITHUB_ORGANIZATION} -r ${GITHUB_REPO} --tag "${TAG}" -j
