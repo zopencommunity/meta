@@ -1,3 +1,4 @@
+#!/bin/bash
 # Publish Job : https://163.74.88.212:8443/view/Framework/job/Port-Publish/
 # This publish job will a pax.Z artifact from the Port-Build (https://163.74.88.212:8443/view/Framework/job/Port-Build/)
 # Inputs: 
@@ -23,13 +24,11 @@ PAX=`find . -type f -path "*install/*zos.pax.Z"`
 BUILD_STATUS=`find . -name "test.status" | xargs cat`
 DEPENDENCIES=`find . -name ".runtimedeps" | xargs cat`
 BUILD_DEPENDENCIES=`find . -name ".builddeps" | xargs cat`
-VERSION=`find . -name ".version" | xargs cat`
-
-echo $PAX
+VERSION=`find . -name "*install/.version" | xargs cat`
 
 if [ ! -f "$PAX" ]; then
   echo "Port pax file does not exist";
-  exit 0;
+  exit 1;
 fi
 
 if [ -z "$DEPENDENCIES" ]; then
@@ -96,22 +95,64 @@ exists=$(github-release info -u ${GITHUB_ORGANIZATION} -r ${GITHUB_REPO}  -j)
 if [ $? -gt 0 ]; then
   echo "Creating a new release in github"
   github-release -v release --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --name "z/OS Release"
+  if [ $? -eq 0 ]; then
+    echo "Release created successfully!"
+  else
+    echo "Failed to recreate release."
+    exit 1                                     
+  fi
 fi
 
 exists=$(github-release info -u ${GITHUB_ORGANIZATION} -r ${GITHUB_REPO} --tag "${TAG}" -j)
 if [ $? -gt 0 ]; then
   echo "Creating a new tag in github"
   github-release -v release --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --tag "${TAG}" --name "${NAME}" --description "${DESCRIPTION}"
+  if [ $? -eq 0 ]; then
+    echo "Release created successfully!"
+  else
+    echo "Failed to create release."
+    exit 1                                     
+  fi
 else
   echo "Deleting and creating new tag"
   github-release -v delete --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --tag "${TAG}"
   github-release -v release --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --tag "${TAG}" --name "${NAME}" --description "${DESCRIPTION}"
+  if [ $? -eq 0 ]; then
+    echo "Release recreated successfully!"
+  else
+    echo "Failed to recreate release."
+    exit 1                                     
+  fi
 fi
 
-sleep 30 # Let github register the release
-
-echo "Release should now exist"
-github-release info -u ${GITHUB_ORGANIZATION} -r ${GITHUB_REPO} --tag "${TAG}" -j
+# check up to 5 times for the release to appear on github                                                     
+for i in {1..5}; do
+  github-release info -u "${GITHUB_ORGANIZATION}" -r "${GITHUB_REPO}" --tag "${TAG}" -j
+  if [ $? -eq 0 ]; then
+    echo "Release found!"
+    break
+  else
+    if [ $i -eq 5 ]; then
+       echo "Command failed after 5 attempts. Recreating release..."
+       github-release release -v --user "${GITHUB_ORGANIZATION}" --repo "${GITHUB_REPO}" --tag "${TAG}" --name "${NAME}" --description "${DESCRIPTION}"
+       if [ $? -eq 0 ]; then
+         echo "Release recreated successfully!"
+       else
+         echo "Failed to recreate release."
+         exit 1                                     
+       fi
+    else
+      echo "Command failed. Retrying in 10 seconds..."
+      sleep 10
+    fi
+ fi
+done
 
 echo "Uploading the artifacts into github"
 github-release -v upload --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --tag "${TAG}" --name "${PAX_BASENAME}" --file "${PAX}"
+if [ $? -eq 0 ]; then
+  echo "Artifacts uploaded successfully!"
+else
+  echo "Failed to upload artifacts!"
+  exit 1                                     
+fi
