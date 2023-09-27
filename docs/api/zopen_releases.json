@@ -1,5 +1,5 @@
 {
-  "timestamp": "2023-09-27T13:30:04.450289",
+  "timestamp": "2023-09-27T14:32:21.368202",
   "release_data": {
     "automake": [
       {
@@ -6613,6 +6613,22 @@
     ],
     "gettext": [
       {
+        "name": "gettext 0.3.0-dt-stable\n0.20.1.124-32cf\n0.21 (Build 1347) - (STABLE)",
+        "date": "2023-09-22 22:30:25",
+        "tag_name": "STABLE_gettextport_1347",
+        "assets": [
+          {
+            "name": "gettext-0.21.20230922_120117.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/gettextport/releases/download/STABLE_gettextport_1347/gettext-0.21.20230922_120117.zos.pax.Z",
+            "size": 33997824,
+            "expanded_size": 85125958,
+            "runtime_dependencies": null,
+            "total_tests": "445",
+            "passed_tests": "411"
+          }
+        ]
+      },
+      {
         "name": "gettext 0.3.0-dt-stable\n0.20.1.124-32cf\n0.21 (Build 1335) - (STABLE)",
         "date": "2023-09-22 05:21:13",
         "tag_name": "STABLE_gettextport_1335",
@@ -6966,6 +6982,22 @@
       }
     ],
     "openssl": [
+      {
+        "name": "openssl (Build 1393) - (STABLE)",
+        "date": "2023-09-27 17:56:23",
+        "tag_name": "STABLE_opensslport_1393",
+        "assets": [
+          {
+            "name": "openssl-heads.openssl-3.1.2.20230927_125435.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/opensslport/releases/download/STABLE_opensslport_1393/openssl-heads.openssl-3.1.2.20230927_125435.zos.pax.Z",
+            "size": 14547456,
+            "expanded_size": 44362530,
+            "runtime_dependencies": null,
+            "total_tests": "215",
+            "passed_tests": "208"
+          }
+        ]
+      },
       {
         "name": "openssl (Build 1200) - (STABLE)",
         "date": "2023-08-29 00:11:53",
@@ -8377,6 +8409,38 @@
         ]
       },
       {
+        "name": "gitport (Build 287)",
+        "date": "2022-11-11 19:06:33",
+        "tag_name": "gitport_287",
+        "assets": [
+          {
+            "name": "git-2.38.1.20221111_133402.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/gitport/releases/download/gitport_287/git-2.38.1.20221111_133402.zos.pax.Z",
+            "size": 56480256,
+            "expanded_size": 143895343,
+            "runtime_dependencies": null,
+            "total_tests": "91",
+            "passed_tests": "88"
+          }
+        ]
+      },
+      {
+        "name": "gitport (Build 284)",
+        "date": "2022-11-11 03:54:00",
+        "tag_name": "gitport_284",
+        "assets": [
+          {
+            "name": "git-2.38.1.20221110_222136.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/gitport/releases/download/gitport_284/git-2.38.1.20221110_222136.zos.pax.Z",
+            "size": 56480256,
+            "expanded_size": 143895495,
+            "runtime_dependencies": null,
+            "total_tests": "91",
+            "passed_tests": "88"
+          }
+        ]
+      },
+      {
         "name": "gitport boot backup",
         "date": "2022-11-08 03:21:37",
         "tag_name": "boot_11012023",
@@ -8386,6 +8450,54 @@
             "url": "https://github.com/ZOSOpenTools/gitport/releases/download/boot_11012023/git-2.38.1.20221111_133402.zos.pax.Z",
             "size": 56480256,
             "expanded_size": 143895343,
+            "runtime_dependencies": null,
+            "total_tests": -1,
+            "passed_tests": -1
+          }
+        ]
+      },
+      {
+        "name": "gitport (Build 236)",
+        "date": "2022-11-04 04:09:30",
+        "tag_name": "gitport_236",
+        "assets": [
+          {
+            "name": "git-2.9.5.20221103_235337.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/gitport/releases/download/gitport_236/git-2.9.5.20221103_235337.zos.pax.Z",
+            "size": 45513216,
+            "expanded_size": 110715050,
+            "runtime_dependencies": null,
+            "total_tests": "77",
+            "passed_tests": "64"
+          }
+        ]
+      },
+      {
+        "name": "gitport (Build 215)",
+        "date": "2022-10-25 14:49:49",
+        "tag_name": "gitport_215",
+        "assets": [
+          {
+            "name": "git-2.9.5.20221025_102644.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/gitport/releases/download/gitport_215/git-2.9.5.20221025_102644.zos.pax.Z",
+            "size": 37739520,
+            "expanded_size": 76073947,
+            "runtime_dependencies": null,
+            "total_tests": "77",
+            "passed_tests": "35"
+          }
+        ]
+      },
+      {
+        "name": "gitport (Build 212)",
+        "date": "2022-10-24 17:21:50",
+        "tag_name": "gitport_212",
+        "assets": [
+          {
+            "name": "git-2.9.5.20221024_130108.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/gitport/releases/download/gitport_212/git-2.9.5.20221024_130108.zos.pax.Z",
+            "size": 37739520,
+            "expanded_size": 76072864,
             "runtime_dependencies": null,
             "total_tests": -1,
             "passed_tests": -1
@@ -9742,6 +9854,22 @@
       }
     ],
     "pkgconfig": [
+      {
+        "name": "pkgconfig 0.29.2 (Build 1394) - (STABLE)",
+        "date": "2023-09-27 18:20:06",
+        "tag_name": "STABLE_pkgconfigport_1394",
+        "assets": [
+          {
+            "name": "pkgconfig-DEV.20230927_130850.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/pkgconfigport/releases/download/STABLE_pkgconfigport_1394/pkgconfig-DEV.20230927_130850.zos.pax.Z",
+            "size": 838656,
+            "expanded_size": 2041406,
+            "runtime_dependencies": null,
+            "total_tests": "30",
+            "passed_tests": "30"
+          }
+        ]
+      },
       {
         "name": "pkgconfig 0.29.2 (Build 1023)",
         "date": "2023-05-30 16:52:50",
@@ -20821,6 +20949,24 @@
         ]
       }
     ],
+    "yq": [
+      {
+        "name": "yq 4.33.3 (Build 971)",
+        "date": "2023-05-01 02:20:38",
+        "tag_name": "Releaseline_yqport_971",
+        "assets": [
+          {
+            "name": "yq-master.20230430_221841.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/yqport/releases/download/Releaseline_yqport_971/yq-master.20230430_221841.zos.pax.Z",
+            "size": 11999232,
+            "expanded_size": 34593029,
+            "runtime_dependencies": null,
+            "total_tests": -1,
+            "passed_tests": -1
+          }
+        ]
+      }
+    ],
     "libgpgerror": [
       {
         "name": "libgpgerror 0.3.0-dt-stable\n1.47 (Build 1223) - (STABLE)",
@@ -20883,24 +21029,6 @@
             "runtime_dependencies": null,
             "total_tests": "1",
             "passed_tests": "1"
-          }
-        ]
-      }
-    ],
-    "yq": [
-      {
-        "name": "yq 4.33.3 (Build 971)",
-        "date": "2023-05-01 02:20:38",
-        "tag_name": "Releaseline_yqport_971",
-        "assets": [
-          {
-            "name": "yq-master.20230430_221841.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/yqport/releases/download/Releaseline_yqport_971/yq-master.20230430_221841.zos.pax.Z",
-            "size": 11999232,
-            "expanded_size": 34593029,
-            "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
           }
         ]
       }
