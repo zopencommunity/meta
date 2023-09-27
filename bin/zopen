@@ -79,31 +79,65 @@ for arg in $*; do
       subcmd="zopen-$arg"
       ;;
     "download")
-      subcmd='zopen-install'
+      shift
+      exec "${bindir}/lib/zopen-install" $@
+      ;;
+    "generate")
+      shift
+      exec "${bindir}/lib/zopen-generate" $@
+      ;;
+    "help" | "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
+      printHelp "${args}"
+      exit 0
       ;;
     "init")
-      subcmd='zopen-init'
+      shift
+      if $legacy; then
+        exec "${bindir}/lib/zopen-init --legacy" $@
+      else
+        exec "${bindir}/lib/zopen-init" $@
+      fi
       ;;
-    "list")
-      subcmd='zopen-query'
-      subopts="${subopts} --list"
+    "install" | "-i")
+      shift
+      exec "${bindir}/lib/zopen-install" $@
       ;;
-    "search")
-      subcmd='zopen-query'
-      subopts="${subopts} --remote-search"
+    "list" | "-l")
+      shift
+      exec "${bindir}/lib/zopen-query" "--list" $@
       ;;
-    "upgrade")
-      subcmd='zopen-install'
-      subopts="${subopts} -u"
+    "query" | "-q")
+      shift
+      exec "${bindir}/lib/zopen-query" $@
+      ;;
+    "remove" | "-r" | "uninstall" | "un" | "erase" | "e")
+      shift
+      exec "${bindir}/lib/zopen-remove" $@
+      ;;
+    "search" | "-s")
+      shift
+      exec "${bindir}/lib/zopen-query" --remote-search $@
+      ;;
+    "update-cacert")
+      shift
+      exec "${bindir}/lib/zopen-update-cacert" $@
+      ;;
+    "upgrade" | "up")
+      shift
+      exec "${bindir}/lib/zopen-install" -u $@
       ;;
     "--version")
-      version=true
-      ;;
-    "--help")
-      help=true
+      if [ "x$2" = "x" ]; then
+        name=$ME
+      else
+        name="$2"
+      fi
+      exec "${bindir}/lib/zopen-version" $name 
       ;;
     *)
-      printError "Unknown option '$arg' specified"
+      printSoftError "Unknown option ${1} specified"
+      printSyntax "${args}"
+      exit 8
       ;;
   esac
 done
