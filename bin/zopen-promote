@@ -159,7 +159,7 @@ isPermString "$configperms"
 if ! isPermString "$configperms"; then
   printError "Invalid permission string '$configperms'. Correct the parameter and retry command"
 else
-  printDebug "Applying permissions: '$configperms'"
+  printDebug "Will apply permissions: '$configperms'"
 fi
 
 defaultZopenPerms="g+rx,g-w,o-rwx" # Allow user full access, group read/execute, others no access
@@ -168,7 +168,7 @@ printDebug "Check if promoted system perms set; otherwise use default: '$default
 if ! isPermString "$zopenperms"; then
   printError "Invalid permission string '$zopenperms'. Correct the parameter and retry command"
 else
-  printDebug "Applying permissions: '$zopenperms'"
+  printDebug "Will apply permissions: '$zopenperms'"
 fi
 
 if [ -z "$fromDir" ] && [ -n "$ZOPEN_ROOTFS" ]; then
@@ -322,11 +322,8 @@ writeConfigFile "$configFile" "$promotefs" "$zopen_pkginstall" "$ZOPEN_CA"
 printVerbose "Chmodding zopen environment with symbolic permission string '$zopenperms'"
 chmod -R "$zopenperms" "$promotefs" 2>/dev/null  
 
-effuid=$LOGNAME
-effgid=$(id -gn $effuid)
-printVerbose "Ensuring correct uid [$effuid] & gid [$effgid] for configfile if !installing as user (ie su/root/etc)"
-chown "$effuid" "$configFile" 2>/dev/null # suppress if not permitted
-chgrp "$effgid" "$configFile" 2>/dev/null # suppress if not permitted
+printVerbose "Chmodding new configuration file with symbolic permission string '$configperms'"
+chmod "$configperms" "$configFile"
 printInfo "- Created config in $configFile."
 
 printDebug "Moving the new config file created above into promoted environment"
@@ -334,6 +331,5 @@ printDebug "Moving the new config file created above into promoted environment"
 mv "$configFile" "$promotefs/etc/zopen-config" >/dev/null 2>&1
 printInfo "${NC}${CYAN}- Run '. $configFile' to enable promoted environment for current session${NC}"
 printInfo "${NC}${CYAN}- or manually copy promoted configuration to required location and/or modify .profile"
-syslog "$ZOPEN_LOG_PATH/audit.log" "$LOG_A" "$CAT_PACKAGE,$CAT_FILE" "INIT" "" "zopen environment promoted to $rootfs"
-syslog "$ZOPEN_LOG_PATH/audit.log" "$LOG_A" "$CAT_PACKAGE,$CAT_FILE" "INIT" "" "zopen environment promoted to $rootfs"
+syslog "$ZOPEN_LOG_PATH/audit.log" "$LOG_A" "$CAT_PACKAGE,$CAT_FILE" "PROMOTE" "mainline" "zopen environment promoted to $rootfs"
 printInfo "${NC}${GREEN}zopen promote complete.${NC}"
