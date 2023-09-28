@@ -1,31 +1,76 @@
-#
-# This file is only meant to be source'd
+#!/bin/false
+# This file is only meant to be source'd hence the dummy hashbang
 #
 
-export ZOPEN_CLEANUP="stty echo" # set this as a default to ensure line visibility!
 addCleanupTrapCmd()
 {
   newCmd=$(echo "$1" | sed -e 's/^[ ]*//' -e 's/[ ]*$//')
-  if [ -z "$ZOPEN_CLEANUP" ]; then
-    export ZOPEN_CLEANUP="$newCmd"
+  if [ -e "$ZOPEN_CLEANUP_PIPE" ]; then
+    (echo "$newCmd" > "$ZOPEN_CLEANUP_PIPE")&
   else
-    export ZOPEN_CLEANUP="$(deleteDuplicateEntriesRedux "$ZOPEN_CLEANUP; $newCmd" ";")"
+    printSoftError "Cleanup pipeline not available; temporary files and resources might not be cleared"
   fi
 }
 
 cleanupFunction() 
 {
-  [ -n "$ZOPEN_CLEANUP" ] && $(eval "$ZOPEN_CLEANUP" 2>/dev/null)
+  if [ -e "$ZOPEN_CLEANUP_PIPE" ]; then
+    while read cleanupcmd; do
+      eval "$cleanupcmd" 2>/dev/null
+    done < "$ZOPEN_CLEANUP_PIPE"
+    rm -rf "$ZOPEN_CLEANUP_PIPE"
+  fi
   trap - EXIT INT TERM QUIT HUP
-  unset ZOPEN_CLEANUP
+  
 }
-trap "cleanupFunction" EXIT INT TERM QUIT HUP
+
+# Generate a file name that has a high probability of being unique for
+# use as a temporary filename - the filename should be unique in the 
+# instance it was generated and probability suggests it should be for
+# a "reasonable" time after...
+mktempfile()
+{
+  prefix="zopen_$1"
+  suffix=".tmp"
+  [ -n "$2" ] && [ ! "$2" = "." ] && suffix="$2"
+  for tmp in "$TMPDIR" "$TMP" /tmp; do
+    [ -n "$tmp" ] && [ -d "$tmp" ] && break
+  done
+  [ ! -d "$tmp" ] && printError "Could not locate suitable temporary directory [tried \$TMPDIR \$TMP & /tmp]. Define a temporary location and retry command"
+  rnd=$(od -vAn -tu8 -N8  < /dev/urandom | tr -d "[:blank:]")
+  tempfile="$tmp/${prefix%%_}_$rnd.${suffix##.}"
+  if [ -e  "$tempfile" ]; then
+    mktempfile "$1" "$suffix" # recurse and try again
+  else
+    echo "$tempfile"
+  fi
+}
+
+# Create a temporary directory
+mktempdir()
+{
+  tempdir=$(mktempfile "$1")
+  [ ! -e "$tempdir" ] && mkdir "$tempdir" && addCleanupTrapCmd "rm -rf $tempdir" && echo "$tempdir"
+}
+
+isPermString()
+{
+  test=$(echo "$1" | zossed "s/[-+rwxugo,=]//g")
+  if [ -n "$test" ]; then
+    printDebug "Permission string '$1' was invalid"
+    false; 
+  else
+    true;
+  fi
+  return # the output of the last command
+}
 
 writeConfigFile(){
   configFile="$1"
   rootfs="$2"
   pkginstall="$3"
   certPath="$4"
+
   cat << EOF >  "$configFile"
 # z/OS Open Tools Configuration file
 # Main root location for the zopen installation; can be changed if the
@@ -272,6 +317,14 @@ getScreenCols()
   stty | awk -F'[/=;]' '/columns/ { print $4}' | tr -d " "
 }
 
+zossed()
+{
+  # Use the standard z/OS sed utility; If the sed package is installed
+  # GNU sed becomes the dominant version which might change how
+  # matching is performed
+  /bin/sed "$@"
+}
+
 zosfind()
 {
   # Use the standard z/OS find utility; If the findutils package is installed,
@@ -280,7 +333,7 @@ zosfind()
   # "-wholename" is not available on standard zosfind. For the tooling to be
   # consistent across platforms (where findutils is/is not installed) use the
   # standard zos version
-  /bin/find $*
+  /bin/find "$@"
 }
 
 findrev() 
@@ -593,6 +646,16 @@ deletetask()
 
 zopenInitialize()
 {
+  # Create the cleanup pipeline and exit handler
+  trap "cleanupFunction" EXIT INT TERM QUIT HUP
+  [ -z "$ZOPEN_CLEANUP_PIPE" ] \
+  && [ ! -p "$ZOPEN_CLEANUP_PIPE" ] \
+  && ZOPEN_CLEANUP_PIPE=$(mktempfile "clean" "pipe") \
+  && mkfifo "$ZOPEN_CLEANUP_PIPE" \
+  && chtag -tc 819 "$ZOPEN_CLEANUP_PIPE" \
+  && export ZOPEN_CLEANUP_PIPE
+
+  addCleanupTrapCmd "stty echo" # set this as a default to ensure line visibility!
   defineEnvironment
   defineANSI
   if [ -z "$ZOPEN_DONT_PROCESS_CONFIG" ]; then
@@ -601,6 +664,7 @@ zopenInitialize()
 
   ZOPEN_JSON_CACHE_URL="https://zosopentools.github.io/meta/api/zopen_releases.json"
 }
+
 
 printDebug()
 {
@@ -965,17 +1029,17 @@ CAT_ZOPEN="Z"     # Related to the zopen system itself
 
 syslog() 
 {
-  fd=$1
-  type=$2
-  categories=$3
-  module=$4
-  location=$5
-  msg=$6
+  fd=$1           # file
+  type=$2         # LOG_? type as defined above
+  categories=$3   # CAT_? type as defined above
+  module=$4       # zopen-<MODULE>
+  location=$5     # function
+  msg=$6          # Message text
   if [ ! -e "$fd" ]; then
     mkdir -p "$(dirname "$fd")"
     touch "$fd"
   fi
-  echo $(date +"%F %T") $(id | cut -d' ' -f1)::$module:$type:$categories:$location:$msg >> $fd
+  echo "$(date +"%F %T") $(id | cut -d' ' -f1)::$module:$type:$categories:$location:$msg" >> $fd
 }
 
 downloadJSONCache() 
