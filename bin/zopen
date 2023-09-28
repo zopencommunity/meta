@@ -29,9 +29,11 @@ for currently installed packages.
 Usage: zopen [COMMAND] [OPTION] [PARAMETERS]...
 
 Command:
-  init              generate \$rootfs/etc/zopen-config, creates file structure and bootstraps
+  init              generate \$rootfs/etc/zopen-config, creates file 
+                    structure and bootstraps
   build             invokes the build script
-  clone             clone a z/OS Open Tools environment
+  promote           promote  a z/OS Open Tools environment to a new 
+                    location
   download          downloads z/OS Open Tools package(s)
   install           installs z/OS Open Tools package(s))
   generate          generate a zopen project
@@ -74,7 +76,7 @@ version=false
 
 for arg in $*; do
   case "$arg" in
-    "alt"|"build"|"clean"|"clone"|"generate"|"init"|"install"|\
+    "alt"|"build"|"clean"|"promote"|"generate"|"init"|"install"|\
     "query"|"remove"|"update-cacert")
       subcmd="zopen-$arg"
       ;;
