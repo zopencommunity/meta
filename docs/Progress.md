@@ -154,7 +154,7 @@
 | [llamacppport](https://github.com/ZOSOpenTools/llamacppport) | 0 | Skipped |
 | [luarocksport](https://github.com/ZOSOpenTools/luarocksport) | 0 | 100% |
 | [lynxport](https://github.com/ZOSOpenTools/lynxport) | 0 | 100% |
-| [man-dbport](https://github.com/ZOSOpenTools/man-dbport) | 0 | 93% |
+| [man-dbport](https://github.com/ZOSOpenTools/man-dbport) | 0 | 96% |
 | [metaport](https://github.com/ZOSOpenTools/metaport) | 0 | 100% |
 | [multitailport](https://github.com/ZOSOpenTools/multitailport) | 0 | No builds |
 | [nanoport](https://github.com/ZOSOpenTools/nanoport) | 0 | Skipped |
@@ -309,4 +309,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-09-28 17:15:40
+Last updated:  2023-09-28 17:27:04
