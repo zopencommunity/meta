@@ -85,9 +85,9 @@
 | [gawkport](https://github.com/ZOSOpenTools/gawkport) | 8 | 93% |automake, curl, expat, gzip, ncurses, rsync, sudo, vim
 | [libgpgerrorport](https://github.com/ZOSOpenTools/libgpgerrorport) | 7 | 100% |gpg, libassuan, libgcrypt, libksba, npth, ntbtls, pinentry
 | [libiconvport](https://github.com/ZOSOpenTools/libiconvport) | 5 | 100% |bison, libxml2, man-db, php, tig
+| [pythonport](https://github.com/ZOSOpenTools/pythonport) | 5 | 100% |curl, libxml2, lz4, rsync, zstd
+| [flexport](https://github.com/ZOSOpenTools/flexport) | 4 | 100% |bison, cscope, man-db, xmlto
 | [pkgconfigport](https://github.com/ZOSOpenTools/pkgconfigport) | 4 | 100% |avro-c-lib, librdkafka, man-db, thesilversearcher
-| [pythonport](https://github.com/ZOSOpenTools/pythonport) | 4 | 100% |curl, lz4, rsync, zstd
-| [flexport](https://github.com/ZOSOpenTools/flexport) | 3 | 100% |bison, cscope, man-db
 | [getoptport](https://github.com/ZOSOpenTools/getoptport) | 3 | 52% |avro-c-lib, flex, xmlto
 | [gperfport](https://github.com/ZOSOpenTools/gperfport) | 3 | 100% |hello, libiconv, m4
 | [wgetport](https://github.com/ZOSOpenTools/wgetport) | 3 | 18% |hello, man-db, sed
@@ -203,7 +203,7 @@
 |  [llamacppport](https://github.com/ZOSOpenTools/llamacppport) | 236 | 1
 |  [findutilsport](https://github.com/ZOSOpenTools/findutilsport) | 209 | 8
 |  [gettextport](https://github.com/ZOSOpenTools/gettextport) | 206 | 7
-|  [protobufport](https://github.com/ZOSOpenTools/protobufport) | 197 | 10
+|  [protobufport](https://github.com/ZOSOpenTools/protobufport) | 178 | 9
 |  [autoconfport](https://github.com/ZOSOpenTools/autoconfport) | 175 | 7
 |  [diffutilsport](https://github.com/ZOSOpenTools/diffutilsport) | 140 | 8
 |  [tclport](https://github.com/ZOSOpenTools/tclport) | 130 | 5
@@ -259,6 +259,7 @@
 |  [xzport](https://github.com/ZOSOpenTools/xzport) | 15 | 1
 |  [bisonport](https://github.com/ZOSOpenTools/bisonport) | 13 | 1
 |  [automakeport](https://github.com/ZOSOpenTools/automakeport) | 12 | 1
+|  [libxml2port](https://github.com/ZOSOpenTools/libxml2port) | 12 | 1
 | &#10003; [bumpport](https://github.com/ZOSOpenTools/bumpport) | 0 | 0
 | &#10003; [byaccport](https://github.com/ZOSOpenTools/byaccport) | 0 | 0
 | &#10003; [comp_clangport](https://github.com/ZOSOpenTools/comp_clangport) | 0 | 0
@@ -281,7 +282,6 @@
 | &#10003; [libgit2port](https://github.com/ZOSOpenTools/libgit2port) | 0 | 0
 | &#10003; [libiconvport](https://github.com/ZOSOpenTools/libiconvport) | 0 | 0
 | &#10003; [libserdesport](https://github.com/ZOSOpenTools/libserdesport) | 0 | 0
-| &#10003; [libxml2port](https://github.com/ZOSOpenTools/libxml2port) | 0 | 0
 | &#10003; [luarocksport](https://github.com/ZOSOpenTools/luarocksport) | 0 | 0
 | &#10003; [m4port](https://github.com/ZOSOpenTools/m4port) | 0 | 0
 | &#10003; [man-dbport](https://github.com/ZOSOpenTools/man-dbport) | 0 | 0
@@ -309,4 +309,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-09-28 15:11:30
+Last updated:  2023-09-28 17:15:40
