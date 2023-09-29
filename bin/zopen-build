@@ -1211,10 +1211,10 @@ replaceHardcodedPath()
       isWriteable=false
       chmod "+w" $f
     fi
-    cp $f $f.tmp && \
+    cp $f $f.old && \
     # replace hardcoded path and strip out the -suffix in name to match active
-    sed -e "s#\(${orig}\)/\([^/]*\)[^-]*-[^/]*#${replaced}/\2/\2#g" $f.tmp > $f && \
-    rm $f.tmp;
+    sed -e "s#\(${orig}\)/\([^/]*\)/[^/]*#${replaced}/\2/\2#g" $f.old > $f &&
+    rm $f.old
     if ! $isWriteable; then
       chmod "-w" $f
     fi
