@@ -91,18 +91,6 @@ DESCRIPTION="${DESCRIPTION}<br /><b>Or use:</b> <pre>zopen install ${PORT_NAME}<
 
 NAME="${PORT_NAME} ${VERSION}(Build ${BUILD_ID}) - ($BUILD_LINE)"
 
-exists=$(github-release info -u ${GITHUB_ORGANIZATION} -r ${GITHUB_REPO}  -j)
-if [ $? -gt 0 ]; then
-  echo "Creating a new release in github"
-  github-release -v release --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --name "z/OS Release"
-  if [ $? -eq 0 ]; then
-    echo "Release created successfully!"
-  else
-    echo "Failed to recreate release."
-    exit 1                                     
-  fi
-fi
-
 exists=$(github-release info -u ${GITHUB_ORGANIZATION} -r ${GITHUB_REPO} --tag "${TAG}" -j)
 if [ $? -gt 0 ]; then
   echo "Creating a new tag in github"
