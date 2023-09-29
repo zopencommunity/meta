@@ -1213,7 +1213,7 @@ replaceHardcodedPath()
     fi
     cp $f $f.old && \
     # replace hardcoded path and strip out the -suffix in name to match active
-    sed -e "s#\(${orig}\)/\([^/]*\)/[^/]*#${replaced}/\2/\2#g" $f.old > $f &&
+    sed -e "s#${orig}/\([^/]\+\)/[^/\n ]*#${replaced}/\1/\1#g" $f.old > $f &&
     rm $f.old
     if ! $isWriteable; then
       chmod "-w" $f
