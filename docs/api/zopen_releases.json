@@ -1,5 +1,5 @@
 {
-  "timestamp": "2023-09-30T00:05:28.730853",
+  "timestamp": "2023-09-30T18:40:39.128880",
   "release_data": {
     "autoconf": [
       {
@@ -21270,6 +21270,22 @@
       }
     ],
     "yq": [
+      {
+        "name": "yq (Build 1421) - (STABLE)",
+        "date": "2023-09-30 22:28:55",
+        "tag_name": "STABLE_yqport_1421",
+        "assets": [
+          {
+            "name": "yq-master.20230930_222420.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/yqport/releases/download/STABLE_yqport_1421/yq-master.20230930_222420.zos.pax.Z",
+            "size": 11579904,
+            "expanded_size": 33679216,
+            "runtime_dependencies": null,
+            "total_tests": -1,
+            "passed_tests": -1
+          }
+        ]
+      },
       {
         "name": "yq 4.33.3 (Build 971)",
         "date": "2023-05-01 02:20:38",
