@@ -23,8 +23,7 @@ setupMyself
 
 printHelp(){
 cat << HELPDOC
-zopen alt is a utility for z/OS Open Tools to switch package versions 
-for currently installed packages.
+zopen is a utility for mangaging a z/OS Open Tools environment.
 
 Usage: zopen [COMMAND] [OPTION] [PARAMETERS]...
 
@@ -80,66 +79,27 @@ for arg in $*; do
     "query"|"remove"|"update-cacert")
       subcmd="zopen-$arg"
       ;;
-    "download")
-      shift
-      exec "${bindir}/lib/zopen-install" $@
+    "help" | "--help" | "-?")
+      help=true
       ;;
-    "generate")
-      shift
-      exec "${bindir}/lib/zopen-generate" $@
+    "list")
+      subcmd='zopen-query'
+      subopts="${subopts} --list"
       ;;
-    "help" | "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
-      printHelp "${args}"
-      exit 0
+    "search")
+      subcmd='zopen-query'
+      subopts="${subopts} --remote-search"
       ;;
-    "init")
-      shift
-      if $legacy; then
-        exec "${bindir}/lib/zopen-init --legacy" $@
-      else
-        exec "${bindir}/lib/zopen-init" $@
-      fi
-      ;;
-    "install" | "-i")
-      shift
-      exec "${bindir}/lib/zopen-install" $@
-      ;;
-    "list" | "-l")
-      shift
-      exec "${bindir}/lib/zopen-query" "--list" $@
-      ;;
-    "query" | "-q")
-      shift
-      exec "${bindir}/lib/zopen-query" $@
-      ;;
-    "remove" | "-r" | "uninstall" | "un" | "erase" | "e")
-      shift
-      exec "${bindir}/lib/zopen-remove" $@
-      ;;
-    "search" | "-s")
-      shift
-      exec "${bindir}/lib/zopen-query" --remote-search $@
-      ;;
-    "update-cacert")
-      shift
-      exec "${bindir}/lib/zopen-update-cacert" $@
-      ;;
-    "upgrade" | "up")
-      shift
-      exec "${bindir}/lib/zopen-install" -u $@
+    "upgrade")
+      subcmd='zopen-install'
+      subopts="${subopts} -u"
       ;;
     "--version")
-      if [ "x$2" = "x" ]; then
-        name=$ME
-      else
-        name="$2"
-      fi
-      exec "${bindir}/lib/zopen-version" $name 
+      version=true
       ;;
     *)
-      printSoftError "Unknown option ${1} specified"
-      printSyntax "${args}"
-      exit 8
+      # let unknown stuff through
+      subopts="${subopts} ${arg}"
       ;;
   esac
 done
@@ -151,7 +111,7 @@ if [ "x${subcmd}" = "x" ]; then
   elif $version; then
     : # fall through
   else
-    printSyntax
+    printHelp
     exit 4
   fi
 fi
