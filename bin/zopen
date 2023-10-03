@@ -23,8 +23,7 @@ setupMyself
 
 printHelp(){
 cat << HELPDOC
-zopen alt is a utility for z/OS Open Tools to switch package versions 
-for currently installed packages.
+zopen is a utility for mangaging a z/OS Open Tools environment.
 
 Usage: zopen [COMMAND] [OPTION] [PARAMETERS]...
 
@@ -80,12 +79,6 @@ for arg in $*; do
     "query"|"remove"|"update-cacert")
       subcmd="zopen-$arg"
       ;;
-    "download")
-      subcmd='zopen-install'
-      ;;
-    "init")
-      subcmd='zopen-init'
-      ;;
     "list")
       subcmd='zopen-query'
       subopts="${subopts} --list"
@@ -101,11 +94,12 @@ for arg in $*; do
     "--version")
       version=true
       ;;
-    "--help")
+    "help" | "--help" | "-?")
       help=true
       ;;
     *)
-      printError "Unknown option '$arg' specified"
+      # let unknown stuff through
+      subopts="${subopts} ${arg}"
       ;;
   esac
 done
@@ -117,7 +111,7 @@ if [ "x${subcmd}" = "x" ]; then
   elif $version; then
     : # fall through
   else
-    printSyntax
+    printHelp
     exit 4
   fi
 fi
