@@ -8,7 +8,8 @@ If you have access to a z/OS system, you can get started with porting [here](htt
 
 ## How do I consume the z/OS Open Tools?
 
-You can install them directly from the zOS Open Tools repo's [GitHub releases](https://github.com/ZOSOpenTools/meta/releases). All z/OS Open Tools releases are consolidated into a [table here](https://zosopentools.github.io/meta/#/Latest). Or you can use the [zopen install tool](https://github.com/ZOSOpenTools/meta/blob/main/bin/lib/zopen-install) from the [meta repository](https://github.com/ZOSOpenTools/meta) to install the tools, [documented here](https://zosopentools.github.io/meta/#/Guides/zopen).
+To install and consume z/OS Open Tools, we recommend that you use the [zopen package manager](https://zosopentools.github.io/meta/#/Guides/ThePackageManager?id=using-the-package-manager). Get started [here](https://zosopentools.github.io/meta/#/Guides/QuickStart). 
+Alternatively, you can install the tools directly from the zOS Open Tools repo's github releases. For example, the releases for git are available [here]( https://github.com/ZOSOpenTools/gitport/releases). All z/OS Open Tools releases are consolidated into a [table here](https://zosopentools.github.io/meta/#/Latest).
 
 ## How do I raise issues?
 If the issue pertains to a given project, open the issue in the project's Github repository. If you have a general issue or discussion item, [create a discussion](https://github.com/ZOSOpenTools/meta/discussions).
