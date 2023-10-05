@@ -93,7 +93,7 @@ with open('docs/Latest.md', 'w') as f:
         # If the directory exists, delete it recursively
         shutil.rmtree(r.name);
 
-    #subprocess.run(['git', 'clone', r.clone_url, r.name])
+    subprocess.run(['git', 'clone', r.clone_url, r.name])
 
     # Count the number of .patch files and total lines in patches directory
     num_patches = 0
