@@ -41,7 +41,9 @@
 * [libgit2port](https://github.com/ZOSOpenTools/libgit2port)
 * [libserdesport](https://github.com/ZOSOpenTools/libserdesport)
 * [multitailport](https://github.com/ZOSOpenTools/multitailport)
+* [natsport](https://github.com/ZOSOpenTools/natsport)
 * [neovimport](https://github.com/ZOSOpenTools/neovimport)
+* [nginxport](https://github.com/ZOSOpenTools/nginxport)
 * [phpport](https://github.com/ZOSOpenTools/phpport)
 * [redisport](https://github.com/ZOSOpenTools/redisport)
 * [shufport](https://github.com/ZOSOpenTools/shufport)
@@ -156,8 +158,10 @@
 | [metaport](https://github.com/ZOSOpenTools/metaport) | 0 | 100% |
 | [multitailport](https://github.com/ZOSOpenTools/multitailport) | 0 | No builds |
 | [nanoport](https://github.com/ZOSOpenTools/nanoport) | 0 | Skipped |
+| [natsport](https://github.com/ZOSOpenTools/natsport) | 0 | No builds |
 | [ncduport](https://github.com/ZOSOpenTools/ncduport) | 0 | Skipped |
 | [neovimport](https://github.com/ZOSOpenTools/neovimport) | 0 | No builds |
+| [nginxport](https://github.com/ZOSOpenTools/nginxport) | 0 | No builds |
 | [opensshport](https://github.com/ZOSOpenTools/opensshport) | 0 | 100% |
 | [phpport](https://github.com/ZOSOpenTools/phpport) | 0 | No builds |
 | [powerlinegoport](https://github.com/ZOSOpenTools/powerlinegoport) | 0 | Skipped |
@@ -284,8 +288,10 @@
 | &#10003; [man-dbport](https://github.com/ZOSOpenTools/man-dbport) | 0 | 0
 | &#10003; [metaport](https://github.com/ZOSOpenTools/metaport) | 0 | 0
 | &#10003; [multitailport](https://github.com/ZOSOpenTools/multitailport) | 0 | 0
+| &#10003; [natsport](https://github.com/ZOSOpenTools/natsport) | 0 | 0
 | &#10003; [ncduport](https://github.com/ZOSOpenTools/ncduport) | 0 | 0
 | &#10003; [neovimport](https://github.com/ZOSOpenTools/neovimport) | 0 | 0
+| &#10003; [nginxport](https://github.com/ZOSOpenTools/nginxport) | 0 | 0
 | &#10003; [onigurumaport](https://github.com/ZOSOpenTools/onigurumaport) | 0 | 0
 | &#10003; [opensslport](https://github.com/ZOSOpenTools/opensslport) | 0 | 0
 | &#10003; [pythonport](https://github.com/ZOSOpenTools/pythonport) | 0 | 0
@@ -305,4 +311,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-10-05 07:46:08
+Last updated:  2023-10-05 11:57:15
