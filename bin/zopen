@@ -80,16 +80,16 @@ version=false
 for arg in $*; do
   case "${arg}" in
     "alt"|"build"|"clean"|"generate"|"init"|"install"|\
-    "query"|"remove"|"update-cacert")
+    "query"|"remove"|"update-cacert"|"upgrade")
       subcmd="zopen-${arg}"
       ;;
     "list")
       subcmd='zopen-query'
       subopts="${subopts} --list"
       ;;
-    "upgrade")
-      subcmd='zopen-install'
-      subopts="${subopts} -u"
+    "search")
+      subcmd='zopen-query'
+      subopts="${subopts} --remote-search"
       ;;
     "--version")
       version=true

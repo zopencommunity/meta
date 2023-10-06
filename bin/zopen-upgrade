@@ -1,0 +1,214 @@
+#!/bin/sh
+# Upgrade utility for z/OS Open Tools - https://github.com/ZOSOpenTools
+#
+# All zopen-* scripts MUST start with this code to maintain consistency
+#
+setupMyself()
+{
+  ME=$(basename $0)
+  MYDIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
+  INCDIR="${MYDIR}/../include"
+  if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
+    echo "Internal Error. Unable to find common.sh file to source" >&2
+    exit 8
+  fi
+  . "${INCDIR}/common.sh"
+}
+setupMyself
+checkWritable
+
+printHelp(){
+  cat << HELPDOC
+zopen upgrade is a utility for z/OS Open Tools to upgrade packages to
+a later release
+
+Usage: zopen upgrade [OPTION] [PARAMETERS] [PACKAGES]
+
+Options:
+      --paxrepodir  a directory location to locate pax files
+      --paxinstall  list of pax files to install
+  -y, --yes         automatically answer yes to prompts
+  -v, --verbose     run in verbose mode
+  -h,-?, --help     display this help and exit
+
+Examples:
+  zopen install foo 
+                    install package foo if not already installed
+  zopen install --release-line DEV foo
+                    install package foo from the DEV releaseline if
+                    available
+  zopen upgrade     upgrade all packages to latest version on their
+                    releaseline
+  zopen install -y foo bar --no-deps
+                    install packages foo and bar without asking for
+                    user confirmation and without installing any
+                    dependencies
+  zopen install --paxinstall foo
+                    locate the pax file for foo in the current
+                    directory or the system-configured paxdir and
+                    install
+  zopen install --paxinstall /tmp/foo-1.2.3-4.zos.pax.Z
+                    install package foo from the specified location
+  zopen install -y --paxinstall --paxrepodir /tmp foo-1.2.3-4.zos.pax.Z
+                    check for the named package in /tmp and install
+                    package foo if found
+
+Report bugs at https://github.com/ZOSOpenTools/meta/issues .
+
+HELPDOC
+}
+
+upgradePackages()( # Note the subshell '()'
+  packages="$1"
+  printDebug "Packages to upgrade: $packages"
+  sessionList="" # Track the packages installed during this session to prevent repeats
+  mutexReq "zopen" "zopen"
+  for pkg in $packages; do
+    handlePackageInstall "$pkg"
+  done
+  mutexFree "zopen"
+)
+
+# Main code start here
+# Need to set a number of variables for use in the install function
+# which is common between install & upgrade
+args=$*
+upgradeInstalled=true
+verbose=false
+debug=false
+xdebug=false
+paxrepodir=""
+paxinstall=false
+selectVersion=false
+setActive=true
+cacheOnly=false
+downloadOnly=false
+localInstall=false
+reinstall=false
+installOrUpgrade=false
+nosymlink=false
+skipupgrade=false
+doNotInstallDeps=true
+yesToPrompts=false
+chosenRepos=""
+while [ $# -gt 0 ]; do
+  case "$1" in
+    "--yes" | "-y")
+      yesToPrompts=true  # Automatically answer 'yes' to any questions
+      ;;
+    "--no-set-active")
+      setactive=false  # Install package as normal but keep existing installation as active
+      ;;
+    "--paxinstall")
+      paxinstall=true # Use pax files to install
+      ;;
+    "--paxrepodir")
+      [ $# -lt 2 ] && printError "Missing parameter"
+      shift
+      paxrepodir=$(echo "$1" )
+      ;;
+    "-h" | "--help" | "-?")
+      printHelp "${args}"
+      exit 0
+      ;;
+    "--debug")
+      verbose=true
+      debug=true
+      ;;
+    "-v" | "--verbose")
+      verbose=true
+      ;;
+    "--debug")
+      verbose=true
+      debug=true
+      ;;
+    "--xdebug")
+      verbose=true
+      debug=true
+      xdebug=true
+    ;;
+    "--version")
+      zopen --version $ME
+      exit 0
+      ;;
+    *)
+      chosenRepos=" $chosenRepos $1 ";
+      ;;
+  esac
+  shift;
+done
+
+$xdebug && set -x && printVerbose "Enabled command execution trace" 
+
+if [ -z "${chosenRepos}" ]; then
+
+    printVerbose "No specific port to upgrade, upgrade all installed packages"
+    printInfo "- Querying for installed packages"
+    progressHandler "spinner" "- Query complete" &
+    ph=$!
+    killph="kill -HUP $ph"
+    addCleanupTrapCmd "$killph"
+    chosenRepos="$(${MYDIR}/zopen-query list --installed --no-header --no-versions)"
+    $killph 2>/dev/null  # if the timer is not running, the kill will fail
+fi
+
+checkIfConfigLoaded
+
+export SSL_CERT_FILE="${ZOPEN_CA}"
+export GIT_SSL_CAINFO="${ZOPEN_CA}"
+export CURL_CA_BUNDLE="${ZOPEN_CA}"
+
+printDebug "Installing to zopen file system: $ZOPEN_ROOTFS"
+if [ -z "$ZOPEN_ROOTFS" ]; then
+  printError "Unable to locate zopen file system, \$ZOPEN_ROOTFS is undefined"
+fi
+downloadDir="$ZOPEN_ROOTFS/var/cache/zopen"
+
+
+if [ ! -d "${downloadDir}" ]; then
+  mkdir -p "${downloadDir}"
+  if [ $? -gt 0 ]; then
+    printError "Could not create download directory: $downloadDir"
+  fi
+fi
+
+printDebug "Checking if installing from pax files: $paxinstall"
+if ! $paxinstall; then
+  # Parse passed in repositories and check if valid zopen framework repos
+  printVerbose "Querying remote repo for latest package information"
+  getReposFromGithub
+  grfgRc=$?
+  $killph 2>/dev/null  # if the timer is not running, the kill will fail
+  [ 0 -ne $grfgRc ] && exit $grfgRc;
+else
+  printDebug "Using pax files for install, not GH"
+  [ -n "$paxrepodir" ] && printDebug "Using '$paxrepodir' to locate pax files"
+fi
+installArray=""
+
+if $paxinstall; then
+  printDebug "Installing from pax files as listed in arguments: '$chosenRepos'"
+  installArray="$chosenRepos"
+else
+  printDebug "Parsing list of packages to install and verifying validity"
+
+  badportlist=""
+  for chosenRepo in $(echo "${chosenRepos}" | tr ',' ' '); do
+    printVerbose "Processing repo: $chosenRepo"
+    printDebug "Stripping any version (%), tag (#) or port suffixes and trim"
+    toolrepo=$(echo "$chosenRepo" | sed -e 's#%.*##' -e 's#=.*##' -e 's#.*port##')
+
+    toolfound=$(echo "${repo_results}" | awk -vtoolrepo="$toolrepo" '$0 == toolrepo {print}') 
+    if [ "$toolfound" = "$toolrepo" ]; then
+      printVerbose "Adding '$chosenRepo' to the install queue"
+      installArray=$(printf "%s\n%s" "$installArray" "$chosenRepo")
+    else
+      badportlist=$(printf "%s %s" "$badportlist" "$toolrepo")
+    fi
+  done
+  if [ -n "$badportlist" ]; then
+    printError "The following requested port(s) do not exist:\n\t$badportlist"
+  fi
+fi
+
+upgradePackages "$installArray"
