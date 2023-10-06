@@ -4,14 +4,14 @@
 #
 setupMyself()
 {
-        ME=$(basename $0)
-        MYDIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
-        INCDIR="${MYDIR}/../include"
-        if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
-                echo "Internal Error. Unable to find common.sh file to source" >&2
-                exit 8
-        fi
-        . "${INCDIR}/common.sh"
+  ME=$(basename "$0")
+  MYDIR="$(cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P)"
+  INCDIR="${MYDIR}/../include"
+  if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
+    echo "Internal Error. Unable to find common.sh file to source" >&2
+    exit 8
+  fi
+  . "${INCDIR}/common.sh"
 }
 setupMyself
 
@@ -22,11 +22,11 @@ printSyntax()
   printf "Syntax: %s [<patch file>]\n" "${0}" >&2
 }
 
-if [ "x$1" = "x--help" ]; then
+if [ "$1" = "--help" ]; then
   printSyntax
   exit 0
-elif [ "x$1" = "x--version" ]; then
-  zopen --version $ME
+elif [ "$1" = "--version" ]; then
+  zopen --version "${ME}"
   exit 0
 fi
 
@@ -34,12 +34,12 @@ if [ $# -lt 1 ]; then
   exit 4
 fi
 
-if ! mkdir -p "${pd}" ; then
+if ! mkdir -p "${pd}"; then
   printf 'Unable to create patch directory: %s. No patch files created\n' "${pd}" >&2
   exit 8
 fi
 
-for aggregate in $@ ; do
+for aggregate in $@; do
   info=$(grep -n '^diff --git' "${aggregate}")
   lastline=$(wc -l "$1" | awk '{ print $1; }')
   lines=$(printf "%s" "${info}" | awk -F: ' { print $1; }')
@@ -60,20 +60,20 @@ for aggregate in $@ ; do
       af="${file[i]}.patch"
       d=$(dirname "${af}")
       rf=$(basename "${af}")
-      if ! mkdir -p "${pd}/${d}" ; then
+      if ! mkdir -p "${pd}/${d}"; then
         printf 'Unable to create directory %s. Partial splitting has been performed under %s', "${d}" "${pd}" >&2
         exit 8
       fi
       #printf "%s/%s/%s %d %d\n" "${pd}" "${d}" "${rf}" "${start}" "${end}"
-      taillines=$((end-start))
-      headlines=$((end-1))
+      taillines=$((end - start))
+      headlines=$((end - 1))
       content=$(head -n "${headlines}" "${aggregate}" | tail -n "${taillines}")
-      if ! printf '%s\n' "${content}" >"${pd}/${d}/${rf}" ; then
+      if ! printf '%s\n' "${content}" >"${pd}/${d}/${rf}"; then
         printf 'Unable to write patch file to %s. Partial splitting has been performed under %s', "${pd}/${d}/${rf}" "${pd}" >&2
         exit 8
       fi
     fi
     start="${end}"
-    i=$((i+1))
+    i=$((i + 1))
   done
 done

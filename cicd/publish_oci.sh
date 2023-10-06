@@ -18,18 +18,18 @@ PRODUCT_RELEASE=$(jq -r '.product.release' properties.json)
 PRODUCT_SUMMARY=$(jq -r '.product.summary' properties.json)
 PRODUCT_DESCRIPTION=$(jq -r '.product.description' properties.json)
 
-if [ ! -f "$PRODUCT_PAX" ]; then
-  echo "$PRODUCT_PAX does not exist"
+if [ ! -f "${PRODUCT_PAX}" ]; then
+  echo "${PRODUCT_PAX} does not exist"
   exit 1
 fi
 
 DIR_NAME=${PRODUCT_PAX%%.pax.Z}
-DIR_NAME=$(echo "$DIR_NAME" | sed -e "s/\.202[0-9]*_[0-9]*\.zos/.zos/g" -e "s/\.zos//g")
+DIR_NAME=$(echo "${DIR_NAME}" | sed -e "s/\.202[0-9]*_[0-9]*\.zos/.zos/g" -e "s/\.zos//g")
 
-tar -xvf $PRODUCT_PAX
+tar -xvf "${PRODUCT_PAX}"
 
 if [ ! -d "${DIR_NAME}" ]; then
-  echo "$DIR_NAME directory does not exist. $PRODUCT_PAX may not have been extracted properly"
+  echo "${DIR_NAME} directory does not exist. ${PRODUCT_PAX} may not have been extracted properly"
   exit 1
 fi
 
@@ -59,10 +59,10 @@ LABEL vendor=\"ZOSOpenTools\""
     rm -f "${ZOPEN_IMAGE_CONTAINERFILE_NAME}"
   fi
   echo "Generating ${ZOPEN_IMAGE_CONTAINERFILE_NAME}"
-  containerfilecontents="${containerfilecontents}\nCOPY $PRODUCT_PAX $PRODUCT_PAX"
+  containerfilecontents="${containerfilecontents}\nCOPY ${PRODUCT_PAX} ${PRODUCT_PAX}"
   containerfilecontents="${containerfilecontents}\nCOPY .zpm .zpm"
 
-  echo -e "$containerfilecontents" > "${ZOPEN_IMAGE_CONTAINERFILE_NAME}"
+  echo -e "${containerfilecontents}" > "${ZOPEN_IMAGE_CONTAINERFILE_NAME}"
 
   echo "Building OCI Artifact"
   set -x
@@ -70,33 +70,33 @@ LABEL vendor=\"ZOSOpenTools\""
   if [ $? -gt 0 ]; then
     exit 4;
   fi
-  buildId=$(echo "$output" | tail -1)
+  buildId=$(echo "${output}" | tail -1)
 
   echo "Pushing OCI Artifact"
-  "${ZOPEN_PODMAN_BINARY}" push $buildId  "$ZOPEN_IMAGE_REGISTRY/zosopentools/${PRODUCT_NAME}:${PRODUCT_VERSION}"
+  "${ZOPEN_PODMAN_BINARY}" push "${buildId}"  "${ZOPEN_IMAGE_REGISTRY}/zosopentools/${PRODUCT_NAME}:${PRODUCT_VERSION}"
   if [ $? -gt 0 ]; then
     exit 4;
   fi
 }
 
-if [ -z $ZOPEN_IMAGE_REGISTRY ]; then
+if [ -z "${ZOPEN_IMAGE_REGISTRY}" ]; then
   echo "Environment variable ZOPEN_IMAGE_REGISTRY is needed to push an OCI image"
   exit 4;
 fi
-if [ -z $ZOPEN_IMAGE_REGISTRY_ID ]; then
+if [ -z "${ZOPEN_IMAGE_REGISTRY_ID}" ]; then
   echo "Environment variable ZOPEN_IMAGE_REGISTRY_ID is needed to push an OCI image"
   exit 4;
 fi
-if [ -z $ZOPEN_IMAGE_REGISTRY_KEY_FILE ] || [ ! -r $ZOPEN_IMAGE_REGISTRY_KEY_FILE ]; then
+if [ -z "${ZOPEN_IMAGE_REGISTRY_KEY_FILE}" ] || [ ! -r "${ZOPEN_IMAGE_REGISTRY_KEY_FILE}" ]; then
   echo "Environment variable ZOPEN_IMAGE_REGISTRY_KEY_FILE is needed to push an OCI image"
   exit 4;
 fi
-if [ -z "$(command -v ${ZOPEN_PODMAN_BINARY})" ]; then
+if [ -z "$(command -v "${ZOPEN_PODMAN_BINARY}")" ]; then
   echo "${ZOPEN_PODMAN_BINARY} is not present on your system"
   exit 4
 fi
 
 # try logging in first to make sure we're ok
-cat $ZOPEN_IMAGE_REGISTRY_KEY_FILE | "${ZOPEN_PODMAN_BINARY}" login $ZOPEN_IMAGE_REGISTRY -u $ZOPEN_IMAGE_REGISTRY_ID --password-stdin
+cat "${ZOPEN_IMAGE_REGISTRY_KEY_FILE}" | "${ZOPEN_PODMAN_BINARY}" login "${ZOPEN_IMAGE_REGISTRY}" -u "${ZOPEN_IMAGE_REGISTRY_ID}" --password-stdin
 
 generateOCI

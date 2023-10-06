@@ -6,16 +6,16 @@ export ZOPEN_CLEANUP="stty echo" # set this as a default to ensure line visibili
 addCleanupTrapCmd()
 {
   newCmd=$(echo "$1" | sed -e 's/^[ ]*//' -e 's/[ ]*$//')
-  if [ -z "$ZOPEN_CLEANUP" ]; then
-    export ZOPEN_CLEANUP="$newCmd"
+  if [ -z "${ZOPEN_CLEANUP}" ]; then
+    export ZOPEN_CLEANUP="${newCmd}"
   else
-    export ZOPEN_CLEANUP="$(deleteDuplicateEntriesRedux "$ZOPEN_CLEANUP; $newCmd" ";")"
+    export ZOPEN_CLEANUP="$(deleteDuplicateEntriesRedux "${ZOPEN_CLEANUP}; ${newCmd}" ";")"
   fi
 }
 
 cleanupFunction() 
 {
-  [ -n "$ZOPEN_CLEANUP" ] && $(eval "$ZOPEN_CLEANUP" 2>/dev/null)
+  [ -n "${ZOPEN_CLEANUP}" ] && $(eval "${ZOPEN_CLEANUP}" 2>/dev/null)
   trap - EXIT INT TERM QUIT HUP
   unset ZOPEN_CLEANUP
 }
@@ -24,18 +24,18 @@ trap "cleanupFunction" EXIT INT TERM QUIT HUP
 isPackageActive()
 {
   pkg="$1"
-  printDebug "Checking if '$pkg' is installed and active"
-  installedPackage=$(cd "$ZOPEN_PKGINSTALL" && zosfind . -name ".active" | grep "/$pkg/")
+  printDebug "Checking if '${pkg}' is installed and active"
+  installedPackage=$(cd "${ZOPEN_PKGINSTALL}" && zosfind . -name ".active" | grep "/${pkg}/")
   cmdrc=$?
   # Return 1 for true/Package is Active, 0 for false/Package is not active
-  [ $cmdrc -eq 0 ] && return 1 || return 0
+  [ "${cmdrc}" -eq 0 ] && return 1 || return 0
 }
 
 curlCmd()
 {
   # Take the list of parameters and concat them with  
   # any custom parameters the user requires in ZOPEN_CURL_PARAMS
-  curl $ZOPEN_CURL_PARAMS $*
+  curl "${ZOPEN_CURL_PARAMS}" "$*"
 }
 
 validateReleaseLine()
@@ -52,17 +52,17 @@ validateReleaseLine()
 deref()
 {
   testpath="$1"
-  if [ -L "$testpath" ]; then
-    child=$(basename "$testpath")
-    symlink=$(ls -l "$testpath" | sed 's/.*-> \(.*\)/\1/')
-    parent=$(dirname "$testpath")
-    relpath="$parent/$symlink"
-    relparent=$(dirname "$relpath")
-    abspath=$(cd "$relparent" && pwd -P)
-    testpath="$abspath/$child"
-    deref "$testpath"
+  if [ -L "${testpath}" ]; then
+    child=$(basename "${testpath}")
+    symlink=$(ls -l "${testpath}" | sed 's/.*-> \(.*\)/\1/')
+    parent=$(dirname "${testpath}")
+    relpath="${parent}/${symlink}"
+    relparent=$(dirname "${relpath}")
+    abspath=$(cd "${relparent}" && pwd -P)
+    testpath="${abspath}/${child}"
+    deref "${testpath}"
   else
-    [ -n "$testpath" ] && echo "$testpath" && unset testpath
+    [ -n "${testpath}" ] && echo "${testpath}" && unset testpath
   fi
 }
 
@@ -111,15 +111,15 @@ ansiline()
   deltax=$1
   deltay=$2
   echostr=$3
-  if [ $deltax -gt 0 ]; then
-    echostr="${ESC}[${deltax}A$echostr"
-  elif [ $deltax -lt 0 ]; then
-    echostr="${ESC}[$(expr $deltax \* -1)A$echostr"
+  if [ "${deltax}" -gt 0 ]; then
+    echostr="${ESC}[${deltax}A${echostr}"
+  elif [ "${deltax}" -lt 0 ]; then
+    echostr="${ESC}[$(expr "${deltax}" \* -1)A${echostr}"
   fi
-  if [ $deltay -gt 0 ]; then
-    echostr="${ESC}[${deltax}C$echostr"
-  elif [ $deltay -lt 0 ]; then
-    echostr="${ESC}[$(expr $deltax \* -1)D$echostr"
+  if [ "${deltay}" -gt 0 ]; then
+    echostr="${ESC}[${deltax}C${echostr}"
+  elif [ "${deltay}" -lt 0 ]; then
+    echostr="${ESC}[$(expr "${deltax}" \* -1)D${echostr}"
   fi
  /bin/echo "${echostr}"
 
@@ -139,17 +139,17 @@ zosfind()
   # "-wholename" is not available on standard zosfind. For the tooling to be
   # consistent across platforms (where findutils is/is not installed) use the
   # standard zos version
-  /bin/find $*
+  /bin/find "$*"
 }
 
 findrev() 
 {
   haystack="$1"
   needle="$2"
-  while [[ "$haystack" != "" && "$haystack" != "/" && "$haystack" != "./" && ! -e "$haystack/$needle" ]]; do
+  while [[ "${haystack}" != "" && "${haystack}" != "/" && "${haystack}" != "./" && ! -e "${haystack}/${needle}" ]]; do
     haystack=${haystack%/*}
   done
-  echo "$haystack"
+  echo "${haystack}"
 }
 
 strtrim()
@@ -161,7 +161,7 @@ defineEnvironment()
 {
   # Required for proper operation of z/OS auto-conversion support
   export _BPXK_AUTOCVT=ON
-  export _CEE_RUNOPTS="$_CEE_RUNOPTS FILETAG(AUTOCVT,AUTOTAG) POSIX(ON)"
+  export _CEE_RUNOPTS="${_CEE_RUNOPTS} FILETAG(AUTOCVT,AUTOTAG) POSIX(ON)"
   export _TAG_REDIR_ERR=txt
   export _TAG_REDIR_IN=txt
   export _TAG_REDIR_OUT=txt
@@ -193,46 +193,46 @@ printColors()
 mutexReq()
 {
   mutex=$1
-  lockdir="$ZOPEN_ROOTFS/var/lock"
-  [ -e lockdir ] || mkdir -p $lockdir
-  mutex="$lockdir/$mutex"
+  lockdir="${ZOPEN_ROOTFS}/var/lock"
+  [ -e lockdir ] || mkdir -p "${lockdir}"
+  mutex="${lockdir}/${mutex}"
   mypid=$(exec sh -c 'echo $PPID')
-  if [ -e "$mutex" ]; then
-    lockedpid=$(cat $mutex)
-    { [ ! "$lockedpid" = "$mypid" ] && [ ! "$lockedpid" = "$PPID" ]; } && kill -0 "$lockedpid" 2>/dev/null && echo "Aborting, Active process '$lockedpid' holds the '$2' lock: '$mutex'" && exit -1
+  if [ -e "${mutex}" ]; then
+    lockedpid=$(cat "${mutex}")
+    { [ ! "${lockedpid}" = "${mypid}" ] && [ ! "${lockedpid}" = "${PPID}" ]; } && kill -0 "${lockedpid}" 2>/dev/null && echo "Aborting, Active process '${lockedpid}' holds the '$2' lock: '${mutex}'" && exit -1
   fi
-  addCleanupTrapCmd "rm -rf $mutex"
-  echo "$mypid" > $mutex
+  addCleanupTrapCmd "rm -rf ${mutex}"
+  echo "${mypid}" > "${mutex}"
 }
 
 mutexFree()
 {
   mutex=$1
-  lockdir="$ZOPEN_ROOTFS/var/lock"
-  mutex="$lockdir/$mutex"
-  [ -e "$mutex" ] && rm -f $mutex
+  lockdir="${ZOPEN_ROOTFS}/var/lock"
+  mutex="${lockdir}/${mutex}"
+  [ -e "${mutex}" ] && rm -f "${mutex}"
 }
 
 relativePath2(){
   sourcePath=$1
   targetPath=$2
-  currentIFS="$IFS"
+  currentIFS="${IFS}"
   IFS="/"
   relativePath=''
-  set -- $targetPath
-  for elem in $sourcePath; do
-      if [ -z "$relativePath" ]; then
-        if [ "$1" = "$elem" ]; then
+  set -- "${targetPath}"
+  for elem in ${sourcePath}; do
+      if [ -z "${relativePath}" ]; then
+        if [ "$1" = "${elem}" ]; then
             shift
             continue
         else
-          relativePath="../$elem"
+          relativePath="../${elem}"
         fi
       else
         if [ -z "$1" ]; then
-          relativePath="$relativePath/$elem"
+          relativePath="${relativePath}/${elem}"
         else
-          relativePath="../$relativePath/$elem"
+          relativePath="../${relativePath}/${elem}"
         fi
       fi
     if [ $# -gt 0 ]; then
@@ -242,10 +242,10 @@ relativePath2(){
   # if the target is longer than the source, there might be some additional
   # elements in the shifted $0 to append
   if [ $# -gt 0 ]; then
-     relativePath=$relativePath/$(echo $* | sed "s/ /\//g")
+     relativePath=${relativePath}/$(echo "$*" | sed "s/ /\//g")
   fi
-  IFS="$currentIFS"
-  echo "$relativePath"
+  IFS="${currentIFS}"
+  echo "${relativePath}"
 }
 
 # Merges a package directory's symlinks into the main zopen root filesystem
@@ -256,81 +256,81 @@ mergeIntoSystem()
   rootfs="$3"
   rebaseusr="$4"
 
-  [ -z "$rebaseusr" ] && rebaseusr="usr/local"
+  [ -z "${rebaseusr}" ] && rebaseusr="usr/local"
 
-  currentDir="$PWD"
-  targetdir="$rootfs/$rebaseusr"     # The main rootfs/usr location
+  currentDir="${PWD}"
+  targetdir="${rootfs}/${rebaseusr}"     # The main rootfs/usr location
 
   printDebug "Calculating the offset path to store from root"
-  offset=$(dirname "${versioneddir#$rootfs/}")
-  version=$(basename $versioneddir)
+  offset=$(dirname "${versioneddir#"${rootfs}"/}")
+  version=$(basename "${versioneddir}")
   tmptime=$(date +%Y%m%d%H%M%S)
-  processingDir="$rootfs/tmp/zopen.$tmptime"
-  printDebug "Temporary processing dir evaluated to: $processingDir"
+  processingDir="${rootfs}/tmp/zopen.${tmptime}"
+  printDebug "Temporary processing dir evaluated to: ${processingDir}"
 
-  virtualStore="$processingDir/$offset"
-  printDebug "Creating virtual store at: $virtualStore"
-  mkdir -p "$virtualStore"
+  virtualStore="${processingDir}/${offset}"
+  printDebug "Creating virtual store at: ${virtualStore}"
+  mkdir -p "${virtualStore}"
 
   printDebug "Moving from main store location (unpax-dir) to processing store"
-  mv "$versioneddir" "$virtualStore"
+  mv "${versioneddir}" "${virtualStore}"
 
   printDebug "Creating main linked directory in store"
-  $(cd "$virtualStore" && ln -s "$version" "$name")
+  $(cd "${virtualStore}" && ln -s "${version}" "${name}")
 
   printDebug "Creating virtual root directory structure"
-  mkdir -p "$processingDir/$rebaseusr"
+  mkdir -p "${processingDir}/${rebaseusr}"
 
   printDebug "Generating relative symlinks in processing location"
-  relpath=$(relativePath2 "$virtualStore/$name" "$processingDir/$rebaseusr")
-  [ "$relpath" = "/" ] && printError "Relative path calculated as root directory itself!?!"
+  relpath=$(relativePath2 "${virtualStore}/${name}" "${processingDir}/${rebaseusr}")
+  [ "${relpath}" = "/" ] && printError "Relative path calculated as root directory itself!?!"
 
   printDebug "Generating symlink tree"
   
   printDebug "Creating directory structure"
-  curdir="$PWD"
-  cd "$virtualStore/$name"
+  curdir="${PWD}"
+  cd "${virtualStore}/${name}" || exit
    # since 'ln *' doesn't invoke globbing to allow multiple files at once,
    # abuse the Recurse option; this results in "already exists" errors but 
    # ignore them as the first call should generate the correct link but 
    # subsequent calls would generate a symlink that has incorrect dereferencing 
    # and ignoring them is actually faster than individually creating the links!
   zosfind . -type d | sort -r | while read dir; do
-    dir=$(echo "$dir" | sed "s#^./##")
-    printDebug "Processing dir: $dir" 
-    [ $dir = "." ] && continue;
-    mkdir -p "$processingDir/$rebaseusr/$dir"
-    cd "$processingDir/$rebaseusr/$dir"
-    dirrelpath=$(relativePath2 "$virtualStore/$name/$dir" "$processingDir/$rebaseusr/$dir")
-    ln -Rs "$dirrelpath/" "." 2>/dev/null
+    dir=$(echo "${dir}" | sed "s#^./##")
+    printDebug "Processing dir: ${dir}" 
+    [ "${dir}" = "." ] && continue;
+    mkdir -p "${processingDir}/${rebaseusr}/${dir}"
+    cd "${processingDir}/${rebaseusr}/${dir}" || exit
+    dirrelpath=$(relativePath2 "${virtualStore}/${name}/${dir}" "${processingDir}/${rebaseusr}/${dir}")
+    ln -Rs "${dirrelpath}/" "." 2>/dev/null
   done 
 
   printDebug "Moving unpaxed processing-directory back to main rootfs store"
   # this *must* be done before the merge step below or relative symlinks can't
   # work
-  versioneddirname=$(basename "$versioneddir")
-  mv "$virtualStore/$versioneddirname" "$rootfs/$offset"
+  versioneddirname=$(basename "${versioneddir}")
+  mv "${virtualStore}/${versioneddirname}" "${rootfs}/${offset}"
 
-  tarfile="$name.usr.tar"
-  printDebug "Merge symlinks into main filesystem using tmp tar file $tarfile"
+  tarfile="${name}.usr.tar"
+  printDebug "Merge symlinks into main filesystem using tmp tar file ${tarfile}"
   
   printDebug "Generating intermediary tar file"
   # Need '-S' to allow long symlinks
-  $(cd "$processingDir" && tar -S -cf "$tarfile" "usr")
+  $(cd "${processingDir}" && tar -S -cf "${tarfile}" "usr")
 
   printDebug "Generating listing for remove processing (including main symlink)"
-  listing=$(tar tf "$processingDir/$tarfile" 2>/dev/null| sort -r)
-  echo "Installed files:" > "$versioneddir/.links"
-  echo "$listing" >>  "$versioneddir/.links"
+  listing=$(tar tf "${processingDir}/${tarfile}" 2>/dev/null| sort -r)
+  echo "Installed files:" > "${versioneddir}/.links"
+  echo "${listing}" >>  "${versioneddir}/.links"
   
   printDebug "Extracting tar to rootfs"
-  cd "$processingDir" && tar xf "$tarfile" -C "$rootfs" 2>/dev/null
+  cd "${processingDir}" && tar xf "${tarfile}" -C "${rootfs}" 2>/dev/null
 
   printDebug "Cleaning temp resources"
-  rm -rf "$processingDir" 2>/dev/null
+  rm -rf "${processingDir}" 2>/dev/null
 
   printDebug "Switching to previous cwd - current work dir was purged"
-  cd "$currentDir"
+  cd "${currentDir}" || exit
 
   printInfo "- Integration complete"
   return 0
@@ -346,36 +346,36 @@ unsymlinkFromSystem()
   pkg=$1
   rootfs=$2
   dotlinks=$3
-  if [ -e "$dotlinks" ]; then
-    printInfo "- Checking for obsoleted files in $rootfs/usr/ tree from $pkg"
+  if [ -e "${dotlinks}" ]; then
+    printInfo "- Checking for obsoleted files in ${rootfs}/usr/ tree from ${pkg}"
     # Use sed to skip header line in .links file
     # Note that the contents of the links file are ordered such that
     # processing occurs depth-first; if, after removing orphaned symlinks,
     # a directory is empty, then it can be removed.
-    nfiles=$(sed '1d;$d' "$dotlinks" | wc -l  | tr -d ' ')
+    nfiles=$(sed '1d;$d' "${dotlinks}" | wc -l  | tr -d ' ')
     flecnt=0
     pct=0
 
     printDebug "Creating Temporary dirname file"
-    tempDirFile="$ZOPEN_ROOTFS/tmp/zopen.rmdir.$RANDOM"
-    tempTrash="$tempDirFile.trash"
-    [ -e "$tempDirFile" ] && rm -f "$tempDirFile" >/dev/null 2>&1
-    touch "$tempDirFile"
-    addCleanupTrapCmd "rm -rf $tempDirFile"
-    printDebug "Using temporary file $tempDirFile"
+    tempDirFile="${ZOPEN_ROOTFS}/tmp/zopen.rmdir.${RANDOM}"
+    tempTrash="${tempDirFile}.trash"
+    [ -e "${tempDirFile}" ] && rm -f "${tempDirFile}" >/dev/null 2>&1
+    touch "${tempDirFile}"
+    addCleanupTrapCmd "rm -rf ${tempDirFile}"
+    printDebug "Using temporary file ${tempDirFile}"
     printInfo "- Checking ${nfiles} potential links"
 
     rm_fileprocs=15
-    [ -e "$rootfs/etc/zopen/rm_fileprocs" ] && rm_fileprocs=$(cat "$rootfs/etc/zopen/rm_fileprocs")
+    [ -e "${rootfs}/etc/zopen/rm_fileprocs" ] && rm_fileprocs=$(cat "${rootfs}/etc/zopen/rm_fileprocs")
     threshold=$(( nfiles / rm_fileprocs))
     threshold=$(( threshold + 1 ))
-    printDebug "Threshold of files per worker [files/procs] calculated as: $threshold"
-    [ $threshold -le 50 ] && threshold=50 && printVerbose "Threshold below min: using 50" # Don't spawn too many
+    printDebug "Threshold of files per worker [files/procs] calculated as: ${threshold}"
+    [ "${threshold}" -le 50 ] && threshold=50 && printVerbose "Threshold below min: using 50" # Don't spawn too many
     printDebug "Starting spinner..."
     progressHandler "spinner" "- Complete" &
     ph=$!
-    killph="kill -HUP $ph"
-    addCleanupTrapCmd "$killph"
+    killph="kill -HUP ${ph}"
+    addCleanupTrapCmd "${killph}"
 
     printDebug "Spawning as subshell to handle threading"
     # Note that this all must happen in a subshell as the above started
@@ -386,30 +386,30 @@ unsymlinkFromSystem()
       filenames=""
       while read filetounlink; do
         tid=$(( tid + 1 ))
-        filetounlink=$(echo "$filetounlink" | sed 's/\(.*\).symbolic.*/\1/')
-        filenames=$(/bin/printf "%s\n%s" "$filenames" "$filetounlink")
+        filetounlink=$(echo "${filetounlink}" | sed 's/\(.*\).symbolic.*/\1/')
+        filenames=$(/bin/printf "%s\n%s" "${filenames}" "${filetounlink}")
         if [ "$(( tid % threshold ))" -eq 0 ]; then
-          deletethread "$filenames" "$tempDirFile" &
+          deletethread "${filenames}" "${tempDirFile}" &
           printDebug "Started delete thread: $!"
           filenames=""
         fi
       done <<EOF
-$(sed '1d;$d' "$dotlinks")
+$(sed '1d;$d' "${dotlinks}")
 EOF
-      if [ -n "$filenames" ]; then
+      if [ -n "${filenames}" ]; then
         # Handle when there are not enough to trigger the threshold of a new thread above,
         # there will still be items in the "array"
-        deletethread "$filenames" "$tempDirFile" #&
+        deletethread "${filenames}" "${tempDirFile}" #&
         printDebug "Started delete thread: $!"
       fi
       wait 
     )
-    $killph 2>/dev/null  # if the timer is not running, the kill will fail
-    if [ -e "$tempDirFile" ]; then
-      ndirs=$(cat "$tempDirFile" | uniq | wc -l  | tr -d ' ')
+    ${killph} 2>/dev/null  # if the timer is not running, the kill will fail
+    if [ -e "${tempDirFile}" ]; then
+      ndirs=$(cat "${tempDirFile}" | uniq | wc -l  | tr -d ' ')
       printInfo "- Checking ${ndirs} dir links"
-      for d in $(cat "$tempDirFile" | uniq | sort -r) ; do 
-        [ -d "$d" ] && rmdir "$d" >/dev/null 2>&1
+      for d in $(cat "${tempDirFile}" | uniq | sort -r) ; do 
+        [ -d "${d}" ] && rmdir "${d}" >/dev/null 2>&1
       done
     fi
   else
@@ -421,8 +421,8 @@ deletethread()
 {
   filestodelete="$1"
   tempDirFile="$2"
-  echo "$filestodelete"| while read filetounlink; do
-    deletetask "$tempDirFile" "$filetounlink" 
+  echo "${filestodelete}"| while read filetounlink; do
+    deletetask "${tempDirFile}" "${filetounlink}" 
   done
 }
 
@@ -430,23 +430,23 @@ deletetask()
 {
     tempDirFile="$1"
     filename="$2"
-    [ -z "$filename" ] && return 0
-    filename="$ZOPEN_ROOTFS/$filename"
-    if [ -d "$filename" ]; then
+    [ -z "${filename}" ] && return 0
+    filename="${ZOPEN_ROOTFS}/${filename}"
+    if [ -d "${filename}" ]; then
         # Add to the queue for checking once files are gone if unique
-        ispresent=$(grep "^$filename[ ]*$" "$tempDirFile")
-        if [ -z "$ispresent" ]; then
-          echo " $filename " >> "$tempDirFile"
+        ispresent=$(grep "^${filename}[ ]*$" "${tempDirFile}")
+        if [ -z "${ispresent}" ]; then
+          echo " ${filename} " >> "${tempDirFile}"
         else
           alreadyfound=""
         fi
-    elif [ -L "$filename" ]; then
-      if [ ! -f "$filename" ]; then
+    elif [ -L "${filename}" ]; then
+      if [ ! -f "${filename}" ]; then
         # the linked-to file no longer exists (ie. the symlink is dangling)
-        rm -f "$filename" >/dev/null 2>&1
+        rm -f "${filename}" >/dev/null 2>&1
       fi
     else 
-      echo "Unprocessable file: '$filename'" >> "$tempTrash" 
+      echo "Unprocessable file: '${filename}'" >> "${tempTrash}" 
     fi
 }
 
@@ -454,7 +454,7 @@ zopenInitialize()
 {
   defineEnvironment
   defineANSI
-  if [ -z "$ZOPEN_DONT_PROCESS_CONFIG" ]; then
+  if [ -z "${ZOPEN_DONT_PROCESS_CONFIG}" ]; then
     processConfig
   fi
 
@@ -467,7 +467,7 @@ printDebug()
   if ${debug}; then
     printColors "${NC}${BLUE}${BOLD}:DEBUG:${NC}: '${1}'" >&2
   fi
-  [ ! -z "$xtrc" ] && set -x
+  [ ! -z "${xtrc}" ] && set -x
   return 0;
 }
 
@@ -477,7 +477,7 @@ printVerbose()
   if ${verbose}; then
     printColors "${NC}${GREEN}${BOLD}VERBOSE${NC}: '${1}'" >&2
   fi
-  [ ! -z "$xtrc" ] && set -x
+  [ ! -z "${xtrc}" ] && set -x
   return 0;
 }
 
@@ -485,7 +485,7 @@ printHeader()
 {
   [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
   printColors "${NC}${YELLOW}${BOLD}${UNDERLINE}${1}${NC}" >&2
-  [ ! -z "$xtrc" ] && set -x
+  [ ! -z "${xtrc}" ] && set -x
   return 0;
 }
 
@@ -495,9 +495,9 @@ runAndLog()
   eval "$1"
   rc=$?
   if [ ! -z "${SSH_TTY}" ]; then
-    chtag -r $SSH_TTY
+    chtag -r "${SSH_TTY}"
   fi
-  return $rc
+  return "${rc}"
 }
 
 runLogProgress()
@@ -513,17 +513,17 @@ runLogProgress()
   else
     completeText="Complete"
   fi
-  progressHandler "spinner" "- $completeText" &
+  progressHandler "spinner" "- ${completeText}" &
   ph=$!
-  killph="kill -HUP $ph"
-  addCleanupTrapCmd "$killph"
+  killph="kill -HUP ${ph}"
+  addCleanupTrapCmd "${killph}"
   eval "$1"
   rc=$?
   if [ ! -z "${SSH_TTY}" ]; then
-    chtag -r $SSH_TTY
+    chtag -r "${SSH_TTY}"
   fi
-  $killph 2>/dev/null  # if the timer is not running, the kill will fail
-  return $rc
+  ${killph} 2>/dev/null  # if the timer is not running, the kill will fail
+  return "${rc}"
 }
 
 spinloop()
@@ -531,7 +531,7 @@ spinloop()
   # in the absence of generic ms/ns reporting, spin-loop instead - not ideal
   # but without pre-reqing packages...
   i=$1
-  while [ $i -ge 0 ]; do
+  while [ "${i}" -ge 0 ]; do
     true > /dev/null
     i=$(( i - 1 ))
   done
@@ -541,14 +541,14 @@ progressNetwork()
 {
   # Loop until signal received
   icon="-----"
-  ansiline 0 0 "$icon"
+  ansiline 0 0 "${icon}"
   while : ; do
     spinloop 1000
-    case "$icon" in
+    case "${icon}" in
       '-----') icon='>----';; '>----') icon='->---';; '->---') icon='-->--';; '-->--') icon='--->-';; '--->-') icon='---->';;
       '---->') icon='----<';; '----<') icon='---<-';; '---<-') icon='--<--';; '--<--') icon='-<---';; '-<---') icon='<----';; '<----') icon='-----';;
     esac
-    ansiline 1 -1 "$icon"
+    ansiline 1 -1 "${icon}"
   done
 }
 
@@ -556,13 +556,13 @@ progressSpinner()
 {
   # Loop until signal received
   icon="-"
-  ansiline 0 0 "$icon"
+  ansiline 0 0 "${icon}"
   while : ; do
     spinloop 1000
-    case "$icon" in
+    case "${icon}" in
       '-') icon='\';; '\') icon='|';; '|') icon='/';; '/') icon='-';;
     esac
-    ansiline 1 -1 "$icon"
+    ansiline 1 -1 "${icon}"
   done
 }
 
@@ -574,9 +574,9 @@ progressHandler()
       completiontext=$2  # Custom end text (when the process is complete)
       
       trapcmd="exit;"
-      [ -n "$completiontext" ] && trapcmd="/bin/echo \"\047[1A\047[30D\047[2K$completiontext\"; $trapcmd"
-      trap "$trapcmd" HUP
-      case "$type" in
+      [ -n "${completiontext}" ] && trapcmd="/bin/echo \"\047[1A\047[30D\047[2K${completiontext}\"; ${trapcmd}"
+      trap "${trapcmd}" HUP
+      case "${type}" in
         "network") progressNetwork;;
         *)         progressSpinner;;
       esac
@@ -588,41 +588,41 @@ runInBackgroundWithTimeoutAndLog()
   command="$1"
   timeout="$2"
 
-  printVerbose "$command with timeout of ${timeout}s"
-  eval "$command &; TEEPID=$!"
+  printVerbose "${command} with timeout of ${timeout}s"
+  eval "${command} &; TEEPID=$!"
   PID=$!
   n=0
-  while [ $n -le $timeout ]; do
-    kill -0 $PID 2>/dev/null
+  while [ "${n}" -le "${timeout}" ]; do
+    kill -0 "${PID}" 2>/dev/null
     if [ $? != 0 ]; then
-      wait $PID
+      wait "${PID}"
       if [ ! -z "${SSH_TTY}" ]; then
-        chtag -r $SSH_TTY
+        chtag -r "${SSH_TTY}"
       fi
       rc=$?
-      return $rc
+      return "${rc}"
     else
       sleep 1
-      n=`expr $n + 1`
+      n=$(expr "${n}" + 1)
     fi
   done
-  kill -9 $PID
-  kill -9 $TEEPID
-  printError "TIMEOUT: (PID: $PID): $command"
+  kill -9 "${PID}"
+  kill -9 "${TEEPID}"
+  printError "TIMEOUT: (PID: ${PID}): ${command}"
 }
 
 printSoftError()
 {
   [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
   printColors "${NC}${RED}${BOLD}***ERROR: ${NC}${RED}${1}${NC}" >&2
-  [ -n "$xtrc" ] && set -x
+  [ -n "${xtrc}" ] && set -x
 }
 
 printError()
 {
   [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
   printColors "${NC}${RED}${BOLD}***ERROR: ${NC}${RED}${1}${NC}" >&2
-  [ -n "$xtrc" ] && set -x
+  [ -n "${xtrc}" ] && set -x
   mutexFree "zopen" # prevent lock from lingering around after an error
   cleanupFunction
   exit 4
@@ -632,7 +632,7 @@ printWarning()
 {
   [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
   printColors "${NC}${YELLOW}${BOLD}***WARNING: ${NC}${YELLOW}${1}${NC}" >&2
-  [ -n "$xtrc" ] && set -x
+  [ -n "${xtrc}" ] && set -x
   return 0;
 }
 
@@ -640,7 +640,7 @@ printInfo()
 {
   [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
   printColors "$1" >&2
-  [ -n "$xtrc" ] && set -x
+  [ -n "${xtrc}" ] && set -x
   return 0;
 }
 
@@ -653,14 +653,14 @@ getInputHidden()
   addCleanupTrapCmd "stty echo"
   stty -echo
   read zopen_input
-  echo $zopen_input
+  echo "${zopen_input}"
   stty echo
 }
 
 getInput()
 {
   read zopen_input
-  echo $zopen_input
+  echo "${zopen_input}"
 }
 
 printElapsedTime()
@@ -668,16 +668,16 @@ printElapsedTime()
   printType=$1
   functionName=$2
   startTime=$3
-  elapsedTime=$(( $SECONDS - $startTime ))
+  elapsedTime=$(( ${SECONDS} - ${startTime} ))
 
-  elapsedTimeOutput="$functionName completed in $elapsedTime seconds."
+  elapsedTimeOutput="${functionName} completed in ${elapsedTime} seconds."
 
-  case $printType in
+  case ${printType} in
     "info")
-      printInfo "$elapsedTimeOutput"
+      printInfo "${elapsedTimeOutput}"
       ;;
     "verbose")
-      printVerbose "$elapsedTimeOutput"
+      printVerbose "${elapsedTimeOutput}"
       ;;
   esac
 }
@@ -685,10 +685,10 @@ printElapsedTime()
 processConfig()
 {
   export ZOPEN_QUICK_LOAD=1
-  if [ -z "$ZOPEN_ROOTFS" ]; then
+  if [ -z "${ZOPEN_ROOTFS}" ]; then
     relativeRootDir="$(cd "$(dirname "$0")/../.." >/dev/null 2>&1 && pwd -P)"
-    if [ -f "$relativeRootDir/etc/zopen-config" ]; then
-      . "$relativeRootDir/etc/zopen-config"
+    if [ -f "${relativeRootDir}/etc/zopen-config" ]; then
+      . "${relativeRootDir}/etc/zopen-config"
     else
       printError "Source the zopen-config prior to running $0"
     fi
@@ -704,8 +704,8 @@ checkIfConfigLoaded() {
   fi
   
   if [ ! -z "${errorMessage}" ]; then
-    if [ -r "$mydir/../../../etc/zopen-config" ]; then
-      relativeConfigDir="$(cd "$(dirname "$mydir")/../../etc/" >/dev/null 2>&1 && pwd -P)"
+    if [ -r "${mydir}/../../../etc/zopen-config" ]; then
+      relativeConfigDir="$(cd "$(dirname "${mydir}")/../../etc/" >/dev/null 2>&1 && pwd -P)"
       errorMessage="${errorMessage} Run '. ${relativeConfigDir}/zopen-config'  or add it to your .profile."
     fi
     printError "${errorMessage}"
@@ -715,41 +715,41 @@ checkIfConfigLoaded() {
 parseDeps()
 {
   dep="$1"
-  version=$(echo $dep | awk -F '[>=<]+' '{print $2}')
-  if [ -z "$version" ]; then
+  version=$(echo "${dep}" | awk -F '[>=<]+' '{print $2}')
+  if [ -z "${version}" ]; then
     operator=""
-    dep=$(echo $dep | awk -F '[>=<]+' '{print $1}')
+    dep=$(echo "${dep}" | awk -F '[>=<]+' '{print $1}')
   else
-    operator=$(echo $dep | awk -F '[0-9.]+' '{print $1}' | awk -F '^[a-zA-Z]+' '{print $2}')
-    dep=$(echo $dep | awk -F '[>=<]+' '{print $1}')
-    case $operator in
+    operator=$(echo "${dep}" | awk -F '[0-9.]+' '{print $1}' | awk -F '^[a-zA-Z]+' '{print $2}')
+    dep=$(echo "${dep}" | awk -F '[>=<]+' '{print $1}')
+    case ${operator} in
       ">=") ;;
       "=") ;;
-      *) printError "$operator is not supported."
+      *) printError "${operator} is not supported."
     esac
-    major=$(echo $version | awk -F. '{print $1}')
-    minor=$(echo $version | awk -F. '{print $2}')
-    if [ -z "$minor" ]; then
+    major=$(echo "${version}" | awk -F. '{print $1}')
+    minor=$(echo "${version}" | awk -F. '{print $2}')
+    if [ -z "${minor}" ]; then
       minor=0
     fi
-    patch=$(echo $version | awk -F. '{print $3}')
-    if [ -z "$patch" ]; then
+    patch=$(echo "${version}" | awk -F. '{print $3}')
+    if [ -z "${patch}" ]; then
       patch=0
     fi
-    prerelease=$(echo $version | awk -F. '{print $4}')
-    if [ -z "$prerelease" ]; then
+    prerelease=$(echo "${version}" | awk -F. '{print $4}')
+    if [ -z "${prerelease}" ]; then
       prerelease=0
     fi
   fi
 
-  echo "$dep|$operator|$major|$minor|$patch|$prerelease"
+  echo "${dep}|${operator}|${major}|${minor}|${patch}|${prerelease}"
 }
 
 compareVersions()
 {
   v1="$1"
   v2="$2"
-  awk -v v1="$v1" -v v2="$v2" '
+  awk -v v1="${v1}" -v v2="${v2}" '
   function vercmp(v1, v2) {
     n1 = split(v1, v1_array, ".")
     n2 = split(v2, v2_array, ".")
@@ -780,11 +780,11 @@ validateVersion()
   operator=$2
   requestedVersion=$3
   dependency=$4
-  if [ -n "$operator" ] && [ -z "$version" ]; then
-    printVerbose "$operator ${requestedVersion} requsted, but no version file found in $versionPath." 
+  if [ -n "${operator}" ] && [ -z "${version}" ]; then
+    printVerbose "${operator} ${requestedVersion} requsted, but no version file found in ${versionPath}." 
     return 1
-  elif [ ! -z "$operator" ] && ! compareVersions "${version}" "${requestedVersion}"; then
-    printVerbose "$dependency does not satisfy ${version} $operator ${requestedVersion}"
+  elif [ ! -z "${operator}" ] && ! compareVersions "${version}" "${requestedVersion}"; then
+    printVerbose "${dependency} does not satisfy ${version} ${operator} ${requestedVersion}"
     return 1
   fi
   return 0
@@ -794,7 +794,7 @@ deleteDuplicateEntries()
 {
   value=$1
   delim=$2
-  echo "$value$delim" | awk -v RS="$delim" '!($0 in a) {a[$0]; printf("%s%s", col, $0); col=RS; }' | sed "s/${delim}$//"
+  echo "${value}${delim}" | awk -v RS="${delim}" '!($0 in a) {a[$0]; printf("%s%s", col, $0); col=RS; }' | sed "s/${delim}$//"
 }
 
 # reworked version of above to strip blank elements between delims
@@ -802,7 +802,7 @@ deleteDuplicateEntriesRedux()
 {
   value=$1
   delim=$2
-  echo "$value" | awk -v RS="$delim" -v ORS="$delim" ' {gsub("^[ ]+|[ ]$", "", $0); if (NF>0 && !a[$0]++) {print } }' | sed "s/${delim}$//"
+  echo "${value}" | awk -v RS="${delim}" -v ORS="${delim}" ' {gsub("^[ ]+|[ ]$", "", $0); if (NF>0 && !a[$0]++) {print } }' | sed "s/${delim}$//"
 }
 
 # Logging Types
@@ -830,59 +830,59 @@ syslog()
   module=$4
   location=$5
   msg=$6
-  if [ ! -e "$fd" ]; then
-    mkdir -p "$(dirname "$fd")"
-    touch "$fd"
+  if [ ! -e "${fd}" ]; then
+    mkdir -p "$(dirname "${fd}")"
+    touch "${fd}"
   fi
-  echo $(date +"%F %T") $(id | cut -d' ' -f1)::$module:$type:$categories:$location:$msg >> $fd
+  echo $(date +"%F %T") $(id | cut -d' ' -f1)::"${module}":"${type}":"${categories}":"${location}":"${msg}" >> "${fd}"
 }
 
 downloadJSONCache() 
 {
-  if [ -z "$JSON_CACHE" ]; then
-    JSON_CACHE="$ZOPEN_ROOTFS/var/cache/zopen/zopen_releases.json"
-    JSON_TIMESTAMP="$ZOPEN_ROOTFS/var/cache/zopen/zopen_releases.timestamp"
-    JSON_TIMESTAMP_CURRENT="$ZOPEN_ROOTFS/var/cache/zopen/zopen_releases.timestamp.current"
-    if ! curlCmd -L -s -I "$ZOPEN_JSON_CACHE_URL" -o "$JSON_TIMESTAMP_CURRENT"; then
-      printError "Failed to obtain json cache timestamp from $ZOPEN_JSON_CACHE_URL"
+  if [ -z "${JSON_CACHE}" ]; then
+    JSON_CACHE="${ZOPEN_ROOTFS}/var/cache/zopen/zopen_releases.json"
+    JSON_TIMESTAMP="${ZOPEN_ROOTFS}/var/cache/zopen/zopen_releases.timestamp"
+    JSON_TIMESTAMP_CURRENT="${ZOPEN_ROOTFS}/var/cache/zopen/zopen_releases.timestamp.current"
+    if ! curlCmd -L -s -I "${ZOPEN_JSON_CACHE_URL}" -o "${JSON_TIMESTAMP_CURRENT}"; then
+      printError "Failed to obtain json cache timestamp from ${ZOPEN_JSON_CACHE_URL}"
     fi
-    chtag -tc 819 "$JSON_TIMESTAMP_CURRENT"
+    chtag -tc 819 "${JSON_TIMESTAMP_CURRENT}"
 
-    if [ -f "$JSON_CACHE" ] && [ -f "$JSON_TIMESTAMP" ] && [ "$(grep 'Last-Modified' "$JSON_TIMESTAMP_CURRENT")" = "$(grep 'Last-Modified' "$JSON_TIMESTAMP")" ]; then
+    if [ -f "${JSON_CACHE}" ] && [ -f "${JSON_TIMESTAMP}" ] && [ "$(grep 'Last-Modified' "${JSON_TIMESTAMP_CURRENT}")" = "$(grep 'Last-Modified' "${JSON_TIMESTAMP}")" ]; then
       return;
     fi
 
-    mv "$JSON_TIMESTAMP_CURRENT" "$JSON_TIMESTAMP"
-    if ! curlCmd -L -s -o "$JSON_CACHE" "$ZOPEN_JSON_CACHE_URL" ; then
-      printError "Failed to obtain json cache from $ZOPEN_JSON_CACHE_URL"
+    mv "${JSON_TIMESTAMP_CURRENT}" "${JSON_TIMESTAMP}"
+    if ! curlCmd -L -s -o "${JSON_CACHE}" "${ZOPEN_JSON_CACHE_URL}" ; then
+      printError "Failed to obtain json cache from ${ZOPEN_JSON_CACHE_URL}"
     fi
-    chtag -tc 819 "$JSON_CACHE"
+    chtag -tc 819 "${JSON_CACHE}"
   fi
 
-  if [ ! -f "$JSON_CACHE" ]; then
-    printError "Could not download json cache from $ZOPEN_JSON_CACHE_URL"
+  if [ ! -f "${JSON_CACHE}" ]; then
+    printError "Could not download json cache from ${ZOPEN_JSON_CACHE_URL}"
   fi
 }
 
 getReposFromGithub()
 {
   downloadJSONCache
-  repo_results="$(cat "$JSON_CACHE" | jq -r '.release_data | keys[]')"
+  repo_results="$(cat "${JSON_CACHE}" | jq -r '.release_data | keys[]')"
 }
 
 getAllReleasesFromGithub(){
   downloadJSONCache
   repo="$1"
-  releases="$(jq -e -r '.release_data."'$repo'"' "$JSON_CACHE")"
+  releases="$(jq -e -r '.release_data."'"${repo}"'"' "${JSON_CACHE}")"
   if [ $? -ne 0 ]; then
-    printError "Could not get all releases for $repo"
+    printError "Could not get all releases for ${repo}"
   fi
 }
 
 initDefaultEnvironment()
 {
-  export ZOPEN_OLD_PATH=$PATH       # Preserve PATH in case scripts need to access it
-  export ZOPEN_OLD_LIBPATH=$LIBPATH # Preserve LIBPATH in case scripts need to access it
+  export ZOPEN_OLD_PATH="${PATH}"       # Preserve PATH in case scripts need to access it
+  export ZOPEN_OLD_LIBPATH="${LIBPATH}" # Preserve LIBPATH in case scripts need to access it
   export PATH="$(getconf PATH)"
   export _CEE_RUNOPTS="FILETAG(AUTOCVT,AUTOTAG) POSIX(ON)"
   unset MANPATH
@@ -897,7 +897,7 @@ initDefaultEnvironment()
 #
 checkWritable()
 {
-  if [ "x$INCDIR" = "x" ]; then
+  if [ "${INCDIR}" = "" ]; then
     echo "Internal error. Caller has to have set INCDIR" >&2
     exit 16
   fi
