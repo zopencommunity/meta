@@ -4,14 +4,14 @@
 #
 setupMyself()
 {
-  ME=$(basename "$0")
-  MYDIR="$(cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P)"
-  INCDIR="${MYDIR}/../include"
-  if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
-    echo "Internal Error. Unable to find common.sh file to source" >&2
-    exit 8
-  fi
-  . "${INCDIR}/common.sh"
+        ME=$(basename $0)
+        MYDIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
+        INCDIR="${MYDIR}/../include"
+        if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
+                echo "Internal Error. Unable to find common.sh file to source" >&2
+                exit 8
+        fi
+        . "${INCDIR}/common.sh"
 }
 setupMyself
 
@@ -23,29 +23,29 @@ setupMyself
 
 printSyntax()
 {
-  echo "${ME} will generate man pages from help and version information for zopen and zopen-* tools" >&2
-  echo "Syntax: ${ME} DIRECTORY" >&2
+  echo "$ME will generate man pages from help and version information for zopen and zopen-* tools" >&2
+  echo "Syntax: $ME DIRECTORY" >&2
   echo "  where DIRECTORY is the directory to write the man pages to (the directory needs to already exist)" >&2
 }
 
 if [[ $# -eq 1 ]]; then
-  if [ "$1" = "--help" ]; then
+  if [ "x$1" = "x--help" ]; then
     printSyntax
     exit 0
-  elif [ "$1" = "--version" ]; then
-    zopen --version "${ME}"
+  elif [ "x$1" = "x--version" ]; then
+    zopen --version $ME
     exit 0
   else
     mandir="$1"
   fi
 else
-  echo "Expected one parameter to be passed to ${ME}. $# were passed in. No action performed" >&2
+  echo "Expected one parameter to be passed to $ME. $# were passed in. No action performed" >&2
   printSyntax
   exit 8
 fi
 
 set -e
-export rootdir="$(cd "${MYDIR}/../" && dirname "${PWD}" >/dev/null 2>&1 && pwd -P)"
+export rootdir="$( cd "$MYDIR/../" && dirname "$PWD" >/dev/null 2>&1 && pwd -P )"
 
 help2manopts="--no-discard-stderr -N"
 
@@ -55,7 +55,7 @@ if ! [ -d "${mandir}" ]; then
   exit 8
 fi
 
-if [ "${MYDIR}" = "" ] || [ "${rootdir}" = "" ]; then
+if [ "x${MYDIR}" = "x" ] || [ "x${rootdir}" = "x" ]; then
   echo "Internal error. Unable to determine version information" >&2
   exit 8
 fi
@@ -64,23 +64,26 @@ tooldirs="${rootdir}/bin"
 
 echo "Man pages will be written to: ${mandir}"
 for tooldir in ${tooldirs}; do
-  for tool in ${tooldir}/zopen*; do
-    basetool=$(basename "${tool}")
-    help2man "${help2manopts}" "${tool}" >"${mandir}/${basetool}.1"
-    if $("${tool}" --help >/dev/null 2>&1); then
+  for tool in $tooldir/zopen*; do
+    basetool=$(basename ${tool})
+    help2man ${help2manopts} "${tool}" >"${mandir}/${basetool}.1"
+    if  $( "${tool}" --help >/dev/null 2>&1 ) ; then
       # Tool has implemented --help
-      if $("${tool}" --version >/dev/null 2>&1); then
+      if  $( "${tool}" --version >/dev/null 2>&1 ) ; then
         echo "${basetool}"
-      else
+      else 
         echo "${tool} supports --help but not --version options. man page generation skipped." >&2
       fi
-    else
+    else 
       # Tool has NOT implemented --help
-      if $("${tool}" --version >/dev/null 2>&1); then
+      if  $( "${tool}" --version >/dev/null 2>&1 ) ; then
         echo "${tool} does not support --help but does support man page generation skipped." >&2
-      else
+      else 
         echo "${tool} does not support --help nor --version options. man page generation skipped." >&2
       fi
     fi
   done
 done
+
+
+
