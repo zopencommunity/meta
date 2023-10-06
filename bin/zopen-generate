@@ -1,34 +1,33 @@
 #!/bin/sh
+# Initialize zopen
+ZOPEN_DONT_PROCESS_CONFIG=1
 # Generates a zopen compatible project
 #
 #
 # All zopen-* scripts MUST start with this code to maintain consistency
 #
-setupMyself()
-{
-        ME=$(basename $0)
-        MYDIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
-        INCDIR="${MYDIR}/../include"
-        if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
-                echo "Internal Error. Unable to find common.sh file to source" >&2
-                exit 8
-        fi
-        . "${INCDIR}/common.sh"
+setupMyself() {
+  ME=$(basename $0)
+  MYDIR="$(cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P)"
+  INCDIR="${MYDIR}/../include"
+  if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
+    echo "Internal Error. Unable to find common.sh file to source" >&2
+    exit 8
+  fi
+  . "${INCDIR}/common.sh"
 }
 setupMyself
 
-buildLicenseLookup()
-{
+buildLicenseLookup() {
   licensesCSV="${MYDIR}/../data/licenses.csv"
   if [ ! -r "$licensesCSV" ]; then
-    return 4;
+    return 4
   fi
 
   validLicenseNames="$(cat $licensesCSV | tail +1 | cut -f1 -d',' | xargs)"
 }
 
-printSyntax() 
-{
+printSyntax() {
   args=$*
   echo "zopen-generate will generate a zopen compatible project" >&2
   echo "Syntax: zopen-generate" >&2
@@ -47,7 +46,7 @@ if [[ $# -eq 1 ]]; then
     exit 8
   fi
 fi
- 
+
 buildLicenseLookup
 
 printHeader "Generate a zopen project"
@@ -110,12 +109,14 @@ mkdir -p ${name}port/patches
 
 # Create external LICENSE
 touch "${name}port/patches/LICENSE" && chtag -tc 819 "${name}port/patches/LICENSE"
-echo "${licenseName}\nView license contents at ${licenseUrl}" > "${name}port/patches/LICENSE"
+echo "${licenseName}\nView license contents at ${licenseUrl}" >"${name}port/patches/LICENSE"
 
 buildenv="${name}port/buildenv"
 touch $buildenv && chtag -tc 819 $buildenv
 
 cp "${MYDIR}/../data/CONTRIBUTING.md" "${name}port/CONTRIBUTING.md"
+mkdir -p "${name}port/.github/workflows"
+cp "${MYDIR}/../data/*.yml" "${name}port/.github/workflows/"
 
 if [ ! -z "$stablePath" ]; then
   buildenvContents="export ZOPEN_STABLE_URL=\"$stablePath\"\n"
@@ -140,7 +141,6 @@ fi
 if [ ! -z "$runtimedeps" ]; then
   buildenvContents="${buildenvContents}export ZOPEN_RUNTIME_DEPS=\"$runtimedeps\"\n"
 fi
-
 
 buildenvContents="${buildenvContents}\nzopen_check_results()
 {
@@ -172,37 +172,36 @@ zopen_get_version()
   echo \"1.0.0\"
 }"
 
-/bin/echo "$buildenvContents" > $buildenv
+/bin/echo "$buildenvContents" >$buildenv
 
 printInfo "$buildenv created"
 
 touch "${name}port/README.md" && chtag -tc 819 "${name}port/README.md"
-cat <<EOT > "${name}port/README.md"
+cat <<EOT >"${name}port/README.md"
 ${name}
 
 ${description}
 EOT
 printInfo "${name}port/README.md created"
 
-createCICD()
-{
-buildline=$1
-touch "${name}port/cicd-$buildline.groovy" && chtag -tc 819 "${name}port/cicd-$buildline.groovy"
-buildlineUpper=$(echo "$buildline" | awk '{print toupper($0)}')
-cat <<EOT > "${name}port/cicd-$buildline.groovy"
-node('linux')
-{
-  stage ('Poll') {
+createCICD() {
+  buildline=$1
+  touch "${name}port/cicd-$buildline.groovy" && chtag -tc 819 "${name}port/cicd-$buildline.groovy"
+  buildlineUpper=$(echo "$buildline" | awk '{print toupper($0)}')
+  cat <<EOT >"${name}port/cicd-$buildline.groovy"
+  node('linux')
+  {
+    stage ('Poll') {
     checkout([
-      \$class: 'GitSCM',
-      branches: [[name: '*/main']],
-      doGenerateSubmoduleConfigurations: false,
-      extensions: [],
-      userRemoteConfigs: [[url: 'https://github.com/ZOSOpenTools/${name}port.git']]])
+    \$class: 'GitSCM',
+    branches: [[name: '*/main']],
+    doGenerateSubmoduleConfigurations: false,
+    extensions: [],
+    userRemoteConfigs: [[url: 'https://github.com/ZOSOpenTools/${name}port.git']]])
   }
   stage('Build') {
-    build job: 'Port-Pipeline', parameters: [string(name: 'PORT_GITHUB_REPO', value: 'https://github.com/ZOSOpenTools/${name}port.git'), string(name: 'PORT_DESCRIPTION', value: '${description}' ), string(name: 'BUILD_LINE', value: '$buildlineUpper') ]
-  }
+  build job: 'Port-Pipeline', parameters: [string(name: 'PORT_GITHUB_REPO', value: 'https://github.com/ZOSOpenTools/${name}port.git'), string(name: 'PORT_DESCRIPTION', value: '${description}' ), string(name: 'BUILD_LINE', value: '$buildlineUpper') ]
+}
 }
 EOT
 }
@@ -211,7 +210,7 @@ createCICD "stable"
 createCICD "dev"
 
 touch "${name}port/.gitignore" && chtag -tc 819 "${name}port/.gitignore"
-cat <<EOT > "${name}port/.gitignore"
+cat <<EOT >"${name}port/.gitignore"
 log/
 log.DEV/
 log.STABLE/
