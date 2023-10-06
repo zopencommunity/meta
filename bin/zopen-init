@@ -41,6 +41,9 @@ Options:
                     globally configure the release line for package
                     installs to enable Development (DEV) packages; the
                     default is for a system to use STABLE packages
+      --paxrepodir <RPEO>
+                    configure a global location for pax file
+                    installation source
   -f, --fs-layout <LAYOUT>
                     The filesystem structure to use for installed 
                     packages on disk; packages will be installed to 
@@ -104,6 +107,10 @@ while [ $# -gt 0 ]; do
     "--releaseline-dev" )
       releaselineDev=true
       ;;
+    "--paxrepodir")
+      shift
+      paxrepodir="$1" # Only support single repo directory
+    ;;
     "-h" | "--help" | "-?")
       printHelp
       exit 0
@@ -272,8 +279,10 @@ else
   releaseLine="STABLE"
   printInfo "- Configured zopen to use stable releaseline packages"
 fi
-echo "${releaseLine}" > "${rootfs}/etc/zopen/releaseline"
-
+echo "$releaseLine" > "$rootfs/etc/zopen/releaseline"
+if [ -n "$paxrepodir" ]; then
+  echo "dir:$paxrepodir" > "$rootfs/etc/zopen/paxrepodir"
+fi
 printInfo "- Check for shipped curl pax"
 curlpax="packages/curl-8.4.0.20231011_155722.zos.pax.Z"
 
