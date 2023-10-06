@@ -436,7 +436,7 @@ mutexReq()
       [ ! "${lockedpid}" = "${mypid}" ] && [ ! "${lockedpid}" = "${PPID}" ]
     } && kill -0 "${lockedpid}" 2> /dev/null && echo "Aborting, Active process '${lockedpid}' holds the '$2' lock: '${mutex}'" && exit -1
   fi
-  addCleanupTrapCmd "rm -rf ${mutex}"
+  addCleanupTrapCmd "rm -rf $mutex 2>/dev/null"
   echo "${mypid}" > ${mutex}
 }
 
