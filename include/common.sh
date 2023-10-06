@@ -86,31 +86,29 @@ isPackageActive(){
   getCurrentVersionDir "$needle"
 }
 
-# getCurrentVersionDir
-# returns the version directory that has been set as active/installed
-# indicating that the $needle is active.
-# inputs: $1 - package to get currently active version of
-# return: 0  for success (output of pwd -P command)
-#         4  if unable to access version directory (eg. not installed)
-#         !0 cd or pwd -P failed
-getCurrentVersionDir(){
-  needle="$1"
-  [ ! -L "${ZOPEN_PKGINSTALL}/${needle}/${needle}" ] \
-    && echo ""\
-    && return 4
-  cd "${ZOPEN_PKGINSTALL}/${needle}/${needle}" 2> /dev/null \
-    && pwd -P 2> /dev/null
+# Given two input files, return those lines in haystack file that are 
+# not in needles file
+diffFile()
+{
+  haystackfile="$1"
+  needlesfile="$2"
+  [ -s "$needlesfile" ] || printError "Internal error; needle file was empty/non-existent."
+  diff=$(awk 'NR==FNR{needles[$0];next} 
+    !($0 in needles) {print}' "$needlesfile" "$haystackfile")
+  echo "$diff"
 }
 
-# isPackageActive
-# returns whether the package is active ie. has a symlink from 
-#  $PKGINSTALL/pkg/pkg to a versioned directory
-# inputs: $1 - package to get currently active version of
-# return: 0  for active
-#         !0 for not active
-isPackageActive(){
-  needle="$1"
-  getCurrentVersionDir "$needle"
+# Given two input lists (with \n delimiters), return those lines in  
+# haystack that are not in needles
+diffList()
+{
+  haystack="$1"
+  needles="$2"
+  haystackfile=$(mktempfile "haystack")
+  cat "$haystack" >"$haystackfile"
+  needlesfile=$(mktempfile "needles")
+  cat "$needles"  >"$needlesfile"
+  diffFile "$needlesfile" "$haystackfile"
 }
 
 # getCurrentVersionDir
@@ -190,7 +188,7 @@ mktempfile()
 mktempdir()
 {
   tempdir=$(mktempfile "$1")
-  [ ! -e "${tempdir}" ] && mkdir "${tempdir}" && addCleanupTrapCmd "rm -rf ${tempdir}" && echo "${tempdir}"
+  [ ! -e "$tempdir" ] && mkdir "$tempdir" && addCleanupTrapCmd "rm -rf $tempdir 2>/dev/null" && echo "$tempdir"
 }
 
 isPermString()
@@ -551,8 +549,8 @@ mergeIntoSystem()
   currentDir="${PWD}"
 
   printDebug "Calculating the offset path to store from root"
-  offset=$(dirname "${versioneddir#"${rootfs}"/}")
-  version=$(basename ${versioneddir})
+  offset=$(dirname "${versioneddir#$rootfs/}")
+  version=$(basename "$versioneddir")
   tmptime=$(date +%Y%m%d%H%M%S)
   processingDir="${rootfs}/tmp/zopen.${tmptime}"
   printDebug "Temporary processing dir evaluated to: ${processingDir}"
