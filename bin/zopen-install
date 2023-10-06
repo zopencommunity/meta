@@ -17,470 +17,91 @@ setupMyself()
 setupMyself
 checkWritable
 
-printSyntax()
-{
-  args=$*
-  echo "zopen install is a utility to download/install a z/OS Open Tools package."
-  echo "Usage: zopen install [OPION] [PACKAGE]"
-  echo "  [PACKAGE] is a package to install. Multiple packages can be specified."
-  echo "Options:"
-  echo "  --help                   print this help."
-  echo "  --version                print version"
-  echo "  -u, --update, --upgrade  updates installed z/OS Open Tools packages."
-  echo "  --install-or-upgrade     installs the package if not installed, or upgrades the package if installed."
-  echo "  --reinstallx             reinstall already installed z/OS Open Tools packages."
-  echo "  --nosymlink              do not integrate into filesystem through symlink redirection."
-  echo "  --release-line [stable, dev] the release line to build off of."
-  echo "  --no-deps                do not install dependencies."
-  echo "  --cache-only             do not install dependencies."
-  echo "  --no-set-active          do not change the pinned version"
-  echo "  --skip-upgrade           do not upgrade."
-  echo "  --yes, -y                automatically answer yes to prompts."
-  echo "  --select                 select a version to install."
-  echo "  -v                       run in verbose mode"
-  echo "  --download-only          download package to current directory"
-  echo "  --local-install          download and unpackage to current directory"
-  echo "  --all                    download/install all z/OS Open Tools packages"
+printHelp(){
+  cat << HELPDOC
+zopen install is a utility for z/OS Open Tools to install and update
+packages
+
+Usage: zopen install [OPTION] [PARAMETERS] [PACKAGES]
+
+Options:
+  -u, --upgrade     check for package updates and apply
+      --reinstall   reinstall currently installed package(s)
+      --paxrepodir  a directory location to locate pax files
+      --paxinstall  list of pax files to install
+  -y, --yes         automatically answer yes to prompts
+      --select      select a version to install from available versions
+      --release-line [stable|dev]
+                    the release line to install from
+      --no-deps     do not install dependencies
+      --install-or-upgrade
+                    installs the package if not installed, or upgrades
+                    the package if installed
+      --nosymlink   do not integrate into filesystem through symlink 
+                    redirection
+
+      --cache-only  download installable package to the install cache
+      --no-set-active
+                    do not change the currently active version
+      --skip-upgrade
+                    do not upgrade existing packages
+      --download-only
+                    download installable package with no install
+      --local-install
+                    download and unpackage to current directory
+      --all         download all available packages and install
+  -v, --verbose     run in verbose mode
+  -h,-?, --help     display this help and exit
+
+
+Examples:
+  zopen install foo 
+                    install package foo if not already installed
+  zopen install --release-line DEV foo
+                    install package foo from the DEV releaseline if
+                    available
+  zopen upgrade     upgrade all packages to latest version on their
+                    releaseline
+  zopen install -y foo bar --no-deps
+                    install packages foo and bar without asking for
+                    user confirmation and without installing any
+                    dependencies
+  zopen install --paxinstall foo
+                    locate the pax file for foo in the current
+                    directory or the system-configured paxdir and
+                    install
+  zopen install --paxinstall /tmp/foo-1.2.3-4.zos.pax.Z
+                    install package foo from the specified location
+  zopen install -y --paxinstall --paxrepodir /tmp foo-1.2.3-4.zos.pax.Z
+                    check for the named package in /tmp and install
+                    package foo if found
+
+Report bugs at https://github.com/ZOSOpenTools/meta/issues .
+
+HELPDOC
 }
 
-installDependencies()
-(
-  name=$1
-  printVerbose "List of dependencies to install: ${dependencies}"
-  skipupgrade_lcl=${skipupgrade}
-  skipupgrade=true
-  echo "${dependencies}" | xargs | tr ' ' '\n' | sort | while read dep; do
-    printVerbose "Removing '${dep}' from dependency queue '${dependencies}'"
-    dependencies=$(echo "${dependencies}" | sed -e "s/${dep}//" | tr -s ' ')
-    handlePackageInstall "${dep}"
-  done
-  skipupgrade=${skipupgrade_lcl}
-)
-
-handlePackageInstall()
-{
-
-  fullname="$1"
-  printVerbose "Name to install: ${fullname}, parsing any version ('=') or tag ('%') has been specified"
-  name=$(echo "${fullname}" | sed -e 's#[=%].*##')
-  repo="${name}"
-  versioned=$(echo "${fullname}" | cut -s -d '=' -f 2)
-  tagged=$(echo "${fullname}" | cut -s -d '%' -f 2)
-  printVerbose "Name:${name};version:${versioned};tag:${tagged};repo:${repo}"
-  printHeader "Installing package: ${name}"
-
-  getAllReleasesFromGithub "${repo}"
-
-  if ${localInstall}; then
-    printVerbose "Local install to current directory"
-    rootInstallDir="${PWD}"
-  else
-    printVerbose "Setting install root to: ${ZOPEN_PKGINSTALL}"
-    rootInstallDir="${ZOPEN_PKGINSTALL}"
-  fi
-
-  originalFileVersion=""
-  printVerbose "Checking for meta files in '${rootInstallDir}/${name}/${name}'"
-  printVerbose "Finding version/release information."
-  if [ -e "${rootInstallDir}/${name}/${name}/.releaseinfo" ]; then
-    originalFileVersion=$(cat "${rootInstallDir}/${name}/${name}/.releaseinfo")
-    printVerbose "Found originalFileVersion=${originalFileVersion} (port is already installed)."
-  elif [ -e "${rootInstallDir}/${name}/${name}/.version" ]; then
-    originalFileVersion=$(cat "${rootInstallDir}/${name}/${name}/.version")
-    printVerbose "Found originalFileVersion=${originalFileVersion} (port is already installed)."
-  else
-    printVerbose "Could not detect existing installation at ${rootInstallDir}/${name}/${name}"
-  fi
-
-  printVerbose "Finding releaseline information."
-  installedReleaseLine=""
-  if [ -e "${rootInstallDir}/${name}/${name}/.releaseline" ]; then
-    installedReleaseLine=$(cat "${rootInstallDir}/${name}/${name}/.releaseline")
-    printVerbose "Installed product from releaseline: ${installedReleaseLine}"
-  else
-    printVerbose "No current releaseline for package."
-  fi
-
-  releaseMetadata=""
-  downloadURL=""
-  # Options where the user explicitly sets a version/tag/releaseline currently ignore any configured release-line,
-  # either for a previous package install or system default
-  if [ -n "${versioned}" ]; then
-    printVerbose "Specific version ${versioned} requested - checking existence and URL."
-    requestedMajor=$(echo "${versioned}" | awk -F'.' '{print $1}')
-    requestedMinor=$(echo "${versioned}" | awk -F'.' '{print $2}')
-    requestedPatch=$(echo "${versioned}" | awk -F'.' '{print $3}')
-    requestedSubrelease=$(echo "${versioned}" | awk -F'.' '{print $4}')
-    requestedVersion="${requestedMajor}\\\.${requestedMinor}\\\.${requestedPatch}\\\.${requestedSubrelease}"
-    printVerbose "Finding URL for latest release matching version prefix: requestedVersion: ${requestedVersion}"
-    releaseMetadata=$(/bin/printf "%s" "${releases}" | jq -e -r '. | map(select(.assets[].name | test("'${requestedVersion}'")))[0]')
-  elif [ -n "${tagged}" ]; then
-    printVerbose "Explicit tagged version '${tagged}' specified. Checking for match."
-    releaseMetadata=$(/bin/printf "%s" "${releases}" | jq -e -r '.[] | select(.tag_name == "'${tagged}'")')
-    printVerbose "Use quick check for asset to check for existence of metadata for specific messages."
-    asset=$(/bin/printf "%s" "${releaseMetadata}" | jq -e -r '.assets[0]')
-    if [ $? -ne 0 ]; then
-      printError "Could not find release tagged '${tagged}' in repo '${repo}'"
-    fi
-  elif ${selectVersion}; then
-    # Explicitly allow the user to select a release to install; useful if there are broken installs
-    # as a known good release can be found, selected and pinned!
-    printVerbose "List individual releases and allow selection."
-    i=$(/bin/printf "%s" "${releases}" | jq -r 'length - 1')
-    printInfo "Versions available for install:"
-    /bin/printf "%s" "${releases}" | jq -e -r 'to_entries | map("\(.key): \(.value.tag_name) - \(.value.assets[0].name) - size: \(.value.assets[0].expanded_size/ (1024 * 1024))mb")[]'
-
-    printVerbose "Getting user selection."
-    valid=false
-    while ! ${valid}; do
-      echo "Enter version to install (0-${i}): "
-      read selection < /dev/tty
-      if [[ ! -z $(echo "${selection}" | sed -e 's/[0-9]*//') ]]; then
-        echo "Invalid input, must be a number between 0 and ${i}."
-      elif [ "${selection}" -ge 0 ] && [ "${selection}" -le "${i}" ]; then
-        valid=true
-      fi
-    done
-    printVerbose "Selecting item ${selection} from array"
-    releaseMetadata="$(/bin/printf "%s" "${releases}" | jq -e -r ".[${selection}]")"
-
-  elif [ ! -z "${releaseLine}" ]; then
-    printVerbose "Install from release line '${releaseLine}' specified"
-    validatedReleaseLine=$(validateReleaseLine "${releaseLine}")
-    if [ -z "${validatedReleaseLine}" ]; then
-      printError "Invalid releaseline specified: '${releaseLine}'; Valid values: DEV or STABLE."
-    fi
-    printVerbose "Finding latest asset on the release line"
-    releaseMetadata="$(/bin/printf "%s" "${releases}" | jq -e -r '. | map(select(.tag_name | startswith("'${releaseLine}'")))[0]')"
-    printVerbose "Use quick check for asset to check for existence of metadata."
-    asset="$(/bin/printf "%s" "${releaseMetadata}" | jq -e -r '.assets[0]')"
-    if [ $? -ne 0 ]; then
-      printError "Could not find release-line ${releaseLine} for repo: ${repo}."
-    fi
-
-  else
-    printVerbose "No explicit version/tag/releaseline, checking for pre-existing package&releaseline."
-    if [ -n "${installedReleaseLine}" ]; then
-      printVerbose "Found existing releaseline '${installedReleaseLine}', restricting to only that releaseline."
-      validatedReleaseLine="${installedReleaseLine}" # Already validated when stored
-    else
-      printVerbose "Checking for system-configured releaseline."
-      sysrelline=$(cat "${ZOPEN_ROOTFS}/etc/zopen/releaseline" | awk ' {print toupper($1)}')
-      printVerbose "Validating value: ${sysrelline}"
-      validatedReleaseLine=$(validateReleaseLine "${sysrelline}")
-      if [ -n "${validatedReleaseLine}" ]; then
-        printVerbose "zopen system configured to use releaseline '${sysrelline}'; restricting to that releaseline."
-      else
-        printWarning "zopen misconfigured to use an unknown releaseline of '${sysrelline}'; defaulting to STABLE packages."
-        printWarning "Set the contents of '${ZOPEN_ROOTFS}/etc/zopen/releaseline' to a valid value to remove this message."
-        printWarning "Valid values are: DEV | STABLE."
-        validatedReleaseLine="STABLE"
-      fi
-    fi
-    # We have some situations that could arise
-    # 1. the port being installed has no releaseline tagging yet (ie. no releases tagged STABLE_* or DEV_*)
-    # 2. system is configured for STABLE but only has DEV stream available
-    # 3. system is configured for DEV but only has DEV stream available
-    # 4. the port being installed has got full releaseline tagging
-    # The issue could arise that the user has switched the system from DEV->STABLE or vice-versa so package
-    # stream mismatches could arise but in normal case, once a package is installed [that has releaseline tagging]
-    # then that specific releaseline will be used
-    printVerbose "Finding any releases tagged with ${validatedReleaseLine} and getting the first (newest/latest)"
-    releaseMetadata="$(/bin/printf "%s" "${releases}" | jq -e -r '. | map(select(.tag_name | startswith("'${validatedReleaseLine}'")))[0]')"
-    printVerbose "Use quick check for asset to check for existence of metadata"
-    asset="$(/bin/printf "%s" "${releaseMetadata}" | jq -e -r '.assets[0]')"
-    if [ $? -eq 0 ]; then
-      # Case 4...
-      printVerbose "Found a specific '${validatedReleaseLine}' release-line tagged version; installing..."
-    else
-      # Case 2 & 3
-      printVerbose "No releases on releaseline '${validatedReleaseLine}'; checking alternative releaseline."
-      alt=$(echo "${validatedReleaseLine}" | awk ' /DEV/ { print "STABLE" } /STABLE/ { print "DEV" }')
-      releaseMetadata="$(/bin/printf "%s" "${releases}" | jq -e -r '. | map(select(.tag_name | startswith("'${alt}'")))[0]')"
-      printVerbose "Use quick check for asset to check for existence of metadata"
-      asset="$(/bin/printf "%s" "${releaseMetadata}" | jq -e -r '.assets[0]')"
-      if [ $? -eq 0 ]; then
-        printVerbose "Found a release on the '${alt}' release line so release tagging is active."
-        if [ "DEV" = "${validatedReleaseLine}" ]; then
-          # The system will be configured to use DEV packages where available but if none, use latest
-          printInfo "No specific DEV releaseline package, using latest available"
-          releaseMetadata="$(/bin/printf "%s" "${releases}" | jq -e -r ".[0]")"
-        else
-          printVerbose "The system is configured to only use STABLE releaseline packages but there are none."
-          printInfo "No release available on the '${validatedReleaseLine}' releaseline."
-        fi
-      else
-        # Case 1 - old package that has no release tagging yet (no DEV or STABLE), just install latest
-        printVerbose "Installing latest release"
-        releaseMetadata="$(/bin/printf "%s" "${releases}" | jq -e -r ".[0]")"
-      fi
-    fi
-  fi
-
-  printVerbose "Getting specific asset details from metadata: ${releaseMetadata}"
-  if [ -z "${asset}" ] || [ "null" = "${asset}" ]; then
-    printVerbose "Asset not found during previous logic; setting now."
-    asset=$(/bin/printf "%s" "${releaseMetadata}" | jq -e -r '.assets[0]')
-  fi
-  if [ -z "${asset}" ]; then
-    printError "Unable to determine download asset for ${name}"
-  fi
-
-  tagname=$(/bin/printf "%s" "${releaseMetadata}" | jq -e -r ".tag_name" | sed "s/\([^_]*\)_.*/\1/")
-  installedReleaseLine=$(validateReleaseLine "${tagname}")
-
-  downloadURL=$(/bin/printf "%s" "${asset}" | jq -e -r '.url')
-  size=$(/bin/printf "%s" "${asset}" | jq -e -r '.expanded_size')
-
-  if [ -z "${downloadURL}" ]; then
-    printError "Unable to determine download location for ${name}"
-  fi
-  downloadFile=$(basename "${downloadURL}")
-  downloadFileVer=$(echo "${downloadFile}" | sed -E 's/.*-(.*)\.zos\.pax\.Z/\1/')
-  printVerbose "Downloading port from URL: ${downloadURL} to file: ${downloadFile} (ver=${downloadFileVer})"
-
-  if ${downloadOnly}; then
-    printVerbose "Skipping installation, downloading only."
-  else
-    printVerbose "Install=${downloadFileVer};Original=${originalFileVersion};${upgradeInstalled};${installOrUpgrade};${reinstall}"
-    if [ "${downloadFileVer}" = "${originalFileVersion}" ]; then
-      if ! ${reinstall}; then
-        printInfo "${NC}${GREEN}Package ${name} is already installed at the requested version: ${downloadFileVer}${NC} and due to the absence of the 'reinstall' flag, will not be reinstalled."
-        return
-      fi
-      printInfo "- Reinstalling version '${downloadFileVer}' of ${name}..."
-    fi
-
-    printVerbose "Checking if package is not installed but scheduled for upgrade."
-    if [ -z "${originalFileVersion}" ]; then
-      printVerbose "No previous version found."
-      if ${installOrUpgrade}; then
-        printVerbose "Package ${name} was not installed, so installing instead of upgrading."
-      elif ${upgradeInstalled}; then
-        printError "Package ${name} can not be upgraded as it is not installed."
-        continue
-      fi
-      unInstallOldVersion=false
-      printInfo "- Installing ${name}..."
-    elif ${skipupgrade}; then
-      printInfo "Package ${name} has a newer release '${downloadFileVer}' but was not specified for an upgrade."
-      continue
-    elif ! ${setactive}; then
-      printVerbose "Current version '${originalFileVersion}' will remain active."
-      unInstallOldVersion=false
-    else
-      printVerbose "Previous version '${originalFileVersion}' installed."
-      if [ -e "${rootInstallDir}/${name}/${name}/.pinned" ]; then
-        printWarning "- Version '${originalFileVersion}' has been pinned; upgrade to '${downloadFileVer}' skipped."
-        syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_PACKAGE},${CAT_INSTALL}" "DOWNLOAD" "handlePackageInstall" "Attempt to change pinned package '${name}' skipped."
-        continue
-      else
-        printInfo "- Replacing ${name} version '${originalFileVersion}' with '${downloadFileVer}'"
-        unInstallOldVersion=true
-        currentversiondir=$(cd "${rootInstallDir}/${name}/${name}" && pwd -P)
-        currentlinkfile="${currentversiondir}/.links"
-      fi
-    fi
-  fi
-
-  printVerbose "Ensuring we are in the correct working download location '${downloadDir}'"
-  cd "${downloadDir}" || exit
-  if [ ! -n "${downloadOnly}" ] || [ ! -n "${localInstall}" ]; then
-    printVerbose "Checking current directory for already downloaded package [file name comparison]."
-    location="current directory"
-  else
-    printVerbose "Checking cache for already downloaded package [file name comparison]."
-    location="zopen package cache"
-  fi
-
-  pax=${downloadFile}
-  if [ -f "${pax}" ]; then
-    printInfo "- Found existing file '${pax}' in ${location}"
-  else
-    printInfo "- Downloading ${pax} file from remote to ${location}..."
-    if ! ${verbose}; then
-      redirectToDevNull="2>/dev/null"
-    fi
-
-    progressHandler "network" "- Downloaded ${pax} file from remote to ${location}." &
-    ph=$!
-    killph="kill -HUP ${ph}"
-    addCleanupTrapCmd "${killph}"
-
-    if ! runAndLog "curlCmd -L '${downloadURL}' -O ${redirectToDevNull}"; then
-      printError "Could not download from ${downloadURL}. Correct any errors and potentially retry."
-      continue
-    fi
-    ${killph} 2> /dev/null # if the timer is not running, the kill will fail
-    syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_NETWORK},${CAT_PACKAGE},${CAT_FILE}" "DOWNLOAD" "handlePackageInstall" "Downloaded remote file '${pax}'"
-  fi
-  if [ ! -f "${pax}" ]; then
-    printError "${pax} was not found after download!?"
-  fi
-
-  if ${downloadOnly}; then
-    printVerbose "Pax was downloaded to local dir '${downloadDir}'"
-  elif ${cacheOnly}; then
-    printVerbose "Pax was downloaded to zopen cache '${downloadDir}'"
-  else
-    printVerbose "Installing ${pax}"
-    installdirname="${name}/${pax%.pax.Z}" # Use full pax name as default
-
-    printInfo "- Processing ${pax}..."
-    baseinstalldir="."
-    paxredirect=""
-    if ! ${localInstall}; then
-      baseinstalldir="${rootInstallDir}"
-      paxredirect="-s %[^/]*/%${rootInstallDir}/${installdirname}/%"
-      printVerbose "Non-local install, extracting with '${paxredirect}'"
-    else
-      printInfo "- Local install specified."
-      paxredirect="-s %[^/]*/%${installdirname}/%"
-      printVerbose "Non-local install, extracting with '${paxredirect}'"
-    fi
-
-    megabytes=$(echo "scale=2; ${size} / (1024 * 1024)" | bc)
-    printInfo "After this operation, ${megabytes} MB of additional disk space will be used."
-    if ! ${yesToPrompts}; then
-      while true; do
-        printInfo "Do you want to continue? [y/n]"
-        read continueInstall < /dev/tty
-        if [ "y" = "${continueInstall}" ]; then
-          break
-        fi
-        if [ "n" = "${continueInstall}" ]; then
-          mutexFree "zopen"
-          printInfo "Exiting..."
-          exit 0
-        fi
-      done
-    fi
-
-    printVerbose "Check for existing directory for version '${installdirname}'"
-    if [ -d "${baseinstalldir}/${installdirname}" ]; then
-      printInfo "- Clearing existing directory and contents"
-      rm -rf "${baseinstalldir}/${installdirname}"
-    fi
-
-    if ! runLogProgress "pax -rf ${pax} -p p ${paxredirect} ${redirectToDevNull}" "Expanding ${pax}" "Expanded"; then
-      printWarning "Errors unpaxing, package directory state unknown."
-      printInfo "Use zopen alt to select previous version."
-      continue
-    fi
-    if ${localInstall}; then
-      rm -f "${pax}"
-    fi
-
-    if ${setactive}; then
-      if [ -L "${baseinstalldir}/${name}/${name}" ]; then
-        printVerbose "Removing old symlink '${baseinstalldir}/${name}/${name}'"
-        rm -f "${baseinstalldir}/${name}/${name}"
-      fi
-      if ! ln -s "${baseinstalldir}/${installdirname}" "${baseinstalldir}/${name}/${name}"; then
-        printError "Could not create symbolic link name."
-      fi
-    fi
-
-    printVerbose "Adding version '${downloadFileVer}' to info file."
-    # Add file version information as a .releaseinfo file
-    echo "${downloadFileVer}" > "${baseinstalldir}/${installdirname}/.releaseinfo"
-
-    # Check for a .version file from the pax - if present good, if not
-    # generate one from the file name as the tag isn't granular enough to really
-    # be used in dependency checks
-    if [ ! -f "${baseinstalldir}/${installdirname}/.version" ]; then
-      echo "${downloadFileVer}" > "${baseinstalldir}/${installdirname}/.version"
-    fi
-
-    printVerbose "Adding releaseline '${installedReleaseLine}' metadata to ${baseinstalldir}/${installdirname}/.releaseline"
-    echo "${installedReleaseLine}" > "${baseinstalldir}/${installdirname}/.releaseline"
-
-    if ${setactive}; then
-      if ! ${nosymlink}; then
-        mergeIntoSystem "${name}" "${baseinstalldir}/${installdirname}" "${ZOPEN_ROOTFS}"
-        misrc=$?
-        printVerbose "The merge completed with: ${misrc}"
-      fi
-
-      printInfo "- Checking for env file."
-      if [ -f "${baseinstalldir}/${name}/${name}/.env" ] || [ -f "${baseinstalldir}/${name}/${name}/.appenv" ]; then
-        printInfo "- .env file found, adding to profiled processing."
-        mkdir -p "${ZOPEN_ROOTFS}/etc/profiled/${name}"
-        cat << EOF > "${ZOPEN_ROOTFS}/etc/profiled/${name}/dotenv"
-curdir=\$(pwd)
-cd "\${ZOPEN_ROOTFS}${ZOPEN_PKGINSTALL##"${ZOPEN_ROOTFS}"}/${name}/${name}" >/dev/null 2>&1
-# If .appenv exists, source it as it's quicker
-if [ -f ".appenv" ]; then
-  . ./.appenv
-elif [ -f ".env" ]; then
-  . ./.env
-fi
-cd \${curdir}  >/dev/null 2>&1
-EOF
-        printInfo "- Sourcing environment to run any setup."
-        cd "${baseinstalldir}/${name}/${name}" && ./setup.sh
-      fi
-    fi
-    if ${unInstallOldVersion}; then
-      printVerbose "New version merged; checking for orphaned files from previous version."
-      # This will remove any old symlinks or dirs that might have changed in an upgrade
-      # as the merge process overwrites existing files to point to different version
-      unsymlinkFromSystem "${name}" "${ZOPEN_ROOTFS}" "${currentlinkfile}"
-    fi
-
-    if ${setactive}; then
-      printVerbose "Marking this version as installed."
-      touch "${baseinstalldir}/${name}/${name}/.active"
-      installedList="${name} ${installedList}"
-      syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_INSTALL},${CAT_PACKAGE}" "DOWNLOAD" "handlePackageInstall" "Installed package:'${name}';version:${downloadFileVer};install_dir='${baseinstalldir}/${installdirname}';"
-    fi
-
-    if ${doNotInstallDeps}; then
-      printInfo "- Skipping dependency installation."
-    elif ${reinstall}; then
-      printVerbose "- Reinstalling so no dependency reinstall (unless explicitly listed)."
-    else
-      printInfo "- Checking for runtime dependencies."
-      printVerbose "Checking for .runtimedeps file."
-      if [ -e "${baseinstalldir}/${name}/${name}/.runtimedeps" ]; then
-        dependencies=$(cat "${baseinstalldir}/${name}/${name}/.runtimedeps")
-      fi
-      printVerbose "Checking for runtime dependencies from the git metadata."
-      if echo "${statusline}" | grep "Runtime Dependencies:" > /dev/null; then
-        gitmetadependencies="$(echo "${statusline}" | sed -e "s#.*Runtime Dependencies:<\/b> ##" -e "s#<br />.*##")"
-        if [ ! "${gitmetadependencies}" = "No dependencies" ]; then
-          dependencies="${dependencies} ${gitmetadependencies}"
-        fi
-      fi
-      dependencies=$(deleteDuplicateEntries "${dependencies}" " ")
-      if [ -n "${dependencies}" ]; then
-        printInfo "- ${name} depends on: ${dependencies}"
-        printInfo "- Installing dependencies."
-        installDependencies "${name}" "${dependencies}"
-      else
-        printInfo "- No runtime dependencies found."
-      fi
-    fi
-    printInfo "${NC}${GREEN}Successfully installed: ${name}${NC}"
-  fi # (download only)
-}
-
-installPorts()
-(
+installPorts()( # Note the subshell '()'
   ports="$1"
-  printVerbose "Ports to install: ${ports}"
+  printDebug "Ports to install: $ports"
+  sessionList="" # Track the packages installed during this session to prevent repeats
   mutexReq "zopen" "zopen"
-  echo "${ports}" | xargs | tr ' ' '\n' | while read port; do
-    handlePackageInstall "${port}"
+  for port in $ports; do
+    handlePackageInstall "$port"
   done
   mutexFree "zopen"
 )
 
 # Main code start here
+# Need to set a number of variables for use in the install function
+# which is common between install & upgrade
 args=$*
 upgradeInstalled=false
 verbose=false
 debug=false
+xdebug=false
+paxrepodir=""
+paxinstall=false
 selectVersion=false
 setActive=true
 cacheOnly=false
@@ -496,59 +117,67 @@ yesToPrompts=false
 chosenRepos=""
 while [ $# -gt 0 ]; do
   case "$1" in
-  "-u" | "--update" | "-update" | "-upgrade" | "--upgrade")
-    upgradeInstalled=true # Upgrade packages
-    ;;
-  "-r" | "-reinstall" | "--reinstall")
-    reinstall=true # If package already installed, reinstall
-    ;;
-  "--install-or-upgrade")
-    installOrUpgrade=true # Upgrade package or install if not present
-    ;;
-  "--local-install")
-    localInstall=true # Install the package into current directory
-    ;;
-  "--no-symlink")
-    nosymlink=true # Do not mesh the package into the file system; leave as stand-alone
-    ;;
-  "--no-deps")
-    doNotInstallDeps=true
-    ;;
-  "--cache-only")
-    cacheOnly=true # Download remote pax file to cache only (no install)
-    ;;
-  "--release-line")
-    shift
-    releaseLine=$(echo "$1" | awk '{print toupper($0)}')
-    ;;
-  "--yes" | "-y")
-    yesToPrompts=true # Automatically answer 'yes' to any questions
-    ;;
-  "--download-only")
-    downloadOnly=true # Download remote pax file to current directory only
-    ;;
-  "--no-set-active")
-    setactive=false # Install package as normal but keep existing installation as active
-    ;;
-  "--skip-upgrade")
-    skipupgrade=true # Do not upgrade any packages
-    ;;
-  "--all")
-    all=true # Install all packages
-    ;;
-  "--select")
-    selectVersion=true # Display a selction table to allow version picking
-    ;;
-  "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
-    printSyntax "${args}"
-    exit 0
-    ;;
-  "--debug")
-    verbose=true
-    debug=true
-    ;;
-  "-v" | "--v" | "-verbose" | "--verbose")
-    verbose=true
+    "-r" | "-reinstall" | "--reinstall")
+      reinstall=true  # If package already installed, reinstall
+      ;;
+    "--install-or-upgrade")
+      installOrUpgrade=true  # Upgrade package or install if not present
+      ;;
+    "--local-install")
+      localInstall=true # Install the package into current directory
+      ;;
+    "--no-symlink")
+      nosymlink=true  # Do not mesh the package into the file system; leave as stand-alone
+      ;;
+    "--no-deps")
+      doNotInstallDeps=true
+      ;;
+    "--cache-only")
+      cacheOnly=true  # Download remote pax file to cache only (no install)
+      ;;
+    "--release-line")
+      shift
+      releaseLine=$(echo "$1" | awk '{print toupper($0)}')
+      ;;
+    "--yes" | "-y")
+      yesToPrompts=true  # Automatically answer 'yes' to any questions
+      ;;
+    "--download-only")
+      downloadOnly=true  # Download remote pax file to current directory only
+      ;;
+    "--no-set-active")
+      setactive=false  # Install package as normal but keep existing installation as active
+      ;;
+    "--skip-upgrade")
+      skipupgrade=true  # Do not upgrade any packages
+      ;;
+    "--all")
+      all=true  # Install all packages
+      ;;
+    "--select")
+      selectVersion=true  # Display a selction table to allow version picking
+      ;;
+    "--paxinstall")
+      paxinstall=true # Use pax files to install
+      ;;
+    "--paxrepodir")
+      [ $# -lt 2 ] && printError "Missing parameter"
+      shift
+      paxrepodir=$(echo "$1" )
+      ;;
+    "-h" | "--help" | "-?")
+      printHelp "${args}"
+      exit 0
+      ;;
+    "--debug")
+      verbose=true
+      debug=true
+      ;;
+    "-v" | "--verbose")
+      verbose=true
+      ;;
+    "--xdebug")
+      xdebug=true
     ;;
   "--version")
     zopen-version ${ME}
@@ -560,6 +189,8 @@ while [ $# -gt 0 ]; do
   esac
   shift
 done
+
+$xdebug && set -x && printVerbose "Enabled command execution trace" 
 
 if [ -z "${chosenRepos}" ]; then
   if ! ${all} && ! ${upgradeInstalled}; then
@@ -589,15 +220,15 @@ export SSL_CERT_FILE="${ZOPEN_CA}"
 export GIT_SSL_CAINFO="${ZOPEN_CA}"
 export CURL_CA_BUNDLE="${ZOPEN_CA}"
 
-if ${downloadOnly}; then
-  downloadDir="${PWD}"
-  printVerbose "Downloading pax to current directory '${downloadDir}'"
-elif ${localInstall}; then
-  downloadDir="${PWD}"
-  printVerbose "Installing to current directory '${downloadDir}'"
+if $downloadOnly; then
+  downloadDir="$PWD"
+  printDebug "Downloading pax to current directory '$downloadDir'"
+elif $localInstall; then
+  downloadDir="$PWD"
+  printDebug "Installing to current directory '$downloadDir'"
 else
-  printVerbose "Installing to zopen file system: ${ZOPEN_ROOTFS}"
-  if [ -z "${ZOPEN_ROOTFS}" ]; then
+  printDebug "Installing to zopen file system: $ZOPEN_ROOTFS"
+  if [ -z "$ZOPEN_ROOTFS" ]; then
     printError "Unable to locate zopen file system, \$ZOPEN_ROOTFS is undefined."
   fi
   downloadDir="${ZOPEN_ROOTFS}/var/cache/zopen"
@@ -610,23 +241,23 @@ if [ ! -d "${downloadDir}" ]; then
   fi
 fi
 
-if [ -n "${downloadDir}" ] && [ -d "${downloadDir}" ]; then
-  cd "${downloadDir}" || exit
+printDebug "Checking if installing from pax files: $paxinstall"
+if ! $paxinstall; then
+  # Parse passed in repositories and check if valid zopen framework repos
+  printVerbose "Querying remote repo for latest package information"
+  getReposFromGithub
+  grfgRc=$?
+  $killph 2>/dev/null  # if the timer is not running, the kill will fail
+  [ 0 -ne $grfgRc ] && exit $grfgRc;
+else
+  printDebug "Using pax files for install"
+  [ -n "$paxrepodir" ] && printDebug "Using '$paxrepodir' to locate pax files"
 fi
-
-printVerbose "Working directory: ${downloadDir}"
-# Parse passed in repositories and check if valid zopen framework repos
-printInfo "- Querying remote repo for latest package information."
-getReposFromGithub
-grfgRc=$?
-${killph} 2> /dev/null # if the timer is not running, the kill will fail
-[ 0 -ne "${grfgRc}" ] && exit "${grfgRc}"
-
-foundPort=false
 installArray=""
 
-if ${all}; then
-  if ! ${yesToPrompts}; then
+if $all; then
+  if ! $paxinstall; then
+      if ! ${yesToPrompts}; then
     # Sum up the pax size + expanded size of the latest releases of each port
     spaceRequiredBytes=$(jq '.release_data | to_entries | map(select(.value | length > 0)) | map(.value[0].assets[0]) | reduce .[] as $item ({}; . + {($item.name): ($item.size + $item.expanded_size)}) | [.[]] | add' ${JSON_CACHE})
     spaceRequiredMB=$(echo "scale=0; ${spaceRequiredBytes} / (1024 * 1024)" | bc)
@@ -646,25 +277,43 @@ if ${all}; then
     installArray="${installArray} ${repo}"
   done
   installArray=$(strtrim "${installArray}")
+  else
+    printDebug "Checking for system default repo directory"
+    [ -r "$ZOPEN_ROOTFS/etc/zopen/paxrepodir" ] && usepaxrepodir=$(cat "$ZOPEN_ROOTFS/etc/zopen/paxrepodir")
+    printDebug "Checking for override parameter"
+    [ -z "$paxrepodir" ] && usepaxrepodir="./" || usepaxrepodir="$paxrepodir" # default to current directory
+    case "$usepaxrepodir" in
+      */) printDebug "String terminated with '/' already" ;;
+      *)  usepaxrepodir="$usepaxrepodir/";;
+    esac
+
+    printDebug "Locating all pax files in repo at '$usepaxrepodir'"
+    installArray=$(zosfind "$usepaxrepodir" ! -name "$usepaxrepodir"  -prune | grep ".pax.Z")
+    [ -z "$installArray" ] && printInfo "No packages found to install'" && exit 1
+  fi
+elif $paxinstall; then
+  printDebug "Installing from pax files as listed in arguments: '$chosenRepos'"
+  installArray="$chosenRepos"
 else
-  for chosenRepo in $(echo "${chosenRepos}" | tr ',' '\n'); do
-    printVerbose "Processing repo: ${chosenRepo}."
-    printVerbose "Stripping any version (%), tag (#) or port suffixes."
-    toolrepo=$(echo "${chosenRepo}" | sed -e 's#%.*##' -e 's#=.*##' -e 's#.*port##')
-    printVerbose "Adding prefix and 'port' suffix." # quicker than testing for presence!
-    toolfound=$(echo "${repo_results}" | awk -vtoolrepo="${toolrepo}" '$0 == toolrepo {print}')
-    if [ "${toolfound}" = "${toolrepo}" ]; then
-      printVerbose "Adding '${chosenRepo}' to the install queue."
-      installArray="${installArray} ${chosenRepo}"
-      printVerbose "Removing valid port from input list."
-      chosenRepos=$(echo "${chosenRepos}" | sed -e "s#${chosenRepo}##")
+  printDebug "Parsing list of packages to install and verifying validity"
+
+  badportlist=""
+  for chosenRepo in $(echo "${chosenRepos}" | tr ',' ' '); do
+    printVerbose "Processing repo: $chosenRepo"
+    printDebug "Stripping any version (%), tag (#) or port suffixes and trim"
+    toolrepo=$(echo "$chosenRepo" | sed -e 's#%.*##' -e 's#=.*##' -e 's#.*port##')
+
+    toolfound=$(echo "${repo_results}" | awk -vtoolrepo="$toolrepo" '$0 == toolrepo {print}') 
+    if [ "$toolfound" = "$toolrepo" ]; then
+      printVerbose "Adding '$chosenRepo' to the install queue"
+      installArray=$(printf "%s\n%s" "$installArray" "$chosenRepo")
+    else
+      badportlist=$(printf "%s %s" "$badportlist" "$toolrepo")
     fi
   done
-fi
-printVerbose "Checking whether any ports remain in the input list."
-chosenRepos=$(strtrim "${chosenRepos}")
-if [ -n "${chosenRepos}" ]; then
-  printError "The following requested port(s) do not exist:\n\t$(echo ${chosenRepos} | tr -s '[:space:]')"
+  if [ -n "$badportlist" ]; then
+    printError "The following requested port(s) do not exist:\n\t$badportlist"
+  fi
 fi
 
 installPorts "${installArray}"

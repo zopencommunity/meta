@@ -86,6 +86,30 @@ isPackageActive(){
   getCurrentVersionDir "$needle"
 }
 
+# Given two input files, return those lines in haystack file that are 
+# not in needles file
+diffFile()
+{
+  haystackfile="$1"
+  needlesfile="$2"
+  [ -s "$needlesfile" ] || printError "Internal error; needle file was empty/non-existent."
+  diff=$(awk 'NR==FNR{needles[$0];next} 
+    !($0 in needles) {print}' "$needlesfile" "$haystackfile")
+  echo "$diff"
+}
+
+# Given two input lists (with \n delimiters), return those lines in  
+# haystack that are not in needles
+diffList()
+{
+  haystack="$1"
+  needles="$2"
+  haystackfile=$(mktempfile "haystack")
+  cat "$haystack" >"$haystackfile"
+  needlesfile=$(mktempfile "needles")
+  cat "$needles"  >"$needlesfile"
+  diffFile "$needlesfile" "$haystackfile"
+}
 # Generate a file name that has a high probability of being unique for
 # use as a temporary filename - the filename should be unique in the
 # instance it was generated and probability suggests it should be for
@@ -112,7 +136,7 @@ mktempfile()
 mktempdir()
 {
   tempdir=$(mktempfile "$1")
-  [ ! -e "${tempdir}" ] && mkdir "${tempdir}" && addCleanupTrapCmd "rm -rf ${tempdir}" && echo "${tempdir}"
+  [ ! -e "$tempdir" ] && mkdir "$tempdir" && addCleanupTrapCmd "rm -rf $tempdir 2>/dev/null" && echo "$tempdir"
 }
 
 isPermString()
@@ -355,7 +379,7 @@ findrev()
 {
   haystack="$1"
   needle="$2"
-  while [[ "${haystack}" != "" && "${haystack}" != "/" && "${haystack}" != "./" && ! -e "${haystack}/${needle}" ]]; do
+  while [ "$haystack" != "" && "$haystack" != "/" && "$haystack" != "./" && ! -e "$haystack/$needle" ]; do
     haystack=${haystack%/*}
   done
   echo "${haystack}"
@@ -412,8 +436,8 @@ mutexReq()
       [ ! "${lockedpid}" = "${mypid}" ] && [ ! "${lockedpid}" = "${PPID}" ]
     } && kill -0 "${lockedpid}" 2> /dev/null && echo "Aborting, Active process '${lockedpid}' holds the '$2' lock: '${mutex}'" && exit -1
   fi
-  addCleanupTrapCmd "rm -rf ${mutex}"
-  echo "${mypid}" > ${mutex}
+  addCleanupTrapCmd "rm -rf $mutex 2>/dev/null"
+  echo "$mypid" > $mutex
 }
 
 mutexFree()
@@ -470,12 +494,11 @@ mergeIntoSystem()
 
   [ -z "${rebaseusr}" ] && rebaseusr="usr/local"
 
-  currentDir="${PWD}"
-  targetdir="${rootfs}/${rebaseusr}" # The main rootfs/usr location
+  currentDir="$PWD"
 
   printDebug "Calculating the offset path to store from root"
-  offset=$(dirname "${versioneddir#"${rootfs}"/}")
-  version=$(basename ${versioneddir})
+  offset=$(dirname "${versioneddir#$rootfs/}")
+  version=$(basename "$versioneddir")
   tmptime=$(date +%Y%m%d%H%M%S)
   processingDir="${rootfs}/tmp/zopen.${tmptime}"
   printDebug "Temporary processing dir evaluated to: ${processingDir}"
@@ -488,7 +511,7 @@ mergeIntoSystem()
   mv "${versioneddir}" "${virtualStore}"
 
   printDebug "Creating main linked directory in store"
-  $(cd "${virtualStore}" && ln -s "${version}" "${name}")
+  cd "$virtualStore" && ln -s "$version" "$name"
 
   printDebug "Creating virtual root directory structure"
   mkdir -p "${processingDir}/${rebaseusr}"
@@ -500,22 +523,21 @@ mergeIntoSystem()
   printDebug "Generating symlink tree"
 
   printDebug "Creating directory structure"
-  curdir="${PWD}"
-  cd "${virtualStore}/${name}" || exit
-  # since 'ln *' doesn't invoke globbing to allow multiple files at once,
-  # abuse the Recurse option; this results in "already exists" errors but
-  # ignore them as the first call should generate the correct link but
-  # subsequent calls would generate a symlink that has incorrect dereferencing
-  # and ignoring them is actually faster than individually creating the links!
+  cd "$virtualStore/$name" || printError "Unable to change to virtual store at '$virtualStore/$name'"
+   # since 'ln *' doesn't invoke globbing to allow multiple files at once,
+   # abuse the Recurse option; this results in "already exists" errors but 
+   # ignore them as the first call should generate the correct link but 
+   # subsequent calls would generate a symlink that has incorrect dereferencing 
+   # and ignoring them is actually faster than individually creating the links!
   zosfind . -type d | sort -r | while read dir; do
-    dir=$(echo "${dir}" | sed "s#^./##")
-    printDebug "Processing dir: ${dir}"
-    [ ${dir} = "." ] && continue
-    mkdir -p "${processingDir}/${rebaseusr}/${dir}"
-    cd "${processingDir}/${rebaseusr}/${dir}" || exit
-    dirrelpath=$(relativePath2 "${virtualStore}/${name}/${dir}" "${processingDir}/${rebaseusr}/${dir}")
-    ln -Rs "${dirrelpath}/" "." 2> /dev/null
-  done
+    dir=$(echo "$dir" | sed "s#^./##")
+    printDebug "Processing dir: $dir" 
+    [ $dir = "." ] && continue;
+    mkdir -p "$processingDir/$rebaseusr/$dir"
+    cd "$processingDir/$rebaseusr/$dir" || printError "Unable to change to processing directory '$processingDir/$rebaseusr/$dir'"
+    dirrelpath=$(relativePath2 "$virtualStore/$name/$dir" "$processingDir/$rebaseusr/$dir")
+    ln -Rs "$dirrelpath/" "." 2>/dev/null
+  done 
 
   printDebug "Moving unpaxed processing-directory back to main rootfs store."
   # this *must* be done before the merge step below or relative symlinks can't
@@ -528,21 +550,20 @@ mergeIntoSystem()
 
   printDebug "Generating intermediary tar file"
   # Need '-S' to allow long symlinks
-  $(cd "${processingDir}" && tar -S -cf "${tarfile}" "usr")
+  cd "$processingDir" && tar -S -cf "$tarfile" "usr"
 
-  printDebug "Generating listing for remove processing (including main symlink)."
-  listing=$(tar tf "${processingDir}/${tarfile}" 2> /dev/null | sort -r)
-  echo "Installed files:" > "${versioneddir}/.links"
-  echo "${listing}" >> "${versioneddir}/.links"
-
-  printDebug "Extracting tar to rootfs."
+  printDebug "Generating listing for remove processing (including main symlink)"
+  echo "Installed files:" > "$versioneddir/.links"
+  tar tf "$processingDir/$tarfile" 2>/dev/null| sort -r >> "$versioneddir/.links"
+  
+  printDebug "Extracting tar to rootfs"
   cd "${processingDir}" && tar xf "${tarfile}" -C "${rootfs}" 2> /dev/null
 
   printDebug "Cleaning temp resources."
   rm -rf "${processingDir}" 2> /dev/null
 
-  printDebug "Switching to previous cwd - current work dir was purged."
-  cd "${currentDir}" || exit
+  printDebug "Switching to previous cwd - current work dir was purged"
+  cd "$currentDir" || printError "Unable to change to '$currentDir'"
 
   printInfo "- Integration complete."
   return 0
@@ -558,71 +579,96 @@ unsymlinkFromSystem()
   pkg=$1
   rootfs=$2
   dotlinks=$3
-  if [ -e "${dotlinks}" ]; then
-    printInfo "- Checking for obsoleted files in ${rootfs}/usr/ tree from ${pkg}."
-    # Use sed to skip header line in .links file
-    # Note that the contents of the links file are ordered such that
-    # processing occurs depth-first; if, after removing orphaned symlinks,
-    # a directory is empty, then it can be removed.
-    nfiles=$(sed '1d;$d' "${dotlinks}" | wc -l | tr -d ' ')
-    flecnt=0
-    pct=0
+  newfilelist=$4
 
-    printDebug "Creating temporary dirname file."
-    tempDirFile="${ZOPEN_ROOTFS}/tmp/zopen.rmdir.${RANDOM}"
-    tempTrash="${tempDirFile}.trash"
-    [ -e "${tempDirFile}" ] && rm -f "${tempDirFile}" > /dev/null 2>&1
-    touch "${tempDirFile}"
-    addCleanupTrapCmd "rm -rf ${tempDirFile}"
-    printDebug "Using temporary file ${tempDirFile}"
-    printInfo "- Checking ${nfiles} potential links."
+  if [ -e "$dotlinks" ]; then
+    printInfo "- Checking for obsoleted files in $rootfs/usr/ tree from $pkg"
 
-    rm_fileprocs=15
-    [ -e "${rootfs}/etc/zopen/rm_fileprocs" ] && rm_fileprocs=$(cat "${rootfs}/etc/zopen/rm_fileprocs")
-    threshold=$((nfiles / rm_fileprocs))
-    threshold=$((threshold + 1))
-    printDebug "Threshold of files per worker [files/procs] calculated as: ${threshold}"
-    [ "${threshold}" -le 50 ] && threshold=50 && printVerbose "Threshold below min: using 50." # Don't spawn too many
-    printDebug "Starting spinner..."
-    progressHandler "spinner" "- Complete" &
-    ph=$!
-    killph="kill -HUP ${ph} 2>/dev/null"
-    addCleanupTrapCmd "${killph}"
-
-    printDebug "Spawning as subshell to handle threading."
-    # Note that this all must happen in a subshell as the above started
-    # progressHandler is a signal-terminated process - and a wait issued in
-    # the parent will never complete until that ph is signalled/terminated!
-    deletethreads=$(
-      tid=0
-      filenames=""
-      while read filetounlink; do
-        tid=$((tid + 1))
-        filetounlink=$(echo "${filetounlink}" | sed 's/\(.*\).symbolic.*/\1/')
-        filenames=$(/bin/printf "%s\n%s" "${filenames}" "${filetounlink}")
-        if [ "$((tid % threshold))" -eq 0 ]; then
-          deletethread "${filenames}" "${tempDirFile}" &
-          printDebug "Started delete thread: $!"
-          filenames=""
-        fi
-      done << EOF
-$(sed '1d;$d' "${dotlinks}")
-EOF
-      if [ -n "${filenames}" ]; then
-        # Handle when there are not enough to trigger the threshold of a new thread above,
-        # there will still be items in the "array"
-        deletethread "${filenames}" "${tempDirFile}" #&
-        printDebug "Started delete thread: $!"
-      fi
-      wait
-    )
-    ${killph} 2> /dev/null # if the timer is not running, the kill will fail
-    if [ -e "${tempDirFile}" ]; then
-      ndirs=$(cat "${tempDirFile}" | uniq | wc -l | tr -d ' ')
-      printInfo "- Checking ${ndirs} dir links"
-      for d in $(cat "${tempDirFile}" | uniq | sort -r); do
-        [ -d "${d}" ] && rmdir "${d}" > /dev/null 2>&1
+    if [ -e "$newfilelist" ]; then
+      printDebug "Release change, so the list of changes to physically remove should be smaller"
+      printDebug "Starting spinner..."
+      progressHandler "spinner" "- Check complete" &
+      ph=$!
+      killph="kill -HUP $ph"
+      addCleanupTrapCmd "$killph 2>/dev/null"
+      obsoleteList=$(diffFile "$dotlinks" "$newfilelist")
+      echo "$obsoleteList" | while read obsoleteFile; do
+        [ -z "$obsoleteFile" ] && return 0
+        obsoleteFile="$ZOPEN_ROOTFS/$obsoleteFile"
+        obsoleteFile="${obsoleteFile%% symbolic*}"
+        printDebug "Checking obsoletefile '$obsoleteFile'"
+        if [ -L "$obsoleteFile" ] && [ ! -e "$obsoleteFile" ]; then
+          # the linked-to file no longer exists (ie. the symlink is dangling)
+          rm -f "$obsoleteFile" >/dev/null 2>&1
+        fi 
       done
+      $killph 2>/dev/null  # if the timer is not running, the kill will fail
+    else
+      # Slower method needed to analyse each link to see if it has
+      # become orphaned. Only relevent when removing a package as 
+      # upgrades/alt-switching can supply a list of files
+      # Use sed to skip header line in .links file
+      # Note that the contents of the links file are ordered such that
+      # processing occurs depth-first; if, after removing orphaned symlinks,
+      # a directory is empty, then it can be removed.
+      nfiles=$(sed '1d;$d' "$dotlinks" | wc -l  | tr -d ' ')
+  
+      printDebug "Creating Temporary dirname file"
+      tempDirFile="$ZOPEN_ROOTFS/tmp/zopen.rmdir.$RANDOM"
+      tempTrash="$tempDirFile.trash"
+      [ -e "$tempDirFile" ] && rm -f "$tempDirFile" >/dev/null 2>&1
+      touch "$tempDirFile"
+      addCleanupTrapCmd "rm -rf $tempDirFile 2>/dev/null"
+      printDebug "Using temporary file $tempDirFile"
+      printInfo "- Checking ${nfiles} potential links"
+  
+      rm_fileprocs=15
+      [ -e "$rootfs/etc/zopen/rm_fileprocs" ] && rm_fileprocs=$(cat "$rootfs/etc/zopen/rm_fileprocs")
+      threshold=$(( nfiles / rm_fileprocs))
+      threshold=$(( threshold + 1 ))
+      printDebug "Threshold of files per worker [files/procs] calculated as: $threshold"
+      [ $threshold -le 50 ] && threshold=50 && printVerbose "Threshold below min: using 50" # Don't spawn too many
+      printDebug "Starting spinner..."
+      progressHandler "spinner" "- Complete" &
+      ph=$!
+      killph="kill -HUP $ph"
+      addCleanupTrapCmd "$killph 2>/dev/null"
+  
+      printDebug "Spawning as subshell to handle threading"
+      # Note that this all must happen in a subshell as the above started
+      # progressHandler is a signal-terminated process - and a wait issued in 
+      # the parent will never complete until that ph is signalled/terminated!
+      deletethreads=$(
+        tid=0
+        filenames=""
+        while read filetounlink; do
+          tid=$(( tid + 1 ))
+          filetounlink=$(echo "$filetounlink" | sed 's/\(.*\).symbolic.*/\1/')
+          filenames=$(/bin/printf "%s\n%s" "$filenames" "$filetounlink")
+          if [ "$(( tid % threshold ))" -eq 0 ]; then
+            deletethread "$filenames" "$tempDirFile" &
+            printDebug "Started delete thread: $!"
+            filenames=""
+          fi
+        done <<EOF
+$(sed '1d;$d' "$dotlinks")
+EOF
+        if [ -n "$filenames" ]; then
+          # Handle when there are not enough to trigger the threshold of a new thread above,
+          # there will still be items in the "array"
+          deletethread "$filenames" "$tempDirFile" #&
+          printDebug "Started delete thread: $!"
+        fi
+        wait 
+      )
+      $killph 2>/dev/null  # if the timer is not running, the kill will fail
+      if [ -e "$tempDirFile" ]; then
+        ndirs=$(cat "$tempDirFile" | uniq | wc -l  | tr -d ' ')
+        printInfo "- Checking ${ndirs} dir links"
+        for d in $(cat "$tempDirFile" | uniq | sort -r) ; do 
+          [ -d "$d" ] && rmdir "$d" >/dev/null 2>&1
+        done
+      fi
     fi
   else
     printWarning "Could not locate list of current links to verify, dangling links might be present; run 'zopen clean -d'"
@@ -661,7 +707,6 @@ deletetask()
     echo "Unprocessable file: '${filename}'" >> "${tempTrash}"
   fi
 }
-
 
 
 
@@ -857,7 +902,7 @@ getInputHidden()
   # Register trap-handler to try and ensure that we restore the screen to display
   # chars in the event the script is terminated early (eg. user hits CTRL-C instead of
   # answering the masked question)
-  addCleanupTrapCmd "stty echo"
+  addCleanupTrapCmd "stty echo 2>/dev/null"
   stty -echo
   read zopen_input
   echo ${zopen_input}
@@ -1128,6 +1173,1118 @@ checkWritable()
   if ! [ -w "${ROOTDIR}" ]; then
     printError "Tools distribution is read-only. Cannot run update operation '${ME}'." >&2
   fi
+}
+
+installDependencies()
+(
+  name=$1
+  printVerbose "List of dependencies to install: $dependencies"
+  skipupgrade_lcl=$skipupgrade
+  skipupgrade=true
+  echo "$dependencies" | xargs | tr ' ' '\n' | sort | while read dep; do
+    printDebug "Removing '$dep' from dependency queue '$dependencies'"
+    # done in case of dependency chain that specifies the same dependency more than once!
+    dependencies=$(echo "$dependencies" | sed -e "s/$dep//" | tr -s ' ')
+    printDebug "Checking if package already installed this session"
+    alreadyInstalled=$(echo "$sessionList" | sed -e "s/.*\($dep\).*//")
+    if [ -z "$alreadyInstalled" ]; then
+      handlePackageInstall "$dep"
+    else
+      printDebug "Package '$dep' installed earlier; no install required"
+    fi
+  done
+  skipupgrade=$skipupgrade_lcl
+)
+
+handlePackageInstall(){
+  printDebug "Checking whether installing direct from pax files or via Github repo"
+  if ! $paxinstall; then
+    printDebug "Using standard Github repo"
+    fullname="$1"
+    printDebug "Name to install: $fullname, parsing any version ('=') or tag ('%') has been specified"
+    name=$(echo "$fullname" | sed -e 's#[=%].*##')
+    repo="${name}"
+    versioned=$(echo "$fullname" | cut -s -d '=' -f 2)
+    tagged=$(echo "$fullname" | cut -s -d '%' -f 2)
+    printDebug "Name:$name;version:$versioned;tag:$tagged;repo:$repo"
+    printHeader "Installing package: $name"
+    [ -z "$paxrepodir" ] && getAllReleasesFromGithub "${repo}"
+  else 
+    printDebug "Using native pax files to install"
+    reponame="$1"
+    if [ "$reponame" = "${reponame%%.zos.pax.Z}" ]; then
+      printDebug "Package did not have .zos.pax.Z suffix - attempt to locate suitable pax"
+
+      printDebug "Check [in order] cli paxrootdir -> system paxrootdir -> current dir for repo to check"
+      testpaxRepo=""
+      [ -n "$paxrepodir" ] && testpaxRepo="$paxrepodir"
+      [ -n "$testpaxRepo" ] && [ ! -r "$testpaxRepo" ] && printError "Could not access location '$testpaxRepo' from parameter --paxrepodir. Check parameter setting and retry command"
+      [ -z "$testpaxRepo" ] && [ -e "$ZOPEN_ROOTFS/etc/zopen/paxrepodir" ] && tespaxRepo=$(cat "$ZOPEN_ROOTFS/etc/zopen/paxrepodir")
+      [ -n "$testpaxRepo" ] && [ ! -r "$testpaxRepo" ] && printError "Unable to read system repository at location '$tespaxRepo'. Correct system setting in '$ZOPEN_ROOTFS/etc/zopen/paxrepodir' and retry command"
+      [ -z "$testpaxRepo" ] && testpaxRepo="./"
+      prefix="$reponame-" 
+      printDebug "Finding paxes prefixed '$prefix' in '$testpaxRepo'"
+      # Note, not cd'ing to dir means we get full pax name - need the "/" at the end though
+      #(heads -1 or tails -1 - need to test multiple pax for install)
+      paxRepo=$(zosfind "${testpaxRepo%%/}/" ! -name "${testpaxRepo%%/}/" -prune -a -type f |grep "$prefix" |sort|tail -n 1)
+      printVerbose "Found pax '$paxRepo' as candidate for install for package '$reponame'"
+    else
+      printDebug "Parameter passed in had suffix indicating pax file; try to locate file..."
+      if [ -r "$reponame" ]; then
+        printVerbose "Found file at location specified '$reponame'; using as-is"
+        paxRepo="$reponame"
+      else
+        printDebug "Attempt to locate rpm file in current directory or in configured locations [if set]"
+        paxfilename=$(basename "$reponame") 
+        printDebug "Checking current directory '$PWD'"
+        testpaxRepo="./$paxfilename"
+        if [ -r "$testpaxRepo" ]; then
+          printVerbose "Found $paxfilename as '$testpaxRepo'; installing"
+          paxRepo="$testpaxRepo"
+        elif [ -n "$paxrepodir" ]; then
+          printVerbose "Using repository '$paxrepodir' as specified on cli"
+          testpaxRepo="$paxrepodir/$paxfilename"
+          if [ -r "$testpaxRepo" ]; then
+            printVerbose "Found $paxfilename as '$testpaxRepo'; installing"
+            paxRepo="$testpaxRepo"
+          fi
+        elif [ -e "$ZOPEN_ROOTFS/etc/zopen/paxrepodir" ]; then
+          printDebug "Using [single] repository specified from system config '$ZOPEN_ROOTFS/etc/zopen/paxrepodir'"
+          paxrepodir=$(cat "$ZOPEN_ROOTFS/etc/zopen/paxrepodir")
+          printVerbose "Trying repository at system configured location '$repodir'"
+          testpaxRepo="$paxrepodir/$paxfilename"
+          if [ -r "$testpaxRepo" ]; then
+            printVerbose "Found $paxfilename as '$testpaxRepo'; installing"
+            paxRepo="$testpaxRepo"
+          fi
+#          paxlist=$(cd "$paxrepodir" | zosfind "." -type f -name "*$fullname-*zos.pax.Z")
+        else
+          printError "Cannot locate specified pax file '$reponame' to install. Validate filename, repository or permissions and retry request"
+        fi
+      fi
+    fi
+
+    [ -z "$paxRepo" ] && printError "Could not locate pax file for '$reponame'. Validate filename, repository or permissions and retry request."      
+    printDebug "Installing a custom-repo pax '$paxRepo', need to find and break it open and get the metadata first"
+    tmptime=$(date +%Y%m%d%H%M%S)
+    tmpUnpaxDir="$rootfs/tmp/zopen.$tmptime"
+    printVerbose "Temporary processing dir evaluated to: $tmpUnpaxDir"
+    [ -e "$tmpUnpaxDir" ] && rm -rf "$tmpUnpaxDir"
+    mkdir -p "$tmpUnpaxDir" >/dev/null 2>&1
+    #addCleanupTrapCmd "rm -rf $tmpUnpaxDir"
+    paxredirect="-s %[^/]*/%$tmpUnpaxDir/%"
+    
+    if ! runLogProgress "pax -rf $paxRepo -p p $paxredirect ${redirectToDevNull} " "Expanding $paxRepo" "Expanded"; then
+      printError "Errors unpaxing '$paxRepo'"
+      continue;
+    fi
+    printDebug "Checking pax for metadata file(s): README.md"
+
+    printDebug "Attempting to calculate package name..."
+    if [ -r "$tmpUnpaxDir/README.md" ]; then
+      printDebug "Found README.md - first line *might* be package title"
+      name=$(head -1 "$tmpUnpaxDir/README.md" | awk '{print $NF}')
+    fi
+    if [ -z "$name" ]; then 
+        # Fallback to pax file name
+        name=$(basename "${paxRepo%%-*}")
+        printVerbose "Using '$name' as package name"
+    fi
+    name="${name%port}"
+    [ -z "$name" ] && printError "Could not determine package name from pax file metadata"
+    printVerbose "Using '$name' as package name"    
+
+    printDebug "Copying specified pax '$paxRepo' for package '$name' into correct location for install '$downloadDir'"
+    downloadFile=$(basename "$paxRepo")
+    # if already exits, skip copy
+    [ ! -e "$downloadDir/$downloadFile" ] && cp -R "$paxRepo" "$downloadDir"
+  fi
+
+  if $localInstall; then
+    printDebug "Local install to current directory"
+    rootInstallDir="$PWD"
+  else
+    printDebug "Setting install root to: ${ZOPEN_PKGINSTALL}"
+    rootInstallDir="${ZOPEN_PKGINSTALL}"
+  fi
+  originalFileVersion=""
+  printDebug "Checking for meta files in '${rootInstallDir}/${name}/${name}'"
+  printDebug "Finding version/release information"
+  if [ -e "${rootInstallDir}/${name}/${name}/.releaseinfo" ]; then
+    originalFileVersion=$(cat "${rootInstallDir}/${name}/${name}/.releaseinfo")
+    printDebug "Found originalFileVersion=$originalFileVersion (port is already installed)"
+  elif [ -e "${rootInstallDir}/${name}/${name}/.version" ]; then
+    originalFileVersion=$(cat "${rootInstallDir}/${name}/${name}/.version")
+    printDebug "Found originalFileVersion=$originalFileVersion (port is already installed)"
+  else
+    printDebug "Could not detect existing installation at ${rootInstallDir}/${name}/${name}"
+  fi
+
+  printDebug "Finding releaseline information"
+  installedReleaseLine=""
+  if [ -e "${rootInstallDir}/${name}/${name}/.releaseline" ]; then
+    installedReleaseLine=$(cat "${rootInstallDir}/${name}/${name}/.releaseline")
+    printVerbose "Installed product from releaseline: $installedReleaseLine"
+  else
+    printVerbose "No current releaseline for package"
+  fi
+  
+  printDebug "Checking whether installing direct from a pax [from a custom repo]"
+  if ! $paxinstall; then
+    releasemetadata=""
+    downloadURL=""
+    # Options where the user explicitly sets a version/tag/releaseline currently ignore any configured release-line,
+    # either for a previous package install or system default
+    if [ ! "x" = "x$versioned" ]; then
+      printDebug "Specific version $versioned requested - checking existence and URL"
+      requestedMajor=$(echo "$versioned" | awk -F'.' '{print $1}')
+      requestedMinor=$(echo "$versioned" | awk -F'.' '{print $2}')
+      requestedPatch=$(echo "$versioned" | awk -F'.' '{print $3}')
+      requestedSubrelease=$(echo "$versioned" | awk -F'.' '{print $4}')
+      requestedVersion="${requestedMajor}\\\.${requestedMinor}\\\.${requestedPatch}\\\.${requestedSubrelease}"
+      printDebug "Finding URL for latest release matching version prefix: requestedVersion: $requestedVersion"
+      releasemetadata=$(/bin/printf "%s" "$releases" | jq -e -r '. | map(select(.assets[].name | test("'$requestedVersion'")))[0]')
+    elif [ ! "x" = "x$tagged" ]; then
+      printDebug "Explicit tagged version '$tagged' specified. Checking for match"
+      releaseMetadata=$(/bin/printf "%s" "$releases" | jq -e -r '.[] | select(.tag_name == "'$tagged'")')
+      printDebug "Use quick check for asset to check for existence of metadata for specific messages"
+      asset=$(/bin/printf "%s" "$releaseMetadata" | jq -e -r '.assets[0]')
+      if [ $? -ne 0 ]; then
+        printError "Could not find release tagged '$tagged' in repo '$repo'"
+      fi
+    elif $selectVersion; then
+      # Explicitly allow the user to select a release to install; useful if there are broken installs
+      # as a known good release can be found, selected and pinned!
+      printDebug "List individual releases and allow selection"
+      i=$(/bin/printf "%s" "$releases" | jq -r 'length - 1')
+      printInfo "Versions available for install:"
+      /bin/printf "%s" "$releases" | jq -e -r 'to_entries | map("\(.key): \(.value.tag_name) - \(.value.assets[0].name) - size: \(.value.assets[0].expanded_size/ (1024 * 1024))mb")[]'
+  
+      printDebug "Getting user selection"
+      valid=false
+      while ! $valid; do
+        echo "Enter version to install (0-$i): "
+        read selection < /dev/tty
+        if [[ ! -z $(echo "$selection" | sed -e 's/[0-9]*//') ]]; then
+          echo "Invalid input, must be a number between 0 and $i"
+        elif [ "$selection" -ge 0 ] && [ "$selection" -le "$i" ]; then
+          valid=true
+        fi
+      done
+      printVerbose "Selecting item $selection from array"
+      releasemetadata="$(/bin/printf "%s" "$releases" | jq -e -r ".[$selection]")"
+  
+    elif [ ! -z "$releaseLine" ]; then  
+      printDebug "Install from release line '$releaseLine' specified"
+      validatedReleaseLine=$(validateReleaseLine "$releaseLine")
+      if [ -z "$validatedReleaseLine" ]; then
+        printError "Invalid releaseline specified: '$releaseLine'; Valid values: DEV or STABLE"
+      fi
+      printDebug "Finding latest asset on the release line"
+      releasemetadata="$(/bin/printf "%s" "$releases" | jq -e -r '. | map(select(.tag_name | startswith("'$releaseLine'")))[0]')"
+      printDebug "Use quick check for asset to check for existence of metadata"
+      asset="$(/bin/printf "%s" "$releasemetadata" | jq -e -r '.assets[0]')"
+      if [ $? -ne 0 ]; then
+        printError "Could not find release-line $releaseLine for repo: $repo"
+      fi
+      
+    else
+      printDebug "No explicit version/tag/releaseline, checking for pre-existing package&releaseline"
+      if [ -n "$installedReleaseLine" ]; then
+        printDebug "Found existing releaseline '$installedReleaseLine', restricting to only that releaseline"
+        validatedReleaseLine="$installedReleaseLine"  # Already validated when stored
+      else 
+        printDebug "Checking for system-configured releaseline"
+        sysrelline=$(cat "$ZOPEN_ROOTFS/etc/zopen/releaseline" | awk ' {print toupper($1)}')
+        printDebug "Validating value: $sysrelline"
+        validatedReleaseLine=$(validateReleaseLine "$sysrelline")
+        if [ -n "$validatedReleaseLine" ]; then
+          printDebug "zopen system configured to use releaseline '$sysrelline'; restricting to that releaseline"
+        else
+          printWarning "zopen misconfigured to use an unknown releaseline of '$sysrelline'; defaulting to STABLE packages"
+          printWarning "Set the contents of '$ZOPEN_ROOTFS/etc/zopen/releaseline' to a valid value to remove this message"
+          printWarning "Valid values are: DEV | STABLE"
+          validatedReleaseLine="STABLE"
+        fi
+      fi
+
+      printDebug "Parsing releases: $releases"
+      # We have some situations that could arise
+        # 1. the port being installed has no releaseline tagging yet (ie. no releases tagged STABLE_* or DEV_*)
+        # 2. system is configured for STABLE but only has DEV stream available
+        # 3. system is configured for DEV but only has DEV stream available
+        # 4. the port being installed has got full releaseline tagging
+        # The issue could arise that the user has switched the system from DEV->STABLE or vice-versa so package
+        # stream mismatches could arise but in normal case, once a package is installed [that has releaseline tagging]
+        # then that specific releaseline will be used
+      printDebug "Finding any releases tagged with $validatedReleaseLine and getting the first (newest/latest)"
+      releasemetadata="$(/bin/printf "%s" "$releases" | jq -e -r '. | map(select(.tag_name | startswith("'$validatedReleaseLine'")))[0]')"
+      printDebug "Use quick check for asset to check for existence of metadata"
+      asset="$(/bin/printf "%s" "$releasemetadata" | jq -e -r '.assets[0]')"
+      if [ $? -eq 0 ]; then
+        # Case 4...
+        printVerbose "Found a specific '$validatedReleaseLine' release-line tagged version; installing..."
+      else
+        # Case 2 & 3
+        printDebug "No releases on releaseline '$validatedReleaseLine'; checking alternative releaseline"
+        alt=$(echo "$validatedReleaseLine" | awk ' /DEV/ { print "STABLE" } /STABLE/ { print "DEV" }')
+        releasemetadata="$(/bin/printf "%s" "$releases" | jq -e -r '. | map(select(.tag_name | startswith("'$alt'")))[0]')"
+        printDebug "Use quick check for asset to check for existence of metadata"
+        asset="$(/bin/printf "%s" "$releasemetadata" | jq -e -r '.assets[0]')"
+        if [ $? -eq 0 ]; then
+          printDebug "Found a release on the '$alt' release line so release tagging is active"
+          if [ "DEV" = "$validatedReleaseLine" ]; then
+            # The system will be configured to use DEV packages where available but if none, use latest
+            printInfo "No specific DEV releaseline package, using latest available"
+            releasemetadata="$(/bin/printf "%s" "$releases" | jq -e -r ".[0]")"
+          else
+            printVerbose "The system is configured to only use STABLE releaseline packages but there are none"
+            printInfo "No release available on the '$validatedReleaseLine' releaseline."
+          fi
+        else
+          # Case 1 - old package that has no release tagging yet (no DEV or STABLE), just install latest
+          printVerbose "Installing latest release"
+          releasemetadata="$(/bin/printf "%s" "$releases" | jq -e -r ".[0]")"
+        fi
+      fi
+    fi
+    printDebug "Getting specific asset details from metadata: $releasemetadata"
+    if [ -z "$asset" ] || [ "null" = "$asset" ]; then
+      printDebug "Asset not found during previous logic; setting now"
+      asset=$(/bin/printf "%s" "$releasemetadata" | jq -e -r '.assets[0]')
+    fi
+    if [ "x" = "x$asset" ]; then
+      printError "Unable to determine download asset for ${name}"
+    fi
+  
+    tagname=$(/bin/printf "%s" "$releasemetadata" | jq -e -r ".tag_name" | sed "s/\([^_]*\)_.*/\1/")
+    installedReleaseLine=$(validateReleaseLine "$tagname" )
+  
+    downloadURL=$(/bin/printf "%s" "$asset" | jq -e -r '.url')
+    size=$(/bin/printf "%s" "$asset" | jq -e -r '.expanded_size')
+  
+    if [ "x" = "x$downloadURL" ]; then
+      printError "Unable to determine download location for ${name}"
+    fi
+    downloadFile=$(basename "$downloadURL")
+    downloadFileVer=$(echo "$downloadFile" |sed -E 's/.*-(.*)\.zos\.pax\.Z/\1/')
+    printVerbose "Downloading port from URL: $downloadURL to file: $downloadFile (ver=$downloadFileVer)"
+  else
+    printVerbose "Installing package '$name' from pax file '$paxRepo'"
+    printDebug "Pax was expanded to '$tmpUnpaxDir' previously"
+    downloadFilePrfx="${paxRepo%.zos.pax.Z}"
+    downloadFileVer="${downloadFilePrfx##*-}"
+    size=$(du -s "$tmpUnpaxDir" | awk ' {print $1}') # in 512-blocks
+    [ -z "$size" ] && printError "Could not calculate directory size"
+    size=$(echo "$size * 512" | bc)
+  fi
+
+  if $downloadOnly; then
+    printVerbose "Skipping installation, downloading only"
+  else
+    printDebug "Install=${downloadFileVer};Original=${originalFileVersion};${upgradeInstalled};${installOrUpgrade};${reinstall}"
+    if [ "${downloadFileVer}" = "${originalFileVersion}" ]; then
+      if ! $reinstall; then
+        printInfo "${NC}${GREEN}Package ${name} is already installed at the requested version: ${downloadFileVer}${NC}"
+        return;
+      fi
+      printInfo "- Reinstalling version '$downloadFileVer' of ${name}..."
+    fi
+
+    printDebug "Checking if package is not installed but scheduled for upgrade"
+    if [ "x" = "x$originalFileVersion" ]; then
+      printDebug "No previous version found"
+      if $installOrUpgrade; then
+        printDebug "Package ${name} was not installed so not upgrading but installing"
+      elif $upgradeInstalled; then
+        printError "Package ${name} can not be upgraded as it is not installed!"
+        continue;
+      fi
+      unInstallOldVersion=false
+      printInfo "- Installing ${name}..."
+    elif $skipupgrade; then
+      printInfo "Package ${name} has a newer release '${downloadFileVer}' but explicitly skipping"
+      continue;
+    elif ! $setactive; then
+      printVerbose "Current version '${originalFileVersion}' will remain active"
+      unInstallOldVersion=false
+    else
+      printVerbose "Previous version '${originalFileVersion}' installed"
+      if [ -e "${rootInstallDir}/${name}/${name}/.pinned" ]; then
+        printWarning "- Version '${originalFileVersion}' has been pinned; upgrade to '${downloadFileVer}' skipped"
+        syslog "$ZOPEN_LOG_PATH/audit.log" "$LOG_A" "$CAT_PACKAGE,$CAT_INSTALL" "DOWNLOAD" "handlePackageInstall" "Attempt to change pinned package '${name}' skipped"
+        continue;
+      else
+        printInfo "- Replacing ${name} version '${originalFileVersion}' with '${downloadFileVer}'"
+        unInstallOldVersion=true
+        currentversiondir=$(cd "$rootInstallDir/$name/${name}" && pwd -P)
+        currentlinkfile="$currentversiondir/.links"
+      fi
+    fi
+  fi
+  printDebug "Ensuring we are in the correct working download location '${downloadDir}'"
+  cd "${downloadDir}" || printError "Unable to change to download directory '${downloadDir}'"
+
+  if [ ! $downloadOnly ] || [ ! $localInstall ]; then
+    printDebug "Checking current directory for already downloaded package [file name comparison]"
+    location="current directory"
+  else
+    printDebug "Checking cache for already downloaded package [file name comparison]"
+    location="zopen package cache"
+  fi
+
+  pax=$downloadFile
+  if [ -f "$pax" ]; then
+    printVerbose "- Found existing file '${pax}' in ${location}"
+  else
+    printInfo "- Downloading $pax file from remote to ${location}..."
+    if ! $verbose; then
+      redirectToDevNull="2>/dev/null"
+    fi
+
+    progressHandler "network" "- Downloaded $pax file from remote to ${location}." &
+    ph=$!
+    killph="kill -HUP $ph"
+    addCleanupTrapCmd "$killph"
+
+    if ! runAndLog "curlCmd -L '${downloadURL}' -O ${redirectToDevNull}"; then
+      printError "Could not download from ${downloadURL}. Correct any errors and potentially retry"
+      continue;
+    fi
+    $killph 2>/dev/null  # if the timer is not running, the kill will fail
+    syslog "$ZOPEN_LOG_PATH/audit.log" "$LOG_A" "$CAT_NETWORK,$CAT_PACKAGE,$CAT_FILE" "DOWNLOAD" "handlePackageInstall" "Downloaded remote file '$pax'"
+  fi
+  if [ ! -f "${pax}" ]; then
+    printError "${pax} was not found after download!?!"
+  fi
+
+  if $downloadOnly; then
+    printVerbose "Pax was downloaded to local dir '$downloadDir'"
+  elif $cacheOnly; then
+    printVerbose "Pax was downloaded to zopen cache '$downloadDir'"
+  else
+    printDebug "Installing $pax"
+    installdirname="${name}/${pax%.pax.Z}" # Use full pax name as default
+
+    printVerbose "- Processing $pax..."
+    baseinstalldir="."
+    paxredirect=""
+    if ! $localInstall; then
+      baseinstalldir="$rootInstallDir"
+      paxredirect="-s %[^/]*/%$rootInstallDir/$installdirname/%"
+      printDebug "Non-local install, extracting with '$paxredirect'"
+    else
+      printVerbose "- Local install specified"
+      paxredirect="-s %[^/]*/%$installdirname/%"
+      printDebug "Non-local install, extracting with '$paxredirect'"
+    fi
+
+    megabytes=$(echo "scale=2; $size / (1024 * 1024)" | bc)
+    printInfo "After this operation, $megabytes MB of additional disk space will be used."
+    if ! $yesToPrompts; then
+      while true; do
+        printInfo "Do you want to continue? [y/n/a]"
+        read continueInstall < /dev/tty
+        case "$continueInstall" in
+          "y") break;;
+          "n") mutexFree "zopen" && printInfo "Exiting..." && exit 0 ;;
+          "a") yesToPrompts=true; break;;
+          *) echo "?";;
+        esac
+      done
+    fi
+
+    printDebug "Check for existing directory for version '$installdirname'"
+    if [ -d "$baseinstalldir/$installdirname" ]; then 
+      printVerbose "- Clearing existing directory and contents"
+      rm -rf "$baseinstalldir/$installdirname"
+    fi
+
+    if  ! $paxinstall; then
+      if ! runLogProgress "pax -rf $pax -p p $paxredirect ${redirectToDevNull}" "Expanding $pax" "Expanded"; then
+        printWarning "Errors unpaxing, package directory state unknown"
+        printInfo    "Use zopen alt to select previous version to ensure known state"
+        continue;
+      fi
+    else
+      printVerbose "Moving already expanded pax directory to expanded location"
+      mkdir -p "$baseinstalldir/$installdirname" 2>/dev/null
+      mv "$tmpUnpaxDir/" "$baseinstalldir/$installdirname" >/dev/null 2?&1
+    fi
+    if $localInstall; then
+      rm -f "${pax}"
+    fi
+
+    if $setactive; then
+      if [ -L "$baseinstalldir/$name/${name}" ]; then
+        printDebug "Removing old symlink '$baseinstalldir/$name/${name}'"
+        rm -f "$baseinstalldir/$name/${name}"
+      fi
+      if ! ln -s "$baseinstalldir/$installdirname" "$baseinstalldir/$name/${name}"; then
+        printError "Could not create symbolic link name"
+      fi 
+    fi 
+
+    printDebug "Adding version '${downloadFileVer}' to info file"
+    # Add file version information as a .releaseinfo file
+    echo "$downloadFileVer" > "${baseinstalldir}/$installdirname/.releaseinfo"
+
+    # Check for a .version file from the pax - if present good, if not
+    # generate one from the file name as the tag isn't granular enough to really
+    # be used in dependency checks
+    if [ ! -f "${baseinstalldir}/$installdirname/.version" ]; then
+      echo "$downloadFileVer" > "${baseinstalldir}/$installdirname/.version"
+    fi
+
+    printDebug "Adding releaseline '$installedReleaseLine' metadata to ${baseinstalldir}/$installdirname/.releaseline"
+    echo "$installedReleaseLine" > "${baseinstalldir}/$installdirname/.releaseline"
+
+    if $setactive; then
+      if ! $nosymlink; then
+        mergeIntoSystem "$name" "${baseinstalldir}/$installdirname" "$ZOPEN_ROOTFS" 
+        misrc=$?
+        printDebug "The merge complete with: $misrc"
+      fi
+
+      printVerbose "- Checking for env file"
+      if [ -f ${baseinstalldir}/${name}/${name}/.env -o -f ${baseinstalldir}/${name}/${name}/.appenv ]; then
+        printVerbose "- .env file found, adding to profiled processing"
+        mkdir -p "$ZOPEN_ROOTFS/etc/profiled/$name"
+        cat << EOF > "$ZOPEN_ROOTFS/etc/profiled/$name/dotenv"
+curdir=\$(pwd)
+cd "$baseinstalldir/$name/$name" >/dev/null 2>&1
+# If .appenv exists, source it as it's quicker
+if [ -f ".appenv" ]; then
+  . ./.appenv
+elif [ -f ".env" ]; then
+  . ./.env
+fi
+cd \$curdir  >/dev/null 2>&1
+EOF
+        printVerbose "- Running any setup scripts"
+        cd "${baseinstalldir}/${name}/${name}" && [ -r "./setup.sh" ] && ./setup.sh
+      fi
+    fi
+    if $unInstallOldVersion; then
+      printDebug "New version merged; checking for orphaned files from previous version"
+      # This will remove any old symlinks or dirs that might have changed in an upgrade
+      # as the merge process overwrites existing files to point to different version
+      unsymlinkFromSystem "$name" "$ZOPEN_ROOTFS" "$currentlinkfile" "${baseinstalldir}/${name}/${name}/.links"
+    fi
+
+    if $setactive; then
+      printDebug "Marking this version as installed"
+      touch "${baseinstalldir}/${name}/${name}/.active"
+      installedList="$name $installedList"
+      syslog "$ZOPEN_LOG_PATH/audit.log" "$LOG_A" "$CAT_INSTALL,$CAT_PACKAGE" "DOWNLOAD" "handlePackageInstall" "Installed package:'$name';version:$downloadFileVer;install_dir='$baseinstalldir/$installdirname';"
+    fi
+
+    if $doNotInstallDeps; then
+        printVerbose "- Skipping dependency installation"
+    elif $reinstall; then
+      printDebug "- Reinstalling so no dependency reinstall (unless explicitly listed)"
+    else
+      printVerbose "- Checking for runtime dependencies"
+      printDebug "Checking for .runtimedeps file"
+      if [ -e "${baseinstalldir}/${name}/${name}/.runtimedeps" ]; then
+        dependencies=$(cat "${baseinstalldir}/${name}/${name}/.runtimedeps")
+      fi
+      printDebug "Checking for runtime dependencies from the git metadata"
+      if echo "$statusline" | grep "Runtime Dependencies:" >/dev/null; then
+        gitmetadependencies="$(echo "$statusline" | sed -e "s#.*Runtime Dependencies:<\/b> ##" -e "s#<br />.*##")"
+        if [ ! "$gitmetadependencies" = "No dependencies" ]; then
+          dependencies="$dependencies $gitmetadependencies"
+        fi
+      fi
+      dependencies=$(deleteDuplicateEntries "$dependencies" " ")
+      if [ ! "x" = "x$dependencies" ]; then
+        printVerbose "- $name depends on: $dependencies"
+        printInfo "- Installing dependencies"
+        installDependencies "$name" "$dependencies"
+      else
+        printVerbose "- No runtime dependencies found"
+      fi
+    fi
+    sessionList="$sessionList $name"
+    printInfo "${NC}${GREEN}Successfully installed $name${NC}"
+  fi # (download only)
+}
+
+zopenInitialize()
+{
+  # Create the cleanup pipeline and exit handler
+  trap "cleanupFunction" EXIT INT TERM QUIT HUP
+  [ -z "$ZOPEN_CLEANUP_PIPE" ] \
+  && [ ! -p "$ZOPEN_CLEANUP_PIPE" ] \
+  && ZOPEN_CLEANUP_PIPE=$(mktempfile "clean" "pipe") \
+  && mkfifo "$ZOPEN_CLEANUP_PIPE" \
+  && chtag -tc 819 "$ZOPEN_CLEANUP_PIPE" \
+  && export ZOPEN_CLEANUP_PIPE
+
+  addCleanupTrapCmd "stty echo 2>/dev/null" # set this as a default to ensure line visibility!
+  defineEnvironment
+  defineANSI
+  if [ -z "$ZOPEN_DONT_PROCESS_CONFIG" ]; then
+    processConfig
+  fi
+
+  ZOPEN_JSON_CACHE_URL="https://zosopentools.github.io/meta/api/zopen_releases.json"
+}
+
+installDependencies()
+(
+  name=$1
+  printVerbose "List of dependencies to install: $dependencies"
+  skipupgrade_lcl=$skipupgrade
+  skipupgrade=true
+  echo "$dependencies" | xargs | tr ' ' '\n' | sort | while read dep; do
+    printDebug "Removing '$dep' from dependency queue '$dependencies'"
+    # done in case of dependency chain that specifies the same dependency more than once!
+    dependencies=$(echo "$dependencies" | sed -e "s/$dep//" | tr -s ' ')
+    printDebug "Checking if package already installed this session"
+    alreadyInstalled=$(echo "$sessionList" | sed -e "s/.*\($dep\).*//")
+    if [ -z "$alreadyInstalled" ]; then
+      handlePackageInstall "$dep"
+    else
+      printDebug "Package '$dep' installed earlier; no install required"
+    fi
+  done
+  skipupgrade=$skipupgrade_lcl
+)
+
+handlePackageInstall(){
+  printDebug "Checking whether installing direct from pax files or via Github repo"
+  if ! $paxinstall; then
+    printDebug "Using standard Github repo"
+    fullname="$1"
+    printDebug "Name to install: $fullname, parsing any version ('=') or tag ('%') has been specified"
+    name=$(echo "$fullname" | sed -e 's#[=%].*##')
+    repo="${name}"
+    versioned=$(echo "$fullname" | cut -s -d '=' -f 2)
+    tagged=$(echo "$fullname" | cut -s -d '%' -f 2)
+    printDebug "Name:$name;version:$versioned;tag:$tagged;repo:$repo"
+    printHeader "Installing package: $name"
+    [ -z "$paxrepodir" ] && getAllReleasesFromGithub "${repo}"
+  else 
+    printDebug "Using native pax files to install"
+    reponame="$1"
+    if [ "$reponame" = "${reponame%%.zos.pax.Z}" ]; then
+      printDebug "Package did not have .zos.pax.Z suffix - attempt to locate suitable pax"
+
+      printDebug "Check [in order] cli paxrootdir -> system paxrootdir -> current dir for repo to check"
+      testpaxRepo=""
+      [ -n "$paxrepodir" ] && testpaxRepo="$paxrepodir"
+      [ -n "$testpaxRepo" ] && [ ! -r "$testpaxRepo" ] && printError "Could not access location '$testpaxRepo' from parameter --paxrepodir. Check parameter setting and retry command"
+      [ -z "$testpaxRepo" ] && [ -e "$ZOPEN_ROOTFS/etc/zopen/paxrepodir" ] && tespaxRepo=$(cat "$ZOPEN_ROOTFS/etc/zopen/paxrepodir")
+      [ -n "$testpaxRepo" ] && [ ! -r "$testpaxRepo" ] && printError "Unable to read system repository at location '$tespaxRepo'. Correct system setting in '$ZOPEN_ROOTFS/etc/zopen/paxrepodir' and retry command"
+      [ -z "$testpaxRepo" ] && testpaxRepo="./"
+      prefix="$reponame-" 
+      printDebug "Finding paxes prefixed '$prefix' in '$testpaxRepo'"
+      # Note, not cd'ing to dir means we get full pax name - need the "/" at the end though
+      #(heads -1 or tails -1 - need to test multiple pax for install)
+      paxRepo=$(zosfind "${testpaxRepo%%/}/" ! -name "${testpaxRepo%%/}/" -prune -a -type f |grep "$prefix" |sort|tail -n 1)
+      printVerbose "Found pax '$paxRepo' as candidate for install for package '$reponame'"
+    else
+      printDebug "Parameter passed in had suffix indicating pax file; try to locate file..."
+      if [ -r "$reponame" ]; then
+        printVerbose "Found file at location specified '$reponame'; using as-is"
+        paxRepo="$reponame"
+      else
+        printDebug "Attempt to locate rpm file in current directory or in configured locations [if set]"
+        paxfilename=$(basename "$reponame") 
+        printDebug "Checking current directory '$PWD'"
+        testpaxRepo="./$paxfilename"
+        if [ -r "$testpaxRepo" ]; then
+          printVerbose "Found $paxfilename as '$testpaxRepo'; installing"
+          paxRepo="$testpaxRepo"
+        elif [ -n "$paxrepodir" ]; then
+          printVerbose "Using repository '$paxrepodir' as specified on cli"
+          testpaxRepo="$paxrepodir/$paxfilename"
+          if [ -r "$testpaxRepo" ]; then
+            printVerbose "Found $paxfilename as '$testpaxRepo'; installing"
+            paxRepo="$testpaxRepo"
+          fi
+        elif [ -e "$ZOPEN_ROOTFS/etc/zopen/paxrepodir" ]; then
+          printDebug "Using [single] repository specified from system config '$ZOPEN_ROOTFS/etc/zopen/paxrepodir'"
+          paxrepodir=$(cat "$ZOPEN_ROOTFS/etc/zopen/paxrepodir")
+          printVerbose "Trying repository at system configured location '$repodir'"
+          testpaxRepo="$paxrepodir/$paxfilename"
+          if [ -r "$testpaxRepo" ]; then
+            printVerbose "Found $paxfilename as '$testpaxRepo'; installing"
+            paxRepo="$testpaxRepo"
+          fi
+#          paxlist=$(cd "$paxrepodir" | zosfind "." -type f -name "*$fullname-*zos.pax.Z")
+        else
+          printError "Cannot locate specified pax file '$reponame' to install. Validate filename, repository or permissions and retry request"
+        fi
+      fi
+    fi
+
+    [ -z "$paxRepo" ] && printError "Could not locate pax file for '$reponame'. Validate filename, repository or permissions and retry request."      
+    printDebug "Installing a custom-repo pax '$paxRepo', need to find and break it open and get the metadata first"
+    tmptime=$(date +%Y%m%d%H%M%S)
+    tmpUnpaxDir="$rootfs/tmp/zopen.$tmptime"
+    printVerbose "Temporary processing dir evaluated to: $tmpUnpaxDir"
+    [ -e "$tmpUnpaxDir" ] && rm -rf "$tmpUnpaxDir"
+    mkdir -p "$tmpUnpaxDir" >/dev/null 2>&1
+    #addCleanupTrapCmd "rm -rf $tmpUnpaxDir"
+    paxredirect="-s %[^/]*/%$tmpUnpaxDir/%"
+    
+    if ! runLogProgress "pax -rf $paxRepo -p p $paxredirect ${redirectToDevNull} " "Expanding $paxRepo" "Expanded"; then
+      printError "Errors unpaxing '$paxRepo'"
+      continue;
+    fi
+    printDebug "Checking pax for metadata file(s): README.md"
+
+    printDebug "Attempting to calculate package name..."
+    if [ -r "$tmpUnpaxDir/README.md" ]; then
+      printDebug "Found README.md - first line *might* be package title"
+      name=$(head -1 "$tmpUnpaxDir/README.md" | awk '{print $NF}')
+    fi
+    if [ -z "$name" ]; then 
+        # Fallback to pax file name
+        name=$(basename "${paxRepo%%-*}")
+        printVerbose "Using '$name' as package name"
+    fi
+    name="${name%port}"
+    [ -z "$name" ] && printError "Could not determine package name from pax file metadata"
+    printVerbose "Using '$name' as package name"    
+
+    printDebug "Copying specified pax '$paxRepo' for package '$name' into correct location for install '$downloadDir'"
+    downloadFile=$(basename "$paxRepo")
+    # if already exits, skip copy
+    [ ! -e "$downloadDir/$downloadFile" ] && cp -R "$paxRepo" "$downloadDir"
+  fi
+
+  if $localInstall; then
+    printDebug "Local install to current directory"
+    rootInstallDir="$PWD"
+  else
+    printDebug "Setting install root to: ${ZOPEN_PKGINSTALL}"
+    rootInstallDir="${ZOPEN_PKGINSTALL}"
+  fi
+  originalFileVersion=""
+  printDebug "Checking for meta files in '${rootInstallDir}/${name}/${name}'"
+  printDebug "Finding version/release information"
+  if [ -e "${rootInstallDir}/${name}/${name}/.releaseinfo" ]; then
+    originalFileVersion=$(cat "${rootInstallDir}/${name}/${name}/.releaseinfo")
+    printDebug "Found originalFileVersion=$originalFileVersion (port is already installed)"
+  elif [ -e "${rootInstallDir}/${name}/${name}/.version" ]; then
+    originalFileVersion=$(cat "${rootInstallDir}/${name}/${name}/.version")
+    printDebug "Found originalFileVersion=$originalFileVersion (port is already installed)"
+  else
+    printDebug "Could not detect existing installation at ${rootInstallDir}/${name}/${name}"
+  fi
+
+  printDebug "Finding releaseline information"
+  installedReleaseLine=""
+  if [ -e "${rootInstallDir}/${name}/${name}/.releaseline" ]; then
+    installedReleaseLine=$(cat "${rootInstallDir}/${name}/${name}/.releaseline")
+    printVerbose "Installed product from releaseline: $installedReleaseLine"
+  else
+    printVerbose "No current releaseline for package"
+  fi
+  
+  printDebug "Checking whether installing direct from a pax [from a custom repo]"
+  if ! $paxinstall; then
+    releasemetadata=""
+    downloadURL=""
+    # Options where the user explicitly sets a version/tag/releaseline currently ignore any configured release-line,
+    # either for a previous package install or system default
+    if [ ! "x" = "x$versioned" ]; then
+      printDebug "Specific version $versioned requested - checking existence and URL"
+      requestedMajor=$(echo "$versioned" | awk -F'.' '{print $1}')
+      requestedMinor=$(echo "$versioned" | awk -F'.' '{print $2}')
+      requestedPatch=$(echo "$versioned" | awk -F'.' '{print $3}')
+      requestedSubrelease=$(echo "$versioned" | awk -F'.' '{print $4}')
+      requestedVersion="${requestedMajor}\\\.${requestedMinor}\\\.${requestedPatch}\\\.${requestedSubrelease}"
+      printDebug "Finding URL for latest release matching version prefix: requestedVersion: $requestedVersion"
+      releasemetadata=$(/bin/printf "%s" "$releases" | jq -e -r '. | map(select(.assets[].name | test("'$requestedVersion'")))[0]')
+    elif [ ! "x" = "x$tagged" ]; then
+      printDebug "Explicit tagged version '$tagged' specified. Checking for match"
+      releaseMetadata=$(/bin/printf "%s" "$releases" | jq -e -r '.[] | select(.tag_name == "'$tagged'")')
+      printDebug "Use quick check for asset to check for existence of metadata for specific messages"
+      asset=$(/bin/printf "%s" "$releaseMetadata" | jq -e -r '.assets[0]')
+      if [ $? -ne 0 ]; then
+        printError "Could not find release tagged '$tagged' in repo '$repo'"
+      fi
+    elif $selectVersion; then
+      # Explicitly allow the user to select a release to install; useful if there are broken installs
+      # as a known good release can be found, selected and pinned!
+      printDebug "List individual releases and allow selection"
+      i=$(/bin/printf "%s" "$releases" | jq -r 'length - 1')
+      printInfo "Versions available for install:"
+      /bin/printf "%s" "$releases" | jq -e -r 'to_entries | map("\(.key): \(.value.tag_name) - \(.value.assets[0].name) - size: \(.value.assets[0].expanded_size/ (1024 * 1024))mb")[]'
+  
+      printDebug "Getting user selection"
+      valid=false
+      while ! $valid; do
+        echo "Enter version to install (0-$i): "
+        read selection < /dev/tty
+        if [[ ! -z $(echo "$selection" | sed -e 's/[0-9]*//') ]]; then
+          echo "Invalid input, must be a number between 0 and $i"
+        elif [ "$selection" -ge 0 ] && [ "$selection" -le "$i" ]; then
+          valid=true
+        fi
+      done
+      printVerbose "Selecting item $selection from array"
+      releasemetadata="$(/bin/printf "%s" "$releases" | jq -e -r ".[$selection]")"
+  
+    elif [ ! -z "$releaseLine" ]; then  
+      printDebug "Install from release line '$releaseLine' specified"
+      validatedReleaseLine=$(validateReleaseLine "$releaseLine")
+      if [ -z "$validatedReleaseLine" ]; then
+        printError "Invalid releaseline specified: '$releaseLine'; Valid values: DEV or STABLE"
+      fi
+      printDebug "Finding latest asset on the release line"
+      releasemetadata="$(/bin/printf "%s" "$releases" | jq -e -r '. | map(select(.tag_name | startswith("'$releaseLine'")))[0]')"
+      printDebug "Use quick check for asset to check for existence of metadata"
+      asset="$(/bin/printf "%s" "$releasemetadata" | jq -e -r '.assets[0]')"
+      if [ $? -ne 0 ]; then
+        printError "Could not find release-line $releaseLine for repo: $repo"
+      fi
+      
+    else
+      printDebug "No explicit version/tag/releaseline, checking for pre-existing package&releaseline"
+      if [ -n "$installedReleaseLine" ]; then
+        printDebug "Found existing releaseline '$installedReleaseLine', restricting to only that releaseline"
+        validatedReleaseLine="$installedReleaseLine"  # Already validated when stored
+      else 
+        printDebug "Checking for system-configured releaseline"
+        sysrelline=$(cat "$ZOPEN_ROOTFS/etc/zopen/releaseline" | awk ' {print toupper($1)}')
+        printDebug "Validating value: $sysrelline"
+        validatedReleaseLine=$(validateReleaseLine "$sysrelline")
+        if [ -n "$validatedReleaseLine" ]; then
+          printDebug "zopen system configured to use releaseline '$sysrelline'; restricting to that releaseline"
+        else
+          printWarning "zopen misconfigured to use an unknown releaseline of '$sysrelline'; defaulting to STABLE packages"
+          printWarning "Set the contents of '$ZOPEN_ROOTFS/etc/zopen/releaseline' to a valid value to remove this message"
+          printWarning "Valid values are: DEV | STABLE"
+          validatedReleaseLine="STABLE"
+        fi
+      fi
+
+      printDebug "Parsing releases: $releases"
+      # We have some situations that could arise
+        # 1. the port being installed has no releaseline tagging yet (ie. no releases tagged STABLE_* or DEV_*)
+        # 2. system is configured for STABLE but only has DEV stream available
+        # 3. system is configured for DEV but only has DEV stream available
+        # 4. the port being installed has got full releaseline tagging
+        # The issue could arise that the user has switched the system from DEV->STABLE or vice-versa so package
+        # stream mismatches could arise but in normal case, once a package is installed [that has releaseline tagging]
+        # then that specific releaseline will be used
+      printDebug "Finding any releases tagged with $validatedReleaseLine and getting the first (newest/latest)"
+      releasemetadata="$(/bin/printf "%s" "$releases" | jq -e -r '. | map(select(.tag_name | startswith("'$validatedReleaseLine'")))[0]')"
+      printDebug "Use quick check for asset to check for existence of metadata"
+      asset="$(/bin/printf "%s" "$releasemetadata" | jq -e -r '.assets[0]')"
+      if [ $? -eq 0 ]; then
+        # Case 4...
+        printVerbose "Found a specific '$validatedReleaseLine' release-line tagged version; installing..."
+      else
+        # Case 2 & 3
+        printDebug "No releases on releaseline '$validatedReleaseLine'; checking alternative releaseline"
+        alt=$(echo "$validatedReleaseLine" | awk ' /DEV/ { print "STABLE" } /STABLE/ { print "DEV" }')
+        releasemetadata="$(/bin/printf "%s" "$releases" | jq -e -r '. | map(select(.tag_name | startswith("'$alt'")))[0]')"
+        printDebug "Use quick check for asset to check for existence of metadata"
+        asset="$(/bin/printf "%s" "$releasemetadata" | jq -e -r '.assets[0]')"
+        if [ $? -eq 0 ]; then
+          printDebug "Found a release on the '$alt' release line so release tagging is active"
+          if [ "DEV" = "$validatedReleaseLine" ]; then
+            # The system will be configured to use DEV packages where available but if none, use latest
+            printInfo "No specific DEV releaseline package, using latest available"
+            releasemetadata="$(/bin/printf "%s" "$releases" | jq -e -r ".[0]")"
+          else
+            printVerbose "The system is configured to only use STABLE releaseline packages but there are none"
+            printInfo "No release available on the '$validatedReleaseLine' releaseline."
+          fi
+        else
+          # Case 1 - old package that has no release tagging yet (no DEV or STABLE), just install latest
+          printVerbose "Installing latest release"
+          releasemetadata="$(/bin/printf "%s" "$releases" | jq -e -r ".[0]")"
+        fi
+      fi
+    fi
+    printDebug "Getting specific asset details from metadata: $releasemetadata"
+    if [ -z "$asset" ] || [ "null" = "$asset" ]; then
+      printDebug "Asset not found during previous logic; setting now"
+      asset=$(/bin/printf "%s" "$releasemetadata" | jq -e -r '.assets[0]')
+    fi
+    if [ "x" = "x$asset" ]; then
+      printError "Unable to determine download asset for ${name}"
+    fi
+  
+    tagname=$(/bin/printf "%s" "$releasemetadata" | jq -e -r ".tag_name" | sed "s/\([^_]*\)_.*/\1/")
+    installedReleaseLine=$(validateReleaseLine "$tagname" )
+  
+    downloadURL=$(/bin/printf "%s" "$asset" | jq -e -r '.url')
+    size=$(/bin/printf "%s" "$asset" | jq -e -r '.expanded_size')
+  
+    if [ "x" = "x$downloadURL" ]; then
+      printError "Unable to determine download location for ${name}"
+    fi
+    downloadFile=$(basename "$downloadURL")
+    downloadFileVer=$(echo "$downloadFile" |sed -E 's/.*-(.*)\.zos\.pax\.Z/\1/')
+    printVerbose "Downloading port from URL: $downloadURL to file: $downloadFile (ver=$downloadFileVer)"
+  else
+    printVerbose "Installing package '$name' from pax file '$paxRepo'"
+    printDebug "Pax was expanded to '$tmpUnpaxDir' previously"
+    downloadFilePrfx="${paxRepo%.zos.pax.Z}"
+    downloadFileVer="${downloadFilePrfx##*-}"
+    size=$(du -s "$tmpUnpaxDir" | awk ' {print $1}') # in 512-blocks
+    [ -z "$size" ] && printError "Could not calculate directory size"
+    size=$(echo "$size * 512" | bc)
+  fi
+
+  if $downloadOnly; then
+    printVerbose "Skipping installation, downloading only"
+  else
+    printDebug "Install=${downloadFileVer};Original=${originalFileVersion};${upgradeInstalled};${installOrUpgrade};${reinstall}"
+    if [ "${downloadFileVer}" = "${originalFileVersion}" ]; then
+      if ! $reinstall; then
+        printInfo "${NC}${GREEN}Package ${name} is already installed at the requested version: ${downloadFileVer}${NC}"
+        return;
+      fi
+      printInfo "- Reinstalling version '$downloadFileVer' of ${name}..."
+    fi
+
+    printDebug "Checking if package is not installed but scheduled for upgrade"
+    if [ "x" = "x$originalFileVersion" ]; then
+      printDebug "No previous version found"
+      if $installOrUpgrade; then
+        printDebug "Package ${name} was not installed so not upgrading but installing"
+      elif $upgradeInstalled; then
+        printError "Package ${name} can not be upgraded as it is not installed!"
+        continue;
+      fi
+      unInstallOldVersion=false
+      printInfo "- Installing ${name}..."
+    elif $skipupgrade; then
+      printInfo "Package ${name} has a newer release '${downloadFileVer}' but explicitly skipping"
+      continue;
+    elif ! $setactive; then
+      printVerbose "Current version '${originalFileVersion}' will remain active"
+      unInstallOldVersion=false
+    else
+      printVerbose "Previous version '${originalFileVersion}' installed"
+      if [ -e "${rootInstallDir}/${name}/${name}/.pinned" ]; then
+        printWarning "- Version '${originalFileVersion}' has been pinned; upgrade to '${downloadFileVer}' skipped"
+        syslog "$ZOPEN_LOG_PATH/audit.log" "$LOG_A" "$CAT_PACKAGE,$CAT_INSTALL" "DOWNLOAD" "handlePackageInstall" "Attempt to change pinned package '${name}' skipped"
+        continue;
+      else
+        printInfo "- Replacing ${name} version '${originalFileVersion}' with '${downloadFileVer}'"
+        unInstallOldVersion=true
+        currentversiondir=$(cd "$rootInstallDir/$name/${name}" && pwd -P)
+        currentlinkfile="$currentversiondir/.links"
+      fi
+    fi
+  fi
+  printDebug "Ensuring we are in the correct working download location '${downloadDir}'"
+  cd "${downloadDir}" || printError "Unable to change to download directory '${downloadDir}'"
+
+  if [ ! $downloadOnly ] || [ ! $localInstall ]; then
+    printDebug "Checking current directory for already downloaded package [file name comparison]"
+    location="current directory"
+  else
+    printDebug "Checking cache for already downloaded package [file name comparison]"
+    location="zopen package cache"
+  fi
+
+  pax=$downloadFile
+  if [ -f "$pax" ]; then
+    printVerbose "- Found existing file '${pax}' in ${location}"
+  else
+    printInfo "- Downloading $pax file from remote to ${location}..."
+    if ! $verbose; then
+      redirectToDevNull="2>/dev/null"
+    fi
+
+    progressHandler "network" "- Downloaded $pax file from remote to ${location}." &
+    ph=$!
+    killph="kill -HUP $ph"
+    addCleanupTrapCmd "$killph"
+
+    if ! runAndLog "curlCmd -L '${downloadURL}' -O ${redirectToDevNull}"; then
+      printError "Could not download from ${downloadURL}. Correct any errors and potentially retry"
+      continue;
+    fi
+    $killph 2>/dev/null  # if the timer is not running, the kill will fail
+    syslog "$ZOPEN_LOG_PATH/audit.log" "$LOG_A" "$CAT_NETWORK,$CAT_PACKAGE,$CAT_FILE" "DOWNLOAD" "handlePackageInstall" "Downloaded remote file '$pax'"
+  fi
+  if [ ! -f "${pax}" ]; then
+    printError "${pax} was not found after download!?!"
+  fi
+
+  if $downloadOnly; then
+    printVerbose "Pax was downloaded to local dir '$downloadDir'"
+  elif $cacheOnly; then
+    printVerbose "Pax was downloaded to zopen cache '$downloadDir'"
+  else
+    printDebug "Installing $pax"
+    installdirname="${name}/${pax%.pax.Z}" # Use full pax name as default
+
+    printVerbose "- Processing $pax..."
+    baseinstalldir="."
+    paxredirect=""
+    if ! $localInstall; then
+      baseinstalldir="$rootInstallDir"
+      paxredirect="-s %[^/]*/%$rootInstallDir/$installdirname/%"
+      printDebug "Non-local install, extracting with '$paxredirect'"
+    else
+      printVerbose "- Local install specified"
+      paxredirect="-s %[^/]*/%$installdirname/%"
+      printDebug "Non-local install, extracting with '$paxredirect'"
+    fi
+
+    megabytes=$(echo "scale=2; $size / (1024 * 1024)" | bc)
+    printInfo "After this operation, $megabytes MB of additional disk space will be used."
+    if ! $yesToPrompts; then
+      while true; do
+        printInfo "Do you want to continue? [y/n/a]"
+        read continueInstall < /dev/tty
+        case "$continueInstall" in
+          "y") break;;
+          "n") mutexFree "zopen" && printInfo "Exiting..." && exit 0 ;;
+          "a") yesToPrompts=true; break;;
+          *) echo "?";;
+        esac
+      done
+    fi
+
+    printDebug "Check for existing directory for version '$installdirname'"
+    if [ -d "$baseinstalldir/$installdirname" ]; then 
+      printVerbose "- Clearing existing directory and contents"
+      rm -rf "$baseinstalldir/$installdirname"
+    fi
+
+    if  ! $paxinstall; then
+      if ! runLogProgress "pax -rf $pax -p p $paxredirect ${redirectToDevNull}" "Expanding $pax" "Expanded"; then
+        printWarning "Errors unpaxing, package directory state unknown"
+        printInfo    "Use zopen alt to select previous version to ensure known state"
+        continue;
+      fi
+    else
+      printVerbose "Moving already expanded pax directory to expanded location"
+      mkdir -p "$baseinstalldir/$installdirname" 2>/dev/null
+      mv "$tmpUnpaxDir/" "$baseinstalldir/$installdirname" >/dev/null 2?&1
+    fi
+    if $localInstall; then
+      rm -f "${pax}"
+    fi
+
+    if $setactive; then
+      if [ -L "$baseinstalldir/$name/${name}" ]; then
+        printDebug "Removing old symlink '$baseinstalldir/$name/${name}'"
+        rm -f "$baseinstalldir/$name/${name}"
+      fi
+      if ! ln -s "$baseinstalldir/$installdirname" "$baseinstalldir/$name/${name}"; then
+        printError "Could not create symbolic link name"
+      fi 
+    fi 
+
+    printDebug "Adding version '${downloadFileVer}' to info file"
+    # Add file version information as a .releaseinfo file
+    echo "$downloadFileVer" > "${baseinstalldir}/$installdirname/.releaseinfo"
+
+    # Check for a .version file from the pax - if present good, if not
+    # generate one from the file name as the tag isn't granular enough to really
+    # be used in dependency checks
+    if [ ! -f "${baseinstalldir}/$installdirname/.version" ]; then
+      echo "$downloadFileVer" > "${baseinstalldir}/$installdirname/.version"
+    fi
+
+    printDebug "Adding releaseline '$installedReleaseLine' metadata to ${baseinstalldir}/$installdirname/.releaseline"
+    echo "$installedReleaseLine" > "${baseinstalldir}/$installdirname/.releaseline"
+
+    if $setactive; then
+      if ! $nosymlink; then
+        mergeIntoSystem "$name" "${baseinstalldir}/$installdirname" "$ZOPEN_ROOTFS" 
+        misrc=$?
+        printDebug "The merge complete with: $misrc"
+      fi
+
+      printVerbose "- Checking for env file"
+      if [ -f ${baseinstalldir}/${name}/${name}/.env -o -f ${baseinstalldir}/${name}/${name}/.appenv ]; then
+        printVerbose "- .env file found, adding to profiled processing"
+        mkdir -p "$ZOPEN_ROOTFS/etc/profiled/$name"
+        cat << EOF > "$ZOPEN_ROOTFS/etc/profiled/$name/dotenv"
+curdir=\$(pwd)
+cd "$baseinstalldir/$name/$name" >/dev/null 2>&1
+# If .appenv exists, source it as it's quicker
+if [ -f ".appenv" ]; then
+  . ./.appenv
+elif [ -f ".env" ]; then
+  . ./.env
+fi
+cd \$curdir  >/dev/null 2>&1
+EOF
+        printVerbose "- Running any setup scripts"
+        cd "${baseinstalldir}/${name}/${name}" && [ -r "./setup.sh" ] && ./setup.sh
+      fi
+    fi
+    if $unInstallOldVersion; then
+      printDebug "New version merged; checking for orphaned files from previous version"
+      # This will remove any old symlinks or dirs that might have changed in an upgrade
+      # as the merge process overwrites existing files to point to different version
+      unsymlinkFromSystem "$name" "$ZOPEN_ROOTFS" "$currentlinkfile" "${baseinstalldir}/${name}/${name}/.links"
+    fi
+
+    if $setactive; then
+      printDebug "Marking this version as installed"
+      touch "${baseinstalldir}/${name}/${name}/.active"
+      installedList="$name $installedList"
+      syslog "$ZOPEN_LOG_PATH/audit.log" "$LOG_A" "$CAT_INSTALL,$CAT_PACKAGE" "DOWNLOAD" "handlePackageInstall" "Installed package:'$name';version:$downloadFileVer;install_dir='$baseinstalldir/$installdirname';"
+    fi
+
+    if $doNotInstallDeps; then
+        printVerbose "- Skipping dependency installation"
+    elif $reinstall; then
+      printDebug "- Reinstalling so no dependency reinstall (unless explicitly listed)"
+    else
+      printVerbose "- Checking for runtime dependencies"
+      printDebug "Checking for .runtimedeps file"
+      if [ -e "${baseinstalldir}/${name}/${name}/.runtimedeps" ]; then
+        dependencies=$(cat "${baseinstalldir}/${name}/${name}/.runtimedeps")
+      fi
+      printDebug "Checking for runtime dependencies from the git metadata"
+      if echo "$statusline" | grep "Runtime Dependencies:" >/dev/null; then
+        gitmetadependencies="$(echo "$statusline" | sed -e "s#.*Runtime Dependencies:<\/b> ##" -e "s#<br />.*##")"
+        if [ ! "$gitmetadependencies" = "No dependencies" ]; then
+          dependencies="$dependencies $gitmetadependencies"
+        fi
+      fi
+      dependencies=$(deleteDuplicateEntries "$dependencies" " ")
+      if [ ! "x" = "x$dependencies" ]; then
+        printVerbose "- $name depends on: $dependencies"
+        printInfo "- Installing dependencies"
+        installDependencies "$name" "$dependencies"
+      else
+        printVerbose "- No runtime dependencies found"
+      fi
+    fi
+    sessionList="$sessionList $name"
+    printInfo "${NC}${GREEN}Successfully installed $name${NC}"
+  fi # (download only)
+}
+
+zopenInitialize()
+{
+  # Create the cleanup pipeline and exit handler
+  trap "cleanupFunction" EXIT INT TERM QUIT HUP
+  [ -z "$ZOPEN_CLEANUP_PIPE" ] \
+  && [ ! -p "$ZOPEN_CLEANUP_PIPE" ] \
+  && ZOPEN_CLEANUP_PIPE=$(mktempfile "clean" "pipe") \
+  && mkfifo "$ZOPEN_CLEANUP_PIPE" \
+  && chtag -tc 819 "$ZOPEN_CLEANUP_PIPE" \
+  && export ZOPEN_CLEANUP_PIPE
+
+  addCleanupTrapCmd "stty echo 2>/dev/null" # set this as a default to ensure line visibility!
+  defineEnvironment
+  defineANSI
+  if [ -z "$ZOPEN_DONT_PROCESS_CONFIG" ]; then
+    processConfig
+  fi
+
+  ZOPEN_JSON_CACHE_URL="https://zosopentools.github.io/meta/api/zopen_releases.json"
 }
 
 zopenInitialize
