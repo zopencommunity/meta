@@ -17,19 +17,25 @@ setupMyself()
 setupMyself
 checkWritable
 
-printSyntax()
-{
-  args=$*
-  echo "${ME} - remove installed z/OS Open Tools packages."
-  echo "Usage: zopen remove [OPTION] PACKAGE"
-  echo "  PACKAGE is a list of one or more projects to uninstall"
-  echo "Options:"
-  echo "  --help       print this help"
-  echo "  --version    print version"
-  echo "  -p, --purge  remove package, the versioned directory and any cached file"
-  echo "  -v           run in verbose mode"
-  echo "Examples:"
-  echo "  ${ME} man-db    Remove the man-db package" 
+printHelp(){
+cat << HELPDOC
+${ME} is a utility to remove installed z/OS Open Tools packages
+
+Usage: zopen remove [OPTION] [PACKAGES]
+
+Options:
+  -p, --purge       remove package, the versioned directory and any 
+                    cached file
+      --version     display the program version
+  -v, --verbose     run in verbose mode
+  -h,-?, --help     display this help and exit
+
+Examples:
+  ${ME} man-db    Remove the man-db package
+
+Report bugs at https://github.com/ZOSOpenTools/meta/issues .
+
+HELPDOC
 }
 
 removePackages()
@@ -39,7 +45,7 @@ removePackages()
   echo "${pkglist}" | xargs | tr ' ' '\n' | sort | while read pkg; do
     printHeader "Removing package: ${pkg}"
     printInfo "- Checking status of package '${pkg}'"
-    if [ ! -f ${ZOPEN_PKGINSTALL}/${pkg}/${pkg}/.active ]; then
+    if [ ! -f "${ZOPEN_PKGINSTALL}/${pkg}/${pkg}/.active" ]; then
       printInfo "${NC}${YELLOW}Package '${pkg}' is not installed${NC}"
     else
       printInfo "- Package installed, unmeshing from system"
@@ -70,15 +76,13 @@ removePackages()
       printInfo "- Removing profiled entry"
       [ -d "${ZOPEN_ROOTFS}/etc/profiled/${pkg}" ] && rm -rf "${ZOPEN_ROOTFS}/etc/profiled/${pkg}"
 
-      syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_PACKAGE},${CAT_REMOVE}" "REMOVE" "removePackage" "Removed package:'${needle};version:${version};"
+      syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_PACKAGE},${CAT_REMOVE}" "REMOVE" "removePackage" "Removed package:'${pkg};version:${version};"
       printInfo "${NC}${GREEN}Successfully removed: ${pkg}${NC}"
     fi
   done
 }
 
 # Main code start here
-args=$*
-
 verbose=false
 debug=false
 purge=false
