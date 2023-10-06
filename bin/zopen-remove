@@ -5,38 +5,39 @@
 #
 setupMyself()
 {
-        ME=$(basename $0)
-        MYDIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
-        INCDIR="${MYDIR}/../include"
-        if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
-                echo "Internal Error. Unable to find common.sh file to source" >&2
-                exit 8
-        fi
-        . "${INCDIR}/common.sh"
+  ME=$(basename $0)
+  MYDIR="$(cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P)"
+  INCDIR="${MYDIR}/../include"
+  if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
+    echo "Internal Error. Unable to find common.sh file to source" >&2
+    exit 8
+  fi
+  . "${INCDIR}/common.sh"
 }
 setupMyself
 checkWritable
 
-printSyntax() 
+printSyntax()
 {
   args=$*
   echo "zopen remove is a utility to remove installed z/OS Open Tools packages."
   echo "Syntax: zopen remove [<option>]* <package, ...>" >&2
   echo "  where <option> may be one or more of:" >&2
-  echo "  --help: print this help"  >&2
-  echo "  --version: print version"  >&2
-  echo "  -p|--purge: remove package, the versioned directory and any cached file"  >&2
+  echo "  --help: print this help" >&2
+  echo "  --version: print version" >&2
+  echo "  -p|--purge: remove package, the versioned directory and any cached file" >&2
   echo "  -v: run in verbose mode" >&2
   echo "  and <package> is a list of one or more projects to uninstall" >&2
 }
 
-removePackages(){
+removePackages()
+{
   pkglist=$*
 
   echo "$pkglist" | xargs | tr ' ' '\n' | sort | while read pkg; do
     printHeader "Removing package: $pkg"
     printInfo "- Checking status of package '$pkg'"
-    if [ ! -f $ZOPEN_PKGINSTALL/$pkg/$pkg/.active ]; then 
+    if [ ! -f $ZOPEN_PKGINSTALL/$pkg/$pkg/.active ]; then
       printInfo "${NC}${YELLOW}Package '$pkg' is not installed${NC}"
     else
       printInfo "- Package installed, unmeshing from system"
@@ -81,28 +82,28 @@ purge=false
 chosenRepos=""
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    "-p" | "--purge")
-      purge=true
-      ;;
-    "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
-      printSyntax "${args}"
-      exit 0
-      ;;
-    "--version")
-      zopen --version $ME
-      exit 0
-      ;;
-    "-v" | "--v" | "-verbose" | "--verbose")
-      verbose=true
-      ;;
-    *)
-      chosenRepos="$chosenRepos $1";
-      ;;
+  "-p" | "--purge")
+    purge=true
+    ;;
+  "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
+    printSyntax "${args}"
+    exit 0
+    ;;
+  "--version")
+    zopen --version $ME
+    exit 0
+    ;;
+  "-v" | "--v" | "-verbose" | "--verbose")
+    verbose=true
+    ;;
+  *)
+    chosenRepos="$chosenRepos $1"
+    ;;
   esac
-  shift;
+  shift
 done
 
-[[ ! -z "$chosenRepos" ]] || printError "No packages selected for removal" 
+[[ ! -z "$chosenRepos" ]] || printError "No packages selected for removal"
 mutexReq "zopen" "zopen"
 removePackages "$chosenRepos"
 mutexFree "zopen"

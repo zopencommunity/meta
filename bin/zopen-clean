@@ -6,20 +6,21 @@
 #
 setupMyself()
 {
-        ME=$(basename $0)
-        MYDIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
-        INCDIR="${MYDIR}/../include"
-        if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
-                echo "Internal Error. Unable to find common.sh file to source" >&2
-                exit 8
-        fi
-        . "${INCDIR}/common.sh"
+  ME=$(basename $0)
+  MYDIR="$(cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P)"
+  INCDIR="${MYDIR}/../include"
+  if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
+    echo "Internal Error. Unable to find common.sh file to source" >&2
+    exit 8
+  fi
+  . "${INCDIR}/common.sh"
 }
 setupMyself
 checkWritable
 
-printHelp(){
-cat << HELPDOC
+printHelp()
+{
+  cat <<HELPDOC
 zopen clean is a utility for z/OS Open Tools to clean uneeded resources
 from the system to save space and prevent clutter
 
@@ -47,10 +48,10 @@ Report bugs at https://github.com/ZOSOpenTools/meta/issues .
 HELPDOC
 }
 
-
-cleanUnused(){
+cleanUnused()
+{
   needle=$1
-  found=$(zosfind "$ZOPEN_PKGINSTALL" -name "*/${needle}-*" -prune -type d )
+  found=$(zosfind "$ZOPEN_PKGINSTALL" -name "*/${needle}-*" -prune -type d)
   if [ -z "$found" ]; then
     printInfo "No versions of package '${needle}' found for removal"
     return
@@ -65,12 +66,12 @@ cleanUnused(){
 
   i=0
   current=0
-# the below would be simpler, but creates a subshell so can't get the number of entries outside!  
-#  echo "$found" | xargs | tr ' ' '\n' | while read repo; do
+  # the below would be simpler, but creates a subshell so can't get the number of entries outside!
+  #  echo "$found" | xargs | tr ' ' '\n' | while read repo; do
   TMP_FIFO_PIPE="$HOME/altselect.pipe"
   [ ! -p "$TMP_FIFO_PIPE" ] || rm -f "$TMP_FIFO_PIPE"
   mkfifo "$TMP_FIFO_PIPE"
-  echo "$found" | xargs | tr ' ' '\n'>> "$TMP_FIFO_PIPE" &
+  echo "$found" | xargs | tr ' ' '\n' >>"$TMP_FIFO_PIPE" &
   while read repo; do
     printVerbose "Parsing repo: '$repo' as '${repo#$ZOPEN_PKGINSTALL/}'"
     if [ "${repo}" = "${repo#$ZOPEN_PKGINSTALL/}" ]; then
@@ -89,19 +90,20 @@ cleanUnused(){
       current=$i
       printInfo "${NC}${GREEN}$i: ${repo#$ZOPEN_PKGINSTALL/}  <-  current${NC}"
     else
-      rm -rf "$repo" >/dev/null 2>&1 
+      rm -rf "$repo" >/dev/null 2>&1
       printInfo "$i: ${repo#$ZOPEN_PKGINSTALL/} <- Removed"
       syslog "$ZOPEN_LOG_PATH/audit.log" "$LOG_A" "$CAT_FILE,$CAT_PACKAGE,$CAT_REMOVE" "CLEAN" "cleanUnused" "Removed unused package at ${repo#$ZOPEN_PKGINSTALL/} "
     fi
-  done < "$TMP_FIFO_PIPE"
+  done <"$TMP_FIFO_PIPE"
   [ ! -p "$TMP_FIFO_PIPE" ] || rm -f "$TMP_FIFO_PIPE"
-  printInfo "- Removal of unused package versions complete" 
+  printInfo "- Removal of unused package versions complete"
 }
 
-cleanDangling(){
+cleanDangling()
+{
   printVerbose "Removing dangling symlinks from the file structure"
   # As packages can install to any subfolder of the zopen filesystem, need to traverse
-    # along every path under that filesystem
+  # along every path under that filesystem
   if [ "$ZOPEN_ROOTFS" = "/." ]; then
     printWarning "With zopen's root configured as '/', traversal to find dangling symlinks"
     printWarning "will occur on ALL mounted file systems, ALL sub-directories and will"
@@ -112,7 +114,7 @@ cleanDangling(){
     printWarning "within the zopen file structure so all locations need to be considered"
     printWarning "and analysed."
     printWarning "Are you absolutely sure you want to run this option (y/N)?"
-    read absolutely < /dev/tty
+    read absolutely </dev/tty
     if [ -n "$absolutely" ] && [ "y" = "${absolutely}" ]; then
       printInfo "- Checking for any dangling symlinks across system"
     else
@@ -129,11 +131,12 @@ cleanDangling(){
     rm -f $sl
     flecnt=$(expr $flecnt + 1)
   done
-  $killph 2>/dev/null  # if the timer is not running, the kill will fail
+  $killph 2>/dev/null # if the timer is not running, the kill will fail
   syslog "$ZOPEN_LOG_PATH/audit.log" "$LOG_A" "$CAT_FILE" "CLEAN" "cleanDangling" "zopen system scanned for dangling symlinks; $flecnt link(s) removed"
 }
 
-cleanCache(){
+cleanCache()
+{
   printVerbose "Cleaning $ZOPEN_ROOTFS/var/cache/zopen"
   rm -rf "$ZOPEN_ROOTFS/var/cache/zopen/*"
   syslog "$ZOPEN_LOG_PATH/audit.log" "$LOG_A" "$CAT_FILE" "CLEAN" "cleanCache" "Main cache in $ZOPEN_ROOTFS/var/cache/zopen cleaned"
@@ -155,53 +158,52 @@ fi
 while [ $# -gt 0 ]; do
   printVerbose "Parsing option: $1"
   case "$1" in
-      "-u" | "--unused")
-      shift
-      [ $# -lt 1 ] && printError "Missing parameter for 'clean unused' option"
-      unused=true
-      dangling=false
-      cache=false
-      package="$1"
-      ;;
-      "-d" | "--dangling")
-      unused=false
-      dangling=true
-      cache=false
-      ;;
-      "-c" | "--cache")
-      unused=false
-      dangling=false
-      cache=true
-      ;;
-    "-h" | "--help" | "-?" )
-      printHelp "${args}"
-      exit 0
-      ;;
-    "--version" )
-      zopen --version $ME
-      exit 0
-      ;;
-    "-v" | "--verbose")
-      verbose=true
-      ;;
-    "--debug")
-      verbose=true
-      debug=true
-      ;;
-    *)
-      package="$1"; # Use the last unrecognised parameter as the package
-      ;;
+  "-u" | "--unused")
+    shift
+    [ $# -lt 1 ] && printError "Missing parameter for 'clean unused' option"
+    unused=true
+    dangling=false
+    cache=false
+    package="$1"
+    ;;
+  "-d" | "--dangling")
+    unused=false
+    dangling=true
+    cache=false
+    ;;
+  "-c" | "--cache")
+    unused=false
+    dangling=false
+    cache=true
+    ;;
+  "-h" | "--help" | "-?")
+    printHelp "${args}"
+    exit 0
+    ;;
+  "--version")
+    zopen --version $ME
+    exit 0
+    ;;
+  "-v" | "--verbose")
+    verbose=true
+    ;;
+  "--debug")
+    verbose=true
+    debug=true
+    ;;
+  *)
+    package="$1" # Use the last unrecognised parameter as the package
+    ;;
   esac
-  shift;
+  shift
 done
 
-if $unused; then 
+if $unused; then
   cleanUnused "$package"
 fi
-if $dangling; then 
+if $dangling; then
   cleanDangling
 fi
 if $cache; then
   cleanCache
 fi
-

@@ -2,14 +2,14 @@
 #
 # General purpose zopen script
 #
-ZOPEN_DONT_PROCESS_CONFIG=1 
+ZOPEN_DONT_PROCESS_CONFIG=1
 #
 # All zopen-* scripts MUST start with this code to maintain consistency
 #
 setupMyself()
 {
   ME=$(basename $0)
-  MYDIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
+  MYDIR="$(cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P)"
   INCDIR="${MYDIR}/../include"
   if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
     echo "Internal Error. Unable to find common.sh file to source" >&2
@@ -43,7 +43,7 @@ printSyntax()
   echo "" >&2
 }
 
-printHelp() 
+printHelp()
 {
   echo "zopen is a general purpose script to be used with the z/OS Open Tools ports." >&2
   printSyntax
@@ -67,58 +67,58 @@ version=false
 
 for arg in $*; do
   case "$arg" in
-    "alt")
-      subcmd='zopen-alt'
-      ;;
-    "build")
-      subcmd='zopen-build'
-      ;;
-    "clean")
-      subcmd='zopen-clean'
-      ;;
-    "download")
-      subcmd='zopen-install'
-      ;;
-    "generate")
-      subcmd='zopen-generate'
-      ;;
-    "init")
-      subcmd='zopen-init'
-      ;;
-    "install")
-      subcmd='zopen-install'
-      ;;
-    "query")
-      subcmd='zopen-query'
-      ;;
-    "list")
-      subcmd='zopen-query'
-      subopts="${subopts} --list"
-      ;;
-    "search")
-      subcmd='zopen-query'
-      subopts="${subopts} --remote-search"
-      ;;
-    "remove")
-      subcmd='zopen-remove'
-      ;;
-    "update-cacert")
-      subcmd='zopen-update-cacert'
-      ;;
-    "upgrade")
-      subcmd='zopen-install'
-      subopts="${subopts} -u"
-      ;;
-    "--version")
-      version=true
-      ;;
-    "--help")
-      help=true
-      ;;
-    *)
-      # let unknown stuff through
-      subopts="${subopts} ${arg}"
-      ;;
+  "alt")
+    subcmd='zopen-alt'
+    ;;
+  "build")
+    subcmd='zopen-build'
+    ;;
+  "clean")
+    subcmd='zopen-clean'
+    ;;
+  "download")
+    subcmd='zopen-install'
+    ;;
+  "generate")
+    subcmd='zopen-generate'
+    ;;
+  "init")
+    subcmd='zopen-init'
+    ;;
+  "install")
+    subcmd='zopen-install'
+    ;;
+  "query")
+    subcmd='zopen-query'
+    ;;
+  "list")
+    subcmd='zopen-query'
+    subopts="${subopts} --list"
+    ;;
+  "search")
+    subcmd='zopen-query'
+    subopts="${subopts} --remote-search"
+    ;;
+  "remove")
+    subcmd='zopen-remove'
+    ;;
+  "update-cacert")
+    subcmd='zopen-update-cacert'
+    ;;
+  "upgrade")
+    subcmd='zopen-install'
+    subopts="${subopts} -u"
+    ;;
+  "--version")
+    version=true
+    ;;
+  "--help")
+    help=true
+    ;;
+  *)
+    # let unknown stuff through
+    subopts="${subopts} ${arg}"
+    ;;
   esac
 done
 
