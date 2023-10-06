@@ -45,6 +45,9 @@ Options:
       --paxrepodir <RPEO>
                     configure a global location for pax file
                     installation source
+      --paxrepodir <RPEO>
+                    configure a global location for pax file
+                    installation source
   -f, --fs-layout <LAYOUT>
                     The filesystem structure to use for installed 
                     packages on disk; packages will be installed to 
@@ -111,7 +114,7 @@ while [ $# -gt 0 ]; do
     "--paxrepodir")
       shift
       paxrepodir="$1" # Only support single repo directory
-      ;;
+    ;;
     "-h" | "--help" | "-?")
       printHelp
       exit 0
