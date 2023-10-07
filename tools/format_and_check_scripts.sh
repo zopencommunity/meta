@@ -36,7 +36,7 @@ if [ "$format" = true ]; then
     if [ "$verbose" = true ]; then
       echo "Formatting $file..."
     fi
-    shfmt -i 2 -fn -w "$file"
+    shfmt -i 2 -fn -sr -w "$file"
   done
 fi
 
@@ -45,6 +45,6 @@ if [ "$shellcheck" = true ]; then
     if [ "$verbose" = true ]; then
       echo "Running ShellCheck on $file..."
     fi
-    shellcheck -s sh -e SC2034,SC2048 --severity=error "$file"
+    shellcheck --shell sh -f diff -o all -e SC2268,SC2086 "$file" | git apply
   done
 fi
