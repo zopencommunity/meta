@@ -8,14 +8,14 @@
 #
 setupMyself()
 {
-  ME=$(basename $0)
-  MYDIR="$(cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P)"
-  INCDIR="${MYDIR}/../include"
-  if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
-    echo "Internal Error. Unable to find common.sh file to source" >&2
-    exit 8
-  fi
-  . "${INCDIR}/common.sh"
+        ME=$(basename $0)
+        MYDIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
+        INCDIR="${MYDIR}/../include"
+        if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
+                echo "Internal Error. Unable to find common.sh file to source" >&2
+                exit 8
+        fi
+        . "${INCDIR}/common.sh"
 }
 setupMyself
 
@@ -53,7 +53,7 @@ rootpkg="$1"
 
 tmpdir="/tmp/blddep_$$"
 
-if ! mkdir "${tmpdir}"; then
+if ! mkdir "${tmpdir}" ; then
   echo "Unable to create temporary directory for computing transitive closure" >&2
   syntax
 fi
@@ -71,8 +71,8 @@ changed=true
 while ${changed}; do
   changed=false
   for pkg in ${deps}; do
-    if ! [[ -v scanned["${pkg}"] ]]; then
-      if ! git clone "git@github.com:ZOSOpenTools/${pkg}port.git"; then
+    if ! [[ -v scanned["${pkg}"] ]] ; then
+      if ! git clone "git@github.com:ZOSOpenTools/${pkg}port.git" ; then
         echo "Unable to clone package ${pkg}" >&2
         exit 4
       else
@@ -88,7 +88,7 @@ while ${changed}; do
         echo "${pkg} needs ${newpkgs}"
       fi
       for newpkg in ${newpkgs}; do
-        if ! [[ -v scanned["${newpkg}"] ]]; then
+        if ! [[ -v scanned["${newpkg}"] ]] ; then
           deps="${deps} ${newpkg}"
         fi
       done

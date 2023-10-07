@@ -4,14 +4,14 @@
 #
 setupMyself()
 {
-  ME=$(basename $0)
-  MYDIR="$(cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P)"
-  INCDIR="${MYDIR}/../include"
-  if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
-    echo "Internal Error. Unable to find common.sh file to source" >&2
-    exit 8
-  fi
-  . "${INCDIR}/common.sh"
+        ME=$(basename $0)
+        MYDIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
+        INCDIR="${MYDIR}/../include"
+        if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
+                echo "Internal Error. Unable to find common.sh file to source" >&2
+                exit 8
+        fi
+        . "${INCDIR}/common.sh"
 }
 setupMyself
 
@@ -48,10 +48,10 @@ fi
 
 if [ -d "${root}" ]; then
   echo "Using ${root} for determining z/OS tarball versions" >&2
-else
+else 
   if [ "x${root}" = "x-?" ] || [ "x${root}" = "x-help" ]; then
     :
-  else
+  else 
     echo "Unable to find ${root} for determining z/OS tarball versions" >&2
   fi
   syntax
@@ -82,9 +82,10 @@ for rawtool in ${tools}; do
     if [ "x${brew_line}" = "x" ]; then
       brew_version="unknown"
     else
-      next_brew_line=$((brew_line + 1))
+      next_brew_line=$((brew_line+1))
       brew_version=$(echo "${brew_version_info}" | sed -n "${next_brew_line}p" | awk -F '<|>' '{print $3}')
     fi
     echo "${tool} zos-version ${version} brew-version ${brew_version}"
   fi
 done
+
