@@ -45,6 +45,8 @@ if [ "$shellcheck" = true ]; then
     if [ "$verbose" = true ]; then
       echo "Running ShellCheck on $file..."
     fi
+    #TODO: change to -z checks: Avoids https://www.shellcheck.net/wiki/SC2268
+    #TODO: change to "$@" - Avoids https://www.shellcheck.net/wiki/SC2086
     shellcheck --shell sh -f diff -o all -e SC2268,SC2086 "$file" | git apply
   done
 fi
