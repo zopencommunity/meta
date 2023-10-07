@@ -1,5 +1,5 @@
 {
-  "timestamp": "2023-10-07T10:25:15.097177",
+  "timestamp": "2023-10-07T13:06:15.887361",
   "release_data": {
     "perl": [
       {
@@ -2364,6 +2364,22 @@
       }
     ],
     "curl": [
+      {
+        "name": "curl (Build 1443) - (STABLE)",
+        "date": "2023-10-07 16:48:13",
+        "tag_name": "STABLE_curlport_1443",
+        "assets": [
+          {
+            "name": "curl-8.2.1.20231007_134755.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/curlport/releases/download/STABLE_curlport_1443/curl-8.2.1.20231007_134755.zos.pax.Z",
+            "size": 6096384,
+            "expanded_size": 14782122,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "1244",
+            "passed_tests": "1239"
+          }
+        ]
+      },
       {
         "name": "curl 0.3.0-dt-stable\n8.1.2 (Build 1245) - (STABLE)",
         "date": "2023-09-13 00:54:57",
