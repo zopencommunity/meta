@@ -105,7 +105,7 @@ handlePackageInstall()
   downloadURL=""
   # Options where the user explicitly sets a version/tag/releaseline currently ignore any configured release-line,
   # either for a previous package install or system default
-  if [ ! "x" = "x${versioned}" ]; then
+  if [ -n "${versioned}" ]; then
     printVerbose "Specific version ${versioned} requested - checking existence and URL"
     requestedMajor=$(echo "${versioned}" | awk -F'.' '{print $1}')
     requestedMinor=$(echo "${versioned}" | awk -F'.' '{print $2}')
@@ -114,7 +114,7 @@ handlePackageInstall()
     requestedVersion="${requestedMajor}\\\.${requestedMinor}\\\.${requestedPatch}\\\.${requestedSubrelease}"
     printVerbose "Finding URL for latest release matching version prefix: requestedVersion: ${requestedVersion}"
     releaseMetadata=$(/bin/printf "%s" "${releases}" | jq -e -r '. | map(select(.assets[].name | test("'${requestedVersion}'")))[0]')
-  elif [ ! "x" = "x${tagged}" ]; then
+  elif [ -n "${tagged}" ]; then
     printVerbose "Explicit tagged version '${tagged}' specified. Checking for match"
     releaseMetadata=$(/bin/printf "%s" "${releases}" | jq -e -r '.[] | select(.tag_name == "'${tagged}'")')
     printVerbose "Use quick check for asset to check for existence of metadata for specific messages"
@@ -222,7 +222,7 @@ handlePackageInstall()
     printVerbose "Asset not found during previous logic; setting now"
     asset=$(/bin/printf "%s" "${releaseMetadata}" | jq -e -r '.assets[0]')
   fi
-  if [ "x" = "x${asset}" ]; then
+  if [ -z "${asset}" ]; then
     printError "Unable to determine download asset for ${name}"
   fi
 
@@ -232,7 +232,7 @@ handlePackageInstall()
   downloadURL=$(/bin/printf "%s" "${asset}" | jq -e -r '.url')
   size=$(/bin/printf "%s" "${asset}" | jq -e -r '.expanded_size')
 
-  if [ "x" = "x${downloadURL}" ]; then
+  if [ -z "${downloadURL}" ]; then
     printError "Unable to determine download location for ${name}"
   fi
   downloadFile=$(basename "${downloadURL}")
@@ -252,7 +252,7 @@ handlePackageInstall()
     fi
 
     printVerbose "Checking if package is not installed but scheduled for upgrade"
-    if [ "x" = "x${originalFileVersion}" ]; then
+    if [ -z "${originalFileVersion}" ]; then
       printVerbose "No previous version found"
       if ${installOrUpgrade}; then
         printVerbose "Package ${name} was not installed so not upgrading but installing"
@@ -453,7 +453,7 @@ EOF
         fi
       fi
       dependencies=$(deleteDuplicateEntries "${dependencies}" " ")
-      if [ ! "x" = "x${dependencies}" ]; then
+      if [ -n "${dependencies}" ]; then
         printInfo "- ${name} depends on: ${dependencies}"
         printInfo "- Installing dependencies"
         installDependencies "${name}" "${dependencies}"

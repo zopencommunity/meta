@@ -56,7 +56,7 @@ for aggregate in $@; do
   start=''
   i=-1
   printf '%s\n' "${lines}" | while IFS= read -r end; do
-    if [ "x${start}" != "x" ]; then
+    if [ -n "${start}"" ]; then
       af="${file[i]}.patch"
       d=$(dirname "${af}")
       rf=$(basename "${af}")

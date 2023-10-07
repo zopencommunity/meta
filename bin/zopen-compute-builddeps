@@ -80,7 +80,7 @@ while ${changed}; do
         changed=true
       fi
       newpkgs=$(grep "ZOPEN_${primary_type}_DEPS" "${pkg}port/buildenv" | awk -F '"' '{print $2; }')
-      if [ "x${newpkgs}" = "x" ]; then
+      if [ -z "${newpkgs}" ]; then
         # try again with secondary type
         newpkgs=$(grep "ZOPEN_${secondary_type}_DEPS" "${pkg}port/buildenv" | awk -F '"' '{print $2; }')
       fi

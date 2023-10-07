@@ -489,7 +489,7 @@ checkEnv()
 
   implicitDeps="sed" # for replaceHardcodedPaths logic
 
-  if [ "${ZOPEN_COMP}x" = "x" ]; then
+  if [ -z "${ZOPEN_COMP}" ]; then
     implicitDeps="${implicitDeps} comp_xlclang"
   else
     # user specified, so normalize in lower case
@@ -498,10 +498,10 @@ checkEnv()
   fi
 
   if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
-    if [ "${ZOPEN_URL}x" = "x" ]; then
+    if [ -z "${ZOPEN_URL}" ]; then
       printError "ZOPEN_STABLE_URL, ZOPEN_DEV_URL, ZOPEN_URL or ZOPEN_TARBALL_URL needs to be defined"
     fi
-    if [ "${ZOPEN_DEPS}x" = "x" ]; then
+    if [ -z "${ZOPEN_DEPS}" ]; then
       printError "ZOPEN_STABLE_DEPS, ZOPEN_DEV_DEPS, ZOPEN_DEPS or ZOPEN_TARBALL_DEPS needs to be defined"
     fi
     implicitDeps="${implicitDeps} git curl tar"
@@ -516,10 +516,10 @@ checkEnv()
     printVerbose "Implicitly adding tarball dependencies: ${implicitDeps}"
     ZOPEN_DEPS="${implicitDeps} ${ZOPEN_DEPS}"
   elif [ "${ZOPEN_TYPE}x" = "GITx" ]; then
-    if [ "${ZOPEN_URL}x" = "x" ]; then
+    if [ -z "${ZOPEN_URL}" ]; then
       printError "ZOPEN_STABLE_URL, ZOPEN_DEV_URL, ZOPEN_URL or ZOPEN_GIT_URL needs to be defined"
     fi
-    if [ "${ZOPEN_DEPS}x" = "x" ]; then
+    if [ -z "${ZOPEN_DEPS}" ]; then
       printError "ZOPEN_STABLE_DEPS, ZOPEN_DEV_DEPS, ZOPEN_DEPS or ZOPEN_GIT_DEPS needs to be defined"
     fi
     implicitDeps="${implicitDeps} git"
@@ -652,7 +652,7 @@ setEnv()
   export LDFLAGS_FOR_BUILD="${LDFLAGS}"
   export LIBS_FOR_BUILD="${LIBS}"
 
-  if [ "${ZOPEN_NUM_JOBS}x" = "x" ]; then
+  if [ -z "${ZOPEN_NUM_JOBS}" ]; then
     ZOPEN_NUM_JOBS=$("${MYDIR}/numcpus.rexx")
 
     # Use half of the CPUs by default
@@ -663,40 +663,40 @@ setEnv()
     export ZOPEN_NUM_JOBS=1
   fi
 
-  if [ "${ZOPEN_BOOTSTRAP}x" = "x" ]; then
+  if [ -z "${ZOPEN_BOOTSTRAP}" ]; then
     export ZOPEN_BOOTSTRAP="${ZOPEN_BOOTSTRAPD}"
   fi
-  if [ "${ZOPEN_BOOTSTRAP_OPTS}x" = "x" ]; then
+  if [ -z "${ZOPEN_BOOTSTRAP_OPTS}" ]; then
     export ZOPEN_BOOTSTRAP_OPTS="${ZOPEN_BOOTSTRAP_OPTSD}"
   fi
-  if [ "${ZOPEN_CONFIGURE}x" = "x" ]; then
+  if [ -z "${ZOPEN_CONFIGURE}" ]; then
     export ZOPEN_CONFIGURE="${ZOPEN_CONFIGURED}"
   fi
-  if [ "${ZOPEN_MAKE}x" = "x" ]; then
+  if [ -z "${ZOPEN_MAKE}" ]; then
     export ZOPEN_MAKE="${ZOPEN_MAKED}"
   fi
-  if [ "${ZOPEN_MAKE_OPTS}x" = "x" ]; then
+  if [ -z "${ZOPEN_MAKE_OPTS}" ]; then
     export ZOPEN_MAKE_OPTS="-j${ZOPEN_NUM_JOBS}"
   fi
-  if [ "${ZOPEN_CHECK}x" = "x" ]; then
+  if [ -z "${ZOPEN_CHECK}" ]; then
     export ZOPEN_CHECK="${ZOPEN_CHECKD}"
   fi
-  if [ "${ZOPEN_CHECK_TIMEOUT}x" = "x" ]; then
+  if [ -z "${ZOPEN_CHECK_TIMEOUT}" ]; then
     export ZOPEN_CHECK_TIMEOUT="${ZOPEN_CHECK_TIMEOUTD}"
   fi
-  if [ "${ZOPEN_CHECK_OPTS}x" = "x" ]; then
+  if [ -z "${ZOPEN_CHECK_OPTS}" ]; then
     export ZOPEN_CHECK_OPTS="${ZOPEN_CHECK_OPTSD}"
   fi
-  if [ "${ZOPEN_INSTALL}x" = "x" ]; then
+  if [ -z "${ZOPEN_INSTALL}" ]; then
     export ZOPEN_INSTALL="${ZOPEN_INSTALLD}"
   fi
-  if [ "${ZOPEN_INSTALL_OPTS}x" = "x" ]; then
+  if [ -z "${ZOPEN_INSTALL_OPTS}" ]; then
     export ZOPEN_INSTALL_OPTS="-j${ZOPEN_NUM_JOBS} ${ZOPEN_INSTALL_OPTSD}"
   fi
-  if [ "${ZOPEN_CLEAN}x" = "x" ]; then
+  if [ -z "${ZOPEN_CLEAN}" ]; then
     export ZOPEN_CLEAN="${ZOPEN_CLEAND}"
   fi
-  if [ "${ZOPEN_CLEAN_OPTS}x" = "x" ]; then
+  if [ -z "${ZOPEN_CLEAN_OPTS}" ]; then
     export ZOPEN_CLEAN_OPTS="${ZOPEN_CLEAN_OPTSD}"
   fi
   LOG_PFX=$(date +%C%y%m%d_%H%M%S)
@@ -751,11 +751,11 @@ gitClone()
     if ! runAndLog "git clone \"${ZOPEN_URL}\" ${gitOptions}"; then
       printError "Unable to clone ${gitname} from ${ZOPEN_URL}"
     fi
-    if [ "${ZOPEN_GIT_BRANCH}x" != "x" ]; then
+    if [ -n "${ZOPEN_GIT_BRANCH}" ]; then
       if ! git -C "${dir}" checkout "${ZOPEN_GIT_BRANCH}" > /dev/null; then
         printError"Unable to checkout ${ZOPEN_URL} branch ${ZOPEN_GIT_BRANCH}"
       fi
-    elif [ "${ZOPEN_GIT_TAG}x" != "x" ]; then
+    elif [ -n "${ZOPEN_GIT_TAG}" ]; then
       if ! git -C "${dir}" checkout tags/"${ZOPEN_GIT_TAG}" -b "${ZOPEN_GIT_TAG}" > /dev/null; then
         printError"Unable to checkout ${ZOPEN_URL} tag ${ZOPEN_GIT_TAG}"
       fi
@@ -936,7 +936,7 @@ applyPatches()
   fi
 
   patches=$( (cd "${patch_dir}" && find . -name "*.patch" | sort))
-  if [ "${patches}x" = "x" ]; then
+  if [ -z "${patches}" ]; then
     printWarning "No patches in ${patch_dir} to apply"
     return 0
   fi
@@ -1583,11 +1583,11 @@ resolveCommands()
     # If not, add the '-DEV' suffix so as not to collide with zopen installed packages
     ZOPEN_NAME="${ZOPEN_NAME}-DEV"
   fi
-  if [ "${ZOPEN_INSTALL_DIR}x" = "x" ]; then
+  if [ -z "${ZOPEN_INSTALL_DIR}" ]; then
     PROJECT_NAME="$(echo ${ZOPEN_NAME} | cut -d'-' -f1)"
     export ZOPEN_INSTALL_DIR="${ZOPEN_PKGINSTALL}/${PROJECT_NAME}/${ZOPEN_NAME}" # Install into dev location
   fi
-  if [ "${ZOPEN_LOG_DIR}x" = "x" ]; then
+  if [ -z "${ZOPEN_LOG_DIR}" ]; then
     export ZOPEN_LOG_DIR="${ZOPEN_ROOT}/log"
     if [ ! -z "${ZOPEN_BUILD_LINE}" ]; then
       ZOPEN_LOG_DIR="${ZOPEN_LOG_DIR}.${ZOPEN_BUILD_LINE}"
@@ -1602,7 +1602,7 @@ resolveCommands()
     unset ZOPEN_BOOTSTRAP_CMD
   fi
 
-  if [ "${ZOPEN_CONFIGURE_OPTS}x" = "x" ]; then
+  if [ -z "${ZOPEN_CONFIGURE_OPTS}" ]; then
     case "${ZOPEN_CONFIGURE}" in
     *cmake*)
       export ZOPEN_CONFIGURE_OPTS="--install-prefix ${ZOPEN_INSTALL_DIR} ${ZOPEN_EXTRA_CONFIGURE_OPTS}"
@@ -1613,7 +1613,7 @@ resolveCommands()
     esac
   fi
   if [ "${ZOPEN_CONFIGURE}x" != "skipx" ]; then
-    if [ "${ZOPEN_CONFIGURE_MINIMAL}x" = "x" ]; then
+    if [ -z "${ZOPEN_CONFIGURE_MINIMAL}" ]; then
       case "${ZOPEN_CONFIGURE}" in
       *cmake*)
         export ZOPEN_CONFIGURE_CMD="\"${ZOPEN_CONFIGURE}\" ${ZOPEN_CONFIGURE_OPTS} -DCMAKE_C_COMPILER=${CC} -DCMAKE_C_FLAGS=\"${CPPFLAGS} ${CFLAGS}\" -DCMAKE_CXX_COMPILER=${CXX} -DCMAKE_CXX_FLAGS=\"${CPPFLAGS} ${CXXFLAGS}\" -DCMAKE_CXX_LINK_LIBRARY_FLAG=\"${LDFLAGS}\" -DCMAKE_C_LINK_LIBRARY_FLAG=\"${LDFLAGS}\" -DCMAKE_CXX_STANDARD_LIBRARIES=\"${LIBS}\" -DCMAKE_C_STANDARD_LIBRARIES=\"${LIBS}\""
@@ -1638,7 +1638,7 @@ resolveCommands()
   fi
 
   if [ "${ZOPEN_MAKE}x" != "skipx" ] && [ ! -z "$(command -v ${ZOPEN_MAKE})" ]; then
-    if [ "${ZOPEN_MAKE_MINIMAL}x" = "x" ]; then
+    if [ -z "${ZOPEN_MAKE_MINIMAL}" ]; then
       export ZOPEN_MAKE_CMD="\"${ZOPEN_MAKE}\" ${ZOPEN_MAKE_OPTS} ${verboseOpts} CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\" \"LDLIBS=${LIBS}\""
       export ZOPEN_MAKE_MINIMAL="no"
     else
@@ -1650,7 +1650,7 @@ resolveCommands()
   fi
 
   if [ "${ZOPEN_CHECK}x" != "skipx" ] && ! ${skipcheck}; then
-    if [ "${ZOPEN_CHECK_MINIMAL}x" = "x" ]; then
+    if [ -z "${ZOPEN_CHECK_MINIMAL}" ]; then
       export ZOPEN_CHECK_CMD="\"${ZOPEN_CHECK}\" ${ZOPEN_CHECK_OPTS} ${verboseOpts} CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\""
     else
       export ZOPEN_CHECK_CMD="\"${ZOPEN_CHECK}\" ${ZOPEN_CHECK_OPTS}"
@@ -1960,7 +1960,7 @@ fi
 
 cd "${ZOPEN_ROOT}/${dir}" || exit 99
 
-if [ "${ZOPEN_SRC_DIR}x" != "x" ]; then
+if [ -n "${ZOPEN_SRC_DIR}" ]; then
   cd "${ZOPEN_SRC_DIR}" || exit 99
 fi
 
@@ -1976,7 +1976,7 @@ if command -V "${ZOPEN_INIT_CODE}" > /dev/null 2>&1; then
 fi
 
 if ${startShell}; then
-  if [ "${ZOPEN_SHELL}x" != "x" ]; then
+  if [ -n "${ZOPEN_SHELL}" ]; then
     exec "${ZOPEN_SHELL}"
   else
     exec /bin/sh

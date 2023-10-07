@@ -122,7 +122,7 @@ for arg in $*; do
   esac
 done
 
-if [ "x${subcmd}" = "x" ]; then
+if [ -z "${subcmd}" ]; then
   if ${help}; then
     printHelp
     exit 0
@@ -139,7 +139,7 @@ if ${help}; then
 fi
 
 if ${version}; then
-  if [ "x${subcmd}" = "x" ]; then
+  if [ -z "${subcmd}" ]; then
     subopts="${ME}"
   else
     subopts="${subcmd}"

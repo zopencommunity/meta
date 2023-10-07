@@ -73,13 +73,13 @@ brew_version_info=$(curl https://formulae.brew.sh/formula/ 2> /dev/null | grep '
 for rawtool in ${tools}; do
   tool=${rawtool%%port}
   version_file=$(echo "${version_files}" | grep "${tool}-" | head -n 1)
-  if [ "x${version_file}" = "x" ]; then
+  if [ -z "${version_file}" ]; then
     :
     #echo "No version file for ${tool}. ${tool} skipped" >&2
   else
     version="$(cat ${version_file})"
     brew_line=$(echo "${brew_version_info}" | grep -n ">${tool}<" | awk -F: '{print $1}')
-    if [ "x${brew_line}" = "x" ]; then
+    if [ -z "${brew_line}" ]; then
       brew_version="unknown"
     else
       next_brew_line=$((brew_line + 1))

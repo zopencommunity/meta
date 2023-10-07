@@ -902,7 +902,7 @@ initDefaultEnvironment()
 #
 checkWritable()
 {
-  if [ "x${INCDIR}" = "x" ]; then
+  if [ -z "${INCDIR}" ]; then
     echo "Internal error. Caller has to have set INCDIR" >&2
     exit 16
   fi

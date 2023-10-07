@@ -55,7 +55,7 @@ if ! [ -d "${mandir}" ]; then
   exit 8
 fi
 
-if [ "x${MYDIR}" = "x" ] || [ "x${rootdir}" = "x" ]; then
+if [ -z "${MYDIR}" ] || [ "x${rootdir}" ]; then
   echo "Internal error. Unable to determine version information" >&2
   exit 8
 fi
