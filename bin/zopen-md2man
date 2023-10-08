@@ -29,7 +29,7 @@ if [[ $# -eq 1 ]]; then
     printSyntax
     exit 0
   elif [ "x$1" = "x--version" ]; then
-    zopen --version $ME
+    zopen-version $ME
     exit 0
   else
     echo "Unrecognized option $1. Processing terminated" >&2
