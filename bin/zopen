@@ -3,14 +3,14 @@
 # zopen wrapper script to allow single point of entry to zopen
 # tooling
 #
-ZOPEN_DONT_PROCESS_CONFIG=1 
+ZOPEN_DONT_PROCESS_CONFIG=1
 #
 # All zopen-* scripts MUST start with this code to maintain consistency
 #
 setupMyself()
 {
   ME=$(basename $0)
-  MYDIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
+  MYDIR="$(cd "$(dirname "$0")" > /dev/null 2>&1 && pwd -P)"
   INCDIR="${MYDIR}/../include"
   if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
     echo "Internal Error. Unable to find common.sh file to source" >&2
@@ -74,10 +74,10 @@ help=false
 version=false
 
 for arg in $*; do
-  case "$arg" in
+  case "${arg}" in
     "alt"|"build"|"clean"|"promote"|"generate"|"init"|"install"|\
     "query"|"remove"|"update-cacert")
-      subcmd="zopen-$arg"
+      subcmd="zopen-${arg}"
       ;;
     "list")
       subcmd='zopen-query'
@@ -104,11 +104,11 @@ for arg in $*; do
   esac
 done
 
-if [ "x${subcmd}" = "x" ]; then
-  if $help; then
+if [ -z "${subcmd}" ]; then
+  if ${help}; then
     printHelp
     exit 0
-  elif $version; then
+  elif ${version}; then
     : # fall through
   else
     printHelp
@@ -116,13 +116,13 @@ if [ "x${subcmd}" = "x" ]; then
   fi
 fi
 
-if $help; then
+if ${help}; then
   subopts="--help"
 fi
 
-if $version; then
-  if [ "x${subcmd}" = "x" ]; then
-    subopts="$ME"
+if ${version}; then
+  if [ -z "${subcmd}" ]; then
+    subopts="${ME}"
   else
     subopts="${subcmd}"
   fi

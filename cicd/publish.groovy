@@ -122,7 +122,7 @@ for i in {1..5}; do
   else
     if [ $i -eq 5 ]; then
        echo "Command failed after 5 attempts. Recreating release..."
-       github-release release -v --user "${GITHUB_ORGANIZATION}" --repo "${GITHUB_REPO}" --tag "${TAG}" --name "${NAME}" --description "${DESCRIPTION}"
+       github-release -v release --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --tag "${TAG}" --name "${NAME}" --description "${DESCRIPTION}"
        if [ $? -eq 0 ]; then
          echo "Release recreated successfully!"
        else

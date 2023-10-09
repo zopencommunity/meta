@@ -76,9 +76,9 @@ def process_asset(asset, body):
                 total_tests = test_status_match.group(2)
 
             # Extract runtime dependencies
-            dependencies_match = re.search(r"Runtime Dependencies:</b>\s*(.*?)<br>", body)
+            dependencies_match = re.search(r"<b>Runtime Dependencies:</b>(.*?)<br", body)
             if dependencies_match:
-                runtime_dependencies = dependencies_match.group(1)
+                runtime_dependencies = dependencies_match.group(1).strip()
 
         filtered_asset = {
             "name": asset_name,
