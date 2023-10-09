@@ -5,7 +5,7 @@
 #
 setupMyself()
 {
-  ME=$(basename $0)
+  ME=$(basename "$0")
   MYDIR="$(cd "$(dirname "$0")" > /dev/null 2>&1 && pwd -P)"
   INCDIR="${MYDIR}/../include"
   if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
@@ -61,7 +61,7 @@ mergeNewVersion()
   printVerbose "New version merged; checking for orphaned files from previous version"
   # This will remove any old symlinks or dirs that might have changed in an up/downgrade
   # as the merge process overwrites existing files to point to different version. If there was
-  # no other version, then $deref will be empty so nothing to uninstall
+  # no other version, then ${deref} will be empty so nothing to uninstall
   if [ -n "${deref}" ]; then
     unsymlinkFromSystem "${package}" "${ZOPEN_ROOTFS}" "${ZOPEN_PKGINSTALL}/${package}/${deref}/.links"
   else
@@ -156,7 +156,7 @@ listAlts()
   i=0
   current=0
   # just the below would be simpler, but creates a subshell so can't get the number of entries outside!
-  #  echo "$found" | xargs | tr ' ' '\n' | while read repo; do
+  #  echo "${found}" | xargs | tr ' ' '\n' | while read repo; do
   TMP_FIFO_PIPE="${HOME}/altselect.pipe"
   [ ! -p "${TMP_FIFO_PIPE}" ] || rm -f "${TMP_FIFO_PIPE}"
   mkfifo ${TMP_FIFO_PIPE}

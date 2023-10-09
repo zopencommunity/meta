@@ -1,28 +1,215 @@
-#
-# This file is only meant to be source'd
+#!/bin/false
+# This file is only meant to be source'd hence the dummy hashbang
+# shellcheck shell=sh
 #
 
-export ZOPEN_CLEANUP="stty echo" # set this as a default to ensure line visibility!
 addCleanupTrapCmd()
 {
   newCmd=$(echo "$1" | sed -e 's/^[ ]*//' -e 's/[ ]*$//')
-  if [ -z "${ZOPEN_CLEANUP}" ]; then
-    export ZOPEN_CLEANUP="${newCmd}"
+  if [ -e "${ZOPEN_CLEANUP_PIPE}" ]; then
+    (echo "${newCmd}" > "${ZOPEN_CLEANUP_PIPE}")&
   else
-    export ZOPEN_CLEANUP="$(deleteDuplicateEntriesRedux "${ZOPEN_CLEANUP}; ${newCmd}" ";")"
+    printSoftError "Cleanup pipeline not available; temporary files and resources might not be cleared"
   fi
 }
 
 cleanupFunction()
 {
-  [ -n "${ZOPEN_CLEANUP}" ] && $(eval "${ZOPEN_CLEANUP}" 2> /dev/null)
+  if [ -e "${ZOPEN_CLEANUP_PIPE}" ]; then
+    while read cleanupcmd; do
+      eval "${cleanupcmd}" 2>/dev/null
+    done < "${ZOPEN_CLEANUP_PIPE}"
+    rm -rf "${ZOPEN_CLEANUP_PIPE}"
+  fi
   trap - EXIT INT TERM QUIT HUP
-  unset ZOPEN_CLEANUP
+  
 }
-trap "cleanupFunction" EXIT INT TERM QUIT HUP
 
-isPackageActive()
+# Generate a file name that has a high probability of being unique for
+# use as a temporary filename - the filename should be unique in the 
+# instance it was generated and probability suggests it should be for
+# a "reasonable" time after...
+mktempfile()
 {
+  prefix="zopen_$1"
+  suffix=".tmp"
+  [ -n "$2" ] && [ ! "$2" = "." ] && suffix="$2"
+  for tmp in "${TMPDIR}" "${TMP}" /tmp; do
+    [ -n "${tmp}" ] && [ -d "${tmp}" ] && break
+  done
+  [ ! -d "${tmp}" ] && printError "Could not locate suitable temporary directory [tried \$TMPDIR \$TMP & /tmp]. Define a temporary location and retry command"
+  rnd=$(od -vAn -tu8 -N8  < /dev/urandom | tr -d "[:blank:]")
+  tempfile="${tmp}/${prefix%%_}_${rnd}.${suffix##.}"
+  if [ -e  "${tempfile}" ]; then
+    mktempfile "$1" "${suffix}" # recurse and try again
+  else
+    echo "${tempfile}"
+  fi
+}
+
+# Create a temporary directory
+mktempdir()
+{
+  tempdir=$(mktempfile "$1")
+  [ ! -e "${tempdir}" ] && mkdir "${tempdir}" && addCleanupTrapCmd "rm -rf ${tempdir}" && echo "${tempdir}"
+}
+
+isPermString()
+{
+  test=$(echo "$1" | zossed "s/[-+rwxugo,=]//g")
+  if [ -n "${test}" ]; then
+    printDebug "Permission string '$1' was invalid"
+    false; 
+  else
+    true;
+  fi
+  return # the output of the last command
+}
+
+writeConfigFile(){
+  configFile="$1"
+  rootfs="$2"
+  pkginstall="$3"
+  certPath="$4"
+
+  cat << EOF >  "${configFile}"
+# z/OS Open Tools Configuration file
+# Main root location for the zopen installation; can be changed if the
+# underlying root location is copied/moved elsewhere as locations are
+# relative to this envvar value
+ZOPEN_ROOTFS=\"${rootfs}\"
+export ZOPEN_ROOTFS
+configStartTime=\${SECONDS}
+zot=\"z/OS Open Tools\"
+
+# Temporary file location
+for tmp in "\${TMPDIR}" "\${TMP}" /tmp
+do
+  if [ ! -z \${tmp} ] && [ -d \${tmp} ]; then
+    break
+  fi
+done
+
+if [ ! -d "\${tmp}" ]; then
+  echo "Temporary directory not found. Specify \${TMPDIR}, \${TMP} or have a valid /tmp directory"
+fi
+FIFO_PIPE_DOTENVS="\${tmp}/zopen_\${LOGNAME}.dotenv.pipe"
+FIFO_PIPE_STDOUT="\${tmp}/zopen_\${LOGNAME}.stdout.pipe"
+
+# Set Traps
+atExit() {
+  sig=\$?
+  [ ! -z "\${FIFO_PIPE_DOTENVS}" -a -p \${FIFO_PIPE_DOTENVS} ] && rm -rf \${FIFO_PIPE_DOTENVS}
+  [ ! -z "\${FIFO_PIPE_STDOUT}" -a -p \${FIFO_PIPE_STDOUT} ] && rm -rf \${FIFO_PIPE_STDOUT}
+  trap - EXIT INT TERM QUIT HUP
+  return \${sig}
+}
+
+trap "atExit" EXIT INT TERM QUIT HUP
+
+sanitizeEnvVar(){
+  # remove any envvar entries that match the specified regex
+  value="\$1"
+  delim="\$2"
+  prefix="\$3"
+  echo "\${value}" | awk -v RS="\${delim}" -v DLIM="\${delim}" -v PRFX="\${prefix}" '{ if (match(\$1, PRFX)==0) {printf("%s%s",\$1,DLIM)}}'
+}
+
+deleteDuplicateEntries() 
+{
+  value="\$1"
+  delim="\$2"
+  echo "\${value}\${delim}" | awk -v RS="\${delim}" '!(\$0 in a) {a[\$0]; printf("%s%s", col, \$0); col=RS; }' | sed "s/\${delim}$//"
+}
+
+# z/OS Open Tools environment variables
+ZOPEN_PKGINSTALL=\${ZOPEN_ROOTFS}/${pkginstall}
+export ZOPEN_PKGINSTALL
+ZOPEN_SEARCH_PATH=\${ZOPEN_ROOTFS}/usr/share/zopen/
+export ZOPEN_SEARCH_PATH
+ZOPEN_CA=\"\${ZOPEN_ROOTFS}/${certPath}\"
+export ZOPEN_CA
+ZOPEN_LOG_PATH=\${ZOPEN_ROOTFS}/var/log
+export ZOPEN_LOG_PATH
+
+# Disable ANSI terminal commands if terminal does not support them
+# Currently only OMVS detected
+if [ "\${_BPX_TERMPATH-x}" = "OMVS" ];  then
+  ansiEnabled=false
+else
+  ansiEnabled=true
+fi
+
+# Custom parameters for zopen default tooling
+# Add any custom parameters for curl
+ZOPEN_CURL_PARAMS=""
+
+# Environment variables
+
+if [ -z "\${ZOPEN_QUICK_LOAD}" ]; then
+  if [ -e "\${ZOPEN_ROOTFS}/etc/profiled" ]; then
+    dotenvs=\$(find "\${ZOPEN_ROOTFS}/etc/profiled" -type f -name 'dotenv' -print)
+    dotenvcnt=\$(echo "\${dotenvs}" | wc -l | tr -d ' ')
+    filecnt=0
+    # Create a pipe to hold the list of dotenv dirs to process
+    [ ! -p \${FIFO_PIPE_DOTENVS} ] || rm -f \${FIFO_PIPE_DOTENVS}
+    mkfifo \${FIFO_PIPE_DOTENVS}
+    chtag -tc 819 \${FIFO_PIPE_DOTENVS}
+    # Create a pipe to hold any output from the attempt to run the
+    # dotenv sourcing to allow errors to propogate to the user
+    [ ! -p \${FIFO_PIPE_STDOUT} ] || rm -f \${FIFO_PIPE_STDOUT}
+    mkfifo \${FIFO_PIPE_STDOUT}
+    chtag -tc 819 \${FIFO_PIPE_STDOUT}
+    [ \${ansiEnabled} ] && /bin/echo ""
+    (/bin/echo "\${dotenvs}" | xargs | tr ' ' '\n'>>\${FIFO_PIPE_DOTENVS} &)
+    while read FILE; do
+      [ -z "\${TMP_FIFO_PIPE}" ] && break
+      filecnt=\$(expr \${filecnt} + 1)
+      pct=\$(expr \${filecnt} \* 100)
+      pct=\$(expr \${pct} / \${dotenvcnt})
+      if \${ansiEnabled};  then
+        /bin/echo "\047[1A\047[\$30D\047[2K- Processing \${zot} configuration: \${pct}% (\${filecnt}/\${dotenvcnt})"
+      else
+        /bin/echo "Processing \${zot} configuration...: \${pct}% (\${filecnt}/\${dotenvcnt})"
+      fi
+      [ -e \${FILE} ] && . \${FILE} >\${FIFO_PIPE_STDOUT} 2>&1
+      # If there were any messages during the dotenv processing, output to screen
+      while read outputline; do
+        if [ -n "\${outputline" ]; then
+          if \${ansiEnabled}; then
+            inserSpacer=true
+          fi
+          printf "%szn" "\${outputline}"
+        fi
+      done < \${FIFO_PIPE_STDOUT}
+      [ \${insertSpacer} ] || printf "\n\n" # Add blank lines to restart the spinner otherwise messages from setup are overwritten
+    done < \${FIFO_PIPE_DOTENVS}
+    [ -n "\${FIFO_PIPE_DOTENVS}" -a -e "\${FIFO_PIPE_DOTENVS}" ] || rm -f "\${FIFO_PIPE_DOTENVS}"
+    [ -n "\${FIFO_PIPE_STDOUT}" -a -e "\${FIFO_PIPE_STDOUT}" ] || rm -f "\${FIFO_PIPE_STDOUT}"
+    if \${ansiEnabled};  then
+      /bin/echo "\047[1A\047[\$30D\047[2K- Processed \${zot} configuration: 100% (\${dotenvcnt}/\${dotenvcnt})"
+    else
+      /bin/echo "Processing \${zot} configuration...: 100% (\${filecnt}/\${dotenvcnt})"
+    fi
+    unset dotenvs dotenvcnt filecnt
+  fi
+fi
+PATH=\${ZOPEN_ROOTFS}/usr/local/bin:\${ZOPEN_ROOTFS}/usr/bin:\${ZOPEN_ROOTFS}/bin:\${ZOPEN_ROOTFS}/boot:\$(sanitizeEnvVar \"\${PATH}\" \":\" \"^\${ZOPEN_PKGINSTALL}/.*\$\")
+export PATH=\$(deleteDuplicateEntries \"\${PATH}\" \":\")
+LIBPATH=\${ZOPEN_ROOTFS}/usr/local/lib:\${ZOPEN_ROOTFS}/usr/lib:\$(sanitizeEnvVar "\${LIBPATH}" ":" "^\${ZOPEN_PKGINSTALL}/.*\$")
+export LIBPATH=\$(deleteDuplicateEntries \"\${LIBPATH}\" \":\")
+MANPATH=\${ZOPEN_ROOTFS}/usr/local/share/man:\${ZOPEN_ROOTFS}/usr/local/share/man/\%L:\${ZOPEN_ROOTFS}/usr/share/man:\${ZOPEN_ROOTFS}/usr/share/man/\%L:\$(sanitizeEnvVar \"\${MANPATH}\" \":\" \"^\${ZOPEN_PKGINSTALL}/.*\$\")
+export MANPATH=\$(deleteDuplicateEntries \"\${MANPATH}\" \":\")
+
+unset tmp FIFO_PIPE_DOTENVS FIFO_PIPE_STDOUT
+
+# Unset traps
+trap - EXIT INT TERM QUIT HUP
+EOF
+
+}
+
+isPackageActive(){
   pkg="$1"
   printDebug "Checking if '${pkg}' is installed and active"
   installedPackage=$(cd "${ZOPEN_PKGINSTALL}" && zosfind . -name ".active" | grep "/${pkg}/")
@@ -131,6 +318,14 @@ getScreenCols()
   stty | awk -F'[/=;]' '/columns/ { print $4}' | tr -d " "
 }
 
+zossed()
+{
+  # Use the standard z/OS sed utility; If the sed package is installed
+  # GNU sed becomes the dominant version which might change how
+  # matching is performed
+  /bin/sed "$@"
+}
+
 zosfind()
 {
   # Use the standard z/OS find utility; If the findutils package is installed,
@@ -139,7 +334,7 @@ zosfind()
   # "-wholename" is not available on standard zosfind. For the tooling to be
   # consistent across platforms (where findutils is/is not installed) use the
   # standard zos version
-  /bin/find $*
+  /bin/find "$@"
 }
 
 findrev()
@@ -196,7 +391,7 @@ mutexReq()
   lockdir="${ZOPEN_ROOTFS}/var/lock"
   [ -e lockdir ] || mkdir -p ${lockdir}
   mutex="${lockdir}/${mutex}"
-  mypid=$(exec sh -c 'echo $PPID')
+  mypid=$(exec sh -c 'echo ${PPID}')
   if [ -e "${mutex}" ]; then
     lockedpid=$(cat ${mutex})
     {
@@ -455,6 +650,16 @@ deletetask()
 
 zopenInitialize()
 {
+  # Create the cleanup pipeline and exit handler
+  trap "cleanupFunction" EXIT INT TERM QUIT HUP
+  [ -z "${ZOPEN_CLEANUP_PIPE}" ] \
+  && [ ! -p "${ZOPEN_CLEANUP_PIPE}" ] \
+  && ZOPEN_CLEANUP_PIPE=$(mktempfile "clean" "pipe") \
+  && mkfifo "${ZOPEN_CLEANUP_PIPE}" \
+  && chtag -tc 819 "${ZOPEN_CLEANUP_PIPE}" \
+  && export ZOPEN_CLEANUP_PIPE
+
+  addCleanupTrapCmd "stty echo" # set this as a default to ensure line visibility!
   defineEnvironment
   defineANSI
   if [ -z "${ZOPEN_DONT_PROCESS_CONFIG}" ]; then
@@ -463,6 +668,7 @@ zopenInitialize()
 
   ZOPEN_JSON_CACHE_URL="https://zosopentools.github.io/meta/api/zopen_releases.json"
 }
+
 
 printDebug()
 {
@@ -701,7 +907,7 @@ processConfig()
 checkIfConfigLoaded()
 {
   if [ -z "${ZOPEN_CA}" ]; then
-    errorMessage="\$ZOPEN_CA was not set. Ensure zopen init has run and zopen-config has been sourced."
+    errorMessage="\${ZOPEN_CA} was not set. Ensure zopen init has run and zopen-config has been sourced."
   fi
   if [ ! -r "${ZOPEN_CA}" ]; then
     errorMessage="Certificate at ${ZOPEN_CA} could not be accessed. Ensure zopen init has run and zopen-config has been sourced."
@@ -828,17 +1034,17 @@ CAT_ZOPEN="Z"   # Related to the zopen system itself
 
 syslog()
 {
-  fd=$1
-  type=$2
-  categories=$3
-  module=$4
-  location=$5
-  msg=$6
+  fd=$1           # file
+  type=$2         # LOG_? type as defined above
+  categories=$3   # CAT_? type as defined above
+  module=$4       # zopen-<MODULE>
+  location=$5     # function
+  msg=$6          # Message text
   if [ ! -e "${fd}" ]; then
     mkdir -p "$(dirname "${fd}")"
     touch "${fd}"
   fi
-  echo $(date +"%F %T") $(id | cut -d' ' -f1)::${module}:${type}:${categories}:${location}:${msg} >> ${fd}
+  echo "$(date +"%F %T") $(id | cut -d' ' -f1)::${module}:${type}:${categories}:${location}:${msg}" >> "${fd}"
 }
 
 downloadJSONCache()

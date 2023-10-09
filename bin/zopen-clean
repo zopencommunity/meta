@@ -67,7 +67,7 @@ cleanUnused()
   i=0
   current=0
   # the below would be simpler, but creates a subshell so can't get the number of entries outside!
-  #  echo "$found" | xargs | tr ' ' '\n' | while read repo; do
+  #  echo "${found}" | xargs | tr ' ' '\n' | while read repo; do
   TMP_FIFO_PIPE="${HOME}/altselect.pipe"
   [ ! -p "${TMP_FIFO_PIPE}" ] || rm -f "${TMP_FIFO_PIPE}"
   mkfifo "${TMP_FIFO_PIPE}"

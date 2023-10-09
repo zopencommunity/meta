@@ -1,0 +1,335 @@
+#!/bin/sh
+# Promote a zopen instance to a different location
+
+#
+# All zopen-* scripts MUST start with this code to maintain consistency
+#
+setupMyself()
+{
+  ME=$(basename $0)
+  MYDIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
+  INCDIR="${MYDIR}/../include"
+  if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
+    echo "Internal Error. Unable to find common.sh file to source" >&2
+    exit 8
+  fi
+  . "${INCDIR}/common.sh"
+}
+setupMyself
+
+printHelp(){
+cat << HELPDOC
+zopen promote is a utility for z/OS Open Tools to generate a clone of
+an existing zopen environment. For example a user can install
+to a test area and when happy that the behaviour is correct, promote
+to a production area.
+
+Usage: zopen promote [OPTION] [DESTINATION]...
+
+Options:
+  -f, --from  [DIRECTORY]      
+                    the zopen environment to copy from; if not present,
+                    the default is taken from ZOPEN_ROOTFS (the current
+                    zopen environment)
+  -y, --yes         automatically answer 'yes' to prompts; existing 
+                    target filesystems will be purged before promote
+                    occurs
+  -o, --owner [OWNER]      
+                    change owner of promoted environment files from
+                    current user
+  -g, --group [GROUP]
+                    change group of promoted environment files from
+                    default
+  -cp, --configperms [PERMISSIONS]
+                    update the permissions for the configuration file
+                    <promotedroot>/etc/zopen-config with the given 
+                    [PERMISSIONS] string, specified in symbolic mode
+  -zp, --zopenperms [PERMISSIONS]
+                    update the permissions for all files within the
+                    promoted zopen environment with the given 
+                    [PERMISSIONS] string, specified in symbolic mode 
+      --keepzopentooling 
+                    install the zopen admin tools into the promoted
+                    environment for zopen system administration                  
+  -v, --verbose     run in verbose mode
+      --version
+  -h, -?, --help    display this help and exit
+
+Examples:
+  zopen promote       interactively promote current zopen environment
+  zopen promote /prod 
+                    promote current zopen environment to '/prod', setting
+                    file ownership to current user and group to default
+  zopen promote /prod --owner FOO 
+
+                    promote current zopen environment to '/prod', setting
+                    file ownership to 'FOO' and group to default
+  zopen promote /prod --group BAR 
+                    promote current zopen environment to '/prod', setting
+                    file ownership to current user and group to 'BAR'
+  zopen promote /mytest -cp g-wx,o-rwx -zp g-rwx,o-rwx --owner FOO
+                    promote current zopen environment to '/mytest', 
+                    allowing only the current user to source the
+                    zopen-config environment file and only permit 
+                    access to zopen environment files to the user 'FOO'
+
+Report bugs at https://github.com/ZOSOpenTools/meta/issues 
+
+HELPDOC
+}
+
+args=$*
+
+printHeader "Promoting zopen environment"
+
+verbose=false
+debug=false
+yesToPrompts=false
+fromDir=
+group=
+owner=
+configperms=
+zopenperms=
+keepzopentooling=false
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    "-f" | "--from")
+      shift
+      [ $# -lt 1 ] && printError "Missing 'from' directory"    
+      fromDir="$1"
+      ;;
+    "-g" | "--group")
+      shift
+      [ $# -lt 1 ] && printError "Missing 'group' parameter"    
+      group="$1"
+      ;;
+    "-o" | "--owner")
+      shift
+      [ $# -lt 1 ] && printError "Missing 'owner' parameter"    
+      owner="$1"
+      ;;
+    "-cp" | "--configperms")
+      shift
+      [ $# -lt 1 ] && printError "Missing 'owner' parameter"  
+      configperms="$1"
+      ;;
+    "-zp" | "--zopenperms")
+      shift
+      [ $# -lt 1 ] && printError "Missing 'owner' parameter"  
+      zopenperms="$1"
+      ;;
+    "-h" | "--help" | "-?")
+      printHelp "${args}"
+      exit 0
+      ;;
+    "-v" | "--verbose")
+      verbose=true
+      ;;
+    "--debug") 
+      verbose=true
+      debug=true
+      ;;
+    "--xdebug")
+      set -x
+      ;;
+    "--yes" | "-y")
+      yesToPrompts=true  # Automatically answer 'yes' to any questions
+      ;;
+    "--keepzopentooling")
+      keepzopentooling=true
+      ;;
+    "--version")
+      zopen --version "${ME}"
+      exit 0
+      ;;
+    *)
+      promotefs="$1";
+      ;;
+  esac
+  shift;
+done
+
+printDebug "Validating input parameters"
+
+defaultConfigPerms="u+rwx,g+rx,g-w,o-rwx" # Allow user full access, group read/execute, others no access
+printDebug "Check if configuration file perms set; otherwise use default: '${defaultConfigPerms}'"
+[ -z "${configperms}" ] && configperms="${defaultConfigPerms}"
+isPermString "${configperms}"
+if ! isPermString "${configperms}"; then
+  printError "Invalid permission string '${configperms}'. Correct the parameter and retry command"
+else
+  printDebug "Will apply permissions: '${configperms}'"
+fi
+
+defaultZopenPerms="g+rx,g-w,o-rwx" # Allow user full access, group read/execute, others no access
+printDebug "Check if promoted system perms set; otherwise use default: '${defaultZopenPerms}'"
+[ -z "${zopenperms}" ] && zopenperms="${defaultZopenPerms}"
+if ! isPermString "${zopenperms}"; then
+  printError "Invalid permission string '${zopenperms}'. Correct the parameter and retry command"
+else
+  printDebug "Will apply permissions: '${zopenperms}'"
+fi
+
+if [ -z "${fromDir}" ] && [ -n "${ZOPEN_ROOTFS}" ]; then
+  rootfs="${ZOPEN_ROOTFS}"
+  printVerbose "- Setting init directory from ZOPEN_ROOTFS envvar: ${rootfs}"
+elif [ -n "${fromDir}" ]; then
+  printVerbose "- Setting init directory from cli value: fromDir"
+  rootfs="${fromDir}"
+else
+  printError "Could not locate existing installation, ZOPEN_ROOTFS envvar not defined and no --from parameter]. Correct error and retry command"
+fi
+
+if [ -z "${promotefs}" ]; then
+  printInfo "- Enter fully-qualified path to your target directory:"
+  promotefs=$(getInput)
+else
+  printVerbose "- promote directory from cli: ${promotefs}"
+fi
+
+if [ -z "${promotefs}" ]; then
+  printError "- No target location for promote. Stopping."
+fi
+
+if [ -e "${promotefs}" ];then
+  printDebug "Target filesystem already exists"
+  deref=$(cd "${promotefs}" && pwd -P)
+  if [ "${deref}" = "/" ]; then
+    if ! ${yesToPrompts}; then
+      printInfo "- Cloning into system root; are you sure (y/N)?"
+      sysrootok=$(getInput)
+      if [ -n "${sysrootok}" ] && [ "y" = "${sysrootok}" ]; then
+        printInfo "- Using '/' as target filesystem"
+        promotefs="/."
+      else
+        printInfo "- promote operation stopped" && exit 0
+      fi
+    fi
+  else
+    overwrite=${yesToPrompts}
+    purge=false
+    if ! ${overwrite}; then
+      printWarning "Existing file system found at '${promotefs}'"
+      while true; do
+        printWarning "Overwrite, Purge existing or Abort (o/p/a)"
+        read existingAction < /dev/tty
+        case "${existingAction}" in
+         "o") break;;
+         "p") purge=true; break;;
+         "a") printInfo "promote operation aborted" && exit 0;;
+         *) continue;;
+        esac
+      done
+    fi
+    if ${purge}; then
+      printDebug "Removing existing promote dir at '${promotefs}' and recreating"
+      rm -rf "${promotefs}" && mkdir -p "${promotefs}"
+    fi
+  fi
+else
+  printVerbose "Stripping any trailing '/' char"
+  promotefs="${promotefs%/}"
+  mkdir -p "${promotefs}"
+fi
+
+printInfo "- Promoting from '${rootfs}' to '${promotefs}'..."
+
+printDebug "Generating temporary pipe"
+FIFO_PIPE_STDOUT=$(mktempfile "" ".pipe")
+
+progressHandler "spinner" "- promote complete" &
+ph=$!
+killph="kill -HUP ${ph}"
+addCleanupTrapCmd "${killph}"
+#cp -fRT "${rootfs}/"  Fails to keep some relative symlinks correct
+
+printDebug "Need to pax old dir and unpax to new dest to keep symlink structure"
+# Some files are set with permission -r--r--r-- which means they cannot be copied
+# over without some work.  Rather than search for these files, attempt to copy
+# and catch the errors, forcibly re-copying the file over afterwards; saves
+# iterating the entire file system twice 
+
+printDebug "Generating temporary pipe"
+FIFO_PIPE_STDOUT=$(mktempfile "promotestdout" ".pipe")
+[ ! -p "${FIFO_PIPE_STDOUT}" ] || rm -f "${FIFO_PIPE_STDOUT}"
+mkfifo "${FIFO_PIPE_STDOUT}" && chtag -tc 819 "${FIFO_PIPE_STDOUT}" && addCleanupTrapCmd "rm -rf ${FIFO_PIPE_STDOUT}"
+cd "${rootfs}" && pax -rw -p p "." "${promotefs}"  2>>"${FIFO_PIPE_STDOUT}" &
+while read OUTMSG; do
+  printDebug "Parsing output: '${OUTMSG}'"
+  destFile=$(echo "${OUTMSG}" | sed 's#.*FSUM7148.*"\(.*\)".*EDC5111I.*#\1#')
+  if [ "${destFile}" = "${OUTMSG}" ]; then
+    printSoftError "${OUTMSG}"
+    printError "Error cloning '${srcFile}' to '${destFile}'. Correct the reported error and retry command"
+  else
+    printDebug "Permission fail; trying to force copy of '${srcFile}' to '${destFile}'"
+    srcFile="${rootfs}${destFile#"${promotefs}"}"
+    printDebug "Copying sourcefile '${srcFile}' to '${destFile}'"
+    cp -f "${srcFile}" "${destFile}"
+
+    [ "$?" -ne 0 ] && printError "Could not promote environment; permission issue cloning '${srcFile}' to '${destFile}'. Check permissions and retry command."
+  fi
+  
+done < "${FIFO_PIPE_STDOUT}"
+[ -n "${FIFO_PIPE_STDOUT}" ] && [ -e "${FIFO_PIPE_STDOUT}" ] && rm -f "${FIFO_PIPE_STDOUT}"
+${killph} 2>/dev/null  # if the timer is not running, the kill will fail
+
+printVerbose "Grabbing pkginstall location from within promoted env"
+if [ -e "${promotefs}/etc/zopen/fstype" ]; then
+  zopen_pkginstall=$(cat "${promotefs}/etc/zopen/fstype")
+else
+  printError "Unable to locate '${promotefs}/etc/zopen/fstype'; unrecognisable file system. Check permissions"
+fi
+
+
+if ! ${keepzopentooling}; then
+  printDebug "Stripping zopen tools from cloned environment; removing meta packages"
+  rmtarget="${promotefs}/${zopen_pkginstall}/meta"
+  rm -rf "${rmtarget}"
+  
+  printDebug "Scanning and removing orphaned links from promoted environment"
+  # As packages can install to any subfolder of the zopen filesystem, need to traverse
+  # along every path under that filesystem - even if '/''. As this is a cloned
+  # environment, can just check for links related to "meta/meta*"
+  progressHandler "spinner" "- Dangling link removal complete" &
+  ph=$!
+  killph="kill -HUP ${ph}"
+  addCleanupTrapCmd "${killph}"
+  flecnt=0
+  zosfind "${promotefs}" -type l -exec test ! -e {} \; -print | while read sl; do
+    printVerbose "Removing symlink '${sl}'"
+    rm -f ${sl}
+    flecnt=$(expr ${flecnt} + 1)
+  done
+  ${killph} 2>/dev/null  # if the timer is not running, the kill will fail
+  syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_ZOPEN}" "PROMOTE" "mainline" "meta tooling checked for and removed from promoted environment; ${flecnt} link(s) removed"
+fi
+
+printDebug "Calculating certificate location"
+ZOPEN_CA_DIR="etc/pki/tls/certs"  # Mimic location on some Linux distributions
+certFileName="cacert.pem"
+ZOPEN_CA="${ZOPEN_CA_DIR}/${certFileName}"
+configFile="${promotefs}/etc/zopen-config"
+printInfo "- Creating configuration for promoted environment"
+
+printDebug "Removing existing configuration file"
+[ -e "${configFile}" ] && rm "${configFile}"
+
+writeConfigFile "${configFile}" "${promotefs}" "${zopen_pkginstall}" "${ZOPEN_CA}"
+
+[ ! -r "${configFile}" ] && printError "Config file '${configFile}' was not created or accessible as expected. Correct any reported errors or run with --verbose option for more details"
+
+printVerbose "Chmodding zopen environment with symbolic permission string '${zopenperms}'"
+chmod -R "${zopenperms}" "${promotefs}" 2>/dev/null  
+
+printVerbose "Chmodding new configuration file with symbolic permission string '${configperms}'"
+chmod "${configperms}" "${configFile}"
+printInfo "- Created config in ${configFile}."
+
+printDebug "Moving the new config file created above into promoted environment"
+[ ! -r "${configFile}" ] && printError "Cannot locate new configuration file '${configFile}'. etc/zopen-config in promoted environment will need manual update to reference promoted location"
+mv "${configFile}" "${promotefs}/etc/zopen-config" >/dev/null 2>&1
+printInfo "${NC}${CYAN}- Run '. ${configFile}' to enable promoted environment for current session${NC}"
+printInfo "${NC}${CYAN}- or manually copy promoted configuration to required location and/or modify .profile"
+syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_PACKAGE},${CAT_FILE}" "PROMOTE" "mainline" "zopen environment promoted to ${rootfs}"
+printInfo "${NC}${GREEN}zopen promote complete.${NC}"

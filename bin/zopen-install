@@ -403,19 +403,19 @@ handlePackageInstall()
       fi
 
       printInfo "- Checking for env file"
-      if [ -f ${baseinstalldir}/${name}/${name}/.env -o -f ${baseinstalldir}/${name}/${name}/.appenv ]; then
+      if [ -f "${baseinstalldir}/${name}/${name}/.env" ] || [ -f "${baseinstalldir}/${name}/${name}/.appenv" ]; then
         printInfo "- .env file found, adding to profiled processing"
         mkdir -p "${ZOPEN_ROOTFS}/etc/profiled/${name}"
         cat << EOF > "${ZOPEN_ROOTFS}/etc/profiled/${name}/dotenv"
 curdir=\$(pwd)
-cd "${baseinstalldir}/${name}/${name}" >/dev/null 2>&1
+cd "\${ZOPEN_ROOTFS}${ZOPEN_PKGINSTALL##"${ZOPEN_ROOTFS}"}/${name}/${name}" >/dev/null 2>&1
 # If .appenv exists, source it as it's quicker
 if [ -f ".appenv" ]; then
   . ./.appenv
 elif [ -f ".env" ]; then
   . ./.env
 fi
-cd \$curdir  >/dev/null 2>&1
+cd \${curdir}  >/dev/null 2>&1
 EOF
         printInfo "- Sourcing environment to run any setup"
         cd "${baseinstalldir}/${name}/${name}" && ./setup.sh
