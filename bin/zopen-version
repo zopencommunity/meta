@@ -11,6 +11,7 @@ setupMyself()
     echo "Internal Error. Unable to find common.sh file to source" >&2
     exit 8
   fi
+  # shellcheck source=/dev/null
   . "${INCDIR}/common.sh"
 }
 setupMyself
@@ -34,7 +35,7 @@ freesw="This is free software: you are free to change and redistribute it."
 warranty="There is NO WARRANTY, to the extent permitted by law."
 authors="Written by contributors to the z/OS Open Tools Community <https://github.com/ZOSOpenTools/meta/graphs/contributors>."
 
-if [[ $# -eq 1 ]]; then
+if [ $# -eq 1 ]; then
   if [ "x$1" = "x--help" ]; then
     printSyntax
     exit 0

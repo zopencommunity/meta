@@ -12,14 +12,15 @@ ZOPEN_DONT_PROCESS_CONFIG=1
 #
 setupMyself()
 {
-        ME=$(basename "$0")
-        MYDIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
-        INCDIR="${MYDIR}/../include"
-        if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
-                echo "Internal Error. Unable to find common.sh file to source" >&2
-                exit 8
-        fi
-        . "${INCDIR}/common.sh"
+  ME=$(basename "$0")
+  MYDIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
+  INCDIR="${MYDIR}/../include"
+  if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
+    echo "Internal Error. Unable to find common.sh file to source" >&2
+    exit 8
+  fi
+  # shellcheck source=/dev/null
+  . "${INCDIR}/common.sh"
 }
 setupMyself
 checkWritable
@@ -110,7 +111,7 @@ while [ $# -gt 0 ]; do
     "--paxrepodir")
       shift
       paxrepodir="$1" # Only support single repo directory
-    ;;
+      ;;
     "-h" | "--help" | "-?")
       printHelp
       exit 0
@@ -279,9 +280,9 @@ else
   releaseLine="STABLE"
   printInfo "- Configured zopen to use stable releaseline packages"
 fi
-echo "$releaseLine" > "$rootfs/etc/zopen/releaseline"
-if [ -n "$paxrepodir" ]; then
-  echo "dir:$paxrepodir" > "$rootfs/etc/zopen/paxrepodir"
+echo "${releaseLine}" > "${rootfs}/etc/zopen/releaseline"
+if [ -n "${paxrepodir}" ]; then
+  echo "dir:${paxrepodir}" > "${rootfs}/etc/zopen/paxrepodir"
 fi
 printInfo "- Check for shipped curl pax"
 curlpax="packages/curl-8.4.0.20231011_155722.zos.pax.Z"

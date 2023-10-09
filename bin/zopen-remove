@@ -12,6 +12,7 @@ setupMyself()
     echo "Internal Error. Unable to find common.sh file to source" >&2
     exit 8
   fi
+  # shellcheck source=/dev/null
   . "${INCDIR}/common.sh"
 }
 setupMyself
@@ -93,7 +94,7 @@ while [ $# -gt 0 ]; do
     purge=true
     ;;
   "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
-    printSyntax "${args}"
+    printHelp
     exit 0
     ;;
   "--version")

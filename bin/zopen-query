@@ -12,6 +12,7 @@ setupMyself()
     echo "Internal Error. Unable to find common.sh file to source" >&2
     exit 8
   fi
+  # shellcheck source=/dev/null
   . "${INCDIR}/common.sh"
 }
 setupMyself

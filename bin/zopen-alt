@@ -12,6 +12,7 @@ setupMyself()
     echo "Internal Error. Unable to find common.sh file to source" >&2
     exit 8
   fi
+  # shellcheck source=/dev/null
   . "${INCDIR}/common.sh"
 }
 setupMyself
@@ -61,7 +62,7 @@ mergeNewVersion()
   printVerbose "New version merged; checking for orphaned files from previous version"
   # This will remove any old symlinks or dirs that might have changed in an up/downgrade
   # as the merge process overwrites existing files to point to different version. If there was
-  # no other version, then $deref will be empty so nothing to uninstall
+  # no other version, then ${deref} will be empty so nothing to uninstall
   if [ -n "${deref}" ]; then
     unsymlinkFromSystem "${package}" "${ZOPEN_ROOTFS}" "${ZOPEN_PKGINSTALL}/$package/$deref/.links" "${ZOPEN_PKGINSTALL}/${package}/${package}/.links"
   else
@@ -171,7 +172,7 @@ listAlts()
       printInfo "${i}: ${repo#"${ZOPEN_PKGINSTALL}"/}"
     fi
   done < "${TMP_FIFO_PIPE}"
-  [ ! -p ${TMP_FIFO_PIPE} ] || rm -rf "${TMP_FIFO_PIPE}"
+  [ ! -p "${TMP_FIFO_PIPE}" ] || rm -rf "${TMP_FIFO_PIPE}"
 
   if ${select}; then
     mutexReq "zopen" "zopen"

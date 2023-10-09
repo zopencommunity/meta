@@ -5,13 +5,14 @@
 #
 setupMyself()
 {
-  ME=$(basename $0)
+  ME=$(basename "$0")
   MYDIR="$(cd "$(dirname "$0")" > /dev/null 2>&1 && pwd -P)"
   INCDIR="${MYDIR}/../include"
   if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
     echo "Internal Error. Unable to find common.sh file to source" >&2
     exit 8
   fi
+  # shellcheck source=/dev/null
   . "${INCDIR}/common.sh"
 }
 setupMyself
@@ -80,17 +81,6 @@ Report bugs at https://github.com/ZOSOpenTools/meta/issues .
 
 HELPDOC
 }
-
-installPorts()( # Note the subshell '()'
-  ports="$1"
-  printDebug "Ports to install: $ports"
-  sessionList="" # Track the packages installed during this session to prevent repeats
-  mutexReq "zopen" "zopen"
-  for port in $ports; do
-    handlePackageInstall "$port"
-  done
-  mutexFree "zopen"
-)
 
 # Main code start here
 # Need to set a number of variables for use in the install function
@@ -190,7 +180,7 @@ while [ $# -gt 0 ]; do
   shift
 done
 
-$xdebug && set -x && printVerbose "Enabled command execution trace" 
+${xdebug} && set -x && printVerbose "Enabled command execution trace" 
 
 if [ -z "${chosenRepos}" ]; then
   if ! ${all} && ! ${upgradeInstalled}; then
@@ -202,7 +192,7 @@ if [ -z "${chosenRepos}" ]; then
     printInfo "- Querying for installed packages."
     progressHandler "spinner" "- Query complete." &
     ph=$!
-    killph="kill -HUP ${ph}"
+    killph="kill -HUP ${ph} 2>/dev/null"
     addCleanupTrapCmd "${killph}"
     chosenRepos="$(${MYDIR}/zopen-query --list --installed --no-header --no-version 2>&1)"
     zqrc=$?
@@ -220,16 +210,16 @@ export SSL_CERT_FILE="${ZOPEN_CA}"
 export GIT_SSL_CAINFO="${ZOPEN_CA}"
 export CURL_CA_BUNDLE="${ZOPEN_CA}"
 
-if $downloadOnly; then
-  downloadDir="$PWD"
-  printDebug "Downloading pax to current directory '$downloadDir'"
-elif $localInstall; then
-  downloadDir="$PWD"
-  printDebug "Installing to current directory '$downloadDir'"
+if ${downloadOnly}; then
+  downloadDir="${PWD}"
+  printDebug "Downloading pax to current directory '${downloadDir}'"
+elif ${localInstall}; then
+  downloadDir="${PWD}"
+  printDebug "Installing to current directory '${downloadDir}'"
 else
-  printDebug "Installing to zopen file system: $ZOPEN_ROOTFS"
-  if [ -z "$ZOPEN_ROOTFS" ]; then
-    printError "Unable to locate zopen file system, \$ZOPEN_ROOTFS is undefined."
+  printDebug "Installing to zopen file system: ${ZOPEN_ROOTFS}"
+  if [ -z "${ZOPEN_ROOTFS}" ]; then
+    printError "Unable to locate zopen file system, \${ZOPEN_ROOTFS} is undefined."
   fi
   downloadDir="${ZOPEN_ROOTFS}/var/cache/zopen"
 fi
@@ -241,17 +231,17 @@ if [ ! -d "${downloadDir}" ]; then
   fi
 fi
 
-printDebug "Checking if installing from pax files: $paxinstall"
-if ! $paxinstall; then
+printDebug "Checking if installing from pax files: ${paxinstall}"
+if ! ${paxinstall}; then
   # Parse passed in repositories and check if valid zopen framework repos
   printVerbose "Querying remote repo for latest package information"
   getReposFromGithub
   grfgRc=$?
-  $killph 2>/dev/null  # if the timer is not running, the kill will fail
-  [ 0 -ne $grfgRc ] && exit $grfgRc;
+  ${killph} 2>/dev/null  # if the timer is not running, the kill will fail
+  [ 0 -ne ${grfgRc} ] && exit ${grfgRc};
 else
   printDebug "Using pax files for install"
-  [ -n "$paxrepodir" ] && printDebug "Using '$paxrepodir' to locate pax files"
+  [ -n "${paxrepodir}" ] && printDebug "Using '${paxrepodir}' to locate pax files"
 fi
 installArray=""
 
@@ -279,41 +269,48 @@ if $all; then
   installArray=$(strtrim "${installArray}")
   else
     printDebug "Checking for system default repo directory"
-    [ -r "$ZOPEN_ROOTFS/etc/zopen/paxrepodir" ] && usepaxrepodir=$(cat "$ZOPEN_ROOTFS/etc/zopen/paxrepodir")
+    [ -r "${ZOPEN_ROOTFS}/etc/zopen/paxrepodir" ] && usepaxrepodir=$(cat "${ZOPEN_ROOTFS}/etc/zopen/paxrepodir")
     printDebug "Checking for override parameter"
-    [ -z "$paxrepodir" ] && usepaxrepodir="./" || usepaxrepodir="$paxrepodir" # default to current directory
-    case "$usepaxrepodir" in
+    [ -z "${paxrepodir}" ] && usepaxrepodir="./" || usepaxrepodir="${paxrepodir}" # default to current directory
+    case "${usepaxrepodir}" in
       */) printDebug "String terminated with '/' already" ;;
-      *)  usepaxrepodir="$usepaxrepodir/";;
+      *)  usepaxrepodir="${usepaxrepodir}/";;
     esac
 
-    printDebug "Locating all pax files in repo at '$usepaxrepodir'"
-    installArray=$(zosfind "$usepaxrepodir" ! -name "$usepaxrepodir"  -prune | grep ".pax.Z")
-    [ -z "$installArray" ] && printInfo "No packages found to install'" && exit 1
+    printDebug "Locating all pax files in repo at '${usepaxrepodir}'"
+    installArray=$(zosfind "${usepaxrepodir}" ! -name "${usepaxrepodir}"  -prune | grep ".pax.Z")
+    [ -z "${installArray}" ] && printInfo "No packages found to install'" && exit 1
   fi
-elif $paxinstall; then
-  printDebug "Installing from pax files as listed in arguments: '$chosenRepos'"
-  installArray="$chosenRepos"
+elif ${paxinstall}; then
+  printDebug "Installing from pax files as listed in arguments: '${chosenRepos}'"
+  installArray="${chosenRepos}"
 else
   printDebug "Parsing list of packages to install and verifying validity"
 
   badportlist=""
   for chosenRepo in $(echo "${chosenRepos}" | tr ',' ' '); do
-    printVerbose "Processing repo: $chosenRepo"
+    printVerbose "Processing repo: ${chosenRepo}"
     printDebug "Stripping any version (%), tag (#) or port suffixes and trim"
-    toolrepo=$(echo "$chosenRepo" | sed -e 's#%.*##' -e 's#=.*##' -e 's#.*port##')
+    toolrepo=$(echo "${chosenRepo}" | sed -e 's#%.*##' -e 's#=.*##' -e 's#.*port##')
 
-    toolfound=$(echo "${repo_results}" | awk -vtoolrepo="$toolrepo" '$0 == toolrepo {print}') 
-    if [ "$toolfound" = "$toolrepo" ]; then
-      printVerbose "Adding '$chosenRepo' to the install queue"
-      installArray=$(printf "%s\n%s" "$installArray" "$chosenRepo")
+    toolfound=$(echo "${repo_results}" | awk -vtoolrepo="${toolrepo}" '$0 == toolrepo {print}') 
+    if [ "${toolfound}" = "${toolrepo}" ]; then
+      printVerbose "Adding '${chosenRepo}' to the install queue"
+      installArray=$(printf "%s\n%s" "${installArray}" "${chosenRepo}")
     else
-      badportlist=$(printf "%s %s" "$badportlist" "$toolrepo")
+      badportlist=$(printf "%s %s" "${badportlist}" "${toolrepo}")
     fi
   done
-  if [ -n "$badportlist" ]; then
-    printError "The following requested port(s) do not exist:\n\t$badportlist"
+  if [ -n "${badportlist}" ]; then
+    printError "The following requested port(s) do not exist:\n\t${badportlist}"
   fi
 fi
 
-installPorts "${installArray}"
+printDebug "Ports to install: ${installArray}"
+sessionList="" # Track the packages installed during this session to prevent repeats
+mutexReq "zopen" "zopen"
+for port in ${installArray}; do
+  handlePackageInstall "${port}"
+done
+mutexFree "zopen"
+
