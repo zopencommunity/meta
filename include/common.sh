@@ -92,10 +92,10 @@ diffFile()
 {
   haystackfile="$1"
   needlesfile="$2"
-  [ -s "$needlesfile" ] || printError "Internal error; needle file was empty/non-existent."
+  [ -s "${needlesfile}" ] || printError "Internal error; needle file was empty/non-existent."
   diff=$(awk 'NR==FNR{needles[$0];next} 
-    !($0 in needles) {print}' "$needlesfile" "$haystackfile")
-  echo "$diff"
+    !($0 in needles) {print}' "${needlesfile}" "${haystackfile}")
+  echo "${diff}"
 }
 
 # Given two input lists (with \n delimiters), return those lines in  
@@ -105,10 +105,10 @@ diffList()
   haystack="$1"
   needles="$2"
   haystackfile=$(mktempfile "haystack")
-  cat "$haystack" >"$haystackfile"
+  cat "${haystack}" >"${haystackfile}"
   needlesfile=$(mktempfile "needles")
-  cat "$needles"  >"$needlesfile"
-  diffFile "$needlesfile" "$haystackfile"
+  cat "${needles}" >"${needlesfile}"
+  diffFile "${needlesfile}" "${haystackfile}"
 }
 
 # getCurrentVersionDir
@@ -188,7 +188,7 @@ mktempfile()
 mktempdir()
 {
   tempdir=$(mktempfile "$1")
-  [ ! -e "$tempdir" ] && mkdir "$tempdir" && addCleanupTrapCmd "rm -rf $tempdir 2>/dev/null" && echo "$tempdir"
+  [ ! -e "${tempdir}" ] && mkdir "${tempdir}" && addCleanupTrapCmd "rm -rf ${tempdir}" && echo "${tempdir}"
 }
 
 isPermString()
@@ -549,8 +549,8 @@ mergeIntoSystem()
   currentDir="${PWD}"
 
   printDebug "Calculating the offset path to store from root"
-  offset=$(dirname "${versioneddir#$rootfs/}")
-  version=$(basename "$versioneddir")
+  offset=$(dirname "${versioneddir#"${rootfs}"/}")
+  version=$(basename ${versioneddir})
   tmptime=$(date +%Y%m%d%H%M%S)
   processingDir="${rootfs}/tmp/zopen.${tmptime}"
   printDebug "Temporary processing dir evaluated to: ${processingDir}"

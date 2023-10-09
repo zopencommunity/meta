@@ -93,7 +93,7 @@ while [ $# -gt 0 ]; do
   "-p" | "--purge")
     purge=true
     ;;
-  "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
+  "-h" | "--help" | "-?")
     printHelp
     exit 0
     ;;
