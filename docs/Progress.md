@@ -176,7 +176,7 @@
 | [terraformport](https://github.com/ZOSOpenTools/terraformport) | 0 | No builds |
 | [thesilversearcherport](https://github.com/ZOSOpenTools/thesilversearcherport) | 0 | No builds |
 | [tigport](https://github.com/ZOSOpenTools/tigport) | 0 | 100% |
-| [vimport](https://github.com/ZOSOpenTools/vimport) | 0 | 100% |
+| [vimport](https://github.com/ZOSOpenTools/vimport) | 0 | 99% |
 | [whichport](https://github.com/ZOSOpenTools/whichport) | 0 | 100% |
 | [xmltoport](https://github.com/ZOSOpenTools/xmltoport) | 0 | 100% |
 | [yqport](https://github.com/ZOSOpenTools/yqport) | 0 | Skipped |
@@ -314,4 +314,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-10-09 23:09:39
+Last updated:  2023-10-10 15:20:36
