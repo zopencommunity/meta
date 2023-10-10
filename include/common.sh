@@ -218,6 +218,15 @@ EOF
 
 }
 
+isPackageActive(){
+  pkg="$1"
+  printDebug "Checking if '${pkg}' is installed and active"
+  installedPackage=$(cd "${ZOPEN_PKGINSTALL}" && zosfind . -name ".active" | grep "/${pkg}/")
+  cmdrc=$?
+  # Return 1 for true/Package is Active, 0 for false/Package is not active
+  [ "${cmdrc}" -eq 0 ] && return 1 || return 0
+}
+
 curlCmd()
 {
   # Take the list of parameters and concat them with
