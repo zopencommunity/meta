@@ -1,5 +1,5 @@
 {
-  "timestamp": "2023-10-11T16:04:44.911031",
+  "timestamp": "2023-10-11T17:36:30.065446",
   "release_data": {
     "automake": [
       {
@@ -7736,6 +7736,22 @@
       }
     ],
     "git": [
+      {
+        "name": "git (Build 1450) - (STABLE)",
+        "date": "2023-10-11 21:17:06",
+        "tag_name": "STABLE_gitport_1450",
+        "assets": [
+          {
+            "name": "git-2.41.0.20231011_202854.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/gitport/releases/download/STABLE_gitport_1450/git-2.41.0.20231011_202854.zos.pax.Z",
+            "size": 52577280,
+            "expanded_size": 108424020,
+            "runtime_dependencies": "bash less ncurses perl",
+            "total_tests": "91",
+            "passed_tests": "88"
+          }
+        ]
+      },
       {
         "name": "git (Build 1430) - (STABLE)",
         "date": "2023-10-05 07:15:06",
