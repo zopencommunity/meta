@@ -175,7 +175,7 @@ if [ -z "\${ZOPEN_QUICK_LOAD}" ]; then
       [ -e \${FILE} ] && . \${FILE} >\${FIFO_PIPE_STDOUT} 2>&1
       # If there were any messages during the dotenv processing, output to screen
       while read outputline; do
-        if [ -n "\${outputline" ]; then
+        if [ -n "\${outputline}" ]; then
           if \${ansiEnabled}; then
             inserSpacer=true
           fi
