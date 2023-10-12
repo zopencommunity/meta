@@ -15,6 +15,12 @@ addCleanupTrapCmd()
 
 cleanupFunction()
 {
+  # Only action the cleanup pipeline when not in a sub-zopen-process
+  if ps -o args= -p "${PPID}" | grep "/bin/zopen" > /dev/null 2>&1; then
+    # we are a child of a zopen process so do not attempt to cleanuup yet!
+    return
+  fi
+  
   if [ -e "${ZOPEN_CLEANUP_PIPE}" ]; then
     while read cleanupcmd; do
       eval "${cleanupcmd}" 2>/dev/null
@@ -22,7 +28,6 @@ cleanupFunction()
     rm -rf "${ZOPEN_CLEANUP_PIPE}"
   fi
   trap - EXIT INT TERM QUIT HUP
-  
 }
 
 # Generate a file name that has a high probability of being unique for

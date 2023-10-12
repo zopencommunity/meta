@@ -469,11 +469,11 @@ installPorts()
 (
   ports="$1"
   printVerbose "Ports to install: ${ports}"
+  mutexReq "zopen" "zopen"
   echo "${ports}" | xargs | tr ' ' '\n' | while read port; do
-    mutexReq "zopen" "zopen"
     handlePackageInstall "${port}"
-    mutexFree "zopen"
   done
+  mutexFree "zopen"
 )
 
 # Main code start here
