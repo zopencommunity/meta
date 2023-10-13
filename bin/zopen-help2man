@@ -33,7 +33,7 @@ if [[ $# -eq 1 ]]; then
     printSyntax
     exit 0
   elif [ "x$1" = "x--version" ]; then
-    zopen --version ${ME}
+    zopen-version $ME
     exit 0
   else
     mandir="$1"

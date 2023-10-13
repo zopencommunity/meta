@@ -19,7 +19,36 @@ setupMyself()
   fi
   . "${INCDIR}/common.sh"
 }
+
+Syntax()
+{
+  echo "$ME [--version|--help]"
+  echo "  simple script to create a cicd-dev.groovy and cicd-stable.groovy from a cicd.groovy."
+  echo "  By no means bullet-proof but might save some typing"
+  echo "  Has no checks in it and requires you fill in the ...'s in the generated files."
+  echo "   Also, spacing is a bit off - but easy enough to change post-processing in the editor."
+}
+
 setupMyself
+
+if [ $# -gt 0 ]; then
+  if [ "$1" = "--version" ]; then
+    zopen-version $ME
+    exit 0
+  elif [ "$1" = "--help" ]; then
+    Syntax
+    exit 0
+  else
+    echo "Unknown parameter specified $1 specified" >&2
+    Syntax
+    exit 4
+  fi
+fi
+
+if ! [ -f cicd.groovy ]; then
+  echo "No cicd.groovy to convert. No action performed" >&2
+  exit 4
+fi
 
 class=$(cat cicd.groovy | grep "class: ")
 branches=$(cat cicd.groovy | grep "branches: ")

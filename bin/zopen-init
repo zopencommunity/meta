@@ -112,7 +112,7 @@ while [ $# -gt 0 ]; do
       verbose=true
       ;;
     "--version")
-      zopen --version "${ME}"
+      zopen-version $ME
       exit 0
       ;;
     "--debug") 
