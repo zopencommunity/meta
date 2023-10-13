@@ -16,16 +16,27 @@ addCleanupTrapCmd()
 cleanupFunction()
 {
   # Only action the cleanup pipeline when not in a sub-zopen-process
-  if ps -o args= -p "${PPID}" | grep "/bin/zopen" > /dev/null 2>&1; then
+  parentCmd=$(ps -o args= -p "${PPID}")
+  if [ -z "$parentCmd" ]; then
+    printDebug "ps did not list the process details for parent \$PPID=${PPID}"
+    return
+  fi
+  if echo "${parentCmd}" | grep "/bin/zopen" > /dev/null 2>&1; then
     # we are a child of a zopen process so do not attempt to cleanuup yet!
     return
   fi
-  
+
   if [ -e "${ZOPEN_CLEANUP_PIPE}" ]; then
+    # Add a cleanup of the pipe for when we are finished - explicitly
+    # add to the pipeline as if a user has CTRL-C'd early, that can 
+    # trigger cleanup with an empty pipeline, leaving the read of the pipe
+    # waiting indefinitely
+    addCleanupTrapCmd "rm -rf \"${ZOPEN_CLEANUP_PIPE}\""
     while read cleanupcmd; do
       eval "${cleanupcmd}" 2>/dev/null
     done < "${ZOPEN_CLEANUP_PIPE}"
-    rm -rf "${ZOPEN_CLEANUP_PIPE}"
+    
+    unset ZOPEN_CLEANUP_PIPE
   fi
   trap - EXIT INT TERM QUIT HUP
 }
