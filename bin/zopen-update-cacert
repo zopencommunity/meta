@@ -7,36 +7,36 @@
 #
 setupMyself()
 {
-        ME=$(basename $0)
-        MYDIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
-        INCDIR="${MYDIR}/../include"
-        if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
-                echo "Internal Error. Unable to find common.sh file to source" >&2
-                exit 8
-        fi
-        . "${INCDIR}/common.sh"
+  ME=$(basename $0)
+  MYDIR="$(cd "$(dirname "$0")" > /dev/null 2>&1 && pwd -P)"
+  INCDIR="${MYDIR}/../include"
+  if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
+    echo "Internal Error. Unable to find common.sh file to source" >&2
+    exit 8
+  fi
+  . "${INCDIR}/common.sh"
 }
 setupMyself
 checkWritable
 
 # Temporary files
-for tmp in "$TMPDIR" "$TMP" /tmp
-do
-  if [ ! -z "$tmp" ] && [ -d "$tmp" ]; then
-    TEMP_CACERT="$tmp/$LOGNAME.$RANDOM.cacert.pem"
+for tmp in "${TMPDIR}" "${TMP}" /tmp; do
+  if [ ! -z "${tmp}" ] && [ -d "${tmp}" ]; then
+    TEMP_CACERT="${tmp}/${LOGNAME}.${RANDOM}.cacert.pem"
     break
   fi
 done
 
-cleanupOnExit() {
-    rv=$?
-    [ -f "$TEMP_CACERT" ] && rm -rf "$TEMP_CACERT"
-    exit $rv
+cleanupOnExit()
+{
+  rv=$?
+  [ -f "${TEMP_CACERT}" ] && rm -rf "${TEMP_CACERT}"
+  exit "${rv}"
 }
 
 trap "cleanupOnExit" EXIT INT TERM QUIT HUP
 
-printHelp() 
+printHelp()
 {
   args=$*
   echo "zopen-update-cacert:"
@@ -60,48 +60,47 @@ getCACertFromCurl()
   printVerbose "Using $(type curl)"
   printVerbose "Downloading ${cacert_update_url}"
   nocertverify=""
-  if [ ! -f "$SSL_CERT_FILE" ]; then
+  if [ ! -f "${SSL_CERT_FILE}" ]; then
     printVerbose "No cacert file present"
-    if $insecureFallback; then 
+    if ${insecureFallback}; then
       printWarning "Using insecure fallback"
       nocertverify="-k "
     fi
   fi
   curlver="$(type curl)"
   crc=$?
-  [ $crc -ne 0 ] && printError "Could not locate curl to download certificate."
+  [ "${crc}" -ne 0 ] && printError "Could not locate curl to download certificate."
 
-  printVerbose "Type of curl: $curlver"
-  if ! curlCmd -L $nocertverify -o "$TEMP_CACERT" ${cacert_update_url}  ; then
+  printVerbose "Type of curl: ${curlver}"
+  if ! curlCmd -L ${nocertverify} -o "${TEMP_CACERT}" "${cacert_update_url}"; then
     printError "curl command could not download from: ${cacert_update_url}"
   fi
 
-  if [ ! -f "$TEMP_CACERT" ]; then
-    printError "$TEMP_CACERT was not downloaded"
+  if [ ! -f "${TEMP_CACERT}" ]; then
+    printError "${TEMP_CACERT} was not downloaded"
   fi
 }
 
 updateCACert()
 {
-  printInfo "Re-creating $ZOPEN_CA"
-  cp "$TEMP_CACERT" "$ZOPEN_CA"
+  printInfo "Re-creating ${ZOPEN_CA}"
+  cp "${TEMP_CACERT}" "${ZOPEN_CA}"
 }
 
 # Main code start here
 verbose=false
-export default_dir="$( cd "${MYDIR}/../" && pwd -P )"
+export default_dir="$(cd "${MYDIR}/../" && pwd -P)"
 export cacert_update_url="https://curl.se/ca/cacert.pem"
 
 # Temporary files
-for tmp in "$TMPDIR" "$TMP" /tmp
-do
-  if [ ! -z "$tmp" ] && [ -d "$tmp" ]; then
-    TEMP_CACERT="$tmp/$LOGNAME.$RANDOM.cacert.pem"
+for tmp in "${TMPDIR}" "${TMP}" /tmp; do
+  if [ ! -z "${tmp}" ] && [ -d "${tmp}" ]; then
+    TEMP_CACERT="${tmp}/${LOGNAME}.${RANDOM}.cacert.pem"
     break
   fi
 done
 
-if [ -z "$TEMP_CACERT" ]; then
+if [ -z "${TEMP_CACERT}" ]; then
   printError "Could not find a temporary write location in \$TMPDIR, \$TMP, or /tmp"
 fi
 
@@ -111,40 +110,40 @@ forceUpdate=false
 insecureFallback=false
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    "-f" | "-force" | "--force")
-      forceUpdate=true;
-      ;;
-    "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
+  "-f" | "-force" | "--force")
+    forceUpdate=true
+    ;;
+  "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
+    printHelp "${args}"
+    exit 0
+    ;;
+  "--version")
+    zopen-version ${ME}
+    exit 0
+    ;;
+  "-i" | "--insecure-fallback")
+    insecureFallback=true
+    ;;
+  "-v" | "--v" | "-verbose" | "--verbose")
+    verbose=true
+    ;;
+  *)
+    if [ "${1#-*}" = "$1" ]; then
+      dir="$1"
+    else
+      echo "Unknown option: $1"
       printHelp "${args}"
-      exit 0
-      ;;
-    "--version")
-      zopen-version $ME
-      exit 0
-      ;;
-    "-i" | "--insecure-fallback")
-      insecureFallback=true
-      ;;
-    "-v" | "--v" | "-verbose" | "--verbose")
-      verbose=true
-      ;;
-    *)
-      if [ "${1#-*}" = "$1" ]; then
-        dir="$1"
-      else
-        echo "Unknown option: $1"
-        printHelp "${args}"
-        exit 8
-      fi
-      ;;
+      exit 8
+    fi
+    ;;
   esac
-  shift;
+  shift
 done
 
 ZOPEN_CA="${dir}/cacert.pem"
 
 if ! [ -r "${ZOPEN_CA}" ]; then
-  forceUpdate=true 
+  forceUpdate=true
 fi
 
 printHeader "Getting latest CA Certificate"
@@ -154,21 +153,20 @@ if ! getCACertFromCurl; then
   fi
 fi
 
-
-if $forceUpdate; then
+if ${forceUpdate}; then
   updateCACert
-elif ! diff "$TEMP_CACERT" "$ZOPEN_CA" >/dev/null; then
+elif ! diff "${TEMP_CACERT}" "${ZOPEN_CA}" > /dev/null; then
   while true; do
-    printWarning "Your local cacert '$ZOPEN_CA' is outdated or does not exist. Would you like to update it? (y, n)"
+    printWarning "Your local cacert '${ZOPEN_CA}' is outdated or does not exist. Would you like to update it? (y, n)"
     update=$(getInput)
-    if [ "$update" = "n" ]; then
+    if [ "${update}" = "n" ]; then
       exit 0
-    elif [ "$update" = "y" ]; then
+    elif [ "${update}" = "y" ]; then
       break
     fi
   done
 
   updateCACert
 else
-  printInfo "Your cacert '$ZOPEN_CA' is already up to date"
+  printInfo "Your cacert '${ZOPEN_CA}' is already up to date"
 fi

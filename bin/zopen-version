@@ -4,22 +4,22 @@
 #
 setupMyself()
 {
-        ME=$(basename $0)
-        MYDIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
-        INCDIR="${MYDIR}/../include"
-        if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
-                echo "Internal Error. Unable to find common.sh file to source" >&2
-                exit 8
-        fi
-        . "${INCDIR}/common.sh"
+  ME=$(basename $0)
+  MYDIR="$(cd "$(dirname "$0")" > /dev/null 2>&1 && pwd -P)"
+  INCDIR="${MYDIR}/../include"
+  if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
+    echo "Internal Error. Unable to find common.sh file to source" >&2
+    exit 8
+  fi
+  . "${INCDIR}/common.sh"
 }
 setupMyself
 
 printSyntax()
 {
-  echo "$ME prints version information for ${package}"
-  echo "Usage: $ME [OPTION] tool"
-  echo "   or: $ME [OPTION]"
+  echo "${ME} prints version information for ${package}"
+  echo "Usage: ${ME} [OPTION] tool"
+  echo "   or: ${ME} [OPTION]"
   echo "Syntax: zopen-version [OPTIONS]"
   echo "where OPTIONS can be:"
   echo "  --help: print this help"
