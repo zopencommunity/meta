@@ -16,18 +16,56 @@ addCleanupTrapCmd()
 cleanupFunction()
 {
   # Only action the cleanup pipeline when not in a sub-zopen-process
-  if ps -o args= -p "${PPID}" | grep "/bin/zopen" > /dev/null 2>&1; then
+  parentCmd=$(ps -o args= -p "${PPID}")
+  if [ -z "$parentCmd" ]; then
+    printDebug "ps did not list the process details for parent \$PPID=${PPID}"
+    return
+  fi
+  if echo "${parentCmd}" | grep "/bin/zopen" > /dev/null 2>&1; then
     # we are a child of a zopen process so do not attempt to cleanuup yet!
     return
   fi
-  
+
   if [ -e "${ZOPEN_CLEANUP_PIPE}" ]; then
+    # Add a cleanup of the pipe for when we are finished - explicitly
+    # add to the pipeline as if a user has CTRL-C'd early, that can 
+    # trigger cleanup with an empty pipeline, leaving the read of the pipe
+    # waiting indefinitely!
+    addCleanupTrapCmd "rm -rf \"${ZOPEN_CLEANUP_PIPE}\""
     while read cleanupcmd; do
       eval "${cleanupcmd}" 2>/dev/null
     done < "${ZOPEN_CLEANUP_PIPE}"
-    rm -rf "${ZOPEN_CLEANUP_PIPE}"
+    
+    unset ZOPEN_CLEANUP_PIPE
   fi
   trap - EXIT INT TERM QUIT HUP
+}
+
+# getCurrentVersionDir
+# returns the version directory that has been set as active/installed
+# indicating that the $needle is active.
+# inputs: $1 - package to get currently active version of
+# return: 0  for success (output of pwd -P command)
+#         4  if unable to access version directory (eg. not installed)
+#         !0 cd or pwd -P failed
+getCurrentVersionDir(){
+  needle="$1"
+  [ ! -L "${ZOPEN_PKGINSTALL}/${needle}/${needle}" ] \
+    && echo ""\
+    && return 4
+  cd "${ZOPEN_PKGINSTALL}/${needle}/${needle}" 2> /dev/null \
+    && pwd -P 2> /dev/null
+}
+
+# isPackageActive
+# returns whether the package is active ie. has a symlink from 
+#  $PKGINSTALL/pkg/pkg to a versioned directory
+# inputs: $1 - package to get currently active version of
+# return: 0  for active
+#         !0 for not active
+isPackageActive(){
+  needle="$1"
+  getCurrentVersionDir "$needle"
 }
 
 # Generate a file name that has a high probability of being unique for
@@ -212,15 +250,6 @@ unset tmp FIFO_PIPE_DOTENVS FIFO_PIPE_STDOUT
 trap - EXIT INT TERM QUIT HUP
 EOF
 
-}
-
-isPackageActive(){
-  pkg="$1"
-  printDebug "Checking if '${pkg}' is installed and active"
-  installedPackage=$(cd "${ZOPEN_PKGINSTALL}" && zosfind . -name ".active" | grep "/${pkg}/")
-  cmdrc=$?
-  # Return 1 for true/Package is Active, 0 for false/Package is not active
-  [ "${cmdrc}" -eq 0 ] && return 1 || return 0
 }
 
 curlCmd()
