@@ -41,6 +41,33 @@ cleanupFunction()
   trap - EXIT INT TERM QUIT HUP
 }
 
+# getCurrentVersionDir
+# returns the version directory that has been set as active/installed
+# indicating that the $needle is active.
+# inputs: $1 - package to get currently active version of
+# return: 0  for success (output of pwd -P command)
+#         4  if unable to access version directory (eg. not installed)
+#         !0 cd or pwd -P failed
+getCurrentVersionDir(){
+  needle="$1"
+  [ ! -L "${ZOPEN_PKGINSTALL}/${needle}/${needle}" ] \
+    && echo ""\
+    && return 4
+  cd "${ZOPEN_PKGINSTALL}/${needle}/${needle}" 2> /dev/null \
+    && pwd -P 2> /dev/null
+}
+
+# isPackageActive
+# returns whether the package is active ie. has a symlink from 
+#  $PKGINSTALL/pkg/pkg to a versioned directory
+# inputs: $1 - package to get currently active version of
+# return: 0  for active
+#         !0 for not active
+isPackageActive(){
+  needle="$1"
+  getCurrentVersionDir "$needle"
+}
+
 # Generate a file name that has a high probability of being unique for
 # use as a temporary filename - the filename should be unique in the 
 # instance it was generated and probability suggests it should be for
@@ -223,15 +250,6 @@ unset tmp FIFO_PIPE_DOTENVS FIFO_PIPE_STDOUT
 trap - EXIT INT TERM QUIT HUP
 EOF
 
-}
-
-isPackageActive(){
-  pkg="$1"
-  printDebug "Checking if '${pkg}' is installed and active"
-  installedPackage=$(cd "${ZOPEN_PKGINSTALL}" && zosfind . -name ".active" | grep "/${pkg}/")
-  cmdrc=$?
-  # Return 1 for true/Package is Active, 0 for false/Package is not active
-  [ "${cmdrc}" -eq 0 ] && return 1 || return 0
 }
 
 curlCmd()
