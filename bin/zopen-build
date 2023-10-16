@@ -1063,7 +1063,7 @@ configure()
   if command -V "${ZOPEN_PRE_CONFIGURE_CODE}" >/dev/null 2>&1; then
     printVerbose "Running ${ZOPEN_PRE_CONFIGURE_CODE}"
     if ! "${ZOPEN_PRE_CONFIGURE_CODE}" ; then
-        printError "Pre build failed."
+        printError "Pre configure failed."
     fi
   fi
   configureStartTime=$SECONDS
