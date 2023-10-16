@@ -52,8 +52,24 @@ LABEL vendor=\"ZOSOpenTools\""
 
 
   mkdir -p ".zpm"
-  cat "${DIR_NAME}/setup.sh" | sed -e "s#\. ./.env#cd \$INSTALL_DIR; . ./.env; cd -#" -e "s#\${root}/setup.sh#\${root}/.env/install.sh#"  > .zpm/install.sh
-  cp "${DIR_NAME}/.env" .zpm/.env
+  
+  cat << ZZ > .zpm/install.sh
+#!/bin/sh
+if [ -z "\$INSTALL_DIR" ]; then
+  echo "\$INSTALL_DIR is not set. This script was likely not run via zpm."
+  exit 1
+fi
+
+set -e
+cd "\$INSTALL_DIR/${DIR_NAME}"
+./setup.sh
+ZZ
+
+  cat << ZZ > .zpm/.env
+cd "\$INSTALL_DIR/${DIR_NAME}";
+. ./.env
+cd -
+ZZ
 
   if [ -f "${ZOPEN_IMAGE_CONTAINERFILE_NAME}" ]; then
     rm -f "${ZOPEN_IMAGE_CONTAINERFILE_NAME}"
