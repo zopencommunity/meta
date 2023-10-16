@@ -13,7 +13,7 @@ You can develop z/OS Open Tools out of any directory you want. For example, if y
 zopen install git # Make sure you have git installed
 git clone git@github.com:ZOSOpenTools/gitport.git # clone the z/OS git port
 cd gitport
-zopen build -v # perform a build of git
+zopen build # perform a build of git
 # make changes to the git source...
 zopen build -v # repeat zopen build command
 ```
