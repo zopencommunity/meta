@@ -24,8 +24,8 @@ progressPerStatus = {
   "Blue": 0,
   "Yellow": 0,
   "Red": 0,
+  "Not built": 0,
   "Skipped": 0,
-  "Not built": 0
 }
 
 statusPerPort = {}
@@ -134,7 +134,7 @@ sizes = []
 for x, y in progressPerStatus.items():
     labels.append(x)
     sizes.append(y)
-colors = ['#00FF00','#0000FF','#FFFF00','#AAAAAA','#FF0000']
+colors = ['#00FF00','#0000FF','#FFFF00','#FF0000','#AAAAAA','#FF8888']
 plt.title("Current Porting Status")
 p, tx, autotexts = plt.pie(sizes, labels=labels, colors=colors, autopct="", shadow=True)
 for i, a in enumerate(autotexts):
@@ -151,7 +151,7 @@ for x, y in sorted(statusPerPort.items(), key=lambda x: x[1]):
     labels.append(x)
     sizes.append(y)
 fig = plt.figure()
-fig.set_size_inches(20, 12)
+fig.set_size_inches(30, 25)
 ax = fig.add_axes([0,0,1,1])
 cmap = cm.get_cmap('Greens')
 color_norm = mpl.colors.Normalize(vmin=min(sizes), vmax=max(sizes))
@@ -168,7 +168,7 @@ for val in sizes:
     else:
         col.append('#FFEF00')
 
-bars = ax.barh(labels, sizes, color = col, height = 0.6, align='edge');
+bars = ax.barh(labels, sizes, color = col, height = 0.8, align='edge');
 ax.bar_label(bars)
 plt.savefig('docs/images/quality.png',  bbox_inches="tight")
 
