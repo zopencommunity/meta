@@ -125,6 +125,7 @@ echo "User-Provided functions:
   zopen_post_buildenv         This function runs after the 'buildenv' is processed.
   zopen_pre_patch             This function runs before the 'patch' step of the build is run.
   zopen_pre_check             This function runs before the 'check' step of the build is run.
+  zopen_pre_configure         This function runs before the 'configure' step of the build is run.
   zopen_pre_build             This function runs before the 'make' step of the build is run.
   zopen_append_to_env         This function runs as part of generation of the .env file. The output of the function is appended to .env
   zopen_append_to_setup       This function runs as part of generation of the setup.sh file. The output of the function is appended to setup.sh
@@ -472,6 +473,7 @@ checkEnv()
   ZOPEN_APPEND_TO_ZOSLIB_ENV_CODE="zopen_append_to_zoslib_env"
   ZOPEN_APPEND_TO_SETUP_CODE="zopen_append_to_setup"
   ZOPEN_APPEND_TO_VALIDATE_CODE="zopen_append_to_validate_install"
+  ZOPEN_PRE_CONFIGURE_CODE="zopen_pre_configure"
   ZOPEN_PRE_BUILD_CODE="zopen_pre_build"
   ZOPEN_PRE_INSTALL_CODE="zopen_pre_install"
   ZOPEN_POST_INSTALL_CODE="zopen_post_install"
@@ -1058,6 +1060,12 @@ bootstrap()
 
 configure()
 {
+  if command -V "${ZOPEN_PRE_CONFIGURE_CODE}" >/dev/null 2>&1; then
+    printVerbose "Running ${ZOPEN_PRE_CONFIGURE_CODE}"
+    if ! "${ZOPEN_PRE_CONFIGURE_CODE}" ; then
+        printError "Pre build failed."
+    fi
+  fi
   configureStartTime=$SECONDS
   if [ -n "${ZOPEN_CONFIGURE_CMD}" ] ; then
     printHeader "Running Configure"
