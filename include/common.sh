@@ -159,9 +159,8 @@ ZOPEN_CURL_PARAMS=""
 if [ -z "\${ZOPEN_QUICK_LOAD}" ]; then
   if [ -e "\${ZOPEN_ROOTFS}/etc/profiled" ]; then
     dotenvs=\$(find "\${ZOPEN_ROOTFS}/etc/profiled" -type f -name 'dotenv' -print)
-    printf "Processing \$zot configuration.."
+    printf "Processing \$zot configuration..."
     for dotenv in \$dotenvs; do
-      printf "."
       . \$dotenv
     done 
     /bin/echo "DONE"
