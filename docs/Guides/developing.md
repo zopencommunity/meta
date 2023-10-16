@@ -6,7 +6,7 @@ Please read [Quick Start](QuickStart.md) and [The package manager](ThePackageMan
 
 After running `zopen init`, you are able to install tools under the tools directory you chose, i.e. `$ZOPEN_ROOTFS` 
 
-You can develop z/OS Open Tools out of any directory you want. For example, if you wanted to make enhancements to the git port, you would do perform the following:
+You can develop z/OS Open Tools out of any directory you want. For example, if you wanted to make enhancements to the git port, you would perform the following commands:
 
 ```bash
 . /path/to/zopen/etc/zopen-config # source zopen-config
@@ -14,6 +14,8 @@ zopen install git # Make sure you have git installed
 git clone git@github.com:ZOSOpenTools/gitport.git # clone the z/OS git port
 cd gitport
 zopen build -v # perform a build of git
+# make changes to the git source...
+zopen build -v # repeat zopen build command
 ```
 
 This will build `gitport` and then install it into the `$ZOPEN_PKGINSTALL/zopen/git` directory. This will set git as the active version in your zopen installation. You can use `zopen alt` to customize which version of git to set as the active version. Invoke `zopen alt --help` for details on how to customize this.
@@ -25,9 +27,10 @@ To see the list of commands:
 `zopen --help`
 ```
 
-## To Develop z/OS Open Tools
+## Developing z/OS Open Tools
 
 ### zopen generate
+
 If you're starting a new port, it is advised that you start with the `zopen generate` command. `zopen generate` will prompt for a series of questions and then generate a file and directory structure, including a `buildenv` file which will be used as input to the `zopen build` command.
 
 ### zopen build
