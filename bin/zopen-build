@@ -368,7 +368,7 @@ loadBuildEnv()
   fi
 
   # Indicates to .env script that we're in zopen build
-  export ZOPEN_IN_ZOPEN_BUILD=1
+  export ZOPEN_IN_ZOPEN_BUILD="$LOGNAME.$$.$RANDOM"
 
   . ${buildEnvFile}
 
@@ -1792,7 +1792,6 @@ generateZOSLIBHooks()
   output="zoslib_env_hook.c"
 
   # Defines zoslib_env_hook
-
   cat << zz > "${output}"
 #include <stdio.h>
 #include <stdlib.h>
@@ -1808,9 +1807,9 @@ char* value_str;
 char* pos;
 long size;
 
-// Do not use when running under zopen
-// To avoid test specific settings
-if (getenv("ZOPEN_IN_ZOPEN_BUILD")) {
+// Do not use when building itself to avoid test failures to incorrect paths
+if ((envar_value = getenv("ZOPEN_IN_ZOPEN_BUILD")) &&
+    strcmp(envar_value, "${ZOPEN_IN_ZOPEN_BUILD}") == 0) {
   return 0;
 }
 zz
