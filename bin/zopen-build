@@ -70,9 +70,6 @@ Optional:
   ZOPEN_EXTRA_LDFLAGS  C/C++ linker flags to append to LDFLAGS (defaults to '')
   ZOPEN_EXTRA_LIBS     C/C++ libraries to append to LIBS (defaults to '')
 
-  ZOPEN_DEV_BRANCH     The branch that the git repo should checkout (default is repo default)
-  ZOPEN_STABLE_BRANCH  The branch that the stable repo should checkout (default is repo default)
-
   ZOPEN_BOOTSTRAP      Bootstrap program to run. If skip is specified, no bootstrap step is performed (defaults to '${ZOPEN_BOOTSTRAPD}')
   ZOPEN_BOOTSTRAP_OPTS Options to pass to bootstrap program (defaults to '${ZOPEN_BOOTSTRAP_OPTSD}')
   ZOPEN_CONFIGURE      Configuration program to run. If skip is specified, no configuration step is performed (defaults to '${ZOPEN_CONFIGURED}')
@@ -91,23 +88,23 @@ Optional:
   ZOPEN_CLEAN          Clean up program to run (defaults to '${ZOPEN_CLEAND}')
   ZOPEN_CLEAN_OPTS     Options to pass to clean up  program (defaults to '${ZOPEN_CLEAN_OPTSD}')
 
-Restricted Usage - only SET by metaport, otherwise READ ONLY
+Restricted Usage - only SET by metaport, otherwise READ ONLY:
   ZOPEN_INSTALL_DIR    Installation directory to pass to configuration (defaults to '\${ZOPEN_PKGINSTALL}/<pkg>/<pkg>')
   ZOPEN_NUM_JOBS       Number of jobs that can be run in parallel (defaults to 1/2 the CPUs on the system)
 
-Restricted Usage (clangport)
+Restricted Usage (clangport):
   ZOPEN_CPPFLAGS       C/C++ pre-processor flags (default set by dependency)
   ZOPEN_CFLAGS         C compiler flags (default set by dependency)
   ZOPEN_CXXFLAGS       C++ compiler flags (default set by dependency)
   ZOPEN_LDFLAGS        C/C++ linker flags (default set by dependency)
 
-Restricted Usage (phpport)
+Restricted Usage (phpport):
   ZOPEN_GIT_SETUP      Specify whether git files should be added to a local repo or if this will be done manually (defaults to Y)
 
-Restricted Usage (tclport)
+Restricted Usage (tclport):
   ZOPEN_SRC_DIR        specify a relative source directory to cd to for bootstrap, configure, build, check, install (defaults to '.')
 
-Restricted Usage (meta)
+Restricted Usage (meta):
   ZOPEN_IMAGE_REGISTRY Docker image registry to an OCI image to (use with --oci option)
   ZOPEN_IMAGE_DOCKERFILE_NAME Dockerfile name (default: Dockerfile)
   ZOPEN_IMAGE_DOCKER_NAME Docker/podman tool name (default: podman)
@@ -116,9 +113,17 @@ Restricted Usage (meta)
   ZOPEN_LOG_DIR        The directory to store build logs (defaults to '${ZOPEN_ROOT}/log')
   ZOPEN_SHELL          Specify an alternate shell to use if -s option specified (defaults to /bin/sh)
 
-Deprecated:
+Being reworked to move to common ZOPEN_xxx_GIT_REFS:
   ZOPEN_DEV_TAG        The tag that the git repo should checkout as a branch (optional)
   ZOPEN_STABLE_TAG     The tag that the git repo should checkout as a branch (optional)
+  ZOPEN_DEV_BRANCH     The branch that the git repo should checkout (default is repo default)
+  ZOPEN_STABLE_BRANCH  The branch that the stable repo should checkout (default is repo default)
+
+Currently unused:
+  ZOPEN_DEV_TYPE       The type of package to download. Valid types are TARBALL, BARE and GIT 
+  ZOPEN_STABLE_TYPE    The type of package to download. Valid types are TARBALL, BARE and GIT
+
+Deprecated:
   ZOPEN_TYPE           The type of package to download. Valid types are TARBALL, BARE and GIT 
   ZOPEN_TARBALL_URL    The fully qualified URL that the tarball should be downloaded from (required if ZOPEN_TYPE=TARBALL)
   ZOPEN_TARBALL_DEPS   Space-delimited set of source packages this git package depends on to build (required if ZOPEN_TYPE=TARBALL)
@@ -128,8 +133,6 @@ Deprecated:
   ZOPEN_GIT_TAG        The tag that the git repo should checkout as a branch 
   ZOPEN_URL            Alternate environment variable instead of ZOPEN_TARBALL_URL or ZOPEN_GIT_URL (alternate to ZOPEN_TARBALL_URL or ZOPEN_GIT_URL)
   ZOPEN_DEPS           Alternate environment variable instead of ZOPEN_TARBALL_DEPS or ZOPEN_GIT_DEPS (alternate to ZOPEN_TARBALL_DEPS or ZOPEN_GIT_DEPS)
-  ZOPEN_DEV_TYPE       The type of package to download. Valid types are TARBALL, BARE and GIT 
-  ZOPEN_STABLE_TYPE    The type of package to download. Valid types are TARBALL, BARE and GIT
   ZOPEN_CC             C compiler (default set by dependency)
   ZOPEN_CXX            C++ compiler (default set by dependency)
   ZOPEN_LIBS           C/C++ libraries (default set by dependency)
