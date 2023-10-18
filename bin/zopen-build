@@ -1802,7 +1802,8 @@ generateZOSLIBHooks()
   # GIT_EXEC_PATH|set|PROJECT_ROOT/libexec/git-core
   # GIT_SSL_CAINFO|set|PROJECT_ROOT/cacert.pem
   #  The first field is the environment variable. The second field is the action, which is one of set, unset, or prepend.
-  #  The last field is the value. For unset, this is left empty. PROJECT_ROOT is replaced by the root directory of where the project is installed to.
+  #  The last field is the value. 
+  #  For unset, this is left empty. PROJECT_ROOT is replaced by the root directory of where the project is installed to.
 
   zoslib_env=""
   #TODO: In the future, consider locating all shared libraries and adding the LIBPATH automatically
