@@ -404,3 +404,8 @@ fi
 printInfo "${NC}${YELLOW}IMPORTANT: Run '. ${rootfs}/etc/zopen-config' to enable zopen environment for current session or add it to your .profile.${NC}"
 syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_PACKAGE},${CAT_FILE}" "INIT" "" "zopen environment initialised as ${ZOPEN_ROOTFS}"
 printInfo "${NC}${GREEN}zopen initialization complete.${NC}"
+myparent="$(cd "$(dirname "${MYDIR}")" >/dev/null 2>&1 && pwd -P )"
+myparentpaxz="${myparent}.pax.Z"
+if [ -d "${myparent}" ] && [ -f "${myparentpaxz}" ]; then
+  printInfo "${NC}${GREEN}You can now safely delete the pax file ${myparentpaxz} and ${myparent} directory.${NC}"
+fi
