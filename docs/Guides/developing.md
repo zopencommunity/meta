@@ -15,7 +15,7 @@ git clone git@github.com:ZOSOpenTools/gitport.git # clone the z/OS git port
 cd gitport
 zopen build # perform a build of git
 # make changes to the git source...
-zopen build -v # repeat zopen build command
+zopen build # repeat zopen build command
 ```
 
 This will build `gitport` and then install it into the `$ZOPEN_PKGINSTALL/zopen/git` directory. This will set git as the active version in your zopen installation. You can use `zopen alt` to customize which version of git to set as the active version. Invoke `zopen alt --help` for details on how to customize this.
