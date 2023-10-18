@@ -1502,7 +1502,7 @@ install()
     fi
 
     if [ -z "$(command -v zopen_get_version)" ]; then
-      printWarning "A zopen_get_version() function should be defined in the buildenv to extract the version contents"
+      printError "A zopen_get_version() function must be defined in the buildenv to extract the version contents"
     else
       versionString=$(zopen_get_version)
       echo ${versionString} | awk -F. '{
