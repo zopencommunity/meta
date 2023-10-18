@@ -90,12 +90,12 @@
 | [libiconvport](https://github.com/ZOSOpenTools/libiconvport) | 5 | 100% |bison, libxml2, man-db, php, tig
 | [flexport](https://github.com/ZOSOpenTools/flexport) | 4 | 100% |bison, cscope, man-db, xmlto
 | [pkgconfigport](https://github.com/ZOSOpenTools/pkgconfigport) | 4 | 100% |avro-c-lib, librdkafka, man-db, thesilversearcher
+| [comp_clangport](https://github.com/ZOSOpenTools/comp_clangport) | 3 | 100% |duckdb, m4, zotsample
 | [getoptport](https://github.com/ZOSOpenTools/getoptport) | 3 | 52% |avro-c-lib, flex, xmlto
 | [gperfport](https://github.com/ZOSOpenTools/gperfport) | 3 | 100% |hello, libiconv, m4
 | [wgetport](https://github.com/ZOSOpenTools/wgetport) | 3 | 18% |hello, man-db, sed
 | [wharfport](https://github.com/ZOSOpenTools/wharfport) | 3 | Skipped |duf, gum, termenv
 | [bisonport](https://github.com/ZOSOpenTools/bisonport) | 2 | 99% |bash, php
-| [comp_clangport](https://github.com/ZOSOpenTools/comp_clangport) | 2 | 100% |duckdb, m4
 | [gnulibport](https://github.com/ZOSOpenTools/gnulibport) | 2 | 100% |htop, thesilversearcher
 | [groffport](https://github.com/ZOSOpenTools/groffport) | 2 | 100% |libiconv, man-db
 | [lessport](https://github.com/ZOSOpenTools/lessport) | 2 | 100% |git, man-db
@@ -106,6 +106,7 @@
 | [luaport](https://github.com/ZOSOpenTools/luaport) | 2 | 100% |luarocks, neovim
 | [lz4port](https://github.com/ZOSOpenTools/lz4port) | 2 | 100% |librdkafka, rsync
 | [rsyncport](https://github.com/ZOSOpenTools/rsyncport) | 2 | 97% |m4, sed
+| [unzipport](https://github.com/ZOSOpenTools/unzipport) | 2 | 100% |luarocks, zotsample
 | [zipport](https://github.com/ZOSOpenTools/zipport) | 2 | 100% |luarocks, unzip
 | [zstdport](https://github.com/ZOSOpenTools/zstdport) | 2 | 100% |librdkafka, rsync
 | [c3270port](https://github.com/ZOSOpenTools/c3270port) | 1 | 100% |zigi
@@ -126,7 +127,6 @@
 | [sqliteport](https://github.com/ZOSOpenTools/sqliteport) | 1 | Skipped |php
 | [tclport](https://github.com/ZOSOpenTools/tclport) | 1 | Skipped |expect
 | [termenvport](https://github.com/ZOSOpenTools/termenvport) | 1 | No builds |duf
-| [unzipport](https://github.com/ZOSOpenTools/unzipport) | 1 | 100% |luarocks
 | [xxhashport](https://github.com/ZOSOpenTools/xxhashport) | 1 | 100% |rsync
 | [avro-c-libport](https://github.com/ZOSOpenTools/avro-c-libport) | 0 | No builds |
 | [bumpport](https://github.com/ZOSOpenTools/bumpport) | 0 | No builds |
@@ -317,4 +317,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-10-17 11:03:17
+Last updated:  2023-10-17 23:56:03
