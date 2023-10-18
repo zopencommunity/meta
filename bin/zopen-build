@@ -1807,7 +1807,11 @@ char* value_str;
 char* pos;
 long size;
 
-// Do not use when building itself to avoid test failures to incorrect paths
+// Avoid setting environment variables during build time because they do not hold correct values
+// and should only be used from the installed location.
+// To avoid setting environment variables during build time, we need to guard it
+// by checking if ZOPEN_IN_ZOPEN_BUILD is set to the current build process setting.
+But this also meant that any dependent tools that set envars via zoslib env hooks would avoid setting those environment variables, effectively breaking them.
 if ((envar_value = getenv("ZOPEN_IN_ZOPEN_BUILD")) &&
     strcmp(envar_value, "${ZOPEN_IN_ZOPEN_BUILD}") == 0) {
   return 0;
