@@ -1012,6 +1012,18 @@ downloadJSONCache()
     JSON_CACHE="${ZOPEN_ROOTFS}/var/cache/zopen/zopen_releases.json"
     JSON_TIMESTAMP="${ZOPEN_ROOTFS}/var/cache/zopen/zopen_releases.timestamp"
     JSON_TIMESTAMP_CURRENT="${ZOPEN_ROOTFS}/var/cache/zopen/zopen_releases.timestamp.current"
+
+    # Need to check that we can read & write to the JSON timestamp cache files
+    if [ -e "${JSON_TIMESTAMP_CURRENT}" ]; then
+      [ ! -w "${JSON_TIMESTAMP_CURRENT}" ] || [ ! -r "${JSON_TIMESTAMP_CURRENT}" ] && printError "Cannot access cache at '${JSON_TIMESTAMP_CURRENT}'. Check permissions and retry request"
+    fi
+    if [ -e "${JSON_TIMESTAMP}" ]; then
+      [ ! -w "${JSON_TIMESTAMP}" ] || [ ! -r "${JSON_TIMESTAMP}" ] && printError "Cannot access cache at '${JSON_TIMESTAMP}'. Check permissions and retry request"
+    fi
+    if [ -e "${JSON_CACHE}" ]; then
+      [ ! -w "${JSON_CACHE}" ] || [ ! -r "${JSON_CACHE}" ] && printError "Cannot access cache at '${JSON_CACHE}'. Check permissions and retry request"
+    fi
+
     if ! curlCmd -L -s -I "${ZOPEN_JSON_CACHE_URL}" -o "${JSON_TIMESTAMP_CURRENT}"; then
       printError "Failed to obtain json cache timestamp from ${ZOPEN_JSON_CACHE_URL}"
     fi
@@ -1020,8 +1032,10 @@ downloadJSONCache()
     if [ -f "${JSON_CACHE}" ] && [ -f "${JSON_TIMESTAMP}" ] && [ "$(grep 'Last-Modified' "${JSON_TIMESTAMP_CURRENT}")" = "$(grep 'Last-Modified' "${JSON_TIMESTAMP}")" ]; then
       return
     fi
+    
+    printVerbose "Replacing old timestamp with latest"
+    mv -f "${JSON_TIMESTAMP_CURRENT}" "${JSON_TIMESTAMP}"
 
-    mv "${JSON_TIMESTAMP_CURRENT}" "${JSON_TIMESTAMP}"
     if ! curlCmd -L -s -o "${JSON_CACHE}" "${ZOPEN_JSON_CACHE_URL}"; then
       printError "Failed to obtain json cache from ${ZOPEN_JSON_CACHE_URL}"
     fi
