@@ -122,7 +122,6 @@ writeConfigFile(){
 # relative to this envvar value
 ZOPEN_ROOTFS=\"${rootfs}\"
 export ZOPEN_ROOTFS
-configStartTime=\${SECONDS}
 zot=\"z/OS Open Tools\"
 
 sanitizeEnvVar(){
