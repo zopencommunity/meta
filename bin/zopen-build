@@ -1908,7 +1908,7 @@ zz
   if [ "${CC}" = "xlclang" ]; then
     extraOptions="-qexportall"
   fi
-  cat ${output}
+
   if ! runAndLog "${CC} ${CFLAGS} ${CPPFLAGS} -DPATH_MAX=1024 ${extraOptions} -c ${output} -o ${output}.o"; then
     printError "Compiler command for ${output} failed to compile"
   fi
