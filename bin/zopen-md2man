@@ -39,7 +39,7 @@ if [[ $# -eq 1 ]]; then
 fi
 
 set -e
-zopen_version='0.7.0' ## add code to perform zopen --version once supported
+zopen_version="$(zopen --version)"
 zopen_date=$(date "+%B %d %Y")
 
 mandir="${MYDIR}/man1" ## may want this elsewhere
