@@ -222,4 +222,4 @@ fi
 printHeader "${name} project is ready! ${name}port/"
 printInfo "Create patches under the ${name}port/patches directory"
 printInfo "Run zopen build to build ${name}port"
-printInfo "Contact  to create https://github.com/ZOSOpenTools/${name}port.git"
+printInfo "Contact Igor Todorovski (itodoro@ca.ibm.com) to create https://github.com/ZOSOpenTools/${name}port.git"
