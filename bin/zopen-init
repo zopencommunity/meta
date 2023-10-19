@@ -275,7 +275,7 @@ fi
 echo "${releaseLine}" > "${rootfs}/etc/zopen/releaseline"
 
 printInfo "- Check for shipped curl pax"
-curlpax="packages/curl-8.1.2.20230707_145137.zos.pax.Z"
+curlpax="packages/curl-8.4.0.20231011_155722.zos.pax.Z"
 
 curllcn=$(findrev "${MYDIR}" "${curlpax}")
 echo "${curllcn}/${curlpax}"
