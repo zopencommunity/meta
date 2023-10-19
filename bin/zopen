@@ -31,19 +31,14 @@ Command:
   init              generate \$rootfs/etc/zopen-config, creates file 
                     structure and bootstraps
   build             invokes the build script
-  promote           promote  a z/OS Open Tools environment to a new 
-                    location
-  download          downloads z/OS Open Tools package(s)
   install           installs z/OS Open Tools package(s))
   generate          generate a zopen project
-  update-cacert     update the cacert.pem file
   upgrade           upgrades already installed tools
   list              lists information about z/OS Open Tools packages
-  query             queries z/OS Open Tools packages
-  search            searches remote repo for z/OS Open Tools package
   remove            removes installed z/OS Open Tools packages
   alt               switch local versions of z/OS Open Tools packages
   clean             cleans various aspects of z/OS Open Tools packages
+  update-cacert     update the cacert.pem file
 
 Option:
   -v, --verbose     run in verbose mode
@@ -75,17 +70,13 @@ version=false
 
 for arg in $*; do
   case "${arg}" in
-    "alt"|"build"|"clean"|"promote"|"generate"|"init"|"install"|\
-    "query"|"remove"|"update-cacert")
+    "alt"|"build"|"clean"|"generate"|"init"|"install"|\
+    "remove"|"update-cacert")
       subcmd="zopen-${arg}"
       ;;
     "list")
       subcmd='zopen-query'
       subopts="${subopts} --list"
-      ;;
-    "search")
-      subcmd='zopen-query'
-      subopts="${subopts} --remote-search"
       ;;
     "upgrade")
       subcmd='zopen-install'
