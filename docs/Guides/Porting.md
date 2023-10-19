@@ -132,7 +132,7 @@ ZOPEN_STABLE_DEPS/ZOPEN_STABLE_DEPS are used to identify the non-standard z/OS O
 Similarly, `zopen_append_to_zoslib_env()` can be used to set program specific environment variables.
 It accepts the following format:
   envar|action|value
-Where envar is the environment variable, action is either set, unset, or prepend, and value is the environment variable value.
+Where envar is the environment variable, action is either set (if unset), overrideset, unset, or prepend, and value is the environment variable value.
 The string `PROJECT_HOME` represents a special value and is replaced with the root path of the project"
 
 To help gauge the build quality of the port, a zopen_check_results() function needs to be provided inside the buildenv. This function should process the test results and emit a report of the failures, total number of tests, expected number of failures and expected number of tests to stdout as in the following format:
