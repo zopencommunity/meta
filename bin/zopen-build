@@ -1766,7 +1766,7 @@ generateZOSLIBHooks()
   # GIT_TEMPLATE_DIR|set|PROJECT_ROOT/share/git-core/templates
   # GIT_EXEC_PATH|set|PROJECT_ROOT/libexec/git-core
   # GIT_SSL_CAINFO|set|PROJECT_ROOT/cacert.pem
-  #  The first field is the environment variable. The second field is the action, which is one of set, unset, or prepend.
+  #  The first field is the environment variable. The second field is the action, which is one of set (if unset), unset, overrideset or prepend.
   #  The last field is the value. For unset, this is left empty. PROJECT_ROOT is replaced by the root directory of where the project is installed to.
 
   zoslib_env=""
@@ -1811,7 +1811,7 @@ long size;
 // and should only be used from the installed location.
 // To avoid setting environment variables during build time, we need to guard it
 // by checking if ZOPEN_IN_ZOPEN_BUILD is set to the current build process setting.
-But this also meant that any dependent tools that set envars via zoslib env hooks would avoid setting those environment variables, effectively breaking them.
+// But this also meant that any dependent tools that set envars via zoslib env hooks would avoid setting those environment variables, effectively breaking them.
 if ((envar_value = getenv("ZOPEN_IN_ZOPEN_BUILD")) &&
     strcmp(envar_value, "${ZOPEN_IN_ZOPEN_BUILD}") == 0) {
   return 0;
@@ -1826,10 +1826,14 @@ zz
     var=$(echo ${line} | cut -d '|' -f 1)
     action=$(echo ${line} | cut -d '|' -f 2)
     value=$(echo ${line} | cut -d '|' -f 3)
-
+  
     if [ "${action}" = "unset" ]; then
       echo "unsetenv(\"${var}\");" >> "${output}"
-    elif [ "${action}" = "set" ]; then
+    elif [ "${action}" = "set" -o "${action}" = "overrideset" ]; then
+      forceset="0"
+      if [ "${action}" = "overrideset" ]; then
+        forceset="1";
+      fi
       cat << zz >> "${output}"
     value_str = "${value}";
     size = PATH_MAX;
@@ -1849,7 +1853,7 @@ zz
       }
     }
 
-    if (!getenv("${var}")) {
+    if (!getenv("${var}") || ${forceset}) {
       if (getenv("__ZOPEN_DEBUG"))
         fprintf(stderr, "Setting variable %s=%s\n", "${var}", envar_value);
       if (setenv("${var}", envar_value, 1) != 0) {
@@ -1904,6 +1908,7 @@ zz
   if [ "${CC}" = "xlclang" ]; then
     extraOptions="-qexportall"
   fi
+  cat ${output}
   if ! runAndLog "${CC} ${CFLAGS} ${CPPFLAGS} -DPATH_MAX=1024 ${extraOptions} -c ${output} -o ${output}.o"; then
     printError "Compiler command for ${output} failed to compile"
   fi
