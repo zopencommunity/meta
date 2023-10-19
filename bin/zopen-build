@@ -525,6 +525,11 @@ checkEnv()
     implicitDeps="${implicitDeps} comp_${ZOPEN_COMP}"
   fi
 
+  if [ -z "${ZOPEN_DONT_ADD_ZOSLIB_DEP}" ]; then
+    # Add zoslib as an implicit library
+    implicitDeps="${implicitDeps} zoslib"
+  fi
+
   if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
     if [ -z "${ZOPEN_URL}" ]; then
       printError "ZOPEN_STABLE_URL, ZOPEN_DEV_URL, ZOPEN_URL or ZOPEN_TARBALL_URL needs to be defined"
