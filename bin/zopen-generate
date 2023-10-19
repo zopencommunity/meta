@@ -211,6 +211,7 @@ printInfo "${name}port/.gitignore created"
 
 metalicense="${ZOPEN_ROOTFS}/usr/local/zopen/meta/meta-main/LICENSE"
 ourlicense="${name}port/LICENSE"
+
 if [ -e "${ourlicense}" ]; then
   printError "License already in ${name}port/LICENSE. Please confirm it is consistent with ${metalicense}"
 elif [ -e "${metalicense}" ]; then
