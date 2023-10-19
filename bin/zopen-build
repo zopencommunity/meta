@@ -473,7 +473,7 @@ checkEnv()
       if [ ! -z "${ZOPEN_TARBALL_DEPS}" ]; then
         export ZOPEN_DEPS="${ZOPEN_TARBALL_DEPS}"
       fi
-      printHeader "Using tarball environment"
+      printHeader "Using stable environment"
     elif [ "${ZOPEN_TYPE}x" = "GITx" ]; then
       if [ ! -z "${ZOPEN_GIT_URL}" ]; then
         export ZOPEN_URL="${ZOPEN_GIT_URL}"
@@ -481,7 +481,7 @@ checkEnv()
       if [ ! -z "${ZOPEN_GIT_DEPS}" ]; then
         export ZOPEN_DEPS="${ZOPEN_GIT_DEPS}"
       fi
-      printHeader "Using git environment"
+      printHeader "Using dev environment"
     elif [ "${ZOPEN_TYPE}x" = "BAREx" ]; then
       printHeader "Using bare environment"
     else
