@@ -87,6 +87,7 @@ Optional:
   ZOPEN_INSTALL_OPTS   Options to pass to installation program (defaults to '${ZOPEN_INSTALL_OPTSD}')
   ZOPEN_CLEAN          Clean up program to run (defaults to '${ZOPEN_CLEAND}')
   ZOPEN_CLEAN_OPTS     Options to pass to clean up  program (defaults to '${ZOPEN_CLEAN_OPTSD}')
+  ZOPEN_DONT_ADD_ZOSLIB_DEP Set it to avoid adding zoslib as a dependency
 
 Restricted Usage - only SET by metaport, otherwise READ ONLY:
   ZOPEN_INSTALL_DIR    Installation directory to pass to configuration (defaults to '\${ZOPEN_PKGINSTALL}/<pkg>/<pkg>')
