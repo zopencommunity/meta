@@ -1,5 +1,5 @@
 {
-  "timestamp": "2023-10-18T15:58:06.411964",
+  "timestamp": "2023-10-18T23:31:53.569273",
   "release_data": {
     "automake": [
       {
@@ -23201,6 +23201,24 @@
             "runtime_dependencies": "No dependencies",
             "total_tests": "344",
             "passed_tests": "157"
+          }
+        ]
+      }
+    ],
+    "bump": [
+      {
+        "name": "bump (Build 1477) - (STABLE)",
+        "date": "2023-10-19 03:14:59",
+        "tag_name": "STABLE_bumpport_1477",
+        "assets": [
+          {
+            "name": "bump-master.20231019_030956.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/bumpport/releases/download/STABLE_bumpport_1477/bump-master.20231019_030956.zos.pax.Z",
+            "size": 9870336,
+            "expanded_size": 28814250,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "12",
+            "passed_tests": "12"
           }
         ]
       }

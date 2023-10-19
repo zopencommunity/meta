@@ -29,7 +29,6 @@
 ## Projects that do not have builds
 
 * [avro-c-libport](https://github.com/ZOSOpenTools/avro-c-libport)
-* [bumpport](https://github.com/ZOSOpenTools/bumpport)
 * [depot_toolsport](https://github.com/ZOSOpenTools/depot_toolsport)
 * [direnvport](https://github.com/ZOSOpenTools/direnvport)
 * [dufport](https://github.com/ZOSOpenTools/dufport)
@@ -106,7 +105,6 @@
 | [luaport](https://github.com/ZOSOpenTools/luaport) | 2 | 100% |luarocks, neovim
 | [lz4port](https://github.com/ZOSOpenTools/lz4port) | 2 | 100% |librdkafka, rsync
 | [rsyncport](https://github.com/ZOSOpenTools/rsyncport) | 2 | 97% |m4, sed
-| [unzipport](https://github.com/ZOSOpenTools/unzipport) | 2 | 100% |luarocks, zotsample
 | [zipport](https://github.com/ZOSOpenTools/zipport) | 2 | 100% |luarocks, unzip
 | [zstdport](https://github.com/ZOSOpenTools/zstdport) | 2 | 100% |librdkafka, rsync
 | [c3270port](https://github.com/ZOSOpenTools/c3270port) | 1 | 100% |zigi
@@ -127,9 +125,10 @@
 | [sqliteport](https://github.com/ZOSOpenTools/sqliteport) | 1 | Skipped |php
 | [tclport](https://github.com/ZOSOpenTools/tclport) | 1 | Skipped |expect
 | [termenvport](https://github.com/ZOSOpenTools/termenvport) | 1 | No builds |duf
+| [unzipport](https://github.com/ZOSOpenTools/unzipport) | 1 | 100% |luarocks
 | [xxhashport](https://github.com/ZOSOpenTools/xxhashport) | 1 | 100% |rsync
 | [avro-c-libport](https://github.com/ZOSOpenTools/avro-c-libport) | 0 | No builds |
-| [bumpport](https://github.com/ZOSOpenTools/bumpport) | 0 | No builds |
+| [bumpport](https://github.com/ZOSOpenTools/bumpport) | 0 | 100% |
 | [byaccport](https://github.com/ZOSOpenTools/byaccport) | 0 | 45% |
 | [comp_xlclangport](https://github.com/ZOSOpenTools/comp_xlclangport) | 0 | 100% |
 | [cscopeport](https://github.com/ZOSOpenTools/cscopeport) | 0 | 100% |
@@ -317,4 +316,4 @@
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
-Last updated:  2023-10-18 15:41:52
+Last updated:  2023-10-18 23:15:39
