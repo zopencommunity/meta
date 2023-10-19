@@ -120,9 +120,8 @@ writeConfigFile(){
 # Main root location for the zopen installation; can be changed if the
 # underlying root location is copied/moved elsewhere as locations are
 # relative to this envvar value
-ZOPEN_ROOTFS=\"${rootfs}\"
+ZOPEN_ROOTFS=\"\${ZOPEN_ROOTFS}:${rootfs}\"
 export ZOPEN_ROOTFS
-configStartTime=\${SECONDS}
 zot=\"z/OS Open Tools\"
 
 sanitizeEnvVar(){
