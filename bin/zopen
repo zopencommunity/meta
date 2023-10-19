@@ -38,6 +38,7 @@ Command:
   remove            removes installed z/OS Open Tools packages
   alt               switch local versions of z/OS Open Tools packages
   clean             cleans various aspects of z/OS Open Tools packages
+  update-cacert     update the cacert.pem file
 
 Option:
   -v, --verbose     run in verbose mode
@@ -70,7 +71,7 @@ version=false
 for arg in $*; do
   case "${arg}" in
     "alt"|"build"|"clean"|"generate"|"init"|"install"|\
-    "remove")
+    "remove"|"update-cacert")
       subcmd="zopen-${arg}"
       ;;
     "list")
