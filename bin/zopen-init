@@ -321,6 +321,8 @@ if [ -n "${ZOPEN_CA}" ]; then
   else
     printVerbose "Unable to use Certificate file '${certFileName}' specified in environment variable ZOPEN_CA='${ZOPEN_CA}'. "
   fi
+elif [ -f "${ZOPEN_ROOTFS}/${ZOPEN_CA_DIR}/${certFileName}" ]; then
+  cacertFound=true
 else
   printVerbose "No current value for ZOPEN_CA environment variable"
 fi
