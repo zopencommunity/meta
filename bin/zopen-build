@@ -554,14 +554,6 @@ checkEnv()
     printVerbose "Implicitly adding git dependencies: ${implicitDeps}"
     ZOPEN_DEPS="${implicitDeps} ${ZOPEN_DEPS}"
   fi
-
-  if ! [ -r "${ZOPEN_CA}" ]; then
-    # Check local clone
-    export ZOPEN_CA="${utilparentdir}/cacert.pem"
-    if ! [ -r "${ZOPEN_CA}" ]; then
-      printError "Internal Error. Certificate ${ZOPEN_CA} is required. Use zopen update-cacert to update."
-    fi
-  fi
 }
 
 setDepsEnv()
@@ -570,13 +562,6 @@ setDepsEnv()
     curlpath=$(dirname "$(command -V curl | cut -f3 -d' ')")
   fi
   initDefaultEnvironment
-  # Add base dependencies:
-  # zopen bin, and curl
-  export PATH="${utilparentdir}/bin:${PATH}"
-  if ${forceUpgradeDeps}; then
-    export PATH="${curlpath}:${PATH}"
-  fi
-
   deps="${ZOPEN_DEPS}"
 
   orig="${PWD}"
