@@ -154,16 +154,6 @@ buildenvContents="${buildenvContents}\nzopen_check_results()
   echo \"expectedTotalTests:1\"
 }
 
-zopen_append_to_env()
-{
-  # echo envars outside of PATH, MANPATH, LIBPATH
-}
-
-zopen_append_to_setup()
-{
-  # echo commands that will run when installing via setup.sh
-}
-
 zopen_get_version()
 {
   # Modify to echo the version of your tool/library
@@ -219,18 +209,18 @@ install/
 EOT
 printInfo "${name}port/.gitignore created"
 
-if [ -e "${MYDIR}/../LICENSE" ]; then
-  cp "${MYDIR}/../LICENSE" "${name}port/LICENSE"
-elif [ -n "${ZOPEN_ROOTFS}" ]; then
-  pkgInstallDir="$(cat "${ZOPEN_ROOTFS}/etc/zopen/fstype")"
-  if [ -e "${MYDIR}/../../${pkgInstallDir}/meta/meta/LICENSE" ]; then
-    cp "${MYDIR}/../../${pkgInstallDir}/meta/meta/LICENSE" "${name}port/LICENSE"
-  else
-    printError "Could not locate LICENSE file to copy for project"
-  fi
+metalicense="${ZOPEN_ROOTFS}/usr/local/zopen/meta/meta-main/LICENSE"
+ourlicense="${name}port/LICENSE"
+
+if [ -e "${ourlicense}" ]; then
+  printError "License already in ${name}port/LICENSE. Please confirm it is consistent with ${metalicense}"
+elif [ -e "${metalicense}" ]; then
+  cp "${metalicense}" "${ourlicense}"
+else
+  printError "Could not locate LICENSE file to copy for project"
 fi
 
 printHeader "${name} project is ready! ${name}port/"
 printInfo "Create patches under the ${name}port/patches directory"
 printInfo "Run zopen build to build ${name}port"
-printInfo "Contact Mike Fulton (fultonm@ca.ibm.com) to create https://github.com/ZOSOpenTools/${name}port.git"
+printInfo "Contact Igor Todorovski (itodorov@ca.ibm.com) to create https://github.com/ZOSOpenTools/${name}port.git"
