@@ -62,6 +62,7 @@ fi
 
 tooldirs="${rootdir}/bin"
 
+rc=0
 echo "Man pages will be written to: ${mandir}"
 for tooldir in ${tooldirs}; do
   for tool in ${tooldir}/zopen*; do
@@ -73,14 +74,19 @@ for tooldir in ${tooldirs}; do
         echo "${basetool}"
       else
         echo "${tool} supports --help but not --version options. man page generation skipped." >&2
+        rc=8
       fi
     else
       # Tool has NOT implemented --help
       if $("${tool}" --version > /dev/null 2>&1); then
         echo "${tool} does not support --help but does support man page generation skipped." >&2
+        rc=8
       else
         echo "${tool} does not support --help nor --version options. man page generation skipped." >&2
+        rc=8
       fi
     fi
   done
 done
+
+exit $rc
