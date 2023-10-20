@@ -617,7 +617,6 @@ zopenInitialize()
   && chtag -tc 819 "${ZOPEN_CLEANUP_PIPE}" \
   && export ZOPEN_CLEANUP_PIPE
 
-  addCleanupTrapCmd "stty echo" # set this as a default to ensure line visibility!
   defineEnvironment
   defineANSI
   if [ -z "${ZOPEN_DONT_PROCESS_CONFIG}" ]; then
