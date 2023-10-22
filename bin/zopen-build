@@ -1846,6 +1846,7 @@ zz
     var=$(echo ${line} | cut -d '|' -f 1)
     action=$(echo ${line} | cut -d '|' -f 2)
     value=$(echo ${line} | cut -d '|' -f 3)
+    projectRootCount=$(echo "${value}" | awk -F "PROJECT_ROOT" '{print NF-1}')
   
     if [ "${action}" = "unset" ]; then
       echo "unsetenv(\"${var}\");" >> "${output}"
@@ -1886,7 +1887,7 @@ zz
     elif [ "${action}" = "prepend" ]; then
       cat << zz >> "${output}"
     value_str = "${value}";
-    size = strlen(getenv("${var}")) + strlen(value_str) + strlen(root_dir) + 2;
+    size = strlen(getenv("${var}")) + strlen(value_str) + strlen(root_dir)*${projectRootCount} + 2 /*for : and null*/;
     envar_value = (char*)malloc(size);
     memset(envar_value, 0, size);
 
