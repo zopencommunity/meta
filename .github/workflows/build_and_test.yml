@@ -36,6 +36,10 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           status: pending
 
+      - name: Trigger Jenkins Job 2
+        run: |
+          echo "${{ github.event.issue.pull_request.url }}"
+
       - name: Github API Request
         id: request
         uses: octokit/request-action@v2.1.7
