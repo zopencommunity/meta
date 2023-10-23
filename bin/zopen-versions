@@ -4,14 +4,14 @@
 #
 setupMyself()
 {
-        ME=$(basename $0)
-        MYDIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
-        INCDIR="${MYDIR}/../include"
-        if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
-                echo "Internal Error. Unable to find common.sh file to source" >&2
-                exit 8
-        fi
-        . "${INCDIR}/common.sh"
+  ME=$(basename $0)
+  MYDIR="$(cd "$(dirname "$0")" > /dev/null 2>&1 && pwd -P)"
+  INCDIR="${MYDIR}/../include"
+  if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
+    echo "Internal Error. Unable to find common.sh file to source" >&2
+    exit 8
+  fi
+  . "${INCDIR}/common.sh"
 }
 setupMyself
 
@@ -28,30 +28,30 @@ syntax()
 
 if [[ $# -eq 1 ]]; then
   if [ "x$1" = "x--help" ]; then
-    printSyntax
+    syntax
     exit 0
   elif [ "x$1" = "x--version" ]; then
-    zopen --version $ME
+    zopen-version $ME
     exit 0
   else
     echo "Unrecognized option $1. Processing terminated" >&2
-    printSyntax
+    syntax
     exit 8
   fi
 fi
 
 if [ $# -eq 0 ]; then
-  root="$HOME/zopen/prod"
+  root="${HOME}/zopen/prod"
 else
   root="$1"
 fi
 
 if [ -d "${root}" ]; then
   echo "Using ${root} for determining z/OS tarball versions" >&2
-else 
+else
   if [ "x${root}" = "x-?" ] || [ "x${root}" = "x-help" ]; then
     :
-  else 
+  else
     echo "Unable to find ${root} for determining z/OS tarball versions" >&2
   fi
   syntax
@@ -69,23 +69,22 @@ else
 fi
 
 version_files=$(find "${root}" -name ".version")
-brew_version_info=$(curl https://formulae.brew.sh/formula/ 2>/dev/null | grep '<td>')
+brew_version_info=$(curl https://formulae.brew.sh/formula/ 2> /dev/null | grep '<td>')
 for rawtool in ${tools}; do
   tool=${rawtool%%port}
   version_file=$(echo "${version_files}" | grep "${tool}-" | head -n 1)
-  if [ "x${version_file}" = "x" ]; then
+  if [ -z "${version_file}" ]; then
     :
     #echo "No version file for ${tool}. ${tool} skipped" >&2
   else
     version="$(cat ${version_file})"
     brew_line=$(echo "${brew_version_info}" | grep -n ">${tool}<" | awk -F: '{print $1}')
-    if [ "x${brew_line}" = "x" ]; then
+    if [ -z "${brew_line}" ]; then
       brew_version="unknown"
     else
-      next_brew_line=$((brew_line+1))
+      next_brew_line=$((brew_line + 1))
       brew_version=$(echo "${brew_version_info}" | sed -n "${next_brew_line}p" | awk -F '<|>' '{print $3}')
     fi
     echo "${tool} zos-version ${version} brew-version ${brew_version}"
   fi
 done
-

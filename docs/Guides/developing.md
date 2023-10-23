@@ -4,29 +4,34 @@ Please read [Quick Start](QuickStart.md) and [The package manager](ThePackageMan
 
 ## zopen directory structure
 
-After running `zopen init`, you are able to install tools under the tools directory you chose, i.e. `$ZOPEN_HOME` 
+After running `zopen init`, you are able to install tools under the tools directory you chose, i.e. `$ZOPEN_ROOTFS` 
 
-You can develop z/OS Open Tools out of any directory you want, but we recommend creating a directory under `$ZOPEN_HOME/dev`. 
-
-The _dev_ directory is where you will do your development. For example, if you wanted to make enhancements to the `zotsampleport` 
-tool, you would do the following:
+You can develop z/OS Open Tools out of any directory you want. For example, if you wanted to make enhancements to the git port, you would perform the following commands:
 
 ```bash
-cd $ZOPEN_HOME/dev
-git clone git@github.com:ZOSOpenTools/zotsampleport.git
-cd zotsampleport
-zopen build
+. /path/to/zopen/etc/zopen-config # source zopen-config
+zopen install git # Make sure you have git installed
+git clone git@github.com:ZOSOpenTools/gitport.git # clone the z/OS git port
+cd gitport
+zopen build # perform a build of git
+# make changes to the git source...
+zopen build # repeat zopen build command
 ```
 
-This will build `zotsampleport` and then install it into `$ZOPEN_HOME/zopen/prod` directory.
+This will build `gitport` and then install it into the `$ZOPEN_PKGINSTALL/zopen/git` directory. This will set git as the active version in your zopen installation. You can use `zopen alt` to customize which version of git to set as the active version. Invoke `zopen alt --help` for details on how to customize this.
 
-We provide a number of tools under `zopen` in addition to `install` and `build`. 
-To see the list of tools:
+## Using the zopen commands
+
+To see the list of commands:
 ```bash
-`zopen -?`
+`zopen --help`
 ```
 
-## To Develop z/OS Open Tools
+## Developing z/OS Open Tools
+
+### zopen generate
+
+If you're starting a new port, it is advised that you start with the `zopen generate` command. `zopen generate` will prompt for a series of questions and then generate a file and directory structure, including a `buildenv` file which will be used as input to the `zopen build` command.
 
 ### zopen build
 
@@ -92,9 +97,6 @@ Run `zopen build` from the root directory of the git repo you would like to buil
 cd ${HOME}/zopen/dev/m4port
 zopen build
 ```
-
-### zopen generate
-You can generate a zopen template project with `zopen generate`. It will ask you a series of questions and then generate the zopen file structure, including a `buildenv` file that will help you get started with your project.
 
 ### zopen update-cacacert
 

@@ -6,9 +6,11 @@ ZOPEN_DONT_PROCESS_CONFIG=1
 #
 # All zopen-* scripts MUST start with this code to maintain consistency
 #
-setupMyself() {
+
+setupMyself()
+{
   ME=$(basename $0)
-  MYDIR="$(cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P)"
+  MYDIR="$(cd "$(dirname "$0")" > /dev/null 2>&1 && pwd -P)"
   INCDIR="${MYDIR}/../include"
   if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
     echo "Internal Error. Unable to find common.sh file to source" >&2
@@ -20,14 +22,16 @@ setupMyself
 
 buildLicenseLookup() {
   licensesCSV="${MYDIR}/../data/licenses.csv"
-  if [ ! -r "$licensesCSV" ]; then
+  if [ ! -r "${licensesCSV}" ]; then
     return 4
   fi
 
-  validLicenseNames="$(cat $licensesCSV | tail +1 | cut -f1 -d',' | xargs)"
+  validLicenseNames="$(cat ${licensesCSV} | tail +1 | cut -f1 -d',' | xargs)"
 }
 
-printSyntax() {
+
+printSyntax()
+{
   args=$*
   echo "zopen-generate will generate a zopen compatible project" >&2
   echo "Syntax: zopen-generate" >&2
@@ -38,7 +42,7 @@ if [[ $# -eq 1 ]]; then
     printSyntax
     exit 0
   elif [ "x$1" = "x--version" ]; then
-    zopen --version $ME
+    zopen-version $ME
     exit 0
   else
     echo "Unrecognized option $1. Processing terminated" >&2
@@ -51,31 +55,31 @@ buildLicenseLookup
 
 printHeader "Generate a zopen project"
 valid=false
-while ! $valid; do
+while ! ${valid}; do
   echo "What is the project name?"
   name=$(getInput)
-  if ! echo "$name" | grep -q -E "port$"; then
+  if ! echo "${name}" | grep -q -E "port$"; then
     valid=true
   else
-    printWarning "$name must not end with port"
+    printWarning "${name} must not end with port"
   fi
 done
 echo "Provided a description of the project:"
 description=$(getInput)
 
 valid=false
-while ! $valid; do
-  echo "Provide the community license to use for $name's patches: (select from $validLicenseNames)"
+while ! ${valid}; do
+  echo "Provide the community license to use for ${name}'s patches: (select from ${validLicenseNames})"
   license_name="$(getInput | tr -d ' ')"
-  if ! echo " $validLicenseNames" | grep -q " $license_name"; then
-    printWarning "License is not valid, please enter a license from one of these names: $validLicenseNames)"
+  if ! echo " ${validLicenseNames}" | grep -q " ${license_name}"; then
+    printWarning "License is not valid, please enter a license from one of these names: ${validLicenseNames})"
   else
-    licenseName="$(cat $licensesCSV | grep "\"$license_name\"" | cut -f2 -d',')"
-    licenseUrl="$(cat $licensesCSV | grep "\"$license_name\"" | cut -f4 -d',')"
+    licenseName="$(cat ${licensesCSV} | grep "\"${license_name}\"" | cut -f2 -d',')"
+    licenseUrl="$(cat ${licensesCSV} | grep "\"${license_name}\"" | cut -f4 -d',')"
     valid=true
   fi
 done
-echo $licenseUrl
+echo ${licenseUrl}
 
 echo "Enter ${name}'s stable release source url: (Specify a Git or Tarball URL. If none, press enter)"
 stablePath=$(getInput)
@@ -92,19 +96,19 @@ runtimedeps=$(getInput)
 
 project_path="${name}port"
 
-if [ -d $project_path ]; then
+if [ -d ${project_path} ]; then
   while true; do
-    echo "Directory $project_path already exists. Update it? (y, n)"
+    echo "Directory ${project_path} already exists. Update it? (y, n)"
     clobber=$(getInput)
-    if [ "$clobber" = "n" ]; then
+    if [ "${clobber}" = "n" ]; then
       exit 0
-    elif [ "$clobber" = "y" ]; then
+    elif [ "${clobber}" = "y" ]; then
       break
     fi
   done
 fi
 
-printHeader "Generating $project_path zopen project"
+printHeader "Generating ${project_path} zopen project"
 mkdir -p ${name}port/patches
 
 # Create external LICENSE
@@ -112,34 +116,34 @@ touch "${name}port/patches/LICENSE" && chtag -tc 819 "${name}port/patches/LICENS
 echo "${licenseName}\nView license contents at ${licenseUrl}" >"${name}port/patches/LICENSE"
 
 buildenv="${name}port/buildenv"
-touch $buildenv && chtag -tc 819 $buildenv
+touch ${buildenv} && chtag -tc 819 ${buildenv}
 
 cp "${MYDIR}/../data/CONTRIBUTING.md" "${name}port/CONTRIBUTING.md"
 mkdir -p "${name}port/.github/workflows"
 cp "${MYDIR}/../data/*.yml" "${name}port/.github/workflows/"
 
-if [ ! -z "$stablePath" ]; then
-  buildenvContents="export ZOPEN_STABLE_URL=\"$stablePath\"\n"
+if [ ! -z "${stablePath}" ]; then
+  buildenvContents="export ZOPEN_STABLE_URL=\"${stablePath}\"\n"
 fi
-if [ ! -z "$stableDeps" ]; then
-  buildenvContents="${buildenvContents}export ZOPEN_STABLE_DEPS=\"$stableDeps\"\n"
-fi
-
-if [ ! -z "$devPath" ]; then
-  buildenvContents="${buildenvContents}export ZOPEN_DEV_URL=\"$devPath\"\n"
-fi
-if [ ! -z "$devDeps" ]; then
-  buildenvContents="${buildenvContents}export ZOPEN_DEV_DEPS=\"$devDeps\"\n"
+if [ ! -z "${stableDeps}" ]; then
+  buildenvContents="${buildenvContents}export ZOPEN_STABLE_DEPS=\"${stableDeps}\"\n"
 fi
 
-if [ ! -z "$buildline" ] && [ "$buildline" = "dev" ]; then
+if [ ! -z "${devPath}" ]; then
+  buildenvContents="${buildenvContents}export ZOPEN_DEV_URL=\"${devPath}\"\n"
+fi
+if [ ! -z "${devDeps}" ]; then
+  buildenvContents="${buildenvContents}export ZOPEN_DEV_DEPS=\"${devDeps}\"\n"
+fi
+
+if [ ! -z "${buildline}" ] && [ "${buildline}" = "dev" ]; then
   buildenvContents="${buildenvContents}export ZOPEN_BUILD_LINE=\"DEV\"\n"
 else
   buildenvContents="${buildenvContents}export ZOPEN_BUILD_LINE=\"STABLE\"\n"
 fi
 
-if [ ! -z "$runtimedeps" ]; then
-  buildenvContents="${buildenvContents}export ZOPEN_RUNTIME_DEPS=\"$runtimedeps\"\n"
+if [ ! -z "${runtimedeps}" ]; then
+  buildenvContents="${buildenvContents}export ZOPEN_RUNTIME_DEPS=\"${runtimedeps}\"\n"
 fi
 
 buildenvContents="${buildenvContents}\nzopen_check_results()
@@ -155,16 +159,6 @@ buildenvContents="${buildenvContents}\nzopen_check_results()
   echo \"expectedTotalTests:1\"
 }
 
-zopen_append_to_env()
-{
-  # echo envars outside of PATH, MANPATH, LIBPATH
-}
-
-zopen_append_to_setup()
-{
-  # echo commands that will run when installing via setup.sh
-}
-
 zopen_get_version()
 {
   # Modify to echo the version of your tool/library
@@ -172,26 +166,29 @@ zopen_get_version()
   echo \"1.0.0\"
 }"
 
-/bin/echo "$buildenvContents" >$buildenv
+/bin/echo "${buildenvContents}" > ${buildenv}
 
-printInfo "$buildenv created"
+printInfo "${buildenv} created"
 
 touch "${name}port/README.md" && chtag -tc 819 "${name}port/README.md"
-cat <<EOT >"${name}port/README.md"
+
+cat << EOT > "${name}port/README.md"
 ${name}
 
 ${description}
 EOT
 printInfo "${name}port/README.md created"
 
-createCICD() {
+
+createCICD()
+{
   buildline=$1
-  touch "${name}port/cicd-$buildline.groovy" && chtag -tc 819 "${name}port/cicd-$buildline.groovy"
-  buildlineUpper=$(echo "$buildline" | awk '{print toupper($0)}')
-  cat <<EOT >"${name}port/cicd-$buildline.groovy"
-  node('linux')
-  {
-    stage ('Poll') {
+  touch "${name}port/cicd-${buildline}.groovy" && chtag -tc 819 "${name}port/cicd-${buildline}.groovy"
+  buildlineUpper=$(echo "${buildline}" | awk '{print toupper($0)}')
+  cat << EOT > "${name}port/cicd-${buildline}.groovy"
+node('linux')
+{
+  stage ('Poll') {
     checkout([
     \$class: 'GitSCM',
     branches: [[name: '*/main']],
@@ -200,8 +197,8 @@ createCICD() {
     userRemoteConfigs: [[url: 'https://github.com/ZOSOpenTools/${name}port.git']]])
   }
   stage('Build') {
-  build job: 'Port-Pipeline', parameters: [string(name: 'PORT_GITHUB_REPO', value: 'https://github.com/ZOSOpenTools/${name}port.git'), string(name: 'PORT_DESCRIPTION', value: '${description}' ), string(name: 'BUILD_LINE', value: '$buildlineUpper') ]
-}
+    build job: 'Port-Pipeline', parameters: [string(name: 'PORT_GITHUB_REPO', value: 'https://github.com/ZOSOpenTools/${name}port.git'), string(name: 'PORT_DESCRIPTION', value: '${description}' ), string(name: 'BUILD_LINE', value: '${buildlineUpper}') ]
+  }
 }
 EOT
 }
@@ -210,7 +207,7 @@ createCICD "stable"
 createCICD "dev"
 
 touch "${name}port/.gitignore" && chtag -tc 819 "${name}port/.gitignore"
-cat <<EOT >"${name}port/.gitignore"
+cat << EOT > "${name}port/.gitignore"
 log/
 log.DEV/
 log.STABLE/
@@ -219,18 +216,18 @@ install/
 EOT
 printInfo "${name}port/.gitignore created"
 
-if [ -e "${MYDIR}/../LICENSE" ]; then
-  cp "${MYDIR}/../LICENSE" "${name}port/LICENSE"
-elif [ -n "$ZOPEN_ROOTFS" ]; then
-  pkgInstallDir="$(cat "$ZOPEN_ROOTFS/etc/zopen/fstype")"
-  if [ -e "${MYDIR}/../../$pkgInstallDir/meta/meta/LICENSE" ]; then
-    cp "${MYDIR}/../../$pkgInstallDir/meta/meta/LICENSE" "${name}port/LICENSE"
-  else
-    printError "Could not locate LICENSE file to copy for project"
-  fi
+metalicense="${ZOPEN_ROOTFS}/usr/local/zopen/meta/meta-main/LICENSE"
+ourlicense="${name}port/LICENSE"
+
+if [ -e "${ourlicense}" ]; then
+  printError "License already in ${name}port/LICENSE. Please confirm it is consistent with ${metalicense}"
+elif [ -e "${metalicense}" ]; then
+  cp "${metalicense}" "${ourlicense}"
+else
+  printError "Could not locate LICENSE file to copy for project"
 fi
 
 printHeader "${name} project is ready! ${name}port/"
 printInfo "Create patches under the ${name}port/patches directory"
 printInfo "Run zopen build to build ${name}port"
-printInfo "Contact Mike Fulton (fultonm@ca.ibm.com) to create https://github.com/ZOSOpenTools/${name}port.git"
+printInfo "Contact Igor Todorovski (itodorov@ca.ibm.com) to create https://github.com/ZOSOpenTools/${name}port.git"

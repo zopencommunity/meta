@@ -1,15 +1,16 @@
 #!/bin/sh
 #
-# General purpose zopen script
+# zopen wrapper script to allow single point of entry to zopen
+# tooling
 #
-ZOPEN_DONT_PROCESS_CONFIG=1 
+ZOPEN_DONT_PROCESS_CONFIG=1
 #
 # All zopen-* scripts MUST start with this code to maintain consistency
 #
 setupMyself()
 {
   ME=$(basename $0)
-  MYDIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
+  MYDIR="$(cd "$(dirname "$0")" > /dev/null 2>&1 && pwd -P)"
   INCDIR="${MYDIR}/../include"
   if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
     echo "Internal Error. Unable to find common.sh file to source" >&2
@@ -19,44 +20,54 @@ setupMyself()
 }
 setupMyself
 
-printSyntax()
-{
-  printInfo "" >&2
-  printInfo "Syntax: zopen [options] <command>" >&2
-  printInfo "where <options> may be one of the following:" >&2
-  printInfo "  --version       print product version" >&2
-  printInfo "  --help          print this help" >&2
-  printInfo "where <command> may be one of the following:" >&2
-  printInfo "  init            generate \$rootfs/etc/zopen-config, creates file structure and bootstraps" >&2
-  printInfo "  build           invokes the build script." >&2
-  printInfo "  download        downloads z/OS Open Tools package(s)" >&2
-  printInfo "  install         installs z/OS Open Tools package(s))" >&2
-  printInfo "  generate        generate a zopen project" >&2
-  printInfo "  update-cacert   update the cacert.pem file" >&2
-  printInfo "  upgrade         upgrades already installed tools" >&2
-  printInfo "  list            lists information about z/OS Open Tools packages" >&2
-  printInfo "  query           queries z/OS Open Tools packages" >&2
-  printInfo "  search          searches remote repo for z/OS Open Tools package" >&2
-  printInfo "  remove          removes installed z/OS Open Tools packages" >&2
-  printInfo "  alt             switch local versions of z/OS Open Tools packages" >&2
-  printInfo "  clean           cleans various aspects of z/OS Open Tools packages" >&2
-  echo "" >&2
+
+printHelp(){
+cat << HELPDOC
+zopen is a utility for managing a z/OS Open Tools environment.
+
+Usage: zopen [COMMAND] [OPTION] [PARAMETERS]...
+
+Command:
+  init              initializes a zopen environment at the specified location
+  install           installs one or more z/OS Open Tools packages
+  list              lists information about z/OS Open Tools packages
+  upgrade           upgrades already z/OS Open Tools packages
+  remove            removes installed z/OS Open Tools packages
+  build             builds the enclosing z/OS Open Tools git-cloned package
+  alt               manage alternate versions of z/OS Open Tools packages
+  clean             cleans up your zopen environment
+  generate          generates a new zopen project
+  update-cacert     update the cacert.pem file used by z/OS Open Tools
+
+Option:
+  -v, --verbose     run in verbose mode
+  -h,-?, --help     display this help and exit
+
+Examples:
+  zopen --help      displays zopen help
+  zopen --version   displays the installed zopen version
+  zopen install git install the latest z/OS Open Tools git package
+  zopen upgrade -y  upgrade all installed packages to the latest release, without prompting
+  zopen alt bash    list the installed alternative bash z/OS Open Tools packages
+
+SEE ALSO:
+  zopen-version(1)
+  zopen-init(1)
+  zopen-install(1)
+  zopen-list(1)
+  zopen-remove(1)
+  zopen-build(1)
+  zopen-alt(1)
+  zopen-clean(1)
+  zopen-generate(1)
+  zopen-update-cacert(1)
+
+
+Report bugs at https://github.com/ZOSOpenTools/meta/issues .
+
+HELPDOC
 }
 
-printHelp() 
-{
-  echo "zopen is a general purpose script to be used with the z/OS Open Tools ports." >&2
-  printSyntax
-  echo "Example usage:" >&2
-  echo " # Install the 'which' utility package" >&2
-  echo " zopen install which" >&2
-  echo " # List available packages to download" >&2
-  echo " zopen list" >&2
-  echo " # List currently installed packages" >&2
-  echo " zopen list --installed" >&2
-  echo " # Generate a zopen template project" >&2
-  echo " zopen generate" >&2
-}
 
 export PATH="${MYDIR}:${PATH}"
 
@@ -66,44 +77,14 @@ help=false
 version=false
 
 for arg in $*; do
-  case "$arg" in
-    "alt")
-      subcmd='zopen-alt'
-      ;;
-    "build")
-      subcmd='zopen-build'
-      ;;
-    "clean")
-      subcmd='zopen-clean'
-      ;;
-    "download")
-      subcmd='zopen-install'
-      ;;
-    "generate")
-      subcmd='zopen-generate'
-      ;;
-    "init")
-      subcmd='zopen-init'
-      ;;
-    "install")
-      subcmd='zopen-install'
-      ;;
-    "query")
-      subcmd='zopen-query'
+  case "${arg}" in
+    "alt"|"build"|"clean"|"generate"|"init"|"install"|\
+    "remove"|"update-cacert")
+      subcmd="zopen-${arg}"
       ;;
     "list")
       subcmd='zopen-query'
       subopts="${subopts} --list"
-      ;;
-    "search")
-      subcmd='zopen-query'
-      subopts="${subopts} --remote-search"
-      ;;
-    "remove")
-      subcmd='zopen-remove'
-      ;;
-    "update-cacert")
-      subcmd='zopen-update-cacert'
       ;;
     "upgrade")
       subcmd='zopen-install'
@@ -112,7 +93,7 @@ for arg in $*; do
     "--version")
       version=true
       ;;
-    "--help")
+    "help" | "--help" | "-?")
       help=true
       ;;
     *)
@@ -122,25 +103,25 @@ for arg in $*; do
   esac
 done
 
-if [ "x${subcmd}" = "x" ]; then
-  if $help; then
+if [ -z "${subcmd}" ]; then
+  if ${help}; then
     printHelp
     exit 0
-  elif $version; then
+  elif ${version}; then
     : # fall through
   else
-    printSyntax
+    printHelp
     exit 4
   fi
 fi
 
-if $help; then
+if ${help}; then
   subopts="--help"
 fi
 
-if $version; then
-  if [ "x${subcmd}" = "x" ]; then
-    subopts="$ME"
+if ${version}; then
+  if [ -z "${subcmd}" ]; then
+    subopts="${ME}"
   else
     subopts="${subcmd}"
   fi

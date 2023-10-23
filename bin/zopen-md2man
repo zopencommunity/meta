@@ -7,14 +7,14 @@
 #
 setupMyself()
 {
-        ME=$(basename $0)
-        MYDIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
-        INCDIR="${MYDIR}/../include"
-        if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
-                echo "Internal Error. Unable to find common.sh file to source" >&2
-                exit 8
-        fi
-        . "${INCDIR}/common.sh"
+  ME=$(basename $0)
+  MYDIR="$(cd "$(dirname "$0")" > /dev/null 2>&1 && pwd -P)"
+  INCDIR="${MYDIR}/../include"
+  if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
+    echo "Internal Error. Unable to find common.sh file to source" >&2
+    exit 8
+  fi
+  . "${INCDIR}/common.sh"
 }
 setupMyself
 
@@ -29,7 +29,7 @@ if [[ $# -eq 1 ]]; then
     printSyntax
     exit 0
   elif [ "x$1" = "x--version" ]; then
-    zopen --version $ME
+    zopen-version $ME
     exit 0
   else
     echo "Unrecognized option $1. Processing terminated" >&2
@@ -39,16 +39,16 @@ if [[ $# -eq 1 ]]; then
 fi
 
 set -e
-zopen_version='0.7.0' ## add code to perform zopen --version once supported
+zopen_version="$(zopen --version)"
 zopen_date=$(date "+%B %d %Y")
 
 mandir="${MYDIR}/man1" ## may want this elsewhere
 
 for mdf in "${curdir}"/*.md; do
-	bf=$(basename $mdf)
-	zopen_tool=${bf%%.md}
+  bf=$(basename ${mdf})
+  zopen_tool=${bf%%.md}
 
-header="---
+  header="---
 title: ${zopen_tool}
 section: 1
 header: User Manual
@@ -56,7 +56,7 @@ footer: ${zopen_version}
 date: ${zopen_date}
 ---
 "
-	body=$(cat ${mdf})
-	manfile="${mandir}/${zopen_tool}.1.gz"
-	echo "${header}${body}" | pandoc -s -f markdown -t man | gzip >${manfile}
+  body=$(cat ${mdf})
+  manfile="${mandir}/${zopen_tool}.1.gz"
+  echo "${header}${body}" | pandoc -s -f markdown -t man | gzip > ${manfile}
 done
