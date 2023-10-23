@@ -43,7 +43,9 @@ jobs:
           route: ${{ github.event.issue.pull_request.url }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: "echo latest release: '${{ steps.get_latest_release.outputs.data }}'"
+
+      - name: Display Github Data
+        run: "echo latest release: '${{ steps.request.outputs.data }}'"
 
       - name: Trigger Jenkins Job
         run: |
