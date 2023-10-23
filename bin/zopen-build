@@ -88,6 +88,9 @@ Optional:
   ZOPEN_CLEAN          Clean up program to run (defaults to '${ZOPEN_CLEAND}')
   ZOPEN_CLEAN_OPTS     Options to pass to clean up  program (defaults to '${ZOPEN_CLEAN_OPTSD}')
 
+Restricted Usage - only set in ports if necessary
+  ZOPEN_DONT_ADD_ZOSLIB_DEP Set it to avoid adding zoslib as a dependency
+
 Restricted Usage - only SET by metaport, otherwise READ ONLY:
   ZOPEN_INSTALL_DIR    Installation directory to pass to configuration (defaults to '\${ZOPEN_PKGINSTALL}/<pkg>/<pkg>')
   ZOPEN_NUM_JOBS       Number of jobs that can be run in parallel (defaults to 1/2 the CPUs on the system)
@@ -523,6 +526,11 @@ checkEnv()
     # user specified, so normalize in lower case
     ZOPEN_COMP=$(echo "${ZOPEN_COMP}" | tr '[A-Z]' '[a-z]')
     implicitDeps="${implicitDeps} comp_${ZOPEN_COMP}"
+  fi
+
+  if [ -z "${ZOPEN_DONT_ADD_ZOSLIB_DEP}" ]; then
+    # Add zoslib as an implicit library
+    implicitDeps="${implicitDeps} zoslib"
   fi
 
   if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
