@@ -1,4 +1,4 @@
-name: Test meta port
+name: Build and Test
 
 on:
   issue_comment:
@@ -11,6 +11,7 @@ on:
 
 jobs:
   build-meta-on-jenkins:
+    if: github.event.issue.pull_request || contains(github.event.comment.body, '/run tests') || github.event_name == 'workflow_dispatch'
     uses: ZOSOpenTools/meta/.github/workflows/build_and_test.yml@main
     with:
       repo: 'https://github.com/ZOSOpenTools/metaport.git'

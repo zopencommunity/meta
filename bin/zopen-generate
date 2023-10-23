@@ -6,7 +6,6 @@ ZOPEN_DONT_PROCESS_CONFIG=1
 #
 # All zopen-* scripts MUST start with this code to maintain consistency
 #
-
 setupMyself()
 {
   ME=$(basename $0)
@@ -20,7 +19,8 @@ setupMyself()
 }
 setupMyself
 
-buildLicenseLookup() {
+buildLicenseLookup()
+{
   licensesCSV="${MYDIR}/../data/licenses.csv"
   if [ ! -r "${licensesCSV}" ]; then
     return 4
@@ -28,7 +28,6 @@ buildLicenseLookup() {
 
   validLicenseNames="$(cat ${licensesCSV} | tail +1 | cut -f1 -d',' | xargs)"
 }
-
 
 printSyntax()
 {
@@ -113,7 +112,7 @@ mkdir -p ${name}port/patches
 
 # Create external LICENSE
 touch "${name}port/patches/LICENSE" && chtag -tc 819 "${name}port/patches/LICENSE"
-echo "${licenseName}\nView license contents at ${licenseUrl}" >"${name}port/patches/LICENSE"
+echo "${licenseName}\nView license contents at ${licenseUrl}" > "${name}port/patches/LICENSE"
 
 buildenv="${name}port/buildenv"
 touch ${buildenv} && chtag -tc 819 ${buildenv}
@@ -171,14 +170,12 @@ zopen_get_version()
 printInfo "${buildenv} created"
 
 touch "${name}port/README.md" && chtag -tc 819 "${name}port/README.md"
-
 cat << EOT > "${name}port/README.md"
 ${name}
 
 ${description}
 EOT
 printInfo "${name}port/README.md created"
-
 
 createCICD()
 {
@@ -190,11 +187,11 @@ node('linux')
 {
   stage ('Poll') {
     checkout([
-    \$class: 'GitSCM',
-    branches: [[name: '*/main']],
-    doGenerateSubmoduleConfigurations: false,
-    extensions: [],
-    userRemoteConfigs: [[url: 'https://github.com/ZOSOpenTools/${name}port.git']]])
+      \$class: 'GitSCM',
+      branches: [[name: '*/main']],
+      doGenerateSubmoduleConfigurations: false,
+      extensions: [],
+      userRemoteConfigs: [[url: 'https://github.com/ZOSOpenTools/${name}port.git']]])
   }
   stage('Build') {
     build job: 'Port-Pipeline', parameters: [string(name: 'PORT_GITHUB_REPO', value: 'https://github.com/ZOSOpenTools/${name}port.git'), string(name: 'PORT_DESCRIPTION', value: '${description}' ), string(name: 'BUILD_LINE', value: '${buildlineUpper}') ]
