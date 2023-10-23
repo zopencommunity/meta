@@ -82,11 +82,15 @@ jobs:
           # Retrieve the build URL once the job has started
           BUILD_NUMBER=$(curl -k -s "${{ secrets.JENKINS_SERVER_URL }}/queue/item/${BUILD_NUMBER}/api/json" -u "${{ secrets.JENKINS_USER }}:${{ secrets.JENKINS_API_TOKEN }}" | jq -r '.executable.number')
 
+          set +e
+          echo "Build in progress..."
           # Poll the Jenkins API to check if the build has completed
           while [ "$(curl -k -s "${{ secrets.JENKINS_SERVER_URL }}/job/Port-Build/${BUILD_NUMBER}/api/json" -u "${{ secrets.JENKINS_USER }}:${{ secrets.JENKINS_API_TOKEN }}" | jq -r '.building')" == "true" ]; do
-              echo "Build in progress..."
-              sleep 10
+              echo -n "."
+              sleep 1
           done
+          set -e
+          echo "\nConsole output: "
 
           # Retrieve the console output of the Jenkins job
           CONSOLE_OUTPUT=$(curl -k -s "${{ secrets.JENKINS_SERVER_URL }}/job/Port-Build/${BUILD_NUMBER}/consoleText" -u "${{ secrets.JENKINS_USER }}:${{ secrets.JENKINS_API_TOKEN }}")
