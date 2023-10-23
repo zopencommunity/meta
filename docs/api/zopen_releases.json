@@ -1,5 +1,5 @@
 {
-  "timestamp": "2023-10-23T00:44:14.678557",
+  "timestamp": "2023-10-23T12:55:20.460573",
   "release_data": {
     "automake": [
       {
@@ -7832,6 +7832,22 @@
       }
     ],
     "git": [
+      {
+        "name": "git (Build 1507) - (STABLE)",
+        "date": "2023-10-23 16:35:21",
+        "tag_name": "STABLE_gitport_1507",
+        "assets": [
+          {
+            "name": "git-2.41.0.20231023_154410.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/gitport/releases/download/STABLE_gitport_1507/git-2.41.0.20231023_154410.zos.pax.Z",
+            "size": 52577280,
+            "expanded_size": 108424159,
+            "runtime_dependencies": "bash less ncurses perl",
+            "total_tests": "91",
+            "passed_tests": "88"
+          }
+        ]
+      },
       {
         "name": "git (Build 1494) - (STABLE)",
         "date": "2023-10-20 14:36:33",
@@ -23637,24 +23653,6 @@
         ]
       }
     ],
-    "bump": [
-      {
-        "name": "bump (Build 1477) - (STABLE)",
-        "date": "2023-10-19 03:14:59",
-        "tag_name": "STABLE_bumpport_1477",
-        "assets": [
-          {
-            "name": "bump-master.20231019_030956.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/bumpport/releases/download/STABLE_bumpport_1477/bump-master.20231019_030956.zos.pax.Z",
-            "size": 9870336,
-            "expanded_size": 28814250,
-            "runtime_dependencies": "No dependencies",
-            "total_tests": "12",
-            "passed_tests": "12"
-          }
-        ]
-      }
-    ],
     "tig": [
       {
         "name": "tig (Build 1458) - (STABLE)",
@@ -23701,6 +23699,24 @@
             "runtime_dependencies": null,
             "total_tests": "1",
             "passed_tests": "1"
+          }
+        ]
+      }
+    ],
+    "bump": [
+      {
+        "name": "bump (Build 1477) - (STABLE)",
+        "date": "2023-10-19 03:14:59",
+        "tag_name": "STABLE_bumpport_1477",
+        "assets": [
+          {
+            "name": "bump-master.20231019_030956.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/bumpport/releases/download/STABLE_bumpport_1477/bump-master.20231019_030956.zos.pax.Z",
+            "size": 9870336,
+            "expanded_size": 28814250,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "12",
+            "passed_tests": "12"
           }
         ]
       }
