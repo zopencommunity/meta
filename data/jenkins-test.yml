@@ -1,4 +1,4 @@
-name: Test port
+name: Build and Test
 
 on:
   issue_comment:

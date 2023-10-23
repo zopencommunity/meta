@@ -90,7 +90,7 @@ jobs:
               sleep 1
           done
           set -e
-          echo "\nConsole output: "
+          echo "Console output: "
 
           # Retrieve the console output of the Jenkins job
           CONSOLE_OUTPUT=$(curl -k -s "${{ secrets.JENKINS_SERVER_URL }}/job/Port-Build/${BUILD_NUMBER}/consoleText" -u "${{ secrets.JENKINS_USER }}:${{ secrets.JENKINS_API_TOKEN }}")
