@@ -1,4 +1,6 @@
 #!/bin/sh
+# Initialize zopen
+ZOPEN_DONT_PROCESS_CONFIG=1
 # Generates a zopen compatible project
 #
 #
@@ -116,6 +118,8 @@ buildenv="${name}port/buildenv"
 touch ${buildenv} && chtag -tc 819 ${buildenv}
 
 cp "${MYDIR}/../data/CONTRIBUTING.md" "${name}port/CONTRIBUTING.md"
+mkdir -p "${name}port/.github/workflows"
+cp "${MYDIR}/../data/*.yml" "${name}port/.github/workflows/"
 
 if [ ! -z "${stablePath}" ]; then
   buildenvContents="export ZOPEN_STABLE_URL=\"${stablePath}\"\n"

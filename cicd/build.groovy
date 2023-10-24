@@ -44,6 +44,9 @@ if [ ! -z "$BUILD_LINE" ]; then
   extraOptions="$extraOptions --build $BUILD_LINE"
 fi
 
+if [ ! -z "$BUILD_BRANCH" ]; then
+  export ZOPEN_GIT_BRANCH="$BUILD_BRANCH"
+fi
 git clone -b "${PORT_BRANCH}" "${PORT_GITHUB_REPO}" ${PORT_NAME} && cd ${PORT_NAME}
 
 # Always run tests and update dependencies and generate pax file

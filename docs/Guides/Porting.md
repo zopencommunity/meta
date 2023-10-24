@@ -212,6 +212,11 @@ Once your repository is created, you will be invited as a collaborator.
 
 Proceed to clone the repository and submit a Pull Request including the initial contents of your z/OS port.
 
+### Contributing your changes
+
+Please follow the [contributing guidelines](https://github.com/ZOSOpenTools/meta/blob/main/CONTRIBUTING.md).
+
+
 ### Setting up the CI/CD pipeline
 
 Once you have a working build of your z/OS Open Source tool, then you may add it to the z/OS Open Source Jenkins CI/CD pipeline.
