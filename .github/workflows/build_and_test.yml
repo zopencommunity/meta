@@ -26,13 +26,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Get PR details
+        if: ${{ github.event_name == 'issue_comment'}}
         uses: xt0rted/pull-request-comment-branch@v1
         id: comment-branch
 
       - name: Set commit status as pending
         uses: myrotvorets/set-commit-status-action@master
         with:
-          sha: ${{ steps.comment-branch.outputs.head_sha }}
+          sha: ${{ steps.comment-branch.outputs.head_sha || github.sha }}
           token: ${{ secrets.GITHUB_TOKEN }}
           status: pending
 
