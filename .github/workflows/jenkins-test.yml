@@ -4,16 +4,15 @@ on:
   issue_comment:
     types:
       - created
-  pull_request:
-    types:
-      - opened 
+  pull_request_target:
+    types: [opened, synchronize, reopened]
   workflow_dispatch:
 
 jobs:
-  build-meta-on-jenkins:
-    if: github.event.issue.pull_request || contains(github.event.comment.body, '/run tests') || github.event_name == 'workflow_dispatch'
+  build-and-test:
+    if: (github.event.issue.pull_request && contains(github.event.comment.body, '/run tests')) || github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request_target'
     uses: ZOSOpenTools/meta/.github/workflows/build_and_test.yml@main
+    secrets: inherit
     with:
       repo: 'https://github.com/ZOSOpenTools/metaport.git'
       use_prbranch_as_build_branch: true
-    secrets: inherit

@@ -60,26 +60,7 @@ It should:
 
 ## Automated Tests
 
-We have set up automated tests for this repository using GitHub Actions. When you open a pull request or comment with `/run tests`, the following action will be triggered:
-
-```yaml
-name: Test Port
-
-on:
-  issue_comment:
-    types:
-      - created
-  pull_request:
-    types:
-      - opened
-  workflow_dispatch:
-
-jobs:
-  build-on-jenkins:
-    if: github.event.issue.pull_request || contains(github.event.comment.body, '/run tests') || github.event_name == 'workflow_dispatch'
-    uses: ZOSOpenTools/meta/.github/workflows/build_and_test.yml@main
-    secrets: inherit
-```
+We have set up automated tests for this repository using GitHub Actions. When you open a pull request or comment with `/run tests`, the following action will be triggered: [build_and_test.yml](https://github.com/zosopentools/meta/blob/main/data/build_and_test.yml).
 
 Please make sure your changes pass all the automated tests before merging your pull request. If the tests fail, our CI/CD system will provide information on what needs to be fixed.
 
