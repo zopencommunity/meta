@@ -41,7 +41,8 @@ jobs:
         id: request
         uses: octokit/request-action@v2.x
         with:
-          route: ${{ github.event.issue.pull_request.url }}
+          route: |
+            ${{ github.event.issue.pull_request.url || github.event.pull_request.url }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
