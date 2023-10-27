@@ -522,7 +522,7 @@ checkEnv()
     fi
   fi
 
-  implicitDeps="sed git"
+  implicitDeps="sed git jq"
 
   if [ -z "${ZOPEN_COMP}" ]; then
     implicitDeps="${implicitDeps} comp_xlclang"
@@ -572,7 +572,7 @@ checkEnv()
   ZOPEN_CATEGORIES_LOWER=$(printf "%s" "$ZOPEN_CATEGORIES" | tr '[:upper:]' '[:lower:]')
 
   for category in $(echo ${ZOPEN_CATEGORIES_LOWER} | tr ' ' '\n' | sort -u); do
-    if ! echo "${ZOPEN_VALID_CATEGORIES}" | tr ',' '\n' | grep -q "^${category}$"; then
+    if ! echo "${ZOPEN_VALID_CATEGORIES}" | tr ' ' '\n' | grep -q "^${category}$"; then
       printError "Invalid category specified in \$ZOPEN_CATEGORIES: ${category}"
     fi
   done
@@ -1500,7 +1500,6 @@ cat <<zz > "${ZOPEN_INSTALL_DIR}/metadata.json"
   "version": "${version}",
   "release": "${LOG_PFX}",
   "summary": "${name} on z/OS",
-  "pax": "${ZOPEN_NAME}.${LOG_PFX}.zos.pax.Z",
   "repo": "${ZOPEN_REMOTE_URL}",
   "categories": "${ZOPEN_CATEGORIES}",
   "test_status": "${ZOPEN_STATUS}",
@@ -1511,6 +1510,9 @@ cat <<zz > "${ZOPEN_INSTALL_DIR}/metadata.json"
   "commitsha": "${ZOPEN_COMMIT_SHA}"
 }}
 zz
+  if ! jq -e '.' "${ZOPEN_INSTALL_DIR}/metadata.json" 1>/dev/null 2>&1; then
+    printError "${ZOPEN_INSTALL_DIR}/metadata.json contains invalid json: $(cat ${ZOPEN_INSTALL_DIR}/metadata.json)"
+  fi 
   cp "${ZOPEN_INSTALL_DIR}/metadata.json" "${ZOPEN_ROOT}/install/metadata.json"
 }
 
@@ -1600,6 +1602,10 @@ install()
       if ! runAndLog "${ZOPEN_PAX_CMD}"; then
         printError "Could not generate pax \"${paxFileName}\""
       fi
+
+      pax_size=$(du -s "${paxFileName}" | awk '{print $1}')
+      jq '.product |= . + { "pax": "'${ZOPEN_NAME}.${LOG_PFX}.zos.pax.Z'", "pax_size": "'${pax_size}'" }' "${ZOPEN_ROOT}/install/metadata.json" > "${ZOPEN_ROOT}/install/metadata.json.tmp"
+      mv "${ZOPEN_ROOT}/install/metadata.json.tmp" "${ZOPEN_ROOT}/install/metadata.json"
     fi
     if ${setActive}; then
       PROJECT_NAME="$(echo ${ZOPEN_NAME} | cut -d'-' -f1)"
