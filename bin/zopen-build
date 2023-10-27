@@ -58,6 +58,7 @@ User-Provided environment variables:
 
 Required:
   ZOPEN_BUILD_LINE     Specify the default build line, either 'DEV' or 'STABLE'
+  ZOPEN_CATEGORIES     Specify all categories that apply with space as a delimiter. Valid categories: ('${ZOPEN_VALID_CATEGORIES}')
   ZOPEN_STABLE_URL     Required IF ZOPEN_BUILD_LINE='STABLE'. Specify the stable build url (either a git url or tarball url)
   ZOPEN_STABLE_DEPS    Required IF ZOPEN_BUILD_LINE='STABLE'. Specify the stable build dependencies
   ZOPEN_DEV_URL        Required IF ZOPEN_BUILD_LINE='DEV'. Specify the dev build url (either a git url or tarball url)
@@ -239,6 +240,8 @@ setDefaults()
   export ZOPEN_TEST_STATUS_NONE_PASSED=3
   export ZOPEN_TEST_STATUS_ERROR=4
   export ZOPEN_TEST_STATUS_SKIPPED=5
+  # Define the valid categories
+  export ZOPEN_VALID_CATEGORIES="$(cat ${MYDIR}/../data/tool_categories.txt)"
   unset ZOPEN_CPPFLAGS
   unset ZOPEN_CFLAGS
   unset ZOPEN_CXXFLAGS
@@ -403,6 +406,7 @@ loadBuildEnv()
   . ${buildEnvFile}
 
   setDefaultBuild
+  
 
   if command -V "zopen_post_buildenv" > /dev/null 2>&1; then
     printVerbose "Running zopen_post_buildenv"
@@ -518,7 +522,7 @@ checkEnv()
     fi
   fi
 
-  implicitDeps="sed" # for replaceHardcodedPaths logic
+  implicitDeps="sed git"
 
   if [ -z "${ZOPEN_COMP}" ]; then
     implicitDeps="${implicitDeps} comp_xlclang"
@@ -540,7 +544,7 @@ checkEnv()
     if [ -z "${ZOPEN_DEPS}" ]; then
       printError "ZOPEN_STABLE_DEPS, ZOPEN_DEV_DEPS, ZOPEN_DEPS or ZOPEN_TARBALL_DEPS needs to be defined"
     fi
-    implicitDeps="${implicitDeps} git curl tar"
+    implicitDeps="${implicitDeps} curl tar"
     ext=${ZOPEN_URL##*.}
     if [ "${ext}x" = "xzx" ]; then
       implicitDeps="${implicitDeps} xz"
@@ -558,9 +562,24 @@ checkEnv()
     if [ -z "${ZOPEN_DEPS}" ]; then
       printError "ZOPEN_STABLE_DEPS, ZOPEN_DEV_DEPS, ZOPEN_DEPS or ZOPEN_GIT_DEPS needs to be defined"
     fi
-    implicitDeps="${implicitDeps} git"
+    implicitDeps="${implicitDeps}"
     printVerbose "Implicitly adding git dependencies: ${implicitDeps}"
     ZOPEN_DEPS="${implicitDeps} ${ZOPEN_DEPS}"
+  fi 
+
+  ZOPEN_COMMIT_SHA="$(git rev-parse HEAD)"
+
+  ZOPEN_CATEGORIES_LOWER=$(printf "%s" "$ZOPEN_CATEGORIES" | tr '[:upper:]' '[:lower:]')
+
+  for category in $(echo ${ZOPEN_CATEGORIES_LOWER} | tr ' ' '\n' | sort -u); do
+    if ! echo "${ZOPEN_VALID_CATEGORIES}" | tr ',' '\n' | grep -q "^${category}$"; then
+      printError "Invalid category specified in \$ZOPEN_CATEGORIES: ${category}"
+    fi
+  done
+
+  ZOPEN_REMOTE_URL="$(git config --get remote.origin.url)"
+  if [ -z "${ZOPEN_REMOTE_URL}" ]; then
+    ZOPEN_REMOTE_URL="local"
   fi
 }
 
@@ -1452,12 +1471,17 @@ createReadme()
   cat "${MYDIR}/../data/README_footer.md" >> "${ZOPEN_INSTALL_DIR}/README.md"
 }
 
-generatePropertiesJSON()
+generateMetadataJSON()
 {
-  printHeader "Creating Properties JSON"
+  printHeader "Creating Metadata JSON"
   package=${ZOPEN_NAME}
-  name=$(echo ${package} | cut -d "-" -f 1)
-  version=$(echo ${package} | cut -d "-" -f 2)
+  name=$(echo $package | cut -d "-" -f 1)
+  if [ -z "${versionString}" ]; then
+    version=$(echo ${package} | cut -d "-" -f 2)
+
+  else
+    version="${versionString}"
+  fi
 
   # Make the version OCI compat
   case "${version}" in
@@ -1467,18 +1491,27 @@ generatePropertiesJSON()
   *) version="1.0.0.0" ;;
   esac
 
-  cat << zz > "${ZOPEN_INSTALL_DIR}/properties.json"
+  total_size=$(du -s "${ZOPEN_INSTALL_DIR}" | awk '{print $1}')
+
+cat <<zz > "${ZOPEN_INSTALL_DIR}/metadata.json"  
 {
 "product": {
-  "pax": "${ZOPEN_NAME}.${LOG_PFX}.zos.pax.Z",
   "name": "${name}",
   "version": "${version}",
   "release": "${LOG_PFX}",
   "summary": "${name} on z/OS",
-  "description": "TODO"
+  "pax": "${ZOPEN_NAME}.${LOG_PFX}.zos.pax.Z",
+  "repo": "${ZOPEN_REMOTE_URL}",
+  "categories": "${ZOPEN_CATEGORIES}",
+  "test_status": "${ZOPEN_STATUS}",
+  "buildline": "${ZOPEN_BUILD_LINE}",
+  "size": "${total_size}",
+  "runtimedeps": "$(cat "${ZOPEN_INSTALL_DIR}/.runtimedeps")",
+  "builddeps": "$(cat "${ZOPEN_INSTALL_DIR}/.builddeps")",
+  "commitsha": "${ZOPEN_COMMIT_SHA}"
 }}
 zz
-  cp "${ZOPEN_INSTALL_DIR}/properties.json" "${ZOPEN_ROOT}/install/properties.json"
+  cp "${ZOPEN_INSTALL_DIR}/metadata.json" "${ZOPEN_ROOT}/install/metadata.json"
 }
 
 install()
@@ -1516,9 +1549,10 @@ install()
     asciiecho "${ZOPEN_STATUS}" "${ZOPEN_ROOT}/install/test.status"
     cp "${ZOPEN_ROOT}/install/test.status" "${ZOPEN_INSTALL_DIR}/test.status"
 
-    if [ ! -z "${ZOPEN_BUILD_LINE}" ]; then
-      asciiecho "${ZOPEN_BUILD_LINE}" "${ZOPEN_INSTALL_DIR}/.buildline"
+    if [ -z "${ZOPEN_BUILD_LINE}" ]; then
+      ZOPEN_BUILD_LINE="STABLE"
     fi
+    asciiecho "${ZOPEN_BUILD_LINE}" "${ZOPEN_INSTALL_DIR}/.buildline"
 
     if [ -z "$(command -v zopen_get_version)" ]; then
       printError "A zopen_get_version() function must be defined in the buildenv to extract the version contents"
@@ -1550,10 +1584,8 @@ install()
       cp "${ZOPEN_INSTALL_DIR}/.version" "${ZOPEN_ROOT}/install/"
     fi
 
-    if [ ! -z "${ZOPEN_RUNTIME_DEPS}" ]; then
-      asciiecho "$(echo "${ZOPEN_RUNTIME_DEPS}" | xargs | tr ' ' '\n' | sort -u | xargs)" "${ZOPEN_INSTALL_DIR}/.runtimedeps"
-      cp "${ZOPEN_INSTALL_DIR}/.runtimedeps" "${ZOPEN_ROOT}/install/"
-    fi
+    asciiecho "$(echo "${ZOPEN_RUNTIME_DEPS}" | xargs | tr ' ' '\n' | sort -u | xargs)" "${ZOPEN_INSTALL_DIR}/.runtimedeps"
+    cp "${ZOPEN_INSTALL_DIR}/.runtimedeps" "${ZOPEN_ROOT}/install/"
 
     buildDeps="${ZOPEN_DEPS}"
     asciiecho "$(echo "${buildDeps}" | xargs | tr ' ' '\n' | sort -u | xargs)" "${ZOPEN_INSTALL_DIR}/.builddeps"
@@ -1561,7 +1593,7 @@ install()
 
     asciiecho "${LOG_PFX}" "${ZOPEN_INSTALL_DIR}/.buildtimestamp"
 
-    generatePropertiesJSON
+    generateMetadataJSON
 
     if ${generatePax}; then
       printHeader "Generating pax.Z from ${ZOPEN_INSTALL_DIR}"

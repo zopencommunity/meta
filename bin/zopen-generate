@@ -66,6 +66,25 @@ done
 echo "Provided a description of the project:"
 description=$(getInput)
 
+ZOPEN_VALID_CATEGORIES="$(cat ${MYDIR}/../data/tool_categories.txt)"
+valid=false
+while ! ${valid}; do
+  printHeader "Valid categories: ${ZOPEN_VALID_CATEGORIES}"
+  printHeader "What categories does the project fit under? (delimit with a space):"
+  categories=$(getInput)
+  categories=$(printf "%s" "${categories}" | tr '[:upper:]' '[:lower:]')
+  error=false
+  for category in $(echo ${categories} | tr ' ' '\n' | sort -u); do
+    if ! echo "${ZOPEN_VALID_CATEGORIES}" | tr ' ' '\n' | grep -q "^${category}$"; then
+      printWarning "Invalid category specified: ${category}"
+      error=true
+    fi
+  done
+  if ! $error; then
+    valid=true
+  fi
+done
+
 valid=false
 while ! ${valid}; do
   echo "Provide the community license to use for ${name}'s patches: (select from ${validLicenseNames})"
@@ -144,6 +163,8 @@ fi
 if [ ! -z "${runtimedeps}" ]; then
   buildenvContents="${buildenvContents}export ZOPEN_RUNTIME_DEPS=\"${runtimedeps}\"\n"
 fi
+
+buildenvContents="${buildenvContents}export ZOPEN_CATEGORIES=\"${categories}\"\n"
 
 buildenvContents="${buildenvContents}\nzopen_check_results()
 {
