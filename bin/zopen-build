@@ -1493,6 +1493,13 @@ generateMetadataJSON()
 
   total_size=$(du -s "${ZOPEN_INSTALL_DIR}" | awk '{print $1}')
 
+  if [ -z "$totalTests" ]; then
+    total_tests=-1
+  fi
+  if [ -z "$success" ]; then
+    success=-1
+  fi
+
 cat <<zz > "${ZOPEN_INSTALL_DIR}/metadata.json"  
 {
 "product": {
@@ -1502,7 +1509,8 @@ cat <<zz > "${ZOPEN_INSTALL_DIR}/metadata.json"
   "summary": "${name} on z/OS",
   "repo": "${ZOPEN_REMOTE_URL}",
   "categories": "${ZOPEN_CATEGORIES}",
-  "test_status": "${ZOPEN_STATUS}",
+  "total_tests": "${totalTests}",
+  "total_success": "${success}",
   "buildline": "${ZOPEN_BUILD_LINE}",
   "size": "${total_size}",
   "runtimedeps": "$(cat "${ZOPEN_INSTALL_DIR}/.runtimedeps")",
