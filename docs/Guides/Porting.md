@@ -106,6 +106,7 @@ export ZOPEN_DEV_DEPS="git make autoconf"
 export ZOPEN_STABLE_URL="https://github.com/stedolan/jq/releases/download/jq-1.6/jq-1.6.tar.gz"
 export ZOPEN_STABLE_DEPS="make"
 export ZOPEN_BUILD_LINE="STABLE"
+export ZOPEN_CATEGORIES="security networking"
 
 zopen_check_results()
 {
