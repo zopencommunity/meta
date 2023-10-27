@@ -1603,8 +1603,13 @@ install()
         printError "Could not generate pax \"${paxFileName}\""
       fi
 
+      #TODO: Hack so that we can use coreutils md5sum without impacting builds
+      ZOPEN_DEPS="coreutils jq"
+      setDepsEnv
+
       pax_size=$(du -s "${paxFileName}" | awk '{print $1}')
-      jq '.product |= . + { "pax": "'${ZOPEN_NAME}.${LOG_PFX}.zos.pax.Z'", "pax_size": "'${pax_size}'" }' "${ZOPEN_ROOT}/install/metadata.json" > "${ZOPEN_ROOT}/install/metadata.json.tmp"
+      md5sum=$(md5sum "${paxFileName}" | awk '{print $1}')
+      jq '.product |= . + { "pax": "'${ZOPEN_NAME}.${LOG_PFX}.zos.pax.Z'", "pax_size": "'${pax_size}'", "md5": "'${md5sum}'" }' "${ZOPEN_ROOT}/install/metadata.json" > "${ZOPEN_ROOT}/install/metadata.json.tmp"
       mv "${ZOPEN_ROOT}/install/metadata.json.tmp" "${ZOPEN_ROOT}/install/metadata.json"
     fi
     if ${setActive}; then
