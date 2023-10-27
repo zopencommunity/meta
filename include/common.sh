@@ -211,6 +211,20 @@ deref()
   fi
 }
 
+#return 1 if brightness is dark, 0 if light, and -1 if unknown (considered to be dark as default)
+darkbackground() {
+  if [ "${#COLORFGBG}" -ge 3 ]; then
+    bg=${COLORFGBG##*;}
+    if [ ${bg} -lt 7 ]; then
+      return 1
+    else
+      return 0
+    fi
+  else
+    return -1
+  fi
+}
+
 defineANSI()
 {
   # Standard tty codes
@@ -649,8 +663,17 @@ printVerbose()
 
 printHeader()
 {
+  darkbackground
+  dark=$?
+  if [ $dark -eq -1 ] || [ $dark -eq 1]; then
+    [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
+    printColors "${NC}${YELLOW}${BOLD}${UNDERLINE}${1}${NC}" >&2
+    [ ! -z "${xtrc}" ] && set -x
+    return 0
+  fi
+  
   [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
-  printColors "${NC}${YELLOW}${BOLD}${UNDERLINE}${1}${NC}" >&2
+  printColors "${NC}${MAGENTA}${BOLD}${UNDERLINE}${1}${NC}" >&2
   [ ! -z "${xtrc}" ] && set -x
   return 0
 }
@@ -796,8 +819,16 @@ printError()
 
 printWarning()
 {
+  darkbackground
+  dark=$?
+  if [ $dark -eq -1 ] || [ $dark -eq 1]; then
+    [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
+    printColors "${NC}${YELLOW}${BOLD}***WARNING: ${NC}${YELLOW}${1}${NC}" >&2
+    [ -n "${xtrc}" ] && set -x
+    return 0
+  fi
   [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
-  printColors "${NC}${YELLOW}${BOLD}***WARNING: ${NC}${YELLOW}${1}${NC}" >&2
+  printColors "${NC}${MAGENTA}${BOLD}***WARNING: ${NC}${MAGENTA}${1}${NC}" >&2
   [ -n "${xtrc}" ] && set -x
   return 0
 }
