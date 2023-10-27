@@ -128,6 +128,8 @@ zopen_append_to_zoslib_env()
 ```
 ZOPEN_STABLE_DEPS/ZOPEN_STABLE_DEPS are used to identify the non-standard z/OS Open Tools dependencies needed to build the project. 
 
+ZOPEN_CATEGORIES represent the [categories]((https://github.com/ZOSOpenTools/meta/blob/main/data/tool_categories.txt") that the tool or library fits under.
+
 `zopen_append_to_env()` can be used to add additional environment variables outside of the normal environment variables. (e.g. PATH, LIBPATH, MANPATH)
 
 Similarly, `zopen_append_to_zoslib_env()` can be used to set program specific environment variables.
