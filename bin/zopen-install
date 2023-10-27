@@ -263,7 +263,7 @@ handlePackageInstall()
       unInstallOldVersion=false
       printInfo "- Installing ${name}..."
     elif ${skipupgrade}; then
-      printInfo "Package ${name} has a newer release '${downloadFileVer}' but explicitly skipping due to the use of the 'skipupgrade' flag"
+      printInfo "Package ${name} has a newer release '${downloadFileVer}' but was not specified for an upgrade"
       continue
     elif ! ${setactive}; then
       printVerbose "Current version '${originalFileVersion}' will remain active"
