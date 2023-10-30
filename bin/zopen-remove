@@ -78,9 +78,10 @@ removePackages()
 args=$*
 
 verbose=false
+debug=false
 purge=false
 chosenRepos=""
-while [[ $# -gt 0 ]]; do
+while [ $# -gt 0 ]; do
   case "$1" in
   "-p" | "--purge")
     purge=true
@@ -94,7 +95,12 @@ while [[ $# -gt 0 ]]; do
     exit 0
     ;;
   "-v" | "--v" | "-verbose" | "--verbose")
+    # shellcheck disable=SC2034
     verbose=true
+    ;;
+  "--debug")
+    # shellcheck disable=SC2034
+    debug=true
     ;;
   *)
     chosenRepos="${chosenRepos} $1"
@@ -103,7 +109,7 @@ while [[ $# -gt 0 ]]; do
   shift
 done
 
-[[ ! -z "${chosenRepos}" ]] || printError "No packages selected for removal"
+[ -n "${chosenRepos}" ] || printError "No packages selected for removal"
 mutexReq "zopen" "zopen"
 removePackages "${chosenRepos}"
 mutexFree "zopen"
