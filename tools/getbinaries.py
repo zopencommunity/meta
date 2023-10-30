@@ -32,6 +32,7 @@ statusPerPort = {}
 dependentOn = {}
 patchesPerPort = {}
 totalPatchLinesPerPort = {}
+download_counts = {}
 
 # using an access token
 g = Github("access_token")
@@ -56,6 +57,7 @@ with open('docs/Latest.md', 'w') as f:
     print("| [" + r.name + "](" + r.html_url + ")", end='')
     dependentOn[r.name] = []
     releases = r.get_releases()
+    download_counts[r.name] = 0
     if (releases.totalCount):
       latestRelease = r.get_latest_release()
       status = latestRelease.body
@@ -75,6 +77,8 @@ with open('docs/Latest.md', 'w') as f:
         statusPerPort[r.name] = -1;
         print("| No status", end='');
         print("| N/A", end='');
+      for release in releases:
+        download_counts[r.name] += sum(asset.download_count for asset in release.get_assets())
     else:
       progressPerStatus["Not built"] += 1;
       statusPerPort[r.name] = -2;
@@ -225,6 +229,13 @@ with open('docs/Progress.md', 'w') as f:
     if patches == 0:
         checkMark = "&#10003;"
     print("| " + checkMark + " [" + x + "](https://github.com/ZOSOpenTools/" + x + ") | " + str(patchLines) + " | " + str(patches));
+
+  sorted_projects_by_downloads = sorted(download_counts.items(), key=lambda x: x[1], reverse=True)
+  print("\n## Projects with the most downloads\n")
+  print("| Package | Download Count |")
+  print("|---|---|")
+  for project, download_count in sorted_projects_by_downloads:
+    print("| [" + project + "](" + f"https://github.com/ZOSOpenTools/{project}" + ") | " + str(download_count) + " |")
 
   print("\nLast updated: ", todaysDate);
 
