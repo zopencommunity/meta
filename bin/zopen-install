@@ -245,7 +245,7 @@ handlePackageInstall()
     printVerbose "Install=${downloadFileVer};Original=${originalFileVersion};${upgradeInstalled};${installOrUpgrade};${reinstall}"
     if [ "${downloadFileVer}" = "${originalFileVersion}" ]; then
       if ! ${reinstall}; then
-        printInfo "${NC}${GREEN}Package ${name} is already installed at the requested version: ${downloadFileVer}${NC}"
+        printInfo "${NC}${GREEN}Package ${name} is already installed at the requested version: ${downloadFileVer}${NC} and due to the absence of the 'reinstall' flag, will not be reinstalled"
         return
       fi
       printInfo "- Reinstalling version '${downloadFileVer}' of ${name}..."
@@ -263,7 +263,7 @@ handlePackageInstall()
       unInstallOldVersion=false
       printInfo "- Installing ${name}..."
     elif ${skipupgrade}; then
-      printInfo "Package ${name} has a newer release '${downloadFileVer}' but explicitly skipping"
+      printInfo "Package ${name} has a newer release '${downloadFileVer}' but was not specified for an upgrade"
       continue
     elif ! ${setactive}; then
       printVerbose "Current version '${originalFileVersion}' will remain active"
