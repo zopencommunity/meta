@@ -792,7 +792,7 @@ printError()
   printColors "${NC}${RED}${BOLD}***ERROR: ${NC}${RED}${1}${NC}" >&2
   [ -n "${xtrc}" ] && set -x
   mutexFree "zopen" # prevent lock from lingering around after an error
-cleanupFunction
+  cleanupFunction
   exit 4
 }
 
