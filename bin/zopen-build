@@ -166,6 +166,18 @@ Optional:
   "
 }
 
+printSeeAlso()
+{
+  echo "SEE ALSO:
+  zopen(1)
+  zopen-init(1)
+  zopen-install(1)
+  zopen-list(1)
+  zopen-remove(1)
+  zopen-alt(1)
+  "
+}
+
 # Temporary files
 for tmp in "${TMPDIR}" "${TMP}" /tmp; do
   if [ ! -z ${tmp} ] && [ -d ${tmp} ]; then
@@ -288,6 +300,8 @@ printSyntax()
     echo "${opts}"
     fns=$(printFunctions)
     echo "${fns}"
+    seeAlso=$(printSeeAlso)
+    echo "${seeAlso}"
   )
 }
 
