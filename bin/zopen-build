@@ -64,29 +64,29 @@ Required:
   ZOPEN_DEV_DEPS       Required IF ZOPEN_BUILD_LINE='DEV'. Specify the dev build dependencies
 
 Optional:
-  ZOPEN_EXTRA_CPPFLAGS C/C++ pre-processor flags to append to CPPFLAGS (defaults to '')
-  ZOPEN_EXTRA_CFLAGS   C compiler flags to append to CFLAGS (defaults to '')
-  ZOPEN_EXTRA_CXXFLAGS C++ compiler flags to append to CXXFLAGS (defaults to '')
-  ZOPEN_EXTRA_LDFLAGS  C/C++ linker flags to append to LDFLAGS (defaults to '')
-  ZOPEN_EXTRA_LIBS     C/C++ libraries to append to LIBS (defaults to '')
+  ZOPEN_EXTRA_CPPFLAGS  C,C++ pre-processor flags to append to CPPFLAGS (defaults to '')
+  ZOPEN_EXTRA_CFLAGS    C compiler flags to append to CFLAGS (defaults to '')
+  ZOPEN_EXTRA_CXXFLAGS  C++ compiler flags to append to CXXFLAGS (defaults to '')
+  ZOPEN_EXTRA_LDFLAGS   C,C++ linker flags to append to LDFLAGS (defaults to '')
+  ZOPEN_EXTRA_LIBS      C,C++ libraries to append to LIBS (defaults to '')
 
-  ZOPEN_BOOTSTRAP      Bootstrap program to run. If skip is specified, no bootstrap step is performed (defaults to '${ZOPEN_BOOTSTRAPD}')
-  ZOPEN_BOOTSTRAP_OPTS Options to pass to bootstrap program (defaults to '${ZOPEN_BOOTSTRAP_OPTSD}')
-  ZOPEN_CONFIGURE      Configuration program to run. If skip is specified, no configuration step is performed (defaults to '${ZOPEN_CONFIGURED}')
-  ZOPEN_CONFIGURE_MINIMAL Configuration program will not be passed CFLAGS, LDFLAGS, CPPFLAGS options but will just get them from env vars
-  ZOPEN_CONFIGURE_OPTS Options to pass to configuration program (defaults to '--prefix=\${ZOPEN_INSTALL_DIR}')
-  ZOPEN_EXTRA_CONFIGURE_OPTS Extra configure options to pass to configuration program (defaults to '')
-  ZOPEN_MAKE           Build program to run. If skip is specified, no build step is performed (defaults to '${ZOPEN_MAKED}')
-  ZOPEN_MAKE_MINIMAL   Build program will not be passed CFLAGS, LDFLAGS, CPPFLAGS options but will just get them from env vars
-  ZOPEN_MAKE_OPTS      Options to pass to build program (defaults to '-j\${ZOPEN_NUM_JOBS}')
-  ZOPEN_CHECK          Check program to run. If skip is specified, no check step is performed (defaults to '${ZOPEN_CHECKD}')
-  ZOPEN_CHECK_MINIMAL  Check program will not be passed CFLAGS, LDFLAGS, CPPFLAGS options but will just get them from env vars
-  ZOPEN_CHECK_OPTS     Options to pass to check program (defaults to '${ZOPEN_CHECK_OPTSD}')
-  ZOPEN_CHECK_TIMEOUT  Timeout limit in seconds for the check program (defaults to '${ZOPEN_CHECK_TIMEOUTD}')
-  ZOPEN_INSTALL        Installation program to run. If skip is specified, no installation step is performed (defaults to '${ZOPEN_INSTALLD}')
-  ZOPEN_INSTALL_OPTS   Options to pass to installation program (defaults to '${ZOPEN_INSTALL_OPTSD}')
-  ZOPEN_CLEAN          Clean up program to run (defaults to '${ZOPEN_CLEAND}')
-  ZOPEN_CLEAN_OPTS     Options to pass to clean up  program (defaults to '${ZOPEN_CLEAN_OPTSD}')
+  ZOPEN_BOOTSTRAP             Bootstrap program to run. If skip is specified, no bootstrap step is performed (defaults to '${ZOPEN_BOOTSTRAPD}')
+  ZOPEN_BOOTSTRAP_OPTS        Options to pass to bootstrap program (defaults to '${ZOPEN_BOOTSTRAP_OPTSD}')
+  ZOPEN_CONFIGURE             Configuration program to run. If skip is specified, no configuration step is performed (defaults to '${ZOPEN_CONFIGURED}')
+  ZOPEN_CONFIGURE_MINIMAL     Configuration program will not be passed CFLAGS, LDFLAGS, CPPFLAGS options but will just get them from env vars
+  ZOPEN_CONFIGURE_OPTS        Options to pass to configuration program (defaults to '--prefix=\${ZOPEN_INSTALL_DIR}')
+  ZOPEN_EXTRA_CONFIGURE_OPTS  Extra configure options to pass to configuration program (defaults to '')
+  ZOPEN_MAKE                  Build program to run. If skip is specified, no build step is performed (defaults to '${ZOPEN_MAKED}')
+  ZOPEN_MAKE_MINIMAL          Build program will not be passed CFLAGS, LDFLAGS, CPPFLAGS options but will just get them from env vars
+  ZOPEN_MAKE_OPTS             Options to pass to build program (defaults to '-j\${ZOPEN_NUM_JOBS}')
+  ZOPEN_CHECK                 Check program to run. If skip is specified, no check step is performed (defaults to '${ZOPEN_CHECKD}')
+  ZOPEN_CHECK_MINIMAL         Check program will not be passed CFLAGS, LDFLAGS, CPPFLAGS options but will just get them from env vars
+  ZOPEN_CHECK_OPTS            Options to pass to check program (defaults to '${ZOPEN_CHECK_OPTSD}')
+  ZOPEN_CHECK_TIMEOUT         Timeout limit in seconds for the check program (defaults to '${ZOPEN_CHECK_TIMEOUTD}')
+  ZOPEN_INSTALL               Installation program to run. If skip is specified, no installation step is performed (defaults to '${ZOPEN_INSTALLD}')
+  ZOPEN_INSTALL_OPTS          Options to pass to installation program (defaults to '${ZOPEN_INSTALL_OPTSD}')
+  ZOPEN_CLEAN                 Clean up program to run (defaults to '${ZOPEN_CLEAND}')
+  ZOPEN_CLEAN_OPTS            Options to pass to clean up  program (defaults to '${ZOPEN_CLEAN_OPTSD}')
 
 Restricted Usage - only set in ports if necessary
   ZOPEN_DONT_ADD_ZOSLIB_DEP Set it to avoid adding zoslib as a dependency
@@ -108,13 +108,13 @@ Restricted Usage (tclport):
   ZOPEN_SRC_DIR        specify a relative source directory to cd to for bootstrap, configure, build, check, install (defaults to '.')
 
 Restricted Usage (meta):
-  ZOPEN_IMAGE_REGISTRY Docker image registry to an OCI image to (use with --oci option)
-  ZOPEN_IMAGE_DOCKERFILE_NAME Dockerfile name (default: Dockerfile)
-  ZOPEN_IMAGE_DOCKER_NAME Docker/podman tool name (default: podman)
-  ZOPEN_IMAGE_REGISTRY_ID The ID to authenticate to the Docker image registry (use with --oci option)
-  ZOPEN_IMAGE_REGISTRY_KEY_FILE The file containing the key to authenticate to the Docker image registry (use with --oci option)
-  ZOPEN_LOG_DIR        The directory to store build logs (defaults to '${ZOPEN_ROOT}/log')
-  ZOPEN_SHELL          Specify an alternate shell to use if -s option specified (defaults to /bin/sh)
+  ZOPEN_IMAGE_REGISTRY           Docker image registry to an OCI image to (use with --oci option)
+  ZOPEN_IMAGE_DOCKERFILE_NAME    Dockerfile name (default: Dockerfile)
+  ZOPEN_IMAGE_DOCKER_NAME        Docker/podman tool name (default: podman)
+  ZOPEN_IMAGE_REGISTRY_ID        The ID to authenticate to the Docker image registry (use with --oci option)
+  ZOPEN_IMAGE_REGISTRY_KEY_FILE  The file containing the key to authenticate to the Docker image registry (use with --oci option)
+  ZOPEN_LOG_DIR                  The directory to store build logs (defaults to '${ZOPEN_ROOT}/log')
+  ZOPEN_SHELL                    Specify an alternate shell to use if -s option specified (defaults to /bin/sh)
 
 Being reworked to move to common ZOPEN_xxx_GIT_REFS:
   ZOPEN_DEV_TAG        The tag that the git repo should checkout as a branch (optional)
@@ -159,7 +159,7 @@ Optional:
   zopen_pre_build             This function runs before the 'make' step of the build is run.
   zopen_append_to_env         This function runs as part of generation of the .env file. The output of the function is appended to .env
   zopen_append_to_setup       This function runs as part of generation of the setup.sh file. The output of the function is appended to setup.sh
-  zopen_append_to_validate_install This function runs as part of generation of the install_test.sh file. The output of the function is appended to install_test.sh script.
+  zopen_append_to_validate_install  This function runs as part of generation of the install_test.sh file. The output of the function is appended to install_test.sh script.
   zopen_pre_install           This function runs before the 'install' step of the build is run.
   zopen_post_install          This function runs after the 'install' step of the build is run.
   zopen_append_to_zoslib_env  This function runs as part of generation of the C function zoslib_env_hook, which can be used to set environment variables before main is run.
@@ -258,32 +258,31 @@ printSyntax()
   (
     echo ""
     echo "zopen-build is a general purpose build script to be used with the ZOSOpenTools ports."
-    echo "The specifics of how the tool works can be controlled through environment variables."
-    echo "The only environment variables you _must_ specify are to tell zopen-build where the "
-    echo "  source is, and in what format type the source is stored."
-    echo "By default, the environment variables are defined in a file named buildenv in the "
-    echo "  root directory of the <package>port github repository"
-    echo "To see a fully functioning z/OSOpenTools sample port"
-    echo "  see: https://github.com/ZOSOpenTools/zotsampleport"
     echo ""
     echo "Usage: zopen-build [OPTION]..."
-    echo "  Option:"
-    echo "  -h                 print this information"
-    echo "  -v                 run in verbose mode"
-    echo "  -vv                run in very verbose mode (sets environment variables V=1 and VERBOSE=1)"
-    echo "  -u,--upgradedeps   upgrade all dependencies by running zopen install"
-    echo "  --buildtype TYPE   TYPE may be release or debug.  The default is release"
-    echo "  --build LINE       LINE may be dev or stable. This is the build line to build off of"
-    echo "  --comp COMP        COMP may be comp_xlclang, comp_clang, comp_go, comp_python. The default is comp_xlclang."
-    echo "  --oci              build and publish an OCI image to \$ZOPEN_IMAGE_REGISTRY"
-    echo "  -e ENV_FILE        source ENV_FILE instead of buildenv to establish build environment"
-    echo "  -c,--clean         Deletes all of the build output and forces reconfigure with next build"
-    echo "  -f,--force-rebuild forces a rebuild, including running bootstrap and configure again"
-    echo "  -g,--get-source    get the source and apply patch without building"
-    echo "  -gp,--generate-pax generate a pax.Z file based on the install contents"
-    echo "  --forcepatchapply  force apply the patches, where rejected patches are placed into a corresponding file of the same name, with the .rej extension"
-    echo "  --no-set-active    do not change the pinned version" 
-    echo "  -s                 exec a shell before running configure.  Useful when manually building ports."
+    echo ""
+    echo "Option:"
+    echo "  -h                   print this information"
+    echo "  -v                   run in verbose mode"
+    echo "  -vv                  run in very verbose mode (sets environment variables V=1 and VERBOSE=1)"
+    echo "  -u, --upgradedeps    upgrade all dependencies by running zopen install"
+    echo "  --buildtype TYPE     TYPE may be release or debug.  The default is release"
+    echo "  --build LINE         LINE may be dev or stable. This is the build line to build off of"
+    echo "  --comp COMP          COMP may be comp_xlclang, comp_clang, comp_go, comp_python. The default is comp_xlclang."
+    echo "  --oci                build and publish an OCI image to \$ZOPEN_IMAGE_REGISTRY"
+    echo "  -e ENV_FILE          source ENV_FILE instead of buildenv to establish build environment"
+    echo "  -c, --clean          Deletes all of the build output and forces reconfigure with next build"
+    echo "  -f, --force-rebuild  forces a rebuild, including running bootstrap and configure again"
+    echo "  -g, --get-source     get the source and apply patch without building"
+    echo "  -gp, --generate-pax  generate a pax.Z file based on the install contents"
+    echo "  --forcepatchapply    force apply the patches, where rejected patches are placed into a corresponding file of the same name, with the .rej extension"
+    echo "  --no-set-active      do not change the pinned version" 
+    echo "  -s                   exec a shell before running configure.  Useful when manually building ports."
+    echo ""
+    echo "The specifics of how the tool works can be controlled through environment variables."
+    echo "The only environment variables you _must_ specify are to tell zopen-build where the source is, and in what format type the source is stored."
+    echo "By default, the environment variables are defined in a file named buildenv in the root directory of the [PACKAGE]port github repository"
+    echo "To see a fully functioning z/OSOpenTools sample port see: https://github.com/ZOSOpenTools/zotsampleport"
 
     opts=$(printEnvVar)
     echo "${opts}"
