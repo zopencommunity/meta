@@ -232,7 +232,10 @@ defineANSI()
   ERASELINE="${ESC}[2K"
   CRSRHIDE="${ESC}[?25l"
   CRSRSHOW="${ESC}[?25h"
-
+  
+  
+  
+  
   # Color-type codes, needs explicit terminal settings
   if [ ! "${_BPX_TERMPATH-x}" = "OMVS" ] && [ -z "${NO_COLOR}" ] && [ ! "${FORCE_COLOR-x}" = "0" ] && [ -t 1 ] && [ -t 2 ]; then
     esc="\047"
@@ -262,6 +265,18 @@ defineANSI()
     BOLD=''
     UNDERLINE=''
     NC=''
+  fi
+
+  darkbackground
+  bg=$?
+  if [ $bg -ne 0 ]; then 
+    #if the background was set to black or unknown the header and warning color will be yellow
+    HEADERCOLOR="${YELLOW}"
+    WARNINGCOLOR="${YELLOW}"
+  else
+    #else the header and warning color will become magenta
+    HEADERCOLOR="${MAGENTA}"
+    WARNINGCOLOR="${MAGENTA}"
   fi
 }
 
@@ -663,19 +678,11 @@ printVerbose()
 
 printHeader()
 {
-  darkbackground
-  dark=$?
-  if [ $dark -eq -1 ] || [ $dark -eq 1]; then
-    [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
-    printColors "${NC}${YELLOW}${BOLD}${UNDERLINE}${1}${NC}" >&2
-    [ ! -z "${xtrc}" ] && set -x
-    return 0
-  fi
-  
   [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
-  printColors "${NC}${MAGENTA}${BOLD}${UNDERLINE}${1}${NC}" >&2
+  printColors "${NC}${HEADERCOLOR}${BOLD}${UNDERLINE}${1}${NC}" >&2
   [ ! -z "${xtrc}" ] && set -x
   return 0
+
 }
 
 runAndLog()
@@ -819,16 +826,8 @@ printError()
 
 printWarning()
 {
-  darkbackground
-  dark=$?
-  if [ $dark -eq -1 ] || [ $dark -eq 1]; then
-    [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
-    printColors "${NC}${YELLOW}${BOLD}***WARNING: ${NC}${YELLOW}${1}${NC}" >&2
-    [ -n "${xtrc}" ] && set -x
-    return 0
-  fi
   [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
-  printColors "${NC}${MAGENTA}${BOLD}***WARNING: ${NC}${MAGENTA}${1}${NC}" >&2
+  printColors "${NC}${WARNINGCOLOR}${BOLD}***WARNING: ${NC}${YELLOW}${1}${NC}" >&2
   [ -n "${xtrc}" ] && set -x
   return 0
 }
