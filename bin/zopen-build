@@ -289,7 +289,7 @@ printSyntax()
     echo "${opts}"
     fns=$(printFunctions)
     echo "${fns}"
-  ) >&2
+  )
 }
 
 processOptions()
