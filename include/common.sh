@@ -3,42 +3,60 @@
 # shellcheck shell=sh
 #
 
-addCleanupTrapCmd()
+zopenInitialize()
 {
-  newCmd=$(echo "$1" | sed -e 's/^[ ]*//' -e 's/[ ]*$//')
-  if [ -e "${ZOPEN_CLEANUP_PIPE}" ]; then
-    (echo "${newCmd}" > "${ZOPEN_CLEANUP_PIPE}")&
-  else
-    printSoftError "Cleanup pipeline not available; temporary files and resources might not be cleared"
+  # Create the cleanup pipeline and exit handler
+  trap "cleanupFunction" EXIT INT TERM QUIT HUP
+  defineEnvironment
+  defineANSI
+  if [ -z "${ZOPEN_DONT_PROCESS_CONFIG}" ]; then
+    processConfig
+  fi
+  ZOPEN_JSON_CACHE_URL="https://zosopentools.github.io/meta/api/zopen_releases.json"
+}
+
+addCleanupTrapCmd(){
+  newcmd=$1
+  # Small timing window if the script is killed between the creation
+  # and removal of the temporary file; would be easier if zos sh
+  # didn't have a bug -trap can't be piped/redirected anywhere except
+  # a file like it can in bash or non-zos sh as it seems to create
+  # and run in the subshell before returning trap handler(s)!?!
+  tmpscriptfile="clean.tmp"
+  trap > "${tmpscriptfile}" 2>&1 && script=$(cat "${tmpscriptfile}")
+  rm "${tmpscriptfile}"
+  if [ -n "${script}" ]; then
+    for trappedSignal in "EXIT" "INT" "TERM" "QUIT" "HUP"; do
+      newtrapcmd=$(echo "${script}" | while read trapcmd; do
+	       sigcmd=$(echo "${trapcmd}" | sed "s/trap -- \"\(.*\)\" ${trappedSignal}.*/\1/")
+	       [ "${sigcmd}" = "${trapcmd}" ] && continue
+	       printf "%s;%s" "${sigcmd}" "${newcmd}" | tr -s ';'
+         break
+      done
+      )
+      if [ -n "${newtrapcmd}" ]; then
+        trap -- "${newtrapcmd}" "${trappedSignal}"
+      fi
+    done
   fi
 }
 
 cleanupFunction()
 {
-  # Only action the cleanup pipeline when not in a sub-zopen-process
-  parentCmd=$(ps -o args= -p "${PPID}")
-  if [ -z "$parentCmd" ]; then
-    printDebug "ps did not list the process details for parent \$PPID=${PPID}"
-    return
-  fi
-  if echo "${parentCmd}" | grep "/bin/zopen" > /dev/null 2>&1; then
-    # we are a child of a zopen process so do not attempt to cleanuup yet!
-    return
-  fi
+  :
+}
 
-  if [ -e "${ZOPEN_CLEANUP_PIPE}" ]; then
-    # Add a cleanup of the pipe for when we are finished - explicitly
-    # add to the pipeline as if a user has CTRL-C'd early, that can 
-    # trigger cleanup with an empty pipeline, leaving the read of the pipe
-    # waiting indefinitely
-    addCleanupTrapCmd "rm -rf \"${ZOPEN_CLEANUP_PIPE}\""
-    while read cleanupcmd; do
-      eval "${cleanupcmd}" 2>/dev/null
-    done < "${ZOPEN_CLEANUP_PIPE}"
-    
-    unset ZOPEN_CLEANUP_PIPE
+# getParentProcess
+# returns the parent process for the specified process
+# input: $1 - the pid to get the parent of
+# return: 0 for error or parent process id
+getParentProcess()
+{
+  parent=$(ps -o ppid= -p "$1")
+  if parent=$(ps -o ppid= -p "$1"); then
+    return 0
   fi
-  trap - EXIT INT TERM QUIT HUP
+  return "${parent}"
 }
 
 # getCurrentVersionDir
@@ -530,7 +548,7 @@ unsymlinkFromSystem()
     printDebug "Starting spinner..."
     progressHandler "spinner" "- Complete" &
     ph=$!
-    killph="kill -HUP ${ph}"
+    killph="kill -HUP ${ph} 2>/dev/null"
     addCleanupTrapCmd "${killph}"
 
     printDebug "Spawning as subshell to handle threading"
@@ -606,25 +624,7 @@ deletetask()
   fi
 }
 
-zopenInitialize()
-{
-  # Create the cleanup pipeline and exit handler
-  trap "cleanupFunction" EXIT INT TERM QUIT HUP
-  [ -z "${ZOPEN_CLEANUP_PIPE}" ] \
-  && [ ! -p "${ZOPEN_CLEANUP_PIPE}" ] \
-  && ZOPEN_CLEANUP_PIPE=$(mktempfile "clean" "pipe") \
-  && mkfifo "${ZOPEN_CLEANUP_PIPE}" \
-  && chtag -tc 819 "${ZOPEN_CLEANUP_PIPE}" \
-  && export ZOPEN_CLEANUP_PIPE
 
-  defineEnvironment
-  defineANSI
-  if [ -z "${ZOPEN_DONT_PROCESS_CONFIG}" ]; then
-    processConfig
-  fi
-
-  ZOPEN_JSON_CACHE_URL="https://zosopentools.github.io/meta/api/zopen_releases.json"
-}
 
 
 printDebug()
@@ -681,7 +681,7 @@ runLogProgress()
   fi
   progressHandler "spinner" "- ${completeText}" &
   ph=$!
-  killph="kill -HUP ${ph}"
+  killph="kill -HUP ${ph} 2>/dev/null"
   addCleanupTrapCmd "${killph}"
   eval "$1"
   rc=$?
@@ -698,38 +698,34 @@ spinloop()
   # but without pre-reqing packages...
   i=$1
   while [ ${i} -ge 0 ]; do
-    true > /dev/null
+    :
     i=$((i - 1))
   done
 }
 
-progressNetwork()
+progressAnimation()
 {
-  # Loop until signal received
-  icon="-----"
-  ansiline 0 0 "${icon}"
+  [ $# -eq 0 ] && printError "Internal error: no animation strings"
+  animcnt=$#
+  anim=1
+  ansiline 0 0 "$1"
   while :; do
     spinloop 1000
-    case "${icon}" in
-    '-----') icon='>----' ;; '>----') icon='->---' ;; '->---') icon='-->--' ;; '-->--') icon='--->-' ;; '--->-') icon='---->' ;;
-    '---->') icon='----<' ;; '----<') icon='---<-' ;; '---<-') icon='--<--' ;; '--<--') icon='-<---' ;; '-<---') icon='<----' ;; '<----') icon='-----' ;;
-    esac
-    ansiline 1 -1 "${icon}"
+    # Check for daemonization of this process (ie. orphaned and PPID=1)
+    # Cannot actually use "$PPID" as it is set at script initialization
+    # and not updated when the parent changes so need to query
+    getParentProcess "$$" >/dev/null 2>&1
+    ppid=$?
+    [ "${ppid}" -eq 1 ] && kill INT "${ppid}" >/dev/null 2>&1
+    anim=$((anim + 1))
+    [ ${anim} -gt ${animcnt} ] && anim=1
+    ansiline 1 -1 $(getNthArrayArg "${anim}" "$@")
   done
 }
 
-progressSpinner()
-{
-  # Loop until signal received
-  icon="-"
-  ansiline 0 0 "${icon}"
-  while :; do
-    spinloop 1000
-    case "${icon}" in
-    '-') icon='\' ;; '\') icon='|' ;; '|') icon='/' ;; '/') icon='-' ;;
-    esac
-    ansiline 1 -1 "${icon}"
-  done
+getNthArrayArg () {
+    shift "$1"
+    echo "$1"
 }
 
 progressHandler()
@@ -738,13 +734,19 @@ progressHandler()
     [ -z "${-%%*x*}" ] && set +x # Disable -x debug if set for this process
     type=$1
     completiontext=$2 # Custom end text (when the process is complete)
-
     trapcmd="exit;"
-    [ -n "${completiontext}" ] && trapcmd="/bin/echo \"\047[1A\047[30D\047[2K${completiontext}\"; ${trapcmd}"
+    if [ -n "${completiontext}" ]; then
+      trapcmd="/bin/echo \"\047[1A\047[30D\047[2K${completiontext}\"; ${trapcmd}"
+    fi
+    # shellcheck disable=SC2064
     trap "${trapcmd}" HUP
     case "${type}" in
-    "network") progressNetwork ;;
-    *) progressSpinner ;;
+      "spinner") progressAnimation '-' '\' '|' '/' 
+      ;;
+      "network") progressAnimation '-----' '>----' '->---' '-->--' '--->-' '---->' '-----' '----<' '---<-' '--<--' '-<---' '<----'
+      ;;
+      *) progressAnimation '.' 'o' 'O' 'O' 'o' '.'
+      ;;
     esac
   fi
 }
@@ -772,8 +774,8 @@ runInBackgroundWithTimeoutAndLog()
       n=$(expr ${n} + 1)
     fi
   done
-  kill -9 "${PID}"
-  kill -9 ${TEEPID}
+  kill -9 "${PID}" 2>/dev/null
+  kill -9 "${TEEPID}" 2>/dev/null
   printError "TIMEOUT: (PID: ${PID}): ${command}"
 }
 
