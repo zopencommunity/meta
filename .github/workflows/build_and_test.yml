@@ -46,8 +46,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Display Github Data
-        run: "echo latest release: '${{ steps.request.outputs.data }}'"
+      #- name: Display Github Data
+      #  run: "echo latest release: '${{ steps.request.outputs.data }}'"
 
       - name: Trigger Jenkins Job
         run: |
