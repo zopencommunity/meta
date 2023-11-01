@@ -1,5 +1,4 @@
 *	      text	zos-working-tree-encoding=ISO8859-1
-# Sourcing of files tagged as IBM-1047 works universally across all shells/system setups:
 .env    text  zos-working-tree-encoding=IBM-1047
 *.pem   text  zos-working-tree-encoding=UTF-8
 *.png   binary
