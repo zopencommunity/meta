@@ -111,57 +111,6 @@ diffList()
   diffFile "${needlesfile}" "${haystackfile}"
 }
 
-# getCurrentVersionDir
-# returns the version directory that has been set as active/installed
-# indicating that the $needle is active.
-# inputs: $1 - package to get currently active version of
-# return: 0  for success (output of pwd -P command)
-#         4  if unable to access version directory (eg. not installed)
-#         !0 cd or pwd -P failed
-getCurrentVersionDir(){
-  needle="$1"
-  [ ! -L "${ZOPEN_PKGINSTALL}/${needle}/${needle}" ] \
-    && echo ""\
-    && return 4
-  cd "${ZOPEN_PKGINSTALL}/${needle}/${needle}" 2> /dev/null \
-    && pwd -P 2> /dev/null
-}
-
-# isPackageActive
-# returns whether the package is active ie. has a symlink from 
-#  $PKGINSTALL/pkg/pkg to a versioned directory
-# inputs: $1 - package to get currently active version of
-# return: 0  for active
-#         !0 for not active
-isPackageActive(){
-  needle="$1"
-  getCurrentVersionDir "$needle"
-}
-
-# Given two input files, return those lines in haystack file that are 
-# not in needles file
-diffFile()
-{
-  haystackfile="$1"
-  needlesfile="$2"
-  [ -s "${needlesfile}" ] || printError "Internal error; needle file was empty/non-existent."
-  diff=$(awk 'NR==FNR{needles[$0];next} 
-    !($0 in needles) {print}' "${needlesfile}" "${haystackfile}")
-  echo "${diff}"
-}
-
-# Given two input lists (with \n delimiters), return those lines in  
-# haystack that are not in needles
-diffList()
-{
-  haystack="$1"
-  needles="$2"
-  haystackfile=$(mktempfile "haystack")
-  cat "${haystack}" >"${haystackfile}"
-  needlesfile=$(mktempfile "needles")
-  cat "${needles}" >"${needlesfile}"
-  diffFile "${needlesfile}" "${haystackfile}"
-}
 # Generate a file name that has a high probability of being unique for
 # use as a temporary filename - the filename should be unique in the
 # instance it was generated and probability suggests it should be for
@@ -268,15 +217,6 @@ MANPATH=\${ZOPEN_ROOTFS}/usr/local/share/man:\${ZOPEN_ROOTFS}/usr/local/share/ma
 export MANPATH=\$(deleteDuplicateEntries \"\${MANPATH}\" \":\")
 EOF
 
-}
-
-isPackageActive(){
-  pkg="$1"
-  printDebug "Checking if '${pkg}' is installed and active"
-  installedPackage=$(cd "${ZOPEN_PKGINSTALL}" && zosfind . -name ".active" | grep "/${pkg}/")
-  cmdrc=$?
-  # Return 1 for true/Package is Active, 0 for false/Package is not active
-  [ "${cmdrc}" -eq 0 ] && return 1 || return 0
 }
 
 curlCmd()
@@ -1770,27 +1710,6 @@ EOF
     sessionList="${sessionLis} ${name}"
     printInfo "${NC}${GREEN}Successfully installed ${name}${NC}"
   fi # (download only)
-}
-
-zopenInitialize()
-{
-  # Create the cleanup pipeline and exit handler
-  trap "cleanupFunction" EXIT INT TERM QUIT HUP
-  [ -z "${ZOPEN_CLEANUP_PIPE}" ] \
-  && [ ! -p "${ZOPEN_CLEANUP_PIPE}" ] \
-  && ZOPEN_CLEANUP_PIPE=$(mktempfile "clean" "pipe") \
-  && mkfifo "${ZOPEN_CLEANUP_PIPE}" \
-  && chtag -tc 819 "${ZOPEN_CLEANUP_PIPE}" \
-  && export ZOPEN_CLEANUP_PIPE
-
-  addCleanupTrapCmd "stty echo 2>/dev/null" # set this as a default to ensure line visibility!
-  defineEnvironment
-  defineANSI
-  if [ -z "${ZOPEN_DONT_PROCESS_CONFIG}" ]; then
-    processConfig
-  fi
-
-  ZOPEN_JSON_CACHE_URL="https://zosopentools.github.io/meta/api/zopen_releases.json"
 }
 
 zopenInitialize
