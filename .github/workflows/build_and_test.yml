@@ -36,6 +36,7 @@ jobs:
           sha: ${{ steps.comment-branch.outputs.head_sha || github.sha }}
           token: ${{ secrets.GITHUB_TOKEN }}
           status: pending
+          context: "Build and Test"
 
       - name: Github API Request
         id: request
@@ -120,3 +121,4 @@ jobs:
           sha: ${{ steps.comment-branch.outputs.head_sha || github.sha }}
           token: ${{ secrets.GITHUB_TOKEN }}
           status: ${{ job.status }}
+          context: "Build and Test"
