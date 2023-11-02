@@ -1,0 +1,6 @@
+export PATH=/usr/lpp/IBM/cyp/v3r11/pyz/bin:$PATH
+export LIBPATH=/usr/lpp/IBM/cyp/v3r11/pyz/lib:$LIBPATH
+export __IPC_CLEANUP=1
+export LIBPATH=$LIBPATH:/lib/
+. /jenkins/zopen/etc/zopen-config
+
