@@ -101,12 +101,12 @@
 
     - name: runs vols_online
       shell: |
-        export PATH=/usr/lpp/ibm/zoautil/bin::$PATH
+        export PATH=/usr/lpp/IBM/zoautil/bin::$PATH
         cd sbin
         . ./volfunc 2>/dev/null >/dev/null
         vols_online | grep USER
       register: isUserOnline
-      ignore_errors: true
+      ignore_errors: True
       delegate_to: "myhost"
 
     - name: Runs df
@@ -177,7 +177,7 @@
         pax -rf ~/C_C++_for_Open_Enterprise_Languages.nonsmpe.pax.Z
       delegate_to: myhost
 
-    - name: Runs zopen init and initializes environment
+    - name: Runs zopen init, install git (+ dependencies) and initializes environment
       shell: |
         cd /jenkins
         pax -rf /tmp/meta-0.8.0.pax.Z
