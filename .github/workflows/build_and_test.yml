@@ -84,18 +84,29 @@ jobs:
 
           # Retrieve the build URL once the job has started
           BUILD_NUMBER=$(curl -k -s --header 'Accept: application/json' "${{ secrets.JENKINS_SERVER_URL }}/queue/item/${BUILD_NUMBER}/api/json" -u "${{ secrets.JENKINS_USER }}:${{ secrets.JENKINS_API_TOKEN }}" | jq -r '.executable.number')
+          echo "Job Number: $BUILD_NUMBER"
 
           set +e
           echo "Build in progress..."
+          echo "See ${{ secrets.JENKINS_USER }}/job/Port-Build/${BUILD_NUMBER}/console for more details (if you have access)"
           # Poll the Jenkins API to check if the build has completed
-          while [ "$(curl -k -s --header 'content-type: nocache' --header 'Accept: application/json' "${{ secrets.JENKINS_SERVER_URL }}/job/Port-Build/${BUILD_NUMBER}/api/json" -u "${{ secrets.JENKINS_USER }}:${{ secrets.JENKINS_API_TOKEN }}" | jq -r '.building')" == "true" ]; do
-              echo -n "."
-              sleep 10
+          while true; do
+            set +e
+            CURL_OUTPUT=$(curl -k -s  -u "${{ secrets.JENKINS_USER }}:${{ secrets.JENKINS_API_TOKEN }}" --header 'content-type: nocache' --header 'Accept: application/json' "${{ secrets.JENKINS_SERVER_URL }}/job/Port-Build/${BUILD_NUMBER}/api/json" --fail)
+            set -e
+            if [ $? -gt 0 ]; then
+              CURL_OUTPUT=$(curl -k -s  -u "${{ secrets.JENKINS_USER }}:${{ secrets.JENKINS_API_TOKEN }}" --header 'content-type: nocache' --header 'Accept: application/json' "${{ secrets.JENKINS_SERVER_URL }}/job/Port-Build/${BUILD_NUMBER}/api/json" --fail)
+            fi
+            if [ "$(echo "${CURL_OUTPUT}" | jq -r '.building')" == "true" ]; do
+              break;
+            fi
+            echo -n "."
+            sleep 10
           done
           set -e
           echo "Console output: "
           # Retrieve the console output of the Jenkins job
-          curl -k -s "--header 'content-type: nocache' ${{ secrets.JENKINS_SERVER_URL }}/job/Port-Build/${BUILD_NUMBER}/consoleText" -u "${{ secrets.JENKINS_USER }}:${{ secrets.JENKINS_API_TOKEN }}"
+          curl -k -s "--header 'content-type: nocache' "${{ secrets.JENKINS_SERVER_URL }}/job/Port-Build/${BUILD_NUMBER}/consoleText" -u "${{ secrets.JENKINS_USER }}:${{ secrets.JENKINS_API_TOKEN }}"
 
           if [ "$(curl -k -s --header 'content-type: nocache' --header 'Accept: application/json' "${{ secrets.JENKINS_SERVER_URL }}/job/Port-Build/${BUILD_NUMBER}/api/json" -u "${{ secrets.JENKINS_USER }}:${{ secrets.JENKINS_API_TOKEN }}" | jq -r '.result')" != "SUCCESS" ]; then
             echo "Job failed..."
