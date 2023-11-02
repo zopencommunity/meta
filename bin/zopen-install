@@ -170,7 +170,7 @@ while [ $# -gt 0 ]; do
       xdebug=true
     ;;
   "--version")
-    zopen-version ${ME}
+    zopen-version "${ME}"
     exit 0
     ;;
   *)
@@ -192,7 +192,7 @@ if [ -z "${chosenRepos}" ]; then
     printInfo "- Querying for installed packages."
     progressHandler "spinner" "- Query complete." &
     ph=$!
-    killph="kill -HUP ${ph} 2>/dev/null"
+    killph="kill -HUP ${ph}"
     addCleanupTrapCmd "${killph}"
     chosenRepos="$(${MYDIR}/zopen-query --list --installed --no-header --no-version 2>&1)"
     zqrc=$?
@@ -237,7 +237,6 @@ if ! ${paxinstall}; then
   printVerbose "Querying remote repo for latest package information"
   getReposFromGithub
   grfgRc=$?
-  ${killph} 2>/dev/null  # if the timer is not running, the kill will fail
   [ 0 -ne ${grfgRc} ] && exit ${grfgRc};
 else
   printDebug "Using pax files for install"

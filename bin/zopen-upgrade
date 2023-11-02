@@ -12,6 +12,7 @@ setupMyself()
     echo "Internal Error. Unable to find common.sh file to source" >&2
     exit 8
   fi
+  # shellcheck disable=SC1091
   . "${INCDIR}/common.sh"
 }
 setupMyself
@@ -32,26 +33,10 @@ Options:
   -h,-?, --help     display this help and exit
 
 Examples:
-  zopen install foo 
-                    install package foo if not already installed
-  zopen install --release-line DEV foo
-                    install package foo from the DEV releaseline if
-                    available
-  zopen upgrade     upgrade all packages to latest version on their
+  zopen upgrade foo 
+                    upgrade package foo if installed
+  zopen upgrade -y  upgrade all packages to latest version on their
                     releaseline
-  zopen install -y foo bar --no-deps
-                    install packages foo and bar without asking for
-                    user confirmation and without installing any
-                    dependencies
-  zopen install --paxinstall foo
-                    locate the pax file for foo in the current
-                    directory or the system-configured paxdir and
-                    install
-  zopen install --paxinstall /tmp/foo-1.2.3-4.zos.pax.Z
-                    install package foo from the specified location
-  zopen install -y --paxinstall --paxrepodir /tmp foo-1.2.3-4.zos.pax.Z
-                    check for the named package in /tmp and install
-                    package foo if found
 
 Report bugs at https://github.com/ZOSOpenTools/meta/issues .
 
@@ -102,11 +87,7 @@ while [ $# -gt 0 ]; do
       printHelp "${args}"
       exit 0
       ;;
-    "--debug")
-      verbose=true
-      debug=true
-      ;;
-    "-v" | "--verbose")
+     "-v" | "--verbose")
       verbose=true
       ;;
     "--debug")
@@ -119,7 +100,7 @@ while [ $# -gt 0 ]; do
       xdebug=true
     ;;
     "--version")
-      zopen --version "${ME}"
+      zopen-version "${ME}"
       exit 0
       ;;
     *)
@@ -137,10 +118,10 @@ if [ -z "${chosenRepos}" ]; then
     printInfo "- Querying for installed packages"
     progressHandler "spinner" "- Query complete" &
     ph=$!
-    killph="kill -HUP ${ph} 2>/dev/null"
+    killph="kill -HUP ${ph}"
     addCleanupTrapCmd "${killph}"
     chosenRepos="$(${MYDIR}/zopen-query list --installed --no-header --no-versions)"
-    ${killph} # if the timer is not running, the kill will fail
+    ${killph} 2>/dev/null # if the timer is not running, the kill will fail
 fi
 
 checkIfConfigLoaded
@@ -169,7 +150,6 @@ if ! ${paxinstall}; then
   printVerbose "Querying remote repo for latest package information"
   getReposFromGithub
   grfgRc=$?
-  ${killph} # if the timer is not running, the kill will fail
   [ 0 -ne ${grfgRc} ] && exit ${grfgRc};
 else
   printDebug "Using pax files for install, not GH"

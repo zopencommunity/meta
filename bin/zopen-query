@@ -211,7 +211,7 @@ printInstalledEntries()
   printVerbose "Packages: ${installedPackages}"
   echo "${installedPackages}" | xargs | tr ' ' '\n' | sort | while read repo; do
     repo="${repo##*/}"
-    pkghome="${ZOPEN_PKGINSTALL}/${repo}/${repo}"
+        pkghome="${ZOPEN_PKGINSTALL}/${repo}/${repo}"
     if [ ! -e "${pkghome}/.active" ]; then
       printVerbose "Symlink '${repo}' in '${ZOPEN_PKGINSTALL}' is not active; skipping"
       continue

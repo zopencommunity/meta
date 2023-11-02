@@ -1241,7 +1241,7 @@ useLocalRepo()
       elif [ -e "${ZOPEN_ROOTFS}/etc/zopen/paxrepodir" ]; then
         printDebug "Using [single] repository specified from system config '${ZOPEN_ROOTFS}/etc/zopen/paxrepodir'"
         paxrepodir=$(cat "${ZOPEN_ROOTFS}/etc/zopen/paxrepodir")
-        printVerbose "Trying repository at system configured location '${repodir}'"
+        printVerbose "Trying repository at system configured location '${paxrepodir}'"
         testpaxRepo="${paxrepodir}/${paxfilename}"
         if [ -r "${testpaxRepo}" ]; then
           printVerbose "Found ${paxfilename} as '${testpaxRepo}'; installing"
@@ -1742,7 +1742,7 @@ handlePackageInstall(){
     if ! runAndLog "curlCmd -L '${downloadURL}' -O ${redirectToDevNull}"; then
       printError "Could not download from ${downloadURL}. Correct any errors and potentially retry"
     fi
-    ${killph}  # if the timer is not running, the kill will fail
+    ${killph} 2>/dev/null # if the timer is not running, the kill will fail
     syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_NETWORK},${CAT_PACKAGE},${CAT_FILE}" "DOWNLOAD" "handlePackageInstall" "Downloaded remote file '${pax}'"
   fi
   if [ ! -f "${pax}" ]; then
