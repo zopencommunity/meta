@@ -97,7 +97,7 @@ jobs:
             if [ $? -gt 0 ]; then
               CURL_OUTPUT=$(curl -k -s  -u "${{ secrets.JENKINS_USER }}:${{ secrets.JENKINS_API_TOKEN }}" --header 'content-type: nocache' --header 'Accept: application/json' "${{ secrets.JENKINS_SERVER_URL }}/job/Port-Build/${BUILD_NUMBER}/api/json" --fail)
             fi
-            if [ "$(echo "${CURL_OUTPUT}" | jq -r '.building')" == "true" ]; do
+            if [ "$(echo "${CURL_OUTPUT}" | jq -r '.building')" == "true" ]; then
               break;
             fi
             echo -n "."
