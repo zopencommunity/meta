@@ -221,7 +221,7 @@ if [ -e "${ourlicense}" ]; then
 elif [ -e "${metalicense}" ]; then
   cp "${metalicense}" "${ourlicense}"
 else
-  printError "Could not locate LICENSE file to copy for project"
+  printWarn "Could not locate LICENSE file ${metalicense} to copy for project ${ourlicense}"
 fi
 
 printHeader "${name} project is ready! ${name}port/"
