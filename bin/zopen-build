@@ -580,6 +580,13 @@ checkEnv()
   ZOPEN_REMOTE_URL="$(git config --get remote.origin.url)"
   if [ -z "${ZOPEN_REMOTE_URL}" ]; then
     ZOPEN_REMOTE_URL="local"
+  else
+    if [ -n "$(echo "${ZOPEN_REMOTE_URL}" | grep '^git@')" ]; then
+      ZOPEN_REMOTE_URL="${ZOPEN_REMOTE_URL#*:}"
+      ZOPEN_REMOTE_URL="https://github.com/$ZOPEN_REMOTE_URL"
+    fi
+
+    ZOPEN_REMOTE_URL="${ZOPEN_REMOTE_URL%.git}"
   fi
 }
 
@@ -1500,28 +1507,58 @@ generateMetadataJSON()
     success=-1
   fi
 
+metadata_version_scheme="0.1" # Update if we add breaking changes to the json format
 cat <<zz > "${ZOPEN_INSTALL_DIR}/metadata.json"  
 {
+"version_scheme": "${metadata_version_scheme}",
 "product": {
   "name": "${name}",
   "version": "${version}",
   "release": "${LOG_PFX}",
   "summary": "${name} on z/OS",
   "repo": "${ZOPEN_REMOTE_URL}",
+  "license": "${ZOPEN_REMOTE_URL}/blob/main/patches/LICENSE",
+  "zopen_license": "${ZOPEN_REMOTE_URL}/blob/main/LICENSE",
   "categories": "${ZOPEN_CATEGORIES}",
-  "total_tests": "${totalTests}",
-  "total_success": "${success}",
   "buildline": "${ZOPEN_BUILD_LINE}",
+  "test_status": {
+    "total_tests": "${totalTests}",
+    "total_success": "${success}"
+  },
   "size": "${total_size}",
-  "runtimedeps": "$(cat "${ZOPEN_INSTALL_DIR}/.runtimedeps")",
-  "builddeps": "$(cat "${ZOPEN_INSTALL_DIR}/.builddeps")",
-  "commitsha": "${ZOPEN_COMMIT_SHA}"
+  "build_dependencies": "$(cat "${ZOPEN_INSTALL_DIR}/.builddeps")",
+  "commitsha": "${ZOPEN_COMMIT_SHA}",
+zz
+
+cat <<zz >> "${ZOPEN_INSTALL_DIR}/metadata.json"  
+  "runtime_dependencies": [
+zz
+
+#TODO: add versionRanges, for now set to null
+isFirst=true
+echo "${ZOPEN_RUNTIME_DEPS}" | xargs | tr ' ' '\n' | sort | while read dep; do
+if ! $isFirst; then
+  echo "," >> "${ZOPEN_INSTALL_DIR}/metadata.json"
+fi
+cat <<zz >> "${ZOPEN_INSTALL_DIR}/metadata.json"  
+      {
+        "name": "${dep}",
+        "versionRange": null
+      }
+zz
+isFirst=false
+done
+
+cat <<zz >> "${ZOPEN_INSTALL_DIR}/metadata.json"  
+  ]
 }}
 zz
   if ! jq -e '.' "${ZOPEN_INSTALL_DIR}/metadata.json" 1>/dev/null 2>&1; then
     printError "${ZOPEN_INSTALL_DIR}/metadata.json contains invalid json: $(cat ${ZOPEN_INSTALL_DIR}/metadata.json)"
   fi 
-  cp "${ZOPEN_INSTALL_DIR}/metadata.json" "${ZOPEN_ROOT}/install/metadata.json"
+  # Format json
+  jq "." "${ZOPEN_INSTALL_DIR}/metadata.json" > "${ZOPEN_ROOT}/install/metadata.json"
+  cp "${ZOPEN_ROOT}/install/metadata.json" "${ZOPEN_INSTALL_DIR}/metadata.json"
 }
 
 install()
