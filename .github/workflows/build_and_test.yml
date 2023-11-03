@@ -65,7 +65,7 @@ jobs:
             BUILD_BRANCH_OPT="-F BUILD_BRANCH=${branch}"
             branch="main"
           fi
-          CAUSE="Triggered by GH Action from PR: ${{ github.event.issue.pull_request.url || github.event.pull_request.url }}<br />:Repo ${repo}, Branch: ${branch}, Build Opts: ${BUILD_BRANCH_OPT}"
+          CAUSE="Triggered by GH Action from PR: ${{ github.event.issue.pull_request.url || github.event.pull_request.url }} - Repo ${repo}, Branch: ${branch}, Build Opts: ${BUILD_BRANCH_OPT}"
 
           ENCODED_CAUSE=$(echo -n "$CAUSE" | jq -s -R -r @uri)
           JENKINS_JOB_URL="${{ secrets.JENKINS_SERVER_URL }}/job/Port-Build/buildWithParameters?token=jenkinstest&cause=${ENCODED_CAUSE}"
