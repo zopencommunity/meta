@@ -53,6 +53,7 @@
 * [termenvport](https://github.com/ZOSOpenTools/termenvport)
 * [terraformport](https://github.com/ZOSOpenTools/terraformport)
 * [thesilversearcherport](https://github.com/ZOSOpenTools/thesilversearcherport)
+* [zos-code-page-toolsport](https://github.com/ZOSOpenTools/zos-code-page-toolsport)
 
 ## Projects with the most dependencies
 
@@ -74,7 +75,7 @@
 | [gettextport](https://github.com/ZOSOpenTools/gettextport) | 19 | 98% |coreutils, ctags, expat, getopt, git, gpg, hello, libassuan, libgcrypt, libgpgerror, libiconv, libksba, m4, man-db, nano, npth, ntbtls, pinentry, which
 | [bashport](https://github.com/ZOSOpenTools/bashport) | 18 | 80% |autoconf, avro-c-lib, bison, diffutils, direnv, expat, flex, git, jansson, libiconv, libmd, librdkafka, libxml2, meta, oniguruma, re2c, texinfo, xmlto
 | [ncursesport](https://github.com/ZOSOpenTools/ncursesport) | 17 | 100% |bash, c3270, cscope, gettext, git, gpg, htop, less, lynx, man-db, multitail, nano, ncdu, screen, thesilversearcher, tig, vim
-| [texinfoport](https://github.com/ZOSOpenTools/texinfoport) | 16 | 57% |autoconf, automake, bison, expat, gettext, git, gpg, groff, gzip, hello, libtool, m4, make, ntbtls, sed, tar
+| [texinfoport](https://github.com/ZOSOpenTools/texinfoport) | 16 | 35% |autoconf, automake, bison, expat, gettext, git, gpg, groff, gzip, hello, libtool, m4, make, ntbtls, sed, tar
 | [xzport](https://github.com/ZOSOpenTools/xzport) | 16 | 88% |autoconf, automake, bison, diffutils, expat, findutils, gettext, git, gzip, help2man, libtool, m4, make, man-db, texinfo, thesilversearcher
 | [grepport](https://github.com/ZOSOpenTools/grepport) | 13 | 95% |bash, byacc, gnulib, libpcre2, libpcre, librdkafka, libxslt, m4, man-db, meta, ntbtls, which, xmlto
 | [libtoolport](https://github.com/ZOSOpenTools/libtoolport) | 13 | 80% |curl, expat, hello, jansson, libgdbm, libmd, libpcre, m4, man-db, oniguruma, php, re2c, texinfo
@@ -186,6 +187,7 @@
 | [xmltoport](https://github.com/ZOSOpenTools/xmltoport) | 0 | 100% |
 | [yqport](https://github.com/ZOSOpenTools/yqport) | 0 | Skipped |
 | [zigiport](https://github.com/ZOSOpenTools/zigiport) | 0 | Skipped |
+| [zos-code-page-toolsport](https://github.com/ZOSOpenTools/zos-code-page-toolsport) | 0 | No builds |
 | [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 100% |
 
 ## Projects with the most patches
@@ -227,6 +229,7 @@
 |  [libtoolport](https://github.com/ZOSOpenTools/libtoolport) | 71 | 3
 |  [libuvport](https://github.com/ZOSOpenTools/libuvport) | 70 | 2
 |  [getoptport](https://github.com/ZOSOpenTools/getoptport) | 65 | 1
+|  [texinfoport](https://github.com/ZOSOpenTools/texinfoport) | 56 | 3
 |  [tarport](https://github.com/ZOSOpenTools/tarport) | 55 | 1
 |  [c3270port](https://github.com/ZOSOpenTools/c3270port) | 54 | 1
 |  [unzipport](https://github.com/ZOSOpenTools/unzipport) | 54 | 1
@@ -241,7 +244,6 @@
 |  [luaport](https://github.com/ZOSOpenTools/luaport) | 45 | 1
 |  [xxhashport](https://github.com/ZOSOpenTools/xxhashport) | 38 | 2
 |  [ntbtlsport](https://github.com/ZOSOpenTools/ntbtlsport) | 33 | 1
-|  [texinfoport](https://github.com/ZOSOpenTools/texinfoport) | 33 | 2
 |  [sqliteport](https://github.com/ZOSOpenTools/sqliteport) | 32 | 1
 |  [jqport](https://github.com/ZOSOpenTools/jqport) | 30 | 2
 |  [lynxport](https://github.com/ZOSOpenTools/lynxport) | 30 | 1
@@ -319,6 +321,7 @@
 | &#10003; [zigiport](https://github.com/ZOSOpenTools/zigiport) | 0 | 0
 | &#10003; [zipport](https://github.com/ZOSOpenTools/zipport) | 0 | 0
 | &#10003; [zlibport](https://github.com/ZOSOpenTools/zlibport) | 0 | 0
+| &#10003; [zos-code-page-toolsport](https://github.com/ZOSOpenTools/zos-code-page-toolsport) | 0 | 0
 | &#10003; [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 0 | 0
 | &#10003; [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 0 | 0
 
@@ -326,111 +329,111 @@
 
 | Package | Download Count |
 |---|---|
-| [gitport](https://github.com/ZOSOpenTools/gitport) | 23788 |
-| [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 23043 |
-| [metaport](https://github.com/ZOSOpenTools/metaport) | 18737 |
-| [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 17008 |
-| [perlport](https://github.com/ZOSOpenTools/perlport) | 16537 |
-| [jqport](https://github.com/ZOSOpenTools/jqport) | 16139 |
-| [coreutilsport](https://github.com/ZOSOpenTools/coreutilsport) | 15570 |
-| [curlport](https://github.com/ZOSOpenTools/curlport) | 15409 |
-| [bashport](https://github.com/ZOSOpenTools/bashport) | 14660 |
-| [xzport](https://github.com/ZOSOpenTools/xzport) | 14279 |
-| [vimport](https://github.com/ZOSOpenTools/vimport) | 13507 |
-| [automakeport](https://github.com/ZOSOpenTools/automakeport) | 11944 |
-| [tarport](https://github.com/ZOSOpenTools/tarport) | 11005 |
-| [bzip2port](https://github.com/ZOSOpenTools/bzip2port) | 10713 |
-| [opensslport](https://github.com/ZOSOpenTools/opensslport) | 10551 |
-| [gzipport](https://github.com/ZOSOpenTools/gzipport) | 10457 |
-| [makeport](https://github.com/ZOSOpenTools/makeport) | 10357 |
-| [lessport](https://github.com/ZOSOpenTools/lessport) | 10284 |
-| [libiconvport](https://github.com/ZOSOpenTools/libiconvport) | 9755 |
-| [ncursesport](https://github.com/ZOSOpenTools/ncursesport) | 9488 |
-| [diffutilsport](https://github.com/ZOSOpenTools/diffutilsport) | 8636 |
-| [findutilsport](https://github.com/ZOSOpenTools/findutilsport) | 8522 |
-| [m4port](https://github.com/ZOSOpenTools/m4port) | 8368 |
-| [groffport](https://github.com/ZOSOpenTools/groffport) | 8144 |
-| [gettextport](https://github.com/ZOSOpenTools/gettextport) | 7824 |
-| [libpipelineport](https://github.com/ZOSOpenTools/libpipelineport) | 7591 |
-| [autoconfport](https://github.com/ZOSOpenTools/autoconfport) | 7577 |
-| [gawkport](https://github.com/ZOSOpenTools/gawkport) | 7218 |
-| [sedport](https://github.com/ZOSOpenTools/sedport) | 6823 |
-| [libtoolport](https://github.com/ZOSOpenTools/libtoolport) | 6400 |
-| [libgdbmport](https://github.com/ZOSOpenTools/libgdbmport) | 5938 |
-| [unzipport](https://github.com/ZOSOpenTools/unzipport) | 5383 |
-| [man-dbport](https://github.com/ZOSOpenTools/man-dbport) | 5248 |
-| [help2manport](https://github.com/ZOSOpenTools/help2manport) | 5205 |
-| [grepport](https://github.com/ZOSOpenTools/grepport) | 4737 |
-| [zlibport](https://github.com/ZOSOpenTools/zlibport) | 4597 |
-| [rsyncport](https://github.com/ZOSOpenTools/rsyncport) | 4413 |
-| [cmakeport](https://github.com/ZOSOpenTools/cmakeport) | 3237 |
-| [xxhashport](https://github.com/ZOSOpenTools/xxhashport) | 3230 |
-| [lz4port](https://github.com/ZOSOpenTools/lz4port) | 3211 |
-| [screenport](https://github.com/ZOSOpenTools/screenport) | 3095 |
-| [zstdport](https://github.com/ZOSOpenTools/zstdport) | 2807 |
-| [bisonport](https://github.com/ZOSOpenTools/bisonport) | 2729 |
-| [comp_clangport](https://github.com/ZOSOpenTools/comp_clangport) | 2673 |
-| [gpgport](https://github.com/ZOSOpenTools/gpgport) | 2390 |
-| [comp_xlclangport](https://github.com/ZOSOpenTools/comp_xlclangport) | 2152 |
-| [texinfoport](https://github.com/ZOSOpenTools/texinfoport) | 2044 |
-| [wgetport](https://github.com/ZOSOpenTools/wgetport) | 2018 |
-| [lynxport](https://github.com/ZOSOpenTools/lynxport) | 1845 |
-| [c3270port](https://github.com/ZOSOpenTools/c3270port) | 1718 |
-| [expatport](https://github.com/ZOSOpenTools/expatport) | 1700 |
-| [opensshport](https://github.com/ZOSOpenTools/opensshport) | 1694 |
-| [sshpassport](https://github.com/ZOSOpenTools/sshpassport) | 1653 |
-| [gperfport](https://github.com/ZOSOpenTools/gperfport) | 1624 |
-| [sqliteport](https://github.com/ZOSOpenTools/sqliteport) | 1591 |
-| [zipport](https://github.com/ZOSOpenTools/zipport) | 1591 |
-| [tclport](https://github.com/ZOSOpenTools/tclport) | 1588 |
-| [zigiport](https://github.com/ZOSOpenTools/zigiport) | 1559 |
-| [patchport](https://github.com/ZOSOpenTools/patchport) | 1540 |
-| [libksbaport](https://github.com/ZOSOpenTools/libksbaport) | 1516 |
-| [luaport](https://github.com/ZOSOpenTools/luaport) | 1456 |
-| [flexport](https://github.com/ZOSOpenTools/flexport) | 1412 |
-| [ninjaport](https://github.com/ZOSOpenTools/ninjaport) | 1366 |
-| [nanoport](https://github.com/ZOSOpenTools/nanoport) | 1356 |
-| [getoptport](https://github.com/ZOSOpenTools/getoptport) | 1354 |
-| [cscopeport](https://github.com/ZOSOpenTools/cscopeport) | 1335 |
-| [ncduport](https://github.com/ZOSOpenTools/ncduport) | 1252 |
-| [libxml2port](https://github.com/ZOSOpenTools/libxml2port) | 1250 |
-| [libgcryptport](https://github.com/ZOSOpenTools/libgcryptport) | 1240 |
-| [libgpgerrorport](https://github.com/ZOSOpenTools/libgpgerrorport) | 1231 |
-| [npthport](https://github.com/ZOSOpenTools/npthport) | 1220 |
-| [ctagsport](https://github.com/ZOSOpenTools/ctagsport) | 1217 |
-| [libpcre2port](https://github.com/ZOSOpenTools/libpcre2port) | 1175 |
-| [sudoport](https://github.com/ZOSOpenTools/sudoport) | 1137 |
-| [pythonport](https://github.com/ZOSOpenTools/pythonport) | 1132 |
-| [comp_goport](https://github.com/ZOSOpenTools/comp_goport) | 947 |
-| [libassuanport](https://github.com/ZOSOpenTools/libassuanport) | 940 |
-| [expectport](https://github.com/ZOSOpenTools/expectport) | 932 |
-| [helloport](https://github.com/ZOSOpenTools/helloport) | 922 |
-| [whichport](https://github.com/ZOSOpenTools/whichport) | 879 |
-| [pkgconfigport](https://github.com/ZOSOpenTools/pkgconfigport) | 862 |
-| [xmltoport](https://github.com/ZOSOpenTools/xmltoport) | 797 |
-| [libxsltport](https://github.com/ZOSOpenTools/libxsltport) | 784 |
-| [re2cport](https://github.com/ZOSOpenTools/re2cport) | 772 |
-| [llamacppport](https://github.com/ZOSOpenTools/llamacppport) | 675 |
-| [onigurumaport](https://github.com/ZOSOpenTools/onigurumaport) | 659 |
-| [pinentryport](https://github.com/ZOSOpenTools/pinentryport) | 615 |
-| [tigport](https://github.com/ZOSOpenTools/tigport) | 607 |
-| [byaccport](https://github.com/ZOSOpenTools/byaccport) | 603 |
-| [gnulibport](https://github.com/ZOSOpenTools/gnulibport) | 597 |
-| [libssh2port](https://github.com/ZOSOpenTools/libssh2port) | 574 |
-| [ntbtlsport](https://github.com/ZOSOpenTools/ntbtlsport) | 565 |
-| [duckdbport](https://github.com/ZOSOpenTools/duckdbport) | 489 |
-| [gumport](https://github.com/ZOSOpenTools/gumport) | 470 |
-| [powerlinegoport](https://github.com/ZOSOpenTools/powerlinegoport) | 466 |
-| [wharfport](https://github.com/ZOSOpenTools/wharfport) | 465 |
-| [yqport](https://github.com/ZOSOpenTools/yqport) | 448 |
-| [libpcreport](https://github.com/ZOSOpenTools/libpcreport) | 433 |
-| [librdkafkaport](https://github.com/ZOSOpenTools/librdkafkaport) | 428 |
-| [luarocksport](https://github.com/ZOSOpenTools/luarocksport) | 419 |
-| [protobufport](https://github.com/ZOSOpenTools/protobufport) | 399 |
-| [libuvport](https://github.com/ZOSOpenTools/libuvport) | 344 |
-| [libmdport](https://github.com/ZOSOpenTools/libmdport) | 203 |
-| [bumpport](https://github.com/ZOSOpenTools/bumpport) | 52 |
-| [moreutilsport](https://github.com/ZOSOpenTools/moreutilsport) | 3 |
+| [gitport](https://github.com/ZOSOpenTools/gitport) | 23874 |
+| [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 23121 |
+| [metaport](https://github.com/ZOSOpenTools/metaport) | 18838 |
+| [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 17070 |
+| [perlport](https://github.com/ZOSOpenTools/perlport) | 16586 |
+| [jqport](https://github.com/ZOSOpenTools/jqport) | 16198 |
+| [coreutilsport](https://github.com/ZOSOpenTools/coreutilsport) | 15617 |
+| [curlport](https://github.com/ZOSOpenTools/curlport) | 15453 |
+| [bashport](https://github.com/ZOSOpenTools/bashport) | 14704 |
+| [xzport](https://github.com/ZOSOpenTools/xzport) | 14322 |
+| [vimport](https://github.com/ZOSOpenTools/vimport) | 13551 |
+| [automakeport](https://github.com/ZOSOpenTools/automakeport) | 11976 |
+| [tarport](https://github.com/ZOSOpenTools/tarport) | 11039 |
+| [bzip2port](https://github.com/ZOSOpenTools/bzip2port) | 10746 |
+| [opensslport](https://github.com/ZOSOpenTools/opensslport) | 10581 |
+| [gzipport](https://github.com/ZOSOpenTools/gzipport) | 10489 |
+| [makeport](https://github.com/ZOSOpenTools/makeport) | 10385 |
+| [lessport](https://github.com/ZOSOpenTools/lessport) | 10315 |
+| [libiconvport](https://github.com/ZOSOpenTools/libiconvport) | 9793 |
+| [ncursesport](https://github.com/ZOSOpenTools/ncursesport) | 9515 |
+| [diffutilsport](https://github.com/ZOSOpenTools/diffutilsport) | 8663 |
+| [findutilsport](https://github.com/ZOSOpenTools/findutilsport) | 8549 |
+| [m4port](https://github.com/ZOSOpenTools/m4port) | 8394 |
+| [groffport](https://github.com/ZOSOpenTools/groffport) | 8172 |
+| [gettextport](https://github.com/ZOSOpenTools/gettextport) | 7849 |
+| [libpipelineport](https://github.com/ZOSOpenTools/libpipelineport) | 7618 |
+| [autoconfport](https://github.com/ZOSOpenTools/autoconfport) | 7597 |
+| [gawkport](https://github.com/ZOSOpenTools/gawkport) | 7242 |
+| [sedport](https://github.com/ZOSOpenTools/sedport) | 6845 |
+| [libtoolport](https://github.com/ZOSOpenTools/libtoolport) | 6420 |
+| [libgdbmport](https://github.com/ZOSOpenTools/libgdbmport) | 5957 |
+| [unzipport](https://github.com/ZOSOpenTools/unzipport) | 5401 |
+| [man-dbport](https://github.com/ZOSOpenTools/man-dbport) | 5268 |
+| [help2manport](https://github.com/ZOSOpenTools/help2manport) | 5220 |
+| [grepport](https://github.com/ZOSOpenTools/grepport) | 4753 |
+| [zlibport](https://github.com/ZOSOpenTools/zlibport) | 4611 |
+| [rsyncport](https://github.com/ZOSOpenTools/rsyncport) | 4428 |
+| [cmakeport](https://github.com/ZOSOpenTools/cmakeport) | 3247 |
+| [xxhashport](https://github.com/ZOSOpenTools/xxhashport) | 3240 |
+| [lz4port](https://github.com/ZOSOpenTools/lz4port) | 3221 |
+| [screenport](https://github.com/ZOSOpenTools/screenport) | 3106 |
+| [zstdport](https://github.com/ZOSOpenTools/zstdport) | 2816 |
+| [bisonport](https://github.com/ZOSOpenTools/bisonport) | 2739 |
+| [comp_clangport](https://github.com/ZOSOpenTools/comp_clangport) | 2683 |
+| [gpgport](https://github.com/ZOSOpenTools/gpgport) | 2398 |
+| [comp_xlclangport](https://github.com/ZOSOpenTools/comp_xlclangport) | 2160 |
+| [texinfoport](https://github.com/ZOSOpenTools/texinfoport) | 2051 |
+| [wgetport](https://github.com/ZOSOpenTools/wgetport) | 2026 |
+| [lynxport](https://github.com/ZOSOpenTools/lynxport) | 1852 |
+| [c3270port](https://github.com/ZOSOpenTools/c3270port) | 1726 |
+| [expatport](https://github.com/ZOSOpenTools/expatport) | 1706 |
+| [opensshport](https://github.com/ZOSOpenTools/opensshport) | 1700 |
+| [sshpassport](https://github.com/ZOSOpenTools/sshpassport) | 1658 |
+| [gperfport](https://github.com/ZOSOpenTools/gperfport) | 1629 |
+| [zipport](https://github.com/ZOSOpenTools/zipport) | 1601 |
+| [sqliteport](https://github.com/ZOSOpenTools/sqliteport) | 1596 |
+| [tclport](https://github.com/ZOSOpenTools/tclport) | 1594 |
+| [zigiport](https://github.com/ZOSOpenTools/zigiport) | 1564 |
+| [patchport](https://github.com/ZOSOpenTools/patchport) | 1545 |
+| [libksbaport](https://github.com/ZOSOpenTools/libksbaport) | 1523 |
+| [luaport](https://github.com/ZOSOpenTools/luaport) | 1461 |
+| [flexport](https://github.com/ZOSOpenTools/flexport) | 1418 |
+| [ninjaport](https://github.com/ZOSOpenTools/ninjaport) | 1370 |
+| [getoptport](https://github.com/ZOSOpenTools/getoptport) | 1362 |
+| [nanoport](https://github.com/ZOSOpenTools/nanoport) | 1361 |
+| [cscopeport](https://github.com/ZOSOpenTools/cscopeport) | 1340 |
+| [libxml2port](https://github.com/ZOSOpenTools/libxml2port) | 1257 |
+| [ncduport](https://github.com/ZOSOpenTools/ncduport) | 1257 |
+| [libgcryptport](https://github.com/ZOSOpenTools/libgcryptport) | 1246 |
+| [libgpgerrorport](https://github.com/ZOSOpenTools/libgpgerrorport) | 1236 |
+| [npthport](https://github.com/ZOSOpenTools/npthport) | 1225 |
+| [ctagsport](https://github.com/ZOSOpenTools/ctagsport) | 1221 |
+| [libpcre2port](https://github.com/ZOSOpenTools/libpcre2port) | 1179 |
+| [sudoport](https://github.com/ZOSOpenTools/sudoport) | 1142 |
+| [pythonport](https://github.com/ZOSOpenTools/pythonport) | 1137 |
+| [comp_goport](https://github.com/ZOSOpenTools/comp_goport) | 951 |
+| [libassuanport](https://github.com/ZOSOpenTools/libassuanport) | 944 |
+| [expectport](https://github.com/ZOSOpenTools/expectport) | 936 |
+| [helloport](https://github.com/ZOSOpenTools/helloport) | 925 |
+| [whichport](https://github.com/ZOSOpenTools/whichport) | 897 |
+| [pkgconfigport](https://github.com/ZOSOpenTools/pkgconfigport) | 865 |
+| [xmltoport](https://github.com/ZOSOpenTools/xmltoport) | 800 |
+| [libxsltport](https://github.com/ZOSOpenTools/libxsltport) | 787 |
+| [re2cport](https://github.com/ZOSOpenTools/re2cport) | 775 |
+| [llamacppport](https://github.com/ZOSOpenTools/llamacppport) | 678 |
+| [onigurumaport](https://github.com/ZOSOpenTools/onigurumaport) | 662 |
+| [pinentryport](https://github.com/ZOSOpenTools/pinentryport) | 617 |
+| [tigport](https://github.com/ZOSOpenTools/tigport) | 610 |
+| [byaccport](https://github.com/ZOSOpenTools/byaccport) | 606 |
+| [gnulibport](https://github.com/ZOSOpenTools/gnulibport) | 599 |
+| [libssh2port](https://github.com/ZOSOpenTools/libssh2port) | 579 |
+| [ntbtlsport](https://github.com/ZOSOpenTools/ntbtlsport) | 567 |
+| [duckdbport](https://github.com/ZOSOpenTools/duckdbport) | 492 |
+| [gumport](https://github.com/ZOSOpenTools/gumport) | 472 |
+| [powerlinegoport](https://github.com/ZOSOpenTools/powerlinegoport) | 468 |
+| [wharfport](https://github.com/ZOSOpenTools/wharfport) | 467 |
+| [yqport](https://github.com/ZOSOpenTools/yqport) | 450 |
+| [libpcreport](https://github.com/ZOSOpenTools/libpcreport) | 435 |
+| [librdkafkaport](https://github.com/ZOSOpenTools/librdkafkaport) | 430 |
+| [luarocksport](https://github.com/ZOSOpenTools/luarocksport) | 421 |
+| [protobufport](https://github.com/ZOSOpenTools/protobufport) | 401 |
+| [libuvport](https://github.com/ZOSOpenTools/libuvport) | 346 |
+| [libmdport](https://github.com/ZOSOpenTools/libmdport) | 205 |
+| [bumpport](https://github.com/ZOSOpenTools/bumpport) | 53 |
+| [moreutilsport](https://github.com/ZOSOpenTools/moreutilsport) | 5 |
 | [avro-c-libport](https://github.com/ZOSOpenTools/avro-c-libport) | 0 |
 | [depot_toolsport](https://github.com/ZOSOpenTools/depot_toolsport) | 0 |
 | [direnvport](https://github.com/ZOSOpenTools/direnvport) | 0 |
@@ -455,5 +458,6 @@
 | [termenvport](https://github.com/ZOSOpenTools/termenvport) | 0 |
 | [terraformport](https://github.com/ZOSOpenTools/terraformport) | 0 |
 | [thesilversearcherport](https://github.com/ZOSOpenTools/thesilversearcherport) | 0 |
+| [zos-code-page-toolsport](https://github.com/ZOSOpenTools/zos-code-page-toolsport) | 0 |
 
-Last updated:  2023-11-03 00:57:15
+Last updated:  2023-11-03 12:50:50
