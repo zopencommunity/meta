@@ -1526,12 +1526,32 @@ cat <<zz > "${ZOPEN_INSTALL_DIR}/metadata.json"
     "total_success": "${success}"
   },
   "size": "${total_size}",
-  "build_dependencies": "$(cat "${ZOPEN_INSTALL_DIR}/.builddeps")",
   "commitsha": "${ZOPEN_COMMIT_SHA}",
 zz
 
+# Build Dependencies
 cat <<zz >> "${ZOPEN_INSTALL_DIR}/metadata.json"  
-  "runtime_dependencies": [
+  "build_dependencies": [
+zz
+
+#TODO: add versionRanges, for now set to null
+isFirst=true
+echo "${ZOPEN_DEPS}" | xargs | tr ' ' '\n' | sort | while read dep; do
+if ! $isFirst; then
+  echo "," >> "${ZOPEN_INSTALL_DIR}/metadata.json"
+fi
+cat <<zz >> "${ZOPEN_INSTALL_DIR}/metadata.json"  
+      {
+        "name": "${dep}",
+        "versionRange": null
+      }
+zz
+isFirst=false
+done
+
+# Runtime Dependencies
+cat <<zz >> "${ZOPEN_INSTALL_DIR}/metadata.json"  
+  ],"runtime_dependencies": [
 zz
 
 #TODO: add versionRanges, for now set to null
