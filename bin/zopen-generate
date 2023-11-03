@@ -119,7 +119,7 @@ touch ${buildenv} && chtag -tc 819 ${buildenv}
 
 cp "${MYDIR}/../data/CONTRIBUTING.md" "${name}port/CONTRIBUTING.md"
 mkdir -p "${name}port/.github/workflows"
-cp "${MYDIR}/../data/*.yml" "${name}port/.github/workflows/"
+cp "${MYDIR}/../data/*.yml" "${name}port/.github/workflows/" 2>/dev/null # no yml files yet?
 
 if [ ! -z "${stablePath}" ]; then
   buildenvContents="export ZOPEN_STABLE_URL=\"${stablePath}\"\n"
