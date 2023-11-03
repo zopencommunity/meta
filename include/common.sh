@@ -233,9 +233,6 @@ defineANSI()
   CRSRHIDE="${ESC}[?25l"
   CRSRSHOW="${ESC}[?25h"
   
-  
-  
-  
   # Color-type codes, needs explicit terminal settings
   if [ ! "${_BPX_TERMPATH-x}" = "OMVS" ] && [ -z "${NO_COLOR}" ] && [ ! "${FORCE_COLOR-x}" = "0" ] && [ -t 1 ] && [ -t 2 ]; then
     esc="\047"
