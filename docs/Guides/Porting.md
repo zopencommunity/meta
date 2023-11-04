@@ -106,6 +106,7 @@ export ZOPEN_DEV_DEPS="git make autoconf"
 export ZOPEN_STABLE_URL="https://github.com/stedolan/jq/releases/download/jq-1.6/jq-1.6.tar.gz"
 export ZOPEN_STABLE_DEPS="make"
 export ZOPEN_BUILD_LINE="STABLE"
+export ZOPEN_CATEGORIES="security networking"
 
 zopen_check_results()
 {
@@ -126,6 +127,8 @@ zopen_append_to_zoslib_env()
 }
 ```
 ZOPEN_STABLE_DEPS/ZOPEN_STABLE_DEPS are used to identify the non-standard z/OS Open Tools dependencies needed to build the project. 
+
+ZOPEN_CATEGORIES represent the [categories]((https://github.com/ZOSOpenTools/meta/blob/main/data/tool_categories.txt") that the tool or library fits under.
 
 `zopen_append_to_env()` can be used to add additional environment variables outside of the normal environment variables. (e.g. PATH, LIBPATH, MANPATH)
 
