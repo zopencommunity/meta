@@ -12,7 +12,7 @@
     _CEE_RUNOPTS: "FILETAG(AUTOCVT,AUTOTAG) POSIX(ON)"
     _BPXK_AUTOCVT: "ON"
     PATH: "/usr/lpp/IBM/zoautil/bin/:{{ ansible_env.PATH }}:/sbin:/usr/sbin:/usr/lpp/IBM/zoautil/bin/"
-    LIBPATH: "/usr/lpp/IBM/zoautil/lib:$LIBPATH"
+    LIBPATH: "/usr/lpp/IBM/zoautil/lib:/lib/:$LIBPATH"
 
   tasks:
     - fail:
@@ -44,16 +44,21 @@
         name: "myhost"
         ansible_host: "{{ instance_ip }}"
         ansible_user: ibmuser
-        interpreter_python: /usr/lpp/IBM/cyp/v3r10/pyz/bin/python3
-        ansible_python_interpreter: /usr/lpp/IBM/cyp/v3r10/pyz/bin/python3
+        interpreter_python: /usr/lpp/IBM/cyp/v3r11/pyz/bin/python3
+        ansible_python_interpreter: /usr/lpp/IBM/cyp/v3r11/pyz/bin/python3
 
     - name: Add host to inventory
       add_host:
         name: "jenkinshost"
         ansible_host: "{{ instance_ip }}"
         ansible_user: jenkins
-        interpreter_python: /usr/lpp/IBM/cyp/v3r10/pyz/bin/python3
-        ansible_python_interpreter: /usr/lpp/IBM/cyp/v3r10/pyz/bin/python3
+        interpreter_python: /usr/lpp/IBM/cyp/v3r11/pyz/bin/python3
+        ansible_python_interpreter: /usr/lpp/IBM/cyp/v3r11/pyz/bin/python3
+
+    - name: Creats sbin directory
+      shell: |
+        mkdir -p sbin
+      delegate_to: "myhost"
 
     - name: Copy sbin directory
       copy:
@@ -94,12 +99,12 @@
       when:
         address is not defined
 
-    - name: Runs vols_online
+    - name: runs vols_online
       shell: |
-        export PATH=/usr/lpp/IBM/zoautil/bin:$PATH
+        export PATH=/usr/lpp/IBM/zoautil/bin::$PATH
         cd sbin
         . ./volfunc 2>/dev/null >/dev/null
-        vols_online | grep USER 
+        vols_online | grep USER
       register: isUserOnline
       ignore_errors: True
       delegate_to: "myhost"
@@ -136,16 +141,15 @@
       shell: |
         export PATH=/usr/lpp/IBM/zoautil/bin:/usr/sbin:$PATH
         cd sbin/
-        echo "{{ jenkins_public_key }}" | ./crtuser jenkins user
+        echo "{{ jenkins_public_key }}" | ./crtuser jenkins USER
       when:
         - hasJenkins.rc == 1
       delegate_to: "myhost"
 
     - name: Download zopen-setup
       get_url:
-        url: https://github.com/ZOSOpenTools/meta/releases/download/v1.0.0/zopen-setup
-        dest: /tmp/zopen-setup  
-        mode: '0755'
+        url: https://github.com/ZOSOpenTools/meta/releases/download/v0.8.0/meta-0.8.0.pax.Z
+        dest: /tmp/meta-0.8.0.pax.Z
       when:
         - skipZopenSetup is not defined
 
@@ -155,11 +159,10 @@
         chmount -w /
       delegate_to: "myhost"
 
-    - name: Copy zopen-setup to /bin
+    - name: Copy meta pax to /bin
       copy:
-        src: /tmp/zopen-setup
-        dest: /bin/zopen-setup
-        mode: 0755
+        src: /tmp/meta-0.8.0.pax.Z
+        dest: /tmp/meta-0.8.0.pax.Z
       delegate_to: myhost
 
     - name: Copy Clang pax
@@ -174,12 +177,17 @@
         pax -rf ~/C_C++_for_Open_Enterprise_Languages.nonsmpe.pax.Z
       delegate_to: myhost
 
-    - name: Runs zopen-setup and initializes environment
+    - name: Runs zopen init, install git (+ dependencies) and initializes environment
       shell: |
-        mkdir -p /jenkins/zopen
-        zopen-setup /jenkins/zopen
-        cd /jenkins/zopen/boot
-        . ./.bootenv
+        cd /jenkins
+        pax -rf /tmp/meta-0.8.0.pax.Z
+        cd meta-0.8.0/
+        . ./.env
+        zopen init --yes /jenkins/zopen
+        cd -
+        . /jenkins/zopen/etc/zopen-config
+        zopen install git -y
+        rm -rf meta-0.8.0/
         git config --global user.email "jenkins@ibm.com"
         git config --global user.name "Jenkins"
       delegate_to: "jenkinshost"
@@ -215,7 +223,29 @@
         ./update_parmlib.sh
       delegate_to: "myhost"
 
+    - name: Replace current bash with z/OS Open Tools bash
+      shell: |
+        chmount -w /
+        cp /jenkins/zopen/usr/local/bin/bash /bin/bash
+      delegate_to: "myhost"
+
     - name: Make /var/lib/sudo
       shell: |
         mkdir -p /var/lib/sudo
       delegate_to: "myhost"
+
+    - name: Copy id_rsa if it exists
+      copy:
+        dest: ./.ssh/id_rsa.ascii
+        mode: 0700
+        src: id_rsa
+      ignore_errors: true
+      delegate_to: "jenkinshost"
+
+    - name: Make id_rsa ebcdic if it's present
+      shell: |
+        iconv -f UTF8 -t IBM-1047 .ssh/id_rsa.ascii > .ssh/id_rsa
+        chtag -tc 1047 .ssh/id_rsa
+        chmod 700 .ssh/id_rsa
+      ignore_errors: true
+      delegate_to: "jenkinshost"

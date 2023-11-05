@@ -3,6 +3,6 @@ zone: ca-tor-2
 vpc_name: Default
 profile: mz2o-2x16
 capacity: 250
-image_name: ibm-zos-2-4-s390x-dev-test-wazi-10
+image_name: ibm-zos-2-5-s390x-dev-test-wazi-10
 subnet_name: Default
 private_key_file: $HOME/.ssh/id_rsa_jenkins
