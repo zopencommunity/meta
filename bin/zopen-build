@@ -605,10 +605,6 @@ checkEnv()
 
 setDepsEnv()
 {
-  if command -V curl > /dev/null 2>&1; then
-    curlpath=$(dirname "$(command -V curl | cut -f3 -d' ')")
-  fi
-  initDefaultEnvironment
   deps="${ZOPEN_DEPS}"
 
   orig="${PWD}"
@@ -690,6 +686,12 @@ setEnv()
   export SSL_CERT_FILE="${ZOPEN_CA}"
   export GIT_SSL_CAINFO="${ZOPEN_CA}"
   export CURL_CA_BUNDLE="${ZOPEN_CA}"
+
+  if command -V curl > /dev/null 2>&1; then
+    curlpath=$(dirname "$(command -V curl | cut -f3 -d' ')")
+  fi
+
+  initDefaultEnvironment
 
   setDepsEnv
 
