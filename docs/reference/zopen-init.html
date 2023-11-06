@@ -1,0 +1,186 @@
+<!-- Creator     : groff version 1.22.3 -->
+<!-- CreationDate: Mon Nov  6 12:48:15 2023 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>ZOPEN-INIT</title>
+
+</head>
+<body>
+
+<h1 align="center">ZOPEN-INIT</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#OPTIONS">OPTIONS</a><br>
+<a href="#EXAMPLES">EXAMPLES</a><br>
+<a href="#AUTHOR">AUTHOR</a><br>
+<a href="#REPORTING BUGS">REPORTING BUGS</a><br>
+<a href="#COPYRIGHT">COPYRIGHT</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">zopen-init
+&minus; manual page for zopen-init 0.8.0</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>zopen</b>
+<i>alt</i> [<i>OPTION</i>] [<i>PARAMETERS</i>]...</p>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">zopen init is a
+utility for z/OS Open Tools to generate a zopen environment,
+bootstrapping initial tools and creating a configuration
+file</p>
+
+<h2>OPTIONS
+<a name="OPTIONS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>&minus;y</b>,
+<b>&minus;&minus;yes</b></p>
+
+<p style="margin-left:22%;">automatically answer
+&rsquo;yes&rsquo; to prompts</p>
+
+
+<p style="margin-left:11%;"><b>&minus;&minus;append&minus;to&minus;profile</b></p>
+
+<p style="margin-left:22%;">appends sourcing of
+zopen&minus;config to current user&rsquo;s .profile</p>
+
+
+<p style="margin-left:11%;"><b>&minus;&minus;releaseline&minus;dev</b></p>
+
+<p style="margin-left:22%;">globally configure the release
+line for package installs to enable Development (DEV)
+packages; the default is for a system to use STABLE
+packages</p>
+
+<p style="margin-left:11%;"><b>&minus;f</b>,
+<b>&minus;&minus;fs&minus;layout</b> &lt;LAYOUT&gt;</p>
+
+<p style="margin-left:22%;">The filesystem structure to use
+for installed packages on disk; packages will be installed
+to this location under &lt;zopen rootfs&gt;. [LAYOUT] should
+be one of:</p>
+
+<p style="margin-left:11%;">usrlclz &minus;
+<i>/usr/local/zopen</i> (default)</p>
+
+<p style="margin-left:22%;">zopen &minus; <i>/usr/zopen</i>
+prod &minus; legacy zopen standard location ibm &minus;
+<i>/usr/lpp</i> fhs &minus; File Hierarchical Standard
+(<i>/opt</i>) usrlcl &minus; <i>/usr/local</i></p>
+
+
+<p style="margin-left:11%;"><b>&minus;&minus;re&minus;init</b></p>
+
+<p style="margin-left:22%;">Re&minus;initializes a previous
+zopen environment or create a new environment using current
+tooling. Re&minus;initializing over a previous installation
+will re&minus;use existing package structures and
+configuration and regenerate configuration files. select the
+active version for PACKAGE from a list</p>
+
+<p style="margin-left:11%;"><b>&minus;v</b>,
+<b>&minus;&minus;verbose</b></p>
+
+<p style="margin-left:22%;">run in verbose mode</p>
+
+<p style="margin-left:11%;"><b>&minus;h</b>, &minus;?,
+<b>&minus;&minus;help</b></p>
+
+<p style="margin-left:22%;">display this help and exit</p>
+
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">zopen init</p>
+
+<p style="margin-left:22%;">interactively bootstrap a zopen
+environment</p>
+
+<p style="margin-left:11%;">zopen init
+&minus;&minus;releaseline&minus;dev</p>
+
+<p style="margin-left:22%;">interactively bootstrap a zopen
+environment that will use Development Releaseline
+packages</p>
+
+<p style="margin-left:11%;">zopen &minus;&minus;yes
+&minus;&minus;append&minus;to&minus;profile
+&minus;&minus;fs&minus;layout fhs /zopen</p>
+
+<p style="margin-left:22%;">non&minus;interactively create
+a zopen environment at location &rsquo;/zopen&rsquo; on
+disk, with packages installed to &rsquo;/zopen/opt&rsquo;.
+The user&rsquo;s .profile will be updated to source the
+configuration file at
+&rsquo;/zopen/etc/zopen&minus;config&rsquo; when new
+terminal sessions start</p>
+
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Written by
+contributors to the z/OS Open Tools Community
+&lt;https://github.com/ZOSOpenTools/meta/graphs/contributors&gt;.</p>
+
+<h2>REPORTING BUGS
+<a name="REPORTING BUGS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Report bugs at
+https://github.com/ZOSOpenTools/meta/issues</p>
+
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Copyright
+&copy; 2023 zOS Open Tools Community.</p>
+
+<p style="margin-left:11%; margin-top: 1em">License Apache:
+The Apache Software Foundation license,
+&lt;https://directory.fsf.org/wiki/License:Apache2.0&gt;
+<br>
+This is free software: you are free to change and
+redistribute it. There is NO WARRANTY, to the extent
+permitted by law.</p>
+<hr>
+</body>
+</html>

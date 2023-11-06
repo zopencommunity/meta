@@ -1,0 +1,211 @@
+<!-- Creator     : groff version 1.22.3 -->
+<!-- CreationDate: Mon Nov  6 12:48:15 2023 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>PROMOTING</title>
+
+</head>
+<body>
+
+<h1 align="center">PROMOTING</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#OPTIONS">OPTIONS</a><br>
+<a href="#EXAMPLES">EXAMPLES</a><br>
+<a href="#AUTHOR">AUTHOR</a><br>
+<a href="#REPORTING BUGS">REPORTING BUGS</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Promoting
+&minus; manual page for Promoting zopen environment</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>zopen</b>
+<i>promote</i> [<i>OPTION</i>] [<i>DESTINATION</i>]...</p>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Promoting zopen
+environment zopen promote is a utility for z/OS Open Tools
+to generate a clone of an existing zopen environment. For
+example a user can install to a test area and when happy
+that the behaviour is correct, promote to a production
+area.</p>
+
+<h2>OPTIONS
+<a name="OPTIONS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>&minus;f</b>,
+<b>&minus;&minus;from</b></p>
+
+<p style="margin-left:22%;">[DIRECTORY] the zopen
+environment to copy from; if not present, the default is
+taken from ZOPEN_ROOTFS (the current zopen environment)</p>
+
+<p style="margin-left:11%;"><b>&minus;y</b>,
+<b>&minus;&minus;yes</b></p>
+
+<p style="margin-left:22%;">automatically answer
+&rsquo;yes&rsquo; to prompts; existing target filesystems
+will be purged before promote occurs</p>
+
+<p style="margin-left:11%;"><b>&minus;o</b>,
+<b>&minus;&minus;owner</b> [OWNER]</p>
+
+<p style="margin-left:22%;">change owner of promoted
+environment files from current user</p>
+
+<p style="margin-left:11%;"><b>&minus;g</b>,
+<b>&minus;&minus;group</b> [GROUP]</p>
+
+<p style="margin-left:22%;">change group of promoted
+environment files from default</p>
+
+<p style="margin-left:11%;"><b>&minus;cp</b>,
+<b>&minus;&minus;configperms</b> [PERMISSIONS]</p>
+
+<p style="margin-left:22%;">update the permissions for the
+configuration file
+&lt;promotedroot&gt;/etc/zopen&minus;config with the given
+[PERMISSIONS] string, specified in symbolic mode</p>
+
+<p style="margin-left:11%;"><b>&minus;zp</b>,
+<b>&minus;&minus;zopenperms</b> [PERMISSIONS]</p>
+
+<p style="margin-left:22%;">update the permissions for all
+files within the promoted zopen environment with the given
+[PERMISSIONS] string, specified in symbolic mode</p>
+
+
+<p style="margin-left:11%;"><b>&minus;&minus;keepzopentooling</b></p>
+
+<p style="margin-left:22%;">install the zopen admin tools
+into the promoted environment for zopen system
+administration</p>
+
+<p style="margin-left:11%;"><b>&minus;v</b>,
+<b>&minus;&minus;verbose</b></p>
+
+<p style="margin-left:22%;">run in verbose mode</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="14%">
+
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;version</b></p> </td>
+<td width="75%">
+</td></tr>
+</table>
+
+<p><b>&minus;h</b>, &minus;?, <b>&minus;&minus;help</b></p></table>
+
+<p style="margin-left:22%;">display this help and exit</p>
+
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">zopen
+promote</p>
+
+<p style="margin-left:22%;">interactively promote current
+zopen environment</p>
+
+<p style="margin-left:11%;">zopen promote /prod</p>
+
+<p style="margin-left:22%;">promote current zopen
+environment to &rsquo;/prod&rsquo;, setting file ownership
+to current user and group to default</p>
+
+<p style="margin-left:22%; margin-top: 1em">zopen promote
+/prod &minus;&minus;owner FOO</p>
+
+<p style="margin-left:11%;">promote current zopen
+environment to &rsquo;/prod&rsquo;, setting</p>
+
+<p style="margin-left:22%;">file ownership to
+&rsquo;FOO&rsquo; and group to default</p>
+
+<p style="margin-left:11%;">zopen promote /prod
+&minus;&minus;group BAR</p>
+
+<p style="margin-left:22%;">promote current zopen
+environment to &rsquo;/prod&rsquo;, setting file ownership
+to current user and group to &rsquo;BAR&rsquo;</p>
+
+<p style="margin-left:11%;">zopen promote /mytest &minus;cp
+g&minus;wx,o&minus;rwx &minus;zp g&minus;rwx,o&minus;rwx
+&minus;&minus;owner FOO</p>
+
+<p style="margin-left:22%;">promote current zopen
+environment to &rsquo;/mytest&rsquo;, allowing only the
+current user to source the zopen&minus;config environment
+file and only permit access to zopen environment files to
+the user &rsquo;FOO&rsquo;</p>
+
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Written by
+contributors to the z/OS Open Tools Community
+&lt;https://github.com/ZOSOpenTools/meta/graphs/contributors&gt;.</p>
+
+<h2>REPORTING BUGS
+<a name="REPORTING BUGS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Report bugs at
+https://github.com/ZOSOpenTools/meta/issues</p>
+
+<p style="margin-left:11%; margin-top: 1em">zopen (zopen
+tools) 0.8.0 <br>
+Copyright &copy; 2023 zOS Open Tools Community.</p>
+
+<p style="margin-left:11%; margin-top: 1em">License Apache:
+The Apache Software Foundation license,
+&lt;https://directory.fsf.org/wiki/License:Apache2.0&gt;
+<br>
+This is free software: you are free to change and
+redistribute it. <br>
+There is NO WARRANTY, to the extent permitted by law.</p>
+<hr>
+</body>
+</html>

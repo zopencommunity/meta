@@ -1,0 +1,239 @@
+<!-- Creator     : groff version 1.22.3 -->
+<!-- CreationDate: Mon Nov  6 12:48:15 2023 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>ZOPEN</title>
+
+</head>
+<body>
+
+<h1 align="center">ZOPEN</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#EXAMPLES">EXAMPLES</a><br>
+<a href="#AUTHOR">AUTHOR</a><br>
+<a href="#REPORTING BUGS">REPORTING BUGS</a><br>
+<a href="#COPYRIGHT">COPYRIGHT</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">zopen &minus;
+manual page for zopen 0.8.0</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>zopen</b>
+[<i>COMMAND</i>] [<i>OPTION</i>] [<i>PARAMETERS</i>]...</p>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">zopen is a
+utility for managing a z/OS Open Tools environment.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>Command:</b></p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="6%">
+
+
+<p>init</p></td>
+<td width="5%"></td>
+<td width="78%">
+
+
+<p>initializes a zopen environment at the specified
+location</p> </td></tr>
+</table>
+
+<p style="margin-left:11%;">install</p>
+
+<p style="margin-left:22%;">installs one or more z/OS Open
+Tools packages</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="6%">
+
+
+<p>list</p></td>
+<td width="5%"></td>
+<td width="73%">
+
+
+<p>lists information about z/OS Open Tools packages</p></td>
+<td width="5%">
+</td></tr>
+</table>
+
+<p style="margin-left:11%;">upgrade</p>
+
+<p style="margin-left:22%;">upgrades already z/OS Open
+Tools packages</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="9%">
+
+
+<p>remove</p></td>
+<td width="2%"></td>
+<td width="78%">
+
+
+<p>removes installed z/OS Open Tools packages</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="9%">
+
+
+<p>build</p></td>
+<td width="2%"></td>
+<td width="78%">
+
+
+<p>builds the enclosing z/OS Open Tools git&minus;cloned
+package</p> </td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="9%">
+
+
+<p>alt</p></td>
+<td width="2%"></td>
+<td width="78%">
+
+
+<p>manage alternate versions of z/OS Open Tools
+packages</p> </td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="9%">
+
+
+<p>clean</p></td>
+<td width="2%"></td>
+<td width="78%">
+
+
+<p>cleans up your zopen environment</p></td></tr>
+</table>
+
+<p style="margin-left:11%;">generate</p>
+
+<p style="margin-left:22%;">generates a new zopen
+project</p>
+
+<p style="margin-left:11%;">update&minus;cacert</p>
+
+<p style="margin-left:22%;">update the cacert.pem file used
+by z/OS Open Tools</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Option: <br>
+&minus;v</b>, <b>&minus;&minus;verbose</b></p>
+
+<p style="margin-left:22%;">run in verbose mode</p>
+
+<p style="margin-left:11%;"><b>&minus;h</b>,&minus;?,
+<b>&minus;&minus;help</b></p>
+
+<p style="margin-left:22%;">display this help and exit</p>
+
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">zopen
+&minus;&minus;help</p>
+
+<p style="margin-left:22%;">displays zopen help</p>
+
+<p style="margin-left:11%;">zopen &minus;&minus;version</p>
+
+<p style="margin-left:22%;">displays the installed zopen
+version</p>
+
+<p style="margin-left:22%; margin-top: 1em">zopen install
+git install the latest z/OS Open Tools git package zopen
+upgrade &minus;y upgrade all installed packages to the
+latest release, without prompting zopen alt bash list the
+installed alternative bash z/OS Open Tools packages</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>SEE
+ALSO:</b></p>
+
+<p style="margin-left:22%;">zopen&minus;version(1)
+zopen&minus;init(1) zopen&minus;install(1)
+zopen&minus;list(1) zopen&minus;remove(1)
+zopen&minus;build(1) zopen&minus;alt(1) zopen&minus;clean(1)
+zopen&minus;generate(1)
+zopen&minus;update&minus;cacert(1)</p>
+
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Written by
+contributors to the z/OS Open Tools Community
+&lt;https://github.com/ZOSOpenTools/meta/graphs/contributors&gt;.</p>
+
+<h2>REPORTING BUGS
+<a name="REPORTING BUGS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Report bugs at
+https://github.com/ZOSOpenTools/meta/issues .</p>
+
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Copyright
+&copy; 2023 zOS Open Tools Community.</p>
+
+<p style="margin-left:11%; margin-top: 1em">License Apache:
+The Apache Software Foundation license,
+&lt;https://directory.fsf.org/wiki/License:Apache2.0&gt;
+<br>
+This is free software: you are free to change and
+redistribute it. There is NO WARRANTY, to the extent
+permitted by law.</p>
+<hr>
+</body>
+</html>
