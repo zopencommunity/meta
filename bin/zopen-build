@@ -535,7 +535,7 @@ checkEnv()
     fi
   fi
 
-  implicitDeps="sed git jq"
+  implicitDeps="sed git jq curl"
 
   if [ -z "${ZOPEN_COMP}" ]; then
     implicitDeps="${implicitDeps} comp_xlclang"
@@ -557,7 +557,7 @@ checkEnv()
     if [ -z "${ZOPEN_DEPS}" ]; then
       printError "ZOPEN_STABLE_DEPS, ZOPEN_DEV_DEPS, ZOPEN_DEPS or ZOPEN_TARBALL_DEPS needs to be defined"
     fi
-    implicitDeps="${implicitDeps} curl tar"
+    implicitDeps="${implicitDeps} tar"
     ext=${ZOPEN_URL##*.}
     if [ "${ext}x" = "xzx" ]; then
       implicitDeps="${implicitDeps} xz"
@@ -1684,7 +1684,7 @@ install()
       fi
 
       #TODO: Hack so that we can use coreutils md5sum without impacting builds
-      ZOPEN_DEPS="coreutils jq"
+      ZOPEN_DEPS="${ZOPEN_DEPS} coreutils jq"
       setDepsEnv
 
       pax_size=$(du -s "${paxFileName}" | awk '{print $1}')
