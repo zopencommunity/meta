@@ -23,9 +23,14 @@ setupMyself
 
 printSyntax()
 {
-  echo "${ME} will generate man pages from help and version information for zopen and zopen-* tools" >&2
-  echo "Syntax: ${ME} DIRECTORY" >&2
-  echo "  where DIRECTORY is the directory to write the man pages to (the directory needs to already exist)" >&2
+  echo "${ME} - generate man pages from help and version information for zopen and zopen-* tools"
+  echo "Usage: ${ME} [OPTION] DIRECTORY"
+  echo "  DIRECTORY  the existing directory to write the man pages"
+  echo "Options:"
+  echo "  --help     display this help and exit"
+  echo "  --version  print version"
+  echo "Example:"
+  echo "  ${ME} /tmp/man1    write the man pages to the /tmp/man1 directory"
 }
 
 if [[ $# -eq 1 ]]; then

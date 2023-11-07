@@ -20,14 +20,16 @@ checkWritable
 printSyntax()
 {
   args=$*
-  echo "zopen remove is a utility to remove installed z/OS Open Tools packages."
-  echo "Syntax: zopen remove [<option>]* <package, ...>" >&2
-  echo "  where <option> may be one or more of:" >&2
-  echo "  --help: print this help" >&2
-  echo "  --version: print version" >&2
-  echo "  -p|--purge: remove package, the versioned directory and any cached file" >&2
-  echo "  -v: run in verbose mode" >&2
-  echo "  and <package> is a list of one or more projects to uninstall" >&2
+  echo "${ME} - remove installed z/OS Open Tools packages."
+  echo "Usage: zopen remove [OPTION] PACKAGE"
+  echo "  PACKAGE is a list of one or more projects to uninstall"
+  echo "Options:"
+  echo "  --help       print this help"
+  echo "  --version    print version"
+  echo "  -p, --purge  remove package, the versioned directory and any cached file"
+  echo "  -v           run in verbose mode"
+  echo "Examples:"
+  echo "  ${ME} man-db    Remove the man-db package" 
 }
 
 removePackages()
