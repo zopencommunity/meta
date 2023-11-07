@@ -131,7 +131,7 @@ mkdir -p ${name}port/patches
 
 # Create external LICENSE
 touch "${name}port/patches/LICENSE" && chtag -tc 819 "${name}port/patches/LICENSE"
-printf "%s\n" "${licenseName}\nView license contents at ${licenseUrl}" > "${name}port/patches/LICENSE"
+printf "%s\nView license comments at %s\n" "${licenseName}" "${licenseUrl}" > "${name}port/patches/LICENSE"
 
 buildenv="${name}port/buildenv"
 touch ${buildenv} && chtag -tc 819 ${buildenv}
