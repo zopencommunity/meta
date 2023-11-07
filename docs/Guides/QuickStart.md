@@ -28,3 +28,73 @@ If you like learning through watching, check out our getting started Video:
 <video height="1080" controls>
   <source src="https://github.com/ZOSOpenTools/collateral/raw/main/ZOSOpenToolsIntroV2-cropped.mp4" type="video/mp4">
 </video>
+
+
+## Upgrading z/OS Open Tools
+
+z/OS Open Tools can be upgraded like so:
+
+```
+$ zopen upgrade
+```
+
+In this case, all packages including the package manager, `zopen` (via the meta package manager) will
+be updated sequentially while being prompted to perform the update.
+Using the option `-y` will automatically accept all prompts as
+shown here:
+
+```
+$ zopen upgrade -y
+```
+
+
+## Upgrading a single package
+
+Individual packages can be upgraded by specifying the package
+name.  For example upgrading just the package manager is
+accomplished like so:
+
+```
+$ zopen upgrade
+```
+
+In this case, all packages including the package manager (Meta) will
+be updated sequentially while being prompted to perform the update.
+Using the option `-y` will automatically accept all prompts as
+shown here:
+
+```
+$ zopen upgrade -y
+```
+
+## Upgrading a single package
+
+Individual packages can be upgraded by specifiying the package
+name.  For example upgrading just the package manager is
+accomplished like so:
+
+```
+$ zopen upgrade meta -y
+$ zopen init --re-init
+# This assumes zopen is installed in your $HOME directory
+$ . ~/zopen/etc/zopen-config
+```
+
+Note, for users of meta 0.6.x and earlier, if the upgrade fails because of a pinned message, find the 
+`.pinned` file and remove it.  Afterwards `zopen upgrade meta -y` will
+work.
+
+For example:
+
+```
+$ cd ~/zopen
+$ find . -name ".pinned"
+./meta-0.6.2/.pinned
+./usr/local/zopen/meta/meta-dt/.pinned
+$ rm ./usr/local/zopen/meta/meta-dt/.pinned
+# This is a version installed as part of the install process and
+# can be safely removed once installed.
+$ rm -rf ./meta-0.6.2/.pinned
+```
+
+

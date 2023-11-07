@@ -1,5 +1,6 @@
-*	text	zos-working-tree-encoding=ISO8859-1
-*.pem   text zos-working-tree-encoding=UTF-8
+*	      text	zos-working-tree-encoding=ISO8859-1
+.env    text  zos-working-tree-encoding=IBM-1047
+*.pem   text  zos-working-tree-encoding=UTF-8
 *.png   binary
-*.gif binary
+*.gif   binary
 *.pax.Z binary

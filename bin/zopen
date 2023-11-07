@@ -23,41 +23,44 @@ setupMyself
 
 printHelp(){
 cat << HELPDOC
-zopen is a utility for mangaging a z/OS Open Tools environment.
+zopen is a utility for managing a z/OS Open Tools environment.
 
 Usage: zopen [COMMAND] [OPTION] [PARAMETERS]...
 
 Command:
-  init              generate \$rootfs/etc/zopen-config, creates file 
-                    structure and bootstraps
-  build             invokes the build script
-  promote           promote  a z/OS Open Tools environment to a new 
-                    location
-  download          downloads z/OS Open Tools package(s)
-  install           installs z/OS Open Tools package(s))
-  generate          generate a zopen project
-  update-cacert     update the cacert.pem file
-  upgrade           upgrades already installed tools
+  init              initializes a zopen environment at the specified location
+  install           installs one or more z/OS Open Tools packages
   list              lists information about z/OS Open Tools packages
-  query             queries z/OS Open Tools packages
-  search            searches remote repo for z/OS Open Tools package
+  upgrade           upgrades already z/OS Open Tools packages
   remove            removes installed z/OS Open Tools packages
-  alt               switch local versions of z/OS Open Tools packages
-  clean             cleans various aspects of z/OS Open Tools packages
+  build             builds the enclosing z/OS Open Tools git-cloned package
+  alt               manage alternate versions of z/OS Open Tools packages
+  clean             cleans up your zopen environment
+  generate          generates a new zopen project
+  update-cacert     update the cacert.pem file used by z/OS Open Tools
 
 Option:
   -v, --verbose     run in verbose mode
   -h,-?, --help     display this help and exit
 
 Examples:
-  zopen alt foo     list the available alternatives for package 'foo'
-  zopen --help      display help for zopen
-  zopen install foo 
-                    install package foo
-  zopen alt --select foo
-                    list the available alternatives for package 'foo'
-                    and allow the user to select an alternative version
+  zopen --help      displays zopen help
+  zopen --version   displays the installed zopen version
+  zopen install git install the latest z/OS Open Tools git package
+  zopen upgrade -y  upgrade all installed packages to the latest release, without prompting
+  zopen alt bash    list the installed alternative bash z/OS Open Tools packages
 
+SEE ALSO:
+  zopen-version(1)
+  zopen-init(1)
+  zopen-install(1)
+  zopen-list(1)
+  zopen-remove(1)
+  zopen-build(1)
+  zopen-alt(1)
+  zopen-clean(1)
+  zopen-generate(1)
+  zopen-update-cacert(1)
 
 
 Report bugs at https://github.com/ZOSOpenTools/meta/issues .
@@ -75,17 +78,13 @@ version=false
 
 for arg in $*; do
   case "${arg}" in
-    "alt"|"build"|"clean"|"promote"|"generate"|"init"|"install"|\
-    "query"|"remove"|"update-cacert")
+    "alt"|"build"|"clean"|"generate"|"init"|"install"|\
+    "remove"|"update-cacert")
       subcmd="zopen-${arg}"
       ;;
     "list")
       subcmd='zopen-query'
       subopts="${subopts} --list"
-      ;;
-    "search")
-      subcmd='zopen-query'
-      subopts="${subopts} --remote-search"
       ;;
     "upgrade")
       subcmd='zopen-install'

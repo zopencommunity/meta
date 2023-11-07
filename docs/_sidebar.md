@@ -6,6 +6,8 @@
     - [Migration Considerations](/Guides/Migration.md)
   - [Available ports](/Latest.md)
     - [Current Status](/Progress.md)
+  - Reference
+    - [zopen](/reference/zopen-reference.md)
   - [Porting to z/OS guide](/Guides/Porting.md)
     - [Leveraging the zoslib library](/Guides/Zoslib.md)
     - [CI/CD pipeline](/Guides/Pipeline.md)

@@ -1,0 +1,127 @@
+name: "BuildAndTest"
+on:
+  workflow_call:
+    inputs:
+      repo:
+        required: false
+        type: string
+        default: ""
+      branch:
+        required: false
+        default: ""
+        type: string
+      use_prbranch_as_build_branch:
+        required: false
+        default: false
+        type: boolean
+    secrets:
+      JENKINS_USER:
+        required: true
+      JENKINS_API_TOKEN:
+        required: true
+      JENKINS_SERVER_URL:
+        required: true
+jobs:
+  trigger-jenkins-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get PR details
+        if: ${{ github.event_name == 'issue_comment'}}
+        uses: xt0rted/pull-request-comment-branch@v1
+        id: comment-branch
+
+      - name: Set commit status as pending
+        uses: myrotvorets/set-commit-status-action@master
+        with:
+          sha: ${{ steps.comment-branch.outputs.head_sha || github.sha }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          status: pending
+          context: "Build and Test"
+
+      - name: Github API Request
+        id: request
+        uses: octokit/request-action@v2.x
+        with:
+          route: |
+            ${{ github.event.issue.pull_request.url || github.event.pull_request.url }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      #- name: Display Github Data
+      #  run: "echo latest release: '${{ steps.request.outputs.data }}'"
+
+      - name: Trigger Jenkins Job
+        run: |
+          repo="${{ inputs.repo }}"
+          if [ -z "${repo}" ]; then
+            repo="${{ fromJson(steps.request.outputs.data).head.repo.clone_url }}"
+          fi
+          branch="${{ inputs.branch }}"
+          if [ -z "${branch}" ]; then
+            branch="${{ fromJson(steps.request.outputs.data).head.ref }}"
+          fi
+          BUILD_BRANCH_OPT=""
+          if ${{ inputs.use_prbranch_as_build_branch }}; then
+            BUILD_BRANCH_OPT="-F BUILD_BRANCH=${branch}"
+            branch="main"
+          fi
+          CAUSE="Triggered by GH Action from PR: ${{ github.event.issue.pull_request.url || github.event.pull_request.url }} - Repo ${repo}, Branch: ${branch}, Build Opts: ${BUILD_BRANCH_OPT}"
+
+          ENCODED_CAUSE=$(echo -n "$CAUSE" | jq -s -R -r @uri)
+          JENKINS_JOB_URL="${{ secrets.JENKINS_SERVER_URL }}/job/Port-Build/buildWithParameters?token=jenkinstest&cause=${ENCODED_CAUSE}"
+
+
+          RESPONSE=$(curl -k -X POST -s -i -u "${{ secrets.JENKINS_USER }}:${{ secrets.JENKINS_API_TOKEN }}" "${JENKINS_JOB_URL}" -F PORT_GITHUB_REPO="${repo}" -F PORT_DESCRIPTION="Github CI Test of ${repo}" -F PORT_BRANCH="${branch}" ${BUILD_BRANCH_OPT})
+
+          # Extract the build URL from the response headers
+          BUILD_URL=$(echo "$RESPONSE" | grep -oP "Location: \K(.*)" | tr -d '\r')
+
+          # Extract the build number from the BUILD_URL
+          BUILD_NUMBER=$(basename "$BUILD_URL" | tr -d '/')
+          echo "Build Number: $BUILD_NUMBER"
+
+          # Poll the Jenkins queue API to check if the job has started
+          while [ "$(curl -k -s --header 'content-type: nocache' --header 'Accept: application/json' "${{ secrets.JENKINS_SERVER_URL }}/queue/item/${BUILD_NUMBER}/api/json" -u "${{ secrets.JENKINS_USER }}:${{ secrets.JENKINS_API_TOKEN }}" | jq -r '.executable.number')" == "null" ]; do
+              echo "Job is waiting in the queue..."
+              sleep 10
+          done
+
+          # Retrieve the build URL once the job has started
+          BUILD_NUMBER=$(curl -k -s --header 'Accept: application/json' "${{ secrets.JENKINS_SERVER_URL }}/queue/item/${BUILD_NUMBER}/api/json" -u "${{ secrets.JENKINS_USER }}:${{ secrets.JENKINS_API_TOKEN }}" | jq -r '.executable.number')
+          echo "Job Number: $BUILD_NUMBER"
+
+          echo "Build in progress..."
+          echo "See ${{ secrets.JENKINS_USER }}/job/Port-Build/${BUILD_NUMBER}/console for more details (if you have access)"
+          # Poll the Jenkins API to check if the build has completed
+          while true; do
+            set +e
+            CURL_OUTPUT=$(curl -k -s  -u "${{ secrets.JENKINS_USER }}:${{ secrets.JENKINS_API_TOKEN }}" --header 'content-type: nocache' --header 'Accept: application/json' "${{ secrets.JENKINS_SERVER_URL }}/job/Port-Build/${BUILD_NUMBER}/api/json" --fail)
+            set -e
+            if [ $? -gt 0 ]; then
+              echo "Previous curl command failed, try again with Mozilla header"
+              CURL_OUTPUT=$(curl -k -s -u "${{ secrets.JENKINS_USER }}:${{ secrets.JENKINS_API_TOKEN }}" --header 'User-Agent: Mozilla/5.0' --header 'Accept: application/json' "${{ secrets.JENKINS_SERVER_URL }}/job/Port-Build/${BUILD_NUMBER}/api/json" --fail)
+            fi
+            if [ "$(echo "${CURL_OUTPUT}" | jq -r '.building')" != "true" ]; then
+              break;
+            fi
+            echo -n "."
+            sleep 10
+          done
+          echo "Console output: "
+          # Retrieve the console output of the Jenkins job
+          curl -k -s --header 'User-Agent: Mozilla/5.0' "${{ secrets.JENKINS_SERVER_URL }}/job/Port-Build/${BUILD_NUMBER}/consoleText" -u "${{ secrets.JENKINS_USER }}:${{ secrets.JENKINS_API_TOKEN }}"
+
+          if [ "$(curl -k -s --header 'User-Agent: Mozilla/5.0' --header 'Accept: application/json' "${{ secrets.JENKINS_SERVER_URL }}/job/Port-Build/${BUILD_NUMBER}/api/json" -u "${{ secrets.JENKINS_USER }}:${{ secrets.JENKINS_API_TOKEN }}" | jq -r '.result')" != "SUCCESS" ]; then
+            echo "Job failed..."
+            exit 1
+          fi
+          exit 0
+
+      - name: Set final commit status
+        uses: myrotvorets/set-commit-status-action@master
+        if: always()
+        with:
+          sha: ${{ steps.comment-branch.outputs.head_sha || github.sha }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          status: ${{ job.status }}
+          context: "Build and Test"

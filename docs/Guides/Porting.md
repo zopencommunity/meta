@@ -106,6 +106,7 @@ export ZOPEN_DEV_DEPS="git make autoconf"
 export ZOPEN_STABLE_URL="https://github.com/stedolan/jq/releases/download/jq-1.6/jq-1.6.tar.gz"
 export ZOPEN_STABLE_DEPS="make"
 export ZOPEN_BUILD_LINE="STABLE"
+export ZOPEN_CATEGORIES="security networking"
 
 zopen_check_results()
 {
@@ -127,12 +128,14 @@ zopen_append_to_zoslib_env()
 ```
 ZOPEN_STABLE_DEPS/ZOPEN_STABLE_DEPS are used to identify the non-standard z/OS Open Tools dependencies needed to build the project. 
 
+ZOPEN_CATEGORIES represent the [categories]((https://github.com/ZOSOpenTools/meta/blob/main/data/tool_categories.txt") that the tool or library fits under.
+
 `zopen_append_to_env()` can be used to add additional environment variables outside of the normal environment variables. (e.g. PATH, LIBPATH, MANPATH)
 
 Similarly, `zopen_append_to_zoslib_env()` can be used to set program specific environment variables.
 It accepts the following format:
   envar|action|value
-Where envar is the environment variable, action is either set, unset, or prepend, and value is the environment variable value.
+Where envar is the environment variable, action is either set (if unset), overrideset, unset, or prepend, and value is the environment variable value.
 The string `PROJECT_HOME` represents a special value and is replaced with the root path of the project"
 
 To help gauge the build quality of the port, a zopen_check_results() function needs to be provided inside the buildenv. This function should process the test results and emit a report of the failures, total number of tests, expected number of failures and expected number of tests to stdout as in the following format:
@@ -211,6 +214,11 @@ Send an email to itodorov@ca.ibm.com or fultonm@ca.ibm.com with the following in
 Once your repository is created, you will be invited as a collaborator.
 
 Proceed to clone the repository and submit a Pull Request including the initial contents of your z/OS port.
+
+### Contributing your changes
+
+Please follow the [contributing guidelines](https://github.com/ZOSOpenTools/meta/blob/main/CONTRIBUTING.md).
+
 
 ### Setting up the CI/CD pipeline
 

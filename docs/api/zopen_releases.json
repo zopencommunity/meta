@@ -1,425 +1,39 @@
 {
-  "timestamp": "2023-10-13T01:21:29.463076",
+  "timestamp": "2023-11-06T21:16:20.432266",
   "release_data": {
-    "m4": [
-      {
-        "name": "m4 (Build 1446) - (DEV)",
-        "date": "2023-10-10 03:09:05",
-        "tag_name": "DEV_m4port_1446",
-        "assets": [
-          {
-            "name": "m4-branch-1.4.20231009_223814.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/DEV_m4port_1446/m4-branch-1.4.20231009_223814.zos.pax.Z",
-            "size": 838656,
-            "expanded_size": 1853582,
-            "runtime_dependencies": "No dependencies",
-            "total_tests": "238",
-            "passed_tests": "234"
-          }
-        ]
-      },
-      {
-        "name": "m4 (Build 1444) - (DEV)",
-        "date": "2023-10-08 00:13:02",
-        "tag_name": "DEV_m4port_1444",
-        "assets": [
-          {
-            "name": "m4-branch-1.4.20231007_193135.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/DEV_m4port_1444/m4-branch-1.4.20231007_193135.zos.pax.Z",
-            "size": 838656,
-            "expanded_size": 1853598,
-            "runtime_dependencies": "No dependencies",
-            "total_tests": "238",
-            "passed_tests": "234"
-          }
-        ]
-      },
-      {
-        "name": "m4 (Build 1435) - (STABLE)",
-        "date": "2023-10-06 22:12:36",
-        "tag_name": "STABLE_m4port_1435",
-        "assets": [
-          {
-            "name": "m4-1.4.19.20231006_203601.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/STABLE_m4port_1435/m4-1.4.19.20231006_203601.zos.pax.Z",
-            "size": 612864,
-            "expanded_size": 1462697,
-            "runtime_dependencies": "No dependencies",
-            "total_tests": "237",
-            "passed_tests": "233"
-          }
-        ]
-      },
-      {
-        "name": "m4 (Build 1434) - (STABLE)",
-        "date": "2023-10-06 20:37:43",
-        "tag_name": "STABLE_m4port_1434",
-        "assets": [
-          {
-            "name": "m4-1.4.19.20231006_194803.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/STABLE_m4port_1434/m4-1.4.19.20231006_194803.zos.pax.Z",
-            "size": 612864,
-            "expanded_size": 1462619,
-            "runtime_dependencies": "No dependencies",
-            "total_tests": "237",
-            "passed_tests": "233"
-          }
-        ]
-      },
-      {
-        "name": "m4 (Build 1429) - (STABLE)",
-        "date": "2023-10-04 20:45:17",
-        "tag_name": "STABLE_m4port_1429",
-        "assets": [
-          {
-            "name": "m4-1.4.19.20231004_200316.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/STABLE_m4port_1429/m4-1.4.19.20231004_200316.zos.pax.Z",
-            "size": 612864,
-            "expanded_size": 1462709,
-            "runtime_dependencies": "No dependencies",
-            "total_tests": "237",
-            "passed_tests": "233"
-          }
-        ]
-      },
-      {
-        "name": "m4 zopen 0.7.0\n1.4.19\n1.4.19 (Build 1358) - (STABLE)",
-        "date": "2023-09-24 21:57:17",
-        "tag_name": "STABLE_m4port_1358",
-        "assets": [
-          {
-            "name": "m4-1.4.19.20230924_212310.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/STABLE_m4port_1358/m4-1.4.19.20230924_212310.zos.pax.Z",
-            "size": 612864,
-            "expanded_size": 1462754,
-            "runtime_dependencies": "No dependencies",
-            "total_tests": "237",
-            "passed_tests": "233"
-          }
-        ]
-      },
-      {
-        "name": "m4 0.3.0-dt-stable\n1.4.19\n1.4.19 (Build 1312) - (STABLE)",
-        "date": "2023-09-20 23:14:45",
-        "tag_name": "STABLE_m4port_1312",
-        "assets": [
-          {
-            "name": "m4-1.4.19.20230920_223415.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/STABLE_m4port_1312/m4-1.4.19.20230920_223415.zos.pax.Z",
-            "size": 612864,
-            "expanded_size": 1462741,
-            "runtime_dependencies": "No dependencies",
-            "total_tests": "237",
-            "passed_tests": "233"
-          }
-        ]
-      },
-      {
-        "name": "m4 0.3.0-dt-stable\n1.4.19\n1.4.19 (Build 1228) - (STABLE)",
-        "date": "2023-09-09 01:23:31",
-        "tag_name": "STABLE_m4port_1228",
-        "assets": [
-          {
-            "name": "m4-1.4.19.20230908_202307.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/STABLE_m4port_1228/m4-1.4.19.20230908_202307.zos.pax.Z",
-            "size": 612864,
-            "expanded_size": 1433637,
-            "runtime_dependencies": "No dependencies",
-            "total_tests": "237",
-            "passed_tests": "233"
-          }
-        ]
-      },
-      {
-        "name": "m4 1.4.19 (Build 1172)",
-        "date": "2023-07-24 03:09:17",
-        "tag_name": "Releaseline_m4port_1172",
-        "assets": [
-          {
-            "name": "m4-1.4.19.20230723_222152.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/Releaseline_m4port_1172/m4-1.4.19.20230723_222152.zos.pax.Z",
-            "size": 612864,
-            "expanded_size": 1434535,
-            "runtime_dependencies": "No dependencies",
-            "total_tests": "237",
-            "passed_tests": "233"
-          }
-        ]
-      },
-      {
-        "name": "m4 1.4.19 (Build 954)",
-        "date": "2023-04-24 17:53:46",
-        "tag_name": "Releaseline_m4port_954",
-        "assets": [
-          {
-            "name": "m4-1.4.19.20230424_133345.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/Releaseline_m4port_954/m4-1.4.19.20230424_133345.zos.pax.Z",
-            "size": 612864,
-            "expanded_size": 1434551,
-            "runtime_dependencies": "No dependencies",
-            "total_tests": "237",
-            "passed_tests": "233"
-          }
-        ]
-      },
-      {
-        "name": "m4 1.4.19 (Build 637)",
-        "date": "2023-02-23 14:19:34",
-        "tag_name": "m4port_637",
-        "assets": [
-          {
-            "name": "m4-1.4.19.20230223_090140.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/m4port_637/m4-1.4.19.20230223_090140.zos.pax.Z",
-            "size": 612864,
-            "expanded_size": 1431292,
-            "runtime_dependencies": "No dependencies",
-            "total_tests": "237",
-            "passed_tests": "233"
-          }
-        ]
-      },
-      {
-        "name": "m4 1.4.19 (Build 597)",
-        "date": "2023-02-18 07:03:19",
-        "tag_name": "m4port_597",
-        "assets": [
-          {
-            "name": "m4-1.4.19.20230218_014604.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/m4port_597/m4-1.4.19.20230218_014604.zos.pax.Z",
-            "size": 612864,
-            "expanded_size": 1431496,
-            "runtime_dependencies": "No dependencies",
-            "total_tests": "237",
-            "passed_tests": "233"
-          }
-        ]
-      },
-      {
-        "name": "m4port (Build 336)",
-        "date": "2022-12-05 18:23:44",
-        "tag_name": "m4port_336",
-        "assets": [
-          {
-            "name": "m4-1.4.19.20221205_130639.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/m4port_336/m4-1.4.19.20221205_130639.zos.pax.Z",
-            "size": 451584,
-            "expanded_size": 968528,
-            "runtime_dependencies": null,
-            "total_tests": "237",
-            "passed_tests": "233"
-          }
-        ]
-      },
-      {
-        "name": "m4port (Build 324)",
-        "date": "2022-11-28 16:54:15",
-        "tag_name": "m4port_324",
-        "assets": [
-          {
-            "name": "m4-1.4.19.20221128_113218.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/m4port_324/m4-1.4.19.20221128_113218.zos.pax.Z",
-            "size": 451584,
-            "expanded_size": 968648,
-            "runtime_dependencies": null,
-            "total_tests": "237",
-            "passed_tests": "233"
-          }
-        ]
-      },
-      {
-        "name": "m4port (Build 275)",
-        "date": "2022-11-09 07:17:32",
-        "tag_name": "m4port_275",
-        "assets": [
-          {
-            "name": "m4-1.4.19.20221109_020040.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/m4port_275/m4-1.4.19.20221109_020040.zos.pax.Z",
-            "size": 612864,
-            "expanded_size": 1590774,
-            "runtime_dependencies": null,
-            "total_tests": "237",
-            "passed_tests": "233"
-          }
-        ]
-      },
-      {
-        "name": "m4port (Build 245)",
-        "date": "2022-11-07 10:01:41",
-        "tag_name": "m4port_245",
-        "assets": [
-          {
-            "name": "m4-1.4.19.20221106_231454.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/m4port_245/m4-1.4.19.20221106_231454.zos.pax.Z",
-            "size": 612864,
-            "expanded_size": 1590809,
-            "runtime_dependencies": null,
-            "total_tests": "237",
-            "passed_tests": "233"
-          }
-        ]
-      },
-      {
-        "name": "m4port (Build 210)",
-        "date": "2022-10-24 14:25:55",
-        "tag_name": "m4port_210",
-        "assets": [
-          {
-            "name": "m4-1.4.19.20221024_100531.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/m4port_210/m4-1.4.19.20221024_100531.zos.pax.Z",
-            "size": 612864,
-            "expanded_size": 1591194,
-            "runtime_dependencies": null,
-            "total_tests": "237",
-            "passed_tests": "233"
-          }
-        ]
-      },
-      {
-        "name": "m4port (Build 206)",
-        "date": "2022-10-22 02:10:24",
-        "tag_name": "m4port_206",
-        "assets": [
-          {
-            "name": "m4-1.4.19.20221021_215407.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/m4port_206/m4-1.4.19.20221021_215407.zos.pax.Z",
-            "size": 612864,
-            "expanded_size": 1591166,
-            "runtime_dependencies": null,
-            "total_tests": "237",
-            "passed_tests": "233"
-          }
-        ]
-      },
-      {
-        "name": "m4port (Build 166)",
-        "date": "2022-09-23 20:33:53",
-        "tag_name": "m4port_166",
-        "assets": [
-          {
-            "name": "m4-1.4.19.20220923_161553.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/m4port_166/m4-1.4.19.20220923_161553.zos.pax.Z",
-            "size": 612864,
-            "expanded_size": 1590650,
-            "runtime_dependencies": null,
-            "total_tests": "237",
-            "passed_tests": "233"
-          }
-        ]
-      },
-      {
-        "name": "m4port (Build 161)",
-        "date": "2022-09-21 03:43:18",
-        "tag_name": "m4port_161",
-        "assets": [
-          {
-            "name": "m4-1.4.19.20220920_231320.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/m4port_161/m4-1.4.19.20220920_231320.zos.pax.Z",
-            "size": 612864,
-            "expanded_size": 1783666,
-            "runtime_dependencies": null,
-            "total_tests": "237",
-            "passed_tests": "233"
-          }
-        ]
-      },
-      {
-        "name": "m4port (Build 158)",
-        "date": "2022-09-19 16:00:37",
-        "tag_name": "m4port_158",
-        "assets": [
-          {
-            "name": "m4-1.4.19.20220919_114245.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/m4port_158/m4-1.4.19.20220919_114245.zos.pax.Z",
-            "size": 612864,
-            "expanded_size": 1783796,
-            "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
-          }
-        ]
-      },
-      {
-        "name": "m4port (Build 141)",
-        "date": "2022-09-09 01:54:16",
-        "tag_name": "m4port_141",
-        "assets": [
-          {
-            "name": "m4-1.4.19.20220908_213800.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/m4port_141/m4-1.4.19.20220908_213800.zos.pax.Z",
-            "size": 612864,
-            "expanded_size": 1783583,
-            "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
-          }
-        ]
-      },
-      {
-        "name": "m4port (Build 127)",
-        "date": "2022-09-07 22:18:51",
-        "tag_name": "m4port_127",
-        "assets": [
-          {
-            "name": "m4-1.4.19.20220907_180205.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/m4port_127/m4-1.4.19.20220907_180205.zos.pax.Z",
-            "size": 612864,
-            "expanded_size": 1783790,
-            "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
-          }
-        ]
-      },
-      {
-        "name": "m4port (Build 71)",
-        "date": "2022-08-15 04:25:52",
-        "tag_name": "m4port_71",
-        "assets": [
-          {
-            "name": "m4-1.4.19.20220814_222328.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/m4port_71/m4-1.4.19.20220814_222328.zos.pax.Z",
-            "size": 612864,
-            "expanded_size": 1784073,
-            "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
-          }
-        ]
-      },
-      {
-        "name": "m4port (Build 41)",
-        "date": "2022-07-22 07:04:14",
-        "tag_name": "m4port_41",
-        "assets": [
-          {
-            "name": "m4-1.4.19.20220722_024801.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/m4port_41/m4-1.4.19.20220722_024801.zos.pax.Z",
-            "size": 612864,
-            "expanded_size": 1784198,
-            "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
-          }
-        ]
-      },
-      {
-        "name": "m4port (Build 32)",
-        "date": "2022-07-20 22:03:52",
-        "tag_name": "m4port_32",
-        "assets": [
-          {
-            "name": "m4-1.4.19.20220720_174801.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/m4port_32/m4-1.4.19.20220720_174801.zos.pax.Z",
-            "size": 612864,
-            "expanded_size": 1784214,
-            "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
-          }
-        ]
-      }
-    ],
     "perl": [
+      {
+        "name": "perl (Build 1504) - (STABLE)",
+        "date": "2023-10-22 21:45:19",
+        "tag_name": "STABLE_perlport_1504",
+        "assets": [
+          {
+            "name": "perl5-heads.v5.38.0.20231022_145541.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/STABLE_perlport_1504/perl5-heads.v5.38.0.20231022_145541.zos.pax.Z",
+            "size": 30256128,
+            "expanded_size": 92712997,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "2495",
+            "passed_tests": "2469"
+          }
+        ]
+      },
+      {
+        "name": "perl (Build 1496) - (STABLE)",
+        "date": "2023-10-20 19:08:55",
+        "tag_name": "STABLE_perlport_1496",
+        "assets": [
+          {
+            "name": "perl5-heads.v5.38.0.20231020_120854.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/perlport/releases/download/STABLE_perlport_1496/perl5-heads.v5.38.0.20231020_120854.zos.pax.Z",
+            "size": 30256128,
+            "expanded_size": 92714662,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "2494",
+            "passed_tests": "2468"
+          }
+        ]
+      },
       {
         "name": "perl 5.38.0 (Build 1391) - (STABLE)",
         "date": "2023-09-27 17:05:58",
@@ -1143,6 +757,22 @@
     ],
     "automake": [
       {
+        "name": "automake (Build 1506) - (STABLE)",
+        "date": "2023-10-23 04:24:47",
+        "tag_name": "STABLE_automakeport_1506",
+        "assets": [
+          {
+            "name": "automake-1.16.5.20231023_020456.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/STABLE_automakeport_1506/automake-1.16.5.20231023_020456.zos.pax.Z",
+            "size": 999936,
+            "expanded_size": 2459490,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "7",
+            "passed_tests": "5"
+          }
+        ]
+      },
+      {
         "name": "automake 0.3.0-dt-stable\n1.16.5 (Build 1249) - (STABLE)",
         "date": "2023-09-13 04:05:52",
         "tag_name": "STABLE_automakeport_1249",
@@ -1641,6 +1271,38 @@
     ],
     "autoconf": [
       {
+        "name": "autoconf (Build 1543) - (STABLE)",
+        "date": "2023-11-03 16:50:11",
+        "tag_name": "STABLE_autoconfport_1543",
+        "assets": [
+          {
+            "name": "autoconf-2.71.20231102_230025.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/STABLE_autoconfport_1543/autoconf-2.71.20231102_230025.zos.pax.Z",
+            "size": 1419264,
+            "expanded_size": 3619039,
+            "runtime_dependencies": "m4 perl",
+            "total_tests": "599",
+            "passed_tests": "587"
+          }
+        ]
+      },
+      {
+        "name": "autoconf (Build 1510) - (STABLE)",
+        "date": "2023-10-24 08:20:31",
+        "tag_name": "STABLE_autoconfport_1510",
+        "assets": [
+          {
+            "name": "autoconf-2.71.20231023_191302.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/STABLE_autoconfport_1510/autoconf-2.71.20231023_191302.zos.pax.Z",
+            "size": 1419264,
+            "expanded_size": 3619247,
+            "runtime_dependencies": "m4 perl",
+            "total_tests": "599",
+            "passed_tests": "587"
+          }
+        ]
+      },
+      {
         "name": "autoconf 2.71\n2.71 (Build 1397) - (STABLE)",
         "date": "2023-09-28 05:50:25",
         "tag_name": "STABLE_autoconfport_1397",
@@ -1945,7 +1607,473 @@
         ]
       }
     ],
+    "m4": [
+      {
+        "name": "m4 (Build 1545) - (DEV)",
+        "date": "2023-11-03 20:47:55",
+        "tag_name": "DEV_m4port_1545",
+        "assets": [
+          {
+            "name": "m4-branch-1.4.20231103_143403.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/DEV_m4port_1545/m4-branch-1.4.20231103_143403.zos.pax.Z",
+            "size": 838656,
+            "expanded_size": 1853200,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "238",
+            "passed_tests": "234"
+          }
+        ]
+      },
+      {
+        "name": "m4 (Build 1544) - (STABLE)",
+        "date": "2023-11-03 18:37:02",
+        "tag_name": "STABLE_m4port_1544",
+        "assets": [
+          {
+            "name": "m4-1.4.19.20231103_180906.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/STABLE_m4port_1544/m4-1.4.19.20231103_180906.zos.pax.Z",
+            "size": 838656,
+            "expanded_size": 2135875,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "237",
+            "passed_tests": "233"
+          }
+        ]
+      },
+      {
+        "name": "m4 (Build 1446) - (DEV)",
+        "date": "2023-10-10 03:09:05",
+        "tag_name": "DEV_m4port_1446",
+        "assets": [
+          {
+            "name": "m4-branch-1.4.20231009_223814.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/DEV_m4port_1446/m4-branch-1.4.20231009_223814.zos.pax.Z",
+            "size": 838656,
+            "expanded_size": 1853582,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "238",
+            "passed_tests": "234"
+          }
+        ]
+      },
+      {
+        "name": "m4 (Build 1444) - (DEV)",
+        "date": "2023-10-08 00:13:02",
+        "tag_name": "DEV_m4port_1444",
+        "assets": [
+          {
+            "name": "m4-branch-1.4.20231007_193135.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/DEV_m4port_1444/m4-branch-1.4.20231007_193135.zos.pax.Z",
+            "size": 838656,
+            "expanded_size": 1853598,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "238",
+            "passed_tests": "234"
+          }
+        ]
+      },
+      {
+        "name": "m4 (Build 1435) - (STABLE)",
+        "date": "2023-10-06 22:12:36",
+        "tag_name": "STABLE_m4port_1435",
+        "assets": [
+          {
+            "name": "m4-1.4.19.20231006_203601.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/STABLE_m4port_1435/m4-1.4.19.20231006_203601.zos.pax.Z",
+            "size": 612864,
+            "expanded_size": 1462697,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "237",
+            "passed_tests": "233"
+          }
+        ]
+      },
+      {
+        "name": "m4 (Build 1434) - (STABLE)",
+        "date": "2023-10-06 20:37:43",
+        "tag_name": "STABLE_m4port_1434",
+        "assets": [
+          {
+            "name": "m4-1.4.19.20231006_194803.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/STABLE_m4port_1434/m4-1.4.19.20231006_194803.zos.pax.Z",
+            "size": 612864,
+            "expanded_size": 1462619,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "237",
+            "passed_tests": "233"
+          }
+        ]
+      },
+      {
+        "name": "m4 (Build 1429) - (STABLE)",
+        "date": "2023-10-04 20:45:17",
+        "tag_name": "STABLE_m4port_1429",
+        "assets": [
+          {
+            "name": "m4-1.4.19.20231004_200316.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/STABLE_m4port_1429/m4-1.4.19.20231004_200316.zos.pax.Z",
+            "size": 612864,
+            "expanded_size": 1462709,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "237",
+            "passed_tests": "233"
+          }
+        ]
+      },
+      {
+        "name": "m4 zopen 0.7.0\n1.4.19\n1.4.19 (Build 1358) - (STABLE)",
+        "date": "2023-09-24 21:57:17",
+        "tag_name": "STABLE_m4port_1358",
+        "assets": [
+          {
+            "name": "m4-1.4.19.20230924_212310.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/STABLE_m4port_1358/m4-1.4.19.20230924_212310.zos.pax.Z",
+            "size": 612864,
+            "expanded_size": 1462754,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "237",
+            "passed_tests": "233"
+          }
+        ]
+      },
+      {
+        "name": "m4 0.3.0-dt-stable\n1.4.19\n1.4.19 (Build 1312) - (STABLE)",
+        "date": "2023-09-20 23:14:45",
+        "tag_name": "STABLE_m4port_1312",
+        "assets": [
+          {
+            "name": "m4-1.4.19.20230920_223415.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/STABLE_m4port_1312/m4-1.4.19.20230920_223415.zos.pax.Z",
+            "size": 612864,
+            "expanded_size": 1462741,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "237",
+            "passed_tests": "233"
+          }
+        ]
+      },
+      {
+        "name": "m4 0.3.0-dt-stable\n1.4.19\n1.4.19 (Build 1228) - (STABLE)",
+        "date": "2023-09-09 01:23:31",
+        "tag_name": "STABLE_m4port_1228",
+        "assets": [
+          {
+            "name": "m4-1.4.19.20230908_202307.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/STABLE_m4port_1228/m4-1.4.19.20230908_202307.zos.pax.Z",
+            "size": 612864,
+            "expanded_size": 1433637,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "237",
+            "passed_tests": "233"
+          }
+        ]
+      },
+      {
+        "name": "m4 1.4.19 (Build 1172)",
+        "date": "2023-07-24 03:09:17",
+        "tag_name": "Releaseline_m4port_1172",
+        "assets": [
+          {
+            "name": "m4-1.4.19.20230723_222152.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/Releaseline_m4port_1172/m4-1.4.19.20230723_222152.zos.pax.Z",
+            "size": 612864,
+            "expanded_size": 1434535,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "237",
+            "passed_tests": "233"
+          }
+        ]
+      },
+      {
+        "name": "m4 1.4.19 (Build 954)",
+        "date": "2023-04-24 17:53:46",
+        "tag_name": "Releaseline_m4port_954",
+        "assets": [
+          {
+            "name": "m4-1.4.19.20230424_133345.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/Releaseline_m4port_954/m4-1.4.19.20230424_133345.zos.pax.Z",
+            "size": 612864,
+            "expanded_size": 1434551,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "237",
+            "passed_tests": "233"
+          }
+        ]
+      },
+      {
+        "name": "m4 1.4.19 (Build 637)",
+        "date": "2023-02-23 14:19:34",
+        "tag_name": "m4port_637",
+        "assets": [
+          {
+            "name": "m4-1.4.19.20230223_090140.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/m4port_637/m4-1.4.19.20230223_090140.zos.pax.Z",
+            "size": 612864,
+            "expanded_size": 1431292,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "237",
+            "passed_tests": "233"
+          }
+        ]
+      },
+      {
+        "name": "m4 1.4.19 (Build 597)",
+        "date": "2023-02-18 07:03:19",
+        "tag_name": "m4port_597",
+        "assets": [
+          {
+            "name": "m4-1.4.19.20230218_014604.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/m4port_597/m4-1.4.19.20230218_014604.zos.pax.Z",
+            "size": 612864,
+            "expanded_size": 1431496,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "237",
+            "passed_tests": "233"
+          }
+        ]
+      },
+      {
+        "name": "m4port (Build 336)",
+        "date": "2022-12-05 18:23:44",
+        "tag_name": "m4port_336",
+        "assets": [
+          {
+            "name": "m4-1.4.19.20221205_130639.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/m4port_336/m4-1.4.19.20221205_130639.zos.pax.Z",
+            "size": 451584,
+            "expanded_size": 968528,
+            "runtime_dependencies": null,
+            "total_tests": "237",
+            "passed_tests": "233"
+          }
+        ]
+      },
+      {
+        "name": "m4port (Build 324)",
+        "date": "2022-11-28 16:54:15",
+        "tag_name": "m4port_324",
+        "assets": [
+          {
+            "name": "m4-1.4.19.20221128_113218.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/m4port_324/m4-1.4.19.20221128_113218.zos.pax.Z",
+            "size": 451584,
+            "expanded_size": 968648,
+            "runtime_dependencies": null,
+            "total_tests": "237",
+            "passed_tests": "233"
+          }
+        ]
+      },
+      {
+        "name": "m4port (Build 275)",
+        "date": "2022-11-09 07:17:32",
+        "tag_name": "m4port_275",
+        "assets": [
+          {
+            "name": "m4-1.4.19.20221109_020040.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/m4port_275/m4-1.4.19.20221109_020040.zos.pax.Z",
+            "size": 612864,
+            "expanded_size": 1590774,
+            "runtime_dependencies": null,
+            "total_tests": "237",
+            "passed_tests": "233"
+          }
+        ]
+      },
+      {
+        "name": "m4port (Build 245)",
+        "date": "2022-11-07 10:01:41",
+        "tag_name": "m4port_245",
+        "assets": [
+          {
+            "name": "m4-1.4.19.20221106_231454.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/m4port_245/m4-1.4.19.20221106_231454.zos.pax.Z",
+            "size": 612864,
+            "expanded_size": 1590809,
+            "runtime_dependencies": null,
+            "total_tests": "237",
+            "passed_tests": "233"
+          }
+        ]
+      },
+      {
+        "name": "m4port (Build 210)",
+        "date": "2022-10-24 14:25:55",
+        "tag_name": "m4port_210",
+        "assets": [
+          {
+            "name": "m4-1.4.19.20221024_100531.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/m4port_210/m4-1.4.19.20221024_100531.zos.pax.Z",
+            "size": 612864,
+            "expanded_size": 1591194,
+            "runtime_dependencies": null,
+            "total_tests": "237",
+            "passed_tests": "233"
+          }
+        ]
+      },
+      {
+        "name": "m4port (Build 206)",
+        "date": "2022-10-22 02:10:24",
+        "tag_name": "m4port_206",
+        "assets": [
+          {
+            "name": "m4-1.4.19.20221021_215407.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/m4port_206/m4-1.4.19.20221021_215407.zos.pax.Z",
+            "size": 612864,
+            "expanded_size": 1591166,
+            "runtime_dependencies": null,
+            "total_tests": "237",
+            "passed_tests": "233"
+          }
+        ]
+      },
+      {
+        "name": "m4port (Build 166)",
+        "date": "2022-09-23 20:33:53",
+        "tag_name": "m4port_166",
+        "assets": [
+          {
+            "name": "m4-1.4.19.20220923_161553.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/m4port_166/m4-1.4.19.20220923_161553.zos.pax.Z",
+            "size": 612864,
+            "expanded_size": 1590650,
+            "runtime_dependencies": null,
+            "total_tests": "237",
+            "passed_tests": "233"
+          }
+        ]
+      },
+      {
+        "name": "m4port (Build 161)",
+        "date": "2022-09-21 03:43:18",
+        "tag_name": "m4port_161",
+        "assets": [
+          {
+            "name": "m4-1.4.19.20220920_231320.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/m4port_161/m4-1.4.19.20220920_231320.zos.pax.Z",
+            "size": 612864,
+            "expanded_size": 1783666,
+            "runtime_dependencies": null,
+            "total_tests": "237",
+            "passed_tests": "233"
+          }
+        ]
+      },
+      {
+        "name": "m4port (Build 158)",
+        "date": "2022-09-19 16:00:37",
+        "tag_name": "m4port_158",
+        "assets": [
+          {
+            "name": "m4-1.4.19.20220919_114245.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/m4port_158/m4-1.4.19.20220919_114245.zos.pax.Z",
+            "size": 612864,
+            "expanded_size": 1783796,
+            "runtime_dependencies": null,
+            "total_tests": -1,
+            "passed_tests": -1
+          }
+        ]
+      },
+      {
+        "name": "m4port (Build 141)",
+        "date": "2022-09-09 01:54:16",
+        "tag_name": "m4port_141",
+        "assets": [
+          {
+            "name": "m4-1.4.19.20220908_213800.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/m4port_141/m4-1.4.19.20220908_213800.zos.pax.Z",
+            "size": 612864,
+            "expanded_size": 1783583,
+            "runtime_dependencies": null,
+            "total_tests": -1,
+            "passed_tests": -1
+          }
+        ]
+      },
+      {
+        "name": "m4port (Build 127)",
+        "date": "2022-09-07 22:18:51",
+        "tag_name": "m4port_127",
+        "assets": [
+          {
+            "name": "m4-1.4.19.20220907_180205.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/m4port_127/m4-1.4.19.20220907_180205.zos.pax.Z",
+            "size": 612864,
+            "expanded_size": 1783790,
+            "runtime_dependencies": null,
+            "total_tests": -1,
+            "passed_tests": -1
+          }
+        ]
+      },
+      {
+        "name": "m4port (Build 71)",
+        "date": "2022-08-15 04:25:52",
+        "tag_name": "m4port_71",
+        "assets": [
+          {
+            "name": "m4-1.4.19.20220814_222328.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/m4port_71/m4-1.4.19.20220814_222328.zos.pax.Z",
+            "size": 612864,
+            "expanded_size": 1784073,
+            "runtime_dependencies": null,
+            "total_tests": -1,
+            "passed_tests": -1
+          }
+        ]
+      },
+      {
+        "name": "m4port (Build 41)",
+        "date": "2022-07-22 07:04:14",
+        "tag_name": "m4port_41",
+        "assets": [
+          {
+            "name": "m4-1.4.19.20220722_024801.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/m4port_41/m4-1.4.19.20220722_024801.zos.pax.Z",
+            "size": 612864,
+            "expanded_size": 1784198,
+            "runtime_dependencies": null,
+            "total_tests": -1,
+            "passed_tests": -1
+          }
+        ]
+      },
+      {
+        "name": "m4port (Build 32)",
+        "date": "2022-07-20 22:03:52",
+        "tag_name": "m4port_32",
+        "assets": [
+          {
+            "name": "m4-1.4.19.20220720_174801.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/m4port/releases/download/m4port_32/m4-1.4.19.20220720_174801.zos.pax.Z",
+            "size": 612864,
+            "expanded_size": 1784214,
+            "runtime_dependencies": null,
+            "total_tests": -1,
+            "passed_tests": -1
+          }
+        ]
+      }
+    ],
     "make": [
+      {
+        "name": "make (Build 1551) - (STABLE)",
+        "date": "2023-11-05 16:21:08",
+        "tag_name": "STABLE_makeport_1551",
+        "assets": [
+          {
+            "name": "make-4.4.1.20231105_155804.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/makeport/releases/download/STABLE_makeport_1551/make-4.4.1.20231105_155804.zos.pax.Z",
+            "size": 774144,
+            "expanded_size": 1938483,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "1414",
+            "passed_tests": "1414"
+          }
+        ]
+      },
       {
         "name": "make 0.3.0-dt-stable\n4.4.1 (Build 1320) - (STABLE)",
         "date": "2023-09-21 02:32:37",
@@ -3939,6 +4067,22 @@
     ],
     "cmake": [
       {
+        "name": "cmake (Build 1511) - (STABLE)",
+        "date": "2023-10-24 12:53:34",
+        "tag_name": "STABLE_cmakeport_1511",
+        "assets": [
+          {
+            "name": "CMake-heads.v3.27.6.20231023_204359.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/cmakeport/releases/download/STABLE_cmakeport_1511/CMake-heads.v3.27.6.20231023_204359.zos.pax.Z",
+            "size": 42932736,
+            "expanded_size": 96296004,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "600",
+            "passed_tests": "502"
+          }
+        ]
+      },
+      {
         "name": "cmake (Build 1431) - (STABLE)",
         "date": "2023-10-05 11:45:47",
         "tag_name": "STABLE_cmakeport_1431",
@@ -4150,6 +4294,38 @@
       }
     ],
     "less": [
+      {
+        "name": "less (Build 1528) - (STABLE)",
+        "date": "2023-11-01 14:53:19",
+        "tag_name": "STABLE_lessport_1528",
+        "assets": [
+          {
+            "name": "less-643.20231101_144644.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/lessport/releases/download/STABLE_lessport_1528/less-643.20231101_144644.zos.pax.Z",
+            "size": 1225728,
+            "expanded_size": 3162558,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "1",
+            "passed_tests": "1"
+          }
+        ]
+      },
+      {
+        "name": "less (Build 1455) - (STABLE)",
+        "date": "2023-10-16 22:32:23",
+        "tag_name": "STABLE_lessport_1455",
+        "assets": [
+          {
+            "name": "less-643.20231016_222451.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/lessport/releases/download/STABLE_lessport_1455/less-643.20231016_222451.zos.pax.Z",
+            "size": 1225728,
+            "expanded_size": 3162709,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "1",
+            "passed_tests": "1"
+          }
+        ]
+      },
       {
         "name": "less 0.3.0-dt-stable\n643 (Build 1229) - (STABLE)",
         "date": "2023-09-09 12:05:28",
@@ -4584,6 +4760,38 @@
       }
     ],
     "gzip": [
+      {
+        "name": "gzip (Build 1527) - (STABLE)",
+        "date": "2023-11-01 14:42:43",
+        "tag_name": "STABLE_gzipport_1527",
+        "assets": [
+          {
+            "name": "gzip-1.13.20231101_140036.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/gzipport/releases/download/STABLE_gzipport_1527/gzip-1.13.20231101_140036.zos.pax.Z",
+            "size": 483840,
+            "expanded_size": 1463712,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "27",
+            "passed_tests": "21"
+          }
+        ]
+      },
+      {
+        "name": "gzip (Build 1523) - (STABLE)",
+        "date": "2023-10-30 03:42:42",
+        "tag_name": "STABLE_gzipport_1523",
+        "assets": [
+          {
+            "name": "gzip-1.12.20231030_024100.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/gzipport/releases/download/STABLE_gzipport_1523/gzip-1.12.20231030_024100.zos.pax.Z",
+            "size": 483840,
+            "expanded_size": 1207941,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "25",
+            "passed_tests": "19"
+          }
+        ]
+      },
       {
         "name": "gzip 0.3.0-dt-stable\n1.12 (Build 1311) - (STABLE)",
         "date": "2023-09-20 22:44:26",
@@ -5805,6 +6013,22 @@
     ],
     "ncurses": [
       {
+        "name": "ncurses (Build 1553) - (STABLE)",
+        "date": "2023-11-05 17:09:06",
+        "tag_name": "STABLE_ncursesport_1553",
+        "assets": [
+          {
+            "name": "ncurses-6.3.20231105_110138.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/ncursesport/releases/download/STABLE_ncursesport_1553/ncurses-6.3.20231105_110138.zos.pax.Z",
+            "size": 6935040,
+            "expanded_size": 23884868,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "1",
+            "passed_tests": "1"
+          }
+        ]
+      },
+      {
         "name": "ncurses 0.3.0-dt-stable\n6.3 (Build 1288) - (STABLE)",
         "date": "2023-09-15 04:26:54",
         "tag_name": "STABLE_ncursesport_1288",
@@ -6207,6 +6431,38 @@
     ],
     "bison": [
       {
+        "name": "bison (Build 1512) - (STABLE)",
+        "date": "2023-10-24 18:49:41",
+        "tag_name": "STABLE_bisonport_1512",
+        "assets": [
+          {
+            "name": "bison-3.8.2.20231024_092007.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/bisonport/releases/download/STABLE_bisonport_1512/bison-3.8.2.20231024_092007.zos.pax.Z",
+            "size": 2806272,
+            "expanded_size": 5402406,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "696",
+            "passed_tests": "694"
+          }
+        ]
+      },
+      {
+        "name": "bison (Build 1501) - (STABLE)",
+        "date": "2023-10-22 00:05:11",
+        "tag_name": "STABLE_bisonport_1501",
+        "assets": [
+          {
+            "name": "bison-3.8.2.20231021_140106.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/bisonport/releases/download/STABLE_bisonport_1501/bison-3.8.2.20231021_140106.zos.pax.Z",
+            "size": 2806272,
+            "expanded_size": 5402472,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "696",
+            "passed_tests": "694"
+          }
+        ]
+      },
+      {
         "name": "bison (Build 1419) - (STABLE)",
         "date": "2023-09-30 02:41:21",
         "tag_name": "STABLE_bisonport_1419",
@@ -6336,6 +6592,22 @@
       }
     ],
     "libtool": [
+      {
+        "name": "libtool (Build 1533) - (STABLE)",
+        "date": "2023-11-01 21:16:58",
+        "tag_name": "STABLE_libtoolport_1533",
+        "assets": [
+          {
+            "name": "libtool-2.4.20231101_164828.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/libtoolport/releases/download/STABLE_libtoolport_1533/libtool-2.4.20231101_164828.zos.pax.Z",
+            "size": 999936,
+            "expanded_size": 2619967,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "98",
+            "passed_tests": "79"
+          }
+        ]
+      },
       {
         "name": "libtool 0.3.0-dt-stable\n2.4 (Build 1269) - (STABLE)",
         "date": "2023-09-14 00:43:57",
@@ -6869,6 +7141,22 @@
     ],
     "gettext": [
       {
+        "name": "gettext (Build 1466) - (STABLE)",
+        "date": "2023-10-17 11:15:46",
+        "tag_name": "STABLE_gettextport_1466",
+        "assets": [
+          {
+            "name": "gettext-0.21.20231016_231528.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/gettextport/releases/download/STABLE_gettextport_1466/gettext-0.21.20231016_231528.zos.pax.Z",
+            "size": 34030080,
+            "expanded_size": 85267562,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "445",
+            "passed_tests": "440"
+          }
+        ]
+      },
+      {
         "name": "gettext (Build 1442) - (STABLE)",
         "date": "2023-10-07 14:08:42",
         "tag_name": "STABLE_gettextport_1442",
@@ -7254,6 +7542,22 @@
       }
     ],
     "openssl": [
+      {
+        "name": "openssl (Build 1555) - (STABLE)",
+        "date": "2023-11-06 01:13:56",
+        "tag_name": "STABLE_opensslport_1555",
+        "assets": [
+          {
+            "name": "openssl-3.1.2.20231105_171041.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/opensslport/releases/download/STABLE_opensslport_1555/openssl-3.1.2.20231105_171041.zos.pax.Z",
+            "size": 14515200,
+            "expanded_size": 44356527,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "215",
+            "passed_tests": "208"
+          }
+        ]
+      },
       {
         "name": "openssl (Build 1393) - (STABLE)",
         "date": "2023-09-27 17:56:23",
@@ -7736,6 +8040,54 @@
       }
     ],
     "git": [
+      {
+        "name": "git (Build 1507) - (STABLE)",
+        "date": "2023-10-23 16:35:21",
+        "tag_name": "STABLE_gitport_1507",
+        "assets": [
+          {
+            "name": "git-2.41.0.20231023_154410.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/gitport/releases/download/STABLE_gitport_1507/git-2.41.0.20231023_154410.zos.pax.Z",
+            "size": 52577280,
+            "expanded_size": 108424159,
+            "runtime_dependencies": "bash less ncurses perl",
+            "total_tests": "91",
+            "passed_tests": "88"
+          }
+        ]
+      },
+      {
+        "name": "git (Build 1494) - (STABLE)",
+        "date": "2023-10-20 14:36:33",
+        "tag_name": "STABLE_gitport_1494",
+        "assets": [
+          {
+            "name": "git-2.41.0.20231020_134608.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/gitport/releases/download/STABLE_gitport_1494/git-2.41.0.20231020_134608.zos.pax.Z",
+            "size": 52577280,
+            "expanded_size": 108423767,
+            "runtime_dependencies": "bash less ncurses perl",
+            "total_tests": "91",
+            "passed_tests": "88"
+          }
+        ]
+      },
+      {
+        "name": "git (Build 1482) - (STABLE)",
+        "date": "2023-10-19 16:13:19",
+        "tag_name": "STABLE_gitport_1482",
+        "assets": [
+          {
+            "name": "git-2.41.0.20231019_152123.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/gitport/releases/download/STABLE_gitport_1482/git-2.41.0.20231019_152123.zos.pax.Z",
+            "size": 52577280,
+            "expanded_size": 108423555,
+            "runtime_dependencies": "bash less ncurses perl",
+            "total_tests": "91",
+            "passed_tests": "88"
+          }
+        ]
+      },
       {
         "name": "git (Build 1450) - (STABLE)",
         "date": "2023-10-11 21:17:06",
@@ -8827,6 +9179,134 @@
     ],
     "zotsample": [
       {
+        "name": "zotsample (Build 1549) - (STABLE)",
+        "date": "2023-11-05 15:31:50",
+        "tag_name": "STABLE_zotsampleport_1549",
+        "assets": [
+          {
+            "name": "zotsample-1.3.20231105_103106.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/zotsampleport/releases/download/STABLE_zotsampleport_1549/zotsample-1.3.20231105_103106.zos.pax.Z",
+            "size": 32256,
+            "expanded_size": 104426,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "1",
+            "passed_tests": "1"
+          }
+        ]
+      },
+      {
+        "name": "zotsample (Build 1509) - (STABLE)",
+        "date": "2023-10-23 19:00:34",
+        "tag_name": "STABLE_zotsampleport_1509",
+        "assets": [
+          {
+            "name": "zotsample-1.3.20231023_190028.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/zotsampleport/releases/download/STABLE_zotsampleport_1509/zotsample-1.3.20231023_190028.zos.pax.Z",
+            "size": 32256,
+            "expanded_size": 104860,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "1",
+            "passed_tests": "1"
+          }
+        ]
+      },
+      {
+        "name": "zotsample (Build 1508) - (STABLE)",
+        "date": "2023-10-23 18:54:56",
+        "tag_name": "STABLE_zotsampleport_1508",
+        "assets": [
+          {
+            "name": "zotsample-1.3.20231023_185453.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/zotsampleport/releases/download/STABLE_zotsampleport_1508/zotsample-1.3.20231023_185453.zos.pax.Z",
+            "size": 32256,
+            "expanded_size": 104871,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "1",
+            "passed_tests": "1"
+          }
+        ]
+      },
+      {
+        "name": "zotsample (Build 1484) - (STABLE)",
+        "date": "2023-10-19 16:25:08",
+        "tag_name": "STABLE_zotsampleport_1484",
+        "assets": [
+          {
+            "name": "zotsample-1.3.20231019_162450.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/zotsampleport/releases/download/STABLE_zotsampleport_1484/zotsample-1.3.20231019_162450.zos.pax.Z",
+            "size": 32256,
+            "expanded_size": 104953,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "1",
+            "passed_tests": "1"
+          }
+        ]
+      },
+      {
+        "name": "zotsample (Build 1480) - (STABLE)",
+        "date": "2023-10-19 03:30:09",
+        "tag_name": "STABLE_zotsampleport_1480",
+        "assets": [
+          {
+            "name": "zotsample-1.3.20231019_032943.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/zotsampleport/releases/download/STABLE_zotsampleport_1480/zotsample-1.3.20231019_032943.zos.pax.Z",
+            "size": 32256,
+            "expanded_size": 104846,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "1",
+            "passed_tests": "1"
+          }
+        ]
+      },
+      {
+        "name": "zotsample (Build 1479) - (STABLE)",
+        "date": "2023-10-19 03:29:48",
+        "tag_name": "STABLE_zotsampleport_1479",
+        "assets": [
+          {
+            "name": "zotsample-1.3.20231019_032855.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/zotsampleport/releases/download/STABLE_zotsampleport_1479/zotsample-1.3.20231019_032855.zos.pax.Z",
+            "size": 32256,
+            "expanded_size": 104843,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "1",
+            "passed_tests": "1"
+          }
+        ]
+      },
+      {
+        "name": "zotsample (Build 1468) - (STABLE)",
+        "date": "2023-10-18 03:55:23",
+        "tag_name": "STABLE_zotsampleport_1468",
+        "assets": [
+          {
+            "name": "zotsample-1.3.20231018_035503.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/zotsampleport/releases/download/STABLE_zotsampleport_1468/zotsample-1.3.20231018_035503.zos.pax.Z",
+            "size": 32256,
+            "expanded_size": 48591,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "1",
+            "passed_tests": "1"
+          }
+        ]
+      },
+      {
+        "name": "zotsample (Build 1454) - (STABLE)",
+        "date": "2023-10-16 20:19:13",
+        "tag_name": "STABLE_zotsampleport_1454",
+        "assets": [
+          {
+            "name": "zotsample-1.1.20231016_201845.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/zotsampleport/releases/download/STABLE_zotsampleport_1454/zotsample-1.1.20231016_201845.zos.pax.Z",
+            "size": 32256,
+            "expanded_size": 78196,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "1",
+            "passed_tests": "1"
+          }
+        ]
+      },
+      {
         "name": "zotsample (Build 1401) - (STABLE)",
         "date": "2023-09-28 17:15:09",
         "tag_name": "STABLE_zotsampleport_1401",
@@ -8884,6 +9364,22 @@
             "url": "https://github.com/ZOSOpenTools/zotsampleport/releases/download/STABLE_zotsampleport_1370/zotsample-1.1.20230925_234936.zos.pax.Z",
             "size": 32256,
             "expanded_size": 78303,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "1",
+            "passed_tests": "1"
+          }
+        ]
+      },
+      {
+        "name": "zotsample (Build 1369) - (STABLE)",
+        "date": "2023-09-25 19:05:13",
+        "tag_name": "STABLE_zotsampleport_1369",
+        "assets": [
+          {
+            "name": "zotsample-1.1.20230925_190518.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/zotsampleport/releases/download/STABLE_zotsampleport_1369/zotsample-1.1.20230925_190518.zos.pax.Z",
+            "size": 32256,
+            "expanded_size": 78295,
             "runtime_dependencies": "No dependencies",
             "total_tests": "1",
             "passed_tests": "1"
@@ -8987,6 +9483,22 @@
         ]
       },
       {
+        "name": "zotsample 0.3.0-dt-stable (Build 1217) - (STABLE)",
+        "date": "2023-09-06 00:47:56",
+        "tag_name": "STABLE_zotsampleport_1217",
+        "assets": [
+          {
+            "name": "zotsample-1.0.20230905_204747.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/zotsampleport/releases/download/STABLE_zotsampleport_1217/zotsample-1.0.20230905_204747.zos.pax.Z",
+            "size": 32256,
+            "expanded_size": 78709,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "1",
+            "passed_tests": "1"
+          }
+        ]
+      },
+      {
         "name": "zotsample (Build 1180) - (STABLE)",
         "date": "2023-08-02 17:44:04",
         "tag_name": "STABLE_zotsampleport_1180",
@@ -9044,6 +9556,22 @@
             "url": "https://github.com/ZOSOpenTools/zotsampleport/releases/download/Releaseline_zotsampleport_1004/zotsample-1.0.20230518_232659.zos.pax.Z",
             "size": 32256,
             "expanded_size": 78862,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "1",
+            "passed_tests": "1"
+          }
+        ]
+      },
+      {
+        "name": "zotsample (Build 1003)",
+        "date": "2023-05-19 03:18:02",
+        "tag_name": "Releaseline_zotsampleport_1003",
+        "assets": [
+          {
+            "name": "zotsample-1.0.20230518_224505.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/zotsampleport/releases/download/Releaseline_zotsampleport_1003/zotsample-1.0.20230518_224505.zos.pax.Z",
+            "size": 32256,
+            "expanded_size": 78864,
             "runtime_dependencies": "No dependencies",
             "total_tests": "1",
             "passed_tests": "1"
@@ -9227,6 +9755,22 @@
         ]
       },
       {
+        "name": "zotsample (Build 558)",
+        "date": "2023-02-16 20:52:37",
+        "tag_name": "zotsampleport_558",
+        "assets": [
+          {
+            "name": "zotsample-1.0.20230216_155229.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/zotsampleport/releases/download/zotsampleport_558/zotsample-1.0.20230216_155229.zos.pax.Z",
+            "size": 32256,
+            "expanded_size": 78982,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": -1,
+            "passed_tests": -1
+          }
+        ]
+      },
+      {
         "name": "zotsample (Build 469)",
         "date": "2023-02-06 03:22:26",
         "tag_name": "zotsampleport_469",
@@ -9275,38 +9819,6 @@
         ]
       },
       {
-        "name": "zotsampleport (Build 399)",
-        "date": "2023-01-18 03:49:08",
-        "tag_name": "zotsampleport_399",
-        "assets": [
-          {
-            "name": "zotsample-1.0.20230117_224800.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/zotsampleport/releases/download/zotsampleport_399/zotsample-1.0.20230117_224800.zos.pax.Z",
-            "size": 32256,
-            "expanded_size": 48236,
-            "runtime_dependencies": null,
-            "total_tests": "1",
-            "passed_tests": "1"
-          }
-        ]
-      },
-      {
-        "name": "zotsampleport (Build 381)",
-        "date": "2023-01-16 02:55:33",
-        "tag_name": "zotsampleport_381",
-        "assets": [
-          {
-            "name": "zotsample-1.0.20230115_215536.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/zotsampleport/releases/download/zotsampleport_381/zotsample-1.0.20230115_215536.zos.pax.Z",
-            "size": 32256,
-            "expanded_size": 48254,
-            "runtime_dependencies": null,
-            "total_tests": "1",
-            "passed_tests": "1"
-          }
-        ]
-      },
-      {
         "name": "zotsampleport (Build 381)",
         "date": "2023-01-16 02:55:33",
         "tag_name": "zotsampleport_381",
@@ -9332,38 +9844,6 @@
             "url": "https://github.com/ZOSOpenTools/zotsampleport/releases/download/zotsampleport_379/zotsample-1.0.20230113_163651.zos.pax.Z",
             "size": 32256,
             "expanded_size": 48227,
-            "runtime_dependencies": null,
-            "total_tests": "1",
-            "passed_tests": "1"
-          }
-        ]
-      },
-      {
-        "name": "zotsampleport (Build 379)",
-        "date": "2023-01-13 21:36:46",
-        "tag_name": "zotsampleport_379",
-        "assets": [
-          {
-            "name": "zotsample-1.0.20230113_163651.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/zotsampleport/releases/download/zotsampleport_379/zotsample-1.0.20230113_163651.zos.pax.Z",
-            "size": 32256,
-            "expanded_size": 48227,
-            "runtime_dependencies": null,
-            "total_tests": "1",
-            "passed_tests": "1"
-          }
-        ]
-      },
-      {
-        "name": "zotsampleport (Build 378)",
-        "date": "2023-01-13 19:50:31",
-        "tag_name": "zotsampleport_378",
-        "assets": [
-          {
-            "name": "zotsample-1.0.20230113_145036.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/zotsampleport/releases/download/zotsampleport_378/zotsample-1.0.20230113_145036.zos.pax.Z",
-            "size": 32256,
-            "expanded_size": 48225,
             "runtime_dependencies": null,
             "total_tests": "1",
             "passed_tests": "1"
@@ -9965,6 +10445,70 @@
     ],
     "man-db": [
       {
+        "name": "man-db (Build 1548) - (STABLE)",
+        "date": "2023-11-04 03:49:01",
+        "tag_name": "STABLE_man-dbport_1548",
+        "assets": [
+          {
+            "name": "man-db-2.12.0.20231103_220446.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/man-dbport/releases/download/STABLE_man-dbport_1548/man-db-2.12.0.20231103_220446.zos.pax.Z",
+            "size": 14579712,
+            "expanded_size": 25401909,
+            "runtime_dependencies": "groff less libiconv ncurses",
+            "total_tests": "32",
+            "passed_tests": "30"
+          }
+        ]
+      },
+      {
+        "name": "man-db (Build 1534) - (STABLE)",
+        "date": "2023-11-02 14:10:42",
+        "tag_name": "STABLE_man-dbport_1534",
+        "assets": [
+          {
+            "name": "man-db-2.11.2.20231102_123850.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/man-dbport/releases/download/STABLE_man-dbport_1534/man-db-2.11.2.20231102_123850.zos.pax.Z",
+            "size": 14289408,
+            "expanded_size": 26064679,
+            "runtime_dependencies": "groff less libiconv ncurses",
+            "total_tests": "31",
+            "passed_tests": "30"
+          }
+        ]
+      },
+      {
+        "name": "man-db (Build 1476) - (STABLE)",
+        "date": "2023-10-18 19:30:49",
+        "tag_name": "STABLE_man-dbport_1476",
+        "assets": [
+          {
+            "name": "man-db-2.11.2.20231018_180328.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/man-dbport/releases/download/STABLE_man-dbport_1476/man-db-2.11.2.20231018_180328.zos.pax.Z",
+            "size": 14289408,
+            "expanded_size": 26064554,
+            "runtime_dependencies": "groff less libiconv ncurses",
+            "total_tests": "31",
+            "passed_tests": "30"
+          }
+        ]
+      },
+      {
+        "name": "man-db (Build 1460) - (STABLE)",
+        "date": "2023-10-17 01:39:11",
+        "tag_name": "STABLE_man-dbport_1460",
+        "assets": [
+          {
+            "name": "man-db-2.11.2.20231016_235756.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/man-dbport/releases/download/STABLE_man-dbport_1460/man-db-2.11.2.20231016_235756.zos.pax.Z",
+            "size": 14289408,
+            "expanded_size": 26064450,
+            "runtime_dependencies": "groff less libiconv ncurses",
+            "total_tests": "31",
+            "passed_tests": "30"
+          }
+        ]
+      },
+      {
         "name": "man-db (Build 1406) - (STABLE)",
         "date": "2023-09-28 21:19:49",
         "tag_name": "STABLE_man-dbport_1406",
@@ -10256,6 +10800,54 @@
       }
     ],
     "vim": [
+      {
+        "name": "vim (Build 1493) - (STABLE)",
+        "date": "2023-10-20 14:14:57",
+        "tag_name": "STABLE_vimport_1493",
+        "assets": [
+          {
+            "name": "vim-master.20231020_134515.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/vimport/releases/download/STABLE_vimport_1493/vim-master.20231020_134515.zos.pax.Z",
+            "size": 16353792,
+            "expanded_size": 42167413,
+            "runtime_dependencies": "ncurses",
+            "total_tests": "5360",
+            "passed_tests": "5323"
+          }
+        ]
+      },
+      {
+        "name": "vim (Build 1473) - (STABLE)",
+        "date": "2023-10-18 17:00:16",
+        "tag_name": "STABLE_vimport_1473",
+        "assets": [
+          {
+            "name": "vim-master.20231018_155457.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/vimport/releases/download/STABLE_vimport_1473/vim-master.20231018_155457.zos.pax.Z",
+            "size": 16353792,
+            "expanded_size": 42168147,
+            "runtime_dependencies": "ncurses",
+            "total_tests": "5361",
+            "passed_tests": "5323"
+          }
+        ]
+      },
+      {
+        "name": "vim (Build 1456) - (STABLE)",
+        "date": "2023-10-16 23:00:30",
+        "tag_name": "STABLE_vimport_1456",
+        "assets": [
+          {
+            "name": "vim-master.20231016_215435.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/vimport/releases/download/STABLE_vimport_1456/vim-master.20231016_215435.zos.pax.Z",
+            "size": 16353792,
+            "expanded_size": 42167864,
+            "runtime_dependencies": "ncurses",
+            "total_tests": "5349",
+            "passed_tests": "5307"
+          }
+        ]
+      },
       {
         "name": "vim (Build 1447) - (STABLE)",
         "date": "2023-10-10 19:20:04",
@@ -11397,6 +11989,22 @@
     ],
     "expat": [
       {
+        "name": "expat (Build 1513) - (STABLE)",
+        "date": "2023-10-25 01:11:50",
+        "tag_name": "STABLE_expatport_1513",
+        "assets": [
+          {
+            "name": "expat-2.4.9.20231025_005701.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/expatport/releases/download/STABLE_expatport_1513/expat-2.4.9.20231025_005701.zos.pax.Z",
+            "size": 741888,
+            "expanded_size": 1723844,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "2",
+            "passed_tests": "2"
+          }
+        ]
+      },
+      {
         "name": "expat zopen 0.7.0 (Build 1345) - (STABLE)",
         "date": "2023-09-22 21:43:07",
         "tag_name": "STABLE_expatport_1345",
@@ -11478,6 +12086,22 @@
       }
     ],
     "tcl": [
+      {
+        "name": "tcl (Build 1514) - (STABLE)",
+        "date": "2023-10-25 02:25:00",
+        "tag_name": "STABLE_tclport_1514",
+        "assets": [
+          {
+            "name": "tcl-core8.6.12-src.20231025_021432.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/tclport/releases/download/STABLE_tclport_1514/tcl-core8.6.12-src.20231025_021432.zos.pax.Z",
+            "size": 6999552,
+            "expanded_size": 21234168,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": -1,
+            "passed_tests": -1
+          }
+        ]
+      },
       {
         "name": "tcl (Build 1392) - (STABLE)",
         "date": "2023-09-27 17:11:32",
@@ -12235,6 +12859,54 @@
     ],
     "rsync": [
       {
+        "name": "rsync (Build 1559) - (STABLE)",
+        "date": "2023-11-06 18:36:52",
+        "tag_name": "STABLE_rsyncport_1559",
+        "assets": [
+          {
+            "name": "rsync-master.20231106_151057.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/rsyncport/releases/download/STABLE_rsyncport_1559/rsync-master.20231106_151057.zos.pax.Z",
+            "size": 4419072,
+            "expanded_size": 9112223,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "44",
+            "passed_tests": "43"
+          }
+        ]
+      },
+      {
+        "name": "rsync (Build 1557) - (STABLE)",
+        "date": "2023-11-06 15:27:29",
+        "tag_name": "STABLE_rsyncport_1557",
+        "assets": [
+          {
+            "name": "rsync-master.20231106_151057.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/rsyncport/releases/download/STABLE_rsyncport_1557/rsync-master.20231106_151057.zos.pax.Z",
+            "size": 4419072,
+            "expanded_size": 9112223,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "44",
+            "passed_tests": "43"
+          }
+        ]
+      },
+      {
+        "name": "rsync (Build 1556) - (STABLE)",
+        "date": "2023-11-06 15:20:01",
+        "tag_name": "STABLE_rsyncport_1556",
+        "assets": [
+          {
+            "name": "rsync-master.20231106_100222.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/rsyncport/releases/download/STABLE_rsyncport_1556/rsync-master.20231106_100222.zos.pax.Z",
+            "size": 4419072,
+            "expanded_size": 9112234,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "44",
+            "passed_tests": "43"
+          }
+        ]
+      },
+      {
         "name": "rsync (Build 1408) - (STABLE)",
         "date": "2023-09-28 21:59:44",
         "tag_name": "STABLE_rsyncport_1408",
@@ -12476,6 +13148,38 @@
       }
     ],
     "gawk": [
+      {
+        "name": "gawk (Build 1519) - (STABLE)",
+        "date": "2023-10-25 16:07:15",
+        "tag_name": "STABLE_gawkport_1519",
+        "assets": [
+          {
+            "name": "gawk-5.1.1.20231025_155151.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/gawkport/releases/download/STABLE_gawkport_1519/gawk-5.1.1.20231025_155151.zos.pax.Z",
+            "size": 1806336,
+            "expanded_size": 4526340,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "595",
+            "passed_tests": "554"
+          }
+        ]
+      },
+      {
+        "name": "gawk (Build 1516) - (STABLE)",
+        "date": "2023-10-25 03:45:23",
+        "tag_name": "STABLE_gawkport_1516",
+        "assets": [
+          {
+            "name": "gawk-5.1.1.20231025_032806.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/gawkport/releases/download/STABLE_gawkport_1516/gawk-5.1.1.20231025_032806.zos.pax.Z",
+            "size": 1806336,
+            "expanded_size": 4526337,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "595",
+            "passed_tests": "554"
+          }
+        ]
+      },
       {
         "name": "gawk 0.3.0-dt-stable\n5.1.1 (Build 1265) - (STABLE)",
         "date": "2023-09-13 20:26:42",
@@ -13123,6 +13827,38 @@
     ],
     "lz4": [
       {
+        "name": "lz4 (Build 1554) - (STABLE)",
+        "date": "2023-11-05 22:19:04",
+        "tag_name": "STABLE_lz4port_1554",
+        "assets": [
+          {
+            "name": "lz4-1.9.4.20231105_221721.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/lz4port/releases/download/STABLE_lz4port_1554/lz4-1.9.4.20231105_221721.zos.pax.Z",
+            "size": 1032192,
+            "expanded_size": 2229218,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "1",
+            "passed_tests": "1"
+          }
+        ]
+      },
+      {
+        "name": "lz4 (Build 1547) - (STABLE)",
+        "date": "2023-11-04 03:08:59",
+        "tag_name": "STABLE_lz4port_1547",
+        "assets": [
+          {
+            "name": "lz4-1.9.3.20231104_030741.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/lz4port/releases/download/STABLE_lz4port_1547/lz4-1.9.3.20231104_030741.zos.pax.Z",
+            "size": 999936,
+            "expanded_size": 2112021,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "1",
+            "passed_tests": "1"
+          }
+        ]
+      },
+      {
         "name": "lz4 zopen 0.7.0 (Build 1354) - (STABLE)",
         "date": "2023-09-24 16:20:40",
         "tag_name": "STABLE_lz4port_1354",
@@ -13284,6 +14020,22 @@
       }
     ],
     "bzip2": [
+      {
+        "name": "bzip2 (Build 1505) - (STABLE)",
+        "date": "2023-10-23 02:33:27",
+        "tag_name": "STABLE_bzip2port_1505",
+        "assets": [
+          {
+            "name": "bzip2-1.0.8.20231023_023252.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/bzip2port/releases/download/STABLE_bzip2port_1505/bzip2-1.0.8.20231023_023252.zos.pax.Z",
+            "size": 1483776,
+            "expanded_size": 3756381,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "6",
+            "passed_tests": "6"
+          }
+        ]
+      },
       {
         "name": "bzip2 0.3.0-dt-stable (Build 1248) - (STABLE)",
         "date": "2023-09-13 03:10:33",
@@ -13798,6 +14550,22 @@
       }
     ],
     "jq": [
+      {
+        "name": "jq (Build 1521) - (STABLE)",
+        "date": "2023-10-30 03:05:44",
+        "tag_name": "STABLE_jqport_1521",
+        "assets": [
+          {
+            "name": "jq-1.6.20231030_021723.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/jqport/releases/download/STABLE_jqport_1521/jq-1.6.20231030_021723.zos.pax.Z",
+            "size": 1451520,
+            "expanded_size": 3208045,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "7",
+            "passed_tests": "5"
+          }
+        ]
+      },
       {
         "name": "jq (Build 1440) - (STABLE)",
         "date": "2023-10-07 02:21:19",
@@ -14329,6 +15097,22 @@
     ],
     "sed": [
       {
+        "name": "sed (Build 1471) - (STABLE)",
+        "date": "2023-10-18 13:35:41",
+        "tag_name": "STABLE_sedport_1471",
+        "assets": [
+          {
+            "name": "sed-4.8.20231018_125704.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/sedport/releases/download/STABLE_sedport_1471/sed-4.8.20231018_125704.zos.pax.Z",
+            "size": 612864,
+            "expanded_size": 1517868,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "58",
+            "passed_tests": "54"
+          }
+        ]
+      },
+      {
         "name": "sed 0.3.0-dt-stable\n4.8\n4.8 (Build 1285) - (STABLE)",
         "date": "2023-09-15 03:41:54",
         "tag_name": "STABLE_sedport_1285",
@@ -14650,6 +15434,38 @@
       }
     ],
     "grep": [
+      {
+        "name": "grep (Build 1546) - (STABLE)",
+        "date": "2023-11-04 01:45:49",
+        "tag_name": "STABLE_grepport_1546",
+        "assets": [
+          {
+            "name": "grep-3.11.20231104_001657.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/grepport/releases/download/STABLE_grepport_1546/grep-3.11.20231104_001657.zos.pax.Z",
+            "size": 645120,
+            "expanded_size": 1485864,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "127",
+            "passed_tests": "117"
+          }
+        ]
+      },
+      {
+        "name": "grep (Build 1525) - (STABLE)",
+        "date": "2023-10-30 04:59:22",
+        "tag_name": "STABLE_grepport_1525",
+        "assets": [
+          {
+            "name": "grep-3.8.20231030_031655.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/grepport/releases/download/STABLE_grepport_1525/grep-3.8.20231030_031655.zos.pax.Z",
+            "size": 645120,
+            "expanded_size": 1485754,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "121",
+            "passed_tests": "115"
+          }
+        ]
+      },
       {
         "name": "grep 0.3.0-dt-stable\n3.8 (Build 1313) - (STABLE)",
         "date": "2023-09-20 23:37:05",
@@ -15377,6 +16193,22 @@
     ],
     "texinfo": [
       {
+        "name": "texinfo (Build 1542) - (STABLE)",
+        "date": "2023-11-03 05:50:46",
+        "tag_name": "STABLE_texinfoport_1542",
+        "assets": [
+          {
+            "name": "texinfo-6.8.20231103_012230.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/texinfoport/releases/download/STABLE_texinfoport_1542/texinfo-6.8.20231103_012230.zos.pax.Z",
+            "size": 3290112,
+            "expanded_size": 10653982,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "85",
+            "passed_tests": "30"
+          }
+        ]
+      },
+      {
         "name": "texinfo (Build 1428) - (STABLE)",
         "date": "2023-10-04 19:39:12",
         "tag_name": "STABLE_texinfoport_1428",
@@ -15670,6 +16502,86 @@
       }
     ],
     "zoslib": [
+      {
+        "name": "zoslib (Build 1492) - (STABLE)",
+        "date": "2023-10-19 21:17:50",
+        "tag_name": "STABLE_zoslibport_1492",
+        "assets": [
+          {
+            "name": "zoslib-zopen.20231019_211406.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/zoslibport/releases/download/STABLE_zoslibport_1492/zoslib-zopen.20231019_211406.zos.pax.Z",
+            "size": 1096704,
+            "expanded_size": 3431021,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "30",
+            "passed_tests": "30"
+          }
+        ]
+      },
+      {
+        "name": "zoslib (Build 1486) - (STABLE)",
+        "date": "2023-10-19 17:02:14",
+        "tag_name": "STABLE_zoslibport_1486",
+        "assets": [
+          {
+            "name": "zoslib-zopen.20231019_165801.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/zoslibport/releases/download/STABLE_zoslibport_1486/zoslib-zopen.20231019_165801.zos.pax.Z",
+            "size": 1096704,
+            "expanded_size": 3430875,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "30",
+            "passed_tests": "30"
+          }
+        ]
+      },
+      {
+        "name": "zoslib (Build 1485) - (STABLE)",
+        "date": "2023-10-19 16:54:49",
+        "tag_name": "STABLE_zoslibport_1485",
+        "assets": [
+          {
+            "name": "zoslib-zopen.20231019_165049.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/zoslibport/releases/download/STABLE_zoslibport_1485/zoslib-zopen.20231019_165049.zos.pax.Z",
+            "size": 1096704,
+            "expanded_size": 3430996,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "30",
+            "passed_tests": "30"
+          }
+        ]
+      },
+      {
+        "name": "zoslib (Build 1470) - (STABLE)",
+        "date": "2023-10-18 04:18:59",
+        "tag_name": "STABLE_zoslibport_1470",
+        "assets": [
+          {
+            "name": "zoslib-zopen.20231018_041529.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/zoslibport/releases/download/STABLE_zoslibport_1470/zoslib-zopen.20231018_041529.zos.pax.Z",
+            "size": 1096704,
+            "expanded_size": 3430970,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "30",
+            "passed_tests": "30"
+          }
+        ]
+      },
+      {
+        "name": "zoslib (Build 1469) - (STABLE)",
+        "date": "2023-10-18 04:08:49",
+        "tag_name": "STABLE_zoslibport_1469",
+        "assets": [
+          {
+            "name": "zoslib-zopen.20231018_040525.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/zoslibport/releases/download/STABLE_zoslibport_1469/zoslib-zopen.20231018_040525.zos.pax.Z",
+            "size": 1096704,
+            "expanded_size": 3431054,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "30",
+            "passed_tests": "30"
+          }
+        ]
+      },
       {
         "name": "zoslib (Build 1423) - (STABLE)",
         "date": "2023-10-02 19:07:41",
@@ -16585,6 +17497,22 @@
     ],
     "patch": [
       {
+        "name": "patch (Build 1552) - (STABLE)",
+        "date": "2023-11-05 16:34:13",
+        "tag_name": "STABLE_patchport_1552",
+        "assets": [
+          {
+            "name": "patch-2.7.20231105_105848.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/patchport/releases/download/STABLE_patchport_1552/patch-2.7.20231105_105848.zos.pax.Z",
+            "size": 516096,
+            "expanded_size": 1271870,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "34",
+            "passed_tests": "32"
+          }
+        ]
+      },
+      {
         "name": "patch zopen 0.7.0\n2.7 (Build 1344) - (STABLE)",
         "date": "2023-09-22 21:24:28",
         "tag_name": "STABLE_patchport_1344",
@@ -16972,6 +17900,22 @@
       }
     ],
     "libpipeline": [
+      {
+        "name": "libpipeline (Build 1531) - (STABLE)",
+        "date": "2023-11-01 16:15:56",
+        "tag_name": "STABLE_libpipelineport_1531",
+        "assets": [
+          {
+            "name": "libpipeline-1.5.6.20231101_154336.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/libpipelineport/releases/download/STABLE_libpipelineport_1531/libpipeline-1.5.6.20231101_154336.zos.pax.Z",
+            "size": 193536,
+            "expanded_size": 559866,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "1",
+            "passed_tests": "1"
+          }
+        ]
+      },
       {
         "name": "libpipeline (Build 1404) - (STABLE)",
         "date": "2023-09-28 19:11:03",
@@ -17424,6 +18368,22 @@
       }
     ],
     "groff": [
+      {
+        "name": "groff (Build 1524) - (STABLE)",
+        "date": "2023-10-30 03:47:59",
+        "tag_name": "STABLE_groffport_1524",
+        "assets": [
+          {
+            "name": "groff-1.22.4.20231030_031014.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/groffport/releases/download/STABLE_groffport_1524/groff-1.22.4.20231030_031014.zos.pax.Z",
+            "size": 15192576,
+            "expanded_size": 43389608,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "2",
+            "passed_tests": "2"
+          }
+        ]
+      },
       {
         "name": "groff 0.3.0-dt-stable\n1.22.4\n1.22.4 (Build 1331) - (STABLE)",
         "date": "2023-09-21 19:56:56",
@@ -18277,6 +19237,22 @@
     ],
     "zip": [
       {
+        "name": "zip (Build 1539) - (STABLE)",
+        "date": "2023-11-03 02:42:03",
+        "tag_name": "STABLE_zipport_1539",
+        "assets": [
+          {
+            "name": "zip-master.20231103_024127.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/zipport/releases/download/STABLE_zipport_1539/zip-master.20231103_024127.zos.pax.Z",
+            "size": 483840,
+            "expanded_size": 1175666,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "7",
+            "passed_tests": "7"
+          }
+        ]
+      },
+      {
         "name": "zip zopen 0.7.0\n3.0 (Build 1356) - (STABLE)",
         "date": "2023-09-24 19:57:21",
         "tag_name": "STABLE_zipport_1356",
@@ -18358,6 +19334,22 @@
       }
     ],
     "screen": [
+      {
+        "name": "screen (Build 1489) - (STABLE)",
+        "date": "2023-10-19 18:26:33",
+        "tag_name": "STABLE_screenport_1489",
+        "assets": [
+          {
+            "name": "screen-4.9.1.20231019_141817.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/screenport/releases/download/STABLE_screenport_1489/screen-4.9.1.20231019_141817.zos.pax.Z",
+            "size": 1483776,
+            "expanded_size": 2844945,
+            "runtime_dependencies": "ncurses",
+            "total_tests": -1,
+            "passed_tests": -1
+          }
+        ]
+      },
       {
         "name": "screen (Build 1410) - (STABLE)",
         "date": "2023-09-28 22:57:34",
@@ -18520,6 +19512,22 @@
       }
     ],
     "ncdu": [
+      {
+        "name": "ncdu (Build 1475) - (STABLE)",
+        "date": "2023-10-18 19:24:37",
+        "tag_name": "STABLE_ncduport_1475",
+        "assets": [
+          {
+            "name": "ncdu-1.19.20231018_192033.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/ncduport/releases/download/STABLE_ncduport_1475/ncdu-1.19.20231018_192033.zos.pax.Z",
+            "size": 677376,
+            "expanded_size": 1659357,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": -1,
+            "passed_tests": -1
+          }
+        ]
+      },
       {
         "name": "ncdu (Build 1374) - (STABLE)",
         "date": "2023-09-26 12:42:30",
@@ -18861,6 +19869,22 @@
     ],
     "nano": [
       {
+        "name": "nano (Build 1457) - (STABLE)",
+        "date": "2023-10-16 23:01:15",
+        "tag_name": "STABLE_nanoport_1457",
+        "assets": [
+          {
+            "name": "nano-7.0.20231016_223715.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/nanoport/releases/download/STABLE_nanoport_1457/nano-7.0.20231016_223715.zos.pax.Z",
+            "size": 1161216,
+            "expanded_size": 2879184,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": -1,
+            "passed_tests": -1
+          }
+        ]
+      },
+      {
         "name": "nano 0.3.0-dt-stable\n7.0 (Build 1287) - (STABLE)",
         "date": "2023-09-15 04:05:39",
         "tag_name": "STABLE_nanoport_1287",
@@ -18993,6 +20017,22 @@
     ],
     "flex": [
       {
+        "name": "flex (Build 1517) - (STABLE)",
+        "date": "2023-10-25 04:11:17",
+        "tag_name": "STABLE_flexport_1517",
+        "assets": [
+          {
+            "name": "flex-2.6.4.20231025_032843.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/flexport/releases/download/STABLE_flexport_1517/flex-2.6.4.20231025_032843.zos.pax.Z",
+            "size": 741888,
+            "expanded_size": 1820837,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "110",
+            "passed_tests": "110"
+          }
+        ]
+      },
+      {
         "name": "flex (Build 1405) - (STABLE)",
         "date": "2023-09-28 21:15:04",
         "tag_name": "STABLE_flexport_1405",
@@ -19074,6 +20114,22 @@
       }
     ],
     "cscope": [
+      {
+        "name": "cscope (Build 1461) - (STABLE)",
+        "date": "2023-10-17 01:57:21",
+        "tag_name": "STABLE_cscopeport_1461",
+        "assets": [
+          {
+            "name": "cscope-15.9.20231017_014900.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/cscopeport/releases/download/STABLE_cscopeport_1461/cscope-15.9.20231017_014900.zos.pax.Z",
+            "size": 999936,
+            "expanded_size": 2338544,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "1",
+            "passed_tests": "1"
+          }
+        ]
+      },
       {
         "name": "cscope 0.3.0-dt-stable (Build 1286) - (STABLE)",
         "date": "2023-09-15 03:45:09",
@@ -19224,6 +20280,22 @@
       }
     ],
     "sqlite": [
+      {
+        "name": "sqlite (Build 1563) - (STABLE)",
+        "date": "2023-11-07 01:54:52",
+        "tag_name": "STABLE_sqliteport_1563",
+        "assets": [
+          {
+            "name": "sqlite-autoconf-3420000.20231107_013513.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/sqliteport/releases/download/STABLE_sqliteport_1563/sqlite-autoconf-3420000.20231107_013513.zos.pax.Z",
+            "size": 5612544,
+            "expanded_size": 11719431,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "1",
+            "passed_tests": "1"
+          }
+        ]
+      },
       {
         "name": "sqlite 0.3.0-dt-stable\n3.42.0 (Build 1264) - (STABLE)",
         "date": "2023-09-13 20:25:11",
@@ -19388,6 +20460,54 @@
       }
     ],
     "libiconv": [
+      {
+        "name": "libiconv (Build 1541) - (DEV)",
+        "date": "2023-11-03 04:56:38",
+        "tag_name": "DEV_libiconvport_1541",
+        "assets": [
+          {
+            "name": "libiconv-master.20231103_032611.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/libiconvport/releases/download/DEV_libiconvport_1541/libiconv-master.20231103_032611.zos.pax.Z",
+            "size": 2677248,
+            "expanded_size": 3594767,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "199",
+            "passed_tests": "199"
+          }
+        ]
+      },
+      {
+        "name": "libiconv (Build 1490) - (STABLE)",
+        "date": "2023-10-19 18:39:09",
+        "tag_name": "STABLE_libiconvport_1490",
+        "assets": [
+          {
+            "name": "libiconv-1.17.20231019_173613.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/libiconvport/releases/download/STABLE_libiconvport_1490/libiconv-1.17.20231019_173613.zos.pax.Z",
+            "size": 2386944,
+            "expanded_size": 2816520,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "199",
+            "passed_tests": "199"
+          }
+        ]
+      },
+      {
+        "name": "libiconv (Build 1488) - (DEV)",
+        "date": "2023-10-19 18:26:09",
+        "tag_name": "DEV_libiconvport_1488",
+        "assets": [
+          {
+            "name": "libiconv-master.20231019_170127.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/libiconvport/releases/download/DEV_libiconvport_1488/libiconv-master.20231019_170127.zos.pax.Z",
+            "size": 2419200,
+            "expanded_size": 2884784,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "199",
+            "passed_tests": "199"
+          }
+        ]
+      },
       {
         "name": "libiconv 1.17 (Build 1396) - (DEV)",
         "date": "2023-09-28 04:10:20",
@@ -19934,6 +21054,214 @@
       }
     ],
     "meta": [
+      {
+        "name": "meta (Build 1536) - (STABLE)",
+        "date": "2023-11-03 01:16:48",
+        "tag_name": "STABLE_metaport_1536",
+        "assets": [
+          {
+            "name": "meta-main.20231102_211223.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/metaport/releases/download/STABLE_metaport_1536/meta-main.20231102_211223.zos.pax.Z",
+            "size": 12870144,
+            "expanded_size": 11874106,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "6",
+            "passed_tests": "6"
+          }
+        ]
+      },
+      {
+        "name": "meta (Build 1535) - (STABLE)",
+        "date": "2023-11-03 00:48:12",
+        "tag_name": "STABLE_metaport_1535",
+        "assets": [
+          {
+            "name": "meta-main.20231102_204339.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/metaport/releases/download/STABLE_metaport_1535/meta-main.20231102_204339.zos.pax.Z",
+            "size": 12870144,
+            "expanded_size": 11879337,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "6",
+            "passed_tests": "6"
+          }
+        ]
+      },
+      {
+        "name": "meta (Build 1502) - (STABLE)",
+        "date": "2023-10-22 02:48:07",
+        "tag_name": "STABLE_metaport_1502",
+        "assets": [
+          {
+            "name": "meta-main.20231022_024501.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/metaport/releases/download/STABLE_metaport_1502/meta-main.20231022_024501.zos.pax.Z",
+            "size": 12837888,
+            "expanded_size": 11713732,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "6",
+            "passed_tests": "6"
+          }
+        ]
+      },
+      {
+        "name": "meta (Build 1495) - (STABLE)",
+        "date": "2023-10-20 17:25:10",
+        "tag_name": "STABLE_metaport_1495",
+        "assets": [
+          {
+            "name": "meta-main.20231020_172204.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/metaport/releases/download/STABLE_metaport_1495/meta-main.20231020_172204.zos.pax.Z",
+            "size": 12805632,
+            "expanded_size": 11613855,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "6",
+            "passed_tests": "6"
+          }
+        ]
+      },
+      {
+        "name": "meta (Build 1491) - (STABLE)",
+        "date": "2023-10-19 18:56:10",
+        "tag_name": "STABLE_metaport_1491",
+        "assets": [
+          {
+            "name": "meta-main.20231019_185104.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/metaport/releases/download/STABLE_metaport_1491/meta-main.20231019_185104.zos.pax.Z",
+            "size": 12805632,
+            "expanded_size": 11615623,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "5",
+            "passed_tests": "5"
+          }
+        ]
+      },
+      {
+        "name": "meta (Build 1487) - (STABLE)",
+        "date": "2023-10-19 17:45:04",
+        "tag_name": "STABLE_metaport_1487",
+        "assets": [
+          {
+            "name": "meta-main.20231019_173903.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/metaport/releases/download/STABLE_metaport_1487/meta-main.20231019_173903.zos.pax.Z",
+            "size": 11450880,
+            "expanded_size": 10583571,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "5",
+            "passed_tests": "5"
+          }
+        ]
+      },
+      {
+        "name": "meta (Build 1483) - (STABLE)",
+        "date": "2023-10-19 16:17:22",
+        "tag_name": "STABLE_metaport_1483",
+        "assets": [
+          {
+            "name": "meta-main.20231019_161129.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/metaport/releases/download/STABLE_metaport_1483/meta-main.20231019_161129.zos.pax.Z",
+            "size": 11450880,
+            "expanded_size": 10594069,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "5",
+            "passed_tests": "5"
+          }
+        ]
+      },
+      {
+        "name": "meta (Build 1481) - (STABLE)",
+        "date": "2023-10-19 04:35:49",
+        "tag_name": "STABLE_metaport_1481",
+        "assets": [
+          {
+            "name": "meta-main.20231019_043048.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/metaport/releases/download/STABLE_metaport_1481/meta-main.20231019_043048.zos.pax.Z",
+            "size": 11450880,
+            "expanded_size": 10584207,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "4",
+            "passed_tests": "4"
+          }
+        ]
+      },
+      {
+        "name": "meta (Build 1478) - (STABLE)",
+        "date": "2023-10-19 03:25:50",
+        "tag_name": "STABLE_metaport_1478",
+        "assets": [
+          {
+            "name": "meta-main.20231019_032331.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/metaport/releases/download/STABLE_metaport_1478/meta-main.20231019_032331.zos.pax.Z",
+            "size": 11450880,
+            "expanded_size": 10594530,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "3",
+            "passed_tests": "3"
+          }
+        ]
+      },
+      {
+        "name": "meta (Build 1474) - (STABLE)",
+        "date": "2023-10-18 17:31:28",
+        "tag_name": "STABLE_metaport_1474",
+        "assets": [
+          {
+            "name": "meta-main.20231018_172917.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/metaport/releases/download/STABLE_metaport_1474/meta-main.20231018_172917.zos.pax.Z",
+            "size": 11450880,
+            "expanded_size": 10587271,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "3",
+            "passed_tests": "3"
+          }
+        ]
+      },
+      {
+        "name": "meta (Build 1467) - (STABLE)",
+        "date": "2023-10-17 15:02:32",
+        "tag_name": "STABLE_metaport_1467",
+        "assets": [
+          {
+            "name": "meta-main.20231017_150039.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/metaport/releases/download/STABLE_metaport_1467/meta-main.20231017_150039.zos.pax.Z",
+            "size": 11418624,
+            "expanded_size": 10580661,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "3",
+            "passed_tests": "3"
+          }
+        ]
+      },
+      {
+        "name": "meta (Build 1465) - (STABLE)",
+        "date": "2023-10-17 02:59:43",
+        "tag_name": "STABLE_metaport_1465",
+        "assets": [
+          {
+            "name": "meta-main.20231017_025731.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/metaport/releases/download/STABLE_metaport_1465/meta-main.20231017_025731.zos.pax.Z",
+            "size": 11418624,
+            "expanded_size": 10581940,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "3",
+            "passed_tests": "3"
+          }
+        ]
+      },
+      {
+        "name": "meta (Build 1464) - (STABLE)",
+        "date": "2023-10-17 02:27:08",
+        "tag_name": "STABLE_metaport_1464",
+        "assets": [
+          {
+            "name": "meta-main.20231017_022414.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/metaport/releases/download/STABLE_metaport_1464/meta-main.20231017_022414.zos.pax.Z",
+            "size": 11418624,
+            "expanded_size": 10580550,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "2",
+            "passed_tests": "2"
+          }
+        ]
+      },
       {
         "name": "meta (Build 1453) - (STABLE)",
         "date": "2023-10-13 05:01:51",
@@ -20993,6 +22321,22 @@
     ],
     "libxml2": [
       {
+        "name": "libxml2 (Build 1529) - (STABLE)",
+        "date": "2023-11-01 15:17:25",
+        "tag_name": "STABLE_libxml2port_1529",
+        "assets": [
+          {
+            "name": "libxml2-2.9.12.20231101_144831.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/libxml2port/releases/download/STABLE_libxml2port_1529/libxml2-2.9.12.20231101_144831.zos.pax.Z",
+            "size": 9225216,
+            "expanded_size": 21717002,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "2737",
+            "passed_tests": "2735"
+          }
+        ]
+      },
+      {
         "name": "libxml2 (Build 1417) - (STABLE)",
         "date": "2023-09-29 23:01:35",
         "tag_name": "STABLE_libxml2port_1417",
@@ -21273,6 +22617,38 @@
     ],
     "getopt": [
       {
+        "name": "getopt (Build 1537) - (STABLE)",
+        "date": "2023-11-03 01:46:44",
+        "tag_name": "STABLE_getoptport_1537",
+        "assets": [
+          {
+            "name": "getopt-1.1.6.20231102_214513.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/getoptport/releases/download/STABLE_getoptport_1537/getopt-1.1.6.20231102_214513.zos.pax.Z",
+            "size": 64512,
+            "expanded_size": 145205,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "23",
+            "passed_tests": "12"
+          }
+        ]
+      },
+      {
+        "name": "getopt (Build 1518) - (STABLE)",
+        "date": "2023-10-25 13:56:15",
+        "tag_name": "STABLE_getoptport_1518",
+        "assets": [
+          {
+            "name": "getopt-1.1.6.20231025_135421.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/getoptport/releases/download/STABLE_getoptport_1518/getopt-1.1.6.20231025_135421.zos.pax.Z",
+            "size": 64512,
+            "expanded_size": 145220,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "23",
+            "passed_tests": "12"
+          }
+        ]
+      },
+      {
         "name": "getopt (Build 1420) - (STABLE)",
         "date": "2023-09-30 03:53:30",
         "tag_name": "STABLE_getoptport_1420",
@@ -21404,6 +22780,22 @@
       }
     ],
     "lynx": [
+      {
+        "name": "lynx (Build 1459) - (STABLE)",
+        "date": "2023-10-17 00:07:54",
+        "tag_name": "STABLE_lynxport_1459",
+        "assets": [
+          {
+            "name": "lynx-2.8.9.20231016_231228.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/lynxport/releases/download/STABLE_lynxport_1459/lynx-2.8.9.20231016_231228.zos.pax.Z",
+            "size": 5483520,
+            "expanded_size": 11906483,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "1",
+            "passed_tests": "1"
+          }
+        ]
+      },
       {
         "name": "lynx zopen 0.7.0\n2.8.9rel.1 (Build 1355) - (STABLE)",
         "date": "2023-09-24 16:47:05",
@@ -21635,6 +23027,22 @@
     ],
     "expect": [
       {
+        "name": "expect (Build 1515) - (STABLE)",
+        "date": "2023-10-25 03:14:52",
+        "tag_name": "STABLE_expectport_1515",
+        "assets": [
+          {
+            "name": "expect-5.45.4.20231025_031000.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/expectport/releases/download/STABLE_expectport_1515/expect-5.45.4.20231025_031000.zos.pax.Z",
+            "size": 2580480,
+            "expanded_size": 6231628,
+            "runtime_dependencies": "tcl",
+            "total_tests": -1,
+            "passed_tests": -1
+          }
+        ]
+      },
+      {
         "name": "expect 0.3.0-dt-stable\n5.45.4 (Build 1256) - (STABLE)",
         "date": "2023-09-13 16:15:11",
         "tag_name": "STABLE_expectport_1256",
@@ -21684,6 +23092,38 @@
       }
     ],
     "npth": [
+      {
+        "name": "npth (Build 1550) - (STABLE)",
+        "date": "2023-11-05 16:11:52",
+        "tag_name": "STABLE_npthport_1550",
+        "assets": [
+          {
+            "name": "npth-1.6.20231105_105957.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/npthport/releases/download/STABLE_npthport_1550/npth-1.6.20231105_105957.zos.pax.Z",
+            "size": 32256,
+            "expanded_size": 129969,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "3",
+            "passed_tests": "3"
+          }
+        ]
+      },
+      {
+        "name": "npth (Build 1498) - (STABLE)",
+        "date": "2023-10-20 22:19:36",
+        "tag_name": "STABLE_npthport_1498",
+        "assets": [
+          {
+            "name": "npth-1.6.20231020_220730.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/npthport/releases/download/STABLE_npthport_1498/npth-1.6.20231020_220730.zos.pax.Z",
+            "size": 32256,
+            "expanded_size": 98416,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "3",
+            "passed_tests": "3"
+          }
+        ]
+      },
       {
         "name": "npth 0.3.0-dt-stable\n1.6 (Build 1231) - (STABLE)",
         "date": "2023-09-11 14:20:54",
@@ -21785,6 +23225,22 @@
     ],
     "libgpgerror": [
       {
+        "name": "libgpgerror (Build 1500) - (STABLE)",
+        "date": "2023-10-20 22:45:56",
+        "tag_name": "STABLE_libgpgerrorport_1500",
+        "assets": [
+          {
+            "name": "libgpgerror-DEV.20231020_221203.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/libgpgerrorport/releases/download/STABLE_libgpgerrorport_1500/libgpgerror-DEV.20231020_221203.zos.pax.Z",
+            "size": 999936,
+            "expanded_size": 2584186,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "12",
+            "passed_tests": "12"
+          }
+        ]
+      },
+      {
         "name": "libgpgerror 0.3.0-dt-stable\n1.47 (Build 1223) - (STABLE)",
         "date": "2023-09-08 15:03:59",
         "tag_name": "STABLE_libgpgerrorport_1223",
@@ -21850,6 +23306,38 @@
       }
     ],
     "libgcrypt": [
+      {
+        "name": "libgcrypt (Build 1522) - (STABLE)",
+        "date": "2023-10-30 03:12:21",
+        "tag_name": "STABLE_libgcryptport_1522",
+        "assets": [
+          {
+            "name": "libgcrypt-1.10.2.20231030_022125.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/libgcryptport/releases/download/STABLE_libgcryptport_1522/libgcrypt-1.10.2.20231030_022125.zos.pax.Z",
+            "size": 3064320,
+            "expanded_size": 6881246,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "35",
+            "passed_tests": "35"
+          }
+        ]
+      },
+      {
+        "name": "libgcrypt (Build 1499) - (STABLE)",
+        "date": "2023-10-20 22:39:50",
+        "tag_name": "STABLE_libgcryptport_1499",
+        "assets": [
+          {
+            "name": "libgcrypt-1.10.2.20231020_215057.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/libgcryptport/releases/download/STABLE_libgcryptport_1499/libgcrypt-1.10.2.20231020_215057.zos.pax.Z",
+            "size": 3064320,
+            "expanded_size": 6881499,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "35",
+            "passed_tests": "35"
+          }
+        ]
+      },
       {
         "name": "libgcrypt 0.3.0-dt-stable\n1.10.2 (Build 1225) - (STABLE)",
         "date": "2023-09-08 16:08:39",
@@ -21917,6 +23405,22 @@
     ],
     "libassuan": [
       {
+        "name": "libassuan (Build 1497) - (STABLE)",
+        "date": "2023-10-20 22:03:10",
+        "tag_name": "STABLE_libassuanport_1497",
+        "assets": [
+          {
+            "name": "libassuan-2.5.5.20231020_214734.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/libassuanport/releases/download/STABLE_libassuanport_1497/libassuan-2.5.5.20231020_214734.zos.pax.Z",
+            "size": 193536,
+            "expanded_size": 526488,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "3",
+            "passed_tests": "3"
+          }
+        ]
+      },
+      {
         "name": "libassuan 0.3.0-dt-stable\n2.5.5 (Build 1239) - (STABLE)",
         "date": "2023-09-12 14:15:44",
         "tag_name": "STABLE_libassuanport_1239",
@@ -21966,6 +23470,22 @@
       }
     ],
     "libksba": [
+      {
+        "name": "libksba (Build 1530) - (STABLE)",
+        "date": "2023-11-01 15:39:12",
+        "tag_name": "STABLE_libksbaport_1530",
+        "assets": [
+          {
+            "name": "libksba-1.6.3.20231101_152251.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/libksbaport/releases/download/STABLE_libksbaport_1530/libksba-1.6.3.20231101_152251.zos.pax.Z",
+            "size": 354816,
+            "expanded_size": 882737,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "7",
+            "passed_tests": "7"
+          }
+        ]
+      },
       {
         "name": "libksba 0.3.0-dt-stable\n1.0.0 (Build 1224) - (STABLE)",
         "date": "2023-09-08 15:38:59",
@@ -22114,6 +23634,22 @@
       }
     ],
     "comp_go": [
+      {
+        "name": "comp_go (Build 1520) - (STABLE)",
+        "date": "2023-10-26 22:48:05",
+        "tag_name": "STABLE_comp_goport_1520",
+        "assets": [
+          {
+            "name": "comp_go-DEV.20231026_224803.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/comp_goport/releases/download/STABLE_comp_goport_1520/comp_go-DEV.20231026_224803.zos.pax.Z",
+            "size": 32256,
+            "expanded_size": 48802,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "1",
+            "passed_tests": "1"
+          }
+        ]
+      },
       {
         "name": "comp_go 0.3.0-dt-stable (Build 1233) - (STABLE)",
         "date": "2023-09-11 19:23:00",
@@ -22456,6 +23992,38 @@
       }
     ],
     "libssh2": [
+      {
+        "name": "libssh2 (Build 1532) - (STABLE)",
+        "date": "2023-11-01 16:43:22",
+        "tag_name": "STABLE_libssh2port_1532",
+        "assets": [
+          {
+            "name": "libssh2-1.10.0.20231101_162008.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/libssh2port/releases/download/STABLE_libssh2port_1532/libssh2-1.10.0.20231101_162008.zos.pax.Z",
+            "size": 451584,
+            "expanded_size": 1395374,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "2",
+            "passed_tests": "2"
+          }
+        ]
+      },
+      {
+        "name": "libssh2 (Build 1526) - (STABLE)",
+        "date": "2023-11-01 14:41:45",
+        "tag_name": "STABLE_libssh2port_1526",
+        "assets": [
+          {
+            "name": "libssh2-1.10.0.20231101_141657.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/libssh2port/releases/download/STABLE_libssh2port_1526/libssh2-1.10.0.20231101_141657.zos.pax.Z",
+            "size": 451584,
+            "expanded_size": 1395235,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "2",
+            "passed_tests": "2"
+          }
+        ]
+      },
       {
         "name": "libssh2 0.3.0-dt-stable\n1.10.0 (Build 1268) - (STABLE)",
         "date": "2023-09-13 21:29:41",
@@ -22837,6 +24405,22 @@
     ],
     "byacc": [
       {
+        "name": "byacc (Build 1503) - (STABLE)",
+        "date": "2023-10-22 18:36:35",
+        "tag_name": "STABLE_byaccport_1503",
+        "assets": [
+          {
+            "name": "byacc-20230521.20231022_182616.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/byaccport/releases/download/STABLE_byaccport_1503/byacc-20230521.20231022_182616.zos.pax.Z",
+            "size": 419328,
+            "expanded_size": 1041155,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "344",
+            "passed_tests": "157"
+          }
+        ]
+      },
+      {
         "name": "byacc 0.3.0-dt-stable\n2.0 (Build 1246) - (STABLE)",
         "date": "2023-09-13 02:47:22",
         "tag_name": "STABLE_byaccport_1246",
@@ -22869,7 +24453,41 @@
         ]
       }
     ],
+    "bump": [
+      {
+        "name": "bump (Build 1477) - (STABLE)",
+        "date": "2023-10-19 03:14:59",
+        "tag_name": "STABLE_bumpport_1477",
+        "assets": [
+          {
+            "name": "bump-master.20231019_030956.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/bumpport/releases/download/STABLE_bumpport_1477/bump-master.20231019_030956.zos.pax.Z",
+            "size": 9870336,
+            "expanded_size": 28814250,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "12",
+            "passed_tests": "12"
+          }
+        ]
+      }
+    ],
     "tig": [
+      {
+        "name": "tig (Build 1458) - (STABLE)",
+        "date": "2023-10-16 23:11:10",
+        "tag_name": "STABLE_tigport_1458",
+        "assets": [
+          {
+            "name": "tig-2.5.8.20231016_230546.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/tigport/releases/download/STABLE_tigport_1458/tig-2.5.8.20231016_230546.zos.pax.Z",
+            "size": 2128896,
+            "expanded_size": 3652173,
+            "runtime_dependencies": "git",
+            "total_tests": "1",
+            "passed_tests": "1"
+          }
+        ]
+      },
       {
         "name": "tig 0.3.0-dt-stable\n1.0.0 (Build 1290) - (STABLE)",
         "date": "2023-09-15 14:23:26",
@@ -22904,6 +24522,22 @@
       }
     ],
     "c3270": [
+      {
+        "name": "c3270 (Build 1463) - (STABLE)",
+        "date": "2023-10-17 02:20:47",
+        "tag_name": "STABLE_c3270port_1463",
+        "assets": [
+          {
+            "name": "c3270-DEV.20231017_020159.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/c3270port/releases/download/STABLE_c3270port_1463/c3270-DEV.20231017_020159.zos.pax.Z",
+            "size": 9418752,
+            "expanded_size": 19325760,
+            "runtime_dependencies": "ncurses",
+            "total_tests": "1",
+            "passed_tests": "1"
+          }
+        ]
+      },
       {
         "name": "c3270 1.0.0 (Build 1375) - (STABLE)",
         "date": "2023-09-26 12:57:01",
@@ -23403,6 +25037,76 @@
             "runtime_dependencies": "No dependencies",
             "total_tests": "5",
             "passed_tests": "0"
+          }
+        ]
+      }
+    ],
+    "githubcli": [
+      {
+        "name": "githubcli (Build 1561) - (DEV)",
+        "date": "2023-11-06 21:58:35",
+        "tag_name": "DEV_githubcliport_1561",
+        "assets": [
+          {
+            "name": "githubcli-DEV.20231106_214912.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/githubcliport/releases/download/DEV_githubcliport_1561/githubcli-DEV.20231106_214912.zos.pax.Z",
+            "size": 34352640,
+            "expanded_size": 115456300,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": -1,
+            "passed_tests": -1
+          }
+        ]
+      },
+      {
+        "name": "cli (Build 1560) - (DEV)",
+        "date": "2023-11-06 21:22:44",
+        "tag_name": "DEV_cliport_1560",
+        "assets": [
+          {
+            "name": "githubcli-DEV.20231106_205638.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/githubcliport/releases/download/DEV_cliport_1560/githubcli-DEV.20231106_205638.zos.pax.Z",
+            "size": 34352640,
+            "expanded_size": 115456324,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": -1,
+            "passed_tests": -1
+          }
+        ]
+      }
+    ],
+    "moreutils": [
+      {
+        "name": "moreutils (Build 1538) - (STABLE)",
+        "date": "2023-11-03 01:55:42",
+        "tag_name": "STABLE_moreutilsport_1538",
+        "assets": [
+          {
+            "name": "moreutils-master.20231102_215528.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/moreutilsport/releases/download/STABLE_moreutilsport_1538/moreutils-master.20231102_215528.zos.pax.Z",
+            "size": 870912,
+            "expanded_size": 2361625,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": -1,
+            "passed_tests": -1
+          }
+        ]
+      }
+    ],
+    "zos-code-page-tools": [
+      {
+        "name": "zos-code-page-tools (Build 1562) - (DEV)",
+        "date": "2023-11-06 23:21:45",
+        "tag_name": "DEV_zos-code-page-toolsport_1562",
+        "assets": [
+          {
+            "name": "zoscodepagetools-DEV.20231106_231917.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/zos-code-page-toolsport/releases/download/DEV_zos-code-page-toolsport_1562/zoscodepagetools-DEV.20231106_231917.zos.pax.Z",
+            "size": 64512,
+            "expanded_size": 260152,
+            "runtime_dependencies": "bash",
+            "total_tests": "1",
+            "passed_tests": "1"
           }
         ]
       }

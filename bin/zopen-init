@@ -275,7 +275,7 @@ fi
 echo "${releaseLine}" > "${rootfs}/etc/zopen/releaseline"
 
 printInfo "- Check for shipped curl pax"
-curlpax="packages/curl-8.1.2.20230707_145137.zos.pax.Z"
+curlpax="packages/curl-8.4.0.20231011_155722.zos.pax.Z"
 
 curllcn=$(findrev "${MYDIR}" "${curlpax}")
 echo "${curllcn}/${curlpax}"
@@ -310,7 +310,9 @@ paxrc=$(pax -rf "${cachedir}/${basejqpax}" -s##${rootfs}/boot/#)
 printVerbose "Configuring CA certificate file '${certFileName}'"
 cacertFound=false
 printVerbose "Check for existing ZOPEN_CA environment variable: ${ZOPEN_CA}"
-if [ -n "${ZOPEN_CA}" ]; then
+if [ -f "${ZOPEN_ROOTFS}/${ZOPEN_CA_DIR}/${certFileName}" ]; then
+  cacertFound=true
+elif [ -n "${ZOPEN_CA}" ]; then
   printVerbose "Existing envvar for ZOPEN_CA found"
   if [ -r "${ZOPEN_CA}" ]; then
     printInfo "- Found existing setting for ZOPEN_CA '${ZOPEN_CA}'; reusing certificate"
@@ -404,3 +406,8 @@ fi
 printInfo "${NC}${YELLOW}IMPORTANT: Run '. ${rootfs}/etc/zopen-config' to enable zopen environment for current session or add it to your .profile.${NC}"
 syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_PACKAGE},${CAT_FILE}" "INIT" "" "zopen environment initialised as ${ZOPEN_ROOTFS}"
 printInfo "${NC}${GREEN}zopen initialization complete.${NC}"
+myparent="$(cd "$(dirname "${MYDIR}")" >/dev/null 2>&1 && pwd -P )"
+myparentpaxz="${myparent}.pax.Z"
+if [ -d "${myparent}" ] && [ -f "${myparentpaxz}" ]; then
+  printInfo "${NC}${GREEN}You can now safely delete the pax file ${myparentpaxz} and ${myparent} directory.${NC}"
+fi

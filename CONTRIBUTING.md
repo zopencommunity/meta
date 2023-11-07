@@ -47,6 +47,24 @@ It should:
   * perf: performance improvement
   * test: tests and CI updates
 
+## Pull Request Process
+
+1. Fork the repository to your own GitHub account.
+2. Create a new branch for your changes: `git checkout -b my-feature`
+3. Make your changes and commit them to your branch.
+4. Push your changes to your forked repository: `git push origin my-feature`
+5. Open a pull request against the `main` branch of this repository.
+6. Ensure your pull request has a clear title and description, explaining the purpose of your changes.
+7. If your pull request addresses any issues, please reference them in the description using the syntax `Fixes #123` or `Closes #456`.
+8. Your pull request will automatically trigger tests when opened or when you comment `/run tests`.
+
+## Automated Tests
+
+We have set up automated tests for this repository using GitHub Actions. When you open a pull request or comment with `/run tests`, the following action will be triggered: [build_and_test.yml](https://github.com/zosopentools/meta/blob/main/data/build_and_test.yml).
+
+Please make sure your changes pass all the automated tests before merging your pull request. If the tests fail, our CI/CD system will provide information on what needs to be fixed.
+
+
 ### Developer's Certificate of Origin 1.1
 
 ```text

@@ -3,42 +3,60 @@
 # shellcheck shell=sh
 #
 
-addCleanupTrapCmd()
+zopenInitialize()
 {
-  newCmd=$(echo "$1" | sed -e 's/^[ ]*//' -e 's/[ ]*$//')
-  if [ -e "${ZOPEN_CLEANUP_PIPE}" ]; then
-    (echo "${newCmd}" > "${ZOPEN_CLEANUP_PIPE}")&
-  else
-    printSoftError "Cleanup pipeline not available; temporary files and resources might not be cleared"
+  # Create the cleanup pipeline and exit handler
+  trap "cleanupFunction" EXIT INT TERM QUIT HUP
+  defineEnvironment
+  defineANSI
+  if [ -z "${ZOPEN_DONT_PROCESS_CONFIG}" ]; then
+    processConfig
+  fi
+  ZOPEN_JSON_CACHE_URL="https://zosopentools.github.io/meta/api/zopen_releases.json"
+}
+
+addCleanupTrapCmd(){
+  newcmd=$1
+  # Small timing window if the script is killed between the creation
+  # and removal of the temporary file; would be easier if zos sh
+  # didn't have a bug -trap can't be piped/redirected anywhere except
+  # a file like it can in bash or non-zos sh as it seems to create
+  # and run in the subshell before returning trap handler(s)!?!
+  tmpscriptfile="clean.tmp"
+  trap > "${tmpscriptfile}" 2>&1 && script=$(cat "${tmpscriptfile}")
+  rm "${tmpscriptfile}"
+  if [ -n "${script}" ]; then
+    for trappedSignal in "EXIT" "INT" "TERM" "QUIT" "HUP"; do
+      newtrapcmd=$(echo "${script}" | while read trapcmd; do
+	       sigcmd=$(echo "${trapcmd}" | sed "s/trap -- \"\(.*\)\" ${trappedSignal}.*/\1/")
+	       [ "${sigcmd}" = "${trapcmd}" ] && continue
+	       printf "%s;%s" "${sigcmd}" "${newcmd}" | tr -s ';'
+         break
+      done
+      )
+      if [ -n "${newtrapcmd}" ]; then
+        trap -- "${newtrapcmd}" "${trappedSignal}"
+      fi
+    done
   fi
 }
 
 cleanupFunction()
 {
-  # Only action the cleanup pipeline when not in a sub-zopen-process
-  parentCmd=$(ps -o args= -p "${PPID}")
-  if [ -z "$parentCmd" ]; then
-    printDebug "ps did not list the process details for parent \$PPID=${PPID}"
-    return
-  fi
-  if echo "${parentCmd}" | grep "/bin/zopen" > /dev/null 2>&1; then
-    # we are a child of a zopen process so do not attempt to cleanuup yet!
-    return
-  fi
+  :
+}
 
-  if [ -e "${ZOPEN_CLEANUP_PIPE}" ]; then
-    # Add a cleanup of the pipe for when we are finished - explicitly
-    # add to the pipeline as if a user has CTRL-C'd early, that can 
-    # trigger cleanup with an empty pipeline, leaving the read of the pipe
-    # waiting indefinitely
-    addCleanupTrapCmd "rm -rf \"${ZOPEN_CLEANUP_PIPE}\""
-    while read cleanupcmd; do
-      eval "${cleanupcmd}" 2>/dev/null
-    done < "${ZOPEN_CLEANUP_PIPE}"
-    
-    unset ZOPEN_CLEANUP_PIPE
+# getParentProcess
+# returns the parent process for the specified process
+# input: $1 - the pid to get the parent of
+# return: 0 for error or parent process id
+getParentProcess()
+{
+  parent=$(ps -o ppid= -p "$1")
+  if parent=$(ps -o ppid= -p "$1"); then
+    return 0
   fi
-  trap - EXIT INT TERM QUIT HUP
+  return "${parent}"
 }
 
 # getCurrentVersionDir
@@ -122,33 +140,7 @@ writeConfigFile(){
 # relative to this envvar value
 ZOPEN_ROOTFS=\"${rootfs}\"
 export ZOPEN_ROOTFS
-configStartTime=\${SECONDS}
 zot=\"z/OS Open Tools\"
-
-# Temporary file location
-for tmp in "\${TMPDIR}" "\${TMP}" /tmp
-do
-  if [ ! -z \${tmp} ] && [ -d \${tmp} ]; then
-    break
-  fi
-done
-
-if [ ! -d "\${tmp}" ]; then
-  echo "Temporary directory not found. Specify \${TMPDIR}, \${TMP} or have a valid /tmp directory"
-fi
-FIFO_PIPE_DOTENVS="\${tmp}/zopen_\${LOGNAME}.dotenv.pipe"
-FIFO_PIPE_STDOUT="\${tmp}/zopen_\${LOGNAME}.stdout.pipe"
-
-# Set Traps
-atExit() {
-  sig=\$?
-  [ ! -z "\${FIFO_PIPE_DOTENVS}" -a -p \${FIFO_PIPE_DOTENVS} ] && rm -rf \${FIFO_PIPE_DOTENVS}
-  [ ! -z "\${FIFO_PIPE_STDOUT}" -a -p \${FIFO_PIPE_STDOUT} ] && rm -rf \${FIFO_PIPE_STDOUT}
-  trap - EXIT INT TERM QUIT HUP
-  return \${sig}
-}
-
-trap "atExit" EXIT INT TERM QUIT HUP
 
 sanitizeEnvVar(){
   # remove any envvar entries that match the specified regex
@@ -175,14 +167,6 @@ export ZOPEN_CA
 ZOPEN_LOG_PATH=\${ZOPEN_ROOTFS}/var/log
 export ZOPEN_LOG_PATH
 
-# Disable ANSI terminal commands if terminal does not support them
-# Currently only OMVS detected
-if [ "\${_BPX_TERMPATH-x}" = "OMVS" ];  then
-  ansiEnabled=false
-else
-  ansiEnabled=true
-fi
-
 # Custom parameters for zopen default tooling
 # Add any custom parameters for curl
 ZOPEN_CURL_PARAMS=""
@@ -192,49 +176,12 @@ ZOPEN_CURL_PARAMS=""
 if [ -z "\${ZOPEN_QUICK_LOAD}" ]; then
   if [ -e "\${ZOPEN_ROOTFS}/etc/profiled" ]; then
     dotenvs=\$(find "\${ZOPEN_ROOTFS}/etc/profiled" -type f -name 'dotenv' -print)
-    dotenvcnt=\$(echo "\${dotenvs}" | wc -l | tr -d ' ')
-    filecnt=0
-    # Create a pipe to hold the list of dotenv dirs to process
-    [ ! -p \${FIFO_PIPE_DOTENVS} ] || rm -f \${FIFO_PIPE_DOTENVS}
-    mkfifo \${FIFO_PIPE_DOTENVS}
-    chtag -tc 819 \${FIFO_PIPE_DOTENVS}
-    # Create a pipe to hold any output from the attempt to run the
-    # dotenv sourcing to allow errors to propogate to the user
-    [ ! -p \${FIFO_PIPE_STDOUT} ] || rm -f \${FIFO_PIPE_STDOUT}
-    mkfifo \${FIFO_PIPE_STDOUT}
-    chtag -tc 819 \${FIFO_PIPE_STDOUT}
-    [ \${ansiEnabled} ] && /bin/echo ""
-    (/bin/echo "\${dotenvs}" | xargs | tr ' ' '\n'>>\${FIFO_PIPE_DOTENVS} &)
-    while read FILE; do
-      [ -z "\${TMP_FIFO_PIPE}" ] && break
-      filecnt=\$(expr \${filecnt} + 1)
-      pct=\$(expr \${filecnt} \* 100)
-      pct=\$(expr \${pct} / \${dotenvcnt})
-      if \${ansiEnabled};  then
-        /bin/echo "\047[1A\047[\$30D\047[2K- Processing \${zot} configuration: \${pct}% (\${filecnt}/\${dotenvcnt})"
-      else
-        /bin/echo "Processing \${zot} configuration...: \${pct}% (\${filecnt}/\${dotenvcnt})"
-      fi
-      [ -e \${FILE} ] && . \${FILE} >\${FIFO_PIPE_STDOUT} 2>&1
-      # If there were any messages during the dotenv processing, output to screen
-      while read outputline; do
-        if [ -n "\${outputline}" ]; then
-          if \${ansiEnabled}; then
-            inserSpacer=true
-          fi
-          printf "%szn" "\${outputline}"
-        fi
-      done < \${FIFO_PIPE_STDOUT}
-      [ \${insertSpacer} ] || printf "\n\n" # Add blank lines to restart the spinner otherwise messages from setup are overwritten
-    done < \${FIFO_PIPE_DOTENVS}
-    [ -n "\${FIFO_PIPE_DOTENVS}" -a -e "\${FIFO_PIPE_DOTENVS}" ] || rm -f "\${FIFO_PIPE_DOTENVS}"
-    [ -n "\${FIFO_PIPE_STDOUT}" -a -e "\${FIFO_PIPE_STDOUT}" ] || rm -f "\${FIFO_PIPE_STDOUT}"
-    if \${ansiEnabled};  then
-      /bin/echo "\047[1A\047[\$30D\047[2K- Processed \${zot} configuration: 100% (\${dotenvcnt}/\${dotenvcnt})"
-    else
-      /bin/echo "Processing \${zot} configuration...: 100% (\${filecnt}/\${dotenvcnt})"
-    fi
-    unset dotenvs dotenvcnt filecnt
+    printf "Processing \$zot configuration..."
+    for dotenv in \$dotenvs; do
+      . \$dotenv
+    done 
+    /bin/echo "DONE"
+    unset dotenvs
   fi
 fi
 PATH=\${ZOPEN_ROOTFS}/usr/local/bin:\${ZOPEN_ROOTFS}/usr/bin:\${ZOPEN_ROOTFS}/bin:\${ZOPEN_ROOTFS}/boot:\$(sanitizeEnvVar \"\${PATH}\" \":\" \"^\${ZOPEN_PKGINSTALL}/.*\$\")
@@ -243,11 +190,6 @@ LIBPATH=\${ZOPEN_ROOTFS}/usr/local/lib:\${ZOPEN_ROOTFS}/usr/lib:\$(sanitizeEnvVa
 export LIBPATH=\$(deleteDuplicateEntries \"\${LIBPATH}\" \":\")
 MANPATH=\${ZOPEN_ROOTFS}/usr/local/share/man:\${ZOPEN_ROOTFS}/usr/local/share/man/\%L:\${ZOPEN_ROOTFS}/usr/share/man:\${ZOPEN_ROOTFS}/usr/share/man/\%L:\$(sanitizeEnvVar \"\${MANPATH}\" \":\" \"^\${ZOPEN_PKGINSTALL}/.*\$\")
 export MANPATH=\$(deleteDuplicateEntries \"\${MANPATH}\" \":\")
-
-unset tmp FIFO_PIPE_DOTENVS FIFO_PIPE_STDOUT
-
-# Unset traps
-trap - EXIT INT TERM QUIT HUP
 EOF
 
 }
@@ -287,6 +229,20 @@ deref()
   fi
 }
 
+#return 1 if brightness is dark, 0 if light, and -1 if unknown (considered to be dark as default)
+darkbackground() {
+  if [ "${#COLORFGBG}" -ge 3 ]; then
+    bg=${COLORFGBG##*;}
+    if [ ${bg} -lt 7 ]; then
+      return 1
+    else
+      return 0
+    fi
+  else
+    return -1
+  fi
+}
+
 defineANSI()
 {
   # Standard tty codes
@@ -294,7 +250,7 @@ defineANSI()
   ERASELINE="${ESC}[2K"
   CRSRHIDE="${ESC}[?25l"
   CRSRSHOW="${ESC}[?25h"
-
+  
   # Color-type codes, needs explicit terminal settings
   if [ ! "${_BPX_TERMPATH-x}" = "OMVS" ] && [ -z "${NO_COLOR}" ] && [ ! "${FORCE_COLOR-x}" = "0" ] && [ -t 1 ] && [ -t 2 ]; then
     esc="\047"
@@ -324,6 +280,18 @@ defineANSI()
     BOLD=''
     UNDERLINE=''
     NC=''
+  fi
+
+  darkbackground
+  bg=$?
+  if [ $bg -ne 0 ]; then 
+    #if the background was set to black or unknown the header and warning color will be yellow
+    HEADERCOLOR="${YELLOW}"
+    WARNINGCOLOR="${YELLOW}"
+  else
+    #else the header and warning color will become magenta
+    HEADERCOLOR="${MAGENTA}"
+    WARNINGCOLOR="${MAGENTA}"
   fi
 }
 
@@ -606,7 +574,7 @@ unsymlinkFromSystem()
     printDebug "Starting spinner..."
     progressHandler "spinner" "- Complete" &
     ph=$!
-    killph="kill -HUP ${ph}"
+    killph="kill -HUP ${ph} 2>/dev/null"
     addCleanupTrapCmd "${killph}"
 
     printDebug "Spawning as subshell to handle threading"
@@ -682,26 +650,7 @@ deletetask()
   fi
 }
 
-zopenInitialize()
-{
-  # Create the cleanup pipeline and exit handler
-  trap "cleanupFunction" EXIT INT TERM QUIT HUP
-  [ -z "${ZOPEN_CLEANUP_PIPE}" ] \
-  && [ ! -p "${ZOPEN_CLEANUP_PIPE}" ] \
-  && ZOPEN_CLEANUP_PIPE=$(mktempfile "clean" "pipe") \
-  && mkfifo "${ZOPEN_CLEANUP_PIPE}" \
-  && chtag -tc 819 "${ZOPEN_CLEANUP_PIPE}" \
-  && export ZOPEN_CLEANUP_PIPE
 
-  addCleanupTrapCmd "stty echo" # set this as a default to ensure line visibility!
-  defineEnvironment
-  defineANSI
-  if [ -z "${ZOPEN_DONT_PROCESS_CONFIG}" ]; then
-    processConfig
-  fi
-
-  ZOPEN_JSON_CACHE_URL="https://zosopentools.github.io/meta/api/zopen_releases.json"
-}
 
 
 printDebug()
@@ -727,9 +676,10 @@ printVerbose()
 printHeader()
 {
   [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
-  printColors "${NC}${YELLOW}${BOLD}${UNDERLINE}${1}${NC}" >&2
+  printColors "${NC}${HEADERCOLOR}${BOLD}${UNDERLINE}${1}${NC}" >&2
   [ ! -z "${xtrc}" ] && set -x
   return 0
+
 }
 
 runAndLog()
@@ -758,7 +708,7 @@ runLogProgress()
   fi
   progressHandler "spinner" "- ${completeText}" &
   ph=$!
-  killph="kill -HUP ${ph}"
+  killph="kill -HUP ${ph} 2>/dev/null"
   addCleanupTrapCmd "${killph}"
   eval "$1"
   rc=$?
@@ -775,38 +725,34 @@ spinloop()
   # but without pre-reqing packages...
   i=$1
   while [ ${i} -ge 0 ]; do
-    true > /dev/null
+    :
     i=$((i - 1))
   done
 }
 
-progressNetwork()
+progressAnimation()
 {
-  # Loop until signal received
-  icon="-----"
-  ansiline 0 0 "${icon}"
+  [ $# -eq 0 ] && printError "Internal error: no animation strings"
+  animcnt=$#
+  anim=1
+  ansiline 0 0 "$1"
   while :; do
     spinloop 1000
-    case "${icon}" in
-    '-----') icon='>----' ;; '>----') icon='->---' ;; '->---') icon='-->--' ;; '-->--') icon='--->-' ;; '--->-') icon='---->' ;;
-    '---->') icon='----<' ;; '----<') icon='---<-' ;; '---<-') icon='--<--' ;; '--<--') icon='-<---' ;; '-<---') icon='<----' ;; '<----') icon='-----' ;;
-    esac
-    ansiline 1 -1 "${icon}"
+    # Check for daemonization of this process (ie. orphaned and PPID=1)
+    # Cannot actually use "$PPID" as it is set at script initialization
+    # and not updated when the parent changes so need to query
+    getParentProcess "$$" >/dev/null 2>&1
+    ppid=$?
+    [ "${ppid}" -eq 1 ] && kill INT "${ppid}" >/dev/null 2>&1
+    anim=$((anim + 1))
+    [ ${anim} -gt ${animcnt} ] && anim=1
+    ansiline 1 -1 $(getNthArrayArg "${anim}" "$@")
   done
 }
 
-progressSpinner()
-{
-  # Loop until signal received
-  icon="-"
-  ansiline 0 0 "${icon}"
-  while :; do
-    spinloop 1000
-    case "${icon}" in
-    '-') icon='\' ;; '\') icon='|' ;; '|') icon='/' ;; '/') icon='-' ;;
-    esac
-    ansiline 1 -1 "${icon}"
-  done
+getNthArrayArg () {
+    shift "$1"
+    echo "$1"
 }
 
 progressHandler()
@@ -815,13 +761,19 @@ progressHandler()
     [ -z "${-%%*x*}" ] && set +x # Disable -x debug if set for this process
     type=$1
     completiontext=$2 # Custom end text (when the process is complete)
-
     trapcmd="exit;"
-    [ -n "${completiontext}" ] && trapcmd="/bin/echo \"\047[1A\047[30D\047[2K${completiontext}\"; ${trapcmd}"
+    if [ -n "${completiontext}" ]; then
+      trapcmd="/bin/echo \"\047[1A\047[30D\047[2K${completiontext}\"; ${trapcmd}"
+    fi
+    # shellcheck disable=SC2064
     trap "${trapcmd}" HUP
     case "${type}" in
-    "network") progressNetwork ;;
-    *) progressSpinner ;;
+      "spinner") progressAnimation '-' '\' '|' '/' 
+      ;;
+      "network") progressAnimation '-----' '>----' '->---' '-->--' '--->-' '---->' '-----' '----<' '---<-' '--<--' '-<---' '<----'
+      ;;
+      *) progressAnimation '.' 'o' 'O' 'O' 'o' '.'
+      ;;
     esac
   fi
 }
@@ -849,8 +801,8 @@ runInBackgroundWithTimeoutAndLog()
       n=$(expr ${n} + 1)
     fi
   done
-  kill -9 "${PID}"
-  kill -9 ${TEEPID}
+  kill -9 "${PID}" 2>/dev/null
+  kill -9 "${TEEPID}" 2>/dev/null
   printError "TIMEOUT: (PID: ${PID}): ${command}"
 }
 
@@ -874,7 +826,7 @@ printError()
 printWarning()
 {
   [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
-  printColors "${NC}${YELLOW}${BOLD}***WARNING: ${NC}${YELLOW}${1}${NC}" >&2
+  printColors "${NC}${WARNINGCOLOR}${BOLD}***WARNING: ${NC}${YELLOW}${1}${NC}" >&2
   [ -n "${xtrc}" ] && set -x
   return 0
 }
@@ -1087,6 +1039,18 @@ downloadJSONCache()
     JSON_CACHE="${ZOPEN_ROOTFS}/var/cache/zopen/zopen_releases.json"
     JSON_TIMESTAMP="${ZOPEN_ROOTFS}/var/cache/zopen/zopen_releases.timestamp"
     JSON_TIMESTAMP_CURRENT="${ZOPEN_ROOTFS}/var/cache/zopen/zopen_releases.timestamp.current"
+
+    # Need to check that we can read & write to the JSON timestamp cache files
+    if [ -e "${JSON_TIMESTAMP_CURRENT}" ]; then
+      [ ! -w "${JSON_TIMESTAMP_CURRENT}" ] || [ ! -r "${JSON_TIMESTAMP_CURRENT}" ] && printError "Cannot access cache at '${JSON_TIMESTAMP_CURRENT}'. Check permissions and retry request"
+    fi
+    if [ -e "${JSON_TIMESTAMP}" ]; then
+      [ ! -w "${JSON_TIMESTAMP}" ] || [ ! -r "${JSON_TIMESTAMP}" ] && printError "Cannot access cache at '${JSON_TIMESTAMP}'. Check permissions and retry request"
+    fi
+    if [ -e "${JSON_CACHE}" ]; then
+      [ ! -w "${JSON_CACHE}" ] || [ ! -r "${JSON_CACHE}" ] && printError "Cannot access cache at '${JSON_CACHE}'. Check permissions and retry request"
+    fi
+
     if ! curlCmd -L -s -I "${ZOPEN_JSON_CACHE_URL}" -o "${JSON_TIMESTAMP_CURRENT}"; then
       printError "Failed to obtain json cache timestamp from ${ZOPEN_JSON_CACHE_URL}"
     fi
@@ -1095,8 +1059,10 @@ downloadJSONCache()
     if [ -f "${JSON_CACHE}" ] && [ -f "${JSON_TIMESTAMP}" ] && [ "$(grep 'Last-Modified' "${JSON_TIMESTAMP_CURRENT}")" = "$(grep 'Last-Modified' "${JSON_TIMESTAMP}")" ]; then
       return
     fi
+    
+    printVerbose "Replacing old timestamp with latest"
+    mv -f "${JSON_TIMESTAMP_CURRENT}" "${JSON_TIMESTAMP}"
 
-    mv "${JSON_TIMESTAMP_CURRENT}" "${JSON_TIMESTAMP}"
     if ! curlCmd -L -s -o "${JSON_CACHE}" "${ZOPEN_JSON_CACHE_URL}"; then
       printError "Failed to obtain json cache from ${ZOPEN_JSON_CACHE_URL}"
     fi
