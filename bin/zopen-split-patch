@@ -19,7 +19,14 @@ pd='split-patches'
 
 printSyntax()
 {
-  printf "Syntax: %s [<patch file>]\n" "${0}" >&2
+  echo "${ME} - split a patch file into one patch file for each patch"
+  echo "  Patches are written to ${pd} in the current directory"
+  echo "Usage: ${ME} [OPTION] [PATCHFILE]"
+  echo "Options:"
+  echo "  --help      display this help and exit"
+  echo "  --version   print version"
+  echo "Example:"
+  echo "  ${ME} P1.patch    write P1.patch into multiple patches under ${pd}"
 }
 
 if [ "x$1" = "x--help" ]; then

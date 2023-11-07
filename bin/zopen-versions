@@ -20,10 +20,11 @@ setupMyself
 #
 syntax()
 {
-  echo "$0: Print out installed version of z/OS tool and corresponding BREW latest version" >&2
-  echo "$0 [<directory>]" >&2
-  echo "  where <directory> is the root directory where z/OS Open Source packages are checked" >&2
-  echo "  default: ~/zopen/prod" >&2
+  echo "${ME} - print installed version of z/OS tool and corresponding BREW latest version"
+  echo "${ME} [OPTION]"
+  echo "Options:"
+  echo "  --help      display this help and exit"
+  echo "  --version   print version"
 }
 
 if [[ $# -eq 1 ]]; then

@@ -21,13 +21,20 @@ setupMyself
 
 syntax()
 {
-  echo "$0: Print out build dependencies (transitive closure) for a given tool" >&2
-  echo "Syntax: $0 <tool>" >&2
+  echo "$ME - print out build dependencies (transitive closure) for a given tool."
+  echo "  Note this tool will clone several repositories into a temporary directory for this computation."
+  echo "Usage: $ME [OPTION] [tool]"
+  echo "Options:"
+  echo "  --help     display this help and exit"
+  echo "  --version  print version"
+  echo "Examples:"
+  echo "  print out the tools required to build git"
+  echo "    $ME git"
   exit 0
 }
 
-primary_type="TARBALL"
-secondary_type="GIT"
+primary_type="STABLE"
+secondary_type="DEV"
 verbose=true
 
 if [ $# -eq 0 ]; then
@@ -43,9 +50,7 @@ if [[ $# -eq 1 ]]; then
     zopen-version $ME
     exit 0
   else
-    echo "Unrecognized option $1. Processing terminated" >&2
-    printSyntax
-    exit 8
+    :
   fi
 fi
 

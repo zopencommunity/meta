@@ -19,22 +19,23 @@ setupMyself
 printSyntax()
 {
   args=$*
-  echo "zopen query is a utility for z/OS Open Tools to query packages and repos." >&2
-  echo "Syntax: zopen-query [<option>]* [<package]*" >&2
-  echo "  where <option> may be one or more of:" >&2
-  echo "  --help: print this help" >&2
-  echo "  --version: print version" >&2
-  echo "  --list: list all available z/OS Open Tools." >&2
-  echo "  --remote-search: regex match package against available z/OS Open Tools" >&2
-  echo "  -i : --installed: list install z/OS Open Tools." >&2
-  echo " --upgradeable: list packages where an upgrade is available." >&2
-  echo "  -wp : --whatprovides: which installed package provided a file." >&2
-  echo "  -v: run in verbose mode." >&2
-  echo "  -d | --details: include full details for listings." >&2
-  echo "  --no-header: suppress the header for the output." >&2
-  echo "  --no-version:  suppress version information, return package names." >&2
-  echo "  --filter <color>: apply filter based on quality (green - all tests passing, blue - most tests passing, yellow - some tests passing, red - no tests passing, or skipped (no filter by default))" >&2
-  echo " and <package> is an optional list of one or more packages." >&2
+  echo "zopen query is a utility for z/OS Open Tools to query packages and repos."
+  echo "Usage: zopen-query [OPTION] [PACKAGE]"
+  echo "  PACKAGE is an optional list of one or more packages."
+  echo "Options:"
+  echo "  --help           print this help"
+  echo "  --version        print version" 
+  echo "  --list           list all available z/OS Open Tools."
+  echo "  --remote-search  regex match package against available z/OS Open Tools"
+  echo "  -i, --installed  list install z/OS Open Tools."
+  echo "  --upgradeable    list packages where an upgrade is available."
+  echo "  -wp, --whatprovides  which installed package provided a file."
+  echo "  -v               run in verbose mode."
+  echo "  -d, --details    include full details for listings."
+  echo "  --no-header,     suppress the header for the output."
+  echo "  --no-version,    suppress version information, return package names."
+  echo "  --filter COLOR   apply COLOR (quality) filter."
+  echo "                   green: all pass, blue: most pass, yellow: some pass, red: no pass, grey: skipped"
 }
 
 colorizepct()

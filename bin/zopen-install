@@ -21,26 +21,26 @@ printSyntax()
 {
   args=$*
   echo "zopen install is a utility to download/install a z/OS Open Tools package."
-  echo "Syntax: zopen install [<option>]* <package, ...>" >&2
-  echo "  where <option> may be one or more of:" >&2
-  echo "  --help: print this help." >&2
-  echo "  --version: print version" >&2
-  echo "  -u|--update|--upgrade: updates installed z/OS Open Tools packages." >&2
-  echo "  --install-or-upgrade: installs the package if not installed, or upgrades the package if installed." >&2
-  echo "  --reinstall: reinstall already installed z/OS Open Tools packages." >&2
-  echo "  --nosymlink: do not integrate into filesystem through symlink redirection. " >&2
-  echo "  --release-line <stable|dev>: the release line to build off of." >&2
-  echo "  --no-deps: do not install dependencies." >&2
-  echo "  --cache-only: do not install dependencies." >&2
-  echo "  --no-set-active: do not change the pinned version" >&2
-  echo "  --skip-upgrade: do not upgrade." >&2
-  echo "  --yes|-y: automatically answer yes to prompts." >&2
-  echo "  --select: select a version to install." >&2
-  echo "  -v: run in verbose mode" >&2
-  echo "  --download-only: download package to current directory" >&2
-  echo "  --local-install: download and unpackage to current directory" >&2
-  echo "  --all: download/install all z/OS Open Tools packages" >&2
-  echo "  and <package> is a list of one or more projects to install" >&2
+  echo "Usage: zopen install [OPION] [PACKAGE]"
+  echo "  [PACKAGE] is a package to install. Multiple packages can be specified."
+  echo "Options:"
+  echo "  --help                   print this help."
+  echo "  --version                print version"
+  echo "  -u, --update, --upgrade  updates installed z/OS Open Tools packages."
+  echo "  --install-or-upgrade     installs the package if not installed, or upgrades the package if installed."
+  echo "  --reinstallx             reinstall already installed z/OS Open Tools packages."
+  echo "  --nosymlink              do not integrate into filesystem through symlink redirection."
+  echo "  --release-line [stable, dev] the release line to build off of."
+  echo "  --no-deps                do not install dependencies."
+  echo "  --cache-only             do not install dependencies."
+  echo "  --no-set-active          do not change the pinned version"
+  echo "  --skip-upgrade           do not upgrade."
+  echo "  --yes, -y                automatically answer yes to prompts."
+  echo "  --select                 select a version to install."
+  echo "  -v                       run in verbose mode"
+  echo "  --download-only          download package to current directory"
+  echo "  --local-install          download and unpackage to current directory"
+  echo "  --all                    download/install all z/OS Open Tools packages"
 }
 
 installDependencies()
