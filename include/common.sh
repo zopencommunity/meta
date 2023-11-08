@@ -319,9 +319,10 @@ getScreenCols()
   if  [ -t 1 ] && [ -t 2 ]; then
     # Note tput does not handle ssh sessions too well...
     stty | awk -F'[/=;]' '/columns/ { print $4}' | tr -d " "
+  elif [ ! -z ${COLUMNS} ]; then
+    echo "${COLUMNS}"
   else
-    # If no tty, return a default column length
-    echo 120
+    echo "$(tput cols)"
   fi
 }
 
