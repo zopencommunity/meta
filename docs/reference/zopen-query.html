@@ -1,5 +1,5 @@
 <!-- Creator     : groff version 1.22.3 -->
-<!-- CreationDate: Tue Nov  7 19:39:38 2023 -->
+<!-- CreationDate: Tue Nov  7 23:43:56 2023 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -45,49 +45,51 @@
 
 
 <p style="margin-left:11%; margin-top: 1em"><b>zopen-query</b>
-[<i>OPTION</i>] [<i>PACKAGE</i>]</p>
+[<i>OPTION</i>] [<i>VERB</i>] [<i>PACKAGE</i>]</p>
 
 <h2>DESCRIPTION
 <a name="DESCRIPTION"></a>
 </h2>
 
 
-<p style="margin-left:11%; margin-top: 1em">zopen query is
-a utility for z/OS Open Tools to query packages and
+
+<p style="margin-left:11%; margin-top: 1em">zopen&minus;query
+&minus; a utility for z/OS Open Tools to query packages and
 repos.</p>
 
-<p style="margin-left:22%; margin-top: 1em">PACKAGE is an
-optional list of one or more packages.</p>
-
-<h2>OPTIONS
-<a name="OPTIONS"></a>
-</h2>
-
+<p style="margin-left:22%; margin-top: 1em">VERB is the
+action to take, which is one of</p>
 
 <table width="100%" border="0" rules="none" frame="void"
        cellspacing="0" cellpadding="0">
 <tr valign="top" align="left">
 <td width="11%"></td>
-<td width="9%">
-
-
-<p style="margin-top: 1em"><b>&minus;&minus;help</b></p></td>
-<td width="2%"></td>
-<td width="23%">
-
-
-<p style="margin-top: 1em">print this help</p></td>
 <td width="55%">
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;list</b>,
+<b>&minus;&minus;remote&minus;search</b>,
+<b>&minus;&minus;installed</b></p> </td>
+<td width="34%">
 </td></tr>
 </table>
 
-
-<p style="margin-left:11%;"><b>&minus;&minus;version</b></p>
-
-<p style="margin-left:22%;">print version</p>
+<p style="margin-left:22%; margin-top: 1em">PACKAGE is a
+package, specified for
+<b>&minus;&minus;remote&minus;search</b></p>
 
 <table width="100%" border="0" rules="none" frame="void"
        cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+
+
+<p><b>Verbs:</b></p><td width="11%"></td>
+<td width="9%"></td>
+<td width="2%"></td>
+<td width="53%">
+</td>
+<td width="25%">
+</td></tr>
 <tr valign="top" align="left">
 <td width="11%"></td>
 <td width="9%">
@@ -112,20 +114,13 @@ available z/OS Open Tools</p>
 <p style="margin-left:11%;"><b>&minus;i</b>,
 <b>&minus;&minus;installed</b></p>
 
-<p style="margin-left:22%;">list install z/OS Open
+<p style="margin-left:22%;">list installed z/OS Open
 Tools.</p>
 
+<h2>OPTIONS
+<a name="OPTIONS"></a>
+</h2>
 
-<p style="margin-left:11%;"><b>&minus;&minus;upgradeable</b></p>
-
-<p style="margin-left:22%;">list packages where an upgrade
-is available.</p>
-
-<p style="margin-left:11%;"><b>&minus;wp</b>,
-<b>&minus;&minus;whatprovides</b></p>
-
-<p style="margin-left:22%;">which installed package
-provided a file.</p>
 
 <table width="100%" border="0" rules="none" frame="void"
        cellspacing="0" cellpadding="0">
@@ -134,12 +129,12 @@ provided a file.</p>
 <td width="3%">
 
 
-<p><b>&minus;v</b></p></td>
+<p style="margin-top: 1em"><b>&minus;v</b></p></td>
 <td width="8%"></td>
 <td width="30%">
 
 
-<p>run in verbose mode.</p></td>
+<p style="margin-top: 1em">run in verbose mode.</p></td>
 <td width="48%">
 </td></tr>
 </table>
@@ -162,12 +157,27 @@ output.</p>
 <p style="margin-left:22%;">suppress version information,
 return package names.</p>
 
-<p style="margin-left:11%;"><b>&minus;&minus;filter</b>
-COLOR</p>
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="9%">
 
-<p style="margin-left:22%;">apply COLOR (quality) filter.
-green: all pass, blue: most pass, yellow: some pass, red: no
-pass, grey: skipped</p>
+
+<p><b>&minus;&minus;help</b></p></td>
+<td width="2%"></td>
+<td width="23%">
+
+
+<p>print this help</p></td>
+<td width="55%">
+</td></tr>
+</table>
+
+
+<p style="margin-left:11%;"><b>&minus;&minus;version</b></p>
+
+<p style="margin-left:22%;">print version</p>
 
 <h2>AUTHOR
 <a name="AUTHOR"></a>
