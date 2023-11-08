@@ -7,7 +7,6 @@ This page provides information about the zopen interface. Click on any of the zo
 * [zopen-compute-builddeps](/reference/zopen-compute-builddeps)
 * [zopen-generate](/reference/zopen-generate)
 * [zopen-help2man](/reference/zopen-help2man)
-* [zopen-importenvs](/reference/zopen-importenvs)
 * [zopen-init](/reference/zopen-init)
 * [zopen-install](/reference/zopen-install)
 * [zopen-md2man](/reference/zopen-md2man)

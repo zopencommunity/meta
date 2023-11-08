@@ -1,5 +1,5 @@
 <!-- Creator     : groff version 1.22.3 -->
-<!-- CreationDate: Tue Nov  7 16:54:31 2023 -->
+<!-- CreationDate: Tue Nov  7 19:39:38 2023 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -21,7 +21,10 @@
 <h1 align="center">ZOPEN-REMOVE</h1>
 
 <a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
 <a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#OPTIONS">OPTIONS</a><br>
+<a href="#EXAMPLES">EXAMPLES</a><br>
 <a href="#AUTHOR">AUTHOR</a><br>
 <a href="#COPYRIGHT">COPYRIGHT</a><br>
 
@@ -36,24 +39,87 @@
 <p style="margin-left:11%; margin-top: 1em">zopen-remove
 &minus; manual page for zopen-remove 0.8.0</p>
 
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>zopen</b>
+<i>remove</i> [<i>OPTION</i>] <i>PACKAGE</i></p>
+
 <h2>DESCRIPTION
 <a name="DESCRIPTION"></a>
 </h2>
 
 
-<p style="margin-left:11%; margin-top: 1em">zopen remove is
-a utility to remove installed z/OS Open Tools packages.
-Syntax: zopen remove [&lt;option&gt;]* &lt;package,
-...&gt;</p>
 
-<p style="margin-left:22%; margin-top: 1em">where
-&lt;option&gt; may be one or more of:
-<b>&minus;&minus;help</b>: print this help
-<b>&minus;&minus;version</b>: print version
-<b>&minus;p</b>|&minus;&minus;purge: remove package, the
-versioned directory and any cached file <b>&minus;v</b>: run
-in verbose mode and &lt;package&gt; is a list of one or more
-projects to uninstall</p>
+<p style="margin-left:11%; margin-top: 1em">zopen&minus;remove
+&minus; remove installed z/OS Open Tools packages.</p>
+
+<p style="margin-left:22%; margin-top: 1em">PACKAGE is a
+list of one or more projects to uninstall</p>
+
+<h2>OPTIONS
+<a name="OPTIONS"></a>
+</h2>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="9%">
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;help</b></p></td>
+<td width="2%"></td>
+<td width="23%">
+
+
+<p style="margin-top: 1em">print this help</p></td>
+<td width="55%">
+</td></tr>
+</table>
+
+
+<p style="margin-left:11%;"><b>&minus;&minus;version</b></p>
+
+<p style="margin-left:22%;">print version</p>
+
+<p style="margin-left:11%;"><b>&minus;p</b>,
+<b>&minus;&minus;purge</b></p>
+
+<p style="margin-left:22%;">remove package, the versioned
+directory and any cached file</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="3%">
+
+
+<p><b>&minus;v</b></p></td>
+<td width="8%"></td>
+<td width="29%">
+
+
+<p>run in verbose mode</p></td>
+<td width="49%">
+</td></tr>
+</table>
+
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em">zopen&minus;remove
+man&minus;db</p>
+
+<p style="margin-left:22%;">Remove the man&minus;db
+package</p>
 
 <h2>AUTHOR
 <a name="AUTHOR"></a>

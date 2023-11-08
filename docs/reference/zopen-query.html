@@ -1,5 +1,5 @@
 <!-- Creator     : groff version 1.22.3 -->
-<!-- CreationDate: Tue Nov  7 16:54:31 2023 -->
+<!-- CreationDate: Tue Nov  7 19:39:38 2023 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -21,7 +21,9 @@
 <h1 align="center">ZOPEN-QUERY</h1>
 
 <a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
 <a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#OPTIONS">OPTIONS</a><br>
 <a href="#AUTHOR">AUTHOR</a><br>
 <a href="#COPYRIGHT">COPYRIGHT</a><br>
 
@@ -36,91 +38,136 @@
 <p style="margin-left:11%; margin-top: 1em">zopen-query
 &minus; manual page for zopen-query 0.8.0</p>
 
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>zopen-query</b>
+[<i>OPTION</i>] [<i>PACKAGE</i>]</p>
+
 <h2>DESCRIPTION
 <a name="DESCRIPTION"></a>
 </h2>
 
 
 <p style="margin-left:11%; margin-top: 1em">zopen query is
-a utility for z/OS Open Tools to query packages and repos.
-Syntax: zopen&minus;query [&lt;option&gt;]*
-[&lt;package]*</p>
+a utility for z/OS Open Tools to query packages and
+repos.</p>
 
-<p style="margin-left:22%; margin-top: 1em">where
-&lt;option&gt; may be one or more of:
-<b>&minus;&minus;help</b>: print this help
-<b>&minus;&minus;version</b>: print version
-<b>&minus;&minus;list</b>: list all available z/OS Open
-Tools. <b>&minus;&minus;remote&minus;search</b>: regex match
-package against available z/OS Open Tools <b>&minus;i</b> :
-<b>&minus;&minus;installed</b>: list install z/OS Open
-Tools.</p>
+<p style="margin-left:22%; margin-top: 1em">PACKAGE is an
+optional list of one or more packages.</p>
+
+<h2>OPTIONS
+<a name="OPTIONS"></a>
+</h2>
+
 
 <table width="100%" border="0" rules="none" frame="void"
        cellspacing="0" cellpadding="0">
 <tr valign="top" align="left">
 <td width="11%"></td>
-<td width="89%">
+<td width="9%">
 
 
-
-<p style="margin-top: 1em"><b>&minus;&minus;upgradeable</b>:
-list packages where an upgrade is available.</p></td></tr>
-<tr valign="top" align="left">
-<td width="11%"></td>
-<td width="89%">
+<p style="margin-top: 1em"><b>&minus;&minus;help</b></p></td>
+<td width="2%"></td>
+<td width="23%">
 
 
-<p style="margin-top: 1em"><b>&minus;wp</b> :
-<b>&minus;&minus;whatprovides</b>: which installed package
-provided a file.</p></td></tr>
-<tr valign="top" align="left">
-<td width="11%"></td>
-<td width="89%">
-
-
-<p style="margin-top: 1em"><b>&minus;v</b>: run in verbose
-mode.</p> </td></tr>
-<tr valign="top" align="left">
-<td width="11%"></td>
-<td width="89%">
-
-
-<p style="margin-top: 1em"><b>&minus;d</b> |
-<b>&minus;&minus;details</b>: include full details for
-listings.</p> </td></tr>
-<tr valign="top" align="left">
-<td width="11%"></td>
-<td width="89%">
-
-
-
-<p style="margin-top: 1em"><b>&minus;&minus;no&minus;header</b>:
-suppress the header for the output.</p></td></tr>
+<p style="margin-top: 1em">print this help</p></td>
+<td width="55%">
+</td></tr>
 </table>
 
-<p><b>&minus;&minus;no&minus;version</b>:</p></table>
+
+<p style="margin-left:11%;"><b>&minus;&minus;version</b></p>
+
+<p style="margin-left:22%;">print version</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="9%">
+
+
+<p><b>&minus;&minus;list</b></p></td>
+<td width="2%"></td>
+<td width="53%">
+
+
+<p>list all available z/OS Open Tools.</p></td>
+<td width="25%">
+</td></tr>
+</table>
+
+
+<p style="margin-left:11%;"><b>&minus;&minus;remote&minus;search</b></p>
+
+<p style="margin-left:22%;">regex match package against
+available z/OS Open Tools</p>
+
+<p style="margin-left:11%;"><b>&minus;i</b>,
+<b>&minus;&minus;installed</b></p>
+
+<p style="margin-left:22%;">list install z/OS Open
+Tools.</p>
+
+
+<p style="margin-left:11%;"><b>&minus;&minus;upgradeable</b></p>
+
+<p style="margin-left:22%;">list packages where an upgrade
+is available.</p>
+
+<p style="margin-left:11%;"><b>&minus;wp</b>,
+<b>&minus;&minus;whatprovides</b></p>
+
+<p style="margin-left:22%;">which installed package
+provided a file.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="3%">
+
+
+<p><b>&minus;v</b></p></td>
+<td width="8%"></td>
+<td width="30%">
+
+
+<p>run in verbose mode.</p></td>
+<td width="48%">
+</td></tr>
+</table>
+
+<p style="margin-left:11%;"><b>&minus;d</b>,
+<b>&minus;&minus;details</b></p>
+
+<p style="margin-left:22%;">include full details for
+listings.</p>
+
+
+<p style="margin-left:11%;"><b>&minus;&minus;no&minus;header</b>,</p>
+
+<p style="margin-left:22%;">suppress the header for the
+output.</p>
+
+
+<p style="margin-left:11%;"><b>&minus;&minus;no&minus;version</b>,</p>
 
 <p style="margin-left:22%;">suppress version information,
 return package names.</p>
 
-<table width="100%" border="0" rules="none" frame="void"
-       cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="11%"></td>
-<td width="89%">
+<p style="margin-left:11%;"><b>&minus;&minus;filter</b>
+COLOR</p>
 
-
-<p style="margin-top: 1em"><b>&minus;&minus;filter</b>
-&lt;color&gt;: apply filter based on quality (green &minus;
-all tests passing, blue &minus; most tests passing, yellow
-&minus; some tests passing, red &minus; no tests passing, or
-skipped (no filter by default))</p></td></tr>
-</table>
-
-<p style="margin-left:22%; margin-top: 1em">and
-&lt;package&gt; is an optional list of one or more
-packages.</p>
+<p style="margin-left:22%;">apply COLOR (quality) filter.
+green: all pass, blue: most pass, yellow: some pass, red: no
+pass, grey: skipped</p>
 
 <h2>AUTHOR
 <a name="AUTHOR"></a>
