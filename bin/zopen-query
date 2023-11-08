@@ -16,26 +16,39 @@ setupMyself()
 }
 setupMyself
 
+filter_implemented=false
+upgradeable_implemented=false
+whatprovides_implemented=false
+
 printSyntax()
 {
   args=$*
-  echo "zopen query is a utility for z/OS Open Tools to query packages and repos."
-  echo "Usage: zopen-query [OPTION] [PACKAGE]"
-  echo "  PACKAGE is an optional list of one or more packages."
-  echo "Options:"
-  echo "  --help           print this help"
-  echo "  --version        print version" 
+  echo "${ME} -  a utility for z/OS Open Tools to query packages and repos."
+  echo "Usage: ${ME} [OPTION] [VERB] [PACKAGE]"
+  echo "  VERB is the action to take, which is one of"
+  echo "    --list, --remote-search, --installed"
+  echo "  PACKAGE is a package, specified for --remote-search"
+  echo "Verbs:"
   echo "  --list           list all available z/OS Open Tools."
   echo "  --remote-search  regex match package against available z/OS Open Tools"
-  echo "  -i, --installed  list install z/OS Open Tools."
+  echo "  -i, --installed  list installed z/OS Open Tools."
+if ${upgradeable_implemented}; then
   echo "  --upgradeable    list packages where an upgrade is available."
+fi
+if ${whatprovides_implemented}; then
   echo "  -wp, --whatprovides  which installed package provided a file."
+fi
+  echo "Options:"
   echo "  -v               run in verbose mode."
   echo "  -d, --details    include full details for listings."
   echo "  --no-header,     suppress the header for the output."
   echo "  --no-version,    suppress version information, return package names."
+if ${filter_implemented}; then
   echo "  --filter COLOR   apply COLOR (quality) filter."
-  echo "                   green: all pass, blue: most pass, yellow: some pass, red: no pass, grey: skipped"
+  echo "                   green: all pass, blue: most pass, yellow: some pass, red: no pass, gray: skipped"
+fi
+  echo "  --help           print this help"
+  echo "  --version        print version" 
 }
 
 colorizepct()
@@ -44,13 +57,13 @@ colorizepct()
   if [ -z "${percentage}" ]; then
     colored="${RED}"
   elif [ ! "${percentage}" = "${percentage#Skipped}" ]; then
-    colored="${RED}"
+    colored="${GRAY}"
   elif [ ${percentage} -eq 100 ]; then
     colored="${GREEN}"
   elif [ ${percentage} -gt 50 ]; then
     colored="${BLUE}"
   elif [ ${percentage} -gt 0 ]; then
-    colored="{YELLOW}"
+    colored="${YELLOW}"
   else
     colored="${RED}"
   fi
@@ -104,7 +117,7 @@ printDetailListEntries()
             continue
           fi
         fi
-        if ! ${noversions}; then
+        if ! ${noversion}; then
           printf "%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s\n" "${repo}" "${originalVersion}" "${dotversion}" "${latestVersion}"
         else
           printf "%s\n" "${repo}"
@@ -203,7 +216,7 @@ printInstalledEntries()
       continue
     fi
 
-    if ${noversions}; then
+    if ${noversion}; then
       printf "%s\n" "${repo}"
       continue
     fi
@@ -284,7 +297,7 @@ whatProvides()
 args=$*
 verbose=false
 noheader=false
-noversions=false
+noversion=false
 localoption=true
 upgradeable=false
 details=0
@@ -325,8 +338,8 @@ while [[ $# -gt 0 ]]; do
   "--upgradeable")
     upgradeable=true
     ;;
-  "--no-versions")
-    noversions=true
+  "--no-version")
+    noversion=true
     noheader=true # headers do not mean anything without versions!
     ;;
   "-f" | "--filter")
@@ -364,12 +377,14 @@ export SSL_CERT_FILE="${ZOPEN_CA}"
 export GIT_SSL_CAINFO="${ZOPEN_CA}"
 export CURL_CA_BUNDLE="${ZOPEN_CA}"
 
-if [ ! -z "${filter}" ]; then
-  filter=$(echo "${filter}" | awk '{print tolower($0)}')
-  case "${filter}" in
-  blue | green | yellow | red | skipped) ;;
-  *) printError "The filter must be one of blue|green|yellow|red" ;;
-  esac
+if ${filter_implemented}; then
+  if [ ! -z "${filter}" ]; then
+    filter=$(echo "${filter}" | awk '{print tolower($0)}')
+    case "${filter}" in
+    blue | green | yellow | red | gray) ;;
+    *) printError "The filter must be one of blue|green|yellow|red|gray" ;;
+    esac
+  fi
 fi
 
 if ! ${localoption}; then
