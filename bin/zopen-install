@@ -575,14 +575,6 @@ if [ -z "${chosenRepos}" ]; then
     addCleanupTrapCmd "${killph}"
     chosenRepos="$(${MYDIR}/zopen-query list --installed --no-header --no-versions)"
     ${killph} 2> /dev/null # if the timer is not running, the kill will fail
-  elif ${all}; then
-    if ! ${yesToPrompts}; then
-      printInfo "Enter 'all' to confirm full installation [takes a long time so be sure!]:"
-      confirmall=$(getInput)
-      if [ ! "xall" = "x${confirmall}" ]; then
-        printError "Cancelling full installation"
-      fi
-    fi
   fi
 fi
 
