@@ -42,10 +42,7 @@ Options:
                     globally configure the release line for package
                     installs to enable Development (DEV) packages; the
                     default is for a system to use STABLE packages
-      --paxrepodir <RPEO>
-                    configure a global location for pax file
-                    installation source
-      --paxrepodir <RPEO>
+      --paxrepodir <REPO>
                     configure a global location for pax file
                     installation source
   -f, --fs-layout <LAYOUT>
@@ -120,13 +117,15 @@ while [ $# -gt 0 ]; do
       exit 0
       ;;
     "-v" | "--verbose")
+      # shellcheck disable=SC2034
       verbose=true
       ;;
     "--version")
-      zopen-version $ME
+      zopen-version "${ME}"
       exit 0
       ;;
     "--debug") 
+      # shellcheck disable=SC2034
       debug=true
       ;;
     "--yes" | "-y")
@@ -388,6 +387,7 @@ jqdir=$(ls "${rootfs}/boot" | grep jq | head -1)
 chmod -R 755 "${rootfs}/boot/${jqdir}"
 curwd="${PWD}"
 cd "${rootfs}/boot/${jqdir}/" || printError "Could not access jq bootstrap in directory '${rootfs}/boot/${jqdir}/'. Re-run 'zopen init' to retry"
+# shellcheck disable=SC1091
 . ./.env
 cd "${curwd}"  || printError "Could not change to ${curwd}. Re-run 'zopen init' to retry"
 
@@ -399,11 +399,13 @@ runAndLog "${MYDIR}/zopen-update-cacert -f ${ZOPEN_CA} -v"
 export ZOPEN_CA="${ZOPEN_CA}/cacert.pem"
 
 printInfo "- Sourcing environment"
+# shellcheck disable=SC1090
 . "${configFile}"
 printInfo "- Using bootstrapped curl and jq to install updated versions (if available)"
 toolInstall=$(runAndLog "${MYDIR}/zopen-install -y curl jq meta")
 toolInstall=$?
 [ ${toolInstall} -ne 0 ] && printError "Unable to install curl, jq and/or meta; see previous errors and retry the initilisation using the '--re-init' parameter"
+# shellcheck disable=SC1090
 . "${configFile}"
 
 printInfo "- zopen bootstrapping complete"
