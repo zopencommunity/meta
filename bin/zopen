@@ -31,11 +31,12 @@ Command:
   init              initializes a zopen environment at the specified location
   install           installs one or more z/OS Open Tools packages
   list              lists information about z/OS Open Tools packages
-  upgrade           upgrades already z/OS Open Tools packages
+  upgrade           upgrades existing z/OS Open Tools packages
   remove            removes installed z/OS Open Tools packages
   build             builds the enclosing z/OS Open Tools git-cloned package
   alt               manage alternate versions of z/OS Open Tools packages
   clean             cleans up your zopen environment
+  query             list local or remote information about z/OS Open Tools packages
   generate          generates a new zopen project
   update-cacert     update the cacert.pem file used by z/OS Open Tools
 
@@ -54,7 +55,7 @@ SEE ALSO:
   zopen-version(1)
   zopen-init(1)
   zopen-install(1)
-  zopen-list(1)
+  zopen-query(1)
   zopen-remove(1)
   zopen-build(1)
   zopen-alt(1)
@@ -79,7 +80,7 @@ version=false
 for arg in $*; do
   case "${arg}" in
     "alt"|"build"|"clean"|"generate"|"init"|"install"|\
-    "remove"|"update-cacert")
+    "query"|"remove"|"update-cacert")
       subcmd="zopen-${arg}"
       ;;
     "list")
