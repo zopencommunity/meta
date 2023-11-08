@@ -17,6 +17,7 @@ PRODUCT_VERSION=$(jq -r '.product.version' metadata.json)
 PRODUCT_RELEASE=$(jq -r '.product.release' metadata.json)
 PRODUCT_SUMMARY=$(jq -r '.product.summary' metadata.json)
 PRODUCT_DESCRIPTION=$(jq -r '.product.description' metadata.json)
+RUNTIME_DEPENDENCIES=$(jq -r '.product.runtime_dependencies[].name' metadata.json  | sort -u | xargs)
 
 if [ ! -f "$PRODUCT_PAX" ]; then
   echo "$PRODUCT_PAX does not exist"
@@ -48,12 +49,28 @@ LABEL description=\"${PRODUCT_DESCRIPTION}\"
 LABEL specification=2.0.0
 LABEL summary=\"${PRODUCT_SUMMARY}\"
 LABEL community_unsupported=true
-LABEL vendor=\"ZOSOpenTools\""
-
+LABEL vendor=\"ZOSOpenTools\"
+LABEL runtimedeps=\"${RUNTIME_DEPENDENCIES}\""
 
   mkdir -p ".zpm"
-  cat "${DIR_NAME}/setup.sh" | sed -e "s#\. ./.env#cd \$INSTALL_DIR; . ./.env; cd -#" -e "s#\${root}/setup.sh#\${root}/.env/install.sh#"  > .zpm/install.sh
-  cp "${DIR_NAME}/.env" .zpm/.env
+  
+  cat << ZZ > .zpm/install.sh
+#!/bin/sh
+if [ -z "\$INSTALL_DIR" ]; then
+  echo "\$INSTALL_DIR is not set. This script was likely not run via zpm."
+  exit 1
+fi
+
+set -e
+cd "\$INSTALL_DIR/${DIR_NAME}"
+./setup.sh
+ZZ
+
+  cat << ZZ > .zpm/.env
+cd "\$INSTALL_DIR/${DIR_NAME}";
+. ./.env
+cd -
+ZZ
 
   if [ -f "${ZOPEN_IMAGE_CONTAINERFILE_NAME}" ]; then
     rm -f "${ZOPEN_IMAGE_CONTAINERFILE_NAME}"
@@ -79,16 +96,16 @@ LABEL vendor=\"ZOSOpenTools\""
   fi
 }
 
-if [ -z $ZOPEN_IMAGE_REGISTRY ]; then
+if [ -z "${ZOPEN_IMAGE_REGISTRY}" ]; then
   echo "Environment variable ZOPEN_IMAGE_REGISTRY is needed to push an OCI image"
   exit 4;
 fi
-if [ -z $ZOPEN_IMAGE_REGISTRY_ID ]; then
+if [ -z "${ZOPEN_IMAGE_REGISTRY_ID}" ]; then
   echo "Environment variable ZOPEN_IMAGE_REGISTRY_ID is needed to push an OCI image"
   exit 4;
 fi
-if [ -z $ZOPEN_IMAGE_REGISTRY_KEY_FILE ] || [ ! -r $ZOPEN_IMAGE_REGISTRY_KEY_FILE ]; then
-  echo "Environment variable ZOPEN_IMAGE_REGISTRY_KEY_FILE is needed to push an OCI image"
+if [ -z "${ZOPEN_IMAGE_REGISTRY_KEY}" ]; then
+  echo "Environment variable ZOPEN_IMAGE_REGISTRY_KEY is needed to push an OCI image"
   exit 4;
 fi
 if [ -z "$(command -v ${ZOPEN_PODMAN_BINARY})" ]; then
@@ -97,6 +114,6 @@ if [ -z "$(command -v ${ZOPEN_PODMAN_BINARY})" ]; then
 fi
 
 # try logging in first to make sure we're ok
-cat $ZOPEN_IMAGE_REGISTRY_KEY_FILE | "${ZOPEN_PODMAN_BINARY}" login $ZOPEN_IMAGE_REGISTRY -u $ZOPEN_IMAGE_REGISTRY_ID --password-stdin
+echo $ZOPEN_IMAGE_REGISTRY_KEY_FILE | "${ZOPEN_PODMAN_BINARY}" login $ZOPEN_IMAGE_REGISTRY -u $ZOPEN_IMAGE_REGISTRY_ID --password-stdin
 
 generateOCI

@@ -1426,6 +1426,7 @@ rm \".installing\"
 zz
 
   echo "#!/bin/sh" > "${ZOPEN_INSTALL_DIR}/install_test.sh"
+  chmod +x "${ZOPEN_INSTALL_DIR}/install_test.sh"
   if command -V "${ZOPEN_APPEND_TO_VALIDATE_CODE}" > /dev/null 2>&1; then
     printVerbose "Appending additional validate code..."
     append_to_validate="$(${ZOPEN_APPEND_TO_VALIDATE_CODE})"
