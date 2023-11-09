@@ -1588,7 +1588,6 @@ cat <<zz >> "${ZOPEN_INSTALL_DIR}/metadata.json"
   ]
 }}
 zz
-   jq -e '.' "${ZOPEN_INSTALL_DIR}/metadata.json"
   if ! jq -e '.' "${ZOPEN_INSTALL_DIR}/metadata.json" 1>/dev/null 2>&1; then
     printError "${ZOPEN_INSTALL_DIR}/metadata.json contains invalid json: $(cat ${ZOPEN_INSTALL_DIR}/metadata.json)"
   fi 
