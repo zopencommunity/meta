@@ -6,6 +6,11 @@ on:
       - created
   pull_request_target:
     types: [opened, synchronize, reopened]
+    paths-ignore:
+      - 'cicd*.groovy'
+      - '**/LICENSE'
+      - 'docs/**'
+      - 'README.md'
   workflow_dispatch:
 
 jobs:
