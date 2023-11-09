@@ -316,8 +316,15 @@ ansiline()
 
 getScreenCols()
 {
-  # Note tput does not handle ssh sessions too well...
-  stty | awk -F'[/=;]' '/columns/ { print $4}' | tr -d " "
+  # If stdout/stderr are associated with a tty terminal
+  if  [ -t 1 ] && [ -t 2 ]; then
+    # Note tput does not handle ssh sessions too well...
+    stty | awk -F'[/=;]' '/columns/ { print $4}' | tr -d " "
+  elif [ ! -z "${COLUMNS}" ]; then
+    echo "${COLUMNS}"
+  else
+    echo "$(tput cols)"
+  fi
 }
 
 zossed()
