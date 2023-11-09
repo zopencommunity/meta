@@ -567,7 +567,6 @@ checkEnv()
       implicitDeps="${implicitDeps} bzip2"
     fi
     printVerbose "Implicitly adding tarball dependencies: ${implicitDeps}"
-    ZOPEN_DEPS="${implicitDeps} ${ZOPEN_DEPS}"
   elif [ "${ZOPEN_TYPE}x" = "GITx" ]; then
     if [ -z "${ZOPEN_URL}" ]; then
       printError "ZOPEN_STABLE_URL, ZOPEN_DEV_URL, ZOPEN_URL or ZOPEN_GIT_URL needs to be defined"
@@ -577,8 +576,8 @@ checkEnv()
     fi
     implicitDeps="${implicitDeps}"
     printVerbose "Implicitly adding git dependencies: ${implicitDeps}"
-    ZOPEN_DEPS="${implicitDeps} ${ZOPEN_DEPS}"
   fi 
+  ZOPEN_DEPS="${implicitDeps} ${ZOPEN_DEPS}"
 
   ZOPEN_COMMIT_SHA="$(git rev-parse HEAD)"
 
@@ -1589,6 +1588,7 @@ cat <<zz >> "${ZOPEN_INSTALL_DIR}/metadata.json"
   ]
 }}
 zz
+   jq -e '.' "${ZOPEN_INSTALL_DIR}/metadata.json"
   if ! jq -e '.' "${ZOPEN_INSTALL_DIR}/metadata.json" 1>/dev/null 2>&1; then
     printError "${ZOPEN_INSTALL_DIR}/metadata.json contains invalid json: $(cat ${ZOPEN_INSTALL_DIR}/metadata.json)"
   fi 
