@@ -623,9 +623,14 @@ installArray=""
 if ${all}; then
   if ! ${yesToPrompts}; then
     # Sum up the pax size + expanded size of the latest releases of each port
-    allSize=$(jq '.release_data | to_entries | map(select(.value | length > 0)) | map(.value[0].assets[0]) | reduce .[] as $item ({}; . + {($item.name): ($item.size + $item.expanded_size)}) | [.[]] | add' ${JSON_CACHE})
-    megabytes=$(echo "scale=2; ${allSize} / (1024 * 1024)" | bc)
-    printInfo "You have chosen to install all tools. An estimated ${megabytes} MB of additional disk space will be used."
+    spaceRequiredBytes=$(jq '.release_data | to_entries | map(select(.value | length > 0)) | map(.value[0].assets[0]) | reduce .[] as $item ({}; . + {($item.name): ($item.size + $item.expanded_size)}) | [.[]] | add' ${JSON_CACHE})
+    spaceRequiredMB=$(echo "scale=0; ${spaceRequiredBytes} / (1024 * 1024)" | bc)
+    availableSpaceMB=$(/bin/df -m ${ZOPEN_ROOTFS} | sed "1d" | awk '{ print $3 }' | awk -F'/' '{ print $1 }')
+    
+    printInfo "You have chosen to install all tools. An estimated ${spaceRequiredMB} MB of additional disk space will be used."
+    if [ $availableSpaceMB -lt $spaceRequiredMB ]; then
+      printWarning "Your zopen file-system ($ZOPEN_ROOTFS) only has ${availableSpaceMB} MB of available space."
+    fi
     printInfo "Enter 'all' to confirm full installation [takes a long time so be sure!]:"
     confirmall=$(getInput)
     if [ ! "xall" = "x${confirmall}" ]; then
