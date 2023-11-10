@@ -238,7 +238,7 @@ install/
 EOT
 printInfo "${name}port/.gitignore created"
 
-metalicense="${ZOPEN_ROOTFS}/usr/local/zopen/meta/meta-main/LICENSE"
+metalicense="${ZOPEN_ROOTFS}/usr/local/zopen/meta/meta/LICENSE"
 ourlicense="${name}port/LICENSE"
 
 if [ -e "${ourlicense}" ]; then
