@@ -51,52 +51,26 @@ HELPDOC
 cleanUnused()
 {
   needle=$1
-  found=$(zosfind "${ZOPEN_PKGINSTALL}" -name "*/${needle}-*" -prune -type d)
-  if [ -z "${found}" ]; then
-    printInfo "No versions of package '${needle}' found for removal"
-    return
-  fi
+  [ -z "${needle}" ] && return 
+  current=$(getCurrentVersionDir "${needle}")
 
-  if isPackageActive "${needle}"; then
-    printVerbose "Getting the current versions directory [if any]"
-    deref=$(cd "${ZOPEN_PKGINSTALL}/${needle}/${needle}" && pwd -P)
+  if [ -n "${current}" ]; then
+    current=$(basename "${current}")
   else
-    printInfo "No currently installed version of package '${needle}'. Removing all versions"
+    printInfo "No currently active version of '${needle}'; removing all versions"
   fi
-
-  i=0
-  current=0
-  # the below would be simpler, but creates a subshell so can't get the number of entries outside!
-  #  echo "${found}" | xargs | tr ' ' '\n' | while read repo; do
-  TMP_FIFO_PIPE="${HOME}/altselect.pipe"
-  [ ! -p "${TMP_FIFO_PIPE}" ] || rm -f "${TMP_FIFO_PIPE}"
-  mkfifo "${TMP_FIFO_PIPE}"
-  echo "${found}" | xargs | tr ' ' '\n' >> "${TMP_FIFO_PIPE}" &
+  cd "${ZOPEN_PKGINSTALL}/${needle}" && zosfind . -name "./*" -prune -type d |
   while read repo; do
-    printVerbose "Parsing repo: '${repo}' as '${repo#"${ZOPEN_PKGINSTALL}"/}'"
-    if [ "${repo}" = "${repo#"${ZOPEN_PKGINSTALL}"/}" ]; then
-      printVerbose "Working around possible bug in FIFO that converts initial char to alert/bell 0x07/'\a'"
-      if ! $(type od); then
-        printVerbose "Displaying erroneous string"
-        out=$(echo "${repo}" | od -cx)
-        printVerbose "String details:\n '${out}'"
-      fi
-      repo="/$(echo ${repo} | cut -b 2-)"
-      printVerbose "Repo:='${repo}'"
-      syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_W}" "${CAT_FILE},${CAT_SYS}" "CLEAN" "cleanUnused" "FIFO character issue while reading from ${TMP_FIFO_PIPE}. Workaround applied"
-    fi
-    i=$(expr ${i} + 1)
-    if [ "${deref#"${ZOPEN_PKGINSTALL}"/}" = "${repo#"${ZOPEN_PKGINSTALL}"/}" ]; then
-      current=${i}
-      printInfo "${NC}${GREEN}${i}: ${repo#"${ZOPEN_PKGINSTALL}"/}  <-  current${NC}"
+    printVerbose "Parsing repo: '${repo}' as '${repo#./}'"
+    repo="${repo#./}"
+    if [ "${current}" = "${repo}" ]; then
+      printInfo "${NC}${GREEN}-> ${repo}  <- Current version${NC}"
     else
-      rm -rf "${repo}" > /dev/null 2>&1
-      printInfo "${i}: ${repo#"${ZOPEN_PKGINSTALL}"/} <- Removed"
+      echo rm -rf "${ZOPEN_PKGINSTALL}/${needle}/${repo}" #> /dev/null 2>&1
+      printInfo "-- ${repo} <- Removed"
       syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_FILE},${CAT_PACKAGE},${CAT_REMOVE}" "CLEAN" "cleanUnused" "Removed unused package at ${repo#"${ZOPEN_PKGINSTALL}"/} "
     fi
-  done < "${TMP_FIFO_PIPE}"
-  [ ! -p "${TMP_FIFO_PIPE}" ] || rm -f "${TMP_FIFO_PIPE}"
-  printInfo "- Removal of unused package versions complete"
+  done  
 }
 
 cleanDangling()
@@ -104,7 +78,8 @@ cleanDangling()
   printVerbose "Removing dangling symlinks from the file structure"
   # As packages can install to any subfolder of the zopen filesystem, need to traverse
   # along every path under that filesystem
-  if [ "${ZOPEN_ROOTFS}" = "/." ]; then
+  deref=$(cd "${ZOPEN_ROOTFS}" && pwd -P)
+  if [ "${deref}" = "/" ]; then
     printWarning "With zopen's root configured as '/', traversal to find dangling symlinks"
     printWarning "will occur on ALL mounted file systems, ALL sub-directories and will"
     printWarning "attempt to remove any dangling symlinks it finds, regardless of how they"
@@ -125,14 +100,12 @@ cleanDangling()
   ph=$!
   killph="kill -HUP ${ph}"
   addCleanupTrapCmd "${killph}"
-  flecnt=0
   zosfind "${ZOPEN_ROOTFS}" -type l -exec test ! -e {} \; -print | while read sl; do
     printVerbose "Removing symlink '${sl}'"
-    rm -f ${sl}
-    flecnt=$(expr ${flecnt} + 1)
+    rm -f "${sl}"
   done
   ${killph} 2> /dev/null # if the timer is not running, the kill will fail
-  syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_FILE}" "CLEAN" "cleanDangling" "zopen system scanned for dangling symlinks; ${flecnt} link(s) removed"
+  syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_FILE}" "CLEAN" "cleanDangling" "zopen system at '${ZOPEN_ROOTFS}' scanned for dangling symlinks"
 }
 
 cleanCache()
