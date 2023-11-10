@@ -1,5 +1,5 @@
 {
-  "timestamp": "2023-11-09T22:41:06.484102",
+  "timestamp": "2023-11-09T23:40:22.912172",
   "release_data": {
     "m4": [
       {
@@ -20897,6 +20897,38 @@
     ],
     "ctags": [
       {
+        "name": "ctags (Build 1673) - (STABLE)",
+        "date": "2023-11-10 04:25:29",
+        "tag_name": "STABLE_ctagsport_1673",
+        "assets": [
+          {
+            "name": "ctags-5.8.20231109_231553.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/ctagsport/releases/download/STABLE_ctagsport_1673/ctags-5.8.20231109_231553.zos.pax.Z",
+            "size": 612864,
+            "expanded_size": 1553834,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "1",
+            "passed_tests": "1"
+          }
+        ]
+      },
+      {
+        "name": "ctags (Build 1671) - (STABLE)",
+        "date": "2023-11-10 04:15:15",
+        "tag_name": "STABLE_ctagsport_1671",
+        "assets": [
+          {
+            "name": "ctags-5.8.20231110_040525.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/ctagsport/releases/download/STABLE_ctagsport_1671/ctags-5.8.20231110_040525.zos.pax.Z",
+            "size": 612864,
+            "expanded_size": 1553967,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "1",
+            "passed_tests": "1"
+          }
+        ]
+      },
+      {
         "name": "ctags zopen 0.7.0 (Build 1357) - (STABLE)",
         "date": "2023-09-24 20:13:46",
         "tag_name": "STABLE_ctagsport_1357",
@@ -23934,6 +23966,22 @@
       }
     ],
     "lynx": [
+      {
+        "name": "lynx (Build 1672) - (STABLE)",
+        "date": "2023-11-10 04:19:14",
+        "tag_name": "STABLE_lynxport_1672",
+        "assets": [
+          {
+            "name": "lynx-2.8.9.20231109_230553.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/lynxport/releases/download/STABLE_lynxport_1672/lynx-2.8.9.20231109_230553.zos.pax.Z",
+            "size": 5515776,
+            "expanded_size": 11947986,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "1",
+            "passed_tests": "1"
+          }
+        ]
+      },
       {
         "name": "lynx (Build 1459) - (STABLE)",
         "date": "2023-10-17 00:07:54",
