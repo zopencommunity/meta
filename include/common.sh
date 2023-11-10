@@ -229,7 +229,7 @@ deref()
   fi
 }
 
-#return 1 if brightness is dark, 0 if light, and -1 if unknown (considered to be dark as default)
+#return 1 if brightness is dark, 0 if light, and 255 if unknown (considered to be dark as default)
 darkbackground() {
   if [ "${#COLORFGBG}" -ge 3 ]; then
     bg=${COLORFGBG##*;}
@@ -239,7 +239,7 @@ darkbackground() {
       return 0
     fi
   else
-    return -1
+    return 255
   fi
 }
 
@@ -247,8 +247,11 @@ defineANSI()
 {
   # Standard tty codes
   ESC="\047"
+  # shellcheck disable=SC2034
   ERASELINE="${ESC}[2K"
+  # shellcheck disable=SC2034
   CRSRHIDE="${ESC}[?25l"
+  # shellcheck disable=SC2034
   CRSRSHOW="${ESC}[?25h"
   
   # Color-type codes, needs explicit terminal settings
@@ -265,6 +268,17 @@ defineANSI()
     BOLD="${esc}[1m"
     UNDERLINE="${esc}[4m"
     NC="${esc}[0m"
+    darkbackground
+    bg=$?
+    if [ $bg -ne 0 ]; then 
+      #if the background was set to black or unknown the header and warning color will be yellow
+      HEADERCOLOR="${YELLOW}"
+      WARNINGCOLOR="${YELLOW}"
+    else
+      #else the header and warning color will become magenta
+      HEADERCOLOR="${MAGENTA}"
+      WARNINGCOLOR="${MAGENTA}"
+    fi
   else
     # unset esc RED GREEN YELLOW BOLD UNDERLINE NC
 
@@ -280,18 +294,9 @@ defineANSI()
     BOLD=''
     UNDERLINE=''
     NC=''
-  fi
+    HEADERCOLOR=''
+    WARNINGCOLOR=''
 
-  darkbackground
-  bg=$?
-  if [ $bg -ne 0 ]; then 
-    #if the background was set to black or unknown the header and warning color will be yellow
-    HEADERCOLOR="${YELLOW}"
-    WARNINGCOLOR="${YELLOW}"
-  else
-    #else the header and warning color will become magenta
-    HEADERCOLOR="${MAGENTA}"
-    WARNINGCOLOR="${MAGENTA}"
   fi
 }
 
