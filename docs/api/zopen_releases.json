@@ -1,5 +1,5 @@
 {
-  "timestamp": "2023-11-12T00:58:28.483432",
+  "timestamp": "2023-11-12T02:18:40.195033",
   "release_data": {
     "m4": [
       {
@@ -483,433 +483,209 @@
         ]
       }
     ],
-    "automake": [
+    "autoconf": [
       {
-        "name": "automake (Build 1594) - (STABLE)",
-        "date": "2023-11-09 01:37:45",
-        "tag_name": "STABLE_automakeport_1594",
+        "name": "autoconf (Build 1654) - (STABLE)",
+        "date": "2023-11-09 13:03:32",
+        "tag_name": "STABLE_autoconfport_1654",
         "assets": [
           {
-            "name": "automake-1.16.5.20231108_184539.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/STABLE_automakeport_1594/automake-1.16.5.20231108_184539.zos.pax.Z",
-            "size": 999936,
-            "expanded_size": 2459145,
-            "runtime_dependencies": "No dependencies",
-            "total_tests": "7",
-            "passed_tests": "5"
+            "name": "autoconf-2.71.20231109_012459.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/STABLE_autoconfport_1654/autoconf-2.71.20231109_012459.zos.pax.Z",
+            "size": 1419264,
+            "expanded_size": 3650762,
+            "runtime_dependencies": "m4 perl",
+            "total_tests": "599",
+            "passed_tests": "587"
           }
         ]
       },
       {
-        "name": "automake (Build 1506) - (STABLE)",
-        "date": "2023-10-23 04:24:47",
-        "tag_name": "STABLE_automakeport_1506",
+        "name": "autoconf (Build 1543) - (STABLE)",
+        "date": "2023-11-03 16:50:11",
+        "tag_name": "STABLE_autoconfport_1543",
         "assets": [
           {
-            "name": "automake-1.16.5.20231023_020456.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/STABLE_automakeport_1506/automake-1.16.5.20231023_020456.zos.pax.Z",
-            "size": 999936,
-            "expanded_size": 2459490,
-            "runtime_dependencies": "No dependencies",
-            "total_tests": "7",
-            "passed_tests": "5"
+            "name": "autoconf-2.71.20231102_230025.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/STABLE_autoconfport_1543/autoconf-2.71.20231102_230025.zos.pax.Z",
+            "size": 1419264,
+            "expanded_size": 3619039,
+            "runtime_dependencies": "m4 perl",
+            "total_tests": "599",
+            "passed_tests": "587"
           }
         ]
       },
       {
-        "name": "automake 0.3.0-dt-stable\n1.16.5 (Build 1249) - (STABLE)",
-        "date": "2023-09-13 04:05:52",
-        "tag_name": "STABLE_automakeport_1249",
+        "name": "autoconf (Build 1510) - (STABLE)",
+        "date": "2023-10-24 08:20:31",
+        "tag_name": "STABLE_autoconfport_1510",
         "assets": [
           {
-            "name": "automake-1.16.5.20230913_013426.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/STABLE_automakeport_1249/automake-1.16.5.20230913_013426.zos.pax.Z",
-            "size": 999936,
-            "expanded_size": 2459099,
-            "runtime_dependencies": "No dependencies",
-            "total_tests": "7",
-            "passed_tests": "5"
+            "name": "autoconf-2.71.20231023_191302.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/STABLE_autoconfport_1510/autoconf-2.71.20231023_191302.zos.pax.Z",
+            "size": 1419264,
+            "expanded_size": 3619247,
+            "runtime_dependencies": "m4 perl",
+            "total_tests": "599",
+            "passed_tests": "587"
           }
         ]
       },
       {
-        "name": "automake 1.16.5 (Build 1110)",
-        "date": "2023-06-30 20:36:03",
-        "tag_name": "Releaseline_automakeport_1110",
+        "name": "autoconf 2.71\n2.71 (Build 1397) - (STABLE)",
+        "date": "2023-09-28 05:50:25",
+        "tag_name": "STABLE_autoconfport_1397",
         "assets": [
           {
-            "name": "automake-1.16.5.20230630_142215.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/Releaseline_automakeport_1110/automake-1.16.5.20230630_142215.zos.pax.Z",
-            "size": 999936,
-            "expanded_size": 2455462,
-            "runtime_dependencies": "No dependencies",
-            "total_tests": "7",
-            "passed_tests": "5"
+            "name": "autoconf-2.71.20230927_135608.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/STABLE_autoconfport_1397/autoconf-2.71.20230927_135608.zos.pax.Z",
+            "size": 1419264,
+            "expanded_size": 3613738,
+            "runtime_dependencies": "m4 perl",
+            "total_tests": "599",
+            "passed_tests": "586"
           }
         ]
       },
       {
-        "name": "automake (Build 1039)",
-        "date": "2023-06-05 07:02:01",
-        "tag_name": "Releaseline_automakeport_1039",
+        "name": "autoconf 2.71 (Build 1043)",
+        "date": "2023-06-05 09:59:30",
+        "tag_name": "Releaseline_autoconfport_1043",
         "assets": [
           {
-            "name": "automake-1.16.5.20230605_002645.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/Releaseline_automakeport_1039/automake-1.16.5.20230605_002645.zos.pax.Z",
-            "size": 999936,
-            "expanded_size": 2455395,
+            "name": "autoconf-2.71.20230604_225130.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/Releaseline_autoconfport_1043/autoconf-2.71.20230604_225130.zos.pax.Z",
+            "size": 1419264,
+            "expanded_size": 3614512,
             "runtime_dependencies": "No dependencies",
-            "total_tests": "7",
-            "passed_tests": "5"
+            "total_tests": "599",
+            "passed_tests": "586"
           }
         ]
       },
       {
-        "name": "automake (Build 958)",
-        "date": "2023-04-25 02:09:31",
-        "tag_name": "Releaseline_automakeport_958",
+        "name": "autoconf 2.71 (Build 963)",
+        "date": "2023-04-25 07:44:29",
+        "tag_name": "Releaseline_autoconfport_963",
         "assets": [
           {
-            "name": "automake-1.16.5.20230424_201900.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/Releaseline_automakeport_958/automake-1.16.5.20230424_201900.zos.pax.Z",
-            "size": 999936,
-            "expanded_size": 2455289,
+            "name": "autoconf-2.71.20230424_201410.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/Releaseline_autoconfport_963/autoconf-2.71.20230424_201410.zos.pax.Z",
+            "size": 1419264,
+            "expanded_size": 3614567,
             "runtime_dependencies": "No dependencies",
-            "total_tests": "7",
-            "passed_tests": "5"
+            "total_tests": "599",
+            "passed_tests": "586"
           }
         ]
       },
       {
-        "name": "automake (Build 894)",
-        "date": "2023-04-11 02:35:16",
-        "tag_name": "Releaseline_automakeport_894",
+        "name": "autoconf 2.71 (Build 828)",
+        "date": "2023-03-28 06:45:26",
+        "tag_name": "autoconfport_828",
         "assets": [
           {
-            "name": "automake-1.16.5.20230410_201813.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/Releaseline_automakeport_894/automake-1.16.5.20230410_201813.zos.pax.Z",
-            "size": 999936,
-            "expanded_size": 2455445,
+            "name": "autoconf-2.71.20230327_202120.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_828/autoconf-2.71.20230327_202120.zos.pax.Z",
+            "size": 1419264,
+            "expanded_size": 3614263,
             "runtime_dependencies": "No dependencies",
-            "total_tests": "7",
-            "passed_tests": "5"
+            "total_tests": "599",
+            "passed_tests": "586"
           }
         ]
       },
       {
-        "name": "automake (Build 870)",
-        "date": "2023-04-04 14:08:05",
-        "tag_name": "Releaseline_automakeport_870",
+        "name": "autoconf 2.71 (Build 699)",
+        "date": "2023-03-07 08:53:11",
+        "tag_name": "autoconfport_699",
         "assets": [
           {
-            "name": "automake-1.16.5.20230404_074559.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/Releaseline_automakeport_870/automake-1.16.5.20230404_074559.zos.pax.Z",
-            "size": 999936,
-            "expanded_size": 2455541,
+            "name": "autoconf-2.71.20230306_203846.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_699/autoconf-2.71.20230306_203846.zos.pax.Z",
+            "size": 1419264,
+            "expanded_size": 3614332,
             "runtime_dependencies": "No dependencies",
-            "total_tests": "7",
-            "passed_tests": "5"
+            "total_tests": "599",
+            "passed_tests": "586"
           }
         ]
       },
       {
-        "name": "automake (Build 825)",
-        "date": "2023-03-28 02:34:30",
-        "tag_name": "automakeport_825",
+        "name": "autoconf 2.71 (Build 633)",
+        "date": "2023-02-21 19:55:12",
+        "tag_name": "autoconfport_633",
         "assets": [
           {
-            "name": "automake-1.16.5.20230327_212946.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_825/automake-1.16.5.20230327_212946.zos.pax.Z",
-            "size": 999936,
-            "expanded_size": 2455369,
+            "name": "autoconf-2.71.20230221_083918.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_633/autoconf-2.71.20230221_083918.zos.pax.Z",
+            "size": 1419264,
+            "expanded_size": 3614402,
             "runtime_dependencies": "No dependencies",
-            "total_tests": "7",
-            "passed_tests": "5"
+            "total_tests": "599",
+            "passed_tests": "586"
           }
         ]
       },
       {
-        "name": "automake (Build 788)",
-        "date": "2023-03-21 02:00:24",
-        "tag_name": "automakeport_788",
+        "name": "autoconfport (Build 276)",
+        "date": "2022-11-09 08:24:12",
+        "tag_name": "autoconfport_276",
         "assets": [
           {
-            "name": "automake-1.16.5.20230320_204234.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_788/automake-1.16.5.20230320_204234.zos.pax.Z",
-            "size": 999936,
-            "expanded_size": 2455420,
-            "runtime_dependencies": "No dependencies",
-            "total_tests": "7",
-            "passed_tests": "5"
-          }
-        ]
-      },
-      {
-        "name": "automake (Build 782)",
-        "date": "2023-03-20 16:53:29",
-        "tag_name": "automakeport_782",
-        "assets": [
-          {
-            "name": "automake-1.16.5.20230320_114745.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_782/automake-1.16.5.20230320_114745.zos.pax.Z",
-            "size": 999936,
-            "expanded_size": 2455748,
-            "runtime_dependencies": "No dependencies",
-            "total_tests": "7",
-            "passed_tests": "5"
-          }
-        ]
-      },
-      {
-        "name": "automake (Build 753)",
-        "date": "2023-03-14 01:42:07",
-        "tag_name": "automakeport_753",
-        "assets": [
-          {
-            "name": "automake-1.16.5.20230313_201807.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_753/automake-1.16.5.20230313_201807.zos.pax.Z",
-            "size": 999936,
-            "expanded_size": 2455712,
-            "runtime_dependencies": "No dependencies",
-            "total_tests": "7",
-            "passed_tests": "5"
-          }
-        ]
-      },
-      {
-        "name": "automake (Build 697)",
-        "date": "2023-03-07 01:40:02",
-        "tag_name": "automakeport_697",
-        "assets": [
-          {
-            "name": "automake-1.16.5.20230306_192341.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_697/automake-1.16.5.20230306_192341.zos.pax.Z",
-            "size": 999936,
-            "expanded_size": 2455661,
-            "runtime_dependencies": "No dependencies",
-            "total_tests": "7",
-            "passed_tests": "5"
-          }
-        ]
-      },
-      {
-        "name": "automake (Build 635)",
-        "date": "2023-02-22 02:23:06",
-        "tag_name": "automakeport_635",
-        "assets": [
-          {
-            "name": "automake-1.16.5.20230221_201944.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_635/automake-1.16.5.20230221_201944.zos.pax.Z",
-            "size": 999936,
-            "expanded_size": 2455287,
-            "runtime_dependencies": "No dependencies",
-            "total_tests": "7",
-            "passed_tests": "5"
-          }
-        ]
-      },
-      {
-        "name": "automake (Build 604)",
-        "date": "2023-02-18 21:23:37",
-        "tag_name": "automakeport_604",
-        "assets": [
-          {
-            "name": "automake-1.16.5.20230218_151901.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_604/automake-1.16.5.20230218_151901.zos.pax.Z",
-            "size": 999936,
-            "expanded_size": 2455392,
-            "runtime_dependencies": "No dependencies",
-            "total_tests": "7",
-            "passed_tests": "5"
-          }
-        ]
-      },
-      {
-        "name": "automakeport (Build 323)",
-        "date": "2022-11-28 16:31:17",
-        "tag_name": "automakeport_323",
-        "assets": [
-          {
-            "name": "automake-1.16.5.20221128_104437.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_323/automake-1.16.5.20221128_104437.zos.pax.Z",
-            "size": 999936,
-            "expanded_size": 2422497,
+            "name": "autoconf-2.71.20221108_204804.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_276/autoconf-2.71.20221108_204804.zos.pax.Z",
+            "size": 1419264,
+            "expanded_size": 3583457,
             "runtime_dependencies": null,
-            "total_tests": "7",
-            "passed_tests": "5"
+            "total_tests": "599",
+            "passed_tests": "587"
           }
         ]
       },
       {
-        "name": "automakeport (Build 310)",
-        "date": "2022-11-23 22:37:23",
-        "tag_name": "automakeport_310",
+        "name": "autoconfport (Build 190)",
+        "date": "2022-10-07 10:16:36",
+        "tag_name": "autoconfport_190",
         "assets": [
           {
-            "name": "automake-1.16.5.20221123_170624.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_310/automake-1.16.5.20221123_170624.zos.pax.Z",
-            "size": 999936,
-            "expanded_size": 2422598,
+            "name": "autoconf-2.71.20221007_003454.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_190/autoconf-2.71.20221007_003454.zos.pax.Z",
+            "size": 1419264,
+            "expanded_size": 3583303,
             "runtime_dependencies": null,
-            "total_tests": "7",
-            "passed_tests": "5"
+            "total_tests": "599",
+            "passed_tests": "587"
           }
         ]
       },
       {
-        "name": "automakeport (Build 278)",
-        "date": "2022-11-09 09:07:14",
-        "tag_name": "automakeport_278",
+        "name": "autoconfport (Build 173)",
+        "date": "2022-10-01 00:41:37",
+        "tag_name": "autoconfport_173",
         "assets": [
           {
-            "name": "automake-1.16.20221109_032611.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_278/automake-1.16.20221109_032611.zos.pax.Z",
-            "size": 999936,
-            "expanded_size": 2433371,
+            "name": "autoconf-2.71.20220930_144332.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_173/autoconf-2.71.20220930_144332.zos.pax.Z",
+            "size": 1419264,
+            "expanded_size": 3583396,
             "runtime_dependencies": null,
-            "total_tests": "6",
-            "passed_tests": "4"
+            "total_tests": "599",
+            "passed_tests": "587"
           }
         ]
       },
       {
-        "name": "automakeport (Build 250)",
-        "date": "2022-11-07 10:01:49",
-        "tag_name": "automakeport_250",
+        "name": "autoconfport (Build 139)",
+        "date": "2022-09-09 01:30:36",
+        "tag_name": "autoconfport_139",
         "assets": [
           {
-            "name": "automake-1.16.20221107_010922.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_250/automake-1.16.20221107_010922.zos.pax.Z",
-            "size": 999936,
-            "expanded_size": 2432974,
-            "runtime_dependencies": null,
-            "total_tests": "6",
-            "passed_tests": "4"
-          }
-        ]
-      },
-      {
-        "name": "automakeport (Build 225)",
-        "date": "2022-10-31 22:02:45",
-        "tag_name": "automakeport_225",
-        "assets": [
-          {
-            "name": "automake-1.16.20221031_171104.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_225/automake-1.16.20221031_171104.zos.pax.Z",
-            "size": 999936,
-            "expanded_size": 2433246,
-            "runtime_dependencies": null,
-            "total_tests": "6",
-            "passed_tests": "4"
-          }
-        ]
-      },
-      {
-        "name": "automakeport (Build 216)",
-        "date": "2022-10-26 23:58:58",
-        "tag_name": "automakeport_216",
-        "assets": [
-          {
-            "name": "automake-1.16.20221025_115314.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_216/automake-1.16.20221025_115314.zos.pax.Z",
-            "size": 999936,
-            "expanded_size": 2433110,
-            "runtime_dependencies": null,
-            "total_tests": "4",
-            "passed_tests": "4"
-          }
-        ]
-      },
-      {
-        "name": "automakeport (Build 213)",
-        "date": "2022-10-24 20:13:21",
-        "tag_name": "automakeport_213",
-        "assets": [
-          {
-            "name": "automake-1.16.20221024_153345.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_213/automake-1.16.20221024_153345.zos.pax.Z",
-            "size": 999936,
-            "expanded_size": 2432935,
-            "runtime_dependencies": null,
-            "total_tests": "109",
-            "passed_tests": "76"
-          }
-        ]
-      },
-      {
-        "name": "automakeport (Build 186)",
-        "date": "2022-10-05 19:56:25",
-        "tag_name": "automakeport_186",
-        "assets": [
-          {
-            "name": "automake-1.16.20221005_152102.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_186/automake-1.16.20221005_152102.zos.pax.Z",
-            "size": 999936,
-            "expanded_size": 2433242,
-            "runtime_dependencies": null,
-            "total_tests": "109",
-            "passed_tests": "76"
-          }
-        ]
-      },
-      {
-        "name": "automakeport (Build 181)",
-        "date": "2022-10-04 19:54:25",
-        "tag_name": "automakeport_181",
-        "assets": [
-          {
-            "name": "automake-1.16.20221004_155314.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_181/automake-1.16.20221004_155314.zos.pax.Z",
-            "size": 999936,
-            "expanded_size": 2433073,
-            "runtime_dependencies": null,
-            "total_tests": "4",
-            "passed_tests": "4"
-          }
-        ]
-      },
-      {
-        "name": "automakeport (Build 179)",
-        "date": "2022-10-04 05:55:33",
-        "tag_name": "automakeport_179",
-        "assets": [
-          {
-            "name": "automake-1.16.20221004_015418.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_179/automake-1.16.20221004_015418.zos.pax.Z",
-            "size": 999936,
-            "expanded_size": 2432819,
-            "runtime_dependencies": null,
-            "total_tests": "4",
-            "passed_tests": "4"
-          }
-        ]
-      },
-      {
-        "name": "automakeport (Build 167)",
-        "date": "2022-09-27 00:47:25",
-        "tag_name": "automakeport_167",
-        "assets": [
-          {
-            "name": "automake-1.16.20220926_200506.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_167/automake-1.16.20220926_200506.zos.pax.Z",
-            "size": 967680,
-            "expanded_size": 2422939,
-            "runtime_dependencies": null,
-            "total_tests": "109",
-            "passed_tests": "76"
-          }
-        ]
-      },
-      {
-        "name": "automakeport (Build 150)",
-        "date": "2022-09-16 23:14:59",
-        "tag_name": "automakeport_150",
-        "assets": [
-          {
-            "name": "automake-1.16.20220916_191357.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_150/automake-1.16.20220916_191357.zos.pax.Z",
-            "size": 967680,
-            "expanded_size": 2422381,
+            "name": "autoconf-2.71.20220908_213001.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_139/autoconf-2.71.20220908_213001.zos.pax.Z",
+            "size": 1419264,
+            "expanded_size": 3583265,
             "runtime_dependencies": null,
             "total_tests": -1,
             "passed_tests": -1
@@ -917,15 +693,15 @@
         ]
       },
       {
-        "name": "automakeport (Build 144)",
-        "date": "2022-09-15 14:21:43",
-        "tag_name": "automakeport_144",
+        "name": "autoconfport (Build 138)",
+        "date": "2022-09-08 23:16:27",
+        "tag_name": "autoconfport_138",
         "assets": [
           {
-            "name": "automake-1.16.20220915_102010.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_144/automake-1.16.20220915_102010.zos.pax.Z",
-            "size": 967680,
-            "expanded_size": 2422857,
+            "name": "autoconf-2.71.20220908_191549.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_138/autoconf-2.71.20220908_191549.zos.pax.Z",
+            "size": 1419264,
+            "expanded_size": 3583402,
             "runtime_dependencies": null,
             "total_tests": -1,
             "passed_tests": -1
@@ -933,15 +709,15 @@
         ]
       },
       {
-        "name": "automakeport (Build 140)",
-        "date": "2022-09-09 01:35:58",
-        "tag_name": "automakeport_140",
+        "name": "autoconfport (Build 133)",
+        "date": "2022-09-08 12:23:39",
+        "tag_name": "autoconfport_133",
         "assets": [
           {
-            "name": "automake-1.16.20220908_213425.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_140/automake-1.16.20220908_213425.zos.pax.Z",
-            "size": 999936,
-            "expanded_size": 2431164,
+            "name": "autoconf-2.71.20220908_082302.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_133/autoconf-2.71.20220908_082302.zos.pax.Z",
+            "size": 1419264,
+            "expanded_size": 3583515,
             "runtime_dependencies": null,
             "total_tests": -1,
             "passed_tests": -1
@@ -949,15 +725,15 @@
         ]
       },
       {
-        "name": "automakeport (Build 72)",
-        "date": "2022-08-15 04:26:41",
-        "tag_name": "automakeport_72",
+        "name": "autoconfport (Build 124)",
+        "date": "2022-09-07 14:17:05",
+        "tag_name": "autoconfport_124",
         "assets": [
           {
-            "name": "automake-1.16.20220814_235735.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_72/automake-1.16.20220814_235735.zos.pax.Z",
-            "size": 999936,
-            "expanded_size": 2400942,
+            "name": "autoconf-2.71.20220907_101629.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_124/autoconf-2.71.20220907_101629.zos.pax.Z",
+            "size": 1419264,
+            "expanded_size": 3583649,
             "runtime_dependencies": null,
             "total_tests": -1,
             "passed_tests": -1
@@ -965,15 +741,15 @@
         ]
       },
       {
-        "name": "automakeport (Build 69)",
-        "date": "2022-08-15 03:56:56",
-        "tag_name": "automakeport_69",
+        "name": "autoconfport (Build 109)",
+        "date": "2022-09-06 23:24:52",
+        "tag_name": "autoconfport_109",
         "assets": [
           {
-            "name": "automake-1.16.20220814_220543.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_69/automake-1.16.20220814_220543.zos.pax.Z",
-            "size": 999936,
-            "expanded_size": 2400912,
+            "name": "autoconf-2.71.20220906_164434.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_109/autoconf-2.71.20220906_164434.zos.pax.Z",
+            "size": 1419264,
+            "expanded_size": 3582596,
             "runtime_dependencies": null,
             "total_tests": -1,
             "passed_tests": -1
@@ -981,15 +757,15 @@
         ]
       },
       {
-        "name": "automakeport (Build 40)",
-        "date": "2022-07-22 06:20:43",
-        "tag_name": "automakeport_40",
+        "name": "autoconfport (Build 100)",
+        "date": "2022-09-02 20:26:12",
+        "tag_name": "autoconfport_100",
         "assets": [
           {
-            "name": "automake-1.16.20220722_021904.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_40/automake-1.16.20220722_021904.zos.pax.Z",
-            "size": 999936,
-            "expanded_size": 2400831,
+            "name": "autoconf-2.71.20220902_162511.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_100/autoconf-2.71.20220902_162511.zos.pax.Z",
+            "size": 1419264,
+            "expanded_size": 3583737,
             "runtime_dependencies": null,
             "total_tests": -1,
             "passed_tests": -1
@@ -997,15 +773,63 @@
         ]
       },
       {
-        "name": "automakeport (Build 16)",
-        "date": "2022-06-07 20:09:35",
-        "tag_name": "automakeport_16",
+        "name": "autoconfport (Build 98)",
+        "date": "2022-08-30 17:23:46",
+        "tag_name": "autoconfport_98",
         "assets": [
           {
-            "name": "automake-1.16.20220607_160856.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_16/automake-1.16.20220607_160856.zos.pax.Z",
-            "size": 3419136,
-            "expanded_size": 8742382,
+            "name": "autoconf-2.71.20220830_132303.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_98/autoconf-2.71.20220830_132303.zos.pax.Z",
+            "size": 1419264,
+            "expanded_size": 3584134,
+            "runtime_dependencies": null,
+            "total_tests": -1,
+            "passed_tests": -1
+          }
+        ]
+      },
+      {
+        "name": "autoconfport (Build 68)",
+        "date": "2022-08-14 01:42:24",
+        "tag_name": "autoconfport_68",
+        "assets": [
+          {
+            "name": "autoconf-2.71.20220813_214144.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_68/autoconf-2.71.20220813_214144.zos.pax.Z",
+            "size": 1419264,
+            "expanded_size": 3583534,
+            "runtime_dependencies": null,
+            "total_tests": -1,
+            "passed_tests": -1
+          }
+        ]
+      },
+      {
+        "name": "autoconfport (Build 39)",
+        "date": "2022-07-22 05:59:33",
+        "tag_name": "autoconfport_39",
+        "assets": [
+          {
+            "name": "autoconf-2.71.20220722_015902.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_39/autoconf-2.71.20220722_015902.zos.pax.Z",
+            "size": 1419264,
+            "expanded_size": 3583588,
+            "runtime_dependencies": null,
+            "total_tests": -1,
+            "passed_tests": -1
+          }
+        ]
+      },
+      {
+        "name": "autoconfport (Build 15)",
+        "date": "2022-06-07 17:49:54",
+        "tag_name": "autoconfport_15",
+        "assets": [
+          {
+            "name": "autoconf-2.71.20220607_134926.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_15/autoconf-2.71.20220607_134926.zos.pax.Z",
+            "size": 2483712,
+            "expanded_size": 6400751,
             "runtime_dependencies": null,
             "total_tests": -1,
             "passed_tests": -1
@@ -1783,209 +1607,433 @@
         ]
       }
     ],
-    "autoconf": [
+    "automake": [
       {
-        "name": "autoconf (Build 1654) - (STABLE)",
-        "date": "2023-11-09 13:03:32",
-        "tag_name": "STABLE_autoconfport_1654",
+        "name": "automake (Build 1594) - (STABLE)",
+        "date": "2023-11-09 01:37:45",
+        "tag_name": "STABLE_automakeport_1594",
         "assets": [
           {
-            "name": "autoconf-2.71.20231109_012459.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/STABLE_autoconfport_1654/autoconf-2.71.20231109_012459.zos.pax.Z",
-            "size": 1419264,
-            "expanded_size": 3650762,
-            "runtime_dependencies": "m4 perl",
-            "total_tests": "599",
-            "passed_tests": "587"
-          }
-        ]
-      },
-      {
-        "name": "autoconf (Build 1543) - (STABLE)",
-        "date": "2023-11-03 16:50:11",
-        "tag_name": "STABLE_autoconfport_1543",
-        "assets": [
-          {
-            "name": "autoconf-2.71.20231102_230025.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/STABLE_autoconfport_1543/autoconf-2.71.20231102_230025.zos.pax.Z",
-            "size": 1419264,
-            "expanded_size": 3619039,
-            "runtime_dependencies": "m4 perl",
-            "total_tests": "599",
-            "passed_tests": "587"
-          }
-        ]
-      },
-      {
-        "name": "autoconf (Build 1510) - (STABLE)",
-        "date": "2023-10-24 08:20:31",
-        "tag_name": "STABLE_autoconfport_1510",
-        "assets": [
-          {
-            "name": "autoconf-2.71.20231023_191302.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/STABLE_autoconfport_1510/autoconf-2.71.20231023_191302.zos.pax.Z",
-            "size": 1419264,
-            "expanded_size": 3619247,
-            "runtime_dependencies": "m4 perl",
-            "total_tests": "599",
-            "passed_tests": "587"
-          }
-        ]
-      },
-      {
-        "name": "autoconf 2.71\n2.71 (Build 1397) - (STABLE)",
-        "date": "2023-09-28 05:50:25",
-        "tag_name": "STABLE_autoconfport_1397",
-        "assets": [
-          {
-            "name": "autoconf-2.71.20230927_135608.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/STABLE_autoconfport_1397/autoconf-2.71.20230927_135608.zos.pax.Z",
-            "size": 1419264,
-            "expanded_size": 3613738,
-            "runtime_dependencies": "m4 perl",
-            "total_tests": "599",
-            "passed_tests": "586"
-          }
-        ]
-      },
-      {
-        "name": "autoconf 2.71 (Build 1043)",
-        "date": "2023-06-05 09:59:30",
-        "tag_name": "Releaseline_autoconfport_1043",
-        "assets": [
-          {
-            "name": "autoconf-2.71.20230604_225130.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/Releaseline_autoconfport_1043/autoconf-2.71.20230604_225130.zos.pax.Z",
-            "size": 1419264,
-            "expanded_size": 3614512,
+            "name": "automake-1.16.5.20231108_184539.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/STABLE_automakeport_1594/automake-1.16.5.20231108_184539.zos.pax.Z",
+            "size": 999936,
+            "expanded_size": 2459145,
             "runtime_dependencies": "No dependencies",
-            "total_tests": "599",
-            "passed_tests": "586"
+            "total_tests": "7",
+            "passed_tests": "5"
           }
         ]
       },
       {
-        "name": "autoconf 2.71 (Build 963)",
-        "date": "2023-04-25 07:44:29",
-        "tag_name": "Releaseline_autoconfport_963",
+        "name": "automake (Build 1506) - (STABLE)",
+        "date": "2023-10-23 04:24:47",
+        "tag_name": "STABLE_automakeport_1506",
         "assets": [
           {
-            "name": "autoconf-2.71.20230424_201410.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/Releaseline_autoconfport_963/autoconf-2.71.20230424_201410.zos.pax.Z",
-            "size": 1419264,
-            "expanded_size": 3614567,
+            "name": "automake-1.16.5.20231023_020456.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/STABLE_automakeport_1506/automake-1.16.5.20231023_020456.zos.pax.Z",
+            "size": 999936,
+            "expanded_size": 2459490,
             "runtime_dependencies": "No dependencies",
-            "total_tests": "599",
-            "passed_tests": "586"
+            "total_tests": "7",
+            "passed_tests": "5"
           }
         ]
       },
       {
-        "name": "autoconf 2.71 (Build 828)",
-        "date": "2023-03-28 06:45:26",
-        "tag_name": "autoconfport_828",
+        "name": "automake 0.3.0-dt-stable\n1.16.5 (Build 1249) - (STABLE)",
+        "date": "2023-09-13 04:05:52",
+        "tag_name": "STABLE_automakeport_1249",
         "assets": [
           {
-            "name": "autoconf-2.71.20230327_202120.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_828/autoconf-2.71.20230327_202120.zos.pax.Z",
-            "size": 1419264,
-            "expanded_size": 3614263,
+            "name": "automake-1.16.5.20230913_013426.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/STABLE_automakeport_1249/automake-1.16.5.20230913_013426.zos.pax.Z",
+            "size": 999936,
+            "expanded_size": 2459099,
             "runtime_dependencies": "No dependencies",
-            "total_tests": "599",
-            "passed_tests": "586"
+            "total_tests": "7",
+            "passed_tests": "5"
           }
         ]
       },
       {
-        "name": "autoconf 2.71 (Build 699)",
-        "date": "2023-03-07 08:53:11",
-        "tag_name": "autoconfport_699",
+        "name": "automake 1.16.5 (Build 1110)",
+        "date": "2023-06-30 20:36:03",
+        "tag_name": "Releaseline_automakeport_1110",
         "assets": [
           {
-            "name": "autoconf-2.71.20230306_203846.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_699/autoconf-2.71.20230306_203846.zos.pax.Z",
-            "size": 1419264,
-            "expanded_size": 3614332,
+            "name": "automake-1.16.5.20230630_142215.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/Releaseline_automakeport_1110/automake-1.16.5.20230630_142215.zos.pax.Z",
+            "size": 999936,
+            "expanded_size": 2455462,
             "runtime_dependencies": "No dependencies",
-            "total_tests": "599",
-            "passed_tests": "586"
+            "total_tests": "7",
+            "passed_tests": "5"
           }
         ]
       },
       {
-        "name": "autoconf 2.71 (Build 633)",
-        "date": "2023-02-21 19:55:12",
-        "tag_name": "autoconfport_633",
+        "name": "automake (Build 1039)",
+        "date": "2023-06-05 07:02:01",
+        "tag_name": "Releaseline_automakeport_1039",
         "assets": [
           {
-            "name": "autoconf-2.71.20230221_083918.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_633/autoconf-2.71.20230221_083918.zos.pax.Z",
-            "size": 1419264,
-            "expanded_size": 3614402,
+            "name": "automake-1.16.5.20230605_002645.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/Releaseline_automakeport_1039/automake-1.16.5.20230605_002645.zos.pax.Z",
+            "size": 999936,
+            "expanded_size": 2455395,
             "runtime_dependencies": "No dependencies",
-            "total_tests": "599",
-            "passed_tests": "586"
+            "total_tests": "7",
+            "passed_tests": "5"
           }
         ]
       },
       {
-        "name": "autoconfport (Build 276)",
-        "date": "2022-11-09 08:24:12",
-        "tag_name": "autoconfport_276",
+        "name": "automake (Build 958)",
+        "date": "2023-04-25 02:09:31",
+        "tag_name": "Releaseline_automakeport_958",
         "assets": [
           {
-            "name": "autoconf-2.71.20221108_204804.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_276/autoconf-2.71.20221108_204804.zos.pax.Z",
-            "size": 1419264,
-            "expanded_size": 3583457,
+            "name": "automake-1.16.5.20230424_201900.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/Releaseline_automakeport_958/automake-1.16.5.20230424_201900.zos.pax.Z",
+            "size": 999936,
+            "expanded_size": 2455289,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "7",
+            "passed_tests": "5"
+          }
+        ]
+      },
+      {
+        "name": "automake (Build 894)",
+        "date": "2023-04-11 02:35:16",
+        "tag_name": "Releaseline_automakeport_894",
+        "assets": [
+          {
+            "name": "automake-1.16.5.20230410_201813.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/Releaseline_automakeport_894/automake-1.16.5.20230410_201813.zos.pax.Z",
+            "size": 999936,
+            "expanded_size": 2455445,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "7",
+            "passed_tests": "5"
+          }
+        ]
+      },
+      {
+        "name": "automake (Build 870)",
+        "date": "2023-04-04 14:08:05",
+        "tag_name": "Releaseline_automakeport_870",
+        "assets": [
+          {
+            "name": "automake-1.16.5.20230404_074559.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/Releaseline_automakeport_870/automake-1.16.5.20230404_074559.zos.pax.Z",
+            "size": 999936,
+            "expanded_size": 2455541,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "7",
+            "passed_tests": "5"
+          }
+        ]
+      },
+      {
+        "name": "automake (Build 825)",
+        "date": "2023-03-28 02:34:30",
+        "tag_name": "automakeport_825",
+        "assets": [
+          {
+            "name": "automake-1.16.5.20230327_212946.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_825/automake-1.16.5.20230327_212946.zos.pax.Z",
+            "size": 999936,
+            "expanded_size": 2455369,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "7",
+            "passed_tests": "5"
+          }
+        ]
+      },
+      {
+        "name": "automake (Build 788)",
+        "date": "2023-03-21 02:00:24",
+        "tag_name": "automakeport_788",
+        "assets": [
+          {
+            "name": "automake-1.16.5.20230320_204234.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_788/automake-1.16.5.20230320_204234.zos.pax.Z",
+            "size": 999936,
+            "expanded_size": 2455420,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "7",
+            "passed_tests": "5"
+          }
+        ]
+      },
+      {
+        "name": "automake (Build 782)",
+        "date": "2023-03-20 16:53:29",
+        "tag_name": "automakeport_782",
+        "assets": [
+          {
+            "name": "automake-1.16.5.20230320_114745.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_782/automake-1.16.5.20230320_114745.zos.pax.Z",
+            "size": 999936,
+            "expanded_size": 2455748,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "7",
+            "passed_tests": "5"
+          }
+        ]
+      },
+      {
+        "name": "automake (Build 753)",
+        "date": "2023-03-14 01:42:07",
+        "tag_name": "automakeport_753",
+        "assets": [
+          {
+            "name": "automake-1.16.5.20230313_201807.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_753/automake-1.16.5.20230313_201807.zos.pax.Z",
+            "size": 999936,
+            "expanded_size": 2455712,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "7",
+            "passed_tests": "5"
+          }
+        ]
+      },
+      {
+        "name": "automake (Build 697)",
+        "date": "2023-03-07 01:40:02",
+        "tag_name": "automakeport_697",
+        "assets": [
+          {
+            "name": "automake-1.16.5.20230306_192341.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_697/automake-1.16.5.20230306_192341.zos.pax.Z",
+            "size": 999936,
+            "expanded_size": 2455661,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "7",
+            "passed_tests": "5"
+          }
+        ]
+      },
+      {
+        "name": "automake (Build 635)",
+        "date": "2023-02-22 02:23:06",
+        "tag_name": "automakeport_635",
+        "assets": [
+          {
+            "name": "automake-1.16.5.20230221_201944.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_635/automake-1.16.5.20230221_201944.zos.pax.Z",
+            "size": 999936,
+            "expanded_size": 2455287,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "7",
+            "passed_tests": "5"
+          }
+        ]
+      },
+      {
+        "name": "automake (Build 604)",
+        "date": "2023-02-18 21:23:37",
+        "tag_name": "automakeport_604",
+        "assets": [
+          {
+            "name": "automake-1.16.5.20230218_151901.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_604/automake-1.16.5.20230218_151901.zos.pax.Z",
+            "size": 999936,
+            "expanded_size": 2455392,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "7",
+            "passed_tests": "5"
+          }
+        ]
+      },
+      {
+        "name": "automakeport (Build 323)",
+        "date": "2022-11-28 16:31:17",
+        "tag_name": "automakeport_323",
+        "assets": [
+          {
+            "name": "automake-1.16.5.20221128_104437.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_323/automake-1.16.5.20221128_104437.zos.pax.Z",
+            "size": 999936,
+            "expanded_size": 2422497,
             "runtime_dependencies": null,
-            "total_tests": "599",
-            "passed_tests": "587"
+            "total_tests": "7",
+            "passed_tests": "5"
           }
         ]
       },
       {
-        "name": "autoconfport (Build 190)",
-        "date": "2022-10-07 10:16:36",
-        "tag_name": "autoconfport_190",
+        "name": "automakeport (Build 310)",
+        "date": "2022-11-23 22:37:23",
+        "tag_name": "automakeport_310",
         "assets": [
           {
-            "name": "autoconf-2.71.20221007_003454.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_190/autoconf-2.71.20221007_003454.zos.pax.Z",
-            "size": 1419264,
-            "expanded_size": 3583303,
+            "name": "automake-1.16.5.20221123_170624.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_310/automake-1.16.5.20221123_170624.zos.pax.Z",
+            "size": 999936,
+            "expanded_size": 2422598,
             "runtime_dependencies": null,
-            "total_tests": "599",
-            "passed_tests": "587"
+            "total_tests": "7",
+            "passed_tests": "5"
           }
         ]
       },
       {
-        "name": "autoconfport (Build 173)",
-        "date": "2022-10-01 00:41:37",
-        "tag_name": "autoconfport_173",
+        "name": "automakeport (Build 278)",
+        "date": "2022-11-09 09:07:14",
+        "tag_name": "automakeport_278",
         "assets": [
           {
-            "name": "autoconf-2.71.20220930_144332.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_173/autoconf-2.71.20220930_144332.zos.pax.Z",
-            "size": 1419264,
-            "expanded_size": 3583396,
+            "name": "automake-1.16.20221109_032611.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_278/automake-1.16.20221109_032611.zos.pax.Z",
+            "size": 999936,
+            "expanded_size": 2433371,
             "runtime_dependencies": null,
-            "total_tests": "599",
-            "passed_tests": "587"
+            "total_tests": "6",
+            "passed_tests": "4"
           }
         ]
       },
       {
-        "name": "autoconfport (Build 139)",
-        "date": "2022-09-09 01:30:36",
-        "tag_name": "autoconfport_139",
+        "name": "automakeport (Build 250)",
+        "date": "2022-11-07 10:01:49",
+        "tag_name": "automakeport_250",
         "assets": [
           {
-            "name": "autoconf-2.71.20220908_213001.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_139/autoconf-2.71.20220908_213001.zos.pax.Z",
-            "size": 1419264,
-            "expanded_size": 3583265,
+            "name": "automake-1.16.20221107_010922.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_250/automake-1.16.20221107_010922.zos.pax.Z",
+            "size": 999936,
+            "expanded_size": 2432974,
+            "runtime_dependencies": null,
+            "total_tests": "6",
+            "passed_tests": "4"
+          }
+        ]
+      },
+      {
+        "name": "automakeport (Build 225)",
+        "date": "2022-10-31 22:02:45",
+        "tag_name": "automakeport_225",
+        "assets": [
+          {
+            "name": "automake-1.16.20221031_171104.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_225/automake-1.16.20221031_171104.zos.pax.Z",
+            "size": 999936,
+            "expanded_size": 2433246,
+            "runtime_dependencies": null,
+            "total_tests": "6",
+            "passed_tests": "4"
+          }
+        ]
+      },
+      {
+        "name": "automakeport (Build 216)",
+        "date": "2022-10-26 23:58:58",
+        "tag_name": "automakeport_216",
+        "assets": [
+          {
+            "name": "automake-1.16.20221025_115314.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_216/automake-1.16.20221025_115314.zos.pax.Z",
+            "size": 999936,
+            "expanded_size": 2433110,
+            "runtime_dependencies": null,
+            "total_tests": "4",
+            "passed_tests": "4"
+          }
+        ]
+      },
+      {
+        "name": "automakeport (Build 213)",
+        "date": "2022-10-24 20:13:21",
+        "tag_name": "automakeport_213",
+        "assets": [
+          {
+            "name": "automake-1.16.20221024_153345.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_213/automake-1.16.20221024_153345.zos.pax.Z",
+            "size": 999936,
+            "expanded_size": 2432935,
+            "runtime_dependencies": null,
+            "total_tests": "109",
+            "passed_tests": "76"
+          }
+        ]
+      },
+      {
+        "name": "automakeport (Build 186)",
+        "date": "2022-10-05 19:56:25",
+        "tag_name": "automakeport_186",
+        "assets": [
+          {
+            "name": "automake-1.16.20221005_152102.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_186/automake-1.16.20221005_152102.zos.pax.Z",
+            "size": 999936,
+            "expanded_size": 2433242,
+            "runtime_dependencies": null,
+            "total_tests": "109",
+            "passed_tests": "76"
+          }
+        ]
+      },
+      {
+        "name": "automakeport (Build 181)",
+        "date": "2022-10-04 19:54:25",
+        "tag_name": "automakeport_181",
+        "assets": [
+          {
+            "name": "automake-1.16.20221004_155314.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_181/automake-1.16.20221004_155314.zos.pax.Z",
+            "size": 999936,
+            "expanded_size": 2433073,
+            "runtime_dependencies": null,
+            "total_tests": "4",
+            "passed_tests": "4"
+          }
+        ]
+      },
+      {
+        "name": "automakeport (Build 179)",
+        "date": "2022-10-04 05:55:33",
+        "tag_name": "automakeport_179",
+        "assets": [
+          {
+            "name": "automake-1.16.20221004_015418.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_179/automake-1.16.20221004_015418.zos.pax.Z",
+            "size": 999936,
+            "expanded_size": 2432819,
+            "runtime_dependencies": null,
+            "total_tests": "4",
+            "passed_tests": "4"
+          }
+        ]
+      },
+      {
+        "name": "automakeport (Build 167)",
+        "date": "2022-09-27 00:47:25",
+        "tag_name": "automakeport_167",
+        "assets": [
+          {
+            "name": "automake-1.16.20220926_200506.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_167/automake-1.16.20220926_200506.zos.pax.Z",
+            "size": 967680,
+            "expanded_size": 2422939,
+            "runtime_dependencies": null,
+            "total_tests": "109",
+            "passed_tests": "76"
+          }
+        ]
+      },
+      {
+        "name": "automakeport (Build 150)",
+        "date": "2022-09-16 23:14:59",
+        "tag_name": "automakeport_150",
+        "assets": [
+          {
+            "name": "automake-1.16.20220916_191357.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_150/automake-1.16.20220916_191357.zos.pax.Z",
+            "size": 967680,
+            "expanded_size": 2422381,
             "runtime_dependencies": null,
             "total_tests": -1,
             "passed_tests": -1
@@ -1993,15 +2041,15 @@
         ]
       },
       {
-        "name": "autoconfport (Build 138)",
-        "date": "2022-09-08 23:16:27",
-        "tag_name": "autoconfport_138",
+        "name": "automakeport (Build 144)",
+        "date": "2022-09-15 14:21:43",
+        "tag_name": "automakeport_144",
         "assets": [
           {
-            "name": "autoconf-2.71.20220908_191549.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_138/autoconf-2.71.20220908_191549.zos.pax.Z",
-            "size": 1419264,
-            "expanded_size": 3583402,
+            "name": "automake-1.16.20220915_102010.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_144/automake-1.16.20220915_102010.zos.pax.Z",
+            "size": 967680,
+            "expanded_size": 2422857,
             "runtime_dependencies": null,
             "total_tests": -1,
             "passed_tests": -1
@@ -2009,15 +2057,15 @@
         ]
       },
       {
-        "name": "autoconfport (Build 133)",
-        "date": "2022-09-08 12:23:39",
-        "tag_name": "autoconfport_133",
+        "name": "automakeport (Build 140)",
+        "date": "2022-09-09 01:35:58",
+        "tag_name": "automakeport_140",
         "assets": [
           {
-            "name": "autoconf-2.71.20220908_082302.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_133/autoconf-2.71.20220908_082302.zos.pax.Z",
-            "size": 1419264,
-            "expanded_size": 3583515,
+            "name": "automake-1.16.20220908_213425.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_140/automake-1.16.20220908_213425.zos.pax.Z",
+            "size": 999936,
+            "expanded_size": 2431164,
             "runtime_dependencies": null,
             "total_tests": -1,
             "passed_tests": -1
@@ -2025,15 +2073,15 @@
         ]
       },
       {
-        "name": "autoconfport (Build 124)",
-        "date": "2022-09-07 14:17:05",
-        "tag_name": "autoconfport_124",
+        "name": "automakeport (Build 72)",
+        "date": "2022-08-15 04:26:41",
+        "tag_name": "automakeport_72",
         "assets": [
           {
-            "name": "autoconf-2.71.20220907_101629.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_124/autoconf-2.71.20220907_101629.zos.pax.Z",
-            "size": 1419264,
-            "expanded_size": 3583649,
+            "name": "automake-1.16.20220814_235735.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_72/automake-1.16.20220814_235735.zos.pax.Z",
+            "size": 999936,
+            "expanded_size": 2400942,
             "runtime_dependencies": null,
             "total_tests": -1,
             "passed_tests": -1
@@ -2041,15 +2089,15 @@
         ]
       },
       {
-        "name": "autoconfport (Build 109)",
-        "date": "2022-09-06 23:24:52",
-        "tag_name": "autoconfport_109",
+        "name": "automakeport (Build 69)",
+        "date": "2022-08-15 03:56:56",
+        "tag_name": "automakeport_69",
         "assets": [
           {
-            "name": "autoconf-2.71.20220906_164434.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_109/autoconf-2.71.20220906_164434.zos.pax.Z",
-            "size": 1419264,
-            "expanded_size": 3582596,
+            "name": "automake-1.16.20220814_220543.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_69/automake-1.16.20220814_220543.zos.pax.Z",
+            "size": 999936,
+            "expanded_size": 2400912,
             "runtime_dependencies": null,
             "total_tests": -1,
             "passed_tests": -1
@@ -2057,15 +2105,15 @@
         ]
       },
       {
-        "name": "autoconfport (Build 100)",
-        "date": "2022-09-02 20:26:12",
-        "tag_name": "autoconfport_100",
+        "name": "automakeport (Build 40)",
+        "date": "2022-07-22 06:20:43",
+        "tag_name": "automakeport_40",
         "assets": [
           {
-            "name": "autoconf-2.71.20220902_162511.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_100/autoconf-2.71.20220902_162511.zos.pax.Z",
-            "size": 1419264,
-            "expanded_size": 3583737,
+            "name": "automake-1.16.20220722_021904.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_40/automake-1.16.20220722_021904.zos.pax.Z",
+            "size": 999936,
+            "expanded_size": 2400831,
             "runtime_dependencies": null,
             "total_tests": -1,
             "passed_tests": -1
@@ -2073,63 +2121,15 @@
         ]
       },
       {
-        "name": "autoconfport (Build 98)",
-        "date": "2022-08-30 17:23:46",
-        "tag_name": "autoconfport_98",
+        "name": "automakeport (Build 16)",
+        "date": "2022-06-07 20:09:35",
+        "tag_name": "automakeport_16",
         "assets": [
           {
-            "name": "autoconf-2.71.20220830_132303.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_98/autoconf-2.71.20220830_132303.zos.pax.Z",
-            "size": 1419264,
-            "expanded_size": 3584134,
-            "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
-          }
-        ]
-      },
-      {
-        "name": "autoconfport (Build 68)",
-        "date": "2022-08-14 01:42:24",
-        "tag_name": "autoconfport_68",
-        "assets": [
-          {
-            "name": "autoconf-2.71.20220813_214144.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_68/autoconf-2.71.20220813_214144.zos.pax.Z",
-            "size": 1419264,
-            "expanded_size": 3583534,
-            "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
-          }
-        ]
-      },
-      {
-        "name": "autoconfport (Build 39)",
-        "date": "2022-07-22 05:59:33",
-        "tag_name": "autoconfport_39",
-        "assets": [
-          {
-            "name": "autoconf-2.71.20220722_015902.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_39/autoconf-2.71.20220722_015902.zos.pax.Z",
-            "size": 1419264,
-            "expanded_size": 3583588,
-            "runtime_dependencies": null,
-            "total_tests": -1,
-            "passed_tests": -1
-          }
-        ]
-      },
-      {
-        "name": "autoconfport (Build 15)",
-        "date": "2022-06-07 17:49:54",
-        "tag_name": "autoconfport_15",
-        "assets": [
-          {
-            "name": "autoconf-2.71.20220607_134926.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/autoconfport/releases/download/autoconfport_15/autoconf-2.71.20220607_134926.zos.pax.Z",
-            "size": 2483712,
-            "expanded_size": 6400751,
+            "name": "automake-1.16.20220607_160856.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/automakeport/releases/download/automakeport_16/automake-1.16.20220607_160856.zos.pax.Z",
+            "size": 3419136,
+            "expanded_size": 8742382,
             "runtime_dependencies": null,
             "total_tests": -1,
             "passed_tests": -1
@@ -3600,6 +3600,22 @@
       }
     ],
     "xz": [
+      {
+        "name": "xz (Build 1693) - (STABLE)",
+        "date": "2023-11-12 06:12:34",
+        "tag_name": "STABLE_xzport_1693",
+        "assets": [
+          {
+            "name": "xz-5.2.5.20231112_053523.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/xzport/releases/download/STABLE_xzport_1693/xz-5.2.5.20231112_053523.zos.pax.Z",
+            "size": 1838592,
+            "expanded_size": 4622256,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "9",
+            "passed_tests": "7"
+          }
+        ]
+      },
       {
         "name": "xz (Build 1641) - (STABLE)",
         "date": "2023-11-09 09:59:03",
@@ -11265,6 +11281,22 @@
     ],
     "vim": [
       {
+        "name": "vim (Build 1694) - (STABLE)",
+        "date": "2023-11-12 06:14:49",
+        "tag_name": "STABLE_vimport_1694",
+        "assets": [
+          {
+            "name": "vim-master.20231112_004642.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/vimport/releases/download/STABLE_vimport_1694/vim-master.20231112_004642.zos.pax.Z",
+            "size": 16386048,
+            "expanded_size": 42199464,
+            "runtime_dependencies": "ncurses",
+            "total_tests": "5380",
+            "passed_tests": "5344"
+          }
+        ]
+      },
+      {
         "name": "vim (Build 1617) - (STABLE)",
         "date": "2023-11-09 05:32:58",
         "tag_name": "STABLE_vimport_1617",
@@ -14305,6 +14337,22 @@
     ],
     "zstd": [
       {
+        "name": "zstd (Build 1691) - (STABLE)",
+        "date": "2023-11-12 05:52:49",
+        "tag_name": "STABLE_zstdport_1691",
+        "assets": [
+          {
+            "name": "zstd-1.5.2.20231112_004111.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/zstdport/releases/download/STABLE_zstdport_1691/zstd-1.5.2.20231112_004111.zos.pax.Z",
+            "size": 3225600,
+            "expanded_size": 5941392,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "1",
+            "passed_tests": "1"
+          }
+        ]
+      },
+      {
         "name": "zstd (Build 1690) - (STABLE)",
         "date": "2023-11-12 05:43:55",
         "tag_name": "STABLE_zstdport_1690",
@@ -16445,6 +16493,22 @@
     ],
     "diffutils": [
       {
+        "name": "diffutils (Build 1696) - (STABLE)",
+        "date": "2023-11-12 06:54:25",
+        "tag_name": "STABLE_diffutilsport_1696",
+        "assets": [
+          {
+            "name": "diffutils-3.8.20231112_054941.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/diffutilsport/releases/download/STABLE_diffutilsport_1696/diffutils-3.8.20231112_054941.zos.pax.Z",
+            "size": 1677312,
+            "expanded_size": 4161805,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "172",
+            "passed_tests": "161"
+          }
+        ]
+      },
+      {
         "name": "diffutils (Build 1644) - (STABLE)",
         "date": "2023-11-09 11:16:18",
         "tag_name": "STABLE_diffutilsport_1644",
@@ -17318,6 +17382,22 @@
       }
     ],
     "zoslib": [
+      {
+        "name": "zoslib (Build 1695) - (STABLE)",
+        "date": "2023-11-12 06:21:47",
+        "tag_name": "STABLE_zoslibport_1695",
+        "assets": [
+          {
+            "name": "zoslib-zopen.20231112_061545.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/zoslibport/releases/download/STABLE_zoslibport_1695/zoslib-zopen.20231112_061545.zos.pax.Z",
+            "size": 1096704,
+            "expanded_size": 3430258,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "30",
+            "passed_tests": "30"
+          }
+        ]
+      },
       {
         "name": "zoslib (Build 1610) - (STABLE)",
         "date": "2023-11-09 04:15:55",
@@ -23928,6 +24008,22 @@
       }
     ],
     "xmlto": [
+      {
+        "name": "xmlto (Build 1692) - (STABLE)",
+        "date": "2023-11-12 05:53:27",
+        "tag_name": "STABLE_xmltoport_1692",
+        "assets": [
+          {
+            "name": "xmlto-0.0.28.20231112_054808.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/xmltoport/releases/download/STABLE_xmltoport_1692/xmlto-0.0.28.20231112_054808.zos.pax.Z",
+            "size": 96768,
+            "expanded_size": 241428,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "1",
+            "passed_tests": "1"
+          }
+        ]
+      },
       {
         "name": "xmlto (Build 1652) - (STABLE)",
         "date": "2023-11-09 12:54:57",
