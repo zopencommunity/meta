@@ -3,6 +3,7 @@
 #
 # All zopen-* scripts MUST start with this code to maintain consistency
 #
+# set -x
 setupMyself()
 {
   ME=$(basename $0)
@@ -68,6 +69,14 @@ handlePackageInstall()
   tagged=$(echo "${fullname}" | cut -s -d '%' -f 2)
   printVerbose "Name:${name};version:${versioned};tag:${tagged};repo:${repo}"
   printHeader "Installing package: ${name}"
+  nameSansPort=$(echo "${name}" | sed -e 's#\(.*\)port$#\1#')
+  # findutilsport -> findutils
+  # findutils -> findutils
+  if [[ "${nameSansPort}" != "${name}" ]] ; then
+    echo "Usage error: please install using base project name without port suffix."
+    echo "  try: zopen install ${nameSansPort}"
+    exit 1
+  fi
 
   getAllReleasesFromGithub "${repo}"
 
@@ -637,7 +646,7 @@ else
   for chosenRepo in $(echo "${chosenRepos}" | tr ',' '\n'); do
     printVerbose "Processing repo: ${chosenrepo}"
     printVerbose "Stripping any version (%), tag (#) or port suffixes"
-    toolrepo=$(echo "${chosenRepo}" | sed -e 's#%.*##' -e 's#=.*##' -e 's#.*port##')
+    toolrepo=$(echo "${chosenRepo}" | sed -e 's#%.*##' -e 's#=.*##' -e 's#\(.*\)port$#\1#')
     printVerbose "Adding prefix and 'port' suffix" # quicker than testing for presence!
     toolfound=$(echo "${repo_results}" | awk -vtoolrepo="${toolrepo}" '$0 == toolrepo {print}')
     if [ "${toolfound}" = "${toolrepo}" ]; then
