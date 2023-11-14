@@ -58,20 +58,23 @@ removePackages()
       if [ -e "${ZOPEN_PKGINSTALL}/${pkg}/${pkg}" ]; then
         deref=$(cd "${ZOPEN_PKGINSTALL}/${pkg}/${pkg}" && pwd -P | awk -F/ '{ print $(NF)}')
         installedlinksfile="${ZOPEN_PKGINSTALL}/${pkg}/${deref}/.links"
+        printVerbose "Main symlink removed, removing dangling symlinks"
+        unsymlinkFromSystem "${pkg}" "${ZOPEN_ROOTFS}" "${installedlinksfile}"
         if ${purge}; then
           printInfo "- Purging package"
           printVerbose "Checking if we are currently in a directory that is to be purged"
-          [ "${PWD##"${ZOPEN_PKGINSTALL}"/"${pkg}"/"${pkg}"}" != "${PWD}" ] && cd ${ZOPEN_PKGINSTALL} || exit
-          rm -rf $(cd "${ZOPEN_PKGINSTALL}/${pkg}/${pkg}" && pwd -P)
-          syslog ${ZOPEN_LOG_PATH}/audit.log ${LOG_A} "${CAT_PACKAGE},${CAT_REMOVE}" "REMOVE" "removePackage" "Purging package:'${needle};version:${version};"
+          [ "${PWD##"${ZOPEN_PKGINSTALL}"/"${pkg}"/"${pkg}"}" != "${PWD}" ] && cd "${ZOPEN_PKGINSTALL}"
+          purgeDir="$(cd "${ZOPEN_PKGINSTALL}/${pkg}/${pkg}" && pwd -P)"
+          [ "${purgeDir}" = "/" ] && printError "Directory to remove resolved to '/'"
+          printVerbose "Purging versioned directory: '${purgeDir}'"
+          rm -rf "${purgeDir}"
+          syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_PACKAGE},${CAT_REMOVE}" "REMOVE" "removePackage" "Purging package:'${needle};version:${version};"
         else
           printInfo "- Removing metadata file to mark uninstall"
           rm -f "${ZOPEN_PKGINSTALL}/${pkg}/${pkg}/.active"
-          printInfo "- Breaking link from current to versioned"
-          rm -f "${ZOPEN_PKGINSTALL}/${pkg}/${pkg}"
         fi
-        printVerbose "Main symlink removed, removing dangling symlinks"
-        unsymlinkFromSystem "${pkg}" "${ZOPEN_ROOTFS}" "${installedlinksfile}"
+        printInfo "- Breaking link from current to versioned"
+        [ -e "${ZOPEN_PKGINSTALL}/${pkg}/${pkg}" ] && rm -f "${ZOPEN_PKGINSTALL}/${pkg}/${pkg}"
       fi
 
       printInfo "- Removing profiled entry"

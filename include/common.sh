@@ -1264,16 +1264,13 @@ useLocalRepo()
   if ! runLogProgress "pax -rf ${paxRepo} -p p ${paxredirect} ${redirectToDevNull} " "Expanding ${paxRepo}" "Expanded"; then
     printError "Errors unpaxing '${paxRepo}'"
   fi
-  printDebug "Checking pax for metadata file(s): README.md"
   printDebug "Attempting to calculate package name..."
-  if [ -r "${tmpUnpaxDir}/README.md" ]; then
-    printDebug "Found README.md - first line *might* be package title"
-    name=$(head -1 "${tmpUnpaxDir}/README.md" | awk '{print $NF}')
-  fi
-  if [ -z "${name}" ]; then 
-      # Fallback to pax file name
-      name=$(basename "${paxRepo%%-*}")
-      printVerbose "Using '${name}' as package name"
+  mdf="${tmpUnpaxDir}/metadata.json"
+  printDebug "Checking pax for metadata file: ${mdf}"
+
+  if [ -r "${mdf}" ]; then
+    printDebug "Found ${mdf}"
+    name=$(jq -e -r '.product.name' "${mdf}")
   fi
   name="${name%port}"
   [ -z "${name}" ] && printError "Could not determine package name from pax file metadata"
@@ -1289,7 +1286,7 @@ useGitHubRepo()
   fullname="$1"
   printDebug "Name to install: ${fullname}, parsing any version ('=') or tag ('%') has been specified"
   name=$(echo "${fullname}" | sed -e 's#[=%].*##')
-  repo="${name}"
+  repo="${name%port}"
   versioned=$(echo "${fullname}" | cut -s -d '=' -f 2)
   tagged=$(echo "${fullname}" | cut -s -d '%' -f 2)
   printDebug "Name:${name};version:${versioned};tag:${tagged};repo:${repo}"
