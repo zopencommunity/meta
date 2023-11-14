@@ -216,3 +216,10 @@ Internally, zopen sets the `V` and `VERBOSE` environment variables to 1 when the
 ```
 zopen build -vv
 ```
+
+# Some of the text colors are too bright for my terminal's background
+If your background is a lighter color, the header or warning colors could be almost impossible to read as they are by default yellow. There exists a variable in bash that if you change it, it will update the color scheme. The following **bash** command is for changing the color scheme to fit a light terminal background.
+
+```bash
+export COLORFGBG="0;15"
+```
