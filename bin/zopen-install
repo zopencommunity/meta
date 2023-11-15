@@ -575,14 +575,6 @@ if [ -z "${chosenRepos}" ]; then
     addCleanupTrapCmd "${killph}"
     chosenRepos="$(${MYDIR}/zopen-query list --installed --no-header --no-versions)"
     ${killph} 2> /dev/null # if the timer is not running, the kill will fail
-  elif ${all}; then
-    if ! ${yesToPrompts}; then
-      printInfo "Enter 'all' to confirm full installation [takes a long time so be sure!]:"
-      confirmall=$(getInput)
-      if [ ! "xall" = "x${confirmall}" ]; then
-        printError "Cancelling full installation"
-      fi
-    fi
   fi
 fi
 
@@ -629,6 +621,22 @@ foundPort=false
 installArray=""
 
 if ${all}; then
+  if ! ${yesToPrompts}; then
+    # Sum up the pax size + expanded size of the latest releases of each port
+    spaceRequiredBytes=$(jq '.release_data | to_entries | map(select(.value | length > 0)) | map(.value[0].assets[0]) | reduce .[] as $item ({}; . + {($item.name): ($item.size + $item.expanded_size)}) | [.[]] | add' ${JSON_CACHE})
+    spaceRequiredMB=$(echo "scale=0; ${spaceRequiredBytes} / (1024 * 1024)" | bc)
+    availableSpaceMB=$(/bin/df -m ${ZOPEN_ROOTFS} | sed "1d" | awk '{ print $3 }' | awk -F'/' '{ print $1 }')
+    
+    printInfo "You have chosen to install all tools. An estimated ${spaceRequiredMB} MB of additional disk space will be used."
+    if [ $availableSpaceMB -lt $spaceRequiredMB ]; then
+      printWarning "Your zopen file-system ($ZOPEN_ROOTFS) only has ${availableSpaceMB} MB of available space."
+    fi
+    printInfo "Enter 'all' to confirm full installation [takes a long time so be sure!]:"
+    confirmall=$(getInput)
+    if [ ! "xall" = "x${confirmall}" ]; then
+      printError "Cancelling full installation"
+    fi
+  fi
   for repo in $(echo ${repo_results}); do
     installArray="${installArray} ${repo}"
   done
