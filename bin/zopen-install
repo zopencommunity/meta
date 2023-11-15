@@ -580,14 +580,6 @@ if [ -z "${chosenRepos}" ]; then
     if [ ${zqrc} -ne 0 ]; then
       printError "Query for installed packages unexpectedly failed; zopen-query returned message: '${chosenRepos}'"
     fi
-  elif ${all}; then
-    if ! ${yesToPrompts}; then
-      printInfo "Enter 'all' to confirm full installation [takes a long time so be sure!]:"
-      confirmall=$(getInput)
-      if [ ! "xall" = "x${confirmall}" ]; then
-        printError "Cancelling full installation"
-      fi
-    fi
   fi
 fi
 
