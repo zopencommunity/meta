@@ -362,7 +362,7 @@ fi
 # Need to source the .env file from within the actual curl directory and cannot
 # spawn sub-process otherwise no access to environment from this script so run inline
 printVerbose "Sourcing environment to trigger any setup required for packages"
-curldir=$(ls "${rootfs}/boot" | grep curl)
+curldir=$(ls "${rootfs}/boot" | grep curl | head -1)
 [ -e "${rootfs}/boot/${curldir}" ] || printError "Could not locate curl directory '${rootfs}/boot/${curldir}/' for bootstrap. Re-run 'zopen init' to retry"
 chmod -R 755 "${rootfs}/boot/${curldir}"
 curwd="${PWD}"
@@ -370,7 +370,7 @@ cd "${rootfs}/boot/${curldir}/" || printError "Could not access curl bootstrap i
 . ./.env
 cd "${curwd}"  || printError "Could not change to ${curwd}. Re-run 'zopen init' to retry"
 
-jqdir=$(ls "${rootfs}/boot" | grep jq)
+jqdir=$(ls "${rootfs}/boot" | grep jq | head -1)
 [ -e "${rootfs}/boot/${jqdir}" ] || printError "Could not locate jq directory '${rootfs}/boot/${jqdir}' for bootstrap. Re-run 'zopen init' to retry"
 chmod -R 755 "${rootfs}/boot/${jqdir}"
 curwd="${PWD}"
