@@ -13,4 +13,4 @@ The new zopen package manager is not compatible with the previous version of zop
 * Some Rocket Software tools, such as Git, ask the user to export a set of environment prior to running the tool. For example, `GIT_EXEC_PATH` and `GIT_TEMPLATE_DIR` for Git.
 * Some of these environment variables may persist in your .profile or .bashrc or other scripts.
 * These environment variables could lead to conflicts with zopen's tools and could cause potential functional issues.
-* To avoid such conflicts, it is recommended to remove any Rocket Software environment variables. If you are unsure, and to reduce potential conflicts, source zopen's `zopen-config` configuration file **after** configuring Rocket Software tools.
+* To avoid such conflicts, it is recommended to remove or unset all Rocket Software environment variables. If you are unsure, source the zopen configuration file `$ZOPEN_ROOTFS/etc/zopen-config` **after** configuring Rocket Software tools.
