@@ -12,7 +12,7 @@ zopenInitialize()
   if [ -z "${ZOPEN_DONT_PROCESS_CONFIG}" ]; then
     processConfig
   fi
-  ZOPEN_JSON_CACHE_URL="https://zosopentools.github.io/meta/api/zopen_releases.json"
+  ZOPEN_JSON_CACHE_URL="https://raw.githubusercontent.com/ZOSOpenTools/meta/main/docs/api/zopen_releases.json"
 }
 
 addCleanupTrapCmd(){
