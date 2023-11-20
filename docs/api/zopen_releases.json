@@ -1,5 +1,5 @@
 {
-  "timestamp": "2023-11-17T19:41:54.302121",
+  "timestamp": "2023-11-20T12:11:30.283174",
   "release_data": {
     "m4": [
       {
@@ -6493,6 +6493,22 @@
     ],
     "ncurses": [
       {
+        "name": "ncurses (Build 1741) - (STABLE)",
+        "date": "2023-11-14 18:45:05",
+        "tag_name": "STABLE_ncursesport_1741",
+        "assets": [
+          {
+            "name": "ncurses-6.4.20231114_180107.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/ncursesport/releases/download/STABLE_ncursesport_1741/ncurses-6.4.20231114_180107.zos.pax.Z",
+            "size": 6999552,
+            "expanded_size": 24106803,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "1",
+            "passed_tests": "1"
+          }
+        ]
+      },
+      {
         "name": "ncurses (Build 1699) - (STABLE)",
         "date": "2023-11-13 06:06:00",
         "tag_name": "STABLE_ncursesport_1699",
@@ -6566,6 +6582,22 @@
             "url": "https://github.com/ZOSOpenTools/ncursesport/releases/download/stable/ncurses-6.3.20230705_122326.zos.pax.Z",
             "size": 6902784,
             "expanded_size": 23838325,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "1",
+            "passed_tests": "1"
+          }
+        ]
+      },
+      {
+        "name": "stable-release_20230804_122014",
+        "date": "2023-08-04 16:20:15",
+        "tag_name": "stable_20230804_122014",
+        "assets": [
+          {
+            "name": "ncurses-6.3.20230424_012401.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/ncursesport/releases/download/stable_20230804_122014/ncurses-6.3.20230424_012401.zos.pax.Z",
+            "size": 6902784,
+            "expanded_size": 23839142,
             "runtime_dependencies": "No dependencies",
             "total_tests": "1",
             "passed_tests": "1"
@@ -20083,6 +20115,22 @@
     ],
     "groff": [
       {
+        "name": "groff (Build 1784) - (STABLE)",
+        "date": "2023-11-20 16:46:48",
+        "tag_name": "STABLE_groffport_1784",
+        "assets": [
+          {
+            "name": "groff-1.23.0.20231120_105706.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/groffport/releases/download/STABLE_groffport_1784/groff-1.23.0.20231120_105706.zos.pax.Z",
+            "size": 16547328,
+            "expanded_size": 47100911,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "164",
+            "passed_tests": "159"
+          }
+        ]
+      },
+      {
         "name": "groff (Build 1732) - (STABLE)",
         "date": "2023-11-14 06:04:24",
         "tag_name": "STABLE_groffport_1732",
@@ -28477,24 +28525,6 @@
         ]
       }
     ],
-    "zospstree": [
-      {
-        "name": "zospstree (Build 1745) - (STABLE)",
-        "date": "2023-11-14 21:44:01",
-        "tag_name": "STABLE_zospstreeport_1745",
-        "assets": [
-          {
-            "name": "zostree-DEV.20231114_164121.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/zospstreeport/releases/download/STABLE_zospstreeport_1745/zostree-DEV.20231114_164121.zos.pax.Z",
-            "size": 999936,
-            "expanded_size": 2239862,
-            "runtime_dependencies": "bash",
-            "total_tests": "1",
-            "passed_tests": "1"
-          }
-        ]
-      }
-    ],
     "zosnc": [
       {
         "name": "zosnc (Build 1776) - (STABLE)",
@@ -28522,6 +28552,24 @@
             "url": "https://github.com/ZOSOpenTools/zosncport/releases/download/STABLE_zosncport_1743/zosnc-DEV.20231114_163450.zos.pax.Z",
             "size": 1225728,
             "expanded_size": 2656875,
+            "runtime_dependencies": "bash",
+            "total_tests": "1",
+            "passed_tests": "1"
+          }
+        ]
+      }
+    ],
+    "zospstree": [
+      {
+        "name": "zospstree (Build 1745) - (STABLE)",
+        "date": "2023-11-14 21:44:01",
+        "tag_name": "STABLE_zospstreeport_1745",
+        "assets": [
+          {
+            "name": "zostree-DEV.20231114_164121.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/zospstreeport/releases/download/STABLE_zospstreeport_1745/zostree-DEV.20231114_164121.zos.pax.Z",
+            "size": 999936,
+            "expanded_size": 2239862,
             "runtime_dependencies": "bash",
             "total_tests": "1",
             "passed_tests": "1"
