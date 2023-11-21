@@ -573,7 +573,7 @@ if [ -z "${chosenRepos}" ]; then
     ph=$!
     killph="kill -HUP ${ph}"
     addCleanupTrapCmd "${killph}"
-    chosenRepos="$(${MYDIR}/zopen-query list --installed --no-header --no-version 2>&1)"
+    chosenRepos="$(${MYDIR}/zopen-query --list --installed --no-header --no-version 2>&1)"
     zqrc=$?
     ${killph} 2> /dev/null # if the timer is not running, the kill will fail
     sleep 1 # give the above process time to clear
