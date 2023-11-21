@@ -61,7 +61,7 @@ colorizepct()
   elif [ ${percentage} -eq 100 ]; then
     colored="${GREEN}"
   elif [ ${percentage} -gt 50 ]; then
-    colored="${BLUE}"
+    colored="${BOLD}${BLUE}"
   elif [ ${percentage} -gt 0 ]; then
     colored="${YELLOW}"
   else
@@ -200,9 +200,9 @@ printInstalledEntries()
   printVerbose "Screen width: ${scrcols}; colwidth:${colwidth}"
   if [ -n "$1" ] && ! ${noheader}; then
     if [ "${details}" -eq 0 ]; then
-      printf "${NC}${UNDERLINE}%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s${NC}\n" "Package" "Installed" "File" "Releaseline"
+      printf "${NC}${UNDERLINE}%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s${NC}\n" "Package" "Version" "File" "Releaseline"
     else
-      printf "${NC}${UNDERLINE}%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s${NC}\n" "Package" "Installed" "File" "Releaseline" "Expanded Size" "Quality"
+      printf "${NC}${UNDERLINE}%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s${NC}\n" "Package" "Version" "File" "Releaseline" "Expanded Size" "Quality"
     fi
   fi
   printVerbose "Getting list of symlinks in the package install directory (that point to specific versions)"
@@ -256,7 +256,7 @@ printInstalledEntries()
         if [ -e "${pkghome}/test.status" ]; then
           teststatus=$(cat "${pkghome}/test.status")
           percentage=$(echo "${teststatus}" | sed 's/[^-]*-\([^%\.]*\).*/\1/')
-          printf "${NC}%s-${colwidth}s${NC}" "$(colorizepct "${percentage}")" "${percentage}"
+          printf "${NC}$(colorizepct "${percentage}")%-${colwidth}s${NC}"  "${percentage}"
         else
           printf "${NC}${RED}%-${colwidth}s${NC}" "No tests"
         fi
