@@ -27998,6 +27998,25 @@
           }
         ]
       }
+    ],
+    "gn": [
+      {
+        "name": "gn (Build 1730) - (STABLE)",
+        "date": "2023-11-14 05:28:37",
+        "tag_name": "STABLE_gnport_1730",
+        "assets": [
+          {
+            "name": "gn-zopen.20231114_002159.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/gnport/releases/download/STABLE_gnport_1730/gn-zopen.20231114_002159.zos.pax.Z",
+            "size": 1096704,
+            "expanded_size": 3430269,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "30",
+            "passed_tests": "30"
+          }
+        ]
+      }
     ]
   }
+
 }
