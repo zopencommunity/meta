@@ -38,6 +38,7 @@ elif [ "x$1" = "x--version" ]; then
 fi
 
 if [ $# -lt 1 ]; then
+  echo "${ME} requires that a patch file be specified. No action performed." >&2
   exit 4
 fi
 
@@ -46,9 +47,23 @@ if ! mkdir -p "${pd}"; then
   exit 8
 fi
 
+#
+# For each aggregate:
+#  Extract lines that start with 'diff --git', and put the line numbers
+#  for each match into the 'lines' array. 
+#  Add the 'lastline' to the end of the lines array.
+#  These entries indicate the line numbers for each diff file that we will want to create.
+#   Get the relative file names (a and b) from these 'diff --git' lines and make sure they 
+#  match as a check that this is a 'standard' git diff.
+#  Put the array of file names into the 'file' array
+#
+#  Loop through the lines and create new files from the original aggregate file, 
+#  using the line numbers and file names from the lines and file arrays. 
+#
 for aggregate in $@; do
   info=$(grep -n '^diff --git' "${aggregate}")
   lastline=$(wc -l "$1" | awk '{ print $1; }')
+  lastline=$((lastline + 1))
   lines=$(printf "%s" "${info}" | awk -F: ' { print $1; }')
   lines=$(printf '%s\n%s\n' "${lines}" "${lastline}")
 
@@ -63,7 +78,7 @@ for aggregate in $@; do
   start=''
   i=-1
   printf '%s\n' "${lines}" | while IFS= read -r end; do
-    if [ -n "${start}"" ]; then
+    if [ -n "${start}" ]; then
       af="${file[i]}.patch"
       d=$(dirname "${af}")
       rf=$(basename "${af}")
