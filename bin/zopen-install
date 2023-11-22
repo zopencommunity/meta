@@ -194,19 +194,19 @@ handlePackageInstall()
       printVerbose "Found a specific '${validatedReleaseLine}' release-line tagged version; installing..."
     else
       # Case 2 & 3
-      printVerbose "No releases on releaseline '${validatedReleaseLine}'; checking alternative releaseline"
+      printVerbose "No releases on releaseline '${validatedReleaseLine}'; checking alternative releaseline."
       alt=$(echo "${validatedReleaseLine}" | awk ' /DEV/ { print "STABLE" } /STABLE/ { print "DEV" }')
       releaseMetadata="$(/bin/printf "%s" "${releases}" | jq -e -r '. | map(select(.tag_name | startswith("'${alt}'")))[0]')"
       printVerbose "Use quick check for asset to check for existence of metadata"
       asset="$(/bin/printf "%s" "${releaseMetadata}" | jq -e -r '.assets[0]')"
       if [ $? -eq 0 ]; then
-        printVerbose "Found a release on the '${alt}' release line so release tagging is active"
+        printVerbose "Found a release on the '${alt}' release line so release tagging is active."
         if [ "DEV" = "${validatedReleaseLine}" ]; then
           # The system will be configured to use DEV packages where available but if none, use latest
           printInfo "No specific DEV releaseline package, using latest available"
           releaseMetadata="$(/bin/printf "%s" "${releases}" | jq -e -r ".[0]")"
         else
-          printVerbose "The system is configured to only use STABLE releaseline packages but there are none"
+          printVerbose "The system is configured to only use STABLE releaseline packages but there are none."
           printInfo "No release available on the '${validatedReleaseLine}' releaseline."
         fi
       else
@@ -219,7 +219,7 @@ handlePackageInstall()
 
   printVerbose "Getting specific asset details from metadata: ${releaseMetadata}"
   if [ -z "${asset}" ] || [ "null" = "${asset}" ]; then
-    printVerbose "Asset not found during previous logic; setting now"
+    printVerbose "Asset not found during previous logic; setting now."
     asset=$(/bin/printf "%s" "${releaseMetadata}" | jq -e -r '.assets[0]')
   fi
   if [ -z "${asset}" ]; then
@@ -240,39 +240,39 @@ handlePackageInstall()
   printVerbose "Downloading port from URL: ${downloadURL} to file: ${downloadFile} (ver=${downloadFileVer})"
 
   if ${downloadOnly}; then
-    printVerbose "Skipping installation, downloading only"
+    printVerbose "Skipping installation, downloading only."
   else
     printVerbose "Install=${downloadFileVer};Original=${originalFileVersion};${upgradeInstalled};${installOrUpgrade};${reinstall}"
     if [ "${downloadFileVer}" = "${originalFileVersion}" ]; then
       if ! ${reinstall}; then
-        printInfo "${NC}${GREEN}Package ${name} is already installed at the requested version: ${downloadFileVer}${NC} and due to the absence of the 'reinstall' flag, will not be reinstalled"
+        printInfo "${NC}${GREEN}Package ${name} is already installed at the requested version: ${downloadFileVer}${NC} and due to the absence of the 'reinstall' flag, will not be reinstalled."
         return
       fi
       printInfo "- Reinstalling version '${downloadFileVer}' of ${name}..."
     fi
 
-    printVerbose "Checking if package is not installed but scheduled for upgrade"
+    printVerbose "Checking if package is not installed but scheduled for upgrade."
     if [ -z "${originalFileVersion}" ]; then
-      printVerbose "No previous version found"
+      printVerbose "No previous version found."
       if ${installOrUpgrade}; then
-        printVerbose "Package ${name} was not installed so not upgrading but installing"
+        printVerbose "Package ${name} was not installed, so installing instead of upgrading."
       elif ${upgradeInstalled}; then
-        printError "Package ${name} can not be upgraded as it is not installed!"
+        printError "Package ${name} can not be upgraded as it is not installed."
         continue
       fi
       unInstallOldVersion=false
       printInfo "- Installing ${name}..."
     elif ${skipupgrade}; then
-      printInfo "Package ${name} has a newer release '${downloadFileVer}' but was not specified for an upgrade"
+      printInfo "Package ${name} has a newer release '${downloadFileVer}' but was not specified for an upgrade."
       continue
     elif ! ${setactive}; then
-      printVerbose "Current version '${originalFileVersion}' will remain active"
+      printVerbose "Current version '${originalFileVersion}' will remain active."
       unInstallOldVersion=false
     else
-      printVerbose "Previous version '${originalFileVersion}' installed"
+      printVerbose "Previous version '${originalFileVersion}' installed."
       if [ -e "${rootInstallDir}/${name}/${name}/.pinned" ]; then
-        printWarning "- Version '${originalFileVersion}' has been pinned; upgrade to '${downloadFileVer}' skipped"
-        syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_PACKAGE},${CAT_INSTALL}" "DOWNLOAD" "handlePackageInstall" "Attempt to change pinned package '${name}' skipped"
+        printWarning "- Version '${originalFileVersion}' has been pinned; upgrade to '${downloadFileVer}' skipped."
+        syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_PACKAGE},${CAT_INSTALL}" "DOWNLOAD" "handlePackageInstall" "Attempt to change pinned package '${name}' skipped."
         continue
       else
         printInfo "- Replacing ${name} version '${originalFileVersion}' with '${downloadFileVer}'"
@@ -308,14 +308,14 @@ handlePackageInstall()
     addCleanupTrapCmd "${killph}"
 
     if ! runAndLog "curlCmd -L '${downloadURL}' -O ${redirectToDevNull}"; then
-      printError "Could not download from ${downloadURL}. Correct any errors and potentially retry"
+      printError "Could not download from ${downloadURL}. Correct any errors and potentially retry."
       continue
     fi
     ${killph} 2> /dev/null # if the timer is not running, the kill will fail
     syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_NETWORK},${CAT_PACKAGE},${CAT_FILE}" "DOWNLOAD" "handlePackageInstall" "Downloaded remote file '${pax}'"
   fi
   if [ ! -f "${pax}" ]; then
-    printError "${pax} was not found after download!?!"
+    printError "${pax} was not found after download!?"
   fi
 
   if ${downloadOnly}; then
@@ -363,8 +363,8 @@ handlePackageInstall()
     fi
 
     if ! runLogProgress "pax -rf ${pax} -p p ${paxredirect} ${redirectToDevNull}" "Expanding ${pax}" "Expanded"; then
-      printWarning "Errors unpaxing, package directory state unknown"
-      printInfo "Use zopen alt to select previous version"
+      printWarning "Errors unpaxing, package directory state unknown."
+      printInfo "Use zopen alt to select previous version."
       continue
     fi
     if ${localInstall}; then
@@ -377,11 +377,11 @@ handlePackageInstall()
         rm -f "${baseinstalldir}/${name}/${name}"
       fi
       if ! ln -s "${baseinstalldir}/${installdirname}" "${baseinstalldir}/${name}/${name}"; then
-        printError "Could not create symbolic link name"
+        printError "Could not create symbolic link name."
       fi
     fi
 
-    printVerbose "Adding version '${downloadFileVer}' to info file"
+    printVerbose "Adding version '${downloadFileVer}' to info file."
     # Add file version information as a .releaseinfo file
     echo "${downloadFileVer}" > "${baseinstalldir}/${installdirname}/.releaseinfo"
 
@@ -402,7 +402,7 @@ handlePackageInstall()
         printVerbose "The merge completed with: ${misrc}"
       fi
 
-      printInfo "- Checking for env file"
+      printInfo "- Checking for env file."
       if [ -f "${baseinstalldir}/${name}/${name}/.env" ] || [ -f "${baseinstalldir}/${name}/${name}/.appenv" ]; then
         printInfo "- .env file found, adding to profiled processing."
         mkdir -p "${ZOPEN_ROOTFS}/etc/profiled/${name}"
@@ -563,7 +563,7 @@ done
 
 if [ -z "${chosenRepos}" ]; then
   if ! ${all} && ! ${upgradeInstalled}; then
-    printInfo "No ports selected for installation"
+    printInfo "No ports selected for installation."
     exit 4
   fi
   if ${upgradeInstalled}; then
