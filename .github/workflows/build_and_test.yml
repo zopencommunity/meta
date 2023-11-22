@@ -111,7 +111,7 @@ jobs:
             echo -n "."
             sleep 10
           done
-          echo "\nConsole output: "
+          echo "\rConsole output: "
           # Retrieve the console output of the Jenkins job
           curl -k -s --header 'User-Agent: Mozilla/5.0' "${{ vars.JENKINS_SERVER_URL }}/job/Port-Build/${BUILD_NUMBER}/consoleText" -u "${{ secrets.JENKINS_USER }}:${{ secrets.JENKINS_API_TOKEN }}"
 
