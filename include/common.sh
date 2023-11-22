@@ -76,7 +76,7 @@ getCurrentVersionDir(){
 }
 
 # isPackageActive
-# returns whether the package is active ie. has a symlink from 
+# returns whether the package is active ie. has a symlink from
 #  $PKGINSTALL/pkg/pkg to a versioned directory
 # inputs: $1 - package to get currently active version of
 # return: 0  for active
@@ -87,7 +87,7 @@ isPackageActive(){
 }
 
 # Generate a file name that has a high probability of being unique for
-# use as a temporary filename - the filename should be unique in the 
+# use as a temporary filename - the filename should be unique in the
 # instance it was generated and probability suggests it should be for
 # a "reasonable" time after...
 mktempfile()
@@ -120,7 +120,7 @@ isPermString()
   test=$(echo "$1" | zossed "s/[-+rwxugo,=]//g")
   if [ -n "${test}" ]; then
     printDebug "Permission string '$1' was invalid"
-    false; 
+    false;
   else
     true;
   fi
@@ -150,7 +150,7 @@ sanitizeEnvVar(){
   echo "\${value}" | awk -v RS="\${delim}" -v DLIM="\${delim}" -v PRFX="\${prefix}" '{ if (match(\$1, PRFX)==0) {printf("%s%s",\$1,DLIM)}}'
 }
 
-deleteDuplicateEntries() 
+deleteDuplicateEntries()
 {
   value="\$1"
   delim="\$2"
@@ -179,7 +179,7 @@ if [ -z "\${ZOPEN_QUICK_LOAD}" ]; then
     printf "Processing \$zot configuration..."
     for dotenv in \$dotenvs; do
       . \$dotenv
-    done 
+    done
     /bin/echo "DONE"
     unset dotenvs
   fi
@@ -253,7 +253,7 @@ defineANSI()
   CRSRHIDE="${ESC}[?25l"
   # shellcheck disable=SC2034
   CRSRSHOW="${ESC}[?25h"
-  
+
   # Color-type codes, needs explicit terminal settings
   if [ ! "${_BPX_TERMPATH-x}" = "OMVS" ] && [ -z "${NO_COLOR}" ] && [ ! "${FORCE_COLOR-x}" = "0" ] && [ -t 1 ] && [ -t 2 ]; then
     esc="\047"
@@ -270,7 +270,7 @@ defineANSI()
     NC="${esc}[0m"
     darkbackground
     bg=$?
-    if [ $bg -ne 0 ]; then 
+    if [ $bg -ne 0 ]; then
       #if the background was set to black or unknown the header and warning color will be yellow
       HEADERCOLOR="${YELLOW}"
       WARNINGCOLOR="${YELLOW}"
@@ -517,7 +517,7 @@ mergeIntoSystem()
     ln -Rs "${dirrelpath}/" "." 2> /dev/null
   done
 
-  printDebug "Moving unpaxed processing-directory back to main rootfs store"
+  printDebug "Moving unpaxed processing-directory back to main rootfs store."
   # this *must* be done before the merge step below or relative symlinks can't
   # work
   versioneddirname=$(basename "${versioneddir}")
@@ -530,21 +530,21 @@ mergeIntoSystem()
   # Need '-S' to allow long symlinks
   $(cd "${processingDir}" && tar -S -cf "${tarfile}" "usr")
 
-  printDebug "Generating listing for remove processing (including main symlink)"
+  printDebug "Generating listing for remove processing (including main symlink)."
   listing=$(tar tf "${processingDir}/${tarfile}" 2> /dev/null | sort -r)
   echo "Installed files:" > "${versioneddir}/.links"
   echo "${listing}" >> "${versioneddir}/.links"
 
-  printDebug "Extracting tar to rootfs"
+  printDebug "Extracting tar to rootfs."
   cd "${processingDir}" && tar xf "${tarfile}" -C "${rootfs}" 2> /dev/null
 
-  printDebug "Cleaning temp resources"
+  printDebug "Cleaning temp resources."
   rm -rf "${processingDir}" 2> /dev/null
 
-  printDebug "Switching to previous cwd - current work dir was purged"
+  printDebug "Switching to previous cwd - current work dir was purged."
   cd "${currentDir}" || exit
 
-  printInfo "- Integration complete"
+  printInfo "- Integration complete."
   return 0
 }
 
@@ -559,7 +559,7 @@ unsymlinkFromSystem()
   rootfs=$2
   dotlinks=$3
   if [ -e "${dotlinks}" ]; then
-    printInfo "- Checking for obsoleted files in ${rootfs}/usr/ tree from ${pkg}"
+    printInfo "- Checking for obsoleted files in ${rootfs}/usr/ tree from ${pkg}."
     # Use sed to skip header line in .links file
     # Note that the contents of the links file are ordered such that
     # processing occurs depth-first; if, after removing orphaned symlinks,
@@ -568,28 +568,28 @@ unsymlinkFromSystem()
     flecnt=0
     pct=0
 
-    printDebug "Creating Temporary dirname file"
+    printDebug "Creating temporary dirname file."
     tempDirFile="${ZOPEN_ROOTFS}/tmp/zopen.rmdir.${RANDOM}"
     tempTrash="${tempDirFile}.trash"
     [ -e "${tempDirFile}" ] && rm -f "${tempDirFile}" > /dev/null 2>&1
     touch "${tempDirFile}"
     addCleanupTrapCmd "rm -rf ${tempDirFile}"
     printDebug "Using temporary file ${tempDirFile}"
-    printInfo "- Checking ${nfiles} potential links"
+    printInfo "- Checking ${nfiles} potential links."
 
     rm_fileprocs=15
     [ -e "${rootfs}/etc/zopen/rm_fileprocs" ] && rm_fileprocs=$(cat "${rootfs}/etc/zopen/rm_fileprocs")
     threshold=$((nfiles / rm_fileprocs))
     threshold=$((threshold + 1))
     printDebug "Threshold of files per worker [files/procs] calculated as: ${threshold}"
-    [ "${threshold}" -le 50 ] && threshold=50 && printVerbose "Threshold below min: using 50" # Don't spawn too many
+    [ "${threshold}" -le 50 ] && threshold=50 && printVerbose "Threshold below min: using 50." # Don't spawn too many
     printDebug "Starting spinner..."
     progressHandler "spinner" "- Complete" &
     ph=$!
     killph="kill -HUP ${ph} 2>/dev/null"
     addCleanupTrapCmd "${killph}"
 
-    printDebug "Spawning as subshell to handle threading"
+    printDebug "Spawning as subshell to handle threading."
     # Note that this all must happen in a subshell as the above started
     # progressHandler is a signal-terminated process - and a wait issued in
     # the parent will never complete until that ph is signalled/terminated!
@@ -679,7 +679,7 @@ printVerbose()
 {
   [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
   if ${verbose}; then
-    printColors "${NC}${GREEN}${BOLD}VERBOSE${NC}: '${1}'" >&2
+    printColors "${NC}${GREEN}${BOLD}VERBOSE${NC}: ${1}" >&2
   fi
   [ ! -z "${xtrc}" ] && set -x
   return 0
@@ -744,7 +744,7 @@ spinloop()
 
 progressAnimation()
 {
-  [ $# -eq 0 ] && printError "Internal error: no animation strings"
+  [ $# -eq 0 ] && printError "Internal error: no animation strings."
   animcnt=$#
   anim=1
   ansiline 0 0 "$1"
@@ -752,7 +752,7 @@ progressAnimation()
     spinloop 1000
     # Check for daemonization of this process (ie. orphaned and PPID=1)
     # Cannot actually use "$PPID" as it is set at script initialization
-    # and not updated when the parent changes so need to query
+    # and not updated when the parent changes so need to query.
     getParentProcess "$$" >/dev/null 2>&1
     ppid=$?
     [ "${ppid}" -eq 1 ] && kill INT "${ppid}" >/dev/null 2>&1
@@ -780,7 +780,7 @@ progressHandler()
     # shellcheck disable=SC2064
     trap "${trapcmd}" HUP
     case "${type}" in
-      "spinner") progressAnimation '-' '\' '|' '/' 
+      "spinner") progressAnimation '-' '\' '|' '/'
       ;;
       "network") progressAnimation '-----' '>----' '->---' '-->--' '--->-' '---->' '-----' '----<' '---<-' '--<--' '-<---' '<----'
       ;;
@@ -795,7 +795,7 @@ runInBackgroundWithTimeoutAndLog()
   command="$1"
   timeout="$2"
 
-  printVerbose "${command} with timeout of ${timeout}s"
+  printVerbose "${command} with timeout of ${timeout}s."
   eval "${command} &; TEEPID=$!"
   PID=$!
   n=0
@@ -897,7 +897,7 @@ processConfig()
     if [ -f "${relativeRootDir}/etc/zopen-config" ]; then
       . "${relativeRootDir}/etc/zopen-config"
     else
-      printError "Source the zopen-config prior to running $0"
+      printError "Source the zopen-config prior to running $0."
     fi
   fi
 }
@@ -989,9 +989,9 @@ validateVersion()
   requestedVersion=$3
   dependency=$4
   if [ -n "${operator}" ] && [ -z "${version}" ]; then
-    printVerbose "${operator} ${requestedVersion} requsted, but no version file found in ${versionPath}."
+    printVerbose "${operator} ${requestedVersion} requested, but no version file found in ${versionPath}"
     return 1
-  elif [ ! -z "${operator}" ] && ! compareVersions "${version}" "${requestedVersion}"; then
+  elif [ -n "${operator}" ] && ! compareVersions "${version}" "${requestedVersion}"; then
     printVerbose "${dependency} does not satisfy ${version} ${operator} ${requestedVersion}"
     return 1
   fi
@@ -1054,13 +1054,13 @@ downloadJSONCache()
 
     # Need to check that we can read & write to the JSON timestamp cache files
     if [ -e "${JSON_TIMESTAMP_CURRENT}" ]; then
-      [ ! -w "${JSON_TIMESTAMP_CURRENT}" ] || [ ! -r "${JSON_TIMESTAMP_CURRENT}" ] && printError "Cannot access cache at '${JSON_TIMESTAMP_CURRENT}'. Check permissions and retry request"
+      [ ! -w "${JSON_TIMESTAMP_CURRENT}" ] || [ ! -r "${JSON_TIMESTAMP_CURRENT}" ] && printError "Cannot access cache at '${JSON_TIMESTAMP_CURRENT}'. Check permissions and retry request."
     fi
     if [ -e "${JSON_TIMESTAMP}" ]; then
-      [ ! -w "${JSON_TIMESTAMP}" ] || [ ! -r "${JSON_TIMESTAMP}" ] && printError "Cannot access cache at '${JSON_TIMESTAMP}'. Check permissions and retry request"
+      [ ! -w "${JSON_TIMESTAMP}" ] || [ ! -r "${JSON_TIMESTAMP}" ] && printError "Cannot access cache at '${JSON_TIMESTAMP}'. Check permissions and retry request."
     fi
     if [ -e "${JSON_CACHE}" ]; then
-      [ ! -w "${JSON_CACHE}" ] || [ ! -r "${JSON_CACHE}" ] && printError "Cannot access cache at '${JSON_CACHE}'. Check permissions and retry request"
+      [ ! -w "${JSON_CACHE}" ] || [ ! -r "${JSON_CACHE}" ] && printError "Cannot access cache at '${JSON_CACHE}'. Check permissions and retry request."
     fi
 
     if ! curlCmd -L -s -I "${ZOPEN_JSON_CACHE_URL}" -o "${JSON_TIMESTAMP_CURRENT}"; then
@@ -1071,8 +1071,8 @@ downloadJSONCache()
     if [ -f "${JSON_CACHE}" ] && [ -f "${JSON_TIMESTAMP}" ] && [ "$(grep 'Last-Modified' "${JSON_TIMESTAMP_CURRENT}")" = "$(grep 'Last-Modified' "${JSON_TIMESTAMP}")" ]; then
       return
     fi
-    
-    printVerbose "Replacing old timestamp with latest"
+
+    printVerbose "Replacing old timestamp with latest."
     mv -f "${JSON_TIMESTAMP_CURRENT}" "${JSON_TIMESTAMP}"
 
     if ! curlCmd -L -s -o "${JSON_CACHE}" "${ZOPEN_JSON_CACHE_URL}"; then
@@ -1126,8 +1126,7 @@ checkWritable()
   fi
   ROOTDIR="$(cd "${INCDIR}/../" > /dev/null 2>&1 && pwd -P)"
   if ! [ -w "${ROOTDIR}" ]; then
-    printError "Tried to run an update operation (${ME}) in a read-only tools distribution" >&2
-    exit 8
+    printError "Tools distribution is read-only. Cannot run update operation '${ME}'." >&2
   fi
 }
 
