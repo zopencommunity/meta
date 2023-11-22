@@ -30,7 +30,7 @@ addCleanupTrapCmd(){
       newtrapcmd=$(echo "${script}" | while read trapcmd; do
 	       sigcmd=$(echo "${trapcmd}" | sed "s/trap -- \"\(.*\)\" ${trappedSignal}.*/\1/")
 	       [ "${sigcmd}" = "${trapcmd}" ] && continue
-	       printf "%s;%s" "${sigcmd}" "${newcmd}" | tr -s ';'
+	       printf "%s;%s 2>/dev/null" "${sigcmd}" "${newcmd}" | tr -s ';'
          break
       done
       )
