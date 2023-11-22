@@ -634,6 +634,8 @@ setDepsEnv()
           fi
 
           printVerbose "Setting up ${depdir} dependency environment"
+          # Set expected environment variables
+          #TODO: migrate _HOME variables from .env to .appenv
           depUpper=$(echo "${dep}" | awk '{print toupper($0)}')
           export ${depUpper}_HOME="${depdir}"
           export PATH="${depdir}/bin:$PATH"
