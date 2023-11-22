@@ -130,13 +130,13 @@ handlePackageInstall()
     printInfo "Versions available for install:"
     /bin/printf "%s" "${releases}" | jq -e -r 'to_entries | map("\(.key): \(.value.tag_name) - \(.value.assets[0].name) - size: \(.value.assets[0].expanded_size/ (1024 * 1024))mb")[]'
 
-    printVerbose "Getting user selection"
+    printVerbose "Getting user selection."
     valid=false
     while ! ${valid}; do
       echo "Enter version to install (0-${i}): "
       read selection < /dev/tty
       if [[ ! -z $(echo "${selection}" | sed -e 's/[0-9]*//') ]]; then
-        echo "Invalid input, must be a number between 0 and ${i}"
+        echo "Invalid input, must be a number between 0 and ${i}."
       elif [ "${selection}" -ge 0 ] && [ "${selection}" -le "${i}" ]; then
         valid=true
       fi
@@ -148,32 +148,32 @@ handlePackageInstall()
     printVerbose "Install from release line '${releaseLine}' specified"
     validatedReleaseLine=$(validateReleaseLine "${releaseLine}")
     if [ -z "${validatedReleaseLine}" ]; then
-      printError "Invalid releaseline specified: '${releaseLine}'; Valid values: DEV or STABLE"
+      printError "Invalid releaseline specified: '${releaseLine}'; Valid values: DEV or STABLE."
     fi
     printVerbose "Finding latest asset on the release line"
     releaseMetadata="$(/bin/printf "%s" "${releases}" | jq -e -r '. | map(select(.tag_name | startswith("'${releaseLine}'")))[0]')"
-    printVerbose "Use quick check for asset to check for existence of metadata"
+    printVerbose "Use quick check for asset to check for existence of metadata."
     asset="$(/bin/printf "%s" "${releaseMetadata}" | jq -e -r '.assets[0]')"
     if [ $? -ne 0 ]; then
-      printError "Could not find release-line ${releaseLine} for repo: ${repo}"
+      printError "Could not find release-line ${releaseLine} for repo: ${repo}."
     fi
 
   else
-    printVerbose "No explicit version/tag/releaseline, checking for pre-existing package&releaseline"
+    printVerbose "No explicit version/tag/releaseline, checking for pre-existing package&releaseline."
     if [ -n "${installedReleaseLine}" ]; then
-      printVerbose "Found existing releaseline '${installedReleaseLine}', restricting to only that releaseline"
+      printVerbose "Found existing releaseline '${installedReleaseLine}', restricting to only that releaseline."
       validatedReleaseLine="${installedReleaseLine}" # Already validated when stored
     else
-      printVerbose "Checking for system-configured releaseline"
+      printVerbose "Checking for system-configured releaseline."
       sysrelline=$(cat "${ZOPEN_ROOTFS}/etc/zopen/releaseline" | awk ' {print toupper($1)}')
       printVerbose "Validating value: ${sysrelline}"
       validatedReleaseLine=$(validateReleaseLine "${sysrelline}")
       if [ -n "${validatedReleaseLine}" ]; then
-        printVerbose "zopen system configured to use releaseline '${sysrelline}'; restricting to that releaseline"
+        printVerbose "zopen system configured to use releaseline '${sysrelline}'; restricting to that releaseline."
       else
-        printWarning "zopen misconfigured to use an unknown releaseline of '${sysrelline}'; defaulting to STABLE packages"
-        printWarning "Set the contents of '${ZOPEN_ROOTFS}/etc/zopen/releaseline' to a valid value to remove this message"
-        printWarning "Valid values are: DEV | STABLE"
+        printWarning "zopen misconfigured to use an unknown releaseline of '${sysrelline}'; defaulting to STABLE packages."
+        printWarning "Set the contents of '${ZOPEN_ROOTFS}/etc/zopen/releaseline' to a valid value to remove this message."
+        printWarning "Valid values are: DEV | STABLE."
         validatedReleaseLine="STABLE"
       fi
     fi
