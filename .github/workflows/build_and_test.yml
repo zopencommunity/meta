@@ -88,7 +88,7 @@ jobs:
           echo "Job Number: $BUILD_NUMBER"
 
           echo "Build in progress..."
-          echo "See ${{ secrets.JENKINS_USER }}/job/Port-Build/${BUILD_NUMBER}/console for more details (if you have access)"
+          echo "See ${{ secrets.JENKINS_HOST_URL }}/job/Port-Build/${BUILD_NUMBER}/console for more details (if you have access)"
           # Poll the Jenkins API to check if the build has completed
           while true; do
             set +e
@@ -107,7 +107,7 @@ jobs:
             if [ "$(echo "${CURL_OUTPUT}" | jq -r '.building')" != "true" ]; then
               break;
             fi
-            printf "."
+            stdbuf -o0 printf "."
             sleep 10
           done
           echo ""
