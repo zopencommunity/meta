@@ -679,7 +679,7 @@ printVerbose()
 {
   [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
   if ${verbose}; then
-    printColors "${NC}${GREEN}${BOLD}VERBOSE${NC}: '${1}'" >&2
+    printColors "${NC}${GREEN}${BOLD}VERBOSE${NC}: ${1}" >&2
   fi
   [ ! -z "${xtrc}" ] && set -x
   return 0
