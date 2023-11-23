@@ -149,7 +149,7 @@ if [ -n "${ZOPEN_ROOT_PATH}" ]; then
   printInfo "- Setting root directory from ZOPEN_ROOT_PATH envvar: ${rootfs}"
 fi
 
-if [ -n "${reinitExisting}" ]  && [ -n "${ZOPEN_ROOTFS}" ]; then
+if ${reinitExisting} && [ -n "${ZOPEN_ROOTFS}" ]; then
   rootfs="${ZOPEN_ROOTFS}"
   printInfo "- Setting root directory from ZOPEN_ROOTFS envvar: ${rootfs}"
 fi
