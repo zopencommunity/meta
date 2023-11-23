@@ -149,14 +149,14 @@ if [ -n "${ZOPEN_ROOT_PATH}" ]; then
   printInfo "- Setting root directory from ZOPEN_ROOT_PATH envvar: ${rootfs}"
 fi
 
-if ${reinitExisting} && [ -n "${ZOPEN_ROOTFS}" ]; then
-  rootfs="${ZOPEN_ROOTFS}"
-  printInfo "- Setting root directory from ZOPEN_ROOTFS envvar: ${rootfs}"
-fi
-
 if [ -z "${rootfs}" ]; then
-  printInfo "- Enter fully-qualified path to your zopen root directory (default: ${HOME}/zopen):"
-  rootfs=$(getInput)
+  if ${reinitExisting} && [ -n "${ZOPEN_ROOTFS}" ]; then
+    rootfs="${ZOPEN_ROOTFS}"
+    printInfo "- Setting root directory from ZOPEN_ROOTFS envvar: ${rootfs}"
+  else
+    printInfo "- Enter fully-qualified path to your zopen root directory (default: ${HOME}/zopen):"
+    rootfs=$(getInput)
+  fi
 else
   printInfo "- Setting root directory from cli: ${rootfs}"
 fi
