@@ -141,14 +141,14 @@ writeConfigFile(){
 ZOPEN_ROOTFS=\"${rootfs}\"
 export ZOPEN_ROOTFS
 
-if [ -z "${_BPXK_AUTOCVT}" ]; then
+if [ -z "\${_BPXK_AUTOCVT}" ]; then
   export _BPXK_AUTOCVT=ON
 else
-  CUR_CVT="${_BPXK_AUTOCVT}"
-  if [ "${CUR_CVT}" = "ON" ] || [ "${CUR_CVT}" = "ALL" ]; then
+  CUR_CVT="\${_BPXK_AUTOCVT}"
+  if [ "\${CUR_CVT}" = "ON" ] || [ "\${CUR_CVT}" = "ALL" ]; then
     : # ok - we can source the config with these settings
   else
-    echo "Error. You have _BPXK_AUTOCVT=${CUR_CVT} and we can not source the configuration" >&2
+    echo "Error. You have _BPXK_AUTOCVT=\${CUR_CVT} and we can not source the configuration" >&2
     return 4
   fi
 fi
