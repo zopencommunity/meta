@@ -84,6 +84,16 @@ HELPDOC
 
 args=$*
 
+
+# Constants
+# Number of rm processes to run in parallel
+RM_FILEPROCS=5 #TODO: adjust based on number of online cpus on system
+
+# Boostrap pax files
+CURL_PAX_LOCATION="packages/curl-8.4.0.20231011_155722.zos.pax.Z"
+JQ_PAX_LOCATION="packages/curl-8.4.0.20231011_155722.zos.pax.Z"
+
+
 verbose=false
 debug=false
 yesToPrompts=false
@@ -151,27 +161,33 @@ init()
     *) printError "${NC}${RED}The filesystem layout ${fslayout} is unrecognised" ;;
   esac
 
-  printHeader "Initialize zopen framework"
+  if ${reinitExisting}; then
+    printHeader "Re-initializing zopen framework"
+  elif ${refresh}; then
+    printHeader "Refreshing zopen framework"
+  else
+    printHeader "Initializing zopen framework"
+  fi
 
   if [ -n "${ZOPEN_ROOT_PATH}" ]; then
     rootfs="${ZOPEN_ROOT_PATH}"
-    printInfo "- Setting root directory from ZOPEN_ROOT_PATH envvar: ${rootfs}"
+    printVerbose "- Setting root directory from ZOPEN_ROOT_PATH envvar: ${rootfs}"
   fi
 
   if [ -z "${rootfs}" ]; then
     if ${reinitExisting} || ${refresh} && [ -n "${ZOPEN_ROOTFS}" ]; then
       rootfs="${ZOPEN_ROOTFS}"
-      printInfo "- Setting root directory from ZOPEN_ROOTFS envvar: ${rootfs}"
+      printVerbose "- Setting root directory from ZOPEN_ROOTFS envvar: ${rootfs}"
     else
       printInfo "- Enter fully-qualified path to your zopen root directory (default: ${HOME}/zopen):"
       rootfs=$(getInput)
     fi
   else
-    printInfo "- Setting root directory from cli: ${rootfs}"
+    printVerbose "- Setting root directory from cli: ${rootfs}"
   fi
 
   if [ -z "${rootfs}" ]; then
-    printInfo "- No explicit root set, using default: ${HOME}/zopen"
+    printVerbose "- No explicit root set, using default: ${HOME}/zopen"
     rootfs="${HOME}/zopen"
   else
     if [ "${rootfs%/}" = '/' ]; then
@@ -223,7 +239,7 @@ init()
       if ${reinitExisting} || {
         [ -n "${reinit}" ] && [ "y" = "${reinit}" ]
       }; then
-        printInfo "- Re-initializing; removing existing zopen-config"
+        printInfo "- Re-initializing; zopen-config will be re-created"
         rmrf=$(rm -rf "${configFile}")
       else
         printWarning "- Stopping. Pre-existing configuration will be preserved"
@@ -239,12 +255,13 @@ init()
 
 generateFileSystem()
 {
-  printInfo "Checking for existence of specified root: '${rootfs}'"
+  printHeader "Generating File System"
+  printVerbose "Checking for existence of specified root: '${rootfs}'"
   [ -e "${rootfs}" ] || mkdir -p "${rootfs}" || printError "Unable to create zopen root filesystem at '${rootfs}'"
   [ -d "${rootfs}" ] || printError "Specified location '${rootfs}' is not a directory. Unable to access root file system at '${rootfs}'; check permissions"  
   [ -w "${rootfs}" ] || printError "Unable to write to root file system at '${rootfs}'; check permissions"  
 
-  printInfo "- Populating standard file system"
+  printVerbose "- Populating standard file system"
   [ -e "${rootfs}/bin" ] || mkdir -p "${rootfs}/bin"
   [ -e "${rootfs}/etc" ] || mkdir -p "${rootfs}/etc"
   [ -e "${rootfs}/include" ] || mkdir -p "${rootfs}/include"
@@ -255,10 +272,10 @@ generateFileSystem()
   [ -e "${rootfs}/var/log" ] || mkdir -p "${rootfs}/var/log"
   [ -e "${rootfs}/var/tmp" ] || mkdir -p "${rootfs}/var/tmp"
 
-  printInfo "- Creating path for bootstrap files"
+  printVerbose "- Creating path for bootstrap files"
   [ -e "${rootfs}/boot" ] || mkdir -p "${rootfs}/boot"
 
-  printInfo "- Creating symbolic path for prod redirect files"
+  printVerbose "- Creating symbolic path for prod redirect files"
   [ -e "${rootfs}/usr/share/zopen/boot" ] || ln -s "${rootfs}/boot" "${rootfs}/usr/share/zopen/boot"
   [ -e "${rootfs}/etc/zopen" ] || mkdir -p "${rootfs}/etc/zopen"
   echo "${zopen_pkginstall}" > "${rootfs}/etc/zopen/fstype"
@@ -267,16 +284,9 @@ generateFileSystem()
   [ -e "${rootfs}/usr/share/zopen/prod" ] || ln -s "${rootfs}/${zopen_pkginstall}" "${rootfs}/usr/share/zopen/prod"
 
   if [ "${ZOPEN_PKGINSTALL}" = "${rootfs}" ]; then
-    printWarning "Package install location is the zopen root location; this is not recommended. Continue (y/n)"
-    pkgoverlaysrootfs=$(getInput)
-    if [ -n "${pkgoverlaysrootfs}" ] && [ "y" = "${pkgoverlaysrootfs}" ]; then
-      printInfo "- Continuing. Packages will be installed into the zopen root location: ${rootfs}"
-    else
-      printWarning "- Stopping. Existing configuration will be preserved"
-      exit 8
-    fi
+    printError "Package install location is the zopen root location; this is not allowed. Exiting".
   fi
-  printInfo "- Creating path for certificate lookups"
+  printVerbose "- Creating path for certificate lookups: ${rootfs}/${ZOPEN_CA_DIR}"
   [ -e "${rootfs}/${ZOPEN_CA_DIR}" ] || mkdir -p "${rootfs}/${ZOPEN_CA_DIR}"
 
   processCaCerts
@@ -285,12 +295,12 @@ generateFileSystem()
 
 generateConfig()
 {
-  
+  printHeader "Generating zopen-config" 
   writeConfigFile "${configFile}" "${rootfs}" "${zopen_pkginstall}" "${ZOPEN_CA_DIR}/${certFileName}"
   printInfo "- Created config in ${configFile}"
   if ${appendToProfile}; then
     if ! grep -q ". ${rootfs}/etc/zopen-config" "${HOME}/.profile"; then
-      printVerbose "Line not present (grep returned non-0)"
+      printVerbose "zopen-config line not present, proceeding to add to .profile"
   cat << EOF >>  "${HOME}/.profile"
 [ -e "${rootfs}/etc/zopen-config" ] && . ${rootfs}/etc/zopen-config
 EOF
@@ -300,8 +310,7 @@ EOF
 
 setDefaults()
 {
-  # Generate any system values that can be user changed
-  echo "15" > "${rootfs}/etc/zopen/rm_fileprocs"
+  echo "$RM_FILEPROCS" > "${rootfs}/etc/zopen/rm_fileprocs"
 
   if ${releaselineDev}; then
     releaseLine="DEV"
@@ -315,13 +324,14 @@ setDefaults()
 
 installPrereqs()
 {
-  printInfo "- Check for shipped curl pax"
-  curlpax="packages/curl-8.4.0.20231011_155722.zos.pax.Z"
+  printHeader "Installing zopen pre-requisites"
+  printVerbose "- Check for shipped curl pax"
+  curlpax="$CURL_PAX_LOCATION"
 
   curllcn=$(findrev "${MYDIR}" "${curlpax}")
   echo "${curllcn}/${curlpax}"
   if [ -e "${curllcn}/${curlpax}" ]; then
-    printInfo "- Found ${curlpax}. Adding to zopen cache to install as bootstrap"
+    printVerbose "- Found ${curlpax}. Adding to zopen cache to install as bootstrap"
     cp -f "${curllcn}/${curlpax}" "${rootfs}/var/cache/zopen"
   else
     printError "Could not locate curl pax in the zopen cache"
@@ -332,12 +342,12 @@ installPrereqs()
   [ -e "${cachedir}/${basecurlpax}" ] || printError "Could not locate bootstrap curl pax."
   paxrc=$(pax -rf "${cachedir}/${basecurlpax}" -s##${rootfs}/boot/#)
 
-  printInfo "- Check for shipped jq pax"
-  jqpax="packages/jq-1.6.20230720_160648.zos.pax.Z"
+  printVerbose "- Check for shipped jq pax"
+  jqpax="$JQ_PAX_LOCATION"
 
   jqlcn=$(findrev "${MYDIR}" "${jqpax}")
   if [ -e "${jqlcn}/${jqpax}" ]; then
-    printInfo "- Found ${jqpax}. Adding to zopen cache to install as bootstrap"
+    printVerbose "- Found ${jqpax}. Adding to zopen cache to install as bootstrap"
     cp -f "${jqlcn}/${jqpax}" "${rootfs}/var/cache/zopen"
   else
     printError "${jqpax} not found"
@@ -371,14 +381,14 @@ installPrereqs()
 
   . "${configFile}"
 
-  printInfo "Updating CA Certificate"
+  printHeader "Updating CA Certificate"
   export ZOPEN_CA="${ZOPEN_ROOTFS}/${ZOPEN_CA_DIR}/${certFileName}"
   caCertDir="${ZOPEN_ROOTFS}/${ZOPEN_CA_DIR}"
   mkdir -p "${caCertDir}"
-  runAndLog "${MYDIR}/zopen-update-cacert -f "${caCertDir}" -v"
+  runAndLog "${MYDIR}/zopen-update-cacert -f "${caCertDir}" "
   [ $? -ne 0 ] && exit $?
 
-  printInfo "- Using bootstrapped curl and jq to install updated versions (if available)"
+  printVerbose "- Using bootstrapped curl and jq to install updated versions (if available)"
   toolInstall=$(runAndLog "${MYDIR}/zopen-install -y curl jq meta")
   toolInstall=$?
   [ ${toolInstall} -ne 0 ] && printError "Unable to install curl, jq and/or meta; see previous errors and retry the initilisation using the '--re-init' parameter"
@@ -398,7 +408,7 @@ processCaCerts()
   elif [ -n "${ZOPEN_CA}" ]; then
     printVerbose "Existing envvar for ZOPEN_CA found: ${ZOPEN_CA}"
     if [ -r "${ZOPEN_CA}" ]; then
-      printInfo "- Found existing setting for ZOPEN_CA '${ZOPEN_CA}'; reusing certificate"
+      printVerbose "- Found existing setting for ZOPEN_CA '${ZOPEN_CA}'; reusing certificate"
       if [ "${ZOPEN_CA}" != "${ZOPEN_ROOTFS}/${ZOPEN_CA_DIR}/${certFileName}" ]; then # avoid cp error
         cp -f "${ZOPEN_CA}" "${ZOPEN_ROOTFS}/${ZOPEN_CA_DIR}"
       fi
@@ -413,7 +423,7 @@ processCaCerts()
     printVerbose "Checking '${MYDIR}' directory tree for certificate file '${certFileName}'"
     cacertlcn="$(findrev "${MYDIR}" "${certFileName}")"
     if [ -e "${cacertlcn}/${certFileName}" ]; then
-      printInfo "- Found default certificate file '${certFileName}'; copying to zopen file system"
+      printVerbose "- Found default certificate file '${certFileName}'; copying to zopen file system"
       cp -f "${cacertlcn}/${certFileName}" "${ZOPEN_ROOTFS}/${ZOPEN_CA_DIR}"
       cacertFound=true
     else
@@ -424,7 +434,7 @@ processCaCerts()
     cacertlcn="${MYDIR}/../../${ZOPEN_CA_DIR}/${certFileName}"
     printVerbose "Attempting relative search for certificate file at '${cacertlcn}'"
     if [ -r "${cacertlcn}" ]; then
-      printInfo "- Found existing certificate file ${certFileName}'; copying to zopen file system"
+      printVerbose "- Found existing certificate file ${certFileName}'; copying to zopen file system"
       cp -f "${cacertlcn}" "${ZOPEN_ROOTFS}/${ZOPEN_CA_DIR}"
       cacertFound=true
     else
@@ -445,9 +455,9 @@ processCaCerts()
 
 deinit()
 {
+  printHeader "Initialization successfully completed"
   printInfo "${NC}${YELLOW}IMPORTANT: Run '. ${rootfs}/etc/zopen-config' to enable zopen environment for current session or add it to your .profile.${NC}"
   syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_PACKAGE},${CAT_FILE}" "INIT" "" "zopen environment initialised as ${ZOPEN_ROOTFS}"
-  printInfo "${NC}${GREEN}zopen initialization complete.${NC}"
   if ! ${refresh}; then
     myparent="$(cd "$(dirname "${MYDIR}")" >/dev/null 2>&1 && pwd -P )"
     myparentpaxz="${myparent}.pax.Z"
