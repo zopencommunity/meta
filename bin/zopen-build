@@ -1011,7 +1011,7 @@ applyPatches()
   if [ "${results}" != '' ]; then
     printInfo "Existing Changes are active in ${code_dir}."
     printInfo "To re-apply patches, you need to reset the local git repo. "
-    printInfo "  cd '${code_dir}' && git reset --hard origin/main"
+    printInfo "  cd '${code_dir}' && git reset --hard"
     return 0
   else
     for patch in ${patches}; do
