@@ -231,6 +231,10 @@ init()
       fi
     fi
   fi
+
+  export ZOPEN_ROOTFS="${rootfs}"
+  ZOPEN_CA_DIR="etc/pki/tls/certs" # Mimic location on some Linux distributions
+  certFileName="cacert.pem"
 }
 
 generateFileSystem()
@@ -272,14 +276,17 @@ generateFileSystem()
       exit 8
     fi
   fi
+  printInfo "- Creating path for certificate lookups"
+  [ -e "${rootfs}/${ZOPEN_CA_DIR}" ] || mkdir -p "${rootfs}/${ZOPEN_CA_DIR}"
 
-  export ZOPEN_ROOTFS="${rootfs}"
+  processCaCerts
   printInfo "- Root FS available at ${rootfs}"
 }
 
 generateConfig()
 {
-  writeConfigFile "${configFile}" "${rootfs}" "${zopen_pkginstall}" "${ZOPEN_CA}"
+  
+  writeConfigFile "${configFile}" "${rootfs}" "${zopen_pkginstall}" "${ZOPEN_CA_DIR}/${certFileName}"
   printInfo "- Created config in ${configFile}"
   if ${appendToProfile}; then
     if ! grep -q ". ${rootfs}/etc/zopen-config" "${HOME}/.profile"; then
@@ -361,9 +368,15 @@ installPrereqs()
   cd "${curwd}"  || printError "Could not change to ${curwd}. Re-run 'zopen init' to retry"
 
   printInfo "- Sourcing environment"
+
   . "${configFile}"
 
-  generateCACerts
+  printInfo "Updating CA Certificate"
+  export ZOPEN_CA="${ZOPEN_ROOTFS}/${ZOPEN_CA_DIR}/${certFileName}"
+  caCertDir="${ZOPEN_ROOTFS}/${ZOPEN_CA_DIR}"
+  mkdir -p "${caCertDir}"
+  runAndLog "${MYDIR}/zopen-update-cacert -f "${caCertDir}" -v"
+  [ $? -ne 0 ] && exit $?
 
   printInfo "- Using bootstrapped curl and jq to install updated versions (if available)"
   toolInstall=$(runAndLog "${MYDIR}/zopen-install -y curl jq meta")
@@ -375,22 +388,15 @@ installPrereqs()
 }
 
 
-generateCACerts()
+processCaCerts()
 {
-  ZOPEN_CA_DIR="etc/pki/tls/certs" # Mimic location on some Linux distributions
-  certFileName="cacert.pem"
-  ZOPEN_CA="${ZOPEN_CA_DIR}/${certFileName}"
-
-  printInfo "- Creating path for certificate lookups"
-  [ -e "${rootfs}/${ZOPEN_CA_DIR}" ] || mkdir -p "${rootfs}/${ZOPEN_CA_DIR}"
-
   printVerbose "Configuring CA certificate file '${certFileName}'"
   cacertFound=false
   printVerbose "Check for existing ZOPEN_CA environment variable: ${ZOPEN_CA}"
   if [ -f "${ZOPEN_ROOTFS}/${ZOPEN_CA_DIR}/${certFileName}" ]; then
     cacertFound=true
   elif [ -n "${ZOPEN_CA}" ]; then
-    printVerbose "Existing envvar for ZOPEN_CA found"
+    printVerbose "Existing envvar for ZOPEN_CA found: ${ZOPEN_CA}"
     if [ -r "${ZOPEN_CA}" ]; then
       printInfo "- Found existing setting for ZOPEN_CA '${ZOPEN_CA}'; reusing certificate"
       if [ "${ZOPEN_CA}" != "${ZOPEN_ROOTFS}/${ZOPEN_CA_DIR}/${certFileName}" ]; then # avoid cp error
@@ -435,13 +441,6 @@ generateCACerts()
   else
     printError "- Could not access '${certFileName}' in '${ZOPEN_ROOTFS}/${ZOPEN_CA_DIR}'"
   fi
-
-  printInfo "- Updating CA cert"
-  ZOPEN_CA="${ZOPEN_ROOTFS}/${ZOPEN_CA_DIR}"
-  mkdir -p "${ZOPEN_CA}"
-  runAndLog "${MYDIR}/zopen-update-cacert -f ${ZOPEN_CA} -v"
-  [ $? -ne 0 ] && exit $?
-  export ZOPEN_CA="${ZOPEN_CA}/cacert.pem"
 }
 
 deinit()
@@ -463,5 +462,4 @@ init
 generateConfig
 ! ${refresh} && setDefaults
 ! ${refresh} && installPrereqs
-! ${refresh} && generateCACerts
 deinit
