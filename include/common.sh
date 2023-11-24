@@ -148,7 +148,7 @@ else
   if [ "\${CUR_CVT}" = "ON" ] || [ "\${CUR_CVT}" = "ALL" ]; then
     : # ok - we can source the config with these settings
   else
-    echo "Error. You have _BPXK_AUTOCVT=\${CUR_CVT} and we can not source the configuration" >&2
+    echo "Error. You have _BPXK_AUTOCVT=\${CUR_CVT} and we can not source the configuration." >&2
     return 4
   fi
 fi
