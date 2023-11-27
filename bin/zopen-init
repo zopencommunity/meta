@@ -12,14 +12,14 @@ ZOPEN_DONT_PROCESS_CONFIG=1
 #
 setupMyself()
 {
-        ME=$(basename "$0")
-        MYDIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
-        INCDIR="${MYDIR}/../include"
-        if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
-                echo "Internal Error. Unable to find common.sh file to source" >&2
-                exit 8
-        fi
-        . "${INCDIR}/common.sh"
+  ME=$(basename "$0")
+  MYDIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
+  INCDIR="${MYDIR}/../include"
+  if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
+    echo "Internal Error. Unable to find common.sh file to source" >&2
+    exit 8
+  fi
+  . "${INCDIR}/common.sh"
 }
 setupMyself
 checkWritable
@@ -34,30 +34,30 @@ Usage: zopen init [OPTION] [PARAMETERS]...
 
 Options:
   -y, --yes         
-            automatically answer 'yes' to prompts
+          automatically answer 'yes' to prompts
 
   --append-to-profile
-            appends sourcing of zopen-config to current 
-            user's .profile
+          appends sourcing of zopen-config to current 
+          user's .profile
 
   --releaseline-dev
-            globally configure the release line for package
-            installs to enable Development (DEV) packages; the
-            default is for a system to use STABLE packages
+          globally configure the release line for package
+          installs to enable Development (DEV) packages; the
+          default is for a system to use STABLE packages
 
   -f, --fs-layout <LAYOUT>
-            The filesystem structure to use for installed 
-            packages on disk; packages will be installed to 
-            this location under <zopen rootfs>. 
+          The filesystem structure to use for installed 
+          packages on disk; packages will be installed to 
+          this location under <zopen rootfs>. 
 
-            <LAYOUT> should be one of:                                         
+          <LAYOUT> should be one of:                                         
 
-              usrlclz: /usr/local/zopen (default),
-              zopen: /usr/zopen,
-              prod: legacy zopen standard location,
-              ibm: /usr/lpp,
-              fhs: File Hierarchical Standard (/opt),
-              usrlcl: usr/local
+            usrlclz: /usr/local/zopen (default),
+            zopen: /usr/zopen,
+            prod: legacy zopen standard location,
+            ibm: /usr/lpp,
+            fhs: File Hierarchical Standard (/opt),
+            usrlcl: usr/local
 
   --re-init      
           Re-initializes a previous zopen environment or 
@@ -77,17 +77,20 @@ Options:
           display this help and exit
 
 Examples:
-  zopen init        interactively bootstrap a zopen environment
+  zopen init        
+          interactively bootstrap a zopen environment
+
   zopen init --releaseline-dev
-                    interactively bootstrap a zopen environment that
-                    will use Development Releaseline packages
+          interactively bootstrap a zopen environment that
+          will use Development Releaseline packages
+
   zopen --yes --append-to-profile --fs-layout fhs /zopen
-                    non-interactively create a zopen environment at 
-                    location '/zopen' on disk, with packages installed
-                    to '/zopen/opt'. The user's .profile will be
-                    updated to source the configuration file at
-                    '/zopen/etc/zopen-config' when new terminal 
-                    sessions start
+          non-interactively create a zopen environment at 
+          location '/zopen' on disk, with packages installed
+          to '/zopen/opt'. The user's .profile will be
+          updated to source the configuration file at
+          '/zopen/etc/zopen-config' when new terminal 
+          sessions start
 
 Report bugs at https://github.com/ZOSOpenTools/meta/issues 
 
