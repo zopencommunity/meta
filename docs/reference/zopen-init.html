@@ -1,5 +1,5 @@
 <!-- Creator     : groff version 1.22.3 -->
-<!-- CreationDate: Sun Nov 26 22:28:52 2023 -->
+<!-- CreationDate: Mon Nov 27 00:45:24 2023 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -46,7 +46,7 @@
 
 
 <p style="margin-left:11%; margin-top: 1em"><b>zopen</b>
-<i>alt</i> [<i>OPTION</i>] [<i>PARAMETERS</i>]...</p>
+<i>init</i> [<i>OPTION</i>] [<i>PARAMETERS</i>]...</p>
 
 <h2>DESCRIPTION
 <a name="DESCRIPTION"></a>
@@ -63,89 +63,163 @@ file</p>
 </h2>
 
 
-
-<p style="margin-left:11%; margin-top: 1em"><b>&minus;y</b>,
-<b>&minus;&minus;yes</b></p>
-
-<p style="margin-left:22%;">automatically answer
-&rsquo;yes&rsquo; to prompts</p>
-
-
-<p style="margin-left:11%;"><b>&minus;&minus;append&minus;to&minus;profile</b></p>
-
-<p style="margin-left:22%;">appends sourcing of
-zopen&minus;config to current user&rsquo;s .profile</p>
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="14%">
 
 
-<p style="margin-left:11%;"><b>&minus;&minus;releaseline&minus;dev</b></p>
+<p style="margin-top: 1em"><b>&minus;y</b>,
+<b>&minus;&minus;yes</b></p> </td>
+<td width="75%">
+</td></tr>
+</table>
 
-<p style="margin-left:22%;">globally configure the release
-line for package installs to enable Development (DEV)
-packages; the default is for a system to use STABLE
-packages</p>
+<p style="margin-left:22%; margin-top: 1em">automatically
+answer &rsquo;yes&rsquo; to prompts</p>
 
-<p style="margin-left:11%;"><b>&minus;f</b>,
-<b>&minus;&minus;fs&minus;layout</b> &lt;LAYOUT&gt;</p>
-
-<p style="margin-left:22%;">The filesystem structure to use
-for installed packages on disk; packages will be installed
-to this location under &lt;zopen rootfs&gt;. [LAYOUT] should
-be one of:</p>
-
-<p style="margin-left:11%;">usrlclz &minus;
-<i>/usr/local/zopen</i> (default)</p>
-
-<p style="margin-left:22%;">zopen &minus; <i>/usr/zopen</i>
-prod &minus; legacy zopen standard location ibm &minus;
-<i>/usr/lpp</i> fhs &minus; File Hierarchical Standard
-(<i>/opt</i>) usrlcl &minus; <i>/usr/local</i></p>
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="29%">
 
 
-<p style="margin-left:11%;"><b>&minus;&minus;re&minus;init</b></p>
 
-<p style="margin-left:22%;">Re&minus;initializes a previous
-zopen environment or create a new environment using current
-tooling. Re&minus;initializing over a previous installation
-will re&minus;use existing package structures and
-configuration and regenerate configuration files. select the
-active version for PACKAGE from a list</p>
+<p style="margin-top: 1em"><b>&minus;&minus;append&minus;to&minus;profile</b></p> </td>
+<td width="60%">
+</td></tr>
+</table>
 
-<p style="margin-left:11%;"><b>&minus;v</b>,
+<p style="margin-left:22%; margin-top: 1em">appends
+sourcing of zopen&minus;config to current user&rsquo;s
+.profile</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="26%">
+
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;releaseline&minus;dev</b></p> </td>
+<td width="63%">
+</td></tr>
+</table>
+
+<p style="margin-left:22%; margin-top: 1em">globally
+configure the release line for package installs to enable
+Development (DEV) packages; the default is for a system to
+use STABLE packages</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="37%">
+
+
+<p style="margin-top: 1em"><b>&minus;f</b>,
+<b>&minus;&minus;fs&minus;layout</b> &lt;LAYOUT&gt;</p></td>
+<td width="52%">
+</td></tr>
+</table>
+
+<p style="margin-left:22%; margin-top: 1em">The filesystem
+structure to use for installed packages on disk; packages
+will be installed to this location under &lt;zopen
+rootfs&gt;.</p>
+
+<p style="margin-left:22%; margin-top: 1em">&lt;LAYOUT&gt;
+should be one of:</p>
+
+<p style="margin-left:22%; margin-top: 1em">usrlclz:
+<i>/usr/local/zopen</i> (default), zopen: <i>/usr/zopen</i>,
+prod: legacy zopen standard location, ibm: <i>/usr/lpp</i>,
+fhs: File Hierarchical Standard (<i>/opt</i>), usrlcl:
+usr/local</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="14%">
+
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;re&minus;init</b></p> </td>
+<td width="75%">
+</td></tr>
+</table>
+
+
+<p style="margin-left:22%; margin-top: 1em">Re&minus;initializes
+a previous zopen environment or create a new environment
+using current tooling. Re&minus;initializing over a previous
+installation will re&minus;use existing package structures
+and configuration and regenerate configuration files. select
+the active version for PACKAGE from a list</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="14%">
+
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;refresh</b></p> </td>
+<td width="75%">
+</td></tr>
+</table>
+
+<p style="margin-left:22%; margin-top: 1em">Refreshes the
+zopen&minus;config file</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>&minus;v</b>,
 <b>&minus;&minus;verbose</b></p>
 
-<p style="margin-left:22%;">run in verbose mode</p>
+<p style="margin-left:22%; margin-top: 1em">run in verbose
+mode</p>
 
-<p style="margin-left:11%;"><b>&minus;h</b>, &minus;?,
-<b>&minus;&minus;help</b></p>
 
-<p style="margin-left:22%;">display this help and exit</p>
+<p style="margin-left:11%; margin-top: 1em"><b>&minus;h</b>,
+&minus;?, <b>&minus;&minus;help</b></p>
+
+<p style="margin-left:22%; margin-top: 1em">display this
+help and exit</p>
 
 <h2>EXAMPLES
 <a name="EXAMPLES"></a>
 </h2>
 
 
-<p style="margin-left:11%; margin-top: 1em">zopen init</p>
+<p style="margin-left:22%; margin-top: 1em">zopen init</p>
 
-<p style="margin-left:22%;">interactively bootstrap a zopen
-environment</p>
+<p style="margin-left:22%; margin-top: 1em">interactively
+bootstrap a zopen environment</p>
 
-<p style="margin-left:11%;">zopen init
+<p style="margin-left:22%; margin-top: 1em">zopen init
 &minus;&minus;releaseline&minus;dev</p>
 
-<p style="margin-left:22%;">interactively bootstrap a zopen
-environment that will use Development Releaseline
-packages</p>
+<p style="margin-left:22%; margin-top: 1em">interactively
+bootstrap a zopen environment that will use Development
+Releaseline packages</p>
 
-<p style="margin-left:11%;">zopen &minus;&minus;yes
+<p style="margin-left:22%; margin-top: 1em">zopen
+&minus;&minus;yes
 &minus;&minus;append&minus;to&minus;profile
 &minus;&minus;fs&minus;layout fhs /zopen</p>
 
-<p style="margin-left:22%;">non&minus;interactively create
-a zopen environment at location &rsquo;/zopen&rsquo; on
-disk, with packages installed to &rsquo;/zopen/opt&rsquo;.
-The user&rsquo;s .profile will be updated to source the
-configuration file at
+
+<p style="margin-left:22%; margin-top: 1em">non&minus;interactively
+create a zopen environment at location &rsquo;/zopen&rsquo;
+on disk, with packages installed to
+&rsquo;/zopen/opt&rsquo;. The user&rsquo;s .profile will be
+updated to source the configuration file at
 &rsquo;/zopen/etc/zopen&minus;config&rsquo; when new
 terminal sessions start</p>
 
