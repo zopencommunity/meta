@@ -1081,7 +1081,7 @@ downloadJSONCache()
     fi
     chtag -tc 819 "${JSON_TIMESTAMP_CURRENT}"
 
-    if [ -f "${JSON_CACHE}" ] && [ -f "${JSON_TIMESTAMP}" ] && [ "$(grep 'Last-Modified' "${JSON_TIMESTAMP_CURRENT}")" = "$(grep 'Last-Modified' "${JSON_TIMESTAMP}")" ]; then
+    if [ -f "${JSON_CACHE}" ] && [ -f "${JSON_TIMESTAMP}" ] && grep -q 'ETag' "${JSON_TIMESTAMP_CURRENT}" && [ "$(grep 'ETag' "${JSON_TIMESTAMP_CURRENT}")" = "$(grep 'ETag' "${JSON_TIMESTAMP}")" ]; then
       return
     fi
 
