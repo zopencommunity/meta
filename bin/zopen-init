@@ -33,35 +33,48 @@ file
 Usage: zopen init [OPTION] [PARAMETERS]...
 
 Options:
-  -y, --yes         automatically answer 'yes' to prompts
-      --append-to-profile
-                    appends sourcing of zopen-config to current 
-                    user's .profile
-      --releaseline-dev
-                    globally configure the release line for package
-                    installs to enable Development (DEV) packages; the
-                    default is for a system to use STABLE packages
+  -y, --yes         
+            automatically answer 'yes' to prompts
+
+  --append-to-profile
+            appends sourcing of zopen-config to current 
+            user's .profile
+
+  --releaseline-dev
+            globally configure the release line for package
+            installs to enable Development (DEV) packages; the
+            default is for a system to use STABLE packages
+
   -f, --fs-layout <LAYOUT>
-                    The filesystem structure to use for installed 
-                    packages on disk; packages will be installed to 
-                    this location under <zopen rootfs>. [LAYOUT] should
-                    be one of:
-                      usrlclz - /usr/local/zopen (default) 
-                      zopen - /usr/zopen
-                      prod - legacy zopen standard location
-                      ibm  - /usr/lpp
-                      fhs  - File Hierarchical Standard (/opt)
-                      usrlcl - /usr/local
-      --re-init     Re-initializes a previous zopen environment or 
-                    create a new environment using current tooling.
-                    Re-initializing over a previous installation will 
-                    re-use existing package structures and 
-                    configuration and regenerate configuration files.                    
-                    select the active version for PACKAGE from a list
-      --refresh
-                    Refreshes the zopen-config file 
-  -v, --verbose     run in verbose mode
-  -h, -?, --help    display this help and exit
+            The filesystem structure to use for installed 
+            packages on disk; packages will be installed to 
+            this location under <zopen rootfs>. 
+
+            <LAYOUT> should be one of:                                         
+
+              usrlclz: /usr/local/zopen (default),
+              zopen: /usr/zopen,
+              prod: legacy zopen standard location,
+              ibm: /usr/lpp,
+              fhs: File Hierarchical Standard (/opt),
+              usrlcl: usr/local
+
+  --re-init      
+          Re-initializes a previous zopen environment or 
+          create a new environment using current tooling.
+          Re-initializing over a previous installation will 
+          re-use existing package structures and 
+          configuration and regenerate configuration files.                    
+          select the active version for PACKAGE from a list
+
+  --refresh         
+          Refreshes the zopen-config file 
+
+-v, --verbose     
+          run in verbose mode
+
+-h, -?, --help    
+          display this help and exit
 
 Examples:
   zopen init        interactively bootstrap a zopen environment
@@ -91,7 +104,7 @@ RM_FILEPROCS=5 #TODO: adjust based on number of online cpus on system
 
 # Boostrap pax files
 CURL_PAX_LOCATION="packages/curl-8.4.0.20231011_155722.zos.pax.Z"
-JQ_PAX_LOCATION="packages/curl-8.4.0.20231011_155722.zos.pax.Z"
+JQ_PAX_LOCATION="packages/jq-1.6.20230720_160648.zos.pax.Z"
 
 
 verbose=false
