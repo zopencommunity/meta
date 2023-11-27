@@ -72,8 +72,14 @@ getCACertFromCurl()
   [ "${crc}" -ne 0 ] && printError "Could not locate curl to download certificate."
 
   printVerbose "Type of curl: ${curlver}"
-  if ! curlCmd -L ${nocertverify} -o "${TEMP_CACERT}" "${cacert_update_url}"; then
-    printError "curl command could not download from: ${cacert_update_url}"
+  if ! curlCmd -L ${nocertverify} -o "${TEMP_CACERT}" "${cacert_update_url} -fail"; then
+    printWarning "Failed to download ${cacert_update_url}, attempting mirror ${cacert_mirror_update_url}"
+    if ! curlCmd -L ${nocertverify} -o "${TEMP_CACERT}" "${cacert_mirror_update_url} -fail"; then
+      printWarning "Failed to download ${cacert_mirror_update_url}, forcing ipv4"
+      if ! curlCmd -L ${nocertverify} -o "${TEMP_CACERT}" "${cacert_update_url} -4 -fail"; then
+        printError "curl command could not download from: ${cacert_update_url} using ipv4"
+      fi
+    fi
   fi
 
   if [ ! -f "${TEMP_CACERT}" ]; then
@@ -91,6 +97,7 @@ updateCACert()
 verbose=false
 export default_dir="$(cd "${MYDIR}/../" && pwd -P)"
 export cacert_update_url="https://curl.se/ca/cacert.pem"
+export cacert_mirror_update_url="http://curl.haxx.se/ca/cacert.pem"
 
 # Temporary files
 for tmp in "${TMPDIR}" "${TMP}" /tmp; do
