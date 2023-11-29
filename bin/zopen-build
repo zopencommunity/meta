@@ -163,6 +163,7 @@ Optional:
   zopen_append_to_validate_install  This function runs as part of generation of the install_test.sh file. The output of the function is appended to install_test.sh script.
   zopen_pre_install           This function runs before the 'install' step of the build is run.
   zopen_post_install          This function runs after the 'install' step of the build is run.
+  zopen_pre_terminate         This function runs before zopen build terminates.
   zopen_append_to_zoslib_env  This function runs as part of generation of the C function zoslib_env_hook, which can be used to set environment variables before main is run.
   "
 }
@@ -530,6 +531,7 @@ checkEnv()
   ZOPEN_PRE_INSTALL_CODE="zopen_pre_install"
   ZOPEN_POST_INSTALL_CODE="zopen_post_install"
   ZOPEN_CHECK_RESULTS_CODE="zopen_check_results"
+  ZOPEN_PRE_TERMINATE_CODE="zopen_pre_terminate"
 
   if ! command -V "${ZOPEN_CHECK_RESULTS_CODE}" > /dev/null 2>&1; then
     if [ "${ZOPEN_CHECK}x" != "skipx" ] && ! ${skipcheck}; then
@@ -2176,6 +2178,13 @@ fi
 
 if ! install; then
   exit 4
+fi
+
+if command -V "${ZOPEN_PRE_TERMINATE_CODE}" > /dev/null 2>&1; then
+  printVerbose "Running ${ZOPEN_PRE_TERMINATE_CODE}"
+  if ! "${ZOPEN_PRE_TERMINATE_CODE}" "${ZOPEN_INSTALL_DIR}"; then
+    printError "Pre terminate failed."
+  fi
 fi
 
 exit 0
