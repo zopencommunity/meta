@@ -163,6 +163,7 @@ Optional:
   zopen_append_to_validate_install  This function runs as part of generation of the install_test.sh file. The output of the function is appended to install_test.sh script.
   zopen_pre_install           This function runs before the 'install' step of the build is run.
   zopen_post_install          This function runs after the 'install' step of the build is run.
+  zopen_pre_terminate         This function runs before zopen build terminates.
   zopen_append_to_zoslib_env  This function runs as part of generation of the C function zoslib_env_hook, which can be used to set environment variables before main is run.
   "
 }
@@ -292,6 +293,7 @@ printSyntax()
     echo "  -gp, --generate-pax  generate a pax.Z file based on the install contents"
     echo "  --forcepatchapply    force apply the patches, where rejected patches are placed into a corresponding file of the same name, with the .rej extension"
     echo "  --no-set-active      do not change the pinned version" 
+    echo "  --no-install-deps    do not install project's runtime dependencies"
     echo "  -s                   exec a shell before running configure.  Useful when manually building ports."
     echo ""
     echo "The specifics of how the tool works can be controlled through environment variables."
@@ -326,6 +328,7 @@ processOptions()
   forcePatchApply=false
   depsPath="${ZOPEN_PKGINSTALL}"
   forceUpgradeDeps=false
+  noInstallRuntimeDeps=false
   while [[ $# -gt 0 ]]; do
     case $1 in
     "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
@@ -351,6 +354,9 @@ processOptions()
       ;;
     "--forcepatchapply")
       forcePatchApply=true
+      ;;
+    "--no-install-deps")
+      noInstallRuntimeDeps=true
       ;;
     "-buildtype" | "--buildtype" | "-b")
       shift
@@ -525,6 +531,7 @@ checkEnv()
   ZOPEN_PRE_INSTALL_CODE="zopen_pre_install"
   ZOPEN_POST_INSTALL_CODE="zopen_post_install"
   ZOPEN_CHECK_RESULTS_CODE="zopen_check_results"
+  ZOPEN_PRE_TERMINATE_CODE="zopen_pre_terminate"
 
   if ! command -V "${ZOPEN_CHECK_RESULTS_CODE}" > /dev/null 2>&1; then
     if [ "${ZOPEN_CHECK}x" != "skipx" ] && ! ${skipcheck}; then
@@ -1005,7 +1012,8 @@ applyPatches()
   failedcount=0
   if [ "${results}" != '' ]; then
     printInfo "Existing Changes are active in ${code_dir}."
-    printInfo "To re-apply patches, perform a git reset on ${code_dir} prior to running applyPatches again."
+    printInfo "To re-apply patches, you need to reset the local git repo. "
+    printInfo "  cd '${code_dir}' && git reset --hard"
     return 0
   else
     for patch in ${patches}; do
@@ -1452,8 +1460,10 @@ ${varName}_originalDir="\$OLDPWD"
 ZZ
     echo "${ZOPEN_RUNTIME_DEPS}" | xargs | tr ' ' '\n' | sort | while read dep; do
       # Use the first path specified in the dependency search list to install to
-      if ! runAndLog "PATH=\"${curlpath}:${PATH}\" ${MYDIR}/zopen-install --install-or-upgrade ${dep} -v --no-deps -y"; then
-        printError "Failed to install dependencies"
+      if $noInstallRuntimeDeps; then
+        if ! runAndLog "PATH=\"${curlpath}:${PATH}\" ${MYDIR}/zopen-install --install-or-upgrade ${dep} -v --no-deps -y"; then
+          printError "Failed to install dependencies"
+        fi
       fi
       cat << ZZ >> "${ZOPEN_INSTALL_DIR}/.depsenv"
 if [ -f "../../${dep}/${dep}/.env" ]; then
@@ -2168,6 +2178,13 @@ fi
 
 if ! install; then
   exit 4
+fi
+
+if command -V "${ZOPEN_PRE_TERMINATE_CODE}" > /dev/null 2>&1; then
+  printVerbose "Running ${ZOPEN_PRE_TERMINATE_CODE}"
+  if ! "${ZOPEN_PRE_TERMINATE_CODE}" "${ZOPEN_INSTALL_DIR}"; then
+    printError "Pre terminate failed."
+  fi
 fi
 
 exit 0

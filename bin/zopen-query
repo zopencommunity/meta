@@ -61,7 +61,7 @@ colorizepct()
   elif [ ${percentage} -eq 100 ]; then
     colored="${GREEN}"
   elif [ ${percentage} -gt 50 ]; then
-    colored="${BLUE}"
+    colored="${BOLD}${BLUE}"
   elif [ ${percentage} -gt 0 ]; then
     colored="${YELLOW}"
   else
@@ -196,17 +196,17 @@ printInstalledEntries()
 {
   scrcols=$(getScreenCols)
   [ "${details}" -eq 0 ] && numcols=4 || numcols=6
-  colwidth=$((${scrcols} / ${numcols} - 1))
+  colwidth=$((scrcols / numcols - 1))
   printVerbose "Screen width: ${scrcols}; colwidth:${colwidth}"
-  if [ ! -z "$1" ] && ! ${noheader}; then
+  if [ -n "$1" ] && ! ${noheader}; then
     if [ "${details}" -eq 0 ]; then
-      printf "${NC}${UNDERLINE}%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s${NC}\n" "Package" "Installed" "File" "Releaseline"
+      printf "${NC}${UNDERLINE}%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s${NC}\n" "Package" "Version" "File" "Releaseline"
     else
-      printf "${NC}${UNDERLINE}%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s${NC}\n" "Package" "Installed" "File" "Releaseline" "Expanded Size" "Quality"
+      printf "${NC}${UNDERLINE}%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s${NC}\n" "Package" "Version" "File" "Releaseline" "Expanded Size" "Quality"
     fi
   fi
   printVerbose "Getting list of symlinks in the package install directory (that point to specific versions)"
-  installedPackages=$(cd "${ZOPEN_PKGINSTALL}" && zosfind . -type l)
+  installedPackages=$(cd "${ZOPEN_PKGINSTALL}" && zosfind  ./*/. ! -name . -prune -type l)
   printVerbose "Packages: ${installedPackages}"
   echo "${installedPackages}" | xargs | tr ' ' '\n' | sort | while read repo; do
     repo="${repo##*/}"
@@ -249,14 +249,14 @@ printInstalledEntries()
       if [ "${details}" -eq 1 ]; then
         # Extra headers: disk size and quality
         disksizestr=$(du "${ZOPEN_PKGINSTALL}/${repo}" | tail -n 1)
-        disksizestr=$(echo ${disksizestr} | sed 's#\([0-9]*\).*#\1#')
-        disksize=$((${disksizestr} * 512))
+        disksizestr=$(echo "${disksizestr}" | sed 's#\([0-9]*\).*#\1#')
+        disksize=$((disksizestr * 512))
         printf "%-${colwidth}d" "${disksize}"
 
         if [ -e "${pkghome}/test.status" ]; then
           teststatus=$(cat "${pkghome}/test.status")
           percentage=$(echo "${teststatus}" | sed 's/[^-]*-\([^%\.]*\).*/\1/')
-          printf "${NC}${s}%-${colwidth}s${NC}" "$(colorizepct "${percentage}")" "${percentage}"
+          printf "${NC}$(colorizepct "${percentage}")%-${colwidth}s${NC}"  "${percentage}"
         else
           printf "${NC}${RED}%-${colwidth}s${NC}" "No tests"
         fi
@@ -275,7 +275,7 @@ whatProvides()
   # Find any symlinks that match the needle and can then be dereferenced
   found=$(zosfind "${ZOPEN_ROOTFS}" -name "${ZOPEN_PKGINSTALL}/\*" -prune -o -type l -print | grep "${needle}")
   printVerbose "Found list: '${found}'"
-  if [[ -z "${found}" ]]; then
+  if [ -z "${found}" ]; then
     printInfo "No package provides '${needle}'"
   else
     matches=$(echo "${found}" | wc -w | tr -d ' ')
@@ -302,11 +302,11 @@ localoption=true
 upgradeable=false
 details=0
 needle=
-if [[ $# -eq 0 ]]; then
+if [ $# -eq 0 ]; then
   printError "No option provided for query"
 fi
 
-while [[ $# -gt 0 ]]; do
+while [ $# -gt 0 ]; do
   printVerbose "Parsing option: $1"
   case "$1" in
   "--list")
@@ -322,14 +322,14 @@ while [[ $# -gt 0 ]]; do
     localoption=true
     whatprovides=1
     shift
-    [ ! -z $1 ] || printError "Missing file argument"
+    [ -n "$1" ] || printError "Missing file argument"
     needle=$1
     ;;
   "--remote-search")
     localoption=false
     remotesearch=1
     shift
-    [ ! -z $1 ] || printError "Missing package argument"
+    [ -n "$1" ] || printError "Missing package argument"
     needle=$1
     ;;
   "--no-header")
@@ -354,10 +354,11 @@ while [[ $# -gt 0 ]]; do
     exit 0
     ;;
   "--version")
-    zopen-version ${ME}
+    zopen-version "${ME}"
     exit 0
     ;;
   "-v" | "--v" | "-verbose" | "--verbose")
+    # shellcheck disable=SC2034
     verbose=true
     ;;
   -*)
