@@ -12,6 +12,7 @@ zopenInitialize()
   if [ -z "${ZOPEN_DONT_PROCESS_CONFIG}" ]; then
     processConfig
   fi
+  ZOPEN_ANALYTICS_JSON="${ZOPEN_ROOTFS}/etc/zopen/analytics.json"
   ZOPEN_JSON_CACHE_URL="https://raw.githubusercontent.com/ZOSOpenTools/meta/main/docs/api/zopen_releases.json"
 }
 
@@ -704,7 +705,14 @@ printHeader()
   printColors "${NC}${HEADERCOLOR}${BOLD}${UNDERLINE}${1}${NC}" >&2
   [ ! -z "${xtrc}" ] && set -x
   return 0
+}
 
+printAttention()
+{
+  [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
+  printColors "${NC}${MAGENTA}${BOLD}${UNDERLINE}${1}${NC}" >&2
+  [ ! -z "${xtrc}" ] && set -x
+  return 0
 }
 
 runAndLog()
@@ -1142,5 +1150,21 @@ checkWritable()
     printError "Tools distribution is read-only. Cannot run update operation '${ME}'." >&2
   fi
 }
+
+generateUUID() 
+{
+  date_part=$(date +%s)
+  random_part=$((RANDOM))
+  uuid="$date_part-$random_part"
+  echo $uuid
+}
+
+getReleaseLine()
+{
+  jsonConfig="${ZOPEN_ROOTFS}/etc/zopen/config.json"
+  jq -r '.release_line' $jsonConfig
+}
+
+. ${INCDIR}/analytics.sh
 
 zopenInitialize

@@ -70,6 +70,9 @@ Options:
   --refresh         
           Refreshes the zopen-config file 
 
+  --[no]enable-stats
+          Toggle enabling collection of usage statistics
+
 -v, --verbose     
           run in verbose mode
 
@@ -109,8 +112,8 @@ RM_FILEPROCS=5 #TODO: adjust based on number of online cpus on system
 CURL_PAX_LOCATION="packages/curl-8.4.0.20231011_155722.zos.pax.Z"
 JQ_PAX_LOCATION="packages/jq-1.6.20230720_160648.zos.pax.Z"
 
-
 verbose=false
+isHostIBM=false
 debug=false
 yesToPrompts=false
 reinitExisting=false
@@ -118,6 +121,8 @@ appendToProfile=false
 releaselineDev=false
 refresh=false
 fslayout="usrlclz"
+isCollectingStats=false
+isBot=false # used by jenkins, CI/CD
 while [ $# -gt 0 ]; do
   case "$1" in
     "-f" | "--fs-layout" )
@@ -136,6 +141,12 @@ while [ $# -gt 0 ]; do
       ;;
     "--releaseline-dev" )
       releaselineDev=true
+      ;;
+    "--enable-stats" )
+      enableStats=true
+      ;;
+    "--noenable-stats" )
+      enableStats=false
       ;;
     "-h" | "--help" | "-?")
       printHelp
@@ -164,27 +175,8 @@ while [ $# -gt 0 ]; do
   shift
 done
 
-init()
+determineRootFileSystem()
 {
-  printDebug "Validating input parameters"
-  case "${fslayout}" in
-    "usrlclz") zopen_pkginstall="usr/local/zopen"    ;;
-    "usrlcl")  zopen_pkginstall="usr/local"    ;;
-    "fhs")     zopen_pkginstall="opt"    ;;
-    "ibm")     zopen_pkginstall="usr/lpp"    ;;
-    "prod")    zopen_pkginstall="prod"    ;;
-    "zopen")   zopen_pkginstall="usr/zopen"    ;;
-    *) printError "${NC}${RED}The filesystem layout ${fslayout} is unrecognised" ;;
-  esac
-
-  if ${reinitExisting}; then
-    printHeader "Re-initializing zopen framework"
-  elif ${refresh}; then
-    printHeader "Refreshing zopen framework"
-  else
-    printHeader "Initializing zopen framework"
-  fi
-
   if [ -n "${ZOPEN_ROOT_PATH}" ]; then
     rootfs="${ZOPEN_ROOT_PATH}"
     printVerbose "- Setting root directory from ZOPEN_ROOT_PATH envvar: ${rootfs}"
@@ -222,10 +214,63 @@ init()
       fi
     fi
   fi
+}
+
+determineStatsCollection()
+{
+  if is_ibm_hostname; then
+    isHostIBM=true
+  fi
+  if [ -n "$enableStats" ] && $enableStats; then
+    isCollectingStats=true
+  elif [ -n "$enableStats" ] && ! $enableStats; then
+    isCollectingStats=false
+  elif $isHostIBM; then
+    printAttention "Attention: Turning on usage statistics as your host is an IBM host. If this is incorrect, rerun with --noenable-stats"
+    isCollectingStats=true
+  else
+    printInfo "Do you want to contribute anonymous usage statistics to help improve z/OS Open Tools? (press y to collect stats or n for no): "
+    read collectStats < /dev/tty
+    if [ "y" = "${collectStats}" ]; then
+      isCollectingStats=true
+    fi
+  fi
+
+  # Undocumented envar, for CI/CD tracking
+  if [ -n "${ZOPEN_IS_BOT}" ]; then
+    isBot=true
+  fi
+}
+
+init()
+{
+  if ${reinitExisting}; then
+    printHeader "Re-initializing zopen framework"
+  elif ${refresh}; then
+    printHeader "Refreshing zopen framework"
+  else
+    printHeader "Initializing zopen framework"
+  fi
+
+
+  printDebug "Validating input parameters"
+  case "${fslayout}" in
+    "usrlclz") zopen_pkginstall="usr/local/zopen"    ;;
+    "usrlcl")  zopen_pkginstall="usr/local"    ;;
+    "fhs")     zopen_pkginstall="opt"    ;;
+    "ibm")     zopen_pkginstall="usr/lpp"    ;;
+    "prod")    zopen_pkginstall="prod"    ;;
+    "zopen")   zopen_pkginstall="usr/zopen"    ;;
+    *) printError "${NC}${RED}The filesystem layout ${fslayout} is unrecognised" ;;
+  esac
+
+  determineRootFileSystem
+  determineStatsCollection
 
   if ! ${refresh} && ! ${reinitExisting}; then
     printInfo "- Binaries will be symlinked under \"${rootfs}/usr/local/bin\". Libraries will be symlinked under \"${rootfs}/usr/lib\""
     printInfo "- Packages will be installed and maintained under the directory structure ${fslayout} (${rootfs}/${zopen_pkginstall}). To change, re-run with the -f <layout> option."
+    printInfo "- Collecting usage statistics: $isCollectingStats"
   fi
   if ! ${yesToPrompts}; then
     while true; do
@@ -263,6 +308,7 @@ init()
       fi
     fi
   fi
+
 
   export ZOPEN_ROOTFS="${rootfs}"
   ZOPEN_CA_DIR="etc/pki/tls/certs" # Mimic location on some Linux distributions
@@ -309,7 +355,7 @@ generateFileSystem()
   printInfo "- Root FS available at ${rootfs}"
 }
 
-generateConfig()
+generateZopenConfig()
 {
   printHeader "Generating zopen-config" 
   writeConfigFile "${configFile}" "${rootfs}" "${zopen_pkginstall}" "${ZOPEN_CA_DIR}/${certFileName}"
@@ -324,9 +370,10 @@ EOF
   fi
 }
 
-setDefaults()
+generateJsonConfiguration()
 {
-  echo "$RM_FILEPROCS" > "${rootfs}/etc/zopen/rm_fileprocs"
+  jsonConfig="${rootfs}/etc/zopen/config.json"
+  jsonConfigWorking="${jsonConfig}.working"
 
   if ${releaselineDev}; then
     releaseLine="DEV"
@@ -335,7 +382,41 @@ setDefaults()
     releaseLine="STABLE"
     printInfo "- Configured zopen to use stable releaseline packages"
   fi
-  echo "${releaseLine}" > "${rootfs}/etc/zopen/releaseline"
+
+  cat <<zz > "${jsonConfigWorking}"
+  {
+    "release_line": "${releaseLine}",
+    "num_rm_procs": ${RM_FILEPROCS},
+    "is_collecting_stats": ${isCollectingStats}
+  }
+zz
+  jq '.' $jsonConfigWorking > $jsonConfig
+}
+
+generateAnalyticsConfiguration()
+{
+  if ! ${isCollectingStats}; then
+    printVerbose "You have chosen to not collect statistics."
+    return;
+  fi
+  jsonConfig="${rootfs}/etc/zopen/analytics.json"
+  if [ -e "${jsonConfig}" ]; then
+    return;
+  fi
+  jsonConfigWorking="${jsonConfig}.working"
+
+  UUID=$(generateUUID)
+  cat <<zz > "${jsonConfigWorking}"
+  {
+    "profile": "${UUID}",
+    "is_host_ibm": "${isHostIBM}",
+    "is_bot": ${isBot},
+    "installs": [],
+    "removes": []
+  }
+zz
+  jq '.' $jsonConfigWorking > $jsonConfig
+  registerFileSystem "${UUID}" "${isHostIBM}" "${isBot}"
 }
 
 installPrereqs()
@@ -404,13 +485,15 @@ installPrereqs()
   runAndLog "${MYDIR}/zopen-update-cacert -f "${caCertDir}" "
   [ $? -ne 0 ] && exit $?
 
+  printInfo "- zopen bootstrapping complete"
+}
+
+updateBootstrappedTools() {
   printVerbose "- Using bootstrapped curl and jq to install updated versions (if available)"
   toolInstall=$(runAndLog "${MYDIR}/zopen-install -y curl jq meta")
   toolInstall=$?
   [ ${toolInstall} -ne 0 ] && printError "Unable to install curl, jq and/or meta; see previous errors and retry the initilisation using the '--re-init' parameter"
   . "${configFile}"
-
-  printInfo "- zopen bootstrapping complete"
 }
 
 
@@ -485,7 +568,9 @@ deinit()
 
 init
 ! ${refresh} && generateFileSystem
-generateConfig
-! ${refresh} && setDefaults
+generateZopenConfig
 ! ${refresh} && installPrereqs
+generateJsonConfiguration
+generateAnalyticsConfiguration
+! ${refresh} && updateBootstrappedTools
 deinit

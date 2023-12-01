@@ -174,7 +174,7 @@ handlePackageInstall()
       validatedReleaseLine="${installedReleaseLine}" # Already validated when stored
     else
       printVerbose "Checking for system-configured releaseline."
-      sysrelline=$(cat "${ZOPEN_ROOTFS}/etc/zopen/releaseline" | awk ' {print toupper($1)}')
+      sysrelline=$(getReleaseLine)
       printVerbose "Validating value: ${sysrelline}"
       validatedReleaseLine=$(validateReleaseLine "${sysrelline}")
       if [ -n "${validatedReleaseLine}" ]; then
@@ -443,6 +443,8 @@ EOF
       installedList="${name} ${installedList}"
       syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_INSTALL},${CAT_PACKAGE}" "DOWNLOAD" "handlePackageInstall" "Installed package:'${name}';version:${downloadFileVer};install_dir='${baseinstalldir}/${installdirname}';"
     fi
+
+    registerInstall "$name" "${downloadFileVer}" "${upgradeInstalled}"
 
     if ${doNotInstallDeps}; then
       printInfo "- Skipping dependency installation."
