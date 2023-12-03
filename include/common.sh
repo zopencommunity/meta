@@ -591,8 +591,7 @@ unsymlinkFromSystem()
     printDebug "Using temporary file ${tempDirFile}"
     printInfo "- Checking ${nfiles} potential links."
 
-    rm_fileprocs=15
-    [ -e "${rootfs}/etc/zopen/rm_fileprocs" ] && rm_fileprocs=$(cat "${rootfs}/etc/zopen/rm_fileprocs")
+    rm_fileprocs=$(getRMProcs)
     threshold=$((nfiles / rm_fileprocs))
     threshold=$((threshold + 1))
     printDebug "Threshold of files per worker [files/procs] calculated as: ${threshold}"
@@ -1050,6 +1049,7 @@ CAT_QUERY="Q"   # Query processing
 CAT_REMOVE="R"  # Removal handling
 CAT_SYS="S"     # Related to the underlying native z/OS system
 CAT_ZOPEN="Z"   # Related to the zopen system itself
+CAT_STATS="ST"  # Related to usage statistics
 
 syslog()
 {
@@ -1162,7 +1162,32 @@ generateUUID()
 getReleaseLine()
 {
   jsonConfig="${ZOPEN_ROOTFS}/etc/zopen/config.json"
-  jq -r '.release_line' $jsonConfig
+  if [ ! -f "${jsonConfig}" ]; then
+    jq -r '.release_line' $jsonConfig
+  else
+    echo "STABLE"
+  fi
+}
+
+getRMProcs()
+{
+  jsonConfig="${ZOPEN_ROOTFS}/etc/zopen/config.json"
+  if [ ! -f "${jsonConfig}" ]; then
+    jq -r '.num_rm_procs' $jsonConfig
+  else
+    echo "5" # default
+  fi
+}
+
+isURLReachable() {
+  url="$1"
+  timeout=5
+
+  if curl -s --fail --max-time $timeout "$url" > /dev/null; then
+    return 0
+  else
+    return 1
+  fi
 }
 
 . ${INCDIR}/analytics.sh

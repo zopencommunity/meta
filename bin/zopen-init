@@ -218,7 +218,7 @@ determineRootFileSystem()
 
 determineStatsCollection()
 {
-  if is_ibm_hostname; then
+  if isIBMHostname; then
     isHostIBM=true
   fi
   if [ -n "$enableStats" ] && $enableStats; then

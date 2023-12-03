@@ -53,7 +53,7 @@ installDependencies()
   echo "${dependencies}" | xargs | tr ' ' '\n' | sort | while read dep; do
     printVerbose "Removing '${dep}' from dependency queue '${dependencies}'"
     dependencies=$(echo "${dependencies}" | sed -e "s/${dep}//" | tr -s ' ')
-    handlePackageInstall "${dep}"
+    handlePackageInstall "${dep}" true
   done
   skipupgrade=${skipupgrade_lcl}
 )
@@ -62,6 +62,10 @@ handlePackageInstall()
 {
 
   fullname="$1"
+  isRuntimeDependency=$2
+  if [ -z "$isRuntimeDependency" ]; then
+    isRuntimeDependency=false
+  fi
   printVerbose "Name to install: ${fullname}, parsing any version ('=') or tag ('%') has been specified"
   name=$(echo "${fullname}" | sed -e 's#[=%].*##')
   repo="${name}"
@@ -444,7 +448,7 @@ EOF
       syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_INSTALL},${CAT_PACKAGE}" "DOWNLOAD" "handlePackageInstall" "Installed package:'${name}';version:${downloadFileVer};install_dir='${baseinstalldir}/${installdirname}';"
     fi
 
-    registerInstall "$name" "${downloadFileVer}" "${upgradeInstalled}"
+    registerInstall "$name" "${downloadFileVer}" "${upgradeInstalled}" ${isRuntimeDependency}
 
     if ${doNotInstallDeps}; then
       printInfo "- Skipping dependency installation."
