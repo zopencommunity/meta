@@ -1,5 +1,5 @@
 {
-  "timestamp": "2023-12-02T20:49:01.209412",
+  "timestamp": "2023-12-02T22:04:56.944825",
   "release_data": {
     "automake": [
       {
@@ -25655,6 +25655,22 @@
     ],
     "libpcre2": [
       {
+        "name": "libpcre2 (Build 1864) - (STABLE)",
+        "date": "2023-12-03 01:49:18",
+        "tag_name": "STABLE_libpcre2port_1864",
+        "assets": [
+          {
+            "name": "pcre2-10.42.20231202_202715.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/libpcre2port/releases/download/STABLE_libpcre2port_1864/pcre2-10.42.20231202_202715.zos.pax.Z",
+            "size": 2612736,
+            "expanded_size": 6628530,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "3",
+            "passed_tests": "2"
+          }
+        ]
+      },
+      {
         "name": "libpcre2 (Build 1659) - (STABLE)",
         "date": "2023-11-09 13:33:25",
         "tag_name": "STABLE_libpcre2port_1659",
@@ -28607,6 +28623,22 @@
     ],
     "ntbtls": [
       {
+        "name": "ntbtls (Build 1868) - (STABLE)",
+        "date": "2023-12-03 02:00:32",
+        "tag_name": "STABLE_ntbtlsport_1868",
+        "assets": [
+          {
+            "name": "ntbtls-0.3.1.20231203_013905.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/ntbtlsport/releases/download/STABLE_ntbtlsport_1868/ntbtls-0.3.1.20231203_013905.zos.pax.Z",
+            "size": 161280,
+            "expanded_size": 364803,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "1",
+            "passed_tests": "1"
+          }
+        ]
+      },
+      {
         "name": "ntbtls (Build 1611) - (STABLE)",
         "date": "2023-11-09 04:19:53",
         "tag_name": "STABLE_ntbtlsport_1611",
@@ -28939,6 +28971,38 @@
     ],
     "libmd": [
       {
+        "name": "libmd (Build 1869) - (STABLE)",
+        "date": "2023-12-03 02:14:31",
+        "tag_name": "STABLE_libmdport_1869",
+        "assets": [
+          {
+            "name": "libmd-1.1.0.20231203_015822.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/libmdport/releases/download/STABLE_libmdport_1869/libmd-1.1.0.20231203_015822.zos.pax.Z",
+            "size": 96768,
+            "expanded_size": 325007,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "6",
+            "passed_tests": "6"
+          }
+        ]
+      },
+      {
+        "name": "libmd (Build 1865) - (STABLE)",
+        "date": "2023-12-03 01:50:33",
+        "tag_name": "STABLE_libmdport_1865",
+        "assets": [
+          {
+            "name": "libmd-1.1.0.20231203_013405.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/libmdport/releases/download/STABLE_libmdport_1865/libmd-1.1.0.20231203_013405.zos.pax.Z",
+            "size": 96768,
+            "expanded_size": 325035,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "6",
+            "passed_tests": "6"
+          }
+        ]
+      },
+      {
         "name": "libmd (Build 1623) - (STABLE)",
         "date": "2023-11-09 05:53:25",
         "tag_name": "STABLE_libmdport_1623",
@@ -29170,6 +29234,22 @@
       }
     ],
     "libuv": [
+      {
+        "name": "libuv (Build 1870) - (STABLE)",
+        "date": "2023-12-03 02:23:36",
+        "tag_name": "STABLE_libuvport_1870",
+        "assets": [
+          {
+            "name": "libuv-heads.v1.47.0.20231203_020031.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/libuvport/releases/download/STABLE_libuvport_1870/libuv-heads.v1.47.0.20231203_020031.zos.pax.Z",
+            "size": 290304,
+            "expanded_size": 911244,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "429",
+            "passed_tests": "425"
+          }
+        ]
+      },
       {
         "name": "libuv (Build 1728) - (STABLE)",
         "date": "2023-11-13 16:49:03",
@@ -29465,6 +29545,22 @@
     ],
     "zos-code-page-tools": [
       {
+        "name": "zos-code-page-tools (Build 1863) - (DEV)",
+        "date": "2023-12-03 01:48:46",
+        "tag_name": "DEV_zos-code-page-toolsport_1863",
+        "assets": [
+          {
+            "name": "zoscodepagetools-DEV.20231202_204539.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/zos-code-page-toolsport/releases/download/DEV_zos-code-page-toolsport_1863/zoscodepagetools-DEV.20231202_204539.zos.pax.Z",
+            "size": 64512,
+            "expanded_size": 260053,
+            "runtime_dependencies": "bash",
+            "total_tests": "1",
+            "passed_tests": "1"
+          }
+        ]
+      },
+      {
         "name": "zos-code-page-tools (Build 1609) - (DEV)",
         "date": "2023-11-09 04:07:19",
         "tag_name": "DEV_zos-code-page-toolsport_1609",
@@ -29583,6 +29679,22 @@
     ],
     "zospstree": [
       {
+        "name": "zospstree (Build 1867) - (STABLE)",
+        "date": "2023-12-03 01:55:11",
+        "tag_name": "STABLE_zospstreeport_1867",
+        "assets": [
+          {
+            "name": "zostree-DEV.20231202_205215.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/zospstreeport/releases/download/STABLE_zospstreeport_1867/zostree-DEV.20231202_205215.zos.pax.Z",
+            "size": 999936,
+            "expanded_size": 2239801,
+            "runtime_dependencies": "bash",
+            "total_tests": "1",
+            "passed_tests": "1"
+          }
+        ]
+      },
+      {
         "name": "zospstree (Build 1745) - (STABLE)",
         "date": "2023-11-14 21:44:01",
         "tag_name": "STABLE_zospstreeport_1745",
@@ -29600,6 +29712,22 @@
       }
     ],
     "zosnc": [
+      {
+        "name": "zosnc (Build 1866) - (STABLE)",
+        "date": "2023-12-03 01:53:46",
+        "tag_name": "STABLE_zosncport_1866",
+        "assets": [
+          {
+            "name": "zosnc-DEV.20231203_015127.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/zosncport/releases/download/STABLE_zosncport_1866/zosnc-DEV.20231203_015127.zos.pax.Z",
+            "size": 1225728,
+            "expanded_size": 2656546,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "1",
+            "passed_tests": "1"
+          }
+        ]
+      },
       {
         "name": "zosnc (Build 1776) - (STABLE)",
         "date": "2023-11-16 20:29:16",
@@ -29652,6 +29780,22 @@
       }
     ],
     "util-linux": [
+      {
+        "name": "util-linux (Build 1871) - (STABLE)",
+        "date": "2023-12-03 02:46:17",
+        "tag_name": "STABLE_util-linuxport_1871",
+        "assets": [
+          {
+            "name": "util-linux-heads.v2.39.2.20231203_020050.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/util-linuxport/releases/download/STABLE_util-linuxport_1871/util-linux-heads.v2.39.2.20231203_020050.zos.pax.Z",
+            "size": 741888,
+            "expanded_size": 1887185,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "1",
+            "passed_tests": "1"
+          }
+        ]
+      },
       {
         "name": "util-linux (Build 1832) - (STABLE)",
         "date": "2023-11-25 00:31:50",
@@ -29755,24 +29899,6 @@
         ]
       }
     ],
-    "gmp": [
-      {
-        "name": "gmp (Build 1853) - (STABLE)",
-        "date": "2023-12-01 00:11:33",
-        "tag_name": "STABLE_gmpport_1853",
-        "assets": [
-          {
-            "name": "gmp-6.3.0.20231130_170213.zos.pax.Z",
-            "url": "https://github.com/ZOSOpenTools/gmpport/releases/download/STABLE_gmpport_1853/gmp-6.3.0.20231130_170213.zos.pax.Z",
-            "size": 999936,
-            "expanded_size": 2916242,
-            "runtime_dependencies": "No dependencies",
-            "total_tests": "178",
-            "passed_tests": "178"
-          }
-        ]
-      }
-    ],
     "nghttp2": [
       {
         "name": "nghttp2 (Build 1857) - (STABLE)",
@@ -29787,6 +29913,24 @@
             "runtime_dependencies": "No dependencies",
             "total_tests": "1",
             "passed_tests": "1"
+          }
+        ]
+      }
+    ],
+    "gmp": [
+      {
+        "name": "gmp (Build 1853) - (STABLE)",
+        "date": "2023-12-01 00:11:33",
+        "tag_name": "STABLE_gmpport_1853",
+        "assets": [
+          {
+            "name": "gmp-6.3.0.20231130_170213.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/gmpport/releases/download/STABLE_gmpport_1853/gmp-6.3.0.20231130_170213.zos.pax.Z",
+            "size": 999936,
+            "expanded_size": 2916242,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "178",
+            "passed_tests": "178"
           }
         ]
       }
