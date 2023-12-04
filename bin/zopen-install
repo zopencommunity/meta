@@ -354,19 +354,10 @@ handlePackageInstall()
 
     megabytes=$(echo "scale=2; ${size} / (1024 * 1024)" | bc)
     printInfo "After this operation, ${megabytes} MB of additional disk space will be used."
-    if ! ${yesToPrompts}; then
-      while true; do
-        printInfo "Do you want to continue? [y/n]"
-        read continueInstall < /dev/tty
-        if [ "y" = "${continueInstall}" ]; then
-          break
-        fi
-        if [ "n" = "${continueInstall}" ]; then
-          mutexFree "zopen"
-          printInfo "Exiting..."
-          exit 0
-        fi
-      done
+    if ! promptYesOrNo "Do you want to continue?" ${yesToPrompts}; then
+      mutexFree "zopen"
+      printInfo "Exiting..."
+      exit 0
     fi
 
     printVerbose "Check for existing directory for version '${installdirname}'"
