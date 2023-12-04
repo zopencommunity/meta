@@ -229,9 +229,8 @@ determineStatsCollection()
     printAttention "Attention: Turning on usage statistics as your host is an IBM host. If this is incorrect, rerun with --noenable-stats"
     isCollectingStats=true
   else
-    printInfo "Do you want to contribute anonymous usage statistics to help improve z/OS Open Tools? (press y to collect stats or n for no): "
-    read collectStats < /dev/tty
-    if [ "y" = "${collectStats}" ]; then
+    statsMsg="Do you want to contribute anonymous usage statistics to help improve z/OS Open Tools? "
+    if promptYesOrNo "${statsMsg}" false; then
       isCollectingStats=true
     fi
   fi
@@ -272,18 +271,10 @@ init()
     printInfo "- Packages will be installed and maintained under the directory structure ${fslayout} (${rootfs}/${zopen_pkginstall}). To change, re-run with the -f <layout> option."
     printInfo "- Collecting usage statistics: $isCollectingStats"
   fi
-  if ! ${yesToPrompts}; then
-    while true; do
-      printInfo "Do you want to continue? [y/n]"
-      read continueInstall < /dev/tty
-      if [ "y" = "${continueInstall}" ]; then
-        break
-      fi
-      if [ "n" = "${continueInstall}" ]; then
-        printInfo "Exiting..."
-        exit 0
-      fi
-    done
+
+  if ! promptYesOrNo "Do you want to continue?" ${yesToPrompts}; then
+    printInfo "Exiting..."
+    exit 0
   fi
 
   configFile="${rootfs}/etc/zopen-config"

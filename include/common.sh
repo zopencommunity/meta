@@ -1190,6 +1190,26 @@ isURLReachable() {
   fi
 }
 
+promptYesOrNo() {
+  message="$1"
+  skip=$2
+  if ! ${skip}; then
+    while true; do
+      printInfo "${message} [y/n]"
+      read answer < /dev/tty
+      answer=$(echo "${answer}" | tr '[A-Z]' '[a-z]')
+      if [ "y" = "${answer}" ] || [ "yes" = "${answer}" ]; then
+        return 0
+      fi
+      if [ "n" = "${answer}" ] || [ "no" = "${answer}" ]; then
+        return 1
+      fi
+    done
+  fi
+  return 0
+}
+
+
 . ${INCDIR}/analytics.sh
 
 zopenInitialize
