@@ -35,6 +35,9 @@ isIBMHostname()
 sendStatsToRemote()
 {
   json="$1"
+  if ! command -v curl >/dev/null 2>&1; then
+    printError "curl not found. This should not occur. Please report a bug"
+  fi
   response=$(curl -X POST -H "Content-Type: application/json" -d "$json" "${ZOPEN_STATS_URL}/statistics")
   if [ $? -eq 0 ]; then
     success=$(echo "$response" | jq -r '.success')
