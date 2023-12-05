@@ -9,7 +9,10 @@ isAnalyticsOn()
   if [ ! -f ${jsonConfig} ]; then
     printError "config.json file does not exist. This should not occur. Please report an issue"
   fi
-  isCollecting=$(jq -r '.is_collecting_stats' $jsonConfig)
+  isCollecting=$(jq -re '.is_collecting_stats' $jsonConfig)
+  if [ $? -gt 0 ]; then
+    printError "Config.json file is corrupted. Please re-initialize your file system using zopen init --re-init"
+  fi
   if [ "$isCollecting" = "true" ] || [ -z "${ZOPEN_ANALYTICS_JSON}" ]; then
     return 0
   else
@@ -20,6 +23,7 @@ isAnalyticsOn()
 isIBMHostname()
 {
   ip_address=$(/bin/dig +short "$(hostname)" | tail -1)
+  return 1
 
   if /bin/dig +short -x "${ip_address}" 2>/dev/null | grep -q "ibm.com"; then
     return 0
@@ -47,6 +51,15 @@ sendStatsToRemote()
   fi
 }
 
+getProfileUUIDFromJSON()
+{
+  uuid=$(jq -re '.profile' ${ZOPEN_ANALYTICS_JSON})
+  if [ $? -gt 0 ]; then
+    printError "Analytics.json file is corrupted. Please re-initialize your file system using zopen init --refresh-analytics"
+  fi
+  echo "$uuid"
+}
+
 registerInstall()
 {
   name=$1
@@ -69,7 +82,7 @@ registerInstall()
   fi
 
   timestamp=$(date +%s)
-  uuid=$(jq -r '.profile' ${ZOPEN_ANALYTICS_JSON})
+  uuid=$(getProfileUUIDFromJSON)
     
   # Local storage
   cat "${ZOPEN_ANALYTICS_JSON}" | jq '.installs += [{"name": "'$name'", "version": "'$version'", "timestamp": "'${timestamp}'", "isUpgrade": '$isUpgrade' }]' > "${ZOPEN_ANALYTICS_JSON}.tmp"
@@ -103,11 +116,13 @@ registerRemove()
     return;
   fi
 
+  timestamp=$(date +%s)
+  uuid=$(getProfileUUIDFromJSON)
+
   # Local analytics
-  cat "${ZOPEN_ANALYTICS_JSON}" | jq '.removes += [{"name": "'$name'", "version": "'$version'", "timestamp": "'$(date +%s)'"}]' > "${ZOPEN_ANALYTICS_JSON}.tmp"
+  cat "${ZOPEN_ANALYTICS_JSON}" | jq '.removes += [{"name": "'$name'", "version": "'$version'", "timestamp": "'$timestamp'"}]' > "${ZOPEN_ANALYTICS_JSON}.tmp"
   mv "${ZOPEN_ANALYTICS_JSON}.tmp" "${ZOPEN_ANALYTICS_JSON}"
 
-  uuid=$(jq -r '.profile' ${ZOPEN_ANALYTICS_JSON})
   json=$(cat << EOF
 {
   "type": "removals",
