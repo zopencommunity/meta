@@ -77,9 +77,7 @@ handlePackageInstall()
   # findutilsport -> findutils
   # findutils -> findutils
   if [[ "${nameSansPort}" != "${name}" ]] ; then
-    echo "Usage error: please install using base project name without port suffix."
-    echo "  try: zopen install ${nameSansPort}"
-    exit 1
+    printError "Please install using base project name without port suffix.\nTry: zopen install ${nameSansPort}"
   fi
 
   getAllReleasesFromGithub "${repo}"
