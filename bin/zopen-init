@@ -218,6 +218,11 @@ determineRootFileSystem()
 
 determineStatsCollection()
 {
+  if [ -z "$ZOPEN_BETA_FEATURES" ]; then
+    return
+  fi
+  isAnalyticsOn
+  analyticsRC=$?
   if isIBMHostname; then
     isHostIBM=true
   fi
@@ -225,11 +230,14 @@ determineStatsCollection()
     isCollectingStats=true
   elif [ -n "$enableStats" ] && ! $enableStats; then
     isCollectingStats=false
+  elif [ $analyticsRC -lt 2 ]; then
+    isCollectingStats=$(jq -re '.is_collecting_stats' $jsonConfig)
+    return
   elif $isHostIBM; then
     printAttention "Attention: Turning on usage statistics as your host is an IBM host. If this is incorrect, rerun with --noenable-stats"
     isCollectingStats=true
   else
-    statsMsg="Do you want to contribute anonymous usage statistics to help improve z/OS Open Tools? "
+    statsMsg="Do you want to contribute ${NC}${BOLD}anonymous${NC} usage statistics to help improve z/OS Open Tools? "
     if promptYesOrNo "${statsMsg}" false; then
       isCollectingStats=true
     fi
@@ -366,12 +374,19 @@ generateJsonConfiguration()
   jsonConfig="${rootfs}/etc/zopen/config.json"
   jsonConfigWorking="${jsonConfig}.working"
 
-  if ${releaselineDev}; then
-    releaseLine="DEV"
-    printInfo "- Configured zopen to use development (DEV) releaseline packages where available" 
-  else
-    releaseLine="STABLE"
-    printInfo "- Configured zopen to use stable releaseline packages"
+  if [ -e "${jsonConfig}" ]; then
+    releaseLine=$(jq -r '.release_line' $jsonConfig)
+    RM_FILEPROCS=$(jq -r '.num_rm_procs' $jsonConfig)
+  fi
+
+  if [ -z "$releaseLine" ]; then
+    if ${releaselineDev}; then
+      releaseLine="DEV"
+      printInfo "- Configured zopen to use development (DEV) releaseline packages where available" 
+    else
+      releaseLine="STABLE"
+      printInfo "- Configured zopen to use stable releaseline packages"
+    fi
   fi
 
   cat <<zz > "${jsonConfigWorking}"
@@ -394,7 +409,8 @@ generateAnalyticsConfiguration()
     return;
   fi
   jsonConfig="${rootfs}/etc/zopen/analytics.json"
-  # if it's valid json, skip
+
+  # if it's an existing valid json, skip
   if [ -s "${jsonConfig}" ] && jq "." -e /home/itodoro/zopen-blabla/etc/zopen/analytics.json 2>/dev/null >/dev/null; then
     return;
   fi

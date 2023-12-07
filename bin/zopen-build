@@ -660,11 +660,8 @@ setDepsEnv()
       else
         printHeader "Upgrading dependency ${dep}. Installing via zopen install"
       fi
-      if [ -z "${curlpath}" ]; then
-        printError "Need curl to proceed with installation"
-      fi
       path=${ZOPEN_PKGINSTALL} # Install location
-      if ! runAndLog "PATH=\"${curlpath}:${PATH}\" ${MYDIR}/zopen-install --install-or-upgrade ${dep} -v -y"; then
+      if ! runAndLog "PATH=\"${ZOPEN_OLD_PATH}\" ${MYDIR}/zopen-install --install-or-upgrade ${dep} -v -y"; then
         printError "zopen install command failed"
       fi
       depdir="${path}/${dep}/${dep}"
@@ -693,12 +690,7 @@ setEnv()
   export GIT_SSL_CAINFO="${ZOPEN_CA}"
   export CURL_CA_BUNDLE="${ZOPEN_CA}"
 
-  if command -V curl > /dev/null 2>&1; then
-    curlpath=$(dirname "$(command -V curl | cut -f3 -d' ')")
-  fi
-
   initDefaultEnvironment
-
   setDepsEnv
 
   # Dependencies such as libraries may add flags
@@ -1461,7 +1453,7 @@ ZZ
     echo "${ZOPEN_RUNTIME_DEPS}" | xargs | tr ' ' '\n' | sort | while read dep; do
       # Use the first path specified in the dependency search list to install to
       if $noInstallRuntimeDeps; then
-        if ! runAndLog "PATH=\"${curlpath}:${PATH}\" ${MYDIR}/zopen-install --install-or-upgrade ${dep} -v --no-deps -y"; then
+        if ! runAndLog "PATH=\"${ZOPEN_OLD_PATH}\" ${MYDIR}/zopen-install --install-or-upgrade ${dep} -v --no-deps -y"; then
           printError "Failed to install dependencies"
         fi
       fi

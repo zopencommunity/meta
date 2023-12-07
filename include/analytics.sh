@@ -7,15 +7,15 @@ isAnalyticsOn()
 {
   # Currently in beta more
   if [ -z "$ZOPEN_BETA_FEATURES" ]; then
-    return 1
+    return 2
   fi
   jsonConfig="${ZOPEN_ROOTFS}/etc/zopen/config.json"
   if [ ! -f ${jsonConfig} ]; then
-    printError "config.json file does not exist. This should not occur. Please report an issue"
+    return 2
   fi
-  isCollecting=$(jq -re '.is_collecting_stats' $jsonConfig)
+  isCollecting=$(jq -r '.is_collecting_stats' $jsonConfig)
   if [ $? -gt 0 ]; then
-    printError "Config.json file is corrupted. Please re-initialize your file system using zopen init --re-init"
+    return 2
   fi
   if [ "$isCollecting" = "true" ] || [ -z "${ZOPEN_ANALYTICS_JSON}" ]; then
     return 0
@@ -27,6 +27,7 @@ isAnalyticsOn()
 isIBMHostname()
 {
   ip_address=$(/bin/dig +short "$(hostname)" | tail -1)
+  return 1
 
   if /bin/dig +short -x "${ip_address}" 2>/dev/null | grep -q "ibm.com"; then
     return 0
