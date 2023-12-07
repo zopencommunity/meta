@@ -18,6 +18,13 @@ We currently host **120+ z/OS Open Source projects** and we're looking for more!
  * Want to [develop the tools](/Guides/developing.md) ?
  * Want to [improve our documentation](./UpdateDocs.md) ?
 
+### Your Feedback Matters!
+
+* Enjoying z/OS Open Tools? We'd love to get a testimonial from you! Share it by [emailing us](mailto:fultonm@ca.ibm.com).
+* Got an idea or general feedback for the community? Create a [discussion item](https://github.com/orgs/ZOSOpenTools/discussions). We'd love to hear it!
+
+Let's make our tools even better together! 🌟
+
 </div>
 </section>
 
