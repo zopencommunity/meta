@@ -23,7 +23,6 @@ isAnalyticsOn()
 isIBMHostname()
 {
   ip_address=$(/bin/dig +short "$(hostname)" | tail -1)
-  return 1
 
   if /bin/dig +short -x "${ip_address}" 2>/dev/null | grep -q "ibm.com"; then
     return 0
@@ -38,18 +37,18 @@ sendStatsToRemote()
   if ! command -v curl >/dev/null 2>&1; then
     printError "curl not found. This should not occur. Please report a bug"
   fi
-  response=$(curl -X POST -H "Content-Type: application/json" -d "$json" "${ZOPEN_STATS_URL}/statistics")
+  response=$(curl -s -X POST -H "Content-Type: application/json" -d "$json" "${ZOPEN_STATS_URL}/statistics")
   if [ $? -eq 0 ]; then
     success=$(echo "$response" | jq -r '.success')
     if [ "$success" = "true" ]; then
-      printVerbose "Successfully transmitted statistics"
+      printVerbose "Successfully transmitted statistics: $json"
       syslog "${ZOPEN_LOG_PATH}/analytics.log" "${LOG_I}" "${CAT_STATS}" "ANALYTICS" "sendStatsToRemote" "Successfully sent $json to $ZOPEN_STATS_URL"
     else
-      printVerbose "Statistics were not successfully transmitted"
+      printVerbose "Statistics were not successfully transmitted: $json"
       syslog "${ZOPEN_LOG_PATH}/analytics.log" "${LOG_E}" "${CAT_STATS}" "ANALYTICS" "sendStatsToRemote" "Failed to send $json to $ZOPEN_STATS_URL"
     fi
   else
-      printVerbose "Statistics were not successfully transmitted"
+      printVerbose "Statistics were not successfully transmitted: $json"
       syslog "${ZOPEN_LOG_PATH}/analytics.log" "${LOG_E}" "${CAT_STATS}" "ANALYTICS" "sendStatsToRemote" "Failed to send $json to $ZOPEN_STATS_URL"
   fi
 }
@@ -69,6 +68,7 @@ registerInstall()
   version=$2
   isUpgrade=$3
   isRuntimeDependencyInstall=$4
+  timestamp=$5
 
   if [ ! -z "$ZOPEN_IN_ZOPEN_BUILD" ]; then
     isBuildInstall=true
@@ -84,7 +84,9 @@ registerInstall()
     return;
   fi
 
-  timestamp=$(date +%s)
+  if [ -z "$timestamp" ]; then
+    timestamp=$(date +%s)
+  fi
   uuid=$(getProfileUUIDFromJSON)
     
   # Local storage
@@ -175,4 +177,37 @@ registerError()
   if ! isAnalyticsOn; then
     return;
   fi
+}
+
+processAnalyticsFromLogFile()
+{
+  log_file="$ZOPEN_LOG_PATH/audit.log"
+  if [ ! -f "${log_file}" ]; then
+    return
+  fi
+  encountered_packages=""
+
+  printHeader "Porcessing Analytics from log files for existing installation"
+  grep 'handlePackageInstall.*Installed' "$log_file" | while IFS= read -r line || [ -n "$line" ]; do
+    # Extract timestamp
+    timestamp=$(echo "$line" | awk '{print $1 " " $2}')
+    timestamp=$(date -d "$timestamp" +"%s")
+
+    # Extract package name
+    package_name=$(echo "$line" | awk -F"'" '{print $2}')
+
+    # Extract version
+    version=$(echo "$line" | awk -F'version:' '{split($2, a, ";"); print a[1]}' | tr -d '[:space:]')
+
+    # Check if the package has been encountered earlier in the log
+    is_upgrade=0
+    if echo "$encountered_packages" | grep -q ":$package_name:"; then
+        is_upgrade=1
+    fi
+
+    encountered_packages="${encountered_packages}:$package_name:"
+
+    printInfo "Processing $package_name - $version - $timestamp - isUpgrade: $is_upgrade"
+    registerInstall "$package_name" "$version" ${is_upgrade} 0 "${timestamp}"
+  done
 }

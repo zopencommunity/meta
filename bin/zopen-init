@@ -391,7 +391,8 @@ generateAnalyticsConfiguration()
     return;
   fi
   jsonConfig="${rootfs}/etc/zopen/analytics.json"
-  if [ -e "${jsonConfig}" ]; then
+  # if it's valid json, skip
+  if [ -s "${jsonConfig}" ] && jq "." -e /home/itodoro/zopen-blabla/etc/zopen/analytics.json 2>/dev/null >/dev/null; then
     return;
   fi
   jsonConfigWorking="${jsonConfig}.working"
@@ -408,6 +409,10 @@ generateAnalyticsConfiguration()
 zz
   jq '.' $jsonConfigWorking > $jsonConfig
   registerFileSystem "${UUID}" "${isHostIBM}" "${isBot}"
+
+  if [ -n "$ZOPEN_ROOTFS" ] && [ -n "$ZOPEN_LOG_PATH" ] && [ -f "$ZOPEN_LOG_PATH/audit.log" ]; then
+    processAnalyticsFromLogFile
+  fi
 }
 
 installPrereqs()
