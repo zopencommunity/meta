@@ -5,6 +5,10 @@ ZOPEN_STATS_URL="http://163.74.88.212:3000"
 
 isAnalyticsOn()
 {
+  # Currently in beta more
+  if [ -z "$ZOPEN_BETA_FEATURES" ]; then
+    return 1
+  fi
   jsonConfig="${ZOPEN_ROOTFS}/etc/zopen/config.json"
   if [ ! -f ${jsonConfig} ]; then
     printError "config.json file does not exist. This should not occur. Please report an issue"
@@ -70,6 +74,10 @@ registerInstall()
   isRuntimeDependencyInstall=$4
   timestamp=$5
 
+  if ! isAnalyticsOn; then
+    return;
+  fi
+
   if [ ! -z "$ZOPEN_IN_ZOPEN_BUILD" ]; then
     isBuildInstall=true
   else
@@ -78,10 +86,6 @@ registerInstall()
 
   if [ -z "$isRuntimeDependencyInstall" ]; then
     isRuntimeDependencyInstall=false
-  fi
-
-  if ! isAnalyticsOn; then
-    return;
   fi
 
   if [ -z "$timestamp" ]; then
@@ -149,6 +153,7 @@ registerFileSystem()
   uuid=$1
   isibm=$2
   isbot=$3
+
   if ! isAnalyticsOn; then
     return;
   fi
