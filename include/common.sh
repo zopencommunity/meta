@@ -376,7 +376,7 @@ findrev()
 
 strtrim()
 {
-  echo "$1" | sed -e 's/^[ ]*//' -e 's/[ ]*$//'
+  echo "$1" | sed -e 's/^\s*//' -e 's/[ ]*$//'
 }
 
 defineEnvironment()

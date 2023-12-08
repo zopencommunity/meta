@@ -654,6 +654,7 @@ if ${all}; then
   done
   installArray=$(strtrim "${installArray}")
 else
+  chosenRepos=$(strtrim "${chosenRepos}")
   for chosenRepo in $(echo "${chosenRepos}" | tr ',' '\n'); do
     printVerbose "Processing repo: ${chosenrepo}"
     printVerbose "Stripping any version (%), tag (#) or port suffixes"
@@ -664,7 +665,7 @@ else
       printVerbose "Adding '${chosenRepo}' to the install queue."
       installArray="${installArray} ${chosenRepo}"
       printVerbose "Removing valid port from input list."
-      chosenRepos=$(echo "${chosenRepos}" | sed -e "s#${chosenRepo}##")
+      chosenRepos=$(echo "${chosenRepos}" | sed -e "s#^${chosenRepo}\$##")
     fi
   done
 fi
