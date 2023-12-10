@@ -27,12 +27,14 @@ from the system to save space and prevent clutter
 Usage: zopen clean [OPTION] [PACKAGE]
 
 Options:
-  -c, --cache       cleans the downloaded package cache; packages will be re-downloaded if needed
+  -c, --cache  [PACKAGE ...]
+                    cleans the downloaded package cache; packages will be re-downloaded if needed
   -d, --dangling    removes dangling symlinks from the zopen file system in case of issues during
                     package maintenance
-  -u, --unused [PACKAGE]     
-                    remove versions of PACKAGE that are available as alternatives, leaving only the 
+  -u, --unused [PACKAGE ...]     
+                    remove versions of PACKAGEs that are available as alternatives, leaving only the 
                     currently active version
+      --all         apply cleanup command to all applicable packages
   -v, --verbose     run in verbose mode
   -h,-?, --help     display this help and exit
   --version         print version
@@ -50,28 +52,32 @@ HELPDOC
 
 cleanUnused()
 {
-  needle=$1
-  [ -z "${needle}" ] && return 
-  current=$(getCurrentVersionDir "${needle}")
-
-  if [ -n "${current}" ]; then
-    current=$(basename "${current}")
-  else
-    printInfo "No currently active version of '${needle}'; removing all versions"
-  fi
-  cd "${ZOPEN_PKGINSTALL}/${needle}" && zosfind . -name "./*" -prune -type d |
-  while read repo; do
-    printVerbose "Parsing repo: '${repo}' as '${repo#./}'"
-    repo="${repo#./}"
-    if [ "${current}" = "${repo}" ]; then
-      printInfo "${NC}${GREEN}-> ${repo}  <- Current version${NC}"
+  for needle in $1; do
+    [ -z "${needle}" ] && return 
+    [ ! -e "${ZOPEN_PKGINSTALL}/${needle}" ] && printInfo "No versions of '${needle}' found" && continue
+    
+    current=$(getCurrentVersionDir "${needle}")
+  
+    if [ -n "${current}" ]; then
+      current=$(basename "${current}")
     else
-      deref=$(cd "${ZOPEN_PKGINSTALL}/${needle}/${repo}" && pwd -P)
-      [ "${deref}" = "/" ] || rm -rf "${deref}" > /dev/null 2>&1
-      printInfo "-- ${repo} <- Removed"
-      syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_FILE},${CAT_PACKAGE},${CAT_REMOVE}" "CLEAN" "cleanUnused" "Removed unused package at ${repo#"${ZOPEN_PKGINSTALL}"/} "
+      printInfo "No currently active version of '${needle}'; removing all versions"
     fi
-  done  
+
+    cd "${ZOPEN_PKGINSTALL}/${needle}" && zosfind . -name "./*" -prune -type d |
+    while read repo; do
+      printVerbose "Parsing repo: '${repo}' as '${repo#./}'"
+      repo="${repo#./}"
+      if [ "${current}" = "${repo}" ]; then
+        printInfo "${NC}${GREEN}-> ${repo}  <- Current version${NC}"
+      else
+        deref=$(cd "${ZOPEN_PKGINSTALL}/${needle}/${repo}" && pwd -P)
+        [ "${deref}" = "/" ] || rm -rf "${deref}" > /dev/null 2>&1
+        printInfo "-- ${repo} <- Removed"
+        syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_FILE},${CAT_PACKAGE},${CAT_REMOVE}" "CLEAN" "cleanUnused" "Removed unused package at ${repo#"${ZOPEN_PKGINSTALL}"/} "
+      fi
+    done  
+  done
 }
 
 cleanDangling()
@@ -102,7 +108,7 @@ cleanDangling()
   killph="kill -HUP ${ph}"
   addCleanupTrapCmd "${killph}"
   zosfind "${ZOPEN_ROOTFS}" -type l -exec test ! -e {} \; -print | while read sl; do
-    printVerbose "Removing symlink '${sl}'"
+    printVerbose "Removing dahngling symlink '${sl}'"
     rm -f "${sl}"
   done
   ${killph} 2> /dev/null # if the timer is not running, the kill will fail
@@ -111,10 +117,21 @@ cleanDangling()
 
 cleanCache()
 {
-  printVerbose "Cleaning ${ZOPEN_ROOTFS}/var/cache/zopen"
-  rm -rf "${ZOPEN_ROOTFS}/var/cache/zopen/"*
-  syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_FILE}" "CLEAN" "cleanCache" "Main cache in ${ZOPEN_ROOTFS}/var/cache/zopen cleaned"
-  printInfo "- Cache at '${ZOPEN_ROOTFS}/var/cache/zopen' cleaned"
+  # "All" option ignores the input parameter list as it brute force-cleans the cache rather
+  # than cherry-pick the files to remove
+  if ${all}; then
+    printVerbose "Cleaning all entries in ${ZOPEN_ROOTFS}/var/cache/zopen"
+    rm -rf "${ZOPEN_ROOTFS}/var/cache/zopen/"*
+    syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_FILE}" "CLEAN" "cleanCache" "Main cache in ${ZOPEN_ROOTFS}/var/cache/zopen cleaned"
+    printInfo "- Cache at '${ZOPEN_ROOTFS}/var/cache/zopen' cleaned"
+  else
+    for needle in $1; do
+      printVerbose "Cleaning ${ZOPEN_ROOTFS}/var/cache/zopen entries for '${needle}"
+      rm -rf "${ZOPEN_ROOTFS}"/var/cache/zopen/"${needle}"-*
+      syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_FILE}" "CLEAN" "cleanCache" "Cache for '${needle}' in ${ZOPEN_ROOTFS}/var/cache/zopen cleaned."
+      printVerbose "- Cleaned cached files for '${needle}' in cache at '${ZOPEN_ROOTFS}/var/cache/zopen'."
+    done
+  fi
 }
 
 # Main code start here
@@ -124,7 +141,8 @@ debug=false
 unused=false
 dangling=false
 cache=false
-package=""
+all=false
+packagelist=""
 
 if [ $# -eq 0 ]; then
   printError "No option provided for cleaning"
@@ -133,12 +151,11 @@ while [ $# -gt 0 ]; do
   printVerbose "Parsing option: $1"
   case "$1" in
   "-u" | "--unused")
-    shift
-    [ $# -lt 1 ] && printError "Missing parameter for 'clean unused' option"
     unused=true
     dangling=false
-    cache=false
-    package="$1"
+    ;;
+  "--all")
+    all=true
     ;;
   "-d" | "--dangling")
     unused=false
@@ -146,7 +163,6 @@ while [ $# -gt 0 ]; do
     cache=false
     ;;
   "-c" | "--cache")
-    unused=false
     dangling=false
     cache=true
     ;;
@@ -166,18 +182,40 @@ while [ $# -gt 0 ]; do
     debug=true
     ;;
   *)
-    package="$1" # Use the last unrecognised parameter as the package
+    packagelist=$(printf "%s %s" "${packagelist}" "$1") # Use the last unrecognised parameter as the package
     ;;
   esac
   shift
 done
 
-if ${unused}; then
-  cleanUnused "${package}"
-fi
-if ${dangling}; then
+
+if ! ${dangling}; then
+  getReposFromGithub
+  if $all; then
+    # shellcheck disable=SC2154
+    for repo in ${repo_results}; do
+      cleanlist="${cleanlist} ${repo}"
+    done
+  elif [ -n "$packagelist" ]; then
+    for pkg in $(echo "${packagelist}" | tr ',' ' ' | tr -s ' '); do
+      pkgfound=$(echo "${repo_results}" | awk -vpkg="${pkg}" '$0 == pkg {print}')
+      if [ "${pkgfound}" = "${pkg}" ]; then
+        printVerbose "Adding '${pkg}' to the clean queue."
+        cleanlist=$(printf "%s %s" "${cleanlist}" "${pkg}")
+      else
+        invalidlist=$(printf "%s %s" "${invalidlist}" "${pkg}")
+      fi
+    done
+    [ -n "${invalidlist}" ] && printError "The following package(s) were invalid and cannot be cleaned:\n${invalidlist}"
+  elif [ ${cache} ]; then
+    all=true
+  else
+    [ -z "${packagelist}" ] && printError "Missing parameters. Correct command syntax and retry."
+  fi
+  ${unused} && cleanUnused "${cleanlist}"
+  ${cache} && cleanCache "${cleanlist}"
+  exit
+else
   cleanDangling
-fi
-if ${cache}; then
-  cleanCache
+  exit
 fi
