@@ -542,7 +542,7 @@ checkEnv()
     fi
   fi
 
-  implicitDeps="sed git jq curl"
+  implicitDeps="sed git jq curl xz zstd"
 
   if [ -z "${ZOPEN_COMP}" ]; then
     implicitDeps="${implicitDeps} comp_xlclang"
@@ -1507,7 +1507,7 @@ generateMetadataJSON()
 {
   printHeader "Creating Metadata JSON"
   package=${ZOPEN_NAME}
-  name=$(echo $package | cut -d "-" -f 1)
+  PACKAGE_NAME=$(echo $package | cut -d "-" -f 1)
   if [ -z "${versionString}" ]; then
     version=$(echo ${package} | cut -d "-" -f 2)
 
@@ -1537,7 +1537,7 @@ cat <<zz > "${ZOPEN_INSTALL_DIR}/metadata.json"
 {
 "version_scheme": "${metadata_version_scheme}",
 "product": {
-  "name": "${name}",
+  "name": "${PACKAGE_NAME}",
   "version": "${version}",
   "release": "${LOG_PFX}",
   "summary": "${name} on z/OS",
@@ -1545,6 +1545,7 @@ cat <<zz > "${ZOPEN_INSTALL_DIR}/metadata.json"
   "license": "${ZOPEN_REMOTE_URL}/blob/main/patches/LICENSE",
   "zopen_license": "${ZOPEN_REMOTE_URL}/blob/main/LICENSE",
   "categories": "${ZOPEN_CATEGORIES}",
+  "assets": [],
   "buildline": "${ZOPEN_BUILD_LINE}",
   "test_status": {
     "total_tests": "${totalTests}",
@@ -1688,18 +1689,60 @@ install()
     generateMetadataJSON
 
     if ${generatePax}; then
-      printHeader "Generating pax.Z from ${ZOPEN_INSTALL_DIR}"
+      printHeader "Generating pax from ${ZOPEN_INSTALL_DIR}"
+      echo "${versionString}"
+      paxFileName="${PACKAGE_NAME}-${versionString}-${LOG_PFX}.zos.pax"
+      paxFilePath="${ZOPEN_ROOT}/install/${paxFileName}"
+      zstdFilePath="${paxFilePath}.zst"
+      compressFilePath="${paxFilePath}.Z"
+
+      ZOPEN_PAX_CMD="pax -w -x pax \"-s#${ZOPEN_INSTALL_DIR}/#${PACKAGE_NAME}-${versionString}/#\" -f \"${paxFilePath}\" \"${ZOPEN_INSTALL_DIR}/\""
+
       if ! runAndLog "${ZOPEN_PAX_CMD}"; then
-        printError "Could not generate pax \"${paxFileName}\""
+        printError "Could not generate pax \"${paxFilePath}\""
+      fi
+
+      printInfo "Compressing ${paxFileName} with zstd..." 
+      if ! runAndLog "zstd -19 -k \"${paxFilePath}\""; then
+        printError "Could not generate pax \"${zstdFilePath}\""
+      fi
+
+      printInfo "Compressing ${paxFileName} with compress..." 
+      if ! runAndLog "compress \"${paxFilePath}\""; then
+        printError "Could not generate pax \"${compressFilePath}\""
       fi
 
       #TODO: Hack so that we can use coreutils md5sum without impacting builds
       ZOPEN_DEPS="${ZOPEN_DEPS} coreutils jq"
       setDepsEnv
 
-      pax_size=$(du -s "${paxFileName}" | awk '{print $1}')
-      md5sum=$(md5sum "${paxFileName}" | awk '{print $1}')
-      jq '.product |= . + { "pax": "'${ZOPEN_NAME}.${LOG_PFX}.zos.pax.Z'", "pax_size": "'${pax_size}'", "md5": "'${md5sum}'" }' "${ZOPEN_ROOT}/install/metadata.json" > "${ZOPEN_ROOT}/install/metadata.json.tmp"
+      pax_size=$(du -s "${compressFilePath}" | awk '{print $1}')
+      zstd_size=$(du -s "${zstdFilePath}" | awk '{print $1}')
+
+      pax_checksum=$(sha256sum "${compressFilePath}" | awk '{print $1}')
+      zstd_checksum=$(sha256sum "${zstdFilePath}" | awk '{print $1}')
+      #jq '.product |= . + { "pax_file": "'${compressFilePath}'", "pax_size": "'${pax_size}'", "pax_sha256": "'${pax_checksum}'", "zstd_file": "'${zstdFilePath}'", "zstd_size": "'${zstd_size}'", "zstd_sha256": "'${zstd_checksum}'" }' "${ZOPEN_ROOT}/install/metadata.json" > "${ZOPEN_ROOT}/install/metadata.json.tmp"
+      jq --arg compressFilePath "${compressFilePath}" \
+        --arg pax_size "${pax_size}" \
+        --arg pax_checksum "${pax_checksum}" \
+        --arg zstdFilePath "${zstdFilePath}" \
+        --arg zstd_size "${zstd_size}" \
+        --arg zstd_checksum "${zstd_checksum}" \
+        '.product.assets += [
+            {
+              "file": $compressFilePath,
+              "size": $pax_size,
+              "sha256": $pax_checksum,
+              "compression": "compress"
+            },
+            {
+              "file": $zstdFilePath,
+              "size": $zstd_size,
+              "sha256": $zstd_checksum,
+              "compression": "zstd"
+            }
+        ]' "${ZOPEN_ROOT}/install/metadata.json" > "${ZOPEN_ROOT}/install/metadata.json.tmp"
+
       mv "${ZOPEN_ROOT}/install/metadata.json.tmp" "${ZOPEN_ROOT}/install/metadata.json"
     fi
     if ${setActive}; then
@@ -1832,11 +1875,8 @@ resolveCommands()
       ;;
     esac
     [[ -d ${ZOPEN_ROOT}/install ]] || mkdir -p ${ZOPEN_ROOT}/install
-    paxFileName="${ZOPEN_ROOT}/install/${ZOPEN_NAME}.${LOG_PFX}.zos.pax.Z"
-    export ZOPEN_PAX_CMD="pax -w -z -x pax \"-s#${ZOPEN_INSTALL_DIR}/#${ZOPEN_NAME}/#\" -f \"${paxFileName}\" \"${ZOPEN_INSTALL_DIR}/\""
   else
     unset ZOPEN_INSTALL_CMD
-    unset ZOPEN_PAX_CMD
   fi
 
   if [ "${ZOPEN_CLEAN}x" != "skipx" ] && [ ! -z "$(command -v ${ZOPEN_CLEAN})" ]; then
