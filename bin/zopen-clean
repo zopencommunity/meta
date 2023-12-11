@@ -108,7 +108,7 @@ cleanDangling()
   killph="kill -HUP ${ph}"
   addCleanupTrapCmd "${killph}"
   zosfind "${ZOPEN_ROOTFS}" -type l -exec test ! -e {} \; -print | while read sl; do
-    printVerbose "Removing dahngling symlink '${sl}'"
+    printVerbose "Removing dangling symlink '${sl}'"
     rm -f "${sl}"
   done
   ${killph} 2> /dev/null # if the timer is not running, the kill will fail
