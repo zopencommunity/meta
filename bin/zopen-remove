@@ -54,10 +54,10 @@ removePackages()
         if ${purge}; then
           printInfo "- Purging package"
           printVerbose "Checking if we are currently in a directory that is to be purged"
-          [ "${PWD##"${ZOPEN_PKGINSTALL}"/"${pkg}"/"${pkg}"}" != "${PWD}" ] && cd ${ZOPEN_PKGINSTALL} || exit
+          [ "${PWD##"${ZOPEN_PKGINSTALL}"/"${pkg}"/"${pkg}"}" != "${PWD}" ] && cd ${ZOPEN_PKGINSTALL}
           rm -rf $(cd "${ZOPEN_PKGINSTALL}/${pkg}/${pkg}" && pwd -P)
           syslog ${ZOPEN_LOG_PATH}/audit.log ${LOG_A} "${CAT_PACKAGE},${CAT_REMOVE}" "REMOVE" "removePackage" "Purging package:'${needle};version:${version};"
-          registerRemove "$name" "${version}"
+          registerRemove "${pkg}" "${version}"
         else
           printInfo "- Removing metadata file to mark uninstall"
           rm -f "${ZOPEN_PKGINSTALL}/${pkg}/${pkg}/.active"

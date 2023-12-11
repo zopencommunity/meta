@@ -237,9 +237,16 @@ determineStatsCollection()
     printAttention "Attention: Turning on usage statistics as your host is an IBM host. If this is incorrect, rerun with --noenable-stats"
     isCollectingStats=true
   else
-    statsMsg="Do you want to contribute ${NC}${BOLD}anonymous${NC} usage statistics to help improve z/OS Open Tools? "
+    statsMsg="Do you want to contribute ${NC}${BOLD}anonymous${NC} usage statistics (https://zosopentools.github.io/meta/#/Guides/Analytics) to help improve z/OS Open Tools?"
     if promptYesOrNo "${statsMsg}" false; then
       isCollectingStats=true
+    fi
+  fi
+
+  if $isCollectingStats; then
+    if ! curl -I "${ZOPEN_STATS_URL}" -fail >/dev/null 2>/dev/null; then
+      printAttention "The statistics server url is blocked: ${ZOPEN_STATS_URL}. Turning usage statistics off."
+      isCollectingStats=false
     fi
   fi
 
@@ -258,7 +265,6 @@ init()
   else
     printHeader "Initializing zopen framework"
   fi
-
 
   printDebug "Validating input parameters"
   case "${fslayout}" in

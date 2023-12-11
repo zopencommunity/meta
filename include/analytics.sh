@@ -26,8 +26,7 @@ isAnalyticsOn()
 
 isIBMHostname()
 {
-  ip_address=$(/bin/dig +short "$(hostname)" | tail -1)
-  return 1
+  ip_address=$(/bin/dig +short "$(hostname)" 2>/dev/null | tail -1)
 
   if /bin/dig +short -x "${ip_address}" 2>/dev/null | grep -q "ibm.com"; then
     return 0
@@ -101,6 +100,7 @@ registerInstall()
   json=$(cat << EOF
 {
   "type": "installs",
+  "version": "0.1",
   "data": {
     "uuid": "$uuid",
     "packagename": "$name",
@@ -136,6 +136,7 @@ registerRemove()
   json=$(cat << EOF
 {
   "type": "removals",
+  "version": "0.1",
   "data": {
     "uuid": "$uuid",
     "packagename": "$name",
@@ -161,7 +162,8 @@ registerFileSystem()
 
   json=$(cat << EOF
 {
-  "type": "profile",
+  "type": "profiles",
+  "version": "0.1",
   "data": {
     "uuid": "$uuid",
     "isbot": "$isbot",
