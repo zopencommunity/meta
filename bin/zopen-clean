@@ -27,13 +27,15 @@ from the system to save space and prevent clutter
 Usage: zopen clean [OPTION] [PACKAGE]
 
 Options:
+  -m, --metadata    cleans and refreshes the metadata for zopen
   -c, --cache  [PACKAGE ...]
-                    cleans the downloaded package cache; packages will be re-downloaded if needed
-  -d, --dangling    removes dangling symlinks from the zopen file system in case of issues during
-                    package maintenance
+                    cleans the downloaded package cache; packages will be 
+                    re-downloaded if needed
+  -d, --dangling    removes dangling symlinks from the zopen file system in case 
+                    of issues during package maintenance
   -u, --unused [PACKAGE ...]     
-                    remove versions of PACKAGEs that are available as alternatives, leaving only the 
-                    currently active version
+                    remove versions of PACKAGEs that are available as 
+                    alternatives, leaving only the currently active version
       --all         apply cleanup command to all applicable packages
   -v, --verbose     run in verbose mode
   -h,-?, --help     display this help and exit
@@ -41,7 +43,7 @@ Options:
 
 Examples:
   zopen clean -c    clear the package download cache
-  zopen clean -d    analyse the zopen file system and remove any dangling symlinks
+  zopen clean -d    analyse the zopen file system and remove dangling symlinks
   zopen clean -u [PACKAGE]
                     remove unused versions for PACKAGE
 
@@ -115,23 +117,30 @@ cleanDangling()
   syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_FILE}" "CLEAN" "cleanDangling" "zopen system at '${ZOPEN_ROOTFS}' scanned for dangling symlinks"
 }
 
-cleanCache()
+cleanPackageCache()
 {
   # "All" option ignores the input parameter list as it brute force-cleans the cache rather
-  # than cherry-pick the files to remove
+  # than cherry-pick the files to remove which would be slowed
   if ${all}; then
-    printVerbose "Cleaning all entries in ${ZOPEN_ROOTFS}/var/cache/zopen"
-    rm -rf "${ZOPEN_ROOTFS}/var/cache/zopen/"*
-    syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_FILE}" "CLEAN" "cleanCache" "Main cache in ${ZOPEN_ROOTFS}/var/cache/zopen cleaned"
+    printVerbose "Cleaning all cached packages in ${ZOPEN_ROOTFS}/var/cache/zopen"
+    rm -rf "${ZOPEN_ROOTFS}"/var/cache/zopen/*.pax.Z  # We actively want globbing
+    syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_FILE}" "CLEAN" "cleanPackageCache" "Main cache in ${ZOPEN_ROOTFS}/var/cache/zopen cleaned"
     printInfo "- Cache at '${ZOPEN_ROOTFS}/var/cache/zopen' cleaned"
   else
     for needle in $1; do
       printVerbose "Cleaning ${ZOPEN_ROOTFS}/var/cache/zopen entries for '${needle}"
-      rm -rf "${ZOPEN_ROOTFS}"/var/cache/zopen/"${needle}"-*
-      syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_FILE}" "CLEAN" "cleanCache" "Cache for '${needle}' in ${ZOPEN_ROOTFS}/var/cache/zopen cleaned."
+      zosfind "${ZOPEN_ROOTFS}"/var/cache/zopen -name "${needle}-*" -exec rm {} \;
+      syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_FILE}" "CLEAN" "cleanPackageCache" "Cache for '${needle}' in ${ZOPEN_ROOTFS}/var/cache/zopen cleaned."
       printVerbose "- Cleaned cached files for '${needle}' in cache at '${ZOPEN_ROOTFS}/var/cache/zopen'."
     done
   fi
+}
+
+cleanMetadata()
+{
+  # Zopen metadata should prefix with the zopen_*
+  printVerbose "Clearing meta info files from ${ZOPEN_ROOTFS}/var/cache/zopen"
+  rm "${ZOPEN_ROOTFS}"/var/cache/zopen/zopen_* || printError "Unable to clear metadata from ${ZOPEN_ROOTFS}/var/cache/zopen. Check permissions and retry."
 }
 
 # Main code start here
@@ -143,6 +152,7 @@ dangling=false
 cache=false
 all=false
 packagelist=""
+meta=false
 
 if [ $# -eq 0 ]; then
   printError "No option provided for cleaning"
@@ -161,10 +171,15 @@ while [ $# -gt 0 ]; do
     unused=false
     dangling=true
     cache=false
+    meta=false
     ;;
   "-c" | "--cache")
     dangling=false
     cache=true
+    ;;
+  "-m" | "--metadata")
+    dangling=false
+    meta=true
     ;;
   "-h" | "--help" | "-?")
     printHelp "${args}"
@@ -178,7 +193,9 @@ while [ $# -gt 0 ]; do
     verbose=true
     ;;
   "--debug")
+    # shellcheck disable=SC2034
     verbose=true
+    # shellcheck disable=SC2034
     debug=true
     ;;
   *)
@@ -188,34 +205,35 @@ while [ $# -gt 0 ]; do
   shift
 done
 
+${dangling} && cleanDangling && exit
+${meta} && cleanMetadata
 
-if ! ${dangling}; then
-  getReposFromGithub
-  if $all; then
-    # shellcheck disable=SC2154
-    for repo in ${repo_results}; do
-      cleanlist="${cleanlist} ${repo}"
-    done
-  elif [ -n "$packagelist" ]; then
-    for pkg in $(echo "${packagelist}" | tr ',' ' ' | tr -s ' '); do
-      pkgfound=$(echo "${repo_results}" | awk -vpkg="${pkg}" '$0 == pkg {print}')
-      if [ "${pkgfound}" = "${pkg}" ]; then
-        printVerbose "Adding '${pkg}' to the clean queue."
-        cleanlist=$(printf "%s %s" "${cleanlist}" "${pkg}")
-      else
-        invalidlist=$(printf "%s %s" "${invalidlist}" "${pkg}")
-      fi
-    done
-    [ -n "${invalidlist}" ] && printError "The following package(s) were invalid and cannot be cleaned:\n${invalidlist}"
-  elif [ ${cache} ]; then
-    all=true
-  else
-    [ -z "${packagelist}" ] && printError "Missing parameters. Correct command syntax and retry."
-  fi
-  ${unused} && cleanUnused "${cleanlist}"
-  ${cache} && cleanCache "${cleanlist}"
-  exit
+getReposFromGithub
+if $all; then
+  printVerbose "Generating complete list of all packages"
+  # shellcheck disable=SC2154
+  for repo in ${repo_results}; do
+    cleanlist="${cleanlist} ${repo}"
+  done
+elif [ -n "$packagelist" ]; then
+  for pkg in $(echo "${packagelist}" | tr ',' ' ' | tr -s ' '); do
+    pkgfound=$(echo "${repo_results}" | awk -vpkg="${pkg}" '$0 == pkg {print}')
+    if [ "${pkgfound}" = "${pkg}" ]; then
+      printVerbose "Adding '${pkg}' to the clean queue."
+      cleanlist=$(printf "%s %s" "${cleanlist}" "${pkg}")
+    else
+      invalidlist=$(printf "%s %s" "${invalidlist}" "${pkg}")
+    fi
+  done
+  [ -n "${invalidlist}" ] && printError "The following package(s) were invalid and cannot be cleaned:\n${invalidlist}"
+elif [ ${cache} ]; then
+  printVerbose "Default for --cache is all ${NC}${BOLD}installed${NC} packages"
+  all=true
 else
-  cleanDangling
-  exit
+  [ -z "${packagelist}" ] && printError "Missing parameters. Correct command syntax and retry."
 fi
+${unused} && cleanUnused "${cleanlist}"
+${cache} && cleanPackageCache "${cleanlist}"
+
+# At this point, commands completed successfully
+exit 0
