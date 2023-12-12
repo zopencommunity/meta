@@ -195,7 +195,7 @@ processAnalyticsFromLogFile()
   fi
   encountered_packages=""
 
-  printHeader "Porcessing Analytics from log files for existing installation"
+  printHeader "Processing analytics from existing installation's log files"
   grep 'handlePackageInstall.*Installed' "$log_file" | while IFS= read -r line || [ -n "$line" ]; do
     # Extract timestamp
     timestamp=$(echo "$line" | awk '{print $1 " " $2}')
@@ -215,7 +215,7 @@ processAnalyticsFromLogFile()
 
     encountered_packages="${encountered_packages}:$package_name:"
 
-    printInfo "Processing $package_name - $version - $timestamp - isUpgrade: $is_upgrade"
+    printInfo "Processed $package_name - $version - $timestamp - isUpgrade: $is_upgrade"
     registerInstall "$package_name" "$version" ${is_upgrade} 0 "${timestamp}"
   done
 }

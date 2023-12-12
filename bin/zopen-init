@@ -322,7 +322,11 @@ init()
 
 generateFileSystem()
 {
-  printHeader "Generating File System"
+  if ${refresh}; then
+    printHeader "Checking File System"
+  else
+    printHeader "Generating File System"
+  fi
   printVerbose "Checking for existence of specified root: '${rootfs}'"
   [ -e "${rootfs}" ] || mkdir -p "${rootfs}" || printError "Unable to create zopen root filesystem at '${rootfs}'"
   [ -d "${rootfs}" ] || printError "Specified location '${rootfs}' is not a directory. Unable to access root file system at '${rootfs}'; check permissions"  
@@ -337,6 +341,7 @@ generateFileSystem()
   [ -e "${rootfs}/usr/share/zopen" ] || mkdir -p "${rootfs}/usr/share/zopen"
   [ -e "${rootfs}/var/cache/zopen" ] || mkdir -p "${rootfs}/var/cache/zopen"
   [ -e "${rootfs}/var/log" ] || mkdir -p "${rootfs}/var/log"
+  [ -e "${rootfs}/var/lib/zopen" ] || mkdir -p "${rootfs}/var/lib/zopen"
   [ -e "${rootfs}/var/tmp" ] || mkdir -p "${rootfs}/var/tmp"
 
   printVerbose "- Creating path for bootstrap files"
@@ -414,10 +419,10 @@ generateAnalyticsConfiguration()
     printVerbose "You have chosen to not collect statistics."
     return;
   fi
-  jsonConfig="${rootfs}/etc/zopen/analytics.json"
+  jsonConfig="${rootfs}/var/lib/zopen/analytics.json"
 
   # if it's an existing valid json, skip
-  if [ -s "${jsonConfig}" ] && jq "." -e /home/itodoro/zopen-blabla/etc/zopen/analytics.json 2>/dev/null >/dev/null; then
+  if [ -s "${jsonConfig}" ] && jq "." -e "${jsonConfig}" 2>/dev/null >/dev/null; then
     return;
   fi
   jsonConfigWorking="${jsonConfig}.working"
@@ -588,7 +593,7 @@ deinit()
 }
 
 init
-! ${refresh} && generateFileSystem
+generateFileSystem
 generateZopenConfig
 ! ${refresh} && installPrereqs
 generateJsonConfiguration

@@ -12,7 +12,7 @@ zopenInitialize()
   if [ -z "${ZOPEN_DONT_PROCESS_CONFIG}" ]; then
     processConfig
   fi
-  ZOPEN_ANALYTICS_JSON="${ZOPEN_ROOTFS}/etc/zopen/analytics.json"
+  ZOPEN_ANALYTICS_JSON="${ZOPEN_ROOTFS}/var/lib/zopen/analytics.json"
   ZOPEN_JSON_CACHE_URL="https://raw.githubusercontent.com/ZOSOpenTools/meta/main/docs/api/zopen_releases.json"
 }
 
