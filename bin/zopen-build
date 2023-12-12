@@ -1690,8 +1690,8 @@ install()
 
     if ${generatePax}; then
       printHeader "Generating pax from ${ZOPEN_INSTALL_DIR}"
-      echo "${versionString}"
-      paxFileName="${PACKAGE_NAME}-${versionString}-${LOG_PFX}.zos.pax"
+      osRelease="zos24" #TODO: change based on build target
+      paxFileName="${PACKAGE_NAME}-${versionString}-${osRelease}.s390x.pax"
       paxFilePath="${ZOPEN_ROOT}/install/${paxFileName}"
       zstdFilePath="${paxFilePath}.zst"
       compressFilePath="${paxFilePath}.Z"
