@@ -1,5 +1,5 @@
 {
-  "timestamp": "2023-12-12T12:30:29.754704",
+  "timestamp": "2023-12-12T18:27:27.969638",
   "release_data": {
     "automake": [
       {
@@ -30449,6 +30449,24 @@
             "runtime_dependencies": "No dependencies",
             "total_tests": "1",
             "passed_tests": "1"
+          }
+        ]
+      }
+    ],
+    "groovy": [
+      {
+        "name": "groovy (Build 1904) - (STABLE)",
+        "date": "2023-12-12 23:07:15",
+        "tag_name": "STABLE_groovyport_1904",
+        "assets": [
+          {
+            "name": "groovy-DEV.20231212_175511.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/groovyport/releases/download/STABLE_groovyport_1904/groovy-DEV.20231212_175511.zos.pax.Z",
+            "size": 31675392,
+            "expanded_size": 25390392,
+            "runtime_dependencies": "bash java",
+            "total_tests": -1,
+            "passed_tests": -1
           }
         ]
       }
