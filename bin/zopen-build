@@ -840,7 +840,7 @@ extractTarBall()
   tarballz="$1"
   dir="$2"
   noext=${tarballz%%.zip}
-  if "x${noext}" = "x${tarballz}"; then
+  if [ "x${noext}" = "x${tarballz}" ]; then
     # Standard tarball
     if ! tar --version > /dev/null 2> /dev/null; then
       printError "The tar open source package is required by zopen-build. The z/OS default 'tar' is insufficient"
@@ -869,10 +869,8 @@ extractTarBall()
       printError "unzip failed for ${tarballz}."
       echo "${out}" >&2 
     fi
-
   fi
   rm -f "${tarballz}"
-
   tagTree "${dir}"
   cd "${dir}" || printError "Cannot cd to ${dir}"
 
