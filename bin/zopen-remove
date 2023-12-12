@@ -42,7 +42,20 @@ removePackages()
     if [ ! -f ${ZOPEN_PKGINSTALL}/${pkg}/${pkg}/.active ]; then
       printInfo "${NC}${YELLOW}Package '${pkg}' is not installed${NC}"
     else
-      printInfo "- Package installed, unmeshing from system"
+      printInfo "- Away to remove '${pkg}',"
+      if ! ${yesToPrompts}; then
+        while true; do
+          printInfo "- Do you want to continue? [y/n/a]"
+          read continueInstall < /dev/tty
+          case "${continueInstall}" in
+            "y") break;;
+            "n") mutexFree "zopen"; printInfo "Exiting..."; exit 0 ;;
+            "a") yesToPrompts=true; break;;
+            *) echo "?";;
+          esac
+        done
+      fi
+      printInfo "- Unmeshing from system"
       version="unknown"
       if [ -e "${ZOPEN_PKGINSTALL}/${pkg}/${pkg}/.releaseinfo" ]; then
         version=$(cat "${ZOPEN_PKGINSTALL}/${pkg}/${pkg}/.releaseinfo")
@@ -83,6 +96,7 @@ verbose=false
 debug=false
 purge=false
 chosenRepos=""
+yesToPrompts=false
 while [ $# -gt 0 ]; do
   case "$1" in
   "-p" | "--purge")
@@ -103,6 +117,9 @@ while [ $# -gt 0 ]; do
   "--debug")
     # shellcheck disable=SC2034
     debug=true
+    ;;
+  "-y" | "--yes") 
+    yesToPrompts=true
     ;;
   *)
     chosenRepos="${chosenRepos} $1"

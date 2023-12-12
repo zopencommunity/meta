@@ -433,7 +433,7 @@ EOF
       printVerbose "New version merged; checking for orphaned files from previous version."
       # This will remove any old symlinks or dirs that might have changed in an upgrade
       # as the merge process overwrites existing files to point to different version
-      unsymlinkFromSystem "${name}" "${ZOPEN_ROOTFS}" "${currentlinkfile}"
+      unsymlinkFromSystem "${name}" "${ZOPEN_ROOTFS}" "${currentlinkfile}" "${baseinstalldir}/${name}/${name}/.links"
     fi
 
     if ${setactive}; then
