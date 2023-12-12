@@ -572,6 +572,8 @@ checkEnv()
       implicitDeps="${implicitDeps} gzip"
     elif [ "${ext}x" = "bz2x" ]; then
       implicitDeps="${implicitDeps} bzip2"
+    elif [ "${ext}x" = "zipx" ]; then
+      implicitDeps="${implicitDeps} unzip"
     fi
     printVerbose "Implicitly adding tarball dependencies: ${implicitDeps}"
   elif [ "${ZOPEN_TYPE}x" = "GITx" ]; then
@@ -837,22 +839,37 @@ extractTarBall()
 {
   tarballz="$1"
   dir="$2"
+  noext=${tarballz%%.zip}
+  if "x${noext}" = "x${tarballz}"; then
+    # Standard tarball
+    if ! tar --version > /dev/null 2> /dev/null; then
+      printError "The tar open source package is required by zopen-build. The z/OS default 'tar' is insufficient"
+    fi
+    tarraw=$(tar --version | head -1 | awk '{print $4;}')
+    v=${tarraw%%.*}
+    r=${tarraw##*.}
+    if [ ${v} -lt 1 ] || [ ${r} -lt 34 ]; then
+      printError "Need to be running at least tar 1.34"
+    fi
 
-  if ! tar --version > /dev/null 2> /dev/null; then
-    printError "The tar open source package is required by zopen-build. The z/OS default 'tar' is insufficient"
-  fi
-  tarraw=$(tar --version | head -1 | awk '{print $4;}')
-  v=${tarraw%%.*}
-  r=${tarraw##*.}
-  if [ ${v} -lt 1 ] || [ ${r} -lt 34 ]; then
-    printError "Need to be running at least tar 1.34"
-  fi
+    printInfo "Extract tarball ${tarballz} into ${dir}"
+    tar -axf "${tarballz}"
+    if [ $? -gt 0 ]; then
+      printError "Unable to untar ${tarballz}"
+    fi
+  else 
+    # Standard unzip
+    # Remove the old directory contents if it already exists.
+    # Keep the directory itself since there may be a symbolic
+    # link pointing to it
+    rm -rf "${noext}/*"
+    printInfo "Extract zip ${tarballz} into ${dir}"
+    out=$(unzip "${tarballz}" 2> /dev/null)
+    if [ $? -gt 1 ]; then
+      printError "unzip failed for ${tarballz}."
+      echo "${out}" >&2 
+    fi
 
-  printInfo "Extract tarball ${tarballz} into ${dir}"
-
-  tar -axf "${tarballz}"
-  if [ $? -gt 0 ]; then
-    printError "Unable to untar ${tarballz}"
   fi
   rm -f "${tarballz}"
 
@@ -912,6 +929,7 @@ downloadTarBall()
   tarballz=$(basename "${ZOPEN_URL}")
   dir=${tarballz%%.tar.*}
   dir=${dir%%.tgz}
+  dir=${dir%%.zip}
   if [ -d "${dir}" ]; then
     echo "Using existing tarball directory ${dir}" >&2
   else
@@ -928,7 +946,7 @@ downloadTarBall()
     #
     # Some sites fail on the first call because the name resolver hasn't resolved.
     # Make a first call to just get the headers and toss everything out just to
-    # set up the cache (requirec for openssl)
+    # set up the cache (required for openssl)
     #
     curlCmd -I "${ZOPEN_URL}" > /dev/null 2>&1
 
