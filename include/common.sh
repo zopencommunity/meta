@@ -691,7 +691,7 @@ EOF
       fi
     fi
   else
-    printDebug "No list of current links to cgeck - package was not installed/active"
+    printDebug "No list of current links to check - package was not installed/active"
   fi
 }
 
