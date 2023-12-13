@@ -53,7 +53,7 @@ installDependencies()
   echo "${dependencies}" | xargs | tr ' ' '\n' | sort | while read dep; do
     printVerbose "Removing '${dep}' from dependency queue '${dependencies}'"
     dependencies=$(echo "${dependencies}" | sed -e "s/${dep}//" | tr -s ' ')
-    handlePackageInstall "${dep}"
+    handlePackageInstall "${dep}" true
   done
   skipupgrade=${skipupgrade_lcl}
 )
@@ -62,6 +62,10 @@ handlePackageInstall()
 {
 
   fullname="$1"
+  isRuntimeDependency=$2
+  if [ -z "$isRuntimeDependency" ]; then
+    isRuntimeDependency=false
+  fi
   printVerbose "Name to install: ${fullname}, parsing any version ('=') or tag ('%') has been specified"
   name=$(echo "${fullname}" | sed -e 's#[=%].*##')
   repo="${name}"
@@ -173,7 +177,7 @@ handlePackageInstall()
       validatedReleaseLine="${installedReleaseLine}" # Already validated when stored
     else
       printVerbose "Checking for system-configured releaseline."
-      sysrelline=$(cat "${ZOPEN_ROOTFS}/etc/zopen/releaseline" | awk ' {print toupper($1)}')
+      sysrelline=$(getReleaseLine)
       printVerbose "Validating value: ${sysrelline}"
       validatedReleaseLine=$(validateReleaseLine "${sysrelline}")
       if [ -n "${validatedReleaseLine}" ]; then
@@ -349,19 +353,10 @@ handlePackageInstall()
 
     megabytes=$(echo "scale=2; ${size} / (1024 * 1024)" | bc)
     printInfo "After this operation, ${megabytes} MB of additional disk space will be used."
-    if ! ${yesToPrompts}; then
-      while true; do
-        printInfo "Do you want to continue? [y/n]"
-        read continueInstall < /dev/tty
-        if [ "y" = "${continueInstall}" ]; then
-          break
-        fi
-        if [ "n" = "${continueInstall}" ]; then
-          mutexFree "zopen"
-          printInfo "Exiting..."
-          exit 0
-        fi
-      done
+    if ! promptYesOrNo "Do you want to continue?" ${yesToPrompts}; then
+      mutexFree "zopen"
+      printInfo "Exiting..."
+      exit 0
     fi
 
     printVerbose "Check for existing directory for version '${installdirname}'"
@@ -442,6 +437,8 @@ EOF
       installedList="${name} ${installedList}"
       syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_INSTALL},${CAT_PACKAGE}" "DOWNLOAD" "handlePackageInstall" "Installed package:'${name}';version:${downloadFileVer};install_dir='${baseinstalldir}/${installdirname}';"
     fi
+
+    registerInstall "$name" "${downloadFileVer}" "${upgradeInstalled}" ${isRuntimeDependency}
 
     if ${doNotInstallDeps}; then
       printInfo "- Skipping dependency installation."
