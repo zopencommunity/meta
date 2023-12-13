@@ -17,19 +17,31 @@ setupMyself()
 setupMyself
 checkWritable
 
-printSyntax()
+printHelp()
 {
-  args=$*
-  echo "${ME} - remove installed z/OS Open Tools packages."
-  echo "Usage: zopen remove [OPTION] PACKAGE"
-  echo "  PACKAGE is a list of one or more projects to uninstall"
-  echo "Options:"
-  echo "  --help       print this help"
-  echo "  --version    print version"
-  echo "  -p, --purge  remove package, the versioned directory and any cached file"
-  echo "  -v           run in verbose mode"
-  echo "Examples:"
-  echo "  ${ME} man-db    Remove the man-db package" 
+  cat << HELPDOC
+zopen remove is a utility for z/OS Open Tools to remove an installed package or
+packages.
+
+Usage: zopen remove [OPTION] [PACKAGE] ...
+
+Options:
+  -y, --yes         automatically answer yes to prompts.
+  -p, --purge       remove package, the versioned directory and any cached file
+  -v, --verbose     run in verbose mode
+  -h, -?, --help    display this help and exit
+  --version         print version
+
+Examples:
+  zopen remove foo bar
+                    interactively remove the foo and bar packages if installed
+  zopen remove --yes foo bar
+                    remove the foo and bar packages if installed, without asking
+                    for confirmation
+
+Report bugs at https://github.com/ZOSOpenTools/meta/issues .
+
+HELPDOC
 }
 
 removePackages()
@@ -102,8 +114,8 @@ while [ $# -gt 0 ]; do
   "-p" | "--purge")
     purge=true
     ;;
-  "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
-    printSyntax "${args}"
+  "-h" | "--help" | "-?")
+    printHelp "${args}"
     exit 0
     ;;
   "--version")
