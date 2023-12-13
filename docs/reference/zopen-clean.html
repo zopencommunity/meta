@@ -1,5 +1,5 @@
 <!-- Creator     : groff version 1.22.3 -->
-<!-- CreationDate: Tue Dec 12 12:19:10 2023 -->
+<!-- CreationDate: Wed Dec 13 15:12:00 2023 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -63,11 +63,18 @@ from the system to save space and prevent clutter</p>
 
 
 
-<p style="margin-left:11%; margin-top: 1em"><b>&minus;c</b>,
+<p style="margin-left:11%; margin-top: 1em"><b>&minus;m</b>,
+<b>&minus;&minus;metadata</b></p>
+
+<p style="margin-left:22%;">cleans and refreshes the
+metadata for zopen</p>
+
+<p style="margin-left:11%;"><b>&minus;c</b>,
 <b>&minus;&minus;cache</b></p>
 
-<p style="margin-left:22%;">cleans the downloaded package
-cache; packages will be re&minus;downloaded if needed</p>
+<p style="margin-left:22%;">[PACKAGE ...] cleans the
+downloaded package cache; packages will be
+re&minus;downloaded if needed</p>
 
 <p style="margin-left:11%;"><b>&minus;d</b>,
 <b>&minus;&minus;dangling</b></p>
@@ -77,11 +84,28 @@ the zopen file system in case of issues during package
 maintenance</p>
 
 <p style="margin-left:11%;"><b>&minus;u</b>,
-<b>&minus;&minus;unused</b> [PACKAGE]</p>
+<b>&minus;&minus;unused</b> [PACKAGE ...]</p>
 
-<p style="margin-left:22%;">remove versions of PACKAGE that
-are available as alternatives, leaving only the currently
-active version</p>
+<p style="margin-left:22%;">remove versions of PACKAGEs
+that are available as alternatives, leaving only the
+currently active version</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="7%">
+
+
+<p><b>&minus;&minus;all</b></p></td>
+<td width="4%"></td>
+<td width="73%">
+
+
+<p>apply cleanup command to all applicable packages</p></td>
+<td width="5%">
+</td></tr>
+</table>
 
 <p style="margin-left:11%;"><b>&minus;v</b>,
 <b>&minus;&minus;verbose</b></p>
@@ -112,7 +136,7 @@ cache</p>
 <p style="margin-left:11%;">zopen clean &minus;d</p>
 
 <p style="margin-left:22%;">analyse the zopen file system
-and remove any dangling symlinks</p>
+and remove dangling symlinks</p>
 
 <p style="margin-left:11%;">zopen clean &minus;u
 [PACKAGE]</p>

@@ -12,6 +12,7 @@ zopenInitialize()
   if [ -z "${ZOPEN_DONT_PROCESS_CONFIG}" ]; then
     processConfig
   fi
+  ZOPEN_ANALYTICS_JSON="${ZOPEN_ROOTFS}/var/lib/zopen/analytics.json"
   ZOPEN_JSON_CACHE_URL="https://raw.githubusercontent.com/ZOSOpenTools/meta/main/docs/api/zopen_releases.json"
 }
 
@@ -721,7 +722,14 @@ printHeader()
   printColors "${NC}${HEADERCOLOR}${BOLD}${UNDERLINE}${1}${NC}" >&2
   [ ! -z "${xtrc}" ] && set -x
   return 0
+}
 
+printAttention()
+{
+  [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
+  printColors "${NC}${MAGENTA}${BOLD}${UNDERLINE}${1}${NC}" >&2
+  [ ! -z "${xtrc}" ] && set -x
+  return 0
 }
 
 runAndLog()
@@ -1051,6 +1059,7 @@ CAT_QUERY="Q"   # Query processing
 CAT_REMOVE="R"  # Removal handling
 CAT_SYS="S"     # Related to the underlying native z/OS system
 CAT_ZOPEN="Z"   # Related to the zopen system itself
+CAT_STATS="ST"  # Related to usage statistics
 
 syslog()
 {
@@ -1128,8 +1137,8 @@ getAllReleasesFromGithub()
 
 initDefaultEnvironment()
 {
-  export ZOPEN_OLD_PATH=${PATH}       # Preserve PATH in case scripts need to access it
-  export ZOPEN_OLD_LIBPATH=${LIBPATH} # Preserve LIBPATH in case scripts need to access it
+  export ZOPEN_OLD_PATH="${PATH}"       # Preserve PATH in case scripts need to access it
+  export ZOPEN_OLD_LIBPATH="${LIBPATH}" # Preserve LIBPATH in case scripts need to access it
   export PATH="$(getconf PATH)"
   export _CEE_RUNOPTS="FILETAG(AUTOCVT,AUTOTAG) POSIX(ON)"
   unset MANPATH
@@ -1153,5 +1162,66 @@ checkWritable()
     printError "Tools distribution is read-only. Cannot run update operation '${ME}'." >&2
   fi
 }
+
+generateUUID() 
+{
+  date_part=$(date +%s)
+  random_part=$((RANDOM))
+  uuid="$date_part-$random_part"
+  echo $uuid
+}
+
+getReleaseLine()
+{
+  jsonConfig="${ZOPEN_ROOTFS}/etc/zopen/config.json"
+  if [ ! -f "${jsonConfig}" ]; then
+    jq -r '.release_line' $jsonConfig
+  else
+    echo "STABLE"
+  fi
+}
+
+getRMProcs()
+{
+  jsonConfig="${ZOPEN_ROOTFS}/etc/zopen/config.json"
+  if [ ! -f "${jsonConfig}" ]; then
+    jq -r '.num_rm_procs' $jsonConfig
+  else
+    echo "5" # default
+  fi
+}
+
+isURLReachable() {
+  url="$1"
+  timeout=5
+
+  if curl -s --fail --max-time $timeout "$url" > /dev/null; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+promptYesOrNo() {
+  message="$1"
+  skip=$2
+  if ! ${skip}; then
+    while true; do
+      printInfo "${message} [y/n]"
+      read answer < /dev/tty
+      answer=$(echo "${answer}" | tr '[A-Z]' '[a-z]')
+      if [ "y" = "${answer}" ] || [ "yes" = "${answer}" ]; then
+        return 0
+      fi
+      if [ "n" = "${answer}" ] || [ "no" = "${answer}" ]; then
+        return 1
+      fi
+    done
+  fi
+  return 0
+}
+
+
+. ${INCDIR}/analytics.sh
 
 zopenInitialize
