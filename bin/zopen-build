@@ -1519,6 +1519,11 @@ createReadme()
   cat "${MYDIR}/../data/README_footer.md" >> "${ZOPEN_INSTALL_DIR}/README.md"
 }
 
+getPathSizeInBytes()
+{
+  du -ks "$1" | awk '{print $1 * 1024}'
+}
+
 generateMetadataJSON()
 {
   printHeader "Creating Metadata JSON"
@@ -1539,7 +1544,7 @@ generateMetadataJSON()
   *) version="1.0.0.0" ;;
   esac
 
-  total_size=$(du -s "${ZOPEN_INSTALL_DIR}" | awk '{print $1}')
+  total_size=$(getPathSizeInBytes "${ZOPEN_INSTALL_DIR}")
 
   if [ -z "$totalTests" ]; then
     total_tests=-1
@@ -1713,7 +1718,7 @@ install()
       ZOPEN_DEPS="${ZOPEN_DEPS} coreutils jq"
       setDepsEnv
 
-      pax_size=$(du -s "${paxFileName}" | awk '{print $1}')
+      pax_size=$(getPathSizeInBytes "${paxFileName}")
       md5sum=$(md5sum "${paxFileName}" | awk '{print $1}')
       jq '.product |= . + { "pax": "'${ZOPEN_NAME}.${LOG_PFX}.zos.pax.Z'", "pax_size": "'${pax_size}'", "md5": "'${md5sum}'" }' "${ZOPEN_ROOT}/install/metadata.json" > "${ZOPEN_ROOT}/install/metadata.json.tmp"
       mv "${ZOPEN_ROOT}/install/metadata.json.tmp" "${ZOPEN_ROOT}/install/metadata.json"
