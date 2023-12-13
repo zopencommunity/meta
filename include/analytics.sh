@@ -13,7 +13,7 @@ isAnalyticsOn()
   if [ ! -f ${jsonConfig} ]; then
     return 2
   fi
-  isCollecting=$(jq -r '.is_collecting_stats' $jsonConfig)
+  isCollecting=$(jq -re '.is_collecting_stats' $jsonConfig)
   if [ $? -gt 0 ]; then
     return 2
   fi

@@ -400,6 +400,14 @@ generateJsonConfiguration()
     fi
   fi
 
+  if [ -z "$ZOPEN_BETA_FEATURES" ]; then
+  cat <<zz > "${jsonConfigWorking}"
+  {
+    "release_line": "${releaseLine}",
+    "num_rm_procs": ${RM_FILEPROCS}
+  }
+zz
+  else
   cat <<zz > "${jsonConfigWorking}"
   {
     "release_line": "${releaseLine}",
@@ -407,6 +415,7 @@ generateJsonConfiguration()
     "is_collecting_stats": ${isCollectingStats}
   }
 zz
+  fi
   jq '.' $jsonConfigWorking > $jsonConfig
 }
 
