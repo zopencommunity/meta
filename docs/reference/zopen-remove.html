@@ -1,5 +1,5 @@
 <!-- Creator     : groff version 1.22.3 -->
-<!-- CreationDate: Wed Dec 13 15:12:01 2023 -->
+<!-- CreationDate: Thu Dec 14 16:27:55 2023 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -26,6 +26,7 @@
 <a href="#OPTIONS">OPTIONS</a><br>
 <a href="#EXAMPLES">EXAMPLES</a><br>
 <a href="#AUTHOR">AUTHOR</a><br>
+<a href="#REPORTING BUGS">REPORTING BUGS</a><br>
 <a href="#COPYRIGHT">COPYRIGHT</a><br>
 
 <hr>
@@ -45,46 +46,28 @@
 
 
 <p style="margin-left:11%; margin-top: 1em"><b>zopen</b>
-<i>remove</i> [<i>OPTION</i>] <i>PACKAGE</i></p>
+<i>remove</i> [<i>OPTION</i>] [<i>PACKAGE</i>] ...</p>
 
 <h2>DESCRIPTION
 <a name="DESCRIPTION"></a>
 </h2>
 
 
-
-<p style="margin-left:11%; margin-top: 1em">zopen&minus;remove
-&minus; remove installed z/OS Open Tools packages.</p>
-
-<p style="margin-left:22%; margin-top: 1em">PACKAGE is a
-list of one or more projects to uninstall</p>
+<p style="margin-left:11%; margin-top: 1em">zopen remove is
+a utility for z/OS Open Tools to remove an installed package
+or packages.</p>
 
 <h2>OPTIONS
 <a name="OPTIONS"></a>
 </h2>
 
 
-<table width="100%" border="0" rules="none" frame="void"
-       cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="11%"></td>
-<td width="9%">
 
+<p style="margin-left:11%; margin-top: 1em"><b>&minus;y</b>,
+<b>&minus;&minus;yes</b></p>
 
-<p style="margin-top: 1em"><b>&minus;&minus;help</b></p></td>
-<td width="2%"></td>
-<td width="23%">
-
-
-<p style="margin-top: 1em">print this help</p></td>
-<td width="55%">
-</td></tr>
-</table>
-
-
-<p style="margin-left:11%;"><b>&minus;&minus;version</b></p>
-
-<p style="margin-left:22%;">print version</p>
+<p style="margin-left:22%;">automatically answer yes to
+prompts.</p>
 
 <p style="margin-left:11%;"><b>&minus;p</b>,
 <b>&minus;&minus;purge</b></p>
@@ -92,34 +75,37 @@ list of one or more projects to uninstall</p>
 <p style="margin-left:22%;">remove package, the versioned
 directory and any cached file</p>
 
-<table width="100%" border="0" rules="none" frame="void"
-       cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="11%"></td>
-<td width="3%">
+<p style="margin-left:11%;"><b>&minus;v</b>,
+<b>&minus;&minus;verbose</b></p>
+
+<p style="margin-left:22%;">run in verbose mode</p>
+
+<p style="margin-left:11%;"><b>&minus;h</b>, &minus;?,
+<b>&minus;&minus;help</b></p>
+
+<p style="margin-left:22%;">display this help and exit</p>
 
 
-<p><b>&minus;v</b></p></td>
-<td width="8%"></td>
-<td width="29%">
+<p style="margin-left:11%;"><b>&minus;&minus;version</b></p>
 
-
-<p>run in verbose mode</p></td>
-<td width="49%">
-</td></tr>
-</table>
+<p style="margin-left:22%;">print version</p>
 
 <h2>EXAMPLES
 <a name="EXAMPLES"></a>
 </h2>
 
 
+<p style="margin-left:11%; margin-top: 1em">zopen remove
+foo bar</p>
 
-<p style="margin-left:11%; margin-top: 1em">zopen&minus;remove
-man&minus;db</p>
+<p style="margin-left:22%;">interactively remove the foo
+and bar packages if installed</p>
 
-<p style="margin-left:22%;">Remove the man&minus;db
-package</p>
+<p style="margin-left:11%;">zopen remove &minus;&minus;yes
+foo bar</p>
+
+<p style="margin-left:22%;">remove the foo and bar packages
+if installed, without asking for confirmation</p>
 
 <h2>AUTHOR
 <a name="AUTHOR"></a>
@@ -129,6 +115,14 @@ package</p>
 <p style="margin-left:11%; margin-top: 1em">Written by
 contributors to the z/OS Open Tools Community
 &lt;https://github.com/ZOSOpenTools/meta/graphs/contributors&gt;.</p>
+
+<h2>REPORTING BUGS
+<a name="REPORTING BUGS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Report bugs at
+https://github.com/ZOSOpenTools/meta/issues .</p>
 
 <h2>COPYRIGHT
 <a name="COPYRIGHT"></a>
