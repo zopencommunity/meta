@@ -52,6 +52,8 @@ mergeNewVersion()
 {
   package="$1"
   newver="$2"
+  oldver="$2"
+  [ -z "${package}" ] && printError "Internal error; no packagename provided to merge."
   [ -d "${ZOPEN_PKGINSTALL}/${package}/${newver}" ] || printError "Version '${newver}' was not available to set as current"
   if [ -e "${ZOPEN_PKGINSTALL}/${package}/${package}" ]; then
     printVerbose "Removing main link"
@@ -63,7 +65,7 @@ mergeNewVersion()
   # as the merge process overwrites existing files to point to different version. If there was
   # no other version, then ${deref} will be empty so nothing to uninstall
   if [ -n "${deref}" ]; then
-    unsymlinkFromSystem "${package}" "${ZOPEN_ROOTFS}" "${ZOPEN_PKGINSTALL}/${package}/${deref}/.links"
+    unsymlinkFromSystem "${package}" "${ZOPEN_ROOTFS}" "${ZOPEN_PKGINSTALL}/${package}/${deref}/.links" "${ZOPEN_PKGINSTALL}/${package}/${newver}/.links"
   else
     printVerbose "No previous version found (no .links) - no unlinking performed"
   fi
@@ -97,10 +99,10 @@ setAlt()
     exit 4
   fi
   if [ -e "${ZOPEN_PKGINSTALL}/${package}/${package}" ]; then
-    deref=$(ls -l "${ZOPEN_PKGINSTALL}/${package}/${package}" | awk '{ print $(NF) }')
+    deref=$(cd "${ZOPEN_PKGINSTALL}/${package}/${package}" > /dev/null 2>&1 && pwd -P)
     printVerbose "Current version: ${deref#"${ZOPEN_PKGINSTALL}"/}"
   fi
-  mergeNewVersion "${package}" "${newver}"
+  mergeNewVersion "${package}" "${newver}" "${deref}"
 }
 
 selectAlt()

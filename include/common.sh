@@ -18,6 +18,7 @@ zopenInitialize()
 
 addCleanupTrapCmd(){
   newcmd=$1
+  [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
   # Small timing window if the script is killed between the creation
   # and removal of the temporary file; would be easier if zos sh
   # didn't have a bug -trap can't be piped/redirected anywhere except
@@ -40,6 +41,7 @@ addCleanupTrapCmd(){
       fi
     done
   fi
+  [ -n "${xtrc}" ] && set -x
 }
 
 cleanupFunction()
@@ -87,10 +89,39 @@ isPackageActive(){
   getCurrentVersionDir "$needle"
 }
 
+# Given two input files, return those lines in haystack file that are 
+# not in needles file
+diffFile()
+{
+  haystackfile="$1"
+  needlesfile="$2"
+  [ -n "${needlesfile}" ] || printError "Internal error; needle file was empty/non-existent."
+  diff=$(awk 'NR==FNR{needles[$0];next} 
+    !($0 in needles) {print}' "${needlesfile}" "${haystackfile}")
+  echo "${diff}"
+}
+
+# Given two input lists (with \n delimiters), return those lines in  
+# haystack that are not in needles
+diffList()
+{
+  haystack="$1"
+  needles="$2"
+  haystackfile=$(mktempfile "haystack")
+  echo "${haystack}" >"${haystackfile}"
+  [ -e "${haystackfile}" ] && addCleanupTrapCmd "rm -rf ${tempdir}"
+  needlesfile=$(mktempfile "needles")
+  echo "${needles}" >"${needlesfile}"
+  [ -e "${needlesfile}" ] && addCleanupTrapCmd "rm -rf ${needlesfile}"
+  diffFile "${needlesfile}" "${haystackfile}"
+}
+
 # Generate a file name that has a high probability of being unique for
 # use as a temporary filename - the filename should be unique in the
 # instance it was generated and probability suggests it should be for
-# a "reasonable" time after...
+# a "reasonable" time after... Note the caller is responsible for ensuring
+# any cleanup is scheduled - the caller may not actually need to write to
+# the file
 mktempfile()
 {
   prefix="zopen_$1"
@@ -572,111 +603,98 @@ unsymlinkFromSystem()
   pkg=$1
   rootfs=$2
   dotlinks=$3
+  newfilelist=$4
   if [ -e "${dotlinks}" ]; then
-    printInfo "- Checking for obsoleted files in ${rootfs}/usr/ tree from ${pkg}."
-    # Use sed to skip header line in .links file
-    # Note that the contents of the links file are ordered such that
-    # processing occurs depth-first; if, after removing orphaned symlinks,
-    # a directory is empty, then it can be removed.
-    nfiles=$(sed '1d;$d' "${dotlinks}" | wc -l | tr -d ' ')
-    flecnt=0
-    pct=0
+    printInfo "- Checking for obsoleted files in ${rootfs}/usr/ tree from ${pkg}"
 
-    printDebug "Creating temporary dirname file."
-    tempDirFile="${ZOPEN_ROOTFS}/tmp/zopen.rmdir.${RANDOM}"
-    tempTrash="${tempDirFile}.trash"
-    [ -e "${tempDirFile}" ] && rm -f "${tempDirFile}" > /dev/null 2>&1
-    touch "${tempDirFile}"
-    addCleanupTrapCmd "rm -rf ${tempDirFile}"
-    printDebug "Using temporary file ${tempDirFile}"
-    printInfo "- Checking ${nfiles} potential links."
+    if [ -e "${newfilelist}" ]; then
+      printDebug "Release change, so the list of changes to physically remove should be smaller"
+      printDebug "Starting spinner..."
+      progressHandler "spinner" "- Check complete" &
+      ph=$!
+      killph="kill -HUP ${ph}"
+      addCleanupTrapCmd "${killph}"
+      obsoleteList=$(diffFile "${dotlinks}" "${newfilelist}")
+      echo "${obsoleteList}" | while read obsoleteFile; do
+        [ -z "${obsoleteFile}" ] && return 0
+        obsoleteFile="${ZOPEN_ROOTFS}/${obsoleteFile}"
+        obsoleteFile="${obsoleteFile%% symbolic*}"
+        printDebug "Checking obsoletefile '${obsoleteFile}'"
+        if [ -L "${obsoleteFile}" ] && [ ! -e "${obsoleteFile}" ]; then
+          # the linked-to file no longer exists (ie. the symlink is dangling)
+          rm -f "${obsoleteFile}" > /dev/null 2>&1
+        fi 
+      done
+      ${killph} 2>/dev/null # if the timer is not running, the kill will fail
+      sleep 1 # give spinner time to exit if running
+    else
+      # Slower method needed to analyse each link to see if it has
+      # become orphaned. Only relevent when removing a package as 
+      # upgrades/alt-switching can supply a list of files
+      # Use sed to skip header line in .links file
+      # Note that the contents of the links file are ordered such that
+      # processing occurs depth-first; if, after removing orphaned symlinks,
+      # a directory is empty, then it can be removed.
+      nfiles=$(sed '1d;$d' "${dotlinks}" | wc -l  | tr -d ' ')
+      printDebug "Creating Temporary dirname file"
+      tempDirFile=$(mktempfile "unsymlink")
+      [ -e "${tempDirFile}" ] && rm -f "${tempDirFile}" >/dev/null 2>&1
+      touch "${tempDirFile}"
+      tempTrash=$(mktempfile "unsymlink" "trash")
+      [ -e "${tempTrash}" ] && rm -f "${tempTrash}" >/dev/null 2>&1
+      addCleanupTrapCmd "rm -rf ${tempDirFile}"
+      printDebug "Using temporary file ${tempDirFile}"
+      printInfo "- Checking ${nfiles} potential links"
+      printDebug "Starting spinner..."
+      progressHandler "spinner" "- Complete" &
+      ph=$!
+      killph="kill -HUP ${ph}"
+      addCleanupTrapCmd "${killph}"
 
-    rm_fileprocs=$(getRMProcs)
-    threshold=$((nfiles / rm_fileprocs))
-    threshold=$((threshold + 1))
-    printDebug "Threshold of files per worker [files/procs] calculated as: ${threshold}"
-    [ "${threshold}" -le 50 ] && threshold=50 && printVerbose "Threshold below min: using 50." # Don't spawn too many
-    printDebug "Starting spinner..."
-    progressHandler "spinner" "- Complete" &
-    ph=$!
-    killph="kill -HUP ${ph} 2>/dev/null"
-    addCleanupTrapCmd "${killph}"
-
-    printDebug "Spawning as subshell to handle threading."
-    # Note that this all must happen in a subshell as the above started
-    # progressHandler is a signal-terminated process - and a wait issued in
-    # the parent will never complete until that ph is signalled/terminated!
-    deletethreads=$(
-      tid=0
-      filenames=""
       while read filetounlink; do
-        tid=$((tid + 1))
         filetounlink=$(echo "${filetounlink}" | sed 's/\(.*\).symbolic.*/\1/')
-        filenames=$(/bin/printf "%s\n%s" "${filenames}" "${filetounlink}")
-        if [ "$((tid % threshold))" -eq 0 ]; then
-          deletethread "${filenames}" "${tempDirFile}" &
-          printDebug "Started delete thread: $!"
-          filenames=""
+        filename="$filetounlink"
+        [ -z "${filetounlink}" ] && continue
+        filetounlink="${ZOPEN_ROOTFS}/${filetounlink}"
+        [ ! -e "${filetounlink}" ] && continue  # If not there, can'e be removed!
+        if [ -d "${filetounlink}" ]; then
+          # Add to the directory queue for checking once files are gone if unique
+          ispresent=$(grep "^${filetounlink}[ ]*$" "${tempDirFile}")
+          if [ -z "${ispresent}" ]; then
+            echo " ${filetounlink} " >> "${tempDirFile}"
+          fi
+        elif [ -L "${filetounlink}" ]; then
+          if [ ! -f "${filetounlink}" ]; then
+            # the linked-to file no longer exists (ie. the symlink is dangling)
+            rm -f "${filetounlink}" > /dev/null 2>&1
+          fi
+        else
+          echo "Unprocessable file: '${filetounlink}'" >> "${tempTrash}"
         fi
-      done << EOF
+      done <<EOF
 $(sed '1d;$d' "${dotlinks}")
 EOF
-      if [ -n "${filenames}" ]; then
-        # Handle when there are not enough to trigger the threshold of a new thread above,
-        # there will still be items in the "array"
-        deletethread "${filenames}" "${tempDirFile}" #&
-        printDebug "Started delete thread: $!"
+      ${killph} 2>/dev/null # if the timer is not running, the kill will fail
+      sleep 1 # ensure the spinner has stopped if running
+      if [ -e "${tempDirFile}" ]; then
+        ndirs=$(uniq < "${tempDirFile}" | wc -l  | tr -d ' ')
+        printVerbose "- Checking ${ndirs} dir links"
+        for d in $(uniq < "${tempDirFile}" | sort -r) ; do 
+          [ -d "${d}" ] && rmdir "${d}" >/dev/null 2>&1
+        done
       fi
-      wait
-    )
-    ${killph} 2> /dev/null # if the timer is not running, the kill will fail
-    if [ -e "${tempDirFile}" ]; then
-      ndirs=$(cat "${tempDirFile}" | uniq | wc -l | tr -d ' ')
-      printInfo "- Checking ${ndirs} dir links"
-      for d in $(cat "${tempDirFile}" | uniq | sort -r); do
-        [ -d "${d}" ] && rmdir "${d}" > /dev/null 2>&1
-      done
+      if [ -e "${tempTrash}" ]; then
+        printSoftError "Issues found while trying to remove the following files:"
+        while read errorFile; do
+          printSoftError "${errorFile}"
+        done < "${tempTrash}"
+        printError "Manual removal of files might be required"
+      fi
     fi
   else
-    printWarning "Could not locate list of current links to verify, dangling links might be present; run 'zopen clean -d'"
+    printDebug "No list of current links to check - package was not installed/active"
   fi
 }
-
-deletethread()
-{
-  filestodelete="$1"
-  tempDirFile="$2"
-  echo "${filestodelete}" | while read filetounlink; do
-    deletetask "${tempDirFile}" "${filetounlink}"
-  done
-}
-
-deletetask()
-{
-  tempDirFile="$1"
-  filename="$2"
-  [ -z "${filename}" ] && return 0
-  filename="${ZOPEN_ROOTFS}/${filename}"
-  if [ -d "${filename}" ]; then
-    # Add to the queue for checking once files are gone if unique
-    ispresent=$(grep "^${filename}[ ]*$" "${tempDirFile}")
-    if [ -z "${ispresent}" ]; then
-      echo " ${filename} " >> "${tempDirFile}"
-    else
-      alreadyfound=""
-    fi
-  elif [ -L "${filename}" ]; then
-    if [ ! -f "${filename}" ]; then
-      # the linked-to file no longer exists (ie. the symlink is dangling)
-      rm -f "${filename}" > /dev/null 2>&1
-    fi
-  else
-    echo "Unprocessable file: '${filename}'" >> "${tempTrash}"
-  fi
-}
-
-
-
 
 printDebug()
 {
@@ -1023,14 +1041,6 @@ deleteDuplicateEntries()
   value=$1
   delim=$2
   echo "${value}${delim}" | awk -v RS="${delim}" '!($0 in a) {a[$0]; printf("%s%s", col, $0); col=RS; }' | sed "s/${delim}$//"
-}
-
-# reworked version of above to strip blank elements between delims
-deleteDuplicateEntriesRedux()
-{
-  value=$1
-  delim=$2
-  echo "${value}" | awk -v RS="${delim}" -v ORS="${delim}" ' {gsub("^[ ]+|[ ]$", "", $0); if (NF>0 && !a[$0]++) {print } }' | sed "s/${delim}$//"
 }
 
 # Logging Types
