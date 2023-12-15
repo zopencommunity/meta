@@ -1,5 +1,5 @@
 {
-  "timestamp": "2023-12-14T18:06:32.202944",
+  "timestamp": "2023-12-14T19:47:27.631477",
   "release_data": {
     "perl": [
       {
@@ -24113,6 +24113,22 @@
     ],
     "meta": [
       {
+        "name": "meta (Build 1914) - (STABLE)",
+        "date": "2023-12-14 23:23:28",
+        "tag_name": "STABLE_metaport_1914",
+        "assets": [
+          {
+            "name": "meta-main.20231214_230014.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/metaport/releases/download/STABLE_metaport_1914/meta-main.20231214_230014.zos.pax.Z",
+            "size": 12999168,
+            "expanded_size": 12389955,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "9",
+            "passed_tests": "9"
+          }
+        ]
+      },
+      {
         "name": "meta (Build 1909) - (STABLE)",
         "date": "2023-12-13 20:02:59",
         "tag_name": "STABLE_metaport_1909",
@@ -30512,6 +30528,22 @@
       }
     ],
     "gmp": [
+      {
+        "name": "gmp (Build 1915) - (STABLE)",
+        "date": "2023-12-15 00:28:17",
+        "tag_name": "STABLE_gmpport_1915",
+        "assets": [
+          {
+            "name": "gmp-6.3.0.20231214_204802.zos.pax.Z",
+            "url": "https://github.com/ZOSOpenTools/gmpport/releases/download/STABLE_gmpport_1915/gmp-6.3.0.20231214_204802.zos.pax.Z",
+            "size": 999936,
+            "expanded_size": 2915810,
+            "runtime_dependencies": "No dependencies",
+            "total_tests": "178",
+            "passed_tests": "178"
+          }
+        ]
+      },
       {
         "name": "gmp (Build 1853) - (STABLE)",
         "date": "2023-12-01 00:11:33",
