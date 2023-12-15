@@ -314,7 +314,7 @@ handlePackageInstall()
       redirectToDevNull="2>/dev/null"
     fi
 
-    progressHandler "network" "- Downloaded ${pax} file from remote to ${location}." &
+    progressHandler "network" "- Download complete." &
     ph=$!
     killph="kill -HUP ${ph}"
     addCleanupTrapCmd "${killph}"

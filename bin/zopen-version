@@ -28,7 +28,7 @@ printSyntax()
 
 tool='zopen' # Default name
 package="zopen tools"
-copyright="Copyright (C) 2023 zOS Open Tools Community."
+copyright="Copyright (C) 2023 z/OS Open Tools Community."
 license="License Apache: The Apache Software Foundation license, <https://directory.fsf.org/wiki/License:Apache2.0>"
 freesw="This is free software: you are free to change and redistribute it."
 warranty="There is NO WARRANTY, to the extent permitted by law."
