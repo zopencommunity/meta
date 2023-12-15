@@ -20,10 +20,10 @@ printSyntax()
   echo "${ME} prints version information for ${package}"
   echo "Usage: ${ME} [OPTION] tool"
   echo "   or: ${ME} [OPTION]"
-  echo "Syntax: zopen-version [OPTIONS]"
+  echo "Syntax: ${ME} [OPTIONS]"
   echo "where OPTIONS can be:"
-  echo "  --help: print this help"
-  echo "  --version: print version"
+  echo "  --help          print this help"
+  echo "  --version       print version"
 }
 
 tool='zopen' # Default name

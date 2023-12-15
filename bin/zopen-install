@@ -22,8 +22,8 @@ printSyntax()
 {
   args=$*
 cat << HELPDOC
-zopen install is a utility to download/install a z/OS Open Tools package.
-Usage: zopen install [OPION] [PACKAGE]
+${ME} is a utility to download/install a z/OS Open Tools package.
+Usage: ${ME} [OPION] [PACKAGE]
   [PACKAGE] is a package to install. Multiple packages can be specified.
 Options:
   --help                   print this help.

@@ -40,10 +40,10 @@ printHelp()
 {
   args=$*
 cat << HELPDOC
-zopen-update-cacert:
+${ME}:
   Update your cacert.pem file to the latest curl CA certificates extracted from Mozilla.
 Syntax:
-  zopen-update-cacert [-fhv] [<directory>]
+  ${ME} [-fhv] [<directory>]
 Options:
   -f, --force           update cacert.pem file even if up to date.
   -h, --help            print this help.
