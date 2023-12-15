@@ -39,18 +39,21 @@ trap "cleanupOnExit" EXIT INT TERM QUIT HUP
 printHelp()
 {
   args=$*
-  echo "zopen-update-cacert:"
-  echo "  Update your cacert.pem file to the latest curl CA certificates extracted from Mozilla"
-  echo "Syntax:"
-  echo "  zopen-update-cacert [-fhv] [<directory>]"
-  echo "Options:"
-  echo "  -f|--force: update cacert.pem file even if it may be up to date"
-  echo "  -h|--help: print this help"
-  echo "  --version: print version"
-  echo "  -v|--verbose: print verbose messages"
-  echo "Parameters:"
-  echo "  <directory>: the directory where the cacert.pem will be updated"
-  echo "    The default directory location is: ${default_dir}"
+cat << HELPDOC
+zopen-update-cacert:
+  Update your cacert.pem file to the latest curl CA certificates extracted from Mozilla.
+Syntax:
+  zopen-update-cacert [-fhv] [<directory>]
+Options:
+  -f, --force           update cacert.pem file even if up to date.
+  -h, --help            print this help.
+  -v, --verbose         print verbose messages.
+  --version             print version.
+
+Parameters:
+  <directory>: the directory where the cacert.pem will be updated.
+    The default directory location is: ${default_dir}
+HELPDOC
 }
 
 getCACertFromCurl()

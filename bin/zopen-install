@@ -40,7 +40,7 @@ Options:
   --skip-upgrade           do not upgrade.
   -y, --yes                automatically answer yes to prompts.
   --select                 select a version to install.
-  -v, --verbose            run in verbose mode.
+  -v, --verbose            print verbose messages.
   --download-only          download package to current directory.
   --local-install          download and unpackage to current directory.
   --all                    download/install all z/OS Open Tools packages.
