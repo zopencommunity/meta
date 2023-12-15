@@ -21,27 +21,30 @@ checkWritable
 printSyntax()
 {
   args=$*
-  echo "zopen install is a utility to download/install a z/OS Open Tools package."
-  echo "Usage: zopen install [OPION] [PACKAGE]"
-  echo "  [PACKAGE] is a package to install. Multiple packages can be specified."
-  echo "Options:"
-  echo "  --help                   print this help."
-  echo "  --version                print version"
-  echo "  -u, --update, --upgrade  updates installed z/OS Open Tools packages."
-  echo "  --install-or-upgrade     installs the package if not installed, or upgrades the package if installed."
-  echo "  --reinstallx             reinstall already installed z/OS Open Tools packages."
-  echo "  --nosymlink              do not integrate into filesystem through symlink redirection."
-  echo "  --release-line [stable, dev] the release line to build off of."
-  echo "  --no-deps                do not install dependencies."
-  echo "  --cache-only             do not install dependencies."
-  echo "  --no-set-active          do not change the pinned version"
-  echo "  --skip-upgrade           do not upgrade."
-  echo "  --yes, -y                automatically answer yes to prompts."
-  echo "  --select                 select a version to install."
-  echo "  -v                       run in verbose mode"
-  echo "  --download-only          download package to current directory"
-  echo "  --local-install          download and unpackage to current directory"
-  echo "  --all                    download/install all z/OS Open Tools packages"
+cat << HELPDOC
+${ME} is a utility to download/install a z/OS Open Tools package.
+Usage: ${ME} [OPION] [PACKAGE]
+  [PACKAGE] is a package to install. Multiple packages can be specified.
+Options:
+  --help                   print this help.
+  --version                print version.
+  -u, --update, --upgrade  updates installed z/OS Open Tools packages.
+  --install-or-upgrade     installs the package if not installed,
+                           or upgrades the package if installed.
+  -r, --reinstall          reinstall already installed z/OS Open Tools packages.
+  --nosymlink              do not integrate into filesystem through symlink redirection.
+  --release-line [stable, dev] the release line to build off of.
+  --no-deps                do not install dependencies.
+  --cache-only             do not install dependencies.
+  --no-set-active          do not change the pinned version.
+  --skip-upgrade           do not upgrade.
+  -y, --yes                automatically answer yes to prompts.
+  --select                 select a version to install.
+  -v, --verbose            print verbose messages.
+  --download-only          download package to current directory.
+  --local-install          download and unpackage to current directory.
+  --all                    download/install all z/OS Open Tools packages.
+HELPDOC
 }
 
 installDependencies()
@@ -501,7 +504,7 @@ yesToPrompts=false
 chosenRepos=""
 while [ $# -gt 0 ]; do
   case "$1" in
-  "-u" | "--update" | "-update" | "-upgrade" | "--upgrade")
+  "-u" | "--update" | "--upgrade")
     upgradeInstalled=true # Upgrade packages
     ;;
   "-r" | "-reinstall" | "--reinstall")
@@ -544,7 +547,7 @@ while [ $# -gt 0 ]; do
   "--select")
     selectVersion=true # Display a selction table to allow version picking
     ;;
-  "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
+  "-h" | "--help" | "-?" )
     printSyntax "${args}"
     exit 0
     ;;
@@ -552,7 +555,7 @@ while [ $# -gt 0 ]; do
     verbose=true
     debug=true
     ;;
-  "-v" | "--v" | "-verbose" | "--verbose")
+  "-v" | "--verbose")
     verbose=true
     ;;
   "--version")

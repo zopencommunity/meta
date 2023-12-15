@@ -23,9 +23,9 @@ setupMyself
 
 printHelp(){
 cat << HELPDOC
-zopen is a utility for managing a z/OS Open Tools environment.
+${ME} is a utility for managing a z/OS Open Tools environment.
 
-Usage: zopen [COMMAND] [OPTION] [PARAMETERS]...
+Usage: ${ME} [COMMAND] [OPTION] [PARAMETERS]...
 
 Command:
   init              initializes a zopen environment at the specified location
