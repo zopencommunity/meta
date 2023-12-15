@@ -30,7 +30,7 @@ addCleanupTrapCmd(){
   if [ -n "${script}" ]; then
     for trappedSignal in "EXIT" "INT" "TERM" "QUIT" "HUP"; do
       newtrapcmd=$(echo "${script}" | while read trapcmd; do
-	       sigcmd=$(echo "${trapcmd}" | sed "s/trap -- \"\(.*\)\" ${trappedSignal}.*/\1/")
+	       sigcmd=$(echo "${trapcmd}" | zossed "s/trap -- \"\(.*\)\" ${trappedSignal}.*/\1/")
 	       [ "${sigcmd}" = "${trapcmd}" ] && continue
 	       printf "%s;%s 2>/dev/null" "${sigcmd}" "${newcmd}" | tr -s ';'
          break
@@ -199,7 +199,7 @@ deleteDuplicateEntries()
 {
   value="\$1"
   delim="\$2"
-  echo "\${value}\${delim}" | awk -v RS="\${delim}" '!(\$0 in a) {a[\$0]; printf("%s%s", col, \$0); col=RS; }' | sed "s/\${delim}$//"
+  echo "\${value}\${delim}" | awk -v RS="\${delim}" '!(\$0 in a) {a[\$0]; printf("%s%s", col, \$0); col=RS; }' | /bin/sed "s/\${delim}$//"
 }
 
 # z/OS Open Tools environment variables
@@ -262,7 +262,7 @@ deref()
   testpath="$1"
   if [ -L "${testpath}" ]; then
     child=$(basename "${testpath}")
-    symlink=$(ls -l "${testpath}" | sed 's/.*-> \(.*\)/\1/')
+    symlink=$(ls -l "${testpath}" | zossed 's/.*-> \(.*\)/\1/')
     parent=$(dirname "${testpath}")
     relpath="${parent}/${symlink}"
     relparent=$(dirname "${relpath}")
@@ -408,7 +408,7 @@ findrev()
 
 strtrim()
 {
-  echo "$1" | sed -e 's/^[ \t]*//' -e 's/[ ]*$//'
+  echo "$1" | zossed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'
 }
 
 defineEnvironment()
@@ -499,7 +499,7 @@ relativePath2()
   # if the target is longer than the source, there might be some additional
   # elements in the shifted $0 to append
   if [ $# -gt 0 ]; then
-    relativePath=${relativePath}/$(echo $* | sed "s/ /\//g")
+    relativePath=${relativePath}/$(echo $* | zossed "s/ /\//g")
   fi
   IFS="${currentIFS}"
   echo "${relativePath}"
@@ -553,7 +553,7 @@ mergeIntoSystem()
   # subsequent calls would generate a symlink that has incorrect dereferencing
   # and ignoring them is actually faster than individually creating the links!
   zosfind . -type d | sort -r | while read dir; do
-    dir=$(echo "${dir}" | sed "s#^./##")
+    dir=$(echo "${dir}" | zossed "s#^./##")
     printDebug "Processing dir: ${dir}"
     [ ${dir} = "." ] && continue
     mkdir -p "${processingDir}/${rebaseusr}/${dir}"
@@ -635,7 +635,7 @@ unsymlinkFromSystem()
       # Note that the contents of the links file are ordered such that
       # processing occurs depth-first; if, after removing orphaned symlinks,
       # a directory is empty, then it can be removed.
-      nfiles=$(sed '1d;$d' "${dotlinks}" | wc -l  | tr -d ' ')
+      nfiles=$(zossed '1d;$d' "${dotlinks}" | wc -l  | tr -d ' ')
       printDebug "Creating Temporary dirname file"
       tempDirFile=$(mktempfile "unsymlink")
       [ -e "${tempDirFile}" ] && rm -f "${tempDirFile}" >/dev/null 2>&1
@@ -652,7 +652,7 @@ unsymlinkFromSystem()
       addCleanupTrapCmd "${killph}"
 
       while read filetounlink; do
-        filetounlink=$(echo "${filetounlink}" | sed 's/\(.*\).symbolic.*/\1/')
+        filetounlink=$(echo "${filetounlink}" | zossed 's/\(.*\).symbolic.*/\1/')
         filename="$filetounlink"
         [ -z "${filetounlink}" ] && continue
         filetounlink="${ZOPEN_ROOTFS}/${filetounlink}"
@@ -672,7 +672,7 @@ unsymlinkFromSystem()
           echo "Unprocessable file: '${filetounlink}'" >> "${tempTrash}"
         fi
       done <<EOF
-$(sed '1d;$d' "${dotlinks}")
+$(zossed '1d;$d' "${dotlinks}")
 EOF
       ${killph} 2>/dev/null # if the timer is not running, the kill will fail
       sleep 1 # ensure the spinner has stopped if running
@@ -1040,7 +1040,7 @@ deleteDuplicateEntries()
 {
   value=$1
   delim=$2
-  echo "${value}${delim}" | awk -v RS="${delim}" '!($0 in a) {a[$0]; printf("%s%s", col, $0); col=RS; }' | sed "s/${delim}$//"
+  echo "${value}${delim}" | awk -v RS="${delim}" '!($0 in a) {a[$0]; printf("%s%s", col, $0); col=RS; }' | zossed "s/${delim}$//"
 }
 
 # Logging Types
