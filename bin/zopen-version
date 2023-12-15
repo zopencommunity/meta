@@ -17,13 +17,15 @@ setupMyself
 
 printSyntax()
 {
-  echo "${ME} prints version information for ${package}"
-  echo "Usage: ${ME} [OPTION] tool"
-  echo "   or: ${ME} [OPTION]"
-  echo "Syntax: ${ME} [OPTIONS]"
-  echo "where OPTIONS can be:"
-  echo "  --help          print this help"
-  echo "  --version       print version"
+  cat << HELPDOC
+  ${ME} prints version information for ${package}
+  Usage: ${ME} [OPTION] tool
+     or: ${ME} [OPTION]
+  Syntax: ${ME} [OPTIONS]
+  where OPTIONS can be:
+    --help          print this help
+    --version       print version
+HELPDOC
 }
 
 tool='zopen' # Default name
