@@ -31,7 +31,7 @@ Options:
   -u, --update, --upgrade  updates installed z/OS Open Tools packages.
   --install-or-upgrade     installs the package if not installed,
                            or upgrades the package if installed.
-  --reinstall              reinstall already installed z/OS Open Tools packages.
+  -r, --reinstall          reinstall already installed z/OS Open Tools packages.
   --nosymlink              do not integrate into filesystem through symlink redirection.
   --release-line [stable, dev] the release line to build off of.
   --no-deps                do not install dependencies.
@@ -504,7 +504,7 @@ yesToPrompts=false
 chosenRepos=""
 while [ $# -gt 0 ]; do
   case "$1" in
-  "-u" | "--update" | "-update" | "-upgrade" | "--upgrade")
+  "-u" | "--update" | "--upgrade")
     upgradeInstalled=true # Upgrade packages
     ;;
   "-r" | "-reinstall" | "--reinstall")
@@ -547,7 +547,7 @@ while [ $# -gt 0 ]; do
   "--select")
     selectVersion=true # Display a selction table to allow version picking
     ;;
-  "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
+  "-h" | "--help" | "-?" )
     printSyntax "${args}"
     exit 0
     ;;
@@ -555,7 +555,7 @@ while [ $# -gt 0 ]; do
     verbose=true
     debug=true
     ;;
-  "-v" | "--v" | "-verbose" | "--verbose")
+  "-v" | "--verbose")
     verbose=true
     ;;
   "--version")
