@@ -50,7 +50,7 @@ Examples:
   zopen clean -u [PACKAGE]
                     remove unused versions for PACKAGE
 
-Report bugs at https://github.com/ZOSOpenTools/meta/issues .
+Report bugs at https://github.com/ZOSOpenTools/meta/issues.
 
 HELPDOC
 }
