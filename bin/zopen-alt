@@ -24,18 +24,18 @@ checkWritable
 printHelp()
 {
   cat << HELPDOC
-zopen alt is a utility for z/OS Open Tools to switch package versions
+${ME} is a utility for z/OS Open Tools to switch package versions
 for currently installed packages.
 
-Usage: zopen alt [OPTION] [PACKAGE] [PARAMETERS]...
+Usage: ${ME} [OPTION] [PACKAGE] [PARAMETERS]...
 
 Options:
+  -h, --help, -?    display this help and exit.
+  --select [PACKAGE]
+                    select the active version for PACKAGE from a list.
   -s, --set [PACKAGE] [VERSION]
-                    set the active version for PACKAGE to VERSION
-      --select [PACKAGE]
-                    select the active version for PACKAGE from a list
-  -v, --verbose     run in verbose mode
-  -h,-?, --help     display this help and exit
+                    set the active version for PACKAGE to VERSION.
+  -v, --verbose     run in verbose mode.
   --version         print version
 
 Examples:
