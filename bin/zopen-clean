@@ -24,25 +24,25 @@ checkWritable
 printHelp()
 {
   cat << HELPDOC
-zopen clean is a utility for z/OS Open Tools to clean uneeded resources
-from the system to save space and prevent clutter
+${ME} is a utility for z/OS Open Tools to remove uneeded resources
+from the system to save space and prevent clutter.
 
-Usage: zopen clean [OPTION] [PACKAGE]
+Usage: ${ME} [OPTION] [PACKAGE]
 
 Options:
-  -m, --metadata    cleans and refreshes the metadata for zopen
+  --all             apply cleanup command to all applicable packages.
   -c, --cache  [PACKAGE ...]
                     cleans the downloaded package cache; packages will be
-                    re-downloaded if needed
-  -d, --dangling    removes dangling symlinks from the zopen file system in case
-                    of issues during package maintenance
+                    re-downloaded if needed.
+  -d, --dangling    removes dangling symlinks from the zopen file system in
+                    case of issues during package maintenance.
+  -h, --help, -?    display this help and exit.
+  -m, --metadata    cleans and refreshes the metadata for zopen.
   -u, --unused [PACKAGE ...]
                     remove versions of PACKAGEs that are available as
-                    alternatives, leaving only the currently active version
-      --all         apply cleanup command to all applicable packages
-  -v, --verbose     run in verbose mode
-  -h,-?, --help     display this help and exit
-  --version         print version
+                    alternatives, leaving only the currently active version.
+  -v, --verbose     run in verbose mode.
+  --version         print version.
 
 Examples:
   zopen clean -c    clear the package download cache
