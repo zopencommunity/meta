@@ -30,10 +30,13 @@ syntax()
   cat << HELPDOC
 $ME - print out build dependencies (transitive closure) for a given tool.
   NOTE: This tool will clone several repositories into a temporary directory for this computation.
+
 Usage: $ME [OPTION] [tool]
+
 Options:
   --help        display this help and exit
   --version     print version
+
 Examples:
   print out the tools required to build git.
     $ME git
