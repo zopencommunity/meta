@@ -175,11 +175,11 @@ printSeeAlso()
 {
   echo "SEE ALSO:
   zopen(1)
+  zopen-alt(1)
   zopen-init(1)
   zopen-install(1)
   zopen-list(1)
   zopen-remove(1)
-  zopen-alt(1)
   "
 }
 
@@ -274,43 +274,55 @@ setDefaults()
 printSyntax()
 {
   args=$*
-  (
-    echo ""
-    echo "zopen-build is a general purpose build script to be used with the ZOSOpenTools ports."
-    echo ""
-    echo "Usage: zopen-build [OPTION]..."
-    echo ""
-    echo "Option:"
-    echo "  -h                   print this information"
-    echo "  -v                   run in verbose mode"
-    echo "  -vv                  run in very verbose mode (sets environment variables V=1 and VERBOSE=1)"
-    echo "  -u, --upgradedeps    upgrade all dependencies by running zopen install"
-    echo "  --buildtype TYPE     TYPE may be release or debug.  The default is release"
-    echo "  --build LINE         LINE may be dev or stable. This is the build line to build off of"
-    echo "  --comp COMP          COMP may be comp_xlclang, comp_clang, comp_go, comp_python. The default is comp_xlclang."
-    echo "  --oci                build and publish an OCI image to \$ZOPEN_IMAGE_REGISTRY"
-    echo "  -e ENV_FILE          source ENV_FILE instead of buildenv to establish build environment"
-    echo "  -c, --clean          Deletes all of the build output and forces reconfigure with next build"
-    echo "  -f, --force-rebuild  forces a rebuild, including running bootstrap and configure again"
-    echo "  -g, --get-source     get the source and apply patch without building"
-    echo "  -gp, --generate-pax  generate a pax.Z file based on the install contents"
-    echo "  --forcepatchapply    force apply the patches, where rejected patches are placed into a corresponding file of the same name, with the .rej extension"
-    echo "  --no-set-active      do not change the pinned version"
-    echo "  --no-install-deps    do not install project's runtime dependencies"
-    echo "  -s                   exec a shell before running configure.  Useful when manually building ports."
-    echo ""
-    echo "The specifics of how the tool works can be controlled through environment variables."
-    echo "The only environment variables you _must_ specify are to tell zopen-build where the source is, and in what format type the source is stored."
-    echo "By default, the environment variables are defined in a file named buildenv in the root directory of the [PACKAGE]port github repository"
-    echo "To see a fully functioning z/OSOpenTools sample port see: https://github.com/ZOSOpenTools/zotsampleport"
+  cat << HELPDOC
+${ME} is a general purpose build script to be used with the ZOSOpenTools ports.
 
-    opts=$(printEnvVar)
-    echo "${opts}"
-    fns=$(printFunctions)
-    echo "${fns}"
-    seeAlso=$(printSeeAlso)
-    echo "${seeAlso}"
-  )
+Usage: ${ME} [OPTION]...
+
+Option:
+  --build LINE          LINE may be dev or stable. This is the build line
+                        to build off of.
+  --buildtype TYPE      TYPE may be release or debug.  The default is release.
+  -c, --clean           Deletes all of the build output and forces
+                        reconfigure with next build.
+  --comp COMP           COMP may be comp_xlclang, comp_clang, comp_go,
+                        comp_python. The default is comp_xlclang.
+  -e ENV_FILE           source ENV_FILE instead of buildenv to establish
+                        build environment.
+  -f, --force-rebuild   forces a rebuild, including running bootstrap
+                        and configure again.
+  --forcepatchapply     force apply the patches, where rejected patches are
+                        placed into a corresponding file of the same name,
+                        with the .rej extension.
+  -g, --get-source      get the source and apply patch without building.
+  -gp, --generate-pax   generate a pax.Z file based on the install contents.
+  -h, --help, -?        print this information.
+  --no-set-active       do not change the pinned version.
+  --no-install-deps     do not install project's runtime dependencies.
+  --oci                 build and publish an OCI image to \$ZOPEN_IMAGE_REGISTRY.
+  -s                    exec a shell before running configure. Useful when
+                        manually building ports.
+  -v                    run in verbose mode.
+  -vv                   run in very verbose mode (sets environment variables
+                        V=1 and VERBOSE=1).
+  -u, --upgradedeps     upgrade all dependencies by running zopen install.
+
+The specifics of how the tool works can be controlled through environment
+variables. The only environment variables you _must_ specify are to tell
+${ME} where the source is, and in what format type the source is stored.
+By default, the environment variables are defined in a file named buildenv
+in the root directory of the [PACKAGE]port github repository.
+
+To see a fully functioning z/OS Open Tools sample port see:
+https://github.com/ZOSOpenTools/zotsampleport
+
+opts=$(printEnvVar)
+echo "${opts}"
+fns=$(printFunctions)
+echo "${fns}"
+seeAlso=$(printSeeAlso)
+echo "${seeAlso}"
+HELPDOC
 }
 
 processOptions()
@@ -332,9 +344,9 @@ processOptions()
   depsPath="${ZOPEN_PKGINSTALL}"
   forceUpgradeDeps=false
   noInstallRuntimeDeps=false
-  while [[ $# -gt 0 ]]; do
+  while [ $# -gt 0 ]; do
     case $1 in
-    "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
+    "-h" | "--help" | "-?")
       trap - EXIT
       printSyntax "${args}"
       exit 0
