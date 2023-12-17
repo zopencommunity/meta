@@ -356,10 +356,10 @@ processOptions()
       zopen-version ${ME}
       exit 0
       ;;
-    "-v" | "--v" | "-verbose" | "--verbose")
+    "-v" | "--verbose")
       verbose=true
       ;;
-    "-vv" | "--vv" | "-veryverbose" | "--veryverbose")
+    "-vv" | "--vv" | "--veryverbose")
       export V=1
       export VERBOSE=1
       verbose=true
@@ -421,7 +421,7 @@ processOptions()
       startShell=true
       ;;
     *)
-      printError "Unknown option ${arg} specified"
+      printError "Unknown option ${1} specified"
       ;;
     esac
     shift
