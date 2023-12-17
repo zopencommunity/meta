@@ -30,28 +30,29 @@ ${ME} is a utility for managing a z/OS Open Tools environment.
 Usage: ${ME} [COMMAND] [OPTION] [PARAMETERS]...
 
 Command:
-  init              initializes a zopen environment at the specified location
-  install           installs one or more z/OS Open Tools packages
-  list              lists information about z/OS Open Tools packages
-  upgrade           upgrades existing z/OS Open Tools packages
-  remove            removes installed z/OS Open Tools packages
-  build             builds the enclosing z/OS Open Tools git-cloned package
-  alt               manage alternate versions of z/OS Open Tools packages
-  clean             cleans up your zopen environment
-  query             list local or remote information about z/OS Open Tools packages
-  generate          generates a new zopen project
-  update-cacert     update the cacert.pem file used by z/OS Open Tools
+  alt               manage alternate versions of z/OS Open Tools packages.
+  build             builds the enclosing z/OS Open Tools git-cloned package.
+  clean             cleans up your zopen environment.
+  generate          generates a new zopen project.
+  init              initializes a zopen environment at the specified location.
+  install           installs one or more z/OS Open Tools packages.
+  list              lists information about z/OS Open Tools packages.
+  query             list local or remote info about z/OS Open Tools packages.
+  remove            removes installed z/OS Open Tools packages.
+  update-cacert     update the cacert.pem file used by z/OS Open Tools.
+  upgrade           upgrades existing z/OS Open Tools packages.
 
-Option:
-  -v, --verbose     run in verbose mode
-  -h,-?, --help     display this help and exit
+Options:
+  -h,-?, --help     display this help and exit.
+  -v, --verbose     run in verbose mode.
 
 Examples:
-  zopen --help      displays zopen help
-  zopen --version   displays the installed zopen version
-  zopen install git install the latest z/OS Open Tools git package
-  zopen upgrade -y  upgrade all installed packages to the latest release, without prompting
-  zopen alt bash    list the installed alternative bash z/OS Open Tools packages
+  zopen --help      displays zopen help.
+  zopen --version   displays the installed zopen version.
+  zopen install git install the latest z/OS Open Tools git package.
+  zopen upgrade -y  upgrade all installed packages to the latest release,
+                    without prompting.
+  zopen alt bash    list installed alternative bash z/OS Open Tools packages.
 
 SEE ALSO:
   zopen-version(1)
@@ -64,7 +65,6 @@ SEE ALSO:
   zopen-clean(1)
   zopen-generate(1)
   zopen-update-cacert(1)
-
 
 Report bugs at https://github.com/ZOSOpenTools/meta/issues .
 
