@@ -23,13 +23,14 @@ setupMyself
 printSyntax()
 {
   cat << HELPDOC
-  ${ME} prints version information for ${package}
-  Usage: ${ME} [OPTION] tool
-     or: ${ME} [OPTION]
-  Syntax: ${ME} [OPTIONS]
-  where OPTIONS can be:
-    --help          print this help
-    --version       print version
+${ME} prints version information for ${package}.
+
+Usage: ${ME} [OPTION] tool
+
+Options:
+  --help          display this help and exit.
+  --version       print version.
+
 HELPDOC
 }
 
@@ -41,7 +42,7 @@ freesw="This is free software: you are free to change and redistribute it."
 warranty="There is NO WARRANTY, to the extent permitted by law."
 authors="Written by contributors to the z/OS Open Tools Community <https://github.com/ZOSOpenTools/meta/graphs/contributors>."
 
-if [[ $# -eq 1 ]]; then
+if [ $# -eq 1 ]; then
   if [ "x$1" = "x--help" ]; then
     printSyntax
     exit 0
