@@ -49,6 +49,7 @@ Options:
   -v, --verbose            print verbose messages.
   --version                print version.
   -y, --yes                automatically answer yes to prompts.
+  
 HELPDOC
 }
 
