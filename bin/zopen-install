@@ -25,8 +25,10 @@ printSyntax()
   args=$*
 cat << HELPDOC
 ${ME} is a utility to download/install a z/OS Open Tools package.
+
 Usage: ${ME} [OPION] [PACKAGE]
   [PACKAGE] is a package to install. Multiple packages can be specified.
+
 Options:
   --all                    download/install all z/OS Open Tools packages.
   --cache-only             do not install dependencies.
@@ -37,7 +39,8 @@ Options:
   --local-install          download and unpackage to current directory.
   --no-deps                do not install dependencies.
   --no-set-active          do not change the pinned version.
-  --nosymlink              do not integrate into filesystem through symlink redirection.
+  --nosymlink              do not integrate into filesystem through
+                           symlink redirection.
   -r, --reinstall          reinstall already installed z/OS Open Tools packages.
   --release-line [stable, dev] the release line to build off of.
   --select                 select a version to install.
