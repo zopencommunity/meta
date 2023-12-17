@@ -3,6 +3,9 @@
 ZOPEN_DONT_PROCESS_CONFIG=1
 # Generates a zopen compatible project
 #
+# Copyright (C) 2023 z/OS Open Tools Community.
+#
+
 #
 # All zopen-* scripts MUST start with this code to maintain consistency
 #
@@ -31,12 +34,11 @@ buildLicenseLookup()
 
 printSyntax()
 {
-  args=$*
   echo "zopen-generate will generate a zopen compatible project" >&2
   echo "Syntax: zopen-generate" >&2
 }
 
-if [[ $# -eq 1 ]]; then
+if [ $# -eq 1 ]; then
   if [ "x$1" = "x--help" ]; then
     printSyntax
     exit 0

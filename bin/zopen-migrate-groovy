@@ -5,6 +5,9 @@
 # Has no checks in it and requires you fill in the ...'s in the generated files.
 # Also, spacing is a bit off - but easy enough to change post-processing in the editor.
 #
+# Copyright (C) 2023 z/OS Open Tools Community.
+#
+
 #
 # All zopen-* scripts MUST start with this code to maintain consistency
 #

@@ -1,6 +1,10 @@
 #!/bin/sh
 # "Alternatives" utility for z/OS Open Tools - https://github.com/ZOSOpenTools
 #
+# Copyright (C) 2023 z/OS Open Tools Community.
+#
+
+#
 # All zopen-* scripts MUST start with this code to maintain consistency
 #
 setupMyself()
@@ -20,15 +24,15 @@ checkWritable
 printHelp()
 {
   cat << HELPDOC
-zopen alt is a utility for z/OS Open Tools to switch package versions 
+zopen alt is a utility for z/OS Open Tools to switch package versions
 for currently installed packages.
 
 Usage: zopen alt [OPTION] [PACKAGE] [PARAMETERS]...
 
 Options:
   -s, --set [PACKAGE] [VERSION]
-                    set the active version for PACKAGE to VERSION 
-      --select [PACKAGE] 
+                    set the active version for PACKAGE to VERSION
+      --select [PACKAGE]
                     select the active version for PACKAGE from a list
   -v, --verbose     run in verbose mode
   -h,-?, --help     display this help and exit

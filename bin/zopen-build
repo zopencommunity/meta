@@ -1,12 +1,15 @@
 #!/bin/sh
 #
-# General purpose build script for ZOSOpenTools ports
+# General purpose build script for z/OS Open Tools ports - https://github.com/ZOSOpenTools
 #
 # ZOPEN_BUILD_LINE must be defined to either STABLE or DEV. This indicates the type of package to build
 #
 # For more details, see the help which you can get by issuing:
 # zopen-build -h
 #
+# Copyright (C) 2023 z/OS Open Tools Community.
+#
+
 #
 # All zopen-* scripts MUST start with this code to maintain consistency
 #
@@ -124,17 +127,17 @@ Being reworked to move to common ZOPEN_xxx_GIT_REFS:
   ZOPEN_STABLE_BRANCH  The branch that the stable repo should checkout (default is repo default)
 
 Currently unused:
-  ZOPEN_DEV_TYPE       The type of package to download. Valid types are TARBALL, BARE and GIT 
+  ZOPEN_DEV_TYPE       The type of package to download. Valid types are TARBALL, BARE and GIT
   ZOPEN_STABLE_TYPE    The type of package to download. Valid types are TARBALL, BARE and GIT
 
 Deprecated:
-  ZOPEN_TYPE           The type of package to download. Valid types are TARBALL, BARE and GIT 
+  ZOPEN_TYPE           The type of package to download. Valid types are TARBALL, BARE and GIT
   ZOPEN_TARBALL_URL    The fully qualified URL that the tarball should be downloaded from (required if ZOPEN_TYPE=TARBALL)
   ZOPEN_TARBALL_DEPS   Space-delimited set of source packages this git package depends on to build (required if ZOPEN_TYPE=TARBALL)
   ZOPEN_GIT_URL        The fully qualified URL that the git repo should be cloned from (required if ZOPEN_TYPE=GIT)
   ZOPEN_GIT_DEPS       Space-delimited set of source packages this tarball package depends on to build (required if ZOPEN_TYPE=GIT)
-  ZOPEN_GIT_BRANCH     The branch that the git repo should checkout 
-  ZOPEN_GIT_TAG        The tag that the git repo should checkout as a branch 
+  ZOPEN_GIT_BRANCH     The branch that the git repo should checkout
+  ZOPEN_GIT_TAG        The tag that the git repo should checkout as a branch
   ZOPEN_URL            Alternate environment variable instead of ZOPEN_TARBALL_URL or ZOPEN_GIT_URL (alternate to ZOPEN_TARBALL_URL or ZOPEN_GIT_URL)
   ZOPEN_DEPS           Alternate environment variable instead of ZOPEN_TARBALL_DEPS or ZOPEN_GIT_DEPS (alternate to ZOPEN_TARBALL_DEPS or ZOPEN_GIT_DEPS)
   ZOPEN_CC             C compiler (default set by dependency)
@@ -292,7 +295,7 @@ printSyntax()
     echo "  -g, --get-source     get the source and apply patch without building"
     echo "  -gp, --generate-pax  generate a pax.Z file based on the install contents"
     echo "  --forcepatchapply    force apply the patches, where rejected patches are placed into a corresponding file of the same name, with the .rej extension"
-    echo "  --no-set-active      do not change the pinned version" 
+    echo "  --no-set-active      do not change the pinned version"
     echo "  --no-install-deps    do not install project's runtime dependencies"
     echo "  -s                   exec a shell before running configure.  Useful when manually building ports."
     echo ""
@@ -425,7 +428,7 @@ loadBuildEnv()
   . ${buildEnvFile}
 
   setDefaultBuild
-  
+
 
   if command -V "zopen_post_buildenv" > /dev/null 2>&1; then
     printVerbose "Running zopen_post_buildenv"
@@ -585,7 +588,7 @@ checkEnv()
     fi
     implicitDeps="${implicitDeps}"
     printVerbose "Implicitly adding git dependencies: ${implicitDeps}"
-  fi 
+  fi
   ZOPEN_DEPS="${implicitDeps} ${ZOPEN_DEPS}"
 
   ZOPEN_COMMIT_SHA="$(git rev-parse HEAD)"
@@ -849,7 +852,7 @@ extractTarBall()
     if [ $? -gt 0 ]; then
       printError "Unable to untar ${tarballz}"
     fi
-  else 
+  else
     # Standard unzip
     # Remove the old directory contents if it already exists.
     # Keep the directory itself since there may be a symbolic
@@ -859,7 +862,7 @@ extractTarBall()
     out=$(unzip "${tarballz}" 2> /dev/null)
     if [ $? -gt 1 ]; then
       printError "unzip failed for ${tarballz}."
-      echo "${out}" >&2 
+      echo "${out}" >&2
     fi
   fi
   rm -f "${tarballz}"
@@ -1546,7 +1549,7 @@ generateMetadataJSON()
   fi
 
 metadata_version_scheme="0.1" # Update if we add breaking changes to the json format
-cat <<zz > "${ZOPEN_INSTALL_DIR}/metadata.json"  
+cat <<zz > "${ZOPEN_INSTALL_DIR}/metadata.json"
 {
 "version_scheme": "${metadata_version_scheme}",
 "product": {
@@ -1568,7 +1571,7 @@ cat <<zz > "${ZOPEN_INSTALL_DIR}/metadata.json"
 zz
 
 # Build Dependencies
-cat <<zz >> "${ZOPEN_INSTALL_DIR}/metadata.json"  
+cat <<zz >> "${ZOPEN_INSTALL_DIR}/metadata.json"
   "build_dependencies": [
 zz
 
@@ -1578,7 +1581,7 @@ echo "${ZOPEN_DEPS}" | xargs | tr ' ' '\n' | sort | while read dep; do
 if ! $isFirst; then
   echo "," >> "${ZOPEN_INSTALL_DIR}/metadata.json"
 fi
-cat <<zz >> "${ZOPEN_INSTALL_DIR}/metadata.json"  
+cat <<zz >> "${ZOPEN_INSTALL_DIR}/metadata.json"
       {
         "name": "${dep}",
         "versionRange": null
@@ -1588,7 +1591,7 @@ isFirst=false
 done
 
 # Runtime Dependencies
-cat <<zz >> "${ZOPEN_INSTALL_DIR}/metadata.json"  
+cat <<zz >> "${ZOPEN_INSTALL_DIR}/metadata.json"
   ],"runtime_dependencies": [
 zz
 
@@ -1598,7 +1601,7 @@ echo "${ZOPEN_RUNTIME_DEPS}" | xargs | tr ' ' '\n' | sort | while read dep; do
 if ! $isFirst; then
   echo "," >> "${ZOPEN_INSTALL_DIR}/metadata.json"
 fi
-cat <<zz >> "${ZOPEN_INSTALL_DIR}/metadata.json"  
+cat <<zz >> "${ZOPEN_INSTALL_DIR}/metadata.json"
       {
         "name": "${dep}",
         "versionRange": null
@@ -1607,13 +1610,13 @@ zz
 isFirst=false
 done
 
-cat <<zz >> "${ZOPEN_INSTALL_DIR}/metadata.json"  
+cat <<zz >> "${ZOPEN_INSTALL_DIR}/metadata.json"
   ]
 }}
 zz
   if ! jq -e '.' "${ZOPEN_INSTALL_DIR}/metadata.json" 1>/dev/null 2>&1; then
     printError "${ZOPEN_INSTALL_DIR}/metadata.json contains invalid json: $(cat ${ZOPEN_INSTALL_DIR}/metadata.json)"
-  fi 
+  fi
   # Format json
   jq "." "${ZOPEN_INSTALL_DIR}/metadata.json" > "${ZOPEN_ROOT}/install/metadata.json"
   cp "${ZOPEN_ROOT}/install/metadata.json" "${ZOPEN_INSTALL_DIR}/metadata.json"
@@ -2001,7 +2004,7 @@ zz
     action=$(echo ${line} | cut -d '|' -f 2)
     value=$(echo ${line} | cut -d '|' -f 3)
     projectRootCount=$(echo "${value}" | awk -F "PROJECT_ROOT" '{print NF-1}')
-  
+
     if [ "${action}" = "unset" ]; then
       echo "unsetenv(\"${var}\");" >> "${output}"
     elif [ "${action}" = "set" -o "${action}" = "overrideset" ]; then

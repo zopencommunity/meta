@@ -1,5 +1,13 @@
 #!/bin/sh
 #
+# Routine to generate man pages from the --help and --version for the various tools.
+#
+# We may choose to use --extendedhelp if the --help output is too long for folks.
+#
+# Copyright (C) 2023 z/OS Open Tools Community.
+#
+
+#
 # All zopen-* scripts MUST start with this code to maintain consistency
 #
 setupMyself()
@@ -15,25 +23,22 @@ setupMyself()
 }
 setupMyself
 
-#
-# Routine to generate man pages from the --help and --version for the various tools
-#
-# We may choose to use --extendedhelp if the --help output is too long for folks
-#
 
 printSyntax()
 {
-  echo "${ME} - generate man pages from help and version information for zopen and zopen-* tools"
-  echo "Usage: ${ME} [OPTION] DIRECTORY"
-  echo "  DIRECTORY  the existing directory to write the man pages"
-  echo "Options:"
-  echo "  --help     display this help and exit"
-  echo "  --version  print version"
-  echo "Example:"
-  echo "  ${ME} /tmp/man1    write the man pages to the /tmp/man1 directory"
+  cat << HELPDOC
+${ME} - generate man pages from help and version information for zopen and zopen-* tools.
+Usage: ${ME} [OPTION] DIRECTORY
+  DIRECTORY  the existing directory to write the man pages.
+Options:
+  --help         display this help and exit
+  --version      print version
+Example:"
+  ${ME} /tmp/man1    write the man pages to the /tmp/man1 directory.
+HELPDOC
 }
 
-if [[ $# -eq 1 ]]; then
+if [ $# -eq 1 ]; then
   if [ "x$1" = "x--help" ]; then
     printSyntax
     exit 0

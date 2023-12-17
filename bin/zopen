@@ -1,7 +1,9 @@
 #!/bin/sh
 #
 # zopen wrapper script to allow single point of entry to zopen
-# tooling
+# tooling.
+#
+# Copyright (C) 2023 z/OS Open Tools Community.
 #
 ZOPEN_DONT_PROCESS_CONFIG=1
 #

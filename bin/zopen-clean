@@ -1,5 +1,8 @@
 #!/bin/sh
 # Cleanup utility for z/OS Open Tools - https://github.com/ZOSOpenTools
+#
+# Copyright (C) 2023 z/OS Open Tools Community.
+#
 
 #
 # All zopen-* scripts MUST start with this code to maintain consistency
@@ -29,12 +32,12 @@ Usage: zopen clean [OPTION] [PACKAGE]
 Options:
   -m, --metadata    cleans and refreshes the metadata for zopen
   -c, --cache  [PACKAGE ...]
-                    cleans the downloaded package cache; packages will be 
+                    cleans the downloaded package cache; packages will be
                     re-downloaded if needed
-  -d, --dangling    removes dangling symlinks from the zopen file system in case 
+  -d, --dangling    removes dangling symlinks from the zopen file system in case
                     of issues during package maintenance
-  -u, --unused [PACKAGE ...]     
-                    remove versions of PACKAGEs that are available as 
+  -u, --unused [PACKAGE ...]
+                    remove versions of PACKAGEs that are available as
                     alternatives, leaving only the currently active version
       --all         apply cleanup command to all applicable packages
   -v, --verbose     run in verbose mode
@@ -55,11 +58,11 @@ HELPDOC
 cleanUnused()
 {
   for needle in $1; do
-    [ -z "${needle}" ] && return 
+    [ -z "${needle}" ] && return
     [ ! -e "${ZOPEN_PKGINSTALL}/${needle}" ] && printInfo "No versions of '${needle}' found" && continue
-    
+
     current=$(getCurrentVersionDir "${needle}")
-  
+
     if [ -n "${current}" ]; then
       current=$(basename "${current}")
     else
@@ -78,7 +81,7 @@ cleanUnused()
         printInfo "-- ${repo} <- Removed"
         syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_FILE},${CAT_PACKAGE},${CAT_REMOVE}" "CLEAN" "cleanUnused" "Removed unused package at ${repo#"${ZOPEN_PKGINSTALL}"/} "
       fi
-    done  
+    done
   done
 }
 

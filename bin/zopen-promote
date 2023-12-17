@@ -1,5 +1,8 @@
 #!/bin/sh
-# Promote a zopen instance to a different location
+# Promote a zopen instance to a different location.
+#
+# Copyright (C) 2023 z/OS Open Tools Community.
+#
 
 #
 # All zopen-* scripts MUST start with this code to maintain consistency
@@ -26,36 +29,45 @@ to a test area, validate the behavior, and promote to a production area.
 Usage: zopen promote [OPTION] [DESTINATION]...
 
 Options:
-  -f, --from  [DIRECTORY]
-                    The zopen environment to copy from; if not present,
-                    the default is taken from ZOPEN_ROOTFS (the current
-                    zopen environment).
-  -y, --yes         Automatically answer 'yes' to prompts; existing
-                    target filesystems will be purged before promote
-                    occurs.
-  -o, --owner [OWNER]
-                    Change owner of promoted environment files from
-                    current user.
-  -g, --group [GROUP]
-                    Change group of promoted environment files from
-                    default.
   -cp, --configperms [PERMISSIONS]
                     Update the permissions for the configuration file
                     <promotedroot>/etc/zopen-config with the given
                     [PERMISSIONS] string, specified in symbolic mode.
+
+  -f, --from  [DIRECTORY]
+                    The zopen environment to copy from; if not present,
+                    the default is taken from ZOPEN_ROOTFS (the current
+                    zopen environment).
+
+  -g, --group [GROUP]
+                    Change group of promoted environment files from
+                    default.
+
+  -h, -?, --help    Display this help and exit.
+
+  --keepzopentooling
+                    Install the zopen admin tools into the promoted
+                    environment for zopen system administration.
+
+  -o, --owner [OWNER]
+                    Change owner of promoted environment files from
+                    current user.
+
+  -v, --verbose     Run in verbose mode.
+
+  --version         Display version information.
+
+  -y, --yes         Automatically answer 'yes' to prompts; existing
+                    target filesystems will be purged before promote
+                    occurs.
+
   -zp, --zopenperms [PERMISSIONS]
                     Update the permissions for all files within the
                     promoted zopen environment with the given
                     [PERMISSIONS] string, specified in symbolic mode.
-  --keepzopentooling
-                    Install the zopen admin tools into the promoted
-                    environment for zopen system administration.
-  -v, --verbose     Run in verbose mode.
-  --version         Display version information.
-  -h, -?, --help    Display this help and exit.
 
 Examples:
-  zopen promote       Interactively promote current zopen environment.
+  zopen promote     Interactively promote current zopen environment.
   zopen promote /prod
                     Promote current zopen environment to '/prod', setting
                     file ownership to current user and group to default.

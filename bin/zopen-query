@@ -1,6 +1,10 @@
 #!/bin/sh
 # Query utility for z/OS Open Tools - https://github.com/ZOSOpenTools
 #
+# Copyright (C) 2023 z/OS Open Tools Community.
+#
+
+#
 # All zopen-* scripts MUST start with this code to maintain consistency
 #
 setupMyself()
@@ -48,7 +52,7 @@ if ${filter_implemented}; then
   echo "                   green: all pass, blue: most pass, yellow: some pass, red: no pass, gray: skipped"
 fi
   echo "  --help           print this help"
-  echo "  --version        print version" 
+  echo "  --version        print version"
 }
 
 colorizepct()

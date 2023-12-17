@@ -1,6 +1,10 @@
 #!/bin/sh
 # Removal utility for z/OS Open Tools - https://github.com/ZOSOpenTools
 #
+# Copyright (C) 2023 z/OS Open Tools Community.
+#
+
+#
 # All zopen-* scripts MUST start with this code to maintain consistency
 #
 setupMyself()
@@ -26,11 +30,15 @@ packages.
 Usage: zopen remove [OPTION] [PACKAGE] ...
 
 Options:
+  -h, --help, -?    display this help and exit.
+
+  -p, --purge       remove package, the versioned directory and any cached file.
+
+  -v, --verbose     run in verbose mode.
+
+  --version         print version.
+
   -y, --yes         automatically answer yes to prompts.
-  -p, --purge       remove package, the versioned directory and any cached file
-  -v, --verbose     run in verbose mode
-  -h, -?, --help    display this help and exit
-  --version         print version
 
 Examples:
   zopen remove foo bar
@@ -131,7 +139,7 @@ while [ $# -gt 0 ]; do
     # shellcheck disable=SC2034
     debug=true
     ;;
-  "-y" | "--yes") 
+  "-y" | "--yes")
     yesToPrompts=true
     ;;
   *)

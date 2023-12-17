@@ -1,8 +1,11 @@
 #!/bin/env bash
-
 #
 # Print out build dependencies (transitive closure) for a given tool
 #
+#
+# Copyright (C) 2023 z/OS Open Tools Community.
+#
+
 #
 # All zopen-* scripts MUST start with this code to maintain consistency
 #
@@ -19,17 +22,22 @@ setupMyself()
 }
 setupMyself
 
+#
+# Display help text.
+#
 syntax()
 {
-  echo "$ME - print out build dependencies (transitive closure) for a given tool."
-  echo "  Note this tool will clone several repositories into a temporary directory for this computation."
-  echo "Usage: $ME [OPTION] [tool]"
-  echo "Options:"
-  echo "  --help     display this help and exit"
-  echo "  --version  print version"
-  echo "Examples:"
-  echo "  print out the tools required to build git"
-  echo "    $ME git"
+  cat << HELPDOC
+$ME - print out build dependencies (transitive closure) for a given tool.
+  NOTE: This tool will clone several repositories into a temporary directory for this computation.
+Usage: $ME [OPTION] [tool]
+Options:
+  --help        display this help and exit
+  --version     print version
+Examples:
+  print out the tools required to build git.
+    $ME git
+HELPDOC
   exit 0
 }
 
@@ -38,7 +46,7 @@ secondary_type="DEV"
 verbose=true
 
 if [ $# -eq 0 ]; then
-  echo "Need to specify a package name" >&2
+  echo "Need to specify a package name." >&2
   syntax
 fi
 
