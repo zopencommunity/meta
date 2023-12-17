@@ -55,16 +55,16 @@ Examples:
   zopen alt bash    list installed alternative bash z/OS Open Tools packages.
 
 SEE ALSO:
-  zopen-version(1)
+  zopen-alt(1)
+  zopen-build(1)
+  zopen-clean(1)
+  zopen-generate(1)
   zopen-init(1)
   zopen-install(1)
   zopen-query(1)
   zopen-remove(1)
-  zopen-build(1)
-  zopen-alt(1)
-  zopen-clean(1)
-  zopen-generate(1)
   zopen-update-cacert(1)
+  zopen-version(1)
 
 Report bugs at https://github.com/ZOSOpenTools/meta/issues .
 
