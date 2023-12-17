@@ -43,19 +43,23 @@ printHelp()
 {
   args=$*
 cat << HELPDOC
-${ME}:
-  Update your cacert.pem file to the latest curl CA certificates extracted from Mozilla.
+${ME}: Update your cacert.pem file to the latest CA certificates extracted from Mozilla.
+
 Syntax:
   ${ME} [-fhv] [<directory>]
+
 Options:
   -f, --force           update cacert.pem file even if up to date.
   -h, --help            print this help.
+  -i, --insecure-fallback
+                        (UNSAFE) Skip certificate validation during download.
   -v, --verbose         print verbose messages.
   --version             print version.
 
 Parameters:
   <directory>: the directory where the cacert.pem will be updated.
     The default directory location is: ${default_dir}
+
 HELPDOC
 }
 
@@ -121,12 +125,12 @@ dir="${default_dir}"
 args=$*
 forceUpdate=false
 insecureFallback=false
-while [[ $# -gt 0 ]]; do
+while [ $# -gt 0 ]; do
   case "$1" in
-  "-f" | "-force" | "--force")
+  "-f" | "--force")
     forceUpdate=true
     ;;
-  "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
+  "-h" | "--help" | "-?")
     printHelp "${args}"
     exit 0
     ;;
@@ -137,7 +141,7 @@ while [[ $# -gt 0 ]]; do
   "-i" | "--insecure-fallback")
     insecureFallback=true
     ;;
-  "-v" | "--v" | "-verbose" | "--verbose")
+  "-v" | "--verbose")
     verbose=true
     ;;
   *)
