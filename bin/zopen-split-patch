@@ -26,12 +26,16 @@ printSyntax()
   cat << HELPDOC
 ${ME} - split a patch file into one patch file for each patch.
   Patches are written to ${pd} in the current directory.
+
 Usage: ${ME} [OPTION] [PATCHFILE]
+
 Options:
   --help      display this help and exit.
   --version   print version.
+
 Example:
   ${ME} P1.patch    write P1.patch into multiple patches under ${pd}
+
 HELPDOC
 }
 
