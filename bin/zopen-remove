@@ -24,28 +24,25 @@ checkWritable
 printHelp()
 {
   cat << HELPDOC
-zopen remove is a utility for z/OS Open Tools to remove an installed package or
+${ME} is a utility for z/OS Open Tools to remove an installed package or
 packages.
 
-Usage: zopen remove [OPTION] [PACKAGE] ...
+Usage: ${ME} [OPTION] [PACKAGE] ...
 
 Options:
   -h, --help, -?    display this help and exit.
-
-  -p, --purge       remove package, the versioned directory and any cached file.
-
+  -p, --purge       remove package, the versioned directory, and any
+                    cached files.
   -v, --verbose     run in verbose mode.
-
   --version         print version.
-
   -y, --yes         automatically answer yes to prompts.
 
 Examples:
   zopen remove foo bar
                     interactively remove the foo and bar packages if installed
   zopen remove --yes foo bar
-                    remove the foo and bar packages if installed, without asking
-                    for confirmation
+                    remove the foo and bar packages if installed, without
+                    asking for confirmation
 
 Report bugs at https://github.com/ZOSOpenTools/meta/issues .
 
