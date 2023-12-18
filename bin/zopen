@@ -43,7 +43,7 @@ Command:
   upgrade           upgrades existing z/OS Open Tools packages.
 
 Options:
-  -h,-?, --help     display this help and exit.
+  -h, --help, -?    display this help and exit.
   -v, --verbose     run in verbose mode.
 
 Examples:
