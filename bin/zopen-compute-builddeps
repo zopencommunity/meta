@@ -29,16 +29,17 @@ syntax()
 {
   cat << HELPDOC
 $ME - print out build dependencies (transitive closure) for a given tool.
-  NOTE: This tool will clone several repositories into a temporary directory for this computation.
+  NOTE: This tool will clone several repositories into a
+  temporary directory for this computation.
 
 Usage: $ME [OPTION] [tool]
 
 Options:
-  --help        display this help and exit
-  --version     print version
+  --help        display this help and exit.
+  --version     print version.
 
 Examples:
-  print out the tools required to build git.
+  Print out the tools required to build git.
     $ME git
 HELPDOC
   exit 0
@@ -70,7 +71,7 @@ rootpkg="$1"
 tmpdir="/tmp/blddep_$$"
 
 if ! mkdir "${tmpdir}"; then
-  echo "Unable to create temporary directory for computing transitive closure" >&2
+  echo "Unable to create temporary directory for computing transitive closure." >&2
   syntax
 fi
 
