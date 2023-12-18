@@ -268,7 +268,7 @@ for tmp in "${TMPDIR}" "${TMP}" /tmp; do
 done
 
 if [ ! -d "${tmp}" ]; then
-  printError "Temporary directory not found. Please specify \$TMPDIR, \$TMP or have a valid /tmp directory"
+  printError "Temporary directory not found. Please specify \$TMPDIR, \$TMP or have a valid /tmp directory."
 fi
 
 TMP_FIFO_PIPE="${tmp}/${LOGNAME}.pipe"
@@ -352,7 +352,8 @@ printSyntax()
 {
   args=$*
   cat << HELPDOC
-${ME} is a general purpose build script to be used with the ZOSOpenTools ports.
+${ME} is a general purpose build script to be used with the
+z/OS Open Tools ports.
 
 Usage: ${ME} [OPTION]...
 
