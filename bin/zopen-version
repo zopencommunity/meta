@@ -37,10 +37,10 @@ HELPDOC
 tool='zopen' # Default name
 package="zopen tools"
 copyright="Copyright (C) 2023 z/OS Open Tools Community."
-license="License Apache: The Apache Software Foundation license, <https://directory.fsf.org/wiki/License:Apache2.0>"
+license="License: Apache License, Version 2.0, <https://directory.fsf.org/wiki/License:Apache2.0>"
 freesw="This is free software: you are free to change and redistribute it."
 warranty="There is NO WARRANTY, to the extent permitted by law."
-authors="Written by contributors to the z/OS Open Tools Community <https://github.com/ZOSOpenTools/meta/graphs/contributors>."
+authors="Written by contributors to the z/OS Open Tools Community. <https://github.com/ZOSOpenTools/meta/graphs/contributors>"
 
 if [ $# -eq 1 ]; then
   if [ "x$1" = "x--help" ]; then
@@ -57,4 +57,4 @@ set -e
 
 version=$(cat "${INCDIR}/zopen_version")
 
-printf "%s %s %s\n%s\n\n%s\n%s\n%s\n\n\n%s\n" "${tool}" "(${package})" "${version}" "${copyright}" "${license}" "${freesw}" "${warranty}" "${authors}"
+printf "%s %s %s\n%s\n\n%s\n%s\n%s\n\n%s\n\n" "${tool}" "(${package})" "${version}" "${copyright}" "${license}" "${freesw}" "${warranty}" "${authors}"
