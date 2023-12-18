@@ -4,7 +4,7 @@
 #
 
 #
-# All zopen-* scripts MUST start with this code to maintain consistency
+# All zopen-* scripts MUST start with this code to maintain consistency.
 #
 setupMyself()
 {
