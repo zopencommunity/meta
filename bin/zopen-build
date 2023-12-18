@@ -59,89 +59,145 @@ printEnvVar()
   echo "User-Provided environment variables:
 
 Required:
-  ZOPEN_BUILD_LINE     Specify the default build line, either 'DEV' or 'STABLE'
-  ZOPEN_CATEGORIES     Specify all categories that apply with space as a delimiter. Valid categories: ('${ZOPEN_VALID_CATEGORIES}')
-  ZOPEN_DEV_DEPS       Required IF ZOPEN_BUILD_LINE='DEV'. Specify the dev build dependencies
-  ZOPEN_DEV_URL        Required IF ZOPEN_BUILD_LINE='DEV'. Specify the dev build url (either a git url or tarball url)
-  ZOPEN_STABLE_DEPS    Required IF ZOPEN_BUILD_LINE='STABLE'. Specify the stable build dependencies
-  ZOPEN_STABLE_URL     Required IF ZOPEN_BUILD_LINE='STABLE'. Specify the stable build url (either a git url or tarball url)
+  ZOPEN_BUILD_LINE    Specify the default build line, either 'DEV' or 'STABLE'
+  ZOPEN_CATEGORIES    Specify a space-delimited list of applicable categories.
+                      Valid categories:
+                      ('${ZOPEN_VALID_CATEGORIES}')
+  ZOPEN_DEV_DEPS      Required IF ZOPEN_BUILD_LINE='DEV'.
+                      Specify the dev build dependencies
+  ZOPEN_DEV_URL       Required IF ZOPEN_BUILD_LINE='DEV'. Specify the dev
+                      build URL (either git or tarball).
+  ZOPEN_STABLE_DEPS   Required IF ZOPEN_BUILD_LINE='STABLE'.
+                      Specify the stable build dependencies.
+  ZOPEN_STABLE_URL    Required IF ZOPEN_BUILD_LINE='STABLE'. Specify the
+                      stable build URL (either git or tarball).
 
 Optional:
-  ZOPEN_EXTRA_CFLAGS    C compiler flags to append to CFLAGS (defaults to '')
-  ZOPEN_EXTRA_CPPFLAGS  C,C++ pre-processor flags to append to CPPFLAGS (defaults to '')
-  ZOPEN_EXTRA_CXXFLAGS  C++ compiler flags to append to CXXFLAGS (defaults to '')
-  ZOPEN_EXTRA_LDFLAGS   C,C++ linker flags to append to LDFLAGS (defaults to '')
-  ZOPEN_EXTRA_LIBS      C,C++ libraries to append to LIBS (defaults to '')
+  ZOPEN_EXTRA_CFLAGS    C compiler flags to append to CFLAGS (defaults to '').
+  ZOPEN_EXTRA_CPPFLAGS  C,C++ pre-processor flags to append to CPPFLAGS.
+                        (defaults to '')
+  ZOPEN_EXTRA_CXXFLAGS  C++ compiler flags to append to CXXFLAGS.
+                        (defaults to '')
+  ZOPEN_EXTRA_LDFLAGS   C,C++ linker flags to append to LDFLAGS.
+                        (defaults to '')
+  ZOPEN_EXTRA_LIBS      C,C++ libraries to append to LIBS. (defaults to '')
 
-  ZOPEN_BOOTSTRAP             Bootstrap program to run. If skip is specified, no bootstrap step is performed (defaults to '${ZOPEN_BOOTSTRAPD}')
-  ZOPEN_BOOTSTRAP_OPTS        Options to pass to bootstrap program (defaults to '${ZOPEN_BOOTSTRAP_OPTSD}')
-  ZOPEN_CHECK                 Check program to run. If skip is specified, no check step is performed (defaults to '${ZOPEN_CHECKD}')
-  ZOPEN_CHECK_MINIMAL         Check program will not be passed CFLAGS, LDFLAGS, CPPFLAGS options but will just get them from env vars
-  ZOPEN_CHECK_OPTS            Options to pass to check program (defaults to '${ZOPEN_CHECK_OPTSD}')
-  ZOPEN_CHECK_TIMEOUT         Timeout limit in seconds for the check program (defaults to '${ZOPEN_CHECK_TIMEOUTD}')
-  ZOPEN_CLEAN                 Clean up program to run (defaults to '${ZOPEN_CLEAND}')
-  ZOPEN_CLEAN_OPTS            Options to pass to clean up  program (defaults to '${ZOPEN_CLEAN_OPTSD}')
-  ZOPEN_CONFIGURE             Configuration program to run. If skip is specified, no configuration step is performed (defaults to '${ZOPEN_CONFIGURED}')
-  ZOPEN_CONFIGURE_MINIMAL     Configuration program will not be passed CFLAGS, LDFLAGS, CPPFLAGS options but will just get them from env vars
-  ZOPEN_CONFIGURE_OPTS        Options to pass to configuration program (defaults to '--prefix=\${ZOPEN_INSTALL_DIR}')
-  ZOPEN_EXTRA_CONFIGURE_OPTS  Extra configure options to pass to configuration program (defaults to '')
-  ZOPEN_INSTALL               Installation program to run. If skip is specified, no installation step is performed (defaults to '${ZOPEN_INSTALLD}')
-  ZOPEN_INSTALL_OPTS          Options to pass to installation program (defaults to '${ZOPEN_INSTALL_OPTSD}')
-  ZOPEN_MAKE                  Build program to run. If skip is specified, no build step is performed (defaults to '${ZOPEN_MAKED}')
-  ZOPEN_MAKE_MINIMAL          Build program will not be passed CFLAGS, LDFLAGS, CPPFLAGS options but will just get them from env vars
-  ZOPEN_MAKE_OPTS             Options to pass to build program (defaults to '-j\${ZOPEN_NUM_JOBS}')
+  ZOPEN_BOOTSTRAP             Bootstrap program to run. If skip is specified,
+                              no bootstrap step is performed.
+                              (defaults to '${ZOPEN_BOOTSTRAPD}')
+  ZOPEN_BOOTSTRAP_OPTS        Options to pass to bootstrap program.
+                              (defaults to '${ZOPEN_BOOTSTRAP_OPTSD}')
+  ZOPEN_CHECK                 Check program to run. If skip is specified,
+                              no check step is performed.
+                              (defaults to '${ZOPEN_CHECKD}')
+  ZOPEN_CHECK_MINIMAL         Check program will not be passed CFLAGS, LDFLAGS,
+                              CPPFLAGS options but will get them from env vars.
+  ZOPEN_CHECK_OPTS            Options to pass to check program.
+                              (defaults to '${ZOPEN_CHECK_OPTSD}')
+  ZOPEN_CHECK_TIMEOUT         Timeout limit in seconds for the check program.
+                              (defaults to '${ZOPEN_CHECK_TIMEOUTD}')
+  ZOPEN_CLEAN                 Clean up program to run.
+                              (defaults to '${ZOPEN_CLEAND}')
+  ZOPEN_CLEAN_OPTS            Options to pass to clean up  program.
+                              (defaults to '${ZOPEN_CLEAN_OPTSD}')
+  ZOPEN_CONFIGURE             Configuration program to run. If skip is
+                              specified, no configuration step is performed.
+                              (defaults to '${ZOPEN_CONFIGURED}')
+  ZOPEN_CONFIGURE_MINIMAL     Configuration program will not be passed CFLAGS,
+                              LDFLAGS, CPPFLAGS options but will get them from
+                              env vars.
+  ZOPEN_CONFIGURE_OPTS        Options to pass to configuration program.
+                              (defaults to '--prefix=\${ZOPEN_INSTALL_DIR}')
+  ZOPEN_EXTRA_CONFIGURE_OPTS  Extra configure options to pass to configuration
+                              program. (defaults to '')
+  ZOPEN_INSTALL               Installation program to run. If skip is specified,
+                              no installation step is performed.
+                              (defaults to '${ZOPEN_INSTALLD}')
+  ZOPEN_INSTALL_OPTS          Options to pass to installation program.
+                              (defaults to '${ZOPEN_INSTALL_OPTSD}')
+  ZOPEN_MAKE                  Build program to run. If skip is specified,
+                              no build step is performed.
+                              (defaults to '${ZOPEN_MAKED}')
+  ZOPEN_MAKE_MINIMAL          Build program will not be passed CFLAGS, LDFLAGS,
+                              CPPFLAGS options but will get them from env vars.
+  ZOPEN_MAKE_OPTS             Options to pass to build program.
+                              (defaults to '-j\${ZOPEN_NUM_JOBS}')
 
 Restricted Usage - only set in ports if necessary
-  ZOPEN_DONT_ADD_ZOSLIB_DEP Set it to avoid adding zoslib as a dependency
+  ZOPEN_DONT_ADD_ZOSLIB_DEP   Set to avoid adding zoslib as a dependency.
 
 Restricted Usage - only SET by metaport, otherwise READ ONLY:
-  ZOPEN_INSTALL_DIR    Installation directory to pass to configuration (defaults to '\${ZOPEN_PKGINSTALL}/<pkg>/<pkg>')
-  ZOPEN_NUM_JOBS       Number of jobs that can be run in parallel (defaults to 1/2 the CPUs on the system)
+  ZOPEN_INSTALL_DIR   Installation directory to pass to configuration.
+                      (defaults to '\${ZOPEN_PKGINSTALL}/<pkg>/<pkg>')
+  ZOPEN_NUM_JOBS      Number of jobs that can be run in parallel
+                      (defaults to half the CPUs on the system)
 
 Restricted Usage (clangport):
-  ZOPEN_CFLAGS         C compiler flags (default set by dependency)
-  ZOPEN_CPPFLAGS       C/C++ pre-processor flags (default set by dependency)
-  ZOPEN_CXXFLAGS       C++ compiler flags (default set by dependency)
-  ZOPEN_LDFLAGS        C/C++ linker flags (default set by dependency)
+  ZOPEN_CFLAGS        C compiler flags. (default set by dependency)
+  ZOPEN_CPPFLAGS      C/C++ pre-processor flags. (default set by dependency)
+  ZOPEN_CXXFLAGS      C++ compiler flags. (default set by dependency)
+  ZOPEN_LDFLAGS       C/C++ linker flags. (default set by dependency)
 
 Restricted Usage (phpport):
-  ZOPEN_GIT_SETUP      Specify whether git files should be added to a local repo or if this will be done manually (defaults to Y)
+  ZOPEN_GIT_SETUP     Specify whether git files should be added to a local
+                      repo or if this will be done manually. (defaults to Y)
 
 Restricted Usage (tclport):
-  ZOPEN_SRC_DIR        specify a relative source directory to cd to for bootstrap, configure, build, check, install (defaults to '.')
+  ZOPEN_SRC_DIR       Specify a relative source directory to cd to for
+                      bootstrap, configure, build, check, install.
+                      (defaults to '.')
 
 Restricted Usage (meta):
-  ZOPEN_IMAGE_DOCKERFILE_NAME    Dockerfile name (default: Dockerfile)
-  ZOPEN_IMAGE_DOCKER_NAME        Docker/podman tool name (default: podman)
-  ZOPEN_IMAGE_REGISTRY           Docker image registry to an OCI image to (use with --oci option)
-  ZOPEN_IMAGE_REGISTRY_ID        The ID to authenticate to the Docker image registry (use with --oci option)
-  ZOPEN_IMAGE_REGISTRY_KEY_FILE  The file containing the key to authenticate to the Docker image registry (use with --oci option)
-  ZOPEN_LOG_DIR                  The directory to store build logs (defaults to '${ZOPEN_ROOT}/log')
-  ZOPEN_SHELL                    Specify an alternate shell to use if -s option specified (defaults to /bin/sh)
+  ZOPEN_IMAGE_DOCKERFILE_NAME     Dockerfile name. (default: Dockerfile)
+  ZOPEN_IMAGE_DOCKER_NAME         Docker/podman tool name. (default: podman)
+  ZOPEN_IMAGE_REGISTRY            Docker image registry to an OCI image to
+                                  (use with --oci option)
+  ZOPEN_IMAGE_REGISTRY_ID         The ID to authenticate to the Docker image
+                                  registry. (use with --oci option)
+  ZOPEN_IMAGE_REGISTRY_KEY_FILE   The file containing authentication key to the
+                                  Docker image registry. (use with --oci option)
+  ZOPEN_LOG_DIR                   The directory to store build logs.
+                                  (defaults to '${ZOPEN_ROOT}/log')
+  ZOPEN_SHELL                     Specify an alternate shell to use if -s
+                                  option specified. (defaults to /bin/sh)
 
 Being reworked to move to common ZOPEN_xxx_GIT_REFS:
-  ZOPEN_DEV_BRANCH     The branch that the git repo should checkout (default is repo default)
-  ZOPEN_DEV_TAG        The tag that the git repo should checkout as a branch (optional)
-  ZOPEN_STABLE_BRANCH  The branch that the stable repo should checkout (default is repo default)
-  ZOPEN_STABLE_TAG     The tag that the git repo should checkout as a branch (optional)
+  ZOPEN_DEV_BRANCH      The branch that the git repo should checkout.
+                        (default is repo default)
+  ZOPEN_DEV_TAG         The tag that the git repo should checkout as a branch.
+                        (optional)
+  ZOPEN_STABLE_BRANCH   The branch that the stable repo should checkout.
+                        (default is repo default)
+  ZOPEN_STABLE_TAG      The tag that the git repo should checkout as a branch.
+                        (optional)
 
 Currently unused:
-  ZOPEN_DEV_TYPE       The type of package to download. Valid types are TARBALL, BARE and GIT
-  ZOPEN_STABLE_TYPE    The type of package to download. Valid types are TARBALL, BARE and GIT
+  ZOPEN_DEV_TYPE        The type of package to download. Valid types are
+                        TARBALL, BARE and GIT.
+  ZOPEN_STABLE_TYPE     The type of package to download. Valid types are
+                        TARBALL, BARE and GIT.
 
 Deprecated:
-  ZOPEN_CC             C compiler (default set by dependency)
-  ZOPEN_CXX            C++ compiler (default set by dependency)
-  ZOPEN_DEPS           Alternate environment variable instead of ZOPEN_TARBALL_DEPS or ZOPEN_GIT_DEPS (alternate to ZOPEN_TARBALL_DEPS or ZOPEN_GIT_DEPS)
-  ZOPEN_GIT_BRANCH     The branch that the git repo should checkout
-  ZOPEN_GIT_DEPS       Space-delimited set of source packages this tarball package depends on to build (required if ZOPEN_TYPE=GIT)
-  ZOPEN_GIT_TAG        The tag that the git repo should checkout as a branch
-  ZOPEN_GIT_URL        The fully qualified URL that the git repo should be cloned from (required if ZOPEN_TYPE=GIT)
-  ZOPEN_LIBS           C/C++ libraries (default set by dependency)
-  ZOPEN_TARBALL_DEPS   Space-delimited set of source packages this git package depends on to build (required if ZOPEN_TYPE=TARBALL)
-  ZOPEN_TARBALL_URL    The fully qualified URL that the tarball should be downloaded from (required if ZOPEN_TYPE=TARBALL)
-  ZOPEN_TYPE           The type of package to download. Valid types are TARBALL, BARE and GIT
-  ZOPEN_URL            Alternate environment variable instead of ZOPEN_TARBALL_URL or ZOPEN_GIT_URL (alternate to ZOPEN_TARBALL_URL or ZOPEN_GIT_URL)
+  ZOPEN_CC              C compiler. (default set by dependency)
+  ZOPEN_CXX             C++ compiler. (default set by dependency)
+  ZOPEN_DEPS            Alternate environment variable instead of
+                        ZOPEN_TARBALL_DEPS or ZOPEN_GIT_DEPS.
+  ZOPEN_GIT_BRANCH      The branch that the git repo should checkout.
+  ZOPEN_GIT_DEPS        Space-delimited set of source packages this tarball
+                        package depends on to build.
+                        (required if ZOPEN_TYPE=GIT)
+  ZOPEN_GIT_TAG         The tag that the git repo should checkout as a branch.
+  ZOPEN_GIT_URL         The fully qualified URL that the git repo should be
+                        cloned from. (required if ZOPEN_TYPE=GIT)
+  ZOPEN_LIBS            C/C++ libraries (default set by dependency)
+  ZOPEN_TARBALL_DEPS    Space-delimited set of source packages this git package
+                        depends on to build. (required if ZOPEN_TYPE=TARBALL)
+  ZOPEN_TARBALL_URL     The fully qualified URL that the tarball should be
+                        downloaded from. (required if ZOPEN_TYPE=TARBALL)
+  ZOPEN_TYPE            The type of package to download. Valid types are
+                        TARBALL, BARE and GIT.
+  ZOPEN_URL             Alternate environment variable instead of
+                        ZOPEN_TARBALL_URL or ZOPEN_GIT_URL.
 "
 }
 
