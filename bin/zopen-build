@@ -56,8 +56,7 @@ asciiecho()
 
 printEnvVar()
 {
-  cat << ENVARS
-User-Provided environment variables:
+  echo "User-Provided environment variables:
 
 Required:
   ZOPEN_BUILD_LINE     Specify the default build line, either 'DEV' or 'STABLE'
@@ -143,7 +142,7 @@ Deprecated:
   ZOPEN_TARBALL_URL    The fully qualified URL that the tarball should be downloaded from (required if ZOPEN_TYPE=TARBALL)
   ZOPEN_TYPE           The type of package to download. Valid types are TARBALL, BARE and GIT
   ZOPEN_URL            Alternate environment variable instead of ZOPEN_TARBALL_URL or ZOPEN_GIT_URL (alternate to ZOPEN_TARBALL_URL or ZOPEN_GIT_URL)
-ENVARS
+"
 }
 
 printFunctions()
@@ -316,13 +315,11 @@ in the root directory of the [PACKAGE]port github repository.
 To see a fully functioning z/OS Open Tools sample port see:
 https://github.com/ZOSOpenTools/zotsampleport
 
-opts=$(printEnvVar)
-echo "${opts}"
-fns=$(printFunctions)
-echo "${fns}"
-seeAlso=$(printSeeAlso)
-echo "${seeAlso}"
 HELPDOC
+
+printEnvVar
+printFunctions
+printSeeAlso
 }
 
 processOptions()
