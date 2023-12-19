@@ -37,12 +37,10 @@ printVersion()
 {
   cat << VERSIONDOC
 ${tool} (${package}) ${version}
-Copyright (C) 2022-2023 z/OS Open Tools Community.
 
-License: Apache License, Version 2.0,
-<https://directory.fsf.org/wiki/License:Apache2.0>
-
-This is free software: you are free to change and redistribute it.
+This is free software: you are free to change and redistribute it under the
+terms of the Apache License, Version 2.0.
+<https://www.apache.org/licenses/LICENSE-2.0.html>
 There is NO WARRANTY, to the extent permitted by law.
 
 Written by contributors to the z/OS Open Tools Community.
