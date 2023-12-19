@@ -1,7 +1,6 @@
 #!/bin/sh
-# Promote a zopen instance to a different location.
 #
-# Copyright (C) 2023 z/OS Open Tools Community.
+# Promote a zopen instance to a different location.
 #
 
 #

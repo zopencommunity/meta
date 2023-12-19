@@ -1,7 +1,6 @@
 #!/bin/sh
-# Version utility for z/OS Open Tools - https://github.com/ZOSOpenTools
 #
-# Copyright (C) 2023 z/OS Open Tools Community.
+# Version utility for z/OS Open Tools - https://github.com/ZOSOpenTools
 #
 
 #
@@ -38,7 +37,7 @@ printVersion()
 {
   cat << VERSIONDOC
 ${tool} (${package}) ${version}
-Copyright (C) 2023 z/OS Open Tools Community.
+Copyright (C) 2022-2023 z/OS Open Tools Community.
 
 License: Apache License, Version 2.0,
 <https://directory.fsf.org/wiki/License:Apache2.0>

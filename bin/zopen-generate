@@ -1,9 +1,8 @@
 #!/bin/sh
+#
 # Initialize zopen
 ZOPEN_DONT_PROCESS_CONFIG=1
 # Generates a zopen compatible project
-#
-# Copyright (C) 2023 z/OS Open Tools Community.
 #
 
 #

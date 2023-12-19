@@ -1,8 +1,7 @@
 #!/bin/sh
+#
 # Generate man1/xxx.1.gz from xxx.md
 # Probably throw-away since we are going to use help2man instead
-#
-# Copyright (C) 2023 z/OS Open Tools Community.
 #
 
 #

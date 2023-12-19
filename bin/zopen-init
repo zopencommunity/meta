@@ -1,8 +1,6 @@
 #!/bin/sh
 # Initialize zopen environment - https://github.com/ZOSOpenTools
 #
-# Copyright (C) 2023 z/OS Open Tools Community.
-#
 ME=$(basename "$0")
 
 if [ -z "${utildir}" ]; then

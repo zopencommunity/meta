@@ -1,6 +1,6 @@
 #!/bin/env bash
 #
-# Copyright (C) 2023 z/OS Open Tools Community.
+# Split a patch file into multiple patches.
 #
 
 #

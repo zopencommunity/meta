@@ -4,8 +4,6 @@
 #
 # We may choose to use --extendedhelp if the --help output is too long for folks.
 #
-# Copyright (C) 2023 z/OS Open Tools Community.
-#
 
 #
 # All zopen-* scripts MUST start with this code to maintain consistency.

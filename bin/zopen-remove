@@ -1,7 +1,6 @@
 #!/bin/sh
-# Removal utility for z/OS Open Tools - https://github.com/ZOSOpenTools
 #
-# Copyright (C) 2023 z/OS Open Tools Community.
+# Removal utility for z/OS Open Tools - https://github.com/ZOSOpenTools
 #
 
 #

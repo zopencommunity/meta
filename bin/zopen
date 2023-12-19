@@ -3,8 +3,6 @@
 # zopen wrapper script to allow single point of entry to zopen
 # tooling.
 #
-# Copyright (C) 2023 z/OS Open Tools Community.
-#
 ZOPEN_DONT_PROCESS_CONFIG=1
 #
 # All zopen-* scripts MUST start with this code to maintain consistency.
