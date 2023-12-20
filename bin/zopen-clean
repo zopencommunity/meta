@@ -1,8 +1,10 @@
 #!/bin/sh
+#
 # Cleanup utility for z/OS Open Tools - https://github.com/ZOSOpenTools
+#
 
 #
-# All zopen-* scripts MUST start with this code to maintain consistency
+# All zopen-* scripts MUST start with this code to maintain consistency.
 #
 setupMyself()
 {
@@ -10,7 +12,7 @@ setupMyself()
   MYDIR="$(cd "$(dirname "$0")" > /dev/null 2>&1 && pwd -P)"
   INCDIR="${MYDIR}/../include"
   if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
-    echo "Internal Error. Unable to find common.sh file to source" >&2
+    echo "Internal Error. Unable to find common.sh file to source." >&2
     exit 8
   fi
   . "${INCDIR}/common.sh"
@@ -21,25 +23,25 @@ checkWritable
 printHelp()
 {
   cat << HELPDOC
-zopen clean is a utility for z/OS Open Tools to clean uneeded resources
-from the system to save space and prevent clutter
+${ME} is a utility for z/OS Open Tools to remove uneeded resources
+from the system to save space and prevent clutter.
 
-Usage: zopen clean [OPTION] [PACKAGE]
+Usage: ${ME} [OPTION] [PACKAGE]
 
 Options:
-  -m, --metadata    cleans and refreshes the metadata for zopen
+  --all             apply cleanup command to all applicable packages.
   -c, --cache  [PACKAGE ...]
-                    cleans the downloaded package cache; packages will be 
-                    re-downloaded if needed
-  -d, --dangling    removes dangling symlinks from the zopen file system in case 
-                    of issues during package maintenance
-  -u, --unused [PACKAGE ...]     
-                    remove versions of PACKAGEs that are available as 
-                    alternatives, leaving only the currently active version
-      --all         apply cleanup command to all applicable packages
-  -v, --verbose     run in verbose mode
-  -h,-?, --help     display this help and exit
-  --version         print version
+                    cleans the downloaded package cache; packages will be
+                    re-downloaded if needed.
+  -d, --dangling    removes dangling symlinks from the zopen file system in
+                    case of issues during package maintenance.
+  -h, --help, -?    display this help and exit.
+  -m, --metadata    cleans and refreshes the metadata for zopen.
+  -u, --unused [PACKAGE ...]
+                    remove versions of PACKAGEs that are available as
+                    alternatives, leaving only the currently active version.
+  -v, --verbose     run in verbose mode.
+  --version         print version.
 
 Examples:
   zopen clean -c    clear the package download cache
@@ -47,7 +49,7 @@ Examples:
   zopen clean -u [PACKAGE]
                     remove unused versions for PACKAGE
 
-Report bugs at https://github.com/ZOSOpenTools/meta/issues .
+Report bugs at https://github.com/ZOSOpenTools/meta/issues.
 
 HELPDOC
 }
@@ -55,11 +57,11 @@ HELPDOC
 cleanUnused()
 {
   for needle in $1; do
-    [ -z "${needle}" ] && return 
+    [ -z "${needle}" ] && return
     [ ! -e "${ZOPEN_PKGINSTALL}/${needle}" ] && printInfo "No versions of '${needle}' found" && continue
-    
+
     current=$(getCurrentVersionDir "${needle}")
-  
+
     if [ -n "${current}" ]; then
       current=$(basename "${current}")
     else
@@ -78,7 +80,7 @@ cleanUnused()
         printInfo "-- ${repo} <- Removed"
         syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_FILE},${CAT_PACKAGE},${CAT_REMOVE}" "CLEAN" "cleanUnused" "Removed unused package at ${repo#"${ZOPEN_PKGINSTALL}"/} "
       fi
-    done  
+    done
   done
 }
 

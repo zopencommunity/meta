@@ -1,7 +1,10 @@
 #!/bin/sh
+#
 # Install utility for z/OS Open Tools - https://github.com/ZOSOpenTools
 #
-# All zopen-* scripts MUST start with this code to maintain consistency
+
+#
+# All zopen-* scripts MUST start with this code to maintain consistency.
 #
 # set -x
 setupMyself()
@@ -10,7 +13,7 @@ setupMyself()
   MYDIR="$(cd "$(dirname "$0")" > /dev/null 2>&1 && pwd -P)"
   INCDIR="${MYDIR}/../include"
   if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
-    echo "Internal Error. Unable to find common.sh file to source" >&2
+    echo "Internal Error. Unable to find common.sh file to source." >&2
     exit 8
   fi
   . "${INCDIR}/common.sh"
@@ -23,27 +26,31 @@ printSyntax()
   args=$*
 cat << HELPDOC
 ${ME} is a utility to download/install a z/OS Open Tools package.
+
 Usage: ${ME} [OPION] [PACKAGE]
   [PACKAGE] is a package to install. Multiple packages can be specified.
+
 Options:
+  --all                    download/install all z/OS Open Tools packages.
+  --cache-only             do not install dependencies.
+  --download-only          download package to current directory.
   --help                   print this help.
-  --version                print version.
-  -u, --update, --upgrade  updates installed z/OS Open Tools packages.
   --install-or-upgrade     installs the package if not installed,
                            or upgrades the package if installed.
-  -r, --reinstall          reinstall already installed z/OS Open Tools packages.
-  --nosymlink              do not integrate into filesystem through symlink redirection.
-  --release-line [stable, dev] the release line to build off of.
-  --no-deps                do not install dependencies.
-  --cache-only             do not install dependencies.
-  --no-set-active          do not change the pinned version.
-  --skip-upgrade           do not upgrade.
-  -y, --yes                automatically answer yes to prompts.
-  --select                 select a version to install.
-  -v, --verbose            print verbose messages.
-  --download-only          download package to current directory.
   --local-install          download and unpackage to current directory.
-  --all                    download/install all z/OS Open Tools packages.
+  --no-deps                do not install dependencies.
+  --no-set-active          do not change the pinned version.
+  --nosymlink              do not integrate into filesystem through
+                           symlink redirection.
+  -r, --reinstall          reinstall already installed z/OS Open Tools packages.
+  --release-line [stable, dev] the release line to build off of.
+  --select                 select a version to install.
+  --skip-upgrade           do not upgrade.
+  -u, --update, --upgrade  updates installed z/OS Open Tools packages.
+  -v, --verbose            print verbose messages.
+  --version                print version.
+  -y, --yes                automatically answer yes to prompts.
+
 HELPDOC
 }
 

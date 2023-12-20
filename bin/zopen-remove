@@ -1,7 +1,10 @@
 #!/bin/sh
+#
 # Removal utility for z/OS Open Tools - https://github.com/ZOSOpenTools
 #
-# All zopen-* scripts MUST start with this code to maintain consistency
+
+#
+# All zopen-* scripts MUST start with this code to maintain consistency.
 #
 setupMyself()
 {
@@ -9,7 +12,7 @@ setupMyself()
   MYDIR="$(cd "$(dirname "$0")" > /dev/null 2>&1 && pwd -P)"
   INCDIR="${MYDIR}/../include"
   if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
-    echo "Internal Error. Unable to find common.sh file to source" >&2
+    echo "Internal Error. Unable to find common.sh file to source." >&2
     exit 8
   fi
   . "${INCDIR}/common.sh"
@@ -20,24 +23,25 @@ checkWritable
 printHelp()
 {
   cat << HELPDOC
-zopen remove is a utility for z/OS Open Tools to remove an installed package or
+${ME} is a utility for z/OS Open Tools to remove an installed package or
 packages.
 
-Usage: zopen remove [OPTION] [PACKAGE] ...
+Usage: ${ME} [OPTION] [PACKAGE] ...
 
 Options:
+  -h, --help, -?    display this help and exit.
+  -p, --purge       remove package, the versioned directory, and any
+                    cached files.
+  -v, --verbose     run in verbose mode.
+  --version         print version.
   -y, --yes         automatically answer yes to prompts.
-  -p, --purge       remove package, the versioned directory and any cached file
-  -v, --verbose     run in verbose mode
-  -h, -?, --help    display this help and exit
-  --version         print version
 
 Examples:
   zopen remove foo bar
                     interactively remove the foo and bar packages if installed
   zopen remove --yes foo bar
-                    remove the foo and bar packages if installed, without asking
-                    for confirmation
+                    remove the foo and bar packages if installed, without
+                    asking for confirmation
 
 Report bugs at https://github.com/ZOSOpenTools/meta/issues .
 
@@ -131,7 +135,7 @@ while [ $# -gt 0 ]; do
     # shellcheck disable=SC2034
     debug=true
     ;;
-  "-y" | "--yes") 
+  "-y" | "--yes")
     yesToPrompts=true
     ;;
   *)

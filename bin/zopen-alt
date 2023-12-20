@@ -1,7 +1,10 @@
 #!/bin/sh
+#
 # "Alternatives" utility for z/OS Open Tools - https://github.com/ZOSOpenTools
 #
-# All zopen-* scripts MUST start with this code to maintain consistency
+
+#
+# All zopen-* scripts MUST start with this code to maintain consistency.
 #
 setupMyself()
 {
@@ -9,7 +12,7 @@ setupMyself()
   MYDIR="$(cd "$(dirname "$0")" > /dev/null 2>&1 && pwd -P)"
   INCDIR="${MYDIR}/../include"
   if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
-    echo "Internal Error. Unable to find common.sh file to source" >&2
+    echo "Internal Error. Unable to find common.sh file to source." >&2
     exit 8
   fi
   . "${INCDIR}/common.sh"
@@ -20,18 +23,18 @@ checkWritable
 printHelp()
 {
   cat << HELPDOC
-zopen alt is a utility for z/OS Open Tools to switch package versions 
+${ME} is a utility for z/OS Open Tools to switch package versions
 for currently installed packages.
 
-Usage: zopen alt [OPTION] [PACKAGE] [PARAMETERS]...
+Usage: ${ME} [OPTION] [PACKAGE] [PARAMETERS]...
 
 Options:
+  -h, --help, -?    display this help and exit.
+  --select [PACKAGE]
+                    select the active version for PACKAGE from a list.
   -s, --set [PACKAGE] [VERSION]
-                    set the active version for PACKAGE to VERSION 
-      --select [PACKAGE] 
-                    select the active version for PACKAGE from a list
-  -v, --verbose     run in verbose mode
-  -h,-?, --help     display this help and exit
+                    set the active version for PACKAGE to VERSION.
+  -v, --verbose     run in verbose mode.
   --version         print version
 
 Examples:
@@ -43,7 +46,7 @@ Examples:
                     set the active version of package 'foo' to version
                     foo-1.2.3.19700101_012345.zos if available
 
-Report bugs at https://github.com/ZOSOpenTools/meta/issues .
+Report bugs at https://github.com/ZOSOpenTools/meta/issues
 
 HELPDOC
 }

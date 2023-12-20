@@ -1,5 +1,6 @@
 #!/bin/sh
-# Initialize zopen
+# Initialize zopen environment - https://github.com/ZOSOpenTools
+#
 ME=$(basename "$0")
 
 if [ -z "${utildir}" ]; then
@@ -8,7 +9,7 @@ fi
 
 ZOPEN_DONT_PROCESS_CONFIG=1
 #
-# All zopen-* scripts MUST start with this code to maintain consistency
+# All zopen-* scripts MUST start with this code to maintain consistency.
 #
 setupMyself()
 {
@@ -16,7 +17,7 @@ setupMyself()
   MYDIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
   INCDIR="${MYDIR}/../include"
   if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
-    echo "Internal Error. Unable to find common.sh file to source" >&2
+    echo "Internal Error. Unable to find common.sh file to source." >&2
     exit 8
   fi
   . "${INCDIR}/common.sh"
@@ -26,31 +27,26 @@ checkWritable
 
 printHelp(){
 cat << HELPDOC
-zopen init is a utility for z/OS Open Tools to generate a zopen 
+zopen init is a utility for z/OS Open Tools to generate a zopen
 environment, bootstrapping initial tools and creating a configuration
 file
 
 Usage: zopen init [OPTION] [PARAMETERS]...
 
 Options:
-  -y, --yes         
-          automatically answer 'yes' to prompts
-
   --append-to-profile
-          appends sourcing of zopen-config to current 
+          appends sourcing of zopen-config to current
           user's .profile
 
-  --releaseline-dev
-          globally configure the release line for package
-          installs to enable Development (DEV) packages; the
-          default is for a system to use STABLE packages
+  --[no]enable-stats
+          Toggle enabling collection of usage statistics
 
   -f, --fs-layout <LAYOUT>
-          The filesystem structure to use for installed 
-          packages on disk; packages will be installed to 
-          this location under <zopen rootfs>. 
+          The filesystem structure to use for installed
+          packages on disk; packages will be installed to
+          this location under <zopen rootfs>.
 
-          <LAYOUT> should be one of:                                         
+          <LAYOUT> should be one of:
 
             usrlclz: /usr/local/zopen (default),
             zopen: /usr/zopen,
@@ -59,28 +55,33 @@ Options:
             fhs: File Hierarchical Standard (/opt),
             usrlcl: usr/local
 
-  --re-init      
-          Re-initializes a previous zopen environment or 
-          create a new environment using current tooling.
-          Re-initializing over a previous installation will 
-          re-use existing package structures and 
-          configuration and regenerate configuration files.                    
-          select the active version for PACKAGE from a list
-
-  --refresh         
-          Refreshes the zopen-config file 
-
-  --[no]enable-stats
-          Toggle enabling collection of usage statistics
-
--v, --verbose     
-          run in verbose mode
-
--h, -?, --help    
+  -h, -?, --help
           display this help and exit
 
+  --re-init
+          Re-initializes a previous zopen environment or
+          create a new environment using current tooling.
+          Re-initializing over a previous installation will
+          re-use existing package structures and
+          configuration and regenerate configuration files.
+          select the active version for PACKAGE from a list
+
+  --refresh
+          Refreshes the zopen-config file
+
+  --releaseline-dev
+          globally configure the release line for package
+          installs to enable Development (DEV) packages; the
+          default is for a system to use STABLE packages
+
+  -v, --verbose
+          run in verbose mode
+
+  -y, --yes
+          automatically answer 'yes' to prompts
+
 Examples:
-  zopen init        
+  zopen init
           interactively bootstrap a zopen environment
 
   zopen init --releaseline-dev
@@ -88,14 +89,14 @@ Examples:
           will use Development Releaseline packages
 
   zopen --yes --append-to-profile --fs-layout fhs /zopen
-          non-interactively create a zopen environment at 
+          non-interactively create a zopen environment at
           location '/zopen' on disk, with packages installed
           to '/zopen/opt'. The user's .profile will be
           updated to source the configuration file at
-          '/zopen/etc/zopen-config' when new terminal 
+          '/zopen/etc/zopen-config' when new terminal
           sessions start
 
-Report bugs at https://github.com/ZOSOpenTools/meta/issues 
+Report bugs at https://github.com/ZOSOpenTools/meta/issues
 
 HELPDOC
 }
@@ -159,7 +160,7 @@ while [ $# -gt 0 ]; do
       zopen-version $ME
       exit 0
       ;;
-    "--debug") 
+    "--debug")
       debug=true
       ;;
     "--yes" | "-y")
@@ -329,8 +330,8 @@ generateFileSystem()
   fi
   printVerbose "Checking for existence of specified root: '${rootfs}'"
   [ -e "${rootfs}" ] || mkdir -p "${rootfs}" || printError "Unable to create zopen root filesystem at '${rootfs}'"
-  [ -d "${rootfs}" ] || printError "Specified location '${rootfs}' is not a directory. Unable to access root file system at '${rootfs}'; check permissions"  
-  [ -w "${rootfs}" ] || printError "Unable to write to root file system at '${rootfs}'; check permissions"  
+  [ -d "${rootfs}" ] || printError "Specified location '${rootfs}' is not a directory. Unable to access root file system at '${rootfs}'; check permissions"
+  [ -w "${rootfs}" ] || printError "Unable to write to root file system at '${rootfs}'; check permissions"
 
   printVerbose "- Populating standard file system"
   [ -e "${rootfs}/bin" ] || mkdir -p "${rootfs}/bin"
@@ -367,7 +368,7 @@ generateFileSystem()
 
 generateZopenConfig()
 {
-  printHeader "Generating zopen-config" 
+  printHeader "Generating zopen-config"
   writeConfigFile "${configFile}" "${rootfs}" "${zopen_pkginstall}" "${ZOPEN_CA_DIR}/${certFileName}"
   printInfo "- Created config in ${configFile}"
   if ${appendToProfile}; then
@@ -393,7 +394,7 @@ generateJsonConfiguration()
   if [ -z "$releaseLine" ]; then
     if ${releaselineDev}; then
       releaseLine="DEV"
-      printInfo "- Configured zopen to use development (DEV) releaseline packages where available" 
+      printInfo "- Configured zopen to use development (DEV) releaseline packages where available"
     else
       releaseLine="STABLE"
       printInfo "- Configured zopen to use stable releaseline packages"

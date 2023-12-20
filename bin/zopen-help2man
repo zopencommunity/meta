@@ -1,6 +1,12 @@
 #!/bin/sh
 #
-# All zopen-* scripts MUST start with this code to maintain consistency
+# Routine to generate man pages from the --help and --version for the various tools.
+#
+# We may choose to use --extendedhelp if the --help output is too long for folks.
+#
+
+#
+# All zopen-* scripts MUST start with this code to maintain consistency.
 #
 setupMyself()
 {
@@ -8,32 +14,29 @@ setupMyself()
   MYDIR="$(cd "$(dirname "$0")" > /dev/null 2>&1 && pwd -P)"
   INCDIR="${MYDIR}/../include"
   if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
-    echo "Internal Error. Unable to find common.sh file to source" >&2
+    echo "Internal Error. Unable to find common.sh file to source." >&2
     exit 8
   fi
   . "${INCDIR}/common.sh"
 }
 setupMyself
 
-#
-# Routine to generate man pages from the --help and --version for the various tools
-#
-# We may choose to use --extendedhelp if the --help output is too long for folks
-#
 
 printSyntax()
 {
-  echo "${ME} - generate man pages from help and version information for zopen and zopen-* tools"
-  echo "Usage: ${ME} [OPTION] DIRECTORY"
-  echo "  DIRECTORY  the existing directory to write the man pages"
-  echo "Options:"
-  echo "  --help     display this help and exit"
-  echo "  --version  print version"
-  echo "Example:"
-  echo "  ${ME} /tmp/man1    write the man pages to the /tmp/man1 directory"
+  cat << HELPDOC
+${ME} - generate man pages from help and version information for zopen and zopen-* tools.
+Usage: ${ME} [OPTION] DIRECTORY
+  DIRECTORY  the existing directory to write the man pages.
+Options:
+  --help         display this help and exit
+  --version      print version
+Example:"
+  ${ME} /tmp/man1    write the man pages to the /tmp/man1 directory.
+HELPDOC
 }
 
-if [[ $# -eq 1 ]]; then
+if [ $# -eq 1 ]; then
   if [ "x$1" = "x--help" ]; then
     printSyntax
     exit 0
