@@ -1,5 +1,13 @@
 html {
-    font-family: "IBM Plex Sans", Helvetica, Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     font-weight: 400;
     font-size: 16px;
+    -moz-osx-font-smoothing: grayscale;
+    background-color:lightgray;
+}
+
+body h1 {text-align: left}
+
+body a {
+    font-size: 0;
 }
