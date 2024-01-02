@@ -55,28 +55,28 @@ def process_asset(asset, body, metadata_asset_name="metadata.json"):
 
         # Parse metadata information from JSON
         metadata = json.loads(metadata_content).get("product", {})
-        # Construct the full URL
+
+        if "pax" not in metadata:
+            return None
+
         pax_file_name = metadata.get("pax", None)
         if pax_file_name:
             full_url = urllib.parse.urljoin(download_url, pax_file_name)
         else:
             full_url = None
 
-
-        # Extract metadata information
+        # Extract the info from metadata.json file:
         total_tests = metadata.get("test_status", {}).get("total_tests", -1)
         passed_tests = metadata.get("test_status", {}).get("total_success", -1)
 
-        # Extract only the "name" field from runtime_dependencies
         runtime_dependencies_list = metadata.get("runtime_dependencies", [])
         runtime_dependency_names = [dependency.get("name", "") for dependency in runtime_dependencies_list]
         
-        # Convert runtime_dependency_names to a space-delimited string
+        # TODO: We probably want runtime_dependency to be an array at some point. This is mainly for backwards compat
         runtime_dependencies = ' '.join(runtime_dependency_names)
 
-
         filtered_asset = {
-            "name": metadata.get("pax", ''),
+            "name": pax_file_name,
             "url": full_url,
             "size": metadata.get("pax_size", 0),
             "expanded_size": metadata.get("size", 0),
@@ -117,7 +117,7 @@ def process_release(repo_name, release):
         return filtered_release, repo_name
     return None, repo_name
 
-# Process releases in parallel with limited number of threads
+# Process releases in parallel with a limited number of threads
 with concurrent.futures.ThreadPoolExecutor(max_workers=num_threads) as executor:
     futures = []
     for repo in repositories:
@@ -158,13 +158,10 @@ with open(args.output_file, "w") as json_file:
 
 print("JSON cache file created successfully.")
 
-# Verbose output
 if args.verbose:
     print(f"Organization: {organization}")
     print(f"Total repositories: {repositories.totalCount}")
     print(f"Total releases: {sum(len(releases) for releases in release_data.values())}")
-
-# ...
 
 # Add timestamp to the JSON data
 json_data = {
@@ -175,7 +172,7 @@ json_data = {
 with open(args.output_file, "w") as json_file:
     json.dump(json_data, json_file, separators=(',', ':'), default=str)
 
-print("JSON cache file created successfully.")
+print("JSON cache file created successfully: {args.output_file}")
 
 # Create a JSON with the latest releases only
 latest_releases_json_data = {
@@ -195,16 +192,16 @@ for repo_name, entries in release_data.items():
             "assets": entry["assets"]
         }
 
-        if len(latest_entries) > 1:
+        if len(latest_entries) >= 1:
             break
 
-        # Skip detailed info
-        if "runtime_dependencies" not in entry:
-            release_entry.pop("runtime_dependencies", None)
-        if "total_tests" not in entry:
-            release_entry.pop("total_tests", None)
-        if "passed_tests" not in entry:
-            release_entry.pop("passed_tests", None)
+        #Future: Skip detailed info - maybe once we alter zopen query logic to get this from metadata.json
+        #if "runtime_dependencies" not in entry:
+        #    release_entry.pop("runtime_dependencies", None)
+        #if "total_tests" not in entry:
+        #    release_entry.pop("total_tests", None)
+        #if "passed_tests" not in entry:
+        #    release_entry.pop("passed_tests", None)
 
         latest_entries.append(release_entry)
 
@@ -215,4 +212,3 @@ latest_output_file = args.output_file.replace('.json', '_latest.json')
 with open(latest_output_file, "w") as latest_json_file:
     json.dump(latest_releases_json_data, latest_json_file, separators=(',', ':'), default=str)
 print(f"JSON file with the latest releases created successfully: {latest_output_file}")
-
