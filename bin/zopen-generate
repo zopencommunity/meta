@@ -119,6 +119,8 @@ runtimedeps=$(getInput)
 
 project_path="${name}port"
 
+nameUpper=$(echo "$name" | awk '{print toupper($0)}')
+
 if [ -d ${project_path} ]; then
   while true; do
     echo "Directory ${project_path} already exists. Update it? (y, n)"
@@ -143,10 +145,15 @@ touch ${buildenv} && chtag -tc 819 ${buildenv}
 
 cp "${MYDIR}/../data/CONTRIBUTING.md" "${name}port/CONTRIBUTING.md"
 mkdir -p "${name}port/.github/workflows"
-cp "${MYDIR}/../data/*.yml" "${name}port/.github/workflows/" 2>/dev/null # no yml files yet?
+cp ${MYDIR}/../data/*.yml "${name}port/.github/workflows/" 2>/dev/null # no yml files yet?
+
+buildenvContents=""
 
 if [ ! -z "${stablePath}" ]; then
-  buildenvContents="export ZOPEN_STABLE_URL=\"${stablePath}\"\n"
+  buildenvContents="${buildenvContents}# Update bump details accordingly. Use bump check to confirm.\n# bump: $name-version /${nameUpper}_VERSION=\"(.*)\"/ ${stablePath}|semver:*\n"
+  buildenvContents="${buildenvContents}# ${nameUpper}_VERSION=\"V.R.M\" # Specify a stable release\n"
+  buildenvContents="${buildenvContents}# export ZOPEN_STABLE_TAG=\"v\${${nameUpper}_VERSION}\"\n"
+  buildenvContents="${buildenvContents}export ZOPEN_STABLE_URL=\"${stablePath}\"\n"
 fi
 if [ ! -z "${stableDeps}" ]; then
   buildenvContents="${buildenvContents}export ZOPEN_STABLE_DEPS=\"${stableDeps}\"\n"
