@@ -193,13 +193,19 @@ processAnalyticsFromLogFile()
   if [ ! -f "${log_file}" ]; then
     return
   fi
+
+  dateCmd="${INCDIR}/../utilities/date"
+  if [ ! -e "$dateCmd" ]; then
+    return
+  fi
   encountered_packages=""
 
   printHeader "Processing analytics from existing installation's log files"
   grep 'handlePackageInstall.*Installed' "$log_file" | while IFS= read -r line || [ -n "$line" ]; do
+    set -x
     # Extract timestamp
     timestamp=$(echo "$line" | awk '{print $1 " " $2}')
-    timestamp=$(date -d "$timestamp" +"%s")
+    timestamp=$($dateCmd -d "$timestamp" +"%s")
 
     # Extract package name
     package_name=$(echo "$line" | awk -F"'" '{print $2}')
