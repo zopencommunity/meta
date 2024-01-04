@@ -1,5 +1,5 @@
   - [Getting Started](/Guides/QuickStart.md)
-    - [Quick Start](/Guides/QuickStart.md)
+    - [Prerequisites](/Guides/Pre-req.md)
     - [The package manager](/Guides/ThePackageManager.md)
     - [Developing tools](/Guides/developing.md)
     - [Updating the Docs](/Guides/../UpdateDocs.md)
