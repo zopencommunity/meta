@@ -202,7 +202,6 @@ processAnalyticsFromLogFile()
 
   printHeader "Processing analytics from existing installation's log files"
   grep 'handlePackageInstall.*Installed' "$log_file" | while IFS= read -r line || [ -n "$line" ]; do
-    set -x
     # Extract timestamp
     timestamp=$(echo "$line" | awk '{print $1 " " $2}')
     timestamp=$($dateCmd -d "$timestamp" +"%s")
