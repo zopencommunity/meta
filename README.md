@@ -35,7 +35,7 @@ Make sure the character device `/dev/tty` is untagged or you may experience unex
 
 * Download the meta pax to a suitable location (for example /tmp).
 * Expand the pax using the command `pax -rvf <filename>.pax`.  This will expand the pax to the current directory, listing the various included files as it does so.
-* From the `meta-<ver>/bin` directory run the following command, answering the questions appropriately:
+* From the `meta-<ver>` directory run the following command, answering the questions appropriately:
 
 ```bash
 . ./.env
