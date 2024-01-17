@@ -1139,6 +1139,7 @@ initDefaultEnvironment()
 {
   export ZOPEN_OLD_PATH="${PATH}"       # Preserve PATH in case scripts need to access it
   export ZOPEN_OLD_LIBPATH="${LIBPATH}" # Preserve LIBPATH in case scripts need to access it
+  export ZOPEN_OLD_STEPLIB="${STEPLIB}" # Preserve STEPLIB in case scripts need to access it
   export PATH="$(getconf PATH)"
   export _CEE_RUNOPTS="FILETAG(AUTOCVT,AUTOTAG) POSIX(ON)"
   unset MANPATH
