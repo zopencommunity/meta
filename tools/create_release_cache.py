@@ -12,6 +12,7 @@ import datetime
 import requests
 import subprocess
 import shutil
+import urllib
 from collections import OrderedDict
 
 """
@@ -41,63 +42,59 @@ org = g.get_organization(organization)
 repositories = org.get_repos()
 
 # Process a single asset
-def process_asset(asset, body):
-    if asset.name.endswith("pax.Z"):
+def process_asset(asset, body, metadata_asset_name="metadata.json"):
+    if asset.name == metadata_asset_name:
         asset_name = asset.name
         asset_size = asset.size
 
-        # Create a temporary directory
-        temp_dir = tempfile.mkdtemp()
-
-        # Download the pax.Z asset
+        # Download the metadata.json asset
         download_url = asset.browser_download_url
-        asset_path = os.path.join(temp_dir, asset_name)
         response = requests.get(download_url)
-        with open(asset_path, "wb") as file:
-            file.write(response.content)
+        metadata_content = response.content.decode('utf-8')
 
-        # Expand the pax.Z file using tar and calculate the total size
-        p = subprocess.Popen(['zcat', asset_path], stdout=subprocess.PIPE)
-        p2 = subprocess.Popen(['wc', '-c'], stdin=p.stdout, stdout=subprocess.PIPE)
-        p.stdout.close()
-        output = p2.communicate()[0].strip().decode()
-        total_size = int(output)
 
-        # Extract metadata information
-        total_tests = -1
-        passed_tests = -1
-        runtime_dependencies = None
+        # Parse metadata information from JSON
+        metadata = json.loads(metadata_content).get("product", {})
 
-        if body:
-            # Extract test status
-            test_status_match = re.search(r"Test Status:</b>\s*\w+\s*\((\d+) tests pass out of (\d+) tests[^)]*\)", body)
-            if test_status_match:
-                passed_tests = test_status_match.group(1)
-                total_tests = test_status_match.group(2)
+        if "pax" not in metadata:
+            return None
 
-            # Extract runtime dependencies
-            dependencies_match = re.search(r"<b>Runtime Dependencies:</b>(.*?)<br", body)
-            if dependencies_match:
-                runtime_dependencies = dependencies_match.group(1).strip()
+        pax_file_name = metadata.get("pax", None)
+        if pax_file_name:
+            full_url = urllib.parse.urljoin(download_url, pax_file_name)
+        else:
+            full_url = None
+
+        # Extract the info from metadata.json file:
+        total_tests = metadata.get("test_status", {}).get("total_tests", -1)
+        passed_tests = metadata.get("test_status", {}).get("total_success", -1)
+
+        runtime_dependencies_list = metadata.get("runtime_dependencies", [])
+        runtime_dependency_names = [dependency.get("name", "") for dependency in runtime_dependencies_list]
+        
+        # TODO: We probably want runtime_dependency to be an array at some point. This is mainly for backwards compat
+        runtime_dependencies = ' '.join(runtime_dependency_names)
 
         filtered_asset = {
-            "name": asset_name,
-            "url": download_url,
-            "size": asset_size,
-            "expanded_size": total_size,
+            "name": pax_file_name,
+            "url": full_url,
+            "size": metadata.get("pax_size", 0),
+            "expanded_size": metadata.get("size", 0),
             "runtime_dependencies": runtime_dependencies,
             "total_tests": total_tests,
             "passed_tests": passed_tests
         }
         print(filtered_asset)
 
-        # Remove the temporary directory
-        os.remove(asset_path)
-
         return filtered_asset
 
-# Determine the number of threads to use (half the number of CPUs)
-num_threads = max(int(multiprocessing.cpu_count() / 2), 1)
+    # Handle other types of assets or return None if not processing this asset type
+    return None
+
+
+# Cap to 1 thread for now so that we don't hit the secondary rate limit
+num_threads = min(int(multiprocessing.cpu_count() / 2), 1)
+
 
 # Process a single release
 def process_release(repo_name, release):
@@ -120,7 +117,7 @@ def process_release(repo_name, release):
         return filtered_release, repo_name
     return None, repo_name
 
-# Process releases in parallel with limited number of threads
+# Process releases in parallel with a limited number of threads
 with concurrent.futures.ThreadPoolExecutor(max_workers=num_threads) as executor:
     futures = []
     for repo in repositories:
@@ -161,8 +158,57 @@ with open(args.output_file, "w") as json_file:
 
 print("JSON cache file created successfully.")
 
-# Verbose output
 if args.verbose:
     print(f"Organization: {organization}")
     print(f"Total repositories: {repositories.totalCount}")
     print(f"Total releases: {sum(len(releases) for releases in release_data.values())}")
+
+# Add timestamp to the JSON data
+json_data = {
+    "timestamp": datetime.datetime.now().isoformat(),
+    "release_data": release_data
+}
+
+with open(args.output_file, "w") as json_file:
+    json.dump(json_data, json_file, separators=(',', ':'), default=str)
+
+print("JSON cache file created successfully: {args.output_file}")
+
+# Create a JSON with the latest releases only
+latest_releases_json_data = {
+    "timestamp": datetime.datetime.now().isoformat(),
+    "release_data": {}
+}
+
+for repo_name, entries in release_data.items():
+    entries.sort(key=lambda entry: entry['date'], reverse=True)
+    latest_entries = []
+
+    for entry in entries:
+        release_entry = {
+            "name": entry["name"],
+            "date": entry["date"],
+            "tag_name": entry["tag_name"],
+            "assets": entry["assets"]
+        }
+
+        if len(latest_entries) >= 1:
+            break
+
+        #Future: Skip detailed info - maybe once we alter zopen query logic to get this from metadata.json
+        #if "runtime_dependencies" not in entry:
+        #    release_entry.pop("runtime_dependencies", None)
+        #if "total_tests" not in entry:
+        #    release_entry.pop("total_tests", None)
+        #if "passed_tests" not in entry:
+        #    release_entry.pop("passed_tests", None)
+
+        latest_entries.append(release_entry)
+
+    latest_releases_json_data["release_data"][repo_name] = latest_entries
+
+# Save the latest json
+latest_output_file = args.output_file.replace('.json', '_latest.json')
+with open(latest_output_file, "w") as latest_json_file:
+    json.dump(latest_releases_json_data, latest_json_file, separators=(',', ':'), default=str)
+print(f"JSON file with the latest releases created successfully: {latest_output_file}")
