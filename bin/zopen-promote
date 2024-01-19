@@ -21,7 +21,7 @@ setupMyself
 
 printHelp(){
 cat << HELPDOC
-"${ME}" is a utility for z/OS Open Tools to generate a clone of
+${ME} is a utility for z/OS Open Tools to generate a clone of
 an existing zopen environment. For example, a user can install
 to a test area, validate the behavior, and promote to a production area.
 
@@ -89,7 +89,6 @@ HELPDOC
 
 args=$*
 
-printHeader "Promoting zopen environment"
 
 verbose=false
 debug=false
@@ -159,6 +158,7 @@ while [ $# -gt 0 ]; do
   shift;
 done
 
+printHeader "Promoting zopen environment"
 printDebug "Validating input parameters"
 
 defaultConfigPerms="u+rwx,g+rx,g-w,o-rwx" # Allow user full access, group read/execute, others no access
