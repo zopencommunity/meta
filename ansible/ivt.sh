@@ -28,11 +28,21 @@ check_version_at_least() {
     echo "Success: $1 version meets requirements."
 }
 
+check_java() {
+  check_command "java"
+
+  release=$(java -version 2>&1 | head -1  | sed -e 's#.*\"\([^"]*\)".*#\1#g' | awk -F\. ' { print $1.$2 } ')
+  if [ $release -le 18 ] ; then
+    echo "ERROR: Java version is not supported. Please install Java 11 or later - https://www.ibm.com/support/pages/java-sdk-products-zos" >&2
+    exit 1
+  fi
+}
+
 check_zoaversion() {
     check_command "zoaversion"
     print -n "Checking zoaversion version..."
     zoaversion_info=$(zoaversion 2>&1)
-    major_minor_version=$(echo "$zoaversion_info" | awk -F '[ V.]' '/V[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/{print $5"."$6}')
+    major_minor_version=$(echo "$zoaversion_info" | awk -F '[ V.]' '/V[0-9]+\.[0-9]+\.[0-9]+/{print $5"."$6}')
     
     if version_compare "1.2" "$major_minor_version" && version_compare "1.3" "$major_minor_version"; then
         echo "ERROR: zoaversion version V1.2 or V1.3 is required."
@@ -103,5 +113,7 @@ check_system
 check_python
 
 check_zoaversion
+
+check_java
 
 check_network_connectivity
