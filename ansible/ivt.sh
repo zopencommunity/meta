@@ -1,6 +1,6 @@
 #!/bin/sh
 # IVT Shell Script for z/OS Open Tools
-# Checks for min OS, ARCH, and the presence of Python, ZOAU, and Network Connectivity to github.com
+# Checks for min OS, ARCH, and the presence of Python, ZOAU, Java and Network Connectivity to github.com
 
 version_compare() {
     [ "$(/bin/printf '%s\n' "$1" "$2" | sort -V | head -n 1)" != "$1" ]
