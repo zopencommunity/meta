@@ -216,19 +216,28 @@ export ZOPEN_LOG_PATH
 # Add any custom parameters for curl
 ZOPEN_CURL_PARAMS=""
 
-# Environment variables
+# Do not display text for non-interactive sessions
+displayText=true
+if [ -n "\$SSH_CONNECTION" ] && [ -z "\$PS1" ] || [ ! -t 1 ]; then
+  displayText=false
+fi
 
 if [ -z "\${ZOPEN_QUICK_LOAD}" ]; then
   if [ -e "\${ZOPEN_ROOTFS}/etc/profiled" ]; then
     dotenvs=\$(find "\${ZOPEN_ROOTFS}/etc/profiled" -type f -name 'dotenv' -print)
-    printf "Processing \$zot configuration..."
+    if \$displayText; then
+      printf "Processing \$zot configuration..."
+    fi
     for dotenv in \$dotenvs; do
       . \$dotenv
     done
-    /bin/echo "DONE"
+    if \$displayText; then
+      /bin/echo "DONE"
+    fi
     unset dotenvs
   fi
 fi
+unset displayText
 PATH=\${ZOPEN_ROOTFS}/usr/local/bin:\${ZOPEN_ROOTFS}/usr/bin:\${ZOPEN_ROOTFS}/bin:\${ZOPEN_ROOTFS}/boot:\$(sanitizeEnvVar \"\${PATH}\" \":\" \"^\${ZOPEN_PKGINSTALL}/.*\$\")
 export PATH=\$(deleteDuplicateEntries \"\${PATH}\" \":\")
 LIBPATH=\${ZOPEN_ROOTFS}/usr/local/lib:\${ZOPEN_ROOTFS}/usr/lib:\$(sanitizeEnvVar "\${LIBPATH}" ":" "^\${ZOPEN_PKGINSTALL}/.*\$")
