@@ -643,7 +643,8 @@ installArray=""
 if ${all}; then
   if ! ${yesToPrompts}; then
     # Sum up the pax size + expanded size of the latest releases of each port
-    spaceRequiredBytes=$(jq '.release_data | to_entries | map(select(.value | length > 0)) | map(.value[0].assets[0]) | reduce .[] as $item ({}; . + {($item.name): ($item.size + $item.expanded_size)}) | [.[]] | add' ${JSON_CACHE})
+    spaceRequiredBytes=$(jq '.release_data | to_entries | map(select(.value | length > 0)) | map(.value[0].assets[0]) | reduce .[] as $item ({}; . + {($item.name): (($item.size | tonumber)  + ($item.expanded_size | tonumber))}) | [.[]] | add'  ${JSON_CACHE})
+    echo "Space: $spaceRequiredBytes"
     spaceRequiredMB=$(echo "scale=0; ${spaceRequiredBytes} / (1024 * 1024)" | bc)
     availableSpaceMB=$(/bin/df -m ${ZOPEN_ROOTFS} | sed "1d" | awk '{ print $3 }' | awk -F'/' '{ print $1 }')
 
