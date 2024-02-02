@@ -68,6 +68,10 @@ def process_asset(asset, body, metadata_asset_name="metadata.json"):
         # Extract the info from metadata.json file:
         total_tests = metadata.get("test_status", {}).get("total_tests", -1)
         passed_tests = metadata.get("test_status", {}).get("total_success", -1)
+        source_type = metadata.get("source_type", None)
+        sha = None
+        if source_type is not None and source_type == "GIT":
+            sha = metadata.get("community_commitsha", None)
 
         runtime_dependencies_list = metadata.get("runtime_dependencies", [])
         runtime_dependency_names = [dependency.get("name", "") for dependency in runtime_dependencies_list]
@@ -82,7 +86,8 @@ def process_asset(asset, body, metadata_asset_name="metadata.json"):
             "expanded_size": metadata.get("size", 0),
             "runtime_dependencies": runtime_dependencies,
             "total_tests": total_tests,
-            "passed_tests": passed_tests
+            "passed_tests": passed_tests,
+            "community_commitsha": sha
         }
         print(filtered_asset)
 
