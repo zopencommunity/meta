@@ -1650,12 +1650,14 @@ cat <<zz > "${ZOPEN_INSTALL_DIR}/metadata.json"
   "zopen_license": "${ZOPEN_REMOTE_URL}/blob/main/LICENSE",
   "categories": "${ZOPEN_CATEGORIES}",
   "buildline": "${ZOPEN_BUILD_LINE}",
+  "source_type": "${ZOPEN_TYPE}",
   "test_status": {
     "total_tests": "${totalTests}",
     "total_success": "${success}"
   },
   "size": "${total_size}",
   "commitsha": "${ZOPEN_COMMIT_SHA}",
+  "community_commitsha": "${ZOPEN_PROJECT_HEAD_COMMIT_SHA}",
 zz
 
 # Build Dependencies
@@ -1843,6 +1845,8 @@ resolveCommands()
       ZOPEN_NAME="${dir}-${branch}"
     fi
   fi
+  ZOPEN_PROJECT_HEAD_COMMIT_SHA="$(git rev-parse HEAD)"
+
   # Check if ZOPEN_NAME contains a "-"
   if [ -z "$(echo "${ZOPEN_NAME}" | grep '-')" ]; then
     # If not, add the '-DEV' suffix so as not to collide with zopen installed packages
