@@ -9,7 +9,8 @@ cd meta_update
 python3 tools/create_release_cache.py --verbose --output-file docs/api/zopen_releases.json
 
 # Generate Progress page
-python3 tools/getbinaries.py
+#TODO: refactor
+#python3 tools/getbinaries.py
 
 # Generate zopen API Reference
 mkdir -p docs/api
