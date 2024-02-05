@@ -4,6 +4,11 @@ set -e
 # Update Progress page in documentation
 git clone git@github.com:ZOSOpenTools/meta.git meta_update
 cd meta_update
+
+# Generate Release cache
+python3 tools/create_release_cache.py --verbose --output-file docs/api/zopen_releases.json
+
+# Generate Progress page
 python3 tools/getbinaries.py
 
 # Generate zopen API Reference
@@ -32,9 +37,6 @@ EOF
   echo "* [${name}](/reference/${name})" >> docs/reference/zopen-reference.md
   groff -m mandoc -Thtml -Wall "${man}" >"${html}";
 done
-
-# Generate Release cache
-python3 tools/create_release_cache.py --verbose --output-file docs/api/zopen_releases.json
 
 # Commit it all back to the repo
 git config --global user.email "zosopentools@ibm.com"
