@@ -1173,14 +1173,6 @@ checkWritable()
   fi
 }
 
-generateUUID() 
-{
-  date_part=$(date +%s)
-  random_part=$((RANDOM))
-  uuid="$date_part-$random_part"
-  echo $uuid
-}
-
 getReleaseLine()
 {
   jsonConfig="${ZOPEN_ROOTFS}/etc/zopen/config.json"

@@ -3,6 +3,20 @@
 # This is the server that is collecting zopen usage stats
 ZOPEN_STATS_URL="http://163.74.88.212:3000"
 
+generateUUID() 
+{
+  dateCmd="${INCDIR}/../utilities/date"
+  if [ ! -e "$dateCmd" ]; then
+    printError "$dateCmd does not exist."
+  fi
+  date_part=$($dateCmd +%s)
+
+  random_part=$((RANDOM))
+  uuid="$date_part-$random_part"
+  echo $uuid
+}
+
+
 isAnalyticsOn()
 {
   # Currently in beta more
@@ -77,6 +91,12 @@ registerInstall()
   if ! isAnalyticsOn; then
     return;
   fi
+  dateCmd="${INCDIR}/../utilities/date"
+  if [ ! -e "$dateCmd" ]; then
+    return
+  fi
+
+  timestamp=$($dateCmd +%s)
 
   if [ ! -z "$ZOPEN_IN_ZOPEN_BUILD" ]; then
     isBuildInstall=true
@@ -89,7 +109,7 @@ registerInstall()
   fi
 
   if [ -z "$timestamp" ]; then
-    timestamp=$(date +%s)
+    timestamp=$($dateCmd +%s)
   fi
   uuid=$(getProfileUUIDFromJSON)
     
@@ -125,8 +145,12 @@ registerRemove()
   if ! isAnalyticsOn; then
     return;
   fi
+  dateCmd="${INCDIR}/../utilities/date"
+  if [ ! -e "$dateCmd" ]; then
+    return
+  fi
 
-  timestamp=$(date +%s)
+  timestamp=$($dateCmd +%s)
   uuid=$(getProfileUUIDFromJSON)
 
   # Local analytics
