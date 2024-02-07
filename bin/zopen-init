@@ -245,7 +245,7 @@ determineStatsCollection()
   fi
 
   if $isCollectingStats; then
-    if ! curl -I "${ZOPEN_STATS_URL}" -fail >/dev/null 2>/dev/null; then
+    if ! /bin/ping -c 1 -t 2 "163.74.88.212" >/dev/null 2>/dev/null; then
       printAttention "The statistics server url is blocked: ${ZOPEN_STATS_URL}. Turning usage statistics off."
       isCollectingStats=false
     fi
