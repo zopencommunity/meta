@@ -42,6 +42,8 @@ Make sure the character device `/dev/tty` is untagged or you may experience unex
 zopen init
 ```
 
+You can now safely remove `meta-<version>.pax.Z` and the extracted `meta-<version>` directory
+
 ## Sample usage
 
 ```bash
