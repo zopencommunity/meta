@@ -1,7 +1,8 @@
 #!/bin/false
 
 # This is the server that is collecting zopen usage stats
-ZOPEN_STATS_URL="http://163.74.88.212:3000"
+ZOPEN_STATS_IP="163.74.88.212"
+ZOPEN_STATS_URL="http://${ZOPEN_STATS_IP}:3000"
 
 generateUUID() 
 {

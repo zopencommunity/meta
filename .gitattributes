@@ -1,3 +1,4 @@
+*       text  zos-working-tree-encoding=UTF-8
 .env    text  zos-working-tree-encoding=IBM-1047
 utilities/*   binary
 *.png   binary
