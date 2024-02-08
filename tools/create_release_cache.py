@@ -98,7 +98,7 @@ def process_asset(asset, body, metadata_asset_name="metadata.json"):
 
 
 # Cap to 1 thread for now so that we don't hit the secondary rate limit
-num_threads = min(int(multiprocessing.cpu_count() / 2), 1)
+num_threads = min(int(multiprocessing.cpu_count() / 2), 2)
 
 
 # Process a single release
