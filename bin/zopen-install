@@ -252,12 +252,14 @@ handlePackageInstall()
   installedReleaseLine=$(validateReleaseLine "${tagname}")
 
   downloadURL=$(/bin/printf "%s" "${asset}" | jq -e -r '.url')
+  metadataJSONURL="$(dirname "${downloadURL}")/metadata.json"
   size=$(/bin/printf "%s" "${asset}" | jq -e -r '.expanded_size')
 
   if [ -z "${downloadURL}" ]; then
     printError "Unable to determine download location for ${name}"
   fi
   downloadFile=$(basename "${downloadURL}")
+  metadataFile="${downloadFile}.json" # use the same basename as the pax + .json to avoid collision
   downloadFileVer=$(echo "${downloadFile}" | sed -E 's/.*-(.*)\.zos\.pax\.Z/\1/')
   printVerbose "Downloading port from URL: ${downloadURL} to file: ${downloadFile} (ver=${downloadFileVer})"
 
@@ -313,6 +315,12 @@ handlePackageInstall()
   else
     printVerbose "Checking cache for already downloaded package [file name comparison]."
     location="zopen package cache"
+  fi
+
+  # Download the metadata json file
+  if ! runAndLog "curlCmd -L '${metadataJSONURL}' -o '${metadataFile}' ${redirectToDevNull}"; then
+    printError "Could not download from ${metadataJSONURL}. Correct any errors and potentially retry."
+    continue
   fi
 
   pax=${downloadFile}
@@ -383,6 +391,13 @@ handlePackageInstall()
     if ${localInstall}; then
       rm -f "${pax}"
     fi
+
+    # Some installation have installation caveats
+    installCaveat=$(jq -r '.product.install_caveats // empty' "${metadataFile}" 2>/dev/null)
+    if [ -n "$installCaveat" ]; then
+      printf "%s:\n%s\n" "${name}" "${installCaveat}" >> ${caveatsFile}
+    fi
+
 
     if ${setactive}; then
       if [ -L "${baseinstalldir}/${name}/${name}" ]; then
@@ -485,9 +500,15 @@ installPorts()
   ports="$1"
   printVerbose "Ports to install: ${ports}"
   mutexReq "zopen" "zopen"
+  caveatsFile=$(mktempfile "caveats")
   echo "${ports}" | xargs | tr ' ' '\n' | while read port; do
     handlePackageInstall "${port}"
   done
+  if [ -s "${caveatsFile}" ]; then
+    printHeader "Installation Caveats"
+    cat "${caveatsFile}"
+  fi
+  rm -f "${caveatsFile}"
   mutexFree "zopen"
 )
 

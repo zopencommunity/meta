@@ -223,6 +223,9 @@ Optional:
                                     the install_test.sh file. The output of the
                                     function is appended to install_test.sh
                                     script.
+  zopen_install_caveats             This function is run post install. All stdout 
+                                    messages are captured and added to the metadata.json
+                                    as installation caveats.
   zopen_append_to_zoslib_env        This function runs as part of generation of
                                     the C function zoslib_env_hook, which can
                                     be used to set environment variables before
@@ -1636,8 +1639,12 @@ generateMetadataJSON()
     success=-1
   fi
 
-metadata_version_scheme="0.1" # Update if we add breaking changes to the json format
-cat <<zz > "${ZOPEN_INSTALL_DIR}/metadata.json"
+  if [ -n "$(command -v zopen_install_caveats)" ]; then
+    caveats="$(zopen_install_caveats)"
+  fi
+    
+  metadata_version_scheme="0.1" # Update if we add breaking changes to the json format
+  cat <<zz > "${ZOPEN_INSTALL_DIR}/metadata.json"
 {
 "version_scheme": "${metadata_version_scheme}",
 "product": {
@@ -1659,6 +1666,11 @@ cat <<zz > "${ZOPEN_INSTALL_DIR}/metadata.json"
   "commitsha": "${ZOPEN_COMMIT_SHA}",
   "community_commitsha": "${ZOPEN_PROJECT_HEAD_COMMIT_SHA}",
 zz
+  if [ -n "${caveats}" ]; then
+cat <<zz >> "${ZOPEN_INSTALL_DIR}/metadata.json"
+  "install_caveats": "${caveats}",
+zz
+  fi
 
 # Build Dependencies
 cat <<zz >> "${ZOPEN_INSTALL_DIR}/metadata.json"
