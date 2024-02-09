@@ -1666,11 +1666,6 @@ generateMetadataJSON()
   "commitsha": "${ZOPEN_COMMIT_SHA}",
   "community_commitsha": "${ZOPEN_PROJECT_HEAD_COMMIT_SHA}",
 zz
-  if [ -n "${caveats}" ]; then
-cat <<zz >> "${ZOPEN_INSTALL_DIR}/metadata.json"
-  "install_caveats": "${caveats}",
-zz
-  fi
 
 # Build Dependencies
 cat <<zz >> "${ZOPEN_INSTALL_DIR}/metadata.json"
@@ -1719,8 +1714,12 @@ zz
   if ! jq -e '.' "${ZOPEN_INSTALL_DIR}/metadata.json" 1>/dev/null 2>&1; then
     printError "${ZOPEN_INSTALL_DIR}/metadata.json contains invalid json: $(cat ${ZOPEN_INSTALL_DIR}/metadata.json)"
   fi
+  if [ -n "${caveats}" ]; then
+    jq --arg caveats "${caveats}" \
+        '.product += { "install_caveats": $caveats }' "${ZOPEN_INSTALL_DIR}/metadata.json" > "${ZOPEN_INSTALL_DIR}/metadata.json.tmp"
+  fi
   # Format json
-  jq "." "${ZOPEN_INSTALL_DIR}/metadata.json" > "${ZOPEN_ROOT}/install/metadata.json"
+  jq "." "${ZOPEN_INSTALL_DIR}/metadata.json.tmp" > "${ZOPEN_ROOT}/install/metadata.json"
   cp "${ZOPEN_ROOT}/install/metadata.json" "${ZOPEN_INSTALL_DIR}/metadata.json"
 }
 

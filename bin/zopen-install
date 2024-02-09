@@ -395,7 +395,7 @@ handlePackageInstall()
     # Some installation have installation caveats
     installCaveat=$(jq -r '.product.install_caveats // empty' "${metadataFile}" 2>/dev/null)
     if [ -n "$installCaveat" ]; then
-      printf "%s:\n%s\n" "${name}" "${installCaveat}" >> ${caveatsFile}
+      printf "${name}:\n${installCaveat}\n" >> ${caveatsFile}
     fi
 
 
