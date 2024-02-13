@@ -1717,9 +1717,10 @@ zz
   if [ -n "${caveats}" ]; then
     jq --arg caveats "${caveats}" \
         '.product += { "install_caveats": $caveats }' "${ZOPEN_INSTALL_DIR}/metadata.json" > "${ZOPEN_INSTALL_DIR}/metadata.json.tmp"
+    mv "${ZOPEN_INSTALL_DIR}/metadata.json.tmp" "${ZOPEN_INSTALL_DIR}/metadata.json"
   fi
   # Format json
-  jq "." "${ZOPEN_INSTALL_DIR}/metadata.json.tmp" > "${ZOPEN_ROOT}/install/metadata.json"
+  jq "." "${ZOPEN_INSTALL_DIR}/metadata.json" > "${ZOPEN_ROOT}/install/metadata.json"
   cp "${ZOPEN_ROOT}/install/metadata.json" "${ZOPEN_INSTALL_DIR}/metadata.json"
 }
 
