@@ -111,8 +111,7 @@ if [ -z "${subcmd}" ]; then
   elif ${version}; then
     : # fall through
   else
-    printHelp
-    exit 4
+    printError "Unsupported options '$subopts'. Specify --help to view the available options."
   fi
 fi
 
