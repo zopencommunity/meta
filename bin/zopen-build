@@ -1788,7 +1788,7 @@ install()
       }'
 
       if [ $? -ne 0 ]; then
-        printError "${versionString} uses an invalid version format"
+        printError "The version string \"${versionString}\" uses an invalid version format"
       fi
       asciiecho "${versionString}" "${ZOPEN_INSTALL_DIR}/.version"
       cp "${ZOPEN_INSTALL_DIR}/.version" "${ZOPEN_ROOT}/install/"
