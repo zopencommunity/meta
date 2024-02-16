@@ -51,25 +51,6 @@ $ zopen upgrade -y
 
 ## Upgrading a single package
 
-Individual packages can be upgraded by specifying the package
-name.  For example upgrading just the package manager is
-accomplished like so:
-
-```
-$ zopen upgrade
-```
-
-In this case, all packages including the package manager (Meta) will
-be updated sequentially while being prompted to perform the update.
-Using the option `-y` will automatically accept all prompts as
-shown here:
-
-```
-$ zopen upgrade -y
-```
-
-## Upgrading a single package
-
 Individual packages can be upgraded by specifiying the package
 name.  For example upgrading just the package manager is
 accomplished like so:
