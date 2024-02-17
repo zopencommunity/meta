@@ -205,7 +205,9 @@ printInfo "${buildenv} created"
 
 touch "${name}port/README.md" && chtag -tc 819 "${name}port/README.md"
 cat << EOT > "${name}port/README.md"
-${name}
+[![Automatic version updates](https://github.com/ZOSOpenTools/${name}port/actions/workflows/bump.yml/badge.svg)](https://github.com/ZOSOpenTools/${name}port/actions/workflows/bump.yml)
+
+# ${name}
 
 ${description}
 EOT
