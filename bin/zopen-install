@@ -150,7 +150,7 @@ handlePackageInstall()
     printVerbose "List individual releases and allow selection."
     i=$(/bin/printf "%s" "${releases}" | jq -r 'length - 1')
     printInfo "Versions available for install:"
-    /bin/printf "%s" "${releases}" | jq -e -r 'to_entries | map("\(.key): \(.value.tag_name) - \(.value.assets[0].name) - size: \(.value.assets[0].expanded_size/ (1024 * 1024))mb")[]'
+    /bin/printf "%s" "${releases}" | jq -e -r 'to_entries | map("\(.key): \(.value.tag_name) - \(.value.assets[0].name) - size: \(.value.assets[0].expanded_size | tonumber/ (1024 * 1024))mb")[]'
 
     printVerbose "Getting user selection."
     valid=false
