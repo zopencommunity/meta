@@ -219,9 +219,6 @@ determineRootFileSystem()
 
 determineStatsCollection()
 {
-  if [ -z "$ZOPEN_BETA_FEATURES" ]; then
-    return
-  fi
   isAnalyticsOn
   analyticsRC=$?
   if isIBMHostname; then
@@ -401,14 +398,6 @@ generateJsonConfiguration()
     fi
   fi
 
-  if [ -z "$ZOPEN_BETA_FEATURES" ]; then
-  cat <<zz > "${jsonConfigWorking}"
-  {
-    "release_line": "${releaseLine}",
-    "num_rm_procs": ${RM_FILEPROCS}
-  }
-zz
-  else
   cat <<zz > "${jsonConfigWorking}"
   {
     "release_line": "${releaseLine}",
@@ -416,15 +405,11 @@ zz
     "is_collecting_stats": ${isCollectingStats}
   }
 zz
-  fi
   jq '.' $jsonConfigWorking > $jsonConfig
 }
 
 generateAnalyticsConfiguration()
 {
-  if [ -z "$ZOPEN_BETA_FEATURES" ]; then
-    return;
-  fi
   if ! ${isCollectingStats}; then
     printVerbose "You have chosen to not collect statistics."
     return;

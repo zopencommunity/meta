@@ -4,6 +4,7 @@
     - [Developing tools](/Guides/developing.md)
     - [Updating the Docs](/Guides/../UpdateDocs.md)
     - [Migration Considerations](/Guides/Migration.md)
+    - [Analytics](/Guides/Analytics.md)
   - [Available ports](/Latest.md)
     - [Current Status](/Progress.md)
   - Reference
