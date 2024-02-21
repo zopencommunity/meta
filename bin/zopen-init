@@ -234,6 +234,12 @@ determineStatsCollection()
   elif $isHostIBM; then
     printAttention "Attention: Turning on usage statistics as your host is an IBM host. If this is incorrect, rerun with --noenable-stats"
     isCollectingStats=true
+  elif [ -n "${ZOPEN_IS_BOT}" ]; then
+    printAttention "Attention: Turning on usage statistics as you are a CI/CD bot. If this is incorrect, rerun with --noenable-stats"
+    isCollectingStats=true
+  elif [ ! -t 1 ]; then
+    printAttention "Attention: Turning off usage statistics as you are running zopen init in a non-interactive environment. If this is incorrect, rerun with --enable-stats"
+    isCollectingStats=false
   else
     statsMsg="Do you want to contribute ${NC}${BOLD}anonymous${NC} usage statistics (https://zosopentools.github.io/meta/#/Guides/Analytics) to help improve z/OS Open Tools?"
     if promptYesOrNo "${statsMsg}" false; then
