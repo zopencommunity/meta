@@ -69,7 +69,7 @@ while [ $# -gt 0 ]; do
   shift
 done
 
-JSON_VULNERABILITIES_URL="https://raw.githubusercontent.com/ZOSOpenTools/meta/vulnerability_json/docs/api/zopen_vulnerability.json"
+JSON_VULNERABILITIES_URL="https://raw.githubusercontent.com/ZOSOpenTools/meta/main/docs/api/zopen_vulnerability.json"
 
 downloadCVEJSONCache()
 {
@@ -77,8 +77,8 @@ downloadCVEJSONCache()
   [ ! -e "${cachedir}" ] && mkdir -p "${cachedir}"
   JSON_CVE_CACHE="${cachedir}/zopen_vulnerability.json"
 
-  if ! curlout=$(curlCmd -L --no-progress-meter -o "${JSON_CVE_CACHE}" "${JSON_VULNERABILITIES_URL}"); then
-    printError "Failed to obtain json cache from ${JSON_VULNERABILITIES_URL}; ${curlout}"
+  if ! curlout=$(curlCmd -L --fail --no-progress-meter -o "${JSON_CVE_CACHE}" "${JSON_VULNERABILITIES_URL}"); then
+    printError "Failed to obtain vulnerability json from ${JSON_VULNERABILITIES_URL}; ${curlout}"
   fi
   chtag -tc 819 "${JSON_CVE_CACHE}"
 }
