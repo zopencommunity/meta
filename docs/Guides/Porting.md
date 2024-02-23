@@ -225,3 +225,27 @@ Please follow the [contributing guidelines](https://github.com/ZOSOpenTools/meta
 Once you have a working build of your z/OS Open Source tool, then you may add it to the z/OS Open Source Jenkins CI/CD pipeline.
 
 View [CI/CD Pipeline](/Guides/Pipeline.md) for more details
+
+## Porting Go Packages
+
+Pre-reqruisites:
+- The Go on z/OS Compiler
+- Wharf
+- Git
+
+When porting Go packages, there is a general framework you can use to do so. Go supports a feature known as [Workspaces](https://go.dev/blog/get-familiar-with-workspaces). It allows you to work on multiple Go modules at the same time, but for our purposes, we will use it to modify a Go package's dependencies without having to to change the various `go.mod`s of each package. Once we have a workspace, we can make use of [Wharf](https://github.com/ZOSOpenTools/wharf), our open source porting tool for Go packages.
+
+The general steps for porting:
+1. Create a directory that will be your workspace. `cd` into it and run `go work init`
+2. Inside the workspace directory, clone the package you'd like to port and then run `go work use <package name>`.
+3. At the root of the workspace directory, run `wharf ./<package name>/cmd/...`
+    - The usage of `wharf` depends on the directory structure of the package. If there is no `cmd` directory you can also try `wharf ./<package name>/...`
+4. If `wharf` reports that your package was succesfully ported than you can proceed to step 7
+5. If `wharf` reports that is was unable to port the package or it's dependencies, then you must make manual changes
+6. Anytime you need to make changes to a dependency, clone it and make sure to run `go work use ./<dependency>` so that the changes are picked up by the workspace
+7. Once you have a successful build, create diffs of any changes you made and follow the steps outlined in the earlier sections to create a zopen port with the zopen framework
+
+Two examples of ports that you can use as reference:
+- [gum](https://github.com/ZOSOpenTools/gumport) - a package that `wharf` handles without requiring manual changes to dependencies
+- [Github CLI](https://github.com/ZOSOpenTools/githubcliport) - a package that requires manual changes to dependencies
+
