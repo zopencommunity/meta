@@ -21,9 +21,6 @@ generateUUID()
 isAnalyticsOn()
 {
   # Currently in beta more
-  if [ -z "$ZOPEN_BETA_FEATURES" ]; then
-    return 2
-  fi
   jsonConfig="${ZOPEN_ROOTFS}/etc/zopen/config.json"
   if [ ! -f ${jsonConfig} ]; then
     return 2

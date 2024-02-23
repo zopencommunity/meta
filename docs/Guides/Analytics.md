@@ -13,6 +13,9 @@ The usage statistics are viewable at this url: http://163.74.88.212:3000/
 
 Note: IBM hostnames are automatically opted in.
 
+## How to Opt-Out After Opting In
+* If you initially opted in but now wish to opt out, you can set the `is_collecting_stats` field to false in the JSON file located at: `$ZOPEN_ROOTFS/etc/zopen/config.json`.
+
 ## Data Captured
 1. **Package Installations:**
    - **Package Name:** Identifies the installed package.
