@@ -29,7 +29,7 @@ Usage: ${ME} [COMMAND] [OPTION] [PARAMETERS]...
 
 Command:
   alt               manage alternate versions of z/OS Open Tools packages.
-  audit             (beta) reports knonwn vulnerabilities for the installed packages.
+  audit             (beta) reports known vulnerabilities for the installed packages.
   build             builds the enclosing z/OS Open Tools git-cloned package.
   clean             cleans up your zopen environment.
   generate          generates a new zopen project.
