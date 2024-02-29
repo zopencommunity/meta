@@ -22,7 +22,7 @@
     - [Using Bash on z/OS](/Guides/BashOnZOS.md)
     - [Terminal Settings on z/OS](/Guides/TerminalOnZOS.md) 
   - Workshop
-  	- [Manual](/workshop/workshop.md) 
+  	- [Beginner](/workshop/workshop.md) 
   - [External Blogs](/Guides/blogs.md)
   - Resources
     - [z/OS Open Tools Repos](https://github.com/ZOSOpenTools)
