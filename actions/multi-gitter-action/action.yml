@@ -1,0 +1,37 @@
+name: "Setup multi-gitter"
+author: Yevhen Fabizhevskyi
+description: "This action installs multi-gitter CLI tool."
+branding:
+  icon: terminal
+  color: gray-dark
+inputs:
+  version:
+    description: "multi-gitter version."
+    required: false
+    default: "latest"
+runs:
+  using: "composite"
+  steps:
+    - name: Collect info
+      id: info
+      run: |
+        MULTI_GITTER_INSTALLED=$(if command -v multi-gitter >/dev/null 2>&1; then echo true; else echo false; fi)
+        echo "MULTI_GITTER_INSTALLED=${MULTI_GITTER_INSTALLED}" >> "$GITHUB_OUTPUT"
+        multi_gitter_path="${GITHUB_WORKSPACE}/multi-gitter"
+        mkdir -p "${multi_gitter_path}"
+        echo "MULTI_GITTER_PATH=${multi_gitter_path}" >> "$GITHUB_OUTPUT"
+      shell: sh
+
+    - name: Install multi-gitter
+      if: ${{ steps.info.outputs.MULTI_GITTER_INSTALLED == 'false' }}
+      env:
+        BINDIR: "${{ steps.info.outputs.MULTI_GITTER_PATH }}"
+        MULTI_GITTER_VERSION: "${{ inputs.version}}"
+      run: |
+        if [ "${MULTI_GITTER_VERSION}" = "latest" ]; then
+          curl -s https://raw.githubusercontent.com/lindell/multi-gitter/master/install.sh | sh
+        else
+          curl -s https://raw.githubusercontent.com/lindell/multi-gitter/master/install.sh | sh -s -- -d "v${MULTI_GITTER_VERSION}"
+        fi
+        echo "${{ steps.info.outputs.MULTI_GITTER_PATH }}" >> $GITHUB_PATH
+      shell: sh
