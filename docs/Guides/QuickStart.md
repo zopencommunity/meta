@@ -19,7 +19,8 @@ please note you will need to [migrate to the new package manager](Migration.md).
 - Set up the PATH to the `zopen` tool: `cd meta-<version>; . ./.env`
 - Initialize the `zopen tools` environment: `zopen init`
 - Install tools you want with `zopen install <tool>`
-- Access the tools you installed by sourcing your configuration: `. <zopen_root>/etc/zopen-config`. 
+- Access the tools you installed by sourcing your configuration: `. <zopen_root>/etc/zopen-config`.
+- You can now safely remove `meta-<version>.pax.Z` and the `meta-<version>` directory
 
 See [The package manager](ThePackageManager.md) and [Developing Tools](developing.md) for more details.
 
@@ -47,25 +48,6 @@ shown here:
 $ zopen upgrade -y
 ```
 
-
-## Upgrading a single package
-
-Individual packages can be upgraded by specifying the package
-name.  For example upgrading just the package manager is
-accomplished like so:
-
-```
-$ zopen upgrade
-```
-
-In this case, all packages including the package manager (Meta) will
-be updated sequentially while being prompted to perform the update.
-Using the option `-y` will automatically accept all prompts as
-shown here:
-
-```
-$ zopen upgrade -y
-```
 
 ## Upgrading a single package
 

@@ -1,9 +1,10 @@
   - [Getting Started](/Guides/QuickStart.md)
-    - [Quick Start](/Guides/QuickStart.md)
+    - [Prerequisites](/Guides/Pre-req.md)
     - [The package manager](/Guides/ThePackageManager.md)
     - [Developing tools](/Guides/developing.md)
     - [Updating the Docs](/Guides/../UpdateDocs.md)
     - [Migration Considerations](/Guides/Migration.md)
+    - [Analytics](/Guides/Analytics.md)
   - [Available ports](/Latest.md)
     - [Current Status](/Progress.md)
   - Reference
@@ -21,6 +22,8 @@
     - [Using Vim on z/OS](/Guides/VimOnZOS.md)
     - [Using Bash on z/OS](/Guides/BashOnZOS.md)
     - [Terminal Settings on z/OS](/Guides/TerminalOnZOS.md) 
+  - Workshop
+  	- [Beginner](/workshop/workshop.md) 
   - [External Blogs](/Guides/blogs.md)
   - Resources
     - [z/OS Open Tools Repos](https://github.com/ZOSOpenTools)

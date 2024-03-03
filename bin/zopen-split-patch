@@ -1,6 +1,10 @@
 #!/bin/env bash
 #
-# All zopen-* scripts MUST start with this code to maintain consistency
+# Split a patch file into multiple patches.
+#
+
+#
+# All zopen-* scripts MUST start with this code to maintain consistency.
 #
 setupMyself()
 {
@@ -8,7 +12,7 @@ setupMyself()
   MYDIR="$(cd "$(dirname "$0")" > /dev/null 2>&1 && pwd -P)"
   INCDIR="${MYDIR}/../include"
   if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
-    echo "Internal Error. Unable to find common.sh file to source" >&2
+    echo "Internal Error. Unable to find common.sh file to source." >&2
     exit 8
   fi
   . "${INCDIR}/common.sh"
@@ -19,14 +23,20 @@ pd='split-patches'
 
 printSyntax()
 {
-  echo "${ME} - split a patch file into one patch file for each patch"
-  echo "  Patches are written to ${pd} in the current directory"
-  echo "Usage: ${ME} [OPTION] [PATCHFILE]"
-  echo "Options:"
-  echo "  --help      display this help and exit"
-  echo "  --version   print version"
-  echo "Example:"
-  echo "  ${ME} P1.patch    write P1.patch into multiple patches under ${pd}"
+  cat << HELPDOC
+${ME} - split a patch file into one patch file for each patch.
+  Patches are written to ${pd} in the current directory.
+
+Usage: ${ME} [OPTION] [PATCHFILE]
+
+Options:
+  --help      display this help and exit.
+  --version   print version.
+
+Example:
+  ${ME} P1.patch    write P1.patch into multiple patches under ${pd}
+
+HELPDOC
 }
 
 if [ "x$1" = "x--help" ]; then
@@ -50,15 +60,15 @@ fi
 #
 # For each aggregate:
 #  Extract lines that start with 'diff --git', and put the line numbers
-#  for each match into the 'lines' array. 
+#  for each match into the 'lines' array.
 #  Add the 'lastline' to the end of the lines array.
 #  These entries indicate the line numbers for each diff file that we will want to create.
-#   Get the relative file names (a and b) from these 'diff --git' lines and make sure they 
+#   Get the relative file names (a and b) from these 'diff --git' lines and make sure they
 #  match as a check that this is a 'standard' git diff.
 #  Put the array of file names into the 'file' array
 #
-#  Loop through the lines and create new files from the original aggregate file, 
-#  using the line numbers and file names from the lines and file arrays. 
+#  Loop through the lines and create new files from the original aggregate file,
+#  using the line numbers and file names from the lines and file arrays.
 #
 for aggregate in $@; do
   info=$(grep -n '^diff --git' "${aggregate}")

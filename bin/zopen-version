@@ -1,6 +1,10 @@
 #!/bin/sh
 #
-# All zopen-* scripts MUST start with this code to maintain consistency
+# Version utility for z/OS Open Tools - https://github.com/ZOSOpenTools
+#
+
+#
+# All zopen-* scripts MUST start with this code to maintain consistency.
 #
 setupMyself()
 {
@@ -8,7 +12,7 @@ setupMyself()
   MYDIR="$(cd "$(dirname "$0")" > /dev/null 2>&1 && pwd -P)"
   INCDIR="${MYDIR}/../include"
   if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
-    echo "Internal Error. Unable to find common.sh file to source" >&2
+    echo "Internal Error. Unable to find common.sh file to source." >&2
     exit 8
   fi
   . "${INCDIR}/common.sh"
@@ -17,24 +21,39 @@ setupMyself
 
 printSyntax()
 {
-  echo "${ME} prints version information for ${package}"
-  echo "Usage: ${ME} [OPTION] tool"
-  echo "   or: ${ME} [OPTION]"
-  echo "Syntax: zopen-version [OPTIONS]"
-  echo "where OPTIONS can be:"
-  echo "  --help: print this help"
-  echo "  --version: print version"
+  cat << HELPDOC
+${ME} prints version information for ${package}.
+
+Usage: ${ME} [OPTION] tool
+
+Options:
+  --help          display this help and exit.
+  --version       print version.
+
+HELPDOC
+}
+
+printVersion()
+{
+  cat << VERSIONDOC
+${tool} (${package}) ${version}
+
+This is free software: you are free to change and redistribute it under the
+terms of the Apache License, Version 2.0.
+<https://www.apache.org/licenses/LICENSE-2.0.html>
+There is NO WARRANTY, to the extent permitted by law.
+
+Written by contributors to the z/OS Open Tools Community.
+<https://github.com/ZOSOpenTools/meta/graphs/contributors>
+
+VERSIONDOC
 }
 
 tool='zopen' # Default name
 package="zopen tools"
-copyright="Copyright (C) 2023 zOS Open Tools Community."
-license="License Apache: The Apache Software Foundation license, <https://directory.fsf.org/wiki/License:Apache2.0>"
-freesw="This is free software: you are free to change and redistribute it."
-warranty="There is NO WARRANTY, to the extent permitted by law."
-authors="Written by contributors to the z/OS Open Tools Community <https://github.com/ZOSOpenTools/meta/graphs/contributors>."
+version=$(cat "${INCDIR}/zopen_version")
 
-if [[ $# -eq 1 ]]; then
+if [ $# -eq 1 ]; then
   if [ "x$1" = "x--help" ]; then
     printSyntax
     exit 0
@@ -45,8 +64,4 @@ if [[ $# -eq 1 ]]; then
   fi
 fi
 
-set -e
-
-version=$(cat "${INCDIR}/zopen_version")
-
-printf "%s %s %s\n%s\n\n%s\n%s\n%s\n\n\n%s\n" "${tool}" "(${package})" "${version}" "${copyright}" "${license}" "${freesw}" "${warranty}" "${authors}"
+printVersion

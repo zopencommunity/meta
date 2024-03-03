@@ -1,7 +1,7 @@
 ## Welcome to z/OS Open Tools
 
 The [z/OS Open Tools community](https://github.com/ZOSOpenTools/meta/discussions) is here to provide popular Open Source tools and to encourage z/OS Open Source tools development. 
-We currently host **120+ z/OS Open Source projects** and we're looking for more! 
+We currently host **180+ z/OS Open Source projects** and we're looking for more! 
 
 <section class="layout">
 <div style="float: right; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); width: 50%">
@@ -17,6 +17,13 @@ We currently host **120+ z/OS Open Source projects** and we're looking for more!
  * Want to [use the tools](/Guides/ThePackageManager.md) ?
  * Want to [develop the tools](/Guides/developing.md) ?
  * Want to [improve our documentation](./UpdateDocs.md) ?
+
+### Your Feedback Matters!
+
+* Enjoying z/OS Open Tools? We'd love to get a testimonial from you! Share it by [emailing us](mailto:fultonm@ca.ibm.com).
+* Got an idea or general feedback for the community? Create a [discussion item](https://github.com/orgs/ZOSOpenTools/discussions). We'd love to hear it!
+
+Let's make our tools even better together! 🌟
 
 </div>
 </section>

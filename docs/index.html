@@ -56,6 +56,16 @@
       relativePath: true
     }
   </script>
+  <script>
+    function styleandresizeIframe(obj) {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+      var cssLink = document.createElement("link");
+      cssLink.href = "iframe.css"; 
+      cssLink.rel = "stylesheet"; 
+      cssLink.type = "text/css"; 
+      frames['iframe1'].document.head.appendChild(cssLink);
+    }
+  </script>
   <!-- Docsify v4 -->
   <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
   <script src="//unpkg.com/docsify-plugin-toc"></script>

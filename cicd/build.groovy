@@ -14,6 +14,9 @@
 # Jenkins cannot interpret colours
 export NO_COLOR=1
 
+# Tell zopen that we're a CI/CD bot
+export ZOPEN_IS_BOT=1 
+
 # source Jenkins environment variables on zot
 . /jenkins/.env
 

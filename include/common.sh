@@ -12,11 +12,13 @@ zopenInitialize()
   if [ -z "${ZOPEN_DONT_PROCESS_CONFIG}" ]; then
     processConfig
   fi
+  ZOPEN_ANALYTICS_JSON="${ZOPEN_ROOTFS}/var/lib/zopen/analytics.json"
   ZOPEN_JSON_CACHE_URL="https://raw.githubusercontent.com/ZOSOpenTools/meta/main/docs/api/zopen_releases.json"
 }
 
 addCleanupTrapCmd(){
   newcmd=$1
+  [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
   # Small timing window if the script is killed between the creation
   # and removal of the temporary file; would be easier if zos sh
   # didn't have a bug -trap can't be piped/redirected anywhere except
@@ -28,7 +30,7 @@ addCleanupTrapCmd(){
   if [ -n "${script}" ]; then
     for trappedSignal in "EXIT" "INT" "TERM" "QUIT" "HUP"; do
       newtrapcmd=$(echo "${script}" | while read trapcmd; do
-	       sigcmd=$(echo "${trapcmd}" | sed "s/trap -- \"\(.*\)\" ${trappedSignal}.*/\1/")
+	       sigcmd=$(echo "${trapcmd}" | zossed "s/trap -- \"\(.*\)\" ${trappedSignal}.*/\1/")
 	       [ "${sigcmd}" = "${trapcmd}" ] && continue
 	       printf "%s;%s 2>/dev/null" "${sigcmd}" "${newcmd}" | tr -s ';'
          break
@@ -39,6 +41,7 @@ addCleanupTrapCmd(){
       fi
     done
   fi
+  [ -n "${xtrc}" ] && set -x
 }
 
 cleanupFunction()
@@ -86,10 +89,39 @@ isPackageActive(){
   getCurrentVersionDir "$needle"
 }
 
+# Given two input files, return those lines in haystack file that are 
+# not in needles file
+diffFile()
+{
+  haystackfile="$1"
+  needlesfile="$2"
+  [ -n "${needlesfile}" ] || printError "Internal error; needle file was empty/non-existent."
+  diff=$(awk 'NR==FNR{needles[$0];next} 
+    !($0 in needles) {print}' "${needlesfile}" "${haystackfile}")
+  echo "${diff}"
+}
+
+# Given two input lists (with \n delimiters), return those lines in  
+# haystack that are not in needles
+diffList()
+{
+  haystack="$1"
+  needles="$2"
+  haystackfile=$(mktempfile "haystack")
+  echo "${haystack}" >"${haystackfile}"
+  [ -e "${haystackfile}" ] && addCleanupTrapCmd "rm -rf ${tempdir}"
+  needlesfile=$(mktempfile "needles")
+  echo "${needles}" >"${needlesfile}"
+  [ -e "${needlesfile}" ] && addCleanupTrapCmd "rm -rf ${needlesfile}"
+  diffFile "${needlesfile}" "${haystackfile}"
+}
+
 # Generate a file name that has a high probability of being unique for
 # use as a temporary filename - the filename should be unique in the
 # instance it was generated and probability suggests it should be for
-# a "reasonable" time after...
+# a "reasonable" time after... Note the caller is responsible for ensuring
+# any cleanup is scheduled - the caller may not actually need to write to
+# the file
 mktempfile()
 {
   prefix="zopen_$1"
@@ -167,7 +199,7 @@ deleteDuplicateEntries()
 {
   value="\$1"
   delim="\$2"
-  echo "\${value}\${delim}" | awk -v RS="\${delim}" '!(\$0 in a) {a[\$0]; printf("%s%s", col, \$0); col=RS; }' | sed "s/\${delim}$//"
+  echo "\${value}\${delim}" | awk -v RS="\${delim}" '!(\$0 in a) {a[\$0]; printf("%s%s", col, \$0); col=RS; }' | /bin/sed "s/\${delim}$//"
 }
 
 # z/OS Open Tools environment variables
@@ -184,19 +216,28 @@ export ZOPEN_LOG_PATH
 # Add any custom parameters for curl
 ZOPEN_CURL_PARAMS=""
 
-# Environment variables
+# Do not display text for non-interactive sessions
+displayText=true
+if [ -n "\$SSH_CONNECTION" ] && [ -z "\$PS1" ] || [ ! -t 1 ]; then
+  displayText=false
+fi
 
 if [ -z "\${ZOPEN_QUICK_LOAD}" ]; then
   if [ -e "\${ZOPEN_ROOTFS}/etc/profiled" ]; then
     dotenvs=\$(find "\${ZOPEN_ROOTFS}/etc/profiled" -type f -name 'dotenv' -print)
-    printf "Processing \$zot configuration..."
+    if \$displayText; then
+      printf "Processing \$zot configuration..."
+    fi
     for dotenv in \$dotenvs; do
       . \$dotenv
     done
-    /bin/echo "DONE"
+    if \$displayText; then
+      /bin/echo "DONE"
+    fi
     unset dotenvs
   fi
 fi
+unset displayText
 PATH=\${ZOPEN_ROOTFS}/usr/local/bin:\${ZOPEN_ROOTFS}/usr/bin:\${ZOPEN_ROOTFS}/bin:\${ZOPEN_ROOTFS}/boot:\$(sanitizeEnvVar \"\${PATH}\" \":\" \"^\${ZOPEN_PKGINSTALL}/.*\$\")
 export PATH=\$(deleteDuplicateEntries \"\${PATH}\" \":\")
 LIBPATH=\${ZOPEN_ROOTFS}/usr/local/lib:\${ZOPEN_ROOTFS}/usr/lib:\$(sanitizeEnvVar "\${LIBPATH}" ":" "^\${ZOPEN_PKGINSTALL}/.*\$")
@@ -230,7 +271,7 @@ deref()
   testpath="$1"
   if [ -L "${testpath}" ]; then
     child=$(basename "${testpath}")
-    symlink=$(ls -l "${testpath}" | sed 's/.*-> \(.*\)/\1/')
+    symlink=$(ls -l "${testpath}" | zossed 's/.*-> \(.*\)/\1/')
     parent=$(dirname "${testpath}")
     relpath="${parent}/${symlink}"
     relparent=$(dirname "${relpath}")
@@ -376,7 +417,7 @@ findrev()
 
 strtrim()
 {
-  echo "$1" | sed -e 's/^[ ]*//' -e 's/[ ]*$//'
+  echo "$1" | zossed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'
 }
 
 defineEnvironment()
@@ -467,7 +508,7 @@ relativePath2()
   # if the target is longer than the source, there might be some additional
   # elements in the shifted $0 to append
   if [ $# -gt 0 ]; then
-    relativePath=${relativePath}/$(echo $* | sed "s/ /\//g")
+    relativePath=${relativePath}/$(echo $* | zossed "s/ /\//g")
   fi
   IFS="${currentIFS}"
   echo "${relativePath}"
@@ -521,7 +562,7 @@ mergeIntoSystem()
   # subsequent calls would generate a symlink that has incorrect dereferencing
   # and ignoring them is actually faster than individually creating the links!
   zosfind . -type d | sort -r | while read dir; do
-    dir=$(echo "${dir}" | sed "s#^./##")
+    dir=$(echo "${dir}" | zossed "s#^./##")
     printDebug "Processing dir: ${dir}"
     [ ${dir} = "." ] && continue
     mkdir -p "${processingDir}/${rebaseusr}/${dir}"
@@ -571,112 +612,98 @@ unsymlinkFromSystem()
   pkg=$1
   rootfs=$2
   dotlinks=$3
+  newfilelist=$4
   if [ -e "${dotlinks}" ]; then
-    printInfo "- Checking for obsoleted files in ${rootfs}/usr/ tree from ${pkg}."
-    # Use sed to skip header line in .links file
-    # Note that the contents of the links file are ordered such that
-    # processing occurs depth-first; if, after removing orphaned symlinks,
-    # a directory is empty, then it can be removed.
-    nfiles=$(sed '1d;$d' "${dotlinks}" | wc -l | tr -d ' ')
-    flecnt=0
-    pct=0
+    printInfo "- Checking for obsoleted files in ${rootfs}/usr/ tree from ${pkg}"
 
-    printDebug "Creating temporary dirname file."
-    tempDirFile="${ZOPEN_ROOTFS}/tmp/zopen.rmdir.${RANDOM}"
-    tempTrash="${tempDirFile}.trash"
-    [ -e "${tempDirFile}" ] && rm -f "${tempDirFile}" > /dev/null 2>&1
-    touch "${tempDirFile}"
-    addCleanupTrapCmd "rm -rf ${tempDirFile}"
-    printDebug "Using temporary file ${tempDirFile}"
-    printInfo "- Checking ${nfiles} potential links."
-
-    rm_fileprocs=15
-    [ -e "${rootfs}/etc/zopen/rm_fileprocs" ] && rm_fileprocs=$(cat "${rootfs}/etc/zopen/rm_fileprocs")
-    threshold=$((nfiles / rm_fileprocs))
-    threshold=$((threshold + 1))
-    printDebug "Threshold of files per worker [files/procs] calculated as: ${threshold}"
-    [ "${threshold}" -le 50 ] && threshold=50 && printVerbose "Threshold below min: using 50." # Don't spawn too many
-    printDebug "Starting spinner..."
-    progressHandler "spinner" "- Complete" &
-    ph=$!
-    killph="kill -HUP ${ph} 2>/dev/null"
-    addCleanupTrapCmd "${killph}"
-
-    printDebug "Spawning as subshell to handle threading."
-    # Note that this all must happen in a subshell as the above started
-    # progressHandler is a signal-terminated process - and a wait issued in
-    # the parent will never complete until that ph is signalled/terminated!
-    deletethreads=$(
-      tid=0
-      filenames=""
-      while read filetounlink; do
-        tid=$((tid + 1))
-        filetounlink=$(echo "${filetounlink}" | sed 's/\(.*\).symbolic.*/\1/')
-        filenames=$(/bin/printf "%s\n%s" "${filenames}" "${filetounlink}")
-        if [ "$((tid % threshold))" -eq 0 ]; then
-          deletethread "${filenames}" "${tempDirFile}" &
-          printDebug "Started delete thread: $!"
-          filenames=""
-        fi
-      done << EOF
-$(sed '1d;$d' "${dotlinks}")
-EOF
-      if [ -n "${filenames}" ]; then
-        # Handle when there are not enough to trigger the threshold of a new thread above,
-        # there will still be items in the "array"
-        deletethread "${filenames}" "${tempDirFile}" #&
-        printDebug "Started delete thread: $!"
-      fi
-      wait
-    )
-    ${killph} 2> /dev/null # if the timer is not running, the kill will fail
-    if [ -e "${tempDirFile}" ]; then
-      ndirs=$(cat "${tempDirFile}" | uniq | wc -l | tr -d ' ')
-      printInfo "- Checking ${ndirs} dir links"
-      for d in $(cat "${tempDirFile}" | uniq | sort -r); do
-        [ -d "${d}" ] && rmdir "${d}" > /dev/null 2>&1
+    if [ -e "${newfilelist}" ]; then
+      printDebug "Release change, so the list of changes to physically remove should be smaller"
+      printDebug "Starting spinner..."
+      progressHandler "spinner" "- Check complete" &
+      ph=$!
+      killph="kill -HUP ${ph}"
+      addCleanupTrapCmd "${killph}"
+      obsoleteList=$(diffFile "${dotlinks}" "${newfilelist}")
+      echo "${obsoleteList}" | while read obsoleteFile; do
+        [ -z "${obsoleteFile}" ] && return 0
+        obsoleteFile="${ZOPEN_ROOTFS}/${obsoleteFile}"
+        obsoleteFile="${obsoleteFile%% symbolic*}"
+        printDebug "Checking obsoletefile '${obsoleteFile}'"
+        if [ -L "${obsoleteFile}" ] && [ ! -e "${obsoleteFile}" ]; then
+          # the linked-to file no longer exists (ie. the symlink is dangling)
+          rm -f "${obsoleteFile}" > /dev/null 2>&1
+        fi 
       done
-    fi
-  else
-    printWarning "Could not locate list of current links to verify, dangling links might be present; run 'zopen clean -d'"
-  fi
-}
-
-deletethread()
-{
-  filestodelete="$1"
-  tempDirFile="$2"
-  echo "${filestodelete}" | while read filetounlink; do
-    deletetask "${tempDirFile}" "${filetounlink}"
-  done
-}
-
-deletetask()
-{
-  tempDirFile="$1"
-  filename="$2"
-  [ -z "${filename}" ] && return 0
-  filename="${ZOPEN_ROOTFS}/${filename}"
-  if [ -d "${filename}" ]; then
-    # Add to the queue for checking once files are gone if unique
-    ispresent=$(grep "^${filename}[ ]*$" "${tempDirFile}")
-    if [ -z "${ispresent}" ]; then
-      echo " ${filename} " >> "${tempDirFile}"
+      ${killph} 2>/dev/null # if the timer is not running, the kill will fail
+      sleep 1 # give spinner time to exit if running
     else
-      alreadyfound=""
-    fi
-  elif [ -L "${filename}" ]; then
-    if [ ! -f "${filename}" ]; then
-      # the linked-to file no longer exists (ie. the symlink is dangling)
-      rm -f "${filename}" > /dev/null 2>&1
+      # Slower method needed to analyse each link to see if it has
+      # become orphaned. Only relevent when removing a package as 
+      # upgrades/alt-switching can supply a list of files
+      # Use sed to skip header line in .links file
+      # Note that the contents of the links file are ordered such that
+      # processing occurs depth-first; if, after removing orphaned symlinks,
+      # a directory is empty, then it can be removed.
+      nfiles=$(zossed '1d;$d' "${dotlinks}" | wc -l  | tr -d ' ')
+      printDebug "Creating Temporary dirname file"
+      tempDirFile=$(mktempfile "unsymlink")
+      [ -e "${tempDirFile}" ] && rm -f "${tempDirFile}" >/dev/null 2>&1
+      touch "${tempDirFile}"
+      tempTrash=$(mktempfile "unsymlink" "trash")
+      [ -e "${tempTrash}" ] && rm -f "${tempTrash}" >/dev/null 2>&1
+      addCleanupTrapCmd "rm -rf ${tempDirFile}"
+      printDebug "Using temporary file ${tempDirFile}"
+      printInfo "- Checking ${nfiles} potential links"
+      printDebug "Starting spinner..."
+      progressHandler "spinner" "- Complete" &
+      ph=$!
+      killph="kill -HUP ${ph}"
+      addCleanupTrapCmd "${killph}"
+
+      while read filetounlink; do
+        filetounlink=$(echo "${filetounlink}" | zossed 's/\(.*\).symbolic.*/\1/')
+        filename="$filetounlink"
+        [ -z "${filetounlink}" ] && continue
+        filetounlink="${ZOPEN_ROOTFS}/${filetounlink}"
+        [ ! -e "${filetounlink}" ] && continue  # If not there, can'e be removed!
+        if [ -d "${filetounlink}" ]; then
+          # Add to the directory queue for checking once files are gone if unique
+          ispresent=$(grep "^${filetounlink}[ ]*$" "${tempDirFile}")
+          if [ -z "${ispresent}" ]; then
+            echo " ${filetounlink} " >> "${tempDirFile}"
+          fi
+        elif [ -L "${filetounlink}" ]; then
+          if [ ! -f "${filetounlink}" ]; then
+            # the linked-to file no longer exists (ie. the symlink is dangling)
+            rm -f "${filetounlink}" > /dev/null 2>&1
+          fi
+        else
+          echo "Unprocessable file: '${filetounlink}'" >> "${tempTrash}"
+        fi
+      done <<EOF
+$(zossed '1d;$d' "${dotlinks}")
+EOF
+      ${killph} 2>/dev/null # if the timer is not running, the kill will fail
+      sleep 1 # ensure the spinner has stopped if running
+      if [ -e "${tempDirFile}" ]; then
+        ndirs=$(uniq < "${tempDirFile}" | wc -l  | tr -d ' ')
+        printVerbose "- Checking ${ndirs} dir links"
+        for d in $(uniq < "${tempDirFile}" | sort -r) ; do 
+          [ -d "${d}" ] && rmdir "${d}" >/dev/null 2>&1
+        done
+      fi
+      if [ -e "${tempTrash}" ]; then
+        printSoftError "Issues found while trying to remove the following files:"
+        while read errorFile; do
+          printSoftError "${errorFile}"
+        done < "${tempTrash}"
+        printError "Manual removal of files might be required"
+      fi
     fi
   else
-    echo "Unprocessable file: '${filename}'" >> "${tempTrash}"
+    printDebug "No list of current links to check - package was not installed/active"
   fi
 }
-
-
-
 
 printDebug()
 {
@@ -704,7 +731,14 @@ printHeader()
   printColors "${NC}${HEADERCOLOR}${BOLD}${UNDERLINE}${1}${NC}" >&2
   [ ! -z "${xtrc}" ] && set -x
   return 0
+}
 
+printAttention()
+{
+  [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
+  printColors "${NC}${MAGENTA}${BOLD}${UNDERLINE}${1}${NC}" >&2
+  [ ! -z "${xtrc}" ] && set -x
+  return 0
 }
 
 runAndLog()
@@ -1015,15 +1049,7 @@ deleteDuplicateEntries()
 {
   value=$1
   delim=$2
-  echo "${value}${delim}" | awk -v RS="${delim}" '!($0 in a) {a[$0]; printf("%s%s", col, $0); col=RS; }' | sed "s/${delim}$//"
-}
-
-# reworked version of above to strip blank elements between delims
-deleteDuplicateEntriesRedux()
-{
-  value=$1
-  delim=$2
-  echo "${value}" | awk -v RS="${delim}" -v ORS="${delim}" ' {gsub("^[ ]+|[ ]$", "", $0); if (NF>0 && !a[$0]++) {print } }' | sed "s/${delim}$//"
+  echo "${value}${delim}" | awk -v RS="${delim}" '!($0 in a) {a[$0]; printf("%s%s", col, $0); col=RS; }' | zossed "s/${delim}$//"
 }
 
 # Logging Types
@@ -1042,6 +1068,7 @@ CAT_QUERY="Q"   # Query processing
 CAT_REMOVE="R"  # Removal handling
 CAT_SYS="S"     # Related to the underlying native z/OS system
 CAT_ZOPEN="Z"   # Related to the zopen system itself
+CAT_STATS="ST"  # Related to usage statistics
 
 syslog()
 {
@@ -1061,9 +1088,11 @@ syslog()
 downloadJSONCache()
 {
   if [ -z "${JSON_CACHE}" ]; then
-    JSON_CACHE="${ZOPEN_ROOTFS}/var/cache/zopen/zopen_releases.json"
-    JSON_TIMESTAMP="${ZOPEN_ROOTFS}/var/cache/zopen/zopen_releases.timestamp"
-    JSON_TIMESTAMP_CURRENT="${ZOPEN_ROOTFS}/var/cache/zopen/zopen_releases.timestamp.current"
+    cachedir="${ZOPEN_ROOTFS}/var/cache/zopen"
+    [ ! -e "${cachedir}" ] && mkdir -p "${cachedir}"
+    JSON_CACHE="${cachedir}/zopen_releases.json"
+    JSON_TIMESTAMP="${cachedir}/zopen_releases.timestamp"
+    JSON_TIMESTAMP_CURRENT="${cachedir}/zopen_releases.timestamp.current"
 
     # Need to check that we can read & write to the JSON timestamp cache files
     if [ -e "${JSON_TIMESTAMP_CURRENT}" ]; then
@@ -1076,8 +1105,8 @@ downloadJSONCache()
       [ ! -w "${JSON_CACHE}" ] || [ ! -r "${JSON_CACHE}" ] && printError "Cannot access cache at '${JSON_CACHE}'. Check permissions and retry request."
     fi
 
-    if ! curlCmd -L -s -I "${ZOPEN_JSON_CACHE_URL}" -o "${JSON_TIMESTAMP_CURRENT}"; then
-      printError "Failed to obtain json cache timestamp from ${ZOPEN_JSON_CACHE_URL}"
+    if ! curlout=$(curlCmd -L --no-progress-meter -I "${ZOPEN_JSON_CACHE_URL}" -o "${JSON_TIMESTAMP_CURRENT}"); then
+      printError "Failed to obtain json cache timestamp from ${ZOPEN_JSON_CACHE_URL}; ${curlout}"
     fi
     chtag -tc 819 "${JSON_TIMESTAMP_CURRENT}"
 
@@ -1088,8 +1117,8 @@ downloadJSONCache()
     printVerbose "Replacing old timestamp with latest."
     mv -f "${JSON_TIMESTAMP_CURRENT}" "${JSON_TIMESTAMP}"
 
-    if ! curlCmd -L -s -o "${JSON_CACHE}" "${ZOPEN_JSON_CACHE_URL}"; then
-      printError "Failed to obtain json cache from ${ZOPEN_JSON_CACHE_URL}"
+    if ! curlout=$(curlCmd -L --no-progress-meter -o "${JSON_CACHE}" "${ZOPEN_JSON_CACHE_URL}"); then
+      printError "Failed to obtain json cache from ${ZOPEN_JSON_CACHE_URL}; ${curlout}"
     fi
     chtag -tc 819 "${JSON_CACHE}"
   fi
@@ -1117,8 +1146,9 @@ getAllReleasesFromGithub()
 
 initDefaultEnvironment()
 {
-  export ZOPEN_OLD_PATH=${PATH}       # Preserve PATH in case scripts need to access it
-  export ZOPEN_OLD_LIBPATH=${LIBPATH} # Preserve LIBPATH in case scripts need to access it
+  export ZOPEN_OLD_PATH="${PATH}"       # Preserve PATH in case scripts need to access it
+  export ZOPEN_OLD_LIBPATH="${LIBPATH}" # Preserve LIBPATH in case scripts need to access it
+  export ZOPEN_OLD_STEPLIB="${STEPLIB}" # Preserve STEPLIB in case scripts need to access it
   export PATH="$(getconf PATH)"
   export _CEE_RUNOPTS="FILETAG(AUTOCVT,AUTOTAG) POSIX(ON)"
   unset MANPATH
@@ -1142,5 +1172,58 @@ checkWritable()
     printError "Tools distribution is read-only. Cannot run update operation '${ME}'." >&2
   fi
 }
+
+getReleaseLine()
+{
+  jsonConfig="${ZOPEN_ROOTFS}/etc/zopen/config.json"
+  if [ ! -f "${jsonConfig}" ]; then
+    jq -r '.release_line' $jsonConfig
+  else
+    echo "STABLE"
+  fi
+}
+
+getRMProcs()
+{
+  jsonConfig="${ZOPEN_ROOTFS}/etc/zopen/config.json"
+  if [ ! -f "${jsonConfig}" ]; then
+    jq -r '.num_rm_procs' $jsonConfig
+  else
+    echo "5" # default
+  fi
+}
+
+isURLReachable() {
+  url="$1"
+  timeout=5
+
+  if curl -s --fail --max-time $timeout "$url" > /dev/null; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+promptYesOrNo() {
+  message="$1"
+  skip=$2
+  if ! ${skip}; then
+    while true; do
+      printInfo "${message} [y/n]"
+      read answer < /dev/tty
+      answer=$(echo "${answer}" | tr '[A-Z]' '[a-z]')
+      if [ "y" = "${answer}" ] || [ "yes" = "${answer}" ]; then
+        return 0
+      fi
+      if [ "n" = "${answer}" ] || [ "no" = "${answer}" ]; then
+        return 1
+      fi
+    done
+  fi
+  return 0
+}
+
+
+. ${INCDIR}/analytics.sh
 
 zopenInitialize

@@ -1,7 +1,10 @@
 #!/bin/sh
+#
 # Query utility for z/OS Open Tools - https://github.com/ZOSOpenTools
 #
-# All zopen-* scripts MUST start with this code to maintain consistency
+
+#
+# All zopen-* scripts MUST start with this code to maintain consistency.
 #
 setupMyself()
 {
@@ -9,7 +12,7 @@ setupMyself()
   MYDIR="$(cd "$(dirname "$0")" > /dev/null 2>&1 && pwd -P)"
   INCDIR="${MYDIR}/../include"
   if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
-    echo "Internal Error. Unable to find common.sh file to source" >&2
+    echo "Internal Error. Unable to find common.sh file to source." >&2
     exit 8
   fi
   . "${INCDIR}/common.sh"
@@ -24,31 +27,34 @@ printSyntax()
 {
   args=$*
   echo "${ME} -  a utility for z/OS Open Tools to query packages and repos."
+  echo ""
   echo "Usage: ${ME} [OPTION] [VERB] [PACKAGE]"
   echo "  VERB is the action to take, which is one of"
   echo "    --list, --remote-search, --installed"
   echo "  PACKAGE is a package, specified for --remote-search"
+  echo ""
   echo "Verbs:"
+  echo "  -i, --installed  list installed z/OS Open Tools."
   echo "  --list           list all available z/OS Open Tools."
   echo "  --remote-search  regex match package against available z/OS Open Tools"
-  echo "  -i, --installed  list installed z/OS Open Tools."
 if ${upgradeable_implemented}; then
   echo "  --upgradeable    list packages where an upgrade is available."
 fi
 if ${whatprovides_implemented}; then
   echo "  -wp, --whatprovides  which installed package provided a file."
 fi
+  echo ""
   echo "Options:"
-  echo "  -v               run in verbose mode."
   echo "  -d, --details    include full details for listings."
-  echo "  --no-header,     suppress the header for the output."
-  echo "  --no-version,    suppress version information, return package names."
 if ${filter_implemented}; then
   echo "  --filter COLOR   apply COLOR (quality) filter."
   echo "                   green: all pass, blue: most pass, yellow: some pass, red: no pass, gray: skipped"
 fi
   echo "  --help           print this help"
-  echo "  --version        print version" 
+  echo "  --no-header,     suppress the header for the output."
+  echo "  --no-version,    suppress version information, return package names."
+  echo "  -v               run in verbose mode."
+  echo "  --version        print version"
 }
 
 colorizepct()

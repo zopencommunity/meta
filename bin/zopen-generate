@@ -1,10 +1,12 @@
 #!/bin/sh
+#
 # Initialize zopen
 ZOPEN_DONT_PROCESS_CONFIG=1
 # Generates a zopen compatible project
 #
+
 #
-# All zopen-* scripts MUST start with this code to maintain consistency
+# All zopen-* scripts MUST start with this code to maintain consistency.
 #
 setupMyself()
 {
@@ -12,7 +14,7 @@ setupMyself()
   MYDIR="$(cd "$(dirname "$0")" > /dev/null 2>&1 && pwd -P)"
   INCDIR="${MYDIR}/../include"
   if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
-    echo "Internal Error. Unable to find common.sh file to source" >&2
+    echo "Internal Error. Unable to find common.sh file to source." >&2
     exit 8
   fi
   . "${INCDIR}/common.sh"
@@ -31,12 +33,11 @@ buildLicenseLookup()
 
 printSyntax()
 {
-  args=$*
   echo "zopen-generate will generate a zopen compatible project" >&2
   echo "Syntax: zopen-generate" >&2
 }
 
-if [[ $# -eq 1 ]]; then
+if [ $# -eq 1 ]; then
   if [ "x$1" = "x--help" ]; then
     printSyntax
     exit 0
@@ -118,6 +119,8 @@ runtimedeps=$(getInput)
 
 project_path="${name}port"
 
+nameUpper=$(echo "$name" | awk '{print toupper($0)}')
+
 if [ -d ${project_path} ]; then
   while true; do
     echo "Directory ${project_path} already exists. Update it? (y, n)"
@@ -141,11 +144,17 @@ buildenv="${name}port/buildenv"
 touch ${buildenv} && chtag -tc 819 ${buildenv}
 
 cp "${MYDIR}/../data/CONTRIBUTING.md" "${name}port/CONTRIBUTING.md"
+cp "${MYDIR}/../data/CODEOWNERS" "${name}port/CODEOWNERS"
 mkdir -p "${name}port/.github/workflows"
-cp "${MYDIR}/../data/*.yml" "${name}port/.github/workflows/" 2>/dev/null # no yml files yet?
+cp ${MYDIR}/../data/*.yml "${name}port/.github/workflows/" 2>/dev/null # no yml files yet?
+
+buildenvContents=""
 
 if [ ! -z "${stablePath}" ]; then
-  buildenvContents="export ZOPEN_STABLE_URL=\"${stablePath}\"\n"
+  buildenvContents="${buildenvContents}# Update bump details accordingly. Use bump check to confirm.\n# bump: $name-version /${nameUpper}_VERSION=\"(.*)\"/ ${stablePath}|semver:*\n"
+  buildenvContents="${buildenvContents}# ${nameUpper}_VERSION=\"V.R.M\" # Specify a stable release\n"
+  buildenvContents="${buildenvContents}# export ZOPEN_STABLE_TAG=\"v\${${nameUpper}_VERSION}\"\n"
+  buildenvContents="${buildenvContents}export ZOPEN_STABLE_URL=\"${stablePath}\"\n"
 fi
 if [ ! -z "${stableDeps}" ]; then
   buildenvContents="${buildenvContents}export ZOPEN_STABLE_DEPS=\"${stableDeps}\"\n"
@@ -196,7 +205,9 @@ printInfo "${buildenv} created"
 
 touch "${name}port/README.md" && chtag -tc 819 "${name}port/README.md"
 cat << EOT > "${name}port/README.md"
-${name}
+[![Automatic version updates](https://github.com/ZOSOpenTools/${name}port/actions/workflows/bump.yml/badge.svg)](https://github.com/ZOSOpenTools/${name}port/actions/workflows/bump.yml)
+
+# ${name}
 
 ${description}
 EOT
@@ -253,3 +264,4 @@ printHeader "${name} project is ready! ${name}port/"
 printInfo "Create patches under the ${name}port/patches directory"
 printInfo "Run zopen build to build ${name}port"
 printInfo "Contact Igor Todorovski (itodorov@ca.ibm.com) to create https://github.com/ZOSOpenTools/${name}port.git"
+printInfo "Update the CODEOWNERS, buildenv, and README.md files appropriately"

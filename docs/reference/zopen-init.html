@@ -1,5 +1,5 @@
 <!-- Creator     : groff version 1.22.3 -->
-<!-- CreationDate: Fri Dec  1 17:38:25 2023 -->
+<!-- CreationDate: Thu Feb 29 21:06:39 2024 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -27,7 +27,6 @@
 <a href="#EXAMPLES">EXAMPLES</a><br>
 <a href="#AUTHOR">AUTHOR</a><br>
 <a href="#REPORTING BUGS">REPORTING BUGS</a><br>
-<a href="#COPYRIGHT">COPYRIGHT</a><br>
 
 <hr>
 
@@ -38,7 +37,7 @@
 
 
 <p style="margin-left:11%; margin-top: 1em">zopen-init
-&minus; manual page for zopen-init 0.8.0</p>
+&minus; manual page for zopen-init 0.8.1</p>
 
 <h2>SYNOPSIS
 <a name="SYNOPSIS"></a>
@@ -67,22 +66,6 @@ file</p>
        cellspacing="0" cellpadding="0">
 <tr valign="top" align="left">
 <td width="11%"></td>
-<td width="14%">
-
-
-<p style="margin-top: 1em"><b>&minus;y</b>,
-<b>&minus;&minus;yes</b></p> </td>
-<td width="75%">
-</td></tr>
-</table>
-
-<p style="margin-left:22%; margin-top: 1em">automatically
-answer &rsquo;yes&rsquo; to prompts</p>
-
-<table width="100%" border="0" rules="none" frame="void"
-       cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="11%"></td>
 <td width="29%">
 
 
@@ -100,19 +83,17 @@ sourcing of zopen&minus;config to current user&rsquo;s
        cellspacing="0" cellpadding="0">
 <tr valign="top" align="left">
 <td width="11%"></td>
-<td width="26%">
+<td width="27%">
 
 
 
-<p style="margin-top: 1em"><b>&minus;&minus;releaseline&minus;dev</b></p> </td>
-<td width="63%">
+<p style="margin-top: 1em"><b>&minus;&minus;[no]enable&minus;stats</b></p> </td>
+<td width="62%">
 </td></tr>
 </table>
 
-<p style="margin-left:22%; margin-top: 1em">globally
-configure the release line for package installs to enable
-Development (DEV) packages; the default is for a system to
-use STABLE packages</p>
+<p style="margin-left:22%; margin-top: 1em">Toggle enabling
+collection of usage statistics</p>
 
 <table width="100%" border="0" rules="none" frame="void"
        cellspacing="0" cellpadding="0">
@@ -140,6 +121,22 @@ should be one of:</p>
 prod: legacy zopen standard location, ibm: <i>/usr/lpp</i>,
 fhs: File Hierarchical Standard (<i>/opt</i>), usrlcl:
 usr/local</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="21%">
+
+
+<p style="margin-top: 1em"><b>&minus;h</b>, &minus;?,
+<b>&minus;&minus;help</b></p> </td>
+<td width="68%">
+</td></tr>
+</table>
+
+<p style="margin-left:22%; margin-top: 1em">display this
+help and exit</p>
 
 <table width="100%" border="0" rules="none" frame="void"
        cellspacing="0" cellpadding="0">
@@ -178,19 +175,55 @@ the active version for PACKAGE from a list</p>
 <p style="margin-left:22%; margin-top: 1em">Refreshes the
 zopen&minus;config file</p>
 
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="26%">
 
-<p style="margin-left:11%; margin-top: 1em"><b>&minus;v</b>,
-<b>&minus;&minus;verbose</b></p>
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;releaseline&minus;dev</b></p> </td>
+<td width="63%">
+</td></tr>
+</table>
+
+<p style="margin-left:22%; margin-top: 1em">globally
+configure the release line for package installs to enable
+Development (DEV) packages; the default is for a system to
+use STABLE packages</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="20%">
+
+
+<p style="margin-top: 1em"><b>&minus;v</b>,
+<b>&minus;&minus;verbose</b></p> </td>
+<td width="69%">
+</td></tr>
+</table>
 
 <p style="margin-left:22%; margin-top: 1em">run in verbose
 mode</p>
 
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="14%">
 
-<p style="margin-left:11%; margin-top: 1em"><b>&minus;h</b>,
-&minus;?, <b>&minus;&minus;help</b></p>
 
-<p style="margin-left:22%; margin-top: 1em">display this
-help and exit</p>
+<p style="margin-top: 1em"><b>&minus;y</b>,
+<b>&minus;&minus;yes</b></p> </td>
+<td width="75%">
+</td></tr>
+</table>
+
+<p style="margin-left:22%; margin-top: 1em">automatically
+answer &rsquo;yes&rsquo; to prompts</p>
 
 <h2>EXAMPLES
 <a name="EXAMPLES"></a>
@@ -229,8 +262,8 @@ terminal sessions start</p>
 
 
 <p style="margin-left:11%; margin-top: 1em">Written by
-contributors to the z/OS Open Tools Community
-&lt;https://github.com/ZOSOpenTools/meta/graphs/contributors&gt;.</p>
+contributors to the z/OS Open Tools Community.
+&lt;https://github.com/ZOSOpenTools/meta/graphs/contributors&gt;</p>
 
 <h2>REPORTING BUGS
 <a name="REPORTING BUGS"></a>
@@ -240,21 +273,12 @@ contributors to the z/OS Open Tools Community
 <p style="margin-left:11%; margin-top: 1em">Report bugs at
 https://github.com/ZOSOpenTools/meta/issues</p>
 
-<h2>COPYRIGHT
-<a name="COPYRIGHT"></a>
-</h2>
-
-
-<p style="margin-left:11%; margin-top: 1em">Copyright
-&copy; 2023 zOS Open Tools Community.</p>
-
-<p style="margin-left:11%; margin-top: 1em">License Apache:
-The Apache Software Foundation license,
-&lt;https://directory.fsf.org/wiki/License:Apache2.0&gt;
+<p style="margin-left:11%; margin-top: 1em">This is free
+software: you are free to change and redistribute it under
+the terms of the Apache License, Version 2.0.
+&lt;https://www.apache.org/licenses/LICENSE&minus;2.0.html&gt;
 <br>
-This is free software: you are free to change and
-redistribute it. There is NO WARRANTY, to the extent
-permitted by law.</p>
+There is NO WARRANTY, to the extent permitted by law.</p>
 <hr>
 </body>
 </html>

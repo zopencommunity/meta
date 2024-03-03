@@ -1,7 +1,10 @@
 #!/bin/sh
+#
 # Removal utility for z/OS Open Tools - https://github.com/ZOSOpenTools
 #
-# All zopen-* scripts MUST start with this code to maintain consistency
+
+#
+# All zopen-* scripts MUST start with this code to maintain consistency.
 #
 setupMyself()
 {
@@ -9,7 +12,7 @@ setupMyself()
   MYDIR="$(cd "$(dirname "$0")" > /dev/null 2>&1 && pwd -P)"
   INCDIR="${MYDIR}/../include"
   if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
-    echo "Internal Error. Unable to find common.sh file to source" >&2
+    echo "Internal Error. Unable to find common.sh file to source." >&2
     exit 8
   fi
   . "${INCDIR}/common.sh"
@@ -17,19 +20,32 @@ setupMyself()
 setupMyself
 checkWritable
 
-printSyntax()
+printHelp()
 {
-  args=$*
-  echo "${ME} - remove installed z/OS Open Tools packages."
-  echo "Usage: zopen remove [OPTION] PACKAGE"
-  echo "  PACKAGE is a list of one or more projects to uninstall"
-  echo "Options:"
-  echo "  --help       print this help"
-  echo "  --version    print version"
-  echo "  -p, --purge  remove package, the versioned directory and any cached file"
-  echo "  -v           run in verbose mode"
-  echo "Examples:"
-  echo "  ${ME} man-db    Remove the man-db package" 
+  cat << HELPDOC
+${ME} is a utility for z/OS Open Tools to remove an installed package or
+packages.
+
+Usage: ${ME} [OPTION] [PACKAGE] ...
+
+Options:
+  -h, --help, -?    display this help and exit.
+  -p, --purge       remove package, the versioned directory, and any
+                    cached files.
+  -v, --verbose     run in verbose mode.
+  --version         print version.
+  -y, --yes         automatically answer yes to prompts.
+
+Examples:
+  zopen remove foo bar
+                    interactively remove the foo and bar packages if installed
+  zopen remove --yes foo bar
+                    remove the foo and bar packages if installed, without
+                    asking for confirmation
+
+Report bugs at https://github.com/ZOSOpenTools/meta/issues .
+
+HELPDOC
 }
 
 removePackages()
@@ -42,7 +58,20 @@ removePackages()
     if [ ! -f ${ZOPEN_PKGINSTALL}/${pkg}/${pkg}/.active ]; then
       printInfo "${NC}${YELLOW}Package '${pkg}' is not installed${NC}"
     else
-      printInfo "- Package installed, unmeshing from system"
+      printInfo "- Away to remove '${pkg}',"
+      if ! ${yesToPrompts}; then
+        while true; do
+          printInfo "- Do you want to continue? [y/n/a]"
+          read continueInstall < /dev/tty
+          case "${continueInstall}" in
+            "y") break;;
+            "n") mutexFree "zopen"; printInfo "Exiting..."; exit 0 ;;
+            "a") yesToPrompts=true; break;;
+            *) echo "?";;
+          esac
+        done
+      fi
+      printInfo "- Unmeshing from system"
       version="unknown"
       if [ -e "${ZOPEN_PKGINSTALL}/${pkg}/${pkg}/.releaseinfo" ]; then
         version=$(cat "${ZOPEN_PKGINSTALL}/${pkg}/${pkg}/.releaseinfo")
@@ -54,9 +83,10 @@ removePackages()
         if ${purge}; then
           printInfo "- Purging package"
           printVerbose "Checking if we are currently in a directory that is to be purged"
-          [ "${PWD##"${ZOPEN_PKGINSTALL}"/"${pkg}"/"${pkg}"}" != "${PWD}" ] && cd ${ZOPEN_PKGINSTALL} || exit
+          [ "${PWD##"${ZOPEN_PKGINSTALL}"/"${pkg}"/"${pkg}"}" != "${PWD}" ] && cd ${ZOPEN_PKGINSTALL}
           rm -rf $(cd "${ZOPEN_PKGINSTALL}/${pkg}/${pkg}" && pwd -P)
           syslog ${ZOPEN_LOG_PATH}/audit.log ${LOG_A} "${CAT_PACKAGE},${CAT_REMOVE}" "REMOVE" "removePackage" "Purging package:'${needle};version:${version};"
+          registerRemove "${pkg}" "${version}"
         else
           printInfo "- Removing metadata file to mark uninstall"
           rm -f "${ZOPEN_PKGINSTALL}/${pkg}/${pkg}/.active"
@@ -83,13 +113,14 @@ verbose=false
 debug=false
 purge=false
 chosenRepos=""
+yesToPrompts=false
 while [ $# -gt 0 ]; do
   case "$1" in
   "-p" | "--purge")
     purge=true
     ;;
-  "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
-    printSyntax "${args}"
+  "-h" | "--help" | "-?")
+    printHelp "${args}"
     exit 0
     ;;
   "--version")
@@ -103,6 +134,9 @@ while [ $# -gt 0 ]; do
   "--debug")
     # shellcheck disable=SC2034
     debug=true
+    ;;
+  "-y" | "--yes")
+    yesToPrompts=true
     ;;
   *)
     chosenRepos="${chosenRepos} $1"

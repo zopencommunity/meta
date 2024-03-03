@@ -2,8 +2,9 @@
 #
 # Updates the cacert in zopen meta root directory
 #
+
 #
-# All zopen-* scripts MUST start with this code to maintain consistency
+# All zopen-* scripts MUST start with this code to maintain consistency.
 #
 setupMyself()
 {
@@ -11,7 +12,7 @@ setupMyself()
   MYDIR="$(cd "$(dirname "$0")" > /dev/null 2>&1 && pwd -P)"
   INCDIR="${MYDIR}/../include"
   if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
-    echo "Internal Error. Unable to find common.sh file to source" >&2
+    echo "Internal Error. Unable to find common.sh file to source." >&2
     exit 8
   fi
   . "${INCDIR}/common.sh"
@@ -39,18 +40,25 @@ trap "cleanupOnExit" EXIT INT TERM QUIT HUP
 printHelp()
 {
   args=$*
-  echo "zopen-update-cacert:"
-  echo "  Update your cacert.pem file to the latest curl CA certificates extracted from Mozilla"
-  echo "Syntax:"
-  echo "  zopen-update-cacert [-fhv] [<directory>]"
-  echo "Options:"
-  echo "  -f|--force: update cacert.pem file even if it may be up to date"
-  echo "  -h|--help: print this help"
-  echo "  --version: print version"
-  echo "  -v|--verbose: print verbose messages"
-  echo "Parameters:"
-  echo "  <directory>: the directory where the cacert.pem will be updated"
-  echo "    The default directory location is: ${default_dir}"
+cat << HELPDOC
+${ME}: Update your cacert.pem file to the latest CA certificates extracted from Mozilla.
+
+Syntax:
+  ${ME} [-fhv] [<directory>]
+
+Options:
+  -f, --force           update cacert.pem file even if up to date.
+  -h, --help            print this help.
+  -i, --insecure-fallback
+                        (UNSAFE) Skip certificate validation during download.
+  -v, --verbose         print verbose messages.
+  --version             print version.
+
+Parameters:
+  <directory>: the directory where the cacert.pem will be updated.
+    The default directory location is: ${default_dir}
+
+HELPDOC
 }
 
 getCACertFromCurl()
@@ -115,12 +123,12 @@ dir="${default_dir}"
 args=$*
 forceUpdate=false
 insecureFallback=false
-while [[ $# -gt 0 ]]; do
+while [ $# -gt 0 ]; do
   case "$1" in
-  "-f" | "-force" | "--force")
+  "-f" | "--force")
     forceUpdate=true
     ;;
-  "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
+  "-h" | "--help" | "-?")
     printHelp "${args}"
     exit 0
     ;;
@@ -131,7 +139,7 @@ while [[ $# -gt 0 ]]; do
   "-i" | "--insecure-fallback")
     insecureFallback=true
     ;;
-  "-v" | "--v" | "-verbose" | "--verbose")
+  "-v" | "--verbose")
     verbose=true
     ;;
   *)
