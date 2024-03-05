@@ -15,7 +15,7 @@ Alternatively, you can install the tools directly from the zOS Open Tools repo's
 The tools and commands offered by z/OS Open Tools operate within a volunteer-driven and community-supported framework. It's important to understand that these tools and commands are primarily maintained and supported by volunteers within the community. As such, the level of support may vary, and users are encouraged to engage with the community for assistance, report issues, and contribute to the project's development.
 
 ## How do I raise issues?
-If the issue pertains to a given project, open the issue in the project's Github repository. If you have a general issue or discussion item, [create a discussion](https://github.com/ZOSOpenTools/meta/discussions).
+If the issue pertains to a given project, open the issue in the project's Github repository. If you have a general issue or discussion item, [create a discussion](https://github.com/ZOSOpenTools/meta/discussions) or ask us directly on the [System Z Enthusiasts discord channel](https://discord.gg/system-z-enthusiasts-880322471608344597).
 
 ## What is the current porting status?
 Overall status for the z/OS Open Tools initiative is available [here](https://zosopentools.github.io/meta/#/Progress).
