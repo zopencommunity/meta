@@ -4,20 +4,13 @@
 VIM is a popular and powerful text editor that is often used by programmers for writing code. While VIM is available on many different platforms, it can also be used on z/OS.
 
 ## How to obtain VIM on z/OS?
-To obtain VIM on z/OS, download it from [VIM Github Release page](https://github.com/ZOSOpenTools/vimport/releases).
-
-Alternatively, you can use `zopen install` to download vim as follows:
+To obtain VIM on z/OS, use the [zopen package manager](https://zosopentools.github.io/meta/#/Guides/ThePackageManager) to install it as follows:
 ```
-zopen install vim ncurses
+zopen install vim
 ```
-Since VIM depends on ncurses, we also need to download [ncurses](https://github.com/ZOSOpenTools/ncursesport/releases) and source the .env file.
+Since VIM depends on ncurses, it will automatically download ncurses as a runtime dependency.
 
 ## How to use VIM?
-To use VIM on z/OS, first source the .env file provided with the VIM on z/OS release as follows:
-```
-. ./.env
-```
-This will set the appropriate PATH, VIM, MANPATH environment variables.
 
 Now, you can use VIM to edit new or existing files:
 ```
@@ -25,7 +18,7 @@ vim new.txt # create a new file
 vim ~/.profile # edit an existing file
 ```
 
-VIM on z/OS currently understands the `IBM-1047` and `ISO8959-1` file tags. If you are editing a file that is untagged or editing a new file, VIM will save it as ISO8959-1 (ASCII).
+VIM on z/OS currently understands the `IBM-1047` and `ISO8959-1` file tags. If you are editing a file that is untagged or editing a new file, VIM will save it as ISO8959-1 (ASCII). You can use change this behaviour by setting the `_ENCODE_FILE_NEW` environment variable. For example, to tag new files as IBM-1047, set `export _ENCODE_FILE_NEW=IBM=1047`
 
 ## Improving your VIM experience with various tools and plugins
 
