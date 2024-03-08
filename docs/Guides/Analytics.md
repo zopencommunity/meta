@@ -42,3 +42,8 @@ All collected data is anonymized and no personal data is recorded.
 We do not capture any sensitive information such as your ip address, hostname, or file system details. 
 
 If you have opted out, usage statistics will not be collected.
+
+## Usage Statistics
+
+Browse http://163.74.88.212:3000/ to get the full view
+[](http://163.74.88.212:3000/ ':include :type=iframe name="iframe1" width=100% height=100% frameborder="0" scrolling="yes" onload="styleandresizeIframe(this)"')
