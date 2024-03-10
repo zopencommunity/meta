@@ -13,6 +13,7 @@
     - [Leveraging the zoslib library](/Guides/Zoslib.md)
     - [CI/CD pipeline](/Guides/Pipeline.md)
     - [Troubleshooting](/Guides/CommonSolutions.md)
+    - [Getting z/OS Access](/Guides/GettingZOSAccess.md)
   - [FAQ](/Guides/FAQ.md)
   - [Common Solutions](/Guides/CommonSolutions.md)
   - [Success Stories](/SuccessStories.md)
