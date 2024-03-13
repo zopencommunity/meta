@@ -12,7 +12,9 @@ To install and consume z/OS Open Tools, we recommend that you use the [zopen pac
 Alternatively, you can install the tools directly from the zOS Open Tools repo's github releases. For example, the releases for git are available [here]( https://github.com/ZOSOpenTools/gitport/releases). All z/OS Open Tools releases are consolidated into a [table here](https://zosopentools.github.io/meta/#/Latest).
 
 ## What does zopen use for downloading the packages?
-Zopen utilizes curl for downloading. If you are behind a corporate firewall it might be possible to create a `.curlrc` file in your home directory to allow zopen to go through the proxy. This example is for a ntlm based proxy, where a passphrase `This is my passphase!` is used for the user `myuser`, the proxy is called `http://yourinternalproxy`, listening on port `8080`. In this example we also set a user agent to mimic a browser as some proxies might block other user agents. Of course, it is your responsibility to comply with your companies policy if this is allowed.
+Zopen utilizes curl for downloading. If you are behind a corporate firewall it might be possible to create a `.curlrc` file in your home directory to allow zopen to go through the proxy. This example is for a ntlm based proxy, where a passphrase `This is my passphase!` is used for the user `myuser`, the proxy is called `http://yourinternalproxy`, listening on port `8080`. In this example we also set a user agent to mimic a browser as some proxies might block other user agents. 
+In this example we use the `--insecure` tag to ignore certificate errors, a secure option is to include a `cacert /some/path/to/ca-all.pem` line that point to a pem file that has the neccesary root certificates to allow for a trusted chain.
+Of course, it is your responsibility to comply with your companies policy if this is allowed.
 ```
 --proxy http://yourinternalproxy:8080
 --proxy-ntlm
