@@ -87,21 +87,13 @@ version=false
 
 for arg in $*; do
   case "${arg}" in
-    "alt"|"audit"|"build"|"clean"|"generate"|"init"|"install"|\
-    "query"|"remove"|"update-cacert"|"info")
+    "alt"|"build"|"clean"|"generate"|"init"|"install"|"list"|\
+    "query"|"remove"|"update-cacert"|"upgrade"|"info")
       subcmd="zopen-${arg}"
-      ;;
-    "list")
-      subcmd='zopen-query'
-      subopts="${subopts} --list"
       ;;
     "refresh")
       subcmd='zopen-init'
       subopts="${subopts} --refresh"
-      ;;
-    "upgrade")
-      subcmd='zopen-install'
-      subopts="${subopts} -u"
       ;;
     "config")
       subcmd="zopen-${arg}-helper"
