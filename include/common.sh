@@ -1332,13 +1332,13 @@ downloadJSONCache()
   fi
 }
 
-getReposFromGithub()
+getRepos()
 {
-  downloadJSONCache $1
-  repo_results="$(cat "${JSON_CACHE}" | jq -r '.release_data | keys[]')"
+  downloadJSONCache
+  repo_results="$(jq -r '.release_data | keys[]' "${JSON_CACHE}")"
 }
 
-getAllReleasesFromGithub()
+getRepoReleases()
 {
   downloadJSONCache $1
   repo="$1"
