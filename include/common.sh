@@ -428,6 +428,7 @@ defineEnvironment()
   export _TAG_REDIR_ERR=txt
   export _TAG_REDIR_IN=txt
   export _TAG_REDIR_OUT=txt
+  export GIT_UTF8_CCSID=819
 
   # Required for proper operation of xlclang
   export _CC_CCMODE=1
