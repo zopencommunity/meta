@@ -53,6 +53,7 @@ Begin first by cloning the https://github.com/ZOSOpenTools/meta repo.  This repo
 
 ```bash
 # Clone the required repositories (using Git from https://github.com/ZOSOpenTools/gitport)
+export GIT_UTF8_CCSID=819 # set the UTF8 ccsid to 819
 git clone git@github.com:ZOSOpenTools/meta.git && cd meta
 ```
 

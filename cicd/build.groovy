@@ -17,6 +17,9 @@ export NO_COLOR=1
 # Tell zopen that we're a CI/CD bot
 export ZOPEN_IS_BOT=1 
 
+# Use 819 as the ccsid for UTF8 files
+export GIT_UTF8_CCSID=819
+
 # source Jenkins environment variables on zot
 . /jenkins/.env
 
