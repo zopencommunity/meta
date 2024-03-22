@@ -1,6 +1,6 @@
 """
 Script to generate a markdown file listing newly released tools.
-The markdown file includes tool names, release dates, and download links.
+The resulting markdown will be added to the z/OS Open Tools docs
 """
 
 import json
