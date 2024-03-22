@@ -62,7 +62,7 @@ In addition to cscope and ctags, VIM users on z/OS may also want to consider usi
 
 For instructions on how to install NERDTree, visit https://github.com/preservim/nerdtree.
 
-### VIM-Gitgetter
-Finally, vim-gitgetter is a plugin that allows VIM users on z/OS to interact with Git repositories directly from within the editor. This can be incredibly useful for managing code changes and collaborating with other developers, as it allows users to easily manage branches, commit changes, and push code to remote repositories.
+### VIM-Gitgutter
+Finally, vim-gitgutter is a plugin that allows VIM users on z/OS to interact with Git repositories directly from within the editor. This can be incredibly useful for managing code changes and collaborating with other developers, as it allows users to easily manage branches, commit changes, and push code to remote repositories.
 
-For instructions on how to install vim-gitgetter, visit https://github.com/airblade/vim-gitgutter.
+For instructions on how to install vim-gitgutter, visit https://github.com/airblade/vim-gitgutter.
