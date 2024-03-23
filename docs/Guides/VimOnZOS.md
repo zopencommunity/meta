@@ -70,10 +70,9 @@ To quote [its README](https://github.com/tpope/vim-fugitive?tab=readme-ov-file#f
 
 > Fugitive is the premier Vim plugin for Git. Or maybe it's the premier Git plugin for Vim? Either way, it's "so awesome, it should be illegal". That's why it's called Fugitive.
 
-For instructions on how to install vim-gitgutter, visit [https://github.com/airblade/vim-gitgutter](https://github.com/tpope/vim-fugitive?tab=readme-ov-file#fugitivevim).
-
-
 This plugin allows VIM users on z/OS to interact with Git repositories directly from within the editor. This can be incredibly useful for managing code changes and collaborating with other developers, as it allows users to easily manage branches, commit changes, and push code to remote repositories.
+
+For instructions on how to install vim-fugitive, visit [https://github.com/tpope/vim-fugitive](https://github.com/tpope/vim-fugitive?tab=readme-ov-file#fugitivevim).
 
 #### vim-gitgutter
 
