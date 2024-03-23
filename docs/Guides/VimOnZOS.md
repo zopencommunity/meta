@@ -62,7 +62,20 @@ In addition to cscope and ctags, VIM users on z/OS may also want to consider usi
 
 For instructions on how to install NERDTree, visit https://github.com/preservim/nerdtree.
 
-### VIM-Gitgutter
-Finally, vim-gitgutter is a plugin that allows VIM users on z/OS to interact with Git repositories directly from within the editor. This can be incredibly useful for managing code changes and collaborating with other developers, as it allows users to easily manage branches, commit changes, and push code to remote repositories.
+### Plugins for Git
+
+#### vim-fugitive
+
+To quote [its README](https://github.com/tpope/vim-fugitive?tab=readme-ov-file#fugitivevim):
+
+> Fugitive is the premier Vim plugin for Git. Or maybe it's the premier Git plugin for Vim? Either way, it's "so awesome, it should be illegal". That's why it's called Fugitive.
+
+This plugin allows VIM users on z/OS to interact with Git repositories directly from within the editor. This can be incredibly useful for managing code changes and collaborating with other developers, as it allows users to easily manage branches, commit changes, and push code to remote repositories.
+
+For instructions on how to install vim-fugitive, visit [https://github.com/tpope/vim-fugitive](https://github.com/tpope/vim-fugitive?tab=readme-ov-file#fugitivevim).
+
+#### vim-gitgutter
+
+> A Vim plugin which shows a git diff in the sign column. It shows which lines have been added, modified, or removed. You can also preview, stage, and undo individual hunks; and stage partial hunks. The plugin also provides a hunk text object.
 
 For instructions on how to install vim-gitgutter, visit https://github.com/airblade/vim-gitgutter.
