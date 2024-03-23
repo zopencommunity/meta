@@ -66,29 +66,29 @@ If you want to give or send a file copy of your key to someone, use this command
 5. 	On GitHub, navigate to your pull requestO and on the pull request, click  Commits. To view more detailed information about the verified signature, click `Verified`.
 
 
-### How do I sign images?
-1. Any file or image can be signed using command below.
+### How do I sign files?
+1. Any file can be signed using command below.
 
-	`gpg --output <image.name>.sig --sign <image-name>`
+	`gpg --output <file.name>.sig --sign <file-name>`
 	
-2. 	Signed file/image can be verified using:
+2. 	Signed file can be verified using:
 
-	`gpg --verify <image.name>.sig`
+	`gpg --verify <file.name>.sig`
 	
-3. 	To verify the signature and extract the file/image use the --decrypt option. The signed file/image to verify and recover is input and the recovered document is output.
+3. 	To verify the signature and extract the file use the --decrypt option. The signed file to verify and recover is input and the recovered document is output.
 
 	`gpg --output zoslib-zopen.20230511_114620.zos.pax.Z --decrypt zoslib-zopen.20230511_114620.zos.pax.Z.gpg`
 	
 
-### How do I create detached signature and sign an image?
+### How do I create detached signature and sign a file?
 
-1. A detached signature can be created and an image/file can signed using the following commad:
+1. A detached signature can be created and a file can signed using the following commad:
 
-	`gpg --output <image.name>.sig --detach-sig <image-name>` 
+	`gpg --output <file.name>.sig --detach-sig <file-name>` 
 	
-2. 	Both image/file and the detached signature are needed to verify the signature using --verify option:
+2. 	Both file and the detached signature are needed to verify the signature using --verify option:
 
-	`gpg --verify <image.name>.sig <image.name>`
+	`gpg --verify <file.name>.sig <file.name>`
 	
 ### Example:
 
