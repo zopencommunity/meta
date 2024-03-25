@@ -1,21 +1,9 @@
-# UPDATE: New zopen framework is now available!
-
-Get the new zopen framework [here](https://github.com/ZOSOpenTools/meta/releases).
-
-**Note:** The new zopen package manager is not compatible with previous versions of zopen. Migration involves creating a new directory structure for zopen tools. This is accomplished via the `zopen init` command, documented below.
-
-## Before you migrate
-
-* Identify the tools you have already installed. Use `zopen install --list`.
-* If you plan to reuse the existing zopen root directory for installing the new tools, then make sure to back it up to a different directory.
-* Follow the steps below and install each of the tools again via `zopen install`
-
----
-
 # Meta - Introducing the zopen package manager
 
 Meta adds package management facilities to z/OS, via `zopen`. It is similar to utilities like apt, dpkg, yum, yast2, and emerge. It is written as a pure shell script to remove any prerequisites (like python/perl/bash etc).
 This package manager is designed for everyday usage of the z/OS Open Tools ports within the z/OS UNIX environment or for those who wish to download the tools.
+
+**Download** the latest zopen package manager [here](https://github.com/ZOSOpenTools/meta/releases).
 
 ## Pre-config
 
@@ -34,7 +22,7 @@ Make sure the character device `/dev/tty` is untagged or you may experience unex
 ## Installation
 
 * Download the meta pax to a suitable location (for example /tmp).
-* Expand the pax using the command `pax -rvf <filename>.pax`.  This will expand the pax to the current directory, listing the various included files as it does so.
+* Expand the pax using the command `pax -rvf <filename>.pax.Z`.  This will expand the pax to the current directory, listing the various included files as it does so.
 * From the `meta-<ver>` directory run the following command, answering the questions appropriately:
 
 ```bash
@@ -137,6 +125,16 @@ zopen query <option>
 ```
 
 Queries the local z/OS Open Tools system. See `---help` for more details.
+
+## Migrating from zopen version <0.8.0
+**Note:** The new zopen package manager is not compatible with previous versions of zopen. Migration involves creating a new directory structure for zopen tools. This is accomplished via the `zopen init` command, documented below.
+
+### Before you migrate
+
+* Identify the tools you have already installed. Use `zopen install --list`.
+* If you plan to reuse the existing zopen root directory for installing the new tools, then make sure to back it up to a different directory.
+* Follow the steps below and install each of the tools again via `zopen install`
+
 
 ### Useful resources
 
