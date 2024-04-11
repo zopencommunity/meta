@@ -2059,9 +2059,6 @@ generateZOSLIBHooks()
   if command -V "${ZOPEN_APPEND_TO_ZOSLIB_ENV_CODE}" > /dev/null 2>&1; then
     printVerbose "Appending additional environment zoslib variables..."
     zoslib_env="${zoslib_env}$(${ZOPEN_APPEND_TO_ZOSLIB_ENV_CODE})"
-  else
-    # Nothing to add, return
-    return
   fi
 
   printHeader "Generating ZOSLIB Environment Hooks"
@@ -2072,11 +2069,26 @@ generateZOSLIBHooks()
 
   output="zoslib_env_hook.c"
 
+  commit="local"
+  if [ -n "$ZOPEN_COMMIT_SHA" ]; then
+    commit="$(git rev-parse HEAD | cut -c -7)" # shorten to 7 chars for iden
+  fi
+
+  if [ -z "$ZOPEN_VENDOR" ]; then
+    ZOPEN_VENDOR="zOS_Open_Tools" 
+  fi
+
+  iden="\$Id: Vendor:$ZOPEN_VENDOR BuildRev:$commit $(/bin/date +"%Y-%m-%d %H:%M:%S %Z") \$";
+
   # Defines zoslib_env_hook
   cat << zz > "${output}"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#pragma convert("IBM-1047")
+char rcsID[] = "$iden";
+#pragma convert(pop)
 
 #define PROJECT_ROOT_STR "PROJECT_ROOT"
 
