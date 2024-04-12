@@ -2087,7 +2087,7 @@ generateZOSLIBHooks()
 #include <string.h>
 
 #pragma convert("IBM-1047")
-char rcsID[] = "$iden";
+char __zopen_identifier[] = "$iden";
 #pragma convert(pop)
 
 #define PROJECT_ROOT_STR "PROJECT_ROOT"
