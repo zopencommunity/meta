@@ -2056,6 +2056,16 @@ generateZOSLIBHooks()
   #LIBPATH|prepend|PROJECT_ROOT/lib
   #"
 
+  if [ -z "${CC}" ]; then
+    printVerbose "Skipping GenerateZOSLIBHooks since CC is not set"
+    return
+  fi
+
+  if ! command -v "${CC}" > /dev/null 2>&1; then
+    printVerbose "Skipping GenerateZOSLIBHooks since CC is not a command"
+    return
+  fi
+
   if command -V "${ZOPEN_APPEND_TO_ZOSLIB_ENV_CODE}" > /dev/null 2>&1; then
     printVerbose "Appending additional environment zoslib variables..."
     zoslib_env="${zoslib_env}$(${ZOPEN_APPEND_TO_ZOSLIB_ENV_CODE})"
