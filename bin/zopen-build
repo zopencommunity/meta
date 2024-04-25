@@ -423,6 +423,7 @@ processOptions()
   depsPath="${ZOPEN_PKGINSTALL}"
   forceUpgradeDeps=false
   noInstallRuntimeDeps=false
+  depsDepth=2
   while [ $# -gt 0 ]; do
     case $1 in
     "-h" | "--help" | "-?")
@@ -458,6 +459,10 @@ processOptions()
       if [ "${btype}" = "DEBUG" ]; then
         buildInReleaseMode=false
       fi
+      ;;
+    "--deps-depth")
+      shift
+      depsDepth=$1
       ;;
     "-comp" | "--comp")
       shift
@@ -1567,14 +1572,27 @@ ZZ
           printError "Failed to install dependencies"
         fi
       fi
+
+      printVerbose "Generating .depsenv"
+      parent=""
+      depth=$depsDepth
+      while [ $depth -gt 0 ]; do
+        parent="../${parent}"
+        depth=$((depth - 1))
+      done
+      depth=$depsDepth
+      while [ $depth -gt 0 ]; do
+        parent="$parent/${dep}"
+        depth=$((depth - 1))
+      done
       cat << ZZ >> "${ZOPEN_INSTALL_DIR}/.depsenv"
-if [ -f "../../${dep}/${dep}/.env" ]; then
+if [ -f "${parent}/.env" ]; then
   if [[ \$(type echo) == 'echo is a shell builtin' ]]; then
-    pushd "../../${dep}/${dep}" >/dev/null
+    pushd "${parent}" >/dev/null
     . ./.env
     popd >/dev/null
   else
-    cd "../../${dep}/${dep}" && . ./.env; cd - >/dev/null
+    cd "${parent}" && . ./.env; cd - >/dev/null
   fi
 fi
 ZZ
