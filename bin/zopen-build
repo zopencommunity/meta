@@ -1450,6 +1450,7 @@ _CEE_RUNOPTS="\$_CEE_RUNOPTS FILETAG(AUTOCVT,AUTOTAG) POSIX(ON)"
 # Remove spaces in between brackets
 _CEE_RUNOPTS="\$(echo "\$_CEE_RUNOPTS" | awk '{gsub(/\([ \t]*/, "("); gsub(/[ \t]*\)/, ")"); gsub(/[ \t]*,[ \t]*/, ","); print}')"
 export _CEE_RUNOPTS="\$(deleteDuplicateEntries "\$_CEE_RUNOPTS" " ")"
+export _BPXK_AUTOCVT=ON
 
 export ${projectName}_HOME="\${PWD}"
 zz
