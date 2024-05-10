@@ -41,6 +41,19 @@
       name: 'z/OS Open Tools',
       plugins: [
         EditOnGithubPlugin.create('https://github.com/ZOSOpenTools/meta/blob/main/docs/', null, 'Edit this page'),
+        function pageFooter(hook, vm) {
+          var footer = [
+            '<hr/>',
+            '<footer>',
+            '<span>Copyright © z/OS Open Tools a Series of LF Projects, LLC</span>',
+            '<span>For website terms of use, trademark policy, and other project policies, please see <a href="https://lfprojects.org" target="_blank">https://lfprojects.org</a>.</span>',
+            '</footer>',
+          ].join('');
+    
+          hook.afterEach(function (html) {
+            return html + footer;
+          });
+        },
       ],
       repo: 'https://github.com/ZOSOpenTools/meta',
       search: 'auto',
