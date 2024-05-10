@@ -43,12 +43,12 @@
         EditOnGithubPlugin.create('https://github.com/ZOSOpenTools/meta/blob/main/docs/', null, 'Edit this page'),
         function pageFooter(hook, vm) {
           var footer = [
-            '<hr/>',
+            '<hr style="clear: both;"/>',
             '<footer>',
-            '<span>Copyright © z/OS Open Tools a Series of LF Projects, LLC</span>',
+            '<span>Copyright © z/OS Open Tools a Series of LF Projects, LLC.</span>',
             '<span>For website terms of use, trademark policy, and other project policies, please see <a href="https://lfprojects.org" target="_blank">https://lfprojects.org</a>.</span>',
             '</footer>',
-          ].join('');
+          ].join(' ');
     
           hook.afterEach(function (html) {
             return html + footer;
