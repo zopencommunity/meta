@@ -1,8 +1,9 @@
 import argparse
-import requests
 import json
+import aiohttp
+import asyncio
 import sys
-from cvsslib import cvss2, cvss31, calculate_vector
+from cvsslib import cvss31, calculate_vector
 
 HEADER = """
 z/OS Open Tools Vulnerability JSON Generator
@@ -31,84 +32,94 @@ if args.verbose:
     print("Fetching data from:", url)
 
 # Use the OSV API: 
-def fetch_cves(commit):
+async def fetch_cves(session, commit):
     url = "https://api.osv.dev/v1/query"
-    data = {"commit": commit}
-    response = requests.post(url, json=data)
-    if response.status_code == 200:
-        cve_data = response.json()
-        return cve_data.get("vulns", [])
-    else:
-        print("Failed to fetch CVEs for commit:", commit)
-        return []
+    data = {
+        "commit": commit
+    }
+    async with session.post(url, json=data, ssl=False) as response:
+        if response.status == 200:
+            cve_data = await response.json()
+            return cve_data.get("vulns", [])
+        else:
+            print("Failed to fetch CVEs for commit:", commit)
+            return []
 
-response = requests.get(url)
-if response.status_code == 200:
-    if args.verbose:
-        print("Data fetched successfully.")
-    data = response.json()
-    releases_data = data.get("release_data", {})
+async def get_project_cve_info(session, commit, project, release):
+    if not commit:
+        if args.verbose:
+            print("No commit hash for release:", release["name"])
+        return (project, [])
+    all_cves = []
+    cves = await fetch_cves(session, commit)
+    for cve in cves:
+        cvss_vector = cve.get("severity")[0].get("score")
+        cvss_score = calculate_vector(cvss_vector, cvss31) 
+        severity = calculate_severity(cvss_score[0])
+        cve_info = {
+            "id": cve["id"],
+            "details": cve["details"],
+            "published": cve["published"],
+            "severity": severity
+        }
+        release_info = {
+            "name": release["name"],
+            "commit_sha": commit,
+            "CVEs": cve_info
+        }
+        all_cves.append(release_info)
+    return (project, all_cves)
 
-    project_info = {}
-    if args.verbose:
-        print("Processing releases...")
+async def main():
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url, ssl=False) as response:
+            if response.status != 200:
+                print("Failed to fetch data from the URL.")
+                return
 
-    for project, releases in releases_data.items():
-        project_info[project] = []
-        for release in releases:
-            for asset in release.get("assets", []):
-                community_commitsha = asset.get("community_commitsha")
-                if community_commitsha:
-                    cves = fetch_cves(community_commitsha)
-                    if cves:
-                        for cve in cves:
-                            cvss_vector = cve.get("severity")[0].get("score")
-                            cvss_score = calculate_vector(cvss_vector, cvss31) 
-                            severity = calculate_severity(cvss_score[0])
-                            cve_info = {
-                                "id": cve["id"],
-                                "details": cve["details"],
-                                "published": cve["published"],
-                                "severity": severity
-                            }
-                            release_info = {
-                                "name": release["name"],
-                                "commit_sha": community_commitsha,
-                                "CVEs": cve_info
-                            }
-                            project_info[project].append(release_info)
+            if args.verbose:
+                print("Data fetched successfully.")
+            text = await response.text()
+            data = json.loads(text)
+            releases_data = data.get("release_data", {})
 
-    #TODO: Remove after validation - adding a dummy with a known CVE
-    dummy_commit_sha = "564d0252ca632e0264ed670534a51d18a689ef5d"
-    dummy_cves = fetch_cves(dummy_commit_sha)
-    if dummy_cves:
-        for cve in dummy_cves:
-            cvss_vector = cve.get("severity")[0].get("score")
-            cvss_score = calculate_vector(cvss_vector, cvss31) 
-            severity = calculate_severity(cvss_score[0])
-            cve_info = {
-                "id": cve["id"],
-                "details": cve["details"],
-                "published": cve["published"],
-                "severity": severity
-            }
-            dummy_release_info = {
-                "name": "Git Dummy Release",
-                "commit_sha": dummy_commit_sha,
-                "CVEs": cve_info
-            }
-            project_info["gitdummy"] = [dummy_release_info]
+            # Insert dummy commit hash that is known to have a vulnerability
+            dummy_commit_sha = "d3e09bf4654fe5478b6dbf2b26ebab6271317d81"
+            releases_data["gitdummy"] = [{
+                "name": "gitdummy",
+                "assets": [{
+                    "name": "gitdummy",
+                    "community_commitsha": dummy_commit_sha
+                }]
+            }]
 
-    with open(args.output_file, "w") as f:
-        json.dump(project_info, f, indent=4)
-    if args.verbose:
-        print("New JSON file created:", args.output_file)
+            if args.verbose:
+                print("Processing releases...")
+            tasks = []
+            for project, releases in releases_data.items():
+                for release in releases:
+                    for asset in release.get("assets", []):
+                        community_commitsha = asset.get("community_commitsha")
+                        # Create a coroutine for each project to fetch CVEs
+                        tasks.append(get_project_cve_info(session,
+                                                          community_commitsha,
+                                                          project, release))
 
-    if args.verbose:
-        print("Printing JSON to stdout...")
-    json.dump(project_info, sys.stdout, indent=4)
-    if args.verbose:
-        print("\nDone.")
+            if args.verbose:
+                print("Executing tasks...")
+            # Wait for all coroutines to finish and create project_info dict
+            all_cves = await asyncio.gather(*tasks)
+            project_info = {project: cves for project, cves in all_cves}
 
-else:
-    print("Failed to fetch data from the URL.")
+            with open(args.output_file, "w") as f:
+                json.dump(project_info, f, indent=4)
+            if args.verbose:
+                print("New JSON file created:", args.output_file)
+
+            if args.verbose:
+                print("Printing JSON to stdout...")
+            json.dump(project_info, sys.stdout, indent=4)
+            if args.verbose:
+                print("\nDone.")
+
+asyncio.run(main())
