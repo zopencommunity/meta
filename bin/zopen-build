@@ -2141,6 +2141,7 @@ if ((envar_value = getenv("ZOPEN_IN_ZOPEN_BUILD")) &&
 zz
 
   # Process input
+  if [ -n "${zoslib_env}" ]; then
   echo "${zoslib_env}" | while read line; do
     if [ $(echo "${line}" | awk -F '|' '{print NF-1}') -ne 2 ]; then
       printError "${line} must have 2 '|' seperators only"
@@ -2222,6 +2223,7 @@ zz
     fi
 
   done
+  fi
 
   echo "" >> "${output}"
   echo "return 0;" >> "${output}"
