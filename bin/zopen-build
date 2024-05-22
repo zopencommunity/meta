@@ -2144,7 +2144,6 @@ zz
   echo "${zoslib_env}" | while read line; do
     # If its a comment, skip the line
     if [ "${line}" != "${line#\#}" ]; then
-        echo "string starts with  #"
         continue
     fi
     # The line is of this form (no spaces allowed):
