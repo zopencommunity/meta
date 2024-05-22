@@ -170,7 +170,7 @@ writeConfigFile(){
 # Main root location for the zopen installation; can be changed if the
 # underlying root location is copied/moved elsewhere as locations are
 # relative to this envvar value
-ZOPEN_ROOTFS=\"${rootfs}\"
+ZOPEN_ROOTFS="${rootfs}"
 export ZOPEN_ROOTFS
 
 if [ -z "\${_BPXK_AUTOCVT}" ]; then
@@ -185,7 +185,7 @@ else
   fi
 fi
 
-zot=\"z/OS Open Tools\"
+zot="z/OS Open Tools"
 
 sanitizeEnvVar(){
   # remove any envvar entries that match the specified regex
@@ -207,7 +207,7 @@ ZOPEN_PKGINSTALL=\${ZOPEN_ROOTFS}/${pkginstall}
 export ZOPEN_PKGINSTALL
 ZOPEN_SEARCH_PATH=\${ZOPEN_ROOTFS}/usr/share/zopen/
 export ZOPEN_SEARCH_PATH
-ZOPEN_CA=\"\${ZOPEN_ROOTFS}/${certPath}\"
+ZOPEN_CA="\${ZOPEN_ROOTFS}/${certPath}"
 export ZOPEN_CA
 ZOPEN_LOG_PATH=\${ZOPEN_ROOTFS}/var/log
 export ZOPEN_LOG_PATH
@@ -238,12 +238,12 @@ if [ -z "\${ZOPEN_QUICK_LOAD}" ]; then
   fi
 fi
 unset displayText
-PATH=\${ZOPEN_ROOTFS}/usr/local/bin:\${ZOPEN_ROOTFS}/usr/bin:\${ZOPEN_ROOTFS}/bin:\${ZOPEN_ROOTFS}/boot:\$(sanitizeEnvVar \"\${PATH}\" \":\" \"^\${ZOPEN_PKGINSTALL}/.*\$\")
-export PATH=\$(deleteDuplicateEntries \"\${PATH}\" \":\")
+PATH=\${ZOPEN_ROOTFS}/usr/local/bin:\${ZOPEN_ROOTFS}/usr/bin:\${ZOPEN_ROOTFS}/bin:\${ZOPEN_ROOTFS}/boot:\$(sanitizeEnvVar "\${PATH}" ":" "^\${ZOPEN_PKGINSTALL}/.*\$")
+export PATH=\$(deleteDuplicateEntries "\${PATH}" ":")
 LIBPATH=\${ZOPEN_ROOTFS}/usr/local/lib:\${ZOPEN_ROOTFS}/usr/lib:\$(sanitizeEnvVar "\${LIBPATH}" ":" "^\${ZOPEN_PKGINSTALL}/.*\$")
-export LIBPATH=\$(deleteDuplicateEntries \"\${LIBPATH}\" \":\")
-MANPATH=\${ZOPEN_ROOTFS}/usr/local/share/man:\${ZOPEN_ROOTFS}/usr/local/share/man/\%L:\${ZOPEN_ROOTFS}/usr/share/man:\${ZOPEN_ROOTFS}/usr/share/man/\%L:\$(sanitizeEnvVar \"\${MANPATH}\" \":\" \"^\${ZOPEN_PKGINSTALL}/.*\$\")
-export MANPATH=\$(deleteDuplicateEntries \"\${MANPATH}\" \":\")
+export LIBPATH=\$(deleteDuplicateEntries "\${LIBPATH}" ":")
+MANPATH=\${ZOPEN_ROOTFS}/usr/local/share/man:\${ZOPEN_ROOTFS}/usr/local/share/man/\%L:\${ZOPEN_ROOTFS}/usr/share/man:\${ZOPEN_ROOTFS}/usr/share/man/\%L:\$(sanitizeEnvVar "\${MANPATH}" ":" "^\${ZOPEN_PKGINSTALL}/.*\$")
+export MANPATH=\$(deleteDuplicateEntries "\${MANPATH}" ":")
 EOF
 
 }
