@@ -1456,7 +1456,7 @@ export ${projectName}_HOME="\${PWD}"
 zz
 
   if [ -d "${ZOPEN_INSTALL_DIR}/bin" ]; then
-    echo "PATH=\"\${${projectName}_HOME}/bin:\$PATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
+    echo "PATH=\"\${${projectName}_HOME}/bin:\${${projectName}_HOME}/altbin:\$PATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
     echo "export PATH=\"\$(deleteDuplicateEntries \"\$PATH\" \":\")\"" >> "${ZOPEN_INSTALL_DIR}/.env"
   fi
   if [ -d "${ZOPEN_INSTALL_DIR}/lib" ]; then
