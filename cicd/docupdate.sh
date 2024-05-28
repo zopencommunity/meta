@@ -8,6 +8,9 @@ cd meta_update
 # Generate Release cache
 python3 tools/create_release_cache.py --verbose --output-file docs/api/zopen_releases.json
 
+# Generate Vulnerabilities cache
+python3 tools/create_cve_json.py --verbose --output-file docs/api/zopen_vulnerability.json
+
 # Generate Progress page
 #TODO: refactor
 #python3 tools/getbinaries.py
