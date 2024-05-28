@@ -6,7 +6,7 @@ git clone git@github.com:ZOSOpenTools/meta.git meta_update
 cd meta_update
 
 # Generate Release cache
-python3 tools/create_release_cache.py --verbose --output-file docs/api/zopen_releases.json
+#python3 tools/create_release_cache.py --verbose --output-file docs/api/zopen_releases.json
 
 # Generate Vulnerabilities cache
 python3 tools/create_cve_json.py --verbose --output-file docs/api/zopen_vulnerability.json
