@@ -398,6 +398,10 @@ handlePackageInstall()
       printf "${name}:\n${installCaveat}\n" >> ${caveatsFile}
     fi
 
+    if [ -d "${baseinstalldir}/${installdirname}/altbin" ]; then
+      printf "${name}:\n${name} has tools provided under altbin that conflict with tools under /bin.\nTo use them set ZOPEN_TOOLSET_OVERRIDE.\n" >> ${caveatsFile}
+    fi
+
 
     if ${setactive}; then
       if [ -L "${baseinstalldir}/${name}/${name}" ]; then
