@@ -5,32 +5,34 @@ The resulting markdown will be added to the z/OS Open Tools docs
 
 import json
 import requests
-from datetime import datetime
+from datetime import datetime, timedelta
 import argparse
+from collections import defaultdict
 
 def generate_markdown(data, output_file):
-    release_info = {}
+    release_info = defaultdict(lambda: defaultdict(list))
+
     for tool, releases in data.items():
         for release in releases:
-            release_date = datetime.strptime(release['date'], "%Y-%m-%d %H:%M:%S%z").strftime('%Y-%m-%d')
+            release_date = datetime.strptime(release['date'], "%Y-%m-%d %H:%M:%S%z")
+            # Calculate the start of the week for the release date (Monday as the first day of the week)
+            week_start = release_date - timedelta(days=release_date.weekday())
+            week_start_str = week_start.strftime('%Y-%m-%d')
             pax_name = release['assets'][0]['name']
             pax_url = release['assets'][0]['url'].replace('download', 'tag').rsplit('/', 1)[0]
-            if release_date not in release_info:
-                release_info[release_date] = {}
-            if tool not in release_info[release_date]:
-                release_info[release_date][tool] = []
-            release_info[release_date][tool].append({'name': pax_name, 'url': pax_url})
+            release_info[week_start_str][tool].append({'name': pax_name, 'url': pax_url})
 
     sorted_releases = sorted(release_info.items(), key=lambda x: datetime.strptime(x[0], '%Y-%m-%d'), reverse=True)
 
     with open(output_file, 'w') as md_file:
         md_file.write("# Newly Released Tools\n\n")
-        for release_date, tools in sorted_releases:
-            md_file.write(f"## {release_date}\n\n")
+        for week_start, tools in sorted_releases:
+            week_end = (datetime.strptime(week_start, '%Y-%m-%d') + timedelta(days=6)).strftime('%Y-%m-%d')
+            md_file.write(f"<details>\n<summary>Week of {week_start} to {week_end}</summary>\n\n")
             for tool, releases in tools.items():
                 for release in releases:
                     md_file.write(f"- **{tool}**: [{release['name']}]({release['url']})\n")
-            md_file.write("\n")
+            md_file.write("\n</details>\n")
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Generate markdown file for newly released tools.')
@@ -42,3 +44,4 @@ if __name__ == '__main__':
     data = response.json()['release_data']
 
     generate_markdown(data, args.output)
+
