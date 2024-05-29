@@ -395,11 +395,11 @@ handlePackageInstall()
     # Some installation have installation caveats
     installCaveat=$(jq -r '.product.install_caveats // empty' "${metadataFile}" 2>/dev/null)
     if [ -n "$installCaveat" ]; then
-      printf "${name}:\n${installCaveat}\n" >> ${caveatsFile}
+      printf "${NC}${HEADERCOLOR}${BOLD}${name}${NC}:\n ${installCaveat}\n" >> ${caveatsFile}
     fi
 
     if [ -d "${baseinstalldir}/${installdirname}/altbin" ]; then
-      printf "${name}:\n${name} has tools provided under altbin that conflict with tools under /bin.\nTo use them set ZOPEN_TOOLSET_OVERRIDE.\n" >> ${caveatsFile}
+      printf "${NC}${HEADERCOLOR}${BOLD}${name}${NC}:\n${name} has tools provided under altbin/ that conflict with tools under /bin.\nTo use them set ZOPEN_TOOLSET_OVERRIDE and then re-source the zopen-config.\n" >> ${caveatsFile}
     fi
 
 
