@@ -13,7 +13,8 @@ please note you will need to [migrate to the new package manager](Migration.md).
 
 ## Getting the zopen package manager
 
-- Download the latest [meta pax](https://github.com/ZOSOpenTools/meta/releases) to your desktop, then upload to z/OS
+- Download the latest [meta pax](https://github.com/ZOSOpenTools/meta/releases) to your desktop, then upload to z/OS.
+  - Note: it is recommended that you use sftp to transfer the pax file from a non-z/OS machine to z/OS. This will ensure that there is no ASCII/EBCDIC conversion.
 - On z/OS, expand the pax file: `pax -rf meta-<version>.pax.Z`. 
 - cd to the unpax'ed directory: `cd meta-<version>`
 - Set up the PATH to the `zopen` tool: `cd meta-<version>; . ./.env`
