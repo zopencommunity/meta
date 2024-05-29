@@ -21,7 +21,7 @@ Make sure the character device `/dev/tty` is untagged or you may experience unex
 
 ## Installation and sample usage
 
-Start with [Quick start guide](https://zosopentools.org/#/Guides/QuickStart?id=getting-the-zopen-package-manager).
+Start with [quick start guide](https://zosopentools.org/#/Guides/QuickStart?id=getting-the-zopen-package-manager).
 
 ## Important usage notes
 
