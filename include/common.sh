@@ -196,6 +196,10 @@ fi
 ZOPEN_ROOTFS="${rootfs}"
 export ZOPEN_ROOTFS
 
+if [ "\$1" = "--override-zos-tools" ]; then
+  export ZOPEN_TOOLSET_OVERRIDE=1
+fi
+
 if [ -z "\${_BPXK_AUTOCVT}" ]; then
   export _BPXK_AUTOCVT=ON
 else
@@ -210,7 +214,8 @@ fi
 
 zot="z/OS Open Tools"
 
-sanitizeEnvVar(){
+sanitizeEnvVar()
+{
   # remove any envvar entries that match the specified regex
   value="\$1"
   delim="\$2"
