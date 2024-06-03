@@ -6,6 +6,7 @@
     - [Migration Considerations](/Guides/Migration.md)
     - [Analytics](/Guides/Analytics.md)
   - [Available ports](/Latest.md)
+    - [Package Vulnerabilities](/Vulnerabilities.md)
     - [Current Status](/Progress.md)
   - Reference
     - [zopen](/reference/zopen-reference.md)
