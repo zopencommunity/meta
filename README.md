@@ -19,32 +19,9 @@ export _TAG_REDIR_OUT=txt
 
 Make sure the character device `/dev/tty` is untagged or you may experience unexpected behaviour. Run `chtag -r /dev/tty` to remove any tags.
 
-## Installation
+## Installation and sample usage
 
-* Download the meta pax to a suitable location (for example /tmp).
-* Expand the pax using the command `pax -rvf <filename>.pax.Z`.  This will expand the pax to the current directory, listing the various included files as it does so.
-* From the `meta-<ver>` directory run the following command, answering the questions appropriately:
-
-```bash
-. ./.env
-zopen init
-```
-
-You can now safely remove `meta-<version>.pax.Z` and the extracted `meta-<version>` directory
-
-## Sample usage
-
-```bash
-. ./.env # Source the .env from meta
-zopen init
-. <zopen_root_path>/etc/zopen-config
-zopen list --installed
-zopen install which
-zopen list --installed
-which which
-zopen upgrade
-zopen install git vim # install both git and vim
-```
+Start with [quick start guide](https://zosopentools.org/#/Guides/QuickStart?id=getting-the-zopen-package-manager).
 
 ## Important usage notes
 
