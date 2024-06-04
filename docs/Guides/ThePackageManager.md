@@ -47,6 +47,11 @@ Download the latest [meta pax](https://github.com/ZOSOpenTools/meta/releases) to
 > . <zopen_root>/etc/zopen-config
 ```
 
+- List known security vulnerabilities in installed tools with `zopen audit`, e.g.
+```bash
+> zopen audit
+```
+
 # Upgrading the meta zopen package manager
 The meta package, which include zopen, can be upgraded via the `zopen upgrade` command as follows:
 ```bash
