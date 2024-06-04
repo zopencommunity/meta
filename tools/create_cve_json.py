@@ -1,7 +1,9 @@
 import argparse
 import json
+import certifi
 import aiohttp
 import asyncio
+import ssl
 import sys
 from cvsslib import cvss31, calculate_vector
 
@@ -37,7 +39,7 @@ async def fetch_cves(session, commit):
     data = {
         "commit": commit
     }
-    async with session.post(url, json=data, ssl=False) as response:
+    async with session.post(url, json=data) as response:
         if response.status == 200:
             cve_data = await response.json()
             return cve_data.get("vulns", [])
@@ -71,8 +73,10 @@ async def get_project_cve_info(session, commit, project, release):
     return (project, all_cves)
 
 async def main():
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url, ssl=False) as response:
+    ssl_context = ssl.create_default_context(cafile=certifi.where())
+    conn = aiohttp.TCPConnector(ssl_context=ssl_context)
+    async with aiohttp.ClientSession(connector=conn) as session:
+        async with session.get(url) as response:
             if response.status != 200:
                 print("Failed to fetch data from the URL.")
                 return
