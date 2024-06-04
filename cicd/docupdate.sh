@@ -11,6 +11,9 @@ python3 tools/create_release_cache.py --verbose --output-file docs/api/zopen_rel
 # Generate Vulnerabilities cache
 python3 tools/create_cve_json.py --verbose --output-file docs/api/zopen_vulnerability.json
 
+# Generate a view of the vulnerabilities in package releases
+python3 tools/create_vulnerability_doc.py --output-file docs/Vulnerabilities.md
+
 # Generate Progress page
 #TODO: refactor
 #python3 tools/getbinaries.py
