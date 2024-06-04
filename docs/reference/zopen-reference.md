@@ -2,6 +2,7 @@
 This page provides information about the zopen interface. Click on any of the zopen commands listed below to access the reference guide describing how to utilize that command.
 * [zopen](/reference/zopen)
 * [zopen-alt](/reference/zopen-alt)
+* [zopen-audit](/reference/zopen-audit)
 * [zopen-build](/reference/zopen-build)
 * [zopen-clean](/reference/zopen-clean)
 * [zopen-compute-builddeps](/reference/zopen-compute-builddeps)
