@@ -191,7 +191,7 @@ if [ \$# -gt 0 ]; then
 fi
 [ \${knv} ] && /bin/env | /bin/sort > /tmp/zopen-config-env-orig.\$\$
 
-ZOPEN_ROOTFS=\"${rootfs}\"
+ZOPEN_ROOTFS="${rootfs}"
 export ZOPEN_ROOTFS
 
 if [ -z "\${_BPXK_AUTOCVT}" ]; then
