@@ -6,6 +6,7 @@ This page provides information about the zopen interface. Click on any of the zo
 * [zopen-build](/reference/zopen-build)
 * [zopen-clean](/reference/zopen-clean)
 * [zopen-compute-builddeps](/reference/zopen-compute-builddeps)
+* [zopen-config-helper](/reference/zopen-config-helper)
 * [zopen-generate](/reference/zopen-generate)
 * [zopen-help2man](/reference/zopen-help2man)
 * [zopen-init](/reference/zopen-init)
