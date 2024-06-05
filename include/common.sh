@@ -166,20 +166,30 @@ writeConfigFile(){
   certPath="$4"
 
   cat << EOF >  "${configFile}"
+#!/bin/false  # Script currently intended to be sourced, not run
 # z/OS Open Tools Configuration file
 # Main root location for the zopen installation; can be changed if the
 # underlying root location is copied/moved elsewhere as locations are
 # relative to this envvar value
+displayHelp() {
+echo "usage: . zopen-config [--eknv] [--knv] [-?|--help]"
+echo "  --knv             Display zopen environment variables "
+echo "  --eknv            Display zopen environment variables, prefixed with an"
+echo "                   'export ' keyword for use in scripts"
+echo "  -?, --help            Display this help"
+}
+
 knv=false
 exportknv=""
 if [ \$# -gt 0 ]; then
   case "\$1" in
-    eknv) exportknv="export "; knv=true;;
-    knv) knv=true;;
+    --eknv) exportknv="export "; knv=true;;
+    --knv) knv=true;;
+    -?|--help) displayHelp; return 0;;
     *) echo "Error. Unknown parameter '\$1' passed to zopen-config." >&2; return 8;;
   esac
 fi
-[ \${knv} ] && env | sort > /tmp/zopen-config-env-orig.\$\$
+[ \${knv} ] && /bin/env | /bin/sort > /tmp/zopen-config-env-orig.\$\$
 
 ZOPEN_ROOTFS=\"${rootfs}\"
 export ZOPEN_ROOTFS
@@ -257,15 +267,15 @@ MANPATH=\${ZOPEN_ROOTFS}/usr/local/share/man:\${ZOPEN_ROOTFS}/usr/local/share/ma
 export MANPATH=\$(deleteDuplicateEntries "\${MANPATH}" ":")
 
 if \${knv}; then
-  env | sort > /tmp/zopen-config-env-modded.\$\$
-  diffout=\$(diff /tmp/zopen-config-env-orig.$\\$ /tmp/zopen-config-env-modded.\$\$ | grep -E '^[>]' | cut -c3- )
+  /bin/env | /bin/sort > /tmp/zopen-config-env-modded.\$\$
+  diffout=\$(/bin/diff /tmp/zopen-config-env-orig.\$\$ /tmp/zopen-config-env-modded.\$\$ | /bin/grep -E '^[>]' | /bin/cut -c3- )
   echo "\${diffout}" | while IFS= read -r knvp; do
     newval=""
     envvar="\${knvp%%=*}"
     cIFS="\$IFS"
     IFS=":"
     for token in \${knvp##*=}; do
-      tok=\$(echo "\${token}" | sed -e 's#/usr/local/zopen/\([^/]*\)/[^/]*/#/usr/local/zopen/\1/\1/#')
+      tok=\$(echo "\${token}" | /bin/sed -e 's#/usr/local/zopen/\([^/]*\)/[^/]*/#/usr/local/zopen/\1/\1/#')
       newval=\$(printf "%s:%s" "\${newval}" "\${tok}")
     done
     echo "\${exportknv}\${envvar}=\${newval#*:}"
