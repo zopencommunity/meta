@@ -28,36 +28,38 @@ ${ME} is a utility for managing a z/OS Open Tools environment.
 Usage: ${ME} [COMMAND] [OPTION] [PARAMETERS]...
 
 Command:
-  alt               manage alternate versions of z/OS Open Tools packages.
-  audit             (beta) reports known vulnerabilities for the installed packages.
-  build             builds the enclosing z/OS Open Tools git-cloned package.
-  clean             cleans up your zopen environment.
-  generate          generates a new zopen project.
-  init              initializes a zopen environment at the specified location.
-  install           installs one or more z/OS Open Tools packages.
-  list              lists information about z/OS Open Tools packages.
-  query             list local or remote info about z/OS Open Tools packages.
-  remove            removes installed z/OS Open Tools packages.
-  update-cacert     update the cacert.pem file used by z/OS Open Tools.
-  upgrade           upgrades existing z/OS Open Tools packages.
+  alt               manage alternate versions of z/OS Open Tools packages
+  audit             (beta) reports known vulnerabilities for the installed packages
+  build             builds the enclosing z/OS Open Tools git-cloned package
+  clean             cleans up your zopen environment
+  config            change zopen runtime environment settings
+  generate          generates a new zopen project
+  init              initializes a zopen environment at the specified location
+  install           installs one or more z/OS Open Tools packages
+  list              lists information about z/OS Open Tools packages
+  query             list local or remote info about z/OS Open Tools packages
+  remove            removes installed z/OS Open Tools packages
+  update-cacert     update the cacert.pem file used by z/OS Open Tools
+  upgrade           upgrades existing z/OS Open Tools packages
 
 Options:
-  -h, --help, -?    display this help and exit.
-  -v, --verbose     run in verbose mode.
+  -h, --help, -?    display this help and exit
+  -v, --verbose     run in verbose mode
 
 Examples:
-  zopen --help      displays zopen help.
-  zopen --version   displays the installed zopen version.
-  zopen install git install the latest z/OS Open Tools git package.
+  zopen --help      displays zopen help
+  zopen --version   displays the installed zopen version
+  zopen install git install the latest version of the 'git' package
   zopen upgrade -y  upgrade all installed packages to the latest release,
-                    without prompting.
-  zopen alt bash    list installed alternative bash z/OS Open Tools packages.
+                    without prompting
+  zopen alt bash    list installed alternative bash packages
 
 SEE ALSO:
   zopen-alt(1)
   zopen-audit(1)
   zopen-build(1)
   zopen-clean(1)
+  zopen-config-helper(1)
   zopen-generate(1)
   zopen-init(1)
   zopen-install(1)
@@ -92,6 +94,9 @@ for arg in $*; do
     "upgrade")
       subcmd='zopen-install'
       subopts="${subopts} -u"
+      ;;
+    "config")
+      subcmd="zopen-${arg}-helper"
       ;;
     "--version")
       version=true

@@ -1,0 +1,147 @@
+#!/bin/sh -x
+#
+# Configuration helper for z/OS Open Tools - https://github.com/ZOSOpenTools
+#
+
+#
+# All zopen-* scripts MUST start with this code to maintain consistency.
+#
+setupMyself()
+{
+  ME=$(basename $0)
+  MYDIR="$(cd "$(dirname "$0")" > /dev/null 2>&1 && pwd -P)"
+  INCDIR="${MYDIR}/../include"
+  if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
+    echo "Internal Error. Unable to find common.sh file to source." >&2
+    exit 8
+  fi
+  # shellcheck disable=SC1091
+  . "${INCDIR}/common.sh"
+}
+setupMyself
+checkWritable
+
+printHelp()
+{
+  cat << HELPDOC
+${ME} is a utility for z/OS Open Tools to change the zopen runtime environment.
+ 
+
+Usage: ${ME} [OPTION] [KEY]
+
+Options:
+  --delete          unset and remove the named KEY property from the store
+  --get             display the current value for the named KEY property or 
+                    the empty string if the property is not found/set
+  --set             set the configuration value for the named KEY property
+  --list            list all current configuration values
+  -v, --verbose     run in verbose mode.
+  --version         print version.
+
+Examples:
+  zopen --get autocacheclean  
+                    get the value for the autocachclean setting
+  zopen --set is_collecting_stats false
+                    disable the is_collecting_stats functionality
+
+Notes:
+  Configuration options are not validated such that any key/value pairs can
+  be added into the global configuration. 3rd-party utilities can store their
+  global configuration into the zopen runtime environment store and use the
+  zopen config tooling to set/retrieve values
+  
+  
+Report bugs at https://github.com/ZOSOpenTools/meta/issues.
+
+HELPDOC
+}
+
+
+# Main code start here
+args=$*
+cmdtype=""
+verbose=false
+debug=false
+
+if [ $# -eq 0 ]; then
+  printError "No option provided for cleaning"
+fi
+while [ $# -gt 0 ]; do
+  printVerbose "Parsing option: $1"
+  case "$1" in
+  "--set")
+    [ $# -lt 3 ] && \
+        printError "Parameter error trying to set configuration value"
+    cmdtype="set"
+    setting="$2"
+    newvalue="$3"
+    shift 2
+    ;;
+  "--get")
+    shift
+    setting="$1"
+    cmdtype="get"
+    ;;
+  "--list")
+    cmdtype="list"
+    ;;
+  "--delete")
+    shift
+    cmdtype="delete"
+    setting="$1"
+    ;;
+  "-h" | "--help" | "-?")
+    printHelp "${args}"
+    exit 0
+    ;;
+  "--version")
+    zopen-version ${ME}
+    exit 0
+    ;;
+  "-v" | "--verbose")
+    verbose=true
+    ;;
+  "--debug")
+    # shellcheck disable=SC2034
+    verbose=true
+    # shellcheck disable=SC2034
+    debug=true
+    ;;
+  "--xdebug")
+    set -x
+    ;;
+  *)
+    printError "Unexpected parameter '$1'"
+    ;;
+  esac
+  shift
+done
+
+case "${cmdtype}" in
+  get)  if ! jq -r ".${setting}" "${ZOPEN_JSON_CONFIG}"; then
+          printError "Unable to retrieve value for '${setting}'. See previous errors for more information and retry command."
+        fi
+  ;;
+  set)  if ! current=$(jq ".${setting}" "${ZOPEN_JSON_CONFIG}"); then
+          printError "Unable to retrieve current value for '${setting}'. See previous errors for more information and retry command."
+        fi
+        [ "${current}" = "${newvalue}" ] && printInfo "New value '${newvalue}' is already configured." && exit 0
+        if ! jq --arg newvalue "${newvalue}" \
+                ".${setting} = \"$newvalue\"" \
+                "${ZOPEN_JSON_CONFIG}" > "${ZOPEN_JSON_CONFIG}.working"; then
+          printError "Errors setting new value '${newvalue}' for setting '${setting}'. See previous errors for more information and retry command."
+        fi
+  ;;
+  list) if ! jq -r 'to_entries[] | "\(.key): \(.value)"' "${ZOPEN_JSON_CONFIG}"; then
+          printError "Unable to display current configuration. See previous errors for more information and retry command."
+        fi
+  ;;
+  delete) if ! jq "del(.${setting})" "${ZOPEN_JSON_CONFIG}"  > "${ZOPEN_JSON_CONFIG}.working"; then
+            printError "Unable to remove property '${setting}' from configuration. See previous errors for more information and retry command."
+          fi
+          mv "${ZOPEN_JSON_CONFIG}.working" "${ZOPEN_JSON_CONFIG}"
+  ;;
+  *) printError "Required action not specified. Check parameters and retry command."
+esac
+# At this point, commands completed successfully
+exit 0
