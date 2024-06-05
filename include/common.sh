@@ -170,7 +170,18 @@ writeConfigFile(){
 # Main root location for the zopen installation; can be changed if the
 # underlying root location is copied/moved elsewhere as locations are
 # relative to this envvar value
-ZOPEN_ROOTFS="${rootfs}"
+knv=false
+exportknv=""
+if [ \$# -gt 0 ]; then
+  case "\$1" in
+    eknv) exportknv="export "; knv=true;;
+    knv) knv=true;;
+    *) echo "Error. Unknown parameter '\$1' passed to zopen-config." >&2; return 8;;
+  esac
+fi
+[ \${knv} ] && env | sort > /tmp/zopen-config-env-orig.\$\$
+
+ZOPEN_ROOTFS=\"${rootfs}\"
 export ZOPEN_ROOTFS
 
 if [ -z "\${_BPXK_AUTOCVT}" ]; then
@@ -244,6 +255,26 @@ LIBPATH=\${ZOPEN_ROOTFS}/usr/local/lib:\${ZOPEN_ROOTFS}/usr/lib:\$(sanitizeEnvVa
 export LIBPATH=\$(deleteDuplicateEntries "\${LIBPATH}" ":")
 MANPATH=\${ZOPEN_ROOTFS}/usr/local/share/man:\${ZOPEN_ROOTFS}/usr/local/share/man/\%L:\${ZOPEN_ROOTFS}/usr/share/man:\${ZOPEN_ROOTFS}/usr/share/man/\%L:\$(sanitizeEnvVar "\${MANPATH}" ":" "^\${ZOPEN_PKGINSTALL}/.*\$")
 export MANPATH=\$(deleteDuplicateEntries "\${MANPATH}" ":")
+
+if \${knv}; then
+  env | sort > /tmp/zopen-config-env-modded.\$\$
+  diffout=\$(diff /tmp/zopen-config-env-orig.$\\$ /tmp/zopen-config-env-modded.\$\$ | grep -E '^[>]' | cut -c3- )
+  echo "\${diffout}" | while IFS= read -r knvp; do
+    newval=""
+    envvar="\${knvp%%=*}"
+    cIFS="\$IFS"
+    IFS=":"
+    for token in \${knvp##*=}; do
+      tok=\$(echo "\${token}" | sed -e 's#/usr/local/zopen/\([^/]*\)/[^/]*/#/usr/local/zopen/\1/\1/#')
+      newval=\$(printf "%s:%s" "\${newval}" "\${tok}")
+    done
+    echo "\${exportknv}\${envvar}=\${newval#*:}"
+    IFS="\${cIFS}"
+  done
+  rm /tmp/zopen-config-env-orig.\$\$ /tmp/zopen-config-env-modded.\$\$ 2>/dev/null
+fi
+
+
 EOF
 
 }
