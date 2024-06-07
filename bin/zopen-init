@@ -515,15 +515,6 @@ installPrereqs()
   printInfo "- zopen bootstrapping complete"
 }
 
-updateBootstrappedTools() {
-  printVerbose "- Using bootstrapped curl and jq to install updated versions (if available)"
-  toolInstall=$(runAndLog "${MYDIR}/zopen-install -y curl jq meta")
-  toolInstall=$?
-  [ ${toolInstall} -ne 0 ] && printError "Unable to install curl, jq and/or meta; see previous errors and retry the initilisation using the '--re-init' parameter"
-  . "${configFile}"
-}
-
-
 processCaCerts()
 {
   printVerbose "Configuring CA certificate file '${certFileName}'"
@@ -599,5 +590,4 @@ generateZopenConfig
 ! ${refresh} && installPrereqs
 generateJsonConfiguration
 generateAnalyticsConfiguration
-! ${refresh} && updateBootstrappedTools
 deinit
