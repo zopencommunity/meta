@@ -130,29 +130,33 @@ while IFS= read -r repo; do
   fi
 
   # Iterate through CVEs if any are found
-  while IFS=$'\t' read -r severity id details; do
+  while IFS="$(echo t | tr t \\t)" read -r severity id details; do
     printHeader "${severity} severity found for $repo:"
     echo "$id"
     echo "$details"
     echo ""
 
-    ((total_vulns += 1))
+    total_vulns=$((total_vulns + 1))
     case "$severity" in
       "LOW")
-        ((low_vulns += 1))
+        low_vulns=$((low_vulns + 1))
         ;;
       "MEDIUM")
-        ((moderate_vulns += 1))
+        moderate_vulns=$((moderate_vulns + 1))
         ;;
       "HIGH")
-        ((high_vulns += 1))
+        high_vulns=$((high_vulns + 1))
         ;;
       "CRITICAL")
-        ((critical_vulns += 1))
+        critical_vulns=$((critical_vulns + 1))
         ;;
     esac
-  done < <(echo "$cves")
-done < <(echo "$installedPackages")
+  done << CVES
+$(printf "%s\n" "$cves")
+CVES
+done << EOF
+$(printf "%s\n" "$installedPackages")
+EOF
 
 # Print summary
 printHeader "CVE Summary:"
