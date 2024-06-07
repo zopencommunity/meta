@@ -1,4 +1,4 @@
-#!/bin/sh -x
+#!/bin/sh
 #
 # Configuration helper for z/OS Open Tools - https://github.com/ZOSOpenTools
 #
