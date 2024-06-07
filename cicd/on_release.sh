@@ -1,4 +1,7 @@
 #!/bin/env bash
+#
+# This scripts runs after a successful build of a tool
+#
 set -e
 
 git clone git@github.com:ZOSOpenTools/meta.git meta_update

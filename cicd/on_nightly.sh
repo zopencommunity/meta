@@ -1,11 +1,10 @@
+#!/bin/env bash
+#
 # This script will run nightly
 #
-#!/bin/env bash
 set -e
 
 UpdateGithub() {
-  go install github.com/lindell/multi-gitter@latest
-
   multi-gitter --config ./cicd/multi-gitter-config run ./bulk-utils/enable_disabled_workflow.sh
 }
 
@@ -33,7 +32,7 @@ UpdateDocs() {
   cat <<EOF > docs/reference/zopen-reference.md
   # zopen reference documentation
   This page provides information about the zopen interface. Click on any of the zopen commands listed below to access the reference guide describing how to utilize that command.
-  EOF
+EOF
 
   # Generate html and markdown pages
   for man in man/man1/*.1;

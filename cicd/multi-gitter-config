@@ -1,7 +1,7 @@
 base-branch:
   - main
 branch: from-multi-gitter
-concurrent: 20
+concurrent: 5
 conflict-strategy: skip
 draft: false
 dry-run: false
