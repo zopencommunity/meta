@@ -63,21 +63,12 @@ node('linux')
               }
         }
   }
-
-  stage('PublishOCI') {
-      if(!params.NO_PROMOTE) {
-              build job: 'Port-Publish-OCI', propagate: false, wait: false, parameters:
-                 [string(name: 'BUILD_SELECTOR', value: "<SpecificBuildSelector plugin=\"copyartifact@1.46.2\">  <buildNumber>${buildResult.number.toString()}</buildNumber></SpecificBuildSelector>"),
-                 string(name: 'PORT_GITHUB_REPO', value: "${repo}"), string(name: 'PORT_DESCRIPTION', value: "${description}"),
-                 string(name: 'BUILD_LINE', value: "${build_line}")
-                 ]
-        }
   }
 
   
-  stage('UpdateDocs') {
+  stage('UpdateReleaseAPIs') {
       if(!params.NO_PROMOTE) {
-              updateDocsResult = build job: 'Port-Update-Docs', propagate: false, wait: false, parameters: []
+              updateDocsResult = build job: 'Port-Update-Release', propagate: false, wait: false, parameters: []
         }
   }
 
