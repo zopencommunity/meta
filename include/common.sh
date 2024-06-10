@@ -187,7 +187,6 @@ if [ \$# -gt 0 ]; then
     --eknv) exportknv="export "; knv=true;;
     --knv) knv=true;;
     -?|--help) displayHelp; return 0;;
-    *) echo "Error. Unknown parameter '\$1' passed to zopen-config." >&2; return 8;;
   esac
 fi
 [ \${knv} ] && /bin/env | /bin/sort > /tmp/zopen-config-env-orig.\$\$
