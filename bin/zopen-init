@@ -597,7 +597,7 @@ init
 generateFileSystem
 generateZopenConfig
 ! ${refresh} && installPrereqs
-generateJsonConfiguration
+! ${refresh} && generateJsonConfiguration
 generateAnalyticsConfiguration
 ! ${refresh} && updateBootstrappedTools
 deinit

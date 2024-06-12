@@ -49,11 +49,17 @@ Notes:
   Configuration options are not validated such that any key/value pairs can
   be added into the global configuration. 3rd-party utilities can store their
   global configuration into the zopen runtime environment store and use the
-  zopen config tooling to set/retrieve values. The non-relocatable global 
-  configuration file, config.json, can be found at: 
+  zopen config tooling to set/retrieve values. Key names for stored properties
+  must conform to the following rules [0-9a-zA-Z_]:
+    - uppercase letters, A-Z
+    - lowercase letters, a-z
+    - numeric digits, 0-9
+    - underscore, '_'
+  The non-relocatable global configuration file, config.json, can be found at: 
     <\$ZOPEN_ROOTFS>/etc/zopen/config.json
   Manual editing of this configuration file is not recommended and might cause
-  issues with the zopen environment.
+  issues with the zopen environment if misconfigured.
+
   
   
 Report bugs at https://github.com/ZOSOpenTools/meta/issues.
@@ -61,6 +67,19 @@ Report bugs at https://github.com/ZOSOpenTools/meta/issues.
 HELPDOC
 }
 
+validateKey(){
+# To prevent possible issues in jq, sanitise the keys to a subset
+if ! (echo "$1" | /bin/awk '{if ($0 ~ "^[0-9a-zA-Z_]+$") exit 0; exit 1}'); then
+  printError "Invalid key '$1' specified. Check for invalid characters and retry command."
+fi  
+}
+
+getValue(){
+  if ! current=$(jq -r ".\"${setting}\"" "${ZOPEN_JSON_CONFIG}"); then
+    printError "Unable to retrieve current value for '${setting}'. ${current}. See previous errors for more information and retry command."
+  fi
+  echo "${current}"
+}
 
 # Main code start here
 args=$*
@@ -79,6 +98,7 @@ while [ $# -gt 0 ]; do
         printError "Parameter error trying to set configuration value"
     cmdtype="set"
     setting="$2"
+    validateKey "${setting}"
     newvalue="$3"
     shift 2
     ;;
@@ -87,6 +107,7 @@ while [ $# -gt 0 ]; do
         printError "Parameter error trying to get configuration value"
     shift
     setting="$1"
+    validateKey "${setting}"
     cmdtype="get"
     ;;
   "--list")
@@ -125,13 +146,9 @@ while [ $# -gt 0 ]; do
 done
 
 case "${cmdtype}" in
-  get)  if ! jq -r ".${setting}" "${ZOPEN_JSON_CONFIG}"; then
-          printError "Unable to retrieve value for '${setting}'. See previous errors for more information and retry command."
-        fi
+  get)  getValue "${setting}"
   ;;
-  set)  if ! current=$(jq ".${setting}" "${ZOPEN_JSON_CONFIG}"); then
-          printError "Unable to retrieve current value for '${setting}'. See previous errors for more information and retry command."
-        fi
+  set)  current=$(getValue "${setting}") 
         [ "${current}" = "${newvalue}" ] && printInfo "New value '${newvalue}' is already configured." && exit 0
         if ! jq --arg newvalue "${newvalue}" \
                 ".${setting} = \"$newvalue\"" \
@@ -143,7 +160,6 @@ case "${cmdtype}" in
   list) if ! jq -r 'to_entries[] | "\(.key): \(.value)"' "${ZOPEN_JSON_CONFIG}"; then
           printError "Unable to display current configuration. See previous errors for more information and retry command."
         fi
-        mv -f "${ZOPEN_JSON_CONFIG}.working" "${ZOPEN_JSON_CONFIG}"
   ;;
   delete) if ! jq "del(.${setting})" "${ZOPEN_JSON_CONFIG}"  > "${ZOPEN_JSON_CONFIG}.working"; then
             printError "Unable to remove property '${setting}' from configuration. See previous errors for more information and retry command."
