@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+
+<channel>
+<title>z/OS Open Tools Vulnerabilities</title>
+<link>https://zosopentools.org/#/Vulnerabilities</link>
+<description>Vulnerabilities in z/OS Open Tools Packages</description>
+
+</channel>
+
+</rss>
