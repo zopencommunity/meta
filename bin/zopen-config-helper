@@ -35,20 +35,25 @@ Options:
                     the empty string if the property is not found/set
   --set             set the configuration value for the named KEY property
   --list            list all current configuration values
+  -?, --help        display this help
   -v, --verbose     run in verbose mode.
   --version         print version.
 
 Examples:
-  zopen --get autocacheclean  
+  zopen config --get autocacheclean  
                     get the value for the autocachclean setting
-  zopen --set is_collecting_stats false
+  zopen config --set is_collecting_stats false
                     disable the is_collecting_stats functionality
 
 Notes:
   Configuration options are not validated such that any key/value pairs can
   be added into the global configuration. 3rd-party utilities can store their
   global configuration into the zopen runtime environment store and use the
-  zopen config tooling to set/retrieve values
+  zopen config tooling to set/retrieve values. The non-relocatable global 
+  configuration file, config.json, can be found at: 
+    <\$ZOPEN_ROOTFS>/etc/zopen/config.json
+  Manual editing of this configuration file is not recommended and might cause
+  issues with the zopen environment.
   
   
 Report bugs at https://github.com/ZOSOpenTools/meta/issues.
@@ -64,7 +69,7 @@ verbose=false
 debug=false
 
 if [ $# -eq 0 ]; then
-  printError "No option provided for cleaning"
+  printError "No option provided for config. Specify --help to view all available options."
 fi
 while [ $# -gt 0 ]; do
   printVerbose "Parsing option: $1"
@@ -78,6 +83,8 @@ while [ $# -gt 0 ]; do
     shift 2
     ;;
   "--get")
+    [ $# -lt 2 ] && \
+        printError "Parameter error trying to get configuration value"
     shift
     setting="$1"
     cmdtype="get"
@@ -90,7 +97,7 @@ while [ $# -gt 0 ]; do
     cmdtype="delete"
     setting="$1"
     ;;
-  "-h" | "--help" | "-?")
+  "--help" | "-?")
     printHelp "${args}"
     exit 0
     ;;
@@ -131,15 +138,17 @@ case "${cmdtype}" in
                 "${ZOPEN_JSON_CONFIG}" > "${ZOPEN_JSON_CONFIG}.working"; then
           printError "Errors setting new value '${newvalue}' for setting '${setting}'. See previous errors for more information and retry command."
         fi
+        mv -f "${ZOPEN_JSON_CONFIG}.working" "${ZOPEN_JSON_CONFIG}"
   ;;
   list) if ! jq -r 'to_entries[] | "\(.key): \(.value)"' "${ZOPEN_JSON_CONFIG}"; then
           printError "Unable to display current configuration. See previous errors for more information and retry command."
         fi
+        mv -f "${ZOPEN_JSON_CONFIG}.working" "${ZOPEN_JSON_CONFIG}"
   ;;
   delete) if ! jq "del(.${setting})" "${ZOPEN_JSON_CONFIG}"  > "${ZOPEN_JSON_CONFIG}.working"; then
             printError "Unable to remove property '${setting}' from configuration. See previous errors for more information and retry command."
           fi
-          mv "${ZOPEN_JSON_CONFIG}.working" "${ZOPEN_JSON_CONFIG}"
+          mv -f "${ZOPEN_JSON_CONFIG}.working" "${ZOPEN_JSON_CONFIG}"
   ;;
   *) printError "Required action not specified. Check parameters and retry command."
 esac
