@@ -189,7 +189,9 @@ if [ \$# -gt 0 ]; then
     -?|--help) displayHelp; return 0;;
   esac
 fi
-[ \${knv} ] && /bin/env | /bin/sort > /tmp/zopen-config-env-orig.\$\$
+if "\${knv}"; then
+  /bin/env | /bin/sort > /tmp/zopen-config-env-orig.\$\$
+fi
 
 ZOPEN_ROOTFS="${rootfs}"
 export ZOPEN_ROOTFS
