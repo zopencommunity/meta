@@ -14,41 +14,50 @@ if ! command -v curl > /dev/null 2>&1; then
 fi
 
 # Download the latest json
+echo "> Getting latest data from z/OS Open Tools..."
 url=$(curl --fail-with-body --silent -L https://raw.githubusercontent.com/ZOSOpenTools/meta/main/docs/api/zopen_releases_latest.json)
 if [ $? -gt 0 ]; then
   echo "Error: Curl failed due to: \"$url\""
+  exit 1
 fi
 
 # TODO: check if jq is present, and use it instead of this
 url=$(echo "$url" | /bin/tr ' ' '\n' |  grep "https://github.com/ZOSOpenTools/metaport/releases/download/" |  /bin/sed -e 's/.*\(https:\/\/github.com\/ZOSOpenTools\/metaport\/releases\/download\/[^"]*\.pax\.Z\).*/\1/')
 paxFile=$(basename "$url");
 
-echo "Downloading z/OS Open Tools meta.pax.Z..."
+echo "> Downloading z/OS Open Tools $url..."
 
 url=$(curl --fail-with-body -O -L "$url")
 if [ $? -gt 0 ]; then
   echo "Error: Curl failed due to: \"$url\""
+  exit 1
 fi
 
 if [ ! -f $paxFile ]; then
   echo "Error: $paxFile not present"
+  exit 1
 fi
 
 # Extract meta.pax.Z
-echo "Extracting $paxFile..."
+echo "> Extracting $paxFile..."
 paxOutput=$(pax -rvf "$paxFile" 2>&1)
 if [ $? -gt 0 ]; then
    echo "Error: Failed to unpax"
+  exit 1
 fi
 
 dir=$(echo "$paxOutput" | head -1)
+if [ ! -d "$dir" ]; then
+  echo "Error: $dir is not a valid directory"
+  exit 1
+fi
 
 set -e
-echo "Moving to extracted directory..."
+echo "> Moving to extracted directory..."
 cd "$dir"
 
-echo "Setting up environment..."
+echo "> Setting up environment..."
 source ./.env
 
-echo "Initializing zopen tools..."
+echo "> Initializing zopen tools..."
 zopen init
