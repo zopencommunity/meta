@@ -16,7 +16,6 @@ please note you will need to [migrate to the new package manager](Migration.md).
 If you have curl and bash on your system, you can use this one liner:
 ```
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/ZOSOpenTools/meta/HEAD/tools/zopen_install.sh)"
-
 ```
 
 Otherwise, follow these steps:
