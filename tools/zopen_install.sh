@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/usr/bin/env bash
 # 
 # Quick Install tool for zopen's meta package
 # Assumes you have Curl and Bash installed (likely through Open Enterprise Foundation)
