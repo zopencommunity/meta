@@ -502,7 +502,7 @@
 | [gitport](https://github.com/ZOSOpenTools/gitport) | 41437 |
 | [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) | 38537 |
 | [zoslibport](https://github.com/ZOSOpenTools/zoslibport) | 34615 |
-| [jqport](https://github.com/ZOSOpenTools/jqport) | 31168 |
+| [jqport](https://github.com/ZOSOpenTools/jqport) | 31175 |
 | [perlport](https://github.com/ZOSOpenTools/perlport) | 28532 |
 | [curlport](https://github.com/ZOSOpenTools/curlport) | 26976 |
 | [bashport](https://github.com/ZOSOpenTools/bashport) | 26497 |
@@ -557,7 +557,7 @@
 | [whichport](https://github.com/ZOSOpenTools/whichport) | 4031 |
 | [nanoport](https://github.com/ZOSOpenTools/nanoport) | 3997 |
 | [expatport](https://github.com/ZOSOpenTools/expatport) | 3986 |
-| [c3270port](https://github.com/ZOSOpenTools/c3270port) | 3979 |
+| [c3270port](https://github.com/ZOSOpenTools/c3270port) | 3981 |
 | [comp_goport](https://github.com/ZOSOpenTools/comp_goport) | 3809 |
 | [cscopeport](https://github.com/ZOSOpenTools/cscopeport) | 3779 |
 | [gperfport](https://github.com/ZOSOpenTools/gperfport) | 3684 |
@@ -696,4 +696,4 @@
 | [zoslib_31port](https://github.com/ZOSOpenTools/zoslib_31port) | 0 |
 | [zstd_31port](https://github.com/ZOSOpenTools/zstd_31port) | 0 |
 
-Last updated:  2024-06-15 06:01:33
+Last updated:  2024-06-16 06:01:48
