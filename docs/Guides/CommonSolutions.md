@@ -119,7 +119,7 @@ On z/OS, you can find these values in `/usr/include/le/signals.h`
 
 ## CEE3728S The use of a function, which is not supported by this release of Language Environment was detected.
 
-LE provides stubs for some functions that are not yet implemented. This means that they exist in the DLL and side deck, but if you call them they just put out the CEE3728S error message. This causes a problem for builds which detect the available functions on the target OS and conditionally include source based on the detected fuctions. Since these stub fuctions are detected, the built component will try to use them.
+LE provides stubs for some functions that are not yet implemented. This means that they exist in the DLL and side deck, but if you call them they just put out the CEE3728S error message. This causes a problem for builds which detect the available functions on the target OS and conditionally include source based on the detected functions. Since these stub functions are detected, the built component will try to use them.
 
 The issue can be addressed with a workaround which removes the stub functions from the side deck so that the builds fail to detect them. Changing the side deck in the system library is not advisable, so the following steps allow a copy to be used.
 
@@ -162,7 +162,7 @@ This is due to a bug in the LE header file `sys/modes.h` which defines the macro
 This is unfortunately wrong because the macro expects a parameter to be passed to it
 (the z/OS team has been notified and hopefully a fix will be provided soon).
 
-The simplest work-around is to provide a patch to the open source package. `findutils` currently has a patch 
+The simplest workaround is to provide a patch to the open source package. `findutils` currently has a patch 
 for this:
 
 ```
@@ -211,7 +211,7 @@ Here's an example pull request that was done for man-db: https://github.com/ZOSO
 # Displaying compile commands in the build output
 When building projects, it can be helpful to see the actual compile commands being executed. This can aid in understanding the build process, diagnosing issues, or debugging. The zopen build tool provides an option, -vv, for very verbose output. By using this option with the zopen build command, you can enable the display of the compile commands.
 
-Internally, zopen sets the `V` and `VERBOSE` environment variables to 1 when the -vv option is specified. GNU Make, and other build systems, respects these variables and display the executed commands during the build process.
+Internally, zopen sets the `V` and `VERBOSE` environment variables to 1 when the -vv option is specified. GNU Make, and other build systems, respect these variables and display the executed commands during the build process.
 
 ```
 zopen build -vv
