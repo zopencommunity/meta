@@ -7,7 +7,7 @@
 For example, in 2023 the project disclosed [two security vulnerabilities](https://github.blog/2023-01-17-git-security-vulnerabilities-announced-2/) affecting v2.39.0 and older releases, and
 in May 2024, [release 2.45.1](https://github.com/ZOSOpenTools/gitport/releases/tag/STABLE_gitport_2266) fixed 5 more which you can read about in the [Github Blog](https://github.blog/2024-05-14-securing-git-addressing-5-new-vulnerabilities/).
 
-It is important to frequently review the vulnerabilities and keep current with with releases available from z/OS Open Tools.
+It is important to frequently review the vulnerabilities and keep current with releases available from z/OS Open Tools.
 
 ---
 
