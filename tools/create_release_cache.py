@@ -44,6 +44,7 @@ repositories = org.get_repos()
 # Process a single asset
 def process_asset(asset, body, metadata_asset_name="metadata.json"):
     if asset.name == metadata_asset_name:
+        print(asset.name)
         asset_name = asset.name
         asset_size = asset.size
 
