@@ -82,6 +82,8 @@ def process_asset(asset, body, metadata_asset_name="metadata.json"):
         filtered_asset = {
             "name": pax_file_name,
             "url": full_url,
+            "version": metadata.get("version", None),
+            "release": metadata.get("release", None),
             "size": metadata.get("pax_size", 0),
             "expanded_size": metadata.get("size", 0),
             "runtime_dependencies": runtime_dependencies,
