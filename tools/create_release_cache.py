@@ -44,7 +44,6 @@ repositories = org.get_repos()
 # Process a single asset
 def process_asset(asset, body, metadata_asset_name="metadata.json"):
     if asset.name == metadata_asset_name:
-        print(asset.name)
         asset_name = asset.name
         asset_size = asset.size
 
@@ -105,6 +104,7 @@ num_threads = min(int(multiprocessing.cpu_count() / 2), 2)
 # Process a single release
 def process_release(repo_name, release):
     assets = release.get_assets()
+    print(repo_name)
 
     filtered_assets = []
     for asset in assets:
