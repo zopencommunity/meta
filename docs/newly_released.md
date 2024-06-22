@@ -1,6 +1,6 @@
 # Newly Released Tools
 
-<details>
+<details open>
 <summary>Week of 2024-06-17 to 2024-06-23</summary>
 
 - **bash**: [bash-5.2.21.20240617_152629.zos.pax.Z](https://github.com/ZOSOpenTools/bashport/releases/tag/STABLE_bashport_2306)
