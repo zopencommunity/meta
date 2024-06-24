@@ -174,8 +174,9 @@ writeConfigFile(){
 # relative to this envvar value
 displayHelp() {
 echo "usage: . zopen-config [--eknv] [--knv] [-?|--help]"
-echo "  --knv             Display zopen environment variables "
-echo "  --eknv            Display zopen environment variables, prefixed with an"
+echo "  --override-zos-tools Adds altbin/ dir to the PATH, which overrides /bin tools"
+echo "  --knv                Display zopen environment variables "
+echo "  --eknv               Display zopen environment variables, prefixed with an"
 echo "                   'export ' keyword for use in scripts"
 echo "  -?, --help            Display this help"
 }
@@ -186,6 +187,7 @@ if [ \$# -gt 0 ]; then
   case "\$1" in
     --eknv) exportknv="export "; knv=true;;
     --knv) knv=true;;
+    --override-zos-tools)  export ZOPEN_TOOLSET_OVERRIDE=1;;
     -?|--help) displayHelp; return 0;;
   esac
 fi
@@ -195,10 +197,6 @@ fi
 
 ZOPEN_ROOTFS="${rootfs}"
 export ZOPEN_ROOTFS
-
-if [ "\$1" = "--override-zos-tools" ]; then
-  export ZOPEN_TOOLSET_OVERRIDE=1
-fi
 
 if [ -z "\${_BPXK_AUTOCVT}" ]; then
   export _BPXK_AUTOCVT=ON
