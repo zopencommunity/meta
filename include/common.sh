@@ -196,6 +196,10 @@ fi
 ZOPEN_ROOTFS="${rootfs}"
 export ZOPEN_ROOTFS
 
+if [ "\$1" = "--override-zos-tools" ]; then
+  export ZOPEN_TOOLSET_OVERRIDE=1
+fi
+
 if [ -z "\${_BPXK_AUTOCVT}" ]; then
   export _BPXK_AUTOCVT=ON
 else
@@ -210,7 +214,8 @@ fi
 
 zot="z/OS Open Tools"
 
-sanitizeEnvVar(){
+sanitizeEnvVar()
+{
   # remove any envvar entries that match the specified regex
   value="\$1"
   delim="\$2"
@@ -262,6 +267,9 @@ if [ -z "\${ZOPEN_QUICK_LOAD}" ]; then
 fi
 unset displayText
 PATH=\${ZOPEN_ROOTFS}/usr/local/bin:\${ZOPEN_ROOTFS}/usr/bin:\${ZOPEN_ROOTFS}/bin:\${ZOPEN_ROOTFS}/boot:\$(sanitizeEnvVar "\${PATH}" ":" "^\${ZOPEN_PKGINSTALL}/.*\$")
+if [ -n "\$ZOPEN_TOOLSET_OVERRIDE" ]; then
+  PATH="\${ZOPEN_ROOTFS}/usr/local/altbin:\$PATH"
+fi
 export PATH=\$(deleteDuplicateEntries "\${PATH}" ":")
 LIBPATH=\${ZOPEN_ROOTFS}/usr/local/lib:\${ZOPEN_ROOTFS}/usr/lib:\$(sanitizeEnvVar "\${LIBPATH}" ":" "^\${ZOPEN_PKGINSTALL}/.*\$")
 export LIBPATH=\$(deleteDuplicateEntries "\${LIBPATH}" ":")
