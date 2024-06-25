@@ -6,6 +6,7 @@
 - **coreutils**: [coreutils-9.4.20240624_151448.zos.pax.Z](https://github.com/ZOSOpenTools/coreutilsport/releases/tag/STABLE_coreutilsport_2316)
 - **meta**: [meta-main.20240624_210116.zos.pax.Z](https://github.com/ZOSOpenTools/metaport/releases/tag/STABLE_metaport_2315)
 - **meta**: [meta-main.20240624_161135.zos.pax.Z](https://github.com/ZOSOpenTools/metaport/releases/tag/STABLE_metaport_2312)
+- **c3270**: [c3270-DEV.20240625_011218.zos.pax.Z](https://github.com/ZOSOpenTools/c3270port/releases/tag/STABLE_c3270port_2317)
 - **c3270**: [c3270-DEV.20240624_171254.zos.pax.Z](https://github.com/ZOSOpenTools/c3270port/releases/tag/STABLE_c3270port_2314)
 - **c3270**: [c3270-DEV.20240624_172009.zos.pax.Z](https://github.com/ZOSOpenTools/c3270port/releases/tag/STABLE_c3270port_2313)
 - **libsasl2**: [cyrus-sasl-master.20240624_052635.zos.pax.Z](https://github.com/ZOSOpenTools/libsasl2port/releases/tag/STABLE_libsasl2port_2311)
@@ -67,10 +68,10 @@
 <details>
 <summary>Week of 2024-05-20 to 2024-05-26</summary>
 
+- **less**: [less-heads.v655.20240521_023221.zos.pax.Z](https://github.com/ZOSOpenTools/lessport/releases/tag/STABLE_lessport_2270)
 - **curl**: [curl-8.8.0.20240523_003508.zos.pax.Z](https://github.com/ZOSOpenTools/curlport/releases/tag/STABLE_curlport_2274)
 - **curl**: [curl-8.8.0.20240523_004606.zos.pax.Z](https://github.com/ZOSOpenTools/curlport/releases/tag/STABLE_curlport_2273)
 - **curl**: [curl-8.8.0.20240522_160837.zos.pax.Z](https://github.com/ZOSOpenTools/curlport/releases/tag/STABLE_curlport_2272)
-- **less**: [less-heads.v655.20240521_023221.zos.pax.Z](https://github.com/ZOSOpenTools/lessport/releases/tag/STABLE_lessport_2270)
 - **vim**: [vim-heads.v9.1.0413.20240521_211543.zos.pax.Z](https://github.com/ZOSOpenTools/vimport/releases/tag/STABLE_vimport_2271)
 - **libiconv**: [libiconv-master.20240523_094023.zos.pax.Z](https://github.com/ZOSOpenTools/libiconvport/releases/tag/DEV_libiconvport_2275)
 - **gn**: [gn-main.20240524_183021.zos.pax.Z](https://github.com/ZOSOpenTools/gnport/releases/tag/DEV_gnport_2276)
@@ -104,8 +105,8 @@
 <details>
 <summary>Week of 2024-05-06 to 2024-05-12</summary>
 
-- **ncurses**: [ncurses-6.5.20240507_195319.zos.pax.Z](https://github.com/ZOSOpenTools/ncursesport/releases/tag/STABLE_ncursesport_2249)
 - **less**: [less-heads.v654.20240507_192137.zos.pax.Z](https://github.com/ZOSOpenTools/lessport/releases/tag/STABLE_lessport_2248)
+- **ncurses**: [ncurses-6.5.20240507_195319.zos.pax.Z](https://github.com/ZOSOpenTools/ncursesport/releases/tag/STABLE_ncursesport_2249)
 - **zoslib**: [zoslib-main.20240509_214710.zos.pax.Z](https://github.com/ZOSOpenTools/zoslibport/releases/tag/STABLE_zoslibport_2252)
 - **zoslib**: [zoslib-main.20240508_135403.zos.pax.Z](https://github.com/ZOSOpenTools/zoslibport/releases/tag/STABLE_zoslibport_2250)
 - **librdkafka**: [librdkafka-master.20240508_142558.zos.pax.Z](https://github.com/ZOSOpenTools/librdkafkaport/releases/tag/STABLE_librdkafkaport_2251)
@@ -239,9 +240,9 @@
 - **maven**: [apache-maven-3.9.1-bin.20240227_213722.zos.pax.Z](https://github.com/ZOSOpenTools/mavenport/releases/tag/STABLE_mavenport_2169)
 - **maven**: [apache-maven-3.9.1-bin.20240227_131654.zos.pax.Z](https://github.com/ZOSOpenTools/mavenport/releases/tag/STABLE_mavenport_2168)
 - **frp**: [frp-heads.v0.54.0.20240225_234231.zos.pax.Z](https://github.com/ZOSOpenTools/frpport/releases/tag/STABLE_frpport_2164)
+- **popt**: [popt-master.20240229_163236.zos.pax.Z](https://github.com/ZOSOpenTools/poptport/releases/tag/STABLE_poptport_2171)
 - **logrotate**: [logrotate-main.20240229_195903.zos.pax.Z](https://github.com/ZOSOpenTools/logrotateport/releases/tag/STABLE_logrotateport_2174)
 - **logrotate**: [logrotate-main.20240229_165200.zos.pax.Z](https://github.com/ZOSOpenTools/logrotateport/releases/tag/STABLE_logrotateport_2172)
-- **popt**: [popt-master.20240229_163236.zos.pax.Z](https://github.com/ZOSOpenTools/poptport/releases/tag/STABLE_poptport_2171)
 
 </details>
 <details>
@@ -258,8 +259,8 @@
 - **prompters**: [prompters-main.20240220_125303.zos.pax.Z](https://github.com/ZOSOpenTools/promptersport/releases/tag/STABLE_promptersport_2144)
 - **lazygit**: [lazygit-master.20240221_041017.zos.pax.Z](https://github.com/ZOSOpenTools/lazygitport/releases/tag/STABLE_lazygitport_2148)
 - **lazygit**: [lazygit-master.20240220_160117.zos.pax.Z](https://github.com/ZOSOpenTools/lazygitport/releases/tag/STABLE_lazygitport_2145)
-- **git-lfs**: [git-lfs.20240221_133034.zos.pax.Z](https://github.com/ZOSOpenTools/git-lfsport/releases/tag/STABLE_git-lfsport_2150)
 - **gin**: [gin-heads.v1.9.1.20240223_174007.zos.pax.Z](https://github.com/ZOSOpenTools/ginport/releases/tag/STABLE_ginport_2152)
+- **git-lfs**: [git-lfs.20240221_133034.zos.pax.Z](https://github.com/ZOSOpenTools/git-lfsport/releases/tag/STABLE_git-lfsport_2150)
 
 </details>
 <details>
@@ -325,11 +326,11 @@
 <details>
 <summary>Week of 2024-01-29 to 2024-02-04</summary>
 
-- **curl**: [curl-8.5.0.20240130_020020.zos.pax.Z](https://github.com/ZOSOpenTools/curlport/releases/tag/STABLE_curlport_2067)
 - **ninja**: [ninja-master.20240130_160910.zos.pax.Z](https://github.com/ZOSOpenTools/ninjaport/releases/tag/STABLE_ninjaport_2073)
-- **make**: [make-4.4.1.20240129_224230.zos.pax.Z](https://github.com/ZOSOpenTools/makeport/releases/tag/STABLE_makeport_2065)
-- **cmake**: [CMake-heads.v3.27.8.20240129_142242.zos.pax.Z](https://github.com/ZOSOpenTools/cmakeport/releases/tag/STABLE_cmakeport_2068)
 - **libtool**: [libtool-2.4.20240129_152529.zos.pax.Z](https://github.com/ZOSOpenTools/libtoolport/releases/tag/STABLE_libtoolport_2064)
+- **curl**: [curl-8.5.0.20240130_020020.zos.pax.Z](https://github.com/ZOSOpenTools/curlport/releases/tag/STABLE_curlport_2067)
+- **cmake**: [CMake-heads.v3.27.8.20240129_142242.zos.pax.Z](https://github.com/ZOSOpenTools/cmakeport/releases/tag/STABLE_cmakeport_2068)
+- **make**: [make-4.4.1.20240129_224230.zos.pax.Z](https://github.com/ZOSOpenTools/makeport/releases/tag/STABLE_makeport_2065)
 - **pkgconfig**: [pkgconfig-DEV.20240128_220513.zos.pax.Z](https://github.com/ZOSOpenTools/pkgconfigport/releases/tag/STABLE_pkgconfigport_2046)
 - **rsync**: [rsync-master.20240129_094849.zos.pax.Z](https://github.com/ZOSOpenTools/rsyncport/releases/tag/STABLE_rsyncport_2052)
 - **bzip2**: [bzip2-1.0.8.20240128_234041.zos.pax.Z](https://github.com/ZOSOpenTools/bzip2port/releases/tag/STABLE_bzip2port_2048)
@@ -367,16 +368,16 @@
 <details>
 <summary>Week of 2024-01-22 to 2024-01-28</summary>
 
-- **ncurses**: [ncurses-6.4.20240124_160950.zos.pax.Z](https://github.com/ZOSOpenTools/ncursesport/releases/tag/STABLE_ncursesport_2012)
+- **less**: [less-643.20240122_144109.zos.pax.Z](https://github.com/ZOSOpenTools/lessport/releases/tag/STABLE_lessport_1983)
 - **perl**: [perl5-heads.v5.39.7.20240122_185506.zos.pax.Z](https://github.com/ZOSOpenTools/perlport/releases/tag/STABLE_perlport_1991)
-- **help2man**: [help2man-1.49.3.20240124_160159.zos.pax.Z](https://github.com/ZOSOpenTools/help2manport/releases/tag/STABLE_help2manport_2007)
-- **gzip**: [gzip-1.13.20240124_155633.zos.pax.Z](https://github.com/ZOSOpenTools/gzipport/releases/tag/STABLE_gzipport_2010)
+- **cmake**: [CMake-heads.v3.27.8.20240124_102219.zos.pax.Z](https://github.com/ZOSOpenTools/cmakeport/releases/tag/STABLE_cmakeport_2033)
+- **cmake**: [CMake-heads.v3.27.8.20240121_235752.zos.pax.Z](https://github.com/ZOSOpenTools/cmakeport/releases/tag/STABLE_cmakeport_1990)
 - **zlib**: [zlib-heads.v1.3.20240126_215537.zos.pax.Z](https://github.com/ZOSOpenTools/zlibport/releases/tag/STABLE_zlibport_2040)
 - **zlib**: [zlib-develop.20240122_141309.zos.pax.Z](https://github.com/ZOSOpenTools/zlibport/releases/tag/DEV_zlibport_1989)
 - **zlib**: [zlib-develop.20240122_140432.zos.pax.Z](https://github.com/ZOSOpenTools/zlibport/releases/tag/DEV_zlibport_1988)
-- **less**: [less-643.20240122_144109.zos.pax.Z](https://github.com/ZOSOpenTools/lessport/releases/tag/STABLE_lessport_1983)
-- **cmake**: [CMake-heads.v3.27.8.20240124_102219.zos.pax.Z](https://github.com/ZOSOpenTools/cmakeport/releases/tag/STABLE_cmakeport_2033)
-- **cmake**: [CMake-heads.v3.27.8.20240121_235752.zos.pax.Z](https://github.com/ZOSOpenTools/cmakeport/releases/tag/STABLE_cmakeport_1990)
+- **gzip**: [gzip-1.13.20240124_155633.zos.pax.Z](https://github.com/ZOSOpenTools/gzipport/releases/tag/STABLE_gzipport_2010)
+- **ncurses**: [ncurses-6.4.20240124_160950.zos.pax.Z](https://github.com/ZOSOpenTools/ncursesport/releases/tag/STABLE_ncursesport_2012)
+- **help2man**: [help2man-1.49.3.20240124_160159.zos.pax.Z](https://github.com/ZOSOpenTools/help2manport/releases/tag/STABLE_help2manport_2007)
 - **openssl**: [openssl-3.2.0.20240123_152950.zos.pax.Z](https://github.com/ZOSOpenTools/opensslport/releases/tag/STABLE_opensslport_1998)
 - **man-db**: [man-db-2.12.0.20240124_132957.zos.pax.Z](https://github.com/ZOSOpenTools/man-dbport/releases/tag/STABLE_man-dbport_2032)
 - **vim**: [vim-heads.v9.0.2100.20240122_110205.zos.pax.Z](https://github.com/ZOSOpenTools/vimport/releases/tag/STABLE_vimport_1987)
@@ -474,8 +475,8 @@
 <details>
 <summary>Week of 2024-01-01 to 2024-01-07</summary>
 
-- **m4**: [m4-1.4.19.20240104_082339.zos.pax.Z](https://github.com/ZOSOpenTools/m4port/releases/tag/STABLE_m4port_1941)
 - **less**: [less-643.20240104_132250.zos.pax.Z](https://github.com/ZOSOpenTools/lessport/releases/tag/STABLE_lessport_1934)
+- **m4**: [m4-1.4.19.20240104_082339.zos.pax.Z](https://github.com/ZOSOpenTools/m4port/releases/tag/STABLE_m4port_1941)
 - **zotsample**: [zotsample-1.3.20240104_164155.zos.pax.Z](https://github.com/ZOSOpenTools/zotsampleport/releases/tag/STABLE_zotsampleport_1946)
 - **gawk**: [gawk-5.2.2.20240104_213951.zos.pax.Z](https://github.com/ZOSOpenTools/gawkport/releases/tag/STABLE_gawkport_1949)
 - **lz4**: [lz4-1.9.4.20240104_082651.zos.pax.Z](https://github.com/ZOSOpenTools/lz4port/releases/tag/STABLE_lz4port_1936)
@@ -613,10 +614,10 @@
 
 - **perl**: [perl5-heads.v5.39.5.20231122_174302.zos.pax.Z](https://github.com/ZOSOpenTools/perlport/releases/tag/STABLE_perlport_1801)
 - **perl**: [perl5-heads.v5.38.0.20231121_141630.zos.pax.Z](https://github.com/ZOSOpenTools/perlport/releases/tag/STABLE_perlport_1792)
+- **cmake**: [CMake-heads.v3.27.8.20231124_184234.zos.pax.Z](https://github.com/ZOSOpenTools/cmakeport/releases/tag/STABLE_cmakeport_1834)
 - **xz**: [xz-5.2.5.20231124_071430.zos.pax.Z](https://github.com/ZOSOpenTools/xzport/releases/tag/STABLE_xzport_1812)
 - **zlib**: [zlib-develop.20231123_025537.zos.pax.Z](https://github.com/ZOSOpenTools/zlibport/releases/tag/DEV_zlibport_1803)
 - **zlib**: [zlib-heads.v1.3.20231122_215452.zos.pax.Z](https://github.com/ZOSOpenTools/zlibport/releases/tag/STABLE_zlibport_1802)
-- **cmake**: [CMake-heads.v3.27.8.20231124_184234.zos.pax.Z](https://github.com/ZOSOpenTools/cmakeport/releases/tag/STABLE_cmakeport_1834)
 - **openssl**: [openssl-3.2.0.20231124_000835.zos.pax.Z](https://github.com/ZOSOpenTools/opensslport/releases/tag/STABLE_opensslport_1810)
 - **vim**: [vim-master.20231124_154449.zos.pax.Z](https://github.com/ZOSOpenTools/vimport/releases/tag/STABLE_vimport_1823)
 - **vim**: [vim-master.20231123_124149.zos.pax.Z](https://github.com/ZOSOpenTools/vimport/releases/tag/STABLE_vimport_1804)
@@ -665,20 +666,20 @@
 <details>
 <summary>Week of 2023-11-13 to 2023-11-19</summary>
 
-- **ncurses**: [ncurses-6.4.20231114_180107.zos.pax.Z](https://github.com/ZOSOpenTools/ncursesport/releases/tag/STABLE_ncursesport_1741)
-- **ncurses**: [ncurses-6.3.20231113_001550.zos.pax.Z](https://github.com/ZOSOpenTools/ncursesport/releases/tag/STABLE_ncursesport_1699)
-- **automake**: [automake-1.16.5.20231114_060401.zos.pax.Z](https://github.com/ZOSOpenTools/automakeport/releases/tag/STABLE_automakeport_1734)
+- **less**: [less-643.20231113_051522.zos.pax.Z](https://github.com/ZOSOpenTools/lessport/releases/tag/STABLE_lessport_1697)
 - **perl**: [perl5-heads.v5.38.0.20231113_001320.zos.pax.Z](https://github.com/ZOSOpenTools/perlport/releases/tag/STABLE_perlport_1712)
-- **help2man**: [help2man-1.49.3.20231114_054704.zos.pax.Z](https://github.com/ZOSOpenTools/help2manport/releases/tag/STABLE_help2manport_1731)
-- **gzip**: [gzip-1.13.20231113_071414.zos.pax.Z](https://github.com/ZOSOpenTools/gzipport/releases/tag/STABLE_gzipport_1717)
 - **autoconf**: [autoconf-2.71.20231114_002453.zos.pax.Z](https://github.com/ZOSOpenTools/autoconfport/releases/tag/STABLE_autoconfport_1736)
-- **make**: [make-4.4.1.20231113_010159.zos.pax.Z](https://github.com/ZOSOpenTools/makeport/releases/tag/STABLE_makeport_1702)
+- **automake**: [automake-1.16.5.20231114_060401.zos.pax.Z](https://github.com/ZOSOpenTools/automakeport/releases/tag/STABLE_automakeport_1734)
+- **coreutils**: [coreutils-9.4.20231116_212509.zos.pax.Z](https://github.com/ZOSOpenTools/coreutilsport/releases/tag/STABLE_coreutilsport_1780)
+- **coreutils**: [coreutils-9.4.20231113_051902.zos.pax.Z](https://github.com/ZOSOpenTools/coreutilsport/releases/tag/STABLE_coreutilsport_1716)
 - **xz**: [xz-5.2.5.20231113_010933.zos.pax.Z](https://github.com/ZOSOpenTools/xzport/releases/tag/STABLE_xzport_1705)
 - **zlib**: [zlib-heads.v1.3.20231114_130000.zos.pax.Z](https://github.com/ZOSOpenTools/zlibport/releases/tag/STABLE_zlibport_1739)
 - **zlib**: [zlib-develop.20231114_125946.zos.pax.Z](https://github.com/ZOSOpenTools/zlibport/releases/tag/DEV_zlibport_1738)
-- **less**: [less-643.20231113_051522.zos.pax.Z](https://github.com/ZOSOpenTools/lessport/releases/tag/STABLE_lessport_1697)
-- **coreutils**: [coreutils-9.4.20231116_212509.zos.pax.Z](https://github.com/ZOSOpenTools/coreutilsport/releases/tag/STABLE_coreutilsport_1780)
-- **coreutils**: [coreutils-9.4.20231113_051902.zos.pax.Z](https://github.com/ZOSOpenTools/coreutilsport/releases/tag/STABLE_coreutilsport_1716)
+- **gzip**: [gzip-1.13.20231113_071414.zos.pax.Z](https://github.com/ZOSOpenTools/gzipport/releases/tag/STABLE_gzipport_1717)
+- **ncurses**: [ncurses-6.4.20231114_180107.zos.pax.Z](https://github.com/ZOSOpenTools/ncursesport/releases/tag/STABLE_ncursesport_1741)
+- **ncurses**: [ncurses-6.3.20231113_001550.zos.pax.Z](https://github.com/ZOSOpenTools/ncursesport/releases/tag/STABLE_ncursesport_1699)
+- **make**: [make-4.4.1.20231113_010159.zos.pax.Z](https://github.com/ZOSOpenTools/makeport/releases/tag/STABLE_makeport_1702)
+- **help2man**: [help2man-1.49.3.20231114_054704.zos.pax.Z](https://github.com/ZOSOpenTools/help2manport/releases/tag/STABLE_help2manport_1731)
 - **gettext**: [gettext-0.21.20231115_132944.zos.pax.Z](https://github.com/ZOSOpenTools/gettextport/releases/tag/STABLE_gettextport_1766)
 - **gettext**: [gettext-0.21.20231114_011235.zos.pax.Z](https://github.com/ZOSOpenTools/gettextport/releases/tag/STABLE_gettextport_1737)
 - **openssl**: [openssl-3.1.4.20231116_150325.zos.pax.Z](https://github.com/ZOSOpenTools/opensslport/releases/tag/STABLE_opensslport_1775)
@@ -753,28 +754,28 @@
 <details>
 <summary>Week of 2023-11-06 to 2023-11-12</summary>
 
-- **curl**: [curl-8.4.0.20231109_021914.zos.pax.Z](https://github.com/ZOSOpenTools/curlport/releases/tag/STABLE_curlport_1619)
-- **ninja**: [ninja-master.20231109_002036.zos.pax.Z](https://github.com/ZOSOpenTools/ninjaport/releases/tag/STABLE_ninjaport_1584)
-- **ncurses**: [ncurses-6.3.20231109_110849.zos.pax.Z](https://github.com/ZOSOpenTools/ncursesport/releases/tag/STABLE_ncursesport_1648)
-- **automake**: [automake-1.16.5.20231108_184539.zos.pax.Z](https://github.com/ZOSOpenTools/automakeport/releases/tag/STABLE_automakeport_1594)
+- **less**: [less-643.20231109_010905.zos.pax.Z](https://github.com/ZOSOpenTools/lessport/releases/tag/STABLE_lessport_1590)
 - **perl**: [perl5-heads.v5.38.0.20231108_215454.zos.pax.Z](https://github.com/ZOSOpenTools/perlport/releases/tag/STABLE_perlport_1624)
-- **bison**: [bison-3.8.2.20231108_184648.zos.pax.Z](https://github.com/ZOSOpenTools/bisonport/releases/tag/STABLE_bisonport_1616)
-- **gzip**: [gzip-1.13.20231109_012130.zos.pax.Z](https://github.com/ZOSOpenTools/gzipport/releases/tag/STABLE_gzipport_1595)
 - **m4**: [m4-1.4.19.20231109_141136.zos.pax.Z](https://github.com/ZOSOpenTools/m4port/releases/tag/STABLE_m4port_1663)
 - **m4**: [m4-branch-1.4.20231109_082857.zos.pax.Z](https://github.com/ZOSOpenTools/m4port/releases/tag/DEV_m4port_1643)
 - **autoconf**: [autoconf-2.71.20231109_012459.zos.pax.Z](https://github.com/ZOSOpenTools/autoconfport/releases/tag/STABLE_autoconfport_1654)
-- **make**: [make-4.4.1.20231109_131300.zos.pax.Z](https://github.com/ZOSOpenTools/makeport/releases/tag/STABLE_makeport_1661)
+- **automake**: [automake-1.16.5.20231108_184539.zos.pax.Z](https://github.com/ZOSOpenTools/automakeport/releases/tag/STABLE_automakeport_1594)
+- **coreutils**: [coreutils-9.4.20231109_102027.zos.pax.Z](https://github.com/ZOSOpenTools/coreutilsport/releases/tag/STABLE_coreutilsport_1666)
+- **coreutils**: [coreutils-9.4.20231107_235319.zos.pax.Z](https://github.com/ZOSOpenTools/coreutilsport/releases/tag/STABLE_coreutilsport_1579)
+- **ninja**: [ninja-master.20231109_002036.zos.pax.Z](https://github.com/ZOSOpenTools/ninjaport/releases/tag/STABLE_ninjaport_1584)
+- **libtool**: [libtool-2.4.20231109_083911.zos.pax.Z](https://github.com/ZOSOpenTools/libtoolport/releases/tag/STABLE_libtoolport_1656)
+- **curl**: [curl-8.4.0.20231109_021914.zos.pax.Z](https://github.com/ZOSOpenTools/curlport/releases/tag/STABLE_curlport_1619)
+- **cmake**: [CMake-heads.v3.27.6.20231109_132440.zos.pax.Z](https://github.com/ZOSOpenTools/cmakeport/releases/tag/STABLE_cmakeport_1674)
 - **xz**: [xz-5.2.5.20231112_053523.zos.pax.Z](https://github.com/ZOSOpenTools/xzport/releases/tag/STABLE_xzport_1693)
 - **xz**: [xz-5.2.5.20231109_042304.zos.pax.Z](https://github.com/ZOSOpenTools/xzport/releases/tag/STABLE_xzport_1641)
 - **zlib**: [zlib-heads.v1.2.13.20231112_053155.zos.pax.Z](https://github.com/ZOSOpenTools/zlibport/releases/tag/STABLE_zlibport_1687)
 - **zlib**: [zlib-develop.20231112_003203.zos.pax.Z](https://github.com/ZOSOpenTools/zlibport/releases/tag/DEV_zlibport_1686)
 - **zlib**: [zlib-heads.v1.2.13.20231109_061908.zos.pax.Z](https://github.com/ZOSOpenTools/zlibport/releases/tag/STABLE_zlibport_1645)
 - **zlib**: [zlib-develop.20231109_054118.zos.pax.Z](https://github.com/ZOSOpenTools/zlibport/releases/tag/DEV_zlibport_1621)
-- **less**: [less-643.20231109_010905.zos.pax.Z](https://github.com/ZOSOpenTools/lessport/releases/tag/STABLE_lessport_1590)
-- **coreutils**: [coreutils-9.4.20231109_102027.zos.pax.Z](https://github.com/ZOSOpenTools/coreutilsport/releases/tag/STABLE_coreutilsport_1666)
-- **coreutils**: [coreutils-9.4.20231107_235319.zos.pax.Z](https://github.com/ZOSOpenTools/coreutilsport/releases/tag/STABLE_coreutilsport_1579)
-- **cmake**: [CMake-heads.v3.27.6.20231109_132440.zos.pax.Z](https://github.com/ZOSOpenTools/cmakeport/releases/tag/STABLE_cmakeport_1674)
-- **libtool**: [libtool-2.4.20231109_083911.zos.pax.Z](https://github.com/ZOSOpenTools/libtoolport/releases/tag/STABLE_libtoolport_1656)
+- **bison**: [bison-3.8.2.20231108_184648.zos.pax.Z](https://github.com/ZOSOpenTools/bisonport/releases/tag/STABLE_bisonport_1616)
+- **gzip**: [gzip-1.13.20231109_012130.zos.pax.Z](https://github.com/ZOSOpenTools/gzipport/releases/tag/STABLE_gzipport_1595)
+- **ncurses**: [ncurses-6.3.20231109_110849.zos.pax.Z](https://github.com/ZOSOpenTools/ncursesport/releases/tag/STABLE_ncursesport_1648)
+- **make**: [make-4.4.1.20231109_131300.zos.pax.Z](https://github.com/ZOSOpenTools/makeport/releases/tag/STABLE_makeport_1661)
 - **gettext**: [gettext-0.21.20231109_043853.zos.pax.Z](https://github.com/ZOSOpenTools/gettextport/releases/tag/STABLE_gettextport_1667)
 - **gettext**: [gettext-0.21.20231106_162955.zos.pax.Z](https://github.com/ZOSOpenTools/gettextport/releases/tag/STABLE_gettextport_1568)
 - **openssl**: [openssl-3.1.4.20231109_014013.zos.pax.Z](https://github.com/ZOSOpenTools/opensslport/releases/tag/STABLE_opensslport_1614)
