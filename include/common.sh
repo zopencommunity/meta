@@ -193,7 +193,7 @@ if [ \$# -gt 0 ]; then
     -?|--help) displayHelp; return 0;;
   esac
 fi
-if "\${knv}"; then
+if \${knv}; then
   /bin/env | /bin/sort > /tmp/zopen-config-env-orig.\$\$
 fi
 
