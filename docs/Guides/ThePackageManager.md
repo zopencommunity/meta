@@ -2,7 +2,11 @@
 
 ## Installing the package manager
 
-Download the latest [meta pax](https://github.com/ZOSOpenTools/meta/releases) to z/OS
+If you have curl and bash on your system, you can use this one liner:
+```
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/ZOSOpenTools/meta/HEAD/tools/zopen_install.sh)"
+```
+Otherwise, download the latest [meta pax](https://github.com/ZOSOpenTools/metaport/releases) to z/OS
 - download the file to your desktop
 - use `sftp` to upload the pax file to z/OS.
 - On z/OS, expand the pax using the command ```pax -rvf <filename>.pax```.  
@@ -10,47 +14,68 @@ Download the latest [meta pax](https://github.com/ZOSOpenTools/meta/releases) to
 
 - Source the .env to add `zopen` to your PATH:
 ```bash
-> cd meta-<version>
-> . ./.env
+cd meta-<version>
+. ./.env
 ```
 
 - Initialize your environment:
 ```bash
-> zopen init
+zopen init
+# Make sure to source the zopen-config file as instructed
 ```
 
 ## Using the package manager
 
 - Install any z/OS Open Tools via `zopen install`, e.g.
 ```bash
-> zopen install which
+zopen install which # Installs which 
+# Now test which
+which which
 ```
 
 - List which tools you have installed with `zopen list --installed`, e.g.
 ```bash
-> zopen list --installed
- which which
+zopen list --installed
 ```
 
 - See if any tools can be upgraded with `zopen list --upgradeable`, e.g. 
 ```bash
-> zopen list --upgradeable # list all tools that have upgrades available
+zopen list --upgradeable # list all tools that have upgrades available
 ```
 
 - Upgrade your tools to the latest version with `zopen upgrade`, e.g.
 ```bash
-> zopen upgrade
+zopen upgrade
 ```
 
 - Set up your environment to use your installed tools by sourcing your environment, e.g.
 ```bash
-> . <zopen_root>/etc/zopen-config
+. <zopen_root>/etc/zopen-config
 ```
 
 - List known security vulnerabilities in installed tools with `zopen audit`, e.g.
 ```bash
-> zopen audit
+zopen audit
 ```
+
+# Tools that collide with the z/OS /bin tools
+
+Packages such as coreutils, gawk, sed, findutils, grep, diffutils, and openssh provide
+executables that collide with the z/OS UNIX tools under /bin.
+
+To ensure seamless interaction with z/OS tools under /bin, tools that collide with a tool
+under /bin will be prefixed as follows:
+
+ * `g` prefix for GNU based tools. E.g `gmake` and `gawk`.
+
+If you prefer to use the tools without the prefix, you can specify —-override-zos-tools when
+sourcing zopen-config as follows:
+
+```bash
+. <zopen_root>/etc/zopen-config  —-override-zos-tools
+```
+ 
+Good job, I remember editing videos back in the day with Sony Vegas, definitely a tedious process.
 
 # Upgrading the meta zopen package manager
 The meta package, which include zopen, can be upgraded via the `zopen upgrade` command as follows:
