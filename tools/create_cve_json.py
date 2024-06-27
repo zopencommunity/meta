@@ -99,6 +99,36 @@ async def main():
 
         releases_data = releases_json.get("release_data", {})
 
+        # Convert from versions in include json to release names
+        include_releases = defaultdict(list)
+        for pkg, cves in include_json.items():
+            for cve in cves:
+                versions = set(cve.get("versions", []))
+                releases = []
+                for release in releases_data.get(pkg, []):
+                    if release["assets"][0].get("version", "") in versions:
+                        releases.append(release["name"])
+                include_releases[pkg].append({
+                    "id": cve["id"],
+                    "details": cve["details"],
+                    "severity": cve["severity"],
+                    "releases": releases
+                })
+
+        # Convert from versions in exclude json to release names
+        exclude_releases = defaultdict(list)
+        for pkg, cves in exclude_json.items():
+            for cve in cves:
+                versions = set(cve.get("versions", []))
+                releases = []
+                for release in releases_data.get(pkg, []):
+                    if release["assets"][0].get("version", "") in versions:
+                        releases.append(release["name"])
+                exclude_releases[pkg].append({
+                    "id": cve["id"],
+                    "releases": releases
+                })
+
         if args.verbose:
             print("Processing releases...")
         tasks = []
@@ -108,8 +138,8 @@ async def main():
                 for asset in release.get("assets", []):
                     # Create a coroutine for each project to fetch CVEs
                     tasks.append(get_release_cve_info(session, project, release["name"], asset))
-                    info_map[release["name"]]["commit_sha"] = asset["community_commitsha"]
-                    info_map[release["name"]]["release"] = asset["release"]
+                    info_map[release["name"]]["commit_sha"] = asset.get("community_commitsha", None)
+                    info_map[release["name"]]["release"] = asset.get("release", None)
 
         if args.verbose:
             print("Executing tasks...")
@@ -120,8 +150,10 @@ async def main():
         for project, release_name, cves in all_cves:
             # Filter out CVEs that are in exclude list
             release = info_map[release_name]["release"]
-            if project in exclude_json:
-                for exclude_cve in exclude_json[project]:
+            if release is None:
+                continue
+            if project in exclude_releases:
+                for exclude_cve in exclude_releases[project]:
                     filtered = []
                     for cve in cves:
                         if (cve["id"] != exclude_cve["id"] or
@@ -141,12 +173,14 @@ async def main():
                 }
 
         # Add CVEs from include list
-        for project, cves in include_json.items():
+        for project, cves in include_releases.items():
             for cve in cves:
-                for release_name in cve.get("affected_releases", []):
+                for release_name in cve.get("releases", []):
                     if release_name not in info_map:
                         continue
                     release = info_map[release_name]["release"]
+                    if release is None:
+                        continue
                     if release not in project_info[project]:
                         project_info[project][release] = {
                             "release_name": release_name,
