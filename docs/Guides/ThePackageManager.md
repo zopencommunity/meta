@@ -63,10 +63,11 @@ zopen audit
 Packages such as coreutils, gawk, sed, findutils, grep, diffutils, and openssh provide
 executables that collide with the z/OS UNIX tools under /bin.
 
-To ensure seamless interaction with z/OS tools under /bin, tools that collide with a tool
-under /bin will be prefixed as follows:
+To ensure seamless interaction with z/OS tools under /bin, z/OS Open tools that collide
+a z/OS UNIX tool under /bin will be prefixed as follows:
 
  * `g` prefix for GNU based tools. E.g `gmake` and `gawk`.
+ * `z` prefix for non-GNU based tools. E.g `zssh` 
 
 If you prefer to use the tools without the prefix, you can specify —-override-zos-tools when
 sourcing zopen-config as follows:
@@ -74,9 +75,9 @@ sourcing zopen-config as follows:
 ```bash
 . <zopen_root>/etc/zopen-config  —-override-zos-tools
 ```
- 
-Good job, I remember editing videos back in the day with Sony Vegas, definitely a tedious process.
 
+Tools that have collions will
+ 
 # Upgrading the meta zopen package manager
 The meta package, which include zopen, can be upgraded via the `zopen upgrade` command as follows:
 ```bash
