@@ -398,9 +398,10 @@ handlePackageInstall()
       printf "${NC}${HEADERCOLOR}${BOLD}${name}${NC}:\n ${installCaveat}\n" >> ${caveatsFile}
     fi
 
-    if [ -d "${baseinstalldir}/${installdirname}/altbin" ]; then
-      printf "${NC}${HEADERCOLOR}${BOLD}${name}${NC}:\n${name} has tools provided under altbin/ that conflict with tools under /bin.\nTo use them set ZOPEN_TOOLSET_OVERRIDE and then re-source the zopen-config.\n" >> ${caveatsFile}
-    fi
+    # Let the individual tools emit their own caveats
+    #if [ -d "${baseinstalldir}/${installdirname}/altbin" ]; then
+    #  printf "${NC}${HEADERCOLOR}${BOLD}${name}${NC}:\n${name} has tools provided under altbin/ that conflict with tools under /bin.\nTo use them set ZOPEN_TOOLSET_OVERRIDE and then re-source the zopen-config.\n" >> ${caveatsFile}
+    #fi
 
 
     if ${setactive}; then
