@@ -60,23 +60,28 @@ zopen audit
 
 ## Package Collisions with z/OS UNIX tools
 
-Packages such as `coreutils`, `gawk`, `sed`, `findutils`, `grep`, `diffutils`, and `openssh` provide executables that collide with the z/OS UNIX tools under `/bin`.
+Packages such as `coreutils`, `gawk`, `sed`, `findutils`, `grep`, `diffutils`, `man-db` and `openssh` provide executables that collide with the z/OS UNIX tools under `/bin`.
 
 ### Prefixing for z/OS Open Tools
 
-To ensure seamless interaction with z/OS tools under `/bin`, z/OS Open tools that collide with a z/OS UNIX tool under `/bin` will be prefixed as follows:
+To ensure seamless interaction with z/OS tools under `/bin`, z/OS Open tools that collide with a z/OS UNIX tool under `<package>/bin` will be prefixed as follows:
 
 * **`g` prefix** for GNU-based tools. E.g., `gmake` and `gawk`.
-* **`z` prefix** for non-GNU-based tools. E.g., `zssh`.
+* **`zot` prefix** for non-GNU-based tools. E.g., `zotssh` and `zotman`
+
+Tools that have collisions will also print out an install caveat during zopen install.
+
+The original unprefixed binaries will be placed under `<package>/altbin`.
 
 ### Using Tools without Prefix
 
 If you prefer to use the tools without the prefix, you can specify the `--override-zos-tools` option when sourcing `zopen-config` as follows:
+
 ```bash
 . <zopen_root>/etc/zopen-config --override-zos-tools
 ```
 
-Tools that have collisions will also print out an install caveat during zopen install.
+Alternatively, you can add `$ZOPEN_ROOTFS/usr/local/altbin` to your $PATH.
 
  
 # Upgrading the meta zopen package manager
