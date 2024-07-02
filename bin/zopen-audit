@@ -126,9 +126,14 @@ while IFS= read -r repo; do
   fi
 
   # Fetch CVEs using the release timestamp from the vulnerabilities JSON
-  cves=$(jq -cer 'if .["'$repo'"] then .["'$repo'"] | .["'$release'"] | .CVEs? // [] | .[] | [.severity, .id, .details] | @tsv else empty end' $JSON_CVE_CACHE)
+  cves=$(jq -cr '.["'$repo'"] // {} | .["'$release'"] // {} | .CVEs? // [] | .[] | [.severity, .id, .details] | @tsv' $JSON_CVE_CACHE)
 
-  if [ $? -gt 0 ] || [ -z "$cves" ]; then
+  if [ $? -gt 0 ]; then
+    printVerbose "Failed to fetch vulnerabilities for $repo"
+    continue
+  fi
+  if [ -z "$cves" ]; then
+    printVerbose "No vulnerabilities found in $repo"
     continue
   fi
 
