@@ -100,6 +100,8 @@ async def main():
         releases_data = releases_json.get("release_data", {})
 
         # Convert from versions in include json to release names
+        if args.verbose:
+            print("Converting versions in include json to release names...")
         include_releases = defaultdict(list)
         for pkg, cves in include_json.items():
             for cve in cves:
@@ -116,6 +118,8 @@ async def main():
                 })
 
         # Convert from versions in exclude json to release names
+        if args.verbose:
+            print("Converting versions in exclude json to release names...")
         exclude_releases = defaultdict(list)
         for pkg, cves in exclude_json.items():
             for cve in cves:
@@ -159,6 +163,8 @@ async def main():
                         if (cve["id"] != exclude_cve["id"] or
                                 release_name not in exclude_cve["releases"]):
                             filtered.append(cve)
+                        elif args.verbose:
+                            print(f"Exclude list -- ignored {cve['id']} in {release_name}")
                     if len(filtered) > 0:
                         project_info[project][release] = {
                             "release_name": release_name,
@@ -187,6 +193,8 @@ async def main():
                             "commit_sha": info_map[release_name]["commit_sha"],
                             "CVEs": []
                         }
+                    if args.verbose:
+                        print(f"Include list -- added {cve['id']} to {release_name}")
                     project_info[project][release]["CVEs"].append({
                         "id": cve["id"],
                         "details": cve["details"],
