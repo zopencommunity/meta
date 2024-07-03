@@ -66,7 +66,7 @@ Packages such as `coreutils`, `gawk`, `sed`, `findutils`, `grep`, `diffutils`, `
 
 To ensure seamless interaction with z/OS tools under `/bin`, z/OS Open tools that collide with a z/OS UNIX tool under `<package>/bin` will be prefixed as follows:
 
-* **`g` prefix** for GNU-based tools (Coreutils, Awk, Findutils, Diffutils, Grep) . E.g., `gmake` and `gawk`.
+* **`g` prefix** for GNU-based tools (Coreutils, Awk, Findutils, Diffutils, Grep, Sed) . E.g., `gmake` and `gawk`.
 * **`zot` prefix** for non-GNU-based tools (Man-db, OpenSSH). E.g., `zotssh` and `zotman`
 
 Tools that have collisions will also print out an install caveat during zopen install.
