@@ -1,5 +1,9 @@
 # The package manager
 
+## Pre-requisites
+
+Access to a z/OS UNIX machine with z/OS 2.4 and above and network connectivity to github.com and githubusercontent.com.
+
 ## Installing the package manager
 
 If you have curl and bash on your system, you can use this one liner:
