@@ -229,7 +229,7 @@ determineStatsCollection()
   elif [ -n "$enableStats" ] && ! $enableStats; then
     isCollectingStats=false
   elif [ $analyticsRC -lt 2 ]; then
-    isCollectingStats=$(jq -re '.is_collecting_stats' $jsonConfig)
+    isCollectingStats=$(jq -re '.is_collecting_stats' "${jsonConfig}")
     return
   elif $isHostIBM; then
     printAttention "Attention: Turning on usage statistics as your host is an IBM host. If this is incorrect, rerun with --noenable-stats"
@@ -287,7 +287,7 @@ init()
   if ! ${refresh} && ! ${reinitExisting}; then
     printInfo "- Binaries will be symlinked under \"${rootfs}/usr/local/bin\". Libraries will be symlinked under \"${rootfs}/usr/lib\""
     printInfo "- Packages will be installed and maintained under the directory structure ${fslayout} (${rootfs}/${zopen_pkginstall}). To change, re-run with the -f <layout> option."
-    printInfo "- Collecting usage statistics: $isCollectingStats"
+    printInfo "- Collecting usage statistics: ${isCollectingStats}"
   fi
 
   if ! promptYesOrNo "Do you want to continue?" ${yesToPrompts}; then
@@ -310,14 +310,16 @@ init()
         [ -n "${reinit}" ] && [ "y" = "${reinit}" ]
       }; then
         printInfo "- Re-initializing; zopen-config will be re-created"
-        rmrf=$(rm -rf "${configFile}")
+        if ! rm -rf "${configFile}"; then
+          printError "Unable to remove existing file. Check permissions and retry command."
+        fi
+
       else
         printWarning "- Stopping. Pre-existing configuration will be preserved"
         exit 8
       fi
     fi
   fi
-
 
   export ZOPEN_ROOTFS="${rootfs}"
   ZOPEN_CA_DIR="etc/pki/tls/certs" # Mimic location on some Linux distributions
@@ -390,8 +392,9 @@ generateJsonConfiguration()
   jsonConfigWorking="${jsonConfig}.working"
 
   if [ -e "${jsonConfig}" ]; then
-    releaseLine=$(jq -r '.release_line' $jsonConfig)
-    RM_FILEPROCS=$(jq -r '.num_rm_procs' $jsonConfig)
+    releaseLine=$(jq -r '.release_line' "${jsonConfig}")
+    RM_FILEPROCS=$(jq -r '.num_rm_procs' "${jsonConfig}")
+    # note that is_collecting_stats is set earlier
   fi
 
   if [ -z "$releaseLine" ]; then
@@ -404,14 +407,29 @@ generateJsonConfiguration()
     fi
   fi
 
-  cat <<zz > "${jsonConfigWorking}"
-  {
-    "release_line": "${releaseLine}",
-    "num_rm_procs": ${RM_FILEPROCS},
-    "is_collecting_stats": ${isCollectingStats}
-  }
+  if [ ! -e "${jsonConfig}" ]; then
+    printInfo "Generating global configuration"
+    cat <<zz > "${jsonConfigWorking}"
+{
+  "release_line": "${releaseLine}",
+  "num_rm_procs": ${RM_FILEPROCS},
+  "is_collecting_stats": ${isCollectingStats}
+}
 zz
-  jq '.' $jsonConfigWorking > $jsonConfig
+    jq '.' "${jsonConfigWorking}" > "${jsonConfig}"
+  else
+    printInfo "Refreshing global configuration"
+    # In case 3rd-party edits have been made (adding custom keys for
+    # example), just update the values that zopen itself knows about inline
+    if ! jq --arg releaseLine "${releaseLine}" \
+            --arg isCollectingStats "${isCollectingStats}" \
+                ".release_line = \"${releaseLine}\"" \
+                "| .is_collecting_stats = ${isCollectingStats}" \
+                "${ZOPEN_JSON_CONFIG}" > "${ZOPEN_JSON_CONFIG}.working"; then
+      printError "Errors updating existing configuration file. See previous errors for more information and retry command."
+    fi
+    mv -f "${ZOPEN_JSON_CONFIG}.working" "${ZOPEN_JSON_CONFIG}"
+  fi
 }
 
 generateAnalyticsConfiguration()
@@ -597,7 +615,7 @@ init
 generateFileSystem
 generateZopenConfig
 ! ${refresh} && installPrereqs
-! ${refresh} && generateJsonConfiguration
+generateJsonConfiguration
 generateAnalyticsConfiguration
 ! ${refresh} && updateBootstrappedTools
 deinit
