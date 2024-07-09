@@ -41,7 +41,7 @@ Options:
 
 Examples:
   zopen config --get autocacheclean  
-                    get the value for the autocachclean setting
+                    get the value for the autocacheclean setting
   zopen config --set is_collecting_stats false
                     disable the is_collecting_stats functionality
 
