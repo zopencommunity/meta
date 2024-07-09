@@ -26,9 +26,14 @@ def generate_markdown(data, output_file):
 
     with open(output_file, 'w') as md_file:
         md_file.write("# Newly Released Tools\n\n")
+        first_week = True  # Initialize a flag for the first week
         for week_start, tools in sorted_releases:
             week_end = (datetime.strptime(week_start, '%Y-%m-%d') + timedelta(days=6)).strftime('%Y-%m-%d')
-            md_file.write(f"<details>\n<summary>Week of {week_start} to {week_end}</summary>\n\n")
+            if first_week:
+                md_file.write(f"<details open>\n<summary>Week of {week_start} to {week_end}</summary>\n\n")
+                first_week = False  # Update the flag after the first week
+            else:
+                md_file.write(f"<details>\n<summary>Week of {week_start} to {week_end}</summary>\n\n")
             for tool, releases in tools.items():
                 for release in releases:
                     md_file.write(f"- **{tool}**: [{release['name']}]({release['url']})\n")

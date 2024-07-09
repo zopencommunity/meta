@@ -174,10 +174,12 @@ writeConfigFile(){
 # relative to this envvar value
 displayHelp() {
 echo "usage: . zopen-config [--eknv] [--knv] [-?|--help]"
-echo "  --knv             Display zopen environment variables "
-echo "  --eknv            Display zopen environment variables, prefixed with an"
-echo "                   'export ' keyword for use in scripts"
-echo "  -?, --help            Display this help"
+echo "  --override-zos-tools   Adds altbin/ dir to the PATH, which overrides /bin tools"
+echo "  --nooverride-zos-tools Does not add altbin/ dir from PATH"
+echo "  --knv                  Display zopen environment variables "
+echo "  --eknv                 Display zopen environment variables, prefixed with an"
+echo "                         'export ' keyword for use in scripts"
+echo "  -?, --help             Display this help"
 }
 
 knv=false
@@ -186,11 +188,14 @@ if [ \$# -gt 0 ]; then
   case "\$1" in
     --eknv) exportknv="export "; knv=true;;
     --knv) knv=true;;
+    --override-zos-tools)  export ZOPEN_TOOLSET_OVERRIDE=1;;
+    --nooverride-zos-tools)  unset ZOPEN_TOOLSET_OVERRIDE;;
     -?|--help) displayHelp; return 0;;
-    *) echo "Error. Unknown parameter '\$1' passed to zopen-config." >&2; return 8;;
   esac
 fi
-[ \${knv} ] && /bin/env | /bin/sort > /tmp/zopen-config-env-orig.\$\$
+if \${knv}; then
+  /bin/env | /bin/sort > /tmp/zopen-config-env-orig.\$\$
+fi
 
 ZOPEN_ROOTFS="${rootfs}"
 export ZOPEN_ROOTFS
@@ -209,7 +214,8 @@ fi
 
 zot="z/OS Open Tools"
 
-sanitizeEnvVar(){
+sanitizeEnvVar()
+{
   # remove any envvar entries that match the specified regex
   value="\$1"
   delim="\$2"
@@ -261,6 +267,11 @@ if [ -z "\${ZOPEN_QUICK_LOAD}" ]; then
 fi
 unset displayText
 PATH=\${ZOPEN_ROOTFS}/usr/local/bin:\${ZOPEN_ROOTFS}/usr/bin:\${ZOPEN_ROOTFS}/bin:\${ZOPEN_ROOTFS}/boot:\$(sanitizeEnvVar "\${PATH}" ":" "^\${ZOPEN_PKGINSTALL}/.*\$")
+if [ -n "\$ZOPEN_TOOLSET_OVERRIDE" ]; then
+  PATH="\${ZOPEN_ROOTFS}/usr/local/altbin:\$PATH"
+else
+  PATH=\$(sanitizeEnvVar "\${PATH}" ":" "^\${ZOPEN_ROOTFS}/usr/local/altbin.*\$")
+fi
 export PATH=\$(deleteDuplicateEntries "\${PATH}" ":")
 LIBPATH=\${ZOPEN_ROOTFS}/usr/local/lib:\${ZOPEN_ROOTFS}/usr/lib:\$(sanitizeEnvVar "\${LIBPATH}" ":" "^\${ZOPEN_PKGINSTALL}/.*\$")
 export LIBPATH=\$(deleteDuplicateEntries "\${LIBPATH}" ":")

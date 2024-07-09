@@ -10,7 +10,6 @@ on:
 jobs:
   multi-gitter:
     runs-on: ubuntu-latest
-    permissions: write-all
     steps:
       - uses: actions/checkout@main
       - uses: ./actions/multi-gitter-action

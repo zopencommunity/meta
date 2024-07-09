@@ -35,7 +35,7 @@ Once the key generation process is complete, GPG will display information about 
 	uid                      John Doe (ZOS Open tools) <johndoe@example.com>
 	sub   rsa3072 2021-02-09 [E] [expires: 2022-02-09]
 
-### How do I view key fingerprint ?
+### How do I view key fingerprint?
 
 A key fingerprint is a representation of the key's characteristics and serves as a reliable way to verify the integrity and authenticity of a key. To display the fingerprint at any time, use this command, substituting your email address
 
@@ -82,7 +82,7 @@ If you want to give or send a file copy of your key to someone, use this command
 
 ### How do I create detached signature and sign a file?
 
-1. A detached signature can be created and a file can signed using the following commad:
+1. A detached signature can be created and a file can signed using the following command:
 
 	`gpg --output <file.name>.sig --detach-sig <file-name>` 
 	
@@ -104,7 +104,7 @@ If you want to give or send a file copy of your key to someone, use this command
 
 	`curl -k -O https://ftp.gnu.org/gnu/gnu-keyring.gpg` 
 	
-4. 	Verify the downloaded tar file , using command:
+4. 	Verify the downloaded tar file, using command:
 
 	`gpg --verify --keyring ./gnu-keyring.gpg bash-5.2.15.tar.gz.sig`
 	
