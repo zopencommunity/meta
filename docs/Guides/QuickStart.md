@@ -19,7 +19,7 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/ZOSOpenTools/meta/HEAD/t
 ```
 
 Otherwise, follow these steps:
-- Download the latest [meta pax](https://github.com/ZOSOpenTools/meta/releases) to your desktop, then upload to z/OS.
+- Download the latest [meta pax](https://github.com/ZOSOpenTools/metaport/releases) to your desktop, then upload to z/OS.
   - Note: it is recommended that you use sftp to transfer the pax file from a non-z/OS machine to z/OS. This will ensure that there is no ASCII/EBCDIC conversion.
 - On z/OS, expand the pax file: `pax -rf meta-<version>.pax.Z`. 
 - cd to the unpax'ed directory: `cd meta-<version>`
