@@ -3,7 +3,7 @@
 Meta adds package management facilities to z/OS, via `zopen`. It is similar to utilities like apt, dpkg, yum, yast2, and emerge. It is written as a pure shell script to remove any prerequisites (like python/perl/bash etc).
 This package manager is designed for everyday usage of the z/OS Open Tools ports within the z/OS UNIX environment or for those who wish to download the tools.
 
-**Download** the latest zopen package manager [here](https://github.com/ZOSOpenTools/meta/releases).
+**Download** the latest zopen package manager [here](https://github.com/ZOSOpenTools/metaport/releases).
 
 ## Pre-config
 
