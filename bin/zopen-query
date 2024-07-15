@@ -55,7 +55,7 @@ fi
   echo "  --no-version,    suppress version information, return package names."
   echo "  -v               run in verbose mode."
   echo "  --version        print version"
-  echo "  --ai             run with tinyllama model via LocalAI by using zopen build, zopen build will send error to the model and the model will provide what patch we need to do."
+  echo "  --ai             run with tinyllama model via LocalAI by using zopen build, zopen build will send error to the model and the model will provide what patch we need to do"
 }
 
 colorizepct()

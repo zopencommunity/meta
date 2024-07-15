@@ -28,7 +28,7 @@ Syntax()
   echo "  By no means bullet-proof but might save some typing"
   echo "  Has no checks in it and requires you fill in the ...'s in the generated files."
   echo "   Also, spacing is a bit off - but easy enough to change post-processing in the editor."
-  echo "zopen build --ai will run with tinyllama model via LocalAI, zopen build will send error to the model and the model will provide what patch we need to do."
+  echo "zopen build --ai will run with tinyllama model via LocalAI, zopen build will send error to the model and the model will provide what patch we need to do"
 }
 
 setupMyself

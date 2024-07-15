@@ -40,7 +40,7 @@ Options:
   --version         print version.
   --ai              run with tinyllama model via LocalAI by using zopen build,
                     zopen build will send error to the model and the model will provide
-                    what patch we need to do.
+                    what patch we need to do
 
 Examples:
   zopen config --get autocacheclean  

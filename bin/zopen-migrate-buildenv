@@ -23,7 +23,7 @@ Syntax()
   echo "$ME [--version|--help]"
   echo " simple sed script to change over env vars in a buildenv from 'old style' to 'new style'"
   echo " By no means bullet-proof but might save some typing"
-  echo "zopen build --ai will run with tinyllama model via LocalAI, zopen build will send error to the model and the model will provide what patch we need to do."
+  echo "zopen build --ai will run with tinyllama model via LocalAI, zopen build will send error to the model and the model will provide what patch we need to do"
 }
 
 setupMyself

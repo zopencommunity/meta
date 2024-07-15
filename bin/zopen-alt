@@ -38,7 +38,7 @@ Options:
   --version         print version
   --ai              run with tinyllama model via LocalAI by using zopen build,
                     zopen build will send error to the model and the model will
-                    provide what patch we need to do.
+                    provide what patch we need to do
 
 Examples:
   zopen alt foo     list the available alternatives for package 'foo'
