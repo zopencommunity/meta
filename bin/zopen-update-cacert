@@ -53,8 +53,6 @@ Options:
                         (UNSAFE) Skip certificate validation during download.
   -v, --verbose         print verbose messages.
   --version             print version.
-  --ai                  run with tinyllama model via LocalAI by using zopen build, zopen build 
-                        will send error to the model and the model will provide what patch we need to do.
 
 Parameters:
   <directory>: the directory where the cacert.pem will be updated.

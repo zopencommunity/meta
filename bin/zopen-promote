@@ -65,10 +65,6 @@ Options:
                     promoted zopen environment with the given
                     [PERMISSIONS] string, specified in symbolic mode.
 
-  --ai              run with tinyllama model via LocalAI by using zopen build, 
-                    zopen build will send error to the model and the model will
-                    provide what patch we need to do.
-
 Examples:
   zopen promote     Interactively promote current zopen environment.
   zopen promote /prod
@@ -85,7 +81,6 @@ Examples:
                     allowing only the current user to source the
                     zopen-config environment file and only permit
                     access to zopen environment files to the user 'FOO'.
-  zopen build --ai  run with tinyllama model via LocalAI.
 
 Report bugs at https://github.com/ZOSOpenTools/meta/issues
 

@@ -80,11 +80,6 @@ Options:
   -y, --yes
           automatically answer 'yes' to prompts
 
-  --ai
-          run with tinyllama model via LocalAI by using zopen build,
-          zopen build will send error to the model and the model will
-          provide what patch we need to do.
-
 Examples:
   zopen init
           interactively bootstrap a zopen environment
@@ -100,9 +95,6 @@ Examples:
           updated to source the configuration file at
           '/zopen/etc/zopen-config' when new terminal
           sessions start
-
-  zopen build --ai
-          run with tinyllama model via LocalAI
 
 Report bugs at https://github.com/ZOSOpenTools/meta/issues
 

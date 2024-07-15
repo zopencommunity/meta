@@ -34,16 +34,10 @@ Usage: $ME [OPTION] [tool]
 Options:
   --help        display this help and exit.
   --version     print version.
-  --ai          run with tinyllama model via LocalAI by using zopen build,
-                zopen build will send error to the model and the model will
-                provide what patch we need to do.
 
 Examples:
   Print out the tools required to build git.
     $ME git
-
-  Run with tinyllama model via LocalAI.
-    zopen build --ai
 HELPDOC
   exit 0
 }

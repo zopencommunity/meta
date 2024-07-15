@@ -42,16 +42,12 @@ Options:
                     alternatives, leaving only the currently active version.
   -v, --verbose     run in verbose mode.
   --version         print version.
-  --ai              run with tinyllama model via LocalAI by using zopen build,
-                    zopen build will send error to the model and the model will
-                    provide what patch we need to do.
 
 Examples:
   zopen clean -c    clear the package download cache
   zopen clean -d    analyse the zopen file system and remove dangling symlinks
   zopen clean -u [PACKAGE]
                     remove unused versions for PACKAGE
-  zopen build --ai  run with tinyllama model via LocalAI
 
 Report bugs at https://github.com/ZOSOpenTools/meta/issues.
 
