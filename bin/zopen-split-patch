@@ -32,9 +32,13 @@ Usage: ${ME} [OPTION] [PATCHFILE]
 Options:
   --help      display this help and exit.
   --version   print version.
+  --ai        run with tinyllama model via LocalAI by using zopen build,
+              zopen build will send error to the model and the model will
+              provide what patch we need to do.
 
 Example:
   ${ME} P1.patch    write P1.patch into multiple patches under ${pd}
+  zopen build --ai  run with tinyllama model via LocalAI
 
 HELPDOC
 }

@@ -35,6 +35,9 @@ Options:
   -v, --verbose     run in verbose mode.
   --version         print version.
   -y, --yes         automatically answer yes to prompts.
+  --ai              run with tinyllama model via LocalAI by using zopen build,
+                    zopen build will send error to the model and the model will
+                    provide what patch we need to do.
 
 Examples:
   zopen remove foo bar
@@ -42,6 +45,8 @@ Examples:
   zopen remove --yes foo bar
                     remove the foo and bar packages if installed, without
                     asking for confirmation
+  zopen build --ai  
+                    run with tinyllama model via LocalAI
 
 Report bugs at https://github.com/ZOSOpenTools/meta/issues .
 

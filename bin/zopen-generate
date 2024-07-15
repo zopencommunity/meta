@@ -35,6 +35,7 @@ printSyntax()
 {
   echo "zopen-generate will generate a zopen compatible project" >&2
   echo "Syntax: zopen-generate" >&2
+  echo "zopen build --ai will run with tinyllama model via LocalAI, zopen build will send error to the model and the model will provide what patch we need to do." >&2
 }
 
 if [ $# -eq 1 ]; then

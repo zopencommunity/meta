@@ -24,6 +24,7 @@ printSyntax()
 {
   echo "zopen-md2man will generate man pages from markdown (to be removed)" >&2
   echo "Syntax: zopen-md2man" >&2
+  echo "zopen build --ai will run with tinyllama model via LocalAI, zopen build will send error to the model and the model will provide what patch we need to do." >&2
 }
 
 if [[ $# -eq 1 ]]; then

@@ -45,6 +45,8 @@ Command:
 Options:
   -h, --help, -?    display this help and exit
   -v, --verbose     run in verbose mode
+  --ai              run with tinyllama model via LocalAI by using zopen build, zopen build
+                    will send error to the model and the model will provide what patch we need to do.
 
 Examples:
   zopen --help      displays zopen help
@@ -53,6 +55,7 @@ Examples:
   zopen upgrade -y  upgrade all installed packages to the latest release,
                     without prompting
   zopen alt bash    list installed alternative bash packages
+  zopen build --ai  run with tinyllama model via LocalAI
 
 SEE ALSO:
   zopen-alt(1)
