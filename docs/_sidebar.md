@@ -9,8 +9,8 @@
     - [Newly Released Packages](/newly_released.md)
     - [Package Vulnerabilities](/Vulnerabilities.md)
     - [Current Status](/Progress.md)
-  - [Best Practices](/Guides/section.md)
-    - zopen
+  - [Best Practices](/Guides/BestPractices.md)
+    - [zopen](/Guides/zopen-best-practices.md)
   - Reference
     - [zopen](/reference/zopen-reference.md)
   - [Porting to z/OS guide](/Guides/Porting.md)
