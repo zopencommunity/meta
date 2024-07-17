@@ -25,9 +25,12 @@ Otherwise, follow these steps:
 - cd to the unpax'ed directory: `cd meta-<version>`
 - Set up the PATH to the `zopen` tool: `cd meta-<version>; . ./.env`
 - Initialize the `zopen tools` environment: `zopen init`
+- Set up your zopen environment by sourcing the zopen-config file `. $ZOPEN_ROOTFS/etc/zopen-config`, where `$ZOPEN_ROOTFS` is the location to your zopen file system.\*
 - Install tools you want with `zopen install <tool>`
-- Access the tools you installed by sourcing your configuration: `. <zopen_root>/etc/zopen-config`.
 - You can now safely remove `meta-<version>.pax.Z` and the `meta-<version>` directory
+
+
+* **Note**: We recommend that you add the line `. $ZOPEN_ROOTFS/etc/zopen-config` to your `.profile` startup script. Alternatively, you can use `zopen init --append-to-profile` when setting up your zopen file-system.
 
 See [The package manager](ThePackageManager.md) and [Developing Tools](developing.md) for more details.
 
