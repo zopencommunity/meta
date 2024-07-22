@@ -26,8 +26,10 @@ in your installed packages.
 Usage: ${ME} [OPTION]
 
 Options:
-  -v, --verbose     run in verbose mode.
-  --version         print version.
+  -v, --verbose             run in verbose mode.
+  --version                 print version.
+  -u, --update, --upgrade   attempt to resolve vulnerabilities by upgrading packages.
+  -r, --remove              remove packages with vulnerabilities.
 
 Examples:
   zopen audit       check for vulnerabilities in all installed packages
@@ -41,6 +43,8 @@ HELPDOC
 args=$*
 verbose=false
 debug=false
+upgrade=false
+remove=false
 
 while [ $# -gt 0 ]; do
   printVerbose "Parsing option: $1"
@@ -56,6 +60,12 @@ while [ $# -gt 0 ]; do
   "-v" | "--verbose")
     verbose=true
     ;;
+  "-u" | "--update" | "--upgrade")
+    upgrade=true
+    ;;
+  "-r" | "--remove")
+    remove=true
+    ;;
   "--debug")
     # shellcheck disable=SC2034
     verbose=true
@@ -69,9 +79,15 @@ while [ $# -gt 0 ]; do
   shift
 done
 
-JSON_VULNERABILITIES_URL="https://raw.githubusercontent.com/ZOSOpenTools/meta/main/docs/api/zopen_vulnerability.json"
+if [ $upgrade = true ] && [ $remove = true ]; then
+  printError "Cannot use both --upgrade and --remove options at once."
+  exit 1
+fi
 
-downloadCVEJSONCache()
+JSON_VULNERABILITIES_URL="https://raw.githubusercontent.com/ZOSOpenTools/meta/main/docs/api/zopen_vulnerability.json"
+LATEST_RELEASES_URL="https://raw.githubusercontent.com/ZOSOpenTools/meta/main/docs/api/zopen_releases_latest.json"
+
+downloadJsonCaches()
 {
   cachedir="${ZOPEN_ROOTFS}/var/cache/zopen"
   [ ! -e "${cachedir}" ] && mkdir -p "${cachedir}"
@@ -81,15 +97,29 @@ downloadCVEJSONCache()
     printError "Failed to obtain vulnerability json from ${JSON_VULNERABILITIES_URL}; ${curlout}"
   fi
   chtag -tc 819 "${JSON_CVE_CACHE}"
+
+  if $upgrade; then
+    LATEST_RELEASES_CACHE="${cachedir}/zopen_releases_latest.json"
+
+    if ! curlout=$(curlCmd -L --fail --no-progress-meter -o "${LATEST_RELEASES_CACHE}" "${LATEST_RELEASES_URL}"); then
+      printError "Failed to obtain latest releases json from ${LATEST_RELEASES_URL}; ${curlout}"
+    fi
+    chtag -tc 819 "${LATEST_RELEASES_CACHE}"
+  fi
 }
 
-downloadCVEJSONCache
+downloadJsonCaches
 
 if [ ! -f "${JSON_CVE_CACHE}" ]; then
   printError "Vulnerability json cache file not found."
   exit 1
 fi
 printVerbose "Obtained vulnerability json cache."
+
+if [ $upgrade = true ] && [ ! -f "${LATEST_RELEASES_CACHE}" ]; then
+  printError "Latest releases json cache file not found."
+fi
+printVerbose "Obtained latest releases json cache."
 
 # Store vulnerability counts
 total_vulns=0
@@ -99,11 +129,20 @@ high_vulns=0
 critical_vulns=0
 
 # Check for CVEs in all installed projects
-installedPackages=$(cd "${ZOPEN_PKGINSTALL}" && zosfind ./*/. ! -name . -prune -type l)
+installed_packages=$(cd "${ZOPEN_PKGINSTALL}" && zosfind ./*/. ! -name . -prune -type l)
 printVerbose "Found all installed packages."
 
-printHeader "Scanning for vulnerabilities..."
+# Variables for --upgrade flag
+upgradeable_vuln_pkgs=""
+num_upgradeable=0
+vulns_resolved=0
+vulns_added=0
 
+# Variables for --remove flag
+removable_vuln_pkgs=""
+num_removable=0
+
+printHeader "Scanning for vulnerabilities..."
 while IFS= read -r repo; do
   repo="${repo##*/}"
   pkghome="${ZOPEN_PKGINSTALL}/${repo}/${repo}"
@@ -137,12 +176,44 @@ while IFS= read -r repo; do
     continue
   fi
 
+  # Add to removable pacakges list
+  if $remove; then
+    if [ -z "$removable_vuln_pkgs" ]; then
+      removable_vuln_pkgs="${repo}"
+    else
+      removable_vuln_pkgs="${removable_vuln_pkgs}  ${repo}"
+    fi
+    num_removable=$((num_removable + 1))
+  fi
+
+  # If this package is upgradable, add to list of upgradable pkgs with vulns
+  latest_release_vulns=""
+  is_latest_release=true
+  if $upgrade; then
+    latest_release=$(jq -cr '.release_data | .["'$repo'"] | .[0] | .assets | .[0] | .release' $LATEST_RELEASES_CACHE)
+
+    if [ "$release" != "$latest_release" ]; then
+      is_latest_release=false
+
+      # Prevent extra spaces before first package
+      if [ -z "$upgradeable_vuln_pkgs" ]; then
+        upgradeable_vuln_pkgs="${repo}"
+      else
+        upgradeable_vuln_pkgs="${upgradeable_vuln_pkgs}  ${repo}"
+      fi
+      num_upgradeable=$((num_upgradeable + 1))
+      latest_release_vulns=$(jq -cr '.["'$repo'"] | .["'$latest_release'"] // {} | .CVEs? // [] | .[] | .id' $JSON_CVE_CACHE)
+    fi
+  fi
+  # Variables for change in vulnerabilities when upgrading to latest version
+  pkg_vulns_resolved=0
+  pkg_vulns_unresolved=0
+
   # Iterate through CVEs if any are found
   while IFS="$(echo t | tr t \\t)" read -r severity id details; do
     printHeader "${severity} severity found for $repo:"
     echo "$id"
     echo "$details"
-    echo ""
 
     total_vulns=$((total_vulns + 1))
     case "$severity" in
@@ -159,13 +230,101 @@ while IFS= read -r repo; do
         critical_vulns=$((critical_vulns + 1))
         ;;
     esac
+
+    if $upgrade; then
+      if $is_latest_release; then
+        # Skip this section if this is already the latest release
+        echo "This is the latest release of this package."
+      else
+        # Check if this vuln is resolved in the latest release
+        resolved=true
+        while IFS= read -r latest_id; do
+          if [ "$id" = "$latest_id" ]; then
+            resolved=false
+          fi
+        done << LATEST
+$(printf "%s\n" "$latest_release_vulns")
+LATEST
+        if $resolved; then
+          pkg_vulns_resolved=$((pkg_vulns_resolved + 1))
+          echo "Resolved in the latest release of this package."
+        else
+          pkg_vulns_unresolved=$((pkg_vulns_unresolved + 1))
+        fi
+      fi
+    fi
+    echo ""
   done << CVES
 $(printf "%s\n" "$cves")
 CVES
+  # Add numbers from this package to resolved/added vuln counts
+  if [ $upgrade = true ] && [ $is_latest_release = false ]; then
+    total_latest_vulns=0
+    if [ -n "$latest_release_vulns" ]; then
+      total_latest_vulns=$(echo "$latest_release_vulns" | wc -l)
+    fi
+    vulns_resolved=$((vulns_resolved + pkg_vulns_resolved))
+    vulns_added=$((vulns_added + total_latest_vulns - pkg_vulns_unresolved))
+  fi
 done << EOF
-$(printf "%s\n" "$installedPackages")
+$(printf "%s\n" "$installed_packages")
 EOF
 
 # Print summary
 printHeader "CVE Summary:"
-echo "${total_vulns} vulnerabilities (${low_vulns} low, ${moderate_vulns} moderate, ${high_vulns} high, ${critical_vulns} critical)"
+total_vulns_text="${total_vulns} vulnerabilities"
+if [ $total_vulns -eq 1 ]; then
+  total_vulns_text="1 vulnerability"
+fi
+echo "${total_vulns_text} (${low_vulns} low, ${moderate_vulns} moderate, ${high_vulns} high, ${critical_vulns} critical)"
+
+# If upgrade flag is used, present the option to upgrade packages with vulns
+if $upgrade; then
+  if [ $num_upgradeable -eq 0 ]; then
+    printf "\nAll packages with vulnerabilities are already updated to the latest release.\n\n"
+  else
+    vulns_resolved_text="${vulns_resolved} vulnerabilities"
+    vulns_added_text="${vulns_added} vulnerabilities"
+
+    if [ $vulns_resolved -eq 1 ]; then
+      vulns_resolved_text="1 vulnerability"
+    fi
+    if [ $vulns_added -eq 1 ]; then
+      vulns_added_text="1 vulnerability"
+    fi
+
+    if [ $num_upgradeable -eq 1 ]; then
+      printf "\nA newer release is available for 1 package with vulnerabilities.\n"
+    else
+      printf "\nNewer releases are available for %s packages with vulnerabilities.\n" "$num_upgradeable"
+    fi
+    printf "Upgrading will resolve %s and add %s.\n" "$vulns_resolved_text" "$vulns_added_text"
+    printf "\nPackages: %b\n\n" "$upgradeable_vuln_pkgs"
+
+    if ! promptYesOrNo "Would you like to upgrade these packages?" false; then
+      printInfo "Exiting..."
+      exit 0
+    fi
+    zopen-install -u -y ${upgradeable_vuln_pkgs}
+  fi
+fi
+
+# If remove flag is used, present the option to remove packages with vulns
+if $remove; then
+  if [ $num_removable -eq 0 ]; then
+    printf "\nThere are no packages with vulnerabilities to remove.\n\n"
+  else
+    if [ $num_removable -eq 1 ]; then
+      printf "\nThere is 1 package with vulnerabiities to remove.\n"
+    else
+      printf "\nThere are %s packages with vulnerabilities to remove.\n" "$num_removable"
+    fi
+    printf "\nPackages: %b\n\n" "$removable_vuln_pkgs"
+    printWarning "Removing these packages may break dependencies of other packages."
+    if ! promptYesOrNo "Would you like to remove these pacakges?" false; then
+      printInfo "Exiting..."
+      exit 0
+    fi
+    zopen-remove -y ${removable_vuln_pkgs}
+  fi
+fi
