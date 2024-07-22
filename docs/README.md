@@ -20,6 +20,7 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/ZOSOpenTools/meta/HEAD/t
 
 * [Getting Started](/Guides/QuickStart.md) will get you going fast.
 * Our [z/OS Open Tools repositories](https://github.com/ZOSOpenTools) shows what's available
+* [z/OS Open Tools best practices](https://github.com/ZOSOpenTools) 
 * Want to see the latest [build status and quality](Guides/../Latest.md) ?
 * Want to [use the tools](/Guides/ThePackageManager.md) ?
 * Want to [develop the tools](/Guides/developing.md) ?
