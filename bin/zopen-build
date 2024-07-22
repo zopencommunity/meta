@@ -423,6 +423,7 @@ processOptions()
   depsPath="${ZOPEN_PKGINSTALL}"
   forceUpgradeDeps=false
   noInstallRuntimeDeps=false
+  depsDepth=2
   while [ $# -gt 0 ]; do
     case $1 in
     "-h" | "--help" | "-?")
@@ -458,6 +459,10 @@ processOptions()
       if [ "${btype}" = "DEBUG" ]; then
         buildInReleaseMode=false
       fi
+      ;;
+    "--deps-depth")
+      shift
+      depsDepth=$1
       ;;
     "-comp" | "--comp")
       shift
@@ -1445,12 +1450,13 @@ _CEE_RUNOPTS="\$_CEE_RUNOPTS FILETAG(AUTOCVT,AUTOTAG) POSIX(ON)"
 # Remove spaces in between brackets
 _CEE_RUNOPTS="\$(echo "\$_CEE_RUNOPTS" | awk '{gsub(/\([ \t]*/, "("); gsub(/[ \t]*\)/, ")"); gsub(/[ \t]*,[ \t]*/, ","); print}')"
 export _CEE_RUNOPTS="\$(deleteDuplicateEntries "\$_CEE_RUNOPTS" " ")"
+export _BPXK_AUTOCVT=ON
 
 export ${projectName}_HOME="\${PWD}"
 zz
 
   if [ -d "${ZOPEN_INSTALL_DIR}/bin" ]; then
-    echo "PATH=\"\${${projectName}_HOME}/bin:\$PATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
+    echo "PATH=\"\${${projectName}_HOME}/bin:\${${projectName}_HOME}/altbin:\$PATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
     echo "export PATH=\"\$(deleteDuplicateEntries \"\$PATH\" \":\")\"" >> "${ZOPEN_INSTALL_DIR}/.env"
   fi
   if [ -d "${ZOPEN_INSTALL_DIR}/lib" ]; then
@@ -1567,14 +1573,27 @@ ZZ
           printError "Failed to install dependencies"
         fi
       fi
+
+      printVerbose "Generating .depsenv"
+      parent=""
+      depth=$depsDepth
+      while [ $depth -gt 0 ]; do
+        parent="../${parent}"
+        depth=$((depth - 1))
+      done
+      depth=$depsDepth
+      while [ $depth -gt 0 ]; do
+        parent="$parent/${dep}"
+        depth=$((depth - 1))
+      done
       cat << ZZ >> "${ZOPEN_INSTALL_DIR}/.depsenv"
-if [ -f "../../${dep}/${dep}/.env" ]; then
+if [ -f "${parent}/.env" ]; then
   if [[ \$(type echo) == 'echo is a shell builtin' ]]; then
-    pushd "../../${dep}/${dep}" >/dev/null
+    pushd "${parent}" >/dev/null
     . ./.env
     popd >/dev/null
   else
-    cd "../../${dep}/${dep}" && . ./.env; cd - >/dev/null
+    cd "${parent}" && . ./.env; cd - >/dev/null
   fi
 fi
 ZZ
@@ -2056,12 +2075,19 @@ generateZOSLIBHooks()
   #LIBPATH|prepend|PROJECT_ROOT/lib
   #"
 
+  if [ -z "${CC}" ]; then
+    printVerbose "Skipping GenerateZOSLIBHooks since CC is not set"
+    return
+  fi
+
+  if ! command -v "${CC}" > /dev/null 2>&1; then
+    printVerbose "Skipping GenerateZOSLIBHooks since CC is not a command"
+    return
+  fi
+
   if command -V "${ZOPEN_APPEND_TO_ZOSLIB_ENV_CODE}" > /dev/null 2>&1; then
     printVerbose "Appending additional environment zoslib variables..."
     zoslib_env="${zoslib_env}$(${ZOPEN_APPEND_TO_ZOSLIB_ENV_CODE})"
-  else
-    # Nothing to add, return
-    return
   fi
 
   printHeader "Generating ZOSLIB Environment Hooks"
@@ -2072,11 +2098,26 @@ generateZOSLIBHooks()
 
   output="zoslib_env_hook.c"
 
+  commit="local"
+  if [ -n "$ZOPEN_COMMIT_SHA" ]; then
+    commit="$(git rev-parse HEAD | cut -c -7)" # shorten to 7 chars for iden
+  fi
+
+  if [ -z "$ZOPEN_VENDOR" ]; then
+    ZOPEN_VENDOR="zOS_Open_Tools" 
+  fi
+
+  iden="\$Id: Vendor:$ZOPEN_VENDOR BuildRev:$commit $(/bin/date +"%Y-%m-%d %H:%M:%S %Z") \$";
+
   # Defines zoslib_env_hook
   cat << zz > "${output}"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#pragma convert("IBM-1047")
+char __zopen_identifier[] = "$iden";
+#pragma convert(pop)
 
 #define PROJECT_ROOT_STR "PROJECT_ROOT"
 
@@ -2100,7 +2141,16 @@ if ((envar_value = getenv("ZOPEN_IN_ZOPEN_BUILD")) &&
 zz
 
   # Process input
+  if [ -n "${zoslib_env}" ]; then
   echo "${zoslib_env}" | while read line; do
+    # If its a comment, skip the line
+    if [ "${line}" != "${line#\#}" ]; then
+        continue
+    fi
+    # The line is of this form (no spaces allowed):
+    # some var|some action|some value
+    #        |set|
+    #        |overrideset|
     if [ $(echo "${line}" | awk -F '|' '{print NF-1}') -ne 2 ]; then
       printError "${line} must have 2 '|' seperators only"
     fi
@@ -2181,6 +2231,7 @@ zz
     fi
 
   done
+  fi
 
   echo "" >> "${output}"
   echo "return 0;" >> "${output}"

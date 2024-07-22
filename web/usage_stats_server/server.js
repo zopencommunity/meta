@@ -12,8 +12,13 @@ app.use(express.json());
 app.set('view engine', 'ejs');
 app.set('views', __dirname);
 
-// SQLite Database
-const db = new sqlite3.Database('db/package_stats.db');
+const dbDir = path.join(__dirname, 'db');
+if (!fs.existsSync(dbDir)) {
+    fs.mkdirSync(dbDir);
+}
+
+const dbPath = path.join(dbDir, 'package_stats.db');
+const db = new sqlite3.Database(dbPath);
 
 // Create tables if not exists
 db.run(`

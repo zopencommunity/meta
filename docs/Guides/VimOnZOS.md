@@ -4,20 +4,13 @@
 VIM is a popular and powerful text editor that is often used by programmers for writing code. While VIM is available on many different platforms, it can also be used on z/OS.
 
 ## How to obtain VIM on z/OS?
-To obtain VIM on z/OS, download it from [VIM Github Release page](https://github.com/ZOSOpenTools/vimport/releases).
-
-Alternatively, you can use `zopen install` to download vim as follows:
+To obtain VIM on z/OS, use the [zopen package manager](https://zosopentools.github.io/meta/#/Guides/ThePackageManager) to install it as follows:
 ```
-zopen install vim ncurses
+zopen install vim
 ```
-Since VIM depends on ncurses, we also need to download [ncurses](https://github.com/ZOSOpenTools/ncursesport/releases) and source the .env file.
+Since VIM depends on ncurses, it will automatically download ncurses as a runtime dependency.
 
 ## How to use VIM?
-To use VIM on z/OS, first source the .env file provided with the VIM on z/OS release as follows:
-```
-. ./.env
-```
-This will set the appropriate PATH, VIM, MANPATH environment variables.
 
 Now, you can use VIM to edit new or existing files:
 ```
@@ -25,7 +18,7 @@ vim new.txt # create a new file
 vim ~/.profile # edit an existing file
 ```
 
-VIM on z/OS currently understands the `IBM-1047` and `ISO8959-1` file tags. If you are editing a file that is untagged or editing a new file, VIM will save it as ISO8959-1 (ASCII).
+VIM on z/OS currently understands the `IBM-1047` and `ISO8959-1` file tags. If you are editing a file that is untagged or editing a new file, VIM will save it as ISO8959-1 (ASCII). You can use change this behaviour by setting the `_ENCODE_FILE_NEW` environment variable. For example, to tag new files as IBM-1047, set `export _ENCODE_FILE_NEW=IBM=1047`
 
 ## Improving your VIM experience with various tools and plugins
 
@@ -69,7 +62,20 @@ In addition to cscope and ctags, VIM users on z/OS may also want to consider usi
 
 For instructions on how to install NERDTree, visit https://github.com/preservim/nerdtree.
 
-### VIM-Gitgetter
-Finally, vim-gitgetter is a plugin that allows VIM users on z/OS to interact with Git repositories directly from within the editor. This can be incredibly useful for managing code changes and collaborating with other developers, as it allows users to easily manage branches, commit changes, and push code to remote repositories.
+### Plugins for Git
 
-For instructions on how to install vim-gitgetter, visit https://github.com/airblade/vim-gitgutter.
+#### vim-fugitive
+
+To quote [its README](https://github.com/tpope/vim-fugitive?tab=readme-ov-file#fugitivevim):
+
+> Fugitive is the premier Vim plugin for Git. Or maybe it's the premier Git plugin for Vim? Either way, it's "so awesome, it should be illegal". That's why it's called Fugitive.
+
+This plugin allows VIM users on z/OS to interact with Git repositories directly from within the editor. This can be incredibly useful for managing code changes and collaborating with other developers, as it allows users to easily manage branches, commit changes, and push code to remote repositories.
+
+For instructions on how to install vim-fugitive, visit [https://github.com/tpope/vim-fugitive](https://github.com/tpope/vim-fugitive?tab=readme-ov-file#fugitivevim).
+
+#### vim-gitgutter
+
+> A Vim plugin which shows a git diff in the sign column. It shows which lines have been added, modified, or removed. You can also preview, stage, and undo individual hunks; and stage partial hunks. The plugin also provides a hunk text object.
+
+For instructions on how to install vim-gitgutter, visit https://github.com/airblade/vim-gitgutter.

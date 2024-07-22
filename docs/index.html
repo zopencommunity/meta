@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>z/OS Open Tools Docs</title>
+  <title>z/OS Open Tools</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="description" content="Description">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
@@ -38,9 +38,22 @@
           }
         }
       },
-      name: 'z/OS Open Tools',
+      name: '<img src="https://github.com/ZOSOpenTools/.github/blob/main/profile/zot_chop-grey.png?raw=true" alt="z/OS Open Tools Community" height="200em" >',
       plugins: [
         EditOnGithubPlugin.create('https://github.com/ZOSOpenTools/meta/blob/main/docs/', null, 'Edit this page'),
+        function pageFooter(hook, vm) {
+          var footer = [
+            '<hr style="clear: both;"/>',
+            '<footer style="font-size: smaller;">',
+            '<span>Copyright © z/OS Open Tools a Series of LF Projects, LLC.</span>',
+            '<span>For website terms of use, trademark policy, and other project policies, please see <a href="https://lfprojects.org" target="_blank">https://lfprojects.org</a>.</span>',
+            '</footer>',
+          ].join(' ');
+    
+          hook.afterEach(function (html) {
+            return html + footer;
+          });
+        },
       ],
       repo: 'https://github.com/ZOSOpenTools/meta',
       search: 'auto',
@@ -75,5 +88,7 @@
   <script src="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/docsify-sidebar-collapse.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify-darklight-theme@3/dist/docsify-themeable/main.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify-darklight-theme@3/dist/docsify-themeable/index.min.js"></script> 
+  <script src="//cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
+
 </body>
 </html>

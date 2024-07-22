@@ -1,0 +1,24 @@
+name: 'Enable disabled workflow'
+
+on:
+  schedule:
+    # minute hour dom month dow (UTC)
+    - cron: '00 00 2 * *'
+  # enable manual trigger of version updates
+  workflow_dispatch:
+
+jobs:
+  multi-gitter:
+    runs-on: ubuntu-latest
+    permissions: write-all
+    steps:
+      - uses: actions/checkout@main
+      - uses: ./actions/multi-gitter-action
+
+      - name: Print version
+        run: multi-gitter version
+
+      - name: Enable disabled bump workflows in ZOSOpenTools org
+        run: multi-gitter --config ./cicd/multi-gitter-config run ./bulk-utils/enable_disabled_workflow.sh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

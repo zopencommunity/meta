@@ -14,6 +14,7 @@ zopenInitialize()
   fi
   ZOPEN_ANALYTICS_JSON="${ZOPEN_ROOTFS}/var/lib/zopen/analytics.json"
   ZOPEN_JSON_CACHE_URL="https://raw.githubusercontent.com/ZOSOpenTools/meta/main/docs/api/zopen_releases.json"
+  ZOPEN_JSON_CONFIG="${ZOPEN_ROOTFS}/etc/zopen/config.json"
 }
 
 addCleanupTrapCmd(){
@@ -166,11 +167,37 @@ writeConfigFile(){
   certPath="$4"
 
   cat << EOF >  "${configFile}"
+#!/bin/false  # Script currently intended to be sourced, not run
 # z/OS Open Tools Configuration file
 # Main root location for the zopen installation; can be changed if the
 # underlying root location is copied/moved elsewhere as locations are
 # relative to this envvar value
-ZOPEN_ROOTFS=\"${rootfs}\"
+displayHelp() {
+echo "usage: . zopen-config [--eknv] [--knv] [-?|--help]"
+echo "  --override-zos-tools   Adds altbin/ dir to the PATH, which overrides /bin tools"
+echo "  --nooverride-zos-tools Does not add altbin/ dir from PATH"
+echo "  --knv                  Display zopen environment variables "
+echo "  --eknv                 Display zopen environment variables, prefixed with an"
+echo "                         'export ' keyword for use in scripts"
+echo "  -?, --help             Display this help"
+}
+
+knv=false
+exportknv=""
+if [ \$# -gt 0 ]; then
+  case "\$1" in
+    --eknv) exportknv="export "; knv=true;;
+    --knv) knv=true;;
+    --override-zos-tools)  export ZOPEN_TOOLSET_OVERRIDE=1;;
+    --nooverride-zos-tools)  unset ZOPEN_TOOLSET_OVERRIDE;;
+    -?|--help) displayHelp; return 0;;
+  esac
+fi
+if \${knv}; then
+  /bin/env | /bin/sort > /tmp/zopen-config-env-orig.\$\$
+fi
+
+ZOPEN_ROOTFS="${rootfs}"
 export ZOPEN_ROOTFS
 
 if [ -z "\${_BPXK_AUTOCVT}" ]; then
@@ -185,9 +212,10 @@ else
   fi
 fi
 
-zot=\"z/OS Open Tools\"
+zot="z/OS Open Tools"
 
-sanitizeEnvVar(){
+sanitizeEnvVar()
+{
   # remove any envvar entries that match the specified regex
   value="\$1"
   delim="\$2"
@@ -207,7 +235,7 @@ ZOPEN_PKGINSTALL=\${ZOPEN_ROOTFS}/${pkginstall}
 export ZOPEN_PKGINSTALL
 ZOPEN_SEARCH_PATH=\${ZOPEN_ROOTFS}/usr/share/zopen/
 export ZOPEN_SEARCH_PATH
-ZOPEN_CA=\"\${ZOPEN_ROOTFS}/${certPath}\"
+ZOPEN_CA="\${ZOPEN_ROOTFS}/${certPath}"
 export ZOPEN_CA
 ZOPEN_LOG_PATH=\${ZOPEN_ROOTFS}/var/log
 export ZOPEN_LOG_PATH
@@ -238,12 +266,37 @@ if [ -z "\${ZOPEN_QUICK_LOAD}" ]; then
   fi
 fi
 unset displayText
-PATH=\${ZOPEN_ROOTFS}/usr/local/bin:\${ZOPEN_ROOTFS}/usr/bin:\${ZOPEN_ROOTFS}/bin:\${ZOPEN_ROOTFS}/boot:\$(sanitizeEnvVar \"\${PATH}\" \":\" \"^\${ZOPEN_PKGINSTALL}/.*\$\")
-export PATH=\$(deleteDuplicateEntries \"\${PATH}\" \":\")
+PATH=\${ZOPEN_ROOTFS}/usr/local/bin:\${ZOPEN_ROOTFS}/usr/bin:\${ZOPEN_ROOTFS}/bin:\${ZOPEN_ROOTFS}/boot:\$(sanitizeEnvVar "\${PATH}" ":" "^\${ZOPEN_PKGINSTALL}/.*\$")
+if [ -n "\$ZOPEN_TOOLSET_OVERRIDE" ]; then
+  PATH="\${ZOPEN_ROOTFS}/usr/local/altbin:\$PATH"
+else
+  PATH=\$(sanitizeEnvVar "\${PATH}" ":" "^\${ZOPEN_ROOTFS}/usr/local/altbin.*\$")
+fi
+export PATH=\$(deleteDuplicateEntries "\${PATH}" ":")
 LIBPATH=\${ZOPEN_ROOTFS}/usr/local/lib:\${ZOPEN_ROOTFS}/usr/lib:\$(sanitizeEnvVar "\${LIBPATH}" ":" "^\${ZOPEN_PKGINSTALL}/.*\$")
-export LIBPATH=\$(deleteDuplicateEntries \"\${LIBPATH}\" \":\")
-MANPATH=\${ZOPEN_ROOTFS}/usr/local/share/man:\${ZOPEN_ROOTFS}/usr/local/share/man/\%L:\${ZOPEN_ROOTFS}/usr/share/man:\${ZOPEN_ROOTFS}/usr/share/man/\%L:\$(sanitizeEnvVar \"\${MANPATH}\" \":\" \"^\${ZOPEN_PKGINSTALL}/.*\$\")
-export MANPATH=\$(deleteDuplicateEntries \"\${MANPATH}\" \":\")
+export LIBPATH=\$(deleteDuplicateEntries "\${LIBPATH}" ":")
+MANPATH=\${ZOPEN_ROOTFS}/usr/local/share/man:\${ZOPEN_ROOTFS}/usr/local/share/man/\%L:\${ZOPEN_ROOTFS}/usr/share/man:\${ZOPEN_ROOTFS}/usr/share/man/\%L:\$(sanitizeEnvVar "\${MANPATH}" ":" "^\${ZOPEN_PKGINSTALL}/.*\$")
+export MANPATH=\$(deleteDuplicateEntries "\${MANPATH}" ":")
+
+if \${knv}; then
+  /bin/env | /bin/sort > /tmp/zopen-config-env-modded.\$\$
+  diffout=\$(/bin/diff /tmp/zopen-config-env-orig.\$\$ /tmp/zopen-config-env-modded.\$\$ | /bin/grep -E '^[>]' | /bin/cut -c3- )
+  echo "\${diffout}" | while IFS= read -r knvp; do
+    newval=""
+    envvar="\${knvp%%=*}"
+    cIFS="\$IFS"
+    IFS=":"
+    for token in \${knvp##*=}; do
+      tok=\$(echo "\${token}" | /bin/sed -e 's#/usr/local/zopen/\([^/]*\)/[^/]*/#/usr/local/zopen/\1/\1/#')
+      newval=\$(printf "%s:%s" "\${newval}" "\${tok}")
+    done
+    echo "\${exportknv}\${envvar}=\${newval#*:}"
+    IFS="\${cIFS}"
+  done
+  rm /tmp/zopen-config-env-orig.\$\$ /tmp/zopen-config-env-modded.\$\$ 2>/dev/null
+fi
+
+
 EOF
 
 }
@@ -428,6 +481,7 @@ defineEnvironment()
   export _TAG_REDIR_ERR=txt
   export _TAG_REDIR_IN=txt
   export _TAG_REDIR_OUT=txt
+  export GIT_UTF8_CCSID=819
 
   # Required for proper operation of xlclang
   export _CC_CCMODE=1

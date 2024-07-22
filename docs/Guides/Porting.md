@@ -24,7 +24,7 @@ Many tools depend on other tools to be able to build or run. You will need to pr
 (i.e. binary tools not from source), as well as _prod_ tools (i.e. _production_ level tools previously built
 from another z/OS Open Tools repository).
 
-Many tools require a C or C++ compiler (or both) to build. There a couple of options to obtain the C/C++ compiler:
+Many tools require a C or C++ compiler (or both) to build. There are a couple of options to obtain the C/C++ compiler:
 * You can download a web deliverable add-on feature to your XL C/C++ compiler 
 [here](https://www.ibm.com/servers/resourcelink/svc00100.nsf/pages/xlCC++V241ForZOsV24).
 * You can install and manage _C/C++ for Open Enterprise Languages on z/OS_ using _RedHat OpenShift Container Platform_ and _IBM Z and Cloud Modernization Stack_ 
@@ -40,7 +40,7 @@ You can change this location by running `zopen init` to reconfigure the install 
 
 If the tool is not found, then `zopen build` will automatically install it.
 
-Each tool is responsible for knowing how to set it's own environment up (e.g. PATH, LIBPATH, and any other environment variables).
+Each tool is responsible for knowing how to set its own environment up (e.g. PATH, LIBPATH, and any other environment variables).
 By default, `zopen build` will automatically add PATH, LIBPATH, and MANPATH environment variables. If other environment variables are needed, then you can append them by defining a `zopen_append_to_env` function as in the case of [gitport](https://github.com/ZOSOpenTools/gitport/blob/main/buildenv#LL66-L66C20).
 Once the tool is installed, the .env file needs to be source'd from its install directory to set up the environment.
 If you are building from a ZOSOpenTools port, this `.env` file will be created as part of the install process.
@@ -53,6 +53,7 @@ Begin first by cloning the https://github.com/ZOSOpenTools/meta repo.  This repo
 
 ```bash
 # Clone the required repositories (using Git from https://github.com/ZOSOpenTools/gitport)
+export GIT_UTF8_CCSID=819 # set the UTF8 ccsid to 819
 git clone git@github.com:ZOSOpenTools/meta.git && cd meta
 ```
 
@@ -225,3 +226,27 @@ Please follow the [contributing guidelines](https://github.com/ZOSOpenTools/meta
 Once you have a working build of your z/OS Open Source tool, then you may add it to the z/OS Open Source Jenkins CI/CD pipeline.
 
 View [CI/CD Pipeline](/Guides/Pipeline.md) for more details
+
+## Porting Go Packages
+
+Pre-reqruisites:
+- The Go on z/OS Compiler
+- Wharf
+- Git
+
+When porting Go packages, there is a general framework you can use to do so. Go supports a feature known as [Workspaces](https://go.dev/blog/get-familiar-with-workspaces). It allows you to work on multiple Go modules at the same time, but for our purposes, we will use it to modify a Go package's dependencies without having to to change the various `go.mod`s of each package. Once we have a workspace, we can make use of [Wharf](https://github.com/ZOSOpenTools/wharf), our open source porting tool for Go packages.
+
+The general steps for porting:
+1. Create a directory that will be your workspace. `cd` into it and run `go work init`
+2. Inside the workspace directory, clone the package you'd like to port and then run `go work use <package name>`.
+3. At the root of the workspace directory, run `wharf ./<package name>/cmd/...`
+    - The usage of `wharf` depends on the directory structure of the package. If there is no `cmd` directory you can also try `wharf ./<package name>/...`
+4. If `wharf` reports that your package was succesfully ported than you can proceed to step 7
+5. If `wharf` reports that is was unable to port the package or its dependencies, then you must make manual changes
+6. Anytime you need to make changes to a dependency, clone it and make sure to run `go work use ./<dependency>` so that the changes are picked up by the workspace
+7. Once you have a successful build, create diffs of any changes you made and follow the steps outlined in the earlier sections to create a zopen port with the zopen framework
+
+Two examples of ports that you can use as reference:
+- [gum](https://github.com/ZOSOpenTools/gumport) - a package that `wharf` handles without requiring manual changes to dependencies
+- [Github CLI](https://github.com/ZOSOpenTools/githubcliport) - a package that requires manual changes to dependencies
+

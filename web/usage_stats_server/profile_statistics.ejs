@@ -50,12 +50,12 @@
       <tbody>
         <% data.installs.forEach(install => { %>
           <tr>
-            <td><%= install.packagename %></td>
-            <td><%= install.version %></td>
-            <td><%= install.isUpgrade %></td>
-            <td><%= install.isBuildInstall %></td>
-            <td><%= install.isRuntimeDependencyInstall %></td>
-            <td><%= new Date(install.timestamp * 1000).toLocaleString() %></td>
+		<td><%= install.packagename %></td>
+		<td><%= install.version %></td>
+		<td><%= install.isUpgrade ? 'true' : 'false' %></td>
+		<td><%= install.isBuildInstall ? 'true' : 'false' %></td>
+		<td><%= install.isRuntimeDependencyInstall ? 'true' : 'false' %></td>
+		<td><%= new Date(install.timestamp * 1000).toLocaleString() %></td>
           </tr>
         <% }); %>
       </tbody>

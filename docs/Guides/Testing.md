@@ -1,10 +1,34 @@
-# CI/CD Pipeline
+# Testing
 
 ## Getting Started
 
 ### Environment
 
 The z/OS Open Tools CI/CD pipeline leverages Wazi as a Service instances to be able to build, test, and deploy ported packages to Github Releases.
+
+### z/OS Open Tools Github Actions
+
+z/OS Open Tools ports take advantage of Github Actions to be able to build and test project changes directly on our CI/CD z/OS machines. The [build and test](https://github.com/ZOSOpenTools/meta/blob/main/.github/workflows/build_and_test.yml) job triggers a build on Jenkins and reports the status and test results back. If the Github Action is triggered on a Pull Request, then a status check is created to represent the status of the build and test job. Is is strong recommended that you wait for a green status before merging in your approved Pull Request.
+
+Additionally, each port has its own github workflow in place, which calls the build and test job. For example, metaport has the following [workflow](https://github.com/ZOSOpenTools/metaport/blob/main/.github/workflows/build_and_test.yml), which triggers the build and test job to be executed on specific events, including on opened or updated pull requests and on the comment '/run tests'. It also speficies which files to ignore.
+
+#### What to do when there are issues
+
+The build and test job can sometimes fail due to environment or Jenkins related issues. For example, this issue is quite common:
+```
+  ..........................................................Console output: 
+
+  
+  <!DOCTYPE html><html><head resURL="/static/475dfc94" data-rooturl="" data-resurl="/static/475dfc94" data-extensions-available="true" data-unit-test="false" data-imagesurl="/static/475dfc94/images" data-crumb-header="Jenkins-Crumb" data-crumb-value="82483c0595e9cee14b8c260fbf3804f9ae5fc8be2543d7ffdf71e5ec968afc98">
+
+  ...
+```
+
+This usually occurs when the Jenkins system is overloaded.
+
+
+If this is case, simply add the comment `/run tests` to your PR to trigger another build. 
+
 
 ### z/OS Open Tools Jenkins CI/CD Pipeline
 

@@ -11,16 +11,26 @@ Whether you want to _use_ the tools or also _improve_ the tools is up to you.
 If you have installed a version of the zopen package manager prior to September 2023, 
 please note you will need to [migrate to the new package manager](Migration.md). 
 
-## Getting the zopen package manager
+## Installing zopen package manager
 
-- Download the latest [meta pax](https://github.com/ZOSOpenTools/meta/releases) to your desktop, then upload to z/OS
+If you have curl and bash on your system, you can use this one liner:
+```
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/ZOSOpenTools/meta/HEAD/tools/zopen_install.sh)"
+```
+
+Otherwise, follow these steps:
+- Download the latest [meta pax](https://github.com/ZOSOpenTools/metaport/releases) to your desktop, then upload to z/OS.
+  - Note: it is recommended that you use sftp to transfer the pax file from a non-z/OS machine to z/OS. This will ensure that there is no ASCII/EBCDIC conversion.
 - On z/OS, expand the pax file: `pax -rf meta-<version>.pax.Z`. 
 - cd to the unpax'ed directory: `cd meta-<version>`
 - Set up the PATH to the `zopen` tool: `cd meta-<version>; . ./.env`
 - Initialize the `zopen tools` environment: `zopen init`
+- Set up your zopen environment by sourcing the zopen-config file `. $ZOPEN_ROOTFS/etc/zopen-config`, where `$ZOPEN_ROOTFS` is the location to your zopen file system.\*
 - Install tools you want with `zopen install <tool>`
-- Access the tools you installed by sourcing your configuration: `. <zopen_root>/etc/zopen-config`.
 - You can now safely remove `meta-<version>.pax.Z` and the `meta-<version>` directory
+
+
+* **Note**: We recommend that you add the line `. $ZOPEN_ROOTFS/etc/zopen-config` to your `.profile` startup script. Alternatively, you can use `zopen init --append-to-profile` when setting up your zopen file-system.
 
 See [The package manager](ThePackageManager.md) and [Developing Tools](developing.md) for more details.
 
