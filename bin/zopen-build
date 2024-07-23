@@ -2305,7 +2305,9 @@ if [ -n "${ZOPEN_SRC_DIR}" ]; then
   cd "${ZOPEN_SRC_DIR}" || exit 99
 fi
 
-generateZOSLIBHooks
+if [ "${ZOPEN_SKIP_ZOSLIB_ENV_HOOK}x" != "skipx" ]; then
+        generateZOSLIBHooks
+fi
 
 if ! resolveCommands; then
   exit 4
