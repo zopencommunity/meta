@@ -423,8 +423,7 @@ zz
     # example), just update the values that zopen itself knows about inline
     if ! jq --arg releaseLine "${releaseLine}" \
             --arg isCollectingStats "${isCollectingStats}" \
-                ".release_line = \"${releaseLine}\"" \
-                "| .is_collecting_stats = ${isCollectingStats}" \
+                ".release_line = \"${releaseLine}\" | .is_collecting_stats = ${isCollectingStats}" \
                 "${ZOPEN_JSON_CONFIG}" > "${ZOPEN_JSON_CONFIG}.working"; then
       printError "Errors updating existing configuration file. See previous errors for more information and retry command."
     fi
