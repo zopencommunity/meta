@@ -430,8 +430,8 @@ generateJsonConfiguration()
 {
   "release_line": "${releaseLine}",
   "num_rm_procs": ${RM_FILEPROCS},
-  "is_collecting_stats": ${isCollectingStats}
-  "override_zos_tools": ${OVERRIDE_ZOS_TOOLS},
+  "is_collecting_stats": ${isCollectingStats},
+  "override_zos_tools": ${OVERRIDE_ZOS_TOOLS}
 }
 zz
     jq '.' "${jsonConfigWorking}" > "${jsonConfig}"
@@ -440,9 +440,9 @@ zz
     # In case 3rd-party edits have been made (adding custom keys for
     # example), just update the values that zopen itself knows about inline
     if ! jq --arg releaseLine "${releaseLine}" \
-            --arg isCollectingStats "${isCollectingStats}" \
-            --arg overrideZOSTools "${OVERRIDE_ZOS_TOOLS}" \
-                ".release_line = \"${releaseLine}\" | .is_collecting_stats = ${isCollectingStats}" | .override_zos_tools = ${overrideZOSTools}" \
+        --arg isoverrideZOSTools ${OVERRIDE_ZOS_TOOLS} \
+        --arg isCollectingStats ${isCollectingStats} \
+                ".release_line = \$releaseLine | .override_zos_tools = \$isoverrideZOSTools | .is_collecting_stats = \$isCollectingStats" \
                 "${ZOPEN_JSON_CONFIG}" > "${ZOPEN_JSON_CONFIG}.working"; then
       printError "Errors updating existing configuration file. See previous errors for more information and retry command."
     fi
