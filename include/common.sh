@@ -165,6 +165,7 @@ writeConfigFile(){
   rootfs="$2"
   pkginstall="$3"
   certPath="$4"
+  overrideZOSTools=$5
 
   cat << EOF >  "${configFile}"
 #!/bin/false  # Script currently intended to be sourced, not run
@@ -176,25 +177,41 @@ displayHelp() {
 echo "usage: . zopen-config [--eknv] [--knv] [-?|--help]"
 echo "  --override-zos-tools   Adds altbin/ dir to the PATH, which overrides /bin tools"
 echo "  --nooverride-zos-tools Does not add altbin/ dir from PATH"
+echo "  --override-zos-tools-subset=<file>"
+echo "      Override a subset of zos tools. Containing a subset of packages to override, delimited by newlines."
 echo "  --knv                  Display zopen environment variables "
 echo "  --eknv                 Display zopen environment variables, prefixed with an"
 echo "                         'export ' keyword for use in scripts"
 echo "  -?, --help             Display this help"
 }
+EOF
 
+if $overrideZOSTools; then
+  cat << EOF >>  "${configFile}"
+ZOPEN_TOOLSET_OVERRIDE=1;
+EOF
+fi
+
+cat << EOF >>  "${configFile}"
 knv=false
 exportknv=""
+unset overrideFile
 if [ \$# -gt 0 ]; then
   case "\$1" in
     --eknv) exportknv="export "; knv=true;;
     --knv) knv=true;;
     --override-zos-tools)  export ZOPEN_TOOLSET_OVERRIDE=1;;
     --nooverride-zos-tools)  unset ZOPEN_TOOLSET_OVERRIDE;;
+    --override-zos-tools-subset) shift;  export ZOPEN_TOOLSET_OVERRIDE=1; overrideFile="\$1";;
     -?|--help) displayHelp; return 0;;
   esac
 fi
 if \${knv}; then
   /bin/env | /bin/sort > /tmp/zopen-config-env-orig.\$\$
+fi
+
+if [ -n "\${overrideFile}" ] && [ ! -f "\${overrideFile}" ]; then
+  echo "Override file '\${overrideFile}' is not a file. Skipping..."
 fi
 
 ZOPEN_ROOTFS="${rootfs}"
@@ -267,11 +284,23 @@ if [ -z "\${ZOPEN_QUICK_LOAD}" ]; then
 fi
 unset displayText
 PATH=\${ZOPEN_ROOTFS}/usr/local/bin:\${ZOPEN_ROOTFS}/usr/bin:\${ZOPEN_ROOTFS}/bin:\${ZOPEN_ROOTFS}/boot:\$(sanitizeEnvVar "\${PATH}" ":" "^\${ZOPEN_PKGINSTALL}/.*\$")
+
 if [ -n "\$ZOPEN_TOOLSET_OVERRIDE" ]; then
-  PATH="\${ZOPEN_ROOTFS}/usr/local/altbin:\$PATH"
+  if [ -n "\${overrideFile}" ] && [ -f "\${overrideFile}" ]; then
+    PATH=\$(sanitizeEnvVar "\${PATH}" ":" "^\${ZOPEN_ROOTFS}/usr/local/altbin.*\$")
+    while IFS= read -r project; do
+      if [ -d "\$ZOPEN_PKGINSTALL/\$project/\$project/altbin" ]; then
+        PATH="\$ZOPEN_PKGINSTALL/\$project/\$project/altbin:\$PATH"
+      fi
+    done < "\${overrideFile}"
+  else
+    PATH="\${ZOPEN_ROOTFS}/usr/local/altbin:\$PATH"
+  fi
 else
   PATH=\$(sanitizeEnvVar "\${PATH}" ":" "^\${ZOPEN_ROOTFS}/usr/local/altbin.*\$")
 fi
+
+
 export PATH=\$(deleteDuplicateEntries "\${PATH}" ":")
 LIBPATH=\${ZOPEN_ROOTFS}/usr/local/lib:\${ZOPEN_ROOTFS}/usr/lib:\$(sanitizeEnvVar "\${LIBPATH}" ":" "^\${ZOPEN_PKGINSTALL}/.*\$")
 export LIBPATH=\$(deleteDuplicateEntries "\${LIBPATH}" ":")

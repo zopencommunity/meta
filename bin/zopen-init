@@ -41,6 +41,10 @@ Options:
   --[no]enable-stats
           Toggle enabling collection of usage statistics
 
+  --[no]override-zos-tools
+          Toggle default mode for overriding z/OS /bin tools
+          in the zopen-config. Default is --nooverride-zos-tools
+
   -f, --fs-layout <LAYOUT>
           The filesystem structure to use for installed
           packages on disk; packages will be installed to
@@ -145,6 +149,12 @@ while [ $# -gt 0 ]; do
       ;;
     "--enable-stats" )
       enableStats=true
+      ;;
+    "--override-zos-tools" )
+      OVERRIDE_ZOS_TOOLS=true
+      ;;
+    "--nooverride-zos-tools" )
+      OVERRIDE_ZOS_TOOLS=false
       ;;
     "--noenable-stats" )
       enableStats=false
@@ -374,7 +384,7 @@ generateFileSystem()
 generateZopenConfig()
 {
   printHeader "Generating zopen-config"
-  writeConfigFile "${configFile}" "${rootfs}" "${zopen_pkginstall}" "${ZOPEN_CA_DIR}/${certFileName}"
+  writeConfigFile "${configFile}" "${rootfs}" "${zopen_pkginstall}" "${ZOPEN_CA_DIR}/${certFileName}" $OVERRIDE_ZOS_TOOLS
   printInfo "- Created config in ${configFile}"
   if ${appendToProfile}; then
     if ! grep -q ". ${rootfs}/etc/zopen-config" "${HOME}/.profile"; then
@@ -395,6 +405,13 @@ generateJsonConfiguration()
     releaseLine=$(jq -r '.release_line' "${jsonConfig}")
     RM_FILEPROCS=$(jq -r '.num_rm_procs' "${jsonConfig}")
     # note that is_collecting_stats is set earlier
+    if [ -z "${OVERRIDE_ZOS_TOOLS}" ] && jq -er ".override_zos_tools" $jsonConfig >/dev/null; then
+      OVERRIDE_ZOS_TOOLS=$(jq -r '.override_zos_tools' $jsonConfig)
+    fi
+  fi
+
+  if [ -z "${OVERRIDE_ZOS_TOOLS}" ]; then
+    OVERRIDE_ZOS_TOOLS=false
   fi
 
   if [ -z "$releaseLine" ]; then
@@ -413,7 +430,8 @@ generateJsonConfiguration()
 {
   "release_line": "${releaseLine}",
   "num_rm_procs": ${RM_FILEPROCS},
-  "is_collecting_stats": ${isCollectingStats}
+  "is_collecting_stats": ${isCollectingStats},
+  "override_zos_tools": ${OVERRIDE_ZOS_TOOLS}
 }
 zz
     jq '.' "${jsonConfigWorking}" > "${jsonConfig}"
@@ -422,8 +440,9 @@ zz
     # In case 3rd-party edits have been made (adding custom keys for
     # example), just update the values that zopen itself knows about inline
     if ! jq --arg releaseLine "${releaseLine}" \
-            --arg isCollectingStats "${isCollectingStats}" \
-                ".release_line = \"${releaseLine}\" | .is_collecting_stats = ${isCollectingStats}" \
+        --arg isoverrideZOSTools ${OVERRIDE_ZOS_TOOLS} \
+        --arg isCollectingStats ${isCollectingStats} \
+                ".release_line = \$releaseLine | .override_zos_tools = \$isoverrideZOSTools | .is_collecting_stats = \$isCollectingStats" \
                 "${ZOPEN_JSON_CONFIG}" > "${ZOPEN_JSON_CONFIG}.working"; then
       printError "Errors updating existing configuration file. See previous errors for more information and retry command."
     fi
@@ -612,9 +631,9 @@ deinit()
 
 init
 generateFileSystem
+generateJsonConfiguration
 generateZopenConfig
 ! ${refresh} && installPrereqs
-generateJsonConfiguration
 generateAnalyticsConfiguration
 ! ${refresh} && updateBootstrappedTools
 deinit
