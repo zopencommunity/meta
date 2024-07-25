@@ -87,8 +87,51 @@ If you prefer to use the tools without the prefix, you can specify the `--overri
 
 Alternatively, you can add `$ZOPEN_ROOTFS/usr/local/altbin` to your $PATH.
 
+### Adjusting the default override mode for your zopen installation
+
+zopen init provides the following option which can adjust the default override mode.
+```
+  --[no]override-zos-tools
+          Toggle default mode for overriding z/OS /bin tools
+          in the zopen-config. Default is --nooverride-zos-tools
+```
+
+For examples:
+```bash
+zopen init --override-zos-tools
+```
+
+If you have a zopen fileystem already configured, you can use the `zopen config` command to set the value:
+```bash
+zopen config --set override_zos_tools true
+zopen init --refresh # to refresh the zopen-config file
+```
+
+### Selecting a Specific Set of Packages to Override
+If you want to override only a specific set of packages, you can create a file that lists the packages you want to override. This allows for more fine-grained control over which packages are overridden.
+
+**Creating the override list file**
+
+* Create a file named `zopen.subset` in your home directory ($HOME/zopen.subset). Add one tool per line to the file, without any leading or trailing whitespace. For example:
+```bash
+gawk
+coreutils
+sed
+```
+When sourcing zopen-config, use the `--override-zos-tools-subset` option followed by the path to your zopen.subset file:
+```
+. $ZOPEN_ROOTFS/etc/zopen-config --override-zos-tools-subset $HOME/zopen.subset
+```
+This will override only the packages listed in the zopen.subset file.
+
+**Format of the override list file**
+* One tool per line
+* No leading or trailing whitespace
+* Names must match the package names (e.g., gawk, coreutils, sed)
+
  
 # Upgrading the meta zopen package manager
+
 The meta package, which include zopen, can be upgraded via the `zopen upgrade` command as follows:
 ```bash
 > zopen upgrade meta
