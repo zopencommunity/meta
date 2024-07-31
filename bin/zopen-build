@@ -123,6 +123,12 @@ Optional:
   ZOPEN_MAKE_OPTS             Options to pass to build program.
                               (defaults to '-j\${ZOPEN_NUM_JOBS}')
 
+Optional settings for installation:
+  ZOPEN_RUNTIME_DEPS          Runtime z/OS Open Tool dependencies to be installed
+                              alongside the tool.
+  ZOPEN_SYSTEM_PREREQ         System prerequisites, supply the name of the prereq
+                              scripts under $ZOPEN_SYSTEM_PREREQ_DIR
+
 Restricted Usage - only set in ports if necessary
   ZOPEN_DONT_ADD_ZOSLIB_DEP   Set to avoid adding zoslib as a dependency.
 
@@ -710,10 +716,10 @@ checkEnv()
   fi
 
   # Check for validity
-  if [ -n  "${ZOPEN_SYSTEM_PREREQS}" ]; then
-    echo "${ZOPEN_SYSTEM_PREREQS}" | xargs | tr ' ' '\n' | sort | while read prereq; do
-      if [ ! -f "$ZOPEN_SYSTEM_PREREQS_DIR/$prereq" ]; then
-        printError "ZOPEN_SYSTEM_PREREQS prereq \"${prereq}\" does not exist in \"$ZOPEN_SYSTEM_PREREQS_DIR/${prereq}\""
+  if [ -n  "${ZOPEN_SYSTEM_PREREQ}" ]; then
+    echo "${ZOPEN_SYSTEM_PREREQ}" | xargs | tr ' ' '\n' | sort | while read prereq; do
+      if [ ! -f "$ZOPEN_SYSTEM_PREREQ_DIR/$prereq" ]; then
+        printError "ZOPEN_SYSTEM_PREREQ prereq \"${prereq}\" does not exist in \"$ZOPEN_SYSTEM_PREREQ_DIR/${prereq}\""
       fi
     done
   fi 
@@ -1743,7 +1749,7 @@ cat <<zz >> "${ZOPEN_INSTALL_DIR}/metadata.json"
 zz
 
 isFirst=true
-echo "${ZOPEN_SYSTEM_PREREQS}" | xargs | tr ' ' '\n' | sort | while read prereq; do
+echo "${ZOPEN_SYSTEM_PREREQ}" | xargs | tr ' ' '\n' | sort | while read prereq; do
 if ! $isFirst; then
   echo "," >> "${ZOPEN_INSTALL_DIR}/metadata.json"
 fi

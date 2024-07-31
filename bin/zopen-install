@@ -400,24 +400,28 @@ handlePackageInstall()
     fi
 
     
+    systemPrereqs=$(jq -r '.product.system_prereqs // empty' "${metadataFile}" 2>/dev/null)
     if ! $bypassPrereqs; then
-      systemPrereqs=$(jq -r '.product.system_prereqs // empty' "${metadataFile}" 2>/dev/null)
-      systemPrereqs="${systemPrereqs} zos24" # zos24 should be min requirement - always add it
+      if [ -z "${systemPrereqs}" ]; then
+        systemPrereqs="${systemPrereqs} zos24" # if empty, check for zos24
+      fi
       if [ -n "$systemPrereqs" ]; then
-        if [ ! -d "$ZOPEN_SYSTEM_PREREQS_DIR" ]; then
-          printWarning "$ZOPEN_SYSTEM_PREREQS_DIR does not exist. You should upgrade meta. Bypassing prereq check."
+        if [ ! -d "$ZOPEN_SYSTEM_PREREQ_DIR" ]; then
+          printWarning "$ZOPEN_SYSTEM_PREREQ_DIR does not exist. You should upgrade meta. Bypassing prereq check."
         fi
         for prereq in $(echo "${systemPrereqs}" | xargs | tr ' ' '\n' | sort -u); do
-          printHeader "Checking system pre-req requirement $prereq"
-          if [ -e "$ZOPEN_SYSTEM_PREREQS_DIR/$prereq" ]; then
-            if ! /bin/sh -c "$ZOPEN_SYSTEM_PREREQS_DIR/$prereq"; then
+          printInfo "Checking system pre-req requirement $prereq"
+          if [ -e "$ZOPEN_SYSTEM_PREREQ_DIR/$prereq" ]; then
+            if ! /bin/sh -c "$ZOPEN_SYSTEM_PREREQ_DIR/$prereq"; then
               printError "Failed system pre-req check \"$prereq\". If you wish to bypass this, install with --bypass-prereq-checks"
             fi
           else
-            printWarning "$ZOPEN_SYSTEM_PREREQS_DIR/$prereq does not exist. You should upgrade meta. Bypassing prereq check."
+            printWarning "$ZOPEN_SYSTEM_PREREQ_DIR/$prereq does not exist. You should upgrade meta. Bypassing prereq check."
           fi
         done
       fi
+    else
+      syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_PACKAGE},${CAT_INSTALL}" "BYPASS" "handlePackageInstall" "Bypassing prereq checks ${systemPrereqs} for '${name}'."
     fi
     # Let the individual tools emit their own caveats
     #if [ -d "${baseinstalldir}/${installdirname}/altbin" ]; then
