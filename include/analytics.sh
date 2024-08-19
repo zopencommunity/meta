@@ -20,9 +20,11 @@ generateUUID()
 
 isAnalyticsOn()
 {
-  # Currently in beta more
   jsonConfig="${ZOPEN_ROOTFS}/etc/zopen/config.json"
   if [ ! -f ${jsonConfig} ]; then
+    return 2
+  fi
+  if ! command -v jq > /dev/null 2>&1; then
     return 2
   fi
   isCollecting=$(jq -re '.is_collecting_stats' $jsonConfig)
