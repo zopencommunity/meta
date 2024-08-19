@@ -16,9 +16,9 @@ zopenInitialize()
   ZOPEN_JSON_CACHE_URL="https://raw.githubusercontent.com/ZOSOpenTools/meta/main/docs/api/zopen_releases.json"
   ZOPEN_JSON_CONFIG="${ZOPEN_ROOTFS}/etc/zopen/config.json"
   if [ -n "${INCDIR}" ]; then
-    ZOPEN_SYSTEM_PREREQS_DIR="${INCDIR}/prereq_scripts"
+    ZOPEN_SYSTEM_PREREQ_DIR="${INCDIR}/prereq_scripts"
   else
-    ZOPEN_SYSTEM_PREREQS_DIR="${ZOPEN_ROOTFS}/usr/local/zopen/meta/meta/include/prereq_scripts"
+    ZOPEN_SYSTEM_PREREQ_DIR="${ZOPEN_ROOTFS}/usr/local/zopen/meta/meta/include/prereq_scripts"
   fi
 }
 
