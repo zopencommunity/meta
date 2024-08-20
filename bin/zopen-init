@@ -105,7 +105,6 @@ Report bugs at https://github.com/ZOSOpenTools/meta/issues
 HELPDOC
 }
 
-
 args=$*
 
 
@@ -394,6 +393,18 @@ generateZopenConfig()
 EOF
     fi
   fi
+
+  # Source the config file
+  . "${configFile}"
+
+  printHeader "Updating CA Certificate"
+  export ZOPEN_CA="${ZOPEN_ROOTFS}/${ZOPEN_CA_DIR}/${certFileName}"
+  caCertDir="${ZOPEN_ROOTFS}/${ZOPEN_CA_DIR}"
+  mkdir -p "${caCertDir}"
+  runAndLog "${MYDIR}/zopen-update-cacert -f "${caCertDir}" "
+  [ $? -ne 0 ] && exit $?
+
+  printInfo "- zopen bootstrapping complete"
 }
 
 generateJsonConfiguration()
@@ -539,16 +550,6 @@ installPrereqs()
 
   printInfo "- Sourcing environment"
 
-  . "${configFile}"
-
-  printHeader "Updating CA Certificate"
-  export ZOPEN_CA="${ZOPEN_ROOTFS}/${ZOPEN_CA_DIR}/${certFileName}"
-  caCertDir="${ZOPEN_ROOTFS}/${ZOPEN_CA_DIR}"
-  mkdir -p "${caCertDir}"
-  runAndLog "${MYDIR}/zopen-update-cacert -f "${caCertDir}" "
-  [ $? -ne 0 ] && exit $?
-
-  printInfo "- zopen bootstrapping complete"
 }
 
 updateBootstrappedTools() {
@@ -631,9 +632,9 @@ deinit()
 
 init
 generateFileSystem
+! ${refresh} && installPrereqs
 generateJsonConfiguration
 generateZopenConfig
-! ${refresh} && installPrereqs
 generateAnalyticsConfiguration
 ! ${refresh} && updateBootstrappedTools
 deinit
