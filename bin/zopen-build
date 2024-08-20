@@ -370,6 +370,7 @@ Option:
                         comp_python. The default is comp_xlclang.
   -e ENV_FILE           source ENV_FILE instead of buildenv to establish
                         build environment.
+  --instrument          instruments the application with -finstrument-functions (clang)
   -f, --force-rebuild   forces a rebuild, including running bootstrap
                         and configure again.
   --forcepatchapply     force apply the patches, where rejected patches are
@@ -423,6 +424,7 @@ processOptions()
   depsPath="${ZOPEN_PKGINSTALL}"
   forceUpgradeDeps=false
   noInstallRuntimeDeps=false
+  instrument=false
   depsDepth=2
   while [ $# -gt 0 ]; do
     case $1 in
@@ -452,6 +454,9 @@ processOptions()
       ;;
     "--no-install-deps")
       noInstallRuntimeDeps=true
+      ;;
+    "--instrument")
+      instrument=true
       ;;
     "-buildtype" | "--buildtype" | "-b")
       shift
@@ -794,10 +799,17 @@ setEnv()
   initDefaultEnvironment
   setDepsEnv
 
+  # xlclang pragma linkage does not work
+  if [ "${CC}" = "clang" ] && ${instrument}; then
+    instrumentOptions="-finstrument-functions"
+  else
+    printWarning "In order to instrument your application, you must build with clang."
+  fi
+
   # Dependencies such as libraries may add flags
   export CPPFLAGS="${ZOPEN_CPPFLAGS} ${ZOPEN_EXTRA_CPPFLAGS}"
-  export CFLAGS="${ZOPEN_CFLAGS} ${ZOPEN_EXTRA_CFLAGS}"
-  export CXXFLAGS="${ZOPEN_CXXFLAGS} ${ZOPEN_EXTRA_CXXFLAGS}"
+  export CFLAGS="${ZOPEN_CFLAGS} ${ZOPEN_EXTRA_CFLAGS} ${instrumentOptions}"
+  export CXXFLAGS="${ZOPEN_CXXFLAGS} ${ZOPEN_EXTRA_CXXFLAGS} ${instrumentOptions}"
   export LDFLAGS="${ZOPEN_LDFLAGS} ${ZOPEN_EXTRA_LDFLAGS}"
   export LIBS="${ZOPEN_LIBS} ${ZOPEN_EXTRA_LIBS}"
 
