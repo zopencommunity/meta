@@ -21,6 +21,76 @@ setupMyself()
 setupMyself
 checkWritable
 
+verifySignatureOfPax()
+{
+  echo "dh in verifySignatureOfPax , pwd = $PWD, extMetadataJSON= $extMetadataJSON, metadataFile = $metadataFile"
+  cat $extMetadataJSON
+  echo "dh DONE"
+  cat $metadataFile
+#  FILE_TO_VERIFY=$(jq -r '.product.pax' ${metadataFile})
+#  SIGNATURE=$(jq -r '.product.signature' ${metadataFile})
+#  PUBLIC_KEY=$(jq -r '.product.public_key' ${metadataFile})
+#
+#  # Extracting values and checking for errors
+FILE_TO_VERIFY=$(jq -r '.product.pax' "${metadataFile}")
+if [ $? -ne 0 ] || [ "${FILE_TO_VERIFY}" = "null" ] || [ -z "${FILE_TO_VERIFY}" ]; then
+    printError "Failed to extract 'pax' from ${metadataFile}" >&2
+    return 1
+fi
+
+SIGNATURE=$(jq -r '.product.signature' "${metadataFile}")
+if [ $? -ne 0 ] || [ "${SIGNATURE}" = "null" ] || [ -z "${SIGNATURE}" ]; then
+    printfError "Failed to extract 'signature' from ${metadataFile}" >&2
+    return 1
+fi
+
+PUBLIC_KEY=$(jq -r '.product.public_key' "${metadataFile}")
+if [ $? -ne 0 ] || [ "${PUBLIC_KEY}" = "null" ] || [ -z "${PUBLIC_KEY}" ]; then
+    printError "Failed to extract 'public_key' from ${metadataFile}" >&2
+    return 1
+fi
+
+
+  # Create a temporary directory for GPG keyring
+  TMP_GPG_DIR="$HOME/tmp_gpg_verify"
+  mkdir -p "$TMP_GPG_DIR"
+
+  SIGNATURE_FILE="signedfile.asc"
+  PUBLIC_KEY_FILE="scriptpubkey.asc"
+
+  # Remove surrounding double quotes and handle newlines
+  echo "$SIGNATURE" | sed 's/^"\(.*\)"$/\1/' | sed 's/\\n/\n/g' > "$SIGNATURE_FILE"
+  echo "$PUBLIC_KEY" | sed 's/^"\(.*\)"$/\1/' | sed 's/\\n/\n/g' > "$PUBLIC_KEY_FILE"
+
+  # Import the public key into the specified keyring files
+  printVerbose "Importing public key..."
+  gpg --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --batch --yes --import "$PUBLIC_KEY_FILE" > /dev/null 2>&1
+
+  # Verify that the key was imported successfully
+  printVerbose "Checking if public key is imported..."
+  gpg --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --list-keys > /dev/null 2>&1
+  if [ $? -ne 0 ]; then
+      printError "No public key found. Verification aborted."
+      rm -rf "$TMP_GPG_DIR"
+      return 1
+  fi
+
+  # Verify the signature
+  printVerbose "Verifying the signature..."
+  gpg --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --verify "$SIGNATURE_FILE" "$FILE_TO_VERIFY"
+  if gpg --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --verify "$SIGNATURE_FILE" "$FILE_TO_VERIFY" 2>&1 | grep -q "Good signature from"; then
+     printInfo "${NC}${GREEN}Signature verified successfully: ${name}${NC}"
+     return 0
+  else
+     printError "Verification failed"
+     return 2
+  fi
+
+  # Clean up the temporary directory/files
+  rm -rf "${SIGNATURE_FILE}"
+  rm -rf "${PUBLIC_KEY_FILE}"
+  rm -rf "${TMP_GPG_DIR}"
+}
 printSyntax()
 {
   args=$*
@@ -383,11 +453,33 @@ handlePackageInstall()
       rm -rf "${baseinstalldir}/${installdirname}"
     fi
 
-    if ! runLogProgress "pax -rf ${pax} -p p ${paxredirect} ${redirectToDevNull}" "Expanding ${pax}" "Expanded"; then
-      printWarning "Errors unpaxing, package directory state unknown."
-      printInfo "Use zopen alt to select previous version."
-      continue
+    extractPax=true
+
+    metadataVersion=$(jq -r '.version_schema' "${metadataFile}" 2>/dev/null)
+    if [ -n "${metadataVersion}" ]; then
+      printf "${NC}${HEADERCOLOR}${BOLD}${name}${NC}:\n ${installCaveat}\n" >> ${caveatsFile}
     fi
+
+    #if [ "${skipverify}" = false ]; then
+    if (( $(echo "$metadataVersion > 0.1" | bc -l) )) && [ "$skipverify" = "false" ]; then
+           printVerbose "Verify sign for version '${installdirname}'"
+           printVerbose "Verify sign for metadataFile '${metadataFile}'"
+           cat ${metadataFile}
+           verifySignatureOfPax
+           ret_val=$?
+           if [ $ret_val -eq 2 ]; then
+                   printInfo "dh extractPax true here -1 "
+                   extractPax=false;
+           fi
+    fi
+    if [ "$extract" = true ]; then
+       if ! runLogProgress "pax -rf ${pax} -p p ${paxredirect} ${redirectToDevNull}" "Expanding ${pax}" "Expanded"; then
+           printWarning "Errors unpaxing, package directory state unknown."
+           printInfo "Use zopen alt to select previous version."
+       continue
+       fi
+    fi
+
     if ${localInstall}; then
       rm -f "${pax}"
     fi
