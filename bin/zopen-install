@@ -42,9 +42,12 @@ verifySignatureOfPax()
      return 1
   fi
 
+  if [ ! -d "${tmp}" ]; then
+     printError "Temporary directory not found. Please specify \$TMPDIR, \$TMP or have a valid /tmp directory."
+  fi
 
   # Create a temporary directory for GPG keyring
-  TMP_GPG_DIR="$HOME/tmp_gpg_verify"
+  TMP_GPG_DIR="$tmp/tmp_gpg_verify"
   mkdir -p "$TMP_GPG_DIR"
 
   SIGNATURE_FILE="signedfile.asc"
@@ -75,9 +78,17 @@ verifySignatureOfPax()
   fi
   
   # Clean up the temporary directory/files
-  rm -rf "${SIGNATURE_FILE}"
-  rm -rf "${PUBLIC_KEY_FILE}"
-  rm -rf "${TMP_GPG_DIR}"
+  if [ -e "${SIGNATURE_FILE}" ]; then
+ 	rm -rf "${SIGNATURE_FILE}"
+  fi
+
+  if [ -e "${PUBLIC_KEY_FILE}" ]; then
+  	rm -rf "${PUBLIC_KEY_FILE}"
+  fi
+
+  if [ -e "${TMP_GPG_DIR}" ]; then
+  	rm -rf "${TMP_GPG_DIR}"
+  fi
 }
 
 printSyntax()
@@ -377,7 +388,7 @@ handlePackageInstall()
     location="zopen package cache"
   fi
   # Download the metadata json file
-  if ! runAndLog "curlCmd -L '${metadataJSONURL}' -o '${metadataFile}' "; then #${redirectToDevNull}"; then
+  if ! runAndLog "curlCmd -L '${metadataJSONURL}' -o '${metadataFile}' " ${redirectToDevNull}"; then
     printError "Could not download from ${metadataJSONURL}. Correct any errors and potentially retry."
     continue
   fi
@@ -449,8 +460,13 @@ handlePackageInstall()
            verifySignatureOfPax
            ret_val=$?
            if [ $ret_val -eq 2 ]; then
+		   printError "Reading either the PAX file name, the signed file, or the public key from metadata.json has failed."
+           if [ $ret_val -eq 2 ]; then
                    extractPax=false;
            fi
+    elif [ "$is_greater" -eq 1 ]; then
+	   extractPax=false;
+	   printError "Verification of signature cannot be skipped."
     fi
     if [ "$extractPax" = true ]; then
        if ! runLogProgress "pax -rf ${pax} -p p ${paxredirect} ${redirectToDevNull}" "Expanding ${pax}" "Expanded"; then

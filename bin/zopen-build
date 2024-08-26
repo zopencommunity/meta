@@ -383,7 +383,9 @@ Option:
   --oci                 build and publish an OCI image to \$ZOPEN_IMAGE_REGISTRY.
   -s                    exec a shell before running configure. Useful when
                         manually building ports.
-  --signPax, -sp        This option signs the pax file.
+  --sign-pax, -sp       This option signs the pax file.
+			ZOPEN_GPG_SECRET_KEY_FILE, GPG_SECRET_KEY_PASSPHRASE and
+			GPG_PUBLIC_KEY_PATH must be set for signing the file.
   -v                    run in verbose mode.
   -vv                   run in very verbose mode (sets environment variables
                         V=1 and VERBOSE=1).
@@ -506,7 +508,7 @@ processOptions()
     "-s" | "--shell")
       startShell=true
       ;;
-    "-sp" | "--signPax")
+    "-sp" | "--sign-pax")
       signPax=true
       ;;
     *)
@@ -1883,12 +1885,10 @@ install()
 
       #TODO: Hack so that we can use coreutils md5sum without impacting builds
       ZOPEN_DEPS="${ZOPEN_DEPS} coreutils jq"
-      if [ -n "${signPax}" ]; then
-              if [ -z "${ZOPEN_GPG_SECRET_KEY_FILE}" ] || [ -z "${GPG_SECRET_KEY_PASSPHRASE}" ] || [ -z "${GPG_PUBLIC_KEY_PATH}" ]; then
-                        printWarning "GPG keyring environment variables are not set!"
-              else
+      if [ -n "${signPax}" ] && ( [ -z "${ZOPEN_GPG_SECRET_KEY_FILE}" ] || [ -z "${GPG_SECRET_KEY_PASSPHRASE}" ] || [ -z "${GPG_PUBLIC_KEY_PATH}" ] || [ ! -r "${ZOPEN_GPG_SECRET_KEY_FILE}" ] || [ ! -r "${GPG_SECRET_KEY_PASSPHRASE}" ] || [ ! -r "${GPG_PUBLIC_KEY_PATH}" ] ); then
+		printWarning "GPG keyring environment variables must be set to sign the PAX file; otherwise, omit --sign-pax/-sp to bypass signing."
+	else
                 ZOPEN_DEPS="${ZOPEN_DEPS} gpg"
-              fi
       fi
       setDepsEnv
 
