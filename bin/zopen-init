@@ -437,7 +437,7 @@ generateJsonConfiguration()
 
   if [ ! -e "${jsonConfig}" ]; then
     printInfo "Generating global configuration"
-    cat <<zz > "${jsonConfigWorking}"
+    cat <<zz > "${jsonConfig}"
 {
   "release_line": "${releaseLine}",
   "num_rm_procs": ${RM_FILEPROCS},
@@ -445,7 +445,6 @@ generateJsonConfiguration()
   "override_zos_tools": ${OVERRIDE_ZOS_TOOLS}
 }
 zz
-    jq '.' "${jsonConfigWorking}" > "${jsonConfig}"
   else
     printInfo "Refreshing global configuration"
     # In case 3rd-party edits have been made (adding custom keys for
