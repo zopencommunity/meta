@@ -54,6 +54,11 @@ verifySignatureOfPax()
 
   printVerbose "Importing public key..."
   [ -f "$PUBLIC_KEY_FILE" ] && gpg --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --batch --yes --import "$PUBLIC_KEY_FILE" > /dev/null 2>&1
+  if [ $? -ne 0 ]; then
+      [ -e "${TMP_GPG_DIR}" ] && rm -rf "$TMP_GPG_DIR"
+      extractPax=false;
+      printError "Importing public key failed. Verification aborted."
+  fi
 
   # Verify that the key was imported successfully
   printVerbose "Checking if public key is imported..."
