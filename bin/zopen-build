@@ -799,11 +799,12 @@ setEnv()
   initDefaultEnvironment
   setDepsEnv
 
-  # xlclang pragma linkage does not work
-  if [ "${CC}" = "clang" ] && ${instrument}; then
-    instrumentOptions="-finstrument-functions"
-  else
-    printWarning "In order to instrument your application, you must build with clang."
+  if ${instrument}; then
+    if [ "${CC}" = "clang" ]; then
+      instrumentOptions="-finstrument-functions"
+    else
+      printWarning "In order to instrument your application, you must build with clang."
+    fi
   fi
 
   # Dependencies such as libraries may add flags
