@@ -144,3 +144,13 @@ The meta package, which include zopen, can be upgraded via the `zopen upgrade` c
 
 
 
+# Signing & verifying using zopen framework
+* `zopen-build` can now generate signed builds, and `zopen-install` can verify the signature before installation.
+
+* We can enable signed builds using the `--sign-pax` or `-sp` option. If this option is set, it reads the **ZOPEN\_GPG\_SECRET\_KEY\_FILE** and its passphrase from **ZOPEN\_GPG\_SECRET\_KEY\_PASSPHRASE_FILE** to sign the file. The public key is read from **ZOPEN_GPG\_PUBLIC\_KEY\_FILE**.
+<br/>These files are mandatory for signing a file.
+
+* The public key and the signed file details are written to metadata.json (this JSON is not part of the PAX).
+
+
+* Further, during installation, the signed file will be verified. We have a `--skip-verify` to bypass verification of signed PAX files.
