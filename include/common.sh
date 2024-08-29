@@ -45,6 +45,39 @@ addCleanupTrapCmd(){
   [ -n "${xtrc}" ] && set -x
 }
 
+# Temporary files
+for tmp in "${TMPDIR}" "${TMP}" /tmp; do
+  if [ ! -z ${tmp} ] && [ -d ${tmp} ]; then
+    break
+  fi
+done
+
+if [ ! -d "${tmp}" ]; then
+  printError "Temporary directory not found. Please specify \$TMPDIR, \$TMP or have a valid /tmp directory."
+fi
+
+# Capture start time before setting trap
+fullProcessStartTime=${SECONDS}
+
+# Remove temporaries on exit and report elapsed time
+cleanupOnExit()
+{
+  rv=$?
+  [ -f ${ZOPEN_TEMP_C_FILE} ] && rm -rf ${ZOPEN_TEMP_C_FILE}
+  [ -p ${TMP_FIFO_PIPE} ] && rm -rf ${TMP_FIFO_PIPE}
+  if [ ! -z "${TEE_PID}" ]; then
+    if kill -0 ${TEE_PID} 2> /dev/null; then
+      kill -9 ${TEE_PID}
+    fi
+  fi
+  [ -e "${TMP_GPG_DIR}" ] && rm -rf "${TMP_GPG_DIR}"
+  [ -e "${SIGNATURE_FILE}" ] && rm -rf "${SIGNATURE_FILE}"
+  [ -e "${PUBLIC_KEY_FILE}" ] && rm -rf "${PUBLIC_KEY_FILE}"
+  printElapsedTime info "zopen-build" ${fullProcessStartTime}
+  trap - EXIT # clear the EXIT trap so that it's not double called
+  exit ${rv}
+}
+
 cleanupFunction()
 {
   :

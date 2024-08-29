@@ -263,40 +263,8 @@ printSeeAlso()
   "
 }
 
-# Temporary files
-for tmp in "${TMPDIR}" "${TMP}" /tmp; do
-  if [ ! -z ${tmp} ] && [ -d ${tmp} ]; then
-    break
-  fi
-done
-
-if [ ! -d "${tmp}" ]; then
-  printError "Temporary directory not found. Please specify \$TMPDIR, \$TMP or have a valid /tmp directory."
-fi
-
 TMP_FIFO_PIPE="${tmp}/${LOGNAME}.pipe"
 ZOPEN_TEMP_C_FILE="${tmp}/${LOGNAME}.c"
-
-# Capture start time before setting trap
-fullBuildStartTime=${SECONDS}
-
-# Remove temoraries on exit and report elapsed time
-cleanupOnExit()
-{
-  rv=$?
-  [ -f ${ZOPEN_TEMP_C_FILE} ] && rm -rf ${ZOPEN_TEMP_C_FILE}
-  [ -p ${TMP_FIFO_PIPE} ] && rm -rf ${TMP_FIFO_PIPE}
-  if [ ! -z "${TEE_PID}" ]; then
-    if kill -0 ${TEE_PID} 2> /dev/null; then
-      kill -9 ${TEE_PID}
-    fi
-  fi
-  printElapsedTime info "zopen-build" ${fullBuildStartTime}
-  trap - EXIT # clear the EXIT trap so that it's not double called
-  exit ${rv}
-}
-
-trap "cleanupOnExit" EXIT INT TERM QUIT HUP
 
 setDefaultBuild()
 {
@@ -384,8 +352,8 @@ Option:
   -s                    exec a shell before running configure. Useful when
                         manually building ports.
   --sign-pax, -sp       This option signs the pax file.
-			ZOPEN_GPG_SECRET_KEY_FILE, GPG_SECRET_KEY_PASSPHRASE and
-			GPG_PUBLIC_KEY_PATH must be set for signing the file.
+			ZOPEN_GPG_SECRET_KEY_FILE, ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE
+                        and ZOPEN_GPG_PUBLIC_KEY_FILE must be set for signing the file.
   -v                    run in verbose mode.
   -vv                   run in very verbose mode (sets environment variables
                         V=1 and VERBOSE=1).
@@ -523,26 +491,29 @@ signPaxFile()
 {
   # Paths to your files
   PRIVATE_KEY="${ZOPEN_GPG_SECRET_KEY_FILE}"
-  PASSPHRASE_FILE="${GPG_SECRET_KEY_PASSPHRASE}"
+  PASSPHRASE_FILE="${ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE}"
   FILE_TO_SIGN="${paxFileName}"
   OUTPUT_SIGNATURE="${paxFileName}.asc"
 
   # Create a temporary directory for GPG keyring
-  TMP_GPG_DIR="$HOME/tmp_gpg"
+  TMP_GPG_DIR="$tmp/tmp_gpg"
   mkdir -p "$TMP_GPG_DIR"
   chmod a+w "$TMP_GPG_DIR"
 
   # Import the private key into the specified keyring files
   printInfo "Importing private key..."
   gpg --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --secret-keyring "$TMP_GPG_DIR/secring.gpg" --batch --yes --import "$PRIVATE_KEY" > /dev/null 2>&1
+  if [ $? -ne 0 ]; then
+      extractPax=false
+      printError "Importing private key failed. Signing aborted."
+  fi
 
   # Verify that the key was imported successfully
   printInfo "Checking if secret key is imported..."
   gpg --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --secret-keyring "$TMP_GPG_DIR/secring.gpg" --list-secret-keys > /dev/null 2>&1
   if [ $? -ne 0 ]; then
-      printWarning "No secret key found. Signing aborted."
-      rm -rf "$TMP_GPG_DIR"
-      return 1
+      extractPax=false
+      printError "No secret key found. Signing aborted."
   fi
 
   # Sign the file
@@ -551,17 +522,15 @@ signPaxFile()
   gpg --armor --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --secret-keyring "$TMP_GPG_DIR/secring.gpg" --batch --verbose --pinentry-mode loopback --passphrase-file "$PASSPHRASE_FILE" --default-key YOUR_KEY_ID --output "$OUTPUT_SIGNATURE" --detach-sig "$FILE_TO_SIGN" > /dev/null 2>&1
 
   if [ $? -ne 0 ]; then
+      extractPax=false
       printError "Error signing the file."
-      rm -rf "$TMP_GPG_DIR"
-      return 1
   else
-      printInfo "File signed successfully. Signature saved to $OUTPUT_SIGNATURE."
       SIGNATURE=$(jq -Rs . < ${OUTPUT_SIGNATURE})
-      echo "${SIGNATURE}"
+      printInfo "File signed successfully. Signature saved to $OUTPUT_SIGNATURE."
   fi
 
   # Clean up the temporary keyring directory
-  rm -rf "$TMP_GPG_DIR"
+  [ -e "${TMP_GPG_DIR}" ] && rm -rf "${TMP_GPG_DIR}"
 }
 
 
@@ -1885,23 +1854,21 @@ install()
 
       #TODO: Hack so that we can use coreutils md5sum without impacting builds
       ZOPEN_DEPS="${ZOPEN_DEPS} coreutils jq"
-      if [ -n "${signPax}" ] && ( [ -z "${ZOPEN_GPG_SECRET_KEY_FILE}" ] || [ -z "${GPG_SECRET_KEY_PASSPHRASE}" ] || [ -z "${GPG_PUBLIC_KEY_PATH}" ] || [ ! -r "${ZOPEN_GPG_SECRET_KEY_FILE}" ] || [ ! -r "${GPG_SECRET_KEY_PASSPHRASE}" ] || [ ! -r "${GPG_PUBLIC_KEY_PATH}" ] ); then
-		printWarning "GPG keyring environment variables must be set to sign the PAX file; otherwise, omit --sign-pax/-sp to bypass signing."
-	else
-                ZOPEN_DEPS="${ZOPEN_DEPS} gpg"
-      fi
-      setDepsEnv
+      if [ "${signPax}" = "true" ] && ( [ -z "${ZOPEN_GPG_SECRET_KEY_FILE}" ] || [ -z "${ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE}" ] || [ -z "${ZOPEN_GPG_PUBLIC_KEY_FILE}" ] || [ ! -r "${ZOPEN_GPG_SECRET_KEY_FILE}" ] || [ ! -r "${ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE}" ] || [ ! -r "${ZOPEN_GPG_PUBLIC_KEY_FILE}" ] ); then
+		printError "GPG keyring environment variables are not set! You can omit the --sign-pax option to bypass this"
+       else
+		ZOPEN_DEPS="${ZOPEN_DEPS} gpg"
+       fi
+
+       setDepsEnv
 
       pax_size=$(getPathSizeInBytes "${paxFileName}")
       md5sum=$(md5sum "${paxFileName}" | awk '{print $1}')
 
-      if [ -n "${signPax}" ]; then
-        if [ -z "${ZOPEN_GPG_SECRET_KEY_FILE}" ] || [ -z "${GPG_SECRET_KEY_PASSPHRASE}" ] || [ -z "${GPG_PUBLIC_KEY_PATH}" ]; then
-                printWarning "GPG keyring environment variables are not set!"
-        else
-                signature=$(signPaxFile)
-                public_key=$(jq -Rs . < ${GPG_PUBLIC_KEY_PATH})
-        fi
+      #If signPax is true, rest of variables check is done before setDepsEnv
+      if [ "${signPax}" = "true" ]; then
+                signPaxFile
+                public_key=$(jq -Rs . < ${ZOPEN_GPG_PUBLIC_KEY_FILE})
       fi
 
       if [[ -n "${signature}" ]]; then
