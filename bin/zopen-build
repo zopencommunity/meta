@@ -370,7 +370,7 @@ Option:
                         comp_python. The default is comp_xlclang.
   -e ENV_FILE           source ENV_FILE instead of buildenv to establish
                         build environment.
-  --instrument          instruments the application with -finstrument-functions (clang)
+  --instrument          instruments the application with option -finstrument-functions (clang only)
   -f, --force-rebuild   forces a rebuild, including running bootstrap
                         and configure again.
   --forcepatchapply     force apply the patches, where rejected patches are
