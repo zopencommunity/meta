@@ -27,8 +27,7 @@ You will need the IBM C/C++ compiler on your system. There are two options:
   - The default compiler is xlclang. You can download it as a web deliverable add-on feature to your XL C/C++ compiler 
 [here](https://www.ibm.com/servers/resourcelink/svc00100.nsf/pages/xlCC++V241ForZOsV24).
 - Clang
-  - You can install and manage _C/C++ for Open Enterprise Languages on z/OS_ using _RedHat OpenShift Container Platform_ and _IBM Z and Cloud Modernization Stack_ 
-  - Alternatively, you can download the pax edition from IBM at https://epwt-www.mybluemix.net/software/support/trial/cst/programwebsite.wss?siteId=1803
+  - You can download the pax edition from IBM at https://epwt-www.mybluemix.net/software/support/trial/cst/programwebsite.wss?siteId=1803. This version may be used for development of open source software.
 
 If you are building Go projects, you will need the IBM Open Enterprise SDK for Go compiler installed. You can obtain it here: https://www.ibm.com/products/open-enterprise-sdk-go-zos
 
