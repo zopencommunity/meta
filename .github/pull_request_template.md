@@ -6,6 +6,10 @@
      - ✅ Provide tests for your changes.
      - 📝 Use descriptive commit messages.
      - 📗 Update any related documentation and include any relevant screenshots.
+     - 💬 For major changes, consider discussing with the maintainers beforehand.
+     - [ ] Ensure all tests pass locally.
+     - [ ] Add tests for any new functionality.
+     - [ ] Ensure code complies with the project's licensing requirements.
 -->
 
 ## What type of PR is this? (check all applicable)
@@ -14,14 +18,21 @@
 - [ ] Feature
 - [ ] Bug Fix
 - [ ] Optimization
-- [ ] Documentation Update
+- [ ] Content Update
+
+## Category
+
+- [ ] zopen framework
+- [ ] Documentation
+- [ ] CI/CD
+- [ ] Tools
 
 ## Description
+<!-- Provide a comprehensive description summarizing the pull request -->
 
-## Related Tickets & Documents
+## Related Issues
 
 - Related Issue #
 - Closes #
 
-## [optional] Are there any post deployment tasks we need to perform?
-
+## [optional] Are there any post-deployment tasks or follow-up actions required?
