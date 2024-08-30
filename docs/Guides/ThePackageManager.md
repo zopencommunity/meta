@@ -153,4 +153,4 @@ The meta package, which include zopen, can be upgraded via the `zopen upgrade` c
 * The public key and the signed file details are written to metadata.json (this JSON is not part of the PAX).
 
 
-* Further, during installation, the signed file will be verified. We have a `--skip-verify` to bypass verification of signed PAX files.
+* During installation, the signed file will be verified against the signature and public key. Not recommended:  If you prefer to bypass verification of signed PAX files, specify `--skip-verify`.
