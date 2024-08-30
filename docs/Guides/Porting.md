@@ -250,3 +250,77 @@ Two examples of ports that you can use as reference:
 - [gum](https://github.com/ZOSOpenTools/gumport) - a package that `wharf` handles without requiring manual changes to dependencies
 - [Github CLI](https://github.com/ZOSOpenTools/githubcliport) - a package that requires manual changes to dependencies
 
+### Debugging
+
+#### Enabling Code Instrumentation with `zopen build --instrument`
+
+The `zopen build --instrument` option allows you to instrument your application for performance analysis. This option is useful for understanding function call flows and identifying potential performance bottlenecks.
+
+#### How to Use
+
+1. Build the Application:
+
+* To enable instrumentation, build your application using the `zopen build` command with the `--instrument` option:
+
+   ```bash
+   zopen build --instrument
+   ```
+
+2. Run the Instrumented Application:
+
+* After building, run your application as usual. During its execution, a `<application>-<timestamp>.json.gz` file will be generated in the current directory. This file contains detailed trace information in the Chrome Tracing format.
+
+3. View the Trace Data:
+
+* There are two main ways to view the trace data:
+
+Using `zcat` and `jq`:
+
+```bash
+zcat <application>-<timestamp>.json.gz | jq .
+```
+
+**Using Perfetto UI:**
+
+* For a more intuitive and visual representation, load the trace data into the Perfetto UI. Perfetto provides a comprehensive environment for analyzing the trace data, making it easier to understand the application's performance characteristics.
+
+* To load the file into Perfetto UI, visit https://ui.perfetto.dev/.
+
+* Drag and drop the `<application>-<timestamp>.json.gz` file into the UI.
+Perfetto will display the trace data, allowing you to zoom in on specific timeframes, filter events, and analyze the function call hierarchy.
+
+**Customizing the Instrumentation**
+
+* You can customize the behavior of the instrumentation through several environment variables:
+
+`ZOSLIB_PROF_PATH:`
+
+By default, the generated trace file is named `<application>-<timestamp>.json` and saved in the current working directory. You can override this location and filename by setting the `ZOSLIB_PROF_PATH` environment variable:
+
+```bash
+export ZOSLIB_PROF_PATH="/path/to/custom/tracefile.json"
+```
+
+The trace data will then be written to the specified file.
+
+`ZOSLIB_PROF_DISABLE`:
+
+If you want to disable instrumentation at runtime (even if the application was built with instrumentation), you can set the `ZOSLIB_PROF_DISABLE` environment variable:
+
+```bash
+export ZOSLIB_PROF_DISABLE=1
+```
+
+This is useful if you want to run the instrumented application without generating a trace file.
+
+**Compiler Requirement:**
+
+* The instrumentation feature currently requires your application to be built with the clang compiler. If clang is not used, a warning will be issued, and the instrumentation will not be applied.
+
+**Trace File Size:**
+
+* Depending on the size and complexity of your application, the trace file can become quite large. Ensure you have sufficient disk space available when running instrumented applications.
+
+**Automatic Compression:**
+
+* After the trace file is generated, it is automatically compressed using gzip. Ensure that gzip is available on your system, or the compression step may fail.
