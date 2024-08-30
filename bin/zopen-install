@@ -457,7 +457,7 @@ handlePackageInstall()
     is_greater=$(echo "$metadataVersion > 0.1" | bc -l)
 
     if [ "$is_greater" -eq 1 ] && [ "$skipverify" = "false" ]; then
-           verifySignatureOfPax
+       verifySignatureOfPax
     fi
     if [ "$extractPax" = true ]; then
        if ! runLogProgress "pax -rf ${pax} -p p ${paxredirect} ${redirectToDevNull}" "Expanding ${pax}" "Expanded"; then
