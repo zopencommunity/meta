@@ -653,7 +653,9 @@ checkEnv()
   else
     # user specified, so normalize in lower case
     ZOPEN_COMP=$(echo "${ZOPEN_COMP}" | tr '[A-Z]' '[a-z]')
-    implicitDeps="${implicitDeps} comp_${ZOPEN_COMP}"
+    if [ "${ZOPEN_COMP}x" != 'skipx' ]; then
+      implicitDeps="${implicitDeps} comp_${ZOPEN_COMP}"
+    fi
   fi
 
   if [ -z "${ZOPEN_DONT_ADD_ZOSLIB_DEP}" ]; then
