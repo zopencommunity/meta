@@ -1876,7 +1876,7 @@ install()
          jq --arg pax "${ZOPEN_NAME}.${LOG_PFX}.zos.pax.Z" \
             --arg pax_size "$pax_size" \
             --arg md5 "$md5sum" \
-            --arg signature "$signature" \
+            --arg signature "$SIGNATURE" \
             --arg public_key "$public_key" \
             '.product |= . + { "pax": $pax, "pax_size": $pax_size, "md5": $md5, "signature": $signature, "public_key": $public_key }' \
             "${ZOPEN_ROOT}/install/metadata.json" > "${ZOPEN_ROOT}/install/metadata.json.tmp"
