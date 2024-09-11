@@ -1871,7 +1871,7 @@ install()
                 public_key=$(jq -Rs . < ${ZOPEN_GPG_PUBLIC_KEY_FILE})
       fi
 
-      if [[ -n "${signature}" ]]; then
+      if [[ -n "${SIGNATURE}" ]]; then
          cat ${ZOPEN_INSTALL_DIR}/metadata.json
          jq --arg pax "${ZOPEN_NAME}.${LOG_PFX}.zos.pax.Z" \
             --arg pax_size "$pax_size" \
