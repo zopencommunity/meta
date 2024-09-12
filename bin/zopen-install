@@ -124,24 +124,40 @@ ${ME} is a utility to download/install a zopen community package.
 Usage: zopen install [OPTION] [PARAMETERS] [PACKAGES]
 
 Options:
-  --all                    download/install all zopen community packages.
-  --bypass-prereq-checks   Ignores pre-req checks
-  --download-only          download package to current directory.
-  --force                  force install, bypassing locks.
-  --help                   print this help.
-  --install-or-upgrade     installs the package if not installed,
-                           or upgrades the package if installed.
-  --no-deps                do not install dependencies.
-  --no-set-active          do not change the pinned version.
-  --nosymlink              do not integrate into filesystem through
-                           symlink redirection.
-  --reinstall              reinstall already installed zopen community packages.
-  --release-line [stable, dev] the release line to build off of.
-  --select                 select a version to install.
-  -u, --upgrade     check for package updates and apply
-  -v, --verbose            print verbose messages.
-  --version                print version.
-  -y, --yes                automatically answer yes to prompts.
+  --all                    download all available packages and install
+  --bypass-prereq-checks   ignores pre-req checks
+  --download-only          download installable package with no install
+  --install-or-upgrade     installs the package if not installed, or upgrades
+                           the package if installed (deprecated as default behaviour)
+  --nodeps                 do not install dependencies
+  --noset-active           unpackage onto the system but do not change the currently
+                           active version
+  --reinstall              reinstall currently installed package(s)
+  --release-line [stable|dev]
+                           the release line to install from
+  --select                 select a version to install from available versions
+  -v, --verbose            run in verbose mode
+  -y, --yes                automatically answer yes to prompts
+  -h,-?, --help            display this help and exit
+
+
+Examples:
+  zopen install foo 
+                    install package foo if not already installed
+  zopen install --release-line DEV foo
+                    install package foo from the DEV releaseline if
+                    available
+  zopen install -y foo bar --nodeps
+                    install packages foo and bar without asking for
+                    user confirmation and without installing any
+                    dependencies
+  zopen install /tmp/foo-1.2.3-4.zos.pax.Z
+                    install package foo from the specified location
+  zopen install /tmp/foo-1.2.3-4.zos.pax.Z bar-1.2.3.4.zos.pax.Z
+                    install packages foo and bar from the specified 
+                    locations
+
+Report bugs at https://github.com/ZOSOpenTools/meta/issues .
 
 HELPDOC
 }
@@ -186,9 +202,9 @@ while [ $# -gt 0 ]; do
       ;;
     "--no-symlink")
       # shellcheck disable=SC2034
-      nosymlink=true  # Do not mesh the package into the file system; leave as stand-alone
+      setactive=true  # Do not mesh the package into the file system; leave as stand-alone
       ;;
-    "--no-deps")
+    "--nodeps" | "--no-deps") # Deprecate --no-deps for consistency
       doNotInstallDeps=true
       ;;
     "--release-line")
@@ -203,7 +219,7 @@ while [ $# -gt 0 ]; do
     "--download-only")
       downloadOnly=true  # Download remote package files to current directory only
       ;;
-    "--no-set-active")
+    "--noset-active" | "--no-set-active") # Deprecate --no-set-active for consistency
       # shellcheck disable=SC2034
       setactive=false  # Install package as normal but keep existing installation as active
       ;;
@@ -274,7 +290,7 @@ for installRepo in ${potentials}; do
 done
 
 if [ ! ${fileinstall} ]; then 
-  printVerbose "Using potentially remote files; ensuring configured for remte access"
+  printVerbose "Using potentially remote files; ensuring configured for remote access"
   checkIfConfigLoaded
 fi
 
