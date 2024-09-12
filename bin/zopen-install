@@ -49,8 +49,8 @@ verifySignatureOfPax()
 
   SIGNATURE_FILE="$tmp/signedfile.asc"
   PUBLIC_KEY_FILE="$tmp/scriptpubkey.asc"
-  printf "%b" "$SIGNATURE" | tr -d '"' | sed '/^$/d' > "$SIGNATURE_FILE"
-  printf "%b" "$PUBLIC_KEY" | tr -d '"' | sed '/^$/d' > "$PUBLIC_KEY_FILE"
+  printf "%b" "$SIGNATURE" | tr -d '"'  > "$SIGNATURE_FILE"
+  printf "%b" "$PUBLIC_KEY" | tr -d '"'  > "$PUBLIC_KEY_FILE"
 
   printVerbose "Importing public key..."
   [ -f "$PUBLIC_KEY_FILE" ] && gpg --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --batch --yes --import "$PUBLIC_KEY_FILE" > /dev/null 2>&1
@@ -388,7 +388,7 @@ handlePackageInstall()
     location="zopen package cache"
   fi
   # Download the metadata json file
-  if ! runAndLog "curlCmd -L '${metadataJSONURL}' -o '${metadataFile}' " ${redirectToDevNull}"; then
+  if ! runAndLog "curlCmd -L '${metadataJSONURL}' -o '${metadataFile}'" ${redirectToDevNull}; then
     printError "Could not download from ${metadataJSONURL}. Correct any errors and potentially retry."
     continue
   fi
