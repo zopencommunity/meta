@@ -338,6 +338,7 @@ Option:
                         comp_python. The default is comp_xlclang.
   -e ENV_FILE           source ENV_FILE instead of buildenv to establish
                         build environment.
+  --instrument          instruments the application with option -finstrument-functions (clang only)
   -f, --force-rebuild   forces a rebuild, including running bootstrap
                         and configure again.
   --forcepatchapply     force apply the patches, where rejected patches are
@@ -395,6 +396,7 @@ processOptions()
   depsPath="${ZOPEN_PKGINSTALL}"
   forceUpgradeDeps=false
   noInstallRuntimeDeps=false
+  instrument=false
   depsDepth=2
   while [ $# -gt 0 ]; do
     case $1 in
@@ -424,6 +426,9 @@ processOptions()
       ;;
     "--no-install-deps")
       noInstallRuntimeDeps=true
+      ;;
+    "--instrument")
+      instrument=true
       ;;
     "-buildtype" | "--buildtype" | "-b")
       shift
@@ -670,7 +675,9 @@ checkEnv()
   else
     # user specified, so normalize in lower case
     ZOPEN_COMP=$(echo "${ZOPEN_COMP}" | tr '[A-Z]' '[a-z]')
-    implicitDeps="${implicitDeps} comp_${ZOPEN_COMP}"
+    if [ "${ZOPEN_COMP}x" != 'skipx' ]; then
+      implicitDeps="${implicitDeps} comp_${ZOPEN_COMP}"
+    fi
   fi
 
   if [ -z "${ZOPEN_DONT_ADD_ZOSLIB_DEP}" ]; then
@@ -816,10 +823,18 @@ setEnv()
   initDefaultEnvironment
   setDepsEnv
 
+  if ${instrument}; then
+    if [ "${CC}" = "clang" ]; then
+      instrumentOptions="-finstrument-functions"
+    else
+      printWarning "In order to instrument your application, you must build with clang."
+    fi
+  fi
+
   # Dependencies such as libraries may add flags
   export CPPFLAGS="${ZOPEN_CPPFLAGS} ${ZOPEN_EXTRA_CPPFLAGS}"
-  export CFLAGS="${ZOPEN_CFLAGS} ${ZOPEN_EXTRA_CFLAGS}"
-  export CXXFLAGS="${ZOPEN_CXXFLAGS} ${ZOPEN_EXTRA_CXXFLAGS}"
+  export CFLAGS="${ZOPEN_CFLAGS} ${ZOPEN_EXTRA_CFLAGS} ${instrumentOptions}"
+  export CXXFLAGS="${ZOPEN_CXXFLAGS} ${ZOPEN_EXTRA_CXXFLAGS} ${instrumentOptions}"
   export LDFLAGS="${ZOPEN_LDFLAGS} ${ZOPEN_EXTRA_LDFLAGS}"
   export LIBS="${ZOPEN_LIBS} ${ZOPEN_EXTRA_LIBS}"
 
