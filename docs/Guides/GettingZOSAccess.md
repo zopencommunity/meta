@@ -2,7 +2,7 @@
 
 If you find yourself without access to a z/OS machine, then we can help!
 
-If you're interested in contributing to the z/OS Open Tools initiative and need access to a z/OS machine, please reach out to us via email at itodorov@ca.ibm.com.
+If you're interested in contributing to the Zopen Community initiative and need access to a z/OS machine, please reach out to us via email at itodorov@ca.ibm.com.
 
 ### Information Required
 

@@ -2,9 +2,9 @@
 <rss version="2.0">
 
 <channel>
-<title>z/OS Open Tools Vulnerabilities</title>
+<title>Zopen Community Vulnerabilities</title>
 <link>https://zosopentools.org/#/Vulnerabilities</link>
-<description>Vulnerabilities in z/OS Open Tools Packages</description>
+<description>Vulnerabilities in Zopen Community Packages</description>
 
 </channel>
 

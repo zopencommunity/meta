@@ -106,15 +106,15 @@ echo ${licenseUrl}
 
 echo "Enter ${name}'s stable release source url: (Specify a Git or Tarball URL. If none, press enter)"
 stablePath=$(getInput)
-echo "Enter ${name}'s z/OS Open Tools build dependencies for the stable build: (Enter multiple dependencies using spaces. E.g: zoslib make grep)"
+echo "Enter ${name}'s Zopen Community build dependencies for the stable build: (Enter multiple dependencies using spaces. E.g: zoslib make grep)"
 stableDeps=$(getInput)
 echo "Enter ${name}'s dev-line source url: (Specify a Git or Tarball URL. If none, press enter)"
 devPath=$(getInput)
-echo "Enter ${name}'s z/OS Open Tools build dependencies for the dev build: (Enter multiple dependencies using spaces. E.g: zoslib make grep)"
+echo "Enter ${name}'s Zopen Community build dependencies for the dev build: (Enter multiple dependencies using spaces. E.g: zoslib make grep)"
 devDeps=$(getInput)
 echo "Enter the default build line: (stable or dev)"
 buildline=$(getInput)
-echo "Enter ${name}'s z/OS Open Tools runtime dependencies: (example: bash)"
+echo "Enter ${name}'s Zopen Community runtime dependencies: (example: bash)"
 runtimedeps=$(getInput)
 
 project_path="${name}port"
@@ -205,7 +205,7 @@ printInfo "${buildenv} created"
 
 touch "${name}port/README.md" && chtag -tc 819 "${name}port/README.md"
 cat << EOT > "${name}port/README.md"
-[![Automatic version updates](https://github.com/ZOSOpenTools/${name}port/actions/workflows/bump.yml/badge.svg)](https://github.com/ZOSOpenTools/${name}port/actions/workflows/bump.yml)
+[![Automatic version updates](https://github.com/zopen-community/${name}port/actions/workflows/bump.yml/badge.svg)](https://github.com/zopen-community/${name}port/actions/workflows/bump.yml)
 
 # ${name}
 
@@ -227,10 +227,10 @@ node('linux')
       branches: [[name: '*/main']],
       doGenerateSubmoduleConfigurations: false,
       extensions: [],
-      userRemoteConfigs: [[url: 'https://github.com/ZOSOpenTools/${name}port.git']]])
+      userRemoteConfigs: [[url: 'https://github.com/zopen-community/${name}port.git']]])
   }
   stage('Build') {
-    build job: 'Port-Pipeline', parameters: [string(name: 'PORT_GITHUB_REPO', value: 'https://github.com/ZOSOpenTools/${name}port.git'), string(name: 'PORT_DESCRIPTION', value: '${description}' ), string(name: 'BUILD_LINE', value: '${buildlineUpper}') ]
+    build job: 'Port-Pipeline', parameters: [string(name: 'PORT_GITHUB_REPO', value: 'https://github.com/zopen-community/${name}port.git'), string(name: 'PORT_DESCRIPTION', value: '${description}' ), string(name: 'BUILD_LINE', value: '${buildlineUpper}') ]
   }
 }
 EOT
@@ -263,5 +263,5 @@ fi
 printHeader "${name} project is ready! ${name}port/"
 printInfo "Create patches under the ${name}port/patches directory"
 printInfo "Run zopen build to build ${name}port"
-printInfo "Contact Igor Todorovski (itodorov@ca.ibm.com) to create https://github.com/ZOSOpenTools/${name}port.git"
+printInfo "Contact Igor Todorovski (itodorov@ca.ibm.com) to create https://github.com/zopen-community/${name}port.git"
 printInfo "Update the CODEOWNERS, buildenv, and README.md files appropriately"

@@ -1,6 +1,6 @@
 """
 Script to generate a markdown file listing newly released tools.
-The resulting markdown will be added to the z/OS Open Tools docs
+The resulting markdown will be added to the Zopen Community docs
 """
 
 import json
@@ -44,7 +44,7 @@ if __name__ == '__main__':
     parser.add_argument('--output', '-o', default='Newly_released_tools.md', help='Output markdown file path')
     args = parser.parse_args()
 
-    url = 'https://raw.githubusercontent.com/ZOSOpenTools/meta/main/docs/api/zopen_releases.json'
+    url = 'https://raw.githubusercontent.com/zopen-community/meta/main/docs/api/zopen_releases.json'
     response = requests.get(url)
     data = response.json()['release_data']
 

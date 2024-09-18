@@ -1,4 +1,4 @@
-# Links to external blogs on z/OS Open Tools
+# Links to external blogs on Zopen Community
 
 * [GPG on z/OS: Beyond the Basics – A Deep Dive - June 10, 2024](https://tectales.wordpress.com/2024/06/10/273/)
 * [Enhancing Vim on z/OS UNIX with Language Server Protocol (LSP) support - April 18, 2024](https://igortodorovskiibm.github.io/blog/2024/04/18/vim-autocomplete/)

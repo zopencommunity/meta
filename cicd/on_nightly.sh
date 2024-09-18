@@ -10,7 +10,7 @@ UpdateGithub() {
 
 UpdateDocs() {
   # Update Progress page in documentation
-  git clone git@github.com:ZOSOpenTools/meta.git meta_update
+  git clone git@github.com:zopen-community/meta.git meta_update
   cd meta_update
 
   python3 tools/create_cve_json.py --verbose --output-file docs/api/zopen_vulnerability.json

@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Configuration helper for z/OS Open Tools - https://github.com/ZOSOpenTools
+# Configuration helper for Zopen Community - https://github.com/zopen-community
 #
 
 #
@@ -24,7 +24,7 @@ checkWritable
 printHelp()
 {
   cat << HELPDOC
-${ME} is a utility for z/OS Open Tools to change the zopen runtime environment.
+${ME} is a utility for Zopen Community to change the zopen runtime environment.
  
 
 Usage: ${ME} [OPTION] [KEY]
@@ -62,7 +62,7 @@ Notes:
 
   
   
-Report bugs at https://github.com/ZOSOpenTools/meta/issues.
+Report bugs at https://github.com/zopen-community/meta/issues.
 
 HELPDOC
 }

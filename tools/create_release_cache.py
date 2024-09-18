@@ -18,7 +18,7 @@ from collections import OrderedDict
 """
 GitHub Releases JSON Cache
 
-This tool fetches z/OS Open Tools releases and metadata and generates a minimized JSON cache file.
+This tool fetches Zopen Community releases and metadata and generates a minimized JSON cache file.
 The cache file contains information about the releases, including assets, sizes, and metadata.
 """
 
@@ -28,7 +28,7 @@ parser.add_argument('--verbose', action='store_true', help='Enable verbose outpu
 parser.add_argument('--output-file', dest='output_file', required=True, help='The full path to store the json file to')
 args = parser.parse_args()
 
-organization = "ZOSOpenTools"
+organization = "zopen-community"
 
 if os.getenv('ZOPEN_GITHUB_OAUTH_TOKEN') is None:
     print("error: environment variable ZOPEN_GITHUB_OAUTH_TOKEN must be defined")

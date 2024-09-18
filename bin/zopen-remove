@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Removal utility for z/OS Open Tools - https://github.com/ZOSOpenTools
+# Removal utility for Zopen Community - https://github.com/zopen-community
 #
 
 #
@@ -23,7 +23,7 @@ checkWritable
 printHelp()
 {
   cat << HELPDOC
-${ME} is a utility for z/OS Open Tools to remove an installed package or
+${ME} is a utility for Zopen Community to remove an installed package or
 packages.
 
 Usage: ${ME} [OPTION] [PACKAGE] ...
@@ -43,7 +43,7 @@ Examples:
                     remove the foo and bar packages if installed, without
                     asking for confirmation
 
-Report bugs at https://github.com/ZOSOpenTools/meta/issues .
+Report bugs at https://github.com/zopen-community/meta/issues .
 
 HELPDOC
 }

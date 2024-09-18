@@ -34,7 +34,7 @@ zopen install bash
 ```
 For more details on how to use and setup zopen, see the [zopen guide](/Guides/using).
 
-Alternatively, you can download bash directly from https://github.com/ZOSOpenTools/bashport/releases.
+Alternatively, you can download bash directly from https://github.com/zopen-community/bashport/releases.
 
 3. Enter the following command to set Bash as your default shell in your OMVS segment:
 ```

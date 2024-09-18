@@ -2,7 +2,7 @@
 # Publish Job : https://163.74.88.212:8443/view/Framework/job/Port-Publish/
 # This publish job will a pax.Z artifact from the Port-Build (https://163.74.88.212:8443/view/Framework/job/Port-Build/)
 # Inputs: 
-#   - PORT_GITHUB_REPO :  Github repoistory to publish the artifact to e.g: https://github.com/ZOSOpenTools/xzport.git
+#   - PORT_GITHUB_REPO :  Github repoistory to publish the artifact to e.g: https://github.com/zopen-community/xzport.git
 #   - PORT_DESCRIPTION : Description of the tool that is presented in the Github release page
 #   - BUILD_LINE: dev or stable
 #  zos.pax.Z artifact is copied as input
@@ -10,7 +10,7 @@
 # Output:
 #   - pax.Z artifact is published as a Jenkins artifact
 #   - package is copied to /jenkins/build
-GITHUB_ORGANIZATION="ZOSOpenTools"
+GITHUB_ORGANIZATION="zopen-community"
 
 RELEASE_PREFIX=$(basename "${PORT_GITHUB_REPO}")
 # Used for Release/Tag name
@@ -85,7 +85,7 @@ fi
 
 TAG="${BUILD_LINE}_${RELEASE_PREFIX}_${BUILD_ID}"
 
-URL_LINE="https://github.com/ZOSOpenTools/${GITHUB_REPO}/releases/download/${TAG}/$PAX_BASENAME"
+URL_LINE="https://github.com/zopen-community/${GITHUB_REPO}/releases/download/${TAG}/$PAX_BASENAME"
 DESCRIPTION="${DESCRIPTION}<br /><b>Command to download and install on z/OS (if you have curl)</b> <pre>curl -o ${PAX_BASENAME} -L ${URL_LINE} && pax -rf ${PAX_BASENAME} && cd $DIR_NAME && . ./.env</pre>"
 DESCRIPTION="${DESCRIPTION}<br /><b>Or use:</b> <pre>zopen install ${PORT_NAME}</pre>"
 

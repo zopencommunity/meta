@@ -8,9 +8,9 @@ Access to a z/OS UNIX machine with z/OS 2.4 and above and network connectivity t
 
 If you have curl and bash on your system, you can use this one liner:
 ```
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/ZOSOpenTools/meta/HEAD/tools/zopen_install.sh)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/zopen-community/meta/HEAD/tools/zopen_install.sh)"
 ```
-Otherwise, download the latest [meta pax](https://github.com/ZOSOpenTools/metaport/releases) to z/OS
+Otherwise, download the latest [meta pax](https://github.com/zopen-community/metaport/releases) to z/OS
 - download the file to your desktop
 - use `sftp` to upload the pax file to z/OS.
 - On z/OS, expand the pax using the command ```pax -rvf <filename>.pax```.  
@@ -30,7 +30,7 @@ zopen init
 
 ## Using the package manager
 
-- Install any z/OS Open Tools via `zopen install`, e.g.
+- Install any Zopen Community via `zopen install`, e.g.
 ```bash
 zopen install which # Installs which 
 # Now test which
@@ -66,7 +66,7 @@ zopen audit
 
 Packages such as `coreutils`, `gawk`, `sed`, `findutils`, `grep`, `diffutils`, `man-db` and `openssh` provide executables that collide with the z/OS UNIX tools under `/bin`.
 
-### Prefixing for z/OS Open Tools
+### Prefixing for Zopen Community
 
 To ensure seamless interaction with z/OS tools under `/bin`, z/OS Open tools that collide with a z/OS UNIX tool under `<package>/bin` will be prefixed as follows:
 

@@ -1,7 +1,7 @@
-# Collecting Usage Statistics with the z/OS Open Tools Package Manager
+# Collecting Usage Statistics with the Zopen Community Package Manager
 
-Usage statistics collection in z/OS Open Tools Package Manager was introduced to gather anonymized usage data. 
-The collected usage data plays an important role in improving functionality, identifying popular packages, and optimizing z/OS Open Tools user experience.
+Usage statistics collection in Zopen Community Package Manager was introduced to gather anonymized usage data. 
+The collected usage data plays an important role in improving functionality, identifying popular packages, and optimizing Zopen Community user experience.
 The usage statistics are viewable at this url: http://163.74.88.212:3000/
 
 ## How to Opt-In

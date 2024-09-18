@@ -13,10 +13,10 @@ if os.getenv('GITHUB_OAUTH_TOKEN') is None:
 g = Github(os.getenv('GITHUB_OAUTH_TOKEN'))
 
 # get the organization by name
-org = g.get_organization("ZOSOpenTools")
+org = g.get_organization("zopen-community")
 
 # create an OptionParser instance
-parser = OptionParser(description="Add a team to one or more repositories with a given permission level in the ZOSOpenTools organization on GitHub Enterprise.", usage="%prog [options]")
+parser = OptionParser(description="Add a team to one or more repositories with a given permission level in the zopen-community organization on GitHub Enterprise.", usage="%prog [options]")
 parser.add_option("-t", "--team", dest="team_name", help="team name (required)", metavar="TEAM")
 parser.add_option("-p", "--permission", dest="permission", help="permission to give (default: read). Valid permissions are read, write, and admin.", metavar="PERMISSION", default="read")
 parser.add_option("-a", "--all", action="store_true", dest="all_repos", help="add team to all repositories")

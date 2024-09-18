@@ -148,7 +148,7 @@
 
     - name: Download zopen-setup
       get_url:
-        url: https://github.com/ZOSOpenTools/meta/releases/download/v0.8.0/meta-0.8.0.pax.Z
+        url: https://github.com/zopen-community/meta/releases/download/v0.8.0/meta-0.8.0.pax.Z
         dest: /tmp/meta-0.8.0.pax.Z
       when:
         - skipZopenSetup is not defined
@@ -223,7 +223,7 @@
         ./update_parmlib.sh
       delegate_to: "myhost"
 
-    - name: Replace current bash with z/OS Open Tools bash
+    - name: Replace current bash with Zopen Community bash
       shell: |
         chmount -w /
         cp /jenkins/zopen/usr/local/bin/bash /bin/bash

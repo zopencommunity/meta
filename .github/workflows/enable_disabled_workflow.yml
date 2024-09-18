@@ -18,7 +18,7 @@ jobs:
       - name: Print version
         run: multi-gitter version
 
-      - name: Enable disabled bump workflows in ZOSOpenTools org
+      - name: Enable disabled bump workflows in zopen-community org
         run: multi-gitter --config ./cicd/multi-gitter-config run ./bulk-utils/enable_disabled_workflow.sh
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

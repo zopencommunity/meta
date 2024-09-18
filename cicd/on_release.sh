@@ -4,7 +4,7 @@
 #
 set -e
 
-git clone git@github.com:ZOSOpenTools/meta.git meta_update
+git clone git@github.com:zopen-community/meta.git meta_update
 cd meta_update
 
 # Generate Release cache
