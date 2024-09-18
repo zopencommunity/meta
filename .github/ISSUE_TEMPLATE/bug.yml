@@ -1,11 +1,11 @@
-name: "z/OS Open Tools Bug Report"
-description: Report an issue to help improve z/OS Open Tools
+name: "Zopen Bug Report"
+description: Report an issue to help improve zopen
 labels: ["bug"]
 body:
   - type: markdown
     attributes:
       value: |
-        Thank you for reporting an issue with z/OS Open Tools.
+        Thank you for reporting an issue with zopen.
 
         This issue tracker is for reporting bugs and problems related to the meta repo, which is responsible for the zopen package manager and zopen build framework.
 
@@ -47,7 +47,7 @@ body:
 
   - type: input
     attributes:
-      label: z/OS Open Tools Package Manager Version (zopen)
+      label: zopen package manager version
       description: |
         Specify the version of `zopen` you are using (if applicable). You can find the version by running `zopen --version`.
 

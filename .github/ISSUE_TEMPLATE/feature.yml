@@ -1,11 +1,11 @@
-name: "z/OS Open Tools Feature Request"
-description: Suggest a new feature or enhancement for zopen
+name: "Zopen Feature Request"
+description: Suggest a new feature or enhancement for Zopen 
 labels: ["enhancement"]
 body:
   - type: markdown
     attributes:
       value: |
-        Thank you for suggesting a new feature or enhancement for z/OS Open Tools.
+        Thank you for suggesting a new feature or enhancement for Zopen.
 
         Please provide detailed information to help us evaluate your request. The more context and examples you provide, the easier it will be to understand and prioritize your suggestion.
 
