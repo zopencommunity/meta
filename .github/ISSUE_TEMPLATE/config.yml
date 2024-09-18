@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: z/OS Open Tools Discussions
+    url: https://github.com/IBM/zos-open-tools/discussions
+    about: Use this discussion board for sharing ideas related to z/OS Open Tools.

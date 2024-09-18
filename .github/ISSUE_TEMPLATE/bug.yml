@@ -1,0 +1,65 @@
+name: "z/OS Open Tools Bug Report"
+description: Report an issue to help improve z/OS Open Tools
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting an issue with z/OS Open Tools.
+
+        This issue tracker is for reporting bugs and problems related to the meta repo, which is responsible for the zopen package manager and zopen build framework.
+
+        Please fill in as much of the form below as possible to assist us in identifying and fixing the issue efficiently.
+
+  - type: textarea
+    attributes:
+      label: Description
+      description: |
+        Please explain the problem. Please also provide the exact steps that reproduce the issue. If possible, include sample code or a command line invocation.
+
+  - type: dropdown
+    attributes:
+      label: Severity
+      description: |
+        Please select the severity of the feature request:
+      options:
+        - Sev 1 - Critical
+        - Sev 2 - High
+        - Sev 3 - Medium
+        - Sev 4 - Low
+
+  - type: textarea
+    attributes:
+      label: Expected Behavior
+      description: |
+        Describe the expected behavior. What did you anticipate would happen when running the tool or command?
+
+  - type: textarea
+    attributes:
+      label: Actual Behavior
+      description: |
+        What behavior did you experience instead? If possible, provide terminal output or log files (please avoid screenshots when possible).
+  - type: input
+    attributes:
+      label: z/OS Version
+      description: |
+        Specify the z/OS version you're using, including any relevant service levels (use `uname -a` for details).
+
+  - type: input
+    attributes:
+      label: z/OS Open Tools Package Manager Version (zopen)
+      description: |
+        Specify the version of `zopen` you are using (if applicable). You can find the version by running `zopen --version`.
+
+
+  - type: textarea
+    attributes:
+      label: Additional Information (Optional)
+      description: |
+        Share any other relevant information, such as configurations, environment variables, or any debugging attempts you've made.
+
+  - type: input
+    attributes:
+      label: Network or Security Configuration (Optional)
+      description: |
+        If relevant, describe any network or security configurations that may affect the tool's behavior (e.g., firewalls, TLS, or proxy settings).

@@ -1,0 +1,41 @@
+name: "z/OS Open Tools Feature Request"
+description: Suggest a new feature or enhancement for zopen
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for suggesting a new feature or enhancement for z/OS Open Tools.
+
+        Please provide detailed information to help us evaluate your request. The more context and examples you provide, the easier it will be to understand and prioritize your suggestion.
+
+  - type: input
+    attributes:
+      label: Feature Title
+      description: |
+        Provide a concise title for your feature request.
+
+  - type: textarea
+    attributes:
+      label: Feature Description & Current Pain Points
+      description: |
+        Describe the feature you're proposing and explain the problem or limitation it addresses. Why is this feature important to you or others? 
+
+  - type: textarea
+    attributes:
+      label: Proposed Solution & Expected Behavior
+      description: |
+        Describe how the feature should work, including details on how it fits into the existing toolset or workflow. What would the ideal behavior look like?
+
+  - type: input
+    attributes:
+      label: Environment Details (Optional)
+      description: |
+        If relevant, specify the z/OS version or `zopen` version you're using, as well as any network or security configurations that may impact this feature.
+
+  - type: textarea
+    attributes:
+      label: Additional Information (Optional)
+      description: |
+        Share any other relevant information, such as dependencies, alternative approaches you've considered, or potential challenges.
+
