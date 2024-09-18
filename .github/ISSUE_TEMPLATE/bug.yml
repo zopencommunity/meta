@@ -21,7 +21,7 @@ body:
     attributes:
       label: Severity
       description: |
-        Please select the severity of the feature request:
+        Please select the severity of the bug:
       options:
         - Sev 1 - Critical
         - Sev 2 - High
