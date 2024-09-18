@@ -1,0 +1,8 @@
+'Sev 1 - Critical':
+    - '(Sev 1 - Critical|critical|urgent)'
+'Sev 2 - High':
+    - '(Sev 2 - High)'
+'Sev 3 - Medium':
+    - '(Sev 3 - Medium)'
+'Sev 4 - Low':
+    - '(Sev 4 - Low)'
