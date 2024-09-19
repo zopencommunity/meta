@@ -1,5 +1,5 @@
 blank_issues_enabled: false
 contact_links:
   - name: Zopen Community Discussions
-    url: https://github.com/IBM/zos-open-tools/discussions
+    url: https://github.com/IBM/zopen-community/discussions
     about: Use this discussion board for sharing ideas related to the zopen community.
