@@ -510,7 +510,7 @@ Become a part of the z/OS Open Source Technology community either as a **develop
 	
 * As a developer:
 	* if you want to work on new tools, visit pages [1](https://github.com/orgs/zopencommunity/discussions/23) and [2](https://github.com/orgs/zopencommunity/discussions/433), choose a tool to begin the development activity, as outlined [here](https://zopencommunity.github.io/meta/#/Guides/developing). 
-	* Alternatively, if you prefer working on existing tools, you can select one of the help-wanted issues from [here](https://github.com/search?q=user%3Azopencommunity+repo%3Ahttps%3A%2F%2Fgithub.com%2Fzopen-community+label%3A%22help+wanted%22+state%3Aopen&type=issues&ref=advsearch&state=open
+	* Alternatively, if you prefer working on existing tools, you can select one of the help-wanted issues from [here](https://github.com/search?q=user%3Azopencommunity+repo%3Ahttps%3A%2F%2Fgithub.com%2Fzopencommunity+label%3A%22help+wanted%22+state%3Aopen&type=issues&ref=advsearch&state=open
 	).
 	
 * If you'd like to contribute as a consumer of these tools, you can start by visiting this [link](https://zopencommunity.github.io/meta/#/Guides/QuickStart)

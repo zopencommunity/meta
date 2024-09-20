@@ -12,7 +12,7 @@ g = Github(os.getenv('GITHUB_OAUTH_TOKEN'))
 
 # get the organization by name
 parser = OptionParser(description="Enable branch protection for repositories in an organization.")
-parser.add_option("-o", "--org", dest="org", default="zopencommunity", help="organization name (default: zopen-community)")
+parser.add_option("-o", "--org", dest="org", default="zopencommunity", help="organization name (default: zopencommunity)")
 parser.add_option("-r", "--repo", dest="repo", default=None, help="comma separated list of repos to include")
 parser.add_option("-a", "--all", action="store_true", dest="all", default=False, help="include all repos")
 parser.add_option("-v", "--verbose", action="store_true", dest="verbose", default=False, help="print verbose output")
