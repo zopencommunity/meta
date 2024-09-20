@@ -1,6 +1,6 @@
 ## Welcome to zopen community
 
-The [zopen community community](https://github.com/zopencommunity/meta/discussions) is here to provide popular Open Source tools and to encourage z/OS Open Source tools development. 
+The [zopen community](https://github.com/zopencommunity/meta/discussions) is here to provide popular Open Source tools and to encourage z/OS Open Source tools development. 
 We currently host **200+ z/OS Open Source projects** and we're looking for more! 
 
 <section class="layout">
