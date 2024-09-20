@@ -9,9 +9,9 @@ from collections import defaultdict
 from cvsslib import cvss31, calculate_vector
 
 HEADER = """
-Zopen Community Vulnerability JSON Generator
+zopen community Vulnerability JSON Generator
 
-This tool fetches Zopen Community releases and generates a list of tools and their associated CVEs using the osv.dev API.
+This tool fetches zopen community releases and generates a list of tools and their associated CVEs using the osv.dev API.
 """
 
 BASE_URL = "https://raw.githubusercontent.com/zopen-community/meta/main"

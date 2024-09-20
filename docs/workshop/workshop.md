@@ -1,4 +1,4 @@
-# Zopen Community - Hands on Workshop
+# zopen community - Hands on Workshop
 
 ## Prerequisites
 
@@ -8,11 +8,11 @@
 
 ## Introduction (15 minutes)
 
-Welcome to the Zopen Community Workshop, where we'll delve into how you can take advantage of open-source tools within the z/OS UNIX environment.
+Welcome to the zopen community Workshop, where we'll delve into how you can take advantage of open-source tools within the z/OS UNIX environment.
 
 z/OS is renowned for its unwavering reliability, security, and speed. However, it's often challenged by the limited availability of readily available open-source software, compared to more common platforms such as Linux or Mac.
 
-This is where the Zopen Community community comes into play. Our primary mission is to enhance the open-source landscape on z/OS. With over 170 successfully ported open source projects, we're committed to making essential open-source tools readily available on z/OS. Importantly, we actively contribute our enhancements back to open-source communities to keep z/OS aligned with industry developments.
+This is where the zopen community community comes into play. Our primary mission is to enhance the open-source landscape on z/OS. With over 170 successfully ported open source projects, we're committed to making essential open-source tools readily available on z/OS. Importantly, we actively contribute our enhancements back to open-source communities to keep z/OS aligned with industry developments.
 
 In today's session, we'll guide you through practical tasks like downloading and using the open source zopen package manager, installing core tools like Vim, Git, Make and Bash, and even introduce you to the process of porting an external tool (e.g., jq) using the zopen build command.
 
@@ -37,7 +37,7 @@ On getting access, log in to the z/OS UNIX system using SSH, you'll need to foll
     	-   ssh yoursid@hostname.com    	
     	-   NOTE: Replace yourid with the z/OS userid provided and hostname with z/OS host name 
 
-## Module 2: Downloading and Installing Zopen Community Meta Framework (10 mins)
+## Module 2: Downloading and Installing zopen community Meta Framework (10 mins)
 
 ### Video guide: (Optional)
 
@@ -125,7 +125,7 @@ export PATH="<path_to_compiler>:$PATH"
 ### Use the zopen framework to list available tools
 
 -   `zopen list` \# list the available tools, this will list 100+
-    tools available under Zopen Community
+    tools available under zopen community
 -   `zopen list -–installed` # list of installed tools
 
 ### Install your favourite tools
@@ -142,7 +142,7 @@ export PATH="<path_to_compiler>:$PATH"
 	
 	You will notice that it will install git and its runtime dependencies, bash, ncurses, and others.
 
-## Module 5: Using your newly installed Zopen Community (15 minutes)
+## Module 5: Using your newly installed zopen community (15 minutes)
 
 ### Using Bash on z/OS
 
@@ -200,9 +200,9 @@ export PATH="<path_to_compiler>:$PATH"
 	
 	![](workshop/media/image8.png)
 
-## Module 6: Building existing Zopen Community (20 mins)
+## Module 6: Building existing zopen community (20 mins)
 
-Now that you've gained some experience with using the Zopen Community, let's attempt to build an existing open source project, Git.
+Now that you've gained some experience with using the zopen community, let's attempt to build an existing open source project, Git.
 
 1.  Create a directory dev under $HOME/temp_zopen:
 	```
@@ -234,7 +234,7 @@ Now that you've gained some experience with using the Zopen Community, let's att
 	
 	After approximately 10 minutes for `git` build, test and install.
 
-## Module 7: Porting a new open source tool with Zopen Community (20 mins)
+## Module 7: Porting a new open source tool with zopen community (20 mins)
 
 Now that you understand the build process, let's attempt to port an open source tool to z/OS by leveraging `zopen generate`.
 
@@ -318,14 +318,14 @@ We will choose [jq](https://stedolan.github.io/jq/), a lightweight and flexible 
 	* Provide the community license to use for jq's patches: (select from key agpl-3.0 apache-2.0 bsd-2-clause bsd-3-clause bsl-1.0 cc0-1.0 epl-2.0 gpl-2.0 gpl-3.0 lgpl-2.1 mit mpl-2.0 unlicense)
 	  	unlicense
 	* Enter jq's stable release source url: (Specify a Git or Tarball URL. If none, press enter)
-	* Enter jq's Zopen Community build dependencies for the stable build: (Enter multiple dependencies using spaces. E.g: zoslib make grep) 
+	* Enter jq's zopen community build dependencies for the stable build: (Enter multiple dependencies using spaces. E.g: zoslib make grep) 
 	* Enter jq's dev-line source url: (Specify a Git or Tarball URL. If none, press enter)
 	  	git@github.com:stedolan/jq.git
-	* Enter jq's Zopen Community build dependencies for the dev build: (Enter multiple dependencies using spaces. E.g: zoslib make grep)
+	* Enter jq's zopen community build dependencies for the dev build: (Enter multiple dependencies using spaces. E.g: zoslib make grep)
 		git make autoconf
 	* Enter the default build line: (stable or dev)
 		dev
-	* Enter jq's Zopen Community runtime dependencies: (example: bash)
+	* Enter jq's zopen community runtime dependencies: (example: bash)
 	
 	Generating jqport zopen project
 	jqport/buildenv created
@@ -378,7 +378,7 @@ We will choose [jq](https://stedolan.github.io/jq/), a lightweight and flexible 
 	}
 	```
 
-	ZOPEN\_STABLE\_DEPS: are used to identify the non-standard Zopen Community dependencies needed to build the project.
+	ZOPEN\_STABLE\_DEPS: are used to identify the non-standard zopen community dependencies needed to build the project.
 	
 	`zopen_append_to_env()` can be used to add additional environment variables outside of the normal environment variables.
 	(e.g. PATH, LIBPATH, MANPATH)
@@ -518,7 +518,7 @@ Become a part of the z/OS Open Source Technology community either as a **develop
 
 ## What's next (5 minutes)
 
-If you're interested in participating further, we hold regular meetings to explore the latest advancements in Zopen Community via the [z/OS Open Source Guild Meetings](https://github.com/orgs/zopen-community/discussions/categories/guild)
+If you're interested in participating further, we hold regular meetings to explore the latest advancements in zopen community via the [z/OS Open Source Guild Meetings](https://github.com/orgs/zopen-community/discussions/categories/guild)
 
 We're dedicated to building a community of z/OS enthusiasts who collaborate and share their work on GitHub through the "z/OS Open Source Guild". Feel free to also participate in our [discussions](https://github.com/orgs/zopen-community/discussions). For a list of existing issues and how you can get involved, visit [issues](https://github.com/orgs/zopen-community/issues).
 

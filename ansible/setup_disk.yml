@@ -223,7 +223,7 @@
         ./update_parmlib.sh
       delegate_to: "myhost"
 
-    - name: Replace current bash with Zopen Community bash
+    - name: Replace current bash with zopen community bash
       shell: |
         chmount -w /
         cp /jenkins/zopen/usr/local/bin/bash /bin/bash

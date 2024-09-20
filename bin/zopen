@@ -23,24 +23,24 @@ setupMyself
 
 printHelp(){
 cat << HELPDOC
-${ME} is a utility for managing a Zopen Community environment.
+${ME} is a utility for managing a zopen community environment.
 
 Usage: ${ME} [COMMAND] [OPTION] [PARAMETERS]...
 
 Command:
-  alt               manage alternate versions of Zopen Community packages
+  alt               manage alternate versions of zopen community packages
   audit             (beta) reports known vulnerabilities for the installed packages
-  build             builds the enclosing Zopen Community git-cloned package
+  build             builds the enclosing zopen community git-cloned package
   clean             cleans up your zopen environment
   config            change zopen runtime environment settings
   generate          generates a new zopen project
   init              initializes a zopen environment at the specified location
-  install           installs one or more Zopen Community packages
-  list              lists information about Zopen Community packages
-  query             list local or remote info about Zopen Community packages
-  remove            removes installed Zopen Community packages
-  update-cacert     update the cacert.pem file used by Zopen Community
-  upgrade           upgrades existing Zopen Community packages
+  install           installs one or more zopen community packages
+  list              lists information about zopen community packages
+  query             list local or remote info about zopen community packages
+  remove            removes installed zopen community packages
+  update-cacert     update the cacert.pem file used by zopen community
+  upgrade           upgrades existing zopen community packages
 
 Options:
   -h, --help, -?    display this help and exit

@@ -1,4 +1,4 @@
-# Developing Zopen Community
+# Developing zopen community
 
 Please read [Quick Start](QuickStart.md) and [The package manager](ThePackageManager.md) if you haven't already done so.
 
@@ -6,7 +6,7 @@ Please read [Quick Start](QuickStart.md) and [The package manager](ThePackageMan
 
 After running `zopen init`, you are able to install tools under the tools directory you chose, i.e. `$ZOPEN_ROOTFS` 
 
-You can develop Zopen Community out of any directory you want. For example, if you wanted to make enhancements to the git port, you would perform the following commands:
+You can develop zopen community out of any directory you want. For example, if you wanted to make enhancements to the git port, you would perform the following commands:
 
 ```bash
 . /path/to/zopen/etc/zopen-config # source zopen-config
@@ -27,7 +27,7 @@ To see the list of commands:
 `zopen --help`
 ```
 
-## Developing Zopen Community
+## Developing zopen community
 
 ### zopen generate
 

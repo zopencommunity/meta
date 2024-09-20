@@ -1,9 +1,9 @@
-# Quick Start to Zopen Community
+# Quick Start to zopen community
 
-Zopen Community provides a package manager for 
+zopen community provides a package manager for 
 installation of unsupported Open Source tools that run native on your z/OS system. 
 
-Zopen Community also provides an easy to use tool for building these same tools from 
+zopen community also provides an easy to use tool for building these same tools from 
 source code on your z/OS system. 
 
 Whether you want to _use_ the tools or also _improve_ the tools is up to you.
@@ -41,9 +41,9 @@ If you like learning through watching, check out our getting started Video:
 </video>
 
 
-## Upgrading Zopen Community
+## Upgrading zopen community
 
-Zopen Community can be upgraded like so:
+zopen community can be upgraded like so:
 
 ```
 $ zopen upgrade

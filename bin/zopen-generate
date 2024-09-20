@@ -106,15 +106,15 @@ echo ${licenseUrl}
 
 echo "Enter ${name}'s stable release source url: (Specify a Git or Tarball URL. If none, press enter)"
 stablePath=$(getInput)
-echo "Enter ${name}'s Zopen Community build dependencies for the stable build: (Enter multiple dependencies using spaces. E.g: zoslib make grep)"
+echo "Enter ${name}'s zopen community build dependencies for the stable build: (Enter multiple dependencies using spaces. E.g: zoslib make grep)"
 stableDeps=$(getInput)
 echo "Enter ${name}'s dev-line source url: (Specify a Git or Tarball URL. If none, press enter)"
 devPath=$(getInput)
-echo "Enter ${name}'s Zopen Community build dependencies for the dev build: (Enter multiple dependencies using spaces. E.g: zoslib make grep)"
+echo "Enter ${name}'s zopen community build dependencies for the dev build: (Enter multiple dependencies using spaces. E.g: zoslib make grep)"
 devDeps=$(getInput)
 echo "Enter the default build line: (stable or dev)"
 buildline=$(getInput)
-echo "Enter ${name}'s Zopen Community runtime dependencies: (example: bash)"
+echo "Enter ${name}'s zopen community runtime dependencies: (example: bash)"
 runtimedeps=$(getInput)
 
 project_path="${name}port"

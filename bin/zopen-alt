@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# "Alternatives" utility for Zopen Community - https://github.com/zopen-community
+# "Alternatives" utility for zopen community - https://github.com/zopen-community
 #
 
 #
@@ -23,7 +23,7 @@ checkWritable
 printHelp()
 {
   cat << HELPDOC
-${ME} is a utility for Zopen Community to switch package versions
+${ME} is a utility for zopen community to switch package versions
 for currently installed packages.
 
 Usage: ${ME} [OPTION] [PACKAGE] [PARAMETERS]...

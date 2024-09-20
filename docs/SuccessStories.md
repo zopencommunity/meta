@@ -1,6 +1,6 @@
 # Success Stories
 
-Discover how Zopen Community have made a positive impact to various organizations and developers. Read the testimonials from our community members below:
+Discover how zopen community have made a positive impact to various organizations and developers. Read the testimonials from our community members below:
 
 <hr style="height: 3px; background-color: grey;">
 
@@ -13,7 +13,7 @@ Discover how Zopen Community have made a positive impact to various organization
 
 <h4><i>
   "We have been looking for the z/OS USS environment to provide a state of the art "Unix" experience. Participating in the z/OS Open-source Guild meetings has allowed us to install, test and recommend additional tools to be included in the porting efforts. It reminds me of the positive experience in a previous IBM Sponsor User Research initiative. IBM is doing a great job leading all the participants.<br/><br/>
-Through this effort, I have learned that the GNU collection of "free" software (typically packaged with Linux distributions) is the z/OS Open-Source strategy. z/OS and GNU software are a robust combination for hosting on-prem cloud native applications. <b>We see tremendous value moving the platform forward adopting the Zopen Community.</b><br/><br/>
+Through this effort, I have learned that the GNU collection of "free" software (typically packaged with Linux distributions) is the z/OS Open-Source strategy. z/OS and GNU software are a robust combination for hosting on-prem cloud native applications. <b>We see tremendous value moving the platform forward adopting the zopen community.</b><br/><br/>
 We are excited to find out more about IBM's strategy regarding packaging, delivery, and support for enterprise use."
 </i></h4>
 

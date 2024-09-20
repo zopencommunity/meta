@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Query utility for Zopen Community - https://github.com/zopen-community
+# Query utility for zopen community - https://github.com/zopen-community
 #
 
 #
@@ -26,7 +26,7 @@ whatprovides_implemented=false
 printSyntax()
 {
   args=$*
-  echo "${ME} -  a utility for Zopen Community to query packages and repos."
+  echo "${ME} -  a utility for zopen community to query packages and repos."
   echo ""
   echo "Usage: ${ME} [OPTION] [VERB] [PACKAGE]"
   echo "  VERB is the action to take, which is one of"
@@ -34,9 +34,9 @@ printSyntax()
   echo "  PACKAGE is a package, specified for --remote-search"
   echo ""
   echo "Verbs:"
-  echo "  -i, --installed  list installed Zopen Community."
-  echo "  --list           list all available Zopen Community."
-  echo "  --remote-search  regex match package against available Zopen Community"
+  echo "  -i, --installed  list installed zopen community."
+  echo "  --list           list all available zopen community."
+  echo "  --remote-search  regex match package against available zopen community"
 if ${upgradeable_implemented}; then
   echo "  --upgradeable    list packages where an upgrade is available."
 fi

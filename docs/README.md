@@ -1,6 +1,6 @@
-## Welcome to Zopen Community
+## Welcome to zopen community
 
-The [Zopen Community community](https://github.com/zopen-community/meta/discussions) is here to provide popular Open Source tools and to encourage z/OS Open Source tools development. 
+The [zopen community community](https://github.com/zopen-community/meta/discussions) is here to provide popular Open Source tools and to encourage z/OS Open Source tools development. 
 We currently host **200+ z/OS Open Source projects** and we're looking for more! 
 
 <section class="layout">
@@ -19,8 +19,8 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/zopen-community/meta/HEA
 ### Explore & Engage
 
 * [Getting Started](/Guides/QuickStart.md) will get you going fast.
-* Our [Zopen Community repositories](https://github.com/zopen-community) shows what's available
-* [Zopen Community best practices](https://github.com/zopen-community) 
+* Our [zopen community repositories](https://github.com/zopen-community) shows what's available
+* [zopen community best practices](https://github.com/zopen-community) 
 * Want to see the latest [build status and quality](Guides/../Latest.md) ?
 * Want to [use the tools](/Guides/ThePackageManager.md) ?
 * Want to [develop the tools](/Guides/developing.md) ?
@@ -28,7 +28,7 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/zopen-community/meta/HEA
 
 ### Your Feedback Matters!
 
-* Enjoying Zopen Community? We'd love to get a testimonial from you! Share it by [emailing us](mailto:fultonm@ca.ibm.com).
+* Enjoying zopen community? We'd love to get a testimonial from you! Share it by [emailing us](mailto:fultonm@ca.ibm.com).
 * Got an idea or general feedback for the community? Create a [discussion item](https://github.com/orgs/zopen-community/discussions). We'd love to hear it!
 
 Let's make our tools even better together! 🌟

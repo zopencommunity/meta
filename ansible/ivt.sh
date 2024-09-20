@@ -1,5 +1,5 @@
 #!/bin/sh
-# IVT Shell Script for Zopen Community
+# IVT Shell Script for zopen community
 # Checks for min OS, ARCH, and the presence of Python, ZOAU, Java and Network Connectivity to github.com
 
 version_compare() {
@@ -94,7 +94,7 @@ check_system() {
   print -n "Checking for supported hardware..."
   # Checking if the processor is either at least zEC12 (2817)
   if [ ${PROCESSOR} -lt 2817 -a ${PROCESSOR} -ne 1090 ]; then
-    echo "ERROR: A processor level (${PROCESSOR}) lower than IBM zEnterprise EC12 has been detected. The minimum requirement to compile and execute Zopen Community is IBM zEnterprise EC12."
+    echo "ERROR: A processor level (${PROCESSOR}) lower than IBM zEnterprise EC12 has been detected. The minimum requirement to compile and execute zopen community is IBM zEnterprise EC12."
     exit 1
   fi
   echo "Success"

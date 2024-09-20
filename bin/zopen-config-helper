@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Configuration helper for Zopen Community - https://github.com/zopen-community
+# Configuration helper for zopen community - https://github.com/zopen-community
 #
 
 #
@@ -24,7 +24,7 @@ checkWritable
 printHelp()
 {
   cat << HELPDOC
-${ME} is a utility for Zopen Community to change the zopen runtime environment.
+${ME} is a utility for zopen community to change the zopen runtime environment.
  
 
 Usage: ${ME} [OPTION] [KEY]

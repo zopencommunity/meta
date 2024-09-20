@@ -1,7 +1,7 @@
 # Meta - Introducing the zopen package manager
 
 Meta adds package management facilities to z/OS, via `zopen`. It is similar to utilities like apt, dpkg, yum, yast2, and emerge. It is written as a pure shell script to remove any prerequisites (like python/perl/bash etc).
-This package manager is designed for everyday usage of the Zopen Community ports within the z/OS UNIX environment or for those who wish to download the tools.
+This package manager is designed for everyday usage of the zopen community ports within the z/OS UNIX environment or for those who wish to download the tools.
 
 **Download** the latest zopen package manager [here](https://github.com/zopen-community/metaport/releases).
 
@@ -31,7 +31,7 @@ Start with [quick start guide](https://zosopentools.org/#/Guides/QuickStart?id=g
 
 * Selecting `'/'` as the root filesystem will allow the tools to be available system-wide for all users who configure their usage. The install needs to be done by a sysadmin [or someone with sufficient rights using the `sudo` port for example] as the installer will write files to the `/usr` tree and configuration information to /etc. There will also be a configuration file written as `/etc/zopen-config` - this can be sourced by other users.
 
-* Removing zopen and the Zopen Community once installed involves:
+* Removing zopen and the zopen community once installed involves:
   * Uninstalling all installed packages; removing any copies of `zopen-config`
   * Removing the configured zopen root directory (by default `/usr/local/zopen` but is set during installation)
   * Running a command to find any final orphaned symlinks on the system, such as: `/bin/find $ZOPEN_ROOTFS -type l -exec test ! -e {} \; -print`
@@ -47,25 +47,25 @@ Most commands have extended help available using the `--help` parameter.  The fo
 zopen init
 ```
 
-Used to initialise a Zopen Community environment. By default, this will create a `zopen` directory in your `$HOME` directory as the root filesystem (rootfs).  The rootfs holds the various packages, configuration files, and environment for Zopen Community packages. Removing this directory will revert the system without a trace.  A Zopen Community main configuration file is generated in `$rootfs/etc/zopen-config`. To enable the Zopen Community, this will either need to be sourced after logon to the system or the following line can be added to `$HOME/.profile` (or .bash_profile or...) to automatically source the Zopen Community configuration file.
+Used to initialise a zopen community environment. By default, this will create a `zopen` directory in your `$HOME` directory as the root filesystem (rootfs).  The rootfs holds the various packages, configuration files, and environment for Zopen Community packages. Removing this directory will revert the system without a trace.  A Zopen Community main configuration file is generated in `$rootfs/etc/zopen-config`. To enable the Zopen Community, this will either need to be sourced after logon to the system or the following line can be added to `$HOME/.profile` (or .bash_profile or...) to automatically source the Zopen Community configuration file.
 
 ```bash
 [ -e "$rootfs/etc/zopen-config" ] && . $rootfs/etc/zopen-config
 ```
 
-It is possible to reinitialize a system using the `re-init` option - doing so will remove the previous configuration though the rootfs can overlap the old filesystem to reuse installed and/or cached packages for example.  Initialisation on a system that has previously had a Zopen Community configuration should allow some parameters to be copied across, such as Github tokens.
+It is possible to reinitialize a system using the `re-init` option - doing so will remove the previous configuration though the rootfs can overlap the old filesystem to reuse installed and/or cached packages for example.  Initialisation on a system that has previously had a zopen community configuration should allow some parameters to be copied across, such as Github tokens.
 
 ```bash
 zopen install <package>...
 ```
 
-Used to install a Zopen Community package.  By default, the latest stable version is installed although options are available to install specific versions, tags or to pick from a selection [see `--help` for more].
+Used to install a zopen community package.  By default, the latest stable version is installed although options are available to install specific versions, tags or to pick from a selection [see `--help` for more].
 
 ```bash
 zopen upgrade
 ```
 
-Used to upgrade Zopen Community packages.  Without parameters, all installed packages will be upgraded; individual packages can be specified on the command line to upgrade only those packages.  Packages can be "pinned" to prevent upgrading in case a later release is found to be broken or incompatible - creating a `.pinned` file in the package directory prevents the upgrade; removing the file allows upgrades to occur.
+Used to upgrade zopen community packages.  Without parameters, all installed packages will be upgraded; individual packages can be specified on the command line to upgrade only those packages.  Packages can be "pinned" to prevent upgrading in case a later release is found to be broken or incompatible - creating a `.pinned` file in the package directory prevents the upgrade; removing the file allows upgrades to occur.
 
 ```bash
 zopen clean [--cache] [--unused] [--dangling] [--all]
@@ -101,7 +101,7 @@ Searches the remote repository for the specified package, returning appropriate 
 zopen query <option>
 ```
 
-Queries the local Zopen Community system. See `---help` for more details.
+Queries the local zopen community system. See `---help` for more details.
 
 ## Migrating from zopen version <0.8.0
 **Note:** The new zopen package manager is not compatible with previous versions of zopen. Migration involves creating a new directory structure for zopen tools. This is accomplished via the `zopen init` command, documented below.
@@ -115,5 +115,5 @@ Queries the local Zopen Community system. See `---help` for more details.
 
 ### Useful resources
 
-* View the Zopen Community project home: https://github.com/zopen-community
+* View the zopen community project home: https://github.com/zopen-community
 * View the main Meta documentation at https://zosopentools.github.io/meta/

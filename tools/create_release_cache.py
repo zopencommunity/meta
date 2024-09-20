@@ -18,7 +18,7 @@ from collections import OrderedDict
 """
 GitHub Releases JSON Cache
 
-This tool fetches Zopen Community releases and metadata and generates a minimized JSON cache file.
+This tool fetches zopen community releases and metadata and generates a minimized JSON cache file.
 The cache file contains information about the releases, including assets, sizes, and metadata.
 """
 

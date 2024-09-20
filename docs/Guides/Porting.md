@@ -15,14 +15,14 @@ git config --global user.name "<Your Name>"
 This assumes that you have the latest version of [Git](https://github.com/zopen-community/gitport/releases) on your z/OS system.
 
 
-### Leveraging the Zopen Community meta repo
+### Leveraging the zopen community meta repo
 
 The meta repo (https://github.com/zopen-community/meta) consists of common tools and files that aid in the porting process, including the `zopen` suite of tools.  Specifically, `zopen build` provides a common way to bootstrap, configure, build, check,
-and install a software package. `zopen install` provides a mechanism to install the latest published Zopen Community packages.
+and install a software package. `zopen install` provides a mechanism to install the latest published zopen community packages.
 
 Many tools depend on other tools to be able to build or run. You will need to provide both _bootstrap_ tools
 (i.e. binary tools not from source), as well as _prod_ tools (i.e. _production_ level tools previously built
-from another Zopen Community repository).
+from another zopen community repository).
 
 Many tools require a C or C++ compiler (or both) to build. There are a couple of options to obtain the C/C++ compiler:
 * You can download a web deliverable add-on feature to your XL C/C++ compiler 
@@ -127,7 +127,7 @@ zopen_append_to_zoslib_env()
   echo "envar|set|value"
 }
 ```
-ZOPEN_STABLE_DEPS/ZOPEN_STABLE_DEPS are used to identify the non-standard Zopen Community dependencies needed to build the project. 
+ZOPEN_STABLE_DEPS/ZOPEN_STABLE_DEPS are used to identify the non-standard zopen community dependencies needed to build the project. 
 
 ZOPEN_CATEGORIES represent the [categories]((https://github.com/zopen-community/meta/blob/main/data/tool_categories.txt") that the tool or library fits under.
 

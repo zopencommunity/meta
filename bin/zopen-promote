@@ -21,7 +21,7 @@ setupMyself
 
 printHelp(){
 cat << HELPDOC
-${ME} is a utility for Zopen Community to generate a clone of
+${ME} is a utility for zopen community to generate a clone of
 an existing zopen environment. For example, a user can install
 to a test area, validate the behavior, and promote to a production area.
 

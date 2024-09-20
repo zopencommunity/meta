@@ -46,7 +46,7 @@ g = Github(os.getenv('ZOPEN_GITHUB_OAUTH_TOKEN'))
 
 with open('docs/Latest.md', 'w') as f:
   sys.stdout = f # Change the standard output to the file we created.
-  print("# Zopen Community - Packages\n")
+  print("# zopen community - Packages\n")
   print("Note: to download the latest packages, use the `zopen install` script from the [meta repo](https://github.com/zopen-community/meta)\n")
   print("| Package | Status | Test Success Rate | Latest Release | Description |")
   print("|---|---|---|---|---|")

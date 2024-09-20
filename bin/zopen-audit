@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Audit utility for Zopen Community - https://github.com/zopen-community
+# Audit utility for zopen community - https://github.com/zopen-community
 #
 # All zopen-* scripts MUST start with this code to maintain consistency.
 #
@@ -20,7 +20,7 @@ setupMyself
 printHelp()
 {
   cat << HELPDOC
-${ME} is a utility for Zopen Community to check for vulnerabilities
+${ME} is a utility for zopen community to check for vulnerabilities
 in your installed packages.
 
 Usage: ${ME} [OPTION]

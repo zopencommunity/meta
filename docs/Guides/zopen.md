@@ -10,15 +10,15 @@ cd meta
 
 Alternatively, you can download meta via [here](https://github.com/zopen-community/meta/releases/)
 
-## If you are using Zopen Community
+## If you are using zopen community
 
 ### zopen init
 
-`zopen init` is used to initialise a Zopen Community environment. By default, this will create a ```zopen``` directory in your ```$HOME``` directory as the root filesystem (rootfs).  The rootfs holds the various packages, configuration and environment for Zopen Community packages - removing this directory will revert the system without a trace.  A Zopen Community main configuration file is generated in ```$rootfs/etc/zopen-config``` - to enable the Zopen Community, this will either need to be sourced after logon to the system or the following line can be added to ```$HOME/.profile``` (or .bash_profile or...) to automatically source the Zopen Community configuration file.
+`zopen init` is used to initialise a zopen community environment. By default, this will create a ```zopen``` directory in your ```$HOME``` directory as the root filesystem (rootfs).  The rootfs holds the various packages, configuration and environment for Zopen Community packages - removing this directory will revert the system without a trace.  A Zopen Community main configuration file is generated in ```$rootfs/etc/zopen-config``` - to enable the Zopen Community, this will either need to be sourced after logon to the system or the following line can be added to ```$HOME/.profile``` (or .bash_profile or...) to automatically source the Zopen Community configuration file.
 ```bash
 [ -e "$rootfs/etc/zopen-config" ] && . $rootfs/etc/zopen-config
 ```
-It is possible to reinitialize a system using the ```re-init``` option - doing so will remove the previous configuration though the rootfs can overlap the old filesystem to reuse installed and/or cached packages for example.  Initialisation on a system that has previously had a Zopen Community configuration should allow some parameters to be copied across, such as Github tokens.
+It is possible to reinitialize a system using the ```re-init``` option - doing so will remove the previous configuration though the rootfs can overlap the old filesystem to reuse installed and/or cached packages for example.  Initialisation on a system that has previously had a zopen community configuration should allow some parameters to be copied across, such as Github tokens.
 
 ### zopen update-cacert
 
@@ -52,7 +52,7 @@ To upgrade a specific set of packages, you can specify the packages as a comma s
 zopen upgrade make
 ```
 
-## If you are contributing to or developing Zopen Community
+## If you are contributing to or developing zopen community
 
 ### zopen build
 

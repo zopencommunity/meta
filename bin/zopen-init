@@ -27,7 +27,7 @@ checkWritable
 
 printHelp(){
 cat << HELPDOC
-zopen init is a utility for Zopen Community to generate a zopen
+zopen init is a utility for zopen community to generate a zopen
 environment, bootstrapping initial tools and creating a configuration
 file
 
@@ -250,7 +250,7 @@ determineStatsCollection()
     printAttention "Attention: Turning off usage statistics as you are running zopen init in a non-interactive environment. If this is incorrect, rerun with --enable-stats"
     isCollectingStats=false
   else
-    statsMsg="Do you want to contribute ${NC}${BOLD}anonymous${NC} usage statistics (https://zosopentools.github.io/meta/#/Guides/Analytics) to help improve Zopen Community?"
+    statsMsg="Do you want to contribute ${NC}${BOLD}anonymous${NC} usage statistics (https://zosopentools.github.io/meta/#/Guides/Analytics) to help improve zopen community?"
     if promptYesOrNo "${statsMsg}" false; then
       isCollectingStats=true
     fi

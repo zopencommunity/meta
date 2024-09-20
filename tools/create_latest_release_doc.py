@@ -1,6 +1,6 @@
 """
 Script to generate a markdown file listing newly released tools.
-The resulting markdown will be added to the Zopen Community docs
+The resulting markdown will be added to the zopen community docs
 """
 
 import json

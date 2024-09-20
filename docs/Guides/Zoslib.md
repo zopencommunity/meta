@@ -19,7 +19,7 @@ The corresponding `zopen` project lives [here](https://github.com/zopen-communit
 
 As we continue to port projects to z/OS, we have come across many common issues. Rather than repeating the same patterns and duplicating the solutions on a per project basis, we decided to take a different approach. We decided to solve the issues by linking to an intermediary library, ZOSLIB.
 
-ZOSLIB is an actively developed library that's currently being used by 20+ Zopen Community projects, including curl, git, bash and more.
+ZOSLIB is an actively developed library that's currently being used by 20+ zopen community projects, including curl, git, bash and more.
 
 ZOSLIB aims to automatically resolve the following types of issues:
 * Tagging file descriptors which are not tagged appropriately via C open, mkstemp or pipe.

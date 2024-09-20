@@ -30,7 +30,7 @@ zopen init
 
 ## Using the package manager
 
-- Install any Zopen Community via `zopen install`, e.g.
+- Install any zopen community via `zopen install`, e.g.
 ```bash
 zopen install which # Installs which 
 # Now test which
@@ -66,7 +66,7 @@ zopen audit
 
 Packages such as `coreutils`, `gawk`, `sed`, `findutils`, `grep`, `diffutils`, `man-db` and `openssh` provide executables that collide with the z/OS UNIX tools under `/bin`.
 
-### Prefixing for Zopen Community
+### Prefixing for zopen community
 
 To ensure seamless interaction with z/OS tools under `/bin`, z/OS Open tools that collide with a z/OS UNIX tool under `<package>/bin` will be prefixed as follows:
 

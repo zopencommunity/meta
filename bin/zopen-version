@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Version utility for Zopen Community - https://github.com/zopen-community
+# Version utility for zopen community - https://github.com/zopen-community
 #
 
 #
@@ -43,7 +43,7 @@ terms of the Apache License, Version 2.0.
 <https://www.apache.org/licenses/LICENSE-2.0.html>
 There is NO WARRANTY, to the extent permitted by law.
 
-Written by contributors to the Zopen Community Community.
+Written by contributors to the zopen community Community.
 <https://github.com/zopen-community/meta/graphs/contributors>
 
 VERSIONDOC

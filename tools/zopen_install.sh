@@ -17,7 +17,7 @@ fi
 ZOPEN_RELEASE_JSON="https://raw.githubusercontent.com/zopen-community/meta/main/docs/api/zopen_releases_latest.json"
 
 # Download the latest json
-echo "> Getting latest data from Zopen Community..."
+echo "> Getting latest data from zopen community..."
 url=$(curl --fail-with-body --silent -L $ZOPEN_RELEASE_JSON)
 if [ $? -gt 0 ]; then
   echo "Error: Curl failed to download release json $ZOPEN_RELEASE_JSON due to: \"$url\""
@@ -28,7 +28,7 @@ fi
 url=$(echo "$url" | /bin/tr ' ' '\n' |  grep "https://github.com/zopen-community/metaport/releases/download/" |  /bin/sed -e 's/.*\(https:\/\/github.com\/zopen-community\/metaport\/releases\/download\/[^"]*\.pax\.Z\).*/\1/')
 paxFile=$(basename "$url");
 
-echo "> Downloading Zopen Community $url..."
+echo "> Downloading zopen community $url..."
 
 response=$(curl --fail-with-body -O -L "$url")
 if [ $? -gt 0 ]; then

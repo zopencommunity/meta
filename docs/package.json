@@ -1,7 +1,7 @@
 {
   "name": "zosopentools",
   "version": "0.0.1",
-  "description": "Zopen Community Docs",
+  "description": "zopen community Docs",
   "scripts": {
     "serve": "docsify serve",
     "update-sidebar": "docsify-auto-sidebar -d ."

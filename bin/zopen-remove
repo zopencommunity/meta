@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Removal utility for Zopen Community - https://github.com/zopen-community
+# Removal utility for zopen community - https://github.com/zopen-community
 #
 
 #
@@ -23,7 +23,7 @@ checkWritable
 printHelp()
 {
   cat << HELPDOC
-${ME} is a utility for Zopen Community to remove an installed package or
+${ME} is a utility for zopen community to remove an installed package or
 packages.
 
 Usage: ${ME} [OPTION] [PACKAGE] ...
