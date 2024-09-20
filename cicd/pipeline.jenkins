@@ -77,7 +77,7 @@ node('linux')
     if (params.NO_PROMOTE)
         extraText = "\nBuilt with NO_PROMOTE set to true."
     else
-        extraText = "\nRelease published to: ${latestRelease}\nProgress page updated: https://zosopentools.github.io/meta/#/Progress"
+        extraText = "\nRelease published to: ${latestRelease}\nProgress page updated: https://zopencommunity.github.io/meta/#/Progress"
 
     if (!build_line)
       build_line = "STABLE"

@@ -191,7 +191,7 @@ cd whichport
 ```
 
 You will notice that there are several files, and most notably, the `buildenv` configuration. This file instructs `zopen build` on how to build the which tool.
-For more details on the `buildenv` configuration, visit https://zosopentools.github.io/meta/#/Guides/Porting.
+For more details on the `buildenv` configuration, visit https://zopencommunity.github.io/meta/#/Guides/Porting.
 
 Now, let's attempt to build whichport:
 ```
@@ -329,7 +329,7 @@ For a list of existing issues and how you can get involved, visit [issues](https
 
 ## Resources
 * [Github repository](https://github.com/orgs/zopencommunity)
-* [Documentation](https://zosopentools.github.io/meta)
+* [Documentation](https://zopencommunity.github.io/meta)
 * [Discussions](https://github.com/orgs/zopencommunity/discussions)
 * [Discord channel](https://discord.gg/Cgwf6F6dqj)
 * [Guild meeting session](https://github.com/orgs/zopencommunity/discussions/categories/guild)

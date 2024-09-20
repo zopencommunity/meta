@@ -4,7 +4,7 @@
 VIM is a popular and powerful text editor that is often used by programmers for writing code. While VIM is available on many different platforms, it can also be used on z/OS.
 
 ## How to obtain VIM on z/OS?
-To obtain VIM on z/OS, use the [zopen package manager](https://zosopentools.github.io/meta/#/Guides/ThePackageManager) to install it as follows:
+To obtain VIM on z/OS, use the [zopen package manager](https://zopencommunity.github.io/meta/#/Guides/ThePackageManager) to install it as follows:
 ```
 zopen install vim
 ```

@@ -219,7 +219,7 @@ Now that you've gained some experience with using the zopen community, let's att
     `buildenv` configuration. This file instructs `zopen build` on how
     to build the `git` tool.
     
-	 For more details on the `buildenv` configuration, visit <https://zosopentools.github.io/meta/#/Guides/Porting>.
+	 For more details on the `buildenv` configuration, visit <https://zopencommunity.github.io/meta/#/Guides/Porting>.
 	
 	(As mentioned in Module 3, ensure the path to the compiler is set.)
 
@@ -509,11 +509,11 @@ We will choose [jq](https://stedolan.github.io/jq/), a lightweight and flexible 
 Become a part of the z/OS Open Source Technology community either as a **developer** or a **consumer**.
 	
 * As a developer:
-	* if you want to work on new tools, visit pages [1](https://github.com/orgs/zopencommunity/discussions/23) and [2](https://github.com/orgs/zopen-community/discussions/433), choose a tool to begin the development activity, as outlined [here](https://zosopentools.github.io/meta/#/Guides/developing). 
+	* if you want to work on new tools, visit pages [1](https://github.com/orgs/zopencommunity/discussions/23) and [2](https://github.com/orgs/zopen-community/discussions/433), choose a tool to begin the development activity, as outlined [here](https://zopencommunity.github.io/meta/#/Guides/developing). 
 	* Alternatively, if you prefer working on existing tools, you can select one of the help-wanted issues from [here](https://github.com/search?q=user%3Azopen-community+repo%3Ahttps%3A%2F%2Fgithub.com%2Fzopen-community+label%3A%22help+wanted%22+state%3Aopen&type=issues&ref=advsearch&state=open
 	).
 	
-* If you'd like to contribute as a consumer of these tools, you can start by visiting this [link](https://zosopentools.github.io/meta/#/Guides/QuickStart)
+* If you'd like to contribute as a consumer of these tools, you can start by visiting this [link](https://zopencommunity.github.io/meta/#/Guides/QuickStart)
 
 
 ## What's next (5 minutes)
@@ -525,9 +525,9 @@ We're dedicated to building a community of z/OS enthusiasts who collaborate and 
 ## Resources
 
 -   [Github repository](https://github.com/orgs/zopencommunity)
--   [Documentation](https://zosopentools.github.io/meta)
+-   [Documentation](https://zopencommunity.github.io/meta)
 -   [Video
-    demo](https://zosopentools.github.io/meta/#/Guides/QuickStart?id=getting-started-video)
+    demo](https://zopencommunity.github.io/meta/#/Guides/QuickStart?id=getting-started-video)
 -   [Discussions](https://github.com/orgs/zopencommunity/discussions)
 -   [Discord channel](https://discord.gg/Cgwf6F6dqj)
 -   [Guild meeting
