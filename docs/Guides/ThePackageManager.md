@@ -8,9 +8,9 @@ Access to a z/OS UNIX machine with z/OS 2.4 and above and network connectivity t
 
 If you have curl and bash on your system, you can use this one liner:
 ```
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/zopen-community/meta/HEAD/tools/zopen_install.sh)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/zopencommunity/meta/HEAD/tools/zopen_install.sh)"
 ```
-Otherwise, download the latest [meta pax](https://github.com/zopen-community/metaport/releases) to z/OS
+Otherwise, download the latest [meta pax](https://github.com/zopencommunity/metaport/releases) to z/OS
 - download the file to your desktop
 - use `sftp` to upload the pax file to z/OS.
 - On z/OS, expand the pax using the command ```pax -rvf <filename>.pax```.  

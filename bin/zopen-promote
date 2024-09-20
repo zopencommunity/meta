@@ -82,7 +82,7 @@ Examples:
                     zopen-config environment file and only permit
                     access to zopen environment files to the user 'FOO'.
 
-Report bugs at https://github.com/zopen-community/meta/issues
+Report bugs at https://github.com/zopencommunity/meta/issues
 
 HELPDOC
 }

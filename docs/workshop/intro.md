@@ -63,7 +63,7 @@ Note: In the documentation that follows, text inside `< ... >` indicates a value
 
 To get started, you need to get the `meta-<version>.pax.Z` to your z/OS system. Here is one approach:
 - on your laptop or desktop
-- download the [latest meta release](https://github.com/zopen-community/meta/releases) file by clicking on the pax.Z in the **assets** section. 
+- download the [latest meta release](https://github.com/zopencommunity/meta/releases) file by clicking on the pax.Z in the **assets** section. 
 - open a terminal window on your laptop or desktop
 - `cd` into the directory you downloaded the file to
 - `sftp <z/OS system>`
@@ -130,7 +130,7 @@ Type in `ls <tab>`, <tab> will auto-complete and list all files/directories in y
 
 Now, let's use Git to clone a remote repository:
 ```
-git clone https://github.com/zopen-community/meta.git
+git clone https://github.com/zopencommunity/meta.git
 ```
 This will clone the remote repository, meta, to your local z/OS UNIX system under the directory `meta`.
 
@@ -186,7 +186,7 @@ We will use `which` as an existing ported tools to z/OS.
 
 Clone the whichport repository and change to the whichport local workspace as follows:
 ```
-git clone https://github.com/zopen-community/whichport
+git clone https://github.com/zopencommunity/whichport
 cd whichport
 ```
 
@@ -233,14 +233,14 @@ tar
 Generating jqportport zopen project...
 jqport/buildenv created...
 jqport/README.md created...
-jqport project is ready! Contact Mike Fulton (fultonm@ca.ibm.com) to create https://github.com/zopen-community/jqport.git...
+jqport project is ready! Contact Mike Fulton (fultonm@ca.ibm.com) to create https://github.com/zopencommunity/jqport.git...
 ```
 
 Change your current directory to the `jqport` directory: `cd jqport`. You will notice several files:
 * README.md - A description of the project
 * buildenv - The zopen configuration file that drives the build, testing, and installation of the project.
 * cicd.groovy - The CI/CD configuration file used in the Jenkins pipeline
-For more information, please visit the [zopen build README](https://github.com/zopen-community/meta)
+For more information, please visit the [zopen build README](https://github.com/zopencommunity/meta)
 
 Note: `zopen build` supports projects based in github repositories or tarball locations. Since autoconf/automake are not currently 100% functional on z/OS, we typically choose the tarball location because it contains a `configure` script pre-packaged. Let's go ahead and do this for `jq`.
 
@@ -319,17 +319,17 @@ The `-v` option above specifies verbose output.
 Once finished, you will notice that your project was built and installed under `<zopen_root_fs>/usr/local/dev/jq/jq`.
 
 ## What's next (5 minutes)
-If you're interested in participating further, we hold regular meetings to explore the latest advancements in zopen community via the [z/OS Open Source Guild Meetings](https://github.com/orgs/zopen-community/discussions/categories/guild)
+If you're interested in participating further, we hold regular meetings to explore the latest advancements in zopen community via the [z/OS Open Source Guild Meetings](https://github.com/orgs/zopencommunity/discussions/categories/guild)
 
 We're dedicated to building a community of z/OS enthusiasts who collaborate and share their work on GitHub through the "z/OS Open Source Guild."
 
-Feel free to also participate in our [discussions](https://github.com/orgs/zopen-community/discussions).
+Feel free to also participate in our [discussions](https://github.com/orgs/zopencommunity/discussions).
 
-For a list of existing issues and how you can get involved, visit [issues](https://github.com/orgs/zopen-community/issues).
+For a list of existing issues and how you can get involved, visit [issues](https://github.com/orgs/zopencommunity/issues).
 
 ## Resources
-* [Github repository](https://github.com/orgs/zopen-community)
+* [Github repository](https://github.com/orgs/zopencommunity)
 * [Documentation](https://zosopentools.github.io/meta)
-* [Discussions](https://github.com/orgs/zopen-community/discussions)
+* [Discussions](https://github.com/orgs/zopencommunity/discussions)
 * [Discord channel](https://discord.gg/Cgwf6F6dqj)
-* [Guild meeting session](https://github.com/orgs/zopen-community/discussions/categories/guild)
+* [Guild meeting session](https://github.com/orgs/zopencommunity/discussions/categories/guild)

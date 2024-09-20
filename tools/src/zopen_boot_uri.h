@@ -1,7 +1,7 @@
 #ifndef ZOPEN_BOOT_URI
   #include <stdlib.h>
-  #define ZOPEN_TOOLS_URL "https://github.com/zopen-community"
-  #define ZOPEN_REPO_URI_PREFIX "repos/zopen-community"
+  #define ZOPEN_TOOLS_URL "https://github.com/zopencommunity"
+  #define ZOPEN_REPO_URI_PREFIX "repos/zopencommunity"
   #define ZOPEN_REPO_URI_SUFFIX "releases/tags/stable"
   #define ZOPEN_BOOT_URI_PREFIX "zopen-community"
   #define ZOPEN_BOOT_URI_SUFFIX "releases/download/stable"

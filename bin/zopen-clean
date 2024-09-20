@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Cleanup utility for zopen community - https://github.com/zopen-community
+# Cleanup utility for zopen community - https://github.com/zopencommunity
 #
 
 #
@@ -49,7 +49,7 @@ Examples:
   zopen clean -u [PACKAGE]
                     remove unused versions for PACKAGE
 
-Report bugs at https://github.com/zopen-community/meta/issues.
+Report bugs at https://github.com/zopencommunity/meta/issues.
 
 HELPDOC
 }

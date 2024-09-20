@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Configuration helper for zopen community - https://github.com/zopen-community
+# Configuration helper for zopen community - https://github.com/zopencommunity
 #
 
 #
@@ -62,7 +62,7 @@ Notes:
 
   
   
-Report bugs at https://github.com/zopen-community/meta/issues.
+Report bugs at https://github.com/zopencommunity/meta/issues.
 
 HELPDOC
 }

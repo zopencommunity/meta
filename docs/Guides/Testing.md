@@ -8,9 +8,9 @@ The zopen community CI/CD pipeline leverages Wazi as a Service instances to be a
 
 ### zopen community Github Actions
 
-zopen community ports take advantage of Github Actions to be able to build and test project changes directly on our CI/CD z/OS machines. The [build and test](https://github.com/zopen-community/meta/blob/main/.github/workflows/build_and_test.yml) job triggers a build on Jenkins and reports the status and test results back. If the Github Action is triggered on a Pull Request, then a status check is created to represent the status of the build and test job. Is is strong recommended that you wait for a green status before merging in your approved Pull Request.
+zopen community ports take advantage of Github Actions to be able to build and test project changes directly on our CI/CD z/OS machines. The [build and test](https://github.com/zopencommunity/meta/blob/main/.github/workflows/build_and_test.yml) job triggers a build on Jenkins and reports the status and test results back. If the Github Action is triggered on a Pull Request, then a status check is created to represent the status of the build and test job. Is is strong recommended that you wait for a green status before merging in your approved Pull Request.
 
-Additionally, each port has its own github workflow in place, which calls the build and test job. For example, metaport has the following [workflow](https://github.com/zopen-community/metaport/blob/main/.github/workflows/build_and_test.yml), which triggers the build and test job to be executed on specific events, including on opened or updated pull requests and on the comment '/run tests'. It also speficies which files to ignore.
+Additionally, each port has its own github workflow in place, which calls the build and test job. For example, metaport has the following [workflow](https://github.com/zopencommunity/metaport/blob/main/.github/workflows/build_and_test.yml), which triggers the build and test job to be executed on specific events, including on opened or updated pull requests and on the comment '/run tests'. It also speficies which files to ignore.
 
 #### What to do when there are issues
 
@@ -38,11 +38,11 @@ Access to the Jenkins CI/CD Pipeline is currently restricted.  To be able to vie
 
 The zopen community CI/CD pipeline defines three generic Jenkins CI/CD jobs: `Port-Pipeline`, `Port-Build` and `Port-Publish`. The _framework_ jobs are viewable at https://163.74.88.212:8443/view/Framework/.
 
-* Port-Pipeline: This Jenkins pipeline drives the entire build, test, and deploy pipeline.  It can be used by any port that leverages the [zopen framework](https://github.com/zopen-community/meta). It calls the following two Jenkins Jobs as part of its pipeline:
+* Port-Pipeline: This Jenkins pipeline drives the entire build, test, and deploy pipeline.  It can be used by any port that leverages the [zopen framework](https://github.com/zopencommunity/meta). It calls the following two Jenkins Jobs as part of its pipeline:
 	* Port-Build: This Jenkins job builds, tests, and packages the port.  It runs `build.sh` from the meta framework and produces a pax.Z artifact.  If any of the build, test, or package scripts fail, then the Jenkins job will result in failure.
 	* Port-Publish: This Jenkins job consumes an artifact from _Port-Build_ and publishes it into the respective repository's Github Releases page.
 
-The implementation of these jobs is stored under the [Meta repo](https://github.com/zopen-community/meta/tree/main/cicd).
+The implementation of these jobs is stored under the [Meta repo](https://github.com/zopencommunity/meta/tree/main/cicd).
 
 ### Setting up a Jenkins CI/CD job for your Port
 
@@ -51,7 +51,7 @@ The implementation of these jobs is stored under the [Meta repo](https://github.
 node('linux')
 {
         stage('Build') {
-                build job: 'Port-Pipeline', parameters: [string(name: 'PORT_GITHUB_REPO', value: 'https://github.com/zopen-community/myport.git'), string(name: 'PORT_DESCRIPTION', value: 'This is a description of my port' )]
+                build job: 'Port-Pipeline', parameters: [string(name: 'PORT_GITHUB_REPO', value: 'https://github.com/zopencommunity/myport.git'), string(name: 'PORT_DESCRIPTION', value: 'This is a description of my port' )]
         }
 }
 ```

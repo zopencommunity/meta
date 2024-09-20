@@ -8,13 +8,13 @@ cd meta
 . ./.env
 ```
 
-Alternatively, you can download meta via [here](https://github.com/zopen-community/meta/releases/)
+Alternatively, you can download meta via [here](https://github.com/zopencommunity/meta/releases/)
 
 ## If you are using zopen community
 
 ### zopen init
 
-`zopen init` is used to initialise a zopen community environment. By default, this will create a ```zopen``` directory in your ```$HOME``` directory as the root filesystem (rootfs).  The rootfs holds the various packages, configuration and environment for Zopen Community packages - removing this directory will revert the system without a trace.  A Zopen Community main configuration file is generated in ```$rootfs/etc/zopen-config``` - to enable the Zopen Community, this will either need to be sourced after logon to the system or the following line can be added to ```$HOME/.profile``` (or .bash_profile or...) to automatically source the Zopen Community configuration file.
+`zopen init` is used to initialise a zopen community environment. By default, this will create a ```zopen``` directory in your ```$HOME``` directory as the root filesystem (rootfs).  The rootfs holds the various packages, configuration and environment for zopen community packages - removing this directory will revert the system without a trace.  A Zopen Community main configuration file is generated in ```$rootfs/etc/zopen-config``` - to enable the Zopen Community, this will either need to be sourced after logon to the system or the following line can be added to ```$HOME/.profile``` (or .bash_profile or...) to automatically source the Zopen Community configuration file.
 ```bash
 [ -e "$rootfs/etc/zopen-config" ] && . $rootfs/etc/zopen-config
 ```
@@ -102,14 +102,14 @@ To add your own, you can append environment variables by echo'ing them in a func
 After the build is successful, `zopen build` will install the project to `$HOME/zopen/prod/projectname`. To perform post-processing on the installed contents, such as modifying hardcoded path contents, you can write a `zopen_post_install()` function which takes the installed path as the first argument.
 
 Note that you can choose the fully-qualified environment variables ZOPEN_DEV_URL, ZOPEN_DEV_DEPS and ZOPEN_STABLE_URL, ZOPEN_STABLE_DEPS 
-accordingly if you prefer. See (https://github.com/zopen-community/zotsampleport/blob/main/setenv.sh) for an example.
+accordingly if you prefer. See (https://github.com/zopencommunity/zotsampleport/blob/main/setenv.sh) for an example.
 
 There are several additional environment variables that can be specified to provide finer-grained control of the build process. 
 For details
 - Run `zopen build -h` for a description of all the environment variables
-- Read the code: (https://github.com/zopen-community/meta/blob/main/bin/zopen-build). 
+- Read the code: (https://github.com/zopencommunity/meta/blob/main/bin/zopen-build). 
 
-For a sample port, visit the [zotsampleport](https://github.com/zopen-community/zotsampleport) repo.
+For a sample port, visit the [zotsampleport](https://github.com/zopencommunity/zotsampleport) repo.
 
 #### Running zopen build
 

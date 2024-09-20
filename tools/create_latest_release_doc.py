@@ -44,7 +44,7 @@ if __name__ == '__main__':
     parser.add_argument('--output', '-o', default='Newly_released_tools.md', help='Output markdown file path')
     args = parser.parse_args()
 
-    url = 'https://raw.githubusercontent.com/zopen-community/meta/main/docs/api/zopen_releases.json'
+    url = 'https://raw.githubusercontent.com/zopencommunity/meta/main/docs/api/zopen_releases.json'
     response = requests.get(url)
     data = response.json()['release_data']
 

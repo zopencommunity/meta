@@ -19,5 +19,5 @@ jobs:
     uses: zopen-community/meta/.github/workflows/build_and_test.yml@main
     secrets: inherit
     with:
-      repo: 'https://github.com/zopen-community/metaport.git'
+      repo: 'https://github.com/zopencommunity/metaport.git'
       use_prbranch_as_build_branch: true

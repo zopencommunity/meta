@@ -14,7 +14,7 @@ if ! command -v curl > /dev/null 2>&1; then
   exit 1
 fi
 
-ZOPEN_RELEASE_JSON="https://raw.githubusercontent.com/zopen-community/meta/main/docs/api/zopen_releases_latest.json"
+ZOPEN_RELEASE_JSON="https://raw.githubusercontent.com/zopencommunity/meta/main/docs/api/zopen_releases_latest.json"
 
 # Download the latest json
 echo "> Getting latest data from zopen community..."
@@ -25,7 +25,7 @@ if [ $? -gt 0 ]; then
 fi
 
 # TODO: check if jq is present, and use it instead of this
-url=$(echo "$url" | /bin/tr ' ' '\n' |  grep "https://github.com/zopen-community/metaport/releases/download/" |  /bin/sed -e 's/.*\(https:\/\/github.com\/zopen-community\/metaport\/releases\/download\/[^"]*\.pax\.Z\).*/\1/')
+url=$(echo "$url" | /bin/tr ' ' '\n' |  grep "https://github.com/zopencommunity/metaport/releases/download/" |  /bin/sed -e 's/.*\(https:\/\/github.com\/zopen-community\/metaport\/releases\/download\/[^"]*\.pax\.Z\).*/\1/')
 paxFile=$(basename "$url");
 
 echo "> Downloading zopen community $url..."

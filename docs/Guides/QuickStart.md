@@ -15,11 +15,11 @@ please note you will need to [migrate to the new package manager](Migration.md).
 
 If you have curl and bash on your system, you can use this one liner:
 ```
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/zopen-community/meta/HEAD/tools/zopen_install.sh)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/zopencommunity/meta/HEAD/tools/zopen_install.sh)"
 ```
 
 Otherwise, follow these steps:
-- Download the latest [meta pax](https://github.com/zopen-community/metaport/releases) to your desktop, then upload to z/OS.
+- Download the latest [meta pax](https://github.com/zopencommunity/metaport/releases) to your desktop, then upload to z/OS.
   - Note: it is recommended that you use sftp to transfer the pax file from a non-z/OS machine to z/OS. This will ensure that there is no ASCII/EBCDIC conversion.
 - On z/OS, expand the pax file: `pax -rf meta-<version>.pax.Z`. 
 - cd to the unpax'ed directory: `cd meta-<version>`
@@ -37,7 +37,7 @@ See [The package manager](ThePackageManager.md) and [Developing Tools](developin
 ## Getting Started Video
 If you like learning through watching, check out our getting started Video:
 <video height="1080" controls>
-  <source src="https://github.com/zopen-community/collateral/raw/main/zopen-communityIntroV2-cropped.mp4" type="video/mp4">
+  <source src="https://github.com/zopencommunity/collateral/raw/main/zopen-communityIntroV2-cropped.mp4" type="video/mp4">
 </video>
 
 

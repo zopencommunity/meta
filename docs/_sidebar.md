@@ -30,6 +30,6 @@
   	- [Beginner](/workshop/workshop.md) 
   - [External Blogs](/Guides/blogs.md)
   - Resources
-    - [zopen community Repos](https://github.com/zopen-community)
-    - [Discussions](https://github.com/zopen-community/meta/discussions)
-    - [Guild Meetings](https://github.com/zopen-community/meta/discussions/categories/guild)
+    - [zopen community Repos](https://github.com/zopencommunity)
+    - [Discussions](https://github.com/zopencommunity/meta/discussions)
+    - [Guild Meetings](https://github.com/zopencommunity/meta/discussions/categories/guild)

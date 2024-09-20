@@ -148,7 +148,7 @@
 
     - name: Download zopen-setup
       get_url:
-        url: https://github.com/zopen-community/meta/releases/download/v0.8.0/meta-0.8.0.pax.Z
+        url: https://github.com/zopencommunity/meta/releases/download/v0.8.0/meta-0.8.0.pax.Z
         dest: /tmp/meta-0.8.0.pax.Z
       when:
         - skipZopenSetup is not defined

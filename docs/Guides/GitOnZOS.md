@@ -5,7 +5,7 @@
 **Security Updates:** The Git project regularly releases updates which deal with notified vulnerabilities - their list is [here](https://github.com/git/git/security/advisories/).
 
 For example, in 2023 the project disclosed [two security vulnerabilities](https://github.blog/2023-01-17-git-security-vulnerabilities-announced-2/) affecting v2.39.0 and older releases, and
-in May 2024, [release 2.45.1](https://github.com/zopen-community/gitport/releases/tag/STABLE_gitport_2266) fixed 5 more which you can read about in the [Github Blog](https://github.blog/2024-05-14-securing-git-addressing-5-new-vulnerabilities/).
+in May 2024, [release 2.45.1](https://github.com/zopencommunity/gitport/releases/tag/STABLE_gitport_2266) fixed 5 more which you can read about in the [Github Blog](https://github.blog/2024-05-14-securing-git-addressing-5-new-vulnerabilities/).
 
 It is important to frequently review the vulnerabilities and keep current with releases available from zopen community.
 
@@ -13,7 +13,7 @@ It is important to frequently review the vulnerabilities and keep current with r
 
 Git on z/OS is a version of Git that has been adapted to work on the IBM mainframe operating system, z/OS. It allows developers to take advantage of Git's powerful version control capabilities while addressing the unique challenges of the mainframe environment. With Git on z/OS, developers can manage their code, collaborate with other developers, and maintain a clear history of the changes that have been made to the codebase.
 
-You can find more information and download the software on the Git on z/OS GitHub page: https://github.com/zopen-community/gitport
+You can find more information and download the software on the Git on z/OS GitHub page: https://github.com/zopencommunity/gitport
 
 ## Encoding considerations
 
@@ -67,4 +67,4 @@ This will only disable the file tag verification for the specific repository you
 It's important to note that disabling file tag verification may lead to unexpected behavior, so it's recommended to use this option only if necessary and with caution.
 
 ## Migration considerations
-If you are migrating from Rocket Software's Git, the good news is that Git on z/OS should be compatible. However, if you encounter any issues, you can open an issue on the Gitport GitHub page (https://github.com/zopen-community/gitport/issues).
+If you are migrating from Rocket Software's Git, the good news is that Git on z/OS should be compatible. However, if you encounter any issues, you can open an issue on the Gitport GitHub page (https://github.com/zopencommunity/gitport/issues).

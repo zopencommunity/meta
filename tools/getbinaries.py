@@ -47,7 +47,7 @@ g = Github(os.getenv('ZOPEN_GITHUB_OAUTH_TOKEN'))
 with open('docs/Latest.md', 'w') as f:
   sys.stdout = f # Change the standard output to the file we created.
   print("# zopen community - Packages\n")
-  print("Note: to download the latest packages, use the `zopen install` script from the [meta repo](https://github.com/zopen-community/meta)\n")
+  print("Note: to download the latest packages, use the `zopen install` script from the [meta repo](https://github.com/zopencommunity/meta)\n")
   print("| Package | Status | Test Success Rate | Latest Release | Description |")
   print("|---|---|---|---|---|")
 
@@ -119,7 +119,7 @@ with open('docs/Latest.md', 'w') as f:
   print("Last updated: ", todaysDate);
 
 for rname, y in dependentOn.items():
-  response = requests.get("https://raw.githubusercontent.com/zopen-community/" + rname + "/main/buildenv")
+  response = requests.get("https://raw.githubusercontent.com/zopencommunity/" + rname + "/main/buildenv")
   if response.status_code == 200:
     name=re.sub('port$', '', rname)
     matches = re.findall('export\s+ZOPEN.*DEPS\s*=\s*"([^"]*)"', response.text)
@@ -195,12 +195,12 @@ with open('docs/Progress.md', 'w') as f:
   """);
   for x, y in sorted(statusPerPort.items(), key=lambda x: x[1]):
     if y == -1:
-      print("* [" + x + "](https://github.com/zopen-community/" + x + ")");
+      print("* [" + x + "](https://github.com/zopencommunity/" + x + ")");
 
   print("## Projects that do not have builds\n");
   for x, y in sorted(statusPerPort.items(), key=lambda x: x[1]):
     if y == -2:
-      print("* [" + x + "](https://github.com/zopen-community/" + x + ")");
+      print("* [" + x + "](https://github.com/zopencommunity/" + x + ")");
 
   print("""
 ## Projects with the most dependencies
@@ -215,7 +215,7 @@ with open('docs/Progress.md', 'w') as f:
       status = "No builds"
     else:
       status = str(status) + "%"
-    print("| [" + x + "](https://github.com/zopen-community/" + x + ") | " + str(len(y)) + " | " + status + " |"  + ", ".join(str(e) for e in y));
+    print("| [" + x + "](https://github.com/zopencommunity/" + x + ") | " + str(len(y)) + " | " + status + " |"  + ", ".join(str(e) for e in y));
 
   print("""
 ## Projects with the most patches
@@ -228,14 +228,14 @@ with open('docs/Progress.md', 'w') as f:
     checkMark = ""
     if patches == 0:
         checkMark = "&#10003;"
-    print("| " + checkMark + " [" + x + "](https://github.com/zopen-community/" + x + ") | " + str(patchLines) + " | " + str(patches));
+    print("| " + checkMark + " [" + x + "](https://github.com/zopencommunity/" + x + ") | " + str(patchLines) + " | " + str(patches));
 
   sorted_projects_by_downloads = sorted(download_counts.items(), key=lambda x: x[1], reverse=True)
   print("\n## Projects with the most downloads\n")
   print("| Package | Download Count |")
   print("|---|---|")
   for project, download_count in sorted_projects_by_downloads:
-    print("| [" + project + "](" + f"https://github.com/zopen-community/{project}" + ") | " + str(download_count) + " |")
+    print("| [" + project + "](" + f"https://github.com/zopencommunity/{project}" + ") | " + str(download_count) + " |")
 
   print("\nLast updated: ", todaysDate);
 

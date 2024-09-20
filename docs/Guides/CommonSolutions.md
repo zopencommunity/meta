@@ -2,7 +2,7 @@
 
 ## C pipe, C open do not tag newly created file descriptors
 
-Note: in most cases you can use the zoslibport package for ASCII/EBCDIC issues. See [zoslib](https://github.com/zopen-community/zoslibport) for details.
+Note: in most cases you can use the zoslibport package for ASCII/EBCDIC issues. See [zoslib](https://github.com/zopencommunity/zoslibport) for details.
 
 A common problem when porting code to z/OS and building with ASCII is that when files are created, the contents are written out in ASCII
 but by default the files are not tagged to indicate the content is in ASCII. Subsequently, other tools have to _guess_ what codepage the contents are in, and often the tools _guess_ EBCDIC. 
@@ -206,7 +206,7 @@ To override this, you can modify the configure script as follows:
 +  ;;
 ```
 
-Here's an example pull request that was done for man-db: https://github.com/zopen-community/man-dbport/pull/23/files
+Here's an example pull request that was done for man-db: https://github.com/zopencommunity/man-dbport/pull/23/files
 
 # Displaying compile commands in the build output
 When building projects, it can be helpful to see the actual compile commands being executed. This can aid in understanding the build process, diagnosing issues, or debugging. The zopen build tool provides an option, -vv, for very verbose output. By using this option with the zopen build command, you can enable the display of the compile commands.

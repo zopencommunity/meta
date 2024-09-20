@@ -13,7 +13,7 @@ ZOSLIB implements the following:
 
 You can find more details at the [ZOSLIB github page](https://github.com/ibmruntimes/zoslib/tree/zopen).
 
-The corresponding `zopen` project lives [here](https://github.com/zopen-community/zoslibport).
+The corresponding `zopen` project lives [here](https://github.com/zopencommunity/zoslibport).
 
 ## How can ZOSLIB help my project?
 
@@ -36,10 +36,10 @@ Through the zopen framework, all you need to do is to add `zoslib` as a dependen
 ```bash
 export ZOPEN_DEPS="curl gzip tar make zoslib"
 ```
-Here's a [real example](https://github.com/zopen-community/curlport/blob/main/buildenv#L3) where the curl port added zoslib as a dependency.
+Here's a [real example](https://github.com/zopencommunity/curlport/blob/main/buildenv#L3) where the curl port added zoslib as a dependency.
 
 ### How does this work?
-This works because ZOSLIB exposes a set of environment variable flags via it's [buildenv](https://github.com/zopen-community/zoslibport/blob/main/buildenv#L35).
+This works because ZOSLIB exposes a set of environment variable flags via it's [buildenv](https://github.com/zopencommunity/zoslibport/blob/main/buildenv#L35).
 These environment variable will automatically be added to your project when it is included as a dependency. They instruct the compiler to pick up the header files and link to the appropriate zoslib static archive.
 
 ## How do I contribute?

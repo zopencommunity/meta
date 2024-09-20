@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# General purpose build script for zopen community ports - https://github.com/zopen-community
+# General purpose build script for zopen community ports - https://github.com/zopencommunity
 #
 # ZOPEN_BUILD_LINE must be defined to either STABLE or DEV. This indicates the type of package to build
 #
@@ -396,7 +396,7 @@ By default, the environment variables are defined in a file named buildenv
 in the root directory of the [PACKAGE]port github repository.
 
 To see a fully functioning zopen community sample port see:
-https://github.com/zopen-community/zotsampleport
+https://github.com/zopencommunity/zotsampleport
 
 HELPDOC
 

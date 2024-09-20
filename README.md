@@ -3,7 +3,7 @@
 Meta adds package management facilities to z/OS, via `zopen`. It is similar to utilities like apt, dpkg, yum, yast2, and emerge. It is written as a pure shell script to remove any prerequisites (like python/perl/bash etc).
 This package manager is designed for everyday usage of the zopen community ports within the z/OS UNIX environment or for those who wish to download the tools.
 
-**Download** the latest zopen package manager [here](https://github.com/zopen-community/metaport/releases).
+**Download** the latest zopen package manager [here](https://github.com/zopencommunity/metaport/releases).
 
 ## Pre-config
 
@@ -47,7 +47,7 @@ Most commands have extended help available using the `--help` parameter.  The fo
 zopen init
 ```
 
-Used to initialise a zopen community environment. By default, this will create a `zopen` directory in your `$HOME` directory as the root filesystem (rootfs).  The rootfs holds the various packages, configuration files, and environment for Zopen Community packages. Removing this directory will revert the system without a trace.  A Zopen Community main configuration file is generated in `$rootfs/etc/zopen-config`. To enable the Zopen Community, this will either need to be sourced after logon to the system or the following line can be added to `$HOME/.profile` (or .bash_profile or...) to automatically source the Zopen Community configuration file.
+Used to initialise a zopen community environment. By default, this will create a `zopen` directory in your `$HOME` directory as the root filesystem (rootfs).  The rootfs holds the various packages, configuration files, and environment for zopen community packages. Removing this directory will revert the system without a trace.  A Zopen Community main configuration file is generated in `$rootfs/etc/zopen-config`. To enable the Zopen Community, this will either need to be sourced after logon to the system or the following line can be added to `$HOME/.profile` (or .bash_profile or...) to automatically source the Zopen Community configuration file.
 
 ```bash
 [ -e "$rootfs/etc/zopen-config" ] && . $rootfs/etc/zopen-config
@@ -115,5 +115,5 @@ Queries the local zopen community system. See `---help` for more details.
 
 ### Useful resources
 
-* View the zopen community project home: https://github.com/zopen-community
+* View the zopen community project home: https://github.com/zopencommunity
 * View the main Meta documentation at https://zosopentools.github.io/meta/

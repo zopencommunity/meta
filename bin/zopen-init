@@ -1,5 +1,5 @@
 #!/bin/sh
-# Initialize zopen environment - https://github.com/zopen-community
+# Initialize zopen environment - https://github.com/zopencommunity
 #
 ME=$(basename "$0")
 
@@ -100,7 +100,7 @@ Examples:
           '/zopen/etc/zopen-config' when new terminal
           sessions start
 
-Report bugs at https://github.com/zopen-community/meta/issues
+Report bugs at https://github.com/zopencommunity/meta/issues
 
 HELPDOC
 }
