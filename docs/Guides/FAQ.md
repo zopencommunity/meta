@@ -37,7 +37,7 @@ If the issue pertains to a given project, open the issue in the project's Github
 Overall status for the zopen community initiative is available [here](https://zopencommunity.github.io/meta/#/Progress).
 
 ## What are the z/OS Open Source Guild Meetings?
-The z/OS Open Source Guild meetings are monthly meetings where we cover highlights in z/OS Open Source. To view past recordings and slides, visit [https://github.com/zopencommunity/meta/discussions/categories/guild](https://github.com/zopen-community/meta/discussions/categories/guild).
+The z/OS Open Source Guild meetings are monthly meetings where we cover highlights in z/OS Open Source. To view past recordings and slides, visit [https://github.com/zopencommunity/meta/discussions/categories/guild](https://github.com/zopencommunity/meta/discussions/categories/guild).
 
 ## How do I get credit for my contributions?
 We are working on a Badge reward system. Stay tuned.

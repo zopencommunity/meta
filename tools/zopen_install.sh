@@ -25,7 +25,7 @@ if [ $? -gt 0 ]; then
 fi
 
 # TODO: check if jq is present, and use it instead of this
-url=$(echo "$url" | /bin/tr ' ' '\n' |  grep "https://github.com/zopencommunity/metaport/releases/download/" |  /bin/sed -e 's/.*\(https:\/\/github.com\/zopen-community\/metaport\/releases\/download\/[^"]*\.pax\.Z\).*/\1/')
+url=$(echo "$url" | /bin/tr ' ' '\n' |  grep "https://github.com/zopencommunity/metaport/releases/download/" |  /bin/sed -e 's/.*\(https:\/\/github.com\/zopencommunity\/metaport\/releases\/download\/[^"]*\.pax\.Z\).*/\1/')
 paxFile=$(basename "$url");
 
 echo "> Downloading zopen community $url..."

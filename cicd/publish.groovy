@@ -10,7 +10,7 @@
 # Output:
 #   - pax.Z artifact is published as a Jenkins artifact
 #   - package is copied to /jenkins/build
-GITHUB_ORGANIZATION="zopen-community"
+GITHUB_ORGANIZATION="zopencommunity"
 
 RELEASE_PREFIX=$(basename "${PORT_GITHUB_REPO}")
 # Used for Release/Tag name

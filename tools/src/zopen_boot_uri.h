@@ -3,7 +3,7 @@
   #define ZOPEN_TOOLS_URL "https://github.com/zopencommunity"
   #define ZOPEN_REPO_URI_PREFIX "repos/zopencommunity"
   #define ZOPEN_REPO_URI_SUFFIX "releases/tags/stable"
-  #define ZOPEN_BOOT_URI_PREFIX "zopen-community"
+  #define ZOPEN_BOOT_URI_PREFIX "zopencommunity"
   #define ZOPEN_BOOT_URI_SUFFIX "releases/download/stable"
   #define ZOPEN_BOOT_URI_TYPE "zos.pax.Z"
 

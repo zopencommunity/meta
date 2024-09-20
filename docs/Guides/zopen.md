@@ -3,7 +3,7 @@
 The following is a description of the zopen framework provided in the meta repo. To obtain the latest meta tools, you can clone and set up the environment as follows:
 
 ```
-git clone git@github.com:zopen-community/meta.git
+git clone git@github.com:zopencommunity/meta.git
 cd meta
 . ./.env
 ```

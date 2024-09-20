@@ -11,7 +11,7 @@ You can develop zopen community out of any directory you want. For example, if y
 ```bash
 . /path/to/zopen/etc/zopen-config # source zopen-config
 zopen install git # Make sure you have git installed
-git clone git@github.com:zopen-community/gitport.git # clone the z/OS git port
+git clone git@github.com:zopencommunity/gitport.git # clone the z/OS git port
 cd gitport
 zopen build # perform a build of git
 # make changes to the git source...

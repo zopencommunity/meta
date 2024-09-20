@@ -43,7 +43,7 @@ On getting access, log in to the z/OS UNIX system using SSH, you'll need to foll
 
 * There is a video guide provided here. It can be used as reference as you work through the workshop.
 <video height="1080" controls>
-  <source src="https://github.com/zopencommunity/collateral/raw/main/zopen-communityIntroV2-cropped.mp4" type="video/mp4">
+  <source src="https://github.com/zopencommunity/collateral/raw/main/zopencommunityIntroV2-cropped.mp4" type="video/mp4">
 </video>
 
 ## Module 3: Setting up your z/OS environment
@@ -509,8 +509,8 @@ We will choose [jq](https://stedolan.github.io/jq/), a lightweight and flexible 
 Become a part of the z/OS Open Source Technology community either as a **developer** or a **consumer**.
 	
 * As a developer:
-	* if you want to work on new tools, visit pages [1](https://github.com/orgs/zopencommunity/discussions/23) and [2](https://github.com/orgs/zopen-community/discussions/433), choose a tool to begin the development activity, as outlined [here](https://zopencommunity.github.io/meta/#/Guides/developing). 
-	* Alternatively, if you prefer working on existing tools, you can select one of the help-wanted issues from [here](https://github.com/search?q=user%3Azopen-community+repo%3Ahttps%3A%2F%2Fgithub.com%2Fzopen-community+label%3A%22help+wanted%22+state%3Aopen&type=issues&ref=advsearch&state=open
+	* if you want to work on new tools, visit pages [1](https://github.com/orgs/zopencommunity/discussions/23) and [2](https://github.com/orgs/zopencommunity/discussions/433), choose a tool to begin the development activity, as outlined [here](https://zopencommunity.github.io/meta/#/Guides/developing). 
+	* Alternatively, if you prefer working on existing tools, you can select one of the help-wanted issues from [here](https://github.com/search?q=user%3Azopencommunity+repo%3Ahttps%3A%2F%2Fgithub.com%2Fzopen-community+label%3A%22help+wanted%22+state%3Aopen&type=issues&ref=advsearch&state=open
 	).
 	
 * If you'd like to contribute as a consumer of these tools, you can start by visiting this [link](https://zopencommunity.github.io/meta/#/Guides/QuickStart)
@@ -520,7 +520,7 @@ Become a part of the z/OS Open Source Technology community either as a **develop
 
 If you're interested in participating further, we hold regular meetings to explore the latest advancements in zopen community via the [z/OS Open Source Guild Meetings](https://github.com/orgs/zopencommunity/discussions/categories/guild)
 
-We're dedicated to building a community of z/OS enthusiasts who collaborate and share their work on GitHub through the "z/OS Open Source Guild". Feel free to also participate in our [discussions](https://github.com/orgs/zopencommunity/discussions). For a list of existing issues and how you can get involved, visit [issues](https://github.com/orgs/zopen-community/issues).
+We're dedicated to building a community of z/OS enthusiasts who collaborate and share their work on GitHub through the "z/OS Open Source Guild". Feel free to also participate in our [discussions](https://github.com/orgs/zopencommunity/discussions). For a list of existing issues and how you can get involved, visit [issues](https://github.com/orgs/zopencommunity/issues).
 
 ## Resources
 

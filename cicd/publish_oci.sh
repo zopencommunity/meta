@@ -49,7 +49,7 @@ LABEL description=\"${PRODUCT_DESCRIPTION}\"
 LABEL specification=2.0.0
 LABEL summary=\"${PRODUCT_SUMMARY}\"
 LABEL community_unsupported=true
-LABEL vendor=\"zopen-community\"
+LABEL vendor=\"zopencommunity\"
 LABEL runtimedeps=\"${RUNTIME_DEPENDENCIES}\""
 
   mkdir -p ".zpm"

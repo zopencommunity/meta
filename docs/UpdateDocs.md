@@ -1,7 +1,7 @@
 # Updating the docs
 
 To make changes to the docs, please:
- - `git clone git@github.com:zopen-community/meta.git`
+ - `git clone git@github.com:zopencommunity/meta.git`
  - `cd meta/docs`
  - make updates
  - validate your changes, locally on port 3000, as follows:

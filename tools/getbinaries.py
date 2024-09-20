@@ -51,7 +51,7 @@ with open('docs/Latest.md', 'w') as f:
   print("| Package | Status | Test Success Rate | Latest Release | Description |")
   print("|---|---|---|---|---|")
 
-  for r in g.get_user("zopen-community").get_repos():
+  for r in g.get_user("zopencommunity").get_repos():
     if not re.search("port$", r.name):
       continue
     print("| [" + r.name + "](" + r.html_url + ")", end='')

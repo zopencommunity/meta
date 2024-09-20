@@ -28,7 +28,7 @@ parser.add_argument('--verbose', action='store_true', help='Enable verbose outpu
 parser.add_argument('--output-file', dest='output_file', required=True, help='The full path to store the json file to')
 args = parser.parse_args()
 
-organization = "zopen-community"
+organization = "zopencommunity"
 
 if os.getenv('ZOPEN_GITHUB_OAUTH_TOKEN') is None:
     print("error: environment variable ZOPEN_GITHUB_OAUTH_TOKEN must be defined")

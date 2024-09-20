@@ -8,7 +8,7 @@ if [ -z "$stabletools" ]; then
 fi
 
 for tool in $(echo "$stabletools" | tr ',' ' '); do
-  ./create_stable_release.sh --repo "${tool}port" --uname zopen-community
+  ./create_stable_release.sh --repo "${tool}port" --uname zopencommunity
   if [ $? -ne 0 ]; then
     echo "create_stable_release.sh failed for $tool"
     break

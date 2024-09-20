@@ -16,7 +16,7 @@ log-level: debug
 max-reviewers: 0
 max-team-reviewers: 0
 org:
-  - zopen-community
+  - zopencommunity
 output: "-"
 plain-output: false
 platform: github
@@ -25,15 +25,15 @@ repo-include: ".*port$"
 skip-forks: false
 skip-pr: false
 skip-repo:
-  - zopen-community/zotsampleport
-  - zopen-community/pythonport
-  - zopen-community/javaport
-  - zopen-community/bumpport
-  - zopen-community/comp_goport
-  - zopen-community/comp_clangport
-  - zopen-community/comp_xlclangport
-  - zopen-community/toolsandtoysport
-  - zopen-community/jrubyport
-  - zopen-community/my_basicport
-  - zopen-community/llamacppport
-  - zopen-community/librdkafkaport
+  - zopencommunity/zotsampleport
+  - zopencommunity/pythonport
+  - zopencommunity/javaport
+  - zopencommunity/bumpport
+  - zopencommunity/comp_goport
+  - zopencommunity/comp_clangport
+  - zopencommunity/comp_xlclangport
+  - zopencommunity/toolsandtoysport
+  - zopencommunity/jrubyport
+  - zopencommunity/my_basicport
+  - zopencommunity/llamacppport
+  - zopencommunity/librdkafkaport

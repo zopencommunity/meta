@@ -43,7 +43,7 @@ If the tool is not found, then `zopen build` will automatically install it.
 Each tool is responsible for knowing how to set its own environment up (e.g. PATH, LIBPATH, and any other environment variables).
 By default, `zopen build` will automatically add PATH, LIBPATH, and MANPATH environment variables. If other environment variables are needed, then you can append them by defining a `zopen_append_to_env` function as in the case of [gitport](https://github.com/zopencommunity/gitport/blob/main/buildenv#LL66-L66C20).
 Once the tool is installed, the .env file needs to be source'd from its install directory to set up the environment.
-If you are building from a zopen-community port, this `.env` file will be created as part of the install process.
+If you are building from a zopencommunity port, this `.env` file will be created as part of the install process.
 
 ### Create your first z/OS port leveraging the zopen framework
 
@@ -54,7 +54,7 @@ Begin first by cloning the https://github.com/zopencommunity/meta repo.  This re
 ```bash
 # Clone the required repositories (using Git from https://github.com/zopencommunity/gitport)
 export GIT_UTF8_CCSID=819 # set the UTF8 ccsid to 819
-git clone git@github.com:zopen-community/meta.git && cd meta
+git clone git@github.com:zopencommunity/meta.git && cd meta
 ```
 
 Next, in order to use the `zopen` suite of tools, you must set your path environment variable to the `meta/bin` directory.  
@@ -203,7 +203,7 @@ diff -r jq-1.6 jq-1.6.orig > patches/initial_zos.patch
 
 Once you have a working prototype of your tool, you can proceed to the next step.
 
-### Creating a repository under zopen-community
+### Creating a repository under zopencommunity
 
 After you have a working z/OS prototype for your tool, you will need to create a repository to hold your contents.
 
