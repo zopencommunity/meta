@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Version utility for z/OS Open Tools - https://github.com/ZOSOpenTools
+# Version utility for zopen community - https://github.com/zopencommunity
 #
 
 #
@@ -43,8 +43,8 @@ terms of the Apache License, Version 2.0.
 <https://www.apache.org/licenses/LICENSE-2.0.html>
 There is NO WARRANTY, to the extent permitted by law.
 
-Written by contributors to the z/OS Open Tools Community.
-<https://github.com/ZOSOpenTools/meta/graphs/contributors>
+Written by contributors to the zopen community Community.
+<https://github.com/zopencommunity/meta/graphs/contributors>
 
 VERSIONDOC
 }

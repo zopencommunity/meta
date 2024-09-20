@@ -1,5 +1,5 @@
 // Inputs:
-//   PORT_GITHUB_REPO : Github repository (e.g. https://github.com/ZOSOpenTools/makeport.git)
+//   PORT_GITHUB_REPO : Github repository (e.g. https://github.com/zopencommunity/makeport.git)
 //   PORT_BRANCH : (default: main)
 //   PORT_DESCRIPTION : Description of the project
 //   BUILD_LINE: dev or stable line to build against (default: stable)

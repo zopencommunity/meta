@@ -18,7 +18,7 @@ if [ -z "$ZOPEN_GITHUB_OAUTH_TOKEN" ]; then
 fi
 
 echo "Number of args = $#"
-DEFAULT_OWNER="ZOSOpenTools"
+DEFAULT_OWNER="zopen-community"
 OWNERNAME=""
 REPO=""
 RELEASENAME=""
@@ -82,7 +82,7 @@ printSyntax()
   exit 1;
 }
 
-[ -z "${OWNERNAME}" ] && OWNERNAME=$DEFAULT_OWNER && echo "Using default organization name ZOSOpenTools";
+[ -z "${OWNERNAME}" ] && OWNERNAME=$DEFAULT_OWNER && echo "Using default organization name zopen-community";
 [ -z "${REPO}" ] && (printSyntax)
 [ -z "${RELEASENAME}" ] && getLatestReleaseName
 

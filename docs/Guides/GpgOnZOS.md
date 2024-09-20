@@ -117,7 +117,7 @@ If you want to give or send a file copy of your key to someone, use this command
 	
 ### Resources 
 * [GPG Home Page](https://gnupg.org/index.html)
-* To install GPG on z/OS systems [visit](https://github.com/ZOSOpenTools/gpgport/releases)
+* To install GPG on z/OS systems [visit](https://github.com/zopencommunity/gpgport/releases)
 	
 
 

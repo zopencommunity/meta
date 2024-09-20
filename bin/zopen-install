@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Install utility for z/OS Open Tools - https://github.com/ZOSOpenTools
+# Install utility for zopen community - https://github.com/zopencommunity
 #
 
 #
@@ -25,13 +25,13 @@ printSyntax()
 {
   args=$*
 cat << HELPDOC
-${ME} is a utility to download/install a z/OS Open Tools package.
+${ME} is a utility to download/install a zopen community package.
 
 Usage: ${ME} [OPION] [PACKAGE]
   [PACKAGE] is a package to install. Multiple packages can be specified.
 
 Options:
-  --all                    download/install all z/OS Open Tools packages.
+  --all                    download/install all zopen community packages.
   --cache-only             do not install dependencies.
   --download-only          download package to current directory.
   --help                   print this help.
@@ -42,11 +42,11 @@ Options:
   --no-set-active          do not change the pinned version.
   --nosymlink              do not integrate into filesystem through
                            symlink redirection.
-  -r, --reinstall          reinstall already installed z/OS Open Tools packages.
+  -r, --reinstall          reinstall already installed zopen community packages.
   --release-line [stable, dev] the release line to build off of.
   --select                 select a version to install.
   --skip-upgrade           do not upgrade.
-  -u, --update, --upgrade  updates installed z/OS Open Tools packages.
+  -u, --update, --upgrade  updates installed zopen community packages.
   -v, --verbose            print verbose messages.
   --version                print version.
   -y, --yes                automatically answer yes to prompts.

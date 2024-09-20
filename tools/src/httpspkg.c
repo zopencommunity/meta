@@ -10,7 +10,7 @@
 
 /*
  This is the URI pattern we want to generate:
- https://api.github.com/repos/ZOSOpenTools/<pkg>/releases/tags/stable
+ https://api.github.com/repos/zopencommunity/<pkg>/releases/tags/stable
  */
 
 int getfilenamefrompkg(const char* pkg, const char* pkgsfx, const char* tmppem, const char* tmppem2,  char* buffer, size_t bufflen) {

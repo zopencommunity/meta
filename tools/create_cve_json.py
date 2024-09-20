@@ -9,12 +9,12 @@ from collections import defaultdict
 from cvsslib import cvss31, calculate_vector
 
 HEADER = """
-z/OS Open Tools Vulnerability JSON Generator
+zopen community Vulnerability JSON Generator
 
-This tool fetches z/OS Open Tools releases and generates a list of tools and their associated CVEs using the osv.dev API.
+This tool fetches zopen community releases and generates a list of tools and their associated CVEs using the osv.dev API.
 """
 
-BASE_URL = "https://raw.githubusercontent.com/ZOSOpenTools/meta/main"
+BASE_URL = "https://raw.githubusercontent.com/zopencommunity/meta/main"
 
 parser = argparse.ArgumentParser(description=HEADER)
 parser.add_argument('--verbose', action='store_true', help='Enable verbose output')
