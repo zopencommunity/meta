@@ -11,7 +11,7 @@ zopen install vim
 Since VIM depends on ncurses, it will automatically download ncurses as a runtime dependency.
 
 ## How to obtain Alpha release of VIM on z/OS with Dataset I/O support
-To obtain VIM on z/OS with dataset I/O support, use the [zopen package manager](https://zopencommunity.github.io/meta/#/Guides/ThePackageManager) to install it as follows:
+To obtain [VIM on z/OS with dataset I/O support](https://github.com/zopencommunity/vimport/releases/tag/datasetio), use the [zopen package manager](https://zopencommunity.github.io/meta/#/Guides/ThePackageManager) to install it as follows:
 ```
 zopen install vim%datasetio
 ```
