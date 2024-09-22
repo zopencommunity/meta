@@ -37,7 +37,7 @@ See [The package manager](ThePackageManager.md) and [Developing Tools](developin
 ## Getting Started Video
 If you like learning through watching, check out our getting started Video:
 <video height="1080" controls>
-  <source src="https://github.com/zopencommunity/collateral/raw/main/zopencommunityIntroV2-cropped.mp4" type="video/mp4">
+  <source src="https://github.com/zopencommunity/collateral/raw/main/ZOSOpenToolsIntroV2-cropped.mp4" type="video/mp4">
 </video>
 
 
