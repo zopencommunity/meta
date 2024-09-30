@@ -19,12 +19,6 @@ on:
         required: true
       JENKINS_API_TOKEN:
         required: true
-
-permissions:
-  contents: write
-  statuses: write  
-  actions: read    
-  
 jobs:
   trigger-jenkins-job:
     runs-on: ubuntu-latest
