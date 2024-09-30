@@ -1,5 +1,5 @@
 // Inputs:
-//   PORT_GITHUB_REPO : Github repository (e.g. https://github.com/ZOSOpenTools/makeport.git)
+//   PORT_GITHUB_REPO : Github repository (e.g. https://github.com/zopencommunity/makeport.git)
 //   PORT_BRANCH : (default: main)
 //   PORT_DESCRIPTION : Description of the project
 //   BUILD_LINE: dev or stable line to build against (default: stable)
@@ -77,7 +77,7 @@ node('linux')
     if (params.NO_PROMOTE)
         extraText = "\nBuilt with NO_PROMOTE set to true."
     else
-        extraText = "\nRelease published to: ${latestRelease}\nProgress page updated: https://zosopentools.github.io/meta/#/Progress"
+        extraText = "\nRelease published to: ${latestRelease}\nProgress page updated: https://zopencommunity.github.io/meta/#/Progress"
 
     if (!build_line)
       build_line = "STABLE"

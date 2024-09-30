@@ -18,7 +18,7 @@ We recommend adding these environment variables to your `.profile` or `.bashrc` 
 
 ## Required Tools
 
-To consume z/OS Open Tools, all you need is a z/OS UNIX system and unrestricted access to github.com.
+To consume zopen community, all you need is a z/OS UNIX system and unrestricted access to github.com.
 
 ### If you want to contribute and improve the z/OS Open Source Tools 
 

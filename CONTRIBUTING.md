@@ -60,7 +60,7 @@ It should:
 
 ## Automated Tests
 
-We have set up automated tests for this repository using GitHub Actions. When you open a pull request or comment with `/run tests`, the following action will be triggered: [build_and_test.yml](https://github.com/zosopentools/meta/blob/main/data/build_and_test.yml).
+We have set up automated tests for this repository using GitHub Actions. When you open a pull request or comment with `/run tests`, the following action will be triggered: [build_and_test.yml](https://github.com/zopencommunity/meta/blob/main/data/build_and_test.yml).
 
 Please make sure your changes pass all the automated tests before merging your pull request. If the tests fail, our CI/CD system will provide information on what needs to be fixed.
 

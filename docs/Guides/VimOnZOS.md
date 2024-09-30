@@ -4,11 +4,18 @@
 VIM is a popular and powerful text editor that is often used by programmers for writing code. While VIM is available on many different platforms, it can also be used on z/OS.
 
 ## How to obtain VIM on z/OS?
-To obtain VIM on z/OS, use the [zopen package manager](https://zosopentools.github.io/meta/#/Guides/ThePackageManager) to install it as follows:
+To obtain VIM on z/OS, use the [zopen package manager](https://zopencommunity.github.io/meta/#/Guides/ThePackageManager) to install it as follows:
 ```
 zopen install vim
 ```
 Since VIM depends on ncurses, it will automatically download ncurses as a runtime dependency.
+
+## How to obtain Alpha release of VIM on z/OS with Dataset I/O support
+To obtain [VIM on z/OS with dataset I/O support](https://github.com/zopencommunity/vimport/releases/tag/datasetio), use the [zopen package manager](https://zopencommunity.github.io/meta/#/Guides/ThePackageManager) to install it as follows:
+```
+zopen install vim%datasetio
+```
+It will automatically download ncurses and libdio as runtime dependencies.
 
 ## How to use VIM?
 

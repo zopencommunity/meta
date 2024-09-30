@@ -13,7 +13,7 @@ zopenInitialize()
     processConfig
   fi
   ZOPEN_ANALYTICS_JSON="${ZOPEN_ROOTFS}/var/lib/zopen/analytics.json"
-  ZOPEN_JSON_CACHE_URL="https://raw.githubusercontent.com/ZOSOpenTools/meta/main/docs/api/zopen_releases.json"
+  ZOPEN_JSON_CACHE_URL="https://raw.githubusercontent.com/zopencommunity/meta/main/docs/api/zopen_releases.json"
   ZOPEN_JSON_CONFIG="${ZOPEN_ROOTFS}/etc/zopen/config.json"
 }
 
@@ -202,7 +202,7 @@ writeConfigFile(){
 
   cat << EOF >  "${configFile}"
 #!/bin/false  # Script currently intended to be sourced, not run
-# z/OS Open Tools Configuration file
+# zopen community Configuration file
 # Main root location for the zopen installation; can be changed if the
 # underlying root location is copied/moved elsewhere as locations are
 # relative to this envvar value
@@ -262,7 +262,7 @@ else
   fi
 fi
 
-zot="z/OS Open Tools"
+zot="zopen community"
 
 sanitizeEnvVar()
 {
@@ -280,7 +280,7 @@ deleteDuplicateEntries()
   echo "\${value}\${delim}" | awk -v RS="\${delim}" '!(\$0 in a) {a[\$0]; printf("%s%s", col, \$0); col=RS; }' | /bin/sed "s/\${delim}$//"
 }
 
-# z/OS Open Tools environment variables
+# zopen community environment variables
 ZOPEN_PKGINSTALL=\${ZOPEN_ROOTFS}/${pkginstall}
 export ZOPEN_PKGINSTALL
 ZOPEN_SEARCH_PATH=\${ZOPEN_ROOTFS}/usr/share/zopen/

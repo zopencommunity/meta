@@ -14,10 +14,10 @@ if ! command -v curl > /dev/null 2>&1; then
   exit 1
 fi
 
-ZOPEN_RELEASE_JSON="https://raw.githubusercontent.com/ZOSOpenTools/meta/main/docs/api/zopen_releases_latest.json"
+ZOPEN_RELEASE_JSON="https://raw.githubusercontent.com/zopencommunity/meta/main/docs/api/zopen_releases_latest.json"
 
 # Download the latest json
-echo "> Getting latest data from z/OS Open Tools..."
+echo "> Getting latest data from zopen community..."
 url=$(curl --fail-with-body --silent -L $ZOPEN_RELEASE_JSON)
 if [ $? -gt 0 ]; then
   echo "Error: Curl failed to download release json $ZOPEN_RELEASE_JSON due to: \"$url\""
@@ -25,10 +25,10 @@ if [ $? -gt 0 ]; then
 fi
 
 # TODO: check if jq is present, and use it instead of this
-url=$(echo "$url" | /bin/tr ' ' '\n' |  grep "https://github.com/ZOSOpenTools/metaport/releases/download/" |  /bin/sed -e 's/.*\(https:\/\/github.com\/ZOSOpenTools\/metaport\/releases\/download\/[^"]*\.pax\.Z\).*/\1/')
+url=$(echo "$url" | /bin/tr ' ' '\n' |  grep "https://github.com/zopencommunity/metaport/releases/download/" |  /bin/sed -e 's/.*\(https:\/\/github.com\/zopencommunity\/metaport\/releases\/download\/[^"]*\.pax\.Z\).*/\1/')
 paxFile=$(basename "$url");
 
-echo "> Downloading z/OS Open Tools $url..."
+echo "> Downloading zopen community $url..."
 
 response=$(curl --fail-with-body -O -L "$url")
 if [ $? -gt 0 ]; then

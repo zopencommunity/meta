@@ -1,4 +1,4 @@
-# z/OS Open Tools - Hands on Workshop
+# zopen community - Hands on Workshop
 
 ## Prerequisites
 
@@ -8,11 +8,11 @@
 
 ## Introduction (15 minutes)
 
-Welcome to the z/OS Open Tools Workshop, where we'll delve into how you can take advantage of open-source tools within the z/OS UNIX environment.
+Welcome to the zopen community Workshop, where we'll delve into how you can take advantage of open-source tools within the z/OS UNIX environment.
 
 z/OS is renowned for its unwavering reliability, security, and speed. However, it's often challenged by the limited availability of readily available open-source software, compared to more common platforms such as Linux or Mac.
 
-This is where the z/OS Open Tools community comes into play. Our primary mission is to enhance the open-source landscape on z/OS. With over 170 successfully ported open source projects, we're committed to making essential open-source tools readily available on z/OS. Importantly, we actively contribute our enhancements back to open-source communities to keep z/OS aligned with industry developments.
+This is where the zopen community comes into play. Our primary mission is to enhance the open-source landscape on z/OS. With over 170 successfully ported open source projects, we're committed to making essential open-source tools readily available on z/OS. Importantly, we actively contribute our enhancements back to open-source communities to keep z/OS aligned with industry developments.
 
 In today's session, we'll guide you through practical tasks like downloading and using the open source zopen package manager, installing core tools like Vim, Git, Make and Bash, and even introduce you to the process of porting an external tool (e.g., jq) using the zopen build command.
 
@@ -37,13 +37,13 @@ On getting access, log in to the z/OS UNIX system using SSH, you'll need to foll
     	-   ssh yoursid@hostname.com    	
     	-   NOTE: Replace yourid with the z/OS userid provided and hostname with z/OS host name 
 
-## Module 2: Downloading and Installing z/OS Open Tools Meta Framework (10 mins)
+## Module 2: Downloading and Installing zopen community Meta Framework (10 mins)
 
 ### Video guide: (Optional)
 
 * There is a video guide provided here. It can be used as reference as you work through the workshop.
 <video height="1080" controls>
-  <source src="https://github.com/ZOSOpenTools/collateral/raw/main/ZOSOpenToolsIntroV2-cropped.mp4" type="video/mp4">
+  <source src="https://github.com/zopencommunity/collateral/raw/main/zopencommunityIntroV2-cropped.mp4" type="video/mp4">
 </video>
 
 ## Module 3: Setting up your z/OS environment
@@ -80,7 +80,7 @@ export PATH="<path_to_compiler>:$PATH"
   ```
   mkdir -p ${HOME}/temp_zopen
   ```	
-*   Download the latest pax file from [ meta releases ](https://github.com/ZOSOpenTools/meta/releases)
+*   Download the latest pax file from [ meta releases ](https://github.com/zopencommunity/meta/releases)
 
 *   Copy the pax file from the download directory to `${HOME}/temp_zopen/` using command:
    ```
@@ -125,7 +125,7 @@ export PATH="<path_to_compiler>:$PATH"
 ### Use the zopen framework to list available tools
 
 -   `zopen list` \# list the available tools, this will list 100+
-    tools available under z/OS Open Tools
+    tools available under zopen community
 -   `zopen list -–installed` # list of installed tools
 
 ### Install your favourite tools
@@ -142,7 +142,7 @@ export PATH="<path_to_compiler>:$PATH"
 	
 	You will notice that it will install git and its runtime dependencies, bash, ncurses, and others.
 
-## Module 5: Using your newly installed z/OS Open Tools (15 minutes)
+## Module 5: Using your newly installed zopen community (15 minutes)
 
 ### Using Bash on z/OS
 
@@ -200,26 +200,26 @@ export PATH="<path_to_compiler>:$PATH"
 	
 	![](workshop/media/image8.png)
 
-## Module 6: Building existing z/OS Open Tools (20 mins)
+## Module 6: Building existing zopen community (20 mins)
 
-Now that you've gained some experience with using the z/OS Open Tools, let's attempt to build an existing open source project, Git.
+Now that you've gained some experience with using the zopen community, let's attempt to build an existing open source project, Git.
 
 1.  Create a directory dev under $HOME/temp_zopen:
 	```
 	 mkdir -p $HOME/temp_zopen/dev
 	 cd $HOME/temp_zopen/dev
 	```
-2.  Clone the [gitport](https://github.com/ZOSOpenTools/gitport)
+2.  Clone the [gitport](https://github.com/zopencommunity/gitport)
     repository and change to the gitport local workspace as follows:
 	```
-	git clone https://github.com/ZOSOpenTools/gitport
+	git clone https://github.com/zopencommunity/gitport
 	cd gitport
 	```
 3.  You will notice that there are several files, and most notably, the
     `buildenv` configuration. This file instructs `zopen build` on how
     to build the `git` tool.
     
-	 For more details on the `buildenv` configuration, visit <https://zosopentools.github.io/meta/#/Guides/Porting>.
+	 For more details on the `buildenv` configuration, visit <https://zopencommunity.github.io/meta/#/Guides/Porting>.
 	
 	(As mentioned in Module 3, ensure the path to the compiler is set.)
 
@@ -234,7 +234,7 @@ Now that you've gained some experience with using the z/OS Open Tools, let's att
 	
 	After approximately 10 minutes for `git` build, test and install.
 
-## Module 7: Porting a new open source tool with z/OS Open Tools (20 mins)
+## Module 7: Porting a new open source tool with zopen community (20 mins)
 
 Now that you understand the build process, let's attempt to port an open source tool to z/OS by leveraging `zopen generate`.
 
@@ -318,14 +318,14 @@ We will choose [jq](https://stedolan.github.io/jq/), a lightweight and flexible 
 	* Provide the community license to use for jq's patches: (select from key agpl-3.0 apache-2.0 bsd-2-clause bsd-3-clause bsl-1.0 cc0-1.0 epl-2.0 gpl-2.0 gpl-3.0 lgpl-2.1 mit mpl-2.0 unlicense)
 	  	unlicense
 	* Enter jq's stable release source url: (Specify a Git or Tarball URL. If none, press enter)
-	* Enter jq's z/OS Open Tools build dependencies for the stable build: (Enter multiple dependencies using spaces. E.g: zoslib make grep) 
+	* Enter jq's zopen community build dependencies for the stable build: (Enter multiple dependencies using spaces. E.g: zoslib make grep) 
 	* Enter jq's dev-line source url: (Specify a Git or Tarball URL. If none, press enter)
 	  	git@github.com:stedolan/jq.git
-	* Enter jq's z/OS Open Tools build dependencies for the dev build: (Enter multiple dependencies using spaces. E.g: zoslib make grep)
+	* Enter jq's zopen community build dependencies for the dev build: (Enter multiple dependencies using spaces. E.g: zoslib make grep)
 		git make autoconf
 	* Enter the default build line: (stable or dev)
 		dev
-	* Enter jq's z/OS Open Tools runtime dependencies: (example: bash)
+	* Enter jq's zopen community runtime dependencies: (example: bash)
 	
 	Generating jqport zopen project
 	jqport/buildenv created
@@ -334,7 +334,7 @@ We will choose [jq](https://stedolan.github.io/jq/), a lightweight and flexible 
 	jq project is ready! jqport/
 	Create patches under the jqport/patches directory
 	Run zopen build to build jqport
-	Contact Igor Todorovski (itodorov@ca.ibm.com) to create https://github.com/ZOSOpenTools/jqport.git
+	Contact Igor Todorovski (itodorov@ca.ibm.com) to create https://github.com/zopencommunity/jqport.git
 	```
 3. Change your current directory to the jqport directory: 
 	```
@@ -346,7 +346,7 @@ We will choose [jq](https://stedolan.github.io/jq/), a lightweight and flexible 
 	- buildenv - The zopen configuration file that drives the build, testing, and installation of the project.
 	- cicd-dev.groovy - The CI/CD configuration file used in the Jenkins pipeline.
 	
-	For more information, please visit the [zopen build README](https://github.com/ZOSOpenTools/meta)
+	For more information, please visit the [zopen build README](https://github.com/zopencommunity/meta)
 
 	Note: `zopen build` supports projects based in github repositories or tarball locations. Since autoconf/automake are not currently 100% functional on z/OS, we typically choose the tarball location because it contains a `configure` script pre-packaged. Let's go ahead and do this for `jq`.
 
@@ -378,7 +378,7 @@ We will choose [jq](https://stedolan.github.io/jq/), a lightweight and flexible 
 	}
 	```
 
-	ZOPEN\_STABLE\_DEPS: are used to identify the non-standard z/OS Open Tools dependencies needed to build the project.
+	ZOPEN\_STABLE\_DEPS: are used to identify the non-standard zopen community dependencies needed to build the project.
 	
 	`zopen_append_to_env()` can be used to add additional environment variables outside of the normal environment variables.
 	(e.g. PATH, LIBPATH, MANPATH)
@@ -509,26 +509,26 @@ We will choose [jq](https://stedolan.github.io/jq/), a lightweight and flexible 
 Become a part of the z/OS Open Source Technology community either as a **developer** or a **consumer**.
 	
 * As a developer:
-	* if you want to work on new tools, visit pages [1](https://github.com/orgs/ZOSOpenTools/discussions/23) and [2](https://github.com/orgs/ZOSOpenTools/discussions/433), choose a tool to begin the development activity, as outlined [here](https://zosopentools.github.io/meta/#/Guides/developing). 
-	* Alternatively, if you prefer working on existing tools, you can select one of the help-wanted issues from [here](https://github.com/search?q=user%3AZOSOpenTools+repo%3Ahttps%3A%2F%2Fgithub.com%2FZOSOpenTools+label%3A%22help+wanted%22+state%3Aopen&type=issues&ref=advsearch&state=open
+	* if you want to work on new tools, visit pages [1](https://github.com/orgs/zopencommunity/discussions/23) and [2](https://github.com/orgs/zopencommunity/discussions/433), choose a tool to begin the development activity, as outlined [here](https://zopencommunity.github.io/meta/#/Guides/developing). 
+	* Alternatively, if you prefer working on existing tools, you can select one of the help-wanted issues from [here](https://github.com/search?q=user%3Azopencommunity+repo%3Ahttps%3A%2F%2Fgithub.com%2Fzopencommunity+label%3A%22help+wanted%22+state%3Aopen&type=issues&ref=advsearch&state=open
 	).
 	
-* If you'd like to contribute as a consumer of these tools, you can start by visiting this [link](https://zosopentools.github.io/meta/#/Guides/QuickStart)
+* If you'd like to contribute as a consumer of these tools, you can start by visiting this [link](https://zopencommunity.github.io/meta/#/Guides/QuickStart)
 
 
 ## What's next (5 minutes)
 
-If you're interested in participating further, we hold regular meetings to explore the latest advancements in z/OS Open Tools via the [z/OS Open Source Guild Meetings](https://github.com/orgs/ZOSOpenTools/discussions/categories/guild)
+If you're interested in participating further, we hold regular meetings to explore the latest advancements in zopen community via the [z/OS Open Source Guild Meetings](https://github.com/orgs/zopencommunity/discussions/categories/guild)
 
-We're dedicated to building a community of z/OS enthusiasts who collaborate and share their work on GitHub through the "z/OS Open Source Guild". Feel free to also participate in our [discussions](https://github.com/orgs/ZOSOpenTools/discussions). For a list of existing issues and how you can get involved, visit [issues](https://github.com/orgs/ZOSOpenTools/issues).
+We're dedicated to building a community of z/OS enthusiasts who collaborate and share their work on GitHub through the "z/OS Open Source Guild". Feel free to also participate in our [discussions](https://github.com/orgs/zopencommunity/discussions). For a list of existing issues and how you can get involved, visit [issues](https://github.com/orgs/zopencommunity/issues).
 
 ## Resources
 
--   [Github repository](https://github.com/orgs/ZOSOpenTools)
--   [Documentation](https://zosopentools.github.io/meta)
+-   [Github repository](https://github.com/orgs/zopencommunity)
+-   [Documentation](https://zopencommunity.github.io/meta)
 -   [Video
-    demo](https://zosopentools.github.io/meta/#/Guides/QuickStart?id=getting-started-video)
--   [Discussions](https://github.com/orgs/ZOSOpenTools/discussions)
+    demo](https://zopencommunity.github.io/meta/#/Guides/QuickStart?id=getting-started-video)
+-   [Discussions](https://github.com/orgs/zopencommunity/discussions)
 -   [Discord channel](https://discord.gg/Cgwf6F6dqj)
 -   [Guild meeting
-    session](https://github.com/orgs/ZOSOpenTools/discussions/categories/guild)
+    session](https://github.com/orgs/zopencommunity/discussions/categories/guild)

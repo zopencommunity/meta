@@ -1,13 +1,13 @@
 #!/bin/sh
 #
-# General purpose build script for z/OS Open Tools ports - https://github.com/ZOSOpenTools
+# General purpose build script for zopen community ports - https://github.com/zopencommunity
 #
 # ZOPEN_BUILD_LINE must be defined to either STABLE or DEV. This indicates the type of package to build
 #
 # For more details, see the help which you can get by issuing:
 # zopen-build -h
 #
-# Copyright (C) 2023 z/OS Open Tools Community.
+# Copyright (C) 2023 zopen community.
 #
 
 #
@@ -324,7 +324,7 @@ printSyntax()
   args=$*
   cat << HELPDOC
 ${ME} is a general purpose build script to be used with the
-z/OS Open Tools ports.
+zopen community ports.
 
 Usage: ${ME} [OPTION]...
 
@@ -366,8 +366,8 @@ ${ME} where the source is, and in what format type the source is stored.
 By default, the environment variables are defined in a file named buildenv
 in the root directory of the [PACKAGE]port github repository.
 
-To see a fully functioning z/OS Open Tools sample port see:
-https://github.com/ZOSOpenTools/zotsampleport
+To see a fully functioning zopen community sample port see:
+https://github.com/zopencommunity/zotsampleport
 
 HELPDOC
 

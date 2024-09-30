@@ -86,7 +86,7 @@ while ${changed}; do
   changed=false
   for pkg in ${deps}; do
     if ! [[ -v scanned["${pkg}"] ]]; then
-      if ! git clone "git@github.com:ZOSOpenTools/${pkg}port.git"; then
+      if ! git clone "git@github.com:zopencommunity/${pkg}port.git"; then
         echo "Unable to clone package ${pkg}" >&2
         exit 4
       else

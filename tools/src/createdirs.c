@@ -29,7 +29,7 @@ static int createsubdir(const char* rootdir, const char* subdir) {
 
 
 /*
- * Create the directories needed for a z/OS Open Tools
+ * Create the directories needed for a zopen community
  * development environment relative to the root directory
  * passed in.
  *

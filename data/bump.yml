@@ -11,6 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@main
-      - uses: ZOSOpenTools/meta/actions@main
+      - uses: zopencommunity/meta/actions@main
         env:
           GITHUB_TOKEN: ${{ secrets.BUMP_TOKEN }}

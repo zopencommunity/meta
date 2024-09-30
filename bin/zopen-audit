@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Audit utility for z/OS Open Tools - https://github.com/ZOSOpenTools
+# Audit utility for zopen community - https://github.com/zopencommunity
 #
 # All zopen-* scripts MUST start with this code to maintain consistency.
 #
@@ -20,7 +20,7 @@ setupMyself
 printHelp()
 {
   cat << HELPDOC
-${ME} is a utility for z/OS Open Tools to check for vulnerabilities
+${ME} is a utility for zopen community to check for vulnerabilities
 in your installed packages.
 
 Usage: ${ME} [OPTION]
@@ -34,7 +34,7 @@ Options:
 Examples:
   zopen audit       check for vulnerabilities in all installed packages
 
-Report bugs at https://github.com/ZOSOpenTools/meta/issues.
+Report bugs at https://github.com/zopencommunity/meta/issues.
 
 HELPDOC
 }
@@ -84,8 +84,8 @@ if [ $upgrade = true ] && [ $remove = true ]; then
   exit 1
 fi
 
-JSON_VULNERABILITIES_URL="https://raw.githubusercontent.com/ZOSOpenTools/meta/main/docs/api/zopen_vulnerability.json"
-LATEST_RELEASES_URL="https://raw.githubusercontent.com/ZOSOpenTools/meta/main/docs/api/zopen_releases_latest.json"
+JSON_VULNERABILITIES_URL="https://raw.githubusercontent.com/zopencommunity/meta/main/docs/api/zopen_vulnerability.json"
+LATEST_RELEASES_URL="https://raw.githubusercontent.com/zopencommunity/meta/main/docs/api/zopen_releases_latest.json"
 
 downloadJsonCaches()
 {

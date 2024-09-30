@@ -15,5 +15,5 @@ on:
 jobs:
   build-and-test:
     if: (github.event.issue.pull_request && contains(github.event.comment.body, '/run tests')) || github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request_target'
-    uses: ZOSOpenTools/meta/.github/workflows/build_and_test.yml@main
+    uses: zopencommunity/meta/.github/workflows/build_and_test.yml@main
     secrets: inherit

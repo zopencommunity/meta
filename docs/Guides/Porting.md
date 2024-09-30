@@ -12,17 +12,17 @@ You need to configure your user.email and user.name to check in code to the repo
 git config --global user.email "<Your E-Mail>"
 git config --global user.name "<Your Name>"
 ```
-This assumes that you have the latest version of [Git](https://github.com/ZOSOpenTools/gitport/releases) on your z/OS system.
+This assumes that you have the latest version of [Git](https://github.com/zopencommunity/gitport/releases) on your z/OS system.
 
 
-### Leveraging the z/OS Open Tools meta repo
+### Leveraging the zopen community meta repo
 
-The meta repo (https://github.com/ZOSOpenTools/meta) consists of common tools and files that aid in the porting process, including the `zopen` suite of tools.  Specifically, `zopen build` provides a common way to bootstrap, configure, build, check,
-and install a software package. `zopen install` provides a mechanism to install the latest published z/OS Open Tools packages.
+The meta repo (https://github.com/zopencommunity/meta) consists of common tools and files that aid in the porting process, including the `zopen` suite of tools.  Specifically, `zopen build` provides a common way to bootstrap, configure, build, check,
+and install a software package. `zopen install` provides a mechanism to install the latest published zopen community packages.
 
 Many tools depend on other tools to be able to build or run. You will need to provide both _bootstrap_ tools
 (i.e. binary tools not from source), as well as _prod_ tools (i.e. _production_ level tools previously built
-from another z/OS Open Tools repository).
+from another zopen community repository).
 
 Many tools require a C or C++ compiler (or both) to build. There are a couple of options to obtain the C/C++ compiler:
 * You can download a web deliverable add-on feature to your XL C/C++ compiler 
@@ -41,20 +41,20 @@ You can change this location by running `zopen init` to reconfigure the install 
 If the tool is not found, then `zopen build` will automatically install it.
 
 Each tool is responsible for knowing how to set its own environment up (e.g. PATH, LIBPATH, and any other environment variables).
-By default, `zopen build` will automatically add PATH, LIBPATH, and MANPATH environment variables. If other environment variables are needed, then you can append them by defining a `zopen_append_to_env` function as in the case of [gitport](https://github.com/ZOSOpenTools/gitport/blob/main/buildenv#LL66-L66C20).
+By default, `zopen build` will automatically add PATH, LIBPATH, and MANPATH environment variables. If other environment variables are needed, then you can append them by defining a `zopen_append_to_env` function as in the case of [gitport](https://github.com/zopencommunity/gitport/blob/main/buildenv#LL66-L66C20).
 Once the tool is installed, the .env file needs to be source'd from its install directory to set up the environment.
-If you are building from a ZOSOpenTools port, this `.env` file will be created as part of the install process.
+If you are building from a zopencommunity port, this `.env` file will be created as part of the install process.
 
 ### Create your first z/OS port leveraging the zopen framework
 
-Before you begin porting a tool to z/OS, you must first identify the tool or library that you wish to port. For the sake of this guide, let's assume we are porting [jq](https://stedolan.github.io/jq/), a lightweight and flexible json parser. Before porting a tool, check if the project already exists under https://github.com/ZOSOpenTools. If it does exist, then please collaborate with the existing contributors.
+Before you begin porting a tool to z/OS, you must first identify the tool or library that you wish to port. For the sake of this guide, let's assume we are porting [jq](https://stedolan.github.io/jq/), a lightweight and flexible json parser. Before porting a tool, check if the project already exists under https://github.com/zopencommunity. If it does exist, then please collaborate with the existing contributors.
 
-Begin first by cloning the https://github.com/ZOSOpenTools/meta repo.  This repo contains the `zopen` framework under the `bin/` directory and it is what we will use to build, test, and install our port.
+Begin first by cloning the https://github.com/zopencommunity/meta repo.  This repo contains the `zopen` framework under the `bin/` directory and it is what we will use to build, test, and install our port.
 
 ```bash
-# Clone the required repositories (using Git from https://github.com/ZOSOpenTools/gitport)
+# Clone the required repositories (using Git from https://github.com/zopencommunity/gitport)
 export GIT_UTF8_CCSID=819 # set the UTF8 ccsid to 819
-git clone git@github.com:ZOSOpenTools/meta.git && cd meta
+git clone git@github.com:zopencommunity/meta.git && cd meta
 ```
 
 Next, in order to use the `zopen` suite of tools, you must set your path environment variable to the `meta/bin` directory.  
@@ -89,14 +89,14 @@ tar
 Generating jqportport zopen project...
 jqport/buildenv created...
 jqport/README.md created...
-jqport project is ready! Contact Mike Fulton (fultonm@ca.ibm.com) to create https://github.com/ZOSOpenTools/jqport.git...
+jqport project is ready! Contact Mike Fulton (fultonm@ca.ibm.com) to create https://github.com/zopencommunity/jqport.git...
 ```
 
 Change your current directory to the `jqport` directory: `cd jqport`. You will notice several files:
 * README.md - A description of the project
 * buildenv - The zopen configuration file that drives the build, testing, and installation of the project.
 * cicd.groovy - The CI/CD configuration file used in the Jenkins pipeline
-For more information, please visit the [zopen build README](https://github.com/ZOSOpenTools/meta)
+For more information, please visit the [zopen build README](https://github.com/zopencommunity/meta)
 
 Note: `zopen build` supports projects based in github repositories or tarball locations. Since autoconf/automake are not currently 100% functional on z/OS, we typically choose the tarball location because it contains a `configure` script pre-packaged. Let's go ahead and do this for `jq`.
 
@@ -127,9 +127,9 @@ zopen_append_to_zoslib_env()
   echo "envar|set|value"
 }
 ```
-ZOPEN_STABLE_DEPS/ZOPEN_STABLE_DEPS are used to identify the non-standard z/OS Open Tools dependencies needed to build the project. 
+ZOPEN_STABLE_DEPS/ZOPEN_STABLE_DEPS are used to identify the non-standard zopen community dependencies needed to build the project. 
 
-ZOPEN_CATEGORIES represent the [categories]((https://github.com/ZOSOpenTools/meta/blob/main/data/tool_categories.txt") that the tool or library fits under.
+ZOPEN_CATEGORIES represent the [categories]((https://github.com/zopencommunity/meta/blob/main/data/tool_categories.txt") that the tool or library fits under.
 
 `zopen_append_to_env()` can be used to add additional environment variables outside of the normal environment variables. (e.g. PATH, LIBPATH, MANPATH)
 
@@ -203,7 +203,7 @@ diff -r jq-1.6 jq-1.6.orig > patches/initial_zos.patch
 
 Once you have a working prototype of your tool, you can proceed to the next step.
 
-### Creating a repository under ZOSOpenTools
+### Creating a repository under zopencommunity
 
 After you have a working z/OS prototype for your tool, you will need to create a repository to hold your contents.
 
@@ -218,7 +218,7 @@ Proceed to clone the repository and submit a Pull Request including the initial 
 
 ### Contributing your changes
 
-Please follow the [contributing guidelines](https://github.com/ZOSOpenTools/meta/blob/main/CONTRIBUTING.md).
+Please follow the [contributing guidelines](https://github.com/zopencommunity/meta/blob/main/CONTRIBUTING.md).
 
 
 ### Setting up the CI/CD pipeline
@@ -234,7 +234,7 @@ Pre-reqruisites:
 - Wharf
 - Git
 
-When porting Go packages, there is a general framework you can use to do so. Go supports a feature known as [Workspaces](https://go.dev/blog/get-familiar-with-workspaces). It allows you to work on multiple Go modules at the same time, but for our purposes, we will use it to modify a Go package's dependencies without having to to change the various `go.mod`s of each package. Once we have a workspace, we can make use of [Wharf](https://github.com/ZOSOpenTools/wharf), our open source porting tool for Go packages.
+When porting Go packages, there is a general framework you can use to do so. Go supports a feature known as [Workspaces](https://go.dev/blog/get-familiar-with-workspaces). It allows you to work on multiple Go modules at the same time, but for our purposes, we will use it to modify a Go package's dependencies without having to to change the various `go.mod`s of each package. Once we have a workspace, we can make use of [Wharf](https://github.com/zopencommunity/wharf), our open source porting tool for Go packages.
 
 The general steps for porting:
 1. Create a directory that will be your workspace. `cd` into it and run `go work init`
@@ -247,8 +247,8 @@ The general steps for porting:
 7. Once you have a successful build, create diffs of any changes you made and follow the steps outlined in the earlier sections to create a zopen port with the zopen framework
 
 Two examples of ports that you can use as reference:
-- [gum](https://github.com/ZOSOpenTools/gumport) - a package that `wharf` handles without requiring manual changes to dependencies
-- [Github CLI](https://github.com/ZOSOpenTools/githubcliport) - a package that requires manual changes to dependencies
+- [gum](https://github.com/zopencommunity/gumport) - a package that `wharf` handles without requiring manual changes to dependencies
+- [Github CLI](https://github.com/zopencommunity/githubcliport) - a package that requires manual changes to dependencies
 
 ### Debugging
 

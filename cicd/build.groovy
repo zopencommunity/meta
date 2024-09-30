@@ -1,9 +1,9 @@
 # Build Job : https://163.74.88.212:8443/view/Framework/job/Port-Build/
-# This build job will build a https://github.com/ZOSOpenTools/meta compatible project and archive the pax.Z artifact
+# This build job will build a https://github.com/zopencommunity/meta compatible project and archive the pax.Z artifact
 # This job is configured to clone the meta repo at the outset into the current working directory.
 # This job must run on the z/OS zot system
 # Inputs: 
-#   - PORT_GITHUB_REPO : e.g: https://github.com/ZOSOpenTools/makeport.git
+#   - PORT_GITHUB_REPO : e.g: https://github.com/zopencommunity/makeport.git
 #   - PORT_BRANCH : (default: main)
 #   - BUILD_LINE: dev or stable
 #   - FORCE_CLANG : Build using clang

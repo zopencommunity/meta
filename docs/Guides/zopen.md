@@ -3,22 +3,22 @@
 The following is a description of the zopen framework provided in the meta repo. To obtain the latest meta tools, you can clone and set up the environment as follows:
 
 ```
-git clone git@github.com:ZOSOpenTools/meta.git
+git clone git@github.com:zopencommunity/meta.git
 cd meta
 . ./.env
 ```
 
-Alternatively, you can download meta via [here](https://github.com/ZOSOpenTools/meta/releases/)
+Alternatively, you can download meta via [here](https://github.com/zopencommunity/meta/releases/)
 
-## If you are using z/OS Open Tools
+## If you are using zopen community
 
 ### zopen init
 
-`zopen init` is used to initialise a z/OS Open Tools environment. By default, this will create a ```zopen``` directory in your ```$HOME``` directory as the root filesystem (rootfs).  The rootfs holds the various packages, configuration and environment for z/OS Open Tools packages - removing this directory will revert the system without a trace.  A z/OS Open Tools main configuration file is generated in ```$rootfs/etc/zopen-config``` - to enable the z/OS Open Tools, this will either need to be sourced after logon to the system or the following line can be added to ```$HOME/.profile``` (or .bash_profile or...) to automatically source the z/OS Open Tools configuration file.
+`zopen init` is used to initialise a zopen community environment. By default, this will create a ```zopen``` directory in your ```$HOME``` directory as the root filesystem (rootfs).  The rootfs holds the various packages, configuration and environment for zopen community packages - removing this directory will revert the system without a trace.  A Zopen Community main configuration file is generated in ```$rootfs/etc/zopen-config``` - to enable the Zopen Community, this will either need to be sourced after logon to the system or the following line can be added to ```$HOME/.profile``` (or .bash_profile or...) to automatically source the Zopen Community configuration file.
 ```bash
 [ -e "$rootfs/etc/zopen-config" ] && . $rootfs/etc/zopen-config
 ```
-It is possible to reinitialize a system using the ```re-init``` option - doing so will remove the previous configuration though the rootfs can overlap the old filesystem to reuse installed and/or cached packages for example.  Initialisation on a system that has previously had a z/OS Open Tools configuration should allow some parameters to be copied across, such as Github tokens.
+It is possible to reinitialize a system using the ```re-init``` option - doing so will remove the previous configuration though the rootfs can overlap the old filesystem to reuse installed and/or cached packages for example.  Initialisation on a system that has previously had a zopen community configuration should allow some parameters to be copied across, such as Github tokens.
 
 ### zopen update-cacert
 
@@ -52,7 +52,7 @@ To upgrade a specific set of packages, you can specify the packages as a comma s
 zopen upgrade make
 ```
 
-## If you are contributing to or developing z/OS Open Tools
+## If you are contributing to or developing zopen community
 
 ### zopen build
 
@@ -102,14 +102,14 @@ To add your own, you can append environment variables by echo'ing them in a func
 After the build is successful, `zopen build` will install the project to `$HOME/zopen/prod/projectname`. To perform post-processing on the installed contents, such as modifying hardcoded path contents, you can write a `zopen_post_install()` function which takes the installed path as the first argument.
 
 Note that you can choose the fully-qualified environment variables ZOPEN_DEV_URL, ZOPEN_DEV_DEPS and ZOPEN_STABLE_URL, ZOPEN_STABLE_DEPS 
-accordingly if you prefer. See (https://github.com/ZOSOpenTools/zotsampleport/blob/main/setenv.sh) for an example.
+accordingly if you prefer. See (https://github.com/zopencommunity/zotsampleport/blob/main/setenv.sh) for an example.
 
 There are several additional environment variables that can be specified to provide finer-grained control of the build process. 
 For details
 - Run `zopen build -h` for a description of all the environment variables
-- Read the code: (https://github.com/ZOSOpenTools/meta/blob/main/bin/zopen-build). 
+- Read the code: (https://github.com/zopencommunity/meta/blob/main/bin/zopen-build). 
 
-For a sample port, visit the [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) repo.
+For a sample port, visit the [zotsampleport](https://github.com/zopencommunity/zotsampleport) repo.
 
 #### Running zopen build
 

@@ -1,6 +1,6 @@
 name: 'Bump versions'
 description: 'Use bump to create version update pull requests'
-author: 'ZOSOpenTools'
+author: 'zopencommunity'
 branding:
   icon: 'chevrons-up'
   color: 'green'

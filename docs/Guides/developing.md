@@ -1,4 +1,4 @@
-# Developing z/OS Open Tools
+# Developing zopen community
 
 Please read [Quick Start](QuickStart.md) and [The package manager](ThePackageManager.md) if you haven't already done so.
 
@@ -6,12 +6,12 @@ Please read [Quick Start](QuickStart.md) and [The package manager](ThePackageMan
 
 After running `zopen init`, you are able to install tools under the tools directory you chose, i.e. `$ZOPEN_ROOTFS` 
 
-You can develop z/OS Open Tools out of any directory you want. For example, if you wanted to make enhancements to the git port, you would perform the following commands:
+You can develop zopen community out of any directory you want. For example, if you wanted to make enhancements to the git port, you would perform the following commands:
 
 ```bash
 . /path/to/zopen/etc/zopen-config # source zopen-config
 zopen install git # Make sure you have git installed
-git clone git@github.com:ZOSOpenTools/gitport.git # clone the z/OS git port
+git clone git@github.com:zopencommunity/gitport.git # clone the z/OS git port
 cd gitport
 zopen build # perform a build of git
 # make changes to the git source...
@@ -27,7 +27,7 @@ To see the list of commands:
 `zopen --help`
 ```
 
-## Developing z/OS Open Tools
+## Developing zopen community
 
 ### zopen generate
 
@@ -81,14 +81,14 @@ To add your own, you can append environment variables by echo'ing them in a func
 After the build is successful, `zopen build` will install the project to `$HOME/zopen/prod/projectname`. To perform post-processing on the installed contents, such as modifying hardcoded path contents, you can write a `zopen_post_install()` function which takes the installed path as the first argument.
 
 Note that you can choose the fully-qualified environment variables ZOPEN_DEV_URL, ZOPEN_DEV_DEPS and ZOPEN_STABLE_URL, ZOPEN_STABLE_DEPS 
-accordingly if you prefer. See (https://github.com/ZOSOpenTools/zotsampleport/blob/main/setenv.sh) for an example.
+accordingly if you prefer. See (https://github.com/zopencommunity/zotsampleport/blob/main/setenv.sh) for an example.
 
 There are several additional environment variables that can be specified to provide finer-grained control of the build process. 
 For details
 - Run `zopen build -h` for a description of all the environment variables
-- Read the code: (https://github.com/ZOSOpenTools/meta/blob/main/bin/zopen-build). 
+- Read the code: (https://github.com/zopencommunity/meta/blob/main/bin/zopen-build). 
 
-For a sample port, visit the [zotsampleport](https://github.com/ZOSOpenTools/zotsampleport) repo.
+For a sample port, visit the [zotsampleport](https://github.com/zopencommunity/zotsampleport) repo.
 
 #### Running zopen build
 

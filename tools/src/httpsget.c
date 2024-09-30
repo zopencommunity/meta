@@ -73,7 +73,7 @@ int httpsget(const char* host, const char* uri, const char* pem, const char* pem
     } else if (rc == 404) {
       fprintf(stderr, "You have received a 404 Not Found error from %s%s\n", host, uri);
       fprintf(stderr, "This is likely because there is no release currently tagged as 'stable' for this package\n");
-      fprintf(stderr, "Open an issue at https://github.com/ZOSOpenTools/<pkg>port/issues\n");
+      fprintf(stderr, "Open an issue at https://github.com/zopencommunity/<pkg>port/issues\n");
     } else {
       fprintf(stderr, "error downloading  https://%s%s to %s: %d\n", host, uri, output, rc);
     }

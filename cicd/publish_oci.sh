@@ -49,7 +49,7 @@ LABEL description=\"${PRODUCT_DESCRIPTION}\"
 LABEL specification=2.0.0
 LABEL summary=\"${PRODUCT_SUMMARY}\"
 LABEL community_unsupported=true
-LABEL vendor=\"ZOSOpenTools\"
+LABEL vendor=\"zopencommunity\"
 LABEL runtimedeps=\"${RUNTIME_DEPENDENCIES}\""
 
   mkdir -p ".zpm"
@@ -90,7 +90,7 @@ ZZ
   buildId=$(echo "$output" | tail -1)
 
   echo "Pushing OCI Artifact"
-  "${ZOPEN_PODMAN_BINARY}" push $buildId  "$ZOPEN_IMAGE_REGISTRY/zosopentools/${PRODUCT_NAME}:${PRODUCT_VERSION}"
+  "${ZOPEN_PODMAN_BINARY}" push $buildId  "$ZOPEN_IMAGE_REGISTRY/zopencommunity/${PRODUCT_NAME}:${PRODUCT_VERSION}"
   if [ $? -gt 0 ]; then
     exit 4;
   fi
