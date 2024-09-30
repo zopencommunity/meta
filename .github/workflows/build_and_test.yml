@@ -29,7 +29,7 @@ jobs:
         id: comment-branch
 
       - name: Set commit status as pending
-        uses: myrotvorets/set-commit-status-action@master
+        uses: myrotvorets/set-commit-status-action@v2.0.1
         with:
           sha: ${{ steps.comment-branch.outputs.head_sha || github.sha }}
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -122,7 +122,7 @@ jobs:
           exit 0
 
       - name: Set final commit status
-        uses: myrotvorets/set-commit-status-action@master
+        uses: myrotvorets/set-commit-status-action@v2.0.1
         if: always()
         with:
           sha: ${{ steps.comment-branch.outputs.head_sha || github.sha }}
