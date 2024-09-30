@@ -44,11 +44,11 @@ verifySignatureOfPax()
 
 
   # Create a temporary directory for GPG keyring
-  TMP_GPG_DIR="$tmp/tmp_gpg_verify"
+  TMP_GPG_DIR="$zopen_tmp_dir/tmp_gpg_verify"
   mkdir -p "$TMP_GPG_DIR"
 
-  SIGNATURE_FILE="$tmp/signedfile.asc"
-  PUBLIC_KEY_FILE="$tmp/scriptpubkey.asc"
+  SIGNATURE_FILE="$zopen_tmp_dir/signedfile.asc"
+  PUBLIC_KEY_FILE="$zopen_tmp_dir/scriptpubkey.asc"
   printf "%b" "$SIGNATURE" | tr -d '"'  > "$SIGNATURE_FILE"
   printf "%b" "$PUBLIC_KEY" | tr -d '"'  > "$PUBLIC_KEY_FILE"
 

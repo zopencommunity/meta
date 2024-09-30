@@ -263,8 +263,8 @@ printSeeAlso()
   "
 }
 
-TMP_FIFO_PIPE="${tmp}/${LOGNAME}.pipe"
-ZOPEN_TEMP_C_FILE="${tmp}/${LOGNAME}.c"
+TMP_FIFO_PIPE="${zopen_tmp_dir}/${LOGNAME}.pipe"
+ZOPEN_TEMP_C_FILE="${zopen_tmp_dir}/${LOGNAME}.c"
 
 setDefaultBuild()
 {
@@ -501,7 +501,7 @@ signPaxFile()
   OUTPUT_SIGNATURE="${paxFileName}.asc"
 
   # Create a temporary directory for GPG keyring
-  TMP_GPG_DIR="$tmp/tmp_gpg"
+  TMP_GPG_DIR="$zopen_tmp_dir/tmp_gpg"
   mkdir -p "$TMP_GPG_DIR"
   chmod a+w "$TMP_GPG_DIR"
 

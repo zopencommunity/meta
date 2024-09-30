@@ -46,13 +46,13 @@ addCleanupTrapCmd(){
 }
 
 # Temporary files
-for tmp in "${TMPDIR}" "${TMP}" /tmp; do
-  if [ ! -z ${tmp} ] && [ -d ${tmp} ]; then
+for zopen_tmp_dir in "${TMPDIR}" "${TMP}" /tmp; do
+  if [ ! -z ${zopen_tmp_dir} ] && [ -d ${zopen_tmp_dir} ]; then
     break
   fi
 done
 
-if [ ! -d "${tmp}" ]; then
+if [ ! -d "${zopen_tmp_dir}" ]; then
   printError "Temporary directory not found. Please specify \$TMPDIR, \$TMP or have a valid /tmp directory."
 fi
 
@@ -73,7 +73,7 @@ cleanupOnExit()
   [ -e "${TMP_GPG_DIR}" ] && rm -rf "${TMP_GPG_DIR}"
   [ -e "${SIGNATURE_FILE}" ] && rm -rf "${SIGNATURE_FILE}"
   [ -e "${PUBLIC_KEY_FILE}" ] && rm -rf "${PUBLIC_KEY_FILE}"
-  printElapsedTime info "zopen-build" ${fullProcessStartTime}
+  printElapsedTime info "${0}" ${fullProcessStartTime}
   trap - EXIT # clear the EXIT trap so that it's not double called
   exit ${rv}
 }
