@@ -175,8 +175,8 @@ writeConfigFile(){
 # relative to this envvar value
 displayHelp() {
 echo "usage: . zopen-config [--eknv] [--knv] [-?|--help]"
-echo "  --override-zos-tools   Adds altbin/ dir to the PATH and altman/ dir to MANPATH, which overrides /bin tools"
-echo "  --nooverride-zos-tools Does not add altbin/ and altman/ dir to PATH and MANPATH"
+echo "  --override-zos-tools   Adds altbin/ dir to the PATH and altman/ dir to MANPATH, overriding the native z/OS tooling."
+echo "  --nooverride-zos-tools Does not add altbin/ and altman/ dir to PATH and MANPATH."
 echo "  --override-zos-tools-subset=<file>"
 echo "      Override a subset of zos tools. Containing a subset of packages to override, delimited by newlines."
 echo "  --knv                  Display zopen environment variables "
