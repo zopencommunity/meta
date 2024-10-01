@@ -22,7 +22,8 @@ Before submitting a Pull Request, please ensure you've done the following:
 
 ## Category
 
-- [ ] zopen framework
+- [ ] zopen build framework
+- [ ] zopen package manager
 - [ ] Documentation
 - [ ] CI/CD
 - [ ] Tools
