@@ -1,4 +1,9 @@
 name: "BuildAndTest"
+
+permissions:
+  contents: write
+  statuses: write
+  actions: read
 on:
   workflow_call:
     inputs:
