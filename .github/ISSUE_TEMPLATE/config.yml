@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: zopen community discussions
+    url: https://github.com/orgs/zopencommunity/discussions
+    about: Use this discussion board for sharing ideas related to the zopen community.
