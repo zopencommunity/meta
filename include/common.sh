@@ -175,8 +175,8 @@ writeConfigFile(){
 # relative to this envvar value
 displayHelp() {
 echo "usage: . zopen-config [--eknv] [--knv] [-?|--help]"
-echo "  --override-zos-tools   Adds altbin/ dir to the PATH, which overrides /bin tools"
-echo "  --nooverride-zos-tools Does not add altbin/ dir from PATH"
+echo "  --override-zos-tools   Adds altbin/ dir to the PATH and altman/ dir to MANPATH, overriding the native z/OS tooling."
+echo "  --nooverride-zos-tools Does not add altbin/ and altman/ dir to PATH and MANPATH."
 echo "  --override-zos-tools-subset=<file>"
 echo "      Override a subset of zos tools. Containing a subset of packages to override, delimited by newlines."
 echo "  --knv                  Display zopen environment variables "
@@ -284,6 +284,7 @@ if [ -z "\${ZOPEN_QUICK_LOAD}" ]; then
 fi
 unset displayText
 PATH=\${ZOPEN_ROOTFS}/usr/local/bin:\${ZOPEN_ROOTFS}/usr/bin:\${ZOPEN_ROOTFS}/bin:\${ZOPEN_ROOTFS}/boot:\$(sanitizeEnvVar "\${PATH}" ":" "^\${ZOPEN_PKGINSTALL}/.*\$")
+MANPATH=\${ZOPEN_ROOTFS}/usr/local/share/man:\${ZOPEN_ROOTFS}/usr/local/share/man/\%L:\${ZOPEN_ROOTFS}/usr/share/man:\${ZOPEN_ROOTFS}/usr/share/man/\%L:\$(sanitizeEnvVar "\${MANPATH}" ":" "^\${ZOPEN_PKGINSTALL}/.*\$")
 
 if [ -n "\$ZOPEN_TOOLSET_OVERRIDE" ]; then
   if [ -n "\${overrideFile}" ] && [ -f "\${overrideFile}" ]; then
@@ -292,19 +293,23 @@ if [ -n "\$ZOPEN_TOOLSET_OVERRIDE" ]; then
       if [ -d "\$ZOPEN_PKGINSTALL/\$project/\$project/altbin" ]; then
         PATH="\$ZOPEN_PKGINSTALL/\$project/\$project/altbin:\$PATH"
       fi
+      if [ -d "\$ZOPEN_PKGINSTALL/\$project/\$project/share/altman" ]; then
+        MANPATH="\$ZOPEN_PKGINSTALL/\$project/\$project/share/altman:\$MANPATH"
+      fi
     done < "\${overrideFile}"
   else
     PATH="\${ZOPEN_ROOTFS}/usr/local/altbin:\$PATH"
+    MANPATH="\${ZOPEN_ROOTFS}/usr/local/share/altman:\$MANPATH"
   fi
 else
   PATH=\$(sanitizeEnvVar "\${PATH}" ":" "^\${ZOPEN_ROOTFS}/usr/local/altbin.*\$")
+  MANPATH=\$(sanitizeEnvVar "\${MANPATH}" ":" "^\${ZOPEN_ROOTFS}/usr/local/share/altman.*\$")
 fi
 
 
 export PATH=\$(deleteDuplicateEntries "\${PATH}" ":")
 LIBPATH=\${ZOPEN_ROOTFS}/usr/local/lib:\${ZOPEN_ROOTFS}/usr/lib:\$(sanitizeEnvVar "\${LIBPATH}" ":" "^\${ZOPEN_PKGINSTALL}/.*\$")
 export LIBPATH=\$(deleteDuplicateEntries "\${LIBPATH}" ":")
-MANPATH=\${ZOPEN_ROOTFS}/usr/local/share/man:\${ZOPEN_ROOTFS}/usr/local/share/man/\%L:\${ZOPEN_ROOTFS}/usr/share/man:\${ZOPEN_ROOTFS}/usr/share/man/\%L:\$(sanitizeEnvVar "\${MANPATH}" ":" "^\${ZOPEN_PKGINSTALL}/.*\$")
 export MANPATH=\$(deleteDuplicateEntries "\${MANPATH}" ":")
 
 if \${knv}; then
