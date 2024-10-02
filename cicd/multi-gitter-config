@@ -28,10 +28,9 @@ skip-repo:
   - zopencommunity/zotsampleport
   - zopencommunity/pythonport
   - zopencommunity/javaport
+  - zopencommunity/check_pythonport
+  - zopencommunity/check_javaport
   - zopencommunity/bumpport
-  - zopencommunity/comp_goport
-  - zopencommunity/comp_clangport
-  - zopencommunity/comp_xlclangport
   - zopencommunity/toolsandtoysport
   - zopencommunity/jrubyport
   - zopencommunity/my_basicport
