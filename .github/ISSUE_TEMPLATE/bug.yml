@@ -1,11 +1,11 @@
-name: "Zopen Bug Report"
-description: Report an issue to help improve zopen
+name: "zopen community bug report"
+description: Report an issue to help improve the zopen community
 labels: ["bug"]
 body:
   - type: markdown
     attributes:
       value: |
-        Thank you for reporting an issue with zopen.
+        Thank you for reporting an issue to the zopen community.
 
         This issue tracker is for reporting bugs and problems related to the meta repo, which is responsible for the zopen package manager and zopen build framework.
 
@@ -50,7 +50,6 @@ body:
       label: zopen package manager version
       description: |
         Specify the version of `zopen` you are using (if applicable). You can find the version by running `zopen --version`.
-
 
   - type: textarea
     attributes:

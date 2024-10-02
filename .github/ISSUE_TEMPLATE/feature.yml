@@ -1,11 +1,11 @@
-name: "Zopen Feature Request"
-description: Suggest a new feature or enhancement for Zopen 
+name: "zopen feature request"
+description: Suggest a new feature or enhancement for the zopen community
 labels: ["enhancement"]
 body:
   - type: markdown
     attributes:
       value: |
-        Thank you for suggesting a new feature or enhancement for Zopen.
+        Thank you for suggesting a new feature or enhancement for zopen community.
 
         Please provide detailed information to help us evaluate your request. The more context and examples you provide, the easier it will be to understand and prioritize your suggestion.
 
