@@ -400,25 +400,27 @@ handlePackageInstall()
     fi
 
     
-    systemPrereqs=$(jq -r '.product.system_prereqs // empty' "${metadataFile}" 2>/dev/null)
+    systemPrereqs=$(jq -r '.product.system_prereqs // empty | map(.name) | join(" ")' "${metadataFile}" 2>/dev/null)
     if ! $bypassPrereqs; then
       if [ -z "${systemPrereqs}" ]; then
-        systemPrereqs="${systemPrereqs} zos24" # if empty, check for zos24
+        systemPrereqs="${systemPrereqs} zos24" # set the min requirest as zos24
       fi
       if [ -n "$systemPrereqs" ]; then
-        if [ ! -d "$ZOPEN_SYSTEM_PREREQ_DIR" ]; then
-          printWarning "$ZOPEN_SYSTEM_PREREQ_DIR does not exist. You should upgrade meta. Bypassing prereq check."
-        fi
-        for prereq in $(echo "${systemPrereqs}" | xargs | tr ' ' '\n' | sort -u); do
-          printInfo "Checking system pre-req requirement $prereq"
-          if [ -e "$ZOPEN_SYSTEM_PREREQ_DIR/$prereq" ]; then
-            if ! /bin/sh -c "$ZOPEN_SYSTEM_PREREQ_DIR/$prereq"; then
-              printError "Failed system pre-req check \"$prereq\". If you wish to bypass this, install with --bypass-prereq-checks"
+        if [ ! -f "$ZOPEN_SYSTEM_PREREQ_SCRIPT" ]; then
+          printWarning "$ZOPEN_SYSTEM_PREREQ_SCRIPT does not exist. You should upgrade meta. Bypassing prereq check."
+        else
+          . $ZOPEN_SYSTEM_PREREQ_SCRIPT
+          for prereq in $(echo "${systemPrereqs}" | xargs | tr ' ' '\n' | sort -u); do
+            printInfo "Checking system pre-req requirement $prereq"
+            if command -V "${prereq}" >/dev/null 2>&1; then
+              if ! ( ${prereq} ); then
+                printError "Failed system pre-req check \"$prereq\". If you wish to bypass this, install with --bypass-prereq-checks"
+              fi
+            else
+              printWarning "$prereq does not exist in $ZOPEN_SYSTEM_PREREQ_SCRIPT. You should upgrade meta. Bypassing prereq check."
             fi
-          else
-            printWarning "$ZOPEN_SYSTEM_PREREQ_DIR/$prereq does not exist. You should upgrade meta. Bypassing prereq check."
-          fi
-        done
+          done
+        fi
       fi
     else
       syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_PACKAGE},${CAT_INSTALL}" "BYPASS" "handlePackageInstall" "Bypassing prereq checks ${systemPrereqs} for '${name}'."

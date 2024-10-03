@@ -717,9 +717,10 @@ checkEnv()
 
   # Check for validity
   if [ -n  "${ZOPEN_SYSTEM_PREREQ}" ]; then
+    . $ZOPEN_SYSTEM_PREREQ_SCRIPT
     echo "${ZOPEN_SYSTEM_PREREQ}" | xargs | tr ' ' '\n' | sort | while read prereq; do
-      if [ ! -f "$ZOPEN_SYSTEM_PREREQ_DIR/$prereq" ]; then
-        printError "ZOPEN_SYSTEM_PREREQ prereq \"${prereq}\" does not exist in \"$ZOPEN_SYSTEM_PREREQ_DIR/${prereq}\""
+      if ! command -V "${prereq}" >/dev/null 2>&1; then
+        printError "ZOPEN_SYSTEM_PREREQ prereq \"${prereq}\" does not exist in \"$ZOPEN_SYSTEM_PREREQ_SCRIPT\""
       fi
     done
   fi 

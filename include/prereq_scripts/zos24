@@ -1,6 +1,0 @@
-#!/bin/sh
-INCLUDEDIR="$(cd "$(dirname "$0")/.." > /dev/null 2>&1 && pwd -P)"
-
-. $INCLUDEDIR/prereq_inc.sh
-
-check_zos_version 2.4
