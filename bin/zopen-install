@@ -78,7 +78,7 @@ verifySignatureOfPax()
         else
            [ -e "${TMP_GPG_DIR}" ] && rm -rf "$TMP_GPG_DIR"
 	   extractPax=false;
-           printError "Verification failed"
+           printError "Verification failed."
         fi
    else
         extractPax=false;
