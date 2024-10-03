@@ -456,7 +456,7 @@ handlePackageInstall()
     metadataVersion=$(jq -r '.version_scheme' "${metadataFile}" 2>/dev/null)
     is_greater=$(echo "$metadataVersion > 0.1" | bc -l)
 
-    if [ "$is_greater" -eq 1 ] && [ "$skipverify" = "false" ]; then
+    if [ "$is_greater" -eq 1 ] && ! $skipverify; then
        verifySignatureOfPax
     fi
     if [ "$extractPax" = true ]; then
