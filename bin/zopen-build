@@ -495,6 +495,7 @@ processOptions()
 signPaxFile()
 {
   # Paths to your files
+  printHeader "Signing pax file ${paxFileName}"
   PRIVATE_KEY="${ZOPEN_GPG_SECRET_KEY_FILE}"
   PASSPHRASE_FILE="${ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE}"
   FILE_TO_SIGN="${paxFileName}"
@@ -503,7 +504,7 @@ signPaxFile()
   # Create a temporary directory for GPG keyring
   TMP_GPG_DIR="$zopen_tmp_dir/tmp_gpg"
   mkdir -p "$TMP_GPG_DIR"
-  chmod a+w "$TMP_GPG_DIR"
+  chmod u+w "$TMP_GPG_DIR"
 
   # Import the private key into the specified keyring files
   printInfo "Importing private key..."
