@@ -525,7 +525,7 @@ signPaxFile()
   # Sign the file
   printInfo "Signing the file..."
 
-  gpg --armor --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --secret-keyring "$TMP_GPG_DIR/secring.gpg" --batch --verbose --pinentry-mode loopback --passphrase-file "$PASSPHRASE_FILE" --default-key YOUR_KEY_ID --output "$OUTPUT_SIGNATURE" --detach-sig "$FILE_TO_SIGN" > /dev/null 2>&1
+  gpg --armor --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --batch --verbose --pinentry-mode loopback --passphrase-file "$PASSPHRASE_FILE" --output "$OUTPUT_SIGNATURE" --detach-sig "$FILE_TO_SIGN" > /dev/null 2>&1
 
   if [ $? -ne 0 ]; then
       extractPax=false

@@ -70,7 +70,7 @@ verifySignatureOfPax()
   fi
 
   # Verify the signature
-  printVerbose "Verifying the signature..."
+  printVerbose "Verifying the gpg signature..."
   if [ -f "$SIGNATURE_FILE" ]; then
         if gpg --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --verify "$SIGNATURE_FILE" "$FILE_TO_VERIFY" 2>&1 | grep -q "Good signature from"; then
            printInfo "${NC}${GREEN}Signature verified successfully: ${name}${NC}"
