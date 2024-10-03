@@ -1,5 +1,10 @@
 name: 'Automatic version updates'
 
+permissions:
+  contents: write
+  statuses: write
+  actions: read
+
 on:
   schedule:
     # minute hour dom month dow (UTC)

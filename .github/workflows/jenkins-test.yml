@@ -1,5 +1,10 @@
 name: Build and Test
 
+permissions:
+  contents: write
+  statuses: write
+  actions: read
+
 on:
   issue_comment:
     types:
