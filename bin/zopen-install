@@ -403,11 +403,11 @@ handlePackageInstall()
     systemPrereqs=$(jq -r '.product.system_prereqs // empty | map(.name) | join(" ")' "${metadataFile}" 2>/dev/null)
     if ! $bypassPrereqs; then
       if [ -z "${systemPrereqs}" ]; then
-        systemPrereqs="${systemPrereqs} zos24" # set the min requirest as zos24
+        systemPrereqs="${systemPrereqs} zos24" # set the min requirement as z/OS 2.4
       fi
       if [ -n "$systemPrereqs" ]; then
-        if [ ! -f "$ZOPEN_SYSTEM_PREREQ_SCRIPT" ]; then
-          printWarning "$ZOPEN_SYSTEM_PREREQ_SCRIPT does not exist. You should upgrade meta. Bypassing prereq check."
+        if [ ! -r "$ZOPEN_SYSTEM_PREREQ_SCRIPT" ]; then
+          printError "$ZOPEN_SYSTEM_PREREQ_SCRIPT does not exist. Check file permissions and reinstall the meta package or reinitialize the zopen environment. If the error persists, open an issue."
         else
           . $ZOPEN_SYSTEM_PREREQ_SCRIPT
           for prereq in $(echo "${systemPrereqs}" | xargs | tr ' ' '\n' | sort -u); do
@@ -417,7 +417,7 @@ handlePackageInstall()
                 printError "Failed system pre-req check \"$prereq\". If you wish to bypass this, install with --bypass-prereq-checks"
               fi
             else
-              printWarning "$prereq does not exist in $ZOPEN_SYSTEM_PREREQ_SCRIPT. You should upgrade meta. Bypassing prereq check."
+              printError "Prereq \"$prereq\" does not exist in $ZOPEN_SYSTEM_PREREQ_SCRIPT. Consider upgrading meta or open an issue if it persists."
             fi
           done
         fi
