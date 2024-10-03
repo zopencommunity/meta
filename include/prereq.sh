@@ -1,4 +1,6 @@
 #!/bin/false
+export ZOPEN_AVAILABLE_PREREQS="procfs zos31 zos25 zos24"
+
 # This file is only meant to be source'd hence the dummy hashbang
 
 check_zos_version() {
@@ -14,7 +16,7 @@ check_zos_version() {
   VERSION=$(/bin/uname -rsvI 2>/dev/null)
 
   if [ -z "$VERSION" ]; then
-    echo "ERROR: This system is not a z/OS system."
+    echo "ERROR: This z/OS system does not have a valid version."
     exit 1
   fi
 
