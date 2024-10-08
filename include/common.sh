@@ -15,6 +15,11 @@ zopenInitialize()
   ZOPEN_ANALYTICS_JSON="${ZOPEN_ROOTFS}/var/lib/zopen/analytics.json"
   ZOPEN_JSON_CACHE_URL="https://raw.githubusercontent.com/zopencommunity/meta/main/docs/api/zopen_releases.json"
   ZOPEN_JSON_CONFIG="${ZOPEN_ROOTFS}/etc/zopen/config.json"
+  if [ -n "${INCDIR}" ]; then
+    ZOPEN_SYSTEM_PREREQ_SCRIPT="${INCDIR}/prereq.sh"
+  else
+    ZOPEN_SYSTEM_PREREQ_SCRIPT="${ZOPEN_ROOTFS}/usr/local/zopen/meta/meta/include/prereq.sh"
+  fi
 }
 
 addCleanupTrapCmd(){
