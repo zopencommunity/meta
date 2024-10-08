@@ -24,21 +24,15 @@ checkWritable
 verifySignatureOfPax()
 {
   # Extracting values and checking for errors
-  FILE_TO_VERIFY=$(jq -r '.product.pax' "${metadataFile}")
-  if [ $? -ne 0 ] || [ "${FILE_TO_VERIFY}" = "null" ] || [ -z "${FILE_TO_VERIFY}" ]; then
-     extractPax=false;
+  if ! FILE_TO_VERIFY=$(jq -e -r '.product.pax' "${metadataFile}"); then
      printError "Failed to extract 'pax' from ${metadataFile}" >&2
   fi
 
-  SIGNATURE=$(jq -r '.product.signature' "${metadataFile}")
-  if [ $? -ne 0 ] || [ "${SIGNATURE}" = "null" ] || [ -z "${SIGNATURE}" ]; then
-     extractPax=false;
+  if ! SIGNATURE=$(jq -e -r '.product.signature' "${metadataFile}"); then 
      printfError "Failed to extract 'signature' from ${metadataFile}" >&2
   fi
 
-  PUBLIC_KEY=$(jq -r '.product.public_key' "${metadataFile}")
-  if [ $? -ne 0 ] || [ "${PUBLIC_KEY}" = "null" ] || [ -z "${PUBLIC_KEY}" ]; then
-     extractPax=false;
+  if ! PUBLIC_KEY=$(jq -e -r '.product.public_key' "${metadataFile}"); then 
      printError "Failed to extract 'public_key' from ${metadataFile}" >&2
   fi
 
@@ -56,7 +50,6 @@ verifySignatureOfPax()
   [ -f "$PUBLIC_KEY_FILE" ] && gpg --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --batch --yes --import "$PUBLIC_KEY_FILE" > /dev/null 2>&1
   if [ $? -ne 0 ]; then
       [ -e "${TMP_GPG_DIR}" ] && rm -rf "$TMP_GPG_DIR"
-      extractPax=false;
       printError "Importing public key failed. Verification aborted."
   fi
 
@@ -65,23 +58,20 @@ verifySignatureOfPax()
   gpg --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --list-keys > /dev/null 2>&1
   if [ $? -ne 0 ]; then
       [ -e "${TMP_GPG_DIR}" ] && rm -rf "$TMP_GPG_DIR"
-      extractPax=false;
       printError "No public key found. Verification aborted."
   fi
 
   # Verify the signature
-  printVerbose "Verifying the gpg signature..."
+  printInfo "Verifying the gpg signature..."
   if [ -f "$SIGNATURE_FILE" ]; then
         if gpg --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --verify "$SIGNATURE_FILE" "$FILE_TO_VERIFY" 2>&1 | grep -q "Good signature from"; then
            printInfo "${NC}${GREEN}Signature verified successfully: ${name}${NC}"
            return 0
         else
            [ -e "${TMP_GPG_DIR}" ] && rm -rf "$TMP_GPG_DIR"
-	   extractPax=false;
            printError "Verification failed."
         fi
    else
-        extractPax=false;
         printError "Signature file does not exist."
   fi
   
@@ -453,19 +443,16 @@ handlePackageInstall()
       rm -rf "${baseinstalldir}/${installdirname}"
     fi
 
-    extractPax=true
     metadataVersion=$(jq -r '.version_scheme' "${metadataFile}" 2>/dev/null)
     is_greater=$(echo "$metadataVersion > 0.1" | bc -l)
 
     if [ "$is_greater" -eq 1 ] && ! $skipverify; then
        verifySignatureOfPax
     fi
-    if [ "$extractPax" = true ]; then
-       if ! runLogProgress "pax -rf ${pax} -p p ${paxredirect} ${redirectToDevNull}" "Expanding ${pax}" "Expanded"; then
-           printWarning "Errors unpaxing, package directory state unknown."
-           printInfo "Use zopen alt to select previous version."
+    if ! runLogProgress "pax -rf ${pax} -p p ${paxredirect} ${redirectToDevNull}" "Expanding ${pax}" "Expanded"; then
+       printWarning "Errors unpaxing, package directory state unknown."
+       printWarning "Use zopen alt to select previous version."
        continue
-       fi
     fi
 
     if ${localInstall}; then
