@@ -502,6 +502,7 @@ signPaxFile()
 {
   # Paths to your files
   printHeader "Signing pax file ${paxFileName}"
+  printHeader "Signing pax file ${paxFileName}"
   PRIVATE_KEY="${ZOPEN_GPG_SECRET_KEY_FILE}"
   PASSPHRASE_FILE="${ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE}"
   FILE_TO_SIGN="${paxFileName}"
