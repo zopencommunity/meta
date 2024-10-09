@@ -269,40 +269,8 @@ printSeeAlso()
   "
 }
 
-# Temporary files
-for tmp in "${TMPDIR}" "${TMP}" /tmp; do
-  if [ ! -z ${tmp} ] && [ -d ${tmp} ]; then
-    break
-  fi
-done
-
-if [ ! -d "${tmp}" ]; then
-  printError "Temporary directory not found. Please specify \$TMPDIR, \$TMP or have a valid /tmp directory."
-fi
-
-TMP_FIFO_PIPE="${tmp}/${LOGNAME}.pipe"
-ZOPEN_TEMP_C_FILE="${tmp}/${LOGNAME}.c"
-
-# Capture start time before setting trap
-fullBuildStartTime=${SECONDS}
-
-# Remove temoraries on exit and report elapsed time
-cleanupOnExit()
-{
-  rv=$?
-  [ -f ${ZOPEN_TEMP_C_FILE} ] && rm -rf ${ZOPEN_TEMP_C_FILE}
-  [ -p ${TMP_FIFO_PIPE} ] && rm -rf ${TMP_FIFO_PIPE}
-  if [ ! -z "${TEE_PID}" ]; then
-    if kill -0 ${TEE_PID} 2> /dev/null; then
-      kill -9 ${TEE_PID}
-    fi
-  fi
-  printElapsedTime info "zopen-build" ${fullBuildStartTime}
-  trap - EXIT # clear the EXIT trap so that it's not double called
-  exit ${rv}
-}
-
-trap "cleanupOnExit" EXIT INT TERM QUIT HUP
+TMP_FIFO_PIPE="${zopen_tmp_dir}/${LOGNAME}.pipe"
+ZOPEN_TEMP_C_FILE="${zopen_tmp_dir}/${LOGNAME}.c"
 
 setDefaultBuild()
 {
@@ -390,6 +358,9 @@ Option:
   --oci                 build and publish an OCI image to \$ZOPEN_IMAGE_REGISTRY.
   -s                    exec a shell before running configure. Useful when
                         manually building ports.
+  --sign-pax, -sp       This option signs the pax file.
+			ZOPEN_GPG_SECRET_KEY_FILE, ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE
+                        and ZOPEN_GPG_PUBLIC_KEY_FILE must be set for signing the file.
   -v                    run in verbose mode.
   -vv                   run in very verbose mode (sets environment variables
                         V=1 and VERBOSE=1).
@@ -426,6 +397,7 @@ processOptions()
   getSourceOnly=false
   generatePax=false
   setActive=true
+  signPax=false
   forcePatchApply=false
   depsPath="${ZOPEN_PKGINSTALL}"
   forceUpgradeDeps=false
@@ -515,6 +487,9 @@ processOptions()
     "-s" | "--shell")
       startShell=true
       ;;
+    "-sp" | "--sign-pax")
+      signPax=true
+      ;;
     *)
       printError "Unknown option ${1} specified"
       ;;
@@ -522,6 +497,55 @@ processOptions()
     shift
   done
 }
+
+signPaxFile()
+{
+  # Paths to your files
+  printHeader "Signing pax file ${paxFileName}"
+  printHeader "Signing pax file ${paxFileName}"
+  PRIVATE_KEY="${ZOPEN_GPG_SECRET_KEY_FILE}"
+  PASSPHRASE_FILE="${ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE}"
+  FILE_TO_SIGN="${paxFileName}"
+  OUTPUT_SIGNATURE="${paxFileName}.asc"
+
+  # Create a temporary directory for GPG keyring
+  TMP_GPG_DIR="$zopen_tmp_dir/tmp_gpg"
+  mkdir -p "$TMP_GPG_DIR"
+  chmod u+w "$TMP_GPG_DIR"
+
+  # Import the private key into the specified keyring files
+  printInfo "Importing private key..."
+  gpg --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --secret-keyring "$TMP_GPG_DIR/secring.gpg" --batch --yes --import "$PRIVATE_KEY" > /dev/null 2>&1
+  if [ $? -ne 0 ]; then
+      extractPax=false
+      printError "Importing private key failed. Signing aborted."
+  fi
+
+  # Verify that the key was imported successfully
+  printInfo "Checking if secret key is imported..."
+  gpg --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --secret-keyring "$TMP_GPG_DIR/secring.gpg" --list-secret-keys > /dev/null 2>&1
+  if [ $? -ne 0 ]; then
+      extractPax=false
+      printError "No secret key found. Signing aborted."
+  fi
+
+  # Sign the file
+  printInfo "Signing the file..."
+
+  gpg --armor --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --batch --verbose --pinentry-mode loopback --passphrase-file "$PASSPHRASE_FILE" --output "$OUTPUT_SIGNATURE" --detach-sig "$FILE_TO_SIGN" > /dev/null 2>&1
+
+  if [ $? -ne 0 ]; then
+      extractPax=false
+      printError "Error signing the file."
+  else
+      SIGNATURE=$(jq -Rs . < ${OUTPUT_SIGNATURE})
+      printInfo "File signed successfully. Signature saved to $OUTPUT_SIGNATURE."
+  fi
+
+  # Clean up the temporary keyring directory
+  [ -e "${TMP_GPG_DIR}" ] && rm -rf "${TMP_GPG_DIR}"
+}
+
 
 loadBuildEnv()
 {
@@ -1694,7 +1718,7 @@ generateMetadataJSON()
     caveats="$(zopen_install_caveats)"
   fi
     
-  metadata_version_scheme="0.1" # Update if we add breaking changes to the json format
+  metadata_version_scheme="0.2" # Update if we add breaking changes to the json format
   cat <<zz > "${ZOPEN_INSTALL_DIR}/metadata.json"
 {
 "version_scheme": "${metadata_version_scheme}",
@@ -1884,13 +1908,38 @@ install()
 
       #TODO: Hack so that we can use coreutils md5sum without impacting builds
       ZOPEN_DEPS="${ZOPEN_DEPS} coreutils jq"
-      setDepsEnv
+      if [ "${signPax}" = "true" ] && ( [ -z "${ZOPEN_GPG_SECRET_KEY_FILE}" ] || [ -z "${ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE}" ] || [ -z "${ZOPEN_GPG_PUBLIC_KEY_FILE}" ] || [ ! -r "${ZOPEN_GPG_SECRET_KEY_FILE}" ] || [ ! -r "${ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE}" ] || [ ! -r "${ZOPEN_GPG_PUBLIC_KEY_FILE}" ] ); then
+		printError "GPG keyring environment variables are not set! You can omit the --sign-pax option to bypass this"
+       else
+		ZOPEN_DEPS="${ZOPEN_DEPS} gpg"
+       fi
+
+       setDepsEnv
 
       pax_size=$(getPathSizeInBytes "${paxFileName}")
       md5sum=$(md5sum "${paxFileName}" | awk '{print $1}')
-      jq '.product |= . + { "pax": "'${ZOPEN_NAME}.${LOG_PFX}.zos.pax.Z'", "pax_size": "'${pax_size}'", "md5": "'${md5sum}'" }' "${ZOPEN_ROOT}/install/metadata.json" > "${ZOPEN_ROOT}/install/metadata.json.tmp"
+
+      #If signPax is true, rest of variables check is done before setDepsEnv
+      if [ "${signPax}" = "true" ]; then
+                signPaxFile
+                public_key=$(jq -Rs . < ${ZOPEN_GPG_PUBLIC_KEY_FILE})
+      fi
+
+      if [[ -n "${SIGNATURE}" ]]; then
+         cat ${ZOPEN_INSTALL_DIR}/metadata.json
+         jq --arg pax "${ZOPEN_NAME}.${LOG_PFX}.zos.pax.Z" \
+            --arg pax_size "$pax_size" \
+            --arg md5 "$md5sum" \
+            --arg signature "$SIGNATURE" \
+            --arg public_key "$public_key" \
+            '.product |= . + { "pax": $pax, "pax_size": $pax_size, "md5": $md5, "signature": $signature, "public_key": $public_key }' \
+            "${ZOPEN_ROOT}/install/metadata.json" > "${ZOPEN_ROOT}/install/metadata.json.tmp"
+      else
+        jq '.product |= . + { "pax": "'${ZOPEN_NAME}.${LOG_PFX}.zos.pax.Z'", "pax_size": "'${pax_size}'", "md5": "'${md5sum}'" }' "${ZOPEN_ROOT}/install/metadata.json" > "${ZOPEN_ROOT}/install/metadata.json.tmp"
+      fi
       mv "${ZOPEN_ROOT}/install/metadata.json.tmp" "${ZOPEN_ROOT}/install/metadata.json"
     fi
+
     if ${setActive}; then
       PROJECT_NAME="$(echo ${ZOPEN_NAME} | cut -d'-' -f1)"
       mergeIntoSystem "${PROJECT_NAME}" "${ZOPEN_INSTALL_DIR}" "${ZOPEN_ROOTFS}"

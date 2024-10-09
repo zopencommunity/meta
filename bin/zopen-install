@@ -6,7 +6,7 @@
 #
 # All zopen-* scripts MUST start with this code to maintain consistency.
 #
-# set -x
+#set -x
 setupMyself()
 {
   ME=$(basename $0)
@@ -20,6 +20,66 @@ setupMyself()
 }
 setupMyself
 checkWritable
+
+verifySignatureOfPax()
+{
+  # Extracting values and checking for errors
+  if ! FILE_TO_VERIFY=$(jq -e -r '.product.pax' "${metadataFile}"); then
+     printError "Failed to extract 'pax' from ${metadataFile}" >&2
+  fi
+
+  if ! SIGNATURE=$(jq -e -r '.product.signature' "${metadataFile}"); then 
+     printfError "Failed to extract 'signature' from ${metadataFile}" >&2
+  fi
+
+  if ! PUBLIC_KEY=$(jq -e -r '.product.public_key' "${metadataFile}"); then 
+     printError "Failed to extract 'public_key' from ${metadataFile}" >&2
+  fi
+
+
+  # Create a temporary directory for GPG keyring
+  TMP_GPG_DIR="$zopen_tmp_dir/tmp_gpg_verify"
+  mkdir -p "$TMP_GPG_DIR"
+
+  SIGNATURE_FILE="$zopen_tmp_dir/signedfile.asc"
+  PUBLIC_KEY_FILE="$zopen_tmp_dir/scriptpubkey.asc"
+  printf "%b" "$SIGNATURE" | tr -d '"'  > "$SIGNATURE_FILE"
+  printf "%b" "$PUBLIC_KEY" | tr -d '"'  > "$PUBLIC_KEY_FILE"
+
+  printVerbose "Importing public key..."
+  [ -f "$PUBLIC_KEY_FILE" ] && gpg --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --batch --yes --import "$PUBLIC_KEY_FILE" > /dev/null 2>&1
+  if [ $? -ne 0 ]; then
+      [ -e "${TMP_GPG_DIR}" ] && rm -rf "$TMP_GPG_DIR"
+      printError "Importing public key failed. Verification aborted."
+  fi
+
+  # Verify that the key was imported successfully
+  printVerbose "Checking if public key is imported..."
+  gpg --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --list-keys > /dev/null 2>&1
+  if [ $? -ne 0 ]; then
+      [ -e "${TMP_GPG_DIR}" ] && rm -rf "$TMP_GPG_DIR"
+      printError "No public key found. Verification aborted."
+  fi
+
+  # Verify the signature
+  printInfo "Verifying the gpg signature..."
+  if [ -f "$SIGNATURE_FILE" ]; then
+        if gpg --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --verify "$SIGNATURE_FILE" "$FILE_TO_VERIFY" 2>&1 | grep -q "Good signature from"; then
+           printInfo "${NC}${GREEN}Signature verified successfully: ${name}${NC}"
+           return 0
+        else
+           [ -e "${TMP_GPG_DIR}" ] && rm -rf "$TMP_GPG_DIR"
+           printError "Verification failed."
+        fi
+   else
+        printError "Signature file does not exist."
+  fi
+  
+  # Clean up the temporary directory/files
+  [ -e "${SIGNATURE_FILE}" ] && rm -rf "${SIGNATURE_FILE}"
+  [ -e "${PUBLIC_KEY_FILE}" ] && rm -rf "${PUBLIC_KEY_FILE}"
+  [ -e "${TMP_GPG_DIR}" ] && rm -rf "${TMP_GPG_DIR}"
+}
 
 printSyntax()
 {
@@ -61,6 +121,7 @@ installDependencies()
   printVerbose "List of dependencies to install: ${dependencies}"
   skipupgrade_lcl=${skipupgrade}
   skipupgrade=true
+  skipverify=false;
   echo "${dependencies}" | xargs | tr ' ' '\n' | sort | while read dep; do
     printVerbose "Removing '${dep}' from dependency queue '${dependencies}'"
     dependencies=$(echo "${dependencies}" | sed -e "s/${dep}//" | tr -s ' ')
@@ -317,13 +378,11 @@ handlePackageInstall()
     printVerbose "Checking cache for already downloaded package [file name comparison]."
     location="zopen package cache"
   fi
-
   # Download the metadata json file
-  if ! runAndLog "curlCmd -L '${metadataJSONURL}' -o '${metadataFile}' ${redirectToDevNull}"; then
+  if ! runAndLog "curlCmd -L '${metadataJSONURL}' -o '${metadataFile}'" ${redirectToDevNull}; then
     printError "Could not download from ${metadataJSONURL}. Correct any errors and potentially retry."
     continue
   fi
-
   pax=${downloadFile}
   if [ -f "${pax}" ]; then
     printInfo "- Found existing file '${pax}' in ${location}"
@@ -384,11 +443,18 @@ handlePackageInstall()
       rm -rf "${baseinstalldir}/${installdirname}"
     fi
 
-    if ! runLogProgress "pax -rf ${pax} -p p ${paxredirect} ${redirectToDevNull}" "Expanding ${pax}" "Expanded"; then
-      printWarning "Errors unpaxing, package directory state unknown."
-      printInfo "Use zopen alt to select previous version."
-      continue
+    metadataVersion=$(jq -r '.version_scheme' "${metadataFile}" 2>/dev/null)
+    is_greater=$(echo "$metadataVersion > 0.1" | bc -l)
+
+    if [ "$is_greater" -eq 1 ] && ! $skipverify; then
+       verifySignatureOfPax
     fi
+    if ! runLogProgress "pax -rf ${pax} -p p ${paxredirect} ${redirectToDevNull}" "Expanding ${pax}" "Expanded"; then
+       printWarning "Errors unpaxing, package directory state unknown."
+       printWarning "Use zopen alt to select previous version."
+       continue
+    fi
+
     if ${localInstall}; then
       rm -f "${pax}"
     fi
@@ -558,6 +624,7 @@ reinstall=false
 installOrUpgrade=false
 nosymlink=false
 skipupgrade=false
+skipverify=false
 doNotInstallDeps=false
 all=false
 yesToPrompts=false
@@ -604,6 +671,9 @@ while [ $# -gt 0 ]; do
     ;;
   "--skip-upgrade")
     skipupgrade=true # Do not upgrade any packages
+    ;;
+  "--skip-verify" | "-sv")
+    skipverify=true # Verify signature of packages
     ;;
   "--all")
     all=true # Install all packages
