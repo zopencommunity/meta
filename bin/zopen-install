@@ -29,7 +29,8 @@ verifySignatureOfPax()
   fi
 
   if ! SIGNATURE=$(jq -e -r '.product.signature' "${metadataFile}"); then 
-     printfError "Failed to extract 'signature' from ${metadataFile}" >&2
+    printVerbose "Failed to extract 'signature' from ${metadataFile}" >&2
+    return
   fi
 
   if ! PUBLIC_KEY=$(jq -e -r '.product.public_key' "${metadataFile}"); then 
