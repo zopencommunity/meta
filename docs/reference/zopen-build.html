@@ -1,5 +1,5 @@
 <!-- Creator     : groff version 1.22.3 -->
-<!-- CreationDate: Tue Jul 23 06:22:24 2024 -->
+<!-- CreationDate: Fri Oct 11 15:31:17 2024 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -34,7 +34,7 @@
 
 
 <p style="margin-left:11%; margin-top: 1em">zopen-build
-&minus; manual page for zopen-build 0.8.2</p>
+&minus; manual page for zopen-build 0.8.3</p>
 
 <h2>SYNOPSIS
 <a name="SYNOPSIS"></a>
@@ -52,8 +52,8 @@
 
 
 <p style="margin-left:11%; margin-top: 1em">zopen&minus;build
-is a general purpose build script to be used with the z/OS
-Open Tools ports.</p>
+is a general purpose build script to be used with the zopen
+community ports.</p>
 
 <p style="margin-left:11%; margin-top: 1em"><b>Option: <br>
 &minus;&minus;build</b> LINE</p>
@@ -84,6 +84,13 @@ comp_xlclang.</p>
 
 <p style="margin-left:22%;">source ENV_FILE instead of
 buildenv to establish build environment.</p>
+
+
+<p style="margin-left:11%;"><b>&minus;&minus;instrument</b></p>
+
+<p style="margin-left:22%;">instruments the application
+with option <b>&minus;finstrument&minus;functions</b> (clang
+only)</p>
 
 <p style="margin-left:11%;"><b>&minus;f</b>,
 <b>&minus;&minus;force&minus;rebuild</b></p>
@@ -153,24 +160,38 @@ $ZOPEN_IMAGE_REGISTRY.</p> </td></tr>
 
 <p>exec a shell before running configure. Useful when
 manually building ports.</p></td></tr>
+</table>
+
+
+<p style="margin-left:11%;"><b>&minus;&minus;sign&minus;pax</b>,
+<b>&minus;sp</b></p>
+
+<p style="margin-left:22%;">This option signs the pax file.
+ZOPEN_GPG_SECRET_KEY_FILE,
+ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE and
+ZOPEN_GPG_PUBLIC_KEY_FILE must be set for signing the
+file.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
 <tr valign="top" align="left">
 <td width="11%"></td>
-<td width="7%">
+<td width="4%">
 
 
 <p><b>&minus;v</b></p></td>
-<td width="4%"></td>
+<td width="7%"></td>
 <td width="78%">
 
 
 <p>run in verbose mode.</p></td></tr>
 <tr valign="top" align="left">
 <td width="11%"></td>
-<td width="7%">
+<td width="4%">
 
 
 <p><b>&minus;vv</b></p></td>
-<td width="4%"></td>
+<td width="7%"></td>
 <td width="78%">
 
 
@@ -363,6 +384,19 @@ from env vars.</p>
 <p style="margin-left:22%;">Options to pass to build
 program. (defaults to
 &rsquo;&minus;j${ZOPEN_NUM_JOBS}&rsquo;)</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Optional
+settings for installation:</b> <br>
+ZOPEN_RUNTIME_DEPS</p>
+
+<p style="margin-left:22%;">Runtime z/OS Open Tool
+dependencies to be installed alongside the tool.</p>
+
+<p style="margin-left:11%;">ZOPEN_SYSTEM_PREREQ</p>
+
+<p style="margin-left:22%;">System prerequisites, supply
+the name of the prereq scripts under
+/var/lib/jenkins/workspace/Port&minus;Update&minus;Nightly/meta_update/bin/../include/prereq.sh</p>
 
 <p style="margin-left:11%; margin-top: 1em">Restricted
 Usage &minus; only set in ports if necessary <br>
