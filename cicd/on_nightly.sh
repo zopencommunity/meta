@@ -56,6 +56,7 @@ done
   git config --global user.email "zosopentools@ibm.com"
   git config --global user.name "ZOS Open Tools"
   git add docs/*.md
+  git add docs/*.xml
   git add docs/images/*.png
   git add docs/api/*
   git add docs/reference/*
