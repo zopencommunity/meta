@@ -6,6 +6,83 @@
 <link>https://zopen.community/#/Vulnerabilities</link>
 <description>Vulnerabilities in zopen community Packages</description>
 
+<item>
+<title>zlib (Build 2529) - (STABLE)</title>
+<link>https://zopen.community/#/Vulnerabilities?id=zlib</link>
+<description>1 critical vulnerability</description>
+<guid isPermaLink="false">zlib (Build 2529) - (STABLE)</guid>
+</item>
+
+<item>
+<title>vim (Build 2178) - (STABLE)</title>
+<link>https://zopen.community/#/Vulnerabilities?id=vim</link>
+<description>3 medium vulnerabilities</description>
+<guid isPermaLink="false">vim (Build 2178) - (STABLE)</guid>
+</item>
+
+<item>
+<title>vim (Build 2204) - (STABLE)</title>
+<link>https://zopen.community/#/Vulnerabilities?id=vim</link>
+<description>3 medium vulnerabilities</description>
+<guid isPermaLink="false">vim (Build 2204) - (STABLE)</guid>
+</item>
+
+<item>
+<title>vim (Build 2224) - (STABLE)</title>
+<link>https://zopen.community/#/Vulnerabilities?id=vim</link>
+<description>3 medium vulnerabilities</description>
+<guid isPermaLink="false">vim (Build 2224) - (STABLE)</guid>
+</item>
+
+<item>
+<title>vim (Build 2253) - (STABLE)</title>
+<link>https://zopen.community/#/Vulnerabilities?id=vim</link>
+<description>3 medium vulnerabilities</description>
+<guid isPermaLink="false">vim (Build 2253) - (STABLE)</guid>
+</item>
+
+<item>
+<title>vim (Build 2265) - (STABLE)</title>
+<link>https://zopen.community/#/Vulnerabilities?id=vim</link>
+<description>3 medium vulnerabilities</description>
+<guid isPermaLink="false">vim (Build 2265) - (STABLE)</guid>
+</item>
+
+<item>
+<title>vim (Build 2271) - (STABLE)</title>
+<link>https://zopen.community/#/Vulnerabilities?id=vim</link>
+<description>3 medium vulnerabilities</description>
+<guid isPermaLink="false">vim (Build 2271) - (STABLE)</guid>
+</item>
+
+<item>
+<title>vim (Build 2389) - (STABLE)</title>
+<link>https://zopen.community/#/Vulnerabilities?id=vim</link>
+<description>1 medium vulnerability</description>
+<guid isPermaLink="false">vim (Build 2389) - (STABLE)</guid>
+</item>
+
+<item>
+<title>vim (Build 2408) - (STABLE)</title>
+<link>https://zopen.community/#/Vulnerabilities?id=vim</link>
+<description>1 medium vulnerability</description>
+<guid isPermaLink="false">vim (Build 2408) - (STABLE)</guid>
+</item>
+
+<item>
+<title>vim (Build 2421) - (STABLE)</title>
+<link>https://zopen.community/#/Vulnerabilities?id=vim</link>
+<description>1 medium vulnerability</description>
+<guid isPermaLink="false">vim (Build 2421) - (STABLE)</guid>
+</item>
+
+<item>
+<title>vim (Build 2423) - (Alpha) - Dataset I/O</title>
+<link>https://zopen.community/#/Vulnerabilities?id=vim</link>
+<description>1 medium vulnerability</description>
+<guid isPermaLink="false">vim (Build 2423) - (Alpha) - Dataset I/O</guid>
+</item>
+
 </channel>
 
 </rss>
