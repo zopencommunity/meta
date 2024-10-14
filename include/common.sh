@@ -1330,6 +1330,21 @@ isURLReachable() {
   fi
 }
 
+checkAvailableSize()
+{ 
+  printInfo "Checking available size to install package."
+ 
+  partitionSize=$(df -m . | tail -1 | awk '{print $3}' | cut -f1 -d '/') 
+  
+  printDebug "Package Size: $1"
+  printDebug "Partition Size: ${partitionSize}"
+  if [[ $packageSize > $partitionSize ]] ; then
+    printInfo "Not enough space in partition."
+    return 1
+  fi
+  return 0
+}
+
 promptYesOrNo() {
   message="$1"
   skip=$2
