@@ -529,7 +529,7 @@ installPrereqs()
      [ -e "${rootfs}/boot/${tooldir}" ] || printError "Could not locate ${tool} directory '${rootfs}/boot/${tooldir}/' for bootstrap. Re-run 'zopen init' to retry"
      chmod -R 755 "${rootfs}/boot/${tooldir}"
      curwd="${PWD}"
-     cd "${rootfs}/boot/${tooldir}/" || printError "Could not access ${tool} bootstrap in directory '${rootfs}/boot/${tooldir}/'.   Re-run 'zopen init' to retry"
+     cd "${rootfs}/boot/${tooldir}/" || printError "Could not access ${tool} bootstrap in directory '${rootfs}/boot/${tooldir}/'. Re-run 'zopen init' to retry"
      . ./.env
      cd "${curwd}" || printError "Could not change to ${curwd}. Re-run 'zopen init' to retry"
   done
