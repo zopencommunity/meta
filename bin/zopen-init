@@ -526,7 +526,7 @@ installPrereqs()
      printVerbose "Sourcing environment to trigger any setup required for ${tool}"
 
      tooldir=$(ls "${rootfs}/boot" | grep ${tool} | head -1)
-     [ -e "${rootfs}/boot/${tooldir}" ] || printError "Could not locate ${tool} directory '${rootfs}/boot/${tooldir}/' for bootstr  ap. Re-run 'zopen init' to retry"
+     [ -e "${rootfs}/boot/${tooldir}" ] || printError "Could not locate ${tool} directory '${rootfs}/boot/${tooldir}/' for bootstrap. Re-run 'zopen init' to retry"
      chmod -R 755 "${rootfs}/boot/${tooldir}"
      curwd="${PWD}"
      cd "${rootfs}/boot/${tooldir}/" || printError "Could not access ${tool} bootstrap in directory '${rootfs}/boot/${tooldir}/'.   Re-run 'zopen init' to retry"
