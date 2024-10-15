@@ -1,4 +1,6 @@
-# Introduction and General Topics
+# Guild Meeting Topics
+
+## Introduction and General Topics
 
 | Topic   | Guild Meeting Recording | Presentation | Guild Discussion |
 | --- | --- | --- | --- |
@@ -10,10 +12,7 @@
 | zopen framework | [Video 6](https://ibm.box.com/s/l795gouwio3vfj9ufv02imyc1uhrpw9e), [Video 8](https://ibm.ent.box.com/s/4s7mcf804opx5s9fm6qs2io9tgxveeor), [Video 13](https://ibm.webex.com/recordingservice/sites/ibm/recording/7e3af39e767c103cbdd7b2d802a53b90/playback) (pass:9fVeMm93), [Video 7](https://ibm.webex.com/ibm/ldr.php?RCID=c428e59eca7aa0693719d12db97f4c09) (pass:TgxgtgG5) , [Video 15](https://ibm.webex.com/webappng/sites/ibm/recording/8983536fdef7103cbf7eba1ff7604edc/playback) (pass:bEx9rpJH), [Video 16](https://ibm.webex.com/webappng/sites/ibm/recording/2b2b7b682b2a103dbadbe21cc7fa5c34/playback) (pass:696UvgYv)   | [Slide 6](https://github.com/ZOSOpenTools/meta/files/10502172/Open.Source.Guild.Jan.2023.pptx), [Slide 8](https://github.com/ZOSOpenTools/meta/files/11104125/Open.Source.Guild.Mar.2023_final.pptx), [Slide 13](https://github.com/ZOSOpenTools/meta/files/13594410/Open_Source_Guild_13_final.pptx), [Slide 7](https://github.com/ZOSOpenTools/meta/files/14694978/Open_Source_APAC_Guild_7.pptx), [Slide 15](https://github.com/ZOSOpenTools/meta/files/15017330/Open_Source_Guild_15.pptx), [Slide 16](https://github.com/user-attachments/files/16351612/Open_Source_Guild_16_final.pptx)  | [Guild 6](https://github.com/orgs/zopencommunity/discussions/107), [Guild 8](https://github.com/orgs/zopencommunity/discussions/237), [Guild 13](https://github.com/orgs/zopencommunity/discussions/603), [Guild 7](https://github.com/orgs/zopencommunity/discussions/728), [Guild 15](https://github.com/orgs/zopencommunity/discussions/751), [Guild 16](https://github.com/orgs/zopencommunity/discussions/837)  |
 
 
-
-
-
-# Tools Discussion
+## Tools Discussion
 
 | Tool   | Guild Meeting Recording | Presentation | Guild Discussion |
 | -----  | ----- | ----- | ----- |
