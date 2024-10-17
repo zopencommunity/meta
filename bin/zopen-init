@@ -547,7 +547,7 @@ installPrereqs()
 }
 
 updateBootstrappedTools() {
-  printVerbose "- Using bootstrapped curl and jq to install updated versions (if available)"
+  printVerbose "- Using bootstrapped curl, jq, gpg, pinentry and meta to install updated versions (if available)"
   installOptions=""
   if $bypassPrereqs; then
     installOptions="--bypass-prereq-checks";
@@ -635,5 +635,5 @@ generateFileSystem
 generateJsonConfiguration
 generateZopenConfig
 generateAnalyticsConfiguration
-! ${refresh} && updateBootstrappedTools
+updateBootstrappedTools
 deinit
