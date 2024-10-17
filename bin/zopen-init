@@ -45,6 +45,9 @@ Options:
           Toggle default mode for overriding z/OS /bin tools
           in the zopen-config. Default is --nooverride-zos-tools
 
+  --bypass-prereq-checks
+          Bypasses pre-requisite checks
+
   -f, --fs-layout <LAYOUT>
           The filesystem structure to use for installed
           packages on disk; packages will be installed to
@@ -113,8 +116,8 @@ args=$*
 RM_FILEPROCS=5 #TODO: adjust based on number of online cpus on system
 
 # Boostrap pax files
-CURL_PAX_LOCATION="packages/curl-8.4.0.20231011_155722.zos.pax.Z"
-JQ_PAX_LOCATION="packages/jq-1.6.20230720_160648.zos.pax.Z"
+CURL_PAX_LOCATION="packages/curl-8.10.1.20241001_214340.zos.pax.Z"
+JQ_PAX_LOCATION="packages/jq-1.6.20241001_204116.zos.pax.Z"
 GPG_PAX_LOCATION="packages/gnupg-2.4.4.20241001_233258.zos.pax.Z"
 PINENTRY_PAX_LOCATION="packages/pinentry-1.2.1.20241002_001628.zos.pax.Z"
 
@@ -129,6 +132,7 @@ refresh=false
 fslayout="usrlclz"
 isCollectingStats=false
 isBot=false # used by jenkins, CI/CD
+bypassPrereqs=false
 while [ $# -gt 0 ]; do
   case "$1" in
     "-f" | "--fs-layout" )
@@ -137,6 +141,9 @@ while [ $# -gt 0 ]; do
       ;;
     "--re-init" )
       reinitExisting=true
+      ;;
+    "--bypass-prereq-checks")
+      bypassPrereqs=true 
       ;;
     "--refresh" )
       refresh=true
@@ -500,25 +507,28 @@ installPrereqs()
   # Comma-separated list of pax locations
   PAX_LOCATIONS="$CURL_PAX_LOCATION,$JQ_PAX_LOCATION,${GPG_PAX_LOCATION},${PINENTRY_PAX_LOCATION}"
 
-
   echo "$PAX_LOCATIONS" | tr ',' '\n' | while read -r pax; do
-  printVerbose "- Check for shipped ${pax}"
+    printVerbose "- Check for shipped ${pax}"
 
-  paxLocation=$(findrev "${MYDIR}" "${pax}")
-  echo "${paxLocation}/${pax}"
+    paxLocation=$(findrev "${MYDIR}" "${pax}")
+    echo "${paxLocation}/${pax}"
 
-  if [ -e "${paxLocation}/${pax}" ]; then
-     printVerbose "- Found ${pax}. Adding to zopen cache to install as bootstrap"
-     cp -f "${paxLocation}/${pax}" "${rootfs}/var/cache/zopen"
-  else
-     printError "Could not locate ${pax} in the zopen cache"
-  fi
+    if [ -e "${paxLocation}/${pax}" ]; then
+      printVerbose "- Found ${pax}. Adding to zopen cache to install as bootstrap"
+      cp -f "${paxLocation}/${pax}" "${rootfs}/var/cache/zopen"
+    else
+      printError "Could not locate ${pax} in the zopen cache"
+    fi
 
-  printVerbose "- Expanding ${pax} to bootstrap dir..."
-  cachedir="${rootfs}/var/cache/zopen"
-  basepax=$(basename ${pax})
-  [ -e "${cachedir}/${basepax}" ] || printError "Could not locate bootstrap ${pax}."
-     paxrc=$(pax -rf "${cachedir}/${basepax}" -s##${rootfs}/boot/#)
+    printVerbose "- Expanding ${pax} to bootstrap dir..."
+    cachedir="${rootfs}/var/cache/zopen"
+    basepax=$(basename ${pax})
+    [ -e "${cachedir}/${basepax}" ] || printError "Could not locate bootstrap ${pax}."
+    paxrc=$(pax -rf "${cachedir}/${basepax}" -s##${rootfs}/boot/#)
+
+    if [ $? -gt 0 ]; then
+      printError "Failed to extract pax file ${basepax}"
+    fi
  done
 
   # Sourcing the environment from within the actual directories
@@ -538,7 +548,11 @@ installPrereqs()
 
 updateBootstrappedTools() {
   printVerbose "- Using bootstrapped curl and jq to install updated versions (if available)"
-  toolInstall=$(runAndLog "${MYDIR}/zopen-install -y curl jq meta gpg pinentry")
+  installOptions=""
+  if $bypassPrereqs; then
+    installOptions="--bypass-prereq-checks";
+  fi
+  toolInstall=$(runAndLog "${MYDIR}/zopen-install ${installOptions} -y curl jq meta gpg pinentry")
   toolInstall=$?
   [ ${toolInstall} -ne 0 ] && printError "Unable to install curl, jq, gpg, pinentry and/or meta; see previous errors and retry the initilisation using the '--re-init' parameter"
   . "${configFile}"
@@ -604,6 +618,7 @@ deinit()
 {
   printHeader "Initialization successfully completed"
   printInfo "${NC}${YELLOW}IMPORTANT: Run '. ${rootfs}/etc/zopen-config' to enable zopen environment for current session or add it to your .profile.${NC}"
+  printInfo "${NC}${YELLOW}IMPORTANT: If you prefer GNU tools over z/OS /bin tools, run '. ${rootfs}/etc/zopen-config --override-zos-tools' in the current session or add it to your .profile.${NC}"
   syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_PACKAGE},${CAT_FILE}" "INIT" "" "zopen environment initialised as ${ZOPEN_ROOTFS}"
   if ! ${refresh}; then
     myparent="$(cd "$(dirname "${MYDIR}")" >/dev/null 2>&1 && pwd -P )"
