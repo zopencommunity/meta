@@ -379,6 +379,11 @@ handlePackageInstall()
     printVerbose "Checking cache for already downloaded package [file name comparison]."
     location="zopen package cache"
   fi
+
+  # Check partition size before download package
+  megabytes=$(echo "scale=2; ${size} / (1024 * 1024)" | bc)
+  checkAvailableSize ${megabytes}
+
   # Download the metadata json file
   if ! runAndLog "curlCmd -L '${metadataJSONURL}' -o '${metadataFile}'" ${redirectToDevNull}; then
     printError "Could not download from ${metadataJSONURL}. Correct any errors and potentially retry."
@@ -397,7 +402,8 @@ handlePackageInstall()
     ph=$!
     killph="kill -HUP ${ph}"
     addCleanupTrapCmd "${killph}"
-
+    
+    checkAvailableSize ${megabytes}
     if ! runAndLog "curlCmd -L '${downloadURL}' -O ${redirectToDevNull}"; then
       printError "Could not download from ${downloadURL}. Correct any errors and potentially retry."
       continue
@@ -430,7 +436,6 @@ handlePackageInstall()
       printVerbose "Non-local install, extracting with '${paxredirect}'"
     fi
 
-    megabytes=$(echo "scale=2; ${size} / (1024 * 1024)" | bc)
     printInfo "After this operation, ${megabytes} MB of additional disk space will be used."
     if ! promptYesOrNo "Do you want to continue?" ${yesToPrompts}; then
       mutexFree "zopen"
