@@ -547,13 +547,18 @@ installPrereqs()
 }
 
 updateBootstrappedTools() {
-  printVerbose "- Using bootstrapped curl, jq, gpg, pinentry and meta to install updated versions (if available)"
+  printInfo "- Installing/updating bootstrapped curl, jq, gpg, pinentry and meta to install updated versions (if available)"
   installOptions=""
   if $bypassPrereqs; then
     installOptions="--bypass-prereq-checks";
   fi
-  toolInstall=$(runAndLog "${MYDIR}/zopen-install ${installOptions} -y curl jq meta gpg pinentry")
-  toolInstall=$?
+  if ${refresh}; then
+    runAndLog "zopen-install ${installOptions} -y curl jq gpg pinentry"
+    toolInstall=$?
+  else
+    runAndLog "${MYDIR}/zopen-install ${installOptions} -y curl jq meta gpg pinentry"
+    toolInstall=$?
+  fi
   [ ${toolInstall} -ne 0 ] && printError "Unable to install curl, jq, gpg, pinentry and/or meta; see previous errors and retry the initilisation using the '--re-init' parameter"
   . "${configFile}"
 }
