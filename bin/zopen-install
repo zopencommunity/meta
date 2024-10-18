@@ -403,7 +403,7 @@ handlePackageInstall()
     killph="kill -HUP ${ph}"
     addCleanupTrapCmd "${killph}"
     
-    checkAvailableSize ${megabytes}
+    checkAvailableSize ${name} ${size}
     if ! runAndLog "curlCmd -L '${downloadURL}' -O ${redirectToDevNull}"; then
       printError "Could not download from ${downloadURL}. Correct any errors and potentially retry."
       continue
@@ -434,8 +434,8 @@ handlePackageInstall()
       printInfo "- Local install specified."
       paxredirect="-s %[^/]*/%${installdirname}/%"
       printVerbose "Non-local install, extracting with '${paxredirect}'"
-    fi 
-        
+    fi
+ 
     megabytes=$(echo "scale=2; ${expanded_size} / (1024 * 1024)" | bc)
     printInfo "After this operation, ${megabytes} MB of additional disk space will be used."
     if ! promptYesOrNo "Do you want to continue?" ${yesToPrompts}; then
