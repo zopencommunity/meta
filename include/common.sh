@@ -1333,15 +1333,18 @@ isURLReachable() {
 checkAvailableSize()
 { 
   printInfo "Checking available size to install package."
- 
-  partitionSize=$(df -m . | tail -1 | awk '{print $3}' | cut -f1 -d '/') 
   
-  printDebug "Package Size: $1"
-  printDebug "Partition Size: ${partitionSize}"
-  if [[ $packageSize > $partitionSize ]] ; then
+  packageSize="$1"
+  partitionSize=$(df -m . | tail -1 | awk '{print $3}' | cut -f1 -d '/')
+  
+  printDebug "Package Size: ${packageSize} MB"
+  printDebug "Partition Size: ${partitionSize} MB"
+
+  if [ 1 -eq "$(echo "${packageSize} > ${partitionSize}" | bc)" ]; then
     printInfo "Not enough space in partition."
     return 1
   fi
+  printInfo "Enough space to install package. Proceeding installation."
   return 0
 }
 
