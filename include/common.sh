@@ -586,10 +586,11 @@ mutexReq()
   [ -e lockdir ] || mkdir -p ${lockdir}
   mutex="${lockdir}/${mutex}"
   mypid=$(exec sh -c 'echo ${PPID}')
+  mygrandparent=$(/bin/ps -o ppid= -p "$mypid" | awk '{print $1}')
   if [ -e "${mutex}" ]; then
     lockedpid=$(cat ${mutex})
     {
-      [ ! "${lockedpid}" = "${mypid}" ] && [ ! "${lockedpid}" = "${PPID}" ]
+      [ ! "${lockedpid}" = "${mypid}" ] && [ ! "${lockedpid}" = "${PPID}" ] && [ ! "${lockedpid}" = "${mygrandparent}" ]
     } && kill -0 "${lockedpid}" 2> /dev/null && echo "Aborting, Active process '${lockedpid}' holds the '$2' lock: '${mutex}'" && exit -1
   fi
   addCleanupTrapCmd "rm -rf ${mutex}"

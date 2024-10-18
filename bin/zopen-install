@@ -108,6 +108,7 @@ Options:
   --release-line [stable, dev] the release line to build off of.
   --select                 select a version to install.
   --skip-upgrade           do not upgrade.
+  --force                  force install, bypassing locks.
   -u, --update, --upgrade  updates installed zopen community packages.
   -v, --verbose            print verbose messages.
   --version                print version.
@@ -433,7 +434,9 @@ handlePackageInstall()
     megabytes=$(echo "scale=2; ${size} / (1024 * 1024)" | bc)
     printInfo "After this operation, ${megabytes} MB of additional disk space will be used."
     if ! promptYesOrNo "Do you want to continue?" ${yesToPrompts}; then
-      mutexFree "zopen"
+      if ! ${force}; then
+        mutexFree "zopen"
+      fi
       printInfo "Exiting..."
       exit 0
     fi
@@ -598,7 +601,9 @@ installPorts()
 (
   ports="$1"
   printVerbose "Ports to install: ${ports}"
-  mutexReq "zopen" "zopen"
+  if ! ${force}; then
+    mutexReq "zopen" "zopen"
+  fi
   caveatsFile=$(mktempfile "caveats")
   echo "${ports}" | xargs | tr ' ' '\n' | while read port; do
     handlePackageInstall "${port}"
@@ -608,7 +613,9 @@ installPorts()
     cat "${caveatsFile}"
   fi
   rm -f "${caveatsFile}"
-  mutexFree "zopen"
+  if ! ${force}; then
+    mutexFree "zopen"
+  fi
 )
 
 # Main code start here
@@ -630,6 +637,7 @@ doNotInstallDeps=false
 all=false
 yesToPrompts=false
 bypassPrereqs=false
+force=false
 chosenRepos=""
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -675,6 +683,9 @@ while [ $# -gt 0 ]; do
     ;;
   "--skip-verify" | "-sv")
     skipverify=true # Verify signature of packages
+    ;;
+  "--force")
+    force=true # Bypasses locks
     ;;
   "--all")
     all=true # Install all packages
