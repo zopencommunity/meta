@@ -53,9 +53,11 @@ Before you begin porting a tool to z/OS, you must first identify the tool or lib
 
 Begin first by cloning the [meta](https://github.com/zopencommunity/meta) repo. This repo contains the `zopen` framework under the `bin/` directory and it is what we will use to build, test, and install our port.
 
+| :exclamation:  Before cloning, make sure to configure your git tag [here](GitOnZOS.md#file-tag-verifications)  |
+|-----------------------------------------|
+
 ```bash
 # Clone the required repositories (using Git from https://github.com/zopencommunity/gitport)
-export GIT_UTF8_CCSID=819 # set the UTF8 ccsid to 819
 git clone git@github.com:zopencommunity/meta.git && cd meta
 ```
 
