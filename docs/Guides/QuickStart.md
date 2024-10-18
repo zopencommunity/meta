@@ -13,6 +13,10 @@ please note you will need to [migrate to the new package manager](Migration.md).
 
 ## Installing zopen package manager
 
+Make sure that auto-conversion is enabled by checking the environment variables _BPXK_AUTOCVT and _CEE_RUNOPTS. If not set please run
+  - export _BPXK_AUTOCVT="ON"
+  - export _CEE_RUNOPTS="FILETAG(AUTOCVT,AUTOTAG)"
+
 If you have curl and bash on your system, you can use this one liner:
 ```
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/zopencommunity/meta/HEAD/tools/zopen_install.sh)"
@@ -23,9 +27,6 @@ Otherwise, follow these steps:
   - Note: it is recommended that you use sftp to transfer the pax file from a non-z/OS machine to z/OS. This will ensure that there is no ASCII/EBCDIC conversion.
 - On z/OS, expand the pax file: `pax -rf meta-<version>.pax.Z`. 
 - cd to the unpax'ed directory: `cd meta-<version>`
-- Make sure that auto-conversion is enabled by checking the environment variables _BPXK_AUTOCVT and _CEE_RUNOPTS. If not set please run
-  - export _BPXK_AUTOCVT="ON"
-  - export _CEE_RUNOPTS="FILETAG(AUTOCVT,AUTOTAG)"
 - Set up the PATH to the `zopen` tool: `cd meta-<version>; . ./.env`
 - Initialize the `zopen tools` environment: `zopen init`
 - Set up your zopen environment by sourcing the zopen-config file `. $ZOPEN_ROOTFS/etc/zopen-config`, where `$ZOPEN_ROOTFS` is the location to your zopen file system.\*
