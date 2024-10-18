@@ -13,7 +13,7 @@ It is important to frequently review the vulnerabilities and keep current with r
 
 Git on z/OS is a version of Git that has been adapted to work on the IBM mainframe operating system, z/OS. It allows developers to take advantage of Git's powerful version control capabilities while addressing the unique challenges of the mainframe environment. With Git on z/OS, developers can manage their code, collaborate with other developers, and maintain a clear history of the changes that have been made to the codebase.
 
-You can find more information and download the software on the Git on z/OS GitHub page: <https://github.com/zopencommunity/gitport>
+You can find more information and download the software on the [Git on z/OS GitHub page](https://github.com/zopencommunity/gitport)
 
 ## Encoding considerations
 
@@ -49,11 +49,38 @@ It is important to note that Git on z/OS does not currently support adding untag
 
 ## File Tag verifications
 
+To prevent unexpected syntax errors when build your application, like:
+
+```bash
+zopen 1: FSUM7332 syntax error: got (, expecting Newline
+```
+
+You need to export `GIT_UTF8_CCSID` before clonning your repo:
+
+```bash
+export GIT_UTF8_CCSID=819
+```
+
+Alternatively, you can run the command for global configuration:
+
+```bash
+git config --global core.utf8ccsid 819
+```
+
+Or, for local configuration:
+
+| :memo:   Note     | Local configuration will affect only current repository       |
+|---------------|:------------------------|
+
+```bash
+git config core.utf8ccsid 819
+```
+
 To ignore file tag verifications between the file system file tag and the encoding specified in the working-tree-encoding, you can use the core.ignorefiletags configuration option. An example is when your files may be tagged as various encodings, but you want them to be treated verbatim regardless of the file tag. By default, Git performs verifications to ensure that the file tag of the Git files matches the tag specified in the working-tree-encoding. The default codepage of a working tree encoding is UTF-8.
 
 For a global effect, you can use the following command:
 
-```git
+```bash
 git config --global core.ignorefiletags true
 ```
 
@@ -61,7 +88,7 @@ This will disable the file tag verification for all of the repositories on your 
 
 For a local repository effect, you can use the following command inside your repository:
 
-```git
+```bash
 git config core.ignoretags false
 ```
 
@@ -71,4 +98,4 @@ It's important to note that disabling file tag verification may lead to unexpect
 
 ## Migration considerations
 
-If you are migrating from Rocket Software's Git, the good news is that Git on z/OS should be compatible. However, if you encounter any issues, you can open an issue on the Gitport GitHub page (<https://github.com/zopencommunity/gitport/issues>).
+If you are migrating from Rocket Software's Git, the good news is that Git on z/OS should be compatible. However, if you encounter any issues, you can open an issue on the [Gitport GitHub page](https://github.com/zopencommunity/gitport/issues).
