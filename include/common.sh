@@ -1331,6 +1331,25 @@ isURLReachable() {
   fi
 }
 
+checkAvailableSize()
+{ 
+  
+  package="$1"
+  printInfo "Checking available size to install ${package}."
+
+  packageSize=$(echo "scale=2; $2 / (1024 * 1024)" | bc)
+  partitionSize=$(/bin/df -m . | tail -1 | awk '{print $3}' | cut -f1 -d '/')
+  
+  printDebug "Package Size: ${packageSize} MB"
+  printDebug "Partition Size: ${partitionSize} MB"
+
+  if [ 1 -eq "$(echo "${packageSize} > ${partitionSize}" | bc)" ]; then
+    printError "Not enough space in partition."
+  fi
+  printInfo "Enough space to install ${package}. Proceeding installation."
+  return 0
+}
+
 promptYesOrNo() {
   message="$1"
   skip=$2
