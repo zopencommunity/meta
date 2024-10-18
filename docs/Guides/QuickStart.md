@@ -13,6 +13,10 @@ please note you will need to [migrate to the new package manager](Migration.md).
 
 ## Installing zopen package manager
 
+Make sure that auto-conversion is enabled by checking the environment variables _BPXK_AUTOCVT and _CEE_RUNOPTS. If not set please run
+  - export _BPXK_AUTOCVT="ON"
+  - export _CEE_RUNOPTS="FILETAG(AUTOCVT,AUTOTAG)"
+
 If you have curl and bash on your system, you can use this one liner:
 ```
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/zopencommunity/meta/HEAD/tools/zopen_install.sh)"
