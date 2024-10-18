@@ -8,10 +8,25 @@ After running `zopen init`, you are able to install tools under the tools direct
 
 You can develop zopen community out of any directory you want. For example, if you wanted to make enhancements to the git port, you would perform the following commands:
 
+- Install git:
+
 ```bash
 . /path/to/zopen/etc/zopen-config # source zopen-config
 zopen install git # Make sure you have git installed
+```
+
+- Clone repo
+
+| :exclamation:  Before cloning, make sure to configure your git tag [here](GitOnZOS.md#file-tag-verifications)  |
+|-----------------------------------------|
+
+```bash
 git clone git@github.com:zopencommunity/gitport.git # clone the z/OS git port
+```
+
+- Build application
+
+```bash
 cd gitport
 zopen build # perform a build of git
 # make changes to the git source...
