@@ -1335,7 +1335,7 @@ checkAvailableSize()
   printInfo "Checking available size to install package."
   
   packageSize="$1"
-  partitionSize=$(df -m . | tail -1 | awk '{print $3}' | cut -f1 -d '/')
+  partitionSize=$(/bin/df -m . | tail -1 | awk '{print $3}' | cut -f1 -d '/')
   
   printDebug "Package Size: ${packageSize} MB"
   printDebug "Partition Size: ${partitionSize} MB"
