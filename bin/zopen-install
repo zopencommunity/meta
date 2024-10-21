@@ -317,7 +317,8 @@ handlePackageInstall()
 
   downloadURL=$(/bin/printf "%s" "${asset}" | jq -e -r '.url')
   metadataJSONURL="$(dirname "${downloadURL}")/metadata.json"
-  size=$(/bin/printf "%s" "${asset}" | jq -e -r '.expanded_size')
+  expanded_size=$(/bin/printf "%s" "${asset}" | jq -e -r '.expanded_size')
+  size=$(/bin/printf "%s" "${asset}" | jq -e -r '.size')
 
   if [ -z "${downloadURL}" ]; then
     printError "Unable to determine download location for ${name}"
@@ -380,6 +381,10 @@ handlePackageInstall()
     printVerbose "Checking cache for already downloaded package [file name comparison]."
     location="zopen package cache"
   fi
+
+  # Check partition size before download package
+  checkAvailableSize ${name} ${size}
+
   # Download the metadata json file
   if ! runAndLog "curlCmd -L '${metadataJSONURL}' -o '${metadataFile}'" ${redirectToDevNull}; then
     printError "Could not download from ${metadataJSONURL}. Correct any errors and potentially retry."
@@ -398,7 +403,8 @@ handlePackageInstall()
     ph=$!
     killph="kill -HUP ${ph}"
     addCleanupTrapCmd "${killph}"
-
+    
+    checkAvailableSize ${name} ${size}
     if ! runAndLog "curlCmd -L '${downloadURL}' -O ${redirectToDevNull}"; then
       printError "Could not download from ${downloadURL}. Correct any errors and potentially retry."
       continue
@@ -430,8 +436,8 @@ handlePackageInstall()
       paxredirect="-s %[^/]*/%${installdirname}/%"
       printVerbose "Non-local install, extracting with '${paxredirect}'"
     fi
-
-    megabytes=$(echo "scale=2; ${size} / (1024 * 1024)" | bc)
+ 
+    megabytes=$(echo "scale=2; ${expanded_size} / (1024 * 1024)" | bc)
     printInfo "After this operation, ${megabytes} MB of additional disk space will be used."
     if ! promptYesOrNo "Do you want to continue?" ${yesToPrompts}; then
       if ! ${force}; then
