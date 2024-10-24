@@ -69,8 +69,8 @@ git config --global core.utf8ccsid 819
 
 Or, for local configuration:
 
-| :memo:   Note     | Local configuration will affect only current repository       |
-|---------------|:------------------------|
+> [!NOTE]
+> Local configuration will affect only current repository
 
 ```bash
 git config core.utf8ccsid 819

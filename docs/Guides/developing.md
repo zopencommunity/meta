@@ -17,8 +17,8 @@ zopen install git # Make sure you have git installed
 
 - Clone repo
 
-| :exclamation:  Before cloning, make sure to configure your git tag [here](GitOnZOS.md#file-tag-verifications)  |
-|-----------------------------------------|
+> [!IMPORTANT]
+> Before cloning, make sure to configure your git tag [here](GitOnZOS.md#file-tag-verifications)
 
 ```bash
 git clone git@github.com:zopencommunity/gitport.git # clone the z/OS git port
