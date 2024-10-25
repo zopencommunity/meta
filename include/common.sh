@@ -1369,6 +1369,38 @@ promptYesOrNo() {
   return 0
 }
 
+asciiecho()
+{
+  text="$1"
+  file="$2"
+
+  if ! echo "${text}" > "${file}"; then
+    echo "Unable to echo text to ${file}" >&2
+    return 2
+  fi
+  if [ "$(chtag -p "${file}" | cut -f2 -d' ')" = "IBM-1047" ]; then
+    if ! /bin/iconv -f IBM-1047 -t ISO8859-1 < "${file}" > "${file}_ascii" || ! chtag -tc ISO8859-1 "${file}_ascii" || ! mv "${file}_ascii" "${file}"; then
+      printError "Unable to convert EBCDIC text to ASCII for ${file}" >&2
+    fi
+  fi
+  return 0
+}
+
+a2e() 
+{
+  source="$1"
+
+  if [ ! -w "${source}" ]; then
+    printWarning "Cannot write to ${source}"
+    return;
+  fi
+
+  if [ "$(chtag -p "${source}" | cut -f2 -d' ')" = "ISO8859-1" ]; then
+    /bin/iconv -f ISO8859-1 -t IBM-1047 "$source" > "$source.bk"
+    chtag -tc 1047 "$source.bk"
+    mv "$source.bk" "$source"
+  fi
+}
 
 . ${INCDIR}/analytics.sh
 
