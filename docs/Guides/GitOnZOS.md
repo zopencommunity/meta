@@ -13,7 +13,7 @@ It is important to frequently review the vulnerabilities and keep current with r
 
 Git on z/OS is a version of Git that has been adapted to work on the IBM mainframe operating system, z/OS. It allows developers to take advantage of Git's powerful version control capabilities while addressing the unique challenges of the mainframe environment. With Git on z/OS, developers can manage their code, collaborate with other developers, and maintain a clear history of the changes that have been made to the codebase.
 
-You can find more information and download the software on the Git on z/OS GitHub page: https://github.com/zopencommunity/gitport
+You can find the latest information on Git for z/OS by visiting the [zopen community gitport repo](https://github.com/zopencommunity/gitport)
 
 ## Encoding considerations
 
@@ -21,13 +21,13 @@ One of the key features of Git on z/OS is its support for various encodings. Thi
 
 For example, if you want to convert all files in your repository from Git's internal UTF-8 encoding to IBM-1047, you can add the following line to your `.gitattributes` file:
 
-```
+```text
 text working-tree-encoding=IBM-1047
 ```
 
 Similarly, if you want the `working-tree-encoding` to apply to the host platform only, you can use the `[platform]-working-tree-encoding` attribute, where [platform] should be substituted with the host system that you are on, like so:
 
-```
+```text
 text zos-working-tree-encoding=IBM-1047
 ```
 
@@ -41,30 +41,61 @@ When adding files, you need to make sure that the z/OS file tag matches the `wor
 
 Another important aspect of Git on z/OS is its handling of binary files. Binary files, such as images, can be specified using the `binary` attribute in the `.gitattributes` file. For example, if you want all png files to be treated as binary files, you would use the following line in your .gitattributes file:
 
-```
+```text
 *.png binary
 ```
 
 It is important to note that Git on z/OS does not currently support adding untagged files. All files need to be tagged before they can be added to a repository. Additionally, multiple working-tree-encoding attributes can be specified, with later attributes overriding earlier ones in case of an overlap.
 
 ## File Tag verifications
+
+To prevent unexpected syntax errors when building your application, like:
+
+```bash
+zopen 1: FSUM7332 syntax error: got (, expecting Newline
+```
+
+You need to export `GIT_UTF8_CCSID` before cloning your repo:
+
+```bash
+export GIT_UTF8_CCSID=819
+```
+
+Alternatively, you can run the command for global configuration:
+
+```bash
+git config --global core.utf8ccsid 819
+```
+
+Or, for local configuration:
+
+> [!NOTE]
+> Local configuration will affect only current repository
+
+```bash
+git config core.utf8ccsid 819
+```
+
 To ignore file tag verifications between the file system file tag and the encoding specified in the working-tree-encoding, you can use the core.ignorefiletags configuration option. An example is when your files may be tagged as various encodings, but you want them to be treated verbatim regardless of the file tag. By default, Git performs verifications to ensure that the file tag of the Git files matches the tag specified in the working-tree-encoding. The default codepage of a working tree encoding is UTF-8.
 
 For a global effect, you can use the following command:
 
-```
+```bash
 git config --global core.ignorefiletags true
 ```
+
 This will disable the file tag verification for all of the repositories on your system.
 
 For a local repository effect, you can use the following command inside your repository:
 
-```
+```bash
 git config core.ignoretags false
 ```
+
 This will only disable the file tag verification for the specific repository you are currently in.
 
 It's important to note that disabling file tag verification may lead to unexpected behavior, so it's recommended to use this option only if necessary and with caution.
 
 ## Migration considerations
-If you are migrating from Rocket Software's Git, the good news is that Git on z/OS should be compatible. However, if you encounter any issues, you can open an issue on the Gitport GitHub page (https://github.com/zopencommunity/gitport/issues).
+
+If you are migrating from Rocket Software's Git, the good news is that Git on z/OS should be compatible. However, if you encounter any issues, you can open an issue on the [Gitport GitHub page](https://github.com/zopencommunity/gitport/issues).

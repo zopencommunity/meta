@@ -8,16 +8,16 @@ Once you have a z/OS system set up with the required zopen directory structure a
 
 You need to configure your user.email and user.name to check in code to the repositories:
 
-```
+```bash
 git config --global user.email "<Your E-Mail>"
 git config --global user.name "<Your Name>"
 ```
-This assumes that you have the latest version of [Git](https://github.com/zopencommunity/gitport/releases) on your z/OS system.
 
+This assumes that you have the latest version of [Git](https://github.com/zopencommunity/gitport/releases) on your z/OS system.
 
 ### Leveraging the zopen community meta repo
 
-The meta repo (https://github.com/zopencommunity/meta) consists of common tools and files that aid in the porting process, including the `zopen` suite of tools.  Specifically, `zopen build` provides a common way to bootstrap, configure, build, check,
+The meta [repo](https://github.com/zopencommunity/meta) consists of common tools and files that aid in the porting process, including the `zopen` suite of tools.  Specifically, `zopen build` provides a common way to bootstrap, configure, build, check,
 and install a software package. `zopen install` provides a mechanism to install the latest published zopen community packages.
 
 Many tools depend on other tools to be able to build or run. You will need to provide both _bootstrap_ tools
@@ -25,16 +25,18 @@ Many tools depend on other tools to be able to build or run. You will need to pr
 from another zopen community repository).
 
 Many tools require a C or C++ compiler (or both) to build. There are a couple of options to obtain the C/C++ compiler:
-* You can download a web deliverable add-on feature to your XL C/C++ compiler 
+
+* You can download a web deliverable add-on feature to your XL C/C++ compiler
 [here](https://www.ibm.com/servers/resourcelink/svc00100.nsf/pages/xlCC++V241ForZOsV24).
-* You can install and manage _C/C++ for Open Enterprise Languages on z/OS_ using _RedHat OpenShift Container Platform_ and _IBM Z and Cloud Modernization Stack_ 
-[here](https://github.com/IBM/z-and-cloud-modernization-stack-community). 
+* You can install and manage _C/C++ for Open Enterprise Languages on z/OS_ using _RedHat OpenShift Container Platform_ and _IBM Z and Cloud Modernization Stack_
+[here](https://github.com/IBM/z-and-cloud-modernization-stack-community).
 Please note that these compilers are comparable, but how you perform installation and maintenance and pricing is different.
 
 In order for zopen to be able to locate dependent tools, they need to be in well-defined locations.
 
 Dependencies will be searched for in the following default locations:
-- `${ZOPEN_PKGINSTALL}` as configured in your <path_to_zopen_rootfs>/etc/zopen-config configuration.
+
+* `${ZOPEN_PKGINSTALL}` as configured in your <path_to_zopen_rootfs>/etc/zopen-config configuration.
 
 You can change this location by running `zopen init` to reconfigure the install directory.
 
@@ -47,30 +49,35 @@ If you are building from a zopencommunity port, this `.env` file will be created
 
 ### Create your first z/OS port leveraging the zopen framework
 
-Before you begin porting a tool to z/OS, you must first identify the tool or library that you wish to port. For the sake of this guide, let's assume we are porting [jq](https://stedolan.github.io/jq/), a lightweight and flexible json parser. Before porting a tool, check if the project already exists under https://github.com/zopencommunity. If it does exist, then please collaborate with the existing contributors.
+Before you begin porting a tool to z/OS, you must first identify the tool or library that you wish to port. For the sake of this guide, let's assume we are porting [jq](https://stedolan.github.io/jq/), a lightweight and flexible json parser. Before porting a tool, check if the project already exists under [zopencommunity](https://github.com/zopencommunity). If it does exist, then please collaborate with the existing contributors.
 
-Begin first by cloning the https://github.com/zopencommunity/meta repo.  This repo contains the `zopen` framework under the `bin/` directory and it is what we will use to build, test, and install our port.
+Begin first by cloning the [meta](https://github.com/zopencommunity/meta) repo. This repo contains the `zopen` framework under the `bin/` directory and it is what we will use to build, test, and install our port.
+
+> [!IMPORTANT]
+> Before cloning, make sure to configure your git tag [here](GitOnZOS.md#file-tag-verifications)
 
 ```bash
 # Clone the required repositories (using Git from https://github.com/zopencommunity/gitport)
-export GIT_UTF8_CCSID=819 # set the UTF8 ccsid to 819
 git clone git@github.com:zopencommunity/meta.git && cd meta
 ```
 
-Next, in order to use the `zopen` suite of tools, you must set your path environment variable to the `meta/bin` directory.  
+Next, in order to use the `zopen` suite of tools, you must set your path environment variable to the `meta/bin` directory.
+
 ```bash
 . ./.env
 ```
 
-Ok, now you are ready to begin porting. 
+Ok, now you are ready to begin porting.
 
 Begin first by generating a port template project by entering the following command:
+
 ```bash
 zopen generate
 ```
 
 `zopen generate` will ask you a series of questions. Answer them as follows:
-```
+
+```text
 Generate a zopen project...
 * What is the project name?
 jq
@@ -93,6 +100,7 @@ jqport project is ready! Contact Mike Fulton (fultonm@ca.ibm.com) to create http
 ```
 
 Change your current directory to the `jqport` directory: `cd jqport`. You will notice several files:
+
 * README.md - A description of the project
 * buildenv - The zopen configuration file that drives the build, testing, and installation of the project.
 * cicd.groovy - The CI/CD configuration file used in the Jenkins pipeline
@@ -101,6 +109,7 @@ For more information, please visit the [zopen build README](https://github.com/z
 Note: `zopen build` supports projects based in github repositories or tarball locations. Since autoconf/automake are not currently 100% functional on z/OS, we typically choose the tarball location because it contains a `configure` script pre-packaged. Let's go ahead and do this for `jq`.
 
 In the `buildenv` file, you'll notice the following contents:
+
 ```bash
 export ZOPEN_DEV_URL="git@github.com:stedolan/jq.git"
 export ZOPEN_DEV_DEPS="git make autoconf"
@@ -127,9 +136,10 @@ zopen_append_to_zoslib_env()
   echo "envar|set|value"
 }
 ```
-ZOPEN_STABLE_DEPS/ZOPEN_STABLE_DEPS are used to identify the non-standard zopen community dependencies needed to build the project. 
 
-ZOPEN_CATEGORIES represent the [categories]((https://github.com/zopencommunity/meta/blob/main/data/tool_categories.txt") that the tool or library fits under.
+`ZOPEN_STABLE_DEPS`/`ZOPEN_STABLE_DEPS` are used to identify the non-standard zopen community dependencies needed to build the project.
+
+ZOPEN_CATEGORIES represent the [categories](https://github.com/zopencommunity/meta/blob/main/data/tool_categories.txt") that the tool or library fits under.
 
 `zopen_append_to_env()` can be used to add additional environment variables outside of the normal environment variables. (e.g. PATH, LIBPATH, MANPATH)
 
@@ -141,17 +151,18 @@ The string `PROJECT_HOME` represents a special value and is replaced with the ro
 
 To help gauge the build quality of the port, a zopen_check_results() function needs to be provided inside the buildenv. This function should process the test results and emit a report of the failures, total number of tests, expected number of failures and expected number of tests to stdout as in the following format:
 
-```
+```text
 actualFailures:<numberoffailures>
 totalTests:<totalnumberoftests>
 expectedFailures:<expectednumberoffailures>
 expectedTotalTests:<expectednumberoftests>
 ```
+
 The build will fail to proceed to the install step if totalTests is less than expectedTotalTests or actualFailures is greater than expectedFailures.
 
 Here is an example implementation of zopen_check_results():
 
-```
+```bash
 zopen_check_results()
 {
 chk="$1/$2_check.log"
@@ -168,6 +179,7 @@ ZZ
 ```
 
 Next, we can go ahead and test our build.  Run the following:
+
 ```bash
 zopen build -v
 ```
@@ -191,7 +203,8 @@ git diff HEAD > ../patches/initial_zos.patch
 ```
 
 Our preference is to keep patches small and to have seperate patches for each file or each group of changes. In order to filter a diff based on a filename, you can run:
-```
+
+```bash
 git diff HEAD -- myfile.c > ../patches/myfile.c.patch
 ```
 
@@ -207,7 +220,8 @@ Once you have a working prototype of your tool, you can proceed to the next step
 
 After you have a working z/OS prototype for your tool, you will need to create a repository to hold your contents.
 
-Send an email to itodorov@ca.ibm.com or fultonm@ca.ibm.com with the following information:
+Send an email to <itodorov@ca.ibm.com> or <fultonm@ca.ibm.com> with the following information:
+
 * Name of the tool
 * Current repository where contents reside
 * List of Collaborators
@@ -220,7 +234,6 @@ Proceed to clone the repository and submit a Pull Request including the initial 
 
 Please follow the [contributing guidelines](https://github.com/zopencommunity/meta/blob/main/CONTRIBUTING.md).
 
-
 ### Setting up the CI/CD pipeline
 
 Once you have a working build of your z/OS Open Source tool, then you may add it to the z/OS Open Source Jenkins CI/CD pipeline.
@@ -230,25 +243,28 @@ View [CI/CD Pipeline](/Guides/Pipeline.md) for more details
 ## Porting Go Packages
 
 Pre-reqruisites:
-- The Go on z/OS Compiler
-- Wharf
-- Git
+
+* The Go on z/OS Compiler
+* Wharf
+* Git
 
 When porting Go packages, there is a general framework you can use to do so. Go supports a feature known as [Workspaces](https://go.dev/blog/get-familiar-with-workspaces). It allows you to work on multiple Go modules at the same time, but for our purposes, we will use it to modify a Go package's dependencies without having to to change the various `go.mod`s of each package. Once we have a workspace, we can make use of [Wharf](https://github.com/zopencommunity/wharf), our open source porting tool for Go packages.
 
 The general steps for porting:
+
 1. Create a directory that will be your workspace. `cd` into it and run `go work init`
 2. Inside the workspace directory, clone the package you'd like to port and then run `go work use <package name>`.
 3. At the root of the workspace directory, run `wharf ./<package name>/cmd/...`
-    - The usage of `wharf` depends on the directory structure of the package. If there is no `cmd` directory you can also try `wharf ./<package name>/...`
+    * The usage of `wharf` depends on the directory structure of the package. If there is no `cmd` directory you can also try `wharf ./<package name>/...`
 4. If `wharf` reports that your package was succesfully ported than you can proceed to step 7
 5. If `wharf` reports that is was unable to port the package or its dependencies, then you must make manual changes
 6. Anytime you need to make changes to a dependency, clone it and make sure to run `go work use ./<dependency>` so that the changes are picked up by the workspace
 7. Once you have a successful build, create diffs of any changes you made and follow the steps outlined in the earlier sections to create a zopen port with the zopen framework
 
 Two examples of ports that you can use as reference:
-- [gum](https://github.com/zopencommunity/gumport) - a package that `wharf` handles without requiring manual changes to dependencies
-- [Github CLI](https://github.com/zopencommunity/githubcliport) - a package that requires manual changes to dependencies
+
+* [gum](https://github.com/zopencommunity/gumport) - a package that `wharf` handles without requiring manual changes to dependencies
+* [Github CLI](https://github.com/zopencommunity/githubcliport) - a package that requires manual changes to dependencies
 
 ### Debugging
 
@@ -260,15 +276,15 @@ The `zopen build --instrument` option allows you to instrument your application 
 
 1. Build the Application:
 
-* To enable instrumentation, build your application using the `zopen build` command with the `--instrument` option:
+    * To enable instrumentation, build your application using the `zopen build` command with the `--instrument` option:
 
-   ```bash
-   zopen build --instrument
-   ```
+      ```bash
+      zopen build --instrument
+      ```
 
 2. Run the Instrumented Application:
 
-* After building, run your application as usual. During its execution, a `<application>-<timestamp>.json.gz` file will be generated in the current directory. This file contains detailed trace information in the Chrome Tracing format.
+    * After building, run your application as usual. During its execution, a `<application>-<timestamp>.json.gz` file will be generated in the current directory. This file contains detailed trace information in the Chrome Tracing format.
 
 3. View the Trace Data:
 
@@ -284,12 +300,12 @@ zcat <application>-<timestamp>.json.gz | jq .
 
 * For a more intuitive and visual representation, load the trace data into the Perfetto UI. Perfetto provides a comprehensive environment for analyzing the trace data, making it easier to understand the application's performance characteristics.
 
-* To load the file into Perfetto UI, visit https://ui.perfetto.dev/.
+* To load the file into Perfetto UI, visit [Perfetto UI](https://ui.perfetto.dev/).
 
 * Drag and drop the `<application>-<timestamp>.json.gz` file into the UI.
 Perfetto will display the trace data, allowing you to zoom in on specific timeframes, filter events, and analyze the function call hierarchy.
 
-**Customizing the Instrumentation**
+**Customizing the Instrumentation:**
 
 * You can customize the behavior of the instrumentation through several environment variables:
 
