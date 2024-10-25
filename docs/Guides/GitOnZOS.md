@@ -13,7 +13,7 @@ It is important to frequently review the vulnerabilities and keep current with r
 
 Git on z/OS is a version of Git that has been adapted to work on the IBM mainframe operating system, z/OS. It allows developers to take advantage of Git's powerful version control capabilities while addressing the unique challenges of the mainframe environment. With Git on z/OS, developers can manage their code, collaborate with other developers, and maintain a clear history of the changes that have been made to the codebase.
 
-You can find more information and download the software on the [Git on z/OS GitHub page](https://github.com/zopencommunity/gitport)
+You can find the latest information on Git for z/OS by visiting the [zopen community gitport repo](https://github.com/zopencommunity/gitport)
 
 ## Encoding considerations
 
@@ -49,13 +49,13 @@ It is important to note that Git on z/OS does not currently support adding untag
 
 ## File Tag verifications
 
-To prevent unexpected syntax errors when build your application, like:
+To prevent unexpected syntax errors when building your application, like:
 
 ```bash
 zopen 1: FSUM7332 syntax error: got (, expecting Newline
 ```
 
-You need to export `GIT_UTF8_CCSID` before clonning your repo:
+You need to export `GIT_UTF8_CCSID` before cloning your repo:
 
 ```bash
 export GIT_UTF8_CCSID=819
