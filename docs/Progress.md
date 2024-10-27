@@ -505,16 +505,16 @@
 
 | Package | Download Count |
 |---|---|
-| [metaport](https://github.com/zopencommunity/metaport) | 58891 |
+| [metaport](https://github.com/zopencommunity/metaport) | 58903 |
 | [gitport](https://github.com/zopencommunity/gitport) | 47117 |
 | [zoslibport](https://github.com/zopencommunity/zoslibport) | 42592 |
-| [zotsampleport](https://github.com/zopencommunity/zotsampleport) | 40769 |
-| [jqport](https://github.com/zopencommunity/jqport) | 36180 |
+| [zotsampleport](https://github.com/zopencommunity/zotsampleport) | 40771 |
+| [jqport](https://github.com/zopencommunity/jqport) | 36187 |
 | [perlport](https://github.com/zopencommunity/perlport) | 31666 |
-| [curlport](https://github.com/zopencommunity/curlport) | 31326 |
+| [curlport](https://github.com/zopencommunity/curlport) | 31327 |
 | [vimport](https://github.com/zopencommunity/vimport) | 31121 |
 | [bashport](https://github.com/zopencommunity/bashport) | 30382 |
-| [coreutilsport](https://github.com/zopencommunity/coreutilsport) | 28736 |
+| [coreutilsport](https://github.com/zopencommunity/coreutilsport) | 28756 |
 | [xzport](https://github.com/zopencommunity/xzport) | 26584 |
 | [libiconvport](https://github.com/zopencommunity/libiconvport) | 22298 |
 | [lessport](https://github.com/zopencommunity/lessport) | 21675 |
@@ -533,13 +533,13 @@
 | [m4port](https://github.com/zopencommunity/m4port) | 15650 |
 | [gettextport](https://github.com/zopencommunity/gettextport) | 15281 |
 | [libpipelineport](https://github.com/zopencommunity/libpipelineport) | 14238 |
-| [gawkport](https://github.com/zopencommunity/gawkport) | 14216 |
+| [gawkport](https://github.com/zopencommunity/gawkport) | 14217 |
 | [zlibport](https://github.com/zopencommunity/zlibport) | 13897 |
 | [autoconfport](https://github.com/zopencommunity/autoconfport) | 13086 |
 | [unzipport](https://github.com/zopencommunity/unzipport) | 12129 |
 | [libtoolport](https://github.com/zopencommunity/libtoolport) | 11799 |
 | [man-dbport](https://github.com/zopencommunity/man-dbport) | 11071 |
-| [grepport](https://github.com/zopencommunity/grepport) | 10914 |
+| [grepport](https://github.com/zopencommunity/grepport) | 10915 |
 | [libgdbmport](https://github.com/zopencommunity/libgdbmport) | 10643 |
 | [rsyncport](https://github.com/zopencommunity/rsyncport) | 10634 |
 | [comp_clangport](https://github.com/zopencommunity/comp_clangport) | 9504 |
@@ -547,7 +547,7 @@
 | [zstdport](https://github.com/zopencommunity/zstdport) | 9230 |
 | [githubcliport](https://github.com/zopencommunity/githubcliport) | 9158 |
 | [cmakeport](https://github.com/zopencommunity/cmakeport) | 8041 |
-| [gpgport](https://github.com/zopencommunity/gpgport) | 7941 |
+| [gpgport](https://github.com/zopencommunity/gpgport) | 7942 |
 | [xxhashport](https://github.com/zopencommunity/xxhashport) | 7347 |
 | [sqliteport](https://github.com/zopencommunity/sqliteport) | 7210 |
 | [lz4port](https://github.com/zopencommunity/lz4port) | 6692 |
@@ -555,7 +555,7 @@
 | [wgetport](https://github.com/zopencommunity/wgetport) | 6040 |
 | [bisonport](https://github.com/zopencommunity/bisonport) | 6018 |
 | [opensshport](https://github.com/zopencommunity/opensshport) | 5787 |
-| [c3270port](https://github.com/zopencommunity/c3270port) | 5695 |
+| [c3270port](https://github.com/zopencommunity/c3270port) | 5697 |
 | [zos-code-page-toolsport](https://github.com/zopencommunity/zos-code-page-toolsport) | 5641 |
 | [comp_xlclangport](https://github.com/zopencommunity/comp_xlclangport) | 5636 |
 | [whichport](https://github.com/zopencommunity/whichport) | 5604 |
@@ -563,7 +563,7 @@
 | [texinfoport](https://github.com/zopencommunity/texinfoport) | 5555 |
 | [gumport](https://github.com/zopencommunity/gumport) | 5540 |
 | [nanoport](https://github.com/zopencommunity/nanoport) | 5496 |
-| [tclport](https://github.com/zopencommunity/tclport) | 5354 |
+| [tclport](https://github.com/zopencommunity/tclport) | 5355 |
 | [wharfport](https://github.com/zopencommunity/wharfport) | 5255 |
 | [comp_goport](https://github.com/zopencommunity/comp_goport) | 5211 |
 | [libksbaport](https://github.com/zopencommunity/libksbaport) | 5117 |
@@ -581,7 +581,7 @@
 | [zigiport](https://github.com/zopencommunity/zigiport) | 4327 |
 | [libgpgerrorport](https://github.com/zopencommunity/libgpgerrorport) | 4088 |
 | [getoptport](https://github.com/zopencommunity/getoptport) | 3975 |
-| [patchport](https://github.com/zopencommunity/patchport) | 3945 |
+| [patchport](https://github.com/zopencommunity/patchport) | 3946 |
 | [pythonport](https://github.com/zopencommunity/pythonport) | 3879 |
 | [flexport](https://github.com/zopencommunity/flexport) | 3876 |
 | [ninjaport](https://github.com/zopencommunity/ninjaport) | 3774 |
@@ -589,11 +589,11 @@
 | [libpcre2port](https://github.com/zopencommunity/libpcre2port) | 3725 |
 | [npthport](https://github.com/zopencommunity/npthport) | 3660 |
 | [libxml2port](https://github.com/zopencommunity/libxml2port) | 3630 |
-| [tigport](https://github.com/zopencommunity/tigport) | 3596 |
+| [tigport](https://github.com/zopencommunity/tigport) | 3597 |
 | [pkgconfigport](https://github.com/zopencommunity/pkgconfigport) | 3423 |
 | [helloport](https://github.com/zopencommunity/helloport) | 3253 |
 | [yqport](https://github.com/zopencommunity/yqport) | 3246 |
-| [xmltoport](https://github.com/zopencommunity/xmltoport) | 3220 |
+| [xmltoport](https://github.com/zopencommunity/xmltoport) | 3221 |
 | [ntbtlsport](https://github.com/zopencommunity/ntbtlsport) | 3203 |
 | [gitlab-runnerport](https://github.com/zopencommunity/gitlab-runnerport) | 3133 |
 | [godsectport](https://github.com/zopencommunity/godsectport) | 3130 |
@@ -613,7 +613,7 @@
 | [treeport](https://github.com/zopencommunity/treeport) | 2370 |
 | [dos2unixport](https://github.com/zopencommunity/dos2unixport) | 2364 |
 | [libuvport](https://github.com/zopencommunity/libuvport) | 2356 |
-| [gnulibport](https://github.com/zopencommunity/gnulibport) | 2326 |
+| [gnulibport](https://github.com/zopencommunity/gnulibport) | 2327 |
 | [duckdbport](https://github.com/zopencommunity/duckdbport) | 2245 |
 | [util-linuxport](https://github.com/zopencommunity/util-linuxport) | 2199 |
 | [powerlinegoport](https://github.com/zopencommunity/powerlinegoport) | 2132 |
@@ -622,7 +622,7 @@
 | [libpcreport](https://github.com/zopencommunity/libpcreport) | 2033 |
 | [groovyport](https://github.com/zopencommunity/groovyport) | 2010 |
 | [luarocksport](https://github.com/zopencommunity/luarocksport) | 1949 |
-| [protobufport](https://github.com/zopencommunity/protobufport) | 1888 |
+| [protobufport](https://github.com/zopencommunity/protobufport) | 1889 |
 | [libeventport](https://github.com/zopencommunity/libeventport) | 1701 |
 | [javaport](https://github.com/zopencommunity/javaport) | 1666 |
 | [netpbmport](https://github.com/zopencommunity/netpbmport) | 1633 |
@@ -708,4 +708,4 @@
 | [v8port](https://github.com/zopencommunity/v8port) | 0 |
 | [victoriametricsport](https://github.com/zopencommunity/victoriametricsport) | 0 |
 
-Last updated:  2024-10-26 06:00:59
+Last updated:  2024-10-27 06:00:57
