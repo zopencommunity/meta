@@ -4,9 +4,15 @@
 <summary>Week of 2024-10-28 to 2024-11-03</summary>
 
 - **less**: [less-heads.v667.20241028_123530.zos.pax.Z](https://github.com/zopencommunity/lessport/releases/tag/STABLE_lessport_2642)
+- **zotsample**: [zotsample-1.3.20241029_002442.zos.pax.Z](https://github.com/zopencommunity/zotsampleport/releases/tag/STABLE_zotsampleport_2695)
+- **vim**: [vim-heads.v9.1.0736.20241029_002028.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2697)
+- **expat**: [expat-2.5.0.20241029_002907.zos.pax.Z](https://github.com/zopencommunity/expatport/releases/tag/STABLE_expatport_2698)
 - **gawk**: [gawk-5.3.0.20241028_234615.zos.pax.Z](https://github.com/zopencommunity/gawkport/releases/tag/STABLE_gawkport_2689)
 - **bzip2**: [bzip2-1.0.8.20241028_123455.zos.pax.Z](https://github.com/zopencommunity/bzip2port/releases/tag/STABLE_bzip2port_2640)
+- **jq**: [jq-1.6.20241029_001827.zos.pax.Z](https://github.com/zopencommunity/jqport/releases/tag/STABLE_jqport_2694)
+- **sed**: [sed-4.9.20241028_234039.zos.pax.Z](https://github.com/zopencommunity/sedport/releases/tag/STABLE_sedport_2696)
 - **sshpass**: [sshpass-1.10.20241028_083610.zos.pax.Z](https://github.com/zopencommunity/sshpassport/releases/tag/STABLE_sshpassport_2641)
+- **gperf**: [gperf-3.1.20241029_001259.zos.pax.Z](https://github.com/zopencommunity/gperfport/releases/tag/STABLE_gperfport_2693)
 - **zoslib**: [zoslib-zopen2.20241028_235850.zos.pax.Z](https://github.com/zopencommunity/zoslibport/releases/tag/STABLE_zoslibport_2688)
 - **patch**: [patch-2.7.20241028_223747.zos.pax.Z](https://github.com/zopencommunity/patchport/releases/tag/STABLE_patchport_2680)
 - **libgdbm**: [gdbm-1.23.20241028_235609.zos.pax.Z](https://github.com/zopencommunity/libgdbmport/releases/tag/STABLE_libgdbmport_2691)
@@ -109,18 +115,18 @@
 <details>
 <summary>Week of 2024-09-30 to 2024-10-06</summary>
 
-- **ninja**: [ninja-heads.v1.12.1.20241002_002558.zos.pax.Z](https://github.com/zopencommunity/ninjaport/releases/tag/STABLE_ninjaport_2524)
-- **zlib**: [zlib-develop.20241002_012538.zos.pax.Z](https://github.com/zopencommunity/zlibport/releases/tag/DEV_zlibport_2538)
-- **zlib**: [zlib-heads.v1.3.20241002_005437.zos.pax.Z](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_2529)
-- **curl**: [curl-8.10.1.20241001_214340.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/STABLE_curlport_2544)
-- **coreutils**: [coreutils-9.5.20241001_221124.zos.pax.Z](https://github.com/zopencommunity/coreutilsport/releases/tag/STABLE_coreutilsport_2504)
-- **xz**: [xz-5.4.5.20241001_205347.zos.pax.Z](https://github.com/zopencommunity/xzport/releases/tag/STABLE_xzport_2492)
 - **less**: [less-heads.v665.20241002_050201.zos.pax.Z](https://github.com/zopencommunity/lessport/releases/tag/STABLE_lessport_2600)
 - **less**: [less-heads.v665.20241001_204349.zos.pax.Z](https://github.com/zopencommunity/lessport/releases/tag/STABLE_lessport_2490)
+- **coreutils**: [coreutils-9.5.20241001_221124.zos.pax.Z](https://github.com/zopencommunity/coreutilsport/releases/tag/STABLE_coreutilsport_2504)
+- **curl**: [curl-8.10.1.20241001_214340.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/STABLE_curlport_2544)
+- **xz**: [xz-5.4.5.20241001_205347.zos.pax.Z](https://github.com/zopencommunity/xzport/releases/tag/STABLE_xzport_2492)
 - **gzip**: [gzip-1.13.20241002_003451.zos.pax.Z](https://github.com/zopencommunity/gzipport/releases/tag/STABLE_gzipport_2526)
 - **make**: [make-4.4.1.20241002_002034.zos.pax.Z](https://github.com/zopencommunity/makeport/releases/tag/STABLE_makeport_2520)
 - **make**: [make-4.4.1.20241001_184552.zos.pax.Z](https://github.com/zopencommunity/makeport/releases/tag/STABLE_makeport_2487)
+- **zlib**: [zlib-develop.20241002_012538.zos.pax.Z](https://github.com/zopencommunity/zlibport/releases/tag/DEV_zlibport_2538)
+- **zlib**: [zlib-heads.v1.3.20241002_005437.zos.pax.Z](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_2529)
 - **automake**: [automake-1.17.20241001_213717.zos.pax.Z](https://github.com/zopencommunity/automakeport/releases/tag/STABLE_automakeport_2507)
+- **ninja**: [ninja-heads.v1.12.1.20241002_002558.zos.pax.Z](https://github.com/zopencommunity/ninjaport/releases/tag/STABLE_ninjaport_2524)
 - **ncurses**: [ncurses-6.5.20241001_213602.zos.pax.Z](https://github.com/zopencommunity/ncursesport/releases/tag/STABLE_ncursesport_2503)
 - **libtool**: [libtool-2.4.20241001_234831.zos.pax.Z](https://github.com/zopencommunity/libtoolport/releases/tag/STABLE_libtoolport_2580)
 - **openssl**: [openssl-3.2.0.20241002_050426.zos.pax.Z](https://github.com/zopencommunity/opensslport/releases/tag/STABLE_opensslport_2602)
@@ -231,12 +237,12 @@
 <details>
 <summary>Week of 2024-09-23 to 2024-09-29</summary>
 
-- **curl**: [curl-8.9.1.20240923_023409.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/STABLE_curlport_2472)
-- **coreutils**: [coreutils-9.5.20240923_041424.zos.pax.Z](https://github.com/zopencommunity/coreutilsport/releases/tag/STABLE_coreutilsport_2473)
 - **less**: [less-heads.v665.20240923_051232.zos.pax.Z](https://github.com/zopencommunity/lessport/releases/tag/STABLE_lessport_2464)
-- **gzip**: [gzip-1.13.20240923_045235.zos.pax.Z](https://github.com/zopencommunity/gzipport/releases/tag/STABLE_gzipport_2467)
+- **coreutils**: [coreutils-9.5.20240923_041424.zos.pax.Z](https://github.com/zopencommunity/coreutilsport/releases/tag/STABLE_coreutilsport_2473)
 - **perl**: [perl5-heads.v5.41.3.20240923_214546.zos.pax.Z](https://github.com/zopencommunity/perlport/releases/tag/STABLE_perlport_2475)
 - **perl**: [perl5-heads.v5.41.2.20240923_001434.zos.pax.Z](https://github.com/zopencommunity/perlport/releases/tag/STABLE_perlport_2471)
+- **curl**: [curl-8.9.1.20240923_023409.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/STABLE_curlport_2472)
+- **gzip**: [gzip-1.13.20240923_045235.zos.pax.Z](https://github.com/zopencommunity/gzipport/releases/tag/STABLE_gzipport_2467)
 - **make**: [make-4.4.1.20240923_052656.zos.pax.Z](https://github.com/zopencommunity/makeport/releases/tag/STABLE_makeport_2469)
 - **automake**: [automake-1.17.20240924_042051.zos.pax.Z](https://github.com/zopencommunity/automakeport/releases/tag/STABLE_automakeport_2479)
 - **automake**: [automake-1.17.20240922_213122.zos.pax.Z](https://github.com/zopencommunity/automakeport/releases/tag/STABLE_automakeport_2456)
@@ -383,8 +389,8 @@
 <details>
 <summary>Week of 2024-07-22 to 2024-07-28</summary>
 
-- **curl**: [curl-8.9.0.20240724_132428.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/STABLE_curlport_2373)
 - **perl**: [perl5-heads.v5.41.2.20240722_194015.zos.pax.Z](https://github.com/zopencommunity/perlport/releases/tag/STABLE_perlport_2367)
+- **curl**: [curl-8.9.0.20240724_132428.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/STABLE_curlport_2373)
 - **git**: [git-heads.v2.45.2.20240724_182931.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/STABLE_gitport_2374)
 - **git**: [git-heads.v2.45.2.20240724_033146.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/STABLE_gitport_2371)
 - **zoslib**: [zoslib-zopen2.20240724_025947.zos.pax.Z](https://github.com/zopencommunity/zoslibport/releases/tag/STABLE_zoslibport_2370)
@@ -401,10 +407,10 @@
 <details>
 <summary>Week of 2024-07-15 to 2024-07-21</summary>
 
+- **less**: [less-heads.v661.20240720_035954.zos.pax.Z](https://github.com/zopencommunity/lessport/releases/tag/STABLE_lessport_2362)
+- **coreutils**: [coreutils-9.5.20240716_151230.zos.pax.Z](https://github.com/zopencommunity/coreutilsport/releases/tag/STABLE_coreutilsport_2356)
 - **ninja**: [ninja-heads.v1.12.1.20240717_020611.zos.pax.Z](https://github.com/zopencommunity/ninjaport/releases/tag/STABLE_ninjaport_2358)
 - **ninja**: [ninja-heads.v1.12.1.20240716_221816.zos.pax.Z](https://github.com/zopencommunity/ninjaport/releases/tag/STABLE_ninjaport_2357)
-- **coreutils**: [coreutils-9.5.20240716_151230.zos.pax.Z](https://github.com/zopencommunity/coreutilsport/releases/tag/STABLE_coreutilsport_2356)
-- **less**: [less-heads.v661.20240720_035954.zos.pax.Z](https://github.com/zopencommunity/lessport/releases/tag/STABLE_lessport_2362)
 - **sed**: [sed-4.9.20240719_144929.zos.pax.Z](https://github.com/zopencommunity/sedport/releases/tag/STABLE_sedport_2360)
 - **sed**: [sed-4.9.20240719_143852.zos.pax.Z](https://github.com/zopencommunity/sedport/releases/tag/STABLE_sedport_2359)
 - **grep**: [grep-3.11.20240716_174524.zos.pax.Z](https://github.com/zopencommunity/grepport/releases/tag/STABLE_grepport_2355)
@@ -525,10 +531,10 @@
 <details>
 <summary>Week of 2024-05-20 to 2024-05-26</summary>
 
+- **less**: [less-heads.v655.20240521_023221.zos.pax.Z](https://github.com/zopencommunity/lessport/releases/tag/STABLE_lessport_2270)
 - **curl**: [curl-8.8.0.20240523_003508.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/STABLE_curlport_2274)
 - **curl**: [curl-8.8.0.20240523_004606.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/STABLE_curlport_2273)
 - **curl**: [curl-8.8.0.20240522_160837.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/STABLE_curlport_2272)
-- **less**: [less-heads.v655.20240521_023221.zos.pax.Z](https://github.com/zopencommunity/lessport/releases/tag/STABLE_lessport_2270)
 - **vim**: [vim-heads.v9.1.0413.20240521_211543.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2271)
 - **libiconv**: [libiconv-master.20240523_094023.zos.pax.Z](https://github.com/zopencommunity/libiconvport/releases/tag/DEV_libiconvport_2275)
 - **gn**: [gn-main.20240524_183021.zos.pax.Z](https://github.com/zopencommunity/gnport/releases/tag/DEV_gnport_2276)
@@ -552,10 +558,10 @@
 - **librdkafka**: [librdkafka-master.20240515_143011.zos.pax.Z](https://github.com/zopencommunity/librdkafkaport/releases/tag/STABLE_librdkafkaport_2261)
 - **librdkafka**: [librdkafka-master.20240515_142002.zos.pax.Z](https://github.com/zopencommunity/librdkafkaport/releases/tag/STABLE_librdkafkaport_2260)
 - **prompters**: [prompters-main.20240518_191045.zos.pax.Z](https://github.com/zopencommunity/promptersport/releases/tag/STABLE_promptersport_2269)
-- **murex**: [murex-DEV.20240515_162657.zos.pax.Z](https://github.com/zopencommunity/murexport/releases/tag/STABLE_murexport_2265)
 - **cppcheck**: [cppcheck-heads.2.14.0.20240515_202134.zos.pax.Z](https://github.com/zopencommunity/cppcheckport/releases/tag/STABLE_cppcheckport_2264)
 - **cppcheck**: [cppcheck-heads.2.14.0.20240515_201132.zos.pax.Z](https://github.com/zopencommunity/cppcheckport/releases/tag/STABLE_cppcheckport_2262)
 - **cppcheck**: [cppcheck-heads.2.14.0.20240514_151125.zos.pax.Z](https://github.com/zopencommunity/cppcheckport/releases/tag/STABLE_cppcheckport_2259)
+- **murex**: [murex-DEV.20240515_162657.zos.pax.Z](https://github.com/zopencommunity/murexport/releases/tag/STABLE_murexport_2265)
 - **grafana**: [grafana-heads.v10.4.2.20240515_163107.zos.pax.Z](https://github.com/zopencommunity/grafanaport/releases/tag/STABLE_grafanaport_2266)
 
 </details>
@@ -694,9 +700,9 @@
 - **wharf**: [wharf-main.20240228_115840.zos.pax.Z](https://github.com/zopencommunity/wharfport/releases/tag/STABLE_wharfport_2170)
 - **oniguruma**: [oniguruma-heads.v6.9.9.20240226_020727.zos.pax.Z](https://github.com/zopencommunity/onigurumaport/releases/tag/STABLE_onigurumaport_2159)
 - **libmd**: [libmd-1.1.0.20240225_221417.zos.pax.Z](https://github.com/zopencommunity/libmdport/releases/tag/STABLE_libmdport_2160)
+- **frp**: [frp-heads.v0.54.0.20240225_234231.zos.pax.Z](https://github.com/zopencommunity/frpport/releases/tag/STABLE_frpport_2164)
 - **maven**: [apache-maven-3.9.1-bin.20240227_213722.zos.pax.Z](https://github.com/zopencommunity/mavenport/releases/tag/STABLE_mavenport_2169)
 - **maven**: [apache-maven-3.9.1-bin.20240227_131654.zos.pax.Z](https://github.com/zopencommunity/mavenport/releases/tag/STABLE_mavenport_2168)
-- **frp**: [frp-heads.v0.54.0.20240225_234231.zos.pax.Z](https://github.com/zopencommunity/frpport/releases/tag/STABLE_frpport_2164)
 - **popt**: [popt-master.20240229_163236.zos.pax.Z](https://github.com/zopencommunity/poptport/releases/tag/STABLE_poptport_2171)
 - **logrotate**: [logrotate-main.20240229_195903.zos.pax.Z](https://github.com/zopencommunity/logrotateport/releases/tag/STABLE_logrotateport_2174)
 - **logrotate**: [logrotate-main.20240229_165200.zos.pax.Z](https://github.com/zopencommunity/logrotateport/releases/tag/STABLE_logrotateport_2172)
@@ -783,10 +789,10 @@
 <details>
 <summary>Week of 2024-01-29 to 2024-02-04</summary>
 
-- **ninja**: [ninja-master.20240130_160910.zos.pax.Z](https://github.com/zopencommunity/ninjaport/releases/tag/STABLE_ninjaport_2073)
-- **cmake**: [CMake-heads.v3.27.8.20240129_142242.zos.pax.Z](https://github.com/zopencommunity/cmakeport/releases/tag/STABLE_cmakeport_2068)
 - **curl**: [curl-8.5.0.20240130_020020.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/STABLE_curlport_2067)
 - **make**: [make-4.4.1.20240129_224230.zos.pax.Z](https://github.com/zopencommunity/makeport/releases/tag/STABLE_makeport_2065)
+- **cmake**: [CMake-heads.v3.27.8.20240129_142242.zos.pax.Z](https://github.com/zopencommunity/cmakeport/releases/tag/STABLE_cmakeport_2068)
+- **ninja**: [ninja-master.20240130_160910.zos.pax.Z](https://github.com/zopencommunity/ninjaport/releases/tag/STABLE_ninjaport_2073)
 - **libtool**: [libtool-2.4.20240129_152529.zos.pax.Z](https://github.com/zopencommunity/libtoolport/releases/tag/STABLE_libtoolport_2064)
 - **pkgconfig**: [pkgconfig-DEV.20240128_220513.zos.pax.Z](https://github.com/zopencommunity/pkgconfigport/releases/tag/STABLE_pkgconfigport_2046)
 - **rsync**: [rsync-master.20240129_094849.zos.pax.Z](https://github.com/zopencommunity/rsyncport/releases/tag/STABLE_rsyncport_2052)
@@ -825,14 +831,14 @@
 <details>
 <summary>Week of 2024-01-22 to 2024-01-28</summary>
 
+- **less**: [less-643.20240122_144109.zos.pax.Z](https://github.com/zopencommunity/lessport/releases/tag/STABLE_lessport_1983)
+- **perl**: [perl5-heads.v5.39.7.20240122_185506.zos.pax.Z](https://github.com/zopencommunity/perlport/releases/tag/STABLE_perlport_1991)
+- **gzip**: [gzip-1.13.20240124_155633.zos.pax.Z](https://github.com/zopencommunity/gzipport/releases/tag/STABLE_gzipport_2010)
 - **zlib**: [zlib-heads.v1.3.20240126_215537.zos.pax.Z](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_2040)
 - **zlib**: [zlib-develop.20240122_141309.zos.pax.Z](https://github.com/zopencommunity/zlibport/releases/tag/DEV_zlibport_1989)
 - **zlib**: [zlib-develop.20240122_140432.zos.pax.Z](https://github.com/zopencommunity/zlibport/releases/tag/DEV_zlibport_1988)
 - **cmake**: [CMake-heads.v3.27.8.20240124_102219.zos.pax.Z](https://github.com/zopencommunity/cmakeport/releases/tag/STABLE_cmakeport_2033)
 - **cmake**: [CMake-heads.v3.27.8.20240121_235752.zos.pax.Z](https://github.com/zopencommunity/cmakeport/releases/tag/STABLE_cmakeport_1990)
-- **less**: [less-643.20240122_144109.zos.pax.Z](https://github.com/zopencommunity/lessport/releases/tag/STABLE_lessport_1983)
-- **gzip**: [gzip-1.13.20240124_155633.zos.pax.Z](https://github.com/zopencommunity/gzipport/releases/tag/STABLE_gzipport_2010)
-- **perl**: [perl5-heads.v5.39.7.20240122_185506.zos.pax.Z](https://github.com/zopencommunity/perlport/releases/tag/STABLE_perlport_1991)
 - **ncurses**: [ncurses-6.4.20240124_160950.zos.pax.Z](https://github.com/zopencommunity/ncursesport/releases/tag/STABLE_ncursesport_2012)
 - **help2man**: [help2man-1.49.3.20240124_160159.zos.pax.Z](https://github.com/zopencommunity/help2manport/releases/tag/STABLE_help2manport_2007)
 - **openssl**: [openssl-3.2.0.20240123_152950.zos.pax.Z](https://github.com/zopencommunity/opensslport/releases/tag/STABLE_opensslport_1998)
@@ -932,8 +938,8 @@
 <details>
 <summary>Week of 2024-01-01 to 2024-01-07</summary>
 
-- **m4**: [m4-1.4.19.20240104_082339.zos.pax.Z](https://github.com/zopencommunity/m4port/releases/tag/STABLE_m4port_1941)
 - **less**: [less-643.20240104_132250.zos.pax.Z](https://github.com/zopencommunity/lessport/releases/tag/STABLE_lessport_1934)
+- **m4**: [m4-1.4.19.20240104_082339.zos.pax.Z](https://github.com/zopencommunity/m4port/releases/tag/STABLE_m4port_1941)
 - **zotsample**: [zotsample-1.3.20240104_164155.zos.pax.Z](https://github.com/zopencommunity/zotsampleport/releases/tag/STABLE_zotsampleport_1946)
 - **gawk**: [gawk-5.2.2.20240104_213951.zos.pax.Z](https://github.com/zopencommunity/gawkport/releases/tag/STABLE_gawkport_1949)
 - **lz4**: [lz4-1.9.4.20240104_082651.zos.pax.Z](https://github.com/zopencommunity/lz4port/releases/tag/STABLE_lz4port_1936)
@@ -1069,12 +1075,12 @@
 <details>
 <summary>Week of 2023-11-20 to 2023-11-26</summary>
 
+- **perl**: [perl5-heads.v5.39.5.20231122_174302.zos.pax.Z](https://github.com/zopencommunity/perlport/releases/tag/STABLE_perlport_1801)
+- **perl**: [perl5-heads.v5.38.0.20231121_141630.zos.pax.Z](https://github.com/zopencommunity/perlport/releases/tag/STABLE_perlport_1792)
+- **xz**: [xz-5.2.5.20231124_071430.zos.pax.Z](https://github.com/zopencommunity/xzport/releases/tag/STABLE_xzport_1812)
 - **zlib**: [zlib-develop.20231123_025537.zos.pax.Z](https://github.com/zopencommunity/zlibport/releases/tag/DEV_zlibport_1803)
 - **zlib**: [zlib-heads.v1.3.20231122_215452.zos.pax.Z](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_1802)
 - **cmake**: [CMake-heads.v3.27.8.20231124_184234.zos.pax.Z](https://github.com/zopencommunity/cmakeport/releases/tag/STABLE_cmakeport_1834)
-- **xz**: [xz-5.2.5.20231124_071430.zos.pax.Z](https://github.com/zopencommunity/xzport/releases/tag/STABLE_xzport_1812)
-- **perl**: [perl5-heads.v5.39.5.20231122_174302.zos.pax.Z](https://github.com/zopencommunity/perlport/releases/tag/STABLE_perlport_1801)
-- **perl**: [perl5-heads.v5.38.0.20231121_141630.zos.pax.Z](https://github.com/zopencommunity/perlport/releases/tag/STABLE_perlport_1792)
 - **openssl**: [openssl-3.2.0.20231124_000835.zos.pax.Z](https://github.com/zopencommunity/opensslport/releases/tag/STABLE_opensslport_1810)
 - **vim**: [vim-master.20231124_154449.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_1823)
 - **vim**: [vim-master.20231123_124149.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_1804)
@@ -1123,16 +1129,16 @@
 <details>
 <summary>Week of 2023-11-13 to 2023-11-19</summary>
 
-- **zlib**: [zlib-heads.v1.3.20231114_130000.zos.pax.Z](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_1739)
-- **zlib**: [zlib-develop.20231114_125946.zos.pax.Z](https://github.com/zopencommunity/zlibport/releases/tag/DEV_zlibport_1738)
+- **less**: [less-643.20231113_051522.zos.pax.Z](https://github.com/zopencommunity/lessport/releases/tag/STABLE_lessport_1697)
+- **autoconf**: [autoconf-2.71.20231114_002453.zos.pax.Z](https://github.com/zopencommunity/autoconfport/releases/tag/STABLE_autoconfport_1736)
 - **coreutils**: [coreutils-9.4.20231116_212509.zos.pax.Z](https://github.com/zopencommunity/coreutilsport/releases/tag/STABLE_coreutilsport_1780)
 - **coreutils**: [coreutils-9.4.20231113_051902.zos.pax.Z](https://github.com/zopencommunity/coreutilsport/releases/tag/STABLE_coreutilsport_1716)
-- **xz**: [xz-5.2.5.20231113_010933.zos.pax.Z](https://github.com/zopencommunity/xzport/releases/tag/STABLE_xzport_1705)
-- **less**: [less-643.20231113_051522.zos.pax.Z](https://github.com/zopencommunity/lessport/releases/tag/STABLE_lessport_1697)
-- **gzip**: [gzip-1.13.20231113_071414.zos.pax.Z](https://github.com/zopencommunity/gzipport/releases/tag/STABLE_gzipport_1717)
 - **perl**: [perl5-heads.v5.38.0.20231113_001320.zos.pax.Z](https://github.com/zopencommunity/perlport/releases/tag/STABLE_perlport_1712)
-- **autoconf**: [autoconf-2.71.20231114_002453.zos.pax.Z](https://github.com/zopencommunity/autoconfport/releases/tag/STABLE_autoconfport_1736)
+- **xz**: [xz-5.2.5.20231113_010933.zos.pax.Z](https://github.com/zopencommunity/xzport/releases/tag/STABLE_xzport_1705)
+- **gzip**: [gzip-1.13.20231113_071414.zos.pax.Z](https://github.com/zopencommunity/gzipport/releases/tag/STABLE_gzipport_1717)
 - **make**: [make-4.4.1.20231113_010159.zos.pax.Z](https://github.com/zopencommunity/makeport/releases/tag/STABLE_makeport_1702)
+- **zlib**: [zlib-heads.v1.3.20231114_130000.zos.pax.Z](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_1739)
+- **zlib**: [zlib-develop.20231114_125946.zos.pax.Z](https://github.com/zopencommunity/zlibport/releases/tag/DEV_zlibport_1738)
 - **automake**: [automake-1.16.5.20231114_060401.zos.pax.Z](https://github.com/zopencommunity/automakeport/releases/tag/STABLE_automakeport_1734)
 - **ncurses**: [ncurses-6.4.20231114_180107.zos.pax.Z](https://github.com/zopencommunity/ncursesport/releases/tag/STABLE_ncursesport_1741)
 - **ncurses**: [ncurses-6.3.20231113_001550.zos.pax.Z](https://github.com/zopencommunity/ncursesport/releases/tag/STABLE_ncursesport_1699)
@@ -1211,25 +1217,25 @@
 <details>
 <summary>Week of 2023-11-06 to 2023-11-12</summary>
 
-- **ninja**: [ninja-master.20231109_002036.zos.pax.Z](https://github.com/zopencommunity/ninjaport/releases/tag/STABLE_ninjaport_1584)
+- **less**: [less-643.20231109_010905.zos.pax.Z](https://github.com/zopencommunity/lessport/releases/tag/STABLE_lessport_1590)
+- **m4**: [m4-1.4.19.20231109_141136.zos.pax.Z](https://github.com/zopencommunity/m4port/releases/tag/STABLE_m4port_1663)
+- **m4**: [m4-branch-1.4.20231109_082857.zos.pax.Z](https://github.com/zopencommunity/m4port/releases/tag/DEV_m4port_1643)
+- **autoconf**: [autoconf-2.71.20231109_012459.zos.pax.Z](https://github.com/zopencommunity/autoconfport/releases/tag/STABLE_autoconfport_1654)
+- **coreutils**: [coreutils-9.4.20231109_102027.zos.pax.Z](https://github.com/zopencommunity/coreutilsport/releases/tag/STABLE_coreutilsport_1666)
+- **coreutils**: [coreutils-9.4.20231107_235319.zos.pax.Z](https://github.com/zopencommunity/coreutilsport/releases/tag/STABLE_coreutilsport_1579)
+- **perl**: [perl5-heads.v5.38.0.20231108_215454.zos.pax.Z](https://github.com/zopencommunity/perlport/releases/tag/STABLE_perlport_1624)
+- **curl**: [curl-8.4.0.20231109_021914.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/STABLE_curlport_1619)
+- **xz**: [xz-5.2.5.20231112_053523.zos.pax.Z](https://github.com/zopencommunity/xzport/releases/tag/STABLE_xzport_1693)
+- **xz**: [xz-5.2.5.20231109_042304.zos.pax.Z](https://github.com/zopencommunity/xzport/releases/tag/STABLE_xzport_1641)
+- **gzip**: [gzip-1.13.20231109_012130.zos.pax.Z](https://github.com/zopencommunity/gzipport/releases/tag/STABLE_gzipport_1595)
+- **make**: [make-4.4.1.20231109_131300.zos.pax.Z](https://github.com/zopencommunity/makeport/releases/tag/STABLE_makeport_1661)
 - **zlib**: [zlib-heads.v1.2.13.20231112_053155.zos.pax.Z](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_1687)
 - **zlib**: [zlib-develop.20231112_003203.zos.pax.Z](https://github.com/zopencommunity/zlibport/releases/tag/DEV_zlibport_1686)
 - **zlib**: [zlib-heads.v1.2.13.20231109_061908.zos.pax.Z](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_1645)
 - **zlib**: [zlib-develop.20231109_054118.zos.pax.Z](https://github.com/zopencommunity/zlibport/releases/tag/DEV_zlibport_1621)
-- **m4**: [m4-1.4.19.20231109_141136.zos.pax.Z](https://github.com/zopencommunity/m4port/releases/tag/STABLE_m4port_1663)
-- **m4**: [m4-branch-1.4.20231109_082857.zos.pax.Z](https://github.com/zopencommunity/m4port/releases/tag/DEV_m4port_1643)
 - **cmake**: [CMake-heads.v3.27.6.20231109_132440.zos.pax.Z](https://github.com/zopencommunity/cmakeport/releases/tag/STABLE_cmakeport_1674)
-- **curl**: [curl-8.4.0.20231109_021914.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/STABLE_curlport_1619)
-- **coreutils**: [coreutils-9.4.20231109_102027.zos.pax.Z](https://github.com/zopencommunity/coreutilsport/releases/tag/STABLE_coreutilsport_1666)
-- **coreutils**: [coreutils-9.4.20231107_235319.zos.pax.Z](https://github.com/zopencommunity/coreutilsport/releases/tag/STABLE_coreutilsport_1579)
-- **xz**: [xz-5.2.5.20231112_053523.zos.pax.Z](https://github.com/zopencommunity/xzport/releases/tag/STABLE_xzport_1693)
-- **xz**: [xz-5.2.5.20231109_042304.zos.pax.Z](https://github.com/zopencommunity/xzport/releases/tag/STABLE_xzport_1641)
-- **less**: [less-643.20231109_010905.zos.pax.Z](https://github.com/zopencommunity/lessport/releases/tag/STABLE_lessport_1590)
-- **gzip**: [gzip-1.13.20231109_012130.zos.pax.Z](https://github.com/zopencommunity/gzipport/releases/tag/STABLE_gzipport_1595)
-- **perl**: [perl5-heads.v5.38.0.20231108_215454.zos.pax.Z](https://github.com/zopencommunity/perlport/releases/tag/STABLE_perlport_1624)
-- **autoconf**: [autoconf-2.71.20231109_012459.zos.pax.Z](https://github.com/zopencommunity/autoconfport/releases/tag/STABLE_autoconfport_1654)
-- **make**: [make-4.4.1.20231109_131300.zos.pax.Z](https://github.com/zopencommunity/makeport/releases/tag/STABLE_makeport_1661)
 - **automake**: [automake-1.16.5.20231108_184539.zos.pax.Z](https://github.com/zopencommunity/automakeport/releases/tag/STABLE_automakeport_1594)
+- **ninja**: [ninja-master.20231109_002036.zos.pax.Z](https://github.com/zopencommunity/ninjaport/releases/tag/STABLE_ninjaport_1584)
 - **ncurses**: [ncurses-6.3.20231109_110849.zos.pax.Z](https://github.com/zopencommunity/ncursesport/releases/tag/STABLE_ncursesport_1648)
 - **bison**: [bison-3.8.2.20231108_184648.zos.pax.Z](https://github.com/zopencommunity/bisonport/releases/tag/STABLE_bisonport_1616)
 - **libtool**: [libtool-2.4.20231109_083911.zos.pax.Z](https://github.com/zopencommunity/libtoolport/releases/tag/STABLE_libtoolport_1656)
