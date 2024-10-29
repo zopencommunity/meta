@@ -15,15 +15,19 @@ zopenInitialize()
   if [ -z "${ZOPEN_DONT_PROCESS_CONFIG}" ]; then
     processConfig
   fi
+
+  ZOPEN_ORGNAME="zopencommunity"
+  ZOPEN_GITHUB="https://github.com/${ZOPEN_ORGNAME}"
   # shellcheck disable=SC2034
   ZOPEN_ANALYTICS_JSON="${ZOPEN_ROOTFS}/var/lib/zopen/analytics.json"
-  ZOPEN_JSON_CACHE_URL="https://raw.githubusercontent.com/zopencommunity/meta/main/docs/api/zopen_releases.json"
+  ZOPEN_JSON_CACHE_URL="https://raw.githubusercontent.com/${ZOPEN_ORGNAME}/meta/main/docs/api/zopen_releases.json"
   ZOPEN_JSON_CONFIG="${ZOPEN_ROOTFS}/etc/zopen/config.json"
   if [ -n "${INCDIR}" ]; then
     ZOPEN_SCRIPTLET_DIR="${INCDIR}/scriptlets"
   else
     ZOPEN_SCRIPTLET_DIR="${ZOPEN_ROOTFS}/usr/local/zopen/meta/meta/include/scriptlets"
   fi
+
 }
 
 addCleanupTrapCmd(){
@@ -526,7 +530,6 @@ defineANSI()
     GRAY="${ESC}${CSI}37${SGR}"
     BOLD="${ESC}${CSI}1${SGR}"
     UNDERLINE="${ESC}${CSI}4${SGR}"
-    NC="${ESC}${CSI}0${SGR}"
     darkbackground
     bg=$?
     if [ $bg -ne 0 ]; then
@@ -538,6 +541,10 @@ defineANSI()
       HEADERCOLOR="${MAGENTA}"
       WARNINGCOLOR="${MAGENTA}"
     fi
+    # The following should be the last ANSI declaration. With -x trace active, the ANSI
+    # codes might be interpreted by the terminal when outputing the command trace. Having
+    # NC as the last value ensures that the text is returned to normal
+    NC="${ESC}${CSI}0${SGR}"
   else
     # unset esc RED GREEN YELLOW BOLD UNDERLINE NC
     ANSION=false
@@ -2116,7 +2123,8 @@ installFromPax()
   # to the actual repo package name at present.  The repo name is in the
   # repo field so can extract from there instead
   #name=$(jq --raw-output '.product.name' "${metadatafile}")
-  name=$(jq --raw-output '.product.repo | match(".*/ZOSOpenTools/(.*)port").captures[0].string' "${metadatafile}")
+   # Ideally, use $reponame in the match but jq seems to have issues with that!
+  name=$(jq ---arg reponame "${ZOPEN_ORGNAME}" -raw-output '.product.repo | match(".*/zopencommunity/(.*)port").captures[0].string' "${metadatafile}")
   if ! processActionScripts "installPre" "${name}" "${metadatafile}"; then
     printError "Failed installation pre-requisite check(s) for '${name}'. Correct previous errors and retry command"
   fi
@@ -2192,7 +2200,7 @@ EOF
     printDebug "Marking this version as installed"
     touch "${ZOPEN_PKGINSTALL}/${name}/${name}/.active"
     installedList="${name} ${installedList}"
-    syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_INSTALL},${CAT_PACKAGE}" "DOWNLOAD" "handlePackageInstall" "Installed package:'${name}';version:${downloadFileVer};install_dir='${baseinstalldir}/${installdirname}';"
+    syslog "${ZOPEN_LOG_PATH:-${ZOPEN_ROOTFS}/var/log}/audit.log" "${LOG_A}" "${CAT_INSTALL},${CAT_PACKAGE}" "DOWNLOAD" "handlePackageInstall" "Installed package:'${name}';version:${downloadFileVer};install_dir='${baseinstalldir}/${installdirname}';"
     addToInstallTracker "${name}"    
         # Some installation have installation caveats
     installCaveat=$(jq -r '.product.install_caveats // empty' "${metadatafile}" 2>/dev/null)
@@ -2283,18 +2291,31 @@ updatePackageDB()
       continue
     fi
     escapedJSONFile=$(mktempfile "escaped" "json")
-    addCleanupTrapCmd "rm -rf ${escapedJSONFile}"
+    # addCleanupTrapCmd "rm -rf ${escapedJSONFile}"
     stripControlCharacters "${metadataFile}" "${escapedJSONFile}"
     if [ ! -e "${pdb}" ]; then
       echo "[]" > "${pdb}"
     fi
-    mdj=$(jq '. as $metadata | .product.repo | match(".*/ZOSOpenTools/(.*)port").captures[0].string | [{(.):$metadata}]' \
+    # Ideally, use $reponame in the match but jq seems to have issues with that!
+    mdj=$(jq --arg reponame "${ZOPEN_ORGNAME}" '. as $metadata | .product.repo | match(".*/zopencommunity/(.*)port").captures[0].string | [{(.):$metadata}]' \
         "${escapedJSONFile}")
+    if [ -z "${mdj}" ]; then
+      # Try legacy repository
+      mdj=$(jq --arg reponame "${ZOPEN_ORGNAME}" '. as $metadata | .product.repo | match(".*/ZOSOpenTools/(.*)port").captures[0].string | [{(.):$metadata}]' \
+        "${escapedJSONFile}")
+    fi
+
+    if [ -z "${mdj}" ]; then
+      pkg=$(basename "${pkgdir}")
+      printWarning "Cannot locate metadata for installed package '${pkg}' at location '${metadataFile}'. Check file existence and permissions"
+    fi
     if ! jq --argjson mdj "${mdj}" '. += $mdj' \
             "${pdb}" > \
             "${pdb}.working"; then
+      [ -e "${pdb}.working" ] && "${pdb}.working"
+      [ -e "${pdb}" ] && mv -f "${pdb}" "${pdb}.broken" # Save for potential diagnostics
       printSoftError "Could not add metadata for '$(basename "${pkgdir}")' to install tracker."
-      printError "Run zopen --re-init to attempt database regeneration and zopen install --reinstall $(basename "${pkgdir}")"
+      printError "Run 'zopen init --refresh' to attempt database regeneration and re-run command."
     fi
     mv "${pdb}.working" "${pdb}"
   done
