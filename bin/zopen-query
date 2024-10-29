@@ -50,6 +50,7 @@ if ${filter_implemented}; then
   echo "  --filter COLOR   apply COLOR (quality) filter."
   echo "                   green: all pass, blue: most pass, yellow: some pass, red: no pass, gray: skipped"
 fi
+  echo "  --category <category> apply a category filter."
   echo "  --help           print this help"
   echo "  --no-header,     suppress the header for the output."
   echo "  --no-version,    suppress version information, return package names."
@@ -84,11 +85,11 @@ printDetailListEntries()
 
   if [ "${details}" -eq 0 ]; then
     scrcols=$(getScreenCols)
-    numcols=4
+    numcols=5
     colwidth=$((scrcols / numcols - 1))
     printVerbose "Screen width: ${scrcols}; colwidth:${colwidth}"
     if [ ! -z "$1" ] && ! ${noheader}; then
-      printf "${NC}${UNDERLINE}%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s${NC}\n" "Package" "Installed" "Available" "Latest Tag"
+      printf "${NC}${UNDERLINE}%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s${NC}\n" "Package" "Installed" "Available" "Latest Tag" "Categories"
     fi
     echo "${repoArray}" | xargs | tr ' ' '\n' | sort | while read repo; do
       listport=false
@@ -107,6 +108,10 @@ printDetailListEntries()
           printError "Unable to retrieve remote information"
         fi
         latestVersion=$(/bin/printf "%s" "${latest}" | jq -e -r '.assets[0].name' | sed -E 's/.*-(.*)\.zos\.pax\.Z/\1/')
+        categories=$(/bin/printf "%s" "${latest}" | jq -e -r '.assets[0].categories')
+        if [ -n "${category_filter}" ] && ! echo "${categories}" | grep -q "${category_filter}"; then
+          continue
+        fi
         pkghome="${ZOPEN_PKGINSTALL}/${repo}/${repo}"
         if [ -e "${pkghome}/.releaseinfo" ]; then
           originalVersion=$(cat "${pkghome}/.releaseinfo")
@@ -124,7 +129,7 @@ printDetailListEntries()
           fi
         fi
         if ! ${noversion}; then
-          printf "%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s\n" "${repo}" "${originalVersion}" "${dotversion}" "${latestVersion}"
+          printf "%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s\n" "${repo}" "${originalVersion}" "${dotversion}" "${latestVersion}" "${categories}"
         else
           printf "%s\n" "${repo}"
         fi
@@ -133,11 +138,11 @@ printDetailListEntries()
   else
     printVerbose "Checking repoArray: ${repoArray}"
     scrcols=$(getScreenCols)
-    numcols=6
+    numcols=7
     colwidth=$((scrcols / numcols - 1))
     printVerbose "Screen width: ${scrcols}; colwidth:${colwidth}"
     if ! ${noheader}; then
-      printf "${NC}${UNDERLINE}%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s${NC}\n" "Package" "Installed" "Latest Tag" "Download Size" "Expanded Size" "Quality"
+      printf "${NC}${UNDERLINE}%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s${NC}\n" "Package" "Installed" "Latest Tag" "Download Size" "Expanded Size" "Quality" "Categories"
     fi
     echo "${repoArray}" | xargs | tr ' ' '\n' | sort | while read repo; do
       listport=false
@@ -161,7 +166,7 @@ printDetailListEntries()
         case $? in
         1)
           printVerbose "No latest release for port"
-          printf "%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s ${NC}${RED}%-${colwidth}s${NC}\n" "${repo}" "${originalTag}" "Unknown" "Unknown" "Unknown" "Unknown"
+          printf "%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s ${NC}${RED}%-${colwidth}s %-${colwidth}s${NC}\n" "${repo}" "${originalTag}" "Unknown" "Unknown" "Unknown" "Unknown" "Unknown"
           ;;
         0)
           printVerbose "Latest release request successful"
@@ -170,24 +175,26 @@ printDetailListEntries()
           total="$(/bin/printf "%s" "${latest}" | jq -e -r '.assets[0].total_tests')"
           expandedsize="$(/bin/printf "%s" "${latest}" | jq -e -r '.assets[0].expanded_size')"
           downloadsize="$(/bin/printf "%s" "${latest}" | jq -e -r '.assets[0].size')"
+          categories=$(/bin/printf "%s" "${latest}" | jq -e -r '.assets[0].categories')
           if [ "${onlyUpgradesAvailable}" -gt 0 ]; then
             if [ "${originalTag}" = "Not installed" -o "${originalTag}" = "${latestTag}" ]; then
               continue
             fi
           fi
-          if [ ${total} -gt 0 ]; then
+          if [ -n "$total" ] && [ ${total} -gt 0 ]; then
             percentage=$(echo "scale=0; 100 * (${passed}) / ${total}" | bc)
           fi
-          printf "%-${colwidth}s %-${colwidth}s %-${colwidth}s " "${repo}" "${originalTag}" "${latestTag}"
-          printf " %-${colwidth}s" "${downloadsize}"
-          printf " %-${colwidth}s" "${expandedsize}"
+          /bin/printf "%-${colwidth}s %-${colwidth}s %-${colwidth}s" "${repo}" "${originalTag}" "${latestTag}"
+          /bin/printf " %-${colwidth}s" "${downloadsize}"
+          /bin/printf " %-${colwidth}s" "${expandedsize}"
 
           if [ -z "${percentage}" ]; then
-            printf "${NC}${RED}%-${colwidth}s${NC}" "No tests"
+            /bin/printf "${NC}${RED}%-${colwidth}s${NC}" "No tests"
           else
-            printf "${NC}%s%-${colwidth}s${NC}" "$(colorizepct "${percentage}")" "${percentage}%"
+            /bin/printf "${NC}$(colorizepct "${percentage}")%-${colwidth}s${NC}" "${percentage}"
           fi
-          printf "\n"
+          /bin/printf " %-${colwidth}s" "${categories}"
+          /bin/printf "\n"
           ;;
         *) printError "Error while trying to retrieve latest repo release" ;;
         esac
@@ -306,6 +313,7 @@ noheader=false
 noversion=false
 localoption=true
 upgradeable=false
+unset category_filter
 details=0
 needle=
 if [ $# -eq 0 ]; then
@@ -350,6 +358,10 @@ while [ $# -gt 0 ]; do
     ;;
   "-f" | "--filter")
     filter=$2
+    shift
+    ;;
+  "--category")
+    category_filter=$2
     shift
     ;;
   "-d" | "--details")
