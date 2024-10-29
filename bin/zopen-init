@@ -510,7 +510,7 @@ generateDefaultRepository()
   [ ! -e "${rootfs}/etc/zopen/repos.d" ] && mkdir -p "${rootfs}/etc/zopen/repos.d"
 
   if [ -z "${paxrepourl}" ]; then
-    paxrepourl="http://raw.githubusercontent.com/ZOSOpenTools/meta/main/docs/api/zopen_releases.json"
+    paxrepourl="http://raw.githubusercontent.com/${ZOPEN_ORGNAME}/meta/main/docs/api/zopen_releases.json"
   fi
 
   repotype="${paxrepourl%://*}"
@@ -567,7 +567,7 @@ generateAnalyticsConfiguration()
     "removes": []
   }
 zz
-  if jqrc=$(jqw '.' $jsonConfigWorking > $jsonConfig); then
+  if jqrc=$(jqw '.' "${jsonConfigWorking}" > "${jsonConfig}"); then
     rm "${jsonConfigWorking}"
   else
     printSoftError "${jqrc}"
@@ -576,8 +576,13 @@ zz
   
   registerFileSystem "${UUID}" "${isHostIBM}" "${isBot}"
 
-  if [ -n "$ZOPEN_ROOTFS" ] && [ -n "$ZOPEN_LOG_PATH" ] && [ -f "$ZOPEN_LOG_PATH/audit.log" ]; then
-    processAnalyticsFromLogFile
+  if [ -n "$ZOPEN_ROOTFS" ]; then
+    if [ -z "$ZOPEN_LOG_PATH" ]; then
+      ZOPEN_LOG_PATH="${ZOPEN_ROOTFS}/var/log/zopen"
+    fi
+    if [ -f "$ZOPEN_LOG_PATH/audit.log" ]; then
+      processAnalyticsFromLogFile
+    fi
   fi
 }
 
