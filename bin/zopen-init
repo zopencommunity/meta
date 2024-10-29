@@ -341,6 +341,7 @@ init()
 
   export ZOPEN_ROOTFS="${rootfs}"
   ZOPEN_CA_DIR="etc/pki/tls/certs" # Mimic location on some Linux distributions
+  ZOPEN_JSON_CONFIG="${ZOPEN_ROOTFS}/etc/zopen/config.json"
   certFileName="cacert.pem"
 }
 
