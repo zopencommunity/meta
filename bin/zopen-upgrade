@@ -65,10 +65,8 @@ chosenRepos=""
 while [ $# -gt 0 ]; do
   case "$1" in
     "--yes" | "-y")
+      # shellcheck disable=SC2034
       yesToPrompts=true  # Automatically answer 'yes' to any questions
-      ;;
-    "--no-set-active")
-      setactive=false  # Install package as normal but keep existing installation as active
       ;;
     "-h" | "--help" | "-?")
       printHelp "${args}"
@@ -82,7 +80,9 @@ while [ $# -gt 0 ]; do
       debug=true
       ;;
     "--xdebug")
+      # shellcheck disable=SC2034
       verbose=true
+      # shellcheck disable=SC2034
       debug=true
       xdebug=true
     ;;
