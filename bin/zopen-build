@@ -122,6 +122,7 @@ Optional:
                               CPPFLAGS options but will get them from env vars.
   ZOPEN_MAKE_OPTS             Options to pass to build program.
                               (defaults to '-j\${ZOPEN_NUM_JOBS}')
+  ZOPEN_PATCH_DIR             Specify directory from which patches should be applied.
 
 Optional settings for installation:
   ZOPEN_RUNTIME_DEPS          Runtime z/OS Open Tool dependencies to be installed
@@ -1137,19 +1138,29 @@ applyPatches()
     code_dir="${ZOPEN_ROOT}/${gitname%%.*}"
   fi
 
-  if [ ! -z "${ZOPEN_BUILD_LINE}" ]; then
-    buildtype_lower=$(echo "${ZOPEN_BUILD_LINE}" | tr '[A-Z]' '[a-z]')
-    patch_try_dir="${ZOPEN_ROOT}/${buildtype_lower}-patches"
+  if [ ! -z "${ZOPEN_PATCH_DIR}" ]; then
+    patch_try_dir="${ZOPEN_ROOT}/${ZOPEN_PATCH_DIR}"
     if [ -d "${patch_try_dir}" ]; then
       patch_dir="${patch_try_dir}"
-    fi
-  fi
-
-  if [ -z "${patch_dir}" ]; then
-    patch_dir="${ZOPEN_ROOT}/patches"
-    if ! [ -d "${patch_dir}" ]; then
-      printWarning "${patch_dir} does not exist - no patches to apply"
+    else
+      printWarning "Specified patch directory ${patch_try_dir} does not exist - no patches to apply"
       return 0
+    fi
+  else
+    if [ ! -z "${ZOPEN_BUILD_LINE}" ]; then
+      buildtype_lower=$(echo "${ZOPEN_BUILD_LINE}" | tr '[A-Z]' '[a-z]')
+      patch_try_dir="${ZOPEN_ROOT}/${buildtype_lower}-patches"
+      if [ -d "${patch_try_dir}" ]; then
+        patch_dir="${patch_try_dir}"
+      fi
+    fi
+
+    if [ -z "${patch_dir}" ]; then
+      patch_dir="${ZOPEN_ROOT}/patches"
+      if ! [ -d "${patch_dir}" ]; then
+        printWarning "${patch_dir} does not exist - no patches to apply"
+        return 0
+      fi
     fi
   fi
 
