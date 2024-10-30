@@ -1494,7 +1494,7 @@ createEnvAndSetup()
   cat << zz > "${ZOPEN_INSTALL_DIR}/.env"
 if ! [ -f ./.env ]; then
   echo "Need to source from the .env directory" >&2
-  return 0
+  return 1
 fi
 
 dropTagRedirEnvar=false
@@ -1555,6 +1555,7 @@ zz
   cat << zz > "${ZOPEN_INSTALL_DIR}/setup.sh"
 #!/bin/sh
 touch \".installing\"
+SETUPDIR="\$(cd "\$(dirname "\$0")" > /dev/null 2>&1 && pwd -P)"
 . ./.env
 echo \"Setting up ${projectName_lower}...\"
 zz
@@ -1572,20 +1573,34 @@ replaceHardcodedPath() {
   replaced=\$2
   root=\$3
   f=\$4
-  if [ \"\$f\" != \"\${root}/setup.sh\" ] && [ \"\$f\" != \"\${root}/.env\" ]; then
-    isWritable=true
-    if [ ! -w "\$f" ]; then
-      isWriteable=false
-      chmod "+w" \$f
-    fi
-    cp \$f \$f.tmp && \\
-    /bin/sed -e \"s#\${orig}#\${replaced}#g\" \$f.tmp > \$f && \\
-    rm \$f.tmp;
-    if ! \$isWriteable; then
-      chmod "-w" \$f
+  # only substitute text files
+  if /bin/sed -e "" \${f} 2> /dev/null 1>&2; then
+    if [ \"\$f\" != \"\${root}/setup.sh\" ] && [ \"\$f\" != \"\${root}/.env\" ] && [ \"\$f\" != \"\${root}/.replacedpath\" ]; then
+      isWritable=true
+      if [ ! -w "\$f" ]; then
+        isWriteable=false
+        chmod "+w" \$f
+      fi
+      cp \$f \$f.tmp && \\
+      /bin/sed -e \"s#\${orig}#\${replaced}#g\" \$f.tmp > \$f && \\
+      rm -f \$f.tmp;
+      if ! \$isWriteable; then
+        chmod "-w" \$f
+      fi
     fi
   fi
 }
+if [ ! -d "\$${projectName}_HOME" ]; then
+  echo "WARNING: ${projectName}_HOME (set to \"\$${projectName}_HOME\") was not set properly."
+  ${projectName}_HOME="\${SETUPDIR}"
+fi
+
+if [ ! -d "\$${projectName}_HOME" ]; then
+  echo "ERROR: ${projectName}_HOME (set to \"\$${projectName}_HOME\") is not a directory. Exiting."
+  exit 2
+fi
+
+echo "Replacing hardcoded paths in \$${projectName}_HOME..."
 ZOPEN_INSTALL_PREFIX="\$${projectName}_HOME/../../"
 ZOPEN_INSTALL_PREFIX=\$(cd "\${ZOPEN_INSTALL_PREFIX}" >/dev/null 2>&1 && pwd -P)
 for f in \$(/bin/find \$${projectName}_HOME/ -type f | /bin/xargs grep -l \"\$REPLACE_PREFIX_PATH\" 2>/dev/null); do
