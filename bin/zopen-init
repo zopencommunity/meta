@@ -556,7 +556,7 @@ updateBootstrappedTools() {
     ${MYDIR}/zopen-install ${installOptions} -y curl jq gpg pinentry
     toolInstall=$?
   else
-    ${MYDIR}/zopen-install ${installOptions} -y curl jq meta gpg pinentry
+    ${MYDIR}/zopen-install ${installOptions} -y curl jq gpg pinentry meta
     toolInstall=$?
   fi
   [ ${toolInstall} -ne 0 ] && printError "Unable to install curl, jq, gpg, pinentry and/or meta; see previous errors and retry the initilisation using the '--re-init' parameter"
