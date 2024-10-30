@@ -39,11 +39,11 @@ verifySignatureOfPax()
 
 
   # Create a temporary directory for GPG keyring
-  TMP_GPG_DIR="$zopen_tmp_dir/tmp_gpg_verify"
+  TMP_GPG_DIR="$zopen_tmp_dir/zopen_gpg_verify_$LOGNAME_$$"
   mkdir -p "$TMP_GPG_DIR"
 
-  SIGNATURE_FILE="$zopen_tmp_dir/signedfile.asc"
-  PUBLIC_KEY_FILE="$zopen_tmp_dir/scriptpubkey.asc"
+  SIGNATURE_FILE="$zopen_tmp_dir/signedfile.$LOGNAME.$$.asc"
+  PUBLIC_KEY_FILE="$zopen_tmp_dir/scriptpubkey.$LOGNAME.$$.asc"
   printf "%b" "$SIGNATURE" | tr -d '"'  > "$SIGNATURE_FILE"
   printf "%b" "$PUBLIC_KEY" | tr -d '"'  > "$PUBLIC_KEY_FILE"
 
@@ -76,10 +76,11 @@ verifySignatureOfPax()
         printError "Signature file does not exist."
   fi
   
+  printInfo "GPG signature verified."
   # Clean up the temporary directory/files
-  [ -e "${SIGNATURE_FILE}" ] && rm -rf "${SIGNATURE_FILE}"
-  [ -e "${PUBLIC_KEY_FILE}" ] && rm -rf "${PUBLIC_KEY_FILE}"
-  [ -e "${TMP_GPG_DIR}" ] && rm -rf "${TMP_GPG_DIR}"
+  [ -e "${SIGNATURE_FILE}" ] && rm -f "${SIGNATURE_FILE}"
+  [ -e "${PUBLIC_KEY_FILE}" ] && rm -f "${PUBLIC_KEY_FILE}"
+  [ -d "${TMP_GPG_DIR}" ] && rm -rf "${TMP_GPG_DIR}"
 }
 
 printSyntax()
