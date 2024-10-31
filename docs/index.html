@@ -23,51 +23,73 @@
   <div id="app"></div>
   <script src="//cdn.jsdelivr.net/npm/docsify-edit-on-github"></script>
   <script>
-    window.$docsify = {
-      loadSidebar: true,
-      // Fixes all image links to default to the /image directory, preventing
-      // issues that may arise if documents are moved into different folders
-      markdown: {
-        renderer: {
-          image: function(href, title) {
-            if (href.charAt(0) == "/") {
-              href = href.substring(1)
-              console.log(`Fixing image link: ${href}`)
-            }
-            return `<img src="${href}" data-origin="${href}" alt="${title}">`
-          }
+	  window.$docsify = {
+  // Core settings
+  name: '<img src="https://github.com/zopencommunity/.github/blob/main/profile/zopen-community_horizontal-color-omp.png?raw=true" alt="zopen community" height="79em">',
+  repo: 'zopencommunity/meta',  // Simplified repo URL
+  loadSidebar: true,
+  relativePath: true,
+
+  // Navigation settings
+  maxLevel: 1,
+  subMaxLevel: 1,
+  depth: 4,
+  hideOtherSidebarContent: false,
+  sidebarDisplayLevel: 0,
+
+  // Search configuration
+  search: {
+    paths: 'auto',
+    placeholder: 'Type to search',
+    noData: 'No Results',
+    depth: 4,
+  },
+
+  // Table of Contents
+  toc: {
+    tocMaxLevel: 0,
+    target: 'h2'
+  },
+
+  // Image handling
+  markdown: {
+    renderer: {
+      image: function(href, title, text) {
+        // Only modify absolute paths
+        if (href.startsWith('/')) {
+          href = href.substring(1);
         }
-      },
-      name: '<img src="https://github.com/zopencommunity/.github/blob/main/profile/zopen-community_horizontal-color.png?raw=true" alt="zopen community" height="79em" >',
-      plugins: [
-        EditOnGithubPlugin.create('https://github.com/zopencommunity/meta/blob/main/docs/', null, 'Edit this page'),
-        function pageFooter(hook, vm) {
-          var footer = [
-            '<hr style="clear: both;"/>',
-            '<footer style="font-size: smaller;">',
-            '<span>Copyright © zopen community a Series of LF Projects, LLC.</span>',
-            '<span>For website terms of use, trademark policy, and other project policies, please see <a href="https://lfprojects.org" target="_blank">https://lfprojects.org</a>.</span>',
-            '</footer>',
-          ].join(' ');
-    
-          hook.afterEach(function (html) {
-            return html + footer;
-          });
-        },
-      ],
-      repo: 'https://github.com/zopencommunity/meta',
-      search: 'auto',
-      maxLevel: 4,
-      subMaxLevel: 4,
-      depth: 4,
-      hideOtherSidebarContent: false,
-      sidebarDisplayLevel: 0,
-      toc: {
-        tocMaxLevel: 5,
-        target: 'h2, h3, h4, h5, h6'
-      },
-      relativePath: true
+        return `<img src="${href}" alt="${text || title || ''}">`
+      }
     }
+  },
+
+  // Plugins
+  plugins: [
+    // Edit on GitHub plugin with correct path handling
+    EditOnGithubPlugin.create(
+      'https://github.com/zopencommunity/meta/blob/main/docs/',
+      null,
+      'Edit this page'
+    ),
+
+    // Footer plugin
+    function pageFooter(hook, vm) {
+      const footer = [
+        '<hr style="clear: both; margin-top: 20px;">',
+        '<footer>',
+        '<span>Copyright © zopen community a Series of LF Projects, LLC.</span> ',
+        '<span>For website terms of use, trademark policy, and other project policies, please see ',
+        '<a href="https://lfprojects.org" target="_blank">https://lfprojects.org</a>.</span>',
+        '</footer>'
+      ].join('');
+
+      hook.afterEach(function(html) {
+        return html + footer;
+      });
+    }
+  ]
+};
   </script>
   <script>
     function styleandresizeIframe(obj) {
@@ -79,6 +101,20 @@
       frames['iframe1'].document.head.appendChild(cssLink);
     }
   </script>
+  <script>
+  function filterTable() {
+    const selectedCategory = document.getElementById("category-filter").value;
+    const categories = document.querySelectorAll(".table-category");
+
+    categories.forEach((category) => {
+      if (selectedCategory === "All" || category.dataset.category === selectedCategory) {
+        category.style.display = "block";
+      } else {
+        category.style.display = "none";
+      }
+    });
+  }
+</script>
   <!-- Docsify v4 -->
   <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
   <script src="//unpkg.com/docsify-plugin-toc"></script>

@@ -20,7 +20,10 @@ def generate_markdown(data, output_file):
             week_start_str = week_start.strftime('%Y-%m-%d')
             pax_name = release['assets'][0]['name']
             pax_url = release['assets'][0]['url'].replace('download', 'tag').rsplit('/', 1)[0]
-            release_info[week_start_str][tool].append({'name': pax_name, 'url': pax_url})
+            categories = release['assets'][0]['categories']
+            if categories == "":
+                categories = "Uncategorized"
+            release_info[week_start_str][tool].append({'name': pax_name, 'url': pax_url, 'categories': categories})
 
     sorted_releases = sorted(release_info.items(), key=lambda x: datetime.strptime(x[0], '%Y-%m-%d'), reverse=True)
 
@@ -36,7 +39,7 @@ def generate_markdown(data, output_file):
                 md_file.write(f"<details>\n<summary>Week of {week_start} to {week_end}</summary>\n\n")
             for tool, releases in tools.items():
                 for release in releases:
-                    md_file.write(f"- **{tool}**: [{release['name']}]({release['url']})\n")
+                    md_file.write(f"- **{tool}**: [{release['name']}]({release['url']}) - (category: {release['categories']})\n")
             md_file.write("\n</details>\n")
 
 if __name__ == '__main__':
