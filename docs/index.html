@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple.css" title="light">
   <link rel="stylesheet alternative" href="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple-dark.css" title="dark">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/sidebar.min.css" />
-  <link rel="stylesheet" href="https://unpkg.com/docsify-toc@1.0.0/dist/toc.css">
+  <link rel="stylesheet" href="https://unpkg.com/docsify-plugin-toc@1.3.1/dist/light.css">
   <link rel="stylesheet" href="styles.css">
 <!-- Custom theme styles -->
 <style>
@@ -29,6 +29,7 @@
   repo: 'zopencommunity/meta',  // Simplified repo URL
   loadSidebar: true,
   relativePath: true,
+  homepage: 'README.md',
 
   // Navigation settings
   maxLevel: 2,
@@ -47,8 +48,9 @@
 
   // Table of Contents
   toc: {
-    tocMaxLevel: 0,
-    target: 'h2'
+    tocMaxLevel: 1,
+    target: 'h2, h3, h4, h5, h6',
+    ignoreHeaders:  ['<!-- {docsify-ignore} -->', '<!-- {docsify-ignore-all} -->']
   },
 
   // Image handling
@@ -117,7 +119,7 @@
 </script>
   <!-- Docsify v4 -->
   <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
-  <script src="//unpkg.com/docsify-plugin-toc"></script>
+  <script src="https://unpkg.com/docsify-plugin-toc@1.3.1/dist/docsify-plugin-toc.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify-copy-code"></script>
   <script src="//unpkg.com/docsify/lib/plugins/zoom-image.min.js"></script>

@@ -186,7 +186,7 @@ with open('docs/Latest.md', 'w') as f:
     # Write table for each category
     for category, packages in sorted(packages_by_category.items()):
         print(f"<div class=\"table-category\" data-category=\"{category}\">")
-        print(f"\n## {category.title()} ports\n")
+        print(f"\n## {category.title()} ports <!-- {docsify-ignore} -->\n")
         print("| Package | Status | Test Success Rate | Latest Release | Description |")
         print("|---|---|---|---|---|")
         

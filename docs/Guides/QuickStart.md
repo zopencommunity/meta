@@ -11,7 +11,7 @@ Whether you want to _use_ the tools or also _improve_ the tools is up to you.
 If you have installed a version of the zopen package manager prior to September 2023, 
 please note you will need to [migrate to the new package manager](Migration.md). 
 
-## Installing zopen package manager
+## Installing zopen package manager <!-- {docsify-ignore} -->
 
 Make sure that auto-conversion is enabled by checking the environment variables _BPXK_AUTOCVT and _CEE_RUNOPTS. If not set please run
   - export _BPXK_AUTOCVT="ON"
@@ -38,14 +38,14 @@ Otherwise, follow these steps:
 
 See [The package manager](ThePackageManager.md) and [Developing Tools](developing.md) for more details.
 
-## Getting Started Video
+## Getting Started Video <!-- {docsify-ignore} -->
 If you like learning through watching, check out our getting started Video:
 <video height="1080" controls>
   <source src="https://github.com/zopencommunity/collateral/raw/main/ZOSOpenToolsIntroV2-cropped.mp4" type="video/mp4">
 </video>
 
 
-## Upgrading zopen community
+## Upgrading zopen community <!-- {docsify-ignore} -->
 
 zopen community can be upgraded like so:
 
@@ -63,7 +63,7 @@ $ zopen upgrade -y
 ```
 
 
-## Upgrading a single package
+## Upgrading a single package <!-- {docsify-ignore} -->
 
 Individual packages can be upgraded by specifiying the package
 name.  For example upgrading just the package manager is
