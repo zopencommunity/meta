@@ -12,6 +12,7 @@ This guide provides a recommended set of open source tools for various roles wit
       - `openssl` - Encryption and security client and library. 
       - `sudo` - Privilege escalation for executing commands.
    - **System Configuration and Management**:
+      - `c3270` - c3270 emulator to access ISPF/TSO via z/OS UNIX
       - `bash` - Shell scripting and command interpreter.
       - `logrotate` - Automatic rotation and compression of logs.
       - `tmux` and `screen` - Terminal multiplexer for managing sessions.
