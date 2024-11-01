@@ -17,7 +17,7 @@
     - [Leveraging the zoslib library](/Guides/Zoslib.md)
     - [Troubleshooting](/Guides/CommonSolutions.md)
     - [Common Solutions](/Guides/CommonSolutions.md)
-    - [Getting z/OS Access](/Guides/GettingZOSAccess.md)
+    - [Getting z/OS Access](https://community.ibm.com/zsystems/form/zos-program/)
   - [FAQ](/Guides/FAQ.md)
   - Workshops
   	- [Beginner](/workshop/workshop.md) 
