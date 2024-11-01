@@ -19,12 +19,11 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/zopencommunity/meta/HEAD
 ### Explore & Engage
 
 * [Getting Started](/Guides/QuickStart.md) will get you going fast.
-* Our [zopen community repositories](https://github.com/zopencommunity) shows what's available
-* [zopen community best practices](https://github.com/zopencommunity) 
-* Want to see the latest [build status and quality](Guides/../Latest.md) ?
-* Want to [use the tools](/Guides/ThePackageManager.md) ?
-* Want to [develop the tools](/Guides/developing.md) ?
-* Want to [improve our documentation](./UpdateDocs.md) ?
+* Our [zopen community available tools](/Latest) shows what's available.
+* Want to see the (latest tools available)[/newly_released]?
+* Want to [use the tools](/Guides/ThePackageManager.md)?
+* Want to [develop the tools](/Guides/developing.md)?
+* Want to [improve our documentation](./UpdateDocs.md)?
 
 ### Your Feedback Matters!
 
