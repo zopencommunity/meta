@@ -5,6 +5,7 @@ This guide provides a recommended set of open source tools for various roles wit
       - `coreutils` - Essential core utilities (e.g., ls, cat) for daily operations. Recommended if you require additional function over z/OS Native /bin tools.
       - `util-linux` - Common utilities (e.g., whereis - to locate files quickly).
       - `moreutils` - Additional utilities such as sponge, parallel, and more. See this [blog](https://rentes.github.io/unix/utilities/2015/07/27/moreutils-package/) for more details.
+      - `findutils`, `grep`, `sed`, `diff` - GNU based utilities with additional function over /bin tools.
    - **Networking and Security**:
       - `openssh` - Secure remote login and file transfer (includes sftp, ssh, and ssh-copy-id (great for copying an ssh key to another machine quickly)).
       - `curl`, `wget` - Tools to fetch files over HTTP/HTTPS.
