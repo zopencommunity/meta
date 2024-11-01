@@ -28,7 +28,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 <div class="table-category" data-category="build_system">
 
-## Build_System ports
+## Build_System ports <!-- {docsify-ignore} -->
 
 | Package | Status | Test Success Rate | Latest Release | Description |
 |---|---|---|---|---|
@@ -37,7 +37,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 <div class="table-category" data-category="compression">
 
-## Compression ports
+## Compression ports <!-- {docsify-ignore} -->
 
 | Package | Status | Test Success Rate | Latest Release | Description |
 |---|---|---|---|---|
@@ -48,7 +48,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 <div class="table-category" data-category="core">
 
-## Core ports
+## Core ports <!-- {docsify-ignore} -->
 
 | Package | Status | Test Success Rate | Latest Release | Description |
 |---|---|---|---|---|
@@ -66,7 +66,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 <div class="table-category" data-category="database">
 
-## Database ports
+## Database ports <!-- {docsify-ignore} -->
 
 | Package | Status | Test Success Rate | Latest Release | Description |
 |---|---|---|---|---|
@@ -78,7 +78,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 <div class="table-category" data-category="development">
 
-## Development ports
+## Development ports <!-- {docsify-ignore} -->
 
 | Package | Status | Test Success Rate | Latest Release | Description |
 |---|---|---|---|---|
@@ -116,7 +116,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 <div class="table-category" data-category="devops">
 
-## Devops ports
+## Devops ports <!-- {docsify-ignore} -->
 
 | Package | Status | Test Success Rate | Latest Release | Description |
 |---|---|---|---|---|
@@ -133,7 +133,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 <div class="table-category" data-category="documentation">
 
-## Documentation ports
+## Documentation ports <!-- {docsify-ignore} -->
 
 | Package | Status | Test Success Rate | Latest Release | Description |
 |---|---|---|---|---|
@@ -144,7 +144,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 <div class="table-category" data-category="editor">
 
-## Editor ports
+## Editor ports <!-- {docsify-ignore} -->
 
 | Package | Status | Test Success Rate | Latest Release | Description |
 |---|---|---|---|---|
@@ -158,7 +158,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 <div class="table-category" data-category="graphics">
 
-## Graphics ports
+## Graphics ports <!-- {docsify-ignore} -->
 
 | Package | Status | Test Success Rate | Latest Release | Description |
 |---|---|---|---|---|
@@ -169,7 +169,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 <div class="table-category" data-category="language">
 
-## Language ports
+## Language ports <!-- {docsify-ignore} -->
 
 | Package | Status | Test Success Rate | Latest Release | Description |
 |---|---|---|---|---|
@@ -183,7 +183,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 <div class="table-category" data-category="library">
 
-## Library ports
+## Library ports <!-- {docsify-ignore} -->
 
 | Package | Status | Test Success Rate | Latest Release | Description |
 |---|---|---|---|---|
@@ -208,7 +208,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 <div class="table-category" data-category="networking">
 
-## Networking ports
+## Networking ports <!-- {docsify-ignore} -->
 
 | Package | Status | Test Success Rate | Latest Release | Description |
 |---|---|---|---|---|
@@ -219,7 +219,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 <div class="table-category" data-category="security">
 
-## Security ports
+## Security ports <!-- {docsify-ignore} -->
 
 | Package | Status | Test Success Rate | Latest Release | Description |
 |---|---|---|---|---|
@@ -239,7 +239,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 <div class="table-category" data-category="source_control">
 
-## Source_Control ports
+## Source_Control ports <!-- {docsify-ignore} -->
 
 | Package | Status | Test Success Rate | Latest Release | Description |
 |---|---|---|---|---|
@@ -250,7 +250,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 <div class="table-category" data-category="uncategorized">
 
-## Uncategorized ports
+## Uncategorized ports <!-- {docsify-ignore} -->
 
 | Package | Status | Test Success Rate | Latest Release | Description |
 |---|---|---|---|---|
@@ -315,7 +315,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 <div class="table-category" data-category="utilities">
 
-## Utilities ports
+## Utilities ports <!-- {docsify-ignore} -->
 
 | Package | Status | Test Success Rate | Latest Release | Description |
 |---|---|---|---|---|
@@ -348,7 +348,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 <div class="table-category" data-category="webframework">
 
-## Webframework ports
+## Webframework ports <!-- {docsify-ignore} -->
 
 | Package | Status | Test Success Rate | Latest Release | Description |
 |---|---|---|---|---|
