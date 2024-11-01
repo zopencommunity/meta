@@ -20,7 +20,7 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/zopencommunity/meta/HEAD
 
 * [Getting Started](/Guides/QuickStart.md) will get you going fast.
 * Our [zopen community available tools](/Latest) shows what's available.
-* Want to see the (latest tools available)[/newly_released]?
+* Want to see the [latest tools available](/newly_released)?
 * Want to [use the tools](/Guides/ThePackageManager.md)?
 * Want to [develop the tools](/Guides/developing.md)?
 * Want to [improve our documentation](./UpdateDocs.md)?
