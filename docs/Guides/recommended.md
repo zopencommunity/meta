@@ -15,13 +15,13 @@ This guide provides a recommended set of open source tools for various roles wit
       - `logrotate` - Automatic rotation and compression of logs.
       - `tmux` and `screen` - Terminal multiplexer for managing sessions.
       - `tree` - Directory and file structure visualization.
-      - (WIP) `rsync` - File synchronization and transfer.^
+      - (WIP) `rsync` - File synchronization and transfer.
    - **Monitoring**:
       - `prometheus` - Metric-based system and application monitoring.
       - `victoriametrics` - High-performance database for time-series metrics.
       - `grafana` - Visualization tool for metrics.
    - **File Management**:
-      - `ncdu` - Disk usage analyzer.
+      - `ncdu` - Disk usage analyzer to detect files and dirs using up disk space.
       - `zip`, `unzip`, `gzip`, `tar`, `bzip2`, `xz`, `zstd` - Compression and archiving tools for backup or archiving data.
    - **zopen**:
       - `meta` - Package manager to install and manage tools.
