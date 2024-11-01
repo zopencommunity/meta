@@ -30,17 +30,25 @@ This guide provides a recommended set of open source tools for various roles wit
       - `zopen audit` - Security command to check for vulnerabilities in packages.
 
 ## 2. **Application Developer**
+   - **Core System Tools**: 
+      - `coreutils` - Essential core utilities (e.g., ls, cat) for daily operations. Recommended if you require additional function over z/OS Native /bin tools.
+      - `util-linux` - Common utilities (e.g., whereis - to locate files quickly).
+      - `moreutils` - Additional utilities such as sponge, parallel, and more. See this [blog](https://rentes.github.io/unix/utilities/2015/07/27/moreutils-package/) for more details.
+      - `findutils`, `grep`, `sed`, `diff` - GNU based utilities with additional function over /bin tools.
    - **Coding and Compilation**:
       - `cmake` - (Recommended for new projects) - Build automation tool that generates build system files for Make, Ninja and more.
       - `ninja` - Very fast build systems for compiling projects.
       - `make` -  Build systems for compiling projects.
       - `m4` - Macro processor for generating code templates.
       - `autoconf`, `automake`, `pkgconfig` - Tools for configuring software builds.
+   - **Languages**
+      - `lua``, `perl` - Extend functionality with embedded lua or write automation scripts using perl
    - **Libraries**:
       - `zlib` - Compression library.
       - `sqlite` - Embedded database library
       - `libgpgerror`, `libgcrypt` - Cryptographic libraries for signing content.
-      - `libffi`, `libpcre`, `libxml2` - Libraries for foreign function interfaces, regex, and XML.
+      - `libpcre` - Library for regex
+      - `libxml2` - XML library
       - `cjson` - C JSON parsing library (used in Libdio)
       - `protobuf` - Protocol Buffers for data serialization.
    - **Text Editing**:
@@ -61,8 +69,7 @@ This guide provides a recommended set of open source tools for various roles wit
 ## 3. **DevOps / CI/CD Engineer**
    - **Automation**:
       - `buildkite` - Continuous integration agent
-      - `jenkins` - Continuous integration agent
-      - `terraform` - Infrastructure as code.
+      - `github-runner` - Gitlab Continuous integration
    - **Version Control & Collaboration**:
       - `git`, `gitlabcli`, `githubcli` - Version control and GitHub/GitLab management.
    - **Networking and Security**:
