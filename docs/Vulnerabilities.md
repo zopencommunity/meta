@@ -176,3 +176,15 @@ the specified cursor position. It's not quite clear yet, what can lead to this s
 
 </details>
 
+## grafana
+
+<details>
+<summary>grafana (Build 2267) - (STABLE) -- 1 high vulnerability</summary>
+
+- Affected release URL: [grafana (Build 2267) - (STABLE)](https://github.com/zopencommunity/grafanaport/releases/tag/STABLE_grafanaport_67)
+
+- **(HIGH severity) CVE-2024-9264**: The SQL Expressions experimental feature of Grafana allows for the evaluation of `duckdb` queries containing user input. These queries are insufficiently sanitized before being passed to `duckdb`, leading to a command injection and local file inclusion vulnerability. Any user with the VIEWER or higher permission is capable of executing this attack.  The `duckdb` binary must be present in Grafana's $PATH for this attack to function; by default, this binary is not installed in Grafana distributions.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/grafanaport/releases/tag/STABLE_grafanaport_2268)**.
+
+</details>
+

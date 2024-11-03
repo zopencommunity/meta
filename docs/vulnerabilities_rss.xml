@@ -90,6 +90,13 @@
 <guid isPermaLink="false">vim (Build 2423) - (Alpha) - Dataset I/O</guid>
 </item>
 
+<item>
+<title>grafana (Build 2267) - (STABLE)</title>
+<link>https://zopen.community/#/Vulnerabilities?id=grafana</link>
+<description>1 high vulnerability</description>
+<guid isPermaLink="false">grafana (Build 2267) - (STABLE)</guid>
+</item>
+
 </channel>
 
 </rss>
