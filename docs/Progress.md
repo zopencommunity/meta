@@ -238,8 +238,8 @@
 |  [bashport](https://github.com/zopencommunity/bashport) | 4607 | 36
 |  [librdkafkaport](https://github.com/zopencommunity/librdkafkaport) | 2664 | 55
 |  [sudoport](https://github.com/zopencommunity/sudoport) | 1453 | 41
-|  [gitport](https://github.com/zopencommunity/gitport) | 1089 | 28
 |  [cmakeport](https://github.com/zopencommunity/cmakeport) | 1050 | 40
+|  [gitport](https://github.com/zopencommunity/gitport) | 1047 | 27
 |  [perlport](https://github.com/zopencommunity/perlport) | 695 | 14
 |  [coreutilsport](https://github.com/zopencommunity/coreutilsport) | 634 | 16
 |  [vimport](https://github.com/zopencommunity/vimport) | 571 | 19
