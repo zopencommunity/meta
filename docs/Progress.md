@@ -279,6 +279,7 @@
 |  [libssh2port](https://github.com/zopencommunity/libssh2port) | 122 | 5
 |  [m4port](https://github.com/zopencommunity/m4port) | 120 | 5
 |  [thesilversearcherport](https://github.com/zopencommunity/thesilversearcherport) | 118 | 4
+|  [libgcryptport](https://github.com/zopencommunity/libgcryptport) | 116 | 6
 |  [diffutilsport](https://github.com/zopencommunity/diffutilsport) | 114 | 6
 |  [ncursesport](https://github.com/zopencommunity/ncursesport) | 111 | 2
 |  [libbsdport](https://github.com/zopencommunity/libbsdport) | 107 | 4
@@ -286,7 +287,6 @@
 |  [pkgconfigport](https://github.com/zopencommunity/pkgconfigport) | 98 | 1
 |  [libsasl2port](https://github.com/zopencommunity/libsasl2port) | 93 | 5
 |  [patchport](https://github.com/zopencommunity/patchport) | 86 | 3
-|  [libgcryptport](https://github.com/zopencommunity/libgcryptport) | 84 | 5
 |  [gawkport](https://github.com/zopencommunity/gawkport) | 81 | 4
 |  [expectport](https://github.com/zopencommunity/expectport) | 79 | 4
 |  [libassuanport](https://github.com/zopencommunity/libassuanport) | 79 | 3
