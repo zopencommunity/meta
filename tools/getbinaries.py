@@ -38,10 +38,10 @@ def get_success_rate(passed_tests, total_tests, has_releases):
 
 def write_package_table_row(package, status, success_rate, latest_release, latest_asset, description):
     """Helper function to write a consistent table row"""
-    print(f"| [{package}port](https://github.com/zopencommunity/{package}port)", end='')
+    print(f"| [{package}](https://github.com/zopencommunity/{package}port)", end='')
     print(f"|{status}", end='')
     print(f"|{success_rate:.1f}%" if success_rate >= 0 else "|N/A", end='')
-    print(f"|[{latest_release['tag_name']}]({latest_asset['url']})", end='')
+    print(f"|[{latest_release['tag_name'].replace('port', '')}]({latest_asset['url']})", end='')
     print(f"|{description}|")
 
 def count_patches(repo):
