@@ -190,7 +190,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | Package | Status | Test Success Rate | Latest Release | Description |
 |---|---|---|---|---|
 | [expatport](https://github.com/zopencommunity/expatport)|Green|100.0%|[STABLE_expatport_2698](https://github.com/zopencommunity/expatport/releases/download/STABLE_expatport_2698/expat-2.5.0.20241029_002907.zos.pax.Z)|A library for parsing XML content|
-| [zoslibport](https://github.com/zopencommunity/zoslibport)|Green|100.0%|[STABLE_zoslibport_2688](https://github.com/zopencommunity/zoslibport/releases/download/STABLE_zoslibport_2688/zoslib-zopen2.20241028_235850.zos.pax.Z)|A library used by z/OS Open Tools|
+| [zoslibport](https://github.com/zopencommunity/zoslibport)|Green|100.0%|[STABLE_zoslibport_2727](https://github.com/zopencommunity/zoslibport/releases/download/STABLE_zoslibport_2727/zoslib-zopen2.20241113_035526.zos.pax.Z)|A library used by z/OS Open Tools|
 | [libgdbmport](https://github.com/zopencommunity/libgdbmport)|Green|100.0%|[STABLE_libgdbmport_2691](https://github.com/zopencommunity/libgdbmport/releases/download/STABLE_libgdbmport_2691/gdbm-1.23.20241028_235609.zos.pax.Z)|A library for managing database functions|
 | [libpipelineport](https://github.com/zopencommunity/libpipelineport)|Green|100.0%|[STABLE_libpipelineport_2675](https://github.com/zopencommunity/libpipelineport/releases/download/STABLE_libpipelineport_2675/libpipeline-1.5.7.20241028_223656.zos.pax.Z)|A library for managing pipelines of processes|
 | [gnulibport](https://github.com/zopencommunity/gnulibport)|Green|100.0%|[STABLE_gnulibport_2679](https://github.com/zopencommunity/gnulibport/releases/download/STABLE_gnulibport_2679/gnulib-master.20241028_225223.zos.pax.Z)|A library containing common functions used in GNU software|
@@ -358,4 +358,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2024-11-05T07:30:03.174584
+Last updated:  2024-11-12T23:13:06.438089
