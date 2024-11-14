@@ -1338,12 +1338,14 @@ checkAvailableSize()
   printInfo "Checking available size to install ${package}."
 
   packageSize=$(echo "scale=2; $2 / (1024 * 1024)" | bc)
-  partitionSize=$(/bin/df -m . | tail -1 | awk '{print $3}' | cut -f1 -d '/')
+  partitionSize=$(/bin/df -k . | tail -1 | awk '{print $3}' | cut -f1 -d '/')
+
+  partitionSizeMB=$(echo "${partitionSize} / (1024 * 1024)" | bc)
   
   printDebug "Package Size: ${packageSize} MB"
-  printDebug "Partition Size: ${partitionSize} MB"
+  printDebug "Partition Size: ${partitionSizeMB} MB"
 
-  if [ 1 -eq "$(echo "${packageSize} > ${partitionSize}" | bc)" ]; then
+  if [ 1 -eq "$(echo "${packageSize} > ${partitionSizeMB}" | bc)" ]; then
     printError "Not enough space in partition."
   fi
   printInfo "Enough space to install ${package}. Proceeding installation."
