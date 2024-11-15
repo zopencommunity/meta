@@ -516,7 +516,7 @@ signPaxFile()
 
   # Import the private key into the specified keyring files
   printInfo "Importing private key..."
-  gpg --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --secret-keyring "$TMP_GPG_DIR/secring.gpg" --batch --yes --import "$PRIVATE_KEY" > /dev/null 2>&1
+  gpg --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --secret-keyring "$TMP_GPG_DIR/secring.gpg" --batch --yes --import "$PRIVATE_KEY"
   if [ $? -ne 0 ]; then
       extractPax=false
       printError "Importing private key failed. Signing aborted."
@@ -524,7 +524,7 @@ signPaxFile()
 
   # Verify that the key was imported successfully
   printInfo "Checking if secret key is imported..."
-  gpg --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --secret-keyring "$TMP_GPG_DIR/secring.gpg" --list-secret-keys > /dev/null 2>&1
+  gpg --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --secret-keyring "$TMP_GPG_DIR/secring.gpg" --list-secret-keys
   if [ $? -ne 0 ]; then
       extractPax=false
       printError "No secret key found. Signing aborted."
@@ -533,7 +533,7 @@ signPaxFile()
   # Sign the file
   printInfo "Signing the file..."
 
-  gpg --armor --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --batch --verbose --pinentry-mode loopback --passphrase-file "$PASSPHRASE_FILE" --output "$OUTPUT_SIGNATURE" --detach-sig "$FILE_TO_SIGN" > /dev/null 2>&1
+  gpg --armor --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --batch --verbose --pinentry-mode loopback --passphrase-file "$PASSPHRASE_FILE" --output "$OUTPUT_SIGNATURE" --detach-sig "$FILE_TO_SIGN"
 
   if [ $? -ne 0 ]; then
       extractPax=false
