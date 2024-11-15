@@ -21,6 +21,7 @@ jobs:
     - name: Check if Repository Exists
       env:
         ORGANIZATION: IgorTodorovskiIBM
+        GH_TOKEN: ${{ github.token }}
         PORT_NAME: ${{ env.PORT_NAME }}
       run: |
         REPO_NAME="${PORT_NAME}-port"
