@@ -109,7 +109,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | [libdioport](https://github.com/zopencommunity/libdioport)|Green|100.0%|[DEV_libdioport_2726](https://github.com/zopencommunity/libdioport/releases/download/DEV_libdioport_2726/libdio-main.20241105_062712.zos.pax.Z)|A dataset I/O library|
 | [makeport](https://github.com/zopencommunity/makeport)|Blue|99.9%|[STABLE_makeport_2702](https://github.com/zopencommunity/makeport/releases/download/STABLE_makeport_2702/make-4.4.1.20241029_012339.zos.pax.Z)|A build automation tool|
 | [dos2unixport](https://github.com/zopencommunity/dos2unixport)|Blue|99.1%|[STABLE_dos2unixport_2543](https://github.com/zopencommunity/dos2unixport/releases/download/STABLE_dos2unixport_2543/dos2unix-7.5.2.20241002_013955.zos.pax.Z)|A tool for converting DOS/Windows text files to Unix format|
-| [gitport](https://github.com/zopencommunity/gitport)|Blue|96.7%|[STABLE_gitport_2709](https://github.com/zopencommunity/gitport/releases/download/STABLE_gitport_2709/git-heads.v2.46.1.20241029_023900.zos.pax.Z)|The Git version control system|
+| [gitport](https://github.com/zopencommunity/gitport)|Blue|96.7%|[STABLE_gitport_2728](https://github.com/zopencommunity/gitport/releases/download/STABLE_gitport_2728/git-heads.v2.47.0.20241113_142807.zos.pax.Z)|The Git version control system|
 | [re2cport](https://github.com/zopencommunity/re2cport)|Blue|80.0%|[STABLE_re2cport_2686](https://github.com/zopencommunity/re2cport/releases/download/STABLE_re2cport_2686/re2c-3.1.20241028_225705.zos.pax.Z)|A lexer generator for creating lexers|
 | [conanport](https://github.com/zopencommunity/conanport)|Yellow|54.0%|[STABLE_conanport_2723](https://github.com/zopencommunity/conanport/releases/download/STABLE_conanport_2723/conan-heads.2.9.1.20241104_151950.zos.pax.Z)|C/C++ Package Manager tool|
 | [byaccport](https://github.com/zopencommunity/byaccport)|Red|45.6%|[STABLE_byaccport_2661](https://github.com/zopencommunity/byaccport/releases/download/STABLE_byaccport_2661/byacc-20240109.20241028_215525.zos.pax.Z)|A parser generator compatible with Yacc|
@@ -247,7 +247,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 |---|---|---|---|---|
 | [gitlab-runnerport](https://github.com/zopencommunity/gitlab-runnerport)|Skipped|N/A|[STABLE_gitlab-runnerport_2597](https://github.com/zopencommunity/gitlab-runnerport/releases/download/STABLE_gitlab-runnerport_2597/gitlab-runner.20241002_044313.zos.pax.Z)|A GitLab Runner|
 | [tigport](https://github.com/zopencommunity/tigport)|Green|100.0%|[STABLE_tigport_2656](https://github.com/zopencommunity/tigport/releases/download/STABLE_tigport_2656/tig-2.5.9.20241028_214944.zos.pax.Z)|A text-mode interface for Git|
-| [gitport](https://github.com/zopencommunity/gitport)|Blue|96.7%|[STABLE_gitport_2709](https://github.com/zopencommunity/gitport/releases/download/STABLE_gitport_2709/git-heads.v2.46.1.20241029_023900.zos.pax.Z)|The Git version control system|
+| [gitport](https://github.com/zopencommunity/gitport)|Blue|96.7%|[STABLE_gitport_2728](https://github.com/zopencommunity/gitport/releases/download/STABLE_gitport_2728/git-heads.v2.47.0.20241113_142807.zos.pax.Z)|The Git version control system|
 </div>
 
 <div class="table-category" data-category="uncategorized">
@@ -265,9 +265,9 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | [llamacppport](https://github.com/zopencommunity/llamacppport)|Skipped|N/A|[STABLE_llamacppport_2013](https://github.com/zopencommunity/llamacppport/releases/download/STABLE_llamacppport_2013/llamacpp-master.20240124_170742.zos.pax.Z)|A C++ library for writing high-performance network applications|
 | [githubcliport](https://github.com/zopencommunity/githubcliport)|Skipped|N/A|[DEV_githubcliport_2573](https://github.com/zopencommunity/githubcliport/releases/download/DEV_githubcliport_2573/githubcli-DEV.20241002_030701.zos.pax.Z)|A command-line tool for GitHub|
 | [gitlabcliport](https://github.com/zopencommunity/gitlabcliport)|Skipped|N/A|[STABLE_gitlabcliport_2590](https://github.com/zopencommunity/gitlabcliport/releases/download/STABLE_gitlabcliport_2590/gitlabcli-DEV.20241002_042636.zos.pax.Z)|A command-line tool for GitLab|
+| [zlibport](https://github.com/zopencommunity/zlibport)|Green|100.0%|[DEV_zlibport_2706](https://github.com/zopencommunity/zlibport/releases/download/DEV_zlibport_2706/zlib-develop.20241029_024916.zos.pax.Z)|A data compression library|
 | [lessport](https://github.com/zopencommunity/lessport)|Green|100.0%|[STABLE_lessport_2642](https://github.com/zopencommunity/lessport/releases/download/STABLE_lessport_2642/less-heads.v667.20241028_123530.zos.pax.Z)|A text pager|
 | [ncursesport](https://github.com/zopencommunity/ncursesport)|Green|100.0%|[STABLE_ncursesport_2721](https://github.com/zopencommunity/ncursesport/releases/download/STABLE_ncursesport_2721/ncurses-6.5.20241101_200007.zos.pax.Z)|Library for ncurses, a terminal screen handling library|
-| [zlibport](https://github.com/zopencommunity/zlibport)|Green|100.0%|[DEV_zlibport_2706](https://github.com/zopencommunity/zlibport/releases/download/DEV_zlibport_2706/zlib-develop.20241029_024916.zos.pax.Z)|A data compression library|
 | [help2manport](https://github.com/zopencommunity/help2manport)|Green|100.0%|[STABLE_help2manport_2476](https://github.com/zopencommunity/help2manport/releases/download/STABLE_help2manport_2476/help2man-1.49.3.20240924_041914.zos.pax.Z)|A tool for converting manual pages to other formats|
 | [xxhashport](https://github.com/zopencommunity/xxhashport)|Green|100.0%|[STABLE_xxhashport_1993](https://github.com/zopencommunity/xxhashport/releases/download/STABLE_xxhashport_1993/xxHash-0.8.2.20240123_100914.zos.pax.Z)|A fast hash function library|
 | [zstdport](https://github.com/zopencommunity/zstdport)|Green|100.0%|[STABLE_zstdport_2041](https://github.com/zopencommunity/zstdport/releases/download/STABLE_zstdport_2041/zstd-1.5.5.20240126_215521.zos.pax.Z)|A compression algorithm|
@@ -358,4 +358,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2024-11-12T23:13:06.438089
+Last updated:  2024-11-13T10:30:09.602687
