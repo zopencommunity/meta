@@ -1,0 +1,41 @@
+name: Create New Port Repository
+
+on:
+  issues:
+    types: [labeled]
+
+jobs:
+
+  create-repo:
+    if: github.event.label.name == 'approved'
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    - name: Check if Repository Exists
+      env:
+        ORGANIZATION: IgorTodorovskiIBM
+        PORT_NAME: ${{ github.event.issue.title.split(': ')[1] | lower }}
+      run: |
+        REPO_NAME="${PORT_NAME}-port"
+        
+        # Check if the repository already exists
+        if gh repo view "$ORGANIZATION/$REPO_NAME" &> /dev/null; then
+          echo "Repository '$ORGANIZATION/$REPO_NAME' already exists."
+          exit 1
+        else
+          echo "Repository '$ORGANIZATION/$REPO_NAME' does not exist. Proceeding to create it."
+        fi
+        
+    - name: Create Repository
+      env:
+        ORGANIZATION: IgorTodorovskiIBM
+        PORT_NAME: ${{ github.event.issue.title.split(': ')[1] | lower }}
+      run: |
+        REPO_NAME="${PORT_NAME}-port"
+        
+        # Create the repository in your organization
+        gh repo create "$ORGANIZATION/$REPO_NAME" --source=. --private --confirm
+        
+        # Assign the issue creator as the admin
+        gh repo access add-user "$ORGANIZATION/$REPO_NAME" ${{ github.event.issue.user.login }} --admin
