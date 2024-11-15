@@ -12,10 +12,16 @@ jobs:
     
     steps:
     - uses: actions/checkout@v3
+    - name: Extract Port Name
+      run: |
+        echo "PORT_NAME=$(echo "${GITHUB_EVENT_ISSUE_TITLE}" | cut -d: -f2- | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+      env:
+        GITHUB_EVENT_ISSUE_TITLE: ${{ github.event.issue.title }}
+        
     - name: Check if Repository Exists
       env:
         ORGANIZATION: IgorTodorovskiIBM
-        PORT_NAME: ${{ github.event.issue.title.split(': ')[1] | downcase }}
+        PORT_NAME: ${{ env.PORT_NAME }}
       run: |
         REPO_NAME="${PORT_NAME}-port"
         
