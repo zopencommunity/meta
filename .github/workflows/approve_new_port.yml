@@ -15,7 +15,7 @@ jobs:
     - name: Check if Repository Exists
       env:
         ORGANIZATION: IgorTodorovskiIBM
-        PORT_NAME: ${{ github.event.issue.title.split(': ')[1] | lower }}
+        PORT_NAME: ${{ github.event.issue.title.split(': ')[1] | downcase }}
       run: |
         REPO_NAME="${PORT_NAME}-port"
         
