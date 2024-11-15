@@ -27,7 +27,7 @@ startGPGAgent()
      gpg-agent --daemon
      # Wait a moment to ensure the gpg-agent has time to start
      sleep 2
-     # Check again to confirm if gpg-agent started successfully
+     # Check to confirm if gpg-agent started successfully
      if ps -ef | grep -v grep | grep "gpg-agent" > /dev/null; then
         printInfo "gpg-agent started successfully."
      else
