@@ -9,7 +9,8 @@
     - [Newly Released Packages](/newly_released.md)
     - [Package Vulnerabilities](/Vulnerabilities.md)
     - [Current Status](/Progress.md)
-    - [Usage Stats](http://163.74.88.212:3000)
+    - [Usage Stats](http://usage.zopen.community:3000/)
+    - [CICD Pipeline](https://cicd.zopen.community:8443/)
   - Reference
     - [zopen](/reference/zopen-reference.md)
   - Contributing
