@@ -85,7 +85,7 @@ verifySignatureOfPax()
            return 0
         else
            [ -e "${TMP_GPG_DIR}" ] && rm -rf "$TMP_GPG_DIR"
-           printError "Verification failed."
+           printError "Verification failed. Error is: $gpg_output"
         fi
    else
         printError "Signature file does not exist."
