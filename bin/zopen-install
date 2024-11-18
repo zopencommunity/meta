@@ -21,6 +21,20 @@ setupMyself()
 setupMyself
 checkWritable
 
+startGPGAgent()
+{
+     printInfo "Starting gpg-agent..."
+     gpg-agent --daemon
+     # Wait a moment to ensure the gpg-agent has time to start
+     sleep 2
+     # Check to confirm if gpg-agent started successfully
+     if ps -ef | grep -v grep | grep "gpg-agent" > /dev/null; then
+        printInfo "gpg-agent started successfully."
+     else
+        printError "Failed to start gpg-agent. Install GPG using \"zopen install gpg -y\" command."
+     fi
+}
+
 verifySignatureOfPax()
 {
   # Extracting values and checking for errors
@@ -46,9 +60,9 @@ verifySignatureOfPax()
   PUBLIC_KEY_FILE="$zopen_tmp_dir/scriptpubkey.$LOGNAME.$$.asc"
   printf "%b" "$SIGNATURE" | tr -d '"'  > "$SIGNATURE_FILE"
   printf "%b" "$PUBLIC_KEY" | tr -d '"'  > "$PUBLIC_KEY_FILE"
-
+  startGPGAgent
   printVerbose "Importing public key..."
-  [ -f "$PUBLIC_KEY_FILE" ] && gpg --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --batch --yes --import "$PUBLIC_KEY_FILE" > /dev/null 2>&1
+  [ -f "$PUBLIC_KEY_FILE" ] && gpg --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --batch --yes --import "$PUBLIC_KEY_FILE"
   if [ $? -ne 0 ]; then
       [ -e "${TMP_GPG_DIR}" ] && rm -rf "$TMP_GPG_DIR"
       printError "Importing public key failed. Verification aborted."
@@ -56,7 +70,7 @@ verifySignatureOfPax()
 
   # Verify that the key was imported successfully
   printVerbose "Checking if public key is imported..."
-  gpg --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --list-keys > /dev/null 2>&1
+  gpg --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --list-keys
   if [ $? -ne 0 ]; then
       [ -e "${TMP_GPG_DIR}" ] && rm -rf "$TMP_GPG_DIR"
       printError "No public key found. Verification aborted."
@@ -65,12 +79,13 @@ verifySignatureOfPax()
   # Verify the signature
   printInfo "Verifying the gpg signature..."
   if [ -f "$SIGNATURE_FILE" ]; then
-        if gpg --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --verify "$SIGNATURE_FILE" "$FILE_TO_VERIFY" 2>&1 | grep -q "Good signature from"; then
+	gpg_output=$(gpg --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --verify "$SIGNATURE_FILE" "$FILE_TO_VERIFY" 2>&1)
+        if echo "$gpg_output" | grep -q "Good signature from"; then
            printInfo "${NC}${GREEN}Signature verified successfully: ${name}${NC}"
            return 0
         else
            [ -e "${TMP_GPG_DIR}" ] && rm -rf "$TMP_GPG_DIR"
-           printError "Verification failed."
+           printError "Verification failed. Error is: $gpg_output"
         fi
    else
         printError "Signature file does not exist."
