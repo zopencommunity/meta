@@ -83,7 +83,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 | Package | Status | Test Success Rate | Latest Release | Description |
 |---|---|---|---|---|
-| [vim](https://github.com/zopencommunity/vimport)|Skipped|N/A|[STABLE_vim_2697](https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_2697/vim-heads.v9.1.0736.20241029_002028.zos.pax.Z)|Utility for managing virtual file systems|
+| [vim](https://github.com/zopencommunity/vimport)|Skipped|N/A|[STABLE_vim_2736](https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_2736/vim-heads.v9.1.0869.20241118_041149.zos.pax.Z)|Utility for managing virtual file systems|
 | [expect](https://github.com/zopencommunity/expectport)|Skipped|N/A|[STABLE_expect_2673](https://github.com/zopencommunity/expectport/releases/download/STABLE_expectport_2673/expect-5.45.4.20241028_223259.zos.pax.Z)|A tool for automating interactions with text-based programs|
 | [buildkite](https://github.com/zopencommunity/buildkiteport)|Skipped|N/A|[STABLE_buildkite_2546](https://github.com/zopencommunity/buildkiteport/releases/download/STABLE_buildkiteport_2546/buildkite-DEV.20241002_013949.zos.pax.Z)|Buildkite is a platform for running fast, secure, and scalable continuous integration pipelines on your own infrastructure|
 | [gitlab-runner](https://github.com/zopencommunity/gitlab-runnerport)|Skipped|N/A|[STABLE_gitlab-runner_2597](https://github.com/zopencommunity/gitlab-runnerport/releases/download/STABLE_gitlab-runnerport_2597/gitlab-runner.20241002_044313.zos.pax.Z)|A GitLab Runner|
@@ -150,7 +150,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 | Package | Status | Test Success Rate | Latest Release | Description |
 |---|---|---|---|---|
-| [vim](https://github.com/zopencommunity/vimport)|Skipped|N/A|[STABLE_vim_2697](https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_2697/vim-heads.v9.1.0736.20241029_002028.zos.pax.Z)|Utility for managing virtual file systems|
+| [vim](https://github.com/zopencommunity/vimport)|Skipped|N/A|[STABLE_vim_2736](https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_2736/vim-heads.v9.1.0869.20241118_041149.zos.pax.Z)|Utility for managing virtual file systems|
 | [nano](https://github.com/zopencommunity/nanoport)|Skipped|N/A|[STABLE_nano_2684](https://github.com/zopencommunity/nanoport/releases/download/STABLE_nanoport_2684/nano-8.1.20241028_230851.zos.pax.Z)|A simple text editor for console environments|
 | [lazygit](https://github.com/zopencommunity/lazygitport)|Skipped|N/A|[STABLE_lazygit_2148](https://github.com/zopencommunity/lazygitport/releases/download/STABLE_lazygitport_2148/lazygit-master.20240221_041017.zos.pax.Z)|A Git client|
 | [ctags](https://github.com/zopencommunity/ctagsport)|Green|100.0%|[STABLE_ctags_2545](https://github.com/zopencommunity/ctagsport/releases/download/STABLE_ctagsport_2545/ctags-heads.v6.1.0.20241002_014030.zos.pax.Z)|A code indexing tool|
@@ -307,8 +307,8 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | [bash](https://github.com/zopencommunity/bashport)|Blue|80.5%|[STABLE_bash_2485](https://github.com/zopencommunity/bashport/releases/download/STABLE_bashport_2485/bash-5.2.32.20240930_190728.zos.pax.Z)|The Bourne Again shell|
 | [libpcre](https://github.com/zopencommunity/libpcreport)|Blue|80.0%|[STABLE_libpcre_1938](https://github.com/zopencommunity/libpcreport/releases/download/STABLE_libpcreport_1938/pcre-8.45.20240104_134313.zos.pax.Z)|A regular expression library|
 | [coreutils](https://github.com/zopencommunity/coreutilsport)|Blue|79.8%|[STABLE_coreutils_2629](https://github.com/zopencommunity/coreutilsport/releases/download/STABLE_coreutilsport_2629/coreutils-9.5.20241018_140747.zos.pax.Z)|A collection of basic Unix utilities|
-| [gzip](https://github.com/zopencommunity/gzipport)|Blue|77.8%|[STABLE_gzip_2711](https://github.com/zopencommunity/gzipport/releases/download/STABLE_gzipport_2711/gzip-1.13.20241029_035908.zos.pax.Z)|Library for handling gzip compressed files|
 | [xz](https://github.com/zopencommunity/xzport)|Blue|77.8%|[STABLE_xz_2609](https://github.com/zopencommunity/xzport/releases/download/STABLE_xzport_2609/xz-5.4.5.20241009_201602.zos.pax.Z)|A compression utility|
+| [gzip](https://github.com/zopencommunity/gzipport)|Blue|77.8%|[STABLE_gzip_2711](https://github.com/zopencommunity/gzipport/releases/download/STABLE_gzipport_2711/gzip-1.13.20241029_035908.zos.pax.Z)|Library for handling gzip compressed files|
 | [automake](https://github.com/zopencommunity/automakeport)|Yellow|71.4%|[STABLE_automake_2714](https://github.com/zopencommunity/automakeport/releases/download/STABLE_automakeport_2714/automake-1.17.20241029_040611.zos.pax.Z)|Tool for managing dependencies in software projects using GNU Autotools|
 | [getopt](https://github.com/zopencommunity/getoptport)|Yellow|52.2%|[STABLE_getopt_1927](https://github.com/zopencommunity/getoptport/releases/download/STABLE_getoptport_1927/getopt-1.1.6.20240103_131650.zos.pax.Z)|A command-line option parser|
 | [texinfo](https://github.com/zopencommunity/texinfoport)|Red|35.3%|[STABLE_texinfo_1764](https://github.com/zopencommunity/texinfoport/releases/download/STABLE_texinfoport_1764/texinfo-6.8.20231115_132117.zos.pax.Z)|A documentation generator|
@@ -329,7 +329,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | [lazygit](https://github.com/zopencommunity/lazygitport)|Skipped|N/A|[STABLE_lazygit_2148](https://github.com/zopencommunity/lazygitport/releases/download/STABLE_lazygitport_2148/lazygit-master.20240221_041017.zos.pax.Z)|A Git client|
 | [ttype](https://github.com/zopencommunity/ttypeport)|Skipped|N/A|[STABLE_ttype_2185](https://github.com/zopencommunity/ttypeport/releases/download/STABLE_ttypeport_2185/ttype-heads.v0.4.0.20240308_094006.zos.pax.Z)|A terminal type identifier|
 | [godsect](https://github.com/zopencommunity/godsectport)|Skipped|N/A|[STABLE_godsect_2444](https://github.com/zopencommunity/godsectport/releases/download/STABLE_godsectport_2444/godsect-main.20240922_052634.zos.pax.Z)|A code security scanner|
-| [zotsample](https://github.com/zopencommunity/zotsampleport)|Green|100.0%|[STABLE_zotsample_2695](https://github.com/zopencommunity/zotsampleport/releases/download/STABLE_zotsampleport_2695/zotsample-1.3.20241029_002442.zos.pax.Z)|z/OS Open Tools Sample Port for education|
+| [zotsample](https://github.com/zopencommunity/zotsampleport)|Green|100.0%|[STABLE_zotsample_2737](https://github.com/zopencommunity/zotsampleport/releases/download/STABLE_zotsampleport_2737/zotsample-1.3.20241118_070031.zos.pax.Z)|z/OS Open Tools Sample Port for education|
 | [man-db](https://github.com/zopencommunity/man-dbport)|Green|100.0%|[STABLE_man-db_2712](https://github.com/zopencommunity/man-dbport/releases/download/STABLE_man-dbport_2712/man-db-2.12.1.20241029_015025.zos.pax.Z)|Tool for generating manual pages for Unix programs|
 | [hello](https://github.com/zopencommunity/helloport)|Green|100.0%|[STABLE_hello_2670](https://github.com/zopencommunity/helloport/releases/download/STABLE_helloport_2670/hello-2.12.1.20241028_222324.zos.pax.Z)|A simple "hello world" program demonstrating the use of autotools and gettext|
 | [meta](https://github.com/zopencommunity/metaport)|Green|100.0%|[STABLE_meta_2718](https://github.com/zopencommunity/metaport/releases/download/STABLE_metaport_2718/meta-main.20241030_182125.zos.pax.Z)|zopen package manager|
@@ -359,4 +359,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2024-11-15T10:03:14.103825
+Last updated:  2024-11-18T02:13:43.679640
