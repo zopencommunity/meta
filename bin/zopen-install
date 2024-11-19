@@ -398,9 +398,6 @@ handlePackageInstall()
     location="zopen package cache"
   fi
 
-  # Check partition size before download package
-  checkAvailableSize ${name} ${size}
-
   # Download the metadata json file
   if ! runAndLog "curlCmd -L '${metadataJSONURL}' -o '${metadataFile}'" ${redirectToDevNull}; then
     printError "Could not download from ${metadataJSONURL}. Correct any errors and potentially retry."
@@ -415,12 +412,13 @@ handlePackageInstall()
       redirectToDevNull="2>/dev/null"
     fi
 
+    # Check partition size before download package spinner starts
+    checkAvailableSize "${name}" "${size}" "Checking available size to download ${package}."
     progressHandler "network" "- Download complete." &
     ph=$!
     killph="kill -HUP ${ph}"
     addCleanupTrapCmd "${killph}"
-    
-    checkAvailableSize ${name} ${size}
+        
     if ! runAndLog "curlCmd -L '${downloadURL}' -O ${redirectToDevNull}"; then
       printError "Could not download from ${downloadURL}. Correct any errors and potentially retry."
       continue
