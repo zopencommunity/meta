@@ -1336,7 +1336,7 @@ checkAvailableSize()
   
   package="$1"
   packageSize="$2"
-  printInfo "Checking available size to install ${package}."
+  printInfo "- Checking available size to install ${package}."
 
   printDebug "Package Size: ${packageSize} bytes"
   packageSize=$(echo "scale=2; ${packageSize} / 1024" | bc)
