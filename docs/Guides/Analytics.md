@@ -2,7 +2,7 @@
 
 Usage statistics collection in zopen community Package Manager was introduced to gather anonymized usage data. 
 The collected usage data plays an important role in improving functionality, identifying popular packages, and optimizing zopen community user experience.
-The usage statistics are viewable at this url: [http://usage.zopen.community:3000/](http://usage.zopen.community:3000/)
+The usage statistics are viewable at this url: [https://usage.zopen.community:3443/](https://usage.zopen.community:3443/)
 
 ## How to Opt-In
 
@@ -45,5 +45,5 @@ If you have opted out, usage statistics will not be collected.
 
 ## Usage Statistics
 
-Browse http://163.74.88.212:3000/ to get the full view
-[](http://163.74.88.212:3000/ ':include :type=iframe name="iframe1" width=100% height=100% frameborder="0" scrolling="yes" onload="styleandresizeIframe(this)"')
+Browse https://usage.zopen.community:3443/
+[](https://https://usage.zopen.community:3443 ':include :type=iframe name="iframe1" width=100% height=100% frameborder="0" scrolling="yes" onload="styleandresizeIframe(this)"')
