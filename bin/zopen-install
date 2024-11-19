@@ -413,7 +413,7 @@ handlePackageInstall()
     fi
 
     # Check partition size before download package spinner starts
-    checkAvailableSize "${name}" "${size}" "Checking available size to download ${package}."
+    checkAvailableSize "${name}" "${size}"
     progressHandler "network" "- Download complete." &
     ph=$!
     killph="kill -HUP ${ph}"
