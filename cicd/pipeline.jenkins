@@ -26,7 +26,7 @@ def testStatus = "Skipped"
 node('linux')
 {
   stage('Build and Test') {
-    // Build Job : https://128.168.139.253:8443/view/Framework/job/Port-Build/
+    // Build Job : https://cicd.zopen.community/view/Framework/job/Port-Build/
     buildResult = build job: 'Port-Build', propagate: false, parameters: [string(name: 'PORT_GITHUB_REPO', value: "${repo}"),
                    string(name: 'PORT_BRANCH', value: "${branch}"),
                    string(name: 'node', value: "${node_label}"),
