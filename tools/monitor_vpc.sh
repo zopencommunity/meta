@@ -55,7 +55,7 @@ if [ -z "$IBMCLOUD_API_KEY" ]; then
 fi
 
 # Login to IBM Cloud
-if ! ibmcloud login -r jp-tok; then
+if ! ibmcloud login -r ca-tor; then
     echo "Error: Failed to login to IBM Cloud. Please check your IBMCLOUD_API_KEY environment variable."
     exit 1
 fi
