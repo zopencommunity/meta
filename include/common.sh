@@ -1369,6 +1369,10 @@ promptYesOrNo() {
   return 0
 }
 
+# asciiecho: we are in the process of starting to use 'echo' from coreutils.
+# This echo will have a slightly different behaviour than the standard echo in that
+# the file will now be tagged as ascii instead of ebcdic
+# For compatibility, check the tag of the file after the echo and iconv the file IFF it is IBM-1047
 asciiecho()
 {
   text="$1"
