@@ -44,5 +44,5 @@ jobs:
           gh api --method PUT "repos/$ORGANIZATION/$REPO_NAME/collaborators/${{ github.event.issue.user.login }}" -f permission=admin
 
           # Comment on an issue
-          gh issue comment "$ISSUE_NUMBER" --repo "$ORGANIZATION/meta" --body "Repository created: $ORGANIZATION/$REPO_NAME"
+          gh issue comment "$ISSUE_NUMBER" --repo "$ORGANIZATION/meta" --body "Repository created: [$ORGANIZATION/$REPO_NAME]($ORGANIZATION/$REPO_NAME)"
         fi
