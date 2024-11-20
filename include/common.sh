@@ -1370,6 +1370,42 @@ promptYesOrNo() {
   return 0
 }
 
+# asciiecho: we are in the process of starting to use 'echo' from coreutils.
+# This echo will have a slightly different behaviour than the standard echo in that
+# the file will now be tagged as ascii instead of ebcdic
+# For compatibility, check the tag of the file after the echo and iconv the file IFF it is IBM-1047
+asciiecho()
+{
+  text="$1"
+  file="$2"
+
+  if ! echo "${text}" > "${file}"; then
+    echo "Unable to echo text to ${file}" >&2
+    return 2
+  fi
+  if [ "$(chtag -p "${file}" | cut -f2 -d' ')" = "IBM-1047" ]; then
+    if ! /bin/iconv -f IBM-1047 -t ISO8859-1 < "${file}" > "${file}_ascii" || ! chtag -tc ISO8859-1 "${file}_ascii" || ! mv "${file}_ascii" "${file}"; then
+      printError "Unable to convert EBCDIC text to ASCII for ${file}" >&2
+    fi
+  fi
+  return 0
+}
+
+a2e() 
+{
+  source="$1"
+
+  if [ ! -w "${source}" ]; then
+    printWarning "Cannot write to ${source}"
+    return;
+  fi
+
+  if [ "$(chtag -p "${source}" | cut -f2 -d' ')" = "ISO8859-1" ]; then
+    /bin/iconv -f ISO8859-1 -t IBM-1047 "$source" > "$source.bk"
+    chtag -tc 1047 "$source.bk"
+    mv "$source.bk" "$source"
+  fi
+}
 
 . ${INCDIR}/analytics.sh
 
