@@ -329,10 +329,10 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | [lazygit](https://github.com/zopencommunity/lazygitport)|Skipped|N/A|[STABLE_lazygit_2148](https://github.com/zopencommunity/lazygitport/releases/download/STABLE_lazygitport_2148/lazygit-master.20240221_041017.zos.pax.Z)|A Git client|
 | [ttype](https://github.com/zopencommunity/ttypeport)|Skipped|N/A|[STABLE_ttype_2185](https://github.com/zopencommunity/ttypeport/releases/download/STABLE_ttypeport_2185/ttype-heads.v0.4.0.20240308_094006.zos.pax.Z)|A terminal type identifier|
 | [godsect](https://github.com/zopencommunity/godsectport)|Skipped|N/A|[STABLE_godsect_2444](https://github.com/zopencommunity/godsectport/releases/download/STABLE_godsectport_2444/godsect-main.20240922_052634.zos.pax.Z)|A code security scanner|
-| [zotsample](https://github.com/zopencommunity/zotsampleport)|Green|100.0%|[STABLE_zotsample_2737](https://github.com/zopencommunity/zotsampleport/releases/download/STABLE_zotsampleport_2737/zotsample-1.3.20241118_070031.zos.pax.Z)|z/OS Open Tools Sample Port for education|
+| [zotsample](https://github.com/zopencommunity/zotsampleport)|Green|100.0%|[STABLE_zotsample_2744](https://github.com/zopencommunity/zotsampleport/releases/download/STABLE_zotsampleport_2744/zotsample-1.3.20241120_025724.zos.pax.Z)|z/OS Open Tools Sample Port for education|
 | [man-db](https://github.com/zopencommunity/man-dbport)|Green|100.0%|[STABLE_man-db_2712](https://github.com/zopencommunity/man-dbport/releases/download/STABLE_man-dbport_2712/man-db-2.12.1.20241029_015025.zos.pax.Z)|Tool for generating manual pages for Unix programs|
 | [hello](https://github.com/zopencommunity/helloport)|Green|100.0%|[STABLE_hello_2670](https://github.com/zopencommunity/helloport/releases/download/STABLE_helloport_2670/hello-2.12.1.20241028_222324.zos.pax.Z)|A simple "hello world" program demonstrating the use of autotools and gettext|
-| [meta](https://github.com/zopencommunity/metaport)|Green|100.0%|[STABLE_meta_2739](https://github.com/zopencommunity/metaport/releases/download/STABLE_metaport_2739/meta-main.20241118_161559.zos.pax.Z)|zopen package manager|
+| [meta](https://github.com/zopencommunity/metaport)|Green|100.0%|[STABLE_meta_2745](https://github.com/zopencommunity/metaport/releases/download/STABLE_metaport_2745/meta-main.20241120_034335.zos.pax.Z)|zopen package manager|
 | [tig](https://github.com/zopencommunity/tigport)|Green|100.0%|[STABLE_tig_2656](https://github.com/zopencommunity/tigport/releases/download/STABLE_tigport_2656/tig-2.5.9.20241028_214944.zos.pax.Z)|A text-mode interface for Git|
 | [c3270](https://github.com/zopencommunity/c3270port)|Green|100.0%|[STABLE_c3270_2669](https://github.com/zopencommunity/c3270port/releases/download/STABLE_c3270port_2669/c3270-DEV.20241028_220605.zos.pax.Z)|A 3270 terminal emulator|
 | [zos-code-page-tools](https://github.com/zopencommunity/zos-code-page-toolsport)|Green|100.0%|[DEV_zos-code-page-tools_2645](https://github.com/zopencommunity/zos-code-page-toolsport/releases/download/DEV_zos-code-page-toolsport_2645/zoscodepagetools-DEV.20241028_211943.zos.pax.Z)|Tools for working with z/OS code pages|
@@ -359,4 +359,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2024-11-19T03:05:35.179298
+Last updated:  2024-11-19T23:12:30.605468
