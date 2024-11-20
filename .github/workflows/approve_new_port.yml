@@ -2,7 +2,7 @@ name: Create New Port Repository
 
 permissions:
   contents: write
-  statuses: write
+  issues: write
   actions: read
   
 on:
@@ -26,7 +26,7 @@ jobs:
     - name: Check if Repository Exists
       env:
         ORGANIZATION: zopencommunity
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ secrets.REPO_GITHUB_TOKEN }}
         PORT_NAME: ${{ env.PORT_NAME }}
         ISSUE_NUMBER: ${{ github.event.issue.number }}
       run: |
