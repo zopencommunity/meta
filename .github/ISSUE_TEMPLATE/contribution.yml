@@ -1,0 +1,30 @@
+name: "New Port Contribution Request"
+title: "[New Port]: <port-name>"
+description: Request a new repository for a port you'd like to contribute to zopen community.
+labels: ["port-repo-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Important:** Only create this request if you intend to contribute to a new port repository.
+
+        Thank you for considering contributing to our ports collection. Please provide the necessary information below.
+        The repo name chosen will be based on the name provided in the title.
+
+  - type: textarea
+    attributes:
+      label: Port Description
+      description: |
+        Provide a brief description of the port.
+
+  - type: input
+    attributes:
+      label: Upstream Repository URL
+      description: |
+        Enter the URL of the upstream repository (e.g., GitHub, GitLab, Bitbucket).
+
+  - type: textarea
+    attributes:
+      label: Additional Information (Optional)
+      description: |
+        Share any other relevant information.

@@ -4,7 +4,7 @@
 
 ### Environment
 
-The zopen community CI/CD pipeline leverages Wazi as a Service instances to be able to build, test, and deploy ported packages to Github Releases.
+The [zopen community CI/CD](https://cicd.zopen.community) pipeline leverages Wazi as a Service instances to be able to build, test, and deploy ported packages to Github Releases.
 
 ### zopen community Github Actions
 
@@ -36,7 +36,7 @@ Access to the Jenkins CI/CD Pipeline is currently restricted.  To be able to vie
 
 ### Overview of Jenkins CI/CD jobs
 
-The zopen community CI/CD pipeline defines three generic Jenkins CI/CD jobs: `Port-Pipeline`, `Port-Build` and `Port-Publish`. The _framework_ jobs are viewable at https://163.74.88.212:8443/view/Framework/.
+The zopen community CI/CD pipeline defines three generic Jenkins CI/CD jobs: `Port-Pipeline`, `Port-Build` and `Port-Publish`. The _framework_ jobs are viewable at https://cicd.zopen.community/view/Framework/.
 
 * Port-Pipeline: This Jenkins pipeline drives the entire build, test, and deploy pipeline.  It can be used by any port that leverages the [zopen framework](https://github.com/zopencommunity/meta). It calls the following two Jenkins Jobs as part of its pipeline:
 	* Port-Build: This Jenkins job builds, tests, and packages the port.  It runs `build.sh` from the meta framework and produces a pax.Z artifact.  If any of the build, test, or package scripts fail, then the Jenkins job will result in failure.
@@ -61,7 +61,7 @@ Once you have checked in the `cicd.groovy` script, inform Igor Todorovski at ito
 ### Launch a Jenkins CI/CD build for your project
 If you have sufficient access, then you can launch a build of your z/OS Open Source port via Jenkins. Alternatively, you can initiate a build automatically via a commit to the corresponding repository.
 
-If you have access, to start a build, locate your port from the _Port_ view: `https://163.74.88.212:8443/view/Ports/`
+If you have access, to start a build, locate your port from the _Port_ view: [https://cicd.zopen.community](https://cicd.zopen.community).
 
 Click on the arrow pointing downwards and select *Build Now*. This will launch a build of your port.
 

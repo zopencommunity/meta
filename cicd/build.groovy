@@ -1,4 +1,4 @@
-# Build Job : https://163.74.88.212:8443/view/Framework/job/Port-Build/
+# Build Job : https://cicd.zopen.community/view/Framework/job/Port-Build/
 # This build job will build a https://github.com/zopencommunity/meta compatible project and archive the pax.Z artifact
 # This job is configured to clone the meta repo at the outset into the current working directory.
 # This job must run on the z/OS zot system

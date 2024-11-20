@@ -1,6 +1,6 @@
 #!/bin/bash
-# Publish Job : https://163.74.88.212:8443/view/Framework/job/Port-Publish/
-# This publish job will a pax.Z artifact from the Port-Build (https://163.74.88.212:8443/view/Framework/job/Port-Build/)
+# Publish Job : https://cicd.zopen.community/view/Framework/job/Port-Publish/
+# This publish job will a pax.Z artifact from the Port-Build (https://cicd.zopen.community/view/Framework/job/Port-Build/)
 # Inputs: 
 #   - PORT_GITHUB_REPO :  Github repoistory to publish the artifact to e.g: https://github.com/zopencommunity/xzport.git
 #   - PORT_DESCRIPTION : Description of the tool that is presented in the Github release page

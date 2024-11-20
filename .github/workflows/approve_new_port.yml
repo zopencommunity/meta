@@ -1,0 +1,48 @@
+name: Create New Port Repository
+
+permissions:
+  contents: write
+  issues: write
+  actions: read
+  
+on:
+  issues:
+    types: [labeled]
+
+jobs:
+
+  create-repo:
+    if: github.event.label.name == 'approved'
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    - name: Extract Port Name
+      run: |
+        echo "PORT_NAME=$(echo "${GITHUB_EVENT_ISSUE_TITLE}" | cut -d: -f2- | tr -d ' ' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+      env:
+        GITHUB_EVENT_ISSUE_TITLE: ${{ github.event.issue.title }}
+        
+    - name: Check if Repository Exists
+      env:
+        ORGANIZATION: zopencommunity
+        GH_TOKEN: ${{ secrets.REPO_GITHUB_TOKEN }}
+        PORT_NAME: ${{ env.PORT_NAME }}
+        ISSUE_NUMBER: ${{ github.event.issue.number }}
+      run: |
+        REPO_NAME="${PORT_NAME}port"
+        
+        if gh repo view "$ORGANIZATION/$REPO_NAME" &> /dev/null; then
+          echo "Repository '$ORGANIZATION/$REPO_NAME' already exists."
+          gh issue comment "$ISSUE_NUMBER" --repo "$ORGANIZATION/meta" --body "Repository already exists: [$ORGANIZATION/$REPO_NAME]($ORGANIZATION/$REPO_NAME)"
+          exit 1
+        else
+          echo "Repository '$ORGANIZATION/$REPO_NAME' does not exist. Proceeding to create it."
+          gh repo create "$ORGANIZATION/$REPO_NAME" --public
+          
+          # Assign the issue creator as the admin
+          gh api --method PUT "repos/$ORGANIZATION/$REPO_NAME/collaborators/${{ github.event.issue.user.login }}" -f permission=admin
+
+          # Comment on an issue
+          gh issue comment "$ISSUE_NUMBER" --repo "$ORGANIZATION/meta" --body "Repository created: [$ORGANIZATION/$REPO_NAME]($ORGANIZATION/$REPO_NAME)"
+        fi
