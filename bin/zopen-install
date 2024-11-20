@@ -31,7 +31,7 @@ startGPGAgent()
      if ps -ef | grep -v grep | grep "gpg-agent" > /dev/null; then
         printInfo "gpg-agent started successfully."
      else
-        printWarning "Failed to start gpg-agent. Reinstall or Upgrade GPG using \"zopen install --reinstall gpg -y\" or \"zopen upgrade gpg -y\" command."
+        printWarning "Failed to start the gpg-agent. Reinstall or upgrade GPG using \"zopen install --reinstall gpg -y\" or \"zopen upgrade gpg -y\" command."
      fi
 }
 
