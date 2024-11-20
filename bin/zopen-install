@@ -61,11 +61,7 @@ verifySignatureOfPax()
   printf "%b" "$SIGNATURE" | tr -d '"'  > "$SIGNATURE_FILE"
   printf "%b" "$PUBLIC_KEY" | tr -d '"'  > "$PUBLIC_KEY_FILE"
 
-  if ! command -v jq > /dev/null; then
-     printWarning "GPG is not installed"
-  else
-     startGPGAgent
-  fi
+  startGPGAgent
 
   printVerbose "Importing public key..."
   [ -f "$PUBLIC_KEY_FILE" ] && gpg --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --batch --yes --import "$PUBLIC_KEY_FILE"
@@ -479,7 +475,12 @@ handlePackageInstall()
     is_greater=$(echo "$metadataVersion > 0.1" | bc -l)
 
     if [ "$is_greater" -eq 1 ] && ! $skipverify; then
-       verifySignatureOfPax
+	if ! command -v gpg> /dev/null; then
+	   skipverify=false;
+	   printWarning "GPG is not installed"
+        else
+           verifySignatureOfPax
+	fi
     fi
     if ! runLogProgress "pax -rf ${pax} -p p ${paxredirect} ${redirectToDevNull}" "Expanding ${pax}" "Expanded"; then
        printWarning "Errors unpaxing, package directory state unknown."
