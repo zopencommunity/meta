@@ -34,7 +34,7 @@ jobs:
         
         if gh repo view "$ORGANIZATION/$REPO_NAME" &> /dev/null; then
           echo "Repository '$ORGANIZATION/$REPO_NAME' already exists."
-          gh issue comment "$ISSUE_NUMBER" --repo "$ORGANIZATION/meta" --body "Repository already exists: $ORGANIZATION/$REPO_NAME"
+          gh issue comment "$ISSUE_NUMBER" --repo "$ORGANIZATION/meta" --body "Repository already exists: https://github.com/$ORGANIZATION/$REPO_NAME"
           exit 1
         else
           echo "Repository '$ORGANIZATION/$REPO_NAME' does not exist. Proceeding to create it."
@@ -44,5 +44,5 @@ jobs:
           gh api --method PUT "repos/$ORGANIZATION/$REPO_NAME/collaborators/${{ github.event.issue.user.login }}" -f permission=admin
 
           # Comment on an issue
-          gh issue comment "$ISSUE_NUMBER" --repo "$ORGANIZATION/meta" --body "Repository created: $ORGANIZATION/$REPO_NAME"
+          gh issue comment "$ISSUE_NUMBER" --repo "$ORGANIZATION/meta" --body "Repository created at https://github.com/$ORGANIZATION/$REPO_NAME."
         fi
