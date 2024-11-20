@@ -31,7 +31,7 @@ startGPGAgent()
      if ps -ef | grep -v grep | grep "gpg-agent" > /dev/null; then
         printInfo "gpg-agent started successfully."
      else
-        printError "Failed to start gpg-agent. Install GPG using \"zopen install gpg -y\" command."
+        printWarning "Failed to start gpg-agent. Reinstall or Upgrade GPG using \"zopen install --reinstall gpg -y\" or \"zopen upgrade gpg -y\" command."
      fi
 }
 
@@ -60,7 +60,13 @@ verifySignatureOfPax()
   PUBLIC_KEY_FILE="$zopen_tmp_dir/scriptpubkey.$LOGNAME.$$.asc"
   printf "%b" "$SIGNATURE" | tr -d '"'  > "$SIGNATURE_FILE"
   printf "%b" "$PUBLIC_KEY" | tr -d '"'  > "$PUBLIC_KEY_FILE"
-  startGPGAgent
+
+  if ! command -v jq > /dev/null; then
+     printWarning "GPG is not installed"
+  else
+     startGPGAgent
+  fi
+
   printVerbose "Importing public key..."
   [ -f "$PUBLIC_KEY_FILE" ] && gpg --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --batch --yes --import "$PUBLIC_KEY_FILE"
   if [ $? -ne 0 ]; then
