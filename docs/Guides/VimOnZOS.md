@@ -145,6 +145,23 @@ After saving the .vimrc file, open Vim and run the following command to install 
 
 For more details on Airline and Airline-themes, visit https://github.com/vim-airline/vim-airline & https://github.com/vim-airline/vim-airline-themes.
 
+#### Tagbar
+Tagbar is a source code browsing tool that displays the outline of the code currently open in a Vim window. It leverages the ctags utility to generate tags—indexed elements in your code—allowing for efficient and quick navigation. Tagbar’s sidebar acts like a visual table of contents, making it simple to locate specific code segments without scrolling or searching manually.
+
+
+Add the following in .vimrc file between plug#begin and plug#end:
+
+> " Install the Tagbar plugin<br/>
+> Plug 'preservim/tagbar'
+
+#### Install Tagbar Plugin
+
+After saving the .vimrc file, open Vim and run the following command to install the plugins
+
+> :PlugInstall
+
+For more details on Tagbar, visit https://github.com/preservim/tagbar.
+
 #### NERDTree
 In addition to cscope and ctags, VIM users on z/OS may also want to consider using NERDTree, a plugin that allows users to view and navigate the directory structure of a codebase. This can be useful for quickly switching between files and folders, and is especially useful for working with large codebases that have many different directories and files.
 
@@ -208,6 +225,9 @@ For more details on vim-gitgutter, visit https://github.com/airblade/vim-gitgutt
 > 
 > " Install the vim-gnupg plugin<br/>
 > Plug 'jamessan/vim-gnupg'<br/><br/>
+> 
+> " Install the Tagbar plugin<br/>
+> Plug 'preservim/tagbar'<br/><br/>
 > 
 > " Install the NERDTree plugin<br/>
 > Plug 'preservim/nerdtree'<br/><br/>
