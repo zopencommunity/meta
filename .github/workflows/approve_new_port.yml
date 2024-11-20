@@ -34,14 +34,15 @@ jobs:
         
         if gh repo view "$ORGANIZATION/$REPO_NAME" &> /dev/null; then
           echo "Repository '$ORGANIZATION/$REPO_NAME' already exists."
+          gh issue comment "$ISSUE_NUMBER" --repo "$ORGANIZATION/meta" --body "Repository already exists: $ORGANIZATION/$REPO_NAME"
           exit 1
         else
           echo "Repository '$ORGANIZATION/$REPO_NAME' does not exist. Proceeding to create it."
           gh repo create "$ORGANIZATION/$REPO_NAME" --public
           
           # Assign the issue creator as the admin
-          gh repo access add-user "$ORGANIZATION/$REPO_NAME" ${{ github.event.issue.user.login }} --admin
+          gh api --method PUT "repos/$ORGANIZATION/$REPO_NAME/collaborators/${{ github.event.issue.user.login }}" -f permission=admin
 
-          # Post a comment on the issue
-          gh issue comment "$ISSUE_NUMBER" --repo "$ORGANIZATION/meta" --token "$GH_TOKEN" --body "Repository created: $ORGANIZATION/$REPO_NAME"
+          # Comment on an issue
+          gh issue comment "$ISSUE_NUMBER" --repo "$ORGANIZATION/meta" --body "Repository created: $ORGANIZATION/$REPO_NAME"
         fi
