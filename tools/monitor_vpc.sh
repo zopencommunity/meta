@@ -17,13 +17,15 @@ if ! command -v ibmcloud > /dev/null; then
 fi
 
 # Parse script arguments
-while getopts "a:i:p:h" opt; do
+while getopts "a:i:p:r:h" opt; do
   case $opt in
     a) action="$OPTARG"
     ;;
     i) vpc_instance="$OPTARG"
     ;;
     p) ip_address="$OPTARG"
+    ;;
+    r) region="$OPTARG"
     ;;
     h) usage
        exit 0
@@ -55,7 +57,7 @@ if [ -z "$IBMCLOUD_API_KEY" ]; then
 fi
 
 # Login to IBM Cloud
-if ! ibmcloud login -r ca-tor; then
+if ! ibmcloud login -r $region; then
     echo "Error: Failed to login to IBM Cloud. Please check your IBMCLOUD_API_KEY environment variable."
     exit 1
 fi
