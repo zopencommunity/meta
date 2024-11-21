@@ -232,7 +232,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | [libgpgerror](https://github.com/zopencommunity/libgpgerrorport)|Green|100.0%|[STABLE_libgpgerror_2738](https://github.com/zopencommunity/libgpgerrorport/releases/download/STABLE_libgpgerrorport_2738/libgpgerror-DEV.20241118_131834.zos.pax.Z)|A library for handling errors|
 | [libgcrypt](https://github.com/zopencommunity/libgcryptport)|Green|100.0%|[STABLE_libgcrypt_2741](https://github.com/zopencommunity/libgcryptport/releases/download/STABLE_libgcryptport_2741/libgcrypt-1.10.3.20241119_061304.zos.pax.Z)|A general-purpose cryptographic library|
 | [libksba](https://github.com/zopencommunity/libksbaport)|Green|100.0%|[STABLE_libksba_2648](https://github.com/zopencommunity/libksbaport/releases/download/STABLE_libksbaport_2648/libksba-1.6.5.20241028_211725.zos.pax.Z)|A library for working with X.509 certificates and other cryptographic objects|
-| [openssh](https://github.com/zopencommunity/opensshport)|Green|100.0%|[STABLE_openssh_2664](https://github.com/zopencommunity/opensshport/releases/download/STABLE_opensshport_2664/openssh-9.9p1.20241028_215858.zos.pax.Z)|A suite of secure networking utilities|
+| [openssh](https://github.com/zopencommunity/opensshport)|Green|100.0%|[STABLE_openssh_2748](https://github.com/zopencommunity/opensshport/releases/download/STABLE_opensshport_2748/openssh-9.9p1.20241120_165536.zos.pax.Z)|A suite of secure networking utilities|
 | [pinentry](https://github.com/zopencommunity/pinentryport)|Green|100.0%|[STABLE_pinentry_2734](https://github.com/zopencommunity/pinentryport/releases/download/STABLE_pinentryport_2734/pinentry-1.3.1.20241115_142052.zos.pax.Z)|A secure passphrase entry utility|
 | [ntbtls](https://github.com/zopencommunity/ntbtlsport)|Green|100.0%|[STABLE_ntbtls_2650](https://github.com/zopencommunity/ntbtlsport/releases/download/STABLE_ntbtlsport_2650/ntbtls-0.3.2.20241028_211903.zos.pax.Z)|A lightweight TLS 1.2 implementation|
 | [libmd](https://github.com/zopencommunity/libmdport)|Green|100.0%|[STABLE_libmd_2658](https://github.com/zopencommunity/libmdport/releases/download/STABLE_libmdport_2658/libmd-1.1.0.20241028_213749.zos.pax.Z)|A library for computing message digests|
@@ -265,9 +265,9 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | [llamacpp](https://github.com/zopencommunity/llamacppport)|Skipped|N/A|[STABLE_llamacpp_2013](https://github.com/zopencommunity/llamacppport/releases/download/STABLE_llamacppport_2013/llamacpp-master.20240124_170742.zos.pax.Z)|A C++ library for writing high-performance network applications|
 | [githubcli](https://github.com/zopencommunity/githubcliport)|Skipped|N/A|[DEV_githubcli_2573](https://github.com/zopencommunity/githubcliport/releases/download/DEV_githubcliport_2573/githubcli-DEV.20241002_030701.zos.pax.Z)|A command-line tool for GitHub|
 | [gitlabcli](https://github.com/zopencommunity/gitlabcliport)|Skipped|N/A|[STABLE_gitlabcli_2590](https://github.com/zopencommunity/gitlabcliport/releases/download/STABLE_gitlabcliport_2590/gitlabcli-DEV.20241002_042636.zos.pax.Z)|A command-line tool for GitLab|
-| [zlib](https://github.com/zopencommunity/zlibport)|Green|100.0%|[DEV_zlib_2706](https://github.com/zopencommunity/zlibport/releases/download/DEV_zlibport_2706/zlib-develop.20241029_024916.zos.pax.Z)|A data compression library|
 | [less](https://github.com/zopencommunity/lessport)|Green|100.0%|[STABLE_less_2642](https://github.com/zopencommunity/lessport/releases/download/STABLE_lessport_2642/less-heads.v667.20241028_123530.zos.pax.Z)|A text pager|
 | [ncurses](https://github.com/zopencommunity/ncursesport)|Green|100.0%|[STABLE_ncurses_2721](https://github.com/zopencommunity/ncursesport/releases/download/STABLE_ncursesport_2721/ncurses-6.5.20241101_200007.zos.pax.Z)|Library for ncurses, a terminal screen handling library|
+| [zlib](https://github.com/zopencommunity/zlibport)|Green|100.0%|[DEV_zlib_2706](https://github.com/zopencommunity/zlibport/releases/download/DEV_zlibport_2706/zlib-develop.20241029_024916.zos.pax.Z)|A data compression library|
 | [help2man](https://github.com/zopencommunity/help2manport)|Green|100.0%|[STABLE_help2man_2476](https://github.com/zopencommunity/help2manport/releases/download/STABLE_help2manport_2476/help2man-1.49.3.20240924_041914.zos.pax.Z)|A tool for converting manual pages to other formats|
 | [xxhash](https://github.com/zopencommunity/xxhashport)|Green|100.0%|[STABLE_xxhash_1993](https://github.com/zopencommunity/xxhashport/releases/download/STABLE_xxhashport_1993/xxHash-0.8.2.20240123_100914.zos.pax.Z)|A fast hash function library|
 | [zstd](https://github.com/zopencommunity/zstdport)|Green|100.0%|[STABLE_zstd_2041](https://github.com/zopencommunity/zstdport/releases/download/STABLE_zstdport_2041/zstd-1.5.5.20240126_215521.zos.pax.Z)|A compression algorithm|
@@ -307,8 +307,8 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | [bash](https://github.com/zopencommunity/bashport)|Blue|80.5%|[STABLE_bash_2485](https://github.com/zopencommunity/bashport/releases/download/STABLE_bashport_2485/bash-5.2.32.20240930_190728.zos.pax.Z)|The Bourne Again shell|
 | [libpcre](https://github.com/zopencommunity/libpcreport)|Blue|80.0%|[STABLE_libpcre_1938](https://github.com/zopencommunity/libpcreport/releases/download/STABLE_libpcreport_1938/pcre-8.45.20240104_134313.zos.pax.Z)|A regular expression library|
 | [coreutils](https://github.com/zopencommunity/coreutilsport)|Blue|79.8%|[STABLE_coreutils_2629](https://github.com/zopencommunity/coreutilsport/releases/download/STABLE_coreutilsport_2629/coreutils-9.5.20241018_140747.zos.pax.Z)|A collection of basic Unix utilities|
-| [gzip](https://github.com/zopencommunity/gzipport)|Blue|77.8%|[STABLE_gzip_2711](https://github.com/zopencommunity/gzipport/releases/download/STABLE_gzipport_2711/gzip-1.13.20241029_035908.zos.pax.Z)|Library for handling gzip compressed files|
 | [xz](https://github.com/zopencommunity/xzport)|Blue|77.8%|[STABLE_xz_2609](https://github.com/zopencommunity/xzport/releases/download/STABLE_xzport_2609/xz-5.4.5.20241009_201602.zos.pax.Z)|A compression utility|
+| [gzip](https://github.com/zopencommunity/gzipport)|Blue|77.8%|[STABLE_gzip_2711](https://github.com/zopencommunity/gzipport/releases/download/STABLE_gzipport_2711/gzip-1.13.20241029_035908.zos.pax.Z)|Library for handling gzip compressed files|
 | [automake](https://github.com/zopencommunity/automakeport)|Yellow|71.4%|[STABLE_automake_2714](https://github.com/zopencommunity/automakeport/releases/download/STABLE_automakeport_2714/automake-1.17.20241029_040611.zos.pax.Z)|Tool for managing dependencies in software projects using GNU Autotools|
 | [getopt](https://github.com/zopencommunity/getoptport)|Yellow|52.2%|[STABLE_getopt_1927](https://github.com/zopencommunity/getoptport/releases/download/STABLE_getoptport_1927/getopt-1.1.6.20240103_131650.zos.pax.Z)|A command-line option parser|
 | [texinfo](https://github.com/zopencommunity/texinfoport)|Red|35.3%|[STABLE_texinfo_1764](https://github.com/zopencommunity/texinfoport/releases/download/STABLE_texinfoport_1764/texinfo-6.8.20231115_132117.zos.pax.Z)|A documentation generator|
@@ -322,7 +322,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 | Package | Status | Test Success Rate | Latest Release | Description |
 |---|---|---|---|---|
-| [zigi](https://github.com/zopencommunity/zigiport)|Skipped|N/A|[STABLE_zigi_2674](https://github.com/zopencommunity/zigiport/releases/download/STABLE_zigiport_2674/zigi-master.20241028_223549.zos.pax.Z)|A git interface for ispf|
+| [zigi](https://github.com/zopencommunity/zigiport)|Skipped|N/A|[STABLE_zigi_2747](https://github.com/zopencommunity/zigiport/releases/download/STABLE_zigiport_2747/zigi-master.20241120_170602.zos.pax.Z)|A git interface for ispf|
 | [moreutils](https://github.com/zopencommunity/moreutilsport)|Skipped|N/A|[STABLE_moreutils_2647](https://github.com/zopencommunity/moreutilsport/releases/download/STABLE_moreutilsport_2647/moreutils-0.67.20241028_212123.zos.pax.Z)|A collection of text processing utilities|
 | [tree](https://github.com/zopencommunity/treeport)|Skipped|N/A|[STABLE_tree_2644](https://github.com/zopencommunity/treeport/releases/download/STABLE_treeport_2644/tree-heads.2.1.1.20241028_211804.zos.pax.Z)|A directory tree listing tool|
 | [prompters](https://github.com/zopencommunity/promptersport)|Skipped|N/A|[STABLE_prompters_2717](https://github.com/zopencommunity/promptersport/releases/download/STABLE_promptersport_2717/prompters-main.20241029_144150.zos.pax.Z)|Prompter library for creating interactive command line interfaces|
@@ -359,4 +359,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2024-11-19T23:12:30.605468
+Last updated:  2024-11-20T13:08:02.073083
