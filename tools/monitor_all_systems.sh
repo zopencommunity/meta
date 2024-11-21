@@ -41,7 +41,7 @@ monitor_instances() {
     
     set -x
     ./monitor_vpc.sh -i "$name" -p "$ip" -a "$action" -r "$region"
-  set +x
+    set +x
     
   done
 }
