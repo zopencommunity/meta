@@ -16,6 +16,13 @@ to documentation, code, binary files, etc.
 
 No pull request can be merged without being reviewed and approved.
 
+## New Port Contributions
+
+If you'd like to contribute a new z/OS port, please open an issue using the following link:
+[New Port Contribution Request](https://github.com/zopencommunity/meta/issues/new?assignees=&labels=port-repo-request&projects=&template=contribution.yml&title=%5BNew+Port%5D%3A+%3Cport-name%3E)
+
+Once the issue is created, a code owner will review your request. If approved, the issue will be labeled as "approved", and a GitHub Action will automatically create the port repository for you. If the request is not approved, the issue will be closed with an explanation.
+
 ## Validate your changes
 
 Verify that the project is working by running `zopen build`.
