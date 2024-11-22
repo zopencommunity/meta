@@ -2,7 +2,7 @@
 
 ## Getting Started
 
-Before you get started with porting open source to z/OS, read the [Getting Started Guide](Pre-req.md) to set up your environment.
+Before you get started with porting open source to z/OS, read the [Getting Started Guide](Pre-req.md) to set up your environment. We also recommend that you read the [contributing guide](https://github.com/zopencommunity/meta/blob/main/CONTRIBUTING.md).
 
 Once you have a z/OS system set up with the required zopen directory structure and pre-requisite boot tools, you will then need to set up Git as follows:
 
@@ -28,8 +28,7 @@ Many tools require a C or C++ compiler (or both) to build. There are a couple of
 
 * You can download a web deliverable add-on feature to your XL C/C++ compiler
 [here](https://www.ibm.com/servers/resourcelink/svc00100.nsf/pages/xlCC++V241ForZOsV24).
-* You can install and manage _C/C++ for Open Enterprise Languages on z/OS_ using _RedHat OpenShift Container Platform_ and _IBM Z and Cloud Modernization Stack_
-[here](https://github.com/IBM/z-and-cloud-modernization-stack-community).
+* You can install and manage _C/C++ for Open Enterprise Languages on z/OS_ [here](https://epwt-www.mybluemix.net/software/support/trial/cst/programwebsite.wss?siteId=1803).
 Please note that these compilers are comparable, but how you perform installation and maintenance and pricing is different.
 
 In order for zopen to be able to locate dependent tools, they need to be in well-defined locations.
@@ -49,7 +48,7 @@ If you are building from a zopencommunity port, this `.env` file will be created
 
 ### Create your first z/OS port leveraging the zopen framework
 
-Before you begin porting a tool to z/OS, you must first identify the tool or library that you wish to port. For the sake of this guide, let's assume we are porting [jq](https://stedolan.github.io/jq/), a lightweight and flexible json parser. Before porting a tool, check if the project already exists under [zopencommunity](https://github.com/zopencommunity). If it does exist, then please collaborate with the existing contributors.
+Before you begin porting a tool to z/OS, you must first identify the tool or library that you wish to port. For the sake of this guide, let's assume we are porting [jq](https://stedolan.github.io/jq/), a lightweight and flexible json parser. Before porting a tool, check if the project already exists under [zopencommunity](https://github.com/zopencommunity). If it does exist, then please collaborate with the existing contributors. 
 
 Begin first by cloning the [meta](https://github.com/zopencommunity/meta) repo. This repo contains the `zopen` framework under the `bin/` directory and it is what we will use to build, test, and install our port.
 
@@ -220,13 +219,7 @@ Once you have a working prototype of your tool, you can proceed to the next step
 
 After you have a working z/OS prototype for your tool, you will need to create a repository to hold your contents.
 
-Send an email to <itodorov@ca.ibm.com> or <fultonm@ca.ibm.com> with the following information:
-
-* Name of the tool
-* Current repository where contents reside
-* List of Collaborators
-
-Once your repository is created, you will be invited as a collaborator.
+Open a [new port contribution request](https://github.com/zopencommunity/meta/issues/new?assignees=&labels=port-repo-request&projects=&template=contribution.yml&title=%5BNew+Port%5D%3A+%3Cport-name%3E).
 
 Proceed to clone the repository and submit a Pull Request including the initial contents of your z/OS port.
 
