@@ -19,6 +19,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
     <option value="library">library</option>
     <option value="networking">networking</option>
     <option value="security">security</option>
+    <option value="shell">shell</option>
     <option value="source_control">source_control</option>
     <option value="uncategorized">uncategorized</option>
     <option value="utilities">utilities</option>
@@ -239,6 +240,15 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | [libsasl2](https://github.com/zopencommunity/libsasl2port)|Green|100.0%|[STABLE_libsasl2_2311](https://github.com/zopencommunity/libsasl2port/releases/download/STABLE_libsasl2port_2311/cyrus-sasl-master.20240624_052635.zos.pax.Z)|A SASL library|
 </div>
 
+<div class="table-category" data-category="shell">
+
+## Shell <!-- {docsify-ignore} -->
+
+| Package | Status | Test Success Rate | Latest Release | Description |
+|---|---|---|---|---|
+| [powerlinego](https://github.com/zopencommunity/powerlinegoport)|Skipped|N/A|[STABLE_powerlinego_2751](https://github.com/zopencommunity/powerlinegoport/releases/download/STABLE_powerlinegoport_2751/powerlinego-DEV.20241127_031544.zos.pax.Z)|A low-latency prompt for your shell|
+</div>
+
 <div class="table-category" data-category="source_control">
 
 ## Source_Control <!-- {docsify-ignore} -->
@@ -259,7 +269,6 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | [ncdu](https://github.com/zopencommunity/ncduport)|Skipped|N/A|[STABLE_ncdu_2401](https://github.com/zopencommunity/ncduport/releases/download/STABLE_ncduport_2401/ncdu-1.20.20240820_162607.zos.pax.Z)|A disk usage analyzer with an ncurses interface|
 | [emacs](https://github.com/zopencommunity/emacsport)|Skipped|N/A|[STABLE_emacs_2505](https://github.com/zopencommunity/emacsport/releases/download/STABLE_emacsport_2505/emacs-29.4.20241001_222229.zos.pax.Z)|A text editor|
 | [yq](https://github.com/zopencommunity/yqport)|Skipped|N/A|[STABLE_yq_2531](https://github.com/zopencommunity/yqport/releases/download/STABLE_yqport_2531/yq-master.20241002_010453.zos.pax.Z)|A command-line JSON processor|
-| [powerlinego](https://github.com/zopencommunity/powerlinegoport)|Skipped|N/A|[STABLE_powerlinego_2518](https://github.com/zopencommunity/powerlinegoport/releases/download/STABLE_powerlinegoport_2518/powerlinego-DEV.20241002_001754.zos.pax.Z)|A low-latency prompt for your shell|
 | [gum](https://github.com/zopencommunity/gumport)|Skipped|N/A|[STABLE_gum_2581](https://github.com/zopencommunity/gumport/releases/download/STABLE_gumport_2581/gum-heads.v0.13.0.20241002_035627.zos.pax.Z)|A tool for creating simple command-line interfaces|
 | [thesilversearcher](https://github.com/zopencommunity/thesilversearcherport)|Skipped|N/A|[STABLE_thesilversearcher_2575](https://github.com/zopencommunity/thesilversearcherport/releases/download/STABLE_thesilversearcherport_2575/the_silver_searcher-2.2.0.20241002_034103.zos.pax.Z)|A code searching tool|
 | [llamacpp](https://github.com/zopencommunity/llamacppport)|Skipped|N/A|[STABLE_llamacpp_2013](https://github.com/zopencommunity/llamacppport/releases/download/STABLE_llamacppport_2013/llamacpp-master.20240124_170742.zos.pax.Z)|A C++ library for writing high-performance network applications|
@@ -307,8 +316,8 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | [bash](https://github.com/zopencommunity/bashport)|Blue|80.5%|[STABLE_bash_2485](https://github.com/zopencommunity/bashport/releases/download/STABLE_bashport_2485/bash-5.2.32.20240930_190728.zos.pax.Z)|The Bourne Again shell|
 | [libpcre](https://github.com/zopencommunity/libpcreport)|Blue|80.0%|[STABLE_libpcre_1938](https://github.com/zopencommunity/libpcreport/releases/download/STABLE_libpcreport_1938/pcre-8.45.20240104_134313.zos.pax.Z)|A regular expression library|
 | [coreutils](https://github.com/zopencommunity/coreutilsport)|Blue|79.8%|[STABLE_coreutils_2629](https://github.com/zopencommunity/coreutilsport/releases/download/STABLE_coreutilsport_2629/coreutils-9.5.20241018_140747.zos.pax.Z)|A collection of basic Unix utilities|
-| [gzip](https://github.com/zopencommunity/gzipport)|Blue|77.8%|[STABLE_gzip_2711](https://github.com/zopencommunity/gzipport/releases/download/STABLE_gzipport_2711/gzip-1.13.20241029_035908.zos.pax.Z)|Library for handling gzip compressed files|
 | [xz](https://github.com/zopencommunity/xzport)|Blue|77.8%|[STABLE_xz_2609](https://github.com/zopencommunity/xzport/releases/download/STABLE_xzport_2609/xz-5.4.5.20241009_201602.zos.pax.Z)|A compression utility|
+| [gzip](https://github.com/zopencommunity/gzipport)|Blue|77.8%|[STABLE_gzip_2711](https://github.com/zopencommunity/gzipport/releases/download/STABLE_gzipport_2711/gzip-1.13.20241029_035908.zos.pax.Z)|Library for handling gzip compressed files|
 | [automake](https://github.com/zopencommunity/automakeport)|Yellow|71.4%|[STABLE_automake_2714](https://github.com/zopencommunity/automakeport/releases/download/STABLE_automakeport_2714/automake-1.17.20241029_040611.zos.pax.Z)|Tool for managing dependencies in software projects using GNU Autotools|
 | [getopt](https://github.com/zopencommunity/getoptport)|Yellow|52.2%|[STABLE_getopt_1927](https://github.com/zopencommunity/getoptport/releases/download/STABLE_getoptport_1927/getopt-1.1.6.20240103_131650.zos.pax.Z)|A command-line option parser|
 | [texinfo](https://github.com/zopencommunity/texinfoport)|Red|35.3%|[STABLE_texinfo_1764](https://github.com/zopencommunity/texinfoport/releases/download/STABLE_texinfoport_1764/texinfo-6.8.20231115_132117.zos.pax.Z)|A documentation generator|
@@ -359,4 +368,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2024-11-22T11:32:31.539221
+Last updated:  2024-11-26T22:30:12.687026
