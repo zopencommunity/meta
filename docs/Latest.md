@@ -229,7 +229,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | [sshpass](https://github.com/zopencommunity/sshpassport)|Skipped|N/A|[STABLE_sshpass_2641](https://github.com/zopencommunity/sshpassport/releases/download/STABLE_sshpassport_2641/sshpass-1.10.20241028_083610.zos.pax.Z)|A secure shell client|
 | [osv-scanner](https://github.com/zopencommunity/osv-scannerport)|Skipped|N/A|[STABLE_osv-scanner_2133](https://github.com/zopencommunity/osv-scannerport/releases/download/STABLE_osv-scannerport_2133/osv-scanner-heads.v1.6.2.20240214_174547.zos.pax.Z)|Vulnerability scanner written in Go which uses the data provided by https://osv.dev|
 | [cppcheck](https://github.com/zopencommunity/cppcheckport)|Skipped|N/A|[STABLE_cppcheck_2309](https://github.com/zopencommunity/cppcheckport/releases/download/STABLE_cppcheckport_2309/cppcheck-heads.2.14.2.20240619_013350.zos.pax.Z)|A static analysis tool for C/C++ code|
-| [npth](https://github.com/zopencommunity/npthport)|Green|100.0%|[STABLE_npth_2742](https://github.com/zopencommunity/npthport/releases/download/STABLE_npthport_2742/npth-1.8.20241119_072716.zos.pax.Z)|A portable threading library|
+| [npth](https://github.com/zopencommunity/npthport)|Green|100.0%|[STABLE_npth_2754](https://github.com/zopencommunity/npthport/releases/download/STABLE_npthport_2754/npth-1.8.20241128_113430.zos.pax.Z)|A portable threading library|
 | [libgpgerror](https://github.com/zopencommunity/libgpgerrorport)|Green|100.0%|[STABLE_libgpgerror_2753](https://github.com/zopencommunity/libgpgerrorport/releases/download/STABLE_libgpgerrorport_2753/libgpgerror-DEV.20241128_041303.zos.pax.Z)|A library for handling errors|
 | [libgcrypt](https://github.com/zopencommunity/libgcryptport)|Green|100.0%|[STABLE_libgcrypt_2741](https://github.com/zopencommunity/libgcryptport/releases/download/STABLE_libgcryptport_2741/libgcrypt-1.10.3.20241119_061304.zos.pax.Z)|A general-purpose cryptographic library|
 | [libksba](https://github.com/zopencommunity/libksbaport)|Green|100.0%|[STABLE_libksba_2648](https://github.com/zopencommunity/libksbaport/releases/download/STABLE_libksbaport_2648/libksba-1.6.5.20241028_211725.zos.pax.Z)|A library for working with X.509 certificates and other cryptographic objects|
@@ -274,9 +274,9 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | [llamacpp](https://github.com/zopencommunity/llamacppport)|Skipped|N/A|[STABLE_llamacpp_2013](https://github.com/zopencommunity/llamacppport/releases/download/STABLE_llamacppport_2013/llamacpp-master.20240124_170742.zos.pax.Z)|A C++ library for writing high-performance network applications|
 | [githubcli](https://github.com/zopencommunity/githubcliport)|Skipped|N/A|[DEV_githubcli_2573](https://github.com/zopencommunity/githubcliport/releases/download/DEV_githubcliport_2573/githubcli-DEV.20241002_030701.zos.pax.Z)|A command-line tool for GitHub|
 | [gitlabcli](https://github.com/zopencommunity/gitlabcliport)|Skipped|N/A|[STABLE_gitlabcli_2590](https://github.com/zopencommunity/gitlabcliport/releases/download/STABLE_gitlabcliport_2590/gitlabcli-DEV.20241002_042636.zos.pax.Z)|A command-line tool for GitLab|
-| [zlib](https://github.com/zopencommunity/zlibport)|Green|100.0%|[DEV_zlib_2706](https://github.com/zopencommunity/zlibport/releases/download/DEV_zlibport_2706/zlib-develop.20241029_024916.zos.pax.Z)|A data compression library|
 | [less](https://github.com/zopencommunity/lessport)|Green|100.0%|[STABLE_less_2642](https://github.com/zopencommunity/lessport/releases/download/STABLE_lessport_2642/less-heads.v667.20241028_123530.zos.pax.Z)|A text pager|
 | [ncurses](https://github.com/zopencommunity/ncursesport)|Green|100.0%|[STABLE_ncurses_2721](https://github.com/zopencommunity/ncursesport/releases/download/STABLE_ncursesport_2721/ncurses-6.5.20241101_200007.zos.pax.Z)|Library for ncurses, a terminal screen handling library|
+| [zlib](https://github.com/zopencommunity/zlibport)|Green|100.0%|[DEV_zlib_2706](https://github.com/zopencommunity/zlibport/releases/download/DEV_zlibport_2706/zlib-develop.20241029_024916.zos.pax.Z)|A data compression library|
 | [help2man](https://github.com/zopencommunity/help2manport)|Green|100.0%|[STABLE_help2man_2476](https://github.com/zopencommunity/help2manport/releases/download/STABLE_help2manport_2476/help2man-1.49.3.20240924_041914.zos.pax.Z)|A tool for converting manual pages to other formats|
 | [xxhash](https://github.com/zopencommunity/xxhashport)|Green|100.0%|[STABLE_xxhash_1993](https://github.com/zopencommunity/xxhashport/releases/download/STABLE_xxhashport_1993/xxHash-0.8.2.20240123_100914.zos.pax.Z)|A fast hash function library|
 | [zstd](https://github.com/zopencommunity/zstdport)|Green|100.0%|[STABLE_zstd_2041](https://github.com/zopencommunity/zstdport/releases/download/STABLE_zstdport_2041/zstd-1.5.5.20240126_215521.zos.pax.Z)|A compression algorithm|
@@ -368,4 +368,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2024-11-27T23:49:54.013306
+Last updated:  2024-11-28T06:56:43.377858
