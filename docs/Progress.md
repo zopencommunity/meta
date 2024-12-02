@@ -281,8 +281,8 @@
 |  [libeventport](https://github.com/zopencommunity/libeventport) | 127 | 4
 |  [libssh2port](https://github.com/zopencommunity/libssh2port) | 122 | 5
 |  [m4port](https://github.com/zopencommunity/m4port) | 120 | 5
+|  [libgcryptport](https://github.com/zopencommunity/libgcryptport) | 120 | 7
 |  [thesilversearcherport](https://github.com/zopencommunity/thesilversearcherport) | 118 | 4
-|  [libgcryptport](https://github.com/zopencommunity/libgcryptport) | 116 | 6
 |  [diffutilsport](https://github.com/zopencommunity/diffutilsport) | 114 | 6
 |  [ncursesport](https://github.com/zopencommunity/ncursesport) | 111 | 2
 |  [libbsdport](https://github.com/zopencommunity/libbsdport) | 107 | 4
