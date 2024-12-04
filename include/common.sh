@@ -313,7 +313,7 @@ if [ -z "\${ZOPEN_QUICK_LOAD}" ]; then
       if [ -n "\${ZOPEN_TOOLSET_OVERRIDE}" ]; then
         /bin/echo " - NOTE: Conflicting tools (e.g. man, cat, grep) will override z/OS /bin tools. Pass the option --nooverride-zos-tools to avoid this."
       else
-        /bin/echo " - NOTE: Conflicting tools (e.g. man, cat, grep) will not override z/OS /bin tools; Use the prefixed executables instead (eg. zotman, gcat, grep). Pass the option --override-zos-tools to avoid this."
+        /bin/echo " - NOTE: Conflicting tools (e.g. man, cat, grep) will not override z/OS /bin tools; Use the prefixed executables instead (eg. zotman, gcat, grep). Pass the option --override-zos-tools if you prefer zopen tools or --help for further options."
       fi
     fi
 
