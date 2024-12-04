@@ -309,8 +309,14 @@ if [ -z "\${ZOPEN_QUICK_LOAD}" ]; then
   if [ -e "\${ZOPEN_ROOTFS}/etc/profiled" ]; then
     dotenvs=\$(find "\${ZOPEN_ROOTFS}/etc/profiled" -type f -name 'dotenv' -print)
     if \$displayText; then
-      printf "Processing \$zot configuration..."
+      /bin/echo "Processing \$zot configuration..."
+      if [ -n "\${ZOPEN_TOOLSET_OVERRIDE}" ]; then
+        /bin/echo " - NOTE: Conflicting tools (e.g. man, cat, grep) will override z/OS /bin tools. Pass the option --nooverride-zos-tools to avoid this."
+      else
+        /bin/echo " - NOTE: Conflicting tools (e.g. man, cat, grep) will not override z/OS /bin tools; Use the prefixed executables instead (eg. zotman, gcat, grep). Pass the option --override-zos-tools to avoid this."
+      fi
     fi
+
     for dotenv in \$dotenvs; do
       . \$dotenv
     done
