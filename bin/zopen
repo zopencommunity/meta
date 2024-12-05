@@ -104,6 +104,7 @@ for arg in $*; do
       subcmd="zopen-${arg}-helper"
       ;;
     "--version")
+      subcmd='zopen-version'
       version=true
       ;;
     "help" | "--help" | "-?")
@@ -117,7 +118,7 @@ for arg in $*; do
 done
 
 if [ -z "${subcmd}" ]; then
-  if ${help} || [ -z "$subopts" ]; then
+  if ${help} || [ -z "${subopts}" -a -z "${subcmd}" ]; then
     printHelp
     exit 0
   elif ${version}; then
@@ -137,7 +138,6 @@ if ${version}; then
   else
     subopts="${subcmd}"
   fi
-  subcmd='zopen-version'
 fi
 
 ${subcmd} ${subopts}
