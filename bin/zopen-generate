@@ -51,6 +51,11 @@ if [ $# -eq 1 ]; then
   fi
 fi
 
+if ! command -v "git" >/dev/null 2>&1; then
+  echo "zopen generates requires git. Use zopen install git to install it." >&2
+  exit 1
+fi
+
 buildLicenseLookup
 
 printHeader "Generate a zopen project"
@@ -260,8 +265,11 @@ else
   printWarning "Could not locate LICENSE file ${metalicense} to copy for project ${ourlicense}"
 fi
 
+git -C "${name}port" init --initial-branch=main 
+git -C "${name}port" add .
+
 printHeader "${name} project is ready! ${name}port/"
 printInfo "Create patches under the ${name}port/patches directory"
 printInfo "Run zopen build to build ${name}port"
-printInfo "Contact Igor Todorovski (itodorov@ca.ibm.com) to create https://github.com/zopencommunity/${name}port.git"
-printInfo "Update the CODEOWNERS, buildenv, and README.md files appropriately"
+printInfo "To create a zopen repository, submit a \"New port contribution request\" here: https://github.com/zopencommunity/meta/issues/new/choose"
+printInfo "Update the CODEOWNERS, buildenv, patches and README.md files appropriately"
