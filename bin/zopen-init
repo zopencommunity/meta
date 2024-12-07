@@ -313,6 +313,12 @@ init()
     exit 0
   fi
 
+  if ! ${yesToPrompts} && [ -z "${OVERRIDE_ZOS_TOOLS}" ]; then
+    if promptYesOrNo "Should zopen tools default to overriding the z/OS /bin tools (e.g. man, find, grep)?" ${yesToPrompts}; then
+      OVERRIDE_ZOS_TOOLS=true
+    fi
+  fi
+
   configFile="${rootfs}/etc/zopen-config"
   if [ -f "${configFile}" ]; then
     if [ -e "${configFile}" ]; then
