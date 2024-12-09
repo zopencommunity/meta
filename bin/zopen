@@ -35,6 +35,7 @@ Command:
   config            change zopen runtime environment settings
   generate          generates a new zopen project
   init              initializes a zopen environment at the specified location
+  refresh           refreshes your zopen environment and zopen-config file
   install           installs one or more zopen community packages
   list              lists information about zopen community packages
   query             list local or remote info about zopen community packages
@@ -91,6 +92,10 @@ for arg in $*; do
       subcmd='zopen-query'
       subopts="${subopts} --list"
       ;;
+    "refresh")
+      subcmd='zopen-init'
+      subopts="${subopts} --refresh"
+      ;;
     "upgrade")
       subcmd='zopen-install'
       subopts="${subopts} -u"
@@ -99,6 +104,7 @@ for arg in $*; do
       subcmd="zopen-${arg}-helper"
       ;;
     "--version")
+      subcmd='zopen-version'
       version=true
       ;;
     "help" | "--help" | "-?")
@@ -112,7 +118,7 @@ for arg in $*; do
 done
 
 if [ -z "${subcmd}" ]; then
-  if ${help}; then
+  if ${help} || [ -z "${subopts}" -a -z "${subcmd}" ]; then
     printHelp
     exit 0
   elif ${version}; then
@@ -132,7 +138,6 @@ if ${version}; then
   else
     subopts="${subcmd}"
   fi
-  subcmd='zopen-version'
 fi
 
 ${subcmd} ${subopts}
