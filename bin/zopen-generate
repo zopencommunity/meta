@@ -52,7 +52,7 @@ if [ $# -eq 1 ]; then
 fi
 
 if ! command -v "git" >/dev/null 2>&1; then
-  echo "zopen generates requires git. Use zopen install git to install it." >&2
+  echo "zopen generate requires git. Use zopen install git to install it." >&2
   exit 1
 fi
 
