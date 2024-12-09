@@ -523,7 +523,7 @@ signPaxFile()
 loadBuildEnv()
 {
   if [ ! -r ${buildEnvFile} ]; then
-    printError "Build environment file '${buildEnvFile}' does not exist or is not readable"
+    printError "Build environment file '${buildEnvFile}' does not exist or is not readable. Use zopen generate to create a buildenv file."
   fi
 
   # Indicates to .env script that we're in zopen build
