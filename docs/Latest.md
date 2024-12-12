@@ -114,10 +114,10 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | [check_go](https://github.com/zopencommunity/check_goport)|Green|100.0%|[STABLE_check_go_2769](https://github.com/zopencommunity/check_goport/releases/download/STABLE_check_goport_2769/check_go-DEV.20241205_223220.zos.pax.Z)|A script to check for the existence of Go|
 | [cronie](https://github.com/zopencommunity/cronieport)|Green|100.0%|[DEV_cronie_2445](https://github.com/zopencommunity/cronieport/releases/download/DEV_cronieport_2445/cronie-master.20240922_053018.zos.pax.Z)|A cron daemon|
 | [libdio](https://github.com/zopencommunity/libdioport)|Green|100.0%|[DEV_libdio_2770](https://github.com/zopencommunity/libdioport/releases/download/DEV_libdioport_2770/libdio-main.20241206_015131.zos.pax.Z)|A dataset I/O library|
-| [bash-completion](https://github.com/zopencommunity/bash-completionport)|Green|100.0%|[STABLE_bash-completion_2782](https://github.com/zopencommunity/bash-completionport/releases/download/STABLE_bash-completionport_2782/bashcompletion-DEV.20241211_024003.zos.pax.Z)||
+| [bash-completion](https://github.com/zopencommunity/bash-completionport)|Green|100.0%|[STABLE_bash-completion_2785](https://github.com/zopencommunity/bash-completionport/releases/download/STABLE_bash-completionport_2785/bashcompletion-DEV.20241211_200045.zos.pax.Z)||
 | [make](https://github.com/zopencommunity/makeport)|Blue|99.9%|[STABLE_make_2702](https://github.com/zopencommunity/makeport/releases/download/STABLE_makeport_2702/make-4.4.1.20241029_012339.zos.pax.Z)|A build automation tool|
 | [dos2unix](https://github.com/zopencommunity/dos2unixport)|Blue|99.1%|[STABLE_dos2unix_2543](https://github.com/zopencommunity/dos2unixport/releases/download/STABLE_dos2unixport_2543/dos2unix-7.5.2.20241002_013955.zos.pax.Z)|A tool for converting DOS/Windows text files to Unix format|
-| [git](https://github.com/zopencommunity/gitport)|Blue|96.7%|[STABLE_git_2783](https://github.com/zopencommunity/gitport/releases/download/STABLE_gitport_2783/git-heads.v2.47.0.20241211_024728.zos.pax.Z)|The Git version control system|
+| [git](https://github.com/zopencommunity/gitport)|Blue|96.7%|[STABLE_git_2786](https://github.com/zopencommunity/gitport/releases/download/STABLE_gitport_2786/git-heads.v2.47.0.20241211_194122.zos.pax.Z)|The Git version control system|
 | [re2c](https://github.com/zopencommunity/re2cport)|Blue|80.0%|[STABLE_re2c_2686](https://github.com/zopencommunity/re2cport/releases/download/STABLE_re2cport_2686/re2c-3.1.20241028_225705.zos.pax.Z)|A lexer generator for creating lexers|
 | [conan](https://github.com/zopencommunity/conanport)|Yellow|54.0%|[STABLE_conan_2723](https://github.com/zopencommunity/conanport/releases/download/STABLE_conanport_2723/conan-heads.2.9.1.20241104_151950.zos.pax.Z)|C/C++ Package Manager tool|
 | [byacc](https://github.com/zopencommunity/byaccport)|Red|45.6%|[STABLE_byacc_2661](https://github.com/zopencommunity/byaccport/releases/download/STABLE_byaccport_2661/byacc-20240109.20241028_215525.zos.pax.Z)|A parser generator compatible with Yacc|
@@ -257,7 +257,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | Package | Status | Test Success Rate | Latest Release | Description |
 |---|---|---|---|---|
 | [powerlinego](https://github.com/zopencommunity/powerlinegoport)|Skipped|N/A|[STABLE_powerlinego_2775](https://github.com/zopencommunity/powerlinegoport/releases/download/STABLE_powerlinegoport_2775/powerlinego-DEV.20241206_021656.zos.pax.Z)|A low-latency prompt for your shell|
-| [bash-completion](https://github.com/zopencommunity/bash-completionport)|Green|100.0%|[STABLE_bash-completion_2782](https://github.com/zopencommunity/bash-completionport/releases/download/STABLE_bash-completionport_2782/bashcompletion-DEV.20241211_024003.zos.pax.Z)||
+| [bash-completion](https://github.com/zopencommunity/bash-completionport)|Green|100.0%|[STABLE_bash-completion_2785](https://github.com/zopencommunity/bash-completionport/releases/download/STABLE_bash-completionport_2785/bashcompletion-DEV.20241211_200045.zos.pax.Z)||
 </div>
 
 <div class="table-category" data-category="source_control">
@@ -269,7 +269,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | [gitlab-runner](https://github.com/zopencommunity/gitlab-runnerport)|Skipped|N/A|[STABLE_gitlab-runner_2597](https://github.com/zopencommunity/gitlab-runnerport/releases/download/STABLE_gitlab-runnerport_2597/gitlab-runner.20241002_044313.zos.pax.Z)|A GitLab Runner|
 | [git-extras](https://github.com/zopencommunity/git-extrasport)|Skipped|N/A|[STABLE_git-extras_2761](https://github.com/zopencommunity/git-extrasport/releases/download/STABLE_git-extrasport_2761/gitextras-DEV.20241205_164151.zos.pax.Z)||
 | [tig](https://github.com/zopencommunity/tigport)|Green|100.0%|[STABLE_tig_2656](https://github.com/zopencommunity/tigport/releases/download/STABLE_tigport_2656/tig-2.5.9.20241028_214944.zos.pax.Z)|A text-mode interface for Git|
-| [git](https://github.com/zopencommunity/gitport)|Blue|96.7%|[STABLE_git_2783](https://github.com/zopencommunity/gitport/releases/download/STABLE_gitport_2783/git-heads.v2.47.0.20241211_024728.zos.pax.Z)|The Git version control system|
+| [git](https://github.com/zopencommunity/gitport)|Blue|96.7%|[STABLE_git_2786](https://github.com/zopencommunity/gitport/releases/download/STABLE_gitport_2786/git-heads.v2.47.0.20241211_194122.zos.pax.Z)|The Git version control system|
 </div>
 
 <div class="table-category" data-category="uncategorized">
@@ -348,7 +348,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | [zotsample](https://github.com/zopencommunity/zotsampleport)|Green|100.0%|[STABLE_zotsample_2744](https://github.com/zopencommunity/zotsampleport/releases/download/STABLE_zotsampleport_2744/zotsample-1.3.20241120_025724.zos.pax.Z)|z/OS Open Tools Sample Port for education|
 | [man-db](https://github.com/zopencommunity/man-dbport)|Green|100.0%|[STABLE_man-db_2712](https://github.com/zopencommunity/man-dbport/releases/download/STABLE_man-dbport_2712/man-db-2.12.1.20241029_015025.zos.pax.Z)|Tool for generating manual pages for Unix programs|
 | [hello](https://github.com/zopencommunity/helloport)|Green|100.0%|[STABLE_hello_2670](https://github.com/zopencommunity/helloport/releases/download/STABLE_helloport_2670/hello-2.12.1.20241028_222324.zos.pax.Z)|A simple "hello world" program demonstrating the use of autotools and gettext|
-| [meta](https://github.com/zopencommunity/metaport)|Green|100.0%|[STABLE_meta_2750](https://github.com/zopencommunity/metaport/releases/download/STABLE_metaport_2750/meta-main.20241122_160415.zos.pax.Z)|zopen package manager|
+| [meta](https://github.com/zopencommunity/metaport)|Green|100.0%|[STABLE_meta_2784](https://github.com/zopencommunity/metaport/releases/download/STABLE_metaport_2784/meta-main.20241211_185335.zos.pax.Z)|zopen package manager|
 | [which](https://github.com/zopencommunity/whichport)|Green|100.0%|[STABLE_which_2757](https://github.com/zopencommunity/whichport/releases/download/STABLE_whichport_2757/which-2.21.20241202_202927.zos.pax.Z)|A command to find commands|
 | [tig](https://github.com/zopencommunity/tigport)|Green|100.0%|[STABLE_tig_2656](https://github.com/zopencommunity/tigport/releases/download/STABLE_tigport_2656/tig-2.5.9.20241028_214944.zos.pax.Z)|A text-mode interface for Git|
 | [c3270](https://github.com/zopencommunity/c3270port)|Green|100.0%|[STABLE_c3270_2669](https://github.com/zopencommunity/c3270port/releases/download/STABLE_c3270port_2669/c3270-DEV.20241028_220605.zos.pax.Z)|A 3270 terminal emulator|
@@ -376,4 +376,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2024-12-10T22:56:01.576661
+Last updated:  2024-12-11T16:14:03.586261
