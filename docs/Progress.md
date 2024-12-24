@@ -291,6 +291,7 @@
 |  [libssh2port](https://github.com/zopencommunity/libssh2port) | 122 | 5
 |  [m4port](https://github.com/zopencommunity/m4port) | 120 | 5
 |  [thesilversearcherport](https://github.com/zopencommunity/thesilversearcherport) | 118 | 4
+|  [grepport](https://github.com/zopencommunity/grepport) | 115 | 3
 |  [ncursesport](https://github.com/zopencommunity/ncursesport) | 111 | 2
 |  [libbsdport](https://github.com/zopencommunity/libbsdport) | 107 | 4
 |  [zlib-ngport](https://github.com/zopencommunity/zlib-ngport) | 100 | 3
@@ -306,7 +307,6 @@
 |  [nanoport](https://github.com/zopencommunity/nanoport) | 68 | 1
 |  [libgpgmeport](https://github.com/zopencommunity/libgpgmeport) | 66 | 4
 |  [getoptport](https://github.com/zopencommunity/getoptport) | 65 | 1
-|  [grepport](https://github.com/zopencommunity/grepport) | 64 | 3
 |  [logrotateport](https://github.com/zopencommunity/logrotateport) | 62 | 1
 |  [depot_toolsport](https://github.com/zopencommunity/depot_toolsport) | 61 | 1
 |  [texinfoport](https://github.com/zopencommunity/texinfoport) | 56 | 3
