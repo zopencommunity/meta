@@ -15,6 +15,15 @@ git config --global user.name "<Your Name>"
 
 This assumes that you have the latest version of [Git](https://github.com/zopencommunity/gitport/releases) on your z/OS system.
 
+If you are using Vim as your editor, we recommend adding the following settings to your .vimrc file:
+
+```vim
+set expandtab        " Convert tabs to spaces  
+set shiftwidth=2     " Set the number of spaces for indentation  
+set tabstop=2        " Set the number of spaces for a tab character  
+autocmd BufNewFile,BufRead buildenv set filetype=sh  " Set file type to shell script for buildenv files
+```
+
 ### Leveraging the zopen community meta repo
 
 The meta [repo](https://github.com/zopencommunity/meta) consists of common tools and files that aid in the porting process, including the `zopen` suite of tools.  Specifically, `zopen build` provides a common way to bootstrap, configure, build, check,
