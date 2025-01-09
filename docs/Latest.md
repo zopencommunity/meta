@@ -250,6 +250,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | [ntbtls](https://github.com/zopencommunity/ntbtlsport)|Green|100.0%|[STABLE_ntbtls_2781](https://github.com/zopencommunity/ntbtlsport/releases/download/STABLE_ntbtlsport_2781/ntbtls-0.3.2.20241210_043039.zos.pax.Z)|A lightweight TLS 1.2 implementation|
 | [libmd](https://github.com/zopencommunity/libmdport)|Green|100.0%|[STABLE_libmd_2658](https://github.com/zopencommunity/libmdport/releases/download/STABLE_libmdport_2658/libmd-1.1.0.20241028_213749.zos.pax.Z)|A library for computing message digests|
 | [libsasl2](https://github.com/zopencommunity/libsasl2port)|Green|100.0%|[STABLE_libsasl2_2311](https://github.com/zopencommunity/libsasl2port/releases/download/STABLE_libsasl2port_2311/cyrus-sasl-master.20240624_052635.zos.pax.Z)|A SASL library|
+| [gpg](https://github.com/zopencommunity/gpgport)|Blue|97.3%|[STABLE_gpg_2801](https://github.com/zopencommunity/gpgport/releases/download/STABLE_gpgport_2801/gnupg-2.5.2.20250108_094720.zos.pax.Z)|A free software implementation of the GNU Privacy Guard|
 </div>
 
 <div class="table-category" data-category="shell">
@@ -286,9 +287,9 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | [thesilversearcher](https://github.com/zopencommunity/thesilversearcherport)|Skipped|N/A|[STABLE_thesilversearcher_2575](https://github.com/zopencommunity/thesilversearcherport/releases/download/STABLE_thesilversearcherport_2575/the_silver_searcher-2.2.0.20241002_034103.zos.pax.Z)|A code searching tool|
 | [llamacpp](https://github.com/zopencommunity/llamacppport)|Skipped|N/A|[STABLE_llamacpp_2013](https://github.com/zopencommunity/llamacppport/releases/download/STABLE_llamacppport_2013/llamacpp-master.20240124_170742.zos.pax.Z)|A C++ library for writing high-performance network applications|
 | [githubcli](https://github.com/zopencommunity/githubcliport)|Skipped|N/A|[DEV_githubcli_2573](https://github.com/zopencommunity/githubcliport/releases/download/DEV_githubcliport_2573/githubcli-DEV.20241002_030701.zos.pax.Z)|A command-line tool for GitHub|
-| [zlib](https://github.com/zopencommunity/zlibport)|Green|100.0%|[DEV_zlib_2706](https://github.com/zopencommunity/zlibport/releases/download/DEV_zlibport_2706/zlib-develop.20241029_024916.zos.pax.Z)|A data compression library|
 | [ncurses](https://github.com/zopencommunity/ncursesport)|Green|100.0%|[STABLE_ncurses_2721](https://github.com/zopencommunity/ncursesport/releases/download/STABLE_ncursesport_2721/ncurses-6.5.20241101_200007.zos.pax.Z)|Library for ncurses, a terminal screen handling library|
 | [less](https://github.com/zopencommunity/lessport)|Green|100.0%|[STABLE_less_2642](https://github.com/zopencommunity/lessport/releases/download/STABLE_lessport_2642/less-heads.v667.20241028_123530.zos.pax.Z)|A text pager|
+| [zlib](https://github.com/zopencommunity/zlibport)|Green|100.0%|[DEV_zlib_2706](https://github.com/zopencommunity/zlibport/releases/download/DEV_zlibport_2706/zlib-develop.20241029_024916.zos.pax.Z)|A data compression library|
 | [help2man](https://github.com/zopencommunity/help2manport)|Green|100.0%|[STABLE_help2man_2476](https://github.com/zopencommunity/help2manport/releases/download/STABLE_help2manport_2476/help2man-1.49.3.20240924_041914.zos.pax.Z)|A tool for converting manual pages to other formats|
 | [xxhash](https://github.com/zopencommunity/xxhashport)|Green|100.0%|[STABLE_xxhash_1993](https://github.com/zopencommunity/xxhashport/releases/download/STABLE_xxhashport_1993/xxHash-0.8.2.20240123_100914.zos.pax.Z)|A fast hash function library|
 | [zstd](https://github.com/zopencommunity/zstdport)|Green|100.0%|[STABLE_zstd_2041](https://github.com/zopencommunity/zstdport/releases/download/STABLE_zstdport_2041/zstd-1.5.5.20240126_215521.zos.pax.Z)|A compression algorithm|
@@ -312,7 +313,6 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | [ninja](https://github.com/zopencommunity/ninjaport)|Blue|98.2%|[STABLE_ninja_2713](https://github.com/zopencommunity/ninjaport/releases/download/STABLE_ninjaport_2713/ninja-heads.v1.12.1.20241029_041229.zos.pax.Z)|Build automation tool used with GNU Autotools|
 | [autoconf](https://github.com/zopencommunity/autoconfport)|Blue|98.0%|[STABLE_autoconf_1736](https://github.com/zopencommunity/autoconfport/releases/download/STABLE_autoconfport_1736/autoconf-2.71.20231114_002453.zos.pax.Z)|A configuration management tool|
 | [rsync](https://github.com/zopencommunity/rsyncport)|Blue|97.7%|[STABLE_rsync_2052](https://github.com/zopencommunity/rsyncport/releases/download/STABLE_rsyncport_2052/rsync-master.20240129_094849.zos.pax.Z)|A file synchronization utility|
-| [gpg](https://github.com/zopencommunity/gpgport)|Blue|97.3%|[STABLE_gpg_2510](https://github.com/zopencommunity/gpgport/releases/download/STABLE_gpgport_2510/gnupg-2.4.4.20241001_233258.zos.pax.Z)|A free software implementation of the GNU Privacy Guard|
 | [openssl](https://github.com/zopencommunity/opensslport)|Blue|95.5%|[STABLE_openssl_2719](https://github.com/zopencommunity/opensslport/releases/download/STABLE_opensslport_2719/openssl-3.3.2.20241101_004716.zos.pax.Z)|A cryptographic library|
 | [doxygen](https://github.com/zopencommunity/doxygenport)|Blue|95.2%|[STABLE_doxygen_2189](https://github.com/zopencommunity/doxygenport/releases/download/STABLE_doxygenport_2189/doxygen-master.20240311_135723.zos.pax.Z)|A documentation generator|
 | [libuv](https://github.com/zopencommunity/libuvport)|Blue|94.0%|[STABLE_libuv_2601](https://github.com/zopencommunity/libuvport/releases/download/STABLE_libuvport_2601/libuv-heads.v1.48.0.20241002_035849.zos.pax.Z)|An asynchronous I/O library|
@@ -377,4 +377,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-01-07T21:24:26.711025
+Last updated:  2025-01-08T10:53:26.362702
