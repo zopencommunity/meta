@@ -23,20 +23,26 @@ checkWritable
 
 startGPGAgent()
 {
-     printInfo "Starting gpg-agent..."
-     gpg-agent --daemon
+     printInfo "- Starting gpg-agent..."
+     gpg-agent --daemon --disable-scdaemon
      # Wait a moment to ensure the gpg-agent has time to start
      sleep 2
      # Check to confirm if gpg-agent started successfully
-     if ps -ef | grep -v grep | grep "gpg-agent" > /dev/null; then
-        printInfo "gpg-agent started successfully."
-     else
-        printWarning "Failed to start the gpg-agent. Reinstall or upgrade GPG using \"zopen install --reinstall gpg -y\" or \"zopen upgrade gpg -y\" command."
+     if ! ps -ef | grep -v grep | grep "gpg-agent" > /dev/null; then
+        printError "Failed to start the gpg-agent. Reinstall or upgrade GPG using \"zopen install --reinstall gpg -y\" or \"zopen upgrade gpg -y\" command."
      fi
+}
+
+gpgCleanup() {
+  printVerbose "Cleaning up $SIGNATURE_FILE, $PUBLIC_KEY_FILE and $TMP_GPG_DIR"
+  [ -e "$SIGNATURE_FILE" ] && rm -f "$SIGNATURE_FILE"
+  [ -e "$PUBLIC_KEY_FILE" ] && rm -f "$PUBLIC_KEY_FILE"
+  [ -d "$TMP_GPG_DIR" ] && rm -rf "$TMP_GPG_DIR"
 }
 
 verifySignatureOfPax()
 {
+  printInfo "- Performing GPG signature verification of pax file..."
   # Extracting values and checking for errors
   if ! FILE_TO_VERIFY=$(jq -e -r '.product.pax' "${metadataFile}"); then
      printError "Failed to extract 'pax' from ${metadataFile}" >&2
@@ -56,48 +62,46 @@ verifySignatureOfPax()
   TMP_GPG_DIR="$zopen_tmp_dir/zopen_gpg_verify_$LOGNAME_$$"
   mkdir -p "$TMP_GPG_DIR"
 
-  SIGNATURE_FILE="$zopen_tmp_dir/signedfile.$LOGNAME.$$.asc"
-  PUBLIC_KEY_FILE="$zopen_tmp_dir/scriptpubkey.$LOGNAME.$$.asc"
+  SIGNATURE_FILE="$zopen_tmp_dir/zopen_signedfile.$LOGNAME.$$.asc"
+  PUBLIC_KEY_FILE="$zopen_tmp_dir/zopen_scriptpubkey.$LOGNAME.$$.asc"
   printf "%b" "$SIGNATURE" | tr -d '"'  > "$SIGNATURE_FILE"
   printf "%b" "$PUBLIC_KEY" | tr -d '"'  > "$PUBLIC_KEY_FILE"
 
   startGPGAgent
 
   printVerbose "Importing public key..."
-  [ -f "$PUBLIC_KEY_FILE" ] && gpg --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --batch --yes --import "$PUBLIC_KEY_FILE"
+  gpg_output=$(gpg --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --batch --yes --import "$PUBLIC_KEY_FILE" 2>&1)
   if [ $? -ne 0 ]; then
-      [ -e "${TMP_GPG_DIR}" ] && rm -rf "$TMP_GPG_DIR"
-      printError "Importing public key failed. Verification aborted."
+    gpgCleanup
+    printError "Importing public key failed. See output:\n$gpg_output.\n Verification aborted."
   fi
+  printVerbose "$gpg_output"
 
   # Verify that the key was imported successfully
   printVerbose "Checking if public key is imported..."
-  gpg --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --list-keys
+  gpg_output=$(gpg --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --check-sigs 2>&1)
   if [ $? -ne 0 ]; then
-      [ -e "${TMP_GPG_DIR}" ] && rm -rf "$TMP_GPG_DIR"
-      printError "No public key found. Verification aborted."
+    gpgCleanup
+    printError "Public key was not imported. See output:\n$gpg_output.\nVerification aborted."
   fi
+  printVerbose "$gpg_output"
 
   # Verify the signature
-  printInfo "Verifying the gpg signature..."
-  if [ -f "$SIGNATURE_FILE" ]; then
-	gpg_output=$(gpg --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --verify "$SIGNATURE_FILE" "$FILE_TO_VERIFY" 2>&1)
-        if echo "$gpg_output" | grep -q "Good signature from"; then
-           printInfo "${NC}${GREEN}Signature verified successfully: ${name}${NC}"
-           return 0
-        else
-           [ -e "${TMP_GPG_DIR}" ] && rm -rf "$TMP_GPG_DIR"
-           printError "Verification failed. Error is: $gpg_output"
-        fi
-   else
-        printError "Signature file does not exist."
+  printInfo "- Verifying the gpg signature..."
+  if [ ! -f "$SIGNATURE_FILE" ]; then
+    gpgCleanup
+    printError "Signature file does not exist. Please raise an issue."
   fi
-  
-  printInfo "GPG signature verified."
-  # Clean up the temporary directory/files
-  [ -e "${SIGNATURE_FILE}" ] && rm -f "${SIGNATURE_FILE}"
-  [ -e "${PUBLIC_KEY_FILE}" ] && rm -f "${PUBLIC_KEY_FILE}"
-  [ -d "${TMP_GPG_DIR}" ] && rm -rf "${TMP_GPG_DIR}"
+
+  gpg_output=$(gpg --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --verify "$SIGNATURE_FILE" "$FILE_TO_VERIFY" 2>&1)
+  printVerbose "$gpg_output"
+  if echo "$gpg_output" | grep -q "Good signature from"; then
+    gpgCleanup
+    printInfo "- Signature successfully verified."
+  else
+    gpgCleanup
+    printError "Verification failed. See the output:\n$gpg_output"
+  fi
 }
 
 printSyntax()
@@ -164,7 +168,7 @@ handlePackageInstall()
   versioned=$(echo "${fullname}" | cut -s -d '=' -f 2)
   tagged=$(echo "${fullname}" | cut -s -d '%' -f 2)
   printDebug "Name:${name};version:${versioned};tag:${tagged};repo:${repo}"
-  printInfo "Processing package: ${name}"
+  printInfo "${NC}${HEADERCOLOR}${BOLD}Processing package: ${name}${NC}"
 
   nameSansPort=$(echo "${name}" | sed -e 's#\(.*\)port$#\1#')
   # findutilsport -> findutils
@@ -454,7 +458,7 @@ handlePackageInstall()
     fi
  
     megabytes=$(echo "scale=2; ${expanded_size} / (1024 * 1024)" | bc)
-    printInfo "After this operation, ${megabytes} MB of additional disk space will be used."
+    printInfo "After this operation, ${NC}${HEADERCOLOR}${BOLD}${megabytes} MB${NC} of additional disk space will be used."
     if ! promptYesOrNo "Do you want to continue?" ${yesToPrompts}; then
       if ! ${force}; then
         mutexFree "zopen"
@@ -473,12 +477,12 @@ handlePackageInstall()
     is_greater=$(echo "$metadataVersion > 0.1" | bc -l)
 
     if [ "$is_greater" -eq 1 ] && ! $skipverify; then
-	if ! command -v gpg> /dev/null; then
-	   skipverify=false;
-	   printWarning "GPG is not installed"
-        else
-           verifySignatureOfPax
-	fi
+      if ! command -v gpg> /dev/null; then
+        skipverify=false;
+        printWarning "GPG is not installed"
+      else
+        verifySignatureOfPax
+      fi
     fi
     if ! runLogProgress "pax -rf ${pax} -p p ${paxredirect} ${redirectToDevNull}" "Expanding ${pax}" "Expanded"; then
        printWarning "Errors unpaxing, package directory state unknown."
@@ -508,7 +512,7 @@ handlePackageInstall()
         else
           . $ZOPEN_SYSTEM_PREREQ_SCRIPT
           for prereq in $(echo "${systemPrereqs}" | xargs | tr ' ' '\n' | sort -u); do
-            printInfo "Checking system pre-req requirement $prereq"
+            printInfo "- Checking system pre-req requirement $prereq"
             if command -V "${prereq}" >/dev/null 2>&1; then
               if ! ( ${prereq} ); then
                 printError "Failed system pre-req check \"$prereq\". If you wish to bypass this, install with --bypass-prereq-checks"

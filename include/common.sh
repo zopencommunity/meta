@@ -383,7 +383,10 @@ curlCmd()
 {
   # Take the list of parameters and concat them with
   # any custom parameters the user requires in ZOPEN_CURL_PARAMS
-  curl ${ZOPEN_CURL_PARAMS} $*
+  if  [ ! -t 1 ] || [ ! -t 2 ]; then
+    extra_curl_options="--no-progress-meter"
+  fi
+  curl ${ZOPEN_CURL_PARAMS} ${extra_curl_options} $*
 }
 
 validateReleaseLine()
@@ -842,7 +845,7 @@ printDebug()
 {
   [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
   if ${debug}; then
-    printColors "${NC}${BLUE}${BOLD}:DEBUG:${NC}: '${1}'" >&2
+    printColors "${NC}${BLUE}${BOLD}:DEBUG:${NC}: '${1}'"
   fi
   [ ! -z "${xtrc}" ] && set -x
   return 0
@@ -852,7 +855,7 @@ printVerbose()
 {
   [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
   if ${verbose}; then
-    printColors "${NC}${GREEN}${BOLD}VERBOSE${NC}: ${1}" >&2
+    printColors "${NC}${GREEN}${BOLD}VERBOSE${NC}: ${1}"
   fi
   [ ! -z "${xtrc}" ] && set -x
   return 0
@@ -861,7 +864,7 @@ printVerbose()
 printHeader()
 {
   [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
-  printColors "${NC}${HEADERCOLOR}${BOLD}${UNDERLINE}${1}${NC}" >&2
+  printColors "${NC}${HEADERCOLOR}${BOLD}${UNDERLINE}${1}${NC}"
   [ ! -z "${xtrc}" ] && set -x
   return 0
 }
@@ -869,7 +872,7 @@ printHeader()
 printAttention()
 {
   [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
-  printColors "${NC}${MAGENTA}${BOLD}${UNDERLINE}${1}${NC}" >&2
+  printColors "${NC}${MAGENTA}${BOLD}${UNDERLINE}${1}${NC}"
   [ ! -z "${xtrc}" ] && set -x
   return 0
 }
@@ -1026,7 +1029,7 @@ printWarning()
 printInfo()
 {
   [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
-  printColors "$1" >&2
+  printColors "$1"
   [ -n "${xtrc}" ] && set -x
   return 0
 }
