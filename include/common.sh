@@ -845,7 +845,7 @@ printDebug()
 {
   [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
   if ${debug}; then
-    printColors "${NC}${BLUE}${BOLD}:DEBUG:${NC}: '${1}'" >&2
+    printColors "${NC}${BLUE}${BOLD}:DEBUG:${NC}: '${1}'"
   fi
   [ ! -z "${xtrc}" ] && set -x
   return 0
@@ -855,7 +855,7 @@ printVerbose()
 {
   [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
   if ${verbose}; then
-    printColors "${NC}${GREEN}${BOLD}VERBOSE${NC}: ${1}" >&2
+    printColors "${NC}${GREEN}${BOLD}VERBOSE${NC}: ${1}"
   fi
   [ ! -z "${xtrc}" ] && set -x
   return 0
@@ -864,7 +864,7 @@ printVerbose()
 printHeader()
 {
   [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
-  printColors "${NC}${HEADERCOLOR}${BOLD}${UNDERLINE}${1}${NC}" >&2
+  printColors "${NC}${HEADERCOLOR}${BOLD}${UNDERLINE}${1}${NC}"
   [ ! -z "${xtrc}" ] && set -x
   return 0
 }
@@ -872,7 +872,7 @@ printHeader()
 printAttention()
 {
   [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
-  printColors "${NC}${MAGENTA}${BOLD}${UNDERLINE}${1}${NC}" >&2
+  printColors "${NC}${MAGENTA}${BOLD}${UNDERLINE}${1}${NC}"
   [ ! -z "${xtrc}" ] && set -x
   return 0
 }

@@ -97,7 +97,7 @@ verifySignatureOfPax()
   printVerbose "$gpg_output"
   if echo "$gpg_output" | grep -q "Good signature from"; then
     gpgCleanup
-    printInfo "- ${NC}${GREEN}Signature successfully verified.${NC}"
+    printInfo "- Signature successfully verified."
   else
     gpgCleanup
     printError "Verification failed. See the output:\n$gpg_output"
