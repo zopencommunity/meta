@@ -72,8 +72,8 @@ verifySignatureOfPax()
   printVerbose "Importing public key..."
   gpg_output=$(gpg --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --batch --yes --import "$PUBLIC_KEY_FILE" 2>&1)
   if [ $? -ne 0 ]; then
-      gpgCleanup
-      printError "Importing public key failed. See output:\n$gpg_output.\n Verification aborted."
+    gpgCleanup
+    printError "Importing public key failed. See output:\n$gpg_output.\n Verification aborted."
   fi
   printVerbose "$gpg_output"
 
@@ -81,31 +81,27 @@ verifySignatureOfPax()
   printVerbose "Checking if public key is imported..."
   gpg_output=$(gpg --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --check-sigs 2>&1)
   if [ $? -ne 0 ]; then
-      gpgCleanup
-      printError "No public key found. See output:\n$gpg_output.\nVerification aborted."
+    gpgCleanup
+    printError "Public key was not imported. See output:\n$gpg_output.\nVerification aborted."
   fi
   printVerbose "$gpg_output"
 
   # Verify the signature
   printInfo "- Verifying the gpg signature..."
-  if [ -f "$SIGNATURE_FILE" ]; then
-    gpg_output=$(gpg --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --verify "$SIGNATURE_FILE" "$FILE_TO_VERIFY" 2>&1)
-    if echo "$gpg_output" | grep -q "Good signature from"; then
-      gpgCleanup
-      printInfo "- ${NC}${GREEN}Signature successfully verified.${NC}"
-      return 0
-    else
-      gpgCleanup
-      printError "Verification failed. See the output:\n$gpg_output"
-    fi
-  else
-      gpgCleanup
-      printError "Signature file does not exist. Please open an issue."
+  if [ ! -f "$SIGNATURE_FILE" ]; then
+    gpgCleanup
+    printError "Signature file does not exist. Please raise an issue."
   fi
-  
-  # It should not enter here, but add the cleanup just in case
-  gpgCleanup
-  printInfo "GPG signature verified."
+
+  gpg_output=$(gpg --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --verify "$SIGNATURE_FILE" "$FILE_TO_VERIFY" 2>&1)
+  printVerbose "$gpg_output"
+  if echo "$gpg_output" | grep -q "Good signature from"; then
+    gpgCleanup
+    printInfo "- ${NC}${GREEN}Signature successfully verified.${NC}"
+  else
+    gpgCleanup
+    printError "Verification failed. See the output:\n$gpg_output"
+  fi
 }
 
 printSyntax()
@@ -481,12 +477,12 @@ handlePackageInstall()
     is_greater=$(echo "$metadataVersion > 0.1" | bc -l)
 
     if [ "$is_greater" -eq 1 ] && ! $skipverify; then
-	if ! command -v gpg> /dev/null; then
-	   skipverify=false;
-	   printWarning "GPG is not installed"
-        else
-           verifySignatureOfPax
-	fi
+      if ! command -v gpg> /dev/null; then
+        skipverify=false;
+        printWarning "GPG is not installed"
+      else
+        verifySignatureOfPax
+      fi
     fi
     if ! runLogProgress "pax -rf ${pax} -p p ${paxredirect} ${redirectToDevNull}" "Expanding ${pax}" "Expanded"; then
        printWarning "Errors unpaxing, package directory state unknown."

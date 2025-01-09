@@ -383,7 +383,10 @@ curlCmd()
 {
   # Take the list of parameters and concat them with
   # any custom parameters the user requires in ZOPEN_CURL_PARAMS
-  curl ${ZOPEN_CURL_PARAMS} $*
+  if  [ ! -t 1 ] || [ ! -t 2 ]; then
+    extra_curl_options="--no-progress-meter"
+  fi
+  curl ${ZOPEN_CURL_PARAMS} ${extra_curl_options} $*
 }
 
 validateReleaseLine()
@@ -1026,7 +1029,7 @@ printWarning()
 printInfo()
 {
   [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
-  printColors "$1" >&2
+  printColors "$1"
   [ -n "${xtrc}" ] && set -x
   return 0
 }
