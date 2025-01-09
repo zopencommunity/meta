@@ -340,7 +340,7 @@ while [ $# -gt 0 ]; do
     localoption=true
     installed=1
     list=
-    if [ -n "$2" ]; then
+    if [ -n "$2" ] && [[ "$2" != -* ]]; then
       needle="$2"
       shift
     fi
