@@ -102,7 +102,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | [direnv](https://github.com/zopencommunity/direnvport)|Green|100.0%|[STABLE_direnv_2777](https://github.com/zopencommunity/direnvport/releases/download/STABLE_direnvport_2777/direnv-heads.v2.34.0.20241206_022122.zos.pax.Z)||
 | [bump](https://github.com/zopencommunity/bumpport)|Green|100.0%|[STABLE_bump_2773](https://github.com/zopencommunity/bumpport/releases/download/STABLE_bumpport_2773/bump-master.20241205_210719.zos.pax.Z)|A version control and update tool|
 | [depot_tools](https://github.com/zopencommunity/depot_toolsport)|Green|100.0%|[DEV_depot_tools_2788](https://github.com/zopencommunity/depot_toolsport/releases/download/DEV_depot_toolsport_2788/depot_tools-main.20241213_172701.zos.pax.Z)|Tools for working with Chromium development|
-| [gn](https://github.com/zopencommunity/gnport)|Green|100.0%|[DEV_gn_2555](https://github.com/zopencommunity/gnport/releases/download/DEV_gnport_2555/gn-main.20241002_020256.zos.pax.Z)|A build tool|
+| [gn](https://github.com/zopencommunity/gnport)|Green|100.0%|[DEV_gn_2803](https://github.com/zopencommunity/gnport/releases/download/DEV_gnport_2803/gn-main.20250109_140506.zos.pax.Z)|A build tool|
 | [libevent](https://github.com/zopencommunity/libeventport)|Green|100.0%|[STABLE_libevent_2183](https://github.com/zopencommunity/libeventport/releases/download/STABLE_libeventport_2183/libevent-2.1.12-stable.20240307_140629.zos.pax.Z)|An event notification library|
 | [tmux](https://github.com/zopencommunity/tmuxport)|Green|100.0%|[STABLE_tmux_2410](https://github.com/zopencommunity/tmuxport/releases/download/STABLE_tmuxport_2410/tmux-heads.3.3a.20240825_024243.zos.pax.Z)|A terminal multiplexer|
 | [zlib-ng](https://github.com/zopencommunity/zlib-ngport)|Green|100.0%|[DEV_zlib-ng_2087](https://github.com/zopencommunity/zlib-ngport/releases/download/DEV_zlib-ngport_2087/zlib-ng-develop.20240205_031127.zos.pax.Z)|A compression library|
@@ -246,7 +246,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | [libassuan](https://github.com/zopencommunity/libassuanport)|Green|100.0%|[STABLE_libassuan_2759](https://github.com/zopencommunity/libassuanport/releases/download/STABLE_libassuanport_2759/libassuan-3.0.1.20241203_040858.zos.pax.Z)|A library for the Assuan protocol, used for IPC between GnuPG components|
 | [libksba](https://github.com/zopencommunity/libksbaport)|Green|100.0%|[STABLE_libksba_2758](https://github.com/zopencommunity/libksbaport/releases/download/STABLE_libksbaport_2758/libksba-1.6.7.20241203_035217.zos.pax.Z)|A library for working with X.509 certificates and other cryptographic objects|
 | [openssh](https://github.com/zopencommunity/opensshport)|Green|100.0%|[STABLE_openssh_2748](https://github.com/zopencommunity/opensshport/releases/download/STABLE_opensshport_2748/openssh-9.9p1.20241120_165536.zos.pax.Z)|A suite of secure networking utilities|
-| [pinentry](https://github.com/zopencommunity/pinentryport)|Green|100.0%|[STABLE_pinentry_2760](https://github.com/zopencommunity/pinentryport/releases/download/STABLE_pinentryport_2760/pinentry-1.3.1.20241203_061439.zos.pax.Z)|A secure passphrase entry utility|
+| [pinentry](https://github.com/zopencommunity/pinentryport)|Green|100.0%|[STABLE_pinentry_2802](https://github.com/zopencommunity/pinentryport/releases/download/STABLE_pinentryport_2802/pinentry-1.3.1.20250109_133433.zos.pax.Z)|A secure passphrase entry utility|
 | [ntbtls](https://github.com/zopencommunity/ntbtlsport)|Green|100.0%|[STABLE_ntbtls_2781](https://github.com/zopencommunity/ntbtlsport/releases/download/STABLE_ntbtlsport_2781/ntbtls-0.3.2.20241210_043039.zos.pax.Z)|A lightweight TLS 1.2 implementation|
 | [libmd](https://github.com/zopencommunity/libmdport)|Green|100.0%|[STABLE_libmd_2658](https://github.com/zopencommunity/libmdport/releases/download/STABLE_libmdport_2658/libmd-1.1.0.20241028_213749.zos.pax.Z)|A library for computing message digests|
 | [libsasl2](https://github.com/zopencommunity/libsasl2port)|Green|100.0%|[STABLE_libsasl2_2311](https://github.com/zopencommunity/libsasl2port/releases/download/STABLE_libsasl2port_2311/cyrus-sasl-master.20240624_052635.zos.pax.Z)|A SASL library|
@@ -349,7 +349,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | [zotsample](https://github.com/zopencommunity/zotsampleport)|Green|100.0%|[STABLE_zotsample_2744](https://github.com/zopencommunity/zotsampleport/releases/download/STABLE_zotsampleport_2744/zotsample-1.3.20241120_025724.zos.pax.Z)|z/OS Open Tools Sample Port for education|
 | [man-db](https://github.com/zopencommunity/man-dbport)|Green|100.0%|[STABLE_man-db_2712](https://github.com/zopencommunity/man-dbport/releases/download/STABLE_man-dbport_2712/man-db-2.12.1.20241029_015025.zos.pax.Z)|Tool for generating manual pages for Unix programs|
 | [hello](https://github.com/zopencommunity/helloport)|Green|100.0%|[STABLE_hello_2670](https://github.com/zopencommunity/helloport/releases/download/STABLE_helloport_2670/hello-2.12.1.20241028_222324.zos.pax.Z)|A simple "hello world" program demonstrating the use of autotools and gettext|
-| [meta](https://github.com/zopencommunity/metaport)|Green|100.0%|[STABLE_meta_2784](https://github.com/zopencommunity/metaport/releases/download/STABLE_metaport_2784/meta-main.20241211_185335.zos.pax.Z)|zopen package manager|
+| [meta](https://github.com/zopencommunity/metaport)|Green|100.0%|[STABLE_meta_2805](https://github.com/zopencommunity/metaport/releases/download/STABLE_metaport_2805/meta-main.20250109_190352.zos.pax.Z)|zopen package manager|
 | [which](https://github.com/zopencommunity/whichport)|Green|100.0%|[STABLE_which_2789](https://github.com/zopencommunity/whichport/releases/download/STABLE_whichport_2789/which-2.21.20241219_210736.zos.pax.Z)|A command to find commands|
 | [tig](https://github.com/zopencommunity/tigport)|Green|100.0%|[STABLE_tig_2656](https://github.com/zopencommunity/tigport/releases/download/STABLE_tigport_2656/tig-2.5.9.20241028_214944.zos.pax.Z)|A text-mode interface for Git|
 | [c3270](https://github.com/zopencommunity/c3270port)|Green|100.0%|[STABLE_c3270_2669](https://github.com/zopencommunity/c3270port/releases/download/STABLE_c3270port_2669/c3270-DEV.20241028_220605.zos.pax.Z)|A 3270 terminal emulator|
@@ -377,4 +377,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-01-08T10:53:26.362702
+Last updated:  2025-01-09T14:30:10.424334
