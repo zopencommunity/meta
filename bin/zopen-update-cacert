@@ -99,6 +99,7 @@ updateCACert()
 {
   printInfo "Re-creating ${ZOPEN_CA}"
   cp "${TEMP_CACERT}" "${ZOPEN_CA}"
+  chmod +r "${ZOPEN_CA}" # make it world-readable
 }
 
 # Main code start here

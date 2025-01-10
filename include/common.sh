@@ -1223,6 +1223,8 @@ syslog()
 
 downloadJSONCache()
 {
+  from_readonly=$1
+
   if [ -z "${JSON_CACHE}" ]; then
     cachedir="${ZOPEN_ROOTFS}/var/cache/zopen"
     [ ! -e "${cachedir}" ] && mkdir -p "${cachedir}"
@@ -1230,6 +1232,12 @@ downloadJSONCache()
     JSON_TIMESTAMP="${cachedir}/zopen_releases.timestamp"
     JSON_TIMESTAMP_CURRENT="${cachedir}/zopen_releases.timestamp.current"
 
+    if [ -n "$from_readonly" ]; then
+      if [ -r "$JSON_CACHE" ] && [ ! -w "$JSON_CACHE" ]; then
+        return; # Skip the download for read only operations when you know you can't write to it
+      fi
+    fi
+  
     # Need to check that we can read & write to the JSON timestamp cache files
     if [ -e "${JSON_TIMESTAMP_CURRENT}" ]; then
       [ ! -w "${JSON_TIMESTAMP_CURRENT}" ] || [ ! -r "${JSON_TIMESTAMP_CURRENT}" ] && printError "Cannot access cache at '${JSON_TIMESTAMP_CURRENT}'. Check permissions and retry request."
@@ -1266,13 +1274,13 @@ downloadJSONCache()
 
 getReposFromGithub()
 {
-  downloadJSONCache
+  downloadJSONCache $1
   repo_results="$(cat "${JSON_CACHE}" | jq -r '.release_data | keys[]')"
 }
 
 getAllReleasesFromGithub()
 {
-  downloadJSONCache
+  downloadJSONCache $1
   repo="$1"
   releases="$(jq -e -r '.release_data."'${repo}'"' "${JSON_CACHE}")"
   if [ $? -ne 0 ]; then

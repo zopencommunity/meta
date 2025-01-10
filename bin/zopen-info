@@ -1,0 +1,270 @@
+#!/bin/sh
+#
+# Query utility for zopen community - https://github.com/zopencommunity
+#
+
+#
+# All zopen-* scripts MUST start with this code to maintain consistency.
+#
+setupMyself()
+{
+  ME=$(basename $0)
+  MYDIR="$(cd "$(dirname "$0")" > /dev/null 2>&1 && pwd -P)"
+  INCDIR="${MYDIR}/../include"
+  if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
+    echo "Internal Error. Unable to find common.sh file to source." >&2
+    exit 8
+  fi
+  . "${INCDIR}/common.sh"
+}
+setupMyself
+
+printSyntax()
+{
+  echo "${ME} - display detailed information about a zopen package."
+  echo ""
+  echo "Usage: ${ME} [OPTION] PACKAGE"
+  echo "  PACKAGE is the name of a zopen package."
+  echo ""
+  echo "Options:"
+  echo "  -h, --help           print this help"
+  echo "  -v, --verbose        run in verbose mode."
+  echo "  -r, --remote         force a remote lookup"
+  echo "  --version            print version"
+}
+
+printPackageInfo() {
+  package=$1
+  remote_lookup=${2:-false}
+  pkghome="${ZOPEN_PKGINSTALL}/${package}/${package}"
+  metadata="${pkghome}/metadata.json"
+
+  if ${remote_lookup} || [ ! -d "${pkghome}" ]; then
+    printVerbose "Performing remote lookup for package '${package}'"
+
+    if [ -z "${JSON_CACHE}" ]; then
+        printError "JSON_CACHE is not set. Cannot perform remote lookup."
+        exit 1
+    fi
+
+    if [ ! -r "${JSON_CACHE}" ]; then
+        printError "JSON_CACHE file '${JSON_CACHE}' not found or readable. Cannot perform remote lookup."
+        exit 1
+    fi
+
+    remote_data=$(jq -c ".release_data.\"${package}\"[0]" "${JSON_CACHE}")
+
+    if [ -z "${remote_data}" ] || [ "${remote_data}" = "null" ]; then
+        printError "Package '${package}' not found in remote repository."
+        exit 1
+    fi
+
+    name=$(echo "${remote_data}" | jq -r '.name')
+    repo=$(echo "${remote_data}" | jq -r '.assets[0].url' | sed 's#/[^/]*$##') # Extract base URL
+    repo=$(echo "${repo}" | sed 's#/[^/]*$##') # Strip /download
+    repo=$(echo "${repo}" | sed 's#^[^/]*//[^/]*##') # Strip protocol and host
+    repo="https:/${repo}" # Reconstruct as https URL
+
+    version=$(echo "${remote_data}" | jq -r '.assets[0].version')
+    release=$(echo "${remote_data}" | jq -r '.assets[0].release')
+    categories=$(echo "${remote_data}" | jq -r '.assets[0].categories')
+    buildline=$(echo "${remote_data}" | jq -r '.tag_name' | sed -E 's/^(STABLE|DEV|BETA)//')
+    total_tests=$(echo "${remote_data}" | jq -r '.assets[0].total_tests')
+    total_success=$(echo "${remote_data}" | jq -r '.assets[0].passed_tests')
+    size=$(echo "${remote_data}" | jq -r '.assets[0].size')
+    expanded_size=$(echo "${remote_data}" | jq -r '.assets[0].expanded_size')
+    community_commitsha=$(echo "${remote_data}" | jq -r '.assets[0].community_commitsha')
+    runtime_dependencies=$(echo "${remote_data}" | jq -r '.assets[0].runtime_dependencies')
+
+    printHeader "==> ${name} (Not Installed)"
+
+    printHeader "==> Package"
+    printf "%-20s %s\n" "Version:" "${version}"
+    printf "%-20s %s\n" "Release:" "${release}"
+    printf "%-20s %s\n" "Buildline:" "${buildline}"
+    printf "%-20s %s\n" "Categories:" "${categories:-N/A}"
+    printf "%-20s %s\n" "GitHub:" "${repo}"
+    printf "%-20s ${NC}${YELLOW}%s${NC}\n" "Installed:" "No"
+
+    if [ -n "${total_tests}" ]; then
+        test_percentage="N/A"
+        if [ "${total_tests}" -gt 0 ] && [ -n "${total_success}" ]; then
+            test_percentage=$(echo "scale=0; 100 * ${total_success} / ${total_tests}" | bc)
+        fi
+        printHeader "==> Test Status"
+        printf "%-20s %s\n" "Passed:" "${total_success}/${total_tests} (${test_percentage}%)"
+    fi
+
+    printHeader "==> Package Details"
+    if [ -n "${size}" ]; then
+      size_mb=$(echo "scale=2; ${size} / 1024 / 1024" | bc)
+    else
+      size_mb="0.00"
+    fi
+    if [ -n "${expanded_size}" ]; then
+      expanded_size_mb=$(echo "scale=2; ${expanded_size} / 1024 / 1024" | bc)
+    else
+      expanded_size_mb="0.00"
+    fi
+    printf "%-20s %s\n" "Download Size:" "${size_mb} MB"
+    printf "%-20s %s\n" "Install Size:" "${expanded_size_mb} MB"
+
+    if [ -n "${community_commitsha}" ]; then
+        printf "%-20s %s\n" "Community SHA:" "${community_commitsha}"
+    fi
+    
+    if [ -n "${runtime_dependencies}" ]; then
+      printHeader "==> Dependencies"
+      printf "%-20s %s\n" "Runtime:" "${runtime_dependencies}"
+    fi
+
+    return 0
+  else
+    printVerbose "Performing local lookup for package '${package}'"
+    # Local lookup
+    if [ ! -f "${metadata}" ]; then
+      printError "Metadata file not found for package '${package}'. Expected: ${metadata}. '${package}' may be an outdated package."
+      exit 1
+    fi
+
+    name=$(jq -r '.product.name' "${metadata}")
+    version=$(jq -r '.product.version' "${metadata}")
+    release=$(jq -r '.product.release' "${metadata}")
+    summary=$(jq -r '.product.summary' "${metadata}")
+    repo=$(jq -r '.product.repo' "${metadata}")
+    license=$(jq -r '.product.license' "${metadata}")
+    zopen_license=$(jq -r '.product.zopen_license' "${metadata}")
+    categories=$(jq -r '.product.categories' "${metadata}")
+    buildline=$(jq -r '.product.buildline' "${metadata}")
+    source_type=$(jq -r '.product.source_type' "${metadata}")
+    total_tests=$(jq -r '.product.test_status.total_tests' "${metadata}")
+    total_success=$(jq -r '.product.test_status.total_success' "${metadata}")
+    size=$(jq -r '.product.size' "${metadata}")
+    commitsha=$(jq -r '.product.commitsha' "${metadata}")
+    community_commitsha=$(jq -r '.product.community_commitsha' "${metadata}")
+
+    # Use jq's --exit-status option to handle null values gracefully
+    build_dependencies=$(jq -r '.product.build_dependencies | map(.name) | join(", ")' --exit-status "${metadata}")
+    if [ $? -ne 0 ]; then
+        build_dependencies=""
+    fi
+    runtime_dependencies=$(jq -r '.product.runtime_dependencies | map(.name) | join(", ")' --exit-status "${metadata}")
+    if [ $? -ne 0 ]; then
+        runtime_dependencies=""
+    fi
+    system_prereqs=$(jq -r '.product.system_prereqs | map(.name) | join(", ")' --exit-status "${metadata}")
+    if [ $? -ne 0 ]; then
+      system_prereqs=""
+    fi
+
+    installed_version="Not installed"
+    installed_path=""
+    if [ -e "${pkghome}/.releaseinfo" ]; then
+      installed_version=$(cat "${pkghome}/.releaseinfo" )
+    fi
+
+    if [ -e "${pkghome}/.version" ]; then
+      dotversion=$(cat "${pkghome}/.version")
+    fi
+
+    installed_path=$(cd "${ZOPEN_PKGINSTALL}/${package}/${package}" > /dev/null 2>&1 && pwd -P)
+
+    printHeader "==> ${name}: ${buildline} ${dotversion}"
+    printf "%-20s %s\n" "Description:" "${summary}"
+
+    printHeader "==> Package"
+    printf "%-20s %s\n" "Version:" "${dotversion}"
+    if [ -n "${release}" ]; then
+      printf "%-20s %s\n" "Release:" "${release}"
+    fi
+    printf "%-20s %s\n" "Buildline:" "${buildline}"
+    printf "%-20s %s\n" "Categories:" "${categories:-N/A}"
+    printf "%-20s %s\n" "GitHub:" "${repo}"
+    printf "%-20s %s\n" "License:" "${license}"
+    printf "%-20s %s\n" "zopen license:" "${zopen_license}"
+
+    printHeader "==> Installation Details"
+    printf "%-20s %s\n" "Installed:" "Yes"
+    printf "%-20s %s\n" "Installation Path:" "${installed_path}"
+    printf "%-20s %s\n" "Installation Size:" "$(/bin/du -s ${installed_path} | awk '{print $1 / 1024 " MB"}')"
+
+    if [ -n "${total_tests}" ]; then
+      test_percentage="N/A"
+      if [ "${total_tests}" -gt 0 ] && [ -n "${total_success}" ]; then
+        test_percentage=$(echo "scale=0; 100 * ${total_success} / ${total_tests}" | bc)
+      fi
+      printHeader "==> Test Status"
+      printf "%-20s %s\n" "Passed:" "${total_success}/${total_tests} (${test_percentage}%)"
+    fi
+
+    printHeader "==> Package Details"
+    if [ -n "${size}" ]; then
+        size_mb=$(echo "scale=2; ${size} / 1024 / 1024" | bc)
+    else
+        size_mb="0.00"
+    fi
+    printf "%-20s %s\n" "Download Size:" "${size_mb} MB"
+    printf "%-20s %s\n" "Commit SHA:" "${commitsha}"
+    printf "%-20s %s\n" "Community SHA:" "${community_commitsha}"
+
+    if [ -n "${build_dependencies}" ]; then
+      printHeader "==> Dependencies"
+      printf "%-20s %s\n" "Build:" "${build_dependencies}"
+    fi
+    if [ -n "${runtime_dependencies}" ]; then
+      printf "%-20s %s\n" "Runtime:" "${runtime_dependencies}"
+    fi
+    if [ -n "${system_prereqs}" ]; then
+      printf "%-20s %s\n" "System:" "${system_prereqs}"
+    fi
+
+    if [ -f "${pkghome}/.caveats" ]; then
+      printHeader "==> Caveats"
+      cat "${pkghome}/.caveats"
+    fi
+  fi
+}
+
+# Main code start here
+args=$*
+verbose=false
+remote_lookup=false
+
+if [ $# -eq 0 ]; then
+  printError "No package specified."
+  printSyntax
+  exit 1
+fi
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+  "-h" | "--help")
+    printSyntax
+    exit 0
+    ;;
+  "-v" | "--verbose")
+    verbose=true
+    ;;
+  "-r" | "--remote")
+    remote_lookup=true
+    ;;
+  "--version")
+    zopen-version "${ME}"
+    exit 0
+    ;;
+  -*)
+    printError "Unknown option '$1'"
+    printSyntax
+    exit 1
+    ;;
+  *)
+    package="$1"
+    ;;
+  esac
+  shift
+done
+
+checkIfConfigLoaded
+getReposFromGithub true
+
+printPackageInfo "${package}" "${remote_lookup}"
