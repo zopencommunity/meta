@@ -298,6 +298,7 @@
 |  [zlib-ngport](https://github.com/zopencommunity/zlib-ngport) | 100 | 3
 |  [pkgconfigport](https://github.com/zopencommunity/pkgconfigport) | 98 | 1
 |  [libsasl2port](https://github.com/zopencommunity/libsasl2port) | 93 | 5
+|  [depot_toolsport](https://github.com/zopencommunity/depot_toolsport) | 91 | 1
 |  [patchport](https://github.com/zopencommunity/patchport) | 86 | 3
 |  [gawkport](https://github.com/zopencommunity/gawkport) | 81 | 4
 |  [expectport](https://github.com/zopencommunity/expectport) | 79 | 4
@@ -309,7 +310,6 @@
 |  [libgpgmeport](https://github.com/zopencommunity/libgpgmeport) | 66 | 4
 |  [getoptport](https://github.com/zopencommunity/getoptport) | 65 | 1
 |  [logrotateport](https://github.com/zopencommunity/logrotateport) | 62 | 1
-|  [depot_toolsport](https://github.com/zopencommunity/depot_toolsport) | 61 | 1
 |  [texinfoport](https://github.com/zopencommunity/texinfoport) | 56 | 3
 |  [libgpgerrorport](https://github.com/zopencommunity/libgpgerrorport) | 53 | 3
 |  [expatport](https://github.com/zopencommunity/expatport) | 52 | 2
