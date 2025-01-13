@@ -1,4 +1,6 @@
 #!/bin/sh
+this="autopkgpurge"
+printVerbose "Running '${this}' script"
 pkg=$1
 [ -z "${pkg}" ] && return
 if type zopen-config-helper >/dev/null 2>&1; then

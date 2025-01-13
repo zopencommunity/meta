@@ -1,5 +1,7 @@
 #!/bin/sh
+this="list_caveats"
+printVerbose "Running '${this}' script"
 caveats_file="${ZOPEN_ROOTFS}/var/cache/install_caveats.tmp"
-[ -e "${caveats_file}" ] || exit 0
+[ -e "${caveats_file}" ] || return 0
 cat "${caveats_file}"
 rm "${caveats_file}"
