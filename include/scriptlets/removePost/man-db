@@ -1,11 +1,13 @@
 #!/bin/sh
+this="man-db"
+printVerbose "Running '${this}' script"
 if ! zopen list --installed | grep "^man-db\$"; then
   : # No man-db installed
 else
-  echo "- Updating man-db database after package removal..."
+  echo "- Updating man-db database after package changes..."
   if ! mandb >/dev/null 2>&1; then
-    printWarning "man-db update completed with non-zero return code."
-    printWarning "Re-run 'mandb' manually for additional information."
+    printSoftError "man-db update completed with non-zero return code."
+    printSoftError "Re-run 'mandb' manually for additional information."
   else 
     echo "- Update of man-db complete."
   fi
