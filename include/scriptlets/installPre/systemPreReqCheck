@@ -1,0 +1,39 @@
+#!/bin/sh -x
+this="systemPreReqCheck"
+printVerbose "Running '${this}' script"
+pkg=$1
+metadataFile=$2
+
+[ -z "${pkg}" ] && return
+# shellcheck disable=SC2154
+if ! ${bypassPrereqs}; then
+  systemPrereqs=$(jq -r '.product.system_prereqs // empty | map(.name) | join(" ")' "${metadataFile}" 2>/dev/null)
+  if [ -z "${systemPrereqs}" ]; then
+    systemPrereqs="${systemPrereqs} zos24" # set the min requirement as z/OS 2.4
+  fi
+  if [ -n "$systemPrereqs" ]; then
+    ZOPEN_SYSTEM_PREREQ_SCRIPT="../../prereq.sh"
+    if [ ! -r "${ZOPEN_SYSTEM_PREREQ_SCRIPT}" ]; then
+      printSoftError "${ZOPEN_SYSTEM_PREREQ_SCRIPT} does not exist. Check file permissions and reinstall the meta package or reinitialize the zopen environment. If the error persists, open an issue."
+      return 1
+    else
+      # shellcheck disable=SC1090
+      . ${ZOPEN_SYSTEM_PREREQ_SCRIPT}
+      for prereq in $(echo "${systemPrereqs}" | xargs | tr ' ' '\n' | sort -u); do
+        printInfo "- Checking system pre-req requirement ${prereq}"
+        if command -V "${prereq}" >/dev/null 2>&1; then
+          if ! ( ${prereq} ); then
+            printSoftError "Failed system pre-req check \"${prereq}\". If you wish to bypass this, install with --bypass-prereq-checks"
+            return 1
+          fi
+        else
+          printSoftError "Prereq \"${prereq}\" does not exist in ${ZOPEN_SYSTEM_PREREQ_SCRIPT}. Consider upgrading meta or open an issue if it persists."
+          return 1
+        fi
+      done
+    fi
+  fi
+else
+  syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_PACKAGE},${CAT_INSTALL}" "BYPASS" "handlePackageInstall" "Bypassing prereq checks ${systemPrereqs} for '${name}'."
+fi
+

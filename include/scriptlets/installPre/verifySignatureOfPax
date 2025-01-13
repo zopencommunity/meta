@@ -1,0 +1,134 @@
+#!/bin/sh
+this="verifySignatureOfPax"
+printVerbose "Running '${this}' script"
+pkg=$1
+metadataFile=$2
+paxFile=$3
+
+printInfo "- Performing GPG signature verification for '${pkg}' pax file"
+metadataVersion=$(jq -r '.version_scheme' "${metadataFile}" 2>/dev/null)
+is_greater=$(echo "$metadataVersion > 0.1" | bc -l)
+
+if [ "$is_greater" -eq 1 ] && ! $skipverify; then
+  if ! command -v gpg> /dev/null; then
+    skipverify=false;
+    printWarning "GPG is not installed - package validation cannot be performed"
+    return
+  fi
+fi
+
+# The following function will attempt to retrieve a value from the metadata for this
+# package. It will attempt to find it in the metadata included inside the pax file
+# and previously extracted and failing that, will fallback to checking the existence
+# of the package in the cache [the metadata downloaded [might be]/is different]
+extractFromMetaData(){
+  key=$1
+  mdf=$2
+  if ! sRc=$(jq -e -r "${key}" "${mdf}"); then
+    printVerbose "Could not locate ${key} in the pax's metadata. Checking cache..."
+    mdf="${ZOPEN_ROOTFS}/var/cache/zopen/$(basename "$3").json"
+    if ! sRc=$(jq -e -r "${key}" "${mdf}"); then
+      printSoftError "Failed to extract '${key}' from package metadata" >&2
+      return 1
+    fi
+  fi
+  echo "${sRc}" && return 0
+
+}
+# Extracting values and checking for errors
+# If this is a local pax file, then there might not be a .product.pax in the
+# metadata; check for a corresponding <pax>.json file in the cache.
+# Local paxes need to be installed with --skipverify until they contain the
+# .product.pax (and .signature and .public_key) entry
+#if ! FILE_TO_VERIFY=$(jq -e -r '.product.pax' "${metadataFile}"); then
+#  printVerbose "Could not locate .product.pax in the pax's metadata. Checking cache..."
+#  metadataFile="${ZOPEN_ROOTFS}/var/cache/zopen/${paxFile}.json"
+#  if ! FILE_TO_VERIFY=$(jq -e -r '.product.pax' "${metadataFile}"); then
+#    printSoftError "Failed to extract 'pax' from ${metadataFile}" >&2
+#    return 1
+#  fi
+#fi
+if ! FILE_TO_VERIFY=$(extractFromMetaData ".product.pax" "${metadataFile}" "${paxFile}"); then
+  return 1  
+fi
+
+if [ ! "${FILE_TO_VERIFY}" = "$(basename "${paxFile}")" ]; then
+  printSoftError "Mismatch between pax file '${paxFile}' and metadata pax name '${FILE_TO_VERIFY}'"
+  return 1
+fi
+
+if ! SIGNATURE=$(extractFromMetaData ".product.signature" "${metadataFile}" "${paxFile}"); then
+  # Lack of a .signature indicates the package has not yet been signed so allow installation
+  printVerbose "No .signature found in the metadata for '${pkg}'; continuing installation"
+  return 0
+fi
+
+if ! PUBLIC_KEY=$(extractFromMetaData ".product.public_key" "${metadataFile}" "${paxFile}"); then 
+  # Since we found the .signature above, not finding the public key is not good; there is an
+  # error with the metadata, either corrupted in download, in the pax  or initial generation
+  printSoftError "The metadata for '${pkg}' is inconsistent. Clear caches and retry command."
+  return 1
+fi
+
+# Create a temporary directory for GPG keyring
+SIGNATURE_FILE=$(mktempfile "signedfile" ".asc")
+PUBLIC_KEY_FILE=$(mktempfile "scriptpubkey" ".asc")
+
+#TMP_GPG_DIR=$(mktempdir "gpg" "verify")
+#SIGNATURE_FILE="${TMP_GPG_DIR}/signedfile.asc"
+#PUBLIC_KEY_FILE="${TMP_GPG_DIR}/scriptpubkey.asc"
+printf "%b" "${SIGNATURE}" | tr -d '"'  > "${SIGNATURE_FILE}"
+printf "%b" "$PUBLIC_KEY" | tr -d '"'  > "${PUBLIC_KEY_FILE}"
+
+[ -e "${SIGNATURE_FILE}" ] && addCleanupTrapCmd "rm -rf ${SIGNATURE_FILE}"
+[ -e "${PUBLIC_KEY}" ] && addCleanupTrapCmd "rm -rf ${PUBLIC_KEY}"
+
+if [ ! -f "${PUBLIC_KEY_FILE}" ]; then
+  printSoftError "Unable to locate created public key file"
+  return 1
+fi
+
+startGPGAgent
+
+printVerbose "Importing public key to keyring file..."
+${KEYRING_FILE}
+KEYRING_FILE=$(mktempfile "pubring" ".kbx")
+  
+  if ! gpg_output=$(gpg --no-default-keyring --keyring "${KEYRING_FILE}" --batch --yes --import "$PUBLIC_KEY_FILE" 2>&1); then
+    printSoftError "Importing public key failed. Details:"
+    printSoftError "${gpg_output}"
+    printSoftError "Verification aborted." 
+    return 1
+  fi
+  printVerbose "${gpg_output}"
+
+  # Verify that the key was imported successfully
+  printVerbose "Checking if public key is imported..."
+  
+  if ! gpg_output=$(gpg --no-default-keyring --keyring "${KEYRING_FILE}" --check-sigs 2>&1); then
+    printSoftError "Public key was not imported. See output:\n${gpg_output}.\nVerification aborted."
+    return 1
+  fi
+
+  printVerbose "${gpg_output}"
+
+  # Verify the signature
+  printInfo "- Verifying the gpg signature..."
+  if [ ! -f "${SIGNATURE_FILE}" ]; then
+    printSoftError "Signature file does not exist. Please raise an issue."
+    return 1
+  fi
+
+#  gpg_output=$(gpg --no-default-keyring --keyring "${KEYRING_FILE}" --verify "${SIGNATURE_FILE}" "${FILE_TO_VERIFY}" 2>&1)
+  gpg_output=$(gpg --no-default-keyring --keyring "${KEYRING_FILE}" --verify "${SIGNATURE_FILE}" "${paxFile}" 2>&1)
+  printVerbose "${gpg_output}"
+  if ! echo "${gpg_output}" | grep -q "Good signature from"; then
+    printSoftError "Verification failed. Details:"
+    printSoftError "${gpg_output}"
+    return 1
+  fi
+
+  printInfo "- Signature successfully verified."
+  return 0
+
+
