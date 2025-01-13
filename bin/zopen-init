@@ -719,21 +719,13 @@ deinit()
   fi
 }
 
-echo "DBG!! ZOPEN_ROOTFS=${ZOPEN_ROOTFS}"
 init
-echo "DBG!! ZOPEN_ROOTFS=${ZOPEN_ROOTFS}"
 generateFileSystem
-echo "DBG!! ZOPEN_ROOTFS=${ZOPEN_ROOTFS}"
 ! ${refresh} && installPrereqs
-echo "DBG!! ZOPEN_ROOTFS=${ZOPEN_ROOTFS}"
 generateJsonConfiguration
-echo "DBG!! ZOPEN_ROOTFS=${ZOPEN_ROOTFS}"
 generateDefaultRepository
-echo "DBG!! ZOPEN_ROOTFS=${ZOPEN_ROOTFS}"
 generateAnalyticsConfiguration
-echo "DBG!! ZOPEN_ROOTFS=${ZOPEN_ROOTFS}"
 ! ${refresh} && updateBootstrappedTools
-echo "DBG!! ZOPEN_ROOTFS=${ZOPEN_ROOTFS}"
 [ -e "${ZOPEN_ROOTFS}/var/lib/zopen/packageDB.json" ] || updatePackageDB
 updateBootstrappedTools
 deinit

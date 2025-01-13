@@ -174,10 +174,12 @@ else
   waitforpid ${ph}  # Make sure it's finished writing to screen
 fi
 
+# shellcheck disable=SC2154
 if [ 0 -eq "$(echo "${installList}" | jq --raw-output '.installqueue| length')" ]; then
-  printInfo "- No packages to upgrade"
+  printInfo "- No available updates"
 else
   processRepoInstallFile
+  printInfo "Upgrade operation complete"
 fi
-
 mutexFree "zopen"
+

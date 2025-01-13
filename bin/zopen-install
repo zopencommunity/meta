@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -x
 #
 # Install utility for zopen community - https://github.com/zopencommunity
 #
@@ -52,71 +52,7 @@ gpgCleanup() {
   [ -d "$TMP_GPG_DIR" ] && rm -rf "$TMP_GPG_DIR"
 }
 
-verifySignatureOfPax()
-{
-  printInfo "- Performing GPG signature verification of pax file..."
-  # Extracting values and checking for errors
-  if ! FILE_TO_VERIFY=$(jq -e -r '.product.pax' "${metadataFile}"); then
-     printError "Failed to extract 'pax' from ${metadataFile}" >&2
-  fi
-
-  if ! SIGNATURE=$(jq -e -r '.product.signature' "${metadataFile}"); then 
-    printVerbose "Failed to extract 'signature' from ${metadataFile}" >&2
-    return
-  fi
-
-  if ! PUBLIC_KEY=$(jq -e -r '.product.public_key' "${metadataFile}"); then 
-     printError "Failed to extract 'public_key' from ${metadataFile}" >&2
-  fi
-
-
-  # Create a temporary directory for GPG keyring
-  TMP_GPG_DIR="$zopen_tmp_dir/zopen_gpg_verify_$LOGNAME_$$"
-  mkdir -p "$TMP_GPG_DIR"
-
-  SIGNATURE_FILE="$zopen_tmp_dir/zopen_signedfile.$LOGNAME.$$.asc"
-  PUBLIC_KEY_FILE="$zopen_tmp_dir/zopen_scriptpubkey.$LOGNAME.$$.asc"
-  printf "%b" "$SIGNATURE" | tr -d '"'  > "$SIGNATURE_FILE"
-  printf "%b" "$PUBLIC_KEY" | tr -d '"'  > "$PUBLIC_KEY_FILE"
-
-  startGPGAgent
-
-  printVerbose "Importing public key..."
-  gpg_output=$(gpg --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --batch --yes --import "$PUBLIC_KEY_FILE" 2>&1)
-  if [ $? -ne 0 ]; then
-    gpgCleanup
-    printError "Importing public key failed. See output:\n$gpg_output.\n Verification aborted."
-  fi
-  printVerbose "$gpg_output"
-
-  # Verify that the key was imported successfully
-  printVerbose "Checking if public key is imported..."
-  gpg_output=$(gpg --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --check-sigs 2>&1)
-  if [ $? -ne 0 ]; then
-    gpgCleanup
-    printError "Public key was not imported. See output:\n$gpg_output.\nVerification aborted."
-  fi
-  printVerbose "$gpg_output"
-
-  # Verify the signature
-  printInfo "- Verifying the gpg signature..."
-  if [ ! -f "$SIGNATURE_FILE" ]; then
-    gpgCleanup
-    printError "Signature file does not exist. Please raise an issue."
-  fi
-
-  gpg_output=$(gpg --no-default-keyring --keyring "$TMP_GPG_DIR/pubring.kbx" --verify "$SIGNATURE_FILE" "$FILE_TO_VERIFY" 2>&1)
-  printVerbose "$gpg_output"
-  if echo "$gpg_output" | grep -q "Good signature from"; then
-    gpgCleanup
-    printInfo "- Signature successfully verified."
-  else
-    gpgCleanup
-    printError "Verification failed. See the output:\n$gpg_output"
-  fi
-}
-
-printSyntax()
+printHelp()
 {
 cat << HELPDOC
 ${ME} is a utility to download/install a zopen community package.
@@ -182,7 +118,7 @@ skipupgrade=false
 skipverify=false
 doNotInstallDeps=false
 all=false
-yesToPrompts=falseskipupgrade
+yesToPrompts=false
 bypassPrereqs=false
 force=false
 chosenRepos=""
@@ -357,7 +293,7 @@ else
     echo "${installList}" | jq --raw-output '.installqueue | sort| .[] | .portname '
   fi
   processRepoInstallFile
-
+  printInfo "Installation complete."
 fi
 mutexFree "zopen"
 exit

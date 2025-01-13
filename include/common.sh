@@ -233,7 +233,7 @@ mktempfile()
 # Create a temporary directory
 mktempdir()
 {
-  tempdir=$(mktempfile "$1")
+  tempdir=$(mktempfile "$1" "$2")
   [ ! -e "${tempdir}" ] && mkdir "${tempdir}" && addCleanupTrapCmd "rm -rf ${tempdir}" && echo "${tempdir}"
 }
 
@@ -1843,32 +1843,6 @@ createDependancyGraph(){
   createDependancyGraph "${invalidPortAssetFile}"
 }
 
-checkPreReqs(){
-  pkg=$1
-  metadata=$2
-[ -z "${pkg}" ] && return 12
-# shellcheck disable=SC2154
-if ! "${bypassPrereqs:-false}"; then
-  systemPrereqs=$(echo "${metadata}" | jq -r '.product.system_prereqs // empty'  2>/dev/null)
-  systemPrereqs="${systemPrereqs} zos24" # zos24 should be min requirement - always add it
-  if [ -n "${systemPrereqs}" ]; then
-    if [ ! -d "${ZOPEN_SYSTEM_PREREQS_DIR}" ]; then
-      printWarning "${ZOPEN_SYSTEM_PREREQS_DIR} does not exist. You should upgrade meta. Bypassing prereq check."
-    fi
-    for prereq in $(echo "${systemPrereqs}" | xargs | tr ' ' '\n' | sort -u); do
-      printHeader "Checking system pre-req requirement '${prereq}'"
-      if [ -e "${ZOPEN_SYSTEM_PREREQS_DIR}/${prereq}" ]; then
-        if ! /bin/sh -c "${ZOPEN_SYSTEM_PREREQS_DIR}/${prereq}"; then
-          printError "Failed system pre-req check '${prereq}'. If you wish to bypass this, install with --bypass-prereq-checks"
-        fi
-      else
-        printWarning "${ZOPEN_SYSTEM_PREREQS_DIR}/${prereq} does not exist. You should upgrade meta. Bypassing prereq check."
-      fi
-    done
-  fi
-fi
-
-}
 # addToInstallGraph
 # Finds appropriate metadata for the specified port(s) and
 # includes that in the installation file
@@ -1885,9 +1859,6 @@ addToInstallGraph(){
   for portRequested in ${pkgList}; do
     if ! getPortMetaData "${portRequested}" "${invalidPortAssetFile}"; then
       continue
-    fi
-    if ! preReqFailed=$(checkPreReqs "${asset}"); then
-      echo "${preReqFailed}" >> "${invalidPortAssetFile}"
     fi
     ## Merge asset into output file - note the lack of inline file edit hence the mv
     installList=$(echo "${installList}" | jq ".installqueue += [{\"portname\":\"${validatedPort}\", \"asset\":${asset}, \"installtype\":\"${installtype}\"}]")
@@ -1952,42 +1923,49 @@ generateInstallGraph(){
   if "${reinstall}"; then 
     printVerbose "Not pruning already installed packages as reinstalling"
   else
-    pruneGraph
+    parseGraph
   fi  
 }
 
-pruneGraph()
+parseGraph()
 {
-  printDebug "Pruning entries in graph if already installed"
+  printDebug "Parsing graph for valid entries"
   # shellcheck disable=SC2154
   if "${downloadOnly}"; then
-    # Download the pax files, even if already installed as they are not 
-    # being reinstalled so no prune required
+    # Download the pax files, even if already installed or if they would
+    # fail validation - the user wants the files downloaded for whatever reason
     return 0
   fi
-    # Prune already installed packages at the requested level; compare the 
-    # incoming file name against the port name, version and release already on the system
-    # - seems to be the easiest comparison since some data is not in zopen_release vs metadata.json
-    # and a local pax won't have a remote repo but should have a file name!
-    installed=$(zopen list --installed --details)
-    # Ignore the version string - it varies across ports so use name and build time as that
-    # should be unique enough
-    installed=$(echo "${installed}"| awk 'BEGIN{ORS = "," } {print "\"" $1 "@=@" $3 "\""}')
-    installed="[${installed%,}]"
-    
-    installList=$(echo "${installList}" | \
-      jq  --argjson installees "${installed}" \
-        '.installqueue |=
-          map(
-            select(.asset.url |
-              capture(".*/(?<name>.*)-(?<ver>[^-]*)\\.(?<rel>\\d{8}_\\d{6}?)\\.zos\\.pax\\.Z$") |.rel as $rel | .name as $name |
-              $installees | map(
-                .|capture("(?<iname>[^@]*)@=@(?<irel>\\d{8}_\\d{6}?)$")|.iname as $iname | .irel as $irel |
-                ($iname+"-"+$irel) == ($name+"-"+$rel)
-              ) | any == false
-            )
-          )'\
-    )
+  if ! processActionScripts "parseGraphPre" "${installList}"; then
+    exit 1
+  fi
+
+  # Prune already installed packages at the requested level; compare the 
+  # incoming file name against the port name, version and release already on the system
+  # - seems to be the easiest comparison since some data is not in zopen_release vs metadata.json
+  # and a local pax won't have a remote repo but should have a file name!
+  installed=$(zopen list --installed --details)
+  # Ignore the version string - it varies across ports so use name and build time as that
+  # should be unique enough
+  installed=$(echo "${installed}"| awk 'BEGIN{ORS = "," } {print "\"" $1 "@=@" $3 "\""}')
+  installed="[${installed%,}]"
+  
+  installList=$(echo "${installList}" | \
+    jq  --argjson installees "${installed}" \
+      '.installqueue |=
+        map(
+          select(.asset.url |
+            capture(".*/(?<name>.*)-(?<ver>[^-]*)\\.(?<rel>\\d{8}_\\d{6}?)\\.zos\\.pax\\.Z$") |.rel as $rel | .name as $name |
+            $installees | map(
+              .|capture("(?<iname>[^@]*)@=@(?<irel>\\d{8}_\\d{6}?)$")|.iname as $iname | .irel as $irel |
+              ($iname+"-"+$irel) == ($name+"-"+$rel)
+            ) | any == false
+          )
+        )'\
+  )
+  if ! processActionScripts "parseGraphPost"; then
+    exit 1
+  fi
 }
 
 spaceValidate(){
@@ -2081,6 +2059,8 @@ processRepoInstallFile(){
 getInstallFile()
 {
   installurl="$1"
+  metadataJSONURL="$(dirname "${installurl}")/metadata.json"
+  metadataFile="$(basename "${installurl}").json"
   downloadToDir="${ZOPEN_ROOTFS}/var/cache/zopen"
   if $downloadOnly; then
     downloadToDir="."
@@ -2092,8 +2072,13 @@ getInstallFile()
   else
     [ -e "${downloadToDir}" ] || mkdir -p "${downloadToDir}"
     [ -w "${downloadToDir}" ] || printError "No permission to save install file to '${downloadToDir}'. Check permissions and retry command."
+    printVerbose "Downloading installable file"
     if ! runAndLog "cd ${downloadToDir} && curlCmd --no-progress-meter -L ${installurl} -O ${redirectToDevNull}"; then
       printError "Could not download from ${installurl}. Correct any errors and potentially retry"
+    fi
+    printVerbose "Downloading corresponding metadata"
+    if ! runAndLog "curlCmd -L '${metadataJSONURL}' -o '${metadataFile}'" "${redirectToDevNull}"; then
+      printError "Could not download from ${metadataJSONURL}. Correct any errors and potentially retry."
     fi
   fi
 }
@@ -2124,8 +2109,8 @@ installFromPax()
   # repo field so can extract from there instead
   #name=$(jq --raw-output '.product.name' "${metadatafile}")
    # Ideally, use $reponame in the match but jq seems to have issues with that!
-  name=$(jq ---arg reponame "${ZOPEN_ORGNAME}" -raw-output '.product.repo | match(".*/zopencommunity/(.*)port").captures[0].string' "${metadatafile}")
-  if ! processActionScripts "installPre" "${name}" "${metadatafile}"; then
+  name=$(jq --arg reponame "${ZOPEN_ORGNAME}" --raw-output '.product.repo | match(".*/zopencommunity/(.*)port").captures[0].string' "${metadatafile}")
+  if ! processActionScripts "installPre" "${name}" "${metadatafile}" "${pax}"; then
     printError "Failed installation pre-requisite check(s) for '${name}'. Correct previous errors and retry command"
   fi
 
@@ -2235,34 +2220,56 @@ processActionScripts()
   shift # Drop the initial parameter
 
   case "${phase}" in
-    "installPost") scriptDir="${ZOPEN_SCRIPTLET_DIR}/installPost";;
-    "removePost") scriptDir="${ZOPEN_SCRIPTLET_DIR}/removePost";;
-    "transactionPost") scriptDir="${ZOPEN_SCRIPTLET_DIR}/transactionPost";;
     "installPre") scriptDir="${ZOPEN_SCRIPTLET_DIR}/installPre";;
+    "installPost") scriptDir="${ZOPEN_SCRIPTLET_DIR}/installPost";;
     "removePre") scriptDir="${ZOPEN_SCRIPTLET_DIR}/removePre";;
+    "removePost") scriptDir="${ZOPEN_SCRIPTLET_DIR}/removePost";;
     "transactionPre") scriptDir="${ZOPEN_SCRIPTLET_DIR}/transactionPre";;
+    "transactionPost") scriptDir="${ZOPEN_SCRIPTLET_DIR}/transactionPost";;
+    "parseGraphPre") scriptDir="${ZOPEN_SCRIPTLET_DIR}/parseGraphPre";;
+    "parseGraphPost") scriptDir="${ZOPEN_SCRIPTLET_DIR}/parseGraphPost";;
     *) assertFailed "Invalid process action phase '${phase}'"
   esac
   printVerbose "Running script[s] from '${scriptDir}'"
-  scriptRc=$(
-    # Running in a sub-shell so the scripts do not directly affect the current
-    # environment - status is returned to scriptRc
-    [ -d "${scriptDir}" ] || return 0 # No script directory
+
+    if [ ! -d "${scriptDir}" ]; then
+      printDebug "No script directory for phase: ${phase}"
+      return 0
+    fi
     unset CDPATH;
-    cd "${scriptDir}" || exit # the subshell
-    find . -type f | while read scriptFile; do
-      if [ ! -x "${scriptFile}" ]; then
-        printWarning "Script '${scriptDir}/${scriptFile}' is not executable. Check permissions"
+    # shellcheck disable=SC2164
+    cd "${scriptDir}"
+    scriptRcFile=$(mktempfile "actionscripts" ".err")
+    find . -type l | while read scriptFile; do
+      # Note: The script only needs to be readable as it is not executed as a 
+      # separate process; only read permission required when sourced with '.'
+      if [ ! -r "${scriptFile}" ]; then
+        printWarning "Script '${scriptDir}/${scriptFile}' is not readable. Check permissions"
         continue
       fi
-      printVerbose "Running script '${scriptFile}'"
-      # Call each scriptlet with the remaining parameters passed to this function
-      if ! src=$("${scriptFile}" "$@"); then
-        exit "${src:=-1}"
+      printVerbose "Attempting to run script '${scriptFile}'"
+      # Call each scriptlet with the remaining parameters passed to this function as
+      # subshells so that any modification in the scripts does not affect the runtime
+      # Any errors, then output the status code as the final output
+      scriptOutput=$(
+        # shellcheck disable=SC1090
+        # shellcheck disable=SC2240  # This works on z/OS's /bin/sh
+        . "${scriptFile}" "$@" 2>&1
+        echo $?
+      ) 
+      scriptRc=$(echo "${scriptOutput}" | tail -n 1)
+      echo "${scriptOutput}" | head -n -1  # Don't print last (status) line!
+      
+      if [ "${scriptRc}" -ne 0 ]; then
+        touch "${scriptRcFile}" # Needed to indicate error outside subshell
+        break
       fi
     done
-  )
-  return "${scriptRc:-0}"
+    if [ -e "${scriptRcFile}" ]; then
+      rm -f "${scriptRcFile}"
+      return 1
+    fi
+    return 0 # If we get to here, then none of the scripts returned a fatal error
 }
 
 # updatePackageDB
@@ -2427,6 +2434,21 @@ jqfunctions()
   'def pr(s;c;n):s+c*(n-(s|length))' \
   'def c(s;c;l):(((l - (s|length))/2 | floor ) // 0) as $lp|((l - (s|length) - $lp) // 0 )as $rp|pl("";c; $lp) + s + pr("";c; $rp)' \
   'def r(dp):.*pow(10;dp)|round/pow(10;dp)'
+}
+
+startGPGAgent()
+{
+  printInfo "- Starting gpg-agent..."
+  if ! gpg-agent --daemon --disable-scdaemon; then
+    printError "Error running gpg-agent command. Review error messages and retry command."
+  fi
+  # Wait a moment to ensure the gpg-agent has time to start
+  sleep 2
+  # Check to confirm if gpg-agent started successfully
+  # shellcheck disable=SC2009 # pgrep not on z/OS currently!
+  if ! ps -ef | grep -v grep | grep "gpg-agent" > /dev/null; then
+    printError "Failed to start the gpg-agent. Reinstall or upgrade GPG using \"zopen install --reinstall gpg -y\" or \"zopen upgrade gpg -y\" command."
+  fi
 }
 
 # shellcheck disable=SC1091
