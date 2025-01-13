@@ -55,8 +55,13 @@ mergeNewVersion()
 {
   package="$1"
   newver="$2"
-  processActionScripts "transactionPre"
-  processActionScripts "installPre" # We are effectively re-installing
+  # We are effectively re-installing so run scriptlets
+  if ! processActionScripts "transactionPre"; then
+    exit 1
+  fi
+  if ! processActionScripts "installPre"; then
+    exit 1
+  fi
   [ -z "${package}" ] && printError "Internal error; no package name provided to merge."
   [ -d "${ZOPEN_PKGINSTALL}/${package}/${newver}" ] || printError "Version '${newver}' was not available to set as current"
   if [ -e "${ZOPEN_PKGINSTALL}/${package}/${package}" ]; then
