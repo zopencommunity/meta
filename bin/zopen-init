@@ -724,6 +724,7 @@ generateFileSystem
 ! ${refresh} && installPrereqs
 generateJsonConfiguration
 generateDefaultRepository
+generateZopenConfig
 generateAnalyticsConfiguration
 updateBootstrappedTools
 [ -e "${ZOPEN_ROOTFS}/var/lib/zopen/packageDB.json" ] || updatePackageDB
