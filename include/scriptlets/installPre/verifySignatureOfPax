@@ -28,7 +28,7 @@ extractFromMetaData(){
     printVerbose "Could not locate ${key} in the pax's metadata. Checking cache..."
     mdf="${ZOPEN_ROOTFS}/var/cache/zopen/$(basename "$3").json"
     if ! sRc=$(jq -e -r "${key}" "${mdf}"); then
-      printSoftError "Failed to extract '${key}' from package metadata" >&2
+      printVerbose "Failed to extract '${key}' from package metadata" >&2
       return 1
     fi
   fi
@@ -49,6 +49,7 @@ extractFromMetaData(){
 #  fi
 #fi
 if ! FILE_TO_VERIFY=$(extractFromMetaData ".product.pax" "${metadataFile}" "${paxFile}"); then
+  printSoftError "Failed to extract '${key}' from package metadata" >&2
   return 1  
 fi
 
@@ -59,7 +60,7 @@ fi
 
 if ! SIGNATURE=$(extractFromMetaData ".product.signature" "${metadataFile}" "${paxFile}"); then
   # Lack of a .signature indicates the package has not yet been signed so allow installation
-  printVerbose "No .signature found in the metadata for '${pkg}'; continuing installation"
+  printVerbose "No .signature found in the metadata for '${pkg}; continuing installation"
   return 0
 fi
 
@@ -73,6 +74,8 @@ fi
 # Create a temporary directory for GPG keyring
 SIGNATURE_FILE=$(mktempfile "signedfile" ".asc")
 PUBLIC_KEY_FILE=$(mktempfile "scriptpubkey" ".asc")
+addCleanupTrapCmd "rm -rf ${SIGNATURE_FILE}"
+addCleanupTrapCmd "rm -rf ${PUBLIC_KEY}"
 
 #TMP_GPG_DIR=$(mktempdir "gpg" "verify")
 #SIGNATURE_FILE="${TMP_GPG_DIR}/signedfile.asc"
@@ -80,8 +83,6 @@ PUBLIC_KEY_FILE=$(mktempfile "scriptpubkey" ".asc")
 printf "%b" "${SIGNATURE}" | tr -d '"'  > "${SIGNATURE_FILE}"
 printf "%b" "$PUBLIC_KEY" | tr -d '"'  > "${PUBLIC_KEY_FILE}"
 
-[ -e "${SIGNATURE_FILE}" ] && addCleanupTrapCmd "rm -rf ${SIGNATURE_FILE}"
-[ -e "${PUBLIC_KEY}" ] && addCleanupTrapCmd "rm -rf ${PUBLIC_KEY}"
 
 if [ ! -f "${PUBLIC_KEY_FILE}" ]; then
   printSoftError "Unable to locate created public key file"
@@ -93,8 +94,9 @@ startGPGAgent
 printVerbose "Importing public key to keyring file..."
 ${KEYRING_FILE}
 KEYRING_FILE=$(mktempfile "pubring" ".kbx")
+addCleanupTrapCmd "rm -rf ${KEYRING_FILE}"  
   
-  if ! gpg_output=$(gpg --no-default-keyring --keyring "${KEYRING_FILE}" --batch --yes --import "$PUBLIC_KEY_FILE" 2>&1); then
+  if ! gpg_output=$(gpgCmd --no-default-keyring --keyring "${KEYRING_FILE}" --batch --yes --import "$PUBLIC_KEY_FILE" 2>&1); then
     printSoftError "Importing public key failed. Details:"
     printSoftError "${gpg_output}"
     printSoftError "Verification aborted." 
@@ -105,7 +107,7 @@ KEYRING_FILE=$(mktempfile "pubring" ".kbx")
   # Verify that the key was imported successfully
   printVerbose "Checking if public key is imported..."
   
-  if ! gpg_output=$(gpg --no-default-keyring --keyring "${KEYRING_FILE}" --check-sigs 2>&1); then
+  if ! gpg_output=$(gpgCmd --no-default-keyring --keyring "${KEYRING_FILE}" --check-sigs 2>&1); then
     printSoftError "Public key was not imported. See output:\n${gpg_output}.\nVerification aborted."
     return 1
   fi
@@ -119,8 +121,8 @@ KEYRING_FILE=$(mktempfile "pubring" ".kbx")
     return 1
   fi
 
-#  gpg_output=$(gpg --no-default-keyring --keyring "${KEYRING_FILE}" --verify "${SIGNATURE_FILE}" "${FILE_TO_VERIFY}" 2>&1)
-  gpg_output=$(gpg --no-default-keyring --keyring "${KEYRING_FILE}" --verify "${SIGNATURE_FILE}" "${paxFile}" 2>&1)
+#  gpg_output=$(gpgCmd --no-default-keyring --keyring "${KEYRING_FILE}" --verify "${SIGNATURE_FILE}" "${FILE_TO_VERIFY}" 2>&1)
+  gpg_output=$(gpgCmd --no-default-keyring --keyring "${KEYRING_FILE}" --verify "${SIGNATURE_FILE}" "${paxFile}" 2>&1)
   printVerbose "${gpg_output}"
   if ! echo "${gpg_output}" | grep -q "Good signature from"; then
     printSoftError "Verification failed. Details:"
