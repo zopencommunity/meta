@@ -1,4 +1,4 @@
-#!/bin/sh -x
+#!/bin/sh
 this="systemPreReqCheck"
 printVerbose "Running '${this}' script"
 pkg=$1
