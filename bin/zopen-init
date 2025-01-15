@@ -725,6 +725,6 @@ generateFileSystem
 generateJsonConfiguration
 generateDefaultRepository
 generateAnalyticsConfiguration
-[ -e "${ZOPEN_ROOTFS}/var/lib/zopen/packageDB.json" ] || updatePackageDB
 updateBootstrappedTools
+[ -e "${ZOPEN_ROOTFS}/var/lib/zopen/packageDB.json" ] || updatePackageDB
 deinit
