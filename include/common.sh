@@ -5,11 +5,9 @@
 
 zopenInitialize()
 {
-  # Create the cleanup pipeline and exit handler - the export grabs the
-  # program exit code (for EXIT) or the signal otherwise to return from
-  # the program (rather than the return code from the functions in the
-  # trap handler)
-  trap "eval export exitrc=\$?" EXIT INT TERM QUIT HUP
+  # Monitor the intial parent process; as subshells inherit
+  # variables, this will not be overridden due to param expansion
+  parentPid=${parentPid:-$$}
   defineEnvironment
   defineANSI
   if [ -z "${ZOPEN_DONT_PROCESS_CONFIG}" ]; then
@@ -30,12 +28,44 @@ zopenInitialize()
   fi
 
 }
-
 addCleanupTrapCmd(){
-  newcmd="$1 >/dev/null 2>&1"
+  # Attempt to remove any redirects; rather than test, simpler to remove 
+  # and re-add if present. 
+  newcmd=$(echo "$cmd" | zossed -E "s/[ \t]*[1-9]*[<>][>|&]?[ \t]*[^ \t]*//g")
+  newcmd="${newcmd} >/dev/null 2>&1"
+
+  tmpscriptfile="/tmp/zopen_trap.scr"
+  echo "${newcmd}" >> "${tmpscriptfile}"
+
+  if [ $$ -eq "${parentPid}" ]; then
+    # Re-register handlers if already done; quicker than testing presensce
+    for trappedSignal in "EXIT" "INT" "TERM" "QUIT" "HUP"; do
+      trap cleanup "${trappedSignal}"
+    done
+  fi
+}
+
+cleanup() {
+    printVerbose "Performing cleanup [in the parent process]"
+    if [ -f "${tmpscriptfile}" ] && [ -s "${tmpscriptfile}" ]; then
+        # Execute the commands in the cleanup file by sourcing it
+        # shellcheck disable=SC1090
+        . "${tmpscriptfile}"
+        rm "${tmpscriptfile}"
+    else
+        printVerbose "No cleanup script to run"
+    fi
+    printElapsedTime info "${0}" ${fullProcessStartTime}
+}
+
+addCleanupTrapCmd2(){
+  # Attempt to remove any redirects; rather than test, simpler to remove 
+  # and re-add if present. 
+  newcmd=$(echo "$cmd" | zossed -E "s/[ \t]*[1-9]*[<>][>|&]?[ \t]*[^ \t]*//g")
+  newcmd="${newcmd} >/dev/null 2>&1"
   # Command Trace MUST be disabled as the output from this can become
   # interleaved with output when calling zopen sub-processes.
-  [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
+
   # Small timing window if the script is killed between the creation
   # and removal of the temporary file; would be easier if zos sh
   # didn't have a bug -trap can't be piped/redirected anywhere except
