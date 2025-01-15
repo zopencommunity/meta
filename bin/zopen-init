@@ -617,7 +617,7 @@ installPrereqs()
  done
 
   # Sourcing the environment from within the actual directories
-  for tool in "curl" "jq" "pinentry "gnupg""; do
+  for tool in "curl" "jq" "pinentry" "gnupg"; do
      printVerbose "Sourcing environment to trigger any setup required for ${tool}"
 
      tooldir=$(ls "${rootfs}/boot" | grep ${tool} | head -1)
