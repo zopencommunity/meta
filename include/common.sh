@@ -20,6 +20,7 @@ zopenInitialize()
   ZOPEN_GITHUB="https://github.com/${ZOPEN_ORGNAME}"
   # shellcheck disable=SC2034
   ZOPEN_ANALYTICS_JSON="${ZOPEN_ROOTFS}/var/lib/zopen/analytics.json"
+  # shellcheck disable=SC2034
   ZOPEN_JSON_CACHE_URL="https://raw.githubusercontent.com/${ZOPEN_ORGNAME}/meta/main/docs/api/zopen_releases.json"
   ZOPEN_JSON_CONFIG="${ZOPEN_ROOTFS}/etc/zopen/config.json"
   if [ -n "${INCDIR}" ]; then
@@ -2104,12 +2105,21 @@ installFromPax()
   printDebug "Installing from '${pax}'"
 
   metadatafile=$(extractMetadataFromPax "${pax}")
-  # Ideally we would use the following, but name does not always map
-  # to the actual repo package name at present.  The repo name is in the
-  # repo field so can extract from there instead
-  #name=$(jq --raw-output '.product.name' "${metadatafile}")
-   # Ideally, use $reponame in the match but jq seems to have issues with that!
-  name=$(jq --arg reponame "${ZOPEN_ORGNAME}" --raw-output '.product.repo | match(".*/zopencommunity/(.*)port").captures[0].string' "${metadatafile}")
+  # Ideally we would use the following, 
+  #  name=$(jq --raw-output '.product.name' "${metadatafile}") 
+  # but name does not always map to the actual repo package name at present!
+  # The repo name is in the.product.repo field so can extract from there instead.
+  # Note that at present some metadata might refer to the legacy repo ZOSOpenTools
+  # so fall back to that
+  printVerbose "Extracting product name from repo"
+  name=$(jq --arg reponame "${ZOPEN_ORGNAME}" --raw-output '.product.repo | match(".*/\($reponame)/(.*)port").captures[0].string' "${metadatafile}")
+  if [ -z "${name}" ] || [ "${name##*[^ ]*}" = "" ]; then  
+    name=$(jq --arg reponame "ZOSOpenTools" --raw-output '.product.repo | match(".*/\($reponame)/(.*)port").captures[0].string' "${metadatafile}")
+  fi
+  if [ -z "${name}" ] || [ "${name##*[^ ]*}" = "" ]; then  
+    printError "Unable to determine name from .product.repo in '${metadatafile}'. Check metadata is correct."
+  fi
+
   if ! processActionScripts "installPre" "${name}" "${metadatafile}" "${pax}"; then
     printError "Failed installation pre-requisite check(s) for '${name}'. Correct previous errors and retry command"
   fi
@@ -2298,7 +2308,7 @@ updatePackageDB()
       continue
     fi
     escapedJSONFile=$(mktempfile "escaped" "json")
-    # addCleanupTrapCmd "rm -rf ${escapedJSONFile}"
+    addCleanupTrapCmd "rm -rf ${escapedJSONFile}"
     stripControlCharacters "${metadataFile}" "${escapedJSONFile}"
     if [ ! -e "${pdb}" ]; then
       echo "[]" > "${pdb}"
