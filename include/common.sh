@@ -434,6 +434,7 @@ EOF
 
 }
 
+# Wrap the curl command with additional standard parameters
 curlCmd()
 {
   # Take the list of parameters and concat them with
@@ -442,6 +443,19 @@ curlCmd()
     extra_curl_options="--no-progress-meter"
   fi
   curl ${ZOPEN_CURL_PARAMS} ${extra_curl_options} $*
+}
+
+# Wrap the gpg command with additional standard parameters
+gpgCmd()
+{
+  if ! gpgout=$(gpg --no-secmem-warning $*); then
+  	if echo "${gpgout}" | grep -q "EDC5128I No such device"; then
+    printVerbose "Ignoring mmap issue not applicable on z/OS currently"
+      return 0
+    fi
+    echo "${gpgout}"
+    return 1
+  fi
 }
 
 validateReleaseLine()
@@ -2448,8 +2462,14 @@ jqfunctions()
 
 startGPGAgent()
 {
-  printInfo "- Starting gpg-agent..."
-  if ! gpg-agent --daemon --disable-scdaemon; then
+
+  # shellcheck disable=SC2009 # Not on z/OS currently
+  if ps -ef | grep [g]pg-agent; then
+    printInfo "- Re-using gpg-agent"
+    return
+  fi
+  printInfo "- Starting gpg-agent"
+  if ! gpg-agent --daemon --disable-scdaemon --no-secmem-warning; then
     printError "Error running gpg-agent command. Review error messages and retry command."
   fi
   # Wait a moment to ensure the gpg-agent has time to start
