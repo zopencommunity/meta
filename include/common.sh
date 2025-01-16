@@ -54,7 +54,6 @@ cleanup() {
     else
         printVerbose "No cleanup script to run"
     fi
-    printElapsedTime info "${0}" ${fullProcessStartTime}
 }
 
 addCleanupTrapCmd2(){
