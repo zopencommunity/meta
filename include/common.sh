@@ -31,8 +31,7 @@ zopenInitialize()
 addCleanupTrapCmd(){
   # Attempt to remove any redirects; rather than test, simpler to remove 
   # and re-add if present. 
-  newcmd=$(echo "$cmd" | zossed -E "s/[ \t]*[1-9]*[<>][>|&]?[ \t]*[^ \t]*//g")
-  newcmd="${newcmd} >/dev/null 2>&1"
+  newcmd="$1 >/dev/null 2>&1"
 
   tmpscriptfile="/tmp/zopen_trap.scr"
   echo "${newcmd}" >> "${tmpscriptfile}"
