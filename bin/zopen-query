@@ -205,8 +205,11 @@ printDetailListEntries()
   fi
   exit 0
 }
+
 printInstalledEntries()
 {
+  needle="${2}" 
+
   scrcols=$(getScreenCols)
   [ "${details}" -eq 0 ] && numcols=4 || numcols=6
   colwidth=$((scrcols / numcols - 1))
@@ -227,6 +230,12 @@ printInstalledEntries()
     if [ ! -e "${pkghome}/.active" ]; then
       printVerbose "Symlink '${repo}' in '${ZOPEN_PKGINSTALL}' is not active; skipping"
       continue
+    fi
+
+    # Check if the current package matches the needle (if provided)
+    if [ -n "${needle}" ] && ! echo "${repo}" | grep -q "${needle}"; then
+        printVerbose "Skipping '${repo}' as it does not match the needle '${needle}'"
+        continue
     fi
 
     if ${noversion}; then
@@ -331,6 +340,10 @@ while [ $# -gt 0 ]; do
     localoption=true
     installed=1
     list=
+    if [ -n "$2" ] && [[ "$2" != -* ]]; then
+      needle="$2"
+      shift
+    fi
     ;;
   "-wp" | "--whatprovides")
     localoption=true
@@ -408,7 +421,7 @@ fi
 
 if ! ${localoption}; then
   # Retrieve all repositories
-  getReposFromGithub
+  getReposFromGithub true # zopen query is a read only operation
   grfgRc=$?
   [ 0 -ne "${grfgRc}" ] && exit "${grfgRc}"
   repoArray="${repo_results}"
@@ -417,5 +430,5 @@ fi
 ! ${upgradeable} || printDetailListEntries "${details}" "" 1
 [ -z "${remotesearch}" ] || printDetailListEntries "${details}" "${needle}" 0
 [ -z "${list}" ] || printDetailListEntries "${details}" "" 0
-[ -z "${installed}" ] || printInstalledEntries "${details}" "" 0
+[ -z "${installed}" ] || printInstalledEntries "${details}" "${needle}" 0
 [ -z "${whatprovides}" ] || whatProvides "${needle}"

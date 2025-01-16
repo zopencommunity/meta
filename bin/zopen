@@ -37,6 +37,7 @@ Command:
   init              initializes a zopen environment at the specified location
   refresh           refreshes your zopen environment and zopen-config file
   install           installs one or more zopen community packages
+  info              displays detailed information about a package
   list              lists information about zopen community packages
   query             list local or remote info about zopen community packages
   remove            removes installed zopen community packages
@@ -54,6 +55,7 @@ Examples:
   zopen upgrade -y  upgrade all installed packages to the latest release,
                     without prompting
   zopen alt bash    list installed alternative bash packages
+  zopen info vim    displays details information about the installed vim package
 
 SEE ALSO:
   zopen-alt(1)
@@ -64,6 +66,7 @@ SEE ALSO:
   zopen-generate(1)
   zopen-init(1)
   zopen-install(1)
+  zopen-info(1)
   zopen-query(1)
   zopen-remove(1)
   zopen-update-cacert(1)
@@ -85,7 +88,7 @@ version=false
 for arg in $*; do
   case "${arg}" in
     "alt"|"audit"|"build"|"clean"|"generate"|"init"|"install"|\
-    "query"|"remove"|"update-cacert")
+    "query"|"remove"|"update-cacert"|"info")
       subcmd="zopen-${arg}"
       ;;
     "list")
