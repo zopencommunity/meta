@@ -5,6 +5,10 @@ pkg=$1
 metadataFile=$2
 paxFile=$3
 
+if ${skipverify}; then
+  printWarning "Package validation with GPG explicitly skipped"
+  return 0
+fi
 printInfo "- Performing GPG signature verification for '${pkg}' pax file"
 metadataVersion=$(jq -r '.version_scheme' "${metadataFile}" 2>/dev/null)
 is_greater=$(echo "$metadataVersion > 0.1" | bc -l)
