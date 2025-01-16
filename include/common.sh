@@ -31,7 +31,7 @@ zopenInitialize()
 addCleanupTrapCmd(){
   # Attempt to remove any redirects; rather than test, simpler to remove 
   # and re-add if present. 
-  newcmd="$1 >/dev/null 2>&1"
+  newcmd="$1"
 
   tmpscriptfile="/tmp/zopen_trap.scr"
   echo "${newcmd}" >> "${tmpscriptfile}"
@@ -49,7 +49,7 @@ cleanup() {
     if [ -f "${tmpscriptfile}" ] && [ -s "${tmpscriptfile}" ]; then
         # Execute the commands in the cleanup file by sourcing it
         # shellcheck disable=SC1090
-        . "${tmpscriptfile}"
+        . "${tmpscriptfile}" > /dev/null 2>&1
         rm "${tmpscriptfile}"
     else
         printVerbose "No cleanup script to run"
