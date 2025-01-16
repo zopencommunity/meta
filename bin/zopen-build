@@ -111,7 +111,7 @@ Restricted Usage - only SET by metaport, otherwise READ ONLY:
   ZOPEN_NUM_JOBS      Number of jobs that can be run in parallel
                       (defaults to half the CPUs on the system)
 
-Restricted Usage (clangport):
+Restricted Usage (clang):
   ZOPEN_CFLAGS        C compiler flags. (default set by dependency)
   ZOPEN_CPPFLAGS      C/C++ pre-processor flags. (default set by dependency)
   ZOPEN_CXXFLAGS      C++ compiler flags. (default set by dependency)
@@ -313,8 +313,8 @@ Option:
   --buildtype TYPE      TYPE may be release or debug.  The default is release.
   -c, --clean           Deletes all of the build output and forces
                         reconfigure with next build.
-  --comp COMP           COMP may be comp_xlclang, comp_clang, comp_go,
-                        comp_python. The default is comp_xlclang.
+  --comp COMP           COMP may be xlclang, clang, go, java
+                        python. The default is clang.
   -e ENV_FILE           source ENV_FILE instead of buildenv to establish
                         build environment.
   --instrument          instruments the application with option -finstrument-functions (clang only)
@@ -652,12 +652,12 @@ checkEnv()
   implicitDeps="sed git jq curl"
 
   if [ -z "${ZOPEN_COMP}" ]; then
-    implicitDeps="${implicitDeps} comp_xlclang"
+    implicitDeps="${implicitDeps} check_clang"
   else
     # user specified, so normalize in lower case
     ZOPEN_COMP=$(echo "${ZOPEN_COMP}" | tr '[A-Z]' '[a-z]')
     if [ "${ZOPEN_COMP}x" != 'skipx' ]; then
-      implicitDeps="${implicitDeps} comp_${ZOPEN_COMP}"
+      implicitDeps="${implicitDeps} check_${ZOPEN_COMP}"
     fi
   fi
 
@@ -816,7 +816,7 @@ setEnv()
   setDepsEnv
 
   if ${instrument}; then
-    if [ "${CC}" = "clang" ]; then
+    if [ "${CC}" = "clang" ] || [ "${CC}" = "ibm-clang" ]; then
       instrumentOptions="-finstrument-functions"
     else
       printWarning "In order to instrument your application, you must build with clang."
