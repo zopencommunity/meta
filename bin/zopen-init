@@ -475,7 +475,7 @@ generateJsonConfiguration()
 
   if [ ! -e "${jsonConfig}" ]; then
     printInfo "Generating global configuration"
-    cat <<zz > "${jsonConfigWorking}"
+    cat <<zz > "${jsonConfig}"
     {
       "release_line": "${releaseLine:-STABLE}",
       "num_rm_procs": ${rm_fileprocs:-5},
