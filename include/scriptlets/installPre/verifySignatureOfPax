@@ -75,7 +75,7 @@ fi
 SIGNATURE_FILE=$(mktempfile "signedfile" ".asc")
 PUBLIC_KEY_FILE=$(mktempfile "scriptpubkey" ".asc")
 addCleanupTrapCmd "rm -rf ${SIGNATURE_FILE}"
-addCleanupTrapCmd "rm -rf ${PUBLIC_KEY}"
+addCleanupTrapCmd "rm -rf ${PUBLIC_KEY_FILE}"
 
 #TMP_GPG_DIR=$(mktempdir "gpg" "verify")
 #SIGNATURE_FILE="${TMP_GPG_DIR}/signedfile.asc"
@@ -92,9 +92,9 @@ fi
 startGPGAgent
 
 printVerbose "Importing public key to keyring file..."
-${KEYRING_FILE}
 KEYRING_FILE=$(mktempfile "pubring" ".kbx")
 addCleanupTrapCmd "rm -rf ${KEYRING_FILE}"  
+addCleanupTrapCmd "rm -rf ${KEYRING_FILE}~"  # Also remove a potential lock file?  
   
   if ! gpg_output=$(gpgCmd --no-default-keyring --keyring "${KEYRING_FILE}" --batch --yes --import "$PUBLIC_KEY_FILE" 2>&1); then
     printSoftError "Importing public key failed. Details:"
