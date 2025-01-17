@@ -1,5 +1,5 @@
 <!-- Creator     : groff version 1.22.3 -->
-<!-- CreationDate: Fri Jan 17 06:06:10 2025 -->
+<!-- CreationDate: Fri Jan 17 06:06:09 2025 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -13,15 +13,17 @@
        table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
        h1      { text-align: center }
 </style>
-<title>ZOPEN-MIGRATE-GROOVY</title>
+<title>ZOPEN-INFO</title>
 
 </head>
 <body>
 
-<h1 align="center">ZOPEN-MIGRATE-GROOVY</h1>
+<h1 align="center">ZOPEN-INFO</h1>
 
 <a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
 <a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#OPTIONS">OPTIONS</a><br>
 <a href="#AUTHOR">AUTHOR</a><br>
 
 <hr>
@@ -32,9 +34,17 @@
 </h2>
 
 
+<p style="margin-left:11%; margin-top: 1em">zopen-info
+&minus; manual page for zopen-info 0.8.4</p>
 
-<p style="margin-left:11%; margin-top: 1em">zopen-migrate-groovy
-&minus; manual page for zopen-migrate-groovy 0.8.4</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>zopen-info</b>
+[<i>OPTION</i>] <i>PACKAGE</i></p>
 
 <h2>DESCRIPTION
 <a name="DESCRIPTION"></a>
@@ -42,19 +52,38 @@
 
 
 
-<p style="margin-left:11%; margin-top: 1em">zopen&minus;migrate&minus;groovy
-[&minus;&minus;version|&minus;&minus;help]</p>
+<p style="margin-left:11%; margin-top: 1em">zopen&minus;info
+&minus; display detailed information about a zopen
+package.</p>
 
-<p style="margin-left:22%; margin-top: 1em">simple script
-to create a cicd&minus;dev.groovy and
-cicd&minus;stable.groovy from a cicd.groovy. By no means
-bullet&minus;proof but might save some typing Has no checks
-in it and requires you fill in the ...&rsquo;s in the
-generated files.</p>
+<p style="margin-left:22%; margin-top: 1em">PACKAGE is the
+name of a zopen package.</p>
 
-<p style="margin-left:22%; margin-top: 1em">Also, spacing
-is a bit off &minus; but easy enough to change
-post&minus;processing in the editor.</p>
+<h2>OPTIONS
+<a name="OPTIONS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>&minus;h</b>,
+<b>&minus;&minus;help</b></p>
+
+<p style="margin-left:22%;">print this help</p>
+
+<p style="margin-left:11%;"><b>&minus;v</b>,
+<b>&minus;&minus;verbose</b></p>
+
+<p style="margin-left:22%;">run in verbose mode.</p>
+
+<p style="margin-left:11%;"><b>&minus;r</b>,
+<b>&minus;&minus;remote</b></p>
+
+<p style="margin-left:22%;">force a remote lookup</p>
+
+
+<p style="margin-left:11%;"><b>&minus;&minus;version</b></p>
+
+<p style="margin-left:22%;">print version</p>
 
 <p style="margin-left:11%; margin-top: 1em">This is free
 software: you are free to change and redistribute it under
