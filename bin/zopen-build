@@ -1068,12 +1068,12 @@ downloadTarBall()
     #
     curlCmd -I "${ZOPEN_URL}" > /dev/null 2>&1
 
-    if ! curlCmd -L -0 -o "${tarballz}" "${ZOPEN_URL}"; then
+    if ! curlCmd -L -o "${tarballz}" "${ZOPEN_URL}"; then
       if [ -f "${tarballz}" ] && [ $(wc -c "${tarballz}" | awk '{print $1}') -lt 1024 ]; then
         cat "${tarballz}" > /dev/null
       else
         printError "Re-try curl for diagnostics"
-        curlCmd -L -0 -o /dev/null "${ZOPEN_URL}"
+        curlCmd -L -o /dev/null "${ZOPEN_URL}"
       fi
       printError "Unable to download ${tarballz} from ${ZOPEN_URL}"
     fi
