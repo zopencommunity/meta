@@ -45,8 +45,41 @@ Examples:
   zopen config --set is_collecting_stats false
                     disable the is_collecting_stats functionality
 
+Variables
+      The possible configuration values for the zopen environment are listed
+      below. The type of value expected is given, one of:
+        integer|boolean|string.
+      Where the value must be one of an enumerated set, the default value is 
+      listed first. Validation of those values will be performed at runtime.
+
+      autocacheclean [integer:0|1]
+          Tells zopen install to remove downloaded package files from the cache 
+          to preserve space. 
+
+      autopkgpurge [integer:0|1]
+          Tells zopen install to remove any older version[s] of a package after
+          a successful install or upgrade
+      
+      is_collecting_stats [boolean:true|false]
+          Configures the zopen environment to collect anonymous statistcs about
+          package installations.
+      
+      num_rm_procs (deprecated) [integer:5]
+          Tells zopen remove how many subshells to use during removal processing
+
+      override_zos_tools [boolean:false|true]
+          Tells zopen-config whether to prioritise native z/OS tools (such as in
+          /bin) on the \$PATH or to use zopen community ports in preference.
+          zopen community ports can still be referenced using an appropriate
+          command prefix; for example: gawk, zotfile, zotman
+
+      release_line [string:STABLE|DEV]
+          Tells zopen install whether to install packages from the STABLE line
+          or from the DEV line. DEV packages will be newer but might exhibit
+          unexpected behaviour. The default is to use STABLE packages.
+
 Notes:
-  Configuration options are not validated such that any key/value pairs can
+  Configuration options are not validated in that any key/value pairs can
   be added into the global configuration. 3rd-party utilities can store their
   global configuration into the zopen runtime environment store and use the
   zopen config tooling to set/retrieve values. Key names for stored properties
