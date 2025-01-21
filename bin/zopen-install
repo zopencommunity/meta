@@ -69,6 +69,7 @@ Options:
   --noset-active           unpackage onto the system but do not change the currently
                            active version
   --reinstall              reinstall currently installed package(s)
+  --reinstall-with-deps    reinstall package(s) and their dependencies
   --release-line [stable|dev]
                            the release line to install from
   --select                 select a version to install from available versions
@@ -109,11 +110,15 @@ quiet=false
 selectVersion=false
 # shellcheck disable=SC2034
 bypassPrereqs=false
+# shellcheck disable=SC2034
 setActive=true
 downloadOnly=false
 reinstall=false
+reinstallDeps=false
 installOrUpgrade=false
+# shellcheck disable=SC2034
 nosymlink=false
+# shellcheck disable=SC2034
 skipupgrade=false
 skipverify=false
 doNotInstallDeps=false
@@ -129,6 +134,12 @@ while [ $# -gt 0 ]; do
     "-r" | "-reinstall" | "--reinstall")
       # shellcheck disable=SC2034
       reinstall=true  # If package already installed, reinstall
+      ;;
+    "--reinstall-with-deps")
+      # shellcheck disable=SC2034
+      reinstallDeps=true  # If reinstalling, also reinstall dependencies
+      # shellcheck disable=SC2034
+      reinstall=true
       ;;
     "--install-or-upgrade")
       # shellcheck disable=SC2034
