@@ -1952,13 +1952,25 @@ generateInstallGraph(){
   invalidPortAssetFile=$(mktempfile "invalid" "port")
   addCleanupTrapCmd "rm -rf ${invalidPortAssetFile}"
   addToInstallGraph "install" "${invalidPortAssetFile}" "${portsToInstall}"
+
   # shellcheck disable=SC2154
-  if  ${doNotInstallDeps}; then
-      printVerbose "- Skipping dependency analysis"
-  else
-    # calculate dependancy graph
+  if ! ${doNotInstallDeps} && { (! ${reinstall} && ! ${reinstallDeps}) || (${reinstall} && ${reinstallDeps}); }; then
+    # doNotInstallDeps was not explicitly set and we are either not reinstalling(vanilla install) or we
+    # are reinstalling AND the reinstallDependencies flag is set; we do not want
+    # to reinstall a package and all it's dependencies by default, just the package itself
+    printVerbose "Calculating dependancy graph"
     createDependancyGraph "${invalidPortAssetFile}"
+  else
+    printVerbose "- Skipping dependency analysis"
   fi
+
+  # shellcheck disable=SC2154
+  #if ${doNotInstallDeps}; then
+  #    printVerbose "- Skipping dependency analysis"
+  #else
+    # calculate dependancy graph
+  #  createDependancyGraph "${invalidPortAssetFile}"
+  #fi
   
   # shellcheck disable=SC2154
   if "${reinstall}"; then 
