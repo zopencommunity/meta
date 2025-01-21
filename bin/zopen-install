@@ -292,8 +292,11 @@ else
     printInfo " - The following package(s) will be installed:"
     echo "${installList}" | jq --raw-output '.installqueue | sort| .[] | .portname '
   fi
-  processRepoInstallFile
-  printInfo "Installation complete."
+  if ! processRepoInstallFile; then
+    exitrc=1
+  else
+    printInfo "Installation complete."
+  fi
 fi
 mutexFree "zopen"
-exit 0
+exit "${exitrc:-0}"
