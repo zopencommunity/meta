@@ -467,9 +467,7 @@ curlCmd()
 {
   # Take the list of parameters and concat them with
   # any custom parameters the user requires in ZOPEN_CURL_PARAMS
-  if  [ ! -t 1 ] || [ ! -t 2 ]; then
-    extra_curl_options="--no-progress-meter"
-  fi
+  extra_curl_options="--no-progress-meter"
   curl ${ZOPEN_CURL_PARAMS} ${extra_curl_options} $*
 }
 
