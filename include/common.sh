@@ -2124,6 +2124,12 @@ getInstallFile()
     printVerbose "Downloading corresponding metadata"
     if ! runAndLog "curlCmd -L '${metadataJSONURL}' -o '${metadataFile}'" "${redirectToDevNull}"; then
       printError "Could not download from ${metadataJSONURL}. Correct any errors and potentially retry."
+    else
+      if command -v chtag >/dev/null 2>&1; then
+        # Curl currently does not know on z/OS to set the text flag for text files
+        printVerbose "Metadata file downloaded, ensuring 'text' flag set for z/OS"
+        chtag -t "${metadataFile}"
+      fi
     fi
   fi
 }
