@@ -34,11 +34,11 @@ startGPGAgent() {
     if [ -r "$SOCKET_PATH" ]; then
       printVerbose "gpg-agent started successfully (socket created at $SOCKET_PATH)."
     else
-      printVerbose "gpg-agent started, but socket was not created at $SOCKET_PATH. Please verify your GPG installation."
+      printWarning "gpg-agent started, but socket was not created at $SOCKET_PATH. Please verify your GPG installation."
     fi
   else
     if [ -r "$SOCKET_PATH" ]; then
-      printVerbose "gpg-agent started successfully (socket created at $SOCKET_PATH), but gpg-agent returned a non-zero return code."
+      printWarning "gpg-agent started successfully (socket created at $SOCKET_PATH), but gpg-agent returned a non-zero return code."
     else
       printError "Failed to start gpg-agent. Reinstall or upgrade GPG using \"zopen install --reinstall gpg -y\" or \"zopen upgrade gpg -y\"."
     fi
