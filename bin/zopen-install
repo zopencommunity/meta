@@ -21,16 +21,28 @@ setupMyself()
 setupMyself
 checkWritable
 
-startGPGAgent()
-{
-     printInfo "- Starting gpg-agent..."
-     gpg-agent --daemon --disable-scdaemon
-     # Wait a moment to ensure the gpg-agent has time to start
-     sleep 2
-     # Check to confirm if gpg-agent started successfully
-     if ! ps -ef | grep -v grep | grep "gpg-agent" > /dev/null; then
-        printError "Failed to start the gpg-agent. Reinstall or upgrade GPG using \"zopen install --reinstall gpg -y\" or \"zopen upgrade gpg -y\" command."
-     fi
+startGPGAgent() {
+  printInfo "- Starting gpg-agent..."
+
+  SOCKET_PATH=$(gpgconf --list-dirs agent-socket)
+  if [ -r "$SOCKET_PATH" ]; then
+    printVerbose "gpg-agent is already running (socket found at $SOCKET_PATH)."
+    return 0
+  fi
+
+  if eval "$(gpg-agent --daemon --disable-scdaemon)" >/dev/null 2>&1; then
+    if [ -r "$SOCKET_PATH" ]; then
+      printVerbose "gpg-agent started successfully (socket created at $SOCKET_PATH)."
+    else
+      printWarning "gpg-agent started, but socket was not created at $SOCKET_PATH. Please verify your GPG installation."
+    fi
+  else
+    if [ -r "$SOCKET_PATH" ]; then
+      printWarning "gpg-agent started successfully (socket created at $SOCKET_PATH), but gpg-agent returned a non-zero return code."
+    else
+      printError "Failed to start gpg-agent. Reinstall or upgrade GPG using \"zopen install --reinstall gpg -y\" or \"zopen upgrade gpg -y\"."
+    fi
+  fi
 }
 
 gpgCleanup() {
