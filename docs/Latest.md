@@ -44,8 +44,8 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | Package | Status | Test Success Rate | Latest Release | Description |
 |---|---|---|---|---|
 | [bzip2](https://github.com/zopencommunity/bzip2port)|Green|100.0%|[STABLE_bzip2_2640](https://github.com/zopencommunity/bzip2port/releases/download/STABLE_bzip2port_2640/bzip2-1.0.8.20241028_123455.zos.pax.Z)|A compression utility|
-| [zip](https://github.com/zopencommunity/zipport)|Green|100.0%|[STABLE_zip_2855](https://github.com/zopencommunity/zipport/releases/download/STABLE_zipport_2855/zip-master.20250124_101445.zos.pax.Z)|Tool for zipping files|
-| [unzip](https://github.com/zopencommunity/unzipport)|Green|100.0%|[STABLE_unzip_2856](https://github.com/zopencommunity/unzipport/releases/download/STABLE_unzipport_2856/unzip-master.20250124_101529.zos.pax.Z)|Tool for unzipping compressed files|
+| [zip](https://github.com/zopencommunity/zipport)|Green|100.0%|[STABLE_zip_2868](https://github.com/zopencommunity/zipport/releases/download/STABLE_zipport_2868/zip-master.20250128_052311.zos.pax.Z)|Tool for zipping files|
+| [unzip](https://github.com/zopencommunity/unzipport)|Green|100.0%|[STABLE_unzip_2869](https://github.com/zopencommunity/unzipport/releases/download/STABLE_unzipport_2869/unzip-master.20250128_052327.zos.pax.Z)|Tool for unzipping compressed files|
 </div>
 
 <div class="table-category" data-category="core">
@@ -200,6 +200,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 | Package | Status | Test Success Rate | Latest Release | Description |
 |---|---|---|---|---|
+| [zusage](https://github.com/zopencommunity/zusageport)|Skipped|N/A|[DEV_zusage_2867](https://github.com/zopencommunity/zusageport/releases/download/DEV_zusageport_2867/zusage-DEV.20250127_195401.zos.pax.Z)|Usage analytics library|
 | [expat](https://github.com/zopencommunity/expatport)|Green|100.0%|[STABLE_expat_2698](https://github.com/zopencommunity/expatport/releases/download/STABLE_expatport_2698/expat-2.5.0.20241029_002907.zos.pax.Z)|A library for parsing XML content|
 | [zoslib](https://github.com/zopencommunity/zoslibport)|Green|100.0%|[STABLE_zoslib_2794](https://github.com/zopencommunity/zoslibport/releases/download/STABLE_zoslibport_2794/zoslib-zopen2.20250106_215459.zos.pax.Z)|A library used by z/OS Open Tools|
 | [libgdbm](https://github.com/zopencommunity/libgdbmport)|Green|100.0%|[STABLE_libgdbm_2691](https://github.com/zopencommunity/libgdbmport/releases/download/STABLE_libgdbmport_2691/gdbm-1.23.20241028_235609.zos.pax.Z)|A library for managing database functions|
@@ -217,7 +218,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | [libbsd](https://github.com/zopencommunity/libbsdport)|Green|100.0%|[STABLE_libbsd_2665](https://github.com/zopencommunity/libbsdport/releases/download/STABLE_libbsdport_2665/libbsd-main.20241028_215810.zos.pax.Z)|A library providing common BSD functions|
 | [jansson](https://github.com/zopencommunity/janssonport)|Green|100.0%|[STABLE_jansson_2652](https://github.com/zopencommunity/janssonport/releases/download/STABLE_janssonport_2652/jansson-master.20241028_213752.zos.pax.Z)|A C library for encoding, decoding, and manipulating JSON data|
 | [avro-c-lib](https://github.com/zopencommunity/avro-c-libport)|Green|100.0%|[STABLE_avro-c-lib_2651](https://github.com/zopencommunity/avro-c-libport/releases/download/STABLE_avro-c-libport_2651/avro-c-packaging-master.20241028_213518.zos.pax.Z)|A data serialization framework|
-| [zedc_ascii](https://github.com/zopencommunity/zedc_asciiport)|Green|100.0%|[DEV_zedc_ascii_2860](https://github.com/zopencommunity/zedc_asciiport/releases/download/DEV_zedc_asciiport_2860/zedc_ascii-DEV.20250124_133248.zos.pax.Z)|Modified version of zlib for HW optimization|
+| [zedc_ascii](https://github.com/zopencommunity/zedc_asciiport)|Green|100.0%|[DEV_zedc_ascii_2864](https://github.com/zopencommunity/zedc_asciiport/releases/download/DEV_zedc_asciiport_2864/zedc_ascii-DEV.20250127_161314.zos.pax.Z)|Modified version of zlib for HW optimization|
 | [libxml2](https://github.com/zopencommunity/libxml2port)|Blue|99.9%|[STABLE_libxml2_2683](https://github.com/zopencommunity/libxml2port/releases/download/STABLE_libxml2port_2683/libxml2-2.9.12.20241028_233023.zos.pax.Z)|A library for parsing XML content|
 | [libpcre](https://github.com/zopencommunity/libpcreport)|Blue|80.0%|[STABLE_libpcre_2845](https://github.com/zopencommunity/libpcreport/releases/download/STABLE_libpcreport_2845/pcre-8.45.20250123_222319.zos.pax.Z)|A regular expression library|
 | [libpcre2](https://github.com/zopencommunity/libpcre2port)|Yellow|66.7%|[STABLE_libpcre2_2672](https://github.com/zopencommunity/libpcre2port/releases/download/STABLE_libpcre2port_2672/pcre2-10.42.20241028_222746.zos.pax.Z)|A regular expression library|
@@ -254,7 +255,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | [ntbtls](https://github.com/zopencommunity/ntbtlsport)|Green|100.0%|[STABLE_ntbtls_2781](https://github.com/zopencommunity/ntbtlsport/releases/download/STABLE_ntbtlsport_2781/ntbtls-0.3.2.20241210_043039.zos.pax.Z)|A lightweight TLS 1.2 implementation|
 | [libmd](https://github.com/zopencommunity/libmdport)|Green|100.0%|[STABLE_libmd_2658](https://github.com/zopencommunity/libmdport/releases/download/STABLE_libmdport_2658/libmd-1.1.0.20241028_213749.zos.pax.Z)|A library for computing message digests|
 | [libsasl2](https://github.com/zopencommunity/libsasl2port)|Green|100.0%|[STABLE_libsasl2_2311](https://github.com/zopencommunity/libsasl2port/releases/download/STABLE_libsasl2port_2311/cyrus-sasl-master.20240624_052635.zos.pax.Z)|A SASL library|
-| [gpg](https://github.com/zopencommunity/gpgport)|Blue|99.1%|[STABLE_gpg_2819](https://github.com/zopencommunity/gpgport/releases/download/STABLE_gpgport_2819/gnupg-2.5.3.20250116_085115.zos.pax.Z)|A free software implementation of the GNU Privacy Guard|
+| [gpg](https://github.com/zopencommunity/gpgport)|Blue|93.2%|[STABLE_gpg_2863](https://github.com/zopencommunity/gpgport/releases/download/STABLE_gpgport_2863/gnupg-2.5.3.20250127_143406.zos.pax.Z)|A free software implementation of the GNU Privacy Guard|
 </div>
 
 <div class="table-category" data-category="shell">
@@ -291,9 +292,9 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | [gum](https://github.com/zopencommunity/gumport)|Skipped|N/A|[STABLE_gum_2581](https://github.com/zopencommunity/gumport/releases/download/STABLE_gumport_2581/gum-heads.v0.13.0.20241002_035627.zos.pax.Z)|A tool for creating simple command-line interfaces|
 | [llamacpp](https://github.com/zopencommunity/llamacppport)|Skipped|N/A|[STABLE_llamacpp_2013](https://github.com/zopencommunity/llamacppport/releases/download/STABLE_llamacppport_2013/llamacpp-master.20240124_170742.zos.pax.Z)|A C++ library for writing high-performance network applications|
 | [githubcli](https://github.com/zopencommunity/githubcliport)|Skipped|N/A|[DEV_githubcli_2573](https://github.com/zopencommunity/githubcliport/releases/download/DEV_githubcliport_2573/githubcli-DEV.20241002_030701.zos.pax.Z)|A command-line tool for GitHub|
-| [zlib](https://github.com/zopencommunity/zlibport)|Green|100.0%|[DEV_zlib_2706](https://github.com/zopencommunity/zlibport/releases/download/DEV_zlibport_2706/zlib-develop.20241029_024916.zos.pax.Z)|A data compression library|
 | [less](https://github.com/zopencommunity/lessport)|Green|100.0%|[STABLE_less_2841](https://github.com/zopencommunity/lessport/releases/download/STABLE_lessport_2841/less-heads.v668.20250123_133520.zos.pax.Z)|A text pager|
-| [gzip](https://github.com/zopencommunity/gzipport)|Green|100.0%|[STABLE_gzip_2862](https://github.com/zopencommunity/gzipport/releases/download/STABLE_gzipport_2862/gzip-1.13.20250124_151456.zos.pax.Z)|Library for handling gzip compressed files|
+| [zlib](https://github.com/zopencommunity/zlibport)|Green|100.0%|[DEV_zlib_2706](https://github.com/zopencommunity/zlibport/releases/download/DEV_zlibport_2706/zlib-develop.20241029_024916.zos.pax.Z)|A data compression library|
+| [gzip](https://github.com/zopencommunity/gzipport)|Green|100.0%|[STABLE_gzip_2870](https://github.com/zopencommunity/gzipport/releases/download/STABLE_gzipport_2870/gzip-1.13.20250128_051739.zos.pax.Z)|Library for handling gzip compressed files|
 | [ncurses](https://github.com/zopencommunity/ncursesport)|Green|100.0%|[STABLE_ncurses_2812](https://github.com/zopencommunity/ncursesport/releases/download/STABLE_ncursesport_2812/ncurses-6.5.20250114_215252.zos.pax.Z)|Library for ncurses, a terminal screen handling library|
 | [help2man](https://github.com/zopencommunity/help2manport)|Green|100.0%|[STABLE_help2man_2476](https://github.com/zopencommunity/help2manport/releases/download/STABLE_help2manport_2476/help2man-1.49.3.20240924_041914.zos.pax.Z)|A tool for converting manual pages to other formats|
 | [xxhash](https://github.com/zopencommunity/xxhashport)|Green|100.0%|[STABLE_xxhash_1993](https://github.com/zopencommunity/xxhashport/releases/download/STABLE_xxhashport_1993/xxHash-0.8.2.20240123_100914.zos.pax.Z)|A fast hash function library|
@@ -378,4 +379,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-01-24T11:41:16.549389
+Last updated:  2025-01-28T01:36:52.272980
