@@ -76,9 +76,10 @@ done <<< "$REPOS"
 if ! $FOUND_PR; then
     echo -e "\nNo pending version update PRs found!" >> $OUTPUT_FILE
 fi
+echo -e "\n</details>" >> $OUTPUT_FILE
 #
 # Workflow Status Section
-echo -e "<details open>" >> $OUTPUT_FILE
+echo -e "\n<details open>" >> $OUTPUT_FILE
 echo -e '<summary><b style="font-size: 28px;">Bump Automation Status</b></summary>\n' >> $OUTPUT_FILE
 
 ACTIVE_COUNT=0
@@ -99,7 +100,6 @@ echo -e "\n</details>" >> $OUTPUT_FILE
 echo -e "\n**Summary:** $ACTIVE_COUNT active | $MISSING_COUNT missing" >> $OUTPUT_FILE
 
 
-echo -e "\n</details>" >> $OUTPUT_FILE
 echo -e "\n---\n" >> $OUTPUT_FILE
 echo -e "\n> Last updated: $(date +"%Y-%m-%d %H:%M:%S %Z")\n" >> $OUTPUT_FILE
 
