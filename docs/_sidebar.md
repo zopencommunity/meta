@@ -8,7 +8,8 @@
   - [Available Tools and Libraries](/Latest.md)
     - [Newly Released Packages](/newly_released.md)
     - [Package Vulnerabilities](/Vulnerabilities.md)
-    - [Current Status](/Progress.md)
+    - [Status](/Progress.md)
+    - [Currency](/updatestatus.md)
     - [Usage Stats](https://usage.zopen.community)
     - [CICD Pipeline](/Guides/Testing.md)
   - Reference
