@@ -13,6 +13,9 @@ UpdateDocs() {
   git clone git@github.com:zopencommunity/meta.git meta_update
   cd meta_update
 
+  # Generate the currency status
+  ./tools/get_bump_status.sh docs/updatestatus.md
+
   python3 tools/create_cve_json.py --verbose --output-file docs/api/zopen_vulnerability.json
 
   # This script updates the status page
