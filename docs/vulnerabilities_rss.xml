@@ -21,6 +21,20 @@
 </item>
 
 <item>
+<title>zlib (Build 2930) - (STABLE)</title>
+<link>https://zopen.community/#/Vulnerabilities?id=zlib</link>
+<description>1 critical vulnerability</description>
+<guid isPermaLink="false">zlib (Build 2930) - (STABLE)</guid>
+</item>
+
+<item>
+<title>zlib (Build 2985) - (STABLE)</title>
+<link>https://zopen.community/#/Vulnerabilities?id=zlib</link>
+<description>1 critical vulnerability</description>
+<guid isPermaLink="false">zlib (Build 2985) - (STABLE)</guid>
+</item>
+
+<item>
 <title>vim (Build 2178) - (STABLE)</title>
 <link>https://zopen.community/#/Vulnerabilities?id=vim</link>
 <description>3 medium vulnerabilities</description>

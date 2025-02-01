@@ -168,6 +168,7 @@
 - 2024-12-06: [Update git-extras-version to 7.3.0 from V.R.M](https://github.com/zopencommunity/git-extrasport/pull/1) ❌
 
 ### githubcliport
+- 2025-01-31: [Update ghcli-version to 2.66.0 from 2.41.0](https://github.com/zopencommunity/githubcliport/pull/44) ✅
 - 2025-01-07: [Update ghcli-version to 2.65.0 from 2.41.0](https://github.com/zopencommunity/githubcliport/pull/43) ✅
 - 2024-12-21: [Update ghcli-version to 2.64.0 from 2.41.0](https://github.com/zopencommunity/githubcliport/pull/42) ❌
 - 2024-12-06: [Update ghcli-version to 2.63.2 from 2.41.0](https://github.com/zopencommunity/githubcliport/pull/41) ❌
@@ -197,14 +198,6 @@
 - 2024-02-17: [Update ghcli-version to 2.44.1 from 2.41.0](https://github.com/zopencommunity/githubcliport/pull/13) ✅
 - 2024-02-15: [Update ghcli-version to 2.44.0 from 2.41.0](https://github.com/zopencommunity/githubcliport/pull/12) ❌
 - 2024-02-01: [Update ghcli-version to 2.43.1 from 2.41.0](https://github.com/zopencommunity/githubcliport/pull/11) ❌
-- 2024-01-31: [Update ghcli-version to 2.43.0 from 2.41.0](https://github.com/zopencommunity/githubcliport/pull/10) ❌
-
-### gitlab-runnerport
-- 2025-01-24: [Update gitlab-runner-version to 17.8.3 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/33) ❌
-- 2025-01-23: [Update gitlab-runner-version to 17.8.2 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/32) ❌
-- 2025-01-18: [Update gitlab-runner-version to 17.8.1 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/31) ❌
-- 2025-01-16: [Update gitlab-runner-version to 17.8.0 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/30) ❌
-- 2024-12-20: [Update gitlab-runner-version to 17.7.0 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/29) ❌
 
 ### gitlabcliport
 - 2025-01-20: [Update glab-version to 1.52.0 from 1.40.0](https://github.com/zopencommunity/gitlabcliport/pull/22) ✅
@@ -221,6 +214,13 @@
 - 2024-06-25: [Update glab-version to 1.43.0 from 1.40.0](https://github.com/zopencommunity/gitlabcliport/pull/8) ❌
 - 2024-06-18: [Update glab-version to 1.42.0 from 1.40.0](https://github.com/zopencommunity/gitlabcliport/pull/7) ❌
 - 2024-05-29: [Update glab-version to 1.41.0 from 1.40.0](https://github.com/zopencommunity/gitlabcliport/pull/6) ❌
+
+### gitlab-runnerport
+- 2025-01-24: [Update gitlab-runner-version to 17.8.3 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/33) ❌
+- 2025-01-23: [Update gitlab-runner-version to 17.8.2 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/32) ❌
+- 2025-01-18: [Update gitlab-runner-version to 17.8.1 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/31) ❌
+- 2025-01-16: [Update gitlab-runner-version to 17.8.0 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/30) ❌
+- 2024-12-20: [Update gitlab-runner-version to 17.7.0 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/29) ❌
 
 ### gnulibport
 - 2024-10-22: [Update gnulib-version to 1.0 from 20030404](https://github.com/zopencommunity/gnulibport/pull/10) ✅
@@ -511,6 +511,7 @@
 - 2023-11-16: [Update texinfo-version to 7.1 from 6.8](https://github.com/zopencommunity/texinfoport/pull/20) ❌
 
 ### tigport
+- 2025-01-31: [Update tig-version to 2.5.11 from 2.5.9](https://github.com/zopencommunity/tigport/pull/9) ❌
 - 2024-06-08: [Update tig-version to 2.5.10 from 2.5.9](https://github.com/zopencommunity/tigport/pull/6) ✅
 
 ### tmuxport
@@ -595,7 +596,6 @@
 <details open>
 <summary><b style="font-size: 28px;">Bump Automation Status</b></summary>
 
-- ❌ .github - Workflow not configured
 - ✅ antport - [![Bump Status](https://github.com/zopencommunity/antport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/antport/actions/workflows/bump.yml)
 - ✅ autoconfport - [![Bump Status](https://github.com/zopencommunity/autoconfport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/autoconfport/actions/workflows/bump.yml)
 - ✅ automakeport - [![Bump Status](https://github.com/zopencommunity/automakeport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/automakeport/actions/workflows/bump.yml)
@@ -626,6 +626,7 @@
 - ✅ coreutilsport - [![Bump Status](https://github.com/zopencommunity/coreutilsport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/coreutilsport/actions/workflows/bump.yml)
 - ❌ cosignport - Workflow not configured
 - ✅ cppcheckport - [![Bump Status](https://github.com/zopencommunity/cppcheckport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/cppcheckport/actions/workflows/bump.yml)
+- ✅ creduceport - [![Bump Status](https://github.com/zopencommunity/creduceport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/creduceport/actions/workflows/bump.yml)
 - ❌ cronieport - Workflow not configured
 - ✅ cscopeport - [![Bump Status](https://github.com/zopencommunity/cscopeport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/cscopeport/actions/workflows/bump.yml)
 - ✅ ctagsport - [![Bump Status](https://github.com/zopencommunity/ctagsport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/ctagsport/actions/workflows/bump.yml)
@@ -655,11 +656,12 @@
 - ✅ ginport - [![Bump Status](https://github.com/zopencommunity/ginport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/ginport/actions/workflows/bump.yml)
 - ❌ git-chglogport - Workflow not configured
 - ✅ git-extrasport - [![Bump Status](https://github.com/zopencommunity/git-extrasport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/git-extrasport/actions/workflows/bump.yml)
-- ✅ git-lfsport - [![Bump Status](https://github.com/zopencommunity/git-lfsport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/git-lfsport/actions/workflows/bump.yml)
 - ❌ gitgadget - Workflow not configured
+- ❌ .github - Workflow not configured
 - ✅ githubcliport - [![Bump Status](https://github.com/zopencommunity/githubcliport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/githubcliport/actions/workflows/bump.yml)
-- ✅ gitlab-runnerport - [![Bump Status](https://github.com/zopencommunity/gitlab-runnerport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/gitlab-runnerport/actions/workflows/bump.yml)
 - ✅ gitlabcliport - [![Bump Status](https://github.com/zopencommunity/gitlabcliport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/gitlabcliport/actions/workflows/bump.yml)
+- ✅ gitlab-runnerport - [![Bump Status](https://github.com/zopencommunity/gitlab-runnerport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/gitlab-runnerport/actions/workflows/bump.yml)
+- ✅ git-lfsport - [![Bump Status](https://github.com/zopencommunity/git-lfsport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/git-lfsport/actions/workflows/bump.yml)
 - ✅ gitport - [![Bump Status](https://github.com/zopencommunity/gitport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/gitport/actions/workflows/bump.yml)
 - ✅ gmpport - [![Bump Status](https://github.com/zopencommunity/gmpport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/gmpport/actions/workflows/bump.yml)
 - ✅ gnport - [![Bump Status](https://github.com/zopencommunity/gnport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/gnport/actions/workflows/bump.yml)
@@ -820,10 +822,10 @@
 
 </details>
 
-**Summary:** 177 active | 45 missing
+**Summary:** 178 active | 45 missing
 
 ---
 
 
-> Last updated: 2025-01-30 22:14:37 EST
+> Last updated: 2025-02-01 06:07:11 EST
 
