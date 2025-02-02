@@ -82,6 +82,9 @@
 - 2024-10-28: [Update cppcheck-version to 2.16.0 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/7) ❌
 - 2024-09-01: [Update cppcheck-version to 2.15.0 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/5) ❌
 
+### creduceport
+- 2025-02-01: [Update creduce-version to 2.10.0 from V.R.M](https://github.com/zopencommunity/creduceport/pull/1) ❌
+
 ### cunitport
 - 2024-09-18: [Update cunit-version to 3.4.4 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/7) ❌
 - 2024-09-11: [Update cunit-version to 3.4.3 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/6) ❌
@@ -168,6 +171,7 @@
 - 2024-12-06: [Update git-extras-version to 7.3.0 from V.R.M](https://github.com/zopencommunity/git-extrasport/pull/1) ❌
 
 ### githubcliport
+- 2025-02-01: [Update ghcli-version to 2.66.1 from 2.41.0](https://github.com/zopencommunity/githubcliport/pull/45) ✅
 - 2025-01-31: [Update ghcli-version to 2.66.0 from 2.41.0](https://github.com/zopencommunity/githubcliport/pull/44) ✅
 - 2025-01-07: [Update ghcli-version to 2.65.0 from 2.41.0](https://github.com/zopencommunity/githubcliport/pull/43) ✅
 - 2024-12-21: [Update ghcli-version to 2.64.0 from 2.41.0](https://github.com/zopencommunity/githubcliport/pull/42) ❌
@@ -197,7 +201,6 @@
 - 2024-03-05: [Update ghcli-version to 2.45.0 from 2.41.0](https://github.com/zopencommunity/githubcliport/pull/14) ✅
 - 2024-02-17: [Update ghcli-version to 2.44.1 from 2.41.0](https://github.com/zopencommunity/githubcliport/pull/13) ✅
 - 2024-02-15: [Update ghcli-version to 2.44.0 from 2.41.0](https://github.com/zopencommunity/githubcliport/pull/12) ❌
-- 2024-02-01: [Update ghcli-version to 2.43.1 from 2.41.0](https://github.com/zopencommunity/githubcliport/pull/11) ❌
 
 ### gitlabcliport
 - 2025-01-20: [Update glab-version to 1.52.0 from 1.40.0](https://github.com/zopencommunity/gitlabcliport/pull/22) ✅
@@ -471,6 +474,9 @@
 
 ### screenport
 - 2024-08-29: [Update screen-version to 5.0.0 from 4.9.1](https://github.com/zopencommunity/screenport/pull/8) ❌
+
+### spdlogport
+- 2025-02-01: [Update spdlog-version to 1.15.1 from 1.15.0](https://github.com/zopencommunity/spdlogport/pull/1) ✅
 
 ### stowport
 - 2024-09-09: [Update stow-version to 2.4.1 from V.R.M](https://github.com/zopencommunity/stowport/pull/2) ✅
@@ -827,5 +833,5 @@
 ---
 
 
-> Last updated: 2025-02-01 06:07:11 EST
+> Last updated: 2025-02-02 06:07:04 EST
 

@@ -295,14 +295,15 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 |---|---|---|---|---|
 | [gum](https://github.com/zopencommunity/gumport)|Skipped|N/A|[STABLE_gum_2581](https://github.com/zopencommunity/gumport/releases/download/STABLE_gumport_2581/gum-heads.v0.13.0.20241002_035627.zos.pax.Z)|A tool for creating simple command-line interfaces|
 | [llamacpp](https://github.com/zopencommunity/llamacppport)|Skipped|N/A|[STABLE_llamacpp_2013](https://github.com/zopencommunity/llamacppport/releases/download/STABLE_llamacppport_2013/llamacpp-master.20240124_170742.zos.pax.Z)|A C++ library for writing high-performance network applications|
-| [zlib](https://github.com/zopencommunity/zlibport)|Green|100.0%|[DEV_zlib_2989](https://github.com/zopencommunity/zlibport/releases/download/DEV_zlibport_2989/zlib-develop.20250131_045612.zos.pax.Z)|A data compression library|
 | [gzip](https://github.com/zopencommunity/gzipport)|Green|100.0%|[STABLE_gzip_2870](https://github.com/zopencommunity/gzipport/releases/download/STABLE_gzipport_2870/gzip-1.13.20250128_051739.zos.pax.Z)|Library for handling gzip compressed files|
 | [less](https://github.com/zopencommunity/lessport)|Green|100.0%|[STABLE_less_2954](https://github.com/zopencommunity/lessport/releases/download/STABLE_lessport_2954/less-heads.v668.20250130_225718.zos.pax.Z)|A text pager|
+| [zlib](https://github.com/zopencommunity/zlibport)|Green|100.0%|[DEV_zlib_2989](https://github.com/zopencommunity/zlibport/releases/download/DEV_zlibport_2989/zlib-develop.20250131_045612.zos.pax.Z)|A data compression library|
 | [ncurses](https://github.com/zopencommunity/ncursesport)|Green|100.0%|[STABLE_ncurses_2956](https://github.com/zopencommunity/ncursesport/releases/download/STABLE_ncursesport_2956/ncurses-6.5.20250130_230916.zos.pax.Z)|Library for ncurses, a terminal screen handling library|
 | [help2man](https://github.com/zopencommunity/help2manport)|Green|100.0%|[STABLE_help2man_2875](https://github.com/zopencommunity/help2manport/releases/download/STABLE_help2manport_2875/help2man-1.49.3.20250129_141844.zos.pax.Z)|A tool for converting manual pages to other formats|
 | [xxhash](https://github.com/zopencommunity/xxhashport)|Green|100.0%|[STABLE_xxhash_1993](https://github.com/zopencommunity/xxhashport/releases/download/STABLE_xxhashport_1993/xxHash-0.8.2.20240123_100914.zos.pax.Z)|A fast hash function library|
 | [zstd](https://github.com/zopencommunity/zstdport)|Green|100.0%|[STABLE_zstd_2041](https://github.com/zopencommunity/zstdport/releases/download/STABLE_zstdport_2041/zstd-1.5.5.20240126_215521.zos.pax.Z)|A compression algorithm|
 | [lz4](https://github.com/zopencommunity/lz4port)|Green|100.0%|[STABLE_lz4_1936](https://github.com/zopencommunity/lz4port/releases/download/STABLE_lz4port_1936/lz4-1.9.4.20240104_082651.zos.pax.Z)|A compression algorithm|
+| [jq](https://github.com/zopencommunity/jqport)|Green|100.0%|[STABLE_jq_3058](https://github.com/zopencommunity/jqport/releases/download/STABLE_jqport_3058/jq-1.7.1.20250202_085803.zos.pax.Z)|A port of the JQ command-line JSON processor|
 | [php](https://github.com/zopencommunity/phpport)|Green|100.0%|[STABLE_php_1996](https://github.com/zopencommunity/phpport/releases/download/STABLE_phpport_1996/php-8.2.13.20240123_152440.zos.pax.Z)|A programming language|
 | [lynx](https://github.com/zopencommunity/lynxport)|Green|100.0%|[STABLE_lynx_2016](https://github.com/zopencommunity/lynxport/releases/download/STABLE_lynxport_2016/lynx-2.8.9.20240124_173303.zos.pax.Z)|A text-based web browser|
 | [duckdb](https://github.com/zopencommunity/duckdbport)|Green|100.0%|[STABLE_duckdb_1986](https://github.com/zopencommunity/duckdbport/releases/download/STABLE_duckdbport_1986/duckdb-main.20240122_143549.zos.pax.Z)|An in-process SQL OLAP database management system|
@@ -317,7 +318,6 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | [autoconf](https://github.com/zopencommunity/autoconfport)|Blue|98.0%|[STABLE_autoconf_1736](https://github.com/zopencommunity/autoconfport/releases/download/STABLE_autoconfport_1736/autoconf-2.71.20231114_002453.zos.pax.Z)|A configuration management tool|
 | [openssl](https://github.com/zopencommunity/opensslport)|Blue|95.7%|[STABLE_openssl_2838](https://github.com/zopencommunity/opensslport/releases/download/STABLE_opensslport_2838/openssl-3.4.0.20250123_021310.zos.pax.Z)|A cryptographic library|
 | [doxygen](https://github.com/zopencommunity/doxygenport)|Blue|95.2%|[STABLE_doxygen_2189](https://github.com/zopencommunity/doxygenport/releases/download/STABLE_doxygenport_2189/doxygen-master.20240311_135723.zos.pax.Z)|A documentation generator|
-| [jq](https://github.com/zopencommunity/jqport)|Blue|87.5%|[STABLE_jq_3054](https://github.com/zopencommunity/jqport/releases/download/STABLE_jqport_3054/jq-1.7.1.20250131_115905.zos.pax.Z)|A port of the JQ command-line JSON processor|
 | [gettext](https://github.com/zopencommunity/gettextport)|Blue|87.4%|[STABLE_gettext_2450](https://github.com/zopencommunity/gettextport/releases/download/STABLE_gettextport_2450/gettext-0.21.20240922_014617.zos.pax.Z)|A library for internationalization and localization|
 | [libtool](https://github.com/zopencommunity/libtoolport)|Blue|87.0%|[STABLE_libtool_2923](https://github.com/zopencommunity/libtoolport/releases/download/STABLE_libtoolport_2923/libtool-2.4.20250130_120629.zos.pax.Z)|Library for managing program library dependencies|
 | [boost](https://github.com/zopencommunity/boostport)|Blue|85.1%|[DEV_boost_2378](https://github.com/zopencommunity/boostport/releases/download/DEV_boostport_2378/boost-master.20240730_055731.zos.pax.Z)|A collection of C++ libraries|
@@ -381,4 +381,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-01-31T10:38:16.352339
+Last updated:  2025-02-02T04:43:46.895958
