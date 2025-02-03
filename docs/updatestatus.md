@@ -128,6 +128,7 @@
 - 2024-06-27: [Update fx-version to 35.0.0 from 34.0.0](https://github.com/zopencommunity/fxport/pull/2) ✅
 
 ### fzfport
+- 2025-02-02: [Update fzf-version to 0.59.0 from 0.43.0](https://github.com/zopencommunity/fzfport/pull/30) ❌
 - 2025-01-20: [Update fzf-version to 0.58.0 from 0.43.0](https://github.com/zopencommunity/fzfport/pull/29) ✅
 - 2024-12-15: [Update fzf-version to 0.57.0 from 0.43.0](https://github.com/zopencommunity/fzfport/pull/28) ❌
 - 2024-11-15: [Update fzf-version to 0.56.3 from 0.43.0](https://github.com/zopencommunity/fzfport/pull/27) ❌
@@ -263,6 +264,7 @@
 - 2024-01-10: [Update htop-version to 3.3.0 from 3.2.2](https://github.com/zopencommunity/htopport/pull/6) ❌
 
 ### hugoport
+- 2025-02-02: [Update hugo-version to 0.143.0 from 0.129.0](https://github.com/zopencommunity/hugoport/pull/14) ✅
 - 2025-01-22: [Update hugo-version to 0.142.0 from 0.129.0](https://github.com/zopencommunity/hugoport/pull/13) ✅
 - 2025-01-16: [Update hugo-version to 0.141.0 from 0.129.0](https://github.com/zopencommunity/hugoport/pull/12) ✅
 - 2024-12-31: [Update hugo-version to 0.140.2 from 0.129.0](https://github.com/zopencommunity/hugoport/pull/11) ❌
@@ -833,5 +835,5 @@
 ---
 
 
-> Last updated: 2025-02-02 06:07:04 EST
+> Last updated: 2025-02-03 06:07:32 EST
 
