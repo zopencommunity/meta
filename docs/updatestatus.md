@@ -37,33 +37,6 @@
 - 2024-06-02: [Update caddy-version to 2.8.4 from 2.7.6](https://github.com/zopencommunity/caddyport/pull/2) ❌
 - 2024-05-30: [Update caddy-version to 2.8.1 from 2.7.6](https://github.com/zopencommunity/caddyport/pull/1) ❌
 
-### cmakeport
-- 2025-01-24: [Update cmake-version to 3.31.5 from 3.31.3](https://github.com/zopencommunity/cmakeport/pull/63) ✅
-- 2025-01-11: [Update cmake-version to 3.31.4 from 3.31.3](https://github.com/zopencommunity/cmakeport/pull/62) ❌
-- 2024-12-20: [Update cmake-version to 3.31.3 from 3.27.8](https://github.com/zopencommunity/cmakeport/pull/59) ❌
-- 2024-12-05: [Update cmake-version to 3.31.2 from 3.27.8](https://github.com/zopencommunity/cmakeport/pull/58) ❌
-- 2024-11-22: [Update cmake-version to 3.31.1 from 3.27.8](https://github.com/zopencommunity/cmakeport/pull/57) ❌
-- 2024-11-06: [Update cmake-version to 3.31.0 from 3.27.8](https://github.com/zopencommunity/cmakeport/pull/56) ❌
-- 2024-10-08: [Update cmake-version to 3.30.5 from 3.27.8](https://github.com/zopencommunity/cmakeport/pull/54) ❌
-- 2024-10-02: [Update cmake-version to 3.30.4 from 3.27.8](https://github.com/zopencommunity/cmakeport/pull/53) ❌
-- 2024-08-30: [Update cmake-version to 3.30.3 from 3.27.8](https://github.com/zopencommunity/cmakeport/pull/50) ❌
-- 2024-08-02: [Update cmake-version to 3.30.2 from 3.27.8](https://github.com/zopencommunity/cmakeport/pull/49) ❌
-- 2024-07-18: [Update cmake-version to 3.30.1 from 3.27.8](https://github.com/zopencommunity/cmakeport/pull/48) ❌
-- 2024-07-03: [Update cmake-version to 3.30.0 from 3.27.8](https://github.com/zopencommunity/cmakeport/pull/47) ❌
-- 2024-06-18: [Update cmake-version to 3.29.6 from 3.27.8](https://github.com/zopencommunity/cmakeport/pull/46) ❌
-- 2024-06-06: [Update cmake-version to 3.29.5 from 3.27.8](https://github.com/zopencommunity/cmakeport/pull/45) ❌
-- 2024-06-04: [Update cmake-version to 3.29.4 from 3.27.8](https://github.com/zopencommunity/cmakeport/pull/44) ❌
-- 2024-05-08: [Update cmake-version to 3.29.3 from 3.27.8](https://github.com/zopencommunity/cmakeport/pull/43) ❌
-- 2024-04-11: [Update cmake-version to 3.29.2 from 3.27.8](https://github.com/zopencommunity/cmakeport/pull/40) ❌
-- 2024-04-04: [Update cmake-version to 3.29.1 from 3.27.8](https://github.com/zopencommunity/cmakeport/pull/39) ❌
-- 2024-03-21: [Update cmake-version to 3.29.0 from 3.27.8](https://github.com/zopencommunity/cmakeport/pull/38) ❌
-- 2024-03-20: [Update cmake-version to 3.28.4 from 3.27.8](https://github.com/zopencommunity/cmakeport/pull/37) ❌
-- 2024-02-06: [Update cmake-version to 3.28.3 from 3.27.8](https://github.com/zopencommunity/cmakeport/pull/36) ❌
-- 2024-01-30: [Update cmake-version to 3.28.2 from 3.27.8](https://github.com/zopencommunity/cmakeport/pull/35) ❌
-- 2023-12-15: [Update cmake-version to 3.28.1 from 3.27.8](https://github.com/zopencommunity/cmakeport/pull/30) ❌
-- 2023-12-06: [Update cmake-version to 3.28.0 from 3.27.8](https://github.com/zopencommunity/cmakeport/pull/29) ❌
-- 2023-11-29: [Update cmake-version to 3.27.9 from 3.27.8](https://github.com/zopencommunity/cmakeport/pull/28) ❌
-
 ### conanport
 - 2024-12-19: [Update conan-version to 2.11.0 from 2.9.1](https://github.com/zopencommunity/conanport/pull/16) ❌
 - 2024-12-18: [Update conan-version to 2.10.3 from 2.9.1](https://github.com/zopencommunity/conanport/pull/15) ❌
@@ -91,6 +64,9 @@
 - 2024-09-10: [Update cunit-version to 3.4.2 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/5) ❌
 - 2024-08-23: [Update cunit-version to 3.4.1 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/4) ❌
 - 2024-06-08: [Update cunit-version to 3.3.1 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/3) ❌
+
+### diffutilsport
+- 2025-02-03: [Update diffutils-version to 3.11 from 3.10](https://github.com/zopencommunity/diffutilsport/pull/36) ❌
 
 ### direnvport
 - 2024-10-08: [Update direnv-version to 2.35.0 from 2.34.0](https://github.com/zopencommunity/direnvport/pull/8) ❌
@@ -230,6 +206,7 @@
 - 2024-10-22: [Update gnulib-version to 1.0 from 20030404](https://github.com/zopencommunity/gnulibport/pull/10) ✅
 
 ### grafanaport
+- 2025-02-03: [Update grafana-version to 11.5.1 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/16) ❌
 - 2025-01-28: [Update grafana-version to 11.5.0 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/15) ❌
 - 2024-12-06: [Update grafana-version to 11.4.0 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/14) ❌
 - 2024-12-05: [Update grafana-version to 11.3.2 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/12) ❌
@@ -392,9 +369,6 @@
 ### ninjaport
 - 2024-06-08: [Update ninja-version to 1.12.1 from 1.11.1](https://github.com/zopencommunity/ninjaport/pull/9) ❌
 
-### onigurumaport
-- 2025-01-07: [Update oniguruma-version to 6.9.10 from 6.9.9](https://github.com/zopencommunity/onigurumaport/pull/5) ❌
-
 ### opensshport
 - 2024-10-02: [Update openssh-version to 9.9p1 from 9.8p1](https://github.com/zopencommunity/opensshport/pull/15) ❌
 
@@ -445,26 +419,6 @@
 - 2024-02-20: [Update poco-version to 1.13.2 from 1.12.5p2](https://github.com/zopencommunity/pocoport/pull/4) ❌
 - 2024-02-07: [Update poco-version to 1.13.1 from 1.12.5p2](https://github.com/zopencommunity/pocoport/pull/3) ❌
 - 2024-01-25: [Update poco-version to 1.13.0 from 1.12.5p2](https://github.com/zopencommunity/pocoport/pull/2) ❌
-
-### protobufport
-- 2025-01-09: [Update protobuf-version to 29.3 from 25.0](https://github.com/zopencommunity/protobufport/pull/24) ❌
-- 2024-12-18: [Update protobuf-version to 29.2 from 25.0](https://github.com/zopencommunity/protobufport/pull/23) ❌
-- 2024-12-04: [Update protobuf-version to 29.1 from 25.0](https://github.com/zopencommunity/protobufport/pull/22) ❌
-- 2024-11-28: [Update protobuf-version to 29.0 from 25.0](https://github.com/zopencommunity/protobufport/pull/21) ❌
-- 2024-10-23: [Update protobuf-version to 28.3 from 25.0](https://github.com/zopencommunity/protobufport/pull/19) ❌
-- 2024-09-19: [Update protobuf-version to 28.2 from 25.0](https://github.com/zopencommunity/protobufport/pull/17) ❌
-- 2024-09-12: [Update protobuf-version to 28.1 from 25.0](https://github.com/zopencommunity/protobufport/pull/16) ❌
-- 2024-08-29: [Update protobuf-version to 28.0 from 25.0](https://github.com/zopencommunity/protobufport/pull/15) ❌
-- 2024-08-28: [Update protobuf-version to 27.4 from 25.0](https://github.com/zopencommunity/protobufport/pull/14) ❌
-- 2024-07-31: [Update protobuf-version to 27.3 from 25.0](https://github.com/zopencommunity/protobufport/pull/13) ❌
-- 2024-06-26: [Update protobuf-version to 27.2 from 25.0](https://github.com/zopencommunity/protobufport/pull/12) ❌
-- 2024-06-06: [Update protobuf-version to 27.1 from 25.0](https://github.com/zopencommunity/protobufport/pull/11) ❌
-- 2024-05-23: [Update protobuf-version to 27.0 from 25.0](https://github.com/zopencommunity/protobufport/pull/10) ❌
-- 2024-03-28: [Update protobuf-version to 26.1 from 25.0](https://github.com/zopencommunity/protobufport/pull/9) ❌
-- 2024-03-13: [Update protobuf-version to 26.0 from 25.0](https://github.com/zopencommunity/protobufport/pull/8) ❌
-- 2024-02-16: [Update protobuf-version to 25.3 from 25.0](https://github.com/zopencommunity/protobufport/pull/7) ❌
-- 2024-01-10: [Update protobuf-version to 25.2 from 25.0](https://github.com/zopencommunity/protobufport/pull/6) ❌
-- 2023-12-03: [Update protobuf-version to 25.1 from 25.0](https://github.com/zopencommunity/protobufport/pull/5) ❌
 
 ### re2cport
 - 2024-12-12: [Update re2c-version to 4.0.2 from 3.1](https://github.com/zopencommunity/re2cport/pull/13) ✅
@@ -521,11 +475,6 @@
 ### tigport
 - 2025-01-31: [Update tig-version to 2.5.11 from 2.5.9](https://github.com/zopencommunity/tigport/pull/9) ❌
 - 2024-06-08: [Update tig-version to 2.5.10 from 2.5.9](https://github.com/zopencommunity/tigport/pull/6) ✅
-
-### tmuxport
-- 2024-10-02: [Update tmux-version to 3.5 from V.R.M](https://github.com/zopencommunity/tmuxport/pull/14) ✅
-- 2024-02-13: [Update tmux-version to 3.4 from V.R.M](https://github.com/zopencommunity/tmuxport/pull/2) ❌
-- 2024-01-16: [Update tmux-version to 3.3 from V.R.M](https://github.com/zopencommunity/tmuxport/pull/1) ❌
 
 ### treeport
 - 2024-11-26: [Update tree-version to 2.2.1 from 2.1.1](https://github.com/zopencommunity/treeport/pull/15) ❌
@@ -835,5 +784,5 @@
 ---
 
 
-> Last updated: 2025-02-03 06:07:32 EST
+> Last updated: 2025-02-04 06:07:09 EST
 
