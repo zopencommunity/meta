@@ -237,9 +237,23 @@ for installRepo in ${potentials}; do
   [ -f "${installRepo}" ] && fileinstall=true && break
 done
 
-if [ ! ${fileinstall} ]; then 
+# Sanity check for argument clashes
+if ${selectVersion}; then
+  if ${all}; then
+    printError "Conflicting program arguments, --select cannot be used with --all"
+  elif ${fileinstall}; then
+    printError "Conflicting program argument, --select cannot be used with local file installations"
+  fi
+fi
+if ${fileinstall} && ${all}; then
+  printError "Conflicting program argument, --all cannot be used with local file installations"
+fi
+
+if ! ${fileinstall}; then 
   printVerbose "Using potentially remote files; ensuring configured for remote access"
   checkIfConfigLoaded
+else
+  printVerbose "At least one local file was specified for installation"
 fi
 
 mutexReq "zopen" "zopen"
