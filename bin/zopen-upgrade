@@ -104,18 +104,6 @@ done
 
 ${xdebug} && set -x && printVerbose "Enabled command execution trace" 
 
-if [ -z "${chosenRepos}" ]; then
-    printVerbose "No specific port to upgrade, upgrade all installed packages"
-    printInfo "- Querying installed packages"
-    progressHandler "pkgcheck" "- Query of installed packages complete" &
-    ph=$!
-    killph="kill -HUP ${ph}"
-    addCleanupTrapCmd "${killph}"
-    chosenRepos=$(zopen list --installed)
-    ${killph} 2>/dev/null # if the timer is not running, the kill will fail
-    waitforpid ${ph}  # Make sure it's finished writing to screen
-fi
-
 checkIfConfigLoaded
 
 export SSL_CERT_FILE="${ZOPEN_CA}"
@@ -130,8 +118,7 @@ downloadDir="${ZOPEN_ROOTFS}/var/cache/zopen"
 
 
 if [ ! -d "${downloadDir}" ]; then
-  mkdir -p "${downloadDir}"
-  if [ $? -gt 0 ]; then
+  if ! mkdir -p "${downloadDir}"; then
     printError "Could not create download directory: ${downloadDir}"
   fi
 fi
@@ -141,6 +128,7 @@ printVerbose "Querying remote repo for latest package information"
 getRepos
 grfgRc=$?
 [ 0 -ne ${grfgRc} ] && exit ${grfgRc};
+# shellcheck disable=SC2034
 installArray=""
 
 mutexReq "zopen" "zopen"

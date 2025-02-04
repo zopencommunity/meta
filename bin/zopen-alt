@@ -55,15 +55,17 @@ mergeNewVersion()
 {
   package="$1"
   newver="$2"
-  # We are effectively re-installing so run scriptlets
+
+  [ -z "${package}" ] && printError "Internal error; no package name provided to merge."
+  newVerDir="${ZOPEN_PKGINSTALL}/${package}/${newver}"
+  [ -d "${newVerDir}" ] || printError "Version '${newver}' was not available to set as current"
+
+  # We are effectively re-installing so run some scriptlets, noting that for the
+  # alternative to be  available on the system, it must have passed various the
+  # checks in installPre (GPG/prereq)
   if ! processActionScripts "transactionPre"; then
     exit 1
   fi
-  if ! processActionScripts "installPre"; then
-    exit 1
-  fi
-  [ -z "${package}" ] && printError "Internal error; no package name provided to merge."
-  [ -d "${ZOPEN_PKGINSTALL}/${package}/${newver}" ] || printError "Version '${newver}' was not available to set as current"
   if [ -e "${ZOPEN_PKGINSTALL}/${package}/${package}" ]; then
     printVerbose "Removing main link"
     rm -rf "${ZOPEN_PKGINSTALL}/${package}/${package}"
@@ -210,19 +212,14 @@ while [ $# -gt 0 ]; do
   case "$1" in
   "-s" | "--set")
     shift
-    [ $# -lt 2 ] && printError "Missing argument(s) for set option. Check program arguments"
+    [ $# -lt 1 ] && printError "Missing argument for 'set' option. Check program arguments"
     sett=true
     select=false
-    package="$1"
-    newver="$2"
-    shift
+    newver="$1"
     ;;
   "--select")
     select=true
     sett=false
-    shift
-    [ $# -lt 1 ] && printError "Missing argument for select option."
-    package="$1"
     ;;
   "-h" | "--help" | "-?")
     printHelp "${args}"
@@ -247,6 +244,10 @@ while [ $# -gt 0 ]; do
   esac
   shift
 done
+
+if ${select} && [ -z "${package}" ]; then
+  printError "Missing argument for select option."
+fi
 
 if ${sett}; then
   setAlt "${package}" "${newver}"
