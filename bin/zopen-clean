@@ -108,17 +108,20 @@ cleanDangling()
       exit 4
     fi
   fi
-  progressHandler "spinner" "- Dangling link removal complete" &
-  ph=$!
-  killph="kill -HUP ${ph}"
-  addCleanupTrapCmd "${killph}"
+  
+  if ! runLogProgress "rmSymlinks" "Removing orphaned symlinks" "Removed orphaned symlinks" "trash"; then
+    printError "Unexpected error while removing symlinks. Correct errors and retry command."
+  fi
+  syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_FILE}" "CLEAN" "cleanDangling" "zopen system at '${ZOPEN_ROOTFS}' scanned for dangling symlinks"
+}
+
+rmSymlinks()
+{
+  # shellcheck disable=SC2317
   zosfind "${ZOPEN_ROOTFS}" -type l -exec test ! -e {} \; -print | while read sl; do
     printVerbose "Removing dangling symlink '${sl}'"
     rm -f "${sl}"
   done
-  ${killph} 2> /dev/null # if the timer is not running, the kill will fail
-  waitforpid ${ph}  # Make sure it's finished writing to screen
-  syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_FILE}" "CLEAN" "cleanDangling" "zopen system at '${ZOPEN_ROOTFS}' scanned for dangling symlinks"
 }
 
 cleanPackageCache()

@@ -170,15 +170,11 @@ showConfigParmWarning(){
 
 # getParentProcess
 # returns the parent process for the specified process
-# input: $1 - the pid to get the parent of
-# return: 0 for error or parent process id
 getParentProcess()
 {
-  parent=$(ps -o ppid= -p "$1")
-  if parent=$(ps -o ppid= -p "$1"); then
-    return 0
-  fi
-  return "${parent}"
+  [ -z "$1" ] && assertFailed "No process name given"
+  # Get Parent Pid (ppid), with no heading (='') and strip blanks (awk)
+  ps -o ppid= -p "$1" | awk '{$1=$1; print}' 
 }
 
 # getCurrentVersionDir
@@ -911,8 +907,64 @@ mergeIntoSystem()
   printDebug "Switching to previous cwd - current work dir was purged"
   cd "${currentDir}" || printError "Unable to change to '${currentDir}'"
 
-  printInfo "- Integration complete."
   return 0
+}
+
+rmSymlinksFSCheck(){
+  # Slower method needed to analyse each link to see if it has
+  # become orphaned. Only relevent when removing a package as 
+  # upgrades/alt-switching can supply a list of files
+  # Use sed to skip header line in .links file
+  # Note that the contents of the links file are ordered such that
+  # processing occurs depth-first; if, after removing orphaned symlinks,
+  # a directory is empty, then it can be removed.
+  nfiles=$(zossed '1d;$d' "${dotlinks}" | wc -l  | tr -d ' ')
+  printDebug "Creating Temporary dirname file"
+  tempDirFile=$(mktempfile "unsymlink")
+  [ -e "${tempDirFile}" ] && rm -f "${tempDirFile}" >/dev/null 2>&1
+  touch "${tempDirFile}"
+  tempTrash=$(mktempfile "unsymlink" "trash")
+  [ -e "${tempTrash}" ] && rm -f "${tempTrash}" >/dev/null 2>&1
+  addCleanupTrapCmd "rm -rf ${tempDirFile}"
+  addCleanupTrapCmd "rm -rf ${tempTrash}"
+  printDebug "Using temporary file ${tempDirFile}"
+  while read filetounlink; do
+    filetounlink=$(echo "${filetounlink}" | zossed 's/\(.*\).symbolic.*/\1/')
+    filename="$filetounlink"
+    [ -z "${filetounlink}" ] && continue
+    filetounlink="${ZOPEN_ROOTFS}/${filetounlink}"
+    [ ! -e "${filetounlink}" ] && continue  # If not there, can'e be removed!
+    if [ -d "${filetounlink}" ]; then
+      # Add to the directory queue for checking once files are gone if unique
+      ispresent=$(grep "^${filetounlink}[ ]*$" "${tempDirFile}")
+      if [ -z "${ispresent}" ]; then
+        echo " ${filetounlink} " >> "${tempDirFile}"
+      fi
+    elif [ -L "${filetounlink}" ]; then
+      if [ ! -f "${filetounlink}" ]; then
+        # the linked-to file no longer exists (ie. the symlink is dangling)
+        rm -f "${filetounlink}" > /dev/null 2>&1
+      fi
+    else
+      echo "Unprocessable file: '${filetounlink}'" >> "${tempTrash}"
+    fi
+  done <<EOF
+$(zossed '1d;$d' "${dotlinks}")
+EOF
+}
+
+rmSymlinksFileDiff(){
+  obsoleteList=$(diffFile "${dotlinks}" "${newfilelist}")
+  echo "${obsoleteList}" | while read obsoleteFile; do
+    [ -z "${obsoleteFile}" ] && return 0
+    obsoleteFile="${ZOPEN_ROOTFS}/${obsoleteFile}"
+    obsoleteFile="${obsoleteFile%% symbolic*}"
+    printDebug "Checking obsoletefile '${obsoleteFile}'"
+    if [ -L "${obsoleteFile}" ] && [ ! -e "${obsoleteFile}" ]; then
+      # the linked-to file no longer exists (ie. the symlink is dangling)
+      rm -f "${obsoleteFile}" > /dev/null 2>&1
+    fi 
+  done
 }
 
 # The following function will remove any orphaned symlinks left after either:
@@ -929,74 +981,17 @@ unsymlinkFromSystem()
 
   if [ -e "${dotlinks}" ]; then
     if [ -e "${newfilelist}" ]; then
-      printInfo "- Checking for file differences switching versions of '${pkg}'"
-      printDebug "Release change, so the list of changes to physically remove should be smaller"
-      progressHandler "spinner" "- Checked for file differences switching versions of '${pkg}'" &
-      ph=$!
-      killph="kill -HUP ${ph}"
-      addCleanupTrapCmd "${killph}"
-      obsoleteList=$(diffFile "${dotlinks}" "${newfilelist}")
-      echo "${obsoleteList}" | while read obsoleteFile; do
-        [ -z "${obsoleteFile}" ] && return 0
-        obsoleteFile="${ZOPEN_ROOTFS}/${obsoleteFile}"
-        obsoleteFile="${obsoleteFile%% symbolic*}"
-        printDebug "Checking obsoletefile '${obsoleteFile}'"
-        if [ -L "${obsoleteFile}" ] && [ ! -e "${obsoleteFile}" ]; then
-          # the linked-to file no longer exists (ie. the symlink is dangling)
-          rm -f "${obsoleteFile}" > /dev/null 2>&1
-        fi 
-      done
-      ${killph} 2>/dev/null # if the timer is not running, the kill will fail
-      waitforpid ${ph}  # Make sure it's finished writing to screen
+      if ! runLogProgress "rmSymlinksFileDiff" \
+          "Checking for file differences in mesh" \
+          "Checked for file differences mesh" "linkcheck"; then
+        printError "Unable to remove symlinks links. Review any errors. Manual cleanup using zopen-alt might be required"
+      fi
     else
-      # Slower method needed to analyse each link to see if it has
-      # become orphaned. Only relevent when removing a package as 
-      # upgrades/alt-switching can supply a list of files
-      # Use sed to skip header line in .links file
-      # Note that the contents of the links file are ordered such that
-      # processing occurs depth-first; if, after removing orphaned symlinks,
-      # a directory is empty, then it can be removed.
-      nfiles=$(zossed '1d;$d' "${dotlinks}" | wc -l  | tr -d ' ')
-      printDebug "Creating Temporary dirname file"
-      tempDirFile=$(mktempfile "unsymlink")
-      [ -e "${tempDirFile}" ] && rm -f "${tempDirFile}" >/dev/null 2>&1
-      touch "${tempDirFile}"
-      tempTrash=$(mktempfile "unsymlink" "trash")
-      [ -e "${tempTrash}" ] && rm -f "${tempTrash}" >/dev/null 2>&1
-      addCleanupTrapCmd "rm -rf ${tempDirFile}"
-      addCleanupTrapCmd "rm -rf ${tempTrash}"
-      printDebug "Using temporary file ${tempDirFile}"
-      printInfo "- Checking ${nfiles} potentially obsolete file links"
-      progressHandler "linkcheck" "- Checked ${nfiles} potentially obsolete file links" &
-      ph=$!
-      killph="kill -HUP ${ph}"
-      addCleanupTrapCmd "${killph}"
-
-      while read filetounlink; do
-        filetounlink=$(echo "${filetounlink}" | zossed 's/\(.*\).symbolic.*/\1/')
-        filename="$filetounlink"
-        [ -z "${filetounlink}" ] && continue
-        filetounlink="${ZOPEN_ROOTFS}/${filetounlink}"
-        [ ! -e "${filetounlink}" ] && continue  # If not there, can'e be removed!
-        if [ -d "${filetounlink}" ]; then
-          # Add to the directory queue for checking once files are gone if unique
-          ispresent=$(grep "^${filetounlink}[ ]*$" "${tempDirFile}")
-          if [ -z "${ispresent}" ]; then
-            echo " ${filetounlink} " >> "${tempDirFile}"
-          fi
-        elif [ -L "${filetounlink}" ]; then
-          if [ ! -f "${filetounlink}" ]; then
-            # the linked-to file no longer exists (ie. the symlink is dangling)
-            rm -f "${filetounlink}" > /dev/null 2>&1
-          fi
-        else
-          echo "Unprocessable file: '${filetounlink}'" >> "${tempTrash}"
-        fi
-      done <<EOF
-$(zossed '1d;$d' "${dotlinks}")
-EOF
-      ${killph} 2>/dev/null # if the timer is not running, the kill will fail
-      waitforpid ${ph}  # Make sure it's finished writing to screen
+      if ! runLogProgress "rmSymlinksFSCheck" \
+          "Checking for orphaned symlinks in mesh" \
+          "Checked for orphaned symlinks in mesh" "linkcheck"; then
+        printError "Unable to remove symlinks links. Review any errors. Manual cleanup using zopen-alt might be required"
+      fi
       if [ -e "${tempDirFile}" ]; then
         ndirs=$(uniq < "${tempDirFile}" | wc -l  | tr -d ' ')
         printVerbose "- Checking ${ndirs} dir links"
@@ -1012,7 +1007,7 @@ EOF
         done < "${tempTrash}"
         printError "Manual removal of files might be required"
       fi
-    fi
+    fi      
   else
     printDebug "No list of current links to check - package was not installed/active"
   fi
@@ -1070,17 +1065,11 @@ runAndLog()
 runLogProgress()
 {
   printVerbose "$1"
-  if [ -n "$2" ]; then
-    printInfo "- $2"
-  else
-    printInfo "- Running"
-  fi
-  if [ -n "$3" ]; then
-    completeText="- $3"
-  else
-    completeText="- Complete"
-  fi
-  progressHandler "spinner" "${completeText}" &
+  printInfo "- ${2:-Running}"
+  completeText="${3:-Complete}"
+  animation="${4:-spinner}"
+
+  progressHandler "${animation}" "${completeText}" &
   ph=$!
   killph="kill -HUP ${ph}"
   addCleanupTrapCmd "${killph}"
@@ -1089,7 +1078,7 @@ runLogProgress()
   if [ -n "${SSH_TTY}" ]; then
     chtag -r "${SSH_TTY}"
   fi
-  ${killph} 2>/dev/null # if the timer is not running, the kill will fail
+  ${killph} >/dev/null 2>&1 # if the timer is not running, the kill will fail
   waitforpid ${ph}  # Make sure it's finished writing to screen
   return "${rc}"
 }
@@ -1099,8 +1088,7 @@ spinloop()
   # in the absence of generic ms/ns reporting, spin-loop instead - not ideal
   # but without pre-reqing packages...
   i=$1
-  while [ ${i} -ge 0 ]; do
-    :
+  while [ "${i}" -ge 0 ]; do
     i=$((i - 1))
   done
 }
@@ -1110,17 +1098,29 @@ progressAnimation()
   [ $# -eq 0 ] && printError "Internal error: no animation strings."
   animcnt=$#
   anim=1
-  while :; do
-    spinloop 1000
+  firstFrame=true
+  while true; do
+    spinloop 3000
     # Check for daemonization of this process (ie. orphaned and PPID=1)
     # Cannot actually use "$PPID" as it is set at script initialization
     # and not updated when the parent changes so need to query.
-    getParentProcess "$$" >/dev/null 2>&1
-    ppid=$?
-    [ "${ppid}" -eq 1 ] && kill INT "${ppid}" >/dev/null 2>&1
+    if ! ppid=$(getParentProcess "$$"); then
+      printVerbose "Cannot determine parent process, disable animation"
+      exit 1
+    fi
+    if [ "${ppid}" -eq 1 ]; then
+      # We have been daemonized and owned by PPID=1
+      kill HUP "$$" >/dev/null 2>&1
+      sleep 1 > /dev/null 2>&1
+    fi
     anim=$((anim + 1))
     [ ${anim} -gt ${animcnt} ] && anim=1
-    printf "${CRSRSOL}${ERASELINE}%s" "$(getNthArrayArg "${anim}" "$@")"
+    if ${firstFrame}; then
+      printf "${ERASELINE}%s\n" "$(getNthArrayArg "${anim}" "$@")"
+      firstFrame=false
+    else
+      printf "${CRSRPL}${ERASELINE}%s\n" "$(getNthArrayArg "${anim}" "$@")"
+    fi
   done
 }
 
@@ -1132,11 +1132,9 @@ getNthArrayArg ()
 
 waitforpid()
 {
-  sleep 1
   while kill -0 "$1" >/dev/null 2>&1; do
     sleep 1
   done
-  sleep 1
 }
 
 progressHandler()
@@ -1149,17 +1147,14 @@ progressHandler()
     sleep 1
     exit 0
   fi
+  type=$1
+  completiontext=$2 # Custom end text (when the process is complete)
+  trap "exit" EXIT # If there is an animation error, it will just exit
   if ${ANSION}; then
-    type=$1
-    completiontext=$2 # Custom end text (when the process is complete)
-    trapcmd="exit;"
-    if [ -n "${completiontext}" ]; then
-      trapcmd="/bin/printf \"${CRSRSHOW}${ERASELINE}${CRSRPL}${ERASELINE}${completiontext}\n\"; ${trapcmd}"
-    else
-      trapcmd="/bin/printf \"${CRSRSHOW}${ERASELINE}${CRSRPL}${ERASELINE}\"; ${trapcmd}"
-    fi
+    trapcmd="/bin/printf \"${CRSRSHOW}${ERASELINE}${CRSRPL}${ERASELINE}${CRSRPL}${ERASELINE}- ${completiontext:-Done}\n\";exit"
     # shellcheck disable=SC2064
     trap "${trapcmd}" HUP
+    # shellcheck disable=SC2059
     printf "${CRSRHIDE}"
     case "${type}" in
       "spinner")  progressAnimation '-' '/' '|' '\\' ;;
@@ -1170,6 +1165,10 @@ progressHandler()
       "pkgcheck") progressAnimation '?###?###' '#?###?##' '##?###?#' '###?###?';;
       *)          progressAnimation '.' 'o' 'O' 'O' 'o' '.' ;;
     esac
+  else
+    trapcmd="/bin/printf \"${completiontext}\n\";exit"
+    # shellcheck disable=SC2064
+    trap "${trapcmd}" HUP
   fi
 }
 
@@ -1734,25 +1733,17 @@ promptYesNoAlways() {
   skip=$2
   if ! ${skip}; then
     while true; do
-      printInfo "${message} [y/n/a]"
+      /bin/printf "${message} [y/n/a]"
       read answer < /dev/tty
       answer=$(echo "${answer}" | tr '[A-Z]' '[a-z]')
       case "${answer}" in
-       y|Y) return 0;;
-       n|N) return 1;;
-       a|A) ye
+       y|yes) return 0;;
+       n|no) return 1;;
+       a|always) return 2;;
       esac
-
-      if [ "y" = "${answer}" ] || [ "yes" = "${answer}" ]; then
-        return 0
-      fi
-      if [ "n" = "${answer}" ] || [ "no" = "${answer}" ]; then
-        return 1
-      fi
-
     done
   fi
-  return 0
+  return 1
 }
 
 getVersionedMetadata()
@@ -1786,7 +1777,7 @@ getSelectMetadata()
   # As this is running within the generate... logic, a progress handler will have been started.
   # This needs to be terminated before trying to write to screen
   # shellcheck disable=SC2154
-  kill -HUP "${gigph}" 2>/dev/null # if the timer is not running, the kill will fail
+  kill -HUP "${gigph}" >/dev/null 2>&1 # if the timer is not running, the kill will fail
   waitforpid "${gigph}"  # Make sure it's finished writing to screen
   
   repo="$1"
@@ -2058,7 +2049,11 @@ generateInstallGraph(){
   # tempfiles could be created depending on dependency graph depth
   invalidPortAssetFile=$(mktempfile "invalid" "port")
   addCleanupTrapCmd "rm -rf ${invalidPortAssetFile}"
-  addToInstallGraph "install" "${invalidPortAssetFile}" "${portsToInstall}"
+  if ! runLogProgress " addToInstallGraph \"install\" \"\${invalidPortAssetFile}\" \"\${portsToInstall}\"" \
+      "Creating install graph" "Created install graph" "linkcheck"; then
+    printError "Unexpected error whilecreating install graph. Correct errors and retry command."
+  fi
+  ##TODORM addToInstallGraph "install" "${invalidPortAssetFile}" "${portsToInstall}"
 
   # shellcheck disable=SC2154
   if ! ${doNotInstallDeps} && { (! ${reinstall} && ! ${reinstallDeps}) || (${reinstall} && ${reinstallDeps}); }; then
@@ -2066,11 +2061,16 @@ generateInstallGraph(){
     # are reinstalling AND the reinstallDependencies flag is set; we do not want
     # to reinstall a package and all it's dependencies by default, just the package itself
     printVerbose "Calculating dependancy graph"
-    createDependancyGraph "${invalidPortAssetFile}"
+    if ! runLogProgress "createDependancyGraph \"\${invalidPortAssetFile}\"" \
+        "Creating dependancy graph" "Created dependancy graph" "linkcheck"; then
+      printError "Unexpected error while creating dependancy graph. Correct errors and retry command."
+    fi
+    ##TODORM createDependancyGraph "${invalidPortAssetFile}"
   else
     printVerbose "- Skipping dependency analysis"
   fi
 
+  ##TODORM>>
   # shellcheck disable=SC2154
   #if ${doNotInstallDeps}; then
   #    printVerbose "- Skipping dependency analysis"
@@ -2078,7 +2078,7 @@ generateInstallGraph(){
     # calculate dependancy graph
   #  createDependancyGraph "${invalidPortAssetFile}"
   #fi
-  
+  ##<<TODORM
   # shellcheck disable=SC2154
   if "${reinstall}"; then 
     printVerbose "Not pruning already installed packages as reinstalling"
@@ -2317,7 +2317,8 @@ installFromPax()
   fi
 
   # shellcheck disable=SC2154
-  if ! runLogProgress "pax -rf ${pax} -p p ${paxredirect} ${redirectToDevNull}" "Expanding: ${pax}" "Expanded:  ${pax}"; then
+  if ! runLogProgress "pax -rf ${pax} -p p ${paxredirect} ${redirectToDevNull}" \
+      "Expanding file: ${pax}" "Expanded file:  ${pax}"; then
     printSoftError "Unexpected errors during unpaxing, package directory state unknown"
     printError "Use zopen alt to select previous version to ensure known state"
   fi
@@ -2337,9 +2338,14 @@ installFromPax()
       printError "Could not create symbolic link name"
     fi 
     if ! ${nosymlink}; then
-      mergeIntoSystem "${name}" "${ZOPEN_PKGINSTALL}/${installdirname}" "${ZOPEN_ROOTFS}" 
-      misrc=$?
-      printDebug "The merge complete with: ${misrc}"
+      if ! runLogProgress "mergeIntoSystem \"${name}\" \"${ZOPEN_PKGINSTALL}/${installdirname}\" \"${ZOPEN_ROOTFS}\"" \
+          "Merging ${name} into symlink mesh" "Merged ${name} into symlink mesh"; then
+        printSoftError "Unexpected errors merging symlinks into mesh"
+        printError "Use zopen alt to select previous version to ensure known state"
+      fi
+      ##TODORM mergeIntoSystem "${name}" "${ZOPEN_PKGINSTALL}/${installdirname}" "${ZOPEN_ROOTFS}" 
+      ##TODORM misrc=$?
+      ##TODORM printDebug "The merge complete with: ${misrc}"
     fi
 
     printVerbose "- Checking for env file"
