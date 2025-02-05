@@ -242,45 +242,43 @@ else
   mkdir -p "${promotefs}"
 fi
 
-printInfo "- Promoting from '${rootfs}' to '${promotefs}'..."
+promoteFS(){
+  #cp -fRT "${rootfs}/"  Fails to keep some relative symlinks correct
 
-progressHandler "spinner" "- Promoted from '${rootfs}' to '${promotefs}'." &
-ph=$!
-killph="kill -HUP ${ph}"
-addCleanupTrapCmd "${killph}"
-#cp -fRT "${rootfs}/"  Fails to keep some relative symlinks correct
+  printDebug "Need to pax old dir and unpax to new dest to keep symlink structure"
+  # Some files are set with permission -r--r--r-- which means they cannot be copied
+  # over without some work.  Rather than search for these files, attempt to copy
+  # and catch the errors, forcibly re-copying the file over afterwards; saves
+  # iterating the entire file system twice
 
-printDebug "Need to pax old dir and unpax to new dest to keep symlink structure"
-# Some files are set with permission -r--r--r-- which means they cannot be copied
-# over without some work.  Rather than search for these files, attempt to copy
-# and catch the errors, forcibly re-copying the file over afterwards; saves
-# iterating the entire file system twice
+  printDebug "Generating temporary pipe"
+  FIFO_PIPE_STDOUT=$(mktempfile "promotestdout" ".pipe")
+  [ ! -p "${FIFO_PIPE_STDOUT}" ] || rm -f "${FIFO_PIPE_STDOUT}"
+  mkfifo "${FIFO_PIPE_STDOUT}" && chtag -tc 819 "${FIFO_PIPE_STDOUT}"
+  addCleanupTrapCmd "rm -rf ${FIFO_PIPE_STDOUT}"
+  cd "${rootfs}" && pax -rw -p p "." "${promotefs}"  2>>"${FIFO_PIPE_STDOUT}" &
+  while read OUTMSG; do
+    printDebug "Parsing output: '${OUTMSG}'"
+    destFile=$(echo "${OUTMSG}" | sed 's#.*FSUM7148.*"\(.*\)".*EDC5111I.*#\1#')
+    if [ "${destFile}" = "${OUTMSG}" ]; then
+      printSoftError "${OUTMSG}"
+      printError "Error cloning '${srcFile}' to '${destFile}'. Correct the reported error and retry command"
+    else
+      printDebug "Permission fail; trying to force copy of '${srcFile}' to '${destFile}'"
+      srcFile="${rootfs}${destFile#"${promotefs}"}"
+      printDebug "Copying sourcefile '${srcFile}' to '${destFile}'"
+      cp -f "${srcFile}" "${destFile}"
 
-printDebug "Generating temporary pipe"
-FIFO_PIPE_STDOUT=$(mktempfile "promotestdout" ".pipe")
-[ ! -p "${FIFO_PIPE_STDOUT}" ] || rm -f "${FIFO_PIPE_STDOUT}"
-mkfifo "${FIFO_PIPE_STDOUT}" && chtag -tc 819 "${FIFO_PIPE_STDOUT}"
-addCleanupTrapCmd "rm -rf ${FIFO_PIPE_STDOUT}"
-cd "${rootfs}" && pax -rw -p p "." "${promotefs}"  2>>"${FIFO_PIPE_STDOUT}" &
-while read OUTMSG; do
-  printDebug "Parsing output: '${OUTMSG}'"
-  destFile=$(echo "${OUTMSG}" | sed 's#.*FSUM7148.*"\(.*\)".*EDC5111I.*#\1#')
-  if [ "${destFile}" = "${OUTMSG}" ]; then
-    printSoftError "${OUTMSG}"
-    printError "Error cloning '${srcFile}' to '${destFile}'. Correct the reported error and retry command"
-  else
-    printDebug "Permission fail; trying to force copy of '${srcFile}' to '${destFile}'"
-    srcFile="${rootfs}${destFile#"${promotefs}"}"
-    printDebug "Copying sourcefile '${srcFile}' to '${destFile}'"
-    cp -f "${srcFile}" "${destFile}"
+      [ "$?" -ne 0 ] && printError "Could not promote environment; permission issue cloning '${srcFile}' to '${destFile}'. Check permissions and retry command."
+    fi
 
-    [ "$?" -ne 0 ] && printError "Could not promote environment; permission issue cloning '${srcFile}' to '${destFile}'. Check permissions and retry command."
-  fi
+  done < "${FIFO_PIPE_STDOUT}"
+  [ -n "${FIFO_PIPE_STDOUT}" ] && [ -e "${FIFO_PIPE_STDOUT}" ] && rm -f "${FIFO_PIPE_STDOUT}"
+}
 
-done < "${FIFO_PIPE_STDOUT}"
-[ -n "${FIFO_PIPE_STDOUT}" ] && [ -e "${FIFO_PIPE_STDOUT}" ] && rm -f "${FIFO_PIPE_STDOUT}"
-${killph} 2>/dev/null  # if the timer is not running, the kill will fail
-waitforpid ${ph}  # Make sure it's finished writing to screen
+if ! runLogProgress "promoteFS" "Promoting from '${rootfs}' to '${promotefs}'" "Promoted from '${rootfs}' to '${promotefs}'" "mirror"; then
+  printError "Unable to promote file system from '${rootfs}' to '${promotefs}'"
+fi
 
 printVerbose "Grabbing pkginstall location from within promoted env"
 if [ -e "${promotefs}/etc/zopen/fstype" ]; then
@@ -289,6 +287,19 @@ else
   printError "Unable to locate '${promotefs}/etc/zopen/fstype'; unrecognisable file system. Check permissions"
 fi
 
+rmDanglingLinks(){
+  flecnt=0
+
+  tmpfile=$(mktempfile "zopen_promote" ".pipe")
+  addCleanupTrapCmd "rm -rf ${tmpfile}"
+
+  zosfind "${promotefs}" -type l -exec test ! -e {} \; -print > "${tmpfile}"
+  while IFS= read -r sl; do
+    printVerbose "Removing symlink '${sl}'"
+  #  rm -f "${sl}"
+    flecnt=$(expr ${flecnt} + 1)
+  done < "${tmpfile}"
+}
 
 if ! ${keepzopentooling}; then
   printDebug "Stripping zopen tools from cloned environment; removing meta packages"
@@ -299,18 +310,9 @@ if ! ${keepzopentooling}; then
   # As packages can install to any subfolder of the zopen filesystem, need to traverse
   # along every path under that filesystem - even if '/''. As this is a cloned
   # environment, can just check for links related to "meta/meta*"
-  progressHandler "spinner" "- Dangling link removal complete" &
-  ph=$!
-  killph="kill -HUP ${ph}"
-  addCleanupTrapCmd "${killph}"
-  flecnt=0
-  zosfind "${promotefs}" -type l -exec test ! -e {} \; -print | while read sl; do
-    printVerbose "Removing symlink '${sl}'"
-    rm -f ${sl}
-    flecnt=$(expr ${flecnt} + 1)
-  done
-  ${killph} 2>/dev/null  # if the timer is not running, the kill will fail
-  waitforpid ${ph}  # Make sure it's finished writing to screen
+  if ! runLogProgress "rmDanglingLinks" "Removing dangling links" "Removed dangling links"; then
+    printError "Unable to remove dangling links. Review any errors. Manual cleanup might be required"
+  fi
   syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_ZOPEN}" "PROMOTE" "mainline" "meta tooling checked for and removed from promoted environment; ${flecnt} link(s) removed"
 fi
 
