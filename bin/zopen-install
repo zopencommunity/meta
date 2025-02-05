@@ -300,14 +300,9 @@ else
     installList=$(echo "$chosenRepos" | sed "s/@@/ /g")
     validateInstallList "${installList}"
   fi
-  printInfo "- Generating install graph"
-  progressHandler "spinner" "- Generated install graph" &
-  gigph=$!
-  killph="kill -HUP ${gigph}"
-  addCleanupTrapCmd "${killph}"
-  generateInstallGraph "${installList}"
-  ${killph} 2>/dev/null # if the timer is not running, the kill will fail
-  waitforpid ${gigph}  # Make sure it's finished writing to screen
+  if ! generateInstallGraph "${installList}"; then
+    printError "Unable to generate install graph"
+  fi
 fi
 
 if [ 0 -eq "$(echo "${installList}" | jq --raw-output '.installqueue| length')" ]; then

@@ -135,35 +135,16 @@ mutexReq "zopen" "zopen"
 printDebug "Parsing list of packages to install and verifying validity"
 
 if [ -z "${chosenRepos}" ]; then
-  badportlist=""
-  for chosenRepo in $(echo "${chosenRepos}" | tr ',' ' '); do
-    printVerbose "Processing repo: ${chosenRepo}"
-    printDebug "Stripping any version (%), tag (#) or port suffixes and trim"
-    toolrepo=$(echo "${chosenRepo}" | sed -e 's#%.*##' -e 's#=.*##' -e 's#.*port##')
-    toolfound=$(echo "${repo_results}" | awk -vtoolrepo="${toolrepo}" '$0 == toolrepo {print}') 
-    if [ "${toolfound}" = "${toolrepo}" ]; then
-      printVerbose "Adding '${chosenRepo}' to the install queue"
-      installArray=$(printf "%s\n%s" "${installArray}" "${chosenRepo}")
-    else
-      badportlist=$(printf "%s %s" "${badportlist}" "${toolrepo}")
-    fi
-  done
-
-  if [ -z "${badportlist}" ]; then
-    printSoftError "The following requested port(s) do not exist:\n\t${badportlist}"
+  if ! chosenRepos=$(zopen list --installed); then
+    printSoftError "Unable to retrieve list of currently installed packages"
+    printError "Details: ${chosenRepos}"
   fi
-  upgradeList=$(jq --raw-output '.release_data| keys[]' "${JSON_CACHE}")
-  generateInstallGraph "${upgradeList}"
 else
   validateInstallList "${chosenRepos}"
-  printInfo "- Generating upgrade graph"
-  progressHandler "spinner" "- Generated upgrade graph" &
-  ph=$!
-  killph="kill -HUP ${ph}"
-  addCleanupTrapCmd "${killph}"
-  generateInstallGraph "${chosenRepos}"
-  ${killph} 2>/dev/null # if the timer is not running, the kill will fail
-  waitforpid ${ph}  # Make sure it's finished writing to screen
+fi
+
+if ! generateInstallGraph "${chosenRepos}"; then
+  printError "Unable to generate upgrade graph"
 fi
 
 # shellcheck disable=SC2154
