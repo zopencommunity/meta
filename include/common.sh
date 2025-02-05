@@ -20,6 +20,7 @@ zopenInitialize()
   ZOPEN_ANALYTICS_JSON="${ZOPEN_ROOTFS}/var/lib/zopen/analytics.json"
   # shellcheck disable=SC2034
   ZOPEN_JSON_CACHE_URL="https://raw.githubusercontent.com/${ZOPEN_ORGNAME}/meta/main/docs/api/zopen_releases.json"
+  ZOPEN_LATEST_RELEASE_JSON="https://raw.githubusercontent.com/${ZOPEN_ORGNAME}/meta/main/docs/api/zopen_releases_latest.json"
   ZOPEN_JSON_CONFIG="${ZOPEN_ROOTFS}/etc/zopen/config.json"
   if [ -n "${INCDIR}" ]; then
     ZOPEN_SCRIPTLET_DIR="${INCDIR}/scriptlets"
@@ -843,7 +844,7 @@ mergeIntoSystem()
 
   printDebug "Calculating the offset path to store from root"
   offset=$(dirname "${versioneddir#"${rootfs}"/}")
-  version=$(basename ${versioneddir})
+  version=$(basename "${versioneddir}")
   tmptime=$(date +%Y%m%d%H%M%S)
   processingDir="${rootfs}/tmp/zopen.${tmptime}"
   printDebug "Temporary processing dir evaluated to: ${processingDir}"
@@ -1445,10 +1446,75 @@ getJSONCacheURL(){
   esac
 }
 
+updateJSONCaches()
+{
+  printVerbose "Ensuring cache directory exists"
+  cachedir="${ZOPEN_ROOTFS}/var/cache/zopen"
+  [ ! -e "${cachedir}" ] && mkdir -p "${cachedir}"
+  jsonCacheURL=$(getJSONCacheURL)
+
+  printVerbose "Checking if the JSON_CACHE already downloaded in this session"
+  if [ -z "${JSON_CACHE}" ]; then
+    JSON_CACHE="${cachedir}/zopen_releases.json"
+    downloadJSONCacheIfExpired "${JSON_CACHE}" "${jsonCacheURL}"
+  fi
+  if [ -z "${JSON_LATEST_CACHE}" ]; then
+    JSON_LATEST_CACHE="${cachedir}/zopen_releases_latest.json"
+    latestReleaseURL="$(dirname "${jsonCacheURL}")/zopen_releases_latest.json"
+    downloadJSONCacheIfExpired "${JSON_LATEST_CACHE}" "${latestReleaseURL}"
+  fi
+}
+
+downloadJSONCacheIfExpired()
+{
+  fileToCache="$1"
+  cacheUrl="$2"
+  cacheTimestamp="${fileToCache}.timestamp"
+  cacheTimestampCurrent="${fileToCache}.timestamp.current"
+
+    # Need to check that we can read & write to the JSON timestamp cache files
+    if [ -e "${cacheTimestampCurrent}" ]; then
+      [ ! -w "${cacheTimestampCurrent}" ] || [ ! -r "${cacheTimestampCurrent}" ] && printError "Cannot access cache at '${cacheTimestampCurrent}'. Check permissions and retry request."
+    fi
+    if [ -e "${cacheTimestamp}" ]; then
+      [ ! -w "${cacheTimestamp}" ] || [ ! -r "${cacheTimestamp}" ] && printError "Cannot access cache at '${cacheTimestamp}'. Check permissions and retry request."
+    fi
+    if [ -e "${fileToCache}" ]; then
+      [ ! -w "${fileToCache}" ] || [ ! -r "${fileToCache}" ] && printError "Cannot access cache at '${JSON_CACHE}'. Check permissions and retry request."
+    fi
+
+    if ! curlCmd -f -L -s -I "${cacheUrl}" -o "${cacheTimestampCurrent}"; then
+      printError "Failed to obtain json cache timestamp from ${cacheUrl}."
+    fi
+    chtag -tc 819 "${cacheTimestampCurrent}"
+
+    if [ -f "${fileToCache}" ] \
+       && [ -f "${cacheTimestamp}" ] \
+       && [ "$(grep 'Last-Modified' "${cacheTimestampCurrent}")" = "$(grep 'Last-Modified' "${cacheTimestamp}")" ]; then
+      # Metadata cache unchanged
+      return
+    fi
+
+    printVerbose "Replacing old timestamp with latest."
+    mv -f "${cacheTimestampCurrent}" "${cacheTimestamp}"
+
+    if ! curlCmd -f -L -s -o "${fileToCache}" "${cacheUrl}"; then
+      printError "Failed to obtain json cache from '${cacheUrl}'"
+    fi
+    chtag -tc 819 "${fileToCache}"
+  if [ ! -f "${fileToCache}" ]; then
+    printError "Could not download json cache from '${cacheUrl}"
+  fi
+}
+
 downloadJSONCache()
 {
-  from_readonly=$1
-
+  if ! updateJSONCaches; then
+    return 1
+  else
+    return 0
+  fi
+  ##TODORM>>
   if [ -z "${JSON_CACHE}" ]; then
     cachedir="${ZOPEN_ROOTFS}/var/cache/zopen"
     [ ! -e "${cachedir}" ] && mkdir -p "${cachedir}"
@@ -1498,22 +1564,45 @@ downloadJSONCache()
   if [ ! -f "${JSON_CACHE}" ]; then
     printError "Could not download json cache from '${jsonCacheURL}"
   fi
+  ## <<TODORM
 }
 
+# getRepos
+# Queries the main repository list to obtain a list of all available port
+# names, populating the repo_results global var
+# inputs: none
+# return: 0  success
+#         1  failure
 getRepos()
 {
-  downloadJSONCache
+  updateJSONCaches
+  # shellcheck disable=SC2034
   repo_results="$(jq -r '.release_data | keys[]' "${JSON_CACHE}")"
 }
 
+# isValidRepo
+# Queries the main repository list to determine if the input is valid,  This 
+# uses jq itself to return 0 or 1 with no output
+# inputs: $1 the port name.
+
+# return: 0  valid port name
+#         1  invalid port name
+isValidRepo()
+{
+  updateJSONCaches
+  jq -r --arg needle "$1" 'if .release_data | has($needle) then empty else error("") end'  "${JSON_CACHE}" > /dev/null 2>&1
+}
+
+#Deprecated
 getRepoReleases()
 {
-  downloadJSONCache $1
+  updateJSONCaches
   repo="$1"
-  releases="$(jq -e -r '.release_data."'${repo}'"' "${JSON_CACHE}")"
-  if [ $? -ne 0 ]; then
-    printError "Could not get all releases for ${repo}"
-  fi
+  ##TODO 
+  ##TDORM releases="$(jq -e -r '.release_data."'${repo}'"' "${JSON_CACHE}")"
+  ##TDORM if [ $? -ne 0 ]; then
+    ##TDORM printError "Could not get all releases for ${repo}"
+  ##TDORM fi
 }
 
 initDefaultEnvironment()
@@ -1675,13 +1764,16 @@ getVersionedMetadata()
   requestedSubrelease=$(echo "${versioned}" | awk -F'.' '{print $4}')
   requestedVersion="${requestedMajor}\\\.${requestedMinor}\\\.${requestedPatch}\\\.${requestedSubrelease}"
   printDebug "Finding URL for latest release matching version prefix: requestedVersion: ${requestedVersion}"
-  releasemetadata=$(/bin/printf "%s" "${releases}" | jq -e -r '. | map(select(.assets[].name | test("'${requestedVersion}'")))[0]')
+  releasemetadata=$(jq --arg repo "${repo}" --arg requestedVersion "${requestedVersion}" \
+      '.release_data.[$repo] | map(select(.assets[].version | test($requestedVersion)))[0]' "${JSON_CACHE}")
 }
 
 getTaggedMetadata()
 {
   printDebug "Explicit tagged version '${tagged}' specified. Checking for match"
   releasemetadata=$(/bin/printf "%s" "${releases}" | jq -e -r '.[] | select(.tag_name == "'"${tagged}"'")')
+  releasemetadata=$(jq --arg repo "${repo}" --arg requestedVersion "${requestedVersion}" \
+    '.release_data.[$repo][] | select(.tag_name == $tag_name)' "${JSON_CACHE}")
   printDebug "Use quick check for asset to check for existence of metadata for specific messages"
   asset=$(/bin/printf "%s" "${releasemetadata}" | jq -e -r '.assets[0]')
   if [ $? -ne 0 ]; then
@@ -1696,13 +1788,17 @@ getSelectMetadata()
   # shellcheck disable=SC2154
   kill -HUP "${gigph}" 2>/dev/null # if the timer is not running, the kill will fail
   waitforpid "${gigph}"  # Make sure it's finished writing to screen
-
+  
+  repo="$1"
   # Explicitly allow the user to select a release to install; useful if there are broken installs
   # as a known good release can be found, selected and pinned!
   printDebug "List individual releases and allow selection"
-  i=$(/bin/printf "%s" "${releases}" | jq -r 'length - 1')
+  i=$(jq --arg repo "${repo}" '.release_data.[$repo] | length - 1' "${JSON_CACHE}")
   printInfo "Versions available for install:"
-  /bin/printf "%s" "${releases}" | jq --raw-output 'to_entries | map("\(.key): \(.value.tag_name) - \(.value.assets[0].name) [\( ( .value.assets[0].expanded_size|tonumber)*1000 / (1024 * 1024) | ceil | . / 1000)Mb]")[]'
+  if ! jq --raw-output --arg repo "${repo}"  \
+      '.release_data.[$repo] | to_entries | map("\(.key): \(.value.tag_name) - \(.value.assets[0].name) [\( ( .value.assets[0].expanded_size|tonumber)*1000 / (1024 * 1024) | ceil | . / 1000)Mb]")[]' "${JSON_CACHE}"; then
+    printError "Unable to enumerate asset version strings"
+  fi
   printDebug "Getting user selection"
   valid=false
   while ! ${valid}; do
@@ -1715,7 +1811,8 @@ getSelectMetadata()
     fi
   done
   printVerbose "Selecting item ${selection} from array"
-  releasemetadata="$(/bin/printf "%s" "${releases}" | jq -e -r ".[${selection}]")"
+  releasemetadata=$(jq --arg repo "${repo}" --arg selection "${selection}" \
+      '.release_data.[$repo][$selection | tonumber]' "${JSON_CACHE}")
 }
 
 getReleaseLineMetadata()
@@ -1726,16 +1823,19 @@ getReleaseLineMetadata()
     printError "Invalid releaseline specified: '${releaseLine}'; Valid values: DEV or STABLE"
   fi
   printDebug "Finding latest asset on the release line"
-  releasemetadata="$(/bin/printf "%s" "${releases}" | jq -e -r '. | map(select(.tag_name | startswith("'${releaseLine}'")))[0]')"
+  releasemetadata=$(jq --arg repo "${repo}" --arg releaseLine "${validatedReleaseLine}" \
+      '.release_data.[$repo] | map(select(.tag_name | startswith($releaseLine)))[0]' "${JSON_CACHE}")
   printDebug "Use quick check for asset to check for existence of metadata"
   asset="$(/bin/printf "%s" "${releasemetadata}" | jq -e -r '.assets[0]')"
   if [ $? -ne 0 ]; then
-    printError "Could not find release-line ${releaseLine} for repo: ${repo}"
+    printError "Could not find release-line ${releaseLine} releases for repo: ${repo}"
   fi
+  unset "${releaseLine}"
 }
 
 calculateReleaseLineMetadata()
 {
+  repo="$1"
   printDebug "No explicit version/tag/releaseline, checking for pre-existing package&releaseline"
   if [ -n "${installedReleaseLine}" ]; then
     printDebug "Found existing releaseline '${installedReleaseLine}', restricting to only that releaseline"
@@ -1761,17 +1861,17 @@ calculateReleaseLineMetadata()
     fi
   fi
 
-  printDebug "Parsing releases: ${releases}"
     # We have some situations that could arise
     # 1. the port being installed has no releaseline tagging yet (ie. no releases tagged STABLE_* or DEV_*)
     # 2. system is configured for STABLE but only has DEV stream available
-    # 3. system is configured for DEV but only has DEV stream available
+    # 3. system is configured for DEV but only has STABLE stream available
     # 4. the port being installed has got full releaseline tagging
     # The issue could arise that the user has switched the system from DEV->STABLE or vice-versa so package
     # stream mismatches could arise but in normal case, once a package is installed [that has releaseline tagging]
     # then that specific releaseline will be used
   printDebug "Finding any releases tagged with ${validatedReleaseLine} and getting the first (newest/latest)"
-  releasemetadata="$(/bin/printf "%s" "${releases}" | jq -e -r '. | map(select(.tag_name | startswith("'${validatedReleaseLine}'")))[0]')"
+  releasemetadata=$(jq --arg repo "${repo}" --arg releaseLine "${validatedReleaseLine}" \
+      '.release_data.[$repo] | map(select(.tag_name | startswith($releaseLine)))[0]' "${JSON_CACHE}")
 
   printDebug "Use quick check for asset to check for existence of metadata"
   asset="$(/bin/printf "%s" "${releasemetadata}" | jq -e -r '.assets[0]')"
@@ -1784,7 +1884,8 @@ calculateReleaseLineMetadata()
     # Case 2 & 3
     printDebug "No releases on releaseline '${validatedReleaseLine}'; checking alternative releaseline"
     alt=$(echo "${validatedReleaseLine}" | awk ' /DEV/ { print "STABLE" } /STABLE/ { print "DEV" }')
-    releasemetadata="$(/bin/printf "%s" "${releases}" | jq -e -r '. | map(select(.tag_name | startswith("'${alt}'")))[0]')"
+    releasemetadata=$(jq --arg repo "${repo}" --arg releaseLine "${alt}" \
+        '.release_data.[$repo] | map(select(.tag_name | startswith($releaseLine)))[0]' "${JSON_CACHE}")
     printDebug "Use quick check for asset to check for existence of metadata"
     asset="$(/bin/printf "%s" "${releasemetadata}" | jq -e -r '.assets[0]')"
     [ "${asset}" = "null" ] && asset=""  # jq uses null, translate to sh's empty
@@ -1792,8 +1893,8 @@ calculateReleaseLineMetadata()
       printDebug "Found a release on the '${alt}' release line so release tagging is active"
       if [ "DEV" = "${validatedReleaseLine}" ]; then
         # The system will be configured to use DEV packages where available but if none, use latest
-        printInfo "No specific DEV releaseline package, using latest available"
-        releasemetadata="$(/bin/printf "%s" "${releases}" | jq -e -r ".[0]")"
+        printInfo "No specific DEV releaseline package, using latest available release"
+        releasemetadata=$(jq --arg repo "${repo}" '.release_data.[$repo][0]' "${JSON_CACHE}")
       else
         printVerbose "The system is configured to only use STABLE releaseline packages but there are none"
         printInfo "No release available on the '${validatedReleaseLine}' releaseline."
@@ -1801,7 +1902,7 @@ calculateReleaseLineMetadata()
     else
       # Case 1 - old package that has no release tagging yet (no DEV or STABLE), just install latest
       printVerbose "Installing latest release"
-      releasemetadata="$(/bin/printf "%s" "${releases}" | jq -e -r ".[0]")"
+      releasemetadata=$(jq --arg repo "${repo}" '.release_data.[$repo][0]'  "${JSON_CACHE}")
     fi
   fi
 }
@@ -1822,24 +1923,26 @@ getPortMetaData(){
   invalidPortAssetFile="$2"
   printDebug "Removing any version (%) or tag (#) suffixes fron '${portRequested}"
   portName=$(echo "${portRequested}" | sed -e 's#%.*##' -e 's#=.*##')
-  validatedPort=$(echo "${repo_metadata}" | awk -vportName="${portName}" '$0 == portName {print}')
-  if [ -z "${validatedPort}" ]; then
+
+  if ! isValidRepo "${portName}"; then
     echo "${portName}: no matching port found" >> "${invalidPortAssetFile}"
     return 1
   fi
+
   parseRepoName "${portRequested}" # To set the various status flags below
-  getRepoReleases "${validatedPort}"
+  getRepoReleases "${portName}"
   if [ -n "${versioned}" ]; then
-    getVersionedMetadata
+    getVersionedMetadata "${portName}"
   elif [ -n "${tagged}" ]; then
-    getTaggedMetadata    
+    getTaggedMetadata "${portName}"   
   elif # shellcheck disable=SC2154
        ${selectVersion}; then
-    getSelectMetadata
+    selectVersion=false  # Need to set this to prevent selection of dependencies
+    getSelectMetadata "${portName}"
   elif [ -n "${releaseLine}" ]; then  
-    getReleaseLineMetadata      
+    getReleaseLineMetadata "${portName}"     
   else
-    calculateReleaseLineMetadata
+    calculateReleaseLineMetadata "${portName}"
   fi
   if [ -z "${releasemetadata}" ]; then 
     echo "${portName}: metadata could not be found" >> "${invalidPortAssetFile}"
@@ -1865,12 +1968,14 @@ getPortMetaData(){
 #         $2 an error file for outputing failures
 # return: 0  for success (output of pwd -P command)
 #         8  if error
-createDependancyGraph(){
+createDependancyGraph()
+{
   invalidPortAssetFile=$1 && shift 
   printDebug "Getting list of dependencies"
   dependencies=$(echo "${installList}" | jq --raw-output '.installqueue[] | select(.asset.runtime_dependencies | test("No dependencies") | not )| map(try(.runtime_dependencies |= split(" ")))| .[] | .runtime_dependencies[] ')
   printDebug "Removing any dependencies already on install queue"
   installing=$(echo "${installList}" | jq --raw-output '.installqueue[] | .portname')
+  # TODO: Use JQ to diff?
   missing=$(diffList "${installing}" "${dependencies}" )
   if [ -z "${missing}" ]; then
     printDebug "All dependencies are in the install graph"
@@ -1901,8 +2006,9 @@ addToInstallGraph(){
     if ! getPortMetaData "${portRequested}" "${invalidPortAssetFile}"; then
       continue
     fi
-    ## Merge asset into output file - note the lack of inline file edit hence the mv
-    installList=$(echo "${installList}" | jq ".installqueue += [{\"portname\":\"${validatedPort}\", \"asset\":${asset}, \"installtype\":\"${installtype}\"}]")
+    ## Merge asset into JSON install list
+    installList=$(echo "${installList}" | \
+      jq ".installqueue += [{\"portname\":\"${portName}\", \"asset\":${asset}, \"installtype\":\"${installtype}\"}]")
   done
   if [ -e "${invalidPortAssetFile}" ]; then
     printSoftError "The following ports cannot be installed: "
@@ -1916,6 +2022,7 @@ addToInstallGraph(){
 validateInstallList(){
   installees="$1"
   # shellcheck disable=SC2086 # Using set -f disables globbing
+  printVerbose "Stripping any version/tagging"
   installees=$(set -f; echo ${installees} |awk  -v ORS=, -v RS=' ' '{$1=$1; sub(/[=%].*/,x); print "\""$1"\""}')
   invalidPortList=$(jq -r --argjson needles "[${installees%%,}]" \
     '.release_data| keys as $haystack | $needles | map(select(. as $needle | $haystack | index($needle)|not)) | .[]'  "${JSON_CACHE}")
@@ -1946,7 +2053,7 @@ generateInstallGraph(){
   printDebug "Parsing list of packages to install and verifying validity"
   portsToInstall="$1" # start with the initial list
   portsToInstall=$(dedupStringList ' ' "${portsToInstall}")
-  repo_metadata="${repo_results}"
+
   # Create the following file here to trigger cleanup - otherwise, multiple
   # tempfiles could be created depending on dependency graph depth
   invalidPortAssetFile=$(mktempfile "invalid" "port")
@@ -2032,7 +2139,7 @@ spaceValidate(){
   fi
   if ! ${yesToPrompts} || [ "${availableSpaceMB}" -lt "${spaceRequiredMB}" ]; then
     while true; do
-      printInfo "Do you want to continue? [y/n/a]"
+      /bin/printf "Do you want to continue [y/n/a]? "
       read continueInstall < /dev/tty
       case "${continueInstall}" in
         "y") break;;
@@ -2167,20 +2274,28 @@ installFromPax()
   if ! metadatafile=$(extractMetadataFromPax "${pax}"); then
     return 1
   fi
+
   # Ideally we would use the following, 
   #  name=$(jq --raw-output '.product.name' "${metadatafile}") 
   # but name does not always map to the actual repo package name at present!
-  # The repo name is in the.product.repo field so can extract from there instead.
+  # The repo name is in the.product.repo field so can extract from there instead -
+  # though this also has issues for some packages like NATS/nats ...
   # Note that at present some metadata might refer to the legacy repo ZOSOpenTools
   # so fall back to that
-  printVerbose "Extracting product name from repo"
-  name=$(jq --arg reponame "${ZOPEN_ORGNAME}" --raw-output '.product.repo | match(".*/\($reponame)/(.*)port").captures[0].string' "${metadatafile}")
-  if [ -z "${name}" ] || [ "${name##*[^ ]*}" = "" ]; then  
-    name=$(jq --arg reponame "ZOSOpenTools" --raw-output '.product.repo | match(".*/\($reponame)/(.*)port").captures[0].string' "${metadatafile}")
+  if [ -n "${USEPRODNAME}" ]; then
+    printVerbose "Extracting product name from .product.repo"
+    #  name=$(jq --raw-output '.product.name' "${metadatafile}") 
+  else
+    printVerbose "Extracting product name from .product.repo"
+    name=$(jq --arg reponame "${ZOPEN_ORGNAME}" --raw-output '.product.repo | match(".*/\($reponame)/(.*)port").captures[0].string' "${metadatafile}")
+    if [ -z "${name}" ] || [ "${name##*[^ ]*}" = "" ]; then  
+      name=$(jq --arg reponame "ZOSOpenTools" --raw-output '.product.repo | match(".*/\($reponame)/(.*)port").captures[0].string' "${metadatafile}")
+    fi
+    if [ -z "${name}" ] || [ "${name##*[^ ]*}" = "" ]; then  
+      printError "Unable to determine name from .product.repo in '${metadatafile}'. Check metadata is correct."
+    fi
   fi
-  if [ -z "${name}" ] || [ "${name##*[^ ]*}" = "" ]; then  
-    printError "Unable to determine name from .product.repo in '${metadatafile}'. Check metadata is correct."
-  fi
+
 
   if ! processActionScripts "installPre" "${name}" "${metadatafile}" "${pax}"; then
     printError "Failed installation pre-requisite check(s) for '${name}'. Correct previous errors and retry command"
@@ -2517,7 +2632,7 @@ startGPGAgent()
     return
   fi
   printInfo "- Starting gpg-agent"
-  if ! gpg-agent --daemon --disable-scdaemon --no-secmem-warning; then
+  if ! gpg-agent --daemon --disable-scdaemon; then
     printError "Error running gpg-agent command. Review error messages and retry command."
   fi
   # Wait a moment to ensure the gpg-agent has time to start
