@@ -17,8 +17,11 @@ if [ "$is_greater" -eq 1 ] && ! $skipverify; then
   if ! command -v gpg> /dev/null; then
     skipverify=false;
     printWarning "GPG is not installed - package validation cannot be performed"
+    printWarning "Run 'zopen install gpg' or use the --skip-verify parameter"
     return
   fi
+else
+  printVerbose "Skipping verification"
 fi
 
 # The following function will attempt to retrieve a value from the metadata for this
