@@ -148,10 +148,21 @@ if ! generateInstallGraph "${chosenRepos}"; then
 fi
 
 # shellcheck disable=SC2154
-if [ 0 -eq "$(echo "${installList}" | jq --raw-output '.installqueue| length')" ]; then
+upgrades=$(echo "${installList}" | jq --raw-output '.installqueue| length')
+if [ 0 -eq "${upgrades}" ]; then
   printInfo "- No available updates"
 else
-  processRepoInstallFile
+  pkgcount=$(echo "${installList}" | jq --raw-output '.installqueue | sort| length  ')
+  if [ "$pkgcount" -gt 1 ]; then
+    pkgInsert="${pkgcount} packages"
+  else
+    pkgInsert="package"
+  fi
+  printInfo "- The following ${pkgInsert} will be upgraded:"
+  echo "${installList}" | jq --raw-output '.installqueue | sort| .[] | .portname '
+  if promptYesNoAlways "Continue upgrading ${pkgInsert}?" ${yesToPrompts}; then
+    processRepoInstallFile
+  fi
   printInfo "Upgrade operation complete"
 fi
 mutexFree "zopen"

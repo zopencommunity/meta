@@ -509,6 +509,12 @@ deref()
   fi
 }
 
+toAbsolutePath() {
+  case "$1" in
+      /*) echo "$1" ;;  # Already absolute
+      * | . | .. | ./* | ../*) echo "$(cd "$(dirname "$1")" && pwd -P)/$(basename "$1")" ;;
+  esac
+}
 #return 1 if brightness is dark, 0 if light, and 255 if unknown (considered to be dark as default)
 darkbackground() {
   if [ "${#COLORFGBG}" -ge 3 ]; then
@@ -983,7 +989,7 @@ unsymlinkFromSystem()
     if [ -e "${newfilelist}" ]; then
       if ! runLogProgress "rmSymlinksFileDiff" \
           "Checking for file differences in mesh" \
-          "Checked for file differences mesh" "linkcheck"; then
+          "Checked for file differences in mesh" "linkcheck"; then
         printError "Unable to remove symlinks links. Review any errors. Manual cleanup using zopen-alt might be required"
       fi
     else
@@ -1070,8 +1076,8 @@ runLogProgress()
   animation="${4:-spinner}"
 
   progressHandler "${animation}" "${completeText}" &
-  ph=$!
-  killph="kill -HUP ${ph}"
+  PROGRESS_HANDLER=$!
+  killph="kill -HUP ${PROGRESS_HANDLER}"
   addCleanupTrapCmd "${killph}"
   eval "$1"
   rc=$?
@@ -1079,7 +1085,7 @@ runLogProgress()
     chtag -r "${SSH_TTY}"
   fi
   ${killph} >/dev/null 2>&1 # if the timer is not running, the kill will fail
-  waitforpid ${ph}  # Make sure it's finished writing to screen
+  waitforpid ${PROGRESS_HANDLER}  # Make sure it's finished writing to screen
   return "${rc}"
 }
 
@@ -1108,7 +1114,7 @@ progressAnimation()
       printVerbose "Cannot determine parent process, disable animation"
       exit 1
     fi
-    if [ "${ppid}" -eq 1 ]; then
+    if [ "${ppid}" = "1" ]; then
       # We have been daemonized and owned by PPID=1
       kill HUP "$$" >/dev/null 2>&1
       sleep 1 > /dev/null 2>&1
@@ -1777,8 +1783,8 @@ getSelectMetadata()
   # As this is running within the generate... logic, a progress handler will have been started.
   # This needs to be terminated before trying to write to screen
   # shellcheck disable=SC2154
-  kill -HUP "${gigph}" >/dev/null 2>&1 # if the timer is not running, the kill will fail
-  waitforpid "${gigph}"  # Make sure it's finished writing to screen
+  kill -HUP "${PROGRESS_HANDLER}" >/dev/null 2>&1 # if the timer is not running, the kill will fail
+  waitforpid "${PROGRESS_HANDLER}"  # Make sure it's finished writing to screen
   
   repo="$1"
   # Explicitly allow the user to select a release to install; useful if there are broken installs
@@ -2104,6 +2110,18 @@ parseGraph()
   # incoming file name against the port name, version and release already on the system
   # - seems to be the easiest comparison since some data is not in zopen_release vs metadata.json
   # and a local pax won't have a remote repo but should have a file name!
+
+installList=$(jq --argjson install_list "${installList}" '
+. as $input | 
+{
+  "installqueue": (
+    $install_list.installqueue | map(select( .portname as $pnn | .asset.release as $r |
+[$input[] | to_entries[] | select(.key == $pnn) | .value]| all(.product.release != $r)    
+    ))) 
+} ' "${ZOPEN_ROOTFS}/var/lib/zopen/packageDB.json"
+)
+##TODORM>>
+hidden(){
   installed=$(zopen list --installed --details)
   # Ignore the version string - it varies across ports so use name and build time as that
   # should be unique enough
@@ -2123,6 +2141,8 @@ parseGraph()
           )
         )'\
   )
+}  
+##<<TODORM
   if ! processActionScripts "parseGraphPost"; then
     exit 1
   fi
@@ -2325,6 +2345,7 @@ installFromPax()
 
   if [ -e "${ZOPEN_PKGINSTALL}/${name}/${name}/.pinned" ]; then
     printWarning "Current version of ${name} is pinned; not setting updated version as active"
+    printWarning "Remove .pinned file and run 'zopen alt meta' to use new version"
     setactive=false
     unInstallOldVersion=false
   fi
