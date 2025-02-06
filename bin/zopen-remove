@@ -61,21 +61,26 @@ removePackages()
     printHeader "Removing package: ${pkg}"
     processActionScripts "removePre"
     printInfo "- Querying install status of package '${pkg}'"
+    # Check for the actual file rather than the database; if the db is
+    # corrupt, the file is the tell-tale
     if [ ! -f "${ZOPEN_PKGINSTALL}/${pkg}/${pkg}/.active" ]; then
       printInfo "${NC}${YELLOW}- Package '${pkg}' is not installed${NC}"
     else
-      printInfo "- Away to remove '${pkg}',"
-      if ! ${yesToPrompts}; then
-        while true; do
-          /bin/printf "- Do you want to continue [y/n/a]? "
-          read continueInstall < /dev/tty
-          case "${continueInstall}" in
-            "y") break;;
-            "n") mutexFree "zopen"; printInfo "Exiting..."; exit 0 ;;
-            "a") yesToPrompts=true; break;;
-            *) echo "?";;
-          esac
-        done
+     
+      if preReqList=$(checkIfPrereq "${pkg}"); then
+        printWarning "${pkg} is a runtime prerequiste of the following:\n$(echo "${preReqList}" | sed '$d')"
+        printWarning "Removing ${pkg} could result in broken packages"
+        if ! promptYesNoAlways "Continue removal of '${pkg}' ?" false; then
+          mutexFree "zopen"; 
+          printInfo "Exiting..."; 
+         exit 0
+        fi
+      else
+        if ! promptYesNoAlways "Confirm removal of '${pkg}'?" ${yesToPrompts}; then
+          mutexFree "zopen"; 
+          printInfo "Exiting..."; 
+          exit 0
+        fi
       fi
       printInfo "- Unmeshing '${pkg}' from system"
       version="unknown"

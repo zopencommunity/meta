@@ -1739,13 +1739,13 @@ promptYesNoAlways() {
   skip=$2
   if ! ${skip}; then
     while true; do
-      /bin/printf "${message} [y/n/a]"
+      /bin/printf "${message} [y/n/a] "
       read answer < /dev/tty
       answer=$(echo "${answer}" | tr '[A-Z]' '[a-z]')
       case "${answer}" in
        y|yes) return 0;;
        n|no) return 1;;
-       a|always) return 2;;
+       a|always) yesToPrompts=true; return 0;;
       esac
     done
   fi
@@ -2147,6 +2147,19 @@ hidden(){
     exit 1
   fi
 }
+
+checkIfPrereq(){
+  # This jq query analyses the package database, looking for objects where the
+  # runtime dependency contains $1 (the removee). It extracts the keys from those
+  # objects into $dependents then outputs the flattened dependents array along with
+  # eithr true or false depending on if there was a prereq found (true) or if not
+  # false; the exit-status parameter then sets the exit code of jq dependning on that
+  # true/false value!
+  jq -r --exit-status --arg removee "$1" \
+      '[.[] | to_entries | map(select(.value.product.runtime_dependencies[]?.name == $removee)) | .[].key] | . as $dependents | $dependents[], ($dependents | length > 0)' \
+      "${ZOPEN_ROOTFS}/var/lib/zopen/packageDB.json"
+}
+
 
 spaceValidate(){
   spaceRequiredBytes=$1
