@@ -2434,56 +2434,60 @@ processActionScripts()
   shift # Drop the initial parameter
 
   case "${phase}" in
-    "installPre") scriptDir="${ZOPEN_SCRIPTLET_DIR}/installPre";;
-    "installPost") scriptDir="${ZOPEN_SCRIPTLET_DIR}/installPost";;
-    "removePre") scriptDir="${ZOPEN_SCRIPTLET_DIR}/removePre";;
-    "removePost") scriptDir="${ZOPEN_SCRIPTLET_DIR}/removePost";;
-    "transactionPre") scriptDir="${ZOPEN_SCRIPTLET_DIR}/transactionPre";;
-    "transactionPost") scriptDir="${ZOPEN_SCRIPTLET_DIR}/transactionPost";;
-    "parseGraphPre") scriptDir="${ZOPEN_SCRIPTLET_DIR}/parseGraphPre";;
-    "parseGraphPost") scriptDir="${ZOPEN_SCRIPTLET_DIR}/parseGraphPost";;
+    "installPre") scriptletDir="${ZOPEN_SCRIPTLET_DIR}/installPre";;
+    "installPost") scriptletDir="${ZOPEN_SCRIPTLET_DIR}/installPost";;
+    "removePre") scriptletDir="${ZOPEN_SCRIPTLET_DIR}/removePre";;
+    "removePost") scriptletDir="${ZOPEN_SCRIPTLET_DIR}/removePost";;
+    "transactionPre") scriptletDir="${ZOPEN_SCRIPTLET_DIR}/transactionPre";;
+    "transactionPost") scriptletDir="${ZOPEN_SCRIPTLET_DIR}/transactionPost";;
+    "parseGraphPre") scriptletDir="${ZOPEN_SCRIPTLET_DIR}/parseGraphPre";;
+    "parseGraphPost") scriptletDir="${ZOPEN_SCRIPTLET_DIR}/parseGraphPost";;
     *) assertFailed "Invalid process action phase '${phase}'"
   esac
-  printVerbose "Running script[s] from '${scriptDir}'"
+    printVerbose "Running script[s] from '${scriptletDir}'"
 
-    if [ ! -d "${scriptDir}" ]; then
+    if [ ! -d "${scriptletDir}" ]; then
       printDebug "No script directory for phase: ${phase}"
       return 0
     fi
     unset CDPATH;
-    # shellcheck disable=SC2164
-    cd "${scriptDir}"
-    scriptRcFile=$(mktempfile "actionscripts" ".err")
-    find . -type l | while read scriptFile; do
-      # Note: The script only needs to be readable as it is not executed as a 
-      # separate process; only read permission required when sourced with '.'
-      if [ ! -r "${scriptFile}" ]; then
-        printWarning "Script '${scriptDir}/${scriptFile}' is not readable. Check permissions"
-        continue
-      fi
-      printVerbose "Attempting to run script '${scriptFile}'"
-      # Call each scriptlet with the remaining parameters passed to this function as
-      # subshells so that any modification in the scripts does not affect the runtime
-      # Any errors, then output the status code as the final output
-      scriptOutput=$(
-        # shellcheck disable=SC1090
-        # shellcheck disable=SC2240  # This works on z/OS's /bin/sh
-        . "${scriptFile}" "$@" 2>&1
-        echo $?
-      ) 
-      scriptRc=$(echo "${scriptOutput}" | tail -n 1)
-      echo "${scriptOutput}" | head -n -1  # Don't print last (status) line!
-      
-      if [ "${scriptRc}" -ne 0 ]; then
-        touch "${scriptRcFile}" # Needed to indicate error outside subshell
-        break
-      fi
-    done
-    if [ -e "${scriptRcFile}" ]; then
-      rm -f "${scriptRcFile}"
-      return 1
+  cd "${scriptletDir}" || return 1
+
+  scriptletRcFile=$(mktempfile "zopen_actionscripts" ".err")
+  find . -type l | while IFS= read -r scriptletFile; do
+    if [ ! -r "${scriptletFile}" ]; then
+      printWarning "Script '${scriptletDir}/${scriptletFile}' is not readable. Check permissions" >> "${scriptletRcFile}" 2>&1
+      continue
     fi
-    return 0 # If we get to here, then none of the scripts returned a fatal error
+    printVerbose "Attempting to run script '${scriptletFile}'"
+    # Run script in a subshell to prevent environment modification
+    /bin/printf "${CRSRSOL}${ERASELINE}Running ${scriptletFile}"
+    scriptletOutput=$({
+      # shellcheck disable=SC1090
+      # shellcheck disable=SC2240
+      . "$scriptletFile" "$@"
+      echo $?  # Append exit status to output
+      } 2>&1 
+    )
+    /bin/printf "${CRSRSOL}${ERASELINE}${CRSRSOL}"
+    scriptletRc=$(echo "${scriptletOutput}" | tail -n 1)  # Extract exit status
+    scriptletBody=$(echo "${scriptletOutput}" | sed '$d')  # Extract script output
+    if [ "${scriptletRc}" -ne 0 ]; then {
+      printWarning "Scriptlet '${scriptletFile}' failed with exit code ${scriptletRc}"
+      printWarning "Details:"
+      printWarning "${scriptletBody}"
+      } >> "${scriptletRcFile}"
+    fi
+  done
+
+  if [ -s "${scriptletRcFile}" ]; then  # Check if errorLog is non-empty
+    printWarning "One or more scripts failed:"
+    cat "${scriptletRcFile}"
+    rm -f "${scriptletRcFile}"
+    return 1
+  fi
+  rm -f "${scriptletRcFile}"
+  return 0
 }
 
 # updatePackageDB
