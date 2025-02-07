@@ -29,6 +29,7 @@
 - 2025-01-07: [Update byacc-version to 20241231 from 20240109](https://github.com/zopencommunity/byaccport/pull/6) ✅
 
 ### c3270port
+- 2025-02-06: [Update c3270-version to 4.4ga3 from 4.3ga9](https://github.com/zopencommunity/c3270port/pull/28) ❌
 - 2024-12-16: [Update c3270-version to 4.3ga10 from 4.3ga9](https://github.com/zopencommunity/c3270port/pull/27) ❌
 
 ### caddyport
@@ -196,14 +197,6 @@
 - 2024-10-11: [Update libuv-version to 1.49.1 from 1.48.0](https://github.com/zopencommunity/libuvport/pull/5) ❌
 - 2024-10-02: [Update libuv-version to 1.49.0 from 1.48.0](https://github.com/zopencommunity/libuvport/pull/4) ❌
 
-### logrotateport
-- 2024-06-08: [Update logrotate-version to 3.22.0 from V.R.M](https://github.com/zopencommunity/logrotateport/pull/5) ❌
-- 2024-03-01: [Update logrotate-version to 3.21.0 from V.R.M](https://github.com/zopencommunity/logrotateport/pull/2) ✅
-
-### luaport
-- 2024-06-25: [Update lua-version to 5.4.7 from 5.1.5](https://github.com/zopencommunity/luaport/pull/5) ❌
-- 2023-11-16: [Update lua-version to 5.4.6 from 5.1.5](https://github.com/zopencommunity/luaport/pull/4) ❓
-
 ### luvport
 - 2024-03-10: [Update luv-version to 1.6.1 from V.R.M](https://github.com/zopencommunity/luvport/pull/1) ✅
 
@@ -235,13 +228,6 @@
 
 ### ncduport
 - 2024-11-19: [Update ncdu-1-version to 1.21 from 1.20](https://github.com/zopencommunity/ncduport/pull/11) ❌
-
-### neovimport
-- 2025-01-29: [Update neovim-version to 0.10.4 from 0.9.5](https://github.com/zopencommunity/neovimport/pull/12) ❌
-- 2024-12-22: [Update neovim-version to 0.10.3 from 0.9.5](https://github.com/zopencommunity/neovimport/pull/11) ❌
-- 2024-10-03: [Update neovim-version to 0.10.2 from 0.9.5](https://github.com/zopencommunity/neovimport/pull/9) ❌
-- 2024-07-24: [Update neovim-version to 0.10.1 from 0.9.5](https://github.com/zopencommunity/neovimport/pull/7) ❌
-- 2024-05-16: [Update neovim-version to 0.10.0 from 0.9.5](https://github.com/zopencommunity/neovimport/pull/6) ❌
 
 ### netpbmport
 - 2024-11-21: [Update netpbm-version to 10.77.0 from 11.05.00](https://github.com/zopencommunity/netpbmport/pull/7) ❌
@@ -308,6 +294,9 @@
 
 ### screenport
 - 2024-08-29: [Update screen-version to 5.0.0 from 4.9.1](https://github.com/zopencommunity/screenport/pull/8) ❌
+
+### sqliteport
+- 2025-02-06: [Update sqlite-version to 2025-3490000 from 2025-3480000](https://github.com/zopencommunity/sqliteport/pull/23) ❌
 
 ### stowport
 - 2024-09-09: [Update stow-version to 2.4.1 from V.R.M](https://github.com/zopencommunity/stowport/pull/2) ✅
@@ -630,5 +619,5 @@
 ---
 
 
-> Last updated: 2025-02-06 06:06:01 EST
+> Last updated: 2025-02-07 06:05:56 EST
 
