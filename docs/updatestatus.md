@@ -29,6 +29,7 @@
 - 2025-01-07: [Update byacc-version to 20241231 from 20240109](https://github.com/zopencommunity/byaccport/pull/6) ✅
 
 ### c3270port
+- 2025-02-07: [Update c3270-version to 4.4ga4 from 4.3ga9](https://github.com/zopencommunity/c3270port/pull/29) ❌
 - 2025-02-06: [Update c3270-version to 4.4ga3 from 4.3ga9](https://github.com/zopencommunity/c3270port/pull/28) ❌
 - 2024-12-16: [Update c3270-version to 4.3ga10 from 4.3ga9](https://github.com/zopencommunity/c3270port/pull/27) ❌
 
@@ -337,6 +338,7 @@
 - 2023-11-16: [Update texinfo-version to 7.1 from 6.8](https://github.com/zopencommunity/texinfoport/pull/20) ❓
 
 ### tigport
+- 2025-02-07: [Update tig-version to 2.5.12 from 2.5.9](https://github.com/zopencommunity/tigport/pull/10) ❌
 - 2025-01-31: [Update tig-version to 2.5.11 from 2.5.9](https://github.com/zopencommunity/tigport/pull/9) ❌
 - 2024-06-08: [Update tig-version to 2.5.10 from 2.5.9](https://github.com/zopencommunity/tigport/pull/6) ✅
 
@@ -619,5 +621,5 @@
 ---
 
 
-> Last updated: 2025-02-07 06:05:56 EST
+> Last updated: 2025-02-08 06:05:47 EST
 
