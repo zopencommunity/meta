@@ -11,19 +11,6 @@
 
 ### buildkiteport
 - 2025-01-28: [Update buildkite-version to 3.91.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/47) ❌
-- 2025-01-10: [Update buildkite-version to 3.90.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/46) ❌
-- 2025-01-06: [Update buildkite-version to 3.89.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/45) ❌
-- 2024-12-18: [Update buildkite-version to 3.88.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/44) ❌
-- 2024-11-27: [Update buildkite-version to 3.87.1 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/42) ❌
-- 2024-11-18: [Update buildkite-version to 3.87.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/41) ❌
-- 2024-11-12: [Update buildkite-version to 3.86.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/40) ❌
-- 2024-11-09: [Update buildkite-version to 3.85.1 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/39) ❌
-- 2024-11-08: [Update buildkite-version to 3.85.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/38) ❌
-- 2024-10-29: [Update buildkite-version to 3.84.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/37) ❌
-- 2024-10-10: [Update buildkite-version to 3.83.1 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/36) ❌
-- 2024-10-08: [Update buildkite-version to 3.83.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/35) ❌
-- 2024-10-02: [Update buildkite-version to 3.82.1 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/34) ❌
-- 2024-09-18: [Update buildkite-version to 3.82.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/31) ❌
 
 ### byaccport
 - 2025-01-07: [Update byacc-version to 20241231 from 20240109](https://github.com/zopencommunity/byaccport/pull/6) ✅
@@ -289,6 +276,9 @@
 - 2024-02-20: [Update poco-version to 1.13.2 from 1.12.5p2](https://github.com/zopencommunity/pocoport/pull/4) ❌
 - 2024-02-07: [Update poco-version to 1.13.1 from 1.12.5p2](https://github.com/zopencommunity/pocoport/pull/3) ❌
 - 2024-01-25: [Update poco-version to 1.13.0 from 1.12.5p2](https://github.com/zopencommunity/pocoport/pull/2) ❌
+
+### redisport
+- 2025-02-08: [Update redis-version to 20100825 from V.R.M](https://github.com/zopencommunity/redisport/pull/4) ❌
 
 ### s5cmdport
 - 2024-12-17: [Update s5cmd-version to 2.3.0 from 2.2.2](https://github.com/zopencommunity/s5cmdport/pull/3) ❌
@@ -621,5 +611,5 @@
 ---
 
 
-> Last updated: 2025-02-08 06:05:47 EST
+> Last updated: 2025-02-09 06:05:23 EST
 
