@@ -203,8 +203,8 @@ Optional:
                                     function is appended to install_test.sh
                                     script.
   zopen_install_caveats             This function is run post install. All stdout 
-                                    messages are captured and added to the metadata.json
-                                    as installation caveats.
+                                    messages are captured and added to the 
+                                    metadata.json as installation caveats.
   zopen_append_to_zoslib_env        This function runs as part of generation of
                                     the C function zoslib_env_hook, which can
                                     be used to set environment variables before
@@ -213,6 +213,8 @@ Optional:
                                     and patched but before the code is built.
   zopen_post_buildenv               This function runs after the 'buildenv' is
                                     processed.
+  zopen_post_extract                This function runs when an archive containing
+                                    the source to build has been uncompressed.
   zopen_post_install                This function runs after the 'install' step
                                     of the build is run.
   zopen_pre_build                   This function runs before the 'make' step
@@ -988,6 +990,12 @@ extractTarBall()
     if [ $? -gt 1 ]; then
       printError "unzip failed for ${tarballz}."
       echo "${out}" >&2
+    fi
+  fi
+  if command -V "zopen_post_extract" > /dev/null 2>&1; then
+    printVerbose "Running zopen_post_extract"
+    if ! "zopen_post_extract"  "${dir}"; then
+      printError "Error(s) running 'zopen_post_extract' from buildenv"
     fi
   fi
   rm -f "${tarballz}"
