@@ -1033,6 +1033,7 @@ extractTarBall()
 *.gmo binary
 *.po binary
 *.der binary
+*.jar binary
 " ".gitattributes"; then
       printError "Unable to create .gitattributes for tarball"
     fi
