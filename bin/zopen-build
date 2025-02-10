@@ -1113,6 +1113,7 @@ applyPatches()
     tarballz=$(basename "${ZOPEN_URL}")
     root_loc=${tarballz%%.tar.*}
     root_loc=${root_loc%%.tgz}
+    root_loc=${root_loc%%.zip}
     code_dir="${ZOPEN_ROOT}/${root_loc}"
   else
     gitname=$(basename "${ZOPEN_URL}")
