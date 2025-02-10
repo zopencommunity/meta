@@ -909,8 +909,8 @@ tagBinaryFiles()
 #
 tagTree()
 {
-  dir="$1"
-  absdir=$(cd ${dir} && echo "${PWD}")
+  dirtotag="$1"
+  absdir=$(cd ${dirtotag} && echo "${PWD}")
   tagBinaryFiles "${absdir}"
 }
 
