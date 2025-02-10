@@ -152,7 +152,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 |---|---|---|---|---|
 | [xmlto](https://github.com/zopencommunity/xmltoport)|Green|100.0%|[STABLE_xmlto_3007](https://github.com/zopencommunity/xmltoport/releases/download/STABLE_xmltoport_3007/xmlto-0.0.28.20250131_062354.zos.pax.Z)|A tool for converting XML documents to other formats|
 | [shdoc](https://github.com/zopencommunity/shdocport)|Green|100.0%|[DEV_shdoc_2900](https://github.com/zopencommunity/shdocport/releases/download/DEV_shdocport_2900/shdoc-1.2.20250129_185016.zos.pax.Z)|A documentation generator for shell scripts|
-| [doxygen](https://github.com/zopencommunity/doxygenport)|Blue|98.1%|[STABLE_doxygen_3081](https://github.com/zopencommunity/doxygenport/releases/download/STABLE_doxygenport_3081/doxygen-heads.Release_1_13_2.20250205_142410.zos.pax.Z)|A documentation generator|
+| [doxygen](https://github.com/zopencommunity/doxygenport)|Blue|98.1%|[STABLE_doxygen_3090](https://github.com/zopencommunity/doxygenport/releases/download/STABLE_doxygenport_3090/doxygen-heads.Release_1_13_2.20250209_171213.zos.pax.Z)|A documentation generator|
 | [groff](https://github.com/zopencommunity/groffport)|Blue|97.0%|[STABLE_groff_2996](https://github.com/zopencommunity/groffport/releases/download/STABLE_groffport_2996/groff-1.23.0.20250131_051659.zos.pax.Z)|A text formatting system|
 </div>
 
@@ -168,6 +168,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | [lazygit](https://github.com/zopencommunity/lazygitport)|Skipped|N/A|[STABLE_lazygit_2148](https://github.com/zopencommunity/lazygitport/releases/download/STABLE_lazygitport_2148/lazygit-master.20240221_041017.zos.pax.Z)|A Git client|
 | [ctags](https://github.com/zopencommunity/ctagsport)|Green|100.0%|[STABLE_ctags_3013](https://github.com/zopencommunity/ctagsport/releases/download/STABLE_ctagsport_3013/ctags-heads.v6.1.0.20250131_062242.zos.pax.Z)|A code indexing tool|
 | [neovim](https://github.com/zopencommunity/neovimport)|Green|100.0%|[STABLE_neovim_3083](https://github.com/zopencommunity/neovimport/releases/download/STABLE_neovimport_3083/neovim-heads.v0.10.4.20250206_134238.zos.pax.Z)|A text editor|
+| [hexcurse](https://github.com/zopencommunity/hexcurseport)|Green|100.0%|[STABLE_hexcurse_3091](https://github.com/zopencommunity/hexcurseport/releases/download/STABLE_hexcurseport_3091/hexcurse-ng-heads.v1.70.0.20250209_230459.zos.pax.Z)|Hexcurse is a ncurses-based console hexeditor written in C|
 | [dos2unix](https://github.com/zopencommunity/dos2unixport)|Blue|99.1%|[STABLE_dos2unix_3031](https://github.com/zopencommunity/dos2unixport/releases/download/STABLE_dos2unixport_3031/dos2unix-7.5.2.20250131_100352.zos.pax.Z)|A tool for converting DOS/Windows text files to Unix format|
 | [git-lfs](https://github.com/zopencommunity/git-lfsport)|Blue|94.1%|[STABLE_git-lfs_2858](https://github.com/zopencommunity/git-lfsport/releases/download/STABLE_git-lfsport_2858/git-lfs.20250124_120556.zos.pax.Z)|A Git extension for versioning large files|
 </div>
@@ -195,7 +196,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | [python](https://github.com/zopencommunity/pythonport)|Green|100.0%|[STABLE_python_2764](https://github.com/zopencommunity/pythonport/releases/download/STABLE_pythonport_2764/python-DEV.20241205_215241.zos.pax.Z)|A port of the Python programming language|
 | [java](https://github.com/zopencommunity/javaport)|Green|100.0%|[STABLE_java_2643](https://github.com/zopencommunity/javaport/releases/download/STABLE_javaport_2643/java-DEV.20241028_211549.zos.pax.Z)|The IBM implementation of the Java programming language|
 | [my_basic](https://github.com/zopencommunity/my_basicport)|Green|100.0%|[DEV_my_basic_3030](https://github.com/zopencommunity/my_basicport/releases/download/DEV_my_basicport_3030/my_basic-master.20250131_100320.zos.pax.Z)|A BASIC interpreter|
-| [check_python](https://github.com/zopencommunity/check_pythonport)|Green|100.0%|[STABLE_check_python_3032](https://github.com/zopencommunity/check_pythonport/releases/download/STABLE_check_pythonport_3032/check_python-DEV.20250131_100552.zos.pax.Z)|A script to check for the existence of Python|
+| [check_python](https://github.com/zopencommunity/check_pythonport)|Green|100.0%|[STABLE_check_python_3088](https://github.com/zopencommunity/check_pythonport/releases/download/STABLE_check_pythonport_3088/check_python-DEV.20250206_214926.zos.pax.Z)|A script to check for the existence of Python|
 | [check_java](https://github.com/zopencommunity/check_javaport)|Green|100.0%|[STABLE_check_java_3044](https://github.com/zopencommunity/check_javaport/releases/download/STABLE_check_javaport_3044/check_java-DEV.20250131_110841.zos.pax.Z)|A script to check for the existence of Java|
 </div>
 
@@ -205,7 +206,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 | Package | Status | Test Success Rate | Latest Release | Description |
 |---|---|---|---|---|
-| [zusage](https://github.com/zopencommunity/zusageport)|Skipped|N/A|[DEV_zusage_3049](https://github.com/zopencommunity/zusageport/releases/download/DEV_zusageport_3049/zusage-DEV.20250131_112556.zos.pax.Z)|Usage analytics library|
+| [zusage](https://github.com/zopencommunity/zusageport)|Skipped|N/A|[DEV_zusage_3089](https://github.com/zopencommunity/zusageport/releases/download/DEV_zusageport_3089/zusage-DEV.20250207_120409.zos.pax.Z)|Usage analytics library|
 | [expat](https://github.com/zopencommunity/expatport)|Green|100.0%|[STABLE_expat_2953](https://github.com/zopencommunity/expatport/releases/download/STABLE_expatport_2953/expat-2.5.0.20250130_225430.zos.pax.Z)|A library for parsing XML content|
 | [zoslib](https://github.com/zopencommunity/zoslibport)|Green|100.0%|[STABLE_zoslib_3085](https://github.com/zopencommunity/zoslibport/releases/download/STABLE_zoslibport_3085/zoslib-zopen2.20250206_160708.zos.pax.Z)|A library used by z/OS Open Tools|
 | [libgdbm](https://github.com/zopencommunity/libgdbmport)|Green|100.0%|[STABLE_libgdbm_3066](https://github.com/zopencommunity/libgdbmport/releases/download/STABLE_libgdbmport_3066/gdbm-1.24.20250205_031526.zos.pax.Z)|A library for managing database functions|
@@ -296,9 +297,9 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | Package | Status | Test Success Rate | Latest Release | Description |
 |---|---|---|---|---|
 | [llamacpp](https://github.com/zopencommunity/llamacppport)|Skipped|N/A|[STABLE_llamacpp_2013](https://github.com/zopencommunity/llamacppport/releases/download/STABLE_llamacppport_2013/llamacpp-master.20240124_170742.zos.pax.Z)|A C++ library for writing high-performance network applications|
+| [zlib](https://github.com/zopencommunity/zlibport)|Green|100.0%|[STABLE_zlib_3071](https://github.com/zopencommunity/zlibport/releases/download/STABLE_zlibport_3071/zlib-heads.v1.3.1.20250205_034023.zos.pax.Z)|A data compression library|
 | [less](https://github.com/zopencommunity/lessport)|Green|100.0%|[STABLE_less_2954](https://github.com/zopencommunity/lessport/releases/download/STABLE_lessport_2954/less-heads.v668.20250130_225718.zos.pax.Z)|A text pager|
 | [gzip](https://github.com/zopencommunity/gzipport)|Green|100.0%|[STABLE_gzip_3082](https://github.com/zopencommunity/gzipport/releases/download/STABLE_gzipport_3082/gzip-1.13.20250205_093947.zos.pax.Z)|Library for handling gzip compressed files|
-| [zlib](https://github.com/zopencommunity/zlibport)|Green|100.0%|[STABLE_zlib_3071](https://github.com/zopencommunity/zlibport/releases/download/STABLE_zlibport_3071/zlib-heads.v1.3.1.20250205_034023.zos.pax.Z)|A data compression library|
 | [ncurses](https://github.com/zopencommunity/ncursesport)|Green|100.0%|[STABLE_ncurses_2956](https://github.com/zopencommunity/ncursesport/releases/download/STABLE_ncursesport_2956/ncurses-6.5.20250130_230916.zos.pax.Z)|Library for ncurses, a terminal screen handling library|
 | [help2man](https://github.com/zopencommunity/help2manport)|Green|100.0%|[STABLE_help2man_2875](https://github.com/zopencommunity/help2manport/releases/download/STABLE_help2manport_2875/help2man-1.49.3.20250129_141844.zos.pax.Z)|A tool for converting manual pages to other formats|
 | [xxhash](https://github.com/zopencommunity/xxhashport)|Green|100.0%|[STABLE_xxhash_1993](https://github.com/zopencommunity/xxhashport/releases/download/STABLE_xxhashport_1993/xxHash-0.8.2.20240123_100914.zos.pax.Z)|A fast hash function library|
@@ -381,4 +382,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-02-06T16:55:10.499079
+Last updated:  2025-02-09T18:21:56.402394

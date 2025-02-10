@@ -80,6 +80,7 @@
 - 2024-06-08: [Update findutils-version to 4.10.0 from 4.9.0](https://github.com/zopencommunity/findutilsport/pull/19) ❌
 
 ### fqport
+- 2025-02-09: [Update fq-version to 0.14.0 from 0.10.0](https://github.com/zopencommunity/fqport/pull/8) ✅
 - 2024-10-02: [Update fq-version to 0.13.0 from 0.10.0](https://github.com/zopencommunity/fqport/pull/7) ✅
 - 2024-07-15: [Update fq-version to 0.12.0 from 0.10.0](https://github.com/zopencommunity/fqport/pull/5) ❌
 - 2024-04-14: [Update fq-version to 0.11.0 from 0.10.0](https://github.com/zopencommunity/fqport/pull/4) ❌
@@ -121,10 +122,6 @@
 
 ### gitlab-runnerport
 - 2025-01-24: [Update gitlab-runner-version to 17.8.3 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/33) ❌
-- 2025-01-23: [Update gitlab-runner-version to 17.8.2 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/32) ❌
-- 2025-01-18: [Update gitlab-runner-version to 17.8.1 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/31) ❌
-- 2025-01-16: [Update gitlab-runner-version to 17.8.0 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/30) ❌
-- 2024-12-20: [Update gitlab-runner-version to 17.7.0 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/29) ❌
 
 ### gnulibport
 - 2024-10-22: [Update gnulib-version to 1.0 from 20030404](https://github.com/zopencommunity/gnulibport/pull/10) ✅
@@ -461,6 +458,7 @@
 - ✅ gzipport - [![Bump Status](https://github.com/zopencommunity/gzipport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/gzipport/actions/workflows/bump.yml)
 - ✅ helloport - [![Bump Status](https://github.com/zopencommunity/helloport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/helloport/actions/workflows/bump.yml)
 - ✅ help2manport - [![Bump Status](https://github.com/zopencommunity/help2manport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/help2manport/actions/workflows/bump.yml)
+- ✅ hexcurseport - [![Bump Status](https://github.com/zopencommunity/hexcurseport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/hexcurseport/actions/workflows/bump.yml)
 - ✅ htopport - [![Bump Status](https://github.com/zopencommunity/htopport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/htopport/actions/workflows/bump.yml)
 - ✅ hugoport - [![Bump Status](https://github.com/zopencommunity/hugoport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/hugoport/actions/workflows/bump.yml)
 - ❌ iperfport - Workflow not configured
@@ -606,10 +604,10 @@
 
 </details>
 
-**Summary:** 178 active | 45 missing
+**Summary:** 179 active | 45 missing
 
 ---
 
 
-> Last updated: 2025-02-09 06:05:23 EST
+> Last updated: 2025-02-10 06:05:44 EST
 
