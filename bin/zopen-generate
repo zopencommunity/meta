@@ -180,7 +180,7 @@ export ZOPEN_DEV_DEPS=\"${devDeps}\"  # Specify the dev build dependencies
 ## See tool_categories.txt for valid options
 export ZOPEN_CATEGORIES=\"${categories}\"
 
-## Runtime z/OS Open Tool dependencies to be installed alongside the tool.
+## Runtime zopen tool dependencies to be installed alongside the tool.
 export ZOPEN_RUNTIME_DEPS=\"${runtimedeps}\"
 
 ## Runtime system prerequisites; supply the name of the system pre-requisties.
