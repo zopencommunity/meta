@@ -184,7 +184,7 @@ export ZOPEN_CATEGORIES=\"${categories}\"
 export ZOPEN_RUNTIME_DEPS=\"${runtimedeps}\"
 
 ## Runtime system prerequisites; supply the name of the system pre-requisties.
-## Current available prerequisites: zos24 zos25 zos31 procfs
+## Current available prerequisites: zos24 zos25 zos31 procfs (see https://github.com/zopencommunity/meta/blob/main/include/prereq.sh for a current list)
 export ZOPEN_SYSTEM_PREREQ=\"\"
 
 
