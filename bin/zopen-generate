@@ -320,7 +320,7 @@ zopen_get_version()
 ###
 
 ## Don't add zoslib as a dependency; most ports should keep this unset
-#export ZOPEN_DONT_ADD_ZOSLIB_DEP=\"\"
+#export ZOPEN_DONT_ADD_ZOSLIB_DEP=1
 
 
 ###
