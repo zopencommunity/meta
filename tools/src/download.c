@@ -1259,7 +1259,7 @@ int toolkitSlistOperation( HWTH_RETURNCODE_TYPE    *rcPtr,
 		 rxtrace( msgBuf );
 		 *buffListRef = NULL;
 		 return -1;
-	 } /* endif unexpected calloc() faliure */
+	 } /* endif unexpected calloc() failure */
 
 	 /**************************************************************
 	  * Do repetitive malloc() calls to obtain corresponding buffers
