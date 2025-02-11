@@ -244,7 +244,7 @@
 - 2024-02-15: [Update osv-scanner-version to 1.6.2 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/1) ❌
 
 ### patchport
-- 2023-11-05: [Update patch-version to 2.7.6 from 2.7](https://github.com/zopencommunity/patchport/pull/3) ❌
+- 2023-11-05: [Update patch-version to 2.7.6 from 2.7](https://github.com/zopencommunity/patchport/pull/3) ❓
 
 ### perlport
 - 2025-01-21: [Update perl-version to 5.41.8 from 5.41.7](https://github.com/zopencommunity/perlport/pull/105) ❌
@@ -450,6 +450,7 @@
 - ❌ godsectport - Workflow not configured
 - ✅ gperfport - [![Bump Status](https://github.com/zopencommunity/gperfport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/gperfport/actions/workflows/bump.yml)
 - ✅ gpgport - [![Bump Status](https://github.com/zopencommunity/gpgport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/gpgport/actions/workflows/bump.yml)
+- ❌ gradleport - Workflow not configured
 - ✅ grafanaport - [![Bump Status](https://github.com/zopencommunity/grafanaport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/grafanaport/actions/workflows/bump.yml)
 - ✅ grepport - [![Bump Status](https://github.com/zopencommunity/grepport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/grepport/actions/workflows/bump.yml)
 - ✅ groffport - [![Bump Status](https://github.com/zopencommunity/groffport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/groffport/actions/workflows/bump.yml)
@@ -604,10 +605,10 @@
 
 </details>
 
-**Summary:** 179 active | 45 missing
+**Summary:** 179 active | 46 missing
 
 ---
 
 
-> Last updated: 2025-02-10 06:05:44 EST
+> Last updated: 2025-02-11 06:05:49 EST
 

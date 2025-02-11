@@ -168,7 +168,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | [lazygit](https://github.com/zopencommunity/lazygitport)|Skipped|N/A|[STABLE_lazygit_2148](https://github.com/zopencommunity/lazygitport/releases/download/STABLE_lazygitport_2148/lazygit-master.20240221_041017.zos.pax.Z)|A Git client|
 | [ctags](https://github.com/zopencommunity/ctagsport)|Green|100.0%|[STABLE_ctags_3013](https://github.com/zopencommunity/ctagsport/releases/download/STABLE_ctagsport_3013/ctags-heads.v6.1.0.20250131_062242.zos.pax.Z)|A code indexing tool|
 | [neovim](https://github.com/zopencommunity/neovimport)|Green|100.0%|[STABLE_neovim_3083](https://github.com/zopencommunity/neovimport/releases/download/STABLE_neovimport_3083/neovim-heads.v0.10.4.20250206_134238.zos.pax.Z)|A text editor|
-| [hexcurse](https://github.com/zopencommunity/hexcurseport)|Green|100.0%|[STABLE_hexcurse_3091](https://github.com/zopencommunity/hexcurseport/releases/download/STABLE_hexcurseport_3091/hexcurse-ng-heads.v1.70.0.20250209_230459.zos.pax.Z)|Hexcurse is a ncurses-based console hexeditor written in C|
+| [hexcurse](https://github.com/zopencommunity/hexcurseport)|Green|100.0%|[STABLE_hexcurse_3092](https://github.com/zopencommunity/hexcurseport/releases/download/STABLE_hexcurseport_3092/hexcurse-ng-heads.v1.70.0.20250210_000458.zos.pax.Z)|Hexcurse is a ncurses-based console hexeditor written in C|
 | [dos2unix](https://github.com/zopencommunity/dos2unixport)|Blue|99.1%|[STABLE_dos2unix_3031](https://github.com/zopencommunity/dos2unixport/releases/download/STABLE_dos2unixport_3031/dos2unix-7.5.2.20250131_100352.zos.pax.Z)|A tool for converting DOS/Windows text files to Unix format|
 | [git-lfs](https://github.com/zopencommunity/git-lfsport)|Blue|94.1%|[STABLE_git-lfs_2858](https://github.com/zopencommunity/git-lfsport/releases/download/STABLE_git-lfsport_2858/git-lfs.20250124_120556.zos.pax.Z)|A Git extension for versioning large files|
 </div>
@@ -206,7 +206,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 | Package | Status | Test Success Rate | Latest Release | Description |
 |---|---|---|---|---|
-| [zusage](https://github.com/zopencommunity/zusageport)|Skipped|N/A|[DEV_zusage_3089](https://github.com/zopencommunity/zusageport/releases/download/DEV_zusageport_3089/zusage-DEV.20250207_120409.zos.pax.Z)|Usage analytics library|
+| [zusage](https://github.com/zopencommunity/zusageport)|Skipped|N/A|[DEV_zusage_3093](https://github.com/zopencommunity/zusageport/releases/download/DEV_zusageport_3093/zusage-DEV.20250210_164009.zos.pax.Z)|Usage analytics library|
 | [expat](https://github.com/zopencommunity/expatport)|Green|100.0%|[STABLE_expat_2953](https://github.com/zopencommunity/expatport/releases/download/STABLE_expatport_2953/expat-2.5.0.20250130_225430.zos.pax.Z)|A library for parsing XML content|
 | [zoslib](https://github.com/zopencommunity/zoslibport)|Green|100.0%|[STABLE_zoslib_3085](https://github.com/zopencommunity/zoslibport/releases/download/STABLE_zoslibport_3085/zoslib-zopen2.20250206_160708.zos.pax.Z)|A library used by z/OS Open Tools|
 | [libgdbm](https://github.com/zopencommunity/libgdbmport)|Green|100.0%|[STABLE_libgdbm_3066](https://github.com/zopencommunity/libgdbmport/releases/download/STABLE_libgdbmport_3066/gdbm-1.24.20250205_031526.zos.pax.Z)|A library for managing database functions|
@@ -297,10 +297,10 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | Package | Status | Test Success Rate | Latest Release | Description |
 |---|---|---|---|---|
 | [llamacpp](https://github.com/zopencommunity/llamacppport)|Skipped|N/A|[STABLE_llamacpp_2013](https://github.com/zopencommunity/llamacppport/releases/download/STABLE_llamacppport_2013/llamacpp-master.20240124_170742.zos.pax.Z)|A C++ library for writing high-performance network applications|
+| [ncurses](https://github.com/zopencommunity/ncursesport)|Green|100.0%|[STABLE_ncurses_2956](https://github.com/zopencommunity/ncursesport/releases/download/STABLE_ncursesport_2956/ncurses-6.5.20250130_230916.zos.pax.Z)|Library for ncurses, a terminal screen handling library|
+| [gzip](https://github.com/zopencommunity/gzipport)|Green|100.0%|[STABLE_gzip_3082](https://github.com/zopencommunity/gzipport/releases/download/STABLE_gzipport_3082/gzip-1.13.20250205_093947.zos.pax.Z)|Library for handling gzip compressed files|
 | [zlib](https://github.com/zopencommunity/zlibport)|Green|100.0%|[STABLE_zlib_3071](https://github.com/zopencommunity/zlibport/releases/download/STABLE_zlibport_3071/zlib-heads.v1.3.1.20250205_034023.zos.pax.Z)|A data compression library|
 | [less](https://github.com/zopencommunity/lessport)|Green|100.0%|[STABLE_less_2954](https://github.com/zopencommunity/lessport/releases/download/STABLE_lessport_2954/less-heads.v668.20250130_225718.zos.pax.Z)|A text pager|
-| [gzip](https://github.com/zopencommunity/gzipport)|Green|100.0%|[STABLE_gzip_3082](https://github.com/zopencommunity/gzipport/releases/download/STABLE_gzipport_3082/gzip-1.13.20250205_093947.zos.pax.Z)|Library for handling gzip compressed files|
-| [ncurses](https://github.com/zopencommunity/ncursesport)|Green|100.0%|[STABLE_ncurses_2956](https://github.com/zopencommunity/ncursesport/releases/download/STABLE_ncursesport_2956/ncurses-6.5.20250130_230916.zos.pax.Z)|Library for ncurses, a terminal screen handling library|
 | [help2man](https://github.com/zopencommunity/help2manport)|Green|100.0%|[STABLE_help2man_2875](https://github.com/zopencommunity/help2manport/releases/download/STABLE_help2manport_2875/help2man-1.49.3.20250129_141844.zos.pax.Z)|A tool for converting manual pages to other formats|
 | [xxhash](https://github.com/zopencommunity/xxhashport)|Green|100.0%|[STABLE_xxhash_1993](https://github.com/zopencommunity/xxhashport/releases/download/STABLE_xxhashport_1993/xxHash-0.8.2.20240123_100914.zos.pax.Z)|A fast hash function library|
 | [zstd](https://github.com/zopencommunity/zstdport)|Green|100.0%|[STABLE_zstd_2041](https://github.com/zopencommunity/zstdport/releases/download/STABLE_zstdport_2041/zstd-1.5.5.20240126_215521.zos.pax.Z)|A compression algorithm|
@@ -382,4 +382,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-02-09T18:21:56.402394
+Last updated:  2025-02-10T11:56:01.598463
