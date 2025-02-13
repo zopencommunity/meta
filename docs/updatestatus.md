@@ -10,7 +10,7 @@
 - 2024-12-11: [Update bash-completion-version to 20060301 from V.R.M](https://github.com/zopencommunity/bash-completionport/pull/1) ❌
 
 ### buildkiteport
-- 2025-01-28: [Update buildkite-version to 3.91.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/47) ❌
+- 2025-02-12: [Update buildkite-version to 3.92.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/48) ❌
 
 ### byaccport
 - 2025-01-07: [Update byacc-version to 20241231 from 20240109](https://github.com/zopencommunity/byaccport/pull/6) ✅
@@ -101,7 +101,7 @@
 - 2024-12-31: [Update gettext-version to 0.23.1 from 0.21](https://github.com/zopencommunity/gettextport/pull/31) ❌
 - 2024-12-01: [Update gettext-version to 0.23 from 0.21](https://github.com/zopencommunity/gettextport/pull/30) ❌
 - 2024-03-23: [Update gettext-version to 0.22.5 from 0.21](https://github.com/zopencommunity/gettextport/pull/26) ❌
-- 2023-11-20: [Update gettext-version to 0.22.4 from 0.21](https://github.com/zopencommunity/gettextport/pull/24) ❌
+- 2023-11-20: [Update gettext-version to 0.22.4 from 0.21](https://github.com/zopencommunity/gettextport/pull/24) ❓
 - 2023-11-16: [Update gettext-version to 0.22.3 from 0.21](https://github.com/zopencommunity/gettextport/pull/23) ❓
 
 ### ginport
@@ -111,6 +111,7 @@
 - 2024-12-06: [Update git-extras-version to 7.3.0 from V.R.M](https://github.com/zopencommunity/git-extrasport/pull/1) ❌
 
 ### githubcliport
+- 2025-02-12: [Update ghcli-version to 2.67.0 from 2.66.1](https://github.com/zopencommunity/githubcliport/pull/46) ✅
 - 2024-03-21: [Update ghcli-version to 2.46.0 from 2.41.0](https://github.com/zopencommunity/githubcliport/pull/15) ✅
 - 2024-03-05: [Update ghcli-version to 2.45.0 from 2.41.0](https://github.com/zopencommunity/githubcliport/pull/14) ✅
 - 2024-02-17: [Update ghcli-version to 2.44.1 from 2.41.0](https://github.com/zopencommunity/githubcliport/pull/13) ✅
@@ -200,7 +201,6 @@
 - 2024-06-27: [Update murex-version to 6.1.8300 from 6.0.1000](https://github.com/zopencommunity/murexport/pull/1) ❌
 
 ### nanoport
-- 2024-12-21: [Update nano-version to 8.3 from 8.1](https://github.com/zopencommunity/nanoport/pull/17) ❌
 - 2024-09-05: [Update nano-version to 8.2 from 8.1](https://github.com/zopencommunity/nanoport/pull/14) ✅
 
 ### natsport
@@ -225,6 +225,9 @@
 
 ### opensshport
 - 2024-10-02: [Update openssh-version to 9.9p1 from 9.8p1](https://github.com/zopencommunity/opensshport/pull/15) ❌
+
+### opensslport
+- 2025-02-12: [Update openssl-3-version to 3.4.1 from 3.4.0](https://github.com/zopencommunity/opensslport/pull/48) ✅
 
 ### osv-scannerport
 - 2024-12-19: [Update osv-scanner-version to 1.9.2 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/17) ❌
@@ -263,7 +266,7 @@
 - 2024-04-11: [Update php-version to 8.3.6 from 8.2.13](https://github.com/zopencommunity/phpport/pull/18) ❌
 - 2024-03-15: [Update php-version to 8.3.4 from 8.2.13](https://github.com/zopencommunity/phpport/pull/17) ❌
 - 2024-02-16: [Update php-version to 8.3.3 from 8.2.13](https://github.com/zopencommunity/phpport/pull/16) ❌
-- 2023-11-24: [Update php-version to 8.3.0 from 8.2.13](https://github.com/zopencommunity/phpport/pull/13) ❌
+- 2023-11-24: [Update php-version to 8.3.0 from 8.2.13](https://github.com/zopencommunity/phpport/pull/13) ❓
 - 2024-01-18: [Update php-version to 8.3.2 from 8.2.13](https://github.com/zopencommunity/phpport/pull/15) ❌
 - 2023-12-22: [Update php-version to 8.3.1 from 8.2.13](https://github.com/zopencommunity/phpport/pull/14) ❌
 
@@ -289,11 +292,6 @@
 ### stowport
 - 2024-09-09: [Update stow-version to 2.4.1 from V.R.M](https://github.com/zopencommunity/stowport/pull/2) ✅
 - 2024-06-01: [Update stow-version to 2.4.0 from V.R.M](https://github.com/zopencommunity/stowport/pull/1) ✅
-
-### sudoport
-- 2024-11-26: [Update sudo-version to 1.9.16p2 from 1.9.15p5](https://github.com/zopencommunity/sudoport/pull/29) ❌
-- 2024-11-13: [Update sudo-version to 1.9.16p1 from 1.9.15p5](https://github.com/zopencommunity/sudoport/pull/28) ❌
-- 2024-09-02: [Update sudo-version to 1.9.16 from 1.9.15p5](https://github.com/zopencommunity/sudoport/pull/24) ❌
 
 ### tclport
 - 2024-12-20: [Update tcl-version to 9.0.1 from 8.6.13](https://github.com/zopencommunity/tclport/pull/16) ❌
@@ -343,6 +341,7 @@
 - 2024-05-06: [Update util-linux-version to 2.40.1 from 2.39.3](https://github.com/zopencommunity/util-linuxport/pull/5) ❌
 
 ### victoriametricsport
+- 2025-02-11: [Update victoriametrics-version to 1.111.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/20) ❌
 - 2025-01-27: [Update victoriametrics-version to 1.110.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/19) ❌
 - 2025-01-17: [Update victoriametrics-version to 1.109.1 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/18) ❌
 - 2025-01-14: [Update victoriametrics-version to 1.109.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/17) ❌
@@ -357,6 +356,9 @@
 - 2024-08-01: [Update victoriametrics-version to 1.102.1 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/6) ❌
 - 2024-07-18: [Update victoriametrics-version to 1.102.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/5) ❌
 
+### vimport
+- 2025-02-11: [Update vim-version to 9.1.1100 from 9.1.1016](https://github.com/zopencommunity/vimport/pull/84) ✅
+
 ### xmltoport
 - 2024-10-10: [Update xmlto-version to 0.0.29 from 0.0.28](https://github.com/zopencommunity/xmltoport/pull/3) ❌
 
@@ -364,6 +366,7 @@
 - 2024-12-30: [Update xxhash-version to 0.8.3 from 0.8.2](https://github.com/zopencommunity/xxhashport/pull/18) ❌
 
 ### zlib-ngport
+- 2025-02-11: [Update zlib-ng-version to 2.2.4 from 2.1.6](https://github.com/zopencommunity/zlib-ngport/pull/7) ❌
 - 2025-01-07: [Update zlib-ng-version to 2.2.3 from 2.1.6](https://github.com/zopencommunity/zlib-ngport/pull/6) ❌
 - 2024-09-17: [Update zlib-ng-version to 2.2.2 from 2.1.6](https://github.com/zopencommunity/zlib-ngport/pull/4) ❌
 - 2024-07-02: [Update zlib-ng-version to 2.2.1 from 2.1.6](https://github.com/zopencommunity/zlib-ngport/pull/3) ❌
@@ -610,5 +613,5 @@
 ---
 
 
-> Last updated: 2025-02-11 06:05:49 EST
+> Last updated: 2025-02-13 06:05:58 EST
 
