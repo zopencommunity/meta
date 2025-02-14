@@ -1734,6 +1734,30 @@ a2e()
   fi
 }
 
+startGPGAgent() {
+  printInfo "- Starting gpg-agent..."
+
+  SOCKET_PATH=$(gpgconf --list-dirs agent-socket)
+  if [ -r "$SOCKET_PATH" ]; then
+    printVerbose "gpg-agent is already running (socket found at $SOCKET_PATH)."
+    return 0
+  fi
+
+  if eval "$(gpg-agent --daemon --disable-scdaemon)" >/dev/null 2>&1; then
+    if [ -r "$SOCKET_PATH" ]; then
+      printVerbose "gpg-agent started successfully (socket created at $SOCKET_PATH)."
+    else
+      printWarning "gpg-agent started, but socket was not created at $SOCKET_PATH. Please verify your GPG installation."
+    fi
+  else
+    if [ -r "$SOCKET_PATH" ]; then
+      printWarning "gpg-agent started successfully (socket created at $SOCKET_PATH), but gpg-agent returned a non-zero return code."
+    else
+      printError "Failed to start gpg-agent. Reinstall or upgrade GPG using \"zopen install --reinstall gpg -y\" or \"zopen upgrade gpg -y\"."
+    fi
+  fi
+}
+
 promptYesNoAlways() {
   message="$1"
   skip=$2
@@ -1762,7 +1786,7 @@ getVersionedMetadata()
   requestedVersion="${requestedMajor}\\\.${requestedMinor}\\\.${requestedPatch}\\\.${requestedSubrelease}"
   printDebug "Finding URL for latest release matching version prefix: requestedVersion: ${requestedVersion}"
   releasemetadata=$(jq --arg repo "${repo}" --arg requestedVersion "${requestedVersion}" \
-      '.release_data.[$repo] | map(select(.assets[].version | test($requestedVersion)))[0]' "${JSON_CACHE}")
+      '.release_data[$repo] | map(select(.assets[].version | test($requestedVersion)))[0]' "${JSON_CACHE}")
 }
 
 getTaggedMetadata()
@@ -1770,7 +1794,7 @@ getTaggedMetadata()
   printDebug "Explicit tagged version '${tagged}' specified. Checking for match"
   releasemetadata=$(/bin/printf "%s" "${releases}" | jq -e -r '.[] | select(.tag_name == "'"${tagged}"'")')
   releasemetadata=$(jq --arg repo "${repo}" --arg requestedVersion "${requestedVersion}" \
-    '.release_data.[$repo][] | select(.tag_name == $tag_name)' "${JSON_CACHE}")
+    '.release_data[$repo][] | select(.tag_name == $tag_name)' "${JSON_CACHE}")
   printDebug "Use quick check for asset to check for existence of metadata for specific messages"
   asset=$(/bin/printf "%s" "${releasemetadata}" | jq -e -r '.assets[0]')
   if [ $? -ne 0 ]; then
@@ -1790,10 +1814,10 @@ getSelectMetadata()
   # Explicitly allow the user to select a release to install; useful if there are broken installs
   # as a known good release can be found, selected and pinned!
   printDebug "List individual releases and allow selection"
-  i=$(jq --arg repo "${repo}" '.release_data.[$repo] | length - 1' "${JSON_CACHE}")
+  i=$(jq --arg repo "${repo}" '.release_data[$repo] | length - 1' "${JSON_CACHE}")
   printInfo "Versions available for install:"
   if ! jq --raw-output --arg repo "${repo}"  \
-      '.release_data.[$repo] | to_entries | map("\(.key): \(.value.tag_name) - \(.value.assets[0].name) [\( ( .value.assets[0].expanded_size|tonumber)*1000 / (1024 * 1024) | ceil | . / 1000)Mb]")[]' "${JSON_CACHE}"; then
+      '.release_data[$repo] | to_entries | map("\(.key): \(.value.tag_name) - \(.value.assets[0].name) [\( ( .value.assets[0].expanded_size|tonumber)*1000 / (1024 * 1024) | ceil | . / 1000)Mb]")[]' "${JSON_CACHE}"; then
     printError "Unable to enumerate asset version strings"
   fi
   printDebug "Getting user selection"
@@ -1809,7 +1833,7 @@ getSelectMetadata()
   done
   printVerbose "Selecting item ${selection} from array"
   releasemetadata=$(jq --arg repo "${repo}" --arg selection "${selection}" \
-      '.release_data.[$repo][$selection | tonumber]' "${JSON_CACHE}")
+      '.release_data[$repo][$selection | tonumber]' "${JSON_CACHE}")
 }
 
 getReleaseLineMetadata()
@@ -1821,7 +1845,7 @@ getReleaseLineMetadata()
   fi
   printDebug "Finding latest asset on the release line"
   releasemetadata=$(jq --arg repo "${repo}" --arg releaseLine "${validatedReleaseLine}" \
-      '.release_data.[$repo] | map(select(.tag_name | startswith($releaseLine)))[0]' "${JSON_CACHE}")
+      '.release_data[$repo] | map(select(.tag_name | startswith($releaseLine)))[0]' "${JSON_CACHE}")
   printDebug "Use quick check for asset to check for existence of metadata"
   asset="$(/bin/printf "%s" "${releasemetadata}" | jq -e -r '.assets[0]')"
   if [ $? -ne 0 ]; then
@@ -1868,7 +1892,7 @@ calculateReleaseLineMetadata()
     # then that specific releaseline will be used
   printDebug "Finding any releases tagged with ${validatedReleaseLine} and getting the first (newest/latest)"
   releasemetadata=$(jq --arg repo "${repo}" --arg releaseLine "${validatedReleaseLine}" \
-      '.release_data.[$repo] | map(select(.tag_name | startswith($releaseLine)))[0]' "${JSON_CACHE}")
+      '.release_data[$repo] | map(select(.tag_name | startswith($releaseLine)))[0]' "${JSON_CACHE}")
 
   printDebug "Use quick check for asset to check for existence of metadata"
   asset="$(/bin/printf "%s" "${releasemetadata}" | jq -e -r '.assets[0]')"
@@ -1882,7 +1906,7 @@ calculateReleaseLineMetadata()
     printDebug "No releases on releaseline '${validatedReleaseLine}'; checking alternative releaseline"
     alt=$(echo "${validatedReleaseLine}" | awk ' /DEV/ { print "STABLE" } /STABLE/ { print "DEV" }')
     releasemetadata=$(jq --arg repo "${repo}" --arg releaseLine "${alt}" \
-        '.release_data.[$repo] | map(select(.tag_name | startswith($releaseLine)))[0]' "${JSON_CACHE}")
+        '.release_data[$repo] | map(select(.tag_name | startswith($releaseLine)))[0]' "${JSON_CACHE}")
     printDebug "Use quick check for asset to check for existence of metadata"
     asset="$(/bin/printf "%s" "${releasemetadata}" | jq -e -r '.assets[0]')"
     [ "${asset}" = "null" ] && asset=""  # jq uses null, translate to sh's empty
@@ -1891,7 +1915,7 @@ calculateReleaseLineMetadata()
       if [ "DEV" = "${validatedReleaseLine}" ]; then
         # The system will be configured to use DEV packages where available but if none, use latest
         printInfo "No specific DEV releaseline package, using latest available release"
-        releasemetadata=$(jq --arg repo "${repo}" '.release_data.[$repo][0]' "${JSON_CACHE}")
+        releasemetadata=$(jq --arg repo "${repo}" '.release_data[$repo][0]' "${JSON_CACHE}")
       else
         printVerbose "The system is configured to only use STABLE releaseline packages but there are none"
         printInfo "No release available on the '${validatedReleaseLine}' releaseline."
@@ -1899,7 +1923,7 @@ calculateReleaseLineMetadata()
     else
       # Case 1 - old package that has no release tagging yet (no DEV or STABLE), just install latest
       printVerbose "Installing latest release"
-      releasemetadata=$(jq --arg repo "${repo}" '.release_data.[$repo][0]'  "${JSON_CACHE}")
+      releasemetadata=$(jq --arg repo "${repo}" '.release_data[$repo][0]'  "${JSON_CACHE}")
     fi
   fi
 }
@@ -2557,6 +2581,10 @@ updatePackageDB()
     fi
     mv "${pdb}.working" "${pdb}"
   done
+  if [ ! -e "${pdb}" ]; then
+    printVerbose "No currently installed packages [new install?]. Creating empty array[]"
+    printf "[\n]\n" > "${pdb}"
+  fi
 }
 
 stripControlCharacters(){
@@ -2667,27 +2695,6 @@ jqfunctions()
   'def r(dp):.*pow(10;dp)|round/pow(10;dp)'
 }
 
-startGPGAgent()
-{
+. ${INCDIR}/analytics.sh
 
-  # shellcheck disable=SC2009 # Not on z/OS currently
-  if ps -ef | grep [g]pg-agent; then
-    printInfo "- Re-using gpg-agent"
-    return
-  fi
-  printInfo "- Starting gpg-agent"
-  if ! gpg-agent --daemon --disable-scdaemon; then
-    printError "Error running gpg-agent command. Review error messages and retry command."
-  fi
-  # Wait a moment to ensure the gpg-agent has time to start
-  sleep 2
-  # Check to confirm if gpg-agent started successfully
-  # shellcheck disable=SC2009 # pgrep not on z/OS currently!
-  if ! ps -ef | grep -v grep | grep "gpg-agent" > /dev/null; then
-    printError "Failed to start the gpg-agent. Reinstall or upgrade GPG using \"zopen install --reinstall gpg -y\" or \"zopen upgrade gpg -y\" command."
-  fi
-}
-
-# shellcheck disable=SC1091
-. "${INCDIR}/analytics.sh"
 zopenInitialize
