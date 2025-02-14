@@ -95,7 +95,7 @@ Examples:
           interactively bootstrap a zopen environment that
           will use Development Releaseline packages
 
-  zopen --yes --append-to-profile --fs-layout fhs /zopen
+  zopen init --yes --append-to-profile --fs-layout fhs /zopen
           non-interactively create a zopen environment at
           location '/zopen' on disk, with packages installed
           to '/zopen/opt'. The user's .profile will be
