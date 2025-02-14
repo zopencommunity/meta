@@ -1,6 +1,7 @@
 #!/bin/sh
 #
 # Initialize zopen
+# shellcheck disable=SC2034
 ZOPEN_DONT_PROCESS_CONFIG=1
 # Generates a zopen compatible project
 #
@@ -10,13 +11,14 @@ ZOPEN_DONT_PROCESS_CONFIG=1
 #
 setupMyself()
 {
-  ME=$(basename $0)
+  ME=$(basename "$0")
   MYDIR="$(cd "$(dirname "$0")" > /dev/null 2>&1 && pwd -P)"
   INCDIR="${MYDIR}/../include"
   if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
     echo "Internal Error. Unable to find common.sh file to source." >&2
     exit 8
   fi
+  # shellcheck disable=SC1091
   . "${INCDIR}/common.sh"
 }
 setupMyself
@@ -28,7 +30,7 @@ buildLicenseLookup()
     return 4
   fi
 
-  validLicenseNames="$(cat ${licensesCSV} | tail +1 | cut -f1 -d',' | xargs)"
+  validLicenseNames="$(tail +1 "${licensesCSV}" | cut -f1 -d',' | xargs)"
 }
 
 printSyntax()
@@ -38,11 +40,12 @@ printSyntax()
 }
 
 if [ $# -eq 1 ]; then
+  # shellcheck disable=SC2268
   if [ "x$1" = "x--help" ]; then
     printSyntax
     exit 0
   elif [ "x$1" = "x--version" ]; then
-    zopen-version $ME
+    zopen-version "$ME"
     exit 0
   else
     echo "Unrecognized option $1. Processing terminated" >&2
@@ -72,27 +75,19 @@ done
 echo "Provided a description of the project:"
 description=$(getInput)
 
-ZOPEN_VALID_CATEGORIES="$(cat ${MYDIR}/../data/tool_categories.txt)"
-valid=false
-while ! ${valid}; do
-  printHeader "Valid categories: ${ZOPEN_VALID_CATEGORIES}"
-  printHeader "What categories does the project fit under? (delimit with a space):"
+ZOPEN_VALID_CATEGORIES="$(cat "${MYDIR}"/../data/tool_categories.txt)"
+
+# Loop until the user enters a valid value
+while true; do
+  printHeader "Which of the following categories does the project fit under? (delimit with a space):"
+  echo "${ZOPEN_VALID_CATEGORIES}" | fold -w 80 -s
   categories=$(getInput)
-  categories=$(printf "%s" "${categories}" | tr '[:upper:]' '[:lower:]')
-  error=false
-  if [ -z ${categories} ]; then
-    printError "No category specified"
-    exit 8
-  fi
-  for category in $(echo ${categories} | tr ' ' '\n' | sort -u); do
-    if ! echo "${ZOPEN_VALID_CATEGORIES}" | tr ' ' '\n' | grep -q "^${category}$"; then
-      printWarning "Invalid category specified: ${category}"
-      error=true
-    fi
+  # Check if input is in valid_list
+  for category in ${categories}; do
+    # Check if the word is in the valid list using grep
+    echo "${ZOPEN_VALID_CATEGORIES}" | grep -qF "${category}" && break 2
   done
-  if ! $error; then
-    valid=true
-  fi
+  echo "Invalid category specified: ${category}"
 done
 
 valid=false
@@ -102,12 +97,12 @@ while ! ${valid}; do
   if ! echo " ${validLicenseNames}" | grep -q " ${license_name}"; then
     printWarning "License is not valid, please enter a license from one of these names: ${validLicenseNames})"
   else
-    licenseName="$(cat ${licensesCSV} | grep "\"${license_name}\"" | cut -f2 -d',')"
-    licenseUrl="$(cat ${licensesCSV} | grep "\"${license_name}\"" | cut -f4 -d',')"
+    licenseName="$(grep "\"${license_name}\"" "${licensesCSV}" | cut -f2 -d',')"
+    licenseUrl="$(grep "\"${license_name}\"" "${licensesCSV}" | cut -f4 -d',')"
     valid=true
   fi
 done
-echo ${licenseUrl}
+echo "${licenseUrl}"
 
 echo "Enter ${name}'s stable release source url: (Specify a Git or Tarball URL. If none, press enter)"
 stablePath=$(getInput)
@@ -126,7 +121,7 @@ project_path="${name}port"
 
 nameUpper=$(echo "$name" | awk '{print toupper($0)}')
 
-if [ -d ${project_path} ]; then
+if [ -d "${project_path}" ]; then
   while true; do
     echo "Directory ${project_path} already exists. Update it? (y, n)"
     clobber=$(getInput)
@@ -139,52 +134,77 @@ if [ -d ${project_path} ]; then
 fi
 
 printHeader "Generating ${project_path} zopen project"
-mkdir -p ${name}port/patches
+mkdir -p "${name}"port/patches
 
 # Create external LICENSE
 touch "${name}port/patches/LICENSE" && chtag -tc 819 "${name}port/patches/LICENSE"
 printf "%s\nView license contents at %s\n" "${licenseName}" "${licenseUrl}" > "${name}port/patches/LICENSE"
 
 buildenv="${name}port/buildenv"
-touch ${buildenv} && chtag -tc 819 ${buildenv}
+touch "${buildenv}" && chtag -tc 819 "${buildenv}"
 
 cp "${MYDIR}/../data/CONTRIBUTING.md" "${name}port/CONTRIBUTING.md"
 cp "${MYDIR}/../data/CODEOWNERS" "${name}port/CODEOWNERS"
 mkdir -p "${name}port/.github/workflows"
-cp ${MYDIR}/../data/*.yml "${name}port/.github/workflows/" 2>/dev/null # no yml files yet?
+cp "${MYDIR}"/../data/*.yml "${name}port/.github/workflows/" 2>/dev/null # no yml files yet?
 
 buildenvContents=""
 
-if [ ! -z "${stablePath}" ]; then
+if [ -n "${stablePath}" ]; then
   buildenvContents="${buildenvContents}# Update bump details accordingly. Use bump check to confirm.\n# bump: $name-version /${nameUpper}_VERSION=\"(.*)\"/ ${stablePath}|semver:*\n"
   buildenvContents="${buildenvContents}# ${nameUpper}_VERSION=\"V.R.M\" # Specify a stable release\n"
   buildenvContents="${buildenvContents}# export ZOPEN_STABLE_TAG=\"v\${${nameUpper}_VERSION}\"\n"
-  buildenvContents="${buildenvContents}export ZOPEN_STABLE_URL=\"${stablePath}\"\n"
-fi
-if [ ! -z "${stableDeps}" ]; then
-  buildenvContents="${buildenvContents}export ZOPEN_STABLE_DEPS=\"${stableDeps}\"\n"
 fi
 
-if [ ! -z "${devPath}" ]; then
-  buildenvContents="${buildenvContents}export ZOPEN_DEV_URL=\"${devPath}\"\n"
-fi
-if [ ! -z "${devDeps}" ]; then
-  buildenvContents="${buildenvContents}export ZOPEN_DEV_DEPS=\"${devDeps}\"\n"
-fi
+buildenvContents="${buildenvContents}
+###
+### Build control file for the ${name} port
+###
 
-if [ ! -z "${buildline}" ] && [ "${buildline}" = "dev" ]; then
-  buildenvContents="${buildenvContents}export ZOPEN_BUILD_LINE=\"DEV\"\n"
-else
-  buildenvContents="${buildenvContents}export ZOPEN_BUILD_LINE=\"STABLE\"\n"
-fi
+###
+### Required Environment Variables
+###
 
-if [ ! -z "${runtimedeps}" ]; then
-  buildenvContents="${buildenvContents}export ZOPEN_RUNTIME_DEPS=\"${runtimedeps}\"\n"
-fi
+## Specify the default build line, either 'DEV' or 'STABLE' (default: STABLE)
+export ZOPEN_BUILD_LINE=\"${buildline:+$([ "$buildline" = "dev" ] && echo "DEV" || echo "STABLE")}\"
 
-buildenvContents="${buildenvContents}export ZOPEN_CATEGORIES=\"${categories}\"\n"
+## Required IF ZOPEN_BUILD_LINE='STABLE'
+export ZOPEN_STABLE_URL=\"${stablePath}\"  # Specify the stable build URL (either git or tarball)
+export ZOPEN_STABLE_DEPS=\"${stableDeps}\" # Specify the stable build dependencies.
 
-buildenvContents="${buildenvContents}\nzopen_check_results()
+## Required IF ZOPEN_BUILD_LINE='DEV'
+export ZOPEN_DEV_URL=\"${devPath}\"   # Specify the dev build URL
+export ZOPEN_DEV_DEPS=\"${devDeps}\"  # Specify the dev build dependencies
+
+## Specify a space-delimited list of applicable categories.
+## See tool_categories.txt for valid options
+export ZOPEN_CATEGORIES=\"${categories}\"
+
+## Runtime zopen tool dependencies to be installed alongside the tool.
+export ZOPEN_RUNTIME_DEPS=\"${runtimedeps}\"
+
+## Runtime system prerequisites; supply the name of the system pre-requisties.
+## Current available prerequisites: zos24 zos25 zos31 procfs (see https://github.com/zopencommunity/meta/blob/main/include/prereq.sh for a current list)
+export ZOPEN_SYSTEM_PREREQ=\"\"
+
+
+###
+### Build stage control environment variables
+###
+
+#export ZOPEN_BOOTSTRAP=\"skip\" ## Bootstrap program to run (defaults to './bootstrap')
+#export ZOPEN_CHECK=\"skip\"     ## Check program to run (defaults to 'make')
+#export ZOPEN_CONFIGURE=\"skip\" ## Configuration program to run (defaults to './configure')
+#export ZOPEN_INSTALL=\"skip\"   ## Installation program to run (defaults to 'make')
+#export ZOPEN_MAKE=\"skip\"      ## Build program to run (defaults to 'make')
+#export ZOPEN_CLEAN=\"\"         ## Clean up program to run (defaults to 'make')
+
+
+###
+### Required user-supplied functions
+###
+
+zopen_check_results()
 {
   dir=\"\$1\"
   pfx=\"\$2\"
@@ -202,9 +222,116 @@ zopen_get_version()
   # Modify to echo the version of your tool/library
   # Rather than hardcoding the version, obtain the version by running the tool/library
   echo \"1.0.0\"
-}"
+}
 
-/bin/echo "${buildenvContents}" > ${buildenv}
+
+###
+### Optional user-supplied functions for zopen-build
+###
+
+#zopen_append_to_env() {
+  ## This function runs as part of generation of the .env file. The output of the
+  ## function is appended to .env.
+#}
+
+#zopen_append_to_setup(){
+  ## This function runs as part of generation of the setup.sh file. The output of
+  ## the function is appended to setup.sh.
+#}
+
+#zopen_append_to_validate_install(){
+  ## This function runs as part of generation of the install_test.sh file. The
+  ## output of the function is appended to install_test.sh script.
+#}
+
+#zopen_install_caveats(){
+  ## This function is run post install. All stdout messages are captured and
+  ## added to the metadata.json as installation caveats.
+#}
+
+#zopen_append_to_zoslib_env(){
+  ## This function runs as part of generation of the C function zoslib_env_hook,
+  ## which can be used to set environment variables before main is run.
+#}
+
+#zopen_init(){
+  ## This function runs after code is downloaded and patched but before the code
+  ## is built.
+#}
+
+#zopen_post_buildenv(){
+  ## This function runs after the 'buildenv' is processed.
+#}
+
+#zopen_pre_build(){
+  ## This function runs before the 'make' step of the build is run.
+#}
+
+#zopen_pre_check(){
+  ## This function runs before the 'check' step of the build is run.
+#}
+
+#zopen_pre_configure(){
+  ## This function runs before the 'configure' step of the build is run.
+#}
+
+#zopen_pre_install(){
+  ## This function runs before the 'install' step of the build is run.
+#}
+
+#zopen_post_install(){
+  ## This function runs after the 'install' step of the build is run.
+#}
+
+#zopen_pre_patch(){
+  ## This function runs before the 'patch' step of the build is run.
+#}
+
+#zopen_pre_terminate(){
+  ## This function runs before 'zopen build' terminates.
+#}
+
+
+###
+### Optional build control variables
+###
+
+#export ZOPEN_EXTRA_CFLAGS=\"\" ## C compiler flags to append to CFLAGS (defaults to '').
+#export ZOPEN_EXTRA_CPPFLAGS=\"\" ## C,C++ pre-processor flags to append to CPPFLAGS (defaults to '')
+#export ZOPEN_EXTRA_CXXFLAGS=\"\" ## C++ compiler flags to append to CXXFLAGS (defaults to '')
+#export ZOPEN_EXTRA_LDFLAGS=\"\" ## C,C++ linker flags to append to LDFLAGS (defaults to '')
+#export ZOPEN_EXTRA_LIBS=\"\" ## C,C++ libraries to append to LIBS (defaults to '')
+#export ZOPEN_BOOTSTRAP_OPTS=\"\" ## Options to pass to bootstrap program (defaults to '')
+#export ZOPEN_CHECK_MINIMAL=\"\" ## Check program will not be passed CFLAGS, LDFLAGS, CPPFLAGS options but will get them from env vars.
+#export ZOPEN_CHECK_OPTS=\"\" ## Options to pass to check program (defaults to 'check')
+#export ZOPEN_CHECK_TIMEOUT=\"\" ## Timeout limit in seconds for the check program (defaults to '12600' # 3.5 hours)
+#export ZOPEN_CLEAN_OPTS=\"\" ## Options to pass to clean up  program (defaults to 'clean')
+#export ZOPEN_CONFIGURE_MINIMAL=\"\" ## Configuration program will not be passed CFLAGS, LDFLAGS, CPPFLAGS options but will get them from env vars.
+#export ZOPEN_CONFIGURE_OPTS=\"\" ## Options to pass to configuration program (defaults to '--prefix=${ZOPEN_INSTALL_DIR}')
+#export ZOPEN_EXTRA_CONFIGURE_OPTS=\"\" ## Extra configure options to pass to configuration program. (defaults to '')
+#export ZOPEN_INSTALL_OPTS=\"\" ## Options to pass to installation program (defaults to 'install')
+#export ZOPEN_MAKE_MINIMAL=\"\" ## Build program will not be passed CFLAGS, LDFLAGS, CPPFLAGS options but will get them from env vars.
+#export ZOPEN_MAKE_OPTS=\"\" ## Options to pass to build program (defaults to '-j${ZOPEN_NUM_JOBS}')
+#export ZOPEN_PATCH_DIR=\"\" ## Specify directory from which patches should be applied.
+
+
+###
+### Restricted Usage - only set in ports if necessary
+###
+
+## Don't add zoslib as a dependency; most ports should keep this unset
+#export ZOPEN_DONT_ADD_ZOSLIB_DEP=1
+
+
+###
+### Additional user-defined custom code  - runs during script source
+###
+
+## Add user-defined functions and code
+
+"
+
+/bin/echo "${buildenvContents}" > "${buildenv}"
 
 printInfo "${buildenv} created"
 
@@ -265,7 +392,7 @@ else
   printWarning "Could not locate LICENSE file ${metalicense} to copy for project ${ourlicense}"
 fi
 
-git -C "${name}port" init --initial-branch=main 
+git -C "${name}port" init --initial-branch=main
 git -C "${name}port" add .
 
 printHeader "${name} project is ready! ${name}port/"
