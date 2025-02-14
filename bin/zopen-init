@@ -704,6 +704,11 @@ processCaCerts()
   fi
 }
 
+createInitialPackageDB()
+{
+  updatePackageDB
+}
+
 deinit()
 {
   printHeader "Initialization successfully completed"
@@ -726,6 +731,6 @@ generateJsonConfiguration
 generateDefaultRepository
 generateZopenConfig
 generateAnalyticsConfiguration
+[ -e "${ZOPEN_ROOTFS}/var/lib/zopen/packageDB.json" ] || createInitialPackageDB
 updateBootstrappedTools
-[ -e "${ZOPEN_ROOTFS}/var/lib/zopen/packageDB.json" ] || updatePackageDB
 deinit
