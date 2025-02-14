@@ -123,7 +123,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | [git](https://github.com/zopencommunity/gitport)|Blue|96.7%|[STABLE_git_3023](https://github.com/zopencommunity/gitport/releases/download/STABLE_gitport_3023/git-heads.v2.48.1.20250131_080517.zos.pax.Z)|The Git version control system|
 | [re2c](https://github.com/zopencommunity/re2cport)|Blue|83.3%|[STABLE_re2c_3070](https://github.com/zopencommunity/re2cport/releases/download/STABLE_re2cport_3070/re2c-4.0.2.20250205_032000.zos.pax.Z)|A lexer generator for creating lexers|
 | [conan](https://github.com/zopencommunity/conanport)|Yellow|54.0%|[STABLE_conan_3047](https://github.com/zopencommunity/conanport/releases/download/STABLE_conanport_3047/conan-heads.2.9.1.20250131_110229.zos.pax.Z)|C/C++ Package Manager tool|
-| [byacc](https://github.com/zopencommunity/byaccport)|Red|45.6%|[STABLE_byacc_2982](https://github.com/zopencommunity/byaccport/releases/download/STABLE_byaccport_2982/byacc-20240109.20250131_042653.zos.pax.Z)|A parser generator compatible with Yacc|
+| [byacc](https://github.com/zopencommunity/byaccport)|Red|45.6%|[STABLE_byacc_3100](https://github.com/zopencommunity/byaccport/releases/download/STABLE_byaccport_3100/byacc-20241231.20250213_141606.zos.pax.Z)|A parser generator compatible with Yacc|
 | [meson](https://github.com/zopencommunity/mesonport)|Red|33.3%|[STABLE_meson_3029](https://github.com/zopencommunity/mesonport/releases/download/STABLE_mesonport_3029/meson-heads.1.6.0.20250131_092909.zos.pax.Z)|A build system|
 </div>
 
@@ -297,9 +297,9 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | Package | Status | Test Success Rate | Latest Release | Description |
 |---|---|---|---|---|
 | [llamacpp](https://github.com/zopencommunity/llamacppport)|Skipped|N/A|[STABLE_llamacpp_2013](https://github.com/zopencommunity/llamacppport/releases/download/STABLE_llamacppport_2013/llamacpp-master.20240124_170742.zos.pax.Z)|A C++ library for writing high-performance network applications|
-| [gzip](https://github.com/zopencommunity/gzipport)|Green|100.0%|[STABLE_gzip_3082](https://github.com/zopencommunity/gzipport/releases/download/STABLE_gzipport_3082/gzip-1.13.20250205_093947.zos.pax.Z)|Library for handling gzip compressed files|
 | [less](https://github.com/zopencommunity/lessport)|Green|100.0%|[STABLE_less_2954](https://github.com/zopencommunity/lessport/releases/download/STABLE_lessport_2954/less-heads.v668.20250130_225718.zos.pax.Z)|A text pager|
 | [zlib](https://github.com/zopencommunity/zlibport)|Green|100.0%|[STABLE_zlib_3071](https://github.com/zopencommunity/zlibport/releases/download/STABLE_zlibport_3071/zlib-heads.v1.3.1.20250205_034023.zos.pax.Z)|A data compression library|
+| [gzip](https://github.com/zopencommunity/gzipport)|Green|100.0%|[STABLE_gzip_3082](https://github.com/zopencommunity/gzipport/releases/download/STABLE_gzipport_3082/gzip-1.13.20250205_093947.zos.pax.Z)|Library for handling gzip compressed files|
 | [ncurses](https://github.com/zopencommunity/ncursesport)|Green|100.0%|[STABLE_ncurses_2956](https://github.com/zopencommunity/ncursesport/releases/download/STABLE_ncursesport_2956/ncurses-6.5.20250130_230916.zos.pax.Z)|Library for ncurses, a terminal screen handling library|
 | [help2man](https://github.com/zopencommunity/help2manport)|Green|100.0%|[STABLE_help2man_2875](https://github.com/zopencommunity/help2manport/releases/download/STABLE_help2manport_2875/help2man-1.49.3.20250129_141844.zos.pax.Z)|A tool for converting manual pages to other formats|
 | [xxhash](https://github.com/zopencommunity/xxhashport)|Green|100.0%|[STABLE_xxhash_1993](https://github.com/zopencommunity/xxhashport/releases/download/STABLE_xxhashport_1993/xxHash-0.8.2.20240123_100914.zos.pax.Z)|A fast hash function library|
@@ -382,4 +382,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-02-13T05:08:30.976968
+Last updated:  2025-02-13T09:35:46.261376

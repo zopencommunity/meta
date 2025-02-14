@@ -10,10 +10,7 @@
 - 2024-12-11: [Update bash-completion-version to 20060301 from V.R.M](https://github.com/zopencommunity/bash-completionport/pull/1) ❌
 
 ### buildkiteport
-- 2025-02-12: [Update buildkite-version to 3.92.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/48) ❌
-
-### byaccport
-- 2025-01-07: [Update byacc-version to 20241231 from 20240109](https://github.com/zopencommunity/byaccport/pull/6) ✅
+- 2025-02-13: [Update buildkite-version to 3.92.1 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/49) ❌
 
 ### c3270port
 - 2025-02-07: [Update c3270-version to 4.4ga4 from 4.3ga9](https://github.com/zopencommunity/c3270port/pull/29) ❌
@@ -55,6 +52,7 @@
 - 2024-06-08: [Update cunit-version to 3.3.1 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/3) ❌
 
 ### curlport
+- 2025-02-13: [Update curl-version to 8.12.1 from 8.12.0](https://github.com/zopencommunity/curlport/pull/43) ✅
 - 2025-02-05: [Update curl-version to 8.12.0 from 8.11.1](https://github.com/zopencommunity/curlport/pull/41) ❌
 
 ### diffutilsport
@@ -96,6 +94,9 @@
 
 ### fxport
 - 2024-06-27: [Update fx-version to 35.0.0 from 34.0.0](https://github.com/zopencommunity/fxport/pull/2) ✅
+
+### fzfport
+- 2025-02-13: [Update fzf-version to 0.60.0 from 0.59.0](https://github.com/zopencommunity/fzfport/pull/31) ❌
 
 ### gettextport
 - 2024-12-31: [Update gettext-version to 0.23.1 from 0.21](https://github.com/zopencommunity/gettextport/pull/31) ❌
@@ -150,13 +151,6 @@
 
 ### lazygitport
 - 2025-01-11: [Update lazygit-version to 0.46.0 from V.R.M](https://github.com/zopencommunity/lazygitport/pull/10) ❌
-- 2024-09-18: [Update lazygit-version to 0.44.1 from V.R.M](https://github.com/zopencommunity/lazygitport/pull/7) ❌
-- 2024-09-07: [Update lazygit-version to 0.44.0 from V.R.M](https://github.com/zopencommunity/lazygitport/pull/6) ❌
-- 2024-07-13: [Update lazygit-version to 0.43.1 from V.R.M](https://github.com/zopencommunity/lazygitport/pull/5) ❌
-- 2024-03-02: [Update lazygit-version to 0.41 from V.R.M](https://github.com/zopencommunity/lazygitport/pull/2) ✅
-- 2024-05-19: [Update lazygit-version to 0.42.0 from V.R.M](https://github.com/zopencommunity/lazygitport/pull/4) ✅
-- 2024-03-23: [Update lazygit-version to 0.41.0 from V.R.M](https://github.com/zopencommunity/lazygitport/pull/3) ✅
-- 2024-02-16: [Update lazygit-version to 0.40.2 from V.R.M](https://github.com/zopencommunity/lazygitport/pull/1) ✅
 
 ### libiconvport
 - 2024-12-15: [Update libiconv-version to 1.18 from 1.17](https://github.com/zopencommunity/libiconvport/pull/42) ❌
@@ -271,6 +265,7 @@
 - 2023-12-22: [Update php-version to 8.3.1 from 8.2.13](https://github.com/zopencommunity/phpport/pull/14) ❌
 
 ### pocoport
+- 2025-02-13: [Update poco-version to 1.14.1 from 1.12.5p2](https://github.com/zopencommunity/pocoport/pull/9) ❌
 - 2024-12-02: [Update poco-version to 1.14.0 from 1.12.5p2](https://github.com/zopencommunity/pocoport/pull/7) ❌
 - 2024-04-05: [Update poco-version to 1.13.3 from 1.12.5p2](https://github.com/zopencommunity/pocoport/pull/5) ❌
 - 2024-02-20: [Update poco-version to 1.13.2 from 1.12.5p2](https://github.com/zopencommunity/pocoport/pull/4) ❌
@@ -613,5 +608,5 @@
 ---
 
 
-> Last updated: 2025-02-13 06:05:58 EST
+> Last updated: 2025-02-14 06:05:55 EST
 
