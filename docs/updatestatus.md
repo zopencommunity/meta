@@ -51,10 +51,6 @@
 - 2024-08-23: [Update cunit-version to 3.4.1 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/4) ❌
 - 2024-06-08: [Update cunit-version to 3.3.1 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/3) ❌
 
-### curlport
-- 2025-02-13: [Update curl-version to 8.12.1 from 8.12.0](https://github.com/zopencommunity/curlport/pull/43) ✅
-- 2025-02-05: [Update curl-version to 8.12.0 from 8.11.1](https://github.com/zopencommunity/curlport/pull/41) ❌
-
 ### diffutilsport
 - 2025-02-03: [Update diffutils-version to 3.11 from 3.10](https://github.com/zopencommunity/diffutilsport/pull/36) ❌
 
@@ -77,14 +73,7 @@
 ### findutilsport
 - 2024-06-08: [Update findutils-version to 4.10.0 from 4.9.0](https://github.com/zopencommunity/findutilsport/pull/19) ❌
 
-### fqport
-- 2025-02-09: [Update fq-version to 0.14.0 from 0.10.0](https://github.com/zopencommunity/fqport/pull/8) ✅
-- 2024-10-02: [Update fq-version to 0.13.0 from 0.10.0](https://github.com/zopencommunity/fqport/pull/7) ✅
-- 2024-07-15: [Update fq-version to 0.12.0 from 0.10.0](https://github.com/zopencommunity/fqport/pull/5) ❌
-- 2024-04-14: [Update fq-version to 0.11.0 from 0.10.0](https://github.com/zopencommunity/fqport/pull/4) ❌
-
 ### frpport
-- 2024-08-19: [Update frp-version to 0.60.0 from 0.54.0](https://github.com/zopencommunity/frpport/pull/8) ✅
 - 2024-07-09: [Update frp-version to 0.59.0 from 0.54.0](https://github.com/zopencommunity/frpport/pull/7) ❌
 - 2024-05-31: [Update frp-version to 0.58.1 from 0.54.0](https://github.com/zopencommunity/frpport/pull/6) ❌
 - 2024-05-07: [Update frp-version to 0.58.0 from 0.54.0](https://github.com/zopencommunity/frpport/pull/5) ❌
@@ -121,6 +110,9 @@
 - 2024-01-31: [Update ghcli-version to 2.43.0 from 2.41.0](https://github.com/zopencommunity/githubcliport/pull/10) ❌
 - 2024-01-17: [Update ghcli-version to 2.42.1 from 2.41.0](https://github.com/zopencommunity/githubcliport/pull/9) ❌
 - 2024-01-11: [Update ghcli-version to 2.42.0 from 2.41.0](https://github.com/zopencommunity/githubcliport/pull/8) ❌
+
+### gitlabcliport
+- 2025-02-14: [Update glab-version to 1.53.0 from 1.52.0](https://github.com/zopencommunity/gitlabcliport/pull/23) ✅
 
 ### gitlab-runnerport
 - 2025-01-24: [Update gitlab-runner-version to 17.8.3 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/33) ❌
@@ -247,6 +239,7 @@
 - 2025-01-21: [Update perl-version to 5.41.8 from 5.41.7](https://github.com/zopencommunity/perlport/pull/105) ❌
 
 ### phpport
+- 2025-02-14: [Update php-version to 8.4.4 from 8.2.13](https://github.com/zopencommunity/phpport/pull/31) ❌
 - 2025-01-17: [Update php-version to 8.4.3 from 8.2.13](https://github.com/zopencommunity/phpport/pull/30) ❌
 - 2024-12-20: [Update php-version to 8.4.2 from 8.2.13](https://github.com/zopencommunity/phpport/pull/29) ❌
 - 2024-11-21: [Update php-version to 8.4.1 from 8.2.13](https://github.com/zopencommunity/phpport/pull/28) ❌
@@ -271,9 +264,6 @@
 - 2024-02-20: [Update poco-version to 1.13.2 from 1.12.5p2](https://github.com/zopencommunity/pocoport/pull/4) ❌
 - 2024-02-07: [Update poco-version to 1.13.1 from 1.12.5p2](https://github.com/zopencommunity/pocoport/pull/3) ❌
 - 2024-01-25: [Update poco-version to 1.13.0 from 1.12.5p2](https://github.com/zopencommunity/pocoport/pull/2) ❌
-
-### redisport
-- 2025-02-08: [Update redis-version to 20100825 from V.R.M](https://github.com/zopencommunity/redisport/pull/4) ❌
 
 ### s5cmdport
 - 2024-12-17: [Update s5cmd-version to 2.3.0 from 2.2.2](https://github.com/zopencommunity/s5cmdport/pull/3) ❌
@@ -608,5 +598,5 @@
 ---
 
 
-> Last updated: 2025-02-14 06:05:55 EST
+> Last updated: 2025-02-15 06:05:52 EST
 
