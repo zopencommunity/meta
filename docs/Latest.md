@@ -84,10 +84,10 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 | Package | Status | Test Success Rate | Latest Release | Description |
 |---|---|---|---|---|
-| [vim](https://github.com/zopencommunity/vimport)|Skipped|N/A|[STABLE_vim_3052](https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3052/vim-heads.v9.1.1016.20250131_113109.zos.pax.Z)|A TUI editor|
+| [vim](https://github.com/zopencommunity/vimport)|Skipped|N/A|[STABLE_vim_3107](https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3107/vim-heads.v9.1.1100.20250216_161352.zos.pax.Z)|A TUI editor|
 | [expect](https://github.com/zopencommunity/expectport)|Skipped|N/A|[STABLE_expect_2988](https://github.com/zopencommunity/expectport/releases/download/STABLE_expectport_2988/expect-5.45.4.20250131_044542.zos.pax.Z)|A tool for automating interactions with text-based programs|
 | [depot_tools](https://github.com/zopencommunity/depot_toolsport)|Skipped|N/A|[DEV_depot_tools_2832](https://github.com/zopencommunity/depot_toolsport/releases/download/DEV_depot_toolsport_2832/depot_tools-main.20250121_195105.zos.pax.Z)|Tools for working with Chromium development|
-| [githubcli](https://github.com/zopencommunity/githubcliport)|Skipped|N/A|[DEV_githubcli_3074](https://github.com/zopencommunity/githubcliport/releases/download/DEV_githubcliport_3074/githubcli-DEV.20250205_031236.zos.pax.Z)|A command-line tool for GitHub|
+| [githubcli](https://github.com/zopencommunity/githubcliport)|Skipped|N/A|[DEV_githubcli_3109](https://github.com/zopencommunity/githubcliport/releases/download/DEV_githubcliport_3109/githubcli-DEV.20250216_162104.zos.pax.Z)|A command-line tool for GitHub|
 | [buildkite](https://github.com/zopencommunity/buildkiteport)|Skipped|N/A|[STABLE_buildkite_2774](https://github.com/zopencommunity/buildkiteport/releases/download/STABLE_buildkiteport_2774/buildkite-DEV.20241206_015934.zos.pax.Z)|Buildkite is a platform for running fast, secure, and scalable continuous integration pipelines on your own infrastructure|
 | [gitlab-runner](https://github.com/zopencommunity/gitlab-runnerport)|Skipped|N/A|[STABLE_gitlab-runner_2597](https://github.com/zopencommunity/gitlab-runnerport/releases/download/STABLE_gitlab-runnerport_2597/gitlab-runner.20241002_044313.zos.pax.Z)|A GitLab Runner|
 | [ant](https://github.com/zopencommunity/antport)|Skipped|N/A|[STABLE_ant_3011](https://github.com/zopencommunity/antport/releases/download/STABLE_antport_3011/ant-DEV.20250131_063159.zos.pax.Z)|A build automation tool|
@@ -162,7 +162,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 | Package | Status | Test Success Rate | Latest Release | Description |
 |---|---|---|---|---|
-| [vim](https://github.com/zopencommunity/vimport)|Skipped|N/A|[STABLE_vim_3052](https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3052/vim-heads.v9.1.1016.20250131_113109.zos.pax.Z)|A TUI editor|
+| [vim](https://github.com/zopencommunity/vimport)|Skipped|N/A|[STABLE_vim_3107](https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3107/vim-heads.v9.1.1100.20250216_161352.zos.pax.Z)|A TUI editor|
 | [nano](https://github.com/zopencommunity/nanoport)|Skipped|N/A|[STABLE_nano_3094](https://github.com/zopencommunity/nanoport/releases/download/STABLE_nanoport_3094/nano-8.3.20250211_130530.zos.pax.Z)|A simple text editor for console environments|
 | [emacs](https://github.com/zopencommunity/emacsport)|Skipped|N/A|[STABLE_emacs_2999](https://github.com/zopencommunity/emacsport/releases/download/STABLE_emacsport_2999/emacs-29.4.20250131_050216.zos.pax.Z)|A text editor|
 | [lazygit](https://github.com/zopencommunity/lazygitport)|Skipped|N/A|[STABLE_lazygit_2148](https://github.com/zopencommunity/lazygitport/releases/download/STABLE_lazygitport_2148/lazygit-master.20240221_041017.zos.pax.Z)|A Git client|
@@ -239,7 +239,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | Package | Status | Test Success Rate | Latest Release | Description |
 |---|---|---|---|---|
 | [nats](https://github.com/zopencommunity/natsport)|Skipped|N/A|[STABLE_NATS_3027](https://github.com/zopencommunity/natsport/releases/download/STABLE_NATSport_3027/nats-DEV.20250131_095445.zos.pax.Z)|A cloud-native messaging system|
-| [githubcli](https://github.com/zopencommunity/githubcliport)|Skipped|N/A|[DEV_githubcli_3074](https://github.com/zopencommunity/githubcliport/releases/download/DEV_githubcliport_3074/githubcli-DEV.20250205_031236.zos.pax.Z)|A command-line tool for GitHub|
+| [githubcli](https://github.com/zopencommunity/githubcliport)|Skipped|N/A|[DEV_githubcli_3109](https://github.com/zopencommunity/githubcliport/releases/download/DEV_githubcliport_3109/githubcli-DEV.20250216_162104.zos.pax.Z)|A command-line tool for GitHub|
 | [caddy](https://github.com/zopencommunity/caddyport)|Skipped|N/A|[STABLE_caddy_2215](https://github.com/zopencommunity/caddyport/releases/download/STABLE_caddyport_2215/caddy-DEV.20240409_161941.zos.pax.Z)|A web server|
 | [nghttp2](https://github.com/zopencommunity/nghttp2port)|Green|100.0%|[STABLE_nghttp2_3063](https://github.com/zopencommunity/nghttp2port/releases/download/STABLE_nghttp2port_3063/nghttp2-1.64.0.20250205_031626.zos.pax.Z)|An HTTP/2 implementation|
 | [wget](https://github.com/zopencommunity/wgetport)|Red|20.3%|[STABLE_wget_3076](https://github.com/zopencommunity/wgetport/releases/download/STABLE_wgetport_3076/wget-1.25.0.20250205_033712.zos.pax.Z)|A utility for retrieving files from the web|
@@ -298,8 +298,8 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 |---|---|---|---|---|
 | [llamacpp](https://github.com/zopencommunity/llamacppport)|Skipped|N/A|[STABLE_llamacpp_2013](https://github.com/zopencommunity/llamacppport/releases/download/STABLE_llamacppport_2013/llamacpp-master.20240124_170742.zos.pax.Z)|A C++ library for writing high-performance network applications|
 | [zlib](https://github.com/zopencommunity/zlibport)|Green|100.0%|[STABLE_zlib_3071](https://github.com/zopencommunity/zlibport/releases/download/STABLE_zlibport_3071/zlib-heads.v1.3.1.20250205_034023.zos.pax.Z)|A data compression library|
-| [less](https://github.com/zopencommunity/lessport)|Green|100.0%|[STABLE_less_2954](https://github.com/zopencommunity/lessport/releases/download/STABLE_lessport_2954/less-heads.v668.20250130_225718.zos.pax.Z)|A text pager|
 | [gzip](https://github.com/zopencommunity/gzipport)|Green|100.0%|[STABLE_gzip_3082](https://github.com/zopencommunity/gzipport/releases/download/STABLE_gzipport_3082/gzip-1.13.20250205_093947.zos.pax.Z)|Library for handling gzip compressed files|
+| [less](https://github.com/zopencommunity/lessport)|Green|100.0%|[STABLE_less_2954](https://github.com/zopencommunity/lessport/releases/download/STABLE_lessport_2954/less-heads.v668.20250130_225718.zos.pax.Z)|A text pager|
 | [ncurses](https://github.com/zopencommunity/ncursesport)|Green|100.0%|[STABLE_ncurses_2956](https://github.com/zopencommunity/ncursesport/releases/download/STABLE_ncursesport_2956/ncurses-6.5.20250130_230916.zos.pax.Z)|Library for ncurses, a terminal screen handling library|
 | [help2man](https://github.com/zopencommunity/help2manport)|Green|100.0%|[STABLE_help2man_2875](https://github.com/zopencommunity/help2manport/releases/download/STABLE_help2manport_2875/help2man-1.49.3.20250129_141844.zos.pax.Z)|A tool for converting manual pages to other formats|
 | [xxhash](https://github.com/zopencommunity/xxhashport)|Green|100.0%|[STABLE_xxhash_1993](https://github.com/zopencommunity/xxhashport/releases/download/STABLE_xxhashport_1993/xxHash-0.8.2.20240123_100914.zos.pax.Z)|A fast hash function library|
@@ -382,4 +382,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-02-15T04:53:10.639878
+Last updated:  2025-02-16T12:48:42.097345

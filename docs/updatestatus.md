@@ -100,17 +100,6 @@
 ### git-extrasport
 - 2024-12-06: [Update git-extras-version to 7.3.0 from V.R.M](https://github.com/zopencommunity/git-extrasport/pull/1) ❌
 
-### githubcliport
-- 2025-02-12: [Update ghcli-version to 2.67.0 from 2.66.1](https://github.com/zopencommunity/githubcliport/pull/46) ✅
-- 2024-03-21: [Update ghcli-version to 2.46.0 from 2.41.0](https://github.com/zopencommunity/githubcliport/pull/15) ✅
-- 2024-03-05: [Update ghcli-version to 2.45.0 from 2.41.0](https://github.com/zopencommunity/githubcliport/pull/14) ✅
-- 2024-02-17: [Update ghcli-version to 2.44.1 from 2.41.0](https://github.com/zopencommunity/githubcliport/pull/13) ✅
-- 2024-02-15: [Update ghcli-version to 2.44.0 from 2.41.0](https://github.com/zopencommunity/githubcliport/pull/12) ❌
-- 2024-02-01: [Update ghcli-version to 2.43.1 from 2.41.0](https://github.com/zopencommunity/githubcliport/pull/11) ❌
-- 2024-01-31: [Update ghcli-version to 2.43.0 from 2.41.0](https://github.com/zopencommunity/githubcliport/pull/10) ❌
-- 2024-01-17: [Update ghcli-version to 2.42.1 from 2.41.0](https://github.com/zopencommunity/githubcliport/pull/9) ❌
-- 2024-01-11: [Update ghcli-version to 2.42.0 from 2.41.0](https://github.com/zopencommunity/githubcliport/pull/8) ❌
-
 ### gitlabcliport
 - 2025-02-14: [Update glab-version to 1.53.0 from 1.52.0](https://github.com/zopencommunity/gitlabcliport/pull/23) ✅
 
@@ -186,9 +175,6 @@
 - 2024-07-19: [Update murex-version to 6.2.3000 from 6.0.1000](https://github.com/zopencommunity/murexport/pull/2) ❌
 - 2024-06-27: [Update murex-version to 6.1.8300 from 6.0.1000](https://github.com/zopencommunity/murexport/pull/1) ❌
 
-### nanoport
-- 2024-09-05: [Update nano-version to 8.2 from 8.1](https://github.com/zopencommunity/nanoport/pull/14) ✅
-
 ### natsport
 - 2025-01-24: [Update nats-version to 2.10.25 from 2.10.11](https://github.com/zopencommunity/natsport/pull/19) ❌
 - 2024-12-18: [Update nats-version to 2.10.24 from 2.10.11](https://github.com/zopencommunity/natsport/pull/18) ❌
@@ -211,9 +197,6 @@
 
 ### opensshport
 - 2024-10-02: [Update openssh-version to 9.9p1 from 9.8p1](https://github.com/zopencommunity/opensshport/pull/15) ❌
-
-### opensslport
-- 2025-02-12: [Update openssl-3-version to 3.4.1 from 3.4.0](https://github.com/zopencommunity/opensslport/pull/48) ✅
 
 ### osv-scannerport
 - 2024-12-19: [Update osv-scanner-version to 1.9.2 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/17) ❌
@@ -340,9 +323,6 @@
 - 2024-08-28: [Update victoriametrics-version to 1.103.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/7) ❌
 - 2024-08-01: [Update victoriametrics-version to 1.102.1 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/6) ❌
 - 2024-07-18: [Update victoriametrics-version to 1.102.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/5) ❌
-
-### vimport
-- 2025-02-11: [Update vim-version to 9.1.1100 from 9.1.1016](https://github.com/zopencommunity/vimport/pull/84) ✅
 
 ### xmltoport
 - 2024-10-10: [Update xmlto-version to 0.0.29 from 0.0.28](https://github.com/zopencommunity/xmltoport/pull/3) ❌
@@ -598,5 +578,5 @@
 ---
 
 
-> Last updated: 2025-02-16 06:05:22 EST
+> Last updated: 2025-02-17 06:05:38 EST
 
