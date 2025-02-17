@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 
+#
 # Quick Install tool for zopen's meta package
 # Assumes you have Curl and Bash installed (likely through Open Enterprise Foundation)
 # Downloads and extracts meta into the current directory
@@ -49,13 +49,22 @@ if [ $? -gt 0 ]; then
   exit 1
 fi
 
+echo "> Cleaning up pax file $paxFile..."
+rm -vf "$paxFile"
+if [ $? -gt 0 ]; then
+   echo "Warning: Failed to remove pax file $paxFile. Installation will continue, but space might not be freed."
+fi
+
+
 dir=$(echo "$paxOutput" | head -1)
 if [ ! -d "$dir" ]; then
   echo "Error: $dir is not a valid directory."
   exit 1
 fi
 
-set -e
+# From this point on, exit immediately if a command exits with a non-zero status.
+set -e 
+
 echo "> Moving to extracted directory..."
 cd "$dir"
 
@@ -65,6 +74,9 @@ source ./.env
 echo "> Initializing zopen tools..."
 zopen init
 
-echo "> Cleaning up..."
-rm -rvf $paxFile
+echo "> Cleaning up extracted directory..."
 rm -rvf $dir
+
+echo "> zopen meta package installed successfully and cleanup complete."
+
+exit 0 
