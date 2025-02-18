@@ -278,12 +278,12 @@
 |  [zipport](https://github.com/zopencommunity/zipport) | 297 | 8
 |  [ninjaport](https://github.com/zopencommunity/ninjaport) | 274 | 9
 |  [moreutilsport](https://github.com/zopencommunity/moreutilsport) | 262 | 5
+|  [mesonport](https://github.com/zopencommunity/mesonport) | 250 | 10
 |  [gitlab-runnerport](https://github.com/zopencommunity/gitlab-runnerport) | 241 | 10
 |  [llamacppport](https://github.com/zopencommunity/llamacppport) | 236 | 1
 |  [libiconvport](https://github.com/zopencommunity/libiconvport) | 235 | 7
 |  [zstdport](https://github.com/zopencommunity/zstdport) | 227 | 4
 |  [findutilsport](https://github.com/zopencommunity/findutilsport) | 226 | 9
-|  [mesonport](https://github.com/zopencommunity/mesonport) | 215 | 8
 |  [gettextport](https://github.com/zopencommunity/gettextport) | 206 | 7
 |  [protobufport](https://github.com/zopencommunity/protobufport) | 174 | 8
 |  [groffport](https://github.com/zopencommunity/groffport) | 165 | 13

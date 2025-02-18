@@ -158,9 +158,6 @@
 - 2024-10-11: [Update libuv-version to 1.49.1 from 1.48.0](https://github.com/zopencommunity/libuvport/pull/5) ❌
 - 2024-10-02: [Update libuv-version to 1.49.0 from 1.48.0](https://github.com/zopencommunity/libuvport/pull/4) ❌
 
-### luvport
-- 2024-03-10: [Update luv-version to 1.6.1 from V.R.M](https://github.com/zopencommunity/luvport/pull/1) ✅
-
 ### lz4port
 - 2024-07-22: [Update lz4-version to 1.10.0 from 1.9.4](https://github.com/zopencommunity/lz4port/pull/14) ❌
 
@@ -247,6 +244,9 @@
 - 2024-02-20: [Update poco-version to 1.13.2 from 1.12.5p2](https://github.com/zopencommunity/pocoport/pull/4) ❌
 - 2024-02-07: [Update poco-version to 1.13.1 from 1.12.5p2](https://github.com/zopencommunity/pocoport/pull/3) ❌
 - 2024-01-25: [Update poco-version to 1.13.0 from 1.12.5p2](https://github.com/zopencommunity/pocoport/pull/2) ❌
+
+### re2cport
+- 2025-02-17: [Update re2c-version to 4.1 from 4.0.2](https://github.com/zopencommunity/re2cport/pull/14) ✅
 
 ### s5cmdport
 - 2024-12-17: [Update s5cmd-version to 2.3.0 from 2.2.2](https://github.com/zopencommunity/s5cmdport/pull/3) ❌
@@ -578,5 +578,5 @@
 ---
 
 
-> Last updated: 2025-02-17 06:05:38 EST
+> Last updated: 2025-02-18 06:05:52 EST
 
