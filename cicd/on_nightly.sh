@@ -16,6 +16,9 @@ UpdateDocs() {
   # Generate the currency status
   ./tools/get_bump_status.sh docs/updatestatus.md
 
+  # Generate the upstream status
+  python3 ./tools/generate_zopencommunity_patch_report.py --report docs/upstreamstatus.md --images docs/images/upstream
+
   python3 tools/create_cve_json.py --verbose --output-file docs/api/zopen_vulnerability.json
 
   # This script updates the status page
