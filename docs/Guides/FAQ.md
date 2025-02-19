@@ -83,7 +83,7 @@ Refer to the original FAQ for more details on proxy configuration and security c
 Yes, the zopen package manager supports installing specific versions of packages. Refer to the [package manager documentation](/Guides/ThePackageManager) for syntax and examples on how to specify version numbers during installation.
 
 ### What should I do if I get "Permission denied" errors when installing zopen using pax?
-Some z/OS environments have enhanced security settings that may require additional permissions to extract the zopen pax archive. If you encounter "Permission denied" errors during `pax -rf meta-main.xxxx.zos.pax.Z`, it's often related to security permissions and potentially your `umask` setting.
+Some z/OS environments have enhanced security settings that may require additional permissions to extract the zopen pax archive. If you encounter "Permission denied" errors during `pax -rf meta-main.xxxx.zos.pax.Z`, it's likely related to security permissions or your `umask` setting.
 
 * Check your `umask` setting: A restrictive `umask` (e.g., `umask 500`) can prevent `pax` from creating directories and files with the necessary permissions, leading to "Permission denied" errors.  Ensure your `umask` setting is reasonable (e.g., `0022` is a common default). Use the `umask` command to check and adjust your setting if needed.
 * BPX.CAHFS.\* Permissions (TSS Environments): In environments using **TSS (Top Secret Security)**, "Permission denied" errors during pax extraction, especially error code `EDC5111I Permission denied. (errno2=0x5BC80004)`, are often caused by missing permissions for certain **BPX.CAHFS.** facility classes. These facilities control various file system operations.
