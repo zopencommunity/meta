@@ -125,6 +125,9 @@
 ### htopport
 - 2024-01-10: [Update htop-version to 3.3.0 from 3.2.2](https://github.com/zopencommunity/htopport/pull/6) ❌
 
+### hugoport
+- 2025-02-18: [Update hugo-version to 0.144.1 from 0.143.0](https://github.com/zopencommunity/hugoport/pull/16) ✅
+
 ### kotlinport
 - 2024-07-19: [Update kotlin-version to 1.9.25 from 1.9.22](https://github.com/zopencommunity/kotlinport/pull/5) ❌
 - 2024-06-08: [Update kotlin-version to 1.9.24 from 1.9.22](https://github.com/zopencommunity/kotlinport/pull/4) ❌
@@ -132,6 +135,9 @@
 
 ### lazygitport
 - 2025-01-11: [Update lazygit-version to 0.46.0 from V.R.M](https://github.com/zopencommunity/lazygitport/pull/10) ❌
+
+### libassuanport
+- 2025-02-18: [Update libassuan-version to 3.0.2 from 3.0.1](https://github.com/zopencommunity/libassuanport/pull/14) ✅
 
 ### libiconvport
 - 2024-12-15: [Update libiconv-version to 1.18 from 1.17](https://github.com/zopencommunity/libiconvport/pull/42) ❌
@@ -154,9 +160,6 @@
 
 ### libuvport
 - 2025-01-16: [Update libuv-version to 1.50.0 from 1.48.0](https://github.com/zopencommunity/libuvport/pull/8) ❌
-- 2024-10-19: [Update libuv-version to 1.49.2 from 1.48.0](https://github.com/zopencommunity/libuvport/pull/6) ❌
-- 2024-10-11: [Update libuv-version to 1.49.1 from 1.48.0](https://github.com/zopencommunity/libuvport/pull/5) ❌
-- 2024-10-02: [Update libuv-version to 1.49.0 from 1.48.0](https://github.com/zopencommunity/libuvport/pull/4) ❌
 
 ### lz4port
 - 2024-07-22: [Update lz4-version to 1.10.0 from 1.9.4](https://github.com/zopencommunity/lz4port/pull/14) ❌
@@ -193,6 +196,7 @@
 - 2024-06-08: [Update ninja-version to 1.12.1 from 1.11.1](https://github.com/zopencommunity/ninjaport/pull/9) ❌
 
 ### opensshport
+- 2025-02-18: [Update openssh-version to 9.9p2 from 9.9p1](https://github.com/zopencommunity/opensshport/pull/19) ❌
 - 2024-10-02: [Update openssh-version to 9.9p1 from 9.8p1](https://github.com/zopencommunity/opensshport/pull/15) ❌
 
 ### osv-scannerport
@@ -255,6 +259,7 @@
 - 2024-08-29: [Update screen-version to 5.0.0 from 4.9.1](https://github.com/zopencommunity/screenport/pull/8) ❌
 
 ### sqliteport
+- 2025-02-18: [Update sqlite-version to 2025-3490100 from 2025-3480000](https://github.com/zopencommunity/sqliteport/pull/24) ❌
 - 2025-02-06: [Update sqlite-version to 2025-3490000 from 2025-3480000](https://github.com/zopencommunity/sqliteport/pull/23) ❌
 
 ### stowport
@@ -578,5 +583,5 @@
 ---
 
 
-> Last updated: 2025-02-18 06:05:52 EST
+> Last updated: 2025-02-19 06:05:46 EST
 
