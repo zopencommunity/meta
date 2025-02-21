@@ -69,6 +69,10 @@ tools/src/hwthic.h
 # VSCode settings
 .vscode
 
+# IntelliJ IDEA settings
+.idea
+meta.iml
+
 # Generated files from md2man tooling
 
 docs/zopen/man1/zopen*.gz
