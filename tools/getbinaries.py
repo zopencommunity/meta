@@ -44,33 +44,6 @@ def write_package_table_row(package, status, success_rate, latest_release, lates
     print(f"|[{latest_release['tag_name'].replace('port', '')}]({latest_asset['url']})", end='')
     print(f"|{description}|")
 
-def count_patches(repo):
-    """Count patches in a repository"""
-    num_patches = 0
-    total_lines = 0
-    try:
-        # Clone repository
-        if os.path.exists(repo.name):
-            shutil.rmtree(repo.name)
-        subprocess.run(['git', 'clone', repo.clone_url, repo.name], capture_output=True)
-        
-        # Count patches
-        paths = ('patches', 'tarballpatches', 'gitpatches', 'stable-patches', 'dev-patches')
-        for root, dirs, files in chain.from_iterable(os.walk(repo.name + "/" + path) for path in paths):
-            for filename in files:
-                if filename.endswith('.patch'):
-                    num_patches += 1
-                    with open(os.path.join(root, filename), 'r') as patch_file:
-                        total_lines += len(patch_file.readlines())
-        
-        # Cleanup
-        if os.path.exists(repo.name):
-            shutil.rmtree(repo.name)
-    except Exception as e:
-        print(f"Error counting patches for {repo.name}: {str(e)}", file=sys.stderr)
-    
-    return num_patches, total_lines
-
 def get_dependencies(repo):
     """Get dependencies from buildenv file"""
     try:
@@ -97,7 +70,6 @@ statusPerPort = {}
 download_counts = {}
 packages_by_category = defaultdict(list)
 dependentOn = {}
-patchesPerPort = {}
 totalPatchLinesPerPort = {}
 
 if os.getenv('ZOPEN_GITHUB_OAUTH_TOKEN') is None:
@@ -106,7 +78,7 @@ if os.getenv('ZOPEN_GITHUB_OAUTH_TOKEN') is None:
 
 g = Github(os.getenv('ZOPEN_GITHUB_OAUTH_TOKEN'))
 
-json_url = "https://raw.githubusercontent.com/ZOSOpenTools/meta/main/docs/api/zopen_releases.json"
+json_url = "https://raw.githubusercontent.com/ZOSOpenTools/meta/main/docs/api/zopen_releases_latest.json"
 response = requests.get(json_url)
 data = json.loads(response.text)
 todaysDate = data['timestamp']
@@ -129,11 +101,6 @@ for package, releases in data['release_data'].items():
     for dep in dependencies:
         if dep + "port" in dependentOn:
             dependentOn[dep + "port"].append(package)
-    
-    # Count patches
-    num_patches, total_lines = count_patches(repo)
-    patchesPerPort[package + "port"] = num_patches
-    totalPatchLinesPerPort[package + "port"] = total_lines
     
     # Calculate status and success rate
     total_tests = int(latest_asset['total_tests']) if latest_asset['total_tests'] else 0
@@ -286,16 +253,5 @@ with open('docs/Progress.md', 'w') as f:
         else:
             status = f"{status:.1f}%"
         print(f"| [{x}](https://github.com/zopencommunity/{x}) | {len(y)} | {status} |" + ", ".join(str(e) for e in y))
-
-    print("\n## Projects with the most patches\n")
-    print("| Package | # of Patched Lines | # of Patches")
-    print("|---|---|--|")
-    for x, y in sorted(totalPatchLinesPerPort.items(), reverse=True, key=lambda x: x[1]):
-        patches = patchesPerPort[x]
-        patchLines = totalPatchLinesPerPort[x]
-        checkMark = ""
-        if patches == 0:
-            checkMark = "&#10003;"
-        print(f"| {checkMark} [{x}](https://github.com/zopencommunity/{x}) | {patchLines} | {patches}")
 
     print("\nLast updated: ", todaysDate)
