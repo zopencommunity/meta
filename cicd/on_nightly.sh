@@ -64,6 +64,7 @@ done
   git add docs/*.md
   git add docs/*.xml
   git add docs/images/*.png
+  git add docs/images/upstream/*
   git add docs/api/*
   git add docs/reference/*
   git commit -m "Updating docs/apis/reference"
