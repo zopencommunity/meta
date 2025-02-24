@@ -222,7 +222,7 @@
 - 2023-11-05: [Update patch-version to 2.7.6 from 2.7](https://github.com/zopencommunity/patchport/pull/3) ❓
 
 ### perlport
-- 2025-02-24: [Update perl-version to 5.41.9 from 5.41.7](https://github.com/zopencommunity/perlport/pull/107) ⏳
+- 2025-02-24: [Update perl-version to 5.41.9 from 5.41.7](https://github.com/zopencommunity/perlport/pull/107) ✅
 - 2025-01-21: [Update perl-version to 5.41.8 from 5.41.7](https://github.com/zopencommunity/perlport/pull/105) ❌
 
 ### phpport
@@ -588,5 +588,5 @@
 ---
 
 
-> Last updated: 2025-02-24 12:07:24 EST
+> Last updated: 2025-02-24 16:39:48 EST
 
