@@ -68,6 +68,7 @@ done
   git add docs/api/*
   git add docs/reference/*
   git commit -m "Updating docs/apis/reference"
+  git status
   git pull --rebase
   git push origin
 }
