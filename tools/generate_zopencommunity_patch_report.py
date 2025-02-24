@@ -8,7 +8,7 @@ import subprocess
 import requests
 import tempfile
 import matplotlib.pyplot as plt
-
+import calendar # Import for month range calculation
 
 def clone_org_repos(clone_dir, org="zopencommunity"):
     """
@@ -53,6 +53,40 @@ def clone_org_repos(clone_dir, org="zopencommunity"):
         else:
             print(f"Skipping {repo['name']} (does not end with 'port').")
 
+
+def analyze_current_patches(repo_path):
+    """
+    Scan the current branch for patch files in any candidate directory, including subdirectories.
+    When the same patch (same relative file name) appears in more than one directory,
+    choose the one from the highest-priority candidate (stable-patches > dev-patches > patches).
+
+    Returns a tuple: (list of patch info, total LOC)
+    Each patch info is a dict with:
+      'file' (absolute path), 'loc', 'relative' (file name without top-level dir).
+    """
+    candidates = [("stable-patches", 1), ("dev-patches", 2), ("patches", 3)]
+    patches = {}
+    total_loc = 0
+    for candidate, priority in candidates:
+        candidate_path = os.path.join(repo_path, candidate)
+        if os.path.isdir(candidate_path):
+            # Use recursive globbing to find patches in subdirectories as well
+            for file in glob.glob(os.path.join(candidate_path, "**/*.patch"), recursive=True):
+                rel_path_candidate = os.path.relpath(file, candidate_path) # Get relative path to candidate dir
+                rel = os.path.basename(rel_path_candidate) # Use just the filename for priority comparison
+                if rel not in patches or priority < patches[rel]['priority']:
+                    try:
+                        with open(file, 'r', encoding='utf-8', errors='ignore') as f:
+                            lines = f.readlines()
+                            loc = len(lines)
+                    except Exception as e:
+                        print(f"Error reading {file}: {e}")
+                        loc = 0
+                    patches[rel] = {'file': file, 'loc': loc, 'relative': rel_path_candidate, 'priority': priority} # Store relative path to candidate
+    total_loc = sum(p['loc'] for p in patches.values())
+    return list(patches.values()), total_loc
+
+
 def get_repo_origin_date(repo_path):
     """
     Returns the date of the repo's first commit.
@@ -69,22 +103,18 @@ def get_repo_origin_date(repo_path):
         print(f"Error obtaining origin date for {repo_path}: {e}")
         return None
 
-# --- History Analysis (Git Log) ---
+# --- Modified History Analysis (Git Log) to track patch lifecycle ---
 
 def analyze_repo_history(repo_path, since_date):
     """
-    Use Git log to find when *.patch files were added (A) or removed (D)
-    since the specified date – including events from any candidate directory.
-    For each event, if the file path starts with one of the candidate directories
-    (stable-patches/, dev-patches/, patches/), the candidate prefix is removed so
-    that file identity is based solely on the relative path.
-    
-    Rename events (status starting with "R") are skipped.
-    
-    Returns a list of events:
-      { 'file': <relative file path>, 'delta': <+LOC or -LOC>, 'date': <commit_date> }.
+    Analyzes git history to track patch lifecycle AND generate delta-based events.
+
+    Returns a tuple: (patch_lifecycles, events)
+    - patch_lifecycles: Dictionary (same as before) for current patch LOC trend.
+    - events: List of delta-based events (same format as original generate_cumulative_trend).
     """
-    events = []
+    patch_lifecycles = {}
+    events = [] # List for delta-based events
     since_str = since_date.strftime("%Y-%m-%d")
     try:
         output = subprocess.check_output(
@@ -94,11 +124,12 @@ def analyze_repo_history(repo_path, since_date):
         )
     except subprocess.CalledProcessError as e:
         print(f"Error running git log in {repo_path}: {e}")
-        return events
+        return patch_lifecycles, events  # Return both even if error
 
     candidates = ["stable-patches/", "dev-patches/", "patches/"]
     current_commit_hash = None
     current_commit_timestamp = None
+
     for line in output.splitlines():
         if line.startswith("commit:"):
             try:
@@ -113,10 +144,10 @@ def analyze_repo_history(repo_path, since_date):
             if len(parts) < 2:
                 continue
             action = parts[0]
-            file_name = parts[-1]  # Works for both A/D and R cases.
-            # Skip rename events.
+            file_name = parts[-1]
             if action.startswith("R"):
                 continue
+
             candidate_found = None
             for cand in candidates:
                 if file_name.startswith(cand):
@@ -126,6 +157,10 @@ def analyze_repo_history(repo_path, since_date):
                 continue
             relative_file = file_name[len(candidate_found):]
             commit_date = datetime.date.fromtimestamp(current_commit_timestamp)
+
+            if relative_file not in patch_lifecycles:
+                patch_lifecycles[relative_file] = {'added_date': None, 'loc': 0, 'deletion_date': None}
+
             try:
                 if action == "A":
                     file_content = subprocess.check_output(
@@ -133,67 +168,54 @@ def analyze_repo_history(repo_path, since_date):
                         cwd=repo_path, text=True, errors="ignore"
                     )
                     loc = len(file_content.splitlines())
-                    delta = loc
+                    patch_lifecycles[relative_file]['added_date'] = commit_date
+                    patch_lifecycles[relative_file]['loc'] = loc
+
+                    events.append({ # Create 'add' event for overall cumulative trend
+                        'date': commit_date,
+                        'file': relative_file,
+                        'delta': loc
+                    })
+
                 elif action == "D":
-                    file_content = subprocess.check_output(
-                        ["git", "show", f"{current_commit_hash}^:{file_name}"],
-                        cwd=repo_path, text=True, errors="ignore"
-                    )
-                    loc = len(file_content.splitlines())
-                    delta = -loc
-                else:
-                    continue
+                    deletion_loc = patch_lifecycles[relative_file]['loc'] # Get LOC at time of addition
+                    patch_lifecycles[relative_file]['deletion_date'] = commit_date
+
+                    events.append({ # Create 'delete' event for overall cumulative trend
+                        'date': commit_date,
+                        'file': relative_file,
+                        'delta': -deletion_loc # Negative delta for deletion
+                    })
+
             except subprocess.CalledProcessError:
-                loc = 0
-                delta = 0
-            events.append({
-                'file': relative_file,
-                'delta': delta,
-                'date': commit_date,
-            })
-    # Sort events chronologically.
-    events.sort(key=lambda e: e['date'])
-    return events
+                pass
 
-# --- Current Patch Listing ---
+    return patch_lifecycles, events # Return both lifecycle data and events
 
-def analyze_current_patches(repo_path):
+
+# --- Function to calculate current patch LOC for a given date ---
+def get_current_patch_loc_on_date(patch_lifecycles, date):
     """
-    Scan the current branch for patch files in any candidate directory.
-    When the same patch (same relative file name) appears in more than one directory,
-    choose the one from the highest-priority candidate (stable-patches > dev-patches > patches).
-    
-    Returns a tuple: (list of patch info, total LOC)
-    Each patch info is a dict with:
-      'file' (absolute path), 'loc', 'relative' (file name without top-level dir).
+    Calculates the total LOC of patches that were 'current' on the given date.
+    Patches are 'current' if they were added on or before the date and not deleted before the date.
     """
-    candidates = [("stable-patches", 1), ("dev-patches", 2), ("patches", 3)]
-    patches = {}
-    total_loc = 0
-    for candidate, priority in candidates:
-        candidate_path = os.path.join(repo_path, candidate)
-        if os.path.isdir(candidate_path):
-            for file in glob.glob(os.path.join(candidate_path, "*.patch")):
-                rel = os.path.basename(file)
-                if rel not in patches or priority < patches[rel]['priority']:
-                    try:
-                        with open(file, 'r', encoding='utf-8', errors='ignore') as f:
-                            lines = f.readlines()
-                        loc = len(lines)
-                    except Exception as e:
-                        print(f"Error reading {file}: {e}")
-                        loc = 0
-                    patches[rel] = {'file': file, 'loc': loc, 'relative': rel, 'priority': priority}
-    total_loc = sum(p['loc'] for p in patches.values())
-    return list(patches.values()), total_loc
+    current_loc = 0
+    for patch_info in patch_lifecycles.values():
+        added_date = patch_info['added_date']
+        deletion_date = patch_info['deletion_date']
+        loc = patch_info['loc']
 
-# --- Cumulative Trend Graph (Based on Git History) ---
+        if added_date and added_date <= date: # Patch was added by or on this date
+            if deletion_date is None or deletion_date > date: # Not deleted yet OR deleted after this date
+                current_loc += loc
+    return current_loc
 
-def generate_cumulative_trend(repo_path, repo_name, images_dir):
+
+# --- Revamped Cumulative Trend Graph Function ---
+
+def generate_current_patch_loc_trend(repo_path, repo_name, images_dir, patch_lifecycles):
     """
-    Generate a cumulative trend graph (based on Git history) for a repository.
-    The graph shows the net cumulative number of lines (additions minus deletions)
-    in *.patch files (with directory prefix removed) from the inception of the repo to now.
+    Generates a trend graph showing the total LOC of patches current at different points in time.
     """
     origin_date = get_repo_origin_date(repo_path)
     if origin_date is None:
@@ -201,15 +223,11 @@ def generate_cumulative_trend(repo_path, repo_name, images_dir):
     else:
         start_date = origin_date
     print(f"For repo {repo_name}, using start date: {start_date}")
-    events = analyze_repo_history(repo_path, start_date)
-    if not events:
+
+    if not patch_lifecycles: # No patch history, return empty chart
         print(f"No patch history for {repo_name} since {start_date}")
         return None, []
-    # Group events by year-month.
-    monthly = {}
-    for event in events:
-        ym = event['date'].strftime("%Y-%m")
-        monthly[ym] = monthly.get(ym, 0) + event['delta']
+
     current_date = datetime.date.today()
     months = []
     y, m = start_date.year, start_date.month
@@ -219,29 +237,37 @@ def generate_cumulative_trend(repo_path, repo_name, images_dir):
         if m > 12:
             m = 1
             y += 1
+
     x, y_vals = [], []
-    cum_sum = 0
     for ym in months:
         date_obj = datetime.datetime.strptime(ym, "%Y-%m")
+        end_of_month_date = datetime.date(date_obj.year, date_obj.month, 1) # Get start of month
+        # Go to the last day of the month
+        month_range = calendar.monthrange(date_obj.year, date_obj.month)
+        end_of_month_date = end_of_month_date.replace(day=month_range[1])
+
+
         x.append(date_obj)
-        cum_sum += monthly.get(ym, 0)
-        y_vals.append(cum_sum)
+        current_loc = get_current_patch_loc_on_date(patch_lifecycles, end_of_month_date) # Calculate current LOC for end of month
+        y_vals.append(current_loc)
+
     fig, ax = plt.subplots(figsize=(10, 6))
     ax.plot(x, y_vals, marker='o')
     ax.set_xlabel("Date")
-    ax.set_ylabel("Cumulative LOC in .patch files")
-    ax.set_title(f"Cumulative Patch LOC Trend for {repo_name}")
+    ax.set_ylabel("Total LOC of Current Patches") # Updated Y-axis label
+    ax.set_title(f"Trend of Current Patch LOC for {repo_name}") # Updated title
     fig.autofmt_xdate()
     plt.tight_layout()
-    image_filename = f"{repo_name}_cumulative_trend.png"
+    image_filename = f"{repo_name}_current_patch_loc_trend.png" # Updated filename
     graph_file = os.path.join(images_dir, image_filename)
     plt.savefig(graph_file)
     plt.close(fig)
-    return image_filename, events
+    return image_filename, [] # Events are not directly used in this chart anymore, but keep returning empty list for consistency in main
+
 
 def generate_overall_cumulative_trend(all_events, images_dir):
     """
-    Generate an overall cumulative trend graph from all events across repos.
+    Generates an overall cumulative trend graph from all events across repos.
     """
     if not all_events:
         print("No patch events for overall cumulative trend.")
@@ -251,7 +277,7 @@ def generate_overall_cumulative_trend(all_events, images_dir):
         ym = event['date'].strftime("%Y-%m")
         monthly[ym] = monthly.get(ym, 0) + event['delta']
     earliest = min(event['date'] for event in all_events)
-    start_date = max(datetime.date(2023, 1, 1), earliest)
+    start_date = max(datetime.date(2023, 1, 1), earliest) # Keep original start date logic, could be parameterizable
     current_date = datetime.date.today()
     months = []
     y, m = start_date.year, start_date.month
@@ -261,18 +287,20 @@ def generate_overall_cumulative_trend(all_events, images_dir):
         if m > 12:
             m = 1
             y += 1
+
     x, y_vals = [], []
-    cum_sum = 0
+    cum_sum = 0 # Initialize cumulative sum at zero
     for ym in months:
         date_obj = datetime.datetime.strptime(ym, "%Y-%m")
         x.append(date_obj)
-        cum_sum += monthly.get(ym, 0)
+        cum_sum += monthly.get(ym, 0) # Add monthly delta
         y_vals.append(cum_sum)
+
     fig, ax = plt.subplots(figsize=(10, 6))
     ax.plot(x, y_vals, marker='o')
     ax.set_xlabel("Date")
-    ax.set_ylabel("Cumulative LOC in .patch files")
-    ax.set_title("Overall Cumulative Patch LOC Trend")
+    ax.set_ylabel("Cumulative LOC in .patch files (Change)") # Clarify Y-axis label
+    ax.set_title("Overall Cumulative Patch LOC Trend (Change from Start Date)") # More descriptive title
     fig.autofmt_xdate()
     plt.tight_layout()
     overall_filename = "overall_cumulative_trend.png"
@@ -280,6 +308,43 @@ def generate_overall_cumulative_trend(all_events, images_dir):
     plt.savefig(graph_file)
     plt.close(fig)
     return overall_filename
+
+# --- Pie Chart Generation ---
+def generate_tools_pie_chart(repos_data, images_dir):
+    """
+    Generates a pie chart summarizing the distribution of tools by patch LOC.
+    Categories: No Patches, 0-100 LOC, >100 LOC.
+    """
+    no_patches_count = 0
+    low_loc_count = 0
+    high_loc_count = 0
+
+    for repo in repos_data:
+        loc = repo['current_loc']
+        if loc == 0:
+            no_patches_count += 1
+        elif 0 < loc <= 100:
+            low_loc_count += 1
+        else:
+            high_loc_count += 1
+
+    labels = ['No Patches', '0-100 LOC', '>100 LOC']
+    sizes = [no_patches_count, low_loc_count, high_loc_count]
+    colors = ['lightgray', 'lightcoral', 'lightskyblue']
+    explode = (0.1, 0, 0)  # explode 1st slice
+
+    fig, ax = plt.subplots(figsize=(8, 6))
+    ax.pie(sizes, explode=explode, labels=labels, colors=colors, autopct='%1.1f%%',
+            shadow=True, startangle=140)
+    ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+    ax.set_title('Distribution of Tools by Current Patch LOC')
+
+    pie_chart_filename = "tools_patch_loc_distribution.png"
+    pie_chart_file = os.path.join(images_dir, pie_chart_filename)
+    plt.savefig(pie_chart_file)
+    plt.close(fig)
+    return pie_chart_filename
+
 
 # --- Markdown Report Generation ---
 
@@ -289,10 +354,10 @@ def normalize_anchor(name):
     """
     return "repo-" + "".join(ch if ch.isalnum() or ch=="-" else "-" for ch in name.lower())
 
-def generate_combined_markdown_report(repos_data, overall_cumulative_graph, report_file, images_rel_path):
+def generate_combined_markdown_report(repos_data, overall_cumulative_graph, pie_chart_image, report_file, images_rel_path):
     """
     Generate a combined Markdown report that includes:
-      - An overall summary with the overall cumulative trend graph.
+      - An overall summary with the overall cumulative trend graph and pie chart.
       - A repository breakdown table with columns: Repository, Lines of Code, # of Patch files.
         Repository names are links to their detailed sections.
       - Detailed sections for each repository.
@@ -301,23 +366,27 @@ def generate_combined_markdown_report(repos_data, overall_cumulative_graph, repo
     repos_data.sort(key=lambda r: r['current_loc'], reverse=True)
     total_patches = sum(len(repo['current_patches']) for repo in repos_data)
     total_loc = sum(repo['current_loc'] for repo in repos_data)
-    
+
     md = "# Upstream Report\n\n"
     md += "## Overall Summary\n\n"
     md += f"**Total Lines of Code (Current):** {total_loc}  \n"
     md += f"**Total # of Patch files:** {total_patches}\n\n"
-    
+
     if overall_cumulative_graph:
-        md += "### Overall Cumulative Trend Graph\n\n"
-        md += f"![Overall Cumulative Trend]({images_rel_path}/{overall_cumulative_graph})\n\n"
-    
+        md += "### Overall Cumulative Patch LOC Trend (Net Change)\n\n" # Updated title
+        md += f"![Overall Cumulative Patch LOC Trend (Net Change)]({images_rel_path}/{overall_cumulative_graph})\n\n" # Updated alt text
+
+    if pie_chart_image:
+        md += "### Tool Patch LOC Distribution\n\n"
+        md += f"![Tool Patch LOC Distribution]({images_rel_path}/{pie_chart_image})\n\n"
+
     md += "## Repository Breakdown (Sorted by Current Lines of Code)\n\n"
     md += "| Repository | Lines of Code | # of Patch files |\n"
     md += "| --- | --- | --- |\n"
     for repo in repos_data:
         anchor = normalize_anchor(repo['name'])
         md += f"| [{repo['name']}](#{anchor}) | {repo['current_loc']} | {len(repo['current_patches'])} |\n"
-    
+
     md += "\n---\n\n"
     md += "# Detailed Repository Reports\n\n"
     for repo in repos_data:
@@ -326,76 +395,78 @@ def generate_combined_markdown_report(repos_data, overall_cumulative_graph, repo
         md += f"## Repository: {repo['name']}\n\n"
         md += f"**Current Lines of Code:** {repo['current_loc']}  \n"
         md += f"**Current # of Patch files:** {len(repo['current_patches'])}\n\n"
-        if repo.get('cumulative_trend'):
-            md += "### Cumulative Trend Graph (Based on Git History)\n\n"
-            md += f"![Cumulative Trend]({images_rel_path}/{repo['cumulative_trend']})\n\n"
+        if repo.get('cumulative_trend'): # Update description for repo-specific trend
+            md += "### Trend of Current Patch LOC\n\n"
+            md += f"![Current Patch LOC Trend]({images_rel_path}/{repo['cumulative_trend']})\n\n"
         md += "### Current Patch Details\n\n"
         md += "| File | LOC |\n"
         md += "| --- | --- |\n"
         for patch in repo['current_patches']:
             md += f"| {patch['relative']} | {patch['loc']} |\n"
+        md += "\n---\n\n"
         md += "\n### Historical Patch Event Details\n\n"
         md += "| Commit Date | File | Delta LOC |\n"
         md += "| --- | --- | --- |\n"
-        for event in repo['events']:
+        for event in repo['events']: # Use repo['events'] to populate the table
             md += f"| {event['date']} | {event['file']} | {event['delta']} |\n"
         md += "\n---\n\n"
-    
+
     with open(report_file, 'w', encoding='utf-8') as f:
         f.write(md)
     print(f"Combined Markdown report generated at: {report_file}")
     return report_file
 
+
 # --- Main ---
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Clone all repos from github.com/zopencommunity that end with 'port', "
-                    "analyze Git history (from 2023 or repo origin) for *.patch file events (additions, deletions, renames), "
-                    "normalize file paths (ignoring the top-level patch directory), and generate a cumulative trend graph "
-                    "and a combined Markdown report."
+        description="Clone repos, analyze patch lifecycle, and generate reports."
     )
     parser.add_argument(
         "--report", default="docs/upstreamstatus.md",
-        help="Path for the output Markdown report (default: docs/upstreamstatus.md)"
+        help="Path for the output Markdown report"
     )
     parser.add_argument(
         "--images", default="docs/images/upstream",
-        help="Directory for output images (default: docs/images/upstream)"
+        help="Directory for output images"
     )
     args = parser.parse_args()
-    
+
     report_file = args.report
     images_dir = args.images
     os.makedirs(images_dir, exist_ok=True)
     os.makedirs(os.path.dirname(report_file), exist_ok=True)
-    
+
     repos_data = []
-    all_events = []
-    
+    all_events = [] # Initialize all_events again
+
     with tempfile.TemporaryDirectory() as clone_dir:
         print(f"Cloning repositories into temporary directory: {clone_dir}")
         clone_org_repos(clone_dir, org="zopencommunity")
-        
+
         for item in os.listdir(clone_dir):
             repo_path = os.path.join(clone_dir, item)
             if os.path.isdir(repo_path):
                 print(f"Processing repository: {item}")
-                image_filename, events = generate_cumulative_trend(repo_path, item, images_dir)
+                patch_lifecycles, events = analyze_repo_history(repo_path, get_repo_origin_date(repo_path) or datetime.date(2023, 1, 1)) # Get both lifecycle AND events
+                image_filename, _ = generate_current_patch_loc_trend(repo_path, item, images_dir, patch_lifecycles)
                 current_patches, current_loc = analyze_current_patches(repo_path)
                 repos_data.append({
                     'name': item,
                     'cumulative_trend': image_filename,
-                    'events': events,
+                    'events': events, # Now store the events in repo_data
                     'current_patches': current_patches,
                     'current_loc': current_loc,
                 })
-                all_events.extend(events)
-        
-        overall_cumulative = generate_overall_cumulative_trend(all_events, images_dir) if all_events else None
+                all_events.extend(events) # Extend the overall all_events list
+
+        overall_cumulative = generate_overall_cumulative_trend(all_events, images_dir) if all_events else None # Call overall cumulative trend graph generation
+        pie_chart_image = generate_tools_pie_chart(repos_data, images_dir)
         images_rel_path = "./images/upstream"
-        generate_combined_markdown_report(repos_data, overall_cumulative, report_file, images_rel_path)
+        generate_combined_markdown_report(repos_data, overall_cumulative, pie_chart_image, report_file, images_rel_path)
         print("Analysis complete. Temporary clone directory will be removed.")
+
 
 if __name__ == "__main__":
     main()
