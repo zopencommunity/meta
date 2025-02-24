@@ -1,9 +1,9 @@
-# Upstream Patch Report
+# Upstream Report
 
 ## Overall Summary
 
-**Total Lines of Code (Current):** 18553  
-**Total # of Patch files:** 379
+**Total Lines of Code (Current):** 18617  
+**Total # of Patch files:** 382
 
 ### Overall Cumulative Trend Graph
 
@@ -13,7 +13,7 @@
 
 | Repository | Lines of Code | # of Patch files |
 | --- | --- | --- |
-| [bashport](#repo-bashport) | 2637 | 12 |
+| [bashport](#repo-bashport) | 2647 | 12 |
 | [cmakeport](#repo-cmakeport) | 1092 | 1 |
 | [valgrindport](#repo-valgrindport) | 896 | 3 |
 | [gitport](#repo-gitport) | 837 | 25 |
@@ -29,11 +29,11 @@
 | [emacsport](#repo-emacsport) | 413 | 2 |
 | [flexport](#repo-flexport) | 351 | 2 |
 | [prometheusport](#repo-prometheusport) | 348 | 1 |
+| [neovimport](#repo-neovimport) | 347 | 13 |
 | [pocoport](#repo-pocoport) | 343 | 9 |
 | [opensshport](#repo-opensshport) | 342 | 17 |
 | [vimport](#repo-vimport) | 335 | 12 |
 | [phpport](#repo-phpport) | 320 | 13 |
-| [neovimport](#repo-neovimport) | 300 | 9 |
 | [zipport](#repo-zipport) | 297 | 8 |
 | [moreutilsport](#repo-moreutilsport) | 262 | 5 |
 | [gitlab-runnerport](#repo-gitlab-runnerport) | 241 | 10 |
@@ -55,19 +55,19 @@
 | [doxygenport](#repo-doxygenport) | 97 | 5 |
 | [zstdport](#repo-zstdport) | 93 | 2 |
 | [depot_toolsport](#repo-depot-toolsport) | 91 | 1 |
-| [expectport](#repo-expectport) | 79 | 4 |
 | [getoptport](#repo-getoptport) | 79 | 1 |
+| [expectport](#repo-expectport) | 79 | 4 |
 | [libassuanport](#repo-libassuanport) | 77 | 4 |
 | [xmltoport](#repo-xmltoport) | 74 | 1 |
 | [diffutilsport](#repo-diffutilsport) | 72 | 3 |
 | [cppcheckport](#repo-cppcheckport) | 72 | 4 |
 | [libtoolport](#repo-libtoolport) | 71 | 3 |
+| [libuvport](#repo-libuvport) | 69 | 1 |
 | [nanoport](#repo-nanoport) | 68 | 1 |
 | [groffport](#repo-groffport) | 66 | 5 |
-| [libuvport](#repo-libuvport) | 66 | 2 |
 | [logrotateport](#repo-logrotateport) | 65 | 1 |
-| [gnport](#repo-gnport) | 57 | 1 |
 | [libbsdport](#repo-libbsdport) | 57 | 1 |
+| [gnport](#repo-gnport) | 57 | 1 |
 | [texinfoport](#repo-texinfoport) | 56 | 3 |
 | [libgpgerrorport](#repo-libgpgerrorport) | 53 | 3 |
 | [expatport](#repo-expatport) | 52 | 2 |
@@ -75,7 +75,7 @@
 | [terraformport](#repo-terraformport) | 51 | 2 |
 | [lessport](#repo-lessport) | 47 | 3 |
 | [tigport](#repo-tigport) | 47 | 1 |
-| [lazygitport](#repo-lazygitport) | 42 | 1 |
+| [lazygitport](#repo-lazygitport) | 46 | 1 |
 | [poptport](#repo-poptport) | 35 | 1 |
 | [whichport](#repo-whichport) | 34 | 1 |
 | [sedport](#repo-sedport) | 33 | 1 |
@@ -84,147 +84,147 @@
 | [luvport](#repo-luvport) | 31 | 1 |
 | [libffiport](#repo-libffiport) | 31 | 2 |
 | [lynxport](#repo-lynxport) | 30 | 1 |
+| [netpbmport](#repo-netpbmport) | 29 | 2 |
 | [gmpport](#repo-gmpport) | 29 | 2 |
 | [libgpgmeport](#repo-libgpgmeport) | 29 | 2 |
 | [libsasl2port](#repo-libsasl2port) | 29 | 2 |
-| [netpbmport](#repo-netpbmport) | 29 | 2 |
 | [npthport](#repo-npthport) | 28 | 2 |
 | [libksbaport](#repo-libksbaport) | 28 | 2 |
 | [avro-c-libport](#repo-avro-c-libport) | 28 | 2 |
-| [git-extrasport](#repo-git-extrasport) | 26 | 1 |
 | [ctagsport](#repo-ctagsport) | 26 | 2 |
+| [git-extrasport](#repo-git-extrasport) | 26 | 1 |
 | [my_basicport](#repo-my-basicport) | 22 | 1 |
-| [librdkafkaport](#repo-librdkafkaport) | 20 | 1 |
 | [fzfport](#repo-fzfport) | 20 | 1 |
+| [librdkafkaport](#repo-librdkafkaport) | 20 | 1 |
 | [shdocport](#repo-shdocport) | 20 | 2 |
 | [lz4port](#repo-lz4port) | 19 | 1 |
-| [git-lfsport](#repo-git-lfsport) | 18 | 1 |
 | [sshpassport](#repo-sshpassport) | 18 | 1 |
-| [cunitport](#repo-cunitport) | 17 | 2 |
+| [git-lfsport](#repo-git-lfsport) | 18 | 1 |
 | [bzip2port](#repo-bzip2port) | 17 | 1 |
+| [cunitport](#repo-cunitport) | 17 | 2 |
 | [makeport](#repo-makeport) | 16 | 1 |
-| [opensslport](#repo-opensslport) | 15 | 1 |
-| [libpcreport](#repo-libpcreport) | 15 | 1 |
-| [libpipelineport](#repo-libpipelineport) | 15 | 1 |
-| [xzport](#repo-xzport) | 15 | 1 |
-| [libgdbmport](#repo-libgdbmport) | 15 | 1 |
-| [libxsltport](#repo-libxsltport) | 15 | 1 |
-| [libpcre2port](#repo-libpcre2port) | 15 | 1 |
-| [libmdport](#repo-libmdport) | 15 | 1 |
 | [curlport](#repo-curlport) | 15 | 1 |
+| [xzport](#repo-xzport) | 15 | 1 |
+| [opensslport](#repo-opensslport) | 15 | 1 |
+| [libgdbmport](#repo-libgdbmport) | 15 | 1 |
+| [libpipelineport](#repo-libpipelineport) | 15 | 1 |
+| [libpcre2port](#repo-libpcre2port) | 15 | 1 |
+| [libxsltport](#repo-libxsltport) | 15 | 1 |
+| [libpcreport](#repo-libpcreport) | 15 | 1 |
+| [libmdport](#repo-libmdport) | 15 | 1 |
 | [nghttp2port](#repo-nghttp2port) | 14 | 1 |
-| [mesonport](#repo-mesonport) | 13 | 1 |
-| [lpegport](#repo-lpegport) | 13 | 1 |
+| [autoconfport](#repo-autoconfport) | 13 | 1 |
 | [xxhashport](#repo-xxhashport) | 13 | 1 |
+| [ncduport](#repo-ncduport) | 13 | 1 |
 | [luaport](#repo-luaport) | 13 | 1 |
 | [libserdesport](#repo-libserdesport) | 13 | 1 |
+| [mesonport](#repo-mesonport) | 13 | 1 |
+| [lpegport](#repo-lpegport) | 13 | 1 |
 | [stowport](#repo-stowport) | 13 | 1 |
-| [ncduport](#repo-ncduport) | 13 | 1 |
-| [autoconfport](#repo-autoconfport) | 13 | 1 |
-| [grafanaport](#repo-grafanaport) | 0 | 0 |
-| [zedc_asciiport](#repo-zedc-asciiport) | 0 | 0 |
-| [duckdbport](#repo-duckdbport) | 0 | 0 |
-| [libgit2port](#repo-libgit2port) | 0 | 0 |
-| [gradleport](#repo-gradleport) | 0 | 0 |
-| [dos2unixport](#repo-dos2unixport) | 0 | 0 |
-| [shufport](#repo-shufport) | 0 | 0 |
-| [man-dbport](#repo-man-dbport) | 0 | 0 |
-| [frpport](#repo-frpport) | 0 | 0 |
-| [gettextport](#repo-gettextport) | 0 | 0 |
-| [patchport](#repo-patchport) | 0 | 0 |
-| [zos-code-page-toolsport](#repo-zos-code-page-toolsport) | 0 | 0 |
-| [onigurumaport](#repo-onigurumaport) | 0 | 0 |
-| [dialogport](#repo-dialogport) | 0 | 0 |
-| [nginxport](#repo-nginxport) | 0 | 0 |
-| [redisport](#repo-redisport) | 0 | 0 |
-| [fxport](#repo-fxport) | 0 | 0 |
-| [helloport](#repo-helloport) | 0 | 0 |
-| [jrubyport](#repo-jrubyport) | 0 | 0 |
-| [help2manport](#repo-help2manport) | 0 | 0 |
-| [hugoport](#repo-hugoport) | 0 | 0 |
-| [zigiport](#repo-zigiport) | 0 | 0 |
-| [esbuildport](#repo-esbuildport) | 0 | 0 |
-| [gperfport](#repo-gperfport) | 0 | 0 |
-| [gitlabcliport](#repo-gitlabcliport) | 0 | 0 |
-| [ninjaport](#repo-ninjaport) | 0 | 0 |
-| [conanport](#repo-conanport) | 0 | 0 |
-| [cjsonport](#repo-cjsonport) | 0 | 0 |
-| [promptersport](#repo-promptersport) | 0 | 0 |
-| [janssonport](#repo-janssonport) | 0 | 0 |
-| [htopport](#repo-htopport) | 0 | 0 |
-| [check_pythonport](#repo-check-pythonport) | 0 | 0 |
-| [natsport](#repo-natsport) | 0 | 0 |
-| [ttypeport](#repo-ttypeport) | 0 | 0 |
-| [zlibport](#repo-zlibport) | 0 | 0 |
-| [wgetport](#repo-wgetport) | 0 | 0 |
-| [libdioport](#repo-libdioport) | 0 | 0 |
-| [ginport](#repo-ginport) | 0 | 0 |
-| [direnvport](#repo-direnvport) | 0 | 0 |
-| [mavenport](#repo-mavenport) | 0 | 0 |
-| [gnulibport](#repo-gnulibport) | 0 | 0 |
-| [zusageport](#repo-zusageport) | 0 | 0 |
-| [jenkinsport](#repo-jenkinsport) | 0 | 0 |
-| [murexport](#repo-murexport) | 0 | 0 |
-| [check_clangport](#repo-check-clangport) | 0 | 0 |
-| [dufport](#repo-dufport) | 0 | 0 |
-| [comp_xlclangport](#repo-comp-xlclangport) | 0 | 0 |
-| [joeport](#repo-joeport) | 0 | 0 |
-| [kotlinport](#repo-kotlinport) | 0 | 0 |
-| [sudoport](#repo-sudoport) | 0 | 0 |
-| [caddyport](#repo-caddyport) | 0 | 0 |
-| [v8port](#repo-v8port) | 0 | 0 |
-| [powerlinegoport](#repo-powerlinegoport) | 0 | 0 |
-| [luarocksport](#repo-luarocksport) | 0 | 0 |
-| [groovyport](#repo-groovyport) | 0 | 0 |
-| [findutilsport](#repo-findutilsport) | 0 | 0 |
-| [parse-gotestport](#repo-parse-gotestport) | 0 | 0 |
-| [spdlogport](#repo-spdlogport) | 0 | 0 |
-| [zotsampleport](#repo-zotsampleport) | 0 | 0 |
-| [git-chglogport](#repo-git-chglogport) | 0 | 0 |
-| [osv-scannerport](#repo-osv-scannerport) | 0 | 0 |
-| [bash-completionport](#repo-bash-completionport) | 0 | 0 |
-| [buildkiteport](#repo-buildkiteport) | 0 | 0 |
 | [m4port](#repo-m4port) | 0 | 0 |
-| [cosignport](#repo-cosignport) | 0 | 0 |
-| [pythonport](#repo-pythonport) | 0 | 0 |
-| [iperfport](#repo-iperfport) | 0 | 0 |
-| [gawkport](#repo-gawkport) | 0 | 0 |
-| [nmapport](#repo-nmapport) | 0 | 0 |
-| [bisonport](#repo-bisonport) | 0 | 0 |
-| [yqport](#repo-yqport) | 0 | 0 |
-| [check_xlclangport](#repo-check-xlclangport) | 0 | 0 |
-| [re2cport](#repo-re2cport) | 0 | 0 |
-| [c3270port](#repo-c3270port) | 0 | 0 |
-| [perlport](#repo-perlport) | 0 | 0 |
 | [automakeport](#repo-automakeport) | 0 | 0 |
-| [zoslibport](#repo-zoslibport) | 0 | 0 |
-| [byaccport](#repo-byaccport) | 0 | 0 |
-| [tarport](#repo-tarport) | 0 | 0 |
-| [comp_clangport](#repo-comp-clangport) | 0 | 0 |
-| [githubcliport](#repo-githubcliport) | 0 | 0 |
-| [boostport](#repo-boostport) | 0 | 0 |
-| [tclport](#repo-tclport) | 0 | 0 |
-| [multitailport](#repo-multitailport) | 0 | 0 |
-| [libxml2port](#repo-libxml2port) | 0 | 0 |
-| [s5cmdport](#repo-s5cmdport) | 0 | 0 |
-| [comp_goport](#repo-comp-goport) | 0 | 0 |
-| [javaport](#repo-javaport) | 0 | 0 |
+| [perlport](#repo-perlport) | 0 | 0 |
+| [zlibport](#repo-zlibport) | 0 | 0 |
+| [ninjaport](#repo-ninjaport) | 0 | 0 |
 | [coreutilsport](#repo-coreutilsport) | 0 | 0 |
-| [zospstreeport](#repo-zospstreeport) | 0 | 0 |
-| [toolsandtoysport](#repo-toolsandtoysport) | 0 | 0 |
-| [antport](#repo-antport) | 0 | 0 |
-| [fqport](#repo-fqport) | 0 | 0 |
-| [metaport](#repo-metaport) | 0 | 0 |
-| [check_javaport](#repo-check-javaport) | 0 | 0 |
-| [wharfport](#repo-wharfport) | 0 | 0 |
-| [zosncport](#repo-zosncport) | 0 | 0 |
-| [termenvport](#repo-termenvport) | 0 | 0 |
-| [godsectport](#repo-godsectport) | 0 | 0 |
+| [bisonport](#repo-bisonport) | 0 | 0 |
+| [help2manport](#repo-help2manport) | 0 | 0 |
+| [gettextport](#repo-gettextport) | 0 | 0 |
+| [zotsampleport](#repo-zotsampleport) | 0 | 0 |
+| [man-dbport](#repo-man-dbport) | 0 | 0 |
+| [tarport](#repo-tarport) | 0 | 0 |
+| [tclport](#repo-tclport) | 0 | 0 |
+| [gawkport](#repo-gawkport) | 0 | 0 |
+| [shufport](#repo-shufport) | 0 | 0 |
+| [wgetport](#repo-wgetport) | 0 | 0 |
+| [gperfport](#repo-gperfport) | 0 | 0 |
+| [zoslibport](#repo-zoslibport) | 0 | 0 |
+| [patchport](#repo-patchport) | 0 | 0 |
+| [re2cport](#repo-re2cport) | 0 | 0 |
+| [findutilsport](#repo-findutilsport) | 0 | 0 |
 | [cscopeport](#repo-cscopeport) | 0 | 0 |
-| [check_goport](#repo-check-goport) | 0 | 0 |
-| [gumport](#repo-gumport) | 0 | 0 |
+| [gnulibport](#repo-gnulibport) | 0 | 0 |
+| [helloport](#repo-helloport) | 0 | 0 |
+| [htopport](#repo-htopport) | 0 | 0 |
+| [metaport](#repo-metaport) | 0 | 0 |
+| [libxml2port](#repo-libxml2port) | 0 | 0 |
+| [zigiport](#repo-zigiport) | 0 | 0 |
+| [sudoport](#repo-sudoport) | 0 | 0 |
+| [yqport](#repo-yqport) | 0 | 0 |
+| [pythonport](#repo-pythonport) | 0 | 0 |
+| [comp_goport](#repo-comp-goport) | 0 | 0 |
+| [comp_clangport](#repo-comp-clangport) | 0 | 0 |
+| [comp_xlclangport](#repo-comp-xlclangport) | 0 | 0 |
+| [direnvport](#repo-direnvport) | 0 | 0 |
+| [libgit2port](#repo-libgit2port) | 0 | 0 |
+| [duckdbport](#repo-duckdbport) | 0 | 0 |
+| [powerlinegoport](#repo-powerlinegoport) | 0 | 0 |
+| [byaccport](#repo-byaccport) | 0 | 0 |
 | [bumpport](#repo-bumpport) | 0 | 0 |
+| [c3270port](#repo-c3270port) | 0 | 0 |
+| [gumport](#repo-gumport) | 0 | 0 |
+| [wharfport](#repo-wharfport) | 0 | 0 |
+| [dufport](#repo-dufport) | 0 | 0 |
+| [onigurumaport](#repo-onigurumaport) | 0 | 0 |
+| [multitailport](#repo-multitailport) | 0 | 0 |
+| [janssonport](#repo-janssonport) | 0 | 0 |
+| [redisport](#repo-redisport) | 0 | 0 |
+| [luarocksport](#repo-luarocksport) | 0 | 0 |
+| [termenvport](#repo-termenvport) | 0 | 0 |
+| [esbuildport](#repo-esbuildport) | 0 | 0 |
+| [nginxport](#repo-nginxport) | 0 | 0 |
+| [natsport](#repo-natsport) | 0 | 0 |
+| [githubcliport](#repo-githubcliport) | 0 | 0 |
+| [zos-code-page-toolsport](#repo-zos-code-page-toolsport) | 0 | 0 |
+| [v8port](#repo-v8port) | 0 | 0 |
+| [dos2unixport](#repo-dos2unixport) | 0 | 0 |
+| [zospstreeport](#repo-zospstreeport) | 0 | 0 |
+| [zosncport](#repo-zosncport) | 0 | 0 |
+| [boostport](#repo-boostport) | 0 | 0 |
+| [buildkiteport](#repo-buildkiteport) | 0 | 0 |
+| [javaport](#repo-javaport) | 0 | 0 |
+| [antport](#repo-antport) | 0 | 0 |
+| [jrubyport](#repo-jrubyport) | 0 | 0 |
+| [toolsandtoysport](#repo-toolsandtoysport) | 0 | 0 |
+| [groovyport](#repo-groovyport) | 0 | 0 |
+| [kotlinport](#repo-kotlinport) | 0 | 0 |
+| [caddyport](#repo-caddyport) | 0 | 0 |
+| [gitlabcliport](#repo-gitlabcliport) | 0 | 0 |
+| [fqport](#repo-fqport) | 0 | 0 |
+| [promptersport](#repo-promptersport) | 0 | 0 |
+| [osv-scannerport](#repo-osv-scannerport) | 0 | 0 |
+| [ginport](#repo-ginport) | 0 | 0 |
+| [frpport](#repo-frpport) | 0 | 0 |
+| [mavenport](#repo-mavenport) | 0 | 0 |
+| [ttypeport](#repo-ttypeport) | 0 | 0 |
+| [cosignport](#repo-cosignport) | 0 | 0 |
+| [jenkinsport](#repo-jenkinsport) | 0 | 0 |
+| [godsectport](#repo-godsectport) | 0 | 0 |
+| [murexport](#repo-murexport) | 0 | 0 |
+| [grafanaport](#repo-grafanaport) | 0 | 0 |
+| [iperfport](#repo-iperfport) | 0 | 0 |
+| [fxport](#repo-fxport) | 0 | 0 |
+| [s5cmdport](#repo-s5cmdport) | 0 | 0 |
+| [parse-gotestport](#repo-parse-gotestport) | 0 | 0 |
+| [check_clangport](#repo-check-clangport) | 0 | 0 |
+| [check_xlclangport](#repo-check-xlclangport) | 0 | 0 |
+| [check_pythonport](#repo-check-pythonport) | 0 | 0 |
+| [check_javaport](#repo-check-javaport) | 0 | 0 |
+| [check_goport](#repo-check-goport) | 0 | 0 |
+| [nmapport](#repo-nmapport) | 0 | 0 |
+| [hugoport](#repo-hugoport) | 0 | 0 |
+| [dialogport](#repo-dialogport) | 0 | 0 |
+| [joeport](#repo-joeport) | 0 | 0 |
+| [cjsonport](#repo-cjsonport) | 0 | 0 |
+| [libdioport](#repo-libdioport) | 0 | 0 |
+| [conanport](#repo-conanport) | 0 | 0 |
+| [git-chglogport](#repo-git-chglogport) | 0 | 0 |
+| [zedc_asciiport](#repo-zedc-asciiport) | 0 | 0 |
+| [bash-completionport](#repo-bash-completionport) | 0 | 0 |
+| [zusageport](#repo-zusageport) | 0 | 0 |
+| [spdlogport](#repo-spdlogport) | 0 | 0 |
 | [creduceport](#repo-creduceport) | 0 | 0 |
+| [gradleport](#repo-gradleport) | 0 | 0 |
 
 ---
 
@@ -233,7 +233,7 @@
 <a name="repo-bashport"></a>
 ## Repository: bashport
 
-**Current Lines of Code:** 2637  
+**Current Lines of Code:** 2647  
 **Current # of Patch files:** 12
 
 ### Cumulative Trend Graph (Based on Git History)
@@ -244,18 +244,18 @@
 
 | File | LOC |
 | --- | --- |
-| configure.patch | 43 |
-| sig.c.patch | 30 |
-| PR2.patch | 803 |
-| findcmd.c.patch | 22 |
-| PR1.patch | 1473 |
-| kill.def.patch | 123 |
 | Makefile.in.patch | 13 |
+| PR1.patch | 1473 |
+| PR2.patch | 803 |
+| configure.patch | 53 |
+| findcmd.c.patch | 22 |
+| kill.def.patch | 123 |
+| sig.c.patch | 30 |
+| aclocal.patch | 23 |
+| array.tests.patch | 64 |
 | coproc.tests.patch | 17 |
 | redir.tests.patch | 13 |
 | source6.sub.patch | 13 |
-| array.tests.patch | 64 |
-| aclocal.patch | 23 |
 
 ### Historical Patch Event Details
 
@@ -418,9 +418,9 @@
 
 | File | LOC |
 | --- | --- |
-| guest_s390_helpers.c.patch | 867 |
 | Makefile.all.am.patch | 13 |
 | guest_s390_defs.h.patch | 16 |
+| guest_s390_helpers.c.patch | 867 |
 
 ### Historical Patch Event Details
 
@@ -444,30 +444,30 @@
 | File | LOC |
 | --- | --- |
 | Makefile.patch | 84 |
-| diff.c.patch | 42 |
-| configure.ac.patch | 14 |
-| combine-diff.c.patch | 15 |
-| entry.c.patch | 77 |
-| read-cache.c.patch | 14 |
-| object-file.c.patch | 106 |
-| utf8.c.patch | 35 |
-| http.c.patch | 23 |
 | archive.c.patch | 17 |
-| quote.c.patch | 22 |
+| blame.c.patch | 16 |
+| builtin.h.patch | 13 |
+| combine-diff.c.patch | 15 |
+| config.c.patch | 33 |
 | config.mak.uname.patch | 24 |
-| environment.h.patch | 15 |
-| test-lib.sh.patch | 13 |
+| configure.ac.patch | 14 |
+| convert.c.patch | 142 |
 | copy.c.patch | 14 |
+| diff.c.patch | 42 |
+| entry.c.patch | 77 |
+| environment.c.patch | 15 |
+| environment.h.patch | 15 |
+| exec-cmd.c.patch | 15 |
 | generate-perl.sh.patch | 13 |
 | git-compat-util.h.patch | 16 |
-| builtin.h.patch | 13 |
-| convert.c.patch | 142 |
-| config.c.patch | 33 |
-| blame.c.patch | 16 |
-| exec-cmd.c.patch | 15 |
 | hash-object.c.patch | 44 |
+| http.c.patch | 23 |
+| object-file.c.patch | 106 |
+| quote.c.patch | 22 |
 | read-cache-ll.h.patch | 15 |
-| environment.c.patch | 15 |
+| read-cache.c.patch | 14 |
+| test-lib.sh.patch | 13 |
+| utf8.c.patch | 35 |
 
 ### Historical Patch Event Details
 
@@ -504,13 +504,13 @@
 
 | File | LOC |
 | --- | --- |
-| zedc.c.patch | 236 |
-| zos.h.patch | 30 |
-| gzip.c.patch | 199 |
-| unzip.c.patch | 19 |
-| gzip.h.patch | 34 |
 | Makefile.in.patch | 70 |
+| gzip.c.patch | 199 |
+| gzip.h.patch | 34 |
+| unzip.c.patch | 19 |
+| zedc.c.patch | 236 |
 | zip.c.patch | 81 |
+| zos.h.patch | 30 |
 
 ### Historical Patch Event Details
 
@@ -564,18 +564,18 @@
 
 | File | LOC |
 | --- | --- |
-| configure.patch | 27 |
-| configure.ac.patch | 13 |
-| t-exectool.c.patch | 15 |
-| command.c.patch | 13 |
-| call-pinentry.c.patch | 31 |
-| homedir.c.patch | 326 |
-| ffi.c.patch | 14 |
-| gpg-agent.c.patch | 107 |
-| server.c.patch | 22 |
 | call-gpg.c.patch | 54 |
+| call-pinentry.c.patch | 31 |
+| command.c.patch | 13 |
+| configure.ac.patch | 13 |
+| configure.patch | 27 |
 | decrypt.c.patch | 15 |
 | dns.c.patch | 13 |
+| ffi.c.patch | 14 |
+| gpg-agent.c.patch | 107 |
+| homedir.c.patch | 326 |
+| server.c.patch | 22 |
+| t-exectool.c.patch | 15 |
 
 ### Historical Patch Event Details
 
@@ -614,18 +614,19 @@
 
 | File | LOC |
 | --- | --- |
-| configure.ac.patch | 37 |
 | Makemodule.am.patch | 22 |
+| PR1.patch | 257 |
+| configure.ac.patch | 37 |
 | gen_uuid.c.patch | 50 |
+| pty-session.c.patch | 205 |
 | pty-session.h.patch | 12 |
 | scriptlive.c.patch | 29 |
-| PR1.patch | 257 |
-| pty-session.c.patch | 205 |
 
 ### Historical Patch Event Details
 
 | Commit Date | File | Delta LOC |
 | --- | --- | --- |
+| 2023-11-22 | PR1.patch | 262 |
 | 2023-12-04 | gen_uuid.c.patch | 50 |
 | 2024-11-18 | Makemodule.am.patch | 22 |
 | 2024-11-18 | configure.ac.patch | 37 |
@@ -649,18 +650,18 @@
 
 | File | LOC |
 | --- | --- |
+| ebcdic.h.patch | 48 |
 | extract.c.patch | 23 |
-| unzpriv.h.patch | 25 |
-| unxcfg.h.patch | 72 |
+| fileio.c.patch | 67 |
 | globals.h.patch | 18 |
 | process.c.patch | 13 |
-| unix.c.patch | 196 |
 | riscos.h.patch | 16 |
-| fileio.c.patch | 67 |
-| zipinfo.c.patch | 14 |
-| ebcdic.h.patch | 48 |
-| unzip.h.patch | 27 |
 | ttyio.c.patch | 29 |
+| unix.c.patch | 196 |
+| unxcfg.h.patch | 72 |
+| unzip.h.patch | 27 |
+| unzpriv.h.patch | 25 |
+| zipinfo.c.patch | 14 |
 
 ### Historical Patch Event Details
 
@@ -699,19 +700,19 @@
 
 | File | LOC |
 | --- | --- |
-| cron-zos-paths.c.patch | 109 |
-| entry.c.patch | 25 |
-| cron.c.patch | 14 |
 | Makemodule.am.patch | 13 |
-| cronnext.c.patch | 37 |
-| pathnames.h.patch | 30 |
-| pw_dup.c.patch | 57 |
-| crontab.c.patch | 23 |
-| genlib.sh.patch | 77 |
-| readtab.c.patch | 13 |
+| cron-zos-paths.c.patch | 109 |
 | cron-zos-paths.h.patch | 59 |
-| popen.c.patch | 30 |
+| cron.c.patch | 14 |
+| cronnext.c.patch | 37 |
+| crontab.c.patch | 23 |
 | database.c.patch | 23 |
+| entry.c.patch | 25 |
+| genlib.sh.patch | 77 |
+| pathnames.h.patch | 30 |
+| popen.c.patch | 30 |
+| pw_dup.c.patch | 57 |
+| readtab.c.patch | 13 |
 
 ### Historical Patch Event Details
 
@@ -747,12 +748,12 @@
 
 | File | LOC |
 | --- | --- |
+| PR1.patch | 140 |
+| acls.c.patch | 16 |
 | comm.sh.patch | 14 |
 | pty.c.patch | 83 |
-| acls.c.patch | 16 |
-| PR1.patch | 140 |
-| tty.sh.patch | 40 |
 | screen.c.patch | 80 |
+| tty.sh.patch | 40 |
 | utmp.c.patch | 112 |
 
 ### Historical Patch Event Details
@@ -782,19 +783,19 @@
 
 | File | LOC |
 | --- | --- |
+| client.c.patch | 0 |
 | cmd-pipe-pane.c.patch | 22 |
 | configure.ac.patch | 23 |
-| forkpty-zos.c.patch | 120 |
-| tmux.c.patch | 30 |
-| tty-keys.c.patch | 22 |
-| spawn.c.patch | 46 |
-| server.c.patch | 17 |
-| client.c.patch | 0 |
-| tty.c.patch | 20 |
 | environ.c.patch | 20 |
-| osdep-zos.c.patch | 63 |
+| forkpty-zos.c.patch | 120 |
 | job.c.patch | 26 |
+| osdep-zos.c.patch | 63 |
+| server.c.patch | 17 |
+| spawn.c.patch | 46 |
+| tmux.c.patch | 30 |
 | tmux.h.patch | 31 |
+| tty-keys.c.patch | 22 |
+| tty.c.patch | 20 |
 
 ### Historical Patch Event Details
 
@@ -833,8 +834,8 @@
 | File | LOC |
 | --- | --- |
 | Makefile.patch | 49 |
-| zossupport.patch | 334 |
 | manpage.patch | 42 |
+| zossupport.patch | 334 |
 
 ### Historical Patch Event Details
 
@@ -906,14 +907,15 @@
 
 | File | LOC |
 | --- | --- |
-| configure.patch | 33 |
 | Makefile.in.patch | 318 |
+| configure.patch | 33 |
 
 ### Historical Patch Event Details
 
 | Commit Date | File | Delta LOC |
 | --- | --- | --- |
 | 2022-11-25 | try.patch | -34 |
+| 2022-11-25 | try.patch | 24 |
 | 2023-03-06 | Makefile.in.patch | 318 |
 
 ---
@@ -943,6 +945,56 @@
 
 ---
 
+<a name="repo-neovimport"></a>
+## Repository: neovimport
+
+**Current Lines of Code:** 347  
+**Current # of Patch files:** 13
+
+### Cumulative Trend Graph (Based on Git History)
+
+![Cumulative Trend](./images/upstream/neovimport_cumulative_trend.png)
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+| cmake.deps.cmake.BuildLua.cmake.patch | 39 |
+| cmake.deps.cmake.BuildLuv.cmake.patch | 29 |
+| cmake.deps.cmake.BuildTreesitterParsers.cmake.patch | 13 |
+| cmake.deps.cmake.LibvtermCMakeLists.txt.patch | 13 |
+| src.nvim.CMakeLists.txt.patch | 42 |
+| src.nvim.buffer_defs.h.patch | 15 |
+| src.nvim.bufwrite.c.patch | 43 |
+| src.nvim.channel.c.patch | 47 |
+| src.nvim.fileio.c.patch | 24 |
+| src.nvim.memfile.c.patch | 13 |
+| src.nvim.os.pty_process_unix.c.patch | 41 |
+| src.nvim.undo.c.patch | 13 |
+| src.termkey.termkey.c.patch | 15 |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+| 2024-03-09 | PR1.patch | 278 |
+| 2025-01-29 | PR1.patch | -278 |
+| 2025-01-29 | cmake.deps.cmake.LibvtermCMakeLists.txt.patch | 13 |
+| 2025-01-29 | src.nvim.CMakeLists.txt.patch | 42 |
+| 2025-01-29 | src.nvim.bufwrite.c.patch | 22 |
+| 2025-01-29 | src.nvim.channel.c.patch | 47 |
+| 2025-01-29 | src.nvim.fileio.c.patch | 13 |
+| 2025-01-29 | src.nvim.memfile.c.patch | 13 |
+| 2025-01-29 | src.nvim.os.pty_process_unix.c.patch | 122 |
+| 2025-01-29 | src.nvim.undo.c.patch | 13 |
+| 2025-01-29 | src.termkey.termkey.c.patch | 15 |
+| 2025-02-18 | cmake.deps.cmake.BuildLua.cmake.patch | 39 |
+| 2025-02-18 | cmake.deps.cmake.BuildLuv.cmake.patch | 29 |
+| 2025-02-21 | cmake.deps.cmake.BuildTreesitterParsers.cmake.patch | 13 |
+| 2025-02-24 | src.nvim.buffer_defs.h.patch | 15 |
+
+---
+
 <a name="repo-pocoport"></a>
 ## Repository: pocoport
 
@@ -957,15 +1009,15 @@
 
 | File | LOC |
 | --- | --- |
-| configure.patch | 13 |
-| Makefile.patch | 31 |
-| Thread_POSIX.h.patch | 17 |
-| global.patch | 23 |
 | DirectoryWatcher.cpp.patch | 60 |
-| SharedMemory_POSIX.cpp.patch | 64 |
+| Makefile.patch | 31 |
 | Platform.h.patch | 14 |
-| VarHolder.h.patch | 71 |
+| SharedMemory_POSIX.cpp.patch | 64 |
 | Thread_POSIX.cpp.patch | 50 |
+| Thread_POSIX.h.patch | 17 |
+| VarHolder.h.patch | 71 |
+| configure.patch | 13 |
+| global.patch | 23 |
 
 ### Historical Patch Event Details
 
@@ -999,23 +1051,23 @@
 
 | File | LOC |
 | --- | --- |
-| configure.patch | 16 |
 | auth-passwd.c.patch | 16 |
-| platform.c.patch | 16 |
+| auth.c.patch | 17 |
+| configure.patch | 16 |
+| defines.h.patch | 17 |
 | includes.h.patch | 14 |
 | misc.c.patch | 56 |
-| defines.h.patch | 17 |
-| scp.c.patch | 22 |
-| auth.c.patch | 17 |
-| servconf.c.patch | 16 |
-| pathnames.h.patch | 27 |
-| sshd-session.c.patch | 37 |
-| readconf.c.patch | 17 |
-| sshbuf-io.c.patch | 14 |
-| sshkey.c.patch | 14 |
-| packet.c.patch | 14 |
 | monitor_wrap.c.patch | 14 |
+| packet.c.patch | 14 |
+| pathnames.h.patch | 27 |
+| platform.c.patch | 16 |
+| readconf.c.patch | 17 |
+| scp.c.patch | 22 |
+| servconf.c.patch | 16 |
+| sshbuf-io.c.patch | 14 |
 | sshconnect.c.patch | 15 |
+| sshd-session.c.patch | 37 |
+| sshkey.c.patch | 14 |
 
 ### Historical Patch Event Details
 
@@ -1059,16 +1111,16 @@
 
 | File | LOC |
 | --- | --- |
-| vim.h.patch | 12 |
-| evalfunc.c.patch | 18 |
-| pty.c.patch | 17 |
-| test_hlsearch.vim.patch | 53 |
-| structs.h.patch | 14 |
-| os_unix.c.patch | 43 |
-| test_syntax.vim.patch | 79 |
-| fileio.c.patch | 14 |
-| test_startup.vim.patch | 34 |
 | buffwrite.c.patch | 25 |
+| evalfunc.c.patch | 18 |
+| fileio.c.patch | 14 |
+| os_unix.c.patch | 43 |
+| pty.c.patch | 17 |
+| structs.h.patch | 14 |
+| test_hlsearch.vim.patch | 53 |
+| test_startup.vim.patch | 34 |
+| test_syntax.vim.patch | 79 |
+| vim.h.patch | 12 |
 | Makefile.patch | 13 |
 | abendfix.patch | 13 |
 
@@ -1149,19 +1201,19 @@
 
 | File | LOC |
 | --- | --- |
-| net.c.patch | 15 |
-| hrtime.h.patch | 26 |
-| configure.patch | 12 |
 | basic_functions_arginfo.h.patch | 17 |
-| network.c.patch | 17 |
-| zend_alloc.c.patch | 40 |
-| posix.c.patch | 36 |
-| zend_mmap.h.patch | 50 |
-| hrtime.c.patch | 15 |
-| sljitNativeS390X.c.patch | 34 |
-| zend_fibers.c.patch | 31 |
-| microtime.c.patch | 13 |
+| configure.patch | 12 |
 | dns.c.patch | 14 |
+| hrtime.c.patch | 15 |
+| hrtime.h.patch | 26 |
+| microtime.c.patch | 13 |
+| net.c.patch | 15 |
+| network.c.patch | 17 |
+| posix.c.patch | 36 |
+| sljitNativeS390X.c.patch | 34 |
+| zend_alloc.c.patch | 40 |
+| zend_fibers.c.patch | 31 |
+| zend_mmap.h.patch | 50 |
 
 ### Historical Patch Event Details
 
@@ -1189,48 +1241,6 @@
 
 ---
 
-<a name="repo-neovimport"></a>
-## Repository: neovimport
-
-**Current Lines of Code:** 300  
-**Current # of Patch files:** 9
-
-### Cumulative Trend Graph (Based on Git History)
-
-![Cumulative Trend](./images/upstream/neovimport_cumulative_trend.png)
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-| src.termkey.termkey.c.patch | 15 |
-| src.nvim.channel.c.patch | 47 |
-| src.nvim.undo.c.patch | 13 |
-| src.nvim.CMakeLists.txt.patch | 42 |
-| src.nvim.bufwrite.c.patch | 22 |
-| src.nvim.fileio.c.patch | 13 |
-| src.nvim.memfile.c.patch | 13 |
-| src.nvim.os.pty_process_unix.c.patch | 122 |
-| cmake.deps.cmake.LibvtermCMakeLists.txt.patch | 13 |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-| 2024-03-09 | PR1.patch | 278 |
-| 2025-01-29 | PR1.patch | -278 |
-| 2025-01-29 | cmake.deps.cmake.LibvtermCMakeLists.txt.patch | 13 |
-| 2025-01-29 | src.nvim.CMakeLists.txt.patch | 42 |
-| 2025-01-29 | src.nvim.bufwrite.c.patch | 22 |
-| 2025-01-29 | src.nvim.channel.c.patch | 47 |
-| 2025-01-29 | src.nvim.fileio.c.patch | 13 |
-| 2025-01-29 | src.nvim.memfile.c.patch | 13 |
-| 2025-01-29 | src.nvim.os.pty_process_unix.c.patch | 122 |
-| 2025-01-29 | src.nvim.undo.c.patch | 13 |
-| 2025-01-29 | src.termkey.termkey.c.patch | 15 |
-
----
-
 <a name="repo-zipport"></a>
 ## Repository: zipport
 
@@ -1245,14 +1255,14 @@
 
 | File | LOC |
 | --- | --- |
-| zipup.h.patch | 17 |
-| osdep.h.patch | 13 |
-| zip.h.patch | 16 |
-| zipup.c.patch | 21 |
-| zipnote.c.patch | 97 |
-| unix.c.patch | 99 |
 | fileio.c.patch | 17 |
+| osdep.h.patch | 13 |
+| unix.c.patch | 99 |
 | zip.c.patch | 17 |
+| zip.h.patch | 16 |
+| zipnote.c.patch | 97 |
+| zipup.c.patch | 21 |
+| zipup.h.patch | 17 |
 
 ### Historical Patch Event Details
 
@@ -1286,9 +1296,9 @@
 | File | LOC |
 | --- | --- |
 | Makefile.patch | 22 |
-| is_utf8_Makefile.patch | 13 |
 | PR1.patch | 125 |
 | errno.c.patch | 42 |
+| is_utf8_Makefile.patch | 13 |
 | perlpatches.patch | 60 |
 
 ### Historical Patch Event Details
@@ -1317,16 +1327,16 @@
 
 | File | LOC |
 | --- | --- |
-| wrapper_unix.go.patch | 10 |
-| service_zos.go.patch | 59 |
-| service_portable.go.patch | 22 |
-| config_unix.go.patch | 22 |
 | commander_unix.go.patch | 10 |
+| config_unix.go.patch | 22 |
+| dump_unix.go.patch | 22 |
 | job_unix.go.patch | 22 |
 | killer_unix.go.patch | 22 |
-| zip_extra_unix.go.patch | 22 |
-| dump_unix.go.patch | 22 |
 | ops_unix.go.patch | 30 |
+| service_portable.go.patch | 22 |
+| service_zos.go.patch | 59 |
+| wrapper_unix.go.patch | 10 |
+| zip_extra_unix.go.patch | 22 |
 
 ### Historical Patch Event Details
 
@@ -1361,6 +1371,10 @@
 **Current Lines of Code:** 236  
 **Current # of Patch files:** 1
 
+### Cumulative Trend Graph (Based on Git History)
+
+![Cumulative Trend](./images/upstream/llamacppport_cumulative_trend.png)
+
 ### Current Patch Details
 
 | File | LOC |
@@ -1371,6 +1385,7 @@
 
 | Commit Date | File | Delta LOC |
 | --- | --- | --- |
+| 2023-08-21 | PR1.patch | 232 |
 
 ---
 
@@ -1389,10 +1404,10 @@
 | File | LOC |
 | --- | --- |
 | IBM-1047.TXT.patch | 22 |
-| translit.def.patch | 39 |
-| ebcdic1047.h.patch | 35 |
 | Makefile.in.patch | 22 |
+| ebcdic1047.h.patch | 35 |
 | iconv.c.patch | 78 |
+| translit.def.patch | 39 |
 
 ### Historical Patch Event Details
 
@@ -1421,12 +1436,12 @@
 
 | File | LOC |
 | --- | --- |
-| port_def.inc.patch | 22 |
-| config.h.patch | 12 |
-| per_thread_sem.h.patch | 20 |
-| low_level_alloc.cc.patch | 36 |
 | attributes.h.patch | 24 |
+| config.h.patch | 12 |
+| low_level_alloc.cc.patch | 36 |
 | low_level_alloc.h.patch | 13 |
+| per_thread_sem.h.patch | 20 |
+| port_def.inc.patch | 22 |
 | sysinfo.cc.patch | 26 |
 | time_zone_libc.cc.patch | 21 |
 
@@ -1463,13 +1478,13 @@
 
 | File | LOC |
 | --- | --- |
-| configure.patch | 15 |
-| jv_alloc.c.patch | 18 |
 | builtin.c.patch | 32 |
-| version.patch | 19 |
+| configure.patch | 15 |
+| jq_test.c.patch | 16 |
+| jv_alloc.c.patch | 18 |
 | mantest.patch | 10 |
 | shtest.patch | 21 |
-| jq_test.c.patch | 16 |
+| version.patch | 19 |
 | zOS.patch | 15 |
 
 ### Historical Patch Event Details
@@ -1502,13 +1517,13 @@
 
 | File | LOC |
 | --- | --- |
+| Makefile.in.patch | 13 |
 | configure.patch | 33 |
+| doc_Makefile.in.patch | 13 |
 | g10lib.h.patch | 17 |
-| secmem.c.patch | 14 |
 | longlong.h.patch | 22 |
 | rndgetentropy.c.patch | 17 |
-| Makefile.in.patch | 13 |
-| doc_Makefile.in.patch | 13 |
+| secmem.c.patch | 14 |
 
 ### Historical Patch Event Details
 
@@ -1535,15 +1550,18 @@
 
 | File | LOC |
 | --- | --- |
-| configure.patch | 50 |
-| regress_http.c.patch | 22 |
-| evutil.c.patch | 15 |
 | buffer.c.patch | 40 |
+| configure.patch | 50 |
+| evutil.c.patch | 15 |
+| regress_http.c.patch | 22 |
 
 ### Historical Patch Event Details
 
 | Commit Date | File | Delta LOC |
 | --- | --- | --- |
+| 2024-01-02 | configure.patch | 50 |
+| 2024-01-02 | evutil.c.patch | 15 |
+| 2024-01-02 | regress_http.c.patch | 22 |
 | 2024-03-07 | buffer.c.patch | 40 |
 
 ---
@@ -1562,11 +1580,11 @@
 
 | File | LOC |
 | --- | --- |
-| configure.patch | 32 |
 | configure.ac.patch | 20 |
-| secmem.c.patch | 42 |
-| pinentry.c.patch | 15 |
+| configure.patch | 32 |
 | pinentry-emacs.c.patch | 15 |
+| pinentry.c.patch | 15 |
+| secmem.c.patch | 42 |
 
 ### Historical Patch Event Details
 
@@ -1592,10 +1610,10 @@
 | File | LOC |
 | --- | --- |
 | configure.patch | 15 |
-| openssh_fixture.c.patch | 57 |
-| session_fixture.c.patch | 15 |
-| scp_write_nonblock.c.patch | 12 |
 | libssh2_setup.h.patch | 23 |
+| openssh_fixture.c.patch | 57 |
+| scp_write_nonblock.c.patch | 12 |
+| session_fixture.c.patch | 15 |
 
 ### Historical Patch Event Details
 
@@ -1622,10 +1640,10 @@
 
 | File | LOC |
 | --- | --- |
-| main.c.patch | 14 |
 | genlib.sh.patch | 77 |
-| print.c.patch | 14 |
+| main.c.patch | 14 |
 | options.c.patch | 13 |
+| print.c.patch | 14 |
 
 ### Historical Patch Event Details
 
@@ -1651,8 +1669,8 @@
 
 | File | LOC |
 | --- | --- |
-| gnulib.patch | 14 |
 | fts.c.patch | 17 |
+| gnulib.patch | 14 |
 | grep.c.patch | 84 |
 
 ### Historical Patch Event Details
@@ -1681,8 +1699,8 @@
 
 | File | LOC |
 | --- | --- |
-| clear.c.patch | 63 |
 | TERMINFO.patch | 48 |
+| clear.c.patch | 63 |
 
 ### Historical Patch Event Details
 
@@ -1734,8 +1752,8 @@
 | File | LOC |
 | --- | --- |
 | lib_filestream.patch | 36 |
-| lib_memory.patch | 37 |
 | lib_fs.patch | 34 |
+| lib_memory.patch | 37 |
 
 ### Historical Patch Event Details
 
@@ -1750,18 +1768,25 @@
 **Current Lines of Code:** 100  
 **Current # of Patch files:** 3
 
+### Cumulative Trend Graph (Based on Git History)
+
+![Cumulative Trend](./images/upstream/zlib-ngport_cumulative_trend.png)
+
 ### Current Patch Details
 
 | File | LOC |
 | --- | --- |
+| Makefile.in.patch | 56 |
 | zbuild.h.patch | 22 |
 | zutil_p.h.patch | 22 |
-| Makefile.in.patch | 56 |
 
 ### Historical Patch Event Details
 
 | Commit Date | File | Delta LOC |
 | --- | --- | --- |
+| 2024-02-02 | Makefile.in.patch | 56 |
+| 2024-02-02 | zbuild.h.patch | 22 |
+| 2024-02-02 | zutil_p.h.patch | 22 |
 
 ---
 
@@ -1805,10 +1830,10 @@
 
 | File | LOC |
 | --- | --- |
+| filesystem.hpp.patch | 32 |
 | latexgen.cpp.patch | 18 |
 | runtests.py.patch | 16 |
 | types.h.patch | 13 |
-| filesystem.hpp.patch | 32 |
 | util.cpp.patch | 18 |
 
 ### Historical Patch Event Details
@@ -1905,6 +1930,30 @@
 
 ---
 
+<a name="repo-getoptport"></a>
+## Repository: getoptport
+
+**Current Lines of Code:** 79  
+**Current # of Patch files:** 1
+
+### Cumulative Trend Graph (Based on Git History)
+
+![Cumulative Trend](./images/upstream/getoptport_cumulative_trend.png)
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+| Makefile.patch | 79 |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+| 2023-02-10 | Makefile.patch | 25 |
+
+---
+
 <a name="repo-expectport"></a>
 ## Repository: expectport
 
@@ -1919,36 +1968,19 @@
 
 | File | LOC |
 | --- | --- |
+| Makefile.in.patch | 14 |
 | configure.patch | 17 |
 | exp_clib.c.patch | 12 |
-| Makefile.in.patch | 14 |
 | pty_termios.c.patch | 36 |
 
 ### Historical Patch Event Details
 
 | Commit Date | File | Delta LOC |
 | --- | --- | --- |
+| 2023-03-27 | Makefile.in.patch | 14 |
+| 2023-03-27 | configure.patch | 17 |
 | 2023-06-19 | exp_clib.c.patch | 12 |
 | 2023-06-19 | pty_termios.c.patch | 36 |
-
----
-
-<a name="repo-getoptport"></a>
-## Repository: getoptport
-
-**Current Lines of Code:** 79  
-**Current # of Patch files:** 1
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-| Makefile.patch | 79 |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
 
 ---
 
@@ -1966,10 +1998,10 @@
 
 | File | LOC |
 | --- | --- |
-| configure.patch | 27 |
+| Makefile.in.patch | 13 |
 | assuan-defs.h.patch | 22 |
 | assuan-socket.c.patch | 15 |
-| Makefile.in.patch | 13 |
+| configure.patch | 27 |
 
 ### Historical Patch Event Details
 
@@ -2058,10 +2090,10 @@
 
 | File | LOC |
 | --- | --- |
-| path.cpp.patch | 33 |
-| library.cpp.patch | 12 |
-| programmemory.cpp.patch | 18 |
 | compilerDefinitions.cmake.patch | 9 |
+| library.cpp.patch | 12 |
+| path.cpp.patch | 33 |
+| programmemory.cpp.patch | 18 |
 
 ### Historical Patch Event Details
 
@@ -2091,8 +2123,8 @@
 | File | LOC |
 | --- | --- |
 | configure.patch | 22 |
-| ltmain.sh.patch | 34 |
 | libtool.m4.patch | 15 |
+| ltmain.sh.patch | 34 |
 
 ### Historical Patch Event Details
 
@@ -2101,6 +2133,58 @@
 | 2022-09-07 | ltmain.sh.patch | 34 |
 | 2022-12-01 | configure.patch | 22 |
 | 2023-04-28 | libtool.m4.patch | 15 |
+
+---
+
+<a name="repo-libuvport"></a>
+## Repository: libuvport
+
+**Current Lines of Code:** 69  
+**Current # of Patch files:** 1
+
+### Cumulative Trend Graph (Based on Git History)
+
+![Cumulative Trend](./images/upstream/libuvport_cumulative_trend.png)
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+| CMakeLists.txt.patch | 69 |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+| 2023-09-14 | CMakeLists.txt.patch | 32 |
+| 2023-09-14 | src/unix/tcp.c.patch | 38 |
+| 2023-11-13 | src/unix/fs.c.patch | 13 |
+| 2024-03-09 | src/unix/core.c.patch | 49 |
+| 2024-03-09 | src/unix/os390-syscalls.c.patch | 86 |
+| 2024-03-09 | src/unix/os390.c.patch | 20 |
+| 2024-03-09 | src/unix/process.c.patch | 53 |
+| 2024-03-09 | src/unix/stream.c.patch | 41 |
+| 2024-03-09 | test-thread-priority.c.patch | 26 |
+| 2025-02-11 | docs/src/fs.rst.patch | 15 |
+| 2025-02-11 | include/uv.h.patch | 12 |
+| 2025-02-11 | include/uv/errno.h.patch | 17 |
+| 2025-02-11 | include/uv/os390.h.patch | 21 |
+| 2025-02-11 | src/unix/internal.h.patch | 19 |
+| 2025-02-11 | src/unix/linux.c.patch | 38 |
+| 2025-02-11 | src/unix/os390-syscalls.h.patch | 26 |
+| 2025-02-11 | src/unix/thread.c.patch | 25 |
+| 2025-02-11 | src/unix/tty.c.patch | 19 |
+| 2025-02-11 | src/uv-common.c.patch | 15 |
+| 2025-02-11 | test-thread-priority.c.patch | -34 |
+| 2025-02-11 | test/run-tests.c.patch | 27 |
+| 2025-02-11 | test/test-fs-copyfile.c.patch | 31 |
+| 2025-02-11 | test/test-fs.c.patch | 17 |
+| 2025-02-11 | test/test-get-currentexe.c.patch | 159 |
+| 2025-02-11 | test/test-get-passwd.c.patch | 13 |
+| 2025-02-11 | test/test-list.h.patch | 20 |
+| 2025-02-11 | test/test-spawn.c.patch | 59 |
+| 2025-02-11 | test/test-thread-priority.c.patch | 23 |
+| 2025-02-19 | src/unix/tty.c.patch | -19 |
 
 ---
 
@@ -2142,8 +2226,8 @@
 
 | File | LOC |
 | --- | --- |
-| makevarescape.sed.patch | 9 |
 | getopt.c.patch | 16 |
+| makevarescape.sed.patch | 9 |
 | main.cpp.patch | 17 |
 | pre-html.cpp.patch | 24 |
 | test-driver.patch | 0 |
@@ -2168,42 +2252,15 @@
 
 ---
 
-<a name="repo-libuvport"></a>
-## Repository: libuvport
-
-**Current Lines of Code:** 66  
-**Current # of Patch files:** 2
-
-### Cumulative Trend Graph (Based on Git History)
-
-![Cumulative Trend](./images/upstream/libuvport_cumulative_trend.png)
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-| CMakeLists.txt.patch | 32 |
-| test-thread-priority.c.patch | 34 |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-| 2023-11-13 | src/unix/fs.c.patch | 13 |
-| 2024-03-09 | src/unix/core.c.patch | 49 |
-| 2024-03-09 | src/unix/os390-syscalls.c.patch | 86 |
-| 2024-03-09 | src/unix/os390.c.patch | 20 |
-| 2024-03-09 | src/unix/process.c.patch | 53 |
-| 2024-03-09 | src/unix/stream.c.patch | 41 |
-| 2024-03-09 | test-thread-priority.c.patch | 26 |
-
----
-
 <a name="repo-logrotateport"></a>
 ## Repository: logrotateport
 
 **Current Lines of Code:** 65  
 **Current # of Patch files:** 1
+
+### Cumulative Trend Graph (Based on Git History)
+
+![Cumulative Trend](./images/upstream/logrotateport_cumulative_trend.png)
 
 ### Current Patch Details
 
@@ -2215,32 +2272,7 @@
 
 | Commit Date | File | Delta LOC |
 | --- | --- | --- |
-
----
-
-<a name="repo-gnport"></a>
-## Repository: gnport
-
-**Current Lines of Code:** 57  
-**Current # of Patch files:** 1
-
-### Cumulative Trend Graph (Based on Git History)
-
-![Cumulative Trend](./images/upstream/gnport_cumulative_trend.png)
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-| build.gen.py.patch | 57 |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-| 2023-11-16 | build.gen.py.patch | 12 |
-| 2023-11-16 | stub-test.patch | 12 |
-| 2023-11-17 | stub-test.patch | -12 |
+| 2024-02-29 | PR1.patch | 62 |
 
 ---
 
@@ -2273,6 +2305,32 @@
 
 ---
 
+<a name="repo-gnport"></a>
+## Repository: gnport
+
+**Current Lines of Code:** 57  
+**Current # of Patch files:** 1
+
+### Cumulative Trend Graph (Based on Git History)
+
+![Cumulative Trend](./images/upstream/gnport_cumulative_trend.png)
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+| build.gen.py.patch | 57 |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+| 2023-11-16 | build.gen.py.patch | 12 |
+| 2023-11-16 | stub-test.patch | 12 |
+| 2023-11-17 | stub-test.patch | -12 |
+
+---
+
 <a name="repo-texinfoport"></a>
 ## Repository: texinfoport
 
@@ -2287,9 +2345,9 @@
 
 | File | LOC |
 | --- | --- |
-| test-driver.patch | 23 |
-| Makefile.in.patch | 20 |
 | Init-test.inc.patch | 13 |
+| Makefile.in.patch | 20 |
+| test-driver.patch | 23 |
 
 ### Historical Patch Event Details
 
@@ -2315,9 +2373,9 @@
 
 | File | LOC |
 | --- | --- |
+| Makefile.in.patch | 13 |
 | configure.patch | 15 |
 | spawn-posix.c.patch | 25 |
-| Makefile.in.patch | 13 |
 
 ### Historical Patch Event Details
 
@@ -2343,8 +2401,8 @@
 
 | File | LOC |
 | --- | --- |
-| configure.patch | 15 |
 | PR1.patch | 37 |
+| configure.patch | 15 |
 
 ### Historical Patch Event Details
 
@@ -2373,8 +2431,8 @@
 
 | File | LOC |
 | --- | --- |
-| pipe.c.patch | 29 |
 | Makefile.in.patch | 22 |
+| pipe.c.patch | 29 |
 
 ### Historical Patch Event Details
 
@@ -2450,8 +2508,8 @@
 | File | LOC |
 | --- | --- |
 | charset.c.patch | 17 |
-| os.c.patch | 13 |
 | edit.c.patch | 17 |
+| os.c.patch | 13 |
 
 ### Historical Patch Event Details
 
@@ -2499,7 +2557,7 @@
 <a name="repo-lazygitport"></a>
 ## Repository: lazygitport
 
-**Current Lines of Code:** 42  
+**Current Lines of Code:** 46  
 **Current # of Patch files:** 1
 
 ### Cumulative Trend Graph (Based on Git History)
@@ -2510,7 +2568,7 @@
 
 | File | LOC |
 | --- | --- |
-| lazygit.patch | 42 |
+| lazygit.patch | 46 |
 
 ### Historical Patch Event Details
 
@@ -2526,6 +2584,10 @@
 **Current Lines of Code:** 35  
 **Current # of Patch files:** 1
 
+### Cumulative Trend Graph (Based on Git History)
+
+![Cumulative Trend](./images/upstream/poptport_cumulative_trend.png)
+
 ### Current Patch Details
 
 | File | LOC |
@@ -2536,6 +2598,7 @@
 
 | Commit Date | File | Delta LOC |
 | --- | --- | --- |
+| 2024-02-29 | PR1.patch | 35 |
 
 ---
 
@@ -2613,6 +2676,10 @@
 **Current Lines of Code:** 32  
 **Current # of Patch files:** 1
 
+### Cumulative Trend Graph (Based on Git History)
+
+![Cumulative Trend](./images/upstream/sqliteport_cumulative_trend.png)
+
 ### Current Patch Details
 
 | File | LOC |
@@ -2623,6 +2690,7 @@
 
 | Commit Date | File | Delta LOC |
 | --- | --- | --- |
+| 2022-12-08 | configure.patch | 21 |
 
 ---
 
@@ -2664,8 +2732,8 @@
 
 | File | LOC |
 | --- | --- |
-| configure.patch | 15 |
 | configure.host.patch | 16 |
+| configure.patch | 15 |
 
 ### Historical Patch Event Details
 
@@ -2682,6 +2750,10 @@
 **Current Lines of Code:** 30  
 **Current # of Patch files:** 1
 
+### Cumulative Trend Graph (Based on Git History)
+
+![Cumulative Trend](./images/upstream/lynxport_cumulative_trend.png)
+
 ### Current Patch Details
 
 | File | LOC |
@@ -2692,6 +2764,33 @@
 
 | Commit Date | File | Delta LOC |
 | --- | --- | --- |
+| 2023-03-03 | PR1.patch | 30 |
+
+---
+
+<a name="repo-netpbmport"></a>
+## Repository: netpbmport
+
+**Current Lines of Code:** 29  
+**Current # of Patch files:** 2
+
+### Cumulative Trend Graph (Based on Git History)
+
+![Cumulative Trend](./images/upstream/netpbmport_cumulative_trend.png)
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+| Execute-Tests.patch | 10 |
+| GNUmakefile.patch | 19 |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+| 2023-11-22 | Execute-Tests.patch | 10 |
+| 2023-11-23 | GNUmakefile.patch | 19 |
 
 ---
 
@@ -2731,8 +2830,8 @@
 
 | File | LOC |
 | --- | --- |
-| libtool.m4.patch | 15 |
 | ath.h.patch | 14 |
+| libtool.m4.patch | 15 |
 
 ### Historical Patch Event Details
 
@@ -2755,40 +2854,14 @@
 
 | File | LOC |
 | --- | --- |
-| configure.ac.patch | 12 |
 | Makefile.am.patch | 17 |
+| configure.ac.patch | 12 |
 
 ### Historical Patch Event Details
 
 | Commit Date | File | Delta LOC |
 | --- | --- | --- |
 | 2024-06-24 | utils/Makefile.am.patch | 17 |
-
----
-
-<a name="repo-netpbmport"></a>
-## Repository: netpbmport
-
-**Current Lines of Code:** 29  
-**Current # of Patch files:** 2
-
-### Cumulative Trend Graph (Based on Git History)
-
-![Cumulative Trend](./images/upstream/netpbmport_cumulative_trend.png)
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-| GNUmakefile.patch | 19 |
-| Execute-Tests.patch | 10 |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-| 2023-11-22 | Execute-Tests.patch | 10 |
-| 2023-11-23 | GNUmakefile.patch | 19 |
 
 ---
 
@@ -2831,8 +2904,8 @@
 
 | File | LOC |
 | --- | --- |
-| configure.patch | 15 |
 | Makefile.in.patch | 13 |
+| configure.patch | 15 |
 
 ### Historical Patch Event Details
 
@@ -2868,6 +2941,32 @@
 
 ---
 
+<a name="repo-ctagsport"></a>
+## Repository: ctagsport
+
+**Current Lines of Code:** 26  
+**Current # of Patch files:** 2
+
+### Cumulative Trend Graph (Based on Git History)
+
+![Cumulative Trend](./images/upstream/ctagsport_cumulative_trend.png)
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+| Makefile.am.patch | 13 |
+| acutest.h.patch | 13 |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+| 2023-11-20 | Makefile.am.patch | 13 |
+| 2023-11-20 | acutest.h.patch | 13 |
+
+---
+
 <a name="repo-git-extrasport"></a>
 ## Repository: git-extrasport
 
@@ -2884,32 +2983,6 @@
 
 | Commit Date | File | Delta LOC |
 | --- | --- | --- |
-
----
-
-<a name="repo-ctagsport"></a>
-## Repository: ctagsport
-
-**Current Lines of Code:** 26  
-**Current # of Patch files:** 2
-
-### Cumulative Trend Graph (Based on Git History)
-
-![Cumulative Trend](./images/upstream/ctagsport_cumulative_trend.png)
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-| acutest.h.patch | 13 |
-| Makefile.am.patch | 13 |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-| 2023-11-20 | Makefile.am.patch | 13 |
-| 2023-11-20 | acutest.h.patch | 13 |
 
 ---
 
@@ -2934,6 +3007,25 @@
 | Commit Date | File | Delta LOC |
 | --- | --- | --- |
 | 2023-12-03 | my_basic.c.patch | 22 |
+
+---
+
+<a name="repo-fzfport"></a>
+## Repository: fzfport
+
+**Current Lines of Code:** 20  
+**Current # of Patch files:** 1
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+| Makefile.patch | 20 |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
 
 ---
 
@@ -2988,25 +3080,6 @@
 
 ---
 
-<a name="repo-fzfport"></a>
-## Repository: fzfport
-
-**Current Lines of Code:** 20  
-**Current # of Patch files:** 1
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-| Makefile.patch | 20 |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
 <a name="repo-shdocport"></a>
 ## Repository: shdocport
 
@@ -3054,6 +3127,30 @@
 
 ---
 
+<a name="repo-sshpassport"></a>
+## Repository: sshpassport
+
+**Current Lines of Code:** 18  
+**Current # of Patch files:** 1
+
+### Cumulative Trend Graph (Based on Git History)
+
+![Cumulative Trend](./images/upstream/sshpassport_cumulative_trend.png)
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+| main.c.patch | 18 |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+| 2023-11-17 | main.c.patch | 18 |
+
+---
+
 <a name="repo-git-lfsport"></a>
 ## Repository: git-lfsport
 
@@ -3080,56 +3177,6 @@
 
 ---
 
-<a name="repo-sshpassport"></a>
-## Repository: sshpassport
-
-**Current Lines of Code:** 18  
-**Current # of Patch files:** 1
-
-### Cumulative Trend Graph (Based on Git History)
-
-![Cumulative Trend](./images/upstream/sshpassport_cumulative_trend.png)
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-| main.c.patch | 18 |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-| 2023-11-17 | main.c.patch | 18 |
-
----
-
-<a name="repo-cunitport"></a>
-## Repository: cunitport
-
-**Current Lines of Code:** 17  
-**Current # of Patch files:** 2
-
-### Cumulative Trend Graph (Based on Git History)
-
-![Cumulative Trend](./images/upstream/cunitport_cumulative_trend.png)
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-| configure.patch | 0 |
-| bootstrap.patch | 17 |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-| 2023-11-30 | bootstrap.patch | 17 |
-| 2023-11-30 | configure.patch | 0 |
-
----
-
 <a name="repo-bzip2port"></a>
 ## Repository: bzip2port
 
@@ -3151,6 +3198,32 @@
 | Commit Date | File | Delta LOC |
 | --- | --- | --- |
 | 2022-11-23 | Makefile.patch | 25 |
+
+---
+
+<a name="repo-cunitport"></a>
+## Repository: cunitport
+
+**Current Lines of Code:** 17  
+**Current # of Patch files:** 2
+
+### Cumulative Trend Graph (Based on Git History)
+
+![Cumulative Trend](./images/upstream/cunitport_cumulative_trend.png)
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+| bootstrap.patch | 17 |
+| configure.patch | 0 |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+| 2023-11-30 | bootstrap.patch | 17 |
+| 2023-11-30 | configure.patch | 0 |
 
 ---
 
@@ -3179,6 +3252,59 @@
 | 2022-11-21 | PR1/initial_port.patch | -747 |
 | 2023-01-20 | PR1.patch | -247 |
 | 2023-04-17 | getopt.c.patch | 16 |
+
+---
+
+<a name="repo-curlport"></a>
+## Repository: curlport
+
+**Current Lines of Code:** 15  
+**Current # of Patch files:** 1
+
+### Cumulative Trend Graph (Based on Git History)
+
+![Cumulative Trend](./images/upstream/curlport_cumulative_trend.png)
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+| configure.patch | 15 |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+| 2023-03-31 | configure.patch | 15 |
+| 2023-04-26 | system.h.patch | 13 |
+| 2023-08-28 | system.h.patch | -59 |
+| 2025-01-30 | temp.patch | 30 |
+| 2025-02-10 | temp.patch | -30 |
+
+---
+
+<a name="repo-xzport"></a>
+## Repository: xzport
+
+**Current Lines of Code:** 15  
+**Current # of Patch files:** 1
+
+### Cumulative Trend Graph (Based on Git History)
+
+![Cumulative Trend](./images/upstream/xzport_cumulative_trend.png)
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+| configure.patch | 15 |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+| 2022-04-21 | configure.patch | 13 |
+| 2023-05-24 | configure.patch | 15 |
 
 ---
 
@@ -3257,15 +3383,15 @@
 
 ---
 
-<a name="repo-libpcreport"></a>
-## Repository: libpcreport
+<a name="repo-libgdbmport"></a>
+## Repository: libgdbmport
 
 **Current Lines of Code:** 15  
 **Current # of Patch files:** 1
 
 ### Cumulative Trend Graph (Based on Git History)
 
-![Cumulative Trend](./images/upstream/libpcreport_cumulative_trend.png)
+![Cumulative Trend](./images/upstream/libgdbmport_cumulative_trend.png)
 
 ### Current Patch Details
 
@@ -3277,7 +3403,9 @@
 
 | Commit Date | File | Delta LOC |
 | --- | --- | --- |
-| 2023-07-24 | configure.patch | 15 |
+| 2022-10-19 | PR1.patch | 52 |
+| 2023-12-14 | PR1.patch | -52 |
+| 2023-12-14 | configure.patch | 15 |
 
 ---
 
@@ -3305,15 +3433,15 @@
 
 ---
 
-<a name="repo-xzport"></a>
-## Repository: xzport
+<a name="repo-libpcre2port"></a>
+## Repository: libpcre2port
 
 **Current Lines of Code:** 15  
 **Current # of Patch files:** 1
 
 ### Cumulative Trend Graph (Based on Git History)
 
-![Cumulative Trend](./images/upstream/xzport_cumulative_trend.png)
+![Cumulative Trend](./images/upstream/libpcre2port_cumulative_trend.png)
 
 ### Current Patch Details
 
@@ -3325,33 +3453,7 @@
 
 | Commit Date | File | Delta LOC |
 | --- | --- | --- |
-| 2022-04-21 | configure.patch | 13 |
-| 2023-05-24 | configure.patch | 15 |
-
----
-
-<a name="repo-libgdbmport"></a>
-## Repository: libgdbmport
-
-**Current Lines of Code:** 15  
-**Current # of Patch files:** 1
-
-### Cumulative Trend Graph (Based on Git History)
-
-![Cumulative Trend](./images/upstream/libgdbmport_cumulative_trend.png)
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-| configure.patch | 15 |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-| 2023-12-14 | PR1.patch | -52 |
-| 2023-12-14 | configure.patch | 15 |
+| 2023-07-20 | configure.patch | 15 |
 
 ---
 
@@ -3379,15 +3481,15 @@
 
 ---
 
-<a name="repo-libpcre2port"></a>
-## Repository: libpcre2port
+<a name="repo-libpcreport"></a>
+## Repository: libpcreport
 
 **Current Lines of Code:** 15  
 **Current # of Patch files:** 1
 
 ### Cumulative Trend Graph (Based on Git History)
 
-![Cumulative Trend](./images/upstream/libpcre2port_cumulative_trend.png)
+![Cumulative Trend](./images/upstream/libpcreport_cumulative_trend.png)
 
 ### Current Patch Details
 
@@ -3399,7 +3501,7 @@
 
 | Commit Date | File | Delta LOC |
 | --- | --- | --- |
-| 2023-07-20 | configure.patch | 15 |
+| 2023-07-24 | configure.patch | 15 |
 
 ---
 
@@ -3409,28 +3511,9 @@
 **Current Lines of Code:** 15  
 **Current # of Patch files:** 1
 
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-| configure.patch | 15 |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-curlport"></a>
-## Repository: curlport
-
-**Current Lines of Code:** 15  
-**Current # of Patch files:** 1
-
 ### Cumulative Trend Graph (Based on Git History)
 
-![Cumulative Trend](./images/upstream/curlport_cumulative_trend.png)
+![Cumulative Trend](./images/upstream/libmdport_cumulative_trend.png)
 
 ### Current Patch Details
 
@@ -3442,11 +3525,7 @@
 
 | Commit Date | File | Delta LOC |
 | --- | --- | --- |
-| 2023-03-31 | configure.patch | 15 |
-| 2023-04-26 | system.h.patch | 13 |
-| 2023-08-28 | system.h.patch | -59 |
-| 2025-01-30 | temp.patch | 30 |
-| 2025-02-10 | temp.patch | -30 |
+| 2023-07-25 | configure.patch | 15 |
 
 ---
 
@@ -3474,62 +3553,46 @@
 
 ---
 
-<a name="repo-mesonport"></a>
-## Repository: mesonport
+<a name="repo-autoconfport"></a>
+## Repository: autoconfport
 
 **Current Lines of Code:** 13  
 **Current # of Patch files:** 1
 
 ### Cumulative Trend Graph (Based on Git History)
 
-![Cumulative Trend](./images/upstream/mesonport_cumulative_trend.png)
+![Cumulative Trend](./images/upstream/autoconfport_cumulative_trend.png)
 
 ### Current Patch Details
 
 | File | LOC |
 | --- | --- |
-| run_tests.py.patch | 13 |
+| m4sh.m4.patch | 13 |
 
 ### Historical Patch Event Details
 
 | Commit Date | File | Delta LOC |
 | --- | --- | --- |
-| 2023-10-27 | zos.patch | 22 |
-| 2024-05-15 | shared-object.patch | 72 |
-| 2024-11-01 | mesonbuild/backend/backend.py.patch | 22 |
-| 2024-11-01 | mesonbuild/build.py.patch | 29 |
-| 2024-11-01 | mesonbuild/compilers/compilers.py.patch | 13 |
-| 2024-11-01 | mesonbuild/compilers/detect.py.patch | 28 |
-| 2024-11-01 | mesonbuild/envconfig.py.patch | 57 |
-| 2024-11-01 | mesonbuild/linkers/linkers.py.patch | 29 |
-| 2024-11-01 | mesonbuild/utils/universal.py.patch | 23 |
-| 2024-11-01 | run_tests.py.patch | 13 |
-| 2024-11-01 | shared-object.patch | -121 |
-| 2024-11-01 | zos.patch | -93 |
-
----
-
-<a name="repo-lpegport"></a>
-## Repository: lpegport
-
-**Current Lines of Code:** 13  
-**Current # of Patch files:** 1
-
-### Cumulative Trend Graph (Based on Git History)
-
-![Cumulative Trend](./images/upstream/lpegport_cumulative_trend.png)
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-| makefile.patch | 13 |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-| 2024-03-09 | makefile.patch | 13 |
+| 2022-04-18 | lib/autoconf/status.m4.patch | 13 |
+| 2022-04-18 | lib/autoconf/general.m4.patch | 13 |
+| 2022-04-18 | tests/local.at.patch | 8 |
+| 2022-04-18 | build-aux/config.guess.patch | 14 |
+| 2022-04-18 | configure.patch | 28 |
+| 2022-05-18 | PR1/config.guess.patch | 14 |
+| 2022-05-18 | PR1/configure.patch | 22 |
+| 2022-05-18 | PR1/general.m4.patch | 13 |
+| 2022-05-18 | PR1/local.at.patch | 25 |
+| 2022-05-18 | PR1/status.m4.patch | 13 |
+| 2022-05-18 | build-aux/config.guess.patch | -14 |
+| 2022-05-18 | configure.patch | -26 |
+| 2022-05-18 | lib/autoconf/general.m4.patch | -13 |
+| 2022-05-18 | lib/autoconf/status.m4.patch | -13 |
+| 2022-05-18 | tests/local.at.patch | -21 |
+| 2022-05-30 | PR2/lang.m4.patch | 13 |
+| 2022-07-06 | PR3/local.at.patch | 12 |
+| 2023-10-23 | m4sh.m4.patch | 13 |
+| 2024-01-03 | PR2/lang.m4.patch | -13 |
+| 2024-01-03 | PR3/local.at.patch | -12 |
 
 ---
 
@@ -3555,6 +3618,30 @@
 | --- | --- | --- |
 | 2022-07-18 | PR1/linkoptforzos.patch | 25 |
 | 2023-01-22 | tests-Makefile.patch | 13 |
+
+---
+
+<a name="repo-ncduport"></a>
+## Repository: ncduport
+
+**Current Lines of Code:** 13  
+**Current # of Patch files:** 1
+
+### Cumulative Trend Graph (Based on Git History)
+
+![Cumulative Trend](./images/upstream/ncduport_cumulative_trend.png)
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+| util.c.patch | 13 |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+| 2024-08-20 | util.c.patch | 13 |
 
 ---
 
@@ -3611,6 +3698,67 @@
 
 ---
 
+<a name="repo-mesonport"></a>
+## Repository: mesonport
+
+**Current Lines of Code:** 13  
+**Current # of Patch files:** 1
+
+### Cumulative Trend Graph (Based on Git History)
+
+![Cumulative Trend](./images/upstream/mesonport_cumulative_trend.png)
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+| run_tests.py.patch | 13 |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+| 2023-10-27 | zos.patch | 22 |
+| 2024-05-15 | shared-object.patch | 72 |
+| 2024-11-01 | mesonbuild/backend/backend.py.patch | 22 |
+| 2024-11-01 | mesonbuild/build.py.patch | 29 |
+| 2024-11-01 | mesonbuild/compilers/compilers.py.patch | 13 |
+| 2024-11-01 | mesonbuild/compilers/detect.py.patch | 28 |
+| 2024-11-01 | mesonbuild/envconfig.py.patch | 57 |
+| 2024-11-01 | mesonbuild/linkers/linkers.py.patch | 29 |
+| 2024-11-01 | mesonbuild/utils/universal.py.patch | 23 |
+| 2024-11-01 | run_tests.py.patch | 13 |
+| 2024-11-01 | shared-object.patch | -121 |
+| 2024-11-01 | zos.patch | -93 |
+| 2025-02-10 | mesonbuild/environment.py.patch | 58 |
+| 2025-02-10 | mesonbuild/linkers/detect.py.patch | 21 |
+
+---
+
+<a name="repo-lpegport"></a>
+## Repository: lpegport
+
+**Current Lines of Code:** 13  
+**Current # of Patch files:** 1
+
+### Cumulative Trend Graph (Based on Git History)
+
+![Cumulative Trend](./images/upstream/lpegport_cumulative_trend.png)
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+| makefile.patch | 13 |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+| 2024-03-09 | makefile.patch | 13 |
+
+---
+
 <a name="repo-stowport"></a>
 ## Repository: stowport
 
@@ -3622,1426 +3770,6 @@
 | File | LOC |
 | --- | --- |
 | stow.in.patch | 13 |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-ncduport"></a>
-## Repository: ncduport
-
-**Current Lines of Code:** 13  
-**Current # of Patch files:** 1
-
-### Cumulative Trend Graph (Based on Git History)
-
-![Cumulative Trend](./images/upstream/ncduport_cumulative_trend.png)
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-| util.c.patch | 13 |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-| 2024-08-20 | util.c.patch | 13 |
-
----
-
-<a name="repo-autoconfport"></a>
-## Repository: autoconfport
-
-**Current Lines of Code:** 13  
-**Current # of Patch files:** 1
-
-### Cumulative Trend Graph (Based on Git History)
-
-![Cumulative Trend](./images/upstream/autoconfport_cumulative_trend.png)
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-| m4sh.m4.patch | 13 |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-| 2022-04-18 | lib/autoconf/status.m4.patch | 13 |
-| 2022-04-18 | lib/autoconf/general.m4.patch | 13 |
-| 2022-04-18 | tests/local.at.patch | 8 |
-| 2022-04-18 | build-aux/config.guess.patch | 14 |
-| 2022-04-18 | configure.patch | 28 |
-| 2022-05-18 | PR1/config.guess.patch | 14 |
-| 2022-05-18 | PR1/configure.patch | 22 |
-| 2022-05-18 | PR1/general.m4.patch | 13 |
-| 2022-05-18 | PR1/local.at.patch | 25 |
-| 2022-05-18 | PR1/status.m4.patch | 13 |
-| 2022-05-18 | build-aux/config.guess.patch | -14 |
-| 2022-05-18 | configure.patch | -26 |
-| 2022-05-18 | lib/autoconf/general.m4.patch | -13 |
-| 2022-05-18 | lib/autoconf/status.m4.patch | -13 |
-| 2022-05-18 | tests/local.at.patch | -21 |
-| 2022-05-30 | PR2/lang.m4.patch | 13 |
-| 2022-07-06 | PR3/local.at.patch | 12 |
-| 2023-10-23 | m4sh.m4.patch | 13 |
-| 2024-01-03 | PR2/lang.m4.patch | -13 |
-| 2024-01-03 | PR3/local.at.patch | -12 |
-
----
-
-<a name="repo-grafanaport"></a>
-## Repository: grafanaport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-zedc-asciiport"></a>
-## Repository: zedc_asciiport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-duckdbport"></a>
-## Repository: duckdbport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Cumulative Trend Graph (Based on Git History)
-
-![Cumulative Trend](./images/upstream/duckdbport_cumulative_trend.png)
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-| 2023-06-16 | 01-concurrentqueue.h.patch | -25 |
-| 2023-06-16 | 01-file_system.cpp.patch | -73 |
-| 2023-06-16 | 02-concurrentqueue.h.patch | -25 |
-| 2023-06-16 | 02-file_system.cpp.patch | -81 |
-| 2023-06-16 | fast_float.h.patch | -25 |
-| 2023-06-16 | httplib.hpp.patch | -43 |
-| 2023-06-16 | lightweightsemaphore.h.patch | -106 |
-| 2023-06-16 | mutex.hpp.patch | -27 |
-| 2023-08-21 | extension_config.cmake.patch | 24 |
-| 2023-08-23 | extension_config.cmake.patch | -24 |
-| 2024-01-22 | entropy_poll.cpp.patch | 13 |
-| 2024-01-22 | linenoise.cpp.patch | 14 |
-| 2024-06-03 | linenoise.cpp.patch | -14 |
-| 2024-06-03 | entropy_poll.cpp.patch | -13 |
-
----
-
-<a name="repo-libgit2port"></a>
-## Repository: libgit2port
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-gradleport"></a>
-## Repository: gradleport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-dos2unixport"></a>
-## Repository: dos2unixport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Cumulative Trend Graph (Based on Git History)
-
-![Cumulative Trend](./images/upstream/dos2unixport_cumulative_trend.png)
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-| 2024-01-19 | Makefile.patch | -25 |
-
----
-
-<a name="repo-shufport"></a>
-## Repository: shufport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-man-dbport"></a>
-## Repository: man-dbport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Cumulative Trend Graph (Based on Git History)
-
-![Cumulative Trend](./images/upstream/man-dbport_cumulative_trend.png)
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-| 2023-01-06 | man.c.patch | 19 |
-| 2023-01-08 | configure.patch | 16 |
-| 2023-01-08 | convert.c.patch | 18 |
-| 2023-01-08 | manconv.c.patch | 45 |
-| 2023-01-08 | manconv_client.c.patch | 28 |
-| 2023-01-08 | manconv_main.c.patch | 16 |
-| 2023-02-10 | xmalloc.c.patch | 21 |
-| 2023-02-21 | getprogname.c.patch | 18 |
-| 2023-02-21 | getprogname.h.patch | 22 |
-| 2023-05-04 | Makefile.in.patch | 21 |
-| 2023-05-29 | localcharset.c.patch | 13 |
-| 2023-05-29 | manconv.c.patch | -45 |
-| 2023-05-29 | manconv_client.c.patch | -28 |
-| 2023-05-29 | manconv_main.c.patch | -16 |
-| 2023-05-29 | convert.c.patch | -18 |
-
----
-
-<a name="repo-frpport"></a>
-## Repository: frpport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-gettextport"></a>
-## Repository: gettextport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Cumulative Trend Graph (Based on Git History)
-
-![Cumulative Trend](./images/upstream/gettextport_cumulative_trend.png)
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-| 2022-06-28 | PR1/locale-name-collision.patch | 13 |
-| 2022-06-28 | PR1/lock.patch | 19 |
-| 2022-06-28 | PR1/rtlock.patch | 0 |
-| 2022-06-28 | PR1/threadlock.patch | 16 |
-| 2022-06-29 | PR1/lock.patch | -19 |
-| 2022-06-29 | PR1/rtlock.patch | 0 |
-| 2022-06-29 | PR1/threadlock.patch | -16 |
-| 2022-07-09 | PR1/fetch-name-collision.patch | 31 |
-| 2022-07-09 | PR1/no-pwd_gecos.patch | 50 |
-| 2022-07-09 | PR1/tagtarball.patch | 13 |
-| 2022-11-19 | PR2/dummy.c.patch | 16 |
-| 2023-01-31 | PR3/test-unsetenv.c.patch | 20 |
-| 2023-06-01 | PR4/configure.patch | 60 |
-
----
-
-<a name="repo-patchport"></a>
-## Repository: patchport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Cumulative Trend Graph (Based on Git History)
-
-![Cumulative Trend](./images/upstream/patchport_cumulative_trend.png)
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-| 2022-10-18 | PR1/pathmax.h.patch | 14 |
-| 2022-10-18 | PR1/string.in.h.patch | 60 |
-| 2022-10-18 | PR1/util.c.patch | 12 |
-
----
-
-<a name="repo-zos-code-page-toolsport"></a>
-## Repository: zos-code-page-toolsport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-onigurumaport"></a>
-## Repository: onigurumaport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-dialogport"></a>
-## Repository: dialogport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-nginxport"></a>
-## Repository: nginxport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-redisport"></a>
-## Repository: redisport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-fxport"></a>
-## Repository: fxport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-helloport"></a>
-## Repository: helloport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-jrubyport"></a>
-## Repository: jrubyport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-help2manport"></a>
-## Repository: help2manport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-hugoport"></a>
-## Repository: hugoport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-zigiport"></a>
-## Repository: zigiport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-esbuildport"></a>
-## Repository: esbuildport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-gperfport"></a>
-## Repository: gperfport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-gitlabcliport"></a>
-## Repository: gitlabcliport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-ninjaport"></a>
-## Repository: ninjaport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Cumulative Trend Graph (Based on Git History)
-
-![Cumulative Trend](./images/upstream/ninjaport_cumulative_trend.png)
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-| 2022-11-04 | zos-91f99ab.patch | 274 |
-| 2024-01-23 | PR1/CMakeLists.txt.patch | 13 |
-| 2024-01-23 | PR1/configure.py.patch | 108 |
-| 2024-01-23 | PR1/src/disk_interface.cc.patch | 13 |
-| 2024-01-23 | PR1/src/getopt.c.patch | 13 |
-| 2024-01-23 | PR1/src/getopt.h.patch | 13 |
-| 2024-01-23 | PR1/src/manifest_parser_perftest.cc.patch | 13 |
-| 2024-01-23 | PR1/src/ninja.cc.patch | 13 |
-| 2024-01-23 | PR1/src/test.cc.patch | 40 |
-| 2024-01-23 | PR1/src/util.cc.patch | 35 |
-| 2024-01-23 | zos-91f99ab.patch | -274 |
-
----
-
-<a name="repo-conanport"></a>
-## Repository: conanport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Cumulative Trend Graph (Based on Git History)
-
-![Cumulative Trend](./images/upstream/conanport_cumulative_trend.png)
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-| 2024-08-20 | conan/internal/api/detect_api.py.patch | 31 |
-| 2024-08-20 | conan/test/utils/tools.py.patch | 20 |
-| 2024-08-20 | conan/tools/build/cppstd.py.patch | 29 |
-| 2024-08-20 | conan/tools/build/cstd.py.patch | 22 |
-| 2024-08-20 | conan/tools/build/flags.py.patch | 101 |
-| 2024-08-20 | conan/tools/gnu/gnudeps_flags.py.patch | 13 |
-| 2024-08-20 | conan/tools/meson/toolchain.py.patch | 56 |
-| 2024-08-20 | conans/client/conf/__init__.py.patch | 27 |
-
----
-
-<a name="repo-cjsonport"></a>
-## Repository: cjsonport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-promptersport"></a>
-## Repository: promptersport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-janssonport"></a>
-## Repository: janssonport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-htopport"></a>
-## Repository: htopport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Cumulative Trend Graph (Based on Git History)
-
-![Cumulative Trend](./images/upstream/htopport_cumulative_trend.png)
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-| 2023-02-24 | PRZOS/gettime.o.patch | 0 |
-| 2023-02-24 | PRZOS/ProcessField.h.patch | 58 |
-| 2023-02-24 | PRZOS/configure.ac.patch | 23 |
-| 2023-02-24 | PRZOS/gettime.c.patch | 0 |
-| 2023-02-24 | PRZOS/gettime.h.patch | 0 |
-| 2023-02-24 | PRZOS/gettime.o.patch | 0 |
-| 2023-02-24 | PRZOS/hostname.c.patch | 0 |
-| 2023-02-24 | PRZOS/hostname.h.patch | 0 |
-| 2023-02-24 | PRZOS/openzfs_sysctl.c.patch | 0 |
-| 2023-02-24 | PRZOS/openzfs_sysctl.h.patch | 0 |
-| 2023-02-24 | PRZOS/uname.c.patch | 0 |
-| 2023-02-24 | PRZOS/uname.h.patch | 0 |
-
----
-
-<a name="repo-check-pythonport"></a>
-## Repository: check_pythonport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-natsport"></a>
-## Repository: natsport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-ttypeport"></a>
-## Repository: ttypeport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-zlibport"></a>
-## Repository: zlibport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Cumulative Trend Graph (Based on Git History)
-
-![Cumulative Trend](./images/upstream/zlibport_cumulative_trend.png)
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-| 2022-04-20 | zconf.h.cmakein.patch | 23 |
-| 2022-04-20 | zconf.h.in.patch | 23 |
-| 2022-07-22 | PR1/movedashellinkoption.patch | 33 |
-| 2022-07-22 | PR1/removeoldmap.patch | 1934 |
-| 2022-07-22 | zconf.h.cmakein.patch | -23 |
-| 2022-07-22 | zconf.h.in.patch | -23 |
-| 2022-11-15 | PR1/movedashellinkoption.patch | -33 |
-| 2022-11-15 | PR1/removeoldmap.patch | -1934 |
-| 2022-11-15 | configure.patch | 14 |
-| 2023-04-12 | configure.patch | -14 |
-
----
-
-<a name="repo-wgetport"></a>
-## Repository: wgetport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Cumulative Trend Graph (Based on Git History)
-
-![Cumulative Trend](./images/upstream/wgetport_cumulative_trend.png)
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-| 2022-09-20 | PR1/dns.c.patch | 20 |
-| 2022-09-20 | PR1/thread.c.patch | 17 |
-| 2022-09-20 | PR1/wget.h.patch | 18 |
-| 2022-09-20 | PR1/net.c.patch | 19 |
-| 2022-11-14 | PR1/host.c.patch | 55 |
-| 2022-11-27 | PR1/netrc.c.patch | 22 |
-| 2023-11-18 | PR1/netrc.c.patch | -22 |
-
----
-
-<a name="repo-libdioport"></a>
-## Repository: libdioport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-ginport"></a>
-## Repository: ginport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-direnvport"></a>
-## Repository: direnvport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-mavenport"></a>
-## Repository: mavenport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-gnulibport"></a>
-## Repository: gnulibport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Cumulative Trend Graph (Based on Git History)
-
-![Cumulative Trend](./images/upstream/gnulibport_cumulative_trend.png)
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-| 2022-11-25 | PR1/gnulib-tool.patch | 28 |
-| 2022-11-27 | PR1/gnulib-tool.patch | -28 |
-
----
-
-<a name="repo-zusageport"></a>
-## Repository: zusageport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-jenkinsport"></a>
-## Repository: jenkinsport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-murexport"></a>
-## Repository: murexport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-check-clangport"></a>
-## Repository: check_clangport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-dufport"></a>
-## Repository: dufport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-comp-xlclangport"></a>
-## Repository: comp_xlclangport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-joeport"></a>
-## Repository: joeport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-kotlinport"></a>
-## Repository: kotlinport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-sudoport"></a>
-## Repository: sudoport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Cumulative Trend Graph (Based on Git History)
-
-![Cumulative Trend](./images/upstream/sudoport_cumulative_trend.png)
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-| 2023-08-14 | PR1.patch | -1547 |
-| 2023-08-14 | PR1/configure.patch | 15 |
-| 2023-08-14 | PR1/include/sudo_iolog.h.patch | 12 |
-| 2023-08-14 | PR1/lib/eventlog/Makefile.in.patch | 13 |
-| 2023-08-14 | PR1/lib/iolog/Makefile.in.patch | 13 |
-| 2023-08-14 | PR1/lib/util/getentropy.c.patch | 42 |
-| 2023-08-14 | PR1/lib/util/mmap_alloc.c.patch | 53 |
-| 2023-08-14 | PR1/lib/util/pw_dup.c.patch | 32 |
-| 2023-08-14 | PR1/lib/util/regress/mktemp/mktemp_test.c.patch | 28 |
-| 2023-08-14 | PR1/lib/util/sig2str.c.patch | 256 |
-| 2023-08-14 | PR1/lib/util/str2sig.c.patch | 15 |
-| 2023-08-14 | PR1/lib/util/ttyname_dev.c.patch | 15 |
-| 2023-08-14 | PR1/logsrvd/Makefile.in.patch | 13 |
-| 2023-08-14 | PR1/plugins/audit_json/Makefile.in.patch | 13 |
-| 2023-08-14 | PR1/plugins/group_file/Makefile.in.patch | 13 |
-| 2023-08-14 | PR1/plugins/group_file/getgrent.c.patch | 14 |
-| 2023-08-14 | PR1/plugins/python/Makefile.in.patch | 13 |
-| 2023-08-14 | PR1/plugins/sample/Makefile.in.patch | 13 |
-| 2023-08-14 | PR1/plugins/sample_approval/Makefile.in.patch | 13 |
-| 2023-08-14 | PR1/plugins/sudoers/Makefile.in.patch | 43 |
-| 2023-08-14 | PR1/plugins/sudoers/auth/passwd.c.patch | 237 |
-| 2023-08-14 | PR1/plugins/sudoers/check_aliases.c.patch | 33 |
-| 2023-08-14 | PR1/plugins/sudoers/cvtsudoers_pwutil.c.patch | 64 |
-| 2023-08-14 | PR1/plugins/sudoers/defaults.c.patch | 34 |
-| 2023-08-14 | PR1/plugins/sudoers/env.c.patch | 18 |
-| 2023-08-14 | PR1/plugins/sudoers/getspwuid.c.patch | 18 |
-| 2023-08-14 | PR1/plugins/sudoers/pwutil.c.patch | 45 |
-| 2023-08-14 | PR1/plugins/sudoers/pwutil_impl.c.patch | 52 |
-| 2023-08-14 | PR1/plugins/sudoers/regress/testsudoers/test9.sh.patch | 20 |
-| 2023-08-14 | PR1/plugins/sudoers/set_perms.c.patch | 139 |
-| 2023-08-14 | PR1/plugins/sudoers/sudo_printf.c.patch | 12 |
-| 2023-08-14 | PR1/plugins/sudoers/sudoers.c.patch | 17 |
-| 2023-08-14 | PR1/plugins/sudoers/testsudoers.c.patch | 29 |
-| 2023-08-14 | PR1/plugins/sudoers/tsgetgrpw.c.patch | 35 |
-| 2023-08-14 | PR1/plugins/system_group/Makefile.in.patch | 13 |
-| 2023-08-14 | PR1/scripts/install-sh.patch | 44 |
-| 2023-08-14 | PR1/src/Makefile.in.patch | 13 |
-| 2023-08-14 | PR1/src/exec.c.patch | 30 |
-| 2023-08-14 | PR1/src/net_ifs.c.patch | 15 |
-| 2023-08-14 | PR1/src/preload.c.patch | 14 |
-| 2023-08-14 | PR1/src/sudo.c.patch | 35 |
-| 2024-01-19 | PR1/lib/util/progname.c.patch | 13 |
-| 2024-01-31 | PR1/plugins/sudoers/sudo_printf.c.patch | -12 |
-| 2024-06-10 | PR1/src/get_pty.c.patch | 26 |
-| 2025-02-12 | PR1/lib/util/ttyname_dev.c.patch | -15 |
-
----
-
-<a name="repo-caddyport"></a>
-## Repository: caddyport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Cumulative Trend Graph (Based on Git History)
-
-![Cumulative Trend](./images/upstream/caddyport_cumulative_trend.png)
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-| 2024-04-01 | badger_1-6-2.patch | 20 |
-| 2024-04-01 | badger_2-2007-4.patch | 20 |
-| 2024-04-01 | caddy.patch | 11 |
-| 2024-04-03 | badger_1-6-2.patch | -20 |
-| 2024-04-03 | badger_2-2007-4.patch | -20 |
-| 2024-04-03 | caddy.patch | -11 |
-
----
-
-<a name="repo-v8port"></a>
-## Repository: v8port
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-powerlinegoport"></a>
-## Repository: powerlinegoport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Cumulative Trend Graph (Based on Git History)
-
-![Cumulative Trend](./images/upstream/powerlinegoport_cumulative_trend.png)
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-| 2023-05-25 | exitcode_zos.patch | -57 |
-| 2023-06-27 | segment-virtualenv.go.patch | 29 |
-| 2024-11-26 | segment-virtualenv.go.patch | -29 |
-
----
-
-<a name="repo-luarocksport"></a>
-## Repository: luarocksport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-groovyport"></a>
-## Repository: groovyport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-findutilsport"></a>
-## Repository: findutilsport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Cumulative Trend Graph (Based on Git History)
-
-![Cumulative Trend](./images/upstream/findutilsport_cumulative_trend.png)
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-| 2022-11-06 | PR1/filemode.c.patch | 33 |
-| 2022-12-07 | PR2/PR2.patch | 55 |
-| 2023-02-21 | PR3/config.guess.patch | 13 |
-| 2023-02-21 | PR3/configure.patch | 22 |
-| 2023-02-21 | PR3/install-sh.patch | 19 |
-| 2023-02-21 | PR3/test-driver.patch | 19 |
-| 2023-04-29 | PR4/gl_lib_canonicalize.c.patch | 25 |
-| 2023-05-25 | PR4/gnulib-tests_test-unsetenv.c.patch | 23 |
-| 2024-05-27 | PR5/fts.c.patch | 17 |
-
----
-
-<a name="repo-parse-gotestport"></a>
-## Repository: parse-gotestport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-spdlogport"></a>
-## Repository: spdlogport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-zotsampleport"></a>
-## Repository: zotsampleport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-git-chglogport"></a>
-## Repository: git-chglogport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-osv-scannerport"></a>
-## Repository: osv-scannerport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-bash-completionport"></a>
-## Repository: bash-completionport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-buildkiteport"></a>
-## Repository: buildkiteport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
 
 ### Historical Patch Event Details
 
@@ -5069,6 +3797,7 @@
 
 | Commit Date | File | Delta LOC |
 | --- | --- | --- |
+| 2021-08-11 | canonicalize-lgpl.patch | 36 |
 | 2021-11-09 | builtin.patch | 37 |
 | 2022-04-28 | configure.patch | 13 |
 | 2022-05-20 | PR2/builtin.c.patch | 0 |
@@ -5077,69 +3806,15 @@
 
 ---
 
-<a name="repo-cosignport"></a>
-## Repository: cosignport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-pythonport"></a>
-## Repository: pythonport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-iperfport"></a>
-## Repository: iperfport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-gawkport"></a>
-## Repository: gawkport
+<a name="repo-automakeport"></a>
+## Repository: automakeport
 
 **Current Lines of Code:** 0  
 **Current # of Patch files:** 0
 
 ### Cumulative Trend Graph (Based on Git History)
 
-![Cumulative Trend](./images/upstream/gawkport_cumulative_trend.png)
+![Cumulative Trend](./images/upstream/automakeport_cumulative_trend.png)
 
 ### Current Patch Details
 
@@ -5150,150 +3825,19 @@
 
 | Commit Date | File | Delta LOC |
 | --- | --- | --- |
-| 2022-07-17 | PR1/zosdoesnotmeanebcdic.patch | 13 |
-| 2022-07-17 | PR1/noprotoscope.patch | 17 |
-| 2022-07-20 | PR1/ascii-io.patch | 39 |
-| 2022-09-16 | PR2/install-sh.patch | 13 |
-
----
-
-<a name="repo-nmapport"></a>
-## Repository: nmapport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-bisonport"></a>
-## Repository: bisonport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Cumulative Trend Graph (Based on Git History)
-
-![Cumulative Trend](./images/upstream/bisonport_cumulative_trend.png)
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-| 2022-05-27 | PR1/ffsl.patch | 28 |
-| 2022-05-27 | PR1/ylwrap.patch | 13 |
-| 2023-05-31 | PR1/ffsl.patch | -28 |
-
----
-
-<a name="repo-yqport"></a>
-## Repository: yqport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-check-xlclangport"></a>
-## Repository: check_xlclangport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-re2cport"></a>
-## Repository: re2cport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-c3270port"></a>
-## Repository: c3270port
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Cumulative Trend Graph (Based on Git History)
-
-![Cumulative Trend](./images/upstream/c3270port_cumulative_trend.png)
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-| 2024-05-24 | PR1.patch | -54 |
-| 2024-05-24 | c3270/Makefile.obj.in.patch | 14 |
-| 2024-05-24 | c3270/configure.patch | 13 |
-| 2024-05-24 | lib/3270/Makefile.obj.in.patch | 14 |
-| 2024-05-24 | s3270/Makefile.obj.in.patch | 13 |
-| 2024-05-27 | c3270/configure.in.patch | 22 |
-| 2024-05-27 | x3270if/configure.patch | 13 |
-| 2024-05-27 | x3270if/configure.in.patch | 13 |
-| 2024-05-28 | Common/mkfb.c.patch | 37 |
-| 2024-05-28 | tcl3270/Makefile.obj.in.patch | 13 |
-| 2024-05-28 | x3270/Makefile.obj.in.patch | 13 |
-| 2024-06-22 | Common/mkfb.c.patch | -152 |
-| 2024-06-25 | c3270/Makefile.obj.in.patch | -22 |
-| 2024-06-25 | c3270/configure.in.patch | -22 |
-| 2024-06-25 | c3270/configure.patch | -22 |
-| 2024-06-25 | lib/3270/Makefile.obj.in.patch | -14 |
-| 2024-06-25 | s3270/Makefile.obj.in.patch | -13 |
-| 2024-06-25 | tcl3270/Makefile.obj.in.patch | -13 |
-| 2024-06-25 | x3270/Makefile.obj.in.patch | -13 |
-| 2024-06-25 | x3270if/configure.in.patch | -13 |
-| 2024-06-25 | x3270if/configure.patch | -13 |
+| 2022-09-14 | PR1/Makefile.in.patch | 15 |
+| 2022-09-14 | PR1/distdir.am.patch | 13 |
+| 2022-09-16 | PR2/test-driver.patch | 13 |
+| 2022-11-09 | PR1/pr1.patch | 51 |
+| 2022-11-09 | PR1/test-driver.patch | 13 |
+| 2022-11-09 | PR1/Makefile.in.patch | -15 |
+| 2022-11-09 | PR1/distdir.am.patch | -13 |
+| 2022-11-09 | PR2/test-driver.patch | -13 |
+| 2022-11-23 | PR1/test-driver.patch | -13 |
+| 2022-11-27 | PR1/distdir.am.patch | 12 |
+| 2022-11-27 | PR1/pr1.patch | -51 |
+| 2024-09-22 | PR1/configure.patch | 22 |
+| 2025-01-30 | PR1/automake.in.patch | 13 |
 
 ---
 
@@ -5371,15 +3915,15 @@
 
 ---
 
-<a name="repo-automakeport"></a>
-## Repository: automakeport
+<a name="repo-zlibport"></a>
+## Repository: zlibport
 
 **Current Lines of Code:** 0  
 **Current # of Patch files:** 0
 
 ### Cumulative Trend Graph (Based on Git History)
 
-![Cumulative Trend](./images/upstream/automakeport_cumulative_trend.png)
+![Cumulative Trend](./images/upstream/zlibport_cumulative_trend.png)
 
 ### Current Patch Details
 
@@ -5390,67 +3934,28 @@
 
 | Commit Date | File | Delta LOC |
 | --- | --- | --- |
-| 2022-09-14 | PR1/Makefile.in.patch | 15 |
-| 2022-09-14 | PR1/distdir.am.patch | 13 |
-| 2022-09-16 | PR2/test-driver.patch | 13 |
-| 2022-11-09 | PR1/pr1.patch | 51 |
-| 2022-11-09 | PR1/test-driver.patch | 13 |
-| 2022-11-09 | PR1/Makefile.in.patch | -15 |
-| 2022-11-09 | PR1/distdir.am.patch | -13 |
-| 2022-11-09 | PR2/test-driver.patch | -13 |
-| 2022-11-23 | PR1/test-driver.patch | -13 |
-| 2022-11-27 | PR1/distdir.am.patch | 12 |
-| 2022-11-27 | PR1/pr1.patch | -51 |
-| 2024-09-22 | PR1/configure.patch | 22 |
-| 2025-01-30 | PR1/automake.in.patch | 13 |
+| 2022-04-20 | zconf.h.cmakein.patch | 23 |
+| 2022-04-20 | zconf.h.in.patch | 23 |
+| 2022-07-22 | PR1/movedashellinkoption.patch | 33 |
+| 2022-07-22 | PR1/removeoldmap.patch | 1934 |
+| 2022-07-22 | zconf.h.cmakein.patch | -23 |
+| 2022-07-22 | zconf.h.in.patch | -23 |
+| 2022-11-15 | PR1/movedashellinkoption.patch | -33 |
+| 2022-11-15 | PR1/removeoldmap.patch | -1934 |
+| 2022-11-15 | configure.patch | 14 |
+| 2023-04-12 | configure.patch | -14 |
 
 ---
 
-<a name="repo-zoslibport"></a>
-## Repository: zoslibport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-byaccport"></a>
-## Repository: byaccport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-tarport"></a>
-## Repository: tarport
+<a name="repo-ninjaport"></a>
+## Repository: ninjaport
 
 **Current Lines of Code:** 0  
 **Current # of Patch files:** 0
 
 ### Cumulative Trend Graph (Based on Git History)
 
-![Cumulative Trend](./images/upstream/tarport_cumulative_trend.png)
+![Cumulative Trend](./images/upstream/ninjaport_cumulative_trend.png)
 
 ### Current Patch Details
 
@@ -5461,185 +3966,17 @@
 
 | Commit Date | File | Delta LOC |
 | --- | --- | --- |
-| 2023-01-21 | PR1.patch | 55 |
-| 2023-11-21 | gnu/fdopendir.c.patch | 14 |
-| 2023-11-22 | gnu/openat-proc.c.patch | -41 |
-
----
-
-<a name="repo-comp-clangport"></a>
-## Repository: comp_clangport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-githubcliport"></a>
-## Repository: githubcliport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-boostport"></a>
-## Repository: boostport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-tclport"></a>
-## Repository: tclport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Cumulative Trend Graph (Based on Git History)
-
-![Cumulative Trend](./images/upstream/tclport_cumulative_trend.png)
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-| 2022-07-18 | PR1/namecollision.patch | 43 |
-| 2022-07-18 | PR1/neederrno.patch | 12 |
-| 2022-07-18 | PR1/remove_oe_sockets_hardcode.patch | 17 |
-| 2023-01-12 | PR2/tclUnixNotfy.c.patch | 15 |
-| 2023-01-12 | PR2/tclUnixThrd.c.patch | 44 |
-
----
-
-<a name="repo-multitailport"></a>
-## Repository: multitailport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-libxml2port"></a>
-## Repository: libxml2port
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Cumulative Trend Graph (Based on Git History)
-
-![Cumulative Trend](./images/upstream/libxml2port_cumulative_trend.png)
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-| 2023-09-28 | PR1/configure.patch | 12 |
-
----
-
-<a name="repo-s5cmdport"></a>
-## Repository: s5cmdport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-comp-goport"></a>
-## Repository: comp_goport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-javaport"></a>
-## Repository: javaport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
+| 2022-11-04 | zos-91f99ab.patch | 274 |
+| 2024-01-23 | PR1/CMakeLists.txt.patch | 13 |
+| 2024-01-23 | PR1/configure.py.patch | 108 |
+| 2024-01-23 | PR1/src/disk_interface.cc.patch | 13 |
+| 2024-01-23 | PR1/src/getopt.c.patch | 13 |
+| 2024-01-23 | PR1/src/getopt.h.patch | 13 |
+| 2024-01-23 | PR1/src/manifest_parser_perftest.cc.patch | 13 |
+| 2024-01-23 | PR1/src/ninja.cc.patch | 13 |
+| 2024-01-23 | PR1/src/test.cc.patch | 40 |
+| 2024-01-23 | PR1/src/util.cc.patch | 35 |
+| 2024-01-23 | zos-91f99ab.patch | -274 |
 
 ---
 
@@ -5699,8 +4036,33 @@
 
 ---
 
-<a name="repo-zospstreeport"></a>
-## Repository: zospstreeport
+<a name="repo-bisonport"></a>
+## Repository: bisonport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Cumulative Trend Graph (Based on Git History)
+
+![Cumulative Trend](./images/upstream/bisonport_cumulative_trend.png)
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+| 2022-05-27 | PR1/ffsl.patch | 28 |
+| 2022-05-27 | PR1/ylwrap.patch | 13 |
+| 2023-05-31 | PR1/ffsl.patch | -28 |
+
+---
+
+<a name="repo-help2manport"></a>
+## Repository: help2manport
 
 **Current Lines of Code:** 0  
 **Current # of Patch files:** 0
@@ -5717,8 +4079,43 @@
 
 ---
 
-<a name="repo-toolsandtoysport"></a>
-## Repository: toolsandtoysport
+<a name="repo-gettextport"></a>
+## Repository: gettextport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Cumulative Trend Graph (Based on Git History)
+
+![Cumulative Trend](./images/upstream/gettextport_cumulative_trend.png)
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+| 2022-06-28 | PR1/locale-name-collision.patch | 13 |
+| 2022-06-28 | PR1/lock.patch | 19 |
+| 2022-06-28 | PR1/rtlock.patch | 0 |
+| 2022-06-28 | PR1/threadlock.patch | 16 |
+| 2022-06-29 | PR1/lock.patch | -19 |
+| 2022-06-29 | PR1/rtlock.patch | 0 |
+| 2022-06-29 | PR1/threadlock.patch | -16 |
+| 2022-07-09 | PR1/fetch-name-collision.patch | 31 |
+| 2022-07-09 | PR1/no-pwd_gecos.patch | 50 |
+| 2022-07-09 | PR1/tagtarball.patch | 13 |
+| 2022-11-19 | PR2/dummy.c.patch | 16 |
+| 2023-01-31 | PR3/test-unsetenv.c.patch | 20 |
+| 2023-06-01 | PR4/configure.patch | 60 |
+
+---
+
+<a name="repo-zotsampleport"></a>
+## Repository: zotsampleport
 
 **Current Lines of Code:** 0  
 **Current # of Patch files:** 0
@@ -5735,8 +4132,123 @@
 
 ---
 
-<a name="repo-antport"></a>
-## Repository: antport
+<a name="repo-man-dbport"></a>
+## Repository: man-dbport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Cumulative Trend Graph (Based on Git History)
+
+![Cumulative Trend](./images/upstream/man-dbport_cumulative_trend.png)
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+| 2023-01-06 | man.c.patch | 19 |
+| 2023-01-08 | configure.patch | 16 |
+| 2023-01-08 | convert.c.patch | 18 |
+| 2023-01-08 | manconv.c.patch | 45 |
+| 2023-01-08 | manconv_client.c.patch | 28 |
+| 2023-01-08 | manconv_main.c.patch | 16 |
+| 2023-02-10 | xmalloc.c.patch | 21 |
+| 2023-02-21 | getprogname.c.patch | 18 |
+| 2023-02-21 | getprogname.h.patch | 22 |
+| 2023-05-04 | Makefile.in.patch | 21 |
+| 2023-05-29 | localcharset.c.patch | 13 |
+| 2023-05-29 | manconv.c.patch | -45 |
+| 2023-05-29 | manconv_client.c.patch | -28 |
+| 2023-05-29 | manconv_main.c.patch | -16 |
+| 2023-05-29 | convert.c.patch | -18 |
+
+---
+
+<a name="repo-tarport"></a>
+## Repository: tarport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Cumulative Trend Graph (Based on Git History)
+
+![Cumulative Trend](./images/upstream/tarport_cumulative_trend.png)
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+| 2023-01-21 | PR1.patch | 55 |
+| 2023-11-21 | gnu/fdopendir.c.patch | 14 |
+| 2023-11-22 | gnu/openat-proc.c.patch | -41 |
+
+---
+
+<a name="repo-tclport"></a>
+## Repository: tclport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Cumulative Trend Graph (Based on Git History)
+
+![Cumulative Trend](./images/upstream/tclport_cumulative_trend.png)
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+| 2022-07-18 | PR1/namecollision.patch | 43 |
+| 2022-07-18 | PR1/neederrno.patch | 12 |
+| 2022-07-18 | PR1/remove_oe_sockets_hardcode.patch | 17 |
+| 2023-01-12 | PR2/tclUnixNotfy.c.patch | 15 |
+| 2023-01-12 | PR2/tclUnixThrd.c.patch | 44 |
+
+---
+
+<a name="repo-gawkport"></a>
+## Repository: gawkport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Cumulative Trend Graph (Based on Git History)
+
+![Cumulative Trend](./images/upstream/gawkport_cumulative_trend.png)
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+| 2022-07-17 | PR1/zosdoesnotmeanebcdic.patch | 13 |
+| 2022-07-17 | PR1/noprotoscope.patch | 17 |
+| 2022-07-20 | PR1/ascii-io.patch | 39 |
+| 2022-09-16 | PR2/install-sh.patch | 13 |
+
+---
+
+<a name="repo-shufport"></a>
+## Repository: shufport
 
 **Current Lines of Code:** 0  
 **Current # of Patch files:** 0
@@ -5753,8 +4265,37 @@
 
 ---
 
-<a name="repo-fqport"></a>
-## Repository: fqport
+<a name="repo-wgetport"></a>
+## Repository: wgetport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Cumulative Trend Graph (Based on Git History)
+
+![Cumulative Trend](./images/upstream/wgetport_cumulative_trend.png)
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+| 2022-09-20 | PR1/dns.c.patch | 20 |
+| 2022-09-20 | PR1/thread.c.patch | 17 |
+| 2022-09-20 | PR1/wget.h.patch | 18 |
+| 2022-09-20 | PR1/net.c.patch | 19 |
+| 2022-11-14 | PR1/host.c.patch | 55 |
+| 2022-11-27 | PR1/netrc.c.patch | 22 |
+| 2023-11-18 | PR1/netrc.c.patch | -22 |
+
+---
+
+<a name="repo-gperfport"></a>
+## Repository: gperfport
 
 **Current Lines of Code:** 0  
 **Current # of Patch files:** 0
@@ -5771,8 +4312,8 @@
 
 ---
 
-<a name="repo-metaport"></a>
-## Repository: metaport
+<a name="repo-zoslibport"></a>
+## Repository: zoslibport
 
 **Current Lines of Code:** 0  
 **Current # of Patch files:** 0
@@ -5789,8 +4330,33 @@
 
 ---
 
-<a name="repo-check-javaport"></a>
-## Repository: check_javaport
+<a name="repo-patchport"></a>
+## Repository: patchport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Cumulative Trend Graph (Based on Git History)
+
+![Cumulative Trend](./images/upstream/patchport_cumulative_trend.png)
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+| 2022-10-18 | PR1/pathmax.h.patch | 14 |
+| 2022-10-18 | PR1/string.in.h.patch | 60 |
+| 2022-10-18 | PR1/util.c.patch | 12 |
+
+---
+
+<a name="repo-re2cport"></a>
+## Repository: re2cport
 
 **Current Lines of Code:** 0  
 **Current # of Patch files:** 0
@@ -5807,11 +4373,15 @@
 
 ---
 
-<a name="repo-wharfport"></a>
-## Repository: wharfport
+<a name="repo-findutilsport"></a>
+## Repository: findutilsport
 
 **Current Lines of Code:** 0  
 **Current # of Patch files:** 0
+
+### Cumulative Trend Graph (Based on Git History)
+
+![Cumulative Trend](./images/upstream/findutilsport_cumulative_trend.png)
 
 ### Current Patch Details
 
@@ -5822,60 +4392,15 @@
 
 | Commit Date | File | Delta LOC |
 | --- | --- | --- |
-
----
-
-<a name="repo-zosncport"></a>
-## Repository: zosncport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-termenvport"></a>
-## Repository: termenvport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-godsectport"></a>
-## Repository: godsectport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
+| 2022-11-06 | PR1/filemode.c.patch | 33 |
+| 2022-12-07 | PR2/PR2.patch | 55 |
+| 2023-02-21 | PR3/config.guess.patch | 13 |
+| 2023-02-21 | PR3/configure.patch | 22 |
+| 2023-02-21 | PR3/install-sh.patch | 19 |
+| 2023-02-21 | PR3/test-driver.patch | 19 |
+| 2023-04-29 | PR4/gl_lib_canonicalize.c.patch | 25 |
+| 2023-05-25 | PR4/gnulib-tests_test-unsetenv.c.patch | 23 |
+| 2024-05-27 | PR5/fts.c.patch | 17 |
 
 ---
 
@@ -5897,8 +4422,32 @@
 
 ---
 
-<a name="repo-check-goport"></a>
-## Repository: check_goport
+<a name="repo-gnulibport"></a>
+## Repository: gnulibport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Cumulative Trend Graph (Based on Git History)
+
+![Cumulative Trend](./images/upstream/gnulibport_cumulative_trend.png)
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+| 2022-11-25 | PR1/gnulib-tool.patch | 28 |
+| 2022-11-27 | PR1/gnulib-tool.patch | -28 |
+
+---
+
+<a name="repo-helloport"></a>
+## Repository: helloport
 
 **Current Lines of Code:** 0  
 **Current # of Patch files:** 0
@@ -5915,8 +4464,357 @@
 
 ---
 
-<a name="repo-gumport"></a>
-## Repository: gumport
+<a name="repo-htopport"></a>
+## Repository: htopport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Cumulative Trend Graph (Based on Git History)
+
+![Cumulative Trend](./images/upstream/htopport_cumulative_trend.png)
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+| 2022-11-28 | PR1.patch | 191 |
+| 2023-02-24 | PRZOS/gettime.o.patch | 0 |
+| 2023-02-24 | PRZOS/ProcessField.h.patch | 58 |
+| 2023-02-24 | PRZOS/configure.ac.patch | 23 |
+| 2023-02-24 | PRZOS/gettime.c.patch | 0 |
+| 2023-02-24 | PRZOS/gettime.h.patch | 0 |
+| 2023-02-24 | PRZOS/gettime.o.patch | 0 |
+| 2023-02-24 | PRZOS/hostname.c.patch | 0 |
+| 2023-02-24 | PRZOS/hostname.h.patch | 0 |
+| 2023-02-24 | PRZOS/openzfs_sysctl.c.patch | 0 |
+| 2023-02-24 | PRZOS/openzfs_sysctl.h.patch | 0 |
+| 2023-02-24 | PRZOS/uname.c.patch | 0 |
+| 2023-02-24 | PRZOS/uname.h.patch | 0 |
+
+---
+
+<a name="repo-metaport"></a>
+## Repository: metaport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-libxml2port"></a>
+## Repository: libxml2port
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Cumulative Trend Graph (Based on Git History)
+
+![Cumulative Trend](./images/upstream/libxml2port_cumulative_trend.png)
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+| 2023-09-28 | PR1/configure.patch | 12 |
+
+---
+
+<a name="repo-zigiport"></a>
+## Repository: zigiport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-sudoport"></a>
+## Repository: sudoport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Cumulative Trend Graph (Based on Git History)
+
+![Cumulative Trend](./images/upstream/sudoport_cumulative_trend.png)
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+| 2023-03-07 | PR1.patch | 329 |
+| 2023-08-14 | PR1.patch | -1547 |
+| 2023-08-14 | PR1/configure.patch | 15 |
+| 2023-08-14 | PR1/include/sudo_iolog.h.patch | 12 |
+| 2023-08-14 | PR1/lib/eventlog/Makefile.in.patch | 13 |
+| 2023-08-14 | PR1/lib/iolog/Makefile.in.patch | 13 |
+| 2023-08-14 | PR1/lib/util/getentropy.c.patch | 42 |
+| 2023-08-14 | PR1/lib/util/mmap_alloc.c.patch | 53 |
+| 2023-08-14 | PR1/lib/util/pw_dup.c.patch | 32 |
+| 2023-08-14 | PR1/lib/util/regress/mktemp/mktemp_test.c.patch | 28 |
+| 2023-08-14 | PR1/lib/util/sig2str.c.patch | 256 |
+| 2023-08-14 | PR1/lib/util/str2sig.c.patch | 15 |
+| 2023-08-14 | PR1/lib/util/ttyname_dev.c.patch | 15 |
+| 2023-08-14 | PR1/logsrvd/Makefile.in.patch | 13 |
+| 2023-08-14 | PR1/plugins/audit_json/Makefile.in.patch | 13 |
+| 2023-08-14 | PR1/plugins/group_file/Makefile.in.patch | 13 |
+| 2023-08-14 | PR1/plugins/group_file/getgrent.c.patch | 14 |
+| 2023-08-14 | PR1/plugins/python/Makefile.in.patch | 13 |
+| 2023-08-14 | PR1/plugins/sample/Makefile.in.patch | 13 |
+| 2023-08-14 | PR1/plugins/sample_approval/Makefile.in.patch | 13 |
+| 2023-08-14 | PR1/plugins/sudoers/Makefile.in.patch | 43 |
+| 2023-08-14 | PR1/plugins/sudoers/auth/passwd.c.patch | 237 |
+| 2023-08-14 | PR1/plugins/sudoers/check_aliases.c.patch | 33 |
+| 2023-08-14 | PR1/plugins/sudoers/cvtsudoers_pwutil.c.patch | 64 |
+| 2023-08-14 | PR1/plugins/sudoers/defaults.c.patch | 34 |
+| 2023-08-14 | PR1/plugins/sudoers/env.c.patch | 18 |
+| 2023-08-14 | PR1/plugins/sudoers/getspwuid.c.patch | 18 |
+| 2023-08-14 | PR1/plugins/sudoers/pwutil.c.patch | 45 |
+| 2023-08-14 | PR1/plugins/sudoers/pwutil_impl.c.patch | 52 |
+| 2023-08-14 | PR1/plugins/sudoers/regress/testsudoers/test9.sh.patch | 20 |
+| 2023-08-14 | PR1/plugins/sudoers/set_perms.c.patch | 139 |
+| 2023-08-14 | PR1/plugins/sudoers/sudo_printf.c.patch | 12 |
+| 2023-08-14 | PR1/plugins/sudoers/sudoers.c.patch | 17 |
+| 2023-08-14 | PR1/plugins/sudoers/testsudoers.c.patch | 29 |
+| 2023-08-14 | PR1/plugins/sudoers/tsgetgrpw.c.patch | 35 |
+| 2023-08-14 | PR1/plugins/system_group/Makefile.in.patch | 13 |
+| 2023-08-14 | PR1/scripts/install-sh.patch | 44 |
+| 2023-08-14 | PR1/src/Makefile.in.patch | 13 |
+| 2023-08-14 | PR1/src/exec.c.patch | 30 |
+| 2023-08-14 | PR1/src/net_ifs.c.patch | 15 |
+| 2023-08-14 | PR1/src/preload.c.patch | 14 |
+| 2023-08-14 | PR1/src/sudo.c.patch | 35 |
+| 2024-01-19 | PR1/lib/util/progname.c.patch | 13 |
+| 2024-01-31 | PR1/plugins/sudoers/sudo_printf.c.patch | -12 |
+| 2024-06-10 | PR1/src/get_pty.c.patch | 26 |
+| 2025-02-12 | PR1/lib/util/ttyname_dev.c.patch | -15 |
+
+---
+
+<a name="repo-yqport"></a>
+## Repository: yqport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-pythonport"></a>
+## Repository: pythonport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-comp-goport"></a>
+## Repository: comp_goport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-comp-clangport"></a>
+## Repository: comp_clangport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-comp-xlclangport"></a>
+## Repository: comp_xlclangport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-direnvport"></a>
+## Repository: direnvport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-libgit2port"></a>
+## Repository: libgit2port
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-duckdbport"></a>
+## Repository: duckdbport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Cumulative Trend Graph (Based on Git History)
+
+![Cumulative Trend](./images/upstream/duckdbport_cumulative_trend.png)
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+| 2023-06-16 | 01-concurrentqueue.h.patch | -25 |
+| 2023-06-16 | 01-file_system.cpp.patch | -73 |
+| 2023-06-16 | 02-concurrentqueue.h.patch | -25 |
+| 2023-06-16 | 02-file_system.cpp.patch | -81 |
+| 2023-06-16 | fast_float.h.patch | -25 |
+| 2023-06-16 | httplib.hpp.patch | -43 |
+| 2023-06-16 | lightweightsemaphore.h.patch | -106 |
+| 2023-06-16 | mutex.hpp.patch | -27 |
+| 2023-08-21 | extension_config.cmake.patch | 24 |
+| 2023-08-23 | extension_config.cmake.patch | -24 |
+| 2024-01-22 | entropy_poll.cpp.patch | 13 |
+| 2024-01-22 | linenoise.cpp.patch | 14 |
+| 2024-06-03 | linenoise.cpp.patch | -14 |
+| 2024-06-03 | entropy_poll.cpp.patch | -13 |
+
+---
+
+<a name="repo-powerlinegoport"></a>
+## Repository: powerlinegoport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Cumulative Trend Graph (Based on Git History)
+
+![Cumulative Trend](./images/upstream/powerlinegoport_cumulative_trend.png)
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+| 2023-05-25 | exitcode_zos.patch | -57 |
+| 2023-06-27 | segment-virtualenv.go.patch | 29 |
+| 2024-11-26 | segment-virtualenv.go.patch | -29 |
+
+---
+
+<a name="repo-byaccport"></a>
+## Repository: byaccport
 
 **Current Lines of Code:** 0  
 **Current # of Patch files:** 0
@@ -5951,8 +4849,1196 @@
 
 ---
 
+<a name="repo-c3270port"></a>
+## Repository: c3270port
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Cumulative Trend Graph (Based on Git History)
+
+![Cumulative Trend](./images/upstream/c3270port_cumulative_trend.png)
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+| 2023-06-20 | PR1.patch | 13 |
+| 2024-05-24 | PR1.patch | -54 |
+| 2024-05-24 | c3270/Makefile.obj.in.patch | 14 |
+| 2024-05-24 | c3270/configure.patch | 13 |
+| 2024-05-24 | lib/3270/Makefile.obj.in.patch | 14 |
+| 2024-05-24 | s3270/Makefile.obj.in.patch | 13 |
+| 2024-05-27 | c3270/configure.in.patch | 22 |
+| 2024-05-27 | x3270if/configure.patch | 13 |
+| 2024-05-27 | x3270if/configure.in.patch | 13 |
+| 2024-05-28 | Common/mkfb.c.patch | 37 |
+| 2024-05-28 | tcl3270/Makefile.obj.in.patch | 13 |
+| 2024-05-28 | x3270/Makefile.obj.in.patch | 13 |
+| 2024-06-22 | Common/mkfb.c.patch | -152 |
+| 2024-06-25 | c3270/Makefile.obj.in.patch | -22 |
+| 2024-06-25 | c3270/configure.in.patch | -22 |
+| 2024-06-25 | c3270/configure.patch | -22 |
+| 2024-06-25 | lib/3270/Makefile.obj.in.patch | -14 |
+| 2024-06-25 | s3270/Makefile.obj.in.patch | -13 |
+| 2024-06-25 | tcl3270/Makefile.obj.in.patch | -13 |
+| 2024-06-25 | x3270/Makefile.obj.in.patch | -13 |
+| 2024-06-25 | x3270if/configure.in.patch | -13 |
+| 2024-06-25 | x3270if/configure.patch | -13 |
+
+---
+
+<a name="repo-gumport"></a>
+## Repository: gumport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-wharfport"></a>
+## Repository: wharfport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-dufport"></a>
+## Repository: dufport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-onigurumaport"></a>
+## Repository: onigurumaport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-multitailport"></a>
+## Repository: multitailport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-janssonport"></a>
+## Repository: janssonport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-redisport"></a>
+## Repository: redisport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-luarocksport"></a>
+## Repository: luarocksport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-termenvport"></a>
+## Repository: termenvport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-esbuildport"></a>
+## Repository: esbuildport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-nginxport"></a>
+## Repository: nginxport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-natsport"></a>
+## Repository: natsport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-githubcliport"></a>
+## Repository: githubcliport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-zos-code-page-toolsport"></a>
+## Repository: zos-code-page-toolsport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-v8port"></a>
+## Repository: v8port
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-dos2unixport"></a>
+## Repository: dos2unixport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Cumulative Trend Graph (Based on Git History)
+
+![Cumulative Trend](./images/upstream/dos2unixport_cumulative_trend.png)
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+| 2023-11-14 | Makefile.patch | 25 |
+| 2024-01-19 | Makefile.patch | -25 |
+
+---
+
+<a name="repo-zospstreeport"></a>
+## Repository: zospstreeport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-zosncport"></a>
+## Repository: zosncport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-boostport"></a>
+## Repository: boostport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-buildkiteport"></a>
+## Repository: buildkiteport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-javaport"></a>
+## Repository: javaport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-antport"></a>
+## Repository: antport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-jrubyport"></a>
+## Repository: jrubyport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-toolsandtoysport"></a>
+## Repository: toolsandtoysport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-groovyport"></a>
+## Repository: groovyport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-kotlinport"></a>
+## Repository: kotlinport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-caddyport"></a>
+## Repository: caddyport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Cumulative Trend Graph (Based on Git History)
+
+![Cumulative Trend](./images/upstream/caddyport_cumulative_trend.png)
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+| 2024-04-01 | badger_1-6-2.patch | 20 |
+| 2024-04-01 | badger_2-2007-4.patch | 20 |
+| 2024-04-01 | caddy.patch | 11 |
+| 2024-04-03 | badger_1-6-2.patch | -20 |
+| 2024-04-03 | badger_2-2007-4.patch | -20 |
+| 2024-04-03 | caddy.patch | -11 |
+
+---
+
+<a name="repo-gitlabcliport"></a>
+## Repository: gitlabcliport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-fqport"></a>
+## Repository: fqport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-promptersport"></a>
+## Repository: promptersport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-osv-scannerport"></a>
+## Repository: osv-scannerport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-ginport"></a>
+## Repository: ginport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-frpport"></a>
+## Repository: frpport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-mavenport"></a>
+## Repository: mavenport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-ttypeport"></a>
+## Repository: ttypeport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-cosignport"></a>
+## Repository: cosignport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-jenkinsport"></a>
+## Repository: jenkinsport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-godsectport"></a>
+## Repository: godsectport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-murexport"></a>
+## Repository: murexport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-grafanaport"></a>
+## Repository: grafanaport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-iperfport"></a>
+## Repository: iperfport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-fxport"></a>
+## Repository: fxport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-s5cmdport"></a>
+## Repository: s5cmdport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-parse-gotestport"></a>
+## Repository: parse-gotestport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-check-clangport"></a>
+## Repository: check_clangport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-check-xlclangport"></a>
+## Repository: check_xlclangport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-check-pythonport"></a>
+## Repository: check_pythonport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-check-javaport"></a>
+## Repository: check_javaport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-check-goport"></a>
+## Repository: check_goport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-nmapport"></a>
+## Repository: nmapport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-hugoport"></a>
+## Repository: hugoport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-dialogport"></a>
+## Repository: dialogport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-joeport"></a>
+## Repository: joeport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-cjsonport"></a>
+## Repository: cjsonport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-libdioport"></a>
+## Repository: libdioport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-conanport"></a>
+## Repository: conanport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Cumulative Trend Graph (Based on Git History)
+
+![Cumulative Trend](./images/upstream/conanport_cumulative_trend.png)
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+| 2024-08-20 | conan/internal/api/detect_api.py.patch | 31 |
+| 2024-08-20 | conan/test/utils/tools.py.patch | 20 |
+| 2024-08-20 | conan/tools/build/cppstd.py.patch | 29 |
+| 2024-08-20 | conan/tools/build/cstd.py.patch | 22 |
+| 2024-08-20 | conan/tools/build/flags.py.patch | 101 |
+| 2024-08-20 | conan/tools/gnu/gnudeps_flags.py.patch | 13 |
+| 2024-08-20 | conan/tools/meson/toolchain.py.patch | 56 |
+| 2024-08-20 | conans/client/conf/__init__.py.patch | 27 |
+
+---
+
+<a name="repo-git-chglogport"></a>
+## Repository: git-chglogport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-zedc-asciiport"></a>
+## Repository: zedc_asciiport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-bash-completionport"></a>
+## Repository: bash-completionport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-zusageport"></a>
+## Repository: zusageport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-spdlogport"></a>
+## Repository: spdlogport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
 <a name="repo-creduceport"></a>
 ## Repository: creduceport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-gradleport"></a>
+## Repository: gradleport
 
 **Current Lines of Code:** 0  
 **Current # of Patch files:** 0

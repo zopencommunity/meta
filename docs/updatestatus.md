@@ -36,6 +36,7 @@
 - 2025-01-18: [Update coreutils-version to 9.6 from 9.5](https://github.com/zopencommunity/coreutilsport/pull/89) ❌
 
 ### cppcheckport
+- 2025-02-23: [Update cppcheck-version to 2.17.0 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/11) ❌
 - 2024-12-19: [Update cppcheck-version to 2.16.2 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/10) ❌
 - 2024-11-29: [Update cppcheck-version to 2.16.1 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/8) ❌
 - 2024-10-28: [Update cppcheck-version to 2.16.0 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/7) ❌
@@ -45,6 +46,7 @@
 - 2025-02-01: [Update creduce-version to 2.10.0 from V.R.M](https://github.com/zopencommunity/creduceport/pull/1) ❌
 
 ### cunitport
+- 2025-02-24: [Update cunit-version to 3.5.1 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/9) ❌
 - 2024-09-18: [Update cunit-version to 3.4.4 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/7) ❌
 - 2024-09-11: [Update cunit-version to 3.4.3 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/6) ❌
 - 2024-09-10: [Update cunit-version to 3.4.2 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/5) ❌
@@ -65,6 +67,9 @@
 - 2024-09-09: [Update duckdb-version to 1.1.0 from 0.9.2](https://github.com/zopencommunity/duckdbport/pull/15) ❌
 - 2024-06-03: [Update duckdb-version to 1.0.0 from 0.9.2](https://github.com/zopencommunity/duckdbport/pull/13) ❌
 
+### emacsport
+- 2025-02-24: [Update emacs-version to 30.1 from 29.4](https://github.com/zopencommunity/emacsport/pull/11) ❌
+
 ### expatport
 - 2024-11-07: [Update expat-version to 2.6.4 from 2.5.0](https://github.com/zopencommunity/expatport/pull/14) ❌
 - 2024-09-04: [Update expat-version to 2.6.3 from 2.5.0](https://github.com/zopencommunity/expatport/pull/11) ❌
@@ -73,18 +78,12 @@
 ### findutilsport
 - 2024-06-08: [Update findutils-version to 4.10.0 from 4.9.0](https://github.com/zopencommunity/findutilsport/pull/19) ❌
 
-### frpport
-- 2024-07-09: [Update frp-version to 0.59.0 from 0.54.0](https://github.com/zopencommunity/frpport/pull/7) ❌
-- 2024-05-31: [Update frp-version to 0.58.1 from 0.54.0](https://github.com/zopencommunity/frpport/pull/6) ❌
-- 2024-05-07: [Update frp-version to 0.58.0 from 0.54.0](https://github.com/zopencommunity/frpport/pull/5) ❌
-- 2024-04-09: [Update frp-version to 0.57.0 from 0.54.0](https://github.com/zopencommunity/frpport/pull/4) ❌
-- 2024-03-21: [Update frp-version to 0.56.0 from 0.54.0](https://github.com/zopencommunity/frpport/pull/3) ❌
-- 2024-03-12: [Update frp-version to 0.55.1 from 0.54.0](https://github.com/zopencommunity/frpport/pull/2) ❌
-
 ### fxport
 - 2024-06-27: [Update fx-version to 35.0.0 from 34.0.0](https://github.com/zopencommunity/fxport/pull/2) ✅
 
 ### fzfport
+- 2025-02-23: [Update fzf-version to 0.60.2 from 0.59.0](https://github.com/zopencommunity/fzfport/pull/33) ✅
+- 2025-02-20: [Update fzf-version to 0.60.1 from 0.59.0](https://github.com/zopencommunity/fzfport/pull/32) ✅
 - 2025-02-13: [Update fzf-version to 0.60.0 from 0.59.0](https://github.com/zopencommunity/fzfport/pull/31) ❌
 
 ### gettextport
@@ -104,12 +103,14 @@
 - 2025-02-14: [Update glab-version to 1.53.0 from 1.52.0](https://github.com/zopencommunity/gitlabcliport/pull/23) ✅
 
 ### gitlab-runnerport
+- 2025-02-20: [Update gitlab-runner-version to 17.9.0 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/34) ❌
 - 2025-01-24: [Update gitlab-runner-version to 17.8.3 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/33) ❌
 
 ### gnulibport
 - 2024-10-22: [Update gnulib-version to 1.0 from 20030404](https://github.com/zopencommunity/gnulibport/pull/10) ✅
 
 ### grafanaport
+- 2025-02-19: [Update grafana-version to 11.5.2 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/17) ❌
 - 2025-02-03: [Update grafana-version to 11.5.1 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/16) ❌
 - 2025-01-28: [Update grafana-version to 11.5.0 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/15) ❌
 - 2024-12-06: [Update grafana-version to 11.4.0 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/14) ❌
@@ -126,6 +127,7 @@
 - 2024-01-10: [Update htop-version to 3.3.0 from 3.2.2](https://github.com/zopencommunity/htopport/pull/6) ❌
 
 ### hugoport
+- 2025-02-19: [Update hugo-version to 0.144.2 from 0.143.0](https://github.com/zopencommunity/hugoport/pull/17) ❌
 - 2025-02-18: [Update hugo-version to 0.144.1 from 0.143.0](https://github.com/zopencommunity/hugoport/pull/16) ✅
 
 ### kotlinport
@@ -134,7 +136,7 @@
 - 2024-03-07: [Update kotlin-version to 1.9.23 from 1.9.22](https://github.com/zopencommunity/kotlinport/pull/3) ✅
 
 ### lazygitport
-- 2025-01-11: [Update lazygit-version to 0.46.0 from V.R.M](https://github.com/zopencommunity/lazygitport/pull/10) ❌
+- 2025-02-22: [Update lazygit-version to 0.47.1 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/13) ✅
 
 ### libassuanport
 - 2025-02-18: [Update libassuan-version to 3.0.2 from 3.0.1](https://github.com/zopencommunity/libassuanport/pull/14) ✅
@@ -220,6 +222,7 @@
 - 2023-11-05: [Update patch-version to 2.7.6 from 2.7](https://github.com/zopencommunity/patchport/pull/3) ❓
 
 ### perlport
+- 2025-02-24: [Update perl-version to 5.41.9 from 5.41.7](https://github.com/zopencommunity/perlport/pull/107) ⏳
 - 2025-01-21: [Update perl-version to 5.41.8 from 5.41.7](https://github.com/zopencommunity/perlport/pull/105) ❌
 
 ### phpport
@@ -314,6 +317,7 @@
 - 2024-05-06: [Update util-linux-version to 2.40.1 from 2.39.3](https://github.com/zopencommunity/util-linuxport/pull/5) ❌
 
 ### victoriametricsport
+- 2025-02-24: [Update victoriametrics-version to 1.112.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/21) ❌
 - 2025-02-11: [Update victoriametrics-version to 1.111.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/20) ❌
 - 2025-01-27: [Update victoriametrics-version to 1.110.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/19) ❌
 - 2025-01-17: [Update victoriametrics-version to 1.109.1 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/18) ❌
@@ -343,6 +347,7 @@
 - 2024-06-19: [Update zlib-ng-version to 2.2.0 from 2.1.6](https://github.com/zopencommunity/zlib-ngport/pull/2) ❌
 
 ### zstdport
+- 2025-02-20: [Update zstd-version to 1.5.7 from 1.5.5](https://github.com/zopencommunity/zstdport/pull/25) ❌
 - 2024-03-27: [Update zstd-version to 1.5.6 from 1.5.5](https://github.com/zopencommunity/zstdport/pull/21) ❌
 
 </details>
@@ -583,5 +588,5 @@
 ---
 
 
-> Last updated: 2025-02-19 06:05:46 EST
+> Last updated: 2025-02-24 12:07:24 EST
 

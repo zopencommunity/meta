@@ -105,6 +105,27 @@
 </item>
 
 <item>
+<title>githubcli (Build 2550) - (STABLE)</title>
+<link>https://zopen.community/#/Vulnerabilities?id=githubcli</link>
+<description>1 critical vulnerability</description>
+<guid isPermaLink="false">githubcli (Build 2550) - (STABLE)</guid>
+</item>
+
+<item>
+<title>githubcli (Build 2573) - (DEV)</title>
+<link>https://zopen.community/#/Vulnerabilities?id=githubcli</link>
+<description>1 critical vulnerability</description>
+<guid isPermaLink="false">githubcli (Build 2573) - (DEV)</guid>
+</item>
+
+<item>
+<title>githubcli (Build 2995) - (STABLE)</title>
+<link>https://zopen.community/#/Vulnerabilities?id=githubcli</link>
+<description>1 critical vulnerability</description>
+<guid isPermaLink="false">githubcli (Build 2995) - (STABLE)</guid>
+</item>
+
+<item>
 <title>grafana (Build 2267) - (STABLE)</title>
 <link>https://zopen.community/#/Vulnerabilities?id=grafana</link>
 <description>1 high vulnerability</description>
