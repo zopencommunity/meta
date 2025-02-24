@@ -98,7 +98,7 @@ Users in highly secured TSS environments might need to be permitted to the follo
 
 If you encounter these errors in a TSS environment, contact your z/OS security team and ask them to grant you access to these BPX.CAHFS.* facilities.  
 
-If you are using a security product other than RACF (like ACF2 or TSS), request your security team to grant you equivalent permissions that allow file attribute changes, file format changes, file mode changes, file time changes, and symbolic link creation for your user ID.
+If you are using a security product other than TSS (like ACF2 or RACF), request your security team to grant you equivalent permissions that allow file attribute changes, file format changes, file mode changes, file time changes, and symbolic link creation for your user ID.
 
 ## Contributing
 
