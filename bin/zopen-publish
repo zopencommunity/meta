@@ -1,0 +1,299 @@
+#!/bin/sh
+#
+# zopen-publish script for publishing zopen community ports to GitHub Releases (using curl and metadata.json)
+#
+
+#
+# All zopen-* scripts MUST start with this code to maintain consistency.
+#
+setupMyself() {
+  ME=$(basename "$0")
+  MYDIR="$(cd "$(dirname "$0")" > /dev/null 2>&1 && pwd -P)"
+  INCDIR="${MYDIR}/../include"
+  if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
+    echo "Internal Error. Unable to find common.sh file to source." >&2
+    exit 8
+  fi
+  . "${INCDIR}/common.sh"
+}
+setupMyself
+
+printSyntax()
+{
+  echo "${ME} - Publish zopen package release to GitHub."
+  echo ""
+  echo "Usage: ${ME} [OPTION] -p PAX_FILE -m METADATA_FILE"
+  echo ""
+  echo "Options:"
+  echo "  -h, --help              print this help"
+  echo "  -v, --verbose           run in verbose mode."
+  echo "  -p, --pax-file PAX_FILE   Path to the pax.Z file (required)"
+  echo "  -m, --metadata-file METADATA_FILE"
+  echo "                          Path to the metadata.json file (required)"
+  echo "  -r, --repo REPO_URL     GitHub repository URL (optional, overrides metadata.json)"
+  echo "                          e.g., https://github.com/zopencommunity/xzport.git"
+  echo "                          If not provided, will be extracted from metadata.json"
+  echo "  -d, --description TEXT  Description for the GitHub release (optional, from metadata.json 'summary' if omitted)"
+  echo "  -b, --build-line LINE   Build line (DEV or STABLE) (optional, from metadata.json 'buildline' if omitted)"
+  echo "  -t, --github-token TOKEN"
+  echo "                          GitHub Personal Access Token (required, or set GITHUB_TOKEN env var)"
+  echo "  -o, --github-org ORG     GitHub Organization (default: zopencommunity)"
+  echo "     --version            print version"
+  echo ""
+  echo "Environment Variables:"
+  echo "  GITHUB_TOKEN            GitHub Personal Access Token (alternative to --github-token)"
+  echo ""
+  echo "Example:"
+  echo "  zopen-publish -p install/mypackage.zos.pax.Z -m install/metadata.json -t <your_github_token>"
+  echo "  zopen-publish -v -p install/mypackage.zos.pax.Z -m install/metadata.json -r https://github.com/zopencommunity/override-repo.git -d \"My custom release description\" -b DEV -t <your_github_token>"
+}
+
+checkDependencies() {
+  if ! command -v curl > /dev/null; then
+    printError "Error: curl command not found. Please install it."
+    return 1
+  fi
+  if ! command -v jq > /dev/null; then
+    printError "Error: jq command not found. Please install it."
+    return 1
+  fi
+  return 0
+}
+
+
+processOptions() {
+  args=$*
+  verbose=false
+  remote_lookup=false # Not used in this script, but kept for consistency if you intend to add remote lookup feature
+
+  if [ $# -eq 0 ]; then
+    printError "No options specified."
+    printSyntax
+    exit 1
+  fi
+
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      "-h" | "--help")
+        printSyntax
+        exit 0
+        ;;
+      "-v" | "--verbose")
+        verbose=true
+        ;;
+      "-p" | "--pax-file")
+        PAX_FILE="$2"
+        shift
+        ;;
+      "-m" | "--metadata-file")
+        METADATA_FILE="$2"
+        shift
+        ;;
+      "-r" | "--repo")
+        PORT_GITHUB_REPO_OPT="$2"
+        shift
+        ;;
+      "-d" | "--description")
+        PORT_DESCRIPTION_OPT="$2"
+        shift
+        ;;
+      "-b" | "--build-line")
+        BUILD_LINE_OPT="$2"
+        shift
+        ;;
+      "-t" | "--github-token")
+        GITHUB_TOKEN_OPT="$2"
+        shift
+        ;;
+      "-o" | "--github-org")
+        GITHUB_ORGANIZATION="$2"
+        shift
+        ;;
+      "--version")
+        zopen-version "${ME}" # Assuming you have a zopen-version function in common.sh
+        exit 0
+        ;;
+      -*)
+        printError "Unknown option '$1'"
+        printSyntax
+        exit 1
+        ;;
+      *)
+        printError "Unexpected argument '$1'" # If there are non-option arguments
+        printSyntax
+        exit 1
+        ;;
+    esac
+    shift
+  done
+
+  if [ -z "$PAX_FILE" ] || [ -z "$METADATA_FILE" ]; then
+    printError "Missing required options: -p PAX_FILE and -m METADATA_FILE are required."
+    printSyntax
+    exit 1
+  fi
+
+  if [ ! -f "$PAX_FILE" ]; then
+    printError "PAX file not found: $PAX_FILE"
+    exit 1
+  fi
+
+  if [ ! -f "$METADATA_FILE" ]; then
+    printError "Metadata file not found: $METADATA_FILE"
+    exit 1
+  fi
+
+  if [ -z "$GITHUB_TOKEN_OPT" ] && [ -z "$GITHUB_TOKEN" ]; then
+      printError "GitHub token is required. Please provide it via --github-token option or GITHUB_TOKEN environment variable."
+      printSyntax
+      exit 1
+  fi
+
+  if [ -n "$GITHUB_TOKEN_OPT" ]; then
+    export GITHUB_TOKEN="$GITHUB_TOKEN_OPT"
+  fi
+
+
+  if [ -z "$GITHUB_ORGANIZATION" ]; then
+    export GITHUB_ORGANIZATION="zopencommunity" # Default organization
+  fi
+}
+
+
+publishRelease() {
+  PAX_BASENAME=$(basename "${PAX_FILE}")
+  VERSION=$(jq -r '.product.version' "$METADATA_FILE")
+  BUILD_ID=$SECONDS # Using seconds since epoch as a simple build ID for standalone script
+
+  # Extract repo URL from metadata.json
+  METADATA_REPO_URL=$(jq -r '.product.repo' "$METADATA_FILE")
+  if [ -z "$METADATA_REPO_URL" ]; then
+    printError "Error: Repository URL ('repo') not found in metadata.json."
+    return 1
+  fi
+
+  # Use command-line repo option if provided, otherwise use from metadata
+  if [ -n "$PORT_GITHUB_REPO_OPT" ]; then
+    PORT_GITHUB_REPO="$PORT_GITHUB_REPO_OPT"
+    printVerbose "Using repository URL from command line option: $PORT_GITHUB_REPO"
+  else
+    PORT_GITHUB_REPO="$METADATA_REPO_URL"
+    printVerbose "Using repository URL from metadata.json: $PORT_GITHUB_REPO"
+  fi
+
+  RELEASE_PREFIX=$(basename "${PORT_GITHUB_REPO}")
+  RELEASE_PREFIX=${RELEASE_PREFIX%%.*}
+  PORT_NAME=${RELEASE_PREFIX%%port}
+  GITHUB_REPO=$RELEASE_PREFIX
+
+  # Extract description from metadata if not provided by option
+  if [ -z "$PORT_DESCRIPTION_OPT" ]; then
+    PORT_DESCRIPTION=$(jq -r '.product.summary' "$METADATA_FILE")
+    if [ -z "$PORT_DESCRIPTION" ]; then
+      printError "Error: Description ('summary') not found in metadata.json and not provided via command line."
+      return 1
+    fi
+    printVerbose "Using description from metadata.json: $PORT_DESCRIPTION"
+  else
+    PORT_DESCRIPTION="$PORT_DESCRIPTION_OPT"
+    printVerbose "Using description from command line option: $PORT_DESCRIPTION"
+  fi
+
+  # Extract build line from metadata if not provided by option
+  if [ -z "$BUILD_LINE_OPT" ]; then
+    BUILD_LINE=$(jq -r '.product.buildline' "$METADATA_FILE")
+    BUILD_LINE_UPPER=$(echo "$BUILD_LINE" | tr '[:lower:]' '[:upper:]')
+    if [[ "$BUILD_LINE_UPPER" != "DEV" && "$BUILD_LINE_UPPER" != "STABLE" ]]; then
+      printError "Error: Invalid build line in metadata.json: $BUILD_LINE. Must be 'DEV' or 'STABLE'."
+      return 1
+    fi
+    BUILD_LINE="$BUILD_LINE_UPPER"
+    printVerbose "Using build line from metadata.json: $BUILD_LINE"
+
+  else
+    BUILD_LINE="$BUILD_LINE_OPT"
+    BUILD_LINE_UPPER=$(echo "$BUILD_LINE" | tr '[:lower:]' '[:upper:]')
+    if [[ "$BUILD_LINE_UPPER" != "DEV" && "$BUILD_LINE_UPPER" != "STABLE" ]]; then
+      printError "Invalid build line: $BUILD_LINE. Must be 'DEV' or 'STABLE'."
+      printSyntax
+      return 1
+    fi
+    BUILD_LINE="$BUILD_LINE_UPPER"
+    printVerbose "Using build line from command line option: $BUILD_LINE"
+  fi
+
+
+  TAG="${BUILD_LINE}_${RELEASE_PREFIX}_${BUILD_ID}"
+  NAME="${PORT_NAME} ${VERSION}(Build ${BUILD_ID}) - ($BUILD_LINE)"
+
+  DESCRIPTION="${PORT_DESCRIPTION}<br />"
+  DESCRIPTION="${DESCRIPTION}<b>Version:</b> ${VERSION}<br />"
+  URL_LINE="https://github.com/${GITHUB_ORGANIZATION}/${GITHUB_REPO}/releases/download/${TAG}/${PAX_BASENAME}"
+  DESCRIPTION="${DESCRIPTION}<br /><b>Command to download and install on z/OS (if you have curl)</b> <pre>curl -o ${PAX_BASENAME} -L ${URL_LINE} && pax -rf ${PAX_BASENAME} && cd ${PORT_NAME} && . ./.env</pre>"
+  DESCRIPTION="${DESCRIPTION}<br /><b>Or use:</b> <pre>zopen install ${PORT_NAME}</pre>"
+
+
+  # Check if release tag exists and delete if it does
+  if ! deleteGitHubReleaseByTag "${TAG}"; then
+      return 1 # Deletion failed
+  fi
+
+  RELEASE_ID=$(createGitHubRelease "${TAG}" "${NAME}" "${DESCRIPTION}")
+
+  if [ $? -ne 0 ]; then
+      return 1 # Release creation failed
+  fi
+
+  # Upload PAX artifact
+  if ! uploadGitHubReleaseAsset "${RELEASE_ID}" "${PAX_FILE}"; then
+      return 1 # PAX upload failed
+  fi
+
+  # Upload metadata.json artifact
+  if ! uploadGitHubReleaseAsset "${RELEASE_ID}" "${METADATA_FILE}"; then
+      return 1 # metadata.json upload failed
+  fi
+
+
+  echo "Release published successfully to https://github.com/${GITHUB_ORGANIZATION}/${GITHUB_REPO}/releases/tag/${TAG}"
+  return 0
+}
+
+
+# --- Main Script ---
+
+# Initialize variables
+GITHUB_ORGANIZATION="zopencommunity" # Default organization
+export GITHUB_TOKEN="" # Initialize, will be set from env or option.
+PAX_FILE=""
+METADATA_FILE=""
+PORT_GITHUB_REPO="" # Will be extracted from metadata, or overridden by option
+PORT_GITHUB_REPO_OPT="" # To store command line option if provided
+PORT_DESCRIPTION="" # Will be extracted from metadata, or overridden by option
+PORT_DESCRIPTION_OPT="" # To store command line option if provided
+BUILD_LINE="" # Will be extracted from metadata, or overridden by option
+BUILD_LINE_OPT="" # To store command line option if provided
+GITHUB_TOKEN_OPT=""
+
+verbose=false # Initialize verbose flag
+
+processOptions "$@"
+
+if ${verbose}; then
+  set -x # Enable verbose mode if -v or --verbose is used
+fi
+
+if checkDependencies; then
+  printVerbose "Dependencies check passed."
+else
+  printError "Dependency check failed."
+fi
+
+
+if publishRelease; then
+  echo "zopen-publish completed successfully."
+  exit 0
+else
+  printError "zopen-publish failed."
+  exit 1
+fi
