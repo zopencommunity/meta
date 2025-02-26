@@ -61,7 +61,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | [gmp](https://github.com/zopencommunity/gmpport)|Green|100.0%|[STABLE_gmp_3025](https://github.com/zopencommunity/gmpport/releases/download/STABLE_gmpport_3025/gmp-6.3.0.20250131_065607.zos.pax.Z)|A library for arbitrary precision arithmetic|
 | [frp](https://github.com/zopencommunity/frpport)|Green|100.0%|[STABLE_frp_3102](https://github.com/zopencommunity/frpport/releases/download/STABLE_frpport_3102/frp-heads.v0.60.0.20250214_145421.zos.pax.Z)|A reverse proxy|
 | [libdio](https://github.com/zopencommunity/libdioport)|Green|100.0%|[DEV_libdio_3036](https://github.com/zopencommunity/libdioport/releases/download/DEV_libdioport_3036/libdio-main.20250131_101636.zos.pax.Z)|A dataset I/O library|
-| [sudo](https://github.com/zopencommunity/sudoport)|Blue|87.8%|[STABLE_sudo_3125](https://github.com/zopencommunity/sudoport/releases/download/STABLE_sudoport_3125/sudo-1.9.16p2.20250222_034953.zos.pax.Z)|A program for running commands with superuser privileges|
+| [sudo](https://github.com/zopencommunity/sudoport)|Blue|87.8%|[STABLE_sudo_3130](https://github.com/zopencommunity/sudoport/releases/download/STABLE_sudoport_3130/sudo-1.9.16p2.20250225_015946.zos.pax.Z)|A program for running commands with superuser privileges|
 | [sed](https://github.com/zopencommunity/sedport)|Blue|84.7%|[STABLE_sed_2981](https://github.com/zopencommunity/sedport/releases/download/STABLE_sedport_2981/sed-4.9.20250131_041436.zos.pax.Z)|A stream editor for manipulating text files|
 | [netpbm](https://github.com/zopencommunity/netpbmport)|Red|31.2%|[STABLE_netpbm_3051](https://github.com/zopencommunity/netpbmport/releases/download/STABLE_netpbmport_3051/netpbm-trunk.20250131_102551.zos.pax.Z)|A toolkit for manipulating images|
 </div>
@@ -208,7 +208,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 |---|---|---|---|---|
 | [zusage](https://github.com/zopencommunity/zusageport)|Skipped|N/A|[DEV_zusage_3127](https://github.com/zopencommunity/zusageport/releases/download/DEV_zusageport_3127/zusage-DEV.20250224_034508.zos.pax.Z)|Usage analytics library|
 | [expat](https://github.com/zopencommunity/expatport)|Green|100.0%|[STABLE_expat_2953](https://github.com/zopencommunity/expatport/releases/download/STABLE_expatport_2953/expat-2.5.0.20250130_225430.zos.pax.Z)|A library for parsing XML content|
-| [zoslib](https://github.com/zopencommunity/zoslibport)|Green|100.0%|[STABLE_zoslib_3110](https://github.com/zopencommunity/zoslibport/releases/download/STABLE_zoslibport_3110/zoslib-zopen2.20250218_040113.zos.pax.Z)|A library used by z/OS Open Tools|
+| [zoslib](https://github.com/zopencommunity/zoslibport)|Green|100.0%|[STABLE_zoslib_3132](https://github.com/zopencommunity/zoslibport/releases/download/STABLE_zoslibport_3132/zoslib-zopen2.20250226_022218.zos.pax.Z)|A library used by z/OS Open Tools|
 | [libgdbm](https://github.com/zopencommunity/libgdbmport)|Green|100.0%|[STABLE_libgdbm_3066](https://github.com/zopencommunity/libgdbmport/releases/download/STABLE_libgdbmport_3066/gdbm-1.24.20250205_031526.zos.pax.Z)|A library for managing database functions|
 | [libpipeline](https://github.com/zopencommunity/libpipelineport)|Green|100.0%|[STABLE_libpipeline_2957](https://github.com/zopencommunity/libpipelineport/releases/download/STABLE_libpipelineport_2957/libpipeline-1.5.7.20250130_223928.zos.pax.Z)|A library for managing pipelines of processes|
 | [gnulib](https://github.com/zopencommunity/gnulibport)|Green|100.0%|[STABLE_gnulib_2993](https://github.com/zopencommunity/gnulibport/releases/download/STABLE_gnulibport_2993/gnulib-master.20250131_051808.zos.pax.Z)|A library containing common functions used in GNU software|
@@ -297,9 +297,9 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | Package | Status | Test Success Rate | Latest Release | Description |
 |---|---|---|---|---|
 | [llamacpp](https://github.com/zopencommunity/llamacppport)|Skipped|N/A|[STABLE_llamacpp_2013](https://github.com/zopencommunity/llamacppport/releases/download/STABLE_llamacppport_2013/llamacpp-master.20240124_170742.zos.pax.Z)|A C++ library for writing high-performance network applications|
-| [zlib](https://github.com/zopencommunity/zlibport)|Green|100.0%|[STABLE_zlib_3071](https://github.com/zopencommunity/zlibport/releases/download/STABLE_zlibport_3071/zlib-heads.v1.3.1.20250205_034023.zos.pax.Z)|A data compression library|
-| [gzip](https://github.com/zopencommunity/gzipport)|Green|100.0%|[STABLE_gzip_3082](https://github.com/zopencommunity/gzipport/releases/download/STABLE_gzipport_3082/gzip-1.13.20250205_093947.zos.pax.Z)|Library for handling gzip compressed files|
 | [less](https://github.com/zopencommunity/lessport)|Green|100.0%|[STABLE_less_2954](https://github.com/zopencommunity/lessport/releases/download/STABLE_lessport_2954/less-heads.v668.20250130_225718.zos.pax.Z)|A text pager|
+| [gzip](https://github.com/zopencommunity/gzipport)|Green|100.0%|[STABLE_gzip_3082](https://github.com/zopencommunity/gzipport/releases/download/STABLE_gzipport_3082/gzip-1.13.20250205_093947.zos.pax.Z)|Library for handling gzip compressed files|
+| [zlib](https://github.com/zopencommunity/zlibport)|Green|100.0%|[STABLE_zlib_3071](https://github.com/zopencommunity/zlibport/releases/download/STABLE_zlibport_3071/zlib-heads.v1.3.1.20250205_034023.zos.pax.Z)|A data compression library|
 | [ncurses](https://github.com/zopencommunity/ncursesport)|Green|100.0%|[STABLE_ncurses_3124](https://github.com/zopencommunity/ncursesport/releases/download/STABLE_ncursesport_3124/ncurses-6.5.20250222_041835.zos.pax.Z)|Library for ncurses, a terminal screen handling library|
 | [help2man](https://github.com/zopencommunity/help2manport)|Green|100.0%|[STABLE_help2man_2875](https://github.com/zopencommunity/help2manport/releases/download/STABLE_help2manport_2875/help2man-1.49.3.20250129_141844.zos.pax.Z)|A tool for converting manual pages to other formats|
 | [xxhash](https://github.com/zopencommunity/xxhashport)|Green|100.0%|[STABLE_xxhash_1993](https://github.com/zopencommunity/xxhashport/releases/download/STABLE_xxhashport_1993/xxHash-0.8.2.20240123_100914.zos.pax.Z)|A fast hash function library|
@@ -313,7 +313,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | [libserdes](https://github.com/zopencommunity/libserdesport)|Green|100.0%|[STABLE_libserdes_2932](https://github.com/zopencommunity/libserdesport/releases/download/STABLE_libserdesport_2932/libserdes-master.20250130_125514.zos.pax.Z)|A serialization/deserialization library|
 | [curl](https://github.com/zopencommunity/curlport)|Blue|99.9%|[STABLE_curl_3105](https://github.com/zopencommunity/curlport/releases/download/STABLE_curlport_3105/curl-8.12.1.20250214_145238.zos.pax.Z)|Networking tool|
 | [bison](https://github.com/zopencommunity/bisonport)|Blue|99.7%|[STABLE_bison_2448](https://github.com/zopencommunity/bisonport/releases/download/STABLE_bisonport_2448/bison-3.8.2.20240922_015100.zos.pax.Z)|repository for bison port to z/os|
-| [perl](https://github.com/zopencommunity/perlport)|Blue|98.9%|[STABLE_perl_2840](https://github.com/zopencommunity/perlport/releases/download/STABLE_perlport_2840/perl5-heads.v5.41.7.20250123_102326.zos.pax.Z)|Perl programming language|
+| [perl](https://github.com/zopencommunity/perlport)|Blue|98.9%|[STABLE_perl_3131](https://github.com/zopencommunity/perlport/releases/download/STABLE_perlport_3131/perl5-heads.v5.41.9.20250225_132828.zos.pax.Z)|Perl programming language|
 | [m4](https://github.com/zopencommunity/m4port)|Blue|98.3%|[STABLE_m4_1941](https://github.com/zopencommunity/m4port/releases/download/STABLE_m4port_1941/m4-1.4.19.20240104_082339.zos.pax.Z)|A macro processor|
 | [ninja](https://github.com/zopencommunity/ninjaport)|Blue|98.2%|[STABLE_ninja_2924](https://github.com/zopencommunity/ninjaport/releases/download/STABLE_ninjaport_2924/ninja-heads.v1.12.1.20250130_123403.zos.pax.Z)|Build automation tool used with GNU Autotools|
 | [autoconf](https://github.com/zopencommunity/autoconfport)|Blue|98.0%|[STABLE_autoconf_1736](https://github.com/zopencommunity/autoconfport/releases/download/STABLE_autoconfport_1736/autoconf-2.71.20231114_002453.zos.pax.Z)|A configuration management tool|
@@ -382,4 +382,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-02-24T16:45:35.021322
+Last updated:  2025-02-25T23:14:29.902422

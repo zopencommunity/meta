@@ -23,6 +23,9 @@
 - 2024-06-02: [Update caddy-version to 2.8.4 from 2.7.6](https://github.com/zopencommunity/caddyport/pull/2) ❌
 - 2024-05-30: [Update caddy-version to 2.8.1 from 2.7.6](https://github.com/zopencommunity/caddyport/pull/1) ❌
 
+### cmakeport
+- 2025-02-25: [Update cmake-version to 3.31.6 from 3.31.5](https://github.com/zopencommunity/cmakeport/pull/66) ✅
+
 ### conanport
 - 2024-12-19: [Update conan-version to 2.11.0 from 2.9.1](https://github.com/zopencommunity/conanport/pull/16) ❌
 - 2024-12-18: [Update conan-version to 2.10.3 from 2.9.1](https://github.com/zopencommunity/conanport/pull/15) ❌
@@ -31,9 +34,6 @@
 - 2024-12-03: [Update conan-version to 2.10.0 from 2.9.1](https://github.com/zopencommunity/conanport/pull/11) ❌
 - 2024-11-21: [Update conan-version to 2.9.3 from 2.9.1](https://github.com/zopencommunity/conanport/pull/10) ❌
 - 2024-11-07: [Update conan-version to 2.9.2 from 2.9.1](https://github.com/zopencommunity/conanport/pull/9) ❌
-
-### coreutilsport
-- 2025-01-18: [Update coreutils-version to 9.6 from 9.5](https://github.com/zopencommunity/coreutilsport/pull/89) ❌
 
 ### cppcheckport
 - 2025-02-23: [Update cppcheck-version to 2.17.0 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/11) ❌
@@ -75,9 +75,6 @@
 - 2024-09-04: [Update expat-version to 2.6.3 from 2.5.0](https://github.com/zopencommunity/expatport/pull/11) ❌
 - 2024-03-23: [Update expat-version to 2.6.2 from 2.5.0](https://github.com/zopencommunity/expatport/pull/10) ❌
 
-### findutilsport
-- 2024-06-08: [Update findutils-version to 4.10.0 from 4.9.0](https://github.com/zopencommunity/findutilsport/pull/19) ❌
-
 ### fxport
 - 2024-06-27: [Update fx-version to 35.0.0 from 34.0.0](https://github.com/zopencommunity/fxport/pull/2) ✅
 
@@ -87,6 +84,7 @@
 - 2025-02-13: [Update fzf-version to 0.60.0 from 0.59.0](https://github.com/zopencommunity/fzfport/pull/31) ❌
 
 ### gettextport
+- 2025-02-25: [Update gettext-version to 0.24 from 0.21](https://github.com/zopencommunity/gettextport/pull/32) ❌
 - 2024-12-31: [Update gettext-version to 0.23.1 from 0.21](https://github.com/zopencommunity/gettextport/pull/31) ❌
 - 2024-12-01: [Update gettext-version to 0.23 from 0.21](https://github.com/zopencommunity/gettextport/pull/30) ❌
 - 2024-03-23: [Update gettext-version to 0.22.5 from 0.21](https://github.com/zopencommunity/gettextport/pull/26) ❌
@@ -136,6 +134,7 @@
 - 2024-03-07: [Update kotlin-version to 1.9.23 from 1.9.22](https://github.com/zopencommunity/kotlinport/pull/3) ✅
 
 ### lazygitport
+- 2025-02-25: [Update lazygit-version to 0.47.2 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/14) ✅
 - 2025-02-22: [Update lazygit-version to 0.47.1 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/13) ✅
 
 ### libassuanport
@@ -220,10 +219,6 @@
 
 ### patchport
 - 2023-11-05: [Update patch-version to 2.7.6 from 2.7](https://github.com/zopencommunity/patchport/pull/3) ❓
-
-### perlport
-- 2025-02-24: [Update perl-version to 5.41.9 from 5.41.7](https://github.com/zopencommunity/perlport/pull/107) ✅
-- 2025-01-21: [Update perl-version to 5.41.8 from 5.41.7](https://github.com/zopencommunity/perlport/pull/105) ❌
 
 ### phpport
 - 2025-02-14: [Update php-version to 8.4.4 from 8.2.13](https://github.com/zopencommunity/phpport/pull/31) ❌
@@ -588,5 +583,5 @@
 ---
 
 
-> Last updated: 2025-02-25 06:05:47 EST
+> Last updated: 2025-02-26 06:05:50 EST
 

@@ -2,8 +2,8 @@
 
 ## Overall Summary
 
-**Total Lines of Code (Current):** 30162  
-**Total # of Patch files:** 644
+**Total Lines of Code (Current):** 30149  
+**Total # of Patch files:** 645
 
 ### Overall Cumulative Patch LOC Trend (Net Change)
 
@@ -20,7 +20,7 @@
 | [bashport](#repo-bashport) | 4559 | 33 |
 | [librdkafkaport](#repo-librdkafkaport) | 2638 | 54 |
 | [libuvport](#repo-libuvport) | 1558 | 25 |
-| [sudoport](#repo-sudoport) | 1304 | 30 |
+| [sudoport](#repo-sudoport) | 1278 | 30 |
 | [cmakeport](#repo-cmakeport) | 1092 | 1 |
 | [gitport](#repo-gitport) | 975 | 29 |
 | [valgrindport](#repo-valgrindport) | 896 | 3 |
@@ -28,7 +28,7 @@
 | [gzipport](#repo-gzipport) | 669 | 7 |
 | [procpsport](#repo-procpsport) | 655 | 1 |
 | [gpgport](#repo-gpgport) | 650 | 12 |
-| [coreutilsport](#repo-coreutilsport) | 634 | 16 |
+| [coreutilsport](#repo-coreutilsport) | 647 | 17 |
 | [util-linuxport](#repo-util-linuxport) | 612 | 7 |
 | [unzipport](#repo-unzipport) | 548 | 12 |
 | [cronieport](#repo-cronieport) | 510 | 13 |
@@ -517,7 +517,7 @@
 <a name="repo-sudoport"></a>
 ## Repository: sudoport
 
-**Current Lines of Code:** 1304  
+**Current Lines of Code:** 1278  
 **Current # of Patch files:** 30
 
 ### Trend of Current Patch LOC
@@ -554,7 +554,7 @@
 | PR1/plugins/sudoers/regress/testsudoers/test9.sh.patch | 20 |
 | PR1/scripts/install-sh.patch | 44 |
 | PR1/src/exec.c.patch | 30 |
-| PR1/src/get_pty.c.patch | 52 |
+| PR1/src/get_pty.c.patch | 26 |
 | PR1/src/net_ifs.c.patch | 15 |
 | PR1/src/preload.c.patch | 14 |
 | PR1/src/sudo.c.patch | 37 |
@@ -1030,8 +1030,8 @@
 <a name="repo-coreutilsport"></a>
 ## Repository: coreutilsport
 
-**Current Lines of Code:** 634  
-**Current # of Patch files:** 16
+**Current Lines of Code:** 647  
+**Current # of Patch files:** 17
 
 ### Trend of Current Patch LOC
 
@@ -1041,6 +1041,7 @@
 
 | File | LOC |
 | --- | --- |
+| Makefile.in.patch | 12 |
 | build-aux/test-driver.patch | 13 |
 | lib/fdopendir.c.patch | 14 |
 | lib/fts.c.patch | 17 |
@@ -1052,7 +1053,7 @@
 | src/copy.c.patch | 27 |
 | src/cp.c.patch | 61 |
 | src/digest.c.patch | 61 |
-| src/ls.c.patch | 86 |
+| src/ls.c.patch | 87 |
 | src/od.c.patch | 16 |
 | src/pinky.c.patch | 50 |
 | src/stat.c.patch | 126 |
@@ -1065,6 +1066,7 @@
 
 | Commit Date | File | Delta LOC |
 | --- | --- | --- |
+| 2025-02-25 | Makefile.in.patch | 12 |
 | 2024-07-09 | src/ls.c.patch | 86 |
 | 2024-07-09 | lib/fts.c.patch | 17 |
 | 2023-11-14 | lib/nproc.c.patch | 15 |
