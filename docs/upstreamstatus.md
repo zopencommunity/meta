@@ -2,8 +2,8 @@
 
 ## Overall Summary
 
-**Total Lines of Code (Current):** 30149  
-**Total # of Patch files:** 645
+**Total Lines of Code (Current):** 30117  
+**Total # of Patch files:** 646
 
 ### Overall Cumulative Patch LOC Trend (Net Change)
 
@@ -19,7 +19,7 @@
 | --- | --- | --- |
 | [bashport](#repo-bashport) | 4559 | 33 |
 | [librdkafkaport](#repo-librdkafkaport) | 2638 | 54 |
-| [libuvport](#repo-libuvport) | 1558 | 25 |
+| [libuvport](#repo-libuvport) | 1553 | 25 |
 | [sudoport](#repo-sudoport) | 1278 | 30 |
 | [cmakeport](#repo-cmakeport) | 1092 | 1 |
 | [gitport](#repo-gitport) | 975 | 29 |
@@ -52,8 +52,8 @@
 | [llamacppport](#repo-llamacppport) | 236 | 1 |
 | [mesonport](#repo-mesonport) | 229 | 9 |
 | [zstdport](#repo-zstdport) | 227 | 4 |
-| [findutilsport](#repo-findutilsport) | 226 | 9 |
 | [gettextport](#repo-gettextport) | 206 | 7 |
+| [findutilsport](#repo-findutilsport) | 199 | 10 |
 | [libiconvport](#repo-libiconvport) | 196 | 5 |
 | [protobufport](#repo-protobufport) | 174 | 8 |
 | [groffport](#repo-groffport) | 165 | 13 |
@@ -438,7 +438,7 @@
 <a name="repo-libuvport"></a>
 ## Repository: libuvport
 
-**Current Lines of Code:** 1558  
+**Current Lines of Code:** 1553  
 **Current # of Patch files:** 25
 
 ### Trend of Current Patch LOC
@@ -463,7 +463,7 @@
 | src/unix/os390-syscalls.h.patch | 26 |
 | src/unix/os390.c.patch | 144 |
 | src/unix/process.c.patch | 104 |
-| src/unix/stream.c.patch | 191 |
+| src/unix/stream.c.patch | 186 |
 | src/unix/tcp.c.patch | 40 |
 | src/unix/thread.c.patch | 25 |
 | test/run-tests.c.patch | 27 |
@@ -2176,49 +2176,6 @@
 
 ---
 
-<a name="repo-findutilsport"></a>
-## Repository: findutilsport
-
-**Current Lines of Code:** 226  
-**Current # of Patch files:** 9
-
-### Trend of Current Patch LOC
-
-![Current Patch LOC Trend](./images/upstream/findutilsport_current_patch_loc_trend.png)
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-| PR1/filemode.c.patch | 33 |
-| PR2/PR2.patch | 55 |
-| PR3/config.guess.patch | 13 |
-| PR3/configure.patch | 22 |
-| PR3/install-sh.patch | 19 |
-| PR3/test-driver.patch | 19 |
-| PR4/gl_lib_canonicalize.c.patch | 25 |
-| PR4/gnulib-tests_test-unsetenv.c.patch | 23 |
-| PR5/fts.c.patch | 17 |
-
----
-
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-| 2024-05-27 | PR5/fts.c.patch | 17 |
-| 2023-05-25 | PR4/gnulib-tests_test-unsetenv.c.patch | 23 |
-| 2023-04-29 | PR4/gl_lib_canonicalize.c.patch | 25 |
-| 2023-02-21 | PR3/config.guess.patch | 13 |
-| 2023-02-21 | PR3/configure.patch | 22 |
-| 2023-02-21 | PR3/install-sh.patch | 19 |
-| 2023-02-21 | PR3/test-driver.patch | 19 |
-| 2022-12-07 | PR2/PR2.patch | 55 |
-| 2022-11-06 | PR1/filemode.c.patch | 33 |
-
----
-
 <a name="repo-gettextport"></a>
 ## Repository: gettextport
 
@@ -2261,6 +2218,51 @@
 | 2022-06-28 | PR1/lock.patch | 19 |
 | 2022-06-28 | PR1/rtlock.patch | 0 |
 | 2022-06-28 | PR1/threadlock.patch | 16 |
+
+---
+
+<a name="repo-findutilsport"></a>
+## Repository: findutilsport
+
+**Current Lines of Code:** 199  
+**Current # of Patch files:** 10
+
+### Trend of Current Patch LOC
+
+![Current Patch LOC Trend](./images/upstream/findutilsport_current_patch_loc_trend.png)
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+| sched_yield_disable.patch | 13 |
+| PR1/filemode.c.patch | 33 |
+| PR2/PR2.patch | 14 |
+| PR3/config.guess.patch | 13 |
+| PR3/configure.patch | 22 |
+| PR3/install-sh.patch | 19 |
+| PR3/test-driver.patch | 19 |
+| PR4/gl_lib_canonicalize.c.patch | 25 |
+| PR4/gnulib-tests_test-unsetenv.c.patch | 24 |
+| PR5/fts.c.patch | 17 |
+
+---
+
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+| 2025-02-26 | sched_yield_disable.patch | 13 |
+| 2024-05-27 | PR5/fts.c.patch | 17 |
+| 2023-05-25 | PR4/gnulib-tests_test-unsetenv.c.patch | 23 |
+| 2023-04-29 | PR4/gl_lib_canonicalize.c.patch | 25 |
+| 2023-02-21 | PR3/config.guess.patch | 13 |
+| 2023-02-21 | PR3/configure.patch | 22 |
+| 2023-02-21 | PR3/install-sh.patch | 19 |
+| 2023-02-21 | PR3/test-driver.patch | 19 |
+| 2022-12-07 | PR2/PR2.patch | 55 |
+| 2022-11-06 | PR1/filemode.c.patch | 33 |
 
 ---
 

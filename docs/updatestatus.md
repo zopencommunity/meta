@@ -36,6 +36,7 @@
 - 2024-11-07: [Update conan-version to 2.9.2 from 2.9.1](https://github.com/zopencommunity/conanport/pull/9) ❌
 
 ### cppcheckport
+- 2025-02-26: [Update cppcheck-version to 2.17.1 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/12) ❌
 - 2025-02-23: [Update cppcheck-version to 2.17.0 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/11) ❌
 - 2024-12-19: [Update cppcheck-version to 2.16.2 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/10) ❌
 - 2024-11-29: [Update cppcheck-version to 2.16.1 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/8) ❌
@@ -46,6 +47,7 @@
 - 2025-02-01: [Update creduce-version to 2.10.0 from V.R.M](https://github.com/zopencommunity/creduceport/pull/1) ❌
 
 ### cunitport
+- 2025-02-26: [Update cunit-version to 3.5.2 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/10) ❌
 - 2025-02-24: [Update cunit-version to 3.5.1 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/9) ❌
 - 2024-09-18: [Update cunit-version to 3.4.4 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/7) ❌
 - 2024-09-11: [Update cunit-version to 3.4.3 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/6) ❌
@@ -77,11 +79,6 @@
 
 ### fxport
 - 2024-06-27: [Update fx-version to 35.0.0 from 34.0.0](https://github.com/zopencommunity/fxport/pull/2) ✅
-
-### fzfport
-- 2025-02-23: [Update fzf-version to 0.60.2 from 0.59.0](https://github.com/zopencommunity/fzfport/pull/33) ✅
-- 2025-02-20: [Update fzf-version to 0.60.1 from 0.59.0](https://github.com/zopencommunity/fzfport/pull/32) ✅
-- 2025-02-13: [Update fzf-version to 0.60.0 from 0.59.0](https://github.com/zopencommunity/fzfport/pull/31) ❌
 
 ### gettextport
 - 2025-02-25: [Update gettext-version to 0.24 from 0.21](https://github.com/zopencommunity/gettextport/pull/32) ❌
@@ -177,6 +174,7 @@
 - 2024-06-27: [Update murex-version to 6.1.8300 from 6.0.1000](https://github.com/zopencommunity/murexport/pull/1) ❌
 
 ### natsport
+- 2025-02-26: [Update nats-version to 2.10.26 from 2.10.11](https://github.com/zopencommunity/natsport/pull/20) ❌
 - 2025-01-24: [Update nats-version to 2.10.25 from 2.10.11](https://github.com/zopencommunity/natsport/pull/19) ❌
 - 2024-12-18: [Update nats-version to 2.10.24 from 2.10.11](https://github.com/zopencommunity/natsport/pull/18) ❌
 - 2024-12-11: [Update nats-version to 2.10.23 from 2.10.11](https://github.com/zopencommunity/natsport/pull/17) ✅
@@ -237,7 +235,7 @@
 - 2024-02-16: [Update php-version to 8.3.3 from 8.2.13](https://github.com/zopencommunity/phpport/pull/16) ❌
 - 2023-11-24: [Update php-version to 8.3.0 from 8.2.13](https://github.com/zopencommunity/phpport/pull/13) ❓
 - 2024-01-18: [Update php-version to 8.3.2 from 8.2.13](https://github.com/zopencommunity/phpport/pull/15) ❌
-- 2023-12-22: [Update php-version to 8.3.1 from 8.2.13](https://github.com/zopencommunity/phpport/pull/14) ❌
+- 2023-12-22: [Update php-version to 8.3.1 from 8.2.13](https://github.com/zopencommunity/phpport/pull/14) ❓
 
 ### pocoport
 - 2025-02-13: [Update poco-version to 1.14.1 from 1.12.5p2](https://github.com/zopencommunity/pocoport/pull/9) ❌
@@ -583,5 +581,5 @@
 ---
 
 
-> Last updated: 2025-02-26 06:05:50 EST
+> Last updated: 2025-02-27 06:05:47 EST
 
