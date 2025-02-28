@@ -204,7 +204,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 | Package | Status | Test Success Rate | Latest Release | Description |
 |---|---|---|---|---|
-| [zusage](https://github.com/zopencommunity/zusageport)|Skipped|N/A|[DEV_zusage_3138](https://github.com/zopencommunity/zusageport/releases/download/DEV_zusageport_3138/zusage-DEV.20250226_170026.zos.pax.Z)|Usage analytics library|
+| [zusage](https://github.com/zopencommunity/zusageport)|Skipped|N/A|[DEV_zusage_3140](https://github.com/zopencommunity/zusageport/releases/download/DEV_zusageport_3140/zusage-DEV.20250228_020731.zos.pax.Z)|Usage analytics library|
 | [expat](https://github.com/zopencommunity/expatport)|Green|100.0%|[STABLE_expat_2953](https://github.com/zopencommunity/expatport/releases/download/STABLE_expatport_2953/expat-2.5.0.20250130_225430.zos.pax.Z)|A library for parsing XML content|
 | [zoslib](https://github.com/zopencommunity/zoslibport)|Green|100.0%|[STABLE_zoslib_3132](https://github.com/zopencommunity/zoslibport/releases/download/STABLE_zoslibport_3132/zoslib-zopen2.20250226_022218.zos.pax.Z)|A library used by z/OS Open Tools|
 | [libgdbm](https://github.com/zopencommunity/libgdbmport)|Green|100.0%|[STABLE_libgdbm_3066](https://github.com/zopencommunity/libgdbmport/releases/download/STABLE_libgdbmport_3066/gdbm-1.24.20250205_031526.zos.pax.Z)|A library for managing database functions|
@@ -300,6 +300,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | [jq](https://github.com/zopencommunity/jqport)|Skipped|N/A|[zusage](https://github.com/zopencommunity/jqport/releases/download/zusage/jq-1.7.1.20250226_164140.zos.pax.Z)|A port of the JQ command-line JSON processor|
 | [llamacpp](https://github.com/zopencommunity/llamacppport)|Skipped|N/A|[STABLE_llamacpp_2013](https://github.com/zopencommunity/llamacppport/releases/download/STABLE_llamacppport_2013/llamacpp-master.20240124_170742.zos.pax.Z)|A C++ library for writing high-performance network applications|
 | [zlib](https://github.com/zopencommunity/zlibport)|Green|100.0%|[STABLE_zlib_3071](https://github.com/zopencommunity/zlibport/releases/download/STABLE_zlibport_3071/zlib-heads.v1.3.1.20250205_034023.zos.pax.Z)|A data compression library|
+| [coreutils](https://github.com/zopencommunity/coreutilsport)|Green|100.0%|[STABLE_coreutils_3141](https://github.com/zopencommunity/coreutilsport/releases/download/STABLE_coreutilsport_3141/coreutils-9.6.20250228_032556.zos.pax.Z)|A collection of basic Unix utilities|
 | [gzip](https://github.com/zopencommunity/gzipport)|Green|100.0%|[STABLE_gzip_3082](https://github.com/zopencommunity/gzipport/releases/download/STABLE_gzipport_3082/gzip-1.13.20250205_093947.zos.pax.Z)|Library for handling gzip compressed files|
 | [ncurses](https://github.com/zopencommunity/ncursesport)|Green|100.0%|[STABLE_ncurses_3124](https://github.com/zopencommunity/ncursesport/releases/download/STABLE_ncursesport_3124/ncurses-6.5.20250222_041835.zos.pax.Z)|Library for ncurses, a terminal screen handling library|
 | [help2man](https://github.com/zopencommunity/help2manport)|Green|100.0%|[STABLE_help2man_2875](https://github.com/zopencommunity/help2manport/releases/download/STABLE_help2manport_2875/help2man-1.49.3.20250129_141844.zos.pax.Z)|A tool for converting manual pages to other formats|
@@ -320,7 +321,6 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | [gettext](https://github.com/zopencommunity/gettextport)|Blue|87.4%|[STABLE_gettext_2450](https://github.com/zopencommunity/gettextport/releases/download/STABLE_gettextport_2450/gettext-0.21.20240922_014617.zos.pax.Z)|A library for internationalization and localization|
 | [libtool](https://github.com/zopencommunity/libtoolport)|Blue|87.0%|[STABLE_libtool_2923](https://github.com/zopencommunity/libtoolport/releases/download/STABLE_libtoolport_2923/libtool-2.4.20250130_120629.zos.pax.Z)|Library for managing program library dependencies|
 | [boost](https://github.com/zopencommunity/boostport)|Blue|85.1%|[DEV_boost_2378](https://github.com/zopencommunity/boostport/releases/download/DEV_boostport_2378/boost-master.20240730_055731.zos.pax.Z)|A collection of C++ libraries|
-| [coreutils](https://github.com/zopencommunity/coreutilsport)|Blue|84.6%|[STABLE_coreutils_3139](https://github.com/zopencommunity/coreutilsport/releases/download/STABLE_coreutilsport_3139/coreutils-9.6.20250226_104934.zos.pax.Z)|A collection of basic Unix utilities|
 | [cmake](https://github.com/zopencommunity/cmakeport)|Blue|82.3%|[STABLE_cmake_2914](https://github.com/zopencommunity/cmakeport/releases/download/STABLE_cmakeport_2914/cmake-DEV.20250129_182555.zos.pax.Z)|A cross-platform build system|
 | [xz](https://github.com/zopencommunity/xzport)|Blue|77.8%|[STABLE_xz_3075](https://github.com/zopencommunity/xzport/releases/download/STABLE_xzport_3075/xz-5.6.4.20250205_033706.zos.pax.Z)|A compression utility|
 | [automake](https://github.com/zopencommunity/automakeport)|Yellow|71.4%|[STABLE_automake_3055](https://github.com/zopencommunity/automakeport/releases/download/STABLE_automakeport_3055/automake-1.17.20250131_112933.zos.pax.Z)|Tool for managing dependencies in software projects using GNU Autotools|
@@ -381,4 +381,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-02-26T18:00:24.200514
+Last updated:  2025-02-28T05:20:33.678032

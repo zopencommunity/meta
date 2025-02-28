@@ -10,7 +10,7 @@
 - 2024-12-11: [Update bash-completion-version to 20060301 from V.R.M](https://github.com/zopencommunity/bash-completionport/pull/1) ❌
 
 ### buildkiteport
-- 2025-02-13: [Update buildkite-version to 3.92.1 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/49) ❌
+- 2025-02-27: [Update buildkite-version to 3.93.1 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/50) ❌
 
 ### c3270port
 - 2025-02-07: [Update c3270-version to 4.4ga4 from 4.3ga9](https://github.com/zopencommunity/c3270port/pull/29) ❌
@@ -77,6 +77,9 @@
 - 2024-09-04: [Update expat-version to 2.6.3 from 2.5.0](https://github.com/zopencommunity/expatport/pull/11) ❌
 - 2024-03-23: [Update expat-version to 2.6.2 from 2.5.0](https://github.com/zopencommunity/expatport/pull/10) ❌
 
+### frpport
+- 2025-02-27: [Update frp-version to 0.61.1 from 0.60.0](https://github.com/zopencommunity/frpport/pull/12) ❌
+
 ### fxport
 - 2024-06-27: [Update fx-version to 35.0.0 from 34.0.0](https://github.com/zopencommunity/fxport/pull/2) ✅
 
@@ -122,6 +125,7 @@
 - 2024-01-10: [Update htop-version to 3.3.0 from 3.2.2](https://github.com/zopencommunity/htopport/pull/6) ❌
 
 ### hugoport
+- 2025-02-27: [Update hugo-version to 0.145.0 from 0.143.0](https://github.com/zopencommunity/hugoport/pull/18) ❌
 - 2025-02-19: [Update hugo-version to 0.144.2 from 0.143.0](https://github.com/zopencommunity/hugoport/pull/17) ❌
 - 2025-02-18: [Update hugo-version to 0.144.1 from 0.143.0](https://github.com/zopencommunity/hugoport/pull/16) ✅
 
@@ -269,6 +273,7 @@
 - 2024-02-08: [Update tcl-version to 8.6.14 from 8.6.13](https://github.com/zopencommunity/tclport/pull/11) ❌
 
 ### terraformport
+- 2025-02-27: [Update terraform-version to 1.11.0 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/33) ❌
 - 2025-01-23: [Update terraform-version to 1.10.5 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/32) ❌
 - 2025-01-08: [Update terraform-version to 1.10.4 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/31) ❌
 - 2024-12-18: [Update terraform-version to 1.10.3 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/30) ❌
@@ -581,5 +586,5 @@
 ---
 
 
-> Last updated: 2025-02-27 06:05:47 EST
+> Last updated: 2025-02-28 06:05:46 EST
 
