@@ -55,17 +55,17 @@ printPackageInfo() {
     # Extract package name and possible tag
     base_package=$(echo "${package}" | cut -d'%' -f1)
     tag=$(echo "${package}" | cut -d'%' -f2)
-    remote_data=$(jq -c ".release_data.\"${package}\"[0]" "${JSON_CACHE}")
+    if [ -n "$tag" ]; then
+        printVerbose "Looking up tagged version '${tag}' for package '${base_package}'"
+        remote_data=$(jq -c ".release_data.\"${base_package}\"[] | select(.tag_name == \"${tag}\")" "${JSON_CACHE}")
+    else
+        remote_data=$(jq -c ".release_data.\"${base_package}\"[0]" "${JSON_CACHE}")
+    fi
 
     if [ -z "${remote_data}" ] || [ "${remote_data}" = "null" ]; then
         printError "Package '${package}' not found in remote repository."
         exit 1
-    if [ -n "$tag" ]; then
-        printVerbose "Looking up tagged version '${tag}' for package '${base_package}'"
-        remote_data=$(jq -c ".release_data.\"${base_package}\"[] | select(.tag == \"${tag}\")" "${JSON_CACHE}")
-    else
-        remote_data=$(jq -c ".release_data.\"${base_package}\"[0]" "${JSON_CACHE}")
-    fi
+    fi 
 
     name=$(echo "${remote_data}" | jq -r '.name')
     repo=$(echo "${remote_data}" | jq -r '.assets[0].url' | sed 's#/[^/]*$##') # Extract base URL
