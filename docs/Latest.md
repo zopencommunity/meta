@@ -299,9 +299,9 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | [make](https://github.com/zopencommunity/makeport)|Skipped|N/A|[zusage](https://github.com/zopencommunity/makeport/releases/download/zusage/make-4.4.1.20250226_120516.zos.pax.Z)|A build automation tool|
 | [jq](https://github.com/zopencommunity/jqport)|Skipped|N/A|[zusage](https://github.com/zopencommunity/jqport/releases/download/zusage/jq-1.7.1.20250226_164140.zos.pax.Z)|A port of the JQ command-line JSON processor|
 | [llamacpp](https://github.com/zopencommunity/llamacppport)|Skipped|N/A|[STABLE_llamacpp_2013](https://github.com/zopencommunity/llamacppport/releases/download/STABLE_llamacppport_2013/llamacpp-master.20240124_170742.zos.pax.Z)|A C++ library for writing high-performance network applications|
+| [gzip](https://github.com/zopencommunity/gzipport)|Green|100.0%|[STABLE_gzip_3082](https://github.com/zopencommunity/gzipport/releases/download/STABLE_gzipport_3082/gzip-1.13.20250205_093947.zos.pax.Z)|Library for handling gzip compressed files|
 | [zlib](https://github.com/zopencommunity/zlibport)|Green|100.0%|[STABLE_zlib_3071](https://github.com/zopencommunity/zlibport/releases/download/STABLE_zlibport_3071/zlib-heads.v1.3.1.20250205_034023.zos.pax.Z)|A data compression library|
 | [coreutils](https://github.com/zopencommunity/coreutilsport)|Green|100.0%|[STABLE_coreutils_3141](https://github.com/zopencommunity/coreutilsport/releases/download/STABLE_coreutilsport_3141/coreutils-9.6.20250228_032556.zos.pax.Z)|A collection of basic Unix utilities|
-| [gzip](https://github.com/zopencommunity/gzipport)|Green|100.0%|[STABLE_gzip_3082](https://github.com/zopencommunity/gzipport/releases/download/STABLE_gzipport_3082/gzip-1.13.20250205_093947.zos.pax.Z)|Library for handling gzip compressed files|
 | [ncurses](https://github.com/zopencommunity/ncursesport)|Green|100.0%|[STABLE_ncurses_3124](https://github.com/zopencommunity/ncursesport/releases/download/STABLE_ncursesport_3124/ncurses-6.5.20250222_041835.zos.pax.Z)|Library for ncurses, a terminal screen handling library|
 | [help2man](https://github.com/zopencommunity/help2manport)|Green|100.0%|[STABLE_help2man_2875](https://github.com/zopencommunity/help2manport/releases/download/STABLE_help2manport_2875/help2man-1.49.3.20250129_141844.zos.pax.Z)|A tool for converting manual pages to other formats|
 | [xxhash](https://github.com/zopencommunity/xxhashport)|Green|100.0%|[STABLE_xxhash_1993](https://github.com/zopencommunity/xxhashport/releases/download/STABLE_xxhashport_1993/xxHash-0.8.2.20240123_100914.zos.pax.Z)|A fast hash function library|
@@ -381,4 +381,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-02-28T05:20:33.678032
+Last updated:  2025-02-28T10:03:36.791265

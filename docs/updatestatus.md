@@ -121,6 +121,9 @@
 - 2024-07-24: [Update grafana-version to 11.1.2 from 11.0.0](https://github.com/zopencommunity/grafanaport/pull/4) ❌
 - 2024-06-25: [Update grafana-version to 11.1.0 from 11.0.0](https://github.com/zopencommunity/grafanaport/pull/2) ❌
 
+### groovyport
+- 2025-02-28: [Update groovy-version to 4.0.26 from 4.0.25](https://github.com/zopencommunity/groovyport/pull/16) ❌
+
 ### htopport
 - 2024-01-10: [Update htop-version to 3.3.0 from 3.2.2](https://github.com/zopencommunity/htopport/pull/6) ❌
 
@@ -147,7 +150,7 @@
 ### libpcre2port
 - 2024-12-27: [Update libpcre2-version to 10.45 from 10.42](https://github.com/zopencommunity/libpcre2port/pull/10) ❌
 - 2024-06-08: [Update libpcre2-version to 10.44 from 10.42](https://github.com/zopencommunity/libpcre2port/pull/7) ✅
-- 2023-12-29: [Update libpcre2-version to 10.43 from 10.42](https://github.com/zopencommunity/libpcre2port/pull/4) ❌
+- 2023-12-29: [Update libpcre2-version to 10.43 from 10.42](https://github.com/zopencommunity/libpcre2port/pull/4) ❓
 
 ### libpipelineport
 - 2024-08-27: [Update libpipeline-version to 1.5.8 from 1.5.7](https://github.com/zopencommunity/libpipelineport/pull/15) ❌
@@ -586,5 +589,5 @@
 ---
 
 
-> Last updated: 2025-02-28 06:05:46 EST
+> Last updated: 2025-03-01 06:05:31 EST
 
