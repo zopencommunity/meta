@@ -199,6 +199,9 @@
 - 2024-07-29: [Update netpbm-version to 11.07.00 from 11.05.00](https://github.com/zopencommunity/netpbmport/pull/4) ❌
 - 2024-06-08: [Update netpbm-version to 11.06.03 from 11.05.00](https://github.com/zopencommunity/netpbmport/pull/3) ❌
 
+### nghttp2port
+- 2025-03-02: [Update nghttp2-version to 1.65.0 from 1.64.0](https://github.com/zopencommunity/nghttp2port/pull/11) ✅
+
 ### ninjaport
 - 2024-06-08: [Update ninja-version to 1.12.1 from 1.11.1](https://github.com/zopencommunity/ninjaport/pull/9) ❌
 
@@ -590,5 +593,5 @@
 ---
 
 
-> Last updated: 2025-03-02 06:05:13 EST
+> Last updated: 2025-03-03 06:05:45 EST
 
