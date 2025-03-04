@@ -18,7 +18,7 @@ if [ "$is_greater" -eq 1 ] && ! $skipverify; then
     skipverify=false;
     printWarning "GPG is not installed - package validation cannot be performed"
     printWarning "Run 'zopen install gpg' or use the --skip-verify parameter"
-    return
+    return 1
   fi
 else
   printVerbose "Skipping verification"
@@ -32,16 +32,14 @@ extractFromMetaData(){
   key=$1
   mdf=$2
   if ! sRc=$(jq -e -r "${key}" "${mdf}"); then
-    printVerbose "Could not locate ${key} in the pax's metadata. Checking cache..."
     mdf="${ZOPEN_ROOTFS}/var/cache/zopen/$(basename "$3").json"
     if ! sRc=$(jq -e -r "${key}" "${mdf}"); then
-      printVerbose "Failed to extract '${key}' from package metadata" >&2
       return 1
     fi
   fi
   echo "${sRc}" && return 0
-
 }
+
 # Extracting values and checking for errors
 # If this is a local pax file, then there might not be a .product.pax in the
 # metadata; check for a corresponding <pax>.json file in the cache.
