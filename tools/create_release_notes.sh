@@ -2,18 +2,24 @@
 
 set -e  # Exit on error
 
-# Parse command line arguments
+# Default values and flags
 MODE="retro"  # Default mode
 PROJECTS=""
 LIMIT=250
+VERBOSE=false # Verbose output flag - default off
+OUTPUT_DIR=""  # Output directory - default to temp dir
+OUTPUT_TYPE="markdown" # Default output type - "markdown" or "text"
 
 print_usage() {
     echo "Usage: $0 [OPTIONS]"
     echo "Options:"
-    echo "  -m, --mode MODE     Operation mode: 'retro' (update all releases) or 'release' (generate for new release)"
+    echo "  -m, --mode MODE      Operation mode: 'retro' (update all releases) or 'release' (generate for new release)"
     echo "  -p, --projects LIST Comma-separated list of projects (default: all zopencommunity projects)"
-    echo "  -l, --limit NUM     Limit number of releases to process (default: 250)"
-    echo "  -h, --help          Show this help message"
+    echo "  -l, --limit NUM      Limit number of releases to process (default: 250)"
+    echo "  -o, --outputdir DIR  Output directory for generated files (optional, defaults to temp dir)"
+    echo "  -v, --verbose      Enable verbose output"
+    echo "  -t, --outputtype TYPE Output type: 'markdown' or 'text' (default: markdown)"
+    echo "  -h, --help         Show this help message"
 }
 
 while [[ $# -gt 0 ]]; do
@@ -32,6 +38,22 @@ while [[ $# -gt 0 ]]; do
             ;;
         -l|--limit)
             LIMIT="$2"
+            shift 2
+            ;;
+        -o|--outputdir)
+            OUTPUT_DIR="$2"
+            shift 2
+            ;;
+        -v|--verbose)
+            VERBOSE=true
+            shift 1
+            ;;
+        -t|--outputtype)
+            OUTPUT_TYPE="$2"
+            if [[ "$OUTPUT_TYPE" != "markdown" && "$OUTPUT_TYPE" != "text" ]]; then
+                echo "Error: Output type must be either 'markdown' or 'text'"
+                exit 1
+            fi
             shift 2
             ;;
         -h|--help)
@@ -54,9 +76,20 @@ else
     PROJECTS=$(echo "$PROJECTS" | tr ',' ' ')
 fi
 
-# Create a temporary directory for release notes
-TEMP_DIR=$(mktemp -d)
-echo "Using temporary directory: $TEMP_DIR"
+# Determine output directory
+if [ -z "$OUTPUT_DIR" ]; then
+    TEMP_DIR=$(mktemp -d)
+    OUTPUT_BASE_DIR="$TEMP_DIR"
+    if [[ "$VERBOSE" == "true" ]]; then
+        echo "Using temporary directory: $TEMP_DIR" >&2
+    fi
+else
+    OUTPUT_BASE_DIR="$OUTPUT_DIR"
+    mkdir -p "$OUTPUT_BASE_DIR" # Create output directory if it doesn't exist
+    if [[ "$VERBOSE" == "true" ]]; then
+        echo "Using output directory: $OUTPUT_BASE_DIR" >&2
+    fi
+fi
 
 # Global rate limit tracking
 RATE_REMAINING=5000  # Default GitHub rate limit
@@ -77,7 +110,9 @@ check_rate_limit() {
 
     if [ "$RATE_REMAINING" -le 1 ]; then
         local wait_time=$((RATE_RESET - current_time + 1))
-        echo "Rate limit nearly exhausted (${RATE_REMAINING} remaining). Waiting ${wait_time} seconds for reset..."
+        if [[ "$VERBOSE" == "true" ]]; then
+            echo "Rate limit nearly exhausted (${RATE_REMAINING} remaining). Waiting ${wait_time} seconds for reset..." >&2
+        fi
         sleep "$wait_time"
         # Refresh our rate limit info after waiting
         rate_info=$(gh api /rate_limit)
@@ -113,7 +148,9 @@ gh_api_call() {
             return 1
         fi
 
-        echo "API call failed, retrying in 5 seconds..." >&2
+        if [[ "$VERBOSE" == "true" ]]; then
+            echo "API call failed, retrying in 5 seconds..." >&2
+        fi
         sleep 5
     done
 }
@@ -136,8 +173,14 @@ format_commit_message() {
     # Extract just the 40-character SHA
     commit_sha=$(echo "$commit_sha" | grep -o '[0-9a-f]\{40\}')
 
-    # Create the commit link
-    local commit_link="[${commit_sha:0:7}](https://github.com/zopencommunity/${project}/commit/${commit_sha})"
+    local commit_link
+    if [[ "$OUTPUT_TYPE" == "markdown" ]]; then
+        # Create Markdown commit link
+        commit_link="[${commit_sha:0:7}](https://github.com/zopencommunity/${project}/commit/${commit_sha})"
+    else
+        # Plain text URL
+        commit_link="https://github.com/zopencommunity/${project}/commit/${commit_sha}"
+    fi
 
     # Clean up the message while preserving content in parentheses
     first_line=$(echo "$first_line" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
@@ -151,11 +194,19 @@ format_commit_message() {
         # Clean up the message while preserving content
         message=$(echo "$message" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
 
-        printf "* %s%s:%s (%s)\n" "$type" "$scope" "$message" "$commit_link"
+        if [[ "$OUTPUT_TYPE" == "markdown" ]]; then
+            printf "* %s%s:%s (%s)\n" "$type" "$scope" "$message" "$commit_link"
+        else
+            printf "%s%s:%s (%s)\n" "$type" "$scope" "$message" "$commit_link" # Plain text format
+        fi
     else
         # For regular commit messages, preserve the full message
         if [ -n "$first_line" ]; then
-            printf "* %s (%s)\n" "$first_line" "$commit_link"
+            if [[ "$OUTPUT_TYPE" == "markdown" ]]; then
+                printf "* %s (%s)\n" "$first_line" "$commit_link"
+            else
+                printf "%s (%s)\n" "$first_line" "$commit_link" # Plain text format
+            fi
         fi
     fi
 }
@@ -167,7 +218,14 @@ create_release_notes() {
     local curr_tag="$3"
     local output_file="$4"
 
-    local title="## [Changes ${prev_tag}...${curr_tag}](https://github.com/${repo}/compare/${prev_tag}...${curr_tag})"
+    local title_md="## [Changes ${prev_tag}...${curr_tag}](https://github.com/${repo}/compare/${prev_tag}...${curr_tag})"
+    local title_text="Changes ${prev_tag}...${curr_tag} (https://github.com/${repo}/compare/${prev_tag}...${curr_tag})"
+    local title
+    if [[ "$OUTPUT_TYPE" == "markdown" ]]; then
+        title="$title_md"
+    else
+        title="$title_text"
+    fi
     generate_notes "$repo" "$prev_tag" "$curr_tag" "$output_file" "$title"
 }
 
@@ -177,7 +235,14 @@ create_unreleased_notes() {
     local last_tag="$2"
     local output_file="$3"
 
-    local title="## [Changes since ${last_tag}](https://github.com/${repo}/compare/${last_tag}...HEAD)"
+    local title_md="## [Changes since ${last_tag}](https://github.com/${repo}/compare/${last_tag}...HEAD)"
+    local title_text="Changes since ${last_tag} (https://github.com/${repo}/compare/${last_tag}...HEAD)"
+    local title
+    if [[ "$OUTPUT_TYPE" == "markdown" ]]; then
+        title="$title_md"
+    else
+        title="$title_text"
+    fi
     generate_notes "$repo" "$last_tag" "HEAD" "$output_file" "$title"
 }
 
@@ -194,19 +259,30 @@ generate_notes() {
     project=$(echo "$repo" | cut -d'/' -f2)
 
     # Get the comparison data
-    local compare_file="${TEMP_DIR}/compare.json"
+    local compare_file="${OUTPUT_BASE_DIR}/compare.json" # Use OUTPUT_BASE_DIR
     if ! gh_api_call "repos/${repo}/compare/${base_ref}...${target_ref}" "$compare_file"; then
-        echo "Error getting comparison data, skipping..."
+        echo "Error getting comparison data, skipping..." >&2
         rm -f "$compare_file"
         return 1
     fi
+    if [[ "$VERBOSE" == "true" ]]; then
+        echo "Got comparison data: repos/${repo}/compare/${base_ref}...${target_ref} -> $compare_file" >&2
+    fi
 
-    # Create the release notes
-    {
-        echo "$title"
-        echo ""
-        echo "### Pull Requests"
-    } > "$output_file"
+    # Start outputting to the file
+    echo "$title" > "$output_file" # Print title first
+
+    if [[ "$OUTPUT_TYPE" == "text" ]]; then
+        echo "--------------------" >> "$output_file" # Title underline
+        echo "" >> "$output_file"                     # Blank line after title section
+        echo "Pull Requests" >> "$output_file"          # "Pull Requests" header
+        echo "-------------" >> "$output_file"          # Underline for "Pull Requests"
+    elif [[ "$OUTPUT_TYPE" == "markdown" ]]; then
+        echo "### Pull Requests" >> "$output_file"      # Markdown "Pull Requests" header
+    else
+        echo "Pull Requests" >> "$output_file"          # Default plain text header (no underline) - should not reach here but for safety
+    fi
+
 
     # Process PRs
     local has_prs=false
@@ -221,14 +297,23 @@ generate_notes() {
         fi
         pr_num=$(echo "$message" | sed -n 's/^Merge pull request #\([0-9]\+\).*/\1/p')
         if [ -n "$pr_num" ]; then
-            local pr_file="${TEMP_DIR}/pr.json"
+            local pr_file="${OUTPUT_BASE_DIR}/pr.json" # Use OUTPUT_BASE_DIR
             if gh_api_call "repos/${repo}/pulls/${pr_num}" "$pr_file"; then
                 pr_title=$(jq -r '.title' "$pr_file")
                 pr_title=${pr_title//[[\]]/}
-                echo "* ${pr_title} ([#${pr_num}](https://github.com/${repo}/pull/${pr_num}))" >> "$output_file"
+                local pr_line
+                if [[ "$OUTPUT_TYPE" == "markdown" ]]; then
+                    pr_line="* ${pr_title} ([#${pr_num}](https://github.com/${repo}/pull/${pr_num}))"
+                else
+                    pr_line="${pr_title} (PR #${pr_num} - https://github.com/${repo}/pull/${pr_num})" # Plain text PR line
+                fi
+                echo "$pr_line" >> "$output_file"
                 has_prs=true
+                if [[ "$VERBOSE" == "true" ]]; then
+                    echo "Processed PR #${pr_num}: ${pr_title}" >&2
+                fi
 
-                local commits_file="${TEMP_DIR}/commits.json"
+                local commits_file="${OUTPUT_BASE_DIR}/commits.json" # Use OUTPUT_BASE_DIR
                 if gh_api_call "repos/${repo}/pulls/${pr_num}/commits" "$commits_file"; then
                     while read -r commit_sha; do
                         if [ -n "$commit_sha" ]; then
@@ -247,7 +332,12 @@ generate_notes() {
     fi
 
     # Process direct commits
-    echo -e "\n### Direct Changes" >> "$output_file"
+    if [[ "$OUTPUT_TYPE" == "markdown" ]]; then
+        echo -e "\n### Direct Changes" >> "$output_file"
+    else
+        echo -e "\nDirect Changes" >> "$output_file" # Plain text heading
+        echo "----------------" >> "$output_file"      # Underline for text header (using hyphens) - NOW ENSURED TO BE PRESENT
+    fi
     local has_direct=false
 
     while read -r line; do
@@ -259,8 +349,8 @@ generate_notes() {
         fi
 
         first_line=$(echo "$message" | head -n1)
-        if [[ "$first_line" =~ ^Updating\ docs/apis ]] || \
-           [[ "$first_line" =~ ^Reorder\ doc\ updates ]] || \
+        if [[ "$first_line" =~ ^Updating\ docs/apis ]] ||
+           [[ "$first_line" =~ ^Reorder\ doc\ updates ]] ||
            [[ "$first_line" =~ ^Update\ .*\.md$ ]]; then
             continue
         fi
@@ -268,6 +358,9 @@ generate_notes() {
         if [ -n "$sha" ] && [ -z "${pr_commit_map[$sha]+x}" ]; then
             format_commit_message "$sha" "$message" "$project" >> "$output_file"
             has_direct=true
+            if [[ "$VERBOSE" == "true" ]]; then
+                echo "Processed direct commit: ${sha:0:7} - ${message}" >&2
+            fi
         fi
     done < <(jq -r '.commits[] | {message: .commit.message, sha: .sha} | tojson' "$compare_file")
 
@@ -281,24 +374,42 @@ generate_notes() {
 
 # Process each project
 for project in $PROJECTS; do
-    echo "Processing project: $project"
+    if [[ "$VERBOSE" == "true" ]]; then
+        echo "Processing project: $project" >&2
+    fi
     REPO="zopencommunity/$project"
 
     # Get releases
     RELEASES=$(gh release list --limit "$LIMIT" --repo "$REPO" --json name,tagName,publishedAt --order asc)
     if [ -z "$RELEASES" ]; then
-        echo "No releases found for $REPO, skipping..."
+        if [[ "$VERBOSE" == "true" ]]; then
+            echo "No releases found for $REPO, skipping..." >&2
+        fi
         continue
+    fi
+    if [[ "$VERBOSE" == "true" ]]; then
+        echo "Retrieved releases for $REPO" >&2
     fi
 
     if [ "$MODE" = "retro" ]; then
         # Process all releases retrospectively
         prev_tag=""
         echo "$RELEASES" | jq -r '.[] | .tagName' | while read -r curr_tag; do
+            if [[ "$VERBOSE" == "true" ]]; then
+                echo "Processing retro release: $curr_tag" >&2
+            fi
             if [ -n "$prev_tag" ]; then
-                notes_file="${TEMP_DIR}/${project}_${curr_tag}_notes.md"
+                file_extension=".md"
+                if [[ "$OUTPUT_TYPE" == "markdown" ]]; then
+                    file_extension=".md"
+                elif [[ "$OUTPUT_TYPE" == "text" ]]; then
+                    file_extension=".txt"
+                fi
+                notes_file="${OUTPUT_BASE_DIR}/${project}_${curr_tag}_notes${file_extension}" # Use correct file extension
                 if create_release_notes "$REPO" "$prev_tag" "$curr_tag" "$notes_file"; then
-                    echo "Would execute: gh release edit --repo $REPO $curr_tag --notes-file $notes_file"
+                    if [[ "$VERBOSE" == "true" ]]; then
+                        echo "Would execute: gh release edit --repo $REPO $curr_tag --notes-file $notes_file" >&2
+                    fi
                     # Uncomment the following line to actually update the release notes
                     # gh release edit --repo "$REPO" "$curr_tag" --notes-file "$notes_file"
                 fi
@@ -311,39 +422,75 @@ for project in $PROJECTS; do
         if [ -n "$LATEST_TAG" ]; then
             if [ "$project" = "metaport" ]; then
                 # Special handling for metaport - get both metaport and meta changes
-                echo "Processing metaport changes..."
-                notes_file="${TEMP_DIR}/${project}_unreleased_notes.md"
+                if [[ "$VERBOSE" == "true" ]]; then
+                    echo "Processing metaport changes..." >&2
+                fi
+                local file_extension
+                if [[ "$OUTPUT_TYPE" == "markdown" ]]; then
+                    file_extension=".md"
+                elif [[ "$OUTPUT_TYPE" == "text" ]]; then
+                    file_extension=".txt"
+                else
+                    file_extension=".md" # Fallback, should not happen
+                fi
+                notes_file="${OUTPUT_BASE_DIR}/${project}_unreleased_notes${file_extension}" # Use correct file extension
                 if create_unreleased_notes "$REPO" "$LATEST_TAG" "$notes_file"; then
-                    echo "Generated release notes for unreleased metaport changes in $notes_file"
+                    if [[ "$VERBOSE" == "true" ]]; then
+                        echo "Generated release notes for unreleased metaport changes in $notes_file" >&2
+                    fi
                     cat "$notes_file"
                 fi
 
                 # Get the latest release date for metaport
                 LATEST_DATE=$(echo "$RELEASES" | jq -r '.[-1].publishedAt' | cut -d'T' -f1)
                 if [ -n "$LATEST_DATE" ]; then
-                    echo "Processing meta changes since ${LATEST_DATE}..."
+                    if [[ "$VERBOSE" == "true" ]]; then
+                        echo "Processing meta changes since ${LATEST_DATE}..." >&2
+                    fi
 
                     # Find the meta commit hash from the release date
-                    meta_commit_file="${TEMP_DIR}/meta_commit.json"
+                    meta_commit_file="${OUTPUT_BASE_DIR}/meta_commit.json" # Use OUTPUT_BASE_DIR
                     if gh_api_call "repos/zopencommunity/meta/commits?until=${LATEST_DATE}T23:59:59Z&per_page=1" "$meta_commit_file"; then
                         META_COMMIT=$(jq -r '.[0].sha' "$meta_commit_file")
                         if [ -n "$META_COMMIT" ] && [ "$META_COMMIT" != "null" ]; then
-                            meta_notes_file="${TEMP_DIR}/meta_unreleased_notes.md"
+                            local file_extension
+                            if [[ "$OUTPUT_TYPE" == "markdown" ]]; then
+                                file_extension=".md"
+                            elif [[ "$OUTPUT_TYPE" == "text" ]]; then
+                                file_extension=".txt"
+                            else
+                                file_extension=".unknown" # Fallback, should not happen
+                            fi
+                            meta_notes_file="${OUTPUT_BASE_DIR}/meta_unreleased_notes${file_extension}" # Use correct file extension
                             # Create notes for meta changes since the commit at release date
                             if create_unreleased_notes "zopencommunity/meta" "$META_COMMIT" "$meta_notes_file"; then
-                                echo "Generated release notes for unreleased meta changes in $meta_notes_file"
+                                if [[ "$VERBOSE" == "true" ]]; then
+                                    echo "Generated release notes for unreleased meta changes in $meta_notes_file" >&2
+                                fi
                                 cat "$meta_notes_file"
                             fi
                         else
-                            echo "Could not find meta commit for date ${LATEST_DATE}"
+                            if [[ "$VERBOSE" == "true" ]]; then
+                                echo "Could not find meta commit for date ${LATEST_DATE}" >&2
+                            fi
                         fi
                         rm -f "$meta_commit_file"
                     fi
                 fi
             else
-                notes_file="${TEMP_DIR}/${project}_unreleased_notes.md"
+                local file_extension
+                if [[ "$OUTPUT_TYPE" == "markdown" ]]; then
+                    file_extension=".md"
+                elif [[ "$OUTPUT_TYPE" == "text" ]]; then
+                    file_extension=".txt"
+                else
+                    file_extension=".unknown" # Fallback, should not happen
+                fi
+                notes_file="${OUTPUT_BASE_DIR}/${project}_unreleased_notes${file_extension}" # Use correct file extension
                 if create_unreleased_notes "$REPO" "$LATEST_TAG" "$notes_file"; then
-                    echo "Generated release notes for unreleased changes in $notes_file"
+                    if [[ "$VERBOSE" == "true" ]]; then
+                        echo "Generated release notes for unreleased changes in $notes_file" >&2
+                    fi
                     cat "$notes_file"
                 fi
             fi
@@ -351,6 +498,8 @@ for project in $PROJECTS; do
     fi
 done
 
-echo "Temporary directory $TEMP_DIR contains all generated files"
+if [[ "$VERBOSE" == "true" ]]; then
+    echo "Output directory $OUTPUT_BASE_DIR contains all generated files" >&2
+fi
 # Cleanup commented out for inspection
-# rm -rf "$TEMP_DIR"
+# rm -rf "$OUTPUT_BASE_DIR"

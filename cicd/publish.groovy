@@ -21,6 +21,7 @@ GITHUB_REPO=$RELEASE_PREFIX
 
 # PAX file should be a copied artifact
 PAX=`find . -type f -path "*install/*zos.pax.Z"`
+METADATA=`find . -type f -path "*install/metadata.json"`
 BUILD_STATUS=`find . -name "test.status" | xargs cat`
 DEPENDENCIES=`find . -name ".runtimedeps" | xargs cat`
 BUILD_DEPENDENCIES=`find . -name ".builddeps" | xargs cat`
@@ -30,6 +31,14 @@ if [ ! -f "$PAX" ]; then
   echo "Port pax file does not exist";
   exit 1;
 fi
+
+if [ ! -f "$METADATA" ]; then
+  echo "Port metadata.json file does not exist";
+  exit 1;
+fi
+
+echo "PAX: $PAX"
+echo "METADATA: $METADATA"
 
 if [ -z "$DEPENDENCIES" ]; then
   DEPENDENCIES="No dependencies";
@@ -85,7 +94,7 @@ fi
 
 TAG="${BUILD_LINE}_${RELEASE_PREFIX}_${BUILD_ID}"
 
-URL_LINE="https://github.com/zopencommunity/${GITHUB_REPO}/releases/download/${TAG}/$PAX_BASENAME"
+URL_LINE="https://github.com/${GITHUB_ORGANIZATION}/${GITHUB_REPO}/releases/download/${TAG}/$PAX_BASENAME"
 DESCRIPTION="${DESCRIPTION}<br /><b>Command to download and install on z/OS (if you have curl)</b> <pre>curl -o ${PAX_BASENAME} -L ${URL_LINE} && pax -rf ${PAX_BASENAME} && cd $DIR_NAME && . ./.env</pre>"
 DESCRIPTION="${DESCRIPTION}<br /><b>Or use:</b> <pre>zopen install ${PORT_NAME}</pre>"
 
@@ -144,3 +153,14 @@ else
   echo "Failed to upload artifacts!"
   exit 1                                     
 fi
+
+echo "Uploading metadata artifacts into github"
+github-release -v upload --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --tag "${TAG}" --name "metadata.json" --file "${METADATA}"
+if [ $? -eq 0 ]; then
+  echo "Artifacts uploaded successfully!"
+else
+  echo "Failed to upload artifacts!"
+  exit 1                                     
+fi
+
+
