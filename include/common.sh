@@ -1762,7 +1762,7 @@ promptYesNoAlways() {
       esac
     done
   fi
-  return 1
+  [ "$yesToPrompts" = "true" ] && return 0 || return 1
 }
 
 getVersionedMetadata()
