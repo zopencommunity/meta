@@ -73,6 +73,8 @@ Options:
   --release-line [stable|dev]
                            the release line to install from
   --select                 select a version to install from available versions
+  --skip-verify            skips the package verification allowing un-trusted
+                           packages. Caveat usor!
   -v, --verbose            run in verbose mode
   -y, --yes                automatically answer yes to prompts
   -h,-?, --help            display this help and exit
