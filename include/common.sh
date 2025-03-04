@@ -2502,7 +2502,7 @@ processActionScripts()
       printWarning "Scriptlet '${scriptletFile}' failed with exit code ${scriptletRc}"
       printWarning "Details:"
       printWarning "${scriptletBody}"
-      } >> "${scriptletRcFile}"
+      } >> "${scriptletRcFile}" 2>&1
     fi
   done
 
