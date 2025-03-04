@@ -478,13 +478,12 @@ for project in $PROJECTS; do
                     fi
                 fi
             else
-                local file_extension
                 if [[ "$OUTPUT_TYPE" == "markdown" ]]; then
                     file_extension=".md"
                 elif [[ "$OUTPUT_TYPE" == "text" ]]; then
                     file_extension=".txt"
                 else
-                    file_extension=".unknown" # Fallback, should not happen
+                    file_extension=".md" 
                 fi
                 notes_file="${OUTPUT_BASE_DIR}/${project}_unreleased_notes${file_extension}" # Use correct file extension
                 if create_unreleased_notes "$REPO" "$LATEST_TAG" "$notes_file"; then
