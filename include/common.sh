@@ -46,15 +46,12 @@ addCleanupTrapCmd(){
 }
 
 cleanup() {
-    printVerbose "Performing cleanup [in the parent process]"
-    if [ -f "${tmpscriptfile}" ] && [ -s "${tmpscriptfile}" ]; then
-        # Execute the commands in the cleanup file by sourcing it
-        # shellcheck disable=SC1090
-        . "${tmpscriptfile}" > /dev/null 2>&1
-        rm "${tmpscriptfile}"
-    else
-        printVerbose "No cleanup script to run"
-    fi
+  if [ -f "${tmpscriptfile}" ] && [ -s "${tmpscriptfile}" ]; then
+      # Execute the commands in the cleanup file by sourcing it
+      # shellcheck disable=SC1090
+      . "${tmpscriptfile}" > /dev/null 2>&1
+      rm "${tmpscriptfile}"
+  fi
 }
 
 addCleanupTrapCmd2(){
@@ -1075,17 +1072,23 @@ runLogProgress()
   completeText="${3:-Complete}"
   animation="${4:-spinner}"
 
-  progressHandler "${animation}" "${completeText}" &
-  PROGRESS_HANDLER=$!
-  killph="kill -HUP ${PROGRESS_HANDLER}"
-  addCleanupTrapCmd "${killph}"
-  eval "$1"
-  rc=$?
+  if ! ${verbose}; then
+    progressHandler "${animation}" "${completeText}" &
+    PROGRESS_HANDLER=$!
+    killph="kill -HUP ${PROGRESS_HANDLER}"
+    addCleanupTrapCmd "${killph}"
+    eval "$1"
+    rc=$?
+    ${killph} >/dev/null 2>&1 # if the timer is not running, the kill will fail
+    waitforpid ${PROGRESS_HANDLER}  # Make sure it's finished writing to screen
+  else
+    eval "$1"
+    rc=$?
+  fi
   if [ -n "${SSH_TTY}" ]; then
     chtag -r "${SSH_TTY}"
   fi
-  ${killph} >/dev/null 2>&1 # if the timer is not running, the kill will fail
-  waitforpid ${PROGRESS_HANDLER}  # Make sure it's finished writing to screen
+
   return "${rc}"
 }
 
@@ -2079,7 +2082,7 @@ generateInstallGraph(){
   # tempfiles could be created depending on dependency graph depth
   invalidPortAssetFile=$(mktempfile "invalid" "port")
   addCleanupTrapCmd "rm -rf ${invalidPortAssetFile}"
-  if ! runLogProgress " addToInstallGraph \"install\" \"\${invalidPortAssetFile}\" \"\${portsToInstall}\"" \
+  if ! runLogProgress " addToInstallGraph \"install\" \"${invalidPortAssetFile}\" \"${portsToInstall}\"" \
       "Creating install graph" "Created install graph" "linkcheck"; then
     printError "Unexpected error whilecreating install graph. Correct errors and retry command."
   fi
@@ -2091,7 +2094,7 @@ generateInstallGraph(){
     # are reinstalling AND the reinstallDependencies flag is set; we do not want
     # to reinstall a package and all it's dependencies by default, just the package itself
     printVerbose "Calculating dependancy graph"
-    if ! runLogProgress "createDependancyGraph \"\${invalidPortAssetFile}\"" \
+    if ! runLogProgress "createDependancyGraph \"${invalidPortAssetFile}\"" \
         "Creating dependancy graph" "Created dependancy graph" "linkcheck"; then
       printError "Unexpected error while creating dependancy graph. Correct errors and retry command."
     fi
@@ -2176,7 +2179,7 @@ checkIfPrereq(){
   # This jq query analyses the package database, looking for objects where the
   # runtime dependency contains $1 (the removee). It extracts the keys from those
   # objects into $dependents then outputs the flattened dependents array along with
-  # eithr true or false depending on if there was a prereq found (true) or if not
+  # either true or false depending on if there was a prereq found (true) or if not
   # false; the exit-status parameter then sets the exit code of jq dependning on that
   # true/false value!
   jq -r --exit-status --arg removee "$1" \
@@ -2514,6 +2517,11 @@ processActionScripts()
       printWarning "Details:"
       printWarning "${scriptletBody}"
       } >> "${scriptletRcFile}" 2>&1
+    elif ${verbose}; then
+      if [ -n "${scriptletBody}" ]; then
+        # Show the scriptlet output
+        echo "${scriptletBody}"
+      fi
     fi
   done
 
