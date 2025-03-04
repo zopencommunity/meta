@@ -58,9 +58,6 @@
 ### diffutilsport
 - 2025-02-03: [Update diffutils-version to 3.11 from 3.10](https://github.com/zopencommunity/diffutilsport/pull/36) ❌
 
-### direnvport
-- 2024-10-08: [Update direnv-version to 2.35.0 from 2.34.0](https://github.com/zopencommunity/direnvport/pull/8) ❌
-
 ### duckdbport
 - 2025-02-05: [Update duckdb-version to 1.2.0 from 0.9.2](https://github.com/zopencommunity/duckdbport/pull/22) ❌
 - 2024-11-04: [Update duckdb-version to 1.1.3 from 0.9.2](https://github.com/zopencommunity/duckdbport/pull/20) ❌
@@ -82,6 +79,9 @@
 
 ### fxport
 - 2024-06-27: [Update fx-version to 35.0.0 from 34.0.0](https://github.com/zopencommunity/fxport/pull/2) ✅
+
+### fzfport
+- 2025-03-03: [Update fzf-version to 0.60.3 from 0.60.2](https://github.com/zopencommunity/fzfport/pull/34) ❌
 
 ### gettextport
 - 2025-02-25: [Update gettext-version to 0.24 from 0.21](https://github.com/zopencommunity/gettextport/pull/32) ❌
@@ -317,8 +317,8 @@
 ### util-linuxport
 - 2025-01-14: [Update util-linux-version to 2.40.4 from 2.39.3](https://github.com/zopencommunity/util-linuxport/pull/11) ❌
 - 2025-01-09: [Update util-linux-version to 2.40.3 from 2.39.3](https://github.com/zopencommunity/util-linuxport/pull/10) ❌
-- 2024-07-04: [Update util-linux-version to 2.40.2 from 2.39.3](https://github.com/zopencommunity/util-linuxport/pull/7) ❌
 - 2024-03-27: [Update util-linux-version to 2.40 from 2.39.3](https://github.com/zopencommunity/util-linuxport/pull/4) ❌
+- 2024-07-04: [Update util-linux-version to 2.40.2 from 2.39.3](https://github.com/zopencommunity/util-linuxport/pull/7) ❌
 - 2024-05-06: [Update util-linux-version to 2.40.1 from 2.39.3](https://github.com/zopencommunity/util-linuxport/pull/5) ❌
 
 ### victoriametricsport
@@ -593,5 +593,5 @@
 ---
 
 
-> Last updated: 2025-03-03 06:05:45 EST
+> Last updated: 2025-03-04 06:05:55 EST
 

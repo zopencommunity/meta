@@ -83,7 +83,6 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 | Package | Status | Test Success Rate | Latest Release | Description |
 |---|---|---|---|---|
-| [git](https://github.com/zopencommunity/gitport)|Skipped|N/A|[zusage](https://github.com/zopencommunity/gitport/releases/download/zusage/git-heads.v2.48.1.20250226_114803.zos.pax.Z)|The Git version control system|
 | [vim](https://github.com/zopencommunity/vimport)|Skipped|N/A|[zusage](https://github.com/zopencommunity/vimport/releases/download/zusage/vim-heads.v9.1.1016.20250226_170120.zos.pax.Z)|A TUI editor|
 | [expect](https://github.com/zopencommunity/expectport)|Skipped|N/A|[STABLE_expect_2988](https://github.com/zopencommunity/expectport/releases/download/STABLE_expectport_2988/expect-5.45.4.20250131_044542.zos.pax.Z)|A tool for automating interactions with text-based programs|
 | [depot_tools](https://github.com/zopencommunity/depot_toolsport)|Skipped|N/A|[DEV_depot_tools_2832](https://github.com/zopencommunity/depot_toolsport/releases/download/DEV_depot_toolsport_2832/depot_tools-main.20250121_195105.zos.pax.Z)|Tools for working with Chromium development|
@@ -102,7 +101,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | [comp_go](https://github.com/zopencommunity/comp_goport)|Green|100.0%|[STABLE_comp_go_2668](https://github.com/zopencommunity/comp_goport/releases/download/STABLE_comp_goport_2668/comp_go-DEV.20241028_222012.zos.pax.Z)|A code completion tool for Go|
 | [comp_clang](https://github.com/zopencommunity/comp_clangport)|Green|100.0%|[STABLE_comp_clang_2659](https://github.com/zopencommunity/comp_clangport/releases/download/STABLE_comp_clangport_2659/comp_clang-DEV.20241028_215503.zos.pax.Z)|A code completion tool for Clang compiler|
 | [comp_xlclang](https://github.com/zopencommunity/comp_xlclangport)|Green|100.0%|[STABLE_comp_xlclang_2660](https://github.com/zopencommunity/comp_xlclangport/releases/download/STABLE_comp_xlclangport_2660/comp_xlclang-DEV.20241028_215548.zos.pax.Z)|A code completion tool for XL C/C++ compiler|
-| [direnv](https://github.com/zopencommunity/direnvport)|Green|100.0%|[STABLE_direnv_2968](https://github.com/zopencommunity/direnvport/releases/download/STABLE_direnvport_2968/direnv-heads.v2.34.0.20250131_011713.zos.pax.Z)||
+| [direnv](https://github.com/zopencommunity/direnvport)|Green|100.0%|[STABLE_direnv_3142](https://github.com/zopencommunity/direnvport/releases/download/STABLE_direnvport_3142/direnv-heads.v2.35.0.20250303_131322.zos.pax.Z)||
 | [bump](https://github.com/zopencommunity/bumpport)|Green|100.0%|[STABLE_bump_3001](https://github.com/zopencommunity/bumpport/releases/download/STABLE_bumpport_3001/bump-master.20250131_060329.zos.pax.Z)|A version control and update tool|
 | [gn](https://github.com/zopencommunity/gnport)|Green|100.0%|[DEV_gn_2827](https://github.com/zopencommunity/gnport/releases/download/DEV_gnport_2827/gn-main.20250117_125041.zos.pax.Z)|A build tool|
 | [libevent](https://github.com/zopencommunity/libeventport)|Green|100.0%|[STABLE_libevent_2183](https://github.com/zopencommunity/libeventport/releases/download/STABLE_libeventport_2183/libevent-2.1.12-stable.20240307_140629.zos.pax.Z)|An event notification library|
@@ -119,6 +118,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | [libdio](https://github.com/zopencommunity/libdioport)|Green|100.0%|[DEV_libdio_3036](https://github.com/zopencommunity/libdioport/releases/download/DEV_libdioport_3036/libdio-main.20250131_101636.zos.pax.Z)|A dataset I/O library|
 | [bash-completion](https://github.com/zopencommunity/bash-completionport)|Green|100.0%|[STABLE_bash-completion_3043](https://github.com/zopencommunity/bash-completionport/releases/download/STABLE_bash-completionport_3043/bashcompletion-DEV.20250131_110235.zos.pax.Z)||
 | [dos2unix](https://github.com/zopencommunity/dos2unixport)|Blue|99.1%|[STABLE_dos2unix_3031](https://github.com/zopencommunity/dos2unixport/releases/download/STABLE_dos2unixport_3031/dos2unix-7.5.2.20250131_100352.zos.pax.Z)|A tool for converting DOS/Windows text files to Unix format|
+| [git](https://github.com/zopencommunity/gitport)|Blue|96.7%|[STABLE_git_3143](https://github.com/zopencommunity/gitport/releases/download/STABLE_gitport_3143/git-heads.v2.48.1.20250303_153724.zos.pax.Z)|The Git version control system|
 | [re2c](https://github.com/zopencommunity/re2cport)|Blue|83.3%|[STABLE_re2c_3070](https://github.com/zopencommunity/re2cport/releases/download/STABLE_re2cport_3070/re2c-4.0.2.20250205_032000.zos.pax.Z)|A lexer generator for creating lexers|
 | [conan](https://github.com/zopencommunity/conanport)|Yellow|54.0%|[STABLE_conan_3047](https://github.com/zopencommunity/conanport/releases/download/STABLE_conanport_3047/conan-heads.2.9.1.20250131_110229.zos.pax.Z)|C/C++ Package Manager tool|
 | [byacc](https://github.com/zopencommunity/byaccport)|Red|45.6%|[STABLE_byacc_3100](https://github.com/zopencommunity/byaccport/releases/download/STABLE_byaccport_3100/byacc-20241231.20250213_141606.zos.pax.Z)|A parser generator compatible with Yacc|
@@ -282,10 +282,10 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 | Package | Status | Test Success Rate | Latest Release | Description |
 |---|---|---|---|---|
-| [git](https://github.com/zopencommunity/gitport)|Skipped|N/A|[zusage](https://github.com/zopencommunity/gitport/releases/download/zusage/git-heads.v2.48.1.20250226_114803.zos.pax.Z)|The Git version control system|
 | [gitlab-runner](https://github.com/zopencommunity/gitlab-runnerport)|Skipped|N/A|[STABLE_gitlab-runner_2597](https://github.com/zopencommunity/gitlab-runnerport/releases/download/STABLE_gitlab-runnerport_2597/gitlab-runner.20241002_044313.zos.pax.Z)|A GitLab Runner|
 | [git-extras](https://github.com/zopencommunity/git-extrasport)|Skipped|N/A|[STABLE_git-extras_3041](https://github.com/zopencommunity/git-extrasport/releases/download/STABLE_git-extrasport_3041/gitextras-DEV.20250131_105732.zos.pax.Z)||
 | [tig](https://github.com/zopencommunity/tigport)|Green|100.0%|[STABLE_tig_3005](https://github.com/zopencommunity/tigport/releases/download/STABLE_tigport_3005/tig-2.5.9.20250131_061802.zos.pax.Z)|A text-mode interface for Git|
+| [git](https://github.com/zopencommunity/gitport)|Blue|96.7%|[STABLE_git_3143](https://github.com/zopencommunity/gitport/releases/download/STABLE_gitport_3143/git-heads.v2.48.1.20250303_153724.zos.pax.Z)|The Git version control system|
 </div>
 
 <div class="table-category" data-category="uncategorized">
@@ -294,15 +294,15 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 | Package | Status | Test Success Rate | Latest Release | Description |
 |---|---|---|---|---|
-| [less](https://github.com/zopencommunity/lessport)|Skipped|N/A|[zusage](https://github.com/zopencommunity/lessport/releases/download/zusage/less-heads.v668.20250226_155516.zos.pax.Z)|A text pager|
 | [curl](https://github.com/zopencommunity/curlport)|Skipped|N/A|[zusage](https://github.com/zopencommunity/curlport/releases/download/zusage/curl-8.12.1.20250226_160101.zos.pax.Z)|Networking tool|
+| [less](https://github.com/zopencommunity/lessport)|Skipped|N/A|[zusage](https://github.com/zopencommunity/lessport/releases/download/zusage/less-heads.v668.20250226_155516.zos.pax.Z)|A text pager|
 | [make](https://github.com/zopencommunity/makeport)|Skipped|N/A|[zusage](https://github.com/zopencommunity/makeport/releases/download/zusage/make-4.4.1.20250226_120516.zos.pax.Z)|A build automation tool|
 | [jq](https://github.com/zopencommunity/jqport)|Skipped|N/A|[zusage](https://github.com/zopencommunity/jqport/releases/download/zusage/jq-1.7.1.20250226_164140.zos.pax.Z)|A port of the JQ command-line JSON processor|
 | [llamacpp](https://github.com/zopencommunity/llamacppport)|Skipped|N/A|[STABLE_llamacpp_2013](https://github.com/zopencommunity/llamacppport/releases/download/STABLE_llamacppport_2013/llamacpp-master.20240124_170742.zos.pax.Z)|A C++ library for writing high-performance network applications|
-| [gzip](https://github.com/zopencommunity/gzipport)|Green|100.0%|[STABLE_gzip_3082](https://github.com/zopencommunity/gzipport/releases/download/STABLE_gzipport_3082/gzip-1.13.20250205_093947.zos.pax.Z)|Library for handling gzip compressed files|
 | [zlib](https://github.com/zopencommunity/zlibport)|Green|100.0%|[STABLE_zlib_3071](https://github.com/zopencommunity/zlibport/releases/download/STABLE_zlibport_3071/zlib-heads.v1.3.1.20250205_034023.zos.pax.Z)|A data compression library|
-| [coreutils](https://github.com/zopencommunity/coreutilsport)|Green|100.0%|[STABLE_coreutils_3141](https://github.com/zopencommunity/coreutilsport/releases/download/STABLE_coreutilsport_3141/coreutils-9.6.20250228_032556.zos.pax.Z)|A collection of basic Unix utilities|
 | [ncurses](https://github.com/zopencommunity/ncursesport)|Green|100.0%|[STABLE_ncurses_3124](https://github.com/zopencommunity/ncursesport/releases/download/STABLE_ncursesport_3124/ncurses-6.5.20250222_041835.zos.pax.Z)|Library for ncurses, a terminal screen handling library|
+| [coreutils](https://github.com/zopencommunity/coreutilsport)|Green|100.0%|[STABLE_coreutils_3141](https://github.com/zopencommunity/coreutilsport/releases/download/STABLE_coreutilsport_3141/coreutils-9.6.20250228_032556.zos.pax.Z)|A collection of basic Unix utilities|
+| [gzip](https://github.com/zopencommunity/gzipport)|Green|100.0%|[STABLE_gzip_3082](https://github.com/zopencommunity/gzipport/releases/download/STABLE_gzipport_3082/gzip-1.13.20250205_093947.zos.pax.Z)|Library for handling gzip compressed files|
 | [help2man](https://github.com/zopencommunity/help2manport)|Green|100.0%|[STABLE_help2man_2875](https://github.com/zopencommunity/help2manport/releases/download/STABLE_help2manport_2875/help2man-1.49.3.20250129_141844.zos.pax.Z)|A tool for converting manual pages to other formats|
 | [xxhash](https://github.com/zopencommunity/xxhashport)|Green|100.0%|[STABLE_xxhash_1993](https://github.com/zopencommunity/xxhashport/releases/download/STABLE_xxhashport_1993/xxHash-0.8.2.20240123_100914.zos.pax.Z)|A fast hash function library|
 | [zstd](https://github.com/zopencommunity/zstdport)|Green|100.0%|[STABLE_zstd_2041](https://github.com/zopencommunity/zstdport/releases/download/STABLE_zstdport_2041/zstd-1.5.5.20240126_215521.zos.pax.Z)|A compression algorithm|
@@ -381,4 +381,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-02-28T10:03:36.791265
+Last updated:  2025-03-03T12:02:23.761907
