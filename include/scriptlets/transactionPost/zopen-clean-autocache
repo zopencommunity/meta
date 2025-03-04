@@ -9,7 +9,6 @@ fi
 case "${isactive}" in
   0 ) :;; # Take no action
   1 ) echo "- Cleaning install cache..."
-  printInfo "CLEANING !!"
       (zopen clean --cache >/dev/null 2>&1)
       echo "- Cache cleaned."
       ;;
