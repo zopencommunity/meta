@@ -94,7 +94,10 @@ if [ ! -f "${PUBLIC_KEY_FILE}" ]; then
   return 1
 fi
 
-startGPGAgent
+if ! startGPGAgent; then
+  printSoftError "Unable to start GPG agent"
+  return 1
+fi
 
 printVerbose "Importing public key to keyring file..."
 KEYRING_FILE=$(mktempfile "pubring" ".kbx")
