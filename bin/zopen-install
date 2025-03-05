@@ -236,7 +236,17 @@ fi
 printDebug "Checking input parameters for actual files"
 potentials=$(echo "${chosenRepos}" | sed 's/@@/ /g')
 for installRepo in ${potentials}; do
-  [ -f "${installRepo}" ] && fileinstall=true && break
+  [ -f "${installRepo}" ] || continue
+  # The parameter is a file, check it is actually a supported package or ignore
+  case "${installRepo}" in
+    (*.pax.Z)
+      printVerbose "Input parameter '$installRepo' has a supported input suffix"
+      # Treat all input parameters as file parameters
+      fileinstall=true
+      break
+    ;;
+    *) printVerbose "Handling input parameter '$installRepo' as a package name" ;;
+  esac
 done
 
 # Sanity check for argument clashes
