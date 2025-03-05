@@ -103,8 +103,6 @@ def get_repo_origin_date(repo_path):
         print(f"Error obtaining origin date for {repo_path}: {e}")
         return None
 
-# --- Modified History Analysis (Git Log) to track patch lifecycle ---
-
 def analyze_repo_history(repo_path, since_date):
     """
     Analyzes git history to track patch lifecycle AND generate delta-based events.
@@ -309,6 +307,68 @@ def generate_overall_cumulative_trend(all_events, images_dir):
     plt.close(fig)
     return overall_filename
 
+def generate_average_patch_loc_trend(repos_data, images_dir):
+    """
+    Generates a trend graph showing the average patch LOC per project over time.
+    """
+    if not repos_data:
+        print("No repository data to generate average patch LOC trend.")
+        return None
+
+    start_date = None
+    for repo_data in repos_data:
+        repo_start_date = get_repo_origin_date(os.path.join(tempfile.gettempdir(), repo_data['name'])) # Access origin date based on repo data
+        if repo_start_date:
+            if start_date is None or repo_start_date < start_date:
+                start_date = repo_start_date
+
+    if start_date is None:
+        start_date = datetime.date(2022, 4, 4) # Default if no repo origin dates found
+
+    current_date = datetime.date.today()
+    months = []
+    y, m = start_date.year, start_date.month
+    while (y < current_date.year) or (y == current_date.year and m <= current_date.month):
+        months.append(f"{y}-{m:02d}")
+        m += 1
+        if m > 12:
+            m = 1
+            y += 1
+
+    x, y_vals = [], []
+    for ym in months:
+        date_obj = datetime.datetime.strptime(ym, "%Y-%m")
+        end_of_month_date = datetime.date(date_obj.year, date_obj.month, 1)
+        month_range = calendar.monthrange(date_obj.year, date_obj.month)
+        end_of_month_date = end_of_month_date.replace(day=month_range[1])
+
+        x.append(date_obj)
+        total_loc_sum = 0
+        num_repos_count = 0
+        for repo_data in repos_data: # Iterate through repos_data to calculate total_loc for each repo on date
+            repo_patch_lifecycles = repo_data['patch_lifecycles'] # Access patch_lifecycles from repo_data
+            repo_loc = get_current_patch_loc_on_date(repo_patch_lifecycles, end_of_month_date)
+            total_loc_sum += repo_loc
+            num_repos_count += 1
+
+        average_loc = total_loc_sum / num_repos_count if num_repos_count > 0 else 0
+        y_vals.append(average_loc)
+
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.plot(x, y_vals, marker='o')
+    ax.set_xlabel("Date")
+    ax.set_ylabel("Average Patch LOC per Project")
+    ax.set_title("Trend of Average Patch LOC per Project")
+    fig.autofmt_xdate()
+    plt.tight_layout()
+    avg_filename = "average_patch_loc_trend.png"
+    graph_file = os.path.join(images_dir, avg_filename)
+    plt.savefig(graph_file)
+    plt.close(fig)
+    return avg_filename
+
+
 # --- Pie Chart Generation ---
 def generate_tools_pie_chart(repos_data, images_dir):
     """
@@ -354,7 +414,7 @@ def normalize_anchor(name):
     """
     return "repo-" + "".join(ch if ch.isalnum() or ch=="-" else "-" for ch in name.lower())
 
-def generate_combined_markdown_report(repos_data, overall_cumulative_graph, pie_chart_image, report_file, images_rel_path):
+def generate_combined_markdown_report(repos_data, overall_cumulative_graph, average_loc_trend_graph, pie_chart_image, report_file, images_rel_path):
     """
     Generate a combined Markdown report that includes:
       - An overall summary with the overall cumulative trend graph and pie chart.
@@ -366,15 +426,22 @@ def generate_combined_markdown_report(repos_data, overall_cumulative_graph, pie_
     repos_data.sort(key=lambda r: r['current_loc'], reverse=True)
     total_patches = sum(len(repo['current_patches']) for repo in repos_data)
     total_loc = sum(repo['current_loc'] for repo in repos_data)
+    num_repos = len(repos_data) # Get the number of repositories
+    average_loc_per_repo = total_loc / num_repos if num_repos > 0 else 0 # Calculate average, avoid division by zero
 
     md = "# Upstream Report\n\n"
     md += "## Overall Summary\n\n"
     md += f"**Total Lines of Code (Current):** {total_loc}  \n"
+    md += f"**Average Patch LOC per Project:** {average_loc_per_repo:.2f} \n"
     md += f"**Total # of Patch files:** {total_patches}\n\n"
 
     if overall_cumulative_graph:
         md += "### Overall Cumulative Patch LOC Trend (Net Change)\n\n" # Updated title
         md += f"![Overall Cumulative Patch LOC Trend (Net Change)]({images_rel_path}/{overall_cumulative_graph})\n\n" # Updated alt text
+
+    if average_loc_trend_graph: 
+        md += "### Trend of Average Patch LOC per Project\n\n"
+        md += f"![Trend of Average Patch LOC per Project]({images_rel_path}/{average_loc_trend_graph})\n\n"
 
     if pie_chart_image:
         md += "### Tool Patch LOC Distribution\n\n"
@@ -456,15 +523,17 @@ def main():
                     'name': item,
                     'cumulative_trend': image_filename,
                     'events': events, # Now store the events in repo_data
+                    'patch_lifecycles': patch_lifecycles, # Store patch_lifecycles for average calculation
                     'current_patches': current_patches,
                     'current_loc': current_loc,
                 })
                 all_events.extend(events) # Extend the overall all_events list
 
         overall_cumulative = generate_overall_cumulative_trend(all_events, images_dir) if all_events else None # Call overall cumulative trend graph generation
+        average_loc_trend_graph = generate_average_patch_loc_trend(repos_data, images_dir) # Generate average LOC trend graph
         pie_chart_image = generate_tools_pie_chart(repos_data, images_dir)
         images_rel_path = "./images/upstream"
-        generate_combined_markdown_report(repos_data, overall_cumulative, pie_chart_image, report_file, images_rel_path)
+        generate_combined_markdown_report(repos_data, overall_cumulative, average_loc_trend_graph, pie_chart_image, report_file, images_rel_path) # Pass average trend graph filename
         print("Analysis complete. Temporary clone directory will be removed.")
 
 
