@@ -191,6 +191,7 @@
 - 2024-08-30: [Update nats-version to 2.10.20 from 2.10.11](https://github.com/zopencommunity/natsport/pull/12) ❌
 
 ### ncduport
+- 2025-03-05: [Update ncdu-1-version to 1.22 from 1.20](https://github.com/zopencommunity/ncduport/pull/12) ❌
 - 2024-11-19: [Update ncdu-1-version to 1.21 from 1.20](https://github.com/zopencommunity/ncduport/pull/11) ❌
 
 ### netpbmport
@@ -256,6 +257,9 @@
 - 2024-02-07: [Update poco-version to 1.13.1 from 1.12.5p2](https://github.com/zopencommunity/pocoport/pull/3) ❌
 - 2024-01-25: [Update poco-version to 1.13.0 from 1.12.5p2](https://github.com/zopencommunity/pocoport/pull/2) ❌
 
+### protobufport
+- 2025-03-05: [Update protobuf-version to 30.0 from 29.3](https://github.com/zopencommunity/protobufport/pull/26) ❌
+
 ### re2cport
 - 2025-02-17: [Update re2c-version to 4.1 from 4.0.2](https://github.com/zopencommunity/re2cport/pull/14) ✅
 
@@ -280,6 +284,7 @@
 - 2024-02-08: [Update tcl-version to 8.6.14 from 8.6.13](https://github.com/zopencommunity/tclport/pull/11) ❌
 
 ### terraformport
+- 2025-03-05: [Update terraform-version to 1.11.1 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/34) ❌
 - 2025-02-27: [Update terraform-version to 1.11.0 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/33) ❌
 - 2025-01-23: [Update terraform-version to 1.10.5 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/32) ❌
 - 2025-01-08: [Update terraform-version to 1.10.4 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/31) ❌
@@ -337,6 +342,9 @@
 - 2024-08-28: [Update victoriametrics-version to 1.103.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/7) ❌
 - 2024-08-01: [Update victoriametrics-version to 1.102.1 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/6) ❌
 - 2024-07-18: [Update victoriametrics-version to 1.102.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/5) ❌
+
+### vimport
+- 2025-03-05: [Update vim-version to 9.1.1170 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/86) ✅
 
 ### xmltoport
 - 2024-10-10: [Update xmlto-version to 0.0.29 from 0.0.28](https://github.com/zopencommunity/xmltoport/pull/3) ❌
@@ -593,5 +601,5 @@
 ---
 
 
-> Last updated: 2025-03-05 06:05:46 EST
+> Last updated: 2025-03-05 14:18:50 EST
 

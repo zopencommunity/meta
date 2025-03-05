@@ -2,12 +2,17 @@
 
 ## Overall Summary
 
-**Total Lines of Code (Current):** 30252  
-**Total # of Patch files:** 647
+**Total Lines of Code (Current):** 30317  
+**Average Patch LOC per Project:** 143.00 
+**Total # of Patch files:** 648
 
 ### Overall Cumulative Patch LOC Trend (Net Change)
 
 ![Overall Cumulative Patch LOC Trend (Net Change)](./images/upstream/overall_cumulative_trend.png)
+
+### Trend of Average Patch LOC per Project
+
+![Trend of Average Patch LOC per Project](./images/upstream/average_patch_loc_trend.png)
 
 ### Tool Patch LOC Distribution
 
@@ -24,10 +29,10 @@
 | [cmakeport](#repo-cmakeport) | 1092 | 1 |
 | [gitport](#repo-gitport) | 975 | 29 |
 | [valgrindport](#repo-valgrindport) | 896 | 3 |
+| [gpgport](#repo-gpgport) | 687 | 13 |
 | [perlport](#repo-perlport) | 683 | 13 |
 | [gzipport](#repo-gzipport) | 669 | 7 |
 | [procpsport](#repo-procpsport) | 655 | 1 |
-| [gpgport](#repo-gpgport) | 650 | 12 |
 | [coreutilsport](#repo-coreutilsport) | 647 | 17 |
 | [util-linuxport](#repo-util-linuxport) | 612 | 7 |
 | [unzipport](#repo-unzipport) | 548 | 12 |
@@ -55,9 +60,9 @@
 | [gettextport](#repo-gettextport) | 206 | 7 |
 | [findutilsport](#repo-findutilsport) | 199 | 10 |
 | [libiconvport](#repo-libiconvport) | 196 | 5 |
+| [diffutilsport](#repo-diffutilsport) | 184 | 8 |
 | [protobufport](#repo-protobufport) | 174 | 8 |
 | [groffport](#repo-groffport) | 165 | 13 |
-| [diffutilsport](#repo-diffutilsport) | 156 | 8 |
 | [autoconfport](#repo-autoconfport) | 151 | 6 |
 | [jqport](#repo-jqport) | 146 | 8 |
 | [libserdesport](#repo-libserdesport) | 142 | 4 |
@@ -509,8 +514,6 @@
 | 2024-03-09 | src/unix/stream.c.patch | 41 |
 | 2024-03-09 | test-thread-priority.c.patch | 26 |
 | 2023-11-13 | src/unix/fs.c.patch | 13 |
-| 2023-09-14 | CMakeLists.txt.patch | 32 |
-| 2023-09-14 | src/unix/tcp.c.patch | 38 |
 
 ---
 
@@ -818,6 +821,61 @@
 
 ---
 
+<a name="repo-gpgport"></a>
+## Repository: gpgport
+
+**Current Lines of Code:** 687  
+**Current # of Patch files:** 13
+
+### Trend of Current Patch LOC
+
+![Current Patch LOC Trend](./images/upstream/gpgport_current_patch_loc_trend.png)
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+| call-gpg.c.patch | 54 |
+| call-pinentry.c.patch | 31 |
+| command.c.patch | 13 |
+| configure.ac.patch | 13 |
+| configure.patch | 27 |
+| decrypt.c.patch | 15 |
+| dns.c.patch | 13 |
+| ffi.c.patch | 14 |
+| gpg-agent.c.patch | 107 |
+| homedir.c.patch | 326 |
+| openfile.c.patch | 37 |
+| server.c.patch | 22 |
+| t-exectool.c.patch | 15 |
+
+---
+
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+| 2025-02-26 | openfile.c.patch | 40 |
+| 2025-01-15 | t-exectool.c.patch | 15 |
+| 2025-01-06 | command.c.patch | 13 |
+| 2025-01-06 | server.c.patch | 22 |
+| 2025-01-03 | ffi.c.patch | 14 |
+| 2024-01-28 | server.c.patch | -22 |
+| 2023-11-29 | server.c.patch | 15 |
+| 2023-11-09 | configure.ac.patch | 13 |
+| 2023-11-09 | decrypt.c.patch | 15 |
+| 2023-11-09 | dns.c.patch | 13 |
+| 2023-08-11 | dns-stuff.c.patch | 0 |
+| 2023-06-26 | dns-stuff.c.patch | 32 |
+| 2023-06-26 | homedir.c.patch | 98 |
+| 2023-05-18 | call-gpg.c.patch | 54 |
+| 2023-05-18 | call-pinentry.c.patch | 31 |
+| 2023-05-18 | configure.patch | 13 |
+| 2023-05-18 | gpg-agent.c.patch | 107 |
+
+---
+
 <a name="repo-perlport"></a>
 ## Repository: perlport
 
@@ -971,59 +1029,6 @@
 | Commit Date | File | Delta LOC |
 | --- | --- | --- |
 | 2024-07-29 | PR1.patch | 571 |
-
----
-
-<a name="repo-gpgport"></a>
-## Repository: gpgport
-
-**Current Lines of Code:** 650  
-**Current # of Patch files:** 12
-
-### Trend of Current Patch LOC
-
-![Current Patch LOC Trend](./images/upstream/gpgport_current_patch_loc_trend.png)
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-| call-gpg.c.patch | 54 |
-| call-pinentry.c.patch | 31 |
-| command.c.patch | 13 |
-| configure.ac.patch | 13 |
-| configure.patch | 27 |
-| decrypt.c.patch | 15 |
-| dns.c.patch | 13 |
-| ffi.c.patch | 14 |
-| gpg-agent.c.patch | 107 |
-| homedir.c.patch | 326 |
-| server.c.patch | 22 |
-| t-exectool.c.patch | 15 |
-
----
-
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-| 2025-01-15 | t-exectool.c.patch | 15 |
-| 2025-01-06 | command.c.patch | 13 |
-| 2025-01-06 | server.c.patch | 22 |
-| 2025-01-03 | ffi.c.patch | 14 |
-| 2024-01-28 | server.c.patch | -22 |
-| 2023-11-29 | server.c.patch | 15 |
-| 2023-11-09 | configure.ac.patch | 13 |
-| 2023-11-09 | decrypt.c.patch | 15 |
-| 2023-11-09 | dns.c.patch | 13 |
-| 2023-08-11 | dns-stuff.c.patch | 0 |
-| 2023-06-26 | dns-stuff.c.patch | 32 |
-| 2023-06-26 | homedir.c.patch | 98 |
-| 2023-05-18 | call-gpg.c.patch | 54 |
-| 2023-05-18 | call-pinentry.c.patch | 31 |
-| 2023-05-18 | configure.patch | 13 |
-| 2023-05-18 | gpg-agent.c.patch | 107 |
 
 ---
 
@@ -1282,7 +1287,6 @@
 | 2023-06-29 | pty.c.patch | 47 |
 | 2023-06-29 | screen.c.patch | 80 |
 | 2023-06-29 | tty.sh.patch | 40 |
-| 2022-10-31 | PR1.patch | 149 |
 
 ---
 
@@ -1511,7 +1515,6 @@
 | 2023-03-06 | Makefile.in.patch | 318 |
 | 2022-11-25 | try.patch | 0 |
 | 2022-11-25 | try.patch | 24 |
-| 2022-11-25 | configure.patch | 22 |
 
 ---
 
@@ -1540,7 +1543,6 @@
 | --- | --- | --- |
 | 2024-06-03 | wharf.patch | 0 |
 | 2024-06-03 | wharf.patch | 7211 |
-| 2024-05-16 | prometheus.patch | 312 |
 
 ---
 
@@ -2074,10 +2076,6 @@
 **Current Lines of Code:** 236  
 **Current # of Patch files:** 1
 
-### Trend of Current Patch LOC
-
-![Current Patch LOC Trend](./images/upstream/llamacppport_current_patch_loc_trend.png)
-
 ### Current Patch Details
 
 | File | LOC |
@@ -2091,7 +2089,6 @@
 
 | Commit Date | File | Delta LOC |
 | --- | --- | --- |
-| 2023-08-21 | PR1.patch | 232 |
 
 ---
 
@@ -2302,6 +2299,55 @@
 
 ---
 
+<a name="repo-diffutilsport"></a>
+## Repository: diffutilsport
+
+**Current Lines of Code:** 184  
+**Current # of Patch files:** 8
+
+### Trend of Current Patch LOC
+
+![Current Patch LOC Trend](./images/upstream/diffutilsport_current_patch_loc_trend.png)
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+| cmp.c.patch | 18 |
+| depcomp.patch | 30 |
+| help2man.patch | 10 |
+| skip_test.patch | 53 |
+| PR1/config.guess.patch | 13 |
+| PR2/c-file-type.c.patch | 22 |
+| PR2/getprogname.c.patch | 13 |
+| PR3/stdlib.in.h.patch | 25 |
+
+---
+
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+| 2025-02-27 | PR2/c-file-type.c.patch | 22 |
+| 2025-02-27 | PR2/file-type.c.patch | 0 |
+| 2025-02-27 | PR2/system.h.patch | 0 |
+| 2025-02-27 | skip_test.patch | 53 |
+| 2024-12-09 | cmp.c.patch | 32 |
+| 2024-12-09 | help2man.patch | 10 |
+| 2023-11-21 | PR2/config.hin.patch | 0 |
+| 2023-11-21 | PR2/intprops.h.patch | 0 |
+| 2023-02-08 | depcomp.patch | 30 |
+| 2022-11-04 | PR3/stdlib.in.h.patch | 25 |
+| 2022-10-31 | PR2/config.hin.patch | 13 |
+| 2022-10-31 | PR2/file-type.c.patch | 20 |
+| 2022-10-31 | PR2/getprogname.c.patch | 13 |
+| 2022-10-31 | PR2/intprops.h.patch | 13 |
+| 2022-10-31 | PR2/system.h.patch | 13 |
+| 2022-09-15 | PR1/config.guess.patch | 13 |
+
+---
+
 <a name="repo-protobufport"></a>
 ## Repository: protobufport
 
@@ -2395,51 +2441,6 @@
 | 2023-11-18 | assertfix/script.cpp.patch | 12 |
 | 2023-01-13 | makevarescape.sed.patch | 9 |
 | 2023-01-07 | getopt.c.patch | 17 |
-
----
-
-<a name="repo-diffutilsport"></a>
-## Repository: diffutilsport
-
-**Current Lines of Code:** 156  
-**Current # of Patch files:** 8
-
-### Trend of Current Patch LOC
-
-![Current Patch LOC Trend](./images/upstream/diffutilsport_current_patch_loc_trend.png)
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-| cmp.c.patch | 32 |
-| depcomp.patch | 30 |
-| help2man.patch | 10 |
-| PR1/config.guess.patch | 13 |
-| PR2/file-type.c.patch | 20 |
-| PR2/getprogname.c.patch | 13 |
-| PR2/system.h.patch | 13 |
-| PR3/stdlib.in.h.patch | 25 |
-
----
-
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-| 2024-12-09 | cmp.c.patch | 32 |
-| 2024-12-09 | help2man.patch | 10 |
-| 2023-11-21 | PR2/config.hin.patch | 0 |
-| 2023-11-21 | PR2/intprops.h.patch | 0 |
-| 2023-02-08 | depcomp.patch | 30 |
-| 2022-11-04 | PR3/stdlib.in.h.patch | 25 |
-| 2022-10-31 | PR2/config.hin.patch | 13 |
-| 2022-10-31 | PR2/file-type.c.patch | 20 |
-| 2022-10-31 | PR2/getprogname.c.patch | 13 |
-| 2022-10-31 | PR2/intprops.h.patch | 13 |
-| 2022-10-31 | PR2/system.h.patch | 13 |
-| 2022-09-15 | PR1/config.guess.patch | 13 |
 
 ---
 
@@ -2765,7 +2766,6 @@
 | 2024-01-02 | openssh_fixture.c.patch | 57 |
 | 2024-01-02 | scp_write_nonblock.c.patch | 12 |
 | 2024-01-02 | session_fixture.c.patch | 15 |
-| 2023-05-10 | configure.patch | 15 |
 
 ---
 
@@ -2834,7 +2834,6 @@
 | 2024-02-13 | options.c.patch | 13 |
 | 2023-12-03 | main.c.patch | 13 |
 | 2023-12-03 | print.c.patch | 14 |
-| 2023-07-18 | genlib.sh.patch | 77 |
 
 ---
 
@@ -2974,10 +2973,6 @@
 **Current Lines of Code:** 107  
 **Current # of Patch files:** 3
 
-### Trend of Current Patch LOC
-
-![Current Patch LOC Trend](./images/upstream/victoriametricsport_current_patch_loc_trend.png)
-
 ### Current Patch Details
 
 | File | LOC |
@@ -2993,9 +2988,6 @@
 
 | Commit Date | File | Delta LOC |
 | --- | --- | --- |
-| 2024-03-04 | lib_filestream.patch | 36 |
-| 2024-03-04 | lib_fs.patch | 34 |
-| 2024-03-04 | lib_memory.patch | 37 |
 
 ---
 
@@ -3004,10 +2996,6 @@
 
 **Current Lines of Code:** 100  
 **Current # of Patch files:** 3
-
-### Trend of Current Patch LOC
-
-![Current Patch LOC Trend](./images/upstream/zlib-ngport_current_patch_loc_trend.png)
 
 ### Current Patch Details
 
@@ -3024,9 +3012,6 @@
 
 | Commit Date | File | Delta LOC |
 | --- | --- | --- |
-| 2024-02-02 | Makefile.in.patch | 56 |
-| 2024-02-02 | zbuild.h.patch | 22 |
-| 2024-02-02 | zutil_p.h.patch | 22 |
 
 ---
 
@@ -3270,8 +3255,6 @@
 | --- | --- | --- |
 | 2023-06-19 | exp_clib.c.patch | 12 |
 | 2023-06-19 | pty_termios.c.patch | 36 |
-| 2023-03-27 | Makefile.in.patch | 14 |
-| 2023-03-27 | configure.patch | 17 |
 
 ---
 
@@ -3333,7 +3316,6 @@
 | --- | --- | --- |
 | 2023-02-13 | xmlto.in.patch | 0 |
 | 2023-02-12 | configure.patch | 74 |
-| 2023-02-10 | xmlto.in.patch | 25 |
 
 ---
 
@@ -3793,10 +3775,6 @@
 **Current Lines of Code:** 47  
 **Current # of Patch files:** 1
 
-### Trend of Current Patch LOC
-
-![Current Patch LOC Trend](./images/upstream/tigport_current_patch_loc_trend.png)
-
 ### Current Patch Details
 
 | File | LOC |
@@ -3810,7 +3788,6 @@
 
 | Commit Date | File | Delta LOC |
 | --- | --- | --- |
-| 2023-06-20 | PR1.patch | 47 |
 
 ---
 
@@ -4034,10 +4011,6 @@
 **Current Lines of Code:** 30  
 **Current # of Patch files:** 1
 
-### Trend of Current Patch LOC
-
-![Current Patch LOC Trend](./images/upstream/lynxport_current_patch_loc_trend.png)
-
 ### Current Patch Details
 
 | File | LOC |
@@ -4051,7 +4024,6 @@
 
 | Commit Date | File | Delta LOC |
 | --- | --- | --- |
-| 2023-03-03 | PR1.patch | 30 |
 
 ---
 
@@ -4119,10 +4091,6 @@
 **Current Lines of Code:** 29  
 **Current # of Patch files:** 2
 
-### Trend of Current Patch LOC
-
-![Current Patch LOC Trend](./images/upstream/libgpgmeport_current_patch_loc_trend.png)
-
 ### Current Patch Details
 
 | File | LOC |
@@ -4137,10 +4105,6 @@
 
 | Commit Date | File | Delta LOC |
 | --- | --- | --- |
-| 2024-03-04 | ath.h.patch | 22 |
-| 2024-03-04 | libtool.m4.patch | 15 |
-| 2024-03-04 | ath.h.patch | 14 |
-| 2024-03-04 | libtool.m4.patch | 15 |
 
 ---
 
@@ -4169,7 +4133,6 @@
 | Commit Date | File | Delta LOC |
 | --- | --- | --- |
 | 2023-04-26 | configure.patch | 15 |
-| 2023-04-20 | npth.c.patch | 13 |
 
 ---
 
@@ -4265,10 +4228,6 @@
 **Current Lines of Code:** 26  
 **Current # of Patch files:** 1
 
-### Trend of Current Patch LOC
-
-![Current Patch LOC Trend](./images/upstream/git-extrasport_current_patch_loc_trend.png)
-
 ### Current Patch Details
 
 | File | LOC |
@@ -4282,7 +4241,6 @@
 
 | Commit Date | File | Delta LOC |
 | --- | --- | --- |
-| 2024-12-05 | PR1.patch | 12 |
 
 ---
 
@@ -4319,10 +4277,6 @@
 **Current Lines of Code:** 20  
 **Current # of Patch files:** 1
 
-### Trend of Current Patch LOC
-
-![Current Patch LOC Trend](./images/upstream/fzfport_current_patch_loc_trend.png)
-
 ### Current Patch Details
 
 | File | LOC |
@@ -4336,7 +4290,6 @@
 
 | Commit Date | File | Delta LOC |
 | --- | --- | --- |
-| 2023-03-22 | Makefile.patch | 20 |
 
 ---
 
@@ -4668,7 +4621,6 @@
 | --- | --- | --- |
 | 2023-12-14 | PR1.patch | 0 |
 | 2023-12-14 | configure.patch | 15 |
-| 2022-10-19 | PR1.patch | 52 |
 
 ---
 
@@ -4786,10 +4738,6 @@
 **Current Lines of Code:** 15  
 **Current # of Patch files:** 1
 
-### Trend of Current Patch LOC
-
-![Current Patch LOC Trend](./images/upstream/libmdport_current_patch_loc_trend.png)
-
 ### Current Patch Details
 
 | File | LOC |
@@ -4803,7 +4751,6 @@
 
 | Commit Date | File | Delta LOC |
 | --- | --- | --- |
-| 2023-07-25 | configure.patch | 15 |
 
 ---
 
@@ -4943,7 +4890,6 @@
 | Commit Date | File | Delta LOC |
 | --- | --- | --- |
 | 2025-02-06 | src/Makefile.patch | 32 |
-| 2022-12-21 | Makefile.patch | 45 |
 
 ---
 
@@ -4980,10 +4926,6 @@
 **Current Lines of Code:** 13  
 **Current # of Patch files:** 1
 
-### Trend of Current Patch LOC
-
-![Current Patch LOC Trend](./images/upstream/stowport_current_patch_loc_trend.png)
-
 ### Current Patch Details
 
 | File | LOC |
@@ -4997,7 +4939,6 @@
 
 | Commit Date | File | Delta LOC |
 | --- | --- | --- |
-| 2024-05-31 | stow.in.patch | 13 |
 
 ---
 
@@ -5364,7 +5305,6 @@
 | 2023-02-24 | PRZOS/openzfs_sysctl.h.patch | 0 |
 | 2023-02-24 | PRZOS/uname.c.patch | 0 |
 | 2023-02-24 | PRZOS/uname.h.patch | 0 |
-| 2022-11-28 | PR1.patch | 191 |
 
 ---
 
@@ -5593,14 +5533,6 @@
 | 2023-06-16 | httplib.hpp.patch | 0 |
 | 2023-06-16 | lightweightsemaphore.h.patch | 0 |
 | 2023-06-16 | mutex.hpp.patch | 0 |
-| 2023-05-31 | 01-concurrentqueue.h.patch | 25 |
-| 2023-05-31 | 01-file_system.cpp.patch | 73 |
-| 2023-05-31 | 02-concurrentqueue.h.patch | 25 |
-| 2023-05-31 | 02-file_system.cpp.patch | 81 |
-| 2023-05-31 | fast_float.h.patch | 25 |
-| 2023-05-31 | httplib.hpp.patch | 43 |
-| 2023-05-31 | lightweightsemaphore.h.patch | 106 |
-| 2023-05-31 | mutex.hpp.patch | 27 |
 
 ---
 
@@ -5629,7 +5561,6 @@
 | 2024-11-26 | segment-virtualenv.go.patch | 0 |
 | 2023-06-27 | segment-virtualenv.go.patch | 29 |
 | 2023-05-25 | exitcode_zos.patch | 0 |
-| 2023-05-20 | 0001-Add-exit-codes-for-IBM-zOS.patch | 57 |
 
 ---
 
