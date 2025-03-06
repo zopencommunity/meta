@@ -47,38 +47,48 @@ Report bugs at https://github.com/ZOSOpenTools/meta/issues .
 HELPDOC
 }
 
-listLatestForInstalled()
+listUpdatesForInstalled()
 {
-  wpackage=20
-  wversion=12
-  wrelease=14
-  wtag=36
-  # wurl=11 Note required unless additional columns added
-  if ${header}; then
-    printf "${NC}${UNDERLINE}%-${wpackage}s%-${winstalled}s%-${wtag}s%-${wdownload}s%-${wexpsz}s%-${wqual}s${NC}\n" \
-        "$(text_center "Package")" "$(text_center "Version")" "$(text_center "Release")"\
-        "$(text_center "Tag Name")" "$(text_center "Download URL")" 
-  fi
+  downloadJSONCache
+  printInfo "Packages available for update:"
+
   pdb="${ZOPEN_ROOTFS}/var/lib/zopen/packageDB.json"
-  installed=$(zopen list --installed | awk -v ORS=',' '{print "\""$0"\""}')
-  installed="[${installed%,}]" # wrap in a JSON array and strip any trailing ',' char
-  jq --raw-output --argjson installed "${installed}" \
-    "$(jqfunctions) .release_data| 
-    to_entries |sort_by(.key) | .[] | 
-    .key as \$key | 
-    select( \$installed | index(\$key)) |
-    .value[0].assets[0] as \$va | 
-    \$va.url as \$url | 
-    (\$url | match(\".*-([^-]*).([0-9]{8}_[0-9]{6}).zos.pax.Z\").captures) as \$caps |
-    \$caps[0].string as \$version |
-    \$caps[1].string as \$release |
-    .value[0].tag_name as \$tn |
-    pr(\$key;\"@\";${wpackage}) +
-     pr(\$version;\"@\"; ${wversion}) +
-     pr(\$release;\"@\"; ${wrelease}) +
-     pr(\$tn;\"@\";${wtag}) +
-     \$url " 
-      "${JSON_CACHE}" | sed 's/@/ /g'
+  installed=$(zopen list --installed --details | \
+    awk '{gsub(/[[:space:]]+/, "@", $0); lines=(NR==1) ? "\""$0"\"" : lines",""\""$0"\""} END {print "["lines"]"}')
+  #installed="[${installed%,}]" # wrap in a JSON array and strip any trailing ',' char
+  jq --raw-output --arg installed "${installed}" \
+    "$(jqfunctions)"' def parse_installed: ($installed | fromjson) | map(split("@") | {name: .[0], version: .[1], release: .[2]});
+.release_data | to_entries | 
+map(.key as $pkg_name | .value[0].assets | 
+  map(. as $asset |
+    (parse_installed | map(select(.name == $pkg_name)) | .[0]) as $installed_pkg |
+    if $installed_pkg then
+      $asset.version as $asset_version |
+      $asset.release as $asset_release |
+      # Compare versions
+      if ($installed_pkg.version != $asset_version) or ($installed_pkg.release != $asset_release) then
+        if ($installed_pkg.version < $asset_version) or 
+           ($installed_pkg.version == $asset_version and $installed_pkg.release < $asset_release) then
+          {
+            "package": $pkg_name,
+            "installed_version": $installed_pkg.version,
+            "installed_release": $installed_pkg.release,
+            "available_version": $asset_version,
+            "available_release": $asset_release
+          }
+        else null end
+      else null end
+    else null end
+  )
+) | flatten | . as $upgrades |
+($upgrades | map(.package | length) | max) as $max_packagename_length |
+($upgrades | map((.installed_version  + .installed_release ) | length ) | max)as $max_installedstring_length |
+$upgrades | map(select(.)) | .[] 
+| pr(.package;" ";(($max_packagename_length | tonumber) + 4)) +
+ pl((.installed_version + "-" + .installed_release);" ";($max_installedstring_length + 3)) +
+ c("==>";" ";5) + 
+ pr((.available_version + "-" + .available_release);" ";($max_installedstring_length + 3))
+ ' "${JSON_CACHE}" | sed 's/@/ /g'
 }
 
 listAvailablePackages()
@@ -273,7 +283,7 @@ while [ $# -gt 0 ]; do
   case "$1" in
     "--available") available=true; installed=false; updates=false;;
     "--installed") available=false; installed=true; updates=false;;
-    "--updates") available=false; installed=true; updates=true ;;
+    "--updates") available=false; installed=false; updates=true ;;
     "--details") details=true ;;
     "--full") full=true; details=true ;;
     "--header") header=true ;;
@@ -314,5 +324,7 @@ if ${available}; then
   listAvailablePackages
   exit 0
 fi
-
-
+if ${updates}; then
+  listUpdatesForInstalled
+  exit 0
+fi
