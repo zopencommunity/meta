@@ -125,7 +125,7 @@
 - 2025-02-28: [Update groovy-version to 4.0.26 from 4.0.25](https://github.com/zopencommunity/groovyport/pull/16) ❌
 
 ### htopport
-- 2024-01-10: [Update htop-version to 3.3.0 from 3.2.2](https://github.com/zopencommunity/htopport/pull/6) ❌
+- 2024-01-10: [Update htop-version to 3.3.0 from 3.2.2](https://github.com/zopencommunity/htopport/pull/6) ❓
 
 ### hugoport
 - 2025-02-27: [Update hugo-version to 0.145.0 from 0.143.0](https://github.com/zopencommunity/hugoport/pull/18) ❌
@@ -601,5 +601,5 @@
 ---
 
 
-> Last updated: 2025-03-05 14:18:50 EST
+> Last updated: 2025-03-06 06:05:47 EST
 
