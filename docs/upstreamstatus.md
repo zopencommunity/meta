@@ -2,9 +2,9 @@
 
 ## Overall Summary
 
-**Total Lines of Code (Current):** 30317  
-**Average Patch LOC per Project:** 143.00 
-**Total # of Patch files:** 648
+**Total Lines of Code (Current):** 27456  
+**Average Patch LOC per Project:** 128.90 
+**Total # of Patch files:** 647
 
 ### Overall Cumulative Patch LOC Trend (Net Change)
 
@@ -22,8 +22,8 @@
 
 | Repository | Lines of Code | # of Patch files |
 | --- | --- | --- |
-| [bashport](#repo-bashport) | 4559 | 33 |
 | [librdkafkaport](#repo-librdkafkaport) | 2638 | 54 |
+| [bashport](#repo-bashport) | 1698 | 32 |
 | [libuvport](#repo-libuvport) | 1553 | 25 |
 | [sudoport](#repo-sudoport) | 1278 | 30 |
 | [cmakeport](#repo-cmakeport) | 1092 | 1 |
@@ -234,104 +234,11 @@
 | [spdlogport](#repo-spdlogport) | 0 | 0 |
 | [creduceport](#repo-creduceport) | 0 | 0 |
 | [gradleport](#repo-gradleport) | 0 | 0 |
+| [librabbitmqport](#repo-librabbitmqport) | 0 | 0 |
 
 ---
 
 # Detailed Repository Reports
-
-<a name="repo-bashport"></a>
-## Repository: bashport
-
-**Current Lines of Code:** 4559  
-**Current # of Patch files:** 33
-
-### Trend of Current Patch LOC
-
-![Current Patch LOC Trend](./images/upstream/bashport_current_patch_loc_trend.png)
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-| Makefile.in.patch | 13 |
-| PR1.patch | 1473 |
-| PR2.patch | 803 |
-| configure.patch | 53 |
-| findcmd.c.patch | 22 |
-| kill.def.patch | 123 |
-| sig.c.patch | 30 |
-| PR3/builtins.right.patch | 40 |
-| PR3/coproc.tests.patch | 13 |
-| PR3/dstack.right.patch | 10 |
-| PR3/errors.right.patch | 30 |
-| PR3/exec.right.patch | 41 |
-| PR3/exportfunc.right.patch | 18 |
-| PR3/heredoc.right.patch | 13 |
-| PR3/intl.right.patch | 13 |
-| PR3/new-exp.right.patch | 13 |
-| PR3/redir.right.patch | 20 |
-| PR3/redir.tests.patch | 13 |
-| PR3/redir10.sub.patch | 15 |
-| PR3/signames.c.patch | 35 |
-| PR3/smatch.c.patch | 49 |
-| PR3/test1.sub.patch | 13 |
-| PR3/trap.right.patch | 61 |
-| PR3/trap.tests.patch | 13 |
-| PR3/vredir.right.patch | 10 |
-| PR3/vredir.tests.patch | 17 |
-| aclocal.patch | 23 |
-| array.tests.patch | 64 |
-| source6.sub.patch | 13 |
-| dontupstream/read.tests.patch | 13 |
-| dontupstream/redir10.patch | 13 |
-| dontupstream/run-all_and_diff.patch | 72 |
-| dontupstream/stdlib.h.patch | 1407 |
-
----
-
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-| 2024-09-30 | kill.def.patch | 124 |
-| 2023-11-22 | aclocal.patch | 23 |
-| 2023-11-22 | array.tests.patch | 64 |
-| 2023-11-22 | source6.sub.patch | 13 |
-| 2023-11-22 | coproc.tests.patch | 17 |
-| 2023-11-22 | redir.tests.patch | 13 |
-| 2023-11-21 | dontupstream/sig.c.patch | 28 |
-| 2023-10-06 | dontupstream/read.tests.patch | 13 |
-| 2023-10-06 | dontupstream/redir10.patch | 13 |
-| 2023-03-23 | configure.patch | 21 |
-| 2023-03-21 | subst.c.patch | 0 |
-| 2023-03-10 | findcmd.c.patch | 0 |
-| 2023-02-09 | sig.c.patch | 22 |
-| 2023-01-25 | Makefile.in.patch | 13 |
-| 2023-01-05 | subst.c.patch | 32 |
-| 2023-01-04 | PR3/builtins.right.patch | 40 |
-| 2023-01-04 | PR3/dstack.right.patch | 10 |
-| 2023-01-04 | PR3/errors.right.patch | 30 |
-| 2023-01-04 | PR3/exec.right.patch | 41 |
-| 2023-01-04 | PR3/exportfunc.right.patch | 18 |
-| 2023-01-04 | PR3/heredoc.right.patch | 13 |
-| 2023-01-04 | PR3/intl.right.patch | 13 |
-| 2023-01-04 | PR3/new-exp.right.patch | 13 |
-| 2023-01-04 | PR3/redir.right.patch | 20 |
-| 2023-01-04 | PR3/trap.right.patch | 61 |
-| 2023-01-04 | PR3/vredir.right.patch | 10 |
-| 2023-01-02 | PR3/vredir.tests.patch | 17 |
-| 2023-01-01 | PR3/coproc.tests.patch | 21 |
-| 2023-01-01 | PR3/redir.tests.patch | 13 |
-| 2023-01-01 | PR3/redir10.sub.patch | 15 |
-| 2023-01-01 | PR3/test1.sub.patch | 0 |
-| 2022-12-28 | PR3/smatch.c.patch | 49 |
-| 2022-12-28 | PR3/signames.c.patch | 35 |
-| 2022-12-28 | PR3/trap.tests.patch | 13 |
-| 2022-10-28 | PR2.patch | 847 |
-| 2022-10-26 | PR1.patch | 75 |
-
----
 
 <a name="repo-librdkafkaport"></a>
 ## Repository: librdkafkaport
@@ -437,6 +344,100 @@
 | 2023-12-12 | src/rdkafka_transport_int.h.patch | 15 |
 | 2023-12-12 | src/rdlist.c.patch | 65 |
 | 2023-12-12 | src/rdports.c.patch | 47 |
+
+---
+
+<a name="repo-bashport"></a>
+## Repository: bashport
+
+**Current Lines of Code:** 1698  
+**Current # of Patch files:** 32
+
+### Trend of Current Patch LOC
+
+![Current Patch LOC Trend](./images/upstream/bashport_current_patch_loc_trend.png)
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+| Makefile.in.patch | 13 |
+| PR1.patch | 53 |
+| PR2.patch | 769 |
+| configure.patch | 53 |
+| findcmd.c.patch | 22 |
+| kill.def.patch | 123 |
+| sig.c.patch | 30 |
+| PR3/builtins.right.patch | 40 |
+| PR3/coproc.tests.patch | 13 |
+| PR3/dstack.right.patch | 10 |
+| PR3/errors.right.patch | 30 |
+| PR3/exec.right.patch | 41 |
+| PR3/exportfunc.right.patch | 18 |
+| PR3/heredoc.right.patch | 13 |
+| PR3/intl.right.patch | 13 |
+| PR3/new-exp.right.patch | 13 |
+| PR3/redir.right.patch | 20 |
+| PR3/redir.tests.patch | 13 |
+| PR3/redir10.sub.patch | 15 |
+| PR3/signames.c.patch | 35 |
+| PR3/smatch.c.patch | 49 |
+| PR3/test1.sub.patch | 13 |
+| PR3/trap.right.patch | 61 |
+| PR3/trap.tests.patch | 13 |
+| PR3/vredir.right.patch | 10 |
+| PR3/vredir.tests.patch | 17 |
+| aclocal.patch | 23 |
+| array.tests.patch | 64 |
+| source6.sub.patch | 13 |
+| dontupstream/read.tests.patch | 13 |
+| dontupstream/redir10.patch | 13 |
+| dontupstream/run-all_and_diff.patch | 72 |
+
+---
+
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+| 2025-03-06 | dontupstream/stdlib.h.patch | 0 |
+| 2024-09-30 | kill.def.patch | 124 |
+| 2023-11-22 | aclocal.patch | 23 |
+| 2023-11-22 | array.tests.patch | 64 |
+| 2023-11-22 | source6.sub.patch | 13 |
+| 2023-11-22 | coproc.tests.patch | 17 |
+| 2023-11-22 | redir.tests.patch | 13 |
+| 2023-11-21 | dontupstream/sig.c.patch | 28 |
+| 2023-10-06 | dontupstream/read.tests.patch | 13 |
+| 2023-10-06 | dontupstream/redir10.patch | 13 |
+| 2023-03-23 | configure.patch | 21 |
+| 2023-03-21 | subst.c.patch | 0 |
+| 2023-03-10 | findcmd.c.patch | 0 |
+| 2023-02-09 | sig.c.patch | 22 |
+| 2023-01-25 | Makefile.in.patch | 13 |
+| 2023-01-05 | subst.c.patch | 32 |
+| 2023-01-04 | PR3/builtins.right.patch | 40 |
+| 2023-01-04 | PR3/dstack.right.patch | 10 |
+| 2023-01-04 | PR3/errors.right.patch | 30 |
+| 2023-01-04 | PR3/exec.right.patch | 41 |
+| 2023-01-04 | PR3/exportfunc.right.patch | 18 |
+| 2023-01-04 | PR3/heredoc.right.patch | 13 |
+| 2023-01-04 | PR3/intl.right.patch | 13 |
+| 2023-01-04 | PR3/new-exp.right.patch | 13 |
+| 2023-01-04 | PR3/redir.right.patch | 20 |
+| 2023-01-04 | PR3/trap.right.patch | 61 |
+| 2023-01-04 | PR3/vredir.right.patch | 10 |
+| 2023-01-02 | PR3/vredir.tests.patch | 17 |
+| 2023-01-01 | PR3/coproc.tests.patch | 21 |
+| 2023-01-01 | PR3/redir.tests.patch | 13 |
+| 2023-01-01 | PR3/redir10.sub.patch | 15 |
+| 2023-01-01 | PR3/test1.sub.patch | 0 |
+| 2022-12-28 | PR3/smatch.c.patch | 49 |
+| 2022-12-28 | PR3/signames.c.patch | 35 |
+| 2022-12-28 | PR3/trap.tests.patch | 13 |
+| 2022-10-28 | PR2.patch | 847 |
+| 2022-10-26 | PR1.patch | 75 |
 
 ---
 
@@ -7011,6 +7012,27 @@
 
 <a name="repo-gradleport"></a>
 ## Repository: gradleport
+
+**Current Lines of Code:** 0  
+**Current # of Patch files:** 0
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+
+---
+
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+
+---
+
+<a name="repo-librabbitmqport"></a>
+## Repository: librabbitmqport
 
 **Current Lines of Code:** 0  
 **Current # of Patch files:** 0

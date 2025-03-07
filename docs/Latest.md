@@ -58,7 +58,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | [maven](https://github.com/zopencommunity/mavenport)|Skipped|N/A|[STABLE_maven_3018](https://github.com/zopencommunity/mavenport/releases/download/STABLE_mavenport_3018/apache-maven-3.9.9-bin.20250131_084140.zos.pax.Z)|A build automation tool|
 | [util-linux](https://github.com/zopencommunity/util-linuxport)|Green|100.0%|[STABLE_util-linux_3042](https://github.com/zopencommunity/util-linuxport/releases/download/STABLE_util-linuxport_3042/util-linux-heads.v2.39.3.20250131_101532.zos.pax.Z)|A collection of system utilities|
 | [gmp](https://github.com/zopencommunity/gmpport)|Green|100.0%|[STABLE_gmp_3025](https://github.com/zopencommunity/gmpport/releases/download/STABLE_gmpport_3025/gmp-6.3.0.20250131_065607.zos.pax.Z)|A library for arbitrary precision arithmetic|
-| [frp](https://github.com/zopencommunity/frpport)|Green|100.0%|[STABLE_frp_3102](https://github.com/zopencommunity/frpport/releases/download/STABLE_frpport_3102/frp-heads.v0.60.0.20250214_145421.zos.pax.Z)|A reverse proxy|
+| [frp](https://github.com/zopencommunity/frpport)|Green|100.0%|[STABLE_frp_3158](https://github.com/zopencommunity/frpport/releases/download/STABLE_frpport_3158/frp-heads.v0.61.1.20250307_054244.zos.pax.Z)|A reverse proxy|
 | [libdio](https://github.com/zopencommunity/libdioport)|Green|100.0%|[DEV_libdio_3036](https://github.com/zopencommunity/libdioport/releases/download/DEV_libdioport_3036/libdio-main.20250131_101636.zos.pax.Z)|A dataset I/O library|
 | [sudo](https://github.com/zopencommunity/sudoport)|Blue|87.8%|[STABLE_sudo_3134](https://github.com/zopencommunity/sudoport/releases/download/STABLE_sudoport_3134/sudo-1.9.16p2.20250226_031413.zos.pax.Z)|A program for running commands with superuser privileges|
 | [sed](https://github.com/zopencommunity/sedport)|Blue|84.7%|[STABLE_sed_2981](https://github.com/zopencommunity/sedport/releases/download/STABLE_sedport_2981/sed-4.9.20250131_041436.zos.pax.Z)|A stream editor for manipulating text files|
@@ -271,9 +271,9 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 | Package | Status | Test Success Rate | Latest Release | Description |
 |---|---|---|---|---|
-| [bash](https://github.com/zopencommunity/bashport)|Skipped|N/A|[zusage](https://github.com/zopencommunity/bashport/releases/download/zusage/bash-5.2.37.20250226_160642.zos.pax.Z)|The Bourne Again shell|
 | [powerlinego](https://github.com/zopencommunity/powerlinegoport)|Skipped|N/A|[STABLE_powerlinego_2978](https://github.com/zopencommunity/powerlinegoport/releases/download/STABLE_powerlinegoport_2978/powerlinego-DEV.20250131_041610.zos.pax.Z)|A low-latency prompt for your shell|
 | [bash-completion](https://github.com/zopencommunity/bash-completionport)|Green|100.0%|[STABLE_bash-completion_3043](https://github.com/zopencommunity/bash-completionport/releases/download/STABLE_bash-completionport_3043/bashcompletion-DEV.20250131_110235.zos.pax.Z)||
+| [bash](https://github.com/zopencommunity/bashport)|Blue|80.5%|[STABLE_bash_3157](https://github.com/zopencommunity/bashport/releases/download/STABLE_bashport_3157/bash-5.2.37.20250306_184820.zos.pax.Z)|The Bourne Again shell|
 </div>
 
 <div class="table-category" data-category="source_control">
@@ -295,8 +295,8 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | Package | Status | Test Success Rate | Latest Release | Description |
 |---|---|---|---|---|
 | [curl](https://github.com/zopencommunity/curlport)|Skipped|N/A|[zusage](https://github.com/zopencommunity/curlport/releases/download/zusage/curl-8.12.1.20250226_160101.zos.pax.Z)|Networking tool|
-| [make](https://github.com/zopencommunity/makeport)|Skipped|N/A|[zusage](https://github.com/zopencommunity/makeport/releases/download/zusage/make-4.4.1.20250226_120516.zos.pax.Z)|A build automation tool|
 | [less](https://github.com/zopencommunity/lessport)|Skipped|N/A|[zusage](https://github.com/zopencommunity/lessport/releases/download/zusage/less-heads.v668.20250226_155516.zos.pax.Z)|A text pager|
+| [make](https://github.com/zopencommunity/makeport)|Skipped|N/A|[zusage](https://github.com/zopencommunity/makeport/releases/download/zusage/make-4.4.1.20250226_120516.zos.pax.Z)|A build automation tool|
 | [jq](https://github.com/zopencommunity/jqport)|Skipped|N/A|[zusage](https://github.com/zopencommunity/jqport/releases/download/zusage/jq-1.7.1.20250226_164140.zos.pax.Z)|A port of the JQ command-line JSON processor|
 | [llamacpp](https://github.com/zopencommunity/llamacppport)|Skipped|N/A|[STABLE_llamacpp_2013](https://github.com/zopencommunity/llamacppport/releases/download/STABLE_llamacppport_2013/llamacpp-master.20240124_170742.zos.pax.Z)|A C++ library for writing high-performance network applications|
 | [coreutils](https://github.com/zopencommunity/coreutilsport)|Green|100.0%|[STABLE_coreutils_3141](https://github.com/zopencommunity/coreutilsport/releases/download/STABLE_coreutilsport_3141/coreutils-9.6.20250228_032556.zos.pax.Z)|A collection of basic Unix utilities|
@@ -381,4 +381,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-03-05T15:43:25.452067
+Last updated:  2025-03-07T01:25:11.875073
