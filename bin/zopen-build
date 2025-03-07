@@ -140,15 +140,18 @@ Restricted Usage (meta):
   ZOPEN_SHELL                     Specify an alternate shell to use if -s
                                   option specified. (defaults to /bin/sh)
 
-Being reworked to move to common ZOPEN_xxx_GIT_REFS:
-  ZOPEN_DEV_BRANCH      The branch that the git repo should checkout.
-                        (default is repo default)
-  ZOPEN_DEV_TAG         The tag that the git repo should checkout as a branch.
-                        (optional)
-  ZOPEN_STABLE_BRANCH   The branch that the stable repo should checkout.
-                        (default is repo default)
-  ZOPEN_STABLE_TAG      The tag that the git repo should checkout as a branch.
-                        (optional)
+Git variables:
+  ZOPEN_DEV_BRANCH        The branch that the git repo should checkout.
+                          (default is repo default)
+  ZOPEN_DEV_TAG           The tag that the git repo should checkout as a branch.
+                          (optional)
+  ZOPEN_STABLE_BRANCH     The branch that the stable repo should checkout.
+                          (default is repo default)
+  ZOPEN_STABLE_TAG        The tag that the git repo should checkout as a branch.
+                          (optional)
+  ZOPEN_CLONE_SUBMODULES  Set to "yes" to recursively clone submodules.
+  ZOPEN_CLONE_FULL        Set to "yes" to perform a full clone as opposed to the
+                          default shallow clone (depth of 1).
 
 Currently unused:
   ZOPEN_DEV_TYPE        The type of package to download. Valid types are
@@ -937,10 +940,18 @@ gitClone()
   else
     freshBuild=true
     printInfo "Clone and create ${dir}"
-    if [ "${ZOPEN_CLONE_SUBMODULES}" = "yes" ]; then
-      gitOptions=" --recurse-submodules"
+
+    shallowCloneOption="--depth 1"
+    if [ "${ZOPEN_CLONE_FULL}" = "yes" ]; then
+      shallowCloneOption=""
     fi
-    if ! runAndLog "git clone \"${ZOPEN_URL}\" ${gitOptions}"; then
+
+    gitOptions=""
+    if [ "${ZOPEN_CLONE_SUBMODULES}" = "yes" ]; then
+      gitOptions="--recurse-submodules"
+    fi
+
+    if ! runAndLog "git clone ${shallowCloneOption} \"${ZOPEN_URL}\" ${gitOptions}"; then
       printError "Unable to clone ${gitname} from ${ZOPEN_URL}"
     fi
     if [ -n "${ZOPEN_GIT_BRANCH}" ]; then
