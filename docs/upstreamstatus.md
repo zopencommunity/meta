@@ -2,8 +2,8 @@
 
 ## Overall Summary
 
-**Total Lines of Code (Current):** 27456  
-**Average Patch LOC per Project:** 128.90 
+**Total Lines of Code (Current):** 27457  
+**Average Patch LOC per Project:** 128.91 
 **Total # of Patch files:** 647
 
 ### Overall Cumulative Patch LOC Trend (Net Change)
@@ -35,7 +35,7 @@
 | [procpsport](#repo-procpsport) | 655 | 1 |
 | [coreutilsport](#repo-coreutilsport) | 647 | 17 |
 | [util-linuxport](#repo-util-linuxport) | 612 | 7 |
-| [unzipport](#repo-unzipport) | 548 | 12 |
+| [unzipport](#repo-unzipport) | 549 | 12 |
 | [cronieport](#repo-cronieport) | 510 | 13 |
 | [screenport](#repo-screenport) | 485 | 7 |
 | [tmuxport](#repo-tmuxport) | 440 | 13 |
@@ -1154,7 +1154,7 @@
 <a name="repo-unzipport"></a>
 ## Repository: unzipport
 
-**Current Lines of Code:** 548  
+**Current Lines of Code:** 549  
 **Current # of Patch files:** 12
 
 ### Trend of Current Patch LOC
@@ -1172,7 +1172,7 @@
 | process.c.patch | 13 |
 | riscos.h.patch | 16 |
 | ttyio.c.patch | 29 |
-| unix.c.patch | 196 |
+| unix.c.patch | 197 |
 | unxcfg.h.patch | 72 |
 | unzip.h.patch | 27 |
 | unzpriv.h.patch | 25 |
