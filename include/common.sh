@@ -539,6 +539,14 @@ zosfind()
   /bin/find "$@"
 }
 
+zosdu()
+{
+  # Use the standard z/OS du utility; if the coreutils package is installed, this
+  # changes the behaviour of the du command so we need to ensure we support those
+  # who do not have that installed
+  /bin/du "$@"
+}
+
 findrev()
 {
   haystack="$1"
