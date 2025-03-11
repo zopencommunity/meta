@@ -235,15 +235,70 @@ create_unreleased_notes() {
     local last_tag="$2"
     local output_file="$3"
 
-    local title_md="## [Changes since ${last_tag}](https://github.com/${repo}/compare/${last_tag}...HEAD)"
-    local title_text="Changes since ${last_tag} (https://github.com/${repo}/compare/${last_tag}...HEAD)"
-    local title
-    if [[ "$OUTPUT_TYPE" == "markdown" ]]; then
-        title="$title_md"
+    # Handle case where there's no previous tag (first release)
+    if [ -z "$last_tag" ] || [ "$last_tag" = "null" ]; then
+        local title_md="## [All Changes](https://github.com/${repo}/commits/HEAD)"
+        local title_text="All Changes (https://github.com/${repo}/commits/HEAD)"
+        local title
+        if [[ "$OUTPUT_TYPE" == "markdown" ]]; then
+            title="$title_md"
+        else
+            title="$title_text"
+        fi
+
+        # Get recent commits instead of doing a comparison
+        local commits_file="${OUTPUT_BASE_DIR}/recent_commits.json"
+        if ! gh_api_call "repos/${repo}/commits" "$commits_file"; then
+            echo "Error getting recent commits, skipping..." >&2
+            rm -f "$commits_file"
+            return 1
+        fi
+
+        # Start outputting to the file
+        echo "$title" > "$output_file"
+        
+        if [[ "$OUTPUT_TYPE" == "text" ]]; then
+            echo "--------------------" >> "$output_file"
+            echo "" >> "$output_file"
+            echo "Direct Changes" >> "$output_file" 
+            echo "-------------" >> "$output_file"
+        elif [[ "$OUTPUT_TYPE" == "markdown" ]]; then
+            echo "### Direct Changes" >> "$output_file"
+        fi
+
+        local has_direct=false
+        local project=$(echo "$repo" | cut -d'/' -f2)
+        
+        while read -r line; do
+            sha=$(echo "$line" | jq -r '.sha')
+            message=$(echo "$line" | jq -r '.commit.message')
+            
+            if [ -z "$message" ] || echo "$message" | grep -q '^Merge pull request'; then
+                continue
+            fi
+            
+            format_commit_message "$sha" "$message" "$project" >> "$output_file"
+            has_direct=true
+        done < <(jq -c '.[]' "$commits_file")
+        
+        if [ "$has_direct" = false ]; then
+            echo "No changes found." >> "$output_file"
+        fi
+        
+        rm -f "$commits_file"
+        return 0
     else
-        title="$title_text"
+        # Original behavior for repositories with tags
+        local title_md="## [Changes since ${last_tag}](https://github.com/${repo}/compare/${last_tag}...HEAD)"
+        local title_text="Changes since ${last_tag} (https://github.com/${repo}/compare/${last_tag}...HEAD)"
+        local title
+        if [[ "$OUTPUT_TYPE" == "markdown" ]]; then
+            title="$title_md"
+        else
+            title="$title_text"
+        fi
+        generate_notes "$repo" "$last_tag" "HEAD" "$output_file" "$title"
     fi
-    generate_notes "$repo" "$last_tag" "HEAD" "$output_file" "$title"
 }
 
 # Shared function to generate release notes
@@ -419,79 +474,82 @@ for project in $PROJECTS; do
     else
         # Get the latest release tag and date - releases are in ascending order, .[-1] gives us the newest item
         LATEST_TAG=$(echo "$RELEASES" | jq -r '.[-1].tagName')
-        if [ -n "$LATEST_TAG" ]; then
-            if [ "$project" = "metaport" ]; then
-                # Special handling for metaport - get both metaport and meta changes
+        # Check if LATEST_TAG is the literal string "null" (from jq)
+        if [ "$LATEST_TAG" = "null" ]; then
+            LATEST_TAG=""
+        fi
+        
+        if [ "$project" = "metaport" ]; then
+            # Special handling for metaport - get both metaport and meta changes
+            if [[ "$VERBOSE" == "true" ]]; then
+                echo "Processing metaport changes..." >&2
+            fi
+            
+            # Define file_extension based on output type
+            file_extension=".md"
+            if [[ "$OUTPUT_TYPE" == "markdown" ]]; then
+                file_extension=".md"
+            elif [[ "$OUTPUT_TYPE" == "text" ]]; then
+                file_extension=".txt"
+            fi
+            
+            notes_file="${OUTPUT_BASE_DIR}/${project}_unreleased_notes${file_extension}"
+            if create_unreleased_notes "$REPO" "$LATEST_TAG" "$notes_file"; then
                 if [[ "$VERBOSE" == "true" ]]; then
-                    echo "Processing metaport changes..." >&2
+                    echo "Generated release notes for unreleased metaport changes in $notes_file" >&2
                 fi
-                local file_extension
-                if [[ "$OUTPUT_TYPE" == "markdown" ]]; then
-                    file_extension=".md"
-                elif [[ "$OUTPUT_TYPE" == "text" ]]; then
-                    file_extension=".txt"
-                else
-                    file_extension=".md" # Fallback, should not happen
-                fi
-                notes_file="${OUTPUT_BASE_DIR}/${project}_unreleased_notes${file_extension}" # Use correct file extension
-                if create_unreleased_notes "$REPO" "$LATEST_TAG" "$notes_file"; then
-                    if [[ "$VERBOSE" == "true" ]]; then
-                        echo "Generated release notes for unreleased metaport changes in $notes_file" >&2
-                    fi
-                    cat "$notes_file"
+                cat "$notes_file"
+            fi
+
+            # Get the latest release date for metaport
+            LATEST_DATE=$(echo "$RELEASES" | jq -r '.[-1].publishedAt' | cut -d'T' -f1)
+            if [ -n "$LATEST_DATE" ]; then
+                if [[ "$VERBOSE" == "true" ]]; then
+                    echo "Processing meta changes since ${LATEST_DATE}..." >&2
                 fi
 
-                # Get the latest release date for metaport
-                LATEST_DATE=$(echo "$RELEASES" | jq -r '.[-1].publishedAt' | cut -d'T' -f1)
-                if [ -n "$LATEST_DATE" ]; then
-                    if [[ "$VERBOSE" == "true" ]]; then
-                        echo "Processing meta changes since ${LATEST_DATE}..." >&2
-                    fi
-
-                    # Find the meta commit hash from the release date
-                    meta_commit_file="${OUTPUT_BASE_DIR}/meta_commit.json" # Use OUTPUT_BASE_DIR
-                    if gh_api_call "repos/zopencommunity/meta/commits?until=${LATEST_DATE}T23:59:59Z&per_page=1" "$meta_commit_file"; then
-                        META_COMMIT=$(jq -r '.[0].sha' "$meta_commit_file")
-                        if [ -n "$META_COMMIT" ] && [ "$META_COMMIT" != "null" ]; then
-                            local file_extension
-                            if [[ "$OUTPUT_TYPE" == "markdown" ]]; then
-                                file_extension=".md"
-                            elif [[ "$OUTPUT_TYPE" == "text" ]]; then
-                                file_extension=".txt"
-                            else
-                                file_extension=".unknown" # Fallback, should not happen
-                            fi
-                            meta_notes_file="${OUTPUT_BASE_DIR}/meta_unreleased_notes${file_extension}" # Use correct file extension
-                            # Create notes for meta changes since the commit at release date
-                            if create_unreleased_notes "zopencommunity/meta" "$META_COMMIT" "$meta_notes_file"; then
-                                if [[ "$VERBOSE" == "true" ]]; then
-                                    echo "Generated release notes for unreleased meta changes in $meta_notes_file" >&2
-                                fi
-                                cat "$meta_notes_file"
-                            fi
+                # Find the meta commit hash from the release date
+                meta_commit_file="${OUTPUT_BASE_DIR}/meta_commit.json" # Use OUTPUT_BASE_DIR
+                if gh_api_call "repos/zopencommunity/meta/commits?until=${LATEST_DATE}T23:59:59Z&per_page=1" "$meta_commit_file"; then
+                    META_COMMIT=$(jq -r '.[0].sha' "$meta_commit_file")
+                    if [ -n "$META_COMMIT" ] && [ "$META_COMMIT" != "null" ]; then
+                        if [[ "$OUTPUT_TYPE" == "markdown" ]]; then
+                            file_extension=".md"
+                        elif [[ "$OUTPUT_TYPE" == "text" ]]; then
+                            file_extension=".txt"
                         else
-                            if [[ "$VERBOSE" == "true" ]]; then
-                                echo "Could not find meta commit for date ${LATEST_DATE}" >&2
-                            fi
+                            file_extension=".unknown" # Fallback, should not happen
                         fi
-                        rm -f "$meta_commit_file"
+                        meta_notes_file="${OUTPUT_BASE_DIR}/meta_unreleased_notes${file_extension}" # Use correct file extension
+                        # Create notes for meta changes since the commit at release date
+                        if create_unreleased_notes "zopencommunity/meta" "$META_COMMIT" "$meta_notes_file"; then
+                            if [[ "$VERBOSE" == "true" ]]; then
+                                echo "Generated release notes for unreleased meta changes in $meta_notes_file" >&2
+                            fi
+                            cat "$meta_notes_file"
+                        fi
+                    else
+                        if [[ "$VERBOSE" == "true" ]]; then
+                            echo "Could not find meta commit for date ${LATEST_DATE}" >&2
+                        fi
                     fi
+                    rm -f "$meta_commit_file"
                 fi
+            fi
+        else
+            if [[ "$OUTPUT_TYPE" == "markdown" ]]; then
+                file_extension=".md"
+            elif [[ "$OUTPUT_TYPE" == "text" ]]; then
+                file_extension=".txt"
             else
-                if [[ "$OUTPUT_TYPE" == "markdown" ]]; then
-                    file_extension=".md"
-                elif [[ "$OUTPUT_TYPE" == "text" ]]; then
-                    file_extension=".txt"
-                else
-                    file_extension=".md" 
+                file_extension=".md" 
+            fi
+            notes_file="${OUTPUT_BASE_DIR}/${project}_unreleased_notes${file_extension}" # Use correct file extension
+            if create_unreleased_notes "$REPO" "$LATEST_TAG" "$notes_file"; then
+                if [[ "$VERBOSE" == "true" ]]; then
+                    echo "Generated release notes for unreleased changes in $notes_file" >&2
                 fi
-                notes_file="${OUTPUT_BASE_DIR}/${project}_unreleased_notes${file_extension}" # Use correct file extension
-                if create_unreleased_notes "$REPO" "$LATEST_TAG" "$notes_file"; then
-                    if [[ "$VERBOSE" == "true" ]]; then
-                        echo "Generated release notes for unreleased changes in $notes_file" >&2
-                    fi
-                    cat "$notes_file"
-                fi
+                cat "$notes_file"
             fi
         fi
     fi
