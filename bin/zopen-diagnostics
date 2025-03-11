@@ -1,0 +1,125 @@
+#!/bin/sh
+#
+# Query utility for zopen community - https://github.com/zopencommunity
+#
+
+#
+# All zopen-* scripts MUST start with this code to maintain consistency.
+#
+setupMyself()
+{
+  ME=$(basename $0)
+  MYDIR="$(cd "$(dirname "$0")" > /dev/null 2>&1 && pwd -P)"
+  INCDIR="${MYDIR}/../include"
+  if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
+    echo "Internal Error. Unable to find common.sh file to source." >&2
+    exit 8
+  fi
+  . "${INCDIR}/common.sh"
+}
+setupMyself
+
+print_Diagnostics()
+{
+PLATFORM=$(/bin/uname -s)
+
+  # Checking if the platform is z/OS
+  if [ ! ${PLATFORM} = "OS/390" ]; then
+    echo "ERROR: This system is not a z/OS system."
+    exit 1
+  fi
+
+  # Check version
+  VERSION=$(/bin/uname -rsvI 2>/dev/null)
+
+  if [ -z "$VERSION" ]; then
+    echo "ERROR: This z/OS system does not have a valid version."
+    exit 1
+  fi
+
+  MAJOR=$(echo "$VERSION" | /bin/awk '{print $3}' | /bin/sed 's/^0*//')
+  MINOR=$(echo "$VERSION" | /bin/awk '{print $2}' | /bin/cut -d'.' -f1 | /bin/sed 's/^0*//')
+  if [ -z "$MINOR" ]; then
+    MINOR=0
+  fi
+
+  CURRENT_VERSION="$MAJOR.$MINOR"
+
+  EXPECTED_MAJOR=$(echo "$1" | cut -d'.' -f1)
+  EXPECTED_MINOR=$(echo "$1" | cut -d'.' -f2)
+
+  VERSION_NUMBER=$((MAJOR * 100 + MINOR))
+  EXPECTED_VERSION_NUMBER=$((EXPECTED_MAJOR * 100 + EXPECTED_MINOR))
+
+  if [ "$VERSION_NUMBER" -lt "$EXPECTED_VERSION_NUMBER" ]; then
+    echo "ERROR: Expected z/OS version $1 or earlier, but found z/OS version $CURRENT_VERSION"
+    exit 1
+  fi
+  cpu_id="$(uname -m)"
+
+  case "$cpu_id" in
+    3932|3931)
+        cpu_arch="IBM z16" ;;
+    8561)
+        cpu_arch="IBM z15" ;;
+    3907|3906)
+        cpu_arch="IBM z14" ;;
+    2964)
+        cpu_arch="IBM z13" ;;
+    2965)
+        cpu_arch="IBM z13s" ;;
+    2827)
+        cpu_arch="IBM zEC12" ;;
+    2828)
+        cpu_arch="IBM zBC12" ;;
+    2817)
+        cpu_arch="IBM z196" ;;
+    2818)
+        cpu_arch="IBM z114" ;;
+    2097)
+        cpu_arch="IBM z10 EC" ;;
+    2098)
+        cpu_arch="IBM z10 BC" ;;
+    2094)
+        cpu_arch="IBM z9 EC" ;;
+    2096)
+        cpu_arch="IBM z9 BC" ;;
+    *)
+        cpu_arch="Unknown Architecture" ;;
+  esac
+  echo "z/OS Version: $CURRENT_VERSION"
+  echo "Architecture: $cpu_arch"
+  echo "Zopen Version: $(zopen --version | head -1 | cut -d ' ' -f4)"
+  echo "To open an issue go to https://github.com/zopencommunity/meta/issues and paste the above information"
+}
+print_Diagnostics
+# Main code start here
+args=$*
+verbose=false
+remote_lookup=false
+
+if [ $# -eq 0 ]; then
+  exit 1
+fi
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+  "-h" | "--help")
+    exit 0
+    ;;
+  "-v" | "--verbose")
+    verbose=true
+    ;;
+  "--version")
+    exit 0
+    ;;
+  -*)
+    exit 1
+    ;;
+  *)
+    package="$1"
+    ;;
+  esac
+  shift
+done
+
