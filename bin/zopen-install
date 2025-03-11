@@ -324,7 +324,7 @@ else
 fi
 
 if [ 0 -eq "$(echo "${installList}" | jq --raw-output '.installqueue| length')" ]; then
-  printInfo "- No packages for install"
+  printInfo "- No packages require installation"
 else
   if ${verbose}; then 
     printInfo " - The following package(s) will be installed:"
