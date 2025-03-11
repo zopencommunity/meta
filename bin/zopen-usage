@@ -94,8 +94,10 @@ render_pie_chart_awk(){
         -v use_ansi="${use_ansi}" \
         -v symbol_table="${ASCII_SYMBOLS}" \
         -v color_table="${ANSI_COLORS}" \
+        -v color_symbol="█" \
         -v cx="${center_x}" \
         -v cy="${center_y}" \
+        -v ansi_csi="${ANSI_CSI}" \
       '
         function sweep_the_angle(){
           # Uses the globals hence no parameters
@@ -112,33 +114,16 @@ render_pie_chart_awk(){
                   continue;
                 }
               }
-              #if (theta == 90 || theta == 180 || theta == 270 || theta ==0){
-                # The aspect "ratio" is fine for the cardinal directions so don''t
-                # need to extend more to cover it
-              #  if (r >radius){
-              #    continue;
-              #  }
-              #}
-              #if (theta > 135 && theta <= 270){
-              #  # Similarly, the lhs shapes better due to the "floor" type rounding
-              #  # of the int(...) function
-              #  if (r > radius-1){
-              #    continue
-              ##  }
-              #}
-              # Convert angle to radians as awk''s trig functions need that!
               rad = theta * a2r;
-
               # Calculate Cartesian coordinates - sohcahtoa...
               x = int(cx + r * cos(rad));  # effectively a floor so large steps
               y = int(cy + r * sin(rad));  # won''t miss a coordinate.
-
               # Bounds check
               if (x >= 0 && x < width && y >= 0 && y < height) {
                 if (use_ansi == "true") {
-                  chart[x,y] = "\033[" color "m█\033[0m";
+                  chart[x,y] = ansi_csi "[" color "m" color_symbol ansi_csi "[0m";
                 } else {
-                  chart[x,y] = symbol; # 2* to maintain aspect
+                  chart[x,y] = symbol;
                 }
               }
             }
@@ -180,21 +165,18 @@ render_pie_chart_awk(){
           angle_size = size / datasize * 360;
           end_angle = int(current_angle + angle_size);
           if (use_ansi == "true") {
-            modidx=idx % symbolcolors_sizes_size + 1  # Note % to wrap??
+            modidx=idx % colors_size + 1  # Note % to wrap??
             color = colors_array[modidx] ; 
-            
-            #print "Using color: " colors_array[modidx] " at index: " idx " from " colors_size " elements. modded: " modidx
-            if (NR > colors_array) {
+            if (NR > colors_size) {
               # We cannot chart this, so add it to the "other" category
               color="31"
             } else {
-              legend[color] = "  \033[" color "m█\033[0m: " $2 ": " size "k (" (size / datasize*100) "%)"
+              legend[color] = sprintf("%7s: %11sk (%4.1f%%): %25s", ansi_csi "[" color "m" color_symbol ansi_csi "[0m", size, (size / datasize*100), $2)
               pie_size = pie_size + size
             }
           } else {
             modidx=idx % symbols_size + 1
             symbol = symbols_array[modidx];  # Note % to wrap ??
-            #print "Using symbol: " symbol " at index: " idx " from " symbols_size " elements. modded: " modidx
             if (NR > symbols_size) {
               # We cannot chart this, so add it to the "other" category
               symbol="?"
@@ -203,20 +185,23 @@ render_pie_chart_awk(){
               pie_size = pie_size + size
             }
           }
-          #print "angle_size: " angle_size ";end angle: " end_angle ";Theta: " theta ";symbol: " symbol ";color: " color ";"
           sweep_the_angle()
           current_angle = end_angle;
       }
 
       END {
-        #print "angle_size: " angle_size ";end angle: " end_angle ";Theta: " theta ";symbol: " symbol ";"
         # Check if we have used the whole pie, if not then fill in with "other"
         if (end_angle < 360) {
           # Fill in the chart with "?", other
           end_angle=359;
           symbol="?"
+          color="31"
           sweep_the_angle()
-          legend["?"] = sprintf("%7s: %11sk (%4.1f%%): %25s", "?", (datasize - pie_size)/1024, ((datasize - pie_size) / datasize*100), "Other assorted")
+          if (use_ansi == "true") {
+            legend[31] = sprintf("%7s: %11sk (%4.1f%%): %25s", ansi_csi "[31m" color_symbol ansi_csi "[0m", size, (size / datasize*100), "Other assorted")
+          } else {
+            legend["?"] = sprintf("%7s: %11sk (%4.1f%%): %25s", "?", (datasize - pie_size)/1024, ((datasize - pie_size) / datasize*100), "Other assorted")
+          } 
         }
         # Set the centre character to a generic, unused value
         chart[cx,cy] = "O";
@@ -245,10 +230,11 @@ render_pie_chart_awk(){
     printError "Could not generate pie chart: ${pie}"
   fi
   # shellcheck disable=SC2059
-  printf "${pie}\n"
+  /bin/printf "${pie}\n"
   return 0
 }
 
+# Provide a detailed list of the usage
 list_usage(){
   datafile=$1
   datasize=$2
@@ -261,7 +247,7 @@ list_usage(){
     totalsize=$((totalsize + size ))
   done < "${datafile}"
   # Check if we need to add an "Other" to cater for missing allocation!
-  if [ $totalsize -lt $datasize ]; then
+  if [ ${totalsize} -lt "${datasize}" ]; then
     other_size=$((datasize - totalsize))
     percentage=$(echo "scale=2; 100 * ${other_size} / ${datasize}" | bc)
     printf "%10sK %-10s: Other\n" "${other_size}" "(${percentage}%)"
@@ -356,7 +342,9 @@ case $(uname) in
   *) ANSI_CSI="\033";;
 esac
 total_size=0
-data=$(create_datafile)
+if ! data=$(create_datafile); then
+  exit 1 # message will have been printed previously
+fi
 datafile=$(echo "${data}" | head -n 1)
 datasize=$(echo "${data}" | tail -n 1)
 
