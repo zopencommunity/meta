@@ -252,7 +252,7 @@ list_usage(){
     percentage=$(echo "scale=2; 100 * ${other_size} / ${datasize}" | bc)
     printf "%10sK %-10s: Other\n" "${other_size}" "(${percentage}%)"
   fi
-  zopen_env_size=$(du -kts "${zopen_rootfs}" 2>/dev/null | awk '{printf "%.2f", ($1 / 1024)}')
+  zopen_env_size=$(zosdu -kts "${zopen_rootfs}" 2>/dev/null | awk '{printf "%.2f", ($1 / 1024)}')
   available=$(df -k "${zopen_rootfs}" | tail -n 1 | tr -s " " | cut -d' ' -f3)
   printf "  The zopen environment is using %sMb of total storage\n" "${zopen_env_size}"
   echo "${available}" | awk -F'/' '{ printf "  There is %.2f Mb available for the zopen environment\n" , ($1 / 1024) }'
@@ -261,7 +261,7 @@ list_usage(){
 add_dir_size(){
   dir=$1
   [ -e "${dir}" ] || return 1
-  size=$(du -kts "${dir}" 2>/dev/null | awk '{print $1}')
+  size=$(zosdu -kts "${dir}" 2>/dev/null | awk '{print $1}')
   # Do size first as it gets sorted on
   echo "${size}|${dir}" >> "${datafile}"
   echo "${size}"
@@ -277,7 +277,7 @@ create_datafile() {
       printError "Specified zopen environment '${zopen_rootfs}' does not appear to be valid"
 
   datafile=$(mktempfile "pie" ".data")
-  zopen_env_size=$(du -kts "${zopen_rootfs}" 2>/dev/null | awk '{print $1}')
+  zopen_env_size=$(zosdu -kts "${zopen_rootfs}" 2>/dev/null | awk '{print $1}')
   # Get explicit directories to include
   for dir in "${zopen_rootfs}"/usr/local/zopen/*; do
     # Get space usage of the directory (in format "size   dir")
