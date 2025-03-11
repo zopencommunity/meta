@@ -1445,6 +1445,18 @@ getJSONCacheURL(){
 
 updateJSONCaches()
 {
+  if [ -n "${JSON_CACHE}" ]; then
+    printVerbose "Cache already downloaded/checked during this session"
+    return 0
+  fi
+
+  from_readonly="$1"
+  if [ -n "${from_readonly}" ]; then
+    if [ -r "${JSON_CACHE}" ] && [ ! -w "${JSON_CACHE}" ]; then
+      return; # Skip the download for read only operations when you know you can't write to it
+    fi
+  fi
+
   printVerbose "Ensuring cache directory exists"
   cachedir="${ZOPEN_ROOTFS}/var/cache/zopen"
   [ ! -e "${cachedir}" ] && mkdir -p "${cachedir}"
@@ -1506,7 +1518,7 @@ downloadJSONCacheIfExpired()
 
 downloadJSONCache()
 {
-  if ! updateJSONCaches; then
+  if ! updateJSONCaches "$1"; then
     return 1
   else
     return 0
@@ -1572,7 +1584,7 @@ downloadJSONCache()
 #         1  failure
 getRepos()
 {
-  updateJSONCaches
+  updateJSONCaches "$1"
   # shellcheck disable=SC2034
   repo_results="$(jq -r '.release_data | keys[]' "${JSON_CACHE}")"
 }
