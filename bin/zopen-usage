@@ -29,187 +29,40 @@ ${ME} is a utility to display the file system usage by a zopen environment
 Usage: ${ME} [OPTION] [ZOPEN_ROOTFS] [PARAMETERS]...
 
 Options:
+  --pie             generate a pie chart showing space hogs
   -h, --help, -?    display this help and exit.
   -v, --verbose     run in verbose mode.
   --version         print version
 
 Examples:
   zopen usage       list the file system usage for the environment
-  zopen usage /mnt/zopen
+  zopen usage --pie /mnt/zopen
                     list the file system usage for the zopen environment
                     at the mount point /mnt/zopen
+
+Notes:
+  Values might not add to 100% due to rounding during calculations; use the
+  reported values as guidance, rounding up for capacity planning for example.
 
 Report bugs at https://github.com/zopencommunity/meta/issues
 
 HELPDOC
 }
 
-# Utilitiy functions
-_seq(){
-  [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
-  # Create a string with the sequence of numbers from count to $term
-  count=$1
-  term=$2
-  seqstring=""
-  while [ $count -lt $term ]; do
-    seqstring="${seqstring} ${count}"
-    count=$(( count + 1 ))
-  done
-  # shellcheck disable=SC2086  # We want word splitting
-  [ -n "${xtrc}" ] && set -x
-  echo ${seqstring}
-}
-
-get_symbol() {
-    index=$1
-    # If index>NUM, mod to ensure within range. TODO: ensure no clashes if
-    # index=(NUM+1) - there would be side-by-side same chars!
-    position=$((index % ASCII_SYMBOLS_NUM + 1))
-    symbol=$(echo "$ASCII_SYMBOLS" | cut -d' ' -f"$position")
-    echo "$symbol"
-}
-_string_init() {
-  newstring=""
-  [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
-  # shellcheck disable=SC2034  # Is is just used as the counter
-  for i in $(_seq 1 $1); do
-    newstring="${newstring} "
-  done
-  [ -n "${xtrc}" ] && set -x
-  echo "${newstring}"
-}
- # Set a specific character in a string to a new value.  This involves
- # grabbing the prefix up to the character position, the suffix after the
- # character and then catting them altogether with the new char!  No string
- # indexing is available in /bin/sh.
- _string_replace_char() {
-  offset=$1
-  new=$2
-  string=$3
-  if [ "$offset" -ge 0 ] && [ "$offset" -lt ${#string}  ]; then
-    prefix=""
-    suffix=""
-    if [ "$offset" -gt 0 ]; then
-        prefix=$(echo "$string" | cut -c1-"${offset}")
-    fi
-    suffix_pos=$((offset + 1))
-    if [ ${suffix_pos} -le ${#string} ]; then
-      suffix=$(echo "$string" | cut -c${suffix_pos}-)
-    fi
-    string=$(printf "%s%s%s" "${prefix}" "${new}" "${suffix}")
-  fi
-  echo "${string}"
-}
-
-set_char(){
-    x=$1
-    y=$2
-    char=$3
-    color=$4
-    offset=$(( y * width + x ))
-    if $use_ansi; then
-      newchar="${ANSI_CSI}[${color}m${char}${ANSI_CSI}[0m"
-    else
-      newchar="${char}"
-    fi
-    _string_replace_char $offset "$newchar" "$chart"
-}
-
-is_point_in_circle() {
-  x=$1
-  y=$2
-  radius=$3
-  dx=$((x - center_x))
-  dy=$((y - center_y))
-  in_circle=$(echo "$dx $dy $radius" | awk '{distance = sqrt($1*$1 + $2*$2); print (distance <= $3) ? 1 : 0}')
-  if [ "$in_circle" -eq 1 ]; then
-    return 0  # True
-  fi
-  return 1  # False
-}
-
-
-# Function to get angle from center to a point
-get_angle() {
-  x=$1
-  y=$2
-  dx=$((x - center_x))
-  dy=$((y - center_y))
-
-  # Calculate angle using awk's atan2 function, # note conversion rad->deg
-  angle=$(echo "$dy $dx" | awk '{
-    pi = 4 * atan2(1, 1)
-    angle = atan2($1, $2) * 180 / pi;
-    if (angle < 0) angle += 360;
-    printf "%.1f", angle;
-  }')
-  echo "$angle"
-}
-
-get_color() {
-  index=$1
-  # If index>NUM, mod to ensure within range. TODO: ensure no clashes if
-  # index=(NUM+1) - there would be side-by-side same chars!
-  position=$((index % ANSI_COLORS_NUM + 1))
-  echo "${ANSI_COLORS}" | cut -d' ' -f"${position}"
-}
-
-render_ansi(){
-    # ANSI version: Use cursor control for better display
-    #clear
-    printf "%s\n\n" "${title}"
-
-    # Print the chart using cursor positioning
-    printVerbose "Traversing the chart map/string, wrapping at width"
-    for y in $(_seq 0 $((height - 1))); do
-      start_pos=$((y * width + 1))
-      end_pos=$((start_pos + width - 1))
-      current_row=$(echo "$chart" | cut -c${start_pos}-${end_pos})
-      echo -e "${ANSI_CSI}[${y};0H${current_row}"
-    done
-
-    # Move cursor to bottom of chart
-    echo -e "${ANSI_CSI}[${height};0H"
-
-    # Print the legend
-    printf "\nLegend:\n"
-    current_line=$((height + 2))
-
-    index=0
-    while IFS="|" read -r size name; do
-      index=$((index + 1 ))
-      percentage=$(echo "scale=2; 100 * $size / $datasize" | bc)
-      color=$(get_color "$index")
-      echo -e "${ANSI_CSI}[${current_line};0H${ANSI_CSI}[${color}m█${ANSI_CSI}[0m ${name}: ${size}K (${percentage}%)"
-      current_line=$((current_line + 1))
-    done < "${datafile}"
-    echo -e "${ANSI_CSI}[${current_line};0H"
-}
-render_ascii(){
-  # Non-ANSI version: Print line by line
-    #clear
-    printf "%s\n\n" "${title}"
-
-    # Print the chart line by line
-    printVerbose "Traversing the chart map/string, wrapping at width"
-
-    for y in $(_seq 0 $((height - 1))); do
-      start_pos=$((y * width + 1))
-      end_pos=$((start_pos + width - 1))
-      current_row=$(echo "$chart" | cut -c${start_pos}-${end_pos})
-      # shellcheck disable=SC2059
-      printf "${current_row}\n"
-    done
-
-    index=0
-    while IFS="|" read -r size name; do
-      index=$((index + 1 ))
-      percentage=$(echo "scale=2; 100 * $size / $datasize" | bc)
-      symbol=$(get_symbol "$index")
-      printf "${symbol} ${name}: ${size}K (${percentage}%)\n"
-    done < "${datafile}"
-}
-
+# Function to generate ASCII pie charts from disk usage data, offloading the
+# builk of processing to awk
+# Inputs:
+#   title    - the title to use for the chart
+#   datafile - the PSV file containing the data to display
+#   use_ansi - true/false; whether to use ANSI display (defaults to false, using
+#              pure ASCII characters)
+#   datasize - the combined size of the slices/data; this might differ from the next
+#               parameter
+#   pie_size - 0/<integer>; if set to a value, use this as the "whole" value for
+#        the pie. Note: if the slices add to a larger value, then this "whole"
+#        value will be used instead. If the value > slices, generate an "Other"
+#        category since there must be a usage somewhere!
+#   radius - number of characters wide for the pie
 render_pie_chart_awk(){
   title=$1
   datafile=$2
@@ -228,21 +81,6 @@ render_pie_chart_awk(){
   center_y=$radius
 
   count=0
-  # Check if we need to add an "Other" category
-  other_size=0
-  if [ "$pie_size" -gt $datasize ] && [ $pie_size -gt 0 ]; then
-    other_size=$((pie_size - datasize))
-    echo "$other_size|Other|$count" >> "${datafile}"
-    datasize=$pie_size
-    count=$((count + 1))
-  elif [ $pie_size -gt 0 ]; then
-    # If fixed size is provided but smaller than calculated size, use calculated size
-    printWarning "Specified total size ($pie_size) is less than calculated size ($datasize)"
-    printWarning "Using calculated size instead"
-  fi
-
-  # Use a linear string as a 2D array (since no arrays in default shell)
-  # This needs row/column offsets to be used to reference character positions
   width=$((radius * 2 + 4))
   height=$((radius * 2 + 2))
 
@@ -306,7 +144,7 @@ render_pie_chart_awk(){
             }
           }
         }
-        function reverse_array(orig, rev, key, count, keys, i) {
+        function reverse_array(orig, rev) {
           count = 0
           # Grab the keys from the original array
           for (key in orig) {
@@ -345,7 +183,7 @@ render_pie_chart_awk(){
             modidx=idx % symbolcolors_sizes_size + 1  # Note % to wrap??
             color = colors_array[modidx] ; 
             
-            print "Using color: " colors_array[modidx] " at index: " idx " from " colors_size " elements. modded: " modidx
+            #print "Using color: " colors_array[modidx] " at index: " idx " from " colors_size " elements. modded: " modidx
             if (NR > colors_array) {
               # We cannot chart this, so add it to the "other" category
               color="31"
@@ -356,22 +194,17 @@ render_pie_chart_awk(){
           } else {
             modidx=idx % symbols_size + 1
             symbol = symbols_array[modidx];  # Note % to wrap ??
-            print "Using symbol: " symbol " at index: " idx " from " symbols_size " elements. modded: " modidx
+            #print "Using symbol: " symbol " at index: " idx " from " symbols_size " elements. modded: " modidx
             if (NR > symbols_size) {
               # We cannot chart this, so add it to the "other" category
               symbol="?"
             } else {
               legend[symbol] = sprintf("%7s: %11sk (%4.1f%%): %25s", symbol, size, (size / datasize*100), $2)
-              #legend[symbol] = "  " symbol ": " $2 ": " size "k (" (size / datasize*100) "%)"
               pie_size = pie_size + size
             }
           }
-          print "angle_size: " angle_size ";end angle: " end_angle ";Theta: " theta ";symbol: " symbol ";color: " color ";"
+          #print "angle_size: " angle_size ";end angle: " end_angle ";Theta: " theta ";symbol: " symbol ";color: " color ";"
           sweep_the_angle()
-
-          # Loop through radius values and angles
-          #snip
-          #snip
           current_angle = end_angle;
       }
 
@@ -383,8 +216,7 @@ render_pie_chart_awk(){
           end_angle=359;
           symbol="?"
           sweep_the_angle()
-          legend["?"] = sprintf("%7s: %11sk (%4.1f%%): %25s", "?", datasize - pie_size, ((datasize - pie_size) / datasize*100), "Other assorted")
-          #legend["?"] =  "?: Other: " size "k (" ((datasize - pie_size) / datasize*100) "%)"
+          legend["?"] = sprintf("%7s: %11sk (%4.1f%%): %25s", "?", (datasize - pie_size)/1024, ((datasize - pie_size) / datasize*100), "Other assorted")
         }
         # Set the centre character to a generic, unused value
         chart[cx,cy] = "O";
@@ -412,150 +244,8 @@ render_pie_chart_awk(){
       }' "${datafile}" ); then
     printError "Could not generate pie chart: ${pie}"
   fi
+  # shellcheck disable=SC2059
   printf "${pie}\n"
-  return 0
-}
-
-# Function to generate ASCII pie charts from disk usage data
-# Inputs:
-#   title    - the title to use for the chart
-#   datafile - the PSV file containing the data to display
-#   use_ansi - true/false; whether to use ANSI display (defaults to false, using
-#              pure ASCII characters)
-#   datasize - the combined size of the slices/data; this might differ from the next
-#               parameter
-#   pie_size - 0/<integer>; if set to a value, use this as the "whole" value for
-#        the pie. Note: if the slices add to a larger value, then this "whole"
-#        value will be used instead. If the value > slices, generate an "Other"
-#        category since there must be a usage somewhere!
-#   radius - number of characters wide for the pie
-#   $* - key=value pairs.
-render_pie_chart() {
-  title=$1
-  datafile=$2
-  use_ansi=$3
-  datasize=$4
-  pie_size=$5
-  radius=$6
-
-  case "$use_ansi" in
-    true|false) :;; # Fine as-is
-    *) : use_ansi=false ;;
-  esac
-
-  center_x=$((radius + 2))
-  center_y=$radius
-
-  count=0
-  # Check if we need to add an "Other" category
-  other_size=0
-  if [ $pie_size -gt $datasize ] && [ $pie_size -gt 0 ]; then
-    other_size=$((pie_size - datasize))
-    echo "$other_size|Other|$count" >> "${datafile}"
-    datasize=$pie_size
-    count=$((count + 1))
-  elif [ $pie_size -gt 0 ]; then
-    # If fixed size is provided but smaller than calculated size, use calculated size
-    printWarning "Specified total size ($pie_size) is less than calculated size ($datasize)"
-    printWarning "Using calculated size instead"
-  fi
-
-  # Use a linear string as a 2D array (since no arrays in default shell)
-  # This needs row/column offsets to be used to reference character positions
-  width=$((radius * 2 + 4))
-  height=$((radius * 2 + 2))
-  chart_size=$((width * height))
-
-  # Create empty chart filled with spaces
-  chart=$(_string_init "${chart_size}" " ")
-  #chart=""
-  # shellcheck disable=SC2034  # Is is just used as the counter
-  #for i in $(_seq 1 $chart_size); do
-  #  chart="${chart} "
-  #done
-
-  current_angle=0
-  # Read the input file, maintaing a record count to allow indexing into the
-  # symbol/color "arrays"
-  index=0
-  # shellcheck disable=SC2034
-#TODO- must be a quicker method than brute forcing all x & y ;-)
-#  while IFS="|" read -r size dummy; do
-#    index=$((index + 1))
-#    # Calculate relative angle size for this data item based off total size
-#    angle_size=$(echo "$size $datasize" | awk '{printf "%.2f", $1 / $2 * 360}')
-#    end_angle=$(echo "$current_angle $angle_size" | awk '{printf "%.2f", $1 + $2}')
-#    color=$(get_color "$index")
-#    symbol=$(get_symbol "$index")
-
-#    # Scan all positions in the square containing the circle
-#    # #Must be a better way!!
-#    for y in $(_seq 0 $((height - 1))); do
-#      for x in $(_seq 0 $((width - 1))); do
-#        if is_point_in_circle $x $y $radius; then
-#          point_angle=$(get_angle $x $y)
-#
-#          # Check if this point belongs to the current slice
-#          in_slice=$(echo "$point_angle $current_angle $end_angle" | awk '{
-#            print ($1 >= $2 && $1 < $3) ? 1 : 0
-#          }')
-
-#          if [ "$in_slice" -eq 1 ]; then
-#            if $use_ansi; then
-#              chart=$(set_char $x $y "█" $color)
-#            else
-#              chart=$(set_char $x $y "$symbol" "")
-#            fi
-#          fi
-#        fi
-#      done
-#    done
-
-#    current_angle=$end_angle
-#  done < "${datafile}"
-
-  cx=$((radius))   # Center of the grid in the x-direction
-  cy=$((radius))
-  while IFS="|" read -r size dummy; do
-    index=$((index + 1))
-    # Calculate angle size
-    angle_size=$(echo "$size $datasize" | awk '{printf "%.2f", $1 / $2 * 360}')
-    # Flatten to zero decimal places to allow integer maths/sequence
-    end_angle=$(echo "$current_angle $angle_size" | awk '{printf "%.0f", $1 + $2}')
-    # Get color or symbol
-    color=$(get_color "$index")
-    symbol=$(get_symbol "$index")
-    # Loop through radius values instead of checking every (x, y); this uses
-    # polar coordinates so should only "sweep" along the radius line to a width
-    # of the angle
-    for r in $(_seq 0 $radius); do
-      for theta in $(_seq "$current_angle" "$end_angle"); do
-        # Convert angle to radians (awk does not support radians directly)
-        rad=$(echo "$theta" | awk '{printf "%.5f", $1 * 3.14159265 / 180}')
-        # Calculate Cartesian coordinates (x,y) from r.theta
-        x=$(echo "$cx $r $rad" | awk '{printf "%d", $1 + $2 * cos($3)}')
-        y=$(echo "$cy $r $rad" | awk '{printf "%d", $1 + $2 * sin($3)}')
-
-        # Ensure x, y are within bounds
-        if [ "$x" -ge 0 ] && [ "$x" -lt "$width" ] && [ "$y" -ge 0 ] && [ "$y" -lt "$height" ]; then
-          if $use_ansi; then
-            chart=$(set_char $x $y "█" $color)
-          else
-            chart=$(set_char $x $y "$symbol" "")
-          fi
-        fi
-      done
-    done
-    # Move to the next slice
-    current_angle=$end_angle
-  done < "${datafile}"
-
-  # Draw the chart
-  if $use_ansi; then
-    render_ansi
-  else
-    render_ascii
-  fi
   return 0
 }
 
@@ -576,8 +266,8 @@ list_usage(){
     percentage=$(echo "scale=2; 100 * ${other_size} / ${datasize}" | bc)
     printf "%10sK %-10s: Other\n" "${other_size}" "(${percentage}%)"
   fi
-  zopen_env_size=$(du -kts "${ZOPEN_ROOTFS}" 2>/dev/null | awk '{printf "%.2f", ($1 / 1024)}')
-  available=$(df -k "${ZOPEN_ROOTFS}" | tail -n 1 | tr -s " " | cut -d' ' -f3)
+  zopen_env_size=$(du -kts "${zopen_rootfs}" 2>/dev/null | awk '{printf "%.2f", ($1 / 1024)}')
+  available=$(df -k "${zopen_rootfs}" | tail -n 1 | tr -s " " | cut -d' ' -f3)
   printf "  The zopen environment is using %sMb of total storage\n" "${zopen_env_size}"
   echo "${available}" | awk -F'/' '{ printf "  There is %.2f Mb available for the zopen environment\n" , ($1 / 1024) }'
 }
@@ -595,17 +285,22 @@ add_dir_size(){
 # Pipe-Separated-Value (PSV), where the size is first, the name of
 # the field second.
 create_datafile() {
+  printVerbose "Sanity checking environment at '${zopen_rootfs}'"
+  [ -e "${zopen_rootfs}" ] || printError "Specified zopen environment '${zopen_rootfs}' does not exist"
+  [ -e "${zopen_rootfs}/etc/zopen-config" ] || \
+      printError "Specified zopen environment '${zopen_rootfs}' does not appear to be valid"
+
   datafile=$(mktempfile "pie" ".data")
-  zopen_env_size=$(du -kts "${ZOPEN_ROOTFS}" 2>/dev/null | awk '{print $1}')
+  zopen_env_size=$(du -kts "${zopen_rootfs}" 2>/dev/null | awk '{print $1}')
   # Get explicit directories to include
-  for dir in "${ZOPEN_ROOTFS}"/usr/local/zopen/*; do
+  for dir in "${zopen_rootfs}"/usr/local/zopen/*; do
     # Get space usage of the directory (in format "size   dir")
     size=$(add_dir_size "${dir}")
     total_size=$((total_size + size))
   done
-  size=$(add_dir_size "${ZOPEN_ROOTFS}/var/cache/zopen")
+  size=$(add_dir_size "${zopen_rootfs}/var/cache/zopen")
   total_size=$((total_size + size))
-  size=$(add_dir_size "${ZOPEN_ROOTFS}/var/lib/zopen")
+  size=$(add_dir_size "${zopen_rootfs}/var/lib/zopen")
   total_size=$((total_size + size))
 
     # Sort by size (descending)
@@ -615,6 +310,8 @@ create_datafile() {
 }
 
 # Main code start here
+# shellcheck disable=SC2153
+zopen_rootfs="${ZOPEN_ROOTFS}"
 args=$*
 pie=false
 use_ansi=false
@@ -644,17 +341,15 @@ while [ $# -gt 0 ]; do
     verbose=true
     debug=true
     ;;
-  *) :;; # Ignore anything unknown
+  *) zopen_rootfs=$1 ;; # Ignore anything unknown
   esac
   shift
 done
 
-# Define ANSI_COLORS and ASCII_SYMBOLS as strings instead of arrays
-# We'll extract values by position using cut and sed
+# Define ANSI_COLORS and ASCII_SYMBOLS as strings instead of arrays (since not
+# available in /bin/sh! )
 ANSI_COLORS="32 33 34 35 36 37 91 92 93 94 95 96" # 31 used for "other"
-ANSI_COLORS_NUM=13
 ASCII_SYMBOLS="# @ = x $ + % X &"
-ASCII_SYMBOLS_NUM=9
 
 case $(uname) in
   OS/390) ANSI_CSI="\047";;
@@ -666,21 +361,8 @@ datafile=$(echo "${data}" | head -n 1)
 datasize=$(echo "${data}" | tail -n 1)
 
 if $pie; then
-  #render_pie_chart "zopen environment disk usage" "${datafile}" $use_ansi $datasize 0 10
-  render_pie_chart_awk "zopen environment disk usage" "${datafile}" $use_ansi $datasize 0 20
+  render_pie_chart_awk "zopen environment disk usage" "${datafile}" $use_ansi "${datasize}" 0 20 "Biggest space hogs"
 else
-  list_usage "${datafile}" $datasize
+  list_usage "${datafile}" "${datasize}"
 fi
-#[ -e "${datafile}" ] && rm -f "${datafile}"
-#   title    - the title to use for the chart
-#   datafile - the PSV file containing the data to display
-#   use_ansi - true/false; whether to use ANSI display (defaults to false, using
-#              pure ASCII characters)
-#   datasize - the combined size of the slices/data; this might differ from the next
-#               parameter
-#   pie_size - 0/<integer>; if set to a value, use this as the "whole" value for
-#        the pie. Note: if the slices add to a larger value, then this "whole"
-#        value will be used instead. If the value > slices, generate an "Other"
-#        category since there must be a usage somewhere!
-#   radius - number of characters wide for the pie
 
