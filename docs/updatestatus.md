@@ -13,6 +13,7 @@
 - 2025-02-27: [Update buildkite-version to 3.93.1 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/50) ❌
 
 ### c3270port
+- 2025-03-10: [Update c3270-version to 4.4ga5 from 4.3ga9](https://github.com/zopencommunity/c3270port/pull/30) ❌
 - 2025-02-07: [Update c3270-version to 4.4ga4 from 4.3ga9](https://github.com/zopencommunity/c3270port/pull/29) ❌
 - 2025-02-06: [Update c3270-version to 4.4ga3 from 4.3ga9](https://github.com/zopencommunity/c3270port/pull/28) ❌
 - 2024-12-16: [Update c3270-version to 4.3ga10 from 4.3ga9](https://github.com/zopencommunity/c3270port/pull/27) ❌
@@ -127,6 +128,7 @@
 - 2025-02-28: [Update groovy-version to 4.0.26 from 4.0.25](https://github.com/zopencommunity/groovyport/pull/16) ❌
 
 ### htopport
+- 2025-03-10: [Update htop-version to 3.4.0 from 3.2.2](https://github.com/zopencommunity/htopport/pull/9) ❌
 - 2024-01-10: [Update htop-version to 3.3.0 from 3.2.2](https://github.com/zopencommunity/htopport/pull/6) ❓
 
 ### hugoport
@@ -329,6 +331,7 @@
 - 2024-05-06: [Update util-linux-version to 2.40.1 from 2.39.3](https://github.com/zopencommunity/util-linuxport/pull/5) ❌
 
 ### victoriametricsport
+- 2025-03-10: [Update victoriametrics-version to 1.113.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/22) ❌
 - 2025-02-24: [Update victoriametrics-version to 1.112.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/21) ❌
 - 2025-02-11: [Update victoriametrics-version to 1.111.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/20) ❌
 - 2025-01-27: [Update victoriametrics-version to 1.110.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/19) ❌
@@ -346,6 +349,7 @@
 - 2024-07-18: [Update victoriametrics-version to 1.102.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/5) ❌
 
 ### vimport
+- 2025-03-10: [Update vim-version to 9.1.1190 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/88) ✅
 - 2025-03-08: [Update vim-version to 9.1.1180 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/87) ✅
 - 2025-03-05: [Update vim-version to 9.1.1170 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/86) ✅
 
@@ -483,7 +487,7 @@
 - ✅ libpcre2port - [![Bump Status](https://github.com/zopencommunity/libpcre2port/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libpcre2port/actions/workflows/bump.yml)
 - ✅ libpcreport - [![Bump Status](https://github.com/zopencommunity/libpcreport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libpcreport/actions/workflows/bump.yml)
 - ✅ libpipelineport - [![Bump Status](https://github.com/zopencommunity/libpipelineport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libpipelineport/actions/workflows/bump.yml)
-- ❌ librabbitmqport - Workflow not configured
+- ✅ librabbitmqport - [![Bump Status](https://github.com/zopencommunity/librabbitmqport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/librabbitmqport/actions/workflows/bump.yml)
 - ❌ librdkafkaport - Workflow not configured
 - ❌ libsasl2port - Workflow not configured
 - ✅ libserdesport - [![Bump Status](https://github.com/zopencommunity/libserdesport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libserdesport/actions/workflows/bump.yml)
@@ -600,10 +604,10 @@
 
 </details>
 
-**Summary:** 179 active | 47 missing
+**Summary:** 180 active | 46 missing
 
 ---
 
 
-> Last updated: 2025-03-10 06:06:06 EDT
+> Last updated: 2025-03-11 06:06:19 EDT
 

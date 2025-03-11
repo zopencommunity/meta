@@ -2,9 +2,9 @@
 
 ## Overall Summary
 
-**Total Lines of Code (Current):** 27457  
-**Average Patch LOC per Project:** 128.91 
-**Total # of Patch files:** 647
+**Total Lines of Code (Current):** 27535  
+**Average Patch LOC per Project:** 129.27 
+**Total # of Patch files:** 649
 
 ### Overall Cumulative Patch LOC Trend (Net Change)
 
@@ -87,6 +87,7 @@
 | [gawkport](#repo-gawkport) | 81 | 4 |
 | [getoptport](#repo-getoptport) | 79 | 1 |
 | [expectport](#repo-expectport) | 79 | 4 |
+| [librabbitmqport](#repo-librabbitmqport) | 78 | 2 |
 | [libassuanport](#repo-libassuanport) | 77 | 4 |
 | [xmltoport](#repo-xmltoport) | 74 | 1 |
 | [cppcheckport](#repo-cppcheckport) | 72 | 4 |
@@ -234,7 +235,6 @@
 | [spdlogport](#repo-spdlogport) | 0 | 0 |
 | [creduceport](#repo-creduceport) | 0 | 0 |
 | [gradleport](#repo-gradleport) | 0 | 0 |
-| [librabbitmqport](#repo-librabbitmqport) | 0 | 0 |
 
 ---
 
@@ -3284,6 +3284,35 @@
 | 2023-06-19 | pty_termios.c.patch | 36 |
 | 2023-03-27 | Makefile.in.patch | 14 |
 | 2023-03-27 | configure.patch | 17 |
+
+---
+
+<a name="repo-librabbitmqport"></a>
+## Repository: librabbitmqport
+
+**Current Lines of Code:** 78  
+**Current # of Patch files:** 2
+
+### Trend of Current Patch LOC
+
+![Current Patch LOC Trend](./images/upstream/librabbitmqport_current_patch_loc_trend.png)
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+| CMakeLists.txt.patch | 37 |
+| librabbitmq_CMakeLists.txt.patch | 41 |
+
+---
+
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+| 2025-03-05 | CMakeLists.txt.patch | 37 |
+| 2025-03-05 | librabbitmq_CMakeLists.txt.patch | 41 |
 
 ---
 
@@ -7012,27 +7041,6 @@
 
 <a name="repo-gradleport"></a>
 ## Repository: gradleport
-
-**Current Lines of Code:** 0  
-**Current # of Patch files:** 0
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-
----
-
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-
----
-
-<a name="repo-librabbitmqport"></a>
-## Repository: librabbitmqport
 
 **Current Lines of Code:** 0  
 **Current # of Patch files:** 0
