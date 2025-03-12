@@ -21,4 +21,5 @@ This page provides information about the zopen interface. Click on any of the zo
 * [zopen-remove](/reference/zopen-remove)
 * [zopen-split-patch](/reference/zopen-split-patch)
 * [zopen-update-cacert](/reference/zopen-update-cacert)
+* [zopen-usage](/reference/zopen-usage)
 * [zopen-version](/reference/zopen-version)

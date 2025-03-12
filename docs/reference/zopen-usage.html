@@ -1,5 +1,5 @@
 <!-- Creator     : groff version 1.22.3 -->
-<!-- CreationDate: Wed Mar 12 06:12:12 2025 -->
+<!-- CreationDate: Wed Mar 12 06:12:13 2025 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -13,12 +13,12 @@
        table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
        h1      { text-align: center }
 </style>
-<title>ZOPEN-CLEAN</title>
+<title>ZOPEN-USAGE</title>
 
 </head>
 <body>
 
-<h1 align="center">ZOPEN-CLEAN</h1>
+<h1 align="center">ZOPEN-USAGE</h1>
 
 <a href="#NAME">NAME</a><br>
 <a href="#SYNOPSIS">SYNOPSIS</a><br>
@@ -36,8 +36,8 @@
 </h2>
 
 
-<p style="margin-left:11%; margin-top: 1em">zopen-clean
-&minus; manual page for zopen-clean 0.8.4</p>
+<p style="margin-left:11%; margin-top: 1em">zopen-usage
+&minus; manual page for zopen-usage 0.8.4</p>
 
 <h2>SYNOPSIS
 <a name="SYNOPSIS"></a>
@@ -45,8 +45,9 @@
 
 
 
-<p style="margin-left:11%; margin-top: 1em"><b>zopen-clean</b>
-[<i>OPTION</i>] [<i>PACKAGE</i>]</p>
+<p style="margin-left:11%; margin-top: 1em"><b>zopen-usage</b>
+[<i>OPTION</i>] [<i>ZOPEN_ROOTFS</i>]
+[<i>PARAMETERS</i>]...</p>
 
 <h2>DESCRIPTION
 <a name="DESCRIPTION"></a>
@@ -54,9 +55,9 @@
 
 
 
-<p style="margin-left:11%; margin-top: 1em">zopen&minus;clean
-is a utility for zopen community to remove uneeded resources
-from the system to save space and prevent clutter.</p>
+<p style="margin-left:11%; margin-top: 1em">zopen&minus;usage
+is a utility to display the file system usage by a zopen
+environment</p>
 
 <h2>OPTIONS
 <a name="OPTIONS"></a>
@@ -70,48 +71,21 @@ from the system to save space and prevent clutter.</p>
 <td width="7%">
 
 
-<p style="margin-top: 1em"><b>&minus;&minus;all</b></p></td>
+<p style="margin-top: 1em"><b>&minus;&minus;pie</b></p></td>
 <td width="4%"></td>
-<td width="75%">
+<td width="60%">
 
 
-<p style="margin-top: 1em">apply cleanup command to all
-applicable packages.</p></td>
-<td width="3%">
+<p style="margin-top: 1em">generate a pie chart showing
+space hogs</p></td>
+<td width="18%">
 </td></tr>
 </table>
-
-<p style="margin-left:11%;"><b>&minus;c</b>,
-<b>&minus;&minus;cache</b></p>
-
-<p style="margin-left:22%;">[PACKAGE ...] cleans the
-downloaded package cache; packages will be
-re&minus;downloaded if needed.</p>
-
-<p style="margin-left:11%;"><b>&minus;d</b>,
-<b>&minus;&minus;dangling</b></p>
-
-<p style="margin-left:22%;">removes dangling symlinks from
-the zopen file system in case of issues during package
-maintenance.</p>
 
 <p style="margin-left:11%;"><b>&minus;h</b>,
 <b>&minus;&minus;help</b>, &minus;?</p>
 
 <p style="margin-left:22%;">display this help and exit.</p>
-
-<p style="margin-left:11%;"><b>&minus;m</b>,
-<b>&minus;&minus;metadata</b></p>
-
-<p style="margin-left:22%;">cleans and refreshes the
-metadata for zopen.</p>
-
-<p style="margin-left:11%;"><b>&minus;u</b>,
-<b>&minus;&minus;unused</b> [PACKAGE ...]</p>
-
-<p style="margin-left:22%;">remove versions of PACKAGEs
-that are available as alternatives, leaving only the
-currently active version.</p>
 
 <p style="margin-left:11%;"><b>&minus;v</b>,
 <b>&minus;&minus;verbose</b></p>
@@ -121,29 +95,31 @@ currently active version.</p>
 
 <p style="margin-left:11%;"><b>&minus;&minus;version</b></p>
 
-<p style="margin-left:22%;">print version.</p>
+<p style="margin-left:22%;">print version</p>
 
 <h2>EXAMPLES
 <a name="EXAMPLES"></a>
 </h2>
 
 
-<p style="margin-left:11%; margin-top: 1em">zopen clean
-&minus;c</p>
+<p style="margin-left:11%; margin-top: 1em">zopen usage</p>
 
-<p style="margin-left:22%;">clear the package download
-cache</p>
+<p style="margin-left:22%;">list the file system usage for
+the environment</p>
 
-<p style="margin-left:11%;">zopen clean &minus;d</p>
+<p style="margin-left:11%;">zopen usage &minus;&minus;pie
+/mnt/zopen</p>
 
-<p style="margin-left:22%;">analyse the zopen file system
-and remove dangling symlinks</p>
+<p style="margin-left:22%;">list the file system usage for
+the zopen environment at the mount point /mnt/zopen</p>
 
-<p style="margin-left:11%;">zopen clean &minus;u
-[PACKAGE]</p>
 
-<p style="margin-left:22%;">remove unused versions for
-PACKAGE</p>
+<p style="margin-left:11%; margin-top: 1em"><b>Notes:</b></p>
+
+<p style="margin-left:22%;">Values might not add to 100%
+due to rounding during calculations; use the reported values
+as guidance, rounding up for capacity planning for
+example.</p>
 
 <h2>AUTHOR
 <a name="AUTHOR"></a>
@@ -160,7 +136,7 @@ contributors to the zopen community.
 
 
 <p style="margin-left:11%; margin-top: 1em">Report bugs at
-https://github.com/zopencommunity/meta/issues.</p>
+https://github.com/zopencommunity/meta/issues</p>
 
 <p style="margin-left:11%; margin-top: 1em">This is free
 software: you are free to change and redistribute it under

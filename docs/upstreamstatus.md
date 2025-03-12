@@ -2,8 +2,8 @@
 
 ## Overall Summary
 
-**Total Lines of Code (Current):** 27535  
-**Average Patch LOC per Project:** 129.27 
+**Total Lines of Code (Current):** 27548  
+**Average Patch LOC per Project:** 129.33 
 **Total # of Patch files:** 649
 
 ### Overall Cumulative Patch LOC Trend (Net Change)
@@ -64,9 +64,9 @@
 | [protobufport](#repo-protobufport) | 174 | 8 |
 | [groffport](#repo-groffport) | 165 | 13 |
 | [autoconfport](#repo-autoconfport) | 151 | 6 |
+| [redisport](#repo-redisport) | 148 | 1 |
 | [jqport](#repo-jqport) | 146 | 8 |
 | [libserdesport](#repo-libserdesport) | 142 | 4 |
-| [redisport](#repo-redisport) | 135 | 1 |
 | [tclport](#repo-tclport) | 130 | 5 |
 | [libgcryptport](#repo-libgcryptport) | 129 | 7 |
 | [libeventport](#repo-libeventport) | 127 | 4 |
@@ -2506,6 +2506,33 @@
 
 ---
 
+<a name="repo-redisport"></a>
+## Repository: redisport
+
+**Current Lines of Code:** 148  
+**Current # of Patch files:** 1
+
+### Trend of Current Patch LOC
+
+![Current Patch LOC Trend](./images/upstream/redisport_current_patch_loc_trend.png)
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+| pr.patch | 148 |
+
+---
+
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+| 2025-03-04 | pr.patch | 135 |
+
+---
+
 <a name="repo-jqport"></a>
 ## Repository: jqport
 
@@ -2580,33 +2607,6 @@
 | 2024-01-29 | src/serdes-common.h.patch | 15 |
 | 2024-01-29 | src/serdes_int.h.patch | 17 |
 | 2024-01-29 | src/tinycthread.c.patch | 97 |
-
----
-
-<a name="repo-redisport"></a>
-## Repository: redisport
-
-**Current Lines of Code:** 135  
-**Current # of Patch files:** 1
-
-### Trend of Current Patch LOC
-
-![Current Patch LOC Trend](./images/upstream/redisport_current_patch_loc_trend.png)
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-| pr.patch | 135 |
-
----
-
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-| 2025-03-04 | pr.patch | 135 |
 
 ---
 

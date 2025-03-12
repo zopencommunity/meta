@@ -44,7 +44,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 |---|---|---|---|---|
 | [bzip2](https://github.com/zopencommunity/bzip2port)|Green|100.0%|[STABLE_bzip2_2959](https://github.com/zopencommunity/bzip2port/releases/download/STABLE_bzip2port_2959/bzip2-1.0.8.20250130_232500.zos.pax.Z)|A compression utility|
 | [zip](https://github.com/zopencommunity/zipport)|Green|100.0%|[STABLE_zip_3079](https://github.com/zopencommunity/zipport/releases/download/STABLE_zipport_3079/zip-master.20250205_143804.zos.pax.Z)|Tool for zipping files|
-| [unzip](https://github.com/zopencommunity/unzipport)|Green|100.0%|[STABLE_unzip_3080](https://github.com/zopencommunity/unzipport/releases/download/STABLE_unzipport_3080/unzip-master.20250205_143814.zos.pax.Z)|Tool for unzipping compressed files|
+| [unzip](https://github.com/zopencommunity/unzipport)|Green|100.0%|[STABLE_unzip_3159](https://github.com/zopencommunity/unzipport/releases/download/STABLE_unzipport_3159/unzip-master.20250310_061802.zos.pax.Z)|Tool for unzipping compressed files|
 </div>
 
 <div class="table-category" data-category="core">
@@ -224,6 +224,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | [protobuf](https://github.com/zopencommunity/protobufport)|Green|100.0%|[STABLE_protobuf_3061](https://github.com/zopencommunity/protobufport/releases/download/STABLE_protobufport_3061/protobuf-heads.v29.3.20250203_154441.zos.pax.Z)|A protocol buffer compiler|
 | [avro-c-lib](https://github.com/zopencommunity/avro-c-libport)|Green|100.0%|[STABLE_avro-c-lib_3003](https://github.com/zopencommunity/avro-c-libport/releases/download/STABLE_avro-c-libport_3003/avro-c-packaging-master.20250131_060659.zos.pax.Z)|A data serialization framework|
 | [zedc_ascii](https://github.com/zopencommunity/zedc_asciiport)|Green|100.0%|[DEV_zedc_ascii_3078](https://github.com/zopencommunity/zedc_asciiport/releases/download/DEV_zedc_asciiport_3078/zedc_ascii-DEV.20250205_142114.zos.pax.Z)|Modified version of zlib for HW optimization|
+| [librabbitmq](https://github.com/zopencommunity/librabbitmqport)|Green|100.0%|[STABLE_librabbitmq_3162](https://github.com/zopencommunity/librabbitmqport/releases/download/STABLE_librabbitmqport_3162/librabbitmq-DEV.20250311_121219.zos.pax.Z)||
 | [libxml2](https://github.com/zopencommunity/libxml2port)|Blue|100.0%|[STABLE_libxml2_3010](https://github.com/zopencommunity/libxml2port/releases/download/STABLE_libxml2port_3010/libxml2-2.9.12.20250131_055913.zos.pax.Z)|A library for parsing XML content|
 | [libuv](https://github.com/zopencommunity/libuvport)|Blue|98.8%|[STABLE_libuv_3135](https://github.com/zopencommunity/libuvport/releases/download/STABLE_libuvport_3135/libuv-heads.v1.48.0.20250226_120807.zos.pax.Z)|An asynchronous I/O library|
 | [libpcre](https://github.com/zopencommunity/libpcreport)|Blue|80.0%|[STABLE_libpcre_2845](https://github.com/zopencommunity/libpcreport/releases/download/STABLE_libpcreport_2845/pcre-8.45.20250123_222319.zos.pax.Z)|A regular expression library|
@@ -240,6 +241,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | [githubcli](https://github.com/zopencommunity/githubcliport)|Skipped|N/A|[DEV_githubcli_3109](https://github.com/zopencommunity/githubcliport/releases/download/DEV_githubcliport_3109/githubcli-DEV.20250216_162104.zos.pax.Z)|A command-line tool for GitHub|
 | [caddy](https://github.com/zopencommunity/caddyport)|Skipped|N/A|[STABLE_caddy_2215](https://github.com/zopencommunity/caddyport/releases/download/STABLE_caddyport_2215/caddy-DEV.20240409_161941.zos.pax.Z)|A web server|
 | [nghttp2](https://github.com/zopencommunity/nghttp2port)|Green|100.0%|[STABLE_nghttp2_3063](https://github.com/zopencommunity/nghttp2port/releases/download/STABLE_nghttp2port_3063/nghttp2-1.64.0.20250205_031626.zos.pax.Z)|An HTTP/2 implementation|
+| [librabbitmq](https://github.com/zopencommunity/librabbitmqport)|Green|100.0%|[STABLE_librabbitmq_3162](https://github.com/zopencommunity/librabbitmqport/releases/download/STABLE_librabbitmqport_3162/librabbitmq-DEV.20250311_121219.zos.pax.Z)||
 | [wget](https://github.com/zopencommunity/wgetport)|Red|20.3%|[STABLE_wget_3076](https://github.com/zopencommunity/wgetport/releases/download/STABLE_wgetport_3076/wget-1.25.0.20250205_033712.zos.pax.Z)|A utility for retrieving files from the web|
 </div>
 
@@ -294,14 +296,14 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 | Package | Status | Test Success Rate | Latest Release | Description |
 |---|---|---|---|---|
-| [curl](https://github.com/zopencommunity/curlport)|Skipped|N/A|[zusage](https://github.com/zopencommunity/curlport/releases/download/zusage/curl-8.12.1.20250226_160101.zos.pax.Z)|Networking tool|
-| [less](https://github.com/zopencommunity/lessport)|Skipped|N/A|[zusage](https://github.com/zopencommunity/lessport/releases/download/zusage/less-heads.v668.20250226_155516.zos.pax.Z)|A text pager|
 | [make](https://github.com/zopencommunity/makeport)|Skipped|N/A|[zusage](https://github.com/zopencommunity/makeport/releases/download/zusage/make-4.4.1.20250226_120516.zos.pax.Z)|A build automation tool|
+| [less](https://github.com/zopencommunity/lessport)|Skipped|N/A|[zusage](https://github.com/zopencommunity/lessport/releases/download/zusage/less-heads.v668.20250226_155516.zos.pax.Z)|A text pager|
+| [curl](https://github.com/zopencommunity/curlport)|Skipped|N/A|[zusage](https://github.com/zopencommunity/curlport/releases/download/zusage/curl-8.12.1.20250226_160101.zos.pax.Z)|Networking tool|
 | [jq](https://github.com/zopencommunity/jqport)|Skipped|N/A|[zusage](https://github.com/zopencommunity/jqport/releases/download/zusage/jq-1.7.1.20250226_164140.zos.pax.Z)|A port of the JQ command-line JSON processor|
 | [llamacpp](https://github.com/zopencommunity/llamacppport)|Skipped|N/A|[STABLE_llamacpp_2013](https://github.com/zopencommunity/llamacppport/releases/download/STABLE_llamacppport_2013/llamacpp-master.20240124_170742.zos.pax.Z)|A C++ library for writing high-performance network applications|
 | [coreutils](https://github.com/zopencommunity/coreutilsport)|Green|100.0%|[STABLE_coreutils_3141](https://github.com/zopencommunity/coreutilsport/releases/download/STABLE_coreutilsport_3141/coreutils-9.6.20250228_032556.zos.pax.Z)|A collection of basic Unix utilities|
-| [gzip](https://github.com/zopencommunity/gzipport)|Green|100.0%|[STABLE_gzip_3082](https://github.com/zopencommunity/gzipport/releases/download/STABLE_gzipport_3082/gzip-1.13.20250205_093947.zos.pax.Z)|Library for handling gzip compressed files|
 | [zlib](https://github.com/zopencommunity/zlibport)|Green|100.0%|[STABLE_zlib_3071](https://github.com/zopencommunity/zlibport/releases/download/STABLE_zlibport_3071/zlib-heads.v1.3.1.20250205_034023.zos.pax.Z)|A data compression library|
+| [gzip](https://github.com/zopencommunity/gzipport)|Green|100.0%|[STABLE_gzip_3082](https://github.com/zopencommunity/gzipport/releases/download/STABLE_gzipport_3082/gzip-1.13.20250205_093947.zos.pax.Z)|Library for handling gzip compressed files|
 | [ncurses](https://github.com/zopencommunity/ncursesport)|Green|100.0%|[STABLE_ncurses_3124](https://github.com/zopencommunity/ncursesport/releases/download/STABLE_ncursesport_3124/ncurses-6.5.20250222_041835.zos.pax.Z)|Library for ncurses, a terminal screen handling library|
 | [help2man](https://github.com/zopencommunity/help2manport)|Green|100.0%|[STABLE_help2man_2875](https://github.com/zopencommunity/help2manport/releases/download/STABLE_help2manport_2875/help2man-1.49.3.20250129_141844.zos.pax.Z)|A tool for converting manual pages to other formats|
 | [xxhash](https://github.com/zopencommunity/xxhashport)|Green|100.0%|[STABLE_xxhash_1993](https://github.com/zopencommunity/xxhashport/releases/download/STABLE_xxhashport_1993/xxHash-0.8.2.20240123_100914.zos.pax.Z)|A fast hash function library|
@@ -381,4 +383,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-03-07T01:25:11.875073
+Last updated:  2025-03-11T08:30:19.728459

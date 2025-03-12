@@ -56,9 +56,6 @@
 - 2024-08-23: [Update cunit-version to 3.4.1 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/4) ❌
 - 2024-06-08: [Update cunit-version to 3.3.1 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/3) ❌
 
-### diffutilsport
-- 2025-02-03: [Update diffutils-version to 3.11 from 3.10](https://github.com/zopencommunity/diffutilsport/pull/36) ❌
-
 ### duckdbport
 - 2025-03-06: [Update duckdb-version to 1.2.1 from 0.9.2](https://github.com/zopencommunity/duckdbport/pull/23) ❌
 - 2024-06-03: [Update duckdb-version to 1.0.0 from 0.9.2](https://github.com/zopencommunity/duckdbport/pull/13) ❌
@@ -250,7 +247,7 @@
 - 2024-03-15: [Update php-version to 8.3.4 from 8.2.13](https://github.com/zopencommunity/phpport/pull/17) ❌
 - 2024-02-16: [Update php-version to 8.3.3 from 8.2.13](https://github.com/zopencommunity/phpport/pull/16) ❌
 - 2023-11-24: [Update php-version to 8.3.0 from 8.2.13](https://github.com/zopencommunity/phpport/pull/13) ❓
-- 2024-01-18: [Update php-version to 8.3.2 from 8.2.13](https://github.com/zopencommunity/phpport/pull/15) ❌
+- 2024-01-18: [Update php-version to 8.3.2 from 8.2.13](https://github.com/zopencommunity/phpport/pull/15) ❓
 - 2023-12-22: [Update php-version to 8.3.1 from 8.2.13](https://github.com/zopencommunity/phpport/pull/14) ❓
 
 ### pocoport
@@ -609,5 +606,5 @@
 ---
 
 
-> Last updated: 2025-03-11 06:06:19 EDT
+> Last updated: 2025-03-12 06:06:10 EDT
 
