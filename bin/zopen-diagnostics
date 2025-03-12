@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Query utility for zopen community - https://github.com/zopencommunity
+# Diagnostics utility for zopen community - https://github.com/zopencommunity
 #
 
 #
@@ -90,7 +90,10 @@ PLATFORM=$(/bin/uname -s)
   echo "z/OS Version: $CURRENT_VERSION"
   echo "Architecture: $cpu_arch"
   echo "Zopen Version: $(zopen --version | head -1 | cut -d ' ' -f4)"
-  echo "To open an issue go to https://github.com/zopencommunity/meta/issues and paste the above information"
+  echo "Disk Usage for \$ZOPEN_ROOTFS:"
+  du -sh "$ZOPEN_ROOTFS"
+  echo -e "\nFilesystem Usage (df) for \$ZOPEN_ROOTFS:"
+  df -h "$ZOPEN_ROOTFS"
 }
 print_Diagnostics
 # Main code start here
@@ -98,6 +101,14 @@ args=$*
 verbose=false
 remote_lookup=false
 
+    if [ -z "$args" ]; then
+	echo "To open an issue go to https://github.com/zopencommunity/meta/issues and paste the above information" 
+    else
+        args_spaceless=$(echo "$args" | cut -d' ' -f2| tr -d ' ')
+	url="To open an issue go to https://github.com/zopencommunity/"$args_spaceless"port/issues and paste the above information"
+        args_spaceless=$(echo "$args" | tr -d ' ')
+ 	echo $url
+   fi
 if [ $# -eq 0 ]; then
   exit 1
 fi
