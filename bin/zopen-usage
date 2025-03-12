@@ -198,7 +198,7 @@ render_pie_chart_awk(){
           color="31"
           sweep_the_angle()
           if (use_ansi == "true") {
-            legend[31] = sprintf("%7s: %11sk (%4.1f%%): %25s", ansi_csi "[31m" color_symbol ansi_csi "[0m", size, (size / datasize*100), "Other assorted")
+            legend[31] = sprintf("%7s: %11sk (%4.1f%%): %25s", ansi_csi "[31m" color_symbol ansi_csi "[0m", (datasize - pie_size)/1024, ((datasize - pie_size) / datasize*100), "Other assorted")
           } else {
             legend["?"] = sprintf("%7s: %11sk (%4.1f%%): %25s", "?", (datasize - pie_size)/1024, ((datasize - pie_size) / datasize*100), "Other assorted")
           } 
