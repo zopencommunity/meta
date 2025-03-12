@@ -93,7 +93,7 @@ PLATFORM=$(/bin/uname -s)
   echo "Disk Usage for \$ZOPEN_ROOTFS:"
   du -sh "$ZOPEN_ROOTFS"
   echo -e "\nFilesystem Usage (df) for \$ZOPEN_ROOTFS:"
-  df -h "$ZOPEN_ROOTFS"
+  /bin/df -Pm "$ZOPEN_ROOTFS"
 }
 print_Diagnostics
 # Main code start here
