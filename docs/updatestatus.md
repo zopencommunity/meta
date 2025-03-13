@@ -10,6 +10,7 @@
 - 2024-12-11: [Update bash-completion-version to 20060301 from V.R.M](https://github.com/zopencommunity/bash-completionport/pull/1) ❌
 
 ### buildkiteport
+- 2025-03-12: [Update buildkite-version to 3.94.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/51) ❌
 - 2025-02-27: [Update buildkite-version to 3.93.1 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/50) ❌
 
 ### c3270port
@@ -123,6 +124,9 @@
 
 ### groovyport
 - 2025-02-28: [Update groovy-version to 4.0.26 from 4.0.25](https://github.com/zopencommunity/groovyport/pull/16) ❌
+
+### gumport
+- 2025-03-12: [Update gum-version to 0.16.0 from 0.15.2](https://github.com/zopencommunity/gumport/pull/27) ❌
 
 ### htopport
 - 2025-03-10: [Update htop-version to 3.4.0 from 3.2.2](https://github.com/zopencommunity/htopport/pull/9) ❌
@@ -285,6 +289,7 @@
 - 2024-02-08: [Update tcl-version to 8.6.14 from 8.6.13](https://github.com/zopencommunity/tclport/pull/11) ❌
 
 ### terraformport
+- 2025-03-12: [Update terraform-version to 1.11.2 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/35) ❌
 - 2025-03-05: [Update terraform-version to 1.11.1 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/34) ❌
 - 2025-02-27: [Update terraform-version to 1.11.0 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/33) ❌
 - 2025-01-23: [Update terraform-version to 1.10.5 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/32) ❌
@@ -606,5 +611,5 @@
 ---
 
 
-> Last updated: 2025-03-12 06:06:10 EDT
+> Last updated: 2025-03-13 06:06:09 EDT
 
