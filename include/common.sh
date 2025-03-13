@@ -1124,8 +1124,8 @@ progressAnimation()
 
 getNthArrayArg ()
 {
-    shift "$1"
-    echo "$1\c"
+  shift "$1"
+  zosecho "$1\c"
 }
 
 waitforpid()
