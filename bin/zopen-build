@@ -951,17 +951,15 @@ gitClone()
       gitOptions="--recurse-submodules"
     fi
 
-    if ! runAndLog "git clone ${shallowCloneOption} \"${ZOPEN_URL}\" ${gitOptions}"; then
-      printError "Unable to clone ${gitname} from ${ZOPEN_URL}"
-    fi
+    cloneRef=""
     if [ -n "${ZOPEN_GIT_BRANCH}" ]; then
-      if ! git -C "${dir}" checkout "${ZOPEN_GIT_BRANCH}" ${gitOptions} > /dev/null; then
-        printError"Unable to checkout ${ZOPEN_URL} branch ${ZOPEN_GIT_BRANCH}"
-      fi
+      cloneRef="--branch ${ZOPEN_GIT_BRANCH}"
     elif [ -n "${ZOPEN_GIT_TAG}" ]; then
-      if ! git -C "${dir}" checkout tags/"${ZOPEN_GIT_TAG}" -b "${ZOPEN_GIT_TAG}" ${gitOptions} > /dev/null; then
-        printError"Unable to checkout ${ZOPEN_URL} tag ${ZOPEN_GIT_TAG}"
-      fi
+      cloneRef="--branch ${ZOPEN_GIT_TAG}"
+    fi
+
+    if ! runAndLog "git clone ${shallowCloneOption} ${cloneRef} \"${ZOPEN_URL}\" ${gitOptions}"; then
+      printError "Unable to clone ${gitname} from ${ZOPEN_URL}"
     fi
     tagTree "${dir}"
   fi
