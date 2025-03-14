@@ -91,7 +91,9 @@ PLATFORM=$(/bin/uname -s)
   echo "Architecture: $cpu_arch"
   echo "Zopen Version: $(zopen --version | head -1 | cut -d ' ' -f4)"
   echo "Disk Usage for \$ZOPEN_ROOTFS:"
-  du -sh "$ZOPEN_ROOTFS"
+  num1=$(/bin/du -kt $ZOPEN_ROOTFS | tail -1 | tr -s ' ' | cut -d ' ' -f2)
+  num2=1024                                                                     
+  echo "$(echo "scale=2; $num1 / $num2" | bc) mb" 
   echo -e "\nFilesystem Usage (df) for \$ZOPEN_ROOTFS:"
   /bin/df -Pm "$ZOPEN_ROOTFS"
 }
