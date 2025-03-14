@@ -75,9 +75,6 @@
 ### fxport
 - 2024-06-27: [Update fx-version to 35.0.0 from 34.0.0](https://github.com/zopencommunity/fxport/pull/2) ✅
 
-### fzfport
-- 2025-03-03: [Update fzf-version to 0.60.3 from 0.60.2](https://github.com/zopencommunity/fzfport/pull/34) ❌
-
 ### gettextport
 - 2025-02-25: [Update gettext-version to 0.24 from 0.21](https://github.com/zopencommunity/gettextport/pull/32) ❌
 - 2024-12-31: [Update gettext-version to 0.23.1 from 0.21](https://github.com/zopencommunity/gettextport/pull/31) ❌
@@ -172,6 +169,9 @@
 ### libuvport
 - 2025-01-16: [Update libuv-version to 1.50.0 from 1.48.0](https://github.com/zopencommunity/libuvport/pull/8) ❌
 
+### libxsltport
+- 2025-03-13: [Update libxslt-version to 1.1.43 from 1.1.42](https://github.com/zopencommunity/libxsltport/pull/9) ✅
+
 ### lz4port
 - 2024-07-22: [Update lz4-version to 1.10.0 from 1.9.4](https://github.com/zopencommunity/lz4port/pull/14) ❌
 
@@ -236,6 +236,7 @@
 - 2023-11-05: [Update patch-version to 2.7.6 from 2.7](https://github.com/zopencommunity/patchport/pull/3) ❓
 
 ### phpport
+- 2025-03-13: [Update php-version to 8.4.5 from 8.2.13](https://github.com/zopencommunity/phpport/pull/32) ❌
 - 2025-02-14: [Update php-version to 8.4.4 from 8.2.13](https://github.com/zopencommunity/phpport/pull/31) ❌
 - 2025-01-17: [Update php-version to 8.4.3 from 8.2.13](https://github.com/zopencommunity/phpport/pull/30) ❌
 - 2024-12-20: [Update php-version to 8.4.2 from 8.2.13](https://github.com/zopencommunity/phpport/pull/29) ❌
@@ -611,5 +612,5 @@
 ---
 
 
-> Last updated: 2025-03-13 06:06:09 EDT
+> Last updated: 2025-03-14 06:06:02 EDT
 
