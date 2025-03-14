@@ -212,7 +212,7 @@ writeConfigFile(){
 # underlying root location is copied/moved elsewhere as locations are
 # relative to this envvar value
 displayHelp() {
-echo "usage: . zopen-config [--eknv] [--knv] [-?|--help]"
+echo "usage: . zopen-config [--eknv] [--knv] [--quiet] [-?|--help]"
 echo "  --override-zos-tools   Adds altbin/ dir to the PATH and altman/ dir to MANPATH, overriding the native z/OS tooling."
 echo "  --nooverride-zos-tools Does not add altbin/ and altman/ dir to PATH and MANPATH."
 echo "  --override-zos-tools-subset=<file>"
