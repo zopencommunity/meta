@@ -65,6 +65,7 @@
 - 2025-02-24: [Update emacs-version to 30.1 from 29.4](https://github.com/zopencommunity/emacsport/pull/11) ❌
 
 ### expatport
+- 2025-03-14: [Update expat-version to 2.7.0 from 2.5.0](https://github.com/zopencommunity/expatport/pull/15) ❌
 - 2024-11-07: [Update expat-version to 2.6.4 from 2.5.0](https://github.com/zopencommunity/expatport/pull/14) ❌
 - 2024-09-04: [Update expat-version to 2.6.3 from 2.5.0](https://github.com/zopencommunity/expatport/pull/11) ❌
 - 2024-03-23: [Update expat-version to 2.6.2 from 2.5.0](https://github.com/zopencommunity/expatport/pull/10) ❌
@@ -164,7 +165,7 @@
 ### libtoolport
 - 2024-11-21: [Update libtool-version to 2.5.4 from 2.4](https://github.com/zopencommunity/libtoolport/pull/28) ❌
 - 2024-10-02: [Update libtool-version to 2.5.3 from 2.4](https://github.com/zopencommunity/libtoolport/pull/26) ❌
-- 2024-01-02: [Update libtool-version to 2.4.7 from 2.4](https://github.com/zopencommunity/libtoolport/pull/22) ❌
+- 2024-01-02: [Update libtool-version to 2.4.7 from 2.4](https://github.com/zopencommunity/libtoolport/pull/22) ❓
 
 ### libuvport
 - 2025-01-16: [Update libuv-version to 1.50.0 from 1.48.0](https://github.com/zopencommunity/libuvport/pull/8) ❌
@@ -264,6 +265,7 @@
 - 2024-01-25: [Update poco-version to 1.13.0 from 1.12.5p2](https://github.com/zopencommunity/pocoport/pull/2) ❌
 
 ### protobufport
+- 2025-03-14: [Update protobuf-version to 30.1 from 29.3](https://github.com/zopencommunity/protobufport/pull/27) ❌
 - 2025-03-05: [Update protobuf-version to 30.0 from 29.3](https://github.com/zopencommunity/protobufport/pull/26) ❌
 
 ### re2cport
@@ -352,6 +354,7 @@
 - 2024-07-18: [Update victoriametrics-version to 1.102.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/5) ❌
 
 ### vimport
+- 2025-03-14: [Update vim-version to 9.1.120 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/89) ✅
 - 2025-03-10: [Update vim-version to 9.1.1190 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/88) ✅
 - 2025-03-08: [Update vim-version to 9.1.1180 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/87) ✅
 - 2025-03-05: [Update vim-version to 9.1.1170 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/86) ✅
@@ -612,5 +615,5 @@
 ---
 
 
-> Last updated: 2025-03-14 06:06:02 EDT
+> Last updated: 2025-03-15 06:05:48 EDT
 

@@ -2,8 +2,8 @@
 
 ## Overall Summary
 
-**Total Lines of Code (Current):** 27548  
-**Average Patch LOC per Project:** 129.33 
+**Total Lines of Code (Current):** 27482  
+**Average Patch LOC per Project:** 129.02 
 **Total # of Patch files:** 649
 
 ### Overall Cumulative Patch LOC Trend (Net Change)
@@ -24,7 +24,7 @@
 | --- | --- | --- |
 | [librdkafkaport](#repo-librdkafkaport) | 2638 | 54 |
 | [bashport](#repo-bashport) | 1698 | 32 |
-| [libuvport](#repo-libuvport) | 1553 | 25 |
+| [libuvport](#repo-libuvport) | 1487 | 25 |
 | [sudoport](#repo-sudoport) | 1278 | 30 |
 | [cmakeport](#repo-cmakeport) | 1092 | 1 |
 | [gitport](#repo-gitport) | 975 | 29 |
@@ -444,7 +444,7 @@
 <a name="repo-libuvport"></a>
 ## Repository: libuvport
 
-**Current Lines of Code:** 1553  
+**Current Lines of Code:** 1487  
 **Current # of Patch files:** 25
 
 ### Trend of Current Patch LOC
@@ -469,7 +469,7 @@
 | src/unix/os390-syscalls.h.patch | 26 |
 | src/unix/os390.c.patch | 144 |
 | src/unix/process.c.patch | 104 |
-| src/unix/stream.c.patch | 186 |
+| src/unix/stream.c.patch | 120 |
 | src/unix/tcp.c.patch | 40 |
 | src/unix/thread.c.patch | 25 |
 | test/run-tests.c.patch | 27 |
