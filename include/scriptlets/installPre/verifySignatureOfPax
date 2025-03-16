@@ -54,7 +54,7 @@ extractFromMetaData(){
 #  fi
 #fi
 if ! FILE_TO_VERIFY=$(extractFromMetaData ".product.pax" "${metadataFile}" "${paxFile}"); then
-  printSoftError "Failed to extract '${key}' from package metadata" >&2
+  printSoftError "Failed to extract '.product.pax' from package metadata" >&2
   return 1  
 fi
 
