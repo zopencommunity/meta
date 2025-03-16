@@ -2201,11 +2201,33 @@ checkIfPrereq(){
 
 
 spaceValidate(){
-  spaceRequiredBytes=$1
-  spaceRequiredMB=$(echo "scale=0; ${spaceRequiredBytes} / (1024 * 1024)" | bc)
-  availableSpaceMB=$(/bin/df -m "${ZOPEN_ROOTFS}" | sed "1d" | awk '{ print $3 }' | awk -F'/' '{ print $1 }')
+  cacheBytes=$1
+  packageBytes=$2
 
-  printInfo "After this operation, ${spaceRequiredMB} MB of additional disk space will be used."
+  if ${reinstall}; then
+    # During a reinstall, the existing package size should remain constant as the
+    # package should overwrite the existing with the same files. However
+    # there might be a need to download the package into the cache - if
+    # autocacheclean is active, then this should be temporary; if not, then the
+    # cache will grow - infrom the user either way
+    printVerbose "Reinstall of package, so pacakge file size delta should be 0!"
+    spaceRequiredMB=$(echo "scale=0; (${cacheBytes}) / (1024 * 1024)" | bc)
+    if ! isCacheClean=$(zopen config --get autocacheclean); then
+      printError "Could not determine autocacheclean status"
+    fi
+    if [ "${isCacheClean}" -eq 1 ]; then
+      printInfo "During this operation, ${spaceRequiredMB} MB of disk space will be used."
+    else
+      printInfo "After this operation, ${spaceRequiredMB} MB of additional cache will be used."
+    fi
+  else
+    # If not a reinstall, assume there is a need for both the package and the expanded
+    # package to be required
+    spaceRequiredMB=$(echo "scale=0; (${cacheBytes} + ${packageBytes}) / (1024 * 1024)" | bc)
+    printInfo "After this operation, ${spaceRequiredMB} MB of additional disk space will be used."
+  fi
+
+  availableSpaceMB=$(/bin/df -m "${ZOPEN_ROOTFS}" | sed "1d" | awk '{ print $3 }' | awk -F'/' '{ print $1 }')
   if [ "${availableSpaceMB}" -lt "${spaceRequiredMB}" ]; then
     printWarning "Your zopen file-system (${ZOPEN_ROOTFS}) only has ${availableSpaceMB} MB of available space."
   fi
@@ -2263,8 +2285,9 @@ processRepoInstallFile(){
       done
       IFS=${xIFS}
     fi
-    spaceRequiredBytes=$(echo "${installList}" | jq --raw-output '.installqueue| map(.asset.size, .asset.expanded_size)| reduce .[] as $total (0; .+($total|tonumber))')
-    spaceValidate "${spaceRequiredBytes}"
+    cacheSpaceRequired=$(echo "${installList}" | jq --raw-output '.installqueue| map(.asset.size)| reduce .[] as $total (0; .+($total|tonumber))')
+    actualRequiredBytes=$(echo "${installList}" | jq --raw-output '.installqueue| map(.asset.expanded_size)| reduce .[] as $total (0; .+($total|tonumber))')
+    spaceValidate "${cacheSpaceRequired}" "${actualRequiredBytes}"
   fi
 
   processActionScripts "transactionPre"
