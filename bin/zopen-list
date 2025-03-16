@@ -288,6 +288,8 @@ while [ $# -gt 0 ]; do
     "--full") full=true; details=true ;;
     "--header") header=true ;;
     "--noheader") header=false ;;
+    "--no-header") header=false ;;  # legacy, hidden in preference to the above
+    "--no-version") versioninfo=false ;; # legacy/deprecated hence hidden
     "--url") urlinclude=true ;;
     "--version-info") versioninfo=true ;;
     "-h" | "--help" | "-?")
