@@ -100,6 +100,9 @@
 - 2025-03-08: [Update gitlab-runner-version to 17.9.1 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/35) ❌
 - 2025-02-20: [Update gitlab-runner-version to 17.9.0 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/34) ❌
 
+### gitport
+- 2025-03-15: [Update git-version to 2.49.0 from 2.48.1](https://github.com/zopencommunity/gitport/pull/148) ✅
+
 ### gnulibport
 - 2024-10-22: [Update gnulib-version to 1.0 from 20030404](https://github.com/zopencommunity/gnulibport/pull/10) ✅
 
@@ -262,7 +265,7 @@
 - 2024-04-05: [Update poco-version to 1.13.3 from 1.12.5p2](https://github.com/zopencommunity/pocoport/pull/5) ❌
 - 2024-02-20: [Update poco-version to 1.13.2 from 1.12.5p2](https://github.com/zopencommunity/pocoport/pull/4) ❌
 - 2024-02-07: [Update poco-version to 1.13.1 from 1.12.5p2](https://github.com/zopencommunity/pocoport/pull/3) ❌
-- 2024-01-25: [Update poco-version to 1.13.0 from 1.12.5p2](https://github.com/zopencommunity/pocoport/pull/2) ❌
+- 2024-01-25: [Update poco-version to 1.13.0 from 1.12.5p2](https://github.com/zopencommunity/pocoport/pull/2) ❓
 
 ### protobufport
 - 2025-03-14: [Update protobuf-version to 30.1 from 29.3](https://github.com/zopencommunity/protobufport/pull/27) ❌
@@ -364,6 +367,9 @@
 
 ### xxhashport
 - 2024-12-30: [Update xxhash-version to 0.8.3 from 0.8.2](https://github.com/zopencommunity/xxhashport/pull/18) ❌
+
+### zigiport
+- 2025-03-15: [Update zigi-version to 3.24 from v3r23](https://github.com/zopencommunity/zigiport/pull/12) ✅
 
 ### zlib-ngport
 - 2025-02-11: [Update zlib-ng-version to 2.2.4 from 2.1.6](https://github.com/zopencommunity/zlib-ngport/pull/7) ❌
@@ -615,5 +621,5 @@
 ---
 
 
-> Last updated: 2025-03-15 06:05:48 EDT
+> Last updated: 2025-03-16 06:05:34 EDT
 
