@@ -526,7 +526,9 @@ generateDefaultRepository()
 
   repometafile="${paxrepourl##*/}"
   [ "${repometafile}" = "${paxrepourl}" ] && printError "Unable to parse repository file from '${paxrepourl}'. Ensure valid format: <http|file>://<path to repo"
-  
+
+  latestmetafile="$(echo "$repometafile" | sed -e 's/.json/_latest.json/')"
+
   baserepourl="${repourl%/*}"
   [ "${baserepourl}" = "${repourl}" ] && printError "Unable to parse repository file from '${paxrepourl}'. Ensure valid format: <http|file>://<path to repo"
   
@@ -537,7 +539,8 @@ generateDefaultRepository()
 { 
   "type": "${repotype}", 
   "metadata_baseurl": "${baserepourl}", 
-  "metadata_file": "${repometafile}" 
+  "metadata_file": "${repometafile}",
+  "latest_metadata": "${latestmetafile}" 
 }
 EOS
   (cd "${rootfs}/etc/zopen/repos.d" && ln -s "${repoFile}" "active")
