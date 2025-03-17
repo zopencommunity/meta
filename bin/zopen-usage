@@ -1,0 +1,356 @@
+#!/bin/sh
+#
+# File system usage utility
+#
+
+#
+# All zopen-* scripts MUST start with this code to maintain consistency.
+#
+setupMyself()
+{
+  ME=$(basename "$0")
+  MYDIR="$(cd "$(dirname "$0")" > /dev/null 2>&1 && pwd -P)"
+  INCDIR="${MYDIR}/../include"
+  if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
+    echo "Internal Error. Unable to find common.sh file to source." >&2
+    exit 8
+  fi
+  # shellcheck disable=SC1091
+  . "${INCDIR}/common.sh"
+}
+setupMyself
+checkWritable
+
+printHelp()
+{
+  cat << HELPDOC
+${ME} is a utility to display the file system usage by a zopen environment
+
+Usage: ${ME} [OPTION] [ZOPEN_ROOTFS] [PARAMETERS]...
+
+Options:
+  --pie             generate a pie chart showing space hogs
+  -h, --help, -?    display this help and exit.
+  -v, --verbose     run in verbose mode.
+  --version         print version
+
+Examples:
+  zopen usage       list the file system usage for the environment
+  zopen usage --pie /mnt/zopen
+                    list the file system usage for the zopen environment
+                    at the mount point /mnt/zopen
+
+Notes:
+  Values might not add to 100% due to rounding during calculations; use the
+  reported values as guidance, rounding up for capacity planning for example.
+
+Report bugs at https://github.com/zopencommunity/meta/issues
+
+HELPDOC
+}
+
+# Function to generate ASCII pie charts from disk usage data, offloading the
+# builk of processing to awk
+# Inputs:
+#   title    - the title to use for the chart
+#   datafile - the PSV file containing the data to display
+#   use_ansi - true/false; whether to use ANSI display (defaults to false, using
+#              pure ASCII characters)
+#   datasize - the combined size of the slices/data; this might differ from the next
+#               parameter
+#   pie_size - 0/<integer>; if set to a value, use this as the "whole" value for
+#        the pie. Note: if the slices add to a larger value, then this "whole"
+#        value will be used instead. If the value > slices, generate an "Other"
+#        category since there must be a usage somewhere!
+#   radius - number of characters wide for the pie
+render_pie_chart_awk(){
+  title=$1
+  datafile=$2
+  use_ansi=$3
+  datasize=$4
+  pie_size=$5
+  radius=$6
+  legend_title=$7
+
+  case "$use_ansi" in
+    true|false) :;; # Fine as-is
+    *) : use_ansi=false ;;
+  esac
+
+  center_x=$((radius + 2))
+  center_y=$radius
+
+  count=0
+  width=$((radius * 2 + 4))
+  height=$((radius * 2 + 2))
+
+  if ! pie=$(/bin/awk -v FS="|" \
+        -v title="${title}" \
+        -v legend_title="${legend_title}" \
+        -v radius="${radius}" \
+        -v width="${width}" \
+        -v height="${height}" \
+        -v datasize="${datasize}" \
+        -v use_ansi="${use_ansi}" \
+        -v symbol_table="${ASCII_SYMBOLS}" \
+        -v color_table="${ANSI_COLORS}" \
+        -v color_symbol="█" \
+        -v cx="${center_x}" \
+        -v cy="${center_y}" \
+        -v ansi_csi="${ANSI_CSI}" \
+      '
+        function sweep_the_angle(){
+          # Uses the globals hence no parameters
+          # Loop through radius values and angles
+          for (r = 0; r <= (radius+1); r++) {  # +1 to ensure outerbounds on rhs
+            for (theta = current_angle; theta <= end_angle; theta++) {
+              # Need some special "shaping" as the flooring nature of the int(...)
+              # can leave an oddly-shaped pie.
+              if (theta >270) {
+                # top-right quadrant - needs to be extended by a step
+              } else {
+                # other quadrants 
+                if (r > radius){
+                  continue;
+                }
+              }
+              rad = theta * a2r;
+              # Calculate Cartesian coordinates - sohcahtoa...
+              x = int(cx + r * cos(rad));  # effectively a floor so large steps
+              y = int(cy + r * sin(rad));  # won''t miss a coordinate.
+              # Bounds check
+              if (x >= 0 && x < width && y >= 0 && y < height) {
+                if (use_ansi == "true") {
+                  chart[x,y] = ansi_csi "[" color "m" color_symbol ansi_csi "[0m";
+                } else {
+                  chart[x,y] = symbol;
+                }
+              }
+            }
+          }
+        }
+        function reverse_array(orig, rev) {
+          count = 0
+          # Grab the keys from the original array
+          for (key in orig) {
+            keys[++count] = key
+          }
+          # Generate a new array, feeding it the previously found keys
+          for (i = 1; i <= count; i++) {
+            rev[i] = orig[keys[count - i + 1]]
+          }
+          return count
+        }
+
+        BEGIN {
+         # cx = radius;  # Centre of pie
+         # cy = radius;  # Centre of pie
+          a2r = 3.14159265 / 180;
+          current_angle = 0;
+          idx = 0;
+          # Create a 2D array to store the chart
+          for (y = 0; y < height; y++) {
+            for (x = 0; x < width; x++) {
+              chart[x,y] = " ";  # Initialize with spaces
+            }
+          }
+           # Split the strings into arrays
+          symbols_size=split(symbol_table, symbols_array, / /)
+          colors_size=split(color_table, colors_array, / /)
+          pie_size = 0 ;  # how much of the datasize has been mapped
+        }
+        {
+          idx++;
+          size = $1;
+          angle_size = size / datasize * 360;
+          end_angle = int(current_angle + angle_size);
+          if (use_ansi == "true") {
+            modidx=idx % colors_size + 1  # Note % to wrap??
+            color = colors_array[modidx] ; 
+            if (NR > colors_size) {
+              # We cannot chart this, so add it to the "other" category
+              color="31"
+            } else {
+              legend[color] = sprintf("%7s: %11sk (%4.1f%%): %25s", ansi_csi "[" color "m" color_symbol ansi_csi "[0m", size, (size / datasize*100), $2)
+              pie_size = pie_size + size
+            }
+          } else {
+            modidx=idx % symbols_size + 1
+            symbol = symbols_array[modidx];  # Note % to wrap ??
+            if (NR > symbols_size) {
+              # We cannot chart this, so add it to the "other" category
+              symbol="?"
+            } else {
+              legend[symbol] = sprintf("%7s: %11sk (%4.1f%%): %25s", symbol, size, (size / datasize*100), $2)
+              pie_size = pie_size + size
+            }
+          }
+          sweep_the_angle()
+          current_angle = end_angle;
+      }
+
+      END {
+        # Check if we have used the whole pie, if not then fill in with "other"
+        if (end_angle < 360) {
+          # Fill in the chart with "?", other
+          end_angle=359;
+          symbol="?"
+          color="31"
+          sweep_the_angle()
+          if (use_ansi == "true") {
+            legend[31] = sprintf("%7s: %11sk (%4.1f%%): %25s", ansi_csi "[31m" color_symbol ansi_csi "[0m", (datasize - pie_size)/1024, ((datasize - pie_size) / datasize*100), "Other assorted")
+          } else {
+            legend["?"] = sprintf("%7s: %11sk (%4.1f%%): %25s", "?", (datasize - pie_size)/1024, ((datasize - pie_size) / datasize*100), "Other assorted")
+          } 
+        }
+        # Set the centre character to a generic, unused value
+        chart[cx,cy] = "O";
+
+        # Print the chart - note that awk will ignore any embedded ANSI chars
+        # and output them as-is so it should then be able to then printf in the script!
+        # Title
+        print title;
+        # Data
+        for (y = 0; y < height; y++) {
+          line = "";
+          for (x = 0; x < width; x++) {
+            line = line chart[x,y];
+          }
+          print line;
+        }
+        # Legend/Key - currently in smallest order, so reverse it
+        n = reverse_array(legend, legendrev)
+        printf ("%30s\n", legend_title)
+        printf("%7s: %16s: %25s\n", "Symbol", "Bytes used", "Used by")
+        for (i = 1; i <= n; i++) {
+          print legendrev[i]
+        }
+       
+      }' "${datafile}" ); then
+    printError "Could not generate pie chart: ${pie}"
+  fi
+  # shellcheck disable=SC2059
+  /bin/printf "${pie}\n"
+  return 0
+}
+
+# Provide a detailed list of the usage
+list_usage(){
+  datafile=$1
+  datasize=$2
+  totalsize=0
+  printf "%50s\n" "zopen environment file system usage"
+  while IFS="|" read -r size name; do
+    [ -z "${size}" ] && size=0
+    percentage=$(echo "scale=2; 100 * ${size} / ${datasize}" | bc)
+    printf "%10sK %-10s: %s\n" "${size}" "(${percentage}%)" " ${name}"
+    totalsize=$((totalsize + size ))
+  done < "${datafile}"
+  # Check if we need to add an "Other" to cater for missing allocation!
+  if [ ${totalsize} -lt "${datasize}" ]; then
+    other_size=$((datasize - totalsize))
+    percentage=$(echo "scale=2; 100 * ${other_size} / ${datasize}" | bc)
+    printf "%10sK %-10s: Other\n" "${other_size}" "(${percentage}%)"
+  fi
+  zopen_env_size=$(zosdu -kts "${zopen_rootfs}" 2>/dev/null | awk '{printf "%.2f", ($1 / 1024)}')
+  available=$(df -k "${zopen_rootfs}" | tail -n 1 | tr -s " " | cut -d' ' -f3)
+  printf "  The zopen environment is using %sMb of total storage\n" "${zopen_env_size}"
+  echo "${available}" | awk -F'/' '{ printf "  There is %.2f Mb available for the zopen environment\n" , ($1 / 1024) }'
+}
+
+add_dir_size(){
+  dir=$1
+  [ -e "${dir}" ] || return 1
+  size=$(zosdu -kts "${dir}" 2>/dev/null | awk '{print $1}')
+  # Do size first as it gets sorted on
+  echo "${size}|${dir}" >> "${datafile}"
+  echo "${size}"
+}
+
+# Used to create the file pulled into the data analysis. Creates a
+# Pipe-Separated-Value (PSV), where the size is first, the name of
+# the field second.
+create_datafile() {
+  printVerbose "Sanity checking environment at '${zopen_rootfs}'"
+  [ -e "${zopen_rootfs}" ] || printError "Specified zopen environment '${zopen_rootfs}' does not exist"
+  [ -e "${zopen_rootfs}/etc/zopen-config" ] || \
+      printError "Specified zopen environment '${zopen_rootfs}' does not appear to be valid"
+
+  datafile=$(mktempfile "pie" ".data")
+  zopen_env_size=$(zosdu -kts "${zopen_rootfs}" 2>/dev/null | awk '{print $1}')
+  # Get explicit directories to include
+  for dir in "${zopen_rootfs}"/usr/local/zopen/*; do
+    # Get space usage of the directory (in format "size   dir")
+    size=$(add_dir_size "${dir}")
+    total_size=$((total_size + size))
+  done
+  size=$(add_dir_size "${zopen_rootfs}/var/cache/zopen")
+  total_size=$((total_size + size))
+  size=$(add_dir_size "${zopen_rootfs}/var/lib/zopen")
+  total_size=$((total_size + size))
+
+    # Sort by size (descending)
+  sort -nr -t"|" -k1 "${datafile}" > "${datafile}.sorted"
+  mv "${datafile}.sorted" "${datafile}"
+  printf "%s\n%s\n%s" "${datafile}" "${total_size}" "${zopen_env_size}"
+}
+
+# Main code start here
+# shellcheck disable=SC2153
+zopen_rootfs="${ZOPEN_ROOTFS}"
+args=$*
+pie=false
+use_ansi=false
+verbose=false
+debug=false
+while [ $# -gt 0 ]; do
+  printVerbose "Parsing option: $1"
+  case "$1" in
+  "--pie")
+    pie=true
+    ;;
+  "--ansi")
+    use_ansi=true
+    ;;
+  "-h" | "--help" | "-?")
+    printHelp "${args}"
+    exit 0
+    ;;
+  "--version")
+    zopen-version ${ME}
+    exit 0
+    ;;
+  "-v" | "--verbose")
+    verbose=true
+    ;;
+  "--debug")
+    verbose=true
+    debug=true
+    ;;
+  *) zopen_rootfs=$1 ;; # Ignore anything unknown
+  esac
+  shift
+done
+
+# Define ANSI_COLORS and ASCII_SYMBOLS as strings instead of arrays (since not
+# available in /bin/sh! )
+ANSI_COLORS="32 33 34 35 36 37 91 92 93 94 95 96" # 31 used for "other"
+ASCII_SYMBOLS="# @ = x $ + % X &"
+
+case $(uname) in
+  OS/390) ANSI_CSI="\047";;
+  *) ANSI_CSI="\033";;
+esac
+total_size=0
+if ! data=$(create_datafile); then
+  exit 1 # message will have been printed previously
+fi
+datafile=$(echo "${data}" | head -n 1)
+datasize=$(echo "${data}" | tail -n 1)
+
+if $pie; then
+  render_pie_chart_awk "zopen environment disk usage" "${datafile}" $use_ansi "${datasize}" 0 20 "Biggest space hogs"
+else
+  list_usage "${datafile}" "${datasize}"
+fi
+

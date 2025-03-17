@@ -43,6 +43,7 @@ Command:
   remove            removes installed zopen community packages
   update-cacert     update the cacert.pem file used by zopen community
   upgrade           upgrades existing zopen community packages
+  usage             output details about the file system usage for your zopen environment
 
 Options:
   -h, --help, -?    display this help and exit
@@ -56,6 +57,7 @@ Examples:
                     without prompting
   zopen alt bash    list installed alternative bash packages
   zopen info vim    displays details information about the installed vim package
+  zopen usage --pie displays an ASCII-art chart showing biggest space hogs
 
 SEE ALSO:
   zopen-alt(1)
@@ -70,6 +72,7 @@ SEE ALSO:
   zopen-query(1)
   zopen-remove(1)
   zopen-update-cacert(1)
+  zopen-usage(1)
   zopen-version(1)
 
 Report bugs at https://github.com/zopencommunity/meta/issues
@@ -88,7 +91,7 @@ version=false
 for arg in $*; do
   case "${arg}" in
     "alt"|"audit"|"build"|"clean"|"generate"|"init"|"install"|\
-    "query"|"remove"|"update-cacert"|"info"|"diagnostics")
+    "query"|"remove"|"update-cacert"|"info"|"usage"|"diagnostics")
       subcmd="zopen-${arg}"
       ;;
     "list")

@@ -212,7 +212,7 @@ writeConfigFile(){
 # underlying root location is copied/moved elsewhere as locations are
 # relative to this envvar value
 displayHelp() {
-echo "usage: . zopen-config [--eknv] [--knv] [-?|--help]"
+echo "usage: . zopen-config [--eknv] [--knv] [--quiet] [-?|--help]"
 echo "  --override-zos-tools   Adds altbin/ dir to the PATH and altman/ dir to MANPATH, overriding the native z/OS tooling."
 echo "  --nooverride-zos-tools Does not add altbin/ and altman/ dir to PATH and MANPATH."
 echo "  --override-zos-tools-subset=<file>"
@@ -220,6 +220,7 @@ echo "      Override a subset of zos tools. Containing a subset of packages to o
 echo "  --knv                  Display zopen environment variables "
 echo "  --eknv                 Display zopen environment variables, prefixed with an"
 echo "                         'export ' keyword for use in scripts"
+echo "  --quiet                Do not display messages"
 echo "  -?, --help             Display this help"
 }
 EOF
@@ -233,17 +234,20 @@ fi
 cat << EOF >>  "${configFile}"
 knv=false
 exportknv=""
+displayText=true
 unset overrideFile
-if [ \$# -gt 0 ]; then
+while [ \$# -gt 0 ]; do
   case "\$1" in
     --eknv) exportknv="export "; knv=true;;
     --knv) knv=true;;
     --override-zos-tools)  export ZOPEN_TOOLSET_OVERRIDE=1;;
     --nooverride-zos-tools)  unset ZOPEN_TOOLSET_OVERRIDE;;
     --override-zos-tools-subset) shift;  export ZOPEN_TOOLSET_OVERRIDE=1; overrideFile="\$1";;
+    --quiet) displayText=false;;
     -?|--help) displayHelp; return 0;;
   esac
-fi
+  shift
+done
 if \${knv}; then
   /bin/env | /bin/sort > /tmp/zopen-config-env-orig.\$\$
 fi
@@ -300,7 +304,6 @@ export ZOPEN_LOG_PATH
 ZOPEN_CURL_PARAMS=""
 
 # Do not display text for non-interactive sessions
-displayText=true
 if [ -n "\$SSH_CONNECTION" ] && [ -z "\$PS1" ] || [ ! -t 1 ]; then
   displayText=false
 fi
@@ -537,6 +540,14 @@ zosfind()
   # consistent across platforms (where findutils is/is not installed) use the
   # standard zos version
   /bin/find "$@"
+}
+
+zosdu()
+{
+  # Use the standard z/OS du utility; if the coreutils package is installed, this
+  # changes the behaviour of the du command so we need to ensure we support those
+  # who do not have that installed
+  /bin/du "$@"
 }
 
 findrev()
