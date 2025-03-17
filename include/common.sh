@@ -20,6 +20,7 @@ zopenInitialize()
   ZOPEN_ANALYTICS_JSON="${ZOPEN_ROOTFS}/var/lib/zopen/analytics.json"
   # shellcheck disable=SC2034
   ZOPEN_JSON_CACHE_URL="https://raw.githubusercontent.com/${ZOPEN_ORGNAME}/meta/main/docs/api/zopen_releases.json"
+  # shellcheck disable=SC2034
   ZOPEN_LATEST_RELEASE_JSON="https://raw.githubusercontent.com/${ZOPEN_ORGNAME}/meta/main/docs/api/zopen_releases_latest.json"
   ZOPEN_JSON_CONFIG="${ZOPEN_ROOTFS}/etc/zopen/config.json"
   if [ -n "${INCDIR}" ]; then
@@ -30,8 +31,8 @@ zopenInitialize()
 
 }
 addCleanupTrapCmd(){
-  # Attempt to remove any redirects; rather than test, simpler to remove 
-  # and re-add if present. 
+  # Attempt to remove any redirects; rather than test, simpler to remove
+  # and re-add if present.
   newcmd="$1"
 
   tmpscriptfile="/tmp/zopen_trap.scr"
@@ -55,8 +56,8 @@ cleanup() {
 }
 
 addCleanupTrapCmd2(){
-  # Attempt to remove any redirects; rather than test, simpler to remove 
-  # and re-add if present. 
+  # Attempt to remove any redirects; rather than test, simpler to remove
+  # and re-add if present.
   newcmd=$(echo "$cmd" | zossed -E "s/[ \t]*[1-9]*[<>][>|&]?[ \t]*[^ \t]*//g")
   newcmd="${newcmd} >/dev/null 2>&1"
   # Command Trace MUST be disabled as the output from this can become
@@ -95,7 +96,7 @@ addCleanupTrapCmd2(){
                       sep = OFS
                 }
               }
-            } 
+            }
             END{ printf "\n" }'
         )
        printf "%s;%s;%s;eval exit \${exitrc}" "${prfx}" "${newcmd}" "${sigcmd}"  | tr -s ';'
@@ -171,7 +172,7 @@ getParentProcess()
 {
   [ -z "$1" ] && assertFailed "No process name given"
   # Get Parent Pid (ppid), with no heading (='') and strip blanks (awk)
-  ps -o ppid= -p "$1" | awk '{$1=$1; print}' 
+  ps -o ppid= -p "$1" | awk '{$1=$1; print}'
 }
 
 # getCurrentVersionDir
@@ -201,19 +202,19 @@ isPackageActive(){
   getCurrentVersionDir "$needle"
 }
 
-# Given two input files, return those lines in haystack file that are 
+# Given two input files, return those lines in haystack file that are
 # not in needles file
 diffFile()
 {
   haystackfile="$1"
   needlesfile="$2"
   [ -n "${needlesfile}" ] || printError "Internal error; needle file was empty/non-existent."
-  diff=$(awk 'NR==FNR{needles[$0];next} 
+  diff=$(awk 'NR==FNR{needles[$0];next}
     !($0 in needles) {print}' "${needlesfile}" "${haystackfile}")
   echo "${diff}"
 }
 
-# Given two input lists (with \n delimiters), return those lines in  
+# Given two input lists (with \n delimiters), return those lines in
 # haystack that are not in needles
 diffList()
 {
@@ -900,7 +901,7 @@ mergeIntoSystem()
   printDebug "Generating listing for remove processing (including main symlink)"
   echo "Installed files:" > "${versioneddir}/.links"
   tar tf "${processingDir}/${tarfile}" 2> /dev/null| sort -r >> "${versioneddir}/.links"
-  
+
   printDebug "Extracting tar to rootfs"
   cd "${processingDir}" && tar xf "${tarfile}" -C "${rootfs}" 2> /dev/null
 
@@ -915,7 +916,7 @@ mergeIntoSystem()
 
 rmSymlinksFSCheck(){
   # Slower method needed to analyse each link to see if it has
-  # become orphaned. Only relevent when removing a package as 
+  # become orphaned. Only relevent when removing a package as
   # upgrades/alt-switching can supply a list of files
   # Use sed to skip header line in .links file
   # Note that the contents of the links file are ordered such that
@@ -966,7 +967,7 @@ rmSymlinksFileDiff(){
     if [ -L "${obsoleteFile}" ] && [ ! -e "${obsoleteFile}" ]; then
       # the linked-to file no longer exists (ie. the symlink is dangling)
       rm -f "${obsoleteFile}" > /dev/null 2>&1
-    fi 
+    fi
   done
 }
 
@@ -998,7 +999,7 @@ unsymlinkFromSystem()
       if [ -e "${tempDirFile}" ]; then
         ndirs=$(uniq < "${tempDirFile}" | wc -l  | tr -d ' ')
         printVerbose "- Checking ${ndirs} dir links"
-        for d in $(uniq < "${tempDirFile}" | sort -r) ; do 
+        for d in $(uniq < "${tempDirFile}" | sort -r) ; do
           [ -d "${d}" ] && rmdir "${d}" >/dev/null 2>&1
         done
         rm "${tempDirFile}"
@@ -1010,7 +1011,7 @@ unsymlinkFromSystem()
         done < "${tempTrash}"
         printError "Manual removal of files might be required"
       fi
-    fi      
+    fi
   else
     printDebug "No list of current links to check - package was not installed/active"
   fi
@@ -1148,9 +1149,9 @@ waitforpid()
 
 progressHandler()
 {
- 
+
   if [ -z "${-%%*x*}" ]; then
-    # Command trace is active so any progress animation 
+    # Command trace is active so any progress animation
     # writing to screen will interleave, making things cluttered.
     # Sleep for 1s (to allow the caller to setup signal handling) and exit
     sleep 1
@@ -1440,16 +1441,21 @@ syslog()
   echo "$(date +"%F %T") $(id | cut -d' ' -f1)::${module}:${type}:${categories}:${location}:${msg}" >> "${fd}"
 }
 
-getJSONCacheURL(){
+getJSONCacheURLs(){
   activeRepo="${ZOPEN_ROOTFS}/etc/zopen/repos.d/active"
   [ ! -e "${activeRepo}" ] && printError "Could not access repository configuration at '${activeRepo}'. Check file to ensure valid repository configuration or refresh default configuration with zopen init --refresh -y."
 
   type=$(jq -r ".type" "${activeRepo}")
   base=$(jq -r ".metadata_baseurl" "${activeRepo}")
   filename=$(jq -r ".metadata_file" "${activeRepo}")
+  latest_metadata=$(jq -r ".latest_metadata" "${activeRepo}")
   case "${type}" in
-    http|https) printf "%s://%s/%s" "${type}" "${base}" "${filename}";;
-    file)     printf "%s:%s/%s" "${type}" "${base}" "${filename}";;
+    http|https) printf "%s://%s/%s\n%s://%s/%s" \
+                    "${type}" "${base}" "${filename}" "${type}" "${base}" "${latest_metadata}"
+    ;;
+    file) printf "%s:%s/%s\n%s:%s/%s" \
+              "${type}" "${base}" "${filename}" "${type}" "${base}" "${latest_metadata}"
+    ;;
     *)        printError "Unsupported repository type '${type}'.";;
   esac
 }
@@ -1471,17 +1477,17 @@ updateJSONCaches()
   printVerbose "Ensuring cache directory exists"
   cachedir="${ZOPEN_ROOTFS}/var/cache/zopen"
   [ ! -e "${cachedir}" ] && mkdir -p "${cachedir}"
-  jsonCacheURL=$(getJSONCacheURL)
+  jsonCacheURLs=$(getJSONCacheURLs)  # Also sets $latest_metadata
 
   printVerbose "Checking if the JSON_CACHE already downloaded in this session"
   if [ -z "${JSON_CACHE}" ]; then
     JSON_CACHE="${cachedir}/zopen_releases.json"
-    downloadJSONCacheIfExpired "${JSON_CACHE}" "${jsonCacheURL}"
+    downloadJSONCacheIfExpired "${JSON_CACHE}" "$(echo "${jsonCacheURLs}" | head -n 1)"
   fi
   if [ -z "${JSON_LATEST_CACHE}" ]; then
     JSON_LATEST_CACHE="${cachedir}/zopen_releases_latest.json"
-    latestReleaseURL="$(dirname "${jsonCacheURL}")/zopen_releases_latest.json"
-    downloadJSONCacheIfExpired "${JSON_LATEST_CACHE}" "${latestReleaseURL}"
+    latestReleaseURL="$(dirname "${jsonCacheURL}")/${latest_metadata}"
+    downloadJSONCacheIfExpired "${JSON_LATEST_CACHE}" "$(echo "${jsonCacheURLs}" | tail -n 1)"
   fi
 }
 
@@ -1503,7 +1509,7 @@ downloadJSONCacheIfExpired()
       [ ! -w "${fileToCache}" ] || [ ! -r "${fileToCache}" ] && printError "Cannot access cache at '${JSON_CACHE}'. Check permissions and retry request."
     fi
 
-    if ! curlCmd -f -L -s -I "${cacheUrl}" -o "${cacheTimestampCurrent}"; then
+    if ! curlCmd --fail --location --silent --head "${cacheUrl}" -o "${cacheTimestampCurrent}"; then
       printError "Failed to obtain json cache timestamp from ${cacheUrl}."
     fi
     chtag -tc 819 "${cacheTimestampCurrent}"
@@ -1518,7 +1524,7 @@ downloadJSONCacheIfExpired()
     printVerbose "Replacing old timestamp with latest."
     mv -f "${cacheTimestampCurrent}" "${cacheTimestamp}"
 
-    if ! curlCmd -f -L -s -o "${fileToCache}" "${cacheUrl}"; then
+    if ! curlCmd --fail --location --silent -o "${fileToCache}" "${cacheUrl}"; then
       printError "Failed to obtain json cache from '${cacheUrl}'"
     fi
     chtag -tc 819 "${fileToCache}"
@@ -1547,7 +1553,7 @@ downloadJSONCache()
         return; # Skip the download for read only operations when you know you can't write to it
       fi
     fi
-  
+
     # Need to check that we can read & write to the JSON timestamp cache files
     if [ -e "${JSON_TIMESTAMP_CURRENT}" ]; then
       [ ! -w "${JSON_TIMESTAMP_CURRENT}" ] || [ ! -r "${JSON_TIMESTAMP_CURRENT}" ] && printError "Cannot access cache at '${JSON_TIMESTAMP_CURRENT}'. Check permissions and retry request."
@@ -1601,7 +1607,7 @@ getRepos()
 }
 
 # isValidRepo
-# Queries the main repository list to determine if the input is valid,  This 
+# Queries the main repository list to determine if the input is valid,  This
 # uses jq itself to return 0 or 1 with no output
 # inputs: $1 the port name.
 
@@ -1618,7 +1624,7 @@ getRepoReleases()
 {
   updateJSONCaches
   repo="$1"
-  ##TODO 
+  ##TODO
   ##TDORM releases="$(jq -e -r '.release_data."'${repo}'"' "${JSON_CACHE}")"
   ##TDORM if [ $? -ne 0 ]; then
     ##TDORM printError "Could not get all releases for ${repo}"
@@ -1654,7 +1660,7 @@ checkWritable()
   fi
 }
 
-generateUUID() 
+generateUUID()
 {
   date_part=$(date +%s)
   random_part=$((RANDOM))
@@ -1674,8 +1680,8 @@ isURLReachable() {
 }
 
 checkAvailableSize()
-{ 
-  
+{
+
   package="$1"
   packageSize="$2"
   printInfo "- Checking available size to install ${package}."
@@ -1685,7 +1691,7 @@ checkAvailableSize()
   printDebug "Package Size: ${packageSize} k"
   partitionSize=$(/bin/df -k . | tail -1 | awk '{print $3}' | cut -f1 -d '/')
   printDebug "Partition Size: ${partitionSize}k [free on '$(pwd -P)']"
-  
+
   if [ 1 -eq "$(echo "${packageSize} > ${partitionSize}" | bc)" ]; then
     printError "Not enough space in partition."
   fi
@@ -1733,7 +1739,7 @@ asciiecho()
   return 0
 }
 
-a2e() 
+a2e()
 {
   source="$1"
 
@@ -1793,38 +1799,56 @@ promptYesNoAlways() {
 
 getVersionedMetadata()
 {
+  repo=$1
+  invalidPortAssetFile=$2
   printDebug "Specific version ${versioned} requested - checking existence and URL"
-  requestedMajor=$(echo "${versioned}" | awk -F'.' '{print $1}')
-  requestedMinor=$(echo "${versioned}" | awk -F'.' '{print $2}')
-  requestedPatch=$(echo "${versioned}" | awk -F'.' '{print $3}')
-  requestedSubrelease=$(echo "${versioned}" | awk -F'.' '{print $4}')
-  requestedVersion="${requestedMajor}\\\.${requestedMinor}\\\.${requestedPatch}\\\.${requestedSubrelease}"
-  printDebug "Finding URL for latest release matching version prefix: requestedVersion: ${requestedVersion}"
-  releasemetadata=$(jq --arg repo "${repo}" --arg requestedVersion "${requestedVersion}" \
-      '.release_data[$repo] | map(select(.assets[].version | test($requestedVersion)))[0]' "${JSON_CACHE}")
+  requestedVersion=$(echo "${versioned}" | awk -F'.' '{print $4}')
+  printDebug "Finding metadata for latest release matching version prefix: requestedVersion: ${versioned}"
+  if ! releasemetadata=$(jq --arg repo "${repo}" --arg requestedVersion "${versioned}" \
+      '.release_data[$repo] | map(select(.assets[].name | test($requestedVersion)))[0]' "${JSON_CACHE}"); then
+    printSoftError "Could not find metadata for ${repo} in repo metadata '${JSON_CACHE}'" 2> "${invalidPortAssetFile}"
+    return 1
+  elif [ "${releasemetadata}" = "null" ]; then
+      printSoftError "Could not find specified version '${versioned}' for package '${repo}'" 2> "${invalidPortAssetFile}"
+      return 1
+  fi
+  printDebug "Check for asset"
+  asset=$(/bin/printf "%s" "${releasemetadata}" | jq -e -r '.assets[0]')
+  if ! asset=$(/bin/printf "%s" "${releasemetadata}" | jq -e -r '.assets[0]'); then
+    printSoftError "Could not find asset for release version '${versioned}' in repo '${repo}'" 2> "${invalidPortAssetFile}"
+    return 1
+  fi
+  return 0
 }
 
 getTaggedMetadata()
 {
+  repo=$1
+  invalidPortAssetFile=$2
   printDebug "Explicit tagged version '${tagged}' specified. Checking for match"
-  releasemetadata=$(/bin/printf "%s" "${releases}" | jq -e -r '.[] | select(.tag_name == "'"${tagged}"'")')
-  releasemetadata=$(jq --arg repo "${repo}" --arg requestedVersion "${requestedVersion}" \
-    '.release_data[$repo][] | select(.tag_name == $tag_name)' "${JSON_CACHE}")
-  printDebug "Use quick check for asset to check for existence of metadata for specific messages"
-  asset=$(/bin/printf "%s" "${releasemetadata}" | jq -e -r '.assets[0]')
-  if [ $? -ne 0 ]; then
-    printError "Could not find release tagged '${tagged}' in repo '${repo}'"
+  if ! releasemetadata=$(jq -e --arg repo "${repo}" --arg tagged "${tagged}" \
+    '.release_data[$repo][] | select(.tag_name == $tagged)' "${JSON_CACHE}"); then
+    printSoftError "Tagged release '${tagged}' was not found for ${repo}" 2> "${invalidPortAssetFile}"
+    return 1
   fi
+  printDebug "Check for asset"
+  asset=$(/bin/printf "%s" "${releasemetadata}" | jq -e -r '.assets[0]')
+  if ! asset=$(/bin/printf "%s" "${releasemetadata}" | jq -e -r '.assets[0]'); then
+    printSoftError "Could not find asset for release tagged '${tagged}' in repo '${repo}'" 2> "${invalidPortAssetFile}"
+    return 1
+  fi
+  return 0
 }
 
 getSelectMetadata()
 {
   # As this is running within the generate... logic, a progress handler will have been started.
-  # This needs to be terminated before trying to write to screen
+  # This needs to be terminated before trying to write to screen. This does mean that messages
+  # can be written to the screen rather than directed to a temporary error file
   # shellcheck disable=SC2154
   kill -HUP "${PROGRESS_HANDLER}" >/dev/null 2>&1 # if the timer is not running, the kill will fail
   waitforpid "${PROGRESS_HANDLER}"  # Make sure it's finished writing to screen
-  
+
   repo="$1"
   # Explicitly allow the user to select a release to install; useful if there are broken installs
   # as a known good release can be found, selected and pinned!
@@ -1852,19 +1876,25 @@ getSelectMetadata()
 }
 
 getReleaseLineMetadata()
-{ 
+{
+  repo=$1
+  invalidPortAssetFile=$2
   printDebug "Install from release line '${releaseLine}' specified"
   validatedReleaseLine=$(validateReleaseLine "${releaseLine}")
   if [ -z "${validatedReleaseLine}" ]; then
-    printError "Invalid releaseline specified: '${releaseLine}'; Valid values: DEV or STABLE"
+    printSoftError "Invalid releaseline specified: '${releaseLine}'; Valid values: DEV or STABLE" 2> "${invalidPortAssetFile}"
+    return 1
   fi
   printDebug "Finding latest asset on the release line"
-  releasemetadata=$(jq --arg repo "${repo}" --arg releaseLine "${validatedReleaseLine}" \
-      '.release_data[$repo] | map(select(.tag_name | startswith($releaseLine)))[0]' "${JSON_CACHE}")
+  if ! releasemetadata=$(jq --arg repo "${repo}" --arg releaseLine "${validatedReleaseLine}" \
+      '.release_data[$repo] | map(select(.tag_name | startswith($releaseLine)))[0]' "${JSON_CACHE}"); then
+    printSoftError "Could not find metadata for ${repo} in repository metadata at '${JSON_CACHE}'" 2> "${invalidPortAssetFile}"
+    return 1
+  fi
   printDebug "Use quick check for asset to check for existence of metadata"
-  asset="$(/bin/printf "%s" "${releasemetadata}" | jq -e -r '.assets[0]')"
-  if [ $? -ne 0 ]; then
-    printError "Could not find release-line ${releaseLine} releases for repo: ${repo}"
+  if ! asset="$(/bin/printf "%s" "${releasemetadata}" | jq -e -r '.assets[0]')"; then
+    printSoftError "Could not find asset for releaseline '${validatedReleaseLine}' for repo '${repo}' in ${JSON_CACHE}" 2> "${invalidPortAssetFile}"
+    return 1
   fi
   unset "${releaseLine}"
 }
@@ -1876,7 +1906,7 @@ calculateReleaseLineMetadata()
   if [ -n "${installedReleaseLine}" ]; then
     printDebug "Found existing releaseline '${installedReleaseLine}', restricting to only that releaseline"
     validatedReleaseLine="${installedReleaseLine}"  # Already validated when stored
-  else 
+  else
     printDebug "Checking for system-configured releaseline"
     if [ -e "${ZOPEN_JSON_CONFIG}" ]; then
       printDebug "Using v2 configuration: '${ZOPEN_JSON_CONFIG}'"
@@ -1955,9 +1985,11 @@ parseRepoName()
 }
 
 getPortMetaData(){
+  # This is running inside a progresshandler - route error messages to
+  # $2
   portRequested="$1"
   invalidPortAssetFile="$2"
-  printDebug "Removing any version (%) or tag (#) suffixes fron '${portRequested}"
+  printDebug "Removing any version (=) or tag (%) suffixes fron '${portRequested}"
   portName=$(echo "${portRequested}" | sed -e 's#%.*##' -e 's#=.*##')
 
   if ! isValidRepo "${portName}"; then
@@ -1968,29 +2000,39 @@ getPortMetaData(){
   parseRepoName "${portRequested}" # To set the various status flags below
   getRepoReleases "${portName}"
   if [ -n "${versioned}" ]; then
-    getVersionedMetadata "${portName}"
+    if ! getVersionedMetadata "${portName}" "${invalidPortAssetFile}"; then
+      return 1
+    fi
   elif [ -n "${tagged}" ]; then
-    getTaggedMetadata "${portName}"   
+    if ! getTaggedMetadata "${portName}" "${invalidPortAssetFile}"; then
+      return 1
+    fi
   elif # shellcheck disable=SC2154
        ${selectVersion}; then
     selectVersion=false  # Need to set this to prevent selection of dependencies
-    getSelectMetadata "${portName}"
-  elif [ -n "${releaseLine}" ]; then  
-    getReleaseLineMetadata "${portName}"     
+    if ! getSelectMetadata "${portName}" "${invalidPortAssetFile}"; then
+      return 1
+    fi
+  elif [ -n "${releaseLine}" ]; then
+    if ! getReleaseLineMetadata "${portName}" "${invalidPortAssetFile}"; then
+      return 1
+    fi
   else
-    calculateReleaseLineMetadata "${portName}"
+    if ! calculateReleaseLineMetadata "${portName}" "${invalidPortAssetFile}"; then
+      return 1
+    fi
   fi
-  if [ -z "${releasemetadata}" ]; then 
-    echo "${portName}: metadata could not be found" >> "${invalidPortAssetFile}"
-    return 1
-  fi
-  printDebug "Getting specific asset details using metadata: ${releasemetadata}"
   if [ -z "${asset}" ] || [ "null" = "${asset}" ]; then
-    printDebug "Asset not found during previous logic; setting now"
+    printDebug "Asset not found during previous logic; setting now from metadata"
+    if [ -z "${releasemetadata}" ]; then
+    echo "${portName}: metadata could not be found" >> "${invalidPortAssetFile}"
+      return 1
+    fi
+    printDebug "Getting specific asset details using metadata: ${releasemetadata}"
     asset=$(/bin/printf "%s" "${releasemetadata}" | jq -e -r '.assets[0]')
   fi
   if [ -z "${asset}" ]; then
-    echo "${portName} asset metadata could not be found" >> "${invalidPortAssetFile}"
+    echo "${portName} asset metadata could not be found" 2> "${invalidPortAssetFile}"
     return 1
   fi
   return 0
@@ -2006,7 +2048,7 @@ getPortMetaData(){
 #         8  if error
 createDependancyGraph()
 {
-  invalidPortAssetFile=$1 && shift 
+  invalidPortAssetFile=$1 && shift
   printDebug "Getting list of dependencies"
   dependencies=$(echo "${installList}" | jq --raw-output '.installqueue[] | select(.asset.runtime_dependencies | test("No dependencies") | not )| map(try(.runtime_dependencies |= split(" ")))| .[] | .runtime_dependencies[] ')
   printDebug "Removing any dependencies already on install queue"
@@ -2035,7 +2077,7 @@ createDependancyGraph()
 #         8  if error
 addToInstallGraph(){
   installtype=$1 && shift
-  invalidPortAssetFile=$1 && shift 
+  invalidPortAssetFile=$1 && shift
   pkgList="$1"
   printDebug "Adding pkgList to install graph"
   for portRequested in ${pkgList}; do
@@ -2046,13 +2088,8 @@ addToInstallGraph(){
     installList=$(echo "${installList}" | \
       jq ".installqueue += [{\"portname\":\"${portName}\", \"asset\":${asset}, \"installtype\":\"${installtype}\"}]")
   done
-  if [ -e "${invalidPortAssetFile}" ]; then
-    printSoftError "The following ports cannot be installed: "
-    while read invalidPort; do
-      printf "${WARNING} %s\n" "${invalidPort}"
-    done < "${invalidPortAssetFile}"
-    printError "Confirm port names, remove any 'port' suffixes and retry command."
-  fi
+  [ -e "${invalidPortAssetFile}" ] && return 1
+  return 0
 }
 
 validateInstallList(){
@@ -2072,7 +2109,7 @@ validateInstallList(){
 dedupStringList()
 { delim="$1" && shift
   str="$1"
-  echo "${str}"| awk -v delim="${delim}" '                                                                                                      
+  echo "${str}"| awk -v delim="${delim}" '
     { dlm=""; for (i=1; i<=NF; i++) {if (!seen[$i]++) {printf "%s%s", dlm, $i};dlm=delim};print ""}'
 }
 
@@ -2093,10 +2130,18 @@ generateInstallGraph(){
   # Create the following file here to trigger cleanup - otherwise, multiple
   # tempfiles could be created depending on dependency graph depth
   invalidPortAssetFile=$(mktempfile "invalid" "port")
-  addCleanupTrapCmd "rm -rf ${invalidPortAssetFile}"
+  #addCleanupTrapCmd "rm -rf ${invalidPortAssetFile}"
   if ! runLogProgress " addToInstallGraph \"install\" \"${invalidPortAssetFile}\" \"${portsToInstall}\"" \
       "Creating install graph" "Created install graph" "linkcheck"; then
-    printError "Unexpected error whilecreating install graph. Correct errors and retry command."
+    if [ -e  "${invalidPortAssetFile}" ]; then
+      printSoftError "Cannot complete install request"
+      while read invalidPort; do
+        printf "%s\n" "${invalidPort}"
+      done < "${invalidPortAssetFile}"
+      exit 1
+    else
+      printError "Unexpected error while creating install graph. Correct errors and retry command."
+    fi
   fi
   ##TODORM addToInstallGraph "install" "${invalidPortAssetFile}" "${portsToInstall}"
 
@@ -2108,7 +2153,15 @@ generateInstallGraph(){
     printVerbose "Calculating dependancy graph"
     if ! runLogProgress "createDependancyGraph \"${invalidPortAssetFile}\"" \
         "Creating dependancy graph" "Created dependancy graph" "linkcheck"; then
-      printError "Unexpected error while creating dependancy graph. Correct errors and retry command."
+      if [ -e  "${invalidPortAssetFile}" ]; then
+        printSoftError "The following ports cannot be installed: "
+        while read invalidPort; do
+          /bin/printf "${WARNING} %s\n" "${invalidPort}"
+        done < "${invalidPortAssetFile}"
+        printError "Confirm port names, remove any 'port' suffixes and retry command."
+      else
+        printError "Unexpected error while creating dependancy graph. Correct errors and retry command."
+      fi
     fi
     ##TODORM createDependancyGraph "${invalidPortAssetFile}"
   else
@@ -2125,11 +2178,11 @@ generateInstallGraph(){
   #fi
   ##<<TODORM
   # shellcheck disable=SC2154
-  if "${reinstall}"; then 
+  if "${reinstall}"; then
     printVerbose "Not pruning already installed packages as reinstalling"
   else
     parseGraph
-  fi  
+  fi
 }
 
 parseGraph()
@@ -2145,18 +2198,18 @@ parseGraph()
     exit 1
   fi
 
-  # Prune already installed packages at the requested level; compare the 
+  # Prune already installed packages at the requested level; compare the
   # incoming file name against the port name, version and release already on the system
   # - seems to be the easiest comparison since some data is not in zopen_release vs metadata.json
   # and a local pax won't have a remote repo but should have a file name!
 
 installList=$(jq --argjson install_list "${installList}" '
-. as $input | 
+. as $input |
 {
   "installqueue": (
     $install_list.installqueue | map(select( .portname as $pnn | .asset.release as $r |
-[$input[] | to_entries[] | select(.key == $pnn) | .value]| all(.product.release != $r)    
-    ))) 
+[$input[] | to_entries[] | select(.key == $pnn) | .value]| all(.product.release != $r)
+    )))
 } ' "${ZOPEN_ROOTFS}/var/lib/zopen/packageDB.json"
 )
 ##TODORM>>
@@ -2166,7 +2219,7 @@ hidden(){
   # should be unique enough
   installed=$(echo "${installed}"| awk 'BEGIN{ORS = "," } {print "\"" $1 "@=@" $3 "\""}')
   installed="[${installed%,}]"
-  
+
   installList=$(echo "${installList}" | \
     jq  --argjson installees "${installed}" \
       '.installqueue |=
@@ -2180,7 +2233,7 @@ hidden(){
           )
         )'\
   )
-}  
+}
 ##<<TODORM
   if ! processActionScripts "parseGraphPost"; then
     exit 1
@@ -2248,7 +2301,7 @@ spaceValidate(){
 processRepoInstallFile(){
   printVerbose "Beginning port installation"
   mutexReq "zopen"
-  
+
   processActionScripts "transactionPre"
   if [ 0 -eq "$(echo "${installList}" | jq --raw-output '.installqueue| length')" ]; then
     printInfo "- No packages to install"
@@ -2257,7 +2310,7 @@ processRepoInstallFile(){
 
   # shellcheck disable=SC2154
   if ${fileinstall}; then
-    : 
+    :
   else
     if ! ${quiet} >/dev/null 2>&1; then
       xIFS=$IFS
@@ -2315,9 +2368,8 @@ processRepoInstallFile(){
 
 getInstallFile()
 {
-  installurl="$1"
-  metadataJSONURL="$(dirname "${installurl}")/metadata.json"
-  metadataFile="$(basename "${installurl}").json"
+  installurl="$1"  
+
   downloadToDir="${ZOPEN_ROOTFS}/var/cache/zopen"
   if $downloadOnly; then
     downloadToDir="."
@@ -2333,15 +2385,31 @@ getInstallFile()
     if ! runAndLog "cd ${downloadToDir} && curlCmd --no-progress-meter -L ${installurl} -O ${redirectToDevNull}"; then
       printError "Could not download from ${installurl}. Correct any errors and potentially retry"
     fi
+    
     printVerbose "Downloading corresponding metadata"
+    # check if it is in the same location just with a different suffix (as in a mirror)
+    # if not, likely is the original Github repo which uses a subdirectory for the metadata...
+    # Try again with this extended URL
+    metadataFile="$(basename "${installurl}").json"
+    metadataJSONURL="${installurl}.json"
     if ! runAndLog "curlCmd -L '${metadataJSONURL}' -o '${metadataFile}'" "${redirectToDevNull}"; then
-      printError "Could not download from ${metadataJSONURL}. Correct any errors and potentially retry."
-    else
-      if command -v chtag >/dev/null 2>&1; then
-        # Curl currently does not know on z/OS to set the text flag for text files
-        printVerbose "Metadata file downloaded, ensuring 'text' flag set for z/OS"
-        chtag -t "${metadataFile}"
+      printVerbose "Not located explicit file, try extended URL location"
+        metadataJSONURL_ext="$(dirname "${installurl}")/metadata.json"
+      if ! runAndLog "curlCmd -L '${metadataJSONURL_ext}' -o '${metadataFile}'" "${redirectToDevNull}"; then
+        printSoftError "Could not download package metadata. Tried the following locations:"
+        printSoftErrpr "'${metadataJSONURL}' '${metadataJSONURL_ext}'"
+        printError "Correct any errors and retry command"
+      else
+        printVerbose "Metadata downloaded from extended location '${metadataJSONURL_ext}'"
       fi
+    else
+      printVerbose "Metadata downloaded from '${metadataJSONURL}'"
+    fi
+
+    if command -v chtag >/dev/null 2>&1; then
+      # Curl currently does not know on z/OS to set the text flag for text files
+      printVerbose "Metadata file downloaded, ensuring 'text' flag set for z/OS"
+      chtag -t "${metadataFile}"
     fi
   fi
 }
@@ -2370,8 +2438,8 @@ installFromPax()
     return 1
   fi
 
-  # Ideally we would use the following, 
-  #  name=$(jq --raw-output '.product.name' "${metadatafile}") 
+  # Ideally we would use the following,
+  #  name=$(jq --raw-output '.product.name' "${metadatafile}")
   # but name does not always map to the actual repo package name at present!
   # The repo name is in the.product.repo field so can extract from there instead -
   # though this also has issues for some packages like NATS/nats ...
@@ -2379,14 +2447,14 @@ installFromPax()
   # so fall back to that
   if [ -n "${USEPRODNAME}" ]; then
     printVerbose "Extracting product name from .product.repo"
-    #  name=$(jq --raw-output '.product.name' "${metadatafile}") 
+    #  name=$(jq --raw-output '.product.name' "${metadatafile}")
   else
     printVerbose "Extracting product name from .product.repo"
     name=$(jq --arg reponame "${ZOPEN_ORGNAME}" --raw-output '.product.repo | match(".*/\($reponame)/(.*)port").captures[0].string' "${metadatafile}")
-    if [ -z "${name}" ] || [ "${name##*[^ ]*}" = "" ]; then  
+    if [ -z "${name}" ] || [ "${name##*[^ ]*}" = "" ]; then
       name=$(jq --arg reponame "ZOSOpenTools" --raw-output '.product.repo | match(".*/\($reponame)/(.*)port").captures[0].string' "${metadatafile}")
     fi
-    if [ -z "${name}" ] || [ "${name##*[^ ]*}" = "" ]; then  
+    if [ -z "${name}" ] || [ "${name##*[^ ]*}" = "" ]; then
       printError "Unable to determine name from .product.repo in '${metadatafile}'. Check metadata is correct."
     fi
   fi
@@ -2406,7 +2474,7 @@ installFromPax()
   paxredirect="-s %[^/]*/%${ZOPEN_PKGINSTALL}/${installdirname}/%"
 
   printDebug "Check for existing directory for version '${installdirname}'"
-  if [ -d "${ZOPEN_PKGINSTALL}/${installdirname}" ]; then 
+  if [ -d "${ZOPEN_PKGINSTALL}/${installdirname}" ]; then
     printVerbose "- Clearing existing directory and contents"
     rm -rf "${ZOPEN_PKGINSTALL}/${installdirname}"
   fi
@@ -2432,14 +2500,14 @@ installFromPax()
     fi
     if ! ln -s "${ZOPEN_PKGINSTALL}/${installdirname}" "${ZOPEN_PKGINSTALL}/${name}/${name}"; then
       printError "Could not create symbolic link name"
-    fi 
+    fi
     if ! ${nosymlink}; then
       if ! runLogProgress "mergeIntoSystem \"${name}\" \"${ZOPEN_PKGINSTALL}/${installdirname}\" \"${ZOPEN_ROOTFS}\"" \
           "Merging ${name} into symlink mesh" "Merged ${name} into symlink mesh"; then
         printSoftError "Unexpected errors merging symlinks into mesh"
         printError "Use zopen alt to select previous version to ensure known state"
       fi
-      ##TODORM mergeIntoSystem "${name}" "${ZOPEN_PKGINSTALL}/${installdirname}" "${ZOPEN_ROOTFS}" 
+      ##TODORM mergeIntoSystem "${name}" "${ZOPEN_PKGINSTALL}/${installdirname}" "${ZOPEN_ROOTFS}"
       ##TODORM misrc=$?
       ##TODORM printDebug "The merge complete with: ${misrc}"
     fi
@@ -2475,7 +2543,7 @@ EOF
     touch "${ZOPEN_PKGINSTALL}/${name}/${name}/.active"
     installedList="${name} ${installedList}"
     syslog "${ZOPEN_LOG_PATH:-${ZOPEN_ROOTFS}/var/log}/audit.log" "${LOG_A}" "${CAT_INSTALL},${CAT_PACKAGE}" "DOWNLOAD" "handlePackageInstall" "Installed package:'${name}';version:${downloadFileVer};install_dir='${baseinstalldir}/${installdirname}';"
-    addToInstallTracker "${name}"    
+    addToInstallTracker "${name}"
         # Some installation have installation caveats
     installCaveat=$(jq -r '.product.install_caveats // empty' "${metadatafile}" 2>/dev/null)
     if [ -n "$installCaveat" ]; then
@@ -2542,7 +2610,7 @@ processActionScripts()
       # shellcheck disable=SC2240
       . "$scriptletFile" "$@"
       echo $?  # Append exit status to output
-      } 2>&1 
+      } 2>&1
     )
     /bin/printf "${CRSRSOL}${ERASELINE}${CRSRSOL}"
     scriptletRc=$(echo "${scriptletOutput}" | tail -n 1)  # Extract exit status
@@ -2639,12 +2707,12 @@ stripControlCharacters(){
 # JSONcontrolChar2Unicode
 # ensures escaping of characters in JSON. For example, if a caveat has an
 # unescaped '\n'/0x0A jq will fail to process it. Escape control characters
-# 0x00->0x1F and reverse solidus. Note this should also only process unescaped 
-# sequences by checking whether the character prior to the sequence is not a 
+# 0x00->0x1F and reverse solidus. Note this should also only process unescaped
+# sequences by checking whether the character prior to the sequence is not a
 # reverse-solidus (so start-of-line [^] or any character [^\] ). If there was
 # a preceding character, then capture/use that in the regex (\1) so it does not
 # get discarded
-# 
+#
 # inputs: $1 the input JSON file
 #         $2 the output file, with sanitised JSON
 # return: 0  for success (nb. Warnings may haeve been printed to screen)
@@ -2653,22 +2721,22 @@ JSONcontrolChar2Unicode() {
   [ ! -f "$1" ] && assertFailed "No input file specified for parsing!"
   [ -e "$2" ] && assertFailed "Output file exists so cannot be used for output!"
   zossed -E ' # Note this is a long string!
-      s/\\/\\\\/g; # Escape reverse-solidus; the following are the control chars 
+      s/\\/\\\\/g; # Escape reverse-solidus; the following are the control chars
       s/(^|[^\\])\x00/\1\\u0000/g; s/(^|[^\\])\x01/\1\\u0001/g;
       s/(^|[^\\])\x02/\1\\u0002/g; s/(^|[^\\])\x03/\1\\u0003/g;
-      s/(^|[^\\])\x04/\1\\u0004/g; s/(^|[^\\])\x05/\1\\u0005/g;  
+      s/(^|[^\\])\x04/\1\\u0004/g; s/(^|[^\\])\x05/\1\\u0005/g;
       s/(^|[^\\])\x06/\1\\u0006/g; s/(^|[^\\])\x07/\1\\u0007/g;
       s/(^|[^\\])\x08/\1\\u0008/g; s/(^|[^\\])\x09/\1\\u0009/g;
-      s/(^|[^\\])\x0A/\1\\u000A/g; s/(^|[^\\])\x0B/\1\\u000B/g;  
+      s/(^|[^\\])\x0A/\1\\u000A/g; s/(^|[^\\])\x0B/\1\\u000B/g;
       s/(^|[^\\])\x0C/\1\\u000C/g; s/(^|[^\\])\x0D/\1\\u000D/g;
       s/(^|[^\\])\x0E/\1\\u000E/g; s/(^|[^\\])\x0F/\1\\u000F/g;
-      s/(^|[^\\])\x10/\1\\u0010/g; s/(^|[^\\])\x11/\1\\u0011/g;  
+      s/(^|[^\\])\x10/\1\\u0010/g; s/(^|[^\\])\x11/\1\\u0011/g;
       s/(^|[^\\])\x12/\1\\u0012/g; s/(^|[^\\])\x13/\1\\u0013/g;
       s/(^|[^\\])\x14/\1\\u0014/g; s/(^|[^\\])\x15/\1\\u0015/g;
-      s/(^|[^\\])\x16/\1\\u0016/g; s/(^|[^\\])\x17/\1\\u0017/g;  
+      s/(^|[^\\])\x16/\1\\u0016/g; s/(^|[^\\])\x17/\1\\u0017/g;
       s/(^|[^\\])\x18/\1\\u0018/g; s/(^|[^\\])\x19/\1\\u0019/g;
       s/(^|[^\\])\x1A/\1\\u001A/g; s/(^|[^\\])\x1B/\1\\u001B/g;
-      s/(^|[^\\])\x1C/\1\\u001C/g; s/(^|[^\\])\x1D/\1\\u001D/g;  
+      s/(^|[^\\])\x1C/\1\\u001C/g; s/(^|[^\\])\x1D/\1\\u001D/g;
       s/(^|[^\\])\x1E/\1\\u001E/g; s/(^|[^\\])\x1F/\1\\u001F/g;
     '  "$1" > "$2"
 }
@@ -2729,7 +2797,7 @@ jqfunctions()
   # pl(s;c;n) - padLeft with character 'c' to length 'n'
   # pr(s;c;n) - padRight with chacater 'c' to length 'n'
   # c(s;l) - center the string 's' in a string of length 'l'
-  # r(dp) - round decimal to 'dp' decimal places (needs '*' & '/' 10^dp hack) 
+  # r(dp) - round decimal to 'dp' decimal places (needs '*' & '/' 10^dp hack)
   # shellcheck disable=SC2016
   printf "%s;%s;%s;%s;" \
   'def pl(s;c;n):c*(n-(s|length))+s' \
