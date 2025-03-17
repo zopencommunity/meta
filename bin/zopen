@@ -33,6 +33,7 @@ Command:
   build             builds the enclosing zopen community git-cloned package
   clean             cleans up your zopen environment
   config            change zopen runtime environment settings
+  diagnostics       collects system info for zopen troubleshooting
   generate          generates a new zopen project
   init              initializes a zopen environment at the specified location
   refresh           refreshes your zopen environment and zopen-config file
