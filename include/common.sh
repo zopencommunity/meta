@@ -1448,7 +1448,7 @@ getJSONCacheURLs(){
   type=$(jq -r ".type" "${activeRepo}")
   base=$(jq -r ".metadata_baseurl" "${activeRepo}")
   filename=$(jq -r ".metadata_file" "${activeRepo}")
-  latest_metadata=$(jq -r ".latest_metadata" "${activeRepo}")
+  latest_metadata=$(jq -r ".latest_file" "${activeRepo}")
   case "${type}" in
     http|https) printf "%s://%s/%s\n%s://%s/%s" \
                     "${type}" "${base}" "${filename}" "${type}" "${base}" "${latest_metadata}"

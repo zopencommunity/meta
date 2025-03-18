@@ -287,8 +287,12 @@ getPkgMetadata(){
   # Use previously set variables (from getPkgFile) with a ".json" suffix!
   outfile="${tmpdir:=/tmp}/${filename}.json"
   [ -e "${outfile}" ] && rm "${outfile}"
-  if ! curlout=$(curlCmd --no-progress-meter -L -H "${authHeader}" -o "${outfile}" "${repourl}/metadata.json"); then
+  if ! curlout=$(curlCmd --no-progress-meter -L -H "${authHeader}" -o "${outfile}" "$(dirname "${repourl}")/metadata.json"); then
     err "Curl command to retrive package metadata failed '${curlout}'.  Resolve issue and retry request."
+  fi
+  if type chtag > /dev/null 2>&1; then
+    # z/OS only - run chtag to ensure the file is processed as ASCII
+    chtag -tc 819 "${outfile}"
   fi
 }
 
@@ -806,7 +810,7 @@ if "${netrc}"; then
 elif "${noghcreds}"; then
   verbose "Skipping GitHub authorization - using anonymous"
 else
-  # TODO: use more secure than cli param for PAT?.
+  # TODO: use more secure than cli param for PAT?
   [ -z "${ghsrcpat}" ] && err "Github personal access token (PAT) required to prevent rate-limiting"
   [ -n "${ghsrcpat}" ] && authHeader="Authorization: token ${ghsrcpat}"
 fi
