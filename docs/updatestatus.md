@@ -148,9 +148,6 @@
 - 2025-02-25: [Update lazygit-version to 0.47.2 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/14) ✅
 - 2025-02-22: [Update lazygit-version to 0.47.1 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/13) ✅
 
-### libassuanport
-- 2025-02-18: [Update libassuan-version to 3.0.2 from 3.0.1](https://github.com/zopencommunity/libassuanport/pull/14) ✅
-
 ### libiconvport
 - 2024-12-15: [Update libiconv-version to 1.18 from 1.17](https://github.com/zopencommunity/libiconvport/pull/42) ❌
 
@@ -175,9 +172,6 @@
 
 ### libxsltport
 - 2025-03-13: [Update libxslt-version to 1.1.43 from 1.1.42](https://github.com/zopencommunity/libxsltport/pull/9) ✅
-
-### lz4port
-- 2024-07-22: [Update lz4-version to 1.10.0 from 1.9.4](https://github.com/zopencommunity/lz4port/pull/14) ❌
 
 ### man-dbport
 - 2024-08-29: [Update man-db-version to 2.13.0 from 2.12.1](https://github.com/zopencommunity/man-dbport/pull/63) ❌
@@ -220,6 +214,7 @@
 - 2024-10-02: [Update openssh-version to 9.9p1 from 9.8p1](https://github.com/zopencommunity/opensshport/pull/15) ❌
 
 ### osv-scannerport
+- 2025-03-17: [Update osv-scanner-version to 2.0.0 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/18) ✅
 - 2024-12-19: [Update osv-scanner-version to 1.9.2 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/17) ❌
 - 2024-10-31: [Update osv-scanner-version to 1.9.1 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/15) ✅
 - 2024-10-02: [Update osv-scanner-version to 1.9.0 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/14) ❌
@@ -357,6 +352,7 @@
 - 2024-07-18: [Update victoriametrics-version to 1.102.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/5) ❌
 
 ### vimport
+- 2025-03-17: [Update vim-version to 9.1.1210 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/90) ✅
 - 2025-03-14: [Update vim-version to 9.1.120 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/89) ✅
 - 2025-03-10: [Update vim-version to 9.1.1190 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/88) ✅
 - 2025-03-08: [Update vim-version to 9.1.1180 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/87) ✅
@@ -621,5 +617,5 @@
 ---
 
 
-> Last updated: 2025-03-17 06:06:05 EDT
+> Last updated: 2025-03-18 06:06:08 EDT
 

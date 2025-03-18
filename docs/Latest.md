@@ -42,6 +42,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 | Package | Status | Test Success Rate | Latest Release | Description |
 |---|---|---|---|---|
+| [lz4](https://github.com/zopencommunity/lz4port)|Green|100.0%|[STABLE_lz4_3168](https://github.com/zopencommunity/lz4port/releases/download/STABLE_lz4port_3168/lz4-1.10.0.20250317_153615.zos.pax.Z)|A compression algorithm|
 | [bzip2](https://github.com/zopencommunity/bzip2port)|Green|100.0%|[STABLE_bzip2_2959](https://github.com/zopencommunity/bzip2port/releases/download/STABLE_bzip2port_2959/bzip2-1.0.8.20250130_232500.zos.pax.Z)|A compression utility|
 | [zip](https://github.com/zopencommunity/zipport)|Green|100.0%|[STABLE_zip_3079](https://github.com/zopencommunity/zipport/releases/download/STABLE_zipport_3079/zip-master.20250205_143804.zos.pax.Z)|Tool for zipping files|
 | [unzip](https://github.com/zopencommunity/unzipport)|Green|100.0%|[STABLE_unzip_3159](https://github.com/zopencommunity/unzipport/releases/download/STABLE_unzipport_3159/unzip-master.20250310_061802.zos.pax.Z)|Tool for unzipping compressed files|
@@ -296,19 +297,18 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 | Package | Status | Test Success Rate | Latest Release | Description |
 |---|---|---|---|---|
-| [curl](https://github.com/zopencommunity/curlport)|Skipped|N/A|[zusage](https://github.com/zopencommunity/curlport/releases/download/zusage/curl-8.12.1.20250226_160101.zos.pax.Z)|Networking tool|
-| [less](https://github.com/zopencommunity/lessport)|Skipped|N/A|[zusage](https://github.com/zopencommunity/lessport/releases/download/zusage/less-heads.v668.20250226_155516.zos.pax.Z)|A text pager|
 | [make](https://github.com/zopencommunity/makeport)|Skipped|N/A|[zusage](https://github.com/zopencommunity/makeport/releases/download/zusage/make-4.4.1.20250226_120516.zos.pax.Z)|A build automation tool|
+| [less](https://github.com/zopencommunity/lessport)|Skipped|N/A|[zusage](https://github.com/zopencommunity/lessport/releases/download/zusage/less-heads.v668.20250226_155516.zos.pax.Z)|A text pager|
+| [curl](https://github.com/zopencommunity/curlport)|Skipped|N/A|[zusage](https://github.com/zopencommunity/curlport/releases/download/zusage/curl-8.12.1.20250226_160101.zos.pax.Z)|Networking tool|
 | [jq](https://github.com/zopencommunity/jqport)|Skipped|N/A|[zusage](https://github.com/zopencommunity/jqport/releases/download/zusage/jq-1.7.1.20250226_164140.zos.pax.Z)|A port of the JQ command-line JSON processor|
 | [llamacpp](https://github.com/zopencommunity/llamacppport)|Skipped|N/A|[STABLE_llamacpp_2013](https://github.com/zopencommunity/llamacppport/releases/download/STABLE_llamacppport_2013/llamacpp-master.20240124_170742.zos.pax.Z)|A C++ library for writing high-performance network applications|
-| [gzip](https://github.com/zopencommunity/gzipport)|Green|100.0%|[STABLE_gzip_3082](https://github.com/zopencommunity/gzipport/releases/download/STABLE_gzipport_3082/gzip-1.13.20250205_093947.zos.pax.Z)|Library for handling gzip compressed files|
-| [ncurses](https://github.com/zopencommunity/ncursesport)|Green|100.0%|[STABLE_ncurses_3124](https://github.com/zopencommunity/ncursesport/releases/download/STABLE_ncursesport_3124/ncurses-6.5.20250222_041835.zos.pax.Z)|Library for ncurses, a terminal screen handling library|
+| [gzip](https://github.com/zopencommunity/gzipport)|Green|100.0%|[STABLE_gzip_3167](https://github.com/zopencommunity/gzipport/releases/download/STABLE_gzipport_3167/gzip-1.13.20250317_093445.zos.pax.Z)|Library for handling gzip compressed files|
 | [zlib](https://github.com/zopencommunity/zlibport)|Green|100.0%|[STABLE_zlib_3071](https://github.com/zopencommunity/zlibport/releases/download/STABLE_zlibport_3071/zlib-heads.v1.3.1.20250205_034023.zos.pax.Z)|A data compression library|
+| [ncurses](https://github.com/zopencommunity/ncursesport)|Green|100.0%|[STABLE_ncurses_3124](https://github.com/zopencommunity/ncursesport/releases/download/STABLE_ncursesport_3124/ncurses-6.5.20250222_041835.zos.pax.Z)|Library for ncurses, a terminal screen handling library|
 | [coreutils](https://github.com/zopencommunity/coreutilsport)|Green|100.0%|[STABLE_coreutils_3141](https://github.com/zopencommunity/coreutilsport/releases/download/STABLE_coreutilsport_3141/coreutils-9.6.20250228_032556.zos.pax.Z)|A collection of basic Unix utilities|
 | [help2man](https://github.com/zopencommunity/help2manport)|Green|100.0%|[STABLE_help2man_2875](https://github.com/zopencommunity/help2manport/releases/download/STABLE_help2manport_2875/help2man-1.49.3.20250129_141844.zos.pax.Z)|A tool for converting manual pages to other formats|
 | [xxhash](https://github.com/zopencommunity/xxhashport)|Green|100.0%|[STABLE_xxhash_1993](https://github.com/zopencommunity/xxhashport/releases/download/STABLE_xxhashport_1993/xxHash-0.8.2.20240123_100914.zos.pax.Z)|A fast hash function library|
 | [zstd](https://github.com/zopencommunity/zstdport)|Green|100.0%|[STABLE_zstd_2041](https://github.com/zopencommunity/zstdport/releases/download/STABLE_zstdport_2041/zstd-1.5.5.20240126_215521.zos.pax.Z)|A compression algorithm|
-| [lz4](https://github.com/zopencommunity/lz4port)|Green|100.0%|[STABLE_lz4_1936](https://github.com/zopencommunity/lz4port/releases/download/STABLE_lz4port_1936/lz4-1.9.4.20240104_082651.zos.pax.Z)|A compression algorithm|
 | [php](https://github.com/zopencommunity/phpport)|Green|100.0%|[STABLE_php_1996](https://github.com/zopencommunity/phpport/releases/download/STABLE_phpport_1996/php-8.2.13.20240123_152440.zos.pax.Z)|A programming language|
 | [lynx](https://github.com/zopencommunity/lynxport)|Green|100.0%|[STABLE_lynx_2016](https://github.com/zopencommunity/lynxport/releases/download/STABLE_lynxport_2016/lynx-2.8.9.20240124_173303.zos.pax.Z)|A text-based web browser|
 | [duckdb](https://github.com/zopencommunity/duckdbport)|Green|100.0%|[STABLE_duckdb_1986](https://github.com/zopencommunity/duckdbport/releases/download/STABLE_duckdbport_1986/duckdb-main.20240122_143549.zos.pax.Z)|An in-process SQL OLAP database management system|
@@ -352,7 +352,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 | [hello](https://github.com/zopencommunity/helloport)|Green|100.0%|[STABLE_hello_2971](https://github.com/zopencommunity/helloport/releases/download/STABLE_helloport_2971/hello-2.12.1.20250131_030044.zos.pax.Z)|A simple "hello world" program demonstrating the use of autotools and gettext|
 | [meta](https://github.com/zopencommunity/metaport)|Green|100.0%|[STABLE_meta_3103](https://github.com/zopencommunity/metaport/releases/download/STABLE_metaport_3103/meta-main.20250214_121722.zos.pax.Z)|zopen package manager|
 | [which](https://github.com/zopencommunity/whichport)|Green|100.0%|[STABLE_which_2789](https://github.com/zopencommunity/whichport/releases/download/STABLE_whichport_2789/which-2.21.20241219_210736.zos.pax.Z)|A command to find commands|
-| [fzf](https://github.com/zopencommunity/fzfport)|Green|100.0%|[STABLE_fzf_3163](https://github.com/zopencommunity/fzfport/releases/download/STABLE_fzfport_3163/fzf-heads.v0.60.3.20250313_205024.zos.pax.Z)|A fuzzy finder tool|
+| [fzf](https://github.com/zopencommunity/fzfport)|Green|100.0%|[STABLE_fzf_3169](https://github.com/zopencommunity/fzfport/releases/download/STABLE_fzfport_3169/fzf-HEAD.20250318_015543.zos.pax.Z)|A fuzzy finder tool|
 | [tig](https://github.com/zopencommunity/tigport)|Green|100.0%|[STABLE_tig_3005](https://github.com/zopencommunity/tigport/releases/download/STABLE_tigport_3005/tig-2.5.9.20250131_061802.zos.pax.Z)|A text-mode interface for Git|
 | [c3270](https://github.com/zopencommunity/c3270port)|Green|100.0%|[STABLE_c3270_3014](https://github.com/zopencommunity/c3270port/releases/download/STABLE_c3270port_3014/c3270-DEV.20250131_063757.zos.pax.Z)|A 3270 terminal emulator|
 | [wharf](https://github.com/zopencommunity/wharfport)|Green|100.0%|[STABLE_wharf_3056](https://github.com/zopencommunity/wharfport/releases/download/STABLE_wharfport_3056/wharf-main.20250131_125625.zos.pax.Z)|A build configuration for Wharf|
@@ -384,4 +384,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-03-14T13:00:24.462349
+Last updated:  2025-03-17T23:04:48.091765

@@ -2,9 +2,9 @@
 
 ## Overall Summary
 
-**Total Lines of Code (Current):** 27482  
-**Average Patch LOC per Project:** 129.02 
-**Total # of Patch files:** 649
+**Total Lines of Code (Current):** 27516  
+**Average Patch LOC per Project:** 129.18 
+**Total # of Patch files:** 650
 
 ### Overall Cumulative Patch LOC Trend (Net Change)
 
@@ -94,18 +94,19 @@
 | [libtoolport](#repo-libtoolport) | 71 | 3 |
 | [nanoport](#repo-nanoport) | 68 | 1 |
 | [logrotateport](#repo-logrotateport) | 65 | 1 |
+| [lz4port](#repo-lz4port) | 58 | 4 |
 | [gnport](#repo-gnport) | 57 | 1 |
 | [texinfoport](#repo-texinfoport) | 56 | 3 |
 | [libgpgerrorport](#repo-libgpgerrorport) | 53 | 3 |
 | [expatport](#repo-expatport) | 52 | 2 |
 | [terraformport](#repo-terraformport) | 51 | 2 |
 | [libsasl2port](#repo-libsasl2port) | 50 | 3 |
-| [lz4port](#repo-lz4port) | 49 | 4 |
 | [automakeport](#repo-automakeport) | 47 | 3 |
 | [lessport](#repo-lessport) | 47 | 3 |
 | [xxhashport](#repo-xxhashport) | 47 | 2 |
 | [tigport](#repo-tigport) | 47 | 1 |
 | [lazygitport](#repo-lazygitport) | 46 | 1 |
+| [fzfport](#repo-fzfport) | 45 | 2 |
 | [poptport](#repo-poptport) | 35 | 1 |
 | [whichport](#repo-whichport) | 34 | 1 |
 | [sedport](#repo-sedport) | 33 | 1 |
@@ -123,7 +124,6 @@
 | [ctagsport](#repo-ctagsport) | 26 | 2 |
 | [git-extrasport](#repo-git-extrasport) | 26 | 1 |
 | [my_basicport](#repo-my-basicport) | 22 | 1 |
-| [fzfport](#repo-fzfport) | 20 | 1 |
 | [shdocport](#repo-shdocport) | 20 | 2 |
 | [sshpassport](#repo-sshpassport) | 18 | 1 |
 | [git-lfsport](#repo-git-lfsport) | 18 | 1 |
@@ -3498,6 +3498,39 @@
 
 ---
 
+<a name="repo-lz4port"></a>
+## Repository: lz4port
+
+**Current Lines of Code:** 58  
+**Current # of Patch files:** 4
+
+### Trend of Current Patch LOC
+
+![Current Patch LOC Trend](./images/upstream/lz4port_current_patch_loc_trend.png)
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+| Makefile.patch | 19 |
+| PR1/addzostomakefile.patch | 25 |
+| PR2/Makefile.inc.patch | 0 |
+| PR2/tests-Makefile.patch | 14 |
+
+---
+
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+| 2023-07-20 | Makefile.patch | 19 |
+| 2023-01-24 | PR2/Makefile.inc.patch | 0 |
+| 2023-01-24 | PR2/tests-Makefile.patch | 14 |
+| 2022-07-18 | PR1/addzostomakefile.patch | 16 |
+
+---
+
 <a name="repo-gnport"></a>
 ## Repository: gnport
 
@@ -3680,39 +3713,6 @@
 
 ---
 
-<a name="repo-lz4port"></a>
-## Repository: lz4port
-
-**Current Lines of Code:** 49  
-**Current # of Patch files:** 4
-
-### Trend of Current Patch LOC
-
-![Current Patch LOC Trend](./images/upstream/lz4port_current_patch_loc_trend.png)
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-| Makefile.patch | 19 |
-| PR1/addzostomakefile.patch | 16 |
-| PR2/Makefile.inc.patch | 0 |
-| PR2/tests-Makefile.patch | 14 |
-
----
-
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-| 2023-07-20 | Makefile.patch | 19 |
-| 2023-01-24 | PR2/Makefile.inc.patch | 0 |
-| 2023-01-24 | PR2/tests-Makefile.patch | 14 |
-| 2022-07-18 | PR1/addzostomakefile.patch | 16 |
-
----
-
 <a name="repo-automakeport"></a>
 ## Repository: automakeport
 
@@ -3879,6 +3879,35 @@
 | Commit Date | File | Delta LOC |
 | --- | --- | --- |
 | 2024-02-15 | lazygit.patch | 42 |
+
+---
+
+<a name="repo-fzfport"></a>
+## Repository: fzfport
+
+**Current Lines of Code:** 45  
+**Current # of Patch files:** 2
+
+### Trend of Current Patch LOC
+
+![Current Patch LOC Trend](./images/upstream/fzfport_current_patch_loc_trend.png)
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+| Makefile.patch | 20 |
+| main.go.patch | 25 |
+
+---
+
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+| 2025-03-17 | main.go.patch | 25 |
+| 2023-03-22 | Makefile.patch | 20 |
 
 ---
 
@@ -4351,33 +4380,6 @@
 | Commit Date | File | Delta LOC |
 | --- | --- | --- |
 | 2023-12-03 | my_basic.c.patch | 22 |
-
----
-
-<a name="repo-fzfport"></a>
-## Repository: fzfport
-
-**Current Lines of Code:** 20  
-**Current # of Patch files:** 1
-
-### Trend of Current Patch LOC
-
-![Current Patch LOC Trend](./images/upstream/fzfport_current_patch_loc_trend.png)
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-| Makefile.patch | 20 |
-
----
-
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-| 2023-03-22 | Makefile.patch | 20 |
 
 ---
 
