@@ -1,0 +1,853 @@
+#!/bin/sh -x
+# Repo mirror utility - stands alone from other scripts so has no
+# direct dependencies on existing functions. As such, it has some
+# cut-down versions of common features and an independent version
+VERSION=0.4.0
+
+
+# Global constants
+ZOPEN_PROJECT_NAME="zopen community"
+ZOPEN_GITHUB="https://github.com/zopencommunity"
+RELEASE_JSON_URL="https://api.github.com/repos/zopencommunity/meta/contents/docs/api/zopen_releases.json?ref=main"
+LATEST_JSON_URL="https://api.github.com/repos/zopencommunity/meta/contents/docs/api/zopen_releases_latest.json?ref=main"
+
+# Help text
+printHelp() {
+  cat <<HEADER
+${0} is a utility to generate mirrors for repository data
+
+Usage: ${0} [OPTION...]
+
+Options:
+  --activate [ZOPEN_ROOTFS]
+                 set the mirror as the active repod repository for the named
+                 zopen file system
+  --type [FLAT|ALPHA|NAME|ALPHANAME|FTP|SFTP|SAMBA|NEXUS]
+                 type of mirror repository to generate
+  --genRepoFile  generate a repository configuration file for repod
+  --netrc        let curl use .netrc for access credentials
+  --ghsrcpat     the Github Personal Access Token for source repos
+  --noghcreds    explititly do not use GitHub credentials
+  --dstuser      the username for the destination mirror
+  --dstpassword  the password for the destination mirror
+  --target       the target of the destination mirror.
+  --verbose      run in verbose mode
+  -?, --help     display this help and exit
+  --version      print version
+HEADER
+  if "$1"; then
+    cat <<FULLHELP
+Notes:
+  - Environment variable ZOPEN_CURL_PARAMS can be used to specify additional
+    configuration for curl, such as proxies for external access to GitHub.
+  - There is a need to use GitHub credentials (ie. username and a Personal
+    Access Token) to mirror from GitHub. Without these, there is a high
+    possibility of hitting the rate-limit for downloading from GitHub,
+    especially on initial mirror population or if there have been a large
+    number of package updates or large elapsed time since the last mirror
+    operation.  For frequent usage, this might not be required.
+
+
+Examples:
+  Flat dir - creates a mirror in the /zotrepo directory on the local machine,
+              using the passed in GitHub credentials.
+    ${0} --type FLAT --ghsrcpat <gh_pat> --target /zotrepo
+
+  FTP - creates a mirror in the /parent/ftp.repo on the remote machine, using
+              credentials stored in a .netrc file for both the ftp server and
+              GitHub.
+    ${0} --type ftp --netrc --target <server>/%2Fparent/ftp.repo --genRepoFile
+
+Description:
+  ${0} is a small utility that will mirror the packages made available by the
+  ${ZOPEN_PROJECT_NAME} for instalation using the zopen package manager.
+  The mirror will download - and upload if required - the packages from the
+  various GitHub repositories to the location specified and optionally
+  provide configuration files that can be used to configure the zopen package
+  manager to use the alternative repository.
+
+Details:
+  The currently supported mirror types are:
+  FLAT  - mirrors the GH contents into a single directory on the local
+          system. For example: /zopen/repo.mirror
+  ALPHA - mirrors the GH contents into a local directory structure where the
+          heirarchy is the initial package letter as a directory name containing
+          packages starting with that letter. For example: /<parent>/a/...
+  NAME  - mirrors the GH contents into a unique local directory per package.
+          Each directory would contain only releases for that package. For
+          example: /<parent>/automake
+  ALPHANAME - A combination of ALPHA and NAME. For example: /<parent>a/automake
+  FTP   - Mirrors the GH repo to a remote ftp server. Specify the --target
+          in the following format:  "<ftpserver>/<mirrordirectory>". Note that
+          if <mirrordirectory> contains a leading '/' this will need to be
+          replaced with '%2F'; if there is no leading '/', the mirror will be
+          to a directory within the users home directory [the directory where
+          the user will start in after login]. Requires either the --netrc or
+          --dstuser and --dstpassword parameters for credentials where anonymous
+          login is disabled. Note that ftp is inherently insecure!
+  SFTP  - As 'FTP'' but utilises the SFTP protocol
+  SAMBA - As 'FTP' but uses the SAMBA protocol, allowing Windows or Linux
+          network shares. --target should be the URL with share but no leading
+          protocol definition. For example, samba.example.com/share_path  -
+          smb://samba.example.com/share_path will fail
+
+  NEXUS - Utilises a Sonatype Nexus Repository. Requires either the --netrc or
+          --dstuser and --dstpassword parameters for credentials
+
+Parameter details:
+  --genRepoFile
+    The --genRepoFile parameter will create a file that is configured for the
+    specified mirror type. For example, running the mirror for an FTP-type
+    mirror will produce a file with the contents:
+      {
+        "type": "ftp",
+        "metadata_baseurl": "ftpserver.name/%2Fzopen/repo.mirror")",
+        "metadata_file": "metadata.json"
+      }
+    This file can be placed into the <zopenfs>/etc/zopen/repos.d directory and
+    then symlinked to be the active version.
+  --activate [ZOPEN_ROOTFS]
+    The --activate parameter will move a generated repository description file
+    [as generated with the --genRepoFile parameter] to be the active zopen
+    repository for the given zopen environment. Note this does require running
+    in a z/OS environment with authority to write to the
+    <zopenfs>/etc/zopen/repos.d directory.
+  --netrc
+    The underlying curl process will use a .netrc to locate credentials for the
+    user, both for the remote operation and if the --ghsrcpat is not specified,
+    the credentials to use to access Github.  The ZOPEN_CURL_PARAMS environment
+    variable can be used to specify the location ot the netrc file, the default
+    is a .netrc from the users \$HOME directory. A sample entry for .netrc to
+    access an ftp server would be:
+        machine SERVER_HOSTNAME_OR_IP
+        login   SERVER_USERNAME
+        password SERVER_PASSWORD
+
+  --ghsrcpat, --noghcreds
+    To prevent rate-limiting, --ghsrcpat should be specified however this does
+    expose the Personal Access Token to shell history, process listings etc. 
+    Specifying --noghcreds prevents the check for the existence of the ghsrcpat
+    option, allowing a Github configuration in the user's .netrc file to be used
+    to authenticate. A sample entry into .netrc for a Github PAT looks like:
+        machine api.github.com
+        login YOUR_GITHUB_USERNAME
+        password YOUR_PERSONAL_ACCESS_TOKEN
+
+FULLHELP
+  fi
+cat << FOOTER
+Report bugs at ${ZOPEN_GITHUB}/meta/issues .
+FOOTER
+
+}
+
+# Utility functions
+displayVersion() {
+  log ${VERSION}
+}
+
+log() {
+  ! $quiet && /bin/printf "$*\n"
+}
+verbose() {
+  $verbose && /bin/printf "${NC}${MAGENTA}$*${NC}\n"
+}
+
+warning() {
+  /bin/printf " ${NC}${YELLOW}!! $*${NC}\n"
+}
+
+err() {
+  /bin/printf " ${NC}${RED}!! $*${NC}\n"
+  exit 1
+}
+
+defineANSI()
+{
+  # Standard tty codes
+  ESC="" # Start of Escape Sequence; EBCDIC=\047, ASCII=\033
+  platform=$(uname)
+  case ${platform} in
+    "OS/390") ESC=$(printf "\047");;
+           *) ESC=$(printf "\033");;
+  esac
+  CSI="[" # Control Sequence Introducer
+  CNL="E" # Cursor Next Line
+  CPL="F" # Cursor Previous Line
+  CHA="G" # Cursor Horizontal Absolute - column selector
+  EL="K" # Erase In Line
+  SGR="m" # Select Graphic Rendition
+
+  # shellcheck disable=SC2034
+  ERASELINE="${ESC}${CSI}2${EL}"
+  # shellcheck disable=SC2034
+  CRSRHIDE="${ESC}${CSI}?25l"
+  # shellcheck disable=SC2034
+  CRSRSHOW="${ESC}${CSI}?25h"
+  # shellcheck disable=SC2034
+  CRSRSOL="${ESC}${CSI}0${CPL}"
+  # shellcheck disable=SC2034
+  CRSRPL="${ESC}${CSI}1${CPL}"   # Move to start of previous line
+  # shellcheck disable=SC2034
+  CRSRUP="A"  # CUU
+  # shellcheck disable=SC2034
+  CRSRDOWN="B" # CUF
+  # shellcheck disable=SC2034
+  CRSRRIGHT="C" # CUB
+  # shellcheck disable=SC2034
+  CRSRLEFT="D" # CUD
+  # Color-type codes, needs explicit terminal settings
+  if [ ! "${_BPX_TERMPATH-x}" = "OMVS" ] && [ -z "${NO_COLOR}" ] && [ ! "${FORCE_COLOR-x}" = "0" ] && [ -t 1 ] && [ -t 2 ]; then
+    ANSION=true
+    BLACK="${ESC}${CSI}30${SGR}"
+    RED="${ESC}${CSI}31${SGR}"
+    GREEN="${ESC}${CSI}32${SGR}"
+    YELLOW="${ESC}${CSI}33${SGR}"
+    BLUE="${ESC}${CSI}34${SGR}"
+    MAGENTA=$(printf "${ESC}${CSI}35${SGR}")
+    CYAN="${ESC}${CSI}36${SGR}"
+    GRAY="${ESC}${CSI}37${SGR}"
+    BOLD="${ESC}${CSI}1${SGR}"
+    UNDERLINE="${ESC}${CSI}4${SGR}"
+    HEADERCOLOR="${MAGENTA}"
+    WARNINGCOLOR="${MAGENTA}"
+    # Keep the following last in the list - command trace can interpret the codes
+    # above and make the output display interesting depending on what the last
+    # ANSI command was!
+    NC=$(printf "${ESC}${CSI}0${SGR}")
+  else
+    ANSION=false
+    unset esc RED GREEN YELLOW BOLD UNDERLINE NC
+    unset esc BLACK RED GREEN YELLOW BLUE MAGENTA CYAN GRAY
+    unset UNDERLINE NC HEADERCOLOR WARNINGCOLOR
+  fi
+}
+
+curlCmd() {
+  if ! type curl >/dev/null; then
+    err "Could not find curl on the path."
+  fi
+  curl "$@" 2>&1
+}
+
+initial() {
+  echo "$1" | cut -c1
+}
+
+downloadRepoMetadata() {
+  JSON_CACHE="${tmpdir:=/tmp}/zopen_releases.json.$$"
+  JSON_CACHE_LATEST="${tmpdir:=/tmp}/zopen_releases_latest.json.$$"
+
+  if ! curlout=$(curlCmd -L --no-progress-meter -H 'Accept: application/vnd.github.v3.raw' -H "${authHeader}"\
+     -o "${JSON_CACHE}" \
+     "${RELEASE_JSON_URL}"); then
+    err "Failed to obtain json cache from '${RELEASE_JSON_URL}'; ${curlout}"
+  fi
+  if type chtag > /dev/null 2>&1; then
+    # z/OS only - run chtag to ensure the file is processed as ASCII
+    chtag -tc 819 "${JSON_CACHE}"
+  fi
+  if [ ! -f "${JSON_CACHE}" ]; then
+    err "Could not find json cache locally after download from '${RELEASE_JSON_URL}'"
+  fi
+
+  if ! curlout=$(curlCmd -L --no-progress-meter -H 'Accept: application/vnd.github.v3.raw' -H "${authHeader}"\
+     -o "${JSON_CACHE_LATEST}" \
+     "${LATEST_JSON_URL}"); then
+    err "Failed to obtain json cache from '${LATEST_JSON_URL}'; ${curlout}"
+  fi
+  if type chtag > /dev/null 2>&1; then
+    # z/OS only - run chtag to ensure the file is processed as ASCII
+    chtag -tc 819 "${JSON_CACHE_LATEST}"
+  fi
+  if [ ! -f "${JSON_CACHE_LATEST}" ]; then
+    err "Could not find json cache locally after download from '${LATEST_JSON_URL}'"
+  fi
+
+}
+
+getPkgFile() {
+  repo="$1"
+  portNumber=$2
+  repourl=$(jq -r --arg portNumber "${portNumber}" ".release_data.\"${repo%%port}\"[$portNumber].assets[0].url" "${JSON_CACHE}")
+  filename=$(basename "${repourl}")
+  [ -z "${filename}" ] && err "Unable to parse filename for download at '${repourl}'."
+  if eval "${type}Repo checkForFile ${filename}"; then
+    verbose "${filename} already in repository"
+    return 1
+  fi
+  outfile="${tmpdir:=/tmp}/${filename}"
+  [ -e "${outfile}" ] && rm "${outfile}"
+  if ! curlout=$(curlCmd --no-progress-meter -L -H "${authHeader}" -o "${outfile}" "${repourl}"); then
+    err "Curl command to retrive package file failed '${curlout}'.  Resolve issue and retry request."
+  fi
+}
+
+getPkgMetadata(){
+  # Use previously set variables (from getPkgFile) with a ".json" suffix!
+  outfile="${tmpdir:=/tmp}/${filename}.json"
+  [ -e "${outfile}" ] && rm "${outfile}"
+  if ! curlout=$(curlCmd --no-progress-meter -L -H "${authHeader}" -o "${outfile}" "${repourl}/metadata.json"); then
+    err "Curl command to retrive package metadata failed '${curlout}'.  Resolve issue and retry request."
+  fi
+}
+
+## Repository handlers
+_AbstractFileRepo(){
+  case "$1" in
+    initialise) 
+      [ -e "${target}" ] || mkdir -p "${target}" 
+      [ -d "${target}" ] || err "Repo mirror target '${target}' is not a directory"
+      [ -w "${target}" ] || err "Repo mirror target '${target}' is not writable" 
+      return 0
+      ;;
+    checkForFile) err "Unimplemented action verb for abstract type" ;;
+    mirrorFile) err "Unimplemented action verb for abstract type";;
+    generateRepoD)
+       repoDFile="${target}/repod.json"
+      [ -e "${repoDFile}" ] &&
+      mv "${repoDFile}" "${repoDFile}.$(date "+%C%m%d%H%M%S")"
+      mkdir -p "$(dirname "${repoDFile}")"
+      cat <<EOS >"${repoDFile}"
+{
+  "type": "file",
+  "metadata_baseurl": "$(dirname "${rewrittenRepoFile}")",
+  "metadata_file": "$(basename "${rewrittenRepoFile}")",
+  "latest_file": "$(basename "${rewrittenLatestFile}")"
+}
+EOS
+      echo "${repoDFile}"
+      ;;
+    rewriteMetadata) 
+      jqQuery=$2
+      rewrittenRepoFile="${target%/}/metadata.json"
+      rewrittenLatestFile="${target%/}/latest_metadata.json"      
+      if ! rewrite=$(jq --arg zopenrepo "${ZOPEN_GITHUB}" --arg t "${target%/}" \
+        "${jqQuery}" "${JSON_CACHE}" >"${rewrittenRepoFile}"); then
+        err "Unable to generate metadata JSON file '${rewrittenRepoFile}' for mirrored repo. ${rewrite}"
+      fi
+      if ! rewrite=$(jq --arg zopenrepo "${ZOPEN_GITHUB}" --arg t "${target%/}" \
+        "${jqQuery}" "${JSON_CACHE_LATEST}" >"${rewrittenLatestFile}"); then
+        err "Unable to generate metadata JSON file '${rewrittenLatestFile}' for mirrored repo. ${rewrite}"
+      fi
+    ;;
+    *) err "Unsupported action verb for repo type";;
+  esac
+}
+FLATRepo(){
+  case "$1" in
+    initialise) _AbstractFileRepo "initialise" ;;
+    checkForFile)
+      filename=$(basename "$2")
+      [ -e "${target}/${filename}" ] && return 0
+      return 1
+      ;;
+    mirrorFile)
+      targetFile="${target}/$(basename "$2")"
+      [ -e "${targetFile}" ] && verbose "$2 already in repo" && return 0
+      # A mv would generally work, however on z/OS, if there is an issue
+      # setting the new gid there'll be a message; mimic the mv with a 
+      # copy-n-delete as still want to get any error messages - redirecting &
+      # analyzing the output from the mv complicates the code!
+      cp -f "${outfile}" "${targetFile}"
+      rm "${outfile}"      
+      ;;
+    generateRepoD)_AbstractFileRepo "generateRepoD" ;;
+    rewriteMetadata)
+      _AbstractFileRepo "rewriteMetadata" \
+        'walk(if type == "string" then gsub($zopenrepo + "/.*/(?<f>.*)$"; "file://" + $t + "/" + .f) else . end)'
+      ;;
+    *) err "Unsupported action verb for repo type";;
+  esac
+}
+ALPHARepo(){
+  case "$1" in
+    initialise) _AbstractFileRepo "initialise" ;;
+    checkForFile)
+      filename=$(basename "$2")
+      [ -e "${target}/$(initial "${filename}")/${filename}" ] && return 0
+      return 1
+      ;;
+    mirrorFile)
+      filename=$(basename "$2")
+      targetFile="${target}/$(initial "${filename}")/${filename}"
+      [ -e "${targetFile}" ] && verbose "${filename} already downloaded" && return 0
+      [ ! -d "$(dirname "${targetFile}")" ] && mkdir -p "$(dirname "${targetFile}")"
+      [ -e "${outfile}" ] || err "Could not find downloaded file '${outfile}'"
+      cp -f "${outfile}" "${targetFile}"
+      rm "${outfile}"
+      ;;
+    generateRepoD) _AbstractFileRepo "generateRepoD" ;;
+    rewriteMetadata)
+      _AbstractFileRepo "rewriteMetadata" \
+        'walk(if type == "string" then gsub($zopenrepo + "/(?<i>.).*/(?<f>.*)$"; "file://" + $t + "/" + .i + "/" + .f) else . end)'
+      ;;
+    *) err "Unsupported action verb for repo type";;
+  esac
+}
+
+NAMERepo(){
+  case "$1" in
+    initialise) _AbstractFileRepo "initialise" ;;
+    checkForFile)
+      filename=$(basename "$2")
+      pkgname=$(echo "${filename}" | \
+        sed -e "s/\(\.*\)-[^-]*[0-9]*_[0-9]*\..*/\1/")
+      [ -e "${target}/${pkgname}/${filename}" ] && return 0
+      return 1
+      ;;
+    mirrorFile)
+      filename=$(basename "$2")
+      pkgname=$(echo "${filename}" | \
+        sed -e "s/\(\.*\)-[^-]*[0-9]*_[0-9]*\..*/\1/")
+      targetFile="${target}/${pkgname}/${filename}"
+      [ -e "${targetFile}" ] && verbose "${filename} already downloaded" && return 0
+      [ ! -d "$(dirname "${targetFile}")" ] && mkdir -p "$(dirname "${targetFile}")"
+      cp -f "${outfile}" "${targetFile}"
+      rm "${outfile}"
+      ;;
+    generateRepoD) _AbstractFileRepo "generateRepoD" ;;
+    rewriteMetadata)
+      _AbstractFileRepo "rewriteMetadata" \
+        'walk(if type == "string" then gsub($zopenrepo + "/(?<n>.*)port/.*/(?<f>.*)$"; "file://" + $t + "/" + .n + "/" + .f) else . end)'
+      ;;
+    *) err "Unsupported action verb for repo type";;
+  esac
+}
+
+ALPHANAMERepo(){
+  case "$1" in
+    initialise) _AbstractFileRepo "initialise" ;;
+    checkForFile)
+      filename=$(basename "$2")
+      pkgname=$(echo "${filename}" | \
+        sed -e "s/\(\.*\)-[^-]*[0-9]*_[0-9]*\..*/\1/")
+      [ -e "${target}/$(initial "${filename}")/${pkgname}/${filename}" ] && return 0
+      return 1
+      ;;
+    mirrorFile)
+      filename=$(basename "$2")
+      pkgname=$(echo "${filename}" | \
+        sed -e "s/\(\.*\)-[^-]*[0-9]*_[0-9]*\..*/\1/")
+      targetFile="${target}/$(initial "${filename}")/${pkgname}/${filename}"
+      [ -e "${targetFile}" ] && verbose "${filename} already downloaded" && return 0
+      [ -d "$(dirname "${targetFile}")" ] || mkdir -p "$(dirname "${targetFile}")"
+      cp -f "${outfile}" "${targetFile}"
+      rm "${outfile}"
+      ;;
+    generateRepoD) _AbstractFileRepo "generateRepoD" ;;
+    rewriteMetadata)
+      _AbstractFileRepo "rewriteMetadata" \
+        'walk(if type == "string" then gsub($zopenrepo + "/(?<i>.)(?<n>.*)port/.*/(?<f>.*)$"; "file://" + $t + "/" + .i + "/" + .i + .n + "/" + .f) else . end)'
+
+      ;;
+    *) err "Unsupported action verb for repo type";;
+  esac
+}
+
+_AbstractRemoteRepo(){
+  case "$1" in
+    initialise)
+      # Get a directory listing of the remote and grep for the filename - crude
+      # but works. Cache the result in a file; a variable would be potentially quicker
+      # but if the package count gets too large, the variable will overflow.
+      if [ ! -f "${DIR_LIST_CACHE}" ]; then
+        curlparams=$(printf "%s --silent --show-error " "${curlparams}")
+        if ${netrc}; then
+          curlparams=$(printf " %s %s" "${curlparams}" "--netrc")
+        else
+          curlparams=$(printf " %s %s" "${curlparams}" "--user ${dstuser}:${dstpassword}")
+        fi
+        # shellcheck disable=SC2086
+        if ! curlCmd ${curlparams} "$2://${target}/" > "${DIR_LIST_CACHE}"; then
+          err "Failed to otain directory listing at '$2://${target}/': $(cat ${DIR_LIST_CACHE})"
+        fi
+      fi
+      ;;
+    checkForFile) grep -q "$(basename "$2")" "${DIR_LIST_CACHE}" ;;
+    mirrorFile)
+      if ${netrc}; then
+      curlparams=$(printf " %s %s" "${curlparams}" "--netrc")
+      else
+        curlparams=$(printf " %s %s" "${curlparams}" "--user ${dstuser}:${dstpassword}")
+      fi
+      curlparams=$(printf "%s --silent --show-error" "${curlparams}")
+      curlCmd ${curlparams} "--upload-file" "$2" "$3://${target}/"
+      ;;
+    generateRepoD)
+      repoDFile=$(echo "${target}" | sed "s/[\\/:']//g")
+      repoDFile="${repoDFile}/repod.json"
+      mkdir -p "$(dirname "${repoDFile}")"
+      [ -e "${repoDFile}" ] &&
+        mv "${repoDFile}" "${repoDFile}.$(date "+%C%m%d%H%M%S")"
+      cat <<EOS >"${repoDFile}"
+{
+  "type": "$2",
+  "metadata_baseurl": "${target}")",
+  "metadata_file": "$(basename "${rewrittenRepoFile}")",
+  "latest_file": "$(basename "${rewrittenLatestFile}")"
+}
+EOS
+      echo "${repoDFile}"
+      ;;
+    rewriteMetadata) 
+      jqQuery='walk(if type == "string" then gsub($zopenrepo + "/(?<i>.)(?<n>.*)port/.*/(?<f>.*)$"; "$protocol://$target/" + .f) else . end)'
+      rewrittenRepoFile="${target%/}/metadata.json"
+      rewrittenLatestFile="${target%/}/latest_metadata.json"      
+      if ! rewrite=$(jq --arg zopenrepo "${ZOPEN_GITHUB}" --arg t "${target%/}" \
+        "${jqQuery}" "${JSON_CACHE}" >"${rewrittenRepoFile}"); then
+        err "Unable to generate metadata JSON file '${rewrittenRepoFile}' for mirrored repo. ${rewrite}"
+      fi
+      if ! rewrite=$(jq --arg zopenrepo "${ZOPEN_GITHUB}" --arg t "${target%/}" \
+        "${jqQuery}" "${JSON_CACHE_LATEST}" >"${rewrittenLatestFile}"); then
+        err "Unable to generate metadata JSON file '${rewrittenLatestFile}' for mirrored repo. ${rewrite}"
+      fi
+      # Note there is no upload of the files; this is the abstract so no transport
+    ;;
+
+    *) err "Unsupported action verb for repo type";;
+  esac
+}
+
+FTPRepo(){
+  this="ftp"
+  case "$1" in
+    initialise) _AbstractRemoteRepo "initialise" "${this}";;
+    checkForFile)
+      curlparams="--ssl --list-only"
+      _AbstractRemoteRepo "checkForFile" "$2" "${this}"
+      ;;
+    mirrorFile)
+      curlparams="--ssl"
+      _AbstractRemoteRepo "mirrorFile" "$2" "${this}"
+      ;;
+    generateRepoD) _AbstractRemoteRepo "generateRepoD" "${this}" ;;
+    rewriteMetadata)
+      _AbstractRemoteRepo "rewriteMetadata" "${this}"
+      FTPRepo "mirrorFile" "${rewrittenRepoFile}" "${this}"
+      FTPRepo "mirrorFile" "${rewrittenLatestFile}" "${this}"
+      ;;
+    *) err "Unsupported action verb for repo type";;
+  esac
+}
+SFTPRepo(){
+  this="sftp"
+  case "$1" in
+    initialise) _AbstractRemoteRepo "initialise" "${this}" ;;
+    checkForFile)
+      curlparams="--list-only"
+      _AbstractRemoteRepo "checkForFile" "$2" "${this}"
+      ;;
+    mirrorFile) _AbstractRemoteRepo "mirrorFile" "$2" "${this}" ;;
+    generateRepoD) _AbstractRemoteRepo "generateRepoD" "${this}" ;;
+    rewriteMetadata)
+      _AbstractRemoteRepo "rewriteMetadata" "${this}"
+      SFTPRepo "mirrorFile" "${rewrittenRepoFile}" "${this}"
+      SFTPRepo "mirrorFile" "${rewrittenLatestFile}" "${this}"
+      ;;
+    *) err "Unsupported action verb for repo type";;
+  esac
+}
+SAMBARepo(){
+  this="sftp"
+  case "$1" in
+    initialise) _AbstractRemoteRepo "initialise" "${this}" ;;
+    checkForFile)
+      curlparams="--list-only"
+      _AbstractRemoteRepo "checkForFile" "$2" "${this}"
+      ;;
+    mirrorFile) _AbstractRemoteRepo "mirrorFile" "$2" "${this}" ;;
+    generateRepoD) _AbstractRemoteRepo "generateRepoD" "${this}" ;;
+    rewriteMetadata)
+      _AbstractRemoteRepo "rewriteMetadata" "${this}"
+      SAMBARepo "mirrorFile" "${rewrittenRepoFile}" "${this}"
+      SAMBARepo "mirrorFile" "${rewrittenLatestFile}" "${this}"
+      ;;
+    *) err "Unsupported action verb for repo type";;
+  esac
+}
+
+NEXUSRepo(){
+  this="nexus"
+  case "$1" in
+    initialise) _AbstractRemoteRepo "initialise" "${this}" ;;
+    checkForFile)
+      curlparams="--fail -w \"\\n%{http_code}\" -s -I"
+      if ${netrc}; then
+        curlparams=$(printf "%s %s" "${curlparams}" "--netrc")
+      else
+        curlparams=$(printf "%s %s" "${curlparams}" "--user ${dstuser}:${dstpassword}")
+      fi
+      curlCmd ${curlparams} $target/$2 | grep "HTTP/1.1 200 OK" >/dev/null
+      ;;
+    mirrorFile)
+      file="$2"
+      #TODO read Nexus config, use other auth?
+      nexushost=$(echo "${target}" | sed -e "s#^[^/]*//##" -e "s#\([^/]*\).*#\1#")
+      # Check if Nexus credentials are provided
+      if ${netrc}; then
+        verbose "Using netrc credentials so let curl handle this"
+      else
+        verbose "Using Basic Auth"
+        if [ -z "$dstuser" ] || [ -z "$dstpassword" ]; then
+          error "Basic authentication credentials missing"
+        fi
+      fi
+      file="${tmpdir:=/tmp}/${file}"
+      if [ ! -e "${file}" ]; then
+        warning "File '${file}' not found; ignoring upload request"
+        return
+      fi
+      if [ ! -r "${file}" ]; then
+        warning "No permissions to upload file '${file}'; ignoring upload request"
+        return
+      fi 
+      filename=$(basename "${file}")
+      verbose "Attempting to upload '${file}' to '$target/$filename"
+      if ! httprc=$(curlCmd -fs -u "${dstuser}:${dstpassword}" --upload-file "$file" "$target/$filename"); then
+        case ${httprc} in
+          "403") warning "403: Authentication failure uploading file '${file}'";;
+          "200") verbose "200: File '$/tmp/avro-c-packaging-master.20240130_092928.zos.pax.Z{file}' uploaded successfully";;
+          *) warning "${httprc}: Unxpected response code during upload of file '${file}'";
+        esac
+      fi
+      ;;
+    generateRepoD)
+      repoDFile=$(echo "${target}" | sed "s/[\\/:']//g")
+      repoDFile="${repoDFile}/repod.json"
+      mkdir -p "$(dirname "${repoDFile}")"
+      [ -e "${repoDFile}" ] &&
+        mv "${repoDFile}" "${repoDFile}.$(date "+%C%m%d%H%M%S")"
+      cat <<EOS >"${repoDFile}"
+{
+  "type": "nexus",
+  "metadata_baseurl": "${target}")",
+  "metadata_file": "$(basename "${rewrittenRepoFile}")",
+  "latest
+}
+EOS
+      echo "${repoDFile}"
+      ;;
+    rewriteMetadata)
+      _AbstractRemoteRepo "rewriteMetadata" "${this}"
+      NEXUSRepo "mirrorFile" "${rewrittenRepoFile}" "${this}"
+      NEXUSRepo "mirrorFile" "${rewrittenLatestFile}" "${this}"
+      ;;
+    *) err "Unsupported action verb for repo type";;
+  esac
+
+}
+
+
+runMirror() {
+  log "Mirroring packages"
+  terminal=false
+  if [ -t 0 ] && [ -t 1 ]; then
+    terminal=true
+  fi
+
+  cnt=$(jq --raw-output '.release_data| keys | length' "${JSON_CACHE}")
+  log "${cnt} "
+
+  if ! initRepo=$(eval '${type}Repo "initialise"'); then
+    err "Unable to initialise repository mirror: ${initRepo}"
+  fi
+  if $terminal; then
+    # Get terminal width - try tput first, fall back to stty, default to 80.
+    cols=$(tput cols 2>/dev/null || stty size 2>/dev/null | cut -d' ' -f2 || echo 80)
+    effectiveCols=$((cols - 6))
+    pct=$((cnt / effectiveCols))
+    [ "$pct" -eq 0 ] && pct=1  # Ensure pct is at least 1 to avoid division by zero
+    i=0
+    printf "0%%"
+  fi
+
+  for mirror in $(jq --raw-output '.release_data| keys[]' "${JSON_CACHE}"); do
+    if "${verbose}"; then
+        verbose "Mirroring: ${mirror}..."
+    elif ! "${terminal}"; then
+      :
+    else
+      i=$((i + 1))
+      if [ $(( i % pct)) -eq 0 ]; then
+        printf "."
+      fi
+    fi
+    # Just grab the latest version [offset 0 in array]; 
+    # TODO: determine if mirror providers want to provide a full sync - 
+    # trying to install package versions that haven't been mirrored will result
+    # in can't be downloaded errors
+    if getPkgFile "${mirror}port" 0; then # Remember to add the port suffix!
+      if ! getOutput=$(eval '${type}Repo "mirrorFile" "${outfile}"'); then
+        err "Errors mirroring '${outfile}':  ${getOutput}"
+      fi
+    fi
+    # Need to also get the metadata.json for the file - outfile will get updated
+    if getPkgMetadata; then 
+      if ! getOutput=$(eval '${type}Repo "mirrorFile" "${outfile}"'); then
+        err "Errors mirroring '${outfile}':  ${getOutput}"
+      fi
+    fi
+  done
+
+  if $terminal; then
+    printf " 100%%\n"
+  else
+    printf "\n"
+  fi
+
+  log "Mirroring complete, generating metadata JSON"
+  eval '${type}Repo "rewriteMetadata"'
+}
+
+generateRepositoryMetadata() {
+  log "Generate repository information file"
+  if ! repoFile=$(eval '${type}Repo "generateRepoD"'); then
+    err "Could not generate repository file. Details: ${repoFile}"
+  fi
+}
+
+activateRepo() {
+  set -x
+  repodDir="${zopenrootfs}/etc/zopen/repos.d"
+  [ ! -d "${repodDir}" ] && mkdir "${repodDir}"
+  activeSymlink="${repodDir}/active"
+  [ -L "${activeSymlink}" ] && rm "${activeSymlink}"
+  if ! symlink=$(ln -s "${repoFile}" "${activeSymlink}"); then
+    log "$LOG_ERROR" "Could not set new repository '${repoFile}' as active."
+    [ -n "${symlink}" ] && log "$LOG_ERROR" "Details: ${symlink}"
+    exit 8
+  fi
+}
+
+parseArgs() {
+  while [ $# -gt 0 ]; do
+    case $1 in
+    --netrc)
+      netrc=true
+      ;;
+    --ghsrcpat)
+      [ $# -lt 2 ] && err "Missing value for option '$1'"
+      ghsrcpat="$2"
+      shift
+      ;;
+    --type)
+      [ $# -lt 2 ] && err "Missing value for option '$1'"
+      type="$2"
+      shift
+      ;;
+    --tmpdir)
+      [ $# -lt 2 ] && err "Missing value for option '$1'"
+      tmpdir="$2"
+      shift
+      ;;
+    --genRepoFile)
+      genRepoFile=true
+      ;;
+    --activate)
+      [ $# -lt 2 ] && err "Missing zopen rootfs for option '$1'"
+      zopenrootfs="$2"
+      activate=true
+      shift
+      ;;
+    --dstuser)
+      [ $# -lt 2 ] && err "Missing value for option '$1'"
+      dstuser="$2"
+      shift
+      ;;
+    --dstpassword)
+      [ $# -lt 2 ] && err "Missing value for option '$1'"
+      dstpassword="$2"
+      shift
+      ;;
+    --noghcreds)
+      noghcreds=true
+      ;;
+    --target)
+      [ $# -lt 2 ] && err "Missing value for option '$1'"
+      target="$2"
+      shift
+      ;;
+    -? | --?) printHelp false && exit 0 ;;
+    --help) printHelp true && exit 0 ;;
+    --verbose) verbose=true ;;
+    --quiet) quiet=true ;;
+    --version) displayVersion && exit 0 ;;
+    *) err "Bad parameter '$1'. " ;;
+    esac
+    shift
+  done
+}
+
+verbose=false
+quiet=false
+type=""
+genRepoFile=true # ?false?
+activate=false
+zopenrootfs=""
+noghcreds=false
+ghsrcpat=""
+netrc=false
+authHeader=""
+
+export PATH=/bin:$PATH  # Always prefer native tools; makes a difference on z/OS
+defineANSI
+parseArgs "$@"
+
+log "zopen repository mirror"
+if $activate; then
+  [ -z "${zopenrootfs}" ] && err "Missing zopenrootfs definition for the --activate option."
+  [ ! -d "${zopenrootfs}/etc/zopen" ] && err "No zopen file system detected at '${zopenrootfs}'. The --activate option updates a zopen file system so must run on z/OS. Correct parameters and retry request."
+  zopenrootfs=$(cd "${zopenrootfs}" && pwd -P) # use absolute name if possible
+fi
+
+if "${netrc}"; then
+  verbose "Using .netrc for download authentication"
+elif "${noghcreds}"; then
+  verbose "Skipping GitHub authorization - using anonymous"
+else
+  # TODO: use more secure than cli param for PAT?.
+  [ -z "${ghsrcpat}" ] && err "Github personal access token (PAT) required to prevent rate-limiting"
+  [ -n "${ghsrcpat}" ] && authHeader="Authorization: token ${ghsrcpat}"
+fi
+
+[ -z "${type}" ] && err "Missing mirror type"
+[ -z "${target}" ] && err "Parameter --target required for '${type}' mirror type"
+
+type=$(echo "${type}" | /bin/awk '{print(toupper($1))}')
+verbose "Checking repository type '${type}' for validity"
+case "${type}" in
+FLAT | ALPHA | NAME | ALPHANAME)
+  [ ! -d "${target}" ] && mkdir -p "${target}"
+  target=$(cd "${target}" && pwd -P) # Use absolute name if possible
+  ;;
+NEXUS|FTP|SFTP|SAMBA)
+  if ! "${netrc}"; then
+    [ -z "${dstuser}" ] && err "No remote repo username given"
+    [ -z "${dstpassword}" ] && err "No remote repo password given"
+  else
+    verbose "Using .netrc for credentials for upload to remote server"
+  fi
+  case "${type}" in
+    FTP|SFTP|SAMBA)
+      target="${target#*://}"  # Strip any protocol definitions - add back later
+      DIR_LIST_CACHE="${tmpdir:=/tmp}/zopen_mirror_dir_cache.$$"
+      [ -f "${DIR_LIST_CACHE}" ] && rm "${DIR_LIST_CACHE}" ;;
+    *) :;;
+  esac
+;;
+*) err "Unsupported mirror type: '${type}'. Check parameter and retry command." ;;
+esac
+
+downloadRepoMetadata
+runMirror
+if ${genRepoFile}; then
+  generateRepositoryMetadata
+fi
+if ${activate}; then
+  activateRepo
+fi
+[ -e "${DIR_LIST_CACHE}" ] && echo "rm \"${DIR_LIST_CACHE}\""
+
+log "Mirror operation complete"
+
