@@ -321,9 +321,9 @@ if [ -z "\${ZOPEN_QUICK_LOAD}" ]; then
     if \$displayText; then
       /bin/echo "DONE"
       if [ -n "\${ZOPEN_TOOLSET_OVERRIDE}" ]; then
-        /bin/echo "NOTE: Conflicting tools (eg. man, cat, grep, make) will take precendence over z/OS /bin tools. Pass the option --nooverride-zos-tools to avoid this."
+        /bin/echo "NOTE: Conflicting tools (eg. man, cat, grep, make) will take precedence over z/OS /bin tools. Pass the option --nooverride-zos-tools to avoid this."
       else
-        /bin/echo "NOTE: Conflicting tools (eg. man, cat, grep, make) will NOT take precendence over z/OS /bin tools; Use the prefixed executables instead (eg. zotman, gcat, ggrep, gmake). Pass the option --override-zos-tools if you prefer zopen tools or --help for further options."
+        /bin/echo "NOTE: Conflicting tools (eg. man, cat, grep, make) will NOT take precedence over z/OS /bin tools; Use the prefixed executables instead (eg. zotman, gcat, ggrep, gmake). Pass the option --override-zos-tools if you prefer zopen tools or --help for further options."
       fi
     fi
     unset dotenvs
