@@ -310,7 +310,7 @@ _AbstractFileRepo(){
     generateRepoD)
        repoDFile="${target}/repod.json"
       [ -e "${repoDFile}" ] &&
-      mv "${repoDFile}" "${repoDFile}.$(date "+%C%m%d%H%M%S")"
+          mv "${repoDFile}" "${repoDFile}.$(date "+%C%m%d%H%M%S")"
       mkdir -p "$(dirname "${repoDFile}")"
       cat <<EOS >"${repoDFile}"
 {
@@ -708,12 +708,20 @@ generateRepositoryMetadata() {
 }
 
 activateRepo() {
-  set -x
   repodDir="${zopenrootfs}/etc/zopen/repos.d"
   [ ! -d "${repodDir}" ] && mkdir "${repodDir}"
   activeSymlink="${repodDir}/active"
   [ -L "${activeSymlink}" ] && rm "${activeSymlink}"
-  if ! symlink=$(ln -s "${repoFile}" "${activeSymlink}"); then
+  if [ ! -e "${repoFile}" ]; then
+    log "$LOG_ERROR" "Could not find file '${repoFile}' to use as active repository"
+    exit 8
+  fi
+  repoDName=$(basename "${repoFile}")
+  if [ -e "${repodDir}/${repoDName}" ]; then
+    mv "${repodDir}/${repoDName}" "${repodDir}/${repoDName}.$(date "+%C%m%d%H%M%S")"
+  fi
+  cp "${repoFile}" "${repodDir}/${repoDName}"
+  if ! symlink=$(ln -s "${repodDir}/${repoDName}" "${activeSymlink}"); then
     log "$LOG_ERROR" "Could not set new repository '${repoFile}' as active."
     [ -n "${symlink}" ] && log "$LOG_ERROR" "Details: ${symlink}"
     exit 8
