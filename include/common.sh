@@ -2376,8 +2376,9 @@ getInstallFile()
   else
     downloadToDir="${ZOPEN_ROOTFS}/var/cache/zopen"
   fi
+
   if [ -e "${downloadToDir}/${installurl##*/}" ]; then
-    :
+    printVerbose "Install file '${installurl##*/}' already in local cache at '${downloadToDir}'"
   else
     [ -e "${downloadToDir}" ] || mkdir -p "${downloadToDir}"
     [ -w "${downloadToDir}" ] || printError "No permission to save install file to '${downloadToDir}'. Check permissions and retry command."
@@ -2385,12 +2386,15 @@ getInstallFile()
     if ! runAndLog "cd ${downloadToDir} && curlCmd -L ${installurl} -O ${redirectToDevNull}"; then
       printError "Could not download from ${installurl}. Correct any errors and potentially retry"
     fi
-    
+  fi
+  metadataFile="$(basename "${installurl}").json"
+  if [ -e "${downloadToDir}/${metadataFile}" ]; then
+    printVerbose "Corresponding metadata '${metadataFile}' already in local cache"
+  else  
     printVerbose "Downloading corresponding metadata"
     # check if it is in the same location just with a different suffix (as in a mirror)
     # if not, likely is the original Github repo which uses a subdirectory for the metadata
     # Try again with this URL
-    metadataFile="$(basename "${installurl}").json"
     metadataJSONURL="${installurl}.json"
 
     printVerbose "Checking for existence of remote metadata file"
