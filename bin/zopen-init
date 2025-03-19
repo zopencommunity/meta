@@ -540,7 +540,7 @@ generateDefaultRepository()
   "type": "${repotype}", 
   "metadata_baseurl": "${baserepourl}", 
   "metadata_file": "${repometafile}",
-  "latest_metadata": "${latestmetafile}" 
+  "latest_file": "${latestmetafile}" 
 }
 EOS
   (cd "${rootfs}/etc/zopen/repos.d" && ln -s "${repoFile}" "active")
