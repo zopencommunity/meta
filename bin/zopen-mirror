@@ -267,12 +267,12 @@ downloadRepoMetadata() {
 }
 
 getPkgFile() {
-  repo="$1"
+  mirror="$1"
   portNumber=$2
-  repourl=$(jq -r --arg portNumber "${portNumber}" ".release_data.\"${repo%%port}\"[$portNumber].assets[0].url" "${JSON_CACHE}")
+  repourl=$(jq -r --arg portNumber "${portNumber}" ".release_data.\"${mirror}\"[$portNumber].assets[0].url" "${JSON_CACHE}")
   filename=$(basename "${repourl}")
   [ -z "${filename}" ] && err "Unable to parse filename for download at '${repourl}'."
-  if eval "${type}Repo checkForFile ${filename}"; then
+  if eval "${type}Repo checkForFile ${filename} ${mirror}"; then
     verbose "${filename} already in repository"
     return 1
   fi
@@ -395,15 +395,13 @@ NAMERepo(){
     initialise) _AbstractFileRepo "initialise" ;;
     checkForFile)
       filename=$(basename "$2")
-      pkgname=$(echo "${filename}" | \
-        sed -e "s/\(\.*\)-[^-]*[0-9]*_[0-9]*\..*/\1/")
+      pkgname=$3
       [ -e "${target}/${pkgname}/${filename}" ] && return 0
       return 1
       ;;
     mirrorFile)
       filename=$(basename "$2")
-      pkgname=$(echo "${filename}" | \
-        sed -e "s/\(\.*\)-[^-]*[0-9]*_[0-9]*\..*/\1/")
+      pkgname=$3
       targetFile="${target}/${pkgname}/${filename}"
       [ -e "${targetFile}" ] && verbose "${filename} already downloaded" && return 0
       [ ! -d "$(dirname "${targetFile}")" ] && mkdir -p "$(dirname "${targetFile}")"
@@ -424,15 +422,13 @@ ALPHANAMERepo(){
     initialise) _AbstractFileRepo "initialise" ;;
     checkForFile)
       filename=$(basename "$2")
-      pkgname=$(echo "${filename}" | \
-        sed -e "s/\(\.*\)-[^-]*[0-9]*_[0-9]*\..*/\1/")
+      pkgname=$3
       [ -e "${target}/$(initial "${filename}")/${pkgname}/${filename}" ] && return 0
       return 1
       ;;
     mirrorFile)
       filename=$(basename "$2")
-      pkgname=$(echo "${filename}" | \
-        sed -e "s/\(\.*\)-[^-]*[0-9]*_[0-9]*\..*/\1/")
+      pkgname=$3
       targetFile="${target}/$(initial "${filename}")/${pkgname}/${filename}"
       [ -e "${targetFile}" ] && verbose "${filename} already downloaded" && return 0
       [ -d "$(dirname "${targetFile}")" ] || mkdir -p "$(dirname "${targetFile}")"
@@ -471,7 +467,7 @@ _AbstractRemoteRepo(){
     checkForFile) grep -q "$(basename "$2")" "${DIR_LIST_CACHE}" ;;
     mirrorFile)
       if ${netrc}; then
-      curlparams=$(printf " %s %s" "${curlparams}" "--netrc")
+        curlparams=$(printf " %s %s" "${curlparams}" "--netrc")
       else
         curlparams=$(printf " %s %s" "${curlparams}" "--user ${dstuser}:${dstpassword}")
       fi
@@ -681,14 +677,14 @@ runMirror() {
     # TODO: determine if mirror providers want to provide a full sync - 
     # trying to install package versions that haven't been mirrored will result
     # in can't be downloaded errors
-    if getPkgFile "${mirror}port" 0; then # Remember to add the port suffix!
-      if ! getOutput=$(eval '${type}Repo "mirrorFile" "${outfile}"'); then
+    if getPkgFile "${mirror}" 0; then # Remember to add the port suffix!
+      if ! getOutput=$(eval '${type}Repo "mirrorFile" "${outfile}" "${mirror}"'); then
         err "Errors mirroring '${outfile}':  ${getOutput}"
       fi
     fi
     # Need to also get the metadata.json for the file - outfile will get updated
     if getPkgMetadata; then 
-      if ! getOutput=$(eval '${type}Repo "mirrorFile" "${outfile}"'); then
+      if ! getOutput=$(eval '${type}Repo "mirrorFile" "${outfile}" "${mirror}"'); then
         err "Errors mirroring '${outfile}':  ${getOutput}"
       fi
     fi
