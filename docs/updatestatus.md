@@ -327,6 +327,7 @@
 - 2024-07-02: [Update tree-version to 2.1.2 from 2.1.1](https://github.com/zopencommunity/treeport/pull/10) ✅
 
 ### util-linuxport
+- 2025-03-18: [Update util-linux-version to 2.41 from 2.39.3](https://github.com/zopencommunity/util-linuxport/pull/12) ❌
 - 2025-01-14: [Update util-linux-version to 2.40.4 from 2.39.3](https://github.com/zopencommunity/util-linuxport/pull/11) ❌
 - 2025-01-09: [Update util-linux-version to 2.40.3 from 2.39.3](https://github.com/zopencommunity/util-linuxport/pull/10) ❌
 - 2024-03-27: [Update util-linux-version to 2.40 from 2.39.3](https://github.com/zopencommunity/util-linuxport/pull/4) ❌
@@ -617,5 +618,5 @@
 ---
 
 
-> Last updated: 2025-03-18 06:06:08 EDT
+> Last updated: 2025-03-19 06:06:27 EDT
 

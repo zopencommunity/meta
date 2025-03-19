@@ -2,8 +2,8 @@
 
 ## Overall Summary
 
-**Total Lines of Code (Current):** 27516  
-**Average Patch LOC per Project:** 129.18 
+**Total Lines of Code (Current):** 27489  
+**Average Patch LOC per Project:** 129.06 
 **Total # of Patch files:** 650
 
 ### Overall Cumulative Patch LOC Trend (Net Change)
@@ -32,8 +32,8 @@
 | [gpgport](#repo-gpgport) | 687 | 13 |
 | [perlport](#repo-perlport) | 683 | 13 |
 | [gzipport](#repo-gzipport) | 669 | 7 |
+| [coreutilsport](#repo-coreutilsport) | 660 | 18 |
 | [procpsport](#repo-procpsport) | 655 | 1 |
-| [coreutilsport](#repo-coreutilsport) | 647 | 17 |
 | [util-linuxport](#repo-util-linuxport) | 612 | 7 |
 | [unzipport](#repo-unzipport) | 549 | 12 |
 | [cronieport](#repo-cronieport) | 510 | 13 |
@@ -69,7 +69,6 @@
 | [libserdesport](#repo-libserdesport) | 142 | 4 |
 | [tclport](#repo-tclport) | 130 | 5 |
 | [libgcryptport](#repo-libgcryptport) | 129 | 7 |
-| [libeventport](#repo-libeventport) | 127 | 4 |
 | [pinentryport](#repo-pinentryport) | 124 | 5 |
 | [libssh2port](#repo-libssh2port) | 122 | 5 |
 | [m4port](#repo-m4port) | 120 | 5 |
@@ -83,6 +82,7 @@
 | [pkgconfigport](#repo-pkgconfigport) | 98 | 1 |
 | [doxygenport](#repo-doxygenport) | 97 | 5 |
 | [depot_toolsport](#repo-depot-toolsport) | 91 | 1 |
+| [libeventport](#repo-libeventport) | 87 | 3 |
 | [patchport](#repo-patchport) | 86 | 3 |
 | [gawkport](#repo-gawkport) | 81 | 4 |
 | [getoptport](#repo-getoptport) | 79 | 1 |
@@ -1008,38 +1008,11 @@
 
 ---
 
-<a name="repo-procpsport"></a>
-## Repository: procpsport
-
-**Current Lines of Code:** 655  
-**Current # of Patch files:** 1
-
-### Trend of Current Patch LOC
-
-![Current Patch LOC Trend](./images/upstream/procpsport_current_patch_loc_trend.png)
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-| PR1.patch | 655 |
-
----
-
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-| 2024-07-29 | PR1.patch | 571 |
-
----
-
 <a name="repo-coreutilsport"></a>
 ## Repository: coreutilsport
 
-**Current Lines of Code:** 647  
-**Current # of Patch files:** 17
+**Current Lines of Code:** 660  
+**Current # of Patch files:** 18
 
 ### Trend of Current Patch LOC
 
@@ -1056,6 +1029,7 @@
 | lib/getprogname.c.patch | 21 |
 | lib/nproc.c.patch | 15 |
 | lib/posix_memalign.c.patch | 22 |
+| lib/stat-time.h.patch | 13 |
 | src/basenc.c.patch | 15 |
 | src/cat.c.patch | 60 |
 | src/copy.c.patch | 27 |
@@ -1074,6 +1048,7 @@
 
 | Commit Date | File | Delta LOC |
 | --- | --- | --- |
+| 2025-03-18 | lib/stat-time.h.patch | 13 |
 | 2025-02-25 | Makefile.in.patch | 12 |
 | 2024-07-09 | src/ls.c.patch | 86 |
 | 2024-07-09 | lib/fts.c.patch | 17 |
@@ -1109,6 +1084,33 @@
 | 2022-09-14 | PR5/test-driver.patch | 13 |
 | 2022-08-29 | PR4/copy.patch | 55 |
 | 2022-06-14 | PR1/zos_enablement.patch | 314 |
+
+---
+
+<a name="repo-procpsport"></a>
+## Repository: procpsport
+
+**Current Lines of Code:** 655  
+**Current # of Patch files:** 1
+
+### Trend of Current Patch LOC
+
+![Current Patch LOC Trend](./images/upstream/procpsport_current_patch_loc_trend.png)
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+| PR1.patch | 655 |
+
+---
+
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+| 2024-07-29 | PR1.patch | 571 |
 
 ---
 
@@ -2681,39 +2683,6 @@
 
 ---
 
-<a name="repo-libeventport"></a>
-## Repository: libeventport
-
-**Current Lines of Code:** 127  
-**Current # of Patch files:** 4
-
-### Trend of Current Patch LOC
-
-![Current Patch LOC Trend](./images/upstream/libeventport_current_patch_loc_trend.png)
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-| buffer.c.patch | 40 |
-| configure.patch | 50 |
-| evutil.c.patch | 15 |
-| regress_http.c.patch | 22 |
-
----
-
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-| 2024-03-07 | buffer.c.patch | 40 |
-| 2024-01-02 | configure.patch | 50 |
-| 2024-01-02 | evutil.c.patch | 15 |
-| 2024-01-02 | regress_http.c.patch | 22 |
-
----
-
 <a name="repo-pinentryport"></a>
 ## Repository: pinentryport
 
@@ -3160,6 +3129,39 @@
 | 2023-11-10 | gclient_paths.py.patch | 13 |
 | 2023-11-10 | gclient_utils.py.patch | 23 |
 | 2023-11-10 | vpython3.patch | 14 |
+
+---
+
+<a name="repo-libeventport"></a>
+## Repository: libeventport
+
+**Current Lines of Code:** 87  
+**Current # of Patch files:** 3
+
+### Trend of Current Patch LOC
+
+![Current Patch LOC Trend](./images/upstream/libeventport_current_patch_loc_trend.png)
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+| configure.patch | 50 |
+| evutil.c.patch | 15 |
+| regress_http.c.patch | 22 |
+
+---
+
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+| 2025-03-18 | buffer.c.patch | 0 |
+| 2024-03-07 | buffer.c.patch | 40 |
+| 2024-01-02 | configure.patch | 50 |
+| 2024-01-02 | evutil.c.patch | 15 |
+| 2024-01-02 | regress_http.c.patch | 22 |
 
 ---
 
