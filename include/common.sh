@@ -2382,28 +2382,38 @@ getInstallFile()
     [ -e "${downloadToDir}" ] || mkdir -p "${downloadToDir}"
     [ -w "${downloadToDir}" ] || printError "No permission to save install file to '${downloadToDir}'. Check permissions and retry command."
     printVerbose "Downloading installable file"
-    if ! runAndLog "cd ${downloadToDir} && curlCmd --no-progress-meter -L ${installurl} -O ${redirectToDevNull}"; then
+    if ! runAndLog "cd ${downloadToDir} && curlCmd -L ${installurl} -O ${redirectToDevNull}"; then
       printError "Could not download from ${installurl}. Correct any errors and potentially retry"
     fi
     
     printVerbose "Downloading corresponding metadata"
     # check if it is in the same location just with a different suffix (as in a mirror)
-    # if not, likely is the original Github repo which uses a subdirectory for the metadata...
-    # Try again with this extended URL
+    # if not, likely is the original Github repo which uses a subdirectory for the metadata
+    # Try again with this URL
     metadataFile="$(basename "${installurl}").json"
     metadataJSONURL="${installurl}.json"
-    if ! runAndLog "curlCmd -L '${metadataJSONURL}' -o '${metadataFile}'" "${redirectToDevNull}"; then
-      printVerbose "Not located explicit file, try extended URL location"
+
+    printVerbose "Checking for existence of remote metadata file"
+    if curlOut=$(curlCmd -s -o /dev/null -I -w "%{http_code}" "${metadataJSONURL}"); then
+      # test for 404 - if it is, then this is likely the Main GitHub repo which hosts
+      # the metadata as a release so use alternative URL
+      if [ "${curlOut}" = "404" ]; then
         metadataJSONURL_ext="$(dirname "${installurl}")/metadata.json"
-      if ! runAndLog "curlCmd -L '${metadataJSONURL_ext}' -o '${metadataFile}'" "${redirectToDevNull}"; then
-        printSoftError "Could not download package metadata. Tried the following locations:"
-        printSoftErrpr "'${metadataJSONURL}' '${metadataJSONURL_ext}'"
-        printError "Correct any errors and retry command"
-      else
-        printVerbose "Metadata downloaded from extended location '${metadataJSONURL_ext}'"
+        printVerbose " Metadata not found at '${metadataJSONURL}'. Trying '${metadataJSONURL_ext}'"
+        metadataJSONURL="${metadataJSONURL_ext}"
       fi
     else
-      printVerbose "Metadata downloaded from '${metadataJSONURL}'"
+      printSoftError "Curl issue trying to download from '${metadataJSONURL}'"
+      [ -n "${curlOut}" ] && printSoftError
+      exit 1
+    fi
+
+    if ! curlOut=$(cd "${downloadToDir}" && curlCmd -L "${metadataJSONURL}" -o "${metadataFile}"); then
+      printSoftError "Curl issue trying to download from '${metadataJSONURL}'"
+      [ -n "${curlOut}" ] && printSoftError
+      exit 1
+    else
+      printVerbose "Metadata downloaded from '${metadataJSONURL}' to '${metadataFile}'"
     fi
 
     if command -v chtag >/dev/null 2>&1; then
