@@ -1,0 +1,9 @@
+#!/bin/sh
+this="meta-init-refresh"
+printVerbose "Running '${this}' script"
+pkg=$1
+[ -z "${pkg}" ] && return
+case "${pkg}" in
+  meta ) (zopen init --refresh -y) ;;
+  * ) :;; # No action
+esac
