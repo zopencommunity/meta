@@ -2,8 +2,8 @@
 
 ## Overall Summary
 
-**Total Lines of Code (Current):** 27489  
-**Average Patch LOC per Project:** 129.06 
+**Total Lines of Code (Current):** 27616  
+**Average Patch LOC per Project:** 129.65 
 **Total # of Patch files:** 650
 
 ### Overall Cumulative Patch LOC Trend (Net Change)
@@ -29,10 +29,10 @@
 | [cmakeport](#repo-cmakeport) | 1092 | 1 |
 | [gitport](#repo-gitport) | 975 | 29 |
 | [valgrindport](#repo-valgrindport) | 896 | 3 |
+| [coreutilsport](#repo-coreutilsport) | 787 | 18 |
 | [gpgport](#repo-gpgport) | 687 | 13 |
 | [perlport](#repo-perlport) | 683 | 13 |
 | [gzipport](#repo-gzipport) | 669 | 7 |
-| [coreutilsport](#repo-coreutilsport) | 660 | 18 |
 | [procpsport](#repo-procpsport) | 655 | 1 |
 | [util-linuxport](#repo-util-linuxport) | 612 | 7 |
 | [unzipport](#repo-unzipport) | 549 | 12 |
@@ -824,6 +824,85 @@
 
 ---
 
+<a name="repo-coreutilsport"></a>
+## Repository: coreutilsport
+
+**Current Lines of Code:** 787  
+**Current # of Patch files:** 18
+
+### Trend of Current Patch LOC
+
+![Current Patch LOC Trend](./images/upstream/coreutilsport_current_patch_loc_trend.png)
+
+### Current Patch Details
+
+| File | LOC |
+| --- | --- |
+| Makefile.in.patch | 12 |
+| build-aux/test-driver.patch | 13 |
+| lib/fdopendir.c.patch | 14 |
+| lib/fts.c.patch | 17 |
+| lib/getprogname.c.patch | 21 |
+| lib/nproc.c.patch | 15 |
+| lib/posix_memalign.c.patch | 22 |
+| lib/stat-time.h.patch | 13 |
+| src/basenc.c.patch | 15 |
+| src/cat.c.patch | 60 |
+| src/copy.c.patch | 27 |
+| src/cp.c.patch | 61 |
+| src/digest.c.patch | 61 |
+| src/ls.c.patch | 87 |
+| src/od.c.patch | 16 |
+| src/pinky.c.patch | 50 |
+| src/stat.c.patch | 253 |
+| src/timeout.c.patch | 30 |
+
+---
+
+
+### Historical Patch Event Details
+
+| Commit Date | File | Delta LOC |
+| --- | --- | --- |
+| 2025-03-18 | lib/stat-time.h.patch | 13 |
+| 2025-02-25 | Makefile.in.patch | 12 |
+| 2024-07-09 | src/ls.c.patch | 86 |
+| 2024-07-09 | lib/fts.c.patch | 17 |
+| 2023-11-14 | lib/nproc.c.patch | 15 |
+| 2023-10-06 | src/cat.c.patch | 60 |
+| 2023-10-04 | lib/getprogname.c.patch | 13 |
+| 2023-10-03 | lib/filemode.c.patch | 0 |
+| 2023-10-03 | src/dd.c.patch | 0 |
+| 2023-10-03 | src/shred.c.patch | 0 |
+| 2023-10-03 | src/sort.c.patch | 0 |
+| 2023-10-03 | src/split.c.patch | 0 |
+| 2023-10-03 | src/system.h.patch | 0 |
+| 2023-10-02 | PR1/zos_enablement.patch | 0 |
+| 2023-10-02 | PR4/copy.patch | 0 |
+| 2023-10-02 | PR7/PR7.patch | 0 |
+| 2023-10-02 | lib/fdopendir.c.patch | 14 |
+| 2023-10-02 | lib/filemode.c.patch | 21 |
+| 2023-10-02 | lib/posix_memalign.c.patch | 22 |
+| 2023-10-02 | src/basenc.c.patch | 15 |
+| 2023-10-02 | src/copy.c.patch | 35 |
+| 2023-10-02 | src/dd.c.patch | 30 |
+| 2023-10-02 | src/od.c.patch | 15 |
+| 2023-10-02 | src/shred.c.patch | 16 |
+| 2023-10-02 | src/sort.c.patch | 17 |
+| 2023-10-02 | src/split.c.patch | 16 |
+| 2023-10-02 | src/system.h.patch | 19 |
+| 2023-05-16 | pinky.c.patch | 50 |
+| 2023-05-11 | PR10/stat.c.patch | 113 |
+| 2023-04-11 | PR9/disableautoconversion_for_binary_tools.patch | 90 |
+| 2023-02-20 | PR8/cp.c.patch | 41 |
+| 2022-12-07 | PR7/PR7.patch | 55 |
+| 2022-10-30 | PR6/timeout.c.patch | 30 |
+| 2022-09-14 | PR5/test-driver.patch | 13 |
+| 2022-08-29 | PR4/copy.patch | 55 |
+| 2022-06-14 | PR1/zos_enablement.patch | 314 |
+
+---
+
 <a name="repo-gpgport"></a>
 ## Repository: gpgport
 
@@ -1005,85 +1084,6 @@
 | 2025-01-24 | zip.c.patch | 46 |
 | 2025-01-24 | zos.h.patch | 30 |
 | 2024-03-20 | PR1.patch | 206 |
-
----
-
-<a name="repo-coreutilsport"></a>
-## Repository: coreutilsport
-
-**Current Lines of Code:** 660  
-**Current # of Patch files:** 18
-
-### Trend of Current Patch LOC
-
-![Current Patch LOC Trend](./images/upstream/coreutilsport_current_patch_loc_trend.png)
-
-### Current Patch Details
-
-| File | LOC |
-| --- | --- |
-| Makefile.in.patch | 12 |
-| build-aux/test-driver.patch | 13 |
-| lib/fdopendir.c.patch | 14 |
-| lib/fts.c.patch | 17 |
-| lib/getprogname.c.patch | 21 |
-| lib/nproc.c.patch | 15 |
-| lib/posix_memalign.c.patch | 22 |
-| lib/stat-time.h.patch | 13 |
-| src/basenc.c.patch | 15 |
-| src/cat.c.patch | 60 |
-| src/copy.c.patch | 27 |
-| src/cp.c.patch | 61 |
-| src/digest.c.patch | 61 |
-| src/ls.c.patch | 87 |
-| src/od.c.patch | 16 |
-| src/pinky.c.patch | 50 |
-| src/stat.c.patch | 126 |
-| src/timeout.c.patch | 30 |
-
----
-
-
-### Historical Patch Event Details
-
-| Commit Date | File | Delta LOC |
-| --- | --- | --- |
-| 2025-03-18 | lib/stat-time.h.patch | 13 |
-| 2025-02-25 | Makefile.in.patch | 12 |
-| 2024-07-09 | src/ls.c.patch | 86 |
-| 2024-07-09 | lib/fts.c.patch | 17 |
-| 2023-11-14 | lib/nproc.c.patch | 15 |
-| 2023-10-06 | src/cat.c.patch | 60 |
-| 2023-10-04 | lib/getprogname.c.patch | 13 |
-| 2023-10-03 | lib/filemode.c.patch | 0 |
-| 2023-10-03 | src/dd.c.patch | 0 |
-| 2023-10-03 | src/shred.c.patch | 0 |
-| 2023-10-03 | src/sort.c.patch | 0 |
-| 2023-10-03 | src/split.c.patch | 0 |
-| 2023-10-03 | src/system.h.patch | 0 |
-| 2023-10-02 | PR1/zos_enablement.patch | 0 |
-| 2023-10-02 | PR4/copy.patch | 0 |
-| 2023-10-02 | PR7/PR7.patch | 0 |
-| 2023-10-02 | lib/fdopendir.c.patch | 14 |
-| 2023-10-02 | lib/filemode.c.patch | 21 |
-| 2023-10-02 | lib/posix_memalign.c.patch | 22 |
-| 2023-10-02 | src/basenc.c.patch | 15 |
-| 2023-10-02 | src/copy.c.patch | 35 |
-| 2023-10-02 | src/dd.c.patch | 30 |
-| 2023-10-02 | src/od.c.patch | 15 |
-| 2023-10-02 | src/shred.c.patch | 16 |
-| 2023-10-02 | src/sort.c.patch | 17 |
-| 2023-10-02 | src/split.c.patch | 16 |
-| 2023-10-02 | src/system.h.patch | 19 |
-| 2023-05-16 | pinky.c.patch | 50 |
-| 2023-05-11 | PR10/stat.c.patch | 113 |
-| 2023-04-11 | PR9/disableautoconversion_for_binary_tools.patch | 90 |
-| 2023-02-20 | PR8/cp.c.patch | 41 |
-| 2022-12-07 | PR7/PR7.patch | 55 |
-| 2022-10-30 | PR6/timeout.c.patch | 30 |
-| 2022-09-14 | PR5/test-driver.patch | 13 |
-| 2022-08-29 | PR4/copy.patch | 55 |
-| 2022-06-14 | PR1/zos_enablement.patch | 314 |
 
 ---
 

@@ -97,6 +97,7 @@
 - 2025-02-14: [Update glab-version to 1.53.0 from 1.52.0](https://github.com/zopencommunity/gitlabcliport/pull/23) ✅
 
 ### gitlab-runnerport
+- 2025-03-19: [Update gitlab-runner-version to 17.10.0 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/36) ❌
 - 2025-03-08: [Update gitlab-runner-version to 17.9.1 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/35) ❌
 - 2025-02-20: [Update gitlab-runner-version to 17.9.0 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/34) ❌
 
@@ -353,6 +354,7 @@
 - 2024-07-18: [Update victoriametrics-version to 1.102.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/5) ❌
 
 ### vimport
+- 2025-03-19: [Update vim-version to 9.1.1220 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/91) ✅
 - 2025-03-17: [Update vim-version to 9.1.1210 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/90) ✅
 - 2025-03-14: [Update vim-version to 9.1.120 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/89) ✅
 - 2025-03-10: [Update vim-version to 9.1.1190 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/88) ✅
@@ -618,5 +620,5 @@
 ---
 
 
-> Last updated: 2025-03-19 06:06:27 EDT
+> Last updated: 2025-03-20 06:07:04 EDT
 
