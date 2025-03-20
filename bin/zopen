@@ -33,6 +33,7 @@ Command:
   build             builds the enclosing zopen community git-cloned package
   clean             cleans up your zopen environment
   config            change zopen runtime environment settings
+  diagnostics       collects system info for zopen troubleshooting
   generate          generates a new zopen project
   init              initializes a zopen environment at the specified location
   refresh           refreshes your zopen environment and zopen-config file
@@ -91,7 +92,7 @@ version=false
 for arg in $*; do
   case "${arg}" in
     "alt"|"audit"|"build"|"clean"|"generate"|"init"|"install"|\
-    "query"|"remove"|"update-cacert"|"info"|"usage")
+    "query"|"remove"|"update-cacert"|"info"|"usage"|"diagnostics")
       subcmd="zopen-${arg}"
       ;;
     "list")
