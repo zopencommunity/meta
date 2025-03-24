@@ -114,7 +114,7 @@ cleanUnused()
       removeUnusedPackageVersions "${needle}"
     done
   fi
-  $stats && printInfo "Removed ${unusedCount} unused package version$( [ $counter -eq 1 ] || echo s )"
+  $stats && printInfo "Removed ${unusedCount} unused package version"$([ ${unusedCount} -eq 1 ] || echo 's')
 }
 
 cleanDangling()
