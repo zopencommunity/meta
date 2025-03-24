@@ -974,10 +974,9 @@ progressHandler()
     # shellcheck disable=SC2064
     trap "${trapcmd}" HUP
     case "${type}" in
-      "spinner") progressAnimation '-' '\' '|' '/'
-      ;;
-      "network") progressAnimation '-----' '>----' '->---' '-->--' '--->-' '---->' '-----' '----<' '---<-' '--<--' '-<---' '<----'
-      ;;
+      "spinner")   progressAnimation '-' '\' '|' '/' ;;
+      "network")   progressAnimation '-----' '>----' '->---' '-->--' '--->-' '---->' '-----' '----<' '---<-' '--<--' '-<---' '<----' ;;
+      "linkcheck") progressAnimation '======|' '?=====|' '-?====|' '--?===|' '---?==|' '----?=|' '-----?|' '------|' '?-----|' '=?----|' '==?---|' '===?--|' '====?-|' '=====?|';;
       *) progressAnimation '.' 'o' 'O' 'O' 'o' '.'
       ;;
     esac
@@ -1433,6 +1432,37 @@ a2e()
     chtag -tc 1047 "$source.bk"
     mv "$source.bk" "$source"
   fi
+}
+
+diskusage()
+{
+  path=$1
+  # awk to "trim" output"
+  if ! size=$(zosdu -kts "${path}" | /bin/awk '{print ($1)}'); then
+    printError "Unable to generate disk usage (du) report for '${path}'"
+  fi
+  echo "${size}"
+}
+
+formattedFileSize()
+{
+  filesize=$1  # in kb
+  # Use awk rather than $((..)) to get floating points, using the 
+  # "repeated divisions and count" method to generate an offset
+  echo "${filesize}" | awk '{
+    num = $1;
+    unit = "k";
+    if (num >= 1000000000) {
+        num = num / 1000000000;
+        unit = "T";
+    } else if (num >= 1000000) {
+        num = num / 1000000;
+        unit = "G";
+    } else if (num >= 1000) {
+        num = num / 1000;
+        unit = "M";
+    } printf "%.3f%s\n", num, unit;
+  }'  
 }
 
 . ${INCDIR}/analytics.sh
