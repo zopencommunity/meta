@@ -77,19 +77,15 @@ render_pie_chart_awk(){
     *) : use_ansi=false ;;
   esac
 
-  center_x=$((radius + 2))
+  center_x=$((radius + 1))
   center_y=$radius
-
-  count=0
-  width=$((radius * 2 + 4))
-  height=$((radius * 2 + 2))
-
+  aspect="0.6" # Reasonable guess?
+  
   if ! pie=$(/bin/awk -v FS="|" \
         -v title="${title}" \
         -v legend_title="${legend_title}" \
         -v radius="${radius}" \
-        -v width="${width}" \
-        -v height="${height}" \
+        -v aspect="${aspect}"\
         -v datasize="${datasize}" \
         -v use_ansi="${use_ansi}" \
         -v symbol_table="${ASCII_SYMBOLS}" \
@@ -104,22 +100,13 @@ render_pie_chart_awk(){
           # Loop through radius values and angles
           for (r = 0; r <= (radius+1); r++) {  # +1 to ensure outerbounds on rhs
             for (theta = current_angle; theta <= end_angle; theta++) {
-              # Need some special "shaping" as the flooring nature of the int(...)
-              # can leave an oddly-shaped pie.
-              if (theta >270) {
-                # top-right quadrant - needs to be extended by a step
-              } else {
-                # other quadrants 
-                if (r > radius){
-                  continue;
-                }
-              }
               rad = theta * a2r;
               # Calculate Cartesian coordinates - sohcahtoa...
-              x = int(cx + r * cos(rad));  # effectively a floor so large steps
-              y = int(cy + r * sin(rad));  # won''t miss a coordinate.
+              x = round(cx + r * cos(rad));  
+              y = round(cy + r * sin(rad)*aspect);
               # Bounds check
-              if (x >= 0 && x < width && y >= 0 && y < height) {
+ 
+              if (x >= 0 && x <= (width+1) && y >= 0 && y < height) {
                 if (use_ansi == "true") {
                   chart[x,y] = ansi_csi "[" color "m" color_symbol ansi_csi "[0m";
                 } else {
@@ -141,11 +128,23 @@ render_pie_chart_awk(){
           }
           return count
         }
+        function round(x) { # awk only has int!
+          sign=(x<0?-1:1)
+          a=x * sign
+          i=int(a)
+          frac=a-i
+          if (frac=0) return x;
+          value=(frac<0.5?i:i+1)
+          return (value * sign)
+        }
 
         BEGIN {
          # cx = radius;  # Centre of pie
          # cy = radius;  # Centre of pie
+          cy = cy * aspect;
           a2r = 3.14159265 / 180;
+          width = radius * 2 +2 ;
+          height = round(width * aspect);
           current_angle = 0;
           idx = 0;
           # Create a 2D array to store the chart
@@ -209,7 +208,7 @@ render_pie_chart_awk(){
         # Print the chart - note that awk will ignore any embedded ANSI chars
         # and output them as-is so it should then be able to then printf in the script!
         # Title
-        print title;
+        printf("\n%30s\n\n", title);
         # Data
         for (y = 0; y < height; y++) {
           line = "";
@@ -220,7 +219,7 @@ render_pie_chart_awk(){
         }
         # Legend/Key - currently in smallest order, so reverse it
         n = reverse_array(legend, legendrev)
-        printf ("%30s\n", legend_title)
+        printf ("\n%30s\n", legend_title)
         printf("%7s: %16s: %25s\n", "Symbol", "Bytes used", "Used by")
         for (i = 1; i <= n; i++) {
           print legendrev[i]
@@ -341,6 +340,9 @@ case $(uname) in
   OS/390) ANSI_CSI="\047";;
   *) ANSI_CSI="\033";;
 esac
+num_pkgs=$(echo "$zopen_rootfs"/usr/local/zopen/* | awk '{print NF }')
+printInfo "Analyzing environment at: $zopen_rootfs"
+printInfo "Found ${num_pkgs} package"$([ ${num_pkgs} -eq 1 ] || echo 's')"; computing size"$([ ${num_pkgs} -eq 1 ] || echo 's')
 total_size=0
 if ! data=$(create_datafile); then
   exit 1 # message will have been printed previously
@@ -353,4 +355,4 @@ if $pie; then
 else
   list_usage "${datafile}" "${datasize}"
 fi
-
+[ -e "${datafile}" ] && rm -f "${datafile}" 2>/dev/null
