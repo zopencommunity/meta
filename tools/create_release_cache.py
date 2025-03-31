@@ -1,4 +1,12 @@
-from github import Github
+"""
+GitHub Releases JSON Cache
+
+This tool fetches zopen community releases and metadata from repositories
+ending in 'port', processes metadata.json assets within recent releases (2024+),
+handles GitHub API rate limiting with retries, includes repository descriptions
+in a separate file, and generates minified JSON cache files.
+"""
+
 import sys
 import multiprocessing
 import concurrent.futures
@@ -6,218 +14,689 @@ import os
 import re
 import json
 import argparse
-import tempfile
-import tarfile
 import datetime
 import requests
-import subprocess
-import shutil
 import urllib
-from collections import OrderedDict
+import time
+import logging
+from functools import wraps
 
-"""
-GitHub Releases JSON Cache
+# --- Setup Logging ---
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - [%(threadName)s] [%(funcName)s] %(message)s')
+logger = logging.getLogger(__name__)
 
-This tool fetches zopen community releases and metadata and generates a minimized JSON cache file.
-The cache file contains information about the releases, including assets, sizes, and metadata.
-"""
+# --- Constants ---
+ORGANIZATION = "zopencommunity"
+REPO_SUFFIX_FILTER = "port"
+METADATA_ASSET_NAME = "metadata.json"
+DEFAULT_MAX_WORKERS = 4 # Default concurrency level
 
-parser = argparse.ArgumentParser(description='GitHub Releases JSON Cache')
-parser.add_argument('--verbose', action='store_true', help='Enable verbose output')
-#parser.add_argument('--max-releases', type=int, default=None, help='Maximum number of releases to consider per repository (default: consider all releases)')
-parser.add_argument('--output-file', dest='output_file', required=True, help='The full path to store the json file to')
-args = parser.parse_args()
+# Retry Configuration for GitHub API calls
+MAX_RETRIES = 5             # Max attempts for secondary limit errors
+INITIAL_BACKOFF_SECONDS = 2 # Initial wait time for secondary limit retry
+MAX_BACKOFF_SECONDS = 60    # Maximum wait time between retries
+MIN_RELEASE_YEAR = 2023     # Ignore releases published before this year (can be overridden by arg)
 
-organization = "zopencommunity"
-
-if os.getenv('ZOPEN_GITHUB_OAUTH_TOKEN') is None:
-    print("error: environment variable ZOPEN_GITHUB_OAUTH_TOKEN must be defined")
+# --- GitHub Connection & Rate Limiting Logic ---
+try:
+    # Import necessary PyGithub classes
+    from github import Github, GithubException, RateLimitExceededException, BadCredentialsException, UnknownObjectException
+except ImportError:
+    logger.error("Fatal Error: PyGithub library not found. Please install it (`pip install PyGithub`)")
     sys.exit(1)
 
-release_data = OrderedDict()
+def create_github_retry_decorator(github_instance):
+    """
+    Creates a decorator to handle GitHub API rate limiting (primary & secondary)
+    and retries for PyGithub function calls.
+    """
+    # Basic check to ensure a Github instance is passed
+    if not isinstance(github_instance, Github):
+         raise TypeError("github_instance must be an initialized PyGithub Github object")
 
-g = Github(os.getenv('ZOPEN_GITHUB_OAUTH_TOKEN'))
+    def decorator(func):
+        @wraps(func) # Preserves original function metadata (name, docstring)
+        def wrapper(*args, **kwargs):
+            func_name = func.__name__ # Cache for logging clarity
+            retries = 0
+            backoff_seconds = INITIAL_BACKOFF_SECONDS
+            # Loop for retries, allowing MAX_RETRIES attempts *after* the initial call fails
+            while retries <= MAX_RETRIES:
+                try:
+                    # Attempt the actual PyGithub call
+                    result = func(*args, **kwargs)
+                    # If successful after retries, log it for info
+                    if retries > 0:
+                         logger.info(f"Call to {func_name} succeeded after {retries} retries.")
+                    return result # Success
 
-org = g.get_organization(organization)
-repositories = org.get_repos()
+                except RateLimitExceededException as e_primary:
+                    # --- Handle PRIMARY rate limit (hourly) ---
+                    logger.warning(f"Primary rate limit hit calling {func_name}.")
+                    try:
+                        # Attempt to fetch the current rate limit status
+                        limits = github_instance.get_rate_limit().core
+                        reset_time_naive = limits.reset # PyGithub returns naive datetime in UTC
+                        reset_time_utc = reset_time_naive.replace(tzinfo=datetime.timezone.utc) # Make timezone aware
+                        now_utc = datetime.datetime.now(datetime.timezone.utc)
+                        # Calculate sleep duration, ensure it's positive, add buffer
+                        sleep_duration = max(1.0, (reset_time_utc - now_utc).total_seconds()) + 5
+                        logger.warning(f"Primary rate limit details: Limit={limits.limit}, Used={limits.used}, Remaining={limits.remaining}. "
+                                       f"Waiting for {sleep_duration:.2f} seconds until reset at {reset_time_utc.isoformat()}.")
+                        time.sleep(sleep_duration)
+                        # Do not increment 'retries' count here, just wait for the window reset.
+                        # Loop will automatically try the call again after sleeping.
+                        continue # Explicitly continue to next loop iteration
 
-# Process a single asset
-def process_asset(asset, body, metadata_asset_name="metadata.json"):
-    if asset.name == metadata_asset_name:
-        asset_name = asset.name
-        asset_size = asset.size
+                    except Exception as inner_e:
+                        # Handle potential errors fetching rate limit info itself (e.g., network issue during check)
+                        # Fallback to basic exponential backoff if limit info fetch fails
+                        retries += 1 # Count as a retry attempt since we couldn't determine primary reset time
+                        logger.error(f"Error getting rate limit info after hitting limit for {func_name}: {inner_e}. "
+                                     f"Falling back to exponential backoff: Waiting {backoff_seconds}s before retry {retries}/{MAX_RETRIES}.", exc_info=args.verbose)
+                        if retries > MAX_RETRIES:
+                            logger.error(f"Max retries ({MAX_RETRIES}) exceeded for {func_name} after fallback backoff for primary limit.")
+                            raise e_primary # Re-raise the original exception
+                        time.sleep(backoff_seconds)
+                        backoff_seconds = min(MAX_BACKOFF_SECONDS, backoff_seconds * 2)
+                        continue # Explicitly continue
 
-        # Download the metadata.json asset
-        download_url = asset.browser_download_url
-        response = requests.get(download_url)
+                except GithubException as e_github:
+                    # --- Handle SECONDARY rate limit (heuristic: status 403) ---
+                    # Also potentially check for 429 if GitHub uses it sometimes
+                    if e_github.status == 403: # or e_github.status == 429:
+                        retries += 1
+                        if retries > MAX_RETRIES:
+                            logger.error(f"Max retries ({MAX_RETRIES}) exceeded for {func_name} after hitting secondary rate limit ({e_github.status}).")
+                            raise e_github # Re-raise the exception after max retries
+
+                        # Extract error details if available
+                        err_data = e_github.data if hasattr(e_github, 'data') else '(no details)'
+                        logger.warning(f"Secondary rate limit ({e_github.status}) hit calling {func_name}. "
+                                       f"Retrying in {backoff_seconds:.2f}s... (Attempt {retries}/{MAX_RETRIES}) | Error data: {err_data}")
+                        time.sleep(backoff_seconds)
+                        # Exponential backoff with cap
+                        backoff_seconds = min(MAX_BACKOFF_SECONDS, backoff_seconds * 2)
+                        # Continue to next iteration to retry
+                        continue
+
+                    # --- Handle other specific Github errors ---
+                    elif e_github.status == 404:
+                         # Usually no point retrying a 404 Not Found
+                         logger.error(f"GitHub resource not found (404) calling {func_name} with args: {args}, kwargs: {kwargs}")
+                         raise e_github # Re-raise immediately
+                    # Handle other GitHub API errors (e.g., 401 Unauthorized, 5xx Server Errors)
+                    else:
+                        err_data = e_github.data if hasattr(e_github, 'data') else '(no details)'
+                        logger.error(f"Unhandled GithubException calling {func_name} (Status: {e_github.status}): {err_data}")
+                        raise e_github # Re-raise other GitHub errors immediately
+
+                except Exception as e_unexpected:
+                    # --- Catch any other unexpected errors during the API call attempt ---
+                    logger.error(f"Unexpected error calling {func_name}: {e_unexpected}", exc_info=args.verbose)
+                    raise e_unexpected # Re-raise unexpected errors immediately
+
+            # --- End of While Loop ---
+            # This point should only be reached if the loop condition (retries <= MAX_RETRIES) becomes false
+            # which implies all retry attempts failed.
+            logger.error(f"Retry logic completed for {func_name} without success after {MAX_RETRIES} retries.")
+            # Re-raise the last caught GithubException if possible, otherwise raise a generic error.
+            # For simplicity, raising a generic one here. Could store last exception if needed.
+            raise GithubException(status=500, data={"message": f"Max retries exceeded for {func_name}"}, headers=None)
+
+        return wrapper
+    return decorator
+
+# --- Argument Parsing ---
+parser = argparse.ArgumentParser(
+    description='Fetches GitHub release data for zopencommunity/*port repositories, '
+                'filters by year, includes descriptions, and generates JSON caches.',
+    formatter_class=argparse.ArgumentDefaultsHelpFormatter # Show default values in help message
+)
+parser.add_argument(
+    '--verbose',
+    action='store_true',
+    help='Enable verbose (DEBUG level) output, including potentially sensitive info like URLs.'
+)
+parser.add_argument(
+    '--output-file',
+    dest='output_file',
+    required=True,
+    help='The full path to store the main JSON file (minified).'
+)
+parser.add_argument(
+    '--max-workers',
+    type=int,
+    default=DEFAULT_MAX_WORKERS,
+    help='Maximum number of concurrent threads to use for fetching release data.'
+)
+parser.add_argument(
+    '--min-year',
+    type=int,
+    default=MIN_RELEASE_YEAR,
+    help='Ignore releases published before this year.'
+)
+args = parser.parse_args()
+
+# Set logging level based on verbosity argument
+if args.verbose:
+    logger.setLevel(logging.DEBUG)
+    logger.debug("Verbose logging enabled.")
+    # Optionally increase verbosity of underlying libraries for deep debugging
+    # logging.getLogger("urllib3").setLevel(logging.DEBUG)
+    # logging.getLogger("requests").setLevel(logging.DEBUG)
+else:
+    logger.setLevel(logging.INFO)
+
+# --- Environment Check & GitHub Instance Setup ---
+logger.info("Checking environment and initializing GitHub connection...")
+github_token = os.getenv('ZOPEN_GITHUB_OAUTH_TOKEN')
+if not github_token:
+    logger.error("Fatal Error: Environment variable ZOPEN_GITHUB_OAUTH_TOKEN must be defined.")
+    sys.exit(1)
+
+try:
+    # Initialize Github instance. Disable PyGithub's basic retry. Set a request timeout.
+    g = Github(github_token, retry=0, timeout=60)
+    # Create the decorator instance using our authenticated 'g' object
+    # This decorator will be applied to helper functions below
+    github_retry = create_github_retry_decorator(g)
+
+    # --- Decorated Helper Functions for API calls ---
+    # These apply the retry logic automatically when called
+    @github_retry
+    def get_authenticated_user_login(user_obj):
+        """Gets login of the user object, applying retry logic."""
+        return user_obj.login
+
+    @github_retry
+    def get_org_with_retry(org_name):
+        """Gets the organization object with retry logic."""
+        logger.debug(f"Fetching organization: {org_name}")
+        return g.get_organization(org_name)
+
+    @github_retry
+    def get_repos_with_retry(org_obj):
+        """Gets the list of repository objects for the org with retry logic."""
+        logger.debug(f"Fetching repositories for organization: {org_obj.login}")
+        # Returns a PaginatedList, iteration handles subsequent pages
+        return org_obj.get_repos()
+
+    @github_retry
+    def get_releases_with_retry(repo_obj):
+        """Gets the list of release objects for the repo with retry logic."""
+        logger.debug(f"Fetching releases for repository: {repo_obj.name}")
+        # Returns a PaginatedList
+        return repo_obj.get_releases()
+
+    @github_retry
+    def get_assets_with_retry(release_obj):
+        """Gets the list of asset objects for the release with retry logic."""
+        logger.debug(f"Fetching assets for release tag: {release_obj.tag_name}")
+        # Returns a PaginatedList
+        return release_obj.get_assets()
+
+    # --- Verify authentication and connectivity ---
+    user_login = get_authenticated_user_login(g.get_user())
+    logger.info(f"Successfully authenticated to GitHub as: {user_login}")
+    # Log initial rate limit status
+    limits = g.get_rate_limit().core
+    logger.info(f"Initial primary rate limit: {limits.remaining}/{limits.limit} requests remaining.")
+
+except BadCredentialsException:
+    logger.error("Fatal Error: GitHub authentication failed. Check your ZOPEN_GITHUB_OAUTH_TOKEN.")
+    sys.exit(1)
+except GithubException as e:
+     logger.error(f"Fatal Error: GitHub API error during initialization (Status: {e.status}): {e.data if hasattr(e, 'data') else '(no data)'}")
+     sys.exit(1)
+except Exception as e:
+    logger.error(f"Fatal Error: Unexpected error initializing GitHub connection: {e}", exc_info=args.verbose)
+    sys.exit(1)
+
+# --- Core Processing Functions ---
+
+def process_asset(asset):
+    """
+    Downloads and parses a metadata.json asset to extract release details.
+    Handles its own network/parsing errors, independent of GitHub API limits.
+    Returns a dictionary of extracted asset data or None if invalid/not metadata.
+    """
+    # Check if it's the target metadata file by name
+    if asset.name != METADATA_ASSET_NAME:
+        return None # Skip non-metadata files silently
+
+    logger.debug(f"Found target asset '{asset.name}' (ID: {asset.id}, Size: {asset.size} bytes)")
+    download_url = asset.browser_download_url # Get the public download URL
+
+    try:
+        # Download the metadata.json asset using requests library
+        response = requests.get(download_url, timeout=90) # Generous timeout for download
+        response.raise_for_status() # Raise HTTPError for bad responses (4xx or 5xx)
+        logger.debug(f"Successfully downloaded {asset.name} from {download_url}")
+        # Decode content, assuming UTF-8 which is standard for JSON
         metadata_content = response.content.decode('utf-8')
 
+        # Parse metadata information from JSON content
+        metadata_full = json.loads(metadata_content)
+        # Expecting structure like {"product": {...}} containing the details
+        metadata = metadata_full.get("product", {})
+        if not isinstance(metadata, dict) or not metadata:
+            logger.warning(f"Metadata file {asset.name} (URL: {download_url}) lacks 'product' key or it's not a dictionary.")
+            return None # Skip if structure is wrong
 
-        # Parse metadata information from JSON
-        metadata = json.loads(metadata_content).get("product", {})
+        # Check for mandatory 'pax' key within 'product' which names the actual artifact
+        pax_file_name = metadata.get("pax")
+        if not pax_file_name:
+             logger.warning(f"Skipping asset {asset.name} (URL: {download_url}): Required 'pax' key missing in metadata['product']")
+             return None
 
-        if "pax" not in metadata:
-            return None
+        # Construct URL for the actual pax file (assumed relative to the release download URL)
+        base_url = download_url.rsplit('/', 1)[0] + '/' # Get base URL of the release assets
+        full_pax_url = urllib.parse.urljoin(base_url, pax_file_name)
 
-        pax_file_name = metadata.get("pax", None)
-        if pax_file_name:
-            full_url = urllib.parse.urljoin(download_url, pax_file_name)
-        else:
-            full_url = None
+        # Extract other relevant info safely using .get() with defaults
+        test_status = metadata.get("test_status", {})
+        total_tests = test_status.get("total_tests", -1) # Use -1 or None to indicate missing data
+        passed_tests = test_status.get("total_success", -1)
 
-        # Extract the info from metadata.json file:
-        total_tests = metadata.get("test_status", {}).get("total_tests", -1)
-        passed_tests = metadata.get("test_status", {}).get("total_success", -1)
-        source_type = metadata.get("source_type", None)
-        sha = None
-        if source_type is not None and source_type == "GIT":
-            sha = metadata.get("community_commitsha", None)
+        source_type = metadata.get("source_type")
+        # Get commit SHA only if source type is GIT
+        sha = metadata.get("community_commitsha") if source_type == "GIT" else None
 
         runtime_dependencies_list = metadata.get("runtime_dependencies", [])
-        runtime_dependency_names = [dependency.get("name", "") for dependency in runtime_dependencies_list]
-        
-        # TODO: We probably want runtime_dependency to be an array at some point. This is mainly for backwards compat
-        runtime_dependencies = ' '.join(runtime_dependency_names)
+        # Extract names, ensuring list items are dicts and have 'name' key
+        runtime_dependency_names = [
+            dep.get("name") for dep in runtime_dependencies_list
+            if isinstance(dep, dict) and dep.get("name")
+        ]
 
-        filtered_asset = {
+        # --- !!! CONVERT DEPENDENCIES TO STRING !!! ---
+        # Convert the list of names into a single space-separated string
+        runtime_dependencies_string = " ".join(runtime_dependency_names)
+        # --- !!! END CHANGE !!! ---
+
+        # Build the dictionary containing processed data for this asset
+        filtered_asset_data = {
             "name": pax_file_name,
-            "url": full_url,
-            "version": metadata.get("version", None),
-            "release": metadata.get("release", None),
-            "categories": metadata.get("categories", None),
-            "size": metadata.get("pax_size", 0),
-            "expanded_size": metadata.get("size", 0),
-            "runtime_dependencies": runtime_dependencies,
+            "url": full_pax_url,
+            "version": metadata.get("version"),
+            "release": metadata.get("release"),
+            "categories": metadata.get("categories"),
+            "size": metadata.get("pax_size", 0), # Size of the pax file itself
+            "expanded_size": metadata.get("size", 0), # Expanded size on disk
+            # --- !!! USE THE STRING HERE !!! ---
+            "runtime_dependencies": runtime_dependencies_string,
+            # --- !!! END CHANGE !!! ---
             "total_tests": total_tests,
             "passed_tests": passed_tests,
             "community_commitsha": sha
         }
-        print(filtered_asset)
+        logger.debug(f"Successfully processed metadata for asset: {asset.name}, found pax file: {pax_file_name}")
+        return filtered_asset_data
 
-        return filtered_asset
+    # --- Error Handling for download and parsing ---
+    except requests.exceptions.Timeout:
+         logger.warning(f"Timeout downloading {asset.name} from {download_url}")
+         return None
+    except requests.exceptions.RequestException as e:
+        # Log non-timeout request errors (network issues, HTTP status errors like 404 on download URL)
+        logger.warning(f"Failed to download or process {asset.name} from {download_url}: {e}")
+        return None
+    except json.JSONDecodeError as e:
+        # Handle cases where the downloaded file is not valid JSON
+        logger.warning(f"Failed to parse JSON from {asset.name} (URL: {download_url}): {e}")
+        return None
+    except Exception as e:
+        # Catch-all for any other unexpected errors during asset processing
+        logger.error(f"Unexpected error processing asset {asset.name} (URL: {download_url}): {e}", exc_info=args.verbose)
+        return None
 
-    # Handle other types of assets or return None if not processing this asset type
-    return None
+# Process a single GitHub release object
+def process_release(repo_name, release_obj):
+    """
+    Processes assets within a single GitHub release object.
+    Uses decorated helper to fetch assets, then calls process_asset for each.
+    Returns a tuple: (filtered_release_dict, repo_name) or (None, repo_name) on failure.
+    The filtered_release_dict contains release metadata and a list of processed assets.
+    """
+    release_title = release_obj.title
+    release_tag = release_obj.tag_name
+    logger.debug(f"Processing release '{release_title}' (tag: {release_tag}) for repo: {repo_name}")
 
+    try:
+        # Use the decorated helper function to get assets list/iterator with retry logic
+        assets = get_assets_with_retry(release_obj)
+        # Handle case where asset fetching itself might return None after retries
+        if assets is None: # Check explicit None in case empty list is valid
+             logger.warning(f"Could not retrieve assets for release '{release_title}' (tag: {release_tag}) in repo {repo_name}.")
+             return None, repo_name
 
-# Cap to 1 thread for now so that we don't hit the secondary rate limit
-num_threads = min(int(multiprocessing.cpu_count() / 2), 2)
+    except GithubException as e:
+        # Catch error if get_assets_with_retry fails definitively after all retries
+        logger.error(f"Failed to get assets for release '{release_title}' (tag: {release_tag}) in repo {repo_name} after retries: {e}")
+        return None, repo_name # Indicate failure for this specific release
 
-
-# Process a single release
-def process_release(repo_name, release):
-    assets = release.get_assets()
-    print(repo_name)
-
-    filtered_assets = []
+    # --- Process the assets retrieved ---
+    filtered_assets = [] # List to hold successfully processed asset data dicts
+    asset_count = 0
+    # The 'assets' object might be a PaginatedList; direct iteration works fine
     for asset in assets:
-        filtered_asset = process_asset(asset, release.body)
-        if filtered_asset:
-            filtered_assets.append(filtered_asset)
+        asset_count += 1
+        # Process each asset (download metadata.json if applicable, parse)
+        filtered_asset_data = process_asset(asset) # Handles its own download/parse errors
+        # Add to list if processing was successful and returned data
+        if filtered_asset_data:
+            filtered_assets.append(filtered_asset_data)
+    logger.debug(f"Checked {asset_count} assets in release '{release_title}', found {len(filtered_assets)} matching '{METADATA_ASSET_NAME}' with valid data.")
 
+    # --- Construct final release data ---
+    # Only return a structure if we found valid processed assets for this release
     if filtered_assets:
-        filtered_release = {
-            "name": release.title,
-            "date": release.published_at,
-            "tag_name": release.tag_name,
-            "assets": filtered_assets
+        filtered_release_dict = {
+            "name": release_title,
+            "date": release_obj.published_at, # Keep as datetime object for accurate sorting
+            "tag_name": release_tag,
+            "assets": filtered_assets  # List of processed asset data dictionaries
         }
+        return filtered_release_dict, repo_name # Success
+    else:
+        # No relevant/processable assets found in this release, return None for the data part
+        logger.debug(f"No relevant assets found or processed in release '{release_title}'")
+        return None, repo_name
 
-        return filtered_release, repo_name
-    return None, repo_name
+# --- Main Execution Logic ---
+logger.info(f"Starting processing for organization '{ORGANIZATION}', repo suffix '{REPO_SUFFIX_FILTER}', min year {args.min_year}.")
+# Main data structure: { repo_name: [list_of_filtered_releases] }
+release_data = {}
+# Dictionary to store descriptions { repo_name: description }
+repo_descriptions = {}
 
-# Process releases in parallel with a limited number of threads
-with concurrent.futures.ThreadPoolExecutor(max_workers=num_threads) as executor:
-    futures = []
-    for repo in repositories:
-        repo_name = repo.name
+# Counters for tracking progress and results
+total_repos_processed = 0
+skipped_old_releases = 0
+skipped_failed_futures = 0
 
-        if not repo_name.endswith("port"):
-            continue
+try:
+    # Get the organization object using decorated helper with retries
+    org = get_org_with_retry(ORGANIZATION)
 
-        project_name = re.sub(r"port$", "", repo_name)
+    # Get the repositories iterator using decorated helper with retries
+    repositories = get_repos_with_retry(org)
+    logger.info(f"Fetching and filtering repositories from '{org.login}'...")
 
-        if args.verbose:
-            print(f"Fetching releases for repository: {project_name}")
+    # Using ThreadPoolExecutor for concurrent processing of releases
+    with concurrent.futures.ThreadPoolExecutor(
+        max_workers=args.max_workers,
+        thread_name_prefix="release_worker" # Helps identify threads in logs
+    ) as executor:
+        futures = [] # List to hold Future objects representing submitted tasks
+        repo_count = 0 # Counter for total repos checked in the org
 
-        releases = repo.get_releases()
+        # Iterate through repositories (PaginatedList fetches pages automatically)
+        for repo in repositories:
+            repo_count += 1
+            repo_name = repo.name
+            logger.debug(f"Checking repo {repo_count}: {repo_name}")
 
-        for release in releases:
-            future = executor.submit(process_release, project_name, release)
-            futures.append(future)
+            # Filter repositories by the configured suffix
+            if not repo_name.endswith(REPO_SUFFIX_FILTER):
+                logger.debug(f"Skipping repo {repo_name} (suffix mismatch)")
+                continue # Skip to the next repository
 
-    for future in concurrent.futures.as_completed(futures):
-        filtered_release, repo_name = future.result()
-        if filtered_release:
-            if repo_name not in release_data:
-                release_data[repo_name] = []
-            release_data[repo_name].append(filtered_release)
+            # Derive project name (repo name without suffix)
+            project_name = re.sub(rf"{REPO_SUFFIX_FILTER}$", "", repo_name)
+            total_repos_processed += 1
+            logger.info(f"Processing repository: {project_name} (Source: {repo_name})")
 
-for _, entries in release_data.items():
-    entries.sort(key=lambda entry: entry['date'], reverse=True)
+            # Get repository description, provide default if missing
+            repo_description = repo.description or "" # Use empty string if description is None
+            # Store description in the separate dictionary
+            repo_descriptions[project_name] = repo_description
+            if args.verbose: # Log full description only if verbose
+                 logger.debug(f"Repo description stored: '{repo_description}'")
+            elif repo_description: # Log truncated description otherwise
+                 logger.debug(f"Repo description stored: '{repo_description[:70]}...'")
 
-# Add timestamp to the JSON data
-json_data = {
-    "timestamp": datetime.datetime.now().isoformat(),
-    "release_data": release_data
+            # --- Submit release processing tasks for this repo ---
+            try:
+                # Get releases iterator using decorated helper with retries
+                releases = get_releases_with_retry(repo)
+                release_count_in_repo = 0
+                # Submit each release object to the executor for processing
+                for release in releases: # Iterates through the PaginatedList
+                    release_count_in_repo += 1
+                    # 'process_release' function will be called in a worker thread
+                    # with 'project_name' and the 'release' object as arguments
+                    future = executor.submit(process_release, project_name, release)
+                    futures.append(future) # Keep track of the submitted task
+
+                if release_count_in_repo == 0:
+                     logger.info(f"Repository {project_name} has no releases.")
+                else:
+                     logger.debug(f"Submitted {release_count_in_repo} releases for {project_name} to process queue.")
+
+            # Handle errors during the release fetching phase for a repo
+            except UnknownObjectException:
+                 # Repo might have been deleted between getting the repo list and fetching its releases
+                 logger.warning(f"Repository {repo_name} seems to have disappeared or is inaccessible (404). Skipping.")
+            except GithubException as e:
+                # Catch error if get_releases_with_retry fails definitively for this repo after all retries
+                logger.error(f"Could not fetch releases for repository {repo_name} after retries: {e}")
+            except Exception as e:
+                 # Catch other unexpected errors during processing of a specific repository's releases
+                 logger.error(f"Unexpected error processing repository {repo_name}: {e}", exc_info=args.verbose)
+
+        # --- Process results from worker threads as they complete ---
+        total_futures = len(futures)
+        if total_futures == 0:
+             logger.warning(f"No releases were submitted for processing across all {total_repos_processed} repositories.")
+        else:
+             logger.info(f"Submitted tasks for {total_futures} total releases across {total_repos_processed} repositories. Waiting for completion...")
+
+        processed_futures = 0
+        # Use as_completed to process results as soon as they are available
+        for future in concurrent.futures.as_completed(futures):
+            processed_futures += 1
+            # Log progress periodically or on completion
+            if processed_futures % 50 == 0 or processed_futures == total_futures:
+                 logger.info(f"Processing results... ({processed_futures}/{total_futures} tasks completed)")
+
+            try:
+                # Get the result tuple from the completed future: (dict, str) or (None, str)
+                filtered_release_dict, repo_name_result = future.result()
+
+                # --- Filter the result based on Date ---
+                # Check if the processing was successful (dict is not None) and repo name is valid
+                if filtered_release_dict and repo_name_result:
+                    release_date = filtered_release_dict.get('date')
+                    # Ensure we have a valid datetime object for comparison
+                    if release_date and isinstance(release_date, datetime.datetime):
+                         # Apply the minimum year filter
+                        if release_date.year >= args.min_year:
+                            # --- Add the valid, filtered release to our main data structure ---
+                            # Initialize the list for this repo if it's the first valid release found
+                            if repo_name_result not in release_data:
+                                release_data[repo_name_result] = []
+                            # Append the release dict to the list for that repository
+                            release_data[repo_name_result].append(filtered_release_dict)
+                            # Note: Actual count of included releases calculated later
+                        else:
+                            # Log releases skipped due to the date filter (DEBUG level)
+                            logger.debug(f"Skipping release '{filtered_release_dict.get('name', 'N/A')}' (tag: {filtered_release_dict.get('tag_name', 'N/A')}) from {repo_name_result} - Published in {release_date.year} (before {args.min_year})")
+                            skipped_old_releases += 1
+                    else:
+                        # Log if a successfully processed release is missing its date
+                        logger.warning(f"Skipping release in {repo_name_result} due to missing or invalid date field: {filtered_release_dict.get('tag_name', 'N/A')}")
+                # else: The future returned None for filtered_release_dict, meaning processing failed
+                # or no relevant assets were found. No action needed here, already logged in process_release.
+
+            # --- Handle errors that occurred during future execution ---
+            except concurrent.futures.CancelledError:
+                 logger.warning("A release processing task was cancelled.")
+                 skipped_failed_futures += 1
+            except Exception as e:
+                # Log exceptions raised *within* the worker thread task execution if they bubbled up
+                # (e.g., if process_release raised an unexpected error not caught internally)
+                logger.error(f"Error retrieving result from a release processing future: {e}", exc_info=args.verbose)
+                skipped_failed_futures += 1
+
+        logger.info(f"Finished processing futures. Skipped {skipped_old_releases} releases published before {args.min_year}. Encountered {skipped_failed_futures} failed tasks.")
+
+# --- Catch potential exceptions during overall script execution ---
+except BadCredentialsException:
+     # Should be caught during init, but included as safety net
+     logger.error("Fatal Error: Authentication failed during processing.")
+     sys.exit(1)
+except GithubException as e:
+    # Catch major API errors not handled by retry decorator during main loops
+    logger.error(f"Fatal Error: A major GitHub API error occurred during processing (Status: {e.status}): {e.data if hasattr(e, 'data') else '(no data)'}")
+    sys.exit(1)
+except Exception as e:
+    # Catch-all for any other unexpected errors during main setup or processing loops
+    logger.error(f"Fatal Error: An unexpected error occurred during main execution: {e}", exc_info=args.verbose)
+    sys.exit(1)
+
+
+# --- Post-Processing and File Output ---
+logger.info("Finished fetching and processing. Sorting releases and generating output files...")
+
+# Calculate final count of releases actually included in the data structure
+total_releases_included = sum(len(releases_list) for releases_list in release_data.values())
+logger.info(f"Total releases included in final data (published >= {args.min_year}): {total_releases_included}")
+
+# --- Sort Releases By Date Descending ---
+logger.debug("Sorting releases by date descending for each repository...")
+# Iterates directly over the lists (the values in release_data)
+for repo_name, releases_list in release_data.items():
+    if releases_list: # Check if list is not empty before sorting
+        try:
+             # Sort the list of releases *in-place*
+             releases_list.sort(
+                 key=lambda entry: entry.get('date') or datetime.datetime.min.replace(tzinfo=datetime.timezone.utc), # Use min date as fallback
+                 reverse=True # Most recent first
+             )
+        except Exception as e:
+             # Log errors during sorting for a specific repo
+             logger.error(f"Error sorting releases for repo {repo_name}: {e}")
+
+# --- Generate Full JSON Output File (Minified) ---
+logger.info(f"Generating full JSON output file (minified): {args.output_file}")
+# Construct the final JSON object for the main file
+json_data_full = {
+    "generation_timestamp_utc": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+    "source_organization": ORGANIZATION,
+    "minimum_release_year": args.min_year,
+    "release_data": release_data # Use the release_data (dict of lists)
 }
 
-with open(args.output_file, "w") as json_file:
-    json.dump(json_data, json_file, indent=2, default=str)
+try:
+    # Write the JSON data to the specified output file
+    with open(args.output_file, "w", encoding='utf-8') as json_file:
+        # --- !!! USE MINIFIED FORMAT !!! ---
+        # Use separators for minified output, remove indent
+        json.dump(json_data_full, json_file, separators=(',', ':'), default=str, ensure_ascii=False)
+        # --- !!! END CHANGE !!! ---
+    logger.info(f"Full JSON cache file created successfully: {args.output_file}")
+except IOError as e:
+    logger.error(f"Error writing main JSON file to {args.output_file}: {e}")
+except TypeError as e:
+     logger.error(f"Error serializing full data to JSON (check data types): {e}")
 
-print("JSON cache file created successfully.")
 
-if args.verbose:
-    print(f"Organization: {organization}")
-    print(f"Total repositories: {repositories.totalCount}")
-    print(f"Total releases: {sum(len(releases) for releases in release_data.values())}")
-
-# Add timestamp to the JSON data
-json_data = {
-    "timestamp": datetime.datetime.now().isoformat(),
-    "release_data": release_data
-}
-
-with open(args.output_file, "w") as json_file:
-    json.dump(json_data, json_file, separators=(',', ':'), default=str)
-
-print("JSON cache file created successfully: {args.output_file}")
-
-# Create a JSON with the latest releases only
+# --- Generate Latest Releases JSON Output File (Minified) ---
+logger.info("Generating JSON output file with only the latest release per repository...")
+# Prepare the structure for the latest releases JSON
 latest_releases_json_data = {
-    "timestamp": datetime.datetime.now().isoformat(),
-    "release_data": {}
+    "generation_timestamp_utc": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+    "source_organization": ORGANIZATION,
+    "minimum_release_year": args.min_year,
+    "release_data": {} # Structure: { repo_name: [list_with_one_latest_release] }
 }
 
-for repo_name, entries in release_data.items():
-    entries.sort(key=lambda entry: entry['date'], reverse=True)
-    latest_entries = []
+# Iterate through the release_data items (dict of lists)
+for repo_name, releases_list in release_data.items():
+    if releases_list: # Ensure list is not empty (already sorted)
+        latest_entry = releases_list[0] # Get the first item, which is the most recent release
+        # Store as a list containing only the latest release
+        latest_releases_json_data["release_data"][repo_name] = [latest_entry]
+    else:
+         # Handle case where a repo might exist but have no releases passing the filter
+         logger.debug(f"No valid releases found for {repo_name} (published >= {args.min_year}) to include in latest file.")
 
-    for entry in entries:
-        release_entry = {
-            "name": entry["name"],
-            "date": entry["date"],
-            "tag_name": entry["tag_name"],
-            "assets": entry["assets"]
-        }
+# Determine filename for the latest releases file based on the main output file name
+latest_output_file = args.output_file
+# Simple logic to replace or append '_latest' before the extension
+if latest_output_file.lower().endswith('.json'):
+    latest_output_file = latest_output_file[:-5] + '_latest.json' # Insert before .json
+else:
+    latest_output_file += "_latest.json" # Append if no .json extension
 
-        if len(latest_entries) >= 1:
-            break
+try:
+    # Write the latest releases JSON data to the derived filename
+    with open(latest_output_file, "w", encoding='utf-8') as latest_json_file:
+        # Use separators=(',', ':') for minified output
+        # default=str handles datetime objects, ensure_ascii=False for unicode
+        json.dump(latest_releases_json_data, latest_json_file, separators=(',', ':'), default=str, ensure_ascii=False)
+    logger.info(f"JSON file with the latest releases created successfully: {latest_output_file}")
+except IOError as e:
+    logger.error(f"Error writing latest releases JSON file to {latest_output_file}: {e}")
+except TypeError as e:
+     logger.error(f"Error serializing latest data to JSON: {e}")
 
-        #Future: Skip detailed info - maybe once we alter zopen query logic to get this from metadata.json
-        #if "runtime_dependencies" not in entry:
-        #    release_entry.pop("runtime_dependencies", None)
-        #if "total_tests" not in entry:
-        #    release_entry.pop("total_tests", None)
-        #if "passed_tests" not in entry:
-        #    release_entry.pop("passed_tests", None)
 
-        latest_entries.append(release_entry)
+# --- Generate Descriptions JSON File (Human-Readable) ---
+logger.info("Generating JSON file with repository descriptions...")
+# Determine filename for the descriptions file
+desc_output_file = args.output_file
+if desc_output_file.lower().endswith('.json'):
+    desc_output_file = desc_output_file[:-5] + '_descriptions.json'
+else:
+    desc_output_file += "_descriptions.json"
 
-    latest_releases_json_data["release_data"][repo_name] = latest_entries
+# Prepare the data payload for the descriptions file
+descriptions_json_data = {
+    "generation_timestamp_utc": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+    "source_organization": ORGANIZATION,
+    "descriptions": repo_descriptions # Use the dictionary populated earlier
+}
 
-# Save the latest json
-latest_output_file = args.output_file.replace('.json', '_latest.json')
-with open(latest_output_file, "w") as latest_json_file:
-    json.dump(latest_releases_json_data, latest_json_file, separators=(',', ':'), default=str)
-print(f"JSON file with the latest releases created successfully: {latest_output_file}")
+try:
+    # Write the descriptions JSON data to its file
+    with open(desc_output_file, "w", encoding='utf-8') as desc_json_file:
+        # Use human-readable format (indent=2) for descriptions file
+        json.dump(descriptions_json_data, desc_json_file, indent=2, ensure_ascii=False)
+    logger.info(f"JSON file with repository descriptions created successfully: {desc_output_file}")
+except IOError as e:
+    logger.error(f"Error writing descriptions JSON file to {desc_output_file}: {e}")
+except TypeError as e:
+     logger.error(f"Error serializing descriptions data to JSON: {e}")
+
+
+# --- Final Summary Output ---
+logger.info("Script finished successfully.")
+# Always print basic summary stats to INFO level
+logger.info(f"--- Summary ---")
+logger.info(f"Processed {total_repos_processed} '{REPO_SUFFIX_FILTER}' repositories from '{ORGANIZATION}'.")
+logger.info(f"Included {total_releases_included} releases (published >= {args.min_year}).")
+logger.info(f"Skipped {skipped_old_releases} releases (published < {args.min_year}).")
+if skipped_failed_futures > 0:
+    # Log failures as warning if any occurred
+    logger.warning(f"Encountered {skipped_failed_futures} failed release processing tasks (check logs above for details).")
+logger.info(f"Main releases file: {args.output_file}")
+logger.info(f"Latest releases file: {latest_output_file}")
+logger.info(f"Descriptions file: {desc_output_file}") # Mention descriptions file
+
+# Log final rate limit status if possible
+try:
+    # Check current time to ensure we don't make this call too close to the actual reset
+    current_time_utc = datetime.datetime.now(datetime.timezone.utc)
+    limits = g.get_rate_limit().core
+    reset_time_utc = limits.reset.replace(tzinfo=datetime.timezone.utc)
+    # Only log if not immediately near reset, to avoid potential timing issues/extra waits
+    if (reset_time_utc - current_time_utc).total_seconds() > 15:
+        logger.info(f"Final primary rate limit: {limits.remaining}/{limits.limit} requests remaining.")
+    else:
+        logger.info(f"Final primary rate limit check skipped (too close to reset time: {reset_time_utc.isoformat()}).")
+except Exception as e:
+    logger.warning(f"Could not retrieve final rate limit status: {e}")
+
