@@ -24,7 +24,7 @@ checkWritable
 printHelp()
 {
   cat << HELPDOC
-${ME} is a utility for zopen community to remove uneeded resources
+${ME} is a utility for zopen community to remove unneeded resources
 from the system to save space and prevent clutter.
 
 Usage: ${ME} [OPTION] [PACKAGE]

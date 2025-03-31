@@ -50,6 +50,7 @@ Command:
 Options:
   -h, --help, -?    display this help and exit
   -v, --verbose     run in verbose mode
+  --version         display the zopen version
 
 Examples:
   zopen --help      displays zopen help
@@ -58,7 +59,7 @@ Examples:
   zopen upgrade -y  upgrade all installed packages to the latest release,
                     without prompting
   zopen alt bash    list installed alternative bash packages
-  zopen info vim    displays details information about the installed vim package
+  zopen info vim    displays detailed information about the installed vim package
   zopen usage --pie displays an ASCII-art chart showing biggest space hogs
 
 SEE ALSO:
@@ -74,6 +75,7 @@ SEE ALSO:
   zopen-list(1)
   zopen-mirror(1)
   zopen-query(1)
+  zopen-refresh(1)
   zopen-remove(1)
   zopen-update-cacert(1)
   zopen-upgrade(1)
