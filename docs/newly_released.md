@@ -3,8 +3,9 @@
 <details open>
 <summary>Week of 2025-03-31 to 2025-04-06</summary>
 
-- **ncurses**: [ncurses-6.5.20250331_175748.zos.pax.Z](https://github.com/zopencommunity/ncursesport/releases/tag/STABLE_ncursesport_3183) - (category: Uncategorized)
 - **ninja**: [ninja-HEAD.20250331_153509.zos.pax.Z](https://github.com/zopencommunity/ninjaport/releases/tag/STABLE_ninjaport_3182) - (category: Uncategorized)
+- **ncurses**: [ncurses-6.5.20250331_175748.zos.pax.Z](https://github.com/zopencommunity/ncursesport/releases/tag/STABLE_ncursesport_3183) - (category: Uncategorized)
+- **coreutils**: [coreutils-9.6.20250331_114218.zos.pax.Z](https://github.com/zopencommunity/coreutilsport/releases/tag/STABLE_coreutilsport_3185) - (category: Uncategorized)
 - **zoslib**: [zoslib-zopen2.20250331_105546.zos.pax.Z](https://github.com/zopencommunity/zoslibport/releases/tag/STABLE_zoslibport_3180) - (category: library)
 - **getopt**: [getopt-1.1.6.20250331_150230.zos.pax.Z](https://github.com/zopencommunity/getoptport/releases/tag/STABLE_getoptport_3181) - (category: utilities)
 - **moreutils**: [moreutils-0.69.20250331_135235.zos.pax.Z](https://github.com/zopencommunity/moreutilsport/releases/tag/STABLE_moreutilsport_3184) - (category: utilities)
@@ -48,8 +49,8 @@
 <details>
 <summary>Week of 2025-03-03 to 2025-03-09</summary>
 
-- **vim**: [vim-heads.v9.1.1160.20250305_131404.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3153) - (category: editor development)
 - **git**: [git-heads.v2.48.1.20250305_021620.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/STABLE_gitport_3150) - (category: development source_control)
+- **vim**: [vim-heads.v9.1.1160.20250305_131404.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3153) - (category: editor development)
 - **zotsample**: [zotsample-1.3.20250304_185707.zos.pax.Z](https://github.com/zopencommunity/zotsampleport/releases/tag/STABLE_zotsampleport_3148) - (category: utilities)
 - **bash**: [bash-5.2.37.20250306_184820.zos.pax.Z](https://github.com/zopencommunity/bashport/releases/tag/STABLE_bashport_3157) - (category: shell)
 - **diffutils**: [diffutils-3.11.20250305_122917.zos.pax.Z](https://github.com/zopencommunity/diffutilsport/releases/tag/STABLE_diffutilsport_3154) - (category: utilities)
@@ -64,13 +65,13 @@
 <details>
 <summary>Week of 2025-02-24 to 2025-03-02</summary>
 
+- **git**: [git-heads.v2.48.1.20250226_114803.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/zusage) - (category: development source_control)
 - **curl**: [curl-8.12.1.20250226_160101.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/zusage) - (category: Uncategorized)
 - **less**: [less-heads.v668.20250226_155516.zos.pax.Z](https://github.com/zopencommunity/lessport/releases/tag/zusage) - (category: Uncategorized)
 - **vim**: [vim-heads.v9.1.1016.20250226_170120.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/zusage) - (category: editor development)
-- **git**: [git-heads.v2.48.1.20250226_114803.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/zusage) - (category: development source_control)
+- **make**: [make-4.4.1.20250226_120516.zos.pax.Z](https://github.com/zopencommunity/makeport/releases/tag/zusage) - (category: Uncategorized)
 - **perl**: [perl5-heads.v5.41.9.20250225_132828.zos.pax.Z](https://github.com/zopencommunity/perlport/releases/tag/STABLE_perlport_3131) - (category: Uncategorized)
 - **coreutils**: [coreutils-9.6.20250228_032556.zos.pax.Z](https://github.com/zopencommunity/coreutilsport/releases/tag/STABLE_coreutilsport_3141) - (category: Uncategorized)
-- **make**: [make-4.4.1.20250226_120516.zos.pax.Z](https://github.com/zopencommunity/makeport/releases/tag/zusage) - (category: Uncategorized)
 - **bash**: [bash-5.2.37.20250226_160642.zos.pax.Z](https://github.com/zopencommunity/bashport/releases/tag/zusage) - (category: shell)
 - **jq**: [jq-1.7.1.20250226_164140.zos.pax.Z](https://github.com/zopencommunity/jqport/releases/tag/zusage) - (category: Uncategorized)
 - **zoslib**: [zoslib-zopen2.20250226_022218.zos.pax.Z](https://github.com/zopencommunity/zoslibport/releases/tag/STABLE_zoslibport_3132) - (category: library)
@@ -134,10 +135,10 @@
 <details>
 <summary>Week of 2025-02-03 to 2025-02-09</summary>
 
-- **xz**: [xz-5.6.4.20250205_033706.zos.pax.Z](https://github.com/zopencommunity/xzport/releases/tag/STABLE_xzport_3075) - (category: Uncategorized)
+- **gzip**: [gzip-1.13.20250205_093947.zos.pax.Z](https://github.com/zopencommunity/gzipport/releases/tag/STABLE_gzipport_3082) - (category: Uncategorized)
 - **zlib**: [zlib-heads.v1.3.1.20250205_034023.zos.pax.Z](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_3071) - (category: Uncategorized)
 - **zlib**: [zlib-develop.20250204_223712.zos.pax.Z](https://github.com/zopencommunity/zlibport/releases/tag/DEV_zlibport_3069) - (category: Uncategorized)
-- **gzip**: [gzip-1.13.20250205_093947.zos.pax.Z](https://github.com/zopencommunity/gzipport/releases/tag/STABLE_gzipport_3082) - (category: Uncategorized)
+- **xz**: [xz-5.6.4.20250205_033706.zos.pax.Z](https://github.com/zopencommunity/xzport/releases/tag/STABLE_xzport_3075) - (category: Uncategorized)
 - **gawk**: [gawk-5.3.1.20250205_031214.zos.pax.Z](https://github.com/zopencommunity/gawkport/releases/tag/STABLE_gawkport_3064) - (category: utilities)
 - **wget**: [wget-1.25.0.20250205_033712.zos.pax.Z](https://github.com/zopencommunity/wgetport/releases/tag/STABLE_wgetport_3076) - (category: networking)
 - **zoslib**: [zoslib-zopen2.20250206_160708.zos.pax.Z](https://github.com/zopencommunity/zoslibport/releases/tag/STABLE_zoslibport_3085) - (category: library)
@@ -172,35 +173,35 @@
 <details>
 <summary>Week of 2025-01-27 to 2025-02-02</summary>
 
+- **gzip**: [gzip-1.13.20250128_051739.zos.pax.Z](https://github.com/zopencommunity/gzipport/releases/tag/STABLE_gzipport_2870) - (category: Uncategorized)
+- **gzip**: [gzip-1.13.20250127_163434.zos.pax.Z](https://github.com/zopencommunity/gzipport/releases/tag/STABLE_gzipport_2865) - (category: Uncategorized)
+- **git**: [git-heads.v2.48.1.20250131_080517.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/STABLE_gitport_3023) - (category: development source_control)
+- **git**: [git-heads.v2.48.1.20250130_223043.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/STABLE_gitport_2961) - (category: development source_control)
+- **git**: [git-heads.v2.48.1.20250128_192801.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/STABLE_gitport_2873) - (category: development source_control)
+- **man-db**: [man-db-2.12.1.20250130_210217.zos.pax.Z](https://github.com/zopencommunity/man-dbport/releases/tag/STABLE_man-dbport_2945) - (category: utilities)
+- **ninja**: [ninja-heads.v1.12.1.20250130_123403.zos.pax.Z](https://github.com/zopencommunity/ninjaport/releases/tag/STABLE_ninjaport_2924) - (category: Uncategorized)
 - **curl**: [curl-8.11.1.20250130_210044.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/STABLE_curlport_2964) - (category: Uncategorized)
-- **xz**: [xz-5.4.5.20250131_004602.zos.pax.Z](https://github.com/zopencommunity/xzport/releases/tag/STABLE_xzport_2967) - (category: Uncategorized)
-- **xz**: [xz-5.4.5.20250129_182650.zos.pax.Z](https://github.com/zopencommunity/xzport/releases/tag/STABLE_xzport_2905) - (category: Uncategorized)
-- **less**: [less-heads.v668.20250130_225718.zos.pax.Z](https://github.com/zopencommunity/lessport/releases/tag/STABLE_lessport_2954) - (category: Uncategorized)
 - **zlib**: [zlib-develop.20250131_045612.zos.pax.Z](https://github.com/zopencommunity/zlibport/releases/tag/DEV_zlibport_2989) - (category: Uncategorized)
 - **zlib**: [zlib-heads.v1.3.20250131_043441.zos.pax.Z](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_2985) - (category: Uncategorized)
 - **zlib**: [zlib-develop.20250130_125357.zos.pax.Z](https://github.com/zopencommunity/zlibport/releases/tag/DEV_zlibport_2931) - (category: Uncategorized)
 - **zlib**: [zlib-heads.v1.3.20250130_125259.zos.pax.Z](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_2930) - (category: Uncategorized)
+- **less**: [less-heads.v668.20250130_225718.zos.pax.Z](https://github.com/zopencommunity/lessport/releases/tag/STABLE_lessport_2954) - (category: Uncategorized)
 - **vim**: [vim-heads.v9.1.1016.20250131_113109.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3052) - (category: editor development)
 - **vim**: [vim-heads.v9.1.1016.20250130_231821.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2958) - (category: editor development)
-- **git**: [git-heads.v2.48.1.20250131_080517.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/STABLE_gitport_3023) - (category: development source_control)
-- **git**: [git-heads.v2.48.1.20250130_223043.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/STABLE_gitport_2961) - (category: development source_control)
-- **git**: [git-heads.v2.48.1.20250128_192801.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/STABLE_gitport_2873) - (category: development source_control)
-- **gzip**: [gzip-1.13.20250128_051739.zos.pax.Z](https://github.com/zopencommunity/gzipport/releases/tag/STABLE_gzipport_2870) - (category: Uncategorized)
-- **gzip**: [gzip-1.13.20250127_163434.zos.pax.Z](https://github.com/zopencommunity/gzipport/releases/tag/STABLE_gzipport_2865) - (category: Uncategorized)
-- **ncurses**: [ncurses-6.5.20250130_230916.zos.pax.Z](https://github.com/zopencommunity/ncursesport/releases/tag/STABLE_ncursesport_2956) - (category: Uncategorized)
-- **coreutils**: [coreutils-9.5.20250131_021847.zos.pax.Z](https://github.com/zopencommunity/coreutilsport/releases/tag/STABLE_coreutilsport_3016) - (category: Uncategorized)
-- **make**: [make-4.4.1.20250130_121444.zos.pax.Z](https://github.com/zopencommunity/makeport/releases/tag/STABLE_makeport_2925) - (category: development build_system)
-- **man-db**: [man-db-2.12.1.20250130_210217.zos.pax.Z](https://github.com/zopencommunity/man-dbport/releases/tag/STABLE_man-dbport_2945) - (category: utilities)
-- **pkgconfig**: [pkgconfig-DEV.20250131_042705.zos.pax.Z](https://github.com/zopencommunity/pkgconfigport/releases/tag/STABLE_pkgconfigport_2994) - (category: development)
-- **pkgconfig**: [pkgconfig-DEV.20250130_124431.zos.pax.Z](https://github.com/zopencommunity/pkgconfigport/releases/tag/STABLE_pkgconfigport_2940) - (category: development)
-- **cmake**: [cmake-DEV.20250129_182555.zos.pax.Z](https://github.com/zopencommunity/cmakeport/releases/tag/STABLE_cmakeport_2914) - (category: Uncategorized)
-- **ninja**: [ninja-heads.v1.12.1.20250130_123403.zos.pax.Z](https://github.com/zopencommunity/ninjaport/releases/tag/STABLE_ninjaport_2924) - (category: Uncategorized)
-- **help2man**: [help2man-1.49.3.20250129_141844.zos.pax.Z](https://github.com/zopencommunity/help2manport/releases/tag/STABLE_help2manport_2875) - (category: Uncategorized)
 - **automake**: [automake-1.17.20250131_112933.zos.pax.Z](https://github.com/zopencommunity/automakeport/releases/tag/STABLE_automakeport_3055) - (category: Uncategorized)
 - **automake**: [automake-1.17.20250130_222100.zos.pax.Z](https://github.com/zopencommunity/automakeport/releases/tag/STABLE_automakeport_2962) - (category: Uncategorized)
 - **automake**: [automake-1.17.20250130_223718.zos.pax.Z](https://github.com/zopencommunity/automakeport/releases/tag/STABLE_automakeport_2952) - (category: Uncategorized)
 - **automake**: [automake-1.17.20250130_123410.zos.pax.Z](https://github.com/zopencommunity/automakeport/releases/tag/STABLE_automakeport_2941) - (category: Uncategorized)
+- **ncurses**: [ncurses-6.5.20250130_230916.zos.pax.Z](https://github.com/zopencommunity/ncursesport/releases/tag/STABLE_ncursesport_2956) - (category: Uncategorized)
+- **make**: [make-4.4.1.20250130_121444.zos.pax.Z](https://github.com/zopencommunity/makeport/releases/tag/STABLE_makeport_2925) - (category: development build_system)
 - **libtool**: [libtool-2.4.20250130_120629.zos.pax.Z](https://github.com/zopencommunity/libtoolport/releases/tag/STABLE_libtoolport_2923) - (category: Uncategorized)
+- **xz**: [xz-5.4.5.20250131_004602.zos.pax.Z](https://github.com/zopencommunity/xzport/releases/tag/STABLE_xzport_2967) - (category: Uncategorized)
+- **xz**: [xz-5.4.5.20250129_182650.zos.pax.Z](https://github.com/zopencommunity/xzport/releases/tag/STABLE_xzport_2905) - (category: Uncategorized)
+- **pkgconfig**: [pkgconfig-DEV.20250131_042705.zos.pax.Z](https://github.com/zopencommunity/pkgconfigport/releases/tag/STABLE_pkgconfigport_2994) - (category: development)
+- **pkgconfig**: [pkgconfig-DEV.20250130_124431.zos.pax.Z](https://github.com/zopencommunity/pkgconfigport/releases/tag/STABLE_pkgconfigport_2940) - (category: development)
+- **coreutils**: [coreutils-9.5.20250131_021847.zos.pax.Z](https://github.com/zopencommunity/coreutilsport/releases/tag/STABLE_coreutilsport_3016) - (category: Uncategorized)
+- **help2man**: [help2man-1.49.3.20250129_141844.zos.pax.Z](https://github.com/zopencommunity/help2manport/releases/tag/STABLE_help2manport_2875) - (category: Uncategorized)
+- **cmake**: [cmake-DEV.20250129_182555.zos.pax.Z](https://github.com/zopencommunity/cmakeport/releases/tag/STABLE_cmakeport_2914) - (category: Uncategorized)
 - **tar**: [tar-1.35.20250130_121504.zos.pax.Z](https://github.com/zopencommunity/tarport/releases/tag/STABLE_tarport_2939) - (category: utilities)
 - **expat**: [expat-2.5.0.20250130_225430.zos.pax.Z](https://github.com/zopencommunity/expatport/releases/tag/STABLE_expatport_2953) - (category: library)
 - **expat**: [expat-2.5.0.20250130_120352.zos.pax.Z](https://github.com/zopencommunity/expatport/releases/tag/STABLE_expatport_2919) - (category: library)
@@ -371,9 +372,9 @@
 <details>
 <summary>Week of 2025-01-20 to 2025-01-26</summary>
 
+- **gzip**: [gzip-1.13.20250124_151456.zos.pax.Z](https://github.com/zopencommunity/gzipport/releases/tag/STABLE_gzipport_2862) - (category: Uncategorized)
 - **less**: [less-heads.v668.20250123_133520.zos.pax.Z](https://github.com/zopencommunity/lessport/releases/tag/STABLE_lessport_2841) - (category: Uncategorized)
 - **openssl**: [openssl-3.4.0.20250123_021310.zos.pax.Z](https://github.com/zopencommunity/opensslport/releases/tag/STABLE_opensslport_2838) - (category: Uncategorized)
-- **gzip**: [gzip-1.13.20250124_151456.zos.pax.Z](https://github.com/zopencommunity/gzipport/releases/tag/STABLE_gzipport_2862) - (category: Uncategorized)
 - **perl**: [perl5-heads.v5.41.7.20250123_102326.zos.pax.Z](https://github.com/zopencommunity/perlport/releases/tag/STABLE_perlport_2840) - (category: Uncategorized)
 - **bash**: [bash-5.2.37.20250123_235235.zos.pax.Z](https://github.com/zopencommunity/bashport/releases/tag/STABLE_bashport_2848) - (category: shell)
 - **rsync**: [rsync-3.4.1.20250123_215715.zos.pax.Z](https://github.com/zopencommunity/rsyncport/releases/tag/STABLE_rsyncport_2844) - (category: utilities)
@@ -410,12 +411,12 @@
 <details>
 <summary>Week of 2025-01-13 to 2025-01-19</summary>
 
-- **vim**: [vim-heads.v9.1.1016.20250114_184833.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2810) - (category: editor development)
+- **gzip**: [gzip-1.13.20250116_125436.zos.pax.Z](https://github.com/zopencommunity/gzipport/releases/tag/STABLE_gzipport_2821) - (category: Uncategorized)
 - **git**: [git-heads.v2.48.1.20250117_163133.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/STABLE_gitport_2828) - (category: development source_control)
 - **git**: [git-heads.v2.48.1.20250115_210530.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/STABLE_gitport_2817) - (category: development source_control)
 - **git**: [git-heads.v2.48.0.20250115_024338.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/STABLE_gitport_2814) - (category: development source_control)
 - **git**: [git-heads.v2.48.0.20250114_130828.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/STABLE_gitport_2808) - (category: development source_control)
-- **gzip**: [gzip-1.13.20250116_125436.zos.pax.Z](https://github.com/zopencommunity/gzipport/releases/tag/STABLE_gzipport_2821) - (category: Uncategorized)
+- **vim**: [vim-heads.v9.1.1016.20250114_184833.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2810) - (category: editor development)
 - **ncurses**: [ncurses-6.5.20250114_215252.zos.pax.Z](https://github.com/zopencommunity/ncursesport/releases/tag/STABLE_ncursesport_2812) - (category: Uncategorized)
 - **zip**: [zip-master.20250117_063257.zos.pax.Z](https://github.com/zopencommunity/zipport/releases/tag/STABLE_zipport_2825) - (category: compression)
 - **zip**: [zip-master.20250116_134855.zos.pax.Z](https://github.com/zopencommunity/zipport/releases/tag/STABLE_zipport_2822) - (category: compression)
@@ -559,24 +560,24 @@
 <details>
 <summary>Week of 2024-10-28 to 2024-11-03</summary>
 
+- **gzip**: [gzip-1.13.20241029_035908.zos.pax.Z](https://github.com/zopencommunity/gzipport/releases/tag/STABLE_gzipport_2711) - (category: Uncategorized)
+- **git**: [git-heads.v2.46.1.20241029_023900.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/STABLE_gitport_2709) - (category: development source_control)
+- **man-db**: [man-db-2.12.1.20241029_015025.zos.pax.Z](https://github.com/zopencommunity/man-dbport/releases/tag/STABLE_man-dbport_2712) - (category: utilities)
+- **ninja**: [ninja-heads.v1.12.1.20241029_041229.zos.pax.Z](https://github.com/zopencommunity/ninjaport/releases/tag/STABLE_ninjaport_2713) - (category: Uncategorized)
 - **curl**: [curl-8.10.1.20241029_004715.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/STABLE_curlport_2716) - (category: Uncategorized)
-- **less**: [less-heads.v667.20241028_123530.zos.pax.Z](https://github.com/zopencommunity/lessport/releases/tag/STABLE_lessport_2642) - (category: Uncategorized)
 - **zlib**: [zlib-develop.20241029_024916.zos.pax.Z](https://github.com/zopencommunity/zlibport/releases/tag/DEV_zlibport_2706) - (category: Uncategorized)
 - **zlib**: [zlib-heads.v1.3.20241029_011951.zos.pax.Z](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_2700) - (category: Uncategorized)
-- **openssl**: [openssl-3.3.2.20241101_004716.zos.pax.Z](https://github.com/zopencommunity/opensslport/releases/tag/STABLE_opensslport_2719) - (category: Uncategorized)
+- **less**: [less-heads.v667.20241028_123530.zos.pax.Z](https://github.com/zopencommunity/lessport/releases/tag/STABLE_lessport_2642) - (category: Uncategorized)
 - **vim**: [vim-heads.v9.1.0736.20241029_002028.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2697) - (category: editor development)
-- **git**: [git-heads.v2.46.1.20241029_023900.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/STABLE_gitport_2709) - (category: development source_control)
-- **gzip**: [gzip-1.13.20241029_035908.zos.pax.Z](https://github.com/zopencommunity/gzipport/releases/tag/STABLE_gzipport_2711) - (category: Uncategorized)
-- **perl**: [perl5-heads.v5.41.3.20241029_020530.zos.pax.Z](https://github.com/zopencommunity/perlport/releases/tag/STABLE_perlport_2715) - (category: Uncategorized)
+- **openssl**: [openssl-3.3.2.20241101_004716.zos.pax.Z](https://github.com/zopencommunity/opensslport/releases/tag/STABLE_opensslport_2719) - (category: Uncategorized)
+- **automake**: [automake-1.17.20241029_040611.zos.pax.Z](https://github.com/zopencommunity/automakeport/releases/tag/STABLE_automakeport_2714) - (category: Uncategorized)
 - **ncurses**: [ncurses-6.5.20241101_200007.zos.pax.Z](https://github.com/zopencommunity/ncursesport/releases/tag/STABLE_ncursesport_2721) - (category: Uncategorized)
 - **ncurses**: [ncurses-6.5.20241029_033102.zos.pax.Z](https://github.com/zopencommunity/ncursesport/releases/tag/STABLE_ncursesport_2710) - (category: Uncategorized)
 - **make**: [make-4.4.1.20241029_012339.zos.pax.Z](https://github.com/zopencommunity/makeport/releases/tag/STABLE_makeport_2702) - (category: development build_system)
-- **man-db**: [man-db-2.12.1.20241029_015025.zos.pax.Z](https://github.com/zopencommunity/man-dbport/releases/tag/STABLE_man-dbport_2712) - (category: utilities)
-- **pkgconfig**: [pkgconfig-DEV.20241029_013507.zos.pax.Z](https://github.com/zopencommunity/pkgconfigport/releases/tag/STABLE_pkgconfigport_2704) - (category: development)
-- **ninja**: [ninja-heads.v1.12.1.20241029_041229.zos.pax.Z](https://github.com/zopencommunity/ninjaport/releases/tag/STABLE_ninjaport_2713) - (category: Uncategorized)
-- **zotsample**: [zotsample-1.3.20241029_002442.zos.pax.Z](https://github.com/zopencommunity/zotsampleport/releases/tag/STABLE_zotsampleport_2695) - (category: utilities)
-- **automake**: [automake-1.17.20241029_040611.zos.pax.Z](https://github.com/zopencommunity/automakeport/releases/tag/STABLE_automakeport_2714) - (category: Uncategorized)
+- **perl**: [perl5-heads.v5.41.3.20241029_020530.zos.pax.Z](https://github.com/zopencommunity/perlport/releases/tag/STABLE_perlport_2715) - (category: Uncategorized)
 - **libtool**: [libtool-2.4.20241029_025421.zos.pax.Z](https://github.com/zopencommunity/libtoolport/releases/tag/STABLE_libtoolport_2708) - (category: Uncategorized)
+- **zotsample**: [zotsample-1.3.20241029_002442.zos.pax.Z](https://github.com/zopencommunity/zotsampleport/releases/tag/STABLE_zotsampleport_2695) - (category: utilities)
+- **pkgconfig**: [pkgconfig-DEV.20241029_013507.zos.pax.Z](https://github.com/zopencommunity/pkgconfigport/releases/tag/STABLE_pkgconfigport_2704) - (category: development)
 - **tar**: [tar-1.35.20241029_004316.zos.pax.Z](https://github.com/zopencommunity/tarport/releases/tag/STABLE_tarport_2703) - (category: utilities)
 - **expat**: [expat-2.5.0.20241029_002907.zos.pax.Z](https://github.com/zopencommunity/expatport/releases/tag/STABLE_expatport_2698) - (category: library)
 - **tcl**: [tcl-core8.6.13-src.20241029_025017.zos.pax.Z](https://github.com/zopencommunity/tclport/releases/tag/STABLE_tclport_2707) - (category: language)
@@ -660,8 +661,8 @@
 <details>
 <summary>Week of 2024-10-14 to 2024-10-20</summary>
 
-- **coreutils**: [coreutils-9.5.20241018_140747.zos.pax.Z](https://github.com/zopencommunity/coreutilsport/releases/tag/STABLE_coreutilsport_2629) - (category: Uncategorized)
 - **man-db**: [man-db-2.12.1.20241018_101121.zos.pax.Z](https://github.com/zopencommunity/man-dbport/releases/tag/STABLE_man-dbport_2628) - (category: Uncategorized)
+- **coreutils**: [coreutils-9.5.20241018_140747.zos.pax.Z](https://github.com/zopencommunity/coreutilsport/releases/tag/STABLE_coreutilsport_2629) - (category: Uncategorized)
 - **sed**: [sed-4.9.20241018_140849.zos.pax.Z](https://github.com/zopencommunity/sedport/releases/tag/STABLE_sedport_2627) - (category: Uncategorized)
 - **meta**: [meta-main.20241018_082741.zos.pax.Z](https://github.com/zopencommunity/metaport/releases/tag/STABLE_metaport_2626) - (category: Uncategorized)
 - **npth**: [npth-1.6.20241014_074223.zos.pax.Z](https://github.com/zopencommunity/npthport/releases/tag/STABLE_npthport_2616) - (category: Uncategorized)
@@ -675,8 +676,8 @@
 <details>
 <summary>Week of 2024-10-07 to 2024-10-13</summary>
 
-- **xz**: [xz-5.4.5.20241009_201602.zos.pax.Z](https://github.com/zopencommunity/xzport/releases/tag/STABLE_xzport_2609) - (category: Uncategorized)
 - **openssl**: [openssl-3.3.2.20241010_031107.zos.pax.Z](https://github.com/zopencommunity/opensslport/releases/tag/STABLE_opensslport_2611) - (category: Uncategorized)
+- **xz**: [xz-5.4.5.20241009_201602.zos.pax.Z](https://github.com/zopencommunity/xzport/releases/tag/STABLE_xzport_2609) - (category: Uncategorized)
 - **tar**: [tar-1.35.20241009_160002.zos.pax.Z](https://github.com/zopencommunity/tarport/releases/tag/STABLE_tarport_2607) - (category: Uncategorized)
 - **tar**: [tar-1.35.20241009_155135.zos.pax.Z](https://github.com/zopencommunity/tarport/releases/tag/STABLE_tarport_2606) - (category: Uncategorized)
 - **diffutils**: [diffutils-3.10.20241009_155038.zos.pax.Z](https://github.com/zopencommunity/diffutilsport/releases/tag/STABLE_diffutilsport_2605) - (category: Uncategorized)
@@ -693,27 +694,27 @@
 <details>
 <summary>Week of 2024-09-30 to 2024-10-06</summary>
 
+- **gzip**: [gzip-1.13.20241002_003451.zos.pax.Z](https://github.com/zopencommunity/gzipport/releases/tag/STABLE_gzipport_2526) - (category: Uncategorized)
+- **git**: [git-heads.v2.46.1.20241001_233150.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/STABLE_gitport_2522) - (category: Uncategorized)
+- **man-db**: [man-db-2.12.1.20241002_012434.zos.pax.Z](https://github.com/zopencommunity/man-dbport/releases/tag/STABLE_man-dbport_2542) - (category: Uncategorized)
+- **ninja**: [ninja-heads.v1.12.1.20241002_002558.zos.pax.Z](https://github.com/zopencommunity/ninjaport/releases/tag/STABLE_ninjaport_2524) - (category: Uncategorized)
 - **curl**: [curl-8.10.1.20241001_214340.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/STABLE_curlport_2544) - (category: Uncategorized)
-- **xz**: [xz-5.4.5.20241001_205347.zos.pax.Z](https://github.com/zopencommunity/xzport/releases/tag/STABLE_xzport_2492) - (category: Uncategorized)
-- **less**: [less-heads.v665.20241002_050201.zos.pax.Z](https://github.com/zopencommunity/lessport/releases/tag/STABLE_lessport_2600) - (category: Uncategorized)
-- **less**: [less-heads.v665.20241001_204349.zos.pax.Z](https://github.com/zopencommunity/lessport/releases/tag/STABLE_lessport_2490) - (category: Uncategorized)
 - **zlib**: [zlib-develop.20241002_012538.zos.pax.Z](https://github.com/zopencommunity/zlibport/releases/tag/DEV_zlibport_2538) - (category: Uncategorized)
 - **zlib**: [zlib-heads.v1.3.20241002_005437.zos.pax.Z](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_2529) - (category: Uncategorized)
+- **less**: [less-heads.v665.20241002_050201.zos.pax.Z](https://github.com/zopencommunity/lessport/releases/tag/STABLE_lessport_2600) - (category: Uncategorized)
+- **less**: [less-heads.v665.20241001_204349.zos.pax.Z](https://github.com/zopencommunity/lessport/releases/tag/STABLE_lessport_2490) - (category: Uncategorized)
+- **vim**: [vim-heads.v9.1.0736.20241001_210444.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2493) - (category: Uncategorized)
 - **openssl**: [openssl-3.2.0.20241002_050426.zos.pax.Z](https://github.com/zopencommunity/opensslport/releases/tag/STABLE_opensslport_2602) - (category: Uncategorized)
 - **openssl**: [openssl-3.2.0.20241001_204746.zos.pax.Z](https://github.com/zopencommunity/opensslport/releases/tag/STABLE_opensslport_2495) - (category: Uncategorized)
-- **vim**: [vim-heads.v9.1.0736.20241001_210444.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2493) - (category: Uncategorized)
-- **git**: [git-heads.v2.46.1.20241001_233150.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/STABLE_gitport_2522) - (category: Uncategorized)
-- **gzip**: [gzip-1.13.20241002_003451.zos.pax.Z](https://github.com/zopencommunity/gzipport/releases/tag/STABLE_gzipport_2526) - (category: Uncategorized)
+- **automake**: [automake-1.17.20241001_213717.zos.pax.Z](https://github.com/zopencommunity/automakeport/releases/tag/STABLE_automakeport_2507) - (category: Uncategorized)
 - **ncurses**: [ncurses-6.5.20241001_213602.zos.pax.Z](https://github.com/zopencommunity/ncursesport/releases/tag/STABLE_ncursesport_2503) - (category: Uncategorized)
-- **coreutils**: [coreutils-9.5.20241001_221124.zos.pax.Z](https://github.com/zopencommunity/coreutilsport/releases/tag/STABLE_coreutilsport_2504) - (category: Uncategorized)
 - **make**: [make-4.4.1.20241002_002034.zos.pax.Z](https://github.com/zopencommunity/makeport/releases/tag/STABLE_makeport_2520) - (category: Uncategorized)
 - **make**: [make-4.4.1.20241001_184552.zos.pax.Z](https://github.com/zopencommunity/makeport/releases/tag/STABLE_makeport_2487) - (category: Uncategorized)
-- **man-db**: [man-db-2.12.1.20241002_012434.zos.pax.Z](https://github.com/zopencommunity/man-dbport/releases/tag/STABLE_man-dbport_2542) - (category: Uncategorized)
-- **pkgconfig**: [pkgconfig-DEV.20241002_013333.zos.pax.Z](https://github.com/zopencommunity/pkgconfigport/releases/tag/STABLE_pkgconfigport_2558) - (category: Uncategorized)
-- **ninja**: [ninja-heads.v1.12.1.20241002_002558.zos.pax.Z](https://github.com/zopencommunity/ninjaport/releases/tag/STABLE_ninjaport_2524) - (category: Uncategorized)
-- **zotsample**: [zotsample-1.3.20241001_213305.zos.pax.Z](https://github.com/zopencommunity/zotsampleport/releases/tag/STABLE_zotsampleport_2494) - (category: Uncategorized)
-- **automake**: [automake-1.17.20241001_213717.zos.pax.Z](https://github.com/zopencommunity/automakeport/releases/tag/STABLE_automakeport_2507) - (category: Uncategorized)
 - **libtool**: [libtool-2.4.20241001_234831.zos.pax.Z](https://github.com/zopencommunity/libtoolport/releases/tag/STABLE_libtoolport_2580) - (category: Uncategorized)
+- **zotsample**: [zotsample-1.3.20241001_213305.zos.pax.Z](https://github.com/zopencommunity/zotsampleport/releases/tag/STABLE_zotsampleport_2494) - (category: Uncategorized)
+- **xz**: [xz-5.4.5.20241001_205347.zos.pax.Z](https://github.com/zopencommunity/xzport/releases/tag/STABLE_xzport_2492) - (category: Uncategorized)
+- **pkgconfig**: [pkgconfig-DEV.20241002_013333.zos.pax.Z](https://github.com/zopencommunity/pkgconfigport/releases/tag/STABLE_pkgconfigport_2558) - (category: Uncategorized)
+- **coreutils**: [coreutils-9.5.20241001_221124.zos.pax.Z](https://github.com/zopencommunity/coreutilsport/releases/tag/STABLE_coreutilsport_2504) - (category: Uncategorized)
 - **tar**: [tar-1.35.20241002_004438.zos.pax.Z](https://github.com/zopencommunity/tarport/releases/tag/STABLE_tarport_2530) - (category: Uncategorized)
 - **expat**: [expat-2.5.0.20241001_204258.zos.pax.Z](https://github.com/zopencommunity/expatport/releases/tag/STABLE_expatport_2491) - (category: Uncategorized)
 - **tcl**: [tcl-core8.6.13-src.20241002_004045.zos.pax.Z](https://github.com/zopencommunity/tclport/releases/tag/STABLE_tclport_2527) - (category: Uncategorized)
@@ -815,23 +816,23 @@
 <details>
 <summary>Week of 2024-09-23 to 2024-09-29</summary>
 
-- **curl**: [curl-8.9.1.20240923_023409.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/STABLE_curlport_2472) - (category: Uncategorized)
-- **less**: [less-heads.v665.20240923_051232.zos.pax.Z](https://github.com/zopencommunity/lessport/releases/tag/STABLE_lessport_2464) - (category: Uncategorized)
-- **openssl**: [openssl-3.2.0.20240924_001955.zos.pax.Z](https://github.com/zopencommunity/opensslport/releases/tag/STABLE_opensslport_2480) - (category: Uncategorized)
-- **vim**: [vim-heads.v9.1.0736.20240923_045240.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2461) - (category: Uncategorized)
+- **gzip**: [gzip-1.13.20240923_045235.zos.pax.Z](https://github.com/zopencommunity/gzipport/releases/tag/STABLE_gzipport_2467) - (category: Uncategorized)
 - **git**: [git-heads.v2.46.1.20240924_094527.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/STABLE_gitport_2481) - (category: Uncategorized)
 - **git**: [git-heads.v2.46.0.20240923_001607.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/STABLE_gitport_2465) - (category: Uncategorized)
-- **gzip**: [gzip-1.13.20240923_045235.zos.pax.Z](https://github.com/zopencommunity/gzipport/releases/tag/STABLE_gzipport_2467) - (category: Uncategorized)
-- **perl**: [perl5-heads.v5.41.3.20240923_214546.zos.pax.Z](https://github.com/zopencommunity/perlport/releases/tag/STABLE_perlport_2475) - (category: Uncategorized)
-- **perl**: [perl5-heads.v5.41.2.20240923_001434.zos.pax.Z](https://github.com/zopencommunity/perlport/releases/tag/STABLE_perlport_2471) - (category: Uncategorized)
-- **ncurses**: [ncurses-6.5.20240923_050025.zos.pax.Z](https://github.com/zopencommunity/ncursesport/releases/tag/STABLE_ncursesport_2463) - (category: Uncategorized)
-- **coreutils**: [coreutils-9.5.20240923_041424.zos.pax.Z](https://github.com/zopencommunity/coreutilsport/releases/tag/STABLE_coreutilsport_2473) - (category: Uncategorized)
-- **make**: [make-4.4.1.20240923_052656.zos.pax.Z](https://github.com/zopencommunity/makeport/releases/tag/STABLE_makeport_2469) - (category: Uncategorized)
-- **zotsample**: [zotsample-1.3.20240927_063949.zos.pax.Z](https://github.com/zopencommunity/zotsampleport/releases/tag/STABLE_zotsampleport_2483) - (category: Uncategorized)
-- **zotsample**: [zotsample-1.3.20240927_021916.zos.pax.Z](https://github.com/zopencommunity/zotsampleport/releases/tag/STABLE_zotsampleport_2444) - (category: Uncategorized)
-- **help2man**: [help2man-1.49.3.20240924_041914.zos.pax.Z](https://github.com/zopencommunity/help2manport/releases/tag/STABLE_help2manport_2476) - (category: Uncategorized)
+- **curl**: [curl-8.9.1.20240923_023409.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/STABLE_curlport_2472) - (category: Uncategorized)
+- **less**: [less-heads.v665.20240923_051232.zos.pax.Z](https://github.com/zopencommunity/lessport/releases/tag/STABLE_lessport_2464) - (category: Uncategorized)
+- **vim**: [vim-heads.v9.1.0736.20240923_045240.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2461) - (category: Uncategorized)
+- **openssl**: [openssl-3.2.0.20240924_001955.zos.pax.Z](https://github.com/zopencommunity/opensslport/releases/tag/STABLE_opensslport_2480) - (category: Uncategorized)
 - **automake**: [automake-1.17.20240924_042051.zos.pax.Z](https://github.com/zopencommunity/automakeport/releases/tag/STABLE_automakeport_2479) - (category: Uncategorized)
 - **automake**: [automake-1.17.20240922_213122.zos.pax.Z](https://github.com/zopencommunity/automakeport/releases/tag/STABLE_automakeport_2456) - (category: Uncategorized)
+- **ncurses**: [ncurses-6.5.20240923_050025.zos.pax.Z](https://github.com/zopencommunity/ncursesport/releases/tag/STABLE_ncursesport_2463) - (category: Uncategorized)
+- **make**: [make-4.4.1.20240923_052656.zos.pax.Z](https://github.com/zopencommunity/makeport/releases/tag/STABLE_makeport_2469) - (category: Uncategorized)
+- **perl**: [perl5-heads.v5.41.3.20240923_214546.zos.pax.Z](https://github.com/zopencommunity/perlport/releases/tag/STABLE_perlport_2475) - (category: Uncategorized)
+- **perl**: [perl5-heads.v5.41.2.20240923_001434.zos.pax.Z](https://github.com/zopencommunity/perlport/releases/tag/STABLE_perlport_2471) - (category: Uncategorized)
+- **zotsample**: [zotsample-1.3.20240927_063949.zos.pax.Z](https://github.com/zopencommunity/zotsampleport/releases/tag/STABLE_zotsampleport_2483) - (category: Uncategorized)
+- **zotsample**: [zotsample-1.3.20240927_021916.zos.pax.Z](https://github.com/zopencommunity/zotsampleport/releases/tag/STABLE_zotsampleport_2444) - (category: Uncategorized)
+- **coreutils**: [coreutils-9.5.20240923_041424.zos.pax.Z](https://github.com/zopencommunity/coreutilsport/releases/tag/STABLE_coreutilsport_2473) - (category: Uncategorized)
+- **help2man**: [help2man-1.49.3.20240924_041914.zos.pax.Z](https://github.com/zopencommunity/help2manport/releases/tag/STABLE_help2manport_2476) - (category: Uncategorized)
 - **tar**: [tar-1.35.20240924_020247.zos.pax.Z](https://github.com/zopencommunity/tarport/releases/tag/STABLE_tarport_2474) - (category: Uncategorized)
 - **gawk**: [gawk-5.3.0.20240923_011946.zos.pax.Z](https://github.com/zopencommunity/gawkport/releases/tag/STABLE_gawkport_2468) - (category: Uncategorized)
 - **bzip2**: [bzip2-1.0.8.20240923_045931.zos.pax.Z](https://github.com/zopencommunity/bzip2port/releases/tag/STABLE_bzip2port_2462) - (category: Uncategorized)
@@ -852,15 +853,15 @@
 <details>
 <summary>Week of 2024-09-16 to 2024-09-22</summary>
 
+- **bison**: [bison-3.8.2.20240922_015100.zos.pax.Z](https://github.com/zopencommunity/bisonport/releases/tag/STABLE_bisonport_2448) - (category: Uncategorized)
 - **vim**: [vim-heads.v9.1.0736.20240920_181950.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2436) - (category: Uncategorized)
 - **gettext**: [gettext-0.21.20240922_014617.zos.pax.Z](https://github.com/zopencommunity/gettextport/releases/tag/STABLE_gettextport_2450) - (category: Uncategorized)
-- **pkgconfig**: [pkgconfig-DEV.20240922_063401.zos.pax.Z](https://github.com/zopencommunity/pkgconfigport/releases/tag/STABLE_pkgconfigport_2447) - (category: Uncategorized)
 - **zotsample**: [zotsample-1.3.20240922_052529.zos.pax.Z](https://github.com/zopencommunity/zotsampleport/releases/tag/STABLE_zotsampleport_2443) - (category: Uncategorized)
 - **zotsample**: [zotsample-1.3.20240920_204029.zos.pax.Z](https://github.com/zopencommunity/zotsampleport/releases/tag/STABLE_zotsampleport_2440) - (category: Uncategorized)
 - **zotsample**: [zotsample-1.3.20240920_203256.zos.pax.Z](https://github.com/zopencommunity/zotsampleport/releases/tag/STABLE_zotsampleport_2439) - (category: Uncategorized)
 - **zotsample**: [zotsample-1.3.20240920_201847.zos.pax.Z](https://github.com/zopencommunity/zotsampleport/releases/tag/STABLE_zotsampleport_2438) - (category: Uncategorized)
 - **zotsample**: [zotsample-1.3.20240920_192624.zos.pax.Z](https://github.com/zopencommunity/zotsampleport/releases/tag/STABLE_zotsampleport_2437) - (category: Uncategorized)
-- **bison**: [bison-3.8.2.20240922_015100.zos.pax.Z](https://github.com/zopencommunity/bisonport/releases/tag/STABLE_bisonport_2448) - (category: Uncategorized)
+- **pkgconfig**: [pkgconfig-DEV.20240922_063401.zos.pax.Z](https://github.com/zopencommunity/pkgconfigport/releases/tag/STABLE_pkgconfigport_2447) - (category: Uncategorized)
 - **jq**: [jq-1.6.20240920_214546.zos.pax.Z](https://github.com/zopencommunity/jqport/releases/tag/STABLE_jqport_2442) - (category: Uncategorized)
 - **ctags**: [ctags-heads.v6.1.0.20240916_033737.zos.pax.Z](https://github.com/zopencommunity/ctagsport/releases/tag/STABLE_ctagsport_2433) - (category: editor)
 - **sudo**: [sudo-1.9.15p5.20240922_055233.zos.pax.Z](https://github.com/zopencommunity/sudoport/releases/tag/STABLE_sudoport_2446) - (category: Uncategorized)
@@ -949,8 +950,8 @@
 <details>
 <summary>Week of 2024-08-05 to 2024-08-11</summary>
 
-- **curl**: [curl-8.9.1.20240807_143052.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/STABLE_curlport_2382) - (category: Uncategorized)
 - **git**: [git-heads.v2.46.0.20240808_173942.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/STABLE_gitport_2384) - (category: Uncategorized)
+- **curl**: [curl-8.9.1.20240807_143052.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/STABLE_curlport_2382) - (category: Uncategorized)
 - **meta**: [meta-main.20240807_133741.zos.pax.Z](https://github.com/zopencommunity/metaport/releases/tag/STABLE_metaport_2381) - (category: Uncategorized)
 - **dialog**: [dialog-1.3-20240619.20240808_142201.zos.pax.Z](https://github.com/zopencommunity/dialogport/releases/tag/STABLE_dialogport_2383) - (category: graphics)
 
@@ -958,8 +959,8 @@
 <details>
 <summary>Week of 2024-07-29 to 2024-08-04</summary>
 
-- **less**: [less-heads.v661.20240802_200325.zos.pax.Z](https://github.com/zopencommunity/lessport/releases/tag/STABLE_lessport_2380) - (category: Uncategorized)
 - **git**: [git-heads.v2.45.2.20240802_183848.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/STABLE_gitport_2379) - (category: Uncategorized)
+- **less**: [less-heads.v661.20240802_200325.zos.pax.Z](https://github.com/zopencommunity/lessport/releases/tag/STABLE_lessport_2380) - (category: Uncategorized)
 - **boost**: [boost-master.20240730_055731.zos.pax.Z](https://github.com/zopencommunity/boostport/releases/tag/DEV_boostport_2378) - (category: Uncategorized)
 - **grafana**: [grafana-heads.v11.1.3.20240731_150543.zos.pax.Z](https://github.com/zopencommunity/grafanaport/releases/tag/STABLE_grafanaport_2268) - (category: database devops)
 
@@ -967,9 +968,9 @@
 <details>
 <summary>Week of 2024-07-22 to 2024-07-28</summary>
 
-- **curl**: [curl-8.9.0.20240724_132428.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/STABLE_curlport_2373) - (category: Uncategorized)
 - **git**: [git-heads.v2.45.2.20240724_182931.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/STABLE_gitport_2374) - (category: Uncategorized)
 - **git**: [git-heads.v2.45.2.20240724_033146.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/STABLE_gitport_2371) - (category: Uncategorized)
+- **curl**: [curl-8.9.0.20240724_132428.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/STABLE_curlport_2373) - (category: Uncategorized)
 - **perl**: [perl5-heads.v5.41.2.20240722_194015.zos.pax.Z](https://github.com/zopencommunity/perlport/releases/tag/STABLE_perlport_2367) - (category: Uncategorized)
 - **zoslib**: [zoslib-zopen2.20240724_025947.zos.pax.Z](https://github.com/zopencommunity/zoslibport/releases/tag/STABLE_zoslibport_2370) - (category: Uncategorized)
 - **zoslib**: [zoslib-zopen2.20240722_191016.zos.pax.Z](https://github.com/zopencommunity/zoslibport/releases/tag/STABLE_zoslibport_2366) - (category: Uncategorized)
@@ -985,10 +986,10 @@
 <details>
 <summary>Week of 2024-07-15 to 2024-07-21</summary>
 
-- **less**: [less-heads.v661.20240720_035954.zos.pax.Z](https://github.com/zopencommunity/lessport/releases/tag/STABLE_lessport_2362) - (category: Uncategorized)
-- **coreutils**: [coreutils-9.5.20240716_151230.zos.pax.Z](https://github.com/zopencommunity/coreutilsport/releases/tag/STABLE_coreutilsport_2356) - (category: Uncategorized)
 - **ninja**: [ninja-heads.v1.12.1.20240717_020611.zos.pax.Z](https://github.com/zopencommunity/ninjaport/releases/tag/STABLE_ninjaport_2358) - (category: Uncategorized)
 - **ninja**: [ninja-heads.v1.12.1.20240716_221816.zos.pax.Z](https://github.com/zopencommunity/ninjaport/releases/tag/STABLE_ninjaport_2357) - (category: Uncategorized)
+- **less**: [less-heads.v661.20240720_035954.zos.pax.Z](https://github.com/zopencommunity/lessport/releases/tag/STABLE_lessport_2362) - (category: Uncategorized)
+- **coreutils**: [coreutils-9.5.20240716_151230.zos.pax.Z](https://github.com/zopencommunity/coreutilsport/releases/tag/STABLE_coreutilsport_2356) - (category: Uncategorized)
 - **sed**: [sed-4.9.20240719_144929.zos.pax.Z](https://github.com/zopencommunity/sedport/releases/tag/STABLE_sedport_2360) - (category: Uncategorized)
 - **sed**: [sed-4.9.20240719_143852.zos.pax.Z](https://github.com/zopencommunity/sedport/releases/tag/STABLE_sedport_2359) - (category: Uncategorized)
 - **grep**: [grep-3.11.20240716_174524.zos.pax.Z](https://github.com/zopencommunity/grepport/releases/tag/STABLE_grepport_2355) - (category: Uncategorized)
@@ -1017,8 +1018,8 @@
 <details>
 <summary>Week of 2024-07-01 to 2024-07-07</summary>
 
-- **coreutils**: [coreutils-9.5.20240703_180011.zos.pax.Z](https://github.com/zopencommunity/coreutilsport/releases/tag/STABLE_coreutilsport_2333) - (category: Uncategorized)
 - **man-db**: [man-db-2.12.1.20240704_013713.zos.pax.Z](https://github.com/zopencommunity/man-dbport/releases/tag/STABLE_man-dbport_2338) - (category: Uncategorized)
+- **coreutils**: [coreutils-9.5.20240703_180011.zos.pax.Z](https://github.com/zopencommunity/coreutilsport/releases/tag/STABLE_coreutilsport_2333) - (category: Uncategorized)
 - **libiconv**: [libiconv-master.20240704_025604.zos.pax.Z](https://github.com/zopencommunity/libiconvport/releases/tag/DEV_libiconvport_2340) - (category: Uncategorized)
 - **libiconv**: [libiconv-1.17.20240704_030653.zos.pax.Z](https://github.com/zopencommunity/libiconvport/releases/tag/STABLE_libiconvport_2339) - (category: Uncategorized)
 - **libiconv**: [libiconv-1.17.20240704_025605.zos.pax.Z](https://github.com/zopencommunity/libiconvport/releases/tag/STABLE_libiconvport_2337) - (category: Uncategorized)
@@ -1080,9 +1081,9 @@
 <details>
 <summary>Week of 2024-06-03 to 2024-06-09</summary>
 
-- **less**: [less-heads.v657.20240606_184125.zos.pax.Z](https://github.com/zopencommunity/lessport/releases/tag/STABLE_lessport_2295) - (category: Uncategorized)
 - **git**: [git-heads.v2.45.2.20240606_174731.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/STABLE_gitport_2294) - (category: Uncategorized)
 - **git**: [git-heads.v2.45.2.20240603_160125.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/STABLE_gitport_2290) - (category: Uncategorized)
+- **less**: [less-heads.v657.20240606_184125.zos.pax.Z](https://github.com/zopencommunity/lessport/releases/tag/STABLE_lessport_2295) - (category: Uncategorized)
 - **unzip**: [unzip-master.20240604_133728.zos.pax.Z](https://github.com/zopencommunity/unzipport/releases/tag/STABLE_unzipport_2292) - (category: Uncategorized)
 - **unzip**: [unzip-master.20240604_132724.zos.pax.Z](https://github.com/zopencommunity/unzipport/releases/tag/STABLE_unzipport_2291) - (category: Uncategorized)
 - **prometheus**: [prometheus-heads.v2.45.5.20240604_135849.zos.pax.Z](https://github.com/zopencommunity/prometheusport/releases/tag/STABLE_prometheusport_2270) - (category: database devops graphics)
@@ -1122,9 +1123,9 @@
 <details>
 <summary>Week of 2024-05-13 to 2024-05-19</summary>
 
+- **git**: [git-heads.v2.45.1.20240515_200455.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/STABLE_gitport_2266) - (category: Uncategorized)
 - **vim**: [vim-heads.v9.1.0413.20240515_203214.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2265) - (category: Uncategorized)
 - **vim**: [vim-heads.v9.1.0140.20240513_030819.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2253) - (category: Uncategorized)
-- **git**: [git-heads.v2.45.1.20240515_200455.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/STABLE_gitport_2266) - (category: Uncategorized)
 - **openssh**: [openssh-9.7p1.20240518_022943.zos.pax.Z](https://github.com/zopencommunity/opensshport/releases/tag/STABLE_opensshport_2268) - (category: Uncategorized)
 - **wharf**: [wharf-main.20240515_203251.zos.pax.Z](https://github.com/zopencommunity/wharfport/releases/tag/STABLE_wharfport_2263) - (category: Uncategorized)
 - **wharf**: [wharf-main.20240513_201117.zos.pax.Z](https://github.com/zopencommunity/wharfport/releases/tag/STABLE_wharfport_2258) - (category: Uncategorized)
@@ -1160,8 +1161,8 @@
 <summary>Week of 2024-04-29 to 2024-05-05</summary>
 
 - **git**: [git-heads.v2.45.0.20240502_185355.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/STABLE_gitport_2238) - (category: Uncategorized)
-- **perl**: [perl5-heads.v5.39.8.20240502_194648.zos.pax.Z](https://github.com/zopencommunity/perlport/releases/tag/STABLE_perlport_2239) - (category: Uncategorized)
 - **make**: [make-4.4.1.20240430_144126.zos.pax.Z](https://github.com/zopencommunity/makeport/releases/tag/STABLE_makeport_2234) - (category: Uncategorized)
+- **perl**: [perl5-heads.v5.39.8.20240502_194648.zos.pax.Z](https://github.com/zopencommunity/perlport/releases/tag/STABLE_perlport_2239) - (category: Uncategorized)
 - **zip**: [zip-master.20240430_061153.zos.pax.Z](https://github.com/zopencommunity/zipport/releases/tag/STABLE_zipport_2233) - (category: Uncategorized)
 - **unzip**: [unzip-master.20240430_061142.zos.pax.Z](https://github.com/zopencommunity/unzipport/releases/tag/STABLE_unzipport_2232) - (category: Uncategorized)
 - **godsect**: [godsect-main.20240503_023524.zos.pax.Z](https://github.com/zopencommunity/godsectport/releases/tag/STABLE_godsectport_2242) - (category: devops utilities)
@@ -1221,9 +1222,9 @@
 <details>
 <summary>Week of 2024-03-18 to 2024-03-24</summary>
 
-- **vim**: [vim-heads.v9.1.0140.20240320_190941.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2204) - (category: Uncategorized)
-- **git**: [git-heads.v2.44.0.20240318_110959.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/STABLE_gitport_2201) - (category: Uncategorized)
 - **gzip**: [gzip-1.13.20240321_140759.zos.pax.Z](https://github.com/zopencommunity/gzipport/releases/tag/STABLE_gzipport_2205) - (category: Uncategorized)
+- **git**: [git-heads.v2.44.0.20240318_110959.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/STABLE_gitport_2201) - (category: Uncategorized)
+- **vim**: [vim-heads.v9.1.0140.20240320_190941.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2204) - (category: Uncategorized)
 - **meta**: [meta-main.20240320_171223.zos.pax.Z](https://github.com/zopencommunity/metaport/releases/tag/STABLE_metaport_2202) - (category: Uncategorized)
 - **gitlab-runner**: [gitlab-runner.20240321_160142.zos.pax.Z](https://github.com/zopencommunity/gitlab-runnerport/releases/tag/STABLE_gitlab-runnerport_2207) - (category: development source_control)
 - **gitlab-runner**: [gitlab-runner.20240321_152801.zos.pax.Z](https://github.com/zopencommunity/gitlab-runnerport/releases/tag/STABLE_gitlab-runnerport_2206) - (category: development source_control)
@@ -1267,11 +1268,11 @@
 <details>
 <summary>Week of 2024-02-26 to 2024-03-03</summary>
 
-- **xz**: [xz-5.4.5.20240225_221653.zos.pax.Z](https://github.com/zopencommunity/xzport/releases/tag/STABLE_xzport_2163) - (category: Uncategorized)
 - **git**: [git-2.43.0.20240229_200332.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/STABLE_gitport_2175) - (category: Uncategorized)
 - **git**: [git-2.43.0.20240226_220402.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/STABLE_gitport_2167) - (category: Uncategorized)
 - **git**: [git-2.43.0.20240226_215118.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/STABLE_gitport_2166) - (category: Uncategorized)
 - **git**: [git-2.43.0.20240226_025848.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/STABLE_gitport_2162) - (category: Uncategorized)
+- **xz**: [xz-5.4.5.20240225_221653.zos.pax.Z](https://github.com/zopencommunity/xzport/releases/tag/STABLE_xzport_2163) - (category: Uncategorized)
 - **comp_clang**: [comp_clang-DEV.20240229_200034.zos.pax.Z](https://github.com/zopencommunity/comp_clangport/releases/tag/STABLE_comp_clangport_2173) - (category: Uncategorized)
 - **terraform**: [terraform-heads.v1.7.4.20240226_124341.zos.pax.Z](https://github.com/zopencommunity/terraformport/releases/tag/STABLE_terraformport_2165) - (category: devops)
 - **terraform**: [terraform-heads.v1.7.3.20240226_025244.zos.pax.Z](https://github.com/zopencommunity/terraformport/releases/tag/STABLE_terraformport_2161) - (category: devops)
@@ -1367,12 +1368,12 @@
 <details>
 <summary>Week of 2024-01-29 to 2024-02-04</summary>
 
+- **ninja**: [ninja-master.20240130_160910.zos.pax.Z](https://github.com/zopencommunity/ninjaport/releases/tag/STABLE_ninjaport_2073) - (category: Uncategorized)
 - **curl**: [curl-8.5.0.20240130_020020.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/STABLE_curlport_2067) - (category: Uncategorized)
 - **make**: [make-4.4.1.20240129_224230.zos.pax.Z](https://github.com/zopencommunity/makeport/releases/tag/STABLE_makeport_2065) - (category: Uncategorized)
+- **libtool**: [libtool-2.4.20240129_152529.zos.pax.Z](https://github.com/zopencommunity/libtoolport/releases/tag/STABLE_libtoolport_2064) - (category: Uncategorized)
 - **pkgconfig**: [pkgconfig-DEV.20240128_220513.zos.pax.Z](https://github.com/zopencommunity/pkgconfigport/releases/tag/STABLE_pkgconfigport_2046) - (category: Uncategorized)
 - **cmake**: [CMake-heads.v3.27.8.20240129_142242.zos.pax.Z](https://github.com/zopencommunity/cmakeport/releases/tag/STABLE_cmakeport_2068) - (category: Uncategorized)
-- **ninja**: [ninja-master.20240130_160910.zos.pax.Z](https://github.com/zopencommunity/ninjaport/releases/tag/STABLE_ninjaport_2073) - (category: Uncategorized)
-- **libtool**: [libtool-2.4.20240129_152529.zos.pax.Z](https://github.com/zopencommunity/libtoolport/releases/tag/STABLE_libtoolport_2064) - (category: Uncategorized)
 - **rsync**: [rsync-master.20240129_094849.zos.pax.Z](https://github.com/zopencommunity/rsyncport/releases/tag/STABLE_rsyncport_2052) - (category: Uncategorized)
 - **bzip2**: [bzip2-1.0.8.20240128_234041.zos.pax.Z](https://github.com/zopencommunity/bzip2port/releases/tag/STABLE_bzip2port_2048) - (category: Uncategorized)
 - **zoslib**: [zoslib-main.20240202_154126.zos.pax.Z](https://github.com/zopencommunity/zoslibport/releases/tag/STABLE_zoslibport_2086) - (category: Uncategorized)
@@ -1409,19 +1410,19 @@
 <details>
 <summary>Week of 2024-01-22 to 2024-01-28</summary>
 
-- **less**: [less-643.20240122_144109.zos.pax.Z](https://github.com/zopencommunity/lessport/releases/tag/STABLE_lessport_1983) - (category: Uncategorized)
+- **gzip**: [gzip-1.13.20240124_155633.zos.pax.Z](https://github.com/zopencommunity/gzipport/releases/tag/STABLE_gzipport_2010) - (category: Uncategorized)
+- **man-db**: [man-db-2.12.0.20240124_132957.zos.pax.Z](https://github.com/zopencommunity/man-dbport/releases/tag/STABLE_man-dbport_2032) - (category: Uncategorized)
 - **zlib**: [zlib-heads.v1.3.20240126_215537.zos.pax.Z](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_2040) - (category: Uncategorized)
 - **zlib**: [zlib-develop.20240122_141309.zos.pax.Z](https://github.com/zopencommunity/zlibport/releases/tag/DEV_zlibport_1989) - (category: Uncategorized)
 - **zlib**: [zlib-develop.20240122_140432.zos.pax.Z](https://github.com/zopencommunity/zlibport/releases/tag/DEV_zlibport_1988) - (category: Uncategorized)
-- **openssl**: [openssl-3.2.0.20240123_152950.zos.pax.Z](https://github.com/zopencommunity/opensslport/releases/tag/STABLE_opensslport_1998) - (category: Uncategorized)
+- **less**: [less-643.20240122_144109.zos.pax.Z](https://github.com/zopencommunity/lessport/releases/tag/STABLE_lessport_1983) - (category: Uncategorized)
 - **vim**: [vim-heads.v9.0.2100.20240122_110205.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_1987) - (category: Uncategorized)
-- **gzip**: [gzip-1.13.20240124_155633.zos.pax.Z](https://github.com/zopencommunity/gzipport/releases/tag/STABLE_gzipport_2010) - (category: Uncategorized)
-- **perl**: [perl5-heads.v5.39.7.20240122_185506.zos.pax.Z](https://github.com/zopencommunity/perlport/releases/tag/STABLE_perlport_1991) - (category: Uncategorized)
+- **openssl**: [openssl-3.2.0.20240123_152950.zos.pax.Z](https://github.com/zopencommunity/opensslport/releases/tag/STABLE_opensslport_1998) - (category: Uncategorized)
 - **ncurses**: [ncurses-6.4.20240124_160950.zos.pax.Z](https://github.com/zopencommunity/ncursesport/releases/tag/STABLE_ncursesport_2012) - (category: Uncategorized)
-- **man-db**: [man-db-2.12.0.20240124_132957.zos.pax.Z](https://github.com/zopencommunity/man-dbport/releases/tag/STABLE_man-dbport_2032) - (category: Uncategorized)
+- **perl**: [perl5-heads.v5.39.7.20240122_185506.zos.pax.Z](https://github.com/zopencommunity/perlport/releases/tag/STABLE_perlport_1991) - (category: Uncategorized)
+- **help2man**: [help2man-1.49.3.20240124_160159.zos.pax.Z](https://github.com/zopencommunity/help2manport/releases/tag/STABLE_help2manport_2007) - (category: Uncategorized)
 - **cmake**: [CMake-heads.v3.27.8.20240124_102219.zos.pax.Z](https://github.com/zopencommunity/cmakeport/releases/tag/STABLE_cmakeport_2033) - (category: Uncategorized)
 - **cmake**: [CMake-heads.v3.27.8.20240121_235752.zos.pax.Z](https://github.com/zopencommunity/cmakeport/releases/tag/STABLE_cmakeport_1990) - (category: Uncategorized)
-- **help2man**: [help2man-1.49.3.20240124_160159.zos.pax.Z](https://github.com/zopencommunity/help2manport/releases/tag/STABLE_help2manport_2007) - (category: Uncategorized)
 - **tar**: [tar-1.35.20240126_165434.zos.pax.Z](https://github.com/zopencommunity/tarport/releases/tag/STABLE_tarport_2043) - (category: Uncategorized)
 - **expat**: [expat-2.5.0.20240124_122712.zos.pax.Z](https://github.com/zopencommunity/expatport/releases/tag/STABLE_expatport_2018) - (category: Uncategorized)
 - **bash**: [bash-5.2.21.20240126_140514.zos.pax.Z](https://github.com/zopencommunity/bashport/releases/tag/STABLE_bashport_2038) - (category: Uncategorized)
@@ -1516,9 +1517,9 @@
 <details>
 <summary>Week of 2024-01-01 to 2024-01-07</summary>
 
+- **m4**: [m4-1.4.19.20240104_082339.zos.pax.Z](https://github.com/zopencommunity/m4port/releases/tag/STABLE_m4port_1941) - (category: Uncategorized)
 - **less**: [less-643.20240104_132250.zos.pax.Z](https://github.com/zopencommunity/lessport/releases/tag/STABLE_lessport_1934) - (category: Uncategorized)
 - **zotsample**: [zotsample-1.3.20240104_164155.zos.pax.Z](https://github.com/zopencommunity/zotsampleport/releases/tag/STABLE_zotsampleport_1946) - (category: Uncategorized)
-- **m4**: [m4-1.4.19.20240104_082339.zos.pax.Z](https://github.com/zopencommunity/m4port/releases/tag/STABLE_m4port_1941) - (category: Uncategorized)
 - **gawk**: [gawk-5.2.2.20240104_213951.zos.pax.Z](https://github.com/zopencommunity/gawkport/releases/tag/STABLE_gawkport_1949) - (category: Uncategorized)
 - **lz4**: [lz4-1.9.4.20240104_082651.zos.pax.Z](https://github.com/zopencommunity/lz4port/releases/tag/STABLE_lz4port_1936) - (category: Uncategorized)
 - **bzip2**: [bzip2-1.0.8.20240104_213834.zos.pax.Z](https://github.com/zopencommunity/bzip2port/releases/tag/STABLE_bzip2port_1944) - (category: Uncategorized)
@@ -1579,9 +1580,9 @@
 <details>
 <summary>Week of 2023-12-04 to 2023-12-10</summary>
 
+- **vim**: [vim-master.20231207_093519.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_1896) - (category: Uncategorized)
 - **xz**: [xz-5.4.5.20231204_165650.zos.pax.Z](https://github.com/zopencommunity/xzport/releases/tag/STABLE_xzport_1879) - (category: Uncategorized)
 - **xz**: [xz-5.4.5.20231204_101256.zos.pax.Z](https://github.com/zopencommunity/xzport/releases/tag/STABLE_xzport_1878) - (category: Uncategorized)
-- **vim**: [vim-master.20231207_093519.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_1896) - (category: Uncategorized)
 - **zoslib**: [zoslib-main.20231205_141501.zos.pax.Z](https://github.com/zopencommunity/zoslibport/releases/tag/STABLE_zoslibport_1890) - (category: Uncategorized)
 - **zoslib**: [zoslib-main.20231204_223121.zos.pax.Z](https://github.com/zopencommunity/zoslibport/releases/tag/STABLE_zoslibport_1880) - (category: Uncategorized)
 - **zoslib**: [zoslib-main.20231203_231751.zos.pax.Z](https://github.com/zopencommunity/zoslibport/releases/tag/STABLE_zoslibport_1875) - (category: Uncategorized)
@@ -1609,8 +1610,8 @@
 <details>
 <summary>Week of 2023-11-27 to 2023-12-03</summary>
 
-- **vim**: [vim-master.20231127_095820.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_1843) - (category: Uncategorized)
 - **git**: [git-2.43.0.20231127_145951.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/STABLE_gitport_1844) - (category: Uncategorized)
+- **vim**: [vim-master.20231127_095820.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_1843) - (category: Uncategorized)
 - **libtool**: [libtool-2.4.20231202_202646.zos.pax.Z](https://github.com/zopencommunity/libtoolport/releases/tag/STABLE_libtoolport_1873) - (category: Uncategorized)
 - **rsync**: [rsync-master.20231127_083546.zos.pax.Z](https://github.com/zopencommunity/rsyncport/releases/tag/STABLE_rsyncport_1840) - (category: Uncategorized)
 - **zoslib**: [zoslib-zopen.20231203_004352.zos.pax.Z](https://github.com/zopencommunity/zoslibport/releases/tag/STABLE_zoslibport_1874) - (category: Uncategorized)
@@ -1653,15 +1654,15 @@
 <details>
 <summary>Week of 2023-11-20 to 2023-11-26</summary>
 
-- **xz**: [xz-5.2.5.20231124_071430.zos.pax.Z](https://github.com/zopencommunity/xzport/releases/tag/STABLE_xzport_1812) - (category: Uncategorized)
 - **zlib**: [zlib-develop.20231123_025537.zos.pax.Z](https://github.com/zopencommunity/zlibport/releases/tag/DEV_zlibport_1803) - (category: Uncategorized)
 - **zlib**: [zlib-heads.v1.3.20231122_215452.zos.pax.Z](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_1802) - (category: Uncategorized)
-- **openssl**: [openssl-3.2.0.20231124_000835.zos.pax.Z](https://github.com/zopencommunity/opensslport/releases/tag/STABLE_opensslport_1810) - (category: Uncategorized)
 - **vim**: [vim-master.20231124_154449.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_1823) - (category: Uncategorized)
 - **vim**: [vim-master.20231123_124149.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_1804) - (category: Uncategorized)
 - **vim**: [vim-master.20231122_110755.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_1798) - (category: Uncategorized)
+- **openssl**: [openssl-3.2.0.20231124_000835.zos.pax.Z](https://github.com/zopencommunity/opensslport/releases/tag/STABLE_opensslport_1810) - (category: Uncategorized)
 - **perl**: [perl5-heads.v5.39.5.20231122_174302.zos.pax.Z](https://github.com/zopencommunity/perlport/releases/tag/STABLE_perlport_1801) - (category: Uncategorized)
 - **perl**: [perl5-heads.v5.38.0.20231121_141630.zos.pax.Z](https://github.com/zopencommunity/perlport/releases/tag/STABLE_perlport_1792) - (category: Uncategorized)
+- **xz**: [xz-5.2.5.20231124_071430.zos.pax.Z](https://github.com/zopencommunity/xzport/releases/tag/STABLE_xzport_1812) - (category: Uncategorized)
 - **cmake**: [CMake-heads.v3.27.8.20231124_184234.zos.pax.Z](https://github.com/zopencommunity/cmakeport/releases/tag/STABLE_cmakeport_1834) - (category: Uncategorized)
 - **tar**: [tar-1.35.20231122_163410.zos.pax.Z](https://github.com/zopencommunity/tarport/releases/tag/STABLE_tarport_1799) - (category: Uncategorized)
 - **tar**: [tar-1.34.20231121_191928.zos.pax.Z](https://github.com/zopencommunity/tarport/releases/tag/STABLE_tarport_1796) - (category: Uncategorized)
@@ -1707,30 +1708,30 @@
 <details>
 <summary>Week of 2023-11-13 to 2023-11-19</summary>
 
-- **xz**: [xz-5.2.5.20231113_010933.zos.pax.Z](https://github.com/zopencommunity/xzport/releases/tag/STABLE_xzport_1705) - (category: Uncategorized)
-- **less**: [less-643.20231113_051522.zos.pax.Z](https://github.com/zopencommunity/lessport/releases/tag/STABLE_lessport_1697) - (category: Uncategorized)
-- **zlib**: [zlib-heads.v1.3.20231114_130000.zos.pax.Z](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_1739) - (category: Uncategorized)
-- **zlib**: [zlib-develop.20231114_125946.zos.pax.Z](https://github.com/zopencommunity/zlibport/releases/tag/DEV_zlibport_1738) - (category: Uncategorized)
-- **openssl**: [openssl-3.1.4.20231116_150325.zos.pax.Z](https://github.com/zopencommunity/opensslport/releases/tag/STABLE_opensslport_1775) - (category: Uncategorized)
-- **openssl**: [openssl-3.1.4.20231114_054250.zos.pax.Z](https://github.com/zopencommunity/opensslport/releases/tag/STABLE_opensslport_1735) - (category: Uncategorized)
-- **vim**: [vim-master.20231114_130104.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_1740) - (category: Uncategorized)
-- **vim**: [vim-master.20231113_055532.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_1707) - (category: Uncategorized)
+- **gzip**: [gzip-1.13.20231113_071414.zos.pax.Z](https://github.com/zopencommunity/gzipport/releases/tag/STABLE_gzipport_1717) - (category: Uncategorized)
 - **git**: [git-2.42.1.20231117_182735.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/STABLE_gitport_1783) - (category: Uncategorized)
 - **git**: [git-2.42.1.20231113_064816.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/STABLE_gitport_1713) - (category: Uncategorized)
+- **man-db**: [man-db-2.12.0.20231116_163614.zos.pax.Z](https://github.com/zopencommunity/man-dbport/releases/tag/STABLE_man-dbport_1779) - (category: Uncategorized)
+- **autoconf**: [autoconf-2.71.20231114_002453.zos.pax.Z](https://github.com/zopencommunity/autoconfport/releases/tag/STABLE_autoconfport_1736) - (category: Uncategorized)
+- **zlib**: [zlib-heads.v1.3.20231114_130000.zos.pax.Z](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_1739) - (category: Uncategorized)
+- **zlib**: [zlib-develop.20231114_125946.zos.pax.Z](https://github.com/zopencommunity/zlibport/releases/tag/DEV_zlibport_1738) - (category: Uncategorized)
+- **less**: [less-643.20231113_051522.zos.pax.Z](https://github.com/zopencommunity/lessport/releases/tag/STABLE_lessport_1697) - (category: Uncategorized)
+- **vim**: [vim-master.20231114_130104.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_1740) - (category: Uncategorized)
+- **vim**: [vim-master.20231113_055532.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_1707) - (category: Uncategorized)
+- **openssl**: [openssl-3.1.4.20231116_150325.zos.pax.Z](https://github.com/zopencommunity/opensslport/releases/tag/STABLE_opensslport_1775) - (category: Uncategorized)
+- **openssl**: [openssl-3.1.4.20231114_054250.zos.pax.Z](https://github.com/zopencommunity/opensslport/releases/tag/STABLE_opensslport_1735) - (category: Uncategorized)
+- **automake**: [automake-1.16.5.20231114_060401.zos.pax.Z](https://github.com/zopencommunity/automakeport/releases/tag/STABLE_automakeport_1734) - (category: Uncategorized)
 - **gettext**: [gettext-0.21.20231115_132944.zos.pax.Z](https://github.com/zopencommunity/gettextport/releases/tag/STABLE_gettextport_1766) - (category: Uncategorized)
 - **gettext**: [gettext-0.21.20231114_011235.zos.pax.Z](https://github.com/zopencommunity/gettextport/releases/tag/STABLE_gettextport_1737) - (category: Uncategorized)
-- **gzip**: [gzip-1.13.20231113_071414.zos.pax.Z](https://github.com/zopencommunity/gzipport/releases/tag/STABLE_gzipport_1717) - (category: Uncategorized)
-- **perl**: [perl5-heads.v5.38.0.20231113_001320.zos.pax.Z](https://github.com/zopencommunity/perlport/releases/tag/STABLE_perlport_1712) - (category: Uncategorized)
-- **autoconf**: [autoconf-2.71.20231114_002453.zos.pax.Z](https://github.com/zopencommunity/autoconfport/releases/tag/STABLE_autoconfport_1736) - (category: Uncategorized)
 - **ncurses**: [ncurses-6.4.20231114_180107.zos.pax.Z](https://github.com/zopencommunity/ncursesport/releases/tag/STABLE_ncursesport_1741) - (category: Uncategorized)
 - **ncurses**: [ncurses-6.3.20231113_001550.zos.pax.Z](https://github.com/zopencommunity/ncursesport/releases/tag/STABLE_ncursesport_1699) - (category: Uncategorized)
+- **make**: [make-4.4.1.20231113_010159.zos.pax.Z](https://github.com/zopencommunity/makeport/releases/tag/STABLE_makeport_1702) - (category: Uncategorized)
+- **perl**: [perl5-heads.v5.38.0.20231113_001320.zos.pax.Z](https://github.com/zopencommunity/perlport/releases/tag/STABLE_perlport_1712) - (category: Uncategorized)
+- **xz**: [xz-5.2.5.20231113_010933.zos.pax.Z](https://github.com/zopencommunity/xzport/releases/tag/STABLE_xzport_1705) - (category: Uncategorized)
+- **pkgconfig**: [pkgconfig-DEV.20231115_113524.zos.pax.Z](https://github.com/zopencommunity/pkgconfigport/releases/tag/STABLE_pkgconfigport_1759) - (category: Uncategorized)
 - **coreutils**: [coreutils-9.4.20231116_212509.zos.pax.Z](https://github.com/zopencommunity/coreutilsport/releases/tag/STABLE_coreutilsport_1780) - (category: Uncategorized)
 - **coreutils**: [coreutils-9.4.20231113_051902.zos.pax.Z](https://github.com/zopencommunity/coreutilsport/releases/tag/STABLE_coreutilsport_1716) - (category: Uncategorized)
-- **make**: [make-4.4.1.20231113_010159.zos.pax.Z](https://github.com/zopencommunity/makeport/releases/tag/STABLE_makeport_1702) - (category: Uncategorized)
-- **man-db**: [man-db-2.12.0.20231116_163614.zos.pax.Z](https://github.com/zopencommunity/man-dbport/releases/tag/STABLE_man-dbport_1779) - (category: Uncategorized)
-- **pkgconfig**: [pkgconfig-DEV.20231115_113524.zos.pax.Z](https://github.com/zopencommunity/pkgconfigport/releases/tag/STABLE_pkgconfigport_1759) - (category: Uncategorized)
 - **help2man**: [help2man-1.49.3.20231114_054704.zos.pax.Z](https://github.com/zopencommunity/help2manport/releases/tag/STABLE_help2manport_1731) - (category: Uncategorized)
-- **automake**: [automake-1.16.5.20231114_060401.zos.pax.Z](https://github.com/zopencommunity/automakeport/releases/tag/STABLE_automakeport_1734) - (category: Uncategorized)
 - **tar**: [tar-1.34.20231113_051629.zos.pax.Z](https://github.com/zopencommunity/tarport/releases/tag/STABLE_tarport_1700) - (category: Uncategorized)
 - **expat**: [expat-2.5.0.20231115_144847.zos.pax.Z](https://github.com/zopencommunity/expatport/releases/tag/STABLE_expatport_1750) - (category: Uncategorized)
 - **bash**: [bash-5.2.21.20231115_150451.zos.pax.Z](https://github.com/zopencommunity/bashport/releases/tag/STABLE_bashport_1755) - (category: Uncategorized)
@@ -1795,38 +1796,38 @@
 <details>
 <summary>Week of 2023-11-06 to 2023-11-12</summary>
 
+- **m4**: [m4-1.4.19.20231109_141136.zos.pax.Z](https://github.com/zopencommunity/m4port/releases/tag/STABLE_m4port_1663) - (category: Uncategorized)
+- **m4**: [m4-branch-1.4.20231109_082857.zos.pax.Z](https://github.com/zopencommunity/m4port/releases/tag/DEV_m4port_1643) - (category: Uncategorized)
+- **gzip**: [gzip-1.13.20231109_012130.zos.pax.Z](https://github.com/zopencommunity/gzipport/releases/tag/STABLE_gzipport_1595) - (category: Uncategorized)
+- **git**: [git-2.42.1.20231110_140528.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/STABLE_gitport_1678) - (category: Uncategorized)
+- **man-db**: [man-db-2.12.0.20231110_082837.zos.pax.Z](https://github.com/zopencommunity/man-dbport/releases/tag/STABLE_man-dbport_1682) - (category: Uncategorized)
+- **ninja**: [ninja-master.20231109_002036.zos.pax.Z](https://github.com/zopencommunity/ninjaport/releases/tag/STABLE_ninjaport_1584) - (category: Uncategorized)
+- **autoconf**: [autoconf-2.71.20231109_012459.zos.pax.Z](https://github.com/zopencommunity/autoconfport/releases/tag/STABLE_autoconfport_1654) - (category: Uncategorized)
+- **bison**: [bison-3.8.2.20231108_184648.zos.pax.Z](https://github.com/zopencommunity/bisonport/releases/tag/STABLE_bisonport_1616) - (category: Uncategorized)
 - **curl**: [curl-8.4.0.20231109_021914.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/STABLE_curlport_1619) - (category: Uncategorized)
-- **xz**: [xz-5.2.5.20231112_053523.zos.pax.Z](https://github.com/zopencommunity/xzport/releases/tag/STABLE_xzport_1693) - (category: Uncategorized)
-- **xz**: [xz-5.2.5.20231109_042304.zos.pax.Z](https://github.com/zopencommunity/xzport/releases/tag/STABLE_xzport_1641) - (category: Uncategorized)
-- **less**: [less-643.20231109_010905.zos.pax.Z](https://github.com/zopencommunity/lessport/releases/tag/STABLE_lessport_1590) - (category: Uncategorized)
 - **zlib**: [zlib-heads.v1.2.13.20231112_053155.zos.pax.Z](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_1687) - (category: Uncategorized)
 - **zlib**: [zlib-develop.20231112_003203.zos.pax.Z](https://github.com/zopencommunity/zlibport/releases/tag/DEV_zlibport_1686) - (category: Uncategorized)
 - **zlib**: [zlib-heads.v1.2.13.20231109_061908.zos.pax.Z](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_1645) - (category: Uncategorized)
 - **zlib**: [zlib-develop.20231109_054118.zos.pax.Z](https://github.com/zopencommunity/zlibport/releases/tag/DEV_zlibport_1621) - (category: Uncategorized)
-- **openssl**: [openssl-3.1.4.20231109_014013.zos.pax.Z](https://github.com/zopencommunity/opensslport/releases/tag/STABLE_opensslport_1614) - (category: Uncategorized)
-- **openssl**: [openssl-3.1.4.20231108_081539.zos.pax.Z](https://github.com/zopencommunity/opensslport/releases/tag/STABLE_opensslport_1581) - (category: Uncategorized)
+- **less**: [less-643.20231109_010905.zos.pax.Z](https://github.com/zopencommunity/lessport/releases/tag/STABLE_lessport_1590) - (category: Uncategorized)
 - **vim**: [vim-master.20231112_004642.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_1694) - (category: Uncategorized)
 - **vim**: [vim-master.20231108_235032.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_1617) - (category: Uncategorized)
-- **git**: [git-2.42.1.20231110_140528.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/STABLE_gitport_1678) - (category: Uncategorized)
+- **openssl**: [openssl-3.1.4.20231109_014013.zos.pax.Z](https://github.com/zopencommunity/opensslport/releases/tag/STABLE_opensslport_1614) - (category: Uncategorized)
+- **openssl**: [openssl-3.1.4.20231108_081539.zos.pax.Z](https://github.com/zopencommunity/opensslport/releases/tag/STABLE_opensslport_1581) - (category: Uncategorized)
+- **automake**: [automake-1.16.5.20231108_184539.zos.pax.Z](https://github.com/zopencommunity/automakeport/releases/tag/STABLE_automakeport_1594) - (category: Uncategorized)
 - **gettext**: [gettext-0.21.20231109_043853.zos.pax.Z](https://github.com/zopencommunity/gettextport/releases/tag/STABLE_gettextport_1667) - (category: Uncategorized)
 - **gettext**: [gettext-0.21.20231106_162955.zos.pax.Z](https://github.com/zopencommunity/gettextport/releases/tag/STABLE_gettextport_1568) - (category: Uncategorized)
-- **gzip**: [gzip-1.13.20231109_012130.zos.pax.Z](https://github.com/zopencommunity/gzipport/releases/tag/STABLE_gzipport_1595) - (category: Uncategorized)
-- **perl**: [perl5-heads.v5.38.0.20231108_215454.zos.pax.Z](https://github.com/zopencommunity/perlport/releases/tag/STABLE_perlport_1624) - (category: Uncategorized)
-- **autoconf**: [autoconf-2.71.20231109_012459.zos.pax.Z](https://github.com/zopencommunity/autoconfport/releases/tag/STABLE_autoconfport_1654) - (category: Uncategorized)
 - **ncurses**: [ncurses-6.3.20231109_110849.zos.pax.Z](https://github.com/zopencommunity/ncursesport/releases/tag/STABLE_ncursesport_1648) - (category: Uncategorized)
+- **make**: [make-4.4.1.20231109_131300.zos.pax.Z](https://github.com/zopencommunity/makeport/releases/tag/STABLE_makeport_1661) - (category: Uncategorized)
+- **perl**: [perl5-heads.v5.38.0.20231108_215454.zos.pax.Z](https://github.com/zopencommunity/perlport/releases/tag/STABLE_perlport_1624) - (category: Uncategorized)
+- **libtool**: [libtool-2.4.20231109_083911.zos.pax.Z](https://github.com/zopencommunity/libtoolport/releases/tag/STABLE_libtoolport_1656) - (category: Uncategorized)
+- **zotsample**: [zotsample-1.3.20231109_022554.zos.pax.Z](https://github.com/zopencommunity/zotsampleport/releases/tag/STABLE_zotsampleport_1599) - (category: Uncategorized)
+- **xz**: [xz-5.2.5.20231112_053523.zos.pax.Z](https://github.com/zopencommunity/xzport/releases/tag/STABLE_xzport_1693) - (category: Uncategorized)
+- **xz**: [xz-5.2.5.20231109_042304.zos.pax.Z](https://github.com/zopencommunity/xzport/releases/tag/STABLE_xzport_1641) - (category: Uncategorized)
+- **pkgconfig**: [pkgconfig-DEV.20231109_005753.zos.pax.Z](https://github.com/zopencommunity/pkgconfigport/releases/tag/STABLE_pkgconfigport_1627) - (category: Uncategorized)
 - **coreutils**: [coreutils-9.4.20231109_102027.zos.pax.Z](https://github.com/zopencommunity/coreutilsport/releases/tag/STABLE_coreutilsport_1666) - (category: Uncategorized)
 - **coreutils**: [coreutils-9.4.20231107_235319.zos.pax.Z](https://github.com/zopencommunity/coreutilsport/releases/tag/STABLE_coreutilsport_1579) - (category: Uncategorized)
-- **make**: [make-4.4.1.20231109_131300.zos.pax.Z](https://github.com/zopencommunity/makeport/releases/tag/STABLE_makeport_1661) - (category: Uncategorized)
-- **man-db**: [man-db-2.12.0.20231110_082837.zos.pax.Z](https://github.com/zopencommunity/man-dbport/releases/tag/STABLE_man-dbport_1682) - (category: Uncategorized)
-- **pkgconfig**: [pkgconfig-DEV.20231109_005753.zos.pax.Z](https://github.com/zopencommunity/pkgconfigport/releases/tag/STABLE_pkgconfigport_1627) - (category: Uncategorized)
 - **cmake**: [CMake-heads.v3.27.6.20231109_132440.zos.pax.Z](https://github.com/zopencommunity/cmakeport/releases/tag/STABLE_cmakeport_1674) - (category: Uncategorized)
-- **ninja**: [ninja-master.20231109_002036.zos.pax.Z](https://github.com/zopencommunity/ninjaport/releases/tag/STABLE_ninjaport_1584) - (category: Uncategorized)
-- **zotsample**: [zotsample-1.3.20231109_022554.zos.pax.Z](https://github.com/zopencommunity/zotsampleport/releases/tag/STABLE_zotsampleport_1599) - (category: Uncategorized)
-- **bison**: [bison-3.8.2.20231108_184648.zos.pax.Z](https://github.com/zopencommunity/bisonport/releases/tag/STABLE_bisonport_1616) - (category: Uncategorized)
-- **automake**: [automake-1.16.5.20231108_184539.zos.pax.Z](https://github.com/zopencommunity/automakeport/releases/tag/STABLE_automakeport_1594) - (category: Uncategorized)
-- **m4**: [m4-1.4.19.20231109_141136.zos.pax.Z](https://github.com/zopencommunity/m4port/releases/tag/STABLE_m4port_1663) - (category: Uncategorized)
-- **m4**: [m4-branch-1.4.20231109_082857.zos.pax.Z](https://github.com/zopencommunity/m4port/releases/tag/DEV_m4port_1643) - (category: Uncategorized)
-- **libtool**: [libtool-2.4.20231109_083911.zos.pax.Z](https://github.com/zopencommunity/libtoolport/releases/tag/STABLE_libtoolport_1656) - (category: Uncategorized)
 - **tar**: [tar-1.34.20231109_134346.zos.pax.Z](https://github.com/zopencommunity/tarport/releases/tag/STABLE_tarport_1664) - (category: Uncategorized)
 - **tar**: [tar-1.34.20231108_081700.zos.pax.Z](https://github.com/zopencommunity/tarport/releases/tag/STABLE_tarport_1580) - (category: Uncategorized)
 - **expat**: [expat-2.4.9.20231109_003548.zos.pax.Z](https://github.com/zopencommunity/expatport/releases/tag/STABLE_expatport_1586) - (category: Uncategorized)
