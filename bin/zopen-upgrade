@@ -1,5 +1,5 @@
 #!/bin/sh
-# Upgrade utility for z/OS Open Tools - https://github.com/ZOSOpenTools
+# Upgrade utility for zopen community- https://github.com/zopencommunity
 #
 # All zopen-* scripts MUST start with this code to maintain consistency
 #
@@ -20,8 +20,7 @@ checkWritable
 
 printHelp(){
   cat << HELPDOC
-zopen upgrade is a utility for z/OS Open Tools to upgrade packages to
-a later release
+zopen upgrade is a utility to upgrade installed packages to a later release
 
 Usage: zopen upgrade [OPTION] [PARAMETERS] [PACKAGES]
 
@@ -36,7 +35,7 @@ Examples:
   zopen upgrade -y  upgrade all packages to latest version on their
                     releaseline
 
-Report bugs at https://github.com/ZOSOpenTools/meta/issues .
+Report bugs at https://github.com/zopencommunity/meta/issues
 
 HELPDOC
 }

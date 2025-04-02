@@ -32,8 +32,8 @@ Usage: zopen query [OPTION] [VERB] [PACKAGE]
 
 Options:
   -d, --details     include full details for listings
-  -i, --installed   list only installed z/OS Open Tools
-      --list        list all available z/OS Open Tools
+  -i, --installed   list only installed pacakages
+      --list        list all available packages
       --no-header   suppress the header for the output
       --no-version  suppress version information, return package names
       --remote-search
@@ -230,7 +230,7 @@ whatProvides()
     echo "${found}" | xargs | tr ' ' '\n' | while read foundmatch; do
       printVerbose "Parsing '${foundmatch}'"
       if [ ! -d "${foundmatch}" ]; then
-        dereferenced=$(deref "${foundmatch}")
+        dereferenced=$(deref_symlink "${foundmatch}")
         fullpackage=$(echo "${dereferenced}" | sed "s#${ZOPEN_PKGINSTALL}/\([^/]*\).*#\1#")
 
         printInfo "Package '${fullpackage}' provides: '${foundmatch}'"
