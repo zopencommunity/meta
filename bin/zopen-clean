@@ -29,6 +29,7 @@ from the system to save space and prevent clutter.
 Usage: ${ME} [OPTION] [PACKAGE]
 
 Options:
+  --deep            deep clean - run all cleanup operations                    
   --all             apply cleanup command to all applicable packages.
   -c, --cache  [PACKAGE ...]
                     cleans the downloaded package cache; packages will be
@@ -40,6 +41,7 @@ Options:
   -u, --unused [PACKAGE ...]
                     remove versions of PACKAGEs that are available as
                     alternatives, leaving only the currently active version.
+  --nostats         do not output statistics from the clean operation(s)
   -v, --verbose     run in verbose mode.
   --version         print version.
 
@@ -48,44 +50,76 @@ Examples:
   zopen clean -d    analyse the zopen file system and remove dangling symlinks
   zopen clean -u [PACKAGE]
                     remove unused versions for PACKAGE
+  zopen clean -u --all 
+                    remove all unused packages within the zopen environment
+  zopen clean --deep 
+                    
 
 Report bugs at https://github.com/zopencommunity/meta/issues.
 
 HELPDOC
 }
 
+
+removeUnusedPackageVersions()
+{
+  needle=$1
+  [ -z "${needle}" ] && return
+  [ ! -e "${ZOPEN_PKGINSTALL}/${needle}" ] && printInfo "No versions of '${needle}' found" && continue
+
+  current=$(getCurrentVersionDir "${needle}")
+
+  if [ -n "${current}" ]; then
+    current=$(basename "${current}")
+  else
+    printInfo "No currently active version of '${needle}'; removing all versions"
+  fi
+  
+  counterfile=$(mktempfile "clean" ".rupv")
+  addCleanupTrapCmd "rm -f ${counterfile}"
+  cd "${ZOPEN_PKGINSTALL}/${needle}" && zosfind . -name "./*" -prune -type d > "${counterfile}"
+  while read repo; do
+    printVerbose "Parsing repo: '${repo}' as '${repo#./}'"
+    repo="${repo#./}"
+    if [ "${current}" = "${repo}" ]; then
+      printVerbose "${NC}${GREEN}-> ${repo}  <- Current version${NC}"
+    else
+      deref=$(cd "${ZOPEN_PKGINSTALL}/${needle}/${repo}" && pwd -P)
+      if [ "${deref}" != "/" ]; then
+        rm -rf "${deref}" > /dev/null 2>&1
+        printInfo "-  ${repo} <- Removed"
+        syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_FILE},${CAT_PACKAGE},${CAT_REMOVE}" "CLEAN" "cleanUnused" "Removed unused package at ${repo#"${ZOPEN_PKGINSTALL}"/} "
+        unusedCount=$((unusedCount + 1 ))
+      else
+        printError "Logic error - attempt to remove '/';ZOPEN_ROOTFS=${ZOPEN_ROOTFS};ZOPEN_PKGINSTALL=${ZOPEN_PKGINSTALL};needle=${needle};repo=${repo};"
+        return 1
+      fi
+    fi
+  done < "${counterfile}"
+  return 0
+}
+
 cleanUnused()
 {
-  for needle in $1; do
-    [ -z "${needle}" ] && return
-    [ ! -e "${ZOPEN_PKGINSTALL}/${needle}" ] && printInfo "No versions of '${needle}' found" && continue
-
-    current=$(getCurrentVersionDir "${needle}")
-
-    if [ -n "${current}" ]; then
-      current=$(basename "${current}")
-    else
-      printInfo "No currently active version of '${needle}'; removing all versions"
-    fi
-
-    cd "${ZOPEN_PKGINSTALL}/${needle}" && zosfind . -name "./*" -prune -type d |
-    while read repo; do
-      printVerbose "Parsing repo: '${repo}' as '${repo#./}'"
-      repo="${repo#./}"
-      if [ "${current}" = "${repo}" ]; then
-        printInfo "${NC}${GREEN}-> ${repo}  <- Current version${NC}"
-      else
-        deref=$(cd "${ZOPEN_PKGINSTALL}/${needle}/${repo}" && pwd -P)
-        [ "${deref}" = "/" ] || rm -rf "${deref}" > /dev/null 2>&1
-        printInfo "-- ${repo} <- Removed"
-        syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_FILE},${CAT_PACKAGE},${CAT_REMOVE}" "CLEAN" "cleanUnused" "Removed unused package at ${repo#"${ZOPEN_PKGINSTALL}"/} "
-      fi
+  ${deep} && printInfo "Removing any unused package versions"
+  unusedCount=0  # Updated within the removeUnusedPackageVersions function
+  if ${all}; then 
+    zopen list --installed --no-header --no-version | while read -r needle; do 
+      removeUnusedPackageVersions "${needle}"
     done
-  done
+  elif [ -z "$1" ]; then
+    printError "No packages selected for pruning. Specify package list or use parameter '--all'"
+  else
+   for needle in $1; do
+      removeUnusedPackageVersions "${needle}"
+    done
+  fi
+  $stats && printInfo "Removed ${unusedCount} unused package version"$([ ${unusedCount} -eq 1 ] || echo 's')
 }
 
 cleanDangling()
 {
+  ${deep} && printInfo "Purging any dangling symlinks with the zopen environment"
   printVerbose "Removing dangling symlinks from the file structure"
   # As packages can install to any subfolder of the zopen filesystem, need to traverse
   # along every path under that filesystem
@@ -107,25 +141,37 @@ cleanDangling()
       exit 4
     fi
   fi
-  progressHandler "spinner" "- Dangling link removal complete" &
+  progressHandler "linkcheck" "- Dangling link removal complete" &
   ph=$!
   killph="kill -HUP ${ph}"
   addCleanupTrapCmd "${killph}"
-  zosfind "${ZOPEN_ROOTFS}" -type l -exec test ! -e {} \; -print | while read sl; do
+
+  counterfile=$(mktempfile "clean" ".sl")
+  addCleanupTrapCmd "rm -f ${counterfile}"
+  zosfind "${ZOPEN_ROOTFS}" -type l -exec test ! -e {} \; -print > "${counterfile}"
+  counter=0
+  while IFS= read -r sl; do
     printVerbose "Removing dangling symlink '${sl}'"
     rm -f "${sl}"
-  done
+    counter=$((counter + 1))
+  done < "${counterfile}"
   ${killph} 2> /dev/null # if the timer is not running, the kill will fail
+
   syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_FILE}" "CLEAN" "cleanDangling" "zopen system at '${ZOPEN_ROOTFS}' scanned for dangling symlinks"
+
+  ${stats} && printInfo "Cleaned ${counter} dangling symlink$( [ "$counter" -eq 1 ] || echo s )"
 }
 
 cleanPackageCache()
 {
+  ${deep} && printInfo "Cleaning cached package files"
   # "All" option ignores the input parameter list as it brute force-cleans the cache rather
   # than cherry-pick the files to remove which would be slowed
   if ${all}; then
     printVerbose "Cleaning all cached packages in ${ZOPEN_ROOTFS}/var/cache/zopen"
+    # If we delete the pax, we need to delete the metadata and vice-versa
     rm -rf "${ZOPEN_ROOTFS}"/var/cache/zopen/*.pax.Z  # We actively want globbing
+    rm -rf "${ZOPEN_ROOTFS}"/var/cache/zopen/*.pax.Z.json  # We actively want globbing
     syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_FILE}" "CLEAN" "cleanPackageCache" "Main cache in ${ZOPEN_ROOTFS}/var/cache/zopen cleaned"
     printInfo "- Cache at '${ZOPEN_ROOTFS}/var/cache/zopen' cleaned"
   else
@@ -140,9 +186,30 @@ cleanPackageCache()
 
 cleanMetadata()
 {
+  ${deep} && printInfo "Cleaning zopen metadata"
+  if ${verbose} || ${stats}; then
+    lsBefore=$(mktempfile "clean" ".metadata")
+    addCleanupTrapCmd "rm -f ${lsBefore}"
+    lsAfter=$(mktempfile "clean" ".metadata")
+    addCleanupTrapCmd "rm -f ${lsAfter}"
+    ls "${ZOPEN_ROOTFS}/var/cache/zopen" > "$lsBefore" 2>/dev/null || printError "Unable to generate file listing at ${ZOPEN_ROOTFS}/var/cache/zopen. Check permissions and retry."
+  fi
   # Zopen metadata should prefix with the zopen_*
   printVerbose "Clearing meta info files from ${ZOPEN_ROOTFS}/var/cache/zopen"
-  rm "${ZOPEN_ROOTFS}"/var/cache/zopen/zopen_* || printError "Unable to clear metadata from ${ZOPEN_ROOTFS}/var/cache/zopen. Check permissions and retry."
+  rm "${ZOPEN_ROOTFS}"/var/cache/zopen/zopen_* > /dev/null 2>&1 || printError "Unable to clear zopen's metadata from ${ZOPEN_ROOTFS}/var/cache/zopen. Check permissions and retry."
+  if ${verbose} || ${stats}; then
+    ls "${ZOPEN_ROOTFS}/var/cache/zopen" > "$lsAfter" 2>/dev/null || printError "Unable to generate file listing at ${ZOPEN_ROOTFS}/var/cache/zopen. Check permissions and retry."
+    wcBefore=$(wc -l < "$lsBefore")
+    wcAfter=$(wc -l < "$lsAfter")
+    countDiff=$((wcBefore - wcAfter))
+    if ${verbose}; then
+      printInfo "- Removed the following $countDiff file$( [ "$countDiff" -eq 1 ] || echo s ):"
+      grep -Fxv -f "$lsAfter" "$lsBefore" 2> /dev/null
+    elif ${stats}; then
+      printInfo "- Removed $countDiff metadata file$( [ "$countDiff" -eq 1 ] || echo s )"
+    fi
+  fi
+
 }
 
 # Main code start here
@@ -155,6 +222,8 @@ cache=false
 all=false
 packagelist=""
 meta=false
+stats=true
+deep=false
 
 if [ $# -eq 0 ]; then
   printError "No option provided for cleaning"
@@ -162,25 +231,31 @@ fi
 while [ $# -gt 0 ]; do
   printVerbose "Parsing option: $1"
   case "$1" in
+  "--deep")
+    stats=true
+    deep=true
+    all=true
+    unused=true
+    dangling=true
+    cache=true
+    meta=true    
+    ;;
+  "--nostats")
+    stats=false
+    ;;
   "-u" | "--unused")
     unused=true
-    dangling=false
     ;;
   "--all")
     all=true
     ;;
   "-d" | "--dangling")
-    unused=false
     dangling=true
-    cache=false
-    meta=false
     ;;
   "-c" | "--cache")
-    dangling=false
     cache=true
     ;;
   "-m" | "--metadata")
-    dangling=false
     meta=true
     ;;
   "-h" | "--help" | "-?")
@@ -207,35 +282,22 @@ while [ $# -gt 0 ]; do
   shift
 done
 
-${dangling} && cleanDangling && exit
+${stats} && beforeUsage=$(diskusage "${ZOPEN_ROOTFS}")
+
+${dangling} && cleanDangling
 ${meta} && cleanMetadata
 
-getReposFromGithub
-if $all; then
-  printVerbose "Generating complete list of all packages"
-  # shellcheck disable=SC2154
-  for repo in ${repo_results}; do
-    cleanlist="${cleanlist} ${repo}"
-  done
-elif [ -n "$packagelist" ]; then
-  for pkg in $(echo "${packagelist}" | tr ',' ' ' | tr -s ' '); do
-    pkgfound=$(echo "${repo_results}" | awk -vpkg="${pkg}" '$0 == pkg {print}')
-    if [ "${pkgfound}" = "${pkg}" ]; then
-      printVerbose "Adding '${pkg}' to the clean queue."
-      cleanlist=$(printf "%s %s" "${cleanlist}" "${pkg}")
-    else
-      invalidlist=$(printf "%s %s" "${invalidlist}" "${pkg}")
-    fi
-  done
-  [ -n "${invalidlist}" ] && printError "The following package(s) were invalid and cannot be cleaned:\n${invalidlist}"
-elif [ ${cache} ]; then
-  printVerbose "Default for --cache is all ${NC}${BOLD}installed${NC} packages"
+if $cache && [ -z "${packagelist}" ]; then
   all=true
-else
-  [ -z "${packagelist}" ] && printError "Missing parameters. Correct command syntax and retry."
 fi
-${unused} && cleanUnused "${cleanlist}"
-${cache} && cleanPackageCache "${cleanlist}"
+
+${unused} && cleanUnused "${packagelist}"
+${cache} && cleanPackageCache "${packagelist}"
+
+if ${stats}; then 
+  afterUsage=$(diskusage "${ZOPEN_ROOTFS}")
+  printInfo "- Disk usage: Before: $(formattedFileSize "${beforeUsage}"); After: $(formattedFileSize "${afterUsage}"); Reclaimed: $(formattedFileSize $((beforeUsage - afterUsage)))"
+fi
 
 # At this point, commands completed successfully
 exit 0
