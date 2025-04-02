@@ -1999,8 +1999,14 @@ resolveCommands()
   if [ -z "${ZOPEN_NAME}" ]; then
     ZOPEN_NAME="${dir}"
     if [ "${ZOPEN_TYPE}x" = "GITx" ]; then
-      branch=$(git rev-parse --abbrev-ref HEAD 2>&1 | sed "s/\//./g")
-      ZOPEN_NAME="${dir}-${branch}"
+      tag_name=$(git describe --tags --exact-match HEAD 2>/dev/null)
+
+      if [ -n "$tag_name" ]; then
+        ZOPEN_NAME="${dir}-${tag_name}"
+      elif [ "${ZOPEN_TYPE}x" = "GITx" ]; then
+        branch=$(git rev-parse --abbrev-ref HEAD 2>&1 | sed "s/\//./g")
+        ZOPEN_NAME="${dir}-${branch}"
+      fi
     fi
   fi
   ZOPEN_PROJECT_HEAD_COMMIT_SHA="$(git rev-parse HEAD)"
