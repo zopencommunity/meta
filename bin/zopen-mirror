@@ -1,4 +1,4 @@
-#!/bin/sh -x
+#!/bin/sh
 # Repo mirror utility - stands alone from other scripts so has no
 # direct dependencies on existing functions. As such, it has some
 # cut-down versions of common features and an independent version
