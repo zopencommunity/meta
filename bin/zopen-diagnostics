@@ -102,13 +102,34 @@ print_Diagnostics()
   echo "z/OS Version: $CURRENT_VERSION"
   echo "Architecture: $cpu_arch"
   echo "Zopen Version: $(zopen --version | head -1 | cut -d ' ' -f4)"
-  echo "Disk Usage for \$ZOPEN_ROOTFS:"
+  echo "Disk Usage for ZOPEN_ROOTFS ($ZOPEN_ROOTFS):"
   num1=$(/bin/du -kt $ZOPEN_ROOTFS | tail -1 | tr -s ' ' | cut -d ' ' -f2)
   num2=1024                                                                     
   echo "$(echo "scale=2; $num1 / $num2" | bc) mb" 
   echo -e "\nFilesystem Usage (df) for \$ZOPEN_ROOTFS:"
   /bin/df -Pm "$ZOPEN_ROOTFS"
 }
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+  "-h" | "--help")
+    printSyntax
+    exit 0
+    ;;
+  "-v" | "--verbose")
+    verbose=true
+    ;;
+  "--version")
+    zopen-version "${ME}"
+    exit 0
+    ;;
+  -*)
+    exit 1
+    ;;
+  esac
+  shift
+done
+
 print_Diagnostics
 # Main code start here
 args=$*
@@ -127,26 +148,6 @@ if [ $# -eq 0 ]; then
   exit 1
 fi
 
-while [ $# -gt 0 ]; do
-  case "$1" in
-  "-h" | "--help")
-    printSyntax
-    exit 0
-    ;;
-  "-v" | "--verbose")
-    verbose=true
-    ;;
-  "--version")
-    zopen-version "${ME}"
-    exit 0
-    ;;
-  -*)
-    exit 1
-    ;;
-  *)
-    package="$1"
-    ;;
-  esac
-  shift
-done
+
+
 
