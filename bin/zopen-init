@@ -62,6 +62,11 @@ Options:
           configuration and regenerate configuration files.
           select the active version for PACKAGE from a list
 
+  --rebuild-repo-config
+          Recreate the default repository configuration file. Will also
+          refresh the zopen environment configuration, equivalent to
+          setting the --refresh parameter
+
   --refresh
           Refreshes the zopen-config file
 
@@ -119,6 +124,7 @@ reinitExisting=false
 appendToProfile=false
 releaselineDev=false
 refresh=false
+rebuildRepoConfig=false
 isCollectingStats=false
 isBot=false # used by jenkins, CI/CD
 bypassPrereqs=false
@@ -129,6 +135,10 @@ while [ $# -gt 0 ]; do
       ;;
     "--bypass-prereq-checks")
       bypassPrereqs=true 
+      ;;
+    "--rebuild-repo-config")
+      rebuildRepoConfig=true
+      refresh=true
       ;;
     "--refresh" )
       refresh=true
@@ -503,8 +513,10 @@ zz
 
 generateDefaultRepository()
 {
-  # Check for existing repository definition - if present, use.
-  [ -e "${rootfs}/etc/zopen/repos.d/active" ] && return 0
+    # Check for existing repository definition - if present, use unless
+    # user wants to rebuild the default repository file
+  [ -e "${rootfs}/etc/zopen/repos.d/active" ] && 
+      ! ${rebuildRepoConfig} && return 0
 
   # If there is no repository definition, generate a default to point to Github
   [ ! -e "${rootfs}/etc/zopen/repos.d" ] && mkdir -p "${rootfs}/etc/zopen/repos.d"
@@ -516,7 +528,7 @@ generateDefaultRepository()
   repotype="${paxrepourl%://*}"
   [ "${repotype}" = "${paxrepourl}" ] && printError "Unable to parse repository type from '${paxrepourl}'. Ensure valid format: <http|file>://<path to repo"
   
-    case "${repotype}" in
+  case "${repotype}" in
     http|https|file) printDebug "configuring repo type of: '${repotype}'";;
     *) printError "Unsupported repository type of '${repotype}'"
   esac
@@ -527,13 +539,14 @@ generateDefaultRepository()
   repometafile="${paxrepourl##*/}"
   [ "${repometafile}" = "${paxrepourl}" ] && printError "Unable to parse repository file from '${paxrepourl}'. Ensure valid format: <http|file>://<path to repo"
 
-  latestmetafile="$(echo "$repometafile" | sed -e 's/.json/_latest.json/')"
+  latestmetafile="$(echo "${repometafile}" | sed -e 's/.json/_latest.json/')"
 
   baserepourl="${repourl%/*}"
   [ "${baserepourl}" = "${repourl}" ] && printError "Unable to parse repository file from '${paxrepourl}'. Ensure valid format: <http|file>://<path to repo"
   
   repoFile="${rootfs}/etc/zopen/repos.d/$(echo "${repourl}" | tr -d "/[:space:]._").json"
 
+  # Backup any existing repository configuration file
   [ -e "${repoFile}" ] && mv "${repoFile}" "${repoFile}.$(date "+%C%m%d%H%M%S")"
   cat << EOS >  "${repoFile}"
 { 
@@ -543,7 +556,9 @@ generateDefaultRepository()
   "latest_file": "${latestmetafile}" 
 }
 EOS
-  (cd "${rootfs}/etc/zopen/repos.d" && ln -s "${repoFile}" "active")
+  # Create active link if not already present; if it is present, it'll either point to the default already or
+  # it'll point to a custom repo - leave as-is.
+  [ -L "${rootfs}/etc/zopen/repos.d/active" ] || (cd "${rootfs}/etc/zopen/repos.d" && ln -s "${repoFile}" "active")
 }
 
 generateAnalyticsConfiguration()

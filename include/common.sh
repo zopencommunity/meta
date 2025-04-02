@@ -489,22 +489,25 @@ validateReleaseLine()
 }
 
 # Attempt to fully dereference a symlink without any bashisms or arcane set logic
-# using some simplistic (recursive!) logic
-deref()
-{
-  testpath="$1"
-  if [ -L "${testpath}" ]; then
-    child=$(basename "${testpath}")
-    symlink=$(ls -l "${testpath}" | zossed 's/.*-> \(.*\)/\1/')
-    parent=$(dirname "${testpath}")
-    relpath="${parent}/${symlink}"
-    relparent=$(dirname "${relpath}")
-    abspath=$(cd "${relparent}" && pwd -P)
-    testpath="${abspath}/${child}"
-    deref "${testpath}"
-  else
-    [ -n "${testpath}" ] && echo "${testpath}" && unset testpath
-  fi
+deref_symlink() {
+    symlink="$1"
+    if [ -L "${symlink}"]; then
+      target=$(ls -l "$symlink" | awk '{print $NF}')
+    else
+      target="${symlink}"
+    fi
+    targetName=$(basename "${target}")
+    targetDir=$(dirname "${target}")
+    # Check if dir starts with a '/'; if not need to calculate absolute 
+    # fully-qualified name
+    case "$target" in
+        /*) targetDir=$(cd "${targetDir}" && pwd -P);; 
+        *) 
+          symlink_dir=$(dirname "$symlink")
+          targetDir=$(cd "$(pwd -P)/${symlink_dir}" && pwd -P)
+    esac    
+    absolute_dir=$(cd "$targetDir" && pwd -P)  # Resolves symlinked dirs
+    echo "$absolute_dir/$targetName"
 }
 
 toAbsolutePath() {
@@ -513,6 +516,7 @@ toAbsolutePath() {
       * | . | .. | ./* | ../*) echo "$(cd "$(dirname "$1")" && pwd -P)/$(basename "$1")" ;;
   esac
 }
+
 #return 1 if brightness is dark, 0 if light, and 255 if unknown (considered to be dark as default)
 darkbackground() {
   if [ "${#COLORFGBG}" -ge 3 ]; then
@@ -1441,20 +1445,48 @@ syslog()
   echo "$(date +"%F %T") $(id | cut -d' ' -f1)::${module}:${type}:${categories}:${location}:${msg}" >> "${fd}"
 }
 
-getJSONCacheURLs(){
-  activeRepo="${ZOPEN_ROOTFS}/etc/zopen/repos.d/active"
-  [ ! -e "${activeRepo}" ] && printError "Could not access repository configuration at '${activeRepo}'. Check file to ensure valid repository configuration or refresh default configuration with zopen init --refresh -y."
+jqGetKey(){
+  # If there key is not present, the error causes jq to exit with a 
+  # non-zero return code
+  jq -er --arg key "$1" '.[$key] // error("Missing key: " + $key)' "$2"
+}
 
-  type=$(jq -r ".type" "${activeRepo}")
-  base=$(jq -r ".metadata_baseurl" "${activeRepo}")
-  filename=$(jq -r ".metadata_file" "${activeRepo}")
-  latest_metadata=$(jq -r ".latest_file" "${activeRepo}")
+validateReposDEntry(){
+  activeRepo=$1
+  requiredKeys="type metadata_baseurl metadata_file latest_file"
+  printVerbose "Ensuring repo file is valid; required keys: ${requiredKeys}"
+  for reposDEntry in ${requiredKeys}; do
+    if ! jqk=$(jqGetKey "${reposDEntry}" "${activeRepo}"); then
+      printSoftError "Repository definition at '${activeRepo}' incomplete; missing required key: ${reposDEntry}."
+      printError "Running zopen init --refresh might resolve this or recreating file from a backup"
+    elif [ -z "${jqk}" ]; then
+      printSoftError "Repository definition at '${activeRepo}' incomplete; required key '${reposDEntry}' has no value"
+      printError "Check the value in '${activeRepo}' is correct and retry command"
+    else
+      printVerbose "Key '${reposDEntry}' found with value '${jqk}'"
+    fi
+  done
+}
+
+getJSONCacheURLs(){
+  reposdDir="${ZOPEN_ROOTFS}/etc/zopen/repos.d"
+  activeRepo="${reposdDir}/active"
+  dereffedLink=$(deref_symlink "${activeRepo}")
+  [ ! -e "${dereffedLink}" ] && printError "Could not access linked repository configuration at '${dereffedLink}'. Check file to ensure valid repository configuration or refresh default configuration with zopen init --refresh -y."
+  if ! validateReposDEntry "${dereffedLink}"; then
+    return 1
+  fi
+  type=$(jqGetKey "type" "${dereffedLink}")
+  base=$(jqGetKey "metadata_baseurl" "${dereffedLink}")
+  filename=$(jqGetKey "metadata_file" "${dereffedLink}")
+  latest_metadata=$(jqGetKey "latest_file" "${dereffedLink}")
+  
   case "${type}" in
-    http|https) printf "%s://%s/%s\n%s://%s/%s" \
-                    "${type}" "${base}" "${filename}" "${type}" "${base}" "${latest_metadata}"
+    http|https) jsonCacheURLs=$(printf "%s://%s/%s\n%s://%s/%s" \
+                    "${type}" "${base}" "${filename}" "${type}" "${base}" "${latest_metadata}")
     ;;
-    file) printf "%s:%s/%s\n%s:%s/%s" \
-              "${type}" "${base}" "${filename}" "${type}" "${base}" "${latest_metadata}"
+    file) jsonCacheURLs=$(printf "%s:%s/%s\n%s:%s/%s" \
+              "${type}" "${base}" "${filename}" "${type}" "${base}" "${latest_metadata}")
     ;;
     *)        printError "Unsupported repository type '${type}'.";;
   esac
@@ -1477,12 +1509,14 @@ updateJSONCaches()
   printVerbose "Ensuring cache directory exists"
   cachedir="${ZOPEN_ROOTFS}/var/cache/zopen"
   [ ! -e "${cachedir}" ] && mkdir -p "${cachedir}"
-  jsonCacheURLs=$(getJSONCacheURLs)  # Also sets $latest_metadata
+  if ! getJSONCacheURLs; then
+    return 1
+  fi
 
   printVerbose "Checking if the JSON_CACHE already downloaded in this session"
   if [ -z "${JSON_CACHE}" ]; then
     JSON_CACHE="${cachedir}/zopen_releases.json"
-    downloadJSONCacheIfExpired "${JSON_CACHE}" "$(echo "${jsonCacheURLs}" | head -n 1)"
+    downloadJSONCacheIfExpired "${JSON_CACHE}" "$(echo "${jsonCacheURLs}" | tail -n 2 | head -n 1)"
   fi
   if [ -z "${JSON_LATEST_CACHE}" ]; then
     JSON_LATEST_CACHE="${cachedir}/zopen_releases_latest.json"
@@ -1601,7 +1635,9 @@ downloadJSONCache()
 #         1  failure
 getRepos()
 {
-  updateJSONCaches "$1"
+  if ! updateJSONCaches "$1"; then
+    return 1
+  fi
   # shellcheck disable=SC2034
   repo_results="$(jq -r '.release_data | keys[]' "${JSON_CACHE}")"
 }
@@ -1615,14 +1651,18 @@ getRepos()
 #         1  invalid port name
 isValidRepo()
 {
-  updateJSONCaches
+  if ! updateJSONCaches; then
+    return 1
+  fi
   jq -r --arg needle "$1" 'if .release_data | has($needle) then empty else error("") end'  "${JSON_CACHE}" > /dev/null 2>&1
 }
 
 #Deprecated
 getRepoReleases()
 {
-  updateJSONCaches
+  if ! updateJSONCaches; then
+    return 1
+  fi
   repo="$1"
   ##TODO
   ##TDORM releases="$(jq -e -r '.release_data."'${repo}'"' "${JSON_CACHE}")"
@@ -1998,7 +2038,9 @@ getPortMetaData(){
   fi
 
   parseRepoName "${portRequested}" # To set the various status flags below
-  getRepoReleases "${portName}"
+  if ! getRepoReleases "${portName}"; then
+    return 1
+  fi
   if [ -n "${versioned}" ]; then
     if ! getVersionedMetadata "${portName}" "${invalidPortAssetFile}"; then
       return 1
@@ -2430,6 +2472,8 @@ getInstallFile()
 
 extractMetadataFromPax()
 {
+  # If there is an issue with the pax or the target, it is possible for pax 
+  # itself to report an error and sit waiting for user input; 
   if ! pax -rf "$1" -s "%[^/]*/%/tmp/%" '*/metadata.json' ; then
     if ! details=$(pax -rf "$1" -s "%[^/]*/%/tmp/%" '*/package.json'); then
       printSoftError "Could not extract package metadata from file '$1'."
