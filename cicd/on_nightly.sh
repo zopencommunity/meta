@@ -17,12 +17,12 @@ UpdateDocs() {
   ./tools/get_bump_status.sh docs/updatestatus.md
 
   # Generate the upstream status
-  python3 ./tools/generate_zopencommunity_patch_report.py --report docs/upstreamstatus.md --images docs/images/upstream
+  python3 ./tools/generate_zopencommunity_patch_report.py --report docs/upstreamstatus.md --images docs/images/upstream --start-date=2023-01-01
 
   python3 tools/create_cve_json.py --verbose --output-file docs/api/zopen_vulnerability.json
 
   # This script updates the status page
-  python3 tools/getbinaries.py
+  #python3 tools/getbinaries.py
 
   # Generate a view of the newly released tools
   python3 tools/create_latest_release_doc.py --output docs/newly_released.md
