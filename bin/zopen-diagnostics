@@ -19,9 +19,21 @@ setupMyself()
 }
 setupMyself
 
+printSyntax()
+{
+  echo "${ME} - display diagnostics information for issue reporting."
+  echo ""
+  echo "Usage: ${ME} [OPTION]"
+  echo ""
+  echo "Options:"
+  echo "  -h, --help           print this help"
+  echo "  -v, --verbose        run in verbose mode."
+  echo "  --version            print version"
+}
+
 print_Diagnostics()
 {
-PLATFORM=$(/bin/uname -s)
+  PLATFORM=$(/bin/uname -s)
 
   # Checking if the platform is z/OS
   if [ ! ${PLATFORM} = "OS/390" ]; then
@@ -118,12 +130,14 @@ fi
 while [ $# -gt 0 ]; do
   case "$1" in
   "-h" | "--help")
+    printSyntax
     exit 0
     ;;
   "-v" | "--verbose")
     verbose=true
     ;;
   "--version")
+    zopen-version "${ME}"
     exit 0
     ;;
   -*)
