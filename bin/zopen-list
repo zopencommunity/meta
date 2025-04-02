@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# List utility for z/OS Open Tools - https://github.com/ZOSOpenTools
+# List utility for zopen community- https://github.com/zopencommunity
 #
 
 #
@@ -27,8 +27,8 @@ zopen list -  list information about local packages
 Usage: zopen list [OPTION] [VERB] [PACKAGE]
 
 Options:
-  --available     lists all available z/OS Open Tools
-  --installed     list only installed z/OS Open Tools (default output)
+  --available     lists all available packages
+  --installed     list only installed packages (default output)
   --details       provide version information on packages
   --full          provides more information about packages
   --[no]header    output explanation header for columns
@@ -42,7 +42,7 @@ Examples:
   zopen list --installed
                     list packages installed on the system
 
-Report bugs at https://github.com/ZOSOpenTools/meta/issues .
+Report bugs at https://github.com/zopencommunity/meta/issues
 
 HELPDOC
 }
@@ -99,9 +99,9 @@ listAvailablePackages()
   winstalled=10
   wtag=36
   wrellne=12
-  wdownload=10
-  wexpsz=10
-  wqual=7
+  wdownload=12
+  wexpsz=12
+  wqual=10
   if ${urlinclude}; then
     wurl=6
     urltext="URL"
@@ -150,7 +150,8 @@ listAvailablePackages()
         $va.size as $ds |
         ($va.passed_tests | if (.=="") then "0" else . end | tonumber) as $pt |
         ($va.total_tests | if (.=="") then "99999" else . end |tonumber) as $tt |
-        (($pt/$tt*100|r(2))|tostring + "%") as $q |
+        ($pt/$tt*100) as $pts | 
+        ($pts | if (.<0) then "No tests" else ($pts|r(1) |tostring + "%" ) end)  as $q|
         pr($key;"@";($wpackage | tonumber)) +
          c($ins;"@";($winstalled | tonumber)) +
          c($tn;"@";($wtag | tonumber)) +
