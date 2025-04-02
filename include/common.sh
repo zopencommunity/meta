@@ -491,7 +491,7 @@ validateReleaseLine()
 # Attempt to fully dereference a symlink without any bashisms or arcane set logic
 deref_symlink() {
     symlink="$1"
-    if [ -L "${symlink}"]; then
+    if [ -L "${symlink}" ]; then
       target=$(ls -l "$symlink" | awk '{print $NF}')
     else
       target="${symlink}"
