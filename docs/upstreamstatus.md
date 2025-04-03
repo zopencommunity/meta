@@ -1,13 +1,13 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-04-02 06:09:56 EDT.*
+*Report generated on: 2025-04-03 06:10:40 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 213
-- **Total Current Lines of Code (LOC) in Patches:** 27,347
-- **Total Number of Current Patch Files:** 644
-- **Average Current Patch LOC per Project:** 128.39
+- **Total Current Lines of Code (LOC) in Patches:** 27,312
+- **Total Number of Current Patch Files:** 643
+- **Average Current Patch LOC per Project:** 128.23
 - **Average Current Patch Count per Project:** 3.02
 
 ### Historical Trends (All Projects)
@@ -46,11 +46,11 @@
 | [opensshport](#repo-opensshport) | 376 | +0 | 19 |
 | [flexport](#repo-flexport) | 351 | +0 | 2 |
 | [prometheusport](#repo-prometheusport) | 348 | +0 | 1 |
-| [neovimport](#repo-neovimport) | 347 | +0 | 13 |
 | [pocoport](#repo-pocoport) | 343 | +0 | 9 |
 | [rsyncport](#repo-rsyncport) | 341 | +0 | 6 |
 | [vimport](#repo-vimport) | 335 | +0 | 12 |
 | [phpport](#repo-phpport) | 320 | +0 | 13 |
+| [neovimport](#repo-neovimport) | 312 | +0 | 12 |
 | [conanport](#repo-conanport) | 299 | +0 | 8 |
 | [zipport](#repo-zipport) | 297 | +0 | 8 |
 | [gitlab-runnerport](#repo-gitlab-runnerport) | 241 | +0 | 10 |
@@ -965,38 +965,6 @@
 
 ---
 
-<a id="repo-neovimport"></a>
-## neovimport
-
-- **Origin Date (First Commit):** 2023-04-21
-- **Current Patch LOC:** 347
-- **Current Patch Count:** 13
-
-### Historical Trends
-
-![LOC Trend for neovimport](images/upstream/neovimport_current_loc_trend.png)
-![Count Trend for neovimport](images/upstream/neovimport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/cmake.deps.cmake.BuildLua.cmake.patch` | `patches` | 39 |
-| `patches/cmake.deps.cmake.BuildLuv.cmake.patch` | `patches` | 29 |
-| `patches/cmake.deps.cmake.BuildTreesitterParsers.cmake.patch` | `patches` | 13 |
-| `patches/cmake.deps.cmake.LibvtermCMakeLists.txt.patch` | `patches` | 13 |
-| `patches/src.nvim.CMakeLists.txt.patch` | `patches` | 42 |
-| `patches/src.nvim.buffer_defs.h.patch` | `patches` | 15 |
-| `patches/src.nvim.bufwrite.c.patch` | `patches` | 43 |
-| `patches/src.nvim.channel.c.patch` | `patches` | 47 |
-| `patches/src.nvim.fileio.c.patch` | `patches` | 24 |
-| `patches/src.nvim.memfile.c.patch` | `patches` | 13 |
-| `patches/src.nvim.os.pty_process_unix.c.patch` | `patches` | 41 |
-| `patches/src.nvim.undo.c.patch` | `patches` | 13 |
-| `patches/src.termkey.termkey.c.patch` | `patches` | 15 |
-
----
-
 <a id="repo-pocoport"></a>
 ## pocoport
 
@@ -1110,6 +1078,37 @@
 | `patches/zend_alloc.c.patch` | `patches` | 40 |
 | `patches/zend_fibers.c.patch` | `patches` | 31 |
 | `patches/zend_mmap.h.patch` | `patches` | 50 |
+
+---
+
+<a id="repo-neovimport"></a>
+## neovimport
+
+- **Origin Date (First Commit):** 2023-04-21
+- **Current Patch LOC:** 312
+- **Current Patch Count:** 12
+
+### Historical Trends
+
+![LOC Trend for neovimport](images/upstream/neovimport_current_loc_trend.png)
+![Count Trend for neovimport](images/upstream/neovimport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `stable-patches/cmake.deps.cmake.BuildLua.cmake.patch` | `stable-patches` | 39 |
+| `stable-patches/cmake.deps.cmake.BuildLuv.cmake.patch` | `stable-patches` | 29 |
+| `stable-patches/cmake.deps.cmake.BuildTreesitter.cmake.patch` | `stable-patches` | 12 |
+| `stable-patches/cmake.deps.cmake.BuildTreesitterParsers.cmake.patch` | `stable-patches` | 13 |
+| `stable-patches/src.nvim.CMakeLists.txt.patch` | `stable-patches` | 42 |
+| `stable-patches/src.nvim.buffer_defs.h.patch` | `stable-patches` | 15 |
+| `stable-patches/src.nvim.bufwrite.c.patch` | `stable-patches` | 43 |
+| `stable-patches/src.nvim.channel.c.patch` | `stable-patches` | 47 |
+| `stable-patches/src.nvim.memfile.c.patch` | `stable-patches` | 12 |
+| `stable-patches/src.nvim.os.pty_proc_unix.c.patch` | `stable-patches` | 32 |
+| `stable-patches/src.nvim.tui.termkey.termkey.c.patch` | `stable-patches` | 15 |
+| `stable-patches/src.nvim.undo.c.patch` | `stable-patches` | 13 |
 
 ---
 
