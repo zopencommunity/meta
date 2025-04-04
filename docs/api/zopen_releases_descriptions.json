@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2025-04-03T19:33:04.306715+00:00",
+  "generation_timestamp_utc": "2025-04-04T03:15:05.358154+00:00",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -87,10 +87,6 @@
     "libgcrypt": "A general-purpose cryptographic library",
     "libassuan": "A library for the Assuan protocol, used for IPC between GnuPG components",
     "libksba": "A library for working with X.509 certificates and other cryptographic objects",
-    "python": "A port of the Python programming language",
-    "comp_go": "A code completion tool for Go",
-    "comp_clang": "A code completion tool for Clang compiler",
-    "comp_xlclang": "A code completion tool for XL C/C++ compiler",
     "direnv": "",
     "libssh2": "A library for SSH2 protocol",
     "openssh": "A suite of secure networking utilities",
@@ -144,7 +140,6 @@
     "prometheus": "A monitoring system",
     "buildkite": "Buildkite is a platform for running fast, secure, and scalable continuous integration pipelines on your own infrastructure",
     "gitlab-runner": "A GitLab Runner",
-    "java": "The IBM implementation of the Java programming language",
     "ant": "A build automation tool",
     "gmp": "A library for arbitrary precision arithmetic",
     "nghttp2": "An HTTP/2 implementation",
