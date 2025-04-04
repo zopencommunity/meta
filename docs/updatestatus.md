@@ -118,9 +118,6 @@
 ### gnulibport
 - 2024-10-22: [Update gnulib-version to 1.0 from 20030404](https://github.com/zopencommunity/gnulibport/pull/10) ✅
 
-### gpgport
-- 2025-03-07: [Update gpg-version to 2.5.5 from 2.5.4](https://github.com/zopencommunity/gpgport/pull/43) ❌
-
 ### grafanaport
 - 2025-03-26: [Update grafana-version to 11.6.0 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/19) ❌
 - 2025-03-25: [Update grafana-version to 11.5.3 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/18) ❌
@@ -226,6 +223,7 @@
 - 2024-10-02: [Update openssh-version to 9.9p1 from 9.8p1](https://github.com/zopencommunity/opensshport/pull/15) ❌
 
 ### osv-scannerport
+- 2025-04-03: [Update osv-scanner-version to 2.0.1 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/19) ✅
 - 2025-03-17: [Update osv-scanner-version to 2.0.0 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/18) ✅
 - 2024-12-19: [Update osv-scanner-version to 1.9.2 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/17) ❌
 - 2024-10-31: [Update osv-scanner-version to 1.9.1 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/15) ✅
@@ -369,6 +367,7 @@
 - 2024-07-18: [Update victoriametrics-version to 1.102.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/5) ❌
 
 ### vimport
+- 2025-04-03: [Update vim-version to 9.1.1270 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/97) ✅
 - 2025-03-30: [Update vim-version to 9.1.1260 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/96) ✅
 - 2025-03-28: [Update vim-version to 9.1.1250 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/95) ✅
 - 2025-03-27: [Update vim-version to 9.1.1240 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/94) ✅
@@ -431,9 +430,6 @@
 - ✅ cjsonport - [![Bump Status](https://github.com/zopencommunity/cjsonport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/cjsonport/actions/workflows/bump.yml)
 - ✅ cmakeport - [![Bump Status](https://github.com/zopencommunity/cmakeport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/cmakeport/actions/workflows/bump.yml)
 - ❌ collateral - Workflow not configured
-- ❌ comp_clangport - Workflow not configured
-- ❌ comp_goport - Workflow not configured
-- ❌ comp_xlclangport - Workflow not configured
 - ✅ conanport - [![Bump Status](https://github.com/zopencommunity/conanport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/conanport/actions/workflows/bump.yml)
 - ✅ coreutilsport - [![Bump Status](https://github.com/zopencommunity/coreutilsport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/coreutilsport/actions/workflows/bump.yml)
 - ❌ cosignport - Workflow not configured
@@ -495,7 +491,6 @@
 - ✅ hugoport - [![Bump Status](https://github.com/zopencommunity/hugoport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/hugoport/actions/workflows/bump.yml)
 - ❌ iperfport - Workflow not configured
 - ✅ janssonport - [![Bump Status](https://github.com/zopencommunity/janssonport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/janssonport/actions/workflows/bump.yml)
-- ❌ javaport - Workflow not configured
 - ❌ jenkinsport - Workflow not configured
 - ❌ joeport - Workflow not configured
 - ✅ jqport - [![Bump Status](https://github.com/zopencommunity/jqport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/jqport/actions/workflows/bump.yml)
@@ -579,7 +574,6 @@
 - ✅ promptersport - [![Bump Status](https://github.com/zopencommunity/promptersport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/promptersport/actions/workflows/bump.yml)
 - ❌ protobuf - Workflow not configured
 - ✅ protobufport - [![Bump Status](https://github.com/zopencommunity/protobufport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/protobufport/actions/workflows/bump.yml)
-- ❌ pythonport - Workflow not configured
 - ✅ re2cport - [![Bump Status](https://github.com/zopencommunity/re2cport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/re2cport/actions/workflows/bump.yml)
 - ✅ redisport - [![Bump Status](https://github.com/zopencommunity/redisport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/redisport/actions/workflows/bump.yml)
 - ✅ rsyncport - [![Bump Status](https://github.com/zopencommunity/rsyncport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/rsyncport/actions/workflows/bump.yml)
@@ -637,10 +631,10 @@
 
 </details>
 
-**Summary:** 180 active | 46 missing
+**Summary:** 180 active | 41 missing
 
 ---
 
 
-> Last updated: 2025-04-03 06:06:11 EDT
+> Last updated: 2025-04-04 06:06:15 EDT
 

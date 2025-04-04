@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-04-03 06:10:40 EDT.*
+*Report generated on: 2025-04-04 06:10:44 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 213
-- **Total Current Lines of Code (LOC) in Patches:** 27,312
+- **Total Projects Analyzed:** 208
+- **Total Current Lines of Code (LOC) in Patches:** 27,187
 - **Total Number of Current Patch Files:** 643
-- **Average Current Patch LOC per Project:** 128.23
-- **Average Current Patch Count per Project:** 3.02
+- **Average Current Patch LOC per Project:** 130.71
+- **Average Current Patch Count per Project:** 3.09
 
 ### Historical Trends (All Projects)
 
@@ -26,7 +26,7 @@
 |---|:---|:---|:---|
 | [librdkafkaport](#repo-librdkafkaport) | 2,638 | +0 | 54 |
 | [bashport](#repo-bashport) | 1,698 | -2,728 | 32 |
-| [libuvport](#repo-libuvport) | 1,487 | +0 | 25 |
+| [libuvport](#repo-libuvport) | 1,462 | +0 | 26 |
 | [sudoport](#repo-sudoport) | 1,278 | +0 | 30 |
 | [cmakeport](#repo-cmakeport) | 1,092 | +0 | 1 |
 | [gitport](#repo-gitport) | 975 | +0 | 29 |
@@ -60,7 +60,6 @@
 | [gettextport](#repo-gettextport) | 206 | +0 | 7 |
 | [findutilsport](#repo-findutilsport) | 199 | +0 | 10 |
 | [ninjaport](#repo-ninjaport) | 196 | +0 | 8 |
-| [libiconvport](#repo-libiconvport) | 196 | +0 | 5 |
 | [diffutilsport](#repo-diffutilsport) | 184 | +0 | 8 |
 | [protobufport](#repo-protobufport) | 174 | +0 | 8 |
 | [groffport](#repo-groffport) | 165 | +0 | 13 |
@@ -83,6 +82,7 @@
 | [zlib-ngport](#repo-zlib-ngport) | 100 | +0 | 3 |
 | [pkgconfigport](#repo-pkgconfigport) | 98 | +0 | 1 |
 | [doxygenport](#repo-doxygenport) | 97 | +0 | 5 |
+| [libiconvport](#repo-libiconvport) | 96 | -100 | 4 |
 | [depot_toolsport](#repo-depot-toolsport) | 91 | +0 | 1 |
 | [libeventport](#repo-libeventport) | 87 | +0 | 3 |
 | [patchport](#repo-patchport) | 86 | +0 | 3 |
@@ -164,10 +164,6 @@
 | [metaport](#repo-metaport) | 0 | +0 | 0 |
 | [zigiport](#repo-zigiport) | 0 | +0 | 0 |
 | [yqport](#repo-yqport) | 0 | +0 | 0 |
-| [pythonport](#repo-pythonport) | 0 | +0 | 0 |
-| [comp_goport](#repo-comp-goport) | 0 | +0 | 0 |
-| [comp_clangport](#repo-comp-clangport) | 0 | +0 | 0 |
-| [comp_xlclangport](#repo-comp-xlclangport) | 0 | +0 | 0 |
 | [direnvport](#repo-direnvport) | 0 | +0 | 0 |
 | [libgit2port](#repo-libgit2port) | 0 | +0 | 0 |
 | [duckdbport](#repo-duckdbport) | 0 | +0 | 0 |
@@ -195,7 +191,6 @@
 | [zosncport](#repo-zosncport) | 0 | +0 | 0 |
 | [boostport](#repo-boostport) | 0 | +0 | 0 |
 | [buildkiteport](#repo-buildkiteport) | 0 | +0 | 0 |
-| [javaport](#repo-javaport) | 0 | +0 | 0 |
 | [antport](#repo-antport) | 0 | +0 | 0 |
 | [jrubyport](#repo-jrubyport) | 0 | +0 | 0 |
 | [toolsandtoysport](#repo-toolsandtoysport) | 0 | +0 | 0 |
@@ -370,8 +365,8 @@
 ## libuvport
 
 - **Origin Date (First Commit):** 2023-09-14
-- **Current Patch LOC:** 1,487
-- **Current Patch Count:** 25
+- **Current Patch LOC:** 1,462
+- **Current Patch Count:** 26
 
 ### Historical Trends
 
@@ -382,31 +377,32 @@
 
 | Patch File (Repo Relative Path) | Source | LOC |
 |---|---|:---|
-| `patches/CMakeLists.txt.patch` | `patches` | 69 |
-| `patches/docs/src/fs.rst.patch` | `patches` | 15 |
-| `patches/include/uv.h.patch` | `patches` | 22 |
-| `patches/include/uv/errno.h.patch` | `patches` | 17 |
-| `patches/include/uv/os390.h.patch` | `patches` | 21 |
-| `patches/src/unix/core.c.patch` | `patches` | 109 |
-| `patches/src/unix/fs.c.patch` | `patches` | 99 |
-| `patches/src/unix/internal.h.patch` | `patches` | 19 |
-| `patches/src/unix/linux.c.patch` | `patches` | 38 |
-| `patches/src/unix/os390-syscalls.c.patch` | `patches` | 183 |
-| `patches/src/unix/os390-syscalls.h.patch` | `patches` | 26 |
-| `patches/src/unix/os390.c.patch` | `patches` | 144 |
-| `patches/src/unix/process.c.patch` | `patches` | 104 |
-| `patches/src/unix/stream.c.patch` | `patches` | 120 |
-| `patches/src/unix/tcp.c.patch` | `patches` | 40 |
-| `patches/src/unix/thread.c.patch` | `patches` | 25 |
-| `patches/src/uv-common.c.patch` | `patches` | 15 |
-| `patches/test/run-tests.c.patch` | `patches` | 27 |
-| `patches/test/test-fs-copyfile.c.patch` | `patches` | 31 |
-| `patches/test/test-fs.c.patch` | `patches` | 17 |
-| `patches/test/test-get-currentexe.c.patch` | `patches` | 159 |
-| `patches/test/test-get-passwd.c.patch` | `patches` | 13 |
-| `patches/test/test-list.h.patch` | `patches` | 92 |
-| `patches/test/test-spawn.c.patch` | `patches` | 59 |
-| `patches/test/test-thread-priority.c.patch` | `patches` | 23 |
+| `stable-patches/CMakeLists.txt.patch` | `stable-patches` | 69 |
+| `stable-patches/docs/src/fs.rst.patch` | `stable-patches` | 15 |
+| `stable-patches/include/uv.h.patch` | `stable-patches` | 22 |
+| `stable-patches/include/uv/errno.h.patch` | `stable-patches` | 17 |
+| `stable-patches/include/uv/os390.h.patch` | `stable-patches` | 21 |
+| `stable-patches/src/unix/core.c.patch` | `stable-patches` | 109 |
+| `stable-patches/src/unix/fs.c.patch` | `stable-patches` | 131 |
+| `stable-patches/src/unix/internal.h.patch` | `stable-patches` | 19 |
+| `stable-patches/src/unix/linux.c.patch` | `stable-patches` | 28 |
+| `stable-patches/src/unix/os390-syscalls.c.patch` | `stable-patches` | 183 |
+| `stable-patches/src/unix/os390-syscalls.h.patch` | `stable-patches` | 26 |
+| `stable-patches/src/unix/os390.c.patch` | `stable-patches` | 144 |
+| `stable-patches/src/unix/process.c.patch` | `stable-patches` | 105 |
+| `stable-patches/src/unix/stream.c.patch` | `stable-patches` | 120 |
+| `stable-patches/src/unix/tcp.c.patch` | `stable-patches` | 40 |
+| `stable-patches/src/unix/thread.c.patch` | `stable-patches` | 25 |
+| `stable-patches/src/uv-common.c.patch` | `stable-patches` | 15 |
+| `stable-patches/test/run-tests.c.patch` | `stable-patches` | 27 |
+| `stable-patches/test/task.h.patch` | `stable-patches` | 24 |
+| `stable-patches/test/test-fs-copyfile.c.patch` | `stable-patches` | 31 |
+| `stable-patches/test/test-fs.c.patch` | `stable-patches` | 17 |
+| `stable-patches/test/test-get-currentexe.c.patch` | `stable-patches` | 159 |
+| `stable-patches/test/test-get-passwd.c.patch` | `stable-patches` | 13 |
+| `stable-patches/test/test-list.h.patch` | `stable-patches` | 20 |
+| `stable-patches/test/test-spawn.c.patch` | `stable-patches` | 59 |
+| `stable-patches/test/test-thread-priority.c.patch` | `stable-patches` | 23 |
 
 ---
 
@@ -1348,30 +1344,6 @@
 
 ---
 
-<a id="repo-libiconvport"></a>
-## libiconvport
-
-- **Origin Date (First Commit):** 2023-01-14
-- **Current Patch LOC:** 196
-- **Current Patch Count:** 5
-
-### Historical Trends
-
-![LOC Trend for libiconvport](images/upstream/libiconvport_current_loc_trend.png)
-![Count Trend for libiconvport](images/upstream/libiconvport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `stable-patches/IBM-1047.TXT.patch` | `stable-patches` | 22 |
-| `stable-patches/Makefile.in.patch` | `stable-patches` | 22 |
-| `stable-patches/ebcdic1047.h.patch` | `stable-patches` | 35 |
-| `stable-patches/iconv.c.patch` | `stable-patches` | 78 |
-| `stable-patches/translit.def.patch` | `stable-patches` | 39 |
-
----
-
 <a id="repo-diffutilsport"></a>
 ## diffutilsport
 
@@ -1892,6 +1864,29 @@
 | `patches/runtests.py.patch` | `patches` | 16 |
 | `patches/types.h.patch` | `patches` | 13 |
 | `patches/util.cpp.patch` | `patches` | 18 |
+
+---
+
+<a id="repo-libiconvport"></a>
+## libiconvport
+
+- **Origin Date (First Commit):** 2023-01-14
+- **Current Patch LOC:** 96
+- **Current Patch Count:** 4
+
+### Historical Trends
+
+![LOC Trend for libiconvport](images/upstream/libiconvport_current_loc_trend.png)
+![Count Trend for libiconvport](images/upstream/libiconvport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `dev-patches/iconv.c.patch` | `dev-patches` | 17 |
+| `stable-patches/IBM-1047.TXT.patch` | `stable-patches` | 22 |
+| `stable-patches/Makefile.in.patch` | `stable-patches` | 22 |
+| `stable-patches/ebcdic1047.h.patch` | `stable-patches` | 35 |
 
 ---
 
@@ -3529,78 +3524,6 @@
 
 ---
 
-<a id="repo-pythonport"></a>
-## pythonport
-
-- **Origin Date (First Commit):** 2023-04-27
-- **Current Patch LOC:** 0
-- **Current Patch Count:** 0
-
-### Historical Trends
-
-*(Patch LOC trend graph not generated)*
-*(Patch count trend graph not generated)*
-
-### Current Patch Details
-
-*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
-
----
-
-<a id="repo-comp-goport"></a>
-## comp_goport
-
-- **Origin Date (First Commit):** 2023-04-28
-- **Current Patch LOC:** 0
-- **Current Patch Count:** 0
-
-### Historical Trends
-
-*(Patch LOC trend graph not generated)*
-*(Patch count trend graph not generated)*
-
-### Current Patch Details
-
-*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
-
----
-
-<a id="repo-comp-clangport"></a>
-## comp_clangport
-
-- **Origin Date (First Commit):** 2023-04-28
-- **Current Patch LOC:** 0
-- **Current Patch Count:** 0
-
-### Historical Trends
-
-*(Patch LOC trend graph not generated)*
-*(Patch count trend graph not generated)*
-
-### Current Patch Details
-
-*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
-
----
-
-<a id="repo-comp-xlclangport"></a>
-## comp_xlclangport
-
-- **Origin Date (First Commit):** 2023-04-28
-- **Current Patch LOC:** 0
-- **Current Patch Count:** 0
-
-### Historical Trends
-
-*(Patch LOC trend graph not generated)*
-*(Patch count trend graph not generated)*
-
-### Current Patch Details
-
-*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
-
----
-
 <a id="repo-direnvport"></a>
 ## direnvport
 
@@ -4073,24 +3996,6 @@
 ## buildkiteport
 
 - **Origin Date (First Commit):** 2023-11-26
-- **Current Patch LOC:** 0
-- **Current Patch Count:** 0
-
-### Historical Trends
-
-*(Patch LOC trend graph not generated)*
-*(Patch count trend graph not generated)*
-
-### Current Patch Details
-
-*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
-
----
-
-<a id="repo-javaport"></a>
-## javaport
-
-- **Origin Date (First Commit):** 2023-11-29
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 
