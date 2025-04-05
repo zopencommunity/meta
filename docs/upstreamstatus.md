@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-04-04 06:10:44 EDT.*
+*Report generated on: 2025-04-05 06:09:10 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 208
-- **Total Current Lines of Code (LOC) in Patches:** 27,187
-- **Total Number of Current Patch Files:** 643
-- **Average Current Patch LOC per Project:** 130.71
-- **Average Current Patch Count per Project:** 3.09
+- **Total Current Lines of Code (LOC) in Patches:** 27,257
+- **Total Number of Current Patch Files:** 644
+- **Average Current Patch LOC per Project:** 131.04
+- **Average Current Patch Count per Project:** 3.10
 
 ### Historical Trends (All Projects)
 
@@ -29,7 +29,7 @@
 | [libuvport](#repo-libuvport) | 1,462 | +0 | 26 |
 | [sudoport](#repo-sudoport) | 1,278 | +0 | 30 |
 | [cmakeport](#repo-cmakeport) | 1,092 | +0 | 1 |
-| [gitport](#repo-gitport) | 975 | +0 | 29 |
+| [gitport](#repo-gitport) | 958 | -17 | 30 |
 | [valgrindport](#repo-valgrindport) | 896 | +0 | 3 |
 | [coreutilsport](#repo-coreutilsport) | 787 | +0 | 18 |
 | [gpgport](#repo-gpgport) | 687 | +0 | 13 |
@@ -55,6 +55,7 @@
 | [zipport](#repo-zipport) | 297 | +0 | 8 |
 | [gitlab-runnerport](#repo-gitlab-runnerport) | 241 | +0 | 10 |
 | [llamacppport](#repo-llamacppport) | 236 | +0 | 1 |
+| [redisport](#repo-redisport) | 235 | +87 | 1 |
 | [mesonport](#repo-mesonport) | 229 | +0 | 9 |
 | [zstdport](#repo-zstdport) | 227 | +0 | 4 |
 | [gettextport](#repo-gettextport) | 206 | +0 | 7 |
@@ -65,7 +66,6 @@
 | [groffport](#repo-groffport) | 165 | +0 | 13 |
 | [autoconfport](#repo-autoconfport) | 151 | +0 | 6 |
 | [moreutilsport](#repo-moreutilsport) | 151 | +0 | 1 |
-| [redisport](#repo-redisport) | 148 | +0 | 1 |
 | [jqport](#repo-jqport) | 146 | +0 | 8 |
 | [libserdesport](#repo-libserdesport) | 142 | +0 | 4 |
 | [tclport](#repo-tclport) | 130 | +0 | 5 |
@@ -479,8 +479,8 @@
 ## gitport
 
 - **Origin Date (First Commit):** 2022-05-25
-- **Current Patch LOC:** 975
-- **Current Patch Count:** 29
+- **Current Patch LOC:** 958
+- **Current Patch Count:** 30
 
 ### Historical Trends
 
@@ -496,7 +496,7 @@
 | `dev-patches/PR1/releasenamecollision-pack.patch` | `dev-patches` | 22 |
 | `dev-patches/PR1/releasenamecollision.patch` | `dev-patches` | 89 |
 | `stable-patches/Makefile.patch` | `stable-patches` | 84 |
-| `stable-patches/archive.c.patch` | `stable-patches` | 17 |
+| `stable-patches/archive.c.patch` | `stable-patches` | 15 |
 | `stable-patches/blame.c.patch` | `stable-patches` | 16 |
 | `stable-patches/builtin.h.patch` | `stable-patches` | 13 |
 | `stable-patches/combine-diff.c.patch` | `stable-patches` | 15 |
@@ -512,8 +512,9 @@
 | `stable-patches/exec-cmd.c.patch` | `stable-patches` | 15 |
 | `stable-patches/generate-perl.sh.patch` | `stable-patches` | 13 |
 | `stable-patches/git-compat-util.h.patch` | `stable-patches` | 16 |
-| `stable-patches/hash-object.c.patch` | `stable-patches` | 44 |
+| `stable-patches/hash-object.c.patch` | `stable-patches` | 15 |
 | `stable-patches/http.c.patch` | `stable-patches` | 23 |
+| `stable-patches/lockfile.c.patch` | `stable-patches` | 14 |
 | `stable-patches/object-file.c.patch` | `stable-patches` | 106 |
 | `stable-patches/quote.c.patch` | `stable-patches` | 22 |
 | `stable-patches/read-cache-ll.h.patch` | `stable-patches` | 15 |
@@ -1211,6 +1212,26 @@
 
 ---
 
+<a id="repo-redisport"></a>
+## redisport
+
+- **Origin Date (First Commit):** 2025-02-14
+- **Current Patch LOC:** 235
+- **Current Patch Count:** 1
+
+### Historical Trends
+
+![LOC Trend for redisport](images/upstream/redisport_current_loc_trend.png)
+![Count Trend for redisport](images/upstream/redisport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/pr.patch` | `patches` | 235 |
+
+---
+
 <a id="repo-mesonport"></a>
 ## mesonport
 
@@ -1472,26 +1493,6 @@
 | Patch File (Repo Relative Path) | Source | LOC |
 |---|---|:---|
 | `patches/PR1.patch` | `patches` | 151 |
-
----
-
-<a id="repo-redisport"></a>
-## redisport
-
-- **Origin Date (First Commit):** 2025-02-14
-- **Current Patch LOC:** 148
-- **Current Patch Count:** 1
-
-### Historical Trends
-
-![LOC Trend for redisport](images/upstream/redisport_current_loc_trend.png)
-![Count Trend for redisport](images/upstream/redisport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/pr.patch` | `patches` | 148 |
 
 ---
 

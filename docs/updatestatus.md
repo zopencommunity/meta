@@ -60,9 +60,6 @@
 - 2024-08-23: [Update cunit-version to 3.4.1 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/4) ❌
 - 2024-06-08: [Update cunit-version to 3.3.1 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/3) ❌
 
-### curlport
-- 2025-04-02: [Update curl-version to 8.13.0 from 8.12.1](https://github.com/zopencommunity/curlport/pull/44) ✅
-
 ### duckdbport
 - 2025-03-06: [Update duckdb-version to 1.2.1 from 0.9.2](https://github.com/zopencommunity/duckdbport/pull/23) ❌
 - 2024-06-03: [Update duckdb-version to 1.0.0 from 0.9.2](https://github.com/zopencommunity/duckdbport/pull/13) ❌
@@ -386,6 +383,7 @@
 - 2024-12-30: [Update xxhash-version to 0.8.3 from 0.8.2](https://github.com/zopencommunity/xxhashport/pull/18) ❌
 
 ### xzport
+- 2025-04-04: [Update xz-version to 5.8.1 from 5.6.4](https://github.com/zopencommunity/xzport/pull/23) ✅
 - 2025-03-26: [Update xz-version to 5.8.0 from 5.6.4](https://github.com/zopencommunity/xzport/pull/22) ✅
 
 ### zigiport
@@ -636,5 +634,5 @@
 ---
 
 
-> Last updated: 2025-04-04 06:06:15 EDT
+> Last updated: 2025-04-05 06:06:02 EDT
 
