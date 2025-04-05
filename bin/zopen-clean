@@ -15,6 +15,7 @@ setupMyself()
     echo "Internal Error. Unable to find common.sh file to source." >&2
     exit 8
   fi
+  # shellcheck disable=SC1091
   . "${INCDIR}/common.sh"
 }
 setupMyself
@@ -23,7 +24,7 @@ checkWritable
 printHelp()
 {
   cat << HELPDOC
-${ME} is a utility for zopen community to remove uneeded resources
+${ME} is a utility for zopen community to remove unneeded resources
 from the system to save space and prevent clutter.
 
 Usage: ${ME} [OPTION] [PACKAGE]
