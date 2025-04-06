@@ -269,7 +269,7 @@
 - 2025-02-13: [Update poco-version to 1.14.1 from 1.12.5p2](https://github.com/zopencommunity/pocoport/pull/9) ❌
 - 2024-12-02: [Update poco-version to 1.14.0 from 1.12.5p2](https://github.com/zopencommunity/pocoport/pull/7) ❌
 - 2024-04-05: [Update poco-version to 1.13.3 from 1.12.5p2](https://github.com/zopencommunity/pocoport/pull/5) ❌
-- 2024-02-20: [Update poco-version to 1.13.2 from 1.12.5p2](https://github.com/zopencommunity/pocoport/pull/4) ❌
+- 2024-02-20: [Update poco-version to 1.13.2 from 1.12.5p2](https://github.com/zopencommunity/pocoport/pull/4) ❓
 - 2024-02-07: [Update poco-version to 1.13.1 from 1.12.5p2](https://github.com/zopencommunity/pocoport/pull/3) ❓
 - 2024-01-25: [Update poco-version to 1.13.0 from 1.12.5p2](https://github.com/zopencommunity/pocoport/pull/2) ❓
 
@@ -634,5 +634,5 @@
 ---
 
 
-> Last updated: 2025-04-05 06:06:02 EDT
+> Last updated: 2025-04-06 06:05:42 EDT
 
