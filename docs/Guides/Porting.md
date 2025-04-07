@@ -240,7 +240,7 @@ Please follow the [contributing guidelines](https://github.com/zopencommunity/me
 
 Once you have a working build of your z/OS Open Source tool, then you may add it to the z/OS Open Source Jenkins CI/CD pipeline.
 
-View [CI/CD Pipeline](/Guides/Pipeline.md) for more details
+View [CI/CD Pipeline](Testing.md) for more details
 
 ## Porting Go Packages
 
