@@ -81,7 +81,11 @@
 - 2024-06-27: [Update fx-version to 35.0.0 from 34.0.0](https://github.com/zopencommunity/fxport/pull/2) ✅
 
 ### fzfport
+- 2025-04-06: [Update fzf-version to 0.61.1 from 0.60.3](https://github.com/zopencommunity/fzfport/pull/37) ✅
 - 2025-03-30: [Update fzf-version to 0.61.0 from 0.60.3](https://github.com/zopencommunity/fzfport/pull/36) ✅
+
+### gawkport
+- 2025-04-06: [Update gawk-version to 5.3.2 from 5.3.1](https://github.com/zopencommunity/gawkport/pull/28) ❌
 
 ### gettextport
 - 2025-02-25: [Update gettext-version to 0.24 from 0.21](https://github.com/zopencommunity/gettextport/pull/32) ❌
@@ -364,6 +368,7 @@
 - 2024-07-18: [Update victoriametrics-version to 1.102.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/5) ❌
 
 ### vimport
+- 2025-04-06: [Update vim-version to 9.1.1280 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/98) ❌
 - 2025-04-03: [Update vim-version to 9.1.1270 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/97) ✅
 - 2025-03-30: [Update vim-version to 9.1.1260 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/96) ✅
 - 2025-03-28: [Update vim-version to 9.1.1250 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/95) ✅
@@ -634,5 +639,5 @@
 ---
 
 
-> Last updated: 2025-04-06 06:05:42 EDT
+> Last updated: 2025-04-07 06:06:23 EDT
 
