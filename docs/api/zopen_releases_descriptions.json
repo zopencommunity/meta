@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2025-04-08T10:53:23.048132+00:00",
+  "generation_timestamp_utc": "2025-04-08T21:58:43.871048+00:00",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -209,6 +209,9 @@
     "creduce": "",
     "hexcurse": "Hexcurse is a ncurses-based console hexeditor written in C",
     "gradle": "",
-    "librabbitmq": ""
+    "librabbitmq": "",
+    "luajit": "",
+    "ed": "line-oriented text editor",
+    "cpio": "copies in/out of archives"
   }
 }
