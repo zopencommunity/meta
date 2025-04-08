@@ -38,9 +38,9 @@ printPackageInfo() {
   remote_lookup=${2:-false}
   pkghome="${ZOPEN_PKGINSTALL}/${package}/${package}"
   metadata="${pkghome}/metadata.json"
-
-  if ${remote_lookup} || [ ! -d "${pkghome}" ]; then
-    printVerbose "Performing remote lookup for package '${package}'"
+  metadataFile="$zopen_tmp_dir/$LOGNAME.$RANDOM.metadata.json"
+      if ${remote_lookup} || [ ! -d "${pkghome}" ]; then
+        printVerbose "Performing remote lookup for package '${package}'"
 
     if [ -z "${JSON_CACHE}" ]; then
         printError "JSON_CACHE is not set. Cannot perform remote lookup."
@@ -55,11 +55,14 @@ printPackageInfo() {
     # Extract package name and possible tag
     base_package=$(echo "${package}" | cut -d'%' -f1)
     tag=$(echo "${package}" | cut -d'%' -f2)
-    if [ -n "$tag" ]; then
+   
+    if echo "$package" | grep -q '%';then
         printVerbose "Looking up tagged version '${tag}' for package '${base_package}'"
         remote_data=$(jq -c ".release_data.\"${base_package}\"[] | select(.tag_name == \"${tag}\")" "${JSON_CACHE}")
+
     else
         remote_data=$(jq -c ".release_data.\"${base_package}\"[0]" "${JSON_CACHE}")
+	
     fi
 
     if [ -z "${remote_data}" ] || [ "${remote_data}" = "null" ]; then
@@ -68,7 +71,13 @@ printPackageInfo() {
     fi 
 
     name=$(echo "${remote_data}" | jq -r '.name')
+    url=$(echo "${remote_data}" | jq -r '.assets[0].url')
     repo=$(echo "${remote_data}" | jq -r '.assets[0].url' | sed 's#/[^/]*$##') # Extract base URL
+    metadataJSONURL="$(dirname "$url")/metadata.json"
+    if ! runAndLog "curlCmd -s -L '${metadataJSONURL}' -o '${metadataFile}'"; then
+    	printError "Could not download from ${metadataJSONURL}. Correct any errors and potentially retry."
+   	continue
+    fi
     repo=$(echo "${repo}" | sed 's#/[^/]*$##') # Strip /download
     repo=$(echo "${repo}" | sed 's#^[^/]*//[^/]*##') # Strip protocol and host
     repo="https:/${repo}" # Reconstruct as https URL
@@ -82,7 +91,8 @@ printPackageInfo() {
     size=$(echo "${remote_data}" | jq -r '.assets[0].size')
     expanded_size=$(echo "${remote_data}" | jq -r '.assets[0].expanded_size')
     community_commitsha=$(echo "${remote_data}" | jq -r '.assets[0].community_commitsha')
-    runtime_dependencies=$(echo "${remote_data}" | jq -r '.assets[0].runtime_dependencies')
+    runtime_dependencies=$(echo "${remote_data}" | jq -r '.assets[0].runtime_dependencies') 
+    build_dependencies=$(jq -r '.product.build_dependencies | unique_by(.name) | map(.name) | join(" ")' ${metadataFile})
 
     printHeader "==> ${name} (Not Installed)"
 
@@ -124,7 +134,10 @@ printPackageInfo() {
     if [ -n "${runtime_dependencies}" ]; then
       printHeader "==> Dependencies"
       printf "%-20s %s\n" "Runtime:" "${runtime_dependencies}"
+      printf "%-20s %s\n" "Build:" "${build_dependencies}"
     fi
+    
+    rm ${metadataFile}
 
     return 0
   else
