@@ -75,6 +75,7 @@ echo "> Initializing zopen tools..."
 zopen init
 
 echo "> Cleaning up extracted directory..."
+cd ..
 rm -rvf $dir
 
 echo "> zopen meta package installed successfully and cleanup complete."
