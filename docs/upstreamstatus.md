@@ -1,13 +1,13 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-04-07 06:09:59 EDT.*
+*Report generated on: 2025-04-08 06:10:19 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 208
-- **Total Current Lines of Code (LOC) in Patches:** 27,257
+- **Total Current Lines of Code (LOC) in Patches:** 27,275
 - **Total Number of Current Patch Files:** 644
-- **Average Current Patch LOC per Project:** 131.04
+- **Average Current Patch LOC per Project:** 131.13
 - **Average Current Patch Count per Project:** 3.10
 
 ### Historical Trends (All Projects)
@@ -31,7 +31,7 @@
 | [cmakeport](#repo-cmakeport) | 1,092 | +0 | 1 |
 | [gitport](#repo-gitport) | 958 | -17 | 30 |
 | [valgrindport](#repo-valgrindport) | 896 | +0 | 3 |
-| [coreutilsport](#repo-coreutilsport) | 787 | +0 | 18 |
+| [coreutilsport](#repo-coreutilsport) | 796 | +9 | 18 |
 | [gpgport](#repo-gpgport) | 687 | +0 | 13 |
 | [perlport](#repo-perlport) | 683 | +0 | 13 |
 | [gzipport](#repo-gzipport) | 669 | +0 | 7 |
@@ -54,10 +54,10 @@
 | [conanport](#repo-conanport) | 299 | +0 | 8 |
 | [zipport](#repo-zipport) | 297 | +0 | 8 |
 | [gitlab-runnerport](#repo-gitlab-runnerport) | 241 | +0 | 10 |
+| [zstdport](#repo-zstdport) | 236 | +9 | 4 |
 | [llamacppport](#repo-llamacppport) | 236 | +0 | 1 |
 | [redisport](#repo-redisport) | 235 | +87 | 1 |
 | [mesonport](#repo-mesonport) | 229 | +0 | 9 |
-| [zstdport](#repo-zstdport) | 227 | +0 | 4 |
 | [gettextport](#repo-gettextport) | 206 | +0 | 7 |
 | [findutilsport](#repo-findutilsport) | 199 | +0 | 10 |
 | [ninjaport](#repo-ninjaport) | 196 | +0 | 8 |
@@ -550,7 +550,7 @@
 ## coreutilsport
 
 - **Origin Date (First Commit):** 2022-04-29
-- **Current Patch LOC:** 787
+- **Current Patch LOC:** 796
 - **Current Patch Count:** 18
 
 ### Historical Trends
@@ -572,7 +572,7 @@
 | `stable-patches/lib/stat-time.h.patch` | `stable-patches` | 13 |
 | `stable-patches/src/basenc.c.patch` | `stable-patches` | 15 |
 | `stable-patches/src/cat.c.patch` | `stable-patches` | 60 |
-| `stable-patches/src/copy.c.patch` | `stable-patches` | 27 |
+| `stable-patches/src/copy.c.patch` | `stable-patches` | 36 |
 | `stable-patches/src/cp.c.patch` | `stable-patches` | 61 |
 | `stable-patches/src/digest.c.patch` | `stable-patches` | 61 |
 | `stable-patches/src/ls.c.patch` | `stable-patches` | 87 |
@@ -1192,6 +1192,29 @@
 
 ---
 
+<a id="repo-zstdport"></a>
+## zstdport
+
+- **Origin Date (First Commit):** 2022-07-18
+- **Current Patch LOC:** 236
+- **Current Patch Count:** 4
+
+### Historical Trends
+
+![LOC Trend for zstdport](images/upstream/zstdport_current_loc_trend.png)
+![Count Trend for zstdport](images/upstream/zstdport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/Makefile.patch` | `patches` | 29 |
+| `patches/PR1/addzostomakefile.patch` | `patches` | 44 |
+| `patches/PR1/assertfirst.patch` | `patches` | 99 |
+| `patches/tests_Makefile.patch` | `patches` | 64 |
+
+---
+
 <a id="repo-llamacppport"></a>
 ## llamacppport
 
@@ -1257,29 +1280,6 @@
 | `patches/mesonbuild/linkers/linkers.py.patch` | `patches` | 29 |
 | `patches/mesonbuild/utils/universal.py.patch` | `patches` | 23 |
 | `patches/run_tests.py.patch` | `patches` | 13 |
-
----
-
-<a id="repo-zstdport"></a>
-## zstdport
-
-- **Origin Date (First Commit):** 2022-07-18
-- **Current Patch LOC:** 227
-- **Current Patch Count:** 4
-
-### Historical Trends
-
-![LOC Trend for zstdport](images/upstream/zstdport_current_loc_trend.png)
-![Count Trend for zstdport](images/upstream/zstdport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/Makefile.patch` | `patches` | 29 |
-| `patches/PR1/addzostomakefile.patch` | `patches` | 35 |
-| `patches/PR1/assertfirst.patch` | `patches` | 99 |
-| `patches/tests_Makefile.patch` | `patches` | 64 |
 
 ---
 

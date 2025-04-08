@@ -119,6 +119,9 @@
 ### gnulibport
 - 2024-10-22: [Update gnulib-version to 1.0 from 20030404](https://github.com/zopencommunity/gnulibport/pull/10) ✅
 
+### gperfport
+- 2025-04-07: [Update gperf-version to 3.2 from 3.1](https://github.com/zopencommunity/gperfport/pull/7) ✅
+
 ### grafanaport
 - 2025-03-26: [Update grafana-version to 11.6.0 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/19) ❌
 - 2025-03-25: [Update grafana-version to 11.5.3 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/18) ❌
@@ -349,6 +352,7 @@
 - 2024-05-06: [Update util-linux-version to 2.40.1 from 2.39.3](https://github.com/zopencommunity/util-linuxport/pull/5) ❌
 
 ### victoriametricsport
+- 2025-04-07: [Update victoriametrics-version to 1.115.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/24) ❌
 - 2025-03-24: [Update victoriametrics-version to 1.114.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/23) ❌
 - 2025-03-10: [Update victoriametrics-version to 1.113.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/22) ❌
 - 2025-02-24: [Update victoriametrics-version to 1.112.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/21) ❌
@@ -639,5 +643,5 @@
 ---
 
 
-> Last updated: 2025-04-07 06:06:23 EDT
+> Last updated: 2025-04-08 06:06:26 EDT
 
