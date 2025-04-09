@@ -45,10 +45,12 @@ except ImportError:
     logger.error("Fatal Error: PyGithub library not found. Please install it (`pip install PyGithub`)")
     sys.exit(1)
 
+# --- !! REVISED DECORATOR START !! ---
 def create_github_retry_decorator(github_instance):
     """
     Creates a decorator to handle GitHub API rate limiting (primary & secondary)
     and retries for PyGithub function calls.
+    Handles RateLimitExceededException with status 403 using backoff.
     """
     # Basic check to ensure a Github instance is passed
     if not isinstance(github_instance, Github):
@@ -70,49 +72,55 @@ def create_github_retry_decorator(github_instance):
                          logger.info(f"Call to {func_name} succeeded after {retries} retries.")
                     return result # Success
 
-                except RateLimitExceededException as e_primary:
-                    # --- Handle PRIMARY rate limit (hourly) ---
-                    logger.warning(f"Primary rate limit hit calling {func_name}.")
-                    try:
-                        # Attempt to fetch the current rate limit status
-                        limits = github_instance.get_rate_limit().core
-                        reset_time_naive = limits.reset # PyGithub returns naive datetime in UTC
-                        reset_time_utc = reset_time_naive.replace(tzinfo=datetime.timezone.utc) # Make timezone aware
-                        now_utc = datetime.datetime.now(datetime.timezone.utc)
-                        # Calculate sleep duration, ensure it's positive, add buffer
-                        sleep_duration = max(1.0, (reset_time_utc - now_utc).total_seconds()) + 5
-                        logger.warning(f"Primary rate limit details: Limit={limits.limit}, Used={limits.used}, Remaining={limits.remaining}. "
-                                       f"Waiting for {sleep_duration:.2f} seconds until reset at {reset_time_utc.isoformat()}.")
-                        time.sleep(sleep_duration)
-                        # Do not increment 'retries' count here, just wait for the window reset.
-                        # Loop will automatically try the call again after sleeping.
-                        continue # Explicitly continue to next loop iteration
+                except RateLimitExceededException as e_rate_limit:
+                    # --- Handle Rate Limits (Primary or Secondary reported via this exception type) ---
+                    logger.warning(f"Rate limit hit calling {func_name} (Status: {e_rate_limit.status}).")
 
-                    except Exception as inner_e:
-                        # Handle potential errors fetching rate limit info itself (e.g., network issue during check)
-                        # Fallback to basic exponential backoff if limit info fetch fails
-                        retries += 1 # Count as a retry attempt since we couldn't determine primary reset time
-                        logger.error(f"Error getting rate limit info after hitting limit for {func_name}: {inner_e}. "
-                                     f"Falling back to exponential backoff: Waiting {backoff_seconds}s before retry {retries}/{MAX_RETRIES}.", exc_info=args.verbose)
-                        if retries > MAX_RETRIES:
-                            logger.error(f"Max retries ({MAX_RETRIES}) exceeded for {func_name} after fallback backoff for primary limit.")
-                            raise e_primary # Re-raise the original exception
-                        time.sleep(backoff_seconds)
-                        backoff_seconds = min(MAX_BACKOFF_SECONDS, backoff_seconds * 2)
-                        continue # Explicitly continue
+                    # Check if it's a secondary limit (often 403) reported via RateLimitExceededException
+                    # Or if primary limit info fetch fails, fall back to backoff.
+                    is_secondary_limit_behavior = (e_rate_limit.status == 403) # Treat 403 as needing backoff
+                    primary_limit_info_fetched = False
+                    sleep_duration = 0
 
-                except GithubException as e_github:
-                    # --- Handle SECONDARY rate limit (heuristic: status 403) ---
-                    # Also potentially check for 429 if GitHub uses it sometimes
-                    if e_github.status == 403: # or e_github.status == 429:
-                        retries += 1
+                    if not is_secondary_limit_behavior:
+                        # Attempt to handle as a PRIMARY rate limit (wait for reset)
+                        logger.debug(f"Attempting primary rate limit handling (wait for reset) for {func_name}.")
+                        try:
+                            limits = github_instance.get_rate_limit().core
+                            reset_time_naive = limits.reset # PyGithub returns naive datetime in UTC
+                            reset_time_utc = reset_time_naive.replace(tzinfo=datetime.timezone.utc) # Make timezone aware
+                            now_utc = datetime.datetime.now(datetime.timezone.utc)
+                            # Calculate sleep duration, ensure it's positive, add buffer
+                            sleep_duration = max(1.0, (reset_time_utc - now_utc).total_seconds()) + 5
+                            logger.warning(f"Primary rate limit details: Limit={limits.limit}, Used={limits.used}, Remaining={limits.remaining}. "
+                                           f"Waiting for {sleep_duration:.2f} seconds until reset at {reset_time_utc.isoformat()}.")
+                            primary_limit_info_fetched = True
+                        except Exception as inner_e:
+                            # Handle potential errors fetching rate limit info itself (e.g., network issue during check)
+                            # Fallback to basic exponential backoff if limit info fetch fails
+                            logger.error(f"Error getting rate limit info after hitting non-403 limit for {func_name}: {inner_e}. "
+                                         f"Falling back to exponential backoff.", exc_info=args.verbose)
+                            # Force fallback to exponential backoff below
+                            is_secondary_limit_behavior = True # Treat as needing backoff if we can't get primary info
+
+                    # --- Apply Wait Strategy ---
+                    if primary_limit_info_fetched and not is_secondary_limit_behavior:
+                         # Wait for primary limit reset
+                         logger.debug(f"Sleeping for primary rate limit reset: {sleep_duration:.2f}s")
+                         time.sleep(sleep_duration)
+                         # Do not increment 'retries' count here, just wait for the window reset.
+                         # Loop will automatically try the call again after sleeping.
+                         continue # Explicitly continue to next loop iteration to retry
+                    else:
+                        # Handle as needing SECONDARY limit behavior (exponential backoff)
+                        retries += 1 # Count as a retry attempt
                         if retries > MAX_RETRIES:
-                            logger.error(f"Max retries ({MAX_RETRIES}) exceeded for {func_name} after hitting secondary rate limit ({e_github.status}).")
-                            raise e_github # Re-raise the exception after max retries
+                            logger.error(f"Max retries ({MAX_RETRIES}) exceeded for {func_name} after hitting rate limit ({e_rate_limit.status}) and using backoff.")
+                            raise e_rate_limit # Re-raise the original exception after max retries
 
                         # Extract error details if available
-                        err_data = e_github.data if hasattr(e_github, 'data') else '(no details)'
-                        logger.warning(f"Secondary rate limit ({e_github.status}) hit calling {func_name}. "
+                        err_data = e_rate_limit.data if hasattr(e_rate_limit, 'data') else '(no details)'
+                        logger.warning(f"Applying exponential backoff for rate limit ({e_rate_limit.status}) on {func_name}. "
                                        f"Retrying in {backoff_seconds:.2f}s... (Attempt {retries}/{MAX_RETRIES}) | Error data: {err_data}")
                         time.sleep(backoff_seconds)
                         # Exponential backoff with cap
@@ -120,7 +128,24 @@ def create_github_retry_decorator(github_instance):
                         # Continue to next iteration to retry
                         continue
 
-                    # --- Handle other specific Github errors ---
+                except GithubException as e_github:
+                    # --- Handle OTHER specific Github errors that are NOT RateLimitExceededException ---
+                    # Catch potential 403s NOT reported as RateLimitExceededException, OR other errors like 404
+                    if e_github.status == 403:
+                         # It's possible a 403 might occur NOT as a RateLimitExceededException subtype
+                         # Apply secondary limit backoff here as well, as a safety net.
+                        retries += 1
+                        if retries > MAX_RETRIES:
+                            logger.error(f"Max retries ({MAX_RETRIES}) exceeded for {func_name} after hitting generic 403 error.")
+                            raise e_github # Re-raise the exception after max retries
+
+                        err_data = e_github.data if hasattr(e_github, 'data') else '(no details)'
+                        logger.warning(f"Generic 403 GithubException hit calling {func_name} (not RateLimitExceededException type). "
+                                       f"Retrying in {backoff_seconds:.2f}s... (Attempt {retries}/{MAX_RETRIES}) | Error data: {err_data}")
+                        time.sleep(backoff_seconds)
+                        backoff_seconds = min(MAX_BACKOFF_SECONDS, backoff_seconds * 2)
+                        continue # Retry the operation
+
                     elif e_github.status == 404:
                          # Usually no point retrying a 404 Not Found
                          logger.error(f"GitHub resource not found (404) calling {func_name} with args: {args}, kwargs: {kwargs}")
@@ -146,6 +171,7 @@ def create_github_retry_decorator(github_instance):
 
         return wrapper
     return decorator
+# --- !! REVISED DECORATOR END !! ---
 
 # --- Argument Parsing ---
 parser = argparse.ArgumentParser(
@@ -200,7 +226,7 @@ try:
     g = Github(github_token, retry=0, timeout=60)
     # Create the decorator instance using our authenticated 'g' object
     # This decorator will be applied to helper functions below
-    github_retry = create_github_retry_decorator(g)
+    github_retry = create_github_retry_decorator(g) # Use the revised decorator
 
     # --- Decorated Helper Functions for API calls ---
     # These apply the retry logic automatically when called
@@ -240,8 +266,12 @@ try:
     user_login = get_authenticated_user_login(g.get_user())
     logger.info(f"Successfully authenticated to GitHub as: {user_login}")
     # Log initial rate limit status
-    limits = g.get_rate_limit().core
-    logger.info(f"Initial primary rate limit: {limits.remaining}/{limits.limit} requests remaining.")
+    try:
+        limits = g.get_rate_limit().core
+        logger.info(f"Initial primary rate limit: {limits.remaining}/{limits.limit} requests remaining.")
+    except Exception as e_rl_init:
+        logger.warning(f"Could not retrieve initial rate limit status: {e_rl_init}")
+
 
 except BadCredentialsException:
     logger.error("Fatal Error: GitHub authentication failed. Check your ZOPEN_GITHUB_OAUTH_TOKEN.")
@@ -310,10 +340,8 @@ def process_asset(asset):
             if isinstance(dep, dict) and dep.get("name")
         ]
 
-        # --- !!! CONVERT DEPENDENCIES TO STRING !!! ---
         # Convert the list of names into a single space-separated string
         runtime_dependencies_string = " ".join(runtime_dependency_names)
-        # --- !!! END CHANGE !!! ---
 
         # Build the dictionary containing processed data for this asset
         filtered_asset_data = {
@@ -324,9 +352,7 @@ def process_asset(asset):
             "categories": metadata.get("categories"),
             "size": metadata.get("pax_size", 0), # Size of the pax file itself
             "expanded_size": metadata.get("size", 0), # Expanded size on disk
-            # --- !!! USE THE STRING HERE !!! ---
             "runtime_dependencies": runtime_dependencies_string,
-            # --- !!! END CHANGE !!! ---
             "total_tests": total_tests,
             "passed_tests": passed_tests,
             "community_commitsha": sha
@@ -363,38 +389,64 @@ def process_release(repo_name, release_obj):
     release_tag = release_obj.tag_name
     logger.debug(f"Processing release '{release_title}' (tag: {release_tag}) for repo: {repo_name}")
 
+    assets = None # Initialize assets to None
     try:
         # Use the decorated helper function to get assets list/iterator with retry logic
         assets = get_assets_with_retry(release_obj)
-        # Handle case where asset fetching itself might return None after retries
-        if assets is None: # Check explicit None in case empty list is valid
-             logger.warning(f"Could not retrieve assets for release '{release_title}' (tag: {release_tag}) in repo {repo_name}.")
-             return None, repo_name
+        # Handle case where asset fetching itself might return None after retries (should be handled by decorator raising exception now)
+        # if assets is None: # Check explicit None in case empty list is valid - Decorator should raise now instead of returning None
+        #      logger.warning(f"Could not retrieve assets for release '{release_title}' (tag: {release_tag}) in repo {repo_name} after retries.")
+        #      return None, repo_name
 
     except GithubException as e:
         # Catch error if get_assets_with_retry fails definitively after all retries
         logger.error(f"Failed to get assets for release '{release_title}' (tag: {release_tag}) in repo {repo_name} after retries: {e}")
         return None, repo_name # Indicate failure for this specific release
+    except Exception as e:
+        # Catch any other unexpected error during asset fetching
+        logger.error(f"Unexpected error fetching assets for release '{release_title}' (tag: {release_tag}) in repo {repo_name}: {e}", exc_info=args.verbose)
+        return None, repo_name
 
     # --- Process the assets retrieved ---
     filtered_assets = [] # List to hold successfully processed asset data dicts
     asset_count = 0
+
+    if assets is None:
+         logger.warning(f"Asset list is None for release '{release_title}' (tag: {release_tag}) in repo {repo_name}, likely due to prior fetch error.")
+         # Even though decorator should raise, handle defensively
+         return None, repo_name
+
     # The 'assets' object might be a PaginatedList; direct iteration works fine
-    for asset in assets:
-        asset_count += 1
-        # Process each asset (download metadata.json if applicable, parse)
-        filtered_asset_data = process_asset(asset) # Handles its own download/parse errors
-        # Add to list if processing was successful and returned data
-        if filtered_asset_data:
-            filtered_assets.append(filtered_asset_data)
-    logger.debug(f"Checked {asset_count} assets in release '{release_title}', found {len(filtered_assets)} matching '{METADATA_ASSET_NAME}' with valid data.")
+    # Wrap asset iteration in try/except as iteration itself can trigger API calls for pagination
+    try:
+        for asset in assets:
+            asset_count += 1
+            # Process each asset (download metadata.json if applicable, parse)
+            filtered_asset_data = process_asset(asset) # Handles its own download/parse errors
+            # Add to list if processing was successful and returned data
+            if filtered_asset_data:
+                filtered_assets.append(filtered_asset_data)
+        logger.debug(f"Checked {asset_count} assets in release '{release_title}', found {len(filtered_assets)} matching '{METADATA_ASSET_NAME}' with valid data.")
+    except GithubException as e:
+         # Catch rate limit or other GitHub errors during asset list PAGINATION
+        logger.error(f"GitHub error occurred while iterating through assets for release '{release_title}' (tag: {release_tag}) in repo {repo_name}: {e}")
+        return None, repo_name # Fail the release processing if we can't iterate assets
+    except Exception as e:
+        logger.error(f"Unexpected error iterating assets for release '{release_title}' (tag: {release_tag}) in repo {repo_name}: {e}", exc_info=args.verbose)
+        return None, repo_name
+
 
     # --- Construct final release data ---
     # Only return a structure if we found valid processed assets for this release
     if filtered_assets:
+        # Ensure published_at is timezone-aware (it should be from PyGithub, but be safe)
+        published_at_dt = release_obj.published_at
+        if published_at_dt and published_at_dt.tzinfo is None:
+            published_at_dt = published_at_dt.replace(tzinfo=datetime.timezone.utc)
+
         filtered_release_dict = {
             "name": release_title,
-            "date": release_obj.published_at, # Keep as datetime object for accurate sorting
+            "date": published_at_dt, # Keep as datetime object for accurate sorting
             "tag_name": release_tag,
             "assets": filtered_assets  # List of processed asset data dictionaries
         }
@@ -503,6 +555,7 @@ try:
 
             try:
                 # Get the result tuple from the completed future: (dict, str) or (None, str)
+                # .result() will re-raise any exception that occurred in the worker thread
                 filtered_release_dict, repo_name_result = future.result()
 
                 # --- Filter the result based on Date ---
@@ -511,6 +564,10 @@ try:
                     release_date = filtered_release_dict.get('date')
                     # Ensure we have a valid datetime object for comparison
                     if release_date and isinstance(release_date, datetime.datetime):
+                        # Ensure date is timezone-aware for proper comparison if needed (should be UTC from GitHub)
+                        if release_date.tzinfo is None:
+                             release_date = release_date.replace(tzinfo=datetime.timezone.utc)
+
                          # Apply the minimum year filter
                         if release_date.year >= args.min_year:
                             # --- Add the valid, filtered release to our main data structure ---
@@ -528,15 +585,15 @@ try:
                         # Log if a successfully processed release is missing its date
                         logger.warning(f"Skipping release in {repo_name_result} due to missing or invalid date field: {filtered_release_dict.get('tag_name', 'N/A')}")
                 # else: The future returned None for filtered_release_dict, meaning processing failed
-                # or no relevant assets were found. No action needed here, already logged in process_release.
+                # or no relevant assets were found. Handled by exception logging below now.
 
             # --- Handle errors that occurred during future execution ---
             except concurrent.futures.CancelledError:
                  logger.warning("A release processing task was cancelled.")
                  skipped_failed_futures += 1
+            # Catch exceptions raised *within* the worker thread task execution (e.g., from process_release)
+            # This includes GitHub errors that exhausted retries in the decorator
             except Exception as e:
-                # Log exceptions raised *within* the worker thread task execution if they bubbled up
-                # (e.g., if process_release raised an unexpected error not caught internally)
                 logger.error(f"Error retrieving result from a release processing future: {e}", exc_info=args.verbose)
                 skipped_failed_futures += 1
 
@@ -571,19 +628,32 @@ for repo_name, releases_list in release_data.items():
     if releases_list: # Check if list is not empty before sorting
         try:
              # Sort the list of releases *in-place*
+             # Use min date with UTC timezone as fallback for entries missing a valid date
+             min_fallback_date = datetime.datetime.min.replace(tzinfo=datetime.timezone.utc)
              releases_list.sort(
-                 key=lambda entry: entry.get('date') or datetime.datetime.min.replace(tzinfo=datetime.timezone.utc), # Use min date as fallback
+                 key=lambda entry: entry.get('date') if isinstance(entry.get('date'), datetime.datetime) else min_fallback_date,
                  reverse=True # Most recent first
              )
         except Exception as e:
              # Log errors during sorting for a specific repo
              logger.error(f"Error sorting releases for repo {repo_name}: {e}")
 
+# Helper function for JSON serialization (handles datetime)
+def json_default_serializer(obj):
+    if isinstance(obj, datetime.datetime):
+        # Ensure datetime is ISO formatted and includes timezone Z for UTC
+        if obj.tzinfo is None:
+            # If somehow timezone is missing, assume UTC (GitHub times should be UTC)
+             obj = obj.replace(tzinfo=datetime.timezone.utc)
+        return obj.isoformat(timespec='seconds').replace('+00:00', 'Z')
+    raise TypeError(f"Object of type {type(obj)} is not JSON serializable")
+
+
 # --- Generate Full JSON Output File (Minified) ---
 logger.info(f"Generating full JSON output file (minified): {args.output_file}")
 # Construct the final JSON object for the main file
 json_data_full = {
-    "generation_timestamp_utc": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+    "generation_timestamp_utc": datetime.datetime.now(datetime.timezone.utc).isoformat(timespec='seconds') + 'Z',
     "source_organization": ORGANIZATION,
     "minimum_release_year": args.min_year,
     "release_data": release_data # Use the release_data (dict of lists)
@@ -592,10 +662,9 @@ json_data_full = {
 try:
     # Write the JSON data to the specified output file
     with open(args.output_file, "w", encoding='utf-8') as json_file:
-        # --- !!! USE MINIFIED FORMAT !!! ---
         # Use separators for minified output, remove indent
-        json.dump(json_data_full, json_file, separators=(',', ':'), default=str, ensure_ascii=False)
-        # --- !!! END CHANGE !!! ---
+        # Use default=json_default_serializer to handle datetime objects
+        json.dump(json_data_full, json_file, separators=(',', ':'), default=json_default_serializer, ensure_ascii=False)
     logger.info(f"Full JSON cache file created successfully: {args.output_file}")
 except IOError as e:
     logger.error(f"Error writing main JSON file to {args.output_file}: {e}")
@@ -607,7 +676,7 @@ except TypeError as e:
 logger.info("Generating JSON output file with only the latest release per repository...")
 # Prepare the structure for the latest releases JSON
 latest_releases_json_data = {
-    "generation_timestamp_utc": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+    "generation_timestamp_utc": datetime.datetime.now(datetime.timezone.utc).isoformat(timespec='seconds') + 'Z',
     "source_organization": ORGANIZATION,
     "minimum_release_year": args.min_year,
     "release_data": {} # Structure: { repo_name: [list_with_one_latest_release] }
@@ -635,8 +704,8 @@ try:
     # Write the latest releases JSON data to the derived filename
     with open(latest_output_file, "w", encoding='utf-8') as latest_json_file:
         # Use separators=(',', ':') for minified output
-        # default=str handles datetime objects, ensure_ascii=False for unicode
-        json.dump(latest_releases_json_data, latest_json_file, separators=(',', ':'), default=str, ensure_ascii=False)
+        # default=json_default_serializer handles datetime objects, ensure_ascii=False for unicode
+        json.dump(latest_releases_json_data, latest_json_file, separators=(',', ':'), default=json_default_serializer, ensure_ascii=False)
     logger.info(f"JSON file with the latest releases created successfully: {latest_output_file}")
 except IOError as e:
     logger.error(f"Error writing latest releases JSON file to {latest_output_file}: {e}")
@@ -655,7 +724,7 @@ else:
 
 # Prepare the data payload for the descriptions file
 descriptions_json_data = {
-    "generation_timestamp_utc": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+    "generation_timestamp_utc": datetime.datetime.now(datetime.timezone.utc).isoformat(timespec='seconds') + 'Z',
     "source_organization": ORGANIZATION,
     "descriptions": repo_descriptions # Use the dictionary populated earlier
 }
@@ -664,7 +733,8 @@ try:
     # Write the descriptions JSON data to its file
     with open(desc_output_file, "w", encoding='utf-8') as desc_json_file:
         # Use human-readable format (indent=2) for descriptions file
-        json.dump(descriptions_json_data, desc_json_file, indent=2, ensure_ascii=False)
+        # default=json_default_serializer just in case, though unlikely needed here
+        json.dump(descriptions_json_data, desc_json_file, indent=2, ensure_ascii=False, default=json_default_serializer)
     logger.info(f"JSON file with repository descriptions created successfully: {desc_output_file}")
 except IOError as e:
     logger.error(f"Error writing descriptions JSON file to {desc_output_file}: {e}")
@@ -700,3 +770,4 @@ try:
 except Exception as e:
     logger.warning(f"Could not retrieve final rate limit status: {e}")
 
+sys.exit(0) # Explicitly exit with success code
