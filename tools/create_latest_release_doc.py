@@ -16,7 +16,6 @@ def generate_markdown(data, output_file):
         for release in releases:
             # Correct format string for "YYYY-MM-DDTHH:MM:SSZ"
             release_date = datetime.strptime(release['date'], "%Y-%m-%dT%H:%M:%SZ")
-            release_date = release_date.replace(tzinfo=datetime.timezone.utc)
             # Calculate the start of the week for the release date (Monday as the first day of the week)
             week_start = release_date - timedelta(days=release_date.weekday())
             week_start_str = week_start.strftime('%Y-%m-%d')
