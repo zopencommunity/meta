@@ -38,8 +38,9 @@ printPackageInfo() {
   remote_lookup=${2:-false}
   pkghome="${ZOPEN_PKGINSTALL}/${package}/${package}"
   metadata="${pkghome}/metadata.json"
-  metadataFile="$zopen_tmp_dir/$LOGNAME.$RANDOM.metadata.json"
-      if ${remote_lookup} || [ ! -d "${pkghome}" ]; then
+    
+    if ${remote_lookup} || [ ! -d "${pkghome}" ]; then
+        metadataFile="$zopen_tmp_dir/$LOGNAME.$RANDOM.metadata.json"
         printVerbose "Performing remote lookup for package '${package}'"
 
     if [ -z "${JSON_CACHE}" ]; then
@@ -56,13 +57,11 @@ printPackageInfo() {
     base_package=$(echo "${package}" | cut -d'%' -f1)
     tag=$(echo "${package}" | cut -d'%' -f2)
    
-    if echo "$package" | grep -q '%';then
+    if [ -n "$tag" ]; then
         printVerbose "Looking up tagged version '${tag}' for package '${base_package}'"
         remote_data=$(jq -c ".release_data.\"${base_package}\"[] | select(.tag_name == \"${tag}\")" "${JSON_CACHE}")
-
     else
         remote_data=$(jq -c ".release_data.\"${base_package}\"[0]" "${JSON_CACHE}")
-	
     fi
 
     if [ -z "${remote_data}" ] || [ "${remote_data}" = "null" ]; then
@@ -74,6 +73,7 @@ printPackageInfo() {
     url=$(echo "${remote_data}" | jq -r '.assets[0].url')
     repo=$(echo "${remote_data}" | jq -r '.assets[0].url' | sed 's#/[^/]*$##') # Extract base URL
     metadataJSONURL="$(dirname "$url")/metadata.json"
+
     if ! runAndLog "curlCmd -s -L '${metadataJSONURL}' -o '${metadataFile}'"; then
     	printError "Could not download from ${metadataJSONURL}. Correct any errors and potentially retry."
    	continue
