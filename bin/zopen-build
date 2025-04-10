@@ -686,6 +686,8 @@ checkEnv()
       implicitDeps="${implicitDeps} gzip"
     elif [ "${ext}x" = "bz2x" ]; then
       implicitDeps="${implicitDeps} bzip2"
+    elif [ "${ext}x" = "lzx" ]; then
+      implicitDeps="${implicitDeps} lzip"
     elif [ "${ext}x" = "zipx" ]; then
       implicitDeps="${implicitDeps} unzip"
     fi
