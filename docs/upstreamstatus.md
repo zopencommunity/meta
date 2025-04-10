@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-04-08 06:10:19 EDT.*
+*Report generated on: 2025-04-10 06:10:46 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 208
-- **Total Current Lines of Code (LOC) in Patches:** 27,275
+- **Total Projects Analyzed:** 215
+- **Total Current Lines of Code (LOC) in Patches:** 27,335
 - **Total Number of Current Patch Files:** 644
-- **Average Current Patch LOC per Project:** 131.13
-- **Average Current Patch Count per Project:** 3.10
+- **Average Current Patch LOC per Project:** 127.14
+- **Average Current Patch Count per Project:** 3.00
 
 ### Historical Trends (All Projects)
 
@@ -33,9 +33,9 @@
 | [valgrindport](#repo-valgrindport) | 896 | +0 | 3 |
 | [coreutilsport](#repo-coreutilsport) | 796 | +9 | 18 |
 | [gpgport](#repo-gpgport) | 687 | +0 | 13 |
+| [procpsport](#repo-procpsport) | 687 | +42 | 1 |
 | [perlport](#repo-perlport) | 683 | +0 | 13 |
 | [gzipport](#repo-gzipport) | 669 | +0 | 7 |
-| [procpsport](#repo-procpsport) | 645 | +0 | 1 |
 | [util-linuxport](#repo-util-linuxport) | 612 | +0 | 7 |
 | [unzipport](#repo-unzipport) | 549 | +0 | 12 |
 | [cronieport](#repo-cronieport) | 510 | +0 | 13 |
@@ -53,10 +53,10 @@
 | [neovimport](#repo-neovimport) | 312 | +0 | 12 |
 | [conanport](#repo-conanport) | 299 | +0 | 8 |
 | [zipport](#repo-zipport) | 297 | +0 | 8 |
+| [redisport](#repo-redisport) | 263 | +115 | 1 |
 | [gitlab-runnerport](#repo-gitlab-runnerport) | 241 | +0 | 10 |
 | [zstdport](#repo-zstdport) | 236 | +9 | 4 |
 | [llamacppport](#repo-llamacppport) | 236 | +0 | 1 |
-| [redisport](#repo-redisport) | 235 | +87 | 1 |
 | [mesonport](#repo-mesonport) | 229 | +0 | 9 |
 | [gettextport](#repo-gettextport) | 206 | +0 | 7 |
 | [findutilsport](#repo-findutilsport) | 199 | +0 | 10 |
@@ -97,7 +97,6 @@
 | [getoptport](#repo-getoptport) | 66 | +0 | 1 |
 | [logrotateport](#repo-logrotateport) | 65 | +0 | 1 |
 | [lz4port](#repo-lz4port) | 58 | +0 | 4 |
-| [texinfoport](#repo-texinfoport) | 56 | +0 | 3 |
 | [libgpgerrorport](#repo-libgpgerrorport) | 53 | +0 | 3 |
 | [expatport](#repo-expatport) | 52 | +0 | 2 |
 | [terraformport](#repo-terraformport) | 51 | +0 | 2 |
@@ -111,6 +110,7 @@
 | [poptport](#repo-poptport) | 35 | +0 | 1 |
 | [whichport](#repo-whichport) | 34 | +0 | 1 |
 | [sedport](#repo-sedport) | 33 | +0 | 1 |
+| [texinfoport](#repo-texinfoport) | 33 | -23 | 2 |
 | [ntbtlsport](#repo-ntbtlsport) | 33 | +0 | 1 |
 | [sqliteport](#repo-sqliteport) | 32 | +0 | 1 |
 | [luvport](#repo-luvport) | 31 | +0 | 1 |
@@ -147,6 +147,7 @@
 | [luaport](#repo-luaport) | 13 | +0 | 1 |
 | [lpegport](#repo-lpegport) | 13 | +0 | 1 |
 | [stowport](#repo-stowport) | 13 | +0 | 1 |
+| [lzipport](#repo-lzipport) | 13 | +13 | 1 |
 | [libxml2port](#repo-libxml2port) | 12 | +0 | 1 |
 | [zlibport](#repo-zlibport) | 0 | +0 | 0 |
 | [help2manport](#repo-help2manport) | 0 | +0 | 0 |
@@ -232,6 +233,12 @@
 | [spdlogport](#repo-spdlogport) | 0 | +0 | 0 |
 | [creduceport](#repo-creduceport) | 0 | +0 | 0 |
 | [gradleport](#repo-gradleport) | 0 | N/A | 0 |
+| [luajitport](#repo-luajitport) | 0 | +0 | 0 |
+| [edport](#repo-edport) | 0 | N/A | 0 |
+| [cpioport](#repo-cpioport) | 0 | +0 | 0 |
+| [uucpport](#repo-uucpport) | 0 | N/A | 0 |
+| [bcport](#repo-bcport) | 0 | +0 | 0 |
+| [git-sizerport](#repo-git-sizerport) | 0 | +0 | 0 |
 
 ---
 
@@ -615,6 +622,26 @@
 
 ---
 
+<a id="repo-procpsport"></a>
+## procpsport
+
+- **Origin Date (First Commit):** 2024-07-26
+- **Current Patch LOC:** 687
+- **Current Patch Count:** 1
+
+### Historical Trends
+
+![LOC Trend for procpsport](images/upstream/procpsport_current_loc_trend.png)
+![Count Trend for procpsport](images/upstream/procpsport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/PR1.patch` | `patches` | 687 |
+
+---
+
 <a id="repo-perlport"></a>
 ## perlport
 
@@ -670,26 +697,6 @@
 | `patches/zedc.c.patch` | `patches` | 236 |
 | `patches/zip.c.patch` | `patches` | 81 |
 | `patches/zos.h.patch` | `patches` | 30 |
-
----
-
-<a id="repo-procpsport"></a>
-## procpsport
-
-- **Origin Date (First Commit):** 2024-07-26
-- **Current Patch LOC:** 645
-- **Current Patch Count:** 1
-
-### Historical Trends
-
-![LOC Trend for procpsport](images/upstream/procpsport_current_loc_trend.png)
-![Count Trend for procpsport](images/upstream/procpsport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/PR1.patch` | `patches` | 645 |
 
 ---
 
@@ -1163,6 +1170,26 @@
 
 ---
 
+<a id="repo-redisport"></a>
+## redisport
+
+- **Origin Date (First Commit):** 2025-02-14
+- **Current Patch LOC:** 263
+- **Current Patch Count:** 1
+
+### Historical Trends
+
+![LOC Trend for redisport](images/upstream/redisport_current_loc_trend.png)
+![Count Trend for redisport](images/upstream/redisport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/pr.patch` | `patches` | 263 |
+
+---
+
 <a id="repo-gitlab-runnerport"></a>
 ## gitlab-runnerport
 
@@ -1232,26 +1259,6 @@
 | Patch File (Repo Relative Path) | Source | LOC |
 |---|---|:---|
 | `patches/PR1.patch` | `patches` | 236 |
-
----
-
-<a id="repo-redisport"></a>
-## redisport
-
-- **Origin Date (First Commit):** 2025-02-14
-- **Current Patch LOC:** 235
-- **Current Patch Count:** 1
-
-### Historical Trends
-
-![LOC Trend for redisport](images/upstream/redisport_current_loc_trend.png)
-![Count Trend for redisport](images/upstream/redisport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/pr.patch` | `patches` | 235 |
 
 ---
 
@@ -2193,28 +2200,6 @@
 
 ---
 
-<a id="repo-texinfoport"></a>
-## texinfoport
-
-- **Origin Date (First Commit):** 2022-09-19
-- **Current Patch LOC:** 56
-- **Current Patch Count:** 3
-
-### Historical Trends
-
-![LOC Trend for texinfoport](images/upstream/texinfoport_current_loc_trend.png)
-![Count Trend for texinfoport](images/upstream/texinfoport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/Init-test.inc.patch` | `patches` | 13 |
-| `patches/Makefile.in.patch` | `patches` | 20 |
-| `patches/test-driver.patch` | `patches` | 23 |
-
----
-
 <a id="repo-libgpgerrorport"></a>
 ## libgpgerrorport
 
@@ -2484,6 +2469,27 @@
 | Patch File (Repo Relative Path) | Source | LOC |
 |---|---|:---|
 | `stable-patches/execute.c.patch` | `stable-patches` | 33 |
+
+---
+
+<a id="repo-texinfoport"></a>
+## texinfoport
+
+- **Origin Date (First Commit):** 2022-09-19
+- **Current Patch LOC:** 33
+- **Current Patch Count:** 2
+
+### Historical Trends
+
+![LOC Trend for texinfoport](images/upstream/texinfoport_current_loc_trend.png)
+![Count Trend for texinfoport](images/upstream/texinfoport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/Init-test.inc.patch` | `patches` | 13 |
+| `patches/Makefile.in.patch` | `patches` | 20 |
 
 ---
 
@@ -3214,6 +3220,26 @@
 | Patch File (Repo Relative Path) | Source | LOC |
 |---|---|:---|
 | `stable-patches/stow.in.patch` | `stable-patches` | 13 |
+
+---
+
+<a id="repo-lzipport"></a>
+## lzipport
+
+- **Origin Date (First Commit):** 2025-04-09
+- **Current Patch LOC:** 13
+- **Current Patch Count:** 1
+
+### Historical Trends
+
+![LOC Trend for lzipport](images/upstream/lzipport_current_loc_trend.png)
+![Count Trend for lzipport](images/upstream/lzipport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/Makefile.in.patch` | `patches` | 13 |
 
 ---
 
@@ -4735,6 +4761,114 @@
 ## gradleport
 
 - **Origin Date (First Commit):** Unknown
+- **Current Patch LOC:** 0
+- **Current Patch Count:** 0
+
+### Historical Trends
+
+*(Patch LOC trend graph not generated)*
+*(Patch count trend graph not generated)*
+
+### Current Patch Details
+
+*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
+
+---
+
+<a id="repo-luajitport"></a>
+## luajitport
+
+- **Origin Date (First Commit):** 2025-04-08
+- **Current Patch LOC:** 0
+- **Current Patch Count:** 0
+
+### Historical Trends
+
+*(Patch LOC trend graph not generated)*
+*(Patch count trend graph not generated)*
+
+### Current Patch Details
+
+*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
+
+---
+
+<a id="repo-edport"></a>
+## edport
+
+- **Origin Date (First Commit):** Unknown
+- **Current Patch LOC:** 0
+- **Current Patch Count:** 0
+
+### Historical Trends
+
+*(Patch LOC trend graph not generated)*
+*(Patch count trend graph not generated)*
+
+### Current Patch Details
+
+*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
+
+---
+
+<a id="repo-cpioport"></a>
+## cpioport
+
+- **Origin Date (First Commit):** 2025-04-09
+- **Current Patch LOC:** 0
+- **Current Patch Count:** 0
+
+### Historical Trends
+
+*(Patch LOC trend graph not generated)*
+*(Patch count trend graph not generated)*
+
+### Current Patch Details
+
+*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
+
+---
+
+<a id="repo-uucpport"></a>
+## uucpport
+
+- **Origin Date (First Commit):** Unknown
+- **Current Patch LOC:** 0
+- **Current Patch Count:** 0
+
+### Historical Trends
+
+*(Patch LOC trend graph not generated)*
+*(Patch count trend graph not generated)*
+
+### Current Patch Details
+
+*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
+
+---
+
+<a id="repo-bcport"></a>
+## bcport
+
+- **Origin Date (First Commit):** 2025-04-09
+- **Current Patch LOC:** 0
+- **Current Patch Count:** 0
+
+### Historical Trends
+
+*(Patch LOC trend graph not generated)*
+*(Patch count trend graph not generated)*
+
+### Current Patch Details
+
+*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
+
+---
+
+<a id="repo-git-sizerport"></a>
+## git-sizerport
+
+- **Origin Date (First Commit):** 2025-04-09
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 
