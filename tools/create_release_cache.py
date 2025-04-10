@@ -32,9 +32,9 @@ METADATA_ASSET_NAME = "metadata.json"
 DEFAULT_MAX_WORKERS = 4 # Default concurrency level
 
 # Retry Configuration for GitHub API calls
-MAX_RETRIES = 5             # Max attempts for secondary limit errors
-INITIAL_BACKOFF_SECONDS = 2 # Initial wait time for secondary limit retry
-MAX_BACKOFF_SECONDS = 60    # Maximum wait time between retries
+MAX_RETRIES = 20             # Max attempts for secondary limit errors
+INITIAL_BACKOFF_SECONDS = 180 # Initial wait time for secondary limit retry
+MAX_BACKOFF_SECONDS = 300    # Maximum wait time between retries
 MIN_RELEASE_YEAR = 2023     # Ignore releases published before this year (can be overridden by arg)
 
 # --- GitHub Connection & Rate Limiting Logic ---
