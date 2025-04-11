@@ -286,6 +286,6 @@ while [ $# -gt 0 ]; do
 done
 
 checkIfConfigLoaded
-getReposFromGithub true
+getRepos true
 
 printPackageInfo "${package}" "${remote_lookup}"
