@@ -10,6 +10,7 @@
 - 2024-12-11: [Update bash-completion-version to 20060301 from V.R.M](https://github.com/zopencommunity/bash-completionport/pull/1) ❌
 
 ### buildkiteport
+- 2025-04-10: [Update buildkite-version to 3.96.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/54) ❌
 - 2025-03-24: [Update buildkite-version to 3.95.1 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/53) ❌
 - 2025-03-20: [Update buildkite-version to 3.95.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/52) ❌
 - 2025-03-12: [Update buildkite-version to 3.94.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/51) ❌
@@ -123,6 +124,9 @@
 - 2025-03-08: [Update gitlab-runner-version to 17.9.1 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/35) ❌
 - 2025-02-20: [Update gitlab-runner-version to 17.9.0 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/34) ❌
 
+### git-sizerport
+- 2025-04-10: [Update git-sizer-version to 1.5.0 from V.R.M](https://github.com/zopencommunity/git-sizerport/pull/1) ✅
+
 ### gnulibport
 - 2024-10-22: [Update gnulib-version to 1.0 from 20030404](https://github.com/zopencommunity/gnulibport/pull/10) ✅
 
@@ -144,6 +148,9 @@
 - 2024-08-15: [Update grafana-version to 11.1.4 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/6) ❌
 - 2024-07-24: [Update grafana-version to 11.1.2 from 11.0.0](https://github.com/zopencommunity/grafanaport/pull/4) ❌
 - 2024-06-25: [Update grafana-version to 11.1.0 from 11.0.0](https://github.com/zopencommunity/grafanaport/pull/2) ❌
+
+### gzipport
+- 2025-04-10: [Update gz-version to 1.14 from 1.13](https://github.com/zopencommunity/gzipport/pull/18) ❌
 
 ### htopport
 - 2025-03-10: [Update htop-version to 3.4.0 from 3.2.2](https://github.com/zopencommunity/htopport/pull/9) ❌
@@ -630,7 +637,7 @@
 - ✅ unzipport - [![Bump Status](https://github.com/zopencommunity/unzipport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/unzipport/actions/workflows/bump.yml)
 - ✅ util-linuxport - [![Bump Status](https://github.com/zopencommunity/util-linuxport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/util-linuxport/actions/workflows/bump.yml)
 - ❌ utils - Workflow not configured
-- ❌ uucpport - Workflow not configured
+- ✅ uucpport - [![Bump Status](https://github.com/zopencommunity/uucpport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/uucpport/actions/workflows/bump.yml)
 - ✅ v8port - [![Bump Status](https://github.com/zopencommunity/v8port/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/v8port/actions/workflows/bump.yml)
 - ❌ valgrindport - Workflow not configured
 - ✅ victoriametricsport - [![Bump Status](https://github.com/zopencommunity/victoriametricsport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/victoriametricsport/actions/workflows/bump.yml)
@@ -661,10 +668,10 @@
 
 </details>
 
-**Summary:** 184 active | 44 missing
+**Summary:** 185 active | 43 missing
 
 ---
 
 
-> Last updated: 2025-04-10 06:06:42 EDT
+> Last updated: 2025-04-11 06:06:30 EDT
 

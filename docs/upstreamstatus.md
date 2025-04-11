@@ -1,13 +1,13 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-04-10 06:10:46 EDT.*
+*Report generated on: 2025-04-11 06:10:23 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 215
-- **Total Current Lines of Code (LOC) in Patches:** 27,335
-- **Total Number of Current Patch Files:** 644
-- **Average Current Patch LOC per Project:** 127.14
+- **Total Current Lines of Code (LOC) in Patches:** 27,720
+- **Total Number of Current Patch Files:** 646
+- **Average Current Patch LOC per Project:** 128.93
 - **Average Current Patch Count per Project:** 3.00
 
 ### Historical Trends (All Projects)
@@ -29,9 +29,9 @@
 | [libuvport](#repo-libuvport) | 1,462 | +0 | 26 |
 | [sudoport](#repo-sudoport) | 1,278 | +0 | 30 |
 | [cmakeport](#repo-cmakeport) | 1,092 | +0 | 1 |
-| [gitport](#repo-gitport) | 958 | -17 | 30 |
+| [coreutilsport](#repo-coreutilsport) | 1,050 | +263 | 18 |
+| [gitport](#repo-gitport) | 974 | -1 | 31 |
 | [valgrindport](#repo-valgrindport) | 896 | +0 | 3 |
-| [coreutilsport](#repo-coreutilsport) | 796 | +9 | 18 |
 | [gpgport](#repo-gpgport) | 687 | +0 | 13 |
 | [procpsport](#repo-procpsport) | 687 | +42 | 1 |
 | [perlport](#repo-perlport) | 683 | +0 | 13 |
@@ -75,6 +75,7 @@
 | [m4port](#repo-m4port) | 120 | +0 | 5 |
 | [thesilversearcherport](#repo-thesilversearcherport) | 118 | +0 | 4 |
 | [grepport](#repo-grepport) | 115 | +0 | 3 |
+| [uucpport](#repo-uucpport) | 115 | +115 | 1 |
 | [ncursesport](#repo-ncursesport) | 111 | +0 | 2 |
 | [hexcurseport](#repo-hexcurseport) | 108 | +0 | 4 |
 | [libbsdport](#repo-libbsdport) | 107 | +0 | 4 |
@@ -236,7 +237,6 @@
 | [luajitport](#repo-luajitport) | 0 | +0 | 0 |
 | [edport](#repo-edport) | 0 | N/A | 0 |
 | [cpioport](#repo-cpioport) | 0 | +0 | 0 |
-| [uucpport](#repo-uucpport) | 0 | N/A | 0 |
 | [bcport](#repo-bcport) | 0 | +0 | 0 |
 | [git-sizerport](#repo-git-sizerport) | 0 | +0 | 0 |
 
@@ -482,12 +482,49 @@
 
 ---
 
+<a id="repo-coreutilsport"></a>
+## coreutilsport
+
+- **Origin Date (First Commit):** 2022-04-29
+- **Current Patch LOC:** 1,050
+- **Current Patch Count:** 18
+
+### Historical Trends
+
+![LOC Trend for coreutilsport](images/upstream/coreutilsport_current_loc_trend.png)
+![Count Trend for coreutilsport](images/upstream/coreutilsport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `stable-patches/Makefile.in.patch` | `stable-patches` | 12 |
+| `stable-patches/build-aux/test-driver.patch` | `stable-patches` | 13 |
+| `stable-patches/lib/fdopendir.c.patch` | `stable-patches` | 14 |
+| `stable-patches/lib/fts.c.patch` | `stable-patches` | 17 |
+| `stable-patches/lib/getprogname.c.patch` | `stable-patches` | 21 |
+| `stable-patches/lib/nproc.c.patch` | `stable-patches` | 15 |
+| `stable-patches/lib/posix_memalign.c.patch` | `stable-patches` | 22 |
+| `stable-patches/lib/stat-time.h.patch` | `stable-patches` | 13 |
+| `stable-patches/src/basenc.c.patch` | `stable-patches` | 15 |
+| `stable-patches/src/cat.c.patch` | `stable-patches` | 314 |
+| `stable-patches/src/copy.c.patch` | `stable-patches` | 36 |
+| `stable-patches/src/cp.c.patch` | `stable-patches` | 61 |
+| `stable-patches/src/digest.c.patch` | `stable-patches` | 61 |
+| `stable-patches/src/ls.c.patch` | `stable-patches` | 87 |
+| `stable-patches/src/od.c.patch` | `stable-patches` | 16 |
+| `stable-patches/src/pinky.c.patch` | `stable-patches` | 50 |
+| `stable-patches/src/stat.c.patch` | `stable-patches` | 253 |
+| `stable-patches/src/timeout.c.patch` | `stable-patches` | 30 |
+
+---
+
 <a id="repo-gitport"></a>
 ## gitport
 
 - **Origin Date (First Commit):** 2022-05-25
-- **Current Patch LOC:** 958
-- **Current Patch Count:** 30
+- **Current Patch LOC:** 974
+- **Current Patch Count:** 31
 
 ### Historical Trends
 
@@ -504,6 +541,7 @@
 | `dev-patches/PR1/releasenamecollision.patch` | `dev-patches` | 89 |
 | `stable-patches/Makefile.patch` | `stable-patches` | 84 |
 | `stable-patches/archive.c.patch` | `stable-patches` | 15 |
+| `stable-patches/attr.c.patch` | `stable-patches` | 16 |
 | `stable-patches/blame.c.patch` | `stable-patches` | 16 |
 | `stable-patches/builtin.h.patch` | `stable-patches` | 13 |
 | `stable-patches/combine-diff.c.patch` | `stable-patches` | 15 |
@@ -550,43 +588,6 @@
 | `patches/Makefile.all.am.patch` | `patches` | 13 |
 | `patches/guest_s390_defs.h.patch` | `patches` | 16 |
 | `patches/guest_s390_helpers.c.patch` | `patches` | 867 |
-
----
-
-<a id="repo-coreutilsport"></a>
-## coreutilsport
-
-- **Origin Date (First Commit):** 2022-04-29
-- **Current Patch LOC:** 796
-- **Current Patch Count:** 18
-
-### Historical Trends
-
-![LOC Trend for coreutilsport](images/upstream/coreutilsport_current_loc_trend.png)
-![Count Trend for coreutilsport](images/upstream/coreutilsport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `stable-patches/Makefile.in.patch` | `stable-patches` | 12 |
-| `stable-patches/build-aux/test-driver.patch` | `stable-patches` | 13 |
-| `stable-patches/lib/fdopendir.c.patch` | `stable-patches` | 14 |
-| `stable-patches/lib/fts.c.patch` | `stable-patches` | 17 |
-| `stable-patches/lib/getprogname.c.patch` | `stable-patches` | 21 |
-| `stable-patches/lib/nproc.c.patch` | `stable-patches` | 15 |
-| `stable-patches/lib/posix_memalign.c.patch` | `stable-patches` | 22 |
-| `stable-patches/lib/stat-time.h.patch` | `stable-patches` | 13 |
-| `stable-patches/src/basenc.c.patch` | `stable-patches` | 15 |
-| `stable-patches/src/cat.c.patch` | `stable-patches` | 60 |
-| `stable-patches/src/copy.c.patch` | `stable-patches` | 36 |
-| `stable-patches/src/cp.c.patch` | `stable-patches` | 61 |
-| `stable-patches/src/digest.c.patch` | `stable-patches` | 61 |
-| `stable-patches/src/ls.c.patch` | `stable-patches` | 87 |
-| `stable-patches/src/od.c.patch` | `stable-patches` | 16 |
-| `stable-patches/src/pinky.c.patch` | `stable-patches` | 50 |
-| `stable-patches/src/stat.c.patch` | `stable-patches` | 253 |
-| `stable-patches/src/timeout.c.patch` | `stable-patches` | 30 |
 
 ---
 
@@ -1717,6 +1718,26 @@
 | `patches/fts.c.patch` | `patches` | 17 |
 | `patches/gnulib.patch` | `patches` | 14 |
 | `patches/grep.c.patch` | `patches` | 84 |
+
+---
+
+<a id="repo-uucpport"></a>
+## uucpport
+
+- **Origin Date (First Commit):** 2025-04-11
+- **Current Patch LOC:** 115
+- **Current Patch Count:** 1
+
+### Historical Trends
+
+![LOC Trend for uucpport](images/upstream/uucpport_current_loc_trend.png)
+![Count Trend for uucpport](images/upstream/uucpport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/PR1.patch` | `patches` | 115 |
 
 ---
 
@@ -4815,24 +4836,6 @@
 ## cpioport
 
 - **Origin Date (First Commit):** 2025-04-09
-- **Current Patch LOC:** 0
-- **Current Patch Count:** 0
-
-### Historical Trends
-
-*(Patch LOC trend graph not generated)*
-*(Patch count trend graph not generated)*
-
-### Current Patch Details
-
-*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
-
----
-
-<a id="repo-uucpport"></a>
-## uucpport
-
-- **Origin Date (First Commit):** Unknown
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 
