@@ -29,6 +29,7 @@
 - 2024-05-30: [Update caddy-version to 2.8.1 from 2.7.6](https://github.com/zopencommunity/caddyport/pull/1) ❌
 
 ### cmakeport
+- 2025-04-11: [Update cmake-version to 4.0.1 from 3.31.5](https://github.com/zopencommunity/cmakeport/pull/70) ❌
 - 2025-03-28: [Update cmake-version to 4.0.0 from 3.31.5](https://github.com/zopencommunity/cmakeport/pull/68) ❌
 - 2025-02-25: [Update cmake-version to 3.31.6 from 3.31.5](https://github.com/zopencommunity/cmakeport/pull/66) ✅
 
@@ -66,6 +67,9 @@
 
 ### diffutilsport
 - 2025-04-09: [Update diffutils-version to 3.12 from 3.11](https://github.com/zopencommunity/diffutilsport/pull/38) ✅
+
+### direnvport
+- 2025-04-11: [Update direnv-version to 2.36.0 from 2.35.0](https://github.com/zopencommunity/direnvport/pull/11) ❌
 
 ### duckdbport
 - 2025-04-08: [Update duckdb-version to 1.2.2 from 0.9.2](https://github.com/zopencommunity/duckdbport/pull/24) ❌
@@ -149,14 +153,19 @@
 - 2024-07-24: [Update grafana-version to 11.1.2 from 11.0.0](https://github.com/zopencommunity/grafanaport/pull/4) ❌
 - 2024-06-25: [Update grafana-version to 11.1.0 from 11.0.0](https://github.com/zopencommunity/grafanaport/pull/2) ❌
 
+### grepport
+- 2025-04-11: [Update grep-version to 3.12 from 3.11](https://github.com/zopencommunity/grepport/pull/22) ❌
+
 ### gzipport
 - 2025-04-10: [Update gz-version to 1.14 from 1.13](https://github.com/zopencommunity/gzipport/pull/18) ❌
 
 ### htopport
+- 2025-04-11: [Update htop-version to 3.4.1 from 3.2.2](https://github.com/zopencommunity/htopport/pull/10) ❌
 - 2025-03-10: [Update htop-version to 3.4.0 from 3.2.2](https://github.com/zopencommunity/htopport/pull/9) ❌
 - 2024-01-10: [Update htop-version to 3.3.0 from 3.2.2](https://github.com/zopencommunity/htopport/pull/6) ❓
 
 ### hugoport
+- 2025-04-11: [Update hugo-version to 0.146.1 from 0.143.0](https://github.com/zopencommunity/hugoport/pull/19) ✅
 - 2025-02-27: [Update hugo-version to 0.145.0 from 0.143.0](https://github.com/zopencommunity/hugoport/pull/18) ❌
 - 2025-02-19: [Update hugo-version to 0.144.2 from 0.143.0](https://github.com/zopencommunity/hugoport/pull/17) ❌
 - 2025-02-18: [Update hugo-version to 0.144.1 from 0.143.0](https://github.com/zopencommunity/hugoport/pull/16) ✅
@@ -275,6 +284,7 @@
 - 2025-03-22: [Update perl-version to 5.41.10 from 5.41.9](https://github.com/zopencommunity/perlport/pull/108) ❌
 
 ### phpport
+- 2025-04-11: [Update php-version to 8.4.6 from 8.2.13](https://github.com/zopencommunity/phpport/pull/33) ❌
 - 2025-03-13: [Update php-version to 8.4.5 from 8.2.13](https://github.com/zopencommunity/phpport/pull/32) ❌
 - 2025-02-14: [Update php-version to 8.4.4 from 8.2.13](https://github.com/zopencommunity/phpport/pull/31) ❌
 - 2025-01-17: [Update php-version to 8.4.3 from 8.2.13](https://github.com/zopencommunity/phpport/pull/30) ❌
@@ -395,6 +405,7 @@
 - 2024-07-18: [Update victoriametrics-version to 1.102.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/5) ❌
 
 ### vimport
+- 2025-04-11: [Update vim-version to 9.1.1290 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/99) ✅
 - 2025-04-06: [Update vim-version to 9.1.1280 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/98) ❌
 - 2025-04-03: [Update vim-version to 9.1.1270 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/97) ✅
 - 2025-03-30: [Update vim-version to 9.1.1260 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/96) ✅
@@ -491,6 +502,7 @@
 - ✅ frpport - [![Bump Status](https://github.com/zopencommunity/frpport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/frpport/actions/workflows/bump.yml)
 - ✅ fxport - [![Bump Status](https://github.com/zopencommunity/fxport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/fxport/actions/workflows/bump.yml)
 - ✅ fzfport - [![Bump Status](https://github.com/zopencommunity/fzfport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/fzfport/actions/workflows/bump.yml)
+- ❌ gas2asmport - Workflow not configured
 - ✅ gawkport - [![Bump Status](https://github.com/zopencommunity/gawkport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/gawkport/actions/workflows/bump.yml)
 - ✅ getoptport - [![Bump Status](https://github.com/zopencommunity/getoptport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/getoptport/actions/workflows/bump.yml)
 - ✅ gettextport - [![Bump Status](https://github.com/zopencommunity/gettextport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/gettextport/actions/workflows/bump.yml)
@@ -668,10 +680,10 @@
 
 </details>
 
-**Summary:** 185 active | 43 missing
+**Summary:** 185 active | 44 missing
 
 ---
 
 
-> Last updated: 2025-04-11 06:06:30 EDT
+> Last updated: 2025-04-12 06:06:12 EDT
 

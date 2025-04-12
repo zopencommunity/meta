@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-04-11 06:10:23 EDT.*
+*Report generated on: 2025-04-12 06:11:06 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 215
+- **Total Projects Analyzed:** 216
 - **Total Current Lines of Code (LOC) in Patches:** 27,720
 - **Total Number of Current Patch Files:** 646
-- **Average Current Patch LOC per Project:** 128.93
-- **Average Current Patch Count per Project:** 3.00
+- **Average Current Patch LOC per Project:** 128.33
+- **Average Current Patch Count per Project:** 2.99
 
 ### Historical Trends (All Projects)
 
@@ -239,6 +239,7 @@
 | [cpioport](#repo-cpioport) | 0 | +0 | 0 |
 | [bcport](#repo-bcport) | 0 | +0 | 0 |
 | [git-sizerport](#repo-git-sizerport) | 0 | +0 | 0 |
+| [gas2asmport](#repo-gas2asmport) | 0 | N/A | 0 |
 
 ---
 
@@ -4872,6 +4873,24 @@
 ## git-sizerport
 
 - **Origin Date (First Commit):** 2025-04-09
+- **Current Patch LOC:** 0
+- **Current Patch Count:** 0
+
+### Historical Trends
+
+*(Patch LOC trend graph not generated)*
+*(Patch count trend graph not generated)*
+
+### Current Patch Details
+
+*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
+
+---
+
+<a id="repo-gas2asmport"></a>
+## gas2asmport
+
+- **Origin Date (First Commit):** Unknown
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 
