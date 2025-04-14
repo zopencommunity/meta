@@ -14,6 +14,7 @@ zopenInitialize()
   fi
   ZOPEN_ANALYTICS_JSON="${ZOPEN_ROOTFS}/var/lib/zopen/analytics.json"
   ZOPEN_JSON_CACHE_URL="https://raw.githubusercontent.com/zopencommunity/meta/main/docs/api/zopen_releases.json"
+  ZOPEN_DESCRIPTIONS_CACHE_URL="https://raw.githubusercontent.com/ZOSOpenTools/meta/main/docs/api/zopen_releases_descriptions.json"
   ZOPEN_JSON_CONFIG="${ZOPEN_ROOTFS}/etc/zopen/config.json"
   if [ -n "${INCDIR}" ]; then
     ZOPEN_SYSTEM_PREREQ_SCRIPT="${INCDIR}/prereq.sh"
@@ -1240,6 +1241,7 @@ downloadJSONCache()
     cachedir="${ZOPEN_ROOTFS}/var/cache/zopen"
     [ ! -e "${cachedir}" ] && mkdir -p "${cachedir}"
     JSON_CACHE="${cachedir}/zopen_releases.json"
+    JSON_DESCRIPTIONS_CACHE=${cachedir}/zopen_releases_descriptions.json"
     JSON_TIMESTAMP="${cachedir}/zopen_releases.timestamp"
     JSON_TIMESTAMP_CURRENT="${cachedir}/zopen_releases.timestamp.current"
 
@@ -1276,6 +1278,12 @@ downloadJSONCache()
       printError "Failed to obtain json cache from ${ZOPEN_JSON_CACHE_URL}; ${curlout}"
     fi
     chtag -tc 819 "${JSON_CACHE}"
+
+    if ! curlout=$(curlCmd -L --no-progress-meter -o "${JSON_DESCRIPTIONS_CACHE}" "${ZOPEN_DESCRIPTIONS_CACHE_URL}"); then
+      printError "Failed to obtain descriptions  cache from ${ZOPEN_DESCRIPTIONS_CACHE_URL}; ${curlout}"
+    fi
+    chtag -tc 819 "${JSON_DESCRIPTIONS_CACHE}"
+
   fi
 
   if [ ! -f "${JSON_CACHE}" ]; then
