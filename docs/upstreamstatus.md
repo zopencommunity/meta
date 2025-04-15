@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-04-14 06:09:30 EDT.*
+*Report generated on: 2025-04-15 06:10:29 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 216
-- **Total Current Lines of Code (LOC) in Patches:** 27,720
-- **Total Number of Current Patch Files:** 646
-- **Average Current Patch LOC per Project:** 128.33
-- **Average Current Patch Count per Project:** 2.99
+- **Total Current Lines of Code (LOC) in Patches:** 27,817
+- **Total Number of Current Patch Files:** 648
+- **Average Current Patch LOC per Project:** 128.78
+- **Average Current Patch Count per Project:** 3.00
 
 ### Historical Trends (All Projects)
 
@@ -32,10 +32,10 @@
 | [coreutilsport](#repo-coreutilsport) | 1,050 | +263 | 18 |
 | [gitport](#repo-gitport) | 974 | -1 | 31 |
 | [valgrindport](#repo-valgrindport) | 896 | +0 | 3 |
+| [gzipport](#repo-gzipport) | 690 | +21 | 8 |
 | [gpgport](#repo-gpgport) | 687 | +0 | 13 |
 | [procpsport](#repo-procpsport) | 687 | +42 | 1 |
 | [perlport](#repo-perlport) | 683 | +0 | 13 |
-| [gzipport](#repo-gzipport) | 669 | +0 | 7 |
 | [util-linuxport](#repo-util-linuxport) | 612 | +0 | 7 |
 | [unzipport](#repo-unzipport) | 549 | +0 | 12 |
 | [cronieport](#repo-cronieport) | 510 | +0 | 13 |
@@ -91,6 +91,7 @@
 | [expectport](#repo-expectport) | 79 | +0 | 4 |
 | [librabbitmqport](#repo-librabbitmqport) | 78 | +0 | 2 |
 | [libassuanport](#repo-libassuanport) | 77 | +0 | 4 |
+| [gas2asmport](#repo-gas2asmport) | 76 | +76 | 1 |
 | [xmltoport](#repo-xmltoport) | 74 | +0 | 1 |
 | [cppcheckport](#repo-cppcheckport) | 72 | +0 | 4 |
 | [libtoolport](#repo-libtoolport) | 71 | +0 | 3 |
@@ -239,7 +240,6 @@
 | [cpioport](#repo-cpioport) | 0 | +0 | 0 |
 | [bcport](#repo-bcport) | 0 | +0 | 0 |
 | [git-sizerport](#repo-git-sizerport) | 0 | +0 | 0 |
-| [gas2asmport](#repo-gas2asmport) | 0 | N/A | 0 |
 
 ---
 
@@ -592,6 +592,33 @@
 
 ---
 
+<a id="repo-gzipport"></a>
+## gzipport
+
+- **Origin Date (First Commit):** 2022-04-21
+- **Current Patch LOC:** 690
+- **Current Patch Count:** 8
+
+### Historical Trends
+
+![LOC Trend for gzipport](images/upstream/gzipport_current_loc_trend.png)
+![Count Trend for gzipport](images/upstream/gzipport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/Makefile.in.patch` | `patches` | 70 |
+| `patches/gzip.c.patch` | `patches` | 192 |
+| `patches/gzip.h.patch` | `patches` | 22 |
+| `patches/test-reference.patch` | `patches` | 37 |
+| `patches/unzip.c.patch` | `patches` | 24 |
+| `patches/zedc.c.patch` | `patches` | 236 |
+| `patches/zip.c.patch` | `patches` | 79 |
+| `patches/zos.h.patch` | `patches` | 30 |
+
+---
+
 <a id="repo-gpgport"></a>
 ## gpgport
 
@@ -673,32 +700,6 @@
 | `patches/PR1/os390/os390.c.patch` | `patches` | 62 |
 | `patches/PR1/perl.c.patch` | `patches` | 24 |
 | `patches/PR1/util.c.patch` | `patches` | 106 |
-
----
-
-<a id="repo-gzipport"></a>
-## gzipport
-
-- **Origin Date (First Commit):** 2022-04-21
-- **Current Patch LOC:** 669
-- **Current Patch Count:** 7
-
-### Historical Trends
-
-![LOC Trend for gzipport](images/upstream/gzipport_current_loc_trend.png)
-![Count Trend for gzipport](images/upstream/gzipport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/Makefile.in.patch` | `patches` | 70 |
-| `patches/gzip.c.patch` | `patches` | 199 |
-| `patches/gzip.h.patch` | `patches` | 34 |
-| `patches/unzip.c.patch` | `patches` | 19 |
-| `patches/zedc.c.patch` | `patches` | 236 |
-| `patches/zip.c.patch` | `patches` | 81 |
-| `patches/zos.h.patch` | `patches` | 30 |
 
 ---
 
@@ -2071,6 +2072,26 @@
 | `patches/assuan-defs.h.patch` | `patches` | 22 |
 | `patches/assuan-socket.c.patch` | `patches` | 15 |
 | `patches/configure.patch` | `patches` | 27 |
+
+---
+
+<a id="repo-gas2asmport"></a>
+## gas2asmport
+
+- **Origin Date (First Commit):** 2025-04-11
+- **Current Patch LOC:** 76
+- **Current Patch Count:** 1
+
+### Historical Trends
+
+![LOC Trend for gas2asmport](images/upstream/gas2asmport_current_loc_trend.png)
+![Count Trend for gas2asmport](images/upstream/gas2asmport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/Makefile.mvs.patch` | `patches` | 76 |
 
 ---
 
@@ -4873,24 +4894,6 @@
 ## git-sizerport
 
 - **Origin Date (First Commit):** 2025-04-09
-- **Current Patch LOC:** 0
-- **Current Patch Count:** 0
-
-### Historical Trends
-
-*(Patch LOC trend graph not generated)*
-*(Patch count trend graph not generated)*
-
-### Current Patch Details
-
-*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
-
----
-
-<a id="repo-gas2asmport"></a>
-## gas2asmport
-
-- **Origin Date (First Commit):** Unknown
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 

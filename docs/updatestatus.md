@@ -136,6 +136,7 @@
 
 ### gperfport
 - 2025-04-07: [Update gperf-version to 3.2 from 3.1](https://github.com/zopencommunity/gperfport/pull/7) ✅
+- 2025-04-14: [Update gperf-version to 3.2.1 from 3.1](https://github.com/zopencommunity/gperfport/pull/8) ✅
 
 ### grafanaport
 - 2025-03-26: [Update grafana-version to 11.6.0 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/19) ❌
@@ -156,15 +157,13 @@
 ### grepport
 - 2025-04-11: [Update grep-version to 3.12 from 3.11](https://github.com/zopencommunity/grepport/pull/22) ❌
 
-### gzipport
-- 2025-04-10: [Update gz-version to 1.14 from 1.13](https://github.com/zopencommunity/gzipport/pull/18) ❌
-
 ### htopport
 - 2025-04-11: [Update htop-version to 3.4.1 from 3.2.2](https://github.com/zopencommunity/htopport/pull/10) ❌
 - 2025-03-10: [Update htop-version to 3.4.0 from 3.2.2](https://github.com/zopencommunity/htopport/pull/9) ❌
 - 2024-01-10: [Update htop-version to 3.3.0 from 3.2.2](https://github.com/zopencommunity/htopport/pull/6) ❓
 
 ### hugoport
+- 2025-04-14: [Update hugo-version to 0.146.4 from 0.146.2](https://github.com/zopencommunity/hugoport/pull/22) ✅
 - 2025-04-13: [Update hugo-version to 0.146.3 from 0.146.2](https://github.com/zopencommunity/hugoport/pull/21) ✅
 
 ### kotlinport
@@ -173,6 +172,7 @@
 - 2024-03-07: [Update kotlin-version to 1.9.23 from 1.9.22](https://github.com/zopencommunity/kotlinport/pull/3) ✅
 
 ### lazygitport
+- 2025-04-14: [Update lazygit-version to 0.49.0 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/16) ❌
 - 2025-03-01: [Update lazygit-version to 0.48.0 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/15) ✅
 - 2025-02-25: [Update lazygit-version to 0.47.2 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/14) ✅
 - 2025-02-22: [Update lazygit-version to 0.47.1 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/13) ✅
@@ -182,10 +182,6 @@
 
 ### libgdbmport
 - 2025-03-22: [Update libgdbm-version to 1.25 from 1.24](https://github.com/zopencommunity/libgdbmport/pull/10) ❌
-
-### libgpgerrorport
-- 2025-04-09: [Update libgpgerror-version to 1.53 from 1.51](https://github.com/zopencommunity/libgpgerrorport/pull/15) ✅
-- 2025-04-08: [Update libgpgerror-version to 1.52 from 1.51](https://github.com/zopencommunity/libgpgerrorport/pull/14) ✅
 
 ### libiconvport
 - 2024-12-15: [Update libiconv-version to 1.18 from 1.17](https://github.com/zopencommunity/libiconvport/pull/42) ❌
@@ -499,7 +495,7 @@
 - ✅ frpport - [![Bump Status](https://github.com/zopencommunity/frpport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/frpport/actions/workflows/bump.yml)
 - ✅ fxport - [![Bump Status](https://github.com/zopencommunity/fxport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/fxport/actions/workflows/bump.yml)
 - ✅ fzfport - [![Bump Status](https://github.com/zopencommunity/fzfport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/fzfport/actions/workflows/bump.yml)
-- ❌ gas2asmport - Workflow not configured
+- ✅ gas2asmport - [![Bump Status](https://github.com/zopencommunity/gas2asmport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/gas2asmport/actions/workflows/bump.yml)
 - ✅ gawkport - [![Bump Status](https://github.com/zopencommunity/gawkport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/gawkport/actions/workflows/bump.yml)
 - ✅ getoptport - [![Bump Status](https://github.com/zopencommunity/getoptport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/getoptport/actions/workflows/bump.yml)
 - ✅ gettextport - [![Bump Status](https://github.com/zopencommunity/gettextport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/gettextport/actions/workflows/bump.yml)
@@ -677,10 +673,10 @@
 
 </details>
 
-**Summary:** 185 active | 44 missing
+**Summary:** 186 active | 43 missing
 
 ---
 
 
-> Last updated: 2025-04-14 06:06:30 EDT
+> Last updated: 2025-04-15 06:07:01 EDT
 
