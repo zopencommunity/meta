@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-zopen Release Files Lister
+Generates a binary and library files list for each project in a json.
 
 Downloads latest zopen release metadata, downloads the .pax.Z asset,
-extracts it directly using 'tar' (assuming tar handles .Z decompression),
-detects the internal structure, and lists categorized files (binaries, libs).
-Output: zopen_releases_files.json.
+extracts it directly and lists categorized files (binaries, libs).
+
+Output: zopen_files.json
 
 Requires 'tar' command-line tool capable of handling .Z decompression.
 """
@@ -29,7 +29,7 @@ logger = logging.getLogger(__name__)
 
 # --- Constants ---
 INPUT_JSON_URL = "https://raw.githubusercontent.com/zopencommunity/meta/main/docs/api/zopen_releases_latest.json"
-DEFAULT_OUTPUT_FILE = "zopen_releases_files.json"
+DEFAULT_OUTPUT_FILE = "zopen__files.json"
 DEFAULT_MAX_WORKERS = 4
 BINARY_DIRS = ["bin", "sbin", "altbin"]
 LIBRARY_PATTERNS = ['*.a', '*.so']
@@ -112,17 +112,12 @@ def extract_archive(pax_z_file, extract_dir, tar_path):
         logger.error("Error: 'tar' command path not provided or found. Cannot extract.")
         return False
 
-    # --- Attempt Tar Extraction Directly on .pax.Z ---
-    # --- CORRECTED tar command construction ---
-    # Base flags: xf (extract, file)
     tar_flags = 'xf'
-    # Add verbose flag 'v' *to the string* if debug logging is enabled
-    if logger.isEnabledFor(logging.DEBUG):
-        tar_flags = 'xvf' # Becomes 'xvf'
 
-    # Construct command list with flags grouped
+    if logger.isEnabledFor(logging.DEBUG):
+        tar_flags = 'xvf' 
+
     tar_cmd = [tar_path, tar_flags, str(pax_z_path)]
-    # --- End of correction ---
 
     logger.debug(f"Attempting direct extraction with tar: {' '.join(tar_cmd)} (cwd: '{extract_dir}')")
     try:
@@ -150,7 +145,6 @@ def extract_archive(pax_z_file, extract_dir, tar_path):
     except Exception as e:
          logger.error(f"Unexpected error during tar extraction: {e}", exc_info=logger.isEnabledFor(logging.DEBUG))
 
-    # --- Post-Extraction Logging ---
     if extract_success and logger.isEnabledFor(logging.DEBUG):
         try:
             logger.debug(f"--- Listing top-level contents of extraction directory '{extract_dir}' (extracted using tar):")
@@ -182,7 +176,6 @@ def find_project_files(extract_dir):
         logger.warning(f"Base extraction directory '{extract_path}' does not exist. Cannot scan.")
         return {"binaries": [], "libs": []}
 
-    # --- Detect potential top-level project directory ---
     scan_root = extract_path
     potential_root_dir = None
     try:
@@ -259,7 +252,6 @@ def find_project_files(extract_dir):
         except Exception as e:
              logger.error(f"Error scanning for library pattern '{pattern}' in '{scan_root}': {e}", exc_info=logger.isEnabledFor(logging.DEBUG))
 
-    # --- Convert sets to sorted lists ---
     sorted_results = {
         "binaries": sorted(list(results["binaries"])),
         "libs": sorted(list(results["libs"]))
@@ -308,7 +300,7 @@ def process_project(project_name, latest_release_info, tar_path):
                 logger.error(f"Download failed for {pax_asset_name} ({project_name}).")
                 return project_name, None
 
-            # 2. Extract Asset (using simplified function)
+            # 2. Extract Asset 
             extract_sub_dir = os.path.join(temp_dir, "extracted")
             if not extract_archive(pax_z_local_path, extract_sub_dir, tar_path): # Pass only tar_path
                 logger.error(f"Extraction failed for {pax_asset_name} ({project_name}).")
@@ -430,7 +422,6 @@ try:
 except IOError as e: logger.error(f"Fatal: Error writing output file: {e}"); sys.exit(1)
 except TypeError as e: logger.error(f"Fatal: Error serializing data to JSON: {e}"); sys.exit(1)
 
-# --- Final Summary ---
 logger.info("--- Summary ---")
 logger.info(f"Total projects processed attempt: {total_projects}")
 logger.info(f"Projects successfully extracted & scanned: {total_projects - failed_count}")
