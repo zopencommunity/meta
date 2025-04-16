@@ -1,13 +1,13 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-04-15 06:10:29 EDT.*
+*Report generated on: 2025-04-16 06:10:31 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 216
-- **Total Current Lines of Code (LOC) in Patches:** 27,817
-- **Total Number of Current Patch Files:** 648
-- **Average Current Patch LOC per Project:** 128.78
+- **Total Current Lines of Code (LOC) in Patches:** 27,826
+- **Total Number of Current Patch Files:** 649
+- **Average Current Patch LOC per Project:** 128.82
 - **Average Current Patch Count per Project:** 3.00
 
 ### Historical Trends (All Projects)
@@ -91,9 +91,9 @@
 | [expectport](#repo-expectport) | 79 | +0 | 4 |
 | [librabbitmqport](#repo-librabbitmqport) | 78 | +0 | 2 |
 | [libassuanport](#repo-libassuanport) | 77 | +0 | 4 |
-| [gas2asmport](#repo-gas2asmport) | 76 | +76 | 1 |
 | [xmltoport](#repo-xmltoport) | 74 | +0 | 1 |
 | [cppcheckport](#repo-cppcheckport) | 72 | +0 | 4 |
+| [gas2asmport](#repo-gas2asmport) | 72 | +72 | 1 |
 | [libtoolport](#repo-libtoolport) | 71 | +0 | 3 |
 | [nanoport](#repo-nanoport) | 68 | +0 | 1 |
 | [getoptport](#repo-getoptport) | 66 | +0 | 1 |
@@ -149,6 +149,7 @@
 | [luaport](#repo-luaport) | 13 | +0 | 1 |
 | [lpegport](#repo-lpegport) | 13 | +0 | 1 |
 | [stowport](#repo-stowport) | 13 | +0 | 1 |
+| [edport](#repo-edport) | 13 | +13 | 1 |
 | [lzipport](#repo-lzipport) | 13 | +13 | 1 |
 | [libxml2port](#repo-libxml2port) | 12 | +0 | 1 |
 | [zlibport](#repo-zlibport) | 0 | +0 | 0 |
@@ -236,7 +237,6 @@
 | [creduceport](#repo-creduceport) | 0 | +0 | 0 |
 | [gradleport](#repo-gradleport) | 0 | N/A | 0 |
 | [luajitport](#repo-luajitport) | 0 | +0 | 0 |
-| [edport](#repo-edport) | 0 | N/A | 0 |
 | [cpioport](#repo-cpioport) | 0 | +0 | 0 |
 | [bcport](#repo-bcport) | 0 | +0 | 0 |
 | [git-sizerport](#repo-git-sizerport) | 0 | +0 | 0 |
@@ -2075,26 +2075,6 @@
 
 ---
 
-<a id="repo-gas2asmport"></a>
-## gas2asmport
-
-- **Origin Date (First Commit):** 2025-04-11
-- **Current Patch LOC:** 76
-- **Current Patch Count:** 1
-
-### Historical Trends
-
-![LOC Trend for gas2asmport](images/upstream/gas2asmport_current_loc_trend.png)
-![Count Trend for gas2asmport](images/upstream/gas2asmport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/Makefile.mvs.patch` | `patches` | 76 |
-
----
-
 <a id="repo-xmltoport"></a>
 ## xmltoport
 
@@ -2135,6 +2115,26 @@
 | `patches/library.cpp.patch` | `patches` | 12 |
 | `patches/path.cpp.patch` | `patches` | 33 |
 | `patches/programmemory.cpp.patch` | `patches` | 18 |
+
+---
+
+<a id="repo-gas2asmport"></a>
+## gas2asmport
+
+- **Origin Date (First Commit):** 2025-04-11
+- **Current Patch LOC:** 72
+- **Current Patch Count:** 1
+
+### Historical Trends
+
+![LOC Trend for gas2asmport](images/upstream/gas2asmport_current_loc_trend.png)
+![Count Trend for gas2asmport](images/upstream/gas2asmport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/Makefile.mvs.patch` | `patches` | 72 |
 
 ---
 
@@ -3263,6 +3263,26 @@
 | Patch File (Repo Relative Path) | Source | LOC |
 |---|---|:---|
 | `stable-patches/stow.in.patch` | `stable-patches` | 13 |
+
+---
+
+<a id="repo-edport"></a>
+## edport
+
+- **Origin Date (First Commit):** 2025-04-15
+- **Current Patch LOC:** 13
+- **Current Patch Count:** 1
+
+### Historical Trends
+
+![LOC Trend for edport](images/upstream/edport_current_loc_trend.png)
+![Count Trend for edport](images/upstream/edport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/Makefile.in.patch` | `patches` | 13 |
 
 ---
 
@@ -4822,24 +4842,6 @@
 ## luajitport
 
 - **Origin Date (First Commit):** 2025-04-08
-- **Current Patch LOC:** 0
-- **Current Patch Count:** 0
-
-### Historical Trends
-
-*(Patch LOC trend graph not generated)*
-*(Patch count trend graph not generated)*
-
-### Current Patch Details
-
-*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
-
----
-
-<a id="repo-edport"></a>
-## edport
-
-- **Origin Date (First Commit):** Unknown
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 

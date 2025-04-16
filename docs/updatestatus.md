@@ -114,6 +114,7 @@
 - 2024-12-06: [Update git-extras-version to 7.3.0 from V.R.M](https://github.com/zopencommunity/git-extrasport/pull/1) ❌
 
 ### githubcliport
+- 2025-04-15: [Update ghcli-version to 2.70.0 from 2.67.0](https://github.com/zopencommunity/githubcliport/pull/49) ✅
 - 2025-03-20: [Update ghcli-version to 2.69.0 from 2.67.0](https://github.com/zopencommunity/githubcliport/pull/48) ✅
 - 2025-03-06: [Update ghcli-version to 2.68.1 from 2.67.0](https://github.com/zopencommunity/githubcliport/pull/47) ❌
 
@@ -369,14 +370,6 @@
 - 2025-01-31: [Update tig-version to 2.5.11 from 2.5.9](https://github.com/zopencommunity/tigport/pull/9) ❌
 - 2024-06-08: [Update tig-version to 2.5.10 from 2.5.9](https://github.com/zopencommunity/tigport/pull/6) ✅
 
-### util-linuxport
-- 2025-03-18: [Update util-linux-version to 2.41 from 2.39.3](https://github.com/zopencommunity/util-linuxport/pull/12) ❌
-- 2025-01-14: [Update util-linux-version to 2.40.4 from 2.39.3](https://github.com/zopencommunity/util-linuxport/pull/11) ❌
-- 2025-01-09: [Update util-linux-version to 2.40.3 from 2.39.3](https://github.com/zopencommunity/util-linuxport/pull/10) ❌
-- 2024-03-27: [Update util-linux-version to 2.40 from 2.39.3](https://github.com/zopencommunity/util-linuxport/pull/4) ❌
-- 2024-07-04: [Update util-linux-version to 2.40.2 from 2.39.3](https://github.com/zopencommunity/util-linuxport/pull/7) ❌
-- 2024-05-06: [Update util-linux-version to 2.40.1 from 2.39.3](https://github.com/zopencommunity/util-linuxport/pull/5) ❌
-
 ### victoriametricsport
 - 2025-04-07: [Update victoriametrics-version to 1.115.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/24) ❌
 - 2025-03-24: [Update victoriametrics-version to 1.114.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/23) ❌
@@ -398,6 +391,7 @@
 - 2024-07-18: [Update victoriametrics-version to 1.102.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/5) ❌
 
 ### vimport
+- 2025-04-15: [Update vim-version to 9.1.130 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/100) ❌
 - 2025-04-11: [Update vim-version to 9.1.1290 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/99) ✅
 - 2025-04-06: [Update vim-version to 9.1.1280 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/98) ❌
 - 2025-04-03: [Update vim-version to 9.1.1270 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/97) ✅
@@ -484,7 +478,7 @@
 - ✅ doxygenport - [![Bump Status](https://github.com/zopencommunity/doxygenport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/doxygenport/actions/workflows/bump.yml)
 - ✅ duckdbport - [![Bump Status](https://github.com/zopencommunity/duckdbport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/duckdbport/actions/workflows/bump.yml)
 - ✅ dufport - [![Bump Status](https://github.com/zopencommunity/dufport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/dufport/actions/workflows/bump.yml)
-- ❌ edport - Workflow not configured
+- ✅ edport - [![Bump Status](https://github.com/zopencommunity/edport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/edport/actions/workflows/bump.yml)
 - ✅ emacsport - [![Bump Status](https://github.com/zopencommunity/emacsport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/emacsport/actions/workflows/bump.yml)
 - ✅ esbuildport - [![Bump Status](https://github.com/zopencommunity/esbuildport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/esbuildport/actions/workflows/bump.yml)
 - ✅ expatport - [![Bump Status](https://github.com/zopencommunity/expatport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/expatport/actions/workflows/bump.yml)
@@ -673,10 +667,10 @@
 
 </details>
 
-**Summary:** 186 active | 43 missing
+**Summary:** 187 active | 42 missing
 
 ---
 
 
-> Last updated: 2025-04-15 06:07:01 EDT
+> Last updated: 2025-04-16 06:06:29 EDT
 
