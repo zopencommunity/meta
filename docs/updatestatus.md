@@ -87,6 +87,7 @@
 - 2024-03-23: [Update expat-version to 2.6.2 from 2.5.0](https://github.com/zopencommunity/expatport/pull/10) ❌
 
 ### frpport
+- 2025-04-16: [Update frp-version to 0.62.0 from 0.61.1](https://github.com/zopencommunity/frpport/pull/14) ✅
 - 2025-03-07: [Update frp-version to 0.61.2 from 0.61.1](https://github.com/zopencommunity/frpport/pull/13) ✅
 
 ### fxport
@@ -164,6 +165,7 @@
 - 2024-01-10: [Update htop-version to 3.3.0 from 3.2.2](https://github.com/zopencommunity/htopport/pull/6) ❓
 
 ### hugoport
+- 2025-04-16: [Update hugo-version to 0.146.5 from 0.146.2](https://github.com/zopencommunity/hugoport/pull/23) ✅
 - 2025-04-14: [Update hugo-version to 0.146.4 from 0.146.2](https://github.com/zopencommunity/hugoport/pull/22) ✅
 - 2025-04-13: [Update hugo-version to 0.146.3 from 0.146.2](https://github.com/zopencommunity/hugoport/pull/21) ✅
 
@@ -672,5 +674,5 @@
 ---
 
 
-> Last updated: 2025-04-16 06:06:29 EDT
+> Last updated: 2025-04-17 06:06:29 EDT
 

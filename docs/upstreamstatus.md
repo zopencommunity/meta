@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-04-16 06:10:31 EDT.*
+*Report generated on: 2025-04-17 06:10:45 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 216
-- **Total Current Lines of Code (LOC) in Patches:** 27,826
-- **Total Number of Current Patch Files:** 649
-- **Average Current Patch LOC per Project:** 128.82
-- **Average Current Patch Count per Project:** 3.00
+- **Total Current Lines of Code (LOC) in Patches:** 27,865
+- **Total Number of Current Patch Files:** 651
+- **Average Current Patch LOC per Project:** 129.00
+- **Average Current Patch Count per Project:** 3.01
 
 ### Historical Trends (All Projects)
 
@@ -77,6 +77,7 @@
 | [grepport](#repo-grepport) | 115 | +0 | 3 |
 | [uucpport](#repo-uucpport) | 115 | +115 | 1 |
 | [ncursesport](#repo-ncursesport) | 111 | +0 | 2 |
+| [gas2asmport](#repo-gas2asmport) | 111 | +111 | 3 |
 | [hexcurseport](#repo-hexcurseport) | 108 | +0 | 4 |
 | [libbsdport](#repo-libbsdport) | 107 | +0 | 4 |
 | [victoriametricsport](#repo-victoriametricsport) | 107 | +0 | 3 |
@@ -93,7 +94,6 @@
 | [libassuanport](#repo-libassuanport) | 77 | +0 | 4 |
 | [xmltoport](#repo-xmltoport) | 74 | +0 | 1 |
 | [cppcheckport](#repo-cppcheckport) | 72 | +0 | 4 |
-| [gas2asmport](#repo-gas2asmport) | 72 | +72 | 1 |
 | [libtoolport](#repo-libtoolport) | 71 | +0 | 3 |
 | [nanoport](#repo-nanoport) | 68 | +0 | 1 |
 | [getoptport](#repo-getoptport) | 66 | +0 | 1 |
@@ -1764,6 +1764,28 @@
 
 ---
 
+<a id="repo-gas2asmport"></a>
+## gas2asmport
+
+- **Origin Date (First Commit):** 2025-04-11
+- **Current Patch LOC:** 111
+- **Current Patch Count:** 3
+
+### Historical Trends
+
+![LOC Trend for gas2asmport](images/upstream/gas2asmport_current_loc_trend.png)
+![Count Trend for gas2asmport](images/upstream/gas2asmport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/Makefile.mvs.patch` | `patches` | 72 |
+| `patches/test/check.asmok.patch` | `patches` | 10 |
+| `patches/test/deflate2.s.patch` | `patches` | 29 |
+
+---
+
 <a id="repo-hexcurseport"></a>
 ## hexcurseport
 
@@ -2115,26 +2137,6 @@
 | `patches/library.cpp.patch` | `patches` | 12 |
 | `patches/path.cpp.patch` | `patches` | 33 |
 | `patches/programmemory.cpp.patch` | `patches` | 18 |
-
----
-
-<a id="repo-gas2asmport"></a>
-## gas2asmport
-
-- **Origin Date (First Commit):** 2025-04-11
-- **Current Patch LOC:** 72
-- **Current Patch Count:** 1
-
-### Historical Trends
-
-![LOC Trend for gas2asmport](images/upstream/gas2asmport_current_loc_trend.png)
-![Count Trend for gas2asmport](images/upstream/gas2asmport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/Makefile.mvs.patch` | `patches` | 72 |
 
 ---
 
