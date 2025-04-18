@@ -45,7 +45,7 @@ Command:
   update-cacert     update the cacert.pem file used by zopen community
   upgrade           upgrades existing zopen community packages
   usage             output details about the file system usage for your zopen environment
-  which             determine the package a command or library belongs to
+  whichproject      determine the package a command or library belongs to
 
 Options:
   -h, --help, -?    display this help and exit
@@ -75,7 +75,7 @@ SEE ALSO:
   zopen-remove(1)
   zopen-update-cacert(1)
   zopen-usage(1)
-  zopen-which(1)
+  zopen-whichproject(1)
   zopen-version(1)
 
 Report bugs at https://github.com/zopencommunity/meta/issues
@@ -95,7 +95,7 @@ for arg in $*; do
   case "${arg}" in
     "alt"|"audit"|"build"|"clean"|"generate"|"init"|"install"|\
     "query"|"remove"|"update-cacert"|"info"|"usage"|"diagnostics"|\
-    "which")
+    "whichproject")
       subcmd="zopen-${arg}"
       ;;
     "list")

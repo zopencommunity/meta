@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# zopen-which - Find which z/OS Open Tools project provides a command or library.
+# zopen-whichproject - Find which z/OS Open Tools project provides a command or library.
 # Query utility for zopen community - https://github.com/zopencommunity
 #
 
