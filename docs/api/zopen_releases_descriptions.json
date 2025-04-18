@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2025-04-17T16:27:29+00:00Z",
+  "generation_timestamp_utc": "2025-04-18T04:00:25+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -59,7 +59,7 @@
     "unzip": "Tool for unzipping compressed files",
     "nano": "A simple text editor for console environments",
     "ctags": "A code indexing tool",
-    "flex": "A text-based file editor",
+    "flex": "fast lexical analyzer generator",
     "cscope": "A source code analyzer",
     "gnulib": "A library containing common functions used in GNU software",
     "hello": "A simple \"hello world\" program demonstrating the use of autotools and gettext",
