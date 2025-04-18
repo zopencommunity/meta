@@ -1,5 +1,5 @@
 <!-- Creator     : groff version 1.22.3 -->
-<!-- CreationDate: Fri Apr 18 06:11:28 2025 -->
+<!-- CreationDate: Fri Apr 18 06:11:29 2025 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -13,15 +13,17 @@
        table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
        h1      { text-align: center }
 </style>
-<title>ZOPEN-MD2MAN</title>
+<title>ZOPEN-WHICHPROJECT</title>
 
 </head>
 <body>
 
-<h1 align="center">ZOPEN-MD2MAN</h1>
+<h1 align="center">ZOPEN-WHICHPROJECT</h1>
 
 <a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
 <a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#OPTIONS">OPTIONS</a><br>
 <a href="#AUTHOR">AUTHOR</a><br>
 
 <hr>
@@ -32,8 +34,18 @@
 </h2>
 
 
-<p style="margin-left:11%; margin-top: 1em">zopen-md2man
-&minus; manual page for zopen-md2man 0.8.4</p>
+
+<p style="margin-left:11%; margin-top: 1em">zopen-whichproject
+&minus; manual page for zopen-whichproject 0.8.4</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>zopen-whichproject</b>
+[<i>OPTION</i>]... <i>&lt;COMMAND|LIBRARY&gt;</i></p>
 
 <h2>DESCRIPTION
 <a name="DESCRIPTION"></a>
@@ -41,9 +53,37 @@
 
 
 
-<p style="margin-left:11%; margin-top: 1em">zopen&minus;md2man
-will generate man pages from markdown (to be removed)
-Syntax: zopen&minus;md2man</p>
+<p style="margin-left:11%; margin-top: 1em">zopen&minus;whichproject
+&minus; Find which zopen project provides a command or
+library.</p>
+
+<p style="margin-left:22%; margin-top: 1em">COMMAND is the
+name of an executable (e.g., &rsquo;git&rsquo;,
+&rsquo;curl&rsquo;). LIBRARY is the name of a library file
+(e.g., &rsquo;libssl.so&rsquo;, &rsquo;libz.a&rsquo;).</p>
+
+<h2>OPTIONS
+<a name="OPTIONS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>&minus;h</b>,
+<b>&minus;&minus;help</b></p>
+
+<p style="margin-left:22%;">Print this help message.</p>
+
+<p style="margin-left:11%;"><b>&minus;v</b>,
+<b>&minus;&minus;verbose</b></p>
+
+<p style="margin-left:22%;">Run in verbose mode (print
+debug messages).</p>
+
+
+<p style="margin-left:11%;"><b>&minus;&minus;version</b></p>
+
+<p style="margin-left:22%;">Print version information
+(requires zopen&minus;version).</p>
 
 <p style="margin-left:11%; margin-top: 1em">This is free
 software: you are free to change and redistribute it under

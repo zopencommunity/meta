@@ -24,3 +24,4 @@ This page provides information about the zopen interface. Click on any of the zo
 * [zopen-update-cacert](/reference/zopen-update-cacert)
 * [zopen-usage](/reference/zopen-usage)
 * [zopen-version](/reference/zopen-version)
+* [zopen-whichproject](/reference/zopen-whichproject)

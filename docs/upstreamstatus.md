@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-04-17 06:10:45 EDT.*
+*Report generated on: 2025-04-18 06:10:22 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 216
-- **Total Current Lines of Code (LOC) in Patches:** 27,865
-- **Total Number of Current Patch Files:** 651
-- **Average Current Patch LOC per Project:** 129.00
-- **Average Current Patch Count per Project:** 3.01
+- **Total Current Lines of Code (LOC) in Patches:** 27,987
+- **Total Number of Current Patch Files:** 652
+- **Average Current Patch LOC per Project:** 129.57
+- **Average Current Patch Count per Project:** 3.02
 
 ### Historical Trends (All Projects)
 
@@ -28,8 +28,8 @@
 | [bashport](#repo-bashport) | 1,698 | -2,728 | 32 |
 | [libuvport](#repo-libuvport) | 1,462 | +0 | 26 |
 | [sudoport](#repo-sudoport) | 1,278 | +0 | 30 |
+| [coreutilsport](#repo-coreutilsport) | 1,167 | +380 | 18 |
 | [cmakeport](#repo-cmakeport) | 1,092 | +0 | 1 |
-| [coreutilsport](#repo-coreutilsport) | 1,050 | +263 | 18 |
 | [gitport](#repo-gitport) | 974 | -1 | 31 |
 | [valgrindport](#repo-valgrindport) | 896 | +0 | 3 |
 | [gzipport](#repo-gzipport) | 690 | +21 | 8 |
@@ -74,10 +74,10 @@
 | [libssh2port](#repo-libssh2port) | 122 | +0 | 5 |
 | [m4port](#repo-m4port) | 120 | +0 | 5 |
 | [thesilversearcherport](#repo-thesilversearcherport) | 118 | +0 | 4 |
+| [gas2asmport](#repo-gas2asmport) | 116 | +116 | 4 |
 | [grepport](#repo-grepport) | 115 | +0 | 3 |
 | [uucpport](#repo-uucpport) | 115 | +115 | 1 |
 | [ncursesport](#repo-ncursesport) | 111 | +0 | 2 |
-| [gas2asmport](#repo-gas2asmport) | 111 | +111 | 3 |
 | [hexcurseport](#repo-hexcurseport) | 108 | +0 | 4 |
 | [libbsdport](#repo-libbsdport) | 107 | +0 | 4 |
 | [victoriametricsport](#repo-victoriametricsport) | 107 | +0 | 3 |
@@ -463,31 +463,11 @@
 
 ---
 
-<a id="repo-cmakeport"></a>
-## cmakeport
-
-- **Origin Date (First Commit):** 2022-04-21
-- **Current Patch LOC:** 1,092
-- **Current Patch Count:** 1
-
-### Historical Trends
-
-![LOC Trend for cmakeport](images/upstream/cmakeport_current_loc_trend.png)
-![Count Trend for cmakeport](images/upstream/cmakeport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/PR1.patch` | `patches` | 1,092 |
-
----
-
 <a id="repo-coreutilsport"></a>
 ## coreutilsport
 
 - **Origin Date (First Commit):** 2022-04-29
-- **Current Patch LOC:** 1,050
+- **Current Patch LOC:** 1,167
 - **Current Patch Count:** 18
 
 ### Historical Trends
@@ -509,14 +489,34 @@
 | `stable-patches/lib/stat-time.h.patch` | `stable-patches` | 13 |
 | `stable-patches/src/basenc.c.patch` | `stable-patches` | 15 |
 | `stable-patches/src/cat.c.patch` | `stable-patches` | 314 |
-| `stable-patches/src/copy.c.patch` | `stable-patches` | 36 |
+| `stable-patches/src/copy.c.patch` | `stable-patches` | 41 |
 | `stable-patches/src/cp.c.patch` | `stable-patches` | 61 |
 | `stable-patches/src/digest.c.patch` | `stable-patches` | 61 |
-| `stable-patches/src/ls.c.patch` | `stable-patches` | 87 |
+| `stable-patches/src/ls.c.patch` | `stable-patches` | 199 |
 | `stable-patches/src/od.c.patch` | `stable-patches` | 16 |
 | `stable-patches/src/pinky.c.patch` | `stable-patches` | 50 |
 | `stable-patches/src/stat.c.patch` | `stable-patches` | 253 |
 | `stable-patches/src/timeout.c.patch` | `stable-patches` | 30 |
+
+---
+
+<a id="repo-cmakeport"></a>
+## cmakeport
+
+- **Origin Date (First Commit):** 2022-04-21
+- **Current Patch LOC:** 1,092
+- **Current Patch Count:** 1
+
+### Historical Trends
+
+![LOC Trend for cmakeport](images/upstream/cmakeport_current_loc_trend.png)
+![Count Trend for cmakeport](images/upstream/cmakeport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/PR1.patch` | `patches` | 1,092 |
 
 ---
 
@@ -1701,6 +1701,29 @@
 
 ---
 
+<a id="repo-gas2asmport"></a>
+## gas2asmport
+
+- **Origin Date (First Commit):** 2025-04-11
+- **Current Patch LOC:** 116
+- **Current Patch Count:** 4
+
+### Historical Trends
+
+![LOC Trend for gas2asmport](images/upstream/gas2asmport_current_loc_trend.png)
+![Count Trend for gas2asmport](images/upstream/gas2asmport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/Makefile.mvs.patch` | `patches` | 77 |
+| `patches/simple.assemble.patch` | `patches` | 0 |
+| `patches/test/check.asmok.patch` | `patches` | 10 |
+| `patches/test/deflate2.s.patch` | `patches` | 29 |
+
+---
+
 <a id="repo-grepport"></a>
 ## grepport
 
@@ -1761,28 +1784,6 @@
 |---|---|:---|
 | `patches/TERMINFO.patch` | `patches` | 48 |
 | `patches/clear.c.patch` | `patches` | 63 |
-
----
-
-<a id="repo-gas2asmport"></a>
-## gas2asmport
-
-- **Origin Date (First Commit):** 2025-04-11
-- **Current Patch LOC:** 111
-- **Current Patch Count:** 3
-
-### Historical Trends
-
-![LOC Trend for gas2asmport](images/upstream/gas2asmport_current_loc_trend.png)
-![Count Trend for gas2asmport](images/upstream/gas2asmport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/Makefile.mvs.patch` | `patches` | 72 |
-| `patches/test/check.asmok.patch` | `patches` | 10 |
-| `patches/test/deflate2.s.patch` | `patches` | 29 |
 
 ---
 
