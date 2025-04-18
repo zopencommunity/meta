@@ -1,0 +1,112 @@
+#!/bin/sh
+#
+# zopen-which - Find which z/OS Open Tools project provides a command or library.
+# Query utility for zopen community - https://github.com/zopencommunity
+#
+
+#
+# All zopen-* scripts MUST start with this code to maintain consistency.
+#
+setupMyself()
+{
+  ME=$(basename $0)
+  MYDIR="$(cd "$(dirname "$0")" > /dev/null 2>&1 && pwd -P)"
+  INCDIR="${MYDIR}/../include"
+  if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
+    echo "Internal Error. Unable to find common.sh file to source." >&2
+    exit 8
+  fi
+  . "${INCDIR}/common.sh"
+}
+setupMyself
+
+# --- Syntax and Help ---
+printSyntax()
+{
+  echo "${ME} - Find which zopen project provides a command or library."
+  echo ""
+  echo "Usage: ${ME} [OPTION]... <COMMAND|LIBRARY>"
+  echo "  COMMAND is the name of an executable (e.g., 'git', 'curl')."
+  echo "  LIBRARY is the name of a library file (e.g., 'libssl.so', 'libz.a')."
+  echo ""
+  echo "Options:"
+  echo "  -h, --help           Print this help message."
+  echo "  -v, --verbose        Run in verbose mode (print debug messages)."
+  echo "  --version            Print version information (requires zopen-version)."
+}
+
+# --- Parse Full Arguments ---
+# Default values
+remote_lookup=false
+verbose=false
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    "-h" | "--help")
+      printSyntax
+      exit 0
+      ;;
+    "-v" | "--verbose")
+      verbose=true
+      shift
+      ;;
+    "--version")
+      zopen-version "${ME}"
+      exit 0
+      ;;
+    *)
+      query_item=$1
+      shift
+      ;;
+  esac
+done
+
+# Check if essential commands are available
+if ! command -v jq > /dev/null 2>&1; then
+  printError "'jq' command not found. Please install jq to process JSON data."
+  exit 1
+fi
+
+JSON_FILES_URL="https://raw.githubusercontent.com/zopencommunity/meta/main/docs/api/zopen_files.json"
+JSON_FILES_URL="https://raw.githubusercontent.com/zopencommunity/meta/e859e89e75fab31c1d5b4764b9ee9f511c52b682/docs/api/zopen_files.json"
+
+downloadJsonCaches()
+{
+  cachedir="${ZOPEN_ROOTFS}/var/cache/zopen"
+  [ ! -e "${cachedir}" ] && mkdir -p "${cachedir}"
+  JSON_FILES_CACHE="${cachedir}/zopen_files.json"
+
+  if ! curlout=$(curlCmd -L --fail --no-progress-meter -o "${JSON_FILES_CACHE}" "${JSON_FILES_URL}"); then
+    printError "Failed to obtain vulnerability json from ${JSON_FILES_URL}; ${curlout}"
+  fi
+  chtag -tc 819 "${JSON_FILES_CACHE}"
+}
+
+downloadJsonCaches
+
+# Perform the search using jq
+printVerbose "Searching for '${query_item}' in ${JSON_FILES_CACHE}..."
+
+# The jq query to find the project key(s) containing the item
+jq_query='.project_files | to_entries[] | select(.value.binaries[]? == $item or .value.libs[]? == $item) | .key'
+
+# Execute jq, passing the query item as an argument
+# Handle potential errors from jq (e.g., file not found, invalid JSON)
+matching_projects=$(jq -r --arg item "$query_item" "${jq_query}" "${JSON_FILES_CACHE}" 2> /dev/null)
+jq_exit_status=$?
+
+if [ ${jq_exit_status} -ne 0 ] && [ ${jq_exit_status} -ne 4 ]; then # jq exits 4 if no results found, others are errors
+    printError "Error running jq command (Exit status: ${jq_exit_status}). Check JSON file format: ${JSON_FILES_CACHE}"
+    exit 1
+fi
+
+# Check if any projects were found
+if [ -n "${matching_projects}" ]; then
+  printf "Command or library '${query_item}' is provided by the following zopen project(s):\n"
+  printf "%s\n" "${matching_projects}"
+  exit 0 # Success
+else
+  printError "Command or library '${query_item}' not found in the known zopen project file lists."
+  printVerbose "Checked source file: ${JSON_FILES_CACHE}"
+  exit 1 # Indicate not found
+fi

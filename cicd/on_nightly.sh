@@ -21,6 +21,8 @@ UpdateDocs() {
 
   python3 tools/create_cve_json.py --verbose --output-file docs/api/zopen_vulnerability.json
 
+  python3 ./tools/generate_zopen_files_list.py -o docs/api/zopen_files.json
+
   # This script updates the status page
   #python3 tools/getbinaries.py
 
