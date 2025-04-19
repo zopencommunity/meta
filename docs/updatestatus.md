@@ -242,6 +242,7 @@
 - 2024-11-19: [Update ncdu-1-version to 1.21 from 1.20](https://github.com/zopencommunity/ncduport/pull/11) ❌
 
 ### netpbmport
+- 2025-04-18: [Update netpbm-version to 11.09.03 from 11.05.00](https://github.com/zopencommunity/netpbmport/pull/8) ✅
 - 2024-11-21: [Update netpbm-version to 10.77.0 from 11.05.00](https://github.com/zopencommunity/netpbmport/pull/7) ❌
 - 2024-10-12: [Update netpbm-version to 11.08.00 from 11.05.00](https://github.com/zopencommunity/netpbmport/pull/6) ❌
 - 2024-07-29: [Update netpbm-version to 11.07.00 from 11.05.00](https://github.com/zopencommunity/netpbmport/pull/4) ❌
@@ -397,6 +398,7 @@
 - 2024-07-18: [Update victoriametrics-version to 1.102.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/5) ❌
 
 ### vimport
+- 2025-04-18: [Update vim-version to 9.1.1320 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/102) ✅
 - 2025-04-17: [Update vim-version to 9.1.1310 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/101) ✅
 - 2025-04-15: [Update vim-version to 9.1.130 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/100) ❌
 - 2025-04-11: [Update vim-version to 9.1.1290 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/99) ✅
@@ -679,5 +681,5 @@
 ---
 
 
-> Last updated: 2025-04-18 06:06:25 EDT
+> Last updated: 2025-04-19 06:06:02 EDT
 
