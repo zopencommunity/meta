@@ -1241,7 +1241,7 @@ downloadJSONCache()
     cachedir="${ZOPEN_ROOTFS}/var/cache/zopen"
     [ ! -e "${cachedir}" ] && mkdir -p "${cachedir}"
     JSON_CACHE="${cachedir}/zopen_releases.json"
-    JSON_DESCRIPTIONS_CACHE=${cachedir}/zopen_releases_descriptions.json"
+    JSON_DESCRIPTIONS_CACHE="${cachedir}/zopen_releases_descriptions.json"
     JSON_TIMESTAMP="${cachedir}/zopen_releases.timestamp"
     JSON_TIMESTAMP_CURRENT="${cachedir}/zopen_releases.timestamp.current"
 
