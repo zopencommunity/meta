@@ -23,6 +23,7 @@
 - 2024-12-16: [Update c3270-version to 4.3ga10 from 4.3ga9](https://github.com/zopencommunity/c3270port/pull/27) ❌
 
 ### caddyport
+- 2025-04-19: [Update caddy-version to 2.10.0 from 2.7.6](https://github.com/zopencommunity/caddyport/pull/8) ❌
 - 2025-01-08: [Update caddy-version to 2.9.1 from 2.7.6](https://github.com/zopencommunity/caddyport/pull/7) ❌
 - 2025-01-01: [Update caddy-version to 2.9.0 from 2.7.6](https://github.com/zopencommunity/caddyport/pull/6) ❌
 - 2024-06-02: [Update caddy-version to 2.8.4 from 2.7.6](https://github.com/zopencommunity/caddyport/pull/2) ❌
@@ -85,6 +86,9 @@
 - 2024-11-07: [Update expat-version to 2.6.4 from 2.5.0](https://github.com/zopencommunity/expatport/pull/14) ❌
 - 2024-09-04: [Update expat-version to 2.6.3 from 2.5.0](https://github.com/zopencommunity/expatport/pull/11) ❌
 - 2024-03-23: [Update expat-version to 2.6.2 from 2.5.0](https://github.com/zopencommunity/expatport/pull/10) ❌
+
+### fqport
+- 2025-04-19: [Update fq-version to 0.15.0 from 0.14.0](https://github.com/zopencommunity/fqport/pull/9) ✅
 
 ### frpport
 - 2025-04-16: [Update frp-version to 0.62.0 from 0.61.1](https://github.com/zopencommunity/frpport/pull/14) ✅
@@ -681,5 +685,5 @@
 ---
 
 
-> Last updated: 2025-04-19 06:06:02 EDT
+> Last updated: 2025-04-20 06:06:06 EDT
 
