@@ -98,6 +98,7 @@
 - 2024-06-27: [Update fx-version to 35.0.0 from 34.0.0](https://github.com/zopencommunity/fxport/pull/2) ✅
 
 ### fzfport
+- 2025-04-20: [Update fzf-version to 0.61.2 from 0.60.3](https://github.com/zopencommunity/fzfport/pull/38) ✅
 - 2025-04-06: [Update fzf-version to 0.61.1 from 0.60.3](https://github.com/zopencommunity/fzfport/pull/37) ✅
 - 2025-03-30: [Update fzf-version to 0.61.0 from 0.60.3](https://github.com/zopencommunity/fzfport/pull/36) ✅
 
@@ -142,6 +143,7 @@
 - 2024-10-22: [Update gnulib-version to 1.0 from 20030404](https://github.com/zopencommunity/gnulibport/pull/10) ✅
 
 ### gperfport
+- 2025-04-20: [Update gperf-version to 3.3 from 3.1](https://github.com/zopencommunity/gperfport/pull/9) ❌
 - 2025-04-07: [Update gperf-version to 3.2 from 3.1](https://github.com/zopencommunity/gperfport/pull/7) ✅
 - 2025-04-14: [Update gperf-version to 3.2.1 from 3.1](https://github.com/zopencommunity/gperfport/pull/8) ✅
 
@@ -170,6 +172,7 @@
 - 2024-01-10: [Update htop-version to 3.3.0 from 3.2.2](https://github.com/zopencommunity/htopport/pull/6) ❓
 
 ### hugoport
+- 2025-04-20: [Update hugo-version to 0.146.6 from 0.146.2](https://github.com/zopencommunity/hugoport/pull/24) ✅
 - 2025-04-16: [Update hugo-version to 0.146.5 from 0.146.2](https://github.com/zopencommunity/hugoport/pull/23) ✅
 - 2025-04-14: [Update hugo-version to 0.146.4 from 0.146.2](https://github.com/zopencommunity/hugoport/pull/22) ✅
 - 2025-04-13: [Update hugo-version to 0.146.3 from 0.146.2](https://github.com/zopencommunity/hugoport/pull/21) ✅
@@ -278,7 +281,7 @@
 - 2024-05-09: [Update osv-scanner-version to 1.7.3 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/5) ❌
 - 2024-04-19: [Update osv-scanner-version to 1.7.2 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/4) ❌
 - 2024-03-20: [Update osv-scanner-version to 1.7.1 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/3) ✅
-- 2024-03-06: [Update osv-scanner-version to 1.7.0 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/2) ✅
+- 2024-03-06: [Update osv-scanner-version to 1.7.0 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/2) ❓
 - 2024-02-15: [Update osv-scanner-version to 1.6.2 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/1) ❓
 
 ### patchport
@@ -685,5 +688,5 @@
 ---
 
 
-> Last updated: 2025-04-20 06:06:06 EDT
+> Last updated: 2025-04-21 06:06:20 EDT
 
