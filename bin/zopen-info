@@ -54,13 +54,13 @@ printPackageInfo() {
     fi
 
     # Extract package name and possible tag
-    base_package=$(echo "${package}" | cut -d'%' -f1)
-    tag=$(echo "${package}" | cut -d'%' -f2)
-   
-    if [ -n "$tag" ]; then
+    if echo "$package" | grep -q '%'; then
+        base_package=$(echo "$package" | awk -F'%' '{print $1}')
+        tag=$(echo "$package" | awk -F'%' '{print $2}')
         printVerbose "Looking up tagged version '${tag}' for package '${base_package}'"
         remote_data=$(jq -c ".release_data.\"${base_package}\"[] | select(.tag_name == \"${tag}\")" "${JSON_CACHE}")
     else
+        base_package="$package"
         remote_data=$(jq -c ".release_data.\"${base_package}\"[0]" "${JSON_CACHE}")
     fi
 
