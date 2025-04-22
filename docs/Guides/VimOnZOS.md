@@ -25,7 +25,21 @@ vim new.txt # create a new file
 vim ~/.profile # edit an existing file
 ```
 
-On z/OS, VIM recognizes IBM-1047 and ISO8859-1 file tags when _BPK_AUTOCVT=ON is set. To enable support for additional code pages, set _BPK_AUTOCONVT=ALL. If you are editing a file that is untagged or editing a new file, VIM will save it as ISO8959-1 (ASCII). You can use change this behaviour by setting the `_ENCODE_FILE_NEW` environment variable. For example, to tag new files as IBM-1047, set `export _ENCODE_FILE_NEW=IBM=1047`
+On z/OS, VIM recognizes `IBM-1047` and `ISO8859-1` file tags when you set `export _BPK_AUTOCVT=ON`
+
+To enable support for a broader range of code pages, use:
+
+```
+export _BPK_AUTOCVT=ALL
+```
+
+When editing a new or untagged file, VIM will default to tagging it as `ISO8859-1` (ASCII). You can change this default by setting the `_ENCODE_FILE_NEW` environment variable. For example, to tag new files as `IBM-1047`, use:
+
+```
+export _ENCODE_FILE_NEW=IBM-1047
+```
+
+For existing files, VIM will retain the original tag, even if the file is untagged.
 
 ## Improving your VIM experience with various tools and plugins
 
