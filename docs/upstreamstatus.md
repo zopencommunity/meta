@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-04-21 06:10:14 EDT.*
+*Report generated on: 2025-04-22 06:09:54 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 216
-- **Total Current Lines of Code (LOC) in Patches:** 27,987
-- **Total Number of Current Patch Files:** 652
-- **Average Current Patch LOC per Project:** 129.57
-- **Average Current Patch Count per Project:** 3.02
+- **Total Current Lines of Code (LOC) in Patches:** 27,872
+- **Total Number of Current Patch Files:** 654
+- **Average Current Patch LOC per Project:** 129.04
+- **Average Current Patch Count per Project:** 3.03
 
 ### Historical Trends (All Projects)
 
@@ -36,9 +36,9 @@
 | [gpgport](#repo-gpgport) | 687 | +0 | 13 |
 | [procpsport](#repo-procpsport) | 687 | +42 | 1 |
 | [perlport](#repo-perlport) | 683 | +0 | 13 |
-| [util-linuxport](#repo-util-linuxport) | 612 | +0 | 7 |
 | [unzipport](#repo-unzipport) | 549 | +0 | 12 |
 | [cronieport](#repo-cronieport) | 510 | +0 | 13 |
+| [util-linuxport](#repo-util-linuxport) | 497 | -115 | 9 |
 | [screenport](#repo-screenport) | 485 | +0 | 7 |
 | [tmuxport](#repo-tmuxport) | 440 | +0 | 13 |
 | [treeport](#repo-treeport) | 425 | +0 | 3 |
@@ -703,32 +703,6 @@
 
 ---
 
-<a id="repo-util-linuxport"></a>
-## util-linuxport
-
-- **Origin Date (First Commit):** 2023-11-22
-- **Current Patch LOC:** 612
-- **Current Patch Count:** 7
-
-### Historical Trends
-
-![LOC Trend for util-linuxport](images/upstream/util_linuxport_current_loc_trend.png)
-![Count Trend for util-linuxport](images/upstream/util_linuxport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/Makemodule.am.patch` | `patches` | 22 |
-| `patches/PR1.patch` | `patches` | 257 |
-| `patches/configure.ac.patch` | `patches` | 37 |
-| `patches/gen_uuid.c.patch` | `patches` | 50 |
-| `patches/pty-session.c.patch` | `patches` | 205 |
-| `patches/pty-session.h.patch` | `patches` | 12 |
-| `patches/scriptlive.c.patch` | `patches` | 29 |
-
----
-
 <a id="repo-unzipport"></a>
 ## unzipport
 
@@ -789,6 +763,34 @@
 | `patches/popen.c.patch` | `patches` | 30 |
 | `patches/pw_dup.c.patch` | `patches` | 57 |
 | `patches/readtab.c.patch` | `patches` | 13 |
+
+---
+
+<a id="repo-util-linuxport"></a>
+## util-linuxport
+
+- **Origin Date (First Commit):** 2023-11-22
+- **Current Patch LOC:** 497
+- **Current Patch Count:** 9
+
+### Historical Trends
+
+![LOC Trend for util-linuxport](images/upstream/util_linuxport_current_loc_trend.png)
+![Count Trend for util-linuxport](images/upstream/util_linuxport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/blkdev.patch` | `patches` | 20 |
+| `patches/c.h.patch` | `patches` | 37 |
+| `patches/c_strtod.c.patch` | `patches` | 15 |
+| `patches/configure.ac.patch` | `patches` | 37 |
+| `patches/gen_uuid.c.patch` | `patches` | 50 |
+| `patches/pty-session.patch` | `patches` | 217 |
+| `patches/strutils.c.patch` | `patches` | 12 |
+| `patches/term-utils.patch` | `patches` | 65 |
+| `patches/ttyutils.patch` | `patches` | 44 |
 
 ---
 
