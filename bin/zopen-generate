@@ -361,7 +361,7 @@ node('linux')
   }
   stage('Build') {
     # Replace all single quotes with double quotes and store back in the same variable
-    description="${description//\'/\"}"
+    description=$(echo "$description" | sed "s/'/\"/g")
     build job: 'Port-Pipeline', parameters: [string(name: 'PORT_GITHUB_REPO', value: 'https://github.com/zopencommunity/${name}port.git'), string(name: 'PORT_DESCRIPTION', value: '${description}' ), string(name: 'BUILD_LINE', value: '${buildlineUpper}') ]
   }
 }
