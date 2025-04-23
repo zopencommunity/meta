@@ -1,13 +1,13 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-04-22 06:09:54 EDT.*
+*Report generated on: 2025-04-23 06:10:22 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 216
-- **Total Current Lines of Code (LOC) in Patches:** 27,872
+- **Total Current Lines of Code (LOC) in Patches:** 27,874
 - **Total Number of Current Patch Files:** 654
-- **Average Current Patch LOC per Project:** 129.04
+- **Average Current Patch LOC per Project:** 129.05
 - **Average Current Patch Count per Project:** 3.03
 
 ### Historical Trends (All Projects)
@@ -28,7 +28,7 @@
 | [bashport](#repo-bashport) | 1,698 | -2,728 | 32 |
 | [libuvport](#repo-libuvport) | 1,462 | +0 | 26 |
 | [sudoport](#repo-sudoport) | 1,278 | +0 | 30 |
-| [coreutilsport](#repo-coreutilsport) | 1,167 | +380 | 18 |
+| [coreutilsport](#repo-coreutilsport) | 1,169 | +382 | 18 |
 | [cmakeport](#repo-cmakeport) | 1,092 | +0 | 1 |
 | [gitport](#repo-gitport) | 974 | -1 | 31 |
 | [valgrindport](#repo-valgrindport) | 896 | +0 | 3 |
@@ -467,7 +467,7 @@
 ## coreutilsport
 
 - **Origin Date (First Commit):** 2022-04-29
-- **Current Patch LOC:** 1,167
+- **Current Patch LOC:** 1,169
 - **Current Patch Count:** 18
 
 ### Historical Trends
@@ -492,7 +492,7 @@
 | `stable-patches/src/copy.c.patch` | `stable-patches` | 41 |
 | `stable-patches/src/cp.c.patch` | `stable-patches` | 61 |
 | `stable-patches/src/digest.c.patch` | `stable-patches` | 61 |
-| `stable-patches/src/ls.c.patch` | `stable-patches` | 199 |
+| `stable-patches/src/ls.c.patch` | `stable-patches` | 201 |
 | `stable-patches/src/od.c.patch` | `stable-patches` | 16 |
 | `stable-patches/src/pinky.c.patch` | `stable-patches` | 50 |
 | `stable-patches/src/stat.c.patch` | `stable-patches` | 253 |

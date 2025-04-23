@@ -44,7 +44,7 @@
 - 2024-11-07: [Update conan-version to 2.9.2 from 2.9.1](https://github.com/zopencommunity/conanport/pull/9) ❌
 
 ### coreutilsport
-- 2025-04-09: [Update coreutils-version to 9.7 from 9.6](https://github.com/zopencommunity/coreutilsport/pull/95) ❌
+- 2025-04-09: [Update coreutils-version to 9.7 from 9.6](https://github.com/zopencommunity/coreutilsport/pull/95) ✅
 
 ### cppcheckport
 - 2025-02-26: [Update cppcheck-version to 2.17.1 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/12) ❌
@@ -98,6 +98,7 @@
 - 2024-06-27: [Update fx-version to 35.0.0 from 34.0.0](https://github.com/zopencommunity/fxport/pull/2) ✅
 
 ### fzfport
+- 2025-04-22: [Update fzf-version to 0.61.3 from 0.60.3](https://github.com/zopencommunity/fzfport/pull/40) ✅
 - 2025-04-20: [Update fzf-version to 0.61.2 from 0.60.3](https://github.com/zopencommunity/fzfport/pull/38) ✅
 - 2025-04-06: [Update fzf-version to 0.61.1 from 0.60.3](https://github.com/zopencommunity/fzfport/pull/37) ✅
 - 2025-03-30: [Update fzf-version to 0.61.0 from 0.60.3](https://github.com/zopencommunity/fzfport/pull/36) ✅
@@ -286,6 +287,7 @@
 - 2023-11-05: [Update patch-version to 2.7.6 from 2.7](https://github.com/zopencommunity/patchport/pull/3) ❓
 
 ### perlport
+- 2025-04-22: [Update perl-version to 5.41.12 from 5.41.9](https://github.com/zopencommunity/perlport/pull/110) ❌
 - 2025-04-21: [Update perl-version to 5.41.11 from 5.41.9](https://github.com/zopencommunity/perlport/pull/109) ❌
 - 2025-03-22: [Update perl-version to 5.41.10 from 5.41.9](https://github.com/zopencommunity/perlport/pull/108) ❌
 
@@ -485,6 +487,7 @@
 - ✅ ctagsport - [![Bump Status](https://github.com/zopencommunity/ctagsport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/ctagsport/actions/workflows/bump.yml)
 - ✅ cunitport - [![Bump Status](https://github.com/zopencommunity/cunitport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/cunitport/actions/workflows/bump.yml)
 - ✅ curlport - [![Bump Status](https://github.com/zopencommunity/curlport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/curlport/actions/workflows/bump.yml)
+- ❌ datasetautomation - Workflow not configured
 - ✅ depot_toolsport - [![Bump Status](https://github.com/zopencommunity/depot_toolsport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/depot_toolsport/actions/workflows/bump.yml)
 - ✅ dialogport - [![Bump Status](https://github.com/zopencommunity/dialogport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/dialogport/actions/workflows/bump.yml)
 - ✅ diffutilsport - [![Bump Status](https://github.com/zopencommunity/diffutilsport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/diffutilsport/actions/workflows/bump.yml)
@@ -682,10 +685,10 @@
 
 </details>
 
-**Summary:** 187 active | 42 missing
+**Summary:** 187 active | 43 missing
 
 ---
 
 
-> Last updated: 2025-04-22 06:06:40 EDT
+> Last updated: 2025-04-23 06:06:38 EDT
 
