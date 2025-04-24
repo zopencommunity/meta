@@ -21,7 +21,7 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/zopencommunity/meta/HEAD
 ## 🛠️ Explore & Engage
 
 - **Start Here**: Jumpstart your zopen community journey with our [Quick Start Guide](/Guides/QuickStart.md).
-- **Discover**: Browse our [available tools](#Latest).
+- **Discover**: Browse our [available tools](/Latest)).
 - **Status Check**: Stay informed with our [progress](/Progress).
 
 ## 🤝 Collaborate & Contribute
