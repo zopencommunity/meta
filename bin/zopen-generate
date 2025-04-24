@@ -348,6 +348,8 @@ createCICD()
   buildline=$1
   touch "${name}port/cicd-${buildline}.groovy" && chtag -tc 819 "${name}port/cicd-${buildline}.groovy"
   buildlineUpper=$(echo "${buildline}" | awk '{print toupper($0)}')
+  # Replace all single quotes with double quotes and store back in the same variable
+  description=$(echo "$description" | sed "s/'/\"/g")
   cat << EOT > "${name}port/cicd-${buildline}.groovy"
 node('linux')
 {
@@ -360,8 +362,6 @@ node('linux')
       userRemoteConfigs: [[url: 'https://github.com/zopencommunity/${name}port.git']]])
   }
   stage('Build') {
-    # Replace all single quotes with double quotes and store back in the same variable
-    description=$(echo "$description" | sed "s/'/\"/g")
     build job: 'Port-Pipeline', parameters: [string(name: 'PORT_GITHUB_REPO', value: 'https://github.com/zopencommunity/${name}port.git'), string(name: 'PORT_DESCRIPTION', value: '${description}' ), string(name: 'BUILD_LINE', value: '${buildlineUpper}') ]
   }
 }
