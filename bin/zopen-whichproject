@@ -92,7 +92,7 @@ jq_query='.project_files | to_entries[] | select(.value.binaries[]? == $item or 
 
 # Execute jq, passing the query item as an argument
 # Handle potential errors from jq (e.g., file not found, invalid JSON)
-matching_projects=$(jq -r --arg item "$query_item" "${jq_query}" "${JSON_FILES_CACHE}" 2> /dev/null)
+matching_projects=$(jq -r --arg item "$query_item" "${jq_query}" "${JSON_FILES_CACHE}" 2> /dev/null | /bin/sort -u)
 jq_exit_status=$?
 
 if [ ${jq_exit_status} -ne 0 ] && [ ${jq_exit_status} -ne 4 ]; then # jq exits 4 if no results found, others are errors
