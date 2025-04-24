@@ -121,6 +121,7 @@
 - 2024-12-06: [Update git-extras-version to 7.3.0 from V.R.M](https://github.com/zopencommunity/git-extrasport/pull/1) ❌
 
 ### githubcliport
+- 2025-04-23: [Update ghcli-version to 2.71.0 from 2.67.0](https://github.com/zopencommunity/githubcliport/pull/50) ✅
 - 2025-04-15: [Update ghcli-version to 2.70.0 from 2.67.0](https://github.com/zopencommunity/githubcliport/pull/49) ✅
 - 2025-03-20: [Update ghcli-version to 2.69.0 from 2.67.0](https://github.com/zopencommunity/githubcliport/pull/48) ✅
 - 2025-03-06: [Update ghcli-version to 2.68.1 from 2.67.0](https://github.com/zopencommunity/githubcliport/pull/47) ❌
@@ -170,6 +171,7 @@
 - 2024-01-10: [Update htop-version to 3.3.0 from 3.2.2](https://github.com/zopencommunity/htopport/pull/6) ❓
 
 ### hugoport
+- 2025-04-23: [Update hugo-version to 0.146.7 from 0.146.2](https://github.com/zopencommunity/hugoport/pull/25) ✅
 - 2025-04-20: [Update hugo-version to 0.146.6 from 0.146.2](https://github.com/zopencommunity/hugoport/pull/24) ✅
 - 2025-04-16: [Update hugo-version to 0.146.5 from 0.146.2](https://github.com/zopencommunity/hugoport/pull/23) ✅
 - 2025-04-14: [Update hugo-version to 0.146.4 from 0.146.2](https://github.com/zopencommunity/hugoport/pull/22) ✅
@@ -326,6 +328,7 @@
 - 2025-03-05: [Update protobuf-version to 30.0 from 29.3](https://github.com/zopencommunity/protobufport/pull/26) ❌
 
 ### re2cport
+- 2025-04-23: [Update re2c-version to 4.2 from 4.0.2](https://github.com/zopencommunity/re2cport/pull/15) ✅
 - 2025-02-17: [Update re2c-version to 4.1 from 4.0.2](https://github.com/zopencommunity/re2cport/pull/14) ✅
 
 ### s5cmdport
@@ -690,5 +693,5 @@
 ---
 
 
-> Last updated: 2025-04-23 06:06:38 EDT
+> Last updated: 2025-04-24 06:06:52 EDT
 
