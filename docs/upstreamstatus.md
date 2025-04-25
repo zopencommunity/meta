@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-04-24 06:10:18 EDT.*
+*Report generated on: 2025-04-25 06:10:24 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 216
+- **Total Projects Analyzed:** 218
 - **Total Current Lines of Code (LOC) in Patches:** 27,810
 - **Total Number of Current Patch Files:** 655
-- **Average Current Patch LOC per Project:** 128.75
-- **Average Current Patch Count per Project:** 3.03
+- **Average Current Patch LOC per Project:** 127.57
+- **Average Current Patch Count per Project:** 3.00
 
 ### Historical Trends (All Projects)
 
@@ -240,6 +240,8 @@
 | [cpioport](#repo-cpioport) | 0 | +0 | 0 |
 | [bcport](#repo-bcport) | 0 | +0 | 0 |
 | [git-sizerport](#repo-git-sizerport) | 0 | +0 | 0 |
+| [chezmoiport](#repo-chezmoiport) | 0 | N/A | 0 |
+| [jdport](#repo-jdport) | 0 | +0 | 0 |
 
 ---
 
@@ -4902,6 +4904,42 @@
 ## git-sizerport
 
 - **Origin Date (First Commit):** 2025-04-09
+- **Current Patch LOC:** 0
+- **Current Patch Count:** 0
+
+### Historical Trends
+
+*(Patch LOC trend graph not generated)*
+*(Patch count trend graph not generated)*
+
+### Current Patch Details
+
+*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
+
+---
+
+<a id="repo-chezmoiport"></a>
+## chezmoiport
+
+- **Origin Date (First Commit):** Unknown
+- **Current Patch LOC:** 0
+- **Current Patch Count:** 0
+
+### Historical Trends
+
+*(Patch LOC trend graph not generated)*
+*(Patch count trend graph not generated)*
+
+### Current Patch Details
+
+*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
+
+---
+
+<a id="repo-jdport"></a>
+## jdport
+
+- **Origin Date (First Commit):** 2025-04-24
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 

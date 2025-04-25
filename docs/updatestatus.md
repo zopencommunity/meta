@@ -121,12 +121,14 @@
 - 2024-12-06: [Update git-extras-version to 7.3.0 from V.R.M](https://github.com/zopencommunity/git-extrasport/pull/1) ❌
 
 ### githubcliport
+- 2025-04-24: [Update ghcli-version to 2.71.1 from 2.67.0](https://github.com/zopencommunity/githubcliport/pull/51) ❌
 - 2025-04-23: [Update ghcli-version to 2.71.0 from 2.67.0](https://github.com/zopencommunity/githubcliport/pull/50) ✅
 - 2025-04-15: [Update ghcli-version to 2.70.0 from 2.67.0](https://github.com/zopencommunity/githubcliport/pull/49) ✅
 - 2025-03-20: [Update ghcli-version to 2.69.0 from 2.67.0](https://github.com/zopencommunity/githubcliport/pull/48) ✅
 - 2025-03-06: [Update ghcli-version to 2.68.1 from 2.67.0](https://github.com/zopencommunity/githubcliport/pull/47) ❌
 
 ### gitlabcliport
+- 2025-04-24: [Update glab-version to 1.56.0 from 1.52.0](https://github.com/zopencommunity/gitlabcliport/pull/26) ❌
 - 2025-03-25: [Update glab-version to 1.55.0 from 1.52.0](https://github.com/zopencommunity/gitlabcliport/pull/25) ❌
 - 2025-03-20: [Update glab-version to 1.54.0 from 1.52.0](https://github.com/zopencommunity/gitlabcliport/pull/24) ❌
 - 2025-02-14: [Update glab-version to 1.53.0 from 1.52.0](https://github.com/zopencommunity/gitlabcliport/pull/23) ✅
@@ -150,6 +152,7 @@
 - 2025-04-14: [Update gperf-version to 3.2.1 from 3.1](https://github.com/zopencommunity/gperfport/pull/8) ✅
 
 ### grafanaport
+- 2025-04-24: [Update grafana-version to 11.6.1 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/20) ❌
 - 2025-03-26: [Update grafana-version to 11.6.0 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/19) ❌
 - 2025-03-25: [Update grafana-version to 11.5.3 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/18) ❌
 - 2025-02-19: [Update grafana-version to 11.5.2 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/17) ❌
@@ -408,6 +411,7 @@
 - 2024-07-18: [Update victoriametrics-version to 1.102.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/5) ❌
 
 ### vimport
+- 2025-04-24: [Update vim-version to 9.1.1340 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/104) ❌
 - 2025-04-21: [Update vim-version to 9.1.1330 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/103) ✅
 - 2025-04-18: [Update vim-version to 9.1.1320 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/102) ✅
 - 2025-04-17: [Update vim-version to 9.1.1310 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/101) ✅
@@ -476,6 +480,7 @@
 - ❌ check_javaport - Workflow not configured
 - ❌ check_pythonport - Workflow not configured
 - ❌ check_xlclangport - Workflow not configured
+- ❌ chezmoiport - Workflow not configured
 - ✅ cjsonport - [![Bump Status](https://github.com/zopencommunity/cjsonport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/cjsonport/actions/workflows/bump.yml)
 - ✅ cmakeport - [![Bump Status](https://github.com/zopencommunity/cmakeport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/cmakeport/actions/workflows/bump.yml)
 - ❌ collateral - Workflow not configured
@@ -545,6 +550,7 @@
 - ✅ hugoport - [![Bump Status](https://github.com/zopencommunity/hugoport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/hugoport/actions/workflows/bump.yml)
 - ❌ iperfport - Workflow not configured
 - ✅ janssonport - [![Bump Status](https://github.com/zopencommunity/janssonport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/janssonport/actions/workflows/bump.yml)
+- ✅ jdport - [![Bump Status](https://github.com/zopencommunity/jdport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/jdport/actions/workflows/bump.yml)
 - ❌ jenkinsport - Workflow not configured
 - ❌ joeport - Workflow not configured
 - ✅ jqport - [![Bump Status](https://github.com/zopencommunity/jqport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/jqport/actions/workflows/bump.yml)
@@ -688,10 +694,10 @@
 
 </details>
 
-**Summary:** 187 active | 43 missing
+**Summary:** 188 active | 44 missing
 
 ---
 
 
-> Last updated: 2025-04-24 06:06:52 EDT
+> Last updated: 2025-04-25 06:06:42 EDT
 
