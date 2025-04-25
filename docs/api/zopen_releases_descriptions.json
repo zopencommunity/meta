@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2025-04-23T07:26:12+00:00Z",
+  "generation_timestamp_utc": "2025-04-25T14:35:40+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -217,6 +217,8 @@
     "bc": "binary calculator",
     "git-sizer": "",
     "lzip": "",
-    "gas2asm": ""
+    "gas2asm": "",
+    "chezmoi": "",
+    "jd": "JSON diff and patch"
   }
 }
