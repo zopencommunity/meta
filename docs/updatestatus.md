@@ -121,6 +121,7 @@
 - 2024-12-06: [Update git-extras-version to 7.3.0 from V.R.M](https://github.com/zopencommunity/git-extrasport/pull/1) ❌
 
 ### githubcliport
+- 2025-04-25: [Update ghcli-version to 2.71.2 from 2.67.0](https://github.com/zopencommunity/githubcliport/pull/52) ✅
 - 2025-04-24: [Update ghcli-version to 2.71.1 from 2.67.0](https://github.com/zopencommunity/githubcliport/pull/51) ❌
 - 2025-04-23: [Update ghcli-version to 2.71.0 from 2.67.0](https://github.com/zopencommunity/githubcliport/pull/50) ✅
 - 2025-04-15: [Update ghcli-version to 2.70.0 from 2.67.0](https://github.com/zopencommunity/githubcliport/pull/49) ✅
@@ -198,6 +199,7 @@
 - 2025-03-22: [Update libgdbm-version to 1.25 from 1.24](https://github.com/zopencommunity/libgdbmport/pull/10) ❌
 
 ### libgpgerrorport
+- 2025-04-25: [Update libgpgerror-version to 1.55 from 1.53](https://github.com/zopencommunity/libgpgerrorport/pull/18) ✅
 - 2025-04-17: [Update libgpgerror-version to 1.54 from 1.53](https://github.com/zopencommunity/libgpgerrorport/pull/17) ✅
 
 ### libiconvport
@@ -219,6 +221,9 @@
 - 2024-10-02: [Update libtool-version to 2.5.3 from 2.4](https://github.com/zopencommunity/libtoolport/pull/26) ❌
 - 2024-01-02: [Update libtool-version to 2.4.7 from 2.4](https://github.com/zopencommunity/libtoolport/pull/22) ❓
 
+### libuvport
+- 2025-04-25: [Update libuv-version to 1.51.0 from 1.50.0](https://github.com/zopencommunity/libuvport/pull/16) ❌
+
 ### libxsltport
 - 2025-03-13: [Update libxslt-version to 1.1.43 from 1.1.42](https://github.com/zopencommunity/libxsltport/pull/9) ✅
 
@@ -237,6 +242,7 @@
 - 2025-04-02: [Update nano-version to 8.4 from 8.3](https://github.com/zopencommunity/nanoport/pull/18) ✅
 
 ### natsport
+- 2025-04-25: [Update nats-version to 2.11.2 from 2.10.11](https://github.com/zopencommunity/natsport/pull/23) ✅
 - 2025-04-09: [Update nats-version to 2.11.1 from 2.10.11](https://github.com/zopencommunity/natsport/pull/22) ✅
 - 2025-03-20: [Update nats-version to 2.11.0 from 2.10.11](https://github.com/zopencommunity/natsport/pull/21) ✅
 - 2025-02-26: [Update nats-version to 2.10.26 from 2.10.11](https://github.com/zopencommunity/natsport/pull/20) ❌
@@ -699,5 +705,5 @@
 ---
 
 
-> Last updated: 2025-04-25 06:06:42 EDT
+> Last updated: 2025-04-26 06:06:33 EDT
 
