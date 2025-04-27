@@ -17,6 +17,7 @@
 - 2025-02-27: [Update buildkite-version to 3.93.1 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/50) ❌
 
 ### c3270port
+- 2025-04-26: [Update c3270-version to 4.4ga6 from 4.3ga9](https://github.com/zopencommunity/c3270port/pull/31) ❌
 - 2025-03-10: [Update c3270-version to 4.4ga5 from 4.3ga9](https://github.com/zopencommunity/c3270port/pull/30) ❌
 - 2025-02-07: [Update c3270-version to 4.4ga4 from 4.3ga9](https://github.com/zopencommunity/c3270port/pull/29) ❌
 - 2025-02-06: [Update c3270-version to 4.4ga3 from 4.3ga9](https://github.com/zopencommunity/c3270port/pull/28) ❌
@@ -175,6 +176,7 @@
 - 2024-01-10: [Update htop-version to 3.3.0 from 3.2.2](https://github.com/zopencommunity/htopport/pull/6) ❓
 
 ### hugoport
+- 2025-04-26: [Update hugo-version to 0.147.0 from 0.146.2](https://github.com/zopencommunity/hugoport/pull/26) ✅
 - 2025-04-23: [Update hugo-version to 0.146.7 from 0.146.2](https://github.com/zopencommunity/hugoport/pull/25) ✅
 - 2025-04-20: [Update hugo-version to 0.146.6 from 0.146.2](https://github.com/zopencommunity/hugoport/pull/24) ✅
 - 2025-04-16: [Update hugo-version to 0.146.5 from 0.146.2](https://github.com/zopencommunity/hugoport/pull/23) ✅
@@ -705,5 +707,5 @@
 ---
 
 
-> Last updated: 2025-04-26 06:06:33 EDT
+> Last updated: 2025-04-27 06:06:12 EDT
 
