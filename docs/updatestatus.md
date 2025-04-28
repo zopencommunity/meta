@@ -259,13 +259,6 @@
 - 2025-03-05: [Update ncdu-1-version to 1.22 from 1.20](https://github.com/zopencommunity/ncduport/pull/12) ❌
 - 2024-11-19: [Update ncdu-1-version to 1.21 from 1.20](https://github.com/zopencommunity/ncduport/pull/11) ❌
 
-### netpbmport
-- 2025-04-18: [Update netpbm-version to 11.09.03 from 11.05.00](https://github.com/zopencommunity/netpbmport/pull/8) ✅
-- 2024-11-21: [Update netpbm-version to 10.77.0 from 11.05.00](https://github.com/zopencommunity/netpbmport/pull/7) ❌
-- 2024-10-12: [Update netpbm-version to 11.08.00 from 11.05.00](https://github.com/zopencommunity/netpbmport/pull/6) ❌
-- 2024-07-29: [Update netpbm-version to 11.07.00 from 11.05.00](https://github.com/zopencommunity/netpbmport/pull/4) ❌
-- 2024-06-08: [Update netpbm-version to 11.06.03 from 11.05.00](https://github.com/zopencommunity/netpbmport/pull/3) ❌
-
 ### nghttp2port
 - 2025-03-02: [Update nghttp2-version to 1.65.0 from 1.64.0](https://github.com/zopencommunity/nghttp2port/pull/11) ✅
 
@@ -337,10 +330,6 @@
 - 2025-03-27: [Update protobuf-version to 30.2 from 29.3](https://github.com/zopencommunity/protobufport/pull/28) ❌
 - 2025-03-14: [Update protobuf-version to 30.1 from 29.3](https://github.com/zopencommunity/protobufport/pull/27) ❌
 - 2025-03-05: [Update protobuf-version to 30.0 from 29.3](https://github.com/zopencommunity/protobufport/pull/26) ❌
-
-### re2cport
-- 2025-04-23: [Update re2c-version to 4.2 from 4.0.2](https://github.com/zopencommunity/re2cport/pull/15) ✅
-- 2025-02-17: [Update re2c-version to 4.1 from 4.0.2](https://github.com/zopencommunity/re2cport/pull/14) ✅
 
 ### s5cmdport
 - 2024-12-17: [Update s5cmd-version to 2.3.0 from 2.2.2](https://github.com/zopencommunity/s5cmdport/pull/3) ❌
@@ -443,10 +432,6 @@
 
 ### xxhashport
 - 2024-12-30: [Update xxhash-version to 0.8.3 from 0.8.2](https://github.com/zopencommunity/xxhashport/pull/18) ❌
-
-### xzport
-- 2025-04-04: [Update xz-version to 5.8.1 from 5.6.4](https://github.com/zopencommunity/xzport/pull/23) ✅
-- 2025-03-26: [Update xz-version to 5.8.0 from 5.6.4](https://github.com/zopencommunity/xzport/pull/22) ✅
 
 ### zigiport
 - 2025-03-15: [Update zigi-version to 3.24 from v3r23](https://github.com/zopencommunity/zigiport/pull/12) ✅
@@ -707,5 +692,5 @@
 ---
 
 
-> Last updated: 2025-04-27 06:06:12 EDT
+> Last updated: 2025-04-28 06:08:06 EDT
 
