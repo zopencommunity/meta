@@ -10,6 +10,7 @@
 - 2024-12-11: [Update bash-completion-version to 20060301 from V.R.M](https://github.com/zopencommunity/bash-completionport/pull/1) ❌
 
 ### buildkiteport
+- 2025-04-28: [Update buildkite-version to 3.97.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/55) ❌
 - 2025-04-10: [Update buildkite-version to 3.96.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/54) ❌
 - 2025-03-24: [Update buildkite-version to 3.95.1 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/53) ❌
 - 2025-03-20: [Update buildkite-version to 3.95.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/52) ❌
@@ -92,6 +93,7 @@
 - 2025-04-19: [Update fq-version to 0.15.0 from 0.14.0](https://github.com/zopencommunity/fqport/pull/9) ✅
 
 ### frpport
+- 2025-04-28: [Update frp-version to 0.62.1 from 0.61.1](https://github.com/zopencommunity/frpport/pull/15) ✅
 - 2025-04-16: [Update frp-version to 0.62.0 from 0.61.1](https://github.com/zopencommunity/frpport/pull/14) ✅
 - 2025-03-07: [Update frp-version to 0.61.2 from 0.61.1](https://github.com/zopencommunity/frpport/pull/13) ✅
 
@@ -240,9 +242,6 @@
 - 2024-07-19: [Update murex-version to 6.2.3000 from 6.0.1000](https://github.com/zopencommunity/murexport/pull/2) ❌
 - 2024-06-27: [Update murex-version to 6.1.8300 from 6.0.1000](https://github.com/zopencommunity/murexport/pull/1) ❌
 
-### nanoport
-- 2025-04-02: [Update nano-version to 8.4 from 8.3](https://github.com/zopencommunity/nanoport/pull/18) ✅
-
 ### natsport
 - 2025-04-25: [Update nats-version to 2.11.2 from 2.10.11](https://github.com/zopencommunity/natsport/pull/23) ✅
 - 2025-04-09: [Update nats-version to 2.11.1 from 2.10.11](https://github.com/zopencommunity/natsport/pull/22) ✅
@@ -388,6 +387,7 @@
 - 2024-06-08: [Update tig-version to 2.5.10 from 2.5.9](https://github.com/zopencommunity/tigport/pull/6) ✅
 
 ### victoriametricsport
+- 2025-04-28: [Update victoriametrics-version to 1.116.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/25) ❌
 - 2025-04-07: [Update victoriametrics-version to 1.115.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/24) ❌
 - 2025-03-24: [Update victoriametrics-version to 1.114.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/23) ❌
 - 2025-03-10: [Update victoriametrics-version to 1.113.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/22) ❌
@@ -453,6 +453,7 @@
 <summary><b style="font-size: 28px;">Bump Automation Status</b></summary>
 
 - ✅ antport - [![Bump Status](https://github.com/zopencommunity/antport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/antport/actions/workflows/bump.yml)
+- ❌ aprport - Workflow not configured
 - ✅ autoconfport - [![Bump Status](https://github.com/zopencommunity/autoconfport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/autoconfport/actions/workflows/bump.yml)
 - ✅ automakeport - [![Bump Status](https://github.com/zopencommunity/automakeport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/automakeport/actions/workflows/bump.yml)
 - ❌ autoporting - Workflow not configured
@@ -551,6 +552,7 @@
 - ✅ kotlinport - [![Bump Status](https://github.com/zopencommunity/kotlinport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/kotlinport/actions/workflows/bump.yml)
 - ✅ lazygitport - [![Bump Status](https://github.com/zopencommunity/lazygitport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/lazygitport/actions/workflows/bump.yml)
 - ✅ lessport - [![Bump Status](https://github.com/zopencommunity/lessport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/lessport/actions/workflows/bump.yml)
+- ❌ libarchiveport - Workflow not configured
 - ✅ libassuanport - [![Bump Status](https://github.com/zopencommunity/libassuanport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libassuanport/actions/workflows/bump.yml)
 - ✅ libbsdport - [![Bump Status](https://github.com/zopencommunity/libbsdport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libbsdport/actions/workflows/bump.yml)
 - ❌ libdio - Workflow not configured
@@ -687,10 +689,10 @@
 
 </details>
 
-**Summary:** 188 active | 44 missing
+**Summary:** 188 active | 46 missing
 
 ---
 
 
-> Last updated: 2025-04-28 06:08:06 EDT
+> Last updated: 2025-04-29 06:07:53 EDT
 

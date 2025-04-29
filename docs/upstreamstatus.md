@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-04-28 06:12:07 EDT.*
+*Report generated on: 2025-04-29 06:11:30 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 218
-- **Total Current Lines of Code (LOC) in Patches:** 27,810
-- **Total Number of Current Patch Files:** 655
-- **Average Current Patch LOC per Project:** 127.57
-- **Average Current Patch Count per Project:** 3.00
+- **Total Projects Analyzed:** 220
+- **Total Current Lines of Code (LOC) in Patches:** 27,866
+- **Total Number of Current Patch Files:** 657
+- **Average Current Patch LOC per Project:** 126.66
+- **Average Current Patch Count per Project:** 2.99
 
 ### Historical Trends (All Projects)
 
@@ -38,9 +38,9 @@
 | [perlport](#repo-perlport) | 683 | +0 | 13 |
 | [unzipport](#repo-unzipport) | 549 | +0 | 12 |
 | [cronieport](#repo-cronieport) | 510 | +0 | 13 |
+| [util-linuxport](#repo-util-linuxport) | 489 | -123 | 12 |
 | [screenport](#repo-screenport) | 485 | +0 | 7 |
 | [tmuxport](#repo-tmuxport) | 440 | +0 | 13 |
-| [util-linuxport](#repo-util-linuxport) | 433 | -179 | 10 |
 | [treeport](#repo-treeport) | 425 | +0 | 3 |
 | [emacsport](#repo-emacsport) | 413 | +0 | 2 |
 | [opensshport](#repo-opensshport) | 376 | +0 | 19 |
@@ -242,6 +242,8 @@
 | [git-sizerport](#repo-git-sizerport) | 0 | +0 | 0 |
 | [chezmoiport](#repo-chezmoiport) | 0 | N/A | 0 |
 | [jdport](#repo-jdport) | 0 | +0 | 0 |
+| [libarchiveport](#repo-libarchiveport) | 0 | +0 | 0 |
+| [aprport](#repo-aprport) | 0 | +0 | 0 |
 
 ---
 
@@ -768,6 +770,37 @@
 
 ---
 
+<a id="repo-util-linuxport"></a>
+## util-linuxport
+
+- **Origin Date (First Commit):** 2023-11-22
+- **Current Patch LOC:** 489
+- **Current Patch Count:** 12
+
+### Historical Trends
+
+![LOC Trend for util-linuxport](images/upstream/util_linuxport_current_loc_trend.png)
+![Count Trend for util-linuxport](images/upstream/util_linuxport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/blkdev.patch` | `patches` | 20 |
+| `patches/c.h.patch` | `patches` | 37 |
+| `patches/c_strtod.c.patch` | `patches` | 15 |
+| `patches/configure.ac.patch` | `patches` | 74 |
+| `patches/gen_uuid.c.patch` | `patches` | 50 |
+| `patches/monotonic.c.patch` | `patches` | 13 |
+| `patches/pty-session.patch` | `patches` | 131 |
+| `patches/setsid.c.patch` | `patches` | 15 |
+| `patches/strutils.c.patch` | `patches` | 12 |
+| `patches/term-utils.patch` | `patches` | 65 |
+| `patches/ttyutils.patch` | `patches` | 44 |
+| `patches/widechar.h.patch` | `patches` | 13 |
+
+---
+
 <a id="repo-screenport"></a>
 ## screenport
 
@@ -823,35 +856,6 @@
 | `patches/tmux.h.patch` | `patches` | 31 |
 | `patches/tty-keys.c.patch` | `patches` | 22 |
 | `patches/tty.c.patch` | `patches` | 20 |
-
----
-
-<a id="repo-util-linuxport"></a>
-## util-linuxport
-
-- **Origin Date (First Commit):** 2023-11-22
-- **Current Patch LOC:** 433
-- **Current Patch Count:** 10
-
-### Historical Trends
-
-![LOC Trend for util-linuxport](images/upstream/util_linuxport_current_loc_trend.png)
-![Count Trend for util-linuxport](images/upstream/util_linuxport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/blkdev.patch` | `patches` | 20 |
-| `patches/c.h.patch` | `patches` | 37 |
-| `patches/c_strtod.c.patch` | `patches` | 15 |
-| `patches/configure.ac.patch` | `patches` | 46 |
-| `patches/gen_uuid.c.patch` | `patches` | 50 |
-| `patches/monotonic.c.patch` | `patches` | 13 |
-| `patches/pty-session.patch` | `patches` | 131 |
-| `patches/strutils.c.patch` | `patches` | 12 |
-| `patches/term-utils.patch` | `patches` | 65 |
-| `patches/ttyutils.patch` | `patches` | 44 |
 
 ---
 
@@ -4940,6 +4944,42 @@
 ## jdport
 
 - **Origin Date (First Commit):** 2025-04-24
+- **Current Patch LOC:** 0
+- **Current Patch Count:** 0
+
+### Historical Trends
+
+*(Patch LOC trend graph not generated)*
+*(Patch count trend graph not generated)*
+
+### Current Patch Details
+
+*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
+
+---
+
+<a id="repo-libarchiveport"></a>
+## libarchiveport
+
+- **Origin Date (First Commit):** 2025-04-29
+- **Current Patch LOC:** 0
+- **Current Patch Count:** 0
+
+### Historical Trends
+
+*(Patch LOC trend graph not generated)*
+*(Patch count trend graph not generated)*
+
+### Current Patch Details
+
+*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
+
+---
+
+<a id="repo-aprport"></a>
+## aprport
+
+- **Origin Date (First Commit):** 2025-04-29
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 
