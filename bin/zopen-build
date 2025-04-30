@@ -1847,6 +1847,72 @@ zz
   cp "${ZOPEN_ROOT}/install/metadata.json" "${ZOPEN_INSTALL_DIR}/metadata.json"
 }
 
+is_gnu_license_from_file() 
+{
+  if [ -n "${ZOPEN_PATCH_DIR}" ]; then
+    lic_try_dir="${ZOPEN_ROOT}/${ZOPEN_PATCH_DIR}"
+    if [ ! -d "${lic_try_dir}" ]; then
+      return 1
+    fi
+  elif [ -n "${ZOPEN_BUILD_LINE}" ]; then
+    buildtype_lower=$(echo "${ZOPEN_BUILD_LINE}" | tr '[:upper:]' '[:lower:]')
+    lic_try_dir="${ZOPEN_ROOT}/${buildtype_lower}-patches"
+    if [ ! -d "${lic_try_dir}" ]; then
+      lic_try_dir="${ZOPEN_ROOT}/patches"
+    fi
+  else
+    lic_try_dir="${ZOPEN_ROOT}/patches"
+  fi
+
+  if [ ! -d "${lic_try_dir}" ]; then
+    return 1
+  fi
+
+  if [ -f "$lic_try_dir/LICENSE" ]; then
+    head -n 1 "$lic_try_dir/LICENSE" | grep -qi "GNU"
+    return $?
+  fi
+
+  return 1
+}
+
+is_gnu_license_from_url() 
+{
+  echo "$ZOPEN_URL" | grep -qi "gnu"
+  return $?
+}
+
+handle_bin_conflicts()
+{
+  install_dir="$1"
+  prefix="zot"
+
+  mkdir -p "$install_dir/altbin"
+  mkdir -p "$install_dir/share/altman/man1"
+
+  if is_gnu_license_from_url; then
+    printVerbose "Detected GNU license"
+    prefix="g"
+  fi
+
+  find "$install_dir/bin" -type f | while read -r file; do
+    base=$(basename "$file")
+    dir=$(dirname "$file")
+
+    if [ -f "/bin/$base" ]; then
+      mv "$file" "$dir/${prefix}$base"
+      ln -sf "../bin/${prefix}$base" "$install_dir/altbin/$base"
+
+      manpage="$install_dir/share/man/man1/$base.1"
+      if [ -f "$manpage" ]; then
+        mv "$manpage" "$install_dir/share/man/man1/${prefix}$base.1"
+        ln -sf "../../man/man1/${prefix}$base.1" "$install_dir/share/altman/man1/$base.1"
+      fi
+    fi
+  done
+
+}
+
 install()
 {
   installStartTime=${SECONDS}
@@ -1875,6 +1941,8 @@ install()
         printError "Post install failed.${installlog}"
       fi
     fi
+
+    handle_bin_conflicts "${ZOPEN_INSTALL_DIR}"
 
     createReadme
 
