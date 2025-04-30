@@ -45,9 +45,6 @@
 - 2024-11-21: [Update conan-version to 2.9.3 from 2.9.1](https://github.com/zopencommunity/conanport/pull/10) ❌
 - 2024-11-07: [Update conan-version to 2.9.2 from 2.9.1](https://github.com/zopencommunity/conanport/pull/9) ❌
 
-### coreutilsport
-- 2025-04-09: [Update coreutils-version to 9.7 from 9.6](https://github.com/zopencommunity/coreutilsport/pull/95) ✅
-
 ### cppcheckport
 - 2025-02-26: [Update cppcheck-version to 2.17.1 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/12) ❌
 - 2025-02-23: [Update cppcheck-version to 2.17.0 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/11) ❌
@@ -311,7 +308,7 @@
 - 2024-06-06: [Update php-version to 8.3.8 from 8.2.13](https://github.com/zopencommunity/phpport/pull/20) ❌
 - 2024-05-09: [Update php-version to 8.3.7 from 8.2.13](https://github.com/zopencommunity/phpport/pull/19) ❌
 - 2024-04-11: [Update php-version to 8.3.6 from 8.2.13](https://github.com/zopencommunity/phpport/pull/18) ❌
-- 2024-03-15: [Update php-version to 8.3.4 from 8.2.13](https://github.com/zopencommunity/phpport/pull/17) ❌
+- 2024-03-15: [Update php-version to 8.3.4 from 8.2.13](https://github.com/zopencommunity/phpport/pull/17) ❓
 - 2024-02-16: [Update php-version to 8.3.3 from 8.2.13](https://github.com/zopencommunity/phpport/pull/16) ❓
 - 2023-11-24: [Update php-version to 8.3.0 from 8.2.13](https://github.com/zopencommunity/phpport/pull/13) ❓
 - 2024-01-18: [Update php-version to 8.3.2 from 8.2.13](https://github.com/zopencommunity/phpport/pull/15) ❓
@@ -408,6 +405,7 @@
 - 2024-07-18: [Update victoriametrics-version to 1.102.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/5) ❌
 
 ### vimport
+- 2025-04-29: [Update vim-version to 9.1.1350 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/105) ✅
 - 2025-04-24: [Update vim-version to 9.1.1340 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/104) ❌
 - 2025-04-21: [Update vim-version to 9.1.1330 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/103) ✅
 - 2025-04-18: [Update vim-version to 9.1.1320 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/102) ✅
@@ -694,5 +692,5 @@
 ---
 
 
-> Last updated: 2025-04-29 06:07:53 EDT
+> Last updated: 2025-04-30 06:07:19 EDT
 

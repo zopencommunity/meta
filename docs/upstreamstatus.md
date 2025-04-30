@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-04-29 06:11:30 EDT.*
+*Report generated on: 2025-04-30 06:12:41 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 220
-- **Total Current Lines of Code (LOC) in Patches:** 27,866
-- **Total Number of Current Patch Files:** 657
-- **Average Current Patch LOC per Project:** 126.66
-- **Average Current Patch Count per Project:** 2.99
+- **Total Current Lines of Code (LOC) in Patches:** 28,676
+- **Total Number of Current Patch Files:** 675
+- **Average Current Patch LOC per Project:** 130.35
+- **Average Current Patch Count per Project:** 3.07
 
 ### Historical Trends (All Projects)
 
@@ -26,6 +26,7 @@
 |---|:---|:---|:---|
 | [librdkafkaport](#repo-librdkafkaport) | 2,638 | +0 | 54 |
 | [bashport](#repo-bashport) | 1,698 | -2,728 | 32 |
+| [gpgport](#repo-gpgport) | 1,484 | +797 | 30 |
 | [libuvport](#repo-libuvport) | 1,462 | +0 | 26 |
 | [sudoport](#repo-sudoport) | 1,278 | +0 | 30 |
 | [coreutilsport](#repo-coreutilsport) | 1,169 | +382 | 18 |
@@ -33,7 +34,6 @@
 | [gitport](#repo-gitport) | 974 | -1 | 31 |
 | [valgrindport](#repo-valgrindport) | 896 | +0 | 3 |
 | [gzipport](#repo-gzipport) | 690 | +21 | 8 |
-| [gpgport](#repo-gpgport) | 687 | +0 | 13 |
 | [procpsport](#repo-procpsport) | 687 | +42 | 1 |
 | [perlport](#repo-perlport) | 683 | +0 | 13 |
 | [unzipport](#repo-unzipport) | 549 | +0 | 12 |
@@ -151,6 +151,7 @@
 | [stowport](#repo-stowport) | 13 | +0 | 1 |
 | [edport](#repo-edport) | 13 | +13 | 1 |
 | [lzipport](#repo-lzipport) | 13 | +13 | 1 |
+| [aprport](#repo-aprport) | 13 | +13 | 1 |
 | [libxml2port](#repo-libxml2port) | 12 | +0 | 1 |
 | [zlibport](#repo-zlibport) | 0 | +0 | 0 |
 | [help2manport](#repo-help2manport) | 0 | +0 | 0 |
@@ -243,7 +244,6 @@
 | [chezmoiport](#repo-chezmoiport) | 0 | N/A | 0 |
 | [jdport](#repo-jdport) | 0 | +0 | 0 |
 | [libarchiveport](#repo-libarchiveport) | 0 | +0 | 0 |
-| [aprport](#repo-aprport) | 0 | +0 | 0 |
 
 ---
 
@@ -370,6 +370,55 @@
 | `stable-patches/findcmd.c.patch` | `stable-patches` | 22 |
 | `stable-patches/kill.def.patch` | `stable-patches` | 123 |
 | `stable-patches/sig.c.patch` | `stable-patches` | 30 |
+
+---
+
+<a id="repo-gpgport"></a>
+## gpgport
+
+- **Origin Date (First Commit):** 2023-05-17
+- **Current Patch LOC:** 1,484
+- **Current Patch Count:** 30
+
+### Historical Trends
+
+![LOC Trend for gpgport](images/upstream/gpgport_current_loc_trend.png)
+![Count Trend for gpgport](images/upstream/gpgport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/armencrypt.scm.patch` | `patches` | 13 |
+| `patches/armencryptp.scm.patch` | `patches` | 13 |
+| `patches/armsignencrypt.scm.patch` | `patches` | 13 |
+| `patches/call-gpg.c.patch` | `patches` | 54 |
+| `patches/call-pinentry.c.patch` | `patches` | 31 |
+| `patches/command.c.patch` | `patches` | 13 |
+| `patches/compression.scm.patch` | `patches` | 13 |
+| `patches/configure.ac.patch` | `patches` | 13 |
+| `patches/configure.patch` | `patches` | 27 |
+| `patches/decrypt-session-key.scm.patch` | `patches` | 13 |
+| `patches/decrypt.c.patch` | `patches` | 15 |
+| `patches/dns.c.patch` | `patches` | 13 |
+| `patches/ecc.scm.patch` | `patches` | 13 |
+| `patches/encrypt-dsa.scm.patch` | `patches` | 22 |
+| `patches/encrypt-multifile.scm.patch` | `patches` | 13 |
+| `patches/encrypt.scm.patch` | `patches` | 67 |
+| `patches/encryptp.scm.patch` | `patches` | 13 |
+| `patches/ffi.c.patch` | `patches` | 14 |
+| `patches/gpg-agent.c.patch` | `patches` | 107 |
+| `patches/gpgscm_tests.scm.patch` | `patches` | 74 |
+| `patches/homedir.c.patch` | `patches` | 326 |
+| `patches/openfile.c.patch` | `patches` | 37 |
+| `patches/openpgp_setup.scm.patch` | `patches` | 34 |
+| `patches/openpgp_trustpgp_common.scm.patch` | `patches` | 16 |
+| `patches/openpgpdefs.scm.patch` | `patches` | 432 |
+| `patches/seat.scm.patch` | `patches` | 13 |
+| `patches/server.c.patch` | `patches` | 22 |
+| `patches/signencrypt-dsa.scm.patch` | `patches` | 22 |
+| `patches/signencrypt.scm.patch` | `patches` | 13 |
+| `patches/t-exectool.c.patch` | `patches` | 15 |
 
 ---
 
@@ -620,38 +669,6 @@
 | `patches/zedc.c.patch` | `patches` | 236 |
 | `patches/zip.c.patch` | `patches` | 79 |
 | `patches/zos.h.patch` | `patches` | 30 |
-
----
-
-<a id="repo-gpgport"></a>
-## gpgport
-
-- **Origin Date (First Commit):** 2023-05-17
-- **Current Patch LOC:** 687
-- **Current Patch Count:** 13
-
-### Historical Trends
-
-![LOC Trend for gpgport](images/upstream/gpgport_current_loc_trend.png)
-![Count Trend for gpgport](images/upstream/gpgport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/call-gpg.c.patch` | `patches` | 54 |
-| `patches/call-pinentry.c.patch` | `patches` | 31 |
-| `patches/command.c.patch` | `patches` | 13 |
-| `patches/configure.ac.patch` | `patches` | 13 |
-| `patches/configure.patch` | `patches` | 27 |
-| `patches/decrypt.c.patch` | `patches` | 15 |
-| `patches/dns.c.patch` | `patches` | 13 |
-| `patches/ffi.c.patch` | `patches` | 14 |
-| `patches/gpg-agent.c.patch` | `patches` | 107 |
-| `patches/homedir.c.patch` | `patches` | 326 |
-| `patches/openfile.c.patch` | `patches` | 37 |
-| `patches/server.c.patch` | `patches` | 22 |
-| `patches/t-exectool.c.patch` | `patches` | 15 |
 
 ---
 
@@ -3318,6 +3335,26 @@
 
 ---
 
+<a id="repo-aprport"></a>
+## aprport
+
+- **Origin Date (First Commit):** 2025-04-29
+- **Current Patch LOC:** 13
+- **Current Patch Count:** 1
+
+### Historical Trends
+
+![LOC Trend for aprport](images/upstream/aprport_current_loc_trend.png)
+![Count Trend for aprport](images/upstream/aprport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/epoll.c.patch` | `patches` | 13 |
+
+---
+
 <a id="repo-libxml2port"></a>
 ## libxml2port
 
@@ -4960,24 +4997,6 @@
 
 <a id="repo-libarchiveport"></a>
 ## libarchiveport
-
-- **Origin Date (First Commit):** 2025-04-29
-- **Current Patch LOC:** 0
-- **Current Patch Count:** 0
-
-### Historical Trends
-
-*(Patch LOC trend graph not generated)*
-*(Patch count trend graph not generated)*
-
-### Current Patch Details
-
-*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
-
----
-
-<a id="repo-aprport"></a>
-## aprport
 
 - **Origin Date (First Commit):** 2025-04-29
 - **Current Patch LOC:** 0
