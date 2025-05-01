@@ -1,6 +1,6 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-04-30 06:12:41 EDT.*
+*Report generated on: 2025-05-01 06:10:31 EDT.*
 
 ## Overall Summary
 
@@ -26,19 +26,19 @@
 |---|:---|:---|:---|
 | [librdkafkaport](#repo-librdkafkaport) | 2,638 | +0 | 54 |
 | [bashport](#repo-bashport) | 1,698 | -2,728 | 32 |
-| [gpgport](#repo-gpgport) | 1,484 | +797 | 30 |
+| [gpgport](#repo-gpgport) | 1,484 | +0 | 30 |
 | [libuvport](#repo-libuvport) | 1,462 | +0 | 26 |
 | [sudoport](#repo-sudoport) | 1,278 | +0 | 30 |
-| [coreutilsport](#repo-coreutilsport) | 1,169 | +382 | 18 |
+| [coreutilsport](#repo-coreutilsport) | 1,169 | +0 | 18 |
 | [cmakeport](#repo-cmakeport) | 1,092 | +0 | 1 |
-| [gitport](#repo-gitport) | 974 | -1 | 31 |
+| [gitport](#repo-gitport) | 974 | +0 | 31 |
 | [valgrindport](#repo-valgrindport) | 896 | +0 | 3 |
-| [gzipport](#repo-gzipport) | 690 | +21 | 8 |
-| [procpsport](#repo-procpsport) | 687 | +42 | 1 |
+| [gzipport](#repo-gzipport) | 690 | +0 | 8 |
+| [procpsport](#repo-procpsport) | 687 | +0 | 1 |
 | [perlport](#repo-perlport) | 683 | +0 | 13 |
 | [unzipport](#repo-unzipport) | 549 | +0 | 12 |
 | [cronieport](#repo-cronieport) | 510 | +0 | 13 |
-| [util-linuxport](#repo-util-linuxport) | 489 | -123 | 12 |
+| [util-linuxport](#repo-util-linuxport) | 489 | +0 | 12 |
 | [screenport](#repo-screenport) | 485 | +0 | 7 |
 | [tmuxport](#repo-tmuxport) | 440 | +0 | 13 |
 | [treeport](#repo-treeport) | 425 | +0 | 3 |
@@ -53,9 +53,9 @@
 | [neovimport](#repo-neovimport) | 312 | +0 | 12 |
 | [conanport](#repo-conanport) | 299 | +0 | 8 |
 | [zipport](#repo-zipport) | 297 | +0 | 8 |
-| [redisport](#repo-redisport) | 263 | +115 | 1 |
+| [redisport](#repo-redisport) | 263 | +0 | 1 |
 | [gitlab-runnerport](#repo-gitlab-runnerport) | 241 | +0 | 10 |
-| [zstdport](#repo-zstdport) | 236 | +9 | 4 |
+| [zstdport](#repo-zstdport) | 236 | +0 | 4 |
 | [llamacppport](#repo-llamacppport) | 236 | +0 | 1 |
 | [mesonport](#repo-mesonport) | 229 | +0 | 9 |
 | [gettextport](#repo-gettextport) | 206 | +0 | 7 |
@@ -74,9 +74,9 @@
 | [libssh2port](#repo-libssh2port) | 122 | +0 | 5 |
 | [m4port](#repo-m4port) | 120 | +0 | 5 |
 | [thesilversearcherport](#repo-thesilversearcherport) | 118 | +0 | 4 |
-| [gas2asmport](#repo-gas2asmport) | 116 | +116 | 4 |
+| [gas2asmport](#repo-gas2asmport) | 116 | +0 | 4 |
 | [grepport](#repo-grepport) | 115 | +0 | 3 |
-| [uucpport](#repo-uucpport) | 115 | +115 | 1 |
+| [uucpport](#repo-uucpport) | 115 | +0 | 1 |
 | [ncursesport](#repo-ncursesport) | 111 | +0 | 2 |
 | [hexcurseport](#repo-hexcurseport) | 108 | +0 | 4 |
 | [libbsdport](#repo-libbsdport) | 107 | +0 | 4 |
@@ -84,7 +84,7 @@
 | [zlib-ngport](#repo-zlib-ngport) | 100 | +0 | 3 |
 | [pkgconfigport](#repo-pkgconfigport) | 98 | +0 | 1 |
 | [doxygenport](#repo-doxygenport) | 97 | +0 | 5 |
-| [libiconvport](#repo-libiconvport) | 96 | -100 | 4 |
+| [libiconvport](#repo-libiconvport) | 96 | +0 | 4 |
 | [depot_toolsport](#repo-depot-toolsport) | 91 | +0 | 1 |
 | [libeventport](#repo-libeventport) | 87 | +0 | 3 |
 | [patchport](#repo-patchport) | 86 | +0 | 3 |
@@ -112,7 +112,7 @@
 | [poptport](#repo-poptport) | 35 | +0 | 1 |
 | [whichport](#repo-whichport) | 34 | +0 | 1 |
 | [sedport](#repo-sedport) | 33 | +0 | 1 |
-| [texinfoport](#repo-texinfoport) | 33 | -23 | 2 |
+| [texinfoport](#repo-texinfoport) | 33 | +0 | 2 |
 | [ntbtlsport](#repo-ntbtlsport) | 33 | +0 | 1 |
 | [sqliteport](#repo-sqliteport) | 32 | +0 | 1 |
 | [luvport](#repo-luvport) | 31 | +0 | 1 |
@@ -149,9 +149,9 @@
 | [luaport](#repo-luaport) | 13 | +0 | 1 |
 | [lpegport](#repo-lpegport) | 13 | +0 | 1 |
 | [stowport](#repo-stowport) | 13 | +0 | 1 |
-| [edport](#repo-edport) | 13 | +13 | 1 |
-| [lzipport](#repo-lzipport) | 13 | +13 | 1 |
-| [aprport](#repo-aprport) | 13 | +13 | 1 |
+| [edport](#repo-edport) | 13 | +0 | 1 |
+| [lzipport](#repo-lzipport) | 13 | +0 | 1 |
+| [aprport](#repo-aprport) | 13 | +0 | 1 |
 | [libxml2port](#repo-libxml2port) | 12 | +0 | 1 |
 | [zlibport](#repo-zlibport) | 0 | +0 | 0 |
 | [help2manport](#repo-help2manport) | 0 | +0 | 0 |

@@ -266,6 +266,7 @@
 - 2025-04-08: [Update openssl-3-version to 3.5.0 from 3.4.1](https://github.com/zopencommunity/opensslport/pull/49) ❌
 
 ### osv-scannerport
+- 2025-04-30: [Update osv-scanner-version to 2.0.2 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/20) ✅
 - 2025-04-03: [Update osv-scanner-version to 2.0.1 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/19) ✅
 - 2025-03-17: [Update osv-scanner-version to 2.0.0 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/18) ✅
 - 2024-12-19: [Update osv-scanner-version to 1.9.2 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/17) ❌
@@ -692,5 +693,5 @@
 ---
 
 
-> Last updated: 2025-04-30 06:07:19 EDT
+> Last updated: 2025-05-01 06:06:40 EDT
 
