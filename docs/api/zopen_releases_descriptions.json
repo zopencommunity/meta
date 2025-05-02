@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2025-05-01T15:43:33+00:00Z",
+  "generation_timestamp_utc": "2025-05-02T16:28:52+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -222,6 +222,7 @@
     "jd": "JSON diff and patch",
     "libarchive": "",
     "apr": "",
-    "glow": "Render markdown on the CLI"
+    "glow": "Render markdown on the CLI",
+    "scc": "Code counter with complexity calculations and COCOMO estimates"
   }
 }
