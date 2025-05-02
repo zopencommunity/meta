@@ -1847,6 +1847,117 @@ zz
   cp "${ZOPEN_ROOT}/install/metadata.json" "${ZOPEN_INSTALL_DIR}/metadata.json"
 }
 
+set_install_caveats() 
+{
+  package=${ZOPEN_NAME}
+  name=$(echo $package | cut -d "-" -f 1)
+  prefix="$1"
+
+  # Add "GNU " prefix to tool name only if prefix is "g"
+  case "$prefix" in
+      g) tool_label="GNU $name" ;;
+      *) tool_label="$name" ;;
+  esac
+
+  cat <<ZZ
+
+$tool_label has been installed with the prefix "$prefix" under bin/ to avoid collision with z/OS /bin/ tools.
+
+The conflicting manpages have been installed under the share/altman directory.
+You can use 'zotman' from the man-db package to view them.
+
+If you prefer to use the tools without the prefix, source zopen-config with the option --override-zos-tools.
+
+ZZ
+}
+
+
+is_gnu_license_from_file() 
+{
+  if [ -n "${ZOPEN_PATCH_DIR}" ]; then
+    lic_try_dir="${ZOPEN_ROOT}/${ZOPEN_PATCH_DIR}"
+    if [ ! -d "${lic_try_dir}" ]; then
+      return 1
+    fi
+  elif [ -n "${ZOPEN_BUILD_LINE}" ]; then
+    buildtype_lower=$(echo "${ZOPEN_BUILD_LINE}" | tr '[:upper:]' '[:lower:]')
+    lic_try_dir="${ZOPEN_ROOT}/${buildtype_lower}-patches"
+    if [ ! -d "${lic_try_dir}" ]; then
+      lic_try_dir="${ZOPEN_ROOT}/patches"
+    fi
+  else
+    lic_try_dir="${ZOPEN_ROOT}/patches"
+  fi
+
+  if [ ! -d "${lic_try_dir}" ]; then
+    return 1
+  fi
+
+  if [ -f "$lic_try_dir/LICENSE" ]; then
+    head -n 1 "$lic_try_dir/LICENSE" | grep -qi "GNU"
+    return $?
+  fi
+
+  return 1
+}
+
+is_gnu_license_from_url() 
+{
+  echo "$ZOPEN_URL" | grep -qi "gnu"
+  return $?
+}
+
+handle_bin_conflicts()
+{
+  install_dir="$1"
+  prefix="zot"
+  any_conflict=0
+
+  mkdir -p "$install_dir/altbin"
+  mkdir -p "$install_dir/share/altman/man1"
+
+  if is_gnu_license_from_url; then
+    printVerbose "Detected GNU license"
+    prefix="g"
+  fi
+
+  for file in $(find "$install_dir/bin" -type f); do
+  base=$(basename "$file")
+  dir=$(dirname "$file")
+
+  if [ -f "/bin/$base" ]; then
+    mv "$file" "$dir/${prefix}$base"
+    ln -sf "../bin/${prefix}$base" "$install_dir/altbin/$base"
+    printVerbose "Renaming conflicting binary: $base → ${prefix}$base"
+
+    manpage="$install_dir/share/man/man1/$base.1"
+    if [ -f "$manpage" ]; then
+      mv "$manpage" "$install_dir/share/man/man1/${prefix}$base.1"
+      ln -sf "../../man/man1/${prefix}$base.1" "$install_dir/share/altman/man1/$base.1"
+    fi
+
+    any_conflict=1
+  fi
+  done
+
+  if [ "$any_conflict" -eq 1 ]; then
+    if command -v zopen_install_caveats >/dev/null 2>&1; then
+      original_caveats=$(zopen_install_caveats)  # Get the existing caveat output
+      additional_caveats=$(set_install_caveats "$prefix")  # Get new caveats from set_install_caveats
+
+      zopen_install_caveats() {
+	printf "%s\n%s\n" "$original_caveats" "$additional_caveats"
+      }
+    else
+      zopen_install_caveats() {
+	printf "%s\n" "$(set_install_caveats "$prefix")"
+      }
+    fi
+  fi
+
+
+}
+
 install()
 {
   installStartTime=${SECONDS}
@@ -1875,6 +1986,8 @@ install()
         printError "Post install failed.${installlog}"
       fi
     fi
+
+    handle_bin_conflicts "${ZOPEN_INSTALL_DIR}"
 
     createReadme
 
