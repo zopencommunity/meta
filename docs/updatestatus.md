@@ -45,6 +45,9 @@
 - 2024-11-21: [Update conan-version to 2.9.3 from 2.9.1](https://github.com/zopencommunity/conanport/pull/10) ❌
 - 2024-11-07: [Update conan-version to 2.9.2 from 2.9.1](https://github.com/zopencommunity/conanport/pull/9) ❌
 
+### coreutilsport
+- 2025-04-09: [Update coreutils-version to 9.7 from 9.6](https://github.com/zopencommunity/coreutilsport/pull/95) ✅
+
 ### cppcheckport
 - 2025-02-26: [Update cppcheck-version to 2.17.1 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/12) ❌
 - 2025-02-23: [Update cppcheck-version to 2.17.0 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/11) ❌
@@ -444,7 +447,6 @@
 
 ### zstdport
 - 2025-02-20: [Update zstd-version to 1.5.7 from 1.5.5](https://github.com/zopencommunity/zstdport/pull/25) ❌
-- 2024-03-27: [Update zstd-version to 1.5.6 from 1.5.5](https://github.com/zopencommunity/zstdport/pull/21) ❌
 
 </details>
 
@@ -473,7 +475,7 @@
 - ❌ check_javaport - Workflow not configured
 - ❌ check_pythonport - Workflow not configured
 - ❌ check_xlclangport - Workflow not configured
-- ❌ chezmoiport - Workflow not configured
+- ✅ chezmoiport - [![Bump Status](https://github.com/zopencommunity/chezmoiport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/chezmoiport/actions/workflows/bump.yml)
 - ✅ cjsonport - [![Bump Status](https://github.com/zopencommunity/cjsonport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/cjsonport/actions/workflows/bump.yml)
 - ✅ cmakeport - [![Bump Status](https://github.com/zopencommunity/cmakeport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/cmakeport/actions/workflows/bump.yml)
 - ❌ collateral - Workflow not configured
@@ -523,6 +525,7 @@
 - ✅ git-lfsport - [![Bump Status](https://github.com/zopencommunity/git-lfsport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/git-lfsport/actions/workflows/bump.yml)
 - ✅ gitport - [![Bump Status](https://github.com/zopencommunity/gitport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/gitport/actions/workflows/bump.yml)
 - ✅ git-sizerport - [![Bump Status](https://github.com/zopencommunity/git-sizerport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/git-sizerport/actions/workflows/bump.yml)
+- ✅ glowport - [![Bump Status](https://github.com/zopencommunity/glowport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/glowport/actions/workflows/bump.yml)
 - ✅ gmpport - [![Bump Status](https://github.com/zopencommunity/gmpport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/gmpport/actions/workflows/bump.yml)
 - ✅ gnport - [![Bump Status](https://github.com/zopencommunity/gnport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/gnport/actions/workflows/bump.yml)
 - ✅ gnulibport - [![Bump Status](https://github.com/zopencommunity/gnulibport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/gnulibport/actions/workflows/bump.yml)
@@ -688,10 +691,10 @@
 
 </details>
 
-**Summary:** 188 active | 46 missing
+**Summary:** 190 active | 45 missing
 
 ---
 
 
-> Last updated: 2025-05-01 06:06:40 EDT
+> Last updated: 2025-05-02 06:07:09 EDT
 

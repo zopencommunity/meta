@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-05-01 06:10:31 EDT.*
+*Report generated on: 2025-05-02 06:10:41 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 220
+- **Total Projects Analyzed:** 221
 - **Total Current Lines of Code (LOC) in Patches:** 28,676
 - **Total Number of Current Patch Files:** 675
-- **Average Current Patch LOC per Project:** 130.35
-- **Average Current Patch Count per Project:** 3.07
+- **Average Current Patch LOC per Project:** 129.76
+- **Average Current Patch Count per Project:** 3.05
 
 ### Historical Trends (All Projects)
 
@@ -241,9 +241,10 @@
 | [cpioport](#repo-cpioport) | 0 | +0 | 0 |
 | [bcport](#repo-bcport) | 0 | +0 | 0 |
 | [git-sizerport](#repo-git-sizerport) | 0 | +0 | 0 |
-| [chezmoiport](#repo-chezmoiport) | 0 | N/A | 0 |
+| [chezmoiport](#repo-chezmoiport) | 0 | +0 | 0 |
 | [jdport](#repo-jdport) | 0 | +0 | 0 |
 | [libarchiveport](#repo-libarchiveport) | 0 | +0 | 0 |
+| [glowport](#repo-glowport) | 0 | +0 | 0 |
 
 ---
 
@@ -4962,7 +4963,7 @@
 <a id="repo-chezmoiport"></a>
 ## chezmoiport
 
-- **Origin Date (First Commit):** Unknown
+- **Origin Date (First Commit):** 2025-05-02
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 
@@ -4999,6 +5000,24 @@
 ## libarchiveport
 
 - **Origin Date (First Commit):** 2025-04-29
+- **Current Patch LOC:** 0
+- **Current Patch Count:** 0
+
+### Historical Trends
+
+*(Patch LOC trend graph not generated)*
+*(Patch count trend graph not generated)*
+
+### Current Patch Details
+
+*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
+
+---
+
+<a id="repo-glowport"></a>
+## glowport
+
+- **Origin Date (First Commit):** 2025-04-24
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 
