@@ -1861,10 +1861,10 @@ set_install_caveats()
 
   cat <<ZZ
 
-$tool_label have been installed with the prefix "$prefix" under bin/ to avoid collision with z/OS /bin/ tools.
+$tool_label has been installed with the prefix "$prefix" under bin/ to avoid collision with z/OS /bin/ tools.
 
 The conflicting manpages have been installed under the share/altman directory.
-You can use 'zotman' to view them.
+You can use 'zotman' from the man-db package to view them.
 
 If you prefer to use the tools without the prefix, source zopen-config with the option --override-zos-tools.
 
@@ -1940,11 +1940,21 @@ handle_bin_conflicts()
   fi
   done
 
-  if [ "$any_conflict" -eq 1 ] && ! command -v zopen_install_caveats >/dev/null 2>&1; then
-  zopen_install_caveats() {
-    set_install_caveats "$prefix"
-  }
+  if [ "$any_conflict" -eq 1 ]; then
+    if command -v zopen_install_caveats >/dev/null 2>&1; then
+      original_caveats=$(zopen_install_caveats)  # Get the existing caveat output
+      additional_caveats=$(set_install_caveats "$prefix")  # Get new caveats from set_install_caveats
+
+      zopen_install_caveats() {
+	printf "%s\n%s\n" "$original_caveats" "$additional_caveats"
+      }
+    else
+      zopen_install_caveats() {
+	printf "%s\n" "$(set_install_caveats "$prefix")"
+      }
+    fi
   fi
+
 
 }
 
