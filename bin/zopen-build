@@ -1847,6 +1847,31 @@ zz
   cp "${ZOPEN_ROOT}/install/metadata.json" "${ZOPEN_INSTALL_DIR}/metadata.json"
 }
 
+set_install_caveats() 
+{
+  package=${ZOPEN_NAME}
+  name=$(echo $package | cut -d "-" -f 1)
+  prefix="$1"
+
+  # Add "GNU " prefix to tool name only if prefix is "g"
+  case "$prefix" in
+      g) tool_label="GNU $name" ;;
+      *) tool_label="$name" ;;
+  esac
+
+  cat <<ZZ
+
+$tool_label have been installed with the prefix "$prefix" under bin/ to avoid collision with z/OS /bin/ tools.
+
+The conflicting manpages have been installed under the share/altman directory.
+You can use 'zotman' to view them.
+
+If you prefer to use the tools without the prefix, source zopen-config with the option --override-zos-tools.
+
+ZZ
+}
+
+
 is_gnu_license_from_file() 
 {
   if [ -n "${ZOPEN_PATCH_DIR}" ]; then
@@ -1886,6 +1911,7 @@ handle_bin_conflicts()
 {
   install_dir="$1"
   prefix="zot"
+  any_conflict=0
 
   mkdir -p "$install_dir/altbin"
   mkdir -p "$install_dir/share/altman/man1"
@@ -1895,21 +1921,30 @@ handle_bin_conflicts()
     prefix="g"
   fi
 
-  find "$install_dir/bin" -type f | while read -r file; do
-    base=$(basename "$file")
-    dir=$(dirname "$file")
+  for file in $(find "$install_dir/bin" -type f); do
+  base=$(basename "$file")
+  dir=$(dirname "$file")
 
-    if [ -f "/bin/$base" ]; then
-      mv "$file" "$dir/${prefix}$base"
-      ln -sf "../bin/${prefix}$base" "$install_dir/altbin/$base"
+  if [ -f "/bin/$base" ]; then
+    mv "$file" "$dir/${prefix}$base"
+    ln -sf "../bin/${prefix}$base" "$install_dir/altbin/$base"
+    printVerbose "Renaming conflicting binary: $base → ${prefix}$base"
 
-      manpage="$install_dir/share/man/man1/$base.1"
-      if [ -f "$manpage" ]; then
-        mv "$manpage" "$install_dir/share/man/man1/${prefix}$base.1"
-        ln -sf "../../man/man1/${prefix}$base.1" "$install_dir/share/altman/man1/$base.1"
-      fi
+    manpage="$install_dir/share/man/man1/$base.1"
+    if [ -f "$manpage" ]; then
+      mv "$manpage" "$install_dir/share/man/man1/${prefix}$base.1"
+      ln -sf "../../man/man1/${prefix}$base.1" "$install_dir/share/altman/man1/$base.1"
     fi
+
+    any_conflict=1
+  fi
   done
+
+  if [ "$any_conflict" -eq 1 ] && ! command -v zopen_install_caveats >/dev/null 2>&1; then
+  zopen_install_caveats() {
+    set_install_caveats "$prefix"
+  }
+  fi
 
 }
 
