@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-05-02 06:10:41 EDT.*
+*Report generated on: 2025-05-03 06:10:39 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 221
-- **Total Current Lines of Code (LOC) in Patches:** 28,676
+- **Total Projects Analyzed:** 222
+- **Total Current Lines of Code (LOC) in Patches:** 28,663
 - **Total Number of Current Patch Files:** 675
-- **Average Current Patch LOC per Project:** 129.76
-- **Average Current Patch Count per Project:** 3.05
+- **Average Current Patch LOC per Project:** 129.11
+- **Average Current Patch Count per Project:** 3.04
 
 ### Historical Trends (All Projects)
 
@@ -108,13 +108,13 @@
 | [xxhashport](#repo-xxhashport) | 47 | +0 | 2 |
 | [tigport](#repo-tigport) | 47 | +0 | 1 |
 | [lazygitport](#repo-lazygitport) | 46 | +0 | 1 |
-| [fzfport](#repo-fzfport) | 45 | +0 | 2 |
 | [poptport](#repo-poptport) | 35 | +0 | 1 |
 | [whichport](#repo-whichport) | 34 | +0 | 1 |
 | [sedport](#repo-sedport) | 33 | +0 | 1 |
 | [texinfoport](#repo-texinfoport) | 33 | +0 | 2 |
 | [ntbtlsport](#repo-ntbtlsport) | 33 | +0 | 1 |
 | [sqliteport](#repo-sqliteport) | 32 | +0 | 1 |
+| [fzfport](#repo-fzfport) | 32 | +0 | 2 |
 | [luvport](#repo-luvport) | 31 | +0 | 1 |
 | [libffiport](#repo-libffiport) | 31 | +0 | 2 |
 | [lynxport](#repo-lynxport) | 30 | +0 | 1 |
@@ -245,6 +245,7 @@
 | [jdport](#repo-jdport) | 0 | +0 | 0 |
 | [libarchiveport](#repo-libarchiveport) | 0 | +0 | 0 |
 | [glowport](#repo-glowport) | 0 | +0 | 0 |
+| [sccport](#repo-sccport) | 0 | +0 | 0 |
 
 ---
 
@@ -2464,27 +2465,6 @@
 
 ---
 
-<a id="repo-fzfport"></a>
-## fzfport
-
-- **Origin Date (First Commit):** 2023-03-22
-- **Current Patch LOC:** 45
-- **Current Patch Count:** 2
-
-### Historical Trends
-
-![LOC Trend for fzfport](images/upstream/fzfport_current_loc_trend.png)
-![Count Trend for fzfport](images/upstream/fzfport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/Makefile.patch` | `patches` | 20 |
-| `patches/main.go.patch` | `patches` | 25 |
-
----
-
 <a id="repo-poptport"></a>
 ## poptport
 
@@ -2603,6 +2583,27 @@
 | Patch File (Repo Relative Path) | Source | LOC |
 |---|---|:---|
 | `patches/configure.patch` | `patches` | 32 |
+
+---
+
+<a id="repo-fzfport"></a>
+## fzfport
+
+- **Origin Date (First Commit):** 2023-03-22
+- **Current Patch LOC:** 32
+- **Current Patch Count:** 2
+
+### Historical Trends
+
+![LOC Trend for fzfport](images/upstream/fzfport_current_loc_trend.png)
+![Count Trend for fzfport](images/upstream/fzfport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/Makefile.patch` | `patches` | 20 |
+| `patches/main.go.patch` | `patches` | 12 |
 
 ---
 
@@ -5018,6 +5019,24 @@
 ## glowport
 
 - **Origin Date (First Commit):** 2025-04-24
+- **Current Patch LOC:** 0
+- **Current Patch Count:** 0
+
+### Historical Trends
+
+*(Patch LOC trend graph not generated)*
+*(Patch count trend graph not generated)*
+
+### Current Patch Details
+
+*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
+
+---
+
+<a id="repo-sccport"></a>
+## sccport
+
+- **Origin Date (First Commit):** 2025-05-02
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 
