@@ -172,7 +172,7 @@ jobs:
                 owner,
                 repo,
                 issue_number: prNumber,
-                labels: ["auto-merge"]
+                labels: ["automerge"]
               });
             } else {
               console.log("Email did not match. No label added.");
