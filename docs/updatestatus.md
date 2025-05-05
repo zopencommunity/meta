@@ -281,7 +281,7 @@
 - 2024-05-30: [Update osv-scanner-version to 1.7.4 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/6) ✅
 - 2024-05-09: [Update osv-scanner-version to 1.7.3 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/5) ❌
 - 2024-04-19: [Update osv-scanner-version to 1.7.2 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/4) ❌
-- 2024-03-20: [Update osv-scanner-version to 1.7.1 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/3) ✅
+- 2024-03-20: [Update osv-scanner-version to 1.7.1 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/3) ❓
 - 2024-03-06: [Update osv-scanner-version to 1.7.0 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/2) ❓
 - 2024-02-15: [Update osv-scanner-version to 1.6.2 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/1) ❓
 
@@ -333,9 +333,6 @@
 
 ### screenport
 - 2024-08-29: [Update screen-version to 5.0.0 from 4.9.1](https://github.com/zopencommunity/screenport/pull/8) ❌
-
-### spdlogport
-- 2025-03-29: [Update spdlog-version to 1.15.2 from 1.15.1](https://github.com/zopencommunity/spdlogport/pull/2) ✅
 
 ### sqliteport
 - 2025-02-18: [Update sqlite-version to 2025-3490100 from 2025-3480000](https://github.com/zopencommunity/sqliteport/pull/24) ❌
@@ -452,6 +449,7 @@
 
 - ✅ antport - [![Bump Status](https://github.com/zopencommunity/antport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/antport/actions/workflows/bump.yml)
 - ❌ aprport - Workflow not configured
+- ❌ apr-utilport - Workflow not configured
 - ✅ autoconfport - [![Bump Status](https://github.com/zopencommunity/autoconfport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/autoconfport/actions/workflows/bump.yml)
 - ✅ automakeport - [![Bump Status](https://github.com/zopencommunity/automakeport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/automakeport/actions/workflows/bump.yml)
 - ❌ autoporting - Workflow not configured
@@ -689,10 +687,10 @@
 
 </details>
 
-**Summary:** 191 active | 45 missing
+**Summary:** 191 active | 46 missing
 
 ---
 
 
-> Last updated: 2025-05-04 06:06:16 EDT
+> Last updated: 2025-05-05 06:07:30 EDT
 
