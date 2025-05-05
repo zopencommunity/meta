@@ -130,3 +130,51 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           status: ${{ job.status }}
           context: "Build and Test"
+
+      - name: Add label if PR committer email matches
+        if: ${{ job.status == 'success' }}
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const pr = context.payload.pull_request;
+            if (!pr) {
+              console.log("Not a pull request event. Skipping.");
+              return;
+            }
+
+            const prNumber = pr.number;
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+
+            // Get commits in the PR
+            const { data: commits } = await github.rest.pulls.listCommits({
+              owner,
+              repo,
+              pull_number: prNumber
+            });
+
+            if (commits.length === 0) {
+              console.log("No commits found in PR. Skipping.");
+              return;
+            }
+
+            const latestCommit = commits[commits.length - 1];
+            const commitEmail = latestCommit.commit.committer.email;
+
+            console.log(`Latest committer email: ${commitEmail}`);
+
+            const allowedEmail = "bump-action@github"; // ⬅️ Replace this with your email
+
+            if (commitEmail === allowedEmail) {
+              console.log(`Email matched. Adding label to PR #${prNumber}`);
+              await github.rest.issues.addLabels({
+                owner,
+                repo,
+                issue_number: prNumber,
+                labels: ["auto-merge"]
+              });
+            } else {
+              console.log("Email did not match. No label added.");
+            }
+
