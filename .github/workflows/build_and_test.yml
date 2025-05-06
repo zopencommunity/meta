@@ -132,7 +132,7 @@ jobs:
           status: ${{ job.status }}
           context: "Build and Test"
 
-      - name: Check for Bump PR and Merge
+      - name: Check for Bump PR, Merge,and Delete Branch
         if: ${{ success() && github.event_name == 'pull_request_target' }}
         uses: actions/github-script@v6
         with:
@@ -159,7 +159,7 @@ jobs:
             console.log(`Latest commit email: ${email}`);
       
             if (email === "bump-action@github") {
-              console.log("Email matches. Attempting squash merge...");
+              console.log("Email matches. Attempting merge...");
       
               const result = await github.rest.pulls.merge({
                 owner,
@@ -170,11 +170,26 @@ jobs:
       
               if (result.data.merged) {
                 console.log(`✅ PR #${prNumber} merged successfully.`);
+      
+                // Delete the branch if it's not from a fork
+                const branch = pr.head.ref;
+                const isFork = pr.head.repo.full_name !== `${owner}/${repo}`;
+      
+                if (!isFork) {
+                  console.log(`Deleting branch ${branch}...`);
+                  await github.rest.git.deleteRef({
+                    owner,
+                    repo,
+                    ref: `heads/${branch}`
+                  });
+                  console.log(`🗑️ Branch ${branch} deleted.`);
+                } else {
+                  console.log(`Skipping branch deletion – PR is from a fork.`);
+                }
+      
               } else {
                 throw new Error(`❌ Merge failed: ${result.data.message}`);
               }
             } else {
               console.log("Email does not match bump-action@github. Skipping merge.");
             }
-    
-    
