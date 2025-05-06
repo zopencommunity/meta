@@ -132,50 +132,49 @@ jobs:
           status: ${{ job.status }}
           context: "Build and Test"
 
-      - name: Check for Bump PR and set automerge label
-        if: ${{ job.status == 'success' }}
-        uses: actions/github-script@v7
+      - name: Check for Bump PR and Merge
+        if: ${{ success() && github.event_name == 'pull_request_target' }}
+        uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const pr = context.payload.pull_request;
             if (!pr) {
-              console.log("Not a pull request event. Skipping.");
+              console.log("Not a PR event. Skipping.");
               return;
             }
-
+      
+            const { owner, repo } = context.repo;
             const prNumber = pr.number;
-            const owner = context.repo.owner;
-            const repo = context.repo.repo;
-
-            // Get commits in the PR
+      
             const { data: commits } = await github.rest.pulls.listCommits({
               owner,
               repo,
               pull_number: prNumber
             });
-
-            if (commits.length === 0) {
-              console.log("No commits found in PR. Skipping.");
-              return;
-            }
-
+      
             const latestCommit = commits[commits.length - 1];
-            const commitEmail = latestCommit.commit.committer.email;
-
-            console.log(`Latest committer email: ${commitEmail}`);
-
-            const allowedEmail = "bump-action@github";
-
-            if (commitEmail === allowedEmail) {
-              console.log(`Email matched. Adding label to PR #${prNumber}`);
-              await github.rest.issues.addLabels({
+            const email = latestCommit.commit.committer.email;
+      
+            console.log(`Latest commit email: ${email}`);
+      
+            if (email === "bump-action@github") {
+              console.log("Email matches. Attempting squash merge...");
+      
+              const result = await github.rest.pulls.merge({
                 owner,
                 repo,
-                issue_number: prNumber,
-                labels: ["automerge"]
+                pull_number: prNumber,
+                merge_method: "merge"
               });
+      
+              if (result.data.merged) {
+                console.log(`✅ PR #${prNumber} merged successfully.`);
+              } else {
+                throw new Error(`❌ Merge failed: ${result.data.message}`);
+              }
             } else {
-              console.log("Email did not match. No label added.");
+              console.log("Email does not match bump-action@github. Skipping merge.");
             }
-
+    
+    
