@@ -164,7 +164,7 @@ jobs:
 
             console.log(`Latest committer email: ${commitEmail}`);
 
-            const allowedEmail = "bump-action@github"; // ⬅️ Replace this with your email
+            const allowedEmail = "bump-action@github.com";
 
             if (commitEmail === allowedEmail) {
               console.log(`Email matched. Adding label to PR #${prNumber}`);
