@@ -132,17 +132,15 @@ jobs:
           status: ${{ job.status }}
           context: "Build and Test"
 
-      - name: Check for Bump PR, Merge,and Delete Branch
+      - name: Squash and Merge Bump PR
         if: ${{ success() && github.event_name == 'pull_request_target' }}
+        continue-on-error: true
         uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const pr = context.payload.pull_request;
-            if (!pr) {
-              console.log("Not a PR event. Skipping.");
-              return;
-            }
+            if (!pr || pr.head.repo.fork) return;
       
             const { owner, repo } = context.repo;
             const prNumber = pr.number;
@@ -153,43 +151,23 @@ jobs:
               pull_number: prNumber
             });
       
-            const latestCommit = commits[commits.length - 1];
-            const email = latestCommit.commit.committer.email;
-      
-            console.log(`Latest commit email: ${email}`);
+            const email = commits.at(-1).commit.committer.email;
       
             if (email === "bump-action@github") {
-              console.log("Email matches. Attempting merge...");
-      
-              const result = await github.rest.pulls.merge({
+              const merge = await github.rest.pulls.merge({
                 owner,
                 repo,
                 pull_number: prNumber,
                 merge_method: "squash"
               });
       
-              if (result.data.merged) {
-                console.log(`✅ PR #${prNumber} merged successfully.`);
-      
-                // Delete the branch if it's not from a fork
-                const branch = pr.head.ref;
-                const isFork = pr.head.repo.full_name !== `${owner}/${repo}`;
-      
-                if (!isFork) {
-                  console.log(`Deleting branch ${branch}...`);
-                  await github.rest.git.deleteRef({
-                    owner,
-                    repo,
-                    ref: `heads/${branch}`
-                  });
-                  console.log(`🗑️ Branch ${branch} deleted.`);
-                } else {
-                  console.log(`Skipping branch deletion – PR is from a fork.`);
-                }
-      
-              } else {
-                throw new Error(`❌ Merge failed: ${result.data.message}`);
+              if (merge.data.merged) {
+                await github.rest.git.deleteRef({
+                  owner,
+                  repo,
+                  ref: `heads/${pr.head.ref}`
+                });
+                console.log(`✅ PR #${prNumber} merged and branch deleted.`);
               }
-            } else {
-              console.log("Email does not match bump-action@github. Skipping merge.");
             }
+      
