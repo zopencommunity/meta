@@ -2,6 +2,10 @@ name: "BuildAndTest"
 
 on:
   workflow_call:
+    permissions:
+      contents: write
+      pull-requests: write
+      actions: write
     inputs:
       repo:
         required: false
@@ -20,10 +24,6 @@ on:
         required: true
       JENKINS_API_TOKEN:
         required: true
-    permissions:
-      contents: write
-      pull-requests: write
-      actions: write
 
 jobs:
   trigger-jenkins-job:
