@@ -165,7 +165,7 @@ jobs:
                 owner,
                 repo,
                 pull_number: prNumber,
-                merge_method: "merge"
+                merge_method: "squash"
               });
       
               if (result.data.merged) {
