@@ -2,10 +2,6 @@ name: "BuildAndTest"
 
 on:
   workflow_call:
-    permissions:
-      contents: write
-      pull-requests: write
-      actions: write
     inputs:
       repo:
         required: false
