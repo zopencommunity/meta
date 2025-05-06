@@ -134,6 +134,10 @@ jobs:
       - name: Check for Bump PR and set automerge label
         if: ${{ job.status == 'success' }}
         uses: actions/github-script@v7
+        permissions:
+          contents: write
+          pull-requests: write
+          actions: write
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
