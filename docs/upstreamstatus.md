@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-05-07 06:10:18 EDT.*
+*Report generated on: 2025-05-08 06:10:33 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 223
+- **Total Projects Analyzed:** 224
 - **Total Current Lines of Code (LOC) in Patches:** 28,663
 - **Total Number of Current Patch Files:** 675
-- **Average Current Patch LOC per Project:** 128.53
-- **Average Current Patch Count per Project:** 3.03
+- **Average Current Patch LOC per Project:** 127.96
+- **Average Current Patch Count per Project:** 3.01
 
 ### Historical Trends (All Projects)
 
@@ -247,6 +247,7 @@
 | [glowport](#repo-glowport) | 0 | +0 | 0 |
 | [sccport](#repo-sccport) | 0 | +0 | 0 |
 | [apr-utilport](#repo-apr-utilport) | 0 | +0 | 0 |
+| [fishport](#repo-fishport) | 0 | N/A | 0 |
 
 ---
 
@@ -5056,6 +5057,24 @@
 ## apr-utilport
 
 - **Origin Date (First Commit):** 2025-05-05
+- **Current Patch LOC:** 0
+- **Current Patch Count:** 0
+
+### Historical Trends
+
+*(Patch LOC trend graph not generated)*
+*(Patch count trend graph not generated)*
+
+### Current Patch Details
+
+*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
+
+---
+
+<a id="repo-fishport"></a>
+## fishport
+
+- **Origin Date (First Commit):** Unknown
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 

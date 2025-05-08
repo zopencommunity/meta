@@ -84,7 +84,7 @@
 - 2025-03-14: [Update expat-version to 2.7.0 from 2.5.0](https://github.com/zopencommunity/expatport/pull/15) ❌
 - 2024-11-07: [Update expat-version to 2.6.4 from 2.5.0](https://github.com/zopencommunity/expatport/pull/14) ❌
 - 2024-09-04: [Update expat-version to 2.6.3 from 2.5.0](https://github.com/zopencommunity/expatport/pull/11) ❌
-- 2024-03-23: [Update expat-version to 2.6.2 from 2.5.0](https://github.com/zopencommunity/expatport/pull/10) ❌
+- 2024-03-23: [Update expat-version to 2.6.2 from 2.5.0](https://github.com/zopencommunity/expatport/pull/10) ❓
 
 ### fqport
 - 2025-04-19: [Update fq-version to 0.15.0 from 0.14.0](https://github.com/zopencommunity/fqport/pull/9) ✅
@@ -110,7 +110,7 @@
 - 2025-02-25: [Update gettext-version to 0.24 from 0.21](https://github.com/zopencommunity/gettextport/pull/32) ❌
 - 2024-12-31: [Update gettext-version to 0.23.1 from 0.21](https://github.com/zopencommunity/gettextport/pull/31) ❌
 - 2024-12-01: [Update gettext-version to 0.23 from 0.21](https://github.com/zopencommunity/gettextport/pull/30) ❌
-- 2024-03-23: [Update gettext-version to 0.22.5 from 0.21](https://github.com/zopencommunity/gettextport/pull/26) ❌
+- 2024-03-23: [Update gettext-version to 0.22.5 from 0.21](https://github.com/zopencommunity/gettextport/pull/26) ❓
 - 2023-11-20: [Update gettext-version to 0.22.4 from 0.21](https://github.com/zopencommunity/gettextport/pull/24) ❓
 - 2023-11-16: [Update gettext-version to 0.22.3 from 0.21](https://github.com/zopencommunity/gettextport/pull/23) ❓
 
@@ -432,13 +432,6 @@
 ### zigiport
 - 2025-03-15: [Update zigi-version to 3.24 from v3r23](https://github.com/zopencommunity/zigiport/pull/12) ✅
 
-### zlib-ngport
-- 2025-02-11: [Update zlib-ng-version to 2.2.4 from 2.1.6](https://github.com/zopencommunity/zlib-ngport/pull/7) ❌
-- 2025-01-07: [Update zlib-ng-version to 2.2.3 from 2.1.6](https://github.com/zopencommunity/zlib-ngport/pull/6) ❌
-- 2024-09-17: [Update zlib-ng-version to 2.2.2 from 2.1.6](https://github.com/zopencommunity/zlib-ngport/pull/4) ❌
-- 2024-07-02: [Update zlib-ng-version to 2.2.1 from 2.1.6](https://github.com/zopencommunity/zlib-ngport/pull/3) ❌
-- 2024-06-19: [Update zlib-ng-version to 2.2.0 from 2.1.6](https://github.com/zopencommunity/zlib-ngport/pull/2) ❌
-
 ### zstdport
 - 2025-02-20: [Update zstd-version to 1.5.7 from 1.5.5](https://github.com/zopencommunity/zstdport/pull/25) ❌
 
@@ -500,6 +493,7 @@
 - ✅ expatport - [![Bump Status](https://github.com/zopencommunity/expatport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/expatport/actions/workflows/bump.yml)
 - ✅ expectport - [![Bump Status](https://github.com/zopencommunity/expectport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/expectport/actions/workflows/bump.yml)
 - ✅ findutilsport - [![Bump Status](https://github.com/zopencommunity/findutilsport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/findutilsport/actions/workflows/bump.yml)
+- ❌ fishport - Workflow not configured
 - ✅ flexport - [![Bump Status](https://github.com/zopencommunity/flexport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/flexport/actions/workflows/bump.yml)
 - ✅ fqport - [![Bump Status](https://github.com/zopencommunity/fqport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/fqport/actions/workflows/bump.yml)
 - ✅ frpport - [![Bump Status](https://github.com/zopencommunity/frpport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/frpport/actions/workflows/bump.yml)
@@ -687,10 +681,10 @@
 
 </details>
 
-**Summary:** 191 active | 46 missing
+**Summary:** 191 active | 47 missing
 
 ---
 
 
-> Last updated: 2025-05-07 06:06:54 EDT
+> Last updated: 2025-05-08 06:06:53 EDT
 
