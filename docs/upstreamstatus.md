@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-05-08 06:10:33 EDT.*
+*Report generated on: 2025-05-09 06:09:49 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 224
-- **Total Current Lines of Code (LOC) in Patches:** 28,663
-- **Total Number of Current Patch Files:** 675
-- **Average Current Patch LOC per Project:** 127.96
-- **Average Current Patch Count per Project:** 3.01
+- **Total Current Lines of Code (LOC) in Patches:** 28,958
+- **Total Number of Current Patch Files:** 682
+- **Average Current Patch LOC per Project:** 129.28
+- **Average Current Patch Count per Project:** 3.04
 
 ### Historical Trends (All Projects)
 
@@ -58,6 +58,7 @@
 | [zstdport](#repo-zstdport) | 236 | +0 | 4 |
 | [llamacppport](#repo-llamacppport) | 236 | +0 | 1 |
 | [mesonport](#repo-mesonport) | 229 | +0 | 9 |
+| [libarchiveport](#repo-libarchiveport) | 228 | +10 | 6 |
 | [gettextport](#repo-gettextport) | 206 | +0 | 7 |
 | [findutilsport](#repo-findutilsport) | 199 | +0 | 10 |
 | [ninjaport](#repo-ninjaport) | 196 | +0 | 8 |
@@ -96,6 +97,7 @@
 | [cppcheckport](#repo-cppcheckport) | 72 | +0 | 4 |
 | [libtoolport](#repo-libtoolport) | 71 | +0 | 3 |
 | [nanoport](#repo-nanoport) | 68 | +0 | 1 |
+| [gradleport](#repo-gradleport) | 67 | +67 | 1 |
 | [getoptport](#repo-getoptport) | 66 | +0 | 1 |
 | [logrotateport](#repo-logrotateport) | 65 | +0 | 1 |
 | [lz4port](#repo-lz4port) | 58 | +0 | 4 |
@@ -236,14 +238,12 @@
 | [zusageport](#repo-zusageport) | 0 | +0 | 0 |
 | [spdlogport](#repo-spdlogport) | 0 | +0 | 0 |
 | [creduceport](#repo-creduceport) | 0 | +0 | 0 |
-| [gradleport](#repo-gradleport) | 0 | N/A | 0 |
 | [luajitport](#repo-luajitport) | 0 | +0 | 0 |
 | [cpioport](#repo-cpioport) | 0 | +0 | 0 |
 | [bcport](#repo-bcport) | 0 | +0 | 0 |
 | [git-sizerport](#repo-git-sizerport) | 0 | +0 | 0 |
 | [chezmoiport](#repo-chezmoiport) | 0 | +0 | 0 |
 | [jdport](#repo-jdport) | 0 | +0 | 0 |
-| [libarchiveport](#repo-libarchiveport) | 0 | +0 | 0 |
 | [glowport](#repo-glowport) | 0 | +0 | 0 |
 | [sccport](#repo-sccport) | 0 | +0 | 0 |
 | [apr-utilport](#repo-apr-utilport) | 0 | +0 | 0 |
@@ -1323,6 +1323,31 @@
 
 ---
 
+<a id="repo-libarchiveport"></a>
+## libarchiveport
+
+- **Origin Date (First Commit):** 2025-04-29
+- **Current Patch LOC:** 228
+- **Current Patch Count:** 6
+
+### Historical Trends
+
+![LOC Trend for libarchiveport](images/upstream/libarchiveport_current_loc_trend.png)
+![Count Trend for libarchiveport](images/upstream/libarchiveport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/libarchive/archive_entry.h.patch` | `patches` | 40 |
+| `patches/libarchive/archive_read_disk_posix.c.patch` | `patches` | 30 |
+| `patches/libarchive/test/test_read_disk_directory_traversals.c.patch` | `patches` | 37 |
+| `patches/libarchive/test/test_sparse_basic.c.patch` | `patches` | 44 |
+| `patches/test_utils/test_main.c.patch` | `patches` | 60 |
+| `patches/unzip/bsdunzip.c.patch` | `patches` | 17 |
+
+---
+
 <a id="repo-gettextport"></a>
 ## gettextport
 
@@ -2210,6 +2235,26 @@
 | Patch File (Repo Relative Path) | Source | LOC |
 |---|---|:---|
 | `patches/initial_zos.patch` | `patches` | 68 |
+
+---
+
+<a id="repo-gradleport"></a>
+## gradleport
+
+- **Origin Date (First Commit):** 2025-05-08
+- **Current Patch LOC:** 67
+- **Current Patch Count:** 1
+
+### Historical Trends
+
+![LOC Trend for gradleport](images/upstream/gradleport_current_loc_trend.png)
+![Count Trend for gradleport](images/upstream/gradleport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/gradle_on_zos.patch` | `patches` | 67 |
 
 ---
 
@@ -4873,24 +4918,6 @@
 
 ---
 
-<a id="repo-gradleport"></a>
-## gradleport
-
-- **Origin Date (First Commit):** Unknown
-- **Current Patch LOC:** 0
-- **Current Patch Count:** 0
-
-### Historical Trends
-
-*(Patch LOC trend graph not generated)*
-*(Patch count trend graph not generated)*
-
-### Current Patch Details
-
-*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
-
----
-
 <a id="repo-luajitport"></a>
 ## luajitport
 
@@ -4985,24 +5012,6 @@
 ## jdport
 
 - **Origin Date (First Commit):** 2025-04-24
-- **Current Patch LOC:** 0
-- **Current Patch Count:** 0
-
-### Historical Trends
-
-*(Patch LOC trend graph not generated)*
-*(Patch count trend graph not generated)*
-
-### Current Patch Details
-
-*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
-
----
-
-<a id="repo-libarchiveport"></a>
-## libarchiveport
-
-- **Origin Date (First Commit):** 2025-04-29
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 

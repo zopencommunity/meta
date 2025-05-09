@@ -193,9 +193,6 @@
 - 2025-02-25: [Update lazygit-version to 0.47.2 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/14) ✅
 - 2025-02-22: [Update lazygit-version to 0.47.1 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/13) ✅
 
-### lessport
-- 2025-03-25: [Update less-version to 674 from 668](https://github.com/zopencommunity/lessport/pull/36) ❌
-
 ### libgdbmport
 - 2025-03-22: [Update libgdbm-version to 1.25 from 1.24](https://github.com/zopencommunity/libgdbmport/pull/10) ❌
 
@@ -224,9 +221,6 @@
 
 ### libuvport
 - 2025-04-25: [Update libuv-version to 1.51.0 from 1.50.0](https://github.com/zopencommunity/libuvport/pull/16) ❌
-
-### libxsltport
-- 2025-03-13: [Update libxslt-version to 1.1.43 from 1.1.42](https://github.com/zopencommunity/libxsltport/pull/9) ✅
 
 ### man-dbport
 - 2024-08-29: [Update man-db-version to 2.13.0 from 2.12.1](https://github.com/zopencommunity/man-dbport/pull/63) ❌
@@ -379,7 +373,6 @@
 ### tigport
 - 2025-02-07: [Update tig-version to 2.5.12 from 2.5.9](https://github.com/zopencommunity/tigport/pull/10) ❌
 - 2025-01-31: [Update tig-version to 2.5.11 from 2.5.9](https://github.com/zopencommunity/tigport/pull/9) ❌
-- 2024-06-08: [Update tig-version to 2.5.10 from 2.5.9](https://github.com/zopencommunity/tigport/pull/6) ✅
 
 ### victoriametricsport
 - 2025-04-28: [Update victoriametrics-version to 1.116.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/25) ❌
@@ -686,5 +679,5 @@
 ---
 
 
-> Last updated: 2025-05-08 06:06:53 EDT
+> Last updated: 2025-05-09 06:06:35 EDT
 
