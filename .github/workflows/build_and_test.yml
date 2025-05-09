@@ -137,7 +137,6 @@ jobs:
         continue-on-error: true
         uses: actions/github-script@v6
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const pr = context.payload.pull_request;
             if (!pr || pr.head.repo.fork) return;
