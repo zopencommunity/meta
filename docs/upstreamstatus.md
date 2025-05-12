@@ -1,13 +1,13 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-05-11 06:10:12 EDT.*
+*Report generated on: 2025-05-12 06:10:01 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 224
-- **Total Current Lines of Code (LOC) in Patches:** 28,958
-- **Total Number of Current Patch Files:** 682
-- **Average Current Patch LOC per Project:** 129.28
+- **Total Projects Analyzed:** 225
+- **Total Current Lines of Code (LOC) in Patches:** 28,970
+- **Total Number of Current Patch Files:** 683
+- **Average Current Patch LOC per Project:** 128.76
 - **Average Current Patch Count per Project:** 3.04
 
 ### Historical Trends (All Projects)
@@ -155,6 +155,7 @@
 | [lzipport](#repo-lzipport) | 13 | +0 | 1 |
 | [aprport](#repo-aprport) | 13 | +0 | 1 |
 | [libxml2port](#repo-libxml2port) | 12 | +0 | 1 |
+| [gflagsport](#repo-gflagsport) | 12 | +12 | 1 |
 | [zlibport](#repo-zlibport) | 0 | +0 | 0 |
 | [help2manport](#repo-help2manport) | 0 | +0 | 0 |
 | [zotsampleport](#repo-zotsampleport) | 0 | +0 | 0 |
@@ -3421,6 +3422,26 @@
 | Patch File (Repo Relative Path) | Source | LOC |
 |---|---|:---|
 | `patches/PR1/configure.patch` | `patches` | 12 |
+
+---
+
+<a id="repo-gflagsport"></a>
+## gflagsport
+
+- **Origin Date (First Commit):** 2025-05-12
+- **Current Patch LOC:** 12
+- **Current Patch Count:** 1
+
+### Historical Trends
+
+![LOC Trend for gflagsport](images/upstream/gflagsport_current_loc_trend.png)
+![Count Trend for gflagsport](images/upstream/gflagsport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/CMakeLists.txt.patch` | `patches` | 12 |
 
 ---
 

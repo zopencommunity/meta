@@ -102,7 +102,6 @@
 - 2024-06-27: [Update fx-version to 35.0.0 from 34.0.0](https://github.com/zopencommunity/fxport/pull/2) ✅
 
 ### fzfport
-- 2025-05-10: [Update fzf-version to 0.62.0 from 0.60.3](https://github.com/zopencommunity/fzfport/pull/41) ✅
 - 2025-04-22: [Update fzf-version to 0.61.3 from 0.60.3](https://github.com/zopencommunity/fzfport/pull/40) ✅
 - 2025-04-20: [Update fzf-version to 0.61.2 from 0.60.3](https://github.com/zopencommunity/fzfport/pull/38) ✅
 - 2025-04-06: [Update fzf-version to 0.61.1 from 0.60.3](https://github.com/zopencommunity/fzfport/pull/37) ✅
@@ -127,7 +126,6 @@
 - 2024-12-06: [Update git-extras-version to 7.3.0 from V.R.M](https://github.com/zopencommunity/git-extrasport/pull/1) ❌
 
 ### githubcliport
-- 2025-05-10: [Update ghcli-version to 2.72.0 from 2.67.0](https://github.com/zopencommunity/githubcliport/pull/53) ✅
 - 2025-04-25: [Update ghcli-version to 2.71.2 from 2.67.0](https://github.com/zopencommunity/githubcliport/pull/52) ✅
 - 2025-04-24: [Update ghcli-version to 2.71.1 from 2.67.0](https://github.com/zopencommunity/githubcliport/pull/51) ❌
 - 2025-04-23: [Update ghcli-version to 2.71.0 from 2.67.0](https://github.com/zopencommunity/githubcliport/pull/50) ✅
@@ -136,7 +134,6 @@
 - 2025-03-06: [Update ghcli-version to 2.68.1 from 2.67.0](https://github.com/zopencommunity/githubcliport/pull/47) ❌
 
 ### gitlabcliport
-- 2025-05-10: [Update glab-version to 1.57.0 from 1.52.0](https://github.com/zopencommunity/gitlabcliport/pull/27) ✅
 - 2025-04-24: [Update glab-version to 1.56.0 from 1.52.0](https://github.com/zopencommunity/gitlabcliport/pull/26) ❌
 - 2025-03-25: [Update glab-version to 1.55.0 from 1.52.0](https://github.com/zopencommunity/gitlabcliport/pull/25) ❌
 - 2025-03-20: [Update glab-version to 1.54.0 from 1.52.0](https://github.com/zopencommunity/gitlabcliport/pull/24) ❌
@@ -196,9 +193,6 @@
 - 2025-04-14: [Update hugo-version to 0.146.4 from 0.146.2](https://github.com/zopencommunity/hugoport/pull/22) ✅
 - 2025-04-13: [Update hugo-version to 0.146.3 from 0.146.2](https://github.com/zopencommunity/hugoport/pull/21) ✅
 
-### jdport
-- 2025-05-10: [Update jd-version to 2.2.3 from 2.2.2](https://github.com/zopencommunity/jdport/pull/1) ✅
-
 ### kotlinport
 - 2024-07-19: [Update kotlin-version to 1.9.25 from 1.9.22](https://github.com/zopencommunity/kotlinport/pull/5) ❌
 - 2024-06-08: [Update kotlin-version to 1.9.24 from 1.9.22](https://github.com/zopencommunity/kotlinport/pull/4) ❌
@@ -210,9 +204,6 @@
 - 2025-03-01: [Update lazygit-version to 0.48.0 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/15) ✅
 - 2025-02-25: [Update lazygit-version to 0.47.2 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/14) ✅
 - 2025-02-22: [Update lazygit-version to 0.47.1 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/13) ✅
-
-### lessport
-- 2025-05-10: [Update less-version to 678 from 676](https://github.com/zopencommunity/lessport/pull/38) ✅
 
 ### libgcryptport
 - 2025-05-10: [Update libgcrypt-version to 1.11.1 from 1.11.0](https://github.com/zopencommunity/libgcryptport/pull/17) ❌
@@ -246,6 +237,9 @@
 ### libuvport
 - 2025-04-25: [Update libuv-version to 1.51.0 from 1.50.0](https://github.com/zopencommunity/libuvport/pull/16) ❌
 
+### m4port
+- 2025-05-11: [Update m4-version to 1.4.20 from 1.4.19](https://github.com/zopencommunity/m4port/pull/44) ❌
+
 ### man-dbport
 - 2025-05-10: [Update man-db-version to 2.13.1 from 2.12.1](https://github.com/zopencommunity/man-dbport/pull/67) ❌
 - 2024-08-29: [Update man-db-version to 2.13.0 from 2.12.1](https://github.com/zopencommunity/man-dbport/pull/63) ❌
@@ -257,19 +251,6 @@
 - 2024-07-30: [Update murex-version to 6.2.4000 from 6.0.1000](https://github.com/zopencommunity/murexport/pull/3) ❌
 - 2024-07-19: [Update murex-version to 6.2.3000 from 6.0.1000](https://github.com/zopencommunity/murexport/pull/2) ❌
 - 2024-06-27: [Update murex-version to 6.1.8300 from 6.0.1000](https://github.com/zopencommunity/murexport/pull/1) ❌
-
-### natsport
-- 2025-05-10: [Update nats-version to 2.11.3 from 2.10.11](https://github.com/zopencommunity/natsport/pull/24) ✅
-- 2025-04-25: [Update nats-version to 2.11.2 from 2.10.11](https://github.com/zopencommunity/natsport/pull/23) ✅
-- 2025-04-09: [Update nats-version to 2.11.1 from 2.10.11](https://github.com/zopencommunity/natsport/pull/22) ✅
-- 2025-03-20: [Update nats-version to 2.11.0 from 2.10.11](https://github.com/zopencommunity/natsport/pull/21) ✅
-- 2025-02-26: [Update nats-version to 2.10.26 from 2.10.11](https://github.com/zopencommunity/natsport/pull/20) ❌
-- 2025-01-24: [Update nats-version to 2.10.25 from 2.10.11](https://github.com/zopencommunity/natsport/pull/19) ❌
-- 2024-12-18: [Update nats-version to 2.10.24 from 2.10.11](https://github.com/zopencommunity/natsport/pull/18) ❌
-- 2024-12-11: [Update nats-version to 2.10.23 from 2.10.11](https://github.com/zopencommunity/natsport/pull/17) ✅
-- 2024-10-18: [Update nats-version to 2.10.22 from 2.10.11](https://github.com/zopencommunity/natsport/pull/15) ❌
-- 2024-10-02: [Update nats-version to 2.10.21 from 2.10.11](https://github.com/zopencommunity/natsport/pull/14) ✅
-- 2024-08-30: [Update nats-version to 2.10.20 from 2.10.11](https://github.com/zopencommunity/natsport/pull/12) ❌
 
 ### ncduport
 - 2025-03-05: [Update ncdu-1-version to 1.22 from 1.20](https://github.com/zopencommunity/ncduport/pull/12) ❌
@@ -427,6 +408,7 @@
 - 2024-07-18: [Update victoriametrics-version to 1.102.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/5) ❌
 
 ### vimport
+- 2025-05-11: [Update vim-version to 9.1.1380 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/107) ❌
 - 2025-05-10: [Update vim-version to 9.1.1370 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/106) ✅
 - 2025-04-29: [Update vim-version to 9.1.1350 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/105) ✅
 - 2025-04-24: [Update vim-version to 9.1.1340 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/104) ❌
@@ -455,7 +437,8 @@
 - 2024-12-30: [Update xxhash-version to 0.8.3 from 0.8.2](https://github.com/zopencommunity/xxhashport/pull/18) ❌
 
 ### yqport
-- 2025-05-10: [Update yq-version to 4.45.3 from 4.45.1](https://github.com/zopencommunity/yqport/pull/23) ✅
+- 2025-05-11: [Update yq-version to 4.45.4 from 4.45.1](https://github.com/zopencommunity/yqport/pull/24) ❌
+- 2025-05-10: [Update yq-version to 4.45.3 from 4.45.1](https://github.com/zopencommunity/yqport/pull/23) ❌
 
 ### zigiport
 - 2025-03-15: [Update zigi-version to 3.24 from v3r23](https://github.com/zopencommunity/zigiport/pull/12) ✅
@@ -531,6 +514,7 @@
 - ✅ gawkport - [![Bump Status](https://github.com/zopencommunity/gawkport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/gawkport/actions/workflows/bump.yml)
 - ✅ getoptport - [![Bump Status](https://github.com/zopencommunity/getoptport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/getoptport/actions/workflows/bump.yml)
 - ✅ gettextport - [![Bump Status](https://github.com/zopencommunity/gettextport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/gettextport/actions/workflows/bump.yml)
+- ✅ gflagsport - [![Bump Status](https://github.com/zopencommunity/gflagsport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/gflagsport/actions/workflows/bump.yml)
 - ✅ ginport - [![Bump Status](https://github.com/zopencommunity/ginport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/ginport/actions/workflows/bump.yml)
 - ❌ git-chglogport - Workflow not configured
 - ✅ git-extrasport - [![Bump Status](https://github.com/zopencommunity/git-extrasport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/git-extrasport/actions/workflows/bump.yml)
@@ -709,10 +693,10 @@
 
 </details>
 
-**Summary:** 191 active | 47 missing
+**Summary:** 192 active | 47 missing
 
 ---
 
 
-> Last updated: 2025-05-11 06:06:26 EDT
+> Last updated: 2025-05-12 06:06:53 EDT
 

@@ -2,6 +2,48 @@
 
 [Vulnerabilities RSS feed XML file](https://raw.githubusercontent.com/zopencommunity/meta/main/docs/vulnerabilities_rss.xml)
 
+## zlib
+
+<details>
+<summary>zlib (Build 2529) - (STABLE) -- 1 critical vulnerability</summary>
+
+- Affected release URL: [zlib (Build 2529) - (STABLE)](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_2529)
+
+- **(CRITICAL severity) CVE-2023-45853**: MiniZip in zlib through 1.3 has an integer overflow and resultant heap-based buffer overflow in zipOpenNewFileInZip4_64 via a long filename, comment, or extra field. NOTE: MiniZip is not a supported part of the zlib product. NOTE: pyminizip through 0.2.6 is also vulnerable because it bundles an affected zlib version, and exposes the applicable MiniZip code through its compress API.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_3071)**.
+
+</details>
+
+<details>
+<summary>zlib (Build 2700) - (STABLE) -- 1 critical vulnerability</summary>
+
+- Affected release URL: [zlib (Build 2700) - (STABLE)](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_2700)
+
+- **(CRITICAL severity) CVE-2023-45853**: MiniZip in zlib through 1.3 has an integer overflow and resultant heap-based buffer overflow in zipOpenNewFileInZip4_64 via a long filename, comment, or extra field. NOTE: MiniZip is not a supported part of the zlib product. NOTE: pyminizip through 0.2.6 is also vulnerable because it bundles an affected zlib version, and exposes the applicable MiniZip code through its compress API.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_3071)**.
+
+</details>
+
+<details>
+<summary>zlib (Build 2930) - (STABLE) -- 1 critical vulnerability</summary>
+
+- Affected release URL: [zlib (Build 2930) - (STABLE)](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_2930)
+
+- **(CRITICAL severity) CVE-2023-45853**: MiniZip in zlib through 1.3 has an integer overflow and resultant heap-based buffer overflow in zipOpenNewFileInZip4_64 via a long filename, comment, or extra field. NOTE: MiniZip is not a supported part of the zlib product. NOTE: pyminizip through 0.2.6 is also vulnerable because it bundles an affected zlib version, and exposes the applicable MiniZip code through its compress API.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_3071)**.
+
+</details>
+
+<details>
+<summary>zlib (Build 2985) - (STABLE) -- 1 critical vulnerability</summary>
+
+- Affected release URL: [zlib (Build 2985) - (STABLE)](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_2985)
+
+- **(CRITICAL severity) CVE-2023-45853**: MiniZip in zlib through 1.3 has an integer overflow and resultant heap-based buffer overflow in zipOpenNewFileInZip4_64 via a long filename, comment, or extra field. NOTE: MiniZip is not a supported part of the zlib product. NOTE: pyminizip through 0.2.6 is also vulnerable because it bundles an affected zlib version, and exposes the applicable MiniZip code through its compress API.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_3071)**.
+
+</details>
+
 ## vim
 
 <details>
@@ -154,48 +196,6 @@ the specified cursor position. It's not quite clear yet, what can lead to this s
 
 </details>
 
-## zlib
-
-<details>
-<summary>zlib (Build 2529) - (STABLE) -- 1 critical vulnerability</summary>
-
-- Affected release URL: [zlib (Build 2529) - (STABLE)](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_2529)
-
-- **(CRITICAL severity) CVE-2023-45853**: MiniZip in zlib through 1.3 has an integer overflow and resultant heap-based buffer overflow in zipOpenNewFileInZip4_64 via a long filename, comment, or extra field. NOTE: MiniZip is not a supported part of the zlib product. NOTE: pyminizip through 0.2.6 is also vulnerable because it bundles an affected zlib version, and exposes the applicable MiniZip code through its compress API.
-  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_3071)**.
-
-</details>
-
-<details>
-<summary>zlib (Build 2700) - (STABLE) -- 1 critical vulnerability</summary>
-
-- Affected release URL: [zlib (Build 2700) - (STABLE)](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_2700)
-
-- **(CRITICAL severity) CVE-2023-45853**: MiniZip in zlib through 1.3 has an integer overflow and resultant heap-based buffer overflow in zipOpenNewFileInZip4_64 via a long filename, comment, or extra field. NOTE: MiniZip is not a supported part of the zlib product. NOTE: pyminizip through 0.2.6 is also vulnerable because it bundles an affected zlib version, and exposes the applicable MiniZip code through its compress API.
-  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_3071)**.
-
-</details>
-
-<details>
-<summary>zlib (Build 2930) - (STABLE) -- 1 critical vulnerability</summary>
-
-- Affected release URL: [zlib (Build 2930) - (STABLE)](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_2930)
-
-- **(CRITICAL severity) CVE-2023-45853**: MiniZip in zlib through 1.3 has an integer overflow and resultant heap-based buffer overflow in zipOpenNewFileInZip4_64 via a long filename, comment, or extra field. NOTE: MiniZip is not a supported part of the zlib product. NOTE: pyminizip through 0.2.6 is also vulnerable because it bundles an affected zlib version, and exposes the applicable MiniZip code through its compress API.
-  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_3071)**.
-
-</details>
-
-<details>
-<summary>zlib (Build 2985) - (STABLE) -- 1 critical vulnerability</summary>
-
-- Affected release URL: [zlib (Build 2985) - (STABLE)](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_2985)
-
-- **(CRITICAL severity) CVE-2023-45853**: MiniZip in zlib through 1.3 has an integer overflow and resultant heap-based buffer overflow in zipOpenNewFileInZip4_64 via a long filename, comment, or extra field. NOTE: MiniZip is not a supported part of the zlib product. NOTE: pyminizip through 0.2.6 is also vulnerable because it bundles an affected zlib version, and exposes the applicable MiniZip code through its compress API.
-  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_3071)**.
-
-</details>
-
 ## githubcli
 
 <details>
@@ -210,7 +210,7 @@ Developers connect to remote codespaces through an SSH server running within the
 This exploit occurs when a malicious third-party devcontainer contains a modified SSH server that injects `ssh` arguments within the SSH connection details. `gh codespace ssh` and `gh codespace logs` commands could execute arbitrary code on the user's workstation if the remote username contains something like `-oProxyCommand="echo hacked" #`.  The `-oProxyCommand` flag causes `ssh` to execute the provided command while `#` shell comment causes any other `ssh` arguments to be ignored.
 
 In `2.62.0`, the remote username information is being validated before being used.
-  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/githubcliport/releases/tag/DEV_githubcliport_3109)**.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/githubcliport/releases/tag/STABLE_githubcliport_3305)**.
 
 </details>
 
@@ -226,7 +226,7 @@ Developers connect to remote codespaces through an SSH server running within the
 This exploit occurs when a malicious third-party devcontainer contains a modified SSH server that injects `ssh` arguments within the SSH connection details. `gh codespace ssh` and `gh codespace logs` commands could execute arbitrary code on the user's workstation if the remote username contains something like `-oProxyCommand="echo hacked" #`.  The `-oProxyCommand` flag causes `ssh` to execute the provided command while `#` shell comment causes any other `ssh` arguments to be ignored.
 
 In `2.62.0`, the remote username information is being validated before being used.
-  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/githubcliport/releases/tag/DEV_githubcliport_3109)**.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/githubcliport/releases/tag/STABLE_githubcliport_3305)**.
 
 </details>
 
@@ -242,7 +242,7 @@ Developers connect to remote codespaces through an SSH server running within the
 This exploit occurs when a malicious third-party devcontainer contains a modified SSH server that injects `ssh` arguments within the SSH connection details. `gh codespace ssh` and `gh codespace logs` commands could execute arbitrary code on the user's workstation if the remote username contains something like `-oProxyCommand="echo hacked" #`.  The `-oProxyCommand` flag causes `ssh` to execute the provided command while `#` shell comment causes any other `ssh` arguments to be ignored.
 
 In `2.62.0`, the remote username information is being validated before being used.
-  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/githubcliport/releases/tag/DEV_githubcliport_3109)**.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/githubcliport/releases/tag/STABLE_githubcliport_3305)**.
 
 </details>
 
