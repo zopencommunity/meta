@@ -874,7 +874,7 @@ printVerbose()
 
 printHeader()
 {
-  if $noInfoMessages; then
+  if [ -n "$noInfoMessages" ]; then
     return 0;
   fi
   [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
@@ -1041,7 +1041,7 @@ printWarning()
 
 printInfo()
 {
-  if $noInfoMessages; then
+  if [ -n "$noInfoMessages" ]; then
     return 0;
   fi
   [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
