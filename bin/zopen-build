@@ -2343,9 +2343,10 @@ generateZOSLIBHooks()
 
   printHeader "Generating ZOSLIB Environment Hooks"
 
-  # Generate directories
-  mkdir -p .zoslib_hooks
-  cd .zoslib_hooks || exit
+  prevpath="${PWD}"
+  # Generate directories under project root dir
+  mkdir -p "$ZOPEN_ROOT/.zoslib_hooks"
+  cd "$ZOPEN_ROOT/.zoslib_hooks" || exit
 
   output="zoslib_env_hook.c"
 
@@ -2501,7 +2502,7 @@ zz
   export ZOPEN_EXTRA_LIBS="${ZOPEN_EXTRA_LIBS} ${PWD}/${output}.o"
   export LIBS="${LIBS} ${PWD}/${output}.o"
 
-  cd ..
+  cd "${prevpath}" || printError "Could not change back to the original path ${prevpath}"
 }
 
 #
