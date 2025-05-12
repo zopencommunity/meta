@@ -130,3 +130,43 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           status: ${{ job.status }}
           context: "Build and Test"
+
+      - name: Check for Bump PR and Merge 
+        if: ${{ success() && github.event_name == 'pull_request_target' }}
+        continue-on-error: true
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.MERGE_TOKEN }}
+          script: |
+            const pr = context.payload.pull_request;
+            if (!pr || pr.head.repo.fork) return;
+            
+            const { owner, repo } = context.repo;
+            const prNumber = pr.number;
+            const branchName = pr.head.ref;
+      
+            const { data: commits } = await github.rest.pulls.listCommits({
+              owner,
+              repo,
+              pull_number: prNumber
+            });
+      
+            const email = commits.at(-1).commit.committer.email;
+      
+            if (email === "bump-action@github" && branchName.startsWith("bump")) {
+              const merge = await github.rest.pulls.merge({
+                owner,
+                repo,
+                pull_number: prNumber,
+                merge_method: "merge"
+              });
+      
+              if (merge.data.merged) {
+                await github.rest.git.deleteRef({
+                  owner,
+                  repo,
+                  ref: `heads/${branchName}`
+                });
+                console.log(`✅ PR #${prNumber} merged and branch '${branchName}' deleted.`);
+                }
+            }
