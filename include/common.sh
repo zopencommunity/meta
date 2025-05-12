@@ -1298,6 +1298,7 @@ getAllReleasesFromGithub()
   fi
 }
 
+# Initializes a default environment for consistency in zopen builds
 initDefaultEnvironment()
 {
   export ZOPEN_OLD_PATH="${PATH}"       # Preserve PATH in case scripts need to access it
@@ -1308,6 +1309,7 @@ initDefaultEnvironment()
   unset MANPATH
   export LIBPATH="/usr/lib"
   export STEPLIB=none
+  export ZUSAGE_DISABLE=1 # Avoid usage statistics within zopen-build
 }
 
 #
