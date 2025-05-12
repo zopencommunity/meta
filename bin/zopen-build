@@ -381,6 +381,8 @@ processOptions()
   forceUpgradeDeps=false
   noInstallRuntimeDeps=false
   instrument=false
+  printSourceDir=false
+  noInfoMessages=false
   depsDepth=2
   while [ $# -gt 0 ]; do
     case $1 in
@@ -404,6 +406,10 @@ processOptions()
       ;;
     "-u" | "--upgradeDeps")
       forceUpgradeDeps=true
+      ;;
+    "--print-source-dir")
+      printSourceDir=true
+      noInfoMessages=true
       ;;
     "--forcepatchapply")
       forcePatchApply=true
@@ -479,7 +485,6 @@ processOptions()
 signPaxFile()
 {
   # Paths to your files
-  printHeader "Signing pax file ${paxFileName}"
   printHeader "Signing pax file ${paxFileName}"
   PRIVATE_KEY="${ZOPEN_GPG_SECRET_KEY_FILE}"
   PASSPHRASE_FILE="${ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE}"
@@ -937,6 +942,10 @@ gitClone()
 {
   gitname=$(basename "${ZOPEN_URL}")
   dir=${gitname%%.*}
+  if $printSourceDir; then
+    echo $dir  
+    exit 0
+  fi
   if [ -d "${dir}" ]; then
     printInfo "Using existing git clone'd directory ${dir}"
   else
@@ -965,7 +974,6 @@ gitClone()
     fi
     tagTree "${dir}"
   fi
-  echo "${dir}"
 }
 
 extractTarBall()
@@ -1068,6 +1076,10 @@ downloadTarBall()
   dir=${tarballz%%.tar.*}
   dir=${dir%%.tgz}
   dir=${dir%%.zip}
+  if $printSourceDir; then
+    echo $dir  
+    exit 0
+  fi
   if [ -d "${dir}" ]; then
     echo "Using existing tarball directory ${dir}" >&2
   else
@@ -1242,6 +1254,7 @@ getCode()
     printError "ZOPEN_TYPE should be one of GIT or TARBALL"
     return 4
   fi
+
 }
 
 create_fifo_pipe()

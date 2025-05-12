@@ -874,6 +874,9 @@ printVerbose()
 
 printHeader()
 {
+  if $noInfoMessages; then
+    return 0;
+  fi
   [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
   printColors "${NC}${HEADERCOLOR}${BOLD}${UNDERLINE}${1}${NC}"
   [ ! -z "${xtrc}" ] && set -x
@@ -1038,6 +1041,9 @@ printWarning()
 
 printInfo()
 {
+  if $noInfoMessages; then
+    return 0;
+  fi
   [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
   printColors "$1"
   [ -n "${xtrc}" ] && set -x
