@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2025-05-12T15:57:40+00:00Z",
+  "generation_timestamp_utc": "2025-05-13T01:16:01+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -226,6 +226,7 @@
     "scc": "Code counter with complexity calculations and COCOMO estimates",
     "apr-util": "",
     "fish": "fish is a smart and user-friendly command line shell",
-    "gflags": ""
+    "gflags": "",
+    "doom-ascii": "DooM in the terminal!"
   }
 }
