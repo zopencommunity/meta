@@ -1,13 +1,13 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-05-12 06:10:01 EDT.*
+*Report generated on: 2025-05-13 06:10:33 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 225
-- **Total Current Lines of Code (LOC) in Patches:** 28,970
-- **Total Number of Current Patch Files:** 683
-- **Average Current Patch LOC per Project:** 128.76
+- **Total Projects Analyzed:** 227
+- **Total Current Lines of Code (LOC) in Patches:** 29,322
+- **Total Number of Current Patch Files:** 691
+- **Average Current Patch LOC per Project:** 129.17
 - **Average Current Patch Count per Project:** 3.04
 
 ### Historical Trends (All Projects)
@@ -36,9 +36,9 @@
 | [gzipport](#repo-gzipport) | 690 | +0 | 8 |
 | [procpsport](#repo-procpsport) | 687 | +0 | 1 |
 | [perlport](#repo-perlport) | 683 | +0 | 13 |
+| [util-linuxport](#repo-util-linuxport) | 594 | -9 | 15 |
 | [unzipport](#repo-unzipport) | 549 | +0 | 12 |
 | [cronieport](#repo-cronieport) | 510 | +0 | 13 |
-| [util-linuxport](#repo-util-linuxport) | 489 | +0 | 12 |
 | [screenport](#repo-screenport) | 485 | +0 | 7 |
 | [tmuxport](#repo-tmuxport) | 440 | +0 | 13 |
 | [treeport](#repo-treeport) | 425 | +0 | 3 |
@@ -55,14 +55,15 @@
 | [zipport](#repo-zipport) | 297 | +0 | 8 |
 | [redisport](#repo-redisport) | 263 | +0 | 1 |
 | [gitlab-runnerport](#repo-gitlab-runnerport) | 241 | +0 | 10 |
+| [libarchiveport](#repo-libarchiveport) | 237 | +19 | 6 |
 | [zstdport](#repo-zstdport) | 236 | +0 | 4 |
 | [llamacppport](#repo-llamacppport) | 236 | +0 | 1 |
 | [mesonport](#repo-mesonport) | 229 | +0 | 9 |
-| [libarchiveport](#repo-libarchiveport) | 228 | +10 | 6 |
 | [gettextport](#repo-gettextport) | 206 | +0 | 7 |
 | [findutilsport](#repo-findutilsport) | 199 | +0 | 10 |
 | [ninjaport](#repo-ninjaport) | 196 | +0 | 8 |
 | [diffutilsport](#repo-diffutilsport) | 184 | +0 | 8 |
+| [mimallocport](#repo-mimallocport) | 178 | +178 | 4 |
 | [protobufport](#repo-protobufport) | 174 | +0 | 8 |
 | [groffport](#repo-groffport) | 165 | +0 | 13 |
 | [autoconfport](#repo-autoconfport) | 151 | +0 | 6 |
@@ -100,6 +101,7 @@
 | [gradleport](#repo-gradleport) | 67 | +67 | 1 |
 | [getoptport](#repo-getoptport) | 66 | +0 | 1 |
 | [logrotateport](#repo-logrotateport) | 65 | +0 | 1 |
+| [doom-asciiport](#repo-doom-asciiport) | 60 | +60 | 1 |
 | [lz4port](#repo-lz4port) | 58 | +0 | 4 |
 | [libgpgerrorport](#repo-libgpgerrorport) | 53 | +0 | 3 |
 | [expatport](#repo-expatport) | 52 | +0 | 2 |
@@ -729,6 +731,40 @@
 
 ---
 
+<a id="repo-util-linuxport"></a>
+## util-linuxport
+
+- **Origin Date (First Commit):** 2023-11-22
+- **Current Patch LOC:** 594
+- **Current Patch Count:** 15
+
+### Historical Trends
+
+![LOC Trend for util-linuxport](images/upstream/util_linuxport_current_loc_trend.png)
+![Count Trend for util-linuxport](images/upstream/util_linuxport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/blkdev.patch` | `patches` | 20 |
+| `patches/c.h.patch` | `patches` | 37 |
+| `patches/c_strtod.c.patch` | `patches` | 15 |
+| `patches/configure.ac.patch` | `patches` | 110 |
+| `patches/flock.c.patch` | `patches` | 45 |
+| `patches/gen_uuid.c.patch` | `patches` | 50 |
+| `patches/monotonic.c.patch` | `patches` | 13 |
+| `patches/pty-session.patch` | `patches` | 131 |
+| `patches/setsid.c.patch` | `patches` | 15 |
+| `patches/strutils.c.patch` | `patches` | 12 |
+| `patches/term-utils.patch` | `patches` | 43 |
+| `patches/term_util_Makemodule.am.patch` | `patches` | 31 |
+| `patches/ttyutils.patch` | `patches` | 44 |
+| `patches/widechar.h.patch` | `patches` | 13 |
+| `patches/write.c.patch` | `patches` | 15 |
+
+---
+
 <a id="repo-unzipport"></a>
 ## unzipport
 
@@ -789,37 +825,6 @@
 | `patches/popen.c.patch` | `patches` | 30 |
 | `patches/pw_dup.c.patch` | `patches` | 57 |
 | `patches/readtab.c.patch` | `patches` | 13 |
-
----
-
-<a id="repo-util-linuxport"></a>
-## util-linuxport
-
-- **Origin Date (First Commit):** 2023-11-22
-- **Current Patch LOC:** 489
-- **Current Patch Count:** 12
-
-### Historical Trends
-
-![LOC Trend for util-linuxport](images/upstream/util_linuxport_current_loc_trend.png)
-![Count Trend for util-linuxport](images/upstream/util_linuxport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/blkdev.patch` | `patches` | 20 |
-| `patches/c.h.patch` | `patches` | 37 |
-| `patches/c_strtod.c.patch` | `patches` | 15 |
-| `patches/configure.ac.patch` | `patches` | 74 |
-| `patches/gen_uuid.c.patch` | `patches` | 50 |
-| `patches/monotonic.c.patch` | `patches` | 13 |
-| `patches/pty-session.patch` | `patches` | 131 |
-| `patches/setsid.c.patch` | `patches` | 15 |
-| `patches/strutils.c.patch` | `patches` | 12 |
-| `patches/term-utils.patch` | `patches` | 65 |
-| `patches/ttyutils.patch` | `patches` | 44 |
-| `patches/widechar.h.patch` | `patches` | 13 |
 
 ---
 
@@ -1253,6 +1258,31 @@
 
 ---
 
+<a id="repo-libarchiveport"></a>
+## libarchiveport
+
+- **Origin Date (First Commit):** 2025-04-29
+- **Current Patch LOC:** 237
+- **Current Patch Count:** 6
+
+### Historical Trends
+
+![LOC Trend for libarchiveport](images/upstream/libarchiveport_current_loc_trend.png)
+![Count Trend for libarchiveport](images/upstream/libarchiveport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/libarchive/archive_entry.h.patch` | `patches` | 40 |
+| `patches/libarchive/archive_read_disk_posix.c.patch` | `patches` | 39 |
+| `patches/libarchive/test/test_read_disk_directory_traversals.c.patch` | `patches` | 37 |
+| `patches/libarchive/test/test_sparse_basic.c.patch` | `patches` | 44 |
+| `patches/test_utils/test_main.c.patch` | `patches` | 60 |
+| `patches/unzip/bsdunzip.c.patch` | `patches` | 17 |
+
+---
+
 <a id="repo-zstdport"></a>
 ## zstdport
 
@@ -1321,31 +1351,6 @@
 | `patches/mesonbuild/linkers/linkers.py.patch` | `patches` | 29 |
 | `patches/mesonbuild/utils/universal.py.patch` | `patches` | 23 |
 | `patches/run_tests.py.patch` | `patches` | 13 |
-
----
-
-<a id="repo-libarchiveport"></a>
-## libarchiveport
-
-- **Origin Date (First Commit):** 2025-04-29
-- **Current Patch LOC:** 228
-- **Current Patch Count:** 6
-
-### Historical Trends
-
-![LOC Trend for libarchiveport](images/upstream/libarchiveport_current_loc_trend.png)
-![Count Trend for libarchiveport](images/upstream/libarchiveport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/libarchive/archive_entry.h.patch` | `patches` | 40 |
-| `patches/libarchive/archive_read_disk_posix.c.patch` | `patches` | 30 |
-| `patches/libarchive/test/test_read_disk_directory_traversals.c.patch` | `patches` | 37 |
-| `patches/libarchive/test/test_sparse_basic.c.patch` | `patches` | 44 |
-| `patches/test_utils/test_main.c.patch` | `patches` | 60 |
-| `patches/unzip/bsdunzip.c.patch` | `patches` | 17 |
 
 ---
 
@@ -1455,6 +1460,29 @@
 | `patches/depcomp.patch` | `patches` | 30 |
 | `patches/help2man.patch` | `patches` | 10 |
 | `patches/skip_test.patch` | `patches` | 53 |
+
+---
+
+<a id="repo-mimallocport"></a>
+## mimallocport
+
+- **Origin Date (First Commit):** 2025-05-13
+- **Current Patch LOC:** 178
+- **Current Patch Count:** 4
+
+### Historical Trends
+
+![LOC Trend for mimallocport](images/upstream/mimallocport_current_loc_trend.png)
+![Count Trend for mimallocport](images/upstream/mimallocport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/alloc-override.c.patch` | `patches` | 13 |
+| `patches/internal.h.patch` | `patches` | 16 |
+| `patches/prim.c.patch` | `patches` | 135 |
+| `patches/prim.h.patch` | `patches` | 14 |
 
 ---
 
@@ -2296,6 +2324,26 @@
 | Patch File (Repo Relative Path) | Source | LOC |
 |---|---|:---|
 | `patches/PR1.patch` | `patches` | 65 |
+
+---
+
+<a id="repo-doom-asciiport"></a>
+## doom-asciiport
+
+- **Origin Date (First Commit):** 2025-05-12
+- **Current Patch LOC:** 60
+- **Current Patch Count:** 1
+
+### Historical Trends
+
+![LOC Trend for doom-asciiport](images/upstream/doom_asciiport_current_loc_trend.png)
+![Count Trend for doom-asciiport](images/upstream/doom_asciiport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/doom.patch` | `patches` | 60 |
 
 ---
 

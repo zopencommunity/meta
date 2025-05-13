@@ -10,6 +10,7 @@
 - 2024-12-11: [Update bash-completion-version to 20060301 from V.R.M](https://github.com/zopencommunity/bash-completionport/pull/1) ❌
 
 ### buildkiteport
+- 2025-05-12: [Update buildkite-version to 3.97.1 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/56) ❌
 - 2025-04-28: [Update buildkite-version to 3.97.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/55) ❌
 - 2025-04-10: [Update buildkite-version to 3.96.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/54) ❌
 - 2025-03-24: [Update buildkite-version to 3.95.1 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/53) ❌
@@ -318,6 +319,7 @@
 - 2023-12-22: [Update php-version to 8.3.1 from 8.2.13](https://github.com/zopencommunity/phpport/pull/14) ❓
 
 ### pocoport
+- 2025-05-12: [Update poco-version to 1.14.2 from 1.12.5p2](https://github.com/zopencommunity/pocoport/pull/10) ❌
 - 2025-02-13: [Update poco-version to 1.14.1 from 1.12.5p2](https://github.com/zopencommunity/pocoport/pull/9) ❌
 - 2024-12-02: [Update poco-version to 1.14.0 from 1.12.5p2](https://github.com/zopencommunity/pocoport/pull/7) ❌
 - 2024-04-05: [Update poco-version to 1.13.3 from 1.12.5p2](https://github.com/zopencommunity/pocoport/pull/5) ❌
@@ -387,6 +389,7 @@
 - 2025-01-31: [Update tig-version to 2.5.11 from 2.5.9](https://github.com/zopencommunity/tigport/pull/9) ❌
 
 ### victoriametricsport
+- 2025-05-12: [Update victoriametrics-version to 1.117.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/26) ❌
 - 2025-04-28: [Update victoriametrics-version to 1.116.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/25) ❌
 - 2025-04-07: [Update victoriametrics-version to 1.115.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/24) ❌
 - 2025-03-24: [Update victoriametrics-version to 1.114.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/23) ❌
@@ -494,6 +497,7 @@
 - ✅ dialogport - [![Bump Status](https://github.com/zopencommunity/dialogport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/dialogport/actions/workflows/bump.yml)
 - ✅ diffutilsport - [![Bump Status](https://github.com/zopencommunity/diffutilsport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/diffutilsport/actions/workflows/bump.yml)
 - ✅ direnvport - [![Bump Status](https://github.com/zopencommunity/direnvport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/direnvport/actions/workflows/bump.yml)
+- ✅ doom-asciiport - [![Bump Status](https://github.com/zopencommunity/doom-asciiport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/doom-asciiport/actions/workflows/bump.yml)
 - ✅ dos2unixport - [![Bump Status](https://github.com/zopencommunity/dos2unixport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/dos2unixport/actions/workflows/bump.yml)
 - ✅ doxygenport - [![Bump Status](https://github.com/zopencommunity/doxygenport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/doxygenport/actions/workflows/bump.yml)
 - ✅ duckdbport - [![Bump Status](https://github.com/zopencommunity/duckdbport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/duckdbport/actions/workflows/bump.yml)
@@ -599,6 +603,7 @@
 - ✅ mesonport - [![Bump Status](https://github.com/zopencommunity/mesonport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/mesonport/actions/workflows/bump.yml)
 - ❌ meta - Workflow not configured
 - ✅ metaport - [![Bump Status](https://github.com/zopencommunity/metaport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/metaport/actions/workflows/bump.yml)
+- ✅ mimallocport - [![Bump Status](https://github.com/zopencommunity/mimallocport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/mimallocport/actions/workflows/bump.yml)
 - ✅ moreutilsport - [![Bump Status](https://github.com/zopencommunity/moreutilsport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/moreutilsport/actions/workflows/bump.yml)
 - ✅ multitailport - [![Bump Status](https://github.com/zopencommunity/multitailport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/multitailport/actions/workflows/bump.yml)
 - ✅ murexport - [![Bump Status](https://github.com/zopencommunity/murexport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/murexport/actions/workflows/bump.yml)
@@ -693,10 +698,10 @@
 
 </details>
 
-**Summary:** 192 active | 47 missing
+**Summary:** 194 active | 47 missing
 
 ---
 
 
-> Last updated: 2025-05-12 06:06:53 EDT
+> Last updated: 2025-05-13 06:06:55 EDT
 
