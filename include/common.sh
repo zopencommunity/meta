@@ -2237,7 +2237,6 @@ spaceValidate(){
     # package to be required
     spaceRequiredKb=$(( (cacheBytes + packageBytes) / 1024 ))
     spaceRequiredMB=$(echo "scale=0; (${cacheBytes} + ${packageBytes}) / (1024 * 1024)" | bc)
-    printInfo "After this operation, ${spaceRequiredMB} MB of additional disk space will be used."
     printInfo "After this operation, $(formattedFileSize ${spaceRequiredKb}) of additional disk space will be used."
   fi
   availableSpaceKb=$(/bin/df -k "${ZOPEN_ROOTFS}" | sed "1d" | awk '{ print $3 }' | awk -F'/' '{ print $1 }')
