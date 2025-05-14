@@ -2622,7 +2622,17 @@ updatePackageDB()
     addCleanupTrapCmd "rm -rf ${backup}"
     cp "${pdb}" "${backup}"
     rm "${pdb}"
+  else
+    printVerbose "No current package database [new install?]. Creating empty array[]"
+    printf "[\n]\n" > "${pdb}"
   fi
+  
+  if [ $(unset CD_PATH; cd "${ZOPEN_PKGINSTALL}"; ls -A | wc -l) -eq 0 ]; then
+    printVerbose "No packages found to add to database [new install?]"
+    return
+  fi
+
+
   if ! pkgdirs=$(getActivePackageDirs); then
     printError "Unable to update the package db"
   fi
@@ -2662,10 +2672,6 @@ updatePackageDB()
     fi
     mv "${pdb}.working" "${pdb}"
   done
-  if [ ! -e "${pdb}" ]; then
-    printVerbose "No currently installed packages [new install?]. Creating empty array[]"
-    printf "[\n]\n" > "${pdb}"
-  fi
 }
 
 stripControlCharacters(){
