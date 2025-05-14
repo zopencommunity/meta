@@ -1550,7 +1550,7 @@ downloadJSONCacheIfExpired()
 
     if [ -f "${fileToCache}" ] \
        && [ -f "${cacheTimestamp}" ] \
-       && grep -q 'ETag' "${JSON_TIMESTAMP_CURRENT}" \
+       && grep -q 'ETag' "${cacheTimestamp}" \
        && [ "$(grep 'ETag' "${cacheTimestampCurrent}")" = "$(grep 'ETag' "${cacheTimestamp}")" ]; then
       # Metadata cache unchanged
       return
