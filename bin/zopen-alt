@@ -78,7 +78,6 @@ mergeNewVersion()
     printSoftError "Unexpected errors merging symlinks into mesh tree"
     printError "Use zopen alt to select previous version to ensure known state"
   fi
-  ##TODORM mergeIntoSystem "${package}" "${ZOPEN_PKGINSTALL}/${package}/${newver}" "${ZOPEN_ROOTFS}"
   printVerbose "New version merged; checking for orphaned files from previous version"
   # This will remove any old symlinks or dirs that might have changed in an up/downgrade
   # as the merge process overwrites existing files to point to different version. If there was

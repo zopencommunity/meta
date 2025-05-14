@@ -1574,57 +1574,6 @@ downloadJSONCache()
   else
     return 0
   fi
-  ##TODORM>>
-  if [ -z "${JSON_CACHE}" ]; then
-    cachedir="${ZOPEN_ROOTFS}/var/cache/zopen"
-    [ ! -e "${cachedir}" ] && mkdir -p "${cachedir}"
-    JSON_CACHE="${cachedir}/zopen_releases.json"
-    JSON_TIMESTAMP="${cachedir}/zopen_releases.timestamp"
-    JSON_TIMESTAMP_CURRENT="${cachedir}/zopen_releases.timestamp.current"
-
-    if [ -n "$from_readonly" ]; then
-      if [ -r "$JSON_CACHE" ] && [ ! -w "$JSON_CACHE" ]; then
-        return; # Skip the download for read only operations when you know you can't write to it
-      fi
-    fi
-
-    # Need to check that we can read & write to the JSON timestamp cache files
-    if [ -e "${JSON_TIMESTAMP_CURRENT}" ]; then
-      [ ! -w "${JSON_TIMESTAMP_CURRENT}" ] || [ ! -r "${JSON_TIMESTAMP_CURRENT}" ] && printError "Cannot access cache at '${JSON_TIMESTAMP_CURRENT}'. Check permissions and retry request."
-    fi
-    if [ -e "${JSON_TIMESTAMP}" ]; then
-      [ ! -w "${JSON_TIMESTAMP}" ] || [ ! -r "${JSON_TIMESTAMP}" ] && printError "Cannot access cache at '${JSON_TIMESTAMP}'. Check permissions and retry request."
-    fi
-    if [ -e "${JSON_CACHE}" ]; then
-      [ ! -w "${JSON_CACHE}" ] || [ ! -r "${JSON_CACHE}" ] && printError "Cannot access cache at '${JSON_CACHE}'. Check permissions and retry request."
-    fi
-
-    jsonCacheURL=$(getJSONCacheURL)
-    if ! curlCmd -f -L -s -I "${jsonCacheURL}" -o "${JSON_TIMESTAMP_CURRENT}"; then
-      printError "Failed to obtain json cache timestamp from ${jsonCacheURL}."
-    fi
-    chtag -tc 819 "${JSON_TIMESTAMP_CURRENT}"
-
-    if [ -f "${JSON_CACHE}" ] \
-       && [ -f "${JSON_TIMESTAMP}" ] \
-       && [ "$(grep 'Last-Modified' "${JSON_TIMESTAMP_CURRENT}")" = "$(grep 'Last-Modified' "${JSON_TIMESTAMP}")" ]; then
-      # Metadata cache unchanged
-      return
-    fi
-
-    printVerbose "Replacing old timestamp with latest."
-    mv -f "${JSON_TIMESTAMP_CURRENT}" "${JSON_TIMESTAMP}"
-
-    if ! curlCmd -f -L -s -o "${JSON_CACHE}" "${jsonCacheURL}"; then
-      printError "Failed to obtain json cache from '${jsonCacheURL}'"
-    fi
-    chtag -tc 819 "${JSON_CACHE}"
-  fi
-
-  if [ ! -f "${JSON_CACHE}" ]; then
-    printError "Could not download json cache from '${jsonCacheURL}"
-  fi
-  ## <<TODORM
 }
 
 # getRepos
@@ -2185,7 +2134,6 @@ generateInstallGraph(){
       printError "Unexpected error while creating install graph. Correct errors and retry command."
     fi
   fi
-  ##TODORM addToInstallGraph "install" "${invalidPortAssetFile}" "${portsToInstall}"
 
   # shellcheck disable=SC2154
   if ! ${doNotInstallDeps} && { (! ${reinstall} && ! ${reinstallDeps}) || (${reinstall} && ${reinstallDeps}); }; then
@@ -2205,20 +2153,10 @@ generateInstallGraph(){
         printError "Unexpected error while creating dependancy graph. Correct errors and retry command."
       fi
     fi
-    ##TODORM createDependancyGraph "${invalidPortAssetFile}"
   else
     printVerbose "- Skipping dependency analysis"
   fi
 
-  ##TODORM>>
-  # shellcheck disable=SC2154
-  #if ${doNotInstallDeps}; then
-  #    printVerbose "- Skipping dependency analysis"
-  #else
-    # calculate dependancy graph
-  #  createDependancyGraph "${invalidPortAssetFile}"
-  #fi
-  ##<<TODORM
   # shellcheck disable=SC2154
   if "${reinstall}"; then
     printVerbose "Not pruning already installed packages as reinstalling"
@@ -2254,29 +2192,6 @@ installList=$(jq --argjson install_list "${installList}" '
     )))
 } ' "${ZOPEN_ROOTFS}/var/lib/zopen/packageDB.json"
 )
-##TODORM>>
-hidden(){
-  installed=$(zopen list --installed --details)
-  # Ignore the version string - it varies across ports so use name and build time as that
-  # should be unique enough
-  installed=$(echo "${installed}"| awk 'BEGIN{ORS = "," } {print "\"" $1 "@=@" $3 "\""}')
-  installed="[${installed%,}]"
-
-  installList=$(echo "${installList}" | \
-    jq  --argjson installees "${installed}" \
-      '.installqueue |=
-        map(
-          select(.asset.url |
-            capture(".*/(?<name>.*)-(?<ver>[^-]*)\\.(?<rel>\\d{8}_\\d{6}?)\\.zos\\.pax\\.Z$") |.rel as $rel | .name as $name |
-            $installees | map(
-              .|capture("(?<iname>[^@]*)@=@(?<irel>\\d{8}_\\d{6}?)$")|.iname as $iname | .irel as $irel |
-              ($iname+"-"+$irel) == ($name+"-"+$rel)
-            ) | any == false
-          )
-        )'\
-  )
-}
-##<<TODORM
   if ! processActionScripts "parseGraphPost"; then
     exit 1
   fi
@@ -2565,9 +2480,6 @@ installFromPax()
         printSoftError "Unexpected errors merging symlinks into mesh"
         printError "Use zopen alt to select previous version to ensure known state"
       fi
-      ##TODORM mergeIntoSystem "${name}" "${ZOPEN_PKGINSTALL}/${installdirname}" "${ZOPEN_ROOTFS}"
-      ##TODORM misrc=$?
-      ##TODORM printDebug "The merge complete with: ${misrc}"
     fi
 
     printVerbose "- Checking for env file"
