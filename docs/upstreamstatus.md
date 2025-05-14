@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-05-13 06:10:33 EDT.*
+*Report generated on: 2025-05-14 06:10:25 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 227
-- **Total Current Lines of Code (LOC) in Patches:** 29,322
-- **Total Number of Current Patch Files:** 691
-- **Average Current Patch LOC per Project:** 129.17
-- **Average Current Patch Count per Project:** 3.04
+- **Total Current Lines of Code (LOC) in Patches:** 29,457
+- **Total Number of Current Patch Files:** 693
+- **Average Current Patch LOC per Project:** 129.77
+- **Average Current Patch Count per Project:** 3.05
 
 ### Historical Trends (All Projects)
 
@@ -50,6 +50,7 @@
 | [rsyncport](#repo-rsyncport) | 341 | +0 | 6 |
 | [vimport](#repo-vimport) | 335 | +0 | 12 |
 | [phpport](#repo-phpport) | 320 | +0 | 13 |
+| [mimallocport](#repo-mimallocport) | 313 | +313 | 6 |
 | [neovimport](#repo-neovimport) | 312 | +0 | 12 |
 | [conanport](#repo-conanport) | 299 | +0 | 8 |
 | [zipport](#repo-zipport) | 297 | +0 | 8 |
@@ -63,7 +64,6 @@
 | [findutilsport](#repo-findutilsport) | 199 | +0 | 10 |
 | [ninjaport](#repo-ninjaport) | 196 | +0 | 8 |
 | [diffutilsport](#repo-diffutilsport) | 184 | +0 | 8 |
-| [mimallocport](#repo-mimallocport) | 178 | +178 | 4 |
 | [protobufport](#repo-protobufport) | 174 | +0 | 8 |
 | [groffport](#repo-groffport) | 165 | +0 | 13 |
 | [autoconfport](#repo-autoconfport) | 151 | +0 | 6 |
@@ -1124,6 +1124,31 @@
 
 ---
 
+<a id="repo-mimallocport"></a>
+## mimallocport
+
+- **Origin Date (First Commit):** 2025-05-13
+- **Current Patch LOC:** 313
+- **Current Patch Count:** 6
+
+### Historical Trends
+
+![LOC Trend for mimallocport](images/upstream/mimallocport_current_loc_trend.png)
+![Count Trend for mimallocport](images/upstream/mimallocport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/alloc-override.c.patch` | `patches` | 13 |
+| `patches/init.c.patch` | `patches` | 55 |
+| `patches/internal.h.patch` | `patches` | 16 |
+| `patches/options.c.patch` | `patches` | 67 |
+| `patches/prim.c.patch` | `patches` | 135 |
+| `patches/prim.h.patch` | `patches` | 27 |
+
+---
+
 <a id="repo-neovimport"></a>
 ## neovimport
 
@@ -1460,29 +1485,6 @@
 | `patches/depcomp.patch` | `patches` | 30 |
 | `patches/help2man.patch` | `patches` | 10 |
 | `patches/skip_test.patch` | `patches` | 53 |
-
----
-
-<a id="repo-mimallocport"></a>
-## mimallocport
-
-- **Origin Date (First Commit):** 2025-05-13
-- **Current Patch LOC:** 178
-- **Current Patch Count:** 4
-
-### Historical Trends
-
-![LOC Trend for mimallocport](images/upstream/mimallocport_current_loc_trend.png)
-![Count Trend for mimallocport](images/upstream/mimallocport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/alloc-override.c.patch` | `patches` | 13 |
-| `patches/internal.h.patch` | `patches` | 16 |
-| `patches/prim.c.patch` | `patches` | 135 |
-| `patches/prim.h.patch` | `patches` | 14 |
 
 ---
 

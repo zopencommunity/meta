@@ -10,6 +10,7 @@
 - 2024-12-11: [Update bash-completion-version to 20060301 from V.R.M](https://github.com/zopencommunity/bash-completionport/pull/1) ❌
 
 ### buildkiteport
+- 2025-05-13: [Update buildkite-version to 3.97.2 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/57) ❌
 - 2025-05-12: [Update buildkite-version to 3.97.1 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/56) ❌
 - 2025-04-28: [Update buildkite-version to 3.97.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/55) ❌
 - 2025-04-10: [Update buildkite-version to 3.96.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/54) ❌
@@ -100,6 +101,7 @@
 - 2025-03-07: [Update frp-version to 0.61.2 from 0.61.1](https://github.com/zopencommunity/frpport/pull/13) ✅
 
 ### fxport
+- 2025-05-13: [Update fx-version to 36.0.0 from 34.0.0](https://github.com/zopencommunity/fxport/pull/5) ❌
 - 2024-06-27: [Update fx-version to 35.0.0 from 34.0.0](https://github.com/zopencommunity/fxport/pull/2) ✅
 
 ### fzfport
@@ -703,5 +705,5 @@
 ---
 
 
-> Last updated: 2025-05-13 06:06:55 EDT
+> Last updated: 2025-05-14 06:07:14 EDT
 
