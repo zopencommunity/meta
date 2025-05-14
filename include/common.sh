@@ -2221,8 +2221,9 @@ spaceValidate(){
     # there might be a need to download the package into the cache - if
     # autocacheclean is active, then this should be temporary; if not, then the
     # cache will grow - infrom the user either way
-    printVerbose "Reinstall of package, so pacakge file size delta should be 0!"
+    printVerbose "Reinstall of package, so package file size delta should be 0!"
     spaceRequiredMB=$(echo "scale=0; (${cacheBytes}) / (1024 * 1024)" | bc)
+    spaceRequiredKb=$(( cacheBytes / 1024 ))
     if ! isCacheClean=$(zopen config --get autocacheclean); then
       printError "Could not determine autocacheclean status"
     fi
@@ -2234,15 +2235,16 @@ spaceValidate(){
   else
     # If not a reinstall, assume there is a need for both the package and the expanded
     # package to be required
+    spaceRequiredKb=$(( (cacheBytes + packageBytes) / 1024 ))
     spaceRequiredMB=$(echo "scale=0; (${cacheBytes} + ${packageBytes}) / (1024 * 1024)" | bc)
     printInfo "After this operation, ${spaceRequiredMB} MB of additional disk space will be used."
+    printInfo "After this operation, $(formattedFileSize ${spaceRequiredKb}) of additional disk space will be used."
   fi
-
-  availableSpaceMB=$(/bin/df -m "${ZOPEN_ROOTFS}" | sed "1d" | awk '{ print $3 }' | awk -F'/' '{ print $1 }')
-  if [ "${availableSpaceMB}" -lt "${spaceRequiredMB}" ]; then
-    printWarning "Your zopen file-system (${ZOPEN_ROOTFS}) only has ${availableSpaceMB} MB of available space."
+  availableSpaceKb=$(/bin/df -k "${ZOPEN_ROOTFS}" | sed "1d" | awk '{ print $3 }' | awk -F'/' '{ print $1 }')
+  if [ "${availableSpaceKb}" -lt "${spaceRequiredKb}" ]; then
+    printWarning "Your zopen file-system (${ZOPEN_ROOTFS}) only has $(formattedFileSize "${availableSpaceKb}") of available space."
   fi
-  if ! ${yesToPrompts} || [ "${availableSpaceMB}" -lt "${spaceRequiredMB}" ]; then
+  if ! ${yesToPrompts} || [ "${availableSpaceKb}" -lt "${spaceRequiredKb}" ]; then
     while true; do
       /bin/printf "Do you want to continue [y/n/a]? "
       read continueInstall < /dev/tty
