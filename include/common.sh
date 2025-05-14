@@ -2451,10 +2451,16 @@ installFromPax()
 
   printDebug "Check for existing directory for version '${installdirname}'"
   if [ -d "${ZOPEN_PKGINSTALL}/${installdirname}" ]; then
-    printVerbose "- Clearing existing directory and contents"
-    rm -rf "${ZOPEN_PKGINSTALL}/${installdirname}"
+    printVerbose "- Clearing existing directory and contents at '${ZOPEN_PKGINSTALL}/${installdirname}'"
+    rm -rf "${ZOPEN_PKGINSTALL:?}/${installdirname}" || printError "Installation directory resolved to '/'; cannot recursively clear contents!"
   fi
 
+  if [ ! -e "${pax}" ]; then
+    printError "Pax file to install not available at '${pax}'"
+  elif [ ! -r "${pax}" ]; then
+    printError "Pax file to install not readable at '${pax}'"
+  fi
+ 
   # shellcheck disable=SC2154
   if ! runLogProgress "pax -rf ${pax} -p p ${paxredirect} ${redirectToDevNull}" \
       "Expanding file: ${pax}" "Expanded file:  ${pax}"; then
