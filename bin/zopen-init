@@ -53,6 +53,14 @@ Options:
 
   -h, -?, --help
           display this help and exit
+  
+  --offline
+          Perform the base installation of the zopen environment without
+          attempting to update any of the bootstrapping packages. For
+          use in air-gapped environments or where a custom package
+          repository will be configed
+          Note: Post-configuration of alternate package sources might be 
+          required.
 
   --re-init
           Re-initializes a previous zopen environment or
@@ -122,6 +130,7 @@ debug=false
 yesToPrompts=false
 reinitExisting=false
 appendToProfile=false
+offlineInstall=false
 releaselineDev=false
 refresh=false
 rebuildRepoConfig=false
@@ -161,6 +170,9 @@ while [ $# -gt 0 ]; do
       ;;
     "--noenable-stats" )
       enableStats=false
+      ;;
+    "--offline" )
+      offlineInstall=true
       ;;
     "-h" | "--help" | "-?")
       printHelp
@@ -750,5 +762,5 @@ generateDefaultRepository
 generateZopenConfig
 generateAnalyticsConfiguration
 [ -e "${ZOPEN_ROOTFS}/var/lib/zopen/packageDB.json" ] || createInitialPackageDB
-updateBootstrappedTools
+! ${offlineInstall} && updateBootstrappedTools
 deinit
