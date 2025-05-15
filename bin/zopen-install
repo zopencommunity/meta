@@ -73,6 +73,8 @@ Options:
   --release-line [stable|dev]
                            the release line to install from
   --select                 select a version to install from available versions
+  --skip-broken            continue installing other packages as part of a
+                           transaction where a package failed to install                           
   --skip-verify            skips the package verification allowing un-trusted
                            packages. Caveat usor!
   -v, --verbose            run in verbose mode
@@ -120,6 +122,7 @@ reinstallDeps=false
 installOrUpgrade=false
 # shellcheck disable=SC2034
 nosymlink=false
+skip_broken=false
 # shellcheck disable=SC2034
 skipupgrade=false
 skipverify=false
@@ -148,6 +151,7 @@ while [ $# -gt 0 ]; do
       installOrUpgrade=true  # Upgrade package or install if not present
       ;;
     "--bypass-prereq-checks")
+      # shellcheck disable=SC2034
       bypassPrereqs=true 
       ;;
     "--no-symlink")
@@ -172,6 +176,10 @@ while [ $# -gt 0 ]; do
     "--noset-active" | "--no-set-active") # Deprecate --no-set-active for consistency
       # shellcheck disable=SC2034
       setactive=false  # Install package as normal but keep existing installation as active
+      ;;
+    "--skip-broken" | "-sb")
+      # shellcheck disable=SC2034
+      skip_broken=true
       ;;
     "--skip-verify" | "-sv")
       # shellcheck disable=SC2034

@@ -77,6 +77,10 @@ Variables
           Tells zopen install whether to install packages from the STABLE line
           or from the DEV line. DEV packages will be newer but might exhibit
           unexpected behaviour. The default is to use STABLE packages.
+      
+      skip_broken [integer:0|1]
+          Tells zopen that if during a transation an action fails, report the
+          error and continue to the next action when possible.
 
 Notes:
   Configuration options are not validated in that any key/value pairs can

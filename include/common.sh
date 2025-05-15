@@ -2436,7 +2436,12 @@ installFromPax()
 
 
   if ! processActionScripts "installPre" "${name}" "${metadatafile}" "${pax}"; then
-    printError "Failed installation pre-requisite check(s) for '${name}'. Correct previous errors and retry command"
+    skip_broken=$(jq -re '.skip_broken' "${ZOPEN_JSON_CONFIG}")
+    if [ "${skip_broken}" -ne 1 ]; then
+      printError "Failed installation pre-requisite check(s) for '${name}'. Correct previous errors and retry command"
+    fi
+    printSoftError "Skipping package '${name}' due to failed pre-requisite check(s)"
+    return 0 # 0 as we have handled the issue
   fi
 
   # Store current installation directory (if exists)

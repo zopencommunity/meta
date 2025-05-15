@@ -455,7 +455,8 @@ generateJsonConfiguration()
       OVERRIDE_ZOS_TOOLS=$(jqw -r '.override_zos_tools' $jsonConfig)
     fi
     autocacheclean=$(jqw -r '.autocacheclean' "${jsonConfig}")
-    autopkgpurge=$(jqw -r '.autopkgpurge' "${jsonConfig}")    
+    autopkgpurge=$(jqw -r '.autopkgpurge' "${jsonConfig}")
+    skip_broken=$(jqw -r '.skip_broken' "${jsonConfig}")  
   fi
 
   if ${releaselineDev}; then
@@ -489,6 +490,14 @@ generateJsonConfiguration()
        autopkgpurge=0
        ;;
   esac
+  case "${skip_broken:=0}" in
+    "0"|"1") :;; # Valid value
+    "null") skip_broken=0 # Default to false
+        ;;
+    *) showConfigParmWarning "skip_broken" "${skip_broken}" "0|1" "0"
+       skip_broken=0
+       ;;
+  esac
   case "${OVERRIDE_ZOS_TOOLS}" in
     "true"|"false") :;; # Valid value
     "null") OVERRIDE_ZOS_TOOLS=false ;; # No entry in config file
@@ -504,7 +513,8 @@ generateJsonConfiguration()
       "is_collecting_stats": ${isCollectingStats},
       "override_zos_tools": ${OVERRIDE_ZOS_TOOLS},
       "autocacheclean": ${autocacheclean},
-      "autopkgpurge": ${autopkgpurge}
+      "autopkgpurge": ${autopkgpurge},
+      "skip_broken": ${skip_broken}
     }
 zz
   else
