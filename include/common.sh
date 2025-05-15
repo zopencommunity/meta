@@ -47,12 +47,14 @@ addCleanupTrapCmd(){
 }
 
 cleanup() {
+  ogExitCode=$?  # Save the original exit code
   if [ -f "${tmpscriptfile}" ] && [ -s "${tmpscriptfile}" ]; then
       # Execute the commands in the cleanup file by sourcing it
       # shellcheck disable=SC1090
       . "${tmpscriptfile}" > /dev/null 2>&1
       rm "${tmpscriptfile}"
   fi
+  return ${ogExitCode}
 }
 
 addCleanupTrapCmd2(){
@@ -795,7 +797,10 @@ mutexFree()
   mutex=$1
   lockdir="${ZOPEN_ROOTFS}/var/lock"
   mutex="${lockdir}/${mutex}"
-  [ -e "${mutex}" ] && rm -f ${mutex}
+  if [ -e "${mutex}" ]; then
+    rm -f ${mutex}
+  fi
+  return 0
 }
 
 relativePath2()
