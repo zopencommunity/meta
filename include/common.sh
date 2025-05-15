@@ -1199,6 +1199,7 @@ runInBackgroundWithTimeoutAndLog()
   printVerbose "${command} with timeout of ${timeout}s."
   eval "${command} &; TEEPID=$!"
   PID=$!
+  [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""  # Disable cmd trace if active
   n=0
   while [ ${n} -le ${timeout} ]; do
     kill -0 "${PID}" 2> /dev/null
@@ -1208,12 +1209,14 @@ runInBackgroundWithTimeoutAndLog()
         chtag -r "${SSH_TTY}"
       fi
       rc=$?
+      [ -n "${xtrc}" ] && set -x  # Re-enable cmd trace
       return ${rc}
     else
       sleep 1
       n=$(( n + 1))
     fi
   done
+  [ -n "${xtrc}" ] && set -x # Re0enable cmd trace
   kill -9 "${PID}" 2>/dev/null
   kill -9 "${TEEPID}" 2>/dev/null
   printError "TIMEOUT: (PID: ${PID}): ${command}"
