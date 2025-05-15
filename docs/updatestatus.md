@@ -101,6 +101,7 @@
 - 2025-03-07: [Update frp-version to 0.61.2 from 0.61.1](https://github.com/zopencommunity/frpport/pull/13) ✅
 
 ### fxport
+- 2025-05-14: [Update fx-version to 36.0.1 from 34.0.0](https://github.com/zopencommunity/fxport/pull/6) ❌
 - 2025-05-13: [Update fx-version to 36.0.0 from 34.0.0](https://github.com/zopencommunity/fxport/pull/5) ❌
 - 2024-06-27: [Update fx-version to 35.0.0 from 34.0.0](https://github.com/zopencommunity/fxport/pull/2) ✅
 
@@ -160,9 +161,6 @@
 - 2025-04-20: [Update gperf-version to 3.3 from 3.1](https://github.com/zopencommunity/gperfport/pull/9) ❌
 - 2025-04-07: [Update gperf-version to 3.2 from 3.1](https://github.com/zopencommunity/gperfport/pull/7) ✅
 - 2025-04-14: [Update gperf-version to 3.2.1 from 3.1](https://github.com/zopencommunity/gperfport/pull/8) ✅
-
-### gpgport
-- 2025-05-10: [Update gpg-version to 2.5.6 from 2.5.5](https://github.com/zopencommunity/gpgport/pull/47) ✅
 
 ### grafanaport
 - 2025-05-10: [Update grafana-version to 12.0.0 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/21) ❌
@@ -292,11 +290,6 @@
 ### patchport
 - 2025-03-30: [Update patch-version to 2.8 from 2.7](https://github.com/zopencommunity/patchport/pull/7) ❌
 - 2023-11-05: [Update patch-version to 2.7.6 from 2.7](https://github.com/zopencommunity/patchport/pull/3) ❓
-
-### perlport
-- 2025-04-22: [Update perl-version to 5.41.12 from 5.41.9](https://github.com/zopencommunity/perlport/pull/110) ❌
-- 2025-04-21: [Update perl-version to 5.41.11 from 5.41.9](https://github.com/zopencommunity/perlport/pull/109) ❌
-- 2025-03-22: [Update perl-version to 5.41.10 from 5.41.9](https://github.com/zopencommunity/perlport/pull/108) ❌
 
 ### phpport
 - 2025-05-10: [Update php-version to 8.4.7 from 8.2.13](https://github.com/zopencommunity/phpport/pull/34) ❌
@@ -510,7 +503,7 @@
 - ✅ expatport - [![Bump Status](https://github.com/zopencommunity/expatport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/expatport/actions/workflows/bump.yml)
 - ✅ expectport - [![Bump Status](https://github.com/zopencommunity/expectport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/expectport/actions/workflows/bump.yml)
 - ✅ findutilsport - [![Bump Status](https://github.com/zopencommunity/findutilsport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/findutilsport/actions/workflows/bump.yml)
-- ❌ fishport - Workflow not configured
+- ✅ fishport - [![Bump Status](https://github.com/zopencommunity/fishport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/fishport/actions/workflows/bump.yml)
 - ✅ flexport - [![Bump Status](https://github.com/zopencommunity/flexport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/flexport/actions/workflows/bump.yml)
 - ✅ fqport - [![Bump Status](https://github.com/zopencommunity/fqport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/fqport/actions/workflows/bump.yml)
 - ✅ frpport - [![Bump Status](https://github.com/zopencommunity/frpport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/frpport/actions/workflows/bump.yml)
@@ -539,7 +532,7 @@
 - ❌ godsectport - Workflow not configured
 - ✅ gperfport - [![Bump Status](https://github.com/zopencommunity/gperfport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/gperfport/actions/workflows/bump.yml)
 - ✅ gpgport - [![Bump Status](https://github.com/zopencommunity/gpgport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/gpgport/actions/workflows/bump.yml)
-- ❌ gradleport - Workflow not configured
+- ✅ gradleport - [![Bump Status](https://github.com/zopencommunity/gradleport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/gradleport/actions/workflows/bump.yml)
 - ✅ grafanaport - [![Bump Status](https://github.com/zopencommunity/grafanaport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/grafanaport/actions/workflows/bump.yml)
 - ✅ grepport - [![Bump Status](https://github.com/zopencommunity/grepport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/grepport/actions/workflows/bump.yml)
 - ✅ groffport - [![Bump Status](https://github.com/zopencommunity/groffport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/groffport/actions/workflows/bump.yml)
@@ -554,6 +547,7 @@
 - ❌ iperfport - Workflow not configured
 - ✅ janssonport - [![Bump Status](https://github.com/zopencommunity/janssonport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/janssonport/actions/workflows/bump.yml)
 - ✅ jdport - [![Bump Status](https://github.com/zopencommunity/jdport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/jdport/actions/workflows/bump.yml)
+- ✅ jemallocport - [![Bump Status](https://github.com/zopencommunity/jemallocport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/jemallocport/actions/workflows/bump.yml)
 - ❌ jenkinsport - Workflow not configured
 - ❌ joeport - Workflow not configured
 - ✅ jqport - [![Bump Status](https://github.com/zopencommunity/jqport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/jqport/actions/workflows/bump.yml)
@@ -700,10 +694,10 @@
 
 </details>
 
-**Summary:** 194 active | 47 missing
+**Summary:** 197 active | 45 missing
 
 ---
 
 
-> Last updated: 2025-05-14 06:07:14 EDT
+> Last updated: 2025-05-15 06:06:54 EDT
 

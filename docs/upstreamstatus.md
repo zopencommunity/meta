@@ -1,13 +1,13 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-05-14 06:10:25 EDT.*
+*Report generated on: 2025-05-15 06:10:40 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 227
-- **Total Current Lines of Code (LOC) in Patches:** 29,457
-- **Total Number of Current Patch Files:** 693
-- **Average Current Patch LOC per Project:** 129.77
+- **Total Projects Analyzed:** 228
+- **Total Current Lines of Code (LOC) in Patches:** 29,788
+- **Total Number of Current Patch Files:** 695
+- **Average Current Patch LOC per Project:** 130.65
 - **Average Current Patch Count per Project:** 3.05
 
 ### Historical Trends (All Projects)
@@ -59,6 +59,7 @@
 | [libarchiveport](#repo-libarchiveport) | 237 | +19 | 6 |
 | [zstdport](#repo-zstdport) | 236 | +0 | 4 |
 | [llamacppport](#repo-llamacppport) | 236 | +0 | 1 |
+| [fishport](#repo-fishport) | 233 | +233 | 1 |
 | [mesonport](#repo-mesonport) | 229 | +0 | 9 |
 | [gettextport](#repo-gettextport) | 206 | +0 | 7 |
 | [findutilsport](#repo-findutilsport) | 199 | +0 | 10 |
@@ -85,6 +86,7 @@
 | [victoriametricsport](#repo-victoriametricsport) | 107 | +0 | 3 |
 | [zlib-ngport](#repo-zlib-ngport) | 100 | +0 | 3 |
 | [pkgconfigport](#repo-pkgconfigport) | 98 | +0 | 1 |
+| [jemallocport](#repo-jemallocport) | 98 | +98 | 1 |
 | [doxygenport](#repo-doxygenport) | 97 | +0 | 5 |
 | [libiconvport](#repo-libiconvport) | 96 | +0 | 4 |
 | [depot_toolsport](#repo-depot-toolsport) | 91 | +0 | 1 |
@@ -250,7 +252,6 @@
 | [glowport](#repo-glowport) | 0 | +0 | 0 |
 | [sccport](#repo-sccport) | 0 | +0 | 0 |
 | [apr-utilport](#repo-apr-utilport) | 0 | +0 | 0 |
-| [fishport](#repo-fishport) | 0 | N/A | 0 |
 
 ---
 
@@ -1351,6 +1352,26 @@
 
 ---
 
+<a id="repo-fishport"></a>
+## fishport
+
+- **Origin Date (First Commit):** 2025-05-14
+- **Current Patch LOC:** 233
+- **Current Patch Count:** 1
+
+### Historical Trends
+
+![LOC Trend for fishport](images/upstream/fishport_current_loc_trend.png)
+![Count Trend for fishport](images/upstream/fishport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/PR1.patch` | `patches` | 233 |
+
+---
+
 <a id="repo-mesonport"></a>
 ## mesonport
 
@@ -1974,6 +1995,26 @@
 
 ![LOC Trend for pkgconfigport](images/upstream/pkgconfigport_current_loc_trend.png)
 ![Count Trend for pkgconfigport](images/upstream/pkgconfigport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/PR1.patch` | `patches` | 98 |
+
+---
+
+<a id="repo-jemallocport"></a>
+## jemallocport
+
+- **Origin Date (First Commit):** 2025-05-14
+- **Current Patch LOC:** 98
+- **Current Patch Count:** 1
+
+### Historical Trends
+
+![LOC Trend for jemallocport](images/upstream/jemallocport_current_loc_trend.png)
+![Count Trend for jemallocport](images/upstream/jemallocport_current_count_trend.png)
 
 ### Current Patch Details
 
@@ -5137,24 +5178,6 @@
 ## apr-utilport
 
 - **Origin Date (First Commit):** 2025-05-05
-- **Current Patch LOC:** 0
-- **Current Patch Count:** 0
-
-### Historical Trends
-
-*(Patch LOC trend graph not generated)*
-*(Patch count trend graph not generated)*
-
-### Current Patch Details
-
-*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
-
----
-
-<a id="repo-fishport"></a>
-## fishport
-
-- **Origin Date (First Commit):** Unknown
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 
