@@ -145,6 +145,7 @@
 - 2025-02-14: [Update glab-version to 1.53.0 from 1.52.0](https://github.com/zopencommunity/gitlabcliport/pull/23) ✅
 
 ### gitlab-runnerport
+- 2025-05-17: [Update gitlab-runner-version to 18.0.1 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/41) ❌
 - 2025-05-16: [Update gitlab-runner-version to 18.0.0 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/40) ❌
 - 2025-05-10: [Update gitlab-runner-version to 17.11.1 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/39) ❌
 - 2025-04-17: [Update gitlab-runner-version to 17.11.0 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/38) ❌
@@ -705,5 +706,5 @@
 ---
 
 
-> Last updated: 2025-05-17 06:06:38 EDT
+> Last updated: 2025-05-18 06:06:34 EDT
 
