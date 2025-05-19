@@ -1556,12 +1556,20 @@ downloadJSONCacheIfExpired()
     fi
     chtag -tc 819 "${cacheTimestampCurrent}"
 
-    if [ -f "${fileToCache}" ] \
-       && [ -f "${cacheTimestamp}" ] \
-       && grep -q 'ETag' "${cacheTimestamp}" \
-       && [ "$(grep 'ETag' "${cacheTimestampCurrent}")" = "$(grep 'ETag' "${cacheTimestamp}")" ]; then
-      # Metadata cache unchanged
-      return
+    if [ -f "${fileToCache}" ] && [ -f "${cacheTimestamp}" ]; then
+      # Extract eyecatchers - either ETag or Last-Modified depending on repo type
+      prevETag=$(grep -i '^ETag' "${cacheTimestamp}")
+      currETag=$(grep -i '^ETag' "${cacheTimestampCurrent}")
+      prevLastMod=$(grep -i '^Last-Modified' "${cacheTimestamp}")
+      currLastMod=$(grep -i '^Last-Modified' "${cacheTimestampCurrent}")
+      # Compare values if they exist and match - if they do, then the cache is current
+      if [ -n "$prevETag" ] && [ -n "$currETag" ]; then
+        printVerbose "Comparing previous ETag '${prevETag}' with current '${currETag}"
+        [ "$prevETag" = "$currETag" ] && return
+      elif [ -n "$prevLastMod" ] && [ -n "$currLastMod" ]; then
+        printVerbose "Comparing previous ETag '${prevLastMod}' with current '${currLastMod}"
+        [ "$prevLastMod" = "$currLastMod" ] && return
+      fi
     fi
 
     printVerbose "Replacing old timestamp with latest."
