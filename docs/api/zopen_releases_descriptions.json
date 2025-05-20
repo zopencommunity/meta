@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2025-05-16T11:25:52+00:00Z",
+  "generation_timestamp_utc": "2025-05-20T16:02:35+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -229,6 +229,7 @@
     "gflags": "",
     "doom-ascii": "DooM in the terminal!",
     "mimalloc": "",
-    "jemalloc": "Implementation of malloc emphasizing fragmentation avoidance"
+    "jemalloc": "Implementation of malloc emphasizing fragmentation avoidance",
+    "readline": "The GNU Readline library provides a set of functions for use by applications that allow users to edit command lines as they are typed in"
   }
 }
