@@ -183,6 +183,9 @@
 - 2024-07-24: [Update grafana-version to 11.1.2 from 11.0.0](https://github.com/zopencommunity/grafanaport/pull/4) ❌
 - 2024-06-25: [Update grafana-version to 11.1.0 from 11.0.0](https://github.com/zopencommunity/grafanaport/pull/2) ❌
 
+### helloport
+- 2025-05-19: [Update hello-version to 2.12.2 from 2.12.1](https://github.com/zopencommunity/helloport/pull/11) ❌
+
 ### htopport
 - 2025-04-11: [Update htop-version to 3.4.1 from 3.2.2](https://github.com/zopencommunity/htopport/pull/10) ❌
 - 2025-03-10: [Update htop-version to 3.4.0 from 3.2.2](https://github.com/zopencommunity/htopport/pull/9) ❌
@@ -320,7 +323,7 @@
 - 2025-05-12: [Update poco-version to 1.14.2 from 1.12.5p2](https://github.com/zopencommunity/pocoport/pull/10) ❌
 - 2025-02-13: [Update poco-version to 1.14.1 from 1.12.5p2](https://github.com/zopencommunity/pocoport/pull/9) ❌
 - 2024-12-02: [Update poco-version to 1.14.0 from 1.12.5p2](https://github.com/zopencommunity/pocoport/pull/7) ❌
-- 2024-04-05: [Update poco-version to 1.13.3 from 1.12.5p2](https://github.com/zopencommunity/pocoport/pull/5) ❌
+- 2024-04-05: [Update poco-version to 1.13.3 from 1.12.5p2](https://github.com/zopencommunity/pocoport/pull/5) ❓
 - 2024-02-20: [Update poco-version to 1.13.2 from 1.12.5p2](https://github.com/zopencommunity/pocoport/pull/4) ❓
 - 2024-02-07: [Update poco-version to 1.13.1 from 1.12.5p2](https://github.com/zopencommunity/pocoport/pull/3) ❓
 - 2024-01-25: [Update poco-version to 1.13.0 from 1.12.5p2](https://github.com/zopencommunity/pocoport/pull/2) ❓
@@ -411,29 +414,6 @@
 - 2024-08-28: [Update victoriametrics-version to 1.103.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/7) ❌
 - 2024-08-01: [Update victoriametrics-version to 1.102.1 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/6) ❌
 - 2024-07-18: [Update victoriametrics-version to 1.102.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/5) ❌
-
-### vimport
-- 2025-05-11: [Update vim-version to 9.1.1380 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/107) ❌
-- 2025-05-10: [Update vim-version to 9.1.1370 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/106) ✅
-- 2025-04-29: [Update vim-version to 9.1.1350 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/105) ✅
-- 2025-04-24: [Update vim-version to 9.1.1340 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/104) ❌
-- 2025-04-21: [Update vim-version to 9.1.1330 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/103) ✅
-- 2025-04-18: [Update vim-version to 9.1.1320 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/102) ✅
-- 2025-04-17: [Update vim-version to 9.1.1310 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/101) ✅
-- 2025-04-15: [Update vim-version to 9.1.130 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/100) ❌
-- 2025-04-11: [Update vim-version to 9.1.1290 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/99) ✅
-- 2025-04-06: [Update vim-version to 9.1.1280 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/98) ❌
-- 2025-04-03: [Update vim-version to 9.1.1270 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/97) ✅
-- 2025-03-30: [Update vim-version to 9.1.1260 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/96) ✅
-- 2025-03-28: [Update vim-version to 9.1.1250 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/95) ✅
-- 2025-03-27: [Update vim-version to 9.1.1240 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/94) ✅
-- 2025-03-22: [Update vim-version to 9.1.1230 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/93) ✅
-- 2025-03-19: [Update vim-version to 9.1.1220 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/91) ✅
-- 2025-03-17: [Update vim-version to 9.1.1210 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/90) ✅
-- 2025-03-14: [Update vim-version to 9.1.120 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/89) ✅
-- 2025-03-10: [Update vim-version to 9.1.1190 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/88) ✅
-- 2025-03-08: [Update vim-version to 9.1.1180 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/87) ✅
-- 2025-03-05: [Update vim-version to 9.1.1170 from 9.1.1160](https://github.com/zopencommunity/vimport/pull/86) ✅
 
 ### xmltoport
 - 2024-10-10: [Update xmlto-version to 0.0.29 from 0.0.28](https://github.com/zopencommunity/xmltoport/pull/3) ❌
@@ -643,6 +623,7 @@
 - ❌ protobuf - Workflow not configured
 - ✅ protobufport - [![Bump Status](https://github.com/zopencommunity/protobufport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/protobufport/actions/workflows/bump.yml)
 - ✅ re2cport - [![Bump Status](https://github.com/zopencommunity/re2cport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/re2cport/actions/workflows/bump.yml)
+- ❌ readlineport - Workflow not configured
 - ✅ redisport - [![Bump Status](https://github.com/zopencommunity/redisport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/redisport/actions/workflows/bump.yml)
 - ✅ rsyncport - [![Bump Status](https://github.com/zopencommunity/rsyncport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/rsyncport/actions/workflows/bump.yml)
 - ✅ s5cmdport - [![Bump Status](https://github.com/zopencommunity/s5cmdport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/s5cmdport/actions/workflows/bump.yml)
@@ -701,10 +682,10 @@
 
 </details>
 
-**Summary:** 197 active | 45 missing
+**Summary:** 197 active | 46 missing
 
 ---
 
 
-> Last updated: 2025-05-19 06:07:04 EDT
+> Last updated: 2025-05-21 06:07:00 EDT
 
