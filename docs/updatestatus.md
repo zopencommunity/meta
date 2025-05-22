@@ -360,6 +360,7 @@
 - 2024-02-08: [Update tcl-version to 8.6.14 from 8.6.13](https://github.com/zopencommunity/tclport/pull/11) ❓
 
 ### terraformport
+- 2025-05-21: [Update terraform-version to 1.12.1 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/39) ❌
 - 2025-05-15: [Update terraform-version to 1.12.0 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/38) ❌
 - 2025-04-09: [Update terraform-version to 1.11.4 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/37) ❌
 - 2025-03-26: [Update terraform-version to 1.11.3 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/36) ❌
@@ -687,5 +688,5 @@
 ---
 
 
-> Last updated: 2025-05-21 06:07:00 EDT
+> Last updated: 2025-05-22 06:07:02 EDT
 
