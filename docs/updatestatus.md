@@ -78,6 +78,7 @@
 - 2025-04-11: [Update direnv-version to 2.36.0 from 2.35.0](https://github.com/zopencommunity/direnvport/pull/11) ❌
 
 ### duckdbport
+- 2025-05-22: [Update duckdb-version to 1.3.0 from 0.9.2](https://github.com/zopencommunity/duckdbport/pull/25) ❌
 - 2025-04-08: [Update duckdb-version to 1.2.2 from 0.9.2](https://github.com/zopencommunity/duckdbport/pull/24) ❌
 - 2025-03-06: [Update duckdb-version to 1.2.1 from 0.9.2](https://github.com/zopencommunity/duckdbport/pull/23) ❌
 - 2024-06-03: [Update duckdb-version to 1.0.0 from 0.9.2](https://github.com/zopencommunity/duckdbport/pull/13) ❌
@@ -206,6 +207,7 @@
 - 2024-03-07: [Update kotlin-version to 1.9.23 from 1.9.22](https://github.com/zopencommunity/kotlinport/pull/3) ❓
 
 ### lazygitport
+- 2025-05-22: [Update lazygit-version to 0.51.0 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/19) ❌
 - 2025-05-10: [Update lazygit-version to 0.50.0 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/18) ❌
 - 2025-04-14: [Update lazygit-version to 0.49.0 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/16) ❌
 - 2025-03-01: [Update lazygit-version to 0.48.0 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/15) ✅
@@ -416,6 +418,9 @@
 - 2024-08-01: [Update victoriametrics-version to 1.102.1 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/6) ❌
 - 2024-07-18: [Update victoriametrics-version to 1.102.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/5) ❌
 
+### vimport
+- 2025-05-22: [Update vim-version to 9.1.140 from 9.1.1390](https://github.com/zopencommunity/vimport/pull/110) ❌
+
 ### xmltoport
 - 2024-10-10: [Update xmlto-version to 0.0.29 from 0.0.28](https://github.com/zopencommunity/xmltoport/pull/3) ❌
 
@@ -623,6 +628,7 @@
 - ✅ promptersport - [![Bump Status](https://github.com/zopencommunity/promptersport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/promptersport/actions/workflows/bump.yml)
 - ❌ protobuf - Workflow not configured
 - ✅ protobufport - [![Bump Status](https://github.com/zopencommunity/protobufport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/protobufport/actions/workflows/bump.yml)
+- ❌ quiltport - Workflow not configured
 - ✅ re2cport - [![Bump Status](https://github.com/zopencommunity/re2cport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/re2cport/actions/workflows/bump.yml)
 - ❌ readlineport - Workflow not configured
 - ✅ redisport - [![Bump Status](https://github.com/zopencommunity/redisport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/redisport/actions/workflows/bump.yml)
@@ -633,6 +639,7 @@
 - ✅ sedport - [![Bump Status](https://github.com/zopencommunity/sedport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/sedport/actions/workflows/bump.yml)
 - ✅ shdocport - [![Bump Status](https://github.com/zopencommunity/shdocport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/shdocport/actions/workflows/bump.yml)
 - ✅ shufport - [![Bump Status](https://github.com/zopencommunity/shufport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/shufport/actions/workflows/bump.yml)
+- ❌ snappy-cport - Workflow not configured
 - ✅ spdlogport - [![Bump Status](https://github.com/zopencommunity/spdlogport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/spdlogport/actions/workflows/bump.yml)
 - ✅ sqliteport - [![Bump Status](https://github.com/zopencommunity/sqliteport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/sqliteport/actions/workflows/bump.yml)
 - ✅ sshpassport - [![Bump Status](https://github.com/zopencommunity/sshpassport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/sshpassport/actions/workflows/bump.yml)
@@ -683,10 +690,10 @@
 
 </details>
 
-**Summary:** 197 active | 46 missing
+**Summary:** 197 active | 48 missing
 
 ---
 
 
-> Last updated: 2025-05-22 06:07:02 EDT
+> Last updated: 2025-05-23 06:06:42 EDT
 

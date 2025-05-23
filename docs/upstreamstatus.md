@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-05-22 06:10:24 EDT.*
+*Report generated on: 2025-05-23 06:10:19 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 229
+- **Total Projects Analyzed:** 231
 - **Total Current Lines of Code (LOC) in Patches:** 29,788
 - **Total Number of Current Patch Files:** 695
-- **Average Current Patch LOC per Project:** 130.08
-- **Average Current Patch Count per Project:** 3.03
+- **Average Current Patch LOC per Project:** 128.95
+- **Average Current Patch Count per Project:** 3.01
 
 ### Historical Trends (All Projects)
 
@@ -253,6 +253,8 @@
 | [sccport](#repo-sccport) | 0 | +0 | 0 |
 | [apr-utilport](#repo-apr-utilport) | 0 | +0 | 0 |
 | [readlineport](#repo-readlineport) | 0 | +0 | 0 |
+| [quiltport](#repo-quiltport) | 0 | +0 | 0 |
+| [snappy-cport](#repo-snappy-cport) | 0 | +0 | 0 |
 
 ---
 
@@ -5197,6 +5199,42 @@
 ## readlineport
 
 - **Origin Date (First Commit):** 2025-05-20
+- **Current Patch LOC:** 0
+- **Current Patch Count:** 0
+
+### Historical Trends
+
+*(Patch LOC trend graph not generated)*
+*(Patch count trend graph not generated)*
+
+### Current Patch Details
+
+*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
+
+---
+
+<a id="repo-quiltport"></a>
+## quiltport
+
+- **Origin Date (First Commit):** 2025-05-22
+- **Current Patch LOC:** 0
+- **Current Patch Count:** 0
+
+### Historical Trends
+
+*(Patch LOC trend graph not generated)*
+*(Patch count trend graph not generated)*
+
+### Current Patch Details
+
+*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
+
+---
+
+<a id="repo-snappy-cport"></a>
+## snappy-cport
+
+- **Origin Date (First Commit):** 2025-05-22
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 
