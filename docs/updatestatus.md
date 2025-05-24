@@ -146,6 +146,7 @@
 - 2025-02-14: [Update glab-version to 1.53.0 from 1.52.0](https://github.com/zopencommunity/gitlabcliport/pull/23) ✅
 
 ### gitlab-runnerport
+- 2025-05-23: [Update gitlab-runner-version to 18.0.2 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/43) ❌
 - 2025-05-17: [Update gitlab-runner-version to 18.0.1 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/41) ❌
 - 2025-05-16: [Update gitlab-runner-version to 18.0.0 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/40) ❌
 - 2025-05-10: [Update gitlab-runner-version to 17.11.1 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/39) ❌
@@ -167,6 +168,7 @@
 - 2025-04-14: [Update gperf-version to 3.2.1 from 3.1](https://github.com/zopencommunity/gperfport/pull/8) ✅
 
 ### grafanaport
+- 2025-05-23: [Update grafana-version to 12.0.1 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/22) ❌
 - 2025-05-10: [Update grafana-version to 12.0.0 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/21) ❌
 - 2025-04-24: [Update grafana-version to 11.6.1 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/20) ❌
 - 2025-03-26: [Update grafana-version to 11.6.0 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/19) ❌
@@ -207,6 +209,7 @@
 - 2024-03-07: [Update kotlin-version to 1.9.23 from 1.9.22](https://github.com/zopencommunity/kotlinport/pull/3) ❓
 
 ### lazygitport
+- 2025-05-23: [Update lazygit-version to 0.51.1 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/20) ❌
 - 2025-05-22: [Update lazygit-version to 0.51.0 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/19) ❌
 - 2025-05-10: [Update lazygit-version to 0.50.0 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/18) ❌
 - 2025-04-14: [Update lazygit-version to 0.49.0 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/16) ❌
@@ -695,5 +698,5 @@
 ---
 
 
-> Last updated: 2025-05-23 06:06:42 EDT
+> Last updated: 2025-05-24 06:06:36 EDT
 
