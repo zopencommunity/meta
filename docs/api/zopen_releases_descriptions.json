@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2025-05-26T02:09:04+00:00Z",
+  "generation_timestamp_utc": "2025-05-26T03:47:45+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -232,6 +232,7 @@
     "jemalloc": "Implementation of malloc emphasizing fragmentation avoidance",
     "readline": "The GNU Readline library provides a set of functions for use by applications that allow users to edit command lines as they are typed in",
     "quilt": "Quilt allows you to easily manage large numbers of patches by keeping track of the changes each patch makes. Patches can be applied, un-applied, refreshed, and more.",
-    "snappy-c": "This is a C port of the google snappy compressor. The compressor is very fast with reasonable compression ratio. It is mainly useful for projects that cannot integrate C++ code, but want snappy. Also contains a command line tool, a benchmark, random test code and a fuzz tester."
+    "snappy-c": "This is a C port of the google snappy compressor. The compressor is very fast with reasonable compression ratio. It is mainly useful for projects that cannot integrate C++ code, but want snappy. Also contains a command line tool, a benchmark, random test code and a fuzz tester.",
+    "ccache": "Object-file caching compiler wrapper"
   }
 }
