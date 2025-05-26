@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-05-25 06:09:57 EDT.*
+*Report generated on: 2025-05-26 06:10:16 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 231
-- **Total Current Lines of Code (LOC) in Patches:** 29,788
-- **Total Number of Current Patch Files:** 695
-- **Average Current Patch LOC per Project:** 128.95
-- **Average Current Patch Count per Project:** 3.01
+- **Total Projects Analyzed:** 232
+- **Total Current Lines of Code (LOC) in Patches:** 29,954
+- **Total Number of Current Patch Files:** 696
+- **Average Current Patch LOC per Project:** 129.11
+- **Average Current Patch Count per Project:** 3.00
 
 ### Historical Trends (All Projects)
 
@@ -66,6 +66,7 @@
 | [ninjaport](#repo-ninjaport) | 196 | +0 | 8 |
 | [diffutilsport](#repo-diffutilsport) | 184 | +0 | 8 |
 | [protobufport](#repo-protobufport) | 174 | +0 | 8 |
+| [ccacheport](#repo-ccacheport) | 166 | +166 | 1 |
 | [groffport](#repo-groffport) | 165 | +0 | 13 |
 | [autoconfport](#repo-autoconfport) | 151 | +0 | 6 |
 | [moreutilsport](#repo-moreutilsport) | 151 | +0 | 1 |
@@ -1536,6 +1537,26 @@
 | `patches/port_def.inc.patch` | `patches` | 22 |
 | `patches/sysinfo.cc.patch` | `patches` | 26 |
 | `patches/time_zone_libc.cc.patch` | `patches` | 21 |
+
+---
+
+<a id="repo-ccacheport"></a>
+## ccacheport
+
+- **Origin Date (First Commit):** 2025-05-25
+- **Current Patch LOC:** 166
+- **Current Patch Count:** 1
+
+### Historical Trends
+
+![LOC Trend for ccacheport](images/upstream/ccacheport_current_loc_trend.png)
+![Count Trend for ccacheport](images/upstream/ccacheport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/PR1.patch` | `patches` | 166 |
 
 ---
 
