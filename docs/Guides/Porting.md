@@ -1,5 +1,14 @@
 # Porting to z/OS
 
+### Recommended Viewing
+
+If you're new to porting open source to z/OS, we recommend watching the following three short videos that walk through the development process:
+
+- [Part 1: Development Overview](https://ibm.box.com/s/s9s8opsmg4ktb36udyd6kd9a0ymgag4u)
+- [Part 2: Example of Porting a Project](https://ibm.box.com/s/xb4f4oc1ow3dedcz7hcfyjepo1fa5446)
+- [Part 3: Conclusion](https://ibm.box.com/s/yzg7ssuksjg1m6ws5bvcn1t3vb89nohj)
+
+
 ## Getting Started
 
 Before you get started with porting open source to z/OS, read the [Getting Started Guide](Pre-req.md) to set up your environment. We also recommend that you read the [contributing guide](https://github.com/zopencommunity/meta/blob/main/CONTRIBUTING.md).
