@@ -33,6 +33,9 @@
 - 2024-06-02: [Update caddy-version to 2.8.4 from 2.7.6](https://github.com/zopencommunity/caddyport/pull/2) ❌
 - 2024-05-30: [Update caddy-version to 2.8.1 from 2.7.6](https://github.com/zopencommunity/caddyport/pull/1) ❌
 
+### ccacheport
+- 2025-05-26: [Update ccache-version to 4.11.3 from V.R.M](https://github.com/zopencommunity/ccacheport/pull/1) ❌
+
 ### chezmoiport
 - 2025-05-10: [Update chezmoi-version to 2.62.3 from 2.62.2](https://github.com/zopencommunity/chezmoiport/pull/1) ❌
 
@@ -317,7 +320,7 @@
 - 2024-07-05: [Update php-version to 8.3.9 from 8.2.13](https://github.com/zopencommunity/phpport/pull/21) ❌
 - 2024-06-06: [Update php-version to 8.3.8 from 8.2.13](https://github.com/zopencommunity/phpport/pull/20) ❌
 - 2024-05-09: [Update php-version to 8.3.7 from 8.2.13](https://github.com/zopencommunity/phpport/pull/19) ❌
-- 2024-04-11: [Update php-version to 8.3.6 from 8.2.13](https://github.com/zopencommunity/phpport/pull/18) ❌
+- 2024-04-11: [Update php-version to 8.3.6 from 8.2.13](https://github.com/zopencommunity/phpport/pull/18) ❓
 - 2024-03-15: [Update php-version to 8.3.4 from 8.2.13](https://github.com/zopencommunity/phpport/pull/17) ❓
 - 2024-02-16: [Update php-version to 8.3.3 from 8.2.13](https://github.com/zopencommunity/phpport/pull/16) ❓
 - 2023-11-24: [Update php-version to 8.3.0 from 8.2.13](https://github.com/zopencommunity/phpport/pull/13) ❓
@@ -399,6 +402,7 @@
 - 2025-01-31: [Update tig-version to 2.5.11 from 2.5.9](https://github.com/zopencommunity/tigport/pull/9) ❌
 
 ### victoriametricsport
+- 2025-05-26: [Update victoriametrics-version to 1.118.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/28) ❌
 - 2025-05-16: [Update victoriametrics-version to 1.117.1 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/27) ❌
 - 2025-05-12: [Update victoriametrics-version to 1.117.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/26) ❌
 - 2025-04-28: [Update victoriametrics-version to 1.116.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/25) ❌
@@ -445,6 +449,7 @@
 <details open>
 <summary><b style="font-size: 28px;">Bump Automation Status</b></summary>
 
+- ✅ aflplusplusport - [![Bump Status](https://github.com/zopencommunity/aflplusplusport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/aflplusplusport/actions/workflows/bump.yml)
 - ✅ antport - [![Bump Status](https://github.com/zopencommunity/antport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/antport/actions/workflows/bump.yml)
 - ❌ aprport - Workflow not configured
 - ❌ apr-utilport - Workflow not configured
@@ -694,10 +699,10 @@
 
 </details>
 
-**Summary:** 198 active | 48 missing
+**Summary:** 199 active | 48 missing
 
 ---
 
 
-> Last updated: 2025-05-26 06:06:52 EDT
+> Last updated: 2025-05-27 06:07:04 EDT
 

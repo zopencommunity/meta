@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-05-26 06:10:16 EDT.*
+*Report generated on: 2025-05-27 06:11:13 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 232
-- **Total Current Lines of Code (LOC) in Patches:** 29,954
-- **Total Number of Current Patch Files:** 696
-- **Average Current Patch LOC per Project:** 129.11
-- **Average Current Patch Count per Project:** 3.00
+- **Total Projects Analyzed:** 233
+- **Total Current Lines of Code (LOC) in Patches:** 30,138
+- **Total Number of Current Patch Files:** 701
+- **Average Current Patch LOC per Project:** 129.35
+- **Average Current Patch Count per Project:** 3.01
 
 ### Historical Trends (All Projects)
 
@@ -65,6 +65,7 @@
 | [findutilsport](#repo-findutilsport) | 199 | +0 | 10 |
 | [ninjaport](#repo-ninjaport) | 196 | +0 | 8 |
 | [diffutilsport](#repo-diffutilsport) | 184 | +0 | 8 |
+| [aflplusplusport](#repo-aflplusplusport) | 184 | +184 | 5 |
 | [protobufport](#repo-protobufport) | 174 | +0 | 8 |
 | [ccacheport](#repo-ccacheport) | 166 | +166 | 1 |
 | [groffport](#repo-groffport) | 165 | +0 | 13 |
@@ -1510,6 +1511,30 @@
 | `patches/depcomp.patch` | `patches` | 30 |
 | `patches/help2man.patch` | `patches` | 10 |
 | `patches/skip_test.patch` | `patches` | 53 |
+
+---
+
+<a id="repo-aflplusplusport"></a>
+## aflplusplusport
+
+- **Origin Date (First Commit):** 2025-05-27
+- **Current Patch LOC:** 184
+- **Current Patch Count:** 5
+
+### Historical Trends
+
+![LOC Trend for aflplusplusport](images/upstream/aflplusplusport_current_loc_trend.png)
+![Count Trend for aflplusplusport](images/upstream/aflplusplusport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/GNUmakefile.patch` | `patches` | 16 |
+| `patches/afl-common.c.patch` | `patches` | 107 |
+| `patches/afl-fuzz-init.c.patch` | `patches` | 20 |
+| `patches/afl-fuzz-stats.c.patch` | `patches` | 22 |
+| `patches/common.h.patch` | `patches` | 19 |
 
 ---
 
