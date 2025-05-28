@@ -2320,6 +2320,19 @@ LABEL specification=1.0.0"
   cd - || exit
 }
 
+terminate()
+{
+  # Go cleanup
+  if [ -n "$GOPATH" ]; then
+    go clean -modcache
+  fi
+
+  
+  if [ -n "$GOCACHE" ]; then
+    go clean -cache
+  fi
+}
+
 generateZOSLIBHooks()
 {
   # Background:
@@ -2627,5 +2640,7 @@ if command -V "${ZOPEN_PRE_TERMINATE_CODE}" > /dev/null 2>&1; then
     printError "Pre terminate failed."
   fi
 fi
+
+terminate
 
 exit 0
