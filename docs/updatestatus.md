@@ -10,6 +10,7 @@
 - 2024-12-11: [Update bash-completion-version to 20060301 from V.R.M](https://github.com/zopencommunity/bash-completionport/pull/1) ❌
 
 ### buildkiteport
+- 2025-05-27: [Update buildkite-version to 3.98.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/58) ❌
 - 2025-05-13: [Update buildkite-version to 3.97.2 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/57) ❌
 - 2025-05-12: [Update buildkite-version to 3.97.1 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/56) ❌
 - 2025-04-28: [Update buildkite-version to 3.97.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/55) ❌
@@ -704,5 +705,5 @@
 ---
 
 
-> Last updated: 2025-05-27 06:07:04 EDT
+> Last updated: 2025-05-28 06:07:11 EDT
 

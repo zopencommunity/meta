@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-05-27 06:11:13 EDT.*
+*Report generated on: 2025-05-28 06:10:37 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 233
-- **Total Current Lines of Code (LOC) in Patches:** 30,138
-- **Total Number of Current Patch Files:** 701
-- **Average Current Patch LOC per Project:** 129.35
-- **Average Current Patch Count per Project:** 3.01
+- **Total Current Lines of Code (LOC) in Patches:** 30,311
+- **Total Number of Current Patch Files:** 703
+- **Average Current Patch LOC per Project:** 130.09
+- **Average Current Patch Count per Project:** 3.02
 
 ### Historical Trends (All Projects)
 
@@ -52,6 +52,7 @@
 | [phpport](#repo-phpport) | 320 | +0 | 13 |
 | [mimallocport](#repo-mimallocport) | 313 | +313 | 6 |
 | [neovimport](#repo-neovimport) | 312 | +0 | 12 |
+| [libgcryptport](#repo-libgcryptport) | 302 | +173 | 9 |
 | [conanport](#repo-conanport) | 299 | +0 | 8 |
 | [zipport](#repo-zipport) | 297 | +0 | 8 |
 | [redisport](#repo-redisport) | 263 | +0 | 1 |
@@ -74,7 +75,6 @@
 | [jqport](#repo-jqport) | 146 | +0 | 8 |
 | [libserdesport](#repo-libserdesport) | 142 | +0 | 4 |
 | [tclport](#repo-tclport) | 130 | +0 | 5 |
-| [libgcryptport](#repo-libgcryptport) | 129 | +0 | 7 |
 | [pinentryport](#repo-pinentryport) | 124 | +0 | 5 |
 | [libssh2port](#repo-libssh2port) | 122 | +0 | 5 |
 | [m4port](#repo-m4port) | 120 | +0 | 5 |
@@ -1186,6 +1186,34 @@
 
 ---
 
+<a id="repo-libgcryptport"></a>
+## libgcryptport
+
+- **Origin Date (First Commit):** 2023-04-21
+- **Current Patch LOC:** 302
+- **Current Patch Count:** 9
+
+### Historical Trends
+
+![LOC Trend for libgcryptport](images/upstream/libgcryptport_current_loc_trend.png)
+![Count Trend for libgcryptport](images/upstream/libgcryptport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/Makefile.in.patch` | `patches` | 13 |
+| `patches/configure.patch` | `patches` | 33 |
+| `patches/doc_Makefile.in.patch` | `patches` | 13 |
+| `patches/fips.c.patch` | `patches` | 87 |
+| `patches/g10lib.h.patch` | `patches` | 17 |
+| `patches/longlong.h.patch` | `patches` | 22 |
+| `patches/rndgetentropy.c.patch` | `patches` | 17 |
+| `patches/secmem.c.patch` | `patches` | 14 |
+| `patches/t-thread-local.c.patch` | `patches` | 86 |
+
+---
+
 <a id="repo-conanport"></a>
 ## conanport
 
@@ -1733,32 +1761,6 @@
 | `patches/PR1/remove_oe_sockets_hardcode.patch` | `patches` | 17 |
 | `patches/PR2/tclUnixNotfy.c.patch` | `patches` | 15 |
 | `patches/PR2/tclUnixThrd.c.patch` | `patches` | 44 |
-
----
-
-<a id="repo-libgcryptport"></a>
-## libgcryptport
-
-- **Origin Date (First Commit):** 2023-04-21
-- **Current Patch LOC:** 129
-- **Current Patch Count:** 7
-
-### Historical Trends
-
-![LOC Trend for libgcryptport](images/upstream/libgcryptport_current_loc_trend.png)
-![Count Trend for libgcryptport](images/upstream/libgcryptport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/Makefile.in.patch` | `patches` | 13 |
-| `patches/configure.patch` | `patches` | 33 |
-| `patches/doc_Makefile.in.patch` | `patches` | 13 |
-| `patches/g10lib.h.patch` | `patches` | 17 |
-| `patches/longlong.h.patch` | `patches` | 22 |
-| `patches/rndgetentropy.c.patch` | `patches` | 17 |
-| `patches/secmem.c.patch` | `patches` | 14 |
 
 ---
 
