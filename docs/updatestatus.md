@@ -6,6 +6,9 @@
 <summary><b style="font-size: 28px;">Open Update PRs</b></summary>
 
 
+### automakeport
+- 2025-05-28: [Update automake-version to 1.18 from 1.17](https://github.com/zopencommunity/automakeport/pull/28) ❌
+
 ### bash-completionport
 - 2024-12-11: [Update bash-completion-version to 20060301 from V.R.M](https://github.com/zopencommunity/bash-completionport/pull/1) ❌
 
@@ -19,13 +22,6 @@
 - 2025-03-20: [Update buildkite-version to 3.95.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/52) ❌
 - 2025-03-12: [Update buildkite-version to 3.94.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/51) ❌
 - 2025-02-27: [Update buildkite-version to 3.93.1 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/50) ❌
-
-### c3270port
-- 2025-04-26: [Update c3270-version to 4.4ga6 from 4.3ga9](https://github.com/zopencommunity/c3270port/pull/31) ❌
-- 2025-03-10: [Update c3270-version to 4.4ga5 from 4.3ga9](https://github.com/zopencommunity/c3270port/pull/30) ❌
-- 2025-02-07: [Update c3270-version to 4.4ga4 from 4.3ga9](https://github.com/zopencommunity/c3270port/pull/29) ❌
-- 2025-02-06: [Update c3270-version to 4.4ga3 from 4.3ga9](https://github.com/zopencommunity/c3270port/pull/28) ❌
-- 2024-12-16: [Update c3270-version to 4.3ga10 from 4.3ga9](https://github.com/zopencommunity/c3270port/pull/27) ❌
 
 ### caddyport
 - 2025-04-19: [Update caddy-version to 2.10.0 from 2.7.6](https://github.com/zopencommunity/caddyport/pull/8) ❌
@@ -144,6 +140,7 @@
 - 2025-03-06: [Update ghcli-version to 2.68.1 from 2.67.0](https://github.com/zopencommunity/githubcliport/pull/47) ❌
 
 ### gitlabcliport
+- 2025-05-28: [Update glab-version to 1.58.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/28) ❌
 - 2025-04-24: [Update glab-version to 1.56.0 from 1.52.0](https://github.com/zopencommunity/gitlabcliport/pull/26) ❌
 - 2025-03-25: [Update glab-version to 1.55.0 from 1.52.0](https://github.com/zopencommunity/gitlabcliport/pull/25) ❌
 - 2025-03-20: [Update glab-version to 1.54.0 from 1.52.0](https://github.com/zopencommunity/gitlabcliport/pull/24) ❌
@@ -505,6 +502,7 @@
 - ✅ esbuildport - [![Bump Status](https://github.com/zopencommunity/esbuildport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/esbuildport/actions/workflows/bump.yml)
 - ✅ expatport - [![Bump Status](https://github.com/zopencommunity/expatport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/expatport/actions/workflows/bump.yml)
 - ✅ expectport - [![Bump Status](https://github.com/zopencommunity/expectport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/expectport/actions/workflows/bump.yml)
+- ❌ fileport - Workflow not configured
 - ✅ findutilsport - [![Bump Status](https://github.com/zopencommunity/findutilsport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/findutilsport/actions/workflows/bump.yml)
 - ✅ fishport - [![Bump Status](https://github.com/zopencommunity/fishport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/fishport/actions/workflows/bump.yml)
 - ✅ flexport - [![Bump Status](https://github.com/zopencommunity/flexport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/flexport/actions/workflows/bump.yml)
@@ -640,7 +638,7 @@
 - ✅ protobufport - [![Bump Status](https://github.com/zopencommunity/protobufport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/protobufport/actions/workflows/bump.yml)
 - ❌ quiltport - Workflow not configured
 - ✅ re2cport - [![Bump Status](https://github.com/zopencommunity/re2cport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/re2cport/actions/workflows/bump.yml)
-- ❌ readlineport - Workflow not configured
+- ✅ readlineport - [![Bump Status](https://github.com/zopencommunity/readlineport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/readlineport/actions/workflows/bump.yml)
 - ✅ redisport - [![Bump Status](https://github.com/zopencommunity/redisport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/redisport/actions/workflows/bump.yml)
 - ✅ rsyncport - [![Bump Status](https://github.com/zopencommunity/rsyncport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/rsyncport/actions/workflows/bump.yml)
 - ✅ s5cmdport - [![Bump Status](https://github.com/zopencommunity/s5cmdport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/s5cmdport/actions/workflows/bump.yml)
@@ -649,7 +647,7 @@
 - ✅ sedport - [![Bump Status](https://github.com/zopencommunity/sedport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/sedport/actions/workflows/bump.yml)
 - ✅ shdocport - [![Bump Status](https://github.com/zopencommunity/shdocport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/shdocport/actions/workflows/bump.yml)
 - ✅ shufport - [![Bump Status](https://github.com/zopencommunity/shufport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/shufport/actions/workflows/bump.yml)
-- ❌ snappy-cport - Workflow not configured
+- ✅ snappy-cport - [![Bump Status](https://github.com/zopencommunity/snappy-cport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/snappy-cport/actions/workflows/bump.yml)
 - ✅ spdlogport - [![Bump Status](https://github.com/zopencommunity/spdlogport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/spdlogport/actions/workflows/bump.yml)
 - ✅ sqliteport - [![Bump Status](https://github.com/zopencommunity/sqliteport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/sqliteport/actions/workflows/bump.yml)
 - ✅ sshpassport - [![Bump Status](https://github.com/zopencommunity/sshpassport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/sshpassport/actions/workflows/bump.yml)
@@ -700,10 +698,10 @@
 
 </details>
 
-**Summary:** 199 active | 48 missing
+**Summary:** 201 active | 47 missing
 
 ---
 
 
-> Last updated: 2025-05-28 06:07:11 EDT
+> Last updated: 2025-05-29 06:06:57 EDT
 

@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-05-28 06:10:37 EDT.*
+*Report generated on: 2025-05-29 06:10:41 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 233
-- **Total Current Lines of Code (LOC) in Patches:** 30,311
-- **Total Number of Current Patch Files:** 703
-- **Average Current Patch LOC per Project:** 130.09
-- **Average Current Patch Count per Project:** 3.02
+- **Total Projects Analyzed:** 234
+- **Total Current Lines of Code (LOC) in Patches:** 30,367
+- **Total Number of Current Patch Files:** 704
+- **Average Current Patch LOC per Project:** 129.77
+- **Average Current Patch Count per Project:** 3.01
 
 ### Historical Trends (All Projects)
 
@@ -107,6 +107,7 @@
 | [logrotateport](#repo-logrotateport) | 65 | +0 | 1 |
 | [doom-asciiport](#repo-doom-asciiport) | 60 | +60 | 1 |
 | [lz4port](#repo-lz4port) | 58 | +0 | 4 |
+| [snappy-cport](#repo-snappy-cport) | 56 | +56 | 1 |
 | [libgpgerrorport](#repo-libgpgerrorport) | 53 | +0 | 3 |
 | [expatport](#repo-expatport) | 52 | +0 | 2 |
 | [terraformport](#repo-terraformport) | 51 | +0 | 2 |
@@ -256,7 +257,7 @@
 | [apr-utilport](#repo-apr-utilport) | 0 | +0 | 0 |
 | [readlineport](#repo-readlineport) | 0 | +0 | 0 |
 | [quiltport](#repo-quiltport) | 0 | +0 | 0 |
-| [snappy-cport](#repo-snappy-cport) | 0 | +0 | 0 |
+| [fileport](#repo-fileport) | 0 | N/A | 0 |
 
 ---
 
@@ -2461,6 +2462,26 @@
 | `patches/PR1/addzostomakefile.patch` | `patches` | 25 |
 | `patches/PR2/Makefile.inc.patch` | `patches` | 0 |
 | `patches/PR2/tests-Makefile.patch` | `patches` | 14 |
+
+---
+
+<a id="repo-snappy-cport"></a>
+## snappy-cport
+
+- **Origin Date (First Commit):** 2025-05-22
+- **Current Patch LOC:** 56
+- **Current Patch Count:** 1
+
+### Historical Trends
+
+![LOC Trend for snappy-cport](images/upstream/snappy_cport_current_loc_trend.png)
+![Count Trend for snappy-cport](images/upstream/snappy_cport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/endian-fixes.patch` | `patches` | 56 |
 
 ---
 
@@ -5279,10 +5300,10 @@
 
 ---
 
-<a id="repo-snappy-cport"></a>
-## snappy-cport
+<a id="repo-fileport"></a>
+## fileport
 
-- **Origin Date (First Commit):** 2025-05-22
+- **Origin Date (First Commit):** Unknown
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 
