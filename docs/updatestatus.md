@@ -218,6 +218,9 @@
 - 2025-02-25: [Update lazygit-version to 0.47.2 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/14) ✅
 - 2025-02-22: [Update lazygit-version to 0.47.1 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/13) ✅
 
+### lessport
+- 2025-05-30: [Update less-version to 679 from 678](https://github.com/zopencommunity/lessport/pull/40) ❌
+
 ### libgcryptport
 - 2025-05-10: [Update libgcrypt-version to 1.11.1 from 1.11.0](https://github.com/zopencommunity/libgcryptport/pull/17) ❌
 
@@ -547,6 +550,7 @@
 - ✅ hexcurseport - [![Bump Status](https://github.com/zopencommunity/hexcurseport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/hexcurseport/actions/workflows/bump.yml)
 - ✅ htopport - [![Bump Status](https://github.com/zopencommunity/htopport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/htopport/actions/workflows/bump.yml)
 - ✅ hugoport - [![Bump Status](https://github.com/zopencommunity/hugoport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/hugoport/actions/workflows/bump.yml)
+- ❌ inetutilsport - Workflow not configured
 - ❌ iperfport - Workflow not configured
 - ✅ janssonport - [![Bump Status](https://github.com/zopencommunity/janssonport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/janssonport/actions/workflows/bump.yml)
 - ✅ jdport - [![Bump Status](https://github.com/zopencommunity/jdport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/jdport/actions/workflows/bump.yml)
@@ -645,7 +649,7 @@
 - ✅ rsyncport - [![Bump Status](https://github.com/zopencommunity/rsyncport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/rsyncport/actions/workflows/bump.yml)
 - ✅ s5cmdport - [![Bump Status](https://github.com/zopencommunity/s5cmdport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/s5cmdport/actions/workflows/bump.yml)
 - ✅ sccport - [![Bump Status](https://github.com/zopencommunity/sccport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/sccport/actions/workflows/bump.yml)
-- ❌ scdocport - Workflow not configured
+- ✅ scdocport - [![Bump Status](https://github.com/zopencommunity/scdocport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/scdocport/actions/workflows/bump.yml)
 - ✅ screenport - [![Bump Status](https://github.com/zopencommunity/screenport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/screenport/actions/workflows/bump.yml)
 - ✅ sedport - [![Bump Status](https://github.com/zopencommunity/sedport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/sedport/actions/workflows/bump.yml)
 - ✅ shdocport - [![Bump Status](https://github.com/zopencommunity/shdocport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/shdocport/actions/workflows/bump.yml)
@@ -701,10 +705,10 @@
 
 </details>
 
-**Summary:** 202 active | 47 missing
+**Summary:** 203 active | 47 missing
 
 ---
 
 
-> Last updated: 2025-05-30 06:06:57 EDT
+> Last updated: 2025-05-30 15:32:46 EDT
 

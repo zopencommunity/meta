@@ -92,7 +92,7 @@
 | [cmakeport](https://github.com/zopencommunity/cmakeport) | 26 | 82.4% | avro-c-lib, boost, ccache, cjson, cmake, cppcheck, doxygen, duckdb, fish, gflags, jansson, libevent, librabbitmq, libuv, llamacpp, luv, neovim, ninja, popt, protobuf, spdlog, unzip, zedc_ascii, zip, zoslib, zusage |
 | [libtoolport](https://github.com/zopencommunity/libtoolport) | 24 | 87.0% | apr, curl, expat, groff, hello, jansson, less, libarchive, libbsd, libgdbm, libgpgme, libmd, libpcre, libsasl2, logrotate, m4, man-db, oniguruma, php, procps, re2c, texinfo, util-linux, zlib-ng |
 | [ncursesport](https://github.com/zopencommunity/ncursesport) | 24 | 100.0% | bash, c3270, cscope, dialog, doom-ascii, emacs, fish, gettext, git, gpg, hexcurse, less, libgpgme, llamacpp, lynx, man-db, nano, ncdu, procps, screen, thesilversearcher, tig, tmux, vim |
-| [xzport](https://github.com/zopencommunity/xzport) | 21 | 77.8% | autoconf, automake, bison, cronie, diffutils, expat, findutils, gettext, git, gzip, hello, help2man, libbsd, libtool, m4, make, man-db, procps, texinfo, thesilversearcher, util-linux |
+| [xzport](https://github.com/zopencommunity/xzport) | 21 | 100.0% | autoconf, automake, bison, cronie, diffutils, expat, findutils, gettext, git, gzip, hello, help2man, libbsd, libtool, m4, make, man-db, procps, texinfo, thesilversearcher, util-linux |
 | [texinfoport](https://github.com/zopencommunity/texinfoport) | 19 | Skipped | autoconf, automake, bc, bison, cronie, expat, gettext, git, gpg, groff, gzip, hello, libgpgme, libtool, m4, make, ntbtls, sed, tar |
 | [check_pythonport](https://github.com/zopencommunity/check_pythonport) | 18 | 100.0% | apr, c3270, ctags, curl, depot_tools, doxygen, git, gn, libdio, libxml2, lz4, pinentry, re2c, redis, rsync, spdlog, vim, zstd |
 | [getoptport](https://github.com/zopencommunity/getoptport) | 18 | 52.2% | avro-c-lib, coreutils, diffutils, fish, flex, libgpgme, librdkafka, moreutils, neovim, ninja, procps, sed, shdoc, sudo, thesilversearcher, util-linux, which, xmlto |
@@ -277,4 +277,4 @@
 | [zospstreeport](https://github.com/zopencommunity/zospstreeport) | 0 | 100.0% | None |
 | [zotsampleport](https://github.com/zopencommunity/zotsampleport) | 0 | 100.0% | None |
 
-Last updated:  2025-05-30 12:31:33 UTC
+Last updated:  2025-05-30 15:37:15 UTC
