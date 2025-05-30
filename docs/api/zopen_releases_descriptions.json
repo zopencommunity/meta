@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2025-05-30T18:34:47+00:00Z",
+  "generation_timestamp_utc": "2025-05-30T23:07:43+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -236,6 +236,7 @@
     "ccache": "Object-file caching compiler wrapper",
     "aflplusplus": "",
     "file": "",
-    "scdoc": ""
+    "scdoc": "",
+    "inetutils": ""
   }
 }
