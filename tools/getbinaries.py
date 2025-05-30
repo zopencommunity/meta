@@ -209,7 +209,7 @@ with open('docs/Latest.md', 'w') as f:
         print(f"<div class=\"table-category\" data-category=\"{html.escape(category_key)}\">")
         print(f"\n## {html.escape(category_key.title())} \n")
         
-        sorted_packages_list = sorted(packages_list, key=lambda x: (-x['success_rate'] if x['success_rate'] >= 0 else float('-inf')))
+        sorted_packages_list = sorted(packages_list, key=lambda x: x['package'].lower())
         
         if not sorted_packages_list:
             print(f"<p><em>No packages currently listed in this category.</em></p>")

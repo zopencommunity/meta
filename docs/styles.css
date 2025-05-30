@@ -102,4 +102,11 @@
 .tool-name a {
   /* color: #0056b3; */ /* Example: Make package name link color distinct if desired */
 }
-/* --- END OF NEW CSS --- */
+
+/* --- ZEBRA STRIPING FOR TOOL ITEMS --- */
+.tool-item-filterable:nth-child(even) {
+  background-color: #f8f9fa; /* A very light grey, common for zebra striping */
+}
+.tool-item-filterable:nth-child(odd) {
+  background-color: #ffffff; /* Or transparent, if your page background isn't white */
+}
