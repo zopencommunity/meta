@@ -335,6 +335,7 @@
 - 2024-01-25: [Update poco-version to 1.13.0 from 1.12.5p2](https://github.com/zopencommunity/pocoport/pull/2) ❓
 
 ### protobufport
+- 2025-05-29: [Update protobuf-version to 31.1 from 29.3](https://github.com/zopencommunity/protobufport/pull/30) ❌
 - 2025-05-15: [Update protobuf-version to 31.0 from 29.3](https://github.com/zopencommunity/protobufport/pull/29) ❌
 - 2025-03-27: [Update protobuf-version to 30.2 from 29.3](https://github.com/zopencommunity/protobufport/pull/28) ❌
 - 2025-03-14: [Update protobuf-version to 30.1 from 29.3](https://github.com/zopencommunity/protobufport/pull/27) ❌
@@ -351,6 +352,7 @@
 - 2025-05-10: [Update spdlog-version to 1.15.3 from 1.15.1](https://github.com/zopencommunity/spdlogport/pull/9) ✅
 
 ### sqliteport
+- 2025-05-29: [Update sqlite-version to 2025-3500000 from 2025-3480000](https://github.com/zopencommunity/sqliteport/pull/26) ❌
 - 2025-05-10: [Update sqlite-version to 2025-3490200 from 2025-3480000](https://github.com/zopencommunity/sqliteport/pull/25) ❌
 - 2025-02-18: [Update sqlite-version to 2025-3490100 from 2025-3480000](https://github.com/zopencommunity/sqliteport/pull/24) ❌
 - 2025-02-06: [Update sqlite-version to 2025-3490000 from 2025-3480000](https://github.com/zopencommunity/sqliteport/pull/23) ❌
@@ -636,13 +638,14 @@
 - ✅ promptersport - [![Bump Status](https://github.com/zopencommunity/promptersport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/promptersport/actions/workflows/bump.yml)
 - ❌ protobuf - Workflow not configured
 - ✅ protobufport - [![Bump Status](https://github.com/zopencommunity/protobufport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/protobufport/actions/workflows/bump.yml)
-- ❌ quiltport - Workflow not configured
+- ✅ quiltport - [![Bump Status](https://github.com/zopencommunity/quiltport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/quiltport/actions/workflows/bump.yml)
 - ✅ re2cport - [![Bump Status](https://github.com/zopencommunity/re2cport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/re2cport/actions/workflows/bump.yml)
 - ✅ readlineport - [![Bump Status](https://github.com/zopencommunity/readlineport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/readlineport/actions/workflows/bump.yml)
 - ✅ redisport - [![Bump Status](https://github.com/zopencommunity/redisport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/redisport/actions/workflows/bump.yml)
 - ✅ rsyncport - [![Bump Status](https://github.com/zopencommunity/rsyncport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/rsyncport/actions/workflows/bump.yml)
 - ✅ s5cmdport - [![Bump Status](https://github.com/zopencommunity/s5cmdport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/s5cmdport/actions/workflows/bump.yml)
 - ✅ sccport - [![Bump Status](https://github.com/zopencommunity/sccport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/sccport/actions/workflows/bump.yml)
+- ❌ scdocport - Workflow not configured
 - ✅ screenport - [![Bump Status](https://github.com/zopencommunity/screenport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/screenport/actions/workflows/bump.yml)
 - ✅ sedport - [![Bump Status](https://github.com/zopencommunity/sedport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/sedport/actions/workflows/bump.yml)
 - ✅ shdocport - [![Bump Status](https://github.com/zopencommunity/shdocport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/shdocport/actions/workflows/bump.yml)
@@ -698,10 +701,10 @@
 
 </details>
 
-**Summary:** 201 active | 47 missing
+**Summary:** 202 active | 47 missing
 
 ---
 
 
-> Last updated: 2025-05-29 06:06:57 EDT
+> Last updated: 2025-05-30 06:06:57 EDT
 

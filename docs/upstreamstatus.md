@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-05-29 06:10:41 EDT.*
+*Report generated on: 2025-05-30 06:10:47 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 234
-- **Total Current Lines of Code (LOC) in Patches:** 30,367
-- **Total Number of Current Patch Files:** 704
-- **Average Current Patch LOC per Project:** 129.77
-- **Average Current Patch Count per Project:** 3.01
+- **Total Projects Analyzed:** 235
+- **Total Current Lines of Code (LOC) in Patches:** 30,406
+- **Total Number of Current Patch Files:** 705
+- **Average Current Patch LOC per Project:** 129.39
+- **Average Current Patch Count per Project:** 3.00
 
 ### Historical Trends (All Projects)
 
@@ -65,10 +65,10 @@
 | [gettextport](#repo-gettextport) | 206 | +0 | 7 |
 | [findutilsport](#repo-findutilsport) | 199 | +0 | 10 |
 | [ninjaport](#repo-ninjaport) | 196 | +0 | 8 |
+| [ccacheport](#repo-ccacheport) | 195 | +195 | 1 |
 | [diffutilsport](#repo-diffutilsport) | 184 | +0 | 8 |
 | [aflplusplusport](#repo-aflplusplusport) | 184 | +184 | 5 |
 | [protobufport](#repo-protobufport) | 174 | +0 | 8 |
-| [ccacheport](#repo-ccacheport) | 166 | +166 | 1 |
 | [groffport](#repo-groffport) | 165 | +0 | 13 |
 | [autoconfport](#repo-autoconfport) | 151 | +0 | 6 |
 | [moreutilsport](#repo-moreutilsport) | 151 | +0 | 1 |
@@ -163,6 +163,7 @@
 | [aprport](#repo-aprport) | 13 | +0 | 1 |
 | [libxml2port](#repo-libxml2port) | 12 | +0 | 1 |
 | [gflagsport](#repo-gflagsport) | 12 | +12 | 1 |
+| [quiltport](#repo-quiltport) | 10 | +10 | 1 |
 | [zlibport](#repo-zlibport) | 0 | +0 | 0 |
 | [help2manport](#repo-help2manport) | 0 | +0 | 0 |
 | [zotsampleport](#repo-zotsampleport) | 0 | +0 | 0 |
@@ -256,8 +257,8 @@
 | [sccport](#repo-sccport) | 0 | +0 | 0 |
 | [apr-utilport](#repo-apr-utilport) | 0 | +0 | 0 |
 | [readlineport](#repo-readlineport) | 0 | +0 | 0 |
-| [quiltport](#repo-quiltport) | 0 | +0 | 0 |
-| [fileport](#repo-fileport) | 0 | N/A | 0 |
+| [fileport](#repo-fileport) | 0 | +0 | 0 |
+| [scdocport](#repo-scdocport) | 0 | +0 | 0 |
 
 ---
 
@@ -1516,6 +1517,26 @@
 
 ---
 
+<a id="repo-ccacheport"></a>
+## ccacheport
+
+- **Origin Date (First Commit):** 2025-05-25
+- **Current Patch LOC:** 195
+- **Current Patch Count:** 1
+
+### Historical Trends
+
+![LOC Trend for ccacheport](images/upstream/ccacheport_current_loc_trend.png)
+![Count Trend for ccacheport](images/upstream/ccacheport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/PR1.patch` | `patches` | 195 |
+
+---
+
 <a id="repo-diffutilsport"></a>
 ## diffutilsport
 
@@ -1591,26 +1612,6 @@
 | `patches/port_def.inc.patch` | `patches` | 22 |
 | `patches/sysinfo.cc.patch` | `patches` | 26 |
 | `patches/time_zone_libc.cc.patch` | `patches` | 21 |
-
----
-
-<a id="repo-ccacheport"></a>
-## ccacheport
-
-- **Origin Date (First Commit):** 2025-05-25
-- **Current Patch LOC:** 166
-- **Current Patch Count:** 1
-
-### Historical Trends
-
-![LOC Trend for ccacheport](images/upstream/ccacheport_current_loc_trend.png)
-![Count Trend for ccacheport](images/upstream/ccacheport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/PR1.patch` | `patches` | 166 |
 
 ---
 
@@ -3608,6 +3609,26 @@
 
 ---
 
+<a id="repo-quiltport"></a>
+## quiltport
+
+- **Origin Date (First Commit):** 2025-05-22
+- **Current Patch LOC:** 10
+- **Current Patch Count:** 1
+
+### Historical Trends
+
+![LOC Trend for quiltport](images/upstream/quiltport_current_loc_trend.png)
+![Count Trend for quiltport](images/upstream/quiltport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/perl_path.patch` | `patches` | 10 |
+
+---
+
 <a id="repo-zlibport"></a>
 ## zlibport
 
@@ -5282,10 +5303,10 @@
 
 ---
 
-<a id="repo-quiltport"></a>
-## quiltport
+<a id="repo-fileport"></a>
+## fileport
 
-- **Origin Date (First Commit):** 2025-05-22
+- **Origin Date (First Commit):** 2025-05-29
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 
@@ -5300,10 +5321,10 @@
 
 ---
 
-<a id="repo-fileport"></a>
-## fileport
+<a id="repo-scdocport"></a>
+## scdocport
 
-- **Origin Date (First Commit):** Unknown
+- **Origin Date (First Commit):** 2025-05-30
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 
