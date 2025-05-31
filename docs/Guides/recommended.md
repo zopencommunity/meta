@@ -42,7 +42,7 @@ This guide provides a recommended set of open source tools for various roles wit
       - `m4` - Macro processor for generating code templates.
       - `autoconf`, `automake`, `pkgconfig` - Tools for configuring software builds.
    - **Languages**
-      - `lua``, `perl` - Extend functionality with embedded lua or write automation scripts using perl
+      - `lua`, `perl` - Extend functionality with embedded lua or write automation scripts using perl.
    - **Libraries**:
       - `zlib` - Compression library.
       - `sqlite` - Embedded database library
