@@ -1242,12 +1242,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="libiconv" data-searchable-text="libiconv Green 100.0% STABLE_libiconv_3206 A library for character set conversion library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="libiconv" data-searchable-text="libiconv Green 100.0% DEV_libiconv_3403 A library for character set conversion library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libiconvport" target="_blank" rel="noopener noreferrer">libiconv</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/libiconvport/releases/download/STABLE_libiconvport_3206/libiconv-1.18.20250403_185109.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libiconv_3206</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/libiconvport/releases/download/DEV_libiconvport_3403/libiconv-master.20250530_224433.zos.pax.Z" target="_blank" rel="noopener noreferrer">DEV_libiconv_3403</a></div>
     <div class="tool-desc" title="A library for character set conversion">A library for character set conversion</div>
   </div>
 </div>
@@ -2481,4 +2481,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-05-30 15:37:15 UTC
+Last updated:  2025-05-31 06:11:29 UTC
