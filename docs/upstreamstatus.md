@@ -1,6 +1,6 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-05-31 06:10:23 EDT.*
+*Report generated on: 2025-06-01 06:10:20 EDT.*
 
 ## Overall Summary
 
@@ -36,7 +36,7 @@
 | [gzipport](#repo-gzipport) | 690 | +0 | 8 |
 | [procpsport](#repo-procpsport) | 687 | +0 | 1 |
 | [perlport](#repo-perlport) | 683 | +0 | 13 |
-| [util-linuxport](#repo-util-linuxport) | 594 | -9 | 15 |
+| [util-linuxport](#repo-util-linuxport) | 594 | +0 | 15 |
 | [unzipport](#repo-unzipport) | 549 | +0 | 12 |
 | [cronieport](#repo-cronieport) | 510 | +0 | 13 |
 | [screenport](#repo-screenport) | 485 | +0 | 7 |
@@ -50,26 +50,26 @@
 | [rsyncport](#repo-rsyncport) | 341 | +0 | 6 |
 | [vimport](#repo-vimport) | 335 | +0 | 12 |
 | [phpport](#repo-phpport) | 320 | +0 | 13 |
-| [mimallocport](#repo-mimallocport) | 313 | +313 | 6 |
+| [mimallocport](#repo-mimallocport) | 313 | +0 | 6 |
 | [neovimport](#repo-neovimport) | 312 | +0 | 12 |
-| [libgcryptport](#repo-libgcryptport) | 302 | +173 | 9 |
+| [libgcryptport](#repo-libgcryptport) | 302 | +0 | 9 |
 | [conanport](#repo-conanport) | 299 | +0 | 8 |
 | [zipport](#repo-zipport) | 297 | +0 | 8 |
 | [redisport](#repo-redisport) | 263 | +0 | 1 |
 | [gitlab-runnerport](#repo-gitlab-runnerport) | 241 | +0 | 10 |
-| [libarchiveport](#repo-libarchiveport) | 237 | +19 | 6 |
+| [libarchiveport](#repo-libarchiveport) | 237 | +0 | 6 |
 | [zstdport](#repo-zstdport) | 236 | +0 | 4 |
 | [llamacppport](#repo-llamacppport) | 236 | +0 | 1 |
-| [fishport](#repo-fishport) | 233 | +233 | 1 |
+| [fishport](#repo-fishport) | 233 | +0 | 1 |
 | [mesonport](#repo-mesonport) | 229 | +0 | 9 |
 | [gettextport](#repo-gettextport) | 206 | +0 | 7 |
 | [findutilsport](#repo-findutilsport) | 199 | +0 | 10 |
 | [ninjaport](#repo-ninjaport) | 196 | +0 | 8 |
-| [ccacheport](#repo-ccacheport) | 195 | +195 | 1 |
+| [ccacheport](#repo-ccacheport) | 195 | +0 | 1 |
 | [diffutilsport](#repo-diffutilsport) | 184 | +0 | 8 |
-| [aflplusplusport](#repo-aflplusplusport) | 184 | +184 | 5 |
+| [aflplusplusport](#repo-aflplusplusport) | 184 | +0 | 5 |
 | [protobufport](#repo-protobufport) | 174 | +0 | 8 |
-| [jemallocport](#repo-jemallocport) | 166 | +166 | 1 |
+| [jemallocport](#repo-jemallocport) | 166 | +0 | 1 |
 | [groffport](#repo-groffport) | 165 | +0 | 13 |
 | [autoconfport](#repo-autoconfport) | 151 | +0 | 6 |
 | [moreutilsport](#repo-moreutilsport) | 151 | +0 | 1 |
@@ -102,12 +102,12 @@
 | [cppcheckport](#repo-cppcheckport) | 72 | +0 | 4 |
 | [libtoolport](#repo-libtoolport) | 71 | +0 | 3 |
 | [nanoport](#repo-nanoport) | 68 | +0 | 1 |
-| [gradleport](#repo-gradleport) | 67 | +67 | 1 |
+| [gradleport](#repo-gradleport) | 67 | +0 | 1 |
 | [getoptport](#repo-getoptport) | 66 | +0 | 1 |
 | [logrotateport](#repo-logrotateport) | 65 | +0 | 1 |
-| [doom-asciiport](#repo-doom-asciiport) | 60 | +60 | 1 |
+| [doom-asciiport](#repo-doom-asciiport) | 60 | +0 | 1 |
 | [lz4port](#repo-lz4port) | 58 | +0 | 4 |
-| [snappy-cport](#repo-snappy-cport) | 56 | +56 | 1 |
+| [snappy-cport](#repo-snappy-cport) | 56 | +0 | 1 |
 | [libgpgerrorport](#repo-libgpgerrorport) | 53 | +0 | 3 |
 | [expatport](#repo-expatport) | 52 | +0 | 2 |
 | [terraformport](#repo-terraformport) | 51 | +0 | 2 |
@@ -162,8 +162,8 @@
 | [lzipport](#repo-lzipport) | 13 | +0 | 1 |
 | [aprport](#repo-aprport) | 13 | +0 | 1 |
 | [libxml2port](#repo-libxml2port) | 12 | +0 | 1 |
-| [gflagsport](#repo-gflagsport) | 12 | +12 | 1 |
-| [quiltport](#repo-quiltport) | 10 | +10 | 1 |
+| [gflagsport](#repo-gflagsport) | 12 | +0 | 1 |
+| [quiltport](#repo-quiltport) | 10 | +0 | 1 |
 | [zlibport](#repo-zlibport) | 0 | +0 | 0 |
 | [help2manport](#repo-help2manport) | 0 | +0 | 0 |
 | [zotsampleport](#repo-zotsampleport) | 0 | +0 | 0 |
