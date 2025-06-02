@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2025-05-31T16:38:50+00:00Z",
+  "generation_timestamp_utc": "2025-06-02T07:36:59+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -82,7 +82,7 @@
     "expect": "A tool for automating interactions with text-based programs",
     "neovim": "A text editor",
     "npth": "A portable threading library",
-    "yq": "A command-line JSON processor",
+    "yq": "A command-line JSON and YAML processor",
     "libgpgerror": "A library for handling errors",
     "libgcrypt": "A general-purpose cryptographic library",
     "libassuan": "A library for the Assuan protocol, used for IPC between GnuPG components",
