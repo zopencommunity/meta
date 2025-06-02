@@ -892,6 +892,16 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
+<div class="tool-item-filterable" data-package-name="scdoc" data-searchable-text="scdoc Green 100.0% DEV_scdoc_3407 documentation port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/scdocport" target="_blank" rel="noopener noreferrer">scdoc</a></strong></div>
+    <div class="tool-status">Status: Green</div>
+    <div class="tool-test">Test: 100.0%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/scdocport/releases/download/DEV_scdocport_3407/scdoc-master.20250602_072734.zos.pax.Z" target="_blank" rel="noopener noreferrer">DEV_scdoc_3407</a></div>
+    <div class="tool-desc" title=""></div>
+  </div>
+</div>
+
 <div class="tool-item-filterable" data-package-name="shdoc" data-searchable-text="shdoc Green 100.0% DEV_shdoc_2900 A documentation generator for shell scripts documentation port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/shdocport" target="_blank" rel="noopener noreferrer">shdoc</a></strong></div>
@@ -2398,13 +2408,13 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="yq" data-searchable-text="yq Skipped N/A STABLE_yq_3072 A command-line JSON processor utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="yq" data-searchable-text="yq Skipped N/A STABLE_yq_3072 A command-line JSON and YAML processor utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/yqport" target="_blank" rel="noopener noreferrer">yq</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
     <div class="tool-release"><a href="https://github.com/zopencommunity/yqport/releases/download/STABLE_yqport_3072/yq-master.20250205_033653.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_yq_3072</a></div>
-    <div class="tool-desc" title="A command-line JSON processor">A command-line JSON processor</div>
+    <div class="tool-desc" title="A command-line JSON and YAML processor">A command-line JSON and YAML processor</div>
   </div>
 </div>
 
@@ -2481,4 +2491,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-06-01 06:11:29 UTC
+Last updated:  2025-06-02 06:12:01 UTC

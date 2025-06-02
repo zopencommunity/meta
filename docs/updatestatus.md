@@ -62,6 +62,9 @@
 ### creduceport
 - 2025-02-01: [Update creduce-version to 2.10.0 from V.R.M](https://github.com/zopencommunity/creduceport/pull/1) ❌
 
+### ctagsport
+- 2025-06-01: [Update ctags-version to 6.2.0 from 6.1.0](https://github.com/zopencommunity/ctagsport/pull/10) ❌
+
 ### cunitport
 - 2025-02-26: [Update cunit-version to 3.5.2 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/10) ❌
 - 2025-02-24: [Update cunit-version to 3.5.1 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/9) ❌
@@ -203,6 +206,9 @@
 - 2025-04-16: [Update hugo-version to 0.146.5 from 0.146.2](https://github.com/zopencommunity/hugoport/pull/23) ✅
 - 2025-04-14: [Update hugo-version to 0.146.4 from 0.146.2](https://github.com/zopencommunity/hugoport/pull/22) ✅
 - 2025-04-13: [Update hugo-version to 0.146.3 from 0.146.2](https://github.com/zopencommunity/hugoport/pull/21) ✅
+
+### jqport
+- 2025-06-01: [Update jq-version to 1.8.0 from 1.7.1](https://github.com/zopencommunity/jqport/pull/16) ❌
 
 ### kotlinport
 - 2024-07-19: [Update kotlin-version to 1.9.25 from 1.9.22](https://github.com/zopencommunity/kotlinport/pull/5) ❌
@@ -710,5 +716,5 @@
 ---
 
 
-> Last updated: 2025-06-01 06:06:48 EDT
+> Last updated: 2025-06-02 06:06:54 EDT
 
