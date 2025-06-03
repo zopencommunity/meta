@@ -207,9 +207,6 @@
 - 2025-04-14: [Update hugo-version to 0.146.4 from 0.146.2](https://github.com/zopencommunity/hugoport/pull/22) ✅
 - 2025-04-13: [Update hugo-version to 0.146.3 from 0.146.2](https://github.com/zopencommunity/hugoport/pull/21) ✅
 
-### jqport
-- 2025-06-01: [Update jq-version to 1.8.0 from 1.7.1](https://github.com/zopencommunity/jqport/pull/16) ❌
-
 ### kotlinport
 - 2024-07-19: [Update kotlin-version to 1.9.25 from 1.9.22](https://github.com/zopencommunity/kotlinport/pull/5) ❌
 - 2024-06-08: [Update kotlin-version to 1.9.24 from 1.9.22](https://github.com/zopencommunity/kotlinport/pull/4) ❌
@@ -716,5 +713,5 @@
 ---
 
 
-> Last updated: 2025-06-02 06:06:54 EDT
+> Last updated: 2025-06-03 06:07:16 EDT
 

@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-06-02 06:11:02 EDT.*
+*Report generated on: 2025-06-03 06:11:03 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 236
-- **Total Current Lines of Code (LOC) in Patches:** 30,474
-- **Total Number of Current Patch Files:** 705
-- **Average Current Patch LOC per Project:** 129.13
-- **Average Current Patch Count per Project:** 2.99
+- **Total Current Lines of Code (LOC) in Patches:** 30,425
+- **Total Number of Current Patch Files:** 704
+- **Average Current Patch LOC per Project:** 128.92
+- **Average Current Patch Count per Project:** 2.98
 
 ### Historical Trends (All Projects)
 
@@ -49,9 +49,9 @@
 | [pocoport](#repo-pocoport) | 343 | +0 | 9 |
 | [rsyncport](#repo-rsyncport) | 341 | +0 | 6 |
 | [vimport](#repo-vimport) | 335 | +0 | 12 |
+| [neovimport](#repo-neovimport) | 327 | +15 | 13 |
 | [phpport](#repo-phpport) | 320 | +0 | 13 |
 | [mimallocport](#repo-mimallocport) | 313 | +0 | 6 |
-| [neovimport](#repo-neovimport) | 312 | +0 | 12 |
 | [libgcryptport](#repo-libgcryptport) | 302 | +0 | 9 |
 | [conanport](#repo-conanport) | 299 | +0 | 8 |
 | [zipport](#repo-zipport) | 297 | +0 | 8 |
@@ -73,7 +73,6 @@
 | [groffport](#repo-groffport) | 165 | +0 | 13 |
 | [autoconfport](#repo-autoconfport) | 151 | +0 | 6 |
 | [moreutilsport](#repo-moreutilsport) | 151 | +0 | 1 |
-| [jqport](#repo-jqport) | 146 | +0 | 8 |
 | [libserdesport](#repo-libserdesport) | 142 | +0 | 4 |
 | [tclport](#repo-tclport) | 130 | +0 | 5 |
 | [pinentryport](#repo-pinentryport) | 124 | +0 | 5 |
@@ -102,6 +101,7 @@
 | [cppcheckport](#repo-cppcheckport) | 72 | +0 | 4 |
 | [libtoolport](#repo-libtoolport) | 71 | +0 | 3 |
 | [nanoport](#repo-nanoport) | 68 | +0 | 1 |
+| [jqport](#repo-jqport) | 67 | -79 | 5 |
 | [gradleport](#repo-gradleport) | 67 | +0 | 1 |
 | [getoptport](#repo-getoptport) | 66 | +0 | 1 |
 | [logrotateport](#repo-logrotateport) | 65 | +0 | 1 |
@@ -151,6 +151,7 @@
 | [libxsltport](#repo-libxsltport) | 15 | +0 | 1 |
 | [libpcreport](#repo-libpcreport) | 15 | +0 | 1 |
 | [libmdport](#repo-libmdport) | 15 | +0 | 1 |
+| [fileport](#repo-fileport) | 15 | +0 | 1 |
 | [tarport](#repo-tarport) | 14 | +0 | 1 |
 | [nghttp2port](#repo-nghttp2port) | 14 | +0 | 1 |
 | [bisonport](#repo-bisonport) | 13 | +0 | 1 |
@@ -257,9 +258,8 @@
 | [sccport](#repo-sccport) | 0 | +0 | 0 |
 | [apr-utilport](#repo-apr-utilport) | 0 | +0 | 0 |
 | [readlineport](#repo-readlineport) | 0 | +0 | 0 |
-| [fileport](#repo-fileport) | 0 | +0 | 0 |
 | [scdocport](#repo-scdocport) | 0 | +0 | 0 |
-| [inetutilsport](#repo-inetutilsport) | 0 | N/A | 0 |
+| [inetutilsport](#repo-inetutilsport) | 0 | +0 | 0 |
 
 ---
 
@@ -1101,6 +1101,38 @@
 
 ---
 
+<a id="repo-neovimport"></a>
+## neovimport
+
+- **Origin Date (First Commit):** 2023-04-21
+- **Current Patch LOC:** 327
+- **Current Patch Count:** 13
+
+### Historical Trends
+
+![LOC Trend for neovimport](images/upstream/neovimport_current_loc_trend.png)
+![Count Trend for neovimport](images/upstream/neovimport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `stable-patches/cmake.deps.cmake.BuildLua.cmake.patch` | `stable-patches` | 39 |
+| `stable-patches/cmake.deps.cmake.BuildLuv.cmake.patch` | `stable-patches` | 29 |
+| `stable-patches/cmake.deps.cmake.BuildTreesitter.cmake.patch` | `stable-patches` | 12 |
+| `stable-patches/cmake.deps.cmake.BuildTreesitterParsers.cmake.patch` | `stable-patches` | 13 |
+| `stable-patches/src.nvim.CMakeLists.txt.patch` | `stable-patches` | 42 |
+| `stable-patches/src.nvim.buffer_defs.h.patch` | `stable-patches` | 15 |
+| `stable-patches/src.nvim.bufwrite.c.patch` | `stable-patches` | 43 |
+| `stable-patches/src.nvim.channel.c.patch` | `stable-patches` | 47 |
+| `stable-patches/src.nvim.fileio.c.patch` | `stable-patches` | 15 |
+| `stable-patches/src.nvim.memfile.c.patch` | `stable-patches` | 12 |
+| `stable-patches/src.nvim.os.pty_proc_unix.c.patch` | `stable-patches` | 32 |
+| `stable-patches/src.nvim.tui.termkey.termkey.c.patch` | `stable-patches` | 15 |
+| `stable-patches/src.nvim.undo.c.patch` | `stable-patches` | 13 |
+
+---
+
 <a id="repo-phpport"></a>
 ## phpport
 
@@ -1155,37 +1187,6 @@
 | `patches/options.c.patch` | `patches` | 67 |
 | `patches/prim.c.patch` | `patches` | 135 |
 | `patches/prim.h.patch` | `patches` | 27 |
-
----
-
-<a id="repo-neovimport"></a>
-## neovimport
-
-- **Origin Date (First Commit):** 2023-04-21
-- **Current Patch LOC:** 312
-- **Current Patch Count:** 12
-
-### Historical Trends
-
-![LOC Trend for neovimport](images/upstream/neovimport_current_loc_trend.png)
-![Count Trend for neovimport](images/upstream/neovimport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `stable-patches/cmake.deps.cmake.BuildLua.cmake.patch` | `stable-patches` | 39 |
-| `stable-patches/cmake.deps.cmake.BuildLuv.cmake.patch` | `stable-patches` | 29 |
-| `stable-patches/cmake.deps.cmake.BuildTreesitter.cmake.patch` | `stable-patches` | 12 |
-| `stable-patches/cmake.deps.cmake.BuildTreesitterParsers.cmake.patch` | `stable-patches` | 13 |
-| `stable-patches/src.nvim.CMakeLists.txt.patch` | `stable-patches` | 42 |
-| `stable-patches/src.nvim.buffer_defs.h.patch` | `stable-patches` | 15 |
-| `stable-patches/src.nvim.bufwrite.c.patch` | `stable-patches` | 43 |
-| `stable-patches/src.nvim.channel.c.patch` | `stable-patches` | 47 |
-| `stable-patches/src.nvim.memfile.c.patch` | `stable-patches` | 12 |
-| `stable-patches/src.nvim.os.pty_proc_unix.c.patch` | `stable-patches` | 32 |
-| `stable-patches/src.nvim.tui.termkey.termkey.c.patch` | `stable-patches` | 15 |
-| `stable-patches/src.nvim.undo.c.patch` | `stable-patches` | 13 |
 
 ---
 
@@ -1710,33 +1711,6 @@
 | Patch File (Repo Relative Path) | Source | LOC |
 |---|---|:---|
 | `patches/PR1.patch` | `patches` | 151 |
-
----
-
-<a id="repo-jqport"></a>
-## jqport
-
-- **Origin Date (First Commit):** 2022-06-05
-- **Current Patch LOC:** 146
-- **Current Patch Count:** 8
-
-### Historical Trends
-
-![LOC Trend for jqport](images/upstream/jqport_current_loc_trend.png)
-![Count Trend for jqport](images/upstream/jqport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/zOS.patch` | `patches` | 15 |
-| `stable-patches/builtin.c.patch` | `stable-patches` | 32 |
-| `stable-patches/configure.patch` | `stable-patches` | 15 |
-| `stable-patches/jq_test.c.patch` | `stable-patches` | 16 |
-| `stable-patches/jv_alloc.c.patch` | `stable-patches` | 18 |
-| `stable-patches/mantest.patch` | `stable-patches` | 10 |
-| `stable-patches/shtest.patch` | `stable-patches` | 21 |
-| `stable-patches/version.patch` | `stable-patches` | 19 |
 
 ---
 
@@ -2361,6 +2335,30 @@
 | Patch File (Repo Relative Path) | Source | LOC |
 |---|---|:---|
 | `patches/initial_zos.patch` | `patches` | 68 |
+
+---
+
+<a id="repo-jqport"></a>
+## jqport
+
+- **Origin Date (First Commit):** 2022-06-05
+- **Current Patch LOC:** 67
+- **Current Patch Count:** 5
+
+### Historical Trends
+
+![LOC Trend for jqport](images/upstream/jqport_current_loc_trend.png)
+![Count Trend for jqport](images/upstream/jqport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/configure.patch` | `patches` | 15 |
+| `patches/zOS.patch` | `patches` | 15 |
+| `stable-patches/mantest.patch` | `stable-patches` | 10 |
+| `stable-patches/shtest.patch` | `stable-patches` | 11 |
+| `stable-patches/version.patch` | `stable-patches` | 16 |
 
 ---
 
@@ -3361,6 +3359,26 @@
 
 ![LOC Trend for libmdport](images/upstream/libmdport_current_loc_trend.png)
 ![Count Trend for libmdport](images/upstream/libmdport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/configure.patch` | `patches` | 15 |
+
+---
+
+<a id="repo-fileport"></a>
+## fileport
+
+- **Origin Date (First Commit):** 2025-05-29
+- **Current Patch LOC:** 15
+- **Current Patch Count:** 1
+
+### Historical Trends
+
+![LOC Trend for fileport](images/upstream/fileport_current_loc_trend.png)
+![Count Trend for fileport](images/upstream/fileport_current_count_trend.png)
 
 ### Current Patch Details
 
@@ -5304,24 +5322,6 @@
 
 ---
 
-<a id="repo-fileport"></a>
-## fileport
-
-- **Origin Date (First Commit):** 2025-05-29
-- **Current Patch LOC:** 0
-- **Current Patch Count:** 0
-
-### Historical Trends
-
-*(Patch LOC trend graph not generated)*
-*(Patch count trend graph not generated)*
-
-### Current Patch Details
-
-*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
-
----
-
 <a id="repo-scdocport"></a>
 ## scdocport
 
@@ -5343,7 +5343,7 @@
 <a id="repo-inetutilsport"></a>
 ## inetutilsport
 
-- **Origin Date (First Commit):** Unknown
+- **Origin Date (First Commit):** 2025-06-02
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 

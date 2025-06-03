@@ -540,12 +540,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="git" data-searchable-text="git Blue 96.7% STABLE_git_3375 The Git version control system development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="git" data-searchable-text="git Skipped N/A utimedbg2 The Git version control system development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/gitport" target="_blank" rel="noopener noreferrer">git</a></strong></div>
-    <div class="tool-status">Status: Blue</div>
-    <div class="tool-test">Test: 96.7%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/gitport/releases/download/STABLE_gitport_3375/git-v2.49.0.20250529_110853.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_git_3375</a></div>
+    <div class="tool-status">Status: Skipped</div>
+    <div class="tool-test">Test: N/A</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/gitport/releases/download/utimedbg2/git-v2.49.0.20250602_231330.zos.pax.Z" target="_blank" rel="noopener noreferrer">utimedbg2</a></div>
     <div class="tool-desc" title="The Git version control system">The Git version control system</div>
   </div>
 </div>
@@ -998,12 +998,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="neovim" data-searchable-text="neovim Green 100.0% STABLE_neovim_3383 A text editor editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="neovim" data-searchable-text="neovim Green 100.0% STABLE_neovim_3413 A text editor editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/neovimport" target="_blank" rel="noopener noreferrer">neovim</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/neovimport/releases/download/STABLE_neovimport_3383/neovim-v0.11.2.20250530_153852.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_neovim_3383</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/neovimport/releases/download/STABLE_neovimport_3413/neovim-v0.11.2.20250603_062538.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_neovim_3413</a></div>
     <div class="tool-desc" title="A text editor">A text editor</div>
   </div>
 </div>
@@ -1352,12 +1352,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="oniguruma" data-searchable-text="oniguruma Green 100.0% STABLE_oniguruma_3060 A regular expression library library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="oniguruma" data-searchable-text="oniguruma Green 100.0% STABLE_oniguruma_3408 A regular expression library library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/onigurumaport" target="_blank" rel="noopener noreferrer">oniguruma</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/onigurumaport/releases/download/STABLE_onigurumaport_3060/oniguruma-heads.v6.9.10.20250203_150139.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_oniguruma_3060</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/onigurumaport/releases/download/STABLE_onigurumaport_3408/oniguruma-v6.9.10.20250602_111030.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_oniguruma_3408</a></div>
     <div class="tool-desc" title="A regular expression library">A regular expression library</div>
   </div>
 </div>
@@ -1402,12 +1402,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="zoslib" data-searchable-text="zoslib Green 100.0% STABLE_zoslib_3373 A library used by z/OS Open Tools library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="zoslib" data-searchable-text="zoslib Green 100.0% STABLE_zoslib_3411 A library used by z/OS Open Tools library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/zoslibport" target="_blank" rel="noopener noreferrer">zoslib</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/zoslibport/releases/download/STABLE_zoslibport_3373/zoslib-zopen2.20250528_212040.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_zoslib_3373</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/zoslibport/releases/download/STABLE_zoslibport_3411/zoslib-zopen2.20250602_170120.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_zoslib_3411</a></div>
     <div class="tool-desc" title="A library used by z/OS Open Tools">A library used by z/OS Open Tools</div>
   </div>
 </div>
@@ -1696,12 +1696,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 ## Source_Control 
 
-<div class="tool-item-filterable" data-package-name="git" data-searchable-text="git Blue 96.7% STABLE_git_3375 The Git version control system source_control port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="git" data-searchable-text="git Skipped N/A utimedbg2 The Git version control system source_control port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/gitport" target="_blank" rel="noopener noreferrer">git</a></strong></div>
-    <div class="tool-status">Status: Blue</div>
-    <div class="tool-test">Test: 96.7%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/gitport/releases/download/STABLE_gitport_3375/git-v2.49.0.20250529_110853.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_git_3375</a></div>
+    <div class="tool-status">Status: Skipped</div>
+    <div class="tool-test">Test: N/A</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/gitport/releases/download/utimedbg2/git-v2.49.0.20250602_231330.zos.pax.Z" target="_blank" rel="noopener noreferrer">utimedbg2</a></div>
     <div class="tool-desc" title="The Git version control system">The Git version control system</div>
   </div>
 </div>
@@ -1852,12 +1852,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="jq" data-searchable-text="jq Green 100.0% STABLE_jq_3355 A port of the JQ command-line JSON processor uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="jq" data-searchable-text="jq Blue 88.9% STABLE_jq_3409 A port of the JQ command-line JSON processor uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/jqport" target="_blank" rel="noopener noreferrer">jq</a></strong></div>
-    <div class="tool-status">Status: Green</div>
-    <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/jqport/releases/download/STABLE_jqport_3355/jq-1.7.1.20250526_013027.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_jq_3355</a></div>
+    <div class="tool-status">Status: Blue</div>
+    <div class="tool-test">Test: 88.9%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/jqport/releases/download/STABLE_jqport_3409/jq-jq-1.8.0.20250602_121631.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_jq_3409</a></div>
     <div class="tool-desc" title="A port of the JQ command-line JSON processor">A port of the JQ command-line JSON processor</div>
   </div>
 </div>
@@ -2068,6 +2068,16 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
+<div class="tool-item-filterable" data-package-name="file" data-searchable-text="file Green 100.0% STABLE_file_3410 utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/fileport" target="_blank" rel="noopener noreferrer">file</a></strong></div>
+    <div class="tool-status">Status: Green</div>
+    <div class="tool-test">Test: 100.0%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/fileport/releases/download/STABLE_fileport_3410/file-5.46.20250602_142913.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_file_3410</a></div>
+    <div class="tool-desc" title=""></div>
+  </div>
+</div>
+
 <div class="tool-item-filterable" data-package-name="findutils" data-searchable-text="findutils Blue 85.2% STABLE_findutils_3136 Utilities for finding files utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/findutilsport" target="_blank" rel="noopener noreferrer">findutils</a></strong></div>
@@ -2208,12 +2218,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="meta" data-searchable-text="meta Green 100.0% STABLE_meta_3336 zopen package manager utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="meta" data-searchable-text="meta Green 100.0% STABLE_meta_3412 zopen package manager utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/metaport" target="_blank" rel="noopener noreferrer">meta</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/metaport/releases/download/STABLE_metaport_3336/meta-main.20250516_013952.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_meta_3336</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/metaport/releases/download/STABLE_metaport_3412/meta-main.20250603_023207.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_meta_3412</a></div>
     <div class="tool-desc" title="zopen package manager">zopen package manager</div>
   </div>
 </div>
@@ -2491,4 +2501,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-06-02 06:12:01 UTC
+Last updated:  2025-06-03 06:12:06 UTC
