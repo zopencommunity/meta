@@ -312,8 +312,8 @@ if ${fileinstall}; then
   done
   # generate the install list JSON from the @@-delimited inputs
   installList=$(echo "${absoluteFiles}" \
-    | jq --raw-input --arg d "$(pwd -P)" \
-    'def make_object($url): {asset:{url: ( "file://" + $d + "/" + $url  )}}; . | split("@@") | map(select(.!="")|make_object(.)) | {"installqueue" :.} ')
+    | jq --raw-input \
+    'def make_object($url): {asset:{url: ( "file://" + $url  )}}; . | split("@@") | map(select(.!="")|make_object(.)) | {"installqueue" :.} ')
 else
   if ${all}; then
     # shellcheck disable=SC2034
