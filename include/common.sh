@@ -2488,14 +2488,15 @@ installFromPax()
     printError "Use zopen alt to select previous version to ensure known state"
   fi
 
+  setactiveLcl=true
   if [ -e "${ZOPEN_PKGINSTALL}/${name}/${name}/.pinned" ]; then
     printWarning "Current version of ${name} is pinned; not setting updated version as active"
     printWarning "Remove .pinned file and run 'zopen alt meta' to use new version"
-    setactive=false
+    setactiveLcl=false
     unInstallOldVersion=false
   fi
   # shellcheck disable=SC2154
-  if ${setactive}; then
+  if $setactive && $setactiveLcl; then
     if [ -L "${ZOPEN_PKGINSTALL}/${name}/${name}" ]; then
       printDebug "Removing old symlink '${ZOPEN_PKGINSTALL}/${name}/${name}'"
       rm -f "${ZOPEN_PKGINSTALL}/${name}/${name}"
@@ -2537,7 +2538,7 @@ EOF
     unsymlinkFromSystem "${name}" "${ZOPEN_ROOTFS}" "${currentderef}/.links" "${baseinstalldir}/${name}/${name}/.links"
   fi
 
-  if ${setactive}; then
+  if $setactive && $setactiveLcl; then
     printDebug "Marking this version as installed"
     touch "${ZOPEN_PKGINSTALL}/${name}/${name}/.active"
     installedList="${name} ${installedList}"
