@@ -2362,6 +2362,13 @@ getInstallFile()
       printError "Could not download from ${installurl}. Correct any errors and potentially retry"
     fi
   fi
+
+  # Check if this is a pax-flie install; in which case there is no "remote" JSON
+  case "${installurl}" in
+    file://*) return 0 ;;
+    *) :;;
+  esac
+
   metadataFile="$(basename "${installurl}").json"
   if [ -e "${downloadToDir}/${metadataFile}" ]; then
     printVerbose "Corresponding metadata '${metadataFile}' already in local cache"

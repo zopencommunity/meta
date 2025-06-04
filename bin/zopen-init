@@ -432,6 +432,7 @@ EOF
   . "${configFile}"
   printInfo "- zopen-config setup complete"
 }
+
 updateCACert()
 {
   printHeader "Updating CA Certificate"
@@ -684,6 +685,39 @@ updateBootstrappedTools() {
   if ${refresh}; then
     ${MYDIR}/zopen-install ${installOptions} -y curl jq pinentry gpg 
     toolInstall=$?
+  elif ${offlineInstall}; then
+    printVerbose "As offline, no access to meta.pax so copy currently running"
+    metabindir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)
+    ulzm="${rootfs}/usr/local/zopen/meta"
+    target="${ulzm}/meta-bootstrap"
+    mkdir -p "${target}"
+    printVerbose "Copying bare meta scrtips from '${metabindir}' to '${target}"
+    cp -R "${metabindir}/../bin" "${target}"
+    cp -R "${metabindir}/../include" "${target}"
+    printVerbose "Creating main symlink for meta"
+    ln -s "${ulzm}/meta-bootstrap" "${ulzm}/meta"
+    if ! runLogProgress "mergeIntoSystem \"meta\" \"${ulzm}/meta-bootstrap\" \"${rootfs}\"" \
+          "Merging meta into symlink mesh" "Merged meta into symlink mesh"; then
+      printSoftError "Unexpected errors merging symlinks into mesh"
+      printError "Use zopen alt to select previous version to ensure known state"
+    fi
+
+    printVerbose "Installing bootstrap tools"
+    PAX_LOCATIONS="$CURL_PAX_LOCATION,$JQ_PAX_LOCATION,${PINENTRY_PAX_LOCATION},${GPG_PAX_LOCATION}"
+
+    echo "$PAX_LOCATIONS" | tr ',' '\n' | while read -r pax; do
+      printVerbose "- Check for shipped ${pax}"
+      paxLocation=$(findrev "${MYDIR}" "${pax}")
+      echo "${paxLocation}/${pax}"
+      if [ -e "${paxLocation}/${pax}" ]; then
+        # Use local file install to make available; note that this should use
+        # the bootstrapped tools until the install completes and then gets
+        # sourced in
+        zopen install "${paxLocation}/${pax}" -y --bypass-prereq-checks --skip-verify
+      else
+        printError "Could not locate ${pax} in the zopen cache"
+      fi
+  done
   else
     ${MYDIR}/zopen-install ${installOptions} -y curl jq pinentry gpg meta
     toolInstall=$?
@@ -777,5 +811,5 @@ generateZopenConfig
 ! ${offlineInstall} && updateCACert
 generateAnalyticsConfiguration
 [ -e "${ZOPEN_ROOTFS}/var/lib/zopen/packageDB.json" ] || createInitialPackageDB
-! ${offlineInstall} && updateBootstrappedTools
+updateBootstrappedTools
 deinit
