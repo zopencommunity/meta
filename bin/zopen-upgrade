@@ -63,10 +63,17 @@ reinstallDeps=false
 nosymlink=false
 # shellcheck disable=SC2034
 doNotInstallDeps=true
+# shellcheck disable=SC2034
+bypassPrereqs=false
+
 yesToPrompts=false
 chosenRepos=""
 while [ $# -gt 0 ]; do
   case "$1" in
+    "--bypass-prereq-checks")
+      # shellcheck disable=SC2034
+      bypassPrereqs=true 
+      ;;
     "--yes" | "-y")
       # shellcheck disable=SC2034
       yesToPrompts=true  # Automatically answer 'yes' to any questions
