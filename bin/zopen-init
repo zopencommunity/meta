@@ -428,16 +428,20 @@ EOF
   fi
 
   # Source the config file
+  # shellcheck disable=SC1090
   . "${configFile}"
-
+  printInfo "- zopen-config setup complete"
+}
+updateCACert()
+{
   printHeader "Updating CA Certificate"
   export ZOPEN_CA="${ZOPEN_ROOTFS}/${ZOPEN_CA_DIR}/${certFileName}"
   caCertDir="${ZOPEN_ROOTFS}/${ZOPEN_CA_DIR}"
   mkdir -p "${caCertDir}"
-  runAndLog "${MYDIR}/zopen-update-cacert -f "${caCertDir}" "
+  runAndLog "${MYDIR}/zopen-update-cacert -f ${caCertDir} "
   [ $? -ne 0 ] && exit $?
 
-  printInfo "- zopen bootstrapping complete"
+  printInfo "- CA Certificate updated"
 }
 
 generateJsonConfiguration()
@@ -770,6 +774,7 @@ generateFileSystem
 generateJsonConfiguration
 generateDefaultRepository
 generateZopenConfig
+! ${offlineInstall} && updateCACert
 generateAnalyticsConfiguration
 [ -e "${ZOPEN_ROOTFS}/var/lib/zopen/packageDB.json" ] || createInitialPackageDB
 ! ${offlineInstall} && updateBootstrappedTools
