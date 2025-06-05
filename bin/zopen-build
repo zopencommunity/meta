@@ -940,16 +940,16 @@ checkGitVersion()
 gitClone()
 {
   gitname=$(basename "${ZOPEN_URL}")
-  dir=${gitname%%.*}
+  sourcedir=${gitname%%.*}
   if $printSourceDir; then
-    echo $dir  
+    echo $sourcedir  
     exit 0
   fi
-  if [ -d "${dir}" ]; then
-    printInfo "Using existing git clone'd directory ${dir}"
+  if [ -d "${sourcedir}" ]; then
+    printInfo "Using existing git clone'd directory ${sourcedir}"
   else
     freshBuild=true
-    printInfo "Clone and create ${dir}"
+    printInfo "Clone and create ${sourcedir}"
 
     shallowCloneOption="--depth 1"
     if [ "${ZOPEN_CLONE_FULL}" = "yes" ]; then
@@ -971,14 +971,13 @@ gitClone()
     if ! runAndLog "git clone ${shallowCloneOption} ${cloneRef} \"${ZOPEN_URL}\" ${gitOptions}"; then
       printError "Unable to clone ${gitname} from ${ZOPEN_URL}"
     fi
-    tagTree "${dir}"
+    tagTree "${sourcedir}"
   fi
 }
 
 extractTarBall()
 {
   tarballz="$1"
-  dir="$2"
   noext=${tarballz%%.zip}
   if [ "x${noext}" = "x${tarballz}" ]; then
     # Standard tarball
@@ -992,7 +991,7 @@ extractTarBall()
       printError "Need to be running at least tar 1.34"
     fi
 
-    printInfo "Extract tarball ${tarballz} into ${dir}"
+    printInfo "Extract tarball ${tarballz} into ${sourcedir}"
     tar -axf "${tarballz}"
     if [ $? -gt 0 ]; then
       printError "Unable to untar ${tarballz}"
@@ -1003,7 +1002,7 @@ extractTarBall()
     # Keep the directory itself since there may be a symbolic
     # link pointing to it
     rm -rf "${noext}/*"
-    printInfo "Extract zip ${tarballz} into ${dir}"
+    printInfo "Extract zip ${tarballz} into ${sourcedir}"
     out=$(unzip "${tarballz}" 2> /dev/null)
     if [ $? -gt 1 ]; then
       printError "unzip failed for ${tarballz}."
@@ -1012,13 +1011,13 @@ extractTarBall()
   fi
   if command -V "zopen_post_extract" > /dev/null 2>&1; then
     printVerbose "Running zopen_post_extract"
-    if ! "zopen_post_extract"  "${dir}"; then
+    if ! "zopen_post_extract"  "${sourcedir}"; then
       printError "Error(s) running 'zopen_post_extract' from buildenv"
     fi
   fi
   rm -f "${tarballz}"
-  tagTree "${dir}"
-  cd "${dir}" || printError "Cannot cd to ${dir}"
+  tagTree "${sourcedir}"
+  cd "${sourcedir}" || printError "Cannot cd to ${sourcedir}"
 
   # Clean up .git* files since we will be creating our own local git repo for applying patches
   rm -rf .git* .travis*
@@ -1066,52 +1065,84 @@ extractTarBall()
   fi
 }
 
+get_top_folder_name() {
+  archive="$1"
+
+  case "$archive" in
+    *.zip)
+      path=$(unzip -Z1 "$archive" | awk -F/ '{print $1}' | grep -v '^\.$' | sort -u | head -1)
+      ;;
+    *.tar.lz|*.tar.lzip)
+      path=$(lzip -dc "$archive" | tar -tf - 2>/dev/null | awk -F/ '{print $1}' | grep -v '^\.$' | sort -u | head -1)
+      ;;
+    *.tar|*.tar.*|*.tgz)
+      path=$(tar -tf "$archive" 2>/dev/null | awk -F/ '{print $1}' | grep -v '^\.$' | sort -u | head -1)
+      ;;
+    *)
+      path=""
+      ;;
+  esac
+
+  # If not found, derive from filename
+  if [ -z "$path" ]; then
+      path="$archive"
+      for ext in .tar.lzip .tar.lz .tar.gz .tgz .tar.bz2 .tbz2 .tar.xz .txz .tar .zip; do
+        path="${path%$ext}"
+      done
+      path=$(basename "$path")
+  fi
+
+  echo "$path"
+}
+
 downloadTarBall()
 {
   if ! curl --version > /dev/null; then
     printError "curl is required to download a tarball"
   fi
   tarballz=$(basename "${ZOPEN_URL}")
-  dir=${tarballz%%.tar.*}
-  dir=${dir%%.tgz}
-  dir=${dir%%.zip}
+
+  if ${verbose}; then
+    printVerbose "curl ${ZOPEN_CURL_PARAMS} -L -o ${tarballz} ${ZOPEN_URL}"
+  fi
+  #
+  # Some older tarballs (openssl) contain a pax_global_header file. Remove it
+  # in advance so that unzip won't fail
+  #
+  rm -f pax_global_header
+
+  #
+  # Some sites fail on the first call because the name resolver hasn't resolved.
+  # Make a first call to just get the headers and toss everything out just to
+  # set up the cache (required for openssl)
+  #
+  curlCmd -I "${ZOPEN_URL}" > /dev/null 2>&1
+
+  if ! curlCmd -L -o "${tarballz}" "${ZOPEN_URL}"; then
+    if [ -f "${tarballz}" ] && [ $(wc -c "${tarballz}" | awk '{print $1}') -lt 1024 ]; then
+      cat "${tarballz}" > /dev/null
+    else
+      printError "Re-try curl for diagnostics"
+      curlCmd -L -o /dev/null "${ZOPEN_URL}"
+    fi
+    printError "Unable to download ${tarballz} from ${ZOPEN_URL}"
+  fi
+  # curl tags the file as ISO8859-1 (oops) so the tag has to be removed
+  chtag -b "${tarballz}"
+
+  sourcedir=$(get_top_folder_name "$tarballz")
+
   if $printSourceDir; then
-    echo $dir  
+    echo $sourcedir  
+    rm -f "${tarballz}"
     exit 0
   fi
-  if [ -d "${dir}" ]; then
-    echo "Using existing tarball directory ${dir}" >&2
+  if [ -d "${sourcedir}" ]; then
+    echo "Using existing tarball directory ${sourcedir}" >&2
+    rm -f "${tarballz}"
   else
     freshBuild=true
-    if ${verbose}; then
-      printVerbose "curl ${ZOPEN_CURL_PARAMS} -L -o ${tarballz} ${ZOPEN_URL}"
-    fi
-    #
-    # Some older tarballs (openssl) contain a pax_global_header file. Remove it
-    # in advance so that unzip won't fail
-    #
-    rm -f pax_global_header
-
-    #
-    # Some sites fail on the first call because the name resolver hasn't resolved.
-    # Make a first call to just get the headers and toss everything out just to
-    # set up the cache (required for openssl)
-    #
-    curlCmd -I "${ZOPEN_URL}" > /dev/null 2>&1
-
-    if ! curlCmd -L -o "${tarballz}" "${ZOPEN_URL}"; then
-      if [ -f "${tarballz}" ] && [ $(wc -c "${tarballz}" | awk '{print $1}') -lt 1024 ]; then
-        cat "${tarballz}" > /dev/null
-      else
-        printError "Re-try curl for diagnostics"
-        curlCmd -L -o /dev/null "${ZOPEN_URL}"
-      fi
-      printError "Unable to download ${tarballz} from ${ZOPEN_URL}"
-    fi
-    # curl tags the file as ISO8859-1 (oops) so the tag has to be removed
-    chtag -b "${tarballz}"
-
-    extractTarBall "${tarballz}" "${dir}"
+    extractTarBall "${tarballz}" "${sourcedir}"
   fi
 }
 
@@ -1131,16 +1162,7 @@ applyPatches()
     return 0
   fi
   printHeader "Applying patches"
-  if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
-    tarballz=$(basename "${ZOPEN_URL}")
-    root_loc=${tarballz%%.tar.*}
-    root_loc=${root_loc%%.tgz}
-    root_loc=${root_loc%%.zip}
-    code_dir="${ZOPEN_ROOT}/${root_loc}"
-  else
-    gitname=$(basename "${ZOPEN_URL}")
-    code_dir="${ZOPEN_ROOT}/${gitname%%.*}"
-  fi
+  code_dir="${ZOPEN_ROOT}/${sourcedir}"
 
   if [ ! -z "${ZOPEN_PATCH_DIR}" ]; then
     patch_try_dir="${ZOPEN_ROOT}/${ZOPEN_PATCH_DIR}"
@@ -2140,15 +2162,15 @@ EOF
 resolveCommands()
 {
   if [ -z "${ZOPEN_NAME}" ]; then
-    ZOPEN_NAME="${dir}"
+    ZOPEN_NAME="${sourcedir}"
     if [ "${ZOPEN_TYPE}x" = "GITx" ]; then
       tag_name=$(git describe --tags --exact-match HEAD 2>/dev/null)
 
       if [ -n "$tag_name" ]; then
-        ZOPEN_NAME="${dir}-${tag_name}"
+        ZOPEN_NAME="${sourcedir}-${tag_name}"
       elif [ "${ZOPEN_TYPE}x" = "GITx" ]; then
         branch=$(git rev-parse --abbrev-ref HEAD 2>&1 | sed "s/\//./g")
-        ZOPEN_NAME="${dir}-${branch}"
+        ZOPEN_NAME="${sourcedir}-${branch}"
       fi
     fi
   fi
@@ -2592,7 +2614,7 @@ if ${getSourceOnly}; then
   exit 0
 fi
 
-cd "${ZOPEN_ROOT}/${dir}" || exit 99
+cd "${ZOPEN_ROOT}/${sourcedir}" || exit 99
 
 if [ -n "${ZOPEN_SRC_DIR}" ]; then
   cd "${ZOPEN_SRC_DIR}" || exit 99

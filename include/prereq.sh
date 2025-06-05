@@ -35,7 +35,7 @@ check_zos_version() {
   EXPECTED_VERSION_NUMBER=$((EXPECTED_MAJOR * 100 + EXPECTED_MINOR))
 
   if [ "$VERSION_NUMBER" -lt "$EXPECTED_VERSION_NUMBER" ]; then
-    echo "ERROR: Expected z/OS version $1 or earlier, but found z/OS version $CURRENT_VERSION"
+    echo "ERROR: Expected z/OS version $1 or later, but found z/OS version $CURRENT_VERSION"
     exit 1
   fi
 }
