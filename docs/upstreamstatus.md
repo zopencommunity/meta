@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-06-03 06:11:03 EDT.*
+*Report generated on: 2025-06-05 06:11:11 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 236
-- **Total Current Lines of Code (LOC) in Patches:** 30,425
-- **Total Number of Current Patch Files:** 704
-- **Average Current Patch LOC per Project:** 128.92
-- **Average Current Patch Count per Project:** 2.98
+- **Total Projects Analyzed:** 237
+- **Total Current Lines of Code (LOC) in Patches:** 30,437
+- **Total Number of Current Patch Files:** 705
+- **Average Current Patch LOC per Project:** 128.43
+- **Average Current Patch Count per Project:** 2.97
 
 ### Historical Trends (All Projects)
 
@@ -164,6 +164,7 @@
 | [aprport](#repo-aprport) | 13 | +0 | 1 |
 | [libxml2port](#repo-libxml2port) | 12 | +0 | 1 |
 | [gflagsport](#repo-gflagsport) | 12 | +0 | 1 |
+| [libpslport](#repo-libpslport) | 12 | +12 | 1 |
 | [quiltport](#repo-quiltport) | 10 | +0 | 1 |
 | [zlibport](#repo-zlibport) | 0 | +0 | 0 |
 | [help2manport](#repo-help2manport) | 0 | +0 | 0 |
@@ -3625,6 +3626,26 @@
 | Patch File (Repo Relative Path) | Source | LOC |
 |---|---|:---|
 | `patches/CMakeLists.txt.patch` | `patches` | 12 |
+
+---
+
+<a id="repo-libpslport"></a>
+## libpslport
+
+- **Origin Date (First Commit):** 2025-06-03
+- **Current Patch LOC:** 12
+- **Current Patch Count:** 1
+
+### Historical Trends
+
+![LOC Trend for libpslport](images/upstream/libpslport_current_loc_trend.png)
+![Count Trend for libpslport](images/upstream/libpslport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/PR1.patch` | `patches` | 12 |
 
 ---
 

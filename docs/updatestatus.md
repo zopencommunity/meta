@@ -13,6 +13,7 @@
 - 2024-12-11: [Update bash-completion-version to 20060301 from V.R.M](https://github.com/zopencommunity/bash-completionport/pull/1) ❌
 
 ### buildkiteport
+- 2025-06-04: [Update buildkite-version to 3.98.1 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/59) ❌
 - 2025-05-27: [Update buildkite-version to 3.98.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/58) ❌
 - 2025-05-13: [Update buildkite-version to 3.97.2 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/57) ❌
 - 2025-05-12: [Update buildkite-version to 3.97.1 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/56) ❌
@@ -143,6 +144,7 @@
 - 2025-03-06: [Update ghcli-version to 2.68.1 from 2.67.0](https://github.com/zopencommunity/githubcliport/pull/47) ❌
 
 ### gitlabcliport
+- 2025-06-04: [Update glab-version to 1.59.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/29) ❌
 - 2025-05-28: [Update glab-version to 1.58.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/28) ❌
 - 2025-04-24: [Update glab-version to 1.56.0 from 1.52.0](https://github.com/zopencommunity/gitlabcliport/pull/26) ❌
 - 2025-03-25: [Update glab-version to 1.55.0 from 1.52.0](https://github.com/zopencommunity/gitlabcliport/pull/25) ❌
@@ -170,6 +172,9 @@
 - 2025-04-20: [Update gperf-version to 3.3 from 3.1](https://github.com/zopencommunity/gperfport/pull/9) ❌
 - 2025-04-07: [Update gperf-version to 3.2 from 3.1](https://github.com/zopencommunity/gperfport/pull/7) ✅
 - 2025-04-14: [Update gperf-version to 3.2.1 from 3.1](https://github.com/zopencommunity/gperfport/pull/8) ✅
+
+### gpgport
+- 2025-06-03: [Update gpg-version to 2.5.7 from 2.5.6](https://github.com/zopencommunity/gpgport/pull/50) ❌
 
 ### grafanaport
 - 2025-05-23: [Update grafana-version to 12.0.1 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/22) ❌
@@ -256,6 +261,9 @@
 ### libuvport
 - 2025-04-25: [Update libuv-version to 1.51.0 from 1.50.0](https://github.com/zopencommunity/libuvport/pull/16) ❌
 
+### luaport
+- 2025-06-04: [Update lua-version to 5.4.8 from 5.4.7](https://github.com/zopencommunity/luaport/pull/9) ❌
+
 ### m4port
 - 2025-05-11: [Update m4-version to 1.4.20 from 1.4.19](https://github.com/zopencommunity/m4port/pull/44) ❌
 
@@ -300,7 +308,7 @@
 - 2024-06-20: [Update osv-scanner-version to 1.8.0 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/7) ❌
 - 2024-05-30: [Update osv-scanner-version to 1.7.4 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/6) ✅
 - 2024-05-09: [Update osv-scanner-version to 1.7.3 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/5) ❌
-- 2024-04-19: [Update osv-scanner-version to 1.7.2 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/4) ❌
+- 2024-04-19: [Update osv-scanner-version to 1.7.2 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/4) ❓
 - 2024-03-20: [Update osv-scanner-version to 1.7.1 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/3) ❓
 - 2024-03-06: [Update osv-scanner-version to 1.7.0 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/2) ❓
 - 2024-02-15: [Update osv-scanner-version to 1.6.2 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/1) ❓
@@ -510,7 +518,7 @@
 - ✅ esbuildport - [![Bump Status](https://github.com/zopencommunity/esbuildport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/esbuildport/actions/workflows/bump.yml)
 - ✅ expatport - [![Bump Status](https://github.com/zopencommunity/expatport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/expatport/actions/workflows/bump.yml)
 - ✅ expectport - [![Bump Status](https://github.com/zopencommunity/expectport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/expectport/actions/workflows/bump.yml)
-- ❌ fileport - Workflow not configured
+- ✅ fileport - [![Bump Status](https://github.com/zopencommunity/fileport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/fileport/actions/workflows/bump.yml)
 - ✅ findutilsport - [![Bump Status](https://github.com/zopencommunity/findutilsport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/findutilsport/actions/workflows/bump.yml)
 - ✅ fishport - [![Bump Status](https://github.com/zopencommunity/fishport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/fishport/actions/workflows/bump.yml)
 - ✅ flexport - [![Bump Status](https://github.com/zopencommunity/flexport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/flexport/actions/workflows/bump.yml)
@@ -583,6 +591,7 @@
 - ✅ libpcre2port - [![Bump Status](https://github.com/zopencommunity/libpcre2port/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libpcre2port/actions/workflows/bump.yml)
 - ✅ libpcreport - [![Bump Status](https://github.com/zopencommunity/libpcreport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libpcreport/actions/workflows/bump.yml)
 - ✅ libpipelineport - [![Bump Status](https://github.com/zopencommunity/libpipelineport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libpipelineport/actions/workflows/bump.yml)
+- ✅ libpslport - [![Bump Status](https://github.com/zopencommunity/libpslport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libpslport/actions/workflows/bump.yml)
 - ✅ librabbitmqport - [![Bump Status](https://github.com/zopencommunity/librabbitmqport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/librabbitmqport/actions/workflows/bump.yml)
 - ❌ librdkafkaport - Workflow not configured
 - ❌ libsasl2port - Workflow not configured
@@ -708,10 +717,10 @@
 
 </details>
 
-**Summary:** 203 active | 47 missing
+**Summary:** 205 active | 46 missing
 
 ---
 
 
-> Last updated: 2025-06-03 06:07:16 EDT
+> Last updated: 2025-06-05 06:07:05 EDT
 
