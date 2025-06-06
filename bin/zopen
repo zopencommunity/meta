@@ -39,6 +39,7 @@ Command:
   install           installs one or more zopen community packages
   info              displays detailed information about a package
   list              lists information about zopen community packages
+  publish           publish zopen package release to github
   query             list local or remote info about zopen community packages
   remove            removes installed zopen community packages
   update-cacert     update the cacert.pem file used by zopen community
@@ -67,6 +68,7 @@ SEE ALSO:
   zopen-init(1)
   zopen-install(1)
   zopen-info(1)
+  zopen-publish(1)
   zopen-query(1)
   zopen-remove(1)
   zopen-update-cacert(1)
@@ -88,7 +90,7 @@ version=false
 for arg in $*; do
   case "${arg}" in
     "alt"|"audit"|"build"|"clean"|"generate"|"init"|"install"|\
-    "query"|"remove"|"update-cacert"|"info")
+    "query"|"remove"|"update-cacert"|"info"|"publish")
       subcmd="zopen-${arg}"
       ;;
     "list")
