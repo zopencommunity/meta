@@ -1,20 +1,21 @@
 #!/usr/bin/env python3
 import json
 import requests
-from datetime import datetime
+from datetime import datetime # Ensure datetime is imported
 import sys
 from collections import defaultdict
-import matplotlib.pyplot as plt
-from matplotlib import rcParams
-import matplotlib as mpl
-import matplotlib.cm as cm
+import matplotlib.pyplot as plt # Keep if still used for other outputs
+from matplotlib import rcParams # Keep if still used
+import matplotlib as mpl # Keep if still used
+import matplotlib.cm as cm # Keep if still used
 from github import Github
 import os
-import re
-import subprocess
-import shutil
-from itertools import chain
-rcParams.update({'figure.autolayout': True})
+import re # Ensure re is imported
+import subprocess # Keep if still used
+import shutil # Keep if still used
+from itertools import chain # Keep if still used
+rcParams.update({'figure.autolayout': True}) # Keep if still used
+import html # For escaping attribute values
 
 def get_status_color(passed_tests, total_tests, has_releases):
     if not total_tests:
@@ -36,20 +37,13 @@ def get_success_rate(passed_tests, total_tests, has_releases):
         return -1
     return (passed_tests / total_tests) * 100
 
-def write_package_table_row(package, status, success_rate, latest_release, latest_asset, description):
-    """Helper function to write a consistent table row"""
-    print(f"| [{package}](https://github.com/zopencommunity/{package}port)", end='')
-    print(f"|{status}", end='')
-    print(f"|{success_rate:.1f}%" if success_rate >= 0 else "|N/A", end='')
-    print(f"|[{latest_release['tag_name'].replace('port', '')}]({latest_asset['url']})", end='')
-    print(f"|{description}|")
-
 def get_dependencies(repo):
     """Get dependencies from buildenv file"""
     try:
         response = requests.get(f"https://raw.githubusercontent.com/zopencommunity/{repo.name}/main/buildenv")
         if response.status_code == 200:
-            matches = re.findall('export\s+ZOPEN.*DEPS\s*=\s*"([^"]*)"', response.text)
+            # FIX 1: Use raw string for regex
+            matches = re.findall(r'export\s+ZOPEN.*DEPS\s*=\s*"([^"]*)"', response.text)
             dependencies = []
             for match in matches:
                 dependencies += match.split()
@@ -57,6 +51,47 @@ def get_dependencies(repo):
     except Exception as e:
         print(f"Error getting dependencies for {repo.name}: {str(e)}", file=sys.stderr)
     return []
+
+def write_package_item_html(package_info, category_name):
+    pkg_name = package_info['package']
+    status = package_info['status']
+    success_rate_num = package_info['success_rate']
+    latest_release_info = package_info['latest_release']
+    latest_asset_info = package_info['latest_asset']
+    description = package_info['description'] if package_info['description'] is not None else ""
+
+    success_rate_str = f"{success_rate_num:.1f}%" if success_rate_num >= 0 else "N/A"
+    release_tag = latest_release_info['tag_name'].replace('port', '')
+    asset_url = latest_asset_info['url'] 
+    repo_url = f"https://github.com/zopencommunity/{pkg_name}port"
+
+    # Construct searchable text (same as before)
+    searchable_components = [
+        pkg_name, status, success_rate_str, release_tag, description, category_name, "port"
+    ]
+    searchable_text = " ".join(filter(None, searchable_components)) 
+    searchable_text_attr = html.escape(searchable_text, quote=True)
+    package_name_attr = html.escape(pkg_name, quote=True)
+
+    # Updated HTML structure for CSS Grid
+    print(f'<div class="tool-item-filterable" data-package-name="{package_name_attr}" data-searchable-text="{searchable_text_attr}" style="padding: 8px 0; border-bottom: 1px solid #eee;">')
+    print(f'  <div class="tool-info-grid">') # This will be our Grid container
+
+    # Grid items with specific classes
+    print(f'    <div class="tool-name"><strong><a href="{repo_url}" target="_blank" rel="noopener noreferrer">{html.escape(pkg_name)}</a></strong></div>')
+    print(f'    <div class="tool-status">Status: {html.escape(status)}</div>')
+    print(f'    <div class="tool-test">Test: {html.escape(success_rate_str)}</div>')
+    print(f'    <div class="tool-release"><a href="{asset_url}" target="_blank" rel="noopener noreferrer">{html.escape(release_tag)}</a></div>')
+    
+    desc_display_text = ""
+    if description.strip():
+        desc_display_text = html.escape(description)
+    # Always print the div for description to maintain grid structure, even if empty.
+    # The title attribute will show the full description on hover.
+    print(f'    <div class="tool-desc" title="{html.escape(description, quote=True)}">{desc_display_text}</div>')
+    
+    print(f'  </div>') # Close tool-info-grid
+    print(f'</div>\n') # Close tool-item-filterable
 
 progressPerStatus = {
     "Green": 0,
@@ -70,10 +105,10 @@ statusPerPort = {}
 download_counts = {}
 packages_by_category = defaultdict(list)
 dependentOn = {}
-totalPatchLinesPerPort = {}
+totalPatchLinesPerPort = {} # This variable is defined but not used in the provided script snippet
 
 if os.getenv('ZOPEN_GITHUB_OAUTH_TOKEN') is None:
-    print("error: environment variable ZOPEN_GITHUB_OAUTH_TOKEN must be defined")
+    print("error: environment variable ZOPEN_GITHUB_OAUTH_TOKEN must be defined", file=sys.stderr)
     sys.exit(1)
 
 g = Github(os.getenv('ZOPEN_GITHUB_OAUTH_TOKEN'))
@@ -81,47 +116,64 @@ g = Github(os.getenv('ZOPEN_GITHUB_OAUTH_TOKEN'))
 json_url = "https://raw.githubusercontent.com/ZOSOpenTools/meta/main/docs/api/zopen_releases_latest.json"
 response = requests.get(json_url)
 data = json.loads(response.text)
-todaysDate = data['timestamp']
+
+# FIX 2: Generate todaysDate using current time
+todaysDate = datetime.now().strftime("%Y-%m-%d %H:%M:%S UTC")
 
 # Process the data and organize by categories
+# data is expected to have a 'release_data' key at the top level
+if 'release_data' not in data:
+    print(f"Error: 'release_data' key not found in JSON from {json_url}", file=sys.stderr)
+    sys.exit(1)
+
 for package, releases in data['release_data'].items():
     if not releases:
         continue
-            
-    latest_release = releases[0]  # Releases are sorted newest first
+        
+    latest_release = releases[0]
+    if not latest_release['assets']: # Check if assets list is empty
+        print(f"Warning: No assets found for latest release of {package}. Skipping.", file=sys.stderr)
+        continue
     latest_asset = latest_release['assets'][0]
     
-    # Get GitHub repo info
-    repo = g.get_repo(f"zopencommunity/{package}port")
-    description = repo.description or ""
+    try:
+        repo = g.get_repo(f"zopencommunity/{package}port")
+    except Exception as e:
+        print(f"Error getting repo for {package}port: {e}", file=sys.stderr)
+        continue # Skip this package if repo info can't be fetched
+
+    description = repo.description if repo.description else ""
     
-    # Get dependencies
     dependencies = get_dependencies(repo)
-    dependentOn[package + "port"] = []
+    if package + "port" not in dependentOn:
+        dependentOn[package + "port"] = []
     for dep in dependencies:
-        if dep + "port" in dependentOn:
-            dependentOn[dep + "port"].append(package)
+        if dep + "port" not in dependentOn:
+            dependentOn[dep + "port"] = []
+        dependentOn[dep + "port"].append(package)
     
-    # Calculate status and success rate
-    total_tests = int(latest_asset['total_tests']) if latest_asset['total_tests'] else 0
-    passed_tests = int(latest_asset['passed_tests']) if latest_asset['passed_tests'] else 0
+    total_tests = int(latest_asset['total_tests']) if latest_asset.get('total_tests') else 0
+    passed_tests = int(latest_asset['passed_tests']) if latest_asset.get('passed_tests') else 0
     
-    totalReleases = repo.get_releases().totalCount;
+    totalReleases = repo.get_releases().totalCount
     status = get_status_color(passed_tests, total_tests, totalReleases > 0)
     success_rate = get_success_rate(passed_tests, total_tests, totalReleases > 0)
 
-    # Update counters
     progressPerStatus[status] += 1
     statusPerPort[package + "port"] = success_rate
     
-    # Calculate download count
-    download_counts[package + "port"] = sum(
-        int(asset['size']) for release in releases 
-        for asset in release['assets']
-    )
+    current_package_download_count = 0
+    for release_item in releases:
+        for asset_item in release_item['assets']:
+            if 'size' in asset_item and asset_item['size'] is not None:
+                try:
+                    current_package_download_count += int(asset_item['size'])
+                except (ValueError, TypeError):
+                    print(f"Warning: Invalid size for asset in {package}: {asset_item.get('name', 'N/A')}", file=sys.stderr)
+    download_counts[package + "port"] = current_package_download_count
     
-    # Get categories and add to category lists
-    categories = latest_asset['categories'].strip().split() if latest_asset['categories'] else ['uncategorized']
+    categories_str = latest_asset.get('categories') if latest_asset.get('categories') else ""
+    categories = categories_str.strip().split() if categories_str.strip() else ['uncategorized']
     for category in categories:
         packages_by_category[category].append({
             'package': package,
@@ -132,103 +184,134 @@ for package, releases in data['release_data'].items():
             'description': description
         })
 
-# Write Latest.md with category sections
+original_stdout = sys.stdout # Save original stdout
 with open('docs/Latest.md', 'w') as f:
-    sys.stdout = f
+    sys.stdout = f 
     print("# zopen community ports\n")
     print("Note: to download the latest packages, use the [zopen package manager](/Guides/QuickStart)\n")
 
     print("<div>")
     print("  <label for=\"category-filter\">Filter by Category: </label>")
-    print("  <select id=\"category-filter\" onchange=\"filterTable()\">")
+    print("  <select id=\"category-filter\" onchange=\"filterTable()\">") 
     print("    <option value=\"All\">All</option>")
     
-    # Populate dropdown options
-    for category in sorted(packages_by_category.keys()):
-        print(f"    <option value=\"{category}\">{category}</option>")
+    for category_key in sorted(packages_by_category.keys()):
+        print(f"    <option value=\"{html.escape(category_key)}\">{html.escape(category_key.title())}</option>")
     
     print("  </select>")
     print("</div>\n")
 
-    # Write table for each category
-    for category, packages in sorted(packages_by_category.items()):
-        print(f"<div class=\"table-category\" data-category=\"{category}\">")
-        print(f"\n## {category.title()} <!-- {{docsify-ignore}} -->\n")
-        print("| Package | Status | Test Success Rate | Latest Release | Description |")
-        print("|---|---|---|---|---|")
+    print('<div class="tool-search-container" style="margin-top: 15px; margin-bottom: 20px;">')
+    print('  <input type="text" id="toolSearchInput" placeholder="Type to search tools by name, description, release, status, etc..." style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">')
+    print('</div>\n')
+
+    for category_key, packages_list in sorted(packages_by_category.items()):
+        print(f"<div class=\"table-category\" data-category=\"{html.escape(category_key)}\">")
+        print(f"\n## {html.escape(category_key.title())} \n")
         
-        # Sort packages by success rate within category
-        sorted_packages = sorted(packages, key=lambda x: (-x['success_rate'] if x['success_rate'] >= 0 else float('-inf')))
+        sorted_packages_list = sorted(packages_list, key=lambda x: x['package'].lower())
         
-        for package_info in sorted_packages:
-            write_package_table_row(
-                package_info['package'],
-                package_info['status'],
-                package_info['success_rate'],
-                package_info['latest_release'],
-                package_info['latest_asset'],
-                package_info['description']
-            )
+        if not sorted_packages_list:
+            print(f"<p><em>No packages currently listed in this category.</em></p>")
+
+        for package_item_info in sorted_packages_list:
+            write_package_item_html(package_item_info, category_key) 
         print("</div>\n")
 
+    print('<div id="toolNoResultsMessage" style="display: none; text-align: center; padding: 20px; color: #777; margin-top: 20px;">')
+    print('  <p>No tools found matching your search criteria.</p>')
+    print('</div>\n')
 
     print("\nLast updated: ", todaysDate)
 
+sys.stdout = original_stdout # Restore stdout
 
-# Generate pie chart
-labels = []
-sizes = []
-for x, y in progressPerStatus.items():
-    labels.append(x)
-    sizes.append(y)
-colors = ['#00FF00','#0000FF','#FFFF00','#FF0000','#AAAAAA','#FF8888']
-plt.title("Current Porting Status")
-p, tx, autotexts = plt.pie(sizes, labels=labels, colors=colors, autopct="", shadow=True)
-for i, a in enumerate(autotexts):
-    a.set_text("{}".format(sizes[i]))
-plt.axis('equal')
-plt.savefig('docs/images/progress.png')
-plt.close()
-
-# Generate bar chart
-labels = []
-sizes = []
-for x, y in sorted(statusPerPort.items(), key=lambda x: x[1]):
-    if y >= 0:
-        labels.append(x)
-        sizes.append(y)
-fig = plt.figure()
-fig.set_size_inches(45, 32)
-ax = fig.add_axes([0,0,1,1])
-cmap = cm.get_cmap('Greens')
-color_norm = mpl.colors.Normalize(vmin=min(sizes), vmax=max(sizes))
-colors = cmap(color_norm(sizes))
-ax.set_xlabel('Success Rate (%)', fontsize=18)
-ax.set_title("Project Test Quality", fontsize=24)
-ax.tick_params(axis='both', labelsize=18)
-col = []
-for val in sizes:
-    if val == 100:
-        col.append('green')
-    elif val >= 50:
-        col.append('blue')
+# --- Matplotlib chart generation code ---
+# Ensure this section is uncommented and figures managed if charts are needed.
+# Example: For the pie chart
+if any(progressPerStatus.values()): # Check if there's data for the chart
+    plt.figure() # Create a new figure to avoid overlap if multiple charts are made
+    labels_pie = []
+    sizes_pie = []
+    for x, y in progressPerStatus.items():
+        labels_pie.append(x)
+        sizes_pie.append(y)
+    colors_pie = ['#00FF00','#0000FF','#FFFF00','#FF0000','#AAAAAA','#FF8888'] # Ensure enough colors if statuses change
+    plt.title("Current Porting Status")
+    # Ensure sizes_pie is not all zeros before calling plt.pie to avoid errors
+    if sum(sizes_pie) > 0:
+        p_pie, tx_pie, autotexts_pie = plt.pie(sizes_pie, labels=labels_pie, colors=colors_pie, autopct="", shadow=True)
+        for i, a_pie in enumerate(autotexts_pie):
+            a_pie.set_text("{}".format(sizes_pie[i])) # Display actual counts
     else:
-        col.append('#FFEF00')
+        plt.text(0.5, 0.5, 'No data to display', horizontalalignment='center', verticalalignment='center')
+    plt.axis('equal')
+    plt.savefig('docs/images/progress.png')
+    plt.close() # Close the figure
+else:
+    print("No data for progress pie chart.", file=sys.stderr)
 
-bars = ax.barh(labels, sizes, color=col, height=0.8, align='edge')
-ax.bar_label(bars)
-plt.savefig('docs/images/quality.png', bbox_inches="tight")
+# Example: For the bar chart
+active_statusPerPort = {k: v for k, v in statusPerPort.items() if v >= 0} # Filter out negative success rates for this chart
+if active_statusPerPort:
+    labels_bar = []
+    sizes_bar = []
+    for x_bar, y_bar in sorted(active_statusPerPort.items(), key=lambda item: item[1]):
+        labels_bar.append(x_bar)
+        sizes_bar.append(y_bar)
+    
+    if labels_bar: # Proceed if there are items to plot
+        fig_bar = plt.figure()
+        fig_bar.set_size_inches(45, max(32, len(labels_bar) * 0.5)) # Adjust height based on number of labels
+        ax_bar = fig_bar.add_axes([0.1,0.1,0.8,0.8]) # Adjust margins if needed
+        
+        cmap_bar = cm.get_cmap('Greens') # Consider a different map if Greens is not visually distinct enough
+        # Ensure min and max are different for Normalize, or handle single value case
+        min_val_bar = min(sizes_bar) if sizes_bar else 0
+        max_val_bar = max(sizes_bar) if sizes_bar else 100 # Default max if all are same or empty
+        if min_val_bar == max_val_bar:
+            # Handle case where all values are the same
+             color_norm_bar = mpl.colors.Normalize(vmin=min_val_bar -1 , vmax=max_val_bar) # Avoid division by zero
+        else:
+             color_norm_bar = mpl.colors.Normalize(vmin=min_val_bar, vmax=max_val_bar)
 
-# Generate Progress.md with additional sections
-with open('docs/Progress.md', 'w') as f:
-    sys.stdout = f
+        # colors_bar = cmap_bar(color_norm_bar(sizes_bar)) # This might not be what you want for specific color logic below
+
+        col_bar = []
+        for val_bar in sizes_bar:
+            if val_bar == 100:
+                col_bar.append('green')
+            elif val_bar >= 50: # Assuming this was meant to be >= 50 for Blue, as per status logic
+                col_bar.append('blue')
+            # elif val_bar > 0: # Example for Yellow, adjust threshold as needed
+            #    col_bar.append('#FFEF00') # Or your chosen yellow
+            else: # For values < 50 (Red in status logic)
+                col_bar.append('red') # Example, map to your status colors
+
+        ax_bar.set_xlabel('Success Rate (%)', fontsize=18)
+        ax_bar.set_title("Project Test Quality", fontsize=24)
+        ax_bar.tick_params(axis='both', labelsize=max(10, 18 - len(labels_bar)//10)) # Adjust label size
+
+        bars_obj = ax_bar.barh(labels_bar, sizes_bar, color=col_bar, height=0.8, align='edge')
+        ax_bar.bar_label(bars_obj)
+        plt.savefig('docs/images/quality.png', bbox_inches="tight")
+        plt.close() # Close the figure
+    else:
+        print("No valid data for project quality bar chart after filtering.", file=sys.stderr)
+else:
+    print("No data for project quality bar chart.", file=sys.stderr)
+
+
+# --- Generation of Progress.md ---
+with open('docs/Progress.md', 'w') as f_progress:
+    sys.stdout = f_progress
     print("""
 ## Overall Status
-* <span style="color:green">Green</a>: All tests passing
-* <span style="color:blue">Blue</a>: Most tests passing
-* <span style="color:#fee12b">Yellow</a>: Some tests passing
-* <span style="color:red">Red</a>: No tests passing
-* <span style="color:grey">Grey</a>: Skipped or Tests are not enabled
+* <span style="color:green">Green</span>: All tests passing
+* <span style="color:blue">Blue</span>: Most tests passing (>=75%)
+* <span style="color:#fee12b">Yellow</span>: Some tests passing (>=50%)
+* <span style="color:red">Red</span>: Few or no tests passing (<50%)
+* <span style="color:grey">Skipped</span>: Skipped or Tests are not enabled
 
 ![image info](./images/progress.png)
 
@@ -236,22 +319,38 @@ with open('docs/Progress.md', 'w') as f:
 ![image info](./images/quality.png)
 """)
 
-    print("\n## Projects with skipped or no tests (grey)")
-    for x, y in sorted(statusPerPort.items(), key=lambda x: x[1]):
-        if y == -1:
-            print(f"* [{x}](https://github.com/zopencommunity/{x})")
+    print("\n## Projects with skipped or no tests (or no releases resulting in skipped status)")
+    count_skipped_no_tests = 0
+    for x_prog, y_prog in sorted(statusPerPort.items(), key=lambda item: item[0]): # Sort alphabetically
+        if y_prog == -1 or y_prog == -2: # -1 for skipped tests, -2 for no releases
+            status_detail = "Tests skipped or not enabled" if y_prog == -1 else "No releases tracked"
+            print(f"* [{x_prog}](https://github.com/zopencommunity/{x_prog}) - {status_detail}")
+            count_skipped_no_tests +=1
+    if count_skipped_no_tests == 0:
+        print("All projects have tests enabled and/or releases tracked.")
+
 
     print("\n## Projects with the most dependencies\n")
-    print("| Package | # of Dependent Projects | Test Success Rate | Dependent projects")
-    print("|---|---|---|--|")
-    for x, y in sorted(dependentOn.items(), reverse=True, key=lambda x: len(x[1])):
-        status = statusPerPort[x]
-        if status == -1:
-            status = "Skipped"
-        elif status == -2:
-            status = "No builds"
+    print("| Package | # of Dependent Projects | Test Success Rate | Dependent projects |") # Added extra pipe for table alignment
+    print("|---|---|---|---|") # Adjusted for 4 columns
+    # Sort by number of dependents (desc), then alphabetically by package name (asc)
+    for x_dep, y_dep_list in sorted(dependentOn.items(), key=lambda item: (-len(item[1]), item[0])):
+        status_val = statusPerPort.get(x_dep) # Use .get() for safety
+        status_str = ""
+        if status_val is None: # Should not happen if all packages are in statusPerPort
+            status_str = "Unknown"
+        elif status_val == -1:
+            status_str = "Skipped"
+        elif status_val == -2:
+            status_str = "No builds"
         else:
-            status = f"{status:.1f}%"
-        print(f"| [{x}](https://github.com/zopencommunity/{x}) | {len(y)} | {status} |" + ", ".join(str(e) for e in y))
+            status_str = f"{status_val:.1f}%"
+        
+        # Format dependent projects list
+        dependent_projects_str = ", ".join(sorted(str(e) for e in y_dep_list)) if y_dep_list else "None"
+        print(f"| [{x_dep}](https://github.com/zopencommunity/{x_dep}) | {len(y_dep_list)} | {status_str} | {dependent_projects_str} |")
 
     print("\nLast updated: ", todaysDate)
+
+sys.stdout = original_stdout # Restore stdout fully at the end
+print("Script finished.")

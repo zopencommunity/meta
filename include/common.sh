@@ -212,7 +212,7 @@ writeConfigFile(){
 # underlying root location is copied/moved elsewhere as locations are
 # relative to this envvar value
 displayHelp() {
-echo "usage: . zopen-config [--eknv] [--knv] [-?|--help]"
+echo "usage: . zopen-config [--eknv] [--knv] [--quiet] [-?|--help]"
 echo "  --override-zos-tools   Adds altbin/ dir to the PATH and altman/ dir to MANPATH, overriding the native z/OS tooling."
 echo "  --nooverride-zos-tools Does not add altbin/ and altman/ dir to PATH and MANPATH."
 echo "  --override-zos-tools-subset=<file>"
@@ -220,6 +220,7 @@ echo "      Override a subset of zos tools. Containing a subset of packages to o
 echo "  --knv                  Display zopen environment variables "
 echo "  --eknv                 Display zopen environment variables, prefixed with an"
 echo "                         'export ' keyword for use in scripts"
+echo "  --quiet                Do not display messages"
 echo "  -?, --help             Display this help"
 }
 EOF
@@ -233,17 +234,20 @@ fi
 cat << EOF >>  "${configFile}"
 knv=false
 exportknv=""
+displayText=true
 unset overrideFile
-if [ \$# -gt 0 ]; then
+while [ \$# -gt 0 ]; do
   case "\$1" in
     --eknv) exportknv="export "; knv=true;;
     --knv) knv=true;;
     --override-zos-tools)  export ZOPEN_TOOLSET_OVERRIDE=1;;
     --nooverride-zos-tools)  unset ZOPEN_TOOLSET_OVERRIDE;;
     --override-zos-tools-subset) shift;  export ZOPEN_TOOLSET_OVERRIDE=1; overrideFile="\$1";;
+    --quiet) displayText=false;;
     -?|--help) displayHelp; return 0;;
   esac
-fi
+  shift
+done
 if \${knv}; then
   /bin/env | /bin/sort > /tmp/zopen-config-env-orig.\$\$
 fi
@@ -300,7 +304,6 @@ export ZOPEN_LOG_PATH
 ZOPEN_CURL_PARAMS=""
 
 # Do not display text for non-interactive sessions
-displayText=true
 if [ -n "\$SSH_CONNECTION" ] && [ -z "\$PS1" ] || [ ! -t 1 ]; then
   displayText=false
 fi
@@ -318,9 +321,9 @@ if [ -z "\${ZOPEN_QUICK_LOAD}" ]; then
     if \$displayText; then
       /bin/echo "DONE"
       if [ -n "\${ZOPEN_TOOLSET_OVERRIDE}" ]; then
-        /bin/echo "NOTE: Conflicting tools (eg. man, cat, grep, make) will take precendence over z/OS /bin tools. Pass the option --nooverride-zos-tools to avoid this."
+        /bin/echo "NOTE: Conflicting tools (eg. man, cat, grep, make) will take precedence over z/OS /bin tools. Pass the option --nooverride-zos-tools to avoid this."
       else
-        /bin/echo "NOTE: Conflicting tools (eg. man, cat, grep, make) will NOT take precendence over z/OS /bin tools; Use the prefixed executables instead (eg. zotman, gcat, ggrep, gmake). Pass the option --override-zos-tools if you prefer zopen tools or --help for further options."
+        /bin/echo "NOTE: Conflicting tools (eg. man, cat, grep, make) will NOT take precedence over z/OS /bin tools; Use the prefixed executables instead (eg. zotman, gcat, ggrep, gmake). Pass the option --override-zos-tools if you prefer zopen tools or --help for further options."
       fi
     fi
     unset dotenvs
@@ -537,6 +540,14 @@ zosfind()
   # consistent across platforms (where findutils is/is not installed) use the
   # standard zos version
   /bin/find "$@"
+}
+
+zosdu()
+{
+  # Use the standard z/OS du utility; if the coreutils package is installed, this
+  # changes the behaviour of the du command so we need to ensure we support those
+  # who do not have that installed
+  /bin/du "$@"
 }
 
 findrev()
@@ -863,6 +874,9 @@ printVerbose()
 
 printHeader()
 {
+  if [ -n "$noInfoMessages" ]; then
+    return 0;
+  fi
   [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
   printColors "${NC}${HEADERCOLOR}${BOLD}${UNDERLINE}${1}${NC}"
   [ ! -z "${xtrc}" ] && set -x
@@ -963,10 +977,9 @@ progressHandler()
     # shellcheck disable=SC2064
     trap "${trapcmd}" HUP
     case "${type}" in
-      "spinner") progressAnimation '-' '\' '|' '/'
-      ;;
-      "network") progressAnimation '-----' '>----' '->---' '-->--' '--->-' '---->' '-----' '----<' '---<-' '--<--' '-<---' '<----'
-      ;;
+      "spinner")   progressAnimation '-' '\' '|' '/' ;;
+      "network")   progressAnimation '-----' '>----' '->---' '-->--' '--->-' '---->' '-----' '----<' '---<-' '--<--' '-<---' '<----' ;;
+      "linkcheck") progressAnimation '======|' '?=====|' '-?====|' '--?===|' '---?==|' '----?=|' '-----?|' '------|' '?-----|' '=?----|' '==?---|' '===?--|' '====?-|' '=====?|';;
       *) progressAnimation '.' 'o' 'O' 'O' 'o' '.'
       ;;
     esac
@@ -1028,6 +1041,9 @@ printWarning()
 
 printInfo()
 {
+  if [ -n "$noInfoMessages" ]; then
+    return 0;
+  fi
   [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
   printColors "$1"
   [ -n "${xtrc}" ] && set -x
@@ -1288,6 +1304,7 @@ getAllReleasesFromGithub()
   fi
 }
 
+# Initializes a default environment for consistency in zopen builds
 initDefaultEnvironment()
 {
   export ZOPEN_OLD_PATH="${PATH}"       # Preserve PATH in case scripts need to access it
@@ -1298,6 +1315,7 @@ initDefaultEnvironment()
   unset MANPATH
   export LIBPATH="/usr/lib"
   export STEPLIB=none
+  export ZUSAGE_DISABLE=1 # Avoid usage statistics within zopen-build
 }
 
 #
@@ -1422,6 +1440,37 @@ a2e()
     chtag -tc 1047 "$source.bk"
     mv "$source.bk" "$source"
   fi
+}
+
+diskusage()
+{
+  path=$1
+  # awk to "trim" output"
+  if ! size=$(zosdu -kts "${path}" | /bin/awk '{print ($1)}'); then
+    printError "Unable to generate disk usage (du) report for '${path}'"
+  fi
+  echo "${size}"
+}
+
+formattedFileSize()
+{
+  filesize=$1  # in kb
+  # Use awk rather than $((..)) to get floating points, using the 
+  # "repeated divisions and count" method to generate an offset
+  echo "${filesize}" | awk '{
+    num = $1;
+    unit = "k";
+    if (num >= 1000000000) {
+        num = num / 1000000000;
+        unit = "T";
+    } else if (num >= 1000000) {
+        num = num / 1000000;
+        unit = "G";
+    } else if (num >= 1000) {
+        num = num / 1000;
+        unit = "M";
+    } printf "%.3f%s\n", num, unit;
+  }'  
 }
 
 . ${INCDIR}/analytics.sh

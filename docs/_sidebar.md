@@ -34,6 +34,7 @@
     - [Using Git on z/OS](/Guides/GitOnZOS.md)
     - [Using Vim on z/OS](/Guides/VimOnZOS.md)
     - [Using Bash on z/OS](/Guides/BashOnZOS.md)
+    - [Using Neovim on z/OS](/Guides/NeovimOnZOS.md)
     - [Terminal Settings on z/OS](/Guides/TerminalOnZOS.md) 
   - [Success Stories](/SuccessStories.md)
   - **Links**

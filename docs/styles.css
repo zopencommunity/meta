@@ -57,3 +57,56 @@
     flex-wrap: wrap;
   }
 }
+
+.tool-info-grid {
+  display: grid;
+  /* Define your columns. Adjust widths as needed.
+     Order: Name | Status | Test | Release | Description */
+  grid-template-columns: minmax(140px, 1.5fr) /* Name */
+                         minmax(100px, 0.8fr) /* Status */
+                         minmax(90px, 0.7fr)  /* Test */
+                         minmax(180px, 1.2fr) /* Release */
+                         minmax(200px, 2fr);  /* Description */
+  gap: 0px 12px; /* No row gap, 12px column gap for spacing between "cells" */
+  align-items: baseline; /* Aligns text nicely if some items wrap within their cell */
+  font-size: 0.9em; /* Overall smaller font for the details line */
+  line-height: 1.4; /* Improve readability for baseline alignment */
+}
+
+/* Style for individual "cells" in the grid */
+.tool-info-grid > div {
+  overflow: hidden;         /* Hide overflow */
+  text-overflow: ellipsis;  /* Add ... for overflowed text */
+  white-space: nowrap;      /* Keep text on a single line to trigger ellipsis */
+}
+
+/* Allow Name and Description to wrap if needed, overriding nowrap */
+.tool-name {
+  font-size: 1.15em; /* Relative to the .tool-info-grid's font-size */
+  font-weight: bold;
+  white-space: normal; /* Allow name to wrap if very long */
+}
+.tool-desc {
+  white-space: normal; /* Allow description to wrap */
+  /* If you prefer the description to also be single line with ellipsis, remove this white-space: normal; */
+}
+
+/* Ensure links within the grid look good */
+.tool-info-grid a {
+  text-decoration: none;
+  color: inherit; /* Or your preferred link color e.g., #007bff */
+}
+.tool-info-grid a:hover {
+  text-decoration: underline;
+}
+.tool-name a {
+  /* color: #0056b3; */ /* Example: Make package name link color distinct if desired */
+}
+
+/* --- ZEBRA STRIPING FOR TOOL ITEMS --- */
+.tool-item-filterable:nth-child(even) {
+  background-color: #f8f9fa; /* A very light grey, common for zebra striping */
+}
+.tool-item-filterable:nth-child(odd) {
+  background-color: #ffffff; /* Or transparent, if your page background isn't white */
+}

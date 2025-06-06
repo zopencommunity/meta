@@ -2,20 +2,27 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>zopen community</title>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-  <meta name="description" content="Description">
+  <title>zopen community - Open Source for z/OS</title>
+  
+  <meta name="description" content="zopen community brings open-source tools to IBM z/OS, making mainframes modern, accessible, and developer-friendly." />
+  <meta name="keywords" content="z/OS, open source, mainframe, IBM, zopen, UNIX, package manager, developer tools" />
+  
+  <meta property="og:title" content="zopen community - Open Source for z/OS" />
+  <meta property="og:description" content="zopen community brings open-source tools to IBM z/OS, making mainframes modern, accessible, and developer-friendly." />
+  <meta property="og:image" content="https://zopen.community/assets/logo.png" />
+  <meta property="og:url" content="https://zopen.community" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify-darklight-theme@3/dist/docsify-themeable/style.min.css" type="text/css">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/zopen-community_icon.png">
+
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify-darklight-theme@3/dist/docsify-themeable/style.min.css" type="text/css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple.css" title="light">
   <link rel="stylesheet alternative" href="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple-dark.css" title="dark">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/sidebar.min.css" />
   <link rel="stylesheet" href="https://unpkg.com/docsify-toc@1.0.0/dist/toc.css">
   <link rel="stylesheet" href="styles.css">
-<!-- Custom theme styles -->
 <style>
 :root {
-  --content-max-width                 : 100%;
+  --content-max-width             : 100%;
 }
 </style>
 </head>
@@ -23,77 +30,211 @@
   <div id="app"></div>
   <script src="//cdn.jsdelivr.net/npm/docsify-edit-on-github"></script>
   <script>
-	  window.$docsify = {
-  // Core settings
-  name: '<img src="https://github.com/zopencommunity/.github/blob/main/profile/zopen-community_horizontal-color-omp.png?raw=true" alt="zopen community" height="79em">',
-  repo: 'zopencommunity/meta',  // Simplified repo URL
-  loadSidebar: true,
-  relativePath: true,
-  homepage: 'README.md',
+    window.$docsify = {
+      // Core settings
+      name: '<img src="https://github.com/zopencommunity/.github/blob/main/profile/zopen-community_horizontal-color-omp.png?raw=true" alt="zopen community" height="79em">',
+      repo: 'zopencommunity/meta',  // Simplified repo URL
+      loadSidebar: true,
+      relativePath: true,
+      homepage: 'README.md',
 
-  // Navigation settings
-  maxLevel: 2,
-  subMaxLevel: 2,
-  depth: 4,
-  hideOtherSidebarContent: false,
-  sidebarDisplayLevel: 0,
+      // Navigation settings
+      maxLevel: 2,
+      subMaxLevel: 2,
+      // depth: 4, // Note: 'depth' is not a standard Docsify core option, might be for a plugin or custom use.
+      // hideOtherSidebarContent: false, // Note: 'hideOtherSidebarContent' is not standard, check plugin.
+      // sidebarDisplayLevel: 0, // Note: 'sidebarDisplayLevel' is not standard, check plugin.
 
-  // Search configuration
-  search: {
-    paths: 'auto',
-    placeholder: 'Type to search',
-    noData: 'No Results',
-    depth: 4,
-  },
+      // Search configuration
+      search: {
+        paths: 'auto',
+        placeholder: 'Type to search',
+        noData: 'No Results',
+        depth: 4,
+      },
 
-  // Table of Contents
-  toc: {
-    tocMaxLevel: 1,
-    target: 'h2, h3, h4, h5, h6',
-    ignoreHeaders:  ['<!-- {docsify-ignore} -->', '<!-- {docsify-ignore-all} -->']
-  },
+      // Table of Contents
+      toc: {
+        tocMaxLevel: 1,
+        target: 'h2, h3, h4, h5, h6',
+        ignoreHeaders:  ['', '']
+      },
 
-  // Image handling
-  markdown: {
-    renderer: {
-      image: function(href, title, text) {
-        // Only modify absolute paths
-        if (href.startsWith('/')) {
-          href = href.substring(1);
+      // Image handling
+      markdown: {
+        renderer: {
+          image: function(href, title, text) {
+            // Only modify absolute paths if they start with a single slash (relative to domain root)
+            if (href.startsWith('/') && !href.startsWith('//')) { // ensure it's not a protocol-relative URL
+              // Assuming docs are served from a subdirectory and paths in MD are relative to that subdir
+              // If 'relativePath: true' is working as expected, this custom renderer might need adjustment
+              // or might be simplified. Docsify's relativePath usually handles this.
+              // For now, keeping original logic:
+              // href = href.substring(1); // This would make /images/img.png to images/img.png
+            }
+            // If images are in 'docs/images' and pages are like 'docs/topic/page.md', 
+            // and relativePath is true, then '../../images/img.png' or 'images/img.png' (if in same dir) should work.
+            // The original function was:
+            // if (href.startsWith('/')) {
+            //   href = href.substring(1);
+            // }
+            // Reverting to a safer version of the original logic for now, ensure it matches user intent.
+            // This will strip the leading slash IF the image is meant to be relative to the docs root.
+             if (href.startsWith('/') && window.$docsify.relativePath) {
+                 // If relativePath is true, Docsify handles paths relative to the current MD file.
+                 // A leading slash usually means "root of the domain".
+                 // This custom renderer might be trying to correct paths for a specific setup.
+                 // Let's keep the original user logic here:
+                if (href.startsWith('/')) {
+                   href = href.substring(1);
+                }
+             }
+            return `<img src="${href}" alt="${text || title || ''}">`
+          }
         }
-        return `<img src="${href}" alt="${text || title || ''}">`
-      }
+      },
+
+      // Plugins
+      plugins: [
+        // Edit on GitHub plugin with correct path handling
+        EditOnGithubPlugin.create(
+          'https://github.com/zopencommunity/meta/blob/main/docs/',
+          null,
+          'Edit this page'
+        ),
+
+        // Footer plugin
+        function pageFooter(hook, vm) {
+          const footer = [
+            '<hr style="clear: both; margin-top: 20px;">',
+            '<footer>',
+            '<span>Copyright © zopen community a Series of LF Projects, LLC.</span> ',
+            '<span>For website terms of use, trademark policy, and other project policies, please see ',
+            '<a href="https://lfprojects.org" target="_blank">https://lfprojects.org</a>.</span>',
+            '</footer>'
+          ].join('');
+
+          hook.afterEach(function(html) {
+            return html + footer;
+          });
+        },
+
+        function(hook, vm) {
+          hook.doneEach(function() {
+            // This code runs after each page is rendered by Docsify
+            const toolSearchInput = document.getElementById('toolSearchInput');
+            if (toolSearchInput && !toolSearchInput.hasAttribute('data-listener-added')) {
+              toolSearchInput.addEventListener('input', liveSearchTools);
+              toolSearchInput.setAttribute('data-listener-added', 'true'); // Prevent adding multiple listeners
+              liveSearchTools(); // Initial call to filter if input has a value (e.g., browser back button)
+            }
+          });
+        }
+      ]
+    };
+
+    function liveSearchTools() {
+    const input = document.getElementById('toolSearchInput');
+    if (!input) {
+        console.error("Search input 'toolSearchInput' not found!");
+        return;
     }
-  },
 
-  // Plugins
-  plugins: [
-    // Edit on GitHub plugin with correct path handling
-    EditOnGithubPlugin.create(
-      'https://github.com/zopencommunity/meta/blob/main/docs/',
-      null,
-      'Edit this page'
-    ),
+    const filterText = input.value.toLowerCase().trim(); // Filter text is trimmed
+    const allToolItems = document.querySelectorAll('.tool-item-filterable');
+    const categoryContainers = document.querySelectorAll('.table-category');
+    const noResultsEl = document.getElementById('toolNoResultsMessage');
 
-    // Footer plugin
-    function pageFooter(hook, vm) {
-      const footer = [
-        '<hr style="clear: both; margin-top: 20px;">',
-        '<footer>',
-        '<span>Copyright © zopen community a Series of LF Projects, LLC.</span> ',
-        '<span>For website terms of use, trademark policy, and other project policies, please see ',
-        '<a href="https://lfprojects.org" target="_blank">https://lfprojects.org</a>.</span>',
-        '</footer>'
-      ].join('');
+    console.log("--- liveSearchTools ---");
+    console.log("Filter text input: '", input.value, "' -> Processed filterText: '", filterText, "'");
+    console.log("Total tool items found on page:", allToolItems.length);
 
-      hook.afterEach(function(html) {
-        return html + footer;
-      });
+    let visibleCount = 0;
+    const displayedPackageNames = new Set();
+
+    if (filterText !== "") {
+        console.log("====== SEARCH ACTIVE ======");
+
+        allToolItems.forEach((item, index) => {
+            const packageName = item.dataset.packageName || "N/A_PKG_NAME"; // Default if missing, to help debugging
+            const rawSearchableAttr = item.dataset.searchableText;
+            // IMPORTANT: Trim the searchable text from the attribute as well
+            const processedSearchableText = rawSearchableAttr ? rawSearchableAttr.toLowerCase().trim() : '';
+
+            console.log(`--- Item ---`);
+            console.log(`Package: ${packageName}`);
+            // console.log(`Raw data-searchable-text: "${rawSearchableAttr}"`);
+            console.log(`Processed Searchable Text for item: "${processedSearchableText}" (length: ${processedSearchableText.length})`);
+            
+            let isMatch = false;
+            if (processedSearchableText && filterText) {
+                 isMatch = processedSearchableText.includes(filterText);
+            }
+
+            if (isMatch) {
+                console.log(`RESULT: Initial MATCH for package: ${packageName}`);
+                if (packageName !== "N/A_PKG_NAME" && !displayedPackageNames.has(packageName)) {
+                    item.style.display = ""; 
+                    displayedPackageNames.add(packageName);
+                    visibleCount++;
+                    console.log(`Action: SHOWING (unique) - ${packageName}`);
+                } else if (packageName !== "N/A_PKG_NAME" && displayedPackageNames.has(packageName)) {
+                    item.style.display = "none"; 
+                    console.log(`Action: HIDING (duplicate) - ${packageName}`);
+                } else { // Matches but packageName is effectively N/A
+                    item.style.display = "";
+                    visibleCount++;
+                    console.log(`Action: SHOWING (packageName N/A or missing, cannot check uniqueness by name) - Item Index: ${index}`);
+                }
+            } else {
+                console.log(`RESULT: NO MATCH for package: ${packageName}`);
+                item.style.display = "none";
+            }
+        });
+
+        // Now, manage visibility of category containers based on their children's visibility
+        categoryContainers.forEach(container => {
+            // Check for visible children *within this specific category container*
+            // The :scope pseudo-class might not be needed if querySelectorAll on container is sufficient
+            const visibleChildrenInContainer = container.querySelectorAll('.tool-item-filterable:not([style*="display: none"])');
+            
+            if (visibleChildrenInContainer.length > 0) {
+                container.style.display = ""; // Show category if it has visible items
+                // console.log("Category " + (container.dataset.category || 'N/A_CAT') + " has visible children, showing container.");
+            } else {
+                container.style.display = "none"; // Hide category if all its items are hidden by the search
+                // console.log("Category " + (container.dataset.category || 'N/A_CAT') + " has NO visible children, hiding container.");
+            }
+        });
+        console.log("Total unique items shown after filtering:", visibleCount);
+
+    } else {
+        console.log("====== SEARCH CLEARED ======");
+        allToolItems.forEach(item => {
+            item.style.display = ""; 
+        });
+        categoryContainers.forEach(container => {
+            container.style.display = ""; 
+        });
+        
+        if (typeof filterTable === "function") {
+            filterTable(); 
+        } else {
+            console.warn("filterTable function not found!");
+        }
     }
-  ]
-};
+
+    // Manage "No results" message
+    if (noResultsEl) {
+        if (filterText !== "" && visibleCount === 0) {
+            noResultsEl.style.display = "block";
+        } else {
+            noResultsEl.style.display = "none";
+        }
+    }
+}
   </script>
-  <script>
+  <script> // Existing separate script block for iframe functions
     function styleandresizeIframe(obj) {
       obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
       var cssLink = document.createElement("link");
@@ -103,7 +244,7 @@
       frames['iframe1'].document.head.appendChild(cssLink);
     }
   </script>
-  <script>
+  <script> // Existing separate script block for filterTable
   function filterTable() {
     const selectedCategory = document.getElementById("category-filter").value;
     const categories = document.querySelectorAll(".table-category");
@@ -117,7 +258,6 @@
     });
   }
 </script>
-  <!-- Docsify v4 -->
   <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
   <script src="https://unpkg.com/docsify-plugin-toc@1.3.1/dist/docsify-plugin-toc.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
@@ -125,7 +265,7 @@
   <script src="//unpkg.com/docsify/lib/plugins/zoom-image.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/docsify-sidebar-collapse.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify-darklight-theme@3/dist/docsify-themeable/main.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify-darklight-theme@3/dist/docsify-themeable/index.min.js"></script> 
+  <script src="//cdn.jsdelivr.net/npm/docsify-darklight-theme@3/dist/docsify-themeable/index.min.js"></script>  
   <script src="//cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
 
 </body>

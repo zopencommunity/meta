@@ -335,14 +335,12 @@ zopen_get_version()
 
 printInfo "${buildenv} created"
 
-touch "${name}port/README.md" && chtag -tc 819 "${name}port/README.md"
-cat << EOT > "${name}port/README.md"
-[![Automatic version updates](https://github.com/zopencommunity/${name}port/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/${name}port/actions/workflows/bump.yml)
+readmeTemplate="${MYDIR}/../data/README_template.md"
+touch "${name}port/README.md"
+cp "${MYDIR}/../data/README_template.md" "${name}port/README.md.init"
+sed -e "s/\$PORT_NAME/${name}/g" -e "s#\$PORT_DESCRIPTION#${description}#g" "${name}port/README.md.init" > "${name}port/README.md"
+rm -f "${name}port/README.md.init"
 
-# ${name}
-
-${description}
-EOT
 printInfo "${name}port/README.md created"
 
 createCICD()
