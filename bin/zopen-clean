@@ -79,6 +79,7 @@ removeUnusedPackageVersions()
   counterfile=$(mktempfile "clean" ".rupv")
   addCleanupTrapCmd "rm -f ${counterfile}"
   cd "${ZOPEN_PKGINSTALL}/${needle}" && zosfind . -name "./*" -prune -type d > "${counterfile}"
+  unusedCount=0
   while read repo; do
     printVerbose "Parsing repo: '${repo}' as '${repo#./}'"
     repo="${repo#./}"
@@ -97,13 +98,13 @@ removeUnusedPackageVersions()
       fi
     fi
   done < "${counterfile}"
+  $stats && printInfo "Removed ${unusedCount} unused package version$([ ${unusedCount} -eq 1 ] || echo 's')"
   return 0
 }
 
 cleanUnused()
 {
   ${deep} && printInfo "Removing any unused package versions"
-  unusedCount=0  # Updated within the removeUnusedPackageVersions function
   if ${all}; then 
     zopen list --installed --no-header --no-version | while read -r needle; do 
       removeUnusedPackageVersions "${needle}"
@@ -115,7 +116,6 @@ cleanUnused()
       removeUnusedPackageVersions "${needle}"
     done
   fi
-  $stats && printInfo "Removed ${unusedCount} unused package version"$([ ${unusedCount} -eq 1 ] || echo 's')
 }
 
 cleanDangling()
