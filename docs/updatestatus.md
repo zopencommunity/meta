@@ -144,6 +144,7 @@
 - 2025-03-06: [Update ghcli-version to 2.68.1 from 2.67.0](https://github.com/zopencommunity/githubcliport/pull/47) ❌
 
 ### gitlabcliport
+- 2025-06-05: [Update glab-version to 1.59.2 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/30) ❌
 - 2025-06-04: [Update glab-version to 1.59.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/29) ❌
 - 2025-05-28: [Update glab-version to 1.58.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/28) ❌
 - 2025-04-24: [Update glab-version to 1.56.0 from 1.52.0](https://github.com/zopencommunity/gitlabcliport/pull/26) ❌
@@ -318,6 +319,7 @@
 - 2023-11-05: [Update patch-version to 2.7.6 from 2.7](https://github.com/zopencommunity/patchport/pull/3) ❓
 
 ### phpport
+- 2025-06-06: [Update php-version to 8.4.8 from 8.2.13](https://github.com/zopencommunity/phpport/pull/35) ❌
 - 2025-05-10: [Update php-version to 8.4.7 from 8.2.13](https://github.com/zopencommunity/phpport/pull/34) ❌
 - 2025-04-11: [Update php-version to 8.4.6 from 8.2.13](https://github.com/zopencommunity/phpport/pull/33) ❌
 - 2025-03-13: [Update php-version to 8.4.5 from 8.2.13](https://github.com/zopencommunity/phpport/pull/32) ❌
@@ -467,6 +469,7 @@
 - ✅ antport - [![Bump Status](https://github.com/zopencommunity/antport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/antport/actions/workflows/bump.yml)
 - ❌ aprport - Workflow not configured
 - ❌ apr-utilport - Workflow not configured
+- ❌ asioport - Workflow not configured
 - ✅ autoconfport - [![Bump Status](https://github.com/zopencommunity/autoconfport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/autoconfport/actions/workflows/bump.yml)
 - ✅ automakeport - [![Bump Status](https://github.com/zopencommunity/automakeport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/automakeport/actions/workflows/bump.yml)
 - ❌ autoporting - Workflow not configured
@@ -717,10 +720,10 @@
 
 </details>
 
-**Summary:** 205 active | 46 missing
+**Summary:** 205 active | 47 missing
 
 ---
 
 
-> Last updated: 2025-06-05 06:07:05 EDT
+> Last updated: 2025-06-07 06:06:58 EDT
 
