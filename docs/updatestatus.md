@@ -35,6 +35,7 @@
 - 2025-05-26: [Update ccache-version to 4.11.3 from V.R.M](https://github.com/zopencommunity/ccacheport/pull/1) ❌
 
 ### chezmoiport
+- 2025-06-07: [Update chezmoi-version to 2.62.6 from 2.62.5](https://github.com/zopencommunity/chezmoiport/pull/4) ❌
 - 2025-05-10: [Update chezmoi-version to 2.62.3 from 2.62.2](https://github.com/zopencommunity/chezmoiport/pull/1) ❌
 
 ### cmakeport
@@ -219,6 +220,7 @@
 - 2024-03-07: [Update kotlin-version to 1.9.23 from 1.9.22](https://github.com/zopencommunity/kotlinport/pull/3) ❓
 
 ### lazygitport
+- 2025-06-07: [Update lazygit-version to 0.52.0 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/21) ❌
 - 2025-05-23: [Update lazygit-version to 0.51.1 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/20) ❌
 - 2025-05-22: [Update lazygit-version to 0.51.0 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/19) ❌
 - 2025-05-10: [Update lazygit-version to 0.50.0 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/18) ❌
@@ -368,6 +370,7 @@
 - 2025-05-10: [Update spdlog-version to 1.15.3 from 1.15.1](https://github.com/zopencommunity/spdlogport/pull/9) ✅
 
 ### sqliteport
+- 2025-06-07: [Update sqlite-version to 2025-3500100 from 2025-3480000](https://github.com/zopencommunity/sqliteport/pull/27) ❌
 - 2025-05-29: [Update sqlite-version to 2025-3500000 from 2025-3480000](https://github.com/zopencommunity/sqliteport/pull/26) ❌
 - 2025-05-10: [Update sqlite-version to 2025-3490200 from 2025-3480000](https://github.com/zopencommunity/sqliteport/pull/25) ❌
 - 2025-02-18: [Update sqlite-version to 2025-3490100 from 2025-3480000](https://github.com/zopencommunity/sqliteport/pull/24) ❌
@@ -725,5 +728,5 @@
 ---
 
 
-> Last updated: 2025-06-07 06:06:58 EDT
+> Last updated: 2025-06-08 06:06:43 EDT
 
