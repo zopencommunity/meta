@@ -46,12 +46,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="make" data-searchable-text="make Blue 99.9% STABLE_make_3353 A build automation tool build_system port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="make" data-searchable-text="make Blue 99.9% STABLE_make_3439 A build automation tool build_system port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/makeport" target="_blank" rel="noopener noreferrer">make</a></strong></div>
     <div class="tool-status">Status: Blue</div>
     <div class="tool-test">Test: 99.9%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/makeport/releases/download/STABLE_makeport_3353/make-4.4.1.20250526_012118.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_make_3353</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/makeport/releases/download/STABLE_makeport_3439/make-4.4.1.20250609_163324.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_make_3439</a></div>
     <div class="tool-desc" title="A build automation tool">A build automation tool</div>
   </div>
 </div>
@@ -660,12 +660,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="make" data-searchable-text="make Blue 99.9% STABLE_make_3353 A build automation tool development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="make" data-searchable-text="make Blue 99.9% STABLE_make_3439 A build automation tool development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/makeport" target="_blank" rel="noopener noreferrer">make</a></strong></div>
     <div class="tool-status">Status: Blue</div>
     <div class="tool-test">Test: 99.9%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/makeport/releases/download/STABLE_makeport_3353/make-4.4.1.20250526_012118.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_make_3353</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/makeport/releases/download/STABLE_makeport_3439/make-4.4.1.20250609_163324.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_make_3439</a></div>
     <div class="tool-desc" title="A build automation tool">A build automation tool</div>
   </div>
 </div>
@@ -1222,12 +1222,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="libgcrypt" data-searchable-text="libgcrypt Green 100.0% STABLE_libgcrypt_3397 A general-purpose cryptographic library library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="libgcrypt" data-searchable-text="libgcrypt Green 100.0% STABLE_libgcrypt_3450 A general-purpose cryptographic library library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libgcryptport" target="_blank" rel="noopener noreferrer">libgcrypt</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/libgcryptport/releases/download/STABLE_libgcryptport_3397/libgcrypt-1.11.1.20250530_163847.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libgcrypt_3397</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/libgcryptport/releases/download/STABLE_libgcryptport_3450/libgcrypt-1.11.1.20250610_052930.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libgcrypt_3450</a></div>
     <div class="tool-desc" title="A general-purpose cryptographic library">A general-purpose cryptographic library</div>
   </div>
 </div>
@@ -1252,22 +1252,22 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="libiconv" data-searchable-text="libiconv Green 100.0% DEV_libiconv_3403 A library for character set conversion library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="libiconv" data-searchable-text="libiconv Green 100.0% STABLE_libiconv_3446 A library for character set conversion library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libiconvport" target="_blank" rel="noopener noreferrer">libiconv</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/libiconvport/releases/download/DEV_libiconvport_3403/libiconv-master.20250530_224433.zos.pax.Z" target="_blank" rel="noopener noreferrer">DEV_libiconv_3403</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/libiconvport/releases/download/STABLE_libiconvport_3446/libiconv-1.18.20250610_024109.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libiconv_3446</a></div>
     <div class="tool-desc" title="A library for character set conversion">A library for character set conversion</div>
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="libksba" data-searchable-text="libksba Green 100.0% STABLE_libksba_3388 A library for working with X.509 certificates and other cryptographic objects library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="libksba" data-searchable-text="libksba Green 100.0% STABLE_libksba_3449 A library for working with X.509 certificates and other cryptographic objects library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libksbaport" target="_blank" rel="noopener noreferrer">libksba</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/libksbaport/releases/download/STABLE_libksbaport_3388/libksba-1.6.7.20250530_162225.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libksba_3388</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/libksbaport/releases/download/STABLE_libksbaport_3449/libksba-1.6.7.20250610_052828.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libksba_3449</a></div>
     <div class="tool-desc" title="A library for working with X.509 certificates and other cryptographic objects">A library for working with X.509 certificates and other cryptographic objects</div>
   </div>
 </div>
@@ -1544,12 +1544,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="libgcrypt" data-searchable-text="libgcrypt Green 100.0% STABLE_libgcrypt_3397 A general-purpose cryptographic library security port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="libgcrypt" data-searchable-text="libgcrypt Green 100.0% STABLE_libgcrypt_3450 A general-purpose cryptographic library security port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libgcryptport" target="_blank" rel="noopener noreferrer">libgcrypt</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/libgcryptport/releases/download/STABLE_libgcryptport_3397/libgcrypt-1.11.1.20250530_163847.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libgcrypt_3397</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/libgcryptport/releases/download/STABLE_libgcryptport_3450/libgcrypt-1.11.1.20250610_052930.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libgcrypt_3450</a></div>
     <div class="tool-desc" title="A general-purpose cryptographic library">A general-purpose cryptographic library</div>
   </div>
 </div>
@@ -1564,12 +1564,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="libksba" data-searchable-text="libksba Green 100.0% STABLE_libksba_3388 A library for working with X.509 certificates and other cryptographic objects security port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="libksba" data-searchable-text="libksba Green 100.0% STABLE_libksba_3449 A library for working with X.509 certificates and other cryptographic objects security port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libksbaport" target="_blank" rel="noopener noreferrer">libksba</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/libksbaport/releases/download/STABLE_libksbaport_3388/libksba-1.6.7.20250530_162225.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libksba_3388</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/libksbaport/releases/download/STABLE_libksbaport_3449/libksba-1.6.7.20250610_052828.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libksba_3449</a></div>
     <div class="tool-desc" title="A library for working with X.509 certificates and other cryptographic objects">A library for working with X.509 certificates and other cryptographic objects</div>
   </div>
 </div>
@@ -1614,12 +1614,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="openssh" data-searchable-text="openssh Green 100.0% STABLE_openssh_2748 A suite of secure networking utilities security port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="openssh" data-searchable-text="openssh Green 100.0% STABLE_openssh_3443 A suite of secure networking utilities security port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/opensshport" target="_blank" rel="noopener noreferrer">openssh</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/opensshport/releases/download/STABLE_opensshport_2748/openssh-9.9p1.20241120_165536.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_openssh_2748</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/opensshport/releases/download/STABLE_opensshport_3443/openssh-9.9p1.20250609_170650.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_openssh_3443</a></div>
     <div class="tool-desc" title="A suite of secure networking utilities">A suite of secure networking utilities</div>
   </div>
 </div>
@@ -1812,12 +1812,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="curl" data-searchable-text="curl Blue 99.9% STABLE_curl_3432 Networking tool uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="curl" data-searchable-text="curl Blue 99.9% STABLE_curl_3445 Networking tool uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/curlport" target="_blank" rel="noopener noreferrer">curl</a></strong></div>
     <div class="tool-status">Status: Blue</div>
     <div class="tool-test">Test: 99.9%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/curlport/releases/download/STABLE_curlport_3432/curl-8.14.1.20250606_010904.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_curl_3432</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/curlport/releases/download/STABLE_curlport_3445/curl-8.14.1.20250610_010840.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_curl_3445</a></div>
     <div class="tool-desc" title="Networking tool">Networking tool</div>
   </div>
 </div>
@@ -1952,12 +1952,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="ncurses" data-searchable-text="ncurses Green 100.0% STABLE_ncurses_3321 Library for ncurses, a terminal screen handling library uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="ncurses" data-searchable-text="ncurses Green 100.0% STABLE_ncurses_3440 Library for ncurses, a terminal screen handling library uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/ncursesport" target="_blank" rel="noopener noreferrer">ncurses</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/ncursesport/releases/download/STABLE_ncursesport_3321/ncurses-6.5.20250512_141218.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_ncurses_3321</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/ncursesport/releases/download/STABLE_ncursesport_3440/ncurses-6.5.20250609_163428.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_ncurses_3440</a></div>
     <div class="tool-desc" title="Library for ncurses, a terminal screen handling library">Library for ncurses, a terminal screen handling library</div>
   </div>
 </div>
@@ -2032,12 +2032,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="zlib" data-searchable-text="zlib Green 100.0% DEV_zlib_3399 A data compression library uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="zlib" data-searchable-text="zlib Green 100.0% DEV_zlib_3448 A data compression library uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/zlibport" target="_blank" rel="noopener noreferrer">zlib</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/zlibport/releases/download/DEV_zlibport_3399/zlib-develop.20250530_170406.zos.pax.Z" target="_blank" rel="noopener noreferrer">DEV_zlib_3399</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/zlibport/releases/download/DEV_zlibport_3448/zlib-develop.20250610_041524.zos.pax.Z" target="_blank" rel="noopener noreferrer">DEV_zlib_3448</a></div>
     <div class="tool-desc" title="A data compression library">A data compression library</div>
   </div>
 </div>
@@ -2108,12 +2108,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="gawk" data-searchable-text="gawk Blue 93.1% STABLE_gawk_3064 The GNU implementation of the awk text processing language utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="gawk" data-searchable-text="gawk Blue 93.1% STABLE_gawk_3441 The GNU implementation of the awk text processing language utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/gawkport" target="_blank" rel="noopener noreferrer">gawk</a></strong></div>
     <div class="tool-status">Status: Blue</div>
     <div class="tool-test">Test: 93.1%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/gawkport/releases/download/STABLE_gawkport_3064/gawk-5.3.1.20250205_031214.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_gawk_3064</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/gawkport/releases/download/STABLE_gawkport_3441/gawk-5.3.1.20250609_164345.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_gawk_3441</a></div>
     <div class="tool-desc" title="The GNU implementation of the awk text processing language">The GNU implementation of the awk text processing language</div>
   </div>
 </div>
@@ -2168,12 +2168,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="grep" data-searchable-text="grep Blue 92.2% STABLE_grep_3254 Text processing utilities utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="grep" data-searchable-text="grep Blue 92.2% STABLE_grep_3444 Text processing utilities utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/grepport" target="_blank" rel="noopener noreferrer">grep</a></strong></div>
     <div class="tool-status">Status: Blue</div>
     <div class="tool-test">Test: 92.2%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/grepport/releases/download/STABLE_grepport_3254/grep-3.12.20250422_054515.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_grep_3254</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/grepport/releases/download/STABLE_grepport_3444/grep-3.12.20250609_173416.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_grep_3444</a></div>
     <div class="tool-desc" title="Text processing utilities">Text processing utilities</div>
   </div>
 </div>
@@ -2348,12 +2348,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="tar" data-searchable-text="tar Blue 92.4% STABLE_tar_2939 GNU implementation of the tar archiving tool utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="tar" data-searchable-text="tar Blue 95.2% STABLE_tar_3442 GNU implementation of the tar archiving tool utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/tarport" target="_blank" rel="noopener noreferrer">tar</a></strong></div>
     <div class="tool-status">Status: Blue</div>
-    <div class="tool-test">Test: 92.4%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/tarport/releases/download/STABLE_tarport_2939/tar-1.35.20250130_121504.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_tar_2939</a></div>
+    <div class="tool-test">Test: 95.2%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/tarport/releases/download/STABLE_tarport_3442/tar-1.35.20250609_164921.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_tar_3442</a></div>
     <div class="tool-desc" title="GNU implementation of the tar archiving tool">GNU implementation of the tar archiving tool</div>
   </div>
 </div>
@@ -2511,4 +2511,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-06-09 06:11:26 UTC
+Last updated:  2025-06-10 06:11:31 UTC

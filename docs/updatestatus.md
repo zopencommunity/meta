@@ -242,9 +242,6 @@
 - 2025-04-25: [Update libgpgerror-version to 1.55 from 1.53](https://github.com/zopencommunity/libgpgerrorport/pull/18) ✅
 - 2025-04-17: [Update libgpgerror-version to 1.54 from 1.53](https://github.com/zopencommunity/libgpgerrorport/pull/17) ✅
 
-### libiconvport
-- 2024-12-15: [Update libiconv-version to 1.18 from 1.17](https://github.com/zopencommunity/libiconvport/pull/42) ❌
-
 ### libpcre2port
 - 2024-12-27: [Update libpcre2-version to 10.45 from 10.42](https://github.com/zopencommunity/libpcre2port/pull/10) ❌
 - 2024-06-08: [Update libpcre2-version to 10.44 from 10.42](https://github.com/zopencommunity/libpcre2port/pull/7) ✅
@@ -413,14 +410,15 @@
 
 ### texinfoport
 - 2024-12-23: [Update texinfo-version to 7.2 from 6.8](https://github.com/zopencommunity/texinfoport/pull/23) ❌
-- 2024-09-08: [Update texinfo-version to 7.1.1 from 6.8](https://github.com/zopencommunity/texinfoport/pull/21) ❌
 - 2023-11-16: [Update texinfo-version to 7.1 from 6.8](https://github.com/zopencommunity/texinfoport/pull/20) ❓
+- 2024-09-08: [Update texinfo-version to 7.1.1 from 6.8](https://github.com/zopencommunity/texinfoport/pull/21) ❌
 
 ### tigport
 - 2025-02-07: [Update tig-version to 2.5.12 from 2.5.9](https://github.com/zopencommunity/tigport/pull/10) ❌
 - 2025-01-31: [Update tig-version to 2.5.11 from 2.5.9](https://github.com/zopencommunity/tigport/pull/9) ❌
 
 ### victoriametricsport
+- 2025-06-09: [Update victoriametrics-version to 1.119.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/29) ❌
 - 2025-05-26: [Update victoriametrics-version to 1.118.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/28) ❌
 - 2025-05-16: [Update victoriametrics-version to 1.117.1 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/27) ❌
 - 2025-05-12: [Update victoriametrics-version to 1.117.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/26) ❌
@@ -728,5 +726,5 @@
 ---
 
 
-> Last updated: 2025-06-09 06:07:06 EDT
+> Last updated: 2025-06-10 06:07:12 EDT
 
