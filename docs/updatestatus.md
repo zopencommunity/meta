@@ -290,9 +290,6 @@
 - 2025-02-18: [Update openssh-version to 9.9p2 from 9.9p1](https://github.com/zopencommunity/opensshport/pull/19) ❌
 - 2024-10-02: [Update openssh-version to 9.9p1 from 9.8p1](https://github.com/zopencommunity/opensshport/pull/15) ❌
 
-### opensslport
-- 2025-04-08: [Update openssl-3-version to 3.5.0 from 3.4.1](https://github.com/zopencommunity/opensslport/pull/49) ❌
-
 ### osv-scannerport
 - 2025-04-30: [Update osv-scanner-version to 2.0.2 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/20) ✅
 - 2025-04-03: [Update osv-scanner-version to 2.0.1 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/19) ✅
@@ -726,5 +723,5 @@
 ---
 
 
-> Last updated: 2025-06-10 06:07:12 EDT
+> Last updated: 2025-06-11 06:07:19 EDT
 

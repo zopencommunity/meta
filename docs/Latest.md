@@ -380,12 +380,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="check_clang" data-searchable-text="check_clang Green 100.0% STABLE_check_clang_3415 A script to check for the existence of Clang development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="check_clang" data-searchable-text="check_clang Green 100.0% STABLE_check_clang_3454 A script to check for the existence of Clang development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/check_clangport" target="_blank" rel="noopener noreferrer">check_clang</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/check_clangport/releases/download/STABLE_check_clangport_3415/comp_clang-DEV.20250603_110014.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_check_clang_3415</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/check_clangport/releases/download/STABLE_check_clangport_3454/comp_clang-DEV.20250611_031529.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_check_clang_3454</a></div>
     <div class="tool-desc" title="A script to check for the existence of Clang">A script to check for the existence of Clang</div>
   </div>
 </div>
@@ -550,12 +550,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="githubcli" data-searchable-text="githubcli Skipped N/A STABLE_githubcli_3387 A command-line tool for GitHub development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="githubcli" data-searchable-text="githubcli Skipped N/A STABLE_githubcli_3453 A command-line tool for GitHub development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/githubcliport" target="_blank" rel="noopener noreferrer">githubcli</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/githubcliport/releases/download/STABLE_githubcliport_3387/githubcli-DEV.20250530_160142.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_githubcli_3387</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/githubcliport/releases/download/STABLE_githubcliport_3453/githubcli-DEV.20250610_154030.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_githubcli_3453</a></div>
     <div class="tool-desc" title="A command-line tool for GitHub">A command-line tool for GitHub</div>
   </div>
 </div>
@@ -700,12 +700,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="popt" data-searchable-text="popt Green 100.0% STABLE_popt_3022 A command-line argument parser development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="popt" data-searchable-text="popt Green 100.0% STABLE_popt_3451 A command-line argument parser development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/poptport" target="_blank" rel="noopener noreferrer">popt</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/poptport/releases/download/STABLE_poptport_3022/popt-master.20250131_090110.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_popt_3022</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/poptport/releases/download/STABLE_poptport_3451/popt-master.20250610_134922.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_popt_3451</a></div>
     <div class="tool-desc" title="A command-line argument parser">A command-line argument parser</div>
   </div>
 </div>
@@ -1438,12 +1438,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="githubcli" data-searchable-text="githubcli Skipped N/A STABLE_githubcli_3387 A command-line tool for GitHub networking port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="githubcli" data-searchable-text="githubcli Skipped N/A STABLE_githubcli_3453 A command-line tool for GitHub networking port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/githubcliport" target="_blank" rel="noopener noreferrer">githubcli</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/githubcliport/releases/download/STABLE_githubcliport_3387/githubcli-DEV.20250530_160142.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_githubcli_3387</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/githubcliport/releases/download/STABLE_githubcliport_3453/githubcli-DEV.20250610_154030.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_githubcli_3453</a></div>
     <div class="tool-desc" title="A command-line tool for GitHub">A command-line tool for GitHub</div>
   </div>
 </div>
@@ -2228,12 +2228,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="meta" data-searchable-text="meta Green 100.0% STABLE_meta_3412 zopen package manager utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="meta" data-searchable-text="meta Green 100.0% STABLE_meta_3455 zopen package manager utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/metaport" target="_blank" rel="noopener noreferrer">meta</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/metaport/releases/download/STABLE_metaport_3412/meta-main.20250603_023207.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_meta_3412</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/metaport/releases/download/STABLE_metaport_3455/meta-main.20250611_053515.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_meta_3455</a></div>
     <div class="tool-desc" title="zopen package manager">zopen package manager</div>
   </div>
 </div>
@@ -2511,4 +2511,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-06-10 06:11:31 UTC
+Last updated:  2025-06-11 06:12:28 UTC
