@@ -665,7 +665,9 @@ checkEnv()
   else
     # user specified, so normalize in lower case
     ZOPEN_COMP=$(echo "${ZOPEN_COMP}" | tr '[A-Z]' '[a-z]')
-    if [ "${ZOPEN_COMP}x" != 'skipx' ]; then
+    if [ "${ZOPEN_COMP}" = "openxl" ]; then
+      implicitDeps="${implicitDeps} check_clang"
+    elif [ "${ZOPEN_COMP}x" != 'skipx' ]; then
       implicitDeps="${implicitDeps} check_${ZOPEN_COMP}"
     fi
   fi
