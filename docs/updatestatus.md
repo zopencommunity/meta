@@ -232,9 +232,6 @@
 ### lessport
 - 2025-05-30: [Update less-version to 679 from 678](https://github.com/zopencommunity/lessport/pull/40) ❌
 
-### libgcryptport
-- 2025-05-10: [Update libgcrypt-version to 1.11.1 from 1.11.0](https://github.com/zopencommunity/libgcryptport/pull/17) ❌
-
 ### libgdbmport
 - 2025-03-22: [Update libgdbm-version to 1.25 from 1.24](https://github.com/zopencommunity/libgdbmport/pull/10) ❌
 
@@ -381,6 +378,7 @@
 - 2024-02-08: [Update tcl-version to 8.6.14 from 8.6.13](https://github.com/zopencommunity/tclport/pull/11) ❓
 
 ### terraformport
+- 2025-06-11: [Update terraform-version to 1.12.2 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/40) ❌
 - 2025-05-21: [Update terraform-version to 1.12.1 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/39) ❌
 - 2025-05-15: [Update terraform-version to 1.12.0 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/38) ❌
 - 2025-04-09: [Update terraform-version to 1.11.4 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/37) ❌
@@ -468,6 +466,7 @@
 - ❌ aprport - Workflow not configured
 - ❌ apr-utilport - Workflow not configured
 - ❌ asioport - Workflow not configured
+- ✅ asmdioport - [![Bump Status](https://github.com/zopencommunity/asmdioport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/asmdioport/actions/workflows/bump.yml)
 - ✅ autoconfport - [![Bump Status](https://github.com/zopencommunity/autoconfport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/autoconfport/actions/workflows/bump.yml)
 - ✅ automakeport - [![Bump Status](https://github.com/zopencommunity/automakeport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/automakeport/actions/workflows/bump.yml)
 - ❌ autoporting - Workflow not configured
@@ -718,10 +717,10 @@
 
 </details>
 
-**Summary:** 205 active | 47 missing
+**Summary:** 206 active | 47 missing
 
 ---
 
 
-> Last updated: 2025-06-11 06:07:19 EDT
+> Last updated: 2025-06-12 06:07:20 EDT
 

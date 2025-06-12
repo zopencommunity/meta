@@ -18,6 +18,7 @@ This page provides information about the zopen interface. Click on any of the zo
 * [zopen-migrate-buildenv](/reference/zopen-migrate-buildenv)
 * [zopen-migrate-groovy](/reference/zopen-migrate-groovy)
 * [zopen-promote](/reference/zopen-promote)
+* [zopen-publish](/reference/zopen-publish)
 * [zopen-query](/reference/zopen-query)
 * [zopen-remove](/reference/zopen-remove)
 * [zopen-split-patch](/reference/zopen-split-patch)

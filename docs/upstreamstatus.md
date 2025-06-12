@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-06-11 06:11:17 EDT.*
+*Report generated on: 2025-06-12 06:11:16 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 238
+- **Total Projects Analyzed:** 239
 - **Total Current Lines of Code (LOC) in Patches:** 30,437
 - **Total Number of Current Patch Files:** 705
-- **Average Current Patch LOC per Project:** 127.89
-- **Average Current Patch Count per Project:** 2.96
+- **Average Current Patch LOC per Project:** 127.35
+- **Average Current Patch Count per Project:** 2.95
 
 ### Historical Trends (All Projects)
 
@@ -262,6 +262,7 @@
 | [scdocport](#repo-scdocport) | 0 | +0 | 0 |
 | [inetutilsport](#repo-inetutilsport) | 0 | +0 | 0 |
 | [asioport](#repo-asioport) | 0 | N/A | 0 |
+| [asmdioport](#repo-asmdioport) | 0 | +0 | 0 |
 
 ---
 
@@ -5384,6 +5385,24 @@
 ## asioport
 
 - **Origin Date (First Commit):** Unknown
+- **Current Patch LOC:** 0
+- **Current Patch Count:** 0
+
+### Historical Trends
+
+*(Patch LOC trend graph not generated)*
+*(Patch count trend graph not generated)*
+
+### Current Patch Details
+
+*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
+
+---
+
+<a id="repo-asmdioport"></a>
+## asmdioport
+
+- **Origin Date (First Commit):** 2025-06-11
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 
