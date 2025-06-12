@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2025-06-11T15:41:40+00:00Z",
+  "generation_timestamp_utc": "2025-06-12T15:41:30+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -239,6 +239,7 @@
     "scdoc": "",
     "inetutils": "",
     "libpsl": "C library for the Public Suffix List",
-    "asio": ""
+    "asio": "",
+    "asmdio": ""
   }
 }
