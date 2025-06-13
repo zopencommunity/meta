@@ -122,12 +122,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="zip" data-searchable-text="zip Green 100.0% STABLE_zip_3079 Tool for zipping files compression port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="zip" data-searchable-text="zip Green 100.0% STABLE_zip_3461 Tool for zipping files compression port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/zipport" target="_blank" rel="noopener noreferrer">zip</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/zipport/releases/download/STABLE_zipport_3079/zip-master.20250205_143804.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_zip_3079</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/zipport/releases/download/STABLE_zipport_3461/zip-master.20250613_092830.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_zip_3461</a></div>
     <div class="tool-desc" title="Tool for zipping files">Tool for zipping files</div>
   </div>
 </div>
@@ -330,12 +330,22 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="bash-completion" data-searchable-text="bash-completion Green 100.0% STABLE_bash-completion_3043 bash completion scripts for your bash shell development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="asmdio" data-searchable-text="asmdio Green 100.0% STABLE_asmdio_3460 development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/asmdioport" target="_blank" rel="noopener noreferrer">asmdio</a></strong></div>
+    <div class="tool-status">Status: Green</div>
+    <div class="tool-test">Test: 100.0%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/asmdioport/releases/download/STABLE_asmdioport_3460/asmdio-main.20250612_170308.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_asmdio_3460</a></div>
+    <div class="tool-desc" title=""></div>
+  </div>
+</div>
+
+<div class="tool-item-filterable" data-package-name="bash-completion" data-searchable-text="bash-completion Green 100.0% STABLE_bash-completion_2785 bash completion scripts for your bash shell development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/bash-completionport" target="_blank" rel="noopener noreferrer">bash-completion</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/bash-completionport/releases/download/STABLE_bash-completionport_3043/bashcompletion-DEV.20250131_110235.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_bash-completion_3043</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/bash-completionport/releases/download/STABLE_bash-completionport_2785/bashcompletion-DEV.20241211_200045.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_bash-completion_2785</a></div>
     <div class="tool-desc" title="bash completion scripts for your bash shell">bash completion scripts for your bash shell</div>
   </div>
 </div>
@@ -540,12 +550,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="git" data-searchable-text="git Blue 96.7% STABLE_git_3433 The Git version control system development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="git" data-searchable-text="git Blue 96.7% STABLE_git_3459 The Git version control system development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/gitport" target="_blank" rel="noopener noreferrer">git</a></strong></div>
     <div class="tool-status">Status: Blue</div>
     <div class="tool-test">Test: 96.7%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/gitport/releases/download/STABLE_gitport_3433/git-v2.49.0.20250606_132542.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_git_3433</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/gitport/releases/download/STABLE_gitport_3459/git-v2.49.0.20250612_153313.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_git_3459</a></div>
     <div class="tool-desc" title="The Git version control system">The Git version control system</div>
   </div>
 </div>
@@ -988,12 +998,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="nano" data-searchable-text="nano Skipped N/A STABLE_nano_3269 A simple text editor for console environments editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="nano" data-searchable-text="nano Skipped N/A STABLE_nano_3458 A simple text editor for console environments editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/nanoport" target="_blank" rel="noopener noreferrer">nano</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/nanoport/releases/download/STABLE_nanoport_3269/nano-8.4.20250429_001229.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_nano_3269</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/nanoport/releases/download/STABLE_nanoport_3458/nano-8.5.20250612_152625.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_nano_3458</a></div>
     <div class="tool-desc" title="A simple text editor for console environments">A simple text editor for console environments</div>
   </div>
 </div>
@@ -1151,6 +1161,16 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 <div class="table-category" data-category="library">
 
 ## Library 
+
+<div class="tool-item-filterable" data-package-name="asmdio" data-searchable-text="asmdio Green 100.0% STABLE_asmdio_3460 library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/asmdioport" target="_blank" rel="noopener noreferrer">asmdio</a></strong></div>
+    <div class="tool-status">Status: Green</div>
+    <div class="tool-test">Test: 100.0%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/asmdioport/releases/download/STABLE_asmdioport_3460/asmdio-main.20250612_170308.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_asmdio_3460</a></div>
+    <div class="tool-desc" title=""></div>
+  </div>
+</div>
 
 <div class="tool-item-filterable" data-package-name="avro-c-lib" data-searchable-text="avro-c-lib Green 100.0% STABLE_avro-c-lib_3003 A data serialization framework library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
@@ -1392,12 +1412,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="zedc_ascii" data-searchable-text="zedc_ascii Green 100.0% DEV_zedc_ascii_3381 Modified version of zlib for HW optimization library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="zedc_ascii" data-searchable-text="zedc_ascii Green 100.0% DEV_zedc_ascii_3078 Modified version of zlib for HW optimization library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/zedc_asciiport" target="_blank" rel="noopener noreferrer">zedc_ascii</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/zedc_asciiport/releases/download/DEV_zedc_asciiport_3381/zedc_ascii-DEV.20250530_133223.zos.pax.Z" target="_blank" rel="noopener noreferrer">DEV_zedc_ascii_3381</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/zedc_asciiport/releases/download/DEV_zedc_asciiport_3078/zedc_ascii-DEV.20250205_142114.zos.pax.Z" target="_blank" rel="noopener noreferrer">DEV_zedc_ascii_3078</a></div>
     <div class="tool-desc" title="Modified version of zlib for HW optimization">Modified version of zlib for HW optimization</div>
   </div>
 </div>
@@ -1670,12 +1690,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="bash-completion" data-searchable-text="bash-completion Green 100.0% STABLE_bash-completion_3043 bash completion scripts for your bash shell shell port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="bash-completion" data-searchable-text="bash-completion Green 100.0% STABLE_bash-completion_2785 bash completion scripts for your bash shell shell port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/bash-completionport" target="_blank" rel="noopener noreferrer">bash-completion</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/bash-completionport/releases/download/STABLE_bash-completionport_3043/bashcompletion-DEV.20250131_110235.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_bash-completion_3043</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/bash-completionport/releases/download/STABLE_bash-completionport_2785/bashcompletion-DEV.20241211_200045.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_bash-completion_2785</a></div>
     <div class="tool-desc" title="bash completion scripts for your bash shell">bash completion scripts for your bash shell</div>
   </div>
 </div>
@@ -1706,12 +1726,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 ## Source_Control 
 
-<div class="tool-item-filterable" data-package-name="git" data-searchable-text="git Blue 96.7% STABLE_git_3433 The Git version control system source_control port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="git" data-searchable-text="git Blue 96.7% STABLE_git_3459 The Git version control system source_control port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/gitport" target="_blank" rel="noopener noreferrer">git</a></strong></div>
     <div class="tool-status">Status: Blue</div>
     <div class="tool-test">Test: 96.7%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/gitport/releases/download/STABLE_gitport_3433/git-v2.49.0.20250606_132542.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_git_3433</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/gitport/releases/download/STABLE_gitport_3459/git-v2.49.0.20250612_153313.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_git_3459</a></div>
     <div class="tool-desc" title="The Git version control system">The Git version control system</div>
   </div>
 </div>
@@ -2047,6 +2067,16 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 <div class="table-category" data-category="utilities">
 
 ## Utilities 
+
+<div class="tool-item-filterable" data-package-name="asmdio" data-searchable-text="asmdio Green 100.0% STABLE_asmdio_3460 utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/asmdioport" target="_blank" rel="noopener noreferrer">asmdio</a></strong></div>
+    <div class="tool-status">Status: Green</div>
+    <div class="tool-test">Test: 100.0%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/asmdioport/releases/download/STABLE_asmdioport_3460/asmdio-main.20250612_170308.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_asmdio_3460</a></div>
+    <div class="tool-desc" title=""></div>
+  </div>
+</div>
 
 <div class="tool-item-filterable" data-package-name="bc" data-searchable-text="bc Green 100.0% STABLE_bc_3226 binary calculator utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
@@ -2511,4 +2541,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-06-12 06:12:22 UTC
+Last updated:  2025-06-13 06:12:24 UTC
