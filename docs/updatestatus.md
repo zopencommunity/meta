@@ -39,6 +39,7 @@
 - 2025-05-10: [Update chezmoi-version to 2.62.3 from 2.62.2](https://github.com/zopencommunity/chezmoiport/pull/1) ❌
 
 ### cmakeport
+- 2025-06-13: [Update cmake-version to 4.0.3 from 3.31.5](https://github.com/zopencommunity/cmakeport/pull/72) ❌
 - 2025-05-10: [Update cmake-version to 4.0.2 from 3.31.5](https://github.com/zopencommunity/cmakeport/pull/71) ❌
 - 2025-04-11: [Update cmake-version to 4.0.1 from 3.31.5](https://github.com/zopencommunity/cmakeport/pull/70) ❌
 - 2025-03-28: [Update cmake-version to 4.0.0 from 3.31.5](https://github.com/zopencommunity/cmakeport/pull/68) ❌
@@ -466,7 +467,7 @@
 - ✅ antport - [![Bump Status](https://github.com/zopencommunity/antport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/antport/actions/workflows/bump.yml)
 - ❌ aprport - Workflow not configured
 - ❌ apr-utilport - Workflow not configured
-- ❌ asioport - Workflow not configured
+- ✅ asioport - [![Bump Status](https://github.com/zopencommunity/asioport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/asioport/actions/workflows/bump.yml)
 - ✅ asmdioport - [![Bump Status](https://github.com/zopencommunity/asmdioport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/asmdioport/actions/workflows/bump.yml)
 - ✅ autoconfport - [![Bump Status](https://github.com/zopencommunity/autoconfport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/autoconfport/actions/workflows/bump.yml)
 - ✅ automakeport - [![Bump Status](https://github.com/zopencommunity/automakeport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/automakeport/actions/workflows/bump.yml)
@@ -557,6 +558,7 @@
 - ✅ groovyport - [![Bump Status](https://github.com/zopencommunity/groovyport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/groovyport/actions/workflows/bump.yml)
 - ✅ gumport - [![Bump Status](https://github.com/zopencommunity/gumport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/gumport/actions/workflows/bump.yml)
 - ✅ gzipport - [![Bump Status](https://github.com/zopencommunity/gzipport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/gzipport/actions/workflows/bump.yml)
+- ❌ hazelcastport - Workflow not configured
 - ✅ helloport - [![Bump Status](https://github.com/zopencommunity/helloport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/helloport/actions/workflows/bump.yml)
 - ✅ help2manport - [![Bump Status](https://github.com/zopencommunity/help2manport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/help2manport/actions/workflows/bump.yml)
 - ✅ hexcurseport - [![Bump Status](https://github.com/zopencommunity/hexcurseport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/hexcurseport/actions/workflows/bump.yml)
@@ -718,10 +720,10 @@
 
 </details>
 
-**Summary:** 206 active | 47 missing
+**Summary:** 207 active | 47 missing
 
 ---
 
 
-> Last updated: 2025-06-13 06:07:09 EDT
+> Last updated: 2025-06-14 06:07:15 EDT
 

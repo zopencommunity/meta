@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-06-13 06:11:19 EDT.*
+*Report generated on: 2025-06-14 06:11:08 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 239
+- **Total Projects Analyzed:** 240
 - **Total Current Lines of Code (LOC) in Patches:** 30,460
 - **Total Number of Current Patch Files:** 706
-- **Average Current Patch LOC per Project:** 127.45
-- **Average Current Patch Count per Project:** 2.95
+- **Average Current Patch LOC per Project:** 126.92
+- **Average Current Patch Count per Project:** 2.94
 
 ### Historical Trends (All Projects)
 
@@ -261,8 +261,9 @@
 | [readlineport](#repo-readlineport) | 0 | +0 | 0 |
 | [scdocport](#repo-scdocport) | 0 | +0 | 0 |
 | [inetutilsport](#repo-inetutilsport) | 0 | +0 | 0 |
-| [asioport](#repo-asioport) | 0 | N/A | 0 |
+| [asioport](#repo-asioport) | 0 | +0 | 0 |
 | [asmdioport](#repo-asmdioport) | 0 | +0 | 0 |
+| [hazelcastport](#repo-hazelcastport) | 0 | +0 | 0 |
 
 ---
 
@@ -5385,7 +5386,7 @@
 <a id="repo-asioport"></a>
 ## asioport
 
-- **Origin Date (First Commit):** Unknown
+- **Origin Date (First Commit):** 2025-06-13
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 
@@ -5404,6 +5405,24 @@
 ## asmdioport
 
 - **Origin Date (First Commit):** 2025-06-11
+- **Current Patch LOC:** 0
+- **Current Patch Count:** 0
+
+### Historical Trends
+
+*(Patch LOC trend graph not generated)*
+*(Patch count trend graph not generated)*
+
+### Current Patch Details
+
+*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
+
+---
+
+<a id="repo-hazelcastport"></a>
+## hazelcastport
+
+- **Origin Date (First Commit):** 2025-06-13
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 
