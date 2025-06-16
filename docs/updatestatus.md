@@ -237,10 +237,6 @@
 ### libgdbmport
 - 2025-03-22: [Update libgdbm-version to 1.25 from 1.24](https://github.com/zopencommunity/libgdbmport/pull/10) ❌
 
-### libgpgerrorport
-- 2025-04-25: [Update libgpgerror-version to 1.55 from 1.53](https://github.com/zopencommunity/libgpgerrorport/pull/18) ✅
-- 2025-04-17: [Update libgpgerror-version to 1.54 from 1.53](https://github.com/zopencommunity/libgpgerrorport/pull/17) ✅
-
 ### libpcre2port
 - 2024-12-27: [Update libpcre2-version to 10.45 from 10.42](https://github.com/zopencommunity/libpcre2port/pull/10) ❌
 - 2024-06-08: [Update libpcre2-version to 10.44 from 10.42](https://github.com/zopencommunity/libpcre2port/pull/7) ✅
@@ -725,5 +721,5 @@
 ---
 
 
-> Last updated: 2025-06-15 06:06:53 EDT
+> Last updated: 2025-06-16 06:07:18 EDT
 
