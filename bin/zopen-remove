@@ -56,7 +56,6 @@ removePackages()
   # Create a temp file name to trigger the post-transaction action script
   # triggering - run only if an action was taken (which creates the file)
   runpostTxnActionScripts=$(mktempfile "txnpost" "run")
-  addCleanupTrapCmd "rm -rf ${runpostTxnActionScripts}"
   echo "${pkglist}" | xargs | tr ' ' '\n' | sort | while read pkg; do
     printHeader "Removing package: ${pkg}"
     processActionScripts "removePre"
@@ -119,7 +118,7 @@ removePackages()
     fi
   done
   if [ -e "${runpostTxnActionScripts}" ]; then 
-    processActionScripts "transactionPost"; 
+    processActionScripts "transactionPost" "mandb"; 
     rm "${runpostTxnActionScripts}"  
   fi
 }

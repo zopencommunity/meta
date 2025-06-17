@@ -100,7 +100,7 @@ mergeNewVersion()
     version=$(cat "${ZOPEN_PKGINSTALL}/${package}/${package}/.releaseinfo")
   fi
   syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_PACKAGE}" "ALT" "setAlt" "Set '${package}' to version:${version};"
-  processActionScripts "installPost"
+  processActionScripts "installPost" "${package}"
   processActionScripts "transactionPost"
 }
 

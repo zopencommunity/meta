@@ -1,6 +1,19 @@
 #!/bin/sh
 this="man-db"
 printVerbose "Running '${this}' script"
+fullScan=false
+while [ $# -gt 0 ]; do
+  case "$1" in
+    "mandb") fullScan=true ;;
+    *):;;
+  esac
+  shift
+done
+if ! $fullScan; then
+  # The option to run a full mandb scan was not passed; do not run scan
+  return 0
+fi
+
 if ! zopen list --installed | grep "^man-db\$"; then
   return 0 # No man-db installed
 else
