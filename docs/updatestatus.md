@@ -84,6 +84,7 @@
 - 2025-04-11: [Update direnv-version to 2.36.0 from 2.35.0](https://github.com/zopencommunity/direnvport/pull/11) ❌
 
 ### duckdbport
+- 2025-06-16: [Update duckdb-version to 1.3.1 from 0.9.2](https://github.com/zopencommunity/duckdbport/pull/26) ❌
 - 2025-05-22: [Update duckdb-version to 1.3.0 from 0.9.2](https://github.com/zopencommunity/duckdbport/pull/25) ❌
 - 2025-04-08: [Update duckdb-version to 1.2.2 from 0.9.2](https://github.com/zopencommunity/duckdbport/pull/24) ❌
 - 2025-03-06: [Update duckdb-version to 1.2.1 from 0.9.2](https://github.com/zopencommunity/duckdbport/pull/23) ❌
@@ -721,5 +722,5 @@
 ---
 
 
-> Last updated: 2025-06-16 06:07:18 EDT
+> Last updated: 2025-06-17 06:07:18 EDT
 
