@@ -2254,6 +2254,12 @@ spaceValidate(){
     else
       printInfo "After this operation, ${spaceRequiredMB} MB of additional cache will be used."
     fi
+  elif ${downloadOnly}; then
+    # To download to current dir, then only need to make sure there is enough disk space
+    # for the pax, the "cached" size
+    spaceRequiredMB=$(echo "scale=0; (${cacheBytes}) / (1024 * 1024)" | bc)
+    spaceRequiredKb=$(( cacheBytes / 1024 ))
+    printInfo "After this operation, $(formattedFileSize ${spaceRequiredKb}) of additional disk space will be used."
   else
     # If not a reinstall, assume there is a need for both the package and the expanded
     # package to be required
