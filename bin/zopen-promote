@@ -284,7 +284,7 @@ printVerbose "Grabbing pkginstall location from within promoted env"
 if [ -e "${promotefs}/etc/zopen/fstype" ]; then
   zopen_pkginstall=$(cat "${promotefs}/etc/zopen/fstype")
 else
-  printError "Unable to locate '${promotefs}/etc/zopen/fstype'; unrecognisable file system. Check permissions"
+  printInfo "Unable to locate '${promotefs}/etc/zopen/fstype'; unrecognisable file system. Using default."
 fi
 
 rmDanglingLinks(){
