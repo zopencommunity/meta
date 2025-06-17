@@ -34,8 +34,10 @@ addCleanupTrapCmd(){
   # Attempt to remove any redirects; rather than test, simpler to remove
   # and re-add if present.
   newcmd="$1"
-
-  tmpscriptfile="/tmp/zopen_trap.scr"
+  # shellcheck disable=SC2009  # no pgrep.
+  #mypid=$(ps -ef |grep -v grep |grep $0 | tr -s ' ' | cut -f3 -d ' ')
+  mypid=$(exec sh -c 'echo ${PPID}')
+  tmpscriptfile="/tmp/zopen_trap.${mypid}.scr"
   echo "${newcmd}" >> "${tmpscriptfile}"
 
   if [ $$ -eq "${parentPid}" ]; then
@@ -48,6 +50,10 @@ addCleanupTrapCmd(){
 
 cleanup() {
   ogExitCode=$?  # Save the original exit code
+  # shellcheck disable=SC2009  # no pgrep.
+  #mypid=$(ps -ef |grep -v grep |grep ps | tr -s ' ' | cut -f3 -d ' ')
+  mypid=$(exec sh -c 'echo ${PPID}')
+  tmpscriptfile="/tmp/zopen_trap.${mypid}.scr"
   if [ -f "${tmpscriptfile}" ] && [ -s "${tmpscriptfile}" ]; then
       # Execute the commands in the cleanup file by sourcing it
       # shellcheck disable=SC1090
@@ -2138,7 +2144,7 @@ generateInstallGraph(){
   # Create the following file here to trigger cleanup - otherwise, multiple
   # tempfiles could be created depending on dependency graph depth
   invalidPortAssetFile=$(mktempfile "invalid" "port")
-  #addCleanupTrapCmd "rm -rf ${invalidPortAssetFile}"
+  addCleanupTrapCmd "rm -rf ${invalidPortAssetFile}"
   if ! runLogProgress " addToInstallGraph \"install\" \"${invalidPortAssetFile}\" \"${portsToInstall}\"" \
       "Creating install graph" "Created install graph" "linkcheck"; then
     if [ -e  "${invalidPortAssetFile}" ]; then
