@@ -679,6 +679,7 @@ installPrereqs()
 updateBootstrappedTools() {
   printInfo "- Installing/updating bootstrapped curl, jq, gpg, pinentry and meta to install updated versions (if available)"
   installOptions="--force"
+  toolInstall=0
   if $bypassPrereqs; then
     installOptions="${installOptions} --bypass-prereq-checks";
   fi
@@ -691,7 +692,7 @@ updateBootstrappedTools() {
     ulzm="${rootfs}/usr/local/zopen/meta"
     target="${ulzm}/meta-bootstrap"
     mkdir -p "${target}"
-    printVerbose "Copying bare meta scrtips from '${metabindir}' to '${target}"
+    printVerbose "Copying bare meta scripts from '${metabindir}' to '${target}"
     cp -R "${metabindir}/../bin" "${target}"
     cp -R "${metabindir}/../include" "${target}"
     printVerbose "Creating main symlink for meta"
@@ -705,24 +706,34 @@ updateBootstrappedTools() {
     printVerbose "Installing bootstrap tools"
     PAX_LOCATIONS="$CURL_PAX_LOCATION,$JQ_PAX_LOCATION,${PINENTRY_PAX_LOCATION},${GPG_PAX_LOCATION}"
 
-    echo "$PAX_LOCATIONS" | tr ',' '\n' | while read -r pax; do
-      printVerbose "- Check for shipped ${pax}"
+    workingPaxList="$PAX_LOCATIONS"
+    printVerbose " Parsing without subshell to ensure exit"
+    while [ -n "${workingPaxList}" ]; do
+      case "${workingPaxList}" in
+        *,*)
+          pax="${workingPaxList%%,*}"
+          workingPaxList="${workingPaxList#*,}"
+          ;;
+        *) 
+          # Last item [hence no comma separator]
+          pax="${workingPaxList}"
+          workingPaxList=""
+          ;;
+      esac
+      printVerbose "Validating pax '${pax}'"
       paxLocation=$(findrev "${MYDIR}" "${pax}")
       echo "${paxLocation}/${pax}"
       if [ -e "${paxLocation}/${pax}" ]; then
-        # Use local file install to make available; note that this should use
-        # the bootstrapped tools until the install completes and then gets
-        # sourced in
         zopen install "${paxLocation}/${pax}" -y --bypass-prereq-checks --skip-verify
       else
-        printError "Could not locate ${pax} in the zopen cache"
+        printError "Could not locate ${pax} to install as bootstrap"
       fi
-  done
+    done
   else
     ${MYDIR}/zopen-install ${installOptions} -y curl jq pinentry gpg meta
     toolInstall=$?
   fi
-  [ ${toolInstall} -ne 0 ] && printError "Unable to install curl, jq, gpg, pinentry and/or meta; see previous errors and retry the initilisation using the '--re-init' parameter"
+  [ "${toolInstall}" -ne 0 ] && printError "Unable to install curl, jq, gpg, pinentry and/or meta; see previous errors and retry the initilisation using the '--re-init' parameter"
   . "${configFile}"
 }
 
