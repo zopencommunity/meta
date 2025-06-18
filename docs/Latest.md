@@ -72,22 +72,22 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 ## Compression 
 
-<div class="tool-item-filterable" data-package-name="bzip2" data-searchable-text="bzip2 Green 100.0% STABLE_bzip2_2959 A compression utility compression port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="bzip2" data-searchable-text="bzip2 Green 100.0% STABLE_bzip2_3470 A compression utility compression port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/bzip2port" target="_blank" rel="noopener noreferrer">bzip2</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/bzip2port/releases/download/STABLE_bzip2port_2959/bzip2-1.0.8.20250130_232500.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_bzip2_2959</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/bzip2port/releases/download/STABLE_bzip2port_3470/bzip2-1.0.8.20250618_002340.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_bzip2_3470</a></div>
     <div class="tool-desc" title="A compression utility">A compression utility</div>
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="libarchive" data-searchable-text="libarchive Yellow 62.2% STABLE_libarchive_3325 Multi-format archive and compression library compression port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="libarchive" data-searchable-text="libarchive Yellow 62.2% STABLE_libarchive_3468 Multi-format archive and compression library compression port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libarchiveport" target="_blank" rel="noopener noreferrer">libarchive</a></strong></div>
     <div class="tool-status">Status: Yellow</div>
     <div class="tool-test">Test: 62.2%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/libarchiveport/releases/download/STABLE_libarchiveport_3325/libarchive-v3.7.9.20250513_005547.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libarchive_3325</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/libarchiveport/releases/download/STABLE_libarchiveport_3468/libarchive-v3.7.9.20250617_113257.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libarchive_3468</a></div>
     <div class="tool-desc" title="Multi-format archive and compression library">Multi-format archive and compression library</div>
   </div>
 </div>
@@ -132,12 +132,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="zstd" data-searchable-text="zstd Green 100.0% STABLE_zstd_3215 A compression algorithm compression port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="zstd" data-searchable-text="zstd Green 100.0% STABLE_zstd_3467 A compression algorithm compression port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/zstdport" target="_blank" rel="noopener noreferrer">zstd</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/zstdport/releases/download/STABLE_zstdport_3215/zstd-1.5.5.20250407_152423.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_zstd_3215</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/zstdport/releases/download/STABLE_zstdport_3467/zstd-1.5.5.20250617_113210.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_zstd_3467</a></div>
     <div class="tool-desc" title="A compression algorithm">A compression algorithm</div>
   </div>
 </div>
@@ -1498,12 +1498,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="nghttp2" data-searchable-text="nghttp2 Green 100.0% STABLE_nghttp2_3063 An HTTP/2 implementation networking port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="nghttp2" data-searchable-text="nghttp2 Green 100.0% STABLE_nghttp2_3469 An HTTP/2 implementation networking port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/nghttp2port" target="_blank" rel="noopener noreferrer">nghttp2</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/nghttp2port/releases/download/STABLE_nghttp2port_3063/nghttp2-1.64.0.20250205_031626.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_nghttp2_3063</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/nghttp2port/releases/download/STABLE_nghttp2port_3469/nghttp2-1.66.0.20250617_152456.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_nghttp2_3469</a></div>
     <div class="tool-desc" title="An HTTP/2 implementation">An HTTP/2 implementation</div>
   </div>
 </div>
@@ -2541,4 +2541,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-06-17 06:12:26 UTC
+Last updated:  2025-06-18 06:11:55 UTC

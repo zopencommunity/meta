@@ -13,6 +13,7 @@
 - 2024-12-11: [Update bash-completion-version to 20060301 from V.R.M](https://github.com/zopencommunity/bash-completionport/pull/1) ❌
 
 ### buildkiteport
+- 2025-06-17: [Update buildkite-version to 3.98.2 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/60) ❌
 - 2025-06-04: [Update buildkite-version to 3.98.1 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/59) ❌
 - 2025-05-27: [Update buildkite-version to 3.98.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/58) ❌
 - 2025-05-13: [Update buildkite-version to 3.97.2 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/57) ❌
@@ -167,6 +168,9 @@
 - 2025-03-08: [Update gitlab-runner-version to 17.9.1 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/35) ❌
 - 2025-02-20: [Update gitlab-runner-version to 17.9.0 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/34) ❌
 
+### gitport
+- 2025-06-17: [Update git-version to 2.50.0 from 2.49.0](https://github.com/zopencommunity/gitport/pull/160) ❌
+
 ### git-sizerport
 - 2025-04-10: [Update git-sizer-version to 1.5.0 from V.R.M](https://github.com/zopencommunity/git-sizerport/pull/1) ✅
 
@@ -207,15 +211,6 @@
 - 2025-04-11: [Update htop-version to 3.4.1 from 3.2.2](https://github.com/zopencommunity/htopport/pull/10) ❌
 - 2025-03-10: [Update htop-version to 3.4.0 from 3.2.2](https://github.com/zopencommunity/htopport/pull/9) ❌
 - 2024-01-10: [Update htop-version to 3.3.0 from 3.2.2](https://github.com/zopencommunity/htopport/pull/6) ❓
-
-### hugoport
-- 2025-05-10: [Update hugo-version to 0.147.2 from 0.146.2](https://github.com/zopencommunity/hugoport/pull/27) ✅
-- 2025-04-26: [Update hugo-version to 0.147.0 from 0.146.2](https://github.com/zopencommunity/hugoport/pull/26) ✅
-- 2025-04-23: [Update hugo-version to 0.146.7 from 0.146.2](https://github.com/zopencommunity/hugoport/pull/25) ✅
-- 2025-04-20: [Update hugo-version to 0.146.6 from 0.146.2](https://github.com/zopencommunity/hugoport/pull/24) ✅
-- 2025-04-16: [Update hugo-version to 0.146.5 from 0.146.2](https://github.com/zopencommunity/hugoport/pull/23) ✅
-- 2025-04-14: [Update hugo-version to 0.146.4 from 0.146.2](https://github.com/zopencommunity/hugoport/pull/22) ✅
-- 2025-04-13: [Update hugo-version to 0.146.3 from 0.146.2](https://github.com/zopencommunity/hugoport/pull/21) ✅
 
 ### kotlinport
 - 2024-07-19: [Update kotlin-version to 1.9.25 from 1.9.22](https://github.com/zopencommunity/kotlinport/pull/5) ❌
@@ -722,5 +717,5 @@
 ---
 
 
-> Last updated: 2025-06-17 06:07:18 EDT
+> Last updated: 2025-06-18 06:07:01 EDT
 
