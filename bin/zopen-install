@@ -21,13 +21,24 @@ setupMyself()
 setupMyself
 checkWritable
 
+testGPGAgentSocket() {
+  SOCKET_PATH="$1"
+  if ! gpg-connect-agent --socket="$SOCKET_PATH" /bye >/dev/null 2>&1; then
+    return 1
+  fi
+  return 0
+}
+
 startGPGAgent() {
   printInfo "- Starting gpg-agent..."
 
   SOCKET_PATH=$(gpgconf --list-dirs agent-socket)
-  if [ -r "$SOCKET_PATH" ]; then
+  if testGPGAgentSocket "$SOCKET_PATH"; then
     printVerbose "gpg-agent is already running (socket found at $SOCKET_PATH)."
     return 0
+  else
+    printWarning "Found orphaned socket at $SOCKET_PATH. Will attempt to restart gpg-agent."
+    rm -f "$SOCKET_PATH"
   fi
 
   if eval "$(gpg-agent --daemon --disable-scdaemon)" >/dev/null 2>&1; then
