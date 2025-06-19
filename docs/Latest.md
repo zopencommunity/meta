@@ -208,6 +208,16 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
+<div class="tool-item-filterable" data-package-name="readline" data-searchable-text="readline Green 100.0% STABLE_readline_3471 The GNU Readline library provides a set of functions for use by applications that allow users to edit command lines as they are typed in core port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/readlineport" target="_blank" rel="noopener noreferrer">readline</a></strong></div>
+    <div class="tool-status">Status: Green</div>
+    <div class="tool-test">Test: 100.0%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/readlineport/releases/download/STABLE_readlineport_3471/readline-8.2.13.20250618_110543.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_readline_3471</a></div>
+    <div class="tool-desc" title="The GNU Readline library provides a set of functions for use by applications that allow users to edit command lines as they are typed in">The GNU Readline library provides a set of functions for use by applications that allow users to edit command lines as they are typed in</div>
+  </div>
+</div>
+
 <div class="tool-item-filterable" data-package-name="screen" data-searchable-text="screen Skipped N/A STABLE_screen_2906 A full-screen terminal multiplexer core port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/screenport" target="_blank" rel="noopener noreferrer">screen</a></strong></div>
@@ -1392,6 +1402,16 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
+<div class="tool-item-filterable" data-package-name="readline" data-searchable-text="readline Green 100.0% STABLE_readline_3471 The GNU Readline library provides a set of functions for use by applications that allow users to edit command lines as they are typed in library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/readlineport" target="_blank" rel="noopener noreferrer">readline</a></strong></div>
+    <div class="tool-status">Status: Green</div>
+    <div class="tool-test">Test: 100.0%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/readlineport/releases/download/STABLE_readlineport_3471/readline-8.2.13.20250618_110543.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_readline_3471</a></div>
+    <div class="tool-desc" title="The GNU Readline library provides a set of functions for use by applications that allow users to edit command lines as they are typed in">The GNU Readline library provides a set of functions for use by applications that allow users to edit command lines as they are typed in</div>
+  </div>
+</div>
+
 <div class="tool-item-filterable" data-package-name="snappy-c" data-searchable-text="snappy-c Green 100.0% DEV_snappy-c_3374 This is a C port of the google snappy compressor. The compressor is very fast with reasonable compression ratio. It is mainly useful for projects that cannot integrate C++ code, but want snappy. Also contains a command line tool, a benchmark, random test code and a fuzz tester. library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/snappy-cport" target="_blank" rel="noopener noreferrer">snappy-c</a></strong></div>
@@ -2541,4 +2561,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-06-18 06:11:55 UTC
+Last updated:  2025-06-19 06:12:33 UTC

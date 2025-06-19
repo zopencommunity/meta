@@ -148,6 +148,7 @@
 - 2025-03-06: [Update ghcli-version to 2.68.1 from 2.67.0](https://github.com/zopencommunity/githubcliport/pull/47) ❌
 
 ### gitlabcliport
+- 2025-06-18: [Update glab-version to 1.60.1 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/31) ❌
 - 2025-06-05: [Update glab-version to 1.59.2 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/30) ❌
 - 2025-06-04: [Update glab-version to 1.59.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/29) ❌
 - 2025-05-28: [Update glab-version to 1.58.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/28) ❌
@@ -186,6 +187,7 @@
 - 2025-06-03: [Update gpg-version to 2.5.7 from 2.5.6](https://github.com/zopencommunity/gpgport/pull/50) ❌
 
 ### grafanaport
+- 2025-06-18: [Update grafana-version to 12.0.2 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/23) ❌
 - 2025-05-23: [Update grafana-version to 12.0.1 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/22) ❌
 - 2025-05-10: [Update grafana-version to 12.0.0 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/21) ❌
 - 2025-04-24: [Update grafana-version to 11.6.1 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/20) ❌
@@ -276,6 +278,9 @@
 
 ### nghttp2port
 - 2025-03-02: [Update nghttp2-version to 1.65.0 from 1.64.0](https://github.com/zopencommunity/nghttp2port/pull/11) ✅
+
+### ninjaport
+- 2025-06-18: [Update ninja-version to 1.13.0 from 1.12.1](https://github.com/zopencommunity/ninjaport/pull/13) ❌
 
 ### opensshport
 - 2025-02-18: [Update openssh-version to 9.9p2 from 9.9p1](https://github.com/zopencommunity/opensshport/pull/19) ❌
@@ -717,5 +722,5 @@
 ---
 
 
-> Last updated: 2025-06-18 06:07:01 EDT
+> Last updated: 2025-06-19 06:07:12 EDT
 
