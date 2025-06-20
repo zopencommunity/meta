@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-06-19 06:11:25 EDT.*
+*Report generated on: 2025-06-20 06:10:35 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 240
-- **Total Current Lines of Code (LOC) in Patches:** 30,460
-- **Total Number of Current Patch Files:** 706
-- **Average Current Patch LOC per Project:** 126.92
-- **Average Current Patch Count per Project:** 2.94
+- **Total Projects Analyzed:** 241
+- **Total Current Lines of Code (LOC) in Patches:** 30,491
+- **Total Number of Current Patch Files:** 707
+- **Average Current Patch LOC per Project:** 126.52
+- **Average Current Patch Count per Project:** 2.93
 
 ### Historical Trends (All Projects)
 
@@ -126,6 +126,7 @@
 | [fzfport](#repo-fzfport) | 32 | +0 | 2 |
 | [luvport](#repo-luvport) | 31 | +0 | 1 |
 | [libffiport](#repo-libffiport) | 31 | +0 | 2 |
+| [grpcport](#repo-grpcport) | 31 | +31 | 1 |
 | [lynxport](#repo-lynxport) | 30 | +0 | 1 |
 | [netpbmport](#repo-netpbmport) | 29 | +0 | 2 |
 | [gmpport](#repo-gmpport) | 29 | +0 | 2 |
@@ -2861,6 +2862,26 @@
 |---|---|:---|
 | `patches/configure.host.patch` | `patches` | 16 |
 | `patches/configure.patch` | `patches` | 15 |
+
+---
+
+<a id="repo-grpcport"></a>
+## grpcport
+
+- **Origin Date (First Commit):** 2025-06-19
+- **Current Patch LOC:** 31
+- **Current Patch Count:** 1
+
+### Historical Trends
+
+![LOC Trend for grpcport](images/upstream/grpcport_current_loc_trend.png)
+![Count Trend for grpcport](images/upstream/grpcport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/abseil-cpp.patch` | `patches` | 31 |
 
 ---
 

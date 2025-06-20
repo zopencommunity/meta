@@ -148,6 +148,7 @@
 - 2025-03-06: [Update ghcli-version to 2.68.1 from 2.67.0](https://github.com/zopencommunity/githubcliport/pull/47) ❌
 
 ### gitlabcliport
+- 2025-06-19: [Update glab-version to 1.60.2 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/32) ❌
 - 2025-06-18: [Update glab-version to 1.60.1 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/31) ❌
 - 2025-06-05: [Update glab-version to 1.59.2 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/30) ❌
 - 2025-06-04: [Update glab-version to 1.59.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/29) ❌
@@ -553,6 +554,7 @@
 - ✅ grepport - [![Bump Status](https://github.com/zopencommunity/grepport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/grepport/actions/workflows/bump.yml)
 - ✅ groffport - [![Bump Status](https://github.com/zopencommunity/groffport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/groffport/actions/workflows/bump.yml)
 - ✅ groovyport - [![Bump Status](https://github.com/zopencommunity/groovyport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/groovyport/actions/workflows/bump.yml)
+- ✅ grpcport - [![Bump Status](https://github.com/zopencommunity/grpcport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/grpcport/actions/workflows/bump.yml)
 - ✅ gumport - [![Bump Status](https://github.com/zopencommunity/gumport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/gumport/actions/workflows/bump.yml)
 - ✅ gzipport - [![Bump Status](https://github.com/zopencommunity/gzipport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/gzipport/actions/workflows/bump.yml)
 - ❌ hazelcastport - Workflow not configured
@@ -717,10 +719,10 @@
 
 </details>
 
-**Summary:** 207 active | 47 missing
+**Summary:** 208 active | 47 missing
 
 ---
 
 
-> Last updated: 2025-06-19 06:07:12 EDT
+> Last updated: 2025-06-20 06:07:17 EDT
 
