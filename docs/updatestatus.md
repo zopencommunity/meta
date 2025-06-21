@@ -13,6 +13,7 @@
 - 2024-12-11: [Update bash-completion-version to 20060301 from V.R.M](https://github.com/zopencommunity/bash-completionport/pull/1) ❌
 
 ### buildkiteport
+- 2025-06-20: [Update buildkite-version to 3.99.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/61) ❌
 - 2025-06-17: [Update buildkite-version to 3.98.2 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/60) ❌
 - 2025-06-04: [Update buildkite-version to 3.98.1 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/59) ❌
 - 2025-05-27: [Update buildkite-version to 3.98.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/58) ❌
@@ -159,6 +160,7 @@
 - 2025-02-14: [Update glab-version to 1.53.0 from 1.52.0](https://github.com/zopencommunity/gitlabcliport/pull/23) ✅
 
 ### gitlab-runnerport
+- 2025-06-20: [Update gitlab-runner-version to 18.1.0 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/45) ❌
 - 2025-06-12: [Update gitlab-runner-version to 18.0.3 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/44) ❌
 - 2025-05-23: [Update gitlab-runner-version to 18.0.2 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/43) ❌
 - 2025-05-17: [Update gitlab-runner-version to 18.0.1 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/41) ❌
@@ -724,5 +726,5 @@
 ---
 
 
-> Last updated: 2025-06-20 06:07:17 EDT
+> Last updated: 2025-06-21 06:07:07 EDT
 
