@@ -187,6 +187,7 @@
 - 2025-04-14: [Update gperf-version to 3.2.1 from 3.1](https://github.com/zopencommunity/gperfport/pull/8) ✅
 
 ### gpgport
+- 2025-06-21: [Update gpg-version to 2.5.8 from 2.5.6](https://github.com/zopencommunity/gpgport/pull/51) ❌
 - 2025-06-03: [Update gpg-version to 2.5.7 from 2.5.6](https://github.com/zopencommunity/gpgport/pull/50) ❌
 
 ### grafanaport
@@ -726,5 +727,5 @@
 ---
 
 
-> Last updated: 2025-06-21 06:07:07 EDT
+> Last updated: 2025-06-22 06:06:52 EDT
 
