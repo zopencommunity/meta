@@ -374,6 +374,9 @@
 - 2024-09-09: [Update stow-version to 2.4.1 from V.R.M](https://github.com/zopencommunity/stowport/pull/2) ✅
 - 2024-06-01: [Update stow-version to 2.4.0 from V.R.M](https://github.com/zopencommunity/stowport/pull/1) ✅
 
+### sudoport
+- 2025-06-22: [Update sudo-version to 1.9.17 from 1.9.16p2](https://github.com/zopencommunity/sudoport/pull/34) ❌
+
 ### tclport
 - 2024-12-20: [Update tcl-version to 9.0.1 from 8.6.13](https://github.com/zopencommunity/tclport/pull/16) ❌
 - 2024-09-10: [Update tcl-version to 9.0.0 from 8.6.13](https://github.com/zopencommunity/tclport/pull/13) ❌
@@ -727,5 +730,5 @@
 ---
 
 
-> Last updated: 2025-06-22 06:06:52 EDT
+> Last updated: 2025-06-23 06:07:24 EDT
 
