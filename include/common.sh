@@ -30,7 +30,7 @@ addCleanupTrapCmd(){
   # didn't have a bug -trap can't be piped/redirected anywhere except
   # a file like it can in bash or non-zos sh as it seems to create
   # and run in the subshell before returning trap handler(s)!?!
-  tmpscriptfile="clean.tmp"
+  tmpscriptfile="${zopen_tmp_dir}/clean.tmp"
   trap > "${tmpscriptfile}" 2>&1 && script=$(cat "${tmpscriptfile}")
   rm "${tmpscriptfile}"
   if [ -n "${script}" ]; then
@@ -574,6 +574,7 @@ defineEnvironment()
   export _TAG_REDIR_IN=txt
   export _TAG_REDIR_OUT=txt
   export GIT_UTF8_CCSID=819
+  export TERM=xterm # To avoid potential issues with "FSUM6202 Unknown terminal" if using an ncurses terminal database
 
   # Required for proper operation of xlclang
   export _CC_CCMODE=1
