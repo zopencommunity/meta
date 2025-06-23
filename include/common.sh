@@ -5,8 +5,23 @@
 
 zopenInitialize()
 {
+  # Capture start time before setting trap
+  fullProcessStartTime=${SECONDS}
+  
   # Create the cleanup pipeline and exit handler
   trap "cleanupFunction" EXIT INT TERM QUIT HUP
+  
+  # Temporary files
+  for zopen_tmp_dir in "${TMPDIR}" "${TMP}" /tmp; do
+    if [ ! -z ${zopen_tmp_dir} ] && [ -d ${zopen_tmp_dir} ]; then
+      break
+    fi
+  done
+  
+  if [ ! -d "${zopen_tmp_dir}" ]; then
+    printError "Temporary directory not found. Please specify \$TMPDIR, \$TMP or have a valid /tmp directory."
+  fi
+
   defineEnvironment
   defineANSI
   if [ -z "${ZOPEN_DONT_PROCESS_CONFIG}" ]; then
@@ -49,20 +64,6 @@ addCleanupTrapCmd(){
   fi
   [ -n "${xtrc}" ] && set -x
 }
-
-# Temporary files
-for zopen_tmp_dir in "${TMPDIR}" "${TMP}" /tmp; do
-  if [ ! -z ${zopen_tmp_dir} ] && [ -d ${zopen_tmp_dir} ]; then
-    break
-  fi
-done
-
-if [ ! -d "${zopen_tmp_dir}" ]; then
-  printError "Temporary directory not found. Please specify \$TMPDIR, \$TMP or have a valid /tmp directory."
-fi
-
-# Capture start time before setting trap
-fullProcessStartTime=${SECONDS}
 
 # Remove temporaries on exit and report elapsed time
 cleanupOnExit()
