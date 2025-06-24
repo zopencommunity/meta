@@ -1,13 +1,13 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-06-23 06:11:46 EDT.*
+*Report generated on: 2025-06-24 06:11:35 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 241
-- **Total Current Lines of Code (LOC) in Patches:** 30,491
-- **Total Number of Current Patch Files:** 707
-- **Average Current Patch LOC per Project:** 126.52
+- **Total Projects Analyzed:** 242
+- **Total Current Lines of Code (LOC) in Patches:** 30,520
+- **Total Number of Current Patch Files:** 709
+- **Average Current Patch LOC per Project:** 126.12
 - **Average Current Patch Count per Project:** 2.93
 
 ### Historical Trends (All Projects)
@@ -31,7 +31,7 @@
 | [sudoport](#repo-sudoport) | 1,278 | +0 | 30 |
 | [coreutilsport](#repo-coreutilsport) | 1,169 | +0 | 18 |
 | [cmakeport](#repo-cmakeport) | 1,092 | +0 | 1 |
-| [gitport](#repo-gitport) | 997 | +23 | 32 |
+| [gitport](#repo-gitport) | 998 | +24 | 32 |
 | [valgrindport](#repo-valgrindport) | 896 | +0 | 3 |
 | [gzipport](#repo-gzipport) | 690 | +0 | 8 |
 | [procpsport](#repo-procpsport) | 687 | +0 | 1 |
@@ -134,6 +134,7 @@
 | [npthport](#repo-npthport) | 28 | +0 | 2 |
 | [libksbaport](#repo-libksbaport) | 28 | +0 | 2 |
 | [avro-c-libport](#repo-avro-c-libport) | 28 | +0 | 2 |
+| [mpfrport](#repo-mpfrport) | 28 | +28 | 2 |
 | [ctagsport](#repo-ctagsport) | 26 | +0 | 2 |
 | [git-extrasport](#repo-git-extrasport) | 26 | +0 | 1 |
 | [my_basicport](#repo-my-basicport) | 22 | +0 | 1 |
@@ -598,7 +599,7 @@
 ## gitport
 
 - **Origin Date (First Commit):** 2022-05-25
-- **Current Patch LOC:** 997
+- **Current Patch LOC:** 998
 - **Current Patch Count:** 32
 
 ### Historical Trends
@@ -635,7 +636,7 @@
 | `stable-patches/git-compat-util.h.patch` | `stable-patches` | 16 |
 | `stable-patches/hash-object.c.patch` | `stable-patches` | 15 |
 | `stable-patches/http.c.patch` | `stable-patches` | 23 |
-| `stable-patches/lockfile.c.patch` | `stable-patches` | 14 |
+| `stable-patches/lockfile.c.patch` | `stable-patches` | 15 |
 | `stable-patches/object-file.c.patch` | `stable-patches` | 106 |
 | `stable-patches/quote.c.patch` | `stable-patches` | 22 |
 | `stable-patches/read-cache-ll.h.patch` | `stable-patches` | 15 |
@@ -3028,6 +3029,27 @@
 |---|---|:---|
 | `patches/avro_private.h.patch` | `patches` | 13 |
 | `patches/refcount.h.patch` | `patches` | 15 |
+
+---
+
+<a id="repo-mpfrport"></a>
+## mpfrport
+
+- **Origin Date (First Commit):** 2025-06-23
+- **Current Patch LOC:** 28
+- **Current Patch Count:** 2
+
+### Historical Trends
+
+![LOC Trend for mpfrport](images/upstream/mpfrport_current_loc_trend.png)
+![Count Trend for mpfrport](images/upstream/mpfrport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/configure.patch` | `patches` | 15 |
+| `patches/mpfr-longlong.h.patch` | `patches` | 13 |
 
 ---
 

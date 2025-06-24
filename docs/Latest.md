@@ -168,12 +168,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="gmp" data-searchable-text="gmp Green 100.0% STABLE_gmp_3025 A library for arbitrary precision arithmetic core port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="gmp" data-searchable-text="gmp Green 100.0% STABLE_gmp_3481 A library for arbitrary precision arithmetic core port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/gmpport" target="_blank" rel="noopener noreferrer">gmp</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/gmpport/releases/download/STABLE_gmpport_3025/gmp-6.3.0.20250131_065607.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_gmp_3025</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/gmpport/releases/download/STABLE_gmpport_3481/gmp-6.3.0.20250624_025730.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_gmp_3481</a></div>
     <div class="tool-desc" title="A library for arbitrary precision arithmetic">A library for arbitrary precision arithmetic</div>
   </div>
 </div>
@@ -560,12 +560,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="git" data-searchable-text="git Blue 96.7% STABLE_git_3459 The Git version control system development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="git" data-searchable-text="git Blue 96.7% STABLE_git_3480 The Git version control system development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/gitport" target="_blank" rel="noopener noreferrer">git</a></strong></div>
     <div class="tool-status">Status: Blue</div>
     <div class="tool-test">Test: 96.7%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/gitport/releases/download/STABLE_gitport_3459/git-v2.49.0.20250612_153313.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_git_3459</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/gitport/releases/download/STABLE_gitport_3480/git-v2.49.0.20250623_183619.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_git_3480</a></div>
     <div class="tool-desc" title="The Git version control system">The Git version control system</div>
   </div>
 </div>
@@ -1746,12 +1746,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 ## Source_Control 
 
-<div class="tool-item-filterable" data-package-name="git" data-searchable-text="git Blue 96.7% STABLE_git_3459 The Git version control system source_control port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="git" data-searchable-text="git Blue 96.7% STABLE_git_3480 The Git version control system source_control port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/gitport" target="_blank" rel="noopener noreferrer">git</a></strong></div>
     <div class="tool-status">Status: Blue</div>
     <div class="tool-test">Test: 96.7%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/gitport/releases/download/STABLE_gitport_3459/git-v2.49.0.20250612_153313.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_git_3459</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/gitport/releases/download/STABLE_gitport_3480/git-v2.49.0.20250623_183619.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_git_3480</a></div>
     <div class="tool-desc" title="The Git version control system">The Git version control system</div>
   </div>
 </div>
@@ -2544,12 +2544,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 ## Webframework 
 
-<div class="tool-item-filterable" data-package-name="hugo" data-searchable-text="hugo Skipped N/A STABLE_hugo_3436 A static site generator webframework port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="hugo" data-searchable-text="hugo Skipped N/A STABLE_hugo_3479 A static site generator webframework port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/hugoport" target="_blank" rel="noopener noreferrer">hugo</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/hugoport/releases/download/STABLE_hugoport_3436/hugo-v0.147.8.20250607_153719.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_hugo_3436</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/hugoport/releases/download/STABLE_hugoport_3479/hugo-v0.147.9.20250623_153332.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_hugo_3479</a></div>
     <div class="tool-desc" title="A static site generator">A static site generator</div>
   </div>
 </div>
@@ -2561,4 +2561,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-06-23 06:12:55 UTC
+Last updated:  2025-06-24 06:12:37 UTC

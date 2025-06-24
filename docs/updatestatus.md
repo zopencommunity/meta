@@ -13,6 +13,7 @@
 - 2024-12-11: [Update bash-completion-version to 20060301 from V.R.M](https://github.com/zopencommunity/bash-completionport/pull/1) ❌
 
 ### buildkiteport
+- 2025-06-23: [Update buildkite-version to 3.100.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/62) ❌
 - 2025-06-20: [Update buildkite-version to 3.99.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/61) ❌
 - 2025-06-17: [Update buildkite-version to 3.98.2 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/60) ❌
 - 2025-06-04: [Update buildkite-version to 3.98.1 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/59) ❌
@@ -37,6 +38,7 @@
 - 2025-05-26: [Update ccache-version to 4.11.3 from V.R.M](https://github.com/zopencommunity/ccacheport/pull/1) ❌
 
 ### chezmoiport
+- 2025-06-23: [Update chezmoi-version to 2.62.7 from 2.62.5](https://github.com/zopencommunity/chezmoiport/pull/5) ❌
 - 2025-06-07: [Update chezmoi-version to 2.62.6 from 2.62.5](https://github.com/zopencommunity/chezmoiport/pull/4) ❌
 - 2025-05-10: [Update chezmoi-version to 2.62.3 from 2.62.2](https://github.com/zopencommunity/chezmoiport/pull/1) ❌
 
@@ -186,10 +188,6 @@
 - 2025-04-07: [Update gperf-version to 3.2 from 3.1](https://github.com/zopencommunity/gperfport/pull/7) ✅
 - 2025-04-14: [Update gperf-version to 3.2.1 from 3.1](https://github.com/zopencommunity/gperfport/pull/8) ✅
 
-### gpgport
-- 2025-06-21: [Update gpg-version to 2.5.8 from 2.5.6](https://github.com/zopencommunity/gpgport/pull/51) ❌
-- 2025-06-03: [Update gpg-version to 2.5.7 from 2.5.6](https://github.com/zopencommunity/gpgport/pull/50) ❌
-
 ### grafanaport
 - 2025-06-18: [Update grafana-version to 12.0.2 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/23) ❌
 - 2025-05-23: [Update grafana-version to 12.0.1 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/22) ❌
@@ -304,7 +302,7 @@
 - 2024-06-21: [Update osv-scanner-version to 1.8.1 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/8) ❌
 - 2024-06-20: [Update osv-scanner-version to 1.8.0 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/7) ❌
 - 2024-05-30: [Update osv-scanner-version to 1.7.4 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/6) ✅
-- 2024-05-09: [Update osv-scanner-version to 1.7.3 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/5) ❌
+- 2024-05-09: [Update osv-scanner-version to 1.7.3 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/5) ❓
 - 2024-04-19: [Update osv-scanner-version to 1.7.2 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/4) ❓
 - 2024-03-20: [Update osv-scanner-version to 1.7.1 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/3) ❓
 - 2024-03-06: [Update osv-scanner-version to 1.7.0 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/2) ❓
@@ -329,7 +327,7 @@
 - 2024-08-01: [Update php-version to 8.3.10 from 8.2.13](https://github.com/zopencommunity/phpport/pull/22) ❌
 - 2024-07-05: [Update php-version to 8.3.9 from 8.2.13](https://github.com/zopencommunity/phpport/pull/21) ❌
 - 2024-06-06: [Update php-version to 8.3.8 from 8.2.13](https://github.com/zopencommunity/phpport/pull/20) ❌
-- 2024-05-09: [Update php-version to 8.3.7 from 8.2.13](https://github.com/zopencommunity/phpport/pull/19) ❌
+- 2024-05-09: [Update php-version to 8.3.7 from 8.2.13](https://github.com/zopencommunity/phpport/pull/19) ❓
 - 2024-04-11: [Update php-version to 8.3.6 from 8.2.13](https://github.com/zopencommunity/phpport/pull/18) ❓
 - 2024-03-15: [Update php-version to 8.3.4 from 8.2.13](https://github.com/zopencommunity/phpport/pull/17) ❓
 - 2024-02-16: [Update php-version to 8.3.3 from 8.2.13](https://github.com/zopencommunity/phpport/pull/16) ❓
@@ -378,7 +376,7 @@
 - 2025-06-22: [Update sudo-version to 1.9.17 from 1.9.16p2](https://github.com/zopencommunity/sudoport/pull/34) ❌
 
 ### tclport
-- 2024-12-20: [Update tcl-version to 9.0.1 from 8.6.13](https://github.com/zopencommunity/tclport/pull/16) ❌
+- 2024-12-20: [Update tcl-version to 9.0.1 from 8.6.13](https://github.com/zopencommunity/tclport/pull/16) ✅
 - 2024-09-10: [Update tcl-version to 9.0.0 from 8.6.13](https://github.com/zopencommunity/tclport/pull/13) ❌
 - 2024-09-07: [Update tcl-version to 8.6.15 from 8.6.13](https://github.com/zopencommunity/tclport/pull/12) ❌
 - 2024-02-08: [Update tcl-version to 8.6.14 from 8.6.13](https://github.com/zopencommunity/tclport/pull/11) ❓
@@ -419,6 +417,7 @@
 - 2025-01-31: [Update tig-version to 2.5.11 from 2.5.9](https://github.com/zopencommunity/tigport/pull/9) ❌
 
 ### victoriametricsport
+- 2025-06-23: [Update victoriametrics-version to 1.120.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/30) ❌
 - 2025-06-09: [Update victoriametrics-version to 1.119.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/29) ❌
 - 2025-05-26: [Update victoriametrics-version to 1.118.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/28) ❌
 - 2025-05-16: [Update victoriametrics-version to 1.117.1 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/27) ❌
@@ -628,6 +627,7 @@
 - ✅ metaport - [![Bump Status](https://github.com/zopencommunity/metaport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/metaport/actions/workflows/bump.yml)
 - ✅ mimallocport - [![Bump Status](https://github.com/zopencommunity/mimallocport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/mimallocport/actions/workflows/bump.yml)
 - ✅ moreutilsport - [![Bump Status](https://github.com/zopencommunity/moreutilsport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/moreutilsport/actions/workflows/bump.yml)
+- ✅ mpfrport - [![Bump Status](https://github.com/zopencommunity/mpfrport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/mpfrport/actions/workflows/bump.yml)
 - ✅ multitailport - [![Bump Status](https://github.com/zopencommunity/multitailport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/multitailport/actions/workflows/bump.yml)
 - ✅ murexport - [![Bump Status](https://github.com/zopencommunity/murexport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/murexport/actions/workflows/bump.yml)
 - ❌ my_basicport - Workflow not configured
@@ -725,10 +725,10 @@
 
 </details>
 
-**Summary:** 208 active | 47 missing
+**Summary:** 209 active | 47 missing
 
 ---
 
 
-> Last updated: 2025-06-23 06:07:24 EDT
+> Last updated: 2025-06-24 06:07:24 EDT
 
