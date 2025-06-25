@@ -174,9 +174,6 @@
 - 2025-03-08: [Update gitlab-runner-version to 17.9.1 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/35) ❌
 - 2025-02-20: [Update gitlab-runner-version to 17.9.0 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/34) ❌
 
-### gitport
-- 2025-06-17: [Update git-version to 2.50.0 from 2.49.0](https://github.com/zopencommunity/gitport/pull/160) ❌
-
 ### git-sizerport
 - 2025-04-10: [Update git-sizer-version to 1.5.0 from V.R.M](https://github.com/zopencommunity/git-sizerport/pull/1) ✅
 
@@ -377,9 +374,7 @@
 
 ### tclport
 - 2024-12-20: [Update tcl-version to 9.0.1 from 8.6.13](https://github.com/zopencommunity/tclport/pull/16) ✅
-- 2024-09-10: [Update tcl-version to 9.0.0 from 8.6.13](https://github.com/zopencommunity/tclport/pull/13) ❌
 - 2024-09-07: [Update tcl-version to 8.6.15 from 8.6.13](https://github.com/zopencommunity/tclport/pull/12) ❌
-- 2024-02-08: [Update tcl-version to 8.6.14 from 8.6.13](https://github.com/zopencommunity/tclport/pull/11) ❓
 
 ### terraformport
 - 2025-06-11: [Update terraform-version to 1.12.2 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/40) ❌
@@ -415,6 +410,9 @@
 ### tigport
 - 2025-02-07: [Update tig-version to 2.5.12 from 2.5.9](https://github.com/zopencommunity/tigport/pull/10) ❌
 - 2025-01-31: [Update tig-version to 2.5.11 from 2.5.9](https://github.com/zopencommunity/tigport/pull/9) ❌
+
+### util-linuxport
+- 2025-06-24: [Update util-linux-version to 2.41.1 from 2.41](https://github.com/zopencommunity/util-linuxport/pull/19) ❌
 
 ### victoriametricsport
 - 2025-06-23: [Update victoriametrics-version to 1.120.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/30) ❌
@@ -527,6 +525,7 @@
 - ✅ findutilsport - [![Bump Status](https://github.com/zopencommunity/findutilsport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/findutilsport/actions/workflows/bump.yml)
 - ✅ fishport - [![Bump Status](https://github.com/zopencommunity/fishport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/fishport/actions/workflows/bump.yml)
 - ✅ flexport - [![Bump Status](https://github.com/zopencommunity/flexport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/flexport/actions/workflows/bump.yml)
+- ✅ fmtport - [![Bump Status](https://github.com/zopencommunity/fmtport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/fmtport/actions/workflows/bump.yml)
 - ✅ fqport - [![Bump Status](https://github.com/zopencommunity/fqport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/fqport/actions/workflows/bump.yml)
 - ✅ frpport - [![Bump Status](https://github.com/zopencommunity/frpport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/frpport/actions/workflows/bump.yml)
 - ✅ fxport - [![Bump Status](https://github.com/zopencommunity/fxport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/fxport/actions/workflows/bump.yml)
@@ -725,10 +724,10 @@
 
 </details>
 
-**Summary:** 209 active | 47 missing
+**Summary:** 210 active | 47 missing
 
 ---
 
 
-> Last updated: 2025-06-24 06:07:24 EDT
+> Last updated: 2025-06-25 06:07:27 EDT
 

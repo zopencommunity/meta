@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-06-24 06:11:35 EDT.*
+*Report generated on: 2025-06-25 06:11:07 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 242
-- **Total Current Lines of Code (LOC) in Patches:** 30,520
-- **Total Number of Current Patch Files:** 709
-- **Average Current Patch LOC per Project:** 126.12
-- **Average Current Patch Count per Project:** 2.93
+- **Total Projects Analyzed:** 243
+- **Total Current Lines of Code (LOC) in Patches:** 30,500
+- **Total Number of Current Patch Files:** 708
+- **Average Current Patch LOC per Project:** 125.51
+- **Average Current Patch Count per Project:** 2.91
 
 ### Historical Trends (All Projects)
 
@@ -31,7 +31,7 @@
 | [sudoport](#repo-sudoport) | 1,278 | +0 | 30 |
 | [coreutilsport](#repo-coreutilsport) | 1,169 | +0 | 18 |
 | [cmakeport](#repo-cmakeport) | 1,092 | +0 | 1 |
-| [gitport](#repo-gitport) | 998 | +24 | 32 |
+| [gitport](#repo-gitport) | 978 | +4 | 31 |
 | [valgrindport](#repo-valgrindport) | 896 | +0 | 3 |
 | [gzipport](#repo-gzipport) | 690 | +0 | 8 |
 | [procpsport](#repo-procpsport) | 687 | +0 | 1 |
@@ -266,6 +266,7 @@
 | [asioport](#repo-asioport) | 0 | +0 | 0 |
 | [asmdioport](#repo-asmdioport) | 0 | +0 | 0 |
 | [hazelcastport](#repo-hazelcastport) | 0 | +0 | 0 |
+| [fmtport](#repo-fmtport) | 0 | +0 | 0 |
 
 ---
 
@@ -599,8 +600,8 @@
 ## gitport
 
 - **Origin Date (First Commit):** 2022-05-25
-- **Current Patch LOC:** 998
-- **Current Patch Count:** 32
+- **Current Patch LOC:** 978
+- **Current Patch Count:** 31
 
 ### Historical Trends
 
@@ -621,7 +622,7 @@
 | `stable-patches/blame.c.patch` | `stable-patches` | 16 |
 | `stable-patches/builtin.h.patch` | `stable-patches` | 13 |
 | `stable-patches/combine-diff.c.patch` | `stable-patches` | 15 |
-| `stable-patches/config.c.patch` | `stable-patches` | 33 |
+| `stable-patches/config.c.patch` | `stable-patches` | 31 |
 | `stable-patches/config.mak.uname.patch` | `stable-patches` | 24 |
 | `stable-patches/configure.ac.patch` | `stable-patches` | 14 |
 | `stable-patches/convert.c.patch` | `stable-patches` | 142 |
@@ -630,14 +631,13 @@
 | `stable-patches/diff.c.patch` | `stable-patches` | 42 |
 | `stable-patches/entry.c.patch` | `stable-patches` | 77 |
 | `stable-patches/environment.c.patch` | `stable-patches` | 15 |
-| `stable-patches/environment.h.patch` | `stable-patches` | 15 |
+| `stable-patches/environment.h.patch` | `stable-patches` | 14 |
 | `stable-patches/exec-cmd.c.patch` | `stable-patches` | 15 |
 | `stable-patches/generate-perl.sh.patch` | `stable-patches` | 13 |
-| `stable-patches/git-compat-util.h.patch` | `stable-patches` | 16 |
 | `stable-patches/hash-object.c.patch` | `stable-patches` | 15 |
 | `stable-patches/http.c.patch` | `stable-patches` | 23 |
 | `stable-patches/lockfile.c.patch` | `stable-patches` | 15 |
-| `stable-patches/object-file.c.patch` | `stable-patches` | 106 |
+| `stable-patches/object-file.c.patch` | `stable-patches` | 105 |
 | `stable-patches/quote.c.patch` | `stable-patches` | 22 |
 | `stable-patches/read-cache-ll.h.patch` | `stable-patches` | 15 |
 | `stable-patches/read-cache.c.patch` | `stable-patches` | 14 |
@@ -5466,6 +5466,24 @@
 ## hazelcastport
 
 - **Origin Date (First Commit):** 2025-06-13
+- **Current Patch LOC:** 0
+- **Current Patch Count:** 0
+
+### Historical Trends
+
+*(Patch LOC trend graph not generated)*
+*(Patch count trend graph not generated)*
+
+### Current Patch Details
+
+*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
+
+---
+
+<a id="repo-fmtport"></a>
+## fmtport
+
+- **Origin Date (First Commit):** 2025-06-24
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 
