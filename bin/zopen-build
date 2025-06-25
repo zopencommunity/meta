@@ -1781,14 +1781,6 @@ generateMetadataJSON()
     version="${versionString}"
   fi
 
-  # Make the version OCI compat
-  case "${version}" in
-  *.*.*.*) ;;
-  *.*.*) version="${version}.0" ;;
-  *.*) version="${version}.0.0" ;;
-  *) version="1.0.0.0" ;;
-  esac
-
   total_size=$(getPathSizeInBytes "${ZOPEN_INSTALL_DIR}")
 
   if [ -z "$totalTests" ]; then
