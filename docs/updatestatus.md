@@ -13,6 +13,7 @@
 - 2024-12-11: [Update bash-completion-version to 20060301 from V.R.M](https://github.com/zopencommunity/bash-completionport/pull/1) ❌
 
 ### buildkiteport
+- 2025-06-25: [Update buildkite-version to 3.100.1 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/63) ❌
 - 2025-06-23: [Update buildkite-version to 3.100.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/62) ❌
 - 2025-06-20: [Update buildkite-version to 3.99.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/61) ❌
 - 2025-06-17: [Update buildkite-version to 3.98.2 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/60) ❌
@@ -108,6 +109,7 @@
 - 2025-04-19: [Update fq-version to 0.15.0 from 0.14.0](https://github.com/zopencommunity/fqport/pull/9) ✅
 
 ### frpport
+- 2025-06-25: [Update frp-version to 0.63.0 from 0.61.1](https://github.com/zopencommunity/frpport/pull/16) ✅
 - 2025-04-28: [Update frp-version to 0.62.1 from 0.61.1](https://github.com/zopencommunity/frpport/pull/15) ✅
 - 2025-04-16: [Update frp-version to 0.62.0 from 0.61.1](https://github.com/zopencommunity/frpport/pull/14) ✅
 - 2025-03-07: [Update frp-version to 0.61.2 from 0.61.1](https://github.com/zopencommunity/frpport/pull/13) ✅
@@ -151,6 +153,7 @@
 - 2025-03-06: [Update ghcli-version to 2.68.1 from 2.67.0](https://github.com/zopencommunity/githubcliport/pull/47) ❌
 
 ### gitlabcliport
+- 2025-06-25: [Update glab-version to 1.61.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/33) ❌
 - 2025-06-19: [Update glab-version to 1.60.2 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/32) ❌
 - 2025-06-18: [Update glab-version to 1.60.1 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/31) ❌
 - 2025-06-05: [Update glab-version to 1.59.2 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/30) ❌
@@ -440,9 +443,6 @@
 - 2024-08-01: [Update victoriametrics-version to 1.102.1 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/6) ❌
 - 2024-07-18: [Update victoriametrics-version to 1.102.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/5) ❌
 
-### vimport
-- 2025-05-22: [Update vim-version to 9.1.140 from 9.1.1390](https://github.com/zopencommunity/vimport/pull/110) ❌
-
 ### xmltoport
 - 2024-10-10: [Update xmlto-version to 0.0.29 from 0.0.28](https://github.com/zopencommunity/xmltoport/pull/3) ❌
 
@@ -469,7 +469,6 @@
 - ❌ aprport - Workflow not configured
 - ❌ apr-utilport - Workflow not configured
 - ✅ asioport - [![Bump Status](https://github.com/zopencommunity/asioport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/asioport/actions/workflows/bump.yml)
-- ✅ asmdioport - [![Bump Status](https://github.com/zopencommunity/asmdioport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/asmdioport/actions/workflows/bump.yml)
 - ✅ autoconfport - [![Bump Status](https://github.com/zopencommunity/autoconfport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/autoconfport/actions/workflows/bump.yml)
 - ✅ automakeport - [![Bump Status](https://github.com/zopencommunity/automakeport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/automakeport/actions/workflows/bump.yml)
 - ❌ autoporting - Workflow not configured
@@ -623,8 +622,10 @@
 - ✅ mavenport - [![Bump Status](https://github.com/zopencommunity/mavenport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/mavenport/actions/workflows/bump.yml)
 - ✅ mesonport - [![Bump Status](https://github.com/zopencommunity/mesonport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/mesonport/actions/workflows/bump.yml)
 - ❌ meta - Workflow not configured
+- ✅ metaldioport - [![Bump Status](https://github.com/zopencommunity/metaldioport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/metaldioport/actions/workflows/bump.yml)
 - ✅ metaport - [![Bump Status](https://github.com/zopencommunity/metaport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/metaport/actions/workflows/bump.yml)
 - ✅ mimallocport - [![Bump Status](https://github.com/zopencommunity/mimallocport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/mimallocport/actions/workflows/bump.yml)
+- ❌ minjaport - Workflow not configured
 - ✅ moreutilsport - [![Bump Status](https://github.com/zopencommunity/moreutilsport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/moreutilsport/actions/workflows/bump.yml)
 - ✅ mpfrport - [![Bump Status](https://github.com/zopencommunity/mpfrport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/mpfrport/actions/workflows/bump.yml)
 - ✅ multitailport - [![Bump Status](https://github.com/zopencommunity/multitailport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/multitailport/actions/workflows/bump.yml)
@@ -655,6 +656,7 @@
 - ✅ pkgconfigport - [![Bump Status](https://github.com/zopencommunity/pkgconfigport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/pkgconfigport/actions/workflows/bump.yml)
 - ✅ pocoport - [![Bump Status](https://github.com/zopencommunity/pocoport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/pocoport/actions/workflows/bump.yml)
 - ✅ poptport - [![Bump Status](https://github.com/zopencommunity/poptport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/poptport/actions/workflows/bump.yml)
+- ❌ postgresport - Workflow not configured
 - ✅ powerlinegoport - [![Bump Status](https://github.com/zopencommunity/powerlinegoport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/powerlinegoport/actions/workflows/bump.yml)
 - ❌ procpsport - Workflow not configured
 - ❌ prometheusport - Workflow not configured
@@ -724,10 +726,10 @@
 
 </details>
 
-**Summary:** 210 active | 47 missing
+**Summary:** 210 active | 49 missing
 
 ---
 
 
-> Last updated: 2025-06-25 06:07:27 EDT
+> Last updated: 2025-06-26 06:07:29 EDT
 

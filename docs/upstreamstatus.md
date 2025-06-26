@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-06-25 06:11:07 EDT.*
+*Report generated on: 2025-06-26 06:11:40 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 243
+- **Total Projects Analyzed:** 245
 - **Total Current Lines of Code (LOC) in Patches:** 30,500
 - **Total Number of Current Patch Files:** 708
-- **Average Current Patch LOC per Project:** 125.51
-- **Average Current Patch Count per Project:** 2.91
+- **Average Current Patch LOC per Project:** 124.49
+- **Average Current Patch Count per Project:** 2.89
 
 ### Historical Trends (All Projects)
 
@@ -264,9 +264,11 @@
 | [scdocport](#repo-scdocport) | 0 | +0 | 0 |
 | [inetutilsport](#repo-inetutilsport) | 0 | +0 | 0 |
 | [asioport](#repo-asioport) | 0 | +0 | 0 |
-| [asmdioport](#repo-asmdioport) | 0 | +0 | 0 |
+| [metaldioport](#repo-metaldioport) | 0 | +0 | 0 |
 | [hazelcastport](#repo-hazelcastport) | 0 | +0 | 0 |
 | [fmtport](#repo-fmtport) | 0 | +0 | 0 |
+| [minjaport](#repo-minjaport) | 0 | +0 | 0 |
+| [postgresport](#repo-postgresport) | 0 | +0 | 0 |
 
 ---
 
@@ -5444,8 +5446,8 @@
 
 ---
 
-<a id="repo-asmdioport"></a>
-## asmdioport
+<a id="repo-metaldioport"></a>
+## metaldioport
 
 - **Origin Date (First Commit):** 2025-06-11
 - **Current Patch LOC:** 0
@@ -5484,6 +5486,42 @@
 ## fmtport
 
 - **Origin Date (First Commit):** 2025-06-24
+- **Current Patch LOC:** 0
+- **Current Patch Count:** 0
+
+### Historical Trends
+
+*(Patch LOC trend graph not generated)*
+*(Patch count trend graph not generated)*
+
+### Current Patch Details
+
+*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
+
+---
+
+<a id="repo-minjaport"></a>
+## minjaport
+
+- **Origin Date (First Commit):** 2025-06-26
+- **Current Patch LOC:** 0
+- **Current Patch Count:** 0
+
+### Historical Trends
+
+*(Patch LOC trend graph not generated)*
+*(Patch count trend graph not generated)*
+
+### Current Patch Details
+
+*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
+
+---
+
+<a id="repo-postgresport"></a>
+## postgresport
+
+- **Origin Date (First Commit):** 2025-06-26
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 

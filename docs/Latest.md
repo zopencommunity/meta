@@ -341,16 +341,6 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="asmdio" data-searchable-text="asmdio Green 100.0% STABLE_asmdio_3460 development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
-  <div class="tool-info-grid">
-    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/asmdioport" target="_blank" rel="noopener noreferrer">asmdio</a></strong></div>
-    <div class="tool-status">Status: Green</div>
-    <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/asmdioport/releases/download/STABLE_asmdioport_3460/asmdio-main.20250612_170308.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_asmdio_3460</a></div>
-    <div class="tool-desc" title=""></div>
-  </div>
-</div>
-
 <div class="tool-item-filterable" data-package-name="bash-completion" data-searchable-text="bash-completion Green 100.0% STABLE_bash-completion_3043 bash completion scripts for your bash shell development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/bash-completionport" target="_blank" rel="noopener noreferrer">bash-completion</a></strong></div>
@@ -698,6 +688,16 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
     <div class="tool-test">Test: 33.3%</div>
     <div class="tool-release"><a href="https://github.com/zopencommunity/mesonport/releases/download/STABLE_mesonport_3111/meson-heads.1.7.0.20250218_042244.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_meson_3111</a></div>
     <div class="tool-desc" title="A build system">A build system</div>
+  </div>
+</div>
+
+<div class="tool-item-filterable" data-package-name="metaldio" data-searchable-text="metaldio Green 100.0% STABLE_metaldio_3494 development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/metaldioport" target="_blank" rel="noopener noreferrer">metaldio</a></strong></div>
+    <div class="tool-status">Status: Green</div>
+    <div class="tool-test">Test: 100.0%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/metaldioport/releases/download/STABLE_metaldioport_3494/metaldio-main.20250626_025744.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_metaldio_3494</a></div>
+    <div class="tool-desc" title=""></div>
   </div>
 </div>
 
@@ -1183,16 +1183,6 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 ## Library 
 
-<div class="tool-item-filterable" data-package-name="asmdio" data-searchable-text="asmdio Green 100.0% STABLE_asmdio_3460 library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
-  <div class="tool-info-grid">
-    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/asmdioport" target="_blank" rel="noopener noreferrer">asmdio</a></strong></div>
-    <div class="tool-status">Status: Green</div>
-    <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/asmdioport/releases/download/STABLE_asmdioport_3460/asmdio-main.20250612_170308.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_asmdio_3460</a></div>
-    <div class="tool-desc" title=""></div>
-  </div>
-</div>
-
 <div class="tool-item-filterable" data-package-name="avro-c-lib" data-searchable-text="avro-c-lib Green 100.0% STABLE_avro-c-lib_3003 A data serialization framework library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/avro-c-libport" target="_blank" rel="noopener noreferrer">avro-c-lib</a></strong></div>
@@ -1390,6 +1380,16 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
     <div class="tool-test">Test: 100.0%</div>
     <div class="tool-release"><a href="https://github.com/zopencommunity/libxsltport/releases/download/STABLE_libxsltport_3309/libxslt-1.1.43.20250512_061400.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libxslt_3309</a></div>
     <div class="tool-desc" title="A library for processing XSLT stylesheets">A library for processing XSLT stylesheets</div>
+  </div>
+</div>
+
+<div class="tool-item-filterable" data-package-name="metaldio" data-searchable-text="metaldio Green 100.0% STABLE_metaldio_3494 library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/metaldioport" target="_blank" rel="noopener noreferrer">metaldio</a></strong></div>
+    <div class="tool-status">Status: Green</div>
+    <div class="tool-test">Test: 100.0%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/metaldioport/releases/download/STABLE_metaldioport_3494/metaldio-main.20250626_025744.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_metaldio_3494</a></div>
+    <div class="tool-desc" title=""></div>
   </div>
 </div>
 
@@ -2019,12 +2019,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="ncurses" data-searchable-text="ncurses Green 100.0% STABLE_ncurses_3440 Library for ncurses, a terminal screen handling library uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="ncurses" data-searchable-text="ncurses Green 100.0% STABLE_ncurses_3491 Library for ncurses, a terminal screen handling library uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/ncursesport" target="_blank" rel="noopener noreferrer">ncurses</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/ncursesport/releases/download/STABLE_ncursesport_3440/ncurses-6.5.20250609_163428.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_ncurses_3440</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/ncursesport/releases/download/STABLE_ncursesport_3491/ncurses-6.5.20250625_114034.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_ncurses_3491</a></div>
     <div class="tool-desc" title="Library for ncurses, a terminal screen handling library">Library for ncurses, a terminal screen handling library</div>
   </div>
 </div>
@@ -2115,16 +2115,6 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 ## Utilities 
 
-<div class="tool-item-filterable" data-package-name="asmdio" data-searchable-text="asmdio Green 100.0% STABLE_asmdio_3460 utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
-  <div class="tool-info-grid">
-    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/asmdioport" target="_blank" rel="noopener noreferrer">asmdio</a></strong></div>
-    <div class="tool-status">Status: Green</div>
-    <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/asmdioport/releases/download/STABLE_asmdioport_3460/asmdio-main.20250612_170308.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_asmdio_3460</a></div>
-    <div class="tool-desc" title=""></div>
-  </div>
-</div>
-
 <div class="tool-item-filterable" data-package-name="bc" data-searchable-text="bc Green 100.0% STABLE_bc_3226 binary calculator utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/bcport" target="_blank" rel="noopener noreferrer">bc</a></strong></div>
@@ -2155,12 +2145,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="file" data-searchable-text="file Green 100.0% STABLE_file_3428 utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="file" data-searchable-text="file Green 100.0% STABLE_file_3490 utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/fileport" target="_blank" rel="noopener noreferrer">file</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/fileport/releases/download/STABLE_fileport_3428/file-5.46.20250605_084226.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_file_3428</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/fileport/releases/download/STABLE_fileport_3490/file-5.46.20250625_113843.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_file_3490</a></div>
     <div class="tool-desc" title=""></div>
   </div>
 </div>
@@ -2305,13 +2295,23 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="meta" data-searchable-text="meta Green 100.0% STABLE_meta_3476 zopen package manager utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="meta" data-searchable-text="meta Green 100.0% STABLE_meta_3492 zopen package manager utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/metaport" target="_blank" rel="noopener noreferrer">meta</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/metaport/releases/download/STABLE_metaport_3476/meta-main.20250619_165440.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_meta_3476</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/metaport/releases/download/STABLE_metaport_3492/meta-main.20250625_185004.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_meta_3492</a></div>
     <div class="tool-desc" title="zopen package manager">zopen package manager</div>
+  </div>
+</div>
+
+<div class="tool-item-filterable" data-package-name="metaldio" data-searchable-text="metaldio Green 100.0% STABLE_metaldio_3494 utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/metaldioport" target="_blank" rel="noopener noreferrer">metaldio</a></strong></div>
+    <div class="tool-status">Status: Green</div>
+    <div class="tool-test">Test: 100.0%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/metaldioport/releases/download/STABLE_metaldioport_3494/metaldio-main.20250626_025744.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_metaldio_3494</a></div>
+    <div class="tool-desc" title=""></div>
   </div>
 </div>
 
@@ -2588,4 +2588,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-06-25 06:12:10 UTC
+Last updated:  2025-06-26 06:12:45 UTC
