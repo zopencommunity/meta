@@ -208,6 +208,9 @@
 - 2024-07-24: [Update grafana-version to 11.1.2 from 11.0.0](https://github.com/zopencommunity/grafanaport/pull/4) ❌
 - 2024-06-25: [Update grafana-version to 11.1.0 from 11.0.0](https://github.com/zopencommunity/grafanaport/pull/2) ❌
 
+### grpcport
+- 2025-06-26: [Update grpc-version to 1.73.1 from 1.73.0](https://github.com/zopencommunity/grpcport/pull/1) ❌
+
 ### helloport
 - 2025-05-19: [Update hello-version to 2.12.2 from 2.12.1](https://github.com/zopencommunity/helloport/pull/11) ❌
 
@@ -376,6 +379,7 @@
 - 2025-06-22: [Update sudo-version to 1.9.17 from 1.9.16p2](https://github.com/zopencommunity/sudoport/pull/34) ❌
 
 ### tclport
+- 2025-06-26: [Update tcl-version to 9.0.2 from 8.6.14](https://github.com/zopencommunity/tclport/pull/19) ❌
 - 2024-12-20: [Update tcl-version to 9.0.1 from 8.6.13](https://github.com/zopencommunity/tclport/pull/16) ✅
 - 2024-09-07: [Update tcl-version to 8.6.15 from 8.6.13](https://github.com/zopencommunity/tclport/pull/12) ❌
 
@@ -667,6 +671,7 @@
 - ✅ re2cport - [![Bump Status](https://github.com/zopencommunity/re2cport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/re2cport/actions/workflows/bump.yml)
 - ✅ readlineport - [![Bump Status](https://github.com/zopencommunity/readlineport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/readlineport/actions/workflows/bump.yml)
 - ✅ redisport - [![Bump Status](https://github.com/zopencommunity/redisport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/redisport/actions/workflows/bump.yml)
+- ❌ rpmport - Workflow not configured
 - ✅ rsyncport - [![Bump Status](https://github.com/zopencommunity/rsyncport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/rsyncport/actions/workflows/bump.yml)
 - ✅ s5cmdport - [![Bump Status](https://github.com/zopencommunity/s5cmdport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/s5cmdport/actions/workflows/bump.yml)
 - ✅ sccport - [![Bump Status](https://github.com/zopencommunity/sccport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/sccport/actions/workflows/bump.yml)
@@ -726,10 +731,10 @@
 
 </details>
 
-**Summary:** 210 active | 49 missing
+**Summary:** 210 active | 50 missing
 
 ---
 
 
-> Last updated: 2025-06-26 06:07:29 EDT
+> Last updated: 2025-06-27 06:07:20 EDT
 

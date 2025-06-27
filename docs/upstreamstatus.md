@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-06-26 06:11:40 EDT.*
+*Report generated on: 2025-06-27 06:11:53 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 245
-- **Total Current Lines of Code (LOC) in Patches:** 30,500
-- **Total Number of Current Patch Files:** 708
-- **Average Current Patch LOC per Project:** 124.49
-- **Average Current Patch Count per Project:** 2.89
+- **Total Projects Analyzed:** 246
+- **Total Current Lines of Code (LOC) in Patches:** 30,513
+- **Total Number of Current Patch Files:** 709
+- **Average Current Patch LOC per Project:** 124.04
+- **Average Current Patch Count per Project:** 2.88
 
 ### Historical Trends (All Projects)
 
@@ -33,9 +33,9 @@
 | [cmakeport](#repo-cmakeport) | 1,092 | +0 | 1 |
 | [gitport](#repo-gitport) | 978 | +4 | 31 |
 | [valgrindport](#repo-valgrindport) | 896 | +0 | 3 |
+| [perlport](#repo-perlport) | 696 | +13 | 14 |
 | [gzipport](#repo-gzipport) | 690 | +0 | 8 |
 | [procpsport](#repo-procpsport) | 687 | +0 | 1 |
-| [perlport](#repo-perlport) | 683 | +0 | 13 |
 | [util-linuxport](#repo-util-linuxport) | 594 | +0 | 15 |
 | [unzipport](#repo-unzipport) | 549 | +0 | 12 |
 | [cronieport](#repo-cronieport) | 510 | +0 | 13 |
@@ -269,6 +269,7 @@
 | [fmtport](#repo-fmtport) | 0 | +0 | 0 |
 | [minjaport](#repo-minjaport) | 0 | +0 | 0 |
 | [postgresport](#repo-postgresport) | 0 | +0 | 0 |
+| [rpmport](#repo-rpmport) | 0 | +0 | 0 |
 
 ---
 
@@ -670,6 +671,39 @@
 
 ---
 
+<a id="repo-perlport"></a>
+## perlport
+
+- **Origin Date (First Commit):** 2021-11-12
+- **Current Patch LOC:** 696
+- **Current Patch Count:** 14
+
+### Historical Trends
+
+![LOC Trend for perlport](images/upstream/perlport_current_loc_trend.png)
+![Count Trend for perlport](images/upstream/perlport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/MM_OS390.pm.patch` | `patches` | 13 |
+| `patches/PR1/Configure.patch` | `patches` | 32 |
+| `patches/PR1/Makefile.SH.patch` | `patches` | 54 |
+| `patches/PR1/cpan/IPC-SysV/SysV.xs.patch` | `patches` | 13 |
+| `patches/PR1/doio.c.patch` | `patches` | 135 |
+| `patches/PR1/ext/ExtUtils-Miniperl/lib/ExtUtils/Miniperl.pm.patch` | `patches` | 20 |
+| `patches/PR1/hints/os390.sh.patch` | `patches` | 141 |
+| `patches/PR1/installperl.patch` | `patches` | 36 |
+| `patches/PR1/iperlsys.h.patch` | `patches` | 28 |
+| `patches/PR1/lib/File/Copy.pm.patch` | `patches` | 16 |
+| `patches/PR1/makedepend_file.SH.patch` | `patches` | 16 |
+| `patches/PR1/os390/os390.c.patch` | `patches` | 62 |
+| `patches/PR1/perl.c.patch` | `patches` | 24 |
+| `patches/PR1/util.c.patch` | `patches` | 106 |
+
+---
+
 <a id="repo-gzipport"></a>
 ## gzipport
 
@@ -714,38 +748,6 @@
 | Patch File (Repo Relative Path) | Source | LOC |
 |---|---|:---|
 | `patches/PR1.patch` | `patches` | 687 |
-
----
-
-<a id="repo-perlport"></a>
-## perlport
-
-- **Origin Date (First Commit):** 2021-11-12
-- **Current Patch LOC:** 683
-- **Current Patch Count:** 13
-
-### Historical Trends
-
-![LOC Trend for perlport](images/upstream/perlport_current_loc_trend.png)
-![Count Trend for perlport](images/upstream/perlport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/PR1/Configure.patch` | `patches` | 32 |
-| `patches/PR1/Makefile.SH.patch` | `patches` | 54 |
-| `patches/PR1/cpan/IPC-SysV/SysV.xs.patch` | `patches` | 13 |
-| `patches/PR1/doio.c.patch` | `patches` | 135 |
-| `patches/PR1/ext/ExtUtils-Miniperl/lib/ExtUtils/Miniperl.pm.patch` | `patches` | 20 |
-| `patches/PR1/hints/os390.sh.patch` | `patches` | 141 |
-| `patches/PR1/installperl.patch` | `patches` | 36 |
-| `patches/PR1/iperlsys.h.patch` | `patches` | 28 |
-| `patches/PR1/lib/File/Copy.pm.patch` | `patches` | 16 |
-| `patches/PR1/makedepend_file.SH.patch` | `patches` | 16 |
-| `patches/PR1/os390/os390.c.patch` | `patches` | 62 |
-| `patches/PR1/perl.c.patch` | `patches` | 24 |
-| `patches/PR1/util.c.patch` | `patches` | 106 |
 
 ---
 
@@ -5520,6 +5522,24 @@
 
 <a id="repo-postgresport"></a>
 ## postgresport
+
+- **Origin Date (First Commit):** 2025-06-26
+- **Current Patch LOC:** 0
+- **Current Patch Count:** 0
+
+### Historical Trends
+
+*(Patch LOC trend graph not generated)*
+*(Patch count trend graph not generated)*
+
+### Current Patch Details
+
+*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
+
+---
+
+<a id="repo-rpmport"></a>
+## rpmport
 
 - **Origin Date (First Commit):** 2025-06-26
 - **Current Patch LOC:** 0
