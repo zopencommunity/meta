@@ -7,6 +7,7 @@
 
 
 ### automakeport
+- 2025-06-27: [Update automake-version to 1.18.1 from 1.17](https://github.com/zopencommunity/automakeport/pull/29) ❌
 - 2025-05-28: [Update automake-version to 1.18 from 1.17](https://github.com/zopencommunity/automakeport/pull/28) ❌
 
 ### bash-completionport
@@ -165,6 +166,7 @@
 - 2025-02-14: [Update glab-version to 1.53.0 from 1.52.0](https://github.com/zopencommunity/gitlabcliport/pull/23) ✅
 
 ### gitlab-runnerport
+- 2025-06-27: [Update gitlab-runner-version to 18.1.1 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/46) ❌
 - 2025-06-20: [Update gitlab-runner-version to 18.1.0 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/45) ❌
 - 2025-06-12: [Update gitlab-runner-version to 18.0.3 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/44) ❌
 - 2025-05-23: [Update gitlab-runner-version to 18.0.2 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/43) ❌
@@ -736,5 +738,5 @@
 ---
 
 
-> Last updated: 2025-06-27 06:07:20 EDT
+> Last updated: 2025-06-28 06:07:21 EDT
 

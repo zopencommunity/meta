@@ -189,12 +189,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="maven" data-searchable-text="maven Skipped N/A STABLE_maven_3478 A build automation tool core port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="maven" data-searchable-text="maven Skipped N/A STABLE_maven_3500 A build automation tool core port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/mavenport" target="_blank" rel="noopener noreferrer">maven</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/mavenport/releases/download/STABLE_mavenport_3478/apache-maven-3.9.9.20250623_085020.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_maven_3478</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/mavenport/releases/download/STABLE_mavenport_3500/apache-maven-3.9.10.20250627_152739.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_maven_3500</a></div>
     <div class="tool-desc" title="A build automation tool">A build automation tool</div>
   </div>
 </div>
@@ -285,12 +285,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="redis" data-searchable-text="redis Green 100.0% STABLE_redis_3466 An in-memory data store database port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="redis" data-searchable-text="redis Green 100.0% STABLE_redis_3497 An in-memory data store database port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/redisport" target="_blank" rel="noopener noreferrer">redis</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/redisport/releases/download/STABLE_redisport_3466/redis-8.0.2.20250617_062043.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_redis_3466</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/redisport/releases/download/STABLE_redisport_3497/redis-8.0.2.20250627_111551.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_redis_3497</a></div>
     <div class="tool-desc" title="An in-memory data store">An in-memory data store</div>
   </div>
 </div>
@@ -1535,12 +1535,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="nats" data-searchable-text="nats Skipped N/A STABLE_NATS_3345 A cloud-native messaging system networking port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="nats" data-searchable-text="nats Skipped N/A STABLE_NATS_3499 A cloud-native messaging system networking port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/natsport" target="_blank" rel="noopener noreferrer">nats</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/natsport/releases/download/STABLE_NATSport_3345/nats-DEV.20250522_155914.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_NATS_3345</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/natsport/releases/download/STABLE_NATSport_3499/nats-DEV.20250627_151920.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_NATS_3499</a></div>
     <div class="tool-desc" title="A cloud-native messaging system">A cloud-native messaging system</div>
   </div>
 </div>
@@ -2588,4 +2588,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-06-27 06:13:11 UTC
+Last updated:  2025-06-28 06:12:02 UTC
