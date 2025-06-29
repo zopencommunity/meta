@@ -367,6 +367,7 @@
 - 2025-05-10: [Update spdlog-version to 1.15.3 from 1.15.1](https://github.com/zopencommunity/spdlogport/pull/9) ✅
 
 ### sqliteport
+- 2025-06-28: [Update sqlite-version to 2025-3500200 from 2025-3480000](https://github.com/zopencommunity/sqliteport/pull/28) ❌
 - 2025-06-07: [Update sqlite-version to 2025-3500100 from 2025-3480000](https://github.com/zopencommunity/sqliteport/pull/27) ❌
 - 2025-05-29: [Update sqlite-version to 2025-3500000 from 2025-3480000](https://github.com/zopencommunity/sqliteport/pull/26) ❌
 - 2025-05-10: [Update sqlite-version to 2025-3490200 from 2025-3480000](https://github.com/zopencommunity/sqliteport/pull/25) ❌
@@ -738,5 +739,5 @@
 ---
 
 
-> Last updated: 2025-06-28 06:07:21 EDT
+> Last updated: 2025-06-29 06:07:03 EDT
 
