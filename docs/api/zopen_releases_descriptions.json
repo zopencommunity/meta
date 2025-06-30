@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2025-06-28T15:30:33+00:00Z",
+  "generation_timestamp_utc": "2025-06-30T07:18:11+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -247,6 +247,7 @@
     "fmt": "",
     "minja": "Minja is a minimalistic reimplementation of the Jinja templating engine to integrate in/with C++ LLM projects (it's used in llama.cpp)",
     "postgres": "PostgreSQL is an advanced object-relational database management system that supports an extended subset of the SQL standard, including transactions, foreign keys, subqueries, triggers, user-defined types and functions",
-    "rpm": "The RPM Package Manager (RPM) is a powerful package management system capable of building computer software from source into easily distributable packages, installing, updating and uninstalling packaged software"
+    "rpm": "The RPM Package Manager (RPM) is a powerful package management system capable of building computer software from source into easily distributable packages, installing, updating and uninstalling packaged software",
+    "tcltls": ""
   }
 }
