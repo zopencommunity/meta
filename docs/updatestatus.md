@@ -450,6 +450,9 @@
 - 2024-08-01: [Update victoriametrics-version to 1.102.1 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/6) ❌
 - 2024-07-18: [Update victoriametrics-version to 1.102.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/5) ❌
 
+### vimport
+- 2025-06-29: [Update vim-version to 9.1.1490 from 9.1.1480](https://github.com/zopencommunity/vimport/pull/119) ❌
+
 ### xmltoport
 - 2024-10-10: [Update xmlto-version to 0.0.29 from 0.0.28](https://github.com/zopencommunity/xmltoport/pull/3) ❌
 
@@ -691,6 +694,7 @@
 - ✅ sudoport - [![Bump Status](https://github.com/zopencommunity/sudoport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/sudoport/actions/workflows/bump.yml)
 - ✅ tarport - [![Bump Status](https://github.com/zopencommunity/tarport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/tarport/actions/workflows/bump.yml)
 - ✅ tclport - [![Bump Status](https://github.com/zopencommunity/tclport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/tclport/actions/workflows/bump.yml)
+- ✅ tcltlsport - [![Bump Status](https://github.com/zopencommunity/tcltlsport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/tcltlsport/actions/workflows/bump.yml)
 - ✅ termenvport - [![Bump Status](https://github.com/zopencommunity/termenvport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/termenvport/actions/workflows/bump.yml)
 - ✅ terraformport - [![Bump Status](https://github.com/zopencommunity/terraformport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/terraformport/actions/workflows/bump.yml)
 - ✅ texinfoport - [![Bump Status](https://github.com/zopencommunity/texinfoport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/texinfoport/actions/workflows/bump.yml)
@@ -734,10 +738,10 @@
 
 </details>
 
-**Summary:** 210 active | 50 missing
+**Summary:** 211 active | 50 missing
 
 ---
 
 
-> Last updated: 2025-06-29 06:07:03 EDT
+> Last updated: 2025-06-30 06:07:33 EDT
 

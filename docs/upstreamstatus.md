@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-06-29 06:10:46 EDT.*
+*Report generated on: 2025-06-30 06:11:38 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 246
-- **Total Current Lines of Code (LOC) in Patches:** 30,513
-- **Total Number of Current Patch Files:** 709
-- **Average Current Patch LOC per Project:** 124.04
-- **Average Current Patch Count per Project:** 2.88
+- **Total Projects Analyzed:** 247
+- **Total Current Lines of Code (LOC) in Patches:** 30,549
+- **Total Number of Current Patch Files:** 710
+- **Average Current Patch LOC per Project:** 123.68
+- **Average Current Patch Count per Project:** 2.87
 
 ### Historical Trends (All Projects)
 
@@ -74,7 +74,7 @@
 | [autoconfport](#repo-autoconfport) | 151 | +0 | 6 |
 | [moreutilsport](#repo-moreutilsport) | 151 | +0 | 1 |
 | [libserdesport](#repo-libserdesport) | 142 | +0 | 4 |
-| [tclport](#repo-tclport) | 130 | +0 | 5 |
+| [tclport](#repo-tclport) | 132 | +2 | 5 |
 | [pinentryport](#repo-pinentryport) | 124 | +0 | 5 |
 | [libssh2port](#repo-libssh2port) | 122 | +0 | 5 |
 | [m4port](#repo-m4port) | 120 | +0 | 5 |
@@ -119,6 +119,7 @@
 | [lazygitport](#repo-lazygitport) | 46 | +0 | 1 |
 | [poptport](#repo-poptport) | 35 | +0 | 1 |
 | [whichport](#repo-whichport) | 34 | +0 | 1 |
+| [tcltlsport](#repo-tcltlsport) | 34 | +34 | 1 |
 | [sedport](#repo-sedport) | 33 | +0 | 1 |
 | [texinfoport](#repo-texinfoport) | 33 | +0 | 2 |
 | [ntbtlsport](#repo-ntbtlsport) | 33 | +0 | 1 |
@@ -1752,7 +1753,7 @@
 ## tclport
 
 - **Origin Date (First Commit):** 2022-07-09
-- **Current Patch LOC:** 130
+- **Current Patch LOC:** 132
 - **Current Patch Count:** 5
 
 ### Historical Trends
@@ -1766,7 +1767,7 @@
 |---|---|:---|
 | `patches/PR1/namecollision.patch` | `patches` | 42 |
 | `patches/PR1/neederrno.patch` | `patches` | 12 |
-| `patches/PR1/remove_oe_sockets_hardcode.patch` | `patches` | 17 |
+| `patches/PR1/remove_oe_sockets_hardcode.patch` | `patches` | 19 |
 | `patches/PR2/tclUnixNotfy.c.patch` | `patches` | 15 |
 | `patches/PR2/tclUnixThrd.c.patch` | `patches` | 44 |
 
@@ -2724,6 +2725,26 @@
 | Patch File (Repo Relative Path) | Source | LOC |
 |---|---|:---|
 | `patches/bash.c.patch` | `patches` | 34 |
+
+---
+
+<a id="repo-tcltlsport"></a>
+## tcltlsport
+
+- **Origin Date (First Commit):** 2025-06-30
+- **Current Patch LOC:** 34
+- **Current Patch Count:** 1
+
+### Historical Trends
+
+![LOC Trend for tcltlsport](images/upstream/tcltlsport_current_loc_trend.png)
+![Count Trend for tcltlsport](images/upstream/tcltlsport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/configure.patch` | `patches` | 34 |
 
 ---
 
