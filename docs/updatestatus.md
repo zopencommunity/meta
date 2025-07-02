@@ -221,6 +221,9 @@
 - 2025-03-10: [Update htop-version to 3.4.0 from 3.2.2](https://github.com/zopencommunity/htopport/pull/9) ❌
 - 2024-01-10: [Update htop-version to 3.3.0 from 3.2.2](https://github.com/zopencommunity/htopport/pull/6) ❓
 
+### jqport
+- 2025-07-01: [Update jq-version to 1.8.1 from 1.8.0](https://github.com/zopencommunity/jqport/pull/18) ❌
+
 ### kotlinport
 - 2024-07-19: [Update kotlin-version to 1.9.25 from 1.9.22](https://github.com/zopencommunity/kotlinport/pull/5) ❌
 - 2024-06-08: [Update kotlin-version to 1.9.24 from 1.9.22](https://github.com/zopencommunity/kotlinport/pull/4) ❌
@@ -577,7 +580,7 @@
 - ✅ hexcurseport - [![Bump Status](https://github.com/zopencommunity/hexcurseport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/hexcurseport/actions/workflows/bump.yml)
 - ✅ htopport - [![Bump Status](https://github.com/zopencommunity/htopport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/htopport/actions/workflows/bump.yml)
 - ✅ hugoport - [![Bump Status](https://github.com/zopencommunity/hugoport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/hugoport/actions/workflows/bump.yml)
-- ❌ inetutilsport - Workflow not configured
+- ✅ inetutilsport - [![Bump Status](https://github.com/zopencommunity/inetutilsport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/inetutilsport/actions/workflows/bump.yml)
 - ❌ iperfport - Workflow not configured
 - ✅ janssonport - [![Bump Status](https://github.com/zopencommunity/janssonport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/janssonport/actions/workflows/bump.yml)
 - ✅ jdport - [![Bump Status](https://github.com/zopencommunity/jdport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/jdport/actions/workflows/bump.yml)
@@ -654,6 +657,7 @@
 - ❌ nmapport - Workflow not configured
 - ✅ npthport - [![Bump Status](https://github.com/zopencommunity/npthport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/npthport/actions/workflows/bump.yml)
 - ✅ ntbtlsport - [![Bump Status](https://github.com/zopencommunity/ntbtlsport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/ntbtlsport/actions/workflows/bump.yml)
+- ❌ ollamaport - Workflow not configured
 - ✅ onigurumaport - [![Bump Status](https://github.com/zopencommunity/onigurumaport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/onigurumaport/actions/workflows/bump.yml)
 - ✅ opensshport - [![Bump Status](https://github.com/zopencommunity/opensshport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/opensshport/actions/workflows/bump.yml)
 - ✅ opensslport - [![Bump Status](https://github.com/zopencommunity/opensslport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/opensslport/actions/workflows/bump.yml)
@@ -739,10 +743,10 @@
 
 </details>
 
-**Summary:** 211 active | 50 missing
+**Summary:** 212 active | 50 missing
 
 ---
 
 
-> Last updated: 2025-07-01 06:07:32 EDT
+> Last updated: 2025-07-02 06:07:30 EDT
 
