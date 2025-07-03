@@ -2510,34 +2510,49 @@ zz
 zz
     elif [ "${action}" = "prepend" ]; then
       cat << zz >> "${output}"
+{
     value_str = "${value}";
-    size = strlen(getenv("${var}")) + strlen(value_str) + strlen(root_dir)*${projectRootCount} + 2 /*for : and null*/;
+    char* existing = getenv("${var}");
+    size = strlen(value_str) + (existing ? strlen(existing) : 0) + strlen(root_dir) * ${projectRootCount} + 2;
     envar_value = (char*)malloc(size);
     memset(envar_value, 0, size);
 
-    // Substitute PROJECT_ROOT with root_dir (actual project directory)
+    // Substitute PROJECT_ROOT with root_dir
+    char* substituted = (char*)malloc(strlen(value_str) + strlen(root_dir) * ${projectRootCount} + 1);
+    substituted[0] = '\0';
+    char* tmp = value_str;
     while (1) {
-      pos = strstr(value_str, PROJECT_ROOT_STR);
+      pos = strstr(tmp, PROJECT_ROOT_STR);
       if (pos != NULL) {
-        size_t length_before_project_root = pos - value_str;
-        strncat(envar_value, value_str, length_before_project_root);
-        strcat(envar_value, root_dir);
-        value_str = pos + sizeof(PROJECT_ROOT_STR) - 1;
+        size_t len = pos - tmp;
+        strncat(substituted, tmp, len);
+        strcat(substituted, root_dir);
+        tmp = pos + sizeof(PROJECT_ROOT_STR) - 1;
       } else {
-        strcat(envar_value, value_str);
+        strcat(substituted, tmp);
         break;
       }
     }
 
-    strcat(envar_value, ":");
-    strcat(envar_value, getenv("${var}"));
-    if (getenv("__ZOPEN_DEBUG"))
-      fprintf(stderr, "Prepending variable %s=%s\n", "${var}", envar_value);
-    if (setenv("${var}", envar_value, 1) != 0) {
-      fprintf(stderr, "Error: prepending environment variable %s=%s\n", "${var}", envar_value);
-      exit(1);
+    if (!existing || !strstr(existing, substituted)) {
+      if (existing && *existing) {
+        snprintf(envar_value, size, "%s:%s", substituted, existing);
+      } else {
+        snprintf(envar_value, size, "%s", substituted);
+      }
+
+      if (getenv("__ZOPEN_DEBUG"))
+        fprintf(stderr, "Setting ${var} (deduped): %s\n", envar_value);
+
+      if (setenv("${var}", envar_value, 1) != 0) {
+        fprintf(stderr, "Error: Setting environment variable ${var}=%s\n", envar_value);
+        exit(1);
+      }
     }
+
+    free(substituted);
     free(envar_value);
+}
 zz
     else
       printError "${action} is not valid, must be one of set, unset, or prepend"
