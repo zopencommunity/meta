@@ -131,6 +131,7 @@
 - 2025-04-06: [Update gawk-version to 5.3.2 from 5.3.1](https://github.com/zopencommunity/gawkport/pull/28) ❌
 
 ### gettextport
+- 2025-07-02: [Update gettext-version to 0.25.1 from 0.21](https://github.com/zopencommunity/gettextport/pull/34) ❌
 - 2025-05-10: [Update gettext-version to 0.25 from 0.21](https://github.com/zopencommunity/gettextport/pull/33) ❌
 - 2025-02-25: [Update gettext-version to 0.24 from 0.21](https://github.com/zopencommunity/gettextport/pull/32) ❌
 - 2024-12-01: [Update gettext-version to 0.23 from 0.21](https://github.com/zopencommunity/gettextport/pull/30) ❌
@@ -220,9 +221,6 @@
 - 2025-04-11: [Update htop-version to 3.4.1 from 3.2.2](https://github.com/zopencommunity/htopport/pull/10) ❌
 - 2025-03-10: [Update htop-version to 3.4.0 from 3.2.2](https://github.com/zopencommunity/htopport/pull/9) ❌
 - 2024-01-10: [Update htop-version to 3.3.0 from 3.2.2](https://github.com/zopencommunity/htopport/pull/6) ❓
-
-### jqport
-- 2025-07-01: [Update jq-version to 1.8.1 from 1.8.0](https://github.com/zopencommunity/jqport/pull/18) ❌
 
 ### kotlinport
 - 2024-07-19: [Update kotlin-version to 1.9.25 from 1.9.22](https://github.com/zopencommunity/kotlinport/pull/5) ❌
@@ -381,10 +379,6 @@
 - 2024-09-09: [Update stow-version to 2.4.1 from V.R.M](https://github.com/zopencommunity/stowport/pull/2) ✅
 - 2024-06-01: [Update stow-version to 2.4.0 from V.R.M](https://github.com/zopencommunity/stowport/pull/1) ✅
 
-### sudoport
-- 2025-06-30: [Update sudo-version to 1.9.17p1 from 1.9.16p2](https://github.com/zopencommunity/sudoport/pull/36) ❌
-- 2025-06-22: [Update sudo-version to 1.9.17 from 1.9.16p2](https://github.com/zopencommunity/sudoport/pull/34) ❌
-
 ### tclport
 - 2025-06-26: [Update tcl-version to 9.0.2 from 8.6.14](https://github.com/zopencommunity/tclport/pull/19) ❌
 - 2024-12-20: [Update tcl-version to 9.0.1 from 8.6.13](https://github.com/zopencommunity/tclport/pull/16) ✅
@@ -491,6 +485,7 @@
 - ✅ bashport - [![Bump Status](https://github.com/zopencommunity/bashport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/bashport/actions/workflows/bump.yml)
 - ✅ bcport - [![Bump Status](https://github.com/zopencommunity/bcport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/bcport/actions/workflows/bump.yml)
 - ✅ bisonport - [![Bump Status](https://github.com/zopencommunity/bisonport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/bisonport/actions/workflows/bump.yml)
+- ✅ blisport - [![Bump Status](https://github.com/zopencommunity/blisport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/blisport/actions/workflows/bump.yml)
 - ❌ boostport - Workflow not configured
 - ✅ buildkiteport - [![Bump Status](https://github.com/zopencommunity/buildkiteport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/buildkiteport/actions/workflows/bump.yml)
 - ❌ bumpport - Workflow not configured
@@ -743,10 +738,10 @@
 
 </details>
 
-**Summary:** 212 active | 50 missing
+**Summary:** 213 active | 50 missing
 
 ---
 
 
-> Last updated: 2025-07-02 06:07:30 EDT
+> Last updated: 2025-07-03 06:07:43 EDT
 

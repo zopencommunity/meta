@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-07-02 06:11:35 EDT.*
+*Report generated on: 2025-07-03 06:11:50 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 248
-- **Total Current Lines of Code (LOC) in Patches:** 32,067
-- **Total Number of Current Patch Files:** 738
-- **Average Current Patch LOC per Project:** 129.30
-- **Average Current Patch Count per Project:** 2.98
+- **Total Projects Analyzed:** 249
+- **Total Current Lines of Code (LOC) in Patches:** 32,223
+- **Total Number of Current Patch Files:** 740
+- **Average Current Patch LOC per Project:** 129.41
+- **Average Current Patch Count per Project:** 2.97
 
 ### Historical Trends (All Projects)
 
@@ -76,6 +76,7 @@
 | [autoconfport](#repo-autoconfport) | 151 | +0 | 6 |
 | [moreutilsport](#repo-moreutilsport) | 151 | +0 | 1 |
 | [libserdesport](#repo-libserdesport) | 142 | +0 | 4 |
+| [blisport](#repo-blisport) | 138 | +138 | 1 |
 | [tclport](#repo-tclport) | 132 | +0 | 5 |
 | [pinentryport](#repo-pinentryport) | 124 | +0 | 5 |
 | [libssh2port](#repo-libssh2port) | 122 | +0 | 5 |
@@ -95,6 +96,7 @@
 | [depot_toolsport](#repo-depot-toolsport) | 91 | +0 | 1 |
 | [libeventport](#repo-libeventport) | 87 | +0 | 3 |
 | [patchport](#repo-patchport) | 86 | +0 | 3 |
+| [jqport](#repo-jqport) | 85 | +18 | 6 |
 | [gawkport](#repo-gawkport) | 81 | +0 | 4 |
 | [expectport](#repo-expectport) | 79 | +0 | 4 |
 | [librabbitmqport](#repo-librabbitmqport) | 78 | +0 | 2 |
@@ -103,7 +105,6 @@
 | [cppcheckport](#repo-cppcheckport) | 72 | +0 | 4 |
 | [libtoolport](#repo-libtoolport) | 71 | +0 | 3 |
 | [nanoport](#repo-nanoport) | 68 | +0 | 1 |
-| [jqport](#repo-jqport) | 67 | +0 | 5 |
 | [gradleport](#repo-gradleport) | 67 | +0 | 1 |
 | [getoptport](#repo-getoptport) | 66 | +0 | 1 |
 | [logrotateport](#repo-logrotateport) | 65 | +0 | 1 |
@@ -1817,6 +1818,26 @@
 
 ---
 
+<a id="repo-blisport"></a>
+## blisport
+
+- **Origin Date (First Commit):** 2025-07-03
+- **Current Patch LOC:** 138
+- **Current Patch Count:** 1
+
+### Historical Trends
+
+![LOC Trend for blisport](images/upstream/blisport_current_loc_trend.png)
+![Count Trend for blisport](images/upstream/blisport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/PR1.patch` | `patches` | 138 |
+
+---
+
 <a id="repo-tclport"></a>
 ## tclport
 
@@ -2243,6 +2264,31 @@
 
 ---
 
+<a id="repo-jqport"></a>
+## jqport
+
+- **Origin Date (First Commit):** 2022-06-05
+- **Current Patch LOC:** 85
+- **Current Patch Count:** 6
+
+### Historical Trends
+
+![LOC Trend for jqport](images/upstream/jqport_current_loc_trend.png)
+![Count Trend for jqport](images/upstream/jqport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/configure.patch` | `patches` | 15 |
+| `patches/zOS.patch` | `patches` | 15 |
+| `stable-patches/jq.test.patch` | `stable-patches` | 18 |
+| `stable-patches/mantest.patch` | `stable-patches` | 10 |
+| `stable-patches/shtest.patch` | `stable-patches` | 11 |
+| `stable-patches/version.patch` | `stable-patches` | 16 |
+
+---
+
 <a id="repo-gawkport"></a>
 ## gawkport
 
@@ -2415,30 +2461,6 @@
 | Patch File (Repo Relative Path) | Source | LOC |
 |---|---|:---|
 | `patches/initial_zos.patch` | `patches` | 68 |
-
----
-
-<a id="repo-jqport"></a>
-## jqport
-
-- **Origin Date (First Commit):** 2022-06-05
-- **Current Patch LOC:** 67
-- **Current Patch Count:** 5
-
-### Historical Trends
-
-![LOC Trend for jqport](images/upstream/jqport_current_loc_trend.png)
-![Count Trend for jqport](images/upstream/jqport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/configure.patch` | `patches` | 15 |
-| `patches/zOS.patch` | `patches` | 15 |
-| `stable-patches/mantest.patch` | `stable-patches` | 10 |
-| `stable-patches/shtest.patch` | `stable-patches` | 11 |
-| `stable-patches/version.patch` | `stable-patches` | 16 |
 
 ---
 

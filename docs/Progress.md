@@ -266,7 +266,7 @@
 | [snappy-cport](https://github.com/zopencommunity/snappy-cport) | 0 | 100.0% | None |
 | [sshpassport](https://github.com/zopencommunity/sshpassport) | 0 | Skipped | None |
 | [stowport](https://github.com/zopencommunity/stowport) | 0 | 100.0% | None |
-| [sudoport](https://github.com/zopencommunity/sudoport) | 0 | 87.8% | None |
+| [sudoport](https://github.com/zopencommunity/sudoport) | 0 | 66.7% | None |
 | [terraformport](https://github.com/zopencommunity/terraformport) | 0 | Skipped | None |
 | [thesilversearcherport](https://github.com/zopencommunity/thesilversearcherport) | 0 | Skipped | None |
 | [tigport](https://github.com/zopencommunity/tigport) | 0 | 100.0% | None |
@@ -284,4 +284,4 @@
 | [zospstreeport](https://github.com/zopencommunity/zospstreeport) | 0 | 100.0% | None |
 | [zotsampleport](https://github.com/zopencommunity/zotsampleport) | 0 | 100.0% | None |
 
-Last updated:  2025-07-02 06:12:40 UTC
+Last updated:  2025-07-03 06:12:53 UTC

@@ -239,12 +239,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="sudo" data-searchable-text="sudo Blue 87.8% STABLE_sudo_3134 A program for running commands with superuser privileges core port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="sudo" data-searchable-text="sudo Yellow 66.7% STABLE_sudo_3516 A program for running commands with superuser privileges core port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/sudoport" target="_blank" rel="noopener noreferrer">sudo</a></strong></div>
-    <div class="tool-status">Status: Blue</div>
-    <div class="tool-test">Test: 87.8%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/sudoport/releases/download/STABLE_sudoport_3134/sudo-1.9.16p2.20250226_031413.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_sudo_3134</a></div>
+    <div class="tool-status">Status: Yellow</div>
+    <div class="tool-test">Test: 66.7%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/sudoport/releases/download/STABLE_sudoport_3516/sudo-1.9.17p1.20250702_193115.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_sudo_3516</a></div>
     <div class="tool-desc" title="A program for running commands with superuser privileges">A program for running commands with superuser privileges</div>
   </div>
 </div>
@@ -481,12 +481,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="direnv" data-searchable-text="direnv Green 100.0% STABLE_direnv_3142 direnv is an environment variable manager for your shell development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="direnv" data-searchable-text="direnv Green 100.0% STABLE_direnv_3514 direnv is an environment variable manager for your shell development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/direnvport" target="_blank" rel="noopener noreferrer">direnv</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/direnvport/releases/download/STABLE_direnvport_3142/direnv-heads.v2.35.0.20250303_131322.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_direnv_3142</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/direnvport/releases/download/STABLE_direnvport_3514/direnv-v2.37.0.20250702_152853.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_direnv_3514</a></div>
     <div class="tool-desc" title="direnv is an environment variable manager for your shell">direnv is an environment variable manager for your shell</div>
   </div>
 </div>
@@ -761,12 +761,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3495 A TUI editor development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3515 A TUI editor development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/vimport" target="_blank" rel="noopener noreferrer">vim</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3495/vim-v9.1.1480.20250626_152703.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3495</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3515/vim-v9.1.1500.20250702_153637.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3515</a></div>
     <div class="tool-desc" title="A TUI editor">A TUI editor</div>
   </div>
 </div>
@@ -1039,12 +1039,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3495 A TUI editor editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3515 A TUI editor editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/vimport" target="_blank" rel="noopener noreferrer">vim</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3495/vim-v9.1.1480.20250626_152703.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3495</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3515/vim-v9.1.1500.20250702_153637.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3515</a></div>
     <div class="tool-desc" title="A TUI editor">A TUI editor</div>
   </div>
 </div>
@@ -1545,12 +1545,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="nats" data-searchable-text="nats Skipped N/A STABLE_NATS_3499 A cloud-native messaging system networking port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="nats" data-searchable-text="nats Skipped N/A STABLE_NATS_3513 A cloud-native messaging system networking port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/natsport" target="_blank" rel="noopener noreferrer">nats</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/natsport/releases/download/STABLE_NATSport_3499/nats-DEV.20250627_151920.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_NATS_3499</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/natsport/releases/download/STABLE_NATSport_3513/nats-DEV.20250702_152444.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_NATS_3513</a></div>
     <div class="tool-desc" title="A cloud-native messaging system">A cloud-native messaging system</div>
   </div>
 </div>
@@ -1879,12 +1879,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="coreutils" data-searchable-text="coreutils Green 100.0% STABLE_coreutils_3417 A collection of basic Unix utilities uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="coreutils" data-searchable-text="coreutils Green 100.0% STABLE_coreutils_3512 A collection of basic Unix utilities uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/coreutilsport" target="_blank" rel="noopener noreferrer">coreutils</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/coreutilsport/releases/download/STABLE_coreutilsport_3417/coreutils-9.7.20250603_133842.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_coreutils_3417</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/coreutilsport/releases/download/STABLE_coreutilsport_3512/coreutils-9.7.20250702_124530.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_coreutils_3512</a></div>
     <div class="tool-desc" title="A collection of basic Unix utilities">A collection of basic Unix utilities</div>
   </div>
 </div>
@@ -2059,12 +2059,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="perl" data-searchable-text="perl Blue 99.2% STABLE_perl_3496 Perl programming language uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="perl" data-searchable-text="perl Blue 99.2% STABLE_perl_3519 Perl programming language uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/perlport" target="_blank" rel="noopener noreferrer">perl</a></strong></div>
     <div class="tool-status">Status: Blue</div>
     <div class="tool-test">Test: 99.2%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/perlport/releases/download/STABLE_perlport_3496/perl5-v5.41.13.20250626_182936.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_perl_3496</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/perlport/releases/download/STABLE_perlport_3519/perl5-v5.41.13.20250703_052302.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_perl_3519</a></div>
     <div class="tool-desc" title="Perl programming language">Perl programming language</div>
   </div>
 </div>
@@ -2305,12 +2305,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="meta" data-searchable-text="meta Green 100.0% STABLE_meta_3492 zopen package manager utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="meta" data-searchable-text="meta Green 100.0% STABLE_meta_3518 zopen package manager utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/metaport" target="_blank" rel="noopener noreferrer">meta</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/metaport/releases/download/STABLE_metaport_3492/meta-main.20250625_185004.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_meta_3492</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/metaport/releases/download/STABLE_metaport_3518/meta-main.20250703_045321.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_meta_3518</a></div>
     <div class="tool-desc" title="zopen package manager">zopen package manager</div>
   </div>
 </div>
@@ -2598,4 +2598,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-07-02 06:12:40 UTC
+Last updated:  2025-07-03 06:12:53 UTC
