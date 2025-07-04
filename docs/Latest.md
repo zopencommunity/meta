@@ -381,12 +381,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="ccache" data-searchable-text="ccache Green 100.0% STABLE_ccache_3377 Object-file caching compiler wrapper development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="ccache" data-searchable-text="ccache Green 100.0% STABLE_ccache_3525 Object-file caching compiler wrapper development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/ccacheport" target="_blank" rel="noopener noreferrer">ccache</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/ccacheport/releases/download/STABLE_ccacheport_3377/ccache-v4.11.3.20250529_163314.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_ccache_3377</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/ccacheport/releases/download/STABLE_ccacheport_3525/ccache-v4.11.3.20250703_170134.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_ccache_3525</a></div>
     <div class="tool-desc" title="Object-file caching compiler wrapper">Object-file caching compiler wrapper</div>
   </div>
 </div>
@@ -551,12 +551,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="git" data-searchable-text="git Blue 96.7% STABLE_git_3486 The Git version control system development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="git" data-searchable-text="git Blue 92.2% STABLE_git_3526 The Git version control system development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/gitport" target="_blank" rel="noopener noreferrer">git</a></strong></div>
     <div class="tool-status">Status: Blue</div>
-    <div class="tool-test">Test: 96.7%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/gitport/releases/download/STABLE_gitport_3486/git-v2.50.0.20250625_023008.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_git_3486</a></div>
+    <div class="tool-test">Test: 92.2%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/gitport/releases/download/STABLE_gitport_3526/git-v2.50.0.20250704_053951.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_git_3526</a></div>
     <div class="tool-desc" title="The Git version control system">The Git version control system</div>
   </div>
 </div>
@@ -1783,12 +1783,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 ## Source_Control 
 
-<div class="tool-item-filterable" data-package-name="git" data-searchable-text="git Blue 96.7% STABLE_git_3486 The Git version control system source_control port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="git" data-searchable-text="git Blue 92.2% STABLE_git_3526 The Git version control system source_control port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/gitport" target="_blank" rel="noopener noreferrer">git</a></strong></div>
     <div class="tool-status">Status: Blue</div>
-    <div class="tool-test">Test: 96.7%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/gitport/releases/download/STABLE_gitport_3486/git-v2.50.0.20250625_023008.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_git_3486</a></div>
+    <div class="tool-test">Test: 92.2%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/gitport/releases/download/STABLE_gitport_3526/git-v2.50.0.20250704_053951.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_git_3526</a></div>
     <div class="tool-desc" title="The Git version control system">The Git version control system</div>
   </div>
 </div>
@@ -1939,12 +1939,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="jq" data-searchable-text="jq Blue 88.9% STABLE_jq_3422 A port of the JQ command-line JSON processor uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="jq" data-searchable-text="jq Blue 88.9% STABLE_jq_3522 A port of the JQ command-line JSON processor uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/jqport" target="_blank" rel="noopener noreferrer">jq</a></strong></div>
     <div class="tool-status">Status: Blue</div>
     <div class="tool-test">Test: 88.9%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/jqport/releases/download/STABLE_jqport_3422/jq-jq-1.8.0.20250604_094829.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_jq_3422</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/jqport/releases/download/STABLE_jqport_3522/jq-jq-1.8.1.20250703_113647.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_jq_3522</a></div>
     <div class="tool-desc" title="A port of the JQ command-line JSON processor">A port of the JQ command-line JSON processor</div>
   </div>
 </div>
@@ -2295,12 +2295,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="man-db" data-searchable-text="man-db Green 100.0% STABLE_man-db_2945 Tool for generating manual pages for Unix programs utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="man-db" data-searchable-text="man-db Blue 97.7% STABLE_man-db_3524 Tool for generating manual pages for Unix programs utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/man-dbport" target="_blank" rel="noopener noreferrer">man-db</a></strong></div>
-    <div class="tool-status">Status: Green</div>
-    <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/man-dbport/releases/download/STABLE_man-dbport_2945/man-db-2.12.1.20250130_210217.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_man-db_2945</a></div>
+    <div class="tool-status">Status: Blue</div>
+    <div class="tool-test">Test: 97.7%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/man-dbport/releases/download/STABLE_man-dbport_3524/man-db-2.12.1.20250703_151457.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_man-db_3524</a></div>
     <div class="tool-desc" title="Tool for generating manual pages for Unix programs">Tool for generating manual pages for Unix programs</div>
   </div>
 </div>
@@ -2598,4 +2598,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-07-03 06:12:53 UTC
+Last updated:  2025-07-04 06:12:13 UTC

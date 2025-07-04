@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-07-03 06:11:50 EDT.*
+*Report generated on: 2025-07-04 06:11:12 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 249
-- **Total Current Lines of Code (LOC) in Patches:** 32,223
-- **Total Number of Current Patch Files:** 740
-- **Average Current Patch LOC per Project:** 129.41
-- **Average Current Patch Count per Project:** 2.97
+- **Total Current Lines of Code (LOC) in Patches:** 32,706
+- **Total Number of Current Patch Files:** 741
+- **Average Current Patch LOC per Project:** 131.35
+- **Average Current Patch Count per Project:** 2.98
 
 ### Historical Trends (All Projects)
 
@@ -44,6 +44,7 @@
 | [screenport](#repo-screenport) | 485 | +0 | 7 |
 | [tmuxport](#repo-tmuxport) | 440 | +0 | 13 |
 | [treeport](#repo-treeport) | 425 | +0 | 3 |
+| [nginxport](#repo-nginxport) | 414 | +414 | 1 |
 | [emacsport](#repo-emacsport) | 413 | +0 | 2 |
 | [opensshport](#repo-opensshport) | 376 | +0 | 19 |
 | [flexport](#repo-flexport) | 351 | +0 | 2 |
@@ -57,6 +58,7 @@
 | [libgcryptport](#repo-libgcryptport) | 302 | +0 | 9 |
 | [conanport](#repo-conanport) | 299 | +0 | 8 |
 | [zipport](#repo-zipport) | 297 | +0 | 8 |
+| [ccacheport](#repo-ccacheport) | 264 | +69 | 1 |
 | [redisport](#repo-redisport) | 263 | +0 | 1 |
 | [gitlab-runnerport](#repo-gitlab-runnerport) | 241 | +0 | 10 |
 | [libarchiveport](#repo-libarchiveport) | 237 | +0 | 6 |
@@ -68,7 +70,6 @@
 | [protobufport](#repo-protobufport) | 201 | +27 | 9 |
 | [findutilsport](#repo-findutilsport) | 199 | +0 | 10 |
 | [ninjaport](#repo-ninjaport) | 196 | +0 | 8 |
-| [ccacheport](#repo-ccacheport) | 195 | +0 | 1 |
 | [diffutilsport](#repo-diffutilsport) | 184 | +0 | 8 |
 | [aflplusplusport](#repo-aflplusplusport) | 184 | +0 | 5 |
 | [jemallocport](#repo-jemallocport) | 166 | +0 | 1 |
@@ -203,7 +204,6 @@
 | [luarocksport](#repo-luarocksport) | 0 | +0 | 0 |
 | [termenvport](#repo-termenvport) | 0 | +0 | 0 |
 | [esbuildport](#repo-esbuildport) | 0 | +0 | 0 |
-| [nginxport](#repo-nginxport) | 0 | +0 | 0 |
 | [natsport](#repo-natsport) | 0 | +0 | 0 |
 | [githubcliport](#repo-githubcliport) | 0 | +0 | 0 |
 | [zos-code-page-toolsport](#repo-zos-code-page-toolsport) | 0 | +0 | 0 |
@@ -997,6 +997,26 @@
 
 ---
 
+<a id="repo-nginxport"></a>
+## nginxport
+
+- **Origin Date (First Commit):** 2023-10-25
+- **Current Patch LOC:** 414
+- **Current Patch Count:** 1
+
+### Historical Trends
+
+![LOC Trend for nginxport](images/upstream/nginxport_current_loc_trend.png)
+![Count Trend for nginxport](images/upstream/nginxport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/PR1.patch` | `patches` | 414 |
+
+---
+
 <a id="repo-emacsport"></a>
 ## emacsport
 
@@ -1352,6 +1372,26 @@
 
 ---
 
+<a id="repo-ccacheport"></a>
+## ccacheport
+
+- **Origin Date (First Commit):** 2025-05-25
+- **Current Patch LOC:** 264
+- **Current Patch Count:** 1
+
+### Historical Trends
+
+![LOC Trend for ccacheport](images/upstream/ccacheport_current_loc_trend.png)
+![Count Trend for ccacheport](images/upstream/ccacheport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/PR1.patch` | `patches` | 264 |
+
+---
+
 <a id="repo-redisport"></a>
 ## redisport
 
@@ -1624,26 +1664,6 @@
 | `patches/PR1/src/manifest_parser_perftest.cc.patch` | `patches` | 13 |
 | `patches/PR1/src/ninja.cc.patch` | `patches` | 13 |
 | `patches/PR1/src/util.cc.patch` | `patches` | 25 |
-
----
-
-<a id="repo-ccacheport"></a>
-## ccacheport
-
-- **Origin Date (First Commit):** 2025-05-25
-- **Current Patch LOC:** 195
-- **Current Patch Count:** 1
-
-### Historical Trends
-
-![LOC Trend for ccacheport](images/upstream/ccacheport_current_loc_trend.png)
-![Count Trend for ccacheport](images/upstream/ccacheport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/PR1.patch` | `patches` | 195 |
 
 ---
 
@@ -4371,24 +4391,6 @@
 
 <a id="repo-esbuildport"></a>
 ## esbuildport
-
-- **Origin Date (First Commit):** 2023-10-25
-- **Current Patch LOC:** 0
-- **Current Patch Count:** 0
-
-### Historical Trends
-
-*(Patch LOC trend graph not generated)*
-*(Patch count trend graph not generated)*
-
-### Current Patch Details
-
-*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
-
----
-
-<a id="repo-nginxport"></a>
-## nginxport
 
 - **Origin Date (First Commit):** 2023-10-25
 - **Current Patch LOC:** 0
