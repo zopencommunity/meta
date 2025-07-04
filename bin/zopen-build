@@ -318,6 +318,8 @@ Option:
   --buildtype TYPE      TYPE may be release or debug.  The default is release.
   -c, --clean           Deletes all of the build output and forces
                         reconfigure with next build.
+  --ccache              Enable ccache for clang builds to speed up
+                        recompilation.
   --comp COMP           COMP may be xlclang, clang, go, java
                         python. The default is clang.
   -e ENV_FILE           source ENV_FILE instead of buildenv to establish
@@ -382,6 +384,7 @@ processOptions()
   noInstallRuntimeDeps=false
   instrument=false
   printSourceDir=false
+  use_ccache=false
   depsDepth=2
   while [ $# -gt 0 ]; do
     case $1 in
@@ -415,6 +418,9 @@ processOptions()
       ;;
     "--no-install-deps")
       noInstallRuntimeDeps=true
+      ;;
+    "--ccache")
+      use_ccache=true
       ;;
     "--instrument")
       instrument=true
@@ -660,6 +666,10 @@ checkEnv()
 
   implicitDeps="sed git jq curl"
 
+  if ${use_ccache}; then
+    implicitDeps="${implicitDeps} ccache"
+  fi
+
   if [ -z "${ZOPEN_COMP}" ]; then
     implicitDeps="${implicitDeps} check_clang"
   else
@@ -828,8 +838,21 @@ setEnv()
   initDefaultEnvironment
   setDepsEnv
 
+  # Add ccache support if requested and using clang
+  if ${use_ccache}; then
+    if [[ "${CC}" == *clang* ]]; then
+      if command -v ccache >/dev/null 2>&1; then
+        printInfo "Enabling ccache for clang"
+        export CC="ccache ${CC}"
+        export CXX="ccache ${CXX}"
+      else
+        printWarning "ccache requested but not found, not enabling for build."
+      fi
+    fi
+  fi
+
   if ${instrument}; then
-    if [ "${CC}" = "clang" ] || [ "${CC}" = "ibm-clang" ]; then
+    if [[ "${CC}" == *clang* ]]; then
       instrumentOptions="-finstrument-functions"
     else
       printWarning "In order to instrument your application, you must build with clang."
@@ -2212,10 +2235,10 @@ resolveCommands()
     if [ -z "${ZOPEN_CONFIGURE_MINIMAL}" ]; then
       case "${ZOPEN_CONFIGURE}" in
       *cmake*)
-        export ZOPEN_CONFIGURE_CMD="\"${ZOPEN_CONFIGURE}\" ${ZOPEN_CONFIGURE_OPTS} -DCMAKE_C_COMPILER=${CC} -DCMAKE_C_FLAGS=\"${CPPFLAGS} ${CFLAGS}\" -DCMAKE_CXX_COMPILER=${CXX} -DCMAKE_CXX_FLAGS=\"${CPPFLAGS} ${CXXFLAGS}\" -DCMAKE_CXX_LINK_LIBRARY_FLAG=\"${LDFLAGS}\" -DCMAKE_C_LINK_LIBRARY_FLAG=\"${LDFLAGS}\" -DCMAKE_CXX_STANDARD_LIBRARIES=\"${LIBS}\" -DCMAKE_C_STANDARD_LIBRARIES=\"${LIBS}\""
+        export ZOPEN_CONFIGURE_CMD="\"${ZOPEN_CONFIGURE}\" ${ZOPEN_CONFIGURE_OPTS} -DCMAKE_C_COMPILER=\"${CC}\" -DCMAKE_C_FLAGS=\"${CPPFLAGS} ${CFLAGS}\" -DCMAKE_CXX_COMPILER=\"${CXX}\" -DCMAKE_CXX_FLAGS=\"${CPPFLAGS} ${CXXFLAGS}\" -DCMAKE_CXX_LINK_LIBRARY_FLAG=\"${LDFLAGS}\" -DCMAKE_C_LINK_LIBRARY_FLAG=\"${LDFLAGS}\" -DCMAKE_CXX_STANDARD_LIBRARIES=\"${LIBS}\" -DCMAKE_C_STANDARD_LIBRARIES=\"${LIBS}\""
         ;;
       *)
-        export ZOPEN_CONFIGURE_CMD="\"${ZOPEN_CONFIGURE}\" ${ZOPEN_CONFIGURE_OPTS} CC=${CC} CPPFLAGS=\"${CPPFLAGS}\" CFLAGS=\"${CFLAGS}\" CXX=${CXX} CXXFLAGS=\"${CXXFLAGS}\" LDFLAGS=\"${LDFLAGS}\" LIBS=\"${LIBS}\" LDLIBS=\"${LIBS}\""
+        export ZOPEN_CONFIGURE_CMD="\"${ZOPEN_CONFIGURE}\" ${ZOPEN_CONFIGURE_OPTS} CC=\"${CC}\" CPPFLAGS=\"${CPPFLAGS}\" CFLAGS=\"${CFLAGS}\" CXX=\"${CXX}\" CXXFLAGS=\"${CXXFLAGS}\" LDFLAGS=\"${LDFLAGS}\" LIBS=\"${LIBS}\" LDLIBS=\"${LIBS}\""
         ;;
       esac
       export ZOPEN_CONFIGURE_MINIMAL="no"
@@ -2235,7 +2258,7 @@ resolveCommands()
 
   if [ "${ZOPEN_MAKE}x" != "skipx" ] && [ ! -z "$(command -v ${ZOPEN_MAKE})" ]; then
     if [ -z "${ZOPEN_MAKE_MINIMAL}" ]; then
-      export ZOPEN_MAKE_CMD="\"${ZOPEN_MAKE}\" ${ZOPEN_MAKE_OPTS} ${verboseOpts} CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\" \"LDLIBS=${LIBS}\""
+      export ZOPEN_MAKE_CMD="\"${ZOPEN_MAKE}\" ${ZOPEN_MAKE_OPTS} ${verboseOpts} CC=\"${CC}\" \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=\"${CXX}\" \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\" \"LDLIBS=${LIBS}\""
       export ZOPEN_MAKE_MINIMAL="no"
     else
       export ZOPEN_MAKE_CMD="\"${ZOPEN_MAKE}\" ${ZOPEN_MAKE_OPTS}"
@@ -2247,7 +2270,7 @@ resolveCommands()
 
   if [ "${ZOPEN_CHECK}x" != "skipx" ] && ! ${skipcheck}; then
     if [ -z "${ZOPEN_CHECK_MINIMAL}" ]; then
-      export ZOPEN_CHECK_CMD="\"${ZOPEN_CHECK}\" ${ZOPEN_CHECK_OPTS} ${verboseOpts} CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\""
+      export ZOPEN_CHECK_CMD="\"${ZOPEN_CHECK}\" ${ZOPEN_CHECK_OPTS} ${verboseOpts} CC=\"${CC}\" \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=\"${CXX}\" \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\""
     else
       export ZOPEN_CHECK_CMD="\"${ZOPEN_CHECK}\" ${ZOPEN_CHECK_OPTS}"
     fi
@@ -2266,7 +2289,7 @@ resolveCommands()
       export ZOPEN_INSTALL_CMD="\"${ZOPEN_INSTALL}\" ${ZOPEN_INSTALL_OPTS}"
       ;;
     *)
-      export ZOPEN_INSTALL_CMD="\"${ZOPEN_INSTALL}\" ${ZOPEN_INSTALL_OPTS} ${verboseOpts} CC=${CC} \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=${CXX} \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\""
+      export ZOPEN_INSTALL_CMD="\"${ZOPEN_INSTALL}\" ${ZOPEN_INSTALL_OPTS} ${verboseOpts} CC=\"${CC}\" \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=\"${CXX}\" \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\""
       ;;
     esac
     [[ -d ${ZOPEN_ROOT}/install ]] || mkdir -p ${ZOPEN_ROOT}/install
@@ -2392,7 +2415,7 @@ generateZOSLIBHooks()
     return
   fi
 
-  if ! command -v "${CC}" > /dev/null 2>&1; then
+  if ! command -v "$(echo ${CC} | awk '{print $NF}')" > /dev/null 2>&1; then
     printVerbose "Skipping GenerateZOSLIBHooks since CC is not a command"
     return
   fi
