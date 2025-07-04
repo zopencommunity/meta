@@ -4,7 +4,6 @@
 
 Welcome to the zopen community badge program! These badges are designed to recognize and celebrate the valuable contributions of our members. Whether you are submitting code, improving documentation, or porting essential tools, your efforts help our community grow and thrive. This program formally acknowledges that work and showcases the impactful achievements of individuals within our ecosystem.
 
----
 
 ## How to Submit a Nomination
 
@@ -23,8 +22,6 @@ You will be asked to provide the following information:
 
 Nominations are reviewed on a regular basis, and badges can be awarded retroactively for past contributions.
 
----
----
 
 ## 🏅 zopen community contributor
 
@@ -37,8 +34,6 @@ Awarded to individuals who have made a substantive, accepted contribution to the
 * Successfully porting a project to z/OS and contributing it to the zopen community.
 * Submitting a substantial pull request that improves z/OS functionality for an existing tool.
 
----
----
 
 ## 🏆 zopen community significant contributor
 
