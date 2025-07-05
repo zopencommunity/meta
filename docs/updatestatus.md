@@ -13,6 +13,9 @@
 ### bash-completionport
 - 2024-12-11: [Update bash-completion-version to 20060301 from V.R.M](https://github.com/zopencommunity/bash-completionport/pull/1) ❌
 
+### bashport
+- 2025-07-04: [Update bash-version to 5.3 from 5.2.37](https://github.com/zopencommunity/bashport/pull/89) ❌
+
 ### blisport
 - 2025-07-03: [Update blis-version to 2.0 from 1.1](https://github.com/zopencommunity/blisport/pull/1) ❌
 
@@ -362,6 +365,9 @@
 - 2025-03-27: [Update protobuf-version to 30.2 from 29.3](https://github.com/zopencommunity/protobufport/pull/28) ❌
 - 2025-03-14: [Update protobuf-version to 30.1 from 29.3](https://github.com/zopencommunity/protobufport/pull/27) ❌
 - 2025-03-05: [Update protobuf-version to 30.0 from 29.3](https://github.com/zopencommunity/protobufport/pull/26) ❌
+
+### readlineport
+- 2025-07-04: [Update readline-version to 8.3 from 8.2.13](https://github.com/zopencommunity/readlineport/pull/2) ❌
 
 ### s5cmdport
 - 2024-12-17: [Update s5cmd-version to 2.3.0 from 2.2.2](https://github.com/zopencommunity/s5cmdport/pull/3) ❌
@@ -750,5 +756,5 @@
 ---
 
 
-> Last updated: 2025-07-04 06:07:24 EDT
+> Last updated: 2025-07-05 06:07:19 EDT
 

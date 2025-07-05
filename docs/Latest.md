@@ -2059,12 +2059,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="perl" data-searchable-text="perl Blue 99.2% STABLE_perl_3519 Perl programming language uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="perl" data-searchable-text="perl Blue 99.3% STABLE_perl_3527 Perl programming language uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/perlport" target="_blank" rel="noopener noreferrer">perl</a></strong></div>
     <div class="tool-status">Status: Blue</div>
-    <div class="tool-test">Test: 99.2%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/perlport/releases/download/STABLE_perlport_3519/perl5-v5.41.13.20250703_052302.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_perl_3519</a></div>
+    <div class="tool-test">Test: 99.3%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/perlport/releases/download/STABLE_perlport_3527/perl5-v5.43.0.20250704_160128.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_perl_3527</a></div>
     <div class="tool-desc" title="Perl programming language">Perl programming language</div>
   </div>
 </div>
@@ -2598,4 +2598,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-07-04 06:12:13 UTC
+Last updated:  2025-07-05 06:12:38 UTC
