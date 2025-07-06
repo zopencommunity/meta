@@ -235,6 +235,7 @@
 - 2024-03-07: [Update kotlin-version to 1.9.23 from 1.9.22](https://github.com/zopencommunity/kotlinport/pull/3) ❓
 
 ### lazygitport
+- 2025-07-05: [Update lazygit-version to 0.53.1 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/22) ❌
 - 2025-06-07: [Update lazygit-version to 0.52.0 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/21) ❌
 - 2025-05-23: [Update lazygit-version to 0.51.1 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/20) ❌
 - 2025-05-22: [Update lazygit-version to 0.51.0 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/19) ❌
@@ -365,9 +366,6 @@
 - 2025-03-27: [Update protobuf-version to 30.2 from 29.3](https://github.com/zopencommunity/protobufport/pull/28) ❌
 - 2025-03-14: [Update protobuf-version to 30.1 from 29.3](https://github.com/zopencommunity/protobufport/pull/27) ❌
 - 2025-03-05: [Update protobuf-version to 30.0 from 29.3](https://github.com/zopencommunity/protobufport/pull/26) ❌
-
-### readlineport
-- 2025-07-04: [Update readline-version to 8.3 from 8.2.13](https://github.com/zopencommunity/readlineport/pull/2) ❌
 
 ### s5cmdport
 - 2024-12-17: [Update s5cmd-version to 2.3.0 from 2.2.2](https://github.com/zopencommunity/s5cmdport/pull/3) ❌
@@ -756,5 +754,5 @@
 ---
 
 
-> Last updated: 2025-07-05 06:07:19 EDT
+> Last updated: 2025-07-06 06:07:06 EDT
 

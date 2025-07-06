@@ -209,12 +209,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="readline" data-searchable-text="readline Green 100.0% STABLE_readline_3471 The GNU Readline library provides a set of functions for use by applications that allow users to edit command lines as they are typed in core port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="readline" data-searchable-text="readline Green 100.0% STABLE_readline_3528 The GNU Readline library provides a set of functions for use by applications that allow users to edit command lines as they are typed in core port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/readlineport" target="_blank" rel="noopener noreferrer">readline</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/readlineport/releases/download/STABLE_readlineport_3471/readline-8.2.13.20250618_110543.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_readline_3471</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/readlineport/releases/download/STABLE_readlineport_3528/readline-8.3.20250705_134538.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_readline_3528</a></div>
     <div class="tool-desc" title="The GNU Readline library provides a set of functions for use by applications that allow users to edit command lines as they are typed in">The GNU Readline library provides a set of functions for use by applications that allow users to edit command lines as they are typed in</div>
   </div>
 </div>
@@ -761,12 +761,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3515 A TUI editor development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3529 A TUI editor development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/vimport" target="_blank" rel="noopener noreferrer">vim</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3515/vim-v9.1.1500.20250702_153637.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3515</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3529/vim-v9.1.1510.20250705_152634.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3529</a></div>
     <div class="tool-desc" title="A TUI editor">A TUI editor</div>
   </div>
 </div>
@@ -1039,12 +1039,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3515 A TUI editor editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3529 A TUI editor editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/vimport" target="_blank" rel="noopener noreferrer">vim</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3515/vim-v9.1.1500.20250702_153637.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3515</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3529/vim-v9.1.1510.20250705_152634.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3529</a></div>
     <div class="tool-desc" title="A TUI editor">A TUI editor</div>
   </div>
 </div>
@@ -1423,12 +1423,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="readline" data-searchable-text="readline Green 100.0% STABLE_readline_3471 The GNU Readline library provides a set of functions for use by applications that allow users to edit command lines as they are typed in library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="readline" data-searchable-text="readline Green 100.0% STABLE_readline_3528 The GNU Readline library provides a set of functions for use by applications that allow users to edit command lines as they are typed in library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/readlineport" target="_blank" rel="noopener noreferrer">readline</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/readlineport/releases/download/STABLE_readlineport_3471/readline-8.2.13.20250618_110543.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_readline_3471</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/readlineport/releases/download/STABLE_readlineport_3528/readline-8.3.20250705_134538.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_readline_3528</a></div>
     <div class="tool-desc" title="The GNU Readline library provides a set of functions for use by applications that allow users to edit command lines as they are typed in">The GNU Readline library provides a set of functions for use by applications that allow users to edit command lines as they are typed in</div>
   </div>
 </div>
@@ -2598,4 +2598,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-07-05 06:12:38 UTC
+Last updated:  2025-07-06 06:11:53 UTC
