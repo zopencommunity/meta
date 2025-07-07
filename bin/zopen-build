@@ -712,7 +712,7 @@ checkEnv()
 
   ZOPEN_COMMIT_SHA="$(git rev-parse HEAD)"
 
-  ZOPEN_CATEGORIES_LOWER=$(printf "%s" "$ZOPEN_CATEGORIES" | tr '[:upper:]' '[:lower:]')
+  ZOPEN_CATEGORIES_LOWER=$(/bin/printf "%s" "$ZOPEN_CATEGORIES" | tr '[:upper:]' '[:lower:]')
 
   for category in $(echo ${ZOPEN_CATEGORIES_LOWER} | tr ' ' '\n' | sort -u); do
     if ! echo "${ZOPEN_VALID_CATEGORIES}" | tr ' ' '\n' | grep -q "^${category}$"; then
@@ -1973,7 +1973,7 @@ handle_bin_conflicts()
   base=$(basename "$file")
   dir=$(dirname "$file")
 
-  if [ -f "/bin/$base" ]; then
+  if [ -f "/bin/$base" ] && [ ! -L "/bin/$base" ]; then
     mv "$file" "$dir/${prefix}$base"
     ln -sf "../bin/${prefix}$base" "$install_dir/altbin/$base"
     printVerbose "Renaming conflicting binary: $base → ${prefix}$base"
@@ -1994,11 +1994,11 @@ handle_bin_conflicts()
       additional_caveats=$(set_install_caveats "$prefix")  # Get new caveats from set_install_caveats
 
       zopen_install_caveats() {
-	printf "%s\n%s\n" "$original_caveats" "$additional_caveats"
+	/bin/printf "%s\n%s\n" "$original_caveats" "$additional_caveats"
       }
     else
       zopen_install_caveats() {
-	printf "%s\n" "$(set_install_caveats "$prefix")"
+	/bin/printf "%s\n" "$(set_install_caveats "$prefix")"
       }
     fi
   fi

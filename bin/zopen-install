@@ -76,8 +76,8 @@ verifySignatureOfPax()
 
   SIGNATURE_FILE="$zopen_tmp_dir/zopen_signedfile.$LOGNAME.$$.asc"
   PUBLIC_KEY_FILE="$zopen_tmp_dir/zopen_scriptpubkey.$LOGNAME.$$.asc"
-  printf "%b" "$SIGNATURE" | tr -d '"'  > "$SIGNATURE_FILE"
-  printf "%b" "$PUBLIC_KEY" | tr -d '"'  > "$PUBLIC_KEY_FILE"
+  /bin/printf "%b" "$SIGNATURE" | tr -d '"'  > "$SIGNATURE_FILE"
+  /bin/printf "%b" "$PUBLIC_KEY" | tr -d '"'  > "$PUBLIC_KEY_FILE"
 
   startGPGAgent
 
@@ -509,7 +509,7 @@ handlePackageInstall()
     # Some installation have installation caveats
     installCaveat=$(jq -r '.product.install_caveats // empty' "${metadataFile}" 2>/dev/null)
     if [ -n "$installCaveat" ]; then
-      printf "${NC}${HEADERCOLOR}${BOLD}${name}${NC}:\n ${installCaveat}\n" >> ${caveatsFile}
+      /bin/printf "${NC}${HEADERCOLOR}${BOLD}${name}${NC}:\n ${installCaveat}\n" >> ${caveatsFile}
     fi
 
     
@@ -540,7 +540,7 @@ handlePackageInstall()
     fi
     # Let the individual tools emit their own caveats
     #if [ -d "${baseinstalldir}/${installdirname}/altbin" ]; then
-    #  printf "${NC}${HEADERCOLOR}${BOLD}${name}${NC}:\n${name} has tools provided under altbin/ that conflict with tools under /bin.\nTo use them set ZOPEN_TOOLSET_OVERRIDE and then re-source the zopen-config.\n" >> ${caveatsFile}
+    #  /bin/printf "${NC}${HEADERCOLOR}${BOLD}${name}${NC}:\n${name} has tools provided under altbin/ that conflict with tools under /bin.\nTo use them set ZOPEN_TOOLSET_OVERRIDE and then re-source the zopen-config.\n" >> ${caveatsFile}
     #fi
 
 
@@ -858,7 +858,7 @@ else
       printVerbose "Removing valid port from input list."
       chosenRepos=$(echo "${chosenRepos}" | sed -e "s#^${chosenRepo}\$##")
     else
-      invalidlist=$(printf "%s %s" "${invalidlist}" "${chosenRepo}")
+      invalidlist=$(/bin/printf "%s %s" "${invalidlist}" "${chosenRepo}")
     fi
   done
 fi
