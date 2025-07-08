@@ -13,9 +13,6 @@
 ### bash-completionport
 - 2024-12-11: [Update bash-completion-version to 20060301 from V.R.M](https://github.com/zopencommunity/bash-completionport/pull/1) ❌
 
-### bashport
-- 2025-07-04: [Update bash-version to 5.3 from 5.2.37](https://github.com/zopencommunity/bashport/pull/89) ❌
-
 ### blisport
 - 2025-07-03: [Update blis-version to 2.0 from 1.1](https://github.com/zopencommunity/blisport/pull/1) ❌
 
@@ -434,6 +431,7 @@
 - 2025-06-24: [Update util-linux-version to 2.41.1 from 2.41](https://github.com/zopencommunity/util-linuxport/pull/19) ❌
 
 ### victoriametricsport
+- 2025-07-07: [Update victoriametrics-version to 1.121.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/31) ❌
 - 2025-06-23: [Update victoriametrics-version to 1.120.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/30) ❌
 - 2025-06-09: [Update victoriametrics-version to 1.119.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/29) ❌
 - 2025-05-26: [Update victoriametrics-version to 1.118.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/28) ❌
@@ -755,5 +753,5 @@
 ---
 
 
-> Last updated: 2025-07-07 06:07:32 EDT
+> Last updated: 2025-07-08 06:07:32 EDT
 

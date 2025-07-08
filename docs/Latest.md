@@ -837,6 +837,16 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
+<div class="tool-item-filterable" data-package-name="jenkins" data-searchable-text="jenkins Skipped N/A STABLE_jenkins_3531 A continuous integration server devops port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/jenkinsport" target="_blank" rel="noopener noreferrer">jenkins</a></strong></div>
+    <div class="tool-status">Status: Skipped</div>
+    <div class="tool-test">Test: N/A</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/jenkinsport/releases/download/STABLE_jenkinsport_3531/jenkins-DEV.20250707_120014.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_jenkins_3531</a></div>
+    <div class="tool-desc" title="A continuous integration server">A continuous integration server</div>
+  </div>
+</div>
+
 <div class="tool-item-filterable" data-package-name="lazygit" data-searchable-text="lazygit Skipped N/A STABLE_lazygit_2148 A Git client devops port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/lazygitport" target="_blank" rel="noopener noreferrer">lazygit</a></strong></div>
@@ -1463,12 +1473,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="zoslib" data-searchable-text="zoslib Green 100.0% STABLE_zoslib_3485 A library used by z/OS Open Tools library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="zoslib" data-searchable-text="zoslib Green 100.0% STABLE_zoslib_3532 A library used by z/OS Open Tools library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/zoslibport" target="_blank" rel="noopener noreferrer">zoslib</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/zoslibport/releases/download/STABLE_zoslibport_3485/zoslib-zopen2.20250624_164502.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_zoslib_3485</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/zoslibport/releases/download/STABLE_zoslibport_3532/zoslib-zopen2.20250707_150727.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_zoslib_3532</a></div>
     <div class="tool-desc" title="A library used by z/OS Open Tools">A library used by z/OS Open Tools</div>
   </div>
 </div>
@@ -1737,12 +1747,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 ## Shell 
 
-<div class="tool-item-filterable" data-package-name="bash" data-searchable-text="bash Blue 79.2% STABLE_bash_3368 The Bourne Again shell shell port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="bash" data-searchable-text="bash Blue 79.2% STABLE_bash_3535 The Bourne Again shell shell port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/bashport" target="_blank" rel="noopener noreferrer">bash</a></strong></div>
     <div class="tool-status">Status: Blue</div>
     <div class="tool-test">Test: 79.2%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/bashport/releases/download/STABLE_bashport_3368/bash-5.2.37.20250528_111918.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_bash_3368</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/bashport/releases/download/STABLE_bashport_3535/bash-5.2.37.20250708_022544.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_bash_3535</a></div>
     <div class="tool-desc" title="The Bourne Again shell">The Bourne Again shell</div>
   </div>
 </div>
@@ -2175,12 +2185,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="fzf" data-searchable-text="fzf Green 100.0% STABLE_fzf_3501 A fuzzy finder tool utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="fzf" data-searchable-text="fzf Green 100.0% STABLE_fzf_3533 A fuzzy finder tool utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/fzfport" target="_blank" rel="noopener noreferrer">fzf</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/fzfport/releases/download/STABLE_fzfport_3501/fzf-v0.63.0.20250628_151927.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_fzf_3501</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/fzfport/releases/download/STABLE_fzfport_3533/fzf-v0.64.0.20250707_151918.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_fzf_3533</a></div>
     <div class="tool-desc" title="A fuzzy finder tool">A fuzzy finder tool</div>
   </div>
 </div>
@@ -2305,12 +2315,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="meta" data-searchable-text="meta Green 100.0% STABLE_meta_3518 zopen package manager utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="meta" data-searchable-text="meta Green 100.0% STABLE_meta_3534 zopen package manager utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/metaport" target="_blank" rel="noopener noreferrer">meta</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/metaport/releases/download/STABLE_metaport_3518/meta-main.20250703_045321.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_meta_3518</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/metaport/releases/download/STABLE_metaport_3534/meta-main.20250707_163046.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_meta_3534</a></div>
     <div class="tool-desc" title="zopen package manager">zopen package manager</div>
   </div>
 </div>
@@ -2598,4 +2608,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-07-07 06:12:44 UTC
+Last updated:  2025-07-08 06:12:41 UTC
