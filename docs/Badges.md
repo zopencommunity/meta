@@ -17,10 +17,13 @@ You will be asked to provide the following information:
 
 * The nominee's full name and email address.
 * The specific badge you are nominating them for.
-* A clear description of their contributions.
-* Links to evidence of their work (e.g., pull requests, commits, project repositories, or other public resources).
+* A clear description of the contributions
+* Links to evidence (e.g., pull requests, commits, project repositories, or other public resources).
 
-Nominations are reviewed on a regular basis, and badges can be awarded retroactively for past contributions.
+Nominations are reviewed on by the **zopen Technical Steering Committee (TSC)**. Badges can be awarded retroactively for past contributions.
+
+### Review Timeline
+Once a nomination form is submitted, please allow **up to 1 month** for the review. Nominees will receive a response or be awarded their badge within **1-2 months** after the submission date.
 
 
 ## 🏅 zopen community contributor
@@ -32,7 +35,8 @@ Awarded to individuals who have made a substantive, accepted contribution to the
 
 ### Examples of Contributions
 * Successfully porting a project to z/OS and contributing it to the zopen community.
-* Submitting a substantial pull request that improves z/OS functionality for an existing tool.
+* Submitting a substantial pull request that improves z/OS functionality for an existing tool. For example, a pull request that implements a significant new feature or resolves a critical performance bug (e.g., [Enable ccache support for clang builds to speed up recompilation #1061
+](https://github.com/zopencommunity/meta/pull/1061))
 
 
 ## 🏆 zopen community significant contributor
