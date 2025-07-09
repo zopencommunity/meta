@@ -11,7 +11,7 @@ Badges are awarded based on evidence of contribution. We encourage both self-nom
 
 To submit a nomination, please complete our online nomination form:
 
-[**Submit a Nomination**](https://docs.google.com/forms/d/e/1FAIpQLSdsq902oSpRJPfxZrvE_b3EVKUzY0VMbYPd6CBvrUGSBNgOtQ/viewform?usp=sf_link)
+📝 [**Submit a Nomination**](https://docs.google.com/forms/d/e/1FAIpQLSdsq902oSpRJPfxZrvE_b3EVKUzY0VMbYPd6CBvrUGSBNgOtQ/viewform?usp=sf_link)
 
 You will be asked to provide the following information:
 
@@ -38,6 +38,8 @@ Awarded to individuals who have made a substantive, accepted contribution to the
 * Submitting a substantial pull request that improves z/OS functionality for an existing tool. For example, a pull request that implements a significant new feature or resolves a critical performance bug (e.g., [Enable ccache support for clang builds to speed up recompilation #1061
 ](https://github.com/zopencommunity/meta/pull/1061))
 
+📝 [**Submit a Nomination**](https://docs.google.com/forms/d/e/1FAIpQLSdsq902oSpRJPfxZrvE_b3EVKUzY0VMbYPd6CBvrUGSBNgOtQ/viewform?usp=sf_link)
+
 
 ## 🏆 zopen community significant contributor
 
@@ -51,3 +53,5 @@ Awarded to individuals who demonstrate sustained and impactful contribution to t
 * Ported or maintained a **complex or foundational tool**.
 * Introduced **improvements** such as automation, tooling, or design patterns used across multiple packages.
 * Maintained packages that serve as **critical dependencies** in the ecosystem over time.
+
+📝 [**Submit a Nomination**](https://docs.google.com/forms/d/e/1FAIpQLSdsq902oSpRJPfxZrvE_b3EVKUzY0VMbYPd6CBvrUGSBNgOtQ/viewform?usp=sf_link)
