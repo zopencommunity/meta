@@ -25,6 +25,7 @@ Nominations are reviewed on by the **zopen Technical Steering Committee (TSC)**.
 ### Review Timeline
 Once a nomination form is submitted, please allow **up to 1 month** for the review. Nominees will receive a response or be awarded their badge within **1-2 months** after the submission date.
 
+# 🛡️ List of Badges
 
 ## 🏅 zopen community contributor
 
@@ -39,6 +40,8 @@ Awarded to individuals who have made a substantive, accepted contribution to the
 ](https://github.com/zopencommunity/meta/pull/1061))
 
 📝 [**Submit a Nomination**](https://docs.google.com/forms/d/e/1FAIpQLSdsq902oSpRJPfxZrvE_b3EVKUzY0VMbYPd6CBvrUGSBNgOtQ/viewform?usp=sf_link)
+
+
 
 
 ## 🏆 zopen community significant contributor
