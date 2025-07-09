@@ -94,6 +94,7 @@
 - 2025-04-11: [Update direnv-version to 2.36.0 from 2.35.0](https://github.com/zopencommunity/direnvport/pull/11) ❌
 
 ### duckdbport
+- 2025-07-08: [Update duckdb-version to 1.3.2 from 0.9.2](https://github.com/zopencommunity/duckdbport/pull/27) ❌
 - 2025-06-16: [Update duckdb-version to 1.3.1 from 0.9.2](https://github.com/zopencommunity/duckdbport/pull/26) ❌
 - 2025-05-22: [Update duckdb-version to 1.3.0 from 0.9.2](https://github.com/zopencommunity/duckdbport/pull/25) ❌
 - 2025-04-08: [Update duckdb-version to 1.2.2 from 0.9.2](https://github.com/zopencommunity/duckdbport/pull/24) ❌
@@ -458,6 +459,7 @@
 - 2024-07-18: [Update victoriametrics-version to 1.102.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/5) ❌
 
 ### vimport
+- 2025-07-08: [Update vim-version to 9.1.1520 from 9.1.1510](https://github.com/zopencommunity/vimport/pull/123) ❌
 - 2025-07-03: [Update vim-version to 9.1.150 from 9.1.1500](https://github.com/zopencommunity/vimport/pull/121) ❌
 - 2025-06-29: [Update vim-version to 9.1.1490 from 9.1.1480](https://github.com/zopencommunity/vimport/pull/119) ❌
 
@@ -753,5 +755,5 @@
 ---
 
 
-> Last updated: 2025-07-08 06:07:32 EDT
+> Last updated: 2025-07-09 06:07:37 EDT
 
