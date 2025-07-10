@@ -20,7 +20,7 @@ You will be asked to provide the following information:
 * A clear description of the contributions
 * Links to evidence (e.g., pull requests, commits, project repositories, or other public resources).
 
-Nominations are reviewed on by the **zopen Technical Steering Committee (TSC)**. Badges can be awarded retroactively for past contributions.
+Nominations are reviewed on by the **[zopen Technical Steering Committee (TSC)](team.md)**. Badges can be awarded retroactively for past contributions.
 
 ### Review Timeline
 Once a nomination form is submitted, please allow **up to 1 month** for the review. Nominees will receive a response or be awarded their badge within **1-2 months** after the submission date.
