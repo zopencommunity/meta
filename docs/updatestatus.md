@@ -17,6 +17,7 @@
 - 2025-07-03: [Update blis-version to 2.0 from 1.1](https://github.com/zopencommunity/blisport/pull/1) ❌
 
 ### buildkiteport
+- 2025-07-09: [Update buildkite-version to 3.102.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/65) ❌
 - 2025-07-03: [Update buildkite-version to 3.101.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/64) ❌
 - 2025-06-25: [Update buildkite-version to 3.100.1 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/63) ❌
 - 2025-06-23: [Update buildkite-version to 3.100.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/62) ❌
@@ -44,6 +45,7 @@
 - 2025-05-26: [Update ccache-version to 4.11.3 from V.R.M](https://github.com/zopencommunity/ccacheport/pull/1) ❌
 
 ### chezmoiport
+- 2025-07-09: [Update chezmoi-version to 2.63.0 from 2.62.5](https://github.com/zopencommunity/chezmoiport/pull/6) ❌
 - 2025-06-23: [Update chezmoi-version to 2.62.7 from 2.62.5](https://github.com/zopencommunity/chezmoiport/pull/5) ❌
 - 2025-06-07: [Update chezmoi-version to 2.62.6 from 2.62.5](https://github.com/zopencommunity/chezmoiport/pull/4) ❌
 - 2025-05-10: [Update chezmoi-version to 2.62.3 from 2.62.2](https://github.com/zopencommunity/chezmoiport/pull/1) ❌
@@ -755,5 +757,5 @@
 ---
 
 
-> Last updated: 2025-07-09 06:07:37 EDT
+> Last updated: 2025-07-10 06:07:34 EDT
 

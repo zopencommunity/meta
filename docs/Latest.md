@@ -561,12 +561,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="githubcli" data-searchable-text="githubcli Skipped N/A STABLE_githubcli_3475 A command-line tool for GitHub development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="githubcli" data-searchable-text="githubcli Skipped N/A DEV_githubcli_3544 A command-line tool for GitHub development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/githubcliport" target="_blank" rel="noopener noreferrer">githubcli</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/githubcliport/releases/download/STABLE_githubcliport_3475/githubcli-DEV.20250619_154819.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_githubcli_3475</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/githubcliport/releases/download/DEV_githubcliport_3544/githubcli-DEV.20250709_154121.zos.pax.Z" target="_blank" rel="noopener noreferrer">DEV_githubcli_3544</a></div>
     <div class="tool-desc" title="A command-line tool for GitHub">A command-line tool for GitHub</div>
   </div>
 </div>
@@ -691,12 +691,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="metaldio" data-searchable-text="metaldio Green 100.0% STABLE_metaldio_3494 development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="metaldio" data-searchable-text="metaldio Green 100.0% STABLE_metaldio_3541 development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/metaldioport" target="_blank" rel="noopener noreferrer">metaldio</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/metaldioport/releases/download/STABLE_metaldioport_3494/metaldio-main.20250626_025744.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_metaldio_3494</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/metaldioport/releases/download/STABLE_metaldioport_3541/metaldio-V0.1.20250709_151554.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_metaldio_3541</a></div>
     <div class="tool-desc" title=""></div>
   </div>
 </div>
@@ -761,12 +761,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3529 A TUI editor development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3542 A TUI editor development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/vimport" target="_blank" rel="noopener noreferrer">vim</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3529/vim-v9.1.1510.20250705_152634.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3529</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3542/vim-v9.1.1530.20250709_152634.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3542</a></div>
     <div class="tool-desc" title="A TUI editor">A TUI editor</div>
   </div>
 </div>
@@ -1049,12 +1049,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3529 A TUI editor editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3542 A TUI editor editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/vimport" target="_blank" rel="noopener noreferrer">vim</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3529/vim-v9.1.1510.20250705_152634.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3529</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3542/vim-v9.1.1530.20250709_152634.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3542</a></div>
     <div class="tool-desc" title="A TUI editor">A TUI editor</div>
   </div>
 </div>
@@ -1403,12 +1403,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="metaldio" data-searchable-text="metaldio Green 100.0% STABLE_metaldio_3494 library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="metaldio" data-searchable-text="metaldio Green 100.0% STABLE_metaldio_3541 library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/metaldioport" target="_blank" rel="noopener noreferrer">metaldio</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/metaldioport/releases/download/STABLE_metaldioport_3494/metaldio-main.20250626_025744.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_metaldio_3494</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/metaldioport/releases/download/STABLE_metaldioport_3541/metaldio-V0.1.20250709_151554.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_metaldio_3541</a></div>
     <div class="tool-desc" title=""></div>
   </div>
 </div>
@@ -1525,12 +1525,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="githubcli" data-searchable-text="githubcli Skipped N/A STABLE_githubcli_3475 A command-line tool for GitHub networking port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="githubcli" data-searchable-text="githubcli Skipped N/A DEV_githubcli_3544 A command-line tool for GitHub networking port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/githubcliport" target="_blank" rel="noopener noreferrer">githubcli</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/githubcliport/releases/download/STABLE_githubcliport_3475/githubcli-DEV.20250619_154819.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_githubcli_3475</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/githubcliport/releases/download/DEV_githubcliport_3544/githubcli-DEV.20250709_154121.zos.pax.Z" target="_blank" rel="noopener noreferrer">DEV_githubcli_3544</a></div>
     <div class="tool-desc" title="A command-line tool for GitHub">A command-line tool for GitHub</div>
   </div>
 </div>
@@ -1747,12 +1747,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 ## Shell 
 
-<div class="tool-item-filterable" data-package-name="bash" data-searchable-text="bash Blue 79.2% STABLE_bash_3535 The Bourne Again shell shell port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="bash" data-searchable-text="bash Blue 79.2% STABLE_bash_3540 The Bourne Again shell shell port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/bashport" target="_blank" rel="noopener noreferrer">bash</a></strong></div>
     <div class="tool-status">Status: Blue</div>
     <div class="tool-test">Test: 79.2%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/bashport/releases/download/STABLE_bashport_3535/bash-5.2.37.20250708_022544.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_bash_3535</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/bashport/releases/download/STABLE_bashport_3540/bash-5.3.20250709_131616.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_bash_3540</a></div>
     <div class="tool-desc" title="The Bourne Again shell">The Bourne Again shell</div>
   </div>
 </div>
@@ -2059,12 +2059,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="openssl" data-searchable-text="openssl Blue 95.9% STABLE_openssl_3462 A cryptographic library uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="openssl" data-searchable-text="openssl Blue 96.6% STABLE_openssl_3539 A cryptographic library uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/opensslport" target="_blank" rel="noopener noreferrer">openssl</a></strong></div>
     <div class="tool-status">Status: Blue</div>
-    <div class="tool-test">Test: 95.9%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/opensslport/releases/download/STABLE_opensslport_3462/openssl-3.5.0.20250614_124411.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_openssl_3462</a></div>
+    <div class="tool-test">Test: 96.6%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/opensslport/releases/download/STABLE_opensslport_3539/openssl-3.5.1.20250709_113621.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_openssl_3539</a></div>
     <div class="tool-desc" title="A cryptographic library">A cryptographic library</div>
   </div>
 </div>
@@ -2325,12 +2325,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="metaldio" data-searchable-text="metaldio Green 100.0% STABLE_metaldio_3494 utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="metaldio" data-searchable-text="metaldio Green 100.0% STABLE_metaldio_3541 utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/metaldioport" target="_blank" rel="noopener noreferrer">metaldio</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/metaldioport/releases/download/STABLE_metaldioport_3494/metaldio-main.20250626_025744.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_metaldio_3494</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/metaldioport/releases/download/STABLE_metaldioport_3541/metaldio-V0.1.20250709_151554.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_metaldio_3541</a></div>
     <div class="tool-desc" title=""></div>
   </div>
 </div>
@@ -2608,4 +2608,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-07-09 06:12:48 UTC
+Last updated:  2025-07-10 06:12:21 UTC

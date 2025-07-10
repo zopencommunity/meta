@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-07-09 06:11:40 EDT.*
+*Report generated on: 2025-07-10 06:11:11 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 249
-- **Total Current Lines of Code (LOC) in Patches:** 32,707
-- **Total Number of Current Patch Files:** 741
-- **Average Current Patch LOC per Project:** 131.35
-- **Average Current Patch Count per Project:** 2.98
+- **Total Current Lines of Code (LOC) in Patches:** 32,537
+- **Total Number of Current Patch Files:** 733
+- **Average Current Patch LOC per Project:** 130.67
+- **Average Current Patch Count per Project:** 2.94
 
 ### Historical Trends (All Projects)
 
@@ -25,7 +25,7 @@
 | Repository | Current Patch LOC | Delta Last Month | # Current Patches |
 |---|:---|:---|:---|
 | [librdkafkaport](#repo-librdkafkaport) | 2,638 | +0 | 54 |
-| [bashport](#repo-bashport) | 1,698 | -2,728 | 32 |
+| [bashport](#repo-bashport) | 1,495 | -2,931 | 23 |
 | [gpgport](#repo-gpgport) | 1,484 | +0 | 30 |
 | [libuvport](#repo-libuvport) | 1,462 | +0 | 26 |
 | [sudoport](#repo-sudoport) | 1,278 | +0 | 30 |
@@ -116,6 +116,7 @@
 | [expatport](#repo-expatport) | 52 | +0 | 2 |
 | [terraformport](#repo-terraformport) | 51 | +0 | 2 |
 | [libsasl2port](#repo-libsasl2port) | 50 | +0 | 3 |
+| [opensslport](#repo-opensslport) | 48 | +0 | 2 |
 | [automakeport](#repo-automakeport) | 47 | +0 | 3 |
 | [lessport](#repo-lessport) | 47 | +0 | 3 |
 | [xxhashport](#repo-xxhashport) | 47 | +0 | 2 |
@@ -150,7 +151,6 @@
 | [makeport](#repo-makeport) | 16 | +0 | 1 |
 | [curlport](#repo-curlport) | 15 | +0 | 1 |
 | [xzport](#repo-xzport) | 15 | +0 | 1 |
-| [opensslport](#repo-opensslport) | 15 | +0 | 1 |
 | [libgdbmport](#repo-libgdbmport) | 15 | +0 | 1 |
 | [libpipelineport](#repo-libpipelineport) | 15 | +0 | 1 |
 | [libpcre2port](#repo-libpcre2port) | 15 | +0 | 1 |
@@ -355,8 +355,8 @@
 ## bashport
 
 - **Origin Date (First Commit):** 2022-10-26
-- **Current Patch LOC:** 1,698
-- **Current Patch Count:** 32
+- **Current Patch LOC:** 1,495
+- **Current Patch Count:** 23
 
 ### Historical Trends
 
@@ -374,29 +374,20 @@
 | `dev-patches/dontupstream/run-all_and_diff.patch` | `dev-patches` | 72 |
 | `dev-patches/source6.sub.patch` | `dev-patches` | 13 |
 | `stable-patches/Makefile.in.patch` | `stable-patches` | 13 |
-| `stable-patches/PR1.patch` | `stable-patches` | 53 |
-| `stable-patches/PR2.patch` | `stable-patches` | 769 |
-| `stable-patches/PR3/builtins.right.patch` | `stable-patches` | 40 |
+| `stable-patches/PR1.patch` | `stable-patches` | 25 |
+| `stable-patches/PR2.patch` | `stable-patches` | 765 |
 | `stable-patches/PR3/coproc.tests.patch` | `stable-patches` | 13 |
-| `stable-patches/PR3/dstack.right.patch` | `stable-patches` | 10 |
-| `stable-patches/PR3/errors.right.patch` | `stable-patches` | 30 |
-| `stable-patches/PR3/exec.right.patch` | `stable-patches` | 41 |
-| `stable-patches/PR3/exportfunc.right.patch` | `stable-patches` | 18 |
 | `stable-patches/PR3/heredoc.right.patch` | `stable-patches` | 13 |
-| `stable-patches/PR3/intl.right.patch` | `stable-patches` | 13 |
-| `stable-patches/PR3/new-exp.right.patch` | `stable-patches` | 13 |
-| `stable-patches/PR3/redir.right.patch` | `stable-patches` | 20 |
 | `stable-patches/PR3/redir.tests.patch` | `stable-patches` | 13 |
 | `stable-patches/PR3/redir10.sub.patch` | `stable-patches` | 15 |
 | `stable-patches/PR3/signames.c.patch` | `stable-patches` | 35 |
 | `stable-patches/PR3/smatch.c.patch` | `stable-patches` | 49 |
-| `stable-patches/PR3/test1.sub.patch` | `stable-patches` | 13 |
 | `stable-patches/PR3/trap.right.patch` | `stable-patches` | 61 |
-| `stable-patches/PR3/trap.tests.patch` | `stable-patches` | 13 |
-| `stable-patches/PR3/vredir.right.patch` | `stable-patches` | 10 |
 | `stable-patches/PR3/vredir.tests.patch` | `stable-patches` | 17 |
-| `stable-patches/configure.patch` | `stable-patches` | 53 |
-| `stable-patches/findcmd.c.patch` | `stable-patches` | 22 |
+| `stable-patches/anonfile.c.patch` | `stable-patches` | 22 |
+| `stable-patches/builtins.right.patch` | `stable-patches` | 31 |
+| `stable-patches/configure.patch` | `stable-patches` | 54 |
+| `stable-patches/errors.right.patch` | `stable-patches` | 18 |
 | `stable-patches/kill.def.patch` | `stable-patches` | 123 |
 | `stable-patches/sig.c.patch` | `stable-patches` | 30 |
 
@@ -2693,6 +2684,27 @@
 
 ---
 
+<a id="repo-opensslport"></a>
+## opensslport
+
+- **Origin Date (First Commit):** 2022-05-24
+- **Current Patch LOC:** 48
+- **Current Patch Count:** 2
+
+### Historical Trends
+
+![LOC Trend for opensslport](images/upstream/opensslport_current_loc_trend.png)
+![Count Trend for opensslport](images/upstream/opensslport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `stable-patches/50-os390.conf.patch` | `stable-patches` | 15 |
+| `stable-patches/test_skip.patch` | `stable-patches` | 33 |
+
+---
+
 <a id="repo-automakeport"></a>
 ## automakeport
 
@@ -3388,26 +3400,6 @@
 | Patch File (Repo Relative Path) | Source | LOC |
 |---|---|:---|
 | `patches/configure.patch` | `patches` | 15 |
-
----
-
-<a id="repo-opensslport"></a>
-## opensslport
-
-- **Origin Date (First Commit):** 2022-05-24
-- **Current Patch LOC:** 15
-- **Current Patch Count:** 1
-
-### Historical Trends
-
-![LOC Trend for opensslport](images/upstream/opensslport_current_loc_trend.png)
-![Count Trend for opensslport](images/upstream/opensslport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `stable-patches/50-os390.conf.patch` | `stable-patches` | 15 |
 
 ---
 
