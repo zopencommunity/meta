@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2025-07-10T15:32:31+00:00Z",
+  "generation_timestamp_utc": "2025-07-11T14:04:20+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -250,6 +250,7 @@
     "rpm": "The RPM Package Manager (RPM) is a powerful package management system capable of building computer software from source into easily distributable packages, installing, updating and uninstalling packaged software",
     "tcltls": "This package provides an extension which implements Secure Socket Layer (SSL) and Transport Layer Security (TLS) encryption over Transmission Control Protocol (TCP) network communication channels utilizing the OpenSSL library.",
     "ollama": "",
-    "blis": ""
+    "blis": "",
+    "libyaml": "LibYAML is a YAML parser and emitter library"
   }
 }
