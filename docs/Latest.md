@@ -1177,12 +1177,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="tcl" data-searchable-text="tcl Skipped N/A STABLE_tcl_3505 The Tcl scripting language language port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="tcl" data-searchable-text="tcl Skipped N/A STABLE_tcl_3545 The Tcl scripting language language port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/tclport" target="_blank" rel="noopener noreferrer">tcl</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/tclport/releases/download/STABLE_tclport_3505/tcl-DEV.20250630_074526.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_tcl_3505</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/tclport/releases/download/STABLE_tclport_3545/tcl-8.6.16.20250710_133724.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_tcl_3545</a></div>
     <div class="tool-desc" title="The Tcl scripting language">The Tcl scripting language</div>
   </div>
 </div>
@@ -2525,12 +2525,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="yq" data-searchable-text="yq Skipped N/A STABLE_yq_3072 A command-line JSON and YAML processor utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="yq" data-searchable-text="yq Skipped N/A STABLE_yq_3546 A command-line JSON and YAML processor utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/yqport" target="_blank" rel="noopener noreferrer">yq</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/yqport/releases/download/STABLE_yqport_3072/yq-master.20250205_033653.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_yq_3072</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/yqport/releases/download/STABLE_yqport_3546/yq-master.20250710_151926.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_yq_3546</a></div>
     <div class="tool-desc" title="A command-line JSON and YAML processor">A command-line JSON and YAML processor</div>
   </div>
 </div>
@@ -2608,4 +2608,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-07-10 06:12:21 UTC
+Last updated:  2025-07-11 06:12:55 UTC
