@@ -162,6 +162,7 @@
 - 2025-03-06: [Update ghcli-version to 2.68.1 from 2.67.0](https://github.com/zopencommunity/githubcliport/pull/47) ❌
 
 ### gitlabcliport
+- 2025-07-11: [Update glab-version to 1.62.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/34) ❌
 - 2025-06-25: [Update glab-version to 1.61.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/33) ❌
 - 2025-06-19: [Update glab-version to 1.60.2 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/32) ❌
 - 2025-06-18: [Update glab-version to 1.60.1 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/31) ❌
@@ -298,6 +299,7 @@
 - 2025-03-02: [Update nghttp2-version to 1.65.0 from 1.64.0](https://github.com/zopencommunity/nghttp2port/pull/11) ✅
 
 ### ninjaport
+- 2025-07-11: [Update ninja-version to 1.13.1 from 1.12.1](https://github.com/zopencommunity/ninjaport/pull/14) ❌
 - 2025-06-18: [Update ninja-version to 1.13.0 from 1.12.1](https://github.com/zopencommunity/ninjaport/pull/13) ❌
 
 ### opensshport
@@ -628,6 +630,7 @@
 - ✅ libuvport - [![Bump Status](https://github.com/zopencommunity/libuvport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libuvport/actions/workflows/bump.yml)
 - ✅ libxml2port - [![Bump Status](https://github.com/zopencommunity/libxml2port/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libxml2port/actions/workflows/bump.yml)
 - ✅ libxsltport - [![Bump Status](https://github.com/zopencommunity/libxsltport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libxsltport/actions/workflows/bump.yml)
+- ❌ libyamlport - Workflow not configured
 - ❌ llamacppport - Workflow not configured
 - ✅ logrotateport - [![Bump Status](https://github.com/zopencommunity/logrotateport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/logrotateport/actions/workflows/bump.yml)
 - ✅ lpegport - [![Bump Status](https://github.com/zopencommunity/lpegport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/lpegport/actions/workflows/bump.yml)
@@ -648,6 +651,7 @@
 - ✅ metaport - [![Bump Status](https://github.com/zopencommunity/metaport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/metaport/actions/workflows/bump.yml)
 - ✅ mimallocport - [![Bump Status](https://github.com/zopencommunity/mimallocport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/mimallocport/actions/workflows/bump.yml)
 - ❌ minjaport - Workflow not configured
+- ❌ mkcertport - Workflow not configured
 - ✅ moreutilsport - [![Bump Status](https://github.com/zopencommunity/moreutilsport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/moreutilsport/actions/workflows/bump.yml)
 - ✅ mpfrport - [![Bump Status](https://github.com/zopencommunity/mpfrport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/mpfrport/actions/workflows/bump.yml)
 - ✅ multitailport - [![Bump Status](https://github.com/zopencommunity/multitailport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/multitailport/actions/workflows/bump.yml)
@@ -751,10 +755,10 @@
 
 </details>
 
-**Summary:** 213 active | 50 missing
+**Summary:** 213 active | 52 missing
 
 ---
 
 
-> Last updated: 2025-07-11 06:07:28 EDT
+> Last updated: 2025-07-12 06:07:37 EDT
 

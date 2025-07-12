@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-07-11 06:11:49 EDT.*
+*Report generated on: 2025-07-12 06:11:33 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 249
-- **Total Current Lines of Code (LOC) in Patches:** 32,537
-- **Total Number of Current Patch Files:** 733
-- **Average Current Patch LOC per Project:** 130.67
-- **Average Current Patch Count per Project:** 2.94
+- **Total Projects Analyzed:** 251
+- **Total Current Lines of Code (LOC) in Patches:** 32,834
+- **Total Number of Current Patch Files:** 735
+- **Average Current Patch LOC per Project:** 130.81
+- **Average Current Patch Count per Project:** 2.93
 
 ### Historical Trends (All Projects)
 
@@ -38,6 +38,7 @@
 | [procpsport](#repo-procpsport) | 687 | +0 | 1 |
 | [perlport](#repo-perlport) | 684 | -12 | 14 |
 | [util-linuxport](#repo-util-linuxport) | 594 | +0 | 15 |
+| [redisport](#repo-redisport) | 560 | +297 | 3 |
 | [unzipport](#repo-unzipport) | 549 | +0 | 12 |
 | [inetutilsport](#repo-inetutilsport) | 514 | +514 | 20 |
 | [cronieport](#repo-cronieport) | 510 | +0 | 13 |
@@ -59,7 +60,6 @@
 | [conanport](#repo-conanport) | 299 | +0 | 8 |
 | [zipport](#repo-zipport) | 297 | +0 | 8 |
 | [ccacheport](#repo-ccacheport) | 264 | +69 | 1 |
-| [redisport](#repo-redisport) | 263 | +0 | 1 |
 | [gitlab-runnerport](#repo-gitlab-runnerport) | 241 | +0 | 10 |
 | [libarchiveport](#repo-libarchiveport) | 237 | +0 | 6 |
 | [zstdport](#repo-zstdport) | 236 | +0 | 4 |
@@ -273,6 +273,8 @@
 | [postgresport](#repo-postgresport) | 0 | +0 | 0 |
 | [rpmport](#repo-rpmport) | 0 | +0 | 0 |
 | [ollamaport](#repo-ollamaport) | 0 | +0 | 0 |
+| [libyamlport](#repo-libyamlport) | 0 | +0 | 0 |
+| [mkcertport](#repo-mkcertport) | 0 | N/A | 0 |
 
 ---
 
@@ -803,6 +805,28 @@
 | `patches/ttyutils.patch` | `patches` | 44 |
 | `patches/widechar.h.patch` | `patches` | 13 |
 | `patches/write.c.patch` | `patches` | 15 |
+
+---
+
+<a id="repo-redisport"></a>
+## redisport
+
+- **Origin Date (First Commit):** 2025-02-14
+- **Current Patch LOC:** 560
+- **Current Patch Count:** 3
+
+### Historical Trends
+
+![LOC Trend for redisport](images/upstream/redisport_current_loc_trend.png)
+![Count Trend for redisport](images/upstream/redisport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/pr.patch` | `patches` | 263 |
+| `patches/test.patch` | `patches` | 264 |
+| `patches/test_port.patch` | `patches` | 33 |
 
 ---
 
@@ -1380,26 +1404,6 @@
 | Patch File (Repo Relative Path) | Source | LOC |
 |---|---|:---|
 | `patches/PR1.patch` | `patches` | 264 |
-
----
-
-<a id="repo-redisport"></a>
-## redisport
-
-- **Origin Date (First Commit):** 2025-02-14
-- **Current Patch LOC:** 263
-- **Current Patch Count:** 1
-
-### Historical Trends
-
-![LOC Trend for redisport](images/upstream/redisport_current_loc_trend.png)
-![Count Trend for redisport](images/upstream/redisport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/pr.patch` | `patches` | 263 |
 
 ---
 
@@ -5627,6 +5631,42 @@
 ## ollamaport
 
 - **Origin Date (First Commit):** 2025-07-01
+- **Current Patch LOC:** 0
+- **Current Patch Count:** 0
+
+### Historical Trends
+
+*(Patch LOC trend graph not generated)*
+*(Patch count trend graph not generated)*
+
+### Current Patch Details
+
+*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
+
+---
+
+<a id="repo-libyamlport"></a>
+## libyamlport
+
+- **Origin Date (First Commit):** 2025-07-11
+- **Current Patch LOC:** 0
+- **Current Patch Count:** 0
+
+### Historical Trends
+
+*(Patch LOC trend graph not generated)*
+*(Patch count trend graph not generated)*
+
+### Current Patch Details
+
+*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
+
+---
+
+<a id="repo-mkcertport"></a>
+## mkcertport
+
+- **Origin Date (First Commit):** Unknown
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 

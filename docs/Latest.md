@@ -285,12 +285,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="redis" data-searchable-text="redis Green 100.0% STABLE_redis_3530 An in-memory data store database port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="redis" data-searchable-text="redis Blue 99.0% STABLE_redis_3547 An in-memory data store database port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/redisport" target="_blank" rel="noopener noreferrer">redis</a></strong></div>
-    <div class="tool-status">Status: Green</div>
-    <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/redisport/releases/download/STABLE_redisport_3530/redis-8.0.3.20250706_152129.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_redis_3530</a></div>
+    <div class="tool-status">Status: Blue</div>
+    <div class="tool-test">Test: 99.0%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/redisport/releases/download/STABLE_redisport_3547/redis-8.0.3.20250711_131533.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_redis_3547</a></div>
     <div class="tool-desc" title="An in-memory data store">An in-memory data store</div>
   </div>
 </div>
@@ -2591,12 +2591,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 ## Webframework 
 
-<div class="tool-item-filterable" data-package-name="hugo" data-searchable-text="hugo Skipped N/A STABLE_hugo_3479 A static site generator webframework port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="hugo" data-searchable-text="hugo Skipped N/A STABLE_hugo_3548 A static site generator webframework port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/hugoport" target="_blank" rel="noopener noreferrer">hugo</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/hugoport/releases/download/STABLE_hugoport_3479/hugo-v0.147.9.20250623_153332.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_hugo_3479</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/hugoport/releases/download/STABLE_hugoport_3548/hugo-v0.148.1.20250711_152726.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_hugo_3548</a></div>
     <div class="tool-desc" title="A static site generator">A static site generator</div>
   </div>
 </div>
@@ -2608,4 +2608,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-07-11 06:12:55 UTC
+Last updated:  2025-07-12 06:12:37 UTC
