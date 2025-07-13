@@ -1085,12 +1085,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="fx" data-searchable-text="fx Skipped N/A STABLE_fx_3482 A functional programming language graphics port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="fx" data-searchable-text="fx Skipped N/A STABLE_fx_3549 A functional programming language graphics port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/fxport" target="_blank" rel="noopener noreferrer">fx</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/fxport/releases/download/STABLE_fxport_3482/fx-37.0.0.20250624_152126.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_fx_3482</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/fxport/releases/download/STABLE_fxport_3549/fx-37.0.1.20250712_151917.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_fx_3549</a></div>
     <div class="tool-desc" title="A functional programming language">A functional programming language</div>
   </div>
 </div>
@@ -2608,4 +2608,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-07-12 06:12:37 UTC
+Last updated:  2025-07-13 06:11:35 UTC
