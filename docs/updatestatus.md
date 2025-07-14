@@ -114,6 +114,7 @@
 - 2024-03-23: [Update expat-version to 2.6.2 from 2.5.0](https://github.com/zopencommunity/expatport/pull/10) ❓
 
 ### fqport
+- 2025-07-13: [Update fq-version to 0.15.1 from 0.14.0](https://github.com/zopencommunity/fqport/pull/10) ❌
 - 2025-04-19: [Update fq-version to 0.15.0 from 0.14.0](https://github.com/zopencommunity/fqport/pull/9) ✅
 
 ### frpport
@@ -760,5 +761,5 @@
 ---
 
 
-> Last updated: 2025-07-13 06:07:08 EDT
+> Last updated: 2025-07-14 06:07:34 EDT
 

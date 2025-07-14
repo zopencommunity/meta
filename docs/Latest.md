@@ -1039,12 +1039,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="neovim" data-searchable-text="neovim Green 100.0% STABLE_neovim_3413 A text editor editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="neovim" data-searchable-text="neovim Green 100.0% STABLE_neovim_3550 A text editor editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/neovimport" target="_blank" rel="noopener noreferrer">neovim</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/neovimport/releases/download/STABLE_neovimport_3413/neovim-v0.11.2.20250603_062538.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_neovim_3413</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/neovimport/releases/download/STABLE_neovimport_3550/neovim-v0.11.3.20250713_172530.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_neovim_3550</a></div>
     <div class="tool-desc" title="A text editor">A text editor</div>
   </div>
 </div>
@@ -2608,4 +2608,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-07-13 06:11:35 UTC
+Last updated:  2025-07-14 06:12:36 UTC
