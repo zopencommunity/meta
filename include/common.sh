@@ -368,10 +368,10 @@ zot_sanitizeEnvVar()
   # manner
   value="\$1"
   delim="\$2"
-  prefix="\$3"  
+  prefix="\$3"
   if [ -z "\${value}" ]; then
     return
-  fi  
+  fi
   result=""
   oldIFS="\${IFS}"
   IFS="\${delim}"
@@ -408,9 +408,9 @@ zot_deleteDuplicateEntries()
   echo "\${value}\${delim}" | awk -v RS="\${delim}" -v ORS="\${delim}" '
     BEGIN={col=""}
     !(\$0 in a) {
-       a[\$0] = 1; 
+       a[\$0] = 1;
        /bin/printf("%s%s", col, \$0);
-       col=ORS; 
+       col=ORS;
     }' | /bin/sed "s/\${delim}$//"
 }
 
@@ -434,15 +434,25 @@ if [ -n "\$SSH_CONNECTION" ] && [ -z "\$PS1" ] || [ ! -t 1 ]; then
 fi
 
 if [ -z "\${ZOPEN_QUICK_LOAD}" ]; then
-  if [ -e "\${ZOPEN_ROOTFS}/etc/profiled" ]; then
-    dotenvs=\$(find "\${ZOPEN_ROOTFS}/etc/profiled" -type f -name 'dotenv' -print)
+  if [ -d "\${ZOPEN_ROOTFS}/etc/profiled" ]; then
+
     if \$displayText; then
       /bin/printf "Processing \$zot configuration..."
     fi
 
-    for dotenv in \$dotenvs; do
-      . \$dotenv
-    done
+    tmpfile="\${local_tmp}/zopen_config.tmp"
+
+    if /bin/find "\${ZOPEN_ROOTFS}/etc/profiled" -type f -name 'dotenv' -print > "\${tmpfile}"; then
+      while IFS= read -r dotenv; do
+        [ -r "\${dotenv}" ] && . "\${dotenv}"
+      done < "\${tmpfile}"
+    else
+      echo "Error: find command failed" >&2
+      [ -e "\${tmpfile}" ] && rm "\${tmpfile}"
+      exit 1
+    fi
+    [ -e "\${tmpfile}" ] && rm "\${tmpfile}"
+
     if \$displayText; then
       /bin/echo "DONE"
       if [ -n "\${ZOPEN_TOOLSET_OVERRIDE}" ]; then
@@ -1505,7 +1515,7 @@ syslog()
 }
 
 jqGetKey(){
-  # If there key is not present, the error causes jq to exit with a 
+  # If there key is not present, the error causes jq to exit with a
   # non-zero return code
   jq -er --arg key "$1" '.[$key] // error("Missing key: " + $key)' "$2"
 }
@@ -1539,7 +1549,7 @@ getJSONCacheURLs(){
   base=$(jqGetKey "metadata_baseurl" "${dereffedLink}")
   filename=$(jqGetKey "metadata_file" "${dereffedLink}")
   latest_metadata=$(jqGetKey "latest_file" "${dereffedLink}")
-  
+
   case "${type}" in
     http|https) jsonCacheURLs=$(printf "%s://%s/%s\n%s://%s/%s" \
                     "${type}" "${base}" "${filename}" "${type}" "${base}" "${latest_metadata}")
@@ -2073,10 +2083,12 @@ getPortMetaData(){
       return 1
     fi
   elif [ -n "${releaseLine}" ]; then
+    # The release line to use was explicitly mentioned on the cli
     if ! getReleaseLineMetadata "${portName}" "${invalidPortAssetFile}"; then
       return 1
     fi
   else
+    # No explict release line given, calculate
     if ! calculateReleaseLineMetadata "${portName}" "${invalidPortAssetFile}"; then
       return 1
     fi
@@ -2400,7 +2412,7 @@ processRepoInstallFile(){
 
 getInstallFile()
 {
-  installurl="$1"  
+  installurl="$1"
 
   downloadToDir="${ZOPEN_ROOTFS}/var/cache/zopen"
   if $downloadOnly; then
@@ -2429,7 +2441,7 @@ getInstallFile()
   metadataFile="$(basename "${installurl}").json"
   if [ -e "${downloadToDir}/${metadataFile}" ]; then
     printVerbose "Corresponding metadata '${metadataFile}' already in local cache"
-  else  
+  else
     printVerbose "Downloading corresponding metadata"
     # check if it is in the same location just with a different suffix (as in a mirror)
     # if not, likely is the original Github repo which uses a subdirectory for the metadata
@@ -2469,8 +2481,8 @@ getInstallFile()
 
 extractMetadataFromPax()
 {
-  # If there is an issue with the pax or the target, it is possible for pax 
-  # itself to report an error and sit waiting for user input; 
+  # If there is an issue with the pax or the target, it is possible for pax
+  # itself to report an error and sit waiting for user input;
   if ! pax -rf "$1" -s "%[^/]*/%/tmp/%" '*/metadata.json' ; then
     if ! details=$(pax -rf "$1" -s "%[^/]*/%/tmp/%" '*/package.json'); then
       printSoftError "Could not extract package metadata from file '$1'."
@@ -2544,7 +2556,7 @@ installFromPax()
   elif [ ! -r "${pax}" ]; then
     printError "Pax file to install not readable at '${pax}'"
   fi
- 
+
   # shellcheck disable=SC2154
   if ! runLogProgress "pax -rf ${pax} -p p ${paxredirect} ${redirectToDevNull}" \
       "Expanding file: ${pax}" "Expanded file:  ${pax}"; then
@@ -2720,7 +2732,7 @@ updatePackageDB()
     printVerbose "No current package database [new install?]. Creating empty array[]"
     printf "[\n]\n" > "${pdb}"
   fi
-  
+
   if [ $(unset CD_PATH; cd "${ZOPEN_PKGINSTALL}"; ls -A | wc -l) -eq 0 ]; then
     printVerbose "No packages found to add to database [new install?]"
     return
@@ -2889,7 +2901,7 @@ diskusage()
 formattedFileSize()
 {
   filesize=$1  # in kb
-  # Use awk rather than $((..)) to get floating points, using the 
+  # Use awk rather than $((..)) to get floating points, using the
   # "repeated divisions and count" method to generate an offset
   echo "${filesize}" | awk '{
     num = $1;
@@ -2904,7 +2916,7 @@ formattedFileSize()
         num = num / 1000;
         unit = "M";
     } printf "%.3f%s\n", num, unit;
-  }'  
+  }'
 }
 . ${INCDIR}/analytics.sh
 
