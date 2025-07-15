@@ -291,9 +291,7 @@ writeConfigFile(){
   cat << EOF >  "${configFile}"
 #!/bin/false  # Script currently intended to be sourced, not run
 # zopen community Configuration file
-# Main root location for the zopen installation; can be changed if the
-# underlying root location is copied/moved elsewhere as locations are
-# relative to this envvar value
+
 displayHelp() {
 echo "usage: . zopen-config [--eknv] [--knv] [--quiet] [-?|--help]"
 echo "  --override-zos-tools   Adds altbin/ dir to the PATH and altman/ dir to MANPATH, overriding the native z/OS tooling."
@@ -331,14 +329,22 @@ while [ \$# -gt 0 ]; do
   esac
   shift
 done
+
+for local_tmp in "\${TMPDIR}" "\${TMP}" /tmp; do
+  [ -n "\${local_tmp}" ] && [ -d "\${local_tmp}" ] && break
+done
+
 if \${knv}; then
-  /bin/env | /bin/sort > /tmp/zopen-config-env-orig.\$\$
+  /bin/env | /bin/sort > \${local_tmp}/zopen-config-env-orig.\$\$
 fi
 
 if [ -n "\${overrideFile}" ] && [ ! -f "\${overrideFile}" ]; then
   echo "Override file '\${overrideFile}' is not a file. Skipping..."
 fi
 
+# Main root location for the zopen installation; can be changed if the
+# underlying root location is copied/moved elsewhere as locations are
+# relative to this envvar value
 ZOPEN_ROOTFS="${rootfs}"
 export ZOPEN_ROOTFS
 
@@ -443,8 +449,8 @@ export LIBPATH=\$(deleteDuplicateEntries "\${LIBPATH}" ":")
 export MANPATH=\$(deleteDuplicateEntries "\${MANPATH}" ":")
 
 if \${knv}; then
-  /bin/env | /bin/sort > /tmp/zopen-config-env-modded.\$\$
-  diffout=\$(/bin/diff /tmp/zopen-config-env-orig.\$\$ /tmp/zopen-config-env-modded.\$\$ | /bin/grep -E '^[>]' | /bin/cut -c3- )
+  /bin/env | /bin/sort > \${local_tmp}/zopen-config-env-modded.\$\$
+  diffout=\$(/bin/diff \${local_tmp}/zopen-config-env-orig.\$\$ \${local_tmp}/zopen-config-env-modded.\$\$ | /bin/grep -E '^[>]' | /bin/cut -c3- )
   echo "\${diffout}" | while IFS= read -r knvp; do
     newval=""
     envvar="\${knvp%%=*}"
@@ -457,7 +463,7 @@ if \${knv}; then
     echo "\${exportknv}\${envvar}=\${newval#*:}"
     IFS="\${cIFS}"
   done
-  rm /tmp/zopen-config-env-orig.\$\$ /tmp/zopen-config-env-modded.\$\$ 2>/dev/null
+  rm \${local_tmp}/zopen-config-env-orig.\$\$ \${local_tmp}/zopen-config-env-modded.\$\$ 2>/dev/null
 fi
 
 
