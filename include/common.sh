@@ -362,7 +362,7 @@ fi
 
 zot="zopen community"
 
-sanitizeEnvVar()
+zot_sanitizeEnvVar()
 {
   # remove any envvar entries that match the specified regex
   value="\$1"
@@ -371,7 +371,7 @@ sanitizeEnvVar()
   echo "\${value}" | awk -v RS="\${delim}" -v DLIM="\${delim}" -v PRFX="\${prefix}" '{ if (match(\$1, PRFX)==0) {printf("%s%s",\$1,DLIM)}}'
 }
 
-deleteDuplicateEntries()
+zot_deleteDuplicateEntries()
 {
   value="\$1"
   delim="\$2"
@@ -419,12 +419,12 @@ if [ -z "\${ZOPEN_QUICK_LOAD}" ]; then
   fi
 fi
 unset displayText
-PATH=\${ZOPEN_ROOTFS}/usr/local/bin:\${ZOPEN_ROOTFS}/usr/bin:\${ZOPEN_ROOTFS}/bin:\${ZOPEN_ROOTFS}/boot:\$(sanitizeEnvVar "\${PATH}" ":" "^\${ZOPEN_PKGINSTALL}/.*\$")
-MANPATH=\${ZOPEN_ROOTFS}/usr/local/share/man:\${ZOPEN_ROOTFS}/usr/local/share/man/\%L:\${ZOPEN_ROOTFS}/usr/share/man:\${ZOPEN_ROOTFS}/usr/share/man/\%L:\$(sanitizeEnvVar "\${MANPATH}" ":" "^\${ZOPEN_PKGINSTALL}/.*\$")
+PATH=\${ZOPEN_ROOTFS}/usr/local/bin:\${ZOPEN_ROOTFS}/usr/bin:\${ZOPEN_ROOTFS}/bin:\${ZOPEN_ROOTFS}/boot:\$(zot_sanitizeEnvVar "\${PATH}" ":" "^\${ZOPEN_PKGINSTALL}/.*\$")
+MANPATH=\${ZOPEN_ROOTFS}/usr/local/share/man:\${ZOPEN_ROOTFS}/usr/local/share/man/\%L:\${ZOPEN_ROOTFS}/usr/share/man:\${ZOPEN_ROOTFS}/usr/share/man/\%L:\$(zot_sanitizeEnvVar "\${MANPATH}" ":" "^\${ZOPEN_PKGINSTALL}/.*\$")
 
 if [ -n "\$ZOPEN_TOOLSET_OVERRIDE" ]; then
   if [ -n "\${overrideFile}" ] && [ -f "\${overrideFile}" ]; then
-    PATH=\$(sanitizeEnvVar "\${PATH}" ":" "^\${ZOPEN_ROOTFS}/usr/local/altbin.*\$")
+    PATH=\$(zot_sanitizeEnvVar "\${PATH}" ":" "^\${ZOPEN_ROOTFS}/usr/local/altbin.*\$")
     while IFS= read -r project; do
       if [ -d "\$ZOPEN_PKGINSTALL/\$project/\$project/altbin" ]; then
         PATH="\$ZOPEN_PKGINSTALL/\$project/\$project/altbin:\$PATH"
@@ -438,15 +438,15 @@ if [ -n "\$ZOPEN_TOOLSET_OVERRIDE" ]; then
     MANPATH="\${ZOPEN_ROOTFS}/usr/local/share/altman:\$MANPATH"
   fi
 else
-  PATH=\$(sanitizeEnvVar "\${PATH}" ":" "^\${ZOPEN_ROOTFS}/usr/local/altbin.*\$")
-  MANPATH=\$(sanitizeEnvVar "\${MANPATH}" ":" "^\${ZOPEN_ROOTFS}/usr/local/share/altman.*\$")
+  PATH=\$(zot_sanitizeEnvVar "\${PATH}" ":" "^\${ZOPEN_ROOTFS}/usr/local/altbin.*\$")
+  MANPATH=\$(zot_sanitizeEnvVar "\${MANPATH}" ":" "^\${ZOPEN_ROOTFS}/usr/local/share/altman.*\$")
 fi
 
 
-export PATH=\$(deleteDuplicateEntries "\${PATH}" ":")
-LIBPATH=\${ZOPEN_ROOTFS}/usr/local/lib:\${ZOPEN_ROOTFS}/usr/lib:\$(sanitizeEnvVar "\${LIBPATH}" ":" "^\${ZOPEN_PKGINSTALL}/.*\$")
-export LIBPATH=\$(deleteDuplicateEntries "\${LIBPATH}" ":")
-export MANPATH=\$(deleteDuplicateEntries "\${MANPATH}" ":")
+export PATH=\$(zot_deleteDuplicateEntries "\${PATH}" ":")
+LIBPATH=\${ZOPEN_ROOTFS}/usr/local/lib:\${ZOPEN_ROOTFS}/usr/lib:\$(zot_sanitizeEnvVar "\${LIBPATH}" ":" "^\${ZOPEN_PKGINSTALL}/.*\$")
+export LIBPATH=\$(zot_deleteDuplicateEntries "\${LIBPATH}" ":")
+export MANPATH=\$(zot_deleteDuplicateEntries "\${MANPATH}" ":")
 
 if \${knv}; then
   /bin/env | /bin/sort > \${local_tmp}/zopen-config-env-modded.\$\$
@@ -466,7 +466,10 @@ if \${knv}; then
   rm \${local_tmp}/zopen-config-env-orig.\$\$ \${local_tmp}/zopen-config-env-modded.\$\$ 2>/dev/null
 fi
 
-
+# Cleanup
+unset -f zot_deleteDuplicateEntries 2>/dev/null
+unset -f zot_displayHelp 2>/dev/null
+unset -f zot_sanitizeEnvVar 2>/dev/null
 EOF
 
 }
