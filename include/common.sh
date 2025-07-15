@@ -364,18 +364,54 @@ zot="zopen community"
 
 zot_sanitizeEnvVar()
 {
-  # remove any envvar entries that match the specified regex
+  # remove any envvar entries that match the specified prefix, in a shell-agnostic
+  # manner
   value="\$1"
   delim="\$2"
-  prefix="\$3"
-  echo "\${value}" | awk -v RS="\${delim}" -v DLIM="\${delim}" -v PRFX="\${prefix}" '{ if (match(\$1, PRFX)==0) {printf("%s%s",\$1,DLIM)}}'
+  prefix="\$3"  
+  if [ -z "\${value}" ]; then
+    return
+  fi  
+  result=""
+  oldIFS="\${IFS}"
+  IFS="\${delim}"
+  for entry in \${value}; do
+    case "\${entry}" in
+      "\${prefix}"/*)
+        # Skip entries that start with the prefix followed by /
+        ;;
+      *)
+        # Keep entries that don't match
+        if [ -z "\${result}" ]; then
+          # First time through
+          result="\${entry}"
+        else
+          # At least one previous result; insert delimiter
+          result="\${result}\${delim}\${entry}"
+        fi
+        ;;
+    esac
+  done
+  IFS="\${oldIFS}"
+  /bin/echo "\${result}"
 }
 
 zot_deleteDuplicateEntries()
 {
   value="\$1"
   delim="\$2"
-  echo "\${value}\${delim}" | awk -v RS="\${delim}" '!(\$0 in a) {a[\$0]; printf("%s%s", col, \$0); col=RS; }' | /bin/sed "s/\${delim}$//"
+  if [ -z "\${value}" ]; then
+    /bin/echo ""
+    return
+  fi
+
+  echo "\${value}\${delim}" | awk -v RS="\${delim}" -v ORS="\${delim}" '
+    BEGIN={col=""}
+    !(\$0 in a) {
+       a[\$0] = 1; 
+       /bin/printf("%s%s", col, \$0);
+       col=ORS; 
+    }' | /bin/sed "s/\${delim}$//"
 }
 
 # zopen community environment variables
