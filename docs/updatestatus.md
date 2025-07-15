@@ -17,6 +17,7 @@
 - 2025-07-03: [Update blis-version to 2.0 from 1.1](https://github.com/zopencommunity/blisport/pull/1) ❌
 
 ### buildkiteport
+- 2025-07-14: [Update buildkite-version to 3.102.1 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/66) ❌
 - 2025-07-09: [Update buildkite-version to 3.102.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/65) ❌
 - 2025-07-03: [Update buildkite-version to 3.101.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/64) ❌
 - 2025-06-25: [Update buildkite-version to 3.100.1 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/63) ❌
@@ -39,7 +40,7 @@
 - 2025-01-08: [Update caddy-version to 2.9.1 from 2.7.6](https://github.com/zopencommunity/caddyport/pull/7) ❌
 - 2025-01-01: [Update caddy-version to 2.9.0 from 2.7.6](https://github.com/zopencommunity/caddyport/pull/6) ❌
 - 2024-06-02: [Update caddy-version to 2.8.4 from 2.7.6](https://github.com/zopencommunity/caddyport/pull/2) ❌
-- 2024-05-30: [Update caddy-version to 2.8.1 from 2.7.6](https://github.com/zopencommunity/caddyport/pull/1) ❌
+- 2024-05-30: [Update caddy-version to 2.8.1 from 2.7.6](https://github.com/zopencommunity/caddyport/pull/1) ❓
 
 ### ccacheport
 - 2025-05-26: [Update ccache-version to 4.11.3 from V.R.M](https://github.com/zopencommunity/ccacheport/pull/1) ❌
@@ -320,7 +321,7 @@
 - 2024-07-10: [Update osv-scanner-version to 1.8.2 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/9) ❌
 - 2024-06-21: [Update osv-scanner-version to 1.8.1 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/8) ❌
 - 2024-06-20: [Update osv-scanner-version to 1.8.0 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/7) ❌
-- 2024-05-30: [Update osv-scanner-version to 1.7.4 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/6) ✅
+- 2024-05-30: [Update osv-scanner-version to 1.7.4 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/6) ❓
 - 2024-05-09: [Update osv-scanner-version to 1.7.3 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/5) ❓
 - 2024-04-19: [Update osv-scanner-version to 1.7.2 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/4) ❓
 - 2024-03-20: [Update osv-scanner-version to 1.7.1 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/3) ❓
@@ -761,5 +762,5 @@
 ---
 
 
-> Last updated: 2025-07-14 06:07:34 EDT
+> Last updated: 2025-07-15 06:07:43 EDT
 
