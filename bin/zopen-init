@@ -722,18 +722,21 @@ updateBootstrappedTools() {
       esac
       printVerbose "Validating pax '${pax}'"
       paxLocation=$(findrev "${MYDIR}" "${pax}")
-      echo "${paxLocation}/${pax}"
+      printVerbose "Pax installation from '${paxLocation}/${pax}'"
       if [ -e "${paxLocation}/${pax}" ]; then
         zopen install "${paxLocation}/${pax}" -y --bypass-prereq-checks --skip-verify
+        toolInstall=$?
+        [ "${toolInstall}" -ne 0 ] && printError "Unable to install '${pax}' locally; see previous errors and retry installation using the '--re-init' parameter"
       else
         printError "Could not locate ${pax} to install as bootstrap"
       fi
     done
   else
-    ${MYDIR}/zopen-install ${installOptions} -y curl jq pinentry gpg meta
+    "${MYDIR}/zopen-install" ${installOptions} -y curl jq pinentry gpg meta
     toolInstall=$?
   fi
   [ "${toolInstall}" -ne 0 ] && printError "Unable to install curl, jq, gpg, pinentry and/or meta; see previous errors and retry the initilisation using the '--re-init' parameter"
+  # shellcheck disable=SC1090
   . "${configFile}"
 }
 
