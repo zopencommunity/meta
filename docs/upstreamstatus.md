@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-07-15 06:11:32 EDT.*
+*Report generated on: 2025-07-16 06:11:51 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 251
-- **Total Current Lines of Code (LOC) in Patches:** 32,834
+- **Total Projects Analyzed:** 252
+- **Total Current Lines of Code (LOC) in Patches:** 32,830
 - **Total Number of Current Patch Files:** 735
-- **Average Current Patch LOC per Project:** 130.81
-- **Average Current Patch Count per Project:** 2.93
+- **Average Current Patch LOC per Project:** 130.28
+- **Average Current Patch Count per Project:** 2.92
 
 ### Historical Trends (All Projects)
 
@@ -31,7 +31,7 @@
 | [sudoport](#repo-sudoport) | 1,278 | +0 | 30 |
 | [coreutilsport](#repo-coreutilsport) | 1,169 | +0 | 18 |
 | [cmakeport](#repo-cmakeport) | 1,092 | +0 | 1 |
-| [grpcport](#repo-grpcport) | 1,021 | +990 | 8 |
+| [grpcport](#repo-grpcport) | 1,017 | +986 | 8 |
 | [gitport](#repo-gitport) | 978 | +0 | 31 |
 | [valgrindport](#repo-valgrindport) | 896 | +0 | 3 |
 | [gzipport](#repo-gzipport) | 690 | +0 | 8 |
@@ -275,6 +275,7 @@
 | [ollamaport](#repo-ollamaport) | 0 | +0 | 0 |
 | [libyamlport](#repo-libyamlport) | 0 | +0 | 0 |
 | [mkcertport](#repo-mkcertport) | 0 | N/A | 0 |
+| [ansibleport](#repo-ansibleport) | 0 | N/A | 0 |
 
 ---
 
@@ -599,7 +600,7 @@
 ## grpcport
 
 - **Origin Date (First Commit):** 2025-06-19
-- **Current Patch LOC:** 1,021
+- **Current Patch LOC:** 1,017
 - **Current Patch Count:** 8
 
 ### Historical Trends
@@ -613,7 +614,7 @@
 |---|---|:---|
 | `patches/CMakeLists.txt.patch` | `patches` | 15 |
 | `patches/include.patch` | `patches` | 13 |
-| `patches/src.patch` | `patches` | 806 |
+| `patches/src.patch` | `patches` | 802 |
 | `patches/third_party/abseil-cpp.patch` | `patches` | 87 |
 | `patches/third_party/cares.patch` | `patches` | 42 |
 | `patches/third_party/protobuf.patch` | `patches` | 44 |
@@ -5665,6 +5666,24 @@
 
 <a id="repo-mkcertport"></a>
 ## mkcertport
+
+- **Origin Date (First Commit):** Unknown
+- **Current Patch LOC:** 0
+- **Current Patch Count:** 0
+
+### Historical Trends
+
+*(Patch LOC trend graph not generated)*
+*(Patch count trend graph not generated)*
+
+### Current Patch Details
+
+*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
+
+---
+
+<a id="repo-ansibleport"></a>
+## ansibleport
 
 - **Origin Date (First Commit):** Unknown
 - **Current Patch LOC:** 0

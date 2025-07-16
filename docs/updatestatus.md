@@ -17,6 +17,7 @@
 - 2025-07-03: [Update blis-version to 2.0 from 1.1](https://github.com/zopencommunity/blisport/pull/1) ❌
 
 ### buildkiteport
+- 2025-07-15: [Update buildkite-version to 3.102.2 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/67) ❌
 - 2025-07-14: [Update buildkite-version to 3.102.1 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/66) ❌
 - 2025-07-09: [Update buildkite-version to 3.102.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/65) ❌
 - 2025-07-03: [Update buildkite-version to 3.101.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/64) ❌
@@ -490,6 +491,7 @@
 <summary><b style="font-size: 28px;">Bump Automation Status</b></summary>
 
 - ✅ aflplusplusport - [![Bump Status](https://github.com/zopencommunity/aflplusplusport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/aflplusplusport/actions/workflows/bump.yml)
+- ❌ ansibleport - Workflow not configured
 - ✅ antport - [![Bump Status](https://github.com/zopencommunity/antport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/antport/actions/workflows/bump.yml)
 - ❌ aprport - Workflow not configured
 - ❌ apr-utilport - Workflow not configured
@@ -757,10 +759,10 @@
 
 </details>
 
-**Summary:** 213 active | 52 missing
+**Summary:** 213 active | 53 missing
 
 ---
 
 
-> Last updated: 2025-07-15 06:07:43 EDT
+> Last updated: 2025-07-16 06:07:54 EDT
 
