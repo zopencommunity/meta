@@ -2221,6 +2221,10 @@ resolveCommands()
     unset ZOPEN_BOOTSTRAP_CMD
   fi
 
+  # Add meta as an implicit runtime dependency
+  # TODO: remove this once zopen-install is updated to handle this 
+  export ZOPEN_RUNTIME_DEPS="${ZOPEN_RUNTIME_DEPS} meta"
+
   if [ -z "${ZOPEN_CONFIGURE_OPTS}" ]; then
     case "${ZOPEN_CONFIGURE}" in
     *cmake*)
