@@ -165,6 +165,7 @@
 - 2025-03-06: [Update ghcli-version to 2.68.1 from 2.67.0](https://github.com/zopencommunity/githubcliport/pull/47) ❌
 
 ### gitlabcliport
+- 2025-07-16: [Update glab-version to 1.63.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/35) ❌
 - 2025-07-11: [Update glab-version to 1.62.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/34) ❌
 - 2025-06-25: [Update glab-version to 1.61.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/33) ❌
 - 2025-06-19: [Update glab-version to 1.60.2 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/32) ❌
@@ -393,7 +394,7 @@
 
 ### stowport
 - 2024-09-09: [Update stow-version to 2.4.1 from V.R.M](https://github.com/zopencommunity/stowport/pull/2) ✅
-- 2024-06-01: [Update stow-version to 2.4.0 from V.R.M](https://github.com/zopencommunity/stowport/pull/1) ✅
+- 2024-06-01: [Update stow-version to 2.4.0 from V.R.M](https://github.com/zopencommunity/stowport/pull/1) ❓
 
 ### tclport
 - 2025-06-26: [Update tcl-version to 9.0.2 from 8.6.14](https://github.com/zopencommunity/tclport/pull/19) ❌
@@ -764,5 +765,5 @@
 ---
 
 
-> Last updated: 2025-07-16 06:07:54 EDT
+> Last updated: 2025-07-17 06:08:04 EDT
 

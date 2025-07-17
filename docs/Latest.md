@@ -189,12 +189,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="maven" data-searchable-text="maven Skipped N/A STABLE_maven_3500 A build automation tool core port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="maven" data-searchable-text="maven Skipped N/A STABLE_maven_3559 A build automation tool core port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/mavenport" target="_blank" rel="noopener noreferrer">maven</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/mavenport/releases/download/STABLE_mavenport_3500/apache-maven-3.9.10.20250627_152739.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_maven_3500</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/mavenport/releases/download/STABLE_mavenport_3559/apache-maven-3.9.11.20250716_151725.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_maven_3559</a></div>
     <div class="tool-desc" title="A build automation tool">A build automation tool</div>
   </div>
 </div>
@@ -761,12 +761,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3551 A TUI editor development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3560 A TUI editor development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/vimport" target="_blank" rel="noopener noreferrer">vim</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3551/vim-v9.1.1540.20250714_152835.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3551</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3560/vim-v9.1.1550.20250716_152831.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3560</a></div>
     <div class="tool-desc" title="A TUI editor">A TUI editor</div>
   </div>
 </div>
@@ -1049,12 +1049,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3551 A TUI editor editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3560 A TUI editor editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/vimport" target="_blank" rel="noopener noreferrer">vim</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3551/vim-v9.1.1540.20250714_152835.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3551</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3560/vim-v9.1.1550.20250716_152831.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3560</a></div>
     <div class="tool-desc" title="A TUI editor">A TUI editor</div>
   </div>
 </div>
@@ -1909,12 +1909,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="curl" data-searchable-text="curl Blue 99.9% STABLE_curl_3445 Networking tool uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="curl" data-searchable-text="curl Blue 99.9% STABLE_curl_3561 Networking tool uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/curlport" target="_blank" rel="noopener noreferrer">curl</a></strong></div>
     <div class="tool-status">Status: Blue</div>
     <div class="tool-test">Test: 99.9%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/curlport/releases/download/STABLE_curlport_3445/curl-8.14.1.20250610_010840.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_curl_3445</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/curlport/releases/download/STABLE_curlport_3561/curl-8.15.0.20250716_153936.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_curl_3561</a></div>
     <div class="tool-desc" title="Networking tool">Networking tool</div>
   </div>
 </div>
@@ -2205,12 +2205,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="gawk" data-searchable-text="gawk Blue 93.1% STABLE_gawk_3441 The GNU implementation of the awk text processing language utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="gawk" data-searchable-text="gawk Blue 93.3% STABLE_gawk_3558 The GNU implementation of the awk text processing language utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/gawkport" target="_blank" rel="noopener noreferrer">gawk</a></strong></div>
     <div class="tool-status">Status: Blue</div>
-    <div class="tool-test">Test: 93.1%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/gawkport/releases/download/STABLE_gawkport_3441/gawk-5.3.1.20250609_164345.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_gawk_3441</a></div>
+    <div class="tool-test">Test: 93.3%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/gawkport/releases/download/STABLE_gawkport_3558/gawk-5.3.1.20250716_133323.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_gawk_3558</a></div>
     <div class="tool-desc" title="The GNU implementation of the awk text processing language">The GNU implementation of the awk text processing language</div>
   </div>
 </div>
@@ -2618,4 +2618,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-07-16 06:12:56 UTC
+Last updated:  2025-07-17 06:13:17 UTC

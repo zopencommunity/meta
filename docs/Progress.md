@@ -100,7 +100,7 @@
 | [findutilsport](https://github.com/zopencommunity/findutilsport) | 17 | 85.2% | apr, bash-completion, boost, coreutils, gnulib, grep, libiconv, libxml2, netpbm, perl, pkgconfig, procps, prometheus, re2c, redis, texinfo, vim |
 | [pkgconfigport](https://github.com/zopencommunity/pkgconfigport) | 17 | 100.0% | avro-c-lib, ctags, groff, librabbitmq, librdkafka, libserdes, man-db, ncurses, netpbm, nghttp2, procps, redis, tcl, tcltls, thesilversearcher, tmux, util-linux |
 | [wharfport](https://github.com/zopencommunity/wharfport) | 16 | 100.0% | caddy, chezmoi, fq, fx, git-lfs, githubcli, gitlabcli, glow, gum, hugo, lazygit, murex, osv-scanner, prometheus, s5cmd, ttype |
-| [gawkport](https://github.com/zopencommunity/gawkport) | 15 | 93.1% | automake, bash-completion, curl, expat, git, gzip, lzip, ncurses, openssh, procps, rsync, shdoc, sudo, vim, which |
+| [gawkport](https://github.com/zopencommunity/gawkport) | 15 | 93.3% | automake, bash-completion, curl, expat, git, gzip, lzip, ncurses, openssh, procps, rsync, shdoc, sudo, vim, which |
 | [help2manport](https://github.com/zopencommunity/help2manport) | 13 | 100.0% | autoconf, automake, bison, cronie, expat, gettext, git, hello, libtool, m4, make, meta, texinfo |
 | [bzip2port](https://github.com/zopencommunity/bzip2port) | 11 | 100.0% | boost, gpg, libassuan, libgcrypt, libgpgerror, libgpgme, libksba, npth, ntbtls, pinentry, prometheus |
 | [flexport](https://github.com/zopencommunity/flexport) | 10 | 100.0% | autoconf, bison, cscope, doxygen, groff, man-db, netpbm, tmux, util-linux, xmlto |
@@ -287,4 +287,4 @@
 | [zospstreeport](https://github.com/zopencommunity/zospstreeport) | 0 | 100.0% | None |
 | [zotsampleport](https://github.com/zopencommunity/zotsampleport) | 0 | 100.0% | None |
 
-Last updated:  2025-07-16 06:12:56 UTC
+Last updated:  2025-07-17 06:13:17 UTC
