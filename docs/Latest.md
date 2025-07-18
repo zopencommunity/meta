@@ -285,12 +285,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="redis" data-searchable-text="redis Blue 99.0% STABLE_redis_3547 An in-memory data store database port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="redis" data-searchable-text="redis Blue 97.9% STABLE_redis_3562 An in-memory data store database port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/redisport" target="_blank" rel="noopener noreferrer">redis</a></strong></div>
     <div class="tool-status">Status: Blue</div>
-    <div class="tool-test">Test: 99.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/redisport/releases/download/STABLE_redisport_3547/redis-8.0.3.20250711_131533.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_redis_3547</a></div>
+    <div class="tool-test">Test: 97.9%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/redisport/releases/download/STABLE_redisport_3562/redis-8.0.3.20250717_134729.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_redis_3562</a></div>
     <div class="tool-desc" title="An in-memory data store">An in-memory data store</div>
   </div>
 </div>
@@ -1483,12 +1483,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="zoslib" data-searchable-text="zoslib Green 100.0% STABLE_zoslib_3557 A library used by z/OS Open Tools library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="zoslib" data-searchable-text="zoslib Green 100.0% STABLE_zoslib_3563 A library used by z/OS Open Tools library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/zoslibport" target="_blank" rel="noopener noreferrer">zoslib</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/zoslibport/releases/download/STABLE_zoslibport_3557/zoslib-zopen2.20250716_022904.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_zoslib_3557</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/zoslibport/releases/download/STABLE_zoslibport_3563/zoslib-zopen2.20250717_193928.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_zoslib_3563</a></div>
     <div class="tool-desc" title="A library used by z/OS Open Tools">A library used by z/OS Open Tools</div>
   </div>
 </div>
@@ -2325,12 +2325,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="meta" data-searchable-text="meta Green 100.0% STABLE_meta_3534 zopen package manager utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="meta" data-searchable-text="meta Green 100.0% STABLE_meta_3564 zopen package manager utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/metaport" target="_blank" rel="noopener noreferrer">meta</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/metaport/releases/download/STABLE_metaport_3534/meta-main.20250707_163046.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_meta_3534</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/metaport/releases/download/STABLE_metaport_3564/meta-main.20250718_025403.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_meta_3564</a></div>
     <div class="tool-desc" title="zopen package manager">zopen package manager</div>
   </div>
 </div>
@@ -2618,4 +2618,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-07-17 06:13:17 UTC
+Last updated:  2025-07-18 06:12:44 UTC

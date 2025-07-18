@@ -260,7 +260,7 @@
 | [promptersport](https://github.com/zopencommunity/promptersport) | 0 | Skipped | None |
 | [protobufport](https://github.com/zopencommunity/protobufport) | 0 | 100.0% | None |
 | [readlineport](https://github.com/zopencommunity/readlineport) | 0 | 100.0% | None |
-| [redisport](https://github.com/zopencommunity/redisport) | 0 | 99.0% | None |
+| [redisport](https://github.com/zopencommunity/redisport) | 0 | 97.9% | None |
 | [s5cmdport](https://github.com/zopencommunity/s5cmdport) | 0 | Skipped | None |
 | [sccport](https://github.com/zopencommunity/sccport) | 0 | Skipped | None |
 | [scdocport](https://github.com/zopencommunity/scdocport) | 0 | 100.0% | None |
@@ -287,4 +287,4 @@
 | [zospstreeport](https://github.com/zopencommunity/zospstreeport) | 0 | 100.0% | None |
 | [zotsampleport](https://github.com/zopencommunity/zotsampleport) | 0 | 100.0% | None |
 
-Last updated:  2025-07-17 06:13:17 UTC
+Last updated:  2025-07-18 06:12:44 UTC

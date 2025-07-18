@@ -40,7 +40,7 @@
 - 2025-04-19: [Update caddy-version to 2.10.0 from 2.7.6](https://github.com/zopencommunity/caddyport/pull/8) ❌
 - 2025-01-08: [Update caddy-version to 2.9.1 from 2.7.6](https://github.com/zopencommunity/caddyport/pull/7) ❌
 - 2025-01-01: [Update caddy-version to 2.9.0 from 2.7.6](https://github.com/zopencommunity/caddyport/pull/6) ❌
-- 2024-06-02: [Update caddy-version to 2.8.4 from 2.7.6](https://github.com/zopencommunity/caddyport/pull/2) ❌
+- 2024-06-02: [Update caddy-version to 2.8.4 from 2.7.6](https://github.com/zopencommunity/caddyport/pull/2) ❓
 - 2024-05-30: [Update caddy-version to 2.8.1 from 2.7.6](https://github.com/zopencommunity/caddyport/pull/1) ❓
 
 ### ccacheport
@@ -385,6 +385,7 @@
 - 2025-05-10: [Update spdlog-version to 1.15.3 from 1.15.1](https://github.com/zopencommunity/spdlogport/pull/9) ✅
 
 ### sqliteport
+- 2025-07-17: [Update sqlite-version to 2025-3500300 from 2025-3480000](https://github.com/zopencommunity/sqliteport/pull/29) ❌
 - 2025-06-28: [Update sqlite-version to 2025-3500200 from 2025-3480000](https://github.com/zopencommunity/sqliteport/pull/28) ❌
 - 2025-06-07: [Update sqlite-version to 2025-3500100 from 2025-3480000](https://github.com/zopencommunity/sqliteport/pull/27) ❌
 - 2025-05-29: [Update sqlite-version to 2025-3500000 from 2025-3480000](https://github.com/zopencommunity/sqliteport/pull/26) ❌
@@ -765,5 +766,5 @@
 ---
 
 
-> Last updated: 2025-07-17 06:08:04 EDT
+> Last updated: 2025-07-18 06:07:39 EDT
 
