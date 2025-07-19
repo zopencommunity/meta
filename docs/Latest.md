@@ -285,12 +285,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="redis" data-searchable-text="redis Blue 97.9% STABLE_redis_3562 An in-memory data store database port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="redis" data-searchable-text="redis Blue 97.9% STABLE_redis_3565 An in-memory data store database port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/redisport" target="_blank" rel="noopener noreferrer">redis</a></strong></div>
     <div class="tool-status">Status: Blue</div>
     <div class="tool-test">Test: 97.9%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/redisport/releases/download/STABLE_redisport_3562/redis-8.0.3.20250717_134729.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_redis_3562</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/redisport/releases/download/STABLE_redisport_3565/redis-8.0.3.20250718_121404.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_redis_3565</a></div>
     <div class="tool-desc" title="An in-memory data store">An in-memory data store</div>
   </div>
 </div>
@@ -561,12 +561,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="githubcli" data-searchable-text="githubcli Skipped N/A DEV_githubcli_3556 A command-line tool for GitHub development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="githubcli" data-searchable-text="githubcli Skipped N/A STABLE_githubcli_3566 A command-line tool for GitHub development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/githubcliport" target="_blank" rel="noopener noreferrer">githubcli</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/githubcliport/releases/download/DEV_githubcliport_3556/githubcli-DEV.20250715_153926.zos.pax.Z" target="_blank" rel="noopener noreferrer">DEV_githubcli_3556</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/githubcliport/releases/download/STABLE_githubcliport_3566/githubcli-DEV.20250718_201207.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_githubcli_3566</a></div>
     <div class="tool-desc" title="A command-line tool for GitHub">A command-line tool for GitHub</div>
   </div>
 </div>
@@ -1233,6 +1233,16 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
+<div class="tool-item-filterable" data-package-name="grpc" data-searchable-text="grpc Skipped N/A STABLE_grpc_3567 gRPC is a remote procedure call framework library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/grpcport" target="_blank" rel="noopener noreferrer">grpc</a></strong></div>
+    <div class="tool-status">Status: Skipped</div>
+    <div class="tool-test">Test: N/A</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/grpcport/releases/download/STABLE_grpcport_3567/grpc-v1.73.0.20250718_211936.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_grpc_3567</a></div>
+    <div class="tool-desc" title="gRPC is a remote procedure call framework">gRPC is a remote procedure call framework</div>
+  </div>
+</div>
+
 <div class="tool-item-filterable" data-package-name="jansson" data-searchable-text="jansson Green 100.0% STABLE_jansson_2998 A C library for encoding, decoding, and manipulating JSON data library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/janssonport" target="_blank" rel="noopener noreferrer">jansson</a></strong></div>
@@ -1535,13 +1545,23 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="githubcli" data-searchable-text="githubcli Skipped N/A DEV_githubcli_3556 A command-line tool for GitHub networking port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="githubcli" data-searchable-text="githubcli Skipped N/A STABLE_githubcli_3566 A command-line tool for GitHub networking port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/githubcliport" target="_blank" rel="noopener noreferrer">githubcli</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/githubcliport/releases/download/DEV_githubcliport_3556/githubcli-DEV.20250715_153926.zos.pax.Z" target="_blank" rel="noopener noreferrer">DEV_githubcli_3556</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/githubcliport/releases/download/STABLE_githubcliport_3566/githubcli-DEV.20250718_201207.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_githubcli_3566</a></div>
     <div class="tool-desc" title="A command-line tool for GitHub">A command-line tool for GitHub</div>
+  </div>
+</div>
+
+<div class="tool-item-filterable" data-package-name="grpc" data-searchable-text="grpc Skipped N/A STABLE_grpc_3567 gRPC is a remote procedure call framework networking port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/grpcport" target="_blank" rel="noopener noreferrer">grpc</a></strong></div>
+    <div class="tool-status">Status: Skipped</div>
+    <div class="tool-test">Test: N/A</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/grpcport/releases/download/STABLE_grpcport_3567/grpc-v1.73.0.20250718_211936.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_grpc_3567</a></div>
+    <div class="tool-desc" title="gRPC is a remote procedure call framework">gRPC is a remote procedure call framework</div>
   </div>
 </div>
 
@@ -2618,4 +2638,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-07-18 06:12:44 UTC
+Last updated:  2025-07-19 06:12:55 UTC

@@ -179,6 +179,7 @@
 - 2025-02-14: [Update glab-version to 1.53.0 from 1.52.0](https://github.com/zopencommunity/gitlabcliport/pull/23) ✅
 
 ### gitlab-runnerport
+- 2025-07-18: [Update gitlab-runner-version to 18.2.0 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/47) ❌
 - 2025-06-27: [Update gitlab-runner-version to 18.1.1 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/46) ❌
 - 2025-06-20: [Update gitlab-runner-version to 18.1.0 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/45) ❌
 - 2025-06-12: [Update gitlab-runner-version to 18.0.3 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/44) ❌
@@ -467,6 +468,7 @@
 - 2024-07-18: [Update victoriametrics-version to 1.102.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/5) ❌
 
 ### vimport
+- 2025-07-18: [Update vim-version to 9.1.1560 from 9.1.1550](https://github.com/zopencommunity/vimport/pull/127) ❌
 - 2025-07-08: [Update vim-version to 9.1.1520 from 9.1.1510](https://github.com/zopencommunity/vimport/pull/123) ❌
 - 2025-07-03: [Update vim-version to 9.1.150 from 9.1.1500](https://github.com/zopencommunity/vimport/pull/121) ❌
 - 2025-06-29: [Update vim-version to 9.1.1490 from 9.1.1480](https://github.com/zopencommunity/vimport/pull/119) ❌
@@ -605,6 +607,7 @@
 - ❌ joeport - Workflow not configured
 - ✅ jqport - [![Bump Status](https://github.com/zopencommunity/jqport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/jqport/actions/workflows/bump.yml)
 - ❌ jrubyport - Workflow not configured
+- ✅ jsoncppport - [![Bump Status](https://github.com/zopencommunity/jsoncppport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/jsoncppport/actions/workflows/bump.yml)
 - ✅ kotlinport - [![Bump Status](https://github.com/zopencommunity/kotlinport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/kotlinport/actions/workflows/bump.yml)
 - ✅ lazygitport - [![Bump Status](https://github.com/zopencommunity/lazygitport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/lazygitport/actions/workflows/bump.yml)
 - ✅ lessport - [![Bump Status](https://github.com/zopencommunity/lessport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/lessport/actions/workflows/bump.yml)
@@ -761,10 +764,10 @@
 
 </details>
 
-**Summary:** 213 active | 53 missing
+**Summary:** 214 active | 53 missing
 
 ---
 
 
-> Last updated: 2025-07-18 06:07:39 EDT
+> Last updated: 2025-07-19 06:07:33 EDT
 

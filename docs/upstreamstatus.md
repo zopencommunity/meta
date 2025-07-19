@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-07-18 06:11:44 EDT.*
+*Report generated on: 2025-07-19 06:11:48 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 252
-- **Total Current Lines of Code (LOC) in Patches:** 32,830
+- **Total Projects Analyzed:** 253
+- **Total Current Lines of Code (LOC) in Patches:** 32,845
 - **Total Number of Current Patch Files:** 735
-- **Average Current Patch LOC per Project:** 130.28
-- **Average Current Patch Count per Project:** 2.92
+- **Average Current Patch LOC per Project:** 129.82
+- **Average Current Patch Count per Project:** 2.91
 
 ### Historical Trends (All Projects)
 
@@ -38,7 +38,7 @@
 | [procpsport](#repo-procpsport) | 687 | +0 | 1 |
 | [perlport](#repo-perlport) | 684 | -12 | 14 |
 | [util-linuxport](#repo-util-linuxport) | 594 | +0 | 15 |
-| [redisport](#repo-redisport) | 560 | +297 | 3 |
+| [redisport](#repo-redisport) | 575 | +312 | 3 |
 | [unzipport](#repo-unzipport) | 549 | +0 | 12 |
 | [inetutilsport](#repo-inetutilsport) | 514 | +514 | 20 |
 | [cronieport](#repo-cronieport) | 510 | +0 | 13 |
@@ -276,6 +276,7 @@
 | [libyamlport](#repo-libyamlport) | 0 | +0 | 0 |
 | [mkcertport](#repo-mkcertport) | 0 | N/A | 0 |
 | [ansibleport](#repo-ansibleport) | 0 | N/A | 0 |
+| [jsoncppport](#repo-jsoncppport) | 0 | +0 | 0 |
 
 ---
 
@@ -813,7 +814,7 @@
 ## redisport
 
 - **Origin Date (First Commit):** 2025-02-14
-- **Current Patch LOC:** 560
+- **Current Patch LOC:** 575
 - **Current Patch Count:** 3
 
 ### Historical Trends
@@ -825,7 +826,7 @@
 
 | Patch File (Repo Relative Path) | Source | LOC |
 |---|---|:---|
-| `patches/pr.patch` | `patches` | 263 |
+| `patches/pr.patch` | `patches` | 278 |
 | `patches/test.patch` | `patches` | 264 |
 | `patches/test_port.patch` | `patches` | 33 |
 
@@ -5686,6 +5687,24 @@
 ## ansibleport
 
 - **Origin Date (First Commit):** Unknown
+- **Current Patch LOC:** 0
+- **Current Patch Count:** 0
+
+### Historical Trends
+
+*(Patch LOC trend graph not generated)*
+*(Patch count trend graph not generated)*
+
+### Current Patch Details
+
+*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
+
+---
+
+<a id="repo-jsoncppport"></a>
+## jsoncppport
+
+- **Origin Date (First Commit):** 2025-07-18
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 
