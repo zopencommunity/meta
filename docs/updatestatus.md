@@ -103,7 +103,7 @@
 - 2025-05-22: [Update duckdb-version to 1.3.0 from 0.9.2](https://github.com/zopencommunity/duckdbport/pull/25) ❌
 - 2025-04-08: [Update duckdb-version to 1.2.2 from 0.9.2](https://github.com/zopencommunity/duckdbport/pull/24) ❌
 - 2025-03-06: [Update duckdb-version to 1.2.1 from 0.9.2](https://github.com/zopencommunity/duckdbport/pull/23) ❌
-- 2024-06-03: [Update duckdb-version to 1.0.0 from 0.9.2](https://github.com/zopencommunity/duckdbport/pull/13) ❌
+- 2024-06-03: [Update duckdb-version to 1.0.0 from 0.9.2](https://github.com/zopencommunity/duckdbport/pull/13) ❓
 
 ### emacsport
 - 2025-02-24: [Update emacs-version to 30.1 from 29.4](https://github.com/zopencommunity/emacsport/pull/11) ❌
@@ -769,5 +769,5 @@
 ---
 
 
-> Last updated: 2025-07-19 06:07:33 EDT
+> Last updated: 2025-07-20 06:07:21 EDT
 
