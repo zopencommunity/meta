@@ -272,6 +272,7 @@ setDefaults()
   export ZOPEN_CHECKD="make"
   export ZOPEN_CHECK_OPTSD="check"
   export ZOPEN_CHECK_TIMEOUTD="12600" # 3.5 hours
+  export ZOPEN_CHECK_NO_TIMEOUT="0"
   export ZOPEN_INSTALLD="make"
   export ZOPEN_INSTALL_OPTSD="install"
   export ZOPEN_CLEAND="make"
@@ -1439,7 +1440,12 @@ check()
   if [ -n "${ZOPEN_CHECK_CMD}" ]; then
     printHeader "Running Check"
     create_fifo_pipe "${checklog}"
-    runInBackgroundWithTimeoutAndLog "${ZOPEN_CHECK_CMD} > ${TMP_FIFO_PIPE} 2>&1" "${ZOPEN_CHECK_TIMEOUT}"
+    if [ "$ZOPEN_CHECK_TIMEOUT" = "$ZOPEN_CHECK_NO_TIMEOUT" ]; then
+      printVerbose "No timeout for Check"
+      runAndLog "${ZOPEN_CHECK_CMD} > ${TMP_FIFO_PIPE} 2>&1"
+    else
+      runInBackgroundWithTimeoutAndLog "${ZOPEN_CHECK_CMD} > ${TMP_FIFO_PIPE} 2>&1" "${ZOPEN_CHECK_TIMEOUT}"
+    fi
     if command -V "${ZOPEN_CHECK_RESULTS_CODE}" > /dev/null 2>&1; then
       testStatus="$(${ZOPEN_CHECK_RESULTS_CODE} "${ZOPEN_LOG_DIR}" "${LOG_PFX}")"
       printVerbose "Test status:\n${testStatus}"
