@@ -69,6 +69,7 @@
 - 2024-11-07: [Update conan-version to 2.9.2 from 2.9.1](https://github.com/zopencommunity/conanport/pull/9) ❌
 
 ### cppcheckport
+- 2025-07-20: [Update cppcheck-version to 2.18.0 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/13) ❌
 - 2025-02-26: [Update cppcheck-version to 2.17.1 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/12) ❌
 - 2025-02-23: [Update cppcheck-version to 2.17.0 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/11) ❌
 - 2024-12-19: [Update cppcheck-version to 2.16.2 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/10) ❌
@@ -141,6 +142,7 @@
 - 2025-04-06: [Update gawk-version to 5.3.2 from 5.3.1](https://github.com/zopencommunity/gawkport/pull/28) ❌
 
 ### gettextport
+- 2025-07-20: [Update gettext-version to 0.26 from 0.21](https://github.com/zopencommunity/gettextport/pull/36) ❌
 - 2025-07-02: [Update gettext-version to 0.25.1 from 0.21](https://github.com/zopencommunity/gettextport/pull/34) ❌
 - 2025-05-10: [Update gettext-version to 0.25 from 0.21](https://github.com/zopencommunity/gettextport/pull/33) ❌
 - 2025-02-25: [Update gettext-version to 0.24 from 0.21](https://github.com/zopencommunity/gettextport/pull/32) ❌
@@ -769,5 +771,5 @@
 ---
 
 
-> Last updated: 2025-07-20 06:07:21 EDT
+> Last updated: 2025-07-21 06:07:52 EDT
 

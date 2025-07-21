@@ -481,12 +481,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="direnv" data-searchable-text="direnv Green 100.0% STABLE_direnv_3514 direnv is an environment variable manager for your shell development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="direnv" data-searchable-text="direnv Green 100.0% STABLE_direnv_3568 direnv is an environment variable manager for your shell development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/direnvport" target="_blank" rel="noopener noreferrer">direnv</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/direnvport/releases/download/STABLE_direnvport_3514/direnv-v2.37.0.20250702_152853.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_direnv_3514</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/direnvport/releases/download/STABLE_direnvport_3568/direnv-v2.37.1.20250720_152112.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_direnv_3568</a></div>
     <div class="tool-desc" title="direnv is an environment variable manager for your shell">direnv is an environment variable manager for your shell</div>
   </div>
 </div>
@@ -551,12 +551,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="git" data-searchable-text="git Blue 92.2% STABLE_git_3538 The Git version control system development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="git" data-searchable-text="git Blue 92.2% STABLE_git_3570 The Git version control system development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/gitport" target="_blank" rel="noopener noreferrer">git</a></strong></div>
     <div class="tool-status">Status: Blue</div>
     <div class="tool-test">Test: 92.2%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/gitport/releases/download/STABLE_gitport_3538/git-v2.50.1.20250708_232946.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_git_3538</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/gitport/releases/download/STABLE_gitport_3570/git-v2.50.1.20250720_161645.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_git_3570</a></div>
     <div class="tool-desc" title="The Git version control system">The Git version control system</div>
   </div>
 </div>
@@ -761,12 +761,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3560 A TUI editor development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3569 A TUI editor development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/vimport" target="_blank" rel="noopener noreferrer">vim</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3560/vim-v9.1.1550.20250716_152831.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3560</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3569/vim-v9.1.1570.20250720_153237.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3569</a></div>
     <div class="tool-desc" title="A TUI editor">A TUI editor</div>
   </div>
 </div>
@@ -1049,12 +1049,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3560 A TUI editor editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3569 A TUI editor editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/vimport" target="_blank" rel="noopener noreferrer">vim</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3560/vim-v9.1.1550.20250716_152831.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3560</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3569/vim-v9.1.1570.20250720_153237.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3569</a></div>
     <div class="tool-desc" title="A TUI editor">A TUI editor</div>
   </div>
 </div>
@@ -1493,12 +1493,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="zoslib" data-searchable-text="zoslib Green 100.0% STABLE_zoslib_3563 A library used by z/OS Open Tools library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="zoslib" data-searchable-text="zoslib Green 100.0% STABLE_zoslib_3572 A library used by z/OS Open Tools library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/zoslibport" target="_blank" rel="noopener noreferrer">zoslib</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/zoslibport/releases/download/STABLE_zoslibport_3563/zoslib-zopen2.20250717_193928.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_zoslib_3563</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/zoslibport/releases/download/STABLE_zoslibport_3572/zoslib-zopen2.20250721_005237.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_zoslib_3572</a></div>
     <div class="tool-desc" title="A library used by z/OS Open Tools">A library used by z/OS Open Tools</div>
   </div>
 </div>
@@ -1823,12 +1823,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 ## Source_Control 
 
-<div class="tool-item-filterable" data-package-name="git" data-searchable-text="git Blue 92.2% STABLE_git_3538 The Git version control system source_control port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="git" data-searchable-text="git Blue 92.2% STABLE_git_3570 The Git version control system source_control port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/gitport" target="_blank" rel="noopener noreferrer">git</a></strong></div>
     <div class="tool-status">Status: Blue</div>
     <div class="tool-test">Test: 92.2%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/gitport/releases/download/STABLE_gitport_3538/git-v2.50.1.20250708_232946.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_git_3538</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/gitport/releases/download/STABLE_gitport_3570/git-v2.50.1.20250720_161645.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_git_3570</a></div>
     <div class="tool-desc" title="The Git version control system">The Git version control system</div>
   </div>
 </div>
@@ -1919,12 +1919,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="coreutils" data-searchable-text="coreutils Green 100.0% STABLE_coreutils_3512 A collection of basic Unix utilities uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="coreutils" data-searchable-text="coreutils Blue 92.5% STABLE_coreutils_3571 A collection of basic Unix utilities uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/coreutilsport" target="_blank" rel="noopener noreferrer">coreutils</a></strong></div>
-    <div class="tool-status">Status: Green</div>
-    <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/coreutilsport/releases/download/STABLE_coreutilsport_3512/coreutils-9.7.20250702_124530.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_coreutils_3512</a></div>
+    <div class="tool-status">Status: Blue</div>
+    <div class="tool-test">Test: 92.5%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/coreutilsport/releases/download/STABLE_coreutilsport_3571/coreutils-9.7.20250720_200003.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_coreutils_3571</a></div>
     <div class="tool-desc" title="A collection of basic Unix utilities">A collection of basic Unix utilities</div>
   </div>
 </div>
@@ -2638,4 +2638,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-07-20 06:12:10 UTC
+Last updated:  2025-07-21 06:12:34 UTC

@@ -1,13 +1,13 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-07-20 06:11:02 EDT.*
+*Report generated on: 2025-07-21 06:11:26 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 253
-- **Total Current Lines of Code (LOC) in Patches:** 32,845
-- **Total Number of Current Patch Files:** 735
-- **Average Current Patch LOC per Project:** 129.82
+- **Total Current Lines of Code (LOC) in Patches:** 32,932
+- **Total Number of Current Patch Files:** 736
+- **Average Current Patch LOC per Project:** 130.17
 - **Average Current Patch Count per Project:** 2.91
 
 ### Historical Trends (All Projects)
@@ -31,8 +31,8 @@
 | [sudoport](#repo-sudoport) | 1,278 | +0 | 30 |
 | [coreutilsport](#repo-coreutilsport) | 1,169 | +0 | 18 |
 | [cmakeport](#repo-cmakeport) | 1,092 | +0 | 1 |
+| [gitport](#repo-gitport) | 1,065 | +87 | 32 |
 | [grpcport](#repo-grpcport) | 1,017 | +986 | 8 |
-| [gitport](#repo-gitport) | 978 | +0 | 31 |
 | [valgrindport](#repo-valgrindport) | 896 | +0 | 3 |
 | [gzipport](#repo-gzipport) | 690 | +0 | 8 |
 | [procpsport](#repo-procpsport) | 687 | +0 | 1 |
@@ -597,39 +597,12 @@
 
 ---
 
-<a id="repo-grpcport"></a>
-## grpcport
-
-- **Origin Date (First Commit):** 2025-06-19
-- **Current Patch LOC:** 1,017
-- **Current Patch Count:** 8
-
-### Historical Trends
-
-![LOC Trend for grpcport](images/upstream/grpcport_current_loc_trend.png)
-![Count Trend for grpcport](images/upstream/grpcport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/CMakeLists.txt.patch` | `patches` | 15 |
-| `patches/include.patch` | `patches` | 13 |
-| `patches/src.patch` | `patches` | 802 |
-| `patches/third_party/abseil-cpp.patch` | `patches` | 87 |
-| `patches/third_party/cares.patch` | `patches` | 42 |
-| `patches/third_party/protobuf.patch` | `patches` | 44 |
-| `patches/third_party/re2.patch` | `patches` | 14 |
-| `patches/third_party/zlib.patch` | `patches` | 0 |
-
----
-
 <a id="repo-gitport"></a>
 ## gitport
 
 - **Origin Date (First Commit):** 2022-05-25
-- **Current Patch LOC:** 978
-- **Current Patch Count:** 31
+- **Current Patch LOC:** 1,065
+- **Current Patch Count:** 32
 
 ### Historical Trends
 
@@ -665,12 +638,40 @@
 | `stable-patches/hash-object.c.patch` | `stable-patches` | 15 |
 | `stable-patches/http.c.patch` | `stable-patches` | 23 |
 | `stable-patches/lockfile.c.patch` | `stable-patches` | 15 |
-| `stable-patches/object-file.c.patch` | `stable-patches` | 105 |
+| `stable-patches/object-file.c.patch` | `stable-patches` | 172 |
+| `stable-patches/posix.h.patch` | `stable-patches` | 20 |
 | `stable-patches/quote.c.patch` | `stable-patches` | 22 |
 | `stable-patches/read-cache-ll.h.patch` | `stable-patches` | 15 |
 | `stable-patches/read-cache.c.patch` | `stable-patches` | 14 |
 | `stable-patches/test-lib.sh.patch` | `stable-patches` | 13 |
 | `stable-patches/utf8.c.patch` | `stable-patches` | 35 |
+
+---
+
+<a id="repo-grpcport"></a>
+## grpcport
+
+- **Origin Date (First Commit):** 2025-06-19
+- **Current Patch LOC:** 1,017
+- **Current Patch Count:** 8
+
+### Historical Trends
+
+![LOC Trend for grpcport](images/upstream/grpcport_current_loc_trend.png)
+![Count Trend for grpcport](images/upstream/grpcport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/CMakeLists.txt.patch` | `patches` | 15 |
+| `patches/include.patch` | `patches` | 13 |
+| `patches/src.patch` | `patches` | 802 |
+| `patches/third_party/abseil-cpp.patch` | `patches` | 87 |
+| `patches/third_party/cares.patch` | `patches` | 42 |
+| `patches/third_party/protobuf.patch` | `patches` | 44 |
+| `patches/third_party/re2.patch` | `patches` | 14 |
+| `patches/third_party/zlib.patch` | `patches` | 0 |
 
 ---
 
