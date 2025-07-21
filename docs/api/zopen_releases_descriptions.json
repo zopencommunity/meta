@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2025-07-21T01:03:25+00:00Z",
+  "generation_timestamp_utc": "2025-07-21T15:58:52+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -254,6 +254,7 @@
     "libyaml": "LibYAML is a YAML parser and emitter library",
     "mkcert": "",
     "ansible": "",
-    "jsoncpp": ""
+    "jsoncpp": "",
+    "httpd": "The Apache HTTP Server is a powerful and flexible HTTP/1.1 compliant web server"
   }
 }
