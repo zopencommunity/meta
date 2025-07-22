@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2025-07-21T17:58:07+00:00Z",
+  "generation_timestamp_utc": "2025-07-22T15:30:52+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -255,6 +255,8 @@
     "mkcert": "",
     "ansible": "",
     "jsoncpp": "",
-    "httpd": "The Apache HTTP Server is a powerful and flexible HTTP/1.1 compliant web server"
+    "httpd": "The Apache HTTP Server is a powerful and flexible HTTP/1.1 compliant web server",
+    "libsolv": "Library for solving packages and reading repositories",
+    "jsonc": ""
   }
 }
