@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-07-21 06:11:26 EDT.*
+*Report generated on: 2025-07-22 06:11:37 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 253
+- **Total Projects Analyzed:** 255
 - **Total Current Lines of Code (LOC) in Patches:** 32,932
 - **Total Number of Current Patch Files:** 736
-- **Average Current Patch LOC per Project:** 130.17
-- **Average Current Patch Count per Project:** 2.91
+- **Average Current Patch LOC per Project:** 129.15
+- **Average Current Patch Count per Project:** 2.89
 
 ### Historical Trends (All Projects)
 
@@ -277,6 +277,8 @@
 | [mkcertport](#repo-mkcertport) | 0 | N/A | 0 |
 | [ansibleport](#repo-ansibleport) | 0 | N/A | 0 |
 | [jsoncppport](#repo-jsoncppport) | 0 | +0 | 0 |
+| [httpdport](#repo-httpdport) | 0 | +0 | 0 |
+| [libsolvport](#repo-libsolvport) | 0 | +0 | 0 |
 
 ---
 
@@ -5706,6 +5708,42 @@
 ## jsoncppport
 
 - **Origin Date (First Commit):** 2025-07-18
+- **Current Patch LOC:** 0
+- **Current Patch Count:** 0
+
+### Historical Trends
+
+*(Patch LOC trend graph not generated)*
+*(Patch count trend graph not generated)*
+
+### Current Patch Details
+
+*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
+
+---
+
+<a id="repo-httpdport"></a>
+## httpdport
+
+- **Origin Date (First Commit):** 2025-07-21
+- **Current Patch LOC:** 0
+- **Current Patch Count:** 0
+
+### Historical Trends
+
+*(Patch LOC trend graph not generated)*
+*(Patch count trend graph not generated)*
+
+### Current Patch Details
+
+*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
+
+---
+
+<a id="repo-libsolvport"></a>
+## libsolvport
+
+- **Origin Date (First Commit):** 2025-07-22
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 

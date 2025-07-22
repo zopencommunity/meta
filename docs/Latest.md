@@ -501,12 +501,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="ed" data-searchable-text="ed Green 100.0% STABLE_ed_3419 line-oriented text editor development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="ed" data-searchable-text="ed Green 100.0% STABLE_ed_3576 line-oriented text editor development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/edport" target="_blank" rel="noopener noreferrer">ed</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/edport/releases/download/STABLE_edport_3419/ed-1.21.1.20250603_144743.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_ed_3419</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/edport/releases/download/STABLE_edport_3576/ed-1.22.20250721_161217.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_ed_3576</a></div>
     <div class="tool-desc" title="line-oriented text editor">line-oriented text editor</div>
   </div>
 </div>
@@ -1949,12 +1949,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="gettext" data-searchable-text="gettext Blue 87.4% STABLE_gettext_2450 A library for internationalization and localization uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="gettext" data-searchable-text="gettext Blue 94.6% STABLE_gettext_3575 A library for internationalization and localization uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/gettextport" target="_blank" rel="noopener noreferrer">gettext</a></strong></div>
     <div class="tool-status">Status: Blue</div>
-    <div class="tool-test">Test: 87.4%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/gettextport/releases/download/STABLE_gettextport_2450/gettext-0.21.20240922_014617.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_gettext_2450</a></div>
+    <div class="tool-test">Test: 94.6%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/gettextport/releases/download/STABLE_gettextport_3575/gettext-0.21.20250721_140022.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_gettext_3575</a></div>
     <div class="tool-desc" title="A library for internationalization and localization">A library for internationalization and localization</div>
   </div>
 </div>
@@ -2149,12 +2149,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="zlib" data-searchable-text="zlib Green 100.0% DEV_zlib_3448 A data compression library uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="zlib" data-searchable-text="zlib Green 100.0% STABLE_zlib_3574 A data compression library uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/zlibport" target="_blank" rel="noopener noreferrer">zlib</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/zlibport/releases/download/DEV_zlibport_3448/zlib-develop.20250610_041524.zos.pax.Z" target="_blank" rel="noopener noreferrer">DEV_zlib_3448</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/zlibport/releases/download/STABLE_zlibport_3574/zlib-v1.3.1.20250721_154923.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_zlib_3574</a></div>
     <div class="tool-desc" title="A data compression library">A data compression library</div>
   </div>
 </div>
@@ -2345,12 +2345,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="meta" data-searchable-text="meta Green 100.0% STABLE_meta_3564 zopen package manager utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="meta" data-searchable-text="meta Green 100.0% STABLE_meta_3577 zopen package manager utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/metaport" target="_blank" rel="noopener noreferrer">meta</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/metaport/releases/download/STABLE_metaport_3564/meta-main.20250718_025403.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_meta_3564</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/metaport/releases/download/STABLE_metaport_3577/meta-main.20250721_164323.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_meta_3577</a></div>
     <div class="tool-desc" title="zopen package manager">zopen package manager</div>
   </div>
 </div>
@@ -2638,4 +2638,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-07-21 06:12:34 UTC
+Last updated:  2025-07-22 06:12:46 UTC

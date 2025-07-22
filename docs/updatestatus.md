@@ -337,6 +337,9 @@
 - 2025-03-30: [Update patch-version to 2.8 from 2.7](https://github.com/zopencommunity/patchport/pull/7) ❌
 - 2023-11-05: [Update patch-version to 2.7.6 from 2.7](https://github.com/zopencommunity/patchport/pull/3) ❓
 
+### perlport
+- 2025-07-21: [Update perl-version to 5.43.1 from 5.43.0](https://github.com/zopencommunity/perlport/pull/114) ❌
+
 ### phpport
 - 2025-07-03: [Update php-version to 8.4.10 from 8.2.13](https://github.com/zopencommunity/phpport/pull/36) ❌
 - 2025-06-06: [Update php-version to 8.4.8 from 8.2.13](https://github.com/zopencommunity/phpport/pull/35) ❌
@@ -428,7 +431,7 @@
 - 2024-07-10: [Update terraform-version to 1.9.2 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/18) ❌
 - 2024-07-03: [Update terraform-version to 1.9.1 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/17) ❌
 - 2024-06-27: [Update terraform-version to 1.9.0 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/16) ❌
-- 2024-06-05: [Update terraform-version to 1.8.5 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/15) ❌
+- 2024-06-05: [Update terraform-version to 1.8.5 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/15) ❓
 
 ### texinfoport
 - 2024-12-23: [Update texinfo-version to 7.2 from 6.8](https://github.com/zopencommunity/texinfoport/pull/23) ❌
@@ -443,6 +446,7 @@
 - 2025-06-24: [Update util-linux-version to 2.41.1 from 2.41](https://github.com/zopencommunity/util-linuxport/pull/19) ❌
 
 ### victoriametricsport
+- 2025-07-21: [Update victoriametrics-version to 1.122.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/32) ❌
 - 2025-07-07: [Update victoriametrics-version to 1.121.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/31) ❌
 - 2025-06-23: [Update victoriametrics-version to 1.120.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/30) ❌
 - 2025-06-09: [Update victoriametrics-version to 1.119.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/29) ❌
@@ -599,6 +603,7 @@
 - ✅ help2manport - [![Bump Status](https://github.com/zopencommunity/help2manport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/help2manport/actions/workflows/bump.yml)
 - ✅ hexcurseport - [![Bump Status](https://github.com/zopencommunity/hexcurseport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/hexcurseport/actions/workflows/bump.yml)
 - ✅ htopport - [![Bump Status](https://github.com/zopencommunity/htopport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/htopport/actions/workflows/bump.yml)
+- ❌ httpdport - Workflow not configured
 - ✅ hugoport - [![Bump Status](https://github.com/zopencommunity/hugoport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/hugoport/actions/workflows/bump.yml)
 - ✅ inetutilsport - [![Bump Status](https://github.com/zopencommunity/inetutilsport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/inetutilsport/actions/workflows/bump.yml)
 - ❌ iperfport - Workflow not configured
@@ -636,6 +641,7 @@
 - ❌ librdkafkaport - Workflow not configured
 - ❌ libsasl2port - Workflow not configured
 - ✅ libserdesport - [![Bump Status](https://github.com/zopencommunity/libserdesport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libserdesport/actions/workflows/bump.yml)
+- ❌ libsolvport - Workflow not configured
 - ✅ libssh2port - [![Bump Status](https://github.com/zopencommunity/libssh2port/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libssh2port/actions/workflows/bump.yml)
 - ✅ libtoolport - [![Bump Status](https://github.com/zopencommunity/libtoolport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libtoolport/actions/workflows/bump.yml)
 - ✅ libuvport - [![Bump Status](https://github.com/zopencommunity/libuvport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libuvport/actions/workflows/bump.yml)
@@ -766,10 +772,10 @@
 
 </details>
 
-**Summary:** 214 active | 53 missing
+**Summary:** 214 active | 55 missing
 
 ---
 
 
-> Last updated: 2025-07-21 06:07:52 EDT
+> Last updated: 2025-07-22 06:07:54 EDT
 
