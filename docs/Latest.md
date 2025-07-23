@@ -1085,12 +1085,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="fx" data-searchable-text="fx Skipped N/A STABLE_fx_3549 A functional programming language graphics port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="fx" data-searchable-text="fx Skipped N/A STABLE_fx_3578 A functional programming language graphics port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/fxport" target="_blank" rel="noopener noreferrer">fx</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/fxport/releases/download/STABLE_fxport_3549/fx-37.0.1.20250712_151917.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_fx_3549</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/fxport/releases/download/STABLE_fxport_3578/fx-38.0.0.20250722_151927.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_fx_3578</a></div>
     <div class="tool-desc" title="A functional programming language">A functional programming language</div>
   </div>
 </div>
@@ -1949,12 +1949,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="gettext" data-searchable-text="gettext Blue 94.6% STABLE_gettext_3575 A library for internationalization and localization uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="gettext" data-searchable-text="gettext Blue 94.4% STABLE_gettext_3579 A library for internationalization and localization uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/gettextport" target="_blank" rel="noopener noreferrer">gettext</a></strong></div>
     <div class="tool-status">Status: Blue</div>
-    <div class="tool-test">Test: 94.6%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/gettextport/releases/download/STABLE_gettextport_3575/gettext-0.21.20250721_140022.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_gettext_3575</a></div>
+    <div class="tool-test">Test: 94.4%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/gettextport/releases/download/STABLE_gettextport_3579/gettext-0.21.20250722_213833.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_gettext_3579</a></div>
     <div class="tool-desc" title="A library for internationalization and localization">A library for internationalization and localization</div>
   </div>
 </div>
@@ -2212,6 +2212,16 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
     <div class="tool-test">Test: 85.2%</div>
     <div class="tool-release"><a href="https://github.com/zopencommunity/findutilsport/releases/download/STABLE_findutilsport_3420/findutils-4.10.0.20250603_145006.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_findutils_3420</a></div>
     <div class="tool-desc" title="Utilities for finding files">Utilities for finding files</div>
+  </div>
+</div>
+
+<div class="tool-item-filterable" data-package-name="fmt" data-searchable-text="fmt Green 100.0% STABLE_fmt_3580 utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/fmtport" target="_blank" rel="noopener noreferrer">fmt</a></strong></div>
+    <div class="tool-status">Status: Green</div>
+    <div class="tool-test">Test: 100.0%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/fmtport/releases/download/STABLE_fmtport_3580/fmt-11.2.0.20250723_081526.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_fmt_3580</a></div>
+    <div class="tool-desc" title=""></div>
   </div>
 </div>
 
@@ -2638,4 +2648,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-07-22 06:12:46 UTC
+Last updated:  2025-07-23 06:13:09 UTC

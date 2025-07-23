@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-07-22 06:11:37 EDT.*
+*Report generated on: 2025-07-23 06:12:05 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 255
-- **Total Current Lines of Code (LOC) in Patches:** 32,932
-- **Total Number of Current Patch Files:** 736
-- **Average Current Patch LOC per Project:** 129.15
-- **Average Current Patch Count per Project:** 2.89
+- **Total Projects Analyzed:** 256
+- **Total Current Lines of Code (LOC) in Patches:** 33,007
+- **Total Number of Current Patch Files:** 737
+- **Average Current Patch LOC per Project:** 128.93
+- **Average Current Patch Count per Project:** 2.88
 
 ### Historical Trends (All Projects)
 
@@ -59,6 +59,7 @@
 | [libgcryptport](#repo-libgcryptport) | 302 | +0 | 9 |
 | [conanport](#repo-conanport) | 299 | +0 | 8 |
 | [zipport](#repo-zipport) | 297 | +0 | 8 |
+| [gettextport](#repo-gettextport) | 281 | +75 | 8 |
 | [ccacheport](#repo-ccacheport) | 264 | +69 | 1 |
 | [gitlab-runnerport](#repo-gitlab-runnerport) | 241 | +0 | 10 |
 | [libarchiveport](#repo-libarchiveport) | 237 | +0 | 6 |
@@ -66,7 +67,6 @@
 | [llamacppport](#repo-llamacppport) | 236 | +0 | 1 |
 | [fishport](#repo-fishport) | 233 | +0 | 1 |
 | [mesonport](#repo-mesonport) | 229 | +0 | 9 |
-| [gettextport](#repo-gettextport) | 206 | +0 | 7 |
 | [protobufport](#repo-protobufport) | 201 | +27 | 9 |
 | [findutilsport](#repo-findutilsport) | 199 | +0 | 10 |
 | [ninjaport](#repo-ninjaport) | 196 | +0 | 8 |
@@ -279,6 +279,7 @@
 | [jsoncppport](#repo-jsoncppport) | 0 | +0 | 0 |
 | [httpdport](#repo-httpdport) | 0 | +0 | 0 |
 | [libsolvport](#repo-libsolvport) | 0 | +0 | 0 |
+| [jsoncport](#repo-jsoncport) | 0 | +0 | 0 |
 
 ---
 
@@ -1392,6 +1393,33 @@
 
 ---
 
+<a id="repo-gettextport"></a>
+## gettextport
+
+- **Origin Date (First Commit):** 2022-05-20
+- **Current Patch LOC:** 281
+- **Current Patch Count:** 8
+
+### Historical Trends
+
+![LOC Trend for gettextport](images/upstream/gettextport_current_loc_trend.png)
+![Count Trend for gettextport](images/upstream/gettextport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/PR1/fetch-name-collision.patch` | `patches` | 31 |
+| `patches/PR1/locale-name-collision.patch` | `patches` | 13 |
+| `patches/PR1/no-pwd_gecos.patch` | `patches` | 50 |
+| `patches/PR1/tagtarball.patch` | `patches` | 13 |
+| `patches/PR2/dummy.c.patch` | `patches` | 16 |
+| `patches/PR3/test-unsetenv.c.patch` | `patches` | 23 |
+| `patches/PR4/configure.patch` | `patches` | 60 |
+| `patches/UTF8.patch` | `patches` | 75 |
+
+---
+
 <a id="repo-ccacheport"></a>
 ## ccacheport
 
@@ -1554,32 +1582,6 @@
 | `patches/mesonbuild/linkers/linkers.py.patch` | `patches` | 29 |
 | `patches/mesonbuild/utils/universal.py.patch` | `patches` | 23 |
 | `patches/run_tests.py.patch` | `patches` | 13 |
-
----
-
-<a id="repo-gettextport"></a>
-## gettextport
-
-- **Origin Date (First Commit):** 2022-05-20
-- **Current Patch LOC:** 206
-- **Current Patch Count:** 7
-
-### Historical Trends
-
-![LOC Trend for gettextport](images/upstream/gettextport_current_loc_trend.png)
-![Count Trend for gettextport](images/upstream/gettextport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/PR1/fetch-name-collision.patch` | `patches` | 31 |
-| `patches/PR1/locale-name-collision.patch` | `patches` | 13 |
-| `patches/PR1/no-pwd_gecos.patch` | `patches` | 50 |
-| `patches/PR1/tagtarball.patch` | `patches` | 13 |
-| `patches/PR2/dummy.c.patch` | `patches` | 16 |
-| `patches/PR3/test-unsetenv.c.patch` | `patches` | 23 |
-| `patches/PR4/configure.patch` | `patches` | 60 |
 
 ---
 
@@ -5744,6 +5746,24 @@
 ## libsolvport
 
 - **Origin Date (First Commit):** 2025-07-22
+- **Current Patch LOC:** 0
+- **Current Patch Count:** 0
+
+### Historical Trends
+
+*(Patch LOC trend graph not generated)*
+*(Patch count trend graph not generated)*
+
+### Current Patch Details
+
+*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
+
+---
+
+<a id="repo-jsoncport"></a>
+## jsoncport
+
+- **Origin Date (First Commit):** 2025-07-23
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 
