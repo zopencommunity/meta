@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2025-07-23T16:26:58+00:00Z",
+  "generation_timestamp_utc": "2025-07-24T16:29:23+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -257,6 +257,7 @@
     "jsoncpp": "",
     "httpd": "The Apache HTTP Server is a powerful and flexible HTTP/1.1 compliant web server",
     "libsolv": "Library for solving packages and reading repositories",
-    "jsonc": ""
+    "jsonc": "",
+    "libpcap": "libpcap is a network packet capture and filtering library. It allows applications to capture network traffic, filter packets based on various criteria, and save captured data to files"
   }
 }
