@@ -48,6 +48,7 @@
 - 2025-05-26: [Update ccache-version to 4.11.3 from V.R.M](https://github.com/zopencommunity/ccacheport/pull/1) ❌
 
 ### chezmoiport
+- 2025-07-23: [Update chezmoi-version to 2.63.1 from 2.62.5](https://github.com/zopencommunity/chezmoiport/pull/7) ❌
 - 2025-07-09: [Update chezmoi-version to 2.63.0 from 2.62.5](https://github.com/zopencommunity/chezmoiport/pull/6) ❌
 - 2025-06-23: [Update chezmoi-version to 2.62.7 from 2.62.5](https://github.com/zopencommunity/chezmoiport/pull/5) ❌
 - 2025-06-07: [Update chezmoi-version to 2.62.6 from 2.62.5](https://github.com/zopencommunity/chezmoiport/pull/4) ❌
@@ -91,7 +92,7 @@
 - 2024-09-11: [Update cunit-version to 3.4.3 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/6) ❌
 - 2024-09-10: [Update cunit-version to 3.4.2 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/5) ❌
 - 2024-08-23: [Update cunit-version to 3.4.1 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/4) ❌
-- 2024-06-08: [Update cunit-version to 3.3.1 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/3) ❌
+- 2024-06-08: [Update cunit-version to 3.3.1 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/3) ❓
 
 ### diffutilsport
 - 2025-04-09: [Update diffutils-version to 3.12 from 3.11](https://github.com/zopencommunity/diffutilsport/pull/38) ✅
@@ -168,6 +169,7 @@
 - 2025-03-06: [Update ghcli-version to 2.68.1 from 2.67.0](https://github.com/zopencommunity/githubcliport/pull/47) ❌
 
 ### gitlabcliport
+- 2025-07-23: [Update glab-version to 1.64.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/36) ❌
 - 2025-07-16: [Update glab-version to 1.63.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/35) ❌
 - 2025-07-11: [Update glab-version to 1.62.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/34) ❌
 - 2025-06-25: [Update glab-version to 1.61.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/33) ❌
@@ -240,7 +242,7 @@
 
 ### kotlinport
 - 2024-07-19: [Update kotlin-version to 1.9.25 from 1.9.22](https://github.com/zopencommunity/kotlinport/pull/5) ❌
-- 2024-06-08: [Update kotlin-version to 1.9.24 from 1.9.22](https://github.com/zopencommunity/kotlinport/pull/4) ❌
+- 2024-06-08: [Update kotlin-version to 1.9.24 from 1.9.22](https://github.com/zopencommunity/kotlinport/pull/4) ❓
 - 2024-03-07: [Update kotlin-version to 1.9.23 from 1.9.22](https://github.com/zopencommunity/kotlinport/pull/3) ❓
 
 ### lazygitport
@@ -263,7 +265,7 @@
 
 ### libpcre2port
 - 2024-12-27: [Update libpcre2-version to 10.45 from 10.42](https://github.com/zopencommunity/libpcre2port/pull/10) ❌
-- 2024-06-08: [Update libpcre2-version to 10.44 from 10.42](https://github.com/zopencommunity/libpcre2port/pull/7) ✅
+- 2024-06-08: [Update libpcre2-version to 10.44 from 10.42](https://github.com/zopencommunity/libpcre2port/pull/7) ❓
 - 2023-12-29: [Update libpcre2-version to 10.43 from 10.42](https://github.com/zopencommunity/libpcre2port/pull/4) ❓
 
 ### libpipelineport
@@ -635,6 +637,7 @@
 - ✅ libiconvport - [![Bump Status](https://github.com/zopencommunity/libiconvport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libiconvport/actions/workflows/bump.yml)
 - ✅ libksbaport - [![Bump Status](https://github.com/zopencommunity/libksbaport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libksbaport/actions/workflows/bump.yml)
 - ✅ libmdport - [![Bump Status](https://github.com/zopencommunity/libmdport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libmdport/actions/workflows/bump.yml)
+- ❌ libpcapport - Workflow not configured
 - ✅ libpcre2port - [![Bump Status](https://github.com/zopencommunity/libpcre2port/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libpcre2port/actions/workflows/bump.yml)
 - ✅ libpcreport - [![Bump Status](https://github.com/zopencommunity/libpcreport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libpcreport/actions/workflows/bump.yml)
 - ✅ libpipelineport - [![Bump Status](https://github.com/zopencommunity/libpipelineport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libpipelineport/actions/workflows/bump.yml)
@@ -643,7 +646,7 @@
 - ❌ librdkafkaport - Workflow not configured
 - ❌ libsasl2port - Workflow not configured
 - ✅ libserdesport - [![Bump Status](https://github.com/zopencommunity/libserdesport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libserdesport/actions/workflows/bump.yml)
-- ❌ libsolvport - Workflow not configured
+- ✅ libsolvport - [![Bump Status](https://github.com/zopencommunity/libsolvport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libsolvport/actions/workflows/bump.yml)
 - ✅ libssh2port - [![Bump Status](https://github.com/zopencommunity/libssh2port/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libssh2port/actions/workflows/bump.yml)
 - ✅ libtoolport - [![Bump Status](https://github.com/zopencommunity/libtoolport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libtoolport/actions/workflows/bump.yml)
 - ✅ libuvport - [![Bump Status](https://github.com/zopencommunity/libuvport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libuvport/actions/workflows/bump.yml)
@@ -774,10 +777,10 @@
 
 </details>
 
-**Summary:** 214 active | 56 missing
+**Summary:** 215 active | 56 missing
 
 ---
 
 
-> Last updated: 2025-07-23 06:08:01 EDT
+> Last updated: 2025-07-24 06:08:18 EDT
 

@@ -761,12 +761,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3569 A TUI editor development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3585 A TUI editor development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/vimport" target="_blank" rel="noopener noreferrer">vim</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3569/vim-v9.1.1570.20250720_153237.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3569</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3585/vim-v9.1.1580.20250723_152838.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3585</a></div>
     <div class="tool-desc" title="A TUI editor">A TUI editor</div>
   </div>
 </div>
@@ -1049,12 +1049,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3569 A TUI editor editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3585 A TUI editor editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/vimport" target="_blank" rel="noopener noreferrer">vim</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3569/vim-v9.1.1570.20250720_153237.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3569</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3585/vim-v9.1.1580.20250723_152838.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3585</a></div>
     <div class="tool-desc" title="A TUI editor">A TUI editor</div>
   </div>
 </div>
@@ -1147,12 +1147,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="groovy" data-searchable-text="groovy Skipped N/A STABLE_groovy_3363 A scripting language for the Java platform language port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="groovy" data-searchable-text="groovy Skipped N/A STABLE_groovy_3583 A scripting language for the Java platform language port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/groovyport" target="_blank" rel="noopener noreferrer">groovy</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/groovyport/releases/download/STABLE_groovyport_3363/groovy-DEV.20250527_151719.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_groovy_3363</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/groovyport/releases/download/STABLE_groovyport_3583/groovy-DEV.20250723_151728.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_groovy_3583</a></div>
     <div class="tool-desc" title="A scripting language for the Java platform">A scripting language for the Java platform</div>
   </div>
 </div>
@@ -1383,6 +1383,16 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
+<div class="tool-item-filterable" data-package-name="libsolv" data-searchable-text="libsolv Green 100.0% STABLE_libsolv_3582 Library for solving packages and reading repositories library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libsolvport" target="_blank" rel="noopener noreferrer">libsolv</a></strong></div>
+    <div class="tool-status">Status: Green</div>
+    <div class="tool-test">Test: 100.0%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/libsolvport/releases/download/STABLE_libsolvport_3582/libsolv-0.7.34.20250723_122309.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libsolv_3582</a></div>
+    <div class="tool-desc" title="Library for solving packages and reading repositories">Library for solving packages and reading repositories</div>
+  </div>
+</div>
+
 <div class="tool-item-filterable" data-package-name="libuv" data-searchable-text="libuv Blue 98.6% STABLE_libuv_3203 An asynchronous I/O library library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libuvport" target="_blank" rel="noopener noreferrer">libuv</a></strong></div>
@@ -1493,12 +1503,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="zoslib" data-searchable-text="zoslib Green 100.0% STABLE_zoslib_3572 A library used by z/OS Open Tools library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="zoslib" data-searchable-text="zoslib Green 100.0% STABLE_zoslib_3581 A library used by z/OS Open Tools library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/zoslibport" target="_blank" rel="noopener noreferrer">zoslib</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/zoslibport/releases/download/STABLE_zoslibport_3572/zoslib-zopen2.20250721_005237.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_zoslib_3572</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/zoslibport/releases/download/STABLE_zoslibport_3581/zoslib-zopen2.20250723_112707.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_zoslib_3581</a></div>
     <div class="tool-desc" title="A library used by z/OS Open Tools">A library used by z/OS Open Tools</div>
   </div>
 </div>
@@ -2565,12 +2575,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="yq" data-searchable-text="yq Skipped N/A STABLE_yq_3546 A command-line JSON and YAML processor utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="yq" data-searchable-text="yq Skipped N/A STABLE_yq_3584 A command-line JSON and YAML processor utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/yqport" target="_blank" rel="noopener noreferrer">yq</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/yqport/releases/download/STABLE_yqport_3546/yq-master.20250710_151926.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_yq_3546</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/yqport/releases/download/STABLE_yqport_3584/yq-v4.20250723_152224.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_yq_3584</a></div>
     <div class="tool-desc" title="A command-line JSON and YAML processor">A command-line JSON and YAML processor</div>
   </div>
 </div>
@@ -2648,4 +2658,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-07-23 06:13:09 UTC
+Last updated:  2025-07-24 06:13:14 UTC

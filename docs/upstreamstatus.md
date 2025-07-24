@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-07-23 06:12:05 EDT.*
+*Report generated on: 2025-07-24 06:12:04 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 256
-- **Total Current Lines of Code (LOC) in Patches:** 33,007
-- **Total Number of Current Patch Files:** 737
-- **Average Current Patch LOC per Project:** 128.93
-- **Average Current Patch Count per Project:** 2.88
+- **Total Projects Analyzed:** 257
+- **Total Current Lines of Code (LOC) in Patches:** 33,044
+- **Total Number of Current Patch Files:** 738
+- **Average Current Patch LOC per Project:** 128.58
+- **Average Current Patch Count per Project:** 2.87
 
 ### Historical Trends (All Projects)
 
@@ -122,6 +122,7 @@
 | [xxhashport](#repo-xxhashport) | 47 | +0 | 2 |
 | [tigport](#repo-tigport) | 47 | +0 | 1 |
 | [lazygitport](#repo-lazygitport) | 46 | +0 | 1 |
+| [libsolvport](#repo-libsolvport) | 37 | +37 | 1 |
 | [poptport](#repo-poptport) | 35 | +0 | 1 |
 | [whichport](#repo-whichport) | 34 | +0 | 1 |
 | [tcltlsport](#repo-tcltlsport) | 34 | +0 | 1 |
@@ -278,8 +279,8 @@
 | [ansibleport](#repo-ansibleport) | 0 | N/A | 0 |
 | [jsoncppport](#repo-jsoncppport) | 0 | +0 | 0 |
 | [httpdport](#repo-httpdport) | 0 | +0 | 0 |
-| [libsolvport](#repo-libsolvport) | 0 | +0 | 0 |
 | [jsoncport](#repo-jsoncport) | 0 | +0 | 0 |
+| [libpcapport](#repo-libpcapport) | 0 | +0 | 0 |
 
 ---
 
@@ -2818,6 +2819,26 @@
 | Patch File (Repo Relative Path) | Source | LOC |
 |---|---|:---|
 | `patches/lazygit.patch` | `patches` | 46 |
+
+---
+
+<a id="repo-libsolvport"></a>
+## libsolvport
+
+- **Origin Date (First Commit):** 2025-07-22
+- **Current Patch LOC:** 37
+- **Current Patch Count:** 1
+
+### Historical Trends
+
+![LOC Trend for libsolvport](images/upstream/libsolvport_current_loc_trend.png)
+![Count Trend for libsolvport](images/upstream/libsolvport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `stable-patches/PR1.patch` | `stable-patches` | 37 |
 
 ---
 
@@ -5742,10 +5763,10 @@
 
 ---
 
-<a id="repo-libsolvport"></a>
-## libsolvport
+<a id="repo-jsoncport"></a>
+## jsoncport
 
-- **Origin Date (First Commit):** 2025-07-22
+- **Origin Date (First Commit):** 2025-07-23
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 
@@ -5760,10 +5781,10 @@
 
 ---
 
-<a id="repo-jsoncport"></a>
-## jsoncport
+<a id="repo-libpcapport"></a>
+## libpcapport
 
-- **Origin Date (First Commit):** 2025-07-23
+- **Origin Date (First Commit):** 2025-07-24
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 
