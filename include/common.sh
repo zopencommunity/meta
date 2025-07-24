@@ -1384,7 +1384,7 @@ checkAvailableSize()
   if [ 1 -eq "$(echo "${packageSize} > ${partitionSize}" | bc)" ]; then
     printError "Not enough space in partition."
   fi
-  printInfo "- Enough space to install ${package}. Proceeding installation."
+  printInfo "- Enough space to install ${package}. Proceeding with installation."
   return 0
 }
 
