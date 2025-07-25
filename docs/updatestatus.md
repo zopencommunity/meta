@@ -94,9 +94,6 @@
 - 2024-08-23: [Update cunit-version to 3.4.1 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/4) ❌
 - 2024-06-08: [Update cunit-version to 3.3.1 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/3) ❓
 
-### diffutilsport
-- 2025-04-09: [Update diffutils-version to 3.12 from 3.11](https://github.com/zopencommunity/diffutilsport/pull/38) ✅
-
 ### direnvport
 - 2025-04-11: [Update direnv-version to 2.36.0 from 2.35.0](https://github.com/zopencommunity/direnvport/pull/11) ❌
 
@@ -210,6 +207,7 @@
 - 2025-04-14: [Update gperf-version to 3.2.1 from 3.1](https://github.com/zopencommunity/gperfport/pull/8) ✅
 
 ### grafanaport
+- 2025-07-24: [Update grafana-version to 12.1.0 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/24) ❌
 - 2025-06-18: [Update grafana-version to 12.0.2 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/23) ❌
 - 2025-05-23: [Update grafana-version to 12.0.1 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/22) ❌
 - 2025-05-10: [Update grafana-version to 12.0.0 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/21) ❌
@@ -230,6 +228,7 @@
 - 2024-06-25: [Update grafana-version to 11.1.0 from 11.0.0](https://github.com/zopencommunity/grafanaport/pull/2) ❌
 
 ### grpcport
+- 2025-07-24: [Update grpc-version to 1.74.0 from 1.73.0](https://github.com/zopencommunity/grpcport/pull/2) ❌
 - 2025-06-26: [Update grpc-version to 1.73.1 from 1.73.0](https://github.com/zopencommunity/grpcport/pull/1) ❌
 
 ### helloport
@@ -782,5 +781,5 @@
 ---
 
 
-> Last updated: 2025-07-24 06:08:18 EDT
+> Last updated: 2025-07-25 06:07:58 EDT
 

@@ -561,12 +561,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="githubcli" data-searchable-text="githubcli Skipped N/A STABLE_githubcli_3566 A command-line tool for GitHub development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="githubcli" data-searchable-text="githubcli Skipped N/A STABLE_githubcli_3587 A command-line tool for GitHub development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/githubcliport" target="_blank" rel="noopener noreferrer">githubcli</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/githubcliport/releases/download/STABLE_githubcliport_3566/githubcli-DEV.20250718_201207.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_githubcli_3566</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/githubcliport/releases/download/STABLE_githubcliport_3587/githubcli-DEV.20250724_155122.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_githubcli_3587</a></div>
     <div class="tool-desc" title="A command-line tool for GitHub">A command-line tool for GitHub</div>
   </div>
 </div>
@@ -1555,12 +1555,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="githubcli" data-searchable-text="githubcli Skipped N/A STABLE_githubcli_3566 A command-line tool for GitHub networking port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="githubcli" data-searchable-text="githubcli Skipped N/A STABLE_githubcli_3587 A command-line tool for GitHub networking port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/githubcliport" target="_blank" rel="noopener noreferrer">githubcli</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/githubcliport/releases/download/STABLE_githubcliport_3566/githubcli-DEV.20250718_201207.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_githubcli_3566</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/githubcliport/releases/download/STABLE_githubcliport_3587/githubcli-DEV.20250724_155122.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_githubcli_3587</a></div>
     <div class="tool-desc" title="A command-line tool for GitHub">A command-line tool for GitHub</div>
   </div>
 </div>
@@ -2195,12 +2195,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="diffutils" data-searchable-text="diffutils Blue 87.0% STABLE_diffutils_3418 File and directory comparison utilities utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="diffutils" data-searchable-text="diffutils Blue 87.6% STABLE_diffutils_3588 File and directory comparison utilities utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/diffutilsport" target="_blank" rel="noopener noreferrer">diffutils</a></strong></div>
     <div class="tool-status">Status: Blue</div>
-    <div class="tool-test">Test: 87.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/diffutilsport/releases/download/STABLE_diffutilsport_3418/diffutils-3.11.20250603_134651.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_diffutils_3418</a></div>
+    <div class="tool-test">Test: 87.6%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/diffutilsport/releases/download/STABLE_diffutilsport_3588/diffutils-3.12.20250725_080233.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_diffutils_3588</a></div>
     <div class="tool-desc" title="File and directory comparison utilities">File and directory comparison utilities</div>
   </div>
 </div>
@@ -2658,4 +2658,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-07-24 06:13:14 UTC
+Last updated:  2025-07-25 06:12:46 UTC
