@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-07-25 06:11:38 EDT.*
+*Report generated on: 2025-07-26 06:11:59 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 257
-- **Total Current Lines of Code (LOC) in Patches:** 33,044
-- **Total Number of Current Patch Files:** 738
-- **Average Current Patch LOC per Project:** 128.58
-- **Average Current Patch Count per Project:** 2.87
+- **Total Projects Analyzed:** 259
+- **Total Current Lines of Code (LOC) in Patches:** 33,572
+- **Total Number of Current Patch Files:** 753
+- **Average Current Patch LOC per Project:** 129.62
+- **Average Current Patch Count per Project:** 2.91
 
 ### Historical Trends (All Projects)
 
@@ -42,6 +42,7 @@
 | [unzipport](#repo-unzipport) | 549 | +0 | 12 |
 | [inetutilsport](#repo-inetutilsport) | 514 | +514 | 20 |
 | [cronieport](#repo-cronieport) | 510 | +0 | 13 |
+| [llamacppport](#repo-llamacppport) | 498 | +73 | 11 |
 | [screenport](#repo-screenport) | 485 | +0 | 7 |
 | [tmuxport](#repo-tmuxport) | 440 | +0 | 13 |
 | [treeport](#repo-treeport) | 425 | +0 | 3 |
@@ -64,7 +65,6 @@
 | [gitlab-runnerport](#repo-gitlab-runnerport) | 241 | +0 | 10 |
 | [libarchiveport](#repo-libarchiveport) | 237 | +0 | 6 |
 | [zstdport](#repo-zstdport) | 236 | +0 | 4 |
-| [llamacppport](#repo-llamacppport) | 236 | +0 | 1 |
 | [fishport](#repo-fishport) | 233 | +0 | 1 |
 | [mesonport](#repo-mesonport) | 229 | +0 | 9 |
 | [protobufport](#repo-protobufport) | 201 | +27 | 9 |
@@ -90,6 +90,7 @@
 | [hexcurseport](#repo-hexcurseport) | 108 | +0 | 4 |
 | [libbsdport](#repo-libbsdport) | 107 | +0 | 4 |
 | [victoriametricsport](#repo-victoriametricsport) | 107 | +0 | 3 |
+| [mkcertport](#repo-mkcertport) | 105 | +105 | 1 |
 | [zlib-ngport](#repo-zlib-ngport) | 100 | +0 | 3 |
 | [pkgconfigport](#repo-pkgconfigport) | 98 | +0 | 1 |
 | [doxygenport](#repo-doxygenport) | 97 | +0 | 5 |
@@ -98,6 +99,7 @@
 | [libeventport](#repo-libeventport) | 87 | +0 | 3 |
 | [patchport](#repo-patchport) | 86 | +0 | 3 |
 | [jqport](#repo-jqport) | 85 | +18 | 6 |
+| [openldapport](#repo-openldapport) | 85 | +85 | 1 |
 | [gawkport](#repo-gawkport) | 81 | +0 | 4 |
 | [expectport](#repo-expectport) | 79 | +0 | 4 |
 | [librabbitmqport](#repo-librabbitmqport) | 78 | +0 | 2 |
@@ -109,6 +111,7 @@
 | [gradleport](#repo-gradleport) | 67 | +0 | 1 |
 | [getoptport](#repo-getoptport) | 66 | +0 | 1 |
 | [logrotateport](#repo-logrotateport) | 65 | +0 | 1 |
+| [ansibleport](#repo-ansibleport) | 63 | +63 | 2 |
 | [doom-asciiport](#repo-doom-asciiport) | 60 | +0 | 1 |
 | [lz4port](#repo-lz4port) | 58 | +0 | 4 |
 | [snappy-cport](#repo-snappy-cport) | 56 | +0 | 1 |
@@ -169,6 +172,7 @@
 | [edport](#repo-edport) | 13 | +0 | 1 |
 | [lzipport](#repo-lzipport) | 13 | +0 | 1 |
 | [aprport](#repo-aprport) | 13 | +0 | 1 |
+| [jsoncport](#repo-jsoncport) | 13 | +13 | 1 |
 | [libxml2port](#repo-libxml2port) | 12 | +0 | 1 |
 | [gflagsport](#repo-gflagsport) | 12 | +0 | 1 |
 | [libpslport](#repo-libpslport) | 12 | +0 | 1 |
@@ -275,12 +279,10 @@
 | [rpmport](#repo-rpmport) | 0 | +0 | 0 |
 | [ollamaport](#repo-ollamaport) | 0 | +0 | 0 |
 | [libyamlport](#repo-libyamlport) | 0 | +0 | 0 |
-| [mkcertport](#repo-mkcertport) | 0 | N/A | 0 |
-| [ansibleport](#repo-ansibleport) | 0 | N/A | 0 |
 | [jsoncppport](#repo-jsoncppport) | 0 | +0 | 0 |
 | [httpdport](#repo-httpdport) | 0 | +0 | 0 |
-| [jsoncport](#repo-jsoncport) | 0 | +0 | 0 |
 | [libpcapport](#repo-libpcapport) | 0 | +0 | 0 |
+| [glibport](#repo-glibport) | 0 | N/A | 0 |
 
 ---
 
@@ -939,6 +941,36 @@
 
 ---
 
+<a id="repo-llamacppport"></a>
+## llamacppport
+
+- **Origin Date (First Commit):** 2023-08-21
+- **Current Patch LOC:** 498
+- **Current Patch Count:** 11
+
+### Historical Trends
+
+![LOC Trend for llamacppport](images/upstream/llamacppport_current_loc_trend.png)
+![Count Trend for llamacppport](images/upstream/llamacppport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/arg.cpp.patch` | `patches` | 40 |
+| `patches/common.cpp.patch` | `patches` | 13 |
+| `patches/ggml-backend-reg.cpp.patch` | `patches` | 15 |
+| `patches/ggml-cpu.c.patch` | `patches` | 12 |
+| `patches/ggml-cpu.cpp.patch` | `patches` | 62 |
+| `patches/ggml.c.patch` | `patches` | 44 |
+| `patches/httplib.h.patch` | `patches` | 169 |
+| `patches/llama-context.cpp.patch` | `patches` | 37 |
+| `patches/miniaudio.h.patch` | `patches` | 24 |
+| `patches/run.cpp.patch` | `patches` | 22 |
+| `patches/stb_image.h.patch` | `patches` | 60 |
+
+---
+
 <a id="repo-screenport"></a>
 ## screenport
 
@@ -1515,26 +1547,6 @@
 | `patches/PR1/addzostomakefile.patch` | `patches` | 44 |
 | `patches/PR1/assertfirst.patch` | `patches` | 99 |
 | `patches/tests_Makefile.patch` | `patches` | 64 |
-
----
-
-<a id="repo-llamacppport"></a>
-## llamacppport
-
-- **Origin Date (First Commit):** 2023-08-21
-- **Current Patch LOC:** 236
-- **Current Patch Count:** 1
-
-### Historical Trends
-
-![LOC Trend for llamacppport](images/upstream/llamacppport_current_loc_trend.png)
-![Count Trend for llamacppport](images/upstream/llamacppport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/PR1.patch` | `patches` | 236 |
 
 ---
 
@@ -2134,6 +2146,26 @@
 
 ---
 
+<a id="repo-mkcertport"></a>
+## mkcertport
+
+- **Origin Date (First Commit):** 2025-07-11
+- **Current Patch LOC:** 105
+- **Current Patch Count:** 1
+
+### Historical Trends
+
+![LOC Trend for mkcertport](images/upstream/mkcertport_current_loc_trend.png)
+![Count Trend for mkcertport](images/upstream/mkcertport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/truststore_zos.go.patch` | `patches` | 105 |
+
+---
+
 <a id="repo-zlib-ngport"></a>
 ## zlib-ngport
 
@@ -2309,6 +2341,26 @@
 | `stable-patches/mantest.patch` | `stable-patches` | 10 |
 | `stable-patches/shtest.patch` | `stable-patches` | 11 |
 | `stable-patches/version.patch` | `stable-patches` | 16 |
+
+---
+
+<a id="repo-openldapport"></a>
+## openldapport
+
+- **Origin Date (First Commit):** 2025-07-25
+- **Current Patch LOC:** 85
+- **Current Patch Count:** 1
+
+### Historical Trends
+
+![LOC Trend for openldapport](images/upstream/openldapport_current_loc_trend.png)
+![Count Trend for openldapport](images/upstream/openldapport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/PR1.patch` | `patches` | 85 |
 
 ---
 
@@ -2544,6 +2596,27 @@
 | Patch File (Repo Relative Path) | Source | LOC |
 |---|---|:---|
 | `patches/PR1.patch` | `patches` | 65 |
+
+---
+
+<a id="repo-ansibleport"></a>
+## ansibleport
+
+- **Origin Date (First Commit):** 2025-07-24
+- **Current Patch LOC:** 63
+- **Current Patch Count:** 2
+
+### Historical Trends
+
+![LOC Trend for ansibleport](images/upstream/ansibleport_current_loc_trend.png)
+![Count Trend for ansibleport](images/upstream/ansibleport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/cli/__init__.py.patch` | `patches` | 14 |
+| `patches/utils/display.py.patch` | `patches` | 49 |
 
 ---
 
@@ -3772,6 +3845,26 @@
 | Patch File (Repo Relative Path) | Source | LOC |
 |---|---|:---|
 | `patches/epoll.c.patch` | `patches` | 13 |
+
+---
+
+<a id="repo-jsoncport"></a>
+## jsoncport
+
+- **Origin Date (First Commit):** 2025-07-23
+- **Current Patch LOC:** 13
+- **Current Patch Count:** 1
+
+### Historical Trends
+
+![LOC Trend for jsoncport](images/upstream/jsoncport_current_loc_trend.png)
+![Count Trend for jsoncport](images/upstream/jsoncport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/PR1.patch` | `patches` | 13 |
 
 ---
 
@@ -5691,42 +5784,6 @@
 
 ---
 
-<a id="repo-mkcertport"></a>
-## mkcertport
-
-- **Origin Date (First Commit):** Unknown
-- **Current Patch LOC:** 0
-- **Current Patch Count:** 0
-
-### Historical Trends
-
-*(Patch LOC trend graph not generated)*
-*(Patch count trend graph not generated)*
-
-### Current Patch Details
-
-*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
-
----
-
-<a id="repo-ansibleport"></a>
-## ansibleport
-
-- **Origin Date (First Commit):** Unknown
-- **Current Patch LOC:** 0
-- **Current Patch Count:** 0
-
-### Historical Trends
-
-*(Patch LOC trend graph not generated)*
-*(Patch count trend graph not generated)*
-
-### Current Patch Details
-
-*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
-
----
-
 <a id="repo-jsoncppport"></a>
 ## jsoncppport
 
@@ -5763,10 +5820,10 @@
 
 ---
 
-<a id="repo-jsoncport"></a>
-## jsoncport
+<a id="repo-libpcapport"></a>
+## libpcapport
 
-- **Origin Date (First Commit):** 2025-07-23
+- **Origin Date (First Commit):** 2025-07-24
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 
@@ -5781,10 +5838,10 @@
 
 ---
 
-<a id="repo-libpcapport"></a>
-## libpcapport
+<a id="repo-glibport"></a>
+## glibport
 
-- **Origin Date (First Commit):** 2025-07-24
+- **Origin Date (First Commit):** Unknown
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 

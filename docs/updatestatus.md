@@ -6,6 +6,10 @@
 <summary><b style="font-size: 28px;">Open Update PRs</b></summary>
 
 
+### aflplusplusport
+- 2025-07-25: [Update AFLplusplus-version to 4.33c from 4.32c](https://github.com/zopencommunity/aflplusplusport/pull/2) ❌
+- 2025-07-25: [Update AFLplusplus-version to 4.33 from 4.32c](https://github.com/zopencommunity/aflplusplusport/pull/1) ❌
+
 ### automakeport
 - 2025-06-27: [Update automake-version to 1.18.1 from 1.17](https://github.com/zopencommunity/automakeport/pull/29) ❌
 - 2025-05-28: [Update automake-version to 1.18 from 1.17](https://github.com/zopencommunity/automakeport/pull/28) ❌
@@ -96,6 +100,9 @@
 
 ### direnvport
 - 2025-04-11: [Update direnv-version to 2.36.0 from 2.35.0](https://github.com/zopencommunity/direnvport/pull/11) ❌
+
+### doxygenport
+- 2025-07-26: [Update doxygen-version to Release_1_14_0 from Release_1_13_2](https://github.com/zopencommunity/doxygenport/pull/10) ❌
 
 ### duckdbport
 - 2025-07-08: [Update duckdb-version to 1.3.2 from 0.9.2](https://github.com/zopencommunity/duckdbport/pull/27) ❌
@@ -291,6 +298,9 @@
 - 2025-05-10: [Update man-db-version to 2.13.1 from 2.12.1](https://github.com/zopencommunity/man-dbport/pull/67) ❌
 - 2024-08-29: [Update man-db-version to 2.13.0 from 2.12.1](https://github.com/zopencommunity/man-dbport/pull/63) ❌
 
+### mimallocport
+- 2025-07-26: [Update mimalloc-version to 2.2.4 from 2.2.3](https://github.com/zopencommunity/mimallocport/pull/1) ❌
+
 ### murexport
 - 2025-07-03: [Update murex-version to 7.0.2107 from 6.0.1000](https://github.com/zopencommunity/murexport/pull/9) ❌
 - 2025-01-16: [Update murex-version to 6.4.2063 from 6.0.1000](https://github.com/zopencommunity/murexport/pull/8) ❌
@@ -388,9 +398,6 @@
 ### screenport
 - 2025-05-15: [Update screen-version to 5.0.1 from 4.9.1](https://github.com/zopencommunity/screenport/pull/11) ❌
 - 2024-08-29: [Update screen-version to 5.0.0 from 4.9.1](https://github.com/zopencommunity/screenport/pull/8) ❌
-
-### spdlogport
-- 2025-05-10: [Update spdlog-version to 1.15.3 from 1.15.1](https://github.com/zopencommunity/spdlogport/pull/9) ✅
 
 ### sqliteport
 - 2025-07-17: [Update sqlite-version to 2025-3500300 from 2025-3480000](https://github.com/zopencommunity/sqliteport/pull/29) ❌
@@ -503,7 +510,7 @@
 <summary><b style="font-size: 28px;">Bump Automation Status</b></summary>
 
 - ✅ aflplusplusport - [![Bump Status](https://github.com/zopencommunity/aflplusplusport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/aflplusplusport/actions/workflows/bump.yml)
-- ❌ ansibleport - Workflow not configured
+- ✅ ansibleport - [![Bump Status](https://github.com/zopencommunity/ansibleport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/ansibleport/actions/workflows/bump.yml)
 - ✅ antport - [![Bump Status](https://github.com/zopencommunity/antport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/antport/actions/workflows/bump.yml)
 - ❌ aprport - Workflow not configured
 - ❌ apr-utilport - Workflow not configured
@@ -585,6 +592,7 @@
 - ✅ git-lfsport - [![Bump Status](https://github.com/zopencommunity/git-lfsport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/git-lfsport/actions/workflows/bump.yml)
 - ✅ gitport - [![Bump Status](https://github.com/zopencommunity/gitport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/gitport/actions/workflows/bump.yml)
 - ✅ git-sizerport - [![Bump Status](https://github.com/zopencommunity/git-sizerport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/git-sizerport/actions/workflows/bump.yml)
+- ❌ glibport - Workflow not configured
 - ✅ glowport - [![Bump Status](https://github.com/zopencommunity/glowport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/glowport/actions/workflows/bump.yml)
 - ✅ gmpport - [![Bump Status](https://github.com/zopencommunity/gmpport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/gmpport/actions/workflows/bump.yml)
 - ✅ gnport - [![Bump Status](https://github.com/zopencommunity/gnport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/gnport/actions/workflows/bump.yml)
@@ -616,7 +624,7 @@
 - ❌ joeport - Workflow not configured
 - ✅ jqport - [![Bump Status](https://github.com/zopencommunity/jqport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/jqport/actions/workflows/bump.yml)
 - ❌ jrubyport - Workflow not configured
-- ❌ jsoncport - Workflow not configured
+- ✅ jsoncport - [![Bump Status](https://github.com/zopencommunity/jsoncport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/jsoncport/actions/workflows/bump.yml)
 - ✅ jsoncppport - [![Bump Status](https://github.com/zopencommunity/jsoncppport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/jsoncppport/actions/workflows/bump.yml)
 - ✅ kotlinport - [![Bump Status](https://github.com/zopencommunity/kotlinport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/kotlinport/actions/workflows/bump.yml)
 - ✅ lazygitport - [![Bump Status](https://github.com/zopencommunity/lazygitport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/lazygitport/actions/workflows/bump.yml)
@@ -672,7 +680,7 @@
 - ✅ metaport - [![Bump Status](https://github.com/zopencommunity/metaport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/metaport/actions/workflows/bump.yml)
 - ✅ mimallocport - [![Bump Status](https://github.com/zopencommunity/mimallocport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/mimallocport/actions/workflows/bump.yml)
 - ❌ minjaport - Workflow not configured
-- ❌ mkcertport - Workflow not configured
+- ✅ mkcertport - [![Bump Status](https://github.com/zopencommunity/mkcertport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/mkcertport/actions/workflows/bump.yml)
 - ✅ moreutilsport - [![Bump Status](https://github.com/zopencommunity/moreutilsport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/moreutilsport/actions/workflows/bump.yml)
 - ✅ mpfrport - [![Bump Status](https://github.com/zopencommunity/mpfrport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/mpfrport/actions/workflows/bump.yml)
 - ✅ multitailport - [![Bump Status](https://github.com/zopencommunity/multitailport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/multitailport/actions/workflows/bump.yml)
@@ -692,6 +700,7 @@
 - ✅ ntbtlsport - [![Bump Status](https://github.com/zopencommunity/ntbtlsport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/ntbtlsport/actions/workflows/bump.yml)
 - ❌ ollamaport - Workflow not configured
 - ✅ onigurumaport - [![Bump Status](https://github.com/zopencommunity/onigurumaport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/onigurumaport/actions/workflows/bump.yml)
+- ✅ openldapport - [![Bump Status](https://github.com/zopencommunity/openldapport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/openldapport/actions/workflows/bump.yml)
 - ✅ opensshport - [![Bump Status](https://github.com/zopencommunity/opensshport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/opensshport/actions/workflows/bump.yml)
 - ✅ opensslport - [![Bump Status](https://github.com/zopencommunity/opensslport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/opensslport/actions/workflows/bump.yml)
 - ✅ osv-scannerport - [![Bump Status](https://github.com/zopencommunity/osv-scannerport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/osv-scannerport/actions/workflows/bump.yml)
@@ -776,10 +785,10 @@
 
 </details>
 
-**Summary:** 215 active | 56 missing
+**Summary:** 219 active | 54 missing
 
 ---
 
 
-> Last updated: 2025-07-25 06:07:58 EDT
+> Last updated: 2025-07-26 06:07:45 EDT
 
