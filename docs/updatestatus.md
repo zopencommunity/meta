@@ -139,6 +139,7 @@
 - 2024-06-27: [Update fx-version to 35.0.0 from 34.0.0](https://github.com/zopencommunity/fxport/pull/2) ✅
 
 ### fzfport
+- 2025-07-27: [Update fzf-version to 0.65.0 from 0.64.0](https://github.com/zopencommunity/fzfport/pull/44) ❌
 - 2025-04-22: [Update fzf-version to 0.61.3 from 0.60.3](https://github.com/zopencommunity/fzfport/pull/40) ✅
 - 2025-04-20: [Update fzf-version to 0.61.2 from 0.60.3](https://github.com/zopencommunity/fzfport/pull/38) ✅
 - 2025-04-06: [Update fzf-version to 0.61.1 from 0.60.3](https://github.com/zopencommunity/fzfport/pull/37) ✅
@@ -245,6 +246,9 @@
 - 2025-04-11: [Update htop-version to 3.4.1 from 3.2.2](https://github.com/zopencommunity/htopport/pull/10) ❌
 - 2025-03-10: [Update htop-version to 3.4.0 from 3.2.2](https://github.com/zopencommunity/htopport/pull/9) ❌
 - 2024-01-10: [Update htop-version to 3.3.0 from 3.2.2](https://github.com/zopencommunity/htopport/pull/6) ❓
+
+### hugoport
+- 2025-07-27: [Update hugo-version to 0.148.2 from 0.148.1](https://github.com/zopencommunity/hugoport/pull/37) ❌
 
 ### kotlinport
 - 2024-07-19: [Update kotlin-version to 1.9.25 from 1.9.22](https://github.com/zopencommunity/kotlinport/pull/5) ❌
@@ -411,6 +415,9 @@
 ### stowport
 - 2024-09-09: [Update stow-version to 2.4.1 from V.R.M](https://github.com/zopencommunity/stowport/pull/2) ✅
 - 2024-06-01: [Update stow-version to 2.4.0 from V.R.M](https://github.com/zopencommunity/stowport/pull/1) ❓
+
+### sudoport
+- 2025-07-27: [Update sudo-version to 1.9.17p2 from 1.9.17p1](https://github.com/zopencommunity/sudoport/pull/37) ❌
 
 ### tclport
 - 2025-06-26: [Update tcl-version to 9.0.2 from 8.6.14](https://github.com/zopencommunity/tclport/pull/19) ❌
@@ -790,5 +797,5 @@
 ---
 
 
-> Last updated: 2025-07-27 06:07:22 EDT
+> Last updated: 2025-07-28 06:08:05 EDT
 
