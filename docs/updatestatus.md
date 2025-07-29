@@ -189,6 +189,7 @@
 - 2025-02-14: [Update glab-version to 1.53.0 from 1.52.0](https://github.com/zopencommunity/gitlabcliport/pull/23) ✅
 
 ### gitlab-runnerport
+- 2025-07-28: [Update gitlab-runner-version to 18.2.1 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/48) ❌
 - 2025-07-18: [Update gitlab-runner-version to 18.2.0 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/47) ❌
 - 2025-06-27: [Update gitlab-runner-version to 18.1.1 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/46) ❌
 - 2025-06-20: [Update gitlab-runner-version to 18.1.0 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/45) ❌
@@ -755,6 +756,7 @@
 - ✅ thesilversearcherport - [![Bump Status](https://github.com/zopencommunity/thesilversearcherport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/thesilversearcherport/actions/workflows/bump.yml)
 - ✅ tigport - [![Bump Status](https://github.com/zopencommunity/tigport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/tigport/actions/workflows/bump.yml)
 - ✅ tmuxport - [![Bump Status](https://github.com/zopencommunity/tmuxport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/tmuxport/actions/workflows/bump.yml)
+- ❌ toml11port - Workflow not configured
 - ❌ toolsandtoysport - Workflow not configured
 - ✅ treeport - [![Bump Status](https://github.com/zopencommunity/treeport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/treeport/actions/workflows/bump.yml)
 - ✅ ttypeport - [![Bump Status](https://github.com/zopencommunity/ttypeport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/ttypeport/actions/workflows/bump.yml)
@@ -792,10 +794,10 @@
 
 </details>
 
-**Summary:** 219 active | 54 missing
+**Summary:** 219 active | 55 missing
 
 ---
 
 
-> Last updated: 2025-07-28 06:08:05 EDT
+> Last updated: 2025-07-29 06:07:59 EDT
 

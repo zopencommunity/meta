@@ -47,12 +47,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="make" data-searchable-text="make Blue 99.9% STABLE_make_3439 A build automation tool build_system port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="make" data-searchable-text="make Blue 99.9% STABLE_make_3597 A build automation tool build_system port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/makeport" target="_blank" rel="noopener noreferrer">make</a></strong></div>
     <div class="tool-status">Status: Blue</div>
     <div class="tool-test">Test: 99.9%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/makeport/releases/download/STABLE_makeport_3439/make-4.4.1.20250609_163324.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_make_3439</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/makeport/releases/download/STABLE_makeport_3597/make-4.4.1.20250728_195359.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_make_3597</a></div>
     <div class="tool-desc" title="A build automation tool">A build automation tool</div>
   </div>
 </div>
@@ -681,12 +681,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="make" data-searchable-text="make Blue 99.9% STABLE_make_3439 A build automation tool development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="make" data-searchable-text="make Blue 99.9% STABLE_make_3597 A build automation tool development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/makeport" target="_blank" rel="noopener noreferrer">make</a></strong></div>
     <div class="tool-status">Status: Blue</div>
     <div class="tool-test">Test: 99.9%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/makeport/releases/download/STABLE_makeport_3439/make-4.4.1.20250609_163324.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_make_3439</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/makeport/releases/download/STABLE_makeport_3597/make-4.4.1.20250728_195359.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_make_3597</a></div>
     <div class="tool-desc" title="A build automation tool">A build automation tool</div>
   </div>
 </div>
@@ -771,12 +771,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3594 A TUI editor development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3601 A TUI editor development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/vimport" target="_blank" rel="noopener noreferrer">vim</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3594/vim-v9.1.1590.20250726_152639.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3594</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3601/vim-v9.1.1590.20250728_205054.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3601</a></div>
     <div class="tool-desc" title="A TUI editor">A TUI editor</div>
   </div>
 </div>
@@ -1059,12 +1059,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3594 A TUI editor editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3601 A TUI editor editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/vimport" target="_blank" rel="noopener noreferrer">vim</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3594/vim-v9.1.1590.20250726_152639.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3594</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3601/vim-v9.1.1590.20250728_205054.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3601</a></div>
     <div class="tool-desc" title="A TUI editor">A TUI editor</div>
   </div>
 </div>
@@ -1791,12 +1791,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="pinentry" data-searchable-text="pinentry Green 100.0% STABLE_pinentry_3398 A secure passphrase entry utility security port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="pinentry" data-searchable-text="pinentry Green 100.0% STABLE_pinentry_3595 A secure passphrase entry utility security port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/pinentryport" target="_blank" rel="noopener noreferrer">pinentry</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/pinentryport/releases/download/STABLE_pinentryport_3398/pinentry-1.3.1.20250530_170151.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_pinentry_3398</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/pinentryport/releases/download/STABLE_pinentryport_3595/pinentry-1.3.2.20250728_152330.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_pinentry_3595</a></div>
     <div class="tool-desc" title="A secure passphrase entry utility">A secure passphrase entry utility</div>
   </div>
 </div>
@@ -1969,12 +1969,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="curl" data-searchable-text="curl Blue 99.9% STABLE_curl_3561 Networking tool uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="curl" data-searchable-text="curl Blue 99.9% STABLE_curl_3596 Networking tool uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/curlport" target="_blank" rel="noopener noreferrer">curl</a></strong></div>
     <div class="tool-status">Status: Blue</div>
     <div class="tool-test">Test: 99.9%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/curlport/releases/download/STABLE_curlport_3561/curl-8.15.0.20250716_153936.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_curl_3561</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/curlport/releases/download/STABLE_curlport_3596/curl-8.15.0.20250728_192752.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_curl_3596</a></div>
     <div class="tool-desc" title="Networking tool">Networking tool</div>
   </div>
 </div>
@@ -1989,12 +1989,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="gettext" data-searchable-text="gettext Blue 94.4% STABLE_gettext_3579 A library for internationalization and localization uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="gettext" data-searchable-text="gettext Blue 85.2% STABLE_gettext_3602 A library for internationalization and localization uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/gettextport" target="_blank" rel="noopener noreferrer">gettext</a></strong></div>
     <div class="tool-status">Status: Blue</div>
-    <div class="tool-test">Test: 94.4%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/gettextport/releases/download/STABLE_gettextport_3579/gettext-0.21.20250722_213833.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_gettext_3579</a></div>
+    <div class="tool-test">Test: 85.2%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/gettextport/releases/download/STABLE_gettextport_3602/gettext-0.21.20250728_191439.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_gettext_3602</a></div>
     <div class="tool-desc" title="A library for internationalization and localization">A library for internationalization and localization</div>
   </div>
 </div>
@@ -2029,12 +2029,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="less" data-searchable-text="less Green 100.0% STABLE_less_3352 A text pager uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="less" data-searchable-text="less Green 100.0% STABLE_less_3600 A text pager uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/lessport" target="_blank" rel="noopener noreferrer">less</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/lessport/releases/download/STABLE_lessport_3352/less-v678.20250526_011854.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_less_3352</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/lessport/releases/download/STABLE_lessport_3600/less-v678.20250728_204745.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_less_3600</a></div>
     <div class="tool-desc" title="A text pager">A text pager</div>
   </div>
 </div>
@@ -2139,12 +2139,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="perl" data-searchable-text="perl Blue 99.3% STABLE_perl_3537 Perl programming language uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="perl" data-searchable-text="perl Blue 99.3% STABLE_perl_3599 Perl programming language uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/perlport" target="_blank" rel="noopener noreferrer">perl</a></strong></div>
     <div class="tool-status">Status: Blue</div>
     <div class="tool-test">Test: 99.3%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/perlport/releases/download/STABLE_perlport_3537/perl5-v5.43.0.20250709_022328.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_perl_3537</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/perlport/releases/download/STABLE_perlport_3599/perl5-v5.43.0.20250728_200209.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_perl_3599</a></div>
     <div class="tool-desc" title="Perl programming language">Perl programming language</div>
   </div>
 </div>
@@ -2605,12 +2605,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="which" data-searchable-text="which Green 100.0% STABLE_which_3319 A command to find commands utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="which" data-searchable-text="which Green 100.0% STABLE_which_3598 A command to find commands utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/whichport" target="_blank" rel="noopener noreferrer">which</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/whichport/releases/download/STABLE_whichport_3319/which-2.21.20250512_134816.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_which_3319</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/whichport/releases/download/STABLE_whichport_3598/which-2.21.20250728_195958.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_which_3598</a></div>
     <div class="tool-desc" title="A command to find commands">A command to find commands</div>
   </div>
 </div>
@@ -2698,4 +2698,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-07-28 06:13:05 UTC
+Last updated:  2025-07-29 06:12:41 UTC

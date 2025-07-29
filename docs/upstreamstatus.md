@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-07-28 06:11:53 EDT.*
+*Report generated on: 2025-07-29 06:11:39 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 259
-- **Total Current Lines of Code (LOC) in Patches:** 33,572
-- **Total Number of Current Patch Files:** 753
-- **Average Current Patch LOC per Project:** 129.62
-- **Average Current Patch Count per Project:** 2.91
+- **Total Projects Analyzed:** 260
+- **Total Current Lines of Code (LOC) in Patches:** 33,664
+- **Total Number of Current Patch Files:** 755
+- **Average Current Patch LOC per Project:** 129.48
+- **Average Current Patch Count per Project:** 2.90
 
 ### Historical Trends (All Projects)
 
@@ -49,6 +49,7 @@
 | [nginxport](#repo-nginxport) | 414 | +414 | 1 |
 | [emacsport](#repo-emacsport) | 413 | +0 | 2 |
 | [opensshport](#repo-opensshport) | 376 | +0 | 19 |
+| [gettextport](#repo-gettextport) | 364 | +158 | 9 |
 | [flexport](#repo-flexport) | 351 | +0 | 2 |
 | [prometheusport](#repo-prometheusport) | 348 | +0 | 1 |
 | [pocoport](#repo-pocoport) | 343 | +0 | 9 |
@@ -60,7 +61,6 @@
 | [libgcryptport](#repo-libgcryptport) | 302 | +0 | 9 |
 | [conanport](#repo-conanport) | 299 | +0 | 8 |
 | [zipport](#repo-zipport) | 297 | +0 | 8 |
-| [gettextport](#repo-gettextport) | 281 | +75 | 8 |
 | [ccacheport](#repo-ccacheport) | 264 | +69 | 1 |
 | [gitlab-runnerport](#repo-gitlab-runnerport) | 241 | +0 | 10 |
 | [libarchiveport](#repo-libarchiveport) | 237 | +0 | 6 |
@@ -106,12 +106,12 @@
 | [libassuanport](#repo-libassuanport) | 77 | +0 | 4 |
 | [xmltoport](#repo-xmltoport) | 74 | +0 | 1 |
 | [cppcheckport](#repo-cppcheckport) | 72 | +0 | 4 |
+| [ansibleport](#repo-ansibleport) | 72 | +72 | 3 |
 | [libtoolport](#repo-libtoolport) | 71 | +0 | 3 |
 | [nanoport](#repo-nanoport) | 68 | +0 | 1 |
 | [gradleport](#repo-gradleport) | 67 | +0 | 1 |
 | [getoptport](#repo-getoptport) | 66 | +0 | 1 |
 | [logrotateport](#repo-logrotateport) | 65 | +0 | 1 |
-| [ansibleport](#repo-ansibleport) | 63 | +63 | 2 |
 | [doom-asciiport](#repo-doom-asciiport) | 60 | +0 | 1 |
 | [lz4port](#repo-lz4port) | 58 | +0 | 4 |
 | [snappy-cport](#repo-snappy-cport) | 56 | +0 | 1 |
@@ -283,6 +283,7 @@
 | [httpdport](#repo-httpdport) | 0 | +0 | 0 |
 | [libpcapport](#repo-libpcapport) | 0 | +0 | 0 |
 | [glibport](#repo-glibport) | 0 | N/A | 0 |
+| [toml11port](#repo-toml11port) | 0 | +0 | 0 |
 
 ---
 
@@ -1130,6 +1131,34 @@
 
 ---
 
+<a id="repo-gettextport"></a>
+## gettextport
+
+- **Origin Date (First Commit):** 2022-05-20
+- **Current Patch LOC:** 364
+- **Current Patch Count:** 9
+
+### Historical Trends
+
+![LOC Trend for gettextport](images/upstream/gettextport_current_loc_trend.png)
+![Count Trend for gettextport](images/upstream/gettextport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/PR1/fetch-name-collision.patch` | `patches` | 31 |
+| `patches/PR1/locale-name-collision.patch` | `patches` | 13 |
+| `patches/PR1/no-pwd_gecos.patch` | `patches` | 50 |
+| `patches/PR1/tagtarball.patch` | `patches` | 13 |
+| `patches/PR2/dummy.c.patch` | `patches` | 16 |
+| `patches/PR3/test-unsetenv.c.patch` | `patches` | 23 |
+| `patches/PR4/configure.patch` | `patches` | 60 |
+| `patches/UTF8.patch` | `patches` | 119 |
+| `patches/bindtextdom.c.patch` | `patches` | 39 |
+
+---
+
 <a id="repo-flexport"></a>
 ## flexport
 
@@ -1423,33 +1452,6 @@
 | `patches/zipnote.c.patch` | `patches` | 97 |
 | `patches/zipup.c.patch` | `patches` | 21 |
 | `patches/zipup.h.patch` | `patches` | 17 |
-
----
-
-<a id="repo-gettextport"></a>
-## gettextport
-
-- **Origin Date (First Commit):** 2022-05-20
-- **Current Patch LOC:** 281
-- **Current Patch Count:** 8
-
-### Historical Trends
-
-![LOC Trend for gettextport](images/upstream/gettextport_current_loc_trend.png)
-![Count Trend for gettextport](images/upstream/gettextport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/PR1/fetch-name-collision.patch` | `patches` | 31 |
-| `patches/PR1/locale-name-collision.patch` | `patches` | 13 |
-| `patches/PR1/no-pwd_gecos.patch` | `patches` | 50 |
-| `patches/PR1/tagtarball.patch` | `patches` | 13 |
-| `patches/PR2/dummy.c.patch` | `patches` | 16 |
-| `patches/PR3/test-unsetenv.c.patch` | `patches` | 23 |
-| `patches/PR4/configure.patch` | `patches` | 60 |
-| `patches/UTF8.patch` | `patches` | 75 |
 
 ---
 
@@ -2497,6 +2499,28 @@
 
 ---
 
+<a id="repo-ansibleport"></a>
+## ansibleport
+
+- **Origin Date (First Commit):** 2025-07-24
+- **Current Patch LOC:** 72
+- **Current Patch Count:** 3
+
+### Historical Trends
+
+![LOC Trend for ansibleport](images/upstream/ansibleport_current_loc_trend.png)
+![Count Trend for ansibleport](images/upstream/ansibleport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/cli/__init__.py.patch` | `patches` | 14 |
+| `patches/requirements.txt.patch` | `patches` | 9 |
+| `patches/utils/display.py.patch` | `patches` | 49 |
+
+---
+
 <a id="repo-libtoolport"></a>
 ## libtoolport
 
@@ -2596,27 +2620,6 @@
 | Patch File (Repo Relative Path) | Source | LOC |
 |---|---|:---|
 | `patches/PR1.patch` | `patches` | 65 |
-
----
-
-<a id="repo-ansibleport"></a>
-## ansibleport
-
-- **Origin Date (First Commit):** 2025-07-24
-- **Current Patch LOC:** 63
-- **Current Patch Count:** 2
-
-### Historical Trends
-
-![LOC Trend for ansibleport](images/upstream/ansibleport_current_loc_trend.png)
-![Count Trend for ansibleport](images/upstream/ansibleport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/cli/__init__.py.patch` | `patches` | 14 |
-| `patches/utils/display.py.patch` | `patches` | 49 |
 
 ---
 
@@ -5842,6 +5845,24 @@
 ## glibport
 
 - **Origin Date (First Commit):** Unknown
+- **Current Patch LOC:** 0
+- **Current Patch Count:** 0
+
+### Historical Trends
+
+*(Patch LOC trend graph not generated)*
+*(Patch count trend graph not generated)*
+
+### Current Patch Details
+
+*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
+
+---
+
+<a id="repo-toml11port"></a>
+## toml11port
+
+- **Origin Date (First Commit):** 2025-07-28
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 
