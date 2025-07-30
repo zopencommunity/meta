@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-07-29 06:11:39 EDT.*
+*Report generated on: 2025-07-30 06:12:58 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 260
-- **Total Current Lines of Code (LOC) in Patches:** 33,664
+- **Total Projects Analyzed:** 262
+- **Total Current Lines of Code (LOC) in Patches:** 33,728
 - **Total Number of Current Patch Files:** 755
-- **Average Current Patch LOC per Project:** 129.48
-- **Average Current Patch Count per Project:** 2.90
+- **Average Current Patch LOC per Project:** 128.73
+- **Average Current Patch Count per Project:** 2.88
 
 ### Historical Trends (All Projects)
 
@@ -62,11 +62,11 @@
 | [conanport](#repo-conanport) | 299 | +0 | 8 |
 | [zipport](#repo-zipport) | 297 | +0 | 8 |
 | [ccacheport](#repo-ccacheport) | 264 | +69 | 1 |
+| [mesonport](#repo-mesonport) | 257 | +28 | 9 |
 | [gitlab-runnerport](#repo-gitlab-runnerport) | 241 | +0 | 10 |
-| [libarchiveport](#repo-libarchiveport) | 237 | +0 | 6 |
 | [zstdport](#repo-zstdport) | 236 | +0 | 4 |
 | [fishport](#repo-fishport) | 233 | +0 | 1 |
-| [mesonport](#repo-mesonport) | 229 | +0 | 9 |
+| [libarchiveport](#repo-libarchiveport) | 220 | -17 | 5 |
 | [protobufport](#repo-protobufport) | 201 | +27 | 9 |
 | [findutilsport](#repo-findutilsport) | 199 | +0 | 10 |
 | [ninjaport](#repo-ninjaport) | 196 | +0 | 8 |
@@ -74,10 +74,10 @@
 | [aflplusplusport](#repo-aflplusplusport) | 184 | +0 | 5 |
 | [jemallocport](#repo-jemallocport) | 166 | +0 | 1 |
 | [groffport](#repo-groffport) | 165 | +0 | 13 |
+| [blisport](#repo-blisport) | 165 | +165 | 1 |
 | [autoconfport](#repo-autoconfport) | 151 | +0 | 6 |
 | [moreutilsport](#repo-moreutilsport) | 151 | +0 | 1 |
 | [libserdesport](#repo-libserdesport) | 142 | +0 | 4 |
-| [blisport](#repo-blisport) | 138 | +138 | 1 |
 | [tclport](#repo-tclport) | 132 | +0 | 5 |
 | [pinentryport](#repo-pinentryport) | 124 | +0 | 5 |
 | [libssh2port](#repo-libssh2port) | 122 | +0 | 5 |
@@ -146,6 +146,7 @@
 | [mpfrport](#repo-mpfrport) | 28 | +0 | 2 |
 | [ctagsport](#repo-ctagsport) | 26 | +0 | 2 |
 | [git-extrasport](#repo-git-extrasport) | 26 | +0 | 1 |
+| [asioport](#repo-asioport) | 26 | +26 | 1 |
 | [my_basicport](#repo-my-basicport) | 22 | +0 | 1 |
 | [shdocport](#repo-shdocport) | 20 | +0 | 2 |
 | [sshpassport](#repo-sshpassport) | 18 | +0 | 1 |
@@ -270,7 +271,6 @@
 | [apr-utilport](#repo-apr-utilport) | 0 | +0 | 0 |
 | [readlineport](#repo-readlineport) | 0 | +0 | 0 |
 | [scdocport](#repo-scdocport) | 0 | +0 | 0 |
-| [asioport](#repo-asioport) | 0 | +0 | 0 |
 | [metaldioport](#repo-metaldioport) | 0 | +0 | 0 |
 | [hazelcastport](#repo-hazelcastport) | 0 | +0 | 0 |
 | [fmtport](#repo-fmtport) | 0 | +0 | 0 |
@@ -282,8 +282,10 @@
 | [jsoncppport](#repo-jsoncppport) | 0 | +0 | 0 |
 | [httpdport](#repo-httpdport) | 0 | +0 | 0 |
 | [libpcapport](#repo-libpcapport) | 0 | +0 | 0 |
-| [glibport](#repo-glibport) | 0 | N/A | 0 |
+| [glibport](#repo-glibport) | 0 | +0 | 0 |
 | [toml11port](#repo-toml11port) | 0 | +0 | 0 |
+| [stablediffusionport](#repo-stablediffusionport) | 0 | N/A | 0 |
+| [checkport](#repo-checkport) | 0 | +0 | 0 |
 
 ---
 
@@ -1475,6 +1477,34 @@
 
 ---
 
+<a id="repo-mesonport"></a>
+## mesonport
+
+- **Origin Date (First Commit):** 2023-10-20
+- **Current Patch LOC:** 257
+- **Current Patch Count:** 9
+
+### Historical Trends
+
+![LOC Trend for mesonport](images/upstream/mesonport_current_loc_trend.png)
+![Count Trend for mesonport](images/upstream/mesonport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/mesonbuild/backend/backends.py.patch` | `patches` | 13 |
+| `patches/mesonbuild/build.py.patch` | `patches` | 30 |
+| `patches/mesonbuild/compilers/compilers.py.patch` | `patches` | 13 |
+| `patches/mesonbuild/compilers/detect.py.patch` | `patches` | 33 |
+| `patches/mesonbuild/envconfig.py.patch` | `patches` | 17 |
+| `patches/mesonbuild/environment.py.patch` | `patches` | 58 |
+| `patches/mesonbuild/linkers/linkers.py.patch` | `patches` | 57 |
+| `patches/mesonbuild/utils/universal.py.patch` | `patches` | 23 |
+| `patches/run_tests.py.patch` | `patches` | 13 |
+
+---
+
 <a id="repo-gitlab-runnerport"></a>
 ## gitlab-runnerport
 
@@ -1501,31 +1531,6 @@
 | `patches/service_zos.go.patch` | `patches` | 59 |
 | `patches/wrapper_unix.go.patch` | `patches` | 10 |
 | `patches/zip_extra_unix.go.patch` | `patches` | 22 |
-
----
-
-<a id="repo-libarchiveport"></a>
-## libarchiveport
-
-- **Origin Date (First Commit):** 2025-04-29
-- **Current Patch LOC:** 237
-- **Current Patch Count:** 6
-
-### Historical Trends
-
-![LOC Trend for libarchiveport](images/upstream/libarchiveport_current_loc_trend.png)
-![Count Trend for libarchiveport](images/upstream/libarchiveport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/libarchive/archive_entry.h.patch` | `patches` | 40 |
-| `patches/libarchive/archive_read_disk_posix.c.patch` | `patches` | 39 |
-| `patches/libarchive/test/test_read_disk_directory_traversals.c.patch` | `patches` | 37 |
-| `patches/libarchive/test/test_sparse_basic.c.patch` | `patches` | 44 |
-| `patches/test_utils/test_main.c.patch` | `patches` | 60 |
-| `patches/unzip/bsdunzip.c.patch` | `patches` | 17 |
 
 ---
 
@@ -1572,31 +1577,27 @@
 
 ---
 
-<a id="repo-mesonport"></a>
-## mesonport
+<a id="repo-libarchiveport"></a>
+## libarchiveport
 
-- **Origin Date (First Commit):** 2023-10-20
-- **Current Patch LOC:** 229
-- **Current Patch Count:** 9
+- **Origin Date (First Commit):** 2025-04-29
+- **Current Patch LOC:** 220
+- **Current Patch Count:** 5
 
 ### Historical Trends
 
-![LOC Trend for mesonport](images/upstream/mesonport_current_loc_trend.png)
-![Count Trend for mesonport](images/upstream/mesonport_current_count_trend.png)
+![LOC Trend for libarchiveport](images/upstream/libarchiveport_current_loc_trend.png)
+![Count Trend for libarchiveport](images/upstream/libarchiveport_current_count_trend.png)
 
 ### Current Patch Details
 
 | Patch File (Repo Relative Path) | Source | LOC |
 |---|---|:---|
-| `patches/mesonbuild/backend/backends.py.patch` | `patches` | 13 |
-| `patches/mesonbuild/build.py.patch` | `patches` | 30 |
-| `patches/mesonbuild/compilers/compilers.py.patch` | `patches` | 13 |
-| `patches/mesonbuild/compilers/detect.py.patch` | `patches` | 33 |
-| `patches/mesonbuild/envconfig.py.patch` | `patches` | 17 |
-| `patches/mesonbuild/environment.py.patch` | `patches` | 58 |
-| `patches/mesonbuild/linkers/linkers.py.patch` | `patches` | 29 |
-| `patches/mesonbuild/utils/universal.py.patch` | `patches` | 23 |
-| `patches/run_tests.py.patch` | `patches` | 13 |
+| `patches/libarchive/archive_entry.h.patch` | `patches` | 40 |
+| `patches/libarchive/archive_read_disk_posix.c.patch` | `patches` | 39 |
+| `patches/libarchive/test/test_read_disk_directory_traversals.c.patch` | `patches` | 37 |
+| `patches/libarchive/test/test_sparse_basic.c.patch` | `patches` | 44 |
+| `patches/test_utils/test_main.c.patch` | `patches` | 60 |
 
 ---
 
@@ -1787,6 +1788,26 @@
 
 ---
 
+<a id="repo-blisport"></a>
+## blisport
+
+- **Origin Date (First Commit):** 2025-07-03
+- **Current Patch LOC:** 165
+- **Current Patch Count:** 1
+
+### Historical Trends
+
+![LOC Trend for blisport](images/upstream/blisport_current_loc_trend.png)
+![Count Trend for blisport](images/upstream/blisport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/PR1.patch` | `patches` | 165 |
+
+---
+
 <a id="repo-autoconfport"></a>
 ## autoconfport
 
@@ -1852,26 +1873,6 @@
 | `patches/src/serdes-common.h.patch` | `patches` | 15 |
 | `patches/src/serdes_int.h.patch` | `patches` | 17 |
 | `patches/src/tinycthread.c.patch` | `patches` | 97 |
-
----
-
-<a id="repo-blisport"></a>
-## blisport
-
-- **Origin Date (First Commit):** 2025-07-03
-- **Current Patch LOC:** 138
-- **Current Patch Count:** 1
-
-### Historical Trends
-
-![LOC Trend for blisport](images/upstream/blisport_current_loc_trend.png)
-![Count Trend for blisport](images/upstream/blisport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/PR1.patch` | `patches` | 138 |
 
 ---
 
@@ -3320,6 +3321,26 @@
 
 ![LOC Trend for git-extrasport](images/upstream/git_extrasport_current_loc_trend.png)
 ![Count Trend for git-extrasport](images/upstream/git_extrasport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/PR1.patch` | `patches` | 26 |
+
+---
+
+<a id="repo-asioport"></a>
+## asioport
+
+- **Origin Date (First Commit):** 2025-06-13
+- **Current Patch LOC:** 26
+- **Current Patch Count:** 1
+
+### Historical Trends
+
+![LOC Trend for asioport](images/upstream/asioport_current_loc_trend.png)
+![Count Trend for asioport](images/upstream/asioport_current_count_trend.png)
 
 ### Current Patch Details
 
@@ -5625,24 +5646,6 @@
 
 ---
 
-<a id="repo-asioport"></a>
-## asioport
-
-- **Origin Date (First Commit):** 2025-06-13
-- **Current Patch LOC:** 0
-- **Current Patch Count:** 0
-
-### Historical Trends
-
-*(Patch LOC trend graph not generated)*
-*(Patch count trend graph not generated)*
-
-### Current Patch Details
-
-*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
-
----
-
 <a id="repo-metaldioport"></a>
 ## metaldioport
 
@@ -5844,7 +5847,7 @@
 <a id="repo-glibport"></a>
 ## glibport
 
-- **Origin Date (First Commit):** Unknown
+- **Origin Date (First Commit):** 2025-07-29
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 
@@ -5863,6 +5866,42 @@
 ## toml11port
 
 - **Origin Date (First Commit):** 2025-07-28
+- **Current Patch LOC:** 0
+- **Current Patch Count:** 0
+
+### Historical Trends
+
+*(Patch LOC trend graph not generated)*
+*(Patch count trend graph not generated)*
+
+### Current Patch Details
+
+*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
+
+---
+
+<a id="repo-stablediffusionport"></a>
+## stablediffusionport
+
+- **Origin Date (First Commit):** Unknown
+- **Current Patch LOC:** 0
+- **Current Patch Count:** 0
+
+### Historical Trends
+
+*(Patch LOC trend graph not generated)*
+*(Patch count trend graph not generated)*
+
+### Current Patch Details
+
+*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
+
+---
+
+<a id="repo-checkport"></a>
+## checkport
+
+- **Origin Date (First Commit):** 2025-07-29
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 

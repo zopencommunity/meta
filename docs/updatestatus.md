@@ -17,9 +17,6 @@
 ### bash-completionport
 - 2024-12-11: [Update bash-completion-version to 20060301 from V.R.M](https://github.com/zopencommunity/bash-completionport/pull/1) ❌
 
-### blisport
-- 2025-07-03: [Update blis-version to 2.0 from 1.1](https://github.com/zopencommunity/blisport/pull/1) ❌
-
 ### buildkiteport
 - 2025-07-22: [Update buildkite-version to 3.103.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/68) ❌
 - 2025-07-15: [Update buildkite-version to 3.102.2 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/67) ❌
@@ -174,6 +171,7 @@
 - 2025-03-06: [Update ghcli-version to 2.68.1 from 2.67.0](https://github.com/zopencommunity/githubcliport/pull/47) ❌
 
 ### gitlabcliport
+- 2025-07-29: [Update glab-version to 1.65.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/37) ❌
 - 2025-07-23: [Update glab-version to 1.64.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/36) ❌
 - 2025-07-16: [Update glab-version to 1.63.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/35) ❌
 - 2025-07-11: [Update glab-version to 1.62.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/34) ❌
@@ -543,6 +541,7 @@
 - ❌ check_clangport - Workflow not configured
 - ❌ check_goport - Workflow not configured
 - ❌ check_javaport - Workflow not configured
+- ❌ checkport - Workflow not configured
 - ❌ check_pythonport - Workflow not configured
 - ❌ check_xlclangport - Workflow not configured
 - ✅ chezmoiport - [![Bump Status](https://github.com/zopencommunity/chezmoiport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/chezmoiport/actions/workflows/bump.yml)
@@ -600,7 +599,7 @@
 - ✅ git-lfsport - [![Bump Status](https://github.com/zopencommunity/git-lfsport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/git-lfsport/actions/workflows/bump.yml)
 - ✅ gitport - [![Bump Status](https://github.com/zopencommunity/gitport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/gitport/actions/workflows/bump.yml)
 - ✅ git-sizerport - [![Bump Status](https://github.com/zopencommunity/git-sizerport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/git-sizerport/actions/workflows/bump.yml)
-- ❌ glibport - Workflow not configured
+- ✅ glibport - [![Bump Status](https://github.com/zopencommunity/glibport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/glibport/actions/workflows/bump.yml)
 - ✅ glowport - [![Bump Status](https://github.com/zopencommunity/glowport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/glowport/actions/workflows/bump.yml)
 - ✅ gmpport - [![Bump Status](https://github.com/zopencommunity/gmpport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/gmpport/actions/workflows/bump.yml)
 - ✅ gnport - [![Bump Status](https://github.com/zopencommunity/gnport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/gnport/actions/workflows/bump.yml)
@@ -745,6 +744,7 @@
 - ✅ spdlogport - [![Bump Status](https://github.com/zopencommunity/spdlogport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/spdlogport/actions/workflows/bump.yml)
 - ✅ sqliteport - [![Bump Status](https://github.com/zopencommunity/sqliteport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/sqliteport/actions/workflows/bump.yml)
 - ✅ sshpassport - [![Bump Status](https://github.com/zopencommunity/sshpassport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/sshpassport/actions/workflows/bump.yml)
+- ❌ stablediffusionport - Workflow not configured
 - ✅ stowport - [![Bump Status](https://github.com/zopencommunity/stowport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/stowport/actions/workflows/bump.yml)
 - ✅ sudoport - [![Bump Status](https://github.com/zopencommunity/sudoport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/sudoport/actions/workflows/bump.yml)
 - ✅ tarport - [![Bump Status](https://github.com/zopencommunity/tarport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/tarport/actions/workflows/bump.yml)
@@ -794,10 +794,10 @@
 
 </details>
 
-**Summary:** 219 active | 55 missing
+**Summary:** 220 active | 56 missing
 
 ---
 
 
-> Last updated: 2025-07-29 06:07:59 EDT
+> Last updated: 2025-07-30 06:08:31 EDT
 

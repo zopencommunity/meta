@@ -6,6 +6,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   <label for="category-filter">Filter by Category: </label>
   <select id="category-filter" onchange="filterTable()">
     <option value="All">All</option>
+    <option value="ai">Ai</option>
     <option value="build_system">Build_System</option>
     <option value="compression">Compression</option>
     <option value="core">Core</option>
@@ -33,6 +34,22 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   <input type="text" id="toolSearchInput" placeholder="Type to search tools by name, description, release, status, etc..." style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">
 </div>
 
+<div class="table-category" data-category="ai">
+
+## Ai 
+
+<div class="tool-item-filterable" data-package-name="blis" data-searchable-text="blis Red 0.0% STABLE_blis_3610 ai port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/blisport" target="_blank" rel="noopener noreferrer">blis</a></strong></div>
+    <div class="tool-status">Status: Red</div>
+    <div class="tool-test">Test: 0.0%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/blisport/releases/download/STABLE_blisport_3610/blis-2.0.20250730_051930.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_blis_3610</a></div>
+    <div class="tool-desc" title=""></div>
+  </div>
+</div>
+
+</div>
+
 <div class="table-category" data-category="build_system">
 
 ## Build_System 
@@ -57,12 +74,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="meson" data-searchable-text="meson Red 33.3% STABLE_meson_3111 A build system build_system port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="meson" data-searchable-text="meson Yellow 66.7% STABLE_meson_3608 A build system build_system port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/mesonport" target="_blank" rel="noopener noreferrer">meson</a></strong></div>
-    <div class="tool-status">Status: Red</div>
-    <div class="tool-test">Test: 33.3%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/mesonport/releases/download/STABLE_mesonport_3111/meson-heads.1.7.0.20250218_042244.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_meson_3111</a></div>
+    <div class="tool-status">Status: Yellow</div>
+    <div class="tool-test">Test: 66.7%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/mesonport/releases/download/STABLE_mesonport_3608/meson-1.7.0.20250730_020408.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_meson_3608</a></div>
     <div class="tool-desc" title="A build system">A build system</div>
   </div>
 </div>
@@ -93,12 +110,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="lz4" data-searchable-text="lz4 Green 100.0% STABLE_lz4_3168 A compression algorithm compression port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="lz4" data-searchable-text="lz4 Green 100.0% STABLE_lz4_3613 A compression algorithm compression port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/lz4port" target="_blank" rel="noopener noreferrer">lz4</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/lz4port/releases/download/STABLE_lz4port_3168/lz4-1.10.0.20250317_153615.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_lz4_3168</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/lz4port/releases/download/STABLE_lz4port_3613/lz4-1.10.0.20250730_074833.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_lz4_3613</a></div>
     <div class="tool-desc" title="A compression algorithm">A compression algorithm</div>
   </div>
 </div>
@@ -133,12 +150,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="zstd" data-searchable-text="zstd Green 100.0% STABLE_zstd_3467 A compression algorithm compression port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="zstd" data-searchable-text="zstd Green 100.0% STABLE_zstd_3611 A compression algorithm compression port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/zstdport" target="_blank" rel="noopener noreferrer">zstd</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/zstdport/releases/download/STABLE_zstdport_3467/zstd-1.5.5.20250617_113210.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_zstd_3467</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/zstdport/releases/download/STABLE_zstdport_3611/zstd-1.5.5.20250730_072025.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_zstd_3611</a></div>
     <div class="tool-desc" title="A compression algorithm">A compression algorithm</div>
   </div>
 </div>
@@ -305,12 +322,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="sqlite" data-searchable-text="sqlite Green 100.0% STABLE_sqlite_2990 A lightweight embedded SQL database engine database port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="sqlite" data-searchable-text="sqlite Green 100.0% STABLE_sqlite_3609 A lightweight embedded SQL database engine database port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/sqliteport" target="_blank" rel="noopener noreferrer">sqlite</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/sqliteport/releases/download/STABLE_sqliteport_2990/sqlite-autoconf-3480000.20250131_045743.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_sqlite_2990</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/sqliteport/releases/download/STABLE_sqliteport_3609/sqlite-autoconf-3480000.20250730_044226.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_sqlite_3609</a></div>
     <div class="tool-desc" title="A lightweight embedded SQL database engine">A lightweight embedded SQL database engine</div>
   </div>
 </div>
@@ -338,6 +355,16 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
     <div class="tool-test">Test: 100.0%</div>
     <div class="tool-release"><a href="https://github.com/zopencommunity/aprport/releases/download/DEV_aprport_3271/apr-trunk.20250430_051551.zos.pax.Z" target="_blank" rel="noopener noreferrer">DEV_apr_3271</a></div>
     <div class="tool-desc" title="apache portable runtime">apache portable runtime</div>
+  </div>
+</div>
+
+<div class="tool-item-filterable" data-package-name="asio" data-searchable-text="asio Green 100.0% STABLE_asio_3607 development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/asioport" target="_blank" rel="noopener noreferrer">asio</a></strong></div>
+    <div class="tool-status">Status: Green</div>
+    <div class="tool-test">Test: 100.0%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/asioport/releases/download/STABLE_asioport_3607/asio-master.20250729_190809.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_asio_3607</a></div>
+    <div class="tool-desc" title=""></div>
   </div>
 </div>
 
@@ -691,12 +718,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="meson" data-searchable-text="meson Red 33.3% STABLE_meson_3111 A build system development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="meson" data-searchable-text="meson Yellow 66.7% STABLE_meson_3608 A build system development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/mesonport" target="_blank" rel="noopener noreferrer">meson</a></strong></div>
-    <div class="tool-status">Status: Red</div>
-    <div class="tool-test">Test: 33.3%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/mesonport/releases/download/STABLE_mesonport_3111/meson-heads.1.7.0.20250218_042244.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_meson_3111</a></div>
+    <div class="tool-status">Status: Yellow</div>
+    <div class="tool-test">Test: 66.7%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/mesonport/releases/download/STABLE_mesonport_3608/meson-1.7.0.20250730_020408.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_meson_3608</a></div>
     <div class="tool-desc" title="A build system">A build system</div>
   </div>
 </div>
@@ -748,6 +775,16 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
     <div class="tool-test">Test: 100.0%</div>
     <div class="tool-release"><a href="https://github.com/zopencommunity/poptport/releases/download/STABLE_poptport_3451/popt-master.20250610_134922.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_popt_3451</a></div>
     <div class="tool-desc" title="A command-line argument parser">A command-line argument parser</div>
+  </div>
+</div>
+
+<div class="tool-item-filterable" data-package-name="quilt" data-searchable-text="quilt Green 100.0% STABLE_quilt_3605 Quilt allows you to easily manage large numbers of patches by keeping track of the changes each patch makes. Patches can be applied, un-applied, refreshed, and more. development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/quiltport" target="_blank" rel="noopener noreferrer">quilt</a></strong></div>
+    <div class="tool-status">Status: Green</div>
+    <div class="tool-test">Test: 100.0%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/quiltport/releases/download/STABLE_quiltport_3605/quilt-0.69.20250729_161051.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_quilt_3605</a></div>
+    <div class="tool-desc" title="Quilt allows you to easily manage large numbers of patches by keeping track of the changes each patch makes. Patches can be applied, un-applied, refreshed, and more.">Quilt allows you to easily manage large numbers of patches by keeping track of the changes each patch makes. Patches can be applied, un-applied, refreshed, and more.</div>
   </div>
 </div>
 
@@ -1223,6 +1260,16 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
+<div class="tool-item-filterable" data-package-name="blis" data-searchable-text="blis Red 0.0% STABLE_blis_3610 library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/blisport" target="_blank" rel="noopener noreferrer">blis</a></strong></div>
+    <div class="tool-status">Status: Red</div>
+    <div class="tool-test">Test: 0.0%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/blisport/releases/download/STABLE_blisport_3610/blis-2.0.20250730_051930.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_blis_3610</a></div>
+    <div class="tool-desc" title=""></div>
+  </div>
+</div>
+
 <div class="tool-item-filterable" data-package-name="expat" data-searchable-text="expat Green 100.0% STABLE_expat_2953 A library for parsing XML content library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/expatport" target="_blank" rel="noopener noreferrer">expat</a></strong></div>
@@ -1293,12 +1340,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="libgcrypt" data-searchable-text="libgcrypt Green 100.0% STABLE_libgcrypt_3450 A general-purpose cryptographic library library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="libgcrypt" data-searchable-text="libgcrypt Green 100.0% STABLE_libgcrypt_3612 A general-purpose cryptographic library library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libgcryptport" target="_blank" rel="noopener noreferrer">libgcrypt</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/libgcryptport/releases/download/STABLE_libgcryptport_3450/libgcrypt-1.11.1.20250610_052930.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libgcrypt_3450</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/libgcryptport/releases/download/STABLE_libgcryptport_3612/libgcrypt-1.11.1.20250730_072518.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libgcrypt_3612</a></div>
     <div class="tool-desc" title="A general-purpose cryptographic library">A general-purpose cryptographic library</div>
   </div>
 </div>
@@ -1413,12 +1460,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="libxml2" data-searchable-text="libxml2 Blue 100.0% STABLE_libxml2_3010 A library for parsing XML content library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="libxml2" data-searchable-text="libxml2 Blue 100.0% STABLE_libxml2_3614 A library for parsing XML content library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libxml2port" target="_blank" rel="noopener noreferrer">libxml2</a></strong></div>
     <div class="tool-status">Status: Blue</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/libxml2port/releases/download/STABLE_libxml2port_3010/libxml2-2.9.12.20250131_055913.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libxml2_3010</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/libxml2port/releases/download/STABLE_libxml2port_3614/libxml2-2.9.12.20250730_092544.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libxml2_3614</a></div>
     <div class="tool-desc" title="A library for parsing XML content">A library for parsing XML content</div>
   </div>
 </div>
@@ -1503,12 +1550,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="sqlite" data-searchable-text="sqlite Green 100.0% STABLE_sqlite_2990 A lightweight embedded SQL database engine library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="sqlite" data-searchable-text="sqlite Green 100.0% STABLE_sqlite_3609 A lightweight embedded SQL database engine library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/sqliteport" target="_blank" rel="noopener noreferrer">sqlite</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/sqliteport/releases/download/STABLE_sqliteport_2990/sqlite-autoconf-3480000.20250131_045743.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_sqlite_2990</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/sqliteport/releases/download/STABLE_sqliteport_3609/sqlite-autoconf-3480000.20250730_044226.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_sqlite_3609</a></div>
     <div class="tool-desc" title="A lightweight embedded SQL database engine">A lightweight embedded SQL database engine</div>
   </div>
 </div>
@@ -1548,6 +1595,16 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 <div class="table-category" data-category="math">
 
 ## Math 
+
+<div class="tool-item-filterable" data-package-name="blis" data-searchable-text="blis Red 0.0% STABLE_blis_3610 math port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/blisport" target="_blank" rel="noopener noreferrer">blis</a></strong></div>
+    <div class="tool-status">Status: Red</div>
+    <div class="tool-test">Test: 0.0%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/blisport/releases/download/STABLE_blisport_3610/blis-2.0.20250730_051930.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_blis_3610</a></div>
+    <div class="tool-desc" title=""></div>
+  </div>
+</div>
 
 <div class="tool-item-filterable" data-package-name="mpfr" data-searchable-text="mpfr Green 100.0% STABLE_mpfr_3484 math port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
@@ -1681,12 +1738,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="gpg" data-searchable-text="gpg Blue 93.2% STABLE_gpg_3214 A free software implementation of the GNU Privacy Guard security port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="gpg" data-searchable-text="gpg Blue 93.9% STABLE_gpg_3603 A free software implementation of the GNU Privacy Guard security port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/gpgport" target="_blank" rel="noopener noreferrer">gpg</a></strong></div>
     <div class="tool-status">Status: Blue</div>
-    <div class="tool-test">Test: 93.2%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/gpgport/releases/download/STABLE_gpgport_3214/gnupg-2.5.5.20250407_125451.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_gpg_3214</a></div>
+    <div class="tool-test">Test: 93.9%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/gpgport/releases/download/STABLE_gpgport_3603/gnupg-2.5.10.20250729_141140.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_gpg_3603</a></div>
     <div class="tool-desc" title="A free software implementation of the GNU Privacy Guard">A free software implementation of the GNU Privacy Guard</div>
   </div>
 </div>
@@ -1701,12 +1758,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="libgcrypt" data-searchable-text="libgcrypt Green 100.0% STABLE_libgcrypt_3450 A general-purpose cryptographic library security port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="libgcrypt" data-searchable-text="libgcrypt Green 100.0% STABLE_libgcrypt_3612 A general-purpose cryptographic library security port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libgcryptport" target="_blank" rel="noopener noreferrer">libgcrypt</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/libgcryptport/releases/download/STABLE_libgcryptport_3450/libgcrypt-1.11.1.20250610_052930.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libgcrypt_3450</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/libgcryptport/releases/download/STABLE_libgcryptport_3612/libgcrypt-1.11.1.20250730_072518.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libgcrypt_3612</a></div>
     <div class="tool-desc" title="A general-purpose cryptographic library">A general-purpose cryptographic library</div>
   </div>
 </div>
@@ -1959,12 +2016,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="coreutils" data-searchable-text="coreutils Blue 92.5% STABLE_coreutils_3571 A collection of basic Unix utilities uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="coreutils" data-searchable-text="coreutils Blue 92.3% STABLE_coreutils_3606 A collection of basic Unix utilities uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/coreutilsport" target="_blank" rel="noopener noreferrer">coreutils</a></strong></div>
     <div class="tool-status">Status: Blue</div>
-    <div class="tool-test">Test: 92.5%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/coreutilsport/releases/download/STABLE_coreutilsport_3571/coreutils-9.7.20250720_200003.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_coreutils_3571</a></div>
+    <div class="tool-test">Test: 92.3%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/coreutilsport/releases/download/STABLE_coreutilsport_3606/coreutils-9.7.20250729_164230.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_coreutils_3606</a></div>
     <div class="tool-desc" title="A collection of basic Unix utilities">A collection of basic Unix utilities</div>
   </div>
 </div>
@@ -1989,12 +2046,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="gettext" data-searchable-text="gettext Blue 85.2% STABLE_gettext_3602 A library for internationalization and localization uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="gettext" data-searchable-text="gettext Blue 85.2% STABLE_gettext_3604 A library for internationalization and localization uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/gettextport" target="_blank" rel="noopener noreferrer">gettext</a></strong></div>
     <div class="tool-status">Status: Blue</div>
     <div class="tool-test">Test: 85.2%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/gettextport/releases/download/STABLE_gettextport_3602/gettext-0.21.20250728_191439.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_gettext_3602</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/gettextport/releases/download/STABLE_gettextport_3604/gettext-0.21.20250729_131041.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_gettext_3604</a></div>
     <div class="tool-desc" title="A library for internationalization and localization">A library for internationalization and localization</div>
   </div>
 </div>
@@ -2698,4 +2755,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-07-29 06:12:41 UTC
+Last updated:  2025-07-30 06:13:58 UTC
