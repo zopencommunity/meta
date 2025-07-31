@@ -13,16 +13,19 @@ Our primary goal is to make z/OS a more open and accessible platform for everyon
 
 ## Meet the Members
 
-The zopen community TSC is composed of the following members. We encourage you to connect with us!
+The zopen community TSC is composed of the following members:
 
-*   Mike Fulton
-*   Igor Todorovski
-*   Haritha D
-*   Russell Wilson
-*   Anthony Giorgio
-*   Gary Grossi
-*   Vignesh S
-*   Lionel Dyck
+* Igor Todorovski
+* Haritha D
+* Mike Fulton
+* Vignesh S
+* Gary Grossi
+* Lionel Dyck
+* Haritha D
+* Russell Wilson
+* Anthony Giorgio
+* Erik Janssen
+* Sachin T
 
 ## TSC Meeting Minutes
 
