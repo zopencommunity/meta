@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-07-30 06:12:58 EDT.*
+*Report generated on: 2025-07-31 06:12:12 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 262
-- **Total Current Lines of Code (LOC) in Patches:** 33,728
-- **Total Number of Current Patch Files:** 755
-- **Average Current Patch LOC per Project:** 128.73
-- **Average Current Patch Count per Project:** 2.88
+- **Total Current Lines of Code (LOC) in Patches:** 36,647
+- **Total Number of Current Patch Files:** 762
+- **Average Current Patch LOC per Project:** 139.87
+- **Average Current Patch Count per Project:** 2.91
 
 ### Historical Trends (All Projects)
 
@@ -24,6 +24,7 @@
 
 | Repository | Current Patch LOC | Delta Last Month | # Current Patches |
 |---|:---|:---|:---|
+| [stablediffusionport](#repo-stablediffusionport) | 2,905 | +2,905 | 6 |
 | [librdkafkaport](#repo-librdkafkaport) | 2,638 | +0 | 54 |
 | [bashport](#repo-bashport) | 1,495 | -2,931 | 23 |
 | [gpgport](#repo-gpgport) | 1,484 | +0 | 30 |
@@ -48,8 +49,8 @@
 | [treeport](#repo-treeport) | 425 | +0 | 3 |
 | [nginxport](#repo-nginxport) | 414 | +414 | 1 |
 | [emacsport](#repo-emacsport) | 413 | +0 | 2 |
+| [gettextport](#repo-gettextport) | 378 | +172 | 10 |
 | [opensshport](#repo-opensshport) | 376 | +0 | 19 |
-| [gettextport](#repo-gettextport) | 364 | +158 | 9 |
 | [flexport](#repo-flexport) | 351 | +0 | 2 |
 | [prometheusport](#repo-prometheusport) | 348 | +0 | 1 |
 | [pocoport](#repo-pocoport) | 343 | +0 | 9 |
@@ -284,12 +285,36 @@
 | [libpcapport](#repo-libpcapport) | 0 | +0 | 0 |
 | [glibport](#repo-glibport) | 0 | +0 | 0 |
 | [toml11port](#repo-toml11port) | 0 | +0 | 0 |
-| [stablediffusionport](#repo-stablediffusionport) | 0 | N/A | 0 |
 | [checkport](#repo-checkport) | 0 | +0 | 0 |
 
 ---
 
 # Detailed Repository Reports
+
+<a id="repo-stablediffusionport"></a>
+## stablediffusionport
+
+- **Origin Date (First Commit):** 2025-07-29
+- **Current Patch LOC:** 2,905
+- **Current Patch Count:** 6
+
+### Historical Trends
+
+![LOC Trend for stablediffusionport](images/upstream/stablediffusionport_current_loc_trend.png)
+![Count Trend for stablediffusionport](images/upstream/stablediffusionport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/ggml-cpu.cpp.patch` | `patches` | 1,205 |
+| `patches/ggml-zos-fix.patch` | `patches` | 236 |
+| `patches/ggml-zos-mmap-fix.patch` | `patches` | 236 |
+| `patches/ggml_posix_memalign.patch` | `patches` | 10 |
+| `patches/stb_image_no_thread_local.patch` | `patches` | 13 |
+| `patches/zos-mmap-fix-v2.patch` | `patches` | 1,205 |
+
+---
 
 <a id="repo-librdkafkaport"></a>
 ## librdkafkaport
@@ -1095,6 +1120,35 @@
 
 ---
 
+<a id="repo-gettextport"></a>
+## gettextport
+
+- **Origin Date (First Commit):** 2022-05-20
+- **Current Patch LOC:** 378
+- **Current Patch Count:** 10
+
+### Historical Trends
+
+![LOC Trend for gettextport](images/upstream/gettextport_current_loc_trend.png)
+![Count Trend for gettextport](images/upstream/gettextport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/PR1/fetch-name-collision.patch` | `patches` | 31 |
+| `patches/PR1/locale-name-collision.patch` | `patches` | 13 |
+| `patches/PR1/no-pwd_gecos.patch` | `patches` | 50 |
+| `patches/PR1/tagtarball.patch` | `patches` | 13 |
+| `patches/PR2/dummy.c.patch` | `patches` | 16 |
+| `patches/PR3/test-unsetenv.c.patch` | `patches` | 23 |
+| `patches/PR4/configure.patch` | `patches` | 60 |
+| `patches/UTF8.patch` | `patches` | 119 |
+| `patches/bindtextdom.c.patch` | `patches` | 39 |
+| `patches/dcigettext.c.patch` | `patches` | 14 |
+
+---
+
 <a id="repo-opensshport"></a>
 ## opensshport
 
@@ -1130,34 +1184,6 @@
 | `patches/sshconnect.c.patch` | `patches` | 15 |
 | `patches/sshd-session.c.patch` | `patches` | 37 |
 | `patches/sshkey.c.patch` | `patches` | 14 |
-
----
-
-<a id="repo-gettextport"></a>
-## gettextport
-
-- **Origin Date (First Commit):** 2022-05-20
-- **Current Patch LOC:** 364
-- **Current Patch Count:** 9
-
-### Historical Trends
-
-![LOC Trend for gettextport](images/upstream/gettextport_current_loc_trend.png)
-![Count Trend for gettextport](images/upstream/gettextport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/PR1/fetch-name-collision.patch` | `patches` | 31 |
-| `patches/PR1/locale-name-collision.patch` | `patches` | 13 |
-| `patches/PR1/no-pwd_gecos.patch` | `patches` | 50 |
-| `patches/PR1/tagtarball.patch` | `patches` | 13 |
-| `patches/PR2/dummy.c.patch` | `patches` | 16 |
-| `patches/PR3/test-unsetenv.c.patch` | `patches` | 23 |
-| `patches/PR4/configure.patch` | `patches` | 60 |
-| `patches/UTF8.patch` | `patches` | 119 |
-| `patches/bindtextdom.c.patch` | `patches` | 39 |
 
 ---
 
@@ -5866,24 +5892,6 @@
 ## toml11port
 
 - **Origin Date (First Commit):** 2025-07-28
-- **Current Patch LOC:** 0
-- **Current Patch Count:** 0
-
-### Historical Trends
-
-*(Patch LOC trend graph not generated)*
-*(Patch count trend graph not generated)*
-
-### Current Patch Details
-
-*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
-
----
-
-<a id="repo-stablediffusionport"></a>
-## stablediffusionport
-
-- **Origin Date (First Commit):** Unknown
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 

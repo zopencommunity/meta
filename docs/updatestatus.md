@@ -462,31 +462,6 @@
 
 ### victoriametricsport
 - 2025-07-21: [Update victoriametrics-version to 1.122.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/32) ❌
-- 2025-07-07: [Update victoriametrics-version to 1.121.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/31) ❌
-- 2025-06-23: [Update victoriametrics-version to 1.120.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/30) ❌
-- 2025-06-09: [Update victoriametrics-version to 1.119.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/29) ❌
-- 2025-05-26: [Update victoriametrics-version to 1.118.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/28) ❌
-- 2025-05-16: [Update victoriametrics-version to 1.117.1 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/27) ❌
-- 2025-05-12: [Update victoriametrics-version to 1.117.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/26) ❌
-- 2025-04-28: [Update victoriametrics-version to 1.116.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/25) ❌
-- 2025-04-07: [Update victoriametrics-version to 1.115.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/24) ❌
-- 2025-03-24: [Update victoriametrics-version to 1.114.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/23) ❌
-- 2025-03-10: [Update victoriametrics-version to 1.113.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/22) ❌
-- 2025-02-24: [Update victoriametrics-version to 1.112.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/21) ❌
-- 2025-02-11: [Update victoriametrics-version to 1.111.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/20) ❌
-- 2025-01-27: [Update victoriametrics-version to 1.110.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/19) ❌
-- 2025-01-17: [Update victoriametrics-version to 1.109.1 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/18) ❌
-- 2025-01-14: [Update victoriametrics-version to 1.109.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/17) ❌
-- 2024-12-19: [Update victoriametrics-version to 1.108.1 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/16) ❌
-- 2024-12-16: [Update victoriametrics-version to 1.108.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/15) ❌
-- 2024-12-02: [Update victoriametrics-version to 1.107.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/13) ❌
-- 2024-11-18: [Update victoriametrics-version to 1.106.1 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/12) ❌
-- 2024-11-06: [Update victoriametrics-version to 1.106.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/11) ❌
-- 2024-10-22: [Update victoriametrics-version to 1.105.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/10) ❌
-- 2024-10-02: [Update victoriametrics-version to 1.104.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/9) ❌
-- 2024-08-28: [Update victoriametrics-version to 1.103.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/7) ❌
-- 2024-08-01: [Update victoriametrics-version to 1.102.1 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/6) ❌
-- 2024-07-18: [Update victoriametrics-version to 1.102.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/5) ❌
 
 ### vimport
 - 2025-07-18: [Update vim-version to 9.1.1560 from 9.1.1550](https://github.com/zopencommunity/vimport/pull/127) ❌
@@ -744,7 +719,7 @@
 - ✅ spdlogport - [![Bump Status](https://github.com/zopencommunity/spdlogport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/spdlogport/actions/workflows/bump.yml)
 - ✅ sqliteport - [![Bump Status](https://github.com/zopencommunity/sqliteport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/sqliteport/actions/workflows/bump.yml)
 - ✅ sshpassport - [![Bump Status](https://github.com/zopencommunity/sshpassport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/sshpassport/actions/workflows/bump.yml)
-- ❌ stablediffusionport - Workflow not configured
+- ✅ stablediffusionport - [![Bump Status](https://github.com/zopencommunity/stablediffusionport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/stablediffusionport/actions/workflows/bump.yml)
 - ✅ stowport - [![Bump Status](https://github.com/zopencommunity/stowport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/stowport/actions/workflows/bump.yml)
 - ✅ sudoport - [![Bump Status](https://github.com/zopencommunity/sudoport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/sudoport/actions/workflows/bump.yml)
 - ✅ tarport - [![Bump Status](https://github.com/zopencommunity/tarport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/tarport/actions/workflows/bump.yml)
@@ -794,10 +769,10 @@
 
 </details>
 
-**Summary:** 220 active | 56 missing
+**Summary:** 221 active | 55 missing
 
 ---
 
 
-> Last updated: 2025-07-30 06:08:31 EDT
+> Last updated: 2025-07-31 06:07:52 EDT
 
