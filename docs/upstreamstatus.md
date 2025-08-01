@@ -1,13 +1,13 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-07-31 06:12:12 EDT.*
+*Report generated on: 2025-08-01 06:11:59 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 262
-- **Total Current Lines of Code (LOC) in Patches:** 36,647
-- **Total Number of Current Patch Files:** 762
-- **Average Current Patch LOC per Project:** 139.87
+- **Total Current Lines of Code (LOC) in Patches:** 36,777
+- **Total Number of Current Patch Files:** 763
+- **Average Current Patch LOC per Project:** 140.37
 - **Average Current Patch Count per Project:** 2.91
 
 ### Historical Trends (All Projects)
@@ -24,7 +24,7 @@
 
 | Repository | Current Patch LOC | Delta Last Month | # Current Patches |
 |---|:---|:---|:---|
-| [stablediffusionport](#repo-stablediffusionport) | 2,905 | +2,905 | 6 |
+| [stablediffusionport](#repo-stablediffusionport) | 2,905 | +0 | 6 |
 | [librdkafkaport](#repo-librdkafkaport) | 2,638 | +0 | 54 |
 | [bashport](#repo-bashport) | 1,495 | -2,931 | 23 |
 | [gpgport](#repo-gpgport) | 1,484 | +0 | 30 |
@@ -32,24 +32,24 @@
 | [sudoport](#repo-sudoport) | 1,278 | +0 | 30 |
 | [coreutilsport](#repo-coreutilsport) | 1,169 | +0 | 18 |
 | [cmakeport](#repo-cmakeport) | 1,092 | +0 | 1 |
-| [gitport](#repo-gitport) | 1,065 | +87 | 32 |
-| [grpcport](#repo-grpcport) | 1,017 | +986 | 8 |
+| [gitport](#repo-gitport) | 1,065 | +0 | 32 |
+| [grpcport](#repo-grpcport) | 1,017 | +0 | 8 |
 | [valgrindport](#repo-valgrindport) | 896 | +0 | 3 |
 | [gzipport](#repo-gzipport) | 690 | +0 | 8 |
 | [procpsport](#repo-procpsport) | 687 | +0 | 1 |
-| [perlport](#repo-perlport) | 684 | -12 | 14 |
+| [perlport](#repo-perlport) | 684 | +0 | 14 |
 | [util-linuxport](#repo-util-linuxport) | 594 | +0 | 15 |
-| [redisport](#repo-redisport) | 575 | +312 | 3 |
+| [redisport](#repo-redisport) | 575 | +0 | 3 |
 | [unzipport](#repo-unzipport) | 549 | +0 | 12 |
-| [inetutilsport](#repo-inetutilsport) | 514 | +514 | 20 |
+| [inetutilsport](#repo-inetutilsport) | 514 | +0 | 20 |
 | [cronieport](#repo-cronieport) | 510 | +0 | 13 |
-| [llamacppport](#repo-llamacppport) | 498 | +73 | 11 |
+| [llamacppport](#repo-llamacppport) | 498 | +0 | 11 |
 | [screenport](#repo-screenport) | 485 | +0 | 7 |
 | [tmuxport](#repo-tmuxport) | 440 | +0 | 13 |
 | [treeport](#repo-treeport) | 425 | +0 | 3 |
-| [nginxport](#repo-nginxport) | 414 | +414 | 1 |
+| [nginxport](#repo-nginxport) | 414 | +0 | 1 |
 | [emacsport](#repo-emacsport) | 413 | +0 | 2 |
-| [gettextport](#repo-gettextport) | 378 | +172 | 10 |
+| [gettextport](#repo-gettextport) | 378 | +0 | 10 |
 | [opensshport](#repo-opensshport) | 376 | +0 | 19 |
 | [flexport](#repo-flexport) | 351 | +0 | 2 |
 | [prometheusport](#repo-prometheusport) | 348 | +0 | 1 |
@@ -62,24 +62,25 @@
 | [libgcryptport](#repo-libgcryptport) | 302 | +0 | 9 |
 | [conanport](#repo-conanport) | 299 | +0 | 8 |
 | [zipport](#repo-zipport) | 297 | +0 | 8 |
-| [ccacheport](#repo-ccacheport) | 264 | +69 | 1 |
-| [mesonport](#repo-mesonport) | 257 | +28 | 9 |
+| [ccacheport](#repo-ccacheport) | 264 | +0 | 1 |
+| [mesonport](#repo-mesonport) | 257 | +0 | 9 |
 | [gitlab-runnerport](#repo-gitlab-runnerport) | 241 | +0 | 10 |
 | [zstdport](#repo-zstdport) | 236 | +0 | 4 |
 | [fishport](#repo-fishport) | 233 | +0 | 1 |
-| [libarchiveport](#repo-libarchiveport) | 220 | -17 | 5 |
-| [protobufport](#repo-protobufport) | 201 | +27 | 9 |
+| [libarchiveport](#repo-libarchiveport) | 220 | +0 | 5 |
+| [protobufport](#repo-protobufport) | 201 | +0 | 9 |
 | [findutilsport](#repo-findutilsport) | 199 | +0 | 10 |
 | [ninjaport](#repo-ninjaport) | 196 | +0 | 8 |
 | [diffutilsport](#repo-diffutilsport) | 184 | +0 | 8 |
 | [aflplusplusport](#repo-aflplusplusport) | 184 | +0 | 5 |
 | [jemallocport](#repo-jemallocport) | 166 | +0 | 1 |
 | [groffport](#repo-groffport) | 165 | +0 | 13 |
-| [blisport](#repo-blisport) | 165 | +165 | 1 |
+| [blisport](#repo-blisport) | 165 | +0 | 1 |
 | [autoconfport](#repo-autoconfport) | 151 | +0 | 6 |
 | [moreutilsport](#repo-moreutilsport) | 151 | +0 | 1 |
 | [libserdesport](#repo-libserdesport) | 142 | +0 | 4 |
 | [tclport](#repo-tclport) | 132 | +0 | 5 |
+| [multitailport](#repo-multitailport) | 130 | +0 | 1 |
 | [pinentryport](#repo-pinentryport) | 124 | +0 | 5 |
 | [libssh2port](#repo-libssh2port) | 122 | +0 | 5 |
 | [m4port](#repo-m4port) | 120 | +0 | 5 |
@@ -91,7 +92,7 @@
 | [hexcurseport](#repo-hexcurseport) | 108 | +0 | 4 |
 | [libbsdport](#repo-libbsdport) | 107 | +0 | 4 |
 | [victoriametricsport](#repo-victoriametricsport) | 107 | +0 | 3 |
-| [mkcertport](#repo-mkcertport) | 105 | +105 | 1 |
+| [mkcertport](#repo-mkcertport) | 105 | +0 | 1 |
 | [zlib-ngport](#repo-zlib-ngport) | 100 | +0 | 3 |
 | [pkgconfigport](#repo-pkgconfigport) | 98 | +0 | 1 |
 | [doxygenport](#repo-doxygenport) | 97 | +0 | 5 |
@@ -99,15 +100,15 @@
 | [depot_toolsport](#repo-depot-toolsport) | 91 | +0 | 1 |
 | [libeventport](#repo-libeventport) | 87 | +0 | 3 |
 | [patchport](#repo-patchport) | 86 | +0 | 3 |
-| [jqport](#repo-jqport) | 85 | +18 | 6 |
-| [openldapport](#repo-openldapport) | 85 | +85 | 1 |
+| [jqport](#repo-jqport) | 85 | +0 | 6 |
+| [openldapport](#repo-openldapport) | 85 | +0 | 1 |
 | [gawkport](#repo-gawkport) | 81 | +0 | 4 |
 | [expectport](#repo-expectport) | 79 | +0 | 4 |
 | [librabbitmqport](#repo-librabbitmqport) | 78 | +0 | 2 |
 | [libassuanport](#repo-libassuanport) | 77 | +0 | 4 |
 | [xmltoport](#repo-xmltoport) | 74 | +0 | 1 |
 | [cppcheckport](#repo-cppcheckport) | 72 | +0 | 4 |
-| [ansibleport](#repo-ansibleport) | 72 | +72 | 3 |
+| [ansibleport](#repo-ansibleport) | 72 | +0 | 3 |
 | [libtoolport](#repo-libtoolport) | 71 | +0 | 3 |
 | [nanoport](#repo-nanoport) | 68 | +0 | 1 |
 | [gradleport](#repo-gradleport) | 67 | +0 | 1 |
@@ -126,7 +127,7 @@
 | [xxhashport](#repo-xxhashport) | 47 | +0 | 2 |
 | [tigport](#repo-tigport) | 47 | +0 | 1 |
 | [lazygitport](#repo-lazygitport) | 46 | +0 | 1 |
-| [libsolvport](#repo-libsolvport) | 37 | +37 | 1 |
+| [libsolvport](#repo-libsolvport) | 37 | +0 | 1 |
 | [poptport](#repo-poptport) | 35 | +0 | 1 |
 | [whichport](#repo-whichport) | 34 | +0 | 1 |
 | [tcltlsport](#repo-tcltlsport) | 34 | +0 | 1 |
@@ -147,7 +148,7 @@
 | [mpfrport](#repo-mpfrport) | 28 | +0 | 2 |
 | [ctagsport](#repo-ctagsport) | 26 | +0 | 2 |
 | [git-extrasport](#repo-git-extrasport) | 26 | +0 | 1 |
-| [asioport](#repo-asioport) | 26 | +26 | 1 |
+| [asioport](#repo-asioport) | 26 | +0 | 1 |
 | [my_basicport](#repo-my-basicport) | 22 | +0 | 1 |
 | [shdocport](#repo-shdocport) | 20 | +0 | 2 |
 | [sshpassport](#repo-sshpassport) | 18 | +0 | 1 |
@@ -174,7 +175,7 @@
 | [edport](#repo-edport) | 13 | +0 | 1 |
 | [lzipport](#repo-lzipport) | 13 | +0 | 1 |
 | [aprport](#repo-aprport) | 13 | +0 | 1 |
-| [jsoncport](#repo-jsoncport) | 13 | +13 | 1 |
+| [jsoncport](#repo-jsoncport) | 13 | +0 | 1 |
 | [libxml2port](#repo-libxml2port) | 12 | +0 | 1 |
 | [gflagsport](#repo-gflagsport) | 12 | +0 | 1 |
 | [libpslport](#repo-libpslport) | 12 | +0 | 1 |
@@ -206,7 +207,6 @@
 | [wharfport](#repo-wharfport) | 0 | +0 | 0 |
 | [dufport](#repo-dufport) | 0 | +0 | 0 |
 | [onigurumaport](#repo-onigurumaport) | 0 | +0 | 0 |
-| [multitailport](#repo-multitailport) | 0 | +0 | 0 |
 | [janssonport](#repo-janssonport) | 0 | +0 | 0 |
 | [luarocksport](#repo-luarocksport) | 0 | +0 | 0 |
 | [termenvport](#repo-termenvport) | 0 | +0 | 0 |
@@ -1923,6 +1923,26 @@
 | `patches/PR1/remove_oe_sockets_hardcode.patch` | `patches` | 19 |
 | `patches/PR2/tclUnixNotfy.c.patch` | `patches` | 15 |
 | `patches/PR2/tclUnixThrd.c.patch` | `patches` | 44 |
+
+---
+
+<a id="repo-multitailport"></a>
+## multitailport
+
+- **Origin Date (First Commit):** 2025-07-31
+- **Current Patch LOC:** 130
+- **Current Patch Count:** 1
+
+### Historical Trends
+
+![LOC Trend for multitailport](images/upstream/multitailport_current_loc_trend.png)
+![Count Trend for multitailport](images/upstream/multitailport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/PR1.patch` | `patches` | 130 |
 
 ---
 
@@ -4470,24 +4490,6 @@
 ## onigurumaport
 
 - **Origin Date (First Commit):** 2023-07-20
-- **Current Patch LOC:** 0
-- **Current Patch Count:** 0
-
-### Historical Trends
-
-*(Patch LOC trend graph not generated)*
-*(Patch count trend graph not generated)*
-
-### Current Patch Details
-
-*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
-
----
-
-<a id="repo-multitailport"></a>
-## multitailport
-
-- **Origin Date (First Commit):** 2023-07-21
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 

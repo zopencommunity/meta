@@ -64,12 +64,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="make" data-searchable-text="make Blue 99.9% STABLE_make_3597 A build automation tool build_system port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="make" data-searchable-text="make Blue 99.9% STABLE_make_3631 A build automation tool build_system port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/makeport" target="_blank" rel="noopener noreferrer">make</a></strong></div>
     <div class="tool-status">Status: Blue</div>
     <div class="tool-test">Test: 99.9%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/makeport/releases/download/STABLE_makeport_3597/make-4.4.1.20250728_195359.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_make_3597</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/makeport/releases/download/STABLE_makeport_3631/make-4.4.1.20250731_175153.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_make_3631</a></div>
     <div class="tool-desc" title="A build automation tool">A build automation tool</div>
   </div>
 </div>
@@ -588,12 +588,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="githubcli" data-searchable-text="githubcli Skipped N/A STABLE_githubcli_3587 A command-line tool for GitHub development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="githubcli" data-searchable-text="githubcli Skipped N/A STABLE_githubcli_3630 A command-line tool for GitHub development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/githubcliport" target="_blank" rel="noopener noreferrer">githubcli</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/githubcliport/releases/download/STABLE_githubcliport_3587/githubcli-DEV.20250724_155122.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_githubcli_3587</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/githubcliport/releases/download/STABLE_githubcliport_3630/githubcli-DEV.20250731_155233.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_githubcli_3630</a></div>
     <div class="tool-desc" title="A command-line tool for GitHub">A command-line tool for GitHub</div>
   </div>
 </div>
@@ -708,12 +708,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="make" data-searchable-text="make Blue 99.9% STABLE_make_3597 A build automation tool development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="make" data-searchable-text="make Blue 99.9% STABLE_make_3631 A build automation tool development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/makeport" target="_blank" rel="noopener noreferrer">make</a></strong></div>
     <div class="tool-status">Status: Blue</div>
     <div class="tool-test">Test: 99.9%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/makeport/releases/download/STABLE_makeport_3597/make-4.4.1.20250728_195359.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_make_3597</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/makeport/releases/download/STABLE_makeport_3631/make-4.4.1.20250731_175153.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_make_3631</a></div>
     <div class="tool-desc" title="A build automation tool">A build automation tool</div>
   </div>
 </div>
@@ -808,12 +808,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3601 A TUI editor development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3632 A TUI editor development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/vimport" target="_blank" rel="noopener noreferrer">vim</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3601/vim-v9.1.1590.20250728_205054.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3601</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3632/vim-v9.1.1590.20250731_175213.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3632</a></div>
     <div class="tool-desc" title="A TUI editor">A TUI editor</div>
   </div>
 </div>
@@ -1086,6 +1086,16 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
+<div class="tool-item-filterable" data-package-name="multitail" data-searchable-text="multitail Green 100.0% STABLE_multitail_3628 A tool for monitoring multiple log files editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/multitailport" target="_blank" rel="noopener noreferrer">multitail</a></strong></div>
+    <div class="tool-status">Status: Green</div>
+    <div class="tool-test">Test: 100.0%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/multitailport/releases/download/STABLE_multitailport_3628/multitail-7.1.5.20250731_135849.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_multitail_3628</a></div>
+    <div class="tool-desc" title="A tool for monitoring multiple log files">A tool for monitoring multiple log files</div>
+  </div>
+</div>
+
 <div class="tool-item-filterable" data-package-name="nano" data-searchable-text="nano Skipped N/A STABLE_nano_3458 A simple text editor for console environments editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/nanoport" target="_blank" rel="noopener noreferrer">nano</a></strong></div>
@@ -1106,12 +1116,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3601 A TUI editor editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3632 A TUI editor editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/vimport" target="_blank" rel="noopener noreferrer">vim</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3601/vim-v9.1.1590.20250728_205054.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3601</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3632/vim-v9.1.1590.20250731_175213.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3632</a></div>
     <div class="tool-desc" title="A TUI editor">A TUI editor</div>
   </div>
 </div>
@@ -1652,12 +1662,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="githubcli" data-searchable-text="githubcli Skipped N/A STABLE_githubcli_3587 A command-line tool for GitHub networking port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="githubcli" data-searchable-text="githubcli Skipped N/A STABLE_githubcli_3630 A command-line tool for GitHub networking port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/githubcliport" target="_blank" rel="noopener noreferrer">githubcli</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/githubcliport/releases/download/STABLE_githubcliport_3587/githubcli-DEV.20250724_155122.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_githubcli_3587</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/githubcliport/releases/download/STABLE_githubcliport_3630/githubcli-DEV.20250731_155233.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_githubcli_3630</a></div>
     <div class="tool-desc" title="A command-line tool for GitHub">A command-line tool for GitHub</div>
   </div>
 </div>
@@ -2512,6 +2522,16 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
+<div class="tool-item-filterable" data-package-name="multitail" data-searchable-text="multitail Green 100.0% STABLE_multitail_3628 A tool for monitoring multiple log files utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/multitailport" target="_blank" rel="noopener noreferrer">multitail</a></strong></div>
+    <div class="tool-status">Status: Green</div>
+    <div class="tool-test">Test: 100.0%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/multitailport/releases/download/STABLE_multitailport_3628/multitail-7.1.5.20250731_135849.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_multitail_3628</a></div>
+    <div class="tool-desc" title="A tool for monitoring multiple log files">A tool for monitoring multiple log files</div>
+  </div>
+</div>
+
 <div class="tool-item-filterable" data-package-name="ncdu" data-searchable-text="ncdu Skipped N/A STABLE_ncdu_2976 A disk usage analyzer with an ncurses interface utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/ncduport" target="_blank" rel="noopener noreferrer">ncdu</a></strong></div>
@@ -2775,4 +2795,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-07-31 06:13:35 UTC
+Last updated:  2025-08-01 06:13:14 UTC

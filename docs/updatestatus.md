@@ -403,6 +403,7 @@
 - 2024-08-29: [Update screen-version to 5.0.0 from 4.9.1](https://github.com/zopencommunity/screenport/pull/8) ❌
 
 ### sqliteport
+- 2025-07-31: [Update sqlite-version to 2025-3500400 from 2025-3480000](https://github.com/zopencommunity/sqliteport/pull/30) ❌
 - 2025-07-17: [Update sqlite-version to 2025-3500300 from 2025-3480000](https://github.com/zopencommunity/sqliteport/pull/29) ❌
 - 2025-06-28: [Update sqlite-version to 2025-3500200 from 2025-3480000](https://github.com/zopencommunity/sqliteport/pull/28) ❌
 - 2025-06-07: [Update sqlite-version to 2025-3500100 from 2025-3480000](https://github.com/zopencommunity/sqliteport/pull/27) ❌
@@ -774,5 +775,5 @@
 ---
 
 
-> Last updated: 2025-07-31 06:07:52 EDT
+> Last updated: 2025-08-01 06:07:55 EDT
 
