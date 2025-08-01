@@ -1475,6 +1475,57 @@ formattedFileSize()
   }'  
 }
 
+levenshtein() {
+  word1="$1"
+  word2="$2"
+
+  # Calculates the distance and prints it to stdout.
+  awk -v s1="$word1" -v s2="$word2" '
+    BEGIN {
+      len1 = length(s1)
+      len2 = length(s2)
+
+      for (i = 0; i <= len1; i++) d[i,0] = i
+      for (j = 0; j <= len2; j++) d[0,j] = j
+
+      for (i = 1; i <= len1; i++) {
+        for (j = 1; j <= len2; j++) {
+          cost = (substr(s1, i, 1) == substr(s2, j, 1)) ? 0 : 1
+          
+          del = d[i-1,j] + 1
+          ins = d[i,j-1] + 1
+          # Renamed variable to avoid conflict with the built-in "sub" function in awk.
+          substitution = d[i-1,j-1] + cost
+          
+          min = del
+          if (ins < min) min = ins
+          if (substitution < min) min = substitution
+          d[i,j] = min
+        }
+      }
+      print d[len1,len2]
+    }'
+}
+
+# Finds the closest match for a misspelled tool name from a list of valid tools.
+findSuggestion() {
+    misspelled="$1"
+    tool_list="$2"
+    best_match=""
+    min_distance=4 
+
+    for tool in ${tool_list}; do
+        distance=$(levenshtein "${misspelled}" "${tool}")
+        if [ "${distance}" -lt "${min_distance}" ]; then
+            min_distance=${distance}
+            best_match="${tool}"
+        fi
+    done
+
+    echo "${best_match}"
+}
+
+
 . ${INCDIR}/analytics.sh
 
 zopenInitialize
