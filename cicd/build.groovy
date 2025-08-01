@@ -35,8 +35,7 @@ rm -rf packages # Remove packages pax.Z files
 
 # Get port name based on git repo
 PORT_NAME=$(basename "${PORT_GITHUB_REPO}")
-PORT_NAME=${PORT_NAME%%.*}
-PORT_NAME=${PORT_NAME%%port}
+PORT_NAME=${PORT_NAME%%.git}
 
 # Set TMPDIR to a local tmp directory
 export TMPDIR="${PWD}/tmp"
