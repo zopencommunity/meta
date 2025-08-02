@@ -356,6 +356,7 @@
 - 2025-07-21: [Update perl-version to 5.43.1 from 5.43.0](https://github.com/zopencommunity/perlport/pull/114) ❌
 
 ### phpport
+- 2025-08-01: [Update php-version to 8.4.11 from 8.2.13](https://github.com/zopencommunity/phpport/pull/37) ❌
 - 2025-07-03: [Update php-version to 8.4.10 from 8.2.13](https://github.com/zopencommunity/phpport/pull/36) ❌
 - 2025-06-06: [Update php-version to 8.4.8 from 8.2.13](https://github.com/zopencommunity/phpport/pull/35) ❌
 - 2025-05-10: [Update php-version to 8.4.7 from 8.2.13](https://github.com/zopencommunity/phpport/pull/34) ❌
@@ -517,7 +518,7 @@
 - ❌ check_clangport - Workflow not configured
 - ❌ check_goport - Workflow not configured
 - ❌ check_javaport - Workflow not configured
-- ❌ checkport - Workflow not configured
+- ✅ checkport - [![Bump Status](https://github.com/zopencommunity/checkport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/checkport/actions/workflows/bump.yml)
 - ❌ check_pythonport - Workflow not configured
 - ❌ check_xlclangport - Workflow not configured
 - ✅ chezmoiport - [![Bump Status](https://github.com/zopencommunity/chezmoiport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/chezmoiport/actions/workflows/bump.yml)
@@ -732,7 +733,7 @@
 - ✅ thesilversearcherport - [![Bump Status](https://github.com/zopencommunity/thesilversearcherport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/thesilversearcherport/actions/workflows/bump.yml)
 - ✅ tigport - [![Bump Status](https://github.com/zopencommunity/tigport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/tigport/actions/workflows/bump.yml)
 - ✅ tmuxport - [![Bump Status](https://github.com/zopencommunity/tmuxport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/tmuxport/actions/workflows/bump.yml)
-- ❌ toml11port - Workflow not configured
+- ✅ toml11port - [![Bump Status](https://github.com/zopencommunity/toml11port/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/toml11port/actions/workflows/bump.yml)
 - ❌ toolsandtoysport - Workflow not configured
 - ✅ treeport - [![Bump Status](https://github.com/zopencommunity/treeport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/treeport/actions/workflows/bump.yml)
 - ✅ ttypeport - [![Bump Status](https://github.com/zopencommunity/ttypeport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/ttypeport/actions/workflows/bump.yml)
@@ -770,10 +771,10 @@
 
 </details>
 
-**Summary:** 221 active | 55 missing
+**Summary:** 223 active | 53 missing
 
 ---
 
 
-> Last updated: 2025-08-01 06:07:55 EDT
+> Last updated: 2025-08-02 06:07:41 EDT
 

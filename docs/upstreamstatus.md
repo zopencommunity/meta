@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-08-01 06:11:59 EDT.*
+*Report generated on: 2025-08-02 06:12:06 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 262
-- **Total Current Lines of Code (LOC) in Patches:** 36,777
-- **Total Number of Current Patch Files:** 763
-- **Average Current Patch LOC per Project:** 140.37
-- **Average Current Patch Count per Project:** 2.91
+- **Total Current Lines of Code (LOC) in Patches:** 37,083
+- **Total Number of Current Patch Files:** 768
+- **Average Current Patch LOC per Project:** 141.54
+- **Average Current Patch Count per Project:** 2.93
 
 ### Historical Trends (All Projects)
 
@@ -26,7 +26,7 @@
 |---|:---|:---|:---|
 | [stablediffusionport](#repo-stablediffusionport) | 2,905 | +0 | 6 |
 | [librdkafkaport](#repo-librdkafkaport) | 2,638 | +0 | 54 |
-| [bashport](#repo-bashport) | 1,495 | -2,931 | 23 |
+| [bashport](#repo-bashport) | 1,584 | -2,842 | 25 |
 | [gpgport](#repo-gpgport) | 1,484 | +0 | 30 |
 | [libuvport](#repo-libuvport) | 1,462 | +0 | 26 |
 | [sudoport](#repo-sudoport) | 1,278 | +0 | 30 |
@@ -68,6 +68,7 @@
 | [zstdport](#repo-zstdport) | 236 | +0 | 4 |
 | [fishport](#repo-fishport) | 233 | +0 | 1 |
 | [libarchiveport](#repo-libarchiveport) | 220 | +0 | 5 |
+| [toml11port](#repo-toml11port) | 217 | +0 | 3 |
 | [protobufport](#repo-protobufport) | 201 | +0 | 9 |
 | [findutilsport](#repo-findutilsport) | 199 | +0 | 10 |
 | [ninjaport](#repo-ninjaport) | 196 | +0 | 8 |
@@ -284,7 +285,6 @@
 | [httpdport](#repo-httpdport) | 0 | +0 | 0 |
 | [libpcapport](#repo-libpcapport) | 0 | +0 | 0 |
 | [glibport](#repo-glibport) | 0 | +0 | 0 |
-| [toml11port](#repo-toml11port) | 0 | +0 | 0 |
 | [checkport](#repo-checkport) | 0 | +0 | 0 |
 
 ---
@@ -393,8 +393,8 @@
 ## bashport
 
 - **Origin Date (First Commit):** 2022-10-26
-- **Current Patch LOC:** 1,495
-- **Current Patch Count:** 23
+- **Current Patch LOC:** 1,584
+- **Current Patch Count:** 25
 
 ### Historical Trends
 
@@ -410,24 +410,26 @@
 | `dev-patches/dontupstream/read.tests.patch` | `dev-patches` | 13 |
 | `dev-patches/dontupstream/redir10.patch` | `dev-patches` | 13 |
 | `dev-patches/dontupstream/run-all_and_diff.patch` | `dev-patches` | 72 |
+| `dev-patches/redir.tests.patch` | `dev-patches` | 13 |
 | `dev-patches/source6.sub.patch` | `dev-patches` | 13 |
 | `stable-patches/Makefile.in.patch` | `stable-patches` | 13 |
 | `stable-patches/PR1.patch` | `stable-patches` | 25 |
-| `stable-patches/PR2.patch` | `stable-patches` | 765 |
-| `stable-patches/PR3/coproc.tests.patch` | `stable-patches` | 13 |
-| `stable-patches/PR3/heredoc.right.patch` | `stable-patches` | 13 |
-| `stable-patches/PR3/redir.tests.patch` | `stable-patches` | 13 |
-| `stable-patches/PR3/redir10.sub.patch` | `stable-patches` | 15 |
-| `stable-patches/PR3/signames.c.patch` | `stable-patches` | 35 |
-| `stable-patches/PR3/smatch.c.patch` | `stable-patches` | 49 |
-| `stable-patches/PR3/trap.right.patch` | `stable-patches` | 61 |
-| `stable-patches/PR3/vredir.tests.patch` | `stable-patches` | 17 |
 | `stable-patches/anonfile.c.patch` | `stable-patches` | 22 |
-| `stable-patches/builtins.right.patch` | `stable-patches` | 31 |
 | `stable-patches/configure.patch` | `stable-patches` | 54 |
-| `stable-patches/errors.right.patch` | `stable-patches` | 18 |
+| `stable-patches/ignore_pipe.patch` | `stable-patches` | 13 |
 | `stable-patches/kill.def.patch` | `stable-patches` | 123 |
 | `stable-patches/sig.c.patch` | `stable-patches` | 30 |
+| `stable-patches/smatch.c.patch` | `stable-patches` | 49 |
+| `stable-patches/tests/builtins.patch` | `stable-patches` | 31 |
+| `stable-patches/tests/coproc.tests.patch` | `stable-patches` | 13 |
+| `stable-patches/tests/errors.right.patch` | `stable-patches` | 18 |
+| `stable-patches/tests/heredoc.right.patch` | `stable-patches` | 13 |
+| `stable-patches/tests/redir.patch` | `stable-patches` | 49 |
+| `stable-patches/tests/run.patch` | `stable-patches` | 744 |
+| `stable-patches/tests/test.patch` | `stable-patches` | 49 |
+| `stable-patches/tests/trap.patch` | `stable-patches` | 61 |
+| `stable-patches/tests/varenv.patch` | `stable-patches` | 13 |
+| `stable-patches/tests/vredir.patch` | `stable-patches` | 53 |
 
 ---
 
@@ -1624,6 +1626,28 @@
 | `patches/libarchive/test/test_read_disk_directory_traversals.c.patch` | `patches` | 37 |
 | `patches/libarchive/test/test_sparse_basic.c.patch` | `patches` | 44 |
 | `patches/test_utils/test_main.c.patch` | `patches` | 60 |
+
+---
+
+<a id="repo-toml11port"></a>
+## toml11port
+
+- **Origin Date (First Commit):** 2025-07-28
+- **Current Patch LOC:** 217
+- **Current Patch Count:** 3
+
+### Historical Trends
+
+![LOC Trend for toml11port](images/upstream/toml11port_current_loc_trend.png)
+![Count Trend for toml11port](images/upstream/toml11port_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/CMakeList.txt.patch` | `patches` | 22 |
+| `patches/doctest_disable_tls.patch` | `patches` | 28 |
+| `patches/syntax_impl.hpp.patch` | `patches` | 167 |
 
 ---
 
@@ -5876,24 +5900,6 @@
 ## glibport
 
 - **Origin Date (First Commit):** 2025-07-29
-- **Current Patch LOC:** 0
-- **Current Patch Count:** 0
-
-### Historical Trends
-
-*(Patch LOC trend graph not generated)*
-*(Patch count trend graph not generated)*
-
-### Current Patch Details
-
-*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
-
----
-
-<a id="repo-toml11port"></a>
-## toml11port
-
-- **Origin Date (First Commit):** 2025-07-28
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 
