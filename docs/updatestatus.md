@@ -255,6 +255,7 @@
 - 2024-03-07: [Update kotlin-version to 1.9.23 from 1.9.22](https://github.com/zopencommunity/kotlinport/pull/3) ❓
 
 ### lazygitport
+- 2025-08-02: [Update lazygit-version to 0.54.0 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/24) ❌
 - 2025-07-06: [Update lazygit-version to 0.53.0 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/23) ❌
 - 2025-07-05: [Update lazygit-version to 0.53.1 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/22) ❌
 - 2025-06-07: [Update lazygit-version to 0.52.0 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/21) ❌
@@ -776,5 +777,5 @@
 ---
 
 
-> Last updated: 2025-08-02 06:07:41 EDT
+> Last updated: 2025-08-03 06:07:31 EDT
 
