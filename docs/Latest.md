@@ -151,12 +151,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="zstd" data-searchable-text="zstd Green 100.0% STABLE_zstd_3616 A compression algorithm compression port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="zstd" data-searchable-text="zstd Green 100.0% STABLE_zstd_3638 A compression algorithm compression port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/zstdport" target="_blank" rel="noopener noreferrer">zstd</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/zstdport/releases/download/STABLE_zstdport_3616/zstd-1.5.5.20250730_094335.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_zstd_3616</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/zstdport/releases/download/STABLE_zstdport_3638/zstd-1.5.5.20250804_064059.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_zstd_3638</a></div>
     <div class="tool-desc" title="A compression algorithm">A compression algorithm</div>
   </div>
 </div>
@@ -1285,6 +1285,16 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
+<div class="tool-item-filterable" data-package-name="toml11" data-searchable-text="toml11 Blue 90.5% STABLE_toml11_3639 language port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/toml11port" target="_blank" rel="noopener noreferrer">toml11</a></strong></div>
+    <div class="tool-status">Status: Blue</div>
+    <div class="tool-test">Test: 90.5%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/toml11port/releases/download/STABLE_toml11port_3639/toml11-v4.4.0.20250804_063731.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_toml11_3639</a></div>
+    <div class="tool-desc" title=""></div>
+  </div>
+</div>
+
 </div>
 
 <div class="table-category" data-category="library">
@@ -2389,12 +2399,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="fzf" data-searchable-text="fzf Green 100.0% STABLE_fzf_3533 A fuzzy finder tool utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="fzf" data-searchable-text="fzf Green 100.0% STABLE_fzf_3637 A fuzzy finder tool utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/fzfport" target="_blank" rel="noopener noreferrer">fzf</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/fzfport/releases/download/STABLE_fzfport_3533/fzf-v0.64.0.20250707_151918.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_fzf_3533</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/fzfport/releases/download/STABLE_fzfport_3637/fzf-v0.65.1.20250803_151926.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_fzf_3637</a></div>
     <div class="tool-desc" title="A fuzzy finder tool">A fuzzy finder tool</div>
   </div>
 </div>
@@ -2832,4 +2842,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-08-03 06:12:59 UTC
+Last updated:  2025-08-04 06:13:56 UTC
