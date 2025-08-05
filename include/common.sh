@@ -575,6 +575,7 @@ defineEnvironment()
   export _TAG_REDIR_IN=txt
   export _TAG_REDIR_OUT=txt
   export GIT_UTF8_CCSID=819
+  unset _ENCODE_FILE_NEW # rely on the default tool encoding behaviour
   export TERM=xterm # To avoid potential issues with "FSUM6202 Unknown terminal" if using an ncurses terminal database
 
   # Required for proper operation of xlclang
