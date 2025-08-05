@@ -1401,12 +1401,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="libgcrypt" data-searchable-text="libgcrypt Green 100.0% STABLE_libgcrypt_3612 A general-purpose cryptographic library library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="libgcrypt" data-searchable-text="libgcrypt Green 100.0% STABLE_libgcrypt_3641 A general-purpose cryptographic library library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libgcryptport" target="_blank" rel="noopener noreferrer">libgcrypt</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/libgcryptport/releases/download/STABLE_libgcryptport_3612/libgcrypt-1.11.1.20250730_072518.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libgcrypt_3612</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/libgcryptport/releases/download/STABLE_libgcryptport_3641/libgcrypt-1.11.2.20250804_153932.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libgcrypt_3641</a></div>
     <div class="tool-desc" title="A general-purpose cryptographic library">A general-purpose cryptographic library</div>
   </div>
 </div>
@@ -1501,12 +1501,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="libsolv" data-searchable-text="libsolv Green 100.0% STABLE_libsolv_3582 Library for solving packages and reading repositories library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="libsolv" data-searchable-text="libsolv Green 100.0% STABLE_libsolv_3640 Library for solving packages and reading repositories library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libsolvport" target="_blank" rel="noopener noreferrer">libsolv</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/libsolvport/releases/download/STABLE_libsolvport_3582/libsolv-0.7.34.20250723_122309.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libsolv_3582</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/libsolvport/releases/download/STABLE_libsolvport_3640/libsolv-0.7.35.20250804_152328.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libsolv_3640</a></div>
     <div class="tool-desc" title="Library for solving packages and reading repositories">Library for solving packages and reading repositories</div>
   </div>
 </div>
@@ -1819,12 +1819,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="libgcrypt" data-searchable-text="libgcrypt Green 100.0% STABLE_libgcrypt_3612 A general-purpose cryptographic library security port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="libgcrypt" data-searchable-text="libgcrypt Green 100.0% STABLE_libgcrypt_3641 A general-purpose cryptographic library security port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libgcryptport" target="_blank" rel="noopener noreferrer">libgcrypt</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/libgcryptport/releases/download/STABLE_libgcryptport_3612/libgcrypt-1.11.1.20250730_072518.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libgcrypt_3612</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/libgcryptport/releases/download/STABLE_libgcryptport_3641/libgcrypt-1.11.2.20250804_153932.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libgcrypt_3641</a></div>
     <div class="tool-desc" title="A general-purpose cryptographic library">A general-purpose cryptographic library</div>
   </div>
 </div>
@@ -2842,4 +2842,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-08-04 06:13:56 UTC
+Last updated:  2025-08-05 06:13:46 UTC

@@ -397,6 +397,9 @@
 - 2025-03-14: [Update protobuf-version to 30.1 from 29.3](https://github.com/zopencommunity/protobufport/pull/27) ❌
 - 2025-03-05: [Update protobuf-version to 30.0 from 29.3](https://github.com/zopencommunity/protobufport/pull/26) ❌
 
+### redisport
+- 2025-08-04: [Update redis-version to 8.2.0 from 8.0.3](https://github.com/zopencommunity/redisport/pull/15) ❌
+
 ### s5cmdport
 - 2024-12-17: [Update s5cmd-version to 2.3.0 from 2.2.2](https://github.com/zopencommunity/s5cmdport/pull/3) ❌
 
@@ -777,5 +780,5 @@
 ---
 
 
-> Last updated: 2025-08-04 06:08:07 EDT
+> Last updated: 2025-08-05 06:08:10 EDT
 
