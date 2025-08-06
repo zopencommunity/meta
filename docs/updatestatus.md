@@ -340,8 +340,8 @@
 - 2024-08-22: [Update osv-scanner-version to 1.8.4 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/11) ❌
 - 2024-08-07: [Update osv-scanner-version to 1.8.3 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/10) ✅
 - 2024-07-10: [Update osv-scanner-version to 1.8.2 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/9) ❌
-- 2024-06-21: [Update osv-scanner-version to 1.8.1 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/8) ❌
-- 2024-06-20: [Update osv-scanner-version to 1.8.0 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/7) ❌
+- 2024-06-21: [Update osv-scanner-version to 1.8.1 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/8) ❓
+- 2024-06-20: [Update osv-scanner-version to 1.8.0 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/7) ❓
 - 2024-05-30: [Update osv-scanner-version to 1.7.4 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/6) ❓
 - 2024-05-09: [Update osv-scanner-version to 1.7.3 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/5) ❓
 - 2024-04-19: [Update osv-scanner-version to 1.7.2 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/4) ❓
@@ -467,6 +467,7 @@
 - 2025-06-24: [Update util-linux-version to 2.41.1 from 2.41](https://github.com/zopencommunity/util-linuxport/pull/19) ❌
 
 ### victoriametricsport
+- 2025-08-05: [Update victoriametrics-version to 1.123.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/33) ❌
 - 2025-07-21: [Update victoriametrics-version to 1.122.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/32) ❌
 
 ### vimport
@@ -780,5 +781,5 @@
 ---
 
 
-> Last updated: 2025-08-05 06:08:10 EDT
+> Last updated: 2025-08-06 06:08:08 EDT
 

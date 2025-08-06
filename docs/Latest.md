@@ -689,12 +689,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="libgpgme" data-searchable-text="libgpgme Green 100.0% STABLE_libgpgme_3237 A library for accessing cryptographic functions development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="libgpgme" data-searchable-text="libgpgme Green 100.0% STABLE_libgpgme_3644 A library for accessing cryptographic functions development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libgpgmeport" target="_blank" rel="noopener noreferrer">libgpgme</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/libgpgmeport/releases/download/STABLE_libgpgmeport_3237/gpgme-1.23.2.20250416_120633.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libgpgme_3237</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/libgpgmeport/releases/download/STABLE_libgpgmeport_3644/gpgme-1.23.2.20250806_075820.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libgpgme_3644</a></div>
     <div class="tool-desc" title="A library for accessing cryptographic functions">A library for accessing cryptographic functions</div>
   </div>
 </div>
@@ -1955,12 +1955,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="fish" data-searchable-text="fish Skipped N/A STABLE_fish_3338 fish is a smart and user-friendly command line shell shell port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="fish" data-searchable-text="fish Skipped N/A STABLE_fish_3642 fish is a smart and user-friendly command line shell shell port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/fishport" target="_blank" rel="noopener noreferrer">fish</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/fishport/releases/download/STABLE_fishport_3338/fish-3.7.1.20250516_030403.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_fish_3338</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/fishport/releases/download/STABLE_fishport_3642/fish-3.7.1.20250805_190735.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_fish_3642</a></div>
     <div class="tool-desc" title="fish is a smart and user-friendly command line shell">fish is a smart and user-friendly command line shell</div>
   </div>
 </div>
@@ -2529,12 +2529,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="meta" data-searchable-text="meta Green 100.0% STABLE_meta_3577 zopen package manager utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="meta" data-searchable-text="meta Green 100.0% STABLE_meta_3643 zopen package manager utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/metaport" target="_blank" rel="noopener noreferrer">meta</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/metaport/releases/download/STABLE_metaport_3577/meta-main.20250721_164323.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_meta_3577</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/metaport/releases/download/STABLE_metaport_3643/meta-main.20250805_200157.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_meta_3643</a></div>
     <div class="tool-desc" title="zopen package manager">zopen package manager</div>
   </div>
 </div>
@@ -2842,4 +2842,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-08-05 06:13:46 UTC
+Last updated:  2025-08-06 06:13:55 UTC

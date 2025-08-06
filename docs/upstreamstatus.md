@@ -1,13 +1,13 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-08-05 06:12:29 EDT.*
+*Report generated on: 2025-08-06 06:12:36 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 262
-- **Total Current Lines of Code (LOC) in Patches:** 37,083
+- **Total Current Lines of Code (LOC) in Patches:** 37,108
 - **Total Number of Current Patch Files:** 768
-- **Average Current Patch LOC per Project:** 141.54
+- **Average Current Patch LOC per Project:** 141.63
 - **Average Current Patch Count per Project:** 2.93
 
 ### Historical Trends (All Projects)
@@ -63,10 +63,10 @@
 | [conanport](#repo-conanport) | 299 | +0 | 8 |
 | [zipport](#repo-zipport) | 297 | +0 | 8 |
 | [ccacheport](#repo-ccacheport) | 264 | +0 | 1 |
+| [fishport](#repo-fishport) | 258 | +25 | 1 |
 | [mesonport](#repo-mesonport) | 257 | +0 | 9 |
 | [gitlab-runnerport](#repo-gitlab-runnerport) | 241 | +0 | 10 |
 | [zstdport](#repo-zstdport) | 236 | +0 | 4 |
-| [fishport](#repo-fishport) | 233 | +0 | 1 |
 | [libarchiveport](#repo-libarchiveport) | 220 | +0 | 5 |
 | [toml11port](#repo-toml11port) | 217 | +0 | 3 |
 | [protobufport](#repo-protobufport) | 201 | +0 | 9 |
@@ -1505,6 +1505,26 @@
 
 ---
 
+<a id="repo-fishport"></a>
+## fishport
+
+- **Origin Date (First Commit):** 2025-05-14
+- **Current Patch LOC:** 258
+- **Current Patch Count:** 1
+
+### Historical Trends
+
+![LOC Trend for fishport](images/upstream/fishport_current_loc_trend.png)
+![Count Trend for fishport](images/upstream/fishport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/PR1.patch` | `patches` | 258 |
+
+---
+
 <a id="repo-mesonport"></a>
 ## mesonport
 
@@ -1582,26 +1602,6 @@
 | `patches/PR1/addzostomakefile.patch` | `patches` | 44 |
 | `patches/PR1/assertfirst.patch` | `patches` | 99 |
 | `patches/tests_Makefile.patch` | `patches` | 64 |
-
----
-
-<a id="repo-fishport"></a>
-## fishport
-
-- **Origin Date (First Commit):** 2025-05-14
-- **Current Patch LOC:** 233
-- **Current Patch Count:** 1
-
-### Historical Trends
-
-![LOC Trend for fishport](images/upstream/fishport_current_loc_trend.png)
-![Count Trend for fishport](images/upstream/fishport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/PR1.patch` | `patches` | 233 |
 
 ---
 
