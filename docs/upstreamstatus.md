@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-08-06 06:12:36 EDT.*
+*Report generated on: 2025-08-07 06:11:52 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 262
-- **Total Current Lines of Code (LOC) in Patches:** 37,108
-- **Total Number of Current Patch Files:** 768
-- **Average Current Patch LOC per Project:** 141.63
-- **Average Current Patch Count per Project:** 2.93
+- **Total Current Lines of Code (LOC) in Patches:** 40,671
+- **Total Number of Current Patch Files:** 847
+- **Average Current Patch LOC per Project:** 155.23
+- **Average Current Patch Count per Project:** 3.23
 
 ### Historical Trends (All Projects)
 
@@ -26,6 +26,8 @@
 |---|:---|:---|:---|
 | [stablediffusionport](#repo-stablediffusionport) | 2,905 | +0 | 6 |
 | [librdkafkaport](#repo-librdkafkaport) | 2,638 | +0 | 54 |
+| [rpmport](#repo-rpmport) | 1,841 | -66 | 45 |
+| [llamacppport](#repo-llamacppport) | 1,780 | -49 | 37 |
 | [bashport](#repo-bashport) | 1,584 | -2,842 | 25 |
 | [gpgport](#repo-gpgport) | 1,484 | +0 | 30 |
 | [libuvport](#repo-libuvport) | 1,462 | +0 | 26 |
@@ -43,9 +45,9 @@
 | [unzipport](#repo-unzipport) | 549 | +0 | 12 |
 | [inetutilsport](#repo-inetutilsport) | 514 | +0 | 20 |
 | [cronieport](#repo-cronieport) | 510 | +0 | 13 |
-| [llamacppport](#repo-llamacppport) | 498 | +0 | 11 |
 | [screenport](#repo-screenport) | 485 | +0 | 7 |
 | [tmuxport](#repo-tmuxport) | 440 | +0 | 13 |
+| [libpcapport](#repo-libpcapport) | 440 | +0 | 8 |
 | [treeport](#repo-treeport) | 425 | +0 | 3 |
 | [nginxport](#repo-nginxport) | 414 | +0 | 1 |
 | [emacsport](#repo-emacsport) | 413 | +0 | 2 |
@@ -278,12 +280,10 @@
 | [fmtport](#repo-fmtport) | 0 | +0 | 0 |
 | [minjaport](#repo-minjaport) | 0 | +0 | 0 |
 | [postgresport](#repo-postgresport) | 0 | +0 | 0 |
-| [rpmport](#repo-rpmport) | 0 | +0 | 0 |
 | [ollamaport](#repo-ollamaport) | 0 | +0 | 0 |
 | [libyamlport](#repo-libyamlport) | 0 | +0 | 0 |
 | [jsoncppport](#repo-jsoncppport) | 0 | +0 | 0 |
 | [httpdport](#repo-httpdport) | 0 | +0 | 0 |
-| [libpcapport](#repo-libpcapport) | 0 | +0 | 0 |
 | [glibport](#repo-glibport) | 0 | +0 | 0 |
 | [checkport](#repo-checkport) | 0 | +0 | 0 |
 
@@ -386,6 +386,126 @@
 | `patches/tests/0146-metadata_mock.c.patch` | `patches` | 13 |
 | `patches/tests/sockem.c.patch` | `patches` | 17 |
 | `patches/tests/sockem_ctrl.h.patch` | `patches` | 16 |
+
+---
+
+<a id="repo-rpmport"></a>
+## rpmport
+
+- **Origin Date (First Commit):** 2025-06-26
+- **Current Patch LOC:** 1,841
+- **Current Patch Count:** 45
+
+### Historical Trends
+
+![LOC Trend for rpmport](images/upstream/rpmport_current_loc_trend.png)
+![Count Trend for rpmport](images/upstream/rpmport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/CMakeLists.txt.patch` | `patches` | 58 |
+| `patches/build_CMakeLists.txt.patch` | `patches` | 41 |
+| `patches/build_pack.cc.patch` | `patches` | 23 |
+| `patches/build_rpmfc.cc.patch` | `patches` | 13 |
+| `patches/config.h.in.patch` | `patches` | 9 |
+| `patches/include_rpm_CMakeLists.txt.patch` | `patches` | 12 |
+| `patches/include_rpm_argv.h.patch` | `patches` | 22 |
+| `patches/include_rpm_flock_compat.h.patch` | `patches` | 20 |
+| `patches/include_rpm_portable_remove_all.h.patch` | `patches` | 51 |
+| `patches/include_rpm_progname_fallback.c.patch` | `patches` | 44 |
+| `patches/include_rpm_progname_fallback.h.patch` | `patches` | 15 |
+| `patches/include_rpm_stpcpy_custom.h.patch` | `patches` | 17 |
+| `patches/lib_CMakeLists.txt.patch` | `patches` | 20 |
+| `patches/lib_backend_ndb_rpmidx.c.patch` | `patches` | 43 |
+| `patches/lib_backend_ndb_rpmpkg.c.patch` | `patches` | 12 |
+| `patches/lib_backend_ndb_rpmxdb.c.patch` | `patches` | 46 |
+| `patches/lib_fsm.cc.patch` | `patches` | 595 |
+| `patches/lib_headerfmt.cc.patch` | `patches` | 14 |
+| `patches/lib_keystore.cc.patch` | `patches` | 45 |
+| `patches/lib_poptALL.cc.patch` | `patches` | 13 |
+| `patches/lib_progname_fallback.c.patch` | `patches` | 44 |
+| `patches/lib_progname_fallback.h.patch` | `patches` | 15 |
+| `patches/lib_psm.cc.patch` | `patches` | 35 |
+| `patches/lib_rpmchecksig.cc.patch` | `patches` | 23 |
+| `patches/lib_rpminstall.cc.patch` | `patches` | 13 |
+| `patches/lib_rpmug.cc.patch` | `patches` | 14 |
+| `patches/lib_transaction.cc.patch` | `patches` | 28 |
+| `patches/macros.in.patch` | `patches` | 60 |
+| `patches/misc_CMakeLists.txt.patch` | `patches` | 9 |
+| `patches/misc_fts.c.patch` | `patches` | 67 |
+| `patches/misc_system.h.patch` | `patches` | 33 |
+| `patches/rpmio_CMakeLists.txt.patch` | `patches` | 89 |
+| `patches/rpmio_argv.cc.patch` | `patches` | 13 |
+| `patches/rpmio_lposix.cc.patch` | `patches` | 28 |
+| `patches/rpmio_macro.cc.patch` | `patches` | 57 |
+| `patches/rpmio_rpmglob.cc.patch` | `patches` | 20 |
+| `patches/rpmio_rpmlog.cc.patch` | `patches` | 25 |
+| `patches/rpmio_rpmlua.cc.patch` | `patches` | 13 |
+| `patches/rpmio_rpmsq.cc.patch` | `patches` | 13 |
+| `patches/rpmio_rpmstrpool.cc.patch` | `patches` | 25 |
+| `patches/rpmio_rpmver.cc.patch` | `patches` | 12 |
+| `patches/sign_CMakeLists.txt.patch` | `patches` | 10 |
+| `patches/sign_rpmgensig.cc.patch` | `patches` | 13 |
+| `patches/tools_CMakeLists.txt.patch` | `patches` | 47 |
+| `patches/tools_rpm.cc.patch` | `patches` | 22 |
+
+---
+
+<a id="repo-llamacppport"></a>
+## llamacppport
+
+- **Origin Date (First Commit):** 2023-08-21
+- **Current Patch LOC:** 1,780
+- **Current Patch Count:** 37
+
+### Historical Trends
+
+![LOC Trend for llamacppport](images/upstream/llamacppport_current_loc_trend.png)
+![Count Trend for llamacppport](images/upstream/llamacppport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/CMakeLists.txt.patch` | `patches` | 53 |
+| `patches/arg.cpp.patch` | `patches` | 50 |
+| `patches/clip.cpp.patch` | `patches` | 12 |
+| `patches/common.cpp.patch` | `patches` | 21 |
+| `patches/convert-llama2c-to-ggml.cpp.patch` | `patches` | 12 |
+| `patches/examples_gguf.cpp.patch` | `patches` | 12 |
+| `patches/export-lora.cpp.patch` | `patches` | 12 |
+| `patches/ggml-backend-reg.cpp.patch` | `patches` | 15 |
+| `patches/ggml-cpu-impl.h.patch` | `patches` | 31 |
+| `patches/ggml-cpu.c.patch` | `patches` | 13 |
+| `patches/ggml-cpu.cpp.patch` | `patches` | 62 |
+| `patches/ggml-impl.h.patch` | `patches` | 74 |
+| `patches/ggml.c.patch` | `patches` | 545 |
+| `patches/ggml.h.patch` | `patches` | 20 |
+| `patches/gguf-hash.cpp.patch` | `patches` | 12 |
+| `patches/gguf-split.cpp.patch` | `patches` | 80 |
+| `patches/gguf.cpp.patch` | `patches` | 86 |
+| `patches/gguf.h.patch` | `patches` | 23 |
+| `patches/gguf_writer.py.patch` | `patches` | 24 |
+| `patches/httplib.h.patch` | `patches` | 169 |
+| `patches/imatrix.cpp.patch` | `patches` | 12 |
+| `patches/llama-adapter.cpp.patch` | `patches` | 12 |
+| `patches/llama-context.cpp.patch` | `patches` | 37 |
+| `patches/llama-hparams.h.patch` | `patches` | 12 |
+| `patches/llama-model-loader.cpp.patch` | `patches` | 94 |
+| `patches/miniaudio.h.patch` | `patches` | 24 |
+| `patches/ops.h.patch` | `patches` | 12 |
+| `patches/quantize.cpp.patch` | `patches` | 12 |
+| `patches/repack.cpp.patch` | `patches` | 22 |
+| `patches/run.cpp.patch` | `patches` | 22 |
+| `patches/sgemm.h.patch` | `patches` | 15 |
+| `patches/simd-mappings.h.patch` | `patches` | 13 |
+| `patches/stb_image.h.patch` | `patches` | 60 |
+| `patches/test-gguf.cpp.patch` | `patches` | 20 |
+| `patches/unary-ops.h.patch` | `patches` | 12 |
+| `patches/unicode.h.patch` | `patches` | 65 |
+| `patches/vec.h.patch` | `patches` | 10 |
 
 ---
 
@@ -971,36 +1091,6 @@
 
 ---
 
-<a id="repo-llamacppport"></a>
-## llamacppport
-
-- **Origin Date (First Commit):** 2023-08-21
-- **Current Patch LOC:** 498
-- **Current Patch Count:** 11
-
-### Historical Trends
-
-![LOC Trend for llamacppport](images/upstream/llamacppport_current_loc_trend.png)
-![Count Trend for llamacppport](images/upstream/llamacppport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/arg.cpp.patch` | `patches` | 40 |
-| `patches/common.cpp.patch` | `patches` | 13 |
-| `patches/ggml-backend-reg.cpp.patch` | `patches` | 15 |
-| `patches/ggml-cpu.c.patch` | `patches` | 12 |
-| `patches/ggml-cpu.cpp.patch` | `patches` | 62 |
-| `patches/ggml.c.patch` | `patches` | 44 |
-| `patches/httplib.h.patch` | `patches` | 169 |
-| `patches/llama-context.cpp.patch` | `patches` | 37 |
-| `patches/miniaudio.h.patch` | `patches` | 24 |
-| `patches/run.cpp.patch` | `patches` | 22 |
-| `patches/stb_image.h.patch` | `patches` | 60 |
-
----
-
 <a id="repo-screenport"></a>
 ## screenport
 
@@ -1056,6 +1146,33 @@
 | `patches/tmux.h.patch` | `patches` | 31 |
 | `patches/tty-keys.c.patch` | `patches` | 22 |
 | `patches/tty.c.patch` | `patches` | 20 |
+
+---
+
+<a id="repo-libpcapport"></a>
+## libpcapport
+
+- **Origin Date (First Commit):** 2025-07-24
+- **Current Patch LOC:** 440
+- **Current Patch Count:** 8
+
+### Historical Trends
+
+![LOC Trend for libpcapport](images/upstream/libpcapport_current_loc_trend.png)
+![Count Trend for libpcapport](images/upstream/libpcapport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/bpf_image.c.patch` | `patches` | 59 |
+| `patches/etherent.c.patch` | `patches` | 31 |
+| `patches/nametoaddr.c.patch` | `patches` | 65 |
+| `patches/pcap-null.c.patch` | `patches` | 15 |
+| `patches/pcap.c.patch` | `patches` | 128 |
+| `patches/pcap/bpf.h.patch` | `patches` | 13 |
+| `patches/testprogs/Makefile.in.patch` | `patches` | 92 |
+| `patches/testprogs/filtertest.c.patch` | `patches` | 37 |
 
 ---
 
@@ -5788,24 +5905,6 @@
 
 ---
 
-<a id="repo-rpmport"></a>
-## rpmport
-
-- **Origin Date (First Commit):** 2025-06-26
-- **Current Patch LOC:** 0
-- **Current Patch Count:** 0
-
-### Historical Trends
-
-*(Patch LOC trend graph not generated)*
-*(Patch count trend graph not generated)*
-
-### Current Patch Details
-
-*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
-
----
-
 <a id="repo-ollamaport"></a>
 ## ollamaport
 
@@ -5864,24 +5963,6 @@
 ## httpdport
 
 - **Origin Date (First Commit):** 2025-07-21
-- **Current Patch LOC:** 0
-- **Current Patch Count:** 0
-
-### Historical Trends
-
-*(Patch LOC trend graph not generated)*
-*(Patch count trend graph not generated)*
-
-### Current Patch Details
-
-*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
-
----
-
-<a id="repo-libpcapport"></a>
-## libpcapport
-
-- **Origin Date (First Commit):** 2025-07-24
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 

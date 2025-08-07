@@ -56,6 +56,7 @@
 - 2025-05-10: [Update chezmoi-version to 2.62.3 from 2.62.2](https://github.com/zopencommunity/chezmoiport/pull/1) ❌
 
 ### cmakeport
+- 2025-08-06: [Update cmake-version to 4.1.0 from 3.31.5](https://github.com/zopencommunity/cmakeport/pull/74) ❌
 - 2025-06-13: [Update cmake-version to 4.0.3 from 3.31.5](https://github.com/zopencommunity/cmakeport/pull/72) ❌
 - 2025-05-10: [Update cmake-version to 4.0.2 from 3.31.5](https://github.com/zopencommunity/cmakeport/pull/71) ❌
 - 2025-04-11: [Update cmake-version to 4.0.1 from 3.31.5](https://github.com/zopencommunity/cmakeport/pull/70) ❌
@@ -255,6 +256,7 @@
 - 2024-03-07: [Update kotlin-version to 1.9.23 from 1.9.22](https://github.com/zopencommunity/kotlinport/pull/3) ❓
 
 ### lazygitport
+- 2025-08-06: [Update lazygit-version to 0.54.1 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/25) ❌
 - 2025-08-02: [Update lazygit-version to 0.54.0 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/24) ❌
 - 2025-07-06: [Update lazygit-version to 0.53.0 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/23) ❌
 - 2025-07-05: [Update lazygit-version to 0.53.1 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/22) ❌
@@ -713,7 +715,7 @@
 - ✅ re2cport - [![Bump Status](https://github.com/zopencommunity/re2cport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/re2cport/actions/workflows/bump.yml)
 - ✅ readlineport - [![Bump Status](https://github.com/zopencommunity/readlineport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/readlineport/actions/workflows/bump.yml)
 - ✅ redisport - [![Bump Status](https://github.com/zopencommunity/redisport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/redisport/actions/workflows/bump.yml)
-- ❌ rpmport - Workflow not configured
+- ✅ rpmport - [![Bump Status](https://github.com/zopencommunity/rpmport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/rpmport/actions/workflows/bump.yml)
 - ✅ rsyncport - [![Bump Status](https://github.com/zopencommunity/rsyncport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/rsyncport/actions/workflows/bump.yml)
 - ✅ s5cmdport - [![Bump Status](https://github.com/zopencommunity/s5cmdport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/s5cmdport/actions/workflows/bump.yml)
 - ✅ sccport - [![Bump Status](https://github.com/zopencommunity/sccport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/sccport/actions/workflows/bump.yml)
@@ -776,10 +778,10 @@
 
 </details>
 
-**Summary:** 223 active | 53 missing
+**Summary:** 224 active | 52 missing
 
 ---
 
 
-> Last updated: 2025-08-06 06:08:08 EDT
+> Last updated: 2025-08-07 06:08:05 EDT
 

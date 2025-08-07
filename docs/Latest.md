@@ -49,6 +49,16 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
+<div class="tool-item-filterable" data-package-name="llamacpp" data-searchable-text="llamacpp Blue 92.1% DEV_llamacpp_3648 A C++ library for writing high-performance network applications ai port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/llamacppport" target="_blank" rel="noopener noreferrer">llamacpp</a></strong></div>
+    <div class="tool-status">Status: Blue</div>
+    <div class="tool-test">Test: 92.1%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/llamacppport/releases/download/DEV_llamacppport_3648/llamacpp-master.20250806_171956.zos.pax.Z" target="_blank" rel="noopener noreferrer">DEV_llamacpp_3648</a></div>
+    <div class="tool-desc" title="A C++ library for writing high-performance network applications">A C++ library for writing high-performance network applications</div>
+  </div>
+</div>
+
 </div>
 
 <div class="table-category" data-category="build_system">
@@ -539,12 +549,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="ed" data-searchable-text="ed Green 100.0% STABLE_ed_3576 line-oriented text editor development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="ed" data-searchable-text="ed Green 100.0% STABLE_ed_3646 line-oriented text editor development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/edport" target="_blank" rel="noopener noreferrer">ed</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/edport/releases/download/STABLE_edport_3576/ed-1.22.20250721_161217.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_ed_3576</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/edport/releases/download/STABLE_edport_3646/ed-1.22.1.20250806_152334.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_ed_3646</a></div>
     <div class="tool-desc" title="line-oriented text editor">line-oriented text editor</div>
   </div>
 </div>
@@ -1381,12 +1391,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="libassuan" data-searchable-text="libassuan Green 100.0% STABLE_libassuan_3239 A library for the Assuan protocol, used for IPC between GnuPG components library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="libassuan" data-searchable-text="libassuan Green 100.0% STABLE_libassuan_3650 A library for the Assuan protocol, used for IPC between GnuPG components library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libassuanport" target="_blank" rel="noopener noreferrer">libassuan</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/libassuanport/releases/download/STABLE_libassuanport_3239/libassuan-3.0.2.20250417_071410.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libassuan_3239</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/libassuanport/releases/download/STABLE_libassuanport_3650/libassuan-3.0.2.20250807_094158.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libassuan_3650</a></div>
     <div class="tool-desc" title="A library for the Assuan protocol, used for IPC between GnuPG components">A library for the Assuan protocol, used for IPC between GnuPG components</div>
   </div>
 </div>
@@ -1461,12 +1471,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="libpcre2" data-searchable-text="libpcre2 Yellow 66.7% STABLE_libpcre2_3391 A regular expression library library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="libpcre2" data-searchable-text="libpcre2 Yellow 66.7% STABLE_libpcre2_3645 A regular expression library library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libpcre2port" target="_blank" rel="noopener noreferrer">libpcre2</a></strong></div>
     <div class="tool-status">Status: Yellow</div>
     <div class="tool-test">Test: 66.7%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/libpcre2port/releases/download/STABLE_libpcre2port_3391/pcre2-10.42.20250530_162549.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libpcre2_3391</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/libpcre2port/releases/download/STABLE_libpcre2port_3645/pcre2-10.42.20250806_121837.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libpcre2_3645</a></div>
     <div class="tool-desc" title="A regular expression library">A regular expression library</div>
   </div>
 </div>
@@ -1809,12 +1819,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="libassuan" data-searchable-text="libassuan Green 100.0% STABLE_libassuan_3239 A library for the Assuan protocol, used for IPC between GnuPG components security port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="libassuan" data-searchable-text="libassuan Green 100.0% STABLE_libassuan_3650 A library for the Assuan protocol, used for IPC between GnuPG components security port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libassuanport" target="_blank" rel="noopener noreferrer">libassuan</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/libassuanport/releases/download/STABLE_libassuanport_3239/libassuan-3.0.2.20250417_071410.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libassuan_3239</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/libassuanport/releases/download/STABLE_libassuanport_3650/libassuan-3.0.2.20250807_094158.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libassuan_3650</a></div>
     <div class="tool-desc" title="A library for the Assuan protocol, used for IPC between GnuPG components">A library for the Assuan protocol, used for IPC between GnuPG components</div>
   </div>
 </div>
@@ -2123,12 +2133,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="gettext" data-searchable-text="gettext Blue 84.9% STABLE_gettext_3626 A library for internationalization and localization uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="gettext" data-searchable-text="gettext Blue 94.4% STABLE_gettext_3649 A library for internationalization and localization uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/gettextport" target="_blank" rel="noopener noreferrer">gettext</a></strong></div>
     <div class="tool-status">Status: Blue</div>
-    <div class="tool-test">Test: 84.9%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/gettextport/releases/download/STABLE_gettextport_3626/gettext-0.21.20250730_193034.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_gettext_3626</a></div>
+    <div class="tool-test">Test: 94.4%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/gettextport/releases/download/STABLE_gettextport_3649/gettext-0.21.20250806_160232.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_gettext_3649</a></div>
     <div class="tool-desc" title="A library for internationalization and localization">A library for internationalization and localization</div>
   </div>
 </div>
@@ -2203,16 +2213,6 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="llamacpp" data-searchable-text="llamacpp Skipped N/A STABLE_llamacpp_2013 A C++ library for writing high-performance network applications uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
-  <div class="tool-info-grid">
-    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/llamacppport" target="_blank" rel="noopener noreferrer">llamacpp</a></strong></div>
-    <div class="tool-status">Status: Skipped</div>
-    <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/llamacppport/releases/download/STABLE_llamacppport_2013/llamacpp-master.20240124_170742.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_llamacpp_2013</a></div>
-    <div class="tool-desc" title="A C++ library for writing high-performance network applications">A C++ library for writing high-performance network applications</div>
-  </div>
-</div>
-
 <div class="tool-item-filterable" data-package-name="luarocks" data-searchable-text="luarocks Green 100.0% STABLE_luarocks_2014 A package manager for Lua uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/luarocksport" target="_blank" rel="noopener noreferrer">luarocks</a></strong></div>
@@ -2263,12 +2263,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="openssl" data-searchable-text="openssl Blue 96.6% STABLE_openssl_3539 A cryptographic library uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="openssl" data-searchable-text="openssl Blue 96.2% STABLE_openssl_3647 A cryptographic library uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/opensslport" target="_blank" rel="noopener noreferrer">openssl</a></strong></div>
     <div class="tool-status">Status: Blue</div>
-    <div class="tool-test">Test: 96.6%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/opensslport/releases/download/STABLE_opensslport_3539/openssl-3.5.1.20250709_113621.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_openssl_3539</a></div>
+    <div class="tool-test">Test: 96.2%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/opensslport/releases/download/STABLE_opensslport_3647/openssl-3.5.2.20250806_162036.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_openssl_3647</a></div>
     <div class="tool-desc" title="A cryptographic library">A cryptographic library</div>
   </div>
 </div>
@@ -2842,4 +2842,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-08-06 06:13:55 UTC
+Last updated:  2025-08-07 06:13:10 UTC
