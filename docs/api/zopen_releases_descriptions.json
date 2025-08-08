@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2025-08-08T00:04:49+00:00Z",
+  "generation_timestamp_utc": "2025-08-08T14:00:38+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -263,6 +263,7 @@
     "glib": "",
     "toml11": "",
     "stablediffusion": "Stable Diffusion text to image AI model",
-    "check": "A unit testing framework for C"
+    "check": "A unit testing framework for C",
+    "catimg": ""
   }
 }
