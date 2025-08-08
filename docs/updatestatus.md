@@ -18,6 +18,7 @@
 - 2024-12-11: [Update bash-completion-version to 20060301 from V.R.M](https://github.com/zopencommunity/bash-completionport/pull/1) ❌
 
 ### buildkiteport
+- 2025-08-07: [Update buildkite-version to 3.103.1 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/69) ❌
 - 2025-07-22: [Update buildkite-version to 3.103.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/68) ❌
 - 2025-07-15: [Update buildkite-version to 3.102.2 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/67) ❌
 - 2025-07-14: [Update buildkite-version to 3.102.1 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/66) ❌
@@ -49,6 +50,7 @@
 - 2025-05-26: [Update ccache-version to 4.11.3 from V.R.M](https://github.com/zopencommunity/ccacheport/pull/1) ❌
 
 ### chezmoiport
+- 2025-08-07: [Update chezmoi-version to 2.64.0 from 2.62.5](https://github.com/zopencommunity/chezmoiport/pull/8) ❌
 - 2025-07-23: [Update chezmoi-version to 2.63.1 from 2.62.5](https://github.com/zopencommunity/chezmoiport/pull/7) ❌
 - 2025-07-09: [Update chezmoi-version to 2.63.0 from 2.62.5](https://github.com/zopencommunity/chezmoiport/pull/6) ❌
 - 2025-06-23: [Update chezmoi-version to 2.62.7 from 2.62.5](https://github.com/zopencommunity/chezmoiport/pull/5) ❌
@@ -236,6 +238,7 @@
 - 2024-06-25: [Update grafana-version to 11.1.0 from 11.0.0](https://github.com/zopencommunity/grafanaport/pull/2) ❌
 
 ### grpcport
+- 2025-08-07: [Update grpc-version to 1.74.1 from 1.73.0](https://github.com/zopencommunity/grpcport/pull/3) ❌
 - 2025-07-24: [Update grpc-version to 1.74.0 from 1.73.0](https://github.com/zopencommunity/grpcport/pull/2) ❌
 - 2025-06-26: [Update grpc-version to 1.73.1 from 1.73.0](https://github.com/zopencommunity/grpcport/pull/1) ❌
 
@@ -473,6 +476,7 @@
 - 2025-07-21: [Update victoriametrics-version to 1.122.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/32) ❌
 
 ### vimport
+- 2025-08-07: [Update vim-version to 9.1.160 from 9.1.1590](https://github.com/zopencommunity/vimport/pull/131) ❌
 - 2025-07-18: [Update vim-version to 9.1.1560 from 9.1.1550](https://github.com/zopencommunity/vimport/pull/127) ❌
 - 2025-07-08: [Update vim-version to 9.1.1520 from 9.1.1510](https://github.com/zopencommunity/vimport/pull/123) ❌
 - 2025-07-03: [Update vim-version to 9.1.150 from 9.1.1500](https://github.com/zopencommunity/vimport/pull/121) ❌
@@ -783,5 +787,5 @@
 ---
 
 
-> Last updated: 2025-08-07 06:08:05 EDT
+> Last updated: 2025-08-08 06:07:50 EDT
 
