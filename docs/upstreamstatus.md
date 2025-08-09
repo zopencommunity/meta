@@ -1,13 +1,13 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-08-08 06:11:54 EDT.*
+*Report generated on: 2025-08-09 06:12:24 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 262
-- **Total Current Lines of Code (LOC) in Patches:** 40,671
-- **Total Number of Current Patch Files:** 847
-- **Average Current Patch LOC per Project:** 155.23
+- **Total Projects Analyzed:** 263
+- **Total Current Lines of Code (LOC) in Patches:** 40,736
+- **Total Number of Current Patch Files:** 849
+- **Average Current Patch LOC per Project:** 154.89
 - **Average Current Patch Count per Project:** 3.23
 
 ### Historical Trends (All Projects)
@@ -97,6 +97,7 @@
 | [victoriametricsport](#repo-victoriametricsport) | 107 | +0 | 3 |
 | [mkcertport](#repo-mkcertport) | 105 | +0 | 1 |
 | [zlib-ngport](#repo-zlib-ngport) | 100 | +0 | 3 |
+| [ansibleport](#repo-ansibleport) | 100 | +28 | 4 |
 | [pkgconfigport](#repo-pkgconfigport) | 98 | +0 | 1 |
 | [doxygenport](#repo-doxygenport) | 97 | +0 | 5 |
 | [libiconvport](#repo-libiconvport) | 96 | +0 | 4 |
@@ -111,7 +112,6 @@
 | [libassuanport](#repo-libassuanport) | 77 | +0 | 4 |
 | [xmltoport](#repo-xmltoport) | 74 | +0 | 1 |
 | [cppcheckport](#repo-cppcheckport) | 72 | +0 | 4 |
-| [ansibleport](#repo-ansibleport) | 72 | +0 | 3 |
 | [libtoolport](#repo-libtoolport) | 71 | +0 | 3 |
 | [nanoport](#repo-nanoport) | 68 | +0 | 1 |
 | [gradleport](#repo-gradleport) | 67 | +0 | 1 |
@@ -131,6 +131,7 @@
 | [tigport](#repo-tigport) | 47 | +0 | 1 |
 | [lazygitport](#repo-lazygitport) | 46 | +0 | 1 |
 | [libsolvport](#repo-libsolvport) | 37 | +0 | 1 |
+| [catimgport](#repo-catimgport) | 37 | +37 | 1 |
 | [poptport](#repo-poptport) | 35 | +0 | 1 |
 | [whichport](#repo-whichport) | 34 | +0 | 1 |
 | [tcltlsport](#repo-tcltlsport) | 34 | +0 | 1 |
@@ -2378,6 +2379,29 @@
 
 ---
 
+<a id="repo-ansibleport"></a>
+## ansibleport
+
+- **Origin Date (First Commit):** 2025-07-24
+- **Current Patch LOC:** 100
+- **Current Patch Count:** 4
+
+### Historical Trends
+
+![LOC Trend for ansibleport](images/upstream/ansibleport_current_loc_trend.png)
+![Count Trend for ansibleport](images/upstream/ansibleport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/cli/__init__.py.patch` | `patches` | 14 |
+| `patches/plugins/connection/ssh.py.patch` | `patches` | 28 |
+| `patches/requirements.txt.patch` | `patches` | 9 |
+| `patches/utils/display.py.patch` | `patches` | 49 |
+
+---
+
 <a id="repo-pkgconfigport"></a>
 ## pkgconfigport
 
@@ -2684,28 +2708,6 @@
 | `patches/library.cpp.patch` | `patches` | 12 |
 | `patches/path.cpp.patch` | `patches` | 33 |
 | `patches/programmemory.cpp.patch` | `patches` | 18 |
-
----
-
-<a id="repo-ansibleport"></a>
-## ansibleport
-
-- **Origin Date (First Commit):** 2025-07-24
-- **Current Patch LOC:** 72
-- **Current Patch Count:** 3
-
-### Historical Trends
-
-![LOC Trend for ansibleport](images/upstream/ansibleport_current_loc_trend.png)
-![Count Trend for ansibleport](images/upstream/ansibleport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/cli/__init__.py.patch` | `patches` | 14 |
-| `patches/requirements.txt.patch` | `patches` | 9 |
-| `patches/utils/display.py.patch` | `patches` | 49 |
 
 ---
 
@@ -3103,6 +3105,26 @@
 | Patch File (Repo Relative Path) | Source | LOC |
 |---|---|:---|
 | `stable-patches/PR1.patch` | `stable-patches` | 37 |
+
+---
+
+<a id="repo-catimgport"></a>
+## catimgport
+
+- **Origin Date (First Commit):** 2025-08-05
+- **Current Patch LOC:** 37
+- **Current Patch Count:** 1
+
+### Historical Trends
+
+![LOC Trend for catimgport](images/upstream/catimgport_current_loc_trend.png)
+![Count Trend for catimgport](images/upstream/catimgport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/catimg-zos-fixes.patch` | `patches` | 37 |
 
 ---
 

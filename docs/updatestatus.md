@@ -525,6 +525,7 @@
 - ✅ bzip2port - [![Bump Status](https://github.com/zopencommunity/bzip2port/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/bzip2port/actions/workflows/bump.yml)
 - ✅ c3270port - [![Bump Status](https://github.com/zopencommunity/c3270port/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/c3270port/actions/workflows/bump.yml)
 - ✅ caddyport - [![Bump Status](https://github.com/zopencommunity/caddyport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/caddyport/actions/workflows/bump.yml)
+- ✅ catimgport - [![Bump Status](https://github.com/zopencommunity/catimgport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/catimgport/actions/workflows/bump.yml)
 - ✅ ccacheport - [![Bump Status](https://github.com/zopencommunity/ccacheport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/ccacheport/actions/workflows/bump.yml)
 - ❌ check_clangport - Workflow not configured
 - ❌ check_goport - Workflow not configured
@@ -782,10 +783,10 @@
 
 </details>
 
-**Summary:** 224 active | 52 missing
+**Summary:** 225 active | 52 missing
 
 ---
 
 
-> Last updated: 2025-08-08 06:07:50 EDT
+> Last updated: 2025-08-09 06:07:58 EDT
 
