@@ -13,7 +13,6 @@
 
 
 ## Projects with skipped or no tests (or no releases resulting in skipped status)
-* [ansibleport](https://github.com/zopencommunity/ansibleport) - Tests skipped or not enabled
 * [antport](https://github.com/zopencommunity/antport) - Tests skipped or not enabled
 * [buildkiteport](https://github.com/zopencommunity/buildkiteport) - Tests skipped or not enabled
 * [caddyport](https://github.com/zopencommunity/caddyport) - Tests skipped or not enabled
@@ -181,7 +180,6 @@
 | [spdlogport](https://github.com/zopencommunity/spdlogport) | 1 | 100.0% | doxygen |
 | [sqliteport](https://github.com/zopencommunity/sqliteport) | 1 | 100.0% | php |
 | [xxhashport](https://github.com/zopencommunity/xxhashport) | 1 | 100.0% | rsync |
-| [ansibleport](https://github.com/zopencommunity/ansibleport) | 0 | Skipped | None |
 | [antport](https://github.com/zopencommunity/antport) | 0 | Skipped | None |
 | [aprport](https://github.com/zopencommunity/aprport) | 0 | 100.0% | None |
 | [asioport](https://github.com/zopencommunity/asioport) | 0 | 100.0% | None |
@@ -306,4 +304,4 @@
 | [zospstreeport](https://github.com/zopencommunity/zospstreeport) | 0 | 100.0% | None |
 | [zotsampleport](https://github.com/zopencommunity/zotsampleport) | 0 | 100.0% | None |
 
-Last updated:  2025-08-10 06:13:44 UTC
+Last updated:  2025-08-11 06:14:01 UTC

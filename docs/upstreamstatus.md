@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-08-10 06:12:05 EDT.*
+*Report generated on: 2025-08-11 06:12:29 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 263
+- **Total Projects Analyzed:** 264
 - **Total Current Lines of Code (LOC) in Patches:** 40,736
 - **Total Number of Current Patch Files:** 849
-- **Average Current Patch LOC per Project:** 154.89
-- **Average Current Patch Count per Project:** 3.23
+- **Average Current Patch LOC per Project:** 154.30
+- **Average Current Patch Count per Project:** 3.22
 
 ### Historical Trends (All Projects)
 
@@ -287,6 +287,7 @@
 | [httpdport](#repo-httpdport) | 0 | +0 | 0 |
 | [glibport](#repo-glibport) | 0 | +0 | 0 |
 | [checkport](#repo-checkport) | 0 | +0 | 0 |
+| [librepoport](#repo-librepoport) | 0 | +0 | 0 |
 
 ---
 
@@ -6021,6 +6022,24 @@
 ## checkport
 
 - **Origin Date (First Commit):** 2025-07-29
+- **Current Patch LOC:** 0
+- **Current Patch Count:** 0
+
+### Historical Trends
+
+*(Patch LOC trend graph not generated)*
+*(Patch count trend graph not generated)*
+
+### Current Patch Details
+
+*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
+
+---
+
+<a id="repo-librepoport"></a>
+## librepoport
+
+- **Origin Date (First Commit):** 2025-08-11
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 

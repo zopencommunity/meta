@@ -647,6 +647,7 @@
 - ✅ libpslport - [![Bump Status](https://github.com/zopencommunity/libpslport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libpslport/actions/workflows/bump.yml)
 - ✅ librabbitmqport - [![Bump Status](https://github.com/zopencommunity/librabbitmqport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/librabbitmqport/actions/workflows/bump.yml)
 - ❌ librdkafkaport - Workflow not configured
+- ❌ librepoport - Workflow not configured
 - ❌ libsasl2port - Workflow not configured
 - ✅ libserdesport - [![Bump Status](https://github.com/zopencommunity/libserdesport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libserdesport/actions/workflows/bump.yml)
 - ✅ libsolvport - [![Bump Status](https://github.com/zopencommunity/libsolvport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libsolvport/actions/workflows/bump.yml)
@@ -783,10 +784,10 @@
 
 </details>
 
-**Summary:** 225 active | 52 missing
+**Summary:** 225 active | 53 missing
 
 ---
 
 
-> Last updated: 2025-08-10 06:07:46 EDT
+> Last updated: 2025-08-11 06:08:16 EDT
 
