@@ -136,7 +136,7 @@
 - 2025-05-16: [Update fx-version to 36.0.2 from 34.0.0](https://github.com/zopencommunity/fxport/pull/7) ❌
 - 2025-05-14: [Update fx-version to 36.0.1 from 34.0.0](https://github.com/zopencommunity/fxport/pull/6) ❌
 - 2025-05-13: [Update fx-version to 36.0.0 from 34.0.0](https://github.com/zopencommunity/fxport/pull/5) ❌
-- 2024-06-27: [Update fx-version to 35.0.0 from 34.0.0](https://github.com/zopencommunity/fxport/pull/2) ✅
+- 2024-06-27: [Update fx-version to 35.0.0 from 34.0.0](https://github.com/zopencommunity/fxport/pull/2) ❓
 
 ### fzfport
 - 2025-07-27: [Update fzf-version to 0.65.0 from 0.64.0](https://github.com/zopencommunity/fzfport/pull/44) ❌
@@ -317,7 +317,7 @@
 - 2024-09-19: [Update murex-version to 6.3.4225 from 6.0.1000](https://github.com/zopencommunity/murexport/pull/4) ❌
 - 2024-07-30: [Update murex-version to 6.2.4000 from 6.0.1000](https://github.com/zopencommunity/murexport/pull/3) ❌
 - 2024-07-19: [Update murex-version to 6.2.3000 from 6.0.1000](https://github.com/zopencommunity/murexport/pull/2) ❌
-- 2024-06-27: [Update murex-version to 6.1.8300 from 6.0.1000](https://github.com/zopencommunity/murexport/pull/1) ❌
+- 2024-06-27: [Update murex-version to 6.1.8300 from 6.0.1000](https://github.com/zopencommunity/murexport/pull/1) ❓
 
 ### ncduport
 - 2025-03-05: [Update ncdu-1-version to 1.22 from 1.20](https://github.com/zopencommunity/ncduport/pull/12) ❌
@@ -453,7 +453,7 @@
 - 2024-07-25: [Update terraform-version to 1.9.3 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/19) ❌
 - 2024-07-10: [Update terraform-version to 1.9.2 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/18) ❌
 - 2024-07-03: [Update terraform-version to 1.9.1 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/17) ❌
-- 2024-06-27: [Update terraform-version to 1.9.0 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/16) ❌
+- 2024-06-27: [Update terraform-version to 1.9.0 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/16) ❓
 - 2024-06-05: [Update terraform-version to 1.8.5 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/15) ❓
 
 ### texinfoport
@@ -532,7 +532,7 @@
 - ❌ check_xlclangport - Workflow not configured
 - ✅ chezmoiport - [![Bump Status](https://github.com/zopencommunity/chezmoiport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/chezmoiport/actions/workflows/bump.yml)
 - ✅ cjsonport - [![Bump Status](https://github.com/zopencommunity/cjsonport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/cjsonport/actions/workflows/bump.yml)
-- ❌ clang-formatport - Workflow not configured
+- ✅ clang-formatport - [![Bump Status](https://github.com/zopencommunity/clang-formatport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/clang-formatport/actions/workflows/bump.yml)
 - ✅ cmakeport - [![Bump Status](https://github.com/zopencommunity/cmakeport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/cmakeport/actions/workflows/bump.yml)
 - ❌ collateral - Workflow not configured
 - ✅ conanport - [![Bump Status](https://github.com/zopencommunity/conanport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/conanport/actions/workflows/bump.yml)
@@ -782,10 +782,10 @@
 
 </details>
 
-**Summary:** 225 active | 54 missing
+**Summary:** 226 active | 53 missing
 
 ---
 
 
-> Last updated: 2025-08-12 06:08:56 EDT
+> Last updated: 2025-08-13 06:09:00 EDT
 
