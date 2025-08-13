@@ -406,10 +406,10 @@ zot_deleteDuplicateEntries()
   fi
 
   echo "\${value}\${delim}" | awk -v RS="\${delim}" -v ORS="\${delim}" '
-    BEGIN={col=""}
+    BEGIN {col=""}
     !(\$0 in a) {
        a[\$0] = 1;
-       /bin/printf("%s%s", col, \$0);
+       printf("%s%s", col, \$0);
        col=ORS;
     }' | /bin/sed "s/\${delim}$//"
 }
