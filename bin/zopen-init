@@ -702,6 +702,28 @@ updateBootstrappedTools() {
       printSoftError "Unexpected errors merging symlinks into mesh"
       printError "Use zopen alt to select previous version to ensure known state"
     fi
+    printVerbose "Adding bootstrapped meta to package db"
+    printVerbose "Creating basic metadata.json"
+    cat << EOF > "${target}/metadata.json"
+{
+  "version_scheme": "0.2",
+  "product": {
+    "name": "meta",
+    "version": "0.0.0.0-bootstrap",
+    "release": "$(date +%Y%m%d_%H%M%S)",
+    "summary": "meta on z/OS",
+    "repo": "https://github.com/zopencommunity/metaport",
+    "license": "https://github.com/zopencommunity/metaport/blob/main/patches/LICENSE",
+    "zopen_license": "https://github.com/zopencommunity/metaport/blob/main/LICENSE",
+    "categories": "utilities",
+    "size": "$(du -ks "${target}" | awk '{print $1 * 1024}')",
+    "build_dependencies": [],
+    "runtime_dependencies": [],
+    "system_prereqs": []
+  }
+}
+EOF
+    addToInstallTracker "meta"
 
     printVerbose "Installing bootstrap tools"
     PAX_LOCATIONS="$CURL_PAX_LOCATION,$JQ_PAX_LOCATION,${PINENTRY_PAX_LOCATION},${GPG_PAX_LOCATION}"
