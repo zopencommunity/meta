@@ -53,13 +53,13 @@ Options:
 
   -h, -?, --help
           display this help and exit
-  
+
   --offline
           Perform the base installation of the zopen environment without
           attempting to update any of the bootstrapping packages. For
           use in air-gapped environments or where a custom package
           repository will be configed
-          Note: Post-configuration of alternate package sources might be 
+          Note: Post-configuration of alternate package sources might be
           required.
 
   --re-init
@@ -94,13 +94,13 @@ Examples:
           interactively bootstrap a zopen environment
 
   zopen init --releaseline-dev
-          interactively bootstrap a zopen environment that will use 
+          interactively bootstrap a zopen environment that will use
           Development Releaseline packages
   zopen init --yes --append-to-profile /zopen
-          non-interactively create a zopen environment at location 
-          '/zopen' on disk, with packages installed to 
-          '/usr/local/zopen'. The user's .profile will be updated to 
-          source the configuration file at '/zopen/etc/zopen-config' 
+          non-interactively create a zopen environment at location
+          '/zopen' on disk, with packages installed to
+          '/usr/local/zopen'. The user's .profile will be updated to
+          source the configuration file at '/zopen/etc/zopen-config'
           when new terminal sessions start
 
 Report bugs at https://github.com/zopencommunity/meta/issues
@@ -143,7 +143,7 @@ while [ $# -gt 0 ]; do
       reinitExisting=true
       ;;
     "--bypass-prereq-checks")
-      bypassPrereqs=true 
+      bypassPrereqs=true
       ;;
     "--rebuild-repo-config")
       rebuildRepoConfig=true
@@ -183,7 +183,7 @@ while [ $# -gt 0 ]; do
       verbose=true
       ;;
     "--version")
-      zopen-version $ME
+      zopen-version "$ME"
       exit 0
       ;;
     "--debug")
@@ -391,7 +391,7 @@ generateFileSystem()
   printVerbose "- Creating symbolic path for prod redirect files"
   [ -e "${rootfs}/usr/share/zopen/boot" ] || ln -s "${rootfs}/boot" "${rootfs}/usr/share/zopen/boot"
   [ -e "${rootfs}/etc/zopen" ] || mkdir -p "${rootfs}/etc/zopen"
-  
+
   printVerbose "- Creating product installation location"
   zopen_pkginstall="usr/local/zopen"
   [ -e "${rootfs}/${zopen_pkginstall}" ] || mkdir -p "${rootfs}/${zopen_pkginstall}"
@@ -416,7 +416,7 @@ generateFileSystem()
 generateZopenConfig()
 {
   printHeader "Generating zopen-config"
-  writeConfigFile "${configFile}" "${rootfs}" "${zopen_pkginstall}" "${ZOPEN_CA_DIR}/${certFileName}" $OVERRIDE_ZOS_TOOLS
+  writeConfigFile "${configFile}" "${rootfs}" "${zopen_pkginstall}" "${ZOPEN_CA_DIR}/${certFileName}" "$OVERRIDE_ZOS_TOOLS"
   printInfo "- Created config in ${configFile}"
   if ${appendToProfile}; then
     if ! grep -q ". ${rootfs}/etc/zopen-config" "${HOME}/.profile"; then
@@ -456,12 +456,12 @@ generateJsonConfiguration()
       return 4
     fi
     rm_fileprocs=$(jqw -r '.num_rm_procs' "${jsonConfig}")
-    if [ -z "${OVERRIDE_ZOS_TOOLS}" ] && jqw -er ".override_zos_tools" $jsonConfig >/dev/null; then
-      OVERRIDE_ZOS_TOOLS=$(jqw -r '.override_zos_tools' $jsonConfig)
+    if [ -z "${OVERRIDE_ZOS_TOOLS}" ] && jqw -er ".override_zos_tools" "$jsonConfig" >/dev/null; then
+      OVERRIDE_ZOS_TOOLS=$(jqw -r '.override_zos_tools' "$jsonConfig")
     fi
     autocacheclean=$(jqw -r '.autocacheclean' "${jsonConfig}")
     autopkgpurge=$(jqw -r '.autopkgpurge' "${jsonConfig}")
-    skip_broken=$(jqw -r '.skip_broken' "${jsonConfig}")  
+    skip_broken=$(jqw -r '.skip_broken' "${jsonConfig}")
   fi
 
   if ${releaselineDev}; then
@@ -484,7 +484,7 @@ generateJsonConfiguration()
         ;;
     *) showConfigParmWarning "autocacheclean" "${autocacheclean}" "0|1" "1"
        autocacheclean=1
-       
+
        ;;
   esac
   case "${autopkgpurge:=0}" in
@@ -527,8 +527,8 @@ zz
     # In case 3rd-party edits have been made (adding custom keys for
     # example), just update the values that zopen itself knows about inline
     if ! jqw --arg releaseLine "${releaseLine}" \
-        --arg isoverrideZOSTools ${OVERRIDE_ZOS_TOOLS} \
-        --arg isCollectingStats ${isCollectingStats} \
+        --arg isoverrideZOSTools "${OVERRIDE_ZOS_TOOLS}" \
+        --arg isCollectingStats "${isCollectingStats}" \
                 ".release_line = \$releaseLine | .override_zos_tools = \$isoverrideZOSTools | .is_collecting_stats = \$isCollectingStats" \
                 "${jsonConfig}" > "${jsonConfigWorking}"; then
       printError "Errors updating existing configuration file. See previous errors for more information and retry command."
@@ -542,7 +542,7 @@ generateDefaultRepository()
 {
     # Check for existing repository definition - if present, use unless
     # user wants to rebuild the default repository file
-  [ -e "${rootfs}/etc/zopen/repos.d/active" ] && 
+  [ -e "${rootfs}/etc/zopen/repos.d/active" ] &&
       ! ${rebuildRepoConfig} && return 0
 
   # If there is no repository definition, generate a default to point to Github
@@ -554,12 +554,12 @@ generateDefaultRepository()
 
   repotype="${paxrepourl%://*}"
   [ "${repotype}" = "${paxrepourl}" ] && printError "Unable to parse repository type from '${paxrepourl}'. Ensure valid format: <http|file>://<path to repo"
-  
+
   case "${repotype}" in
     http|https|file) printDebug "configuring repo type of: '${repotype}'";;
     *) printError "Unsupported repository type of '${repotype}'"
   esac
-  
+
   repourl="${paxrepourl#*://}"
   [ "${repourl}" = "${paxrepourl}" ] && printError "Unable to parse repository url from'${paxrepourl}'. Ensure valid format: <http|file>://<path to repo"
 
@@ -570,17 +570,17 @@ generateDefaultRepository()
 
   baserepourl="${repourl%/*}"
   [ "${baserepourl}" = "${repourl}" ] && printError "Unable to parse repository file from '${paxrepourl}'. Ensure valid format: <http|file>://<path to repo"
-  
+
   repoFile="${rootfs}/etc/zopen/repos.d/$(echo "${repourl}" | tr -d "/[:space:]._").json"
 
   # Backup any existing repository configuration file
   [ -e "${repoFile}" ] && mv "${repoFile}" "${repoFile}.$(date "+%C%m%d%H%M%S")"
   cat << EOS >  "${repoFile}"
-{ 
-  "type": "${repotype}", 
-  "metadata_baseurl": "${baserepourl}", 
+{
+  "type": "${repotype}",
+  "metadata_baseurl": "${baserepourl}",
   "metadata_file": "${repometafile}",
-  "latest_file": "${latestmetafile}" 
+  "latest_file": "${latestmetafile}"
 }
 EOS
   # Create active link if not already present; if it is present, it'll either point to the default already or
@@ -618,7 +618,7 @@ zz
     printSoftError "${jqrc}"
     printError "Unable to update analystics configuration. See previous errors for more details."
   fi
-  
+
   registerFileSystem "${UUID}" "${isHostIBM}" "${isBot}"
 
   if [ -n "$ZOPEN_ROOTFS" ]; then
@@ -654,10 +654,9 @@ installPrereqs()
     cachedir="${rootfs}/var/cache/zopen"
     basepax=$(basename ${pax})
     [ -e "${cachedir}/${basepax}" ] || printError "Could not locate bootstrap ${pax}."
-    paxrc=$(pax -rf "${cachedir}/${basepax}" -s##${rootfs}/boot/#)
 
-    if [ $? -gt 0 ]; then
-      printError "Failed to extract pax file ${basepax}"
+    if ! paxrc=$(pax -rf "${cachedir}/${basepax}" "-s##${rootfs}/boot/#"); then
+      printError "Failed to extract pax file ${basepax}: ${paxrc}"
     fi
  done
 
@@ -670,6 +669,7 @@ installPrereqs()
      chmod -R 755 "${rootfs}/boot/${tooldir}"
      curwd="${PWD}"
      cd "${rootfs}/boot/${tooldir}/" || printError "Could not access ${tool} bootstrap in directory '${rootfs}/boot/${tooldir}/'. Re-run 'zopen init' to retry"
+     # shellcheck disable=SC1091
      . ./.env
      cd "${curwd}" || printError "Could not change to ${curwd}. Re-run 'zopen init' to retry"
   done
@@ -684,7 +684,7 @@ updateBootstrappedTools() {
     installOptions="${installOptions} --bypass-prereq-checks";
   fi
   if ${refresh}; then
-    ${MYDIR}/zopen-install ${installOptions} -y curl jq pinentry gpg 
+    "${MYDIR}"/zopen-install "${installOptions}" -y curl jq pinentry gpg
     toolInstall=$?
   elif ${offlineInstall}; then
     printVerbose "As offline, no access to meta.pax so copy currently running"
@@ -695,6 +695,7 @@ updateBootstrappedTools() {
     printVerbose "Copying bare meta scripts from '${metabindir}' to '${target}"
     cp -R "${metabindir}/../bin" "${target}"
     cp -R "${metabindir}/../include" "${target}"
+
     printVerbose "Creating main symlink for meta"
     ln -s "${ulzm}/meta-bootstrap" "${ulzm}/meta"
     if ! runLogProgress "mergeIntoSystem \"meta\" \"${ulzm}/meta-bootstrap\" \"${rootfs}\"" \
@@ -736,7 +737,7 @@ EOF
           pax="${workingPaxList%%,*}"
           workingPaxList="${workingPaxList#*,}"
           ;;
-        *) 
+        *)
           # Last item [hence no comma separator]
           pax="${workingPaxList}"
           workingPaxList=""
@@ -754,6 +755,7 @@ EOF
       fi
     done
   else
+    # shellcheck disable=SC2086  # We want installOptions to be split
     "${MYDIR}/zopen-install" ${installOptions} -y curl jq pinentry gpg meta
     toolInstall=$?
   fi
