@@ -1822,13 +1822,29 @@ a2e()
   fi
 }
 
+testGPGAgentSocket() {
+  # Test whether the gpg socket that has been found is actually valid -
+  # orphaned sockets without a daemon can lead to gpg errors when trying
+  # to restart
+  if ! gpg-connect-agent --socket="$1" /bye >/dev/null 2>&1; then
+    return 1
+  fi
+  return 0
+}
+
 startGPGAgent() {
   printInfo "- Starting gpg-agent..."
 
   SOCKET_PATH=$(gpgconf --list-dirs agent-socket)
+  printVerbose "gpg socket path: ${SOCKET_PATH}"
   if [ -r "$SOCKET_PATH" ]; then
-    printVerbose "gpg-agent is already running (socket found at $SOCKET_PATH)."
-    return 0
+    if testGPGAgentSocket "${SOCKET_PATH}"; then
+      printVerbose "gpg-agent is already running (socket found at ${SOCKET_PATH})."
+      return 0
+    else
+      printWarning "Found orphaned GPG agent socket at ${SOCKET_PATH}; removing and attempting restart of gpg-agent."
+      rm -f "${SOCKET_PATH}"
+    fi
   fi
 
   if eval "$(gpg-agent --daemon --disable-scdaemon)" >/dev/null 2>&1; then

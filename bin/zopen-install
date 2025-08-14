@@ -21,37 +21,6 @@ setupMyself()
 setupMyself
 checkWritable
 
-startGPGAgent() {
-  printInfo "- Starting gpg-agent..."
-
-  SOCKET_PATH=$(gpgconf --list-dirs agent-socket)
-  if [ -r "$SOCKET_PATH" ]; then
-    printVerbose "gpg-agent is already running (socket found at $SOCKET_PATH)."
-    return 0
-  fi
-
-  if eval "$(gpg-agent --daemon --disable-scdaemon)" >/dev/null 2>&1; then
-    if [ -r "$SOCKET_PATH" ]; then
-      printVerbose "gpg-agent started successfully (socket created at $SOCKET_PATH)."
-    else
-      printWarning "gpg-agent started, but socket was not created at $SOCKET_PATH. Please verify your GPG installation."
-    fi
-  else
-    if [ -r "$SOCKET_PATH" ]; then
-      printWarning "gpg-agent started successfully (socket created at $SOCKET_PATH), but gpg-agent returned a non-zero return code."
-    else
-      printError "Failed to start gpg-agent. Reinstall or upgrade GPG using \"zopen install --reinstall gpg -y\" or \"zopen upgrade gpg -y\"."
-    fi
-  fi
-}
-
-gpgCleanup() {
-  printVerbose "Cleaning up $SIGNATURE_FILE, $PUBLIC_KEY_FILE and $TMP_GPG_DIR"
-  [ -e "$SIGNATURE_FILE" ] && rm -f "$SIGNATURE_FILE"
-  [ -e "$PUBLIC_KEY_FILE" ] && rm -f "$PUBLIC_KEY_FILE"
-  [ -d "$TMP_GPG_DIR" ] && rm -rf "$TMP_GPG_DIR"
-}
-
 printHelp()
 {
 cat << HELPDOC
