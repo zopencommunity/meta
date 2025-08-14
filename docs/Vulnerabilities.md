@@ -5,7 +5,7 @@
 ## vim
 
 <details>
-<summary>vim (Build 2178) - (STABLE) -- 3 medium vulnerabilities</summary>
+<summary>vim (Build 2178) - (STABLE) -- 5 vulnerabilities (2 high, 3 medium)</summary>
 
 - Affected release URL: [vim (Build 2178) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2178)
 
@@ -18,11 +18,15 @@ but it may cause a crash of Vim. The issue has been fixed as of Vim patch v9.1.0
 a line. Back then we assumed this loop is unnecessary. However, this change made it possible that the cursor position stays invalid and points beyond the end of a line, which would eventually cause a heap-buffer-overflow when trying to access the line pointer at
 the specified cursor position. It's not quite clear yet, what can lead to this situation that the cursor points to an invalid position. That's why patch v9.1.0707 does not include a test case. The only observed impact has been a program crash. This issue has been addressed in with the patch v9.1.0707. All users are advised to upgrade.
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+- **(HIGH severity) CVE-2025-55157**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1400, When processing nested tuples in Vim script, an error during evaluation can trigger a use-after-free in Vim’s internal tuple reference management. Specifically, the tuple_unref() function may access already freed memory due to improper lifetime handling, leading to memory corruption. The exploit requires direct user interaction, as the script must be explicitly executed within Vim. This issue has been patched in version 9.1.1400.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+- **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
 
 </details>
 
 <details>
-<summary>vim (Build 2204) - (STABLE) -- 3 medium vulnerabilities</summary>
+<summary>vim (Build 2204) - (STABLE) -- 5 vulnerabilities (2 high, 3 medium)</summary>
 
 - Affected release URL: [vim (Build 2204) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2204)
 
@@ -35,11 +39,15 @@ but it may cause a crash of Vim. The issue has been fixed as of Vim patch v9.1.0
 a line. Back then we assumed this loop is unnecessary. However, this change made it possible that the cursor position stays invalid and points beyond the end of a line, which would eventually cause a heap-buffer-overflow when trying to access the line pointer at
 the specified cursor position. It's not quite clear yet, what can lead to this situation that the cursor points to an invalid position. That's why patch v9.1.0707 does not include a test case. The only observed impact has been a program crash. This issue has been addressed in with the patch v9.1.0707. All users are advised to upgrade.
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+- **(HIGH severity) CVE-2025-55157**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1400, When processing nested tuples in Vim script, an error during evaluation can trigger a use-after-free in Vim’s internal tuple reference management. Specifically, the tuple_unref() function may access already freed memory due to improper lifetime handling, leading to memory corruption. The exploit requires direct user interaction, as the script must be explicitly executed within Vim. This issue has been patched in version 9.1.1400.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+- **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
 
 </details>
 
 <details>
-<summary>vim (Build 2224) - (STABLE) -- 3 medium vulnerabilities</summary>
+<summary>vim (Build 2224) - (STABLE) -- 5 vulnerabilities (2 high, 3 medium)</summary>
 
 - Affected release URL: [vim (Build 2224) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2224)
 
@@ -52,11 +60,15 @@ but it may cause a crash of Vim. The issue has been fixed as of Vim patch v9.1.0
 a line. Back then we assumed this loop is unnecessary. However, this change made it possible that the cursor position stays invalid and points beyond the end of a line, which would eventually cause a heap-buffer-overflow when trying to access the line pointer at
 the specified cursor position. It's not quite clear yet, what can lead to this situation that the cursor points to an invalid position. That's why patch v9.1.0707 does not include a test case. The only observed impact has been a program crash. This issue has been addressed in with the patch v9.1.0707. All users are advised to upgrade.
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+- **(HIGH severity) CVE-2025-55157**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1400, When processing nested tuples in Vim script, an error during evaluation can trigger a use-after-free in Vim’s internal tuple reference management. Specifically, the tuple_unref() function may access already freed memory due to improper lifetime handling, leading to memory corruption. The exploit requires direct user interaction, as the script must be explicitly executed within Vim. This issue has been patched in version 9.1.1400.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+- **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
 
 </details>
 
 <details>
-<summary>vim (Build 2253) - (STABLE) -- 3 medium vulnerabilities</summary>
+<summary>vim (Build 2253) - (STABLE) -- 5 vulnerabilities (2 high, 3 medium)</summary>
 
 - Affected release URL: [vim (Build 2253) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2253)
 
@@ -69,11 +81,15 @@ but it may cause a crash of Vim. The issue has been fixed as of Vim patch v9.1.0
 a line. Back then we assumed this loop is unnecessary. However, this change made it possible that the cursor position stays invalid and points beyond the end of a line, which would eventually cause a heap-buffer-overflow when trying to access the line pointer at
 the specified cursor position. It's not quite clear yet, what can lead to this situation that the cursor points to an invalid position. That's why patch v9.1.0707 does not include a test case. The only observed impact has been a program crash. This issue has been addressed in with the patch v9.1.0707. All users are advised to upgrade.
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+- **(HIGH severity) CVE-2025-55157**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1400, When processing nested tuples in Vim script, an error during evaluation can trigger a use-after-free in Vim’s internal tuple reference management. Specifically, the tuple_unref() function may access already freed memory due to improper lifetime handling, leading to memory corruption. The exploit requires direct user interaction, as the script must be explicitly executed within Vim. This issue has been patched in version 9.1.1400.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+- **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
 
 </details>
 
 <details>
-<summary>vim (Build 2265) - (STABLE) -- 3 medium vulnerabilities</summary>
+<summary>vim (Build 2265) - (STABLE) -- 5 vulnerabilities (2 high, 3 medium)</summary>
 
 - Affected release URL: [vim (Build 2265) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2265)
 
@@ -86,11 +102,15 @@ but it may cause a crash of Vim. The issue has been fixed as of Vim patch v9.1.0
 a line. Back then we assumed this loop is unnecessary. However, this change made it possible that the cursor position stays invalid and points beyond the end of a line, which would eventually cause a heap-buffer-overflow when trying to access the line pointer at
 the specified cursor position. It's not quite clear yet, what can lead to this situation that the cursor points to an invalid position. That's why patch v9.1.0707 does not include a test case. The only observed impact has been a program crash. This issue has been addressed in with the patch v9.1.0707. All users are advised to upgrade.
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+- **(HIGH severity) CVE-2025-55157**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1400, When processing nested tuples in Vim script, an error during evaluation can trigger a use-after-free in Vim’s internal tuple reference management. Specifically, the tuple_unref() function may access already freed memory due to improper lifetime handling, leading to memory corruption. The exploit requires direct user interaction, as the script must be explicitly executed within Vim. This issue has been patched in version 9.1.1400.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+- **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
 
 </details>
 
 <details>
-<summary>vim (Build 2271) - (STABLE) -- 3 medium vulnerabilities</summary>
+<summary>vim (Build 2271) - (STABLE) -- 5 vulnerabilities (2 high, 3 medium)</summary>
 
 - Affected release URL: [vim (Build 2271) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2271)
 
@@ -103,11 +123,15 @@ but it may cause a crash of Vim. The issue has been fixed as of Vim patch v9.1.0
 a line. Back then we assumed this loop is unnecessary. However, this change made it possible that the cursor position stays invalid and points beyond the end of a line, which would eventually cause a heap-buffer-overflow when trying to access the line pointer at
 the specified cursor position. It's not quite clear yet, what can lead to this situation that the cursor points to an invalid position. That's why patch v9.1.0707 does not include a test case. The only observed impact has been a program crash. This issue has been addressed in with the patch v9.1.0707. All users are advised to upgrade.
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+- **(HIGH severity) CVE-2025-55157**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1400, When processing nested tuples in Vim script, an error during evaluation can trigger a use-after-free in Vim’s internal tuple reference management. Specifically, the tuple_unref() function may access already freed memory due to improper lifetime handling, leading to memory corruption. The exploit requires direct user interaction, as the script must be explicitly executed within Vim. This issue has been patched in version 9.1.1400.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+- **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
 
 </details>
 
 <details>
-<summary>vim (Build 2389) - (STABLE) -- 1 medium vulnerability</summary>
+<summary>vim (Build 2389) - (STABLE) -- 3 vulnerabilities (2 high, 1 medium)</summary>
 
 - Affected release URL: [vim (Build 2389) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2389)
 
@@ -115,11 +139,15 @@ the specified cursor position. It's not quite clear yet, what can lead to this s
 a line. Back then we assumed this loop is unnecessary. However, this change made it possible that the cursor position stays invalid and points beyond the end of a line, which would eventually cause a heap-buffer-overflow when trying to access the line pointer at
 the specified cursor position. It's not quite clear yet, what can lead to this situation that the cursor points to an invalid position. That's why patch v9.1.0707 does not include a test case. The only observed impact has been a program crash. This issue has been addressed in with the patch v9.1.0707. All users are advised to upgrade.
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+- **(HIGH severity) CVE-2025-55157**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1400, When processing nested tuples in Vim script, an error during evaluation can trigger a use-after-free in Vim’s internal tuple reference management. Specifically, the tuple_unref() function may access already freed memory due to improper lifetime handling, leading to memory corruption. The exploit requires direct user interaction, as the script must be explicitly executed within Vim. This issue has been patched in version 9.1.1400.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+- **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
 
 </details>
 
 <details>
-<summary>vim (Build 2408) - (STABLE) -- 1 medium vulnerability</summary>
+<summary>vim (Build 2408) - (STABLE) -- 3 vulnerabilities (2 high, 1 medium)</summary>
 
 - Affected release URL: [vim (Build 2408) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2408)
 
@@ -127,11 +155,15 @@ the specified cursor position. It's not quite clear yet, what can lead to this s
 a line. Back then we assumed this loop is unnecessary. However, this change made it possible that the cursor position stays invalid and points beyond the end of a line, which would eventually cause a heap-buffer-overflow when trying to access the line pointer at
 the specified cursor position. It's not quite clear yet, what can lead to this situation that the cursor points to an invalid position. That's why patch v9.1.0707 does not include a test case. The only observed impact has been a program crash. This issue has been addressed in with the patch v9.1.0707. All users are advised to upgrade.
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+- **(HIGH severity) CVE-2025-55157**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1400, When processing nested tuples in Vim script, an error during evaluation can trigger a use-after-free in Vim’s internal tuple reference management. Specifically, the tuple_unref() function may access already freed memory due to improper lifetime handling, leading to memory corruption. The exploit requires direct user interaction, as the script must be explicitly executed within Vim. This issue has been patched in version 9.1.1400.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+- **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
 
 </details>
 
 <details>
-<summary>vim (Build 2421) - (STABLE) -- 1 medium vulnerability</summary>
+<summary>vim (Build 2421) - (STABLE) -- 3 vulnerabilities (2 high, 1 medium)</summary>
 
 - Affected release URL: [vim (Build 2421) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2421)
 
@@ -139,17 +171,217 @@ the specified cursor position. It's not quite clear yet, what can lead to this s
 a line. Back then we assumed this loop is unnecessary. However, this change made it possible that the cursor position stays invalid and points beyond the end of a line, which would eventually cause a heap-buffer-overflow when trying to access the line pointer at
 the specified cursor position. It's not quite clear yet, what can lead to this situation that the cursor points to an invalid position. That's why patch v9.1.0707 does not include a test case. The only observed impact has been a program crash. This issue has been addressed in with the patch v9.1.0707. All users are advised to upgrade.
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+- **(HIGH severity) CVE-2025-55157**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1400, When processing nested tuples in Vim script, an error during evaluation can trigger a use-after-free in Vim’s internal tuple reference management. Specifically, the tuple_unref() function may access already freed memory due to improper lifetime handling, leading to memory corruption. The exploit requires direct user interaction, as the script must be explicitly executed within Vim. This issue has been patched in version 9.1.1400.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+- **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
 
 </details>
 
 <details>
-<summary>vim (Build 2423) - (Alpha) - Dataset I/O -- 1 medium vulnerability</summary>
+<summary>vim (Build 2423) - (Alpha) - Dataset I/O -- 3 vulnerabilities (2 high, 1 medium)</summary>
 
 - Affected release URL: [vim (Build 2423) - (Alpha) - Dataset I/O](https://github.com/zopencommunity/vimport/releases/tag/datasetio)
 
 - **(MEDIUM severity) CVE-2024-45306**: Vim is an open source, command line text editor. Patch v9.1.0038 optimized how the cursor position is calculated and removed a loop, that verified that the cursor position always points inside a line and does not become invalid by pointing beyond the end of
 a line. Back then we assumed this loop is unnecessary. However, this change made it possible that the cursor position stays invalid and points beyond the end of a line, which would eventually cause a heap-buffer-overflow when trying to access the line pointer at
 the specified cursor position. It's not quite clear yet, what can lead to this situation that the cursor points to an invalid position. That's why patch v9.1.0707 does not include a test case. The only observed impact has been a program crash. This issue has been addressed in with the patch v9.1.0707. All users are advised to upgrade.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+- **(HIGH severity) CVE-2025-55157**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1400, When processing nested tuples in Vim script, an error during evaluation can trigger a use-after-free in Vim’s internal tuple reference management. Specifically, the tuple_unref() function may access already freed memory due to improper lifetime handling, leading to memory corruption. The exploit requires direct user interaction, as the script must be explicitly executed within Vim. This issue has been patched in version 9.1.1400.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+- **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+
+</details>
+
+<details>
+<summary>vim (Build 2436) - (STABLE) -- 2 high vulnerabilities</summary>
+
+- Affected release URL: [vim (Build 2436) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2436)
+
+- **(HIGH severity) CVE-2025-55157**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1400, When processing nested tuples in Vim script, an error during evaluation can trigger a use-after-free in Vim’s internal tuple reference management. Specifically, the tuple_unref() function may access already freed memory due to improper lifetime handling, leading to memory corruption. The exploit requires direct user interaction, as the script must be explicitly executed within Vim. This issue has been patched in version 9.1.1400.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+- **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+
+</details>
+
+<details>
+<summary>vim (Build 2461) - (STABLE) -- 2 high vulnerabilities</summary>
+
+- Affected release URL: [vim (Build 2461) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2461)
+
+- **(HIGH severity) CVE-2025-55157**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1400, When processing nested tuples in Vim script, an error during evaluation can trigger a use-after-free in Vim’s internal tuple reference management. Specifically, the tuple_unref() function may access already freed memory due to improper lifetime handling, leading to memory corruption. The exploit requires direct user interaction, as the script must be explicitly executed within Vim. This issue has been patched in version 9.1.1400.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+- **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+
+</details>
+
+<details>
+<summary>vim (Build 2493) - (STABLE) -- 2 high vulnerabilities</summary>
+
+- Affected release URL: [vim (Build 2493) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2493)
+
+- **(HIGH severity) CVE-2025-55157**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1400, When processing nested tuples in Vim script, an error during evaluation can trigger a use-after-free in Vim’s internal tuple reference management. Specifically, the tuple_unref() function may access already freed memory due to improper lifetime handling, leading to memory corruption. The exploit requires direct user interaction, as the script must be explicitly executed within Vim. This issue has been patched in version 9.1.1400.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+- **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+
+</details>
+
+<details>
+<summary>vim (Build 2697) - (STABLE) -- 2 high vulnerabilities</summary>
+
+- Affected release URL: [vim (Build 2697) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2697)
+
+- **(HIGH severity) CVE-2025-55157**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1400, When processing nested tuples in Vim script, an error during evaluation can trigger a use-after-free in Vim’s internal tuple reference management. Specifically, the tuple_unref() function may access already freed memory due to improper lifetime handling, leading to memory corruption. The exploit requires direct user interaction, as the script must be explicitly executed within Vim. This issue has been patched in version 9.1.1400.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+- **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+
+</details>
+
+<details>
+<summary>vim (Build 2736) - (STABLE) -- 2 high vulnerabilities</summary>
+
+- Affected release URL: [vim (Build 2736) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2736)
+
+- **(HIGH severity) CVE-2025-55157**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1400, When processing nested tuples in Vim script, an error during evaluation can trigger a use-after-free in Vim’s internal tuple reference management. Specifically, the tuple_unref() function may access already freed memory due to improper lifetime handling, leading to memory corruption. The exploit requires direct user interaction, as the script must be explicitly executed within Vim. This issue has been patched in version 9.1.1400.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+- **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+
+</details>
+
+<details>
+<summary>vim (Build 2810) - (STABLE) -- 2 high vulnerabilities</summary>
+
+- Affected release URL: [vim (Build 2810) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2810)
+
+- **(HIGH severity) CVE-2025-55157**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1400, When processing nested tuples in Vim script, an error during evaluation can trigger a use-after-free in Vim’s internal tuple reference management. Specifically, the tuple_unref() function may access already freed memory due to improper lifetime handling, leading to memory corruption. The exploit requires direct user interaction, as the script must be explicitly executed within Vim. This issue has been patched in version 9.1.1400.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+- **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+
+</details>
+
+<details>
+<summary>vim (Build 2958) - (STABLE) -- 2 high vulnerabilities</summary>
+
+- Affected release URL: [vim (Build 2958) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2958)
+
+- **(HIGH severity) CVE-2025-55157**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1400, When processing nested tuples in Vim script, an error during evaluation can trigger a use-after-free in Vim’s internal tuple reference management. Specifically, the tuple_unref() function may access already freed memory due to improper lifetime handling, leading to memory corruption. The exploit requires direct user interaction, as the script must be explicitly executed within Vim. This issue has been patched in version 9.1.1400.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+- **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+
+</details>
+
+<details>
+<summary>vim (Build 3052) - (STABLE) -- 2 high vulnerabilities</summary>
+
+- Affected release URL: [vim (Build 3052) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3052)
+
+- **(HIGH severity) CVE-2025-55157**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1400, When processing nested tuples in Vim script, an error during evaluation can trigger a use-after-free in Vim’s internal tuple reference management. Specifically, the tuple_unref() function may access already freed memory due to improper lifetime handling, leading to memory corruption. The exploit requires direct user interaction, as the script must be explicitly executed within Vim. This issue has been patched in version 9.1.1400.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+- **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+
+</details>
+
+<details>
+<summary>vim (Build 3107) - (STABLE) -- 2 high vulnerabilities</summary>
+
+- Affected release URL: [vim (Build 3107) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3107)
+
+- **(HIGH severity) CVE-2025-55157**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1400, When processing nested tuples in Vim script, an error during evaluation can trigger a use-after-free in Vim’s internal tuple reference management. Specifically, the tuple_unref() function may access already freed memory due to improper lifetime handling, leading to memory corruption. The exploit requires direct user interaction, as the script must be explicitly executed within Vim. This issue has been patched in version 9.1.1400.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+- **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+
+</details>
+
+<details>
+<summary>vim (Build 3115) - (STABLE) -- 2 high vulnerabilities</summary>
+
+- Affected release URL: [vim (Build 3115) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3115)
+
+- **(HIGH severity) CVE-2025-55157**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1400, When processing nested tuples in Vim script, an error during evaluation can trigger a use-after-free in Vim’s internal tuple reference management. Specifically, the tuple_unref() function may access already freed memory due to improper lifetime handling, leading to memory corruption. The exploit requires direct user interaction, as the script must be explicitly executed within Vim. This issue has been patched in version 9.1.1400.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+- **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+
+</details>
+
+<details>
+<summary>vim 9.1.1016.0 (zusage) - (STABLE) -- 2 high vulnerabilities</summary>
+
+- Affected release URL: [vim 9.1.1016.0 (zusage) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/zusage)
+
+- **(HIGH severity) CVE-2025-55157**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1400, When processing nested tuples in Vim script, an error during evaluation can trigger a use-after-free in Vim’s internal tuple reference management. Specifically, the tuple_unref() function may access already freed memory due to improper lifetime handling, leading to memory corruption. The exploit requires direct user interaction, as the script must be explicitly executed within Vim. This issue has been patched in version 9.1.1400.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+- **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+
+</details>
+
+<details>
+<summary>vim (Build 3153) - (STABLE) -- 2 high vulnerabilities</summary>
+
+- Affected release URL: [vim (Build 3153) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3153)
+
+- **(HIGH severity) CVE-2025-55157**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1400, When processing nested tuples in Vim script, an error during evaluation can trigger a use-after-free in Vim’s internal tuple reference management. Specifically, the tuple_unref() function may access already freed memory due to improper lifetime handling, leading to memory corruption. The exploit requires direct user interaction, as the script must be explicitly executed within Vim. This issue has been patched in version 9.1.1400.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+- **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+
+</details>
+
+<details>
+<summary>vim (Build 3192) - (STABLE) -- 2 high vulnerabilities</summary>
+
+- Affected release URL: [vim (Build 3192) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3192)
+
+- **(HIGH severity) CVE-2025-55157**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1400, When processing nested tuples in Vim script, an error during evaluation can trigger a use-after-free in Vim’s internal tuple reference management. Specifically, the tuple_unref() function may access already freed memory due to improper lifetime handling, leading to memory corruption. The exploit requires direct user interaction, as the script must be explicitly executed within Vim. This issue has been patched in version 9.1.1400.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+- **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+
+</details>
+
+<details>
+<summary>vim (Build 3315) - (STABLE) -- 2 high vulnerabilities</summary>
+
+- Affected release URL: [vim (Build 3315) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3315)
+
+- **(HIGH severity) CVE-2025-55157**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1400, When processing nested tuples in Vim script, an error during evaluation can trigger a use-after-free in Vim’s internal tuple reference management. Specifically, the tuple_unref() function may access already freed memory due to improper lifetime handling, leading to memory corruption. The exploit requires direct user interaction, as the script must be explicitly executed within Vim. This issue has been patched in version 9.1.1400.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+- **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+
+</details>
+
+<details>
+<summary>vim (Build 3334) - (STABLE) -- 2 high vulnerabilities</summary>
+
+- Affected release URL: [vim (Build 3334) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3334)
+
+- **(HIGH severity) CVE-2025-55157**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1400, When processing nested tuples in Vim script, an error during evaluation can trigger a use-after-free in Vim’s internal tuple reference management. Specifically, the tuple_unref() function may access already freed memory due to improper lifetime handling, leading to memory corruption. The exploit requires direct user interaction, as the script must be explicitly executed within Vim. This issue has been patched in version 9.1.1400.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+- **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+
+</details>
+
+<details>
+<summary>vim (Build 3351) - (STABLE) -- 2 high vulnerabilities</summary>
+
+- Affected release URL: [vim (Build 3351) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3351)
+
+- **(HIGH severity) CVE-2025-55157**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1400, When processing nested tuples in Vim script, an error during evaluation can trigger a use-after-free in Vim’s internal tuple reference management. Specifically, the tuple_unref() function may access already freed memory due to improper lifetime handling, leading to memory corruption. The exploit requires direct user interaction, as the script must be explicitly executed within Vim. This issue has been patched in version 9.1.1400.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
+- **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)**.
 
 </details>
