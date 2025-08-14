@@ -2425,6 +2425,11 @@ generateZOSLIBHooks()
     return
   fi
 
+  if [ -n "${ZOPEN_DONT_ADD_ZOSLIB_DEP}" ]; then
+    printVerbose "Skipping GenerateZOSLIBHooks since ZOPEN_DONT_ADD_ZOSLIB_DEP is set"
+    return
+  fi
+
   if ! command -v "$(echo ${CC} | awk '{print $NF}')" > /dev/null 2>&1; then
     printVerbose "Skipping GenerateZOSLIBHooks since CC is not a command"
     return
