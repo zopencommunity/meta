@@ -113,20 +113,19 @@
   background-color: #ffffff; /* Or transparent, if your page background isn't white */
 }
 
-@media (prefers-color-scheme: dark) {
-  .markdown-section table,
-  .markdown-section th,
-  .markdown-section td,
-  .markdown-section pre,
-  .markdown-section code {
-    color: #eee !important;
-    background-color: transparent !important;
-  }
+html body .markdown-section table,
+html body .markdown-section th,
+html body .markdown-section td,
+html body .markdown-section pre,
+html body .markdown-section code {
+  color: #eee !important;
+  background-color: transparent !important;
+}
 
-  .tool-item-filterable:nth-child(even) {
-    background-color: rgba(255, 255, 255, 0.05) !important;
-  }
-  .tool-item-filterable:nth-child(odd) {
-    background-color: rgba(255, 255, 255, 0.02) !important;
-  }
+html body .tool-item-filterable:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+html body .tool-item-filterable:nth-child(odd) {
+  background-color: rgba(255, 255, 255, 0.02) !important;
 }
