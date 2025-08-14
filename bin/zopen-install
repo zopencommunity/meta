@@ -60,12 +60,12 @@ verifySignatureOfPax()
      printError "Failed to extract 'pax' from ${metadataFile}" >&2
   fi
 
-  if ! SIGNATURE=$(jq -e -r '.product.signature' "${metadataFile}"); then 
+  if ! SIGNATURE=$(jq -e -r '.product.signature' "${metadataFile}"); then
     printVerbose "Failed to extract 'signature' from ${metadataFile}" >&2
     return
   fi
 
-  if ! PUBLIC_KEY=$(jq -e -r '.product.public_key' "${metadataFile}"); then 
+  if ! PUBLIC_KEY=$(jq -e -r '.product.public_key' "${metadataFile}"); then
      printError "Failed to extract 'public_key' from ${metadataFile}" >&2
   fi
 
@@ -847,6 +847,7 @@ if ${all}; then
 else
   chosenRepos=$(strtrim "${chosenRepos}")
   invalidlist=""
+  suggestionlist=""
   for chosenRepo in $(echo "${chosenRepos}" | tr ',' ' ' | tr -s ' '); do
     printVerbose "Processing repo: ${chosenRepo}"
     printVerbose "Stripping any version (%), tag (#) or port suffixes"
@@ -859,13 +860,22 @@ else
       chosenRepos=$(echo "${chosenRepos}" | sed -e "s#^${chosenRepo}\$##")
     else
       invalidlist=$(/bin/printf "%s %s" "${invalidlist}" "${chosenRepo}")
+      suggestion=$(findSuggestion "${toolrepo}" "${repo_results}")
+      if [ -n "${suggestion}" ]; then
+        suggestionlist="${suggestionlist}\n> Did you mean to install '${suggestion}'?"
+      fi
     fi
   done
 fi
 
 printVerbose "Checking whether any invalid ports were specified."
 if [ -n "${invalidlist}" ]; then
-  printSoftError "The following requested port(s) do not exist:\n\t$(echo "${invalidlist}" | tr -s '[:space:]')"
+  # Format invalid ports onto new lines for readability
+  printSoftError "The following requested port(s) do not exist:$(echo "${invalidlist}" | tr ' ' '\n\t')"
+  if [ -n "${suggestionlist}" ]; then
+    # Use echo to print suggestions without the printSoftError prefix for cleaner output
+    echo -e "${suggestionlist}" >&2
+  fi
   printError "Check port name(s), remove any port suffixes and retry command."
 fi
 
