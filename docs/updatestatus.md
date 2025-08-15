@@ -465,9 +465,6 @@
 - 2025-02-07: [Update tig-version to 2.5.12 from 2.5.9](https://github.com/zopencommunity/tigport/pull/10) ❌
 - 2025-01-31: [Update tig-version to 2.5.11 from 2.5.9](https://github.com/zopencommunity/tigport/pull/9) ❌
 
-### util-linuxport
-- 2025-06-24: [Update util-linux-version to 2.41.1 from 2.41](https://github.com/zopencommunity/util-linuxport/pull/19) ❌
-
 ### victoriametricsport
 - 2025-08-05: [Update victoriametrics-version to 1.123.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/33) ❌
 - 2025-07-21: [Update victoriametrics-version to 1.122.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/32) ❌
@@ -787,5 +784,5 @@
 ---
 
 
-> Last updated: 2025-08-14 06:09:04 EDT
+> Last updated: 2025-08-15 06:08:23 EDT
 
