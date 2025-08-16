@@ -469,6 +469,16 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
+<div class="tool-item-filterable" data-package-name="clang-format" data-searchable-text="clang-format Green 100.0% STABLE_clang-format_3661 development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/clang-formatport" target="_blank" rel="noopener noreferrer">clang-format</a></strong></div>
+    <div class="tool-status">Status: Green</div>
+    <div class="tool-test">Test: 100.0%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/clang-formatport/releases/download/STABLE_clang-formatport_3661/llvm-project-llvmorg-20.1.8.20250815_133430.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_clang-format_3661</a></div>
+    <div class="tool-desc" title=""></div>
+  </div>
+</div>
+
 <div class="tool-item-filterable" data-package-name="conan" data-searchable-text="conan Yellow 54.0% STABLE_conan_3047 C/C++ Package Manager tool development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/conanport" target="_blank" rel="noopener noreferrer">conan</a></strong></div>
@@ -1215,12 +1225,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="check_python" data-searchable-text="check_python Green 100.0% STABLE_check_python_3088 A script to check for the existence of Python language port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="check_python" data-searchable-text="check_python Green 100.0% STABLE_check_python_3032 A script to check for the existence of Python language port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/check_pythonport" target="_blank" rel="noopener noreferrer">check_python</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/check_pythonport/releases/download/STABLE_check_pythonport_3088/check_python-DEV.20250206_214926.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_check_python_3088</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/check_pythonport/releases/download/STABLE_check_pythonport_3032/check_python-DEV.20250131_100552.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_check_python_3032</a></div>
     <div class="tool-desc" title="A script to check for the existence of Python">A script to check for the existence of Python</div>
   </div>
 </div>
@@ -2822,4 +2832,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-08-15 06:14:59 UTC
+Last updated:  2025-08-16 06:13:44 UTC
