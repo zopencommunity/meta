@@ -2,30 +2,31 @@
   --toc-width: 20rem;
 }
 
-.sidebar-nav>ul>li>ul>li>ul>li.active>a:before {
+.sidebar-nav > ul > li > ul > li > ul > li.active > a:before {
   content: none;
   color: none;
 }
 
-.sidebar-nav>ul>li>ul>li>ul>li>a:before {
+.sidebar-nav > ul > li > ul > li > ul > li > a:before {
   content: none;
   margin: none;
   color: none;
 }
 
-.sidebar-nav li.active>a[href^="#/"]:not([href*="?id="]):not(:only-child) {
-    background-image: none;
-    background-position: none;
-}
-.sidebar-nav li>a[href^="#/"]:not([href*="?id="]):not(:only-child) {
-    background-image: none;
-    background-position: none;
-}
-.sidebar-nav li>a[href^="#/"]:not([href*="?id="]):only-child {
+.sidebar-nav li.active > a[href^="#/"]:not([href*="?id="]):not(:only-child) {
   background-image: none;
   background-position: none;
 }
-.sidebar-nav li>a[href^="#/"]:not([href*="?id="]), .sidebar-nav li>a[href^="#/"]:not([href*="?id="]) ~ ul a {
+.sidebar-nav li > a[href^="#/"]:not([href*="?id="]):not(:only-child) {
+  background-image: none;
+  background-position: none;
+}
+.sidebar-nav li > a[href^="#/"]:not([href*="?id="]):only-child {
+  background-image: none;
+  background-position: none;
+}
+.sidebar-nav li > a[href^="#/"]:not([href*="?id="]),
+.sidebar-nav li > a[href^="#/"]:not([href*="?id="]) ~ ul a {
   padding: 1px;
 }
 
@@ -37,7 +38,7 @@
 }
 
 .page_toc {
-  border-left-color: var(--base-color, rgba(0,0,0,0.07))
+  border-left-color: var(--base-color, rgba(0, 0, 0, 0.07));
 }
 
 #docsify-darklight-theme {
@@ -62,11 +63,12 @@
   display: grid;
   /* Define your columns. Adjust widths as needed.
      Order: Name | Status | Test | Release | Description */
-  grid-template-columns: minmax(140px, 1.5fr) /* Name */
-                         minmax(100px, 0.8fr) /* Status */
-                         minmax(90px, 0.7fr)  /* Test */
-                         minmax(180px, 1.2fr) /* Release */
-                         minmax(200px, 2fr);  /* Description */
+  grid-template-columns:
+    minmax(140px, 1.5fr) /* Name */
+    minmax(100px, 0.8fr) /* Status */
+    minmax(90px, 0.7fr) /* Test */
+    minmax(180px, 1.2fr) /* Release */
+    minmax(200px, 2fr); /* Description */
   gap: 0px 12px; /* No row gap, 12px column gap for spacing between "cells" */
   align-items: baseline; /* Aligns text nicely if some items wrap within their cell */
   font-size: 0.9em; /* Overall smaller font for the details line */
@@ -75,9 +77,9 @@
 
 /* Style for individual "cells" in the grid */
 .tool-info-grid > div {
-  overflow: hidden;         /* Hide overflow */
-  text-overflow: ellipsis;  /* Add ... for overflowed text */
-  white-space: nowrap;      /* Keep text on a single line to trigger ellipsis */
+  overflow: hidden; /* Hide overflow */
+  text-overflow: ellipsis; /* Add ... for overflowed text */
+  white-space: nowrap; /* Keep text on a single line to trigger ellipsis */
 }
 
 /* Allow Name and Description to wrap if needed, overriding nowrap */
@@ -109,4 +111,21 @@
 }
 .tool-item-filterable:nth-child(odd) {
   background-color: #ffffff; /* Or transparent, if your page background isn't white */
+}
+
+html body .markdown-section table,
+html body .markdown-section th,
+html body .markdown-section td,
+html body .markdown-section pre,
+html body .markdown-section code {
+  color: #eee !important;
+  background-color: transparent !important;
+}
+
+html body .tool-item-filterable:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+html body .tool-item-filterable:nth-child(odd) {
+  background-color: rgba(255, 255, 255, 0.02) !important;
 }
