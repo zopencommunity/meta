@@ -587,6 +587,18 @@ In `2.62.0`, the remote username information is being validated before being use
 ## grafana
 
 <details>
+<summary>grafana (Build 2266) - (STABLE) -- 1 medium vulnerability</summary>
+
+- Affected release URL: [grafana (Build 2266) - (STABLE)](https://github.com/zopencommunity/grafanaport/releases/tag/STABLE_grafanaport_2266)
+
+- **(MEDIUM severity) CVE-2025-4123**: A cross-site scripting (XSS) vulnerability exists in Grafana caused by combining a client path traversal and open redirect. This allows attackers to redirect users to a website that hosts a frontend plugin that will execute arbitrary JavaScript. This vulnerability does not require editor permissions and if anonymous access is enabled, the XSS will work. If the Grafana Image Renderer plugin is installed, it is possible to exploit the open redirect to achieve a full read SSRF.
+
+The default Content-Security-Policy (CSP) in Grafana will block the XSS though the `connect-src` directive.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/grafanaport/releases/tag/STABLE_grafanaport_2268)**.
+
+</details>
+
+<details>
 <summary>grafana (Build 2267) - (STABLE) -- 1 high vulnerability</summary>
 
 - Affected release URL: [grafana (Build 2267) - (STABLE)](https://github.com/zopencommunity/grafanaport/releases/tag/STABLE_grafanaport_67)

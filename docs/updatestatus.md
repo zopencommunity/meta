@@ -452,7 +452,7 @@
 - 2024-08-07: [Update terraform-version to 1.9.4 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/20) ❌
 - 2024-07-25: [Update terraform-version to 1.9.3 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/19) ❌
 - 2024-07-10: [Update terraform-version to 1.9.2 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/18) ❌
-- 2024-07-03: [Update terraform-version to 1.9.1 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/17) ❌
+- 2024-07-03: [Update terraform-version to 1.9.1 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/17) ❓
 - 2024-06-27: [Update terraform-version to 1.9.0 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/16) ❓
 - 2024-06-05: [Update terraform-version to 1.8.5 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/15) ❓
 
@@ -784,5 +784,5 @@
 ---
 
 
-> Last updated: 2025-08-17 06:07:43 EDT
+> Last updated: 2025-08-18 06:08:36 EDT
 
