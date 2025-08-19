@@ -1531,19 +1531,23 @@ replaceHardcodedPath()
   f=$3
   hasHardcodedPaths=true
   printVerbose "Replacing ${orig} in ${f}"
-  # only substitute text
-  if /bin/sed -e "" ${f} 2> /dev/null 1>&2; then
+  # only substitute text files
+  if /bin/sed -e "" "${f}" 2> /dev/null 1>&2; then
     isWritable=true
     if [ ! -w "${f}" ]; then
-      isWriteable=false
-      chmod "+w" ${f}
+      isWritable=false
+      chmod "+w" "${f}"
     fi
-    cp ${f} ${f}.old &&
-      # replace hardcoded path and strip out the -suffix in name to match active
-      sed -e "s#${orig}/\([^/]\+\)/[^/\n '\";]*#${replaced}/\1/\1#g" ${f}.old > ${f} &&
-      rm ${f}.old
-    if ! ${isWriteable}; then
-      chmod "-w" ${f}
+
+    cp "${f}" "${f}.old" &&
+      sed \
+        -e "s#${orig}/\([^/]\+\)/[^/\n '\";]*#${replaced}/\1/\1#g" \
+        -e "s#${ZOSLIB_HOOK_OBJ}##g" \
+        "${f}.old" > "${f}" &&
+      rm "${f}.old"
+
+    if ! ${isWritable}; then
+      chmod "-w" "${f}"
     fi
   fi
 }
@@ -2615,6 +2619,7 @@ zz
   # Apply it in both LIB envars because some ports use ZOPEN_EXTRA_LIBS directly
   export ZOPEN_EXTRA_LIBS="${ZOPEN_EXTRA_LIBS} ${PWD}/${output}.o"
   export LIBS="${LIBS} ${PWD}/${output}.o"
+  export ZOSLIB_HOOK_OBJ="${PWD}/${output}.o"
 
   cd "${prevpath}" || printError "Could not change back to the original path ${prevpath}"
 }
