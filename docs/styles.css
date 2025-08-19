@@ -115,9 +115,7 @@
 
 html body .markdown-section table,
 html body .markdown-section th,
-html body .markdown-section td,
-html body .markdown-section pre,
-html body .markdown-section code {
+html body .markdown-section td {
   color: #eee !important;
   background-color: transparent !important;
 }
