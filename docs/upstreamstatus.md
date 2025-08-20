@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-08-19 06:13:54 EDT.*
+*Report generated on: 2025-08-20 06:13:39 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 265
-- **Total Current Lines of Code (LOC) in Patches:** 40,749
-- **Total Number of Current Patch Files:** 849
-- **Average Current Patch LOC per Project:** 153.77
-- **Average Current Patch Count per Project:** 3.20
+- **Total Projects Analyzed:** 267
+- **Total Current Lines of Code (LOC) in Patches:** 41,371
+- **Total Number of Current Patch Files:** 857
+- **Average Current Patch LOC per Project:** 154.95
+- **Average Current Patch Count per Project:** 3.21
 
 ### Historical Trends (All Projects)
 
@@ -40,12 +40,13 @@
 | [gzipport](#repo-gzipport) | 690 | +0 | 8 |
 | [procpsport](#repo-procpsport) | 687 | +0 | 1 |
 | [perlport](#repo-perlport) | 684 | +0 | 14 |
-| [util-linuxport](#repo-util-linuxport) | 594 | +0 | 15 |
+| [util-linuxport](#repo-util-linuxport) | 630 | +36 | 16 |
 | [redisport](#repo-redisport) | 588 | +13 | 3 |
 | [unzipport](#repo-unzipport) | 549 | +0 | 12 |
 | [inetutilsport](#repo-inetutilsport) | 514 | +0 | 20 |
 | [cronieport](#repo-cronieport) | 510 | +0 | 13 |
 | [screenport](#repo-screenport) | 485 | +0 | 7 |
+| [glibport](#repo-glibport) | 459 | +459 | 2 |
 | [tmuxport](#repo-tmuxport) | 440 | +0 | 13 |
 | [libpcapport](#repo-libpcapport) | 440 | +0 | 8 |
 | [treeport](#repo-treeport) | 425 | +0 | 3 |
@@ -116,7 +117,9 @@
 | [nanoport](#repo-nanoport) | 68 | +0 | 1 |
 | [gradleport](#repo-gradleport) | 67 | +0 | 1 |
 | [getoptport](#repo-getoptport) | 66 | +0 | 1 |
+| [librepoport](#repo-librepoport) | 66 | +66 | 1 |
 | [logrotateport](#repo-logrotateport) | 65 | +0 | 1 |
+| [libkqueueport](#repo-libkqueueport) | 61 | +61 | 4 |
 | [doom-asciiport](#repo-doom-asciiport) | 60 | +0 | 1 |
 | [lz4port](#repo-lz4port) | 58 | +0 | 4 |
 | [snappy-cport](#repo-snappy-cport) | 56 | +0 | 1 |
@@ -285,10 +288,9 @@
 | [libyamlport](#repo-libyamlport) | 0 | +0 | 0 |
 | [jsoncppport](#repo-jsoncppport) | 0 | +0 | 0 |
 | [httpdport](#repo-httpdport) | 0 | +0 | 0 |
-| [glibport](#repo-glibport) | 0 | +0 | 0 |
 | [checkport](#repo-checkport) | 0 | +0 | 0 |
-| [librepoport](#repo-librepoport) | 0 | +0 | 0 |
 | [clang-formatport](#repo-clang-formatport) | 0 | +0 | 0 |
+| [crushport](#repo-crushport) | 0 | +0 | 0 |
 
 ---
 
@@ -940,8 +942,8 @@
 ## util-linuxport
 
 - **Origin Date (First Commit):** 2023-11-22
-- **Current Patch LOC:** 594
-- **Current Patch Count:** 15
+- **Current Patch LOC:** 630
+- **Current Patch Count:** 16
 
 ### Historical Trends
 
@@ -959,6 +961,7 @@
 | `patches/flock.c.patch` | `patches` | 45 |
 | `patches/gen_uuid.c.patch` | `patches` | 50 |
 | `patches/monotonic.c.patch` | `patches` | 13 |
+| `patches/path.c.patch` | `patches` | 36 |
 | `patches/pty-session.patch` | `patches` | 131 |
 | `patches/setsid.c.patch` | `patches` | 15 |
 | `patches/strutils.c.patch` | `patches` | 12 |
@@ -1117,6 +1120,27 @@
 | `patches/screen.c.patch` | `patches` | 80 |
 | `patches/tty.sh.patch` | `patches` | 40 |
 | `patches/utmp.c.patch` | `patches` | 112 |
+
+---
+
+<a id="repo-glibport"></a>
+## glibport
+
+- **Origin Date (First Commit):** 2025-07-29
+- **Current Patch LOC:** 459
+- **Current Patch Count:** 2
+
+### Historical Trends
+
+![LOC Trend for glibport](images/upstream/glibport_current_loc_trend.png)
+![Count Trend for glibport](images/upstream/glibport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/disable-libffi-wrap.patch` | `patches` | 4 |
+| `patches/p1.patch` | `patches` | 455 |
 
 ---
 
@@ -2795,6 +2819,26 @@
 
 ---
 
+<a id="repo-librepoport"></a>
+## librepoport
+
+- **Origin Date (First Commit):** 2025-08-11
+- **Current Patch LOC:** 66
+- **Current Patch Count:** 1
+
+### Historical Trends
+
+![LOC Trend for librepoport](images/upstream/librepoport_current_loc_trend.png)
+![Count Trend for librepoport](images/upstream/librepoport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/PR1.patch` | `patches` | 66 |
+
+---
+
 <a id="repo-logrotateport"></a>
 ## logrotateport
 
@@ -2812,6 +2856,29 @@
 | Patch File (Repo Relative Path) | Source | LOC |
 |---|---|:---|
 | `patches/PR1.patch` | `patches` | 65 |
+
+---
+
+<a id="repo-libkqueueport"></a>
+## libkqueueport
+
+- **Origin Date (First Commit):** 2025-08-20
+- **Current Patch LOC:** 61
+- **Current Patch Count:** 4
+
+### Historical Trends
+
+![LOC Trend for libkqueueport](images/upstream/libkqueueport_current_loc_trend.png)
+![Count Trend for libkqueueport](images/upstream/libkqueueport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/CMakeLists.txt.patch` | `patches` | 13 |
+| `patches/debug.h.patch` | `patches` | 13 |
+| `patches/private.h.patch` | `patches` | 21 |
+| `patches/proc.c.patch` | `patches` | 14 |
 
 ---
 
@@ -6001,24 +6068,6 @@
 
 ---
 
-<a id="repo-glibport"></a>
-## glibport
-
-- **Origin Date (First Commit):** 2025-07-29
-- **Current Patch LOC:** 0
-- **Current Patch Count:** 0
-
-### Historical Trends
-
-*(Patch LOC trend graph not generated)*
-*(Patch count trend graph not generated)*
-
-### Current Patch Details
-
-*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
-
----
-
 <a id="repo-checkport"></a>
 ## checkport
 
@@ -6037,10 +6086,10 @@
 
 ---
 
-<a id="repo-librepoport"></a>
-## librepoport
+<a id="repo-clang-formatport"></a>
+## clang-formatport
 
-- **Origin Date (First Commit):** 2025-08-11
+- **Origin Date (First Commit):** 2025-08-12
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 
@@ -6055,10 +6104,10 @@
 
 ---
 
-<a id="repo-clang-formatport"></a>
-## clang-formatport
+<a id="repo-crushport"></a>
+## crushport
 
-- **Origin Date (First Commit):** 2025-08-12
+- **Origin Date (First Commit):** 2025-04-24
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 

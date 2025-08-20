@@ -376,7 +376,7 @@
 - 2024-10-02: [Update php-version to 8.3.12 from 8.2.13](https://github.com/zopencommunity/phpport/pull/25) ❌
 - 2024-08-30: [Update php-version to 8.3.11 from 8.2.13](https://github.com/zopencommunity/phpport/pull/23) ❌
 - 2024-08-01: [Update php-version to 8.3.10 from 8.2.13](https://github.com/zopencommunity/phpport/pull/22) ❌
-- 2024-07-05: [Update php-version to 8.3.9 from 8.2.13](https://github.com/zopencommunity/phpport/pull/21) ❌
+- 2024-07-05: [Update php-version to 8.3.9 from 8.2.13](https://github.com/zopencommunity/phpport/pull/21) ❓
 - 2024-06-06: [Update php-version to 8.3.8 from 8.2.13](https://github.com/zopencommunity/phpport/pull/20) ❓
 - 2024-05-09: [Update php-version to 8.3.7 from 8.2.13](https://github.com/zopencommunity/phpport/pull/19) ❓
 - 2024-04-11: [Update php-version to 8.3.6 from 8.2.13](https://github.com/zopencommunity/phpport/pull/18) ❓
@@ -539,6 +539,7 @@
 - ✅ cppcheckport - [![Bump Status](https://github.com/zopencommunity/cppcheckport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/cppcheckport/actions/workflows/bump.yml)
 - ✅ creduceport - [![Bump Status](https://github.com/zopencommunity/creduceport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/creduceport/actions/workflows/bump.yml)
 - ❌ cronieport - Workflow not configured
+- ✅ crushport - [![Bump Status](https://github.com/zopencommunity/crushport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/crushport/actions/workflows/bump.yml)
 - ✅ cscopeport - [![Bump Status](https://github.com/zopencommunity/cscopeport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/cscopeport/actions/workflows/bump.yml)
 - ✅ ctagsport - [![Bump Status](https://github.com/zopencommunity/ctagsport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/ctagsport/actions/workflows/bump.yml)
 - ✅ cunitport - [![Bump Status](https://github.com/zopencommunity/cunitport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/cunitport/actions/workflows/bump.yml)
@@ -633,6 +634,7 @@
 - ✅ libgpgerrorport - [![Bump Status](https://github.com/zopencommunity/libgpgerrorport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libgpgerrorport/actions/workflows/bump.yml)
 - ❌ libgpgmeport - Workflow not configured
 - ✅ libiconvport - [![Bump Status](https://github.com/zopencommunity/libiconvport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libiconvport/actions/workflows/bump.yml)
+- ❌ libkqueueport - Workflow not configured
 - ✅ libksbaport - [![Bump Status](https://github.com/zopencommunity/libksbaport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libksbaport/actions/workflows/bump.yml)
 - ✅ libmdport - [![Bump Status](https://github.com/zopencommunity/libmdport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libmdport/actions/workflows/bump.yml)
 - ❌ libpcapport - Workflow not configured
@@ -642,7 +644,7 @@
 - ✅ libpslport - [![Bump Status](https://github.com/zopencommunity/libpslport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libpslport/actions/workflows/bump.yml)
 - ✅ librabbitmqport - [![Bump Status](https://github.com/zopencommunity/librabbitmqport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/librabbitmqport/actions/workflows/bump.yml)
 - ❌ librdkafkaport - Workflow not configured
-- ❌ librepoport - Workflow not configured
+- ✅ librepoport - [![Bump Status](https://github.com/zopencommunity/librepoport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/librepoport/actions/workflows/bump.yml)
 - ❌ libsasl2port - Workflow not configured
 - ✅ libserdesport - [![Bump Status](https://github.com/zopencommunity/libserdesport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libserdesport/actions/workflows/bump.yml)
 - ✅ libsolvport - [![Bump Status](https://github.com/zopencommunity/libsolvport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libsolvport/actions/workflows/bump.yml)
@@ -779,10 +781,10 @@
 
 </details>
 
-**Summary:** 226 active | 53 missing
+**Summary:** 228 active | 53 missing
 
 ---
 
 
-> Last updated: 2025-08-19 06:08:26 EDT
+> Last updated: 2025-08-20 06:08:42 EDT
 

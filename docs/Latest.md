@@ -247,6 +247,16 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
+<div class="tool-item-filterable" data-package-name="rpm" data-searchable-text="rpm Green 100.0% STABLE_rpm_3666 The RPM Package Manager (RPM) is a powerful package management system capable of building computer software from source into easily distributable packages, installing, updating and uninstalling packaged software core port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/rpmport" target="_blank" rel="noopener noreferrer">rpm</a></strong></div>
+    <div class="tool-status">Status: Green</div>
+    <div class="tool-test">Test: 100.0%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/rpmport/releases/download/STABLE_rpmport_3666/rpm-5.99.91.20250820_052925.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_rpm_3666</a></div>
+    <div class="tool-desc" title="The RPM Package Manager (RPM) is a powerful package management system capable of building computer software from source into easily distributable packages, installing, updating and uninstalling packaged software">The RPM Package Manager (RPM) is a powerful package management system capable of building computer software from source into easily distributable packages, installing, updating and uninstalling packaged software</div>
+  </div>
+</div>
+
 <div class="tool-item-filterable" data-package-name="screen" data-searchable-text="screen Skipped N/A STABLE_screen_2906 A full-screen terminal multiplexer core port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/screenport" target="_blank" rel="noopener noreferrer">screen</a></strong></div>
@@ -277,12 +287,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="util-linux" data-searchable-text="util-linux Skipped N/A STABLE_util-linux_3322 A collection of system utilities core port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="util-linux" data-searchable-text="util-linux Skipped N/A STABLE_util-linux_3667 A collection of system utilities core port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/util-linuxport" target="_blank" rel="noopener noreferrer">util-linux</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/util-linuxport/releases/download/STABLE_util-linuxport_3322/util-linux-v2.41.20250512_151626.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_util-linux_3322</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/util-linuxport/releases/download/STABLE_util-linuxport_3667/util-linux-v2.41.1.20250820_061052.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_util-linux_3667</a></div>
     <div class="tool-desc" title="A collection of system utilities">A collection of system utilities</div>
   </div>
 </div>
@@ -749,11 +759,11 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="metaldio" data-searchable-text="metaldio Green 100.0% STABLE_metaldio_3541 development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="metaldio" data-searchable-text="metaldio Green N/A STABLE_metaldio_3541 development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/metaldioport" target="_blank" rel="noopener noreferrer">metaldio</a></strong></div>
     <div class="tool-status">Status: Green</div>
-    <div class="tool-test">Test: 100.0%</div>
+    <div class="tool-test">Test: N/A</div>
     <div class="tool-release"><a href="https://github.com/zopencommunity/metaldioport/releases/download/STABLE_metaldioport_3541/metaldio-V0.1.20250709_151554.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_metaldio_3541</a></div>
     <div class="tool-desc" title=""></div>
   </div>
@@ -1225,12 +1235,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="check_python" data-searchable-text="check_python Green 100.0% STABLE_check_python_3032 A script to check for the existence of Python language port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="check_python" data-searchable-text="check_python Green 100.0% STABLE_check_python_3088 A script to check for the existence of Python language port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/check_pythonport" target="_blank" rel="noopener noreferrer">check_python</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/check_pythonport/releases/download/STABLE_check_pythonport_3032/check_python-DEV.20250131_100552.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_check_python_3032</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/check_pythonport/releases/download/STABLE_check_pythonport_3088/check_python-DEV.20250206_214926.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_check_python_3088</a></div>
     <div class="tool-desc" title="A script to check for the existence of Python">A script to check for the existence of Python</div>
   </div>
 </div>
@@ -1328,6 +1338,16 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
     <div class="tool-test">Test: 100.0%</div>
     <div class="tool-release"><a href="https://github.com/zopencommunity/expatport/releases/download/STABLE_expatport_2953/expat-2.5.0.20250130_225430.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_expat_2953</a></div>
     <div class="tool-desc" title="A library for parsing XML content">A library for parsing XML content</div>
+  </div>
+</div>
+
+<div class="tool-item-filterable" data-package-name="glib" data-searchable-text="glib Blue 88.6% STABLE_glib_3664 library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/glibport" target="_blank" rel="noopener noreferrer">glib</a></strong></div>
+    <div class="tool-status">Status: Blue</div>
+    <div class="tool-test">Test: 88.6%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/glibport/releases/download/STABLE_glibport_3664/glib-2.85.2.20250819_160545.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_glib_3664</a></div>
+    <div class="tool-desc" title=""></div>
   </div>
 </div>
 
@@ -1441,6 +1461,16 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
+<div class="tool-item-filterable" data-package-name="libkqueue" data-searchable-text="libkqueue Green 100.0% STABLE_libkqueue_3665 A user space implementation of the kqueue(2) kernel event notification mechanism libkqueue acts as a translator between the kevent structure and the native kernel facilities on Linux, Android, Solaris, and Windows. library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libkqueueport" target="_blank" rel="noopener noreferrer">libkqueue</a></strong></div>
+    <div class="tool-status">Status: Green</div>
+    <div class="tool-test">Test: 100.0%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/libkqueueport/releases/download/STABLE_libkqueueport_3665/libkqueue-v2.6.3.20250820_050203.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libkqueue_3665</a></div>
+    <div class="tool-desc" title="A user space implementation of the kqueue(2) kernel event notification mechanism libkqueue acts as a translator between the kevent structure and the native kernel facilities on Linux, Android, Solaris, and Windows.">A user space implementation of the kqueue(2) kernel event notification mechanism libkqueue acts as a translator between the kevent structure and the native kernel facilities on Linux, Android, Solaris, and Windows.</div>
+  </div>
+</div>
+
 <div class="tool-item-filterable" data-package-name="libksba" data-searchable-text="libksba Green 100.0% STABLE_libksba_3449 A library for working with X.509 certificates and other cryptographic objects library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libksbaport" target="_blank" rel="noopener noreferrer">libksba</a></strong></div>
@@ -1501,6 +1531,16 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
+<div class="tool-item-filterable" data-package-name="librepo" data-searchable-text="librepo Green 100.0% STABLE_librepo_3669 library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/librepoport" target="_blank" rel="noopener noreferrer">librepo</a></strong></div>
+    <div class="tool-status">Status: Green</div>
+    <div class="tool-test">Test: 100.0%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/librepoport/releases/download/STABLE_librepoport_3669/librepo-1.20.0.20250820_080359.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_librepo_3669</a></div>
+    <div class="tool-desc" title=""></div>
+  </div>
+</div>
+
 <div class="tool-item-filterable" data-package-name="libsolv" data-searchable-text="libsolv Green 100.0% STABLE_libsolv_3640 Library for solving packages and reading repositories library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libsolvport" target="_blank" rel="noopener noreferrer">libsolv</a></strong></div>
@@ -1551,11 +1591,11 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="metaldio" data-searchable-text="metaldio Green 100.0% STABLE_metaldio_3541 library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="metaldio" data-searchable-text="metaldio Green N/A STABLE_metaldio_3541 library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/metaldioport" target="_blank" rel="noopener noreferrer">metaldio</a></strong></div>
     <div class="tool-status">Status: Green</div>
-    <div class="tool-test">Test: 100.0%</div>
+    <div class="tool-test">Test: N/A</div>
     <div class="tool-release"><a href="https://github.com/zopencommunity/metaldioport/releases/download/STABLE_metaldioport_3541/metaldio-V0.1.20250709_151554.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_metaldio_3541</a></div>
     <div class="tool-desc" title=""></div>
   </div>
@@ -1571,11 +1611,11 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="openldap" data-searchable-text="openldap Green 100.0% STABLE_openldap_3591 library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="openldap" data-searchable-text="openldap Green N/A STABLE_openldap_3591 library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/openldapport" target="_blank" rel="noopener noreferrer">openldap</a></strong></div>
     <div class="tool-status">Status: Green</div>
-    <div class="tool-test">Test: 100.0%</div>
+    <div class="tool-test">Test: N/A</div>
     <div class="tool-release"><a href="https://github.com/zopencommunity/openldapport/releases/download/STABLE_openldapport_3591/openldap-2.6.10.20250725_134847.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_openldap_3591</a></div>
     <div class="tool-desc" title=""></div>
   </div>
@@ -2103,11 +2143,11 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="curl" data-searchable-text="curl Blue 99.9% STABLE_curl_3596 Networking tool uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="curl" data-searchable-text="curl Blue N/A STABLE_curl_3596 Networking tool uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/curlport" target="_blank" rel="noopener noreferrer">curl</a></strong></div>
     <div class="tool-status">Status: Blue</div>
-    <div class="tool-test">Test: 99.9%</div>
+    <div class="tool-test">Test: N/A</div>
     <div class="tool-release"><a href="https://github.com/zopencommunity/curlport/releases/download/STABLE_curlport_3596/curl-8.15.0.20250728_192752.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_curl_3596</a></div>
     <div class="tool-desc" title="Networking tool">Networking tool</div>
   </div>
@@ -2233,12 +2273,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="ncurses" data-searchable-text="ncurses Green 100.0% STABLE_ncurses_3491 Library for ncurses, a terminal screen handling library uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="ncurses" data-searchable-text="ncurses Green 100.0% STABLE_ncurses_3663 Library for ncurses, a terminal screen handling library uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/ncursesport" target="_blank" rel="noopener noreferrer">ncurses</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/ncursesport/releases/download/STABLE_ncursesport_3491/ncurses-6.5.20250625_114034.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_ncurses_3491</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/ncursesport/releases/download/STABLE_ncursesport_3663/ncurses-6.5.20250819_155443.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_ncurses_3663</a></div>
     <div class="tool-desc" title="Library for ncurses, a terminal screen handling library">Library for ncurses, a terminal screen handling library</div>
   </div>
 </div>
@@ -2519,21 +2559,21 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="meta" data-searchable-text="meta Green 100.0% STABLE_meta_3660 zopen package manager utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="meta" data-searchable-text="meta Green 100.0% STABLE_meta_3662 zopen package manager utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/metaport" target="_blank" rel="noopener noreferrer">meta</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/metaport/releases/download/STABLE_metaport_3660/meta-main.20250814_154133.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_meta_3660</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/metaport/releases/download/STABLE_metaport_3662/meta-main.20250819_150756.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_meta_3662</a></div>
     <div class="tool-desc" title="zopen package manager">zopen package manager</div>
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="metaldio" data-searchable-text="metaldio Green 100.0% STABLE_metaldio_3541 utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="metaldio" data-searchable-text="metaldio Green N/A STABLE_metaldio_3541 utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/metaldioport" target="_blank" rel="noopener noreferrer">metaldio</a></strong></div>
     <div class="tool-status">Status: Green</div>
-    <div class="tool-test">Test: 100.0%</div>
+    <div class="tool-test">Test: N/A</div>
     <div class="tool-release"><a href="https://github.com/zopencommunity/metaldioport/releases/download/STABLE_metaldioport_3541/metaldio-V0.1.20250709_151554.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_metaldio_3541</a></div>
     <div class="tool-desc" title=""></div>
   </div>
@@ -2616,6 +2656,16 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
     <div class="tool-test">Test: N/A</div>
     <div class="tool-release"><a href="https://github.com/zopencommunity/promptersport/releases/download/STABLE_promptersport_3020/prompters-main.20250131_084954.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_prompters_3020</a></div>
     <div class="tool-desc" title="Prompter library for creating interactive command line interfaces">Prompter library for creating interactive command line interfaces</div>
+  </div>
+</div>
+
+<div class="tool-item-filterable" data-package-name="rpm" data-searchable-text="rpm Green 100.0% STABLE_rpm_3666 The RPM Package Manager (RPM) is a powerful package management system capable of building computer software from source into easily distributable packages, installing, updating and uninstalling packaged software utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/rpmport" target="_blank" rel="noopener noreferrer">rpm</a></strong></div>
+    <div class="tool-status">Status: Green</div>
+    <div class="tool-test">Test: 100.0%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/rpmport/releases/download/STABLE_rpmport_3666/rpm-5.99.91.20250820_052925.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_rpm_3666</a></div>
+    <div class="tool-desc" title="The RPM Package Manager (RPM) is a powerful package management system capable of building computer software from source into easily distributable packages, installing, updating and uninstalling packaged software">The RPM Package Manager (RPM) is a powerful package management system capable of building computer software from source into easily distributable packages, installing, updating and uninstalling packaged software</div>
   </div>
 </div>
 
@@ -2832,4 +2882,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-08-19 06:15:19 UTC
+Last updated:  2025-08-20 06:15:16 UTC
