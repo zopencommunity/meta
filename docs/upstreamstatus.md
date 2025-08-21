@@ -1,13 +1,13 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-08-20 06:13:39 EDT.*
+*Report generated on: 2025-08-21 06:14:06 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 267
-- **Total Current Lines of Code (LOC) in Patches:** 41,371
-- **Total Number of Current Patch Files:** 857
-- **Average Current Patch LOC per Project:** 154.95
+- **Total Current Lines of Code (LOC) in Patches:** 41,384
+- **Total Number of Current Patch Files:** 858
+- **Average Current Patch LOC per Project:** 155.00
 - **Average Current Patch Count per Project:** 3.21
 
 ### Historical Trends (All Projects)
@@ -182,6 +182,7 @@
 | [edport](#repo-edport) | 13 | +0 | 1 |
 | [lzipport](#repo-lzipport) | 13 | +0 | 1 |
 | [aprport](#repo-aprport) | 13 | +0 | 1 |
+| [fmtport](#repo-fmtport) | 13 | +13 | 1 |
 | [jsoncport](#repo-jsoncport) | 13 | +0 | 1 |
 | [libxml2port](#repo-libxml2port) | 12 | +0 | 1 |
 | [gflagsport](#repo-gflagsport) | 12 | +0 | 1 |
@@ -281,7 +282,6 @@
 | [scdocport](#repo-scdocport) | 0 | +0 | 0 |
 | [metaldioport](#repo-metaldioport) | 0 | +0 | 0 |
 | [hazelcastport](#repo-hazelcastport) | 0 | +0 | 0 |
-| [fmtport](#repo-fmtport) | 0 | +0 | 0 |
 | [minjaport](#repo-minjaport) | 0 | +0 | 0 |
 | [postgresport](#repo-postgresport) | 0 | +0 | 0 |
 | [ollamaport](#repo-ollamaport) | 0 | +0 | 0 |
@@ -4150,6 +4150,26 @@
 
 ---
 
+<a id="repo-fmtport"></a>
+## fmtport
+
+- **Origin Date (First Commit):** 2025-06-24
+- **Current Patch LOC:** 13
+- **Current Patch Count:** 1
+
+### Historical Trends
+
+![LOC Trend for fmtport](images/upstream/fmtport_current_loc_trend.png)
+![Count Trend for fmtport](images/upstream/fmtport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/disable128bit.patch` | `patches` | 13 |
+
+---
+
 <a id="repo-jsoncport"></a>
 ## jsoncport
 
@@ -5928,24 +5948,6 @@
 ## hazelcastport
 
 - **Origin Date (First Commit):** 2025-06-13
-- **Current Patch LOC:** 0
-- **Current Patch Count:** 0
-
-### Historical Trends
-
-*(Patch LOC trend graph not generated)*
-*(Patch count trend graph not generated)*
-
-### Current Patch Details
-
-*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
-
----
-
-<a id="repo-fmtport"></a>
-## fmtport
-
-- **Origin Date (First Commit):** 2025-06-24
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 
