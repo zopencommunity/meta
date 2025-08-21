@@ -13,8 +13,6 @@ please note you will need to [migrate to the new package manager](Migration.md).
 
 ## Installing zopen package manager <!-- {docsify-ignore} -->
 
-## Installing the zopen Package Manager <!-- {docsify-ignore} -->
-
 Before installing, ensure **auto-conversion** is enabled by checking the environment variables `_BPXK_AUTOCVT` and `_CEE_RUNOPTS`. If they are not set, run:
 
 ```bash
