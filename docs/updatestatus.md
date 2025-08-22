@@ -549,6 +549,7 @@
 - ✅ dialogport - [![Bump Status](https://github.com/zopencommunity/dialogport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/dialogport/actions/workflows/bump.yml)
 - ✅ diffutilsport - [![Bump Status](https://github.com/zopencommunity/diffutilsport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/diffutilsport/actions/workflows/bump.yml)
 - ✅ direnvport - [![Bump Status](https://github.com/zopencommunity/direnvport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/direnvport/actions/workflows/bump.yml)
+- ❌ dnf5port - Workflow not configured
 - ✅ doom-asciiport - [![Bump Status](https://github.com/zopencommunity/doom-asciiport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/doom-asciiport/actions/workflows/bump.yml)
 - ✅ dos2unixport - [![Bump Status](https://github.com/zopencommunity/dos2unixport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/dos2unixport/actions/workflows/bump.yml)
 - ✅ doxygenport - [![Bump Status](https://github.com/zopencommunity/doxygenport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/doxygenport/actions/workflows/bump.yml)
@@ -781,10 +782,10 @@
 
 </details>
 
-**Summary:** 228 active | 53 missing
+**Summary:** 228 active | 54 missing
 
 ---
 
 
-> Last updated: 2025-08-21 06:09:05 EDT
+> Last updated: 2025-08-22 06:08:29 EDT
 

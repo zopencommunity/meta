@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-08-21 06:14:06 EDT.*
+*Report generated on: 2025-08-22 06:13:36 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 267
+- **Total Projects Analyzed:** 268
 - **Total Current Lines of Code (LOC) in Patches:** 41,384
 - **Total Number of Current Patch Files:** 858
-- **Average Current Patch LOC per Project:** 155.00
-- **Average Current Patch Count per Project:** 3.21
+- **Average Current Patch LOC per Project:** 154.42
+- **Average Current Patch Count per Project:** 3.20
 
 ### Historical Trends (All Projects)
 
@@ -291,6 +291,7 @@
 | [checkport](#repo-checkport) | 0 | +0 | 0 |
 | [clang-formatport](#repo-clang-formatport) | 0 | +0 | 0 |
 | [crushport](#repo-crushport) | 0 | +0 | 0 |
+| [dnf5port](#repo-dnf5port) | 0 | +0 | 0 |
 
 ---
 
@@ -6110,6 +6111,24 @@
 ## crushport
 
 - **Origin Date (First Commit):** 2025-04-24
+- **Current Patch LOC:** 0
+- **Current Patch Count:** 0
+
+### Historical Trends
+
+*(Patch LOC trend graph not generated)*
+*(Patch count trend graph not generated)*
+
+### Current Patch Details
+
+*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
+
+---
+
+<a id="repo-dnf5port"></a>
+## dnf5port
+
+- **Origin Date (First Commit):** 2025-08-21
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 

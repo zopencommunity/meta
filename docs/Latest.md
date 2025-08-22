@@ -49,6 +49,16 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
+<div class="tool-item-filterable" data-package-name="crush" data-searchable-text="crush Skipped N/A STABLE_crush1 AI coding agent for your favourite terminal  ai port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/crushport" target="_blank" rel="noopener noreferrer">crush</a></strong></div>
+    <div class="tool-status">Status: Skipped</div>
+    <div class="tool-test">Test: N/A</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/crushport/releases/download/STABLE_crush1/crush-v0.6.2.20250821_141740.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_crush1</a></div>
+    <div class="tool-desc" title="AI coding agent for your favourite terminal ">AI coding agent for your favourite terminal </div>
+  </div>
+</div>
+
 <div class="tool-item-filterable" data-package-name="llamacpp" data-searchable-text="llamacpp Blue 92.1% DEV_llamacpp_3648 A C++ library for writing high-performance network applications ai port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/llamacppport" target="_blank" rel="noopener noreferrer">llamacpp</a></strong></div>
@@ -2389,6 +2399,16 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
+<div class="tool-item-filterable" data-package-name="crush" data-searchable-text="crush Skipped N/A STABLE_crush1 AI coding agent for your favourite terminal  utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/crushport" target="_blank" rel="noopener noreferrer">crush</a></strong></div>
+    <div class="tool-status">Status: Skipped</div>
+    <div class="tool-test">Test: N/A</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/crushport/releases/download/STABLE_crush1/crush-v0.6.2.20250821_141740.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_crush1</a></div>
+    <div class="tool-desc" title="AI coding agent for your favourite terminal ">AI coding agent for your favourite terminal </div>
+  </div>
+</div>
+
 <div class="tool-item-filterable" data-package-name="diffutils" data-searchable-text="diffutils Blue 87.6% STABLE_diffutils_3588 File and directory comparison utilities utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/diffutilsport" target="_blank" rel="noopener noreferrer">diffutils</a></strong></div>
@@ -2882,4 +2902,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-08-21 06:15:36 UTC
+Last updated:  2025-08-22 06:15:05 UTC
