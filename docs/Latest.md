@@ -569,12 +569,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="ed" data-searchable-text="ed Green 100.0% STABLE_ed_3646 line-oriented text editor development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="ed" data-searchable-text="ed Green 100.0% STABLE_ed_3675 line-oriented text editor development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/edport" target="_blank" rel="noopener noreferrer">ed</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/edport/releases/download/STABLE_edport_3646/ed-1.22.1.20250806_152334.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_ed_3646</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/edport/releases/download/STABLE_edport_3675/ed-1.22.2.20250823_152129.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_ed_3675</a></div>
     <div class="tool-desc" title="line-oriented text editor">line-oriented text editor</div>
   </div>
 </div>
@@ -849,12 +849,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3632 A TUI editor development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3676 A TUI editor development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/vimport" target="_blank" rel="noopener noreferrer">vim</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3632/vim-v9.1.1590.20250731_175213.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3632</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3676/vim-v9.1.1670.20250823_152651.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3676</a></div>
     <div class="tool-desc" title="A TUI editor">A TUI editor</div>
   </div>
 </div>
@@ -1157,12 +1157,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3632 A TUI editor editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3676 A TUI editor editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/vimport" target="_blank" rel="noopener noreferrer">vim</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3632/vim-v9.1.1590.20250731_175213.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3632</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3676/vim-v9.1.1670.20250823_152651.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3676</a></div>
     <div class="tool-desc" title="A TUI editor">A TUI editor</div>
   </div>
 </div>
@@ -2902,4 +2902,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-08-23 06:15:13 UTC
+Last updated:  2025-08-24 06:14:31 UTC

@@ -40,6 +40,7 @@
 - 2025-02-27: [Update buildkite-version to 3.93.1 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/50) ❌
 
 ### caddyport
+- 2025-08-23: [Update caddy-version to 2.10.2 from 2.7.6](https://github.com/zopencommunity/caddyport/pull/9) ❌
 - 2025-04-19: [Update caddy-version to 2.10.0 from 2.7.6](https://github.com/zopencommunity/caddyport/pull/8) ❌
 - 2025-01-08: [Update caddy-version to 2.9.1 from 2.7.6](https://github.com/zopencommunity/caddyport/pull/7) ❌
 - 2025-01-01: [Update caddy-version to 2.9.0 from 2.7.6](https://github.com/zopencommunity/caddyport/pull/6) ❌
@@ -817,5 +818,5 @@
 ---
 
 
-> Last updated: 2025-08-23 06:07:55 EDT
+> Last updated: 2025-08-24 06:07:55 EDT
 
