@@ -1,13 +1,13 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-08-25 06:13:33 EDT.*
+*Report generated on: 2025-08-26 06:13:23 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 268
-- **Total Current Lines of Code (LOC) in Patches:** 41,384
+- **Total Current Lines of Code (LOC) in Patches:** 41,397
 - **Total Number of Current Patch Files:** 858
-- **Average Current Patch LOC per Project:** 154.42
+- **Average Current Patch LOC per Project:** 154.47
 - **Average Current Patch Count per Project:** 3.20
 
 ### Historical Trends (All Projects)
@@ -127,13 +127,13 @@
 | [expatport](#repo-expatport) | 52 | +0 | 2 |
 | [terraformport](#repo-terraformport) | 51 | +0 | 2 |
 | [libsasl2port](#repo-libsasl2port) | 50 | +0 | 3 |
+| [libsolvport](#repo-libsolvport) | 50 | +13 | 1 |
 | [opensslport](#repo-opensslport) | 48 | +0 | 2 |
 | [automakeport](#repo-automakeport) | 47 | +0 | 3 |
 | [lessport](#repo-lessport) | 47 | +0 | 3 |
 | [xxhashport](#repo-xxhashport) | 47 | +0 | 2 |
 | [tigport](#repo-tigport) | 47 | +0 | 1 |
 | [lazygitport](#repo-lazygitport) | 46 | +0 | 1 |
-| [libsolvport](#repo-libsolvport) | 37 | +0 | 1 |
 | [catimgport](#repo-catimgport) | 37 | +37 | 1 |
 | [poptport](#repo-poptport) | 35 | +0 | 1 |
 | [whichport](#repo-whichport) | 34 | +0 | 1 |
@@ -3032,6 +3032,26 @@
 
 ---
 
+<a id="repo-libsolvport"></a>
+## libsolvport
+
+- **Origin Date (First Commit):** 2025-07-22
+- **Current Patch LOC:** 50
+- **Current Patch Count:** 1
+
+### Historical Trends
+
+![LOC Trend for libsolvport](images/upstream/libsolvport_current_loc_trend.png)
+![Count Trend for libsolvport](images/upstream/libsolvport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `stable-patches/PR1.patch` | `stable-patches` | 50 |
+
+---
+
 <a id="repo-opensslport"></a>
 ## opensslport
 
@@ -3155,26 +3175,6 @@
 | Patch File (Repo Relative Path) | Source | LOC |
 |---|---|:---|
 | `patches/lazygit.patch` | `patches` | 46 |
-
----
-
-<a id="repo-libsolvport"></a>
-## libsolvport
-
-- **Origin Date (First Commit):** 2025-07-22
-- **Current Patch LOC:** 37
-- **Current Patch Count:** 1
-
-### Historical Trends
-
-![LOC Trend for libsolvport](images/upstream/libsolvport_current_loc_trend.png)
-![Count Trend for libsolvport](images/upstream/libsolvport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `stable-patches/PR1.patch` | `stable-patches` | 37 |
 
 ---
 
