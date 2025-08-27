@@ -39,13 +39,13 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 ## Ai 
 
-<div class="tool-item-filterable" data-package-name="blis" data-searchable-text="blis Blue 99.4% STABLE_blis_3620 ai port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="blis" data-searchable-text="blis Green 100.0% STABLE_blis_3682 BLAS-like Library Instantiation Software Framework ai port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/blisport" target="_blank" rel="noopener noreferrer">blis</a></strong></div>
-    <div class="tool-status">Status: Blue</div>
-    <div class="tool-test">Test: 99.4%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/blisport/releases/download/STABLE_blisport_3620/blis-1.1.20250730_142822.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_blis_3620</a></div>
-    <div class="tool-desc" title=""></div>
+    <div class="tool-status">Status: Green</div>
+    <div class="tool-test">Test: 100.0%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/blisport/releases/download/STABLE_blisport_3682/blis-2.0.20250826_192532.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_blis_3682</a></div>
+    <div class="tool-desc" title="BLAS-like Library Instantiation Software Framework">BLAS-like Library Instantiation Software Framework</div>
   </div>
 </div>
 
@@ -489,12 +489,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="clang-format" data-searchable-text="clang-format Green 100.0% STABLE_clang-format_3661 development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="clang-format" data-searchable-text="clang-format Green 100.0% STABLE_clang-format_3681 development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/clang-formatport" target="_blank" rel="noopener noreferrer">clang-format</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/clang-formatport/releases/download/STABLE_clang-formatport_3661/llvm-project-llvmorg-20.1.8.20250815_133430.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_clang-format_3661</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/clang-formatport/releases/download/STABLE_clang-formatport_3681/llvm-project-llvmorg-21.1.0.20250826_163638.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_clang-format_3681</a></div>
     <div class="tool-desc" title=""></div>
   </div>
 </div>
@@ -1331,13 +1331,13 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="blis" data-searchable-text="blis Blue 99.4% STABLE_blis_3620 library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="blis" data-searchable-text="blis Green 100.0% STABLE_blis_3682 BLAS-like Library Instantiation Software Framework library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/blisport" target="_blank" rel="noopener noreferrer">blis</a></strong></div>
-    <div class="tool-status">Status: Blue</div>
-    <div class="tool-test">Test: 99.4%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/blisport/releases/download/STABLE_blisport_3620/blis-1.1.20250730_142822.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_blis_3620</a></div>
-    <div class="tool-desc" title=""></div>
+    <div class="tool-status">Status: Green</div>
+    <div class="tool-test">Test: 100.0%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/blisport/releases/download/STABLE_blisport_3682/blis-2.0.20250826_192532.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_blis_3682</a></div>
+    <div class="tool-desc" title="BLAS-like Library Instantiation Software Framework">BLAS-like Library Instantiation Software Framework</div>
   </div>
 </div>
 
@@ -1707,13 +1707,13 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 ## Math 
 
-<div class="tool-item-filterable" data-package-name="blis" data-searchable-text="blis Blue 99.4% STABLE_blis_3620 math port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="blis" data-searchable-text="blis Green 100.0% STABLE_blis_3682 BLAS-like Library Instantiation Software Framework math port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/blisport" target="_blank" rel="noopener noreferrer">blis</a></strong></div>
-    <div class="tool-status">Status: Blue</div>
-    <div class="tool-test">Test: 99.4%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/blisport/releases/download/STABLE_blisport_3620/blis-1.1.20250730_142822.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_blis_3620</a></div>
-    <div class="tool-desc" title=""></div>
+    <div class="tool-status">Status: Green</div>
+    <div class="tool-test">Test: 100.0%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/blisport/releases/download/STABLE_blisport_3682/blis-2.0.20250826_192532.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_blis_3682</a></div>
+    <div class="tool-desc" title="BLAS-like Library Instantiation Software Framework">BLAS-like Library Instantiation Software Framework</div>
   </div>
 </div>
 
@@ -2902,4 +2902,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-08-26 06:14:52 UTC
+Last updated:  2025-08-27 06:15:41 UTC

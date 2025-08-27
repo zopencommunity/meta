@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-08-26 06:13:23 EDT.*
+*Report generated on: 2025-08-27 06:14:11 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 268
-- **Total Current Lines of Code (LOC) in Patches:** 41,397
-- **Total Number of Current Patch Files:** 858
-- **Average Current Patch LOC per Project:** 154.47
-- **Average Current Patch Count per Project:** 3.20
+- **Total Current Lines of Code (LOC) in Patches:** 41,417
+- **Total Number of Current Patch Files:** 859
+- **Average Current Patch LOC per Project:** 154.54
+- **Average Current Patch Count per Project:** 3.21
 
 ### Historical Trends (All Projects)
 
@@ -75,11 +75,11 @@
 | [protobufport](#repo-protobufport) | 201 | +0 | 9 |
 | [findutilsport](#repo-findutilsport) | 199 | +0 | 10 |
 | [ninjaport](#repo-ninjaport) | 196 | +0 | 8 |
+| [blisport](#repo-blisport) | 185 | +20 | 2 |
 | [diffutilsport](#repo-diffutilsport) | 184 | +0 | 8 |
 | [aflplusplusport](#repo-aflplusplusport) | 184 | +0 | 5 |
 | [jemallocport](#repo-jemallocport) | 166 | +0 | 1 |
 | [groffport](#repo-groffport) | 165 | +0 | 13 |
-| [blisport](#repo-blisport) | 165 | +0 | 1 |
 | [autoconfport](#repo-autoconfport) | 151 | +0 | 6 |
 | [moreutilsport](#repo-moreutilsport) | 151 | +0 | 1 |
 | [libserdesport](#repo-libserdesport) | 142 | +0 | 4 |
@@ -1880,6 +1880,27 @@
 
 ---
 
+<a id="repo-blisport"></a>
+## blisport
+
+- **Origin Date (First Commit):** 2025-07-03
+- **Current Patch LOC:** 185
+- **Current Patch Count:** 2
+
+### Historical Trends
+
+![LOC Trend for blisport](images/upstream/blisport_current_loc_trend.png)
+![Count Trend for blisport](images/upstream/blisport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/PR1.patch` | `patches` | 165 |
+| `patches/PR2.patch` | `patches` | 20 |
+
+---
+
 <a id="repo-diffutilsport"></a>
 ## diffutilsport
 
@@ -1980,26 +2001,6 @@
 | `stable-patches/assertfix/script.cpp.patch` | `stable-patches` | 12 |
 | `stable-patches/getopt.c.patch` | `stable-patches` | 16 |
 | `stable-patches/makevarescape.sed.patch` | `stable-patches` | 9 |
-
----
-
-<a id="repo-blisport"></a>
-## blisport
-
-- **Origin Date (First Commit):** 2025-07-03
-- **Current Patch LOC:** 165
-- **Current Patch Count:** 1
-
-### Historical Trends
-
-![LOC Trend for blisport](images/upstream/blisport_current_loc_trend.png)
-![Count Trend for blisport](images/upstream/blisport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/PR1.patch` | `patches` | 165 |
 
 ---
 

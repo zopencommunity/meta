@@ -10,6 +10,9 @@
 - 2025-07-25: [Update AFLplusplus-version to 4.33c from 4.32c](https://github.com/zopencommunity/aflplusplusport/pull/2) ❌
 - 2025-07-25: [Update AFLplusplus-version to 4.33 from 4.32c](https://github.com/zopencommunity/aflplusplusport/pull/1) ❌
 
+### ansibleport
+- 2025-08-26: [Update ansible-version to 2.19.1 from 2.19.0](https://github.com/zopencommunity/ansibleport/pull/2) ❌
+
 ### automakeport
 - 2025-06-27: [Update automake-version to 1.18.1 from 1.17](https://github.com/zopencommunity/automakeport/pull/29) ❌
 - 2025-05-28: [Update automake-version to 1.18 from 1.17](https://github.com/zopencommunity/automakeport/pull/28) ❌
@@ -51,6 +54,7 @@
 - 2025-05-26: [Update ccache-version to 4.11.3 from V.R.M](https://github.com/zopencommunity/ccacheport/pull/1) ❌
 
 ### chezmoiport
+- 2025-08-26: [Update chezmoi-version to 2.65.0 from 2.62.5](https://github.com/zopencommunity/chezmoiport/pull/9) ❌
 - 2025-08-07: [Update chezmoi-version to 2.64.0 from 2.62.5](https://github.com/zopencommunity/chezmoiport/pull/8) ❌
 - 2025-07-23: [Update chezmoi-version to 2.63.1 from 2.62.5](https://github.com/zopencommunity/chezmoiport/pull/7) ❌
 - 2025-07-09: [Update chezmoi-version to 2.63.0 from 2.62.5](https://github.com/zopencommunity/chezmoiport/pull/6) ❌
@@ -584,7 +588,7 @@
 - ✅ dialogport - [![Bump Status](https://github.com/zopencommunity/dialogport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/dialogport/actions/workflows/bump.yml)
 - ✅ diffutilsport - [![Bump Status](https://github.com/zopencommunity/diffutilsport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/diffutilsport/actions/workflows/bump.yml)
 - ✅ direnvport - [![Bump Status](https://github.com/zopencommunity/direnvport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/direnvport/actions/workflows/bump.yml)
-- ❌ dnf5port - Workflow not configured
+- ✅ dnf5port - [![Bump Status](https://github.com/zopencommunity/dnf5port/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/dnf5port/actions/workflows/bump.yml)
 - ✅ doom-asciiport - [![Bump Status](https://github.com/zopencommunity/doom-asciiport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/doom-asciiport/actions/workflows/bump.yml)
 - ✅ dos2unixport - [![Bump Status](https://github.com/zopencommunity/dos2unixport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/dos2unixport/actions/workflows/bump.yml)
 - ✅ doxygenport - [![Bump Status](https://github.com/zopencommunity/doxygenport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/doxygenport/actions/workflows/bump.yml)
@@ -817,10 +821,10 @@
 
 </details>
 
-**Summary:** 228 active | 54 missing
+**Summary:** 229 active | 53 missing
 
 ---
 
 
-> Last updated: 2025-08-26 06:09:21 EDT
+> Last updated: 2025-08-27 06:08:36 EDT
 

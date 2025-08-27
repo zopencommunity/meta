@@ -196,7 +196,7 @@
 | [asioport](https://github.com/zopencommunity/asioport) | 0 | 100.0% | None |
 | [bash-completionport](https://github.com/zopencommunity/bash-completionport) | 0 | 100.0% | None |
 | [bcport](https://github.com/zopencommunity/bcport) | 0 | 100.0% | None |
-| [blisport](https://github.com/zopencommunity/blisport) | 0 | 99.4% | None |
+| [blisport](https://github.com/zopencommunity/blisport) | 0 | 100.0% | None |
 | [boostport](https://github.com/zopencommunity/boostport) | 0 | 85.1% | None |
 | [buildkiteport](https://github.com/zopencommunity/buildkiteport) | 0 | Skipped | None |
 | [bumpport](https://github.com/zopencommunity/bumpport) | 0 | 100.0% | None |
@@ -311,4 +311,4 @@
 | [zospstreeport](https://github.com/zopencommunity/zospstreeport) | 0 | 100.0% | None |
 | [zotsampleport](https://github.com/zopencommunity/zotsampleport) | 0 | 100.0% | None |
 
-Last updated:  2025-08-26 06:14:52 UTC
+Last updated:  2025-08-27 06:15:41 UTC
