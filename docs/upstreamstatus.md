@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-08-27 06:14:11 EDT.*
+*Report generated on: 2025-08-28 06:14:00 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 268
-- **Total Current Lines of Code (LOC) in Patches:** 41,417
-- **Total Number of Current Patch Files:** 859
-- **Average Current Patch LOC per Project:** 154.54
-- **Average Current Patch Count per Project:** 3.21
+- **Total Projects Analyzed:** 269
+- **Total Current Lines of Code (LOC) in Patches:** 42,175
+- **Total Number of Current Patch Files:** 858
+- **Average Current Patch LOC per Project:** 156.78
+- **Average Current Patch Count per Project:** 3.19
 
 ### Historical Trends (All Projects)
 
@@ -37,6 +37,7 @@
 | [gitport](#repo-gitport) | 1,065 | +0 | 32 |
 | [grpcport](#repo-grpcport) | 1,017 | +0 | 8 |
 | [valgrindport](#repo-valgrindport) | 896 | +0 | 3 |
+| [alternativesport](#repo-alternativesport) | 838 | +838 | 1 |
 | [gzipport](#repo-gzipport) | 690 | +0 | 8 |
 | [procpsport](#repo-procpsport) | 687 | +0 | 1 |
 | [perlport](#repo-perlport) | 684 | +0 | 14 |
@@ -86,7 +87,6 @@
 | [tclport](#repo-tclport) | 132 | +0 | 5 |
 | [multitailport](#repo-multitailport) | 130 | +0 | 1 |
 | [pinentryport](#repo-pinentryport) | 124 | +0 | 5 |
-| [libssh2port](#repo-libssh2port) | 122 | +0 | 5 |
 | [m4port](#repo-m4port) | 120 | +0 | 5 |
 | [thesilversearcherport](#repo-thesilversearcherport) | 118 | +0 | 4 |
 | [gas2asmport](#repo-gas2asmport) | 116 | +0 | 4 |
@@ -134,6 +134,7 @@
 | [xxhashport](#repo-xxhashport) | 47 | +0 | 2 |
 | [tigport](#repo-tigport) | 47 | +0 | 1 |
 | [lazygitport](#repo-lazygitport) | 46 | +0 | 1 |
+| [libssh2port](#repo-libssh2port) | 42 | -80 | 3 |
 | [catimgport](#repo-catimgport) | 37 | +37 | 1 |
 | [poptport](#repo-poptport) | 35 | +0 | 1 |
 | [whichport](#repo-whichport) | 34 | +0 | 1 |
@@ -856,6 +857,26 @@
 | `patches/Makefile.all.am.patch` | `patches` | 13 |
 | `patches/guest_s390_defs.h.patch` | `patches` | 16 |
 | `patches/guest_s390_helpers.c.patch` | `patches` | 867 |
+
+---
+
+<a id="repo-alternativesport"></a>
+## alternativesport
+
+- **Origin Date (First Commit):** 2025-08-27
+- **Current Patch LOC:** 838
+- **Current Patch Count:** 1
+
+### Historical Trends
+
+![LOC Trend for alternativesport](images/upstream/alternativesport_current_loc_trend.png)
+![Count Trend for alternativesport](images/upstream/alternativesport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/PR1.patch` | `patches` | 838 |
 
 ---
 
@@ -2140,30 +2161,6 @@
 
 ---
 
-<a id="repo-libssh2port"></a>
-## libssh2port
-
-- **Origin Date (First Commit):** 2023-05-10
-- **Current Patch LOC:** 122
-- **Current Patch Count:** 5
-
-### Historical Trends
-
-![LOC Trend for libssh2port](images/upstream/libssh2port_current_loc_trend.png)
-![Count Trend for libssh2port](images/upstream/libssh2port_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/configure.patch` | `patches` | 15 |
-| `patches/libssh2_setup.h.patch` | `patches` | 23 |
-| `patches/openssh_fixture.c.patch` | `patches` | 57 |
-| `patches/scp_write_nonblock.c.patch` | `patches` | 12 |
-| `patches/session_fixture.c.patch` | `patches` | 15 |
-
----
-
 <a id="repo-m4port"></a>
 ## m4port
 
@@ -3176,6 +3173,28 @@
 | Patch File (Repo Relative Path) | Source | LOC |
 |---|---|:---|
 | `patches/lazygit.patch` | `patches` | 46 |
+
+---
+
+<a id="repo-libssh2port"></a>
+## libssh2port
+
+- **Origin Date (First Commit):** 2023-05-10
+- **Current Patch LOC:** 42
+- **Current Patch Count:** 3
+
+### Historical Trends
+
+![LOC Trend for libssh2port](images/upstream/libssh2port_current_loc_trend.png)
+![Count Trend for libssh2port](images/upstream/libssh2port_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/configure.patch` | `patches` | 15 |
+| `patches/libssh2_setup.h.patch` | `patches` | 15 |
+| `patches/scp_write_nonblock.c.patch` | `patches` | 12 |
 
 ---
 

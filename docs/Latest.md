@@ -39,13 +39,13 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 ## Ai 
 
-<div class="tool-item-filterable" data-package-name="blis" data-searchable-text="blis Green 100.0% STABLE_blis_3682 BLAS-like Library Instantiation Software Framework ai port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="blis" data-searchable-text="blis Green 100.0% STABLE_blis_3689 BLAS-like Library Instantiation Software Framework for z/OS ai port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/blisport" target="_blank" rel="noopener noreferrer">blis</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/blisport/releases/download/STABLE_blisport_3682/blis-2.0.20250826_192532.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_blis_3682</a></div>
-    <div class="tool-desc" title="BLAS-like Library Instantiation Software Framework">BLAS-like Library Instantiation Software Framework</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/blisport/releases/download/STABLE_blisport_3689/blis-2.0.20250828_014142.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_blis_3689</a></div>
+    <div class="tool-desc" title="BLAS-like Library Instantiation Software Framework for z/OS">BLAS-like Library Instantiation Software Framework for z/OS</div>
   </div>
 </div>
 
@@ -217,12 +217,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="libdio" data-searchable-text="libdio Green 100.0% DEV_libdio_3362 A dataset I/O library core port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="libdio" data-searchable-text="libdio Green 100.0% DEV_libdio_3687 A dataset I/O library core port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libdioport" target="_blank" rel="noopener noreferrer">libdio</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/libdioport/releases/download/DEV_libdioport_3362/libdio-main.20250527_140022.zos.pax.Z" target="_blank" rel="noopener noreferrer">DEV_libdio_3362</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/libdioport/releases/download/DEV_libdioport_3687/libdio-main.20250827_161242.zos.pax.Z" target="_blank" rel="noopener noreferrer">DEV_libdio_3687</a></div>
     <div class="tool-desc" title="A dataset I/O library">A dataset I/O library</div>
   </div>
 </div>
@@ -699,12 +699,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="libdio" data-searchable-text="libdio Green 100.0% DEV_libdio_3362 A dataset I/O library development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="libdio" data-searchable-text="libdio Green 100.0% DEV_libdio_3687 A dataset I/O library development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libdioport" target="_blank" rel="noopener noreferrer">libdio</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/libdioport/releases/download/DEV_libdioport_3362/libdio-main.20250527_140022.zos.pax.Z" target="_blank" rel="noopener noreferrer">DEV_libdio_3362</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/libdioport/releases/download/DEV_libdioport_3687/libdio-main.20250827_161242.zos.pax.Z" target="_blank" rel="noopener noreferrer">DEV_libdio_3687</a></div>
     <div class="tool-desc" title="A dataset I/O library">A dataset I/O library</div>
   </div>
 </div>
@@ -769,12 +769,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="metaldio" data-searchable-text="metaldio Green 100.0% STABLE_metaldio_3541 development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="metaldio" data-searchable-text="metaldio Green 100.0% STABLE_metaldio_3688 development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/metaldioport" target="_blank" rel="noopener noreferrer">metaldio</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/metaldioport/releases/download/STABLE_metaldioport_3541/metaldio-V0.1.20250709_151554.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_metaldio_3541</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/metaldioport/releases/download/STABLE_metaldioport_3688/metaldio-main.20250827_191540.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_metaldio_3688</a></div>
     <div class="tool-desc" title=""></div>
   </div>
 </div>
@@ -849,12 +849,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3676 A TUI editor development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3685 A TUI editor development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/vimport" target="_blank" rel="noopener noreferrer">vim</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3676/vim-v9.1.1670.20250823_152651.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3676</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3685/vim-v9.1.1690.20250827_152849.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3685</a></div>
     <div class="tool-desc" title="A TUI editor">A TUI editor</div>
   </div>
 </div>
@@ -1157,12 +1157,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3676 A TUI editor editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3685 A TUI editor editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/vimport" target="_blank" rel="noopener noreferrer">vim</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3676/vim-v9.1.1670.20250823_152651.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3676</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3685/vim-v9.1.1690.20250827_152849.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3685</a></div>
     <div class="tool-desc" title="A TUI editor">A TUI editor</div>
   </div>
 </div>
@@ -1331,13 +1331,13 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="blis" data-searchable-text="blis Green 100.0% STABLE_blis_3682 BLAS-like Library Instantiation Software Framework library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="blis" data-searchable-text="blis Green 100.0% STABLE_blis_3689 BLAS-like Library Instantiation Software Framework for z/OS library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/blisport" target="_blank" rel="noopener noreferrer">blis</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/blisport/releases/download/STABLE_blisport_3682/blis-2.0.20250826_192532.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_blis_3682</a></div>
-    <div class="tool-desc" title="BLAS-like Library Instantiation Software Framework">BLAS-like Library Instantiation Software Framework</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/blisport/releases/download/STABLE_blisport_3689/blis-2.0.20250828_014142.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_blis_3689</a></div>
+    <div class="tool-desc" title="BLAS-like Library Instantiation Software Framework for z/OS">BLAS-like Library Instantiation Software Framework for z/OS</div>
   </div>
 </div>
 
@@ -1561,6 +1561,16 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
+<div class="tool-item-filterable" data-package-name="libssh2" data-searchable-text="libssh2 Red 6.8% STABLE_libssh2_3691 A library for SSH2 protocol library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libssh2port" target="_blank" rel="noopener noreferrer">libssh2</a></strong></div>
+    <div class="tool-status">Status: Red</div>
+    <div class="tool-test">Test: 6.8%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/libssh2port/releases/download/STABLE_libssh2port_3691/libssh2-1.11.1.20250828_054328.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libssh2_3691</a></div>
+    <div class="tool-desc" title="A library for SSH2 protocol">A library for SSH2 protocol</div>
+  </div>
+</div>
+
 <div class="tool-item-filterable" data-package-name="libuv" data-searchable-text="libuv Blue 98.6% STABLE_libuv_3203 An asynchronous I/O library library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libuvport" target="_blank" rel="noopener noreferrer">libuv</a></strong></div>
@@ -1601,12 +1611,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="metaldio" data-searchable-text="metaldio Green 100.0% STABLE_metaldio_3541 library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="metaldio" data-searchable-text="metaldio Green 100.0% STABLE_metaldio_3688 library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/metaldioport" target="_blank" rel="noopener noreferrer">metaldio</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/metaldioport/releases/download/STABLE_metaldioport_3541/metaldio-V0.1.20250709_151554.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_metaldio_3541</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/metaldioport/releases/download/STABLE_metaldioport_3688/metaldio-main.20250827_191540.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_metaldio_3688</a></div>
     <div class="tool-desc" title=""></div>
   </div>
 </div>
@@ -1707,13 +1717,13 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 ## Math 
 
-<div class="tool-item-filterable" data-package-name="blis" data-searchable-text="blis Green 100.0% STABLE_blis_3682 BLAS-like Library Instantiation Software Framework math port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="blis" data-searchable-text="blis Green 100.0% STABLE_blis_3689 BLAS-like Library Instantiation Software Framework for z/OS math port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/blisport" target="_blank" rel="noopener noreferrer">blis</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/blisport/releases/download/STABLE_blisport_3682/blis-2.0.20250826_192532.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_blis_3682</a></div>
-    <div class="tool-desc" title="BLAS-like Library Instantiation Software Framework">BLAS-like Library Instantiation Software Framework</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/blisport/releases/download/STABLE_blisport_3689/blis-2.0.20250828_014142.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_blis_3689</a></div>
+    <div class="tool-desc" title="BLAS-like Library Instantiation Software Framework for z/OS">BLAS-like Library Instantiation Software Framework for z/OS</div>
   </div>
 </div>
 
@@ -1780,6 +1790,16 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
     <div class="tool-test">Test: 100.0%</div>
     <div class="tool-release"><a href="https://github.com/zopencommunity/librabbitmqport/releases/download/STABLE_librabbitmqport_3162/librabbitmq-DEV.20250311_121219.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_librabbitmq_3162</a></div>
     <div class="tool-desc" title=""></div>
+  </div>
+</div>
+
+<div class="tool-item-filterable" data-package-name="libssh2" data-searchable-text="libssh2 Red 6.8% STABLE_libssh2_3691 A library for SSH2 protocol networking port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libssh2port" target="_blank" rel="noopener noreferrer">libssh2</a></strong></div>
+    <div class="tool-status">Status: Red</div>
+    <div class="tool-test">Test: 6.8%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/libssh2port/releases/download/STABLE_libssh2port_3691/libssh2-1.11.1.20250828_054328.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libssh2_3691</a></div>
+    <div class="tool-desc" title="A library for SSH2 protocol">A library for SSH2 protocol</div>
   </div>
 </div>
 
@@ -1916,6 +1936,16 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
     <div class="tool-test">Test: 100.0%</div>
     <div class="tool-release"><a href="https://github.com/zopencommunity/libsasl2port/releases/download/STABLE_libsasl2port_2311/cyrus-sasl-master.20240624_052635.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libsasl2_2311</a></div>
     <div class="tool-desc" title="A SASL library">A SASL library</div>
+  </div>
+</div>
+
+<div class="tool-item-filterable" data-package-name="libssh2" data-searchable-text="libssh2 Red 6.8% STABLE_libssh2_3691 A library for SSH2 protocol security port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libssh2port" target="_blank" rel="noopener noreferrer">libssh2</a></strong></div>
+    <div class="tool-status">Status: Red</div>
+    <div class="tool-test">Test: 6.8%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/libssh2port/releases/download/STABLE_libssh2port_3691/libssh2-1.11.1.20250828_054328.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libssh2_3691</a></div>
+    <div class="tool-desc" title="A library for SSH2 protocol">A library for SSH2 protocol</div>
   </div>
 </div>
 
@@ -2233,16 +2263,6 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="libssh2" data-searchable-text="libssh2 Red 7.1% STABLE_libssh2_1930 A library for SSH2 protocol uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
-  <div class="tool-info-grid">
-    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libssh2port" target="_blank" rel="noopener noreferrer">libssh2</a></strong></div>
-    <div class="tool-status">Status: Red</div>
-    <div class="tool-test">Test: 7.1%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/libssh2port/releases/download/STABLE_libssh2port_1930/libssh2-1.11.0.20240103_144102.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libssh2_1930</a></div>
-    <div class="tool-desc" title="A library for SSH2 protocol">A library for SSH2 protocol</div>
-  </div>
-</div>
-
 <div class="tool-item-filterable" data-package-name="libtool" data-searchable-text="libtool Blue 87.0% STABLE_libtool_2923 Library for managing program library dependencies uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libtoolport" target="_blank" rel="noopener noreferrer">libtool</a></strong></div>
@@ -2378,6 +2398,16 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 <div class="table-category" data-category="utilities">
 
 ## Utilities 
+
+<div class="tool-item-filterable" data-package-name="alternatives" data-searchable-text="alternatives Green 100.0% STABLE_alternatives_3690 utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/alternativesport" target="_blank" rel="noopener noreferrer">alternatives</a></strong></div>
+    <div class="tool-status">Status: Green</div>
+    <div class="tool-test">Test: 100.0%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/alternativesport/releases/download/STABLE_alternativesport_3690/chkconfig-main.20250828_021455.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_alternatives_3690</a></div>
+    <div class="tool-desc" title=""></div>
+  </div>
+</div>
 
 <div class="tool-item-filterable" data-package-name="bc" data-searchable-text="bc Green 100.0% STABLE_bc_3226 binary calculator utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
@@ -2589,12 +2619,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="metaldio" data-searchable-text="metaldio Green 100.0% STABLE_metaldio_3541 utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="metaldio" data-searchable-text="metaldio Green 100.0% STABLE_metaldio_3688 utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/metaldioport" target="_blank" rel="noopener noreferrer">metaldio</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/metaldioport/releases/download/STABLE_metaldioport_3541/metaldio-V0.1.20250709_151554.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_metaldio_3541</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/metaldioport/releases/download/STABLE_metaldioport_3688/metaldio-main.20250827_191540.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_metaldio_3688</a></div>
     <div class="tool-desc" title=""></div>
   </div>
 </div>
@@ -2902,4 +2932,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-08-27 06:15:41 UTC
+Last updated:  2025-08-28 06:15:33 UTC

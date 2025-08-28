@@ -255,7 +255,7 @@
 - 2024-08-27: [Update grafana-version to 11.2.0 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/7) ❌
 - 2024-08-15: [Update grafana-version to 11.1.4 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/6) ❌
 - 2024-07-24: [Update grafana-version to 11.1.2 from 11.0.0](https://github.com/zopencommunity/grafanaport/pull/4) ❌
-- 2024-06-25: [Update grafana-version to 11.1.0 from 11.0.0](https://github.com/zopencommunity/grafanaport/pull/2) ❌
+- 2024-06-25: [Update grafana-version to 11.1.0 from 11.0.0](https://github.com/zopencommunity/grafanaport/pull/2) ❓
 
 ### groovyport
 - 2025-08-24: [Update groovy-version to 5.0.0 from 4.0.28](https://github.com/zopencommunity/groovyport/pull/20) ❌
@@ -306,6 +306,7 @@
 - 2025-03-22: [Update libgdbm-version to 1.25 from 1.24](https://github.com/zopencommunity/libgdbmport/pull/10) ❌
 
 ### libpcre2port
+- 2025-08-27: [Update libpcre2-version to 10.46 from 10.42](https://github.com/zopencommunity/libpcre2port/pull/14) ❌
 - 2024-12-27: [Update libpcre2-version to 10.45 from 10.42](https://github.com/zopencommunity/libpcre2port/pull/10) ❌
 - 2024-06-08: [Update libpcre2-version to 10.44 from 10.42](https://github.com/zopencommunity/libpcre2port/pull/7) ❓
 - 2023-12-29: [Update libpcre2-version to 10.43 from 10.42](https://github.com/zopencommunity/libpcre2port/pull/4) ❓
@@ -466,6 +467,7 @@
 - 2024-12-20: [Update tcl-version to 9.0.1 from 8.6.13](https://github.com/zopencommunity/tclport/pull/16) ✅
 
 ### terraformport
+- 2025-08-27: [Update terraform-version to 1.13.1 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/42) ❌
 - 2025-08-22: [Update terraform-version to 1.13.0 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/41) ❌
 - 2025-06-11: [Update terraform-version to 1.12.2 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/40) ❌
 - 2025-05-21: [Update terraform-version to 1.12.1 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/39) ❌
@@ -537,6 +539,7 @@
 <summary><b style="font-size: 28px;">Bump Automation Status</b></summary>
 
 - ✅ aflplusplusport - [![Bump Status](https://github.com/zopencommunity/aflplusplusport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/aflplusplusport/actions/workflows/bump.yml)
+- ✅ alternativesport - [![Bump Status](https://github.com/zopencommunity/alternativesport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/alternativesport/actions/workflows/bump.yml)
 - ✅ ansibleport - [![Bump Status](https://github.com/zopencommunity/ansibleport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/ansibleport/actions/workflows/bump.yml)
 - ✅ antport - [![Bump Status](https://github.com/zopencommunity/antport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/antport/actions/workflows/bump.yml)
 - ❌ aprport - Workflow not configured
@@ -821,10 +824,10 @@
 
 </details>
 
-**Summary:** 229 active | 53 missing
+**Summary:** 230 active | 53 missing
 
 ---
 
 
-> Last updated: 2025-08-27 06:08:36 EDT
+> Last updated: 2025-08-28 06:09:19 EDT
 
