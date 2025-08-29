@@ -63,6 +63,7 @@
 - 2025-05-10: [Update chezmoi-version to 2.62.3 from 2.62.2](https://github.com/zopencommunity/chezmoiport/pull/1) ❌
 
 ### cmakeport
+- 2025-08-28: [Update cmake-version to 4.1.1 from 3.31.5](https://github.com/zopencommunity/cmakeport/pull/75) ❌
 - 2025-08-06: [Update cmake-version to 4.1.0 from 3.31.5](https://github.com/zopencommunity/cmakeport/pull/74) ❌
 - 2025-06-13: [Update cmake-version to 4.0.3 from 3.31.5](https://github.com/zopencommunity/cmakeport/pull/72) ❌
 - 2025-05-10: [Update cmake-version to 4.0.2 from 3.31.5](https://github.com/zopencommunity/cmakeport/pull/71) ❌
@@ -93,6 +94,7 @@
 - 2025-02-01: [Update creduce-version to 2.10.0 from V.R.M](https://github.com/zopencommunity/creduceport/pull/1) ❌
 
 ### crushport
+- 2025-08-28: [Update crush-version to 0.7.2 from 0.6.2](https://github.com/zopencommunity/crushport/pull/2) ❌
 - 2025-08-22: [Update crush-version to 0.7.1 from 0.6.2](https://github.com/zopencommunity/crushport/pull/1) ❌
 
 ### ctagsport
@@ -509,6 +511,7 @@
 - 2025-07-21: [Update victoriametrics-version to 1.122.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/32) ❌
 
 ### vimport
+- 2025-08-28: [Update vim-version to 9.1.170 from 9.1.1690](https://github.com/zopencommunity/vimport/pull/136) ❌
 - 2025-08-24: [Update vim-version to 9.1.1680 from 9.1.1670](https://github.com/zopencommunity/vimport/pull/134) ❌
 - 2025-08-22: [Update vim-version to 9.1.1660 from 9.1.1590](https://github.com/zopencommunity/vimport/pull/132) ✅
 - 2025-08-07: [Update vim-version to 9.1.160 from 9.1.1590](https://github.com/zopencommunity/vimport/pull/131) ❌
@@ -829,5 +832,5 @@
 ---
 
 
-> Last updated: 2025-08-28 06:09:19 EDT
+> Last updated: 2025-08-29 06:08:30 EDT
 

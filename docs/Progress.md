@@ -158,6 +158,7 @@
 | [rsyncport](https://github.com/zopencommunity/rsyncport) | 2 | 94.3% | m4, sed |
 | [tcltlsport](https://github.com/zopencommunity/tcltlsport) | 2 | 100.0% | redis, tcl |
 | [avro-c-libport](https://github.com/zopencommunity/avro-c-libport) | 1 | 100.0% | libserdes |
+| [blisport](https://github.com/zopencommunity/blisport) | 1 | 100.0% | llamacpp |
 | [ccacheport](https://github.com/zopencommunity/ccacheport) | 1 | 100.0% | clang-format |
 | [checkport](https://github.com/zopencommunity/checkport) | 1 | 77.8% | librepo |
 | [comp_clangport](https://github.com/zopencommunity/comp_clangport) | 1 | Unknown | prometheus |
@@ -198,7 +199,6 @@
 | [asioport](https://github.com/zopencommunity/asioport) | 0 | 100.0% | None |
 | [bash-completionport](https://github.com/zopencommunity/bash-completionport) | 0 | 100.0% | None |
 | [bcport](https://github.com/zopencommunity/bcport) | 0 | 100.0% | None |
-| [blisport](https://github.com/zopencommunity/blisport) | 0 | 100.0% | None |
 | [boostport](https://github.com/zopencommunity/boostport) | 0 | 85.1% | None |
 | [buildkiteport](https://github.com/zopencommunity/buildkiteport) | 0 | Skipped | None |
 | [bumpport](https://github.com/zopencommunity/bumpport) | 0 | 100.0% | None |
@@ -312,4 +312,4 @@
 | [zospstreeport](https://github.com/zopencommunity/zospstreeport) | 0 | 100.0% | None |
 | [zotsampleport](https://github.com/zopencommunity/zotsampleport) | 0 | 100.0% | None |
 
-Last updated:  2025-08-28 06:15:33 UTC
+Last updated:  2025-08-29 06:14:57 UTC

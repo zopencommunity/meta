@@ -59,12 +59,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="llamacpp" data-searchable-text="llamacpp Blue 92.1% DEV_llamacpp_3648 A C++ library for writing high-performance network applications ai port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="llamacpp" data-searchable-text="llamacpp Blue 92.1% DEV_llamacpp_3695 A C++ library for writing high-performance network applications ai port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/llamacppport" target="_blank" rel="noopener noreferrer">llamacpp</a></strong></div>
     <div class="tool-status">Status: Blue</div>
     <div class="tool-test">Test: 92.1%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/llamacppport/releases/download/DEV_llamacppport_3648/llamacpp-master.20250806_171956.zos.pax.Z" target="_blank" rel="noopener noreferrer">DEV_llamacpp_3648</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/llamacppport/releases/download/DEV_llamacppport_3695/llamacpp-master.20250828_221046.zos.pax.Z" target="_blank" rel="noopener noreferrer">DEV_llamacpp_3695</a></div>
     <div class="tool-desc" title="A C++ library for writing high-performance network applications">A C++ library for writing high-performance network applications</div>
   </div>
 </div>
@@ -1193,12 +1193,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="fx" data-searchable-text="fx Skipped N/A STABLE_fx_3672 A functional programming language graphics port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="fx" data-searchable-text="fx Skipped N/A STABLE_fx_3692 A functional programming language graphics port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/fxport" target="_blank" rel="noopener noreferrer">fx</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/fxport/releases/download/STABLE_fxport_3672/fx-39.0.2.20250822_162644.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_fx_3672</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/fxport/releases/download/STABLE_fxport_3692/fx-39.0.3.20250828_151932.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_fx_3692</a></div>
     <div class="tool-desc" title="A functional programming language">A functional programming language</div>
   </div>
 </div>
@@ -2173,12 +2173,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="coreutils" data-searchable-text="coreutils Blue 92.5% STABLE_coreutils_3627 A collection of basic Unix utilities uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="coreutils" data-searchable-text="coreutils Blue 92.5% STABLE_coreutils_3696 A collection of basic Unix utilities uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/coreutilsport" target="_blank" rel="noopener noreferrer">coreutils</a></strong></div>
     <div class="tool-status">Status: Blue</div>
     <div class="tool-test">Test: 92.5%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/coreutilsport/releases/download/STABLE_coreutilsport_3627/coreutils-9.7.20250731_030130.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_coreutils_3627</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/coreutilsport/releases/download/STABLE_coreutilsport_3696/coreutils-9.7.20250829_035822.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_coreutils_3696</a></div>
     <div class="tool-desc" title="A collection of basic Unix utilities">A collection of basic Unix utilities</div>
   </div>
 </div>
@@ -2915,12 +2915,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 ## Webframework 
 
-<div class="tool-item-filterable" data-package-name="hugo" data-searchable-text="hugo Skipped N/A STABLE_hugo_3548 A static site generator webframework port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="hugo" data-searchable-text="hugo Skipped N/A STABLE_hugo_3693 A static site generator webframework port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/hugoport" target="_blank" rel="noopener noreferrer">hugo</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/hugoport/releases/download/STABLE_hugoport_3548/hugo-v0.148.1.20250711_152726.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_hugo_3548</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/hugoport/releases/download/STABLE_hugoport_3693/hugo-v0.149.0.20250828_152726.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_hugo_3693</a></div>
     <div class="tool-desc" title="A static site generator">A static site generator</div>
   </div>
 </div>
@@ -2932,4 +2932,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-08-28 06:15:33 UTC
+Last updated:  2025-08-29 06:14:57 UTC
