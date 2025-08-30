@@ -94,6 +94,7 @@
 - 2025-02-01: [Update creduce-version to 2.10.0 from V.R.M](https://github.com/zopencommunity/creduceport/pull/1) ❌
 
 ### crushport
+- 2025-08-29: [Update crush-version to 0.7.4 from 0.6.2](https://github.com/zopencommunity/crushport/pull/3) ❌
 - 2025-08-28: [Update crush-version to 0.7.2 from 0.6.2](https://github.com/zopencommunity/crushport/pull/2) ❌
 - 2025-08-22: [Update crush-version to 0.7.1 from 0.6.2](https://github.com/zopencommunity/crushport/pull/1) ❌
 
@@ -832,5 +833,5 @@
 ---
 
 
-> Last updated: 2025-08-29 06:08:30 EDT
+> Last updated: 2025-08-30 06:08:08 EDT
 
