@@ -81,6 +81,7 @@
 - 2024-11-07: [Update conan-version to 2.9.2 from 2.9.1](https://github.com/zopencommunity/conanport/pull/9) ❌
 
 ### cppcheckport
+- 2025-08-30: [Update cppcheck-version to 2.18.2 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/15) ❌
 - 2025-08-22: [Update cppcheck-version to 2.18.1 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/14) ❌
 - 2025-07-20: [Update cppcheck-version to 2.18.0 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/13) ❌
 - 2025-02-26: [Update cppcheck-version to 2.17.1 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/12) ❌
@@ -833,5 +834,5 @@
 ---
 
 
-> Last updated: 2025-08-30 06:08:08 EDT
+> Last updated: 2025-08-31 06:08:01 EDT
 
