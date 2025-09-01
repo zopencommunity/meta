@@ -1193,12 +1193,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="fx" data-searchable-text="fx Skipped N/A STABLE_fx_3692 A functional programming language graphics port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="fx" data-searchable-text="fx Skipped N/A STABLE_fx_3698 A functional programming language graphics port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/fxport" target="_blank" rel="noopener noreferrer">fx</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/fxport/releases/download/STABLE_fxport_3692/fx-39.0.3.20250828_151932.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_fx_3692</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/fxport/releases/download/STABLE_fxport_3698/fx-39.0.4.20250831_151925.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_fx_3698</a></div>
     <div class="tool-desc" title="A functional programming language">A functional programming language</div>
   </div>
 </div>
@@ -2479,12 +2479,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="fzf" data-searchable-text="fzf Green 100.0% STABLE_fzf_3637 A fuzzy finder tool utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="fzf" data-searchable-text="fzf Green 100.0% STABLE_fzf_3697 A fuzzy finder tool utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/fzfport" target="_blank" rel="noopener noreferrer">fzf</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/fzfport/releases/download/STABLE_fzfport_3637/fzf-v0.65.1.20250803_151926.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_fzf_3637</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/fzfport/releases/download/STABLE_fzfport_3697/fzf-v0.65.2.20250831_151937.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_fzf_3697</a></div>
     <div class="tool-desc" title="A fuzzy finder tool">A fuzzy finder tool</div>
   </div>
 </div>
@@ -2932,4 +2932,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-08-31 06:13:10 UTC
+Last updated:  2025-09-01 06:14:40 UTC

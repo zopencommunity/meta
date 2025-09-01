@@ -1,6 +1,6 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-08-31 06:11:39 EDT.*
+*Report generated on: 2025-09-01 06:13:07 EDT.*
 
 ## Overall Summary
 
@@ -26,8 +26,8 @@
 |---|:---|:---|:---|
 | [stablediffusionport](#repo-stablediffusionport) | 2,905 | +0 | 6 |
 | [librdkafkaport](#repo-librdkafkaport) | 2,638 | +0 | 54 |
-| [rpmport](#repo-rpmport) | 1,841 | -66 | 45 |
-| [llamacppport](#repo-llamacppport) | 1,780 | -49 | 37 |
+| [rpmport](#repo-rpmport) | 1,841 | +0 | 45 |
+| [llamacppport](#repo-llamacppport) | 1,780 | +0 | 37 |
 | [bashport](#repo-bashport) | 1,584 | -2,842 | 25 |
 | [gpgport](#repo-gpgport) | 1,484 | +0 | 30 |
 | [libuvport](#repo-libuvport) | 1,462 | +0 | 26 |
@@ -37,17 +37,17 @@
 | [gitport](#repo-gitport) | 1,065 | +0 | 32 |
 | [grpcport](#repo-grpcport) | 1,017 | +0 | 8 |
 | [valgrindport](#repo-valgrindport) | 896 | +0 | 3 |
-| [alternativesport](#repo-alternativesport) | 838 | +838 | 1 |
+| [alternativesport](#repo-alternativesport) | 838 | +0 | 1 |
 | [gzipport](#repo-gzipport) | 690 | +0 | 8 |
 | [procpsport](#repo-procpsport) | 687 | +0 | 1 |
 | [perlport](#repo-perlport) | 684 | +0 | 14 |
-| [util-linuxport](#repo-util-linuxport) | 630 | +36 | 16 |
-| [redisport](#repo-redisport) | 588 | +13 | 3 |
+| [util-linuxport](#repo-util-linuxport) | 630 | +0 | 16 |
+| [redisport](#repo-redisport) | 588 | +0 | 3 |
 | [unzipport](#repo-unzipport) | 549 | +0 | 12 |
 | [inetutilsport](#repo-inetutilsport) | 514 | +0 | 20 |
 | [cronieport](#repo-cronieport) | 510 | +0 | 13 |
 | [screenport](#repo-screenport) | 485 | +0 | 7 |
-| [glibport](#repo-glibport) | 459 | +459 | 2 |
+| [glibport](#repo-glibport) | 459 | +0 | 2 |
 | [tmuxport](#repo-tmuxport) | 440 | +0 | 13 |
 | [libpcapport](#repo-libpcapport) | 440 | +0 | 8 |
 | [treeport](#repo-treeport) | 425 | +0 | 3 |
@@ -67,7 +67,7 @@
 | [conanport](#repo-conanport) | 299 | +0 | 8 |
 | [zipport](#repo-zipport) | 297 | +0 | 8 |
 | [ccacheport](#repo-ccacheport) | 264 | +0 | 1 |
-| [fishport](#repo-fishport) | 258 | +25 | 1 |
+| [fishport](#repo-fishport) | 258 | +0 | 1 |
 | [mesonport](#repo-mesonport) | 257 | +0 | 9 |
 | [gitlab-runnerport](#repo-gitlab-runnerport) | 241 | +0 | 10 |
 | [zstdport](#repo-zstdport) | 236 | +0 | 4 |
@@ -76,7 +76,7 @@
 | [protobufport](#repo-protobufport) | 201 | +0 | 9 |
 | [findutilsport](#repo-findutilsport) | 199 | +0 | 10 |
 | [ninjaport](#repo-ninjaport) | 196 | +0 | 8 |
-| [blisport](#repo-blisport) | 185 | +20 | 2 |
+| [blisport](#repo-blisport) | 185 | +0 | 2 |
 | [diffutilsport](#repo-diffutilsport) | 184 | +0 | 8 |
 | [aflplusplusport](#repo-aflplusplusport) | 184 | +0 | 5 |
 | [jemallocport](#repo-jemallocport) | 166 | +0 | 1 |
@@ -98,7 +98,7 @@
 | [victoriametricsport](#repo-victoriametricsport) | 107 | +0 | 3 |
 | [mkcertport](#repo-mkcertport) | 105 | +0 | 1 |
 | [zlib-ngport](#repo-zlib-ngport) | 100 | +0 | 3 |
-| [ansibleport](#repo-ansibleport) | 100 | +28 | 4 |
+| [ansibleport](#repo-ansibleport) | 100 | +0 | 4 |
 | [pkgconfigport](#repo-pkgconfigport) | 98 | +0 | 1 |
 | [doxygenport](#repo-doxygenport) | 97 | +0 | 5 |
 | [libiconvport](#repo-libiconvport) | 96 | +0 | 4 |
@@ -117,9 +117,9 @@
 | [nanoport](#repo-nanoport) | 68 | +0 | 1 |
 | [gradleport](#repo-gradleport) | 67 | +0 | 1 |
 | [getoptport](#repo-getoptport) | 66 | +0 | 1 |
-| [librepoport](#repo-librepoport) | 66 | +66 | 1 |
+| [librepoport](#repo-librepoport) | 66 | +0 | 1 |
 | [logrotateport](#repo-logrotateport) | 65 | +0 | 1 |
-| [libkqueueport](#repo-libkqueueport) | 61 | +61 | 4 |
+| [libkqueueport](#repo-libkqueueport) | 61 | +0 | 4 |
 | [doom-asciiport](#repo-doom-asciiport) | 60 | +0 | 1 |
 | [lz4port](#repo-lz4port) | 58 | +0 | 4 |
 | [snappy-cport](#repo-snappy-cport) | 56 | +0 | 1 |
@@ -127,15 +127,15 @@
 | [expatport](#repo-expatport) | 52 | +0 | 2 |
 | [terraformport](#repo-terraformport) | 51 | +0 | 2 |
 | [libsasl2port](#repo-libsasl2port) | 50 | +0 | 3 |
-| [libsolvport](#repo-libsolvport) | 50 | +13 | 1 |
+| [libsolvport](#repo-libsolvport) | 50 | +0 | 1 |
 | [opensslport](#repo-opensslport) | 48 | +0 | 2 |
 | [automakeport](#repo-automakeport) | 47 | +0 | 3 |
 | [lessport](#repo-lessport) | 47 | +0 | 3 |
 | [xxhashport](#repo-xxhashport) | 47 | +0 | 2 |
 | [tigport](#repo-tigport) | 47 | +0 | 1 |
 | [lazygitport](#repo-lazygitport) | 46 | +0 | 1 |
-| [libssh2port](#repo-libssh2port) | 42 | -80 | 3 |
-| [catimgport](#repo-catimgport) | 37 | +37 | 1 |
+| [libssh2port](#repo-libssh2port) | 42 | +0 | 3 |
+| [catimgport](#repo-catimgport) | 37 | +0 | 1 |
 | [poptport](#repo-poptport) | 35 | +0 | 1 |
 | [whichport](#repo-whichport) | 34 | +0 | 1 |
 | [tcltlsport](#repo-tcltlsport) | 34 | +0 | 1 |
@@ -183,7 +183,7 @@
 | [edport](#repo-edport) | 13 | +0 | 1 |
 | [lzipport](#repo-lzipport) | 13 | +0 | 1 |
 | [aprport](#repo-aprport) | 13 | +0 | 1 |
-| [fmtport](#repo-fmtport) | 13 | +13 | 1 |
+| [fmtport](#repo-fmtport) | 13 | +0 | 1 |
 | [jsoncport](#repo-jsoncport) | 13 | +0 | 1 |
 | [libxml2port](#repo-libxml2port) | 12 | +0 | 1 |
 | [gflagsport](#repo-gflagsport) | 12 | +0 | 1 |
