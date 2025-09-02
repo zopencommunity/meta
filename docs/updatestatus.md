@@ -358,6 +358,9 @@
 - 2025-03-05: [Update ncdu-1-version to 1.22 from 1.20](https://github.com/zopencommunity/ncduport/pull/12) ❌
 - 2024-11-19: [Update ncdu-1-version to 1.21 from 1.20](https://github.com/zopencommunity/ncduport/pull/11) ❌
 
+### neovimport
+- 2025-09-01: [Update neovim-version to 0.11.4 from 0.11.3](https://github.com/zopencommunity/neovimport/pull/26) ❌
+
 ### nghttp2port
 - 2025-03-02: [Update nghttp2-version to 1.65.0 from 1.64.0](https://github.com/zopencommunity/nghttp2port/pull/11) ✅
 
@@ -508,11 +511,13 @@
 - 2025-01-31: [Update tig-version to 2.5.11 from 2.5.9](https://github.com/zopencommunity/tigport/pull/9) ❌
 
 ### victoriametricsport
+- 2025-09-01: [Update victoriametrics-version to 1.125.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/35) ❌
 - 2025-08-22: [Update victoriametrics-version to 1.124.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/34) ❌
 - 2025-08-05: [Update victoriametrics-version to 1.123.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/33) ❌
 - 2025-07-21: [Update victoriametrics-version to 1.122.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/32) ❌
 
 ### vimport
+- 2025-09-01: [Update vim-version to 9.1.1720 from 9.1.1710](https://github.com/zopencommunity/vimport/pull/139) ❌
 - 2025-08-28: [Update vim-version to 9.1.170 from 9.1.1690](https://github.com/zopencommunity/vimport/pull/136) ❌
 - 2025-08-24: [Update vim-version to 9.1.1680 from 9.1.1670](https://github.com/zopencommunity/vimport/pull/134) ❌
 - 2025-08-22: [Update vim-version to 9.1.1660 from 9.1.1590](https://github.com/zopencommunity/vimport/pull/132) ✅
@@ -834,5 +839,5 @@
 ---
 
 
-> Last updated: 2025-09-01 06:08:38 EDT
+> Last updated: 2025-09-02 06:09:08 EDT
 
