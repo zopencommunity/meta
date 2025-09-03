@@ -1823,12 +1823,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="nghttp2" data-searchable-text="nghttp2 Green 100.0% STABLE_nghttp2_3469 An HTTP/2 implementation networking port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="nghttp2" data-searchable-text="nghttp2 Green 100.0% STABLE_nghttp2_3699 An HTTP/2 implementation networking port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/nghttp2port" target="_blank" rel="noopener noreferrer">nghttp2</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/nghttp2port/releases/download/STABLE_nghttp2port_3469/nghttp2-1.66.0.20250617_152456.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_nghttp2_3469</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/nghttp2port/releases/download/STABLE_nghttp2port_3699/nghttp2-1.67.0.20250902_152031.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_nghttp2_3699</a></div>
     <div class="tool-desc" title="An HTTP/2 implementation">An HTTP/2 implementation</div>
   </div>
 </div>
@@ -1869,12 +1869,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="gpg" data-searchable-text="gpg Blue 93.9% STABLE_gpg_3658 A free software implementation of the GNU Privacy Guard security port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="gpg" data-searchable-text="gpg Blue 94.7% STABLE_gpg_3700 A free software implementation of the GNU Privacy Guard security port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/gpgport" target="_blank" rel="noopener noreferrer">gpg</a></strong></div>
     <div class="tool-status">Status: Blue</div>
-    <div class="tool-test">Test: 93.9%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/gpgport/releases/download/STABLE_gpgport_3658/gnupg-2.5.11.20250813_132518.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_gpg_3658</a></div>
+    <div class="tool-test">Test: 94.7%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/gpgport/releases/download/STABLE_gpgport_3700/gnupg-2.5.12.20250902_153747.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_gpg_3700</a></div>
     <div class="tool-desc" title="A free software implementation of the GNU Privacy Guard">A free software implementation of the GNU Privacy Guard</div>
   </div>
 </div>
@@ -2373,12 +2373,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="xz" data-searchable-text="xz Green 100.0% STABLE_xz_3396 A compression utility uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="xz" data-searchable-text="xz Green 100.0% STABLE_xz_3701 A compression utility uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/xzport" target="_blank" rel="noopener noreferrer">xz</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/xzport/releases/download/STABLE_xzport_3396/xz-5.8.1.20250530_163240.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_xz_3396</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/xzport/releases/download/STABLE_xzport_3701/xz-5.8.1.20250903_075239.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_xz_3701</a></div>
     <div class="tool-desc" title="A compression utility">A compression utility</div>
   </div>
 </div>
@@ -2932,4 +2932,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-09-02 06:16:19 UTC
+Last updated:  2025-09-03 06:14:27 UTC

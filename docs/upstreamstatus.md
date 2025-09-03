@@ -1,13 +1,13 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-09-02 06:14:45 EDT.*
+*Report generated on: 2025-09-03 06:12:50 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 269
-- **Total Current Lines of Code (LOC) in Patches:** 42,175
-- **Total Number of Current Patch Files:** 858
-- **Average Current Patch LOC per Project:** 156.78
+- **Total Current Lines of Code (LOC) in Patches:** 42,187
+- **Total Number of Current Patch Files:** 859
+- **Average Current Patch LOC per Project:** 156.83
 - **Average Current Patch Count per Project:** 3.19
 
 ### Historical Trends (All Projects)
@@ -57,9 +57,9 @@
 | [opensshport](#repo-opensshport) | 376 | +0 | 19 |
 | [flexport](#repo-flexport) | 351 | +0 | 2 |
 | [prometheusport](#repo-prometheusport) | 348 | +0 | 1 |
+| [vimport](#repo-vimport) | 347 | +12 | 13 |
 | [pocoport](#repo-pocoport) | 343 | +0 | 9 |
 | [rsyncport](#repo-rsyncport) | 341 | +0 | 6 |
-| [vimport](#repo-vimport) | 335 | +0 | 12 |
 | [neovimport](#repo-neovimport) | 327 | +0 | 13 |
 | [phpport](#repo-phpport) | 320 | +0 | 13 |
 | [mimallocport](#repo-mimallocport) | 313 | +0 | 6 |
@@ -1396,6 +1396,38 @@
 
 ---
 
+<a id="repo-vimport"></a>
+## vimport
+
+- **Origin Date (First Commit):** 2022-06-24
+- **Current Patch LOC:** 347
+- **Current Patch Count:** 13
+
+### Historical Trends
+
+![LOC Trend for vimport](images/upstream/vimport_current_loc_trend.png)
+![Count Trend for vimport](images/upstream/vimport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `dev-patches/Makefile.patch` | `dev-patches` | 13 |
+| `dev-patches/abendfix.patch` | `dev-patches` | 13 |
+| `stable-patches/auto_configure.patch` | `stable-patches` | 12 |
+| `stable-patches/buffwrite.c.patch` | `stable-patches` | 25 |
+| `stable-patches/evalfunc.c.patch` | `stable-patches` | 18 |
+| `stable-patches/fileio.c.patch` | `stable-patches` | 14 |
+| `stable-patches/os_unix.c.patch` | `stable-patches` | 43 |
+| `stable-patches/pty.c.patch` | `stable-patches` | 17 |
+| `stable-patches/structs.h.patch` | `stable-patches` | 14 |
+| `stable-patches/test_hlsearch.vim.patch` | `stable-patches` | 53 |
+| `stable-patches/test_startup.vim.patch` | `stable-patches` | 34 |
+| `stable-patches/test_syntax.vim.patch` | `stable-patches` | 79 |
+| `stable-patches/vim.h.patch` | `stable-patches` | 12 |
+
+---
+
 <a id="repo-pocoport"></a>
 ## pocoport
 
@@ -1446,37 +1478,6 @@
 | `patches/PR1/touchfix.patch` | `patches` | 11 |
 | `patches/PR3/syscall.c.patch` | `patches` | 217 |
 | `patches/pipe.c.patch` | `patches` | 29 |
-
----
-
-<a id="repo-vimport"></a>
-## vimport
-
-- **Origin Date (First Commit):** 2022-06-24
-- **Current Patch LOC:** 335
-- **Current Patch Count:** 12
-
-### Historical Trends
-
-![LOC Trend for vimport](images/upstream/vimport_current_loc_trend.png)
-![Count Trend for vimport](images/upstream/vimport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `dev-patches/Makefile.patch` | `dev-patches` | 13 |
-| `dev-patches/abendfix.patch` | `dev-patches` | 13 |
-| `stable-patches/buffwrite.c.patch` | `stable-patches` | 25 |
-| `stable-patches/evalfunc.c.patch` | `stable-patches` | 18 |
-| `stable-patches/fileio.c.patch` | `stable-patches` | 14 |
-| `stable-patches/os_unix.c.patch` | `stable-patches` | 43 |
-| `stable-patches/pty.c.patch` | `stable-patches` | 17 |
-| `stable-patches/structs.h.patch` | `stable-patches` | 14 |
-| `stable-patches/test_hlsearch.vim.patch` | `stable-patches` | 53 |
-| `stable-patches/test_startup.vim.patch` | `stable-patches` | 34 |
-| `stable-patches/test_syntax.vim.patch` | `stable-patches` | 79 |
-| `stable-patches/vim.h.patch` | `stable-patches` | 12 |
 
 ---
 

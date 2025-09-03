@@ -135,7 +135,7 @@
 | [expatport](https://github.com/zopencommunity/expatport) | 3 | 100.0% | apr, cronie, git |
 | [gnulibport](https://github.com/zopencommunity/gnulibport) | 3 | 100.0% | doxygen, libbsd, libgpgme |
 | [gperfport](https://github.com/zopencommunity/gperfport) | 3 | 100.0% | hello, libiconv, m4 |
-| [gpgport](https://github.com/zopencommunity/gpgport) | 3 | 93.9% | libgpgme, librepo, rpm |
+| [gpgport](https://github.com/zopencommunity/gpgport) | 3 | 94.7% | libgpgme, librepo, rpm |
 | [libksbaport](https://github.com/zopencommunity/libksbaport) | 3 | 100.0% | gpg, libgpgme, ntbtls |
 | [libssh2port](https://github.com/zopencommunity/libssh2port) | 3 | 6.8% | curl, git, llamacpp |
 | [moreutilsport](https://github.com/zopencommunity/moreutilsport) | 3 | Skipped | zos-code-page-tools, zosnc, zospstree |
@@ -312,4 +312,4 @@
 | [zospstreeport](https://github.com/zopencommunity/zospstreeport) | 0 | 100.0% | None |
 | [zotsampleport](https://github.com/zopencommunity/zotsampleport) | 0 | 100.0% | None |
 
-Last updated:  2025-09-02 06:16:19 UTC
+Last updated:  2025-09-03 06:14:27 UTC
