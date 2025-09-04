@@ -81,6 +81,7 @@
 - 2024-11-07: [Update conan-version to 2.9.2 from 2.9.1](https://github.com/zopencommunity/conanport/pull/9) ❌
 
 ### cppcheckport
+- 2025-09-03: [Update cppcheck-version to 2.18.3 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/16) ❌
 - 2025-08-30: [Update cppcheck-version to 2.18.2 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/15) ❌
 - 2025-08-22: [Update cppcheck-version to 2.18.1 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/14) ❌
 - 2025-07-20: [Update cppcheck-version to 2.18.0 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/13) ❌
@@ -284,7 +285,7 @@
 - 2025-08-22: [Update jd-version to 2.3.0 from 2.2.3](https://github.com/zopencommunity/jdport/pull/2) ❌
 
 ### kotlinport
-- 2024-07-19: [Update kotlin-version to 1.9.25 from 1.9.22](https://github.com/zopencommunity/kotlinport/pull/5) ❌
+- 2024-07-19: [Update kotlin-version to 1.9.25 from 1.9.22](https://github.com/zopencommunity/kotlinport/pull/5) ❓
 - 2024-06-08: [Update kotlin-version to 1.9.24 from 1.9.22](https://github.com/zopencommunity/kotlinport/pull/4) ❓
 - 2024-03-07: [Update kotlin-version to 1.9.23 from 1.9.22](https://github.com/zopencommunity/kotlinport/pull/3) ❓
 
@@ -348,7 +349,7 @@
 - 2024-12-11: [Update murex-version to 6.4.1005 from 6.0.1000](https://github.com/zopencommunity/murexport/pull/7) ❌
 - 2024-09-19: [Update murex-version to 6.3.4225 from 6.0.1000](https://github.com/zopencommunity/murexport/pull/4) ❌
 - 2024-07-30: [Update murex-version to 6.2.4000 from 6.0.1000](https://github.com/zopencommunity/murexport/pull/3) ❌
-- 2024-07-19: [Update murex-version to 6.2.3000 from 6.0.1000](https://github.com/zopencommunity/murexport/pull/2) ❌
+- 2024-07-19: [Update murex-version to 6.2.3000 from 6.0.1000](https://github.com/zopencommunity/murexport/pull/2) ❓
 - 2024-06-27: [Update murex-version to 6.1.8300 from 6.0.1000](https://github.com/zopencommunity/murexport/pull/1) ❓
 
 ### nanoport
@@ -839,5 +840,5 @@
 ---
 
 
-> Last updated: 2025-09-03 06:08:47 EDT
+> Last updated: 2025-09-04 06:09:11 EDT
 

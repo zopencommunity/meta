@@ -2323,12 +2323,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="openssl" data-searchable-text="openssl Blue 96.2% STABLE_openssl_3647 A cryptographic library uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="openssl" data-searchable-text="openssl Blue 99.7% STABLE_openssl_3702 A cryptographic library uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/opensslport" target="_blank" rel="noopener noreferrer">openssl</a></strong></div>
     <div class="tool-status">Status: Blue</div>
-    <div class="tool-test">Test: 96.2%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/opensslport/releases/download/STABLE_opensslport_3647/openssl-3.5.2.20250806_162036.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_openssl_3647</a></div>
+    <div class="tool-test">Test: 99.7%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/opensslport/releases/download/STABLE_opensslport_3702/openssl-3.5.2.20250903_120438.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_openssl_3702</a></div>
     <div class="tool-desc" title="A cryptographic library">A cryptographic library</div>
   </div>
 </div>
@@ -2932,4 +2932,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-09-03 06:14:27 UTC
+Last updated:  2025-09-04 06:15:29 UTC

@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-09-03 06:12:50 EDT.*
+*Report generated on: 2025-09-04 06:13:55 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 269
-- **Total Current Lines of Code (LOC) in Patches:** 42,187
-- **Total Number of Current Patch Files:** 859
-- **Average Current Patch LOC per Project:** 156.83
-- **Average Current Patch Count per Project:** 3.19
+- **Total Current Lines of Code (LOC) in Patches:** 42,206
+- **Total Number of Current Patch Files:** 860
+- **Average Current Patch LOC per Project:** 156.90
+- **Average Current Patch Count per Project:** 3.20
 
 ### Historical Trends (All Projects)
 
@@ -115,6 +115,7 @@
 | [cppcheckport](#repo-cppcheckport) | 72 | +0 | 4 |
 | [libtoolport](#repo-libtoolport) | 71 | +0 | 3 |
 | [nanoport](#repo-nanoport) | 68 | +0 | 1 |
+| [opensslport](#repo-opensslport) | 67 | +19 | 3 |
 | [gradleport](#repo-gradleport) | 67 | +0 | 1 |
 | [getoptport](#repo-getoptport) | 66 | +0 | 1 |
 | [librepoport](#repo-librepoport) | 66 | +0 | 1 |
@@ -128,7 +129,6 @@
 | [terraformport](#repo-terraformport) | 51 | +0 | 2 |
 | [libsasl2port](#repo-libsasl2port) | 50 | +0 | 3 |
 | [libsolvport](#repo-libsolvport) | 50 | +0 | 1 |
-| [opensslport](#repo-opensslport) | 48 | +0 | 2 |
 | [automakeport](#repo-automakeport) | 47 | +0 | 3 |
 | [lessport](#repo-lessport) | 47 | +0 | 3 |
 | [xxhashport](#repo-xxhashport) | 47 | +0 | 2 |
@@ -2779,6 +2779,28 @@
 
 ---
 
+<a id="repo-opensslport"></a>
+## opensslport
+
+- **Origin Date (First Commit):** 2022-05-24
+- **Current Patch LOC:** 67
+- **Current Patch Count:** 3
+
+### Historical Trends
+
+![LOC Trend for opensslport](images/upstream/opensslport_current_loc_trend.png)
+![Count Trend for opensslport](images/upstream/opensslport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `stable-patches/50-os390.conf.patch` | `stable-patches` | 15 |
+| `stable-patches/test_skip.patch` | `stable-patches` | 33 |
+| `stable-patches/ui_disable.patch` | `stable-patches` | 19 |
+
+---
+
 <a id="repo-gradleport"></a>
 ## gradleport
 
@@ -3048,27 +3070,6 @@
 | Patch File (Repo Relative Path) | Source | LOC |
 |---|---|:---|
 | `stable-patches/PR1.patch` | `stable-patches` | 50 |
-
----
-
-<a id="repo-opensslport"></a>
-## opensslport
-
-- **Origin Date (First Commit):** 2022-05-24
-- **Current Patch LOC:** 48
-- **Current Patch Count:** 2
-
-### Historical Trends
-
-![LOC Trend for opensslport](images/upstream/opensslport_current_loc_trend.png)
-![Count Trend for opensslport](images/upstream/opensslport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `stable-patches/50-os390.conf.patch` | `stable-patches` | 15 |
-| `stable-patches/test_skip.patch` | `stable-patches` | 33 |
 
 ---
 
