@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-09-04 06:13:55 EDT.*
+*Report generated on: 2025-09-05 06:12:45 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 269
-- **Total Current Lines of Code (LOC) in Patches:** 42,206
-- **Total Number of Current Patch Files:** 860
-- **Average Current Patch LOC per Project:** 156.90
-- **Average Current Patch Count per Project:** 3.20
+- **Total Projects Analyzed:** 270
+- **Total Current Lines of Code (LOC) in Patches:** 42,236
+- **Total Number of Current Patch Files:** 861
+- **Average Current Patch LOC per Project:** 156.43
+- **Average Current Patch Count per Project:** 3.19
 
 ### Historical Trends (All Projects)
 
@@ -147,6 +147,7 @@
 | [luvport](#repo-luvport) | 31 | +0 | 1 |
 | [libffiport](#repo-libffiport) | 31 | +0 | 2 |
 | [lynxport](#repo-lynxport) | 30 | +0 | 1 |
+| [createrepo_cport](#repo-createrepo-cport) | 30 | +30 | 1 |
 | [netpbmport](#repo-netpbmport) | 29 | +0 | 2 |
 | [gmpport](#repo-gmpport) | 29 | +0 | 2 |
 | [libgpgmeport](#repo-libgpgmeport) | 29 | +0 | 2 |
@@ -3434,6 +3435,26 @@
 
 ![LOC Trend for lynxport](images/upstream/lynxport_current_loc_trend.png)
 ![Count Trend for lynxport](images/upstream/lynxport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/PR1.patch` | `patches` | 30 |
+
+---
+
+<a id="repo-createrepo-cport"></a>
+## createrepo_cport
+
+- **Origin Date (First Commit):** 2025-09-05
+- **Current Patch LOC:** 30
+- **Current Patch Count:** 1
+
+### Historical Trends
+
+![LOC Trend for createrepo_cport](images/upstream/createrepo_cport_current_loc_trend.png)
+![Count Trend for createrepo_cport](images/upstream/createrepo_cport_current_count_trend.png)
 
 ### Current Patch Details
 

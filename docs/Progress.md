@@ -75,10 +75,10 @@
 
 | Package | # of Dependent Projects | Test Success Rate | Dependent projects |
 |---|---|---|---|
-| [makeport](https://github.com/zopencommunity/makeport) | 194 | 99.9% | alternatives, apr, asio, autoconf, automake, avro-c-lib, bash, bash-completion, bc, bison, blis, boost, byacc, bzip2, c3270, ccache, check, cjson, clang-format, cmake, coreutils, cpio, cppcheck, cronie, crush, cscope, ctags, curl, dialog, diffutils, direnv, doom-ascii, dos2unix, doxygen, duckdb, ed, expat, expect, file, findutils, fish, flex, fmt, frp, fzf, gawk, getopt, gettext, gflags, git, git-extras, git-lfs, git-sizer, githubcli, gitlabcli, glib, glow, gmp, gn, gnulib, gperf, gpg, grafana, grep, groff, grpc, gzip, hello, help2man, hexcurse, jansson, jd, jemalloc, jenkins, jq, jsonc, less, libarchive, libassuan, libbsd, libdio, libevent, libgcrypt, libgdbm, libgpgerror, libgpgme, libiconv, libkqueue, libksba, libmd, libpcre, libpcre2, libpipeline, libpsl, librabbitmq, librdkafka, librepo, libsasl2, libserdes, libsolv, libssh2, libtool, libuv, libxml2, libxslt, libyaml, llamacpp, logrotate, lpeg, lua, luarocks, luv, lynx, lz4, lzip, m4, make, man-db, meta, metaldio, mkcert, moreutils, mpfr, multitail, nano, ncdu, ncurses, neovim, netpbm, nghttp2, ninja, npth, ntbtls, oniguruma, openldap, openssh, openssl, patch, perl, php, pinentry, pkgconfig, popt, procps, prometheus, protobuf, quilt, re2c, readline, redis, rpm, rsync, s5cmd, scc, scdoc, screen, sed, shdoc, snappy-c, spdlog, sqlite, sshpass, stow, sudo, tar, tcl, tcltls, texinfo, thesilversearcher, tig, tmux, toml11, tree, unzip, util-linux, uucp, victoriametrics, vim, wget, which, xmlto, xxhash, xz, zedc_ascii, zip, zlib, zlib-ng, zos-code-page-tools, zoslib, zosnc, zospstree, zotsample, zstd, zusage |
+| [makeport](https://github.com/zopencommunity/makeport) | 195 | 99.9% | alternatives, apr, asio, autoconf, automake, avro-c-lib, bash, bash-completion, bc, bison, blis, boost, byacc, bzip2, c3270, ccache, check, cjson, clang-format, cmake, coreutils, cpio, cppcheck, createrepo_c, cronie, crush, cscope, ctags, curl, dialog, diffutils, direnv, doom-ascii, dos2unix, doxygen, duckdb, ed, expat, expect, file, findutils, fish, flex, fmt, frp, fzf, gawk, getopt, gettext, gflags, git, git-extras, git-lfs, git-sizer, githubcli, gitlabcli, glib, glow, gmp, gn, gnulib, gperf, gpg, grafana, grep, groff, grpc, gzip, hello, help2man, hexcurse, jansson, jd, jemalloc, jenkins, jq, jsonc, less, libarchive, libassuan, libbsd, libdio, libevent, libgcrypt, libgdbm, libgpgerror, libgpgme, libiconv, libkqueue, libksba, libmd, libpcre, libpcre2, libpipeline, libpsl, librabbitmq, librdkafka, librepo, libsasl2, libserdes, libsolv, libssh2, libtool, libuv, libxml2, libxslt, libyaml, llamacpp, logrotate, lpeg, lua, luarocks, luv, lynx, lz4, lzip, m4, make, man-db, meta, metaldio, mkcert, moreutils, mpfr, multitail, nano, ncdu, ncurses, neovim, netpbm, nghttp2, ninja, npth, ntbtls, oniguruma, openldap, openssh, openssl, patch, perl, php, pinentry, pkgconfig, popt, procps, prometheus, protobuf, quilt, re2c, readline, redis, rpm, rsync, s5cmd, scc, scdoc, screen, sed, shdoc, snappy-c, spdlog, sqlite, sshpass, stow, sudo, tar, tcl, tcltls, texinfo, thesilversearcher, tig, tmux, toml11, tree, unzip, util-linux, uucp, victoriametrics, vim, wget, which, xmlto, xxhash, xz, zedc_ascii, zip, zlib, zlib-ng, zos-code-page-tools, zoslib, zosnc, zospstree, zotsample, zstd, zusage |
 | [zoslibport](https://github.com/zopencommunity/zoslibport) | 148 | 100.0% | alternatives, apr, avro-c-lib, bash, bash-completion, bc, bison, boost, byacc, bzip2, c3270, check, cmake, coreutils, cpio, cppcheck, cronie, cscope, ctags, curl, dialog, diffutils, doom-ascii, doxygen, duckdb, ed, expat, expect, findutils, fish, flex, fmt, gawk, getopt, gettext, gflags, git, glib, gn, gnulib, gperf, gpg, grep, groff, grpc, gzip, hello, hexcurse, jansson, jemalloc, jenkins, jq, jsonc, less, libarchive, libassuan, libbsd, libevent, libgcrypt, libgdbm, libgpgerror, libgpgme, libkqueue, libksba, libmd, libpcre, libpcre2, libpipeline, librabbitmq, librdkafka, librepo, libsasl2, libserdes, libsolv, libssh2, libtool, libuv, libxml2, libxslt, libyaml, llamacpp, logrotate, lpeg, lua, luv, lynx, lzip, m4, make, man-db, meta, moreutils, mpfr, multitail, my_basic, nano, ncdu, ncurses, neovim, netpbm, ninja, npth, ntbtls, oniguruma, openldap, openssh, openssl, patch, perl, php, pinentry, pkgconfig, popt, procps, protobuf, quilt, re2c, readline, rsync, scdoc, screen, sed, shdoc, snappy-c, spdlog, sqlite, sshpass, sudo, tar, tcl, tcltls, texinfo, thesilversearcher, tig, tmux, toml11, unzip, util-linux, uucp, vim, wget, xmlto, xxhash, xz, zip, zlib, zstd, zusage |
 | [coreutilsport](https://github.com/zopencommunity/coreutilsport) | 114 | 92.5% | alternatives, apr, automake, avro-c-lib, bash, bash-completion, bc, bison, blis, boost, byacc, c3270, ccache, check, cppcheck, cronie, crush, curl, diffutils, direnv, doom-ascii, dos2unix, doxygen, ed, expat, findutils, flex, fq, getopt, gettext, git, git-extras, git-lfs, githubcli, gitlabcli, glib, glow, gnulib, grep, groff, gzip, hello, jansson, jd, jemalloc, jq, less, libbsd, libdio, libevent, libgdbm, libiconv, libkqueue, libmd, libpcre, libpcre2, libpsl, librdkafka, libsasl2, libserdes, libtool, libxml2, logrotate, lua, luarocks, lz4, lzip, man-db, meta, metaldio, moreutils, multitail, ncurses, neovim, netpbm, ntbtls, oniguruma, openldap, openssh, patch, perl, php, pkgconfig, procps, protobuf, quilt, re2c, readline, redis, rpm, rsync, scc, scdoc, sed, shdoc, spdlog, sudo, texinfo, thesilversearcher, tig, tmux, tree, util-linux, vim, which, xxhash, zedc_ascii, zlib-ng, zos-code-page-tools, zoslib, zosnc, zospstree, zstd, zusage |
-| [curlport](https://github.com/zopencommunity/curlport) | 83 | 99.9% | autoconf, automake, avro-c-lib, bash, bison, buildkite, bzip2, c3270, cmake, coreutils, cronie, cscope, curl, diffutils, dos2unix, doxygen, expat, findutils, frp, gawk, gettext, gin, git, gitlab-runner, gn, gnulib, gperf, gpg, grep, groff, gzip, hello, help2man, jq, less, libarchive, libassuan, libgcrypt, libgpgerror, libgpgme, libksba, libpipeline, librdkafka, libserdes, libtool, libyaml, llamacpp, luarocks, lz4, m4, make, man-db, maven, meta, moreutils, ncdu, ncurses, neovim, ninja, npth, ntbtls, oniguruma, openssl, patch, perl, php, pinentry, procps, readline, rsync, screen, sed, snappy-c, tar, tcl, terraform, texinfo, uucp, wget, which, xxhash, xz, zstd |
+| [curlport](https://github.com/zopencommunity/curlport) | 84 | 99.9% | autoconf, automake, avro-c-lib, bash, bison, buildkite, bzip2, c3270, cmake, coreutils, createrepo_c, cronie, cscope, curl, diffutils, dos2unix, doxygen, expat, findutils, frp, gawk, gettext, gin, git, gitlab-runner, gn, gnulib, gperf, gpg, grep, groff, gzip, hello, help2man, jq, less, libarchive, libassuan, libgcrypt, libgpgerror, libgpgme, libksba, libpipeline, librdkafka, libserdes, libtool, libyaml, llamacpp, luarocks, lz4, m4, make, man-db, maven, meta, moreutils, ncdu, ncurses, neovim, ninja, npth, ntbtls, oniguruma, openssl, patch, perl, php, pinentry, procps, readline, rsync, screen, sed, snappy-c, tar, tcl, terraform, texinfo, uucp, wget, which, xxhash, xz, zstd |
 | [gitport](https://github.com/zopencommunity/gitport) | 75 | 92.2% | autoconf, automake, bison, boost, buildkite, caddy, cmake, cronie, ctags, doom-ascii, dos2unix, doxygen, expat, frp, gettext, gflags, gin, git, git-extras, githubcli, gitlab-runner, gitlabcli, gn, gnulib, grafana, grpc, gzip, hello, help2man, jansson, libarchive, libbsd, libgdbm, libgpgme, libkqueue, libmd, libpipeline, librdkafka, libtool, libyaml, m4, make, man-db, meta, murex, ncdu, ncurses, ninja, openssl, patch, perl, php, prometheus, protobuf, re2c, rpm, rsync, shdoc, sqlite, sshpass, tar, terraform, texinfo, thesilversearcher, tig, unzip, victoriametrics, vim, wget, xz, zedc_ascii, zigi, zip, zoslib, zusage |
 | [m4port](https://github.com/zopencommunity/m4port) | 72 | 98.3% | apr, asio, autoconf, automake, bash, bash-completion, bison, check, coreutils, cronie, cscope, ctags, curl, doxygen, expat, file, flex, gettext, git, gn, gnulib, gpg, groff, gzip, hello, help2man, hexcurse, jansson, jemalloc, jq, less, libassuan, libbsd, libgcrypt, libgpgerror, libgpgme, libiconv, libksba, libmd, libpsl, libsasl2, libtool, libyaml, logrotate, m4, make, man-db, mpfr, netpbm, npth, ntbtls, oniguruma, openssl, php, pinentry, procps, re2c, readline, rpm, rsync, screen, sed, sshpass, tar, texinfo, thesilversearcher, tmux, util-linux, uucp, wget, which, zlib-ng |
 | [autoconfport](https://github.com/zopencommunity/autoconfport) | 70 | 98.0% | apr, asio, autoconf, automake, bash, bash-completion, bison, check, coreutils, cpio, cronie, ctags, curl, doxygen, expat, file, gettext, git, gnulib, gpg, groff, grpc, gzip, hello, help2man, hexcurse, jansson, jemalloc, jq, less, libarchive, libassuan, libbsd, libgcrypt, libgpgerror, libgpgme, libiconv, libksba, libmd, libpsl, libsasl2, libtool, libyaml, logrotate, m4, make, man-db, mpfr, nano, npth, ntbtls, oniguruma, php, pinentry, procps, re2c, rpm, rsync, screen, sed, shdoc, sshpass, tar, texinfo, thesilversearcher, tmux, util-linux, uucp, wget, zlib-ng |
@@ -91,45 +91,46 @@
 | [grepport](https://github.com/zopencommunity/grepport) | 47 | 92.2% | apr, bash, bash-completion, bc, blis, byacc, check, cpio, ctags, doxygen, fmt, glib, gnulib, gzip, jenkins, jsonc, less, libkqueue, libpcre, libpcre2, librdkafka, librepo, libserdes, libsolv, libxslt, libyaml, m4, man-db, meta, ntbtls, openldap, perl, procps, prometheus, quilt, readline, redis, rpm, shdoc, snappy-c, stow, toml11, util-linux, wharf, which, xmlto, zlib-ng |
 | [diffutilsport](https://github.com/zopencommunity/diffutilsport) | 46 | 87.6% | apr, bash, bison, boost, byacc, check, coreutils, cronie, ctags, flex, gawk, getopt, git, gnulib, gpg, grep, groff, gzip, jq, jsonc, libassuan, libdio, libgcrypt, libgpgerror, libgpgme, libiconv, libkqueue, libksba, libpcre, libpcre2, libxml2, libxslt, libyaml, man-db, netpbm, npth, ntbtls, php, pinentry, quilt, re2c, rsync, texinfo, vim, which, xmlto |
 | [gettextport](https://github.com/zopencommunity/gettextport) | 41 | 94.4% | alternatives, bash, check, coreutils, cronie, ctags, curl, expat, getopt, git, glib, gpg, hello, less, libassuan, libgcrypt, libgpgerror, libgpgme, libiconv, libksba, libpsl, librepo, libsasl2, libsolv, libyaml, m4, make, man-db, nano, neovim, netpbm, npth, ntbtls, perl, pinentry, procps, rpm, util-linux, uucp, vim, which |
-| [opensslport](https://github.com/zopencommunity/opensslport) | 40 | 99.7% | apr, c3270, cmake, cronie, curl, expat, file, git, gpg, grpc, jq, libarchive, libassuan, libbsd, libevent, libgcrypt, libgpgerror, libksba, librabbitmq, librdkafka, librepo, libsasl2, libserdes, libssh2, llamacpp, lynx, nghttp2, ninja, npth, ntbtls, openldap, openssh, pinentry, redis, rpm, rsync, sudo, tcl, tcltls, wget |
-| [cmakeport](https://github.com/zopencommunity/cmakeport) | 37 | 82.4% | asio, avro-c-lib, boost, ccache, check, cjson, clang-format, cmake, cppcheck, doxygen, duckdb, fish, fmt, gflags, grpc, jansson, jsonc, libevent, libkqueue, librabbitmq, librepo, libsolv, libuv, llamacpp, luv, neovim, ninja, popt, protobuf, rpm, spdlog, toml11, unzip, zedc_ascii, zip, zoslib, zusage |
-| [zlibport](https://github.com/zopencommunity/zlibport) | 37 | 100.0% | autoconf, avro-c-lib, boost, clang-format, cmake, cronie, curl, expat, file, fish, git, glib, gpg, grpc, jq, libevent, libgpgerror, libgpgme, libiconv, librdkafka, librepo, libsasl2, libserdes, libsolv, libssh2, llamacpp, lynx, netpbm, nghttp2, openssh, perl, rpm, rsync, sudo, thesilversearcher, tig, wget |
+| [opensslport](https://github.com/zopencommunity/opensslport) | 41 | 99.7% | apr, c3270, cmake, createrepo_c, cronie, curl, expat, file, git, gpg, grpc, jq, libarchive, libassuan, libbsd, libevent, libgcrypt, libgpgerror, libksba, librabbitmq, librdkafka, librepo, libsasl2, libserdes, libssh2, llamacpp, lynx, nghttp2, ninja, npth, ntbtls, openldap, openssh, pinentry, redis, rpm, rsync, sudo, tcl, tcltls, wget |
+| [cmakeport](https://github.com/zopencommunity/cmakeport) | 38 | 82.4% | asio, avro-c-lib, boost, ccache, check, cjson, clang-format, cmake, cppcheck, createrepo_c, doxygen, duckdb, fish, fmt, gflags, grpc, jansson, jsonc, libevent, libkqueue, librabbitmq, librepo, libsolv, libuv, llamacpp, luv, neovim, ninja, popt, protobuf, rpm, spdlog, toml11, unzip, zedc_ascii, zip, zoslib, zusage |
+| [zlibport](https://github.com/zopencommunity/zlibport) | 38 | 100.0% | autoconf, avro-c-lib, boost, clang-format, cmake, createrepo_c, cronie, curl, expat, file, fish, git, glib, gpg, grpc, jq, libevent, libgpgerror, libgpgme, libiconv, librdkafka, librepo, libsasl2, libserdes, libsolv, libssh2, llamacpp, lynx, netpbm, nghttp2, openssh, perl, rpm, rsync, sudo, thesilversearcher, tig, wget |
 | [check_goport](https://github.com/zopencommunity/check_goport) | 32 | 100.0% | buildkite, bump, caddy, chezmoi, direnv, frp, fx, gin, git-lfs, git-sizer, githubcli, gitlab-runner, gitlabcli, godsect, grafana, gum, hugo, lazygit, mkcert, murex, nats, osv-scanner, parse-gotest, powerlinego, s5cmd, terraform, ttype, victoriametrics, wharf, yq, zosnc, zospstree |
 | [libtoolport](https://github.com/zopencommunity/libtoolport) | 30 | 87.0% | apr, check, expat, file, groff, grpc, hello, jansson, jq, less, libarchive, libbsd, libgdbm, libgpgme, libmd, libpcre, libpsl, libsasl2, libyaml, logrotate, m4, man-db, oniguruma, php, procps, re2c, rpm, texinfo, util-linux, zlib-ng |
 | [ncursesport](https://github.com/zopencommunity/ncursesport) | 27 | 100.0% | bash, c3270, clang-format, cscope, dialog, doom-ascii, emacs, fish, gettext, git, gpg, hexcurse, less, libgpgme, llamacpp, lynx, man-db, multitail, nano, ncdu, procps, screen, thesilversearcher, tig, tmux, util-linux, vim |
 | [check_pythonport](https://github.com/zopencommunity/check_pythonport) | 24 | 100.0% | apr, blis, c3270, clang-format, ctags, curl, depot_tools, doxygen, file, git, glib, gn, libdio, libpsl, librepo, libxml2, lz4, pinentry, re2c, redis, rsync, spdlog, vim, zstd |
 | [gawkport](https://github.com/zopencommunity/gawkport) | 24 | 93.3% | automake, bash-completion, check, coreutils, curl, expat, fmt, git, glib, gzip, jsonc, librepo, libsolv, lzip, ncurses, openssh, procps, quilt, rpm, rsync, shdoc, sudo, vim, which |
-| [pkgconfigport](https://github.com/zopencommunity/pkgconfigport) | 23 | 100.0% | asio, avro-c-lib, check, ctags, glib, groff, grpc, librabbitmq, librdkafka, librepo, libserdes, man-db, ncurses, netpbm, nghttp2, procps, redis, rpm, tcl, tcltls, thesilversearcher, tmux, util-linux |
-| [xzport](https://github.com/zopencommunity/xzport) | 22 | 100.0% | autoconf, automake, bison, cronie, diffutils, expat, findutils, gettext, git, gzip, hello, help2man, libbsd, libtool, m4, make, man-db, procps, rpm, texinfo, thesilversearcher, util-linux |
+| [pkgconfigport](https://github.com/zopencommunity/pkgconfigport) | 24 | 100.0% | asio, avro-c-lib, check, createrepo_c, ctags, glib, groff, grpc, librabbitmq, librdkafka, librepo, libserdes, man-db, ncurses, netpbm, nghttp2, procps, redis, rpm, tcl, tcltls, thesilversearcher, tmux, util-linux |
+| [xzport](https://github.com/zopencommunity/xzport) | 23 | 100.0% | autoconf, automake, bison, createrepo_c, cronie, diffutils, expat, findutils, gettext, git, gzip, hello, help2man, libbsd, libtool, m4, make, man-db, procps, rpm, texinfo, thesilversearcher, util-linux |
 | [findutilsport](https://github.com/zopencommunity/findutilsport) | 19 | 85.2% | apr, bash-completion, boost, coreutils, gnulib, grep, libiconv, libkqueue, libxml2, netpbm, perl, pkgconfig, procps, prometheus, quilt, re2c, redis, texinfo, vim |
 | [texinfoport](https://github.com/zopencommunity/texinfoport) | 19 | Skipped | autoconf, automake, bc, bison, cronie, expat, gettext, git, gpg, groff, gzip, hello, libgpgme, libtool, m4, make, ntbtls, sed, tar |
 | [getoptport](https://github.com/zopencommunity/getoptport) | 18 | 52.2% | avro-c-lib, coreutils, diffutils, fish, flex, libgpgme, librdkafka, moreutils, neovim, ninja, procps, sed, shdoc, sudo, thesilversearcher, util-linux, which, xmlto |
 | [wharfport](https://github.com/zopencommunity/wharfport) | 18 | 100.0% | caddy, chezmoi, crush, fq, fx, git-lfs, githubcli, gitlabcli, glow, gum, hugo, lazygit, murex, osv-scanner, prometheus, s5cmd, ttype, victoriametrics |
-| [bzip2port](https://github.com/zopencommunity/bzip2port) | 13 | 100.0% | boost, gpg, libassuan, libgcrypt, libgpgerror, libgpgme, libksba, libsolv, npth, ntbtls, pinentry, prometheus, rpm |
+| [bzip2port](https://github.com/zopencommunity/bzip2port) | 14 | 100.0% | boost, createrepo_c, gpg, libassuan, libgcrypt, libgpgerror, libgpgme, libksba, libsolv, npth, ntbtls, pinentry, prometheus, rpm |
 | [help2manport](https://github.com/zopencommunity/help2manport) | 13 | 100.0% | autoconf, automake, bison, cronie, expat, gettext, git, hello, libtool, m4, make, meta, texinfo |
-| [libgpgerrorport](https://github.com/zopencommunity/libgpgerrorport) | 11 | 100.0% | gpg, libassuan, libgcrypt, libgpgme, libksba, librepo, libsolv, npth, ntbtls, pinentry, rpm |
+| [libgpgerrorport](https://github.com/zopencommunity/libgpgerrorport) | 12 | 100.0% | createrepo_c, gpg, libassuan, libgcrypt, libgpgme, libksba, librepo, libsolv, npth, ntbtls, pinentry, rpm |
 | [check_clangport](https://github.com/zopencommunity/check_clangport) | 10 | 100.0% | boost, duckdb, gn, grafana, hazelcast, m4, murex, parse-gotest, zos-code-page-tools, zotsample |
 | [flexport](https://github.com/zopencommunity/flexport) | 10 | 100.0% | autoconf, bison, cscope, doxygen, groff, man-db, netpbm, tmux, util-linux, xmlto |
 | [zusageport](https://github.com/zopencommunity/zusageport) | 10 | Skipped | bash, cmake, curl, git, jq, less, make, neovim, ninja, vim |
 | [libiconvport](https://github.com/zopencommunity/libiconvport) | 9 | 100.0% | bison, glib, librepo, libsolv, libxml2, libxslt, man-db, php, tig |
-| [libxml2port](https://github.com/zopencommunity/libxml2port) | 8 | 100.0% | apr, clang-format, doxygen, glib, librepo, libsolv, libxslt, php |
+| [libxml2port](https://github.com/zopencommunity/libxml2port) | 9 | 100.0% | apr, clang-format, createrepo_c, doxygen, glib, librepo, libsolv, libxslt, php |
+| [zstdport](https://github.com/zopencommunity/zstdport) | 8 | 100.0% | ccache, createrepo_c, libarchive, librdkafka, libserdes, libsolv, rpm, rsync |
 | [bisonport](https://github.com/zopencommunity/bisonport) | 7 | 99.7% | bash, doxygen, groff, netpbm, php, tmux, util-linux |
+| [luaport](https://github.com/zopencommunity/luaport) | 7 | 100.0% | createrepo_c, libsolv, lpeg, luarocks, luv, rpm, vim |
+| [poptport](https://github.com/zopencommunity/poptport) | 7 | 100.0% | alternatives, createrepo_c, librabbitmq, libsolv, logrotate, rpm, rsync |
 | [whichport](https://github.com/zopencommunity/whichport) | 7 | 100.0% | boost, jq, libgpgme, libpsl, libserdes, prometheus, redis |
 | [zipport](https://github.com/zopencommunity/zipport) | 7 | 100.0% | fzf, gpg, gradle, libgpgme, luarocks, neovim, unzip |
-| [zstdport](https://github.com/zopencommunity/zstdport) | 7 | 100.0% | ccache, libarchive, librdkafka, libserdes, libsolv, rpm, rsync |
 | [check_javaport](https://github.com/zopencommunity/check_javaport) | 6 | 100.0% | ant, gradle, groovy, hazelcast, jenkins, maven |
 | [groffport](https://github.com/zopencommunity/groffport) | 6 | 97.0% | less, libiconv, man-db, meta, openldap, openssh |
+| [libgcryptport](https://github.com/zopencommunity/libgcryptport) | 6 | 100.0% | createrepo_c, gpg, libgpgme, libsolv, ntbtls, rpm |
 | [libpcre2port](https://github.com/zopencommunity/libpcre2port) | 6 | 66.7% | cppcheck, fish, git, glib, grep, librepo |
-| [luaport](https://github.com/zopencommunity/luaport) | 6 | 100.0% | libsolv, lpeg, luarocks, luv, rpm, vim |
-| [poptport](https://github.com/zopencommunity/poptport) | 6 | 100.0% | alternatives, librabbitmq, libsolv, logrotate, rpm, rsync |
-| [libgcryptport](https://github.com/zopencommunity/libgcryptport) | 5 | 100.0% | gpg, libgpgme, libsolv, ntbtls, rpm |
+| [libassuanport](https://github.com/zopencommunity/libassuanport) | 5 | 100.0% | createrepo_c, gpg, libgpgme, librepo, pinentry |
 | [lz4port](https://github.com/zopencommunity/lz4port) | 5 | 100.0% | libarchive, librdkafka, libserdes, rpm, rsync |
 | [patchport](https://github.com/zopencommunity/patchport) | 5 | 94.1% | glib, m4, neovim, quilt, rpm |
 | [unzipport](https://github.com/zopencommunity/unzipport) | 5 | 100.0% | fzf, gradle, luarocks, neovim, rpm |
 | [lessport](https://github.com/zopencommunity/lessport) | 4 | 100.0% | c3270, git, jq, man-db |
-| [libassuanport](https://github.com/zopencommunity/libassuanport) | 4 | 100.0% | gpg, libgpgme, librepo, pinentry |
 | [libpslport](https://github.com/zopencommunity/libpslport) | 4 | 100.0% | curl, git, libarchive, llamacpp |
 | [ninjaport](https://github.com/zopencommunity/ninjaport) | 4 | 98.2% | clang-format, duckdb, glib, gn |
+| [sqliteport](https://github.com/zopencommunity/sqliteport) | 4 | 100.0% | createrepo_c, libsolv, php, rpm |
 | [tclport](https://github.com/zopencommunity/tclport) | 4 | Skipped | expect, redis, sqlite, tcltls |
 | [wgetport](https://github.com/zopencommunity/wgetport) | 4 | 20.3% | hello, man-db, procps, sed |
 | [expatport](https://github.com/zopencommunity/expatport) | 3 | 100.0% | apr, cronie, git |
@@ -139,12 +140,13 @@
 | [libksbaport](https://github.com/zopencommunity/libksbaport) | 3 | 100.0% | gpg, libgpgme, ntbtls |
 | [libssh2port](https://github.com/zopencommunity/libssh2port) | 3 | 6.8% | curl, git, llamacpp |
 | [moreutilsport](https://github.com/zopencommunity/moreutilsport) | 3 | Skipped | zos-code-page-tools, zosnc, zospstree |
-| [sqliteport](https://github.com/zopencommunity/sqliteport) | 3 | 100.0% | libsolv, php, rpm |
 | [util-linuxport](https://github.com/zopencommunity/util-linuxport) | 3 | Skipped | bash, jq, openldap |
 | [zedc_asciiport](https://github.com/zopencommunity/zedc_asciiport) | 3 | 100.0% | gzip, unzip, zip |
+| [checkport](https://github.com/zopencommunity/checkport) | 2 | 77.8% | createrepo_c, librepo |
 | [cjsonport](https://github.com/zopencommunity/cjsonport) | 2 | Skipped | libdio, vim |
 | [cpioport](https://github.com/zopencommunity/cpioport) | 2 | 93.8% | libarchive, rpm |
 | [doxygenport](https://github.com/zopencommunity/doxygenport) | 2 | 98.1% | librepo, rpm |
+| [glibport](https://github.com/zopencommunity/glibport) | 2 | 88.6% | createrepo_c, librepo |
 | [janssonport](https://github.com/zopencommunity/janssonport) | 2 | 100.0% | avro-c-lib, libserdes |
 | [libbsdport](https://github.com/zopencommunity/libbsdport) | 2 | 100.0% | librdkafka, libserdes |
 | [libuvport](https://github.com/zopencommunity/libuvport) | 2 | 98.6% | luv, neovim |
@@ -155,18 +157,18 @@
 | [parse-gotestport](https://github.com/zopencommunity/parse-gotestport) | 2 | 100.0% | caddy, hugo |
 | [pinentryport](https://github.com/zopencommunity/pinentryport) | 2 | 100.0% | gpg, libgpgme |
 | [readlineport](https://github.com/zopencommunity/readlineport) | 2 | 100.0% | bash, rpm |
+| [rpmport](https://github.com/zopencommunity/rpmport) | 2 | 100.0% | createrepo_c, libsolv |
 | [rsyncport](https://github.com/zopencommunity/rsyncport) | 2 | 94.3% | m4, sed |
 | [tcltlsport](https://github.com/zopencommunity/tcltlsport) | 2 | 100.0% | redis, tcl |
 | [avro-c-libport](https://github.com/zopencommunity/avro-c-libport) | 1 | 100.0% | libserdes |
+| [bash-completionport](https://github.com/zopencommunity/bash-completionport) | 1 | 100.0% | createrepo_c |
 | [blisport](https://github.com/zopencommunity/blisport) | 1 | 100.0% | llamacpp |
 | [ccacheport](https://github.com/zopencommunity/ccacheport) | 1 | 100.0% | clang-format |
-| [checkport](https://github.com/zopencommunity/checkport) | 1 | 77.8% | librepo |
 | [comp_clangport](https://github.com/zopencommunity/comp_clangport) | 1 | Unknown | prometheus |
 | [comp_goport](https://github.com/zopencommunity/comp_goport) | 1 | Unknown | prometheus |
 | [ctagsport](https://github.com/zopencommunity/ctagsport) | 1 | 100.0% | libmd |
 | [fileport](https://github.com/zopencommunity/fileport) | 1 | 100.0% | rpm |
 | [gizpport](https://github.com/zopencommunity/gizpport) | 1 | Unknown | prometheus |
-| [glibport](https://github.com/zopencommunity/glibport) | 1 | 88.6% | librepo |
 | [gmpport](https://github.com/zopencommunity/gmpport) | 1 | 100.0% | mpfr |
 | [gumport](https://github.com/zopencommunity/gumport) | 1 | Skipped | prompters |
 | [jqport](https://github.com/zopencommunity/jqport) | 1 | 88.9% | boost |
@@ -189,7 +191,6 @@
 | [onigurumaport](https://github.com/zopencommunity/onigurumaport) | 1 | 100.0% | jq |
 | [pythonport](https://github.com/zopencommunity/pythonport) | 1 | Unknown | prometheus |
 | [re2cport](https://github.com/zopencommunity/re2cport) | 1 | 83.3% | php |
-| [rpmport](https://github.com/zopencommunity/rpmport) | 1 | 100.0% | libsolv |
 | [scdocport](https://github.com/zopencommunity/scdocport) | 1 | 100.0% | rpm |
 | [spdlogport](https://github.com/zopencommunity/spdlogport) | 1 | 100.0% | doxygen |
 | [xxhashport](https://github.com/zopencommunity/xxhashport) | 1 | 100.0% | rsync |
@@ -197,7 +198,6 @@
 | [antport](https://github.com/zopencommunity/antport) | 0 | Skipped | None |
 | [aprport](https://github.com/zopencommunity/aprport) | 0 | 100.0% | None |
 | [asioport](https://github.com/zopencommunity/asioport) | 0 | 100.0% | None |
-| [bash-completionport](https://github.com/zopencommunity/bash-completionport) | 0 | 100.0% | None |
 | [bcport](https://github.com/zopencommunity/bcport) | 0 | 100.0% | None |
 | [boostport](https://github.com/zopencommunity/boostport) | 0 | 85.1% | None |
 | [buildkiteport](https://github.com/zopencommunity/buildkiteport) | 0 | Skipped | None |
@@ -210,6 +210,7 @@
 | [clang-formatport](https://github.com/zopencommunity/clang-formatport) | 0 | 100.0% | None |
 | [conanport](https://github.com/zopencommunity/conanport) | 0 | 54.0% | None |
 | [cppcheckport](https://github.com/zopencommunity/cppcheckport) | 0 | Skipped | None |
+| [createrepo_cport](https://github.com/zopencommunity/createrepo_cport) | 0 | 100.0% | None |
 | [cronieport](https://github.com/zopencommunity/cronieport) | 0 | 100.0% | None |
 | [crushport](https://github.com/zopencommunity/crushport) | 0 | Skipped | None |
 | [cscopeport](https://github.com/zopencommunity/cscopeport) | 0 | 100.0% | None |
@@ -312,4 +313,4 @@
 | [zospstreeport](https://github.com/zopencommunity/zospstreeport) | 0 | 100.0% | None |
 | [zotsampleport](https://github.com/zopencommunity/zotsampleport) | 0 | 100.0% | None |
 
-Last updated:  2025-09-04 06:15:29 UTC
+Last updated:  2025-09-05 06:14:12 UTC

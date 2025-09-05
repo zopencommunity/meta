@@ -512,6 +512,7 @@
 - 2025-01-31: [Update tig-version to 2.5.11 from 2.5.9](https://github.com/zopencommunity/tigport/pull/9) ❌
 
 ### victoriametricsport
+- 2025-09-04: [Update victoriametrics-version to 1.125.1 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/36) ❌
 - 2025-09-01: [Update victoriametrics-version to 1.125.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/35) ❌
 - 2025-08-22: [Update victoriametrics-version to 1.124.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/34) ❌
 - 2025-08-05: [Update victoriametrics-version to 1.123.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/33) ❌
@@ -590,6 +591,7 @@
 - ❌ cosignport - Workflow not configured
 - ❌ cpioport - Workflow not configured
 - ✅ cppcheckport - [![Bump Status](https://github.com/zopencommunity/cppcheckport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/cppcheckport/actions/workflows/bump.yml)
+- ✅ createrepo_cport - [![Bump Status](https://github.com/zopencommunity/createrepo_cport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/createrepo_cport/actions/workflows/bump.yml)
 - ✅ creduceport - [![Bump Status](https://github.com/zopencommunity/creduceport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/creduceport/actions/workflows/bump.yml)
 - ❌ cronieport - Workflow not configured
 - ✅ crushport - [![Bump Status](https://github.com/zopencommunity/crushport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/crushport/actions/workflows/bump.yml)
@@ -835,10 +837,10 @@
 
 </details>
 
-**Summary:** 230 active | 53 missing
+**Summary:** 231 active | 53 missing
 
 ---
 
 
-> Last updated: 2025-09-04 06:09:11 EDT
+> Last updated: 2025-09-05 06:08:30 EDT
 
