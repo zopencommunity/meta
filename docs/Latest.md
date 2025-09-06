@@ -2869,12 +2869,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="zigi" data-searchable-text="zigi Skipped N/A STABLE_zigi_2984 A git interface for ispf utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="zigi" data-searchable-text="zigi Skipped N/A STABLE_zigi_3705 A git interface for ispf utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/zigiport" target="_blank" rel="noopener noreferrer">zigi</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/zigiport/releases/download/STABLE_zigiport_2984/zigi-master.20250131_043222.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_zigi_2984</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/zigiport/releases/download/STABLE_zigiport_3705/zigi-v3r25.20250905_152554.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_zigi_3705</a></div>
     <div class="tool-desc" title="A git interface for ispf">A git interface for ispf</div>
   </div>
 </div>
@@ -2942,4 +2942,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-09-05 06:14:12 UTC
+Last updated:  2025-09-06 06:13:01 UTC

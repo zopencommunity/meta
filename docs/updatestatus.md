@@ -21,6 +21,7 @@
 - 2024-12-11: [Update bash-completion-version to 20060301 from V.R.M](https://github.com/zopencommunity/bash-completionport/pull/1) ❌
 
 ### buildkiteport
+- 2025-09-05: [Update buildkite-version to 3.104.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/70) ❌
 - 2025-08-07: [Update buildkite-version to 3.103.1 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/69) ❌
 - 2025-07-22: [Update buildkite-version to 3.103.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/68) ❌
 - 2025-07-15: [Update buildkite-version to 3.102.2 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/67) ❌
@@ -190,6 +191,7 @@
 - 2025-03-06: [Update ghcli-version to 2.68.1 from 2.67.0](https://github.com/zopencommunity/githubcliport/pull/47) ❌
 
 ### gitlabcliport
+- 2025-09-05: [Update glab-version to 1.68.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/39) ❌
 - 2025-08-22: [Update glab-version to 1.67.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/38) ❌
 - 2025-07-29: [Update glab-version to 1.65.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/37) ❌
 - 2025-07-23: [Update glab-version to 1.64.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/36) ❌
@@ -207,6 +209,7 @@
 - 2025-02-14: [Update glab-version to 1.53.0 from 1.52.0](https://github.com/zopencommunity/gitlabcliport/pull/23) ✅
 
 ### gitlab-runnerport
+- 2025-09-05: [Update gitlab-runner-version to 18.3.1 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/50) ❌
 - 2025-08-22: [Update gitlab-runner-version to 18.3.0 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/49) ❌
 - 2025-07-28: [Update gitlab-runner-version to 18.2.1 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/48) ❌
 - 2025-07-18: [Update gitlab-runner-version to 18.2.0 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/47) ❌
@@ -230,6 +233,7 @@
 - 2025-04-10: [Update git-sizer-version to 1.5.0 from V.R.M](https://github.com/zopencommunity/git-sizerport/pull/1) ✅
 
 ### glibport
+- 2025-09-05: [Update glib-version to 2.86.0 from 2.85.2](https://github.com/zopencommunity/glibport/pull/3) ❌
 - 2025-08-22: [Update glib-version to 2.85.4 from 2.85.2](https://github.com/zopencommunity/glibport/pull/2) ❌
 
 ### gnulibport
@@ -793,6 +797,7 @@
 - ✅ tarport - [![Bump Status](https://github.com/zopencommunity/tarport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/tarport/actions/workflows/bump.yml)
 - ✅ tclport - [![Bump Status](https://github.com/zopencommunity/tclport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/tclport/actions/workflows/bump.yml)
 - ✅ tcltlsport - [![Bump Status](https://github.com/zopencommunity/tcltlsport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/tcltlsport/actions/workflows/bump.yml)
+- ❌ technical-steering-committee - Workflow not configured
 - ✅ termenvport - [![Bump Status](https://github.com/zopencommunity/termenvport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/termenvport/actions/workflows/bump.yml)
 - ✅ terraformport - [![Bump Status](https://github.com/zopencommunity/terraformport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/terraformport/actions/workflows/bump.yml)
 - ✅ texinfoport - [![Bump Status](https://github.com/zopencommunity/texinfoport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/texinfoport/actions/workflows/bump.yml)
@@ -837,10 +842,10 @@
 
 </details>
 
-**Summary:** 231 active | 53 missing
+**Summary:** 231 active | 54 missing
 
 ---
 
 
-> Last updated: 2025-09-05 06:08:30 EDT
+> Last updated: 2025-09-06 06:07:56 EDT
 
