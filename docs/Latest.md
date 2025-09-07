@@ -2569,12 +2569,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="gum" data-searchable-text="gum Skipped N/A STABLE_gum_3483 A tool for creating simple command-line interfaces utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="gum" data-searchable-text="gum Skipped N/A STABLE_gum_3706 A tool for creating simple command-line interfaces utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/gumport" target="_blank" rel="noopener noreferrer">gum</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/gumport/releases/download/STABLE_gumport_3483/gum-v0.16.2.20250624_152521.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_gum_3483</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/gumport/releases/download/STABLE_gumport_3706/gum-v0.17.0.20250906_152129.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_gum_3706</a></div>
     <div class="tool-desc" title="A tool for creating simple command-line interfaces">A tool for creating simple command-line interfaces</div>
   </div>
 </div>
@@ -2942,4 +2942,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-09-06 06:13:01 UTC
+Last updated:  2025-09-07 06:13:31 UTC

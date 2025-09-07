@@ -97,6 +97,7 @@
 - 2025-02-01: [Update creduce-version to 2.10.0 from V.R.M](https://github.com/zopencommunity/creduceport/pull/1) ❌
 
 ### crushport
+- 2025-09-06: [Update crush-version to 0.7.5 from 0.6.2](https://github.com/zopencommunity/crushport/pull/4) ❌
 - 2025-08-29: [Update crush-version to 0.7.4 from 0.6.2](https://github.com/zopencommunity/crushport/pull/3) ❌
 - 2025-08-28: [Update crush-version to 0.7.2 from 0.6.2](https://github.com/zopencommunity/crushport/pull/2) ❌
 - 2025-08-22: [Update crush-version to 0.7.1 from 0.6.2](https://github.com/zopencommunity/crushport/pull/1) ❌
@@ -294,6 +295,7 @@
 - 2024-03-07: [Update kotlin-version to 1.9.23 from 1.9.22](https://github.com/zopencommunity/kotlinport/pull/3) ❓
 
 ### lazygitport
+- 2025-09-06: [Update lazygit-version to 0.55.0 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/27) ❌
 - 2025-08-22: [Update lazygit-version to 0.54.2 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/26) ❌
 - 2025-08-06: [Update lazygit-version to 0.54.1 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/25) ❌
 - 2025-08-02: [Update lazygit-version to 0.54.0 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/24) ❌
@@ -847,5 +849,5 @@
 ---
 
 
-> Last updated: 2025-09-06 06:07:56 EDT
+> Last updated: 2025-09-07 06:08:04 EDT
 
