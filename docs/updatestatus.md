@@ -97,6 +97,7 @@
 - 2025-02-01: [Update creduce-version to 2.10.0 from V.R.M](https://github.com/zopencommunity/creduceport/pull/1) ❌
 
 ### crushport
+- 2025-09-07: [Update crush-version to 0.7.6 from 0.6.2](https://github.com/zopencommunity/crushport/pull/5) ❌
 - 2025-09-06: [Update crush-version to 0.7.5 from 0.6.2](https://github.com/zopencommunity/crushport/pull/4) ❌
 - 2025-08-29: [Update crush-version to 0.7.4 from 0.6.2](https://github.com/zopencommunity/crushport/pull/3) ❌
 - 2025-08-28: [Update crush-version to 0.7.2 from 0.6.2](https://github.com/zopencommunity/crushport/pull/2) ❌
@@ -264,7 +265,7 @@
 - 2024-10-02: [Update grafana-version to 11.2.2 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/9) ❌
 - 2024-08-27: [Update grafana-version to 11.2.0 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/7) ❌
 - 2024-08-15: [Update grafana-version to 11.1.4 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/6) ❌
-- 2024-07-24: [Update grafana-version to 11.1.2 from 11.0.0](https://github.com/zopencommunity/grafanaport/pull/4) ❌
+- 2024-07-24: [Update grafana-version to 11.1.2 from 11.0.0](https://github.com/zopencommunity/grafanaport/pull/4) ❓
 - 2024-06-25: [Update grafana-version to 11.1.0 from 11.0.0](https://github.com/zopencommunity/grafanaport/pull/2) ❓
 
 ### groovyport
@@ -597,6 +598,7 @@
 - ❌ cosignport - Workflow not configured
 - ❌ cpioport - Workflow not configured
 - ✅ cppcheckport - [![Bump Status](https://github.com/zopencommunity/cppcheckport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/cppcheckport/actions/workflows/bump.yml)
+- ✅ cppunitport - [![Bump Status](https://github.com/zopencommunity/cppunitport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/cppunitport/actions/workflows/bump.yml)
 - ✅ createrepo_cport - [![Bump Status](https://github.com/zopencommunity/createrepo_cport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/createrepo_cport/actions/workflows/bump.yml)
 - ✅ creduceport - [![Bump Status](https://github.com/zopencommunity/creduceport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/creduceport/actions/workflows/bump.yml)
 - ❌ cronieport - Workflow not configured
@@ -844,10 +846,10 @@
 
 </details>
 
-**Summary:** 231 active | 54 missing
+**Summary:** 232 active | 54 missing
 
 ---
 
 
-> Last updated: 2025-09-07 06:08:04 EDT
+> Last updated: 2025-09-08 06:08:52 EDT
 
