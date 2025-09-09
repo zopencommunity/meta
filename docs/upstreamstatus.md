@@ -1,13 +1,13 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-09-08 06:13:44 EDT.*
+*Report generated on: 2025-09-09 06:13:24 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 271
-- **Total Current Lines of Code (LOC) in Patches:** 42,236
-- **Total Number of Current Patch Files:** 861
-- **Average Current Patch LOC per Project:** 155.85
+- **Total Current Lines of Code (LOC) in Patches:** 42,251
+- **Total Number of Current Patch Files:** 862
+- **Average Current Patch LOC per Project:** 155.91
 - **Average Current Patch Count per Project:** 3.18
 
 ### Historical Trends (All Projects)
@@ -174,6 +174,7 @@
 | [libpcreport](#repo-libpcreport) | 15 | +0 | 1 |
 | [libmdport](#repo-libmdport) | 15 | +0 | 1 |
 | [fileport](#repo-fileport) | 15 | +0 | 1 |
+| [cppunitport](#repo-cppunitport) | 15 | +15 | 1 |
 | [tarport](#repo-tarport) | 14 | +0 | 1 |
 | [nghttp2port](#repo-nghttp2port) | 14 | +0 | 1 |
 | [bisonport](#repo-bisonport) | 13 | +0 | 1 |
@@ -294,7 +295,6 @@
 | [clang-formatport](#repo-clang-formatport) | 0 | +0 | 0 |
 | [crushport](#repo-crushport) | 0 | +0 | 0 |
 | [dnf5port](#repo-dnf5port) | 0 | +0 | 0 |
-| [cppunitport](#repo-cppunitport) | 0 | +0 | 0 |
 
 ---
 
@@ -3995,6 +3995,26 @@
 
 ---
 
+<a id="repo-cppunitport"></a>
+## cppunitport
+
+- **Origin Date (First Commit):** 2025-09-08
+- **Current Patch LOC:** 15
+- **Current Patch Count:** 1
+
+### Historical Trends
+
+![LOC Trend for cppunitport](images/upstream/cppunitport_current_loc_trend.png)
+![Count Trend for cppunitport](images/upstream/cppunitport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/configure.patch` | `patches` | 15 |
+
+---
+
 <a id="repo-tarport"></a>
 ## tarport
 
@@ -6173,24 +6193,6 @@
 ## dnf5port
 
 - **Origin Date (First Commit):** 2025-08-21
-- **Current Patch LOC:** 0
-- **Current Patch Count:** 0
-
-### Historical Trends
-
-*(Patch LOC trend graph not generated)*
-*(Patch count trend graph not generated)*
-
-### Current Patch Details
-
-*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
-
----
-
-<a id="repo-cppunitport"></a>
-## cppunitport
-
-- **Origin Date (First Commit):** 2025-09-08
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 
