@@ -36,19 +36,115 @@ buildLicenseLookup()
 printSyntax()
 {
   echo "zopen-generate will generate a zopen compatible project" >&2
-  echo "Syntax: zopen-generate" >&2
+  echo "Syntax: zopen-generate [options]" >&2
+  echo "" >&2
+  echo "Options:" >&2
+  echo "  --help                      Display this help message" >&2
+  echo "  --version                   Display version information" >&2
+  echo "  --name NAME                 Project name" >&2
+  echo "  --description DESC          Project description" >&2
+  echo "  --categories CATS           Project categories (space-delimited)" >&2
+  echo "  --license LICENSE           License name" >&2
+  echo "  --stable-url URL            Stable release source URL" >&2
+  echo "  --stable-deps DEPS          Stable build dependencies (space-delimited)" >&2
+  echo "  --dev-url URL               Dev-line source URL" >&2
+  echo "  --dev-deps DEPS             Dev build dependencies (space-delimited)" >&2
+  echo "  --build-line LINE           Default build line (stable or dev)" >&2
+  echo "  --runtime-deps DEPS         Runtime dependencies (space-delimited)" >&2
+  echo "  --force                     Force update if project directory exists" >&2
+  echo "  --non-interactive           Run in non-interactive mode (requires all necessary options)" >&2
 }
 
-if [ $# -eq 1 ]; then
-  # shellcheck disable=SC2268
-  if [ "x$1" = "x--help" ]; then
-    printSyntax
-    exit 0
-  elif [ "x$1" = "x--version" ]; then
-    zopen-version "$ME"
-    exit 0
-  else
-    echo "Unrecognized option $1. Processing terminated" >&2
+# Initialize variables for command-line arguments
+name=""
+description=""
+categories=""
+license_name=""
+stablePath=""
+stableDeps=""
+devPath=""
+devDeps=""
+buildline=""
+runtimedeps=""
+force=false
+non_interactive=false
+
+# Parse command-line arguments
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --help)
+      printSyntax
+      exit 0
+      ;;
+    --version)
+      zopen-version "$ME"
+      exit 0
+      ;;
+    --name)
+      shift
+      name="$1"
+      ;;
+    --description)
+      shift
+      description="$1"
+      ;;
+    --categories)
+      shift
+      categories="$1"
+      ;;
+    --license)
+      shift
+      license_name="$1"
+      ;;
+    --stable-url)
+      shift
+      stablePath="$1"
+      ;;
+    --stable-deps)
+      shift
+      stableDeps="$1"
+      ;;
+    --dev-url)
+      shift
+      devPath="$1"
+      ;;
+    --dev-deps)
+      shift
+      devDeps="$1"
+      ;;
+    --build-line)
+      shift
+      buildline="$1"
+      ;;
+    --runtime-deps)
+      shift
+      runtimedeps="$1"
+      ;;
+    --force)
+      force=true
+      ;;
+    --non-interactive)
+      non_interactive=true
+      ;;
+    *)
+      echo "Unrecognized option $1. Processing terminated" >&2
+      printSyntax
+      exit 8
+      ;;
+  esac
+  shift
+done
+
+# Check if non-interactive mode is requested but required arguments are missing
+if $non_interactive; then
+  missing_args=""
+  [ -z "$name" ] && missing_args="${missing_args} --name"
+  [ -z "$description" ] && missing_args="${missing_args} --description"
+  [ -z "$categories" ] && missing_args="${missing_args} --categories"
+  [ -z "$license_name" ] && missing_args="${missing_args} --license"
+  
+  if [ -n "$missing_args" ]; then
+    echo "Error: Non-interactive mode requires the following arguments:${missing_args}" >&2
     printSyntax
     exit 8
   fi
@@ -62,75 +158,173 @@ fi
 buildLicenseLookup
 
 printHeader "Generate a zopen project"
-valid=false
-while ! ${valid}; do
-  echo "What is the project name?"
-  name=$(getInput)
-  if ! echo "${name}" | grep -q -E "port$"; then
-    valid=true
+
+# Function to get input either from command-line argument or user input
+getInputOrArg() {
+  arg_value="$1"
+  prompt="$2"
+  
+  if [ -n "$arg_value" ]; then
+    echo "$arg_value"
   else
-    printWarning "${name} must not end with port"
+    if $non_interactive; then
+      # In non-interactive mode, return empty string for missing arguments
+      echo ""
+    else
+      echo "$prompt"
+      getInput
+    fi
   fi
-done
-echo "Provided a description of the project:"
-description=$(getInput)
+}
+
+# Get project name
+if [ -z "$name" ]; then
+  valid=false
+  while ! ${valid}; do
+    echo "What is the project name?"
+    name=$(getInput)
+    if ! echo "${name}" | grep -q -E "port$"; then
+      valid=true
+    else
+      printWarning "${name} must not end with port"
+    fi
+  done
+else
+  # Validate name from command line
+  if echo "${name}" | grep -q -E "port$"; then
+    printWarning "${name} must not end with port"
+    exit 8
+  fi
+fi
+
+# Get project description
+description=$(getInputOrArg "$description" "Provide a description of the project:")
 
 ZOPEN_VALID_CATEGORIES="$(cat "${MYDIR}"/../data/tool_categories.txt)"
+# Convert valid categories to lowercase for case-insensitive comparison
+ZOPEN_VALID_CATEGORIES_LOWER="$(echo "${ZOPEN_VALID_CATEGORIES}" | tr '[:upper:]' '[:lower:]')"
 
-# Loop until the user enters a valid value
-while true; do
-  printHeader "Which of the following categories does the project fit under? (delimit with a space):"
-  echo "${ZOPEN_VALID_CATEGORIES}" | fold -w 80 -s
-  categories=$(getInput)
-  # Check if input is in valid_list
-  for category in ${categories}; do
-    # Check if the word is in the valid list using grep
-    echo "${ZOPEN_VALID_CATEGORIES}" | grep -qF "${category}" && break 2
+# Get categories
+if [ -z "$categories" ]; then
+  # Loop until the user enters a valid value
+  while true; do
+    printHeader "Which of the following categories does the project fit under? (delimit with a space):"
+    echo "${ZOPEN_VALID_CATEGORIES}" | fold -w 80 -s
+    categories=$(getInput)
+    # Check if input is in valid_list
+    for category in ${categories}; do
+      # Convert category to lowercase for case-insensitive comparison
+      category_lower="$(echo "${category}" | tr '[:upper:]' '[:lower:]')"
+      # Check if the word is in the valid list using grep
+      echo "${ZOPEN_VALID_CATEGORIES_LOWER}" | grep -qF "${category_lower}" && break 2
+    done
+    echo "Invalid category specified: ${category}"
   done
-  echo "Invalid category specified: ${category}"
-done
-
-valid=false
-while ! ${valid}; do
-  echo "Provide the community license to use for ${name}'s patches: (select from ${validLicenseNames})"
-  license_name="$(getInput | tr -d ' ')"
-  if ! echo " ${validLicenseNames}" | grep -q " ${license_name}"; then
-    printWarning "License is not valid, please enter a license from one of these names: ${validLicenseNames})"
-  else
-    licenseName="$(grep "\"${license_name}\"" "${licensesCSV}" | cut -f2 -d',')"
-    licenseUrl="$(grep "\"${license_name}\"" "${licensesCSV}" | cut -f4 -d',')"
-    valid=true
+else
+  # Validate categories from command line
+  valid_categories=true
+  # Convert input categories to lowercase for storage
+  categories_normalized=""
+  for category in ${categories}; do
+    # Convert category to lowercase for case-insensitive comparison
+    category_lower="$(echo "${category}" | tr '[:upper:]' '[:lower:]')"
+    if ! echo "${ZOPEN_VALID_CATEGORIES_LOWER}" | grep -qF "${category_lower}"; then
+      echo "Invalid category specified: ${category}"
+      valid_categories=false
+    else
+      # Add the lowercase version to our normalized list
+      categories_normalized="${categories_normalized} ${category_lower}"
+    fi
+  done
+  # Trim leading space and update categories variable
+  if $valid_categories; then
+    categories="$(echo "${categories_normalized}" | sed 's/^ *//')"
   fi
-done
+  if ! $valid_categories; then
+    printWarning "Categories must be valid. See ${MYDIR}/../data/tool_categories.txt for valid options."
+    exit 8
+  fi
+fi
+
+# Get license
+# Convert valid license names to lowercase for case-insensitive comparison
+validLicenseNames_lower="$(echo "${validLicenseNames}" | tr '[:upper:]' '[:lower:]')"
+
+if [ -z "$license_name" ]; then
+  valid=false
+  while ! ${valid}; do
+    echo "Provide the community license to use for ${name}'s patches: (select from ${validLicenseNames})"
+    license_name="$(getInput | tr -d ' ')"
+    # Convert to lowercase for case-insensitive comparison
+    license_name_lower="$(echo "${license_name}" | tr '[:upper:]' '[:lower:]')"
+    if ! echo " ${validLicenseNames_lower}" | grep -q " ${license_name_lower}"; then
+      printWarning "License is not valid, please enter a license from one of these names: ${validLicenseNames})"
+    else
+      # Find the original case in the CSV file (case-insensitive grep)
+      license_name_orig="$(grep -i "\"${license_name_lower}\"" "${licensesCSV}" | cut -f1 -d',' | tr -d '"')"
+      licenseName="$(grep -i "\"${license_name_lower}\"" "${licensesCSV}" | cut -f2 -d',')"
+      licenseUrl="$(grep -i "\"${license_name_lower}\"" "${licensesCSV}" | cut -f4 -d',')"
+      # Use the original case from the CSV for consistency
+      license_name="${license_name_orig}"
+      valid=true
+    fi
+  done
+else
+  # Validate license from command line
+  license_name=$(echo "$license_name" | tr -d ' ')
+  # Convert to lowercase for case-insensitive comparison
+  license_name_lower="$(echo "${license_name}" | tr '[:upper:]' '[:lower:]')"
+  if ! echo " ${validLicenseNames_lower}" | grep -q " ${license_name_lower}"; then
+    printWarning "License is not valid, please enter a license from one of these names: ${validLicenseNames})"
+    exit 8
+  else
+    # Find the original case in the CSV file (case-insensitive grep)
+    license_name_orig="$(grep -i "\"${license_name_lower}\"" "${licensesCSV}" | cut -f1 -d',' | tr -d '"')"
+    licenseName="$(grep -i "\"${license_name_lower}\"" "${licensesCSV}" | cut -f2 -d',')"
+    licenseUrl="$(grep -i "\"${license_name_lower}\"" "${licensesCSV}" | cut -f4 -d',')"
+    # Use the original case from the CSV for consistency
+    license_name="${license_name_orig}"
+  fi
+fi
 echo "${licenseUrl}"
 
-echo "Enter ${name}'s stable release source url: (Specify a Git or Tarball URL. If none, press enter)"
-stablePath=$(getInput)
-echo "Enter ${name}'s zopen community build dependencies for the stable build: (Enter multiple dependencies using spaces. E.g: zoslib make grep)"
-stableDeps=$(getInput)
-echo "Enter ${name}'s dev-line source url: (Specify a Git or Tarball URL. If none, press enter)"
-devPath=$(getInput)
-echo "Enter ${name}'s zopen community build dependencies for the dev build: (Enter multiple dependencies using spaces. E.g: zoslib make grep)"
-devDeps=$(getInput)
-echo "Enter the default build line: (stable or dev)"
-buildline=$(getInput)
-echo "Enter ${name}'s zopen community runtime dependencies: (example: bash)"
-runtimedeps=$(getInput)
+# Get stable release source URL
+stablePath=$(getInputOrArg "$stablePath" "Enter ${name}'s stable release source url: (Specify a Git or Tarball URL. If none, press enter)")
+
+# Get stable build dependencies
+stableDeps=$(getInputOrArg "$stableDeps" "Enter ${name}'s zopen community build dependencies for the stable build: (Enter multiple dependencies using spaces. E.g: zoslib make grep)")
+
+# Get dev-line source URL
+devPath=$(getInputOrArg "$devPath" "Enter ${name}'s dev-line source url: (Specify a Git or Tarball URL. If none, press enter)")
+
+# Get dev build dependencies
+devDeps=$(getInputOrArg "$devDeps" "Enter ${name}'s zopen community build dependencies for the dev build: (Enter multiple dependencies using spaces. E.g: zoslib make grep)")
+
+# Get default build line
+buildline=$(getInputOrArg "$buildline" "Enter the default build line: (stable or dev)")
+
+# Get runtime dependencies
+runtimedeps=$(getInputOrArg "$runtimedeps" "Enter ${name}'s zopen community runtime dependencies: (example: bash)")
 
 project_path="${name}port"
 
 nameUpper=$(echo "$name" | awk '{print toupper($0)}')
 
 if [ -d "${project_path}" ]; then
-  while true; do
-    echo "Directory ${project_path} already exists. Update it? (y, n)"
-    clobber=$(getInput)
-    if [ "${clobber}" = "n" ]; then
-      exit 0
-    elif [ "${clobber}" = "y" ]; then
-      break
-    fi
-  done
+  if $force; then
+    # Skip confirmation if --force is provided
+    :
+  else
+    while true; do
+      echo "Directory ${project_path} already exists. Update it? (y, n)"
+      clobber=$(getInput)
+      if [ "${clobber}" = "n" ]; then
+        exit 0
+      elif [ "${clobber}" = "y" ]; then
+        break
+      fi
+    done
+  fi
 fi
 
 printHeader "Generating ${project_path} zopen project"
