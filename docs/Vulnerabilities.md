@@ -2,48 +2,6 @@
 
 [Vulnerabilities RSS feed XML file](https://raw.githubusercontent.com/zopencommunity/meta/main/docs/vulnerabilities_rss.xml)
 
-## zlib
-
-<details>
-<summary>zlib (Build 2529) - (STABLE) -- 1 critical vulnerability</summary>
-
-- Affected release URL: [zlib (Build 2529) - (STABLE)](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_2529)
-
-- **(CRITICAL severity) CVE-2023-45853**: MiniZip in zlib through 1.3 has an integer overflow and resultant heap-based buffer overflow in zipOpenNewFileInZip4_64 via a long filename, comment, or extra field. NOTE: MiniZip is not a supported part of the zlib product. NOTE: pyminizip through 0.2.6 is also vulnerable because it bundles an affected zlib version, and exposes the applicable MiniZip code through its compress API.
-  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_3574)**.
-
-</details>
-
-<details>
-<summary>zlib (Build 2700) - (STABLE) -- 1 critical vulnerability</summary>
-
-- Affected release URL: [zlib (Build 2700) - (STABLE)](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_2700)
-
-- **(CRITICAL severity) CVE-2023-45853**: MiniZip in zlib through 1.3 has an integer overflow and resultant heap-based buffer overflow in zipOpenNewFileInZip4_64 via a long filename, comment, or extra field. NOTE: MiniZip is not a supported part of the zlib product. NOTE: pyminizip through 0.2.6 is also vulnerable because it bundles an affected zlib version, and exposes the applicable MiniZip code through its compress API.
-  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_3574)**.
-
-</details>
-
-<details>
-<summary>zlib (Build 2930) - (STABLE) -- 1 critical vulnerability</summary>
-
-- Affected release URL: [zlib (Build 2930) - (STABLE)](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_2930)
-
-- **(CRITICAL severity) CVE-2023-45853**: MiniZip in zlib through 1.3 has an integer overflow and resultant heap-based buffer overflow in zipOpenNewFileInZip4_64 via a long filename, comment, or extra field. NOTE: MiniZip is not a supported part of the zlib product. NOTE: pyminizip through 0.2.6 is also vulnerable because it bundles an affected zlib version, and exposes the applicable MiniZip code through its compress API.
-  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_3574)**.
-
-</details>
-
-<details>
-<summary>zlib (Build 2985) - (STABLE) -- 1 critical vulnerability</summary>
-
-- Affected release URL: [zlib (Build 2985) - (STABLE)](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_2985)
-
-- **(CRITICAL severity) CVE-2023-45853**: MiniZip in zlib through 1.3 has an integer overflow and resultant heap-based buffer overflow in zipOpenNewFileInZip4_64 via a long filename, comment, or extra field. NOTE: MiniZip is not a supported part of the zlib product. NOTE: pyminizip through 0.2.6 is also vulnerable because it bundles an affected zlib version, and exposes the applicable MiniZip code through its compress API.
-  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_3574)**.
-
-</details>
-
 ## vim
 
 <details>
@@ -636,6 +594,74 @@ the specified cursor position. It's not quite clear yet, what can lead to this s
 
 </details>
 
+<details>
+<summary>vim 9.1.697 (datasetio_ispf) - (STABLE) -- 8 vulnerabilities (3 high, 5 medium)</summary>
+
+- Affected release URL: [vim 9.1.697 (datasetio_ispf) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/datasetio_ispf)
+
+- **(MEDIUM severity) CVE-2024-45306**: Vim is an open source, command line text editor. Patch v9.1.0038 optimized how the cursor position is calculated and removed a loop, that verified that the cursor position always points inside a line and does not become invalid by pointing beyond the end of
+a line. Back then we assumed this loop is unnecessary. However, this change made it possible that the cursor position stays invalid and points beyond the end of a line, which would eventually cause a heap-buffer-overflow when trying to access the line pointer at
+the specified cursor position. It's not quite clear yet, what can lead to this situation that the cursor points to an invalid position. That's why patch v9.1.0707 does not include a test case. The only observed impact has been a program crash. This issue has been addressed in with the patch v9.1.0707. All users are advised to upgrade.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3712)**.
+- **(MEDIUM severity) CVE-2024-47814**: Vim is an open source, command line text editor. A use-after-free was found in Vim < 9.1.0764. When closing a buffer (visible in a window) a BufWinLeave auto command can cause an use-after-free if this auto command happens to re-open the same buffer in a new split window. Impact is low since the user must have intentionally set up such a strange auto command and run some buffer unload commands. However this may lead to a crash. This issue has been addressed in version 9.1.0764 and all users are advised to upgrade. There are no known workarounds for this vulnerability.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3712)**.
+- **(HIGH severity) CVE-2025-1215**: A vulnerability classified as problematic was found in vim up to 9.1.1096. This vulnerability affects unknown code of the file src/main.c. The manipulation of the argument --log leads to memory corruption. It is possible to launch the attack on the local host. Upgrading to version 9.1.1097 is able to address this issue. The patch is identified as c5654b84480822817bb7b69ebc97c174c91185e9. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3712)**.
+- **(MEDIUM severity) CVE-2025-22134**: When switching to other buffers using the :all command and visual mode still being active, this may cause a heap-buffer overflow, because Vim does not properly end visual mode and therefore may try to access beyond the end of a line in a buffer. In Patch 9.1.1003 Vim will correctly reset the visual mode before opening other windows and buffers and therefore fix this bug. In addition it does verify that it won't try to access a position if the position is greater than the corresponding buffer line. Impact is medium since the user must have switched on visual mode when executing the :all ex command. The Vim project would like to thank github user gandalf4a for reporting this issue. The issue has been fixed as of Vim patch v9.1.1003
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3712)**.
+- **(MEDIUM severity) CVE-2025-24014**: Vim is an open source, command line text editor. A segmentation fault was found in Vim before 9.1.1043. In silent Ex mode (-s -e), Vim typically doesn't show a screen and just operates silently in batch mode. However, it is still possible to trigger the function that handles the scrolling of a gui version of Vim by feeding some binary characters to Vim. The function that handles the scrolling however may be triggering a redraw, which will access the ScreenLines pointer, even so this variable hasn't been allocated (since there is no screen). This vulnerability is fixed in 9.1.1043.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3712)**.
+- **(MEDIUM severity) CVE-2025-29768**: Vim, a text editor, is vulnerable to potential data loss with zip.vim and special crafted zip files in versions prior to 9.1.1198. The impact is medium because a user must be made to view such an archive with Vim and then press 'x' on such a strange filename. The issue has been fixed as of Vim patch v9.1.1198.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3712)**.
+- **(HIGH severity) CVE-2025-55157**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1400, When processing nested tuples in Vim script, an error during evaluation can trigger a use-after-free in Vim’s internal tuple reference management. Specifically, the tuple_unref() function may access already freed memory due to improper lifetime handling, leading to memory corruption. The exploit requires direct user interaction, as the script must be explicitly executed within Vim. This issue has been patched in version 9.1.1400.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3712)**.
+- **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3712)**.
+
+</details>
+
+## zlib
+
+<details>
+<summary>zlib (Build 2529) - (STABLE) -- 1 critical vulnerability</summary>
+
+- Affected release URL: [zlib (Build 2529) - (STABLE)](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_2529)
+
+- **(CRITICAL severity) CVE-2023-45853**: MiniZip in zlib through 1.3 has an integer overflow and resultant heap-based buffer overflow in zipOpenNewFileInZip4_64 via a long filename, comment, or extra field. NOTE: MiniZip is not a supported part of the zlib product. NOTE: pyminizip through 0.2.6 is also vulnerable because it bundles an affected zlib version, and exposes the applicable MiniZip code through its compress API.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_3574)**.
+
+</details>
+
+<details>
+<summary>zlib (Build 2700) - (STABLE) -- 1 critical vulnerability</summary>
+
+- Affected release URL: [zlib (Build 2700) - (STABLE)](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_2700)
+
+- **(CRITICAL severity) CVE-2023-45853**: MiniZip in zlib through 1.3 has an integer overflow and resultant heap-based buffer overflow in zipOpenNewFileInZip4_64 via a long filename, comment, or extra field. NOTE: MiniZip is not a supported part of the zlib product. NOTE: pyminizip through 0.2.6 is also vulnerable because it bundles an affected zlib version, and exposes the applicable MiniZip code through its compress API.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_3574)**.
+
+</details>
+
+<details>
+<summary>zlib (Build 2930) - (STABLE) -- 1 critical vulnerability</summary>
+
+- Affected release URL: [zlib (Build 2930) - (STABLE)](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_2930)
+
+- **(CRITICAL severity) CVE-2023-45853**: MiniZip in zlib through 1.3 has an integer overflow and resultant heap-based buffer overflow in zipOpenNewFileInZip4_64 via a long filename, comment, or extra field. NOTE: MiniZip is not a supported part of the zlib product. NOTE: pyminizip through 0.2.6 is also vulnerable because it bundles an affected zlib version, and exposes the applicable MiniZip code through its compress API.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_3574)**.
+
+</details>
+
+<details>
+<summary>zlib (Build 2985) - (STABLE) -- 1 critical vulnerability</summary>
+
+- Affected release URL: [zlib (Build 2985) - (STABLE)](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_2985)
+
+- **(CRITICAL severity) CVE-2023-45853**: MiniZip in zlib through 1.3 has an integer overflow and resultant heap-based buffer overflow in zipOpenNewFileInZip4_64 via a long filename, comment, or extra field. NOTE: MiniZip is not a supported part of the zlib product. NOTE: pyminizip through 0.2.6 is also vulnerable because it bundles an affected zlib version, and exposes the applicable MiniZip code through its compress API.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_3574)**.
+
+</details>
+
 ## cmake
 
 <details>
@@ -670,21 +696,55 @@ the specified cursor position. It's not quite clear yet, what can lead to this s
 ## redis
 
 <details>
-<summary>redis (Build 3219) - (STABLE) -- 1 critical vulnerability</summary>
+<summary>redis (Build 3219) - (STABLE) -- 2 vulnerabilities (1 critical, 1 high)</summary>
 
 - Affected release URL: [redis (Build 3219) - (STABLE)](https://github.com/zopencommunity/redisport/releases/tag/STABLE_redisport_3219)
 
 - **(CRITICAL severity) CVE-2025-27151**: Redis is an open source, in-memory database that persists on disk. In versions starting from 7.0.0 to before 8.0.2, a stack-based buffer overflow exists in redis-check-aof due to the use of memcpy with strlen(filepath) when copying a user-supplied file path into a fixed-size stack buffer. This allows an attacker to overflow the stack and potentially achieve code execution. This issue has been patched in version 8.0.2.
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/redisport/releases/tag/STABLE_redisport_3655)**.
+- **(HIGH severity) CVE-2025-32023**: Redis is an open source, in-memory database that persists on disk. From 2.8 to before 8.0.3, 7.4.5, 7.2.10, and 6.2.19, an authenticated user may use a specially crafted string to trigger a stack/heap out of bounds write on hyperloglog operations, potentially leading to remote code execution. The bug likely affects all Redis versions with hyperloglog operations implemented. This vulnerability is fixed in 8.0.3, 7.4.5, 7.2.10, and 6.2.19. An additional workaround to mitigate the problem without patching the redis-server executable is to prevent users from executing hyperloglog operations. This can be done using ACL to restrict HLL commands.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/redisport/releases/tag/STABLE_redisport_3655)**.
 
 </details>
 
 <details>
-<summary>redis (Build 3258) - (STABLE) -- 1 critical vulnerability</summary>
+<summary>redis (Build 3258) - (STABLE) -- 2 vulnerabilities (1 critical, 1 high)</summary>
 
 - Affected release URL: [redis (Build 3258) - (STABLE)](https://github.com/zopencommunity/redisport/releases/tag/STABLE_redisport_3258)
 
 - **(CRITICAL severity) CVE-2025-27151**: Redis is an open source, in-memory database that persists on disk. In versions starting from 7.0.0 to before 8.0.2, a stack-based buffer overflow exists in redis-check-aof due to the use of memcpy with strlen(filepath) when copying a user-supplied file path into a fixed-size stack buffer. This allows an attacker to overflow the stack and potentially achieve code execution. This issue has been patched in version 8.0.2.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/redisport/releases/tag/STABLE_redisport_3655)**.
+- **(HIGH severity) CVE-2025-32023**: Redis is an open source, in-memory database that persists on disk. From 2.8 to before 8.0.3, 7.4.5, 7.2.10, and 6.2.19, an authenticated user may use a specially crafted string to trigger a stack/heap out of bounds write on hyperloglog operations, potentially leading to remote code execution. The bug likely affects all Redis versions with hyperloglog operations implemented. This vulnerability is fixed in 8.0.3, 7.4.5, 7.2.10, and 6.2.19. An additional workaround to mitigate the problem without patching the redis-server executable is to prevent users from executing hyperloglog operations. This can be done using ACL to restrict HLL commands.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/redisport/releases/tag/STABLE_redisport_3655)**.
+
+</details>
+
+<details>
+<summary>redis (Build 3427) - (STABLE) -- 1 high vulnerability</summary>
+
+- Affected release URL: [redis (Build 3427) - (STABLE)](https://github.com/zopencommunity/redisport/releases/tag/STABLE_redisport_3427)
+
+- **(HIGH severity) CVE-2025-32023**: Redis is an open source, in-memory database that persists on disk. From 2.8 to before 8.0.3, 7.4.5, 7.2.10, and 6.2.19, an authenticated user may use a specially crafted string to trigger a stack/heap out of bounds write on hyperloglog operations, potentially leading to remote code execution. The bug likely affects all Redis versions with hyperloglog operations implemented. This vulnerability is fixed in 8.0.3, 7.4.5, 7.2.10, and 6.2.19. An additional workaround to mitigate the problem without patching the redis-server executable is to prevent users from executing hyperloglog operations. This can be done using ACL to restrict HLL commands.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/redisport/releases/tag/STABLE_redisport_3655)**.
+
+</details>
+
+<details>
+<summary>redis (Build 3466) - (STABLE) -- 1 high vulnerability</summary>
+
+- Affected release URL: [redis (Build 3466) - (STABLE)](https://github.com/zopencommunity/redisport/releases/tag/STABLE_redisport_3466)
+
+- **(HIGH severity) CVE-2025-32023**: Redis is an open source, in-memory database that persists on disk. From 2.8 to before 8.0.3, 7.4.5, 7.2.10, and 6.2.19, an authenticated user may use a specially crafted string to trigger a stack/heap out of bounds write on hyperloglog operations, potentially leading to remote code execution. The bug likely affects all Redis versions with hyperloglog operations implemented. This vulnerability is fixed in 8.0.3, 7.4.5, 7.2.10, and 6.2.19. An additional workaround to mitigate the problem without patching the redis-server executable is to prevent users from executing hyperloglog operations. This can be done using ACL to restrict HLL commands.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/redisport/releases/tag/STABLE_redisport_3655)**.
+
+</details>
+
+<details>
+<summary>redis (Build 3497) - (STABLE) -- 1 high vulnerability</summary>
+
+- Affected release URL: [redis (Build 3497) - (STABLE)](https://github.com/zopencommunity/redisport/releases/tag/STABLE_redisport_3497)
+
+- **(HIGH severity) CVE-2025-32023**: Redis is an open source, in-memory database that persists on disk. From 2.8 to before 8.0.3, 7.4.5, 7.2.10, and 6.2.19, an authenticated user may use a specially crafted string to trigger a stack/heap out of bounds write on hyperloglog operations, potentially leading to remote code execution. The bug likely affects all Redis versions with hyperloglog operations implemented. This vulnerability is fixed in 8.0.3, 7.4.5, 7.2.10, and 6.2.19. An additional workaround to mitigate the problem without patching the redis-server executable is to prevent users from executing hyperloglog operations. This can be done using ACL to restrict HLL commands.
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/redisport/releases/tag/STABLE_redisport_3655)**.
 
 </details>

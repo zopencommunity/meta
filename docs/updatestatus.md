@@ -11,6 +11,7 @@
 - 2025-07-25: [Update AFLplusplus-version to 4.33 from 4.32c](https://github.com/zopencommunity/aflplusplusport/pull/1) ❌
 
 ### ansibleport
+- 2025-09-09: [Update ansible-version to 2.19.2 from 2.19.0](https://github.com/zopencommunity/ansibleport/pull/3) ❌
 - 2025-08-26: [Update ansible-version to 2.19.1 from 2.19.0](https://github.com/zopencommunity/ansibleport/pull/2) ❌
 
 ### automakeport
@@ -63,6 +64,9 @@
 - 2025-06-07: [Update chezmoi-version to 2.62.6 from 2.62.5](https://github.com/zopencommunity/chezmoiport/pull/4) ❌
 - 2025-05-10: [Update chezmoi-version to 2.62.3 from 2.62.2](https://github.com/zopencommunity/chezmoiport/pull/1) ❌
 
+### cjsonport
+- 2025-09-09: [Update cjson-version to 1.7.19 from 1.7.18](https://github.com/zopencommunity/cjsonport/pull/3) ❓
+
 ### cmakeport
 - 2025-08-28: [Update cmake-version to 4.1.1 from 3.31.5](https://github.com/zopencommunity/cmakeport/pull/75) ❌
 - 2025-08-06: [Update cmake-version to 4.1.0 from 3.31.5](https://github.com/zopencommunity/cmakeport/pull/74) ❌
@@ -97,6 +101,7 @@
 - 2025-02-01: [Update creduce-version to 2.10.0 from V.R.M](https://github.com/zopencommunity/creduceport/pull/1) ❌
 
 ### crushport
+- 2025-09-09: [Update crush-version to 0.7.7 from 0.6.2](https://github.com/zopencommunity/crushport/pull/6) ❌
 - 2025-09-07: [Update crush-version to 0.7.6 from 0.6.2](https://github.com/zopencommunity/crushport/pull/5) ❌
 - 2025-09-06: [Update crush-version to 0.7.5 from 0.6.2](https://github.com/zopencommunity/crushport/pull/4) ❌
 - 2025-08-29: [Update crush-version to 0.7.4 from 0.6.2](https://github.com/zopencommunity/crushport/pull/3) ❌
@@ -185,6 +190,7 @@
 - 2024-12-06: [Update git-extras-version to 7.3.0 from V.R.M](https://github.com/zopencommunity/git-extrasport/pull/1) ❌
 
 ### githubcliport
+- 2025-09-09: [Update ghcli-version to 2.79.0 from 2.78.0](https://github.com/zopencommunity/githubcliport/pull/64) ❌
 - 2025-04-25: [Update ghcli-version to 2.71.2 from 2.67.0](https://github.com/zopencommunity/githubcliport/pull/52) ✅
 - 2025-04-24: [Update ghcli-version to 2.71.1 from 2.67.0](https://github.com/zopencommunity/githubcliport/pull/51) ❌
 - 2025-04-23: [Update ghcli-version to 2.71.0 from 2.67.0](https://github.com/zopencommunity/githubcliport/pull/50) ✅
@@ -503,7 +509,7 @@
 - 2024-09-18: [Update terraform-version to 1.9.6 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/22) ❌
 - 2024-08-21: [Update terraform-version to 1.9.5 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/21) ❌
 - 2024-08-07: [Update terraform-version to 1.9.4 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/20) ❌
-- 2024-07-25: [Update terraform-version to 1.9.3 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/19) ❌
+- 2024-07-25: [Update terraform-version to 1.9.3 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/19) ❓
 - 2024-07-10: [Update terraform-version to 1.9.2 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/18) ❓
 - 2024-07-03: [Update terraform-version to 1.9.1 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/17) ❓
 - 2024-06-27: [Update terraform-version to 1.9.0 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/16) ❓
@@ -851,5 +857,5 @@
 ---
 
 
-> Last updated: 2025-09-09 06:09:30 EDT
+> Last updated: 2025-09-10 06:09:31 EDT
 

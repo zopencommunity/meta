@@ -7,34 +7,6 @@
 <description>Vulnerabilities in zopen community Packages</description>
 
 <item>
-<title>zlib (Build 2529) - (STABLE)</title>
-<link>https://zopen.community/#/Vulnerabilities?id=zlib</link>
-<description>1 critical vulnerability</description>
-<guid isPermaLink="false">zlib (Build 2529) - (STABLE)</guid>
-</item>
-
-<item>
-<title>zlib (Build 2700) - (STABLE)</title>
-<link>https://zopen.community/#/Vulnerabilities?id=zlib</link>
-<description>1 critical vulnerability</description>
-<guid isPermaLink="false">zlib (Build 2700) - (STABLE)</guid>
-</item>
-
-<item>
-<title>zlib (Build 2930) - (STABLE)</title>
-<link>https://zopen.community/#/Vulnerabilities?id=zlib</link>
-<description>1 critical vulnerability</description>
-<guid isPermaLink="false">zlib (Build 2930) - (STABLE)</guid>
-</item>
-
-<item>
-<title>zlib (Build 2985) - (STABLE)</title>
-<link>https://zopen.community/#/Vulnerabilities?id=zlib</link>
-<description>1 critical vulnerability</description>
-<guid isPermaLink="false">zlib (Build 2985) - (STABLE)</guid>
-</item>
-
-<item>
 <title>vim (Build 2178) - (STABLE)</title>
 <link>https://zopen.community/#/Vulnerabilities?id=vim</link>
 <description>12 vulnerabilities (3 high, 9 medium)</description>
@@ -217,6 +189,41 @@
 </item>
 
 <item>
+<title>vim 9.1.697 (datasetio_ispf) - (STABLE)</title>
+<link>https://zopen.community/#/Vulnerabilities?id=vim</link>
+<description>8 vulnerabilities (3 high, 5 medium)</description>
+<guid isPermaLink="false">vim 9.1.697 (datasetio_ispf) - (STABLE)</guid>
+</item>
+
+<item>
+<title>zlib (Build 2529) - (STABLE)</title>
+<link>https://zopen.community/#/Vulnerabilities?id=zlib</link>
+<description>1 critical vulnerability</description>
+<guid isPermaLink="false">zlib (Build 2529) - (STABLE)</guid>
+</item>
+
+<item>
+<title>zlib (Build 2700) - (STABLE)</title>
+<link>https://zopen.community/#/Vulnerabilities?id=zlib</link>
+<description>1 critical vulnerability</description>
+<guid isPermaLink="false">zlib (Build 2700) - (STABLE)</guid>
+</item>
+
+<item>
+<title>zlib (Build 2930) - (STABLE)</title>
+<link>https://zopen.community/#/Vulnerabilities?id=zlib</link>
+<description>1 critical vulnerability</description>
+<guid isPermaLink="false">zlib (Build 2930) - (STABLE)</guid>
+</item>
+
+<item>
+<title>zlib (Build 2985) - (STABLE)</title>
+<link>https://zopen.community/#/Vulnerabilities?id=zlib</link>
+<description>1 critical vulnerability</description>
+<guid isPermaLink="false">zlib (Build 2985) - (STABLE)</guid>
+</item>
+
+<item>
 <title>cmake (Build 2795) - (STABLE)</title>
 <link>https://zopen.community/#/Vulnerabilities?id=cmake</link>
 <description>1 low vulnerability</description>
@@ -240,15 +247,36 @@
 <item>
 <title>redis (Build 3219) - (STABLE)</title>
 <link>https://zopen.community/#/Vulnerabilities?id=redis</link>
-<description>1 critical vulnerability</description>
+<description>2 vulnerabilities (1 critical, 1 high)</description>
 <guid isPermaLink="false">redis (Build 3219) - (STABLE)</guid>
 </item>
 
 <item>
 <title>redis (Build 3258) - (STABLE)</title>
 <link>https://zopen.community/#/Vulnerabilities?id=redis</link>
-<description>1 critical vulnerability</description>
+<description>2 vulnerabilities (1 critical, 1 high)</description>
 <guid isPermaLink="false">redis (Build 3258) - (STABLE)</guid>
+</item>
+
+<item>
+<title>redis (Build 3427) - (STABLE)</title>
+<link>https://zopen.community/#/Vulnerabilities?id=redis</link>
+<description>1 high vulnerability</description>
+<guid isPermaLink="false">redis (Build 3427) - (STABLE)</guid>
+</item>
+
+<item>
+<title>redis (Build 3466) - (STABLE)</title>
+<link>https://zopen.community/#/Vulnerabilities?id=redis</link>
+<description>1 high vulnerability</description>
+<guid isPermaLink="false">redis (Build 3466) - (STABLE)</guid>
+</item>
+
+<item>
+<title>redis (Build 3497) - (STABLE)</title>
+<link>https://zopen.community/#/Vulnerabilities?id=redis</link>
+<description>1 high vulnerability</description>
+<guid isPermaLink="false">redis (Build 3497) - (STABLE)</guid>
 </item>
 
 <item>
