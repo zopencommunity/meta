@@ -56,6 +56,7 @@
 - 2025-05-26: [Update ccache-version to 4.11.3 from V.R.M](https://github.com/zopencommunity/ccacheport/pull/1) ❌
 
 ### chezmoiport
+- 2025-09-10: [Update chezmoi-version to 2.65.1 from 2.62.5](https://github.com/zopencommunity/chezmoiport/pull/10) ❌
 - 2025-08-26: [Update chezmoi-version to 2.65.0 from 2.62.5](https://github.com/zopencommunity/chezmoiport/pull/9) ❌
 - 2025-08-07: [Update chezmoi-version to 2.64.0 from 2.62.5](https://github.com/zopencommunity/chezmoiport/pull/8) ❌
 - 2025-07-23: [Update chezmoi-version to 2.63.1 from 2.62.5](https://github.com/zopencommunity/chezmoiport/pull/7) ❌
@@ -368,6 +369,9 @@
 ### nanoport
 - 2025-08-22: [Update nano-version to 8.6 from 8.5](https://github.com/zopencommunity/nanoport/pull/20) ❌
 
+### natsport
+- 2025-09-10: [Update nats-version to 2.11.9 from 2.11.8](https://github.com/zopencommunity/natsport/pull/30) ❌
+
 ### ncduport
 - 2025-03-05: [Update ncdu-1-version to 1.22 from 1.20](https://github.com/zopencommunity/ncduport/pull/12) ❌
 - 2024-11-19: [Update ncdu-1-version to 1.21 from 1.20](https://github.com/zopencommunity/ncduport/pull/11) ❌
@@ -488,6 +492,7 @@
 - 2024-12-20: [Update tcl-version to 9.0.1 from 8.6.13](https://github.com/zopencommunity/tclport/pull/16) ✅
 
 ### terraformport
+- 2025-09-10: [Update terraform-version to 1.13.2 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/43) ❌
 - 2025-08-27: [Update terraform-version to 1.13.1 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/42) ❌
 - 2025-08-22: [Update terraform-version to 1.13.0 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/41) ❌
 - 2025-06-11: [Update terraform-version to 1.12.2 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/40) ❌
@@ -840,6 +845,7 @@
 - ✅ zipport - [![Bump Status](https://github.com/zopencommunity/zipport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/zipport/actions/workflows/bump.yml)
 - ✅ zlib-ngport - [![Bump Status](https://github.com/zopencommunity/zlib-ngport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/zlib-ngport/actions/workflows/bump.yml)
 - ✅ zlibport - [![Bump Status](https://github.com/zopencommunity/zlibport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/zlibport/actions/workflows/bump.yml)
+- ❌ zopen-mcp-server - Workflow not configured
 - ✅ zos-code-page-toolsport - [![Bump Status](https://github.com/zopencommunity/zos-code-page-toolsport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/zos-code-page-toolsport/actions/workflows/bump.yml)
 - ✅ zoslibport - [![Bump Status](https://github.com/zopencommunity/zoslibport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/zoslibport/actions/workflows/bump.yml)
 - ✅ zosncport - [![Bump Status](https://github.com/zopencommunity/zosncport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/zosncport/actions/workflows/bump.yml)
@@ -852,10 +858,10 @@
 
 </details>
 
-**Summary:** 232 active | 54 missing
+**Summary:** 232 active | 55 missing
 
 ---
 
 
-> Last updated: 2025-09-10 06:09:31 EDT
+> Last updated: 2025-09-11 06:09:37 EDT
 
