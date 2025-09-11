@@ -21,6 +21,7 @@
     - [Leveraging the zoslib library](/Guides/Zoslib.md)
     - [Troubleshooting](/Guides/CommonSolutions.md)
     - [Getting z/OS Access](https://community.ibm.com/zsystems/form/zos-program/)
+  - [Badges](/Badges.md)
   - [FAQ](/Guides/FAQ.md)
   - Workshops
   	- [Beginner](/workshop/workshop.md) 
@@ -36,6 +37,7 @@
     - [Using Bash on z/OS](/Guides/BashOnZOS.md)
     - [Using Neovim on z/OS](/Guides/NeovimOnZOS.md)
     - [Terminal Settings on z/OS](/Guides/TerminalOnZOS.md) 
+  - [Meet the Team](/team.md)
   - [Success Stories](/SuccessStories.md)
   - **Links**
   - <a href="https://github.com/zopencommunity"><img src="images/Octicons-mark-github.svg" width="20" height="20" alt="Github"> Github</a>

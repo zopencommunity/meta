@@ -49,7 +49,7 @@ The zopen package manager is the recommended way to install and manage zopen com
 Instructions to download and install the zopen package manager can be found in the [Quick Start guide](/Guides/QuickStart).  The quick start guide provides the most direct and up-to-date installation instructions.
 
 ### How do I install and manage zopen tools using the zopen package manager?
-Please refer to the [Using the Package Manager guide](/Guildes/ThePackageManager) for detailed instructions on installing tools.  This guide covers basic installation, listing available packages, and more advanced usage.
+Please refer to the [Using the Package Manager guide](/Guides/ThePackageManager) for detailed instructions on installing tools.  This guide covers basic installation, listing available packages, and more advanced usage.
 
 ### How do I check for vulnerabilities in packages installed with the zopen package manager?
 You can use the `zopen audit` command to check for known vulnerabilities in the packages you have installed using the zopen package manager. 

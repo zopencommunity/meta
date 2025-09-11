@@ -5,9 +5,23 @@
 
 zopenInitialize()
 {
-  # Monitor the intial parent process; as subshells inherit
-  # variables, this will not be overridden due to param expansion
-  parentPid=${parentPid:-$$}
+  # Capture start time before setting trap
+  fullProcessStartTime=${SECONDS}
+  
+  # Create the cleanup pipeline and exit handler
+  trap "cleanupFunction" EXIT INT TERM QUIT HUP
+  
+  # Temporary files
+  for zopen_tmp_dir in "${TMPDIR}" "${TMP}" /tmp; do
+    if [ ! -z ${zopen_tmp_dir} ] && [ -d ${zopen_tmp_dir} ]; then
+      break
+    fi
+  done
+  
+  if [ ! -d "${zopen_tmp_dir}" ]; then
+    printError "Temporary directory not found. Please specify \$TMPDIR, \$TMP or have a valid /tmp directory."
+  fi
+
   defineEnvironment
   defineANSI
   if [ -z "${ZOPEN_DONT_PROCESS_CONFIG}" ]; then
@@ -76,7 +90,7 @@ addCleanupTrapCmd2(){
   # didn't have a bug -trap can't be piped/redirected anywhere except
   # a file like it can in bash or non-zos sh as it seems to create
   # and run in the subshell before returning trap handler(s)!?!
-  tmpscriptfile="/tmp/clean.tmp"
+  tmpscriptfile="${zopen_tmp_dir}/clean.tmp"
   trap > "${tmpscriptfile}" 2>&1 && script=$(cat "${tmpscriptfile}")
   if [ -n "${script}" ]; then
   for trappedSignal in "EXIT" "INT" "TERM" "QUIT" "HUP"; do
@@ -119,20 +133,6 @@ addCleanupTrapCmd2(){
   fi
   [ -n "${xtrc}" ] && set -x
 }
-
-# Temporary files
-for zopen_tmp_dir in "${TMPDIR}" "${TMP}" /tmp; do
-  if [ ! -z ${zopen_tmp_dir} ] && [ -d ${zopen_tmp_dir} ]; then
-    break
-  fi
-done
-
-if [ ! -d "${zopen_tmp_dir}" ]; then
-  printError "Temporary directory not found. Please specify \$TMPDIR, \$TMP or have a valid /tmp directory."
-fi
-
-# Capture start time before setting trap
-fullProcessStartTime=${SECONDS}
 
 # Remove temporaries on exit and report elapsed time
 cleanupOnExit()
@@ -810,6 +810,8 @@ defineEnvironment()
   export _TAG_REDIR_IN=txt
   export _TAG_REDIR_OUT=txt
   export GIT_UTF8_CCSID=819
+  unset _ENCODE_FILE_NEW # rely on the default tool encoding behaviour
+  export TERM=xterm # To avoid potential issues with "FSUM6202 Unknown terminal" if using an ncurses terminal database
 
   # Required for proper operation of xlclang
   export _CC_CCMODE=1
@@ -1111,6 +1113,9 @@ printVerbose()
 
 printHeader()
 {
+  if [ -n "$noInfoMessages" ]; then
+    return 0;
+  fi
   [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
   printColors "${NC}${HEADERCOLOR}${BOLD}${UNDERLINE}${1}${NC}"
   [ -n "${xtrc}" ] && set -x
@@ -1320,6 +1325,9 @@ printWarning()
 
 printInfo()
 {
+  if [ -n "$noInfoMessages" ]; then
+    return 0;
+  fi
   [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
   printColors "$1"
   [ -n "${xtrc}" ] && set -x
@@ -1698,6 +1706,7 @@ getRepoReleases()
   ##TDORM fi
 }
 
+# Initializes a default environment for consistency in zopen builds
 initDefaultEnvironment()
 {
   export ZOPEN_OLD_PATH="${PATH}"       # Preserve PATH in case scripts need to access it
@@ -1708,6 +1717,7 @@ initDefaultEnvironment()
   unset MANPATH
   export LIBPATH="/usr/lib"
   export STEPLIB=none
+  export ZUSAGE_DISABLE=1 # Avoid usage statistics within zopen-build
 }
 
 #
@@ -1762,7 +1772,7 @@ checkAvailableSize()
   if [ 1 -eq "$(echo "${packageSize} > ${partitionSize}" | bc)" ]; then
     printError "Not enough space in partition."
   fi
-  printInfo "- Enough space to install ${package}. Proceeding installation."
+  printInfo "- Enough space to install ${package}. Proceeding with installation."
   return 0
 }
 

@@ -35,7 +35,7 @@ check_zos_version() {
   EXPECTED_VERSION_NUMBER=$((EXPECTED_MAJOR * 100 + EXPECTED_MINOR))
 
   if [ "$VERSION_NUMBER" -lt "$EXPECTED_VERSION_NUMBER" ]; then
-    echo "ERROR: Expected z/OS version $1 or earlier, but found z/OS version $CURRENT_VERSION"
+    echo "ERROR: Expected z/OS version $1 or later, but found z/OS version $CURRENT_VERSION"
     exit 1
   fi
 }
@@ -54,6 +54,11 @@ zos31() {
 
 zos25() {
   check_zos_version 2.5
+  if [ ! -f /usr/include/sys/epoll.h ] || [ ! -f /usr/include/sys/eventfd.h ]; then
+    echo "WARNING: Missing LE PTFs UJ94587 UJ94590. You may not have the required Language Environment APAR installed."
+    echo "See: https://www.ibm.com/support/pages/apar/OA61972"
+    echo "To resolve this, install the appropriate PTF for OA61972 on z/OS 2.5."
+  fi
 }
 
 zos24() {

@@ -116,8 +116,8 @@ rm_fileprocs=5 #TODO: adjust based on number of online cpus on system
 # Boostrap pax files
 CURL_PAX="curl-8.10.1.20241001_214340.zos.pax.Z"
 JQ_PAX="jq-1.6.20241001_204116.zos.pax.Z"
-GPG_PAX="gnupg-2.4.4.20241001_233258.zos.pax.Z"
-PINENTRY_PAX="pinentry-1.2.1.20241002_001628.zos.pax.Z"
+GPG_PAX="gnupg-2.5.5.20250407_125451.zos.pax.Z"
+PINENTRY_PAX="pinentry-1.3.1.20250131_041514.zos.pax.Z"
 PKG_DIR="packages"
 CURL_PAX_LOCATION="${PKG_DIR}/${CURL_PAX}"
 JQ_PAX_LOCATION="${PKG_DIR}/${JQ_PAX}"

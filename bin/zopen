@@ -41,11 +41,13 @@ Command:
   info              displays detailed information about a package
   list              lists information about zopen community packages
   mirror            performs a synchronization of the GitHub repository
+  publish           publish zopen package release to github
   query             list local or remote info about zopen community packages
   remove            removes installed zopen community packages
   update-cacert     update the cacert.pem file used by zopen community
   upgrade           upgrades existing zopen community packages
   usage             output details about the file system usage for your zopen environment
+  whichproject      determine the package a command or library belongs to
 
 Options:
   -h, --help, -?    display this help and exit
@@ -74,12 +76,14 @@ SEE ALSO:
   zopen-info(1)
   zopen-list(1)
   zopen-mirror(1)
+  zopen-publish(1)
   zopen-query(1)
   zopen-refresh(1)
   zopen-remove(1)
   zopen-update-cacert(1)
   zopen-upgrade(1)
   zopen-usage(1)
+  zopen-whichproject(1)
   zopen-version(1)
 
 Report bugs at https://github.com/zopencommunity/meta/issues
@@ -99,7 +103,7 @@ for arg in $*; do
   case "${arg}" in
     "alt"|"audit"|"build"|"clean"|"generate"|"init"|"install"|\
     "query"|"remove"|"update-cacert"|"info"|"usage"|"diagnostics"|\
-    "list"|"upgrade"|"mirror")
+    "whichproject"|"publish"|"list"|"upgrade"|"mirror")
       subcmd="zopen-${arg}"
       ;;
     "refresh")

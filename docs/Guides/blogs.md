@@ -1,5 +1,6 @@
 # Links to external blogs on zopen community
 
+* [Installing the zopen tools for your personal use - April 24, 2025](https://dinoframe.io/tutorial/zopen-personal-filesystem)
 * [GPG on z/OS: Beyond the Basics – A Deep Dive - June 10, 2024](https://tectales.wordpress.com/2024/06/10/273/)
 * [Enhancing Vim on z/OS UNIX with Language Server Protocol (LSP) support - April 18, 2024](https://igortodorovskiibm.github.io/blog/2024/04/18/vim-autocomplete/)
 * [Level up z/OS security – Add GPG to the armory - March 19, 2024](https://tectales.wordpress.com/2024/03/19/level-up-z-os-security-add-gpg-to-the-armory/)
