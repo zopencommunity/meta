@@ -49,12 +49,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="crush" data-searchable-text="crush Skipped N/A STABLE_crush_3721 AI coding agent for your favourite terminal  ai port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="crush" data-searchable-text="crush Skipped N/A STABLE_crush_3725 AI coding agent for your favourite terminal  ai port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/crushport" target="_blank" rel="noopener noreferrer">crush</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/crushport/releases/download/STABLE_crushport_3721/crush-v0.7.8.20250910_162631.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_crush_3721</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/crushport/releases/download/STABLE_crushport_3725/crush-v0.7.9.20250911_154129.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_crush_3725</a></div>
     <div class="tool-desc" title="AI coding agent for your favourite terminal ">AI coding agent for your favourite terminal </div>
   </div>
 </div>
@@ -1255,12 +1255,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="groovy" data-searchable-text="groovy Skipped N/A STABLE_groovy_3583 A scripting language for the Java platform language port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="groovy" data-searchable-text="groovy Skipped N/A STABLE_groovy_3723 A scripting language for the Java platform language port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/groovyport" target="_blank" rel="noopener noreferrer">groovy</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/groovyport/releases/download/STABLE_groovyport_3583/groovy-DEV.20250723_151728.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_groovy_3583</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/groovyport/releases/download/STABLE_groovyport_3723/groovy-DEV.20250911_151819.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_groovy_3723</a></div>
     <div class="tool-desc" title="A scripting language for the Java platform">A scripting language for the Java platform</div>
   </div>
 </div>
@@ -2449,12 +2449,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="crush" data-searchable-text="crush Skipped N/A STABLE_crush_3721 AI coding agent for your favourite terminal  utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="crush" data-searchable-text="crush Skipped N/A STABLE_crush_3725 AI coding agent for your favourite terminal  utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/crushport" target="_blank" rel="noopener noreferrer">crush</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/crushport/releases/download/STABLE_crushport_3721/crush-v0.7.8.20250910_162631.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_crush_3721</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/crushport/releases/download/STABLE_crushport_3725/crush-v0.7.9.20250911_154129.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_crush_3725</a></div>
     <div class="tool-desc" title="AI coding agent for your favourite terminal ">AI coding agent for your favourite terminal </div>
   </div>
 </div>
@@ -2952,4 +2952,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-09-11 06:15:21 UTC
+Last updated:  2025-09-12 06:16:05 UTC
