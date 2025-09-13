@@ -454,6 +454,7 @@
 - 2024-01-25: [Update poco-version to 1.13.0 from 1.12.5p2](https://github.com/zopencommunity/pocoport/pull/2) ❓
 
 ### protobufport
+- 2025-09-12: [Update protobuf-version to 32.1 from 29.3](https://github.com/zopencommunity/protobufport/pull/34) ❌
 - 2025-08-22: [Update protobuf-version to 32.0 from 29.3](https://github.com/zopencommunity/protobufport/pull/33) ❌
 - 2025-05-29: [Update protobuf-version to 31.1 from 29.3](https://github.com/zopencommunity/protobufport/pull/30) ❌
 - 2025-05-15: [Update protobuf-version to 31.0 from 29.3](https://github.com/zopencommunity/protobufport/pull/29) ❌
@@ -864,5 +865,5 @@
 ---
 
 
-> Last updated: 2025-09-12 06:09:26 EDT
+> Last updated: 2025-09-13 06:08:12 EDT
 
