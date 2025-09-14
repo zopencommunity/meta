@@ -363,7 +363,7 @@
 - 2025-01-16: [Update murex-version to 6.4.2063 from 6.0.1000](https://github.com/zopencommunity/murexport/pull/8) ❌
 - 2024-12-11: [Update murex-version to 6.4.1005 from 6.0.1000](https://github.com/zopencommunity/murexport/pull/7) ❌
 - 2024-09-19: [Update murex-version to 6.3.4225 from 6.0.1000](https://github.com/zopencommunity/murexport/pull/4) ❌
-- 2024-07-30: [Update murex-version to 6.2.4000 from 6.0.1000](https://github.com/zopencommunity/murexport/pull/3) ❌
+- 2024-07-30: [Update murex-version to 6.2.4000 from 6.0.1000](https://github.com/zopencommunity/murexport/pull/3) ❓
 - 2024-07-19: [Update murex-version to 6.2.3000 from 6.0.1000](https://github.com/zopencommunity/murexport/pull/2) ❓
 - 2024-06-27: [Update murex-version to 6.1.8300 from 6.0.1000](https://github.com/zopencommunity/murexport/pull/1) ❓
 
@@ -865,5 +865,5 @@
 ---
 
 
-> Last updated: 2025-09-13 06:08:12 EDT
+> Last updated: 2025-09-14 06:08:08 EDT
 

@@ -5,7 +5,7 @@
 ## vim
 
 <details>
-<summary>vim (Build 2178) - (STABLE) -- 12 vulnerabilities (3 high, 9 medium)</summary>
+<summary>vim (Build 2178) - (STABLE) -- 13 vulnerabilities (3 high, 10 medium)</summary>
 
 - Affected release URL: [vim (Build 2178) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2178)
 
@@ -36,11 +36,13 @@ the specified cursor position. It's not quite clear yet, what can lead to this s
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 - **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 
 </details>
 
 <details>
-<summary>vim (Build 2204) - (STABLE) -- 12 vulnerabilities (3 high, 9 medium)</summary>
+<summary>vim (Build 2204) - (STABLE) -- 13 vulnerabilities (3 high, 10 medium)</summary>
 
 - Affected release URL: [vim (Build 2204) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2204)
 
@@ -71,11 +73,13 @@ the specified cursor position. It's not quite clear yet, what can lead to this s
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 - **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 
 </details>
 
 <details>
-<summary>vim (Build 2224) - (STABLE) -- 12 vulnerabilities (3 high, 9 medium)</summary>
+<summary>vim (Build 2224) - (STABLE) -- 13 vulnerabilities (3 high, 10 medium)</summary>
 
 - Affected release URL: [vim (Build 2224) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2224)
 
@@ -106,11 +110,13 @@ the specified cursor position. It's not quite clear yet, what can lead to this s
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 - **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 
 </details>
 
 <details>
-<summary>vim (Build 2253) - (STABLE) -- 12 vulnerabilities (3 high, 9 medium)</summary>
+<summary>vim (Build 2253) - (STABLE) -- 13 vulnerabilities (3 high, 10 medium)</summary>
 
 - Affected release URL: [vim (Build 2253) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2253)
 
@@ -141,11 +147,13 @@ the specified cursor position. It's not quite clear yet, what can lead to this s
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 - **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 
 </details>
 
 <details>
-<summary>vim (Build 2265) - (STABLE) -- 12 vulnerabilities (3 high, 9 medium)</summary>
+<summary>vim (Build 2265) - (STABLE) -- 13 vulnerabilities (3 high, 10 medium)</summary>
 
 - Affected release URL: [vim (Build 2265) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2265)
 
@@ -176,11 +184,13 @@ the specified cursor position. It's not quite clear yet, what can lead to this s
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 - **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 
 </details>
 
 <details>
-<summary>vim (Build 2271) - (STABLE) -- 12 vulnerabilities (3 high, 9 medium)</summary>
+<summary>vim (Build 2271) - (STABLE) -- 13 vulnerabilities (3 high, 10 medium)</summary>
 
 - Affected release URL: [vim (Build 2271) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2271)
 
@@ -211,11 +221,13 @@ the specified cursor position. It's not quite clear yet, what can lead to this s
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 - **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 
 </details>
 
 <details>
-<summary>vim (Build 2389) - (STABLE) -- 9 vulnerabilities (3 high, 6 medium)</summary>
+<summary>vim (Build 2389) - (STABLE) -- 10 vulnerabilities (3 high, 7 medium)</summary>
 
 - Affected release URL: [vim (Build 2389) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2389)
 
@@ -239,11 +251,13 @@ the specified cursor position. It's not quite clear yet, what can lead to this s
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 - **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 
 </details>
 
 <details>
-<summary>vim (Build 2408) - (STABLE) -- 8 vulnerabilities (3 high, 5 medium)</summary>
+<summary>vim (Build 2408) - (STABLE) -- 9 vulnerabilities (3 high, 6 medium)</summary>
 
 - Affected release URL: [vim (Build 2408) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2408)
 
@@ -265,11 +279,13 @@ the specified cursor position. It's not quite clear yet, what can lead to this s
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 - **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 
 </details>
 
 <details>
-<summary>vim (Build 2421) - (STABLE) -- 8 vulnerabilities (3 high, 5 medium)</summary>
+<summary>vim (Build 2421) - (STABLE) -- 9 vulnerabilities (3 high, 6 medium)</summary>
 
 - Affected release URL: [vim (Build 2421) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2421)
 
@@ -291,11 +307,13 @@ the specified cursor position. It's not quite clear yet, what can lead to this s
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 - **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 
 </details>
 
 <details>
-<summary>vim (Build 2423) - (Alpha) - Dataset I/O -- 8 vulnerabilities (3 high, 5 medium)</summary>
+<summary>vim (Build 2423) - (Alpha) - Dataset I/O -- 9 vulnerabilities (3 high, 6 medium)</summary>
 
 - Affected release URL: [vim (Build 2423) - (Alpha) - Dataset I/O](https://github.com/zopencommunity/vimport/releases/tag/datasetio)
 
@@ -317,11 +335,13 @@ the specified cursor position. It's not quite clear yet, what can lead to this s
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 - **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 
 </details>
 
 <details>
-<summary>vim (Build 2436) - (STABLE) -- 7 vulnerabilities (3 high, 4 medium)</summary>
+<summary>vim (Build 2436) - (STABLE) -- 8 vulnerabilities (3 high, 5 medium)</summary>
 
 - Affected release URL: [vim (Build 2436) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2436)
 
@@ -339,11 +359,13 @@ the specified cursor position. It's not quite clear yet, what can lead to this s
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 - **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 
 </details>
 
 <details>
-<summary>vim (Build 2461) - (STABLE) -- 7 vulnerabilities (3 high, 4 medium)</summary>
+<summary>vim (Build 2461) - (STABLE) -- 8 vulnerabilities (3 high, 5 medium)</summary>
 
 - Affected release URL: [vim (Build 2461) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2461)
 
@@ -361,11 +383,13 @@ the specified cursor position. It's not quite clear yet, what can lead to this s
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 - **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 
 </details>
 
 <details>
-<summary>vim (Build 2493) - (STABLE) -- 7 vulnerabilities (3 high, 4 medium)</summary>
+<summary>vim (Build 2493) - (STABLE) -- 8 vulnerabilities (3 high, 5 medium)</summary>
 
 - Affected release URL: [vim (Build 2493) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2493)
 
@@ -383,11 +407,13 @@ the specified cursor position. It's not quite clear yet, what can lead to this s
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 - **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 
 </details>
 
 <details>
-<summary>vim (Build 2697) - (STABLE) -- 7 vulnerabilities (3 high, 4 medium)</summary>
+<summary>vim (Build 2697) - (STABLE) -- 8 vulnerabilities (3 high, 5 medium)</summary>
 
 - Affected release URL: [vim (Build 2697) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2697)
 
@@ -405,11 +431,13 @@ the specified cursor position. It's not quite clear yet, what can lead to this s
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 - **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 
 </details>
 
 <details>
-<summary>vim (Build 2736) - (STABLE) -- 6 vulnerabilities (3 high, 3 medium)</summary>
+<summary>vim (Build 2736) - (STABLE) -- 7 vulnerabilities (3 high, 4 medium)</summary>
 
 - Affected release URL: [vim (Build 2736) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2736)
 
@@ -425,11 +453,13 @@ the specified cursor position. It's not quite clear yet, what can lead to this s
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 - **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 
 </details>
 
 <details>
-<summary>vim (Build 2810) - (STABLE) -- 5 vulnerabilities (3 high, 2 medium)</summary>
+<summary>vim (Build 2810) - (STABLE) -- 6 vulnerabilities (3 high, 3 medium)</summary>
 
 - Affected release URL: [vim (Build 2810) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2810)
 
@@ -443,11 +473,13 @@ the specified cursor position. It's not quite clear yet, what can lead to this s
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 - **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 
 </details>
 
 <details>
-<summary>vim (Build 2958) - (STABLE) -- 5 vulnerabilities (3 high, 2 medium)</summary>
+<summary>vim (Build 2958) - (STABLE) -- 6 vulnerabilities (3 high, 3 medium)</summary>
 
 - Affected release URL: [vim (Build 2958) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2958)
 
@@ -461,11 +493,13 @@ the specified cursor position. It's not quite clear yet, what can lead to this s
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 - **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 
 </details>
 
 <details>
-<summary>vim (Build 3052) - (STABLE) -- 5 vulnerabilities (3 high, 2 medium)</summary>
+<summary>vim (Build 3052) - (STABLE) -- 6 vulnerabilities (3 high, 3 medium)</summary>
 
 - Affected release URL: [vim (Build 3052) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3052)
 
@@ -479,11 +513,13 @@ the specified cursor position. It's not quite clear yet, what can lead to this s
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 - **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 
 </details>
 
 <details>
-<summary>vim (Build 3107) - (STABLE) -- 3 vulnerabilities (2 high, 1 medium)</summary>
+<summary>vim (Build 3107) - (STABLE) -- 4 vulnerabilities (2 high, 2 medium)</summary>
 
 - Affected release URL: [vim (Build 3107) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3107)
 
@@ -493,11 +529,13 @@ the specified cursor position. It's not quite clear yet, what can lead to this s
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 - **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 
 </details>
 
 <details>
-<summary>vim (Build 3115) - (STABLE) -- 3 vulnerabilities (2 high, 1 medium)</summary>
+<summary>vim (Build 3115) - (STABLE) -- 4 vulnerabilities (2 high, 2 medium)</summary>
 
 - Affected release URL: [vim (Build 3115) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3115)
 
@@ -507,11 +545,13 @@ the specified cursor position. It's not quite clear yet, what can lead to this s
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 - **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 
 </details>
 
 <details>
-<summary>vim 9.1.1016.0 (zusage) - (STABLE) -- 5 vulnerabilities (3 high, 2 medium)</summary>
+<summary>vim 9.1.1016.0 (zusage) - (STABLE) -- 6 vulnerabilities (3 high, 3 medium)</summary>
 
 - Affected release URL: [vim 9.1.1016.0 (zusage) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/zusage)
 
@@ -525,11 +565,13 @@ the specified cursor position. It's not quite clear yet, what can lead to this s
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 - **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 
 </details>
 
 <details>
-<summary>vim (Build 3153) - (STABLE) -- 3 vulnerabilities (2 high, 1 medium)</summary>
+<summary>vim (Build 3153) - (STABLE) -- 4 vulnerabilities (2 high, 2 medium)</summary>
 
 - Affected release URL: [vim (Build 3153) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3153)
 
@@ -539,11 +581,13 @@ the specified cursor position. It's not quite clear yet, what can lead to this s
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 - **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 
 </details>
 
 <details>
-<summary>vim (Build 3192) - (STABLE) -- 3 vulnerabilities (2 high, 1 medium)</summary>
+<summary>vim (Build 3192) - (STABLE) -- 4 vulnerabilities (2 high, 2 medium)</summary>
 
 - Affected release URL: [vim (Build 3192) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3192)
 
@@ -553,11 +597,13 @@ the specified cursor position. It's not quite clear yet, what can lead to this s
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 - **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 
 </details>
 
 <details>
-<summary>vim (Build 3315) - (STABLE) -- 3 vulnerabilities (2 high, 1 medium)</summary>
+<summary>vim (Build 3315) - (STABLE) -- 4 vulnerabilities (2 high, 2 medium)</summary>
 
 - Affected release URL: [vim (Build 3315) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3315)
 
@@ -567,11 +613,13 @@ the specified cursor position. It's not quite clear yet, what can lead to this s
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 - **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 
 </details>
 
 <details>
-<summary>vim (Build 3334) - (STABLE) -- 2 high vulnerabilities</summary>
+<summary>vim (Build 3334) - (STABLE) -- 3 vulnerabilities (2 high, 1 medium)</summary>
 
 - Affected release URL: [vim (Build 3334) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3334)
 
@@ -579,11 +627,13 @@ the specified cursor position. It's not quite clear yet, what can lead to this s
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 - **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 
 </details>
 
 <details>
-<summary>vim (Build 3351) - (STABLE) -- 2 high vulnerabilities</summary>
+<summary>vim (Build 3351) - (STABLE) -- 3 vulnerabilities (2 high, 1 medium)</summary>
 
 - Affected release URL: [vim (Build 3351) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3351)
 
@@ -591,11 +641,223 @@ the specified cursor position. It's not quite clear yet, what can lead to this s
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 - **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 
 </details>
 
 <details>
-<summary>vim 9.1.697 (datasetio_ispf) - (STABLE) -- 8 vulnerabilities (3 high, 5 medium)</summary>
+<summary>vim (Build 3365) - (STABLE) -- 1 medium vulnerability</summary>
+
+- Affected release URL: [vim (Build 3365) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3365)
+
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+
+</details>
+
+<details>
+<summary>vim (Build 3404) - (STABLE) -- 1 medium vulnerability</summary>
+
+- Affected release URL: [vim (Build 3404) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3404)
+
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+
+</details>
+
+<details>
+<summary>vim (Build 3406) - (STABLE) -- 1 medium vulnerability</summary>
+
+- Affected release URL: [vim (Build 3406) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3406)
+
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+
+</details>
+
+<details>
+<summary>vim (Build 3429) - (STABLE) -- 1 medium vulnerability</summary>
+
+- Affected release URL: [vim (Build 3429) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3429)
+
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+
+</details>
+
+<details>
+<summary>vim (Build 3437) - (STABLE) -- 1 medium vulnerability</summary>
+
+- Affected release URL: [vim (Build 3437) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3437)
+
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+
+</details>
+
+<details>
+<summary>vim (Build 3438) - (STABLE) -- 1 medium vulnerability</summary>
+
+- Affected release URL: [vim (Build 3438) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3438)
+
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+
+</details>
+
+<details>
+<summary>vim (Build 3457) - (STABLE) -- 1 medium vulnerability</summary>
+
+- Affected release URL: [vim (Build 3457) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3457)
+
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+
+</details>
+
+<details>
+<summary>vim (Build 3463) - (STABLE) -- 1 medium vulnerability</summary>
+
+- Affected release URL: [vim (Build 3463) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3463)
+
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+
+</details>
+
+<details>
+<summary>vim (Build 3473) - (STABLE) -- 1 medium vulnerability</summary>
+
+- Affected release URL: [vim (Build 3473) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3473)
+
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+
+</details>
+
+<details>
+<summary>vim (Build 3474) - (STABLE) -- 1 medium vulnerability</summary>
+
+- Affected release URL: [vim (Build 3474) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3474)
+
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+
+</details>
+
+<details>
+<summary>vim (Build 3495) - (STABLE) -- 1 medium vulnerability</summary>
+
+- Affected release URL: [vim (Build 3495) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3495)
+
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+
+</details>
+
+<details>
+<summary>vim (Build 3515) - (STABLE) -- 1 medium vulnerability</summary>
+
+- Affected release URL: [vim (Build 3515) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3515)
+
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+
+</details>
+
+<details>
+<summary>vim (Build 3529) - (STABLE) -- 1 medium vulnerability</summary>
+
+- Affected release URL: [vim (Build 3529) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3529)
+
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+
+</details>
+
+<details>
+<summary>vim (Build 3542) - (STABLE) -- 1 medium vulnerability</summary>
+
+- Affected release URL: [vim (Build 3542) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3542)
+
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+
+</details>
+
+<details>
+<summary>vim (Build 3551) - (STABLE) -- 1 medium vulnerability</summary>
+
+- Affected release URL: [vim (Build 3551) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3551)
+
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+
+</details>
+
+<details>
+<summary>vim (Build 3560) - (STABLE) -- 1 medium vulnerability</summary>
+
+- Affected release URL: [vim (Build 3560) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3560)
+
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+
+</details>
+
+<details>
+<summary>vim (Build 3569) - (STABLE) -- 1 medium vulnerability</summary>
+
+- Affected release URL: [vim (Build 3569) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3569)
+
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+
+</details>
+
+<details>
+<summary>vim (Build 3585) - (STABLE) -- 1 medium vulnerability</summary>
+
+- Affected release URL: [vim (Build 3585) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3585)
+
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+
+</details>
+
+<details>
+<summary>vim (Build 3594) - (STABLE) -- 1 medium vulnerability</summary>
+
+- Affected release URL: [vim (Build 3594) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3594)
+
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+
+</details>
+
+<details>
+<summary>vim (Build 3601) - (STABLE) -- 1 medium vulnerability</summary>
+
+- Affected release URL: [vim (Build 3601) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3601)
+
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+
+</details>
+
+<details>
+<summary>vim (Build 3632) - (STABLE) -- 1 medium vulnerability</summary>
+
+- Affected release URL: [vim (Build 3632) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632)
+
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+
+</details>
+
+<details>
+<summary>vim 9.1.697 (datasetio_ispf) - (STABLE) -- 9 vulnerabilities (3 high, 6 medium)</summary>
 
 - Affected release URL: [vim 9.1.697 (datasetio_ispf) - (STABLE)](https://github.com/zopencommunity/vimport/releases/tag/datasetio_ispf)
 
@@ -616,6 +878,8 @@ the specified cursor position. It's not quite clear yet, what can lead to this s
 - **(HIGH severity) CVE-2025-55157**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1400, When processing nested tuples in Vim script, an error during evaluation can trigger a use-after-free in Vim’s internal tuple reference management. Specifically, the tuple_unref() function may access already freed memory due to improper lifetime handling, leading to memory corruption. The exploit requires direct user interaction, as the script must be explicitly executed within Vim. This issue has been patched in version 9.1.1400.
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 - **(HIGH severity) CVE-2025-55158**: Vim is an open source, command line text editor. In versions from 9.1.1231 to before 9.1.1406, when processing nested tuples during Vim9 script import operations, an error during evaluation can trigger a double-free in Vim’s internal typed value (typval_T) management. Specifically, the clear_tv() function may attempt to free memory that has already been deallocated, due to improper lifetime handling in the handle_import / ex_import code paths. The vulnerability can only be triggered if a user explicitly opens and executes a specially crafted Vim script. This issue has been patched in version 9.1.1406.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
+- **(MEDIUM severity) CVE-2025-9390**: A security flaw has been discovered in vim up to 9.1.1615. Affected by this vulnerability is the function main of the file src/xxd/xxd.c of the component xxd. The manipulation results in buffer overflow. The attack requires a local approach. The exploit has been released to the public and may be exploited. Upgrading to version 9.1.1616 addresses this issue. The patch is identified as eeef7c77436a78cd27047b0f5fa6925d56de3cb0. It is recommended to upgrade the affected component.
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720)**.
 
 </details>
