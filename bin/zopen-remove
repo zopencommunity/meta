@@ -15,6 +15,7 @@ setupMyself()
     echo "Internal Error. Unable to find common.sh file to source." >&2
     exit 8
   fi
+  # shellcheck disable=SC1091
   . "${INCDIR}/common.sh"
 }
 setupMyself
@@ -51,27 +52,36 @@ HELPDOC
 removePackages()
 {
   pkglist=$*
-
+  processActionScripts "transactionPre"
+  # Create a temp file name to trigger the post-transaction action script
+  # triggering - run only if an action was taken (which creates the file)
+  runpostTxnActionScripts=$(mktempfile "txnpost" "run")
   echo "${pkglist}" | xargs | tr ' ' '\n' | sort | while read pkg; do
     printHeader "Removing package: ${pkg}"
-    printInfo "- Checking status of package '${pkg}'"
-    if [ ! -f ${ZOPEN_PKGINSTALL}/${pkg}/${pkg}/.active ]; then
-      printInfo "${NC}${YELLOW}Package '${pkg}' is not installed${NC}"
+    processActionScripts "removePre"
+    printInfo "- Querying install status of package '${pkg}'"
+    # Check for the actual file rather than the database; if the db is
+    # corrupt, the file is the tell-tale
+    if [ ! -f "${ZOPEN_PKGINSTALL}/${pkg}/${pkg}/.active" ]; then
+      printInfo "${NC}${YELLOW}- Package '${pkg}' is not installed${NC}"
     else
-      printInfo "- Away to remove '${pkg}',"
-      if ! ${yesToPrompts}; then
-        while true; do
-          printInfo "- Do you want to continue? [y/n/a]"
-          read continueInstall < /dev/tty
-          case "${continueInstall}" in
-            "y") break;;
-            "n") mutexFree "zopen"; printInfo "Exiting..."; exit 0 ;;
-            "a") yesToPrompts=true; break;;
-            *) echo "?";;
-          esac
-        done
+     
+      if preReqList=$(checkIfPrereq "${pkg}"); then
+        printWarning "${pkg} is a runtime prerequiste of the following:\n$(echo "${preReqList}" | sed '$d')"
+        printWarning "Removing ${pkg} could result in broken packages"
+        if ! promptYesNoAlways "Continue removal of '${pkg}' ?" false; then
+          mutexFree "zopen"; 
+          printInfo "Exiting..."; 
+         exit 0
+        fi
+      else
+        if ! promptYesNoAlways "Confirm removal of '${pkg}'?" ${yesToPrompts}; then
+          mutexFree "zopen"; 
+          printInfo "Exiting..."; 
+          exit 0
+        fi
       fi
-      printInfo "- Unmeshing from system"
+      printInfo "- Unmeshing '${pkg}' from system"
       version="unknown"
       if [ -e "${ZOPEN_PKGINSTALL}/${pkg}/${pkg}/.releaseinfo" ]; then
         version=$(cat "${ZOPEN_PKGINSTALL}/${pkg}/${pkg}/.releaseinfo")
@@ -83,27 +93,34 @@ removePackages()
         if ${purge}; then
           printInfo "- Purging package"
           printVerbose "Checking if we are currently in a directory that is to be purged"
-          [ "${PWD##"${ZOPEN_PKGINSTALL}"/"${pkg}"/"${pkg}"}" != "${PWD}" ] && cd ${ZOPEN_PKGINSTALL}
-          rm -rf $(cd "${ZOPEN_PKGINSTALL}/${pkg}/${pkg}" && pwd -P)
-          syslog ${ZOPEN_LOG_PATH}/audit.log ${LOG_A} "${CAT_PACKAGE},${CAT_REMOVE}" "REMOVE" "removePackage" "Purging package:'${needle};version:${version};"
+          [ "${PWD##"${ZOPEN_PKGINSTALL}"/"${pkg}"/"${pkg}"}" != "${PWD}" ] && cd "${ZOPEN_PKGINSTALL}"
+          rm -rf "$(cd "${ZOPEN_PKGINSTALL}/${pkg}/${pkg}" && pwd -P)"
+          syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_PACKAGE},${CAT_REMOVE}" "REMOVE" "removePackage" "Purging package:'${needle};version:${version};"
           registerRemove "${pkg}" "${version}"
         else
-          printInfo "- Removing metadata file to mark uninstall"
+          printVerbose "- Removing metadata file to mark uninstall"
           rm -f "${ZOPEN_PKGINSTALL}/${pkg}/${pkg}/.active"
-          printInfo "- Breaking link from current to versioned"
+          printVerbose "- Breaking link from current to versioned"
           rm -f "${ZOPEN_PKGINSTALL}/${pkg}/${pkg}"
         fi
         printVerbose "Main symlink removed, removing dangling symlinks"
         unsymlinkFromSystem "${pkg}" "${ZOPEN_ROOTFS}" "${installedlinksfile}"
       fi
 
-      printInfo "- Removing profiled entry"
+      printVerbose "- Removing profiled entry"
       [ -d "${ZOPEN_ROOTFS}/etc/profiled/${pkg}" ] && rm -rf "${ZOPEN_ROOTFS}/etc/profiled/${pkg}"
 
+      removeFromInstallTracker "${pkg}"
+      processActionScripts "removePost"
       syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_PACKAGE},${CAT_REMOVE}" "REMOVE" "removePackage" "Removed package:'${needle};version:${version};"
+      touch "${runpostTxnActionScripts}"
       printInfo "${NC}${GREEN}Successfully removed: ${pkg}${NC}"
     fi
   done
+  if [ -e "${runpostTxnActionScripts}" ]; then 
+    processActionScripts "transactionPost" "mandb"; 
+    rm "${runpostTxnActionScripts}"  
+  fi
 }
 
 # Main code start here

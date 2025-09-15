@@ -1,0 +1,29 @@
+#!/bin/sh
+this="man-db"
+printVerbose "Running '${this}' script"
+fullScan=false
+while [ $# -gt 0 ]; do
+  case "$1" in
+    "mandb") fullScan=true ;;
+    *):;;
+  esac
+  shift
+done
+if ! $fullScan; then
+  # The option to run a full mandb scan was not passed; do not run scan
+  return 0
+fi
+
+if ! zopen list --installed | grep "^man-db\$"; then
+  return 0 # No man-db installed
+else
+  echo "- Updating man-db database after package changes..."
+  if ! mandbOut=$(mandb >/dev/null 2>&1); then
+    printSoftError "man-db update completed with non-zero return code."
+    printSoftError "Details: ${mandbOut}"
+    printSoftError "Re-run 'mandb' manually for additional information."
+    return 1
+  fi
+  echo "- Update of man-db complete."
+fi
+return 0
