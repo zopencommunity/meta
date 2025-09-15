@@ -733,5 +733,5 @@ fi
 git -C "${name}port" init --initial-branch=main; git -C "${name}port" add .
 printHeader "${name} project is ready! ${name}port/"
 printInfo "Review and update the CODEOWNERS, buildenv, patches and README.md files."
-
-
+printInfo "To build your project run: cd ${name}port; zopen build -vv"
+printInfo "Once you are ready to contribute the project, create an issue under https://github.com/zopencommunity/meta/issues/new?template=contribution.yml"
