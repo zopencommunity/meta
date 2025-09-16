@@ -54,6 +54,7 @@
 - 2024-05-30: [Update caddy-version to 2.8.1 from 2.7.6](https://github.com/zopencommunity/caddyport/pull/1) ❓
 
 ### ccacheport
+- 2025-09-15: [Update ccache-version to 4.12 from 4.11.3](https://github.com/zopencommunity/ccacheport/pull/2) ❌
 - 2025-05-26: [Update ccache-version to 4.11.3 from V.R.M](https://github.com/zopencommunity/ccacheport/pull/1) ❌
 
 ### chezmoiport
@@ -201,6 +202,7 @@
 - 2025-03-06: [Update ghcli-version to 2.68.1 from 2.67.0](https://github.com/zopencommunity/githubcliport/pull/47) ❌
 
 ### gitlabcliport
+- 2025-09-15: [Update glab-version to 1.69.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/40) ❌
 - 2025-09-05: [Update glab-version to 1.68.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/39) ❌
 - 2025-08-22: [Update glab-version to 1.67.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/38) ❌
 - 2025-07-29: [Update glab-version to 1.65.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/37) ❌
@@ -532,6 +534,7 @@
 - 2025-01-31: [Update tig-version to 2.5.11 from 2.5.9](https://github.com/zopencommunity/tigport/pull/9) ❌
 
 ### victoriametricsport
+- 2025-09-15: [Update victoriametrics-version to 1.126.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/37) ❌
 - 2025-09-04: [Update victoriametrics-version to 1.125.1 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/36) ❌
 - 2025-09-01: [Update victoriametrics-version to 1.125.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/35) ❌
 - 2025-08-22: [Update victoriametrics-version to 1.124.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/34) ❌
@@ -865,5 +868,5 @@
 ---
 
 
-> Last updated: 2025-09-15 06:09:49 EDT
+> Last updated: 2025-09-16 06:09:55 EDT
 
