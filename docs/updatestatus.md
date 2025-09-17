@@ -22,6 +22,7 @@
 - 2024-12-11: [Update bash-completion-version to 20060301 from V.R.M](https://github.com/zopencommunity/bash-completionport/pull/1) ❌
 
 ### buildkiteport
+- 2025-09-16: [Update buildkite-version to 3.106.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/72) ❌
 - 2025-09-11: [Update buildkite-version to 3.105.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/71) ❌
 - 2025-09-05: [Update buildkite-version to 3.104.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/70) ❌
 - 2025-08-07: [Update buildkite-version to 3.103.1 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/69) ❌
@@ -130,6 +131,7 @@
 - 2025-07-26: [Update doxygen-version to Release_1_14_0 from Release_1_13_2](https://github.com/zopencommunity/doxygenport/pull/10) ❌
 
 ### duckdbport
+- 2025-09-16: [Update duckdb-version to 1.4.0 from 0.9.2](https://github.com/zopencommunity/duckdbport/pull/28) ❌
 - 2025-07-08: [Update duckdb-version to 1.3.2 from 0.9.2](https://github.com/zopencommunity/duckdbport/pull/27) ❌
 - 2025-06-16: [Update duckdb-version to 1.3.1 from 0.9.2](https://github.com/zopencommunity/duckdbport/pull/26) ❌
 - 2025-05-22: [Update duckdb-version to 1.3.0 from 0.9.2](https://github.com/zopencommunity/duckdbport/pull/25) ❌
@@ -202,6 +204,7 @@
 - 2025-03-06: [Update ghcli-version to 2.68.1 from 2.67.0](https://github.com/zopencommunity/githubcliport/pull/47) ❌
 
 ### gitlabcliport
+- 2025-09-16: [Update glab-version to 1.71.2 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/41) ❌
 - 2025-09-15: [Update glab-version to 1.69.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/40) ❌
 - 2025-09-05: [Update glab-version to 1.68.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/39) ❌
 - 2025-08-22: [Update glab-version to 1.67.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/38) ❌
@@ -282,6 +285,7 @@
 - 2025-08-24: [Update groovy-version to 5.0.0 from 4.0.28](https://github.com/zopencommunity/groovyport/pull/20) ❌
 
 ### grpcport
+- 2025-09-16: [Update grpc-version to 1.75.0 from 1.73.0](https://github.com/zopencommunity/grpcport/pull/4) ❌
 - 2025-08-07: [Update grpc-version to 1.74.1 from 1.73.0](https://github.com/zopencommunity/grpcport/pull/3) ❌
 - 2025-07-24: [Update grpc-version to 1.74.0 from 1.73.0](https://github.com/zopencommunity/grpcport/pull/2) ❌
 - 2025-06-26: [Update grpc-version to 1.73.1 from 1.73.0](https://github.com/zopencommunity/grpcport/pull/1) ❌
@@ -320,9 +324,6 @@
 - 2025-03-01: [Update lazygit-version to 0.48.0 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/15) ✅
 - 2025-02-25: [Update lazygit-version to 0.47.2 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/14) ✅
 - 2025-02-22: [Update lazygit-version to 0.47.1 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/13) ✅
-
-### lessport
-- 2025-05-30: [Update less-version to 679 from 678](https://github.com/zopencommunity/lessport/pull/40) ❌
 
 ### libgdbmport
 - 2025-03-22: [Update libgdbm-version to 1.25 from 1.24](https://github.com/zopencommunity/libgdbmport/pull/10) ❌
@@ -435,7 +436,7 @@
 - 2024-10-24: [Update php-version to 8.3.13 from 8.2.13](https://github.com/zopencommunity/phpport/pull/26) ❌
 - 2024-10-02: [Update php-version to 8.3.12 from 8.2.13](https://github.com/zopencommunity/phpport/pull/25) ❌
 - 2024-08-30: [Update php-version to 8.3.11 from 8.2.13](https://github.com/zopencommunity/phpport/pull/23) ❌
-- 2024-08-01: [Update php-version to 8.3.10 from 8.2.13](https://github.com/zopencommunity/phpport/pull/22) ❌
+- 2024-08-01: [Update php-version to 8.3.10 from 8.2.13](https://github.com/zopencommunity/phpport/pull/22) ❓
 - 2024-07-05: [Update php-version to 8.3.9 from 8.2.13](https://github.com/zopencommunity/phpport/pull/21) ❓
 - 2024-06-06: [Update php-version to 8.3.8 from 8.2.13](https://github.com/zopencommunity/phpport/pull/20) ❓
 - 2024-05-09: [Update php-version to 8.3.7 from 8.2.13](https://github.com/zopencommunity/phpport/pull/19) ❓
@@ -540,17 +541,6 @@
 - 2025-08-22: [Update victoriametrics-version to 1.124.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/34) ❌
 - 2025-08-05: [Update victoriametrics-version to 1.123.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/33) ❌
 - 2025-07-21: [Update victoriametrics-version to 1.122.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/32) ❌
-
-### vimport
-- 2025-09-01: [Update vim-version to 9.1.1720 from 9.1.1710](https://github.com/zopencommunity/vimport/pull/139) ❌
-- 2025-08-28: [Update vim-version to 9.1.170 from 9.1.1690](https://github.com/zopencommunity/vimport/pull/136) ❌
-- 2025-08-24: [Update vim-version to 9.1.1680 from 9.1.1670](https://github.com/zopencommunity/vimport/pull/134) ❌
-- 2025-08-22: [Update vim-version to 9.1.1660 from 9.1.1590](https://github.com/zopencommunity/vimport/pull/132) ✅
-- 2025-08-07: [Update vim-version to 9.1.160 from 9.1.1590](https://github.com/zopencommunity/vimport/pull/131) ❌
-- 2025-07-18: [Update vim-version to 9.1.1560 from 9.1.1550](https://github.com/zopencommunity/vimport/pull/127) ❌
-- 2025-07-08: [Update vim-version to 9.1.1520 from 9.1.1510](https://github.com/zopencommunity/vimport/pull/123) ❌
-- 2025-07-03: [Update vim-version to 9.1.150 from 9.1.1500](https://github.com/zopencommunity/vimport/pull/121) ❌
-- 2025-06-29: [Update vim-version to 9.1.1490 from 9.1.1480](https://github.com/zopencommunity/vimport/pull/119) ❌
 
 ### xmltoport
 - 2024-10-10: [Update xmlto-version to 0.0.29 from 0.0.28](https://github.com/zopencommunity/xmltoport/pull/3) ❌
@@ -868,5 +858,5 @@
 ---
 
 
-> Last updated: 2025-09-16 06:09:55 EDT
+> Last updated: 2025-09-17 06:10:26 EDT
 

@@ -1,13 +1,13 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-09-16 06:14:22 EDT.*
+*Report generated on: 2025-09-17 06:15:01 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 271
-- **Total Current Lines of Code (LOC) in Patches:** 42,251
-- **Total Number of Current Patch Files:** 862
-- **Average Current Patch LOC per Project:** 155.91
+- **Total Current Lines of Code (LOC) in Patches:** 42,246
+- **Total Number of Current Patch Files:** 861
+- **Average Current Patch LOC per Project:** 155.89
 - **Average Current Patch Count per Project:** 3.18
 
 ### Historical Trends (All Projects)
@@ -34,7 +34,7 @@
 | [sudoport](#repo-sudoport) | 1,278 | +0 | 30 |
 | [coreutilsport](#repo-coreutilsport) | 1,169 | +0 | 18 |
 | [cmakeport](#repo-cmakeport) | 1,092 | +0 | 1 |
-| [gitport](#repo-gitport) | 1,065 | +0 | 32 |
+| [gitport](#repo-gitport) | 1,060 | -5 | 31 |
 | [grpcport](#repo-grpcport) | 1,017 | +0 | 8 |
 | [valgrindport](#repo-valgrindport) | 896 | +0 | 3 |
 | [alternativesport](#repo-alternativesport) | 838 | +0 | 1 |
@@ -766,8 +766,8 @@
 ## gitport
 
 - **Origin Date (First Commit):** 2022-05-25
-- **Current Patch LOC:** 1,065
-- **Current Patch Count:** 32
+- **Current Patch LOC:** 1,060
+- **Current Patch Count:** 31
 
 ### Historical Trends
 
@@ -788,15 +788,14 @@
 | `stable-patches/blame.c.patch` | `stable-patches` | 16 |
 | `stable-patches/builtin.h.patch` | `stable-patches` | 13 |
 | `stable-patches/combine-diff.c.patch` | `stable-patches` | 15 |
-| `stable-patches/config.c.patch` | `stable-patches` | 31 |
 | `stable-patches/config.mak.uname.patch` | `stable-patches` | 24 |
 | `stable-patches/configure.ac.patch` | `stable-patches` | 14 |
-| `stable-patches/convert.c.patch` | `stable-patches` | 142 |
+| `stable-patches/convert.c.patch` | `stable-patches` | 141 |
 | `stable-patches/copy.c.patch` | `stable-patches` | 14 |
 | `stable-patches/date.c.patch` | `stable-patches` | 23 |
 | `stable-patches/diff.c.patch` | `stable-patches` | 42 |
 | `stable-patches/entry.c.patch` | `stable-patches` | 77 |
-| `stable-patches/environment.c.patch` | `stable-patches` | 15 |
+| `stable-patches/environment.c.patch` | `stable-patches` | 42 |
 | `stable-patches/environment.h.patch` | `stable-patches` | 14 |
 | `stable-patches/exec-cmd.c.patch` | `stable-patches` | 15 |
 | `stable-patches/generate-perl.sh.patch` | `stable-patches` | 13 |

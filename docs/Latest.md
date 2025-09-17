@@ -49,12 +49,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="crush" data-searchable-text="crush Skipped N/A STABLE_crush_3728 AI coding agent for your favourite terminal  ai port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="crush" data-searchable-text="crush Skipped N/A STABLE_crush_3733 AI coding agent for your favourite terminal  ai port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/crushport" target="_blank" rel="noopener noreferrer">crush</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/crushport/releases/download/STABLE_crushport_3728/crush-v0.8.1.20250914_152930.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_crush_3728</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/crushport/releases/download/STABLE_crushport_3733/crush-v0.8.2.20250916_183306.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_crush_3733</a></div>
     <div class="tool-desc" title="AI coding agent for your favourite terminal ">AI coding agent for your favourite terminal </div>
   </div>
 </div>
@@ -849,12 +849,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3730 A TUI editor development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3731 A TUI editor development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/vimport" target="_blank" rel="noopener noreferrer">vim</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3730/vim-v9.1.1760.20250915_152853.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3730</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3731/vim-v9.1.1765.20250916_114748.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3731</a></div>
     <div class="tool-desc" title="A TUI editor">A TUI editor</div>
   </div>
 </div>
@@ -1157,12 +1157,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3730 A TUI editor editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3731 A TUI editor editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/vimport" target="_blank" rel="noopener noreferrer">vim</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3730/vim-v9.1.1760.20250915_152853.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3730</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3731/vim-v9.1.1765.20250916_114748.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3731</a></div>
     <div class="tool-desc" title="A TUI editor">A TUI editor</div>
   </div>
 </div>
@@ -2333,12 +2333,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="openssl" data-searchable-text="openssl Blue 99.7% STABLE_openssl_3702 A cryptographic library uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="openssl" data-searchable-text="openssl Blue 99.7% STABLE_openssl_3732 A cryptographic library uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/opensslport" target="_blank" rel="noopener noreferrer">openssl</a></strong></div>
     <div class="tool-status">Status: Blue</div>
     <div class="tool-test">Test: 99.7%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/opensslport/releases/download/STABLE_opensslport_3702/openssl-3.5.2.20250903_120438.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_openssl_3702</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/opensslport/releases/download/STABLE_opensslport_3732/openssl-3.5.3.20250916_173359.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_openssl_3732</a></div>
     <div class="tool-desc" title="A cryptographic library">A cryptographic library</div>
   </div>
 </div>
@@ -2449,12 +2449,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="crush" data-searchable-text="crush Skipped N/A STABLE_crush_3728 AI coding agent for your favourite terminal  utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="crush" data-searchable-text="crush Skipped N/A STABLE_crush_3733 AI coding agent for your favourite terminal  utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/crushport" target="_blank" rel="noopener noreferrer">crush</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/crushport/releases/download/STABLE_crushport_3728/crush-v0.8.1.20250914_152930.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_crush_3728</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/crushport/releases/download/STABLE_crushport_3733/crush-v0.8.2.20250916_183306.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_crush_3733</a></div>
     <div class="tool-desc" title="AI coding agent for your favourite terminal ">AI coding agent for your favourite terminal </div>
   </div>
 </div>
@@ -2952,4 +2952,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-09-16 06:15:52 UTC
+Last updated:  2025-09-17 06:16:32 UTC
