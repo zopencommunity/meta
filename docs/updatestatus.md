@@ -144,6 +144,7 @@
 - 2025-02-24: [Update emacs-version to 30.1 from 29.4](https://github.com/zopencommunity/emacsport/pull/11) ❌
 
 ### expatport
+- 2025-09-17: [Update expat-version to 2.7.2 from 2.5.0](https://github.com/zopencommunity/expatport/pull/18) ❌
 - 2025-03-28: [Update expat-version to 2.7.1 from 2.5.0](https://github.com/zopencommunity/expatport/pull/16) ❌
 - 2025-03-14: [Update expat-version to 2.7.0 from 2.5.0](https://github.com/zopencommunity/expatport/pull/15) ❌
 - 2024-11-07: [Update expat-version to 2.6.4 from 2.5.0](https://github.com/zopencommunity/expatport/pull/14) ❌
@@ -204,6 +205,7 @@
 - 2025-03-06: [Update ghcli-version to 2.68.1 from 2.67.0](https://github.com/zopencommunity/githubcliport/pull/47) ❌
 
 ### gitlabcliport
+- 2025-09-17: [Update glab-version to 1.72.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/42) ❓
 - 2025-09-16: [Update glab-version to 1.71.2 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/41) ❌
 - 2025-09-15: [Update glab-version to 1.69.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/40) ❌
 - 2025-09-05: [Update glab-version to 1.68.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/39) ❌
@@ -497,6 +499,7 @@
 - 2024-12-20: [Update tcl-version to 9.0.1 from 8.6.13](https://github.com/zopencommunity/tclport/pull/16) ✅
 
 ### terraformport
+- 2025-09-17: [Update terraform-version to 1.13.3 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/44) ❌
 - 2025-09-10: [Update terraform-version to 1.13.2 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/43) ❌
 - 2025-08-27: [Update terraform-version to 1.13.1 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/42) ❌
 - 2025-08-22: [Update terraform-version to 1.13.0 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/41) ❌
@@ -531,6 +534,7 @@
 - 2024-09-08: [Update texinfo-version to 7.1.1 from 6.8](https://github.com/zopencommunity/texinfoport/pull/21) ❌
 
 ### tigport
+- 2025-09-17: [Update tig-version to 2.6.0 from 2.5.10](https://github.com/zopencommunity/tigport/pull/11) ❌
 - 2025-02-07: [Update tig-version to 2.5.12 from 2.5.9](https://github.com/zopencommunity/tigport/pull/10) ❌
 - 2025-01-31: [Update tig-version to 2.5.11 from 2.5.9](https://github.com/zopencommunity/tigport/pull/9) ❌
 
@@ -858,5 +862,5 @@
 ---
 
 
-> Last updated: 2025-09-17 06:10:26 EDT
+> Last updated: 2025-09-18 06:10:07 EDT
 
