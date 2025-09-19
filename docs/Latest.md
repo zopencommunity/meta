@@ -49,12 +49,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="crush" data-searchable-text="crush Skipped N/A STABLE_crush_3736 AI coding agent for your favourite terminal  ai port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="crush" data-searchable-text="crush Skipped N/A STABLE_crush_3737 AI coding agent for your favourite terminal  ai port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/crushport" target="_blank" rel="noopener noreferrer">crush</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/crushport/releases/download/STABLE_crushport_3736/crush-v0.8.3.20250917_154140.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_crush_3736</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/crushport/releases/download/STABLE_crushport_3737/crush-v0.9.0.20250918_153928.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_crush_3737</a></div>
     <div class="tool-desc" title="AI coding agent for your favourite terminal ">AI coding agent for your favourite terminal </div>
   </div>
 </div>
@@ -489,12 +489,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="clang-format" data-searchable-text="clang-format Green 100.0% STABLE_clang-format_3722 development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="clang-format" data-searchable-text="clang-format Green 100.0% STABLE_clang-format_3739 development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/clang-formatport" target="_blank" rel="noopener noreferrer">clang-format</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/clang-formatport/releases/download/STABLE_clang-formatport_3722/llvm-project-llvmorg-21.1.1.20250910_163843.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_clang-format_3722</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/clang-formatport/releases/download/STABLE_clang-formatport_3739/clang-format.20250919_075836.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_clang-format_3739</a></div>
     <div class="tool-desc" title=""></div>
   </div>
 </div>
@@ -1421,6 +1421,16 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
+<div class="tool-item-filterable" data-package-name="libbsd" data-searchable-text="libbsd Green 100.0% STABLE_libbsd_2665 A library providing common BSD functions library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libbsdport" target="_blank" rel="noopener noreferrer">libbsd</a></strong></div>
+    <div class="tool-status">Status: Green</div>
+    <div class="tool-test">Test: 100.0%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/libbsdport/releases/download/STABLE_libbsdport_2665/libbsd-main.20241028_215810.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libbsd_2665</a></div>
+    <div class="tool-desc" title="A library providing common BSD functions">A library providing common BSD functions</div>
+  </div>
+</div>
+
 <div class="tool-item-filterable" data-package-name="libgcrypt" data-searchable-text="libgcrypt Green 100.0% STABLE_libgcrypt_3641 A general-purpose cryptographic library library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libgcryptport" target="_blank" rel="noopener noreferrer">libgcrypt</a></strong></div>
@@ -2253,16 +2263,6 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="libbsd" data-searchable-text="libbsd Green 100.0% STABLE_libbsd_2277 A library providing common BSD functions uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
-  <div class="tool-info-grid">
-    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libbsdport" target="_blank" rel="noopener noreferrer">libbsd</a></strong></div>
-    <div class="tool-status">Status: Green</div>
-    <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/libbsdport/releases/download/STABLE_libbsdport_2277/libbsd-main.20240527_070123.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libbsd_2277</a></div>
-    <div class="tool-desc" title="A library providing common BSD functions">A library providing common BSD functions</div>
-  </div>
-</div>
-
 <div class="tool-item-filterable" data-package-name="libserdes" data-searchable-text="libserdes Green 100.0% STABLE_libserdes_2932 A serialization/deserialization library uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libserdesport" target="_blank" rel="noopener noreferrer">libserdes</a></strong></div>
@@ -2449,12 +2449,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="crush" data-searchable-text="crush Skipped N/A STABLE_crush_3736 AI coding agent for your favourite terminal  utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="crush" data-searchable-text="crush Skipped N/A STABLE_crush_3737 AI coding agent for your favourite terminal  utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/crushport" target="_blank" rel="noopener noreferrer">crush</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/crushport/releases/download/STABLE_crushport_3736/crush-v0.8.3.20250917_154140.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_crush_3736</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/crushport/releases/download/STABLE_crushport_3737/crush-v0.9.0.20250918_153928.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_crush_3737</a></div>
     <div class="tool-desc" title="AI coding agent for your favourite terminal ">AI coding agent for your favourite terminal </div>
   </div>
 </div>
@@ -2489,12 +2489,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="fmt" data-searchable-text="fmt Blue 81.0% STABLE_fmt_3670 utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="fmt" data-searchable-text="fmt Blue 81.0% STABLE_fmt_3738 utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/fmtport" target="_blank" rel="noopener noreferrer">fmt</a></strong></div>
     <div class="tool-status">Status: Blue</div>
     <div class="tool-test">Test: 81.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/fmtport/releases/download/STABLE_fmtport_3670/fmt-11.2.0.20250821_055338.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_fmt_3670</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/fmtport/releases/download/STABLE_fmtport_3738/fmt-12.0.0.20250918_155237.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_fmt_3738</a></div>
     <div class="tool-desc" title=""></div>
   </div>
 </div>
@@ -2952,4 +2952,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-09-18 06:15:29 UTC
+Last updated:  2025-09-19 06:17:04 UTC

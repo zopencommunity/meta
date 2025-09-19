@@ -22,6 +22,7 @@
 - 2024-12-11: [Update bash-completion-version to 20060301 from V.R.M](https://github.com/zopencommunity/bash-completionport/pull/1) ❌
 
 ### buildkiteport
+- 2025-09-18: [Update buildkite-version to 3.107.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/73) ❌
 - 2025-09-16: [Update buildkite-version to 3.106.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/72) ❌
 - 2025-09-11: [Update buildkite-version to 3.105.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/71) ❌
 - 2025-09-05: [Update buildkite-version to 3.104.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/70) ❌
@@ -312,6 +313,7 @@
 - 2024-03-07: [Update kotlin-version to 1.9.23 from 1.9.22](https://github.com/zopencommunity/kotlinport/pull/3) ❓
 
 ### lazygitport
+- 2025-09-18: [Update lazygit-version to 0.55.1 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/28) ❌
 - 2025-09-06: [Update lazygit-version to 0.55.0 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/27) ❌
 - 2025-08-22: [Update lazygit-version to 0.54.2 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/26) ❌
 - 2025-08-06: [Update lazygit-version to 0.54.1 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/25) ❌
@@ -862,5 +864,5 @@
 ---
 
 
-> Last updated: 2025-09-18 06:10:07 EDT
+> Last updated: 2025-09-19 06:10:01 EDT
 
