@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-09-19 06:15:28 EDT.*
+*Report generated on: 2025-09-20 06:13:28 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 271
-- **Total Current Lines of Code (LOC) in Patches:** 42,246
-- **Total Number of Current Patch Files:** 861
-- **Average Current Patch LOC per Project:** 155.89
-- **Average Current Patch Count per Project:** 3.18
+- **Total Projects Analyzed:** 272
+- **Total Current Lines of Code (LOC) in Patches:** 41,820
+- **Total Number of Current Patch Files:** 842
+- **Average Current Patch LOC per Project:** 153.75
+- **Average Current Patch Count per Project:** 3.10
 
 ### Historical Trends (All Projects)
 
@@ -26,11 +26,11 @@
 |---|:---|:---|:---|
 | [stablediffusionport](#repo-stablediffusionport) | 2,905 | +0 | 6 |
 | [librdkafkaport](#repo-librdkafkaport) | 2,638 | +0 | 54 |
-| [rpmport](#repo-rpmport) | 1,841 | +0 | 45 |
 | [llamacppport](#repo-llamacppport) | 1,780 | +0 | 37 |
 | [bashport](#repo-bashport) | 1,584 | -2,842 | 25 |
 | [gpgport](#repo-gpgport) | 1,484 | +0 | 30 |
 | [libuvport](#repo-libuvport) | 1,462 | +0 | 26 |
+| [rpmport](#repo-rpmport) | 1,415 | -426 | 26 |
 | [sudoport](#repo-sudoport) | 1,278 | +0 | 30 |
 | [coreutilsport](#repo-coreutilsport) | 1,169 | +0 | 18 |
 | [cmakeport](#repo-cmakeport) | 1,092 | +0 | 1 |
@@ -295,6 +295,7 @@
 | [clang-formatport](#repo-clang-formatport) | 0 | +0 | 0 |
 | [crushport](#repo-crushport) | 0 | +0 | 0 |
 | [dnf5port](#repo-dnf5port) | 0 | +0 | 0 |
+| [clang-tidyport](#repo-clang-tidyport) | 0 | N/A | 0 |
 
 ---
 
@@ -395,70 +396,6 @@
 | `patches/tests/0146-metadata_mock.c.patch` | `patches` | 13 |
 | `patches/tests/sockem.c.patch` | `patches` | 17 |
 | `patches/tests/sockem_ctrl.h.patch` | `patches` | 16 |
-
----
-
-<a id="repo-rpmport"></a>
-## rpmport
-
-- **Origin Date (First Commit):** 2025-06-26
-- **Current Patch LOC:** 1,841
-- **Current Patch Count:** 45
-
-### Historical Trends
-
-![LOC Trend for rpmport](images/upstream/rpmport_current_loc_trend.png)
-![Count Trend for rpmport](images/upstream/rpmport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/CMakeLists.txt.patch` | `patches` | 58 |
-| `patches/build_CMakeLists.txt.patch` | `patches` | 41 |
-| `patches/build_pack.cc.patch` | `patches` | 23 |
-| `patches/build_rpmfc.cc.patch` | `patches` | 13 |
-| `patches/config.h.in.patch` | `patches` | 9 |
-| `patches/include_rpm_CMakeLists.txt.patch` | `patches` | 12 |
-| `patches/include_rpm_argv.h.patch` | `patches` | 22 |
-| `patches/include_rpm_flock_compat.h.patch` | `patches` | 20 |
-| `patches/include_rpm_portable_remove_all.h.patch` | `patches` | 51 |
-| `patches/include_rpm_progname_fallback.c.patch` | `patches` | 44 |
-| `patches/include_rpm_progname_fallback.h.patch` | `patches` | 15 |
-| `patches/include_rpm_stpcpy_custom.h.patch` | `patches` | 17 |
-| `patches/lib_CMakeLists.txt.patch` | `patches` | 20 |
-| `patches/lib_backend_ndb_rpmidx.c.patch` | `patches` | 43 |
-| `patches/lib_backend_ndb_rpmpkg.c.patch` | `patches` | 12 |
-| `patches/lib_backend_ndb_rpmxdb.c.patch` | `patches` | 46 |
-| `patches/lib_fsm.cc.patch` | `patches` | 595 |
-| `patches/lib_headerfmt.cc.patch` | `patches` | 14 |
-| `patches/lib_keystore.cc.patch` | `patches` | 45 |
-| `patches/lib_poptALL.cc.patch` | `patches` | 13 |
-| `patches/lib_progname_fallback.c.patch` | `patches` | 44 |
-| `patches/lib_progname_fallback.h.patch` | `patches` | 15 |
-| `patches/lib_psm.cc.patch` | `patches` | 35 |
-| `patches/lib_rpmchecksig.cc.patch` | `patches` | 23 |
-| `patches/lib_rpminstall.cc.patch` | `patches` | 13 |
-| `patches/lib_rpmug.cc.patch` | `patches` | 14 |
-| `patches/lib_transaction.cc.patch` | `patches` | 28 |
-| `patches/macros.in.patch` | `patches` | 60 |
-| `patches/misc_CMakeLists.txt.patch` | `patches` | 9 |
-| `patches/misc_fts.c.patch` | `patches` | 67 |
-| `patches/misc_system.h.patch` | `patches` | 33 |
-| `patches/rpmio_CMakeLists.txt.patch` | `patches` | 89 |
-| `patches/rpmio_argv.cc.patch` | `patches` | 13 |
-| `patches/rpmio_lposix.cc.patch` | `patches` | 28 |
-| `patches/rpmio_macro.cc.patch` | `patches` | 57 |
-| `patches/rpmio_rpmglob.cc.patch` | `patches` | 20 |
-| `patches/rpmio_rpmlog.cc.patch` | `patches` | 25 |
-| `patches/rpmio_rpmlua.cc.patch` | `patches` | 13 |
-| `patches/rpmio_rpmsq.cc.patch` | `patches` | 13 |
-| `patches/rpmio_rpmstrpool.cc.patch` | `patches` | 25 |
-| `patches/rpmio_rpmver.cc.patch` | `patches` | 12 |
-| `patches/sign_CMakeLists.txt.patch` | `patches` | 10 |
-| `patches/sign_rpmgensig.cc.patch` | `patches` | 13 |
-| `patches/tools_CMakeLists.txt.patch` | `patches` | 47 |
-| `patches/tools_rpm.cc.patch` | `patches` | 22 |
 
 ---
 
@@ -653,6 +590,51 @@
 | `stable-patches/test/test-list.h.patch` | `stable-patches` | 20 |
 | `stable-patches/test/test-spawn.c.patch` | `stable-patches` | 59 |
 | `stable-patches/test/test-thread-priority.c.patch` | `stable-patches` | 23 |
+
+---
+
+<a id="repo-rpmport"></a>
+## rpmport
+
+- **Origin Date (First Commit):** 2025-06-26
+- **Current Patch LOC:** 1,415
+- **Current Patch Count:** 26
+
+### Historical Trends
+
+![LOC Trend for rpmport](images/upstream/rpmport_current_loc_trend.png)
+![Count Trend for rpmport](images/upstream/rpmport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/CMakeLists.txt.patch` | `patches` | 69 |
+| `patches/build_CMakeLists.txt.patch` | `patches` | 41 |
+| `patches/build_rpmfc.cc.patch` | `patches` | 13 |
+| `patches/lib_CMakeLists.txt.patch` | `patches` | 12 |
+| `patches/lib_backend_ndb_rpmidx.c.patch` | `patches` | 43 |
+| `patches/lib_backend_ndb_rpmxdb.c.patch` | `patches` | 46 |
+| `patches/lib_fsm.cc.patch` | `patches` | 511 |
+| `patches/lib_headerfmt.cc.patch` | `patches` | 28 |
+| `patches/lib_keystore.cc.patch` | `patches` | 45 |
+| `patches/lib_rpmrc.cc.patch` | `patches` | 18 |
+| `patches/lib_rpmug.cc.patch` | `patches` | 28 |
+| `patches/lib_transaction.cc.patch` | `patches` | 28 |
+| `patches/macros.in.patch` | `patches` | 69 |
+| `patches/misc_fts.c.patch` | `patches` | 67 |
+| `patches/misc_system.h.patch` | `patches` | 33 |
+| `patches/rpmio_CMakeLists.txt.patch` | `patches` | 89 |
+| `patches/rpmio_lposix.cc.patch` | `patches` | 28 |
+| `patches/rpmio_macro.cc.patch` | `patches` | 57 |
+| `patches/rpmio_rpmglob.cc.patch` | `patches` | 20 |
+| `patches/rpmio_rpmlog.cc.patch` | `patches` | 41 |
+| `patches/rpmio_rpmsq.cc.patch` | `patches` | 13 |
+| `patches/rpmio_rpmstrpool.cc.patch` | `patches` | 25 |
+| `patches/rpmrc.in.patch` | `patches` | 12 |
+| `patches/scripts.patch` | `patches` | 22 |
+| `patches/sign_CMakeLists.txt.patch` | `patches` | 10 |
+| `patches/tools_CMakeLists.txt.patch` | `patches` | 47 |
 
 ---
 
@@ -6192,6 +6174,24 @@
 ## dnf5port
 
 - **Origin Date (First Commit):** 2025-08-21
+- **Current Patch LOC:** 0
+- **Current Patch Count:** 0
+
+### Historical Trends
+
+*(Patch LOC trend graph not generated)*
+*(Patch count trend graph not generated)*
+
+### Current Patch Details
+
+*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
+
+---
+
+<a id="repo-clang-tidyport"></a>
+## clang-tidyport
+
+- **Origin Date (First Commit):** Unknown
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 

@@ -227,6 +227,7 @@
 - 2025-02-14: [Update glab-version to 1.53.0 from 1.52.0](https://github.com/zopencommunity/gitlabcliport/pull/23) ✅
 
 ### gitlab-runnerport
+- 2025-09-19: [Update gitlab-runner-version to 18.4.0 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/51) ❌
 - 2025-09-05: [Update gitlab-runner-version to 18.3.1 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/50) ❌
 - 2025-08-22: [Update gitlab-runner-version to 18.3.0 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/49) ❌
 - 2025-07-28: [Update gitlab-runner-version to 18.2.1 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/48) ❌
@@ -328,6 +329,9 @@
 - 2025-03-01: [Update lazygit-version to 0.48.0 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/15) ✅
 - 2025-02-25: [Update lazygit-version to 0.47.2 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/14) ✅
 - 2025-02-22: [Update lazygit-version to 0.47.1 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/13) ✅
+
+### lessport
+- 2025-09-19: [Update less-version to 684 from 683](https://github.com/zopencommunity/lessport/pull/42) ❌
 
 ### libgdbmport
 - 2025-03-22: [Update libgdbm-version to 1.25 from 1.24](https://github.com/zopencommunity/libgdbmport/pull/10) ❌
@@ -603,6 +607,7 @@
 - ✅ chezmoiport - [![Bump Status](https://github.com/zopencommunity/chezmoiport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/chezmoiport/actions/workflows/bump.yml)
 - ✅ cjsonport - [![Bump Status](https://github.com/zopencommunity/cjsonport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/cjsonport/actions/workflows/bump.yml)
 - ✅ clang-formatport - [![Bump Status](https://github.com/zopencommunity/clang-formatport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/clang-formatport/actions/workflows/bump.yml)
+- ❌ clang-tidyport - Workflow not configured
 - ✅ cmakeport - [![Bump Status](https://github.com/zopencommunity/cmakeport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/cmakeport/actions/workflows/bump.yml)
 - ❌ collateral - Workflow not configured
 - ✅ conanport - [![Bump Status](https://github.com/zopencommunity/conanport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/conanport/actions/workflows/bump.yml)
@@ -859,10 +864,10 @@
 
 </details>
 
-**Summary:** 232 active | 55 missing
+**Summary:** 232 active | 56 missing
 
 ---
 
 
-> Last updated: 2025-09-19 06:10:01 EDT
+> Last updated: 2025-09-20 06:08:29 EDT
 

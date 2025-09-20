@@ -257,12 +257,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="rpm" data-searchable-text="rpm Green 100.0% STABLE_rpm_3710 The RPM Package Manager (RPM) is a powerful package management system capable of building computer software from source into easily distributable packages, installing, updating and uninstalling packaged software core port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="rpm" data-searchable-text="rpm Green 100.0% STABLE_rpm_3741 The RPM Package Manager (RPM) is a powerful package management system capable of building computer software from source into easily distributable packages, installing, updating and uninstalling packaged software core port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/rpmport" target="_blank" rel="noopener noreferrer">rpm</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/rpmport/releases/download/STABLE_rpmport_3710/rpm-5.99.91.20250908_053306.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_rpm_3710</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/rpmport/releases/download/STABLE_rpmport_3741/rpm-5.99.91.20250919_122615.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_rpm_3741</a></div>
     <div class="tool-desc" title="The RPM Package Manager (RPM) is a powerful package management system capable of building computer software from source into easily distributable packages, installing, updating and uninstalling packaged software">The RPM Package Manager (RPM) is a powerful package management system capable of building computer software from source into easily distributable packages, installing, updating and uninstalling packaged software</div>
   </div>
 </div>
@@ -2243,12 +2243,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="jq" data-searchable-text="jq Blue 88.9% STABLE_jq_3734 A port of the JQ command-line JSON processor uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="jq" data-searchable-text="jq Blue 88.9% STABLE_jq_3742 A port of the JQ command-line JSON processor uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/jqport" target="_blank" rel="noopener noreferrer">jq</a></strong></div>
     <div class="tool-status">Status: Blue</div>
     <div class="tool-test">Test: 88.9%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/jqport/releases/download/STABLE_jqport_3734/jq-jq-1.8.1.20250917_115104.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_jq_3734</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/jqport/releases/download/STABLE_jqport_3742/jq-jq-1.8.1.20250919_125054.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_jq_3742</a></div>
     <div class="tool-desc" title="A port of the JQ command-line JSON processor">A port of the JQ command-line JSON processor</div>
   </div>
 </div>
@@ -2489,12 +2489,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="fmt" data-searchable-text="fmt Blue 81.0% STABLE_fmt_3738 utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="fmt" data-searchable-text="fmt Blue 81.0% STABLE_fmt_3743 utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/fmtport" target="_blank" rel="noopener noreferrer">fmt</a></strong></div>
     <div class="tool-status">Status: Blue</div>
     <div class="tool-test">Test: 81.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/fmtport/releases/download/STABLE_fmtport_3738/fmt-12.0.0.20250918_155237.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_fmt_3738</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/fmtport/releases/download/STABLE_fmtport_3743/fmt-12.0.0.20250919_144147.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_fmt_3743</a></div>
     <div class="tool-desc" title=""></div>
   </div>
 </div>
@@ -2729,12 +2729,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="rpm" data-searchable-text="rpm Green 100.0% STABLE_rpm_3710 The RPM Package Manager (RPM) is a powerful package management system capable of building computer software from source into easily distributable packages, installing, updating and uninstalling packaged software utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="rpm" data-searchable-text="rpm Green 100.0% STABLE_rpm_3741 The RPM Package Manager (RPM) is a powerful package management system capable of building computer software from source into easily distributable packages, installing, updating and uninstalling packaged software utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/rpmport" target="_blank" rel="noopener noreferrer">rpm</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/rpmport/releases/download/STABLE_rpmport_3710/rpm-5.99.91.20250908_053306.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_rpm_3710</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/rpmport/releases/download/STABLE_rpmport_3741/rpm-5.99.91.20250919_122615.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_rpm_3741</a></div>
     <div class="tool-desc" title="The RPM Package Manager (RPM) is a powerful package management system capable of building computer software from source into easily distributable packages, installing, updating and uninstalling packaged software">The RPM Package Manager (RPM) is a powerful package management system capable of building computer software from source into easily distributable packages, installing, updating and uninstalling packaged software</div>
   </div>
 </div>
@@ -2952,4 +2952,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-09-19 06:17:04 UTC
+Last updated:  2025-09-20 06:15:07 UTC
