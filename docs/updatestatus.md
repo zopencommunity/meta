@@ -191,6 +191,7 @@
 - 2023-11-16: [Update gettext-version to 0.22.3 from 0.21](https://github.com/zopencommunity/gettextport/pull/23) ❓
 
 ### ginport
+- 2025-09-20: [Update gin-version to 1.11.0 from 1.10.1](https://github.com/zopencommunity/ginport/pull/7) ❌
 - 2024-06-08: [Update gin-version to 1.10.0 from 1.9.1](https://github.com/zopencommunity/ginport/pull/2) ❌
 
 ### git-extrasport
@@ -869,5 +870,5 @@
 ---
 
 
-> Last updated: 2025-09-20 06:08:29 EDT
+> Last updated: 2025-09-21 06:08:17 EDT
 
