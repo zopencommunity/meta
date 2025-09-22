@@ -412,7 +412,7 @@
 - 2024-10-02: [Update osv-scanner-version to 1.9.0 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/14) ❌
 - 2024-09-11: [Update osv-scanner-version to 1.8.5 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/12) ❌
 - 2024-08-22: [Update osv-scanner-version to 1.8.4 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/11) ❌
-- 2024-08-07: [Update osv-scanner-version to 1.8.3 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/10) ✅
+- 2024-08-07: [Update osv-scanner-version to 1.8.3 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/10) ❓
 - 2024-07-10: [Update osv-scanner-version to 1.8.2 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/9) ❓
 - 2024-06-21: [Update osv-scanner-version to 1.8.1 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/8) ❓
 - 2024-06-20: [Update osv-scanner-version to 1.8.0 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/7) ❓
@@ -528,7 +528,7 @@
 - 2024-10-03: [Update terraform-version to 1.9.7 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/24) ❌
 - 2024-09-18: [Update terraform-version to 1.9.6 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/22) ❌
 - 2024-08-21: [Update terraform-version to 1.9.5 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/21) ❌
-- 2024-08-07: [Update terraform-version to 1.9.4 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/20) ❌
+- 2024-08-07: [Update terraform-version to 1.9.4 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/20) ❓
 - 2024-07-25: [Update terraform-version to 1.9.3 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/19) ❓
 - 2024-07-10: [Update terraform-version to 1.9.2 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/18) ❓
 - 2024-07-03: [Update terraform-version to 1.9.1 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/17) ❓
@@ -870,5 +870,5 @@
 ---
 
 
-> Last updated: 2025-09-21 06:08:17 EDT
+> Last updated: 2025-09-22 06:10:46 EDT
 
