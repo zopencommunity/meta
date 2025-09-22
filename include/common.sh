@@ -1756,26 +1756,6 @@ isURLReachable() {
   fi
 }
 
-checkAvailableSize()
-{
-
-  package="$1"
-  packageSize="$2"
-  printInfo "- Checking available size to install ${package}."
-
-  printDebug "Package Size: ${packageSize} bytes"
-  packageSize=$(echo "scale=2; ${packageSize} / 1024" | bc)
-  printDebug "Package Size: ${packageSize} k"
-  partitionSize=$(/bin/df -k . | tail -1 | awk '{print $3}' | cut -f1 -d '/')
-  printDebug "Partition Size: ${partitionSize}k [free on '$(pwd -P)']"
-
-  if [ 1 -eq "$(echo "${packageSize} > ${partitionSize}" | bc)" ]; then
-    printError "Not enough space in partition."
-  fi
-  printInfo "- Enough space to install ${package}. Proceeding with installation."
-  return 0
-}
-
 promptYesOrNo() {
   message="$1"
   skip=$2
@@ -2176,7 +2156,7 @@ addToInstallGraph(){
   installtype=$1 && shift
   invalidPortAssetFile=$1 && shift
   pkgList="$1"
-  printDebug "Adding pkgList to install graph"
+  printDebug "Adding ${pkgList} to install graph"
   for portRequested in ${pkgList}; do
     if ! getPortMetaData "${portRequested}" "${invalidPortAssetFile}"; then
       continue
@@ -2320,19 +2300,25 @@ spaceValidate(){
   cacheBytes=$1
   packageBytes=$2
 
+  skip_size_check=$(jq -re '.skip_size_check' "${ZOPEN_JSON_CONFIG}")
+  if "${skip_size_check}"; then
+    printVerbose "Skipping size check due to skip_size_check=${skip_size_check}"
+    return
+  fi
+
   if ${reinstall}; then
     # During a reinstall, the existing package size should remain constant as the
     # package should overwrite the existing with the same files. However
     # there might be a need to download the package into the cache - if
     # autocacheclean is active, then this should be temporary; if not, then the
-    # cache will grow - infrom the user either way
+    # cache will grow - inform the user either way
     printVerbose "Reinstall of package, so package file size delta should be 0!"
     spaceRequiredMB=$(echo "scale=0; (${cacheBytes}) / (1024 * 1024)" | bc)
     spaceRequiredKb=$(( cacheBytes / 1024 ))
     if ! isCacheClean=$(zopen config --get autocacheclean); then
       printError "Could not determine autocacheclean status"
     fi
-    if [ "${isCacheClean}" -eq 1 ]; then
+    if ${isCacheClean}; then
       printInfo "During this operation, ${spaceRequiredMB} MB of disk space will be used."
     else
       printInfo "After this operation, ${spaceRequiredMB} MB of additional cache will be used."
@@ -2555,7 +2541,7 @@ installFromPax()
 
   if ! processActionScripts "installPre" "${name}" "${metadatafile}" "${pax}"; then
     skip_broken=$(jq -re '.skip_broken' "${ZOPEN_JSON_CONFIG}")
-    if [ "${skip_broken}" -ne 1 ]; then
+    if "${skip_broken}"; then
       printError "Failed installation pre-requisite check(s) for '${name}'. Correct previous errors and retry command"
     fi
     printSoftError "Skipping package '${name}' due to failed pre-requisite check(s)"
@@ -2944,6 +2930,30 @@ formattedFileSize()
     } printf "%.3f%s\n", num, unit;
   }'
 }
+
+# Used to perform validation of config values. Legacy
+# values might use 0:1 or true:false so handle both,
+# ignoring case
+isFalse()
+{
+  case "$1" in
+    0|[Ff][Aa][Ll][Ss][Ee] ) return 0;;
+    *) return 1;;
+  esac
+}
+isTrue()
+{
+  case "$1" in
+    1|[Tt][Rr][Uu][Ee] ) return 0;;
+    *) return 1;;
+  esac
+}
+
+# Main code
+
+
+# shellcheck disable=SC1091
+# shellcheck disable=SC2086
 . ${INCDIR}/analytics.sh
 
 zopenInitialize

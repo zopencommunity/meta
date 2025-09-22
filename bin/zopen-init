@@ -455,13 +455,13 @@ generateJsonConfiguration()
     if ! releaseLine=$(jqw -r '.release_line' "${jsonConfig}"); then
       return 4
     fi
-    rm_fileprocs=$(jqw -r '.num_rm_procs' "${jsonConfig}")
     if [ -z "${OVERRIDE_ZOS_TOOLS}" ] && jqw -er ".override_zos_tools" "$jsonConfig" >/dev/null; then
       OVERRIDE_ZOS_TOOLS=$(jqw -r '.override_zos_tools' "$jsonConfig")
     fi
     autocacheclean=$(jqw -r '.autocacheclean' "${jsonConfig}")
     autopkgpurge=$(jqw -r '.autopkgpurge' "${jsonConfig}")
     skip_broken=$(jqw -r '.skip_broken' "${jsonConfig}")
+    skip_size_check=$(jqw -r '.skip_size_check' "${jsonConfig}")
   fi
 
   if ${releaselineDev}; then
@@ -478,30 +478,38 @@ generateJsonConfiguration()
        releaseLine="STABLE"
        ;;
   esac
-  case "${autocacheclean:=1}" in
-    "0"|"1") :;; # Valid value
-    "null") autocacheclean=1  # Default to true; jq found no entry (new config)
+  case "${autocacheclean:=true}" in
+    "0"|"1"|[Tt][Rr][Uu][Ee]|[Ff][Aa][Ll][Ss][Ee]) :;; # Valid value
+    "null") autocacheclean="true"  # Default to true; jq found no entry (new config)
         ;;
-    *) showConfigParmWarning "autocacheclean" "${autocacheclean}" "0|1" "1"
-       autocacheclean=1
+    *) showConfigParmWarning "autocacheclean" "${autocacheclean}" "true|false" "true"
+       autocacheclean=true
 
        ;;
   esac
-  case "${autopkgpurge:=0}" in
-    "0"|"1") :;; # Valid value
-    "null")autopkgpurge=0  # Default to false; jq found no entry (new config)
+  case "${autopkgpurge:=false}" in
+    "0"|"1"|[Tt][Rr][Uu][Ee]|[Ff][Aa][Ll][Ss][Ee]) :;; # Valid value
+    "null")autopkgpurge=false  # Default to false; jq found no entry (new config)
         ;;
-    *) showConfigParmWarning "autopkgpurge" "${autopkgpurge}" "0|1" "0"
-       autopkgpurge=0
+    *) showConfigParmWarning "autopkgpurge" "${autopkgpurge}" "true|false" "false"
+       autopkgpurge=false
        ;;
   esac
-  case "${skip_broken:=0}" in
-    "0"|"1") :;; # Valid value
-    "null") skip_broken=0 # Default to false
+  case "${skip_broken:=false}" in
+    "0"|"1"|[Tt][Rr][Uu][Ee]|[Ff][Aa][Ll][Ss][Ee]) :;; # Valid value
+    "null") skip_broken=false # Default to false
         ;;
-    *) showConfigParmWarning "skip_broken" "${skip_broken}" "0|1" "0"
-       skip_broken=0
+    *) showConfigParmWarning "skip_broken" "${skip_broken}" "true|false" "false"
+       skip_broken=false
        ;;
+  esac
+  case "${skip_size_check:=false}" in
+    "0"|"1"|[Tt][Rr][Uu][Ee]|[Ff][Aa][Ll][Ss][Ee]) :;; # Valid value
+    "null") skip_size_check=false # Default to false
+        ;;
+    *)  showConfigParmWarning "skip_size_check" "${skip_size_check}" "true|false" "false"
+        skip_size_check=false
+        ;;
   esac
   case "${OVERRIDE_ZOS_TOOLS}" in
     "true"|"false") :;; # Valid value
@@ -514,12 +522,12 @@ generateJsonConfiguration()
     cat <<zz > "${jsonConfig}"
     {
       "release_line": "${releaseLine:-STABLE}",
-      "num_rm_procs": ${rm_fileprocs:-5},
       "is_collecting_stats": ${isCollectingStats},
       "override_zos_tools": ${OVERRIDE_ZOS_TOOLS},
       "autocacheclean": ${autocacheclean},
       "autopkgpurge": ${autopkgpurge},
-      "skip_broken": ${skip_broken}
+      "skip_broken": ${skip_broken},
+      "skip_size_check": ${skip_size_check}
     }
 zz
   else
@@ -529,8 +537,18 @@ zz
     if ! jqw --arg releaseLine "${releaseLine}" \
         --arg isoverrideZOSTools "${OVERRIDE_ZOS_TOOLS}" \
         --arg isCollectingStats "${isCollectingStats}" \
-                ".release_line = \$releaseLine | .override_zos_tools = \$isoverrideZOSTools | .is_collecting_stats = \$isCollectingStats" \
-                "${jsonConfig}" > "${jsonConfigWorking}"; then
+        --arg autocacheclean "${autocacheclean}" \
+        --arg autopkgpurge "${autopkgpurge}" \
+        --arg skip_broken "${skip_broken}" \
+        --arg skip_size_check "${skip_size_check}" \
+                ".release_line = \$releaseLine |
+                 .override_zos_tools = \$isoverrideZOSTools |
+                 .is_collecting_stats = \$isCollectingStats
+                 .autocacheclean = \$autocacheclean |
+                 .autopkgpurge = \$autopkgpurge |
+                 .skip_broken = \$skip_broken |
+                 .skip_size_check = \$skip_size_check 
+          " "${jsonConfig}" > "${jsonConfigWorking}"; then
       printError "Errors updating existing configuration file. See previous errors for more information and retry command."
     fi
     mv -f "${jsonConfigWorking}" "${jsonConfig}"

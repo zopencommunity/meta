@@ -4,20 +4,20 @@ printVerbose "Running '${this}' script"
 if type zopen-config-helper >/dev/null 2>&1; then
   isactive=$(zopen-config-helper --get autocacheclean)
 else
-  isactive=1 # Default to true
+  isactive=true # Default to true
 fi
-case "${isactive}" in
-  0 ) :;; # Take no action
-  1 ) echo "- Cleaning install cache..."
-      (zopen clean --cache >/dev/null 2>&1)
-      echo "- Cache cleaned."
-      ;;
-  *) printWarning "Invalid value '${isactive}' for autocacheclean config parameter [should be 0 or 1]."
-     if type zopen-config-helper >/dev/null 2>&1; then
-       printWarning "Run zopen config --set autocacheclean [0|1] to update configuration"
-     else
-       printWarning "Update zopen configuration file to contain a valid value for parameter 'autocacheclean'"
-     fi
-     printWarning "Autocache clean will not be performed"
-     ;;
-esac
+
+if isTrue "${isactive}"; then
+  (zopen clean --cache >/dev/null 2>&1)
+  echo "- Cache cleaned."
+elif isFalse "${isactive}"; then
+  printVebose "autoclean cache is disable; no clean will occur"
+else
+  printWarning "Invalid value '${isactive}' for autocacheclean config parameter [should be 'true' or 'false']."
+  if type zopen-config-helper >/dev/null 2>&1; then
+    printWarning "Run zopen config --set autocacheclean [true|false] to update configuration"
+  else
+    printWarning "Update zopen configuration file to contain a valid value for parameter 'autocacheclean'"
+  fi
+  printWarning "Autocache clean will not be performed"
+fi

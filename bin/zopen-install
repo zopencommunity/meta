@@ -92,6 +92,7 @@ installOrUpgrade=false
 # shellcheck disable=SC2034
 nosymlink=false
 skip_broken=false
+skip_size_check=false
 # shellcheck disable=SC2034
 skipupgrade=false
 skipverify=false
@@ -153,6 +154,10 @@ while [ $# -gt 0 ]; do
     "--skip-verify" | "-sv")
       # shellcheck disable=SC2034
       skipverify=true # Verify signature of packages
+      ;;
+    "--skip_size_check" | "-st")
+      # shellcheck disable=SC2034
+      skip_size_check=true
       ;;
     "--force")
       # shellcheck disable=SC2034
