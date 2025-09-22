@@ -298,7 +298,7 @@ else
     printInfo "- Checking installation status for '${installListCount}' packages"
   else
     installList=$(echo "$chosenRepos" | sed "s/@@/ /g")
-    validateInstallList "${installList}"
+    validatePackageList "${installList}"
   fi
   if ! generateInstallGraph "${installList}"; then
     printError "Unable to generate install graph"

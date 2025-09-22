@@ -141,6 +141,7 @@ listAvailablePackages()
       "$(jqfunctions)"' .release_data|
         to_entries |sort_by(.key) | .[] |
         .key as $key |
+        (.value[0].name | split(" ")[0]) as $actualname |
         .value[0].assets[0] as $va |
         $va.url as $url |
         ($url | match(".*-([^-]*).[0-9]{8}_[0-9]{6}.zos.pax.Z").captures[0].string) as $version |
@@ -152,7 +153,7 @@ listAvailablePackages()
         ($va.total_tests | if (.=="") then "99999" else . end |tonumber) as $tt |
         ($pt/$tt*100) as $pts | 
         ($pts | if (.<0) then "No tests" else ($pts|r(1) |tostring + "%" ) end)  as $q|
-        pr($key;"@";($wpackage | tonumber)) +
+        pr($actualname;"@";($wpackage | tonumber)) +
          c($ins;"@";($winstalled | tonumber)) +
          c($tn;"@";($wtag | tonumber)) +
          c($ds;"@";($wdownload | tonumber)) +
@@ -169,12 +170,13 @@ listAvailablePackages()
       "$(jqfunctions)"' .release_data|
         to_entries |sort_by(.key) | .[] |
         .key as $key |
+        (.value[0].name | split(" ")[0]) as $actualname |
         .value[0].assets[0].url as $url |
         ($url | match(".*-([^-]*).[0-9]{8}_[0-9]{6}.zos.pax.Z").captures[0].string) as $version |
         .value[0].tag_name as $tn |
         (if ($installed | index($key)) then "installed" else "available" end) as $ins |
         .value[0].assets[0] as $va |
-        pr($key;"@";($wpackage | tonumber)) +
+        pr($actualname;"@";($wpackage | tonumber)) +
          c($ins;"@";($winstalled | tonumber)) +
           c($version;"@";($wversion | tonumber)) +
            c($tn;"@";($wtag | tonumber)) ' \

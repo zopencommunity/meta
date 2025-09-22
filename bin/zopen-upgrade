@@ -146,7 +146,7 @@ if [ -z "${chosenRepos}" ]; then
     printError "Details: ${chosenRepos}"
   fi
 else
-  validateInstallList "${chosenRepos}"
+  validatePackageList "${chosenRepos}"
 fi
 
 if ! generateInstallGraph "${chosenRepos}"; then

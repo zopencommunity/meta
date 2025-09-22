@@ -2182,13 +2182,47 @@ validateInstallList(){
   printVerbose "Stripping any version/tagging"
   installees=$(set -f; echo ${installees} |awk  -v ORS=, -v RS=' ' '{$1=$1; sub(/[=%].*/,x); print "\""$1"\""}')
   invalidPortList=$(jq -r --argjson needles "[${installees%%,}]" \
-    '.release_data| keys as $haystack | $needles | map(select(. as $needle | $haystack | index($needle)|not)) | .[]'  "${JSON_CACHE}")
+    '.release_data| keys as $haystack | $needles | map(select(. as $needle | $haystack | index($needle)|not)) | .[]'  \
+    "${JSON_CACHE}")
   if [ -n "${invalidPortList}" ]; then
     printSoftError "The following ports could not be installed:"
     printSoftError "    $(echo "${invalidPortList}" | awk -v OFS=' ' -v ORS=' ' '{$1=$1};1' )"
     printError "Check port name(s), remove any extra 'port' suffixes and retry command."
   fi
 }
+
+# This uses the release json file to find whether any of the inputs are invalid
+# package names. Ideally, this would use the keys of the release_data however, the
+# NATS package breaks this as it is known as 'nats' in the repo but the port name is
+# NATS.  As such, use .product.name then fallback to the .url as a sanity check
+# Note: this is not to make the match "case-insensitive", but to use whichever the
+# user uses as the name - if they know it as NATS, accept that!
+validatePackageList(){
+  installees="$1"
+  # shellcheck disable=SC2086 # Using set -f disables globbing
+  printVerbose "Stripping any version/tagging"
+  installees=$(set -f; echo ${installees} |awk  -v ORS=, -v RS=' ' '{$1=$1; sub(/[=%].*/,x); print "\""$1"\""}')
+  invalidPortList=$(jq -r --argjson needles "[${installees%%,}]" \
+'$needles
+  | map(
+      select(
+        (. as $needle) |
+        (any(
+          .release_data | to_entries[] | .value[];
+          .tag_name | test("_[^_]*" + $needle + "[^_]*port")
+        ) | not)
+      )
+    )' \
+    "${JSON_CACHE}")
+  if [ -n "${invalidPortList}" ]; then
+    printSoftError "The following ports could not be installed:"
+    printSoftError "    $(echo "${invalidPortList}" | awk -v OFS=' ' -v ORS=' ' '{$1=$1};1' )"
+    printError "Check port name(s), remove any extra 'port' suffixes and retry command."
+  fi
+
+}
+
+
 
 dedupStringList()
 { delim="$1" && shift
@@ -2532,8 +2566,8 @@ installFromPax()
   # Note that at present some metadata might refer to the legacy repo ZOSOpenTools
   # so fall back to that
   if [ -n "${USEPRODNAME}" ]; then
-    printVerbose "Extracting product name from .product.repo"
-    #  name=$(jq --raw-output '.product.name' "${metadatafile}")
+    printVerbose "Extracting product name from .product.name"
+    name=$(jq --raw-output '.product.name' "${metadatafile}")
   else
     printVerbose "Extracting product name from .product.repo"
     name=$(jq --arg reponame "${ZOPEN_ORGNAME}" --raw-output '.product.repo | match(".*/\($reponame)/(.*)port").captures[0].string' "${metadatafile}")
@@ -2775,11 +2809,18 @@ updatePackageDB()
       echo "[]" > "${pdb}"
     fi
     # Ideally, use $reponame in the match but jq seems to have issues with that!
-    mdj=$(jq --arg reponame "${ZOPEN_ORGNAME}" '. as $metadata | .product.repo | match(".*/zopencommunity/(.*)port").captures[0].string | [{(.):$metadata}]' \
+
+    mdj=$(jq '[{(.product.name):.}]' \
         "${escapedJSONFile}")
+    if [ -z "${mdj}" ]; then 
+    # If we couldn't get the repo name from .product.name, use (.*)port  - this might result
+    # in odd cases [NATS...]
+      mdj=$(jq '. as $metadata | .product.repo | match(".*/zopencommunity/(.*)port").captures[0].string | [{(.):$metadata}]' \
+        "${escapedJSONFile}")
+    fi
     if [ -z "${mdj}" ]; then
-      # Try legacy repository
-      mdj=$(jq --arg reponame "${ZOPEN_ORGNAME}" '. as $metadata | .product.repo | match(".*/ZOSOpenTools/(.*)port").captures[0].string | [{(.):$metadata}]' \
+      # Try legacy repository [for really old packages!]
+      mdj=$(jq '. as $metadata | .product.repo | match(".*/ZOSOpenTools/(.*)port").captures[0].string | [{(.):$metadata}]' \
         "${escapedJSONFile}")
     fi
 
