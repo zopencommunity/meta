@@ -1519,7 +1519,14 @@ syslog()
     mkdir -p "$(dirname "${fd}")"
     touch "${fd}"
   fi
-  echo "$(date +"%F %T") $(id | cut -d' ' -f1)::${module}:${type}:${categories}:${location}:${msg}" >> "${fd}"
+  output="$(date +"%F %T") $(id | cut -d' ' -f1)::${module}:${type}:${categories}:${location}:${msg}"
+  if [ -w "${fd}" ]; then
+    echo "${output}" >> "${fd}"
+  else
+    printWarning "No write permission to log file '${fd}'; writing to stderr"
+    echo "${output}" >&2
+  fi
+
 }
 
 jqGetKey(){
