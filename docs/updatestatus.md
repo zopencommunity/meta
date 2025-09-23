@@ -128,6 +128,9 @@
 ### direnvport
 - 2025-04-11: [Update direnv-version to 2.36.0 from 2.35.0](https://github.com/zopencommunity/direnvport/pull/11) ❌
 
+### dnf5port
+- 2025-09-23: [Update dnf5-version to 5.1.17 from 5.2.15.0](https://github.com/zopencommunity/dnf5port/pull/2) ❌
+
 ### doxygenport
 - 2025-07-26: [Update doxygen-version to Release_1_14_0 from Release_1_13_2](https://github.com/zopencommunity/doxygenport/pull/10) ❌
 
@@ -331,9 +334,6 @@
 - 2025-02-25: [Update lazygit-version to 0.47.2 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/14) ✅
 - 2025-02-22: [Update lazygit-version to 0.47.1 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/13) ✅
 
-### lessport
-- 2025-09-19: [Update less-version to 684 from 683](https://github.com/zopencommunity/lessport/pull/42) ❌
-
 ### libgdbmport
 - 2025-03-22: [Update libgdbm-version to 1.25 from 1.24](https://github.com/zopencommunity/libgdbmport/pull/10) ❌
 
@@ -383,6 +383,7 @@
 - 2025-08-22: [Update nano-version to 8.6 from 8.5](https://github.com/zopencommunity/nanoport/pull/20) ❌
 
 ### natsport
+- 2025-09-22: [Update nats-version to 2.12.0 from 2.11.8](https://github.com/zopencommunity/natsport/pull/31) ❌
 - 2025-09-10: [Update nats-version to 2.11.9 from 2.11.8](https://github.com/zopencommunity/natsport/pull/30) ❌
 
 ### ncduport
@@ -422,14 +423,6 @@
 - 2024-03-20: [Update osv-scanner-version to 1.7.1 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/3) ❓
 - 2024-03-06: [Update osv-scanner-version to 1.7.0 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/2) ❓
 - 2024-02-15: [Update osv-scanner-version to 1.6.2 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/1) ❓
-
-### patchport
-- 2025-03-30: [Update patch-version to 2.8 from 2.7](https://github.com/zopencommunity/patchport/pull/7) ❌
-- 2023-11-05: [Update patch-version to 2.7.6 from 2.7](https://github.com/zopencommunity/patchport/pull/3) ❓
-
-### perlport
-- 2025-08-22: [Update perl-version to 5.43.2 from 5.43.0](https://github.com/zopencommunity/perlport/pull/115) ❌
-- 2025-07-21: [Update perl-version to 5.43.1 from 5.43.0](https://github.com/zopencommunity/perlport/pull/114) ❌
 
 ### phpport
 - 2025-08-01: [Update php-version to 8.4.11 from 8.2.13](https://github.com/zopencommunity/phpport/pull/37) ❌
@@ -870,5 +863,5 @@
 ---
 
 
-> Last updated: 2025-09-22 06:10:46 EDT
+> Last updated: 2025-09-23 06:10:22 EDT
 

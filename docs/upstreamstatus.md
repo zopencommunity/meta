@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-09-22 06:14:53 EDT.*
+*Report generated on: 2025-09-23 06:14:29 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 272
-- **Total Current Lines of Code (LOC) in Patches:** 41,820
-- **Total Number of Current Patch Files:** 842
-- **Average Current Patch LOC per Project:** 153.75
-- **Average Current Patch Count per Project:** 3.10
+- **Total Current Lines of Code (LOC) in Patches:** 42,727
+- **Total Number of Current Patch Files:** 872
+- **Average Current Patch LOC per Project:** 157.08
+- **Average Current Patch Count per Project:** 3.21
 
 ### Historical Trends (All Projects)
 
@@ -36,11 +36,12 @@
 | [cmakeport](#repo-cmakeport) | 1,092 | +0 | 1 |
 | [gitport](#repo-gitport) | 1,060 | -5 | 31 |
 | [grpcport](#repo-grpcport) | 1,017 | +0 | 8 |
+| [dnf5port](#repo-dnf5port) | 1,002 | +445 | 34 |
 | [valgrindport](#repo-valgrindport) | 896 | +0 | 3 |
 | [alternativesport](#repo-alternativesport) | 838 | +0 | 1 |
+| [perlport](#repo-perlport) | 693 | +9 | 14 |
 | [gzipport](#repo-gzipport) | 690 | +0 | 8 |
 | [procpsport](#repo-procpsport) | 687 | +0 | 1 |
-| [perlport](#repo-perlport) | 684 | +0 | 14 |
 | [util-linuxport](#repo-util-linuxport) | 630 | +0 | 16 |
 | [redisport](#repo-redisport) | 588 | +0 | 3 |
 | [unzipport](#repo-unzipport) | 549 | +0 | 12 |
@@ -104,7 +105,6 @@
 | [libiconvport](#repo-libiconvport) | 96 | +0 | 4 |
 | [depot_toolsport](#repo-depot-toolsport) | 91 | +0 | 1 |
 | [libeventport](#repo-libeventport) | 87 | +0 | 3 |
-| [patchport](#repo-patchport) | 86 | +0 | 3 |
 | [jqport](#repo-jqport) | 85 | +0 | 6 |
 | [openldapport](#repo-openldapport) | 85 | +0 | 1 |
 | [gawkport](#repo-gawkport) | 81 | +0 | 4 |
@@ -130,7 +130,6 @@
 | [libsasl2port](#repo-libsasl2port) | 50 | +0 | 3 |
 | [libsolvport](#repo-libsolvport) | 50 | +0 | 1 |
 | [automakeport](#repo-automakeport) | 47 | +0 | 3 |
-| [lessport](#repo-lessport) | 47 | +0 | 3 |
 | [xxhashport](#repo-xxhashport) | 47 | +0 | 2 |
 | [tigport](#repo-tigport) | 47 | +0 | 1 |
 | [lazygitport](#repo-lazygitport) | 46 | +0 | 1 |
@@ -148,6 +147,7 @@
 | [libffiport](#repo-libffiport) | 31 | +0 | 2 |
 | [lynxport](#repo-lynxport) | 30 | +0 | 1 |
 | [createrepo_cport](#repo-createrepo-cport) | 30 | +30 | 1 |
+| [patchport](#repo-patchport) | 29 | -57 | 2 |
 | [netpbmport](#repo-netpbmport) | 29 | +0 | 2 |
 | [gmpport](#repo-gmpport) | 29 | +0 | 2 |
 | [libgpgmeport](#repo-libgpgmeport) | 29 | +0 | 2 |
@@ -192,6 +192,7 @@
 | [libpslport](#repo-libpslport) | 12 | +0 | 1 |
 | [quiltport](#repo-quiltport) | 10 | +0 | 1 |
 | [zlibport](#repo-zlibport) | 0 | +0 | 0 |
+| [lessport](#repo-lessport) | 0 | -47 | 0 |
 | [help2manport](#repo-help2manport) | 0 | +0 | 0 |
 | [zotsampleport](#repo-zotsampleport) | 0 | +0 | 0 |
 | [man-dbport](#repo-man-dbport) | 0 | +0 | 0 |
@@ -294,7 +295,6 @@
 | [checkport](#repo-checkport) | 0 | +0 | 0 |
 | [clang-formatport](#repo-clang-formatport) | 0 | +0 | 0 |
 | [crushport](#repo-crushport) | 0 | +0 | 0 |
-| [dnf5port](#repo-dnf5port) | 0 | +0 | 0 |
 | [clang-tidyport](#repo-clang-tidyport) | 0 | N/A | 0 |
 
 ---
@@ -821,6 +821,59 @@
 
 ---
 
+<a id="repo-dnf5port"></a>
+## dnf5port
+
+- **Origin Date (First Commit):** 2025-08-21
+- **Current Patch LOC:** 1,002
+- **Current Patch Count:** 34
+
+### Historical Trends
+
+![LOC Trend for dnf5port](images/upstream/dnf5port_current_loc_trend.png)
+![Count Trend for dnf5port](images/upstream/dnf5port_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/CMakeLists.txt.patch` | `patches` | 13 |
+| `patches/dnf5-plugins.patch` | `patches` | 20 |
+| `patches/dnf5-plugins_automatic_plugin.patch` | `patches` | 140 |
+| `patches/dnf5-plugins_builddep_plugin.patch` | `patches` | 22 |
+| `patches/dnf5-plugins_changelog_plugin.patch` | `patches` | 13 |
+| `patches/dnf5-plugins_config-manager_plugin.patch` | `patches` | 26 |
+| `patches/dnf5-plugins_copr_plugin.patch` | `patches` | 13 |
+| `patches/dnf5-plugins_needs_restarting_plugin.patch` | `patches` | 13 |
+| `patches/dnf5-plugins_repoclosure_plugin.patch` | `patches` | 13 |
+| `patches/dnf5-plugins_reposync_plugin.patch` | `patches` | 13 |
+| `patches/dnf5.patch` | `patches` | 52 |
+| `patches/dnf5_commands_offline.patch` | `patches` | 22 |
+| `patches/etc.patch` | `patches` | 7 |
+| `patches/include_libdnf5_base.patch` | `patches` | 16 |
+| `patches/libdnf5-cli.patch` | `patches` | 37 |
+| `patches/libdnf5-cli_output.patch` | `patches` | 21 |
+| `patches/libdnf5-cli_progressbar.patch` | `patches` | 13 |
+| `patches/libdnf5-plugins.patch` | `patches` | 12 |
+| `patches/libdnf5.patch` | `patches` | 40 |
+| `patches/libdnf5_base.patch` | `patches` | 53 |
+| `patches/libdnf5_conf.patch` | `patches` | 25 |
+| `patches/libdnf5_logger.patch` | `patches` | 58 |
+| `patches/libdnf5_repo.patch` | `patches` | 22 |
+| `patches/libdnf5_utils.patch` | `patches` | 94 |
+| `patches/libdnf5_utils_fs.patch` | `patches` | 43 |
+| `patches/test_data.patch` | `patches` | 11 |
+| `patches/test_dnf5-plugins_automatic_plugin.patch` | `patches` | 17 |
+| `patches/test_libdnf5-cli.patch` | `patches` | 24 |
+| `patches/test_libdnf5-cli_output.patch` | `patches` | 25 |
+| `patches/test_libdnf5.patch` | `patches` | 24 |
+| `patches/test_libdnf5_conf.patch` | `patches` | 32 |
+| `patches/test_libdnf5_logger.patch` | `patches` | 21 |
+| `patches/test_libdnf5_system.patch` | `patches` | 20 |
+| `patches/test_libdnf5_utils.patch` | `patches` | 27 |
+
+---
+
 <a id="repo-valgrindport"></a>
 ## valgrindport
 
@@ -860,6 +913,39 @@
 | Patch File (Repo Relative Path) | Source | LOC |
 |---|---|:---|
 | `patches/PR1.patch` | `patches` | 838 |
+
+---
+
+<a id="repo-perlport"></a>
+## perlport
+
+- **Origin Date (First Commit):** 2021-11-12
+- **Current Patch LOC:** 693
+- **Current Patch Count:** 14
+
+### Historical Trends
+
+![LOC Trend for perlport](images/upstream/perlport_current_loc_trend.png)
+![Count Trend for perlport](images/upstream/perlport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/MM_OS390.pm.patch` | `patches` | 13 |
+| `patches/PR1/Configure.patch` | `patches` | 32 |
+| `patches/PR1/Makefile.SH.patch` | `patches` | 54 |
+| `patches/PR1/cpan/IPC-SysV/SysV.xs.patch` | `patches` | 13 |
+| `patches/PR1/doio.c.patch` | `patches` | 135 |
+| `patches/PR1/ext/ExtUtils-Miniperl/lib/ExtUtils/Miniperl.pm.patch` | `patches` | 20 |
+| `patches/PR1/hints/os390.sh.patch` | `patches` | 141 |
+| `patches/PR1/installperl.patch` | `patches` | 36 |
+| `patches/PR1/iperlsys.h.patch` | `patches` | 28 |
+| `patches/PR1/lib/File/Copy.pm.patch` | `patches` | 16 |
+| `patches/PR1/makedepend_file.SH.patch` | `patches` | 25 |
+| `patches/PR1/os390/os390.c.patch` | `patches` | 62 |
+| `patches/PR1/perl.c.patch` | `patches` | 24 |
+| `patches/PR1/util.c.patch` | `patches` | 94 |
 
 ---
 
@@ -907,39 +993,6 @@
 | Patch File (Repo Relative Path) | Source | LOC |
 |---|---|:---|
 | `patches/PR1.patch` | `patches` | 687 |
-
----
-
-<a id="repo-perlport"></a>
-## perlport
-
-- **Origin Date (First Commit):** 2021-11-12
-- **Current Patch LOC:** 684
-- **Current Patch Count:** 14
-
-### Historical Trends
-
-![LOC Trend for perlport](images/upstream/perlport_current_loc_trend.png)
-![Count Trend for perlport](images/upstream/perlport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/MM_OS390.pm.patch` | `patches` | 13 |
-| `patches/PR1/Configure.patch` | `patches` | 32 |
-| `patches/PR1/Makefile.SH.patch` | `patches` | 54 |
-| `patches/PR1/cpan/IPC-SysV/SysV.xs.patch` | `patches` | 13 |
-| `patches/PR1/doio.c.patch` | `patches` | 135 |
-| `patches/PR1/ext/ExtUtils-Miniperl/lib/ExtUtils/Miniperl.pm.patch` | `patches` | 20 |
-| `patches/PR1/hints/os390.sh.patch` | `patches` | 141 |
-| `patches/PR1/installperl.patch` | `patches` | 36 |
-| `patches/PR1/iperlsys.h.patch` | `patches` | 28 |
-| `patches/PR1/lib/File/Copy.pm.patch` | `patches` | 16 |
-| `patches/PR1/makedepend_file.SH.patch` | `patches` | 16 |
-| `patches/PR1/os390/os390.c.patch` | `patches` | 62 |
-| `patches/PR1/perl.c.patch` | `patches` | 24 |
-| `patches/PR1/util.c.patch` | `patches` | 94 |
 
 ---
 
@@ -2520,28 +2573,6 @@
 
 ---
 
-<a id="repo-patchport"></a>
-## patchport
-
-- **Origin Date (First Commit):** 2022-10-18
-- **Current Patch LOC:** 86
-- **Current Patch Count:** 3
-
-### Historical Trends
-
-![LOC Trend for patchport](images/upstream/patchport_current_loc_trend.png)
-![Count Trend for patchport](images/upstream/patchport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/PR1/pathmax.h.patch` | `patches` | 14 |
-| `patches/PR1/string.in.h.patch` | `patches` | 60 |
-| `patches/PR1/util.c.patch` | `patches` | 12 |
-
----
-
 <a id="repo-jqport"></a>
 ## jqport
 
@@ -3078,28 +3109,6 @@
 
 ---
 
-<a id="repo-lessport"></a>
-## lessport
-
-- **Origin Date (First Commit):** 2022-04-21
-- **Current Patch LOC:** 47
-- **Current Patch Count:** 3
-
-### Historical Trends
-
-![LOC Trend for lessport](images/upstream/lessport_current_loc_trend.png)
-![Count Trend for lessport](images/upstream/lessport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `stable-patches/charset.c.patch` | `stable-patches` | 17 |
-| `stable-patches/edit.c.patch` | `stable-patches` | 17 |
-| `stable-patches/os.c.patch` | `stable-patches` | 13 |
-
----
-
 <a id="repo-xxhashport"></a>
 ## xxhashport
 
@@ -3443,6 +3452,27 @@
 | Patch File (Repo Relative Path) | Source | LOC |
 |---|---|:---|
 | `patches/PR1.patch` | `patches` | 30 |
+
+---
+
+<a id="repo-patchport"></a>
+## patchport
+
+- **Origin Date (First Commit):** 2022-10-18
+- **Current Patch LOC:** 29
+- **Current Patch Count:** 2
+
+### Historical Trends
+
+![LOC Trend for patchport](images/upstream/patchport_current_loc_trend.png)
+![Count Trend for patchport](images/upstream/patchport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/PR1/pathmax.h.patch` | `patches` | 14 |
+| `patches/PR1/util.c.patch` | `patches` | 15 |
 
 ---
 
@@ -4327,6 +4357,24 @@
 
 ![LOC Trend for zlibport](images/upstream/zlibport_current_loc_trend.png)
 ![Count Trend for zlibport](images/upstream/zlibport_current_count_trend.png)
+
+### Current Patch Details
+
+*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
+
+---
+
+<a id="repo-lessport"></a>
+## lessport
+
+- **Origin Date (First Commit):** 2022-04-21
+- **Current Patch LOC:** 0
+- **Current Patch Count:** 0
+
+### Historical Trends
+
+![LOC Trend for lessport](images/upstream/lessport_current_loc_trend.png)
+![Count Trend for lessport](images/upstream/lessport_current_count_trend.png)
 
 ### Current Patch Details
 
@@ -6156,24 +6204,6 @@
 ## crushport
 
 - **Origin Date (First Commit):** 2025-04-24
-- **Current Patch LOC:** 0
-- **Current Patch Count:** 0
-
-### Historical Trends
-
-*(Patch LOC trend graph not generated)*
-*(Patch count trend graph not generated)*
-
-### Current Patch Details
-
-*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
-
----
-
-<a id="repo-dnf5port"></a>
-## dnf5port
-
-- **Origin Date (First Commit):** 2025-08-21
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 
