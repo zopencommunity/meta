@@ -90,6 +90,9 @@
 - 2024-11-21: [Update conan-version to 2.9.3 from 2.9.1](https://github.com/zopencommunity/conanport/pull/10) ❌
 - 2024-11-07: [Update conan-version to 2.9.2 from 2.9.1](https://github.com/zopencommunity/conanport/pull/9) ❌
 
+### coreutilsport
+- 2025-09-23: [Update coreutils-version to 9.8 from 9.7](https://github.com/zopencommunity/coreutilsport/pull/104) ❌
+
 ### cppcheckport
 - 2025-09-03: [Update cppcheck-version to 2.18.3 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/16) ❌
 - 2025-08-30: [Update cppcheck-version to 2.18.2 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/15) ❌
@@ -423,6 +426,9 @@
 - 2024-03-20: [Update osv-scanner-version to 1.7.1 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/3) ❓
 - 2024-03-06: [Update osv-scanner-version to 1.7.0 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/2) ❓
 - 2024-02-15: [Update osv-scanner-version to 1.6.2 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/1) ❓
+
+### perlport
+- 2025-09-23: [Update perl-version to 5.43.3 from 5.43.2](https://github.com/zopencommunity/perlport/pull/116) ❌
 
 ### phpport
 - 2025-08-01: [Update php-version to 8.4.11 from 8.2.13](https://github.com/zopencommunity/phpport/pull/37) ❌
@@ -863,5 +869,5 @@
 ---
 
 
-> Last updated: 2025-09-23 06:10:22 EDT
+> Last updated: 2025-09-24 06:10:29 EDT
 
