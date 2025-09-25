@@ -1,13 +1,13 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-09-24 06:14:43 EDT.*
+*Report generated on: 2025-09-25 06:15:12 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 272
-- **Total Current Lines of Code (LOC) in Patches:** 42,727
+- **Total Current Lines of Code (LOC) in Patches:** 42,739
 - **Total Number of Current Patch Files:** 872
-- **Average Current Patch LOC per Project:** 157.08
+- **Average Current Patch LOC per Project:** 157.13
 - **Average Current Patch Count per Project:** 3.21
 
 ### Historical Trends (All Projects)
@@ -36,7 +36,7 @@
 | [cmakeport](#repo-cmakeport) | 1,092 | +0 | 1 |
 | [gitport](#repo-gitport) | 1,060 | -5 | 31 |
 | [grpcport](#repo-grpcport) | 1,017 | +0 | 8 |
-| [dnf5port](#repo-dnf5port) | 1,002 | +445 | 34 |
+| [dnf5port](#repo-dnf5port) | 1,014 | +457 | 34 |
 | [valgrindport](#repo-valgrindport) | 896 | +0 | 3 |
 | [alternativesport](#repo-alternativesport) | 838 | +0 | 1 |
 | [perlport](#repo-perlport) | 693 | +9 | 14 |
@@ -825,7 +825,7 @@
 ## dnf5port
 
 - **Origin Date (First Commit):** 2025-08-21
-- **Current Patch LOC:** 1,002
+- **Current Patch LOC:** 1,014
 - **Current Patch Count:** 34
 
 ### Historical Trends
@@ -838,7 +838,7 @@
 | Patch File (Repo Relative Path) | Source | LOC |
 |---|---|:---|
 | `patches/CMakeLists.txt.patch` | `patches` | 13 |
-| `patches/dnf5-plugins.patch` | `patches` | 20 |
+| `patches/dnf5-plugins.patch` | `patches` | 21 |
 | `patches/dnf5-plugins_automatic_plugin.patch` | `patches` | 140 |
 | `patches/dnf5-plugins_builddep_plugin.patch` | `patches` | 22 |
 | `patches/dnf5-plugins_changelog_plugin.patch` | `patches` | 13 |
@@ -846,6 +846,7 @@
 | `patches/dnf5-plugins_copr_plugin.patch` | `patches` | 13 |
 | `patches/dnf5-plugins_needs_restarting_plugin.patch` | `patches` | 13 |
 | `patches/dnf5-plugins_repoclosure_plugin.patch` | `patches` | 13 |
+| `patches/dnf5-plugins_repomanage_plugin.patch` | `patches` | 13 |
 | `patches/dnf5-plugins_reposync_plugin.patch` | `patches` | 13 |
 | `patches/dnf5.patch` | `patches` | 52 |
 | `patches/dnf5_commands_offline.patch` | `patches` | 22 |
@@ -860,9 +861,8 @@
 | `patches/libdnf5_conf.patch` | `patches` | 25 |
 | `patches/libdnf5_logger.patch` | `patches` | 58 |
 | `patches/libdnf5_repo.patch` | `patches` | 22 |
-| `patches/libdnf5_utils.patch` | `patches` | 94 |
+| `patches/libdnf5_utils.patch` | `patches` | 103 |
 | `patches/libdnf5_utils_fs.patch` | `patches` | 43 |
-| `patches/test_data.patch` | `patches` | 11 |
 | `patches/test_dnf5-plugins_automatic_plugin.patch` | `patches` | 17 |
 | `patches/test_libdnf5-cli.patch` | `patches` | 24 |
 | `patches/test_libdnf5-cli_output.patch` | `patches` | 25 |

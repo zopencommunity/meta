@@ -22,6 +22,7 @@
 - 2024-12-11: [Update bash-completion-version to 20060301 from V.R.M](https://github.com/zopencommunity/bash-completionport/pull/1) ❌
 
 ### buildkiteport
+- 2025-09-24: [Update buildkite-version to 3.107.2 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/74) ❌
 - 2025-09-18: [Update buildkite-version to 3.107.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/73) ❌
 - 2025-09-16: [Update buildkite-version to 3.106.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/72) ❌
 - 2025-09-11: [Update buildkite-version to 3.105.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/71) ❌
@@ -60,6 +61,7 @@
 - 2025-05-26: [Update ccache-version to 4.11.3 from V.R.M](https://github.com/zopencommunity/ccacheport/pull/1) ❌
 
 ### chezmoiport
+- 2025-09-24: [Update chezmoi-version to 2.65.2 from 2.62.5](https://github.com/zopencommunity/chezmoiport/pull/11) ❌
 - 2025-09-10: [Update chezmoi-version to 2.65.1 from 2.62.5](https://github.com/zopencommunity/chezmoiport/pull/10) ❌
 - 2025-08-26: [Update chezmoi-version to 2.65.0 from 2.62.5](https://github.com/zopencommunity/chezmoiport/pull/9) ❌
 - 2025-08-07: [Update chezmoi-version to 2.64.0 from 2.62.5](https://github.com/zopencommunity/chezmoiport/pull/8) ❌
@@ -131,9 +133,6 @@
 ### direnvport
 - 2025-04-11: [Update direnv-version to 2.36.0 from 2.35.0](https://github.com/zopencommunity/direnvport/pull/11) ❌
 
-### dnf5port
-- 2025-09-23: [Update dnf5-version to 5.1.17 from 5.2.15.0](https://github.com/zopencommunity/dnf5port/pull/2) ❌
-
 ### doxygenport
 - 2025-07-26: [Update doxygen-version to Release_1_14_0 from Release_1_13_2](https://github.com/zopencommunity/doxygenport/pull/10) ❌
 
@@ -204,6 +203,7 @@
 - 2024-12-06: [Update git-extras-version to 7.3.0 from V.R.M](https://github.com/zopencommunity/git-extrasport/pull/1) ❌
 
 ### githubcliport
+- 2025-09-24: [Update ghcli-version to 2.80.0 from 2.78.0](https://github.com/zopencommunity/githubcliport/pull/65) ❌
 - 2025-09-09: [Update ghcli-version to 2.79.0 from 2.78.0](https://github.com/zopencommunity/githubcliport/pull/64) ❌
 - 2025-04-25: [Update ghcli-version to 2.71.2 from 2.67.0](https://github.com/zopencommunity/githubcliport/pull/52) ✅
 - 2025-04-24: [Update ghcli-version to 2.71.1 from 2.67.0](https://github.com/zopencommunity/githubcliport/pull/51) ❌
@@ -271,6 +271,7 @@
 - 2025-04-14: [Update gperf-version to 3.2.1 from 3.1](https://github.com/zopencommunity/gperfport/pull/8) ✅
 
 ### grafanaport
+- 2025-09-24: [Update grafana-version to 12.2.0 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/26) ❌
 - 2025-08-22: [Update grafana-version to 12.1.1 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/25) ❌
 - 2025-07-24: [Update grafana-version to 12.1.0 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/24) ❌
 - 2025-06-18: [Update grafana-version to 12.0.2 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/23) ❌
@@ -869,5 +870,5 @@
 ---
 
 
-> Last updated: 2025-09-24 06:10:29 EDT
+> Last updated: 2025-09-25 06:10:36 EDT
 
