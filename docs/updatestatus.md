@@ -150,6 +150,7 @@
 - 2025-02-24: [Update emacs-version to 30.1 from 29.4](https://github.com/zopencommunity/emacsport/pull/11) ❌
 
 ### expatport
+- 2025-09-25: [Update expat-version to 2.7.3 from 2.5.0](https://github.com/zopencommunity/expatport/pull/19) ❌
 - 2025-09-17: [Update expat-version to 2.7.2 from 2.5.0](https://github.com/zopencommunity/expatport/pull/18) ❌
 - 2025-03-28: [Update expat-version to 2.7.1 from 2.5.0](https://github.com/zopencommunity/expatport/pull/16) ❌
 - 2025-03-14: [Update expat-version to 2.7.0 from 2.5.0](https://github.com/zopencommunity/expatport/pull/15) ❌
@@ -162,6 +163,7 @@
 - 2025-04-19: [Update fq-version to 0.15.0 from 0.14.0](https://github.com/zopencommunity/fqport/pull/9) ✅
 
 ### frpport
+- 2025-09-25: [Update frp-version to 0.65.0 from 0.61.1](https://github.com/zopencommunity/frpport/pull/18) ✅
 - 2025-08-22: [Update frp-version to 0.64.0 from 0.61.1](https://github.com/zopencommunity/frpport/pull/17) ✅
 - 2025-06-25: [Update frp-version to 0.63.0 from 0.61.1](https://github.com/zopencommunity/frpport/pull/16) ✅
 - 2025-04-28: [Update frp-version to 0.62.1 from 0.61.1](https://github.com/zopencommunity/frpport/pull/15) ✅
@@ -870,5 +872,5 @@
 ---
 
 
-> Last updated: 2025-09-25 06:10:36 EDT
+> Last updated: 2025-09-26 06:09:35 EDT
 
