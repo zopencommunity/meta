@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-09-26 06:13:40 EDT.*
+*Report generated on: 2025-09-27 06:12:45 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 272
-- **Total Current Lines of Code (LOC) in Patches:** 42,739
-- **Total Number of Current Patch Files:** 872
-- **Average Current Patch LOC per Project:** 157.13
-- **Average Current Patch Count per Project:** 3.21
+- **Total Current Lines of Code (LOC) in Patches:** 43,318
+- **Total Number of Current Patch Files:** 877
+- **Average Current Patch LOC per Project:** 159.26
+- **Average Current Patch Count per Project:** 3.22
 
 ### Historical Trends (All Projects)
 
@@ -30,7 +30,7 @@
 | [bashport](#repo-bashport) | 1,584 | -2,842 | 25 |
 | [gpgport](#repo-gpgport) | 1,484 | +0 | 30 |
 | [libuvport](#repo-libuvport) | 1,462 | +0 | 26 |
-| [rpmport](#repo-rpmport) | 1,415 | -426 | 26 |
+| [rpmport](#repo-rpmport) | 1,366 | -475 | 29 |
 | [sudoport](#repo-sudoport) | 1,278 | +0 | 30 |
 | [coreutilsport](#repo-coreutilsport) | 1,169 | +0 | 18 |
 | [cmakeport](#repo-cmakeport) | 1,092 | +0 | 1 |
@@ -42,6 +42,7 @@
 | [perlport](#repo-perlport) | 693 | +9 | 14 |
 | [gzipport](#repo-gzipport) | 690 | +0 | 8 |
 | [procpsport](#repo-procpsport) | 687 | +0 | 1 |
+| [vimport](#repo-vimport) | 672 | +337 | 15 |
 | [util-linuxport](#repo-util-linuxport) | 630 | +0 | 16 |
 | [redisport](#repo-redisport) | 588 | +0 | 3 |
 | [unzipport](#repo-unzipport) | 549 | +0 | 12 |
@@ -56,9 +57,9 @@
 | [emacsport](#repo-emacsport) | 413 | +0 | 2 |
 | [gettextport](#repo-gettextport) | 378 | +0 | 10 |
 | [opensshport](#repo-opensshport) | 376 | +0 | 19 |
+| [nanoport](#repo-nanoport) | 371 | +303 | 1 |
 | [flexport](#repo-flexport) | 351 | +0 | 2 |
 | [prometheusport](#repo-prometheusport) | 348 | +0 | 1 |
-| [vimport](#repo-vimport) | 347 | +12 | 13 |
 | [pocoport](#repo-pocoport) | 343 | +0 | 9 |
 | [rsyncport](#repo-rsyncport) | 341 | +0 | 6 |
 | [neovimport](#repo-neovimport) | 327 | +0 | 13 |
@@ -114,7 +115,6 @@
 | [xmltoport](#repo-xmltoport) | 74 | +0 | 1 |
 | [cppcheckport](#repo-cppcheckport) | 72 | +0 | 4 |
 | [libtoolport](#repo-libtoolport) | 71 | +0 | 3 |
-| [nanoport](#repo-nanoport) | 68 | +0 | 1 |
 | [opensslport](#repo-opensslport) | 67 | +19 | 3 |
 | [gradleport](#repo-gradleport) | 67 | +0 | 1 |
 | [getoptport](#repo-getoptport) | 66 | +0 | 1 |
@@ -597,8 +597,8 @@
 ## rpmport
 
 - **Origin Date (First Commit):** 2025-06-26
-- **Current Patch LOC:** 1,415
-- **Current Patch Count:** 26
+- **Current Patch LOC:** 1,366
+- **Current Patch Count:** 29
 
 ### Historical Trends
 
@@ -609,15 +609,17 @@
 
 | Patch File (Repo Relative Path) | Source | LOC |
 |---|---|:---|
-| `patches/CMakeLists.txt.patch` | `patches` | 69 |
+| `patches/CMakeLists.txt.patch` | `patches` | 82 |
 | `patches/build_CMakeLists.txt.patch` | `patches` | 41 |
 | `patches/build_rpmfc.cc.patch` | `patches` | 13 |
+| `patches/files.cc.patch` | `patches` | 59 |
 | `patches/lib_CMakeLists.txt.patch` | `patches` | 12 |
 | `patches/lib_backend_ndb_rpmidx.c.patch` | `patches` | 43 |
 | `patches/lib_backend_ndb_rpmxdb.c.patch` | `patches` | 46 |
-| `patches/lib_fsm.cc.patch` | `patches` | 511 |
+| `patches/lib_fsm.cc.patch` | `patches` | 234 |
 | `patches/lib_headerfmt.cc.patch` | `patches` | 28 |
 | `patches/lib_keystore.cc.patch` | `patches` | 45 |
+| `patches/lib_rpmfi.cc.patch` | `patches` | 71 |
 | `patches/lib_rpmrc.cc.patch` | `patches` | 18 |
 | `patches/lib_rpmug.cc.patch` | `patches` | 28 |
 | `patches/lib_transaction.cc.patch` | `patches` | 28 |
@@ -632,6 +634,7 @@
 | `patches/rpmio_rpmsq.cc.patch` | `patches` | 13 |
 | `patches/rpmio_rpmstrpool.cc.patch` | `patches` | 25 |
 | `patches/rpmrc.in.patch` | `patches` | 12 |
+| `patches/rpmtypes.h.patch` | `patches` | 85 |
 | `patches/scripts.patch` | `patches` | 22 |
 | `patches/sign_CMakeLists.txt.patch` | `patches` | 10 |
 | `patches/tools_CMakeLists.txt.patch` | `patches` | 47 |
@@ -993,6 +996,40 @@
 | Patch File (Repo Relative Path) | Source | LOC |
 |---|---|:---|
 | `patches/PR1.patch` | `patches` | 687 |
+
+---
+
+<a id="repo-vimport"></a>
+## vimport
+
+- **Origin Date (First Commit):** 2022-06-24
+- **Current Patch LOC:** 672
+- **Current Patch Count:** 15
+
+### Historical Trends
+
+![LOC Trend for vimport](images/upstream/vimport_current_loc_trend.png)
+![Count Trend for vimport](images/upstream/vimport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `dev-patches/Makefile.patch` | `dev-patches` | 13 |
+| `dev-patches/abendfix.patch` | `dev-patches` | 13 |
+| `stable-patches/auto_configure.patch` | `stable-patches` | 12 |
+| `stable-patches/buffer.c.patch` | `stable-patches` | 132 |
+| `stable-patches/buffwrite.c.patch` | `stable-patches` | 89 |
+| `stable-patches/evalfunc.c.patch` | `stable-patches` | 18 |
+| `stable-patches/ex_cmds.c.patch` | `stable-patches` | 32 |
+| `stable-patches/fileio.c.patch` | `stable-patches` | 99 |
+| `stable-patches/os_unix.c.patch` | `stable-patches` | 43 |
+| `stable-patches/pty.c.patch` | `stable-patches` | 17 |
+| `stable-patches/structs.h.patch` | `stable-patches` | 26 |
+| `stable-patches/test_hlsearch.vim.patch` | `stable-patches` | 53 |
+| `stable-patches/test_startup.vim.patch` | `stable-patches` | 34 |
+| `stable-patches/test_syntax.vim.patch` | `stable-patches` | 79 |
+| `stable-patches/vim.h.patch` | `stable-patches` | 12 |
 
 ---
 
@@ -1391,6 +1428,26 @@
 
 ---
 
+<a id="repo-nanoport"></a>
+## nanoport
+
+- **Origin Date (First Commit):** 2022-11-14
+- **Current Patch LOC:** 371
+- **Current Patch Count:** 1
+
+### Historical Trends
+
+![LOC Trend for nanoport](images/upstream/nanoport_current_loc_trend.png)
+![Count Trend for nanoport](images/upstream/nanoport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/initial_zos.patch` | `patches` | 371 |
+
+---
+
 <a id="repo-flexport"></a>
 ## flexport
 
@@ -1429,38 +1486,6 @@
 | Patch File (Repo Relative Path) | Source | LOC |
 |---|---|:---|
 | `patches/prometheus.patch` | `patches` | 348 |
-
----
-
-<a id="repo-vimport"></a>
-## vimport
-
-- **Origin Date (First Commit):** 2022-06-24
-- **Current Patch LOC:** 347
-- **Current Patch Count:** 13
-
-### Historical Trends
-
-![LOC Trend for vimport](images/upstream/vimport_current_loc_trend.png)
-![Count Trend for vimport](images/upstream/vimport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `dev-patches/Makefile.patch` | `dev-patches` | 13 |
-| `dev-patches/abendfix.patch` | `dev-patches` | 13 |
-| `stable-patches/auto_configure.patch` | `stable-patches` | 12 |
-| `stable-patches/buffwrite.c.patch` | `stable-patches` | 25 |
-| `stable-patches/evalfunc.c.patch` | `stable-patches` | 18 |
-| `stable-patches/fileio.c.patch` | `stable-patches` | 14 |
-| `stable-patches/os_unix.c.patch` | `stable-patches` | 43 |
-| `stable-patches/pty.c.patch` | `stable-patches` | 17 |
-| `stable-patches/structs.h.patch` | `stable-patches` | 14 |
-| `stable-patches/test_hlsearch.vim.patch` | `stable-patches` | 53 |
-| `stable-patches/test_startup.vim.patch` | `stable-patches` | 34 |
-| `stable-patches/test_syntax.vim.patch` | `stable-patches` | 79 |
-| `stable-patches/vim.h.patch` | `stable-patches` | 12 |
 
 ---
 
@@ -2770,26 +2795,6 @@
 | `patches/configure.patch` | `patches` | 22 |
 | `patches/libtool.m4.patch` | `patches` | 15 |
 | `patches/ltmain.sh.patch` | `patches` | 34 |
-
----
-
-<a id="repo-nanoport"></a>
-## nanoport
-
-- **Origin Date (First Commit):** 2022-11-14
-- **Current Patch LOC:** 68
-- **Current Patch Count:** 1
-
-### Historical Trends
-
-![LOC Trend for nanoport](images/upstream/nanoport_current_loc_trend.png)
-![Count Trend for nanoport](images/upstream/nanoport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/initial_zos.patch` | `patches` | 68 |
 
 ---
 

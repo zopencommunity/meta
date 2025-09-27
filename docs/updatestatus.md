@@ -299,6 +299,7 @@
 - 2025-08-24: [Update groovy-version to 5.0.0 from 4.0.28](https://github.com/zopencommunity/groovyport/pull/20) ❌
 
 ### grpcport
+- 2025-09-26: [Update grpc-version to 1.75.1 from 1.73.0](https://github.com/zopencommunity/grpcport/pull/5) ❌
 - 2025-09-16: [Update grpc-version to 1.75.0 from 1.73.0](https://github.com/zopencommunity/grpcport/pull/4) ❌
 - 2025-08-07: [Update grpc-version to 1.74.1 from 1.73.0](https://github.com/zopencommunity/grpcport/pull/3) ❌
 - 2025-07-24: [Update grpc-version to 1.74.0 from 1.73.0](https://github.com/zopencommunity/grpcport/pull/2) ❌
@@ -554,6 +555,9 @@
 - 2025-08-22: [Update victoriametrics-version to 1.124.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/34) ❌
 - 2025-08-05: [Update victoriametrics-version to 1.123.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/33) ❌
 - 2025-07-21: [Update victoriametrics-version to 1.122.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/32) ❌
+
+### vimport
+- 2025-09-26: [Update vim-version to 9.1.1790 from 9.1.1780](https://github.com/zopencommunity/vimport/pull/147) ❌
 
 ### xmltoport
 - 2024-10-10: [Update xmlto-version to 0.0.29 from 0.0.28](https://github.com/zopencommunity/xmltoport/pull/3) ❌
@@ -872,5 +876,5 @@
 ---
 
 
-> Last updated: 2025-09-26 06:09:35 EDT
+> Last updated: 2025-09-27 06:08:31 EDT
 

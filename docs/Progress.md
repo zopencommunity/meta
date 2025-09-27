@@ -110,9 +110,9 @@
 | [libgpgerrorport](https://github.com/zopencommunity/libgpgerrorport) | 13 | 100.0% | createrepo_c, dnf5, gpg, libassuan, libgcrypt, libgpgme, libksba, librepo, libsolv, npth, ntbtls, pinentry, rpm |
 | [flexport](https://github.com/zopencommunity/flexport) | 11 | 100.0% | autoconf, bison, cscope, doxygen, groff, jq, man-db, netpbm, tmux, util-linux, xmlto |
 | [check_clangport](https://github.com/zopencommunity/check_clangport) | 10 | 100.0% | boost, duckdb, gn, grafana, hazelcast, m4, murex, parse-gotest, zos-code-page-tools, zotsample |
+| [libiconvport](https://github.com/zopencommunity/libiconvport) | 10 | 100.0% | bison, glib, librepo, libsolv, libxml2, libxslt, man-db, php, rpm, tig |
 | [libxml2port](https://github.com/zopencommunity/libxml2port) | 10 | 100.0% | apr, clang-format, createrepo_c, dnf5, doxygen, glib, librepo, libsolv, libxslt, php |
 | [zusageport](https://github.com/zopencommunity/zusageport) | 10 | Skipped | bash, cmake, curl, git, jq, less, make, neovim, ninja, vim |
-| [libiconvport](https://github.com/zopencommunity/libiconvport) | 9 | 100.0% | bison, glib, librepo, libsolv, libxml2, libxslt, man-db, php, tig |
 | [zstdport](https://github.com/zopencommunity/zstdport) | 9 | 100.0% | ccache, createrepo_c, dnf5, libarchive, librdkafka, libserdes, libsolv, rpm, rsync |
 | [luaport](https://github.com/zopencommunity/luaport) | 8 | 100.0% | createrepo_c, dnf5, libsolv, lpeg, luarocks, luv, rpm, vim |
 | [poptport](https://github.com/zopencommunity/poptport) | 8 | 100.0% | alternatives, createrepo_c, dnf5, librabbitmq, libsolv, logrotate, rpm, rsync |
@@ -134,6 +134,7 @@
 | [tclport](https://github.com/zopencommunity/tclport) | 4 | Skipped | expect, redis, sqlite, tcltls |
 | [util-linuxport](https://github.com/zopencommunity/util-linuxport) | 4 | Skipped | bash, dnf5, jq, openldap |
 | [wgetport](https://github.com/zopencommunity/wgetport) | 4 | 20.3% | hello, man-db, procps, sed |
+| [cjsonport](https://github.com/zopencommunity/cjsonport) | 3 | Skipped | libdio, nano, vim |
 | [doxygenport](https://github.com/zopencommunity/doxygenport) | 3 | 98.1% | cppunit, librepo, rpm |
 | [expatport](https://github.com/zopencommunity/expatport) | 3 | 100.0% | apr, cronie, git |
 | [glibport](https://github.com/zopencommunity/glibport) | 3 | 88.6% | createrepo_c, dnf5, librepo |
@@ -142,15 +143,16 @@
 | [gpgport](https://github.com/zopencommunity/gpgport) | 3 | 94.7% | libgpgme, librepo, rpm |
 | [libksbaport](https://github.com/zopencommunity/libksbaport) | 3 | 100.0% | gpg, libgpgme, ntbtls |
 | [libssh2port](https://github.com/zopencommunity/libssh2port) | 3 | 6.8% | curl, git, llamacpp |
+| [metaldioport](https://github.com/zopencommunity/metaldioport) | 3 | 100.0% | libdio, nano, vim |
 | [moreutilsport](https://github.com/zopencommunity/moreutilsport) | 3 | Skipped | zos-code-page-tools, zosnc, zospstree |
 | [rpmport](https://github.com/zopencommunity/rpmport) | 3 | 100.0% | createrepo_c, dnf5, libsolv |
 | [zedc_asciiport](https://github.com/zopencommunity/zedc_asciiport) | 3 | 100.0% | gzip, unzip, zip |
 | [bash-completionport](https://github.com/zopencommunity/bash-completionport) | 2 | 100.0% | createrepo_c, dnf5 |
 | [checkport](https://github.com/zopencommunity/checkport) | 2 | 77.8% | createrepo_c, librepo |
-| [cjsonport](https://github.com/zopencommunity/cjsonport) | 2 | Skipped | libdio, vim |
 | [cpioport](https://github.com/zopencommunity/cpioport) | 2 | 93.8% | libarchive, rpm |
 | [janssonport](https://github.com/zopencommunity/janssonport) | 2 | 100.0% | avro-c-lib, libserdes |
 | [libbsdport](https://github.com/zopencommunity/libbsdport) | 2 | 100.0% | librdkafka, libserdes |
+| [libdioport](https://github.com/zopencommunity/libdioport) | 2 | 100.0% | nano, vim |
 | [libgpgmeport](https://github.com/zopencommunity/libgpgmeport) | 2 | 100.0% | dnf5, librepo |
 | [libuvport](https://github.com/zopencommunity/libuvport) | 2 | 98.6% | luv, neovim |
 | [man-dbport](https://github.com/zopencommunity/man-dbport) | 2 | 97.7% | openssh, prompters |
@@ -178,7 +180,6 @@
 | [jqport](https://github.com/zopencommunity/jqport) | 1 | 88.9% | boost |
 | [jsoncport](https://github.com/zopencommunity/jsoncport) | 1 | 96.0% | dnf5 |
 | [libarchiveport](https://github.com/zopencommunity/libarchiveport) | 1 | 62.2% | rpm |
-| [libdioport](https://github.com/zopencommunity/libdioport) | 1 | 100.0% | vim |
 | [libeventport](https://github.com/zopencommunity/libeventport) | 1 | 100.0% | tmux |
 | [libgdbmport](https://github.com/zopencommunity/libgdbmport) | 1 | 100.0% | man-db |
 | [libmdport](https://github.com/zopencommunity/libmdport) | 1 | 100.0% | libbsd |
@@ -192,7 +193,6 @@
 | [luarocksport](https://github.com/zopencommunity/luarocksport) | 1 | 100.0% | luv |
 | [lzipport](https://github.com/zopencommunity/lzipport) | 1 | 100.0% | ed |
 | [mesonport](https://github.com/zopencommunity/mesonport) | 1 | 66.7% | glib |
-| [metaldioport](https://github.com/zopencommunity/metaldioport) | 1 | 100.0% | libdio |
 | [netpbmport](https://github.com/zopencommunity/netpbmport) | 1 | 34.9% | groff |
 | [onigurumaport](https://github.com/zopencommunity/onigurumaport) | 1 | 100.0% | jq |
 | [pythonport](https://github.com/zopencommunity/pythonport) | 1 | Unknown | prometheus |
@@ -315,4 +315,4 @@
 | [zospstreeport](https://github.com/zopencommunity/zospstreeport) | 0 | 100.0% | None |
 | [zotsampleport](https://github.com/zopencommunity/zotsampleport) | 0 | 100.0% | None |
 
-Last updated:  2025-09-26 06:15:14 UTC
+Last updated:  2025-09-27 06:14:14 UTC
