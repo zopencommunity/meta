@@ -75,13 +75,13 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 ## Build_System 
 
-<div class="tool-item-filterable" data-package-name="dnf5" data-searchable-text="dnf5 Blue 80.0% STABLE_dnf5_3762 build_system port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="dnf5" data-searchable-text="dnf5 Blue 80.0% STABLE_dnf5_3762 Next-generation RPM package management system build_system port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/dnf5port" target="_blank" rel="noopener noreferrer">dnf5</a></strong></div>
     <div class="tool-status">Status: Blue</div>
     <div class="tool-test">Test: 80.0%</div>
     <div class="tool-release"><a href="https://github.com/zopencommunity/dnf5port/releases/download/STABLE_dnf5port_3762/dnf5-5.2.17.0.20250925_050115.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_dnf5_3762</a></div>
-    <div class="tool-desc" title=""></div>
+    <div class="tool-desc" title="Next-generation RPM package management system">Next-generation RPM package management system</div>
   </div>
 </div>
 
@@ -2962,4 +2962,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-09-27 06:14:14 UTC
+Last updated:  2025-09-28 06:14:15 UTC
