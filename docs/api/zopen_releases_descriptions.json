@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2025-09-26T22:10:14+00:00Z",
+  "generation_timestamp_utc": "2025-09-29T05:31:00+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -269,7 +269,7 @@
     "clang-format": "",
     "crush": "AI coding agent for your favourite terminal ",
     "libkqueue": "A user space implementation of the kqueue(2) kernel event notification mechanism libkqueue acts as a translator between the kevent structure and the native kernel facilities on Linux, Android, Solaris, and Windows.",
-    "dnf5": "",
+    "dnf5": "Next-generation RPM package management system",
     "alternatives": "",
     "createrepo_c": "",
     "cppunit": "",
