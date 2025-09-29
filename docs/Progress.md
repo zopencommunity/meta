@@ -18,6 +18,7 @@
 * [caddyport](https://github.com/zopencommunity/caddyport) - Tests skipped or not enabled
 * [chezmoiport](https://github.com/zopencommunity/chezmoiport) - Tests skipped or not enabled
 * [cjsonport](https://github.com/zopencommunity/cjsonport) - Tests skipped or not enabled
+* [cpioport](https://github.com/zopencommunity/cpioport) - Tests skipped or not enabled
 * [cppcheckport](https://github.com/zopencommunity/cppcheckport) - Tests skipped or not enabled
 * [crushport](https://github.com/zopencommunity/crushport) - Tests skipped or not enabled
 * [depot_toolsport](https://github.com/zopencommunity/depot_toolsport) - Tests skipped or not enabled
@@ -149,7 +150,7 @@
 | [zedc_asciiport](https://github.com/zopencommunity/zedc_asciiport) | 3 | 100.0% | gzip, unzip, zip |
 | [bash-completionport](https://github.com/zopencommunity/bash-completionport) | 2 | 100.0% | createrepo_c, dnf5 |
 | [checkport](https://github.com/zopencommunity/checkport) | 2 | 77.8% | createrepo_c, librepo |
-| [cpioport](https://github.com/zopencommunity/cpioport) | 2 | 93.8% | libarchive, rpm |
+| [cpioport](https://github.com/zopencommunity/cpioport) | 2 | Skipped | libarchive, rpm |
 | [janssonport](https://github.com/zopencommunity/janssonport) | 2 | 100.0% | avro-c-lib, libserdes |
 | [libbsdport](https://github.com/zopencommunity/libbsdport) | 2 | 100.0% | librdkafka, libserdes |
 | [libdioport](https://github.com/zopencommunity/libdioport) | 2 | 100.0% | nano, vim |
@@ -315,4 +316,4 @@
 | [zospstreeport](https://github.com/zopencommunity/zospstreeport) | 0 | 100.0% | None |
 | [zotsampleport](https://github.com/zopencommunity/zotsampleport) | 0 | 100.0% | None |
 
-Last updated:  2025-09-28 06:14:15 UTC
+Last updated:  2025-09-29 06:15:46 UTC

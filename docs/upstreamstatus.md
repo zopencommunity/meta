@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-09-28 06:12:42 EDT.*
+*Report generated on: 2025-09-29 06:14:15 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 272
-- **Total Current Lines of Code (LOC) in Patches:** 43,318
-- **Total Number of Current Patch Files:** 877
-- **Average Current Patch LOC per Project:** 159.26
-- **Average Current Patch Count per Project:** 3.22
+- **Total Current Lines of Code (LOC) in Patches:** 43,850
+- **Total Number of Current Patch Files:** 882
+- **Average Current Patch LOC per Project:** 161.21
+- **Average Current Patch Count per Project:** 3.24
 
 ### Historical Trends (All Projects)
 
@@ -46,6 +46,7 @@
 | [util-linuxport](#repo-util-linuxport) | 630 | +0 | 16 |
 | [redisport](#repo-redisport) | 588 | +0 | 3 |
 | [unzipport](#repo-unzipport) | 549 | +0 | 12 |
+| [cpioport](#repo-cpioport) | 532 | +532 | 5 |
 | [inetutilsport](#repo-inetutilsport) | 514 | +0 | 20 |
 | [cronieport](#repo-cronieport) | 510 | +0 | 13 |
 | [screenport](#repo-screenport) | 485 | +0 | 7 |
@@ -274,7 +275,6 @@
 | [spdlogport](#repo-spdlogport) | 0 | +0 | 0 |
 | [creduceport](#repo-creduceport) | 0 | +0 | 0 |
 | [luajitport](#repo-luajitport) | 0 | +0 | 0 |
-| [cpioport](#repo-cpioport) | 0 | +0 | 0 |
 | [bcport](#repo-bcport) | 0 | +0 | 0 |
 | [git-sizerport](#repo-git-sizerport) | 0 | +0 | 0 |
 | [chezmoiport](#repo-chezmoiport) | 0 | +0 | 0 |
@@ -1118,6 +1118,30 @@
 | `patches/unzip.h.patch` | `patches` | 27 |
 | `patches/unzpriv.h.patch` | `patches` | 25 |
 | `patches/zipinfo.c.patch` | `patches` | 14 |
+
+---
+
+<a id="repo-cpioport"></a>
+## cpioport
+
+- **Origin Date (First Commit):** 2025-04-09
+- **Current Patch LOC:** 532
+- **Current Patch Count:** 5
+
+### Historical Trends
+
+![LOC Trend for cpioport](images/upstream/cpioport_current_loc_trend.png)
+![Count Trend for cpioport](images/upstream/cpioport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/copyin.c.patch` | `patches` | 240 |
+| `patches/copyout.c.patch` | `patches` | 32 |
+| `patches/filetypes.c.patch` | `patches` | 88 |
+| `patches/tar.c.patch` | `patches` | 151 |
+| `patches/util.c.patch` | `patches` | 21 |
 
 ---
 
@@ -5831,24 +5855,6 @@
 ## luajitport
 
 - **Origin Date (First Commit):** 2025-04-08
-- **Current Patch LOC:** 0
-- **Current Patch Count:** 0
-
-### Historical Trends
-
-*(Patch LOC trend graph not generated)*
-*(Patch count trend graph not generated)*
-
-### Current Patch Details
-
-*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
-
----
-
-<a id="repo-cpioport"></a>
-## cpioport
-
-- **Origin Date (First Commit):** 2025-04-09
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 
