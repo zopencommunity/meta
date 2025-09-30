@@ -11,7 +11,7 @@ if isTrue "${isactive}"; then
   (zopen clean --cache >/dev/null 2>&1)
   echo "- Cache cleaned."
 elif isFalse "${isactive}"; then
-  printVebose "autoclean cache is disable; no clean will occur"
+  printVerbose "autoclean cache is disable; no clean will occur"
 else
   printWarning "Invalid value '${isactive}' for autocacheclean config parameter [should be 'true' or 'false']."
   if type zopen-config-helper >/dev/null 2>&1; then

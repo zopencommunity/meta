@@ -12,7 +12,7 @@ fi
 if isTrue "${isactive}"; then
   (zopen clean --unused "${pkg}" >/dev/null 2>&1)
 elif isFalse "${isactive}"; then
-  printVebose "autopkgpurge is disabled; no clean will occur"
+  printVerbose "autopkgpurge is disabled; no clean will occur"
 else
   printWarning "Invalid value '${isactive}' for autopkgpurge config parameter [should be true or false]."
   if type zopen-config-helper >/dev/null 2>&1; then
