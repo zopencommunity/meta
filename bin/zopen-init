@@ -543,7 +543,7 @@ zz
         --arg skip_size_check "${skip_size_check}" \
                 ".release_line = \$releaseLine |
                  .override_zos_tools = \$isoverrideZOSTools |
-                 .is_collecting_stats = \$isCollectingStats
+                 .is_collecting_stats = \$isCollectingStats |
                  .autocacheclean = \$autocacheclean |
                  .autopkgpurge = \$autopkgpurge |
                  .skip_broken = \$skip_broken |
