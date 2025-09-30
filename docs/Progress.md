@@ -90,7 +90,7 @@
 | [bashport](https://github.com/zopencommunity/bashport) | 55 | 88.2% | apr, autoconf, avro-c-lib, bash-completion, bison, blis, check, cpio, cronie, diffutils, direnv, dnf5, ed, expat, flex, fmt, gflags, git, git-extras, gn, gradle, groovy, hazelcast, jansson, jenkins, jq, libarchive, libbsd, libiconv, libkqueue, libmd, libpsl, librdkafka, librepo, libsasl2, libxml2, libyaml, maven, meta, netpbm, oniguruma, procps, prometheus, prompters, re2c, redis, rpm, shdoc, texinfo, tree, vim, which, xmlto, zos-code-page-tools, zospstree |
 | [sedport](https://github.com/zopencommunity/sedport) | 54 | 84.7% | apr, bash, bash-completion, boost, byacc, check, coreutils, cpio, cppunit, doom-ascii, doxygen, git, gpg, groff, gzip, jansson, libassuan, libbsd, libgcrypt, libgpgerror, libgpgme, libiconv, libkqueue, libksba, libmd, librdkafka, libsasl2, libssh2, libxml2, libxslt, libyaml, m4, man-db, ncurses, neovim, npth, ntbtls, openssh, perl, php, pinentry, pkgconfig, procps, prompters, quilt, re2c, readline, rpm, rsync, shdoc, util-linux, uucp, vim, which |
 | [grepport](https://github.com/zopencommunity/grepport) | 49 | 92.2% | apr, bash, bash-completion, bc, blis, byacc, check, cpio, cppunit, ctags, dnf5, doxygen, fmt, glib, gnulib, gzip, jenkins, jsonc, less, libkqueue, libpcre, libpcre2, librdkafka, librepo, libserdes, libsolv, libxslt, libyaml, m4, man-db, meta, ntbtls, openldap, perl, procps, prometheus, quilt, readline, redis, rpm, shdoc, snappy-c, stow, toml11, util-linux, wharf, which, xmlto, zlib-ng |
-| [diffutilsport](https://github.com/zopencommunity/diffutilsport) | 46 | 87.6% | apr, bash, bison, boost, byacc, check, coreutils, cronie, ctags, flex, gawk, getopt, git, gnulib, gpg, grep, groff, gzip, jq, jsonc, libassuan, libdio, libgcrypt, libgpgerror, libgpgme, libiconv, libkqueue, libksba, libpcre, libpcre2, libxml2, libxslt, libyaml, man-db, netpbm, npth, ntbtls, php, pinentry, quilt, re2c, rsync, texinfo, vim, which, xmlto |
+| [diffutilsport](https://github.com/zopencommunity/diffutilsport) | 47 | 87.6% | apr, bash, bison, boost, byacc, check, coreutils, cronie, ctags, flex, gawk, getopt, git, gnulib, gpg, grep, groff, gzip, jq, jsonc, libassuan, libdio, libgcrypt, libgpgerror, libgpgme, libiconv, libkqueue, libksba, libpcre, libpcre2, libxml2, libxslt, libyaml, man-db, netpbm, npth, ntbtls, php, pinentry, quilt, re2c, rpm, rsync, texinfo, vim, which, xmlto |
 | [gettextport](https://github.com/zopencommunity/gettextport) | 42 | 94.4% | alternatives, bash, check, coreutils, cronie, ctags, curl, dnf5, expat, getopt, git, glib, gpg, hello, less, libassuan, libgcrypt, libgpgerror, libgpgme, libiconv, libksba, libpsl, librepo, libsasl2, libsolv, libyaml, m4, make, man-db, nano, neovim, netpbm, npth, ntbtls, perl, pinentry, procps, rpm, util-linux, uucp, vim, which |
 | [opensslport](https://github.com/zopencommunity/opensslport) | 41 | 99.7% | apr, c3270, cmake, createrepo_c, cronie, curl, expat, file, git, gpg, grpc, jq, libarchive, libassuan, libbsd, libevent, libgcrypt, libgpgerror, libksba, librabbitmq, librdkafka, librepo, libsasl2, libserdes, libssh2, llamacpp, lynx, nghttp2, ninja, npth, ntbtls, openldap, openssh, pinentry, redis, rpm, rsync, sudo, tcl, tcltls, wget |
 | [cmakeport](https://github.com/zopencommunity/cmakeport) | 39 | 82.4% | asio, avro-c-lib, boost, ccache, check, cjson, clang-format, cmake, cppcheck, createrepo_c, dnf5, doxygen, duckdb, fish, fmt, gflags, grpc, jansson, jsonc, libevent, libkqueue, librabbitmq, librepo, libsolv, libuv, llamacpp, luv, neovim, ninja, popt, protobuf, rpm, spdlog, toml11, unzip, zedc_ascii, zip, zoslib, zusage |
@@ -156,6 +156,7 @@
 | [libdioport](https://github.com/zopencommunity/libdioport) | 2 | 100.0% | nano, vim |
 | [libgpgmeport](https://github.com/zopencommunity/libgpgmeport) | 2 | 100.0% | dnf5, librepo |
 | [libuvport](https://github.com/zopencommunity/libuvport) | 2 | 98.6% | luv, neovim |
+| [lzipport](https://github.com/zopencommunity/lzipport) | 2 | 100.0% | ed, rpm |
 | [man-dbport](https://github.com/zopencommunity/man-dbport) | 2 | 97.7% | openssh, prompters |
 | [npthport](https://github.com/zopencommunity/npthport) | 2 | 100.0% | gpg, libgpgme |
 | [ntbtlsport](https://github.com/zopencommunity/ntbtlsport) | 2 | 100.0% | gpg, libgpgme |
@@ -192,11 +193,11 @@
 | [libxsltport](https://github.com/zopencommunity/libxsltport) | 1 | 100.0% | moreutils |
 | [lpegport](https://github.com/zopencommunity/lpegport) | 1 | 100.0% | neovim |
 | [luarocksport](https://github.com/zopencommunity/luarocksport) | 1 | 100.0% | luv |
-| [lzipport](https://github.com/zopencommunity/lzipport) | 1 | 100.0% | ed |
 | [mesonport](https://github.com/zopencommunity/mesonport) | 1 | 66.7% | glib |
 | [netpbmport](https://github.com/zopencommunity/netpbmport) | 1 | 34.9% | groff |
 | [onigurumaport](https://github.com/zopencommunity/onigurumaport) | 1 | 100.0% | jq |
 | [pythonport](https://github.com/zopencommunity/pythonport) | 1 | Unknown | prometheus |
+| [quiltport](https://github.com/zopencommunity/quiltport) | 1 | 100.0% | rpm |
 | [re2cport](https://github.com/zopencommunity/re2cport) | 1 | 83.3% | php |
 | [scdocport](https://github.com/zopencommunity/scdocport) | 1 | 100.0% | rpm |
 | [spdlogport](https://github.com/zopencommunity/spdlogport) | 1 | 100.0% | doxygen |
@@ -288,7 +289,6 @@
 | [prometheusport](https://github.com/zopencommunity/prometheusport) | 0 | 100.0% | None |
 | [promptersport](https://github.com/zopencommunity/promptersport) | 0 | Skipped | None |
 | [protobufport](https://github.com/zopencommunity/protobufport) | 0 | 100.0% | None |
-| [quiltport](https://github.com/zopencommunity/quiltport) | 0 | 100.0% | None |
 | [redisport](https://github.com/zopencommunity/redisport) | 0 | 97.9% | None |
 | [s5cmdport](https://github.com/zopencommunity/s5cmdport) | 0 | Skipped | None |
 | [sccport](https://github.com/zopencommunity/sccport) | 0 | Skipped | None |
@@ -316,4 +316,4 @@
 | [zospstreeport](https://github.com/zopencommunity/zospstreeport) | 0 | 100.0% | None |
 | [zotsampleport](https://github.com/zopencommunity/zotsampleport) | 0 | 100.0% | None |
 
-Last updated:  2025-09-29 06:15:46 UTC
+Last updated:  2025-09-30 06:15:42 UTC

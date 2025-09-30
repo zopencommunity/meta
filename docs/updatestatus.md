@@ -93,7 +93,7 @@
 - 2024-11-07: [Update conan-version to 2.9.2 from 2.9.1](https://github.com/zopencommunity/conanport/pull/9) ❌
 
 ### coreutilsport
-- 2025-09-23: [Update coreutils-version to 9.8 from 9.7](https://github.com/zopencommunity/coreutilsport/pull/104) ❌
+- 2025-09-23: [Update coreutils-version to 9.8 from 9.7](https://github.com/zopencommunity/coreutilsport/pull/104) ✅
 
 ### cppcheckport
 - 2025-09-03: [Update cppcheck-version to 2.18.3 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/16) ❌
@@ -557,6 +557,7 @@
 - 2025-07-21: [Update victoriametrics-version to 1.122.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/32) ❌
 
 ### vimport
+- 2025-09-29: [Update vim-version to 9.1.180 from 9.1.1780](https://github.com/zopencommunity/vimport/pull/148) ❌
 - 2025-09-26: [Update vim-version to 9.1.1790 from 9.1.1780](https://github.com/zopencommunity/vimport/pull/147) ❌
 
 ### xmltoport
@@ -876,5 +877,5 @@
 ---
 
 
-> Last updated: 2025-09-29 06:09:01 EDT
+> Last updated: 2025-09-30 06:09:04 EDT
 

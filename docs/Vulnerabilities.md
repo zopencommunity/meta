@@ -2,37 +2,6 @@
 
 [Vulnerabilities RSS feed XML file](https://raw.githubusercontent.com/zopencommunity/meta/main/docs/vulnerabilities_rss.xml)
 
-## cmake
-
-<details>
-<summary>cmake (Build 2795) - (STABLE) -- 1 low vulnerability</summary>
-
-- Affected release URL: [cmake (Build 2795) - (STABLE)](https://github.com/zopencommunity/cmakeport/releases/tag/STABLE_cmakeport_2795)
-
-- **(LOW severity) CVE-2025-9301**: A vulnerability was determined in cmake 4.1.20250725-gb5cce23. This affects the function cmForEachFunctionBlocker::ReplayItems of the file cmForEachCommand.cxx. This manipulation causes reachable assertion. The attack needs to be launched locally. The exploit has been publicly disclosed and may be utilized. Patch name: 37e27f71bc356d880c908040cd0cb68fa2c371b8. It is suggested to install a patch to address this issue.
-  - **Currently no fix -- still affects the [latest release](https://github.com/zopencommunity/cmakeport/releases/tag/STABLE_cmakeport_3201)**.
-
-</details>
-
-<details>
-<summary>cmake (Build 2914) - (STABLE) -- 1 low vulnerability</summary>
-
-- Affected release URL: [cmake (Build 2914) - (STABLE)](https://github.com/zopencommunity/cmakeport/releases/tag/STABLE_cmakeport_2914)
-
-- **(LOW severity) CVE-2025-9301**: A vulnerability was determined in cmake 4.1.20250725-gb5cce23. This affects the function cmForEachFunctionBlocker::ReplayItems of the file cmForEachCommand.cxx. This manipulation causes reachable assertion. The attack needs to be launched locally. The exploit has been publicly disclosed and may be utilized. Patch name: 37e27f71bc356d880c908040cd0cb68fa2c371b8. It is suggested to install a patch to address this issue.
-  - **Currently no fix -- still affects the [latest release](https://github.com/zopencommunity/cmakeport/releases/tag/STABLE_cmakeport_3201)**.
-
-</details>
-
-<details>
-<summary>cmake (Build 3201) - (STABLE) -- 1 low vulnerability</summary>
-
-- Affected release URL: [cmake (Build 3201) - (STABLE)](https://github.com/zopencommunity/cmakeport/releases/tag/STABLE_cmakeport_3201)
-
-- **(LOW severity) CVE-2025-9301**: A vulnerability was determined in cmake 4.1.20250725-gb5cce23. This affects the function cmForEachFunctionBlocker::ReplayItems of the file cmForEachCommand.cxx. This manipulation causes reachable assertion. The attack needs to be launched locally. The exploit has been publicly disclosed and may be utilized. Patch name: 37e27f71bc356d880c908040cd0cb68fa2c371b8. It is suggested to install a patch to address this issue.
-  - **Currently no fix -- this is the latest release**.
-</details>
-
 ## vim
 
 <details>
@@ -955,6 +924,37 @@ the specified cursor position. It's not quite clear yet, what can lead to this s
 - **(CRITICAL severity) CVE-2023-45853**: MiniZip in zlib through 1.3 has an integer overflow and resultant heap-based buffer overflow in zipOpenNewFileInZip4_64 via a long filename, comment, or extra field. NOTE: MiniZip is not a supported part of the zlib product. NOTE: pyminizip through 0.2.6 is also vulnerable because it bundles an affected zlib version, and exposes the applicable MiniZip code through its compress API.
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_3574)**.
 
+</details>
+
+## cmake
+
+<details>
+<summary>cmake (Build 2795) - (STABLE) -- 1 low vulnerability</summary>
+
+- Affected release URL: [cmake (Build 2795) - (STABLE)](https://github.com/zopencommunity/cmakeport/releases/tag/STABLE_cmakeport_2795)
+
+- **(LOW severity) CVE-2025-9301**: A vulnerability was determined in cmake 4.1.20250725-gb5cce23. This affects the function cmForEachFunctionBlocker::ReplayItems of the file cmForEachCommand.cxx. This manipulation causes reachable assertion. The attack needs to be launched locally. The exploit has been publicly disclosed and may be utilized. Patch name: 37e27f71bc356d880c908040cd0cb68fa2c371b8. It is suggested to install a patch to address this issue.
+  - **Currently no fix -- still affects the [latest release](https://github.com/zopencommunity/cmakeport/releases/tag/STABLE_cmakeport_3201)**.
+
+</details>
+
+<details>
+<summary>cmake (Build 2914) - (STABLE) -- 1 low vulnerability</summary>
+
+- Affected release URL: [cmake (Build 2914) - (STABLE)](https://github.com/zopencommunity/cmakeport/releases/tag/STABLE_cmakeport_2914)
+
+- **(LOW severity) CVE-2025-9301**: A vulnerability was determined in cmake 4.1.20250725-gb5cce23. This affects the function cmForEachFunctionBlocker::ReplayItems of the file cmForEachCommand.cxx. This manipulation causes reachable assertion. The attack needs to be launched locally. The exploit has been publicly disclosed and may be utilized. Patch name: 37e27f71bc356d880c908040cd0cb68fa2c371b8. It is suggested to install a patch to address this issue.
+  - **Currently no fix -- still affects the [latest release](https://github.com/zopencommunity/cmakeport/releases/tag/STABLE_cmakeport_3201)**.
+
+</details>
+
+<details>
+<summary>cmake (Build 3201) - (STABLE) -- 1 low vulnerability</summary>
+
+- Affected release URL: [cmake (Build 3201) - (STABLE)](https://github.com/zopencommunity/cmakeport/releases/tag/STABLE_cmakeport_3201)
+
+- **(LOW severity) CVE-2025-9301**: A vulnerability was determined in cmake 4.1.20250725-gb5cce23. This affects the function cmForEachFunctionBlocker::ReplayItems of the file cmForEachCommand.cxx. This manipulation causes reachable assertion. The attack needs to be launched locally. The exploit has been publicly disclosed and may be utilized. Patch name: 37e27f71bc356d880c908040cd0cb68fa2c371b8. It is suggested to install a patch to address this issue.
+  - **Currently no fix -- this is the latest release**.
 </details>
 
 ## redis
