@@ -110,7 +110,7 @@ setAlt()
   newver="$2"
   if [ -e "${ZOPEN_PKGINSTALL}/${package}/" ]; then
     printVerbose "${package} is either installed or has been previously"
-    found=$(zosfind "${ZOPEN_PKGINSTALL}/${package}/" -type l -prune -o -type d -print | sed -e "s#${ZOPEN_PKGINSTALL}/${package}/\([^/]*\).*#\1#" | uniq)
+    found=$(find "${ZOPEN_PKGINSTALL}/${package}/" -type l -prune -o -type d -print | sed -e "s#${ZOPEN_PKGINSTALL}/${package}/\([^/]*\).*#\1#" | uniq)
   else
     printVerbose "${package} has never been installed on the system"
   fi
@@ -162,7 +162,7 @@ listAlts()
   package=$(echo "${package}" | awk '{$1=$1};1')
   if [ -e "${ZOPEN_PKGINSTALL}/${package}/" ]; then
     printVerbose "${package} is either installed or has been previously"
-    found=$(zosfind "${ZOPEN_PKGINSTALL}/${package}/" -type l -prune -o -type d -print | sed -e "s#${ZOPEN_PKGINSTALL}/${package}/\([^/]*\).*#\1#" | uniq)
+    found=$(find "${ZOPEN_PKGINSTALL}/${package}/" -type l -prune -o -type d -print | sed -e "s#${ZOPEN_PKGINSTALL}/${package}/\([^/]*\).*#\1#" | uniq)
   else
     printVerbose "${package} has never been installed on the system"
   fi

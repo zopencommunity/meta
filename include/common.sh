@@ -5,19 +5,23 @@
 
 zopenInitialize()
 {
+  # Hardcode the z/OS-supplied tooling to ensure zopen only uses standard
+  # tools
+  export PATH=/bin:"$PATH"
+
   # Capture start time before setting trap
   fullProcessStartTime=${SECONDS}
-  
+
   # Create the cleanup pipeline and exit handler
   trap "cleanupFunction" EXIT INT TERM QUIT HUP
-  
+
   # Temporary files
   for zopen_tmp_dir in "${TMPDIR}" "${TMP}" /tmp; do
     if [ ! -z ${zopen_tmp_dir} ] && [ -d ${zopen_tmp_dir} ]; then
       break
     fi
   done
-  
+
   if [ ! -d "${zopen_tmp_dir}" ]; then
     printError "Temporary directory not found. Please specify \$TMPDIR, \$TMP or have a valid /tmp directory."
   fi
@@ -29,6 +33,7 @@ zopenInitialize()
   fi
 
   ZOPEN_ORGNAME="zopencommunity"
+  # shellcheck disable=SC2034
   ZOPEN_GITHUB="https://github.com/${ZOPEN_ORGNAME}"
   # shellcheck disable=SC2034
   ZOPEN_ANALYTICS_JSON="${ZOPEN_ROOTFS}/var/lib/zopen/analytics.json"
@@ -80,7 +85,7 @@ cleanup() {
 addCleanupTrapCmd2(){
   # Attempt to remove any redirects; rather than test, simpler to remove
   # and re-add if present.
-  newcmd=$(echo "$cmd" | zossed -E "s/[ \t]*[1-9]*[<>][>|&]?[ \t]*[^ \t]*//g")
+  newcmd=$(echo "$cmd" | sed -E "s/[ \t]*[1-9]*[<>][>|&]?[ \t]*[^ \t]*//g")
   newcmd="${newcmd} >/dev/null 2>&1"
   # Command Trace MUST be disabled as the output from this can become
   # interleaved with output when calling zopen sub-processes.
@@ -97,7 +102,7 @@ addCleanupTrapCmd2(){
     newtrapcmd=$(
         echo "${script}" | while read trapcmd; do
         sigcmd=$(echo "${trapcmd}" |
-            zossed "s/trap -- \"\(.*\)\" ${trappedSignal}.*/\1/")
+            sed "s/trap -- \"\(.*\)\" ${trappedSignal}.*/\1/")
         # No match/replace in sed, then sigcmd remains unchanged
         [ "${sigcmd}" = "${trapcmd}" ] && continue
         # There was a match, so sigcmd contains the string of commands
@@ -271,7 +276,7 @@ mktempdir()
 
 isPermString()
 {
-  test=$(echo "$1" | zossed "s/[-+rwxugo,=]//g")
+  test=$(echo "$1" | sed "s/[-+rwxugo,=]//g")
   if [ -n "${test}" ]; then
     printDebug "Permission string '$1' was invalid"
     false;
@@ -504,7 +509,7 @@ if \${knv}; then
     IFS=":"
     for token in \${knvp##*=}; do
       tok=\$(echo "\${token}" | /bin/sed -e 's#/usr/local/zopen/\([^/]*\)/[^/]*/#/usr/local/zopen/\1/\1/#')
-      newval=\$(printf "%s:%s" "\${newval}" "\${tok}")
+      newval=\$(/bin/printf "%s:%s" "\${newval}" "\${tok}")
     done
     echo "\${exportknv}\${envvar}=\${newval#*:}"
     IFS="\${cIFS}"
@@ -561,14 +566,14 @@ deref_symlink() {
     fi
     targetName=$(basename "${target}")
     targetDir=$(dirname "${target}")
-    # Check if dir starts with a '/'; if not need to calculate absolute 
+    # Check if dir starts with a '/'; if not need to calculate absolute
     # fully-qualified name
     case "$target" in
-        /*) targetDir=$(cd "${targetDir}" && pwd -P);; 
-        *) 
+        /*) targetDir=$(cd "${targetDir}" && pwd -P);;
+        *)
           symlink_dir=$(dirname "$symlink")
           targetDir=$(cd "$(pwd -P)/${symlink_dir}" && pwd -P)
-    esac    
+    esac
     absolute_dir=$(cd "$targetDir" && pwd -P)  # Resolves symlinked dirs
     echo "$absolute_dir/$targetName"
 }
@@ -684,7 +689,7 @@ ansiline()
   deltay=$2
   echostr="$3"
   ansimove "$1" "$2"
-  zosecho "${echostr}\c"
+  echo "${echostr}\c"
 }
 
 ansimove()
@@ -707,7 +712,7 @@ ansimove()
       movestr="${movestr}${ESC}${CSI}$((deltay * -1))${CRSRUP}"
     fi
   fi
-  zosecho "${movestr}\c"
+  echo "${movestr}\c"
 }
 
 getScreenCols()
@@ -725,46 +730,6 @@ getScreenCols()
   echo "${lclcols}"
 }
 
-zostr()
-{
-  # Use the standard z/OS 'tr' command
-  /bin/tr "$@"
-}
-zosecho()
-{
-  # Use the standard z/OS echo utility; supports use of ANSI colour when
-  # required and is consistent across shells as it uses the EBCDIC ANSI
-  # control codes
-  /bin/echo "$@"
-}
-
-zossed()
-{
-  # Use the standard z/OS sed utility; If the sed package is installed
-  # GNU sed becomes the dominant version which might change how
-  # matching is performed
-  /bin/sed "$@"
-}
-
-zosfind()
-{
-  # Use the standard z/OS find utility; If the findutils package is installed,
-  # the installed find command takes precedence but is not compatible with the
-  # standard zos find [regex searches for "-name" are not allowed, but
-  # "-wholename" is not available on standard zosfind. For the tooling to be
-  # consistent across platforms (where findutils is/is not installed) use the
-  # standard zos version
-  /bin/find "$@"
-}
-
-zosdu()
-{
-  # Use the standard z/OS du utility; if the coreutils package is installed, this
-  # changes the behaviour of the du command so we need to ensure we support those
-  # who do not have that installed
-  /bin/du "$@"
-}
-
 findrev()
 {
   haystack="$1"
@@ -777,7 +742,7 @@ findrev()
 
 strtrim()
 {
-  echo "$1" | zossed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'
+  echo "$1" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'
 }
 
 text_center()
@@ -821,20 +786,20 @@ defineEnvironment()
   # Required for proper operation of (USS shipped) sed
   export _UNIX03=YES
 
-  # Use /bin/cat as the pager in case xlclang help is displayed, we don't want to wait for input
-  export PAGER=/bin/cat
+  # Use cat as the pager in case xlclang help is displayed, we don't want to wait for input
+  export PAGER=cat
 
   # Set a default umask of read and execute for user and group
   umask 0022
 }
 
 #
-# For now, explicitly specify zosecho to ensure we get the EBCDIC echo since the escape
+# For now, explicitly specify echo to ensure we get the EBCDIC echo since the escape
 # sequences are EBCDIC escape sequences
 #
 printColors()
 {
-  zosecho "$@"
+  echo "$@"
 }
 
 mutexReq()
@@ -844,7 +809,7 @@ mutexReq()
   [ -e lockdir ] || mkdir -p ${lockdir}
   mutex="${lockdir}/${mutex}"
   mypid=$(exec sh -c 'echo ${PPID}')
-  mygrandparent=$(/bin/ps -o ppid= -p "$mypid" | awk '{print $1}')
+  mygrandparent=$(ps -o ppid= -p "$mypid" | awk '{print $1}')
   if [ -e "${mutex}" ]; then
     lockedpid=$(cat ${mutex})
     {
@@ -896,7 +861,7 @@ relativePath2()
   # if the target is longer than the source, there might be some additional
   # elements in the shifted $0 to append
   if [ $# -gt 0 ]; then
-    relativePath=${relativePath}/$(echo $* | zossed "s/ /\//g")
+    relativePath=${relativePath}/$(echo $* | sed "s/ /\//g")
   fi
   IFS="${currentIFS}"
   echo "${relativePath}"
@@ -947,8 +912,8 @@ mergeIntoSystem()
   # ignore them as the first call should generate the correct link but
   # subsequent calls would generate a symlink that has incorrect dereferencing
   # and ignoring them is actually faster than individually creating the links!
-  zosfind . -type d | sort -r | while read dir; do
-    dir=$(echo "${dir}" | zossed "s#^./##")
+  find . -type d | sort -r | while read dir; do
+    dir=$(echo "${dir}" | sed "s#^./##")
     printDebug "Processing dir: ${dir}"
     [ "${dir}" = "." ] && continue
     mkdir -p "${processingDir}/${rebaseusr}/${dir}"
@@ -994,7 +959,6 @@ rmSymlinksFSCheck(){
   # Note that the contents of the links file are ordered such that
   # processing occurs depth-first; if, after removing orphaned symlinks,
   # a directory is empty, then it can be removed.
-  nfiles=$(zossed '1d;$d' "${dotlinks}" | wc -l  | tr -d ' ')
   printDebug "Creating Temporary dirname file"
   tempDirFile=$(mktempfile "unsymlink")
   [ -e "${tempDirFile}" ] && rm -f "${tempDirFile}" >/dev/null 2>&1
@@ -1005,7 +969,7 @@ rmSymlinksFSCheck(){
   addCleanupTrapCmd "rm -rf ${tempTrash}"
   printDebug "Using temporary file ${tempDirFile}"
   while read filetounlink; do
-    filetounlink=$(echo "${filetounlink}" | zossed 's/\(.*\).symbolic.*/\1/')
+    filetounlink=$(echo "${filetounlink}" | sed 's/\(.*\).symbolic.*/\1/')
     filename="$filetounlink"
     [ -z "${filetounlink}" ] && continue
     filetounlink="${ZOPEN_ROOTFS}/${filetounlink}"
@@ -1025,7 +989,7 @@ rmSymlinksFSCheck(){
       echo "Unprocessable file: '${filetounlink}'" >> "${tempTrash}"
     fi
   done <<EOF
-$(zossed '1d;$d' "${dotlinks}")
+$(sed '1d;$d' "${dotlinks}")
 EOF
 }
 
@@ -1212,7 +1176,7 @@ progressAnimation()
 getNthArrayArg ()
 {
   shift "$1"
-  zosecho "$1\c"
+  echo "$1\c"
 }
 
 waitforpid()
@@ -1486,7 +1450,7 @@ deleteDuplicateEntries()
 {
   value=$1
   delim=$2
-  echo "${value}${delim}" | awk -v RS="${delim}" '!($0 in a) {a[$0]; printf("%s%s", col, $0); col=RS; }' | zossed "s/${delim}$//"
+  echo "${value}${delim}" | awk -v RS="${delim}" '!($0 in a) {a[$0]; printf("%s%s", col, $0); col=RS; }' | sed "s/${delim}$//"
 }
 
 # Logging Types
@@ -1796,7 +1760,7 @@ asciiecho()
     return 2
   fi
   if [ "$(chtag -p "${file}" | cut -f2 -d' ')" = "IBM-1047" ]; then
-    if ! /bin/iconv -f IBM-1047 -t ISO8859-1 < "${file}" > "${file}_ascii" || ! chtag -tc ISO8859-1 "${file}_ascii" || ! mv "${file}_ascii" "${file}"; then
+    if ! iconv -f IBM-1047 -t ISO8859-1 < "${file}" > "${file}_ascii" || ! chtag -tc ISO8859-1 "${file}_ascii" || ! mv "${file}_ascii" "${file}"; then
       printError "Unable to convert EBCDIC text to ASCII for ${file}" >&2
     fi
   fi
@@ -1813,7 +1777,7 @@ a2e()
   fi
 
   if [ "$(chtag -p "${source}" | cut -f2 -d' ')" = "ISO8859-1" ]; then
-    /bin/iconv -f ISO8859-1 -t IBM-1047 "$source" > "$source.bk"
+    iconv -f ISO8859-1 -t IBM-1047 "$source" > "$source.bk"
     chtag -tc 1047 "$source.bk"
     mv "$source.bk" "$source"
   fi
@@ -1864,7 +1828,7 @@ promptYesNoAlways() {
   skip=$2
   if ! ${skip}; then
     while true; do
-      /bin/printf "${message} [y/n/a] "
+      printf "${message} [y/n/a] "
       read answer < /dev/tty
       answer=$(echo "${answer}" | tr '[A-Z]' '[a-z]')
       case "${answer}" in
@@ -1893,8 +1857,8 @@ getVersionedMetadata()
       return 1
   fi
   printDebug "Check for asset"
-  asset=$(/bin/printf "%s" "${releasemetadata}" | jq -e -r '.assets[0]')
-  if ! asset=$(/bin/printf "%s" "${releasemetadata}" | jq -e -r '.assets[0]'); then
+  asset=$(printf "%s" "${releasemetadata}" | jq -e -r '.assets[0]')
+  if ! asset=$(printf "%s" "${releasemetadata}" | jq -e -r '.assets[0]'); then
     printSoftError "Could not find asset for release version '${versioned}' in repo '${repo}'" 2> "${invalidPortAssetFile}"
     return 1
   fi
@@ -1912,8 +1876,8 @@ getTaggedMetadata()
     return 1
   fi
   printDebug "Check for asset"
-  asset=$(/bin/printf "%s" "${releasemetadata}" | jq -e -r '.assets[0]')
-  if ! asset=$(/bin/printf "%s" "${releasemetadata}" | jq -e -r '.assets[0]'); then
+  asset=$(printf "%s" "${releasemetadata}" | jq -e -r '.assets[0]')
+  if ! asset=$(printf "%s" "${releasemetadata}" | jq -e -r '.assets[0]'); then
     printSoftError "Could not find asset for release tagged '${tagged}' in repo '${repo}'" 2> "${invalidPortAssetFile}"
     return 1
   fi
@@ -1972,7 +1936,7 @@ getReleaseLineMetadata()
     return 1
   fi
   printDebug "Use quick check for asset to check for existence of metadata"
-  if ! asset="$(/bin/printf "%s" "${releasemetadata}" | jq -e -r '.assets[0]')"; then
+  if ! asset="$(printf "%s" "${releasemetadata}" | jq -e -r '.assets[0]')"; then
     printSoftError "Could not find asset for releaseline '${validatedReleaseLine}' for repo '${repo}' in ${JSON_CACHE}" 2> "${invalidPortAssetFile}"
     return 1
   fi
@@ -2020,7 +1984,7 @@ calculateReleaseLineMetadata()
       '.release_data[$repo] | map(select(.tag_name | startswith($releaseLine)))[0]' "${JSON_CACHE}")
 
   printDebug "Use quick check for asset to check for existence of metadata"
-  asset="$(/bin/printf "%s" "${releasemetadata}" | jq -e -r '.assets[0]')"
+  asset="$(printf "%s" "${releasemetadata}" | jq -e -r '.assets[0]')"
   [ "${asset}" = "null" ] && asset="" # jq uses null, translate to sh's empty
 
   if [ -n "${asset}" ]; then
@@ -2033,7 +1997,7 @@ calculateReleaseLineMetadata()
     releasemetadata=$(jq --arg repo "${repo}" --arg releaseLine "${alt}" \
         '.release_data[$repo] | map(select(.tag_name | startswith($releaseLine)))[0]' "${JSON_CACHE}")
     printDebug "Use quick check for asset to check for existence of metadata"
-    asset="$(/bin/printf "%s" "${releasemetadata}" | jq -e -r '.assets[0]')"
+    asset="$(printf "%s" "${releasemetadata}" | jq -e -r '.assets[0]')"
     [ "${asset}" = "null" ] && asset=""  # jq uses null, translate to sh's empty
     if [ $? -eq 0 ]; then
       printDebug "Found a release on the '${alt}' release line so release tagging is active"
@@ -2113,7 +2077,7 @@ getPortMetaData(){
       return 1
     fi
     printDebug "Getting specific asset details using metadata: ${releasemetadata}"
-    asset=$(/bin/printf "%s" "${releasemetadata}" | jq -e -r '.assets[0]')
+    asset=$(printf "%s" "${releasemetadata}" | jq -e -r '.assets[0]')
   fi
   if [ -z "${asset}" ]; then
     echo "${portName} asset metadata could not be found" 2> "${invalidPortAssetFile}"
@@ -2273,7 +2237,7 @@ generateInstallGraph(){
       if [ -e  "${invalidPortAssetFile}" ]; then
         printSoftError "The following ports cannot be installed: "
         while read invalidPort; do
-          /bin/printf "${WARNING} %s\n" "${invalidPort}"
+          printf "${WARNING} %s\n" "${invalidPort}"
         done < "${invalidPortAssetFile}"
         printError "Confirm port names, remove any 'port' suffixes and retry command."
       else
@@ -2377,13 +2341,13 @@ spaceValidate(){
     spaceRequiredMB=$(echo "scale=0; (${cacheBytes} + ${packageBytes}) / (1024 * 1024)" | bc)
     printInfo "After this operation, $(formattedFileSize ${spaceRequiredKb}) of additional disk space will be used."
   fi
-  availableSpaceKb=$(/bin/df -k "${ZOPEN_ROOTFS}" | sed "1d" | awk '{ print $3 }' | awk -F'/' '{ print $1 }')
+  availableSpaceKb=$(df -k "${ZOPEN_ROOTFS}" | sed "1d" | awk '{ print $3 }' | awk -F'/' '{ print $1 }')
   if [ "${availableSpaceKb}" -lt "${spaceRequiredKb}" ]; then
     printWarning "Your zopen file-system (${ZOPEN_ROOTFS}) only has $(formattedFileSize "${availableSpaceKb}") of available space."
   fi
   if ! ${yesToPrompts} || [ "${availableSpaceKb}" -lt "${spaceRequiredKb}" ]; then
     while true; do
-      /bin/printf "Do you want to continue [y/n/a]? "
+      printf "Do you want to continue [y/n/a]? "
       read continueInstall < /dev/tty
       case "${continueInstall}" in
         "y") break;;
@@ -2687,7 +2651,7 @@ EOF
 
 getActivePackageDirs()
 {
-  (unset CD_PATH; cd "${ZOPEN_PKGINSTALL}" && zosfind  ./*/. ! -name . -prune -type l)
+  (unset CD_PATH; cd "${ZOPEN_PKGINSTALL}" && find  ./*/. ! -name . -prune -type l)
 }
 
 
@@ -2733,7 +2697,7 @@ processActionScripts()
     fi
     printVerbose "Attempting to run script '${scriptletFile}'"
     # Run script in a subshell to prevent environment modification
-    /bin/printf "${CRSRSOL}${ERASELINE}Running ${scriptletFile}"
+    printf "${CRSRSOL}${ERASELINE}Running ${scriptletFile}"
     scriptletOutput=$({
       # shellcheck disable=SC1090
       # shellcheck disable=SC2240
@@ -2741,7 +2705,7 @@ processActionScripts()
       echo $?  # Append exit status to output
       } 2>&1
     )
-    /bin/printf "${CRSRSOL}${ERASELINE}${CRSRSOL}"
+    printf "${CRSRSOL}${ERASELINE}${CRSRSOL}"
     scriptletRc=$(echo "${scriptletOutput}" | tail -n 1)  # Extract exit status
     scriptletBody=$(echo "${scriptletOutput}" | sed '$d')  # Extract script output
     if [ "${scriptletRc}" -ne 0 ]; then {
@@ -2812,7 +2776,7 @@ updatePackageDB()
 
     mdj=$(jq '[{(.product.name):.}]' \
         "${escapedJSONFile}")
-    if [ -z "${mdj}" ]; then 
+    if [ -z "${mdj}" ]; then
     # If we couldn't get the repo name from .product.name, use (.*)port  - this might result
     # in odd cases [NATS...]
       mdj=$(jq '. as $metadata | .product.repo | match(".*/zopencommunity/(.*)port").captures[0].string | [{(.):$metadata}]' \
@@ -2862,7 +2826,7 @@ stripControlCharacters(){
 JSONcontrolChar2Unicode() {
   [ ! -f "$1" ] && assertFailed "No input file specified for parsing!"
   [ -e "$2" ] && assertFailed "Output file exists so cannot be used for output!"
-  zossed -E ' # Note this is a long string!
+  sed -E ' # Note this is a long string!
       s/\\/\\\\/g; # Escape reverse-solidus; the following are the control chars
       s/(^|[^\\])\x00/\1\\u0000/g; s/(^|[^\\])\x01/\1\\u0001/g;
       s/(^|[^\\])\x02/\1\\u0002/g; s/(^|[^\\])\x03/\1\\u0003/g;
@@ -2952,7 +2916,7 @@ diskusage()
 {
   path=$1
   # awk to "trim" output"
-  if ! size=$(zosdu -kts "${path}" | /bin/awk '{print ($1)}'); then
+  if ! size=$(du -kts "${path}" | awk '{print ($1)}'); then
     printError "Unable to generate disk usage (du) report for '${path}'"
   fi
   echo "${size}"

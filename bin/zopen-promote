@@ -293,7 +293,7 @@ rmDanglingLinks(){
   tmpfile=$(mktempfile "zopen_promote" ".pipe")
   addCleanupTrapCmd "rm -rf ${tmpfile}"
 
-  zosfind "${promotefs}" -type l -exec test ! -e {} \; -print > "${tmpfile}"
+  find "${promotefs}" -type l -exec test ! -e {} \; -print > "${tmpfile}"
   while IFS= read -r sl; do
     printVerbose "Removing symlink '${sl}'"
   #  rm -f "${sl}"
