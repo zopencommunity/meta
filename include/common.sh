@@ -2158,7 +2158,7 @@ validateInstallList(){
 # This uses the release json file to find whether any of the inputs are invalid
 # package names. Ideally, this would use the keys of the release_data however, the
 # NATS package breaks this as it is known as 'nats' in the repo but the port name is
-# NATS.  As such, use .product.name then fallback to the .url as a sanity check
+# NATS.  As such, use .product.name then fallback to the .tag as a sanity check
 # Note: this is not to make the match "case-insensitive", but to use whichever the
 # user uses as the name - if they know it as NATS, accept that!
 validatePackageList(){
@@ -2166,17 +2166,23 @@ validatePackageList(){
   # shellcheck disable=SC2086 # Using set -f disables globbing
   printVerbose "Stripping any version/tagging"
   installees=$(set -f; echo ${installees} |awk  -v ORS=, -v RS=' ' '{$1=$1; sub(/[=%].*/,x); print "\""$1"\""}')
+  # Check the metadata cache file to see if the needle is either the name of a
+  # port (so a key) or is defined in a tag
   invalidPortList=$(jq -r --argjson needles "[${installees%%,}]" \
-'$needles
-  | map(
-      select(
-        (. as $needle) |
-        (any(
-          .release_data | to_entries[] | .value[];
-          .tag_name | test("_[^_]*" + $needle + "[^_]*port")
-        ) | not)
+'. as $data
+| $needles
+| map(
+    select(
+      . as $needle| (
+          ($data.release_data | keys_unsorted | any(. == $needle))
+          or
+          ($data.release_data | to_entries[] | .value[] | .tag_name | (test("_[^_]*" + . + "[^_]*port"))
+        )
+        | not
       )
-    )' \
+    )
+  )
+| unique | join(" ")' \
     "${JSON_CACHE}")
   if [ -n "${invalidPortList}" ]; then
     printSoftError "The following ports could not be installed:"
