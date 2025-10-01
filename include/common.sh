@@ -2140,21 +2140,6 @@ addToInstallGraph(){
   return 0
 }
 
-validateInstallList(){
-  installees="$1"
-  # shellcheck disable=SC2086 # Using set -f disables globbing
-  printVerbose "Stripping any version/tagging"
-  installees=$(set -f; echo ${installees} |awk  -v ORS=, -v RS=' ' '{$1=$1; sub(/[=%].*/,x); print "\""$1"\""}')
-  invalidPortList=$(jq -r --argjson needles "[${installees%%,}]" \
-    '.release_data| keys as $haystack | $needles | map(select(. as $needle | $haystack | index($needle)|not)) | .[]'  \
-    "${JSON_CACHE}")
-  if [ -n "${invalidPortList}" ]; then
-    printSoftError "The following ports could not be installed:"
-    printSoftError "    $(echo "${invalidPortList}" | awk -v OFS=' ' -v ORS=' ' '{$1=$1};1' )"
-    printError "Check port name(s), remove any extra 'port' suffixes and retry command."
-  fi
-}
-
 # This uses the release json file to find whether any of the inputs are invalid
 # package names. Ideally, this would use the keys of the release_data however, the
 # NATS package breaks this as it is known as 'nats' in the repo but the port name is
@@ -2169,25 +2154,36 @@ validatePackageList(){
   # Check the metadata cache file to see if the needle is either the name of a
   # port (so a key) or is defined in a tag
   invalidPortList=$(jq -r --argjson needles "[${installees%%,}]" \
-'. as $data
-| $needles
-| map(
-    select(
-      . as $needle| (
+      '. as $data | $needles| map( select( . as $needle| (
           ($data.release_data | keys_unsorted | any(. == $needle))
           or
           ($data.release_data | to_entries[] | .value[] | .tag_name | (test("_[^_]*" + . + "[^_]*port"))
-        )
-        | not
-      )
-    )
+        ) | not ) ) ) | unique | join(" ")' "${JSON_CACHE}"
   )
-| unique | join(" ")' \
-    "${JSON_CACHE}")
+
   if [ -n "${invalidPortList}" ]; then
-    printSoftError "The following ports could not be installed:"
-    printSoftError "    $(echo "${invalidPortList}" | awk -v OFS=' ' -v ORS=' ' '{$1=$1};1' )"
-    printError "Check port name(s), remove any extra 'port' suffixes and retry command."
+    printSoftError "The following port names were not recognised:"
+    
+    # Calculate word lengths for nicer formatting
+    set -- ${invalidPortList}
+    minlen=1
+    for toolrepo in "$@"; do
+      wordlen=${#toolrepo}
+      minlen=$(( wordlen > minlen ? wordlen : minlen ))
+    done
+    # Respin loop actually checking for suggestions
+    set -- ${invalidPortList}
+    for toolrepo in "$@"; do
+      printDebug "Finding suggestions for '${toolrepo}'[${#toolrepo}]"
+      suggestion=$(toolSuggestion "${toolrepo}")
+        # Use printf to print without the printSoftError prefix for cleaner output
+      if [ -n "${suggestion}" ]; then
+        printf "    %-${minlen}s   [Did you mean '%s'?]\n" "${toolrepo}" "${suggestion}" >&2
+      else
+        printf "    %${minlen}s\n" "${toolrepo}" >&2
+      fi
+    done
+    printError "Check port name(s) and retry command."
   fi
 
 }
@@ -2965,6 +2961,95 @@ isTrue()
     1|[Tt][Rr][Uu][Ee] ) return 0;;
     *) return 1;;
   esac
+}
+
+# Lookup the list of ports and find the closest suggestion. This uses
+# awk to parse the dictionary directly from the cache file [piped via jq]
+toolSuggestion(){
+  word="$1"
+  threshold=4  # If the word is too far from alternatives, do not suggest
+  jq -r '.release_data | keys[]' "${JSON_CACHE}" | \
+    awk -v s1="${word}" -v th="${threshold}" '
+    BEGIN { best = ""; current=th;}
+    END { if (current <= th) print best }
+    {
+      s2=$1
+      len1 = length(s1)
+      len2 = length(s2)
+      for (i = 0; i <= len1; i++) d[i,0] = i
+      for (j = 0; j <= len2; j++) d[0,j] = j
+      for (i = 1; i <= len1; i++) {
+        for (j = 1; j <= len2; j++) {
+          cost = (substr(s1, i, 1) == substr(s2, j, 1)) ? 0 : 1
+          
+          del = d[i-1,j] + 1
+          ins = d[i,j-1] + 1
+          # Renamed variable to avoid conflict with the built-in "sub" function in awk.
+          substitution = d[i-1,j-1] + cost
+          
+          min = del
+          if (ins < min) min = ins
+          if (substitution < min) min = substitution
+          d[i,j] = min
+        }
+      }
+      distance=d[len1,len2]
+      if (distance == 0) { print s2; exit } # Found a match - should not happen
+      if (distance < current) {
+        best=s2
+        current = distance
+      }
+    }
+  '
+
+}
+
+
+levenshtein() {
+  word1="$1"
+  word2="$2"
+
+  # Calculates the distance and prints it to stdout.
+  awk -v s1="$word1" -v s2="$word2" '
+    BEGIN {
+      len1 = length(s1)
+      len2 = length(s2)
+      for (i = 0; i <= len1; i++) d[i,0] = i
+      for (j = 0; j <= len2; j++) d[0,j] = j
+      for (i = 1; i <= len1; i++) {
+        for (j = 1; j <= len2; j++) {
+          cost = (substr(s1, i, 1) == substr(s2, j, 1)) ? 0 : 1
+          
+          del = d[i-1,j] + 1
+          ins = d[i,j-1] + 1
+          # Renamed variable to avoid conflict with the built-in "sub" function in awk.
+          substitution = d[i-1,j-1] + cost
+          
+          min = del
+          if (ins < min) min = ins
+          if (substitution < min) min = substitution
+          d[i,j] = min
+        }
+      }
+      print d[len1,len2]
+    }'
+}
+
+# Finds the closest match for a misspelled word from a list of valid words
+findSuggestion() {
+    misspelled="$1"
+    dictionary="$2"
+    best_match=""
+    min_distance=4 
+
+    for word in ${dictionary}; do
+        distance=$(levenshtein "${misspelled}" "${word}")
+        if [ "${distance}" -lt "${min_distance}" ]; then
+            min_distance=${distance}
+            best_match="${word}"
+        fi
+    done
+    echo "${best_match}"
 }
 
 # Main code
