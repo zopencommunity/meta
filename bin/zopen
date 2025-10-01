@@ -93,7 +93,7 @@ subcmd=""
 help=false
 version=false
 
-for arg in $*; do
+for arg in "$@"; do
   case "${arg}" in
     "alt"|"audit"|"build"|"clean"|"generate"|"init"|"install"|\
     "query"|"remove"|"update-cacert"|"info"|"usage"|"diagnostics"|\
@@ -124,7 +124,7 @@ for arg in $*; do
       ;;
     *)
       # let unknown stuff through
-      subopts="${subopts} ${arg}"
+      subopts="${subopts} '${arg}'"
       ;;
   esac
 done
@@ -136,7 +136,7 @@ if [ -z "${subcmd}" ]; then
   elif ${version}; then
     : # fall through
   else
-    printError "Unsupported options '$subopts'. Specify --help to view the available options."
+    printError "Unsupported options '$*'. Specify --help to view the available options."
   fi
 fi
 
@@ -152,4 +152,4 @@ if ${version}; then
   fi
 fi
 
-${subcmd} ${subopts}
+eval "${subcmd} ${subopts}"

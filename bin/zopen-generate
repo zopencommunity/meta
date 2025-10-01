@@ -41,6 +41,9 @@ printSyntax()
   echo "Options:" >&2
   echo "  --help                      Display this help message" >&2
   echo "  --version                   Display version information" >&2
+  echo "  --list-licenses             List available licenses" >&2
+  echo "  --list-categories           List available categories" >&2
+  echo "  --list-build-systems        List supported build systems" >&2
   echo "  --name NAME                 Project name" >&2
   echo "  --description DESC          Project description" >&2
   echo "  --categories CATS           Project categories (space-delimited)" >&2
@@ -55,6 +58,7 @@ printSyntax()
   echo "  --runtime-deps DEPS         Runtime dependencies (space-delimited)" >&2
   echo "  --force                     Force update if project directory exists" >&2
   echo "  --non-interactive           Run in non-interactive mode (requires all necessary options)" >&2
+  echo "  --json                      Display list output in JSON format" >&2
 }
 
 # Initialize variables for command-line arguments
@@ -72,12 +76,52 @@ buildline=""
 runtimedeps=""
 force=false
 non_interactive=false
+json=false
 
 # Parse command-line arguments. If an argument is not provided, the corresponding variable remains empty.
 while [ $# -gt 0 ]; do
   case "$1" in
     --help) printSyntax; exit 0;;
     --version) zopen-version "$ME"; exit 0;;
+    --json) json=true;;
+    --list-licenses)
+      buildLicenseLookup
+      if ${json}; then
+        if ! command -v "jq" >/dev/null 2>&1; then
+          echo "Error: jq is required for --json output." >&2
+          exit 1
+        fi
+        echo "${validLicenseNames}" | tr ' ' '\n' | tr -d '"' | jq -R . | jq -s '{"licenses": .}'
+      else
+        echo "Available licenses:"
+        echo "${validLicenseNames}" | tr ' ' '\n' | sed 's/,/ /g' | xargs -n 1 | sort | xargs
+      fi
+      exit 0;;
+    --list-categories)
+      ZOPEN_VALID_CATEGORIES="$(cat "${MYDIR}/../data/tool_categories.txt")"
+      if ${json}; then
+        if ! command -v "jq" >/dev/null 2>&1; then
+          echo "Error: jq is required for --json output." >&2
+          exit 1
+        fi
+        echo "${ZOPEN_VALID_CATEGORIES}" | tr ' ' '\n' | jq -R . | jq -s '{"categories": .}'
+      else
+        echo "Available categories:"
+        echo "${ZOPEN_VALID_CATEGORIES}" | tr ' ' '\n'
+      fi
+      exit 0;;
+    --list-build-systems)
+      if ${json}; then
+        if ! command -v "jq" >/dev/null 2>&1; then
+          echo "Error: jq is required for --json output." >&2
+          exit 1
+        fi
+        printf "GNU Make\nCMake\nGo\nGradle\nMaven\nMeson\nPython" | jq -R . | jq -s '{"build_systems": .}'
+      else
+        echo "Supported build systems:"
+        echo "GNU Make, CMake, Go, Gradle, Maven, Meson, Python"
+      fi
+      exit 0;;
     --name) shift; name="$1";;
     --description) shift; description="$1";;
     --categories) shift; categories="$1";;
