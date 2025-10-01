@@ -194,7 +194,7 @@
 | [lpegport](https://github.com/zopencommunity/lpegport) | 1 | 100.0% | neovim |
 | [luarocksport](https://github.com/zopencommunity/luarocksport) | 1 | 100.0% | luv |
 | [mesonport](https://github.com/zopencommunity/mesonport) | 1 | 66.7% | glib |
-| [netpbmport](https://github.com/zopencommunity/netpbmport) | 1 | 34.9% | groff |
+| [netpbmport](https://github.com/zopencommunity/netpbmport) | 1 | 33.9% | groff |
 | [onigurumaport](https://github.com/zopencommunity/onigurumaport) | 1 | 100.0% | jq |
 | [pythonport](https://github.com/zopencommunity/pythonport) | 1 | Unknown | prometheus |
 | [quiltport](https://github.com/zopencommunity/quiltport) | 1 | 100.0% | rpm |
@@ -316,4 +316,4 @@
 | [zospstreeport](https://github.com/zopencommunity/zospstreeport) | 0 | 100.0% | None |
 | [zotsampleport](https://github.com/zopencommunity/zotsampleport) | 0 | 100.0% | None |
 
-Last updated:  2025-09-30 06:15:42 UTC
+Last updated:  2025-10-01 06:15:53 UTC

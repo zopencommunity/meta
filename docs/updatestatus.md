@@ -291,7 +291,7 @@
 - 2024-10-23: [Update grafana-version to 11.3.0 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/10) ❌
 - 2024-10-02: [Update grafana-version to 11.2.2 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/9) ❌
 - 2024-08-27: [Update grafana-version to 11.2.0 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/7) ❌
-- 2024-08-15: [Update grafana-version to 11.1.4 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/6) ❌
+- 2024-08-15: [Update grafana-version to 11.1.4 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/6) ❓
 - 2024-07-24: [Update grafana-version to 11.1.2 from 11.0.0](https://github.com/zopencommunity/grafanaport/pull/4) ❓
 - 2024-06-25: [Update grafana-version to 11.1.0 from 11.0.0](https://github.com/zopencommunity/grafanaport/pull/2) ❓
 
@@ -478,6 +478,7 @@
 - 2025-03-05: [Update protobuf-version to 30.0 from 29.3](https://github.com/zopencommunity/protobufport/pull/26) ❌
 
 ### redisport
+- 2025-09-30: [Update redis-version to 8.2.2 from 8.2.0](https://github.com/zopencommunity/redisport/pull/17) ❌
 - 2025-08-22: [Update redis-version to 8.2.1 from 8.2.0](https://github.com/zopencommunity/redisport/pull/16) ❌
 
 ### s5cmdport
@@ -877,5 +878,5 @@
 ---
 
 
-> Last updated: 2025-09-30 06:09:04 EDT
+> Last updated: 2025-10-01 06:09:03 EDT
 
