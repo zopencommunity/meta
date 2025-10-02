@@ -15,6 +15,7 @@ setupMyself()
     echo "Internal Error. Unable to find common.sh file to source." >&2
     exit 8
   fi
+  # shellcheck source=/dev/null
   . "${INCDIR}/common.sh"
 }
 setupMyself
@@ -23,20 +24,28 @@ filter_implemented=false
 upgradeable_implemented=false
 whatprovides_implemented=false
 
-printSyntax()
-{
-  args=$*
-  echo "${ME} -  a utility for zopen community to query packages and repos."
-  echo ""
-  echo "Usage: ${ME} [OPTION] [VERB] [PACKAGE]"
-  echo "  VERB is the action to take, which is one of"
-  echo "    --list, --remote-search, --installed"
-  echo "  PACKAGE is a package, specified for --remote-search"
-  echo ""
-  echo "Verbs:"
-  echo "  -i, --installed  list installed zopen community."
-  echo "  --list           list all available zopen community."
-  echo "  --remote-search  regex match package against available zopen community"
+printHelp(){
+  cat << HELPDOC
+zopen query -  a utility for zopen community to query packages and repos.
+
+Usage: zopen query [OPTION] [VERB] [PACKAGE]
+
+Options:
+  -d, --details     include full details for listings
+  -i, --installed   list only installed pacakages
+      --list        list all available packages
+      --no-header   suppress the header for the output
+      --no-version  suppress version information, return package names
+      --remote-search
+                    regex match package against available packages
+      --verbose     run in verbose mode
+      --version     print version
+  -h,-?, --help     display this help and exit
+HELPDOC
+if ${filter_implemented}; then
+  echo "  --filter COLOR   apply COLOR (quality) filter."
+  echo "                   green: all pass, blue: most pass, yellow: some pass, red: no pass, gray: skipped"
+fi
 if ${upgradeable_implemented}; then
   echo "  --upgradeable    list packages where an upgrade is available."
 fi
@@ -107,8 +116,8 @@ printDetailListEntries()
         if [ $? -ne 0 ]; then
           printError "Unable to retrieve remote information"
         fi
-        latestVersion=$(/bin/printf "%s" "${latest}" | jq -e -r '.assets[0].name' | sed -E 's/.*-(.*)\.zos\.pax\.Z/\1/')
-        categories=$(/bin/printf "%s" "${latest}" | jq -e -r '.assets[0].categories')
+        latestVersion=$(printf "%s" "${latest}" | jq -e -r '.assets[0].name' | sed -E 's/.*-(.*)\.zos\.pax\.Z/\1/')
+        categories=$(printf "%s" "${latest}" | jq -e -r '.assets[0].categories')
         if [ -n "${category_filter}" ] && ! echo "${categories}" | grep -q "${category_filter}"; then
           continue
         fi
@@ -170,12 +179,12 @@ printDetailListEntries()
           ;;
         0)
           printVerbose "Latest release request successful"
-          latestTag="$(/bin/printf "%s" "${latest}" | jq -e -r '.tag_name')"
-          passed="$(/bin/printf "%s" "${latest}" | jq -e -r '.assets[0].passed_tests')"
-          total="$(/bin/printf "%s" "${latest}" | jq -e -r '.assets[0].total_tests')"
-          expandedsize="$(/bin/printf "%s" "${latest}" | jq -e -r '.assets[0].expanded_size')"
-          downloadsize="$(/bin/printf "%s" "${latest}" | jq -e -r '.assets[0].size')"
-          categories=$(/bin/printf "%s" "${latest}" | jq -e -r '.assets[0].categories')
+          latestTag="$(printf "%s" "${latest}" | jq -e -r '.tag_name')"
+          passed="$(printf "%s" "${latest}" | jq -e -r '.assets[0].passed_tests')"
+          total="$(printf "%s" "${latest}" | jq -e -r '.assets[0].total_tests')"
+          expandedsize="$(printf "%s" "${latest}" | jq -e -r '.assets[0].expanded_size')"
+          downloadsize="$(printf "%s" "${latest}" | jq -e -r '.assets[0].size')"
+          categories=$(printf "%s" "${latest}" | jq -e -r '.assets[0].categories')
           if [ "${onlyUpgradesAvailable}" -gt 0 ]; then
             if [ "${originalTag}" = "Not installed" -o "${originalTag}" = "${latestTag}" ]; then
               continue
@@ -184,17 +193,17 @@ printDetailListEntries()
           if [ -n "$total" ] && [ ${total} -gt 0 ]; then
             percentage=$(echo "scale=0; 100 * (${passed}) / ${total}" | bc)
           fi
-          /bin/printf "%-${colwidth}s %-${colwidth}s %-${colwidth}s" "${repo}" "${originalTag}" "${latestTag}"
-          /bin/printf " %-${colwidth}s" "${downloadsize}"
-          /bin/printf " %-${colwidth}s" "${expandedsize}"
+          printf "%-${colwidth}s %-${colwidth}s %-${colwidth}s" "${repo}" "${originalTag}" "${latestTag}"
+          printf " %-${colwidth}s" "${downloadsize}"
+          printf " %-${colwidth}s" "${expandedsize}"
 
           if [ -z "${percentage}" ]; then
-            /bin/printf "${NC}${RED}%-${colwidth}s${NC}" "No tests"
+            printf "${NC}${RED}%-${colwidth}s${NC}" "No tests"
           else
-            /bin/printf "${NC}$(colorizepct "${percentage}")%-${colwidth}s${NC}" "${percentage}"
+            printf "${NC}$(colorizepct "${percentage}")%-${colwidth}s${NC}" "${percentage}"
           fi
-          /bin/printf " %-${colwidth}s" "${categories}"
-          /bin/printf "\n"
+          printf " %-${colwidth}s" "${categories}"
+          printf "\n"
           ;;
         *) printError "Error while trying to retrieve latest repo release" ;;
         esac
@@ -206,96 +215,12 @@ printDetailListEntries()
   exit 0
 }
 
-printInstalledEntries()
-{
-  needle="${2}" 
-
-  scrcols=$(getScreenCols)
-  [ "${details}" -eq 0 ] && numcols=4 || numcols=6
-  colwidth=$((scrcols / numcols - 1))
-  printVerbose "Screen width: ${scrcols}; colwidth:${colwidth}"
-  if [ -n "$1" ] && ! ${noheader}; then
-    if [ "${details}" -eq 0 ]; then
-      printf "${NC}${UNDERLINE}%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s${NC}\n" "Package" "Version" "File" "Releaseline"
-    else
-      printf "${NC}${UNDERLINE}%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s${NC}\n" "Package" "Version" "File" "Releaseline" "Expanded Size" "Quality"
-    fi
-  fi
-  printVerbose "Getting list of symlinks in the package install directory (that point to specific versions)"
-  installedPackages=$(cd "${ZOPEN_PKGINSTALL}" && zosfind  ./*/. ! -name . -prune -type l)
-  printVerbose "Packages: ${installedPackages}"
-  echo "${installedPackages}" | xargs | tr ' ' '\n' | sort | while read repo; do
-    repo="${repo##*/}"
-    pkghome="${ZOPEN_PKGINSTALL}/${repo}/${repo}"
-    if [ ! -e "${pkghome}/.active" ]; then
-      printVerbose "Symlink '${repo}' in '${ZOPEN_PKGINSTALL}' is not active; skipping"
-      continue
-    fi
-
-    # Check if the current package matches the needle (if provided)
-    if [ -n "${needle}" ] && ! echo "${repo}" | grep -q "${needle}"; then
-        printVerbose "Skipping '${repo}' as it does not match the needle '${needle}'"
-        continue
-    fi
-
-    if ${noversion}; then
-      printf "%s\n" "${repo}"
-      continue
-    fi
-
-    if [ -e "${pkghome}/.releaseinfo" ]; then
-      originalTag=$(cat "${pkghome}/.releaseinfo")
-    else
-      originalTag="N/A"
-    fi
-    if [ -e "${pkghome}/.version" ]; then
-      dotversion=$(cat "${pkghome}/.version")
-    else
-      dotversion="N/A"
-    fi
-
-    releaseline=""
-    if [ -e "${pkghome}/.releaseline" ]; then
-      releaseline=$(cat "${pkghome}/.releaseline")
-    fi
-    if [ -z "${releaseline}" ]; then
-      releaseline="n/a"
-    fi
-
-    printVerbose "Original tag: ${originalTag} for repo: ${repo}"
-    if [ -z "$1" ]; then
-      printInfo "${originalTag}"
-    else
-      fileversion="$(cd "${ZOPEN_PKGINSTALL}/${repo}/${repo}" > /dev/null 2>&1 && pwd -P | xargs basename)"
-      printf "%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s" "${repo}" "${dotversion}" "${fileversion}" "${releaseline}"
-      if [ "${details}" -eq 1 ]; then
-        # Extra headers: disk size and quality
-        disksizestr=$(du "${ZOPEN_PKGINSTALL}/${repo}" | tail -n 1)
-        disksizestr=$(echo "${disksizestr}" | sed 's#\([0-9]*\).*#\1#')
-        disksize=$((disksizestr * 512))
-        printf "%-${colwidth}d" "${disksize}"
-
-        if [ -e "${pkghome}/test.status" ]; then
-          teststatus=$(cat "${pkghome}/test.status")
-          percentage=$(echo "${teststatus}" | sed 's/[^-]*-\([^%\.]*\).*/\1/')
-          printf "${NC}$(colorizepct "${percentage}")%-${colwidth}s${NC}"  "${percentage}"
-        else
-          printf "${NC}${RED}%-${colwidth}s${NC}" "No tests"
-        fi
-      fi
-
-      printf "\n"
-    fi
-  done
-  exit 0
-}
-
 whatProvides()
 {
   needle="$1"
   printVerbose "Finding matches outside of ZOPEN_PKGINSTALL (${ZOPEN_PKGINSTALL})"
   # Find any symlinks that match the needle and can then be dereferenced
-  found=$(zosfind "${ZOPEN_ROOTFS}" -name "${ZOPEN_PKGINSTALL}/\*" -prune -o -type l -print | grep "${needle}")
+  found=$(find "${ZOPEN_ROOTFS}" -name "${ZOPEN_PKGINSTALL}/\*" -prune -o -type l -print | grep "${needle}")
   printVerbose "Found list: '${found}'"
   if [ -z "${found}" ]; then
     printInfo "No package provides '${needle}'"
@@ -305,7 +230,7 @@ whatProvides()
     echo "${found}" | xargs | tr ' ' '\n' | while read foundmatch; do
       printVerbose "Parsing '${foundmatch}'"
       if [ ! -d "${foundmatch}" ]; then
-        dereferenced=$(deref "${foundmatch}")
+        dereferenced=$(deref_symlink "${foundmatch}")
         fullpackage=$(echo "${dereferenced}" | sed "s#${ZOPEN_PKGINSTALL}/\([^/]*\).*#\1#")
 
         printInfo "Package '${fullpackage}' provides: '${foundmatch}'"
@@ -322,6 +247,7 @@ noheader=false
 noversion=false
 localoption=true
 upgradeable=false
+list=false
 unset category_filter
 details=0
 needle=
@@ -333,17 +259,13 @@ while [ $# -gt 0 ]; do
   printVerbose "Parsing option: $1"
   case "$1" in
   "--list")
-    list=1
+    list=true
     localoption=false
     ;;
   "-i" | "--installed")
     localoption=true
     installed=1
-    list=
-    if [ -n "$2" ] && [[ "$2" != -* ]]; then
-      needle="$2"
-      shift
-    fi
+    list=true
     ;;
   "-wp" | "--whatprovides")
     localoption=true
@@ -380,17 +302,20 @@ while [ $# -gt 0 ]; do
   "-d" | "--details")
     details=1
     ;;
-  "-h" | "--h" | "-help" | "--help" | "-?" | "-syntax")
-    printSyntax "${args}"
+  "-h" | "--help" | "-?")
+    printHelp
     exit 0
     ;;
   "--version")
     zopen-version "${ME}"
     exit 0
     ;;
-  "-v" | "--v" | "-verbose" | "--verbose")
+  "--verbose")
     # shellcheck disable=SC2034
     verbose=true
+    ;;
+  "--xdebug")
+    set -x
     ;;
   -*)
     printError "Unknown option '$1'"
@@ -421,14 +346,26 @@ fi
 
 if ! ${localoption}; then
   # Retrieve all repositories
-  getReposFromGithub true # zopen query is a read only operation
+  getRepos
   grfgRc=$?
   [ 0 -ne "${grfgRc}" ] && exit "${grfgRc}"
   repoArray="${repo_results}"
 fi
 
-! ${upgradeable} || printDetailListEntries "${details}" "" 1
-[ -z "${remotesearch}" ] || printDetailListEntries "${details}" "${needle}" 0
-[ -z "${list}" ] || printDetailListEntries "${details}" "" 0
-[ -z "${installed}" ] || printInstalledEntries "${details}" "${needle}" 0
-[ -z "${whatprovides}" ] || whatProvides "${needle}"
+# Use dedicated zopen-list script for listing system packages, passing
+# appropriate parameters to mimic the old query behaviour
+if ${list}; then
+  if ${installed}; then
+    if [ "${details}" -eq 0 ]; then
+      (zopen list --installed)
+    else
+      (zopen list --installed --details --header)
+    fi
+  else
+    (zopen list )
+  fi
+else
+  ! ${upgradeable} || printDetailListEntries "${details}" "" 1
+  [ -z "${remotesearch}" ] || printDetailListEntries "${details}" "${needle}" 0
+  [ -z "${whatprovides}" ] || whatProvides "${needle}"
+fi

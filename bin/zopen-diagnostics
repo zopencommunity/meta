@@ -33,7 +33,7 @@ printSyntax()
 
 print_Diagnostics()
 {
-  PLATFORM=$(/bin/uname -s)
+  PLATFORM=$(uname -s)
 
   # Checking if the platform is z/OS
   if [ ! ${PLATFORM} = "OS/390" ]; then
@@ -42,15 +42,15 @@ print_Diagnostics()
   fi
 
   # Check version
-  VERSION=$(/bin/uname -rsvI 2>/dev/null)
+  VERSION=$(uname -rsvI 2>/dev/null)
 
   if [ -z "$VERSION" ]; then
     echo "ERROR: This z/OS system does not have a valid version."
     exit 1
   fi
 
-  MAJOR=$(echo "$VERSION" | /bin/awk '{print $3}' | /bin/sed 's/^0*//')
-  MINOR=$(echo "$VERSION" | /bin/awk '{print $2}' | /bin/cut -d'.' -f1 | /bin/sed 's/^0*//')
+  MAJOR=$(echo "$VERSION" | awk '{print $3}' | sed 's/^0*//')
+  MINOR=$(echo "$VERSION" | awk '{print $2}' | cut -d'.' -f1 | sed 's/^0*//')
   if [ -z "$MINOR" ]; then
     MINOR=0
   fi
@@ -103,11 +103,11 @@ print_Diagnostics()
   echo "Architecture: $cpu_arch"
   echo "Zopen Version: $(zopen --version | head -1 | cut -d ' ' -f4)"
   echo "Disk Usage for ZOPEN_ROOTFS ($ZOPEN_ROOTFS):"
-  num1=$(/bin/du -kt $ZOPEN_ROOTFS | tail -1 | tr -s ' ' | cut -d ' ' -f2)
-  num2=1024                                                                     
-  echo "$(echo "scale=2; $num1 / $num2" | bc) mb" 
+  num1=$(du -kt $ZOPEN_ROOTFS | tail -1 | tr -s ' ' | cut -d ' ' -f2)
+  num2=1024
+  echo "$(echo "scale=2; $num1 / $num2" | bc) mb"
   echo -e "\nFilesystem Usage (df) for \$ZOPEN_ROOTFS:"
-  /bin/df -Pm "$ZOPEN_ROOTFS"
+  df -Pm "$ZOPEN_ROOTFS"
 }
 
 while [ $# -gt 0 ]; do
@@ -137,7 +137,7 @@ verbose=false
 remote_lookup=false
 
     if [ -z "$args" ]; then
-	echo "To open an issue go to https://github.com/zopencommunity/meta/issues and paste the above information" 
+	echo "To open an issue go to https://github.com/zopencommunity/meta/issues and paste the above information"
     else
         args_spaceless=$(echo "$args" | cut -d' ' -f2| tr -d ' ')
 	url="To open an issue go to https://github.com/zopencommunity/"$args_spaceless"port/issues and paste the above information"
