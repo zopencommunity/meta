@@ -7,6 +7,7 @@
 
 
 ### aflplusplusport
+- 2025-10-01: [Update AFLplusplus-version to 4.34c from 4.32c](https://github.com/zopencommunity/aflplusplusport/pull/3) ❌
 - 2025-07-25: [Update AFLplusplus-version to 4.33c from 4.32c](https://github.com/zopencommunity/aflplusplusport/pull/2) ❌
 - 2025-07-25: [Update AFLplusplus-version to 4.33 from 4.32c](https://github.com/zopencommunity/aflplusplusport/pull/1) ❌
 
@@ -75,6 +76,7 @@
 - 2025-09-09: [Update cjson-version to 1.7.19 from 1.7.18](https://github.com/zopencommunity/cjsonport/pull/3) ❓
 
 ### cmakeport
+- 2025-10-01: [Update cmake-version to 4.1.2 from 3.31.5](https://github.com/zopencommunity/cmakeport/pull/77) ❌
 - 2025-08-28: [Update cmake-version to 4.1.1 from 3.31.5](https://github.com/zopencommunity/cmakeport/pull/75) ❌
 - 2025-08-06: [Update cmake-version to 4.1.0 from 3.31.5](https://github.com/zopencommunity/cmakeport/pull/74) ❌
 - 2025-06-13: [Update cmake-version to 4.0.3 from 3.31.5](https://github.com/zopencommunity/cmakeport/pull/72) ❌
@@ -91,9 +93,6 @@
 - 2024-12-03: [Update conan-version to 2.10.0 from 2.9.1](https://github.com/zopencommunity/conanport/pull/11) ❌
 - 2024-11-21: [Update conan-version to 2.9.3 from 2.9.1](https://github.com/zopencommunity/conanport/pull/10) ❌
 - 2024-11-07: [Update conan-version to 2.9.2 from 2.9.1](https://github.com/zopencommunity/conanport/pull/9) ❌
-
-### coreutilsport
-- 2025-09-23: [Update coreutils-version to 9.8 from 9.7](https://github.com/zopencommunity/coreutilsport/pull/104) ✅
 
 ### cppcheckport
 - 2025-09-03: [Update cppcheck-version to 2.18.3 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/16) ❌
@@ -410,6 +409,9 @@
 ### opensshport
 - 2025-02-18: [Update openssh-version to 9.9p2 from 9.9p1](https://github.com/zopencommunity/opensshport/pull/19) ❌
 - 2024-10-02: [Update openssh-version to 9.9p1 from 9.8p1](https://github.com/zopencommunity/opensshport/pull/15) ❌
+
+### opensslport
+- 2025-10-01: [Update openssl-3-version to 3.6.0 from 3.5.4](https://github.com/zopencommunity/opensslport/pull/59) ❌
 
 ### osv-scannerport
 - 2025-04-30: [Update osv-scanner-version to 2.0.2 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/20) ✅
@@ -878,5 +880,5 @@
 ---
 
 
-> Last updated: 2025-10-01 06:09:03 EDT
+> Last updated: 2025-10-02 06:09:01 EDT
 

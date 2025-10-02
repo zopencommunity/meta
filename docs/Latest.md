@@ -49,12 +49,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="crush" data-searchable-text="crush Skipped N/A STABLE_crush_3778 AI coding agent for your favourite terminal  ai port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="crush" data-searchable-text="crush Skipped N/A STABLE_crush_3781 AI coding agent for your favourite terminal  ai port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/crushport" target="_blank" rel="noopener noreferrer">crush</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/crushport/releases/download/STABLE_crushport_3778/crush-v0.10.3.20250930_154243.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_crush_3778</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/crushport/releases/download/STABLE_crushport_3781/crush-v0.10.4.20251001_153137.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_crush_3781</a></div>
     <div class="tool-desc" title="AI coding agent for your favourite terminal ">AI coding agent for your favourite terminal </div>
   </div>
 </div>
@@ -75,12 +75,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 ## Build_System 
 
-<div class="tool-item-filterable" data-package-name="dnf5" data-searchable-text="dnf5 Blue 80.0% STABLE_dnf5_3777 Next-generation RPM package management system build_system port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="dnf5" data-searchable-text="dnf5 Blue 80.0% STABLE_dnf5_3783 Next-generation RPM package management system build_system port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/dnf5port" target="_blank" rel="noopener noreferrer">dnf5</a></strong></div>
     <div class="tool-status">Status: Blue</div>
     <div class="tool-test">Test: 80.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/dnf5port/releases/download/STABLE_dnf5port_3777/dnf5-5.2.17.0.20250930_121115.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_dnf5_3777</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/dnf5port/releases/download/STABLE_dnf5port_3783/dnf5-5.2.17.0.20251002_033915.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_dnf5_3783</a></div>
     <div class="tool-desc" title="Next-generation RPM package management system">Next-generation RPM package management system</div>
   </div>
 </div>
@@ -2193,12 +2193,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="coreutils" data-searchable-text="coreutils Blue 92.5% STABLE_coreutils_3696 A collection of basic Unix utilities uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="coreutils" data-searchable-text="coreutils Blue 92.5% STABLE_coreutils_3782 A collection of basic Unix utilities uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/coreutilsport" target="_blank" rel="noopener noreferrer">coreutils</a></strong></div>
     <div class="tool-status">Status: Blue</div>
     <div class="tool-test">Test: 92.5%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/coreutilsport/releases/download/STABLE_coreutilsport_3696/coreutils-9.7.20250829_035822.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_coreutils_3696</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/coreutilsport/releases/download/STABLE_coreutilsport_3782/coreutils-9.8.20251002_022157.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_coreutils_3782</a></div>
     <div class="tool-desc" title="A collection of basic Unix utilities">A collection of basic Unix utilities</div>
   </div>
 </div>
@@ -2459,12 +2459,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="crush" data-searchable-text="crush Skipped N/A STABLE_crush_3778 AI coding agent for your favourite terminal  utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="crush" data-searchable-text="crush Skipped N/A STABLE_crush_3781 AI coding agent for your favourite terminal  utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/crushport" target="_blank" rel="noopener noreferrer">crush</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/crushport/releases/download/STABLE_crushport_3778/crush-v0.10.3.20250930_154243.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_crush_3778</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/crushport/releases/download/STABLE_crushport_3781/crush-v0.10.4.20251001_153137.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_crush_3781</a></div>
     <div class="tool-desc" title="AI coding agent for your favourite terminal ">AI coding agent for your favourite terminal </div>
   </div>
 </div>
@@ -2962,4 +2962,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-10-01 06:15:53 UTC
+Last updated:  2025-10-02 06:15:05 UTC
