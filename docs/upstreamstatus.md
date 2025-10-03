@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-10-02 06:13:38 EDT.*
+*Report generated on: 2025-10-03 06:14:22 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 272
-- **Total Current Lines of Code (LOC) in Patches:** 43,874
-- **Total Number of Current Patch Files:** 882
-- **Average Current Patch LOC per Project:** 161.30
-- **Average Current Patch Count per Project:** 3.24
+- **Total Current Lines of Code (LOC) in Patches:** 43,902
+- **Total Number of Current Patch Files:** 883
+- **Average Current Patch LOC per Project:** 161.40
+- **Average Current Patch Count per Project:** 3.25
 
 ### Historical Trends (All Projects)
 
@@ -105,6 +105,7 @@
 | [pkgconfigport](#repo-pkgconfigport) | 98 | +0 | 1 |
 | [doxygenport](#repo-doxygenport) | 97 | +0 | 5 |
 | [libiconvport](#repo-libiconvport) | 96 | +0 | 4 |
+| [opensslport](#repo-opensslport) | 95 | +28 | 4 |
 | [depot_toolsport](#repo-depot-toolsport) | 91 | +0 | 1 |
 | [libeventport](#repo-libeventport) | 87 | +0 | 3 |
 | [jqport](#repo-jqport) | 85 | +0 | 6 |
@@ -116,7 +117,6 @@
 | [xmltoport](#repo-xmltoport) | 74 | +0 | 1 |
 | [cppcheckport](#repo-cppcheckport) | 72 | +0 | 4 |
 | [libtoolport](#repo-libtoolport) | 71 | +0 | 3 |
-| [opensslport](#repo-opensslport) | 67 | +0 | 3 |
 | [gradleport](#repo-gradleport) | 67 | +0 | 1 |
 | [getoptport](#repo-getoptport) | 66 | +0 | 1 |
 | [librepoport](#repo-librepoport) | 66 | +0 | 1 |
@@ -2580,6 +2580,29 @@
 
 ---
 
+<a id="repo-opensslport"></a>
+## opensslport
+
+- **Origin Date (First Commit):** 2022-05-24
+- **Current Patch LOC:** 95
+- **Current Patch Count:** 4
+
+### Historical Trends
+
+![LOC Trend for opensslport](images/upstream/opensslport_current_loc_trend.png)
+![Count Trend for opensslport](images/upstream/opensslport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `stable-patches/50-os390.conf.patch` | `stable-patches` | 15 |
+| `stable-patches/rsa_ossl.c.patch` | `stable-patches` | 28 |
+| `stable-patches/test_skip.patch` | `stable-patches` | 33 |
+| `stable-patches/ui_disable.patch` | `stable-patches` | 19 |
+
+---
+
 <a id="repo-depot-toolsport"></a>
 ## depot_toolsport
 
@@ -2819,28 +2842,6 @@
 | `patches/configure.patch` | `patches` | 22 |
 | `patches/libtool.m4.patch` | `patches` | 15 |
 | `patches/ltmain.sh.patch` | `patches` | 34 |
-
----
-
-<a id="repo-opensslport"></a>
-## opensslport
-
-- **Origin Date (First Commit):** 2022-05-24
-- **Current Patch LOC:** 67
-- **Current Patch Count:** 3
-
-### Historical Trends
-
-![LOC Trend for opensslport](images/upstream/opensslport_current_loc_trend.png)
-![Count Trend for opensslport](images/upstream/opensslport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `stable-patches/50-os390.conf.patch` | `stable-patches` | 15 |
-| `stable-patches/test_skip.patch` | `stable-patches` | 33 |
-| `stable-patches/ui_disable.patch` | `stable-patches` | 19 |
 
 ---
 

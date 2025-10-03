@@ -2343,12 +2343,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="openssl" data-searchable-text="openssl Blue 99.7% STABLE_openssl_3732 A cryptographic library uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="openssl" data-searchable-text="openssl Blue 99.7% STABLE_openssl_3785 A cryptographic library uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/opensslport" target="_blank" rel="noopener noreferrer">openssl</a></strong></div>
     <div class="tool-status">Status: Blue</div>
     <div class="tool-test">Test: 99.7%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/opensslport/releases/download/STABLE_opensslport_3732/openssl-3.5.3.20250916_173359.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_openssl_3732</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/opensslport/releases/download/STABLE_opensslport_3785/openssl-3.6.0.20251002_152051.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_openssl_3785</a></div>
     <div class="tool-desc" title="A cryptographic library">A cryptographic library</div>
   </div>
 </div>
@@ -2945,12 +2945,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 ## Webframework 
 
-<div class="tool-item-filterable" data-package-name="hugo" data-searchable-text="hugo Skipped N/A STABLE_hugo_3763 A static site generator webframework port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="hugo" data-searchable-text="hugo Skipped N/A STABLE_hugo_3784 A static site generator webframework port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/hugoport" target="_blank" rel="noopener noreferrer">hugo</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/hugoport/releases/download/STABLE_hugoport_3763/hugo-v0.150.1.20250925_154533.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_hugo_3763</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/hugoport/releases/download/STABLE_hugoport_3784/hugo-v0.151.0.20251002_154832.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_hugo_3784</a></div>
     <div class="tool-desc" title="A static site generator">A static site generator</div>
   </div>
 </div>
@@ -2962,4 +2962,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-10-02 06:15:05 UTC
+Last updated:  2025-10-03 06:15:49 UTC
