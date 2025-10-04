@@ -343,27 +343,6 @@
 </item>
 
 <item>
-<title>cmake (Build 2795) - (STABLE)</title>
-<link>https://zopen.community/#/Vulnerabilities?id=cmake</link>
-<description>1 low vulnerability</description>
-<guid isPermaLink="false">cmake (Build 2795) - (STABLE)</guid>
-</item>
-
-<item>
-<title>cmake (Build 2914) - (STABLE)</title>
-<link>https://zopen.community/#/Vulnerabilities?id=cmake</link>
-<description>1 low vulnerability</description>
-<guid isPermaLink="false">cmake (Build 2914) - (STABLE)</guid>
-</item>
-
-<item>
-<title>cmake (Build 3201) - (STABLE)</title>
-<link>https://zopen.community/#/Vulnerabilities?id=cmake</link>
-<description>1 low vulnerability</description>
-<guid isPermaLink="false">cmake (Build 3201) - (STABLE)</guid>
-</item>
-
-<item>
 <title>zlib (Build 2529) - (STABLE)</title>
 <link>https://zopen.community/#/Vulnerabilities?id=zlib</link>
 <description>1 critical vulnerability</description>
@@ -389,6 +368,27 @@
 <link>https://zopen.community/#/Vulnerabilities?id=zlib</link>
 <description>1 critical vulnerability</description>
 <guid isPermaLink="false">zlib (Build 2985) - (STABLE)</guid>
+</item>
+
+<item>
+<title>cmake (Build 2795) - (STABLE)</title>
+<link>https://zopen.community/#/Vulnerabilities?id=cmake</link>
+<description>1 low vulnerability</description>
+<guid isPermaLink="false">cmake (Build 2795) - (STABLE)</guid>
+</item>
+
+<item>
+<title>cmake (Build 2914) - (STABLE)</title>
+<link>https://zopen.community/#/Vulnerabilities?id=cmake</link>
+<description>1 low vulnerability</description>
+<guid isPermaLink="false">cmake (Build 2914) - (STABLE)</guid>
+</item>
+
+<item>
+<title>cmake (Build 3201) - (STABLE)</title>
+<link>https://zopen.community/#/Vulnerabilities?id=cmake</link>
+<description>1 low vulnerability</description>
+<guid isPermaLink="false">cmake (Build 3201) - (STABLE)</guid>
 </item>
 
 <item>
