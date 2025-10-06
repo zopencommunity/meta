@@ -114,8 +114,12 @@ for arg in $*; do
       subcmd="zopen-${arg}-helper"
       ;;
     "--version")
-      subcmd='zopen-version'
-      version=true
+      if [ -z "${subcmd}" ]; then
+        subcmd='zopen-version'
+        version=true
+      else
+        subopts="${subopts} ${arg}"
+      fi
       ;;
     "help" | "--help" | "-?")
       help=true
