@@ -1494,7 +1494,7 @@ syslog()
 }
 
 jqGetKey(){
-  # If there key is not present, the error causes jq to exit with a
+  # If the key is not present, the error causes jq to exit with a
   # non-zero return code
   jq -er --arg key "$1" '.[$key] // error("Missing key: " + $key)' "$2"
 }
@@ -1670,11 +1670,6 @@ getRepoReleases()
     return 1
   fi
   repo="$1"
-  ##TODO
-  ##TDORM releases="$(jq -e -r '.release_data."'${repo}'"' "${JSON_CACHE}")"
-  ##TDORM if [ $? -ne 0 ]; then
-    ##TDORM printError "Could not get all releases for ${repo}"
-  ##TDORM fi
 }
 
 # Initializes a default environment for consistency in zopen builds
@@ -2141,11 +2136,9 @@ addToInstallGraph(){
 }
 
 # This uses the release json file to find whether any of the inputs are invalid
-# package names. Ideally, this would use the keys of the release_data however, the
-# NATS package breaks this as it is known as 'nats' in the repo but the port name is
-# NATS.  As such, use .product.name then fallback to the .tag as a sanity check
-# Note: this is not to make the match "case-insensitive", but to use whichever the
-# user uses as the name - if they know it as NATS, accept that!
+# package names. Note that the Github API returns repository names in lowercase
+# which potentially breaks packages whose key does not match their repo name
+# (NATSport for example) - we need to ensure we use the reponame in lowercase.
 validatePackageList(){
   installees="$1"
   # shellcheck disable=SC2086 # Using set -f disables globbing
@@ -2156,9 +2149,7 @@ validatePackageList(){
   invalidPortList=$(jq -r --argjson needles "[${installees%%,}]" \
       '. as $data | $needles| map( select( . as $needle| (
           ($data.release_data | keys_unsorted | any(. == $needle))
-          or
-          ($data.release_data | to_entries[] | .value[] | .tag_name | (test("_[^_]*" + . + "[^_]*port"))
-        ) | not ) ) ) | unique | join(" ")' "${JSON_CACHE}"
+        ) | not ) ) | unique | join(" ")' "${JSON_CACHE}"
   )
 
   if [ -n "${invalidPortList}" ]; then
@@ -2446,7 +2437,7 @@ getInstallFile()
     [ -e "${downloadToDir}" ] || mkdir -p "${downloadToDir}"
     [ -w "${downloadToDir}" ] || printError "No permission to save install file to '${downloadToDir}'. Check permissions and retry command."
     printVerbose "Downloading installable file"
-    if ! runAndLog "cd ${downloadToDir} && curlCmd -L ${installurl} -O ${redirectToDevNull}"; then
+    if ! runAndLog "cd ${downloadToDir} && curlCmd -L ${installurl} -O >/dev/null 2>&1"; then
       printError "Could not download from ${installurl}. Correct any errors and potentially retry"
     fi
   fi
@@ -2527,23 +2518,18 @@ installFromPax()
   # Ideally we would use the following,
   #  name=$(jq --raw-output '.product.name' "${metadatafile}")
   # but name does not always map to the actual repo package name at present!
-  # The repo name is in the.product.repo field so can extract from there instead -
-  # though this also has issues for some packages like NATS/nats ...
-  # Note that at present some metadata might refer to the legacy repo ZOSOpenTools
-  # so fall back to that
-  if [ -n "${USEPRODNAME}" ]; then
-    printVerbose "Extracting product name from .product.name"
-    name=$(jq --raw-output '.product.name' "${metadatafile}")
-  else
-    printVerbose "Extracting product name from .product.repo"
-    name=$(jq --arg reponame "${ZOPEN_ORGNAME}" --raw-output '.product.repo | match(".*/\($reponame)/(.*)port").captures[0].string' "${metadatafile}")
-    if [ -z "${name}" ] || [ "${name##*[^ ]*}" = "" ]; then
-      name=$(jq --arg reponame "ZOSOpenTools" --raw-output '.product.repo | match(".*/\($reponame)/(.*)port").captures[0].string' "${metadatafile}")
-    fi
-    if [ -z "${name}" ] || [ "${name##*[^ ]*}" = "" ]; then
-      printError "Unable to determine name from .product.repo in '${metadatafile}'. Check metadata is correct."
-    fi
+  # The Github API also lowercases repository names when getting all 
+  # repositories which causes issues for NATSport for example. As such, we
+  # can grab the name from .product.repo, lowercase and it should match the
+  # metadata
+  printVerbose "Extracting product name from .product.repo"
+
+  name=$(jq --raw-output '.product.repo | capture(".+/(?<name>[^/].+)(port)")| .name' \
+      "${metadatafile}")
+  if [ -z "${name}" ] || [ "${name##*[^ ]*}" = "" ]; then
+    printError "Unable to determine name from .product.repo in '${metadatafile}'. Check metadata is correct."
   fi
+  name=$(awk -v n="${name}" 'BEGIN{print (tolower(n))}')
 
 
   if ! processActionScripts "installPre" "${name}" "${metadatafile}" "${pax}"; then
@@ -2577,7 +2563,7 @@ installFromPax()
   fi
 
   # shellcheck disable=SC2154
-  if ! runLogProgress "pax -rf ${pax} -p p ${paxredirect} ${redirectToDevNull}" \
+  if ! runLogProgress "pax -rf ${pax} -p p ${paxredirect} >/dev/null 2>&1" \
       "Expanding file: ${pax}" "Expanded file:  ${pax}"; then
     printSoftError "Unexpected errors during unpaxing, package directory state unknown"
     printError "Use zopen alt to select previous version to ensure known state"
@@ -2774,21 +2760,12 @@ updatePackageDB()
     if [ ! -e "${pdb}" ]; then
       echo "[]" > "${pdb}"
     fi
-    # Ideally, use $reponame in the match but jq seems to have issues with that!
 
-    mdj=$(jq '[{(.product.name):.}]' \
+    # Grab the repo name from the metadata.json and lowercase it to match
+    # what the Github API returns when enumerating repsitories!
+    mdj=$(jq '(.product.repo | capture(".+/(?<name>[^/].+)(port)")| .name | ascii_downcase) as $name
+              | [{($name):.}]' \
         "${escapedJSONFile}")
-    if [ -z "${mdj}" ]; then
-    # If we couldn't get the repo name from .product.name, use (.*)port  - this might result
-    # in odd cases [NATS...]
-      mdj=$(jq '. as $metadata | .product.repo | match(".*/zopencommunity/(.*)port").captures[0].string | [{(.):$metadata}]' \
-        "${escapedJSONFile}")
-    fi
-    if [ -z "${mdj}" ]; then
-      # Try legacy repository [for really old packages!]
-      mdj=$(jq '. as $metadata | .product.repo | match(".*/ZOSOpenTools/(.*)port").captures[0].string | [{(.):$metadata}]' \
-        "${escapedJSONFile}")
-    fi
 
     if [ -z "${mdj}" ]; then
       pkg=$(basename "${pkgdir}")
