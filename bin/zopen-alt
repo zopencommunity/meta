@@ -99,6 +99,9 @@ mergeNewVersion()
   if [ -e "${ZOPEN_PKGINSTALL}/${package}/${package}/.releaseinfo" ]; then
     version=$(cat "${ZOPEN_PKGINSTALL}/${package}/${package}/.releaseinfo")
   fi
+  printVerbose "Updating package DB"
+  updatePackageDB
+
   syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_PACKAGE}" "ALT" "setAlt" "Set '${package}' to version:${version};"
   processActionScripts "installPost" "${package}"
   processActionScripts "transactionPost"
