@@ -1,15 +1,22 @@
-#!/bin/bash
-
-# Script to generate the diff files/patches from source code repo to be committed to the port repo
-# Steps
-# 1. Apply all the patches and generate source code repo using zopen build command
-# 2. Commit the files modified by applying patches. Dev/bug fix changes should be done on top of this commit
-# 3. Once changes are ready, create new commit(s)
-# 4. Use this script to generate patch for files modified in step 3
+#!/usr/bin/env bash
 
 echo_error()
 {
     echo "ERROR: $1"
+}
+
+echo_usage()
+{
+    echo "Usage: ./generate_patches.sh -p <port-dir absolute path> -s <src-dir absolute path> [optional]-> --dry-run (Lists the modified files without generating patches)"
+
+    echo ""
+    echo "** Follow these steps to generate patch files using this script **"
+    echo "1) Apply the patches and generate source code repo using zopen build command"
+    echo "2) Commit the files modified by applying patches"
+    echo "3) Perform development or bug fix changes on top of the commit created in step 2. Once the changes are ready, create a new commit(s)."
+    echo "4) Use this script to generate patch files (in port/patches/ directory) for the files modified in step 3."
+    echo ""
+    echo "NOTE: The source repo should not be in a detached state"
 }
 
 get_commit_ids()
@@ -22,6 +29,7 @@ get_commit_ids()
     if [ $(git branch -a | grep '* ' | grep -c "detached") != 0 ] 
     then
         echo_error "This is in detached state, please create a branch and try again!"
+        echo_usage
         exit 1;
     fi
 
@@ -41,6 +49,7 @@ get_commit_ids()
     if [[ -z ${BASE_COMMIT} || -z ${PATCHED_COMMIT} || -z ${CURRENT_COMMIT} ]]
     then
         echo_error "Something is wrong, BASE_COMMIT, PATCHED_COMMIT and CURRENT_COMMIT needed but are not set"
+        echo_usage
         exit
     fi
 }
@@ -58,6 +67,11 @@ gen_patches()
     echo -e "\nModified files:\n" 
     echo -e "${MODIFIED_FILES}\n"
     
+    if [ ${DRY_RUN} == "true" ] ;
+    then
+        return
+    fi
+
     for file in ${MODIFIED_FILES}
     do
         echo "Generating diff for ${file}"
@@ -87,37 +101,53 @@ gen_patches()
 }
 
 ## main() STARTS HERE ##
+DRY_RUN=false
 
-if [ $# != "4" ]
+if [[ $# != "4" && $# != 5 ]]
 then
-    echo_error "Usage: ${0} -p <port-dir absolute path> -s <src-dir absolute path>"
+    echo_usage
     exit 1;
 fi
 
-while getopts "p:s:" opt; do
-case $opt in
-    p)
-        PORT_DIR="$OPTARG"
-        ;;
-    s)
-        SRC_DIR="$OPTARG"
-        ;;
-    :)
-        echo_error "Usage: ${0} -p <port-dir absolute path> -s <src-dir absolute path>"
-        exit 1
-        ;;
-esac
+while [ ! -z $1 ]; do
+    case "$1" in
+        -s)
+            SRC_DIR=${2}
+            shift 2
+            ;;
+        -p)
+            PORT_DIR=${2}
+            shift 2
+            ;;
+        --dry-run)
+            DRY_RUN=true
+            echo "--dry-run is set to true: modified files will be listed but patches won't be generated"
+            shift
+            break
+            ;;
+        -h | --help)
+            echo_usage
+            exit 1
+            ;;
+        :)
+            echo_error "Invalid option"
+            echo_usage
+            exit 1
+            ;;
+    esac
 done
 
 if [ ! -d ${SRC_DIR} ]
 then
     echo_error "${SRC_DIR} does not exist"
+    echo_usage
     exit
 fi
 
 if [ ! -d ${PORT_DIR} ]
 then
     echo_error "${PORT_DIR} does not exist"
+    echo_usage
     exit
 fi
 
