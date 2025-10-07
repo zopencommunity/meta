@@ -267,12 +267,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="rpm" data-searchable-text="rpm Green 100.0% STABLE_rpm_3776 The RPM Package Manager (RPM) is a powerful package management system capable of building computer software from source into easily distributable packages, installing, updating and uninstalling packaged software core port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="rpm" data-searchable-text="rpm Green 100.0% STABLE_rpm_3787 The RPM Package Manager (RPM) is a powerful package management system capable of building computer software from source into easily distributable packages, installing, updating and uninstalling packaged software core port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/rpmport" target="_blank" rel="noopener noreferrer">rpm</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/rpmport/releases/download/STABLE_rpmport_3776/rpm-6.0.0.20250930_051520.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_rpm_3776</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/rpmport/releases/download/STABLE_rpmport_3787/rpm-6.0.0.20251006_110359.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_rpm_3787</a></div>
     <div class="tool-desc" title="The RPM Package Manager (RPM) is a powerful package management system capable of building computer software from source into easily distributable packages, installing, updating and uninstalling packaged software">The RPM Package Manager (RPM) is a powerful package management system capable of building computer software from source into easily distributable packages, installing, updating and uninstalling packaged software</div>
   </div>
 </div>
@@ -859,12 +859,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3786 A TUI editor development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3788 A TUI editor development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/vimport" target="_blank" rel="noopener noreferrer">vim</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3786/vim-v9.1.1820.20251003_152705.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3786</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3788/vim-v9.1.1830.20251006_152655.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3788</a></div>
     <div class="tool-desc" title="A TUI editor">A TUI editor</div>
   </div>
 </div>
@@ -1041,12 +1041,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="scdoc" data-searchable-text="scdoc Green 100.0% DEV_scdoc_3407 documentation port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="scdoc" data-searchable-text="scdoc Green 100.0% STABLE_scdoc_3789 documentation port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/scdocport" target="_blank" rel="noopener noreferrer">scdoc</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/scdocport/releases/download/DEV_scdocport_3407/scdoc-master.20250602_072734.zos.pax.Z" target="_blank" rel="noopener noreferrer">DEV_scdoc_3407</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/scdocport/releases/download/STABLE_scdocport_3789/scdoc-1.11.3.20251007_052746.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_scdoc_3789</a></div>
     <div class="tool-desc" title=""></div>
   </div>
 </div>
@@ -1167,12 +1167,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3786 A TUI editor editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_3788 A TUI editor editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/vimport" target="_blank" rel="noopener noreferrer">vim</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3786/vim-v9.1.1820.20251003_152705.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3786</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_3788/vim-v9.1.1830.20251006_152655.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_3788</a></div>
     <div class="tool-desc" title="A TUI editor">A TUI editor</div>
   </div>
 </div>
@@ -2739,12 +2739,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="rpm" data-searchable-text="rpm Green 100.0% STABLE_rpm_3776 The RPM Package Manager (RPM) is a powerful package management system capable of building computer software from source into easily distributable packages, installing, updating and uninstalling packaged software utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="rpm" data-searchable-text="rpm Green 100.0% STABLE_rpm_3787 The RPM Package Manager (RPM) is a powerful package management system capable of building computer software from source into easily distributable packages, installing, updating and uninstalling packaged software utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/rpmport" target="_blank" rel="noopener noreferrer">rpm</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/rpmport/releases/download/STABLE_rpmport_3776/rpm-6.0.0.20250930_051520.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_rpm_3776</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/rpmport/releases/download/STABLE_rpmport_3787/rpm-6.0.0.20251006_110359.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_rpm_3787</a></div>
     <div class="tool-desc" title="The RPM Package Manager (RPM) is a powerful package management system capable of building computer software from source into easily distributable packages, installing, updating and uninstalling packaged software">The RPM Package Manager (RPM) is a powerful package management system capable of building computer software from source into easily distributable packages, installing, updating and uninstalling packaged software</div>
   </div>
 </div>
@@ -2962,4 +2962,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-10-06 06:14:28 UTC
+Last updated:  2025-10-07 06:14:39 UTC

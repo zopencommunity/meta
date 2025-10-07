@@ -342,6 +342,9 @@
 - 2025-02-25: [Update lazygit-version to 0.47.2 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/14) ✅
 - 2025-02-22: [Update lazygit-version to 0.47.1 from 0.46.0](https://github.com/zopencommunity/lazygitport/pull/13) ✅
 
+### lessport
+- 2025-10-06: [Update less-version to 685 from 684](https://github.com/zopencommunity/lessport/pull/43) ❌
+
 ### libgdbmport
 - 2025-03-22: [Update libgdbm-version to 1.25 from 1.24](https://github.com/zopencommunity/libgdbmport/pull/10) ❌
 
@@ -358,9 +361,9 @@
 - 2024-10-16: [Update libssh2-version to 1.11.1 from 1.11.0](https://github.com/zopencommunity/libssh2port/pull/4) ❌
 
 ### libtoolport
+- 2024-01-02: [Update libtool-version to 2.4.7 from 2.4](https://github.com/zopencommunity/libtoolport/pull/22) ❓
 - 2024-11-21: [Update libtool-version to 2.5.4 from 2.4](https://github.com/zopencommunity/libtoolport/pull/28) ❌
 - 2024-10-02: [Update libtool-version to 2.5.3 from 2.4](https://github.com/zopencommunity/libtoolport/pull/26) ❌
-- 2024-01-02: [Update libtool-version to 2.4.7 from 2.4](https://github.com/zopencommunity/libtoolport/pull/22) ❓
 
 ### libuvport
 - 2025-04-25: [Update libuv-version to 1.51.0 from 1.50.0](https://github.com/zopencommunity/libuvport/pull/16) ❌
@@ -507,8 +510,8 @@
 - 2025-07-27: [Update sudo-version to 1.9.17p2 from 1.9.17p1](https://github.com/zopencommunity/sudoport/pull/37) ❌
 
 ### tclport
+- 2024-12-20: [Update tcl-version to 9.0.1 from 8.6.13](https://github.com/zopencommunity/tclport/pull/16) ❌
 - 2025-06-26: [Update tcl-version to 9.0.2 from 8.6.14](https://github.com/zopencommunity/tclport/pull/19) ❌
-- 2024-12-20: [Update tcl-version to 9.0.1 from 8.6.13](https://github.com/zopencommunity/tclport/pull/16) ✅
 
 ### terraformport
 - 2025-09-17: [Update terraform-version to 1.13.3 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/44) ❌
@@ -532,7 +535,7 @@
 - 2024-10-16: [Update terraform-version to 1.9.8 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/25) ❌
 - 2024-10-03: [Update terraform-version to 1.9.7 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/24) ❌
 - 2024-09-18: [Update terraform-version to 1.9.6 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/22) ❌
-- 2024-08-21: [Update terraform-version to 1.9.5 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/21) ❌
+- 2024-08-21: [Update terraform-version to 1.9.5 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/21) ❓
 - 2024-08-07: [Update terraform-version to 1.9.4 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/20) ❓
 - 2024-07-25: [Update terraform-version to 1.9.3 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/19) ❓
 - 2024-07-10: [Update terraform-version to 1.9.2 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/18) ❓
@@ -879,5 +882,5 @@
 ---
 
 
-> Last updated: 2025-10-06 06:08:56 EDT
+> Last updated: 2025-10-07 06:09:06 EDT
 

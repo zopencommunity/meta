@@ -1,13 +1,13 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-10-06 06:12:56 EDT.*
+*Report generated on: 2025-10-07 06:13:12 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 272
-- **Total Current Lines of Code (LOC) in Patches:** 43,902
-- **Total Number of Current Patch Files:** 883
-- **Average Current Patch LOC per Project:** 161.40
+- **Total Current Lines of Code (LOC) in Patches:** 43,928
+- **Total Number of Current Patch Files:** 885
+- **Average Current Patch LOC per Project:** 161.50
 - **Average Current Patch Count per Project:** 3.25
 
 ### Historical Trends (All Projects)
@@ -159,6 +159,7 @@
 | [ctagsport](#repo-ctagsport) | 26 | +0 | 2 |
 | [git-extrasport](#repo-git-extrasport) | 26 | +0 | 1 |
 | [asioport](#repo-asioport) | 26 | +0 | 1 |
+| [httpdport](#repo-httpdport) | 26 | +0 | 2 |
 | [my_basicport](#repo-my-basicport) | 22 | +0 | 1 |
 | [shdocport](#repo-shdocport) | 20 | +0 | 2 |
 | [sshpassport](#repo-sshpassport) | 18 | +0 | 1 |
@@ -291,7 +292,6 @@
 | [ollamaport](#repo-ollamaport) | 0 | +0 | 0 |
 | [libyamlport](#repo-libyamlport) | 0 | +0 | 0 |
 | [jsoncppport](#repo-jsoncppport) | 0 | +0 | 0 |
-| [httpdport](#repo-httpdport) | 0 | +0 | 0 |
 | [checkport](#repo-checkport) | 0 | +0 | 0 |
 | [clang-formatport](#repo-clang-formatport) | 0 | +0 | 0 |
 | [crushport](#repo-crushport) | 0 | +0 | 0 |
@@ -3714,6 +3714,27 @@
 
 ---
 
+<a id="repo-httpdport"></a>
+## httpdport
+
+- **Origin Date (First Commit):** 2025-07-21
+- **Current Patch LOC:** 26
+- **Current Patch Count:** 2
+
+### Historical Trends
+
+![LOC Trend for httpdport](images/upstream/httpdport_current_loc_trend.png)
+![Count Trend for httpdport](images/upstream/httpdport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/mod_firehose.c.patch` | `patches` | 13 |
+| `patches/rules.mk.in.patch` | `patches` | 13 |
+
+---
+
 <a id="repo-my-basicport"></a>
 ## my_basicport
 
@@ -6144,24 +6165,6 @@
 ## jsoncppport
 
 - **Origin Date (First Commit):** 2025-07-18
-- **Current Patch LOC:** 0
-- **Current Patch Count:** 0
-
-### Historical Trends
-
-*(Patch LOC trend graph not generated)*
-*(Patch count trend graph not generated)*
-
-### Current Patch Details
-
-*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
-
----
-
-<a id="repo-httpdport"></a>
-## httpdport
-
-- **Origin Date (First Commit):** 2025-07-21
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 
