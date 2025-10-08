@@ -1,0 +1,255 @@
+#!/bin/sh
+#
+# zopen-create-repo - Create a new port repository in zopencommunity
+#
+# shellcheck disable=SC2034
+ZOPEN_DONT_PROCESS_CONFIG=1
+#
+# All zopen-* scripts MUST start with this code to maintain consistency.
+#
+setupMyself() {
+  ME=$(basename "$0")
+  MYDIR="$(cd "$(dirname "$0")" > /dev/null 2>&1 && pwd -P)"
+  INCDIR="${MYDIR}/../include"
+  if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
+    echo "Internal Error. Unable to find common.sh file to source." >&2
+    exit 8
+  fi
+  . "${INCDIR}/common.sh"
+}
+setupMyself
+
+printSyntax()
+{
+  echo "${ME} - Create a new port repository in zopencommunity."
+  echo ""
+  echo "NOTE: This script is intended for use by core contributors only."
+  echo "      You must have admin permissions in the zopencommunity organization."
+  echo ""
+  echo "Usage: ${ME} [OPTION] -n PORT_NAME"
+  echo ""
+  echo "Options:"
+  echo "  -h, --help              print this help"
+  echo "  -v, --verbose           run in verbose mode."
+  echo "  -n, --name PORT_NAME    Name of the port (required)"
+  echo "                          e.g., curl, openssl"
+  echo "  -d, --description TEXT  Repository description (optional)"
+  echo "                          Default: 'zopen port of PORT_NAME'"
+  echo "  -u, --user USERNAME     GitHub username to assign as admin (optional)"
+  echo "  -o, --github-org ORG    GitHub Organization (default: zopencommunity)"
+  echo "  -t, --github-token TOKEN"
+  echo "                          GitHub Personal Access Token (required, or set GITHUB_TOKEN env var)"
+  echo "     --version            print version"
+  echo ""
+  echo "Environment Variables:"
+  echo "  GITHUB_TOKEN            GitHub Personal Access Token (alternative to --github-token)"
+  echo ""
+  echo "Example:"
+  echo "  ${ME} -n curl"
+  echo "  ${ME} -v -n pv -d 'Pipe Viewer - monitor data through a pipeline'"
+  echo "  ${ME} -v -n openssl -u johndoe -t <your_github_token>"
+}
+
+checkDependencies() {
+  if ! command -v gh > /dev/null 2>&1; then
+    printError "Error: gh (GitHub CLI) command not found. Please install it from https://cli.github.com/"
+    return 1
+  fi
+  return 0
+}
+
+checkPermissions() {
+  printVerbose "Checking user permissions for organization: $GITHUB_ORGANIZATION"
+
+  # Get the authenticated user
+  GITHUB_USER=$(gh api user -q .login 2>&1)
+  if [ $? -ne 0 ]; then
+    printError "Failed to authenticate with GitHub. Please check your GITHUB_TOKEN."
+    return 1
+  fi
+
+  printVerbose "Authenticated as: $GITHUB_USER"
+
+  # Check user's role in the organization
+  MEMBERSHIP=$(gh api "orgs/$GITHUB_ORGANIZATION/memberships/$GITHUB_USER" 2>&1)
+  if [ $? -ne 0 ]; then
+    printError "You are not a member of the $GITHUB_ORGANIZATION organization."
+    printError "This script is only for core contributors with admin permissions."
+    return 1
+  fi
+
+  # Extract role from membership response
+  ROLE=$(echo "$MEMBERSHIP" | grep -o '"role":"[^"]*"' | cut -d'"' -f4)
+
+  if [ "$ROLE" != "admin" ]; then
+    printError "You do not have admin permissions in the $GITHUB_ORGANIZATION organization."
+    printError "Current role: $ROLE"
+    printError "This script requires admin permissions to create repositories."
+    return 1
+  fi
+
+  printVerbose "Permission check passed. User has admin role in $GITHUB_ORGANIZATION."
+  return 0
+}
+
+processOptions() {
+  args=$*
+  verbose=false
+
+  if [ $# -eq 0 ]; then
+    printError "No options specified."
+    printSyntax
+    exit 1
+  fi
+
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      "-h" | "--help")
+        printSyntax
+        exit 0
+        ;;
+      "-v" | "--verbose")
+        verbose=true
+        ;;
+      "-n" | "--name")
+        PORT_NAME="$2"
+        shift
+        ;;
+      "-d" | "--description")
+        REPO_DESCRIPTION="$2"
+        shift
+        ;;
+      "-u" | "--user")
+        ISSUE_CREATOR="$2"
+        shift
+        ;;
+      "-o" | "--github-org")
+        GITHUB_ORGANIZATION="$2"
+        shift
+        ;;
+      "-t" | "--github-token")
+        GITHUB_TOKEN_OPT="$2"
+        shift
+        ;;
+      "--version")
+        zopen-version "${ME}"
+        exit 0
+        ;;
+      -*)
+        printError "Unknown option '$1'"
+        printSyntax
+        exit 1
+        ;;
+      *)
+        printError "Unexpected argument '$1'"
+        printSyntax
+        exit 1
+        ;;
+    esac
+    shift
+  done
+
+  if [ -z "$PORT_NAME" ]; then
+    printError "Missing required option: -n PORT_NAME is required."
+    printSyntax
+    exit 1
+  fi
+
+  if [ -z "$GITHUB_TOKEN_OPT" ] && [ -z "$GITHUB_TOKEN" ]; then
+    printError "GitHub token is required. Please provide it via --github-token option or GITHUB_TOKEN environment variable."
+    printSyntax
+    exit 1
+  fi
+
+  if [ -n "$GITHUB_TOKEN_OPT" ]; then
+    export GITHUB_TOKEN="$GITHUB_TOKEN_OPT"
+  fi
+
+  if [ -z "$GITHUB_ORGANIZATION" ]; then
+    export GITHUB_ORGANIZATION="zopencommunity" # Default organization
+  fi
+}
+
+createRepository() {
+  # Normalize port name (lowercase, remove spaces)
+  PORT_NAME=$(echo "$PORT_NAME" | tr '[:upper:]' '[:lower:]' | tr -d ' ')
+  REPO_NAME="${PORT_NAME}port"
+
+  printVerbose "Creating repository: $GITHUB_ORGANIZATION/$REPO_NAME"
+
+  # Check if repository already exists
+  if gh repo view "$GITHUB_ORGANIZATION/$REPO_NAME" > /dev/null 2>&1; then
+    printError "Repository '$GITHUB_ORGANIZATION/$REPO_NAME' already exists."
+    echo "View it at: https://github.com/$GITHUB_ORGANIZATION/$REPO_NAME"
+    return 1
+  fi
+
+  printVerbose "Repository '$GITHUB_ORGANIZATION/$REPO_NAME' does not exist. Proceeding to create it."
+
+  # Use provided description or default
+  if [ -z "$REPO_DESCRIPTION" ]; then
+    REPO_DESCRIPTION="zopen port of $PORT_NAME"
+  fi
+
+  printVerbose "Repository description: $REPO_DESCRIPTION"
+
+  # Create the repository with description
+  if ! gh repo create "$GITHUB_ORGANIZATION/$REPO_NAME" --public --description "$REPO_DESCRIPTION" > /dev/null 2>&1; then
+    printError "Failed to create repository '$GITHUB_ORGANIZATION/$REPO_NAME'."
+    return 1
+  fi
+
+  echo "✅ Repository created: https://github.com/$GITHUB_ORGANIZATION/$REPO_NAME"
+
+  # Assign the issue creator as admin if provided
+  if [ -n "$ISSUE_CREATOR" ]; then
+    printVerbose "Assigning $ISSUE_CREATOR as admin collaborator..."
+    if gh api --method PUT "repos/$GITHUB_ORGANIZATION/$REPO_NAME/collaborators/$ISSUE_CREATOR" -f permission=admin > /dev/null 2>&1; then
+      printVerbose "$ISSUE_CREATOR assigned as admin"
+    else
+      printWarning "Failed to assign $ISSUE_CREATOR as admin. You may need to invite them manually."
+    fi
+  fi
+
+  echo ""
+  echo "Next steps:"
+  echo "1. Clone the repository: gh repo clone $GITHUB_ORGANIZATION/$REPO_NAME"
+  echo "2. Initialize it with zopen-generate: zopen-generate --name $PORT_NAME ..."
+  echo "3. Push the initial structure"
+
+  return 0
+}
+
+# --- Main Script ---
+
+# Initialize variables
+GITHUB_ORGANIZATION="zopencommunity"
+PORT_NAME=""
+REPO_DESCRIPTION=""
+ISSUE_CREATOR=""
+GITHUB_TOKEN_OPT=""
+verbose=false
+
+processOptions "$@"
+
+if checkDependencies; then
+  printVerbose "Dependencies check passed."
+else
+  printError "Some dependencies are missing. Please install them and try again."
+  exit 1
+fi
+
+if checkPermissions; then
+  printVerbose "Permissions check passed."
+else
+  printError "Permission check failed. You must be an admin in the $GITHUB_ORGANIZATION organization."
+  exit 1
+fi
+
+if createRepository; then
+  echo "${ME} completed successfully."
+  exit 0
+else
+  printError "${ME} failed."
+  exit 1
+fi
