@@ -1,0 +1,22 @@
+#!/bin/sh
+this="man-db"
+printVerbose "Running '${this}' script"
+if ! zopen list --installed | grep "^man-db\$"; then
+  return 0 # No man-db installed
+else
+  echo "- Updating man database for '$1'"
+  # Check if package shipped any man pages
+  manDir="${ZOPEN_PKGINSTALL}/${1}/${1}/usr/share/man"
+  [ -d "${manDir}" ] || return 0
+  # Man pages were shipped; scan from the directory - the man 
+  # directories are symlinked from ZOPEN_ROOTFS/usr/share/man/manX 
+  # so they all point to the same location anyway.
+  if ! mandbOut=$(mandb "${manDir}" >/dev/null 2>&1); then
+    printSoftError "man-db update completed with non-zero return code."
+    printSoftError "Details: ${mandbOut}"
+    printSoftError "Re-run 'mandb' manually for additional information."
+    return 1
+  fi
+  echo "- Update of man-db complete."
+fi
+return 0

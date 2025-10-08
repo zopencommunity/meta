@@ -40,6 +40,7 @@ Command:
   install           installs one or more zopen community packages
   info              displays detailed information about a package
   list              lists information about zopen community packages
+  mirror            performs a synchronization of the GitHub repository
   publish           publish zopen package release to github
   query             list local or remote info about zopen community packages
   remove            removes installed zopen community packages
@@ -51,6 +52,7 @@ Command:
 Options:
   -h, --help, -?    display this help and exit
   -v, --verbose     run in verbose mode
+  --version         display the zopen version
 
 Examples:
   zopen --help      displays zopen help
@@ -59,7 +61,7 @@ Examples:
   zopen upgrade -y  upgrade all installed packages to the latest release,
                     without prompting
   zopen alt bash    list installed alternative bash packages
-  zopen info vim    displays details information about the installed vim package
+  zopen info vim    displays detailed information about the installed vim package
   zopen usage --pie displays an ASCII-art chart showing biggest space hogs
 
 SEE ALSO:
@@ -72,10 +74,14 @@ SEE ALSO:
   zopen-init(1)
   zopen-install(1)
   zopen-info(1)
+  zopen-list(1)
+  zopen-mirror(1)
   zopen-publish(1)
   zopen-query(1)
+  zopen-refresh(1)
   zopen-remove(1)
   zopen-update-cacert(1)
+  zopen-upgrade(1)
   zopen-usage(1)
   zopen-whichproject(1)
   zopen-version(1)
@@ -97,27 +103,23 @@ for arg in $*; do
   case "${arg}" in
     "alt"|"audit"|"build"|"clean"|"generate"|"init"|"install"|\
     "query"|"remove"|"update-cacert"|"info"|"usage"|"diagnostics"|\
-    "whichproject"|"publish")
+    "whichproject"|"publish"|"list"|"upgrade"|"mirror")
       subcmd="zopen-${arg}"
-      ;;
-    "list")
-      subcmd='zopen-query'
-      subopts="${subopts} --list"
       ;;
     "refresh")
       subcmd='zopen-init'
       subopts="${subopts} --refresh"
       ;;
-    "upgrade")
-      subcmd='zopen-install'
-      subopts="${subopts} -u"
-      ;;
     "config")
       subcmd="zopen-${arg}-helper"
       ;;
     "--version")
-      subcmd='zopen-version'
-      version=true
+      if [ -z "${subcmd}" ]; then
+        subcmd='zopen-version'
+        version=true
+      else
+        subopts="${subopts} ${arg}"
+      fi
       ;;
     "help" | "--help" | "-?")
       help=true

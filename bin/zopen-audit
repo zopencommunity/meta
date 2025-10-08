@@ -129,7 +129,7 @@ high_vulns=0
 critical_vulns=0
 
 # Check for CVEs in all installed projects
-installed_packages=$(cd "${ZOPEN_PKGINSTALL}" && zosfind ./*/. ! -name . -prune -type l)
+installed_packages=$(cd "${ZOPEN_PKGINSTALL}" && find ./*/. ! -name . -prune -type l)
 printVerbose "Found all installed packages."
 
 # Variables for --upgrade flag

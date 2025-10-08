@@ -5,19 +5,23 @@
 
 zopenInitialize()
 {
+  # Hardcode the z/OS-supplied tooling to ensure zopen only uses standard
+  # tools
+  export PATH=/bin:"$PATH"
+
   # Capture start time before setting trap
   fullProcessStartTime=${SECONDS}
-  
+
   # Create the cleanup pipeline and exit handler
   trap "cleanupFunction" EXIT INT TERM QUIT HUP
-  
+
   # Temporary files
   for zopen_tmp_dir in "${TMPDIR}" "${TMP}" /tmp; do
     if [ ! -z ${zopen_tmp_dir} ] && [ -d ${zopen_tmp_dir} ]; then
       break
     fi
   done
-  
+
   if [ ! -d "${zopen_tmp_dir}" ]; then
     printError "Temporary directory not found. Please specify \$TMPDIR, \$TMP or have a valid /tmp directory."
   fi
@@ -27,19 +31,65 @@ zopenInitialize()
   if [ -z "${ZOPEN_DONT_PROCESS_CONFIG}" ]; then
     processConfig
   fi
+
+  ZOPEN_ORGNAME="zopencommunity"
+  # shellcheck disable=SC2034
+  ZOPEN_GITHUB="https://github.com/${ZOPEN_ORGNAME}"
+  # shellcheck disable=SC2034
   ZOPEN_ANALYTICS_JSON="${ZOPEN_ROOTFS}/var/lib/zopen/analytics.json"
-  ZOPEN_JSON_CACHE_URL="https://raw.githubusercontent.com/zopencommunity/meta/main/docs/api/zopen_releases.json"
+  # shellcheck disable=SC2034
+  ZOPEN_JSON_CACHE_URL="https://raw.githubusercontent.com/${ZOPEN_ORGNAME}/meta/main/docs/api/zopen_releases.json"
+  # shellcheck disable=SC2034
+  ZOPEN_LATEST_RELEASE_JSON="https://raw.githubusercontent.com/${ZOPEN_ORGNAME}/meta/main/docs/api/zopen_releases_latest.json"
   ZOPEN_JSON_CONFIG="${ZOPEN_ROOTFS}/etc/zopen/config.json"
   if [ -n "${INCDIR}" ]; then
-    ZOPEN_SYSTEM_PREREQ_SCRIPT="${INCDIR}/prereq.sh"
+    ZOPEN_SCRIPTLET_DIR="${INCDIR}/scriptlets"
   else
-    ZOPEN_SYSTEM_PREREQ_SCRIPT="${ZOPEN_ROOTFS}/usr/local/zopen/meta/meta/include/prereq.sh"
+    ZOPEN_SCRIPTLET_DIR="${ZOPEN_ROOTFS}/usr/local/zopen/meta/meta/include/scriptlets"
+  fi
+
+}
+addCleanupTrapCmd(){
+  # Attempt to remove any redirects; rather than test, simpler to remove
+  # and re-add if present.
+  newcmd="$1"
+  # shellcheck disable=SC2009  # no pgrep.
+  #mypid=$(ps -ef |grep -v grep |grep $0 | tr -s ' ' | cut -f3 -d ' ')
+  mypid=$(exec sh -c 'echo ${PPID}')
+  tmpscriptfile="/tmp/zopen_trap.${mypid}.scr"
+  echo "${newcmd}" >> "${tmpscriptfile}"
+
+  if [ $$ -eq "${parentPid}" ]; then
+    # Re-register handlers if already done; quicker than testing presensce
+    for trappedSignal in "EXIT" "INT" "TERM" "QUIT" "HUP"; do
+      trap cleanup "${trappedSignal}"
+    done
   fi
 }
 
-addCleanupTrapCmd(){
-  newcmd=$1
-  [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
+cleanup() {
+  ogExitCode=$?  # Save the original exit code
+  # shellcheck disable=SC2009  # no pgrep.
+  #mypid=$(ps -ef |grep -v grep |grep ps | tr -s ' ' | cut -f3 -d ' ')
+  mypid=$(exec sh -c 'echo ${PPID}')
+  tmpscriptfile="/tmp/zopen_trap.${mypid}.scr"
+  if [ -f "${tmpscriptfile}" ] && [ -s "${tmpscriptfile}" ]; then
+      # Execute the commands in the cleanup file by sourcing it
+      # shellcheck disable=SC1090
+      . "${tmpscriptfile}" > /dev/null 2>&1
+      rm "${tmpscriptfile}"
+  fi
+  return ${ogExitCode}
+}
+
+addCleanupTrapCmd2(){
+  # Attempt to remove any redirects; rather than test, simpler to remove
+  # and re-add if present.
+  newcmd=$(echo "$cmd" | sed -E "s/[ \t]*[1-9]*[<>][>|&]?[ \t]*[^ \t]*//g")
+  newcmd="${newcmd} >/dev/null 2>&1"
+  # Command Trace MUST be disabled as the output from this can become
+  # interleaved with output when calling zopen sub-processes.
+
   # Small timing window if the script is killed between the creation
   # and removal of the temporary file; would be easier if zos sh
   # didn't have a bug -trap can't be piped/redirected anywhere except
@@ -47,20 +97,44 @@ addCleanupTrapCmd(){
   # and run in the subshell before returning trap handler(s)!?!
   tmpscriptfile="${zopen_tmp_dir}/clean.tmp"
   trap > "${tmpscriptfile}" 2>&1 && script=$(cat "${tmpscriptfile}")
-  rm "${tmpscriptfile}"
   if [ -n "${script}" ]; then
-    for trappedSignal in "EXIT" "INT" "TERM" "QUIT" "HUP"; do
-      newtrapcmd=$(echo "${script}" | while read trapcmd; do
-	       sigcmd=$(echo "${trapcmd}" | zossed "s/trap -- \"\(.*\)\" ${trappedSignal}.*/\1/")
-	       [ "${sigcmd}" = "${trapcmd}" ] && continue
-	       printf "%s;%s 2>/dev/null" "${sigcmd}" "${newcmd}" | tr -s ';'
-         break
+  for trappedSignal in "EXIT" "INT" "TERM" "QUIT" "HUP"; do
+    newtrapcmd=$(
+        echo "${script}" | while read trapcmd; do
+        sigcmd=$(echo "${trapcmd}" |
+            sed "s/trap -- \"\(.*\)\" ${trappedSignal}.*/\1/")
+        # No match/replace in sed, then sigcmd remains unchanged
+        [ "${sigcmd}" = "${trapcmd}" ] && continue
+        # There was a match, so sigcmd contains the string of commands
+        # to run for the trap. Need to remove the exit command (which
+        # returns the exit code) and the initial set of the exit code
+        # and ensure it is last. Note that eval is used to run commands
+        # with potentially embedded variables (like the return code
+        # capture/return)
+        suffix="eval exit \$exitrc"
+        prfx="exitrc=\$?"
+        sigcmd=$(echo "${sigcmd}" |awk -v prfx="$prfx" -v suffix="$suffix" '
+            BEGIN{ FS=";"; OFS=";" sep=""}
+            {
+              for (i=1; i<=NF; i++){
+                if (substr($i, 1, length(prfx)) != prfx &&
+                    substr($i, 1, length(suffix)) != suffix) {
+                      printf "%s%s >/dev/null 2>&1", sep, $i
+                      sep = OFS
+                }
+              }
+            }
+            END{ printf "\n" }'
+        )
+       printf "%s;%s;%s;eval exit \${exitrc}" "${prfx}" "${newcmd}" "${sigcmd}"  | tr -s ';'
+        break
       done
-      )
-      if [ -n "${newtrapcmd}" ]; then
-        trap -- "${newtrapcmd}" "${trappedSignal}"
-      fi
-    done
+    )
+    if [ -n "${newtrapcmd}" ]; then
+      trap -- "${newtrapcmd}" "${trappedSignal}"
+    fi
+  done
+    rm "${tmpscriptfile}" 2>/dev/null
   fi
   [ -n "${xtrc}" ] && set -x
 }
@@ -89,17 +163,29 @@ cleanupFunction()
   :
 }
 
+
+# showConfigParmWarning
+# writes warning messages when a bad config parameter is found
+# input: $1 - name of the paramter
+#        $2 - current value of the parameter
+#        $3 - valid value
+#        $4 - default that will be uesd
+showConfigParmWarning(){
+  printWarning "Found invalid value '$2' for $1 configuration parameter [should be $3]. Defaulting to '$4'"
+  if type zopen-config-helper >/dev/null 2>&1; then
+    printWarning "Run 'zopen config --set $1 [$3]' to update configuration if required."
+  else
+    printWarning "Update zopen configuration file with a valid value [$3] for parameter '$1' if required."
+  fi
+}
+
 # getParentProcess
 # returns the parent process for the specified process
-# input: $1 - the pid to get the parent of
-# return: 0 for error or parent process id
 getParentProcess()
 {
-  parent=$(ps -o ppid= -p "$1")
-  if parent=$(ps -o ppid= -p "$1"); then
-    return 0
-  fi
-  return "${parent}"
+  [ -z "$1" ] && assertFailed "No process name given"
+  # Get Parent Pid (ppid), with no heading (='') and strip blanks (awk)
+  ps -o ppid= -p "$1" | awk '{$1=$1; print}'
 }
 
 # getCurrentVersionDir
@@ -129,19 +215,19 @@ isPackageActive(){
   getCurrentVersionDir "$needle"
 }
 
-# Given two input files, return those lines in haystack file that are 
+# Given two input files, return those lines in haystack file that are
 # not in needles file
 diffFile()
 {
   haystackfile="$1"
   needlesfile="$2"
   [ -n "${needlesfile}" ] || printError "Internal error; needle file was empty/non-existent."
-  diff=$(awk 'NR==FNR{needles[$0];next} 
+  diff=$(awk 'NR==FNR{needles[$0];next}
     !($0 in needles) {print}' "${needlesfile}" "${haystackfile}")
   echo "${diff}"
 }
 
-# Given two input lists (with \n delimiters), return those lines in  
+# Given two input lists (with \n delimiters), return those lines in
 # haystack that are not in needles
 diffList()
 {
@@ -149,11 +235,12 @@ diffList()
   needles="$2"
   haystackfile=$(mktempfile "haystack")
   echo "${haystack}" >"${haystackfile}"
-  [ -e "${haystackfile}" ] && addCleanupTrapCmd "rm -rf ${tempdir}"
+  [ -e "${haystackfile}" ] && addCleanupTrapCmd "rm -rf ${haystackfile}"
   needlesfile=$(mktempfile "needles")
   echo "${needles}" >"${needlesfile}"
   [ -e "${needlesfile}" ] && addCleanupTrapCmd "rm -rf ${needlesfile}"
   diffFile "${needlesfile}" "${haystackfile}"
+  rm -rf "${needlesfile}" "${haystackfile}"
 }
 
 # Generate a file name that has a high probability of being unique for
@@ -183,13 +270,13 @@ mktempfile()
 # Create a temporary directory
 mktempdir()
 {
-  tempdir=$(mktempfile "$1")
+  tempdir=$(mktempfile "$1" "$2")
   [ ! -e "${tempdir}" ] && mkdir "${tempdir}" && addCleanupTrapCmd "rm -rf ${tempdir}" && echo "${tempdir}"
 }
 
 isPermString()
 {
-  test=$(echo "$1" | zossed "s/[-+rwxugo,=]//g")
+  test=$(echo "$1" | sed "s/[-+rwxugo,=]//g")
   if [ -n "${test}" ]; then
     printDebug "Permission string '$1' was invalid"
     false;
@@ -209,9 +296,7 @@ writeConfigFile(){
   cat << EOF >  "${configFile}"
 #!/bin/false  # Script currently intended to be sourced, not run
 # zopen community Configuration file
-# Main root location for the zopen installation; can be changed if the
-# underlying root location is copied/moved elsewhere as locations are
-# relative to this envvar value
+
 displayHelp() {
 echo "usage: . zopen-config [--eknv] [--knv] [--quiet] [-?|--help]"
 echo "  --override-zos-tools   Adds altbin/ dir to the PATH and altman/ dir to MANPATH, overriding the native z/OS tooling."
@@ -249,14 +334,22 @@ while [ \$# -gt 0 ]; do
   esac
   shift
 done
+
+for local_tmp in "\${TMPDIR}" "\${TMP}" /tmp; do
+  [ -n "\${local_tmp}" ] && [ -d "\${local_tmp}" ] && break
+done
+
 if \${knv}; then
-  /bin/env | /bin/sort > /tmp/zopen-config-env-orig.\$\$
+  /bin/env | /bin/sort > \${local_tmp}/zopen-config-env-orig.\$\$
 fi
 
 if [ -n "\${overrideFile}" ] && [ ! -f "\${overrideFile}" ]; then
   echo "Override file '\${overrideFile}' is not a file. Skipping..."
 fi
 
+# Main root location for the zopen installation; can be changed if the
+# underlying root location is copied/moved elsewhere as locations are
+# relative to this envvar value
 ZOPEN_ROOTFS="${rootfs}"
 export ZOPEN_ROOTFS
 
@@ -274,20 +367,56 @@ fi
 
 zot="zopen community"
 
-sanitizeEnvVar()
+zot_sanitizeEnvVar()
 {
-  # remove any envvar entries that match the specified regex
+  # remove any envvar entries that match the specified prefix, in a shell-agnostic
+  # manner
   value="\$1"
   delim="\$2"
   prefix="\$3"
-  echo "\${value}" | awk -v RS="\${delim}" -v DLIM="\${delim}" -v PRFX="\${prefix}" '{ if (match(\$1, PRFX)==0) {printf("%s%s",\$1,DLIM)}}'
+  if [ -z "\${value}" ]; then
+    return
+  fi
+  result=""
+  oldIFS="\${IFS}"
+  IFS="\${delim}"
+  for entry in \${value}; do
+    case "\${entry}" in
+      "\${prefix}"/*)
+        # Skip entries that start with the prefix followed by /
+        ;;
+      *)
+        # Keep entries that don't match
+        if [ -z "\${result}" ]; then
+          # First time through
+          result="\${entry}"
+        else
+          # At least one previous result; insert delimiter
+          result="\${result}\${delim}\${entry}"
+        fi
+        ;;
+    esac
+  done
+  IFS="\${oldIFS}"
+  /bin/echo "\${result}"
 }
 
-deleteDuplicateEntries()
+zot_deleteDuplicateEntries()
 {
   value="\$1"
   delim="\$2"
-  echo "\${value}\${delim}" | awk -v RS="\${delim}" '!(\$0 in a) {a[\$0]; printf("%s%s", col, \$0); col=RS; }' | /bin/sed "s/\${delim}$//"
+  if [ -z "\${value}" ]; then
+    /bin/echo ""
+    return
+  fi
+
+  echo "\${value}\${delim}" | awk -v RS="\${delim}" -v ORS="\${delim}" '
+    BEGIN {col=""}
+    !(\$0 in a) {
+       a[\$0] = 1;
+       printf("%s%s", col, \$0);
+       col=ORS;
+    }' | /bin/sed "s/\${delim}$//"
 }
 
 # zopen community environment variables
@@ -310,15 +439,25 @@ if [ -n "\$SSH_CONNECTION" ] && [ -z "\$PS1" ] || [ ! -t 1 ]; then
 fi
 
 if [ -z "\${ZOPEN_QUICK_LOAD}" ]; then
-  if [ -e "\${ZOPEN_ROOTFS}/etc/profiled" ]; then
-    dotenvs=\$(find "\${ZOPEN_ROOTFS}/etc/profiled" -type f -name 'dotenv' -print)
+  if [ -d "\${ZOPEN_ROOTFS}/etc/profiled" ]; then
+
     if \$displayText; then
       /bin/printf "Processing \$zot configuration..."
     fi
 
-    for dotenv in \$dotenvs; do
-      . \$dotenv
-    done
+    tmpfile="\${local_tmp}/zopen_config.tmp"
+
+    if /bin/find "\${ZOPEN_ROOTFS}/etc/profiled" -type f -name 'dotenv' -print > "\${tmpfile}"; then
+      while IFS= read -r dotenv; do
+        [ -r "\${dotenv}" ] && . "\${dotenv}"
+      done < "\${tmpfile}"
+    else
+      echo "Error: find command failed" >&2
+      [ -e "\${tmpfile}" ] && rm "\${tmpfile}"
+      exit 1
+    fi
+    [ -e "\${tmpfile}" ] && rm "\${tmpfile}"
+
     if \$displayText; then
       /bin/echo "DONE"
       if [ -n "\${ZOPEN_TOOLSET_OVERRIDE}" ]; then
@@ -331,12 +470,12 @@ if [ -z "\${ZOPEN_QUICK_LOAD}" ]; then
   fi
 fi
 unset displayText
-PATH=\${ZOPEN_ROOTFS}/usr/local/bin:\${ZOPEN_ROOTFS}/usr/bin:\${ZOPEN_ROOTFS}/bin:\${ZOPEN_ROOTFS}/boot:\$(sanitizeEnvVar "\${PATH}" ":" "^\${ZOPEN_PKGINSTALL}/.*\$")
-MANPATH=\${ZOPEN_ROOTFS}/usr/local/share/man:\${ZOPEN_ROOTFS}/usr/local/share/man/\%L:\${ZOPEN_ROOTFS}/usr/share/man:\${ZOPEN_ROOTFS}/usr/share/man/\%L:\$(sanitizeEnvVar "\${MANPATH}" ":" "^\${ZOPEN_PKGINSTALL}/.*\$")
+PATH=\${ZOPEN_ROOTFS}/usr/local/bin:\${ZOPEN_ROOTFS}/usr/bin:\${ZOPEN_ROOTFS}/bin:\${ZOPEN_ROOTFS}/boot:\$(zot_sanitizeEnvVar "\${PATH}" ":" "^\${ZOPEN_PKGINSTALL}/.*\$")
+MANPATH=\${ZOPEN_ROOTFS}/usr/local/share/man:\${ZOPEN_ROOTFS}/usr/local/share/man/\%L:\${ZOPEN_ROOTFS}/usr/share/man:\${ZOPEN_ROOTFS}/usr/share/man/\%L:\$(zot_sanitizeEnvVar "\${MANPATH}" ":" "^\${ZOPEN_PKGINSTALL}/.*\$")
 
 if [ -n "\$ZOPEN_TOOLSET_OVERRIDE" ]; then
   if [ -n "\${overrideFile}" ] && [ -f "\${overrideFile}" ]; then
-    PATH=\$(sanitizeEnvVar "\${PATH}" ":" "^\${ZOPEN_ROOTFS}/usr/local/altbin.*\$")
+    PATH=\$(zot_sanitizeEnvVar "\${PATH}" ":" "^\${ZOPEN_ROOTFS}/usr/local/altbin.*\$")
     while IFS= read -r project; do
       if [ -d "\$ZOPEN_PKGINSTALL/\$project/\$project/altbin" ]; then
         PATH="\$ZOPEN_PKGINSTALL/\$project/\$project/altbin:\$PATH"
@@ -350,19 +489,19 @@ if [ -n "\$ZOPEN_TOOLSET_OVERRIDE" ]; then
     MANPATH="\${ZOPEN_ROOTFS}/usr/local/share/altman:\$MANPATH"
   fi
 else
-  PATH=\$(sanitizeEnvVar "\${PATH}" ":" "^\${ZOPEN_ROOTFS}/usr/local/altbin.*\$")
-  MANPATH=\$(sanitizeEnvVar "\${MANPATH}" ":" "^\${ZOPEN_ROOTFS}/usr/local/share/altman.*\$")
+  PATH=\$(zot_sanitizeEnvVar "\${PATH}" ":" "^\${ZOPEN_ROOTFS}/usr/local/altbin.*\$")
+  MANPATH=\$(zot_sanitizeEnvVar "\${MANPATH}" ":" "^\${ZOPEN_ROOTFS}/usr/local/share/altman.*\$")
 fi
 
 
-export PATH=\$(deleteDuplicateEntries "\${PATH}" ":")
-LIBPATH=\${ZOPEN_ROOTFS}/usr/local/lib:\${ZOPEN_ROOTFS}/usr/lib:\$(sanitizeEnvVar "\${LIBPATH}" ":" "^\${ZOPEN_PKGINSTALL}/.*\$")
-export LIBPATH=\$(deleteDuplicateEntries "\${LIBPATH}" ":")
-export MANPATH=\$(deleteDuplicateEntries "\${MANPATH}" ":")
+export PATH=\$(zot_deleteDuplicateEntries "\${PATH}" ":")
+LIBPATH=\${ZOPEN_ROOTFS}/usr/local/lib:\${ZOPEN_ROOTFS}/usr/lib:\$(zot_sanitizeEnvVar "\${LIBPATH}" ":" "^\${ZOPEN_PKGINSTALL}/.*\$")
+export LIBPATH=\$(zot_deleteDuplicateEntries "\${LIBPATH}" ":")
+export MANPATH=\$(zot_deleteDuplicateEntries "\${MANPATH}" ":")
 
 if \${knv}; then
-  /bin/env | /bin/sort > /tmp/zopen-config-env-modded.\$\$
-  diffout=\$(/bin/diff /tmp/zopen-config-env-orig.\$\$ /tmp/zopen-config-env-modded.\$\$ | /bin/grep -E '^[>]' | /bin/cut -c3- )
+  /bin/env | /bin/sort > \${local_tmp}/zopen-config-env-modded.\$\$
+  diffout=\$(/bin/diff \${local_tmp}/zopen-config-env-orig.\$\$ \${local_tmp}/zopen-config-env-modded.\$\$ | /bin/grep -E '^[>]' | /bin/cut -c3- )
   echo "\${diffout}" | while IFS= read -r knvp; do
     newval=""
     envvar="\${knvp%%=*}"
@@ -370,27 +509,42 @@ if \${knv}; then
     IFS=":"
     for token in \${knvp##*=}; do
       tok=\$(echo "\${token}" | /bin/sed -e 's#/usr/local/zopen/\([^/]*\)/[^/]*/#/usr/local/zopen/\1/\1/#')
-      newval=\$(printf "%s:%s" "\${newval}" "\${tok}")
+      newval=\$(/bin/printf "%s:%s" "\${newval}" "\${tok}")
     done
     echo "\${exportknv}\${envvar}=\${newval#*:}"
     IFS="\${cIFS}"
   done
-  rm /tmp/zopen-config-env-orig.\$\$ /tmp/zopen-config-env-modded.\$\$ 2>/dev/null
+  rm \${local_tmp}/zopen-config-env-orig.\$\$ \${local_tmp}/zopen-config-env-modded.\$\$ 2>/dev/null
 fi
 
-
+# Cleanup
+unset -f zot_deleteDuplicateEntries 2>/dev/null
+unset -f zot_displayHelp 2>/dev/null
+unset -f zot_sanitizeEnvVar 2>/dev/null
 EOF
 
 }
 
+# Wrap the curl command with additional standard parameters
 curlCmd()
 {
   # Take the list of parameters and concat them with
   # any custom parameters the user requires in ZOPEN_CURL_PARAMS
-  if  [ ! -t 1 ] || [ ! -t 2 ]; then
-    extra_curl_options="--no-progress-meter"
-  fi
+  extra_curl_options="--no-progress-meter"
   curl ${ZOPEN_CURL_PARAMS} ${extra_curl_options} $*
+}
+
+# Wrap the gpg command with additional standard parameters
+gpgCmd()
+{
+  if ! gpgout=$(gpg --no-secmem-warning $*); then
+  	if echo "${gpgout}" | grep -q "EDC5128I No such device"; then
+    printVerbose "Ignoring mmap issue not applicable on z/OS currently"
+      return 0
+    fi
+    echo "${gpgout}"
+    return 1
+  fi
 }
 
 validateReleaseLine()
@@ -403,22 +557,32 @@ validateReleaseLine()
 }
 
 # Attempt to fully dereference a symlink without any bashisms or arcane set logic
-# using some simplistic (recursive!) logic
-deref()
-{
-  testpath="$1"
-  if [ -L "${testpath}" ]; then
-    child=$(basename "${testpath}")
-    symlink=$(ls -l "${testpath}" | zossed 's/.*-> \(.*\)/\1/')
-    parent=$(dirname "${testpath}")
-    relpath="${parent}/${symlink}"
-    relparent=$(dirname "${relpath}")
-    abspath=$(cd "${relparent}" && pwd -P)
-    testpath="${abspath}/${child}"
-    deref "${testpath}"
-  else
-    [ -n "${testpath}" ] && echo "${testpath}" && unset testpath
-  fi
+deref_symlink() {
+    symlink="$1"
+    if [ -L "${symlink}" ]; then
+      target=$(ls -l "$symlink" | awk '{print $NF}')
+    else
+      target="${symlink}"
+    fi
+    targetName=$(basename "${target}")
+    targetDir=$(dirname "${target}")
+    # Check if dir starts with a '/'; if not need to calculate absolute
+    # fully-qualified name
+    case "$target" in
+        /*) targetDir=$(cd "${targetDir}" && pwd -P);;
+        *)
+          symlink_dir=$(dirname "$symlink")
+          targetDir=$(cd "$(pwd -P)/${symlink_dir}" && pwd -P)
+    esac
+    absolute_dir=$(cd "$targetDir" && pwd -P)  # Resolves symlinked dirs
+    echo "$absolute_dir/$targetName"
+}
+
+toAbsolutePath() {
+  case "$1" in
+      /*) echo "$1" ;;  # Already absolute
+      * | . | .. | ./* | ../*) echo "$(cd "$(dirname "$1")" && pwd -P)/$(basename "$1")" ;;
+  esac
 }
 
 #return 1 if brightness is dark, 0 if light, and 255 if unknown (considered to be dark as default)
@@ -438,28 +602,48 @@ darkbackground() {
 defineANSI()
 {
   # Standard tty codes
-  ESC="\047"
+  ESC=$(printf "\047") # Start of Escape Sequence; EBCDIC=\047, ASCII=\033
+  CSI="[" # Control Sequence Introducer
+  CNL="E" # Cursor Next Line
+  CPL="F" # Cursor Previous Line
+  CHA="G" # Cursor Horizontal Absolute - column selector
+  EL="K" # Erase In Line
+  SGR="m" # Select Graphic Rendition
+
   # shellcheck disable=SC2034
-  ERASELINE="${ESC}[2K"
+  ERASELINE=$(printf "${ESC}${CSI}2${EL}")
   # shellcheck disable=SC2034
-  CRSRHIDE="${ESC}[?25l"
+  CRSRHIDE=$(printf "${ESC}${CSI}?25l")
   # shellcheck disable=SC2034
-  CRSRSHOW="${ESC}[?25h"
+  CRSRSHOW=$(printf "${ESC}${CSI}?25h")
+  CRSRSOL=$(printf "${ESC}${CSI}0${CHA}")
+  # shellcheck disable=SC2034
+  CRSRPL=$(printf "${ESC}${CSI}1${CPL}")   # Move to start of previous line
+  # shellcheck disable=SC2034
+  CRSRUP="A"  # CUU
+  # shellcheck disable=SC2034
+  CRSRDOWN="B" # CUF
+  # shellcheck disable=SC2034
+  CRSRRIGHT="C" # CUB
+  # shellcheck disable=SC2034
+  CRSRLEFT="D" # CUD
+
+
 
   # Color-type codes, needs explicit terminal settings
   if [ ! "${_BPX_TERMPATH-x}" = "OMVS" ] && [ -z "${NO_COLOR}" ] && [ ! "${FORCE_COLOR-x}" = "0" ] && [ -t 1 ] && [ -t 2 ]; then
-    esc="\047"
-    BLACK="${esc}[30m"
-    RED="${esc}[31m"
-    GREEN="${esc}[32m"
-    YELLOW="${esc}[33m"
-    BLUE="${esc}[34m"
-    MAGENTA="${esc}[35m"
-    CYAN="${esc}[36m"
-    GRAY="${esc}[37m"
-    BOLD="${esc}[1m"
-    UNDERLINE="${esc}[4m"
-    NC="${esc}[0m"
+    ANSION=true
+    #ESC="\047"
+    BLACK=$(printf "${ESC}${CSI}30${SGR}")
+    RED="${ESC}${CSI}31${SGR}"
+    GREEN="${ESC}${CSI}32${SGR}"
+    YELLOW="${ESC}${CSI}33${SGR}"
+    BLUE="${ESC}${CSI}34${SGR}"
+    MAGENTA="${ESC}${CSI}35${SGR}"
+    CYAN="${ESC}${CSI}36${SGR}"
+    GRAY="${ESC}${CSI}37${SGR}"
+    BOLD="${ESC}${CSI}1${SGR}"
+    UNDERLINE="${ESC}${CSI}4${SGR}"
     darkbackground
     bg=$?
     if [ $bg -ne 0 ]; then
@@ -471,17 +655,24 @@ defineANSI()
       HEADERCOLOR="${MAGENTA}"
       WARNINGCOLOR="${MAGENTA}"
     fi
+    # The following should be the last ANSI declaration. With -x trace active, the ANSI
+    # codes might be interpreted by the terminal when outputing the command trace. Having
+    # NC as the last value ensures that the text is returned to normal
+    NC="${ESC}${CSI}0${SGR}"
   else
     # unset esc RED GREEN YELLOW BOLD UNDERLINE NC
-
+    ANSION=false
     esc=''
+    # shellcheck disable=SC2034
     BLACK=''
     RED=''
     GREEN=''
     YELLOW=''
     BLUE=''
     MAGENTA=''
+    # shellcheck disable=SC2034
     CYAN=''
+    # shellcheck disable=SC2034
     GRAY=''
     BOLD=''
     UNDERLINE=''
@@ -496,19 +687,32 @@ ansiline()
 {
   deltax=$1
   deltay=$2
-  echostr=$3
-  if [ ${deltax} -gt 0 ]; then
-    echostr="${ESC}[${deltax}A${echostr}"
-  elif [ ${deltax} -lt 0 ]; then
-    echostr="${ESC}[$(expr ${deltax} \* -1)A${echostr}"
-  fi
-  if [ ${deltay} -gt 0 ]; then
-    echostr="${ESC}[${deltax}C${echostr}"
-  elif [ ${deltay} -lt 0 ]; then
-    echostr="${ESC}[$(expr ${deltax} \* -1)D${echostr}"
-  fi
-  /bin/echo "${echostr}"
+  echostr="$3"
+  ansimove "$1" "$2"
+  echo "${echostr}\c"
+}
 
+ansimove()
+{
+  deltax=$1
+  deltay=$2
+
+  movestr=""
+  if [ -n "${deltax}" ]; then
+    if [ "${deltax}" -gt 0 ]; then
+      movestr="${ESC}${CSI}${deltax}${CRSRRIGHT}"
+    elif [ "${deltax}" -lt 0 ]; then
+      movestr="${ESC}${CSI}$((deltax * -1))${CRSRLEFT}"
+    fi
+  fi
+  if [ -n "${deltay}" ]; then
+    if [ "${deltay}" -gt 0 ]; then
+      movestr="${movestr}${ESC}${CSI}${deltay}${CRSRDOWN}"
+    elif [ "${deltay}" -lt 0 ]; then
+      movestr="${movestr}${ESC}${CSI}$((deltay * -1))${CRSRUP}"
+    fi
+  fi
+  echo "${movestr}\c"
 }
 
 getScreenCols()
@@ -516,46 +720,21 @@ getScreenCols()
   # If stdout/stderr are associated with a tty terminal
   if  [ -t 1 ] && [ -t 2 ]; then
     # Note tput does not handle ssh sessions too well...
-    stty | awk -F'[/=;]' '/columns/ { print $4}' | tr -d " "
+    lclcols=$(stty | awk -F'[/=;]' '/columns/ { print $4}' | tr -d " ")
   elif [ ! -z "${COLUMNS}" ]; then
-    echo "${COLUMNS}"
-  else
-    echo "$(tput cols)"
+    lclcols="${COLUMNS}"
+  elif ! lclcols=$(tput cols 2>/dev/null); then
+    # tput can fail if the terminal type is unrecognised; use fallback
+    lclcols=80
   fi
-}
-
-zossed()
-{
-  # Use the standard z/OS sed utility; If the sed package is installed
-  # GNU sed becomes the dominant version which might change how
-  # matching is performed
-  /bin/sed "$@"
-}
-
-zosfind()
-{
-  # Use the standard z/OS find utility; If the findutils package is installed,
-  # the installed find command takes precedence but is not compatible with the
-  # standard zos find [regex searches for "-name" are not allowed, but
-  # "-wholename" is not available on standard zosfind. For the tooling to be
-  # consistent across platforms (where findutils is/is not installed) use the
-  # standard zos version
-  /bin/find "$@"
-}
-
-zosdu()
-{
-  # Use the standard z/OS du utility; if the coreutils package is installed, this
-  # changes the behaviour of the du command so we need to ensure we support those
-  # who do not have that installed
-  /bin/du "$@"
+  echo "${lclcols}"
 }
 
 findrev()
 {
   haystack="$1"
   needle="$2"
-  while [[ "${haystack}" != "" && "${haystack}" != "/" && "${haystack}" != "./" && ! -e "${haystack}/${needle}" ]]; do
+  while [ "${haystack}" != "" ] && [ "${haystack}" != "/" ] && [ "${haystack}" != "./" ] && [ ! -e "${haystack}/${needle}" ]; do
     haystack=${haystack%/*}
   done
   echo "${haystack}"
@@ -563,7 +742,28 @@ findrev()
 
 strtrim()
 {
-  echo "$1" | zossed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'
+  echo "$1" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'
+}
+
+text_center()
+{
+  if [ $# -lt 2 ]; then
+    echo "$1"
+    return
+  fi
+  echo "$1" | awk -v strlen="$2" \
+    '{spc = strlen - length;padding = int(spc / 2);pad = spc - padding;printf "%*s%s%*s\n", pad, "", $0, padding, ""}'
+}
+
+text_padrightr() {
+  padchar="${3:- }" # Default to space char
+  echo "" | awk -v str="$1" -v n="$2" -v pc="$padchar"  \
+      'function padr(n,acc, c){
+          if (++acc>=n) return c;
+          return c padr(n, acc, c);
+        }
+        BEGIN{ print str padr(n,0,pc);}
+      '
 }
 
 defineEnvironment()
@@ -586,20 +786,20 @@ defineEnvironment()
   # Required for proper operation of (USS shipped) sed
   export _UNIX03=YES
 
-  # Use /bin/cat as the pager in case xlclang help is displayed, we don't want to wait for input
-  export PAGER=/bin/cat
+  # Use cat as the pager in case xlclang help is displayed, we don't want to wait for input
+  export PAGER=cat
 
   # Set a default umask of read and execute for user and group
   umask 0022
 }
 
 #
-# For now, explicitly specify /bin/echo to ensure we get the EBCDIC echo since the escape
+# For now, explicitly specify echo to ensure we get the EBCDIC echo since the escape
 # sequences are EBCDIC escape sequences
 #
 printColors()
 {
-  /bin/echo "$@"
+  echo "$@"
 }
 
 mutexReq()
@@ -609,7 +809,7 @@ mutexReq()
   [ -e lockdir ] || mkdir -p ${lockdir}
   mutex="${lockdir}/${mutex}"
   mypid=$(exec sh -c 'echo ${PPID}')
-  mygrandparent=$(/bin/ps -o ppid= -p "$mypid" | awk '{print $1}')
+  mygrandparent=$(ps -o ppid= -p "$mypid" | awk '{print $1}')
   if [ -e "${mutex}" ]; then
     lockedpid=$(cat ${mutex})
     {
@@ -625,7 +825,10 @@ mutexFree()
   mutex=$1
   lockdir="${ZOPEN_ROOTFS}/var/lock"
   mutex="${lockdir}/${mutex}"
-  [ -e "${mutex}" ] && rm -f ${mutex}
+  if [ -e "${mutex}" ]; then
+    rm -f ${mutex}
+  fi
+  return 0
 }
 
 relativePath2()
@@ -658,7 +861,7 @@ relativePath2()
   # if the target is longer than the source, there might be some additional
   # elements in the shifted $0 to append
   if [ $# -gt 0 ]; then
-    relativePath=${relativePath}/$(echo $* | zossed "s/ /\//g")
+    relativePath=${relativePath}/$(echo $* | sed "s/ /\//g")
   fi
   IFS="${currentIFS}"
   echo "${relativePath}"
@@ -675,11 +878,10 @@ mergeIntoSystem()
   [ -z "${rebaseusr}" ] && rebaseusr="usr/local"
 
   currentDir="${PWD}"
-  targetdir="${rootfs}/${rebaseusr}" # The main rootfs/usr location
 
   printDebug "Calculating the offset path to store from root"
   offset=$(dirname "${versioneddir#"${rootfs}"/}")
-  version=$(basename ${versioneddir})
+  version=$(basename "${versioneddir}")
   tmptime=$(date +%Y%m%d%H%M%S)
   processingDir="${rootfs}/tmp/zopen.${tmptime}"
   printDebug "Temporary processing dir evaluated to: ${processingDir}"
@@ -692,7 +894,7 @@ mergeIntoSystem()
   mv "${versioneddir}" "${virtualStore}"
 
   printDebug "Creating main linked directory in store"
-  $(cd "${virtualStore}" && ln -s "${version}" "${name}")
+  cd "${virtualStore}" && ln -s "${version}" "${name}"
 
   printDebug "Creating virtual root directory structure"
   mkdir -p "${processingDir}/${rebaseusr}"
@@ -704,19 +906,18 @@ mergeIntoSystem()
   printDebug "Generating symlink tree"
 
   printDebug "Creating directory structure"
-  curdir="${PWD}"
-  cd "${virtualStore}/${name}" || exit
+  cd "${virtualStore}/${name}" || printError "Unable to change to virtual store at '${virtualStore}/${name}'"
   # since 'ln *' doesn't invoke globbing to allow multiple files at once,
   # abuse the Recurse option; this results in "already exists" errors but
   # ignore them as the first call should generate the correct link but
   # subsequent calls would generate a symlink that has incorrect dereferencing
   # and ignoring them is actually faster than individually creating the links!
-  zosfind . -type d | sort -r | while read dir; do
-    dir=$(echo "${dir}" | zossed "s#^./##")
+  find . -type d | sort -r | while read dir; do
+    dir=$(echo "${dir}" | sed "s#^./##")
     printDebug "Processing dir: ${dir}"
-    [ ${dir} = "." ] && continue
+    [ "${dir}" = "." ] && continue
     mkdir -p "${processingDir}/${rebaseusr}/${dir}"
-    cd "${processingDir}/${rebaseusr}/${dir}" || exit
+    cd "${processingDir}/${rebaseusr}/${dir}" || printError "Unable to change to processing directory '${processingDir}/${rebaseusr}/${dir}'"
     dirrelpath=$(relativePath2 "${virtualStore}/${name}/${dir}" "${processingDir}/${rebaseusr}/${dir}")
     ln -Rs "${dirrelpath}/" "." 2> /dev/null
   done
@@ -732,24 +933,78 @@ mergeIntoSystem()
 
   printDebug "Generating intermediary tar file"
   # Need '-S' to allow long symlinks
-  $(cd "${processingDir}" && tar -S -cf "${tarfile}" "usr")
+  cd "${processingDir}" && tar -S -cf "${tarfile}" "usr"
 
-  printDebug "Generating listing for remove processing (including main symlink)."
-  listing=$(tar tf "${processingDir}/${tarfile}" 2> /dev/null | sort -r)
+  printDebug "Generating listing for remove processing (including main symlink)"
   echo "Installed files:" > "${versioneddir}/.links"
-  echo "${listing}" >> "${versioneddir}/.links"
+  tar tf "${processingDir}/${tarfile}" 2> /dev/null| sort -r >> "${versioneddir}/.links"
 
-  printDebug "Extracting tar to rootfs."
+  printDebug "Extracting tar to rootfs"
   cd "${processingDir}" && tar xf "${tarfile}" -C "${rootfs}" 2> /dev/null
 
   printDebug "Cleaning temp resources."
   rm -rf "${processingDir}" 2> /dev/null
 
-  printDebug "Switching to previous cwd - current work dir was purged."
-  cd "${currentDir}" || exit
+  printDebug "Switching to previous cwd - current work dir was purged"
+  cd "${currentDir}" || printError "Unable to change to '${currentDir}'"
 
-  printInfo "- Integration complete."
   return 0
+}
+
+rmSymlinksFSCheck(){
+  # Slower method needed to analyse each link to see if it has
+  # become orphaned. Only relevent when removing a package as
+  # upgrades/alt-switching can supply a list of files
+  # Use sed to skip header line in .links file
+  # Note that the contents of the links file are ordered such that
+  # processing occurs depth-first; if, after removing orphaned symlinks,
+  # a directory is empty, then it can be removed.
+  printDebug "Creating Temporary dirname file"
+  tempDirFile=$(mktempfile "unsymlink")
+  [ -e "${tempDirFile}" ] && rm -f "${tempDirFile}" >/dev/null 2>&1
+  touch "${tempDirFile}"
+  tempTrash=$(mktempfile "unsymlink" "trash")
+  [ -e "${tempTrash}" ] && rm -f "${tempTrash}" >/dev/null 2>&1
+  addCleanupTrapCmd "rm -rf ${tempDirFile}"
+  addCleanupTrapCmd "rm -rf ${tempTrash}"
+  printDebug "Using temporary file ${tempDirFile}"
+  while read filetounlink; do
+    filetounlink=$(echo "${filetounlink}" | sed 's/\(.*\).symbolic.*/\1/')
+    filename="$filetounlink"
+    [ -z "${filetounlink}" ] && continue
+    filetounlink="${ZOPEN_ROOTFS}/${filetounlink}"
+    [ ! -e "${filetounlink}" ] && continue  # If not there, can'e be removed!
+    if [ -d "${filetounlink}" ]; then
+      # Add to the directory queue for checking once files are gone if unique
+      ispresent=$(grep "^${filetounlink}[ ]*$" "${tempDirFile}")
+      if [ -z "${ispresent}" ]; then
+        echo " ${filetounlink} " >> "${tempDirFile}"
+      fi
+    elif [ -L "${filetounlink}" ]; then
+      if [ ! -f "${filetounlink}" ]; then
+        # the linked-to file no longer exists (ie. the symlink is dangling)
+        rm -f "${filetounlink}" > /dev/null 2>&1
+      fi
+    else
+      echo "Unprocessable file: '${filetounlink}'" >> "${tempTrash}"
+    fi
+  done <<EOF
+$(sed '1d;$d' "${dotlinks}")
+EOF
+}
+
+rmSymlinksFileDiff(){
+  obsoleteList=$(diffFile "${dotlinks}" "${newfilelist}")
+  echo "${obsoleteList}" | while read obsoleteFile; do
+    [ -z "${obsoleteFile}" ] && return 0
+    obsoleteFile="${ZOPEN_ROOTFS}/${obsoleteFile}"
+    obsoleteFile="${obsoleteFile%% symbolic*}"
+    printDebug "Checking obsoletefile '${obsoleteFile}'"
+    if [ -L "${obsoleteFile}" ] && [ ! -e "${obsoleteFile}" ]; then
+      # the linked-to file no longer exists (ie. the symlink is dangling)
+      rm -f "${obsoleteFile}" > /dev/null 2>&1
+    fi
+  done
 }
 
 # The following function will remove any orphaned symlinks left after either:
@@ -763,84 +1018,27 @@ unsymlinkFromSystem()
   rootfs=$2
   dotlinks=$3
   newfilelist=$4
+
   if [ -e "${dotlinks}" ]; then
-    printInfo "- Checking for obsoleted files in ${rootfs}/usr/ tree from ${pkg}"
-
     if [ -e "${newfilelist}" ]; then
-      printDebug "Release change, so the list of changes to physically remove should be smaller"
-      printDebug "Starting spinner..."
-      progressHandler "spinner" "- Check complete" &
-      ph=$!
-      killph="kill -HUP ${ph}"
-      addCleanupTrapCmd "${killph}"
-      obsoleteList=$(diffFile "${dotlinks}" "${newfilelist}")
-      echo "${obsoleteList}" | while read obsoleteFile; do
-        [ -z "${obsoleteFile}" ] && return 0
-        obsoleteFile="${ZOPEN_ROOTFS}/${obsoleteFile}"
-        obsoleteFile="${obsoleteFile%% symbolic*}"
-        printDebug "Checking obsoletefile '${obsoleteFile}'"
-        if [ -L "${obsoleteFile}" ] && [ ! -e "${obsoleteFile}" ]; then
-          # the linked-to file no longer exists (ie. the symlink is dangling)
-          rm -f "${obsoleteFile}" > /dev/null 2>&1
-        fi 
-      done
-      ${killph} 2>/dev/null # if the timer is not running, the kill will fail
-      sleep 1 # give spinner time to exit if running
+      if ! runLogProgress "rmSymlinksFileDiff" \
+          "Checking for file differences in mesh" \
+          "Checked for file differences in mesh" "linkcheck"; then
+        printError "Unable to remove symlinks links. Review any errors. Manual cleanup using zopen-alt might be required"
+      fi
     else
-      # Slower method needed to analyse each link to see if it has
-      # become orphaned. Only relevent when removing a package as 
-      # upgrades/alt-switching can supply a list of files
-      # Use sed to skip header line in .links file
-      # Note that the contents of the links file are ordered such that
-      # processing occurs depth-first; if, after removing orphaned symlinks,
-      # a directory is empty, then it can be removed.
-      nfiles=$(zossed '1d;$d' "${dotlinks}" | wc -l  | tr -d ' ')
-      printDebug "Creating Temporary dirname file"
-      tempDirFile=$(mktempfile "unsymlink")
-      [ -e "${tempDirFile}" ] && rm -f "${tempDirFile}" >/dev/null 2>&1
-      touch "${tempDirFile}"
-      tempTrash=$(mktempfile "unsymlink" "trash")
-      [ -e "${tempTrash}" ] && rm -f "${tempTrash}" >/dev/null 2>&1
-      addCleanupTrapCmd "rm -rf ${tempDirFile}"
-      printDebug "Using temporary file ${tempDirFile}"
-      printInfo "- Checking ${nfiles} potential links"
-      printDebug "Starting spinner..."
-      progressHandler "spinner" "- Complete" &
-      ph=$!
-      killph="kill -HUP ${ph}"
-      addCleanupTrapCmd "${killph}"
-
-      while read filetounlink; do
-        filetounlink=$(echo "${filetounlink}" | zossed 's/\(.*\).symbolic.*/\1/')
-        filename="$filetounlink"
-        [ -z "${filetounlink}" ] && continue
-        filetounlink="${ZOPEN_ROOTFS}/${filetounlink}"
-        [ ! -e "${filetounlink}" ] && continue  # If not there, can'e be removed!
-        if [ -d "${filetounlink}" ]; then
-          # Add to the directory queue for checking once files are gone if unique
-          ispresent=$(grep "^${filetounlink}[ ]*$" "${tempDirFile}")
-          if [ -z "${ispresent}" ]; then
-            echo " ${filetounlink} " >> "${tempDirFile}"
-          fi
-        elif [ -L "${filetounlink}" ]; then
-          if [ ! -f "${filetounlink}" ]; then
-            # the linked-to file no longer exists (ie. the symlink is dangling)
-            rm -f "${filetounlink}" > /dev/null 2>&1
-          fi
-        else
-          echo "Unprocessable file: '${filetounlink}'" >> "${tempTrash}"
-        fi
-      done <<EOF
-$(zossed '1d;$d' "${dotlinks}")
-EOF
-      ${killph} 2>/dev/null # if the timer is not running, the kill will fail
-      sleep 1 # ensure the spinner has stopped if running
+      if ! runLogProgress "rmSymlinksFSCheck" \
+          "Checking for orphaned symlinks in mesh" \
+          "Checked for orphaned symlinks in mesh" "linkcheck"; then
+        printError "Unable to remove symlinks links. Review any errors. Manual cleanup using zopen-alt might be required"
+      fi
       if [ -e "${tempDirFile}" ]; then
         ndirs=$(uniq < "${tempDirFile}" | wc -l  | tr -d ' ')
         printVerbose "- Checking ${ndirs} dir links"
-        for d in $(uniq < "${tempDirFile}" | sort -r) ; do 
+        for d in $(uniq < "${tempDirFile}" | sort -r) ; do
           [ -d "${d}" ] && rmdir "${d}" >/dev/null 2>&1
         done
+        rm "${tempDirFile}"
       fi
       if [ -e "${tempTrash}" ]; then
         printSoftError "Issues found while trying to remove the following files:"
@@ -858,20 +1056,22 @@ EOF
 printDebug()
 {
   [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
+  # shellcheck disable=SC2154
   if ${debug}; then
     printColors "${NC}${BLUE}${BOLD}:DEBUG:${NC}: '${1}'"
   fi
-  [ ! -z "${xtrc}" ] && set -x
+  [ -n "${xtrc}" ] && set -x
   return 0
 }
 
 printVerbose()
 {
   [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
+  # shellcheck disable=SC2154
   if ${verbose}; then
     printColors "${NC}${GREEN}${BOLD}VERBOSE${NC}: ${1}"
   fi
-  [ ! -z "${xtrc}" ] && set -x
+  [ -n "${xtrc}" ] && set -x
   return 0
 }
 
@@ -882,7 +1082,7 @@ printHeader()
   fi
   [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
   printColors "${NC}${HEADERCOLOR}${BOLD}${UNDERLINE}${1}${NC}"
-  [ ! -z "${xtrc}" ] && set -x
+  [ -n "${xtrc}" ] && set -x
   return 0
 }
 
@@ -890,7 +1090,7 @@ printAttention()
 {
   [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
   printColors "${NC}${MAGENTA}${BOLD}${UNDERLINE}${1}${NC}"
-  [ ! -z "${xtrc}" ] && set -x
+  [ -n "${xtrc}" ] && set -x
   return 0
 }
 
@@ -908,26 +1108,27 @@ runAndLog()
 runLogProgress()
 {
   printVerbose "$1"
-  if [ -n "$2" ]; then
-    printInfo "- $2"
+  printInfo "- ${2:-Running}"
+  completeText="${3:-Complete}"
+  animation="${4:-spinner}"
+
+  if ! ${verbose}; then
+    progressHandler "${animation}" "${completeText}" &
+    PROGRESS_HANDLER=$!
+    killph="kill -HUP ${PROGRESS_HANDLER}"
+    addCleanupTrapCmd "${killph}"
+    eval "$1"
+    rc=$?
+    ${killph} >/dev/null 2>&1 # if the timer is not running, the kill will fail
+    waitforpid ${PROGRESS_HANDLER}  # Make sure it's finished writing to screen
   else
-    printInfo "- Running"
+    eval "$1"
+    rc=$?
   fi
-  if [ -n "$3" ]; then
-    completeText="$3"
-  else
-    completeText="Complete"
+  if [ -n "${SSH_TTY}" ]; then
+    chtag -r "${SSH_TTY}"
   fi
-  progressHandler "spinner" "- ${completeText}" &
-  ph=$!
-  killph="kill -HUP ${ph} 2>/dev/null"
-  addCleanupTrapCmd "${killph}"
-  eval "$1"
-  rc=$?
-  if [ ! -z "${SSH_TTY}" ]; then
-    chtag -r ${SSH_TTY}
-  fi
-  ${killph} 2> /dev/null # if the timer is not running, the kill will fail
+
   return "${rc}"
 }
 
@@ -936,8 +1137,7 @@ spinloop()
   # in the absence of generic ms/ns reporting, spin-loop instead - not ideal
   # but without pre-reqing packages...
   i=$1
-  while [ ${i} -ge 0 ]; do
-    :
+  while [ "${i}" -ge 0 ]; do
     i=$((i - 1))
   done
 }
@@ -947,45 +1147,77 @@ progressAnimation()
   [ $# -eq 0 ] && printError "Internal error: no animation strings."
   animcnt=$#
   anim=1
-  ansiline 0 0 "$1"
-  while :; do
-    spinloop 1000
+  firstFrame=true
+  while true; do
+    spinloop 3000
     # Check for daemonization of this process (ie. orphaned and PPID=1)
     # Cannot actually use "$PPID" as it is set at script initialization
     # and not updated when the parent changes so need to query.
-    getParentProcess "$$" >/dev/null 2>&1
-    ppid=$?
-    [ "${ppid}" -eq 1 ] && kill INT "${ppid}" >/dev/null 2>&1
+    if ! ppid=$(getParentProcess "$$"); then
+      printVerbose "Cannot determine parent process, disable animation"
+      exit 1
+    fi
+    if [ "${ppid}" = "1" ]; then
+      # We have been daemonized and owned by PPID=1
+      kill HUP "$$" >/dev/null 2>&1
+      sleep 1 > /dev/null 2>&1
+    fi
     anim=$((anim + 1))
     [ ${anim} -gt ${animcnt} ] && anim=1
-    ansiline 1 -1 $(getNthArrayArg "${anim}" "$@")
+    if ${firstFrame}; then
+      printf "${ERASELINE}%s\n" "$(getNthArrayArg "${anim}" "$@")"
+      firstFrame=false
+    else
+      printf "${CRSRPL}${ERASELINE}%s\n" "$(getNthArrayArg "${anim}" "$@")"
+    fi
   done
 }
 
-getNthArrayArg () {
-    shift "$1"
-    echo "$1"
+getNthArrayArg ()
+{
+  shift "$1"
+  echo "$1\c"
+}
+
+waitforpid()
+{
+  while kill -0 "$1" >/dev/null 2>&1; do
+    sleep 1
+  done
 }
 
 progressHandler()
 {
-  if [ ! "${_BPX_TERMPATH-x}" = "OMVS" ] && [ -z "${NO_COLOR}" ] && [ ! "${FORCE_COLOR-x}" = "0" ] && [ -t 1 ] && [ -t 2 ]; then
-    [ -z "${-%%*x*}" ] && set +x # Disable -x debug if set for this process
-    type=$1
-    completiontext=$2 # Custom end text (when the process is complete)
-    trapcmd="exit;"
-    if [ -n "${completiontext}" ]; then
-      trapcmd="/bin/echo \"\047[1A\047[30D\047[2K${completiontext}\"; ${trapcmd}"
-    fi
+
+  if [ -z "${-%%*x*}" ]; then
+    # Command trace is active so any progress animation
+    # writing to screen will interleave, making things cluttered.
+    # Sleep for 1s (to allow the caller to setup signal handling) and exit
+    sleep 1
+    exit 0
+  fi
+  type=$1
+  completiontext=$2 # Custom end text (when the process is complete)
+  trap "exit" EXIT # If there is an animation error, it will just exit
+  if ${ANSION}; then
+    trapcmd="/bin/printf \"${CRSRSHOW}${ERASELINE}${CRSRPL}${ERASELINE}${CRSRPL}${ERASELINE}- ${completiontext:-Done}\n\";exit"
     # shellcheck disable=SC2064
     trap "${trapcmd}" HUP
+    # shellcheck disable=SC2059
+    printf "${CRSRHIDE}"
     case "${type}" in
-      "spinner")   progressAnimation '-' '\' '|' '/' ;;
-      "network")   progressAnimation '-----' '>----' '->---' '-->--' '--->-' '---->' '-----' '----<' '---<-' '--<--' '-<---' '<----' ;;
+      "spinner")  progressAnimation '-' '/' '|' '\\' ;;
+      "network")  progressAnimation '-----' '>----' '->---' '-->--' '--->-' '---->' '-----' '----<' '---<-' '--<--' '-<---' '<----' ;;
+      "mirror")   progressAnimation '#______' '##_____' '#=#____' '#==#___' '#===#__' '#====#_' '#=====#' '#_====#' '#__===#' '#___==#' '#____=#' '#_____#' ;;
+      "trash")    progressAnimation 'O________' '_O_______' '__O______' '___o_____' '____o____' '_____o___' '______.__' '_______._' '________.' ;;
       "linkcheck") progressAnimation '======|' '?=====|' '-?====|' '--?===|' '---?==|' '----?=|' '-----?|' '------|' '?-----|' '=?----|' '==?---|' '===?--|' '====?-|' '=====?|';;
-      *) progressAnimation '.' 'o' 'O' 'O' 'o' '.'
-      ;;
+      "pkgcheck") progressAnimation '?###?###' '#?###?##' '##?###?#' '###?###?';;
+      *)          progressAnimation '.' 'o' 'O' 'O' 'o' '.' ;;
     esac
+  else
+    trapcmd="/bin/printf \"${completiontext}\n\";exit"
+    # shellcheck disable=SC2064
+    trap "${trapcmd}" HUP
   fi
 }
 
@@ -997,21 +1229,24 @@ runInBackgroundWithTimeoutAndLog()
   printVerbose "${command} with timeout of ${timeout}s."
   eval "${command} &; TEEPID=$!"
   PID=$!
+  [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""  # Disable cmd trace if active
   n=0
   while [ ${n} -le ${timeout} ]; do
     kill -0 "${PID}" 2> /dev/null
     if [ $? != 0 ]; then
       wait "${PID}"
-      if [ ! -z "${SSH_TTY}" ]; then
-        chtag -r ${SSH_TTY}
+      if [ -n "${SSH_TTY}" ]; then
+        chtag -r "${SSH_TTY}"
       fi
       rc=$?
-      return "${rc}"
+      [ -n "${xtrc}" ] && set -x  # Re-enable cmd trace
+      return ${rc}
     else
       sleep 1
-      n=$(expr ${n} + 1)
+      n=$(( n + 1))
     fi
   done
+  [ -n "${xtrc}" ] && set -x # Re0enable cmd trace
   kill -9 "${PID}" 2>/dev/null
   kill -9 "${TEEPID}" 2>/dev/null
   printError "TIMEOUT: (PID: ${PID}): ${command}"
@@ -1024,13 +1259,23 @@ printSoftError()
   [ -n "${xtrc}" ] && set -x
 }
 
+assertFailed()
+{
+  # Used to indicate that something that should have been set in an internal
+  # call was missing/borken - a program error rather than a user error
+  [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
+  printColors "${NC}${RED}${BOLD}***INTERNAL ASSERTION ERROR: ${NC}${RED}${1}${NC}" >&2
+  [ -n "${xtrc}" ] && set -x
+  mutexFree "zopen" # prevent lock from lingering around after an error
+  exit 12
+}
+
 printError()
 {
   [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
   printColors "${NC}${RED}${BOLD}***ERROR: ${NC}${RED}${1}${NC}" >&2
   [ -n "${xtrc}" ] && set -x
   mutexFree "zopen" # prevent lock from lingering around after an error
-  cleanupFunction
   exit 4
 }
 
@@ -1062,14 +1307,14 @@ getInputHidden()
   addCleanupTrapCmd "stty echo"
   stty -echo
   read zopen_input
-  echo ${zopen_input}
+  echo "${zopen_input}"
   stty echo
 }
 
 getInput()
 {
   read zopen_input
-  echo ${zopen_input}
+  echo "${zopen_input}"
 }
 
 printElapsedTime()
@@ -1077,7 +1322,7 @@ printElapsedTime()
   printType=$1
   functionName=$2
   startTime=$3
-  elapsedTime=$((${SECONDS} - ${startTime}))
+  elapsedTime=$((SECONDS - startTime))
 
   elapsedTimeOutput="${functionName} completed in ${elapsedTime} seconds."
 
@@ -1097,6 +1342,7 @@ processConfig()
   if [ -z "${ZOPEN_ROOTFS}" ]; then
     relativeRootDir="$(cd "$(dirname "$0")/../.." > /dev/null 2>&1 && pwd -P)"
     if [ -f "${relativeRootDir}/etc/zopen-config" ]; then
+      # shellcheck source=/dev/null
       . "${relativeRootDir}/etc/zopen-config"
     else
       printError "Source the zopen-config prior to running $0."
@@ -1113,7 +1359,7 @@ checkIfConfigLoaded()
     errorMessage="Certificate at ${ZOPEN_CA} could not be accessed. Ensure zopen init has run and zopen-config has been sourced."
   fi
 
-  if [ ! -z "${errorMessage}" ]; then
+  if [ -n "${errorMessage}" ]; then
     if [ -r "${mydir}/../../../etc/zopen-config" ]; then
       relativeConfigDir="$(cd "$(dirname "${mydir}")/../../etc/" > /dev/null 2>&1 && pwd -P)"
       errorMessage="${errorMessage} Run '. ${relativeConfigDir}/zopen-config'  or add it to your .profile."
@@ -1125,28 +1371,28 @@ checkIfConfigLoaded()
 parseDeps()
 {
   dep="$1"
-  version=$(echo ${dep} | awk -F '[>=<]+' '{print $2}')
+  version=$(echo "${dep}" | awk -F '[>=<]+' '{print $2}')
   if [ -z "${version}" ]; then
     operator=""
-    dep=$(echo ${dep} | awk -F '[>=<]+' '{print $1}')
+    dep=$(echo "${dep}" | awk -F '[>=<]+' '{print $1}')
   else
-    operator=$(echo ${dep} | awk -F '[0-9.]+' '{print $1}' | awk -F '^[a-zA-Z]+' '{print $2}')
-    dep=$(echo ${dep} | awk -F '[>=<]+' '{print $1}')
+    operator=$(echo "${dep}" | awk -F '[0-9.]+' '{print $1}' | awk -F '^[a-zA-Z]+' '{print $2}')
+    dep=$(echo "${dep}" | awk -F '[>=<]+' '{print $1}')
     case ${operator} in
     ">=") ;;
     "=") ;;
     *) printError "${operator} is not supported." ;;
     esac
-    major=$(echo ${version} | awk -F. '{print $1}')
-    minor=$(echo ${version} | awk -F. '{print $2}')
+    major=$(echo "${version}" | awk -F. '{print $1}')
+    minor=$(echo "${version}" | awk -F. '{print $2}')
     if [ -z "${minor}" ]; then
       minor=0
     fi
-    patch=$(echo ${version} | awk -F. '{print $3}')
+    patch=$(echo "${version}" | awk -F. '{print $3}')
     if [ -z "${patch}" ]; then
       patch=0
     fi
-    prerelease=$(echo ${version} | awk -F. '{print $4}')
+    prerelease=$(echo "${version}" | awk -F. '{print $4}')
     if [ -z "${prerelease}" ]; then
       prerelease=0
     fi
@@ -1204,7 +1450,7 @@ deleteDuplicateEntries()
 {
   value=$1
   delim=$2
-  echo "${value}${delim}" | awk -v RS="${delim}" '!($0 in a) {a[$0]; printf("%s%s", col, $0); col=RS; }' | zossed "s/${delim}$//"
+  echo "${value}${delim}" | awk -v RS="${delim}" '!($0 in a) {a[$0]; printf("%s%s", col, $0); col=RS; }' | sed "s/${delim}$//"
 }
 
 # Logging Types
@@ -1237,74 +1483,193 @@ syslog()
     mkdir -p "$(dirname "${fd}")"
     touch "${fd}"
   fi
-  echo "$(date +"%F %T") $(id | cut -d' ' -f1)::${module}:${type}:${categories}:${location}:${msg}" >> "${fd}"
+  output="$(date +"%F %T") $(id | cut -d' ' -f1)::${module}:${type}:${categories}:${location}:${msg}"
+  if [ -w "${fd}" ]; then
+    echo "${output}" >> "${fd}"
+  else
+    printWarning "No write permission to log file '${fd}'; writing to stderr"
+    echo "${output}" >&2
+  fi
+
+}
+
+jqGetKey(){
+  # If the key is not present, the error causes jq to exit with a
+  # non-zero return code
+  jq -er --arg key "$1" '.[$key] // error("Missing key: " + $key)' "$2"
+}
+
+validateReposDEntry(){
+  activeRepo=$1
+  requiredKeys="type metadata_baseurl metadata_file latest_file"
+  printVerbose "Ensuring repo file is valid; required keys: ${requiredKeys}"
+  for reposDEntry in ${requiredKeys}; do
+    if ! jqk=$(jqGetKey "${reposDEntry}" "${activeRepo}"); then
+      printSoftError "Repository definition at '${activeRepo}' incomplete; missing required key: ${reposDEntry}."
+      printError "Running zopen init --refresh might resolve this or recreating file from a backup"
+    elif [ -z "${jqk}" ]; then
+      printSoftError "Repository definition at '${activeRepo}' incomplete; required key '${reposDEntry}' has no value"
+      printError "Check the value in '${activeRepo}' is correct and retry command"
+    else
+      printVerbose "Key '${reposDEntry}' found with value '${jqk}'"
+    fi
+  done
+}
+
+getJSONCacheURLs(){
+  reposdDir="${ZOPEN_ROOTFS}/etc/zopen/repos.d"
+  activeRepo="${reposdDir}/active"
+  dereffedLink=$(deref_symlink "${activeRepo}")
+  [ ! -e "${dereffedLink}" ] && printError "Could not access linked repository configuration at '${dereffedLink}'. Check file to ensure valid repository configuration or refresh default configuration with zopen init --refresh -y."
+  if ! validateReposDEntry "${dereffedLink}"; then
+    return 1
+  fi
+  type=$(jqGetKey "type" "${dereffedLink}")
+  base=$(jqGetKey "metadata_baseurl" "${dereffedLink}")
+  filename=$(jqGetKey "metadata_file" "${dereffedLink}")
+  latest_metadata=$(jqGetKey "latest_file" "${dereffedLink}")
+
+  case "${type}" in
+    http|https) jsonCacheURLs=$(printf "%s://%s/%s\n%s://%s/%s" \
+                    "${type}" "${base}" "${filename}" "${type}" "${base}" "${latest_metadata}")
+    ;;
+    file) jsonCacheURLs=$(printf "%s:%s/%s\n%s:%s/%s" \
+              "${type}" "${base}" "${filename}" "${type}" "${base}" "${latest_metadata}")
+    ;;
+    *)        printError "Unsupported repository type '${type}'.";;
+  esac
+}
+
+updateJSONCaches()
+{
+  if [ -n "${JSON_CACHE}" ]; then
+    printVerbose "Cache already downloaded/checked during this session"
+    return 0
+  fi
+
+  from_readonly="$1"
+  if [ -n "${from_readonly}" ]; then
+    if [ -r "${JSON_CACHE}" ] && [ ! -w "${JSON_CACHE}" ]; then
+      return; # Skip the download for read only operations when you know you can't write to it
+    fi
+  fi
+
+  printVerbose "Ensuring cache directory exists"
+  cachedir="${ZOPEN_ROOTFS}/var/cache/zopen"
+  [ ! -e "${cachedir}" ] && mkdir -p "${cachedir}"
+  if ! getJSONCacheURLs; then
+    return 1
+  fi
+
+  printVerbose "Checking if the JSON_CACHE already downloaded in this session"
+  if [ -z "${JSON_CACHE}" ]; then
+    JSON_CACHE="${cachedir}/zopen_releases.json"
+    downloadJSONCacheIfExpired "${JSON_CACHE}" "$(echo "${jsonCacheURLs}" | tail -n 2 | head -n 1)"
+  fi
+  if [ -z "${JSON_LATEST_CACHE}" ]; then
+    JSON_LATEST_CACHE="${cachedir}/zopen_releases_latest.json"
+    latestReleaseURL="$(dirname "${jsonCacheURL}")/${latest_metadata}"
+    downloadJSONCacheIfExpired "${JSON_LATEST_CACHE}" "$(echo "${jsonCacheURLs}" | tail -n 1)"
+  fi
+}
+
+downloadJSONCacheIfExpired()
+{
+  fileToCache="$1"
+  cacheUrl="$2"
+  cacheTimestamp="${fileToCache}.timestamp"
+  cacheTimestampCurrent="${fileToCache}.timestamp.current"
+
+    # Need to check that we can read & write to the JSON timestamp cache files
+    if [ -e "${cacheTimestampCurrent}" ]; then
+      [ ! -w "${cacheTimestampCurrent}" ] || [ ! -r "${cacheTimestampCurrent}" ] && printError "Cannot access cache at '${cacheTimestampCurrent}'. Check permissions and retry request."
+    fi
+    if [ -e "${cacheTimestamp}" ]; then
+      [ ! -w "${cacheTimestamp}" ] || [ ! -r "${cacheTimestamp}" ] && printError "Cannot access cache at '${cacheTimestamp}'. Check permissions and retry request."
+    fi
+    if [ -e "${fileToCache}" ]; then
+      [ ! -w "${fileToCache}" ] || [ ! -r "${fileToCache}" ] && printError "Cannot access cache at '${JSON_CACHE}'. Check permissions and retry request."
+    fi
+
+    if ! curlCmd --fail --location --silent --head "${cacheUrl}" -o "${cacheTimestampCurrent}"; then
+      printError "Failed to obtain json cache timestamp from ${cacheUrl}."
+    fi
+    chtag -tc 819 "${cacheTimestampCurrent}"
+
+    if [ -f "${fileToCache}" ] && [ -f "${cacheTimestamp}" ]; then
+      # Extract eyecatchers - either ETag or Last-Modified depending on repo type
+      prevETag=$(grep -i '^ETag' "${cacheTimestamp}")
+      currETag=$(grep -i '^ETag' "${cacheTimestampCurrent}")
+      prevLastMod=$(grep -i '^Last-Modified' "${cacheTimestamp}")
+      currLastMod=$(grep -i '^Last-Modified' "${cacheTimestampCurrent}")
+      # Compare values if they exist and match - if they do, then the cache is current
+      if [ -n "$prevETag" ] && [ -n "$currETag" ]; then
+        printVerbose "Comparing previous ETag '${prevETag}' with current '${currETag}"
+        [ "$prevETag" = "$currETag" ] && return
+      elif [ -n "$prevLastMod" ] && [ -n "$currLastMod" ]; then
+        printVerbose "Comparing previous ETag '${prevLastMod}' with current '${currLastMod}"
+        [ "$prevLastMod" = "$currLastMod" ] && return
+      fi
+    fi
+
+    printVerbose "Replacing old timestamp with latest."
+    mv -f "${cacheTimestampCurrent}" "${cacheTimestamp}"
+
+    if ! curlCmd --fail --location --silent -o "${fileToCache}" "${cacheUrl}"; then
+      printError "Failed to obtain json cache from '${cacheUrl}'"
+    fi
+    chtag -tc 819 "${fileToCache}"
+  if [ ! -f "${fileToCache}" ]; then
+    printError "Could not download json cache from '${cacheUrl}"
+  fi
 }
 
 downloadJSONCache()
 {
-  from_readonly=$1
-
-  if [ -z "${JSON_CACHE}" ]; then
-    cachedir="${ZOPEN_ROOTFS}/var/cache/zopen"
-    [ ! -e "${cachedir}" ] && mkdir -p "${cachedir}"
-    JSON_CACHE="${cachedir}/zopen_releases.json"
-    JSON_TIMESTAMP="${cachedir}/zopen_releases.timestamp"
-    JSON_TIMESTAMP_CURRENT="${cachedir}/zopen_releases.timestamp.current"
-
-    if [ -n "$from_readonly" ]; then
-      if [ -r "$JSON_CACHE" ] && [ ! -w "$JSON_CACHE" ]; then
-        return; # Skip the download for read only operations when you know you can't write to it
-      fi
-    fi
-  
-    # Need to check that we can read & write to the JSON timestamp cache files
-    if [ -e "${JSON_TIMESTAMP_CURRENT}" ]; then
-      [ ! -w "${JSON_TIMESTAMP_CURRENT}" ] || [ ! -r "${JSON_TIMESTAMP_CURRENT}" ] && printError "Cannot access cache at '${JSON_TIMESTAMP_CURRENT}'. Check permissions and retry request."
-    fi
-    if [ -e "${JSON_TIMESTAMP}" ]; then
-      [ ! -w "${JSON_TIMESTAMP}" ] || [ ! -r "${JSON_TIMESTAMP}" ] && printError "Cannot access cache at '${JSON_TIMESTAMP}'. Check permissions and retry request."
-    fi
-    if [ -e "${JSON_CACHE}" ]; then
-      [ ! -w "${JSON_CACHE}" ] || [ ! -r "${JSON_CACHE}" ] && printError "Cannot access cache at '${JSON_CACHE}'. Check permissions and retry request."
-    fi
-
-    if ! curlout=$(curlCmd -L --no-progress-meter -I "${ZOPEN_JSON_CACHE_URL}" -o "${JSON_TIMESTAMP_CURRENT}"); then
-      printError "Failed to obtain json cache timestamp from ${ZOPEN_JSON_CACHE_URL}; ${curlout}"
-    fi
-    chtag -tc 819 "${JSON_TIMESTAMP_CURRENT}"
-
-    if [ -f "${JSON_CACHE}" ] && [ -f "${JSON_TIMESTAMP}" ] && grep -q 'ETag' "${JSON_TIMESTAMP_CURRENT}" && [ "$(grep 'ETag' "${JSON_TIMESTAMP_CURRENT}")" = "$(grep 'ETag' "${JSON_TIMESTAMP}")" ]; then
-      return
-    fi
-
-    printVerbose "Replacing old timestamp with latest."
-    mv -f "${JSON_TIMESTAMP_CURRENT}" "${JSON_TIMESTAMP}"
-
-    if ! curlout=$(curlCmd -L --no-progress-meter -o "${JSON_CACHE}" "${ZOPEN_JSON_CACHE_URL}"); then
-      printError "Failed to obtain json cache from ${ZOPEN_JSON_CACHE_URL}; ${curlout}"
-    fi
-    chtag -tc 819 "${JSON_CACHE}"
-  fi
-
-  if [ ! -f "${JSON_CACHE}" ]; then
-    printError "Could not download json cache from ${ZOPEN_JSON_CACHE_URL}"
+  if ! updateJSONCaches "$1"; then
+    return 1
+  else
+    return 0
   fi
 }
 
-getReposFromGithub()
+# getRepos
+# Queries the main repository list to obtain a list of all available port
+# names, populating the repo_results global var
+# inputs: none
+# return: 0  success
+#         1  failure
+getRepos()
 {
-  downloadJSONCache $1
-  repo_results="$(cat "${JSON_CACHE}" | jq -r '.release_data | keys[]')"
+  if ! updateJSONCaches "$1"; then
+    return 1
+  fi
+  # shellcheck disable=SC2034
+  repo_results="$(jq -r '.release_data | keys[]' "${JSON_CACHE}")"
 }
 
-getAllReleasesFromGithub()
+# isValidRepo
+# Queries the main repository list to determine if the input is valid,  This
+# uses jq itself to return 0 or 1 with no output
+# inputs: $1 the port name.
+
+# return: 0  valid port name
+#         1  invalid port name
+isValidRepo()
 {
-  downloadJSONCache $1
+  if ! updateJSONCaches; then
+    return 1
+  fi
+  jq -r --arg needle "$1" 'if .release_data | has($needle) then empty else error("") end'  "${JSON_CACHE}" > /dev/null 2>&1
+}
+
+#Deprecated
+getRepoReleases()
+{
+  if ! updateJSONCaches; then
+    return 1
+  fi
   repo="$1"
-  releases="$(jq -e -r '.release_data."'${repo}'"' "${JSON_CACHE}")"
-  if [ $? -ne 0 ]; then
-    printError "Could not get all releases for ${repo}"
-  fi
 }
 
 # Initializes a default environment for consistency in zopen builds
@@ -1338,55 +1703,23 @@ checkWritable()
   fi
 }
 
-getReleaseLine()
+generateUUID()
 {
-  jsonConfig="${ZOPEN_ROOTFS}/etc/zopen/config.json"
-  if [ ! -f "${jsonConfig}" ]; then
-    jq -r '.release_line' $jsonConfig
-  else
-    echo "STABLE"
-  fi
-}
-
-getRMProcs()
-{
-  jsonConfig="${ZOPEN_ROOTFS}/etc/zopen/config.json"
-  if [ ! -f "${jsonConfig}" ]; then
-    jq -r '.num_rm_procs' $jsonConfig
-  else
-    echo "5" # default
-  fi
+  date_part=$(date +%s)
+  random_part=$((RANDOM))
+  uuid="${date_part}-${random_part}"
+  echo "${uuid}"
 }
 
 isURLReachable() {
   url="$1"
   timeout=5
 
-  if curl -s --fail --max-time $timeout "$url" > /dev/null; then
+  if curlCmd -s --fail --max-time $timeout "$url" > /dev/null; then
     return 0
   else
     return 1
   fi
-}
-
-checkAvailableSize()
-{ 
-  
-  package="$1"
-  packageSize="$2"
-  printInfo "- Checking available size to install ${package}."
-
-  printDebug "Package Size: ${packageSize} bytes"
-  packageSize=$(echo "scale=2; ${packageSize} / 1024" | bc)
-  printDebug "Package Size: ${packageSize} k"
-  partitionSize=$(/bin/df -k . | tail -1 | awk '{print $3}' | cut -f1 -d '/')
-  printDebug "Partition Size: ${partitionSize}k [free on '$(pwd -P)']"
-  
-  if [ 1 -eq "$(echo "${packageSize} > ${partitionSize}" | bc)" ]; then
-    printError "Not enough space in partition."
-  fi
-  printInfo "- Enough space to install ${package}. Proceeding with installation."
-  return 0
 }
 
 promptYesOrNo() {
@@ -1422,14 +1755,14 @@ asciiecho()
     return 2
   fi
   if [ "$(chtag -p "${file}" | cut -f2 -d' ')" = "IBM-1047" ]; then
-    if ! /bin/iconv -f IBM-1047 -t ISO8859-1 < "${file}" > "${file}_ascii" || ! chtag -tc ISO8859-1 "${file}_ascii" || ! mv "${file}_ascii" "${file}"; then
+    if ! iconv -f IBM-1047 -t ISO8859-1 < "${file}" > "${file}_ascii" || ! chtag -tc ISO8859-1 "${file}_ascii" || ! mv "${file}_ascii" "${file}"; then
       printError "Unable to convert EBCDIC text to ASCII for ${file}" >&2
     fi
   fi
   return 0
 }
 
-a2e() 
+a2e()
 {
   source="$1"
 
@@ -1439,17 +1772,1130 @@ a2e()
   fi
 
   if [ "$(chtag -p "${source}" | cut -f2 -d' ')" = "ISO8859-1" ]; then
-    /bin/iconv -f ISO8859-1 -t IBM-1047 "$source" > "$source.bk"
+    iconv -f ISO8859-1 -t IBM-1047 "$source" > "$source.bk"
     chtag -tc 1047 "$source.bk"
     mv "$source.bk" "$source"
   fi
+}
+
+testGPGAgentSocket() {
+  # Test whether the gpg socket that has been found is actually valid -
+  # orphaned sockets without a daemon can lead to gpg errors when trying
+  # to restart
+  if ! gpg-connect-agent --socket="$1" /bye >/dev/null 2>&1; then
+    return 1
+  fi
+  return 0
+}
+
+startGPGAgent() {
+  printInfo "- Starting gpg-agent..."
+
+  SOCKET_PATH=$(gpgconf --list-dirs agent-socket)
+  printVerbose "gpg socket path: ${SOCKET_PATH}"
+  if [ -r "$SOCKET_PATH" ]; then
+    if testGPGAgentSocket "${SOCKET_PATH}"; then
+      printVerbose "gpg-agent is already running (socket found at ${SOCKET_PATH})."
+      return 0
+    else
+      printWarning "Found orphaned GPG agent socket at ${SOCKET_PATH}; removing and attempting restart of gpg-agent."
+      rm -f "${SOCKET_PATH}"
+    fi
+  fi
+
+  if eval "$(gpg-agent --daemon --disable-scdaemon)" >/dev/null 2>&1; then
+    if [ -r "$SOCKET_PATH" ]; then
+      printVerbose "gpg-agent started successfully (socket created at $SOCKET_PATH)."
+    else
+      printWarning "gpg-agent started, but socket was not created at $SOCKET_PATH. Please verify your GPG installation."
+    fi
+  else
+    if [ -r "$SOCKET_PATH" ]; then
+      printWarning "gpg-agent started successfully (socket created at $SOCKET_PATH), but gpg-agent returned a non-zero return code."
+    else
+      printError "Failed to start gpg-agent. Reinstall or upgrade GPG using \"zopen install --reinstall gpg -y\" or \"zopen upgrade gpg -y\"."
+    fi
+  fi
+}
+
+promptYesNoAlways() {
+  message="$1"
+  skip=$2
+  if ! ${skip}; then
+    while true; do
+      printf "${message} [y/n/a] "
+      read answer < /dev/tty
+      answer=$(echo "${answer}" | tr '[A-Z]' '[a-z]')
+      case "${answer}" in
+       y|yes) return 0;;
+       n|no) return 1;;
+       a|always) yesToPrompts=true; return 0;;
+      esac
+    done
+  fi
+  [ "$yesToPrompts" = "true" ] && return 0 || return 1
+}
+
+getVersionedMetadata()
+{
+  repo=$1
+  invalidPortAssetFile=$2
+  printDebug "Specific version ${versioned} requested - checking existence and URL"
+  requestedVersion=$(echo "${versioned}" | awk -F'.' '{print $4}')
+  printDebug "Finding metadata for latest release matching version prefix: requestedVersion: ${versioned}"
+  if ! releasemetadata=$(jq --arg repo "${repo}" --arg requestedVersion "${versioned}" \
+      '.release_data[$repo] | map(select(.assets[].name | test($requestedVersion)))[0]' "${JSON_CACHE}"); then
+    printSoftError "Could not find metadata for ${repo} in repo metadata '${JSON_CACHE}'" 2> "${invalidPortAssetFile}"
+    return 1
+  elif [ "${releasemetadata}" = "null" ]; then
+      printSoftError "Could not find specified version '${versioned}' for package '${repo}'" 2> "${invalidPortAssetFile}"
+      return 1
+  fi
+  printDebug "Check for asset"
+  asset=$(printf "%s" "${releasemetadata}" | jq -e -r '.assets[0]')
+  if ! asset=$(printf "%s" "${releasemetadata}" | jq -e -r '.assets[0]'); then
+    printSoftError "Could not find asset for release version '${versioned}' in repo '${repo}'" 2> "${invalidPortAssetFile}"
+    return 1
+  fi
+  return 0
+}
+
+getTaggedMetadata()
+{
+  repo=$1
+  invalidPortAssetFile=$2
+  printDebug "Explicit tagged version '${tagged}' specified. Checking for match"
+  if ! releasemetadata=$(jq -e --arg repo "${repo}" --arg tagged "${tagged}" \
+    '.release_data[$repo][] | select(.tag_name == $tagged)' "${JSON_CACHE}"); then
+    printSoftError "Tagged release '${tagged}' was not found for ${repo}" 2> "${invalidPortAssetFile}"
+    return 1
+  fi
+  printDebug "Check for asset"
+  asset=$(printf "%s" "${releasemetadata}" | jq -e -r '.assets[0]')
+  if ! asset=$(printf "%s" "${releasemetadata}" | jq -e -r '.assets[0]'); then
+    printSoftError "Could not find asset for release tagged '${tagged}' in repo '${repo}'" 2> "${invalidPortAssetFile}"
+    return 1
+  fi
+  return 0
+}
+
+getSelectMetadata()
+{
+  # As this is running within the generate... logic, a progress handler will have been started.
+  # This needs to be terminated before trying to write to screen. This does mean that messages
+  # can be written to the screen rather than directed to a temporary error file
+  # shellcheck disable=SC2154
+  kill -HUP "${PROGRESS_HANDLER}" >/dev/null 2>&1 # if the timer is not running, the kill will fail
+  waitforpid "${PROGRESS_HANDLER}"  # Make sure it's finished writing to screen
+
+  repo="$1"
+  # Explicitly allow the user to select a release to install; useful if there are broken installs
+  # as a known good release can be found, selected and pinned!
+  printDebug "List individual releases and allow selection"
+  i=$(jq --arg repo "${repo}" '.release_data[$repo] | length - 1' "${JSON_CACHE}")
+  printInfo "Versions available for install:"
+  if ! jq --raw-output --arg repo "${repo}"  \
+      '.release_data[$repo] | to_entries | map("\(.key): \(.value.tag_name) - \(.value.assets[0].name) [\( ( .value.assets[0].expanded_size|tonumber)*1000 / (1024 * 1024) | ceil | . / 1000)Mb]")[]' "${JSON_CACHE}"; then
+    printError "Unable to enumerate asset version strings"
+  fi
+  printDebug "Getting user selection"
+  valid=false
+  while ! ${valid}; do
+    echo "Enter version to install (0-${i}): "
+    read selection < /dev/tty
+    if [ -n "$(echo "${selection}" | sed -e 's/[0-9]*//')" ]; then
+      echo "Invalid input, must be a number between 0 and ${i}"
+    elif [ "${selection}" -ge 0 ] && [ "${selection}" -le "${i}" ]; then
+      valid=true
+    fi
+  done
+  printVerbose "Selecting item ${selection} from array"
+  releasemetadata=$(jq --arg repo "${repo}" --arg selection "${selection}" \
+      '.release_data[$repo][$selection | tonumber]' "${JSON_CACHE}")
+}
+
+getReleaseLineMetadata()
+{
+  repo=$1
+  invalidPortAssetFile=$2
+  printDebug "Install from release line '${releaseLine}' specified"
+  validatedReleaseLine=$(validateReleaseLine "${releaseLine}")
+  if [ -z "${validatedReleaseLine}" ]; then
+    printSoftError "Invalid releaseline specified: '${releaseLine}'; Valid values: DEV or STABLE" 2> "${invalidPortAssetFile}"
+    return 1
+  fi
+  printDebug "Finding latest asset on the release line"
+  if ! releasemetadata=$(jq --arg repo "${repo}" --arg releaseLine "${validatedReleaseLine}" \
+      '.release_data[$repo] | map(select(.tag_name | startswith($releaseLine)))[0]' "${JSON_CACHE}"); then
+    printSoftError "Could not find metadata for ${repo} in repository metadata at '${JSON_CACHE}'" 2> "${invalidPortAssetFile}"
+    return 1
+  fi
+  printDebug "Use quick check for asset to check for existence of metadata"
+  if ! asset="$(printf "%s" "${releasemetadata}" | jq -e -r '.assets[0]')"; then
+    printSoftError "Could not find asset for releaseline '${validatedReleaseLine}' for repo '${repo}' in ${JSON_CACHE}" 2> "${invalidPortAssetFile}"
+    return 1
+  fi
+  unset "${releaseLine}"
+}
+
+calculateReleaseLineMetadata()
+{
+  repo="$1"
+  printDebug "No explicit version/tag/releaseline, checking for pre-existing package&releaseline"
+  if [ -n "${installedReleaseLine}" ]; then
+    printDebug "Found existing releaseline '${installedReleaseLine}', restricting to only that releaseline"
+    validatedReleaseLine="${installedReleaseLine}"  # Already validated when stored
+  else
+    printDebug "Checking for system-configured releaseline"
+    if [ -e "${ZOPEN_JSON_CONFIG}" ]; then
+      printDebug "Using v2 configuration: '${ZOPEN_JSON_CONFIG}'"
+      sysrelline=$(jq -re '.release_line' "${ZOPEN_JSON_CONFIG}")
+    elif [ -e "${ZOPEN_ROOTFS}/etc/zopen/releaseline" ] ; then
+      printDebug "Using legacy file-based config"
+      sysrelline=$(awk ' {print toupper($1)}') < "${ZOPEN_ROOTFS}/etc/zopen/releaseline"
+    fi
+    printDebug "Validating value: ${sysrelline}"
+    validatedReleaseLine=$(validateReleaseLine "${sysrelline}")
+    if [ -n "${validatedReleaseLine}" ]; then
+      printDebug "zopen system configured to use releaseline '${sysrelline}'; restricting to that releaseline"
+    else
+      printWarning "zopen misconfigured to use an unknown releaseline of '${sysrelline}'; defaulting to STABLE packages"
+      printWarning "Set the contents of '${ZOPEN_ROOTFS}/etc/zopen/releaseline' to a valid value to remove this message"
+      printWarning "Valid values are: DEV | STABLE"
+      validatedReleaseLine="STABLE"
+    fi
+  fi
+
+    # We have some situations that could arise
+    # 1. the port being installed has no releaseline tagging yet (ie. no releases tagged STABLE_* or DEV_*)
+    # 2. system is configured for STABLE but only has DEV stream available
+    # 3. system is configured for DEV but only has STABLE stream available
+    # 4. the port being installed has got full releaseline tagging
+    # The issue could arise that the user has switched the system from DEV->STABLE or vice-versa so package
+    # stream mismatches could arise but in normal case, once a package is installed [that has releaseline tagging]
+    # then that specific releaseline will be used
+  printDebug "Finding any releases tagged with ${validatedReleaseLine} and getting the first (newest/latest)"
+  releasemetadata=$(jq --arg repo "${repo}" --arg releaseLine "${validatedReleaseLine}" \
+      '.release_data[$repo] | map(select(.tag_name | startswith($releaseLine)))[0]' "${JSON_CACHE}")
+
+  printDebug "Use quick check for asset to check for existence of metadata"
+  asset="$(printf "%s" "${releasemetadata}" | jq -e -r '.assets[0]')"
+  [ "${asset}" = "null" ] && asset="" # jq uses null, translate to sh's empty
+
+  if [ -n "${asset}" ]; then
+    # Case 4...
+    printVerbose "Found a specific '${validatedReleaseLine}' release-line tagged version; installing..."
+  else
+    # Case 2 & 3
+    printDebug "No releases on releaseline '${validatedReleaseLine}'; checking alternative releaseline"
+    alt=$(echo "${validatedReleaseLine}" | awk ' /DEV/ { print "STABLE" } /STABLE/ { print "DEV" }')
+    releasemetadata=$(jq --arg repo "${repo}" --arg releaseLine "${alt}" \
+        '.release_data[$repo] | map(select(.tag_name | startswith($releaseLine)))[0]' "${JSON_CACHE}")
+    printDebug "Use quick check for asset to check for existence of metadata"
+    asset="$(printf "%s" "${releasemetadata}" | jq -e -r '.assets[0]')"
+    [ "${asset}" = "null" ] && asset=""  # jq uses null, translate to sh's empty
+    if [ $? -eq 0 ]; then
+      printDebug "Found a release on the '${alt}' release line so release tagging is active"
+      if [ "DEV" = "${validatedReleaseLine}" ]; then
+        # The system will be configured to use DEV packages where available but if none, use latest
+        printInfo "No specific DEV releaseline package, using latest available release"
+        releasemetadata=$(jq --arg repo "${repo}" '.release_data[$repo][0]' "${JSON_CACHE}")
+      else
+        printVerbose "The system is configured to only use STABLE releaseline packages but there are none"
+        printInfo "No release available on the '${validatedReleaseLine}' releaseline."
+      fi
+    else
+      # Case 1 - old package that has no release tagging yet (no DEV or STABLE), just install latest
+      printVerbose "Installing latest release"
+      releasemetadata=$(jq --arg repo "${repo}" '.release_data[$repo][0]'  "${JSON_CACHE}")
+    fi
+  fi
+}
+
+parseRepoName()
+{
+  fullname="$1"
+  printDebug "Name to install: ${fullname}, parsing any version ('=') or tag ('%') that has been specified"
+  name=$(echo "${fullname}" | sed -e 's#[=%].*##')
+  repo="${name}"
+  versioned=$(echo "${fullname}" | cut -s -d '=' -f 2)
+  tagged=$(echo "${fullname}" | cut -s -d '%' -f 2)
+  printDebug "Name:${name};version:${versioned};tag:${tagged};repo:${repo}"
+}
+
+getPortMetaData(){
+  # This is running inside a progresshandler - route error messages to
+  # $2
+  portRequested="$1"
+  invalidPortAssetFile="$2"
+  printDebug "Removing any version (=) or tag (%) suffixes fron '${portRequested}"
+  portName=$(echo "${portRequested}" | sed -e 's#%.*##' -e 's#=.*##')
+
+  if ! isValidRepo "${portName}"; then
+    echo "${portName}: no matching port found" >> "${invalidPortAssetFile}"
+    return 1
+  fi
+
+  parseRepoName "${portRequested}" # To set the various status flags below
+  if ! getRepoReleases "${portName}"; then
+    return 1
+  fi
+  if [ -n "${versioned}" ]; then
+    if ! getVersionedMetadata "${portName}" "${invalidPortAssetFile}"; then
+      return 1
+    fi
+  elif [ -n "${tagged}" ]; then
+    if ! getTaggedMetadata "${portName}" "${invalidPortAssetFile}"; then
+      return 1
+    fi
+  elif # shellcheck disable=SC2154
+       ${selectVersion}; then
+    selectVersion=false  # Need to set this to prevent selection of dependencies
+    if ! getSelectMetadata "${portName}" "${invalidPortAssetFile}"; then
+      return 1
+    fi
+  elif [ -n "${releaseLine}" ]; then
+    # The release line to use was explicitly mentioned on the cli
+    if ! getReleaseLineMetadata "${portName}" "${invalidPortAssetFile}"; then
+      return 1
+    fi
+  else
+    # No explict release line given, calculate
+    if ! calculateReleaseLineMetadata "${portName}" "${invalidPortAssetFile}"; then
+      return 1
+    fi
+  fi
+  if [ -z "${asset}" ] || [ "null" = "${asset}" ]; then
+    printDebug "Asset not found during previous logic; setting now from metadata"
+    if [ -z "${releasemetadata}" ]; then
+    echo "${portName}: metadata could not be found" >> "${invalidPortAssetFile}"
+      return 1
+    fi
+    printDebug "Getting specific asset details using metadata: ${releasemetadata}"
+    asset=$(printf "%s" "${releasemetadata}" | jq -e -r '.assets[0]')
+  fi
+  if [ -z "${asset}" ]; then
+    echo "${portName} asset metadata could not be found" 2> "${invalidPortAssetFile}"
+    return 1
+  fi
+  return 0
+}
+
+# createDependancyGraph
+# analyzes the input file to create the list of all packages that are to
+# be pulled in during install - and recurses if any added packages themselves
+# pull in dependancies, dependencies being added to the front of the install queue
+# inputs: $1 the file to use for install ports
+#         $2 an error file for outputing failures
+# return: 0  for success (output of pwd -P command)
+#         8  if error
+createDependancyGraph()
+{
+  invalidPortAssetFile=$1 && shift
+  printDebug "Getting list of dependencies"
+  dependencies=$(echo "${installList}" | jq --raw-output '.installqueue[] | select(.asset.runtime_dependencies | test("No dependencies") | not )| map(try(.runtime_dependencies |= split(" ")))| .[] | .runtime_dependencies[] ')
+  printDebug "Removing any dependencies already on install queue"
+  installing=$(echo "${installList}" | jq --raw-output '.installqueue[] | .portname')
+  # TODO: Use JQ to diff?
+  missing=$(diffList "${installing}" "${dependencies}" )
+  if [ -z "${missing}" ]; then
+    printDebug "All dependencies are in the install graph"
+    return 0
+  fi
+  printDebug "Adding dependencies to install graph"
+  addToInstallGraph "dependancy" "${invalidPortAssetFile}" "${missing}"
+  # Recurse in case the now-installing dependencies themselves have dependencies
+  # Recursive dependencies should not break as the initial package will have been
+  # marked for installation
+  createDependancyGraph "${invalidPortAssetFile}"
+}
+
+# addToInstallGraph
+# Finds appropriate metadata for the specified port(s) and
+# includes that in the installation file
+# inputs: $1 if the install list comes from dependency analysis
+#         $2 an error file for outputing failures
+#         $* requested list of packages to install
+# return: 0  for success (output of pwd -P command)
+#         8  if error
+addToInstallGraph(){
+  installtype=$1 && shift
+  invalidPortAssetFile=$1 && shift
+  pkgList="$1"
+  printDebug "Adding ${pkgList} to install graph"
+  for portRequested in ${pkgList}; do
+    if ! getPortMetaData "${portRequested}" "${invalidPortAssetFile}"; then
+      continue
+    fi
+    ## Merge asset into JSON install list
+    installList=$(echo "${installList}" | \
+      jq ".installqueue += [{\"portname\":\"${portName}\", \"asset\":${asset}, \"installtype\":\"${installtype}\"}]")
+  done
+  [ -e "${invalidPortAssetFile}" ] && return 1
+  return 0
+}
+
+# This uses the release json file to find whether any of the inputs are invalid
+# package names. Note that the Github API returns repository names in lowercase
+# which potentially breaks packages whose key does not match their repo name
+# (NATSport for example) - we need to ensure we use the reponame in lowercase.
+validatePackageList(){
+  installees="$1"
+  # shellcheck disable=SC2086 # Using set -f disables globbing
+  printVerbose "Stripping any version/tagging"
+  installees=$(set -f; echo ${installees} |awk  -v ORS=, -v RS=' ' '{$1=$1; sub(/[=%].*/,x); print "\""$1"\""}')
+  # Check the metadata cache file to see if the needle is either the name of a
+  # port (so a key) or is defined in a tag
+  invalidPortList=$(jq -r --argjson needles "[${installees%%,}]" \
+      '. as $data | $needles| map( select( . as $needle| (
+          ($data.release_data | keys_unsorted | any(. == $needle))
+        ) | not ) ) | unique | join(" ")' "${JSON_CACHE}"
+  )
+
+  if [ -n "${invalidPortList}" ]; then
+    printSoftError "The following port names were not recognised:"
+    
+    # Calculate word lengths for nicer formatting
+    set -- ${invalidPortList}
+    minlen=1
+    for toolrepo in "$@"; do
+      wordlen=${#toolrepo}
+      minlen=$(( wordlen > minlen ? wordlen : minlen ))
+    done
+    # Respin loop actually checking for suggestions
+    set -- ${invalidPortList}
+    for toolrepo in "$@"; do
+      printDebug "Finding suggestions for '${toolrepo}'[${#toolrepo}]"
+      suggestion=$(toolSuggestion "${toolrepo}")
+        # Use printf to print without the printSoftError prefix for cleaner output
+      if [ -n "${suggestion}" ]; then
+        printf "    %-${minlen}s   [Did you mean '%s'?]\n" "${toolrepo}" "${suggestion}" >&2
+      else
+        printf "    %${minlen}s\n" "${toolrepo}" >&2
+      fi
+    done
+    printError "Check port name(s) and retry command."
+  fi
+
+}
+
+
+
+dedupStringList()
+{ delim="$1" && shift
+  str="$1"
+  echo "${str}"| awk -v delim="${delim}" '
+    { dlm=""; for (i=1; i<=NF; i++) {if (!seen[$i]++) {printf "%s%s", dlm, $i};dlm=delim};print ""}'
+}
+
+# generateInstallGraph
+# generates a file with details for packages that are to be installed from
+# the in-use repository, reporting errors if ports were invalid and
+# triggering dependency graph population
+# inputs: $1 the file to use for validated ports
+#         $* requested list of packages to install
+# return: 0  for success (output of pwd -P command)
+#         8  if error
+generateInstallGraph(){
+  installList="{}"
+  printDebug "Parsing list of packages to install and verifying validity"
+  portsToInstall="$1" # start with the initial list
+  portsToInstall=$(dedupStringList ' ' "${portsToInstall}")
+
+  # Create the following file here to trigger cleanup - otherwise, multiple
+  # tempfiles could be created depending on dependency graph depth
+  invalidPortAssetFile=$(mktempfile "invalid" "port")
+  addCleanupTrapCmd "rm -rf ${invalidPortAssetFile}"
+  if ! runLogProgress " addToInstallGraph \"install\" \"${invalidPortAssetFile}\" \"${portsToInstall}\"" \
+      "Creating install graph" "Created install graph" "linkcheck"; then
+    if [ -e  "${invalidPortAssetFile}" ]; then
+      printSoftError "Cannot complete install request"
+      while read invalidPort; do
+        printf "%s\n" "${invalidPort}"
+      done < "${invalidPortAssetFile}"
+      exit 1
+    else
+      printError "Unexpected error while creating install graph. Correct errors and retry command."
+    fi
+  fi
+
+  # shellcheck disable=SC2154
+  if ! ${doNotInstallDeps} && { (! ${reinstall} && ! ${reinstallDeps}) || (${reinstall} && ${reinstallDeps}); }; then
+    # doNotInstallDeps was not explicitly set and we are either not reinstalling(vanilla install) or we
+    # are reinstalling AND the reinstallDependencies flag is set; we do not want
+    # to reinstall a package and all it's dependencies by default, just the package itself
+    printVerbose "Calculating dependancy graph"
+    if ! runLogProgress "createDependancyGraph \"${invalidPortAssetFile}\"" \
+        "Creating dependancy graph" "Created dependancy graph" "linkcheck"; then
+      if [ -e  "${invalidPortAssetFile}" ]; then
+        printSoftError "The following ports cannot be installed: "
+        while read invalidPort; do
+          printf "${WARNING} %s\n" "${invalidPort}"
+        done < "${invalidPortAssetFile}"
+        printError "Confirm port names, remove any 'port' suffixes and retry command."
+      else
+        printError "Unexpected error while creating dependancy graph. Correct errors and retry command."
+      fi
+    fi
+  else
+    printVerbose "- Skipping dependency analysis"
+  fi
+
+  # shellcheck disable=SC2154
+  if "${reinstall}"; then
+    printVerbose "Not pruning already installed packages as reinstalling"
+  else
+    parseGraph
+  fi
+}
+
+parseGraph()
+{
+  printDebug "Parsing graph for valid entries"
+  # shellcheck disable=SC2154
+  if "${downloadOnly}"; then
+    # Download the pax files, even if already installed or if they would
+    # fail validation - the user wants the files downloaded for whatever reason
+    return 0
+  fi
+  if ! processActionScripts "parseGraphPre" "${installList}"; then
+    exit 1
+  fi
+
+  # Prune already installed packages at the requested level; compare the
+  # incoming file name against the port name, version and release already on the system
+  # - seems to be the easiest comparison since some data is not in zopen_release vs metadata.json
+  # and a local pax won't have a remote repo but should have a file name!
+
+installList=$(jq --argjson install_list "${installList}" '
+. as $input |
+{
+  "installqueue": (
+    $install_list.installqueue | map(select( .portname as $pnn | .asset.release as $r |
+[$input[] | to_entries[] | select(.key == $pnn) | .value]| all(.product.release != $r)
+    )))
+} ' "${ZOPEN_ROOTFS}/var/lib/zopen/packageDB.json"
+)
+  if ! processActionScripts "parseGraphPost"; then
+    exit 1
+  fi
+}
+
+checkIfPrereq(){
+  # This jq query analyses the package database, looking for objects where the
+  # runtime dependency contains $1 (the removee). It extracts the keys from those
+  # objects into $dependents then outputs the flattened dependents array along with
+  # either true or false depending on if there was a prereq found (true) or if not
+  # false; the exit-status parameter then sets the exit code of jq dependning on that
+  # true/false value!
+  jq -r --exit-status --arg removee "$1" \
+      '[.[] | to_entries | map(select(.value.product.runtime_dependencies[]?.name == $removee)) | .[].key] | . as $dependents | $dependents[], ($dependents | length > 0)' \
+      "${ZOPEN_ROOTFS}/var/lib/zopen/packageDB.json"
+}
+
+
+spaceValidate(){
+  cacheBytes=$1
+  packageBytes=$2
+
+  skip_size_check=$(jq -re '.skip_size_check' "${ZOPEN_JSON_CONFIG}")
+  if "${skip_size_check}"; then
+    printVerbose "Skipping size check due to skip_size_check=${skip_size_check}"
+    return
+  fi
+
+  if ${reinstall}; then
+    # During a reinstall, the existing package size should remain constant as the
+    # package should overwrite the existing with the same files. However
+    # there might be a need to download the package into the cache - if
+    # autocacheclean is active, then this should be temporary; if not, then the
+    # cache will grow - inform the user either way
+    printVerbose "Reinstall of package, so package file size delta should be 0!"
+    spaceRequiredMB=$(echo "scale=0; (${cacheBytes}) / (1024 * 1024)" | bc)
+    spaceRequiredKb=$(( cacheBytes / 1024 ))
+    if ! isCacheClean=$(zopen config --get autocacheclean); then
+      printError "Could not determine autocacheclean status"
+    fi
+    if ${isCacheClean}; then
+      printInfo "During this operation, ${spaceRequiredMB} MB of disk space will be used."
+    else
+      printInfo "After this operation, ${spaceRequiredMB} MB of additional cache will be used."
+    fi
+  elif ${downloadOnly}; then
+    # To download to current dir, then only need to make sure there is enough disk space
+    # for the pax, the "cached" size
+    spaceRequiredMB=$(echo "scale=0; (${cacheBytes}) / (1024 * 1024)" | bc)
+    spaceRequiredKb=$(( cacheBytes / 1024 ))
+    printInfo "After this operation, $(formattedFileSize ${spaceRequiredKb}) of additional disk space will be used."
+  else
+    # If not a reinstall, assume there is a need for both the package and the expanded
+    # package to be required
+    spaceRequiredKb=$(( (cacheBytes + packageBytes) / 1024 ))
+    spaceRequiredMB=$(echo "scale=0; (${cacheBytes} + ${packageBytes}) / (1024 * 1024)" | bc)
+    printInfo "After this operation, $(formattedFileSize ${spaceRequiredKb}) of additional disk space will be used."
+  fi
+  availableSpaceKb=$(df -k "${ZOPEN_ROOTFS}" | sed "1d" | awk '{ print $3 }' | awk -F'/' '{ print $1 }')
+  if [ "${availableSpaceKb}" -lt "${spaceRequiredKb}" ]; then
+    printWarning "Your zopen file-system (${ZOPEN_ROOTFS}) only has $(formattedFileSize "${availableSpaceKb}") of available space."
+  fi
+  if ! ${yesToPrompts} || [ "${availableSpaceKb}" -lt "${spaceRequiredKb}" ]; then
+    while true; do
+      printf "Do you want to continue [y/n/a]? "
+      read continueInstall < /dev/tty
+      case "${continueInstall}" in
+        "y") break;;
+        "n") mutexFree "zopen"; printInfo "Exiting..."; exit 0 ;;
+        "a") yesToPrompts=true; break;;
+        *) echo "?";;
+      esac
+    done
+  fi
+}
+
+processRepoInstallFile(){
+  printVerbose "Beginning port installation"
+  mutexReq "zopen"
+
+  processActionScripts "transactionPre"
+  if [ 0 -eq "$(echo "${installList}" | jq --raw-output '.installqueue| length')" ]; then
+    printInfo "- No packages to install"
+    return 0
+  fi
+
+  # shellcheck disable=SC2154
+  if ${fileinstall}; then
+    :
+  else
+    if ! ${quiet} >/dev/null 2>&1; then
+      xIFS=$IFS
+      IFS=' '
+      hdr=false
+      for installee in $(echo "${installList}" | jq --raw-output '.installqueue | map( (select(.installtype=="install") | .portname| sub(" ";"") ))| @sh'); do
+        installee=$(echo "${installee}" |tr -d "\'" )
+        [ -z "${installee}" ] && continue
+        if ! ${hdr}; then
+          printHeader "Installing the following packages:"
+          hdr=true
+        fi
+        printInfo "${installee}"
+
+      done
+      hdr=false
+      for dependee in $(echo "${installList}" | jq --raw-output '.installqueue | map( (select(.installtype=="dependancy") | .portname| sub(" ";"") ))| @sh'); do
+        dependee=$(echo "${dependee}" |tr -d "\'" )
+        [ -z "${dependee}" ] && continue
+        if ! ${hdr}; then
+          printHeader "Dependent packages to install:"
+          hdr=true
+        fi
+        printInfo "${dependee}"
+      done
+      IFS=${xIFS}
+    fi
+    cacheSpaceRequired=$(echo "${installList}" | jq --raw-output '.installqueue| map(.asset.size)| reduce .[] as $total (0; .+($total|tonumber))')
+    actualRequiredBytes=$(echo "${installList}" | jq --raw-output '.installqueue| map(.asset.expanded_size)| reduce .[] as $total (0; .+($total|tonumber))')
+    spaceValidate "${cacheSpaceRequired}" "${actualRequiredBytes}"
+  fi
+
+  processActionScripts "transactionPre"
+  for installurl in $(echo "${installList}" | jq --raw-output '.installqueue |map( (.asset.url| sub(" ";"") ))| @sh'); do
+    printVerbose "Analysing :'${installurl}'"
+    installurl=$(echo "${installurl}" | tr -d "' ")
+    getInstallFile "${installurl}"
+    if $downloadOnly; then
+      continue
+    fi
+    installFile="${installurl##*/}"
+    if [ ! "${installFile%.zos.pax.Z}" = "${installFile}" ]; then
+      # Found zos.pax.Z format
+      if ! installFromPax "${installFile}"; then
+        printError "Package installation terminated"
+      fi
+    else
+      printError "Unrecognised install file format"
+    fi
+  done
+  processActionScripts "transactionPost"
+  mutexFree "zopen"
+  printVerbose "Port installation complete"
+}
+
+getInstallFile()
+{
+  installurl="$1"
+
+  downloadToDir="${ZOPEN_ROOTFS}/var/cache/zopen"
+  if $downloadOnly; then
+    downloadToDir="."
+  else
+    downloadToDir="${ZOPEN_ROOTFS}/var/cache/zopen"
+  fi
+
+  if [ -e "${downloadToDir}/${installurl##*/}" ]; then
+    printVerbose "Install file '${installurl##*/}' already in local cache at '${downloadToDir}'"
+  else
+    [ -e "${downloadToDir}" ] || mkdir -p "${downloadToDir}"
+    [ -w "${downloadToDir}" ] || printError "No permission to save install file to '${downloadToDir}'. Check permissions and retry command."
+    printVerbose "Downloading installable file"
+    if ! runAndLog "cd ${downloadToDir} && curlCmd -L ${installurl} -O >/dev/null 2>&1"; then
+      printError "Could not download from ${installurl}. Correct any errors and potentially retry"
+    fi
+  fi
+
+  # Check if this is a pax-flie install; in which case there is no "remote" JSON
+  case "${installurl}" in
+    file://*) return 0 ;;
+    *) :;;
+  esac
+
+  metadataFile="$(basename "${installurl}").json"
+  if [ -e "${downloadToDir}/${metadataFile}" ]; then
+    printVerbose "Corresponding metadata '${metadataFile}' already in local cache"
+  else
+    printVerbose "Downloading corresponding metadata"
+    # check if it is in the same location just with a different suffix (as in a mirror)
+    # if not, likely is the original Github repo which uses a subdirectory for the metadata
+    # Try again with this URL
+    metadataJSONURL="${installurl}.json"
+
+    printVerbose "Checking for existence of remote metadata file"
+    if curlOut=$(curlCmd -s -o /dev/null -I -w "%{http_code}" "${metadataJSONURL}"); then
+      # test for 404 - if it is, then this is likely the Main GitHub repo which hosts
+      # the metadata as a release so use alternative URL
+      if [ "${curlOut}" = "404" ]; then
+        metadataJSONURL_ext="$(dirname "${installurl}")/metadata.json"
+        printVerbose " Metadata not found at '${metadataJSONURL}'. Trying '${metadataJSONURL_ext}'"
+        metadataJSONURL="${metadataJSONURL_ext}"
+      fi
+    else
+      printSoftError "Curl issue trying to download from '${metadataJSONURL}'"
+      [ -n "${curlOut}" ] && printSoftError
+      exit 1
+    fi
+
+    if ! curlOut=$(cd "${downloadToDir}" && curlCmd -L "${metadataJSONURL}" -o "${metadataFile}"); then
+      printSoftError "Curl issue trying to download from '${metadataJSONURL}'"
+      [ -n "${curlOut}" ] && printSoftError
+      exit 1
+    else
+      printVerbose "Metadata downloaded from '${metadataJSONURL}' to '${metadataFile}'"
+    fi
+
+    if command -v chtag >/dev/null 2>&1; then
+      # Curl currently does not know on z/OS to set the text flag for text files
+      printVerbose "Metadata file downloaded, ensuring 'text' flag set for z/OS"
+      chtag -t "${metadataFile}"
+    fi
+  fi
+}
+
+extractMetadataFromPax()
+{
+  # If there is an issue with the pax or the target, it is possible for pax
+  # itself to report an error and sit waiting for user input;
+  if ! pax -rf "$1" -s "%[^/]*/%/tmp/%" '*/metadata.json' ; then
+    if ! details=$(pax -rf "$1" -s "%[^/]*/%/tmp/%" '*/package.json'); then
+      printSoftError "Could not extract package metadata from file '$1'."
+      [ -n "${details}" ] && printSoftError "Details: ${details}"
+      return 1
+    else
+      echo "/tmp/package.json"
+    fi
+  else
+    echo "/tmp/metadata.json"
+  fi
+}
+
+installFromPax()
+{
+  pax="${downloadToDir}/$1"
+  printDebug "Installing from '${pax}'"
+
+  if ! metadatafile=$(extractMetadataFromPax "${pax}"); then
+    return 1
+  fi
+
+  # Ideally we would use the following,
+  #  name=$(jq --raw-output '.product.name' "${metadatafile}")
+  # but name does not always map to the actual repo package name at present!
+  # The Github API also lowercases repository names when getting all 
+  # repositories which causes issues for NATSport for example. As such, we
+  # can grab the name from .product.repo, lowercase and it should match the
+  # metadata
+  printVerbose "Extracting product name from .product.repo"
+
+  name=$(jq --raw-output '.product.repo | capture(".+/(?<name>[^/].+)(port)")| .name' \
+      "${metadatafile}")
+  if [ -z "${name}" ] || [ "${name##*[^ ]*}" = "" ]; then
+    printError "Unable to determine name from .product.repo in '${metadatafile}'. Check metadata is correct."
+  fi
+  name=$(awk -v n="${name}" 'BEGIN{print (tolower(n))}')
+
+
+  if ! processActionScripts "installPre" "${name}" "${metadatafile}" "${pax}"; then
+    skip_broken=$(jq -re '.skip_broken' "${ZOPEN_JSON_CONFIG}")
+    if "${skip_broken}"; then
+      printError "Failed installation pre-requisite check(s) for '${name}'. Correct previous errors and retry command"
+    fi
+    printSoftError "Skipping package '${name}' due to failed pre-requisite check(s)"
+    return 0 # 0 as we have handled the issue
+  fi
+
+  # Store current installation directory (if exists)
+  currentderef=$(cd "${ZOPEN_PKGINSTALL}/${name}/${name}" > /dev/null 2>&1 && pwd -P)
+
+  paxname="${installurl##*/}"
+  installdirname="${name}/${paxname%.pax.Z}" # Use full pax name as default
+
+  baseinstalldir="${ZOPEN_PKGINSTALL}"
+  paxredirect="-s %[^/]*/%${ZOPEN_PKGINSTALL}/${installdirname}/%"
+
+  printDebug "Check for existing directory for version '${installdirname}'"
+  if [ -d "${ZOPEN_PKGINSTALL}/${installdirname}" ]; then
+    printVerbose "- Clearing existing directory and contents at '${ZOPEN_PKGINSTALL}/${installdirname}'"
+    rm -rf "${ZOPEN_PKGINSTALL:?}/${installdirname}" || printError "Installation directory resolved to '/'; cannot recursively clear contents!"
+  fi
+
+  if [ ! -e "${pax}" ]; then
+    printError "Pax file to install not available at '${pax}'"
+  elif [ ! -r "${pax}" ]; then
+    printError "Pax file to install not readable at '${pax}'"
+  fi
+
+  # shellcheck disable=SC2154
+  if ! runLogProgress "pax -rf ${pax} -p p ${paxredirect} >/dev/null 2>&1" \
+      "Expanding file: ${pax}" "Expanded file:  ${pax}"; then
+    printSoftError "Unexpected errors during unpaxing, package directory state unknown"
+    printError "Use zopen alt to select previous version to ensure known state"
+  fi
+
+  setactiveLcl=true
+  if [ -e "${ZOPEN_PKGINSTALL}/${name}/${name}/.pinned" ]; then
+    printWarning "Current version of ${name} is pinned; not setting updated version as active"
+    printWarning "Remove .pinned file and run 'zopen alt meta' to use new version"
+    setactiveLcl=false
+    unInstallOldVersion=false
+  fi
+  # shellcheck disable=SC2154
+  if $setactive && $setactiveLcl; then
+    if [ -L "${ZOPEN_PKGINSTALL}/${name}/${name}" ]; then
+      printDebug "Removing old symlink '${ZOPEN_PKGINSTALL}/${name}/${name}'"
+      rm -f "${ZOPEN_PKGINSTALL}/${name}/${name}"
+    fi
+    if ! ln -s "${ZOPEN_PKGINSTALL}/${installdirname}" "${ZOPEN_PKGINSTALL}/${name}/${name}"; then
+      printError "Could not create symbolic link name"
+    fi
+    if ! ${nosymlink}; then
+      if ! runLogProgress "mergeIntoSystem \"${name}\" \"${ZOPEN_PKGINSTALL}/${installdirname}\" \"${ZOPEN_ROOTFS}\"" \
+          "Merging ${name} into symlink mesh" "Merged ${name} into symlink mesh"; then
+        printSoftError "Unexpected errors merging symlinks into mesh"
+        printError "Use zopen alt to select previous version to ensure known state"
+      fi
+    fi
+
+    printVerbose "- Checking for env file"
+    if [ -f "${ZOPEN_PKGINSTALL}/${name}/${name}/.env" ] || [ -f "${ZOPEN_PKGINSTALL}/${name}/${name}/.appenv" ]; then
+      printVerbose "- .env file found, adding to profiled processing"
+      mkdir -p "${ZOPEN_ROOTFS}/etc/profiled/${name}"
+      cat << EOF > "${ZOPEN_ROOTFS}/etc/profiled/${name}/dotenv"
+curdir=\$(pwd)
+cd "${ZOPEN_PKGINSTALL}/${name}/${name}" >/dev/null 2>&1
+# If .appenv exists, source it as it's quicker
+if [ -f ".appenv" ]; then
+  . ./.appenv
+elif [ -f ".env" ]; then
+  . ./.env
+fi
+cd \${curdir}  >/dev/null 2>&1
+EOF
+      printVerbose "- Running any setup scripts"
+      cd "${ZOPEN_PKGINSTALL}/${name}/${name}" && [ -r "./setup.sh" ] && ./setup.sh >/dev/null
+    fi
+  fi
+  if ${unInstallOldVersion}; then
+    printDebug "New version merged; checking for orphaned files from previous version"
+    # This will remove any old symlinks or dirs that might have changed in an upgrade
+    # as the merge process overwrites existing files to point to different version
+    unsymlinkFromSystem "${name}" "${ZOPEN_ROOTFS}" "${currentderef}/.links" "${baseinstalldir}/${name}/${name}/.links"
+  fi
+
+  if $setactive && $setactiveLcl; then
+    printDebug "Marking this version as installed"
+    touch "${ZOPEN_PKGINSTALL}/${name}/${name}/.active"
+    installedList="${name} ${installedList}"
+    syslog "${ZOPEN_LOG_PATH:-${ZOPEN_ROOTFS}/var/log}/audit.log" "${LOG_A}" "${CAT_INSTALL},${CAT_PACKAGE}" "DOWNLOAD" "handlePackageInstall" "Installed package:'${name}';version:${downloadFileVer};install_dir='${baseinstalldir}/${installdirname}';"
+    addToInstallTracker "${name}"
+        # Some installation have installation caveats
+    installCaveat=$(jq -r '.product.install_caveats // empty' "${metadatafile}" 2>/dev/null)
+    if [ -n "$installCaveat" ]; then
+      printf "${name}:\n%s\n" "${installCaveat}">> "${ZOPEN_ROOTFS}/var/cache/install_caveats.tmp"
+    fi
+
+    processActionScripts "installPost" "${name}"
+  fi
+  printInfo "${NC}${GREEN}Successfully installed ${name}${NC}"
+}
+
+
+getActivePackageDirs()
+{
+  (unset CD_PATH; cd "${ZOPEN_PKGINSTALL}" && find  ./*/. ! -name . -prune -type l)
+}
+
+
+# processActionScripts
+# runs any scriptlets that are applicable to the current phase of an administration
+# command (install/update/remove/alternative)
+# inputs: $1 the phase of the transaction that is currently executing
+#         $2 the name of the package being administered
+# return: 0  for success (nb. Warnings may haeve been printed to screen)
+#         8  on error
+processActionScripts()
+{
+  printVerbose "Processing phase '${1}' scriptlets"
+  [ $# -lt 1 ] && printError "Internal error; missing action phase"
+  phase=$1
+  shift # Drop the initial parameter
+
+  case "${phase}" in
+    "installPre") scriptletDir="${ZOPEN_SCRIPTLET_DIR}/installPre";;
+    "installPost") scriptletDir="${ZOPEN_SCRIPTLET_DIR}/installPost";;
+    "removePre") scriptletDir="${ZOPEN_SCRIPTLET_DIR}/removePre";;
+    "removePost") scriptletDir="${ZOPEN_SCRIPTLET_DIR}/removePost";;
+    "transactionPre") scriptletDir="${ZOPEN_SCRIPTLET_DIR}/transactionPre";;
+    "transactionPost") scriptletDir="${ZOPEN_SCRIPTLET_DIR}/transactionPost";;
+    "parseGraphPre") scriptletDir="${ZOPEN_SCRIPTLET_DIR}/parseGraphPre";;
+    "parseGraphPost") scriptletDir="${ZOPEN_SCRIPTLET_DIR}/parseGraphPost";;
+    *) assertFailed "Invalid process action phase '${phase}'"
+  esac
+    printVerbose "Running script[s] from '${scriptletDir}'"
+
+    if [ ! -d "${scriptletDir}" ]; then
+      printDebug "No script directory for phase: ${phase}"
+      return 0
+    fi
+    unset CDPATH;
+  cd "${scriptletDir}" || return 1
+
+  scriptletRcFile=$(mktempfile "zopen_actionscripts" ".err")
+  find . -type l | while IFS= read -r scriptletFile; do
+    if [ ! -r "${scriptletFile}" ]; then
+      printWarning "Script '${scriptletDir}/${scriptletFile}' is not readable. Check permissions" >> "${scriptletRcFile}" 2>&1
+      continue
+    fi
+    printVerbose "Attempting to run script '${scriptletFile}'"
+    # Run script in a subshell to prevent environment modification
+    printf "${CRSRSOL}${ERASELINE}Running ${scriptletFile}"
+    scriptletOutput=$({
+      # shellcheck disable=SC1090
+      # shellcheck disable=SC2240
+      . "$scriptletFile" "$@"
+      echo $?  # Append exit status to output
+      } 2>&1
+    )
+    printf "${CRSRSOL}${ERASELINE}${CRSRSOL}"
+    scriptletRc=$(echo "${scriptletOutput}" | tail -n 1)  # Extract exit status
+    scriptletBody=$(echo "${scriptletOutput}" | sed '$d')  # Extract script output
+    if [ "${scriptletRc}" -ne 0 ]; then {
+      printWarning "Scriptlet '${scriptletFile}' failed with exit code ${scriptletRc}"
+      printWarning "Details:"
+      printWarning "${scriptletBody}"
+      } >> "${scriptletRcFile}" 2>&1
+    elif ${verbose}; then
+      if [ -n "${scriptletBody}" ]; then
+        # Show the scriptlet output
+        echo "${scriptletBody}"
+      fi
+    fi
+  done
+
+  if [ -s "${scriptletRcFile}" ]; then  # Check if errorLog is non-empty
+    printWarning "One or more scripts failed:"
+    cat "${scriptletRcFile}"
+    rm -f "${scriptletRcFile}"
+    return 1
+  fi
+  rm -f "${scriptletRcFile}"
+  return 0
+}
+
+# updatePackageDB
+# Updates/generates the installed package database
+# return: 0 for success
+#         8 in error
+updatePackageDB()
+{
+  printVerbose "Updating the installed package tracker db"
+
+  pdb="${ZOPEN_ROOTFS}/var/lib/zopen/packageDB.json"
+  if [ -e "${pdb}" ]; then
+    backup=$(mktempfile "updatepdb" "bkk")
+    addCleanupTrapCmd "rm -rf ${backup}"
+    cp "${pdb}" "${backup}"
+    rm "${pdb}"
+  else
+    printVerbose "No current package database [new install?]. Creating empty array[]"
+    printf "[\n]\n" > "${pdb}"
+  fi
+
+  if [ $(unset CD_PATH; cd "${ZOPEN_PKGINSTALL}"; ls -A | wc -l) -eq 0 ]; then
+    printVerbose "No packages found to add to database [new install?]"
+    return
+  fi
+
+
+  if ! pkgdirs=$(getActivePackageDirs); then
+    printError "Unable to update the package db"
+  fi
+  for pkgdir in ${pkgdirs}; do
+    metadataFile="${ZOPEN_PKGINSTALL}/${pkgdir}/metadata.json"
+    if [ ! -e "${metadataFile}" ]; then
+      # TODO: Fallback to filesystem analysis [depending on backward compatability]
+      printWarning "No metadata.json found in '${ZOPEN_PKGINSTALL}/${pkgdir}'. Old package install?"
+      continue
+    fi
+    escapedJSONFile=$(mktempfile "escaped" "json")
+    addCleanupTrapCmd "rm -rf ${escapedJSONFile}"
+    stripControlCharacters "${metadataFile}" "${escapedJSONFile}"
+    if [ ! -e "${pdb}" ]; then
+      echo "[]" > "${pdb}"
+    fi
+
+    # Grab the repo name from the metadata.json and lowercase it to match
+    # what the Github API returns when enumerating repsitories!
+    mdj=$(jq '(.product.repo | capture(".+/(?<name>[^/].+)(port)")| .name | ascii_downcase) as $name
+              | [{($name):.}]' \
+        "${escapedJSONFile}")
+
+    if [ -z "${mdj}" ]; then
+      pkg=$(basename "${pkgdir}")
+      printWarning "Cannot locate metadata for installed package '${pkg}' at location '${metadataFile}'. Check file existence and permissions"
+    fi
+    if ! jq --argjson mdj "${mdj}" '. += $mdj' \
+            "${pdb}" > \
+            "${pdb}.working"; then
+      [ -e "${pdb}.working" ] && "${pdb}.working"
+      [ -e "${pdb}" ] && mv -f "${pdb}" "${pdb}.broken" # Save for potential diagnostics
+      printSoftError "Could not add metadata for '$(basename "${pkgdir}")' to install tracker."
+      printError "Run 'zopen init --refresh' to attempt database regeneration and re-run command."
+    fi
+    mv "${pdb}.working" "${pdb}"
+  done
+}
+
+stripControlCharacters(){
+  [ ! -f "$1" ] && assertFailed "No input file specified for parsing!"
+  [ -e "$2" ] && assertFailed "Output file exists so cannot be used for output!"
+  tr -d '[:cntrl:]' > "$2" < "$1"
+
+}
+# JSONcontrolChar2Unicode
+# ensures escaping of characters in JSON. For example, if a caveat has an
+# unescaped '\n'/0x0A jq will fail to process it. Escape control characters
+# 0x00->0x1F and reverse solidus. Note this should also only process unescaped
+# sequences by checking whether the character prior to the sequence is not a
+# reverse-solidus (so start-of-line [^] or any character [^\] ). If there was
+# a preceding character, then capture/use that in the regex (\1) so it does not
+# get discarded
+#
+# inputs: $1 the input JSON file
+#         $2 the output file, with sanitised JSON
+# return: 0  for success (nb. Warnings may haeve been printed to screen)
+#         8  on error
+JSONcontrolChar2Unicode() {
+  [ ! -f "$1" ] && assertFailed "No input file specified for parsing!"
+  [ -e "$2" ] && assertFailed "Output file exists so cannot be used for output!"
+  sed -E ' # Note this is a long string!
+      s/\\/\\\\/g; # Escape reverse-solidus; the following are the control chars
+      s/(^|[^\\])\x00/\1\\u0000/g; s/(^|[^\\])\x01/\1\\u0001/g;
+      s/(^|[^\\])\x02/\1\\u0002/g; s/(^|[^\\])\x03/\1\\u0003/g;
+      s/(^|[^\\])\x04/\1\\u0004/g; s/(^|[^\\])\x05/\1\\u0005/g;
+      s/(^|[^\\])\x06/\1\\u0006/g; s/(^|[^\\])\x07/\1\\u0007/g;
+      s/(^|[^\\])\x08/\1\\u0008/g; s/(^|[^\\])\x09/\1\\u0009/g;
+      s/(^|[^\\])\x0A/\1\\u000A/g; s/(^|[^\\])\x0B/\1\\u000B/g;
+      s/(^|[^\\])\x0C/\1\\u000C/g; s/(^|[^\\])\x0D/\1\\u000D/g;
+      s/(^|[^\\])\x0E/\1\\u000E/g; s/(^|[^\\])\x0F/\1\\u000F/g;
+      s/(^|[^\\])\x10/\1\\u0010/g; s/(^|[^\\])\x11/\1\\u0011/g;
+      s/(^|[^\\])\x12/\1\\u0012/g; s/(^|[^\\])\x13/\1\\u0013/g;
+      s/(^|[^\\])\x14/\1\\u0014/g; s/(^|[^\\])\x15/\1\\u0015/g;
+      s/(^|[^\\])\x16/\1\\u0016/g; s/(^|[^\\])\x17/\1\\u0017/g;
+      s/(^|[^\\])\x18/\1\\u0018/g; s/(^|[^\\])\x19/\1\\u0019/g;
+      s/(^|[^\\])\x1A/\1\\u001A/g; s/(^|[^\\])\x1B/\1\\u001B/g;
+      s/(^|[^\\])\x1C/\1\\u001C/g; s/(^|[^\\])\x1D/\1\\u001D/g;
+      s/(^|[^\\])\x1E/\1\\u001E/g; s/(^|[^\\])\x1F/\1\\u001F/g;
+    '  "$1" > "$2"
+}
+
+# addToInstallTracker
+# Records the installation into the database that tracks which packages have
+# been installed
+# inputs: $1 the name of the package
+# return: 0  for success (nb. Warnings may haeve been printed to screen)
+#         8  on error
+addToInstallTracker()
+{
+  pkg=$1
+  pdb="${ZOPEN_ROOTFS}/var/lib/zopen/packageDB.json"
+  if [ ! -e "${pdb}" ]; then
+    # Generate the packageDB
+    printWarning "No package tracker found, regenerating [subsequent runs will be faster]"
+    updatePackageDB
+  fi
+  metadataJson=$(cat "${ZOPEN_PKGINSTALL}/${pkg}/${pkg}/metadata.json")
+  if ! jq --argjson mdj "[{\"${pkg}\":${metadataJson}}]" \
+      "if any(.[]; has(\"${pkg}\")) then . |= map( if has(\"${pkg}\") then \$mdj[] else  . end ) else . + \$mdj end" \
+        "${pdb}" > \
+        "${pdb}.working"; then
+    printError "Could not update metadata for '${pkg}' in package tracker. Run zopen -init -re-init to attempt regeneration."
+  fi
+  mv "${pdb}.working" "${pdb}"
+}
+
+# removeFromInstallTracker
+# Removes the installation of the package from the database, making it
+# uninstalled
+# inputs: $1 the name of the package
+# return: 0  for success (nb. Warnings may haeve been printed to screen)
+#         8  on error
+removeFromInstallTracker()
+{
+  pkg=$1
+  pdb="${ZOPEN_ROOTFS}/var/lib/zopen/packageDB.json"
+  if [ ! -e "${pdb}" ]; then
+    # Generate the packageDB
+    printWarning "No package tracker found, regenerating [subsequent runs will be faster]"
+    updatePackageDB
+  fi
+  if ! jq \
+      "map(select(has(\"${pkg}\") | not))" \
+        "${pdb}" > \
+        "${pdb}.working"; then
+    printError "Could not add metadata for '${pkg}' to install tracker. Run zopen --re-init to attempt regeneration."
+  fi
+  mv "${pdb}.working" "${pdb}"
+}
+
+jqfunctions()
+{
+  # Return a set of helper functions for jq that can be prepended to
+  # any jq query
+  # pl(s;c;n) - padLeft with character 'c' to length 'n'
+  # pr(s;c;n) - padRight with chacater 'c' to length 'n'
+  # c(s;l) - center the string 's' in a string of length 'l'
+  # r(dp) - round decimal to 'dp' decimal places (needs '*' & '/' 10^dp hack)
+  # shellcheck disable=SC2016
+  printf "%s;%s;%s;%s;" \
+  'def pl(s;c;n):c*(n-(s|length))+s' \
+  'def pr(s;c;n):s+c*(n-(s|length))' \
+  'def c(s;c;l):(((l - (s|length))/2 | floor ) // 0) as $lp|((l - (s|length) - $lp) // 0 )as $rp|pl("";c; $lp) + s + pr("";c; $rp)' \
+  'def r(dp):.*pow(10;dp)|round/pow(10;dp)'
 }
 
 diskusage()
 {
   path=$1
   # awk to "trim" output"
-  if ! size=$(zosdu -kts "${path}" | /bin/awk '{print ($1)}'); then
+  if ! size=$(du -kts "${path}" | awk '{print ($1)}'); then
     printError "Unable to generate disk usage (du) report for '${path}'"
   fi
   echo "${size}"
@@ -1458,7 +2904,7 @@ diskusage()
 formattedFileSize()
 {
   filesize=$1  # in kb
-  # Use awk rather than $((..)) to get floating points, using the 
+  # Use awk rather than $((..)) to get floating points, using the
   # "repeated divisions and count" method to generate an offset
   echo "${filesize}" | awk '{
     num = $1;
@@ -1473,9 +2919,121 @@ formattedFileSize()
         num = num / 1000;
         unit = "M";
     } printf "%.3f%s\n", num, unit;
-  }'  
+  }'
 }
 
+# Used to perform validation of config values. Legacy
+# values might use 0:1 or true:false so handle both,
+# ignoring case
+isFalse()
+{
+  case "$1" in
+    0|[Ff][Aa][Ll][Ss][Ee] ) return 0;;
+    *) return 1;;
+  esac
+}
+isTrue()
+{
+  case "$1" in
+    1|[Tt][Rr][Uu][Ee] ) return 0;;
+    *) return 1;;
+  esac
+}
+
+# Lookup the list of ports and find the closest suggestion. This uses
+# awk to parse the dictionary directly from the cache file [piped via jq]
+toolSuggestion(){
+  word="$1"
+  threshold=4  # If the word is too far from alternatives, do not suggest
+  jq -r '.release_data | keys[]' "${JSON_CACHE}" | \
+    awk -v s1="${word}" -v th="${threshold}" '
+    BEGIN { best = ""; current=th;}
+    END { if (current <= th) print best }
+    {
+      s2=$1
+      len1 = length(s1)
+      len2 = length(s2)
+      for (i = 0; i <= len1; i++) d[i,0] = i
+      for (j = 0; j <= len2; j++) d[0,j] = j
+      for (i = 1; i <= len1; i++) {
+        for (j = 1; j <= len2; j++) {
+          cost = (substr(s1, i, 1) == substr(s2, j, 1)) ? 0 : 1
+          
+          del = d[i-1,j] + 1
+          ins = d[i,j-1] + 1
+          # Renamed variable to avoid conflict with the built-in "sub" function in awk.
+          substitution = d[i-1,j-1] + cost
+          
+          min = del
+          if (ins < min) min = ins
+          if (substitution < min) min = substitution
+          d[i,j] = min
+        }
+      }
+      distance=d[len1,len2]
+      if (distance == 0) { print s2; exit } # Found a match - should not happen
+      if (distance < current) {
+        best=s2
+        current = distance
+      }
+    }
+  '
+
+}
+
+
+levenshtein() {
+  word1="$1"
+  word2="$2"
+
+  # Calculates the distance and prints it to stdout.
+  awk -v s1="$word1" -v s2="$word2" '
+    BEGIN {
+      len1 = length(s1)
+      len2 = length(s2)
+      for (i = 0; i <= len1; i++) d[i,0] = i
+      for (j = 0; j <= len2; j++) d[0,j] = j
+      for (i = 1; i <= len1; i++) {
+        for (j = 1; j <= len2; j++) {
+          cost = (substr(s1, i, 1) == substr(s2, j, 1)) ? 0 : 1
+          
+          del = d[i-1,j] + 1
+          ins = d[i,j-1] + 1
+          # Renamed variable to avoid conflict with the built-in "sub" function in awk.
+          substitution = d[i-1,j-1] + cost
+          
+          min = del
+          if (ins < min) min = ins
+          if (substitution < min) min = substitution
+          d[i,j] = min
+        }
+      }
+      print d[len1,len2]
+    }'
+}
+
+# Finds the closest match for a misspelled word from a list of valid words
+findSuggestion() {
+    misspelled="$1"
+    dictionary="$2"
+    best_match=""
+    min_distance=4 
+
+    for word in ${dictionary}; do
+        distance=$(levenshtein "${misspelled}" "${word}")
+        if [ "${distance}" -lt "${min_distance}" ]; then
+            min_distance=${distance}
+            best_match="${word}"
+        fi
+    done
+    echo "${best_match}"
+}
+
+# Main code
+
+
+# shellcheck disable=SC1091
+# shellcheck disable=SC2086
 . ${INCDIR}/analytics.sh
 
 zopenInitialize

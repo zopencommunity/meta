@@ -1,0 +1,175 @@
+#!/bin/sh
+# Upgrade utility for zopen community- https://github.com/zopencommunity
+#
+# All zopen-* scripts MUST start with this code to maintain consistency
+#
+setupMyself()
+{
+  ME=$(basename $0)
+  MYDIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
+  INCDIR="${MYDIR}/../include"
+  if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
+    echo "Internal Error. Unable to find common.sh file to source" >&2
+    exit 8
+  fi
+  # shellcheck disable=SC1091
+  . "${INCDIR}/common.sh"
+}
+setupMyself
+checkWritable
+
+printHelp(){
+  cat << HELPDOC
+zopen upgrade is a utility to upgrade installed packages to a later release
+
+Usage: zopen upgrade [OPTION] [PARAMETERS] [PACKAGES]
+
+Options:
+  -y, --yes         automatically answer yes to prompts
+  -v, --verbose     run in verbose mode
+  -h,-?, --help     display this help and exit
+
+Examples:
+  zopen upgrade foo 
+                    upgrade package foo if installed
+  zopen upgrade -y  upgrade all packages to latest version on their
+                    releaseline
+
+Report bugs at https://github.com/zopencommunity/meta/issues
+
+HELPDOC
+}
+
+
+
+# Main code start here
+# Need to set a number of variables for use in the install function
+# which is common between install & upgrade
+args=$*
+verbose=false
+debug=false
+xdebug=false
+# shellcheck disable=SC2034
+selectVersion=false
+# shellcheck disable=SC2034
+setActive=true
+# shellcheck disable=SC2034
+downloadOnly=false
+# shellcheck disable=SC2034
+reinstall=false
+# shellcheck disable=SC2034
+reinstallDeps=false
+# shellcheck disable=SC2034
+nosymlink=false
+# shellcheck disable=SC2034
+doNotInstallDeps=true
+# shellcheck disable=SC2034
+bypassPrereqs=false
+
+yesToPrompts=false
+chosenRepos=""
+while [ $# -gt 0 ]; do
+  case "$1" in
+    "--bypass-prereq-checks")
+      # shellcheck disable=SC2034
+      bypassPrereqs=true 
+      ;;
+    "--yes" | "-y")
+      # shellcheck disable=SC2034
+      yesToPrompts=true  # Automatically answer 'yes' to any questions
+      ;;
+    "-h" | "--help" | "-?")
+      printHelp "${args}"
+      exit 0
+      ;;
+     "-v" | "--verbose")
+      verbose=true
+      ;;
+    "--debug")
+      verbose=true
+      debug=true
+      ;;
+    "--xdebug")
+      # shellcheck disable=SC2034
+      verbose=true
+      # shellcheck disable=SC2034
+      debug=true
+      xdebug=true
+    ;;
+    "--version")
+      zopen-version "${ME}"
+      exit 0
+      ;;
+    -*) printError "Unsupported parameter '$1'" ;;
+    *)
+      chosenRepos=" ${chosenRepos} $1 ";
+      ;;
+  esac
+  shift;
+done
+
+${xdebug} && set -x && printVerbose "Enabled command execution trace" 
+
+checkIfConfigLoaded
+
+export SSL_CERT_FILE="${ZOPEN_CA}"
+export GIT_SSL_CAINFO="${ZOPEN_CA}"
+export CURL_CA_BUNDLE="${ZOPEN_CA}"
+
+printDebug "Installing to zopen file system: ${ZOPEN_ROOTFS}"
+if [ -z "${ZOPEN_ROOTFS}" ]; then
+  printError "Unable to locate zopen file system, \${ZOPEN_ROOTFS} is undefined"
+fi
+downloadDir="${ZOPEN_ROOTFS}/var/cache/zopen"
+
+
+if [ ! -d "${downloadDir}" ]; then
+  if ! mkdir -p "${downloadDir}"; then
+    printError "Could not create download directory: ${downloadDir}"
+  fi
+fi
+
+# Parse passed in repositories and check if valid zopen framework repos
+printVerbose "Querying remote repo for latest package information"
+getRepos
+grfgRc=$?
+[ 0 -ne ${grfgRc} ] && exit ${grfgRc};
+# shellcheck disable=SC2034
+installArray=""
+
+mutexReq "zopen" "zopen"
+printDebug "Parsing list of packages to install and verifying validity"
+
+if [ -z "${chosenRepos}" ]; then
+  if ! chosenRepos=$(zopen list --installed); then
+    printSoftError "Unable to retrieve list of currently installed packages"
+    printError "Details: ${chosenRepos}"
+  fi
+else
+  validatePackageList "${chosenRepos}"
+fi
+
+if ! generateInstallGraph "${chosenRepos}"; then
+  printError "Unable to generate upgrade graph"
+fi
+
+# shellcheck disable=SC2154
+upgrades=$(echo "${installList}" | jq --raw-output '.installqueue| length')
+if [ 0 -eq "${upgrades}" ]; then
+  printInfo "- No available updates"
+else
+  pkgcount=$(echo "${installList}" | jq --raw-output '.installqueue | sort| length  ')
+  if [ "$pkgcount" -gt 1 ]; then
+    pkgInsert="${pkgcount} packages"
+  else
+    pkgInsert="package"
+  fi
+  printInfo "- The following ${pkgInsert} will be upgraded:"
+  echo "${installList}" | jq --raw-output '.installqueue | sort| .[] | .portname '
+  if promptYesNoAlways "Continue upgrading ${pkgInsert}?" ${yesToPrompts}; then
+    processRepoInstallFile
+  fi
+  printInfo "Upgrade operation complete"
+fi
+mutexFree "zopen"
+

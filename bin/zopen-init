@@ -4,9 +4,11 @@
 ME=$(basename "$0")
 
 if [ -z "${utildir}" ]; then
+  # shellcheck disable=SC2155
   export utildir="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
 fi
 
+# shellcheck disable=SC2034
 ZOPEN_DONT_PROCESS_CONFIG=1
 #
 # All zopen-* scripts MUST start with this code to maintain consistency.
@@ -20,6 +22,7 @@ setupMyself()
     echo "Internal Error. Unable to find common.sh file to source." >&2
     exit 8
   fi
+  # shellcheck source=/dev/null
   . "${INCDIR}/common.sh"
 }
 setupMyself
@@ -48,22 +51,16 @@ Options:
   --bypass-prereq-checks
           Bypasses pre-requisite checks
 
-  -f, --fs-layout <LAYOUT>
-          The filesystem structure to use for installed
-          packages on disk; packages will be installed to
-          this location under <zopen rootfs>.
-
-          <LAYOUT> should be one of:
-
-            usrlclz: /usr/local/zopen (default),
-            zopen: /usr/zopen,
-            prod: legacy zopen standard location,
-            ibm: /usr/lpp,
-            fhs: File Hierarchical Standard (/opt),
-            usrlcl: usr/local
-
   -h, -?, --help
           display this help and exit
+
+  --offline
+          Perform the base installation of the zopen environment without
+          attempting to update any of the bootstrapping packages. For
+          use in air-gapped environments or where a custom package
+          repository will be configed
+          Note: Post-configuration of alternate package sources might be
+          required.
 
   --re-init
           Re-initializes a previous zopen environment or
@@ -72,6 +69,11 @@ Options:
           re-use existing package structures and
           configuration and regenerate configuration files.
           select the active version for PACKAGE from a list
+
+  --rebuild-repo-config
+          Recreate the default repository configuration file. Will also
+          refresh the zopen environment configuration, equivalent to
+          setting the --refresh parameter
 
   --refresh
           Refreshes the zopen-config file
@@ -92,34 +94,35 @@ Examples:
           interactively bootstrap a zopen environment
 
   zopen init --releaseline-dev
-          interactively bootstrap a zopen environment that
-          will use Development Releaseline packages
-
-  zopen init --yes --append-to-profile --fs-layout fhs /zopen
-          non-interactively create a zopen environment at
-          location '/zopen' on disk, with packages installed
-          to '/zopen/opt'. The user's .profile will be
-          updated to source the configuration file at
-          '/zopen/etc/zopen-config' when new terminal
-          sessions start
+          interactively bootstrap a zopen environment that will use
+          Development Releaseline packages
+  zopen init --yes --append-to-profile /zopen
+          non-interactively create a zopen environment at location
+          '/zopen' on disk, with packages installed to
+          '/usr/local/zopen'. The user's .profile will be updated to
+          source the configuration file at '/zopen/etc/zopen-config'
+          when new terminal sessions start
 
 Report bugs at https://github.com/zopencommunity/meta/issues
 
 HELPDOC
 }
 
-args=$*
-
 
 # Constants
 # Number of rm processes to run in parallel
-RM_FILEPROCS=5 #TODO: adjust based on number of online cpus on system
+rm_fileprocs=5 #TODO: adjust based on number of online cpus on system
 
 # Boostrap pax files
-CURL_PAX_LOCATION="packages/curl-8.10.1.20241001_214340.zos.pax.Z"
-JQ_PAX_LOCATION="packages/jq-1.6.20241001_204116.zos.pax.Z"
-GPG_PAX_LOCATION="packages/gnupg-2.5.5.20250407_125451.zos.pax.Z"
-PINENTRY_PAX_LOCATION="packages/pinentry-1.3.1.20250131_041514.zos.pax.Z"
+CURL_PAX="curl-8.10.1.20241001_214340.zos.pax.Z"
+JQ_PAX="jq-1.6.20241001_204116.zos.pax.Z"
+GPG_PAX="gnupg-2.5.5.20250407_125451.zos.pax.Z"
+PINENTRY_PAX="pinentry-1.3.1.20250131_041514.zos.pax.Z"
+PKG_DIR="packages"
+CURL_PAX_LOCATION="${PKG_DIR}/${CURL_PAX}"
+JQ_PAX_LOCATION="${PKG_DIR}/${JQ_PAX}"
+GPG_PAX_LOCATION="${PKG_DIR}/${GPG_PAX}"
+PINENTRY_PAX_LOCATION="${PKG_DIR}/${PINENTRY_PAX}"
 
 verbose=false
 isHostIBM=false
@@ -127,23 +130,24 @@ debug=false
 yesToPrompts=false
 reinitExisting=false
 appendToProfile=false
+offlineInstall=false
 releaselineDev=false
 refresh=false
-fslayout="usrlclz"
+rebuildRepoConfig=false
 isCollectingStats=false
 isBot=false # used by jenkins, CI/CD
 bypassPrereqs=false
 while [ $# -gt 0 ]; do
   case "$1" in
-    "-f" | "--fs-layout" )
-      fslayout="$2"
-      shift
-      ;;
     "--re-init" )
       reinitExisting=true
       ;;
     "--bypass-prereq-checks")
-      bypassPrereqs=true 
+      bypassPrereqs=true
+      ;;
+    "--rebuild-repo-config")
+      rebuildRepoConfig=true
+      refresh=true
       ;;
     "--refresh" )
       refresh=true
@@ -167,18 +171,23 @@ while [ $# -gt 0 ]; do
     "--noenable-stats" )
       enableStats=false
       ;;
+    "--offline" )
+      offlineInstall=true
+      ;;
     "-h" | "--help" | "-?")
       printHelp
       exit 0
       ;;
     "-v" | "--verbose")
+      # shellcheck disable=SC2034
       verbose=true
       ;;
     "--version")
-      zopen-version $ME
+      zopen-version "$ME"
       exit 0
       ;;
     "--debug")
+      # shellcheck disable=SC2034
       debug=true
       ;;
     "--yes" | "-y")
@@ -193,6 +202,16 @@ while [ $# -gt 0 ]; do
   esac
   shift
 done
+# Wrapper around jq to provide extra help for certain scenarios
+jqw()
+{
+  if ! type jq >/dev/null 2>&1; then
+    printSoftError "Cannot locate 'jq'."
+    printSoftError "If recovering a system, run . ./.env from the following location:"
+    printError "  <zopenroot>/usr/local/zopen/jq/<jq-version>  and retry command"
+  fi
+  jq "$@"
+}
 
 determineRootFileSystem()
 {
@@ -247,7 +266,9 @@ determineStatsCollection()
   elif [ -n "$enableStats" ] && ! $enableStats; then
     isCollectingStats=false
   elif [ $analyticsRC -lt 2 ]; then
-    isCollectingStats=$(jq -re '.is_collecting_stats' "${jsonConfig}")
+    if ! isCollectingStats=$(jqw -re '.is_collecting_stats' "${jsonConfig}"); then
+      return 4
+    fi
     return
   elif $isHostIBM; then
     printAttention "Attention: Turning on usage statistics as your host is an IBM host. If this is incorrect, rerun with --noenable-stats"
@@ -266,7 +287,7 @@ determineStatsCollection()
   fi
 
   if $isCollectingStats; then
-    if ! /bin/ping -c 1 -t 2 "${ZOPEN_STATS_IP}" >/dev/null 2>/dev/null; then
+    if ! ping -c 1 -t 2 "${ZOPEN_STATS_IP}" >/dev/null 2>/dev/null; then
       printAttention "The statistics server url is blocked: ${ZOPEN_STATS_URL}. Turning usage statistics off."
       isCollectingStats=false
     fi
@@ -288,23 +309,12 @@ init()
     printHeader "Initializing zopen framework"
   fi
 
-  printDebug "Validating input parameters"
-  case "${fslayout}" in
-    "usrlclz") zopen_pkginstall="usr/local/zopen"    ;;
-    "usrlcl")  zopen_pkginstall="usr/local"    ;;
-    "fhs")     zopen_pkginstall="opt"    ;;
-    "ibm")     zopen_pkginstall="usr/lpp"    ;;
-    "prod")    zopen_pkginstall="prod"    ;;
-    "zopen")   zopen_pkginstall="usr/zopen"    ;;
-    *) printError "${NC}${RED}The filesystem layout ${fslayout} is unrecognised" ;;
-  esac
-
   determineRootFileSystem
   determineStatsCollection
 
   if ! ${refresh} && ! ${reinitExisting}; then
     printInfo "- Binaries will be symlinked under \"${rootfs}/usr/local/bin\". Libraries will be symlinked under \"${rootfs}/usr/lib\""
-    printInfo "- Packages will be installed and maintained under the directory structure ${fslayout} (${rootfs}/${zopen_pkginstall}). To change, re-run with the -f <layout> option."
+    printInfo "- Packages will be installed and maintained under the directory '${rootfs}/${zopen_pkginstall}'."
     printInfo "- Collecting usage statistics: ${isCollectingStats}"
   fi
 
@@ -334,8 +344,9 @@ init()
         [ -n "${reinit}" ] && [ "y" = "${reinit}" ]
       }; then
         printInfo "- Re-initializing; zopen-config will be re-created"
-        if ! rm -rf "${configFile}"; then
-          printError "Unable to remove existing file. Check permissions and retry command."
+        backup="zopen-config.$(date +%Y%m%d%H%M%S)"
+        if ! cp "${configFile}" "${backup}"; then
+          printError "Unable to backup existing file. Check permissions and retry command."
         fi
 
       else
@@ -381,13 +392,20 @@ generateFileSystem()
   printVerbose "- Creating symbolic path for prod redirect files"
   [ -e "${rootfs}/usr/share/zopen/boot" ] || ln -s "${rootfs}/boot" "${rootfs}/usr/share/zopen/boot"
   [ -e "${rootfs}/etc/zopen" ] || mkdir -p "${rootfs}/etc/zopen"
-  echo "${zopen_pkginstall}" > "${rootfs}/etc/zopen/fstype"
 
+  printVerbose "- Creating product installation location"
+  zopen_pkginstall="usr/local/zopen"
   [ -e "${rootfs}/${zopen_pkginstall}" ] || mkdir -p "${rootfs}/${zopen_pkginstall}"
   [ -e "${rootfs}/usr/share/zopen/prod" ] || ln -s "${rootfs}/${zopen_pkginstall}" "${rootfs}/usr/share/zopen/prod"
 
+  printVerbose "- Creating repository directory"
+  repodir="${rootfs}/etc/zopen/repos.d"
+  [ -e "${repodir}" ] || mkdir -p "${repodir}"
+
+  printVerbose "- Setting global root envvar"
+  ZOPEN_PKGINSTALL="${rootfs}/${zopen_pkginstall}"
   if [ "${ZOPEN_PKGINSTALL}" = "${rootfs}" ]; then
-    printError "Package install location is the zopen root location; this is not allowed. Exiting".
+    printError "Package install location is the zopen root location; this is not supported. Exiting".
   fi
   printVerbose "- Creating path for certificate lookups: ${rootfs}/${ZOPEN_CA_DIR}"
   [ -e "${rootfs}/${ZOPEN_CA_DIR}" ] || mkdir -p "${rootfs}/${ZOPEN_CA_DIR}"
@@ -399,7 +417,7 @@ generateFileSystem()
 generateZopenConfig()
 {
   printHeader "Generating zopen-config"
-  writeConfigFile "${configFile}" "${rootfs}" "${zopen_pkginstall}" "${ZOPEN_CA_DIR}/${certFileName}" $OVERRIDE_ZOS_TOOLS
+  writeConfigFile "${configFile}" "${rootfs}" "${zopen_pkginstall}" "${ZOPEN_CA_DIR}/${certFileName}" "$OVERRIDE_ZOS_TOOLS"
   printInfo "- Created config in ${configFile}"
   if ${appendToProfile}; then
     if ! grep -q ". ${rootfs}/etc/zopen-config" "${HOME}/.profile"; then
@@ -411,16 +429,21 @@ EOF
   fi
 
   # Source the config file
+  # shellcheck disable=SC1090
   . "${configFile}"
+  printInfo "- zopen-config setup complete"
+}
 
+updateCACert()
+{
   printHeader "Updating CA Certificate"
   export ZOPEN_CA="${ZOPEN_ROOTFS}/${ZOPEN_CA_DIR}/${certFileName}"
   caCertDir="${ZOPEN_ROOTFS}/${ZOPEN_CA_DIR}"
   mkdir -p "${caCertDir}"
-  runAndLog "${MYDIR}/zopen-update-cacert -f "${caCertDir}" "
+  runAndLog "${MYDIR}/zopen-update-cacert -f ${caCertDir} "
   [ $? -ne 0 ] && exit $?
 
-  printInfo "- zopen bootstrapping complete"
+  printInfo "- CA Certificate updated"
 }
 
 generateJsonConfiguration()
@@ -429,51 +452,159 @@ generateJsonConfiguration()
   jsonConfigWorking="${jsonConfig}.working"
 
   if [ -e "${jsonConfig}" ]; then
-    releaseLine=$(jq -r '.release_line' "${jsonConfig}")
-    RM_FILEPROCS=$(jq -r '.num_rm_procs' "${jsonConfig}")
-    # note that is_collecting_stats is set earlier
-    if [ -z "${OVERRIDE_ZOS_TOOLS}" ] && jq -er ".override_zos_tools" $jsonConfig >/dev/null; then
-      OVERRIDE_ZOS_TOOLS=$(jq -r '.override_zos_tools' $jsonConfig)
+    # isCollectingStats is set elsewhere
+    if ! releaseLine=$(jqw -r '.release_line' "${jsonConfig}"); then
+      return 4
     fi
+    if [ -z "${OVERRIDE_ZOS_TOOLS}" ] && jqw -er ".override_zos_tools" "$jsonConfig" >/dev/null; then
+      OVERRIDE_ZOS_TOOLS=$(jqw -r '.override_zos_tools' "$jsonConfig")
+    fi
+    autocacheclean=$(jqw -r '.autocacheclean' "${jsonConfig}")
+    autopkgpurge=$(jqw -r '.autopkgpurge' "${jsonConfig}")
+    skip_broken=$(jqw -r '.skip_broken' "${jsonConfig}")
+    skip_size_check=$(jqw -r '.skip_size_check' "${jsonConfig}")
   fi
 
-  if [ -z "${OVERRIDE_ZOS_TOOLS}" ]; then
-    OVERRIDE_ZOS_TOOLS=false
+  if ${releaselineDev}; then
+    # Explicitly added on the command-line so use it
+    releaseLine="DEV"
+    printInfo "- Configured zopen to use development (DEV) releaseline packages where available"
   fi
+  case "${releaseLine}" in
+    "") releaseLine="STABLE"
+        printInfo "- Configured zopen to use stable releaseline packages"
+        ;;
+    "STABLE"|"DEV") :;; # Use as-is
+    *) printWarning "Current value for release line '${releaseLine}' invalid. Defaulting to 'STABLE'."
+       releaseLine="STABLE"
+       ;;
+  esac
+  case "${autocacheclean:=true}" in
+    "0"|"1"|[Tt][Rr][Uu][Ee]|[Ff][Aa][Ll][Ss][Ee]) :;; # Valid value
+    "null") autocacheclean="true"  # Default to true; jq found no entry (new config)
+        ;;
+    *) showConfigParmWarning "autocacheclean" "${autocacheclean}" "true|false" "true"
+       autocacheclean=true
 
-  if [ -z "$releaseLine" ]; then
-    if ${releaselineDev}; then
-      releaseLine="DEV"
-      printInfo "- Configured zopen to use development (DEV) releaseline packages where available"
-    else
-      releaseLine="STABLE"
-      printInfo "- Configured zopen to use stable releaseline packages"
-    fi
-  fi
+       ;;
+  esac
+  case "${autopkgpurge:=false}" in
+    "0"|"1"|[Tt][Rr][Uu][Ee]|[Ff][Aa][Ll][Ss][Ee]) :;; # Valid value
+    "null")autopkgpurge=false  # Default to false; jq found no entry (new config)
+        ;;
+    *) showConfigParmWarning "autopkgpurge" "${autopkgpurge}" "true|false" "false"
+       autopkgpurge=false
+       ;;
+  esac
+  case "${skip_broken:=false}" in
+    "0"|"1"|[Tt][Rr][Uu][Ee]|[Ff][Aa][Ll][Ss][Ee]) :;; # Valid value
+    "null") skip_broken=false # Default to false
+        ;;
+    *) showConfigParmWarning "skip_broken" "${skip_broken}" "true|false" "false"
+       skip_broken=false
+       ;;
+  esac
+  case "${skip_size_check:=false}" in
+    "0"|"1"|[Tt][Rr][Uu][Ee]|[Ff][Aa][Ll][Ss][Ee]) :;; # Valid value
+    "null") skip_size_check=false # Default to false
+        ;;
+    *)  showConfigParmWarning "skip_size_check" "${skip_size_check}" "true|false" "false"
+        skip_size_check=false
+        ;;
+  esac
+  case "${OVERRIDE_ZOS_TOOLS}" in
+    "true"|"false") :;; # Valid value
+    "null") OVERRIDE_ZOS_TOOLS=false ;; # No entry in config file
+    *) OVERRIDE_ZOS_TOOLS=false ;; # Bad envvar / empty value in config
+  esac
 
   if [ ! -e "${jsonConfig}" ]; then
     printInfo "Generating global configuration"
     cat <<zz > "${jsonConfig}"
-{
-  "release_line": "${releaseLine}",
-  "num_rm_procs": ${RM_FILEPROCS},
-  "is_collecting_stats": ${isCollectingStats},
-  "override_zos_tools": ${OVERRIDE_ZOS_TOOLS}
-}
+    {
+      "release_line": "${releaseLine:-STABLE}",
+      "is_collecting_stats": ${isCollectingStats},
+      "override_zos_tools": ${OVERRIDE_ZOS_TOOLS},
+      "autocacheclean": ${autocacheclean},
+      "autopkgpurge": ${autopkgpurge},
+      "skip_broken": ${skip_broken},
+      "skip_size_check": ${skip_size_check}
+    }
 zz
   else
     printInfo "Refreshing global configuration"
     # In case 3rd-party edits have been made (adding custom keys for
     # example), just update the values that zopen itself knows about inline
-    if ! jq --arg releaseLine "${releaseLine}" \
-        --arg isoverrideZOSTools ${OVERRIDE_ZOS_TOOLS} \
-        --arg isCollectingStats ${isCollectingStats} \
-                ".release_line = \$releaseLine | .override_zos_tools = \$isoverrideZOSTools | .is_collecting_stats = \$isCollectingStats" \
-                "${ZOPEN_JSON_CONFIG}" > "${ZOPEN_JSON_CONFIG}.working"; then
+    if ! jqw --arg releaseLine "${releaseLine}" \
+        --arg isoverrideZOSTools "${OVERRIDE_ZOS_TOOLS}" \
+        --arg isCollectingStats "${isCollectingStats}" \
+        --arg autocacheclean "${autocacheclean}" \
+        --arg autopkgpurge "${autopkgpurge}" \
+        --arg skip_broken "${skip_broken}" \
+        --arg skip_size_check "${skip_size_check}" \
+                ".release_line = \$releaseLine |
+                 .override_zos_tools = \$isoverrideZOSTools |
+                 .is_collecting_stats = \$isCollectingStats |
+                 .autocacheclean = \$autocacheclean |
+                 .autopkgpurge = \$autopkgpurge |
+                 .skip_broken = \$skip_broken |
+                 .skip_size_check = \$skip_size_check
+          " "${jsonConfig}" > "${jsonConfigWorking}"; then
       printError "Errors updating existing configuration file. See previous errors for more information and retry command."
     fi
-    mv -f "${ZOPEN_JSON_CONFIG}.working" "${ZOPEN_JSON_CONFIG}"
+    mv -f "${jsonConfigWorking}" "${jsonConfig}"
   fi
+
+}
+
+generateDefaultRepository()
+{
+    # Check for existing repository definition - if present, use unless
+    # user wants to rebuild the default repository file
+  [ -e "${rootfs}/etc/zopen/repos.d/active" ] &&
+      ! ${rebuildRepoConfig} && return 0
+
+  # If there is no repository definition, generate a default to point to Github
+  [ ! -e "${rootfs}/etc/zopen/repos.d" ] && mkdir -p "${rootfs}/etc/zopen/repos.d"
+
+  if [ -z "${paxrepourl}" ]; then
+    paxrepourl="http://raw.githubusercontent.com/${ZOPEN_ORGNAME}/meta/main/docs/api/zopen_releases.json"
+  fi
+
+  repotype="${paxrepourl%://*}"
+  [ "${repotype}" = "${paxrepourl}" ] && printError "Unable to parse repository type from '${paxrepourl}'. Ensure valid format: <http|file>://<path to repo"
+
+  case "${repotype}" in
+    http|https|file) printDebug "configuring repo type of: '${repotype}'";;
+    *) printError "Unsupported repository type of '${repotype}'"
+  esac
+
+  repourl="${paxrepourl#*://}"
+  [ "${repourl}" = "${paxrepourl}" ] && printError "Unable to parse repository url from'${paxrepourl}'. Ensure valid format: <http|file>://<path to repo"
+
+  repometafile="${paxrepourl##*/}"
+  [ "${repometafile}" = "${paxrepourl}" ] && printError "Unable to parse repository file from '${paxrepourl}'. Ensure valid format: <http|file>://<path to repo"
+
+  latestmetafile="$(echo "${repometafile}" | sed -e 's/.json/_latest.json/')"
+
+  baserepourl="${repourl%/*}"
+  [ "${baserepourl}" = "${repourl}" ] && printError "Unable to parse repository file from '${paxrepourl}'. Ensure valid format: <http|file>://<path to repo"
+
+  repoFile="${rootfs}/etc/zopen/repos.d/$(echo "${repourl}" | tr -d "/[:space:]._").json"
+
+  # Backup any existing repository configuration file
+  [ -e "${repoFile}" ] && mv "${repoFile}" "${repoFile}.$(date "+%C%m%d%H%M%S")"
+  cat << EOS >  "${repoFile}"
+{
+  "type": "${repotype}",
+  "metadata_baseurl": "${baserepourl}",
+  "metadata_file": "${repometafile}",
+  "latest_file": "${latestmetafile}"
+}
+EOS
+  # Create active link if not already present; if it is present, it'll either point to the default already or
+  # it'll point to a custom repo - leave as-is.
+  [ -L "${rootfs}/etc/zopen/repos.d/active" ] || (cd "${rootfs}/etc/zopen/repos.d" && ln -s "${repoFile}" "active")
 }
 
 generateAnalyticsConfiguration()
@@ -485,7 +616,7 @@ generateAnalyticsConfiguration()
   jsonConfig="${rootfs}/var/lib/zopen/analytics.json"
 
   # if it's an existing valid json, skip
-  if [ -s "${jsonConfig}" ] && jq "." -e "${jsonConfig}" 2>/dev/null >/dev/null; then
+  if [ -s "${jsonConfig}" ] && jqw "." -e "${jsonConfig}" 2>/dev/null >/dev/null; then
     return;
   fi
   jsonConfigWorking="${jsonConfig}.working"
@@ -500,11 +631,22 @@ generateAnalyticsConfiguration()
     "removes": []
   }
 zz
-  jq '.' $jsonConfigWorking > $jsonConfig
+  if jqrc=$(jqw '.' "${jsonConfigWorking}" > "${jsonConfig}"); then
+    rm "${jsonConfigWorking}"
+  else
+    printSoftError "${jqrc}"
+    printError "Unable to update analystics configuration. See previous errors for more details."
+  fi
+
   registerFileSystem "${UUID}" "${isHostIBM}" "${isBot}"
 
-  if [ -n "$ZOPEN_ROOTFS" ] && [ -n "$ZOPEN_LOG_PATH" ] && [ -f "$ZOPEN_LOG_PATH/audit.log" ]; then
-    processAnalyticsFromLogFile
+  if [ -n "$ZOPEN_ROOTFS" ]; then
+    if [ -z "$ZOPEN_LOG_PATH" ]; then
+      ZOPEN_LOG_PATH="${ZOPEN_ROOTFS}/var/log/zopen"
+    fi
+    if [ -f "$ZOPEN_LOG_PATH/audit.log" ]; then
+      processAnalyticsFromLogFile
+    fi
   fi
 }
 
@@ -512,7 +654,7 @@ installPrereqs()
 {
   printHeader "Installing zopen pre-requisites"
   # Comma-separated list of pax locations
-  PAX_LOCATIONS="$CURL_PAX_LOCATION,$JQ_PAX_LOCATION,${GPG_PAX_LOCATION},${PINENTRY_PAX_LOCATION}"
+  PAX_LOCATIONS="$CURL_PAX_LOCATION,$JQ_PAX_LOCATION,${PINENTRY_PAX_LOCATION},${GPG_PAX_LOCATION}"
 
   echo "$PAX_LOCATIONS" | tr ',' '\n' | while read -r pax; do
     printVerbose "- Check for shipped ${pax}"
@@ -531,15 +673,14 @@ installPrereqs()
     cachedir="${rootfs}/var/cache/zopen"
     basepax=$(basename ${pax})
     [ -e "${cachedir}/${basepax}" ] || printError "Could not locate bootstrap ${pax}."
-    paxrc=$(pax -rf "${cachedir}/${basepax}" -s##${rootfs}/boot/#)
 
-    if [ $? -gt 0 ]; then
-      printError "Failed to extract pax file ${basepax}"
+    if ! paxrc=$(pax -rf "${cachedir}/${basepax}" "-s##${rootfs}/boot/#"); then
+      printError "Failed to extract pax file ${basepax}: ${paxrc}"
     fi
  done
 
   # Sourcing the environment from within the actual directories
-  for tool in "curl" "jq" "gnupg" "pinentry"; do
+  for tool in "curl" "jq" "pinentry" "gnupg"; do
      printVerbose "Sourcing environment to trigger any setup required for ${tool}"
 
      tooldir=$(ls "${rootfs}/boot" | grep ${tool} | head -1)
@@ -547,6 +688,7 @@ installPrereqs()
      chmod -R 755 "${rootfs}/boot/${tooldir}"
      curwd="${PWD}"
      cd "${rootfs}/boot/${tooldir}/" || printError "Could not access ${tool} bootstrap in directory '${rootfs}/boot/${tooldir}/'. Re-run 'zopen init' to retry"
+     # shellcheck disable=SC1091
      . ./.env
      cd "${curwd}" || printError "Could not change to ${curwd}. Re-run 'zopen init' to retry"
   done
@@ -556,17 +698,88 @@ installPrereqs()
 updateBootstrappedTools() {
   printInfo "- Installing/updating bootstrapped curl, jq, gpg, pinentry and meta to install updated versions (if available)"
   installOptions="--force"
+  toolInstall=0
   if $bypassPrereqs; then
     installOptions="${installOptions} --bypass-prereq-checks";
   fi
   if ${refresh}; then
-    ${MYDIR}/zopen-install ${installOptions} -y curl jq gpg pinentry
+    "${MYDIR}"/zopen-install "${installOptions}" -y curl jq pinentry gpg
     toolInstall=$?
+  elif ${offlineInstall}; then
+    printVerbose "As offline, no access to meta.pax so copy currently running"
+    metabindir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)
+    ulzm="${rootfs}/usr/local/zopen/meta"
+    target="${ulzm}/meta-bootstrap"
+    mkdir -p "${target}"
+    printVerbose "Copying bare meta scripts from '${metabindir}' to '${target}"
+    cp -R "${metabindir}/../bin" "${target}"
+    cp -R "${metabindir}/../include" "${target}"
+
+    printVerbose "Creating main symlink for meta"
+    ln -s "${ulzm}/meta-bootstrap" "${ulzm}/meta"
+    if ! runLogProgress "mergeIntoSystem \"meta\" \"${ulzm}/meta-bootstrap\" \"${rootfs}\"" \
+          "Merging meta into symlink mesh" "Merged meta into symlink mesh"; then
+      printSoftError "Unexpected errors merging symlinks into mesh"
+      printError "Use zopen alt to select previous version to ensure known state"
+    fi
+    printVerbose "Adding bootstrapped meta to package db"
+    printVerbose "Creating basic metadata.json"
+    cat << EOF > "${target}/metadata.json"
+{
+  "version_scheme": "0.2",
+  "product": {
+    "name": "meta",
+    "version": "0.0.0.0-bootstrap",
+    "release": "$(date +%Y%m%d_%H%M%S)",
+    "summary": "meta on z/OS",
+    "repo": "https://github.com/zopencommunity/metaport",
+    "license": "https://github.com/zopencommunity/metaport/blob/main/patches/LICENSE",
+    "zopen_license": "https://github.com/zopencommunity/metaport/blob/main/LICENSE",
+    "categories": "utilities",
+    "size": "$(du -ks "${target}" | awk '{print $1 * 1024}')",
+    "build_dependencies": [],
+    "runtime_dependencies": [],
+    "system_prereqs": []
+  }
+}
+EOF
+    addToInstallTracker "meta"
+
+    printVerbose "Installing bootstrap tools"
+    PAX_LOCATIONS="$CURL_PAX_LOCATION,$JQ_PAX_LOCATION,${PINENTRY_PAX_LOCATION},${GPG_PAX_LOCATION}"
+
+    workingPaxList="$PAX_LOCATIONS"
+    printVerbose " Parsing without subshell to ensure exit"
+    while [ -n "${workingPaxList}" ]; do
+      case "${workingPaxList}" in
+        *,*)
+          pax="${workingPaxList%%,*}"
+          workingPaxList="${workingPaxList#*,}"
+          ;;
+        *)
+          # Last item [hence no comma separator]
+          pax="${workingPaxList}"
+          workingPaxList=""
+          ;;
+      esac
+      printVerbose "Validating pax '${pax}'"
+      paxLocation=$(findrev "${MYDIR}" "${pax}")
+      printVerbose "Pax installation from '${paxLocation}/${pax}'"
+      if [ -e "${paxLocation}/${pax}" ]; then
+        zopen install "${paxLocation}/${pax}" -y --bypass-prereq-checks --skip-verify
+        toolInstall=$?
+        [ "${toolInstall}" -ne 0 ] && printError "Unable to install '${pax}' locally; see previous errors and retry installation using the '--re-init' parameter"
+      else
+        printError "Could not locate ${pax} to install as bootstrap"
+      fi
+    done
   else
-    ${MYDIR}/zopen-install ${installOptions} -y curl jq gpg pinentry meta
+    # shellcheck disable=SC2086  # We want installOptions to be split
+    "${MYDIR}/zopen-install" ${installOptions} -y curl jq pinentry gpg meta
     toolInstall=$?
   fi
-  [ ${toolInstall} -ne 0 ] && printError "Unable to install curl, jq, gpg, pinentry and/or meta; see previous errors and retry the initilisation using the '--re-init' parameter"
+  [ "${toolInstall}" -ne 0 ] && printError "Unable to install curl, jq, gpg, pinentry and/or meta; see previous errors and retry the initilisation using the '--re-init' parameter"
+  # shellcheck disable=SC1090
   . "${configFile}"
 }
 
@@ -626,6 +839,11 @@ processCaCerts()
   fi
 }
 
+createInitialPackageDB()
+{
+  updatePackageDB
+}
+
 deinit()
 {
   printHeader "Initialization successfully completed"
@@ -645,7 +863,10 @@ init
 generateFileSystem
 ! ${refresh} && installPrereqs
 generateJsonConfiguration
+generateDefaultRepository
 generateZopenConfig
+! ${offlineInstall} && updateCACert
 generateAnalyticsConfiguration
+[ -e "${ZOPEN_ROOTFS}/var/lib/zopen/packageDB.json" ] || createInitialPackageDB
 updateBootstrappedTools
 deinit
