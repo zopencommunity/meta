@@ -12,6 +12,7 @@
 - 2025-07-25: [Update AFLplusplus-version to 4.33 from 4.32c](https://github.com/zopencommunity/aflplusplusport/pull/1) ❌
 
 ### ansibleport
+- 2025-10-07: [Update ansible-version to 2.19.3 from 2.19.0](https://github.com/zopencommunity/ansibleport/pull/4) ❌
 - 2025-09-09: [Update ansible-version to 2.19.2 from 2.19.0](https://github.com/zopencommunity/ansibleport/pull/3) ❌
 - 2025-08-26: [Update ansible-version to 2.19.1 from 2.19.0](https://github.com/zopencommunity/ansibleport/pull/2) ❌
 
@@ -138,13 +139,7 @@
 - 2025-07-26: [Update doxygen-version to Release_1_14_0 from Release_1_13_2](https://github.com/zopencommunity/doxygenport/pull/10) ❌
 
 ### duckdbport
-- 2025-09-16: [Update duckdb-version to 1.4.0 from 0.9.2](https://github.com/zopencommunity/duckdbport/pull/28) ❌
-- 2025-07-08: [Update duckdb-version to 1.3.2 from 0.9.2](https://github.com/zopencommunity/duckdbport/pull/27) ❌
-- 2025-06-16: [Update duckdb-version to 1.3.1 from 0.9.2](https://github.com/zopencommunity/duckdbport/pull/26) ❌
-- 2025-05-22: [Update duckdb-version to 1.3.0 from 0.9.2](https://github.com/zopencommunity/duckdbport/pull/25) ❌
-- 2025-04-08: [Update duckdb-version to 1.2.2 from 0.9.2](https://github.com/zopencommunity/duckdbport/pull/24) ❌
-- 2025-03-06: [Update duckdb-version to 1.2.1 from 0.9.2](https://github.com/zopencommunity/duckdbport/pull/23) ❌
-- 2024-06-03: [Update duckdb-version to 1.0.0 from 0.9.2](https://github.com/zopencommunity/duckdbport/pull/13) ❓
+- 2025-10-07: [Update duckdb-version to 1.4.1 from 0.9.2](https://github.com/zopencommunity/duckdbport/pull/30) ❌
 
 ### emacsport
 - 2025-08-22: [Update emacs-version to 30.2 from 29.4](https://github.com/zopencommunity/emacsport/pull/14) ❌
@@ -216,6 +211,7 @@
 - 2025-03-06: [Update ghcli-version to 2.68.1 from 2.67.0](https://github.com/zopencommunity/githubcliport/pull/47) ❌
 
 ### gitlabcliport
+- 2025-10-07: [Update glab-version to 1.73.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/43) ❌
 - 2025-09-17: [Update glab-version to 1.72.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/42) ❓
 - 2025-09-16: [Update glab-version to 1.71.2 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/41) ❌
 - 2025-09-15: [Update glab-version to 1.69.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/40) ❌
@@ -423,7 +419,7 @@
 - 2024-10-31: [Update osv-scanner-version to 1.9.1 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/15) ✅
 - 2024-10-02: [Update osv-scanner-version to 1.9.0 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/14) ❌
 - 2024-09-11: [Update osv-scanner-version to 1.8.5 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/12) ❌
-- 2024-08-22: [Update osv-scanner-version to 1.8.4 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/11) ❌
+- 2024-08-22: [Update osv-scanner-version to 1.8.4 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/11) ❓
 - 2024-08-07: [Update osv-scanner-version to 1.8.3 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/10) ❓
 - 2024-07-10: [Update osv-scanner-version to 1.8.2 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/9) ❓
 - 2024-06-21: [Update osv-scanner-version to 1.8.1 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/8) ❓
@@ -554,6 +550,7 @@
 - 2025-01-31: [Update tig-version to 2.5.11 from 2.5.9](https://github.com/zopencommunity/tigport/pull/9) ❌
 
 ### victoriametricsport
+- 2025-10-07: [Update victoriametrics-version to 1.127.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/38) ❌
 - 2025-09-15: [Update victoriametrics-version to 1.126.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/37) ❌
 - 2025-09-04: [Update victoriametrics-version to 1.125.1 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/36) ❌
 - 2025-09-01: [Update victoriametrics-version to 1.125.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/35) ❌
@@ -882,5 +879,5 @@
 ---
 
 
-> Last updated: 2025-10-07 06:09:06 EDT
+> Last updated: 2025-10-08 06:09:44 EDT
 
