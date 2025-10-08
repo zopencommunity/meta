@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2025-10-08T17:32:38+00:00Z",
+  "generation_timestamp_utc": "2025-10-08T18:32:41+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -274,6 +274,7 @@
     "createrepo_c": "",
     "cppunit": "",
     "clang-tidy": "",
-    "pv": "Pipe Viewer - monitor data through a pipeline"
+    "pv": "Pipe Viewer - monitor data through a pipeline",
+    "mc": "Midnight Commander is a feature-rich visual file manager for Unix-like systems"
   }
 }
