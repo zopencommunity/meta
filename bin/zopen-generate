@@ -36,125 +36,583 @@ buildLicenseLookup()
 printSyntax()
 {
   echo "zopen-generate will generate a zopen compatible project" >&2
-  echo "Syntax: zopen-generate" >&2
+  echo "Syntax: zopen-generate [options]" >&2
+  echo "" >&2
+  echo "Options:" >&2
+  echo "  --help                      Display this help message" >&2
+  echo "  --version                   Display version information" >&2
+  echo "  --list-licenses             List available licenses" >&2
+  echo "  --list-categories           List available categories" >&2
+  echo "  --list-build-systems        List supported build systems" >&2
+  echo "  --name NAME                 Project name" >&2
+  echo "  --description DESC          Project description" >&2
+  echo "  --categories CATS           Project categories (space-delimited)" >&2
+  echo "  --license LICENSE           License name" >&2
+  echo "  --type TYPE                 Port type: 'BUILD' (from source) or 'BARE' (binary download)" >&2
+  echo "  --build-system SYSTEM       Build system if type is BUILD (GNU Make, CMake, Gradle, Maven, etc.)" >&2
+  echo "  --stable-url URL            Stable release source URL" >&2
+  echo "  --stable-deps DEPS          Stable build dependencies (space-delimited)" >&2
+  echo "  --dev-url URL               Dev-line source URL" >&2
+  echo "  --dev-deps DEPS             Dev build dependencies (space-delimited)" >&2
+  echo "  --build-line LINE           Default build line (stable or dev)" >&2
+  echo "  --runtime-deps DEPS         Runtime dependencies (space-delimited)" >&2
+  echo "  --force                     Force update if project directory exists" >&2
+  echo "  --non-interactive           Run in non-interactive mode (requires all necessary options)" >&2
+  echo "  --json                      Display list output in JSON format" >&2
 }
 
-if [ $# -eq 1 ]; then
-  # shellcheck disable=SC2268
-  if [ "x$1" = "x--help" ]; then
-    printSyntax
-    exit 0
-  elif [ "x$1" = "x--version" ]; then
-    zopen-version "$ME"
-    exit 0
-  else
-    echo "Unrecognized option $1. Processing terminated" >&2
+# Initialize variables for command-line arguments
+name=""
+description=""
+categories=""
+license_name=""
+port_type=""
+build_system=""
+stablePath=""
+stableDeps=""
+devPath=""
+devDeps=""
+buildline=""
+runtimedeps=""
+force=false
+non_interactive=false
+json=false
+
+# Parse command-line arguments. If an argument is not provided, the corresponding variable remains empty.
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --help) printSyntax; exit 0;;
+    --version) zopen-version "$ME"; exit 0;;
+    --json) json=true;;
+    --list-licenses)
+      buildLicenseLookup
+      if ${json}; then
+        if ! command -v "jq" >/dev/null 2>&1; then
+          echo "Error: jq is required for --json output." >&2
+          exit 1
+        fi
+        echo "${validLicenseNames}" | tr ' ' '\n' | tr -d '"' | jq -R . | jq -s '{"licenses": .}'
+      else
+        echo "Available licenses:"
+        echo "${validLicenseNames}" | tr ' ' '\n' | sed 's/,/ /g' | xargs -n 1 | sort | xargs
+      fi
+      exit 0;;
+    --list-categories)
+      ZOPEN_VALID_CATEGORIES="$(cat "${MYDIR}/../data/tool_categories.txt")"
+      if ${json}; then
+        if ! command -v "jq" >/dev/null 2>&1; then
+          echo "Error: jq is required for --json output." >&2
+          exit 1
+        fi
+        echo "${ZOPEN_VALID_CATEGORIES}" | tr ' ' '\n' | jq -R . | jq -s '{"categories": .}'
+      else
+        echo "Available categories:"
+        echo "${ZOPEN_VALID_CATEGORIES}" | tr ' ' '\n'
+      fi
+      exit 0;;
+    --list-build-systems)
+      if ${json}; then
+        if ! command -v "jq" >/dev/null 2>&1; then
+          echo "Error: jq is required for --json output." >&2
+          exit 1
+        fi
+        printf "GNU Make\nCMake\nGo\nGradle\nMaven\nMeson\nPython" | jq -R . | jq -s '{"build_systems": .}'
+      else
+        echo "Supported build systems:"
+        echo "GNU Make, CMake, Go, Gradle, Maven, Meson, Python"
+      fi
+      exit 0;;
+    --name) shift; name="$1";;
+    --description) shift; description="$1";;
+    --categories) shift; categories="$1";;
+    --license) shift; license_name="$1";;
+    --type) shift; port_type="$1";;
+    --build-system) shift; build_system="$1";;
+    --stable-url) shift; stablePath="$1";;
+    --stable-deps) shift; stableDeps="$1";;
+    --dev-url) shift; devPath="$1";;
+    --dev-deps) shift; devDeps="$1";;
+    --build-line) shift; buildline="$1";;
+    --runtime-deps) shift; runtimedeps="$1";;
+    --force) force=true;;
+    --non-interactive) non_interactive=true;;
+    *) echo "Unrecognized option $1. Processing terminated" >&2; printSyntax; exit 8;;
+  esac
+  shift
+done
+
+# Check for non-interactive mode requirements
+if $non_interactive; then
+  missing_args=""
+  [ -z "$name" ] && missing_args="${missing_args} --name"
+  [ -z "$description" ] && missing_args="${missing_args} --description"
+  [ -z "$categories" ] && missing_args="${missing_args} --categories"
+  [ -z "$license_name" ] && missing_args="${missing_args} --license"
+  [ -z "$port_type" ] && missing_args="${missing_args} --type"
+  if [ -n "$missing_args" ]; then
+    echo "Error: Non-interactive mode requires the following arguments:${missing_args}" >&2
     printSyntax
     exit 8
   fi
 fi
 
 if ! command -v "git" >/dev/null 2>&1; then
-  echo "zopen generate requires git. Use zopen install git to install it." >&2
-  exit 1
+  echo "zopen generate requires git. Use zopen install git to install it." >&2; exit 1
 fi
 
 buildLicenseLookup
-
 printHeader "Generate a zopen project"
-valid=false
-while ! ${valid}; do
-  echo "What is the project name?"
-  name=$(getInput)
-  if ! echo "${name}" | grep -q -E "port$"; then
-    valid=true
+
+# Standardized helper function for all inputs.
+# It prints the prompt to stderr to avoid being captured by command substitution.
+getInputOrArg() {
+  arg_value="$1"; prompt="$2"
+  if [ -n "$arg_value" ]; then
+    echo "$arg_value"
   else
-    printWarning "${name} must not end with port"
+    if $non_interactive; then
+      echo ""
+    else
+      echo "$prompt" >&2 # Print prompt to stderr
+      getInput           # Read from stdin and echo to stdout
+    fi
   fi
-done
-echo "Provided a description of the project:"
-description=$(getInput)
+}
 
-ZOPEN_VALID_CATEGORIES="$(cat "${MYDIR}"/../data/tool_categories.txt)"
-
-# Loop until the user enters a valid value
-while true; do
-  printHeader "Which of the following categories does the project fit under? (delimit with a space):"
-  echo "${ZOPEN_VALID_CATEGORIES}" | fold -w 80 -s
-  categories=$(getInput)
-  # Check if input is in valid_list
-  for category in ${categories}; do
-    # Check if the word is in the valid list using grep
-    echo "${ZOPEN_VALID_CATEGORIES}" | grep -qF "${category}" && break 2
-  done
-  echo "Invalid category specified: ${category}"
-done
-
-valid=false
-while ! ${valid}; do
-  echo "Provide the community license to use for ${name}'s patches: (select from ${validLicenseNames})"
-  license_name="$(getInput | tr -d ' ')"
-  if ! echo " ${validLicenseNames}" | grep -q " ${license_name}"; then
-    printWarning "License is not valid, please enter a license from one of these names: ${validLicenseNames})"
-  else
-    licenseName="$(grep "\"${license_name}\"" "${licensesCSV}" | cut -f2 -d',')"
-    licenseUrl="$(grep "\"${license_name}\"" "${licensesCSV}" | cut -f4 -d',')"
-    valid=true
-  fi
-done
-echo "${licenseUrl}"
-
-echo "Enter ${name}'s stable release source url: (Specify a Git or Tarball URL. If none, press enter)"
-stablePath=$(getInput)
-echo "Enter ${name}'s zopen community build dependencies for the stable build: (Enter multiple dependencies using spaces. E.g: zoslib make grep)"
-stableDeps=$(getInput)
-echo "Enter ${name}'s dev-line source url: (Specify a Git or Tarball URL. If none, press enter)"
-devPath=$(getInput)
-echo "Enter ${name}'s zopen community build dependencies for the dev build: (Enter multiple dependencies using spaces. E.g: zoslib make grep)"
-devDeps=$(getInput)
-echo "Enter the default build line: (stable or dev)"
-buildline=$(getInput)
-echo "Enter ${name}'s zopen community runtime dependencies: (example: bash)"
-runtimedeps=$(getInput)
-
-project_path="${name}port"
-
-nameUpper=$(echo "$name" | awk '{print toupper($0)}')
-
-if [ -d "${project_path}" ]; then
-  while true; do
-    echo "Directory ${project_path} already exists. Update it? (y, n)"
-    clobber=$(getInput)
-    if [ "${clobber}" = "n" ]; then
-      exit 0
-    elif [ "${clobber}" = "y" ]; then
-      break
+# Get project name
+if [ -z "$name" ]; then
+  valid=false
+  while ! ${valid}; do
+    name=$(getInputOrArg "" "What is the project name?")
+    if [ -z "$name" ]; then
+        printWarning "Project name cannot be empty."
+    elif ! echo "${name}" | grep -q -E "port$"; then
+        valid=true
+    else
+        printWarning "${name} must not end with port"
     fi
   done
+else
+  if echo "${name}" | grep -q -E "port$"; then printWarning "${name} must not end with port"; exit 8; fi
 fi
 
+description=$(getInputOrArg "$description" "Provide a description of the project:")
+
+# Get categories
+ZOPEN_VALID_CATEGORIES="$(cat "${MYDIR}"/../data/tool_categories.txt)"
+ZOPEN_VALID_CATEGORIES_LOWER="$(echo "${ZOPEN_VALID_CATEGORIES}" | tr ' ' '\n' | tr '[:upper:]' '[:lower:]')"
+
+if [ -z "$categories" ]; then
+  valid_input=false
+  while ! ${valid_input}; do
+    categories_input=$(getInputOrArg "" "Which of the following categories does the project fit under? (delimit with a space):
+$(echo "${ZOPEN_VALID_CATEGORIES}" | fold -w 80 -s)")
+    all_valid=true; invalid_category=""; categories_normalized=""
+    if [ -z "$categories_input" ]; then
+      all_valid=false; invalid_category="(empty entry)"
+    else
+      for category in ${categories_input}; do
+        category_lower="$(echo "${category}" | tr '[:upper:]' '[:lower:]')"
+        if ! echo "${ZOPEN_VALID_CATEGORIES_LOWER}" | grep -qFx -- "${category_lower}"; then
+          all_valid=false; invalid_category="${category}"; break
+        fi
+        categories_normalized="${categories_normalized} ${category_lower}"
+      done
+    fi
+    if ${all_valid}; then
+      valid_input=true; categories="$(echo "${categories_normalized}" | sed 's/^ *//')"
+    else
+      printWarning "Invalid or empty category specified: ${invalid_category}"
+    fi
+  done
+else
+  valid_categories=true; categories_normalized=""
+  for category in ${categories}; do
+    category_lower="$(echo "${category}" | tr '[:upper:]' '[:lower:]')"
+    if ! echo "${ZOPEN_VALID_CATEGORIES_LOWER}" | grep -qFx -- "${category_lower}"; then
+      echo "Invalid category specified: ${category}"; valid_categories=false
+    else categories_normalized="${categories_normalized} ${category_lower}"; fi
+  done
+  if $valid_categories; then categories="$(echo "${categories_normalized}" | sed 's/^ *//')"; fi
+  if ! $valid_categories; then printWarning "Categories must be valid..."; exit 8; fi
+fi
+
+# Get license
+validLicenseNames_lower="$(echo "${validLicenseNames}" | tr '[:upper:]' '[:lower:]')"
+if [ -z "$license_name" ]; then
+  valid=false
+  while ! ${valid}; do
+    license_name_input=$(getInputOrArg "" "Provide the community license to use for ${name}'s patches: (select from ${validLicenseNames})")
+    license_name="$(echo "${license_name_input}" | tr -d ' ')"
+    license_name_lower="$(echo "${license_name}" | tr '[:upper:]' '[:lower:]')"
+    if [ -z "$license_name" ]; then
+        printWarning "License cannot be empty."
+    elif ! echo " ${validLicenseNames_lower} " | grep -q " ${license_name_lower} "; then
+      printWarning "License is not valid..."; else
+      license_info="$(grep -i "^\"${license_name_lower}\"," "${licensesCSV}")"
+      license_name_orig="$(echo "${license_info}" | cut -f1 -d',' | tr -d '"')"
+      licenseName="$(echo "${license_info}" | cut -f2 -d',')"
+      licenseUrl="$(echo "${license_info}" | cut -f4 -d',')"
+      license_name="${license_name_orig}"; valid=true
+    fi
+  done
+else
+  license_name=$(echo "$license_name" | tr -d ' '); license_name_lower="$(echo "${license_name}" | tr '[:upper:]' '[:lower:]')"
+  if ! echo " ${validLicenseNames_lower} " | grep -q " ${license_name_lower} "; then
+    printWarning "License is not valid..."; exit 8; else
+    license_info="$(grep -i "^\"${license_name_lower}\"," "${licensesCSV}")"
+    license_name_orig="$(echo "${license_info}" | cut -f1 -d',' | tr -d '"')"
+    licenseName="$(echo "${license_info}" | cut -f2 -d',')"
+    licenseUrl="$(echo "${license_info}" | cut -f4 -d',')"
+    license_name="${license_name_orig}"
+  fi
+fi
+
+# Get Port Type
+if [ -z "$port_type" ]; then
+    valid=false
+    while ! $valid; do
+        port_type_input=$(getInputOrArg "" "What is the port type? (BUILD or BARE) [default: BUILD]
+  BUILD: For projects that compile from source code.
+  BARE: For projects that download pre-compiled binaries (.war, .jar, .bin, .zip, .pax, etc).")
+        port_type_upper=$(echo "$port_type_input" | tr '[:lower:]' '[:upper:]')
+        if [ -z "$port_type_upper" ]; then port_type_upper="BUILD"; fi
+        if [ "$port_type_upper" = "BUILD" ] || [ "$port_type_upper" = "BARE" ]; then
+            port_type="$port_type_upper"; valid=true
+        else printWarning "Invalid type. Please enter BUILD or BARE."; fi
+    done
+fi
+
+build_system_config=""
+custom_functions=""
+build_system=""
+
+if [ "$port_type" = "BARE" ]; then
+    build_system="N/A" # Set here because it's only applicable for BARE
+    build_system_config=$(cat <<EOF
+### Settings for BARE (binary) port
+export ZOPEN_TYPE="BARE"
+export ZOPEN_BOOTSTRAP="skip"
+export ZOPEN_CONFIGURE="skip"
+export ZOPEN_MAKE="skip"
+export ZOPEN_CHECK="skip"
+export ZOPEN_INSTALL="zopen_custom_install"
+EOF
+)
+    custom_functions=$(cat <<EOF
+
+# zopen_init is used to download the binary artifact.
+zopen_init() {
+  # Example: curl -L -o ${name}.war \${ZOPEN_STABLE_URL}
+  echo "BARE port zopen_init hook needs to be implemented to download the artifact."
+}
+
+zopen_custom_install() {
+  mkdir -p "\${ZOPEN_INSTALL_DIR}/bin"
+  # Example: cp ${name}.war "\${ZOPEN_INSTALL_DIR}/bin/"
+  echo "BARE port zopen_custom_install hook needs to be implemented to copy the artifact."
+}
+EOF
+)
+else # This whole block is for BUILD type
+    VALID_BUILD_SYSTEMS_MSG="GNU Make, CMake, Go, Gradle, Maven, Meson, Python"
+    if [ -z "$build_system" ]; then # If --build-system arg was NOT provided
+      if $non_interactive; then build_system="GNU Make"; else
+        valid=false
+        while ! $valid; do
+          build_system_input=$(getInputOrArg "" "Enter the build system to use: (${VALID_BUILD_SYSTEMS_MSG}) [default: GNU Make]")
+          if [ -z "$build_system_input" ]; then build_system="GNU Make"; valid=true; else
+            found=false; input_lower=$(echo "${build_system_input}" | tr '[:upper:]' '[:lower:]')
+            for system in "GNU Make" "CMake" "Go" "Gradle" "Maven" "Meson" "Python"; do
+              system_lower=$(echo "${system}" | tr '[:upper:]' '[:lower:]')
+              if [ "${input_lower}" = "${system_lower}" ]; then build_system="${system}"; found=true; break; fi
+            done
+            if $found; then valid=true; else printWarning "Invalid build system."; fi
+          fi
+        done
+      fi
+    else # If --build-system arg WAS provided, validate it.
+      found=false; input_lower=$(echo "${build_system}" | tr '[:upper:]' '[:lower:]')
+      for system in "GNU Make" "CMake" "Go" "Gradle" "Maven" "Meson" "Python"; do
+        system_lower=$(echo "${system}" | tr '[:upper:]' '[:lower:]')
+        if [ "${input_lower}" = "${system_lower}" ]; then build_system="${system}"; found=true; break; fi
+      done
+      if ! $found; then printWarning "Invalid --build-system '${build_system}'"; exit 8; fi
+    fi
+
+    case "${build_system}" in
+      "GNU Make")
+        build_system_config=$(cat <<'EOF'
+### Optional Settings for GNU Make build system (Autotools)
+#export ZOPEN_EXTRA_CONFIGURE_OPTS="--with-ssl" # Add any additional configure options here
+#export ZOPEN_EXTRA_CFLAGS="-mzos-target=zosv2r5" # Add any additional compiler options here
+EOF
+)
+        custom_functions=$(cat <<EOF
+# For libraries, this hook exports variables for other ports to use.
+#zopen_append_to_env() {
+#  cat <<END
+#if [ ! -z "\\\$ZOPEN_IN_ZOPEN_BUILD" ]; then
+#  export ZOPEN_EXTRA_CFLAGS="\\\${ZOPEN_EXTRA_CFLAGS} -I\\\${PWD}/include"
+#  export ZOPEN_EXTRA_CXXFLAGS="\\\${ZOPEN_EXTRA_CXXFLAGS} -I\\\${PWD}/include"
+#  export ZOPEN_EXTRA_LDFLAGS="\\\${ZOPEN_EXTRA_LDFLAGS} -L\\\${PWD}/lib"
+#  export ZOPEN_EXTRA_LIBS="\\\${ZOPEN_EXTRA_LIBS} -l${name}"
+#fi
+#END
+#}
+EOF
+)
+    ;;
+      "CMake")
+        build_system_config=$(cat <<'EOF'
+### Settings for CMake build system
+export ZOPEN_CONFIGURE="cmake"
+export ZOPEN_CONFIGURE_OPTS="-B ../build -DCMAKE_INSTALL_PREFIX=\${ZOPEN_INSTALL_DIR}"
+export ZOPEN_MAKE="cmake"
+export ZOPEN_MAKE_OPTS="--build ../build"
+export ZOPEN_INSTALL="cmake"
+export ZOPEN_INSTALL_OPTS="--install ../build"
+# ZOPEN_CHECK is often 'ctest' or a custom function.
+#export ZOPEN_CHECK="ctest"
+#export ZOPEN_CHECK_OPTS="--test-dir ../build --output-on-failure"
+EOF
+)
+        custom_functions=$(cat <<EOF
+# For libraries, this hook exports variables for other ports to use.
+#zopen_append_to_env() {
+#  cat <<END
+#if [ ! -z "\\\$ZOPEN_IN_ZOPEN_BUILD" ]; then
+#  export ZOPEN_EXTRA_CFLAGS="\\\${ZOPEN_EXTRA_CFLAGS} -I\\\${PWD}/include"
+#  export ZOPEN_EXTRA_CXXFLAGS="\\\${ZOPEN_EXTRA_CXXFLAGS} -I\\\${PWD}/include"
+#  export ZOPEN_EXTRA_LDFLAGS="\\\${ZOPEN_EXTRA_LDFLAGS} -L\\\${PWD}/lib"
+#  export ZOPEN_EXTRA_LIBS="\\\${ZOPEN_EXTRA_LIBS} -l${name}"
+#fi
+#END
+}
+EOF
+)
+    ;;
+      "Go")
+        build_system_config=$(cat <<'EOF'
+### Settings for Go build system
+export ZOPEN_CONFIGURE="zopen_wharf" 
+export ZOPEN_MAKE="zopen_custom_build"
+export ZOPEN_INSTALL="zopen_custom_install"
+EOF
+)
+        custom_functions=$(cat <<'EOF'
+zopen_init() {
+  # Go projects often need CGO disabled and GOBIN set
+  export CGO_ENABLED=0
+  export GOBIN="${ZOPEN_INSTALL_DIR}/bin"
+}
+zopen_wharf()
+{
+  # Uncomment if using wharf
+  #cd ..
+  #go work init ./package
+  #cd -
+}
+zopen_custom_build() {
+  go build -v ./...
+}
+zopen_custom_install() {
+  go install ./...
+}
+EOF
+)
+    ;;
+      "Gradle")
+        build_system_config=$(cat <<'EOF'
+### Settings for Gradle build system
+export ZOPEN_CONFIGURE="skip"
+export ZOPEN_MAKE="gradle"
+export ZOPEN_MAKE_OPTS="build"
+export ZOPEN_INSTALL="zopen_custom_install"
+EOF
+)
+        custom_functions=$(cat <<'EOF'
+zopen_custom_install() {
+  mkdir -p "${ZOPEN_INSTALL_DIR}/lib"
+  # Find and copy the final artifact from 'build/libs'
+  # find build/libs -name '*.jar' -exec cp {} "${ZOPEN_INSTALL_DIR}/lib/" \;
+  echo "Gradle custom install hook needs to be implemented"
+}
+EOF
+)
+    ;;
+      "Maven")
+        build_system_config=$(cat <<'EOF'
+### Settings for Maven build system
+export ZOPEN_CONFIGURE="skip"
+export ZOPEN_MAKE="mvn"
+export ZOPEN_MAKE_OPTS="package"
+export ZOPEN_INSTALL="zopen_custom_install"
+EOF
+)
+        custom_functions=$(cat <<'EOF'
+zopen_custom_install() {
+  mkdir -p "${ZOPEN_INSTALL_DIR}/lib"
+  # Find and copy the final artifact from the 'target' directory
+  # find target -name '*.jar' -exec cp {} "${ZOPEN_INSTALL_DIR}/lib/" \;
+  echo "Maven custom install hook needs to be implemented"
+}
+EOF
+)
+    ;;
+      "Meson")
+        build_system_config=$(cat <<'EOF'
+### Settings for Meson build system
+export ZOPEN_CONFIGURE="meson"
+export ZOPEN_CONFIGURE_OPTS="setup build --prefix=\${ZOPEN_INSTALL_DIR}"
+export ZOPEN_MAKE="ninja"
+export ZOPEN_MAKE_OPTS="-C build"
+export ZOPEN_INSTALL="ninja"
+export ZOPEN_INSTALL_OPTS="-C build install"
+EOF
+)
+    ;;
+      "Python")
+        build_system_config=$(cat <<'EOF'
+### Settings for Python build system
+export ZOPEN_CONFIGURE="skip"
+export ZOPEN_CHECK="zopen_custom_check"
+export ZOPEN_MAKE="zopen_custom_build"
+export ZOPEN_INSTALL="zopen_custom_install"
+EOF
+)
+        custom_functions=$(cat <<'EOF'
+zopen_custom_build() {
+  python -m venv .venv
+  . .venv/bin/activate
+  pip install --upgrade pip build
+  python -m build --wheel
+  zopen_build_result=$?
+  deactivate
+  return "${zopen_build_result}"
+}
+
+zopen_custom_check() {
+  . .venv/bin/activate
+  # Add test commands here, e.g., pytest
+  zopen_check_result=$?
+  deactivate
+  return "${zopen_check_result}"
+}
+
+zopen_custom_install() {
+  . .venv/bin/activate
+  # Install the built wheel to the target directory
+  pip install --no-deps --target="${ZOPEN_INSTALL_DIR}/lib/python" dist/*.whl
+  # Example: Install dependencies from a requirements file
+  # pip install --target="${ZOPEN_INSTALL_DIR}/lib/python" -r requirements.txt
+  deactivate
+}
+
+zopen_append_to_env() {
+  cat <<END
+# Add the zopen installed packages to PYTHONPATH
+PYTHONPATH="${PYTHONPATH}:\${PWD}/lib/python"
+export PYTHONPATH="$(deleteDuplicateEntries "$PYTHONPATH" ":")"
+END
+}
+EOF
+)
+    ;;
+    esac
+fi
+
+stablePath=$(getInputOrArg "$stablePath" "Enter ${name}'s stable release source url:")
+
+# Attempt to find the latest git tag if the stable path is a git repo
+latest_tag=""
+if echo "${stablePath}" | grep -q -E "\.git$"; then
+    printInfo "Attempting to find the latest git tag from ${stablePath}..."
+    latest_tag_line=$(git ls-remote --tags --sort="-v:refname" "${stablePath}" 2>/dev/null | head -n 1)
+    if [ -n "${latest_tag_line}" ]; then
+        tag_candidate=$(echo "${latest_tag_line}" | awk '{print $2}' | sed 's#refs/tags/##')
+        if [ -n "$tag_candidate" ]; then
+            confirmed_tag=$(getInputOrArg "" "Latest tag found: ${tag_candidate}. Press Enter to use this tag, or enter a different one:")
+            if [ -n "$confirmed_tag" ]; then
+                latest_tag="${confirmed_tag}"
+            else
+                latest_tag="${tag_candidate}"
+            fi
+            printInfo "Using tag: ${latest_tag}"
+        fi
+    else
+        printWarning "Could not automatically determine the latest tag."
+    fi
+fi
+
+stableDeps=$(getInputOrArg "$stableDeps" "Enter stable build dependencies:")
+devPath=$(getInputOrArg "$devPath" "Enter dev-line source url:")
+devDeps=$(getInputOrArg "$devDeps" "Enter dev build dependencies:")
+buildline=$(getInputOrArg "$buildline" "Enter the default build line (stable or dev):")
+runtimedeps=$(getInputOrArg "$runtimedeps" "Enter runtime dependencies:")
+
+# Automatically add build system dependencies
+if [ "$port_type" = "BUILD" ]; then
+    auto_dep=""
+    case "${build_system}" in
+      "GNU Make") auto_dep="make" ;;
+      "CMake") auto_dep="cmake" ;;
+      "Go") auto_dep="check_go" ;;
+      "Gradle") auto_dep="gradle check_java" ;;
+      "Maven") auto_dep="maven check_java" ;;
+      "Meson") auto_dep="meson" ;;
+      "Python") auto_dep="check_python" ;;
+    esac
+
+    if [ -n "$auto_dep" ]; then
+        stableDeps="${stableDeps} ${auto_dep}"
+        devDeps="${devDeps} ${auto_dep}"
+        # Clean up potential leading/trailing spaces and duplicates
+        stableDeps=$(echo "$stableDeps" | xargs -n1 | sort -u | xargs)
+        devDeps=$(echo "$devDeps" | xargs -n1 | sort -u | xargs)
+    fi
+fi
+
+project_path="${name}port"; nameUpper=$(echo "$name" | awk '{print toupper($0)}')
+if [ -d "${project_path}" ]; then
+  if $force; then :; else
+    while true; do echo "Directory ${project_path} exists. Update it? (y, n)" >&2; clobber=$(getInput)
+      if [ "${clobber}" = "n" ]; then exit 0; elif [ "${clobber}" = "y" ]; then break; fi
+    done
+  fi
+fi
+
+#--- Generation Stage ---#
 printHeader "Generating ${project_path} zopen project"
 mkdir -p "${name}"port/patches
-
-# Create external LICENSE
 touch "${name}port/patches/LICENSE" && chtag -tc 819 "${name}port/patches/LICENSE"
 printf "%s\nView license contents at %s\n" "${licenseName}" "${licenseUrl}" > "${name}port/patches/LICENSE"
-
-buildenv="${name}port/buildenv"
-touch "${buildenv}" && chtag -tc 819 "${buildenv}"
-
+buildenv="${name}port/buildenv"; touch "${buildenv}" && chtag -tc 819 "${buildenv}"
 cp "${MYDIR}/../data/CONTRIBUTING.md" "${name}port/CONTRIBUTING.md"
 cp "${MYDIR}/../data/CODEOWNERS" "${name}port/CODEOWNERS"
-mkdir -p "${name}port/.github/workflows"
-cp "${MYDIR}"/../data/*.yml "${name}port/.github/workflows/" 2>/dev/null # no yml files yet?
+mkdir -p "${name}port/.github/workflows"; cp "${MYDIR}"/../data/*.yml "${name}port/.github/workflows/" 2>/dev/null
+default_build_line="STABLE"; if [ "${buildline}" = "dev" ]; then default_build_line="DEV"; fi
 
-buildenvContents=""
+# Prepare version variables based on whether a tag was found
+nameUpper=$(echo "$name" | awk '{print toupper($0)}')
+version_var_name="${nameUpper}_VERSION"
+version_block=""
+tag_export_for_insert=""
+get_version_impl='echo "1.0.0" # Modify to echo the version of your tool/library'
 
 if [ -n "${stablePath}" ]; then
-  buildenvContents="${buildenvContents}# Update bump details accordingly. Use bump check to confirm.\n# bump: $name-version /${nameUpper}_VERSION=\"(.*)\"/ ${stablePath}|semver:*\n"
-  buildenvContents="${buildenvContents}# ${nameUpper}_VERSION=\"V.R.M\" # Specify a stable release\n"
-  buildenvContents="${buildenvContents}# export ZOPEN_STABLE_TAG=\"v\${${nameUpper}_VERSION}\"\n"
+    version_block="# bump: $name-version /${version_var_name}=\"(.*)\"/ ${stablePath}|semver:*\n"
+    if [ -n "$latest_tag" ]; then
+        plain_version=$(echo "${latest_tag}" | sed 's/^v//')
+        version_block="${version_block}${version_var_name}=\"${plain_version}\""
+        tag_export_for_insert="\nexport ZOPEN_STABLE_TAG=\"${latest_tag}\""
+        get_version_impl="echo \"\$${version_var_name}\""
+    else
+        version_block="${version_block}# ${version_var_name}=\"V.R.M\""
+    fi
 fi
+
+buildenvContents="${version_block}\n"
 
 buildenvContents="${buildenvContents}
 ###
@@ -164,212 +622,139 @@ buildenvContents="${buildenvContents}
 ###
 ### Required Environment Variables
 ###
-
-## Specify the default build line, either 'DEV' or 'STABLE' (default: STABLE)
-export ZOPEN_BUILD_LINE=\"${buildline:+$([ "$buildline" = "dev" ] && echo "DEV" || echo "STABLE")}\"
-
-## Required IF ZOPEN_BUILD_LINE='STABLE'
-export ZOPEN_STABLE_URL=\"${stablePath}\"  # Specify the stable build URL (either git or tarball)
-export ZOPEN_STABLE_DEPS=\"${stableDeps}\" # Specify the stable build dependencies.
-
-## Required IF ZOPEN_BUILD_LINE='DEV'
-export ZOPEN_DEV_URL=\"${devPath}\"   # Specify the dev build URL
-export ZOPEN_DEV_DEPS=\"${devDeps}\"  # Specify the dev build dependencies
-
-## Specify a space-delimited list of applicable categories.
-## See tool_categories.txt for valid options
+export ZOPEN_BUILD_LINE=\"${default_build_line}\"
+export ZOPEN_STABLE_URL=\"${stablePath}\"${tag_export_for_insert}
+export ZOPEN_STABLE_DEPS=\"${stableDeps}\"
+export ZOPEN_DEV_URL=\"${devPath}\"
+export ZOPEN_DEV_DEPS=\"${devDeps}\"
 export ZOPEN_CATEGORIES=\"${categories}\"
-
-## Runtime zopen tool dependencies to be installed alongside the tool.
 export ZOPEN_RUNTIME_DEPS=\"${runtimedeps}\"
-
-## Runtime system prerequisites; supply the name of the system pre-requisties.
-## Current available prerequisites: zos24 zos25 zos31 procfs (see https://github.com/zopencommunity/meta/blob/main/include/prereq.sh for a current list)
-export ZOPEN_SYSTEM_PREREQ=\"\"
+# export ZOPEN_SYSTEM_PREREQ=\"zos25\" # optional system pre-req (default=zos25)
 
 
 ###
-### Build stage control environment variables
+### Build settings (Port type: ${port_type}, Build system: ${build_system})
 ###
-
-#export ZOPEN_BOOTSTRAP=\"skip\" ## Bootstrap program to run (defaults to './bootstrap')
-#export ZOPEN_CHECK=\"skip\"     ## Check program to run (defaults to 'make')
-#export ZOPEN_CONFIGURE=\"skip\" ## Configuration program to run (defaults to './configure')
-#export ZOPEN_INSTALL=\"skip\"   ## Installation program to run (defaults to 'make')
-#export ZOPEN_MAKE=\"skip\"      ## Build program to run (defaults to 'make')
-#export ZOPEN_CLEAN=\"\"         ## Clean up program to run (defaults to 'make')
+${build_system_config}
 
 
 ###
 ### Required user-supplied functions
 ###
 
-zopen_check_results()
-{
-  dir=\"\$1\"
-  pfx=\"\$2\"
+zopen_check_results() {
+  dir=\"\$1\" 
+  pfx=\"\$2\" 
   chk=\"\$1/\$2_check.log\"
-
-  # Echo the following information to gauge build health
-  echo \"actualFailures:0\"
-  echo \"totalTests:1\"
+  # Add logic to extract the test results here:
+  echo \"actualFailures:0\" 
+  echo \"totalTests:1\" 
   echo \"expectedFailures:0\"
   echo \"expectedTotalTests:1\"
 }
 
-zopen_get_version()
-{
-  # Modify to echo the version of your tool/library
-  # Rather than hardcoding the version, obtain the version by running the tool/library
-  echo \"1.0.0\"
+zopen_get_version() {
+  ${get_version_impl}
 }
 
 
 ###
-### Optional user-supplied functions for zopen-build
+### Custom Build Logic (if applicable)
+###
+${custom_functions}
+
+###
+### Optional User-Supplied Hooks (uncomment to use)
 ###
 
 #zopen_append_to_env() {
-  ## This function runs as part of generation of the .env file. The output of the
-  ## function is appended to .env.
+#  ## This function runs as part of generation of the .env file. The output of the
+#  ## function is appended to .env.
 #}
-
+#
 #zopen_append_to_setup(){
-  ## This function runs as part of generation of the setup.sh file. The output of
-  ## the function is appended to setup.sh.
+#  ## This function runs as part of generation of the setup.sh file. The output of
+#  ## the function is appended to setup.sh.
 #}
-
+#
 #zopen_append_to_validate_install(){
-  ## This function runs as part of generation of the install_test.sh file. The
-  ## output of the function is appended to install_test.sh script.
+#  ## This function runs as part of generation of the install_test.sh file. The
+#  ## output of the function is appended to install_test.sh script.
 #}
-
+#
 #zopen_install_caveats(){
-  ## This function is run post install. All stdout messages are captured and
-  ## added to the metadata.json as installation caveats.
+#  ## This function is run post install. All stdout messages are captured and
+#  ## added to the metadata.json as installation caveats.
 #}
-
-#zopen_append_to_zoslib_env(){
-  ## This function runs as part of generation of the C function zoslib_env_hook,
-  ## which can be used to set environment variables before main is run.
-#}
-
+#
 #zopen_init(){
-  ## This function runs after code is downloaded and patched but before the code
-  ## is built.
+#  ## This function runs after code is downloaded and patched but before the code
+#  ## is built.
 #}
-
+#
 #zopen_post_buildenv(){
-  ## This function runs after the 'buildenv' is processed.
+#  ## This function runs after the 'buildenv' is processed.
 #}
-
+#
 #zopen_pre_build(){
-  ## This function runs before the 'make' step of the build is run.
+#  ## This function runs before the 'make' step of the build is run.
 #}
-
+#
 #zopen_pre_check(){
-  ## This function runs before the 'check' step of the build is run.
+#  ## This function runs before the 'check' step of the build is run.
 #}
-
+#
 #zopen_pre_configure(){
-  ## This function runs before the 'configure' step of the build is run.
+#  ## This function runs before the 'configure' step of the build is run.
 #}
-
+#
 #zopen_pre_install(){
-  ## This function runs before the 'install' step of the build is run.
+#  ## This function runs before the 'install' step of the build is run.
 #}
-
+#
 #zopen_post_install(){
-  ## This function runs after the 'install' step of the build is run.
+#  ## This function runs after the 'install' step of the build is run.
 #}
-
+#
 #zopen_pre_patch(){
-  ## This function runs before the 'patch' step of the build is run.
+#  ## This function runs before the 'patch' step of the build is run.
 #}
-
+#
 #zopen_pre_terminate(){
-  ## This function runs before 'zopen build' terminates.
+#  ## This function runs before 'zopen build' terminates.
 #}
-
-
-###
-### Optional build control variables
-###
-
-#export ZOPEN_EXTRA_CFLAGS=\"\" ## C compiler flags to append to CFLAGS (defaults to '').
-#export ZOPEN_EXTRA_CPPFLAGS=\"\" ## C,C++ pre-processor flags to append to CPPFLAGS (defaults to '')
-#export ZOPEN_EXTRA_CXXFLAGS=\"\" ## C++ compiler flags to append to CXXFLAGS (defaults to '')
-#export ZOPEN_EXTRA_LDFLAGS=\"\" ## C,C++ linker flags to append to LDFLAGS (defaults to '')
-#export ZOPEN_EXTRA_LIBS=\"\" ## C,C++ libraries to append to LIBS (defaults to '')
-#export ZOPEN_BOOTSTRAP_OPTS=\"\" ## Options to pass to bootstrap program (defaults to '')
-#export ZOPEN_CHECK_MINIMAL=\"\" ## Check program will not be passed CFLAGS, LDFLAGS, CPPFLAGS options but will get them from env vars.
-#export ZOPEN_CHECK_OPTS=\"\" ## Options to pass to check program (defaults to 'check')
-#export ZOPEN_CHECK_TIMEOUT=\"\" ## Timeout limit in seconds for the check program (defaults to '12600' # 3.5 hours)
-#export ZOPEN_CLEAN_OPTS=\"\" ## Options to pass to clean up  program (defaults to 'clean')
-#export ZOPEN_CONFIGURE_MINIMAL=\"\" ## Configuration program will not be passed CFLAGS, LDFLAGS, CPPFLAGS options but will get them from env vars.
-#export ZOPEN_CONFIGURE_OPTS=\"\" ## Options to pass to configuration program (defaults to '--prefix=${ZOPEN_INSTALL_DIR}')
-#export ZOPEN_EXTRA_CONFIGURE_OPTS=\"\" ## Extra configure options to pass to configuration program. (defaults to '')
-#export ZOPEN_INSTALL_OPTS=\"\" ## Options to pass to installation program (defaults to 'install')
-#export ZOPEN_MAKE_MINIMAL=\"\" ## Build program will not be passed CFLAGS, LDFLAGS, CPPFLAGS options but will get them from env vars.
-#export ZOPEN_MAKE_OPTS=\"\" ## Options to pass to build program (defaults to '-j${ZOPEN_NUM_JOBS}')
-#export ZOPEN_PATCH_DIR=\"\" ## Specify directory from which patches should be applied.
-
-
-###
-### Restricted Usage - only set in ports if necessary
-###
-
-## Don't add zoslib as a dependency; most ports should keep this unset
-#export ZOPEN_DONT_ADD_ZOSLIB_DEP=1
-
-
-###
-### Additional user-defined custom code  - runs during script source
-###
-
-## Add user-defined functions and code
-
 "
-
 /bin/echo "${buildenvContents}" > "${buildenv}"
-
 printInfo "${buildenv} created"
 
-readmeTemplate="${MYDIR}/../data/README_template.md"
 touch "${name}port/README.md"
 cp "${MYDIR}/../data/README_template.md" "${name}port/README.md.init"
 sed -e "s/\$PORT_NAME/${name}/g" -e "s#\$PORT_DESCRIPTION#${description}#g" "${name}port/README.md.init" > "${name}port/README.md"
 rm -f "${name}port/README.md.init"
-
 printInfo "${name}port/README.md created"
 
-createCICD()
-{
-  buildline=$1
-  touch "${name}port/cicd-${buildline}.groovy" && chtag -tc 819 "${name}port/cicd-${buildline}.groovy"
+createCICD() {
+  buildline=$1; touch "${name}port/cicd-${buildline}.groovy" && chtag -tc 819 "${name}port/cicd-${buildline}.groovy"
   buildlineUpper=$(echo "${buildline}" | awk '{print toupper($0)}')
-  # Replace all single quotes with double quotes and store back in the same variable
-  description=$(echo "$description" | sed "s/'/\"/g")
+  _groovy_description=$(echo "$description" | sed "s/'/\"/g")
   cat << EOT > "${name}port/cicd-${buildline}.groovy"
-node('linux')
-{
+node('linux') {
   stage ('Poll') {
     checkout([
-      \$class: 'GitSCM',
-      branches: [[name: '*/main']],
-      doGenerateSubmoduleConfigurations: false,
-      extensions: [],
+      \$class: 'GitSCM', branches: [[name: '*/main']], extensions: [],
       userRemoteConfigs: [[url: 'https://github.com/zopencommunity/${name}port.git']]])
   }
   stage('Build') {
-    build job: 'Port-Pipeline', parameters: [string(name: 'PORT_GITHUB_REPO', value: 'https://github.com/zopencommunity/${name}port.git'), string(name: 'PORT_DESCRIPTION', value: '${description}' ), string(name: 'BUILD_LINE', value: '${buildlineUpper}') ]
+    build job: 'Port-Pipeline', parameters: [
+      string(name: 'PORT_GITHUB_REPO', value: 'https://github.com/zopencommunity/${name}port.git'),
+      string(name: 'PORT_DESCRIPTION', value: '${_groovy_description}'),
+      string(name: 'BUILD_LINE', value: '${buildlineUpper}')
+    ]
   }
 }
 EOT
 }
-
-createCICD "stable"
-createCICD "dev"
+createCICD "stable"; createCICD "dev"
 
 touch "${name}port/.gitignore" && chtag -tc 819 "${name}port/.gitignore"
 cat << EOT > "${name}port/.gitignore"
@@ -378,25 +763,19 @@ log.DEV/
 log.STABLE/
 build/
 install/
+.zoslib_hooks/
 EOT
 printInfo "${name}port/.gitignore created"
 
-metalicense="${ZOPEN_ROOTFS}/usr/local/zopen/meta/meta/LICENSE"
-ourlicense="${name}port/LICENSE"
-
-if [ -e "${ourlicense}" ]; then
-  printError "License already in ${name}port/LICENSE. Please confirm it is consistent with ${metalicense}"
-elif [ -e "${metalicense}" ]; then
+metalicense="${ZOPEN_ROOTFS}/usr/local/zopen/meta/meta/LICENSE"; ourlicense="${name}port/LICENSE"
+if [ -f "${metalicense}" ]; then
   cp "${metalicense}" "${ourlicense}"
 else
-  printWarning "Could not locate LICENSE file ${metalicense} to copy for project ${ourlicense}"
+  printWarning "Could not locate meta LICENSE file ${metalicense} to copy to project root."
 fi
 
-git -C "${name}port" init --initial-branch=main
-git -C "${name}port" add .
-
+git -C "${name}port" init --initial-branch=main; git -C "${name}port" add .
 printHeader "${name} project is ready! ${name}port/"
-printInfo "Create patches under the ${name}port/patches directory"
-printInfo "Run zopen build to build ${name}port"
-printInfo "To create a zopen repository, submit a \"New port contribution request\" here: https://github.com/zopencommunity/meta/issues/new/choose"
-printInfo "Update the CODEOWNERS, buildenv, patches and README.md files appropriately"
+printInfo "Review and update the CODEOWNERS, buildenv, patches and README.md files."
+printInfo "To build your project run: cd ${name}port; zopen build -vv"
+printInfo "Once you are ready to contribute the project, create an issue under https://github.com/zopencommunity/meta/issues/new?template=contribution.yml"
