@@ -65,6 +65,7 @@
 - 2025-05-26: [Update ccache-version to 4.11.3 from V.R.M](https://github.com/zopencommunity/ccacheport/pull/1) ❌
 
 ### chezmoiport
+- 2025-10-08: [Update chezmoi-version to 2.66.0 from 2.62.5](https://github.com/zopencommunity/chezmoiport/pull/12) ❌
 - 2025-09-24: [Update chezmoi-version to 2.65.2 from 2.62.5](https://github.com/zopencommunity/chezmoiport/pull/11) ❌
 - 2025-09-10: [Update chezmoi-version to 2.65.1 from 2.62.5](https://github.com/zopencommunity/chezmoiport/pull/10) ❌
 - 2025-08-26: [Update chezmoi-version to 2.65.0 from 2.62.5](https://github.com/zopencommunity/chezmoiport/pull/9) ❌
@@ -129,7 +130,7 @@
 - 2024-09-18: [Update cunit-version to 3.4.4 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/7) ❌
 - 2024-09-11: [Update cunit-version to 3.4.3 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/6) ❌
 - 2024-09-10: [Update cunit-version to 3.4.2 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/5) ❌
-- 2024-08-23: [Update cunit-version to 3.4.1 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/4) ❌
+- 2024-08-23: [Update cunit-version to 3.4.1 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/4) ❓
 - 2024-06-08: [Update cunit-version to 3.3.1 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/3) ❓
 
 ### direnvport
@@ -344,6 +345,9 @@
 ### libgdbmport
 - 2025-03-22: [Update libgdbm-version to 1.25 from 1.24](https://github.com/zopencommunity/libgdbmport/pull/10) ❌
 
+### libgpgerrorport
+- 2025-10-08: [Update libgpgerror-version to 1.56 from 1.55](https://github.com/zopencommunity/libgpgerrorport/pull/21) ❌
+
 ### libpcre2port
 - 2025-08-27: [Update libpcre2-version to 10.46 from 10.42](https://github.com/zopencommunity/libpcre2port/pull/14) ❌
 - 2024-12-27: [Update libpcre2-version to 10.45 from 10.42](https://github.com/zopencommunity/libpcre2port/pull/10) ❌
@@ -506,7 +510,7 @@
 - 2025-07-27: [Update sudo-version to 1.9.17p2 from 1.9.17p1](https://github.com/zopencommunity/sudoport/pull/37) ❌
 
 ### tclport
-- 2024-12-20: [Update tcl-version to 9.0.1 from 8.6.13](https://github.com/zopencommunity/tclport/pull/16) ❌
+- 2024-12-20: [Update tcl-version to 9.0.1 from 8.6.13](https://github.com/zopencommunity/tclport/pull/16) ✅
 - 2025-06-26: [Update tcl-version to 9.0.2 from 8.6.14](https://github.com/zopencommunity/tclport/pull/19) ❌
 
 ### terraformport
@@ -759,6 +763,7 @@
 - ✅ makeport - [![Bump Status](https://github.com/zopencommunity/makeport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/makeport/actions/workflows/bump.yml)
 - ✅ man-dbport - [![Bump Status](https://github.com/zopencommunity/man-dbport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/man-dbport/actions/workflows/bump.yml)
 - ✅ mavenport - [![Bump Status](https://github.com/zopencommunity/mavenport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/mavenport/actions/workflows/bump.yml)
+- ✅ mcport - [![Bump Status](https://github.com/zopencommunity/mcport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/mcport/actions/workflows/bump.yml)
 - ✅ mesonport - [![Bump Status](https://github.com/zopencommunity/mesonport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/mesonport/actions/workflows/bump.yml)
 - ❌ meta - Workflow not configured
 - ✅ metaldioport - [![Bump Status](https://github.com/zopencommunity/metaldioport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/metaldioport/actions/workflows/bump.yml)
@@ -805,6 +810,7 @@
 - ✅ promptersport - [![Bump Status](https://github.com/zopencommunity/promptersport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/promptersport/actions/workflows/bump.yml)
 - ❌ protobuf - Workflow not configured
 - ✅ protobufport - [![Bump Status](https://github.com/zopencommunity/protobufport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/protobufport/actions/workflows/bump.yml)
+- ✅ pvport - [![Bump Status](https://github.com/zopencommunity/pvport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/pvport/actions/workflows/bump.yml)
 - ✅ quiltport - [![Bump Status](https://github.com/zopencommunity/quiltport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/quiltport/actions/workflows/bump.yml)
 - ✅ re2cport - [![Bump Status](https://github.com/zopencommunity/re2cport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/re2cport/actions/workflows/bump.yml)
 - ✅ readlineport - [![Bump Status](https://github.com/zopencommunity/readlineport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/readlineport/actions/workflows/bump.yml)
@@ -874,10 +880,10 @@
 
 </details>
 
-**Summary:** 232 active | 56 missing
+**Summary:** 234 active | 56 missing
 
 ---
 
 
-> Last updated: 2025-10-08 06:09:44 EDT
+> Last updated: 2025-10-09 06:10:24 EDT
 

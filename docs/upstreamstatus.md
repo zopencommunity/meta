@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-10-08 06:13:49 EDT.*
+*Report generated on: 2025-10-09 06:14:52 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 272
-- **Total Current Lines of Code (LOC) in Patches:** 43,928
-- **Total Number of Current Patch Files:** 885
-- **Average Current Patch LOC per Project:** 161.50
-- **Average Current Patch Count per Project:** 3.25
+- **Total Projects Analyzed:** 274
+- **Total Current Lines of Code (LOC) in Patches:** 44,085
+- **Total Number of Current Patch Files:** 887
+- **Average Current Patch LOC per Project:** 160.89
+- **Average Current Patch Count per Project:** 3.24
 
 ### Historical Trends (All Projects)
 
@@ -89,6 +89,7 @@
 | [libserdesport](#repo-libserdesport) | 142 | +0 | 4 |
 | [tclport](#repo-tclport) | 132 | +0 | 5 |
 | [multitailport](#repo-multitailport) | 130 | +0 | 1 |
+| [mcport](#repo-mcport) | 128 | +128 | 1 |
 | [pinentryport](#repo-pinentryport) | 124 | +0 | 5 |
 | [m4port](#repo-m4port) | 120 | +0 | 5 |
 | [thesilversearcherport](#repo-thesilversearcherport) | 118 | +0 | 4 |
@@ -152,6 +153,7 @@
 | [netpbmport](#repo-netpbmport) | 29 | +0 | 2 |
 | [gmpport](#repo-gmpport) | 29 | +0 | 2 |
 | [libgpgmeport](#repo-libgpgmeport) | 29 | +0 | 2 |
+| [pvport](#repo-pvport) | 29 | +29 | 1 |
 | [npthport](#repo-npthport) | 28 | +0 | 2 |
 | [libksbaport](#repo-libksbaport) | 28 | +0 | 2 |
 | [avro-c-libport](#repo-avro-c-libport) | 28 | +0 | 2 |
@@ -2223,6 +2225,26 @@
 
 ---
 
+<a id="repo-mcport"></a>
+## mcport
+
+- **Origin Date (First Commit):** 2025-10-08
+- **Current Patch LOC:** 128
+- **Current Patch Count:** 1
+
+### Historical Trends
+
+![LOC Trend for mcport](images/upstream/mcport_current_loc_trend.png)
+![Count Trend for mcport](images/upstream/mcport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/PR1.patch` | `patches` | 128 |
+
+---
+
 <a id="repo-pinentryport"></a>
 ## pinentryport
 
@@ -3566,6 +3588,26 @@
 |---|---|:---|
 | `stable-patches/ath.h.patch` | `stable-patches` | 14 |
 | `stable-patches/libtool.m4.patch` | `stable-patches` | 15 |
+
+---
+
+<a id="repo-pvport"></a>
+## pvport
+
+- **Origin Date (First Commit):** 2025-10-08
+- **Current Patch LOC:** 29
+- **Current Patch Count:** 1
+
+### Historical Trends
+
+![LOC Trend for pvport](images/upstream/pvport_current_loc_trend.png)
+![Count Trend for pvport](images/upstream/pvport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/PR1.patch` | `patches` | 29 |
 
 ---
 

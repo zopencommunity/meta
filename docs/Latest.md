@@ -20,6 +20,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
     <option value="language">Language</option>
     <option value="library">Library</option>
     <option value="math">Math</option>
+    <option value="monitoring">Monitoring</option>
     <option value="networking">Networking</option>
     <option value="security">Security</option>
     <option value="shell">Shell</option>
@@ -1749,6 +1750,22 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 </div>
 
+<div class="table-category" data-category="monitoring">
+
+## Monitoring 
+
+<div class="tool-item-filterable" data-package-name="pv" data-searchable-text="pv Skipped N/A STABLE_pv_3795 Pipe Viewer - monitor data through a pipeline monitoring port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/pvport" target="_blank" rel="noopener noreferrer">pv</a></strong></div>
+    <div class="tool-status">Status: Skipped</div>
+    <div class="tool-test">Test: N/A</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/pvport/releases/download/STABLE_pvport_3795/pv-1.9.34.20251008_173218.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_pv_3795</a></div>
+    <div class="tool-desc" title="Pipe Viewer - monitor data through a pipeline">Pipe Viewer - monitor data through a pipeline</div>
+  </div>
+</div>
+
+</div>
+
 <div class="table-category" data-category="networking">
 
 ## Networking 
@@ -2052,6 +2069,16 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
     <div class="tool-test">Test: N/A</div>
     <div class="tool-release"><a href="https://github.com/zopencommunity/fishport/releases/download/STABLE_fishport_3642/fish-3.7.1.20250805_190735.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_fish_3642</a></div>
     <div class="tool-desc" title="fish is a smart and user-friendly command line shell">fish is a smart and user-friendly command line shell</div>
+  </div>
+</div>
+
+<div class="tool-item-filterable" data-package-name="mc" data-searchable-text="mc Green 100.0% STABLE_mc_3796 Midnight Commander is a feature-rich visual file manager for Unix-like systems shell port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/mcport" target="_blank" rel="noopener noreferrer">mc</a></strong></div>
+    <div class="tool-status">Status: Green</div>
+    <div class="tool-test">Test: 100.0%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/mcport/releases/download/STABLE_mcport_3796/mc-4.8.33.20251008_182352.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_mc_3796</a></div>
+    <div class="tool-desc" title="Midnight Commander is a feature-rich visual file manager for Unix-like systems">Midnight Commander is a feature-rich visual file manager for Unix-like systems</div>
   </div>
 </div>
 
@@ -2639,12 +2666,22 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="meta" data-searchable-text="meta Green 100.0% STABLE_meta_3662 zopen package manager utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="mc" data-searchable-text="mc Green 100.0% STABLE_mc_3796 Midnight Commander is a feature-rich visual file manager for Unix-like systems utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/mcport" target="_blank" rel="noopener noreferrer">mc</a></strong></div>
+    <div class="tool-status">Status: Green</div>
+    <div class="tool-test">Test: 100.0%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/mcport/releases/download/STABLE_mcport_3796/mc-4.8.33.20251008_182352.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_mc_3796</a></div>
+    <div class="tool-desc" title="Midnight Commander is a feature-rich visual file manager for Unix-like systems">Midnight Commander is a feature-rich visual file manager for Unix-like systems</div>
+  </div>
+</div>
+
+<div class="tool-item-filterable" data-package-name="meta" data-searchable-text="meta Green 100.0% STABLE_meta_3797 zopen package manager utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/metaport" target="_blank" rel="noopener noreferrer">meta</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/metaport/releases/download/STABLE_metaport_3662/meta-main.20250819_150756.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_meta_3662</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/metaport/releases/download/STABLE_metaport_3797/meta-main.20251008_204712.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_meta_3797</a></div>
     <div class="tool-desc" title="zopen package manager">zopen package manager</div>
   </div>
 </div>
@@ -2736,6 +2773,16 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
     <div class="tool-test">Test: N/A</div>
     <div class="tool-release"><a href="https://github.com/zopencommunity/promptersport/releases/download/STABLE_promptersport_3020/prompters-main.20250131_084954.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_prompters_3020</a></div>
     <div class="tool-desc" title="Prompter library for creating interactive command line interfaces">Prompter library for creating interactive command line interfaces</div>
+  </div>
+</div>
+
+<div class="tool-item-filterable" data-package-name="pv" data-searchable-text="pv Skipped N/A STABLE_pv_3795 Pipe Viewer - monitor data through a pipeline utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/pvport" target="_blank" rel="noopener noreferrer">pv</a></strong></div>
+    <div class="tool-status">Status: Skipped</div>
+    <div class="tool-test">Test: N/A</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/pvport/releases/download/STABLE_pvport_3795/pv-1.9.34.20251008_173218.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_pv_3795</a></div>
+    <div class="tool-desc" title="Pipe Viewer - monitor data through a pipeline">Pipe Viewer - monitor data through a pipeline</div>
   </div>
 </div>
 
@@ -2962,4 +3009,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-10-08 06:15:18 UTC
+Last updated:  2025-10-09 06:16:17 UTC
