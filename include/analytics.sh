@@ -28,7 +28,7 @@ isAnalyticsOn()
     return 2
   fi
   isCollecting=$(jq -re '.is_collecting_stats' $jsonConfig)
-  if [ $? -gt 0 ]; then
+  if [ -z "${isCollecting}" ]; then
     return 2
   fi
   if [ "$isCollecting" = "true" ] || [ -z "${ZOPEN_ANALYTICS_JSON}" ]; then
