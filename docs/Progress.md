@@ -103,7 +103,7 @@
 | [pkgconfigport](https://github.com/zopencommunity/pkgconfigport) | 26 | 100.0% | asio, avro-c-lib, check, createrepo_c, ctags, dnf5, glib, groff, grpc, librabbitmq, librdkafka, librepo, libserdes, man-db, mc, ncurses, netpbm, nghttp2, procps, redis, rpm, tcl, tcltls, thesilversearcher, tmux, util-linux |
 | [check_pythonport](https://github.com/zopencommunity/check_pythonport) | 25 | 100.0% | apr, blis, c3270, clang-format, ctags, curl, depot_tools, dnf5, doxygen, file, git, glib, gn, libdio, libpsl, librepo, libxml2, lz4, pinentry, re2c, redis, rsync, spdlog, vim, zstd |
 | [xzport](https://github.com/zopencommunity/xzport) | 24 | 100.0% | autoconf, automake, bison, createrepo_c, cronie, diffutils, dnf5, expat, findutils, gettext, git, gzip, hello, help2man, libbsd, libtool, m4, make, man-db, procps, rpm, texinfo, thesilversearcher, util-linux |
-| [findutilsport](https://github.com/zopencommunity/findutilsport) | 20 | 85.2% | apr, bash-completion, boost, coreutils, gnulib, grep, libiconv, libkqueue, libxml2, netpbm, perl, pkgconfig, procps, prometheus, quilt, re2c, redis, rpm, texinfo, vim |
+| [findutilsport](https://github.com/zopencommunity/findutilsport) | 21 | 85.2% | apr, bash-completion, boost, coreutils, gnulib, grep, libiconv, libkqueue, libxml2, netpbm, perl, pkgconfig, procps, prometheus, quilt, re2c, redis, rpm, tcl, texinfo, vim |
 | [getoptport](https://github.com/zopencommunity/getoptport) | 19 | 52.2% | avro-c-lib, coreutils, diffutils, fish, flex, libgpgme, librdkafka, moreutils, neovim, ninja, procps, pv, sed, shdoc, sudo, thesilversearcher, util-linux, which, xmlto |
 | [texinfoport](https://github.com/zopencommunity/texinfoport) | 19 | Skipped | autoconf, automake, bc, bison, cronie, expat, gettext, git, gpg, groff, gzip, hello, libgpgme, libtool, m4, make, ntbtls, sed, tar |
 | [wharfport](https://github.com/zopencommunity/wharfport) | 18 | 100.0% | caddy, chezmoi, crush, fq, fx, git-lfs, githubcli, gitlabcli, glow, gum, hugo, lazygit, murex, osv-scanner, prometheus, s5cmd, ttype, victoriametrics |
@@ -319,4 +319,4 @@
 | [zospstreeport](https://github.com/zopencommunity/zospstreeport) | 0 | 100.0% | None |
 | [zotsampleport](https://github.com/zopencommunity/zotsampleport) | 0 | 100.0% | None |
 
-Last updated:  2025-10-09 06:16:17 UTC
+Last updated:  2025-10-10 06:14:58 UTC

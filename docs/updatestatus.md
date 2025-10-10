@@ -24,6 +24,7 @@
 - 2024-12-11: [Update bash-completion-version to 20060301 from V.R.M](https://github.com/zopencommunity/bash-completionport/pull/1) ❌
 
 ### buildkiteport
+- 2025-10-09: [Update buildkite-version to 3.109.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/76) ❌
 - 2025-10-02: [Update buildkite-version to 3.108.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/75) ❌
 - 2025-09-24: [Update buildkite-version to 3.107.2 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/74) ❌
 - 2025-09-18: [Update buildkite-version to 3.107.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/73) ❌
@@ -342,11 +343,17 @@
 ### lessport
 - 2025-10-06: [Update less-version to 685 from 684](https://github.com/zopencommunity/lessport/pull/43) ❌
 
+### libarchiveport
+- 2025-10-10: [Update archive-version to 3.8.1 from 3.7.9](https://github.com/zopencommunity/libarchiveport/pull/5) ❌
+
 ### libgdbmport
 - 2025-03-22: [Update libgdbm-version to 1.25 from 1.24](https://github.com/zopencommunity/libgdbmport/pull/10) ❌
 
 ### libgpgerrorport
 - 2025-10-08: [Update libgpgerror-version to 1.56 from 1.55](https://github.com/zopencommunity/libgpgerrorport/pull/21) ❌
+
+### libgpgmeport
+- 2025-10-10: [Update libgpgme-version to 2.0.1 from 1.23.2](https://github.com/zopencommunity/libgpgmeport/pull/3) ❌
 
 ### libpcre2port
 - 2025-08-27: [Update libpcre2-version to 10.46 from 10.42](https://github.com/zopencommunity/libpcre2port/pull/14) ❌
@@ -400,9 +407,6 @@
 ### ncduport
 - 2025-03-05: [Update ncdu-1-version to 1.22 from 1.20](https://github.com/zopencommunity/ncduport/pull/12) ❌
 - 2024-11-19: [Update ncdu-1-version to 1.21 from 1.20](https://github.com/zopencommunity/ncduport/pull/11) ❌
-
-### neovimport
-- 2025-09-01: [Update neovim-version to 0.11.4 from 0.11.3](https://github.com/zopencommunity/neovimport/pull/26) ❌
 
 ### nghttp2port
 - 2025-03-02: [Update nghttp2-version to 1.65.0 from 1.64.0](https://github.com/zopencommunity/nghttp2port/pull/11) ✅
@@ -509,10 +513,6 @@
 ### sudoport
 - 2025-07-27: [Update sudo-version to 1.9.17p2 from 1.9.17p1](https://github.com/zopencommunity/sudoport/pull/37) ❌
 
-### tclport
-- 2024-12-20: [Update tcl-version to 9.0.1 from 8.6.13](https://github.com/zopencommunity/tclport/pull/16) ✅
-- 2025-06-26: [Update tcl-version to 9.0.2 from 8.6.14](https://github.com/zopencommunity/tclport/pull/19) ❌
-
 ### terraformport
 - 2025-09-17: [Update terraform-version to 1.13.3 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/44) ❌
 - 2025-09-10: [Update terraform-version to 1.13.2 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/43) ❌
@@ -563,6 +563,7 @@
 - 2025-07-21: [Update victoriametrics-version to 1.122.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/32) ❌
 
 ### vimport
+- 2025-10-09: [Update vim-version to 9.1.1840 from 9.1.1830](https://github.com/zopencommunity/vimport/pull/152) ❌
 - 2025-09-29: [Update vim-version to 9.1.180 from 9.1.1780](https://github.com/zopencommunity/vimport/pull/148) ❌
 - 2025-09-26: [Update vim-version to 9.1.1790 from 9.1.1780](https://github.com/zopencommunity/vimport/pull/147) ❌
 
@@ -716,7 +717,7 @@
 - ✅ kotlinport - [![Bump Status](https://github.com/zopencommunity/kotlinport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/kotlinport/actions/workflows/bump.yml)
 - ✅ lazygitport - [![Bump Status](https://github.com/zopencommunity/lazygitport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/lazygitport/actions/workflows/bump.yml)
 - ✅ lessport - [![Bump Status](https://github.com/zopencommunity/lessport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/lessport/actions/workflows/bump.yml)
-- ❌ libarchiveport - Workflow not configured
+- ✅ libarchiveport - [![Bump Status](https://github.com/zopencommunity/libarchiveport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libarchiveport/actions/workflows/bump.yml)
 - ✅ libassuanport - [![Bump Status](https://github.com/zopencommunity/libassuanport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libassuanport/actions/workflows/bump.yml)
 - ✅ libbsdport - [![Bump Status](https://github.com/zopencommunity/libbsdport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libbsdport/actions/workflows/bump.yml)
 - ❌ libdio - Workflow not configured
@@ -727,7 +728,7 @@
 - ✅ libgdbmport - [![Bump Status](https://github.com/zopencommunity/libgdbmport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libgdbmport/actions/workflows/bump.yml)
 - ✅ libgit2port - [![Bump Status](https://github.com/zopencommunity/libgit2port/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libgit2port/actions/workflows/bump.yml)
 - ✅ libgpgerrorport - [![Bump Status](https://github.com/zopencommunity/libgpgerrorport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libgpgerrorport/actions/workflows/bump.yml)
-- ❌ libgpgmeport - Workflow not configured
+- ✅ libgpgmeport - [![Bump Status](https://github.com/zopencommunity/libgpgmeport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libgpgmeport/actions/workflows/bump.yml)
 - ✅ libiconvport - [![Bump Status](https://github.com/zopencommunity/libiconvport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libiconvport/actions/workflows/bump.yml)
 - ❌ libkqueueport - Workflow not configured
 - ✅ libksbaport - [![Bump Status](https://github.com/zopencommunity/libksbaport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/libksbaport/actions/workflows/bump.yml)
@@ -817,6 +818,7 @@
 - ✅ redisport - [![Bump Status](https://github.com/zopencommunity/redisport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/redisport/actions/workflows/bump.yml)
 - ✅ rpmport - [![Bump Status](https://github.com/zopencommunity/rpmport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/rpmport/actions/workflows/bump.yml)
 - ✅ rsyncport - [![Bump Status](https://github.com/zopencommunity/rsyncport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/rsyncport/actions/workflows/bump.yml)
+- ✅ rubyport - [![Bump Status](https://github.com/zopencommunity/rubyport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/rubyport/actions/workflows/bump.yml)
 - ✅ s5cmdport - [![Bump Status](https://github.com/zopencommunity/s5cmdport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/s5cmdport/actions/workflows/bump.yml)
 - ✅ sccport - [![Bump Status](https://github.com/zopencommunity/sccport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/sccport/actions/workflows/bump.yml)
 - ✅ scdocport - [![Bump Status](https://github.com/zopencommunity/scdocport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/scdocport/actions/workflows/bump.yml)
@@ -880,10 +882,10 @@
 
 </details>
 
-**Summary:** 234 active | 56 missing
+**Summary:** 237 active | 54 missing
 
 ---
 
 
-> Last updated: 2025-10-09 06:10:24 EDT
+> Last updated: 2025-10-10 06:09:25 EDT
 

@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-10-09 06:14:52 EDT.*
+*Report generated on: 2025-10-10 06:13:28 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 274
-- **Total Current Lines of Code (LOC) in Patches:** 44,085
-- **Total Number of Current Patch Files:** 887
-- **Average Current Patch LOC per Project:** 160.89
-- **Average Current Patch Count per Project:** 3.24
+- **Total Projects Analyzed:** 275
+- **Total Current Lines of Code (LOC) in Patches:** 44,133
+- **Total Number of Current Patch Files:** 884
+- **Average Current Patch LOC per Project:** 160.48
+- **Average Current Patch Count per Project:** 3.21
 
 ### Historical Trends (All Projects)
 
@@ -82,12 +82,12 @@
 | [blisport](#repo-blisport) | 185 | +0 | 2 |
 | [diffutilsport](#repo-diffutilsport) | 184 | +0 | 8 |
 | [aflplusplusport](#repo-aflplusplusport) | 184 | +0 | 5 |
+| [tclport](#repo-tclport) | 180 | +48 | 2 |
 | [jemallocport](#repo-jemallocport) | 166 | +0 | 1 |
 | [groffport](#repo-groffport) | 165 | +0 | 13 |
 | [autoconfport](#repo-autoconfport) | 151 | +0 | 6 |
 | [moreutilsport](#repo-moreutilsport) | 151 | +0 | 1 |
 | [libserdesport](#repo-libserdesport) | 142 | +0 | 4 |
-| [tclport](#repo-tclport) | 132 | +0 | 5 |
 | [multitailport](#repo-multitailport) | 130 | +0 | 1 |
 | [mcport](#repo-mcport) | 128 | +128 | 1 |
 | [pinentryport](#repo-pinentryport) | 124 | +0 | 5 |
@@ -298,6 +298,7 @@
 | [clang-formatport](#repo-clang-formatport) | 0 | +0 | 0 |
 | [crushport](#repo-crushport) | 0 | +0 | 0 |
 | [clang-tidyport](#repo-clang-tidyport) | 0 | N/A | 0 |
+| [rubyport](#repo-rubyport) | 0 | +0 | 0 |
 
 ---
 
@@ -2061,6 +2062,27 @@
 
 ---
 
+<a id="repo-tclport"></a>
+## tclport
+
+- **Origin Date (First Commit):** 2022-07-09
+- **Current Patch LOC:** 180
+- **Current Patch Count:** 2
+
+### Historical Trends
+
+![LOC Trend for tclport](images/upstream/tclport_current_loc_trend.png)
+![Count Trend for tclport](images/upstream/tclport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/generic.patch` | `patches` | 67 |
+| `patches/unix.patch` | `patches` | 113 |
+
+---
+
 <a id="repo-jemallocport"></a>
 ## jemallocport
 
@@ -2178,30 +2200,6 @@
 | `patches/src/serdes-common.h.patch` | `patches` | 15 |
 | `patches/src/serdes_int.h.patch` | `patches` | 17 |
 | `patches/src/tinycthread.c.patch` | `patches` | 97 |
-
----
-
-<a id="repo-tclport"></a>
-## tclport
-
-- **Origin Date (First Commit):** 2022-07-09
-- **Current Patch LOC:** 132
-- **Current Patch Count:** 5
-
-### Historical Trends
-
-![LOC Trend for tclport](images/upstream/tclport_current_loc_trend.png)
-![Count Trend for tclport](images/upstream/tclport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/PR1/namecollision.patch` | `patches` | 42 |
-| `patches/PR1/neederrno.patch` | `patches` | 12 |
-| `patches/PR1/remove_oe_sockets_hardcode.patch` | `patches` | 19 |
-| `patches/PR2/tclUnixNotfy.c.patch` | `patches` | 15 |
-| `patches/PR2/tclUnixThrd.c.patch` | `patches` | 44 |
 
 ---
 
@@ -6279,6 +6277,24 @@
 ## clang-tidyport
 
 - **Origin Date (First Commit):** Unknown
+- **Current Patch LOC:** 0
+- **Current Patch Count:** 0
+
+### Historical Trends
+
+*(Patch LOC trend graph not generated)*
+*(Patch count trend graph not generated)*
+
+### Current Patch Details
+
+*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
+
+---
+
+<a id="repo-rubyport"></a>
+## rubyport
+
+- **Origin Date (First Commit):** 2025-10-09
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 
