@@ -161,7 +161,6 @@
 - 2025-04-19: [Update fq-version to 0.15.0 from 0.14.0](https://github.com/zopencommunity/fqport/pull/9) ✅
 
 ### frpport
-- 2025-09-25: [Update frp-version to 0.65.0 from 0.61.1](https://github.com/zopencommunity/frpport/pull/18) ✅
 - 2025-08-22: [Update frp-version to 0.64.0 from 0.61.1](https://github.com/zopencommunity/frpport/pull/17) ✅
 - 2025-06-25: [Update frp-version to 0.63.0 from 0.61.1](https://github.com/zopencommunity/frpport/pull/16) ✅
 - 2025-04-28: [Update frp-version to 0.62.1 from 0.61.1](https://github.com/zopencommunity/frpport/pull/15) ✅
@@ -708,7 +707,7 @@
 - ✅ janssonport - [![Bump Status](https://github.com/zopencommunity/janssonport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/janssonport/actions/workflows/bump.yml)
 - ✅ jdport - [![Bump Status](https://github.com/zopencommunity/jdport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/jdport/actions/workflows/bump.yml)
 - ✅ jemallocport - [![Bump Status](https://github.com/zopencommunity/jemallocport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/jemallocport/actions/workflows/bump.yml)
-- ❌ jenkinsport - Workflow not configured
+- ✅ jenkinsport - [![Bump Status](https://github.com/zopencommunity/jenkinsport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/jenkinsport/actions/workflows/bump.yml)
 - ❌ joeport - Workflow not configured
 - ✅ jqport - [![Bump Status](https://github.com/zopencommunity/jqport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/jqport/actions/workflows/bump.yml)
 - ❌ jrubyport - Workflow not configured
@@ -882,10 +881,10 @@
 
 </details>
 
-**Summary:** 237 active | 54 missing
+**Summary:** 238 active | 53 missing
 
 ---
 
 
-> Last updated: 2025-10-10 06:09:25 EDT
+> Last updated: 2025-10-11 06:08:26 EDT
 

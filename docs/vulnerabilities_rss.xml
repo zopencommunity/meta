@@ -35,6 +35,27 @@
 </item>
 
 <item>
+<title>cmake (Build 2795) - (STABLE)</title>
+<link>https://zopen.community/#/Vulnerabilities?id=cmake</link>
+<description>1 low vulnerability</description>
+<guid isPermaLink="false">cmake (Build 2795) - (STABLE)</guid>
+</item>
+
+<item>
+<title>cmake (Build 2914) - (STABLE)</title>
+<link>https://zopen.community/#/Vulnerabilities?id=cmake</link>
+<description>1 low vulnerability</description>
+<guid isPermaLink="false">cmake (Build 2914) - (STABLE)</guid>
+</item>
+
+<item>
+<title>cmake (Build 3201) - (STABLE)</title>
+<link>https://zopen.community/#/Vulnerabilities?id=cmake</link>
+<description>1 low vulnerability</description>
+<guid isPermaLink="false">cmake (Build 3201) - (STABLE)</guid>
+</item>
+
+<item>
 <title>vim (Build 2178) - (STABLE)</title>
 <link>https://zopen.community/#/Vulnerabilities?id=vim</link>
 <description>13 vulnerabilities (3 high, 10 medium)</description>
@@ -368,27 +389,6 @@
 <link>https://zopen.community/#/Vulnerabilities?id=vim</link>
 <description>9 vulnerabilities (3 high, 6 medium)</description>
 <guid isPermaLink="false">vim 9.1.697 (datasetio_ispf) - (STABLE)</guid>
-</item>
-
-<item>
-<title>cmake (Build 2795) - (STABLE)</title>
-<link>https://zopen.community/#/Vulnerabilities?id=cmake</link>
-<description>1 low vulnerability</description>
-<guid isPermaLink="false">cmake (Build 2795) - (STABLE)</guid>
-</item>
-
-<item>
-<title>cmake (Build 2914) - (STABLE)</title>
-<link>https://zopen.community/#/Vulnerabilities?id=cmake</link>
-<description>1 low vulnerability</description>
-<guid isPermaLink="false">cmake (Build 2914) - (STABLE)</guid>
-</item>
-
-<item>
-<title>cmake (Build 3201) - (STABLE)</title>
-<link>https://zopen.community/#/Vulnerabilities?id=cmake</link>
-<description>1 low vulnerability</description>
-<guid isPermaLink="false">cmake (Build 3201) - (STABLE)</guid>
 </item>
 
 <item>
