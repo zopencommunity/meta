@@ -158,14 +158,6 @@
 
 ### fqport
 - 2025-07-13: [Update fq-version to 0.15.1 from 0.14.0](https://github.com/zopencommunity/fqport/pull/10) ❌
-- 2025-04-19: [Update fq-version to 0.15.0 from 0.14.0](https://github.com/zopencommunity/fqport/pull/9) ✅
-
-### frpport
-- 2025-08-22: [Update frp-version to 0.64.0 from 0.61.1](https://github.com/zopencommunity/frpport/pull/17) ✅
-- 2025-06-25: [Update frp-version to 0.63.0 from 0.61.1](https://github.com/zopencommunity/frpport/pull/16) ✅
-- 2025-04-28: [Update frp-version to 0.62.1 from 0.61.1](https://github.com/zopencommunity/frpport/pull/15) ✅
-- 2025-04-16: [Update frp-version to 0.62.0 from 0.61.1](https://github.com/zopencommunity/frpport/pull/14) ✅
-- 2025-03-07: [Update frp-version to 0.61.2 from 0.61.1](https://github.com/zopencommunity/frpport/pull/13) ✅
 
 ### fxport
 - 2025-05-16: [Update fx-version to 36.0.2 from 34.0.0](https://github.com/zopencommunity/fxport/pull/7) ❌
@@ -212,6 +204,7 @@
 - 2025-03-06: [Update ghcli-version to 2.68.1 from 2.67.0](https://github.com/zopencommunity/githubcliport/pull/47) ❌
 
 ### gitlabcliport
+- 2025-10-11: [Update glab-version to 1.73.1 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/44) ❌
 - 2025-10-07: [Update glab-version to 1.73.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/43) ❌
 - 2025-09-17: [Update glab-version to 1.72.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/42) ❓
 - 2025-09-16: [Update glab-version to 1.71.2 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/41) ❌
@@ -494,6 +487,9 @@
 ### screenport
 - 2025-05-15: [Update screen-version to 5.0.1 from 4.9.1](https://github.com/zopencommunity/screenport/pull/11) ❌
 - 2024-08-29: [Update screen-version to 5.0.0 from 4.9.1](https://github.com/zopencommunity/screenport/pull/8) ❌
+
+### spdlogport
+- 2025-10-11: [Update spdlog-version to 1.16.0 from 1.15.1](https://github.com/zopencommunity/spdlogport/pull/10) ❌
 
 ### sqliteport
 - 2025-07-31: [Update sqlite-version to 2025-3500400 from 2025-3480000](https://github.com/zopencommunity/sqliteport/pull/30) ❌
@@ -886,5 +882,5 @@
 ---
 
 
-> Last updated: 2025-10-11 06:08:26 EDT
+> Last updated: 2025-10-12 06:08:29 EDT
 

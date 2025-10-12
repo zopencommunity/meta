@@ -394,14 +394,14 @@
 <item>
 <title>redis (Build 3219) - (STABLE)</title>
 <link>https://zopen.community/#/Vulnerabilities?id=redis</link>
-<description>4 vulnerabilities (3 critical, 1 high)</description>
+<description>6 vulnerabilities (3 critical, 3 high)</description>
 <guid isPermaLink="false">redis (Build 3219) - (STABLE)</guid>
 </item>
 
 <item>
 <title>redis (Build 3258) - (STABLE)</title>
 <link>https://zopen.community/#/Vulnerabilities?id=redis</link>
-<description>4 vulnerabilities (3 critical, 1 high)</description>
+<description>6 vulnerabilities (3 critical, 3 high)</description>
 <guid isPermaLink="false">redis (Build 3258) - (STABLE)</guid>
 </item>
 
@@ -429,7 +429,7 @@
 <item>
 <title>redis (Build 3655) - (STABLE)</title>
 <link>https://zopen.community/#/Vulnerabilities?id=redis</link>
-<description>2 critical vulnerabilities</description>
+<description>4 vulnerabilities (2 critical, 2 high)</description>
 <guid isPermaLink="false">redis (Build 3655) - (STABLE)</guid>
 </item>
 

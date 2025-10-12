@@ -960,7 +960,7 @@ the specified cursor position. It's not quite clear yet, what can lead to this s
 ## redis
 
 <details>
-<summary>redis (Build 3219) - (STABLE) -- 4 vulnerabilities (3 critical, 1 high)</summary>
+<summary>redis (Build 3219) - (STABLE) -- 6 vulnerabilities (3 critical, 3 high)</summary>
 
 - Affected release URL: [redis (Build 3219) - (STABLE)](https://github.com/zopencommunity/redisport/releases/tag/STABLE_redisport_3219)
 
@@ -970,13 +970,17 @@ the specified cursor position. It's not quite clear yet, what can lead to this s
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/redisport/releases/tag/STABLE_redisport_3655)**.
 - **(CRITICAL severity) CVE-2025-46817**: Redis is an open source, in-memory database that persists on disk. Versions 8.2.1 and below allow an authenticated user to use a specially crafted Lua script to cause an integer overflow and potentially lead to remote code execution The problem exists in all versions of Redis with Lua scripting. This issue is fixed in version 8.2.2.
   - **Currently no fix -- still affects the [latest release](https://github.com/zopencommunity/redisport/releases/tag/STABLE_redisport_3655)**.
+- **(HIGH severity) CVE-2025-46818**: Redis is an open source, in-memory database that persists on disk. Versions 8.2.1 and below allow an authenticated user to use a specially crafted Lua script to manipulate different LUA objects and potentially run their own code in the context of another user. The problem exists in all versions of Redis with LUA scripting. This issue is fixed in version 8.2.2. A workaround to mitigate the problem without patching the redis-server executable is to prevent users from executing LUA scripts. This can be done using ACL to block a script by restricting both the EVAL and FUNCTION command families.
+  - **Currently no fix -- still affects the [latest release](https://github.com/zopencommunity/redisport/releases/tag/STABLE_redisport_3655)**.
+- **(HIGH severity) CVE-2025-46819**: Redis is an open source, in-memory database that persists on disk. Versions 8.2.1 and below allow an authenticated user to use a specially crafted LUA script to read out-of-bound data or crash the server and subsequent denial of service. The problem exists in all versions of Redis with Lua scripting. This issue is fixed in version 8.2.2. To workaround this issue without patching the redis-server executable is to prevent users from executing Lua scripts. This can be done using ACL to block a script by restricting both the EVAL and FUNCTION command families.
+  - **Currently no fix -- still affects the [latest release](https://github.com/zopencommunity/redisport/releases/tag/STABLE_redisport_3655)**.
 - **(CRITICAL severity) CVE-2025-49844**: Redis is an open source, in-memory database that persists on disk. Versions 8.2.1 and below allow an authenticated user to use a specially crafted Lua script to manipulate the garbage collector, trigger a use-after-free and potentially lead to remote code execution. The problem exists in all versions of Redis with Lua scripting. This issue is fixed in version 8.2.2. To workaround this issue without patching the redis-server executable is to prevent users from executing Lua scripts. This can be done using ACL to restrict EVAL and EVALSHA commands.
   - **Currently no fix -- still affects the [latest release](https://github.com/zopencommunity/redisport/releases/tag/STABLE_redisport_3655)**.
 
 </details>
 
 <details>
-<summary>redis (Build 3258) - (STABLE) -- 4 vulnerabilities (3 critical, 1 high)</summary>
+<summary>redis (Build 3258) - (STABLE) -- 6 vulnerabilities (3 critical, 3 high)</summary>
 
 - Affected release URL: [redis (Build 3258) - (STABLE)](https://github.com/zopencommunity/redisport/releases/tag/STABLE_redisport_3258)
 
@@ -985,6 +989,10 @@ the specified cursor position. It's not quite clear yet, what can lead to this s
 - **(HIGH severity) CVE-2025-32023**: Redis is an open source, in-memory database that persists on disk. From 2.8 to before 8.0.3, 7.4.5, 7.2.10, and 6.2.19, an authenticated user may use a specially crafted string to trigger a stack/heap out of bounds write on hyperloglog operations, potentially leading to remote code execution. The bug likely affects all Redis versions with hyperloglog operations implemented. This vulnerability is fixed in 8.0.3, 7.4.5, 7.2.10, and 6.2.19. An additional workaround to mitigate the problem without patching the redis-server executable is to prevent users from executing hyperloglog operations. This can be done using ACL to restrict HLL commands.
   - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/redisport/releases/tag/STABLE_redisport_3655)**.
 - **(CRITICAL severity) CVE-2025-46817**: Redis is an open source, in-memory database that persists on disk. Versions 8.2.1 and below allow an authenticated user to use a specially crafted Lua script to cause an integer overflow and potentially lead to remote code execution The problem exists in all versions of Redis with Lua scripting. This issue is fixed in version 8.2.2.
+  - **Currently no fix -- still affects the [latest release](https://github.com/zopencommunity/redisport/releases/tag/STABLE_redisport_3655)**.
+- **(HIGH severity) CVE-2025-46818**: Redis is an open source, in-memory database that persists on disk. Versions 8.2.1 and below allow an authenticated user to use a specially crafted Lua script to manipulate different LUA objects and potentially run their own code in the context of another user. The problem exists in all versions of Redis with LUA scripting. This issue is fixed in version 8.2.2. A workaround to mitigate the problem without patching the redis-server executable is to prevent users from executing LUA scripts. This can be done using ACL to block a script by restricting both the EVAL and FUNCTION command families.
+  - **Currently no fix -- still affects the [latest release](https://github.com/zopencommunity/redisport/releases/tag/STABLE_redisport_3655)**.
+- **(HIGH severity) CVE-2025-46819**: Redis is an open source, in-memory database that persists on disk. Versions 8.2.1 and below allow an authenticated user to use a specially crafted LUA script to read out-of-bound data or crash the server and subsequent denial of service. The problem exists in all versions of Redis with Lua scripting. This issue is fixed in version 8.2.2. To workaround this issue without patching the redis-server executable is to prevent users from executing Lua scripts. This can be done using ACL to block a script by restricting both the EVAL and FUNCTION command families.
   - **Currently no fix -- still affects the [latest release](https://github.com/zopencommunity/redisport/releases/tag/STABLE_redisport_3655)**.
 - **(CRITICAL severity) CVE-2025-49844**: Redis is an open source, in-memory database that persists on disk. Versions 8.2.1 and below allow an authenticated user to use a specially crafted Lua script to manipulate the garbage collector, trigger a use-after-free and potentially lead to remote code execution. The problem exists in all versions of Redis with Lua scripting. This issue is fixed in version 8.2.2. To workaround this issue without patching the redis-server executable is to prevent users from executing Lua scripts. This can be done using ACL to restrict EVAL and EVALSHA commands.
   - **Currently no fix -- still affects the [latest release](https://github.com/zopencommunity/redisport/releases/tag/STABLE_redisport_3655)**.
@@ -1022,11 +1030,13 @@ the specified cursor position. It's not quite clear yet, what can lead to this s
 </details>
 
 <details>
-<summary>redis (Build 3655) - (STABLE) -- 2 critical vulnerabilities</summary>
+<summary>redis (Build 3655) - (STABLE) -- 4 vulnerabilities (2 critical, 2 high)</summary>
 
 - Affected release URL: [redis (Build 3655) - (STABLE)](https://github.com/zopencommunity/redisport/releases/tag/STABLE_redisport_3655)
 
 - **(CRITICAL severity) CVE-2025-46817**: Redis is an open source, in-memory database that persists on disk. Versions 8.2.1 and below allow an authenticated user to use a specially crafted Lua script to cause an integer overflow and potentially lead to remote code execution The problem exists in all versions of Redis with Lua scripting. This issue is fixed in version 8.2.2.
+  - **Currently no fix -- this is the latest release**.- **(HIGH severity) CVE-2025-46818**: Redis is an open source, in-memory database that persists on disk. Versions 8.2.1 and below allow an authenticated user to use a specially crafted Lua script to manipulate different LUA objects and potentially run their own code in the context of another user. The problem exists in all versions of Redis with LUA scripting. This issue is fixed in version 8.2.2. A workaround to mitigate the problem without patching the redis-server executable is to prevent users from executing LUA scripts. This can be done using ACL to block a script by restricting both the EVAL and FUNCTION command families.
+  - **Currently no fix -- this is the latest release**.- **(HIGH severity) CVE-2025-46819**: Redis is an open source, in-memory database that persists on disk. Versions 8.2.1 and below allow an authenticated user to use a specially crafted LUA script to read out-of-bound data or crash the server and subsequent denial of service. The problem exists in all versions of Redis with Lua scripting. This issue is fixed in version 8.2.2. To workaround this issue without patching the redis-server executable is to prevent users from executing Lua scripts. This can be done using ACL to block a script by restricting both the EVAL and FUNCTION command families.
   - **Currently no fix -- this is the latest release**.- **(CRITICAL severity) CVE-2025-49844**: Redis is an open source, in-memory database that persists on disk. Versions 8.2.1 and below allow an authenticated user to use a specially crafted Lua script to manipulate the garbage collector, trigger a use-after-free and potentially lead to remote code execution. The problem exists in all versions of Redis with Lua scripting. This issue is fixed in version 8.2.2. To workaround this issue without patching the redis-server executable is to prevent users from executing Lua scripts. This can be done using ACL to restrict EVAL and EVALSHA commands.
   - **Currently no fix -- this is the latest release**.
 </details>
