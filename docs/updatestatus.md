@@ -166,6 +166,7 @@
 - 2024-06-27: [Update fx-version to 35.0.0 from 34.0.0](https://github.com/zopencommunity/fxport/pull/2) ❓
 
 ### fzfport
+- 2025-10-12: [Update fzf-version to 0.66.0 from 0.65.2](https://github.com/zopencommunity/fzfport/pull/47) ❌
 - 2025-07-27: [Update fzf-version to 0.65.0 from 0.64.0](https://github.com/zopencommunity/fzfport/pull/44) ❌
 - 2025-04-22: [Update fzf-version to 0.61.3 from 0.60.3](https://github.com/zopencommunity/fzfport/pull/40) ✅
 - 2025-04-20: [Update fzf-version to 0.61.2 from 0.60.3](https://github.com/zopencommunity/fzfport/pull/38) ✅
@@ -281,7 +282,7 @@
 - 2024-11-20: [Update grafana-version to 11.3.1 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/11) ❌
 - 2024-10-23: [Update grafana-version to 11.3.0 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/10) ❌
 - 2024-10-02: [Update grafana-version to 11.2.2 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/9) ❌
-- 2024-08-27: [Update grafana-version to 11.2.0 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/7) ❌
+- 2024-08-27: [Update grafana-version to 11.2.0 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/7) ❓
 - 2024-08-15: [Update grafana-version to 11.1.4 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/6) ❓
 - 2024-07-24: [Update grafana-version to 11.1.2 from 11.0.0](https://github.com/zopencommunity/grafanaport/pull/4) ❓
 - 2024-06-25: [Update grafana-version to 11.1.0 from 11.0.0](https://github.com/zopencommunity/grafanaport/pull/2) ❓
@@ -354,7 +355,7 @@
 - 2023-12-29: [Update libpcre2-version to 10.43 from 10.42](https://github.com/zopencommunity/libpcre2port/pull/4) ❓
 
 ### libpipelineport
-- 2024-08-27: [Update libpipeline-version to 1.5.8 from 1.5.7](https://github.com/zopencommunity/libpipelineport/pull/15) ❌
+- 2024-08-27: [Update libpipeline-version to 1.5.8 from 1.5.7](https://github.com/zopencommunity/libpipelineport/pull/15) ❓
 
 ### libssh2port
 - 2024-10-16: [Update libssh2-version to 1.11.1 from 1.11.0](https://github.com/zopencommunity/libssh2port/pull/4) ❌
@@ -558,6 +559,7 @@
 - 2025-07-21: [Update victoriametrics-version to 1.122.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/32) ❌
 
 ### vimport
+- 2025-10-12: [Update vim-version to 9.1.1850 from 9.1.1830](https://github.com/zopencommunity/vimport/pull/153) ❌
 - 2025-10-09: [Update vim-version to 9.1.1840 from 9.1.1830](https://github.com/zopencommunity/vimport/pull/152) ❌
 - 2025-09-29: [Update vim-version to 9.1.180 from 9.1.1780](https://github.com/zopencommunity/vimport/pull/148) ❌
 - 2025-09-26: [Update vim-version to 9.1.1790 from 9.1.1780](https://github.com/zopencommunity/vimport/pull/147) ❌
@@ -882,5 +884,5 @@
 ---
 
 
-> Last updated: 2025-10-12 06:08:29 EDT
+> Last updated: 2025-10-13 06:10:38 EDT
 
