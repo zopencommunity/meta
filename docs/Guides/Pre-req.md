@@ -4,7 +4,7 @@ Before you begin, make sure you have access to a z/OS UNIX environment and that 
 
 ## Setting up your z/OS environment
 
-z/OS Open Source tools leverage [z/OS Enhanced ASCII support](https://www.ibm.com/docs/en/zos/3.1.0?topic=pages-enhanced-ascii). This support enables automatic conversion between codepages for tagged files. To take advantage of this support, you need to set the following environment variables:
+z/OS Open Source tools require [z/OS Enhanced ASCII support](https://www.ibm.com/docs/en/zos/3.1.0?topic=pages-enhanced-ascii). This support enables automatic conversion between codepages for tagged files. To take advantage of this support, you need to set the following environment variables:
 
 ```
 export _BPXK_AUTOCVT=ON
