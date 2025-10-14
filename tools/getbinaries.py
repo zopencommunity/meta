@@ -107,11 +107,12 @@ packages_by_category = defaultdict(list)
 dependentOn = {}
 totalPatchLinesPerPort = {} # This variable is defined but not used in the provided script snippet
 
-if os.getenv('ZOPEN_GITHUB_OAUTH_TOKEN') is None:
-    print("error: environment variable ZOPEN_GITHUB_OAUTH_TOKEN must be defined", file=sys.stderr)
+github_token = os.getenv('ZOPEN_GITHUB_OAUTH_TOKEN') or os.getenv('GITHUB_TOKEN')
+if github_token is None:
+    print("error: environment variable ZOPEN_GITHUB_OAUTH_TOKEN or GITHUB_TOKEN must be defined", file=sys.stderr)
     sys.exit(1)
 
-g = Github(os.getenv('ZOPEN_GITHUB_OAUTH_TOKEN'))
+g = Github(github_token)
 
 json_url = "https://raw.githubusercontent.com/ZOSOpenTools/meta/main/docs/api/zopen_releases_latest.json"
 response = requests.get(json_url)
@@ -251,53 +252,60 @@ if any(progressPerStatus.values()): # Check if there's data for the chart
 else:
     print("No data for progress pie chart.", file=sys.stderr)
 
-# Example: For the bar chart
-active_statusPerPort = {k: v for k, v in statusPerPort.items() if v >= 0} # Filter out negative success rates for this chart
+# --- Bar Chart Generation ---
+chart_files = []
+active_statusPerPort = {k: v for k, v in statusPerPort.items() if v >= 0}
 if active_statusPerPort:
-    labels_bar = []
-    sizes_bar = []
-    for x_bar, y_bar in sorted(active_statusPerPort.items(), key=lambda item: item[1]):
-        labels_bar.append(x_bar)
-        sizes_bar.append(y_bar)
+    sorted_ports = sorted(active_statusPerPort.items(), key=lambda item: item[1], reverse=True)
     
-    if labels_bar: # Proceed if there are items to plot
-        fig_bar = plt.figure()
-        fig_bar.set_size_inches(45, max(32, len(labels_bar) * 0.5)) # Adjust height based on number of labels
-        ax_bar = fig_bar.add_axes([0.1,0.1,0.8,0.8]) # Adjust margins if needed
-        
-        cmap_bar = cm.get_cmap('Greens') # Consider a different map if Greens is not visually distinct enough
-        # Ensure min and max are different for Normalize, or handle single value case
-        min_val_bar = min(sizes_bar) if sizes_bar else 0
-        max_val_bar = max(sizes_bar) if sizes_bar else 100 # Default max if all are same or empty
-        if min_val_bar == max_val_bar:
-            # Handle case where all values are the same
-             color_norm_bar = mpl.colors.Normalize(vmin=min_val_bar -1 , vmax=max_val_bar) # Avoid division by zero
-        else:
-             color_norm_bar = mpl.colors.Normalize(vmin=min_val_bar, vmax=max_val_bar)
+    chunk_size = 50
+    if len(sorted_ports) == 0:
+        num_chunks = 0
+    else:
+        num_chunks = (len(sorted_ports) + chunk_size - 1) // chunk_size
+    
+    for i in range(num_chunks):
+        chunk = sorted_ports[i * chunk_size:(i + 1) * chunk_size]
+        chunk.reverse()
+        labels_bar = [item[0] for item in chunk]
+        sizes_bar = [item[1] for item in chunk]
 
-        # colors_bar = cmap_bar(color_norm_bar(sizes_bar)) # This might not be what you want for specific color logic below
+        if not labels_bar:
+            continue
+
+        fig_bar = plt.figure()
+        fig_bar.set_size_inches(20, max(10, len(labels_bar) * 0.4))
+        ax_bar = fig_bar.add_axes([0.2, 0.1, 0.7, 0.85])
 
         col_bar = []
         for val_bar in sizes_bar:
             if val_bar == 100:
                 col_bar.append('green')
-            elif val_bar >= 50: # Assuming this was meant to be >= 50 for Blue, as per status logic
+            elif val_bar >= 75:
                 col_bar.append('blue')
-            # elif val_bar > 0: # Example for Yellow, adjust threshold as needed
-            #    col_bar.append('#FFEF00') # Or your chosen yellow
-            else: # For values < 50 (Red in status logic)
-                col_bar.append('red') # Example, map to your status colors
+            elif val_bar >= 50:
+                col_bar.append('#fee12b')
+            else:
+                col_bar.append('red')
 
-        ax_bar.set_xlabel('Success Rate (%)', fontsize=18)
-        ax_bar.set_title("Project Test Quality", fontsize=24)
-        ax_bar.tick_params(axis='both', labelsize=max(10, 18 - len(labels_bar)//10)) # Adjust label size
+        ax_bar.set_xlabel('Success Rate (%)', fontsize=12)
+        title = "Project Test Quality"
+        if num_chunks > 1:
+            title += f" (Part {i+1}/{num_chunks})"
+        ax_bar.set_title(title, fontsize=16)
+        ax_bar.tick_params(axis='y', labelsize=10)
+        ax_bar.tick_params(axis='x', labelsize=10)
 
-        bars_obj = ax_bar.barh(labels_bar, sizes_bar, color=col_bar, height=0.8, align='edge')
-        ax_bar.bar_label(bars_obj)
-        plt.savefig('docs/images/quality.png', bbox_inches="tight")
-        plt.close() # Close the figure
-    else:
-        print("No valid data for project quality bar chart after filtering.", file=sys.stderr)
+        bars_obj = ax_bar.barh(labels_bar, sizes_bar, color=col_bar, height=0.6, align='center')
+        ax_bar.bar_label(bars_obj, fmt='%.1f%%', padding=3, fontsize=8)
+        
+        chart_filename = f'docs/images/quality_part_{i+1}.png'
+        if num_chunks == 1:
+            chart_filename = 'docs/images/quality.png'
+
+        plt.savefig(chart_filename, bbox_inches="tight")
+        plt.close()
+        chart_files.append(chart_filename.replace('docs/', './'))
 else:
     print("No data for project quality bar chart.", file=sys.stderr)
 
@@ -316,8 +324,12 @@ with open('docs/Progress.md', 'w') as f_progress:
 ![image info](./images/progress.png)
 
 ## Overall Status Breakdown
-![image info](./images/quality.png)
 """)
+    if not chart_files:
+        print("No quality chart generated.")
+    else:
+        for chart_file in chart_files:
+            print(f"![image info]({chart_file})")
 
     print("\n## Projects with skipped or no tests (or no releases resulting in skipped status)")
     count_skipped_no_tests = 0
