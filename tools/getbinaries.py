@@ -343,13 +343,20 @@ with open('docs/Progress.md', 'w') as f_progress:
 
 
     print("\n## Projects with the most dependencies\n")
-    print("| Package | # of Dependent Projects | Test Success Rate | Dependent projects |") # Added extra pipe for table alignment
-    print("|---|---|---|---|") # Adjusted for 4 columns
-    # Sort by number of dependents (desc), then alphabetically by package name (asc)
+    print("""<div class="tool-item-filterable" style="padding: 8px 0; border-bottom: 1px solid #eee; font-weight: bold;">
+  <div class="tool-info-grid">
+    <div class="tool-name">Package</div>
+    <div class="tool-status"># of Dependent Projects</div>
+    <div class="tool-test">Test Success Rate</div>
+    <div class="tool-release">Dependent projects</div>
+    <div class="tool-desc"></div>
+  </div>
+</div>""")
+
     for x_dep, y_dep_list in sorted(dependentOn.items(), key=lambda item: (-len(item[1]), item[0])):
-        status_val = statusPerPort.get(x_dep) # Use .get() for safety
+        status_val = statusPerPort.get(x_dep)
         status_str = ""
-        if status_val is None: # Should not happen if all packages are in statusPerPort
+        if status_val is None:
             status_str = "Unknown"
         elif status_val == -1:
             status_str = "Skipped"
@@ -358,9 +365,17 @@ with open('docs/Progress.md', 'w') as f_progress:
         else:
             status_str = f"{status_val:.1f}%"
         
-        # Format dependent projects list
         dependent_projects_str = ", ".join(sorted(str(e) for e in y_dep_list)) if y_dep_list else "None"
-        print(f"| [{x_dep}](https://github.com/zopencommunity/{x_dep}) | {len(y_dep_list)} | {status_str} | {dependent_projects_str} |")
+        
+        print(f'<div class="tool-item-filterable" style="padding: 8px 0; border-bottom: 1px solid #eee;">')
+        print(f'  <div class="tool-info-grid">')
+        print(f'    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/{x_dep}" target="_blank" rel="noopener noreferrer">{html.escape(x_dep)}</a></strong></div>')
+        print(f'    <div class="tool-status">{len(y_dep_list)}</div>')
+        print(f'    <div class="tool-test">{html.escape(status_str)}</div>')
+        print(f'    <div class="tool-release">{html.escape(dependent_projects_str)}</div>')
+        print(f'    <div class="tool-desc"></div>')
+        print(f'  </div>')
+        print(f'</div>')
 
     print("\nLast updated: ", todaysDate)
 
