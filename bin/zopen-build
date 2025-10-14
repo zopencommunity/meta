@@ -1377,10 +1377,17 @@ configure()
 {
   configure_script=$(echo "${ZOPEN_CONFIGURE}" | awk '{print $1}')
   if [ "${configure_script}" != "skip" ]; then
-    if [ ! -f "${configure_script}" ]; then
-      printError "Configure script '${configure_script}' not found. If this project does not use a configure script, please set 'export ZOPEN_CONFIGURE=skip' in your buildenv file."
-    elif [ ! -x "${configure_script}" ]; then
-      printError "Configure script '${configure_script}' is not executable. If this project does not use a configure script, please set 'export ZOPEN_CONFIGURE=skip' in your buildenv file."
+    # First check: does the file exist?
+    if [ -f "${configure_script}" ]; then
+      # If it's a file but not executable
+      if [ ! -x "${configure_script}" ]; then
+        printError "Configure script '${configure_script}' is not executable. If this project does not use a configure script, please set 'export ZOPEN_CONFIGURE=skip' in your buildenv file."
+      fi
+    else
+      # Not a file — check if it's a command or function in PATH
+      if ! command -v "${configure_script}" >/dev/null 2>&1; then
+        printError "Configure script or command '${configure_script}' not found. If this project does not use a configure script, please set 'export ZOPEN_CONFIGURE=skip' in your buildenv file."
+      fi
     fi
   fi
 
