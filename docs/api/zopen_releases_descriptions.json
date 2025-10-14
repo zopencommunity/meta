@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2025-10-12T15:34:10+00:00Z",
+  "generation_timestamp_utc": "2025-10-14T01:51:18+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -276,6 +276,7 @@
     "clang-tidy": "",
     "pv": "Pipe Viewer - monitor data through a pipeline",
     "mc": "Midnight Commander is a feature-rich visual file manager for Unix-like systems",
-    "ruby": ""
+    "ruby": "",
+    "check_podman": "Find and export podman path"
   }
 }
