@@ -28,7 +28,7 @@ ZOSLIB aims to automatically resolve the following types of issues:
 
 As an example, the C `open` function has been overridden to automatically tag new files as ASCII, and similarly for C `pipe` and `mkstemp`. When zoslib is added to your project, in the case of C `open` function, all references to open are mapped to a new zoslib `__open_ascii` function (defined [here](https://github.com/ibmruntimes/zoslib/blob/zopen/src/zos-io.cc#L720)), which implements this auto-tagging logic.
 
-## How do I leverage zoslib?
+## How do I use zoslib?
 
 Very easily!
 
