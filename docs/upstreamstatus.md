@@ -1,13 +1,13 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2025-10-13 06:16:01 EDT.*
+*Report generated on: 2025-10-14 06:15:06 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 275
-- **Total Current Lines of Code (LOC) in Patches:** 44,133
-- **Total Number of Current Patch Files:** 884
-- **Average Current Patch LOC per Project:** 160.48
+- **Total Projects Analyzed:** 276
+- **Total Current Lines of Code (LOC) in Patches:** 44,145
+- **Total Number of Current Patch Files:** 885
+- **Average Current Patch LOC per Project:** 159.95
 - **Average Current Patch Count per Project:** 3.21
 
 ### Historical Trends (All Projects)
@@ -134,11 +134,11 @@
 | [automakeport](#repo-automakeport) | 47 | +0 | 3 |
 | [xxhashport](#repo-xxhashport) | 47 | +0 | 2 |
 | [tigport](#repo-tigport) | 47 | +0 | 1 |
+| [whichport](#repo-whichport) | 46 | +12 | 2 |
 | [lazygitport](#repo-lazygitport) | 46 | +0 | 1 |
 | [libssh2port](#repo-libssh2port) | 42 | +0 | 3 |
 | [catimgport](#repo-catimgport) | 37 | +0 | 1 |
 | [poptport](#repo-poptport) | 35 | +0 | 1 |
-| [whichport](#repo-whichport) | 34 | +0 | 1 |
 | [tcltlsport](#repo-tcltlsport) | 34 | +0 | 1 |
 | [sedport](#repo-sedport) | 33 | +0 | 1 |
 | [texinfoport](#repo-texinfoport) | 33 | +0 | 2 |
@@ -299,6 +299,7 @@
 | [crushport](#repo-crushport) | 0 | +0 | 0 |
 | [clang-tidyport](#repo-clang-tidyport) | 0 | N/A | 0 |
 | [rubyport](#repo-rubyport) | 0 | +0 | 0 |
+| [check_podmanport](#repo-check-podmanport) | 0 | +0 | 0 |
 
 ---
 
@@ -3200,6 +3201,27 @@
 
 ---
 
+<a id="repo-whichport"></a>
+## whichport
+
+- **Origin Date (First Commit):** 2023-03-23
+- **Current Patch LOC:** 46
+- **Current Patch Count:** 2
+
+### Historical Trends
+
+![LOC Trend for whichport](images/upstream/whichport_current_loc_trend.png)
+![Count Trend for whichport](images/upstream/whichport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `dev-patches/which.texi.patch` | `dev-patches` | 12 |
+| `stable-patches/bash.c.patch` | `stable-patches` | 34 |
+
+---
+
 <a id="repo-lazygitport"></a>
 ## lazygitport
 
@@ -3279,26 +3301,6 @@
 | Patch File (Repo Relative Path) | Source | LOC |
 |---|---|:---|
 | `patches/PR1.patch` | `patches` | 35 |
-
----
-
-<a id="repo-whichport"></a>
-## whichport
-
-- **Origin Date (First Commit):** 2023-03-23
-- **Current Patch LOC:** 34
-- **Current Patch Count:** 1
-
-### Historical Trends
-
-![LOC Trend for whichport](images/upstream/whichport_current_loc_trend.png)
-![Count Trend for whichport](images/upstream/whichport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/bash.c.patch` | `patches` | 34 |
 
 ---
 
@@ -6295,6 +6297,24 @@
 ## rubyport
 
 - **Origin Date (First Commit):** 2025-10-09
+- **Current Patch LOC:** 0
+- **Current Patch Count:** 0
+
+### Historical Trends
+
+*(Patch LOC trend graph not generated)*
+*(Patch count trend graph not generated)*
+
+### Current Patch Details
+
+*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
+
+---
+
+<a id="repo-check-podmanport"></a>
+## check_podmanport
+
+- **Origin Date (First Commit):** 2025-10-13
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 

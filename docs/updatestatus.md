@@ -613,6 +613,7 @@
 - ❌ check_clangport - Workflow not configured
 - ❌ check_goport - Workflow not configured
 - ❌ check_javaport - Workflow not configured
+- ✅ check_podmanport - [![Bump Status](https://github.com/zopencommunity/check_podmanport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/check_podmanport/actions/workflows/bump.yml)
 - ✅ checkport - [![Bump Status](https://github.com/zopencommunity/checkport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/checkport/actions/workflows/bump.yml)
 - ❌ check_pythonport - Workflow not configured
 - ❌ check_xlclangport - Workflow not configured
@@ -879,10 +880,10 @@
 
 </details>
 
-**Summary:** 238 active | 53 missing
+**Summary:** 239 active | 53 missing
 
 ---
 
 
-> Last updated: 2025-10-13 06:10:38 EDT
+> Last updated: 2025-10-14 06:10:08 EDT
 
