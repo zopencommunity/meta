@@ -9,8 +9,11 @@
 ![image info](./images/progress.png)
 
 ## Overall Status Breakdown
-![image info](./images/quality.png)
 
+![image info](./images/quality_part_1.png)
+![image info](./images/quality_part_2.png)
+![image info](./images/quality_part_3.png)
+![image info](./images/quality_part_4.png)
 
 ## Projects with skipped or no tests (or no releases resulting in skipped status)
 * [antport](https://github.com/zopencommunity/antport) - Tests skipped or not enabled
@@ -321,4 +324,4 @@
 | [zospstreeport](https://github.com/zopencommunity/zospstreeport) | 0 | 100.0% | None |
 | [zotsampleport](https://github.com/zopencommunity/zotsampleport) | 0 | 100.0% | None |
 
-Last updated:  2025-10-14 06:16:31 UTC
+Last updated:  2025-10-14 09:43:10 UTC
