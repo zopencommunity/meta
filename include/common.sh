@@ -2754,7 +2754,7 @@ updatePackageDB()
     metadataFile="${ZOPEN_PKGINSTALL}/${pkgdir}/metadata.json"
     if [ ! -e "${metadataFile}" ]; then
       # TODO: Fallback to filesystem analysis [depending on backward compatability]
-      printWarning "No metadata.json found in '${ZOPEN_PKGINSTALL}/${pkgdir}'. Old package install?"
+      printWarning "No metadata.json found in '${ZOPEN_PKGINSTALL}/${pkgdir}' [recent install/old package?]"
       continue
     fi
     escapedJSONFile=$(mktempfile "escaped" "json")
