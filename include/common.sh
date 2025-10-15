@@ -303,7 +303,7 @@ writeConfigFile(){
 #!/bin/false  # Script currently intended to be sourced, not run
 # zopen community Configuration file
 
-displayHelp() {
+zot_displayHelp() {
 echo "usage: . zopen-config [--eknv] [--knv] [--quiet] [-?|--help]"
 echo "  --override-zos-tools   Adds altbin/ dir to the PATH and altman/ dir to MANPATH, overriding the native z/OS tooling."
 echo "  --nooverride-zos-tools Does not add altbin/ and altman/ dir to PATH and MANPATH."
@@ -328,18 +328,33 @@ knv=false
 exportknv=""
 displayText=true
 unset overrideFile
-while [ \$# -gt 0 ]; do
-  case "\$1" in
-    --eknv) exportknv="export "; knv=true;;
-    --knv) knv=true;;
-    --override-zos-tools)  export ZOPEN_TOOLSET_OVERRIDE=1;;
-    --nooverride-zos-tools)  unset ZOPEN_TOOLSET_OVERRIDE;;
-    --override-zos-tools-subset) shift;  export ZOPEN_TOOLSET_OVERRIDE=1; overrideFile="\$1";;
-    --quiet) displayText=false;;
-    -?|--help) displayHelp; return 0;;
-  esac
-  shift
-done
+
+zot_parse() {
+  while [ "\$#" -gt 0 ]; do
+    case \$1 in
+      --eknv) exportknv="export "; knv=true ;;
+      --knv)  knv=true ;;
+      --override-zos-tools)  export ZOPEN_TOOLSET_OVERRIDE=1;;
+      --nooverride-zos-tools)   unset ZOPEN_TOOLSET_OVERRIDE ;;
+      --override-zos-tools-subset)
+        [ "\$#" -ge 2 ] || { printf '%s\n' "error: --override-zos-tools-subset needs a file" >&2; return 2; }
+        export ZOPEN_TOOLSET_OVERRIDE=1
+        overrideFile=\$2; 
+        [ -f "\${overrideFile}" ] || { echo "Error. Override file '\${overrideFile}' is not a file." >&2; return 4; }
+        [ -r "\${overrideFile}" ] || { echo "Error. Override file '\${overrideFile}' is not readable." >&2; return 4; }
+        shift 2; continue ;;
+      --quiet) displayText=false ;;
+      --) shift; break ;;
+      -\?|--help) zot_displayHelp; return 0 ;;
+      --*) printf 'error: unknown option: %s\n' "\$1" >&2; return 2 ;;
+      *)  # positional argument if you support any; collect or ignore
+          ;;
+    esac
+    shift
+  done
+  return 0
+}
+zot_parse "\$@"
 
 for local_tmp in "\${TMPDIR}" "\${TMP}" /tmp; do
   [ -n "\${local_tmp}" ] && [ -d "\${local_tmp}" ] && break
