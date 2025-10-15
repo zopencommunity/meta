@@ -1486,16 +1486,24 @@ syslog()
   module=$4       # zopen-<MODULE>
   location=$5     # function
   msg=$6          # Message text
-  if [ ! -e "${fd}" ]; then
-    mkdir -p "$(dirname "${fd}")"
-    touch "${fd}"
-  fi
+  parent=$(dirname "${fd}")
+
   output="$(date +"%F %T") $(id | cut -d' ' -f1)::${module}:${type}:${categories}:${location}:${msg}"
-  if [ -w "${fd}" ]; then
-    echo "${output}" >> "${fd}"
-  else
-    printWarning "No write permission to log file '${fd}'; writing to stderr"
+  if [ ! -d "${parent}" ]; then
+    mkdir -p "${parent}" 2>/dev/null || {
+      printWarning "Cannot create log directory '${parent}'; writing syslog to stderr"
+      echo "${output}" >&2
+    }
+  elif [ ! -e "${fd}" ]; then
+    touch "${fd}" 2>/dev/null || {
+      printWarning "Cannot create log file '${fd}'; writing syslog to stderr"
+      echo "${output}" >&2
+    }
+  elif [ ! -w "${fd}" ]; then
+    printWarning "No write permission to log file '${fd}'; writing syslog to stderr"
     echo "${output}" >&2
+  else 
+    echo "${output}" >> "${fd}"
   fi
 
 }
