@@ -2286,7 +2286,13 @@ checkIfPrereq(){
       "${ZOPEN_ROOTFS}/var/lib/zopen/packageDB.json"
 }
 
-
+# spaceValidate
+# Ensures there is sufficient available disk space for an operation to continue.
+# Note that auto-expanding Filesystems might display the warning, even if an 
+# expansion is possible; as such, allow the user to continue. Caveat consumptor...
+# Input: $1 - cacheBytes: number of bytes required for caching packages
+#        $2 - packageBytes: number of bytes require for uncompressing package
+# stdout: Formatted file size to 3 decimal places with TGMk suffix
 spaceValidate(){
   cacheBytes=$1
   packageBytes=$2
@@ -2297,6 +2303,10 @@ spaceValidate(){
     return
   fi
 
+  cacheBytesKb=$(echo "scale=0; ${cacheBytes} / 1024" | bc)
+  packageBytesKb=$(echo "scale=0; ${packageBytes} / 1024" | bc)
+  spaceRequiredKb=$(echo "scale=0; ${cacheBytesKb} + ${packageBytesKb}" | bc)    
+
   if ${reinstall}; then
     # During a reinstall, the existing package size should remain constant as the
     # package should overwrite the existing with the same files. However
@@ -2304,28 +2314,28 @@ spaceValidate(){
     # autocacheclean is active, then this should be temporary; if not, then the
     # cache will grow - inform the user either way
     printVerbose "Reinstall of package, so package file size delta should be 0!"
-    spaceRequiredMB=$(echo "scale=0; (${cacheBytes}) / (1024 * 1024)" | bc)
-    spaceRequiredKb=$(( cacheBytes / 1024 ))
+    spaceRequiredKb=$(echo "scale=0; (${cacheBytes}) / 1024" | bc)
     if ! isCacheClean=$(zopen config --get autocacheclean); then
       printError "Could not determine autocacheclean status"
     fi
     if ${isCacheClean}; then
-      printInfo "During this operation, ${spaceRequiredMB} MB of disk space will be used."
+      printInfo "During this operation, $(formattedFileSize "${spaceRequiredKb}") of disk space will be used."
     else
-      printInfo "After this operation, ${spaceRequiredMB} MB of additional cache will be used."
+      printInfo "After this operation, $(formattedFileSize "${spaceRequiredKb}") of additional cache will be used."
     fi
   elif ${downloadOnly}; then
     # To download to current dir, then only need to make sure there is enough disk space
     # for the pax, the "cached" size
-    spaceRequiredMB=$(echo "scale=0; (${cacheBytes}) / (1024 * 1024)" | bc)
-    spaceRequiredKb=$(( cacheBytes / 1024 ))
-    printInfo "After this operation, $(formattedFileSize ${spaceRequiredKb}) of additional disk space will be used."
+    spaceRequiredKb=$(echo "scale=0; (${cacheBytes}) / 1024" | bc)
+    printInfo "After this operation, $(formattedFileSize "${spaceRequiredKb}") of additional disk space will be used."
   else
-    # If not a reinstall, assume there is a need for both the package and the expanded
-    # package to be required
-    spaceRequiredKb=$(( (cacheBytes + packageBytes) / 1024 ))
-    spaceRequiredMB=$(echo "scale=0; (${cacheBytes} + ${packageBytes}) / (1024 * 1024)" | bc)
-    printInfo "After this operation, $(formattedFileSize ${spaceRequiredKb}) of additional disk space will be used."
+    # If not a reinstall, there is a space requirement for both the 
+    # package and the expanded package during install; if autocache clean is on,
+    # some of that will be released
+    if ${isCacheClean}; then
+      printInfo "During this operation, up to $(formattedFileSize "${spaceRequiredKb}") of disk space will be required."
+    fi
+    printInfo "After this operation, $(formattedFileSize "${packageBytesKb}") of disk space will be used."
   fi
   availableSpaceKb=$(df -k "${ZOPEN_ROOTFS}" | sed "1d" | awk '{ print $3 }' | awk -F'/' '{ print $1 }')
   if [ "${availableSpaceKb}" -lt "${spaceRequiredKb}" ]; then
