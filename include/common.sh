@@ -307,7 +307,7 @@ displayHelp() {
 echo "usage: . zopen-config [--eknv] [--knv] [--quiet] [-?|--help]"
 echo "  --override-zos-tools   Adds altbin/ dir to the PATH and altman/ dir to MANPATH, overriding the native z/OS tooling."
 echo "  --nooverride-zos-tools Does not add altbin/ and altman/ dir to PATH and MANPATH."
-echo "  --override-zos-tools-subset=<file>"
+echo "  --override-zos-tools-subset <file>"
 echo "      Override a subset of zos tools. Containing a subset of packages to override, delimited by newlines."
 echo "  --knv                  Display zopen environment variables "
 echo "  --eknv                 Display zopen environment variables, prefixed with an"
@@ -346,11 +346,8 @@ for local_tmp in "\${TMPDIR}" "\${TMP}" /tmp; do
 done
 
 if \${knv}; then
-  /bin/env | /bin/sort > \${local_tmp}/zopen-config-env-orig.\$\$
-fi
-
-if [ -n "\${overrideFile}" ] && [ ! -f "\${overrideFile}" ]; then
-  echo "Override file '\${overrideFile}' is not a file. Skipping..."
+  original_env="\${local_tmp}/zopen-config-env-orig."\$\$
+  /bin/env | /bin/sort > \${original_env}
 fi
 
 # Main root location for the zopen installation; can be changed if the
@@ -448,7 +445,7 @@ if [ -z "\${ZOPEN_QUICK_LOAD}" ]; then
   if [ -d "\${ZOPEN_ROOTFS}/etc/profiled" ]; then
 
     if \$displayText; then
-      /bin/printf "Processing \$zot configuration..."
+      /bin/printf "Processing %s configuration..." "\$zot"
     fi
 
     tmpfile="\${local_tmp}/zopen_config.tmp"
@@ -460,7 +457,7 @@ if [ -z "\${ZOPEN_QUICK_LOAD}" ]; then
     else
       echo "Error: find command failed" >&2
       [ -e "\${tmpfile}" ] && rm "\${tmpfile}"
-      exit 1
+      return 1
     fi
     [ -e "\${tmpfile}" ] && rm "\${tmpfile}"
 
@@ -469,7 +466,7 @@ if [ -z "\${ZOPEN_QUICK_LOAD}" ]; then
       if [ -n "\${ZOPEN_TOOLSET_OVERRIDE}" ]; then
         /bin/echo "NOTE: Conflicting tools (eg. man, cat, grep, make) will take precedence over z/OS /bin tools. Pass the option --nooverride-zos-tools to avoid this."
       else
-        /bin/echo "NOTE: Conflicting tools (eg. man, cat, grep, make) will NOT take precedence over z/OS /bin tools; Use the prefixed executables instead (eg. zotman, gcat, ggrep, gmake). Pass the option --override-zos-tools if you prefer zopen tools or --help for further options."
+        /bin/echo "NOTE: Conflicting tools (eg. man, cat, grep, make) will NOT take precedence over z/OS /bin tools; use the prefixed executables instead (eg. zotman, gcat, ggrep, gmake). Pass the option --override-zos-tools if you prefer zopen tools or --help for further options."
       fi
     fi
     unset dotenvs
@@ -479,15 +476,15 @@ unset displayText
 PATH=\${ZOPEN_ROOTFS}/usr/local/bin:\${ZOPEN_ROOTFS}/usr/bin:\${ZOPEN_ROOTFS}/bin:\${ZOPEN_ROOTFS}/boot:\$(zot_sanitizeEnvVar "\${PATH}" ":" "^\${ZOPEN_PKGINSTALL}/.*\$")
 MANPATH=\${ZOPEN_ROOTFS}/usr/local/share/man:\${ZOPEN_ROOTFS}/usr/local/share/man/\%L:\${ZOPEN_ROOTFS}/usr/share/man:\${ZOPEN_ROOTFS}/usr/share/man/\%L:\$(zot_sanitizeEnvVar "\${MANPATH}" ":" "^\${ZOPEN_PKGINSTALL}/.*\$")
 
-if [ -n "\$ZOPEN_TOOLSET_OVERRIDE" ]; then
+if [ -n "\${ZOPEN_TOOLSET_OVERRIDE}" ]; then
   if [ -n "\${overrideFile}" ] && [ -f "\${overrideFile}" ]; then
     PATH=\$(zot_sanitizeEnvVar "\${PATH}" ":" "^\${ZOPEN_ROOTFS}/usr/local/altbin.*\$")
     while IFS= read -r project; do
-      if [ -d "\$ZOPEN_PKGINSTALL/\$project/\$project/altbin" ]; then
-        PATH="\$ZOPEN_PKGINSTALL/\$project/\$project/altbin:\$PATH"
+      if [ -d "\${ZOPEN_PKGINSTALL}/\${project}/\${project}/altbin" ]; then
+        PATH="\${ZOPEN_PKGINSTALL}/\${project}/\${project}/altbin:\$PATH"
       fi
-      if [ -d "\$ZOPEN_PKGINSTALL/\$project/\$project/share/altman" ]; then
-        MANPATH="\$ZOPEN_PKGINSTALL/\$project/\$project/share/altman:\$MANPATH"
+      if [ -d "\${ZOPEN_PKGINSTALL}/\${project}/\${project}/share/altman" ]; then
+        MANPATH="\${ZOPEN_PKGINSTALL}/\${project}/\${project}/share/altman:\$MANPATH"
       fi
     done < "\${overrideFile}"
   else
@@ -506,8 +503,9 @@ export LIBPATH=\$(zot_deleteDuplicateEntries "\${LIBPATH}" ":")
 export MANPATH=\$(zot_deleteDuplicateEntries "\${MANPATH}" ":")
 
 if \${knv}; then
-  /bin/env | /bin/sort > \${local_tmp}/zopen-config-env-modded.\$\$
-  diffout=\$(/bin/diff \${local_tmp}/zopen-config-env-orig.\$\$ \${local_tmp}/zopen-config-env-modded.\$\$ | /bin/grep -E '^[>]' | /bin/cut -c3- )
+  modified_env="\${local_tmp}/zopen-config-env-modded."\$\$
+  /bin/env | /bin/sort > \${modified_env}
+  diffout=\$(/bin/diff \${original_env} \${modified_env} | /bin/grep -E '^>' | /bin/cut -c3- )
   echo "\${diffout}" | while IFS= read -r knvp; do
     newval=""
     envvar="\${knvp%%=*}"
@@ -520,7 +518,7 @@ if \${knv}; then
     echo "\${exportknv}\${envvar}=\${newval#*:}"
     IFS="\${cIFS}"
   done
-  rm \${local_tmp}/zopen-config-env-orig.\$\$ \${local_tmp}/zopen-config-env-modded.\$\$ 2>/dev/null
+  rm \${original_env} \${modified_env} 2>/dev/null
 fi
 
 # Cleanup
