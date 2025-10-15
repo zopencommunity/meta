@@ -205,6 +205,7 @@
 - 2025-03-06: [Update ghcli-version to 2.68.1 from 2.67.0](https://github.com/zopencommunity/githubcliport/pull/47) ❌
 
 ### gitlabcliport
+- 2025-10-14: [Update glab-version to 1.74.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/45) ❌
 - 2025-10-11: [Update glab-version to 1.73.1 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/44) ❌
 - 2025-10-07: [Update glab-version to 1.73.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/43) ❌
 - 2025-09-17: [Update glab-version to 1.72.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/42) ❓
@@ -394,6 +395,7 @@
 - 2025-08-22: [Update nano-version to 8.6 from 8.5](https://github.com/zopencommunity/nanoport/pull/20) ❌
 
 ### natsport
+- 2025-10-14: [Update nats-version to 2.12.1 from 2.11.8](https://github.com/zopencommunity/natsport/pull/32) ❌
 - 2025-09-22: [Update nats-version to 2.12.0 from 2.11.8](https://github.com/zopencommunity/natsport/pull/31) ❌
 - 2025-09-10: [Update nats-version to 2.11.9 from 2.11.8](https://github.com/zopencommunity/natsport/pull/30) ❌
 
@@ -488,9 +490,6 @@
 ### screenport
 - 2025-05-15: [Update screen-version to 5.0.1 from 4.9.1](https://github.com/zopencommunity/screenport/pull/11) ❌
 - 2024-08-29: [Update screen-version to 5.0.0 from 4.9.1](https://github.com/zopencommunity/screenport/pull/8) ❌
-
-### spdlogport
-- 2025-10-11: [Update spdlog-version to 1.16.0 from 1.15.1](https://github.com/zopencommunity/spdlogport/pull/10) ❌
 
 ### sqliteport
 - 2025-07-31: [Update sqlite-version to 2025-3500400 from 2025-3480000](https://github.com/zopencommunity/sqliteport/pull/30) ❌
@@ -885,5 +884,5 @@
 ---
 
 
-> Last updated: 2025-10-14 09:36:47 EDT
+> Last updated: 2025-10-15 06:10:21 EDT
 

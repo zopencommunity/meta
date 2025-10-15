@@ -50,12 +50,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="crush" data-searchable-text="crush Skipped N/A STABLE_crush_3781 AI coding agent for your favourite terminal  ai port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="crush" data-searchable-text="crush Skipped N/A STABLE_crush_3808 AI coding agent for your favourite terminal  ai port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/crushport" target="_blank" rel="noopener noreferrer">crush</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/crushport/releases/download/STABLE_crushport_3781/crush-v0.10.4.20251001_153137.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_crush_3781</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/crushport/releases/download/STABLE_crushport_3808/crush-v0.11.0.20251014_153140.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_crush_3808</a></div>
     <div class="tool-desc" title="AI coding agent for your favourite terminal ">AI coding agent for your favourite terminal </div>
   </div>
 </div>
@@ -198,12 +198,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 ## Core 
 
-<div class="tool-item-filterable" data-package-name="frp" data-searchable-text="frp Green 100.0% STABLE_frp_3158 A reverse proxy core port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="frp" data-searchable-text="frp Green 100.0% STABLE_frp_3806 A reverse proxy core port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/frpport" target="_blank" rel="noopener noreferrer">frp</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/frpport/releases/download/STABLE_frpport_3158/frp-heads.v0.61.1.20250307_054244.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_frp_3158</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/frpport/releases/download/STABLE_frpport_3806/frp-v0.65.0.20251014_144547.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_frp_3806</a></div>
     <div class="tool-desc" title="A reverse proxy">A reverse proxy</div>
   </div>
 </div>
@@ -570,12 +570,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="dos2unix" data-searchable-text="dos2unix Blue 99.1% STABLE_dos2unix_3031 A tool for converting DOS/Windows text files to Unix format development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="dos2unix" data-searchable-text="dos2unix Blue 99.2% STABLE_dos2unix_3807 A tool for converting DOS/Windows text files to Unix format development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/dos2unixport" target="_blank" rel="noopener noreferrer">dos2unix</a></strong></div>
     <div class="tool-status">Status: Blue</div>
-    <div class="tool-test">Test: 99.1%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/dos2unixport/releases/download/STABLE_dos2unixport_3031/dos2unix-7.5.2.20250131_100352.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_dos2unix_3031</a></div>
+    <div class="tool-test">Test: 99.2%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/dos2unixport/releases/download/STABLE_dos2unixport_3807/dos2unix-7.5.3.20251014_152241.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_dos2unix_3807</a></div>
     <div class="tool-desc" title="A tool for converting DOS/Windows text files to Unix format">A tool for converting DOS/Windows text files to Unix format</div>
   </div>
 </div>
@@ -1088,12 +1088,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="dos2unix" data-searchable-text="dos2unix Blue 99.1% STABLE_dos2unix_3031 A tool for converting DOS/Windows text files to Unix format editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="dos2unix" data-searchable-text="dos2unix Blue 99.2% STABLE_dos2unix_3807 A tool for converting DOS/Windows text files to Unix format editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/dos2unixport" target="_blank" rel="noopener noreferrer">dos2unix</a></strong></div>
     <div class="tool-status">Status: Blue</div>
-    <div class="tool-test">Test: 99.1%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/dos2unixport/releases/download/STABLE_dos2unixport_3031/dos2unix-7.5.2.20250131_100352.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_dos2unix_3031</a></div>
+    <div class="tool-test">Test: 99.2%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/dos2unixport/releases/download/STABLE_dos2unixport_3807/dos2unix-7.5.3.20251014_152241.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_dos2unix_3807</a></div>
     <div class="tool-desc" title="A tool for converting DOS/Windows text files to Unix format">A tool for converting DOS/Windows text files to Unix format</div>
   </div>
 </div>
@@ -2496,12 +2496,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="crush" data-searchable-text="crush Skipped N/A STABLE_crush_3781 AI coding agent for your favourite terminal  utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="crush" data-searchable-text="crush Skipped N/A STABLE_crush_3808 AI coding agent for your favourite terminal  utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/crushport" target="_blank" rel="noopener noreferrer">crush</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/crushport/releases/download/STABLE_crushport_3781/crush-v0.10.4.20251001_153137.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_crush_3781</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/crushport/releases/download/STABLE_crushport_3808/crush-v0.11.0.20251014_153140.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_crush_3808</a></div>
     <div class="tool-desc" title="AI coding agent for your favourite terminal ">AI coding agent for your favourite terminal </div>
   </div>
 </div>
@@ -2686,12 +2686,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="meta" data-searchable-text="meta Green 100.0% STABLE_meta_3797 zopen package manager utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="meta" data-searchable-text="meta Green 100.0% STABLE_meta_3805 zopen package manager utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/metaport" target="_blank" rel="noopener noreferrer">meta</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/metaport/releases/download/STABLE_metaport_3797/meta-main.20251008_204712.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_meta_3797</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/metaport/releases/download/STABLE_metaport_3805/meta-main.20251014_140319.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_meta_3805</a></div>
     <div class="tool-desc" title="zopen package manager">zopen package manager</div>
   </div>
 </div>
@@ -3019,4 +3019,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2025-10-14 09:43:10 UTC
+Last updated:  2025-10-15 06:16:42 UTC
