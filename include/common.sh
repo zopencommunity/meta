@@ -2146,8 +2146,6 @@ validatePackageList(){
   )
 
   if [ -n "${invalidPortList}" ]; then
-    printSoftError "The following port names were not recognised:"
-    
     # Calculate word lengths for nicer formatting
     set -- ${invalidPortList}
     minlen=1
@@ -2155,10 +2153,12 @@ validatePackageList(){
       wordlen=${#toolrepo}
       minlen=$(( wordlen > minlen ? wordlen : minlen ))
     done
+
     # Respin loop actually checking for suggestions
     set -- ${invalidPortList}
+    printSoftError "The following port name$( [ $# -eq 1 ] && echo " was" || echo "s were") not recognised:"
     for toolrepo in "$@"; do
-      printDebug "Finding suggestions for '${toolrepo}'[${#toolrepo}]"
+      printVerbose "Finding suggestions for '${toolrepo}'[${#toolrepo}]"
       suggestion=$(toolSuggestion "${toolrepo}")
         # Use printf to print without the printSoftError prefix for cleaner output
       if [ -n "${suggestion}" ]; then
