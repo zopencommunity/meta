@@ -166,7 +166,7 @@ while IFS= read -r repo; do
   latest_release_vulns=""
   is_latest_release=true
   if $upgrade; then
-    latest_release=$(jq -cr '.release_data | .["'$repo'"] | .[0] | .assets | .[0] | .release' $LATEST_RELEASES_CACHE)
+    latest_release=$(jqw -cr '.release_data | .["'$repo'"] | .[0] | .assets | .[0] | .release' $JSON_LATEST_CACHE)
 
     if [ "$release" != "$latest_release" ]; then
       is_latest_release=false
