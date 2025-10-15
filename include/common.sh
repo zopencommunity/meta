@@ -1064,7 +1064,7 @@ printDebug()
   [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
   # shellcheck disable=SC2154
   if ${debug}; then
-    printColors "${NC}${BLUE}${BOLD}:DEBUG:${NC}: '${1}'"
+    printColors "${NC}${BLUE}${BOLD}:DEBUG:${NC}: '${1}'" >&2
   fi
   [ -n "${xtrc}" ] && set -x
   return 0
@@ -1075,7 +1075,7 @@ printVerbose()
   [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
   # shellcheck disable=SC2154
   if ${verbose}; then
-    printColors "${NC}${GREEN}${BOLD}VERBOSE${NC}: ${1}"
+    printColors "${NC}${GREEN}${BOLD}VERBOSE${NC}: ${1}" >&2
   fi
   [ -n "${xtrc}" ] && set -x
   return 0
