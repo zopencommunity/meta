@@ -1793,19 +1793,22 @@ startGPGAgent() {
       printWarning "Found orphaned GPG agent socket at ${SOCKET_PATH}; removing and attempting restart of gpg-agent."
       rm -f "${SOCKET_PATH}"
     fi
+  else 
+    printWarning "gpg socket at '$SOCKET_PATH' cannot be read"
   fi
 
   if eval "$(gpg-agent --daemon --disable-scdaemon)" >/dev/null 2>&1; then
     if [ -r "$SOCKET_PATH" ]; then
       printVerbose "gpg-agent started successfully (socket created at $SOCKET_PATH)."
     else
-      printWarning "gpg-agent started, but socket was not created at $SOCKET_PATH. Please verify your GPG installation."
+      printWarning "gpg-agent start initiated, but socket was not created at $SOCKET_PATH. Check file permissions for directory '$(dirname "$SOCKET_PATH")' and files contained"
+      printWarning "gpg-agent daemon might not complete initialisation"
     fi
   else
     if [ -r "$SOCKET_PATH" ]; then
       printWarning "gpg-agent started successfully (socket created at $SOCKET_PATH), but gpg-agent returned a non-zero return code."
     else
-      printError "Failed to start gpg-agent. Reinstall or upgrade GPG using \"zopen install --reinstall gpg -y\" or \"zopen upgrade gpg -y\"."
+      printError "Failed to start gpg-agent. Check file permissions for directory '$(dirname "$SOCKET_PATH")' and files contained."
     fi
   fi
 }
