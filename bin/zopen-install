@@ -271,7 +271,7 @@ fi
 printDebug "Checking if installing from pax files: ${fileinstall}"
 if ! ${fileinstall}; then
   printVerbose "Querying metadata for latest package information"
-  getRepos
+  updateCaches
   grfgRc=$?
   [ 0 -ne ${grfgRc} ] && exit ${grfgRc};
 fi
@@ -295,7 +295,7 @@ else
     installList=$(jq --raw-output '.release_data| keys[]' "${JSON_CACHE}") 
     installListCount=$(jq --raw-output '.release_data| keys | length' "${JSON_CACHE}") 
     printInfo "- Installing all currently-uninstalled packages"
-    printInfo "- Checking installation status for '${installListCount}' packages"
+    printInfo "- Checking installation status for ${installListCount} package$([ "${installListCount}" -ne 1 ] && echo "s")"
   else
     installList=$(echo "$chosenRepos" | sed "s/@@/ /g")
     validatePackageList "${installList}"

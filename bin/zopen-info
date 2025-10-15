@@ -15,6 +15,7 @@ setupMyself()
     echo "Internal Error. Unable to find common.sh file to source." >&2
     exit 8
   fi
+  # shellcheck disable=SC1091
   . "${INCDIR}/common.sh"
 }
 setupMyself
@@ -286,6 +287,7 @@ while [ $# -gt 0 ]; do
 done
 
 checkIfConfigLoaded
-getRepos true
-
-printPackageInfo "${package}" "${remote_lookup}"
+updateCaches
+validatePackageList "${package}"
+gatherPackageInfo "${package}" "${remote_lookup}"
+outputPackageInfo

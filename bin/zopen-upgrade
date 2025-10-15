@@ -131,7 +131,7 @@ fi
 
 # Parse passed in repositories and check if valid zopen framework repos
 printVerbose "Querying remote repo for latest package information"
-getRepos
+updateCaches
 grfgRc=$?
 [ 0 -ne ${grfgRc} ] && exit ${grfgRc};
 # shellcheck disable=SC2034

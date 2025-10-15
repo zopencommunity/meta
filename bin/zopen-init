@@ -203,16 +203,6 @@ while [ $# -gt 0 ]; do
   shift
 done
 # Wrapper around jq to provide extra help for certain scenarios
-jqw()
-{
-  if ! type jq >/dev/null 2>&1; then
-    printSoftError "Cannot locate 'jq'."
-    printSoftError "If recovering a system, run . ./.env from the following location:"
-    printError "  <zopenroot>/usr/local/zopen/jq/<jq-version>  and retry command"
-  fi
-  jq "$@"
-}
-
 determineRootFileSystem()
 {
   if [ -n "${ZOPEN_ROOT_PATH}" ]; then

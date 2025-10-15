@@ -100,7 +100,8 @@ printDetailListEntries()
     if [ ! -z "$1" ] && ! ${noheader}; then
       printf "${NC}${UNDERLINE}%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s${NC}\n" "Package" "Installed" "Available" "Latest Tag" "Categories"
     fi
-    echo "${repoArray}" | xargs | tr ' ' '\n' | sort | while read repo; do
+    jqw -r '.release_data | keys[]' "${JSON_CACHE}" |\
+        xargs | tr ' ' '\n' | sort | while read repo; do
       listport=false
       if [ -z "${needle}" ]; then
         listport=true
@@ -145,7 +146,6 @@ printDetailListEntries()
       fi
     done
   else
-    printVerbose "Checking repoArray: ${repoArray}"
     scrcols=$(getScreenCols)
     numcols=7
     colwidth=$((scrcols / numcols - 1))
@@ -153,7 +153,8 @@ printDetailListEntries()
     if ! ${noheader}; then
       printf "${NC}${UNDERLINE}%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s${NC}\n" "Package" "Installed" "Latest Tag" "Download Size" "Expanded Size" "Quality" "Categories"
     fi
-    echo "${repoArray}" | xargs | tr ' ' '\n' | sort | while read repo; do
+    jqw -r '.release_data | keys[]' "${JSON_CACHE}" | \
+        xargs | tr ' ' '\n' | sort | while read repo; do
       listport=false
       if [ -z "${needle}" ]; then
         listport=true
@@ -264,19 +265,19 @@ while [ $# -gt 0 ]; do
     ;;
   "-i" | "--installed")
     localoption=true
-    installed=1
+    installed=true
     list=true
     ;;
   "-wp" | "--whatprovides")
     localoption=true
-    whatprovides=1
+    whatprovides=true
     shift
     [ -n "$1" ] || printError "Missing file argument"
     needle=$1
     ;;
   "--remote-search")
     localoption=false
-    remotesearch=1
+    remotesearch=true
     shift
     [ -n "$1" ] || printError "Missing package argument"
     needle=$1
@@ -346,10 +347,9 @@ fi
 
 if ! ${localoption}; then
   # Retrieve all repositories
-  getRepos
+  updateCaches
   grfgRc=$?
   [ 0 -ne "${grfgRc}" ] && exit "${grfgRc}"
-  repoArray="${repo_results}"
 fi
 
 # Use dedicated zopen-list script for listing system packages, passing
@@ -366,6 +366,6 @@ if ${list}; then
   fi
 else
   ! ${upgradeable} || printDetailListEntries "${details}" "" 1
-  [ -z "${remotesearch}" ] || printDetailListEntries "${details}" "${needle}" 0
-  [ -z "${whatprovides}" ] || whatProvides "${needle}"
+  ! ${remotesearch} || printDetailListEntries "${details}" "${needle}" 0
+  ! ${whatprovides} || whatProvides "${needle}"
 fi

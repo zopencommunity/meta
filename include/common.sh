@@ -41,7 +41,13 @@ zopenInitialize()
   ZOPEN_JSON_CACHE_URL="https://raw.githubusercontent.com/${ZOPEN_ORGNAME}/meta/main/docs/api/zopen_releases.json"
   # shellcheck disable=SC2034
   ZOPEN_LATEST_RELEASE_JSON="https://raw.githubusercontent.com/${ZOPEN_ORGNAME}/meta/main/docs/api/zopen_releases_latest.json"
+   # shellcheck disable=SC2034
+  JSON_FILES_CACHE_URL="https://raw.githubusercontent.com/zopencommunity/meta/main/docs/api/zopen_files.json"
   ZOPEN_JSON_CONFIG="${ZOPEN_ROOTFS}/etc/zopen/config.json"
+  ZOPEN_CACHEDURL_DIR="${ZOPEN_ROOTFS}/var/cache/zopen"
+  ZOPEN_REPOS_DIR="${ZOPEN_ROOTFS}/etc/zopen/repos.d"
+ 
+
   if [ -n "${INCDIR}" ]; then
     ZOPEN_SCRIPTLET_DIR="${INCDIR}/scriptlets"
   else
@@ -1516,61 +1522,59 @@ validateReposDEntry(){
   done
 }
 
-getJSONCacheURLs(){
-  reposdDir="${ZOPEN_ROOTFS}/etc/zopen/repos.d"
-  activeRepo="${reposdDir}/active"
+# buildCacheURL
+# Given a cache filename, generate the appropriate URL to retrieve
+# the latest cache data from, taking into account the different repo types
+# inputs: cacheFileName  - the name of the cache to update
+# stdout: the url to check for the latest cache
+# return: 0  success
+#         1  failure
+buildCacheURL(){
+  cacheFileName=$1
+  activeRepo="${ZOPEN_REPOS_DIR}/active"
   dereffedLink=$(deref_symlink "${activeRepo}")
   [ ! -e "${dereffedLink}" ] && printError "Could not access linked repository configuration at '${dereffedLink}'. Check file to ensure valid repository configuration or refresh default configuration with zopen init --refresh -y."
   if ! validateReposDEntry "${dereffedLink}"; then
     return 1
   fi
-  type=$(jqGetKey "type" "${dereffedLink}")
-  base=$(jqGetKey "metadata_baseurl" "${dereffedLink}")
-  filename=$(jqGetKey "metadata_file" "${dereffedLink}")
-  latest_metadata=$(jqGetKey "latest_file" "${dereffedLink}")
-
+  # Failures in the following indicate the configuration file isn't setup correctly
+  type=$(jqGetKey "type" "${dereffedLink}") || printError "Unrecognised key 'type' in configuration file."
+  base=$(jqGetKey "metadata_baseurl" "${dereffedLink}") || printError "Unrecognised key 'metadata_baseurl' in configuration file."
+  
   case "${type}" in
-    http|https) jsonCacheURLs=$(printf "%s://%s/%s\n%s://%s/%s" \
-                    "${type}" "${base}" "${filename}" "${type}" "${base}" "${latest_metadata}")
+    http|https) printf "%s://%s/%s\n" "${type}" "${base}" "${cacheFileName}"
     ;;
-    file) jsonCacheURLs=$(printf "%s:%s/%s\n%s:%s/%s" \
-              "${type}" "${base}" "${filename}" "${type}" "${base}" "${latest_metadata}")
+    file) printf "%s:%s/%s\n" "${type}" "${base}" "${cacheFileName}"
     ;;
-    *)        printError "Unsupported repository type '${type}'.";;
+    *) printError "Unsupported repository type '${type}'.";;
   esac
 }
 
-updateJSONCaches()
+# shellcheck disable=SC2120
+updateCaches()
 {
-  if [ -n "${JSON_CACHE}" ]; then
-    printVerbose "Cache already downloaded/checked during this session"
-    return 0
+  if [ $# -gt 0 ]; then
+    caches="$1"
+  else
+    caches="JSON_CACHE JSON_LATEST_CACHE JSON_CVE_CACHE JSON_FILES_CACHE"
   fi
-
-  from_readonly="$1"
-  if [ -n "${from_readonly}" ]; then
-    if [ -r "${JSON_CACHE}" ] && [ ! -w "${JSON_CACHE}" ]; then
-      return; # Skip the download for read only operations when you know you can't write to it
+  for cache in $caches; do
+    printVerbose "Checking if the $cache already downloaded in this session"
+    eval "value=\${$cache}"
+    if [ -z "${value}" ]; then
+      case "$cache" in
+        JSON_CACHE)         cacheFile="zopen_releases.json" ;;
+        JSON_LATEST_CACHE)  cacheFile="zopen_releases_latest.json" ;;
+        JSON_CVE_CACHE)     cacheFile="zopen_vulnerability.json" ;;
+        JSON_FILES_CACHE)   cacheFile="zopen_files.json" ;;
+        *) assertFailed "Invalid cache variable specified: $cache"
+      esac
+      fqCacheFile="${ZOPEN_CACHEDURL_DIR}/${cacheFile}"
+      eval "${cache}=${fqCacheFile}"
+      url=$(buildCacheURL "${cacheFile}") || printError "Unable to build url to update release data cache"
+      downloadJSONCacheIfExpired "${fqCacheFile}" "${url}"
     fi
-  fi
-
-  printVerbose "Ensuring cache directory exists"
-  cachedir="${ZOPEN_ROOTFS}/var/cache/zopen"
-  [ ! -e "${cachedir}" ] && mkdir -p "${cachedir}"
-  if ! getJSONCacheURLs; then
-    return 1
-  fi
-
-  printVerbose "Checking if the JSON_CACHE already downloaded in this session"
-  if [ -z "${JSON_CACHE}" ]; then
-    JSON_CACHE="${cachedir}/zopen_releases.json"
-    downloadJSONCacheIfExpired "${JSON_CACHE}" "$(echo "${jsonCacheURLs}" | tail -n 2 | head -n 1)"
-  fi
-  if [ -z "${JSON_LATEST_CACHE}" ]; then
-    JSON_LATEST_CACHE="${cachedir}/zopen_releases_latest.json"
-    latestReleaseURL="$(dirname "${jsonCacheURL}")/${latest_metadata}"
-    downloadJSONCacheIfExpired "${JSON_LATEST_CACHE}" "$(echo "${jsonCacheURLs}" | tail -n 1)"
-  fi
+  done
 }
 
 downloadJSONCacheIfExpired()
@@ -1579,6 +1583,17 @@ downloadJSONCacheIfExpired()
   cacheUrl="$2"
   cacheTimestamp="${fileToCache}.timestamp"
   cacheTimestampCurrent="${fileToCache}.timestamp.current"
+
+  printVerbose "Ensuring cache directory exists"
+  if [ ! -e "${ZOPEN_CACHEDURL_DIR}" ]; then
+    mkdir -p "${ZOPEN_CACHEDURL_DIR}" || printError "Cannot create cache directory for metadata at '${cachedir}'. Check permissions and retry."
+  fi
+
+  if [ -r "${fileToCache}" ] && [ ! -w "${fileToCache}" ]; then
+    # Skip the download for read only operations when you know you can't write to it
+    printWarning "Unable to write to cache at '${fileToCache}'; using stale cache data"
+    return; 
+  fi
 
     # Need to check that we can read & write to the JSON timestamp cache files
     if [ -e "${cacheTimestampCurrent}" ]; then
@@ -1594,7 +1609,10 @@ downloadJSONCacheIfExpired()
     if ! curlCmd --fail --location --silent --head "${cacheUrl}" -o "${cacheTimestampCurrent}"; then
       printError "Failed to obtain json cache timestamp from ${cacheUrl}."
     fi
-    chtag -tc 819 "${cacheTimestampCurrent}"
+    if command -v chtag >/dev/null 2>&1; then
+      printVerbose "Issuing chtag command"
+      chtag -tc 819 "${cacheTimestampCurrent}"
+    fi
 
     if [ -f "${fileToCache}" ] && [ -f "${cacheTimestamp}" ]; then
       # Extract eyecatchers - either ETag or Last-Modified depending on repo type
@@ -1624,30 +1642,6 @@ downloadJSONCacheIfExpired()
   fi
 }
 
-downloadJSONCache()
-{
-  if ! updateJSONCaches "$1"; then
-    return 1
-  else
-    return 0
-  fi
-}
-
-# getRepos
-# Queries the main repository list to obtain a list of all available port
-# names, populating the repo_results global var
-# inputs: none
-# return: 0  success
-#         1  failure
-getRepos()
-{
-  if ! updateJSONCaches "$1"; then
-    return 1
-  fi
-  # shellcheck disable=SC2034
-  repo_results="$(jq -r '.release_data | keys[]' "${JSON_CACHE}")"
-}
-
 # isValidRepo
 # Queries the main repository list to determine if the input is valid,  This
 # uses jq itself to return 0 or 1 with no output
@@ -1657,19 +1651,8 @@ getRepos()
 #         1  invalid port name
 isValidRepo()
 {
-  if ! updateJSONCaches; then
-    return 1
-  fi
+  updateCaches
   jq -r --arg needle "$1" 'if .release_data | has($needle) then empty else error("") end'  "${JSON_CACHE}" > /dev/null 2>&1
-}
-
-#Deprecated
-getRepoReleases()
-{
-  if ! updateJSONCaches; then
-    return 1
-  fi
-  repo="$1"
 }
 
 # Initializes a default environment for consistency in zopen builds
@@ -2037,9 +2020,7 @@ getPortMetaData(){
   fi
 
   parseRepoName "${portRequested}" # To set the various status flags below
-  if ! getRepoReleases "${portName}"; then
-    return 1
-  fi
+  updateCaches
   if [ -n "${versioned}" ]; then
     if ! getVersionedMetadata "${portName}" "${invalidPortAssetFile}"; then
       return 1
@@ -2938,6 +2919,16 @@ isTrue()
     1|[Tt][Rr][Uu][Ee] ) return 0;;
     *) return 1;;
   esac
+}
+
+jqw()
+{
+  if ! type jq >/dev/null 2>&1; then
+    printSoftError "Cannot locate 'jq'."
+    printSoftError "If recovering a system, run . ./.env from the following location:"
+    printError "  <zopenroot>/usr/local/zopen/jq/<jq-version>  and retry command"
+  fi
+  jq "$@"
 }
 
 # Lookup the list of ports and find the closest suggestion. This uses

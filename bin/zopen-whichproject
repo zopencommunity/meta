@@ -67,27 +67,13 @@ if ! command -v jq > /dev/null 2>&1; then
   exit 1
 fi
 
-JSON_FILES_URL="https://raw.githubusercontent.com/zopencommunity/meta/main/docs/api/zopen_files.json"
-JSON_FILES_URL="https://raw.githubusercontent.com/zopencommunity/meta/e859e89e75fab31c1d5b4764b9ee9f511c52b682/docs/api/zopen_files.json"
-
-downloadJsonCaches()
-{
-  cachedir="${ZOPEN_ROOTFS}/var/cache/zopen"
-  [ ! -e "${cachedir}" ] && mkdir -p "${cachedir}"
-  JSON_FILES_CACHE="${cachedir}/zopen_files.json"
-
-  if ! curlout=$(curlCmd -L --fail --no-progress-meter -o "${JSON_FILES_CACHE}" "${JSON_FILES_URL}"); then
-    printError "Failed to obtain vulnerability json from ${JSON_FILES_URL}; ${curlout}"
-  fi
-  chtag -tc 819 "${JSON_FILES_CACHE}"
-}
-
-downloadJsonCaches
+updateCaches "JSON_FILES_CACHE"
 
 # Perform the search using jq
 printVerbose "Searching for '${query_item}' in ${JSON_FILES_CACHE}..."
 
 # The jq query to find the project key(s) containing the item
+# shellcheck disable=SC2016
 jq_query='.project_files | to_entries[] | select(.value.binaries[]? == $item or .value.libs[]? == $item) | .key'
 
 # Execute jq, passing the query item as an argument
