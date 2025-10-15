@@ -1123,6 +1123,7 @@ runLogProgress()
     PROGRESS_HANDLER=$!
     killph="kill -HUP ${PROGRESS_HANDLER}"
     addCleanupTrapCmd "${killph}"
+    sleep 1 # Give the handler time to wakeup!
     eval "$1"
     rc=$?
     ${killph} >/dev/null 2>&1 # if the timer is not running, the kill will fail
