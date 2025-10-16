@@ -410,7 +410,7 @@ zot_deleteDuplicateEntries()
        a[\$0]++;
        printf("%s%s", col, \$0);
        col=ORS;
-    }' | /bin/sed "s/\${delim}//"
+    }' | /bin/sed "s/\${delim}\$//"
 }
 
 # zopen community environment variables
