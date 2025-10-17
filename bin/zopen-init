@@ -335,7 +335,9 @@ init()
       }; then
         printInfo "- Re-initializing; zopen-config will be re-created"
         backup="zopen-config.$(date +%Y%m%d%H%M%S)"
-        if ! cp "${configFile}" "$(dirname "${configFile}")/${backup}"; then
+        bupdir=$(dirname "${configFile}")/zopen
+        [ -e "${bupdir}" ] || { mkdir -p "${bupdir}" || printError "Unable to create directory '${bupdir}'"; }
+        if ! cp "${configFile}" "${bupdir}/${backup}"; then
           printError "Unable to backup existing file. Check permissions and retry command."
         fi
 
