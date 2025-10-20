@@ -2762,16 +2762,18 @@ updatePackageDB()
     if [ -z "${mdj}" ]; then
       pkg=$(basename "${pkgdir}")
       printWarning "Cannot locate metadata for installed package '${pkg}' at location '${metadataFile}'. Check file existence and permissions"
+    else
+      printVerbose "Valid metadata found for package '${pkg}' - add to install tracker"
+      if ! jq --argjson mdj "${mdj}" '. += $mdj' \
+              "${pdb}" > \
+              "${pdb}.working"; then
+        [ -e "${pdb}.working" ] && "${pdb}.working"
+        [ -e "${pdb}" ] && mv -f "${pdb}" "${pdb}.broken" # Save for potential diagnostics
+        printSoftError "Could not add metadata for '$(basename "${pkgdir}")' to install tracker."
+        printError "Run 'zopen init --refresh' to attempt database regeneration and re-run command."
+      fi
+      mv "${pdb}.working" "${pdb}"
     fi
-    if ! jq --argjson mdj "${mdj}" '. += $mdj' \
-            "${pdb}" > \
-            "${pdb}.working"; then
-      [ -e "${pdb}.working" ] && "${pdb}.working"
-      [ -e "${pdb}" ] && mv -f "${pdb}" "${pdb}.broken" # Save for potential diagnostics
-      printSoftError "Could not add metadata for '$(basename "${pkgdir}")' to install tracker."
-      printError "Run 'zopen init --refresh' to attempt database regeneration and re-run command."
-    fi
-    mv "${pdb}.working" "${pdb}"
   done
 }
 
