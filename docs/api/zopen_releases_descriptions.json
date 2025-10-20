@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2025-10-16T21:11:40+00:00Z",
+  "generation_timestamp_utc": "2025-10-20T12:40:41+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -277,6 +277,7 @@
     "pv": "Pipe Viewer - monitor data through a pipeline",
     "mc": "Midnight Commander is a feature-rich visual file manager for Unix-like systems",
     "ruby": "",
-    "check_podman": "Find and export podman path"
+    "check_podman": "Find and export podman path",
+    "util-macros": "X.Org: Set of autoconf macros used to build other xorg packages"
   }
 }
