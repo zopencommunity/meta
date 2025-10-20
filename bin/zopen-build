@@ -1635,6 +1635,10 @@ zz
     echo "PKG_CONFIG_PATH=\"\${${projectName}_HOME}/lib/pkgconfig:\$PKG_CONFIG_PATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
     echo "export PKG_CONFIG_PATH=\"\$(deleteDuplicateEntries \"\$PKG_CONFIG_PATH\" \":\")\"" >> "${ZOPEN_INSTALL_DIR}/.env"
   fi
+  if [ -d "${ZOPEN_INSTALL_DIR}/share/pkgconfig" ]; then
+    echo "PKG_CONFIG_PATH=\"\${${projectName}_HOME}/share/pkgconfig:\$PKG_CONFIG_PATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
+    echo "export PKG_CONFIG_PATH=\"\$(deleteDuplicateEntries \"\$PKG_CONFIG_PATH\" \":\")\"" >> "${ZOPEN_INSTALL_DIR}/.env"
+  fi
   if [ -d "${ZOPEN_INSTALL_DIR}/share/man" ] || [ "${projectName}" = "GIT" ]; then
     echo "MANPATH=\"\${${projectName}_HOME}/share/man:\$MANPATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
     echo "export MANPATH=\"\$(deleteDuplicateEntries \"\$MANPATH\" \":\")\"" >> "${ZOPEN_INSTALL_DIR}/.env"
