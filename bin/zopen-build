@@ -2006,10 +2006,19 @@ is_gnu_license_from_file()
   return 1
 }
 
-is_gnu_license_from_url() 
+is_gnu_license_from_url()
 {
-  echo "$ZOPEN_URL" | grep -qi "gnu"
-  return $?
+  case "$ZOPEN_URL" in
+    *nongnu*)
+      return 1  # Explicitly fail if "nongnu" is present
+      ;;
+    *gnu*)
+      return 0  # Pass if "gnu" is present (and "nongnu" was not)
+      ;;
+    *)
+      return 1  # Fail for all other cases
+      ;;
+  esac
 }
 
 handle_bin_conflicts()
