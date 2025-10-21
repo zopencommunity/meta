@@ -35,14 +35,15 @@ Command:
   config            change zopen runtime environment settings
   diagnostics       collects system info for zopen troubleshooting
   generate          generates a new zopen project
-  init              initializes a zopen environment at the specified location
-  refresh           refreshes your zopen environment and zopen-config file
-  install           installs one or more zopen community packages
   info              displays detailed information about a package
+  init              initializes a zopen environment at the specified location
+  install           installs one or more zopen community packages
   list              lists information about zopen community packages
   mirror            performs a synchronization of the GitHub repository
+  promote           promote a zopen environment to another location
   publish           publish zopen package release to github
   query             list local or remote info about zopen community packages
+  refresh           refreshes your zopen environment and zopen-config file
   remove            removes installed zopen community packages
   update-cacert     update the cacert.pem file used by zopen community
   upgrade           upgrades existing zopen community packages
@@ -71,13 +72,15 @@ SEE ALSO:
   zopen-clean(1)
   zopen-config-helper(1)
   zopen-generate(1)
+  zopen-info(1)
   zopen-init(1)
   zopen-install(1)
-  zopen-info(1)
   zopen-list(1)
   zopen-mirror(1)
+  zopen-promote(1)
   zopen-publish(1)
   zopen-query(1)
+  zopen-promote(1)
   zopen-refresh(1)
   zopen-remove(1)
   zopen-update-cacert(1)
@@ -103,7 +106,7 @@ for arg in $*; do
   case "${arg}" in
     "alt"|"audit"|"build"|"clean"|"generate"|"init"|"install"|\
     "query"|"remove"|"update-cacert"|"info"|"usage"|"diagnostics"|\
-    "whichproject"|"publish"|"list"|"upgrade"|"mirror")
+    "whichproject"|"publish"|"list"|"upgrade"|"mirror"|"promote")
       subcmd="zopen-${arg}"
       ;;
     "refresh")
