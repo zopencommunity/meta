@@ -516,6 +516,7 @@ fi
 unset -f zot_deleteDuplicateEntries 2>/dev/null
 unset -f zot_displayHelp 2>/dev/null
 unset -f zot_sanitizeEnvVar 2>/dev/null
+unset -f zot_parse 2>/dev/null
 EOF
 
 }
