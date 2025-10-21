@@ -798,31 +798,91 @@ printColors()
   echo "$@"
 }
 
-mutexReq()
-{
-  mutex=$1
-  lockdir="${ZOPEN_ROOTFS}/var/lock"
-  [ -e lockdir ] || mkdir -p ${lockdir}
-  mutex="${lockdir}/${mutex}"
-  mypid=$(exec sh -c 'echo ${PPID}')
-  mygrandparent=$(ps -o ppid= -p "$mypid" | awk '{print $1}')
-  if [ -e "${mutex}" ]; then
-    lockedpid=$(cat ${mutex})
-    {
-      [ ! "${lockedpid}" = "${mypid}" ] && [ ! "${lockedpid}" = "${PPID}" ] && [ ! "${lockedpid}" = "${mygrandparent}" ]
-    } && kill -0 "${lockedpid}" 2> /dev/null && echo "Aborting, Active process '${lockedpid}' holds the '$2' lock: '${mutex}'" && exit -1
-  fi
-  addCleanupTrapCmd "rm -rf ${mutex}"
-  echo "${mypid}" > ${mutex}
+# ancestorPid
+# Determines if the given pid belongs to the ancestory lineage of current process
+# (including self)
+# inputs: $1 pid to validate
+# return: 0  pid is an ancestor or self
+#         1  pid is not in ancestor lineage
+ancestorPid() {
+  target="$1"
+  
+  case "$target" in
+    ''|*[!0-9]*) assertFailed "Bad pid '${target}' given to ancestorPid()" ;;
+  esac
+  mypid=$(exec sh -c 'echo ${PPID}')  # $$ does not seem reliable!?!
+  [ "${target}" -eq "${mypid}" ] && return 0
+  ap="${PPID:-0}"  # Get ancestor pid (parent at current level)
+  while [ -n "${ap}" ] && [ "${ap}" -gt 1 ] 2>/dev/null; do
+    [ "$ap" -eq "${target}" ] && return 0
+     # Get ancestor pid (parent of $ap) and trim spaces (awk)
+    if ! ap="$(/bin/ps -o ppid= -p "${ap}" 2>/dev/null | /bin/awk '{print $1}')"; then
+      # awk should just work, so the failure came from ps, likely from traversing the
+      # lineage too far so no permission to go further.
+      return 1
+    fi
+    [ -z "${ap}" ] && break
+  done
+  return 1
 }
 
-mutexFree()
-{
-  mutex=$1
+# mutexReq
+# Finds appropriate metadata for the specified port(s) and
+# includes that in the installation file
+# inputs: $1 name of mutex to being requested
+# return: 0  mutex sucessfully locked
+#         1  mutex lock unsuccessful (fast exit)
+mutexReq() {
+  mutex="$1"
   lockdir="${ZOPEN_ROOTFS}/var/lock"
-  mutex="${lockdir}/${mutex}"
-  if [ -e "${mutex}" ]; then
-    rm -f ${mutex}
+  [ -d "$lockdir" ] || /bin/mkdir -p "${lockdir}" || printError "Cannot create ${lockdir}"
+  mutexdir="${lockdir}/${mutex}.lock"
+  mypid=$(exec sh -c 'echo ${PPID}')  # $$ does not seem reliable!?!
+
+  printVerbose "Using mkdir's atomicity as mutex request"
+  # Network Filesystems might not be so atomic, but smaller window than using a
+  # locak file
+  if /bin/mkdir "${mutexdir}" 2>/dev/null; then
+    printVerbose "Lockdir created - mutex acquired; Adding tracking pid"
+    umask 077
+    /bin/printf '%s\n' "${mypid}" > "${mutexdir}/pid"
+    addCleanupTrapCmd "rmdir '${mutexdir}'"
+    return 0
+  fi
+
+  printVerbose "mkdir('${mutexdir}') failed; lock already held. Checking details"
+  lockedpid="$(/bin/cat "${mutexdir}/pid" 2>/dev/null)"
+  if ! kill -0 "${lockedpid}" 2>/dev/null; then
+    printVerbose "Detected stale lock '${lockedpid}' [pid not active]. Removing mutex and retrying"
+    rm "${mutexdir}/pid" || printError "Cannot remove lockpid file'${mutexdir}/pid'"
+    /bin/rmdir "${mutexdir}" 2>/dev/null || printError "Cannot remove lockfile dir '${mutexdir}'"
+    /bin/sleep 1
+    mutexReq "$mutex"
+    return $?
+  fi
+
+  if ancestorPid "${lockedpid}"; then
+    printVerbose "Ancestor '${lockedpid}' owns mutex; re-entering."
+    return 0
+  fi
+  printError "Aborting, active process '${lockedpid}' holds the '${name}' lock: '${lockpath}'"
+}
+
+# mutexFree
+# Releases the specified mutex; mutexReq checks for stale locks but best to
+# clean up!
+# inputs: $1 name of mutex to release
+# return: 0
+mutexFree() {
+  name="$1"
+  mypid=$(exec sh -c 'echo ${PPID}')  # $$ does not seem reliable!?!
+  lockdir="${ZOPEN_ROOTFS}/var/lock"
+  lockpath="${lockdir}/${name}.lock"
+  if [ -d "${lockpath}" ]; then
+    lockedpid="$(/bin/cat "${lockpath}/pid" 2>/dev/null)"
+    if [ "${lockedpid}" -eq "${mypid}" ] 2>/dev/null || ! kill -0 "${lockedpid}" 2>/dev/null; then
+      rmdir "${lockpath}" 2>/dev/null || true
+    fi
   fi
   return 0
 }
