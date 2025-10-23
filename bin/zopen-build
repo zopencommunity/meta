@@ -1593,17 +1593,7 @@ createEnvAndSetup()
     projectName=$(echo ${ZOPEN_PROJECT_NAME} | awk '{print toupper($0)}')
   else
     # Fall back to parsing (for old ports without ZOPEN_PROJECT_NAME)
-    package=${ZOPEN_NAME}
-    # Try to extract version to derive name
-    version=$(echo "$package" | sed -E 's/.*-([0-9].*)$/\1/')
-    if [ "$version" = "$package" ]; then
-      # No version pattern found, fall back to old cut method
-      projectName=$(echo ${ZOPEN_NAME} | cut -d "-" -f 1 | awk '{print toupper($0)}')
-    else
-      # Version found, derive name by removing -version suffix
-      name="${package%-${version}}"
-      projectName=$(echo ${name} | awk '{print toupper($0)}')
-    fi
+    projectName=$(echo ${ZOPEN_NAME} | cut -d "-" -f 1 | awk '{print toupper($0)}')
   fi
   cat << zz > "${ZOPEN_INSTALL_DIR}/.env"
 if ! [ -f ./.env ]; then
@@ -1850,34 +1840,20 @@ generateMetadataJSON()
   # Use explicit project name if set, otherwise parse from ZOPEN_NAME
   if [ -n "${ZOPEN_PROJECT_NAME}" ]; then
     name="${ZOPEN_PROJECT_NAME}"
-    if [ -z "${versionString}" ]; then
-      # Try to extract version from package name (rightmost segment starting with digit)
-      version=$(echo "$package" | sed -E 's/.*-([0-9].*)$/\1/')
-      # If sed didn't find a pattern (returns whole string), fall back to old method
-      if [ "$version" = "$package" ]; then
-        version=$(echo ${package} | cut -d "-" -f 2)
-      fi
-    else
-      version="${versionString}"
-    fi
   else
     # Fall back to parsing (for old ports without ZOPEN_PROJECT_NAME)
-    if [ -z "${versionString}" ]; then
-      # Try to extract version from package name (rightmost segment starting with digit)
-      version=$(echo "$package" | sed -E 's/.*-([0-9].*)$/\1/')
-      if [ "$version" = "$package" ]; then
-        # No version pattern found, fall back to old cut method
-        name=$(echo $package | cut -d "-" -f 1)
-        version=$(echo ${package} | cut -d "-" -f 2)
-      else
-        # Version found, derive name by removing -version suffix
-        name="${package%-${version}}"
-      fi
-    else
-      version="${versionString}"
-      # Derive name by removing -version suffix
-      name="${package%-${version}}"
+    name=$(echo $package | cut -d "-" -f 1)
+  fi
+
+  if [ -z "${versionString}" ]; then
+    # Try to extract version from package name (rightmost segment starting with digit)
+    version=$(echo "$package" | sed -E 's/.*-([0-9].*)$/\1/')
+    # If sed didn't find a pattern (returns whole string), fall back to old method
+    if [ "$version" = "$package" ]; then
+      version=$(echo ${package} | cut -d "-" -f 2)
     fi
+  else
+    version="${versionString}"
   fi
 
   total_size=$(getPathSizeInBytes "${ZOPEN_INSTALL_DIR}")
@@ -2002,15 +1978,7 @@ set_install_caveats()
     name="${ZOPEN_PROJECT_NAME}"
   else
     # Fall back to parsing (for old ports without ZOPEN_PROJECT_NAME)
-    # Try to extract version to derive name
-    version=$(echo "$package" | sed -E 's/.*-([0-9].*)$/\1/')
-    if [ "$version" = "$package" ]; then
-      # No version pattern found, fall back to old cut method
-      name=$(echo $package | cut -d "-" -f 1)
-    else
-      # Version found, derive name by removing -version suffix
-      name="${package%-${version}}"
-    fi
+    name=$(echo $package | cut -d "-" -f 1)
   fi
   prefix="$1"
 
