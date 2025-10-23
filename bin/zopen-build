@@ -1588,12 +1588,22 @@ replaceHardcodedPaths()
 createEnvAndSetup()
 {
   printHeader "Creating ${ZOPEN_INSTALL_DIR}/.env"
-  # Use explicit project name if set, otherwise parse from ZOPEN_NAME
+
+  # Determine project name with intelligent fallback
   if [ -n "${ZOPEN_PROJECT_NAME}" ]; then
     projectName=$(echo ${ZOPEN_PROJECT_NAME} | awk '{print toupper($0)}')
   else
-    # Fall back to parsing (for old ports without ZOPEN_PROJECT_NAME)
-    projectName=$(echo ${ZOPEN_NAME} | cut -d "-" -f 1 | awk '{print toupper($0)}')
+    # Intelligent fallback: try to extract version and derive name
+    package=${ZOPEN_NAME}
+    version=$(echo "$package" | sed -E 's/.*-([0-9].*)$/\1/')
+    if [ "$version" != "$package" ] && [ -n "$version" ]; then
+      # Version was successfully extracted, remove it to get name
+      name="${package%-${version}}"
+      projectName=$(echo ${name} | awk '{print toupper($0)}')
+    else
+      # No version pattern found, fall back to old cut method
+      projectName=$(echo ${ZOPEN_NAME} | cut -d "-" -f 1 | awk '{print toupper($0)}')
+    fi
   fi
   cat << zz > "${ZOPEN_INSTALL_DIR}/.env"
 if ! [ -f ./.env ]; then
@@ -1837,23 +1847,30 @@ generateMetadataJSON()
   printHeader "Creating Metadata JSON"
   package=${ZOPEN_NAME}
 
-  # Use explicit project name if set, otherwise parse from ZOPEN_NAME
-  if [ -n "${ZOPEN_PROJECT_NAME}" ]; then
-    name="${ZOPEN_PROJECT_NAME}"
+  # Determine version first
+  if [ -n "${versionString}" ]; then
+    version="${versionString}"
   else
-    # Fall back to parsing (for old ports without ZOPEN_PROJECT_NAME)
-    name=$(echo $package | cut -d "-" -f 1)
-  fi
-
-  if [ -z "${versionString}" ]; then
     # Try to extract version from package name (rightmost segment starting with digit)
     version=$(echo "$package" | sed -E 's/.*-([0-9].*)$/\1/')
     # If sed didn't find a pattern (returns whole string), fall back to old method
     if [ "$version" = "$package" ]; then
       version=$(echo ${package} | cut -d "-" -f 2)
     fi
+  fi
+
+  # Determine project name
+  if [ -n "${ZOPEN_PROJECT_NAME}" ]; then
+    name="${ZOPEN_PROJECT_NAME}"
   else
-    version="${versionString}"
+    # Intelligent fallback: derive name by removing -version suffix
+    if [ "$version" != "$package" ] && [ -n "$version" ]; then
+      # Version was successfully extracted, remove it to get name
+      name="${package%-${version}}"
+    else
+      # No version pattern found, fall back to old cut method
+      name=$(echo $package | cut -d "-" -f 1)
+    fi
   fi
 
   total_size=$(getPathSizeInBytes "${ZOPEN_INSTALL_DIR}")
@@ -1973,12 +1990,20 @@ zz
 set_install_caveats()
 {
   package=${ZOPEN_NAME}
-  # Use explicit project name if set, otherwise parse from ZOPEN_NAME
+
+  # Determine project name with intelligent fallback
   if [ -n "${ZOPEN_PROJECT_NAME}" ]; then
     name="${ZOPEN_PROJECT_NAME}"
   else
-    # Fall back to parsing (for old ports without ZOPEN_PROJECT_NAME)
-    name=$(echo $package | cut -d "-" -f 1)
+    # Intelligent fallback: try to extract version and derive name
+    version=$(echo "$package" | sed -E 's/.*-([0-9].*)$/\1/')
+    if [ "$version" != "$package" ] && [ -n "$version" ]; then
+      # Version was successfully extracted, remove it to get name
+      name="${package%-${version}}"
+    else
+      # No version pattern found, fall back to old cut method
+      name=$(echo $package | cut -d "-" -f 1)
+    fi
   fi
   prefix="$1"
 
