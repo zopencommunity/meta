@@ -1591,7 +1591,7 @@ createEnvAndSetup()
 
   # Determine project name with intelligent fallback
   if [ -n "${ZOPEN_PROJECT_NAME}" ]; then
-    projectName=$(echo ${ZOPEN_PROJECT_NAME} | awk '{print toupper($0)}')
+    projectName=$(echo ${ZOPEN_PROJECT_NAME} | sed 's/-/_/g' | awk '{print toupper($0)}')
   else
     # Intelligent fallback: try to extract version and derive name
     package=${ZOPEN_NAME}
@@ -1599,7 +1599,7 @@ createEnvAndSetup()
     if [ "$version" != "$package" ] && [ -n "$version" ]; then
       # Version was successfully extracted, remove it to get name
       name="${package%-${version}}"
-      projectName=$(echo ${name} | awk '{print toupper($0)}')
+      projectName=$(echo ${name} | sed 's/-/_/g' | awk '{print toupper($0)}')
     else
       # No version pattern found, fall back to old cut method
       projectName=$(echo ${ZOPEN_NAME} | cut -d "-" -f 1 | awk '{print toupper($0)}')
@@ -2295,7 +2295,20 @@ resolveCommands()
     ZOPEN_NAME="${ZOPEN_NAME}-DEV"
   fi
   if [ -z "${ZOPEN_INSTALL_DIR}" ]; then
-    PROJECT_NAME="$(echo ${ZOPEN_NAME} | cut -d'-' -f1)"
+    # Use explicit project name if set, otherwise use intelligent fallback
+    if [ -n "${ZOPEN_PROJECT_NAME}" ]; then
+      PROJECT_NAME="${ZOPEN_PROJECT_NAME}"
+    else
+      # Intelligent fallback: try to extract version and derive name
+      version=$(echo "$ZOPEN_NAME" | sed -E 's/.*-([0-9].*)$/\1/')
+      if [ "$version" != "$ZOPEN_NAME" ] && [ -n "$version" ]; then
+        # Version was successfully extracted, remove it to get name
+        PROJECT_NAME="${ZOPEN_NAME%-${version}}"
+      else
+        # No version pattern found, fall back to old cut method
+        PROJECT_NAME="$(echo ${ZOPEN_NAME} | cut -d'-' -f1)"
+      fi
+    fi
     export ZOPEN_INSTALL_DIR="${ZOPEN_PKGINSTALL}/${PROJECT_NAME}/${ZOPEN_NAME}" # Install into dev location
   fi
   if [ -z "${ZOPEN_LOG_DIR}" ]; then
