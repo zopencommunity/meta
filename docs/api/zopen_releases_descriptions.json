@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2025-10-23T15:52:05+00:00Z",
+  "generation_timestamp_utc": "2025-10-23T20:25:09+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -281,6 +281,7 @@
     "util-macros": "X.Org: Set of autoconf macros used to build other xorg packages",
     "xorgproto": "X.Org: Protocol Headers",
     "p7zip": "zopen port of p7zip",
-    "z3": "z3 Theorem Prover"
+    "z3": "z3 Theorem Prover",
+    "xtrans": "z/OS port of xtrans"
   }
 }
