@@ -653,6 +653,7 @@ buildenvContents="${buildenvContents}
 ###
 ### Required Environment Variables
 ###
+export ZOPEN_PROJECT_NAME=\"${name}\"
 export ZOPEN_BUILD_LINE=\"${default_build_line}\"
 export ZOPEN_STABLE_URL=\"${stablePath}\"${tag_export_for_insert}
 export ZOPEN_STABLE_DEPS=\"${stableDeps}\"

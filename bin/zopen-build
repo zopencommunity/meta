@@ -1588,7 +1588,13 @@ replaceHardcodedPaths()
 createEnvAndSetup()
 {
   printHeader "Creating ${ZOPEN_INSTALL_DIR}/.env"
-  projectName=$(echo ${ZOPEN_NAME} | cut -d "-" -f 1 | awk '{print toupper($0)}')
+  # Use explicit project name if set, otherwise parse from ZOPEN_NAME
+  if [ -n "${ZOPEN_PROJECT_NAME}" ]; then
+    projectName=$(echo ${ZOPEN_PROJECT_NAME} | awk '{print toupper($0)}')
+  else
+    # Fall back to parsing (for old ports without ZOPEN_PROJECT_NAME)
+    projectName=$(echo ${ZOPEN_NAME} | cut -d "-" -f 1 | awk '{print toupper($0)}')
+  fi
   cat << zz > "${ZOPEN_INSTALL_DIR}/.env"
 if ! [ -f ./.env ]; then
   echo "Need to source from the .env directory" >&2
@@ -1830,10 +1836,22 @@ generateMetadataJSON()
 {
   printHeader "Creating Metadata JSON"
   package=${ZOPEN_NAME}
-  name=$(echo $package | cut -d "-" -f 1)
-  if [ -z "${versionString}" ]; then
-    version=$(echo ${package} | cut -d "-" -f 2)
 
+  # Use explicit project name if set, otherwise parse from ZOPEN_NAME
+  if [ -n "${ZOPEN_PROJECT_NAME}" ]; then
+    name="${ZOPEN_PROJECT_NAME}"
+  else
+    # Fall back to parsing (for old ports without ZOPEN_PROJECT_NAME)
+    name=$(echo $package | cut -d "-" -f 1)
+  fi
+
+  if [ -z "${versionString}" ]; then
+    # Try to extract version from package name (rightmost segment starting with digit)
+    version=$(echo "$package" | sed -E 's/.*-([0-9].*)$/\1/')
+    # If sed didn't find a pattern (returns whole string), fall back to old method
+    if [ "$version" = "$package" ]; then
+      version=$(echo ${package} | cut -d "-" -f 2)
+    fi
   else
     version="${versionString}"
   fi
@@ -1952,10 +1970,16 @@ zz
   cp "${ZOPEN_ROOT}/install/metadata.json" "${ZOPEN_INSTALL_DIR}/metadata.json"
 }
 
-set_install_caveats() 
+set_install_caveats()
 {
   package=${ZOPEN_NAME}
-  name=$(echo $package | cut -d "-" -f 1)
+  # Use explicit project name if set, otherwise parse from ZOPEN_NAME
+  if [ -n "${ZOPEN_PROJECT_NAME}" ]; then
+    name="${ZOPEN_PROJECT_NAME}"
+  else
+    # Fall back to parsing (for old ports without ZOPEN_PROJECT_NAME)
+    name=$(echo $package | cut -d "-" -f 1)
+  fi
   prefix="$1"
 
   # Add "GNU " prefix to tool name only if prefix is "g"
