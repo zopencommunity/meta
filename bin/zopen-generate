@@ -395,29 +395,60 @@ EOF
       "Go")
         build_system_config=$(cat <<'EOF'
 ### Settings for Go build system
-export ZOPEN_CONFIGURE="zopen_wharf" 
-export ZOPEN_MAKE="zopen_custom_build"
-export ZOPEN_INSTALL="zopen_custom_install"
+export ZOPEN_COMP=GO
+export ZOPEN_CONFIGURE="zopen_wharf"
+export ZOPEN_CONFIGURE_MINIMAL=1
+export ZOPEN_MAKE="zopen_build"
+export ZOPEN_MAKE_MINIMAL=1
+export ZOPEN_CHECK="skip"
+export ZOPEN_INSTALL="zopen_install"
+export ZOPEN_CLEAN="zopen_clean"
 EOF
 )
         custom_functions=$(cat <<'EOF'
 zopen_init() {
-  # Go projects often need CGO disabled and GOBIN set
+  # Disable CGO and unset C/C++ compilers (Go cross-compilation mode)
+  unset CC CXX
   export CGO_ENABLED=0
   export GOBIN="${ZOPEN_INSTALL_DIR}/bin"
+  mkdir -p "${ZOPEN_INSTALL_DIR}/bin"
 }
-zopen_wharf()
-{
-  # Uncomment if using wharf
-  #cd ..
-  #go work init ./package
-  #cd -
+
+zopen_wharf() {
+  # Navigate to parent directory to manage dependencies
+  cd ..
+
+  # Example: Clone and patch a dependency
+  # DEP_TAG="v1.2.3"
+  # git clone https://github.com/example/dependency.git
+  # cd dependency && git -c advice.detachedHead=false checkout ${DEP_TAG}
+  # curl -s -o dependency--${DEP_TAG}.patch "https://raw.githubusercontent.com/ZOSOpenTools/wharf/main/deps-patches/dependency--${DEP_TAG}.patch"
+  # git apply -v dependency--${DEP_TAG}.patch
+  # cd ..
+
+  # Initialize Go workspace with all modules (package + dependencies)
+  # go work init ./${name} ./dependency
+
+  # Run wharf to process dependencies for z/OS
+  # wharf ./${name}/...
+
+  # Return to package directory
+  # cd ./${name}
+
+  echo "zopen_wharf hook needs to be implemented to set up Go workspace and dependencies"
 }
-zopen_custom_build() {
-  go build -v ./...
+
+zopen_build() {
+  go build
 }
-zopen_custom_install() {
-  go install ./...
+
+zopen_install() {
+  go install
+}
+
+zopen_clean() {
+  # Clean up Go workspace artifacts
+  rm -rf ../go.work ../go.work.sum ../.wharf_cache ../wharf_port
 }
 EOF
 )
@@ -622,6 +653,7 @@ buildenvContents="${buildenvContents}
 ###
 ### Required Environment Variables
 ###
+export ZOPEN_PROJECT_NAME=\"${name}\"
 export ZOPEN_BUILD_LINE=\"${default_build_line}\"
 export ZOPEN_STABLE_URL=\"${stablePath}\"${tag_export_for_insert}
 export ZOPEN_STABLE_DEPS=\"${stableDeps}\"

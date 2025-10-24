@@ -1588,7 +1588,10 @@ replaceHardcodedPaths()
 createEnvAndSetup()
 {
   printHeader "Creating ${ZOPEN_INSTALL_DIR}/.env"
-  projectName=$(echo ${ZOPEN_NAME} | cut -d "-" -f 1 | awk '{print toupper($0)}')
+
+  # Get project name and convert to valid shell variable name
+  name=$(getProjectName "${ZOPEN_NAME}")
+  projectName=$(echo ${name} | sed 's/-/_/g' | awk '{print toupper($0)}')
   cat << zz > "${ZOPEN_INSTALL_DIR}/.env"
 if ! [ -f ./.env ]; then
   echo "Need to source from the .env directory" >&2
@@ -1826,16 +1829,46 @@ getPathSizeInBytes()
   du -ks "$1" | awk '{print $1 * 1024}'
 }
 
+#
+# Extract project name from package name (e.g., xcb-proto-1.17.0 -> xcb-proto)
+# Uses ZOPEN_PROJECT_NAME if set, otherwise intelligently parses package name
+#
+getProjectName()
+{
+  package="$1"
+
+  if [ -n "${ZOPEN_PROJECT_NAME}" ]; then
+    echo "${ZOPEN_PROJECT_NAME}"
+    return 0
+  fi
+
+  # Intelligent fallback: try to extract version and derive name
+  version=$(echo "$package" | sed -E 's/.*-([0-9].*)$/\1/')
+  if [ "$version" != "$package" ] && [ -n "$version" ]; then
+    # Version was successfully extracted, remove it to get name
+    echo "${package%-${version}}"
+  else
+    # No version pattern found, fall back to old cut method
+    echo "$package" | cut -d "-" -f 1
+  fi
+}
+
 generateMetadataJSON()
 {
   printHeader "Creating Metadata JSON"
   package=${ZOPEN_NAME}
-  name=$(echo $package | cut -d "-" -f 1)
-  if [ -z "${versionString}" ]; then
-    version=$(echo ${package} | cut -d "-" -f 2)
+  name=$(getProjectName "$package")
 
-  else
+  # Determine version
+  if [ -n "${versionString}" ]; then
     version="${versionString}"
+  else
+    # Try to extract version from package name (rightmost segment starting with digit)
+    version=$(echo "$package" | sed -E 's/.*-([0-9].*)$/\1/')
+    # If sed didn't find a pattern (returns whole string), fall back to old method
+    if [ "$version" = "$package" ]; then
+      version=$(echo ${package} | cut -d "-" -f 2)
+    fi
   fi
 
   total_size=$(getPathSizeInBytes "${ZOPEN_INSTALL_DIR}")
@@ -1952,10 +1985,10 @@ zz
   cp "${ZOPEN_ROOT}/install/metadata.json" "${ZOPEN_INSTALL_DIR}/metadata.json"
 }
 
-set_install_caveats() 
+set_install_caveats()
 {
   package=${ZOPEN_NAME}
-  name=$(echo $package | cut -d "-" -f 1)
+  name=$(getProjectName "$package")
   prefix="$1"
 
   # Add "GNU " prefix to tool name only if prefix is "g"
@@ -2246,7 +2279,9 @@ resolveCommands()
     ZOPEN_NAME="${ZOPEN_NAME}-DEV"
   fi
   if [ -z "${ZOPEN_INSTALL_DIR}" ]; then
-    PROJECT_NAME="$(echo ${ZOPEN_NAME} | cut -d'-' -f1)"
+    # Get project name and lowercase for directory structure
+    PROJECT_NAME=$(getProjectName "${ZOPEN_NAME}")
+    PROJECT_NAME=$(echo "${PROJECT_NAME}" | awk '{print tolower($0)}')
     export ZOPEN_INSTALL_DIR="${ZOPEN_PKGINSTALL}/${PROJECT_NAME}/${ZOPEN_NAME}" # Install into dev location
   fi
   if [ -z "${ZOPEN_LOG_DIR}" ]; then
