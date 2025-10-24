@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2025-10-23T22:23:41+00:00Z",
+  "generation_timestamp_utc": "2025-10-24T06:29:25+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -284,6 +284,8 @@
     "z3": "z3 Theorem Prover",
     "xtrans": "z/OS port of xtrans",
     "xcb-proto": "zopen port of xcb-proto",
-    "libxau": "X.Org: A Sample Authorization Protocol for X"
+    "libxau": "X.Org: A Sample Authorization Protocol for X",
+    "libx11": "X.Org: Core X11 protocol client library",
+    "libxcb": "X.Org: C-language binding for the X Window System"
   }
 }
