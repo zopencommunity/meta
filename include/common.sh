@@ -438,7 +438,12 @@ darkbackground() {
 defineANSI()
 {
   # Standard tty codes
-  ESC="\047"
+  # Use different escape character for OS/390 (EBCDIC \047) vs other platforms (ASCII \033)
+  if [ "$(uname -s)" = "OS/390" ]; then
+    ESC="\047"
+  else
+    ESC="\033"
+  fi
   # shellcheck disable=SC2034
   ERASELINE="${ESC}[2K"
   # shellcheck disable=SC2034
@@ -448,7 +453,7 @@ defineANSI()
 
   # Color-type codes, needs explicit terminal settings
   if [ ! "${_BPX_TERMPATH-x}" = "OMVS" ] && [ -z "${NO_COLOR}" ] && [ ! "${FORCE_COLOR-x}" = "0" ] && [ -t 1 ] && [ -t 2 ]; then
-    esc="\047"
+    esc="${ESC}"
     BLACK="${esc}[30m"
     RED="${esc}[31m"
     GREEN="${esc}[32m"
@@ -591,15 +596,26 @@ defineEnvironment()
 
   # Set a default umask of read and execute for user and group
   umask 0022
+
+  # Create chtag stub for non-OS/390 platforms
+  # Use alias to 'true' so it works with xargs which needs an executable
+  if [ "$(uname -s)" != "OS/390" ]; then
+    alias chtag=true
+  fi
 }
 
 #
-# For now, explicitly specify /bin/echo to ensure we get the EBCDIC echo since the escape
-# sequences are EBCDIC escape sequences
+# Print with color codes
+# On OS/390, use /bin/echo with EBCDIC escape sequences
+# On other platforms, use printf to interpret ASCII escape sequences
 #
 printColors()
 {
-  /bin/echo "$@"
+  if [ "$(uname -s)" = "OS/390" ]; then
+    /bin/echo "$@"
+  else
+    printf "%b\n" "$*"
+  fi
 }
 
 mutexReq()

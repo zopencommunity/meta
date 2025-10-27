@@ -1,6 +1,7 @@
 #!/bin/sh
 #
 # General purpose build script for zopen community ports - https://github.com/zopencommunity
+ZOPEN_DONT_PROCESS_CONFIG=1
 #
 # ZOPEN_BUILD_LINE must be defined to either STABLE or DEV. This indicates the type of package to build
 #
@@ -727,7 +728,7 @@ checkEnv()
     ZOPEN_COMMIT_SHA="local"
   fi
 
-  ZOPEN_CATEGORIES_LOWER=$(/bin/printf "%s" "$ZOPEN_CATEGORIES" | tr '[:upper:]' '[:lower:]')
+  ZOPEN_CATEGORIES_LOWER=$(printf "%s" "$ZOPEN_CATEGORIES" | tr '[:upper:]' '[:lower:]')
 
   for category in $(echo ${ZOPEN_CATEGORIES_LOWER} | tr ' ' '\n' | sort -u); do
     if ! echo "${ZOPEN_VALID_CATEGORIES}" | tr ' ' '\n' | grep -q "^${category}$"; then
@@ -761,6 +762,11 @@ checkEnv()
 
 setDepsEnv()
 {
+	if ${getSourceOnly}; then
+	printVerbose "Skipping dependency ${dep} installation in --get-source mode"
+	return;
+	fi
+
   deps="${ZOPEN_DEPS}"
 
   orig="${PWD}"
@@ -801,6 +807,7 @@ setDepsEnv()
       fi
     done
     if ! ${foundDep} || ${forceUpgradeDeps}; then
+      # Skip dependency installation when using --get-source mode
       if ! ${forceUpgradeDeps}; then
         if [ -z "${operator}" ]; then
           printWarning "Dependency ${dep} not found. Downloading via zopen install"
@@ -884,7 +891,15 @@ setEnv()
   export LIBS_FOR_BUILD="${LIBS}"
 
   if [ -z "${ZOPEN_NUM_JOBS}" ]; then
-    ZOPEN_NUM_JOBS=$("${MYDIR}/numcpus.rexx")
+    if [ "$(uname -s)" = "OS/390" ]; then
+      ZOPEN_NUM_JOBS=$("${MYDIR}/numcpus.rexx")
+    elif [ "$(uname -s)" = "Darwin" ]; then
+      ZOPEN_NUM_JOBS=$(sysctl -n hw.ncpu 2>/dev/null || echo 1)
+    elif [ "$(uname -s)" = "Linux" ]; then
+      ZOPEN_NUM_JOBS=$(nproc 2>/dev/null || grep -c ^processor /proc/cpuinfo 2>/dev/null || echo 1)
+    else
+      ZOPEN_NUM_JOBS=1
+    fi
 
     # Use half of the CPUs by default
     export ZOPEN_NUM_JOBS=$((ZOPEN_NUM_JOBS / 2))
@@ -2093,11 +2108,11 @@ handle_bin_conflicts()
       additional_caveats=$(set_install_caveats "$prefix")  # Get new caveats from set_install_caveats
 
       zopen_install_caveats() {
-	/bin/printf "%s\n%s\n" "$original_caveats" "$additional_caveats"
+	printf "%s\n%s\n" "$original_caveats" "$additional_caveats"
       }
     else
       zopen_install_caveats() {
-	/bin/printf "%s\n" "$(set_install_caveats "$prefix")"
+	printf "%s\n" "$(set_install_caveats "$prefix")"
       }
     fi
   fi
