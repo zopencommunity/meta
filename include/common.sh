@@ -2661,8 +2661,13 @@ elif [ -f ".env" ]; then
 fi
 cd \${curdir}  >/dev/null 2>&1
 EOF
-      printVerbose "- Running any setup scripts"
-      cd "${ZOPEN_PKGINSTALL}/${name}/${name}" && [ -r "./setup.sh" ] && ./setup.sh >/dev/null
+      if [ "${name}" = "meta" ]; then
+        printVerbose "Meta is handled by the zopen-meta-init-refresh script"
+        # running it's setup now can affect the currently running meta
+      else
+        printVerbose "- Running any setup scripts in sub-shell to preserve environment"
+        cd "${ZOPEN_PKGINSTALL}/${name}/${name}" && [ -r "./setup.sh" ] && ./setup.sh >/dev/null
+      fi
     fi
   fi
   if ${unInstallOldVersion}; then
