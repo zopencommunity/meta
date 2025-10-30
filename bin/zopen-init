@@ -127,6 +127,7 @@ PINENTRY_PAX_LOCATION="${PKG_DIR}/${PINENTRY_PAX}"
 verbose=false
 isHostIBM=false
 debug=false
+xdebug=false
 yesToPrompts=false
 reinitExisting=false
 appendToProfile=false
@@ -189,6 +190,10 @@ while [ $# -gt 0 ]; do
     "--debug")
       # shellcheck disable=SC2034
       debug=true
+      ;;
+    "--xdebug")
+      xdebug=true
+      set -x
       ;;
     "--yes" | "-y")
       yesToPrompts=true  # Automatically answer 'yes' to any questions
@@ -758,7 +763,12 @@ EOF
       paxLocation=$(findrev "${MYDIR}" "${pax}")
       printVerbose "Pax installation from '${paxLocation}/${pax}'"
       if [ -e "${paxLocation}/${pax}" ]; then
-        zopen install "${paxLocation}/${pax}" -y --bypass-prereq-checks --skip-verify
+        installOptions="-y --bypass-prereq-checks --skip-verify"
+        ${verbose} && installOptions="${installOptions} --verbose"
+        ${debug} && installOptions="${installOptions} --debug"
+        ${xdebug} && installOptions="${installOptions} --xdebug"
+        # shellcheck disable=SC2086  # We want split options for command
+        zopen install "${paxLocation}/${pax}" ${installOptions}
         toolInstall=$?
         [ "${toolInstall}" -ne 0 ] && printError "Unable to install '${pax}' locally; see previous errors and retry installation using the '--re-init' parameter"
       else
@@ -860,5 +870,8 @@ generateZopenConfig
 ! ${offlineInstall} && updateCACert
 generateAnalyticsConfiguration
 [ -e "${ZOPEN_ROOTFS}/var/lib/zopen/packageDB.json" ] || createInitialPackageDB
-updateBootstrappedTools
+if ! ${refresh} && ! ${offlineInstall}; then
+    updateBootstrappedTools
+fi
+
 deinit
