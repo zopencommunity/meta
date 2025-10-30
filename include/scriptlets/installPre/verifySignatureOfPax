@@ -11,6 +11,7 @@ if ${skipverify}; then
 fi
 printInfo "- Performing GPG signature verification for '${pkg}' pax file"
 metadataVersion=$(jq -r '.version_scheme' "${metadataFile}" 2>/dev/null)
+[ -n "${metadataVersion}" ] || printError "Metadata version could not be read from metadata file '${metadataFile}'"
 is_greater=$(echo "$metadataVersion > 0.1" | bc -l)
 
 if [ "$is_greater" -eq 1 ] && ! $skipverify; then
