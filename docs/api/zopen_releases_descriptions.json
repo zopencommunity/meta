@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2025-11-10T01:35:18+00:00Z",
+  "generation_timestamp_utc": "2025-11-10T13:23:28+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -287,6 +287,7 @@
     "libxau": "X.Org: A Sample Authorization Protocol for X",
     "libx11": "X.Org: Core X11 protocol client library",
     "libxcb": "X.Org: C-language binding for the X Window System",
-    "googletest": "\"Google Test,\" often referred to as GTest, is an open-source C++ unit testing framework developed by Google"
+    "googletest": "\"Google Test,\" often referred to as GTest, is an open-source C++ unit testing framework developed by Google",
+    "yamlcpp": "A C++ library for parsing and emitting YAML."
   }
 }
