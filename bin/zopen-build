@@ -1763,25 +1763,53 @@ fi
 export ${projectName}_HOME="\${PWD}"
 zz
 
+  # Create .binenv and .develenv headers up-front so they are safe to source independently
+  if [ ! -f "${ZOPEN_INSTALL_DIR}/.binenv" ]; then
+    cat << zz > "${ZOPEN_INSTALL_DIR}/.binenv"
+if [ -z "\$${projectName}_HOME" ] || [ ! -d "\$${projectName}_HOME" ]; then
+  export ${projectName}_HOME="\${PWD}"
+fi
+zz
+  fi
+
+  if [ ! -f "${ZOPEN_INSTALL_DIR}/.develenv" ]; then
+    cat << zz > "${ZOPEN_INSTALL_DIR}/.develenv"
+if [ -z "\$${projectName}_HOME" ] || [ ! -d "\$${projectName}_HOME" ]; then
+  export ${projectName}_HOME="\${PWD}"
+fi
+zz
+  fi
+
   if [ -d "${ZOPEN_INSTALL_DIR}/bin" ]; then
-    echo "PATH=\"\${${projectName}_HOME}/bin:\${${projectName}_HOME}/altbin:\$PATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
-    echo "export PATH=\"\$(deleteDuplicateEntries \"\$PATH\" \":\")\"" >> "${ZOPEN_INSTALL_DIR}/.env"
+    echo "PATH=\"\${${projectName}_HOME}/bin:\${${projectName}_HOME}/altbin:\$PATH\"" >> "${ZOPEN_INSTALL_DIR}/.binenv"
+    echo "export PATH=\"\$PATH\"" >> "${ZOPEN_INSTALL_DIR}/.binenv"
   fi
   if [ -d "${ZOPEN_INSTALL_DIR}/lib" ]; then
-    echo "LIBPATH=\"\${${projectName}_HOME}/lib:\$LIBPATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
-    echo "export LIBPATH=\"\$(deleteDuplicateEntries \"\$LIBPATH\" \":\")\"" >> "${ZOPEN_INSTALL_DIR}/.env"
+    SO_GLOB='*.so'
+    if find "${ZOPEN_INSTALL_DIR}/lib" -type f -name "${SO_GLOB}" 2>/dev/null | read -r _so_file; then
+      echo "LIBPATH=\"\${${projectName}_HOME}/lib:\$LIBPATH\"" >> "${ZOPEN_INSTALL_DIR}/.binenv"
+      find "${ZOPEN_INSTALL_DIR}/lib" -type f -name "${SO_GLOB}" 2>/dev/null -exec dirname {} \; \
+        | sort -u \
+        | while read -r _so_dir; do
+            suffix="${_so_dir#${ZOPEN_INSTALL_DIR}}"
+            [ -z "${suffix}" ] && suffix="/lib"
+            echo "LIBPATH=\"\${${projectName}_HOME}${suffix}:\$LIBPATH\"" >> "${ZOPEN_INSTALL_DIR}/.binenv"
+        done
+
+    echo "export LIBPATH=\"\$LIBPATH\"" >> "${ZOPEN_INSTALL_DIR}/.binenv"
+    fi
   fi
   if [ -d "${ZOPEN_INSTALL_DIR}/lib/pkgconfig" ]; then
-    echo "PKG_CONFIG_PATH=\"\${${projectName}_HOME}/lib/pkgconfig:\$PKG_CONFIG_PATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
-    echo "export PKG_CONFIG_PATH=\"\$(deleteDuplicateEntries \"\$PKG_CONFIG_PATH\" \":\")\"" >> "${ZOPEN_INSTALL_DIR}/.env"
+    echo "PKG_CONFIG_PATH=\"\${${projectName}_HOME}/lib/pkgconfig:\$PKG_CONFIG_PATH\"" >> "${ZOPEN_INSTALL_DIR}/.develenv"
+    echo "export PKG_CONFIG_PATH=\"\$PKG_CONFIG_PATH\"" >> "${ZOPEN_INSTALL_DIR}/.develenv"
   fi
   if [ -d "${ZOPEN_INSTALL_DIR}/share/pkgconfig" ]; then
-    echo "PKG_CONFIG_PATH=\"\${${projectName}_HOME}/share/pkgconfig:\$PKG_CONFIG_PATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
-    echo "export PKG_CONFIG_PATH=\"\$(deleteDuplicateEntries \"\$PKG_CONFIG_PATH\" \":\")\"" >> "${ZOPEN_INSTALL_DIR}/.env"
+    echo "PKG_CONFIG_PATH=\"\${${projectName}_HOME}/share/pkgconfig:\$PKG_CONFIG_PATH\"" >> "${ZOPEN_INSTALL_DIR}/.develenv"
+    echo "export PKG_CONFIG_PATH=\"\$PKG_CONFIG_PATH\"" >> "${ZOPEN_INSTALL_DIR}/.develenv"
   fi
   if [ -d "${ZOPEN_INSTALL_DIR}/share/man" ] || [ "${projectName}" = "GIT" ]; then
-    echo "MANPATH=\"\${${projectName}_HOME}/share/man:\$MANPATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
-    echo "export MANPATH=\"\$(deleteDuplicateEntries \"\$MANPATH\" \":\")\"" >> "${ZOPEN_INSTALL_DIR}/.env"
+    echo "MANPATH=\"\${${projectName}_HOME}/share/man:\$MANPATH\"" >> "${ZOPEN_INSTALL_DIR}/.binenv"
+    echo "export MANPATH=\"\$MANPATH\"" >> "${ZOPEN_INSTALL_DIR}/.binenv"
   fi
   if command -V "${ZOPEN_APPEND_TO_ENV_CODE}" > /dev/null 2>&1; then
     printVerbose "Appending additional environment variables..."
@@ -1792,6 +1820,8 @@ zz
 
   echo "${append_to_env}" > "${ZOPEN_INSTALL_DIR}/.appenv"
   echo ". ./.appenv" >> "${ZOPEN_INSTALL_DIR}/.env"
+  echo ". ./.binenv" >> "${ZOPEN_INSTALL_DIR}/.env"
+  echo ". ./.develenv" >> "${ZOPEN_INSTALL_DIR}/.env"
 
   cat << zz >> "${ZOPEN_INSTALL_DIR}/.env"
 if \$dropTagRedirEnvar; then
@@ -1946,6 +1976,8 @@ zz
   # Zopen "entry point" files should be in IBM-1047
   a2e ${ZOPEN_INSTALL_DIR}/setup.sh
   a2e ${ZOPEN_INSTALL_DIR}/.appenv
+  a2e ${ZOPEN_INSTALL_DIR}/.binenv
+  a2e ${ZOPEN_INSTALL_DIR}/.develenv
   a2e ${ZOPEN_INSTALL_DIR}/.env
 
   chmod 755 "${ZOPEN_INSTALL_DIR}/setup.sh"
