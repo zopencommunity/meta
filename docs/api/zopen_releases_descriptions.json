@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2025-11-14T05:20:30+00:00Z",
+  "generation_timestamp_utc": "2025-11-14T15:34:53+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -289,6 +289,7 @@
     "libxcb": "X.Org: C-language binding for the X Window System",
     "googletest": "\"Google Test,\" often referred to as GTest, is an open-source C++ unit testing framework developed by Google",
     "yamlcpp": "A C++ library for parsing and emitting YAML.",
-    "libpkgmanifest": "Library for working with RPM manifests"
+    "libpkgmanifest": "Library for working with RPM manifests",
+    "liboqs": "liboqs provides a collection of open source implementations of quantum-safe key encapsulation mechanisms (KEMs) and digital signature algorithms; the full list can be found below a common API for these algorithms a test harness and benchmarking routines"
   }
 }
