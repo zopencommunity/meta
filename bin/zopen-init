@@ -108,11 +108,6 @@ Report bugs at https://github.com/zopencommunity/meta/issues
 HELPDOC
 }
 
-
-# Constants
-# Number of rm processes to run in parallel
-rm_fileprocs=5 #TODO: adjust based on number of online cpus on system
-
 # Boostrap pax files
 CURL_PAX="curl-8.10.1.20241001_214340.zos.pax.Z"
 JQ_PAX="jq-1.6.20241001_204116.zos.pax.Z"
@@ -313,15 +308,15 @@ init()
     printInfo "- Collecting usage statistics: ${isCollectingStats}"
   fi
 
-  if ! promptYesOrNo "Do you want to continue?" ${yesToPrompts}; then
-    printInfo "Exiting..."
-    exit 0
-  fi
-
   if ! ${yesToPrompts} && [ -z "${OVERRIDE_ZOS_TOOLS}" ]; then
     if promptYesOrNo "Should zopen tools default to overriding the z/OS /bin tools (e.g. man, find, grep)?" ${yesToPrompts}; then
       OVERRIDE_ZOS_TOOLS=true
     fi
+  fi
+
+  if ! promptYesOrNo "Do you want to continue?" ${yesToPrompts}; then
+    printInfo "Exiting..."
+    exit 0
   fi
 
   configFile="${rootfs}/etc/zopen-config"
@@ -647,6 +642,29 @@ zz
   fi
 }
 
+installMeta()
+{
+  printHeader "Installing meta package"
+  printVerbose "Determining if installing using a DEV meta"
+  metabindir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)
+  metaReleaseLine="STABLE"
+  ##TODO
+  metadataFile="${metabindir}/../metadata.json"
+  if [ ! -r "${metadataFile}" ]; then
+    printVerbose "No metadata.json file; using stable release"
+  fi
+  #Note that the releaseline is knwon as buildline in the metadata file!
+  if ! bootstrapMetaReleaseline=$(jqw -r '.product.buildline' "${metadataFile}"); then
+    printVerbose "Could not get releaseline/buildline from package metadata; using stable release"
+  fi
+  case "${bootstrapMetaReleaseline}" in
+    "STABLE"|"DEV") printVerbose "Valid releaseline '${bootstrapMetaReleaseline}' from metadata file"
+                    metaReleaseLine="${bootstrapMetaReleaseline}";;
+    *) printVerbose "Invalid releaseline '${bootstrapMetaReleaseline}'; defaulting to STABLE"  
+  esac
+  "${MYDIR}"/zopen-install "${installOptions}" -y meta --release-line "${metaReleaseLine}"
+}
+
 installPrereqs()
 {
   printHeader "Installing zopen pre-requisites"
@@ -871,7 +889,8 @@ generateZopenConfig
 generateAnalyticsConfiguration
 [ -e "${ZOPEN_ROOTFS}/var/lib/zopen/packageDB.json" ] || createInitialPackageDB
 if ! ${refresh} && ! ${offlineInstall}; then
-    updateBootstrappedTools
+  installMeta
+  updateBootstrappedTools
 fi
 
 deinit
