@@ -125,11 +125,6 @@ listAvailablePackages()
   installed="[${installed%,}]" # wrap in a JSON array and strip any trailing ',' char
 
   if ${details} || ${full}; then
-    if ${urlinclude}; then
-      urltext='$url'
-    else
-      urltext=""
-    fi
     jq --raw-output --argjson installed "${installed}" \
       --arg wpackage "${wpackage}" \
       --arg winstalled "${winstalled}" \
@@ -199,6 +194,11 @@ listInstalledEntries()
     wurl=0
     urltext=""
   fi
+  pdb="${ZOPEN_ROOTFS}/var/lib/zopen/packageDB.json"
+  if ! [ -e "${pdb}" ]; then
+    printWarning "No package database found. Regenerating (subsequent calls will be faster)"
+    updatePackageDB
+  fi
   if ${header} && ${details}; then
     if ${full}; then
       printf "${NC}${UNDERLINE}%-${wpackage}s%-${wversion}s%-${wrelease}s%-${wrellne}s%-${wexpsz}s%-${wqual}s%-${wurl}s${NC}\n" \
@@ -209,11 +209,6 @@ listInstalledEntries()
       printf "${NC}${UNDERLINE}%-${wpackage}s%-${wversion}s%-${wrelease}s${NC}\n" \
           "$(text_center "Package" ${wpackage})" "$(text_center "Version" ${wversion})" "$(text_center "Release" ${wrelease})"
     fi
-  fi
-  pdb="${ZOPEN_ROOTFS}/var/lib/zopen/packageDB.json"
-  if ! [ -e "${pdb}" ]; then
-    printWarning "No package database found. Regenerating (subsequent calls will be faster)"
-    updatePackageDB
   fi
   if ${details}; then
     printVerbose "Details requested"
@@ -226,15 +221,33 @@ listInstalledEntries()
         --arg wrellne "${wrellne}" \
         --arg wexpsz "${wexpsz}" \
         --arg wqual "${wqual}" \
-        "$(jqfunctions)"' .[] |
-          keys[] as $key |
-          .[$key].product.test_status as $ts |
-          pr($key;"@";($wpackage | tonumber)) +
+        --arg urlinclude "${urlinclude}" \
+        --arg wurl "${wurl}" \
+        "$(jqfunctions)"' .[]
+          | (keys|sort)[] as $key
+          |.[$key].product.test_status as $ts
+          |($ts.total_success | tonumber? // null) as $succ
+          |($ts.total_tests|tonumber? // null) as $tests
+          |(
+            if ($succ == -1) then "-1"
+            elif ($tests == null or $succ == null) then "n/a"
+            elif ($tests == 0) then "0"
+            else (((100 * $succ / $tests) * 10 | round) / 10) |r(2)| tostring + "%"
+            end
+            ) as $ts_str
+          | pr($key;"@";($wpackage | tonumber)) +
           c((.[$key].product?.version? // "unknown");"@";($wversion | tonumber)) +
           c((.[$key].product?.release? // "unknown");"@";($wrelease | tonumber)) +
           c((.[$key].product.buildline? // "unknown");"@";($wrellne | tonumber)) +
           c((.[$key].product.size? // "unknown");"@";($wexpsz | tonumber)) +
-          c(((if ($ts? and ($ts.total_tests | tonumber?) and ($ts.total_success | tonumber?)) then ($ts.total_success | tonumber) / ($ts.total_tests | tonumber) else 0 end | .*100)| r(2) |tostring);"@";($wqual | tonumber))' \
+          c($ts_str;"@";($wqual | tonumber)) + 
+          (
+            if ($urlinclude == "true") then 
+              c((.[$key].product.repo? // "unknown");"@";($wurl | tonumber))
+            else
+              ""
+            end
+          )' \
         "${pdb}" | sed 's/@/ /g'
     else
       jq --raw-output \
@@ -242,7 +255,7 @@ listInstalledEntries()
         --arg wversion "${wversion}" \
         --arg wrelease "${wrelease}" \
         "$(jqfunctions)"' .[] |
-          keys[] as $key |
+          (keys|sort)[] as $key |
           pr($key;"@";($wpackage | tonumber)) +
           c(.[$key].product.version;"@";($wversion | tonumber)) +
           c(.[$key].product.release;"@";($wrelease | tonumber))' \
@@ -253,7 +266,7 @@ listInstalledEntries()
       --arg wpackage "${wpackage}" \
       --arg wversion "${wversion}" \
       "$(jqfunctions)"' .[] |
-        keys[] as $key |
+        (keys|sort)[] as $key |
         .[$key].product.test_status as $ts |
         pr($key;"@";($wpackage | tonumber)) +
         c((.[$key].product?.version? // "unknown");"@";($wversion | tonumber))' \
@@ -275,18 +288,16 @@ verbose=false
 header=false
 details=false
 full=false
-available=false
-installed=true
-updates=false
+commandVerb="installed"  # Default list to display
 urlinclude=false  # whether to include download url in output information
 versioninfo=false
 
 while [ $# -gt 0 ]; do
   printVerbose "Parsing option: $1"
   case "$1" in
-    "--available") available=true; installed=false; updates=false;;
-    "--installed") available=false; installed=true; updates=false;;
-    "--updates") available=false; installed=false; updates=true ;;
+    "--available") commandVerb="available";;
+    "--installed") commandVerb="installed";;
+    "--updates") commandVerb="updates";;
     "--details") details=true ;;
     "--full") full=true; details=true ;;
     "--header") header=true ;;
@@ -321,15 +332,13 @@ while [ $# -gt 0 ]; do
 done
 
 checkIfConfigLoaded
-if ${installed}; then
-  listInstalledEntries
-  exit 0
-fi
-if ${available}; then
-  listAvailablePackages
-  exit 0
-fi
-if ${updates}; then
-  listUpdatesForInstalled
-  exit 0
-fi
+
+case "${commandVerb}" in
+  "available") listAvailablePackages;;
+  "updates")   listUpdatesForInstalled;;
+  "installed") listInstalledEntries;;
+  *) assertFailed "Unrecognised command verb '${commandVerb}'";;
+esac
+
+exit 0
+
