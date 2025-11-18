@@ -77,7 +77,6 @@ printPackageInfo() {
 
     if ! runAndLog "curlCmd -s -L '${metadataJSONURL}' -o '${metadataFile}'"; then
     	printError "Could not download from ${metadataJSONURL}. Correct any errors and potentially retry."
-   	continue
     fi
     repo=$(echo "${repo}" | sed 's#/[^/]*$##') # Strip /download
     repo=$(echo "${repo}" | sed 's#^[^/]*//[^/]*##') # Strip protocol and host
@@ -289,5 +288,5 @@ done
 checkIfConfigLoaded
 updateCaches
 validatePackageList "${package}"
-gatherPackageInfo "${package}" "${remote_lookup}"
+printPackageInfo "${package}" "${remote_lookup}"
 outputPackageInfo
