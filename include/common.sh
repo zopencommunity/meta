@@ -1980,16 +1980,37 @@ getReleaseLineMetadata()
     printSoftError "Could not find asset for releaseline '${validatedReleaseLine}' for repo '${repo}' in ${JSON_CACHE}" 2> "${invalidPortAssetFile}"
     return 1
   fi
-  unset "${releaseLine}"
+  unset releaseLine
+}
+
+getReleaseLineFromInstalledPkg(){
+  repo="$1"
+  metadataFile="${ZOPEN_PKGINSTALL}/${repo}//${repo}/metadata.json"
+  if [ ! -r "${metadataFile}" ]; then
+    printVerbose "No metadata.json file for '${repo}'; default to stable"
+    echo "STABLE" && return 0
+  fi
+  #Note that the releaseline is knwon as buildline in the metadata file!
+  if ! installedReleaseline=$(jqw -r '.product.buildline' "${metadataFile}"); then
+    printError "Could not get releaseline/buildline from package metadata for '${repo}'"
+  fi
+  case "${installedReleaseline}" in
+    "STABLE"|"DEV") printVerbose "Valid releaseline '${installedReleaseline}' from metadata file";;
+    *) printError "Invalid releaseline '${installedReleaseline}' for package '${repo}'"  
+  esac
+  echo "${installedReleaseline}"
+  return 0
 }
 
 calculateReleaseLineMetadata()
 {
   repo="$1"
   printDebug "No explicit version/tag/releaseline, checking for pre-existing package&releaseline"
-  if [ -n "${installedReleaseLine}" ]; then
-    printDebug "Found existing releaseline '${installedReleaseLine}', restricting to only that releaseline"
-    validatedReleaseLine="${installedReleaseLine}"  # Already validated when stored
+  if isPackageActive "${repo}"; then
+    printVerbose "Package '${repo}' already installed; determining releaseline"
+    if ! validatedReleaseLine=$(getReleaseLineFromInstalledPkg "${repo}"); then
+      return 1
+    fi
   else
     printDebug "Checking for system-configured releaseline"
     if [ -e "${ZOPEN_JSON_CONFIG}" ]; then
@@ -3098,6 +3119,205 @@ findSuggestion() {
     done
     echo "${best_match}"
 }
+
+# Map functions - no arrays or maps in POSIX.1 shell so improvise
+# Default separators
+DEFAULT_KVSEP="="
+DEFAULT_ENTRYSEP="|"
+
+# Create a new map with specified separators
+createMap() {
+  kvsep="$1"
+  entrysep="$2"
+  echo "${kvsep} ${entrysep} "
+}
+
+# Get key-value separator from map
+getKVSeparator() {
+  map=$1
+  echo "${map}" | awk '{print $1}'
+}
+
+# Get entry separator from map
+getEntrySeparator() {
+  map=$1
+  echo "${map}" | awk '{print $2}'
+}
+
+# Get entries from map
+getEntries() {
+  map=$1
+  echo "${map}" | cut -d' ' -f3-
+}
+
+# Add entry to map (initializes if blank)
+addEntry() {
+  map="$1"
+  key="$2"
+  value="$3"
+
+  if [ -z "${map}" ]; then
+    kvsep="$DEFAULT_KVSEP"
+    entrysep="$DEFAULT_ENTRYSEP"
+    entries=""
+  else
+    kvsep=$(getKVSeparator "${map}")
+    entrysep=$(getEntrySeparator "${map}")
+    entries=$(getEntries "${map}")
+  fi
+  newEntry="${key}${kvsep}${value}"
+  echo "${kvsep} ${entrysep} ${entries}${newEntry}${entrysep}"
+}
+
+# Immutable add (fails if key exists)
+immutableAddEntry() {
+  map="$1"
+  key="$2"
+  value="$3"
+
+  if hasKey "${map}" "$key"; then
+    echo "${map}"
+    return 1
+  else
+    addEntry "${map}" "$key" "$value"
+    return 0
+  fi
+}
+
+# Get value for a key
+getValue() {
+  map="$1"
+  needle="$2"
+  kvsep=$(getKVSeparator "${map}")
+  entrysep=$(getEntrySeparator "${map}")
+  entries=$(getEntries "${map}")
+
+  IFS="$entrysep" set -- $entries
+  for knv; do
+    key=$(echo "$knv" | awk -F"$kvsep" '{print $1}')
+    if [ "$key" = "$needle" ]; then
+      echo "$knv" | awk -F"$kvsep" '{print $2}'
+      return 0
+    fi
+  done
+  return 1
+}
+
+# Check if key exists
+hasKey() {
+  map="$1"
+  needle="$2"
+  getValue "${map}" "$needle" > /dev/null
+}
+
+# Update value for a key
+updateValue() {
+  map="$1"
+  needle="$2"
+  newValue="$3"
+  kvsep=$(getKVSeparator "${map}")
+  entrysep=$(getEntrySeparator "${map}")
+  entries=$(getEntries "${map}")
+  newMap="${kvsep} ${entrysep} "
+
+  IFS="$entrysep" set -- $entries
+  for knv; do
+    key=$(echo "$knv" | awk -F"$kvsep" '{print $1}')
+    if [ "$key" = "$needle" ]; then
+      knv="${key}${kvsep}${newValue}"
+    fi
+    newMap="${newMap}${knv}${entrysep}"
+  done
+  echo "$newMap"
+}
+
+# Delete a key
+deleteKey() {
+  map="$1"
+  needle="$2"
+  kvsep=$(getKVSeparator "${map}")
+  entrysep=$(getEntrySeparator "${map}")
+  entries=$(getEntries "${map}")
+  newMap="${kvsep} ${entrysep} "
+
+  IFS="$entrysep" set -- $entries
+  for knv; do
+    key=$(echo "$knv" | awk -F"$kvsep" '{print $1}')
+    if [ "$key" != "$needle" ]; then
+      newMap="${newMap}${knv}${entrysep}"
+    fi
+  done
+  echo "$newMap"
+}
+
+# List all keys
+listKeys() {
+  map="$1"
+  kvsep=$(getKVSeparator "${map}")
+  entrysep=$(getEntrySeparator "${map}")
+  entries=$(getEntries "${map}")
+
+  IFS="$entrysep" set -- $entries
+  for knv; do
+    echo "$knv" | awk -F"$kvsep" '{print $1}'
+  done
+}
+
+# Print map entries
+prettyPrint() {
+  map="$1"
+  wrap_width="${2:-80}"
+  indent="${3:-4}"
+
+  kvsep=$(getKVSeparator "${map}")
+  entrysep=$(getEntrySeparator "${map}")
+  entries=$(getEntries "${map}")
+
+  printf "%s" "${entries}" | awk -v kvsep="${kvsep}" -v RS="${entrysep}" -v wrap="${wrap_width}" -v lhindent="${indent}"\
+    '
+  {
+    split($0, kv, kvsep) # Split into key/value pair on the key separator
+    keys[NR] = kv[1]     # Store the key in the keys array [no maps in awk]
+    values[NR] = kv[2]   # Store associated value in value array [at same offset!]
+    # Determine what the longest key name is as we use that to calculate the
+    # offset to write values at.
+    if (length(kv[1]) > maxlen) maxlen = length(kv[1])
+  }
+  END {
+    indent = maxlen + 3   # Space between biggest key and start of value text
+    for (i = 1; i <= NR; i++) {  # Loop all records
+      printf "%*s%-*s   ", lhindent, "", maxlen, keys[i]   # Output key
+      line = ""
+      # Need to format the value such that it breaks into sections
+      # then indented to where the initial line started - pretty!
+      split(values[i], words, /[ \t]+/)
+      for (j = 1; j <= length(words); j++) {
+        word = words[j]
+        printf "Parsed word:>>%s\n", word
+        if (length(line) + length(word) + 1 > wrap - indent) {
+          # There is no space in current line buffer for word - output and rebuild
+          print line
+          line = sprintf("%*s%*s%s", lhindent, "", indent, "", word)
+        } else {
+          # Space in buffer for word
+          if (length(line) == 0) {
+            # First word so just use as-is in buffer
+            line = sprintf("%*s%s", lhindent, "", word)
+            printf "Started new line:>>%s\n", line
+          } else {
+            # ! first word so insert space char and append to buffer
+            line = line " " word
+            printf "Line is now :>>%s\n", line
+          }
+        }
+      }
+      # Anything left in the line buffer can be written
+      if (length(line) > 0) print line
+    }
+  }'
+}
+
+
 
 # Main code
 
