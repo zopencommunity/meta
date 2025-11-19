@@ -12,6 +12,10 @@ zopenInitialize()
   # Capture start time before setting trap
   fullProcessStartTime=${SECONDS}
 
+  # Monitor the intial parent process; as subshells inherit
+  # variables, this will not be overridden due to param expansion
+  parentPid=${parentPid:-$$}
+
   # Create the cleanup pipeline and exit handler
   trap "cleanupFunction" EXIT INT TERM QUIT HUP
 
