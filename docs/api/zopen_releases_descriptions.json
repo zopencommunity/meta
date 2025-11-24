@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2025-11-24T16:26:10+00:00Z",
+  "generation_timestamp_utc": "2025-11-24T20:05:45+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -294,6 +294,7 @@
     "faiss": "z/OS port of faiss",
     "libomp": "zopen port of libomp",
     "wrk": "zopen port of wrk",
-    "nnn": "zopen port of nnn"
+    "nnn": "zopen port of nnn",
+    "micro": "easy to use terminal editor"
   }
 }
