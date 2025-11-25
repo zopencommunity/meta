@@ -210,8 +210,10 @@ getCurrentVersionDir(){
   [ ! -L "${ZOPEN_PKGINSTALL}/${needle}/${needle}" ] \
     && echo ""\
     && return 4
-  cd "${ZOPEN_PKGINSTALL}/${needle}/${needle}" 2> /dev/null \
+  ( # Do not modify current environment!
+    cd "${ZOPEN_PKGINSTALL}/${needle}/${needle}" 2> /dev/null \
     && pwd -P 2> /dev/null
+  )
 }
 
 # isPackageActive
@@ -2691,7 +2693,9 @@ EOF
         # running it's setup now can affect the currently running meta
       else
         printVerbose "- Running any setup scripts in sub-shell to preserve environment"
-        cd "${ZOPEN_PKGINSTALL}/${name}/${name}" && [ -r "./setup.sh" ] && ./setup.sh >/dev/null
+        ( # Prevent cd from modifying current environment
+          cd "${ZOPEN_PKGINSTALL}/${name}/${name}" && [ -r "./setup.sh" ] && ./setup.sh >/dev/null
+        )
       fi
     fi
   fi
@@ -2751,13 +2755,14 @@ processActionScripts()
     "parseGraphPost") scriptletDir="${ZOPEN_SCRIPTLET_DIR}/parseGraphPost";;
     *) assertFailed "Invalid process action phase '${phase}'"
   esac
-    printVerbose "Running script[s] from '${scriptletDir}'"
+  printVerbose "Running script[s] from '${scriptletDir}'"
 
-    if [ ! -d "${scriptletDir}" ]; then
-      printDebug "No script directory for phase: ${phase}"
-      return 0
-    fi
-    unset CDPATH;
+  if [ ! -d "${scriptletDir}" ]; then
+    printDebug "No script directory for phase: ${phase}"
+    return 0
+  fi
+  curDir=$(pwd -P)
+  unset CDPATH;
   cd "${scriptletDir}" || return 1
 
   scriptletRcFile=$(mktempfile "zopen_actionscripts" ".err")
@@ -2796,9 +2801,11 @@ processActionScripts()
     printWarning "One or more scripts failed:"
     cat "${scriptletRcFile}"
     rm -f "${scriptletRcFile}"
+    cd "${curDir}" || printSoftError "Could not return to previous directory"
     return 1
   fi
   rm -f "${scriptletRcFile}"
+  cd "${curDir}" || printSoftError "Could not return to previous directory"
   return 0
 }
 
@@ -2821,7 +2828,7 @@ updatePackageDB()
     printf "[\n]\n" > "${pdb}"
   fi
 
-  if [ $(unset CD_PATH; cd "${ZOPEN_PKGINSTALL}"; ls -A | wc -l) -eq 0 ]; then
+  if [ "$(unset CD_PATH; cd "${ZOPEN_PKGINSTALL}"; ls -A | wc -l)" -eq 0 ]; then
     printVerbose "No packages found to add to database [new install?]"
     return
   fi
