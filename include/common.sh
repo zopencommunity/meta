@@ -21,7 +21,7 @@ zopenInitialize()
 
   # Temporary files
   for zopen_tmp_dir in "${TMPDIR}" "${TMP}" /tmp; do
-    if [ ! -z ${zopen_tmp_dir} ] && [ -d ${zopen_tmp_dir} ]; then
+    if [ ! -z "${zopen_tmp_dir}" ] && [ -d "${zopen_tmp_dir}" ]; then
       break
     fi
   done
@@ -66,7 +66,7 @@ addCleanupTrapCmd(){
   # shellcheck disable=SC2009  # no pgrep.
   #mypid=$(ps -ef |grep -v grep |grep $0 | tr -s ' ' | cut -f3 -d ' ')
   mypid=$(exec sh -c 'echo ${PPID}')
-  tmpscriptfile="/tmp/zopen_trap.${mypid}.scr"
+  tmpscriptfile="${zopen_tmp_dir}/zopen_trap.${mypid}.scr"
   echo "${newcmd}" >> "${tmpscriptfile}"
 
   if [ $$ -eq "${parentPid}" ]; then
@@ -82,7 +82,7 @@ cleanup() {
   # shellcheck disable=SC2009  # no pgrep.
   #mypid=$(ps -ef |grep -v grep |grep ps | tr -s ' ' | cut -f3 -d ' ')
   mypid=$(exec sh -c 'echo ${PPID}')
-  tmpscriptfile="/tmp/zopen_trap.${mypid}.scr"
+  tmpscriptfile="${zopen_tmp_dir}/zopen_trap.${mypid}.scr"
   if [ -f "${tmpscriptfile}" ] && [ -s "${tmpscriptfile}" ]; then
       # Execute the commands in the cleanup file by sourcing it
       # shellcheck disable=SC1090
@@ -153,11 +153,11 @@ addCleanupTrapCmd2(){
 cleanupOnExit()
 {
   rv=$?
-  [ -f ${ZOPEN_TEMP_C_FILE} ] && rm -rf ${ZOPEN_TEMP_C_FILE}
-  [ -p ${TMP_FIFO_PIPE} ] && rm -rf ${TMP_FIFO_PIPE}
+  [ -f "${ZOPEN_TEMP_C_FILE}" ] && rm -rf "${ZOPEN_TEMP_C_FILE}"
+  [ -p "${TMP_FIFO_PIPE}" ] && rm -rf "${TMP_FIFO_PIPE}"
   if [ ! -z "${TEE_PID}" ]; then
-    if kill -0 ${TEE_PID} 2> /dev/null; then
-      kill -9 ${TEE_PID}
+    if kill -0 "${TEE_PID}" 2> /dev/null; then
+      kill -9 "${TEE_PID}"
     fi
   fi
   [ -e "${TMP_GPG_DIR}" ] && rm -rf "${TMP_GPG_DIR}"
