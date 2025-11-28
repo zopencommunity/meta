@@ -101,37 +101,48 @@ subopts=""
 subcmd=""
 help=false
 version=false
+verbFound=false
 
-for arg in $*; do
-  case "${arg}" in
-    "alt"|"audit"|"build"|"clean"|"generate"|"init"|"install"|\
-    "query"|"remove"|"update-cacert"|"info"|"usage"|"diagnostics"|\
-    "whichproject"|"publish"|"list"|"upgrade"|"mirror"|"promote")
-      subcmd="zopen-${arg}"
-      ;;
-    "refresh")
-      subcmd='zopen-init'
-      subopts="${subopts} --refresh"
-      ;;
-    "config")
-      subcmd="zopen-${arg}-helper"
-      ;;
-    "--version")
-      if [ -z "${subcmd}" ]; then
-        subcmd='zopen-version'
-        version=true
-      else
+while [ "$#" -gt 0 ]; do
+  arg=$1 || shift
+  if $verbFound; then
+   subopts="${subopts} ${arg}" 
+  else
+    case "${arg}" in
+      "alt"|"audit"|"build"|"clean"|"generate"|"init"|"install"|\
+      "query"|"remove"|"update-cacert"|"info"|"usage"|"diagnostics"|\
+      "whichproject"|"publish"|"list"|"upgrade"|"mirror"|"promote")
+        subcmd="zopen-${arg}"
+        verbFound=true
+        ;;
+      "refresh")
+        subcmd='zopen-init'
+        subopts="${subopts} --refresh"
+        verbFound=true
+        ;;
+      "config")
+        subcmd="zopen-${arg}-helper"
+        verbFound=true
+        ;;
+      "--version")
+        if [ -z "${subcmd}" ]; then
+          subcmd='zopen-version'
+          version=true
+        else
+          subopts="${subopts} ${arg}"
+        fi
+        ;;
+      "help" | "--help" | "-?")
+        help=true
+        verbFound=true
+        ;;
+      *)
+        # let unknown stuff through
         subopts="${subopts} ${arg}"
-      fi
-      ;;
-    "help" | "--help" | "-?")
-      help=true
-      ;;
-    *)
-      # let unknown stuff through
-      subopts="${subopts} ${arg}"
-      ;;
-  esac
+        ;;
+    esac
+  fi
+  shift
 done
 
 if [ -z "${subcmd}" ]; then
@@ -157,4 +168,5 @@ if ${version}; then
   fi
 fi
 
+# shellcheck disable=SC2086  # We want globbing in this case
 ${subcmd} ${subopts}
