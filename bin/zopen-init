@@ -656,12 +656,17 @@ installMeta()
   #Note that the releaseline is knwon as buildline in the metadata file!
   if ! bootstrapMetaReleaseline=$(jqw -r '.product.buildline' "${metadataFile}"); then
     printVerbose "Could not get releaseline/buildline from package metadata; using stable release"
+    metaReleaseLine="STABLE"
+  else
+    case "${bootstrapMetaReleaseline}" in
+      "STABLE"|"DEV") printVerbose "Valid releaseline '${bootstrapMetaReleaseline}' from metadata file"
+                      metaReleaseLine="${bootstrapMetaReleaseline}"
+                      ;;
+      *) printVerbose "Invalid releaseline '${bootstrapMetaReleaseline}'; defaulting to STABLE"  
+         metaReleaseLine="STABLE"
+         ;;
+    esac
   fi
-  case "${bootstrapMetaReleaseline}" in
-    "STABLE"|"DEV") printVerbose "Valid releaseline '${bootstrapMetaReleaseline}' from metadata file"
-                    metaReleaseLine="${bootstrapMetaReleaseline}";;
-    *) printVerbose "Invalid releaseline '${bootstrapMetaReleaseline}'; defaulting to STABLE"  
-  esac
   "${MYDIR}"/zopen-install "${installOptions}" -y meta --release-line "${metaReleaseLine}"
 }
 
@@ -710,7 +715,12 @@ installPrereqs()
   printInfo "- Sourcing environment"
 }
 
-updateBootstrappedTools() {
+# Used to ensure that there are initial versions of the core products available for use.
+# - install/update the packages from the repo
+# - in an offline/airgapped environment, this involves installing the bootstrapped paxes
+# and copying over the meta that was used in the initial install
+updateBootstrappedTools() 
+{
   printInfo "- Installing/updating bootstrapped curl, jq, gpg, pinentry and meta to install updated versions (if available)"
   installOptions="--force"
   toolInstall=0
@@ -718,7 +728,7 @@ updateBootstrappedTools() {
     installOptions="${installOptions} --bypass-prereq-checks";
   fi
   if ${refresh}; then
-    "${MYDIR}"/zopen-install "${installOptions}" -y curl jq pinentry gpg
+    "${MYDIR}"/zopen-install "${installOptions}" --yes curl jq pinentry gpg
     toolInstall=$?
   elif ${offlineInstall}; then
     printVerbose "As offline, no access to meta.pax so copy currently running"
@@ -794,8 +804,9 @@ EOF
       fi
     done
   else
+    installMeta  # Need to ensure meta is available
     # shellcheck disable=SC2086  # We want installOptions to be split
-    "${MYDIR}/zopen-install" ${installOptions} -y curl jq pinentry gpg meta
+    "${MYDIR}/zopen-install" ${installOptions} --yes curl jq pinentry gpg
     toolInstall=$?
   fi
   [ "${toolInstall}" -ne 0 ] && printError "Unable to install curl, jq, gpg, pinentry and/or meta; see previous errors and retry the initilisation using the '--re-init' parameter"
@@ -888,9 +899,6 @@ generateZopenConfig
 ! ${offlineInstall} && updateCACert
 generateAnalyticsConfiguration
 [ -e "${ZOPEN_ROOTFS}/var/lib/zopen/packageDB.json" ] || createInitialPackageDB
-if ! ${refresh} && ! ${offlineInstall}; then
-  installMeta
-  updateBootstrappedTools
-fi
+updateBootstrappedTools
 
 deinit
