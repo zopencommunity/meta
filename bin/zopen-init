@@ -350,7 +350,6 @@ init()
 
   export ZOPEN_ROOTFS="${rootfs}"
   ZOPEN_CA_DIR="etc/pki/tls/certs" # Mimic location on some Linux distributions
-  ZOPEN_JSON_CONFIG="${ZOPEN_ROOTFS}/etc/zopen/config.json"
   certFileName="cacert.pem"
 }
 
@@ -455,6 +454,7 @@ generateJsonConfiguration()
     autopkgpurge=$(jqw -r '.autopkgpurge' "${jsonConfig}")
     skip_broken=$(jqw -r '.skip_broken' "${jsonConfig}")
     skip_size_check=$(jqw -r '.skip_size_check' "${jsonConfig}")
+    offline=$(jqw -r '.offline' "${jsonConfig}")
   fi
 
   if ${releaselineDev}; then
@@ -462,53 +462,13 @@ generateJsonConfiguration()
     releaseLine="DEV"
     printInfo "- Configured zopen to use development (DEV) releaseline packages where available"
   fi
-  case "${releaseLine}" in
-    "") releaseLine="STABLE"
-        printInfo "- Configured zopen to use stable releaseline packages"
-        ;;
-    "STABLE"|"DEV") :;; # Use as-is
-    *) printWarning "Current value for release line '${releaseLine}' invalid. Defaulting to 'STABLE'."
-       releaseLine="STABLE"
-       ;;
-  esac
-  case "${autocacheclean:=true}" in
-    "0"|"1"|[Tt][Rr][Uu][Ee]|[Ff][Aa][Ll][Ss][Ee]) :;; # Valid value
-    "null") autocacheclean="true"  # Default to true; jq found no entry (new config)
-        ;;
-    *) showConfigParmWarning "autocacheclean" "${autocacheclean}" "true|false" "true"
-       autocacheclean=true
-
-       ;;
-  esac
-  case "${autopkgpurge:=false}" in
-    "0"|"1"|[Tt][Rr][Uu][Ee]|[Ff][Aa][Ll][Ss][Ee]) :;; # Valid value
-    "null")autopkgpurge=false  # Default to false; jq found no entry (new config)
-        ;;
-    *) showConfigParmWarning "autopkgpurge" "${autopkgpurge}" "true|false" "false"
-       autopkgpurge=false
-       ;;
-  esac
-  case "${skip_broken:=false}" in
-    "0"|"1"|[Tt][Rr][Uu][Ee]|[Ff][Aa][Ll][Ss][Ee]) :;; # Valid value
-    "null") skip_broken=false # Default to false
-        ;;
-    *) showConfigParmWarning "skip_broken" "${skip_broken}" "true|false" "false"
-       skip_broken=false
-       ;;
-  esac
-  case "${skip_size_check:=false}" in
-    "0"|"1"|[Tt][Rr][Uu][Ee]|[Ff][Aa][Ll][Ss][Ee]) :;; # Valid value
-    "null") skip_size_check=false # Default to false
-        ;;
-    *)  showConfigParmWarning "skip_size_check" "${skip_size_check}" "true|false" "false"
-        skip_size_check=false
-        ;;
-  esac
-  case "${OVERRIDE_ZOS_TOOLS}" in
-    "true"|"false") :;; # Valid value
-    "null") OVERRIDE_ZOS_TOOLS=false ;; # No entry in config file
-    *) OVERRIDE_ZOS_TOOLS=false ;; # Bad envvar / empty value in config
-  esac
+  validateConfigValue "enum" "releaseLine" "$releaseLine" "STABLE" "DEV|STABLE"
+  validateConfigValue "boolean" "autocacheclean" "$autocacheclean" "true"
+  validateConfigValue "boolean" "autopkgpurge" "$autopkgpurge" "false"
+  validateConfigValue "boolean" "skip_broken" "$skip_broken" "false"
+  validateConfigValue "boolean" "skip_size_check" "$skip_size_check" "false"
+  validateConfigValue "boolean" "OVERRIDE_ZOS_TOOLS" "$OVERRIDE_ZOS_TOOLS" "false"
+  validateConfigValue "boolean" "offline" "$offline" "false"
 
   if [ ! -e "${jsonConfig}" ]; then
     printInfo "Generating global configuration"
@@ -520,7 +480,8 @@ generateJsonConfiguration()
       "autocacheclean": ${autocacheclean},
       "autopkgpurge": ${autopkgpurge},
       "skip_broken": ${skip_broken},
-      "skip_size_check": ${skip_size_check}
+      "skip_size_check": ${skip_size_check},
+      "offline": ${offline}
     }
 zz
   else
@@ -534,13 +495,15 @@ zz
         --arg autopkgpurge "${autopkgpurge}" \
         --arg skip_broken "${skip_broken}" \
         --arg skip_size_check "${skip_size_check}" \
+        --arg offline "${offline}" \
                 ".release_line = \$releaseLine |
                  .override_zos_tools = \$isoverrideZOSTools |
                  .is_collecting_stats = \$isCollectingStats |
                  .autocacheclean = \$autocacheclean |
                  .autopkgpurge = \$autopkgpurge |
                  .skip_broken = \$skip_broken |
-                 .skip_size_check = \$skip_size_check
+                 .skip_size_check = \$skip_size_check |
+                 .offline = \$offline
           " "${jsonConfig}" > "${jsonConfigWorking}"; then
       printError "Errors updating existing configuration file. See previous errors for more information and retry command."
     fi

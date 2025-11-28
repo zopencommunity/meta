@@ -3131,6 +3131,41 @@ findSuggestion() {
     echo "${best_match}"
 }
 
+validateConfigValue()
+{
+  type=$1
+  key=$2
+  value=$3
+  default=$4
+  enums=$5
+  case "${type}" in
+    boolean)
+      case "${value:=$default}" in
+        "0"|"1"|[Tt][Rr][Uu][Ee]|[Ff][Aa][Ll][Ss][Ee]) :;; # Valid value
+        "null") value="$default"  # jq found no entry (new config?)
+            ;;
+        *) showConfigParmWarning "${key}" "${value}" "true|false" "${default}"
+          value="$default"
+          ;;
+      esac
+      ;;
+    enum)
+      if [ "${value:=$default}" = "null" ]; then
+        value="$default"  # jq found no entry (new config?)
+      elif echo "${enums}" | awk -v RS='|' -v val="${value}" '
+              { if (toupper(val) == toupper($0)) exit 0; }
+          END { exit 1 }'; then
+        : # Value value
+      else
+          showConfigParmWarning "${key}" "${value}" "${enums}" "${default}"
+          value="$default"
+      fi
+      ;;
+    *) assertFailed "Unknown config value type '${type}'"
+  esac
+  eval "$key=\"${value}\""
+}
+
 # Map functions - no arrays or maps in POSIX.1 shell so improvise
 # Default separators
 DEFAULT_KVSEP="="
