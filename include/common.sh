@@ -2374,7 +2374,7 @@ spaceValidate(){
   cacheBytes=$1
   packageBytes=$2
 
-  skip_size_check=$(jq -re '.skip_size_check' "${ZOPEN_JSON_CONFIG}")
+  skip_size_check=$(jqw -re '.skip_size_check' "${ZOPEN_JSON_CONFIG}")
   if "${skip_size_check}"; then
     printVerbose "Skipping size check due to skip_size_check=${skip_size_check}"
     return
