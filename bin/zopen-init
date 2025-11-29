@@ -604,8 +604,48 @@ zz
     fi
   fi
 }
+installLocalMeta()
+{
+  metabindir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)
+  ulzm="${rootfs}/usr/local/zopen/meta"
+  target="${ulzm}/meta-bootstrap"
+  mkdir -p "${target}"
+  printVerbose "Copying bare meta scripts from '${metabindir}' to '${target}"
+  cp -R "${metabindir}/../bin" "${target}"
+  cp -R "${metabindir}/../include" "${target}"
 
-installMeta()
+  printVerbose "Creating main symlink for meta"
+  ln -s "${ulzm}/meta-bootstrap" "${ulzm}/meta"
+  if ! runLogProgress "mergeIntoSystem \"meta\" \"${ulzm}/meta-bootstrap\" \"${rootfs}\"" \
+        "Merging meta into symlink mesh" "Merged meta into symlink mesh"; then
+    printSoftError "Unexpected errors merging symlinks into mesh"
+    printError "Use zopen alt to select previous version to ensure known state"
+  fi
+  printVerbose "Adding bootstrapped meta to package db"
+  printVerbose "Creating basic metadata.json"
+  cat << EOF > "${target}/metadata.json"
+{
+  "version_scheme": "0.2",
+  "product": {
+    "name": "meta",
+    "version": "0.0.0.0-bootstrap",
+    "release": "$(date +%Y%m%d_%H%M%S)",
+    "summary": "meta on z/OS",
+    "repo": "https://github.com/zopencommunity/metaport",
+    "license": "https://github.com/zopencommunity/metaport/blob/main/patches/LICENSE",
+    "zopen_license": "https://github.com/zopencommunity/metaport/blob/main/LICENSE",
+    "categories": "utilities",
+    "size": "$(du -ks "${target}" | awk '{print $1 * 1024}')",
+    "build_dependencies": [],
+    "runtime_dependencies": [],
+    "system_prereqs": []
+  }
+}
+EOF
+  addToInstallTracker "meta"
+}
+
+installRemoteMeta()
 {
   printHeader "Installing meta package"
   printVerbose "Determining if installing using a DEV meta"
@@ -625,7 +665,7 @@ installMeta()
       "STABLE"|"DEV") printVerbose "Valid releaseline '${bootstrapMetaReleaseline}' from metadata file"
                       metaReleaseLine="${bootstrapMetaReleaseline}"
                       ;;
-      *) printVerbose "Invalid releaseline '${bootstrapMetaReleaseline}'; defaulting to STABLE"  
+      *) printVerbose "Invalid releaseline '${bootstrapMetaReleaseline}'; defaulting to STABLE"
          metaReleaseLine="STABLE"
          ;;
     esac
@@ -682,7 +722,7 @@ installPrereqs()
 # - install/update the packages from the repo
 # - in an offline/airgapped environment, this involves installing the bootstrapped paxes
 # and copying over the meta that was used in the initial install
-updateBootstrappedTools() 
+updateBootstrappedTools()
 {
   printInfo "- Installing/updating bootstrapped curl, jq, gpg, pinentry and meta to install updated versions (if available)"
   installOptions="--force"
@@ -694,45 +734,6 @@ updateBootstrappedTools()
     "${MYDIR}"/zopen-install "${installOptions}" --yes curl jq pinentry gpg
     toolInstall=$?
   elif ${offlineInstall}; then
-    printVerbose "As offline, no access to meta.pax so copy currently running"
-    metabindir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)
-    ulzm="${rootfs}/usr/local/zopen/meta"
-    target="${ulzm}/meta-bootstrap"
-    mkdir -p "${target}"
-    printVerbose "Copying bare meta scripts from '${metabindir}' to '${target}"
-    cp -R "${metabindir}/../bin" "${target}"
-    cp -R "${metabindir}/../include" "${target}"
-
-    printVerbose "Creating main symlink for meta"
-    ln -s "${ulzm}/meta-bootstrap" "${ulzm}/meta"
-    if ! runLogProgress "mergeIntoSystem \"meta\" \"${ulzm}/meta-bootstrap\" \"${rootfs}\"" \
-          "Merging meta into symlink mesh" "Merged meta into symlink mesh"; then
-      printSoftError "Unexpected errors merging symlinks into mesh"
-      printError "Use zopen alt to select previous version to ensure known state"
-    fi
-    printVerbose "Adding bootstrapped meta to package db"
-    printVerbose "Creating basic metadata.json"
-    cat << EOF > "${target}/metadata.json"
-{
-  "version_scheme": "0.2",
-  "product": {
-    "name": "meta",
-    "version": "0.0.0.0-bootstrap",
-    "release": "$(date +%Y%m%d_%H%M%S)",
-    "summary": "meta on z/OS",
-    "repo": "https://github.com/zopencommunity/metaport",
-    "license": "https://github.com/zopencommunity/metaport/blob/main/patches/LICENSE",
-    "zopen_license": "https://github.com/zopencommunity/metaport/blob/main/LICENSE",
-    "categories": "utilities",
-    "size": "$(du -ks "${target}" | awk '{print $1 * 1024}')",
-    "build_dependencies": [],
-    "runtime_dependencies": [],
-    "system_prereqs": []
-  }
-}
-EOF
-    addToInstallTracker "meta"
-
     printVerbose "Installing bootstrap tools"
     PAX_LOCATIONS="$CURL_PAX_LOCATION,$JQ_PAX_LOCATION,${PINENTRY_PAX_LOCATION},${GPG_PAX_LOCATION}"
 
@@ -767,7 +768,7 @@ EOF
       fi
     done
   else
-    installMeta  # Need to ensure meta is available
+    installRemoteMeta  # Need to ensure meta is available
     # shellcheck disable=SC2086  # We want installOptions to be split
     "${MYDIR}/zopen-install" ${installOptions} --yes curl jq pinentry gpg
     toolInstall=$?
