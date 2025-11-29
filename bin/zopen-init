@@ -334,6 +334,7 @@ init()
         [ -n "${reinit}" ] && [ "y" = "${reinit}" ]
       }; then
         printInfo "- Re-initializing; zopen-config will be re-created"
+        reinitExisting=true
         backup="zopen-config.$(date +%Y%m%d%H%M%S)"
         bupdir=$(dirname "${configFile}")/zopen
         [ -e "${bupdir}" ] || { mkdir -p "${bupdir}" || printError "Unable to create directory '${bupdir}'"; }
@@ -854,15 +855,29 @@ deinit()
   fi
 }
 
+# Prompt/pre-fill config questions
 init
+# Check and create if missing required file system layout
 generateFileSystem
+# During install, install the pre-packaged required packages
 ! ${refresh} && installPrereqs
+# On an install, ensure there is a bootstrapped meta to fallback to
+# Note this stage
+! (${refresh} || ${reinitExisting}) && installLocalMeta
+# (Re)Create the config.json control file
 generateJsonConfiguration
+# Create the default repository - even if offline to use as a template
 generateDefaultRepository
+# Create the zopen-config configuration script
 generateZopenConfig
+# Ensure the latest CA certificates are available
 ! ${offlineInstall} && updateCACert
+# Create the analytics collector configuration
 generateAnalyticsConfiguration
+# Create the installation tracking file; if not existing, recreate
 [ -e "${ZOPEN_ROOTFS}/var/lib/zopen/packageDB.json" ] || createInitialPackageDB
+# Update the bootstrapped tools as needed - if offline, just install the
+# shipped paxes
 updateBootstrappedTools
 
 deinit
