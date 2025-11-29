@@ -469,7 +469,7 @@ generateJsonConfiguration()
   validateConfigValue "boolean" "skip_broken" "$skip_broken" "false"
   validateConfigValue "boolean" "skip_size_check" "$skip_size_check" "false"
   validateConfigValue "boolean" "OVERRIDE_ZOS_TOOLS" "$OVERRIDE_ZOS_TOOLS" "false"
-  validateConfigValue "boolean" "offline" "$offline" "false"
+  validateConfigValue "boolean" "offline" "$offlineInstall" "false"
 
   if [ ! -e "${jsonConfig}" ]; then
     printInfo "Generating global configuration"
