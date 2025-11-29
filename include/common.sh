@@ -3153,8 +3153,9 @@ validateConfigValue()
       if [ "${value:=$default}" = "null" ]; then
         value="$default"  # jq found no entry (new config?)
       elif echo "${enums}" | awk -v RS='|' -v val="${value}" '
-              { if (toupper(val) == toupper($0)) exit 0; }
-          END { exit 1 }'; then
+        BEGIN {notfound=1}
+              { if (toupper(val) == toupper($0)) {notfound=0; exit 0;} }
+          END { exit notfound }'; then
         : # Value value
       else
           showConfigParmWarning "${key}" "${value}" "${enums}" "${default}"
