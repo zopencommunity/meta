@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2025-11-27T16:02:34+00:00Z",
+  "generation_timestamp_utc": "2025-11-30T15:33:16+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -296,6 +296,7 @@
     "wrk": "zopen port of wrk",
     "nnn": "zopen port of nnn",
     "oqs-provider": "Currently this provider fully enables quantum-safe cryptography for KEM key establishment in TLS1.3 including management of such keys via the OpenSSL (3.0) provider interface and hybrid KEM schemes.",
-    "micro": "easy to use terminal editor"
+    "micro": "easy to use terminal editor",
+    "clangd": ""
   }
 }
