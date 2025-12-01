@@ -289,4 +289,3 @@ checkIfConfigLoaded
 updateCaches
 validatePackageList "${package}"
 printPackageInfo "${package}" "${remote_lookup}"
-outputPackageInfo
