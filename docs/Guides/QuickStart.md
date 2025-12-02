@@ -22,7 +22,7 @@ export _CEE_RUNOPTS="FILETAG(AUTOCVT,AUTOTAG)"
 
 ---
 
-### Quick Install (if `curl` and `bash` are available)
+### Quick Install (if `curl`, `bash`, and `jq` are available)
 
 Run the following one-liner:
 
