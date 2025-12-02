@@ -9,7 +9,11 @@ if ${skipverify}; then
   printWarning "Package validation with GPG explicitly skipped"
   return 0
 fi
-printInfo "- Performing GPG signature verification for '${pkg}' pax file"
+printInfo "- Performing GPG signature verification for '${pkg}' pax file '${paxFile}'"
+if ! [ -e "${metadataFile}" ]; then
+  printError "Metadata not found for '${pkg}'"
+  return 1
+fi
 metadataVersion=$(jq -r '.version_scheme' "${metadataFile}" 2>/dev/null)
 [ -n "${metadataVersion}" ] || printError "Metadata version could not be read from metadata file '${metadataFile}'"
 is_greater=$(echo "$metadataVersion > 0.1" | bc -l)
@@ -34,6 +38,7 @@ extractFromMetaData(){
   mdf=$2
   if ! sRc=$(jq -e -r "${key}" "${mdf}"); then
     mdf="${ZOPEN_ROOTFS}/var/cache/zopen/$(basename "$3").json"
+    [ -e "${mdf}" ] || return 1
     if ! sRc=$(jq -e -r "${key}" "${mdf}"); then
       return 1
     fi
@@ -42,20 +47,14 @@ extractFromMetaData(){
 }
 
 # Extracting values and checking for errors
-# If this is a local pax file, then there might not be a .product.pax in the
-# metadata; check for a corresponding <pax>.json file in the cache.
-# Local paxes need to be installed with --skipverify until they contain the
-# .product.pax (and .signature and .public_key) entry
-#if ! FILE_TO_VERIFY=$(jq -e -r '.product.pax' "${metadataFile}"); then
-#  printVerbose "Could not locate .product.pax in the pax's metadata. Checking cache..."
-#  metadataFile="${ZOPEN_ROOTFS}/var/cache/zopen/${paxFile}.json"
-#  if ! FILE_TO_VERIFY=$(jq -e -r '.product.pax' "${metadataFile}"); then
-#    printSoftError "Failed to extract 'pax' from ${metadataFile}" >&2
-#    return 1
-#  fi
-#fi
+# If this is a local pax file, then there should not be a .product.pax in the
+# metadata. Local paxes need to be installed with --skipverify since do not 
+# contain the .product.pax and .signature and .public_key entries could be invalid
+# and unreliable/untrustworthy
 if ! FILE_TO_VERIFY=$(extractFromMetaData ".product.pax" "${metadataFile}" "${paxFile}"); then
-  printSoftError "Failed to extract '.product.pax' from package metadata" >&2
+  printWarning "Metadata not found for '${pkg}' - package validation cannot be performed"
+  printWarning "Use the --skip-verify parameter or configure the zopen environment"
+  printWarning "to enable local/offline installations without package verification."
   return 1  
 fi
 
@@ -130,7 +129,6 @@ addCleanupTrapCmd "rm -rf ${KEYRING_FILE}~"  # Also remove a potential lock file
     return 1
   fi
 
-#  gpg_output=$(gpgCmd --no-default-keyring --keyring "${KEYRING_FILE}" --verify "${SIGNATURE_FILE}" "${FILE_TO_VERIFY}" 2>&1)
   gpg_output=$(gpgCmd --no-default-keyring --keyring "${KEYRING_FILE}" --verify "${SIGNATURE_FILE}" "${paxFile}" 2>&1)
   printVerbose "${gpg_output}"
   if ! echo "${gpg_output}" | grep -q "Good signature from"; then

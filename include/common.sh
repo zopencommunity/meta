@@ -2002,7 +2002,10 @@ getReleaseLineFromInstalledPkg(){
   fi
   case "${installedReleaseline}" in
     "STABLE"|"DEV") printVerbose "Valid releaseline '${installedReleaseline}' from metadata file";;
-    *) printError "Invalid releaseline '${installedReleaseline}' for package '${repo}'"  
+    "null") printVerbose "Explicit release line for package '${repo}' unknown; git clone perhaps."
+            installedReleaseline="UNKNOWN"
+            ;;
+    *) printError "Invalid releaseline '${installedReleaseline}' for package '${repo}'"   ;;
   esac
   echo "${installedReleaseline}"
   return 0
@@ -2011,32 +2014,44 @@ getReleaseLineFromInstalledPkg(){
 calculateReleaseLineMetadata()
 {
   repo="$1"
+  validatedReleaseLine="UNKNOWN"
   printDebug "No explicit version/tag/releaseline, checking for pre-existing package&releaseline"
   if isPackageActive "${repo}"; then
-    printVerbose "Package '${repo}' already installed; determining releaseline"
+    printVerbose "Package '${repo}' already installed; attempting to determine releaseline from metadata"
     if ! validatedReleaseLine=$(getReleaseLineFromInstalledPkg "${repo}"); then
       return 1
     fi
-  else
-    printDebug "Checking for system-configured releaseline"
-    if [ -e "${ZOPEN_JSON_CONFIG}" ]; then
-      printDebug "Using v2 configuration: '${ZOPEN_JSON_CONFIG}'"
-      sysrelline=$(jq -re '.release_line' "${ZOPEN_JSON_CONFIG}")
-    elif [ -e "${ZOPEN_ROOTFS}/etc/zopen/releaseline" ] ; then
-      printDebug "Using legacy file-based config"
-      sysrelline=$(awk ' {print toupper($1)}') < "${ZOPEN_ROOTFS}/etc/zopen/releaseline"
-    fi
-    printDebug "Validating value: ${sysrelline}"
-    validatedReleaseLine=$(validateReleaseLine "${sysrelline}")
-    if [ -n "${validatedReleaseLine}" ]; then
-      printDebug "zopen system configured to use releaseline '${sysrelline}'; restricting to that releaseline"
-    else
-      printWarning "zopen misconfigured to use an unknown releaseline of '${sysrelline}'; defaulting to STABLE packages"
-      printWarning "Set the contents of '${ZOPEN_ROOTFS}/etc/zopen/releaseline' to a valid value to remove this message"
-      printWarning "Valid values are: DEV | STABLE"
-      validatedReleaseLine="STABLE"
-    fi
   fi
+  case "${validatedReleaseLine}" in
+    "UNKNOWN") 
+      printVerbose "No specific releaseline from package itself. Checking for system-configured releaseline"
+      if [ -e "${ZOPEN_JSON_CONFIG}" ]; then
+        printDebug "Using v2 configuration: '${ZOPEN_JSON_CONFIG}'"
+        sysrelline=$(jq -re '.release_line' "${ZOPEN_JSON_CONFIG}")
+      elif [ -e "${ZOPEN_ROOTFS}/etc/zopen/releaseline" ] ; then
+        printDebug "Using legacy file-based config"
+        sysrelline=$(awk ' {print toupper($1)}') < "${ZOPEN_ROOTFS}/etc/zopen/releaseline"
+      else
+        printWarning "Cannot determine system or package release line (STABLE|DEV) for package '{repo}'"
+        printWarning "Using default of 'STABLE'"
+        validatedReleaseLine="STABLE"
+      fi
+      if [ -n "${sysrelline}" ]; then
+        printDebug "Validating value: ${sysrelline}"
+        validatedReleaseLine=$(validateReleaseLine "${sysrelline}")
+        if [ -n "${validatedReleaseLine}" ]; then
+          printVerbose "zopen system configured to use releaseline '${sysrelline}'; restricting to that releaseline"
+        else
+          printWarning "zopen misconfigured to use an unknown releaseline of '${sysrelline}'; defaulting to STABLE packages"
+          printWarning "Set the contents of '${ZOPEN_ROOTFS}/etc/zopen/releaseline' to a valid value to remove this message"
+          printWarning "Valid values are: DEV | STABLE"
+          validatedReleaseLine="STABLE"
+        fi
+      fi
+    ;;
+    STABLE|DEV) printVerbose "Using releaseline '${validatedReleaseLine}' for package '${repo}'" ;;
+    *) assertFailed "Invalid value for relaseline '${validatedReleaseLine}' calculated!" ;;
+  esac
 
     # We have some situations that could arise
     # 1. the port being installed has no releaseline tagging yet (ie. no releases tagged STABLE_* or DEV_*)
@@ -2173,11 +2188,16 @@ createDependancyGraph()
     return 0
   fi
   printDebug "Adding dependencies to install graph"
-  addToInstallGraph "dependancy" "${invalidPortAssetFile}" "${missing}"
+  if ! addToInstallGraph "dependancy" "${invalidPortAssetFile}" "${missing}"; then
+    return 1
+  fi
   # Recurse in case the now-installing dependencies themselves have dependencies
   # Recursive dependencies should not break as the initial package will have been
   # marked for installation
-  createDependancyGraph "${invalidPortAssetFile}"
+  if ! createDependancyGraph "${invalidPortAssetFile}"; then
+    return 1
+  fi
+  return 0
 }
 
 # addToInstallGraph
@@ -2195,7 +2215,7 @@ addToInstallGraph(){
   printDebug "Adding ${pkgList} to install graph"
   for portRequested in ${pkgList}; do
     if ! getPortMetaData "${portRequested}" "${invalidPortAssetFile}"; then
-      continue
+      break
     fi
     ## Merge asset into JSON install list
     installList=$(echo "${installList}" | \
