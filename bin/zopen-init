@@ -878,6 +878,6 @@ generateAnalyticsConfiguration
 [ -e "${ZOPEN_ROOTFS}/var/lib/zopen/packageDB.json" ] || createInitialPackageDB
 # Update the bootstrapped tools as needed - if offline, just install the
 # shipped paxes
-updateBootstrappedTools
+! ${refresh} && updateBootstrappedTools
 
 deinit
