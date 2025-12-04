@@ -2507,6 +2507,11 @@ generateZOSLIBHooks()
   #LIBPATH|prepend|PROJECT_ROOT/lib
   #"
 
+  if [ "${ZOPEN_TYPE}x" = "BAREx" ]; then
+    printVerbose "Skipping GenerateZOSLIBHooks for BARE build type"
+    return
+  fi
+
   if [ -z "${CC}" ]; then
     printVerbose "Skipping GenerateZOSLIBHooks since CC is not set"
     return
