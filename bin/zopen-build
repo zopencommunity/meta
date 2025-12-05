@@ -326,6 +326,7 @@ Option:
                         python. The default is clang.
   -e ENV_FILE           source ENV_FILE instead of buildenv to establish
                         build environment.
+  -E, --editable        enable editing of the executable (adds -Wl,-bedit=yes to LDFLAGS).
   --instrument          instruments the application with option -finstrument-functions (clang only)
   -f, --force-rebuild   forces a rebuild, including running bootstrap
                         and configure again.
@@ -387,6 +388,7 @@ processOptions()
   instrument=false
   printSourceDir=false
   use_ccache=false
+  editable=false
   depsDepth=2
   while [ $# -gt 0 ]; do
     case $1 in
@@ -462,6 +464,9 @@ processOptions()
     "-e" | "--env")
       shift
       buildEnvFile=$1
+      ;;
+    "-E" | "--editable")
+      editable=true
       ;;
     "-c" | "--clean")
       cleanupBuild=true
@@ -872,6 +877,9 @@ setEnv()
   fi
 
   # Dependencies such as libraries may add flags
+  if ${editable}; then
+    ZOPEN_EXTRA_LDFLAGS="${ZOPEN_EXTRA_LDFLAGS} -Wl,-bedit=yes"
+  fi
   export CPPFLAGS="${ZOPEN_CPPFLAGS} ${ZOPEN_EXTRA_CPPFLAGS}"
   export CFLAGS="${ZOPEN_CFLAGS} ${ZOPEN_EXTRA_CFLAGS} ${instrumentOptions}"
   export CXXFLAGS="${ZOPEN_CXXFLAGS} ${ZOPEN_EXTRA_CXXFLAGS} ${instrumentOptions}"
