@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -x
 #
 # General purpose build script for zopen community ports - https://github.com/zopencommunity
 #
@@ -760,6 +760,7 @@ setDepsEnv()
   deps="${ZOPEN_DEPS}"
 
   orig="${PWD}"
+  printVerbose "Saving original work directory '${orig}'"
   # Filter out duplicate deps
   deps=$(echo "${deps}" | xargs | tr ' ' '\n' | sort -u)
   for dep in ${deps}; do
@@ -787,10 +788,13 @@ setDepsEnv()
           fi
 
           printVerbose "Setting up ${depdir} dependency environment"
-          cd "${depdir}" && . ./.env
+          curDir="$(pwd -P)"
+          cd "${depdir}" || printError "Failed to change to '${depdir}'"
+          . ./.env
           if [ $? -gt 0 ]; then
             printError "Failed to source ${depdir} .env"
           fi
+          cd "${curDir}" || printError "Failed to return to '${curDir}'"
         fi
         foundDep=true
         break
@@ -812,10 +816,13 @@ setDepsEnv()
       fi
       depdir="${path}/${dep}/${dep}"
       printVerbose "Setting up upgraded ${depdir} dependency environment"
-      cd "${depdir}" && . ./.env
+      curDir="$(pwd -P)"
+      cd "${depdir}" || printError "Failed to change to '${depdir}'"
+      ./.env
       if [ $? -gt 0 ]; then
         printError "Failed to source ${depdir} .env"
       fi
+      cd "${curDir}" || printError "Failed to change back to '${curDir}'"
       versionPath="${depdir}/.version"
       if [ -r "${versionPath}" ]; then
         version=$(cat "${versionPath}")
@@ -825,7 +832,8 @@ setDepsEnv()
       fi
     fi
   done
-  cd "${orig}" || exit 99
+  cd "${orig}" || printError "Unable to change back to '${orig}'"
+  printVerbose "Changed back to directory '${orig}'"
 }
 
 setEnv()
@@ -1043,6 +1051,7 @@ extractTarBall()
   fi
   rm -f "${tarballz}"
   tagTree "${sourcedir}"
+  curDir="$(pwd -P)" # TODO: Do we need to return here??
   cd "${sourcedir}" || printError "Cannot cd to ${sourcedir}"
 
   # Clean up .git* files since we will be creating our own local git repo for applying patches
