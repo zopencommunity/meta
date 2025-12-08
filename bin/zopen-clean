@@ -78,7 +78,7 @@ removeUnusedPackageVersions()
 
   counterfile=$(mktempfile "clean" ".rupv")
   addCleanupTrapCmd "rm -f ${counterfile}"
-  cd "${ZOPEN_PKGINSTALL}/${needle}" && find . -name "./*" -prune -type d > "${counterfile}"
+  (cd "${ZOPEN_PKGINSTALL}/${needle}" && find . -name "./*" -prune -type d > "${counterfile}")
   unusedCount=0
   while read repo; do
     printVerbose "Parsing repo: '${repo}' as '${repo#./}'"
