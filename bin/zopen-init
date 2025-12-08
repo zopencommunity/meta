@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -x
 # Initialize zopen environment - https://github.com/zopencommunity
 #
 ME=$(basename "$0")

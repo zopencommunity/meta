@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -x
 #
 # zopen wrapper script to allow single point of entry to zopen
 # tooling.
