@@ -843,9 +843,11 @@ setEnv()
 {
 
   # Certificate information
-  export SSL_CERT_FILE="${ZOPEN_CA}"
-  export GIT_SSL_CAINFO="${ZOPEN_CA}"
-  export CURL_CA_BUNDLE="${ZOPEN_CA}"
+  if [ -n "${ZOPEN_CA}" ]; then
+    export SSL_CERT_FILE="${ZOPEN_CA}"
+    export GIT_SSL_CAINFO="${ZOPEN_CA}"
+    export CURL_CA_BUNDLE="${ZOPEN_CA}"
+  fi
 
   initDefaultEnvironment
   setDepsEnv
@@ -963,6 +965,9 @@ tagBinaryFiles()
 #
 tagTree()
 {
+  if ${getSourceOnly}; then
+    return;
+  fi
   dirtotag="$1"
   absdir=$(cd ${dirtotag} && echo "${PWD}")
   tagBinaryFiles "${absdir}"
