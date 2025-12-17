@@ -1037,7 +1037,7 @@ extractTarBall()
     tarraw=$(tar --version | head -1 | awk '{print $4;}')
     v=${tarraw%%.*}
     r=${tarraw##*.}
-    if [ ${v} -lt 1 ] || [ ${r} -lt 34 ]; then
+    if [ "${v:-0}" -lt 1 ] || [ "${r:-0}" -lt 34 ]; then
       printError "Need to be running at least tar 1.34"
     fi
 
