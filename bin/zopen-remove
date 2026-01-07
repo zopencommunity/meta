@@ -58,7 +58,7 @@ removePackages()
     if [ ! -f ${ZOPEN_PKGINSTALL}/${pkg}/${pkg}/.active ]; then
       printInfo "${NC}${YELLOW}Package '${pkg}' is not installed${NC}"
     else
-      printInfo "- Away to remove '${pkg}',"
+      printInfo "- OK to remove '${pkg}',"
       if ! ${yesToPrompts}; then
         while true; do
           printInfo "- Do you want to continue? [y/n/a]"
