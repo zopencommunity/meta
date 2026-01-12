@@ -652,10 +652,16 @@ installRemoteMeta()
   printVerbose "Determining if installing using a DEV meta"
   metabindir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)
   metaReleaseLine="STABLE"
-  ##TODO
+
+  printDebug "Trying up one level from '${metabindir}' in case of a pax install..."
   metadataFile="${metabindir}/../metadata.json"
   if [ ! -r "${metadataFile}" ]; then
-    printVerbose "No metadata.json file; using stable release"
+    metadataFile="${metabindir}/../zopen/meta/meta/metadata.json"
+    printDebug "Not found. Tring a deeper reference check at '${metadataFile}'..."
+  fi
+  
+  if [ ! -r "${metadataFile}" ]; then
+    printVerbose "No metadata.json file; defaulting to stable release"
   fi
   #Note that the releaseline is knwon as buildline in the metadata file!
   if ! bootstrapMetaReleaseline=$(jqw -r '.product.buildline' "${metadataFile}"); then
