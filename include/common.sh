@@ -444,19 +444,23 @@ if [ -z "\${ZOPEN_QUICK_LOAD}" ]; then
     if \$displayText; then
       /bin/printf "Processing %s configuration..." "\$zot"
     fi
-
-    tmpfile="\${local_tmp}/zopen_config.tmp"
-
-    if /bin/find "\${ZOPEN_ROOTFS}/etc/profiled" -type f -name 'dotenv' -print > "\${tmpfile}"; then
-      while IFS= read -r dotenv; do
-        [ -r "\${dotenv}" ] && . "\${dotenv}"
-      done < "\${tmpfile}"
-    else
-      echo "Error: find command failed" >&2
-      [ -e "\${tmpfile}" ] && rm "\${tmpfile}"
-      return 1
-    fi
-    [ -e "\${tmpfile}" ] && rm "\${tmpfile}"
+    
+    predotenvPWD=\$(pwd)
+    for dotenv in \${ZOPEN_ROOTFS}/etc/profiled/*; do
+      basedotenvpkg=\$(basename "\${dotenv}")
+      dotenvpkgdir="\${ZOPEN_PKGINSTALL}/\${basedotenvpkg}/\${basedotenvpkg}"
+      if [ ! -d "\${dotenvpkgdir}" ]; then
+        /bin/echo "WARNING: Skipping orphaned dotfile '\${dotenv}' - no installed package at '\${dotenvpkgdir}'"
+        continue
+      fi
+      cd "\${dotenvpkgdir}"
+      if [ -f ".appenv" ]; then
+        . ./.appenv
+      elif [ -f ".env" ]; then
+        . ./.env
+      fi
+    done
+    cd "\${predotenvPWD}"
 
     if \$displayText; then
       /bin/echo "DONE"
@@ -466,7 +470,6 @@ if [ -z "\${ZOPEN_QUICK_LOAD}" ]; then
         /bin/echo "NOTE: Conflicting tools (eg. man, cat, grep, make) will NOT take precedence over z/OS /bin tools; use the prefixed executables instead (eg. zotman, gcat, ggrep, gmake). Pass the option --override-zos-tools if you prefer zopen tools or --help for further options."
       fi
     fi
-    unset dotenvs
   fi
 fi
 unset displayText
