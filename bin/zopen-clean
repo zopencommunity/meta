@@ -1,4 +1,4 @@
-#!/bin/sh -x
+#!/bin/sh
 #
 # Cleanup utility for zopen community - https://github.com/zopencommunity
 #
