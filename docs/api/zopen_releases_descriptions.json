@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2026-01-25T15:30:43+00:00Z",
+  "generation_timestamp_utc": "2026-01-26T02:22:29+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -300,6 +300,8 @@
     "clangd": "",
     "clang_wrapper": "zopen port of clang_wrapper",
     "hlasm-language-server": "",
-    "k6": ""
+    "k6": "",
+    "botan": "Botan is a C++ cryptography library released under the permissive BSD-2-Clause license",
+    "thrift": "Apache Thrift - Software framework for scalable cross-language services development"
   }
 }
