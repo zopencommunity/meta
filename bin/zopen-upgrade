@@ -25,6 +25,10 @@ zopen upgrade is a utility to upgrade installed packages to a later release
 Usage: zopen upgrade [OPTION] [PARAMETERS] [PACKAGES]
 
 Options:
+  --bypass-prereq-checks
+                    ignore pre-requisite checks
+  --nodeps
+                    do not install dependencies
   -y, --yes         automatically answer yes to prompts
   -v, --verbose     run in verbose mode
   -h,-?, --help     display this help and exit
@@ -62,7 +66,7 @@ reinstallDeps=false
 # shellcheck disable=SC2034
 nosymlink=false
 # shellcheck disable=SC2034
-doNotInstallDeps=true
+doNotInstallDeps=false
 # shellcheck disable=SC2034
 bypassPrereqs=false
 
@@ -73,6 +77,10 @@ while [ $# -gt 0 ]; do
     "--bypass-prereq-checks")
       # shellcheck disable=SC2034
       bypassPrereqs=true 
+      ;;
+    "--nodeps" | "--no-deps") # Deprecate --no-deps for consistency
+      # shellcheck disable=SC2034
+      doNotInstallDeps=true
       ;;
     "--yes" | "-y")
       # shellcheck disable=SC2034
