@@ -31,6 +31,7 @@ zopenInitialize()
   fi
 
   defineEnvironment
+  defineSysloggingConstants
   defineANSI
   if [ -z "${ZOPEN_DONT_PROCESS_CONFIG}" ]; then
     processConfig
@@ -58,6 +59,10 @@ zopenInitialize()
     ZOPEN_SCRIPTLET_DIR="${ZOPEN_ROOTFS}/usr/local/zopen/meta/meta/include/scriptlets"
   fi
 
+  # Source analytics and initialize
+  # shellcheck disable=SC1091
+  # shellcheck disable=SC2086
+  . ${INCDIR}/analytics.sh || printWarning "Unable to source analytics.sh"
 }
 addCleanupTrapCmd(){
   # Attempt to remove any redirects; rather than test, simpler to remove
@@ -602,6 +607,27 @@ darkbackground() {
   else
     return 255
   fi
+}
+
+defineSysloggingConstants()
+{
+    # Logging Types
+  LOG_E="ERROR"   # If there was a failure and a command failed
+  LOG_W="WARNING" # If an error occurred but there was a workaround/fallback
+  LOG_I="INFO"    # General information
+  LOG_A="AUDIT"   # Security-type log for admin activities
+
+  # Logging Categories - more than one possible for a log entry
+  CAT_CONFIG="C"  # Configuration change
+  CAT_FILE="F"    # File handling (eg. downloading)
+  CAT_INSTALL="I" # Install processing
+  CAT_NETWORK="N" # Network processing
+  CAT_PKG="P"     # Package handling
+  CAT_QUERY="Q"   # Query processing
+  CAT_REMOVE="R"  # Removal handling
+  CAT_SYS="S"     # Related to the underlying native z/OS system
+  CAT_ZOPEN="Z"   # Related to the zopen system itself
+  CAT_STATS="ST"  # Related to usage statistics
 }
 
 defineANSI()
@@ -1518,24 +1544,6 @@ deleteDuplicateEntries()
   delim=$2
   echo "${value}${delim}" | awk -v RS="${delim}" '!($0 in a) {a[$0]; printf("%s%s", col, $0); col=RS; }' | sed "s/${delim}$//"
 }
-
-# Logging Types
-LOG_E="ERROR"   # If there was a failure and a command failed
-LOG_W="WARNING" # If an error occurred but there was a workaround/fallback
-LOG_I="INFO"    # General information
-LOG_A="AUDIT"   # Security-type log for admin activities
-
-# Logging Categories - more than one possible for a log entry
-CAT_CONFIG="C"  # Configuration change
-CAT_FILE="F"    # File handling (eg. downloading)
-CAT_INSTALL="I" # Install processing
-CAT_NETWORK="N" # Network processing
-CAT_PKG="P"     # Package handling
-CAT_QUERY="Q"   # Query processing
-CAT_REMOVE="R"  # Removal handling
-CAT_SYS="S"     # Related to the underlying native z/OS system
-CAT_ZOPEN="Z"   # Related to the zopen system itself
-CAT_STATS="ST"  # Related to usage statistics
 
 syslog()
 {
@@ -3189,211 +3197,5 @@ validateConfigValue()
   esac
   eval "$key=\"${value}\""
 }
-
-# Map functions - no arrays or maps in POSIX.1 shell so improvise
-# Default separators
-DEFAULT_KVSEP="="
-DEFAULT_ENTRYSEP="|"
-
-# Create a new map with specified separators
-createMap() {
-  kvsep="$1"
-  entrysep="$2"
-  echo "${kvsep} ${entrysep} "
-}
-
-# Get key-value separator from map
-getKVSeparator() {
-  map=$1
-  echo "${map}" | awk '{print $1}'
-}
-
-# Get entry separator from map
-getEntrySeparator() {
-  map=$1
-  echo "${map}" | awk '{print $2}'
-}
-
-# Get entries from map
-getEntries() {
-  map=$1
-  echo "${map}" | cut -d' ' -f3-
-}
-
-# Add entry to map (initializes if blank)
-addEntry() {
-  map="$1"
-  key="$2"
-  value="$3"
-
-  if [ -z "${map}" ]; then
-    kvsep="$DEFAULT_KVSEP"
-    entrysep="$DEFAULT_ENTRYSEP"
-    entries=""
-  else
-    kvsep=$(getKVSeparator "${map}")
-    entrysep=$(getEntrySeparator "${map}")
-    entries=$(getEntries "${map}")
-  fi
-  newEntry="${key}${kvsep}${value}"
-  echo "${kvsep} ${entrysep} ${entries}${newEntry}${entrysep}"
-}
-
-# Immutable add (fails if key exists)
-immutableAddEntry() {
-  map="$1"
-  key="$2"
-  value="$3"
-
-  if hasKey "${map}" "$key"; then
-    echo "${map}"
-    return 1
-  else
-    addEntry "${map}" "$key" "$value"
-    return 0
-  fi
-}
-
-# Get value for a key
-getValue() {
-  map="$1"
-  needle="$2"
-  kvsep=$(getKVSeparator "${map}")
-  entrysep=$(getEntrySeparator "${map}")
-  entries=$(getEntries "${map}")
-
-  IFS="$entrysep" set -- $entries
-  for knv; do
-    key=$(echo "$knv" | awk -F"$kvsep" '{print $1}')
-    if [ "$key" = "$needle" ]; then
-      echo "$knv" | awk -F"$kvsep" '{print $2}'
-      return 0
-    fi
-  done
-  return 1
-}
-
-# Check if key exists
-hasKey() {
-  map="$1"
-  needle="$2"
-  getValue "${map}" "$needle" > /dev/null
-}
-
-# Update value for a key
-updateValue() {
-  map="$1"
-  needle="$2"
-  newValue="$3"
-  kvsep=$(getKVSeparator "${map}")
-  entrysep=$(getEntrySeparator "${map}")
-  entries=$(getEntries "${map}")
-  newMap="${kvsep} ${entrysep} "
-
-  IFS="$entrysep" set -- $entries
-  for knv; do
-    key=$(echo "$knv" | awk -F"$kvsep" '{print $1}')
-    if [ "$key" = "$needle" ]; then
-      knv="${key}${kvsep}${newValue}"
-    fi
-    newMap="${newMap}${knv}${entrysep}"
-  done
-  echo "$newMap"
-}
-
-# Delete a key
-deleteKey() {
-  map="$1"
-  needle="$2"
-  kvsep=$(getKVSeparator "${map}")
-  entrysep=$(getEntrySeparator "${map}")
-  entries=$(getEntries "${map}")
-  newMap="${kvsep} ${entrysep} "
-
-  IFS="$entrysep" set -- $entries
-  for knv; do
-    key=$(echo "$knv" | awk -F"$kvsep" '{print $1}')
-    if [ "$key" != "$needle" ]; then
-      newMap="${newMap}${knv}${entrysep}"
-    fi
-  done
-  echo "$newMap"
-}
-
-# List all keys
-listKeys() {
-  map="$1"
-  kvsep=$(getKVSeparator "${map}")
-  entrysep=$(getEntrySeparator "${map}")
-  entries=$(getEntries "${map}")
-
-  IFS="$entrysep" set -- $entries
-  for knv; do
-    echo "$knv" | awk -F"$kvsep" '{print $1}'
-  done
-}
-
-# Print map entries
-prettyPrint() {
-  map="$1"
-  wrap_width="${2:-80}"
-  indent="${3:-4}"
-
-  kvsep=$(getKVSeparator "${map}")
-  entrysep=$(getEntrySeparator "${map}")
-  entries=$(getEntries "${map}")
-
-  printf "%s" "${entries}" | awk -v kvsep="${kvsep}" -v RS="${entrysep}" -v wrap="${wrap_width}" -v lhindent="${indent}"\
-    '
-  {
-    split($0, kv, kvsep) # Split into key/value pair on the key separator
-    keys[NR] = kv[1]     # Store the key in the keys array [no maps in awk]
-    values[NR] = kv[2]   # Store associated value in value array [at same offset!]
-    # Determine what the longest key name is as we use that to calculate the
-    # offset to write values at.
-    if (length(kv[1]) > maxlen) maxlen = length(kv[1])
-  }
-  END {
-    indent = maxlen + 3   # Space between biggest key and start of value text
-    for (i = 1; i <= NR; i++) {  # Loop all records
-      printf "%*s%-*s   ", lhindent, "", maxlen, keys[i]   # Output key
-      line = ""
-      # Need to format the value such that it breaks into sections
-      # then indented to where the initial line started - pretty!
-      split(values[i], words, /[ \t]+/)
-      for (j = 1; j <= length(words); j++) {
-        word = words[j]
-        printf "Parsed word:>>%s\n", word
-        if (length(line) + length(word) + 1 > wrap - indent) {
-          # There is no space in current line buffer for word - output and rebuild
-          print line
-          line = sprintf("%*s%*s%s", lhindent, "", indent, "", word)
-        } else {
-          # Space in buffer for word
-          if (length(line) == 0) {
-            # First word so just use as-is in buffer
-            line = sprintf("%*s%s", lhindent, "", word)
-            printf "Started new line:>>%s\n", line
-          } else {
-            # ! first word so insert space char and append to buffer
-            line = line " " word
-            printf "Line is now :>>%s\n", line
-          }
-        }
-      }
-      # Anything left in the line buffer can be written
-      if (length(line) > 0) print line
-    }
-  }'
-}
-
-
-
-# Main code
-
-
-# shellcheck disable=SC1091
-# shellcheck disable=SC2086
-. ${INCDIR}/analytics.sh
 
 zopenInitialize
