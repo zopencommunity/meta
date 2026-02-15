@@ -666,7 +666,7 @@ checkEnv()
     fi
   fi
 
-  implicitDeps="sed git jq curl"
+  implicitDeps="sed:bin git:bin jq:bin curl:bin"
 
   if ${use_ccache}; then
     implicitDeps="${implicitDeps} ccache"
@@ -696,18 +696,18 @@ checkEnv()
     if [ -z "${ZOPEN_DEPS}" ]; then
       printError "ZOPEN_STABLE_DEPS, ZOPEN_DEV_DEPS, ZOPEN_DEPS or ZOPEN_TARBALL_DEPS needs to be defined"
     fi
-    implicitDeps="${implicitDeps} tar"
+    implicitDeps="${implicitDeps} tar:bin"
     ext=${ZOPEN_URL##*.}
     if [ "${ext}x" = "xzx" ]; then
-      implicitDeps="${implicitDeps} xz"
+      implicitDeps="${implicitDeps} xz:bin"
     elif [ "${ext}x" = "gzx" -o "${ext}x" = "tgzx" ]; then
-      implicitDeps="${implicitDeps} gzip"
+      implicitDeps="${implicitDeps} gzip:bin"
     elif [ "${ext}x" = "bz2x" ]; then
-      implicitDeps="${implicitDeps} bzip2"
+      implicitDeps="${implicitDeps} bzip2:bin"
     elif [ "${ext}x" = "lzx" ]; then
-      implicitDeps="${implicitDeps} lzip"
+      implicitDeps="${implicitDeps} lzip:bin"
     elif [ "${ext}x" = "zipx" ]; then
-      implicitDeps="${implicitDeps} unzip"
+      implicitDeps="${implicitDeps} unzip:bin"
     fi
     printVerbose "Implicitly adding tarball dependencies: ${implicitDeps}"
   elif [ "${ZOPEN_TYPE}x" = "GITx" ]; then
@@ -760,6 +760,7 @@ checkEnv()
 
 }
 
+# file: bin/zopen-build
 setDepsEnv()
 {
 	if ${getSourceOnly}; then
@@ -768,44 +769,171 @@ setDepsEnv()
 	fi
 
   deps="${ZOPEN_DEPS}"
-
   orig="${PWD}"
+
   # Filter out duplicate deps
   deps=$(echo "${deps}" | xargs | tr ' ' '\n' | sort -u)
+
+  # -- Remove :bin entries if the same package is requested as a full dep --
+  # Build a list of package names that were requested in full form (no trailing tokens),
+  # then rebuild deps preserving order but skipping any tokenized entry for a package
+  # that already has a full request.
+  full_pkgs=""
+  orig_deps="${deps}"
+  for dep in ${orig_deps}; do
+    # strip trailing tokens like :bin (right-to-left)
+    deparg="${dep}"
+    while [ "${deparg#*:}" != "${deparg}" ]; do
+      deparg="${deparg%:*}"
+    done
+    # parse to get canonical package name
+    parseline=$(parseDeps "${deparg}")
+    pkgname=$(echo "${parseline}" | awk -F'|' '{print $1}')
+    # if original dep had no tokens, mark pkg as full-requested
+    if [ "${dep}" = "${deparg}" ]; then
+      full_pkgs="${full_pkgs} ${pkgname}"
+    fi
+  done
+
+  # Rebuild deps, preserving order, skipping tokenized entries when a full request exists
+  filtered_deps=""
+  for dep in ${orig_deps}; do
+    deparg="${dep}"
+    while [ "${deparg#*:}" != "${deparg}" ]; do
+      deparg="${deparg%:*}"
+    done
+    parseline=$(parseDeps "${deparg}")
+    pkgname=$(echo "${parseline}" | awk -F'|' '{print $1}')
+
+    # if a full request exists for this pkg and this entry is tokenized (e.g. pkg:bin),
+    # skip it
+    case " ${full_pkgs} " in
+      *" ${pkgname} "*)
+        if [ "${dep}" != "${deparg}" ]; then
+          # skip tokenized duplicate because full form exists
+          continue
+        fi
+        ;;
+      *)
+        # no full request recorded; keep entry
+        ;;
+    esac
+
+    filtered_deps="${filtered_deps} ${dep}"
+  done
+
+  # Use the filtered list from now on
+  deps=$(echo "${filtered_deps}" | xargs) # normalize spacing
+  # Variables that represent development exports (kept internal; not printed)
+  DEVEL_VARS="ZOPEN_EXTRA_CFLAGS ZOPEN_EXTRA_CXXFLAGS ZOPEN_EXTRA_LDFLAGS ZOPEN_EXTRA_LIBS PKG_CONFIG_PATH"
+
+  # Save development-related variables into an in-memory string (no files, no subshell).
+  save_devel_vars()
+  {
+    saved=""
+    for v in ${DEVEL_VARS}; do
+      eval "isset=\${${v}+set}"
+      if [ "x${isset}" = "xset" ]; then
+        eval "val=\${${v}}"
+        esc=$(printf '%s' "${val}" | sed "s/'/'\\''/g")
+        saved=$(printf "%s\n%s='%s'" "${saved}" "${v}" "${esc}")
+      else
+        saved=$(printf "%s\n%s=" "${saved}" "${v}")
+      fi
+    done
+    SAVED_DEVEL_STATE=$(printf '%s' "${saved}" | sed '1{/^$/d;}')
+  }
+
+  # Restore previously saved development-related variables from the in-memory string.
+  restore_devel_vars()
+  {
+    save="$1"
+    [ -z "${save}" ] && return 0
+
+    # here-doc so loop runs in current shell
+    while IFS= read -r line || [ -n "${line}" ]; do
+      [ -z "${line}" ] && continue
+      name=${line%%=*}
+      rest=${line#*=}
+      # Validate variable name is safe (alphanumeric and underscore only)
+      case "${name}" in
+        *[!A-Za-z0-9_]*) continue ;;  # skip invalid names
+        "") continue ;;
+      esac
+      if [ -z "${rest}" ]; then
+        eval "unset ${name} 2>/dev/null || true"
+      else
+        eval "export ${name}=${rest}"
+      fi
+    done <<EOF
+${save}
+EOF
+  }
+
   for dep in ${deps}; do
     printVerbose "Searching for dependency ${dep}"
-    parseline=$(parseDeps ${dep})
-    dep=$(echo ${parseline} | awk -F'|' '{print $1}')
-    operator=$(echo ${parseline} | awk -F'|' '{print $2}')
-    requestedMajor=$(echo ${parseline} | awk -F'|' '{print $3}')
-    requestedMinor=$(echo ${parseline} | awk -F'|' '{print $4}')
-    requestedPatch=$(echo ${parseline} | awk -F'|' '{print $5}')
-    requestedSubrelease=$(echo ${parseline} | awk -F'|' '{print $6}')
+
+    # parse trailing tokens like :bin (only :bin is supported)
+    deparg="${dep}"
+    binOnly="false"
+    while [ "${deparg#*:}" != "${deparg}" ]; do
+      token="${deparg##*:}"
+      deparg="${deparg%:*}"
+      case "${token}" in
+        bin) binOnly="true" ;;
+        *) ;; # ignore unknown tokens (including any :devel specs)
+      esac
+    done
+    dep="${deparg}"
+
+    parseline=$(parseDeps "${dep}")
+    dep=$(echo "${parseline}" | awk -F'|' '{print $1}')
+    operator=$(echo "${parseline}" | awk -F'|' '{print $2}')
+    requestedMajor=$(echo "${parseline}" | awk -F'|' '{print $3}')
+    requestedMinor=$(echo "${parseline}" | awk -F'|' '{print $4}')
+    requestedPatch=$(echo "${parseline}" | awk -F'|' '{print $5}')
+    requestedSubrelease=$(echo "${parseline}" | awk -F'|' '{print $6}')
     requestedVersion="${requestedMajor}.${requestedMinor}.${requestedPatch}.${requestedSubrelease}"
     foundDep=false
-    for path in $(echo ${depsPath} | tr '|' '\n'); do
+
+    for path in $(echo "${depsPath}" | tr '|' '\n'); do
       if [ -r "${path}/${dep}/${dep}/.env" ]; then
         depdir="${path}/${dep}/${dep}"
         versionPath="${depdir}/.version"
         if [ -r "${versionPath}" ]; then
           version=$(cat "${versionPath}")
         fi
+
         # Avoid double sourcing the .env if we're forcing an upgrade on it
         if ! ${forceUpgradeDeps}; then
           if ! validateVersion "${version}" "${operator}" "${requestedVersion}" "${depdir}"; then
             continue
           fi
 
-          printVerbose "Setting up ${depdir} dependency environment"
-          cd "${depdir}" && . ./.env
-          if [ $? -gt 0 ]; then
-            printError "Failed to source ${depdir} .env"
+          if [ "${binOnly}" = "true" ]; then
+            # bin-only: save development-related vars in-memory, source .env so
+            # other runtime exports happen, then restore dev vars so they are unchanged.
+            save_devel_vars
+            cd "${depdir}" && . ./.env
+            if [ $? -gt 0 ]; then
+              printError "Failed to source ${depdir} .env"
+            fi
+            restore_devel_vars "${SAVED_DEVEL_STATE}"
+
+          else
+            # default behavior: full environment allowed
+            cd "${depdir}" && . ./.env
+            if [ $? -gt 0 ]; then
+              printError "Failed to source ${depdir} .env"
+            fi
           fi
         fi
+
         foundDep=true
         break
       fi
     done
+
     if ! ${foundDep} || ${forceUpgradeDeps}; then
       # Skip dependency installation when using --get-source mode
       if ! ${forceUpgradeDeps}; then
@@ -823,10 +951,21 @@ setDepsEnv()
       fi
       depdir="${path}/${dep}/${dep}"
       printVerbose "Setting up upgraded ${depdir} dependency environment"
-      cd "${depdir}" && . ./.env
-      if [ $? -gt 0 ]; then
-        printError "Failed to source ${depdir} .env"
+
+      if [ "${binOnly}" = "true" ]; then
+        save_devel_vars
+        cd "${depdir}" && . ./.env
+        if [ $? -gt 0 ]; then
+          printError "Failed to source ${depdir} .env"
+        fi
+        restore_devel_vars "${SAVED_DEVEL_STATE}"
+      else
+        cd "${depdir}" && . ./.env
+        if [ $? -gt 0 ]; then
+          printError "Failed to source ${depdir} .env"
+        fi
       fi
+
       versionPath="${depdir}/.version"
       if [ -r "${versionPath}" ]; then
         version=$(cat "${versionPath}")
@@ -836,6 +975,7 @@ setDepsEnv()
       fi
     fi
   done
+
   cd "${orig}" || exit 99
 }
 
@@ -1646,25 +1786,53 @@ fi
 export ${projectName}_HOME="\${PWD}"
 zz
 
+  # Create .binenv and .develenv headers up-front so they are safe to source independently
+  if [ ! -f "${ZOPEN_INSTALL_DIR}/.binenv" ]; then
+    cat << zz > "${ZOPEN_INSTALL_DIR}/.binenv"
+if [ -z "\$${projectName}_HOME" ] || [ ! -d "\$${projectName}_HOME" ]; then
+  export ${projectName}_HOME="\${PWD}"
+fi
+zz
+  fi
+
+  if [ ! -f "${ZOPEN_INSTALL_DIR}/.develenv" ]; then
+    cat << zz > "${ZOPEN_INSTALL_DIR}/.develenv"
+if [ -z "\$${projectName}_HOME" ] || [ ! -d "\$${projectName}_HOME" ]; then
+  export ${projectName}_HOME="\${PWD}"
+fi
+zz
+  fi
+
   if [ -d "${ZOPEN_INSTALL_DIR}/bin" ]; then
-    echo "PATH=\"\${${projectName}_HOME}/bin:\${${projectName}_HOME}/altbin:\$PATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
-    echo "export PATH=\"\$(deleteDuplicateEntries \"\$PATH\" \":\")\"" >> "${ZOPEN_INSTALL_DIR}/.env"
+    echo "PATH=\"\${${projectName}_HOME}/bin:\${${projectName}_HOME}/altbin:\$PATH\"" >> "${ZOPEN_INSTALL_DIR}/.binenv"
+    echo "export PATH=\"\$PATH\"" >> "${ZOPEN_INSTALL_DIR}/.binenv"
   fi
   if [ -d "${ZOPEN_INSTALL_DIR}/lib" ]; then
-    echo "LIBPATH=\"\${${projectName}_HOME}/lib:\$LIBPATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
-    echo "export LIBPATH=\"\$(deleteDuplicateEntries \"\$LIBPATH\" \":\")\"" >> "${ZOPEN_INSTALL_DIR}/.env"
+    SO_GLOB='*.so'
+    if find "${ZOPEN_INSTALL_DIR}/lib" -type f -name "${SO_GLOB}" 2>/dev/null | read -r _so_file; then
+      echo "LIBPATH=\"\${${projectName}_HOME}/lib:\$LIBPATH\"" >> "${ZOPEN_INSTALL_DIR}/.binenv"
+      find "${ZOPEN_INSTALL_DIR}/lib" -type f -name "${SO_GLOB}" 2>/dev/null -exec dirname {} \; \
+        | sort -u \
+        | while read -r _so_dir; do
+            suffix="${_so_dir#${ZOPEN_INSTALL_DIR}}"
+            [ -z "${suffix}" ] && suffix="/lib"
+            echo "LIBPATH=\"\${${projectName}_HOME}${suffix}:\$LIBPATH\"" >> "${ZOPEN_INSTALL_DIR}/.binenv"
+        done
+
+    echo "export LIBPATH=\"\$LIBPATH\"" >> "${ZOPEN_INSTALL_DIR}/.binenv"
+    fi
   fi
   if [ -d "${ZOPEN_INSTALL_DIR}/lib/pkgconfig" ]; then
-    echo "PKG_CONFIG_PATH=\"\${${projectName}_HOME}/lib/pkgconfig:\$PKG_CONFIG_PATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
-    echo "export PKG_CONFIG_PATH=\"\$(deleteDuplicateEntries \"\$PKG_CONFIG_PATH\" \":\")\"" >> "${ZOPEN_INSTALL_DIR}/.env"
+    echo "PKG_CONFIG_PATH=\"\${${projectName}_HOME}/lib/pkgconfig:\$PKG_CONFIG_PATH\"" >> "${ZOPEN_INSTALL_DIR}/.develenv"
+    echo "export PKG_CONFIG_PATH=\"\$PKG_CONFIG_PATH\"" >> "${ZOPEN_INSTALL_DIR}/.develenv"
   fi
   if [ -d "${ZOPEN_INSTALL_DIR}/share/pkgconfig" ]; then
-    echo "PKG_CONFIG_PATH=\"\${${projectName}_HOME}/share/pkgconfig:\$PKG_CONFIG_PATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
-    echo "export PKG_CONFIG_PATH=\"\$(deleteDuplicateEntries \"\$PKG_CONFIG_PATH\" \":\")\"" >> "${ZOPEN_INSTALL_DIR}/.env"
+    echo "PKG_CONFIG_PATH=\"\${${projectName}_HOME}/share/pkgconfig:\$PKG_CONFIG_PATH\"" >> "${ZOPEN_INSTALL_DIR}/.develenv"
+    echo "export PKG_CONFIG_PATH=\"\$PKG_CONFIG_PATH\"" >> "${ZOPEN_INSTALL_DIR}/.develenv"
   fi
   if [ -d "${ZOPEN_INSTALL_DIR}/share/man" ] || [ "${projectName}" = "GIT" ]; then
-    echo "MANPATH=\"\${${projectName}_HOME}/share/man:\$MANPATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
-    echo "export MANPATH=\"\$(deleteDuplicateEntries \"\$MANPATH\" \":\")\"" >> "${ZOPEN_INSTALL_DIR}/.env"
+    echo "MANPATH=\"\${${projectName}_HOME}/share/man:\$MANPATH\"" >> "${ZOPEN_INSTALL_DIR}/.binenv"
+    echo "export MANPATH=\"\$MANPATH\"" >> "${ZOPEN_INSTALL_DIR}/.binenv"
   fi
   if command -V "${ZOPEN_APPEND_TO_ENV_CODE}" > /dev/null 2>&1; then
     printVerbose "Appending additional environment variables..."
@@ -1675,6 +1843,8 @@ zz
 
   echo "${append_to_env}" > "${ZOPEN_INSTALL_DIR}/.appenv"
   echo ". ./.appenv" >> "${ZOPEN_INSTALL_DIR}/.env"
+  echo ". ./.binenv" >> "${ZOPEN_INSTALL_DIR}/.env"
+  echo ". ./.develenv" >> "${ZOPEN_INSTALL_DIR}/.env"
 
   cat << zz >> "${ZOPEN_INSTALL_DIR}/.env"
 if \$dropTagRedirEnvar; then
@@ -1829,6 +1999,8 @@ zz
   # Zopen "entry point" files should be in IBM-1047
   a2e ${ZOPEN_INSTALL_DIR}/setup.sh
   a2e ${ZOPEN_INSTALL_DIR}/.appenv
+  a2e ${ZOPEN_INSTALL_DIR}/.binenv
+  a2e ${ZOPEN_INSTALL_DIR}/.develenv
   a2e ${ZOPEN_INSTALL_DIR}/.env
 
   chmod 755 "${ZOPEN_INSTALL_DIR}/setup.sh"
