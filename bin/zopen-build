@@ -1152,48 +1152,111 @@ get_top_folder_name() {
   echo "$path"
 }
 
+# Helper function to validate downloaded file
+validateDownload()
+{
+  tarball="$1"
+  
+  if [ ! -f "${tarball}" ]; then
+    return 1
+  fi
+  
+  file_size=$(wc -c "${tarball}" | awk '{print $1}')
+  if [ ${file_size} -le 1024 ]; then
+    printWarning "Downloaded file is too small (${file_size} bytes), likely an error"
+    return 1
+  fi
+  
+  # Check if it's not an HTML error page
+  if head -c 512 "${tarball}" | grep -q "<!DOCTYPE\|<html"; then
+    printWarning "Downloaded file appears to be an HTML error page, not the expected tarball"
+    return 1
+  fi
+  
+  printVerbose "Successfully downloaded ${tarball} (${file_size} bytes)"
+  return 0
+}
+
+# Helper function to attempt download using curl's built-in retry
+attemptDownload()
+{
+  url="$1"
+  output="$2"
+  
+  if ${verbose}; then
+    printVerbose "curl -L --max-redirs 10 --connect-timeout 30 --max-time 600 --retry 3 --retry-max-time 300 -o ${output} ${url}"
+  fi
+  
+  # Use curl's built-in retry mechanism for network errors
+  # --retry 3: retry up to 3 times on transient errors (uses exponential backoff by default)
+  # --retry-max-time 300: don't retry beyond 5 minutes total
+  if curlCmd -L --max-redirs 10 --connect-timeout 30 --max-time 600 \
+              --retry 3 --retry-max-time 300 \
+              -o "${output}" "${url}"; then
+    if validateDownload "${output}"; then
+      return 0
+    fi
+    # Download succeeded but validation failed (e.g., HTML error page)
+    printWarning "Download completed but file validation failed for ${url}"
+    rm -f "${output}"
+  else
+    printWarning "Download failed for ${url}"
+    rm -f "${output}"
+  fi
+  
+  return 1
+}
+
 downloadTarBall()
 {
   if ! curl --version > /dev/null; then
     printError "curl is required to download a tarball"
   fi
+  
   tarballz=$(basename "${ZOPEN_URL}")
-
-  if ${verbose}; then
-    printVerbose "curl ${ZOPEN_CURL_PARAMS} -L -o ${tarballz} ${ZOPEN_URL}"
-  fi
-  #
-  # Some older tarballs (openssl) contain a pax_global_header file. Remove it
-  # in advance so that unzip won't fail
-  #
+  
+  # Clean up any existing files
   rm -f pax_global_header
-
-  #
-  # Some sites fail on the first call because the name resolver hasn't resolved.
-  # Make a first call to just get the headers and toss everything out just to
-  # set up the cache (required for openssl)
-  #
-  curlCmd -I "${ZOPEN_URL}" > /dev/null 2>&1
-
-  if ! curlCmd -L -o "${tarballz}" "${ZOPEN_URL}"; then
+  
+  # Build list of URLs to try (primary + mirrors)
+  url_list="${ZOPEN_URL}"
+  if [ -n "${ZOPEN_MIRROR_URL}" ]; then
+    url_list="${url_list} ${ZOPEN_MIRROR_URL}"
+  fi
+  
+  # Try each URL until successful
+  download_success=false
+  for current_url in ${url_list}; do
+    printVerbose "Attempting download from: ${current_url}"
+    if attemptDownload "${current_url}" "${tarballz}"; then
+      download_success=true
+      break
+    fi
+  done
+  
+  # Handle download failure
+  if ! ${download_success}; then
     if [ -f "${tarballz}" ] && [ $(wc -c "${tarballz}" | awk '{print $1}') -lt 1024 ]; then
       cat "${tarballz}" > /dev/null
     else
       printError "Re-try curl for diagnostics"
       curlCmd -L -o /dev/null "${ZOPEN_URL}"
     fi
-    printError "Unable to download ${tarballz} from ${ZOPEN_URL}"
+    all_urls=$(echo "${url_list}" | tr ' ' '\n' | wc -l)
+    printError "Unable to download ${tarballz} after trying ${all_urls} URL(s) with 3 attempts each"
   fi
-  # curl tags the file as ISO8859-1 (oops) so the tag has to be removed
+  
+  # Fix file tagging
   chtag -b "${tarballz}"
-
+  
   sourcedir=$(get_top_folder_name "$tarballz")
-
+  
   if $printSourceDir; then
-    echo $sourcedir  
+    echo $sourcedir
     rm -f "${tarballz}"
     exit 0
   fi
+  
   if [ -d "${sourcedir}" ]; then
     echo "Using existing tarball directory ${sourcedir}" >&2
     rm -f "${tarballz}"
