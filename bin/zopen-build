@@ -667,27 +667,7 @@ checkEnv()
   fi
 
   implicitDeps="sed git jq curl"
-
-  if ${use_ccache}; then
-    implicitDeps="${implicitDeps} ccache"
-  fi
-
-  if [ -z "${ZOPEN_COMP}" ]; then
-    implicitDeps="${implicitDeps} check_clang"
-  else
-    # user specified, so normalize in lower case
-    ZOPEN_COMP=$(echo "${ZOPEN_COMP}" | tr '[A-Z]' '[a-z]')
-    if [ "${ZOPEN_COMP}" = "openxl" ]; then
-      implicitDeps="${implicitDeps} check_clang"
-    elif [ "${ZOPEN_COMP}x" != 'skipx' ]; then
-      implicitDeps="${implicitDeps} check_${ZOPEN_COMP}"
-    fi
-  fi
-
-  if [ -z "${ZOPEN_DONT_ADD_ZOSLIB_DEP}" ]; then
-    # Add zoslib as an implicit library
-    implicitDeps="${implicitDeps} zoslib"
-  fi
+  langDeps=""
 
   if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
     if [ -z "${ZOPEN_URL}" ]; then
@@ -720,7 +700,35 @@ checkEnv()
     implicitDeps="${implicitDeps}"
     printVerbose "Implicitly adding git dependencies: ${implicitDeps}"
   fi
-  ZOPEN_DEPS="${implicitDeps} ${ZOPEN_DEPS}"
+
+  if [ -z "${ZOPEN_COMP}" ]; then
+    langDeps="${langDeps} check_clang"
+  else
+    # user specified, so normalize in lower case
+    ZOPEN_COMP=$(echo "${ZOPEN_COMP}" | tr '[A-Z]' '[a-z]')
+    if [ "${ZOPEN_COMP}" = "openxl" ]; then
+      langDeps="${langDeps} check_clang"
+    elif [ "${ZOPEN_COMP}x" != 'skipx' ]; then
+      langDeps="${langDeps} check_${ZOPEN_COMP}"
+    fi
+  fi
+  
+  if echo "${langDeps}" | grep -E "(check_clang|check_xlclang)" > /dev/null 2>&1; then
+    if [ -z "${ZOPEN_DONT_ADD_ZOSLIB_DEP}" ]; then
+      # Add zoslib as an implicit library
+      langDeps="${langDeps} zoslib"
+    fi
+
+    if ${use_ccache}; then
+      langDeps="${langDeps} ccache"
+    fi
+  fi
+
+  if ${getSourceOnly}; then
+    ZOPEN_DEPS="${implicitDeps}"
+  else
+    ZOPEN_DEPS="${implicitDeps} ${langDeps} ${ZOPEN_DEPS}"
+  fi
 
   if git rev-parse --verify HEAD >/dev/null 2>&1; then
     ZOPEN_COMMIT_SHA="$(git rev-parse HEAD)"
@@ -762,11 +770,6 @@ checkEnv()
 
 setDepsEnv()
 {
-	if ${getSourceOnly}; then
-	printVerbose "Skipping dependency ${dep} installation in --get-source mode"
-	return;
-	fi
-
   deps="${ZOPEN_DEPS}"
 
   orig="${PWD}"
