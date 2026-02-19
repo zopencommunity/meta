@@ -292,6 +292,7 @@ setDefaults()
   export ZOPEN_TEST_STATUS_SKIPPED=5
   # Define the valid categories
   export ZOPEN_VALID_CATEGORIES="$(cat ${MYDIR}/../data/tool_categories.txt)"
+  export ZOPEN_VENDORD="zopencommunity"
   unset ZOPEN_CPPFLAGS
   unset ZOPEN_CFLAGS
   unset ZOPEN_CXXFLAGS
@@ -949,6 +950,9 @@ setEnv()
   fi
   if [ -z "${ZOPEN_CLEAN_OPTS}" ]; then
     export ZOPEN_CLEAN_OPTS="${ZOPEN_CLEAN_OPTSD}"
+  fi
+  if [ -z "${ZOPEN_VENDOR}" ]; then
+    export ZOPEN_VENDOR="${ZOPEN_VENDORD}"
   fi
   LOG_PFX=$(date +%C%y%m%d_%H%M%S)
 }
@@ -2552,10 +2556,6 @@ generateZOSLIBHooks()
   commit="local"
   if [ -n "$ZOPEN_COMMIT_SHA" ]; then
     commit=$(echo "$ZOPEN_COMMIT_SHA" | cut -c -7)
-  fi
-
-  if [ -z "$ZOPEN_VENDOR" ]; then
-    ZOPEN_VENDOR="zOS_Open_Tools" 
   fi
 
   iden="\$Id: Vendor:$ZOPEN_VENDOR BuildRev:$commit $(/bin/date +"%Y-%m-%d %H:%M:%S %Z") \$";
