@@ -292,6 +292,7 @@ setDefaults()
   export ZOPEN_TEST_STATUS_SKIPPED=5
   # Define the valid categories
   export ZOPEN_VALID_CATEGORIES="$(cat ${MYDIR}/../data/tool_categories.txt)"
+  export ZOPEN_VENDORD="zopencommunity"
   unset ZOPEN_CPPFLAGS
   unset ZOPEN_CFLAGS
   unset ZOPEN_CXXFLAGS
@@ -667,27 +668,7 @@ checkEnv()
   fi
 
   implicitDeps="sed git jq curl"
-
-  if ${use_ccache}; then
-    implicitDeps="${implicitDeps} ccache"
-  fi
-
-  if [ -z "${ZOPEN_COMP}" ]; then
-    implicitDeps="${implicitDeps} check_clang"
-  else
-    # user specified, so normalize in lower case
-    ZOPEN_COMP=$(echo "${ZOPEN_COMP}" | tr '[A-Z]' '[a-z]')
-    if [ "${ZOPEN_COMP}" = "openxl" ]; then
-      implicitDeps="${implicitDeps} check_clang"
-    elif [ "${ZOPEN_COMP}x" != 'skipx' ]; then
-      implicitDeps="${implicitDeps} check_${ZOPEN_COMP}"
-    fi
-  fi
-
-  if [ -z "${ZOPEN_DONT_ADD_ZOSLIB_DEP}" ]; then
-    # Add zoslib as an implicit library
-    implicitDeps="${implicitDeps} zoslib"
-  fi
+  langDeps=""
 
   if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
     if [ -z "${ZOPEN_URL}" ]; then
@@ -720,7 +701,35 @@ checkEnv()
     implicitDeps="${implicitDeps}"
     printVerbose "Implicitly adding git dependencies: ${implicitDeps}"
   fi
-  ZOPEN_DEPS="${implicitDeps} ${ZOPEN_DEPS}"
+
+  if [ -z "${ZOPEN_COMP}" ]; then
+    langDeps="${langDeps} check_clang"
+  else
+    # user specified, so normalize in lower case
+    ZOPEN_COMP=$(echo "${ZOPEN_COMP}" | tr '[A-Z]' '[a-z]')
+    if [ "${ZOPEN_COMP}" = "openxl" ]; then
+      langDeps="${langDeps} check_clang"
+    elif [ "${ZOPEN_COMP}x" != 'skipx' ]; then
+      langDeps="${langDeps} check_${ZOPEN_COMP}"
+    fi
+  fi
+  
+  if echo "${langDeps}" | grep -E "(check_clang|check_xlclang)" > /dev/null 2>&1; then
+    if [ -z "${ZOPEN_DONT_ADD_ZOSLIB_DEP}" ]; then
+      # Add zoslib as an implicit library
+      langDeps="${langDeps} zoslib"
+    fi
+
+    if ${use_ccache}; then
+      langDeps="${langDeps} ccache"
+    fi
+  fi
+
+  if ${getSourceOnly}; then
+    ZOPEN_DEPS="${implicitDeps}"
+  else
+    ZOPEN_DEPS="${implicitDeps} ${langDeps} ${ZOPEN_DEPS}"
+  fi
 
   if git rev-parse --verify HEAD >/dev/null 2>&1; then
     ZOPEN_COMMIT_SHA="$(git rev-parse HEAD)"
@@ -762,11 +771,6 @@ checkEnv()
 
 setDepsEnv()
 {
-	if ${getSourceOnly}; then
-	printVerbose "Skipping dependency ${dep} installation in --get-source mode"
-	return;
-	fi
-
   deps="${ZOPEN_DEPS}"
 
   orig="${PWD}"
@@ -946,6 +950,9 @@ setEnv()
   fi
   if [ -z "${ZOPEN_CLEAN_OPTS}" ]; then
     export ZOPEN_CLEAN_OPTS="${ZOPEN_CLEAN_OPTSD}"
+  fi
+  if [ -z "${ZOPEN_VENDOR}" ]; then
+    export ZOPEN_VENDOR="${ZOPEN_VENDORD}"
   fi
   LOG_PFX=$(date +%C%y%m%d_%H%M%S)
 }
@@ -1145,48 +1152,122 @@ get_top_folder_name() {
   echo "$path"
 }
 
+# Helper function to validate downloaded file
+validateDownload()
+{
+  tarball="$1"
+  
+  if [ ! -f "${tarball}" ]; then
+    return 1
+  fi
+  
+  file_size=$(wc -c "${tarball}" | awk '{print $1}')
+  if [ ${file_size} -le 1024 ]; then
+    printWarning "Downloaded file is too small (${file_size} bytes), likely an error"
+    return 1
+  fi
+  
+  # Check if it's not an HTML error page (case-insensitive to catch uppercase/mixed-case HTML)
+  if head -c 512 "${tarball}" | grep -qiE "<!DOCTYPE|<html"; then
+    printWarning "Downloaded file appears to be an HTML error page, not the expected tarball"
+    return 1
+  fi
+  
+  printVerbose "Successfully downloaded ${tarball} (${file_size} bytes)"
+  return 0
+}
+
+# Helper function to attempt download using curl's built-in retry
+attemptDownload()
+{
+  url="$1"
+  output="$2"
+  
+  if ${verbose}; then
+    printVerbose "curl -L --fail --max-redirs 10 --connect-timeout 30 --max-time 600 --retry 3 --retry-all-errors --retry-max-time 300 -o ${output} ${url}"
+  fi
+  
+  # Use curl's built-in retry mechanism for network errors
+  # --retry 3: retry up to 3 times on transient errors (uses exponential backoff by default)
+  # --retry-all-errors: retry on all errors including DNS/resolver failures (replaces warmup request)
+  # --retry-max-time 300: don't retry beyond 5 minutes total
+  # --fail: treat HTTP error responses (4xx/5xx) as failures
+  if curlCmd -L --fail --max-redirs 10 --connect-timeout 30 --max-time 600 \
+              --retry 3 --retry-all-errors --retry-max-time 300 \
+              -o "${output}" "${url}"; then
+    if validateDownload "${output}"; then
+      return 0
+    fi
+    # Download succeeded but validation failed (e.g., HTML error page)
+    printWarning "Download completed but file validation failed for ${url}"
+    # Show diagnostic info for small files before deleting
+    if [ -f "${output}" ] && [ $(wc -c "${output}" | awk '{print $1}') -lt 1024 ]; then
+      printWarning "File content (first 512 bytes):"
+      head -c 512 "${output}" >&2
+    fi
+    rm -f "${output}"
+  else
+    printWarning "Download failed for ${url}"
+    rm -f "${output}"
+  fi
+  
+  return 1
+}
+
 downloadTarBall()
 {
   if ! curl --version > /dev/null; then
     printError "curl is required to download a tarball"
   fi
+  
   tarballz=$(basename "${ZOPEN_URL}")
-
-  if ${verbose}; then
-    printVerbose "curl ${ZOPEN_CURL_PARAMS} -L -o ${tarballz} ${ZOPEN_URL}"
-  fi
-  #
-  # Some older tarballs (openssl) contain a pax_global_header file. Remove it
-  # in advance so that unzip won't fail
-  #
+  
+  # Clean up any existing files
   rm -f pax_global_header
-
-  #
-  # Some sites fail on the first call because the name resolver hasn't resolved.
-  # Make a first call to just get the headers and toss everything out just to
-  # set up the cache (required for openssl)
-  #
-  curlCmd -I "${ZOPEN_URL}" > /dev/null 2>&1
-
-  if ! curlCmd -L -o "${tarballz}" "${ZOPEN_URL}"; then
-    if [ -f "${tarballz}" ] && [ $(wc -c "${tarballz}" | awk '{print $1}') -lt 1024 ]; then
-      cat "${tarballz}" > /dev/null
-    else
-      printError "Re-try curl for diagnostics"
-      curlCmd -L -o /dev/null "${ZOPEN_URL}"
-    fi
-    printError "Unable to download ${tarballz} from ${ZOPEN_URL}"
+  
+  # Build list of URLs to try (primary + mirrors)
+  # Use newline-separated list to avoid word-splitting and glob expansion issues
+  url_list="${ZOPEN_URL}"
+  if [ -n "${ZOPEN_MIRROR_URL}" ]; then
+    url_list="${url_list}
+${ZOPEN_MIRROR_URL}"
   fi
-  # curl tags the file as ISO8859-1 (oops) so the tag has to be removed
+  
+  # Try each URL until successful
+  # Use here-document to avoid subshell and preserve download_success variable
+  download_success=false
+  while IFS= read -r current_url; do
+    if [ -z "${current_url}" ]; then
+      continue
+    fi
+    printVerbose "Attempting download from: ${current_url}"
+    if attemptDownload "${current_url}" "${tarballz}"; then
+      download_success=true
+      break
+    fi
+  done << EOF
+${url_list}
+EOF
+  
+  # Handle download failure
+  if ! ${download_success}; then
+    printError "Re-try curl for diagnostics"
+    curlCmd -L -o /dev/null "${ZOPEN_URL}"
+    all_urls=$(echo "${url_list}" | grep -c '^')
+    printError "Unable to download ${tarballz} after trying ${all_urls} URL(s) with 3 attempts each"
+  fi
+  
+  # Fix file tagging
   chtag -b "${tarballz}"
-
+  
   sourcedir=$(get_top_folder_name "$tarballz")
-
+  
   if $printSourceDir; then
-    echo $sourcedir  
+    echo $sourcedir
     rm -f "${tarballz}"
     exit 0
   fi
+  
   if [ -d "${sourcedir}" ]; then
     echo "Using existing tarball directory ${sourcedir}" >&2
     rm -f "${tarballz}"
@@ -2549,10 +2630,6 @@ generateZOSLIBHooks()
   commit="local"
   if [ -n "$ZOPEN_COMMIT_SHA" ]; then
     commit=$(echo "$ZOPEN_COMMIT_SHA" | cut -c -7)
-  fi
-
-  if [ -z "$ZOPEN_VENDOR" ]; then
-    ZOPEN_VENDOR="zOS_Open_Tools" 
   fi
 
   iden="\$Id: Vendor:$ZOPEN_VENDOR BuildRev:$commit $(/bin/date +"%Y-%m-%d %H:%M:%S %Z") \$";
