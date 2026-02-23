@@ -1167,8 +1167,8 @@ validateDownload()
     return 1
   fi
   
-  # Check if it's not an HTML error page
-  if head -c 512 "${tarball}" | grep -q "<!DOCTYPE\|<html"; then
+  # Check if it's not an HTML error page (case-insensitive to catch uppercase/mixed-case HTML)
+  if head -c 512 "${tarball}" | grep -qiE "<!DOCTYPE|<html"; then
     printWarning "Downloaded file appears to be an HTML error page, not the expected tarball"
     return 1
   fi
@@ -1184,20 +1184,27 @@ attemptDownload()
   output="$2"
   
   if ${verbose}; then
-    printVerbose "curl -L --max-redirs 10 --connect-timeout 30 --max-time 600 --retry 3 --retry-max-time 300 -o ${output} ${url}"
+    printVerbose "curl -L --fail --max-redirs 10 --connect-timeout 30 --max-time 600 --retry 3 --retry-all-errors --retry-max-time 300 -o ${output} ${url}"
   fi
   
   # Use curl's built-in retry mechanism for network errors
   # --retry 3: retry up to 3 times on transient errors (uses exponential backoff by default)
+  # --retry-all-errors: retry on all errors including DNS/resolver failures (replaces warmup request)
   # --retry-max-time 300: don't retry beyond 5 minutes total
-  if curlCmd -L --max-redirs 10 --connect-timeout 30 --max-time 600 \
-              --retry 3 --retry-max-time 300 \
+  # --fail: treat HTTP error responses (4xx/5xx) as failures
+  if curlCmd -L --fail --max-redirs 10 --connect-timeout 30 --max-time 600 \
+              --retry 3 --retry-all-errors --retry-max-time 300 \
               -o "${output}" "${url}"; then
     if validateDownload "${output}"; then
       return 0
     fi
     # Download succeeded but validation failed (e.g., HTML error page)
     printWarning "Download completed but file validation failed for ${url}"
+    # Show diagnostic info for small files before deleting
+    if [ -f "${output}" ] && [ $(wc -c "${output}" | awk '{print $1}') -lt 1024 ]; then
+      printWarning "File content (first 512 bytes):"
+      head -c 512 "${output}" >&2
+    fi
     rm -f "${output}"
   else
     printWarning "Download failed for ${url}"
@@ -1219,30 +1226,34 @@ downloadTarBall()
   rm -f pax_global_header
   
   # Build list of URLs to try (primary + mirrors)
+  # Use newline-separated list to avoid word-splitting and glob expansion issues
   url_list="${ZOPEN_URL}"
   if [ -n "${ZOPEN_MIRROR_URL}" ]; then
-    url_list="${url_list} ${ZOPEN_MIRROR_URL}"
+    url_list="${url_list}
+${ZOPEN_MIRROR_URL}"
   fi
   
   # Try each URL until successful
+  # Use here-document to avoid subshell and preserve download_success variable
   download_success=false
-  for current_url in ${url_list}; do
+  while IFS= read -r current_url; do
+    if [ -z "${current_url}" ]; then
+      continue
+    fi
     printVerbose "Attempting download from: ${current_url}"
     if attemptDownload "${current_url}" "${tarballz}"; then
       download_success=true
       break
     fi
-  done
+  done << EOF
+${url_list}
+EOF
   
   # Handle download failure
   if ! ${download_success}; then
-    if [ -f "${tarballz}" ] && [ $(wc -c "${tarballz}" | awk '{print $1}') -lt 1024 ]; then
-      cat "${tarballz}" > /dev/null
-    else
-      printError "Re-try curl for diagnostics"
-      curlCmd -L -o /dev/null "${ZOPEN_URL}"
-    fi
-    all_urls=$(echo "${url_list}" | tr ' ' '\n' | wc -l)
+    printError "Re-try curl for diagnostics"
+    curlCmd -L -o /dev/null "${ZOPEN_URL}"
+    all_urls=$(echo "${url_list}" | grep -c '^')
     printError "Unable to download ${tarballz} after trying ${all_urls} URL(s) with 3 attempts each"
   fi
   
