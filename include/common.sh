@@ -229,7 +229,10 @@ getCurrentVersionDir(){
 #         !0 for not active
 isPackageActive(){
   needle="$1"
-  getCurrentVersionDir "$needle"
+  if getCurrentVersionDir "$needle" >/dev/null 2>&1 ; then
+    return 0
+  fi
+  return 1    
 }
 
 # Given two input files, return those lines in haystack file that are
