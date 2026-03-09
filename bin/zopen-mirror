@@ -463,7 +463,8 @@ _AbstractRemoteRepo(){
       # Get a directory listing of the remote and grep for the filename - crude
       # but works. Cache the result in a file; a variable would be potentially quicker
       # but if the package count gets too large, the variable will overflow.
-      if [ ! -f "${DIR_LIST_CACHE}" ]; then
+      # Remove any previous cache to ensure new packges found
+      [ ! -f "${DIR_LIST_CACHE}" ] || rm "${DIR_LIST_CACHE}"
         curlparams=$(printf "%s --silent --show-error " "${curlparams}")
         if ${netrc}; then
           curlparams=$(printf " %s %s" "${curlparams}" "--netrc")
