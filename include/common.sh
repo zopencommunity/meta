@@ -481,7 +481,7 @@ if [ -z "\${ZOPEN_QUICK_LOAD}" ]; then
   fi
 fi
 unset displayText
-PATH=\${ZOPEN_ROOTFS}/usr/local/bin:\${ZOPEN_ROOTFS}/usr/bin:\${ZOPEN_ROOTFS}/bin:\${ZOPEN_ROOTFS}/boot:\$(zot_sanitizeEnvVar "\${PATH}" ":" "^\${ZOPEN_PKGINSTALL}/.*\$")
+PATH=\${ZOPEN_ROOTFS}/usr/local/bin:\${ZOPEN_ROOTFS}/usr/bin:\${ZOPEN_ROOTFS}/bin:\${ZOPEN_ROOTFS}/usr/local/sbin:\${ZOPEN_ROOTFS}/boot:\$(zot_sanitizeEnvVar "\${PATH}" ":" "^\${ZOPEN_PKGINSTALL}/.*\$")
 MANPATH=\${ZOPEN_ROOTFS}/usr/local/share/man:\${ZOPEN_ROOTFS}/usr/local/share/man/\%L:\${ZOPEN_ROOTFS}/usr/share/man:\${ZOPEN_ROOTFS}/usr/share/man/\%L:\$(zot_sanitizeEnvVar "\${MANPATH}" ":" "^\${ZOPEN_PKGINSTALL}/.*\$")
 
 if [ -n "\${ZOPEN_TOOLSET_OVERRIDE}" ]; then
@@ -825,15 +825,26 @@ defineEnvironment()
 
   # Set a default umask of read and execute for user and group
   umask 0022
+
+  # Create chtag stub for non-OS/390 platforms
+  # Use alias to 'true' so it works with xargs which needs an executable
+  if [ "$(uname -s)" != "OS/390" ]; then
+    alias chtag=true
+  fi
 }
 
 #
-# For now, explicitly specify echo to ensure we get the EBCDIC echo since the escape
-# sequences are EBCDIC escape sequences
+# Print with color codes
+# On OS/390, use /bin/echo with EBCDIC escape sequences
+# On other platforms, use printf to interpret ASCII escape sequences
 #
 printColors()
 {
-  echo "$@"
+  if [ "$(uname -s)" = "OS/390" ]; then
+    /bin/echo "$@"
+  else
+    printf "%b\n" "$*"
+  fi
 }
 
 # ancestorPid

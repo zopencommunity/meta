@@ -4,7 +4,7 @@
 
 ### Environment
 
-The [zopen community CI/CD](https://cicd.zopen.community) pipeline leverages Wazi as a Service instances to be able to build, test, and deploy ported packages to Github Releases.
+The [zopen community CI/CD](https://cicd.zopen.community) pipeline uses Wazi as a Service instances to be able to build, test, and deploy ported packages to Github Releases.
 
 ### zopen community Github Actions
 
@@ -38,7 +38,7 @@ Access to the Jenkins CI/CD Pipeline is currently restricted.  To be able to vie
 
 The zopen community CI/CD pipeline defines three generic Jenkins CI/CD jobs: `Port-Pipeline`, `Port-Build` and `Port-Publish`. The _framework_ jobs are viewable at https://cicd.zopen.community/view/Framework/.
 
-* Port-Pipeline: This Jenkins pipeline drives the entire build, test, and deploy pipeline.  It can be used by any port that leverages the [zopen framework](https://github.com/zopencommunity/meta). It calls the following two Jenkins Jobs as part of its pipeline:
+* Port-Pipeline: This Jenkins pipeline drives the entire build, test, and deploy pipeline.  It can be used by any port that is part of the [zopen framework](https://github.com/zopencommunity/meta). It calls the following two Jenkins Jobs as part of its pipeline:
 	* Port-Build: This Jenkins job builds, tests, and packages the port.  It runs `build.sh` from the meta framework and produces a pax.Z artifact.  If any of the build, test, or package scripts fail, then the Jenkins job will result in failure.
 	* Port-Publish: This Jenkins job consumes an artifact from _Port-Build_ and publishes it into the respective repository's Github Releases page.
 

@@ -1,0 +1,226 @@
+#!/bin/sh
+#
+# zopen-create-cicd-job - Create a Jenkins CI/CD job for a port
+#
+# shellcheck disable=SC2034
+ZOPEN_DONT_PROCESS_CONFIG=1
+#
+# All zopen-* scripts MUST start with this code to maintain consistency.
+#
+setupMyself() {
+  ME=$(basename "$0")
+  MYDIR="$(cd "$(dirname "$0")" > /dev/null 2>&1 && pwd -P)"
+  INCDIR="${MYDIR}/../include"
+  if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
+    echo "Internal Error. Unable to find common.sh file to source." >&2
+    exit 8
+  fi
+  . "${INCDIR}/common.sh"
+}
+setupMyself
+
+printSyntax()
+{
+  echo "${ME} - Create a Jenkins CI/CD job for a port."
+  echo ""
+  echo "NOTE: This script is intended for use by core contributors only."
+  echo ""
+  echo "Usage: ${ME} [OPTION] -n PORT_NAME"
+  echo ""
+  echo "Options:"
+  echo "  -h, --help              print this help"
+  echo "  -v, --verbose           run in verbose mode."
+  echo "  -n, --name PORT_NAME    Name of the port (required)"
+  echo "                          e.g., curl, openssl (without 'port' suffix)"
+  echo "  -b, --build-type TYPE   Build type: stable or dev (default: stable)"
+  echo "  -s, --script SCRIPT     Groovy script path in repo (default: cicd-stable.groovy)"
+  echo "  -r, --run-after RUN     Trigger job after creation: yes or no (default: yes)"
+  echo "     --version            print version"
+  echo ""
+  echo "Example:"
+  echo "  ${ME} -n curl"
+  echo "  ${ME} -v -n pv -b dev -r no"
+  echo "  ${ME} -n openssl -b stable -s cicd-stable.groovy"
+}
+
+checkDependencies() {
+  if ! command -v curl > /dev/null 2>&1; then
+    printError "Error: curl command not found. Please install it."
+    return 1
+  fi
+  if ! command -v jq > /dev/null 2>&1; then
+    printError "Error: jq command not found. Please install it."
+    return 1
+  fi
+  return 0
+}
+
+processOptions() {
+  args=$*
+  verbose=false
+
+  if [ $# -eq 0 ]; then
+    printError "No options specified."
+    printSyntax
+    exit 1
+  fi
+
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      "-h" | "--help")
+        printSyntax
+        exit 0
+        ;;
+      "-v" | "--verbose")
+        verbose=true
+        ;;
+      "-n" | "--name")
+        PORT_NAME="$2"
+        shift
+        ;;
+      "-b" | "--build-type")
+        BUILD_TYPE="$2"
+        shift
+        ;;
+      "-s" | "--script")
+        SCRIPT_NAME="$2"
+        shift
+        ;;
+      "-r" | "--run-after")
+        RUN_JOB_AFTER="$2"
+        shift
+        ;;
+      "--version")
+        zopen-version "${ME}"
+        exit 0
+        ;;
+      -*)
+        printError "Unknown option '$1'"
+        printSyntax
+        exit 1
+        ;;
+      *)
+        printError "Unexpected argument '$1'"
+        printSyntax
+        exit 1
+        ;;
+    esac
+    shift
+  done
+
+  if [ -z "$PORT_NAME" ]; then
+    printError "Missing required option: -n PORT_NAME is required."
+    printSyntax
+    exit 1
+  fi
+
+  if [ -z "$BUILD_TYPE" ]; then
+    BUILD_TYPE="stable"
+  fi
+
+  # Validate build type
+  if [ "$BUILD_TYPE" != "stable" ] && [ "$BUILD_TYPE" != "dev" ]; then
+    printError "Invalid build type: $BUILD_TYPE. Must be 'stable' or 'dev'."
+    printSyntax
+    exit 1
+  fi
+
+  if [ -z "$SCRIPT_NAME" ]; then
+    SCRIPT_NAME="cicd-stable.groovy"
+  fi
+
+  if [ -z "$RUN_JOB_AFTER" ]; then
+    RUN_JOB_AFTER="yes"
+  fi
+
+  # Validate run after
+  if [ "$RUN_JOB_AFTER" != "yes" ] && [ "$RUN_JOB_AFTER" != "no" ]; then
+    printError "Invalid run-after value: $RUN_JOB_AFTER. Must be 'yes' or 'no'."
+    printSyntax
+    exit 1
+  fi
+}
+
+createJenkinsJob() {
+  # Normalize port name (lowercase, remove spaces)
+  PORT_NAME=$(echo "$PORT_NAME" | tr '[:upper:]' '[:lower:]' | tr -d ' ')
+
+  printVerbose "Creating Jenkins job for port: $PORT_NAME"
+  printVerbose "Build type: $BUILD_TYPE"
+  printVerbose "Script name: $SCRIPT_NAME"
+  printVerbose "Run job after creation: $RUN_JOB_AFTER"
+
+  CAUSE="Triggered by ${ME} script for port: $PORT_NAME"
+  ENCODED_CAUSE=$(echo -n "$CAUSE" | jq -s -R -r @uri)
+
+  # Use Caddy proxy endpoint - no authentication needed
+  PROXY_URL="https://cicd.zopen.community/proxy/create-job?token=zopencreatejob&cause=${ENCODED_CAUSE}"
+
+  printVerbose "Proxy URL: $PROXY_URL"
+
+  # Trigger the Jenkins job via proxy
+  RESPONSE=$(curl -k -X POST -s -i \
+    "${PROXY_URL}" \
+    -F "PORT_NAME=${PORT_NAME}" \
+    -F "BUILD_TYPE=${BUILD_TYPE}" \
+    -F "SCRIPT_NAME=${SCRIPT_NAME}" \
+    -F "RUN_JOB_AFTER=${RUN_JOB_AFTER}" 2>&1)
+
+  if [ $? -ne 0 ]; then
+    printError "Failed to trigger Jenkins job."
+    return 1
+  fi
+
+  # Extract the build URL from the response headers
+  BUILD_URL=$(echo "$RESPONSE" | grep -i "^location:" | sed 's/^location: //i' | tr -d '\r')
+
+  printVerbose "Full Response:"
+  printVerbose "$RESPONSE"
+
+  if [ -z "$BUILD_URL" ]; then
+    printError "Failed to get build URL from Jenkins response."
+    printError "Response Headers:"
+    echo "$RESPONSE" | head -20
+    return 1
+  fi
+
+  # Extract the build number from the BUILD_URL
+  BUILD_NUMBER=$(basename "$BUILD_URL" | tr -d '/')
+
+  printVerbose "Build Number: $BUILD_NUMBER"
+  echo "✅ Jenkins job triggered successfully."
+  echo "Build queue number: $BUILD_NUMBER"
+  echo ""
+  echo "To monitor the job:"
+  echo "  Visit: https://cicd.zopen.community/job/Create-Job/"
+  echo ""
+  echo "The job will create a new CI/CD pipeline for port: $PORT_NAME"
+
+  return 0
+}
+
+# --- Main Script ---
+
+# Initialize variables
+PORT_NAME=""
+BUILD_TYPE="stable"
+SCRIPT_NAME="cicd-stable.groovy"
+RUN_JOB_AFTER="yes"
+verbose=false
+
+processOptions "$@"
+
+if checkDependencies; then
+  printVerbose "Dependencies check passed."
+else
+  printError "Some dependencies are missing. Please install them and try again."
+  exit 1
+fi
+
+if createJenkinsJob; then
+  echo "${ME} completed successfully."
+  exit 0
+else
+  printError "${ME} failed."
+  exit 1
+fi

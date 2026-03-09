@@ -160,7 +160,7 @@ After saving the .vimrc file, open Vim and run the following command to install 
 For more details on Airline and Airline-themes, visit https://github.com/vim-airline/vim-airline & https://github.com/vim-airline/vim-airline-themes.
 
 #### Tagbar
-Tagbar is a source code browsing tool that displays the outline of the code currently open in a Vim window. It leverages the ctags utility to generate tags—indexed elements in your code—allowing for efficient and quick navigation. Tagbar’s sidebar acts like a visual table of contents, making it simple to locate specific code segments without scrolling or searching manually.
+Tagbar is a source code browsing tool that displays the outline of the code currently open in a Vim window. It uses the ctags utility to generate tags—indexed elements in your code—allowing for efficient and quick navigation. Tagbar’s sidebar acts like a visual table of contents, making it simple to locate specific code segments without scrolling or searching manually.
 
 
 Add the following in .vimrc file between plug#begin and plug#end:

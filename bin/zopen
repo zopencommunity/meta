@@ -152,7 +152,7 @@ if [ -z "${subcmd}" ]; then
   elif ${version}; then
     : # fall through
   else
-    printError "Unsupported options '$subopts'. Specify --help to view the available options."
+    printError "Unsupported options '$*'. Specify --help to view the available options."
   fi
 fi
 
@@ -168,5 +168,4 @@ if ${version}; then
   fi
 fi
 
-# shellcheck disable=SC2086  # We want globbing in this case
-${subcmd} ${subopts}
+eval "${subcmd} ${subopts}"

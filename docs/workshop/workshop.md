@@ -85,7 +85,7 @@ export PATH="<path_to_compiler>:$PATH"
 *   Copy the pax file from the download directory to `${HOME}/temp_zopen/` using command:
    ```
 	cp <download_dir>/<meta_pax_file_name> ${HOME}/temp_zopen/
-	```
+   ```
 *   `cd` into `${HOME}/temp_zopen/`, the directory you transferred the
     pax.Z file to
 	```
@@ -111,14 +111,14 @@ export PATH="<path_to_compiler>:$PATH"
 *   Provide the zopen root directory as follows:
 	```
 	 $HOME/zopen_tools
-	 ```
+	```
 
 *   After completion, source the zopen-config, using the dot (.)
     operator, as instructed in the **last line** from the
     `zopen init` output.
 	```
 	 . $HOME/zopen_tools/etc/zopen-config
-	 ```
+	```
 
 ## Module 4: Installing core tools (10 minutes)
 
@@ -146,8 +146,8 @@ export PATH="<path_to_compiler>:$PATH"
 
 ### Using Bash on z/OS
 
-1.  Base was installed via Git as it is a dependency for Git. Going
-    forward, It's recommended that you use Bash on z/OS for the
+1.  Bash was installed via Git as it is a dependency for Git.
+    It's recommended that you use Bash on z/OS for the
     following reasons:
 
     -   Tab Completion: Bash offers tab completion for efficient command
