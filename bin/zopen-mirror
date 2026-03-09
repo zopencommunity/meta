@@ -233,7 +233,7 @@ curlCmd() {
   if [ -n "${authHeader}" ]; then
     curl -H "${authHeader}" "$@" 2>&1
   else
-  curl "$@" 2>&1
+    curl "$@" 2>&1
   fi
 }
 
@@ -241,37 +241,35 @@ initial() {
   echo "$1" | cut -c1
 }
 
-downloadRepoMetadata() {
-  JSON_CACHE="${tmpdir:=/tmp}/zopen_releases.json.$$"
-  JSON_CACHE_LATEST="${tmpdir:=/tmp}/zopen_releases_latest.json.$$"
-
-  if ! curlout=$(curlCmd -L --no-progress-meter -H 'Accept: application/vnd.github.v3.raw' -H "${authHeader}"\
-     -o "${JSON_CACHE}" \
-     "${RELEASE_JSON_URL}"); then
-    err "Failed to obtain json cache from '${RELEASE_JSON_URL}'; ${curlout}"
-  fi
-  if type chtag > /dev/null 2>&1; then
+downloadRepoMetadata()
+{
+  caches="JSON_CACHE JSON_LATEST_CACHE JSON_CVE_CACHE JSON_FILES_CACHE"
+  ZOPEN_CACHEDURL_DIR="${tmpdir:=/tmp}"
+  for cache in $caches; do
+    case "$cache" in
+      JSON_CACHE)         cacheFile="${METADATA_JSON_RELEASE}" ;;
+      JSON_LATEST_CACHE)  cacheFile="${METADATA_JSON_LATEST}" ;;
+      JSON_CVE_CACHE)     cacheFile="${CVE_JSON}" ;;
+      JSON_FILES_CACHE)   cacheFile="${FILES_JSON}" ;;
+      *) err "Invalid cache variable specified: $cache"
+    esac
+    fqCacheFile="${ZOPEN_CACHEDURL_DIR}/${cacheFile}.$$"
+    url=$(printf "%s/%s" "${ZOPEN_API_URL}" "${cacheFile}")
+    if ! curlout=$(curlCmd -L --no-progress-meter \
+        -H 'Accept: application/vnd.github.v3.raw' \
+        -o "${fqCacheFile}" "${url}"); then
+      err "Failed to obtain json cache from '${url}'; ${curlout}"
+    fi
+    [ -f "${fqCacheFile}" ] || err "Could not find json cache locally after download from '${url}'"
     # z/OS only - run chtag to ensure the file is processed as ASCII
-    chtag -tc 819 "${JSON_CACHE}"
-  fi
-  if [ ! -f "${JSON_CACHE}" ]; then
-    err "Could not find json cache locally after download from '${RELEASE_JSON_URL}'"
-  fi
-
-  if ! curlout=$(curlCmd -L --no-progress-meter -H 'Accept: application/vnd.github.v3.raw' -H "${authHeader}"\
-     -o "${JSON_CACHE_LATEST}" \
-     "${LATEST_JSON_URL}"); then
-    err "Failed to obtain json cache from '${LATEST_JSON_URL}'; ${curlout}"
-  fi
-  if type chtag > /dev/null 2>&1; then
-    # z/OS only - run chtag to ensure the file is processed as ASCII
-    chtag -tc 819 "${JSON_CACHE_LATEST}"
-  fi
-  if [ ! -f "${JSON_CACHE_LATEST}" ]; then
-    err "Could not find json cache locally after download from '${LATEST_JSON_URL}'"
-  fi
-
+    if command -v chtag >/dev/null 2>&1; then
+      chtag -tc 819 "${fqCacheFile}"
+    fi
+    eval "${cache}=${fqCacheFile}" # Define variable -> file mapping
+  done
 }
+
+
 
 getPkgFile() {
   mirror="$1"
@@ -336,16 +334,20 @@ EOS
       ;;
     rewriteMetadata) 
       jqQuery=$2
-      rewrittenRepoFile="${target%/}/metadata.json"
-      rewrittenLatestFile="${target%/}/latest_metadata.json"      
-      if ! rewrite=$(jq --arg zopenrepo "${ZOPEN_GITHUB}" --arg t "${target%/}" \
-        "${jqQuery}" "${JSON_CACHE}" >"${rewrittenRepoFile}"); then
-        err "Unable to generate metadata JSON file '${rewrittenRepoFile}' for mirrored repo. ${rewrite}"
+      rewrittenRepoFile="${target%/}/${METADATA_JSON_RELEASE}"
+      if ! jq --arg zopenrepo "${ZOPEN_GITHUB}" --arg t "${target%/}" \
+        "${jqQuery}" "${JSON_CACHE}" >"${rewrittenRepoFile}"; then
+        err "Unable to generate metadata JSON file '${rewrittenRepoFile}' for mirrored repo."
       fi
-      if ! rewrite=$(jq --arg zopenrepo "${ZOPEN_GITHUB}" --arg t "${target%/}" \
-        "${jqQuery}" "${JSON_CACHE_LATEST}" >"${rewrittenLatestFile}"); then
-        err "Unable to generate metadata JSON file '${rewrittenLatestFile}' for mirrored repo. ${rewrite}"
+      rewrittenLatestFile="${target%/}/${METADATA_JSON_LATEST}"  
+      if ! jq --arg zopenrepo "${ZOPEN_GITHUB}" --arg t "${target%/}" \
+        "${jqQuery}" "${JSON_LATEST_CACHE}" >"${rewrittenLatestFile}"; then
+        err "Unable to generate metadata JSON file '${rewrittenLatestFile}' for mirrored repo."
       fi
+      rewrittenCVEFile="${target%/}/${CVE_JSON}"
+      cp "${JSON_CVE_CACHE}" "${rewrittenCVEFile}" 
+      rewrittenFilesFile="${target%/}/${FILES_JSON}"
+      cp "${JSON_FILES_CACHE}" "${rewrittenFilesFile}"
     ;;
     *) err "Unsupported action verb for repo type";;
   esac
@@ -465,16 +467,14 @@ _AbstractRemoteRepo(){
       # but if the package count gets too large, the variable will overflow.
       # Remove any previous cache to ensure new packges found
       [ ! -f "${DIR_LIST_CACHE}" ] || rm "${DIR_LIST_CACHE}"
-        curlparams=$(printf "%s --silent --show-error " "${curlparams}")
-        if ${netrc}; then
-          curlparams=$(printf " %s %s" "${curlparams}" "--netrc")
-        else
-          curlparams=$(printf " %s %s" "${curlparams}" "--user ${dstuser}:${dstpassword}")
-        fi
-        # shellcheck disable=SC2086
-        if ! curlCmd ${curlparams} "$2://${target}/" > "${DIR_LIST_CACHE}"; then
-          err "Failed to otain directory listing at '$2://${target}/': $(cat ${DIR_LIST_CACHE})"
-        fi
+      curlparams=$(printf "%s --silent --show-error " "${curlparams}")
+      if ${netrc}; then
+        curlparams=$(printf " %s %s" "${curlparams}" "--netrc")
+      else
+        curlparams=$(printf " %s %s" "${curlparams}" "--user ${dstuser}:${dstpassword}")
+      fi
+      if ! curlCmd ${curlparams} "$2://${target}/" > "${DIR_LIST_CACHE}"; then
+        err "Failed to otain directory listing at '$2://${target}/': $(cat ${DIR_LIST_CACHE})"
       fi
       ;;
     checkForFile) grep -q "$(basename "$2")" "${DIR_LIST_CACHE}" ;;
@@ -505,19 +505,23 @@ EOS
       ;;
     rewriteMetadata) 
       jqQuery='walk(if type == "string" then gsub($zopenrepo + "/(?<i>.)(?<n>.*)port/.*/(?<f>.*)$"; "$protocol://$target/" + .f) else . end)'
-      rewrittenRepoFile="${target%/}/metadata.json"
-      rewrittenLatestFile="${target%/}/latest_metadata.json"      
-      if ! rewrite=$(jq --arg zopenrepo "${ZOPEN_GITHUB}" --arg t "${target%/}" \
-        "${jqQuery}" "${JSON_CACHE}" >"${rewrittenRepoFile}"); then
-        err "Unable to generate metadata JSON file '${rewrittenRepoFile}' for mirrored repo. ${rewrite}"
+      rewrittenRepoFile="${target%/}/${METADATA_JSON_RELEASE}"
+      rewrittenLatestFile="${target%/}/${METADATA_JSON_LATEST}"      
+      if ! jq --arg zopenrepo "${ZOPEN_GITHUB}" --arg t "${target%/}" \
+        "${jqQuery}" "${JSON_CACHE}" >"${rewrittenRepoFile}"; then
+        err "Unable to generate metadata JSON file '${rewrittenRepoFile}' for mirrored repo"
       fi
-      if ! rewrite=$(jq --arg zopenrepo "${ZOPEN_GITHUB}" --arg t "${target%/}" \
-        "${jqQuery}" "${JSON_CACHE_LATEST}" >"${rewrittenLatestFile}"); then
-        err "Unable to generate metadata JSON file '${rewrittenLatestFile}' for mirrored repo. ${rewrite}"
+      if ! jq --arg zopenrepo "${ZOPEN_GITHUB}" --arg t "${target%/}" \
+        "${jqQuery}" "${JSON_LATEST_CACHE}" >"${rewrittenLatestFile}"; then
+        err "Unable to generate metadata JSON file '${rewrittenLatestFile}' for mirrored repo."
       fi
-      # Note there is no upload of the files; this is the abstract so no transport
-    ;;
-
+      rewrittenCVEFile="${target%/}/${CVE_JSON}"
+      cp "${JSON_CVE_CACHE}" "${rewrittenCVEFile}" 
+      rewrittenFilesFile="${target%/}/${FILES_JSON}"
+      cp "${JSON_FILES_CACHE}" "${rewrittenFilesFile}"
+      # The rewritten files will need transfer to the remote repo in the
+      # concrete implementation
+      ;;
     *) err "Unsupported action verb for repo type";;
   esac
 }
@@ -539,6 +543,8 @@ FTPRepo(){
       _AbstractRemoteRepo "rewriteMetadata" "${this}"
       FTPRepo "mirrorFile" "${rewrittenRepoFile}" "${this}"
       FTPRepo "mirrorFile" "${rewrittenLatestFile}" "${this}"
+      FTPRepo "mirrorFile" "${rewrittenCVEFile}" "${this}"
+      FTPRepo "mirrorFile" "${rewrittenFilesFile}" "${this}"
       ;;
     *) err "Unsupported action verb for repo type";;
   esac
@@ -557,12 +563,14 @@ SFTPRepo(){
       _AbstractRemoteRepo "rewriteMetadata" "${this}"
       SFTPRepo "mirrorFile" "${rewrittenRepoFile}" "${this}"
       SFTPRepo "mirrorFile" "${rewrittenLatestFile}" "${this}"
+      SFTPRepo "mirrorFile" "${rewrittenCVEFile}" "${this}"
+      SFTPRepo "mirrorFile" "${rewrittenFilesFile}" "${this}"
       ;;
     *) err "Unsupported action verb for repo type";;
   esac
 }
 SAMBARepo(){
-  this="sftp"
+  this="smb"
   case "$1" in
     initialise) _AbstractRemoteRepo "initialise" "${this}" ;;
     checkForFile)
@@ -575,6 +583,8 @@ SAMBARepo(){
       _AbstractRemoteRepo "rewriteMetadata" "${this}"
       SAMBARepo "mirrorFile" "${rewrittenRepoFile}" "${this}"
       SAMBARepo "mirrorFile" "${rewrittenLatestFile}" "${this}"
+      SAMBARepo "mirrorFile" "${rewrittenCVEFile}" "${this}"
+      SAMBARepo "mirrorFile" "${rewrittenFilesFile}" "${this}"
       ;;
     *) err "Unsupported action verb for repo type";;
   esac
@@ -635,8 +645,8 @@ NEXUSRepo(){
 {
   "type": "nexus",
   "metadata_baseurl": "${target}")",
-  "metadata_file": "$(basename "${rewrittenRepoFile}")",
-  "latest
+  "metadata_file": "$(basename "${rewrittenRepoFile}")"
+  "latest_file": "$(basename "${rewrittenLatestFile}")"
 }
 EOS
       echo "${repoDFile}"
@@ -645,6 +655,8 @@ EOS
       _AbstractRemoteRepo "rewriteMetadata" "${this}"
       NEXUSRepo "mirrorFile" "${rewrittenRepoFile}" "${this}"
       NEXUSRepo "mirrorFile" "${rewrittenLatestFile}" "${this}"
+      NEXUSRepo "mirrorFile" "${rewrittenCVEFile}" "${this}"
+      NEXUSRepo "mirrorFile" "${rewrittenFilesFile}" "${this}"
       ;;
     *) err "Unsupported action verb for repo type";;
   esac
