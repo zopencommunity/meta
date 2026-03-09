@@ -292,7 +292,12 @@ getPkgFile() {
 
 getPkgMetadata(){
   # Use previously set variables (from getPkgFile) with a ".json" suffix!
-  outfile="${tmpdir:=/tmp}/${filename}.json"
+  metadataFilename="${filename}.json"
+  if eval "${type}Repo checkForFile ${metadataFilename} ${mirror}"; then
+    verbose "${metadataFilename} already in repository"
+    return 1
+  fi
+  outfile="${tmpdir:=/tmp}/${metadataFilename}"
   [ -e "${outfile}" ] && rm "${outfile}"
   if ! curlout=$(curlCmd --no-progress-meter -L  -o "${outfile}" "$(dirname "${repourl}")/metadata.json"); then
     err "Curl command to retrive package metadata failed '${curlout}'.  Resolve issue and retry request."
