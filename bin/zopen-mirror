@@ -2,14 +2,17 @@
 # Repo mirror utility - stands alone from other scripts so has no
 # direct dependencies on existing functions. As such, it has some
 # cut-down versions of common features and an independent version
-VERSION=0.4.0
+VERSION=0.5.0
 
 
 # Global constants
 ZOPEN_PROJECT_NAME="zopen community"
 ZOPEN_GITHUB="https://github.com/zopencommunity"
-RELEASE_JSON_URL="https://api.github.com/repos/zopencommunity/meta/contents/docs/api/zopen_releases.json?ref=main"
-LATEST_JSON_URL="https://api.github.com/repos/zopencommunity/meta/contents/docs/api/zopen_releases_latest.json?ref=main"
+ZOPEN_API_URL="https://api.github.com/repos/zopencommunity/meta/contents/docs/api"
+METADATA_JSON_RELEASE="zopen_releases.json"
+METADATA_JSON_LATEST="zopen_releases_latest.json"
+CVE_JSON="zopen_vulnerability.json"
+FILES_JSON="zopen_files.json"
 
 # Help text
 printHelp() {
@@ -227,7 +230,11 @@ curlCmd() {
   if ! type curl >/dev/null; then
     err "Could not find curl on the path."
   fi
+  if [ -n "${authHeader}" ]; then
+    curl -H "${authHeader}" "$@" 2>&1
+  else
   curl "$@" 2>&1
+  fi
 }
 
 initial() {
@@ -278,7 +285,7 @@ getPkgFile() {
   fi
   outfile="${tmpdir:=/tmp}/${filename}"
   [ -e "${outfile}" ] && rm "${outfile}"
-  if ! curlout=$(curlCmd --no-progress-meter -L -H "${authHeader}" -o "${outfile}" "${repourl}"); then
+  if ! curlout=$(curlCmd --no-progress-meter -L  -o "${outfile}" "${repourl}"); then
     err "Curl command to retrive package file failed '${curlout}'.  Resolve issue and retry request."
   fi
 }
@@ -287,7 +294,7 @@ getPkgMetadata(){
   # Use previously set variables (from getPkgFile) with a ".json" suffix!
   outfile="${tmpdir:=/tmp}/${filename}.json"
   [ -e "${outfile}" ] && rm "${outfile}"
-  if ! curlout=$(curlCmd --no-progress-meter -L -H "${authHeader}" -o "${outfile}" "$(dirname "${repourl}")/metadata.json"); then
+  if ! curlout=$(curlCmd --no-progress-meter -L  -o "${outfile}" "$(dirname "${repourl}")/metadata.json"); then
     err "Curl command to retrive package metadata failed '${curlout}'.  Resolve issue and retry request."
   fi
   if type chtag > /dev/null 2>&1; then
