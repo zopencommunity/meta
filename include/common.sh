@@ -2440,7 +2440,7 @@ spaceValidate(){
     if ! isCacheClean=$(zopen config --get autocacheclean); then
       printError "Could not determine autocacheclean status"
     fi
-    if ${isCacheClean}; then
+    if [ 1 -eq "${isCacheClean}" ]; then
       printInfo "During this operation, $(formattedFileSize "${spaceRequiredKb}") of disk space will be used."
     else
       printInfo "After this operation, $(formattedFileSize "${spaceRequiredKb}") of additional cache will be used."
