@@ -572,23 +572,35 @@ validateReleaseLine()
 # Attempt to fully dereference a symlink without any bashisms or arcane set logic
 deref_symlink() {
     symlink="$1"
-    if [ -L "${symlink}" ]; then
-      target=$(ls -l "$symlink" | awk '{print $NF}')
+    
+    # Recursively follow symlink chain
+    while [ -L "${symlink}" ]; do
+        target=$(ls -l "$symlink" | awk '{print $NF}')
+        
+        # Handle relative vs absolute paths
+        case "$target" in
+            /*)
+                # Absolute path
+                symlink="$target"
+                ;;
+            *)
+                # Relative path - resolve from symlink's directory
+                symlink_dir=$(dirname "$symlink")
+                symlink=$(cd "$symlink_dir" && cd "$(dirname "$target")" && pwd -P)/$(basename "$target")
+                ;;
+        esac
+    done
+    
+    # Resolve final path (handles symlinked directories in path)
+    if [ -e "$symlink" ]; then
+        targetName=$(basename "$symlink")
+        targetDir=$(dirname "$symlink")
+        absolute_dir=$(cd "$targetDir" && pwd -P)
+        echo "$absolute_dir/$targetName"
     else
-      target="${symlink}"
+        # Path doesn't exist, return as-is
+        echo "$symlink"
     fi
-    targetName=$(basename "${target}")
-    targetDir=$(dirname "${target}")
-    # Check if dir starts with a '/'; if not need to calculate absolute
-    # fully-qualified name
-    case "$target" in
-        /*) targetDir=$(cd "${targetDir}" && pwd -P);;
-        *)
-          symlink_dir=$(dirname "$symlink")
-          targetDir=$(cd "$(pwd -P)/${symlink_dir}" && pwd -P)
-    esac
-    absolute_dir=$(cd "$targetDir" && pwd -P)  # Resolves symlinked dirs
-    echo "$absolute_dir/$targetName"
 }
 
 toAbsolutePath() {
@@ -1663,6 +1675,14 @@ updateCaches()
       eval "${cache}=${fqCacheFile}"
       url=$(buildCacheURL "${cacheFile}") || printError "Unable to build url to update release data cache"
       downloadJSONCacheIfExpired "${fqCacheFile}" "${url}"
+    else
+      printVerbose "Skipping download of $cache as it was already downloaded in this session"
+      if [ ! -r "${cacheTimestampCurrent}" ]; then
+        printError "Unable to read from cache timestamp file at '${cacheTimestampCurrent}'. Check permissions and retry."
+      fi
+      if [ ! -w "${cacheTimestampCurrent}" ]; then
+        printError "Unable to write to cache timestamp file at '${cacheTimestampCurrent}'. Check permissions and retry."
+      fi
     fi
   done
 }
