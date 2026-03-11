@@ -462,7 +462,11 @@ generateJsonConfiguration()
     # Explicitly added on the command-line so use it
     releaseLine="DEV"
     printInfo "- Configured zopen to use development (DEV) releaseline packages where available"
+  elif [ -z "${releaseLine}" ]; then
+    printInfo "No releaseline, setting to STABLE"
+    releaseLine="STABLE"
   fi
+  
   validateConfigValue "enum" "releaseLine" "$releaseLine" "STABLE" "DEV|STABLE"
   validateConfigValue "boolean" "autocacheclean" "$autocacheclean" "true"
   validateConfigValue "boolean" "autopkgpurge" "$autopkgpurge" "false"
