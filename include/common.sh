@@ -1140,63 +1140,51 @@ checkIfConfigLoaded()
 
 parseDeps()
 {
-  dep="$1"
-  version=$(echo ${dep} | awk -F '[>=<]+' '{print $2}')
-  if [ -z "${version}" ]; then
-    operator=""
-    dep=$(echo ${dep} | awk -F '[>=<]+' '{print $1}')
+  fullname="$1"
+  # Extract name, operator, and version (e.g., less>=678)
+  # name is everything before the first operator
+  name=$(echo "${fullname}" | sed -E 's/([>=<]|%).*//')
+  
+  # Extract operator (can be >=, <=, >, <, =)
+  operator=$(echo "${fullname}" | sed -E -n "s/^${name}([>=<]{1,2}).*/\1/p")
+  
+  # Extract version (everything after operator but before %)
+  if [ -n "${operator}" ]; then
+    versioned=$(echo "${fullname}" | sed -n "s/^${name}${operator}\([^%]*\).*/\1/p")
   else
-    operator=$(echo ${dep} | awk -F '[0-9.]+' '{print $1}' | awk -F '^[a-zA-Z]+' '{print $2}')
-    dep=$(echo ${dep} | awk -F '[>=<]+' '{print $1}')
-    case ${operator} in
-    ">=") ;;
-    "=") ;;
-    *) printError "${operator} is not supported." ;;
-    esac
-    major=$(echo ${version} | awk -F. '{print $1}')
-    minor=$(echo ${version} | awk -F. '{print $2}')
-    if [ -z "${minor}" ]; then
-      minor=0
-    fi
-    patch=$(echo ${version} | awk -F. '{print $3}')
-    if [ -z "${patch}" ]; then
-      patch=0
-    fi
-    prerelease=$(echo ${version} | awk -F. '{print $4}')
-    if [ -z "${prerelease}" ]; then
-      prerelease=0
-    fi
+    # Fallback to older '=' parsing if no explicit operator found but versioned exists
+    versioned=$(echo "${fullname}" | cut -s -d '=' -f 2 | cut -d '%' -f 1)
+    if [ -n "${versioned}" ]; then operator="="; fi
   fi
-
-  echo "${dep}|${operator}|${major}|${minor}|${patch}|${prerelease}"
+  
+  echo "${name}|${operator}|${versioned}"
 }
 
 compareVersions()
 {
-  v1="$1"
-  v2="$2"
-  awk -v v1="${v1}" -v v2="${v2}" '
-  function vercmp(v1, v2) {
-    n1 = split(v1, v1_array, ".")
-    n2 = split(v2, v2_array, ".")
-
-    for (i = 1; i <= n1 || i <= n2; i++) {
-      if (v1_array[i] != v2_array[i]) {
-        return (v1_array[i] < v2_array[i] ? -1 : 1)
-      }
-    }
-    return 0
-  }
-
-  BEGIN {
-    if (vercmp(v1, v2) >= 0) {
-      exit 0
-    } else {
-      exit 1
-    }
-  }
-  '
-
+  v1="$1" # installed
+  v2="$2" # requested
+  op="$3" # operator
+  
+  # Normalize versions by removing leading 'v'
+  v1_norm="${v1#v}"
+  v2_norm="${v2#v}"
+  
+  # Use jq for numeric semantic comparison
+  # to_v: Converts dot-delimited string to numeric array
+  # match_v: Implements semantic operators including prefix match for '='
+  jq -n -e --arg v1 "$v1_norm" --arg v2 "$v2_norm" --arg op "$op" '
+    def to_v: split(".") | map(tonumber? // 0);
+    def match_v(rv; op):
+      to_v as $av |
+      if op == "=" then $av[0:(rv | length)] == rv
+      elif op == ">=" then $av >= rv
+      elif op == ">" then $av > rv
+      elif op == "<=" then $av <= rv
+      elif op == "<" then $av < rv
+      else false end;
+    $v1 | match_v($v2 | to_v; $op)
+  ' > /dev/null 2>&1
   return $?
 }
 
@@ -1209,7 +1197,7 @@ validateVersion()
   if [ -n "${operator}" ] && [ -z "${version}" ]; then
     printVerbose "${operator} ${requestedVersion} requested, but no version file found in ${versionPath}"
     return 1
-  elif [ -n "${operator}" ] && ! compareVersions "${version}" "${requestedVersion}"; then
+  elif [ -n "${operator}" ] && ! compareVersions "${version}" "${requestedVersion}" "${operator}"; then
     printVerbose "${dependency} does not satisfy ${version} ${operator} ${requestedVersion}"
     return 1
   fi
