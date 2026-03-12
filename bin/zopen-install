@@ -415,7 +415,11 @@ handlePackageInstall()
         continue
       fi
       unInstallOldVersion=false
-      printInfo "- Installing ${name}..."
+      if ${setactive}; then
+        printInfo "- Installing ${name}..."
+      else
+        printInfo "- Installing ${name} (not setting as active)..."
+      fi
     elif ${skipupgrade}; then
       printInfo "Package ${name} has a newer release '${downloadFileVer}' but was not specified for an upgrade."
       continue
@@ -698,7 +702,7 @@ upgradeInstalled=false
 verbose=false
 debug=false
 selectVersion=false
-setActive=true
+setactive=true
 cacheOnly=false
 downloadOnly=false
 localInstall=false

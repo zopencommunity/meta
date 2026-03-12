@@ -841,7 +841,9 @@ setDepsEnv()
       depdir=""
       search_dirs="${path}/${dep}/${dep}"
       if [ -d "${path}/${dep}" ]; then
-        versioned_dirs=$(find "${path}/${dep}" -maxdepth 1 -type d -name "${dep}-*" | sort -r)
+        # Use shell wildcard instead of find -maxdepth for z/OS compatibility
+        # Filter for directories starting with package name followed by a hyphen
+        versioned_dirs=$(ls -d "${path}/${dep}/${dep}-"* 2>/dev/null | sort -r)
         search_dirs="${search_dirs} ${versioned_dirs}"
       fi
 

@@ -1173,16 +1173,19 @@ compareVersions()
   # Use jq for numeric semantic comparison
   # to_v: Converts dot-delimited string to numeric array
   # match_v: Implements semantic operators including prefix match for '='
+  # For semantic comparisons, we pad to 4 elements to ensure consistent results (e.g., 1.2 == 1.2.0)
   jq -n -e --arg v1 "$v1_norm" --arg v2 "$v2_norm" --arg op "$op" '
     def to_v: split(".") | map(tonumber? // 0);
     def match_v(rv; op):
       to_v as $av |
       if op == "=" then $av[0:(rv | length)] == rv
-      elif op == ">=" then $av >= rv
-      elif op == ">" then $av > rv
-      elif op == "<=" then $av <= rv
-      elif op == "<" then $av < rv
-      else false end;
+      else ($av + [0,0,0,0] | .[0:4]) as $pav | (rv + [0,0,0,0] | .[0:4]) as $prv |
+        if op == ">=" then $pav >= $prv
+        elif op == ">" then $pav > $prv
+        elif op == "<=" then $pav <= $prv
+        elif op == "<" then $pav < $prv
+        else false end
+      end;
     $v1 | match_v($v2 | to_v; $op)
   ' > /dev/null 2>&1
   return $?
