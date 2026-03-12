@@ -168,18 +168,32 @@ installDependencies()
 
 handlePackageInstall()
 {
-
   fullname="$1"
   isRuntimeDependency=$2
   if [ -z "$isRuntimeDependency" ]; then
     isRuntimeDependency=false
   fi
-  printVerbose "Name to install: ${fullname}, parsing any version ('=') or tag ('%') has been specified"
-  name=$(echo "${fullname}" | sed -e 's#[=%].*##')
+
+  # Support: name=ver, name>=ver, name>ver, name<=ver, name<ver, name%tag
+  name=$(echo "${fullname}" | sed -E 's/([>=<]|%).*//')
   repo="${name}"
-  versioned=$(echo "${fullname}" | cut -s -d '=' -f 2)
+  
+  # Extract operator (can be >=, <=, >, <, =)
+  operator=$(echo "${fullname}" | sed -E -n "s/^${name}([>=<]{1,2}).*/\1/p")
+  
+  # Extract version (everything after operator but before %)
+  if [ -n "${operator}" ]; then
+    versioned=$(echo "${fullname}" | sed -n "s/^${name}${operator}\([^%]*\).*/\1/p")
+  else
+    # Fallback to older '=' parsing if no explicit operator found but versioned exists
+    versioned=$(echo "${fullname}" | cut -s -d '=' -f 2 | cut -d '%' -f 1)
+    if [ -n "${versioned}" ]; then operator="="; fi
+  fi
+  
+  # Extract tag
   tagged=$(echo "${fullname}" | cut -s -d '%' -f 2)
-  printDebug "Name:${name};version:${versioned};tag:${tagged};repo:${repo}"
+
+  printDebug "Name:${name};operator:${operator};version:${versioned};tag:${tagged};repo:${repo}"
   printInfo "${NC}${HEADERCOLOR}${BOLD}Processing package: ${name}${NC}"
 
   nameSansPort=$(echo "${name}" | sed -e 's#\(.*\)port$#\1#')
@@ -226,40 +240,31 @@ handlePackageInstall()
   # Options where the user explicitly sets a version/tag/releaseline currently ignore any configured release-line,
   # either for a previous package install or system default
   if [ -n "${versioned}" ]; then
-    printVerbose "Specific version ${versioned} requested - checking existence and URL."
+    printVerbose "Specific version ${versioned} requested with operator '${operator}' - checking existence and URL."
     requestedMajor=$(echo "${versioned}" | awk -F'.' '{print $1}')
     if [ -z "${requestedMajor}" ]; then
       printError "A major version must be provided when specifying a version (e.g., ${name}=1)."
     fi
-    requestedMinor=$(echo "${versioned}" | awk -F'.' '{print $2}')
-    requestedPatch=$(echo "${versioned}" | awk -F'.' '{print $3}')
-    requestedSubrelease=$(echo "${versioned}" | awk -F'.' '{print $4}')
 
-    # Construct the version string prefix, stripping any leading 'v'
-    reqVer="${requestedMajor#v}"
-    if [ -n "${requestedMinor}" ]; then
-      reqVer="${reqVer}\\\.${requestedMinor}"
-    fi
-    if [ -n "${requestedPatch}" ]; then
-      reqVer="${reqVer}\\\.${requestedPatch}"
-    fi
-    if [ -n "${requestedSubrelease}" ]; then
-      reqVer="${reqVer}\\\.${requestedSubrelease}"
-    fi
+    # Convert requested version string to a JSON array of numbers for jq
+    req_v_json=$(echo "${versioned#v}" | tr '.' '\n' | jq -R 'tonumber? // 0' | jq -s -c .)
 
-    # The regex matches the version string preceded by a hyphen and optional 'v',
-    # followed by a dot or a hyphen (to mark the end of the version part).
-    versionRegex="-v?${reqVer}([\\\\.-]|$)"
-
-    printVerbose "Finding latest release matching version regex: ${versionRegex}"
-    # Sort matching releases using version-aware logic:
-    # 1. Map assets to extract version/release components
-    # 2. Sort numerically by Major, Minor, Patch, Subrelease (padded)
-    # 3. Use the build timestamp as a final tie-breaker
-    releaseMetadata=$(/bin/printf "%s" "${releases}" | jq -e -r '
-      map(select(.assets[].name | test("'${versionRegex}'"))) | 
-      sort_by(.assets[0].version | split(".") | map(tonumber? // 0)) | 
-      reverse | .[0]')
+    printVerbose "Finding latest release matching ${operator} ${versioned}"
+    # Unified selection logic using jq:
+    # 1. to_v: Converts a dot-delimited version string to a numeric array
+    # 2. match_v: Handles prefix match for '=' and numeric comparison for others
+    releaseMetadata=$(/bin/printf "%s" "${releases}" | jq -e -r --arg op "${operator}" --argjson req_v "${req_v_json}" '
+      def to_v: split(".") | map(tonumber? // 0);
+      def match_v(rv; op):
+        to_v as $av |
+        if op == "=" then $av[0:(rv | length)] == rv
+        elif op == ">=" then $av >= rv
+        elif op == ">" then $av > rv
+        elif op == "<=" then $av <= rv
+        elif op == "<" then $av < rv
+        else false end;
+      map(select(.assets[0].version | match_v($req_v; $op))) | 
+      sort_by(.assets[0].version | to_v) | reverse | .[0]')
   elif [ -n "${tagged}" ]; then
     printVerbose "Explicit tagged version '${tagged}' specified. Checking for match."
     releaseMetadata=$(/bin/printf "%s" "${releases}" | jq -e -r '.[] | select(.tag_name == "'${tagged}'")')
@@ -875,8 +880,8 @@ else
   invalidlist=""
   for chosenRepo in $(echo "${chosenRepos}" | tr ',' ' ' | tr -s ' '); do
     printVerbose "Processing repo: ${chosenRepo}"
-    printVerbose "Stripping any version (%), tag (#) or port suffixes"
-    toolrepo=$(echo "${chosenRepo}" | sed -e 's#%.*##' -e 's#=.*##')
+    printVerbose "Stripping any version operator (>, >=, <, <=, =), tag (%) or port suffixes"
+    toolrepo=$(echo "${chosenRepo}" | sed -E 's/([>=<]|%).*//')
     toolfound=$(echo "${repo_results}" | awk -vtoolrepo="${toolrepo}" '$0 == toolrepo {print}')
     if [ "${toolfound}" = "${toolrepo}" ]; then
       printVerbose "Adding '${chosenRepo}' to the install queue."
