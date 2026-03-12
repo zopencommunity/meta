@@ -1684,14 +1684,14 @@ replaceHardcodedPath()
 
 replaceHardcodedPaths()
 {
-  ZOPEN_INSTALL_PREFIX="${ZOPEN_INSTALL_DIR}/../../"
-  ZOPEN_INSTALL_PREFIX=$(cd "${ZOPEN_INSTALL_PREFIX}" > /dev/null 2>&1 && pwd -P)
+  ZOPEN_HARDCODED_PREFIX="${ZOPEN_INSTALL_DIR}/../../"
+  ZOPEN_HARDCODED_PREFIX=$(cd "${ZOPEN_HARDCODED_PREFIX}" > /dev/null 2>&1 && pwd -P)
 
-  printHeader "Replacing hardcoded ${ZOPEN_INSTALL_PREFIX} path"
+  printHeader "Replacing hardcoded ${ZOPEN_HARDCODED_PREFIX} path"
   hasHardcodedPaths=false
-  for f in $(find ${ZOPEN_INSTALL_DIR}/ -type f | xargs grep -l "${ZOPEN_INSTALL_PREFIX}" 2> /dev/null); do
+  for f in $(find ${ZOPEN_INSTALL_DIR}/ -type f | xargs grep -l "${ZOPEN_HARDCODED_PREFIX}" 2> /dev/null); do
     hasHardcodedPaths=true
-    replaceHardcodedPath "${ZOPEN_INSTALL_PREFIX}" "ZOPEN_INSTALL_PREFIX" "${f}"
+    replaceHardcodedPath "${ZOPEN_HARDCODED_PREFIX}" "ZOPEN_INSTALL_PREFIX" "${f}"
   done
 }
 
