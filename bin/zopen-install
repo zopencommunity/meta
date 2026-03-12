@@ -228,12 +228,38 @@ handlePackageInstall()
   if [ -n "${versioned}" ]; then
     printVerbose "Specific version ${versioned} requested - checking existence and URL."
     requestedMajor=$(echo "${versioned}" | awk -F'.' '{print $1}')
+    if [ -z "${requestedMajor}" ]; then
+      printError "A major version must be provided when specifying a version (e.g., ${name}=1)."
+    fi
     requestedMinor=$(echo "${versioned}" | awk -F'.' '{print $2}')
     requestedPatch=$(echo "${versioned}" | awk -F'.' '{print $3}')
     requestedSubrelease=$(echo "${versioned}" | awk -F'.' '{print $4}')
-    requestedVersion="${requestedMajor}\\\.${requestedMinor}\\\.${requestedPatch}\\\.${requestedSubrelease}"
-    printVerbose "Finding URL for latest release matching version prefix: requestedVersion: ${requestedVersion}"
-    releaseMetadata=$(/bin/printf "%s" "${releases}" | jq -e -r '. | map(select(.assets[].name | test("'${requestedVersion}'")))[0]')
+
+    # Construct the version string prefix, stripping any leading 'v'
+    reqVer="${requestedMajor#v}"
+    if [ -n "${requestedMinor}" ]; then
+      reqVer="${reqVer}\\\.${requestedMinor}"
+    fi
+    if [ -n "${requestedPatch}" ]; then
+      reqVer="${reqVer}\\\.${requestedPatch}"
+    fi
+    if [ -n "${requestedSubrelease}" ]; then
+      reqVer="${reqVer}\\\.${requestedSubrelease}"
+    fi
+
+    # The regex matches the version string preceded by a hyphen and optional 'v',
+    # followed by a dot or a hyphen (to mark the end of the version part).
+    versionRegex="-v?${reqVer}([\\\\.-]|$)"
+
+    printVerbose "Finding latest release matching version regex: ${versionRegex}"
+    # Sort matching releases using version-aware logic:
+    # 1. Map assets to extract version/release components
+    # 2. Sort numerically by Major, Minor, Patch, Subrelease (padded)
+    # 3. Use the build timestamp as a final tie-breaker
+    releaseMetadata=$(/bin/printf "%s" "${releases}" | jq -e -r '
+      map(select(.assets[].name | test("'${versionRegex}'"))) | 
+      sort_by(.assets[0].version | split(".") | map(tonumber? // 0)) | 
+      reverse | .[0]')
   elif [ -n "${tagged}" ]; then
     printVerbose "Explicit tagged version '${tagged}' specified. Checking for match."
     releaseMetadata=$(/bin/printf "%s" "${releases}" | jq -e -r '.[] | select(.tag_name == "'${tagged}'")')
