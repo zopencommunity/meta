@@ -1677,12 +1677,6 @@ updateCaches()
       downloadJSONCacheIfExpired "${fqCacheFile}" "${url}"
     else
       printVerbose "Skipping download of $cache as it was already downloaded in this session"
-      if [ ! -r "${cacheTimestampCurrent}" ]; then
-        printError "Unable to read from cache timestamp file at '${cacheTimestampCurrent}'. Check permissions and retry."
-      fi
-      if [ ! -w "${cacheTimestampCurrent}" ]; then
-        printError "Unable to write to cache timestamp file at '${cacheTimestampCurrent}'. Check permissions and retry."
-      fi
     fi
   done
 }
