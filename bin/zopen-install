@@ -246,8 +246,12 @@ handlePackageInstall()
       printError "A major version must be provided when specifying a version (e.g., ${name}=1)."
     fi
 
+    if ! echo "${versioned#v}" | grep -qE '^[0-9]+(\.[0-9]+)*$'; then
+      printError "Invalid version constraint: '${fullname}'. Version components must be numeric (e.g., name=1.2.3)."
+    fi
+
     # Convert requested version string to a JSON array of numbers for jq
-    req_v_json=$(echo "${versioned#v}" | tr '.' '\n' | jq -R 'tonumber? // 0' | jq -s -c .)
+    req_v_json=$(echo "${versioned#v}" | tr '.' '\n' | jq -R 'tonumber' | jq -s -c .)
 
     printVerbose "Finding latest release matching ${operator} ${versioned}"
     # Unified selection logic using jq:

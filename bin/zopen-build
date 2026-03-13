@@ -778,7 +778,7 @@ setDepsEnv()
   deps=$(echo "${deps}" | xargs | tr ' ' '\n' | sort -u)
   for dep_orig in ${deps}; do
     printVerbose "Searching for dependency ${dep_orig}"
-    parseline=$(parseDeps ${dep_orig})
+    parseline=$(parseDeps "${dep_orig}")
     dep=$(echo ${parseline} | awk -F'|' '{print $1}')
     operator=$(echo ${parseline} | awk -F'|' '{print $2}')
     requestedVersion=$(echo ${parseline} | awk -F'|' '{print $3}')
