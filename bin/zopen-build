@@ -776,39 +776,50 @@ setDepsEnv()
   orig="${PWD}"
   # Filter out duplicate deps
   deps=$(echo "${deps}" | xargs | tr ' ' '\n' | sort -u)
-  for dep in ${deps}; do
-    printVerbose "Searching for dependency ${dep}"
-    parseline=$(parseDeps ${dep})
+  for dep_orig in ${deps}; do
+    printVerbose "Searching for dependency ${dep_orig}"
+    parseline=$(parseDeps "${dep_orig}")
     dep=$(echo ${parseline} | awk -F'|' '{print $1}')
     operator=$(echo ${parseline} | awk -F'|' '{print $2}')
-    requestedMajor=$(echo ${parseline} | awk -F'|' '{print $3}')
-    requestedMinor=$(echo ${parseline} | awk -F'|' '{print $4}')
-    requestedPatch=$(echo ${parseline} | awk -F'|' '{print $5}')
-    requestedSubrelease=$(echo ${parseline} | awk -F'|' '{print $6}')
-    requestedVersion="${requestedMajor}.${requestedMinor}.${requestedPatch}.${requestedSubrelease}"
+    requestedVersion=$(echo ${parseline} | awk -F'|' '{print $3}')
     foundDep=false
     for path in $(echo ${depsPath} | tr '|' '\n'); do
-      if [ -r "${path}/${dep}/${dep}/.env" ]; then
-        depdir="${path}/${dep}/${dep}"
-        versionPath="${depdir}/.version"
-        if [ -r "${versionPath}" ]; then
-          version=$(cat "${versionPath}")
-        fi
-        # Avoid double sourcing the .env if we're forcing an upgrade on it
-        if ! ${forceUpgradeDeps}; then
-          if ! validateVersion "${version}" "${operator}" "${requestedVersion}" "${depdir}"; then
-            continue
-          fi
-
-          printVerbose "Setting up ${depdir} dependency environment"
-          cd "${depdir}" && . ./.env
-          if [ $? -gt 0 ]; then
-            printError "Failed to source ${depdir} .env"
-          fi
-        fi
-        foundDep=true
-        break
+      # Search for a directory that satisfies the version requirement
+      # Priority: 
+      # 1. The default active symlink (e.g., tcl/tcl)
+      # 2. Any versioned directory (e.g., tcl/tcl-8.6.x.x)
+      
+      search_dirs="${path}/${dep}/${dep}"
+      if [ -d "${path}/${dep}" ]; then
+        # Use shell wildcard instead of find -maxdepth for z/OS compatibility
+        # Filter for directories starting with package name followed by a hyphen
+        versioned_dirs=$(ls -d "${path}/${dep}/${dep}-"* 2>/dev/null | sort -r)
+        search_dirs="${search_dirs} ${versioned_dirs}"
       fi
+
+      for depdir in ${search_dirs}; do
+        if [ -r "${depdir}/.env" ]; then
+          versionPath="${depdir}/.version"
+          version=""
+          if [ -r "${versionPath}" ]; then
+            version=$(cat "${versionPath}")
+          fi
+          
+          if ! ${forceUpgradeDeps}; then
+            if ! validateVersion "${version}" "${operator}" "${requestedVersion}" "${depdir}"; then
+              continue
+            fi
+
+            printVerbose "Setting up ${depdir} dependency environment"
+            cd "${depdir}" && . ./.env
+            if [ $? -gt 0 ]; then
+              printError "Failed to source ${depdir} .env"
+            fi
+          fi
+          foundDep=true
+          break 2 # Found and sourced a valid dependency, move to next dep_orig
+        fi
+      done
     done
     if ! ${foundDep} || ${forceUpgradeDeps}; then
       # Skip dependency installation when using --get-source mode
@@ -816,27 +827,50 @@ setDepsEnv()
         if [ -z "${operator}" ]; then
           printWarning "Dependency ${dep} not found. Downloading via zopen install"
         else
-          printWarning "Dependency ${dep} ${operator} ${requestedVersion} not found. Downloading via zopen install"
+          printWarning "Dependency ${dep_orig} not found. Downloading via zopen install"
         fi
       else
         printHeader "Upgrading dependency ${dep}. Installing via zopen install"
       fi
       path=${ZOPEN_PKGINSTALL} # Install location
-      if ! runAndLog "PATH=\"${ZOPEN_OLD_PATH}\" ${MYDIR}/zopen-install --install-or-upgrade ${dep} -v -y"; then
+      if ! runAndLog "PATH=\"${ZOPEN_OLD_PATH}\" ${MYDIR}/zopen-install --install-or-upgrade --no-set-active \"${dep_orig}\" -v -y"; then
         printError "zopen install command failed"
       fi
-      depdir="${path}/${dep}/${dep}"
+      # Post-install: Search for the directory that satisfies the version requirement
+      # Priority: 1. Active symlink, 2. Versioned directories
+      depdir=""
+      search_dirs="${path}/${dep}/${dep}"
+      if [ -d "${path}/${dep}" ]; then
+        # Use shell wildcard instead of find -maxdepth for z/OS compatibility
+        # Filter for directories starting with package name followed by a hyphen
+        versioned_dirs=$(ls -d "${path}/${dep}/${dep}-"* 2>/dev/null | sort -r)
+        search_dirs="${search_dirs} ${versioned_dirs}"
+      fi
+
+      found_after_install=false
+      for d in ${search_dirs}; do
+        if [ -r "${d}/.env" ]; then
+          versionPath="${d}/.version"
+          version=""
+          if [ -r "${versionPath}" ]; then
+            version=$(cat "${versionPath}")
+          fi
+          if validateVersion "${version}" "${operator}" "${requestedVersion}" "${d}"; then
+            depdir="${d}"
+            found_after_install=true
+            break
+          fi
+        fi
+      done
+
+      if ! ${found_after_install}; then
+        printError "Dependency ${dep} upgraded, but no directory satisfies \"${operator}\" \"${requestedVersion}\""
+      fi
+
       printVerbose "Setting up upgraded ${depdir} dependency environment"
       cd "${depdir}" && . ./.env
       if [ $? -gt 0 ]; then
         printError "Failed to source ${depdir} .env"
-      fi
-      versionPath="${depdir}/.version"
-      if [ -r "${versionPath}" ]; then
-        version=$(cat "${versionPath}")
-      fi
-      if ! validateVersion "${version}" "${operator}" "${requestedVersion}" "${depdir}"; then
-        printError "Dependency ${depdir} upgraded, but does not satisfy \"${operator}\" \"${requestedVersion}\""
       fi
     fi
   done
