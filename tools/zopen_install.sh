@@ -10,51 +10,70 @@ if [[ $(uname) != "OS/390" ]]; then
 fi
 
 if ! command -v curl > /dev/null 2>&1; then
-  echo "Error: 'curl' command not found. Please install curl."
+  echo "Error: 'curl' command not found. Please install curl. You can obtain curl from IBM Open Enterprise Foundation for z/OS."
   exit 1
 fi
 
-ZOPEN_RELEASE_JSON="https://raw.githubusercontent.com/zopencommunity/meta/main/docs/api/zopen_releases_latest.json"
+if ! command -v jq > /dev/null 2>&1; then
+  echo "Error: 'jq' command not found. Please install jq. You can obtain jq from IBM Open Enterprise Foundation for z/OS."
+  exit 1
+fi
 
-# Download the latest json
+ZOPEN_RELEASE_JSON="https://raw.githubusercontent.com/zopencommunity/meta/main/docs/api/zopen_releases.json"
+
+# ----------------------------
+# DOWNLOAD RELEASE JSON
+# ----------------------------
 echo "> Getting latest data from zopen community..."
-url=$(curl --fail-with-body --silent -L $ZOPEN_RELEASE_JSON)
+json=$(curl --fail-with-body --silent -L "$ZOPEN_RELEASE_JSON")
 if [ $? -gt 0 ]; then
-  echo "Error: Curl failed to download release json $ZOPEN_RELEASE_JSON due to: \"$url\""
+  echo "Error: Curl failed to download release json $ZOPEN_RELEASE_JSON due to: \"$json\""
   exit 1
 fi
 
-# TODO: check if jq is present, and use it instead of this
-url=$(echo "$url" | /bin/tr ' ' '\n' |  grep "https://github.com/zopencommunity/metaport/releases/download/" |  /bin/sed -e 's/.*\(https:\/\/github.com\/zopencommunity\/metaport\/releases\/download\/[^"]*\.pax\.Z\).*/\1/')
-paxFile=$(basename "$url");
+# ----------------------------
+# Filter only STABLE metaport releases
+url=$(echo "$json" | jq -r '
+  first(
+    .release_data.meta[]? 
+    | select(.tag_name | startswith("STABLE_")) 
+    | .assets[0].url
+  )
+')
 
-echo "> Downloading zopen community $url..."
+paxFile=$(basename "$url")
 
+
+# ----------------------------
+# DOWNLOAD FILE
+# ----------------------------
+echo "> Downloading zopen community package..."
 response=$(curl --fail-with-body -O -L "$url")
 if [ $? -gt 0 ]; then
-  echo "Error: Curl failed to download latest zopen due to: \"$response\"."
+  echo "Error: Curl failed to download STABLE zopen meta due to: \"$response\"."
   exit 1
 fi
 
-if [ ! -f $paxFile ]; then
-  echo "Error: $paxFile not present."
+if [ ! -f "$paxFile" ]; then
+  echo "Error: $paxFile not present after download."
   exit 1
 fi
 
-# Extract meta.pax.Z
+# ----------------------------
+# EXTRACT
+# ----------------------------
 echo "> Extracting $paxFile..."
 paxOutput=$(pax -rvf "$paxFile" 2>&1)
 if [ $? -gt 0 ]; then
    echo "Error: Failed to unpax file $paxFile."
-  exit 1
+   exit 1
 fi
 
 echo "> Cleaning up pax file $paxFile..."
 rm -vf "$paxFile"
 if [ $? -gt 0 ]; then
-   echo "Warning: Failed to remove pax file $paxFile. Installation will continue, but space might not be freed."
+   echo "Warning: Failed to remove pax file $paxFile. Installation continues."
 fi
-
 
 dir=$(echo "$paxOutput" | head -1)
 if [ ! -d "$dir" ]; then
@@ -62,9 +81,11 @@ if [ ! -d "$dir" ]; then
   exit 1
 fi
 
-# From this point on, exit immediately if a command exits with a non-zero status.
-set -e 
+set -e
 
+# ----------------------------
+# INSTALL
+# ----------------------------
 echo "> Moving to extracted directory..."
 cd "$dir"
 
@@ -76,8 +97,9 @@ zopen init
 
 echo "> Cleaning up extracted directory..."
 cd ..
-rm -rvf $dir
+rm -rvf "$dir"
 
-echo "> zopen meta package installed successfully and cleanup complete."
+echo "> zopen meta package installed successfully (stable release)."
 
-exit 0 
+exit 0
+
