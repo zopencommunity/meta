@@ -22,6 +22,7 @@ GITHUB_REPO=$RELEASE_PREFIX
 
 # PAX file should be a copied artifact
 PAX=`find . -type f -path "*install/*zos.pax.Z"`
+RPM=`find rpmbuild/RPMS -type f -name "*.rpm"`
 METADATA=`find . -type f -path "*install/metadata.json"`
 BUILD_STATUS=`find . -name "test.status" | xargs cat`
 DEPENDENCIES=`find . -name ".runtimedeps" | xargs cat`
@@ -31,6 +32,11 @@ VERSION=`find . -name "*install/.version" | xargs cat`
 if [ ! -f "$PAX" ]; then
   echo "Port pax file does not exist";
   exit 1;
+fi
+
+if [ ! -f "$RPM" ]; then
+   echo "Port RPM file does not exist";
+   exit 1;
 fi
 
 if [ ! -f "$METADATA" ]; then
@@ -57,6 +63,8 @@ PAX_BASENAME=$(basename "${PAX}")
 DIR_NAME=${PAX_BASENAME%%.pax.Z}
 DIR_NAME=$(echo "$DIR_NAME" | sed -e "s/\.202[0-9]*_[0-9]*\.zos/.zos/g" -e "s/\.zos//g")
 BUILD_ID=${BUILD_NUMBER}
+RPM_BASENAME=$(basename "${RPM}")
+
 
 # Check for python dependencies
 if pip3 show numpy &> /dev/null; then
@@ -196,6 +204,15 @@ if [ $? -eq 0 ]; then
 else
   echo "Failed to upload PAX artifact!"
   exit 1
+fi
+
+echo "Uploading the RPM artifacts into github"
+github-release -v upload --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --tag "${TAG}" --name "${RPM_BASENAME}" --file "${RPM}"
+if [ $? -eq 0 ]; then
+   echo "RPM Artifact uploaded successfully!"
+else
+   echo "Failed to upload RPM artifact!"
+   exit 1
 fi
 
 echo "Uploading metadata artifacts into github"

@@ -1,0 +1,885 @@
+#!/bin/bash
+#
+# pax2rpm.sh - Generate RPM spec file from z/OS pax archive
+#
+# Usage: pax2rpm.sh <pax_file> [options]
+#
+# Options:
+#   --name <name>           Override package name
+#   --version <version>     Override version
+#   --release <release>     Override release number (default: 1)
+#   --license <license>     Specify license (default: Proprietary)
+#   --summary <summary>     Package summary
+#   --description <desc>    Package description
+#   --url <url>             Project URL
+#   --output <file>         Output spec file (default: <name>.spec)
+#   --build                 Build the RPM after generating spec file
+#   --buildroot <dir>       RPM build root directory (default: ~/rpmbuild)
+#   --validate              Validate spec file after generation
+#   --dry-run               Show what would be done without doing it
+#
+
+set -e
+
+# Default values
+RELEASE="1"
+LICENSE="Proprietary"
+BUILD_ARCH=$(uname -m 2>/dev/null || echo "s390x")
+PACKAGER_NAME="${USER}"
+PACKAGER_EMAIL="${USER}@$(hostname)"
+
+# Build flag
+BUILD_RPM=false
+BUILDROOT="${HOME}/rpmbuild"
+VALIDATE_SPEC=false
+DRY_RUN=false
+VERBOSE=false
+
+# Function to display usage
+usage() {
+    cat << EOF
+Usage: $0 <pax_file> [options]
+
+Generate an RPM spec file from a z/OS pax archive.
+
+Arguments:
+  pax_file                Path to the pax file (e.g., /path/to/file.pax or file.pax.Z)
+
+Options:
+  --name <name>           Override package name (default: extracted from filename)
+  --version <version>     Override version (default: extracted from filename)
+  --release <release>     Override release number (default: 1)
+  --license <license>     Specify license (default: Proprietary)
+  --summary <summary>     Package summary (required)
+  --description <desc>    Package description (default: same as summary)
+  --url <url>             Project URL (default: none)
+  --requires <deps>       Package dependencies (e.g., "oef >= 1.1.0")
+  --output <file>         Output spec file (default: <name>.spec)
+  --build                 Build the RPM after generating spec file
+  --buildroot <dir>       RPM build root directory (default: ~/rpmbuild)
+  --validate              Validate spec file after generation (checks syntax and runs rpmlint)
+  --dry-run               Show what would be done without actually doing it
+  --verbose               Enable verbose debug output
+  --help                  Display this help message
+
+Example:
+  $0 /nfsmnts/bpidrivers/oefv1r1/os390/latest/HAMN110.runnable.pax.Z \\
+     --summary "HAMN110 Runtime Package" \\
+     --license "IBM" \\
+     --url "https://www.ibm.com"
+
+EOF
+    exit 1
+}
+
+# Function to extract package name and version from filename
+parse_filename() {
+    local filename="$1"
+    local basename=$(basename "$filename")
+    
+    # Remove .pax.Z or .pax extension
+    basename="${basename%.pax.Z}"
+    basename="${basename%.pax}"
+    
+    # Try to extract name and version
+    # Pattern 1: NAME-VERSION (e.g., package-1.0)
+    if [[ "$basename" =~ ^(.+)-([0-9]+\.[0-9]+.*)$ ]]; then
+        PKG_NAME="${BASH_REMATCH[1]}"
+        PKG_VERSION="${BASH_REMATCH[2]}"
+    # Pattern 2: NAMEVERSION.suffix (e.g., HAMN110.runnable)
+    elif [[ "$basename" =~ ^([A-Za-z]+)([0-9]+)\.(.+)$ ]]; then
+        PKG_NAME="${BASH_REMATCH[1]}"
+        PKG_VERSION="${BASH_REMATCH[2]}"
+        # Don't include suffix like "runnable" in version
+    # Pattern 3: NAMEVERSION (e.g., HAMN110)
+    elif [[ "$basename" =~ ^([A-Za-z]+)([0-9]+)$ ]]; then
+        PKG_NAME="${BASH_REMATCH[1]}"
+        PKG_VERSION="${BASH_REMATCH[2]}"
+    else
+        PKG_NAME="$basename"
+        PKG_VERSION="1.0"
+    fi
+    
+    # Convert to lowercase and replace invalid characters (keep alphanumeric and hyphens)
+    PKG_NAME=$(echo "$PKG_NAME" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9-]/-/g' | sed 's/^-//;s/-$//')
+}
+
+# Function to analyze pax contents and categorize files
+analyze_pax_contents() {
+    local pax_file="$1"
+    local temp_dir=$(mktemp -d)
+    
+    echo "# Analyzing pax file structure..." >&2
+    
+    # Extract pax listing (limit to first 1000 entries for performance)
+    local pax_listing
+    if [[ "$pax_file" == *.pax.Z ]]; then
+        pax_listing=$(pax -vzf "$pax_file" 2>&1 | head -1000)
+    else
+        pax_listing=$(pax -vf "$pax_file" 2>&1 | head -1000)
+    fi
+    
+    # Check if pax listing failed or is empty
+    # Only treat as error if pax command actually failed (not just listing files)
+    if [ -z "$pax_listing" ]; then
+        echo "# Warning: Could not analyze pax contents, using default structure" >&2
+        rm -rf "$temp_dir"
+        return 1
+    fi
+    
+    # Initialize arrays for different file types
+    declare -g -A FILE_CATEGORIES
+    FILE_CATEGORIES[bins]=""
+    FILE_CATEGORIES[libs]=""
+    FILE_CATEGORIES[includes]=""
+    FILE_CATEGORIES[configs]=""
+    FILE_CATEGORIES[docs]=""
+    FILE_CATEGORIES[data]=""
+    FILE_CATEGORIES[scripts]=""
+    FILE_CATEGORIES[other]=""
+    
+    declare -g -A DIR_STRUCTURE
+    DIR_STRUCTURE[has_bin]=false
+    DIR_STRUCTURE[has_lib]=false
+    DIR_STRUCTURE[has_include]=false
+    DIR_STRUCTURE[has_etc]=false
+    DIR_STRUCTURE[has_share]=false
+    DIR_STRUCTURE[has_doc]=false
+    DIR_STRUCTURE[has_man]=false
+    
+    # Analyze each file
+    while IFS= read -r line; do
+        # Skip empty lines and headers
+        [[ -z "$line" ]] && continue
+        
+        # Extract filename (last field in pax -v output)
+        local filename=$(echo "$line" | awk '{print $NF}')
+        [[ -z "$filename" ]] && continue
+        
+        # Detect directory structure (handles top-level dir if present)
+        # Matches: bin/, ./bin/, package-ver/bin/, ./package-ver/bin/
+        # Does NOT match: usr/lpp/IBM/bin/ (too deep)
+        if [[ "$filename" =~ ^(\./)?([^/]+/)?bin/ ]]; then
+            DIR_STRUCTURE[has_bin]=true
+        elif [[ "$filename" =~ ^(\./)?([^/]+/)?lib/ ]]; then
+            DIR_STRUCTURE[has_lib]=true
+        elif [[ "$filename" =~ ^(\./)?([^/]+/)?include/ ]]; then
+            DIR_STRUCTURE[has_include]=true
+        elif [[ "$filename" =~ ^(\./)?([^/]+/)?etc/ ]]; then
+            DIR_STRUCTURE[has_etc]=true
+        elif [[ "$filename" =~ ^(\./)?([^/]+/)?share/ ]]; then
+            DIR_STRUCTURE[has_share]=true
+        elif [[ "$filename" =~ ^(\./)?([^/]+/)?(doc|docs)/ ]]; then
+            DIR_STRUCTURE[has_doc]=true
+        elif [[ "$filename" =~ ^(\./)?([^/]+/)?man/ ]]; then
+            DIR_STRUCTURE[has_man]=true
+        elif [[ "$filename" =~ ^(\./)?([^/]+/)?scripts/ ]]; then
+            DIR_STRUCTURE[has_scripts]=true
+        elif [[ "$filename" =~ ^(\./)?usr/lpp/ ]]; then
+            DIR_STRUCTURE[is_os_layout]=true
+        fi
+        
+        # Categorize by file type
+        if [[ "$filename" =~ \.(so|so\.[0-9]+|a|dylib)$ ]]; then
+            FILE_CATEGORIES[libs]+="$filename"$'\n'
+        elif [[ "$filename" =~ \.(h|hpp|hxx)$ ]]; then
+            FILE_CATEGORIES[includes]+="$filename"$'\n'
+        elif [[ "$filename" =~ \.(conf|cfg|ini|yaml|yml|json|xml|properties)$ ]]; then
+            FILE_CATEGORIES[configs]+="$filename"$'\n'
+        elif [[ "$filename" =~ \.(md|txt|pdf|html|htm|README|LICENSE|COPYING|CHANGELOG|AUTHORS)$ ]] || [[ "$filename" =~ (README|LICENSE|COPYING|CHANGELOG|AUTHORS|INSTALL|NEWS)$ ]]; then
+            FILE_CATEGORIES[docs]+="$filename"$'\n'
+        elif [[ "$filename" =~ \.(sh|bash|ksh|pl|py|rb)$ ]] && [[ "$line" =~ ^-r.x ]]; then
+            FILE_CATEGORIES[scripts]+="$filename"$'\n'
+        elif [[ "$line" =~ ^-r.x ]] && [[ ! "$filename" =~ \. ]]; then
+            # Executable without extension (likely binary)
+            FILE_CATEGORIES[bins]+="$filename"$'\n'
+        elif [[ "$filename" =~ \.(dat|data|db|sqlite)$ ]]; then
+            FILE_CATEGORIES[data]+="$filename"$'\n'
+        else
+            FILE_CATEGORIES[other]+="$filename"$'\n'
+        fi
+    done <<< "$pax_listing"
+    
+    rm -rf "$temp_dir"
+}
+
+# Function to list contents of pax file
+list_pax_contents() {
+    local pax_file="$1"
+    
+    echo "# Pax file contents (first 100 entries):" >&2
+    
+    if [[ "$pax_file" == *.pax.Z ]]; then
+        pax -rvzf "$pax_file" 2>&1 | head -100
+    else
+        pax -rvf "$pax_file" 2>&1 | head -100
+    fi
+}
+
+# Function to generate install commands based on analyzed contents
+# Function to generate install commands based on analyzed contents
+# Function to generate install commands based on analyzed contents
+generate_install_commands() {
+    local pax_file="$1"
+    
+    cat << 'EOF'
+# Install files based on detected structure
+
+# Detect the source layout
+if [ -d usr ]; then
+    echo "OS layout (usr/) detected, searching for actual content root..."
+    # Find the deepest directory that contains bin, lib, pyz, bash, or go
+    FOUND_PATH=$(find . -type d \( -name bin -o -name lib -o -name pyz -o -name bash -o -name go \) -print -quit)
+    
+    if [ -n "$FOUND_PATH" ]; then
+        FOUND_PATH=${FOUND_PATH#./}
+        if [[ "$FOUND_PATH" == */pyz ]]; then
+            ROOT_DIR="$FOUND_PATH"
+        else
+            ROOT_DIR=$(echo "$FOUND_PATH" | sed 's/\/\(bin\|lib\|bash\|go\)$//')
+        fi
+    else
+        # Fallback for OS layout: find first dir with more than one entry
+        ROOT_DIR="."
+        while [ $(ls -1 "$ROOT_DIR" 2>/dev/null | wc -l) -eq 1 ]; do
+            SUB_DIR=$(ls -1 "$ROOT_DIR")
+            if [ -d "$ROOT_DIR/$SUB_DIR" ]; then
+                ROOT_DIR="$ROOT_DIR/$SUB_DIR"
+            else
+                break
+            fi
+        done
+    fi
+    echo "Detected nested root: $ROOT_DIR"
+    mkdir -p %{buildroot}%{install_dir}
+    cp -RP "$ROOT_DIR"/* %{buildroot}%{install_dir}/
+elif [ $(ls -1 | grep -v "^$" | wc -l) -eq 1 ] && [ -d * ]; then
+    # Standard single-directory layout (e.g., go/)
+    SUB_DIR=$(ls -1)
+    echo "Standard single-directory layout detected: $SUB_DIR"
+    mkdir -p %{buildroot}%{install_dir}
+    cp -RP "$SUB_DIR"/* %{buildroot}%{install_dir}/
+else
+    # Flat or mixed layout
+    echo "Flat or mixed layout detected"
+    mkdir -p %{buildroot}%{install_dir}
+    cp -RP * %{buildroot}%{install_dir}/
+fi
+
+# Install root-level documentation if it hasn't been copied already
+# (Matches files in the CURRENT directory, not ROOT_DIR)
+for doc in README* LICENSE* COPYING* CHANGELOG* AUTHORS* INSTALL* NEWS*; do
+    if [ -f "$doc" ]; then
+        mkdir -p %{buildroot}%{install_dir}/doc
+        cp -RP "$doc" %{buildroot}%{install_dir}/doc/
+    fi
+done
+EOF
+}
+
+
+generate_files_list() {
+    cat << 'EOF'
+%defattr(-,root,root,-)
+%{install_dir}
+EOF
+}
+
+# Function to generate spec file
+generate_spec() {
+    local output_file="$1"
+    local source_file="$2"
+    local date=$(date "+%a %b %d %Y")
+    
+    # Analyze the pax contents first (populate global DIR_STRUCTURE)
+    analyze_pax_contents "$source_file"
+    
+    cat > "$output_file" << EOF
+# RPM Spec file generated from pax archive
+# Source: $source_file
+# Generated: $(date)
+
+%define _rpmfilename %%{NAME}-%%{VERSION}-%%{RELEASE}.%%{ARCH}-ibm-zos.rpm
+
+Name:           ${PKG_NAME}
+Version:        ${PKG_VERSION}
+Release:        ${RELEASE}%{?dist}
+Summary:        ${SUMMARY}
+
+%define install_dir /usr/lpp/pkg/IBM/%{name}/%{version}
+
+License:        ${LICENSE}
+${URL:+URL:            $URL}
+Source0:        $(basename "$source_file")
+
+BuildArch:      ${BUILD_ARCH}
+${REQUIRES:+Requires:       $REQUIRES}
+
+%description
+${DESCRIPTION}
+
+%prep
+# Extract pax archive
+%setup -c -T
+cd %{_builddir}
+mkdir -p %{name}-%{version}
+cd %{name}-%{version}
+
+EOF
+
+    if [[ "$source_file" == *.pax.Z ]]; then
+        cat >> "$output_file" << 'EOF'
+# Extract compressed pax archive
+pax -rzf %{SOURCE0}
+EOF
+    else
+        cat >> "$output_file" << 'EOF'
+# Extract pax archive
+pax -rf %{SOURCE0}
+EOF
+    fi
+
+    cat >> "$output_file" << EOF
+
+%build
+# No build step required for pre-built pax archives
+
+%install
+rm -rf %{buildroot}
+
+# Create base installation directories
+mkdir -p %{buildroot}%{install_dir}
+
+$(generate_install_commands "$source_file")
+
+%files
+$(generate_files_list)
+
+%changelog
+* ${date} ${PACKAGER_NAME} <${PACKAGER_EMAIL}> - ${PKG_VERSION}-${RELEASE}
+- Initial RPM package created from pax archive
+- Source: $(basename "$source_file")
+EOF
+
+    echo "RPM spec file generated: $output_file"
+    echo ""
+    echo "Detected structure:"
+    [[ "${DIR_STRUCTURE[has_bin]}" == "true" ]] && echo "  ✓ Binaries in bin/"
+    [[ "${DIR_STRUCTURE[has_lib]}" == "true" ]] && echo "  ✓ Libraries in lib/"
+    [[ "${DIR_STRUCTURE[has_include]}" == "true" ]] && echo "  ✓ Headers in include/"
+    [[ "${DIR_STRUCTURE[has_etc]}" == "true" ]] && echo "  ✓ Configuration files in etc/"
+    [[ "${DIR_STRUCTURE[has_share]}" == "true" ]] && echo "  ✓ Data files in share/"
+    [[ "${DIR_STRUCTURE[has_doc]}" == "true" ]] && echo "  ✓ Documentation in doc/"
+    [[ "${DIR_STRUCTURE[has_man]}" == "true" ]] && echo "  ✓ Man pages in man/"
+    [[ "${DIR_STRUCTURE[has_scripts]}" == "true" ]] && echo "  ✓ Scripts in scripts/"
+    
+    return 0
+}
+
+# Function to setup rpmbuild directories
+setup_rpmbuild() {
+    local buildroot="$1"
+    
+    echo "Setting up RPM build directories in: $buildroot"
+    
+    mkdir -p "$buildroot"/{BUILD,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS}
+    
+    if [ ! -f "$HOME/.rpmmacros" ]; then
+        cat > "$HOME/.rpmmacros" << EOF
+%_topdir $buildroot
+EOF
+        echo "Created ~/.rpmmacros with _topdir set to $buildroot"
+    fi
+}
+
+# Function to check for required tools
+check_required_tools() {
+    local missing_tools=()
+    local pax_file="$1"
+    
+    # Check for pax
+    if ! command -v pax &> /dev/null; then
+        missing_tools+=("pax")
+    fi
+    
+    # Check for uncompress if dealing with .Z files
+    if [[ "$pax_file" == *.pax.Z ]] && ! command -v uncompress &> /dev/null; then
+        missing_tools+=("uncompress")
+    fi
+    
+    # Check for rpmbuild if building or validating
+    if [ "$BUILD_RPM" = true ] || [ "$VALIDATE_SPEC" = true ]; then
+        echo "DEBUG: Current PATH is $PATH" >&2
+        if ! command -v rpmbuild &> /dev/null; then
+            missing_tools+=("rpmbuild")
+        fi
+    fi
+    
+    if [ ${#missing_tools[@]} -gt 0 ]; then
+        echo "" >&2
+        echo "=========================================" >&2
+        echo "ERROR: Missing Required Tools" >&2
+        echo "=========================================" >&2
+        echo "" >&2
+        echo "The following tools are required but not found:" >&2
+        echo "" >&2
+        
+        for tool in "${missing_tools[@]}"; do
+            echo "  ✗ $tool" >&2
+            
+            case "$tool" in
+                pax)
+                    echo "    Purpose: Extract pax archives" >&2
+                    echo "    Install: Usually pre-installed on z/OS" >&2
+                    echo "             On Linux: apt-get install pax (Debian/Ubuntu)" >&2
+                    echo "                       yum install pax (RHEL/CentOS)" >&2
+                    ;;
+                uncompress)
+                    echo "    Purpose: Decompress .Z files" >&2
+                    echo "    Install: Usually part of ncompress package" >&2
+                    echo "             On z/OS: May be in /usr/bin or /bin" >&2
+                    echo "             On Linux: apt-get install ncompress (Debian/Ubuntu)" >&2
+                    echo "                       yum install ncompress (RHEL/CentOS)" >&2
+                    ;;
+                rpmbuild)
+                    echo "    Purpose: Build RPM packages and validate spec files" >&2
+                    echo "    Install: Part of rpm-build package" >&2
+                    echo "             On z/OS: zopen install rpm" >&2
+                    echo "             On Linux: apt-get install rpm (Debian/Ubuntu)" >&2
+                    echo "                       yum install rpm-build (RHEL/CentOS)" >&2
+                    ;;
+            esac
+            echo "" >&2
+        done
+        
+        echo "Please install the missing tools and try again." >&2
+        echo "" >&2
+        return 1
+    fi
+    
+    # Optional tools check (informational only)
+    local optional_missing=()
+    
+    if [ "$VALIDATE_SPEC" = true ] && ! command -v rpmlint &> /dev/null; then
+        optional_missing+=("rpmlint")
+    fi
+    
+    if [ ${#optional_missing[@]} -gt 0 ]; then
+        echo "" >&2
+        echo "Note: Optional tools not found (validation will be limited):" >&2
+        for tool in "${optional_missing[@]}"; do
+            echo "  - $tool (for enhanced spec file quality checks)" >&2
+            case "$tool" in
+                rpmlint)
+                    echo "    Install: On z/OS: zopen install rpmlint" >&2
+                    echo "             On Linux: apt-get install rpmlint (Debian/Ubuntu)" >&2
+                    echo "                       yum install rpmlint (RHEL/CentOS)" >&2
+                    ;;
+            esac
+        done
+        echo "" >&2
+    fi
+    
+    return 0
+}
+
+# Function to validate spec file syntax
+validate_spec_syntax() {
+    local spec_file="$1"
+    
+    echo ""
+    echo "=========================================="
+    echo "Validating spec file syntax..."
+    echo "=========================================="
+    echo ""
+    
+    # Check if rpmbuild is available
+    if ! command -v rpmbuild &> /dev/null; then
+        echo "Warning: rpmbuild not found, skipping syntax validation" >&2
+        return 0
+    fi
+    
+    # Try to use rpmbuild -bp (prep stage) to validate syntax
+    # This will check syntax without actually building
+    # Use --nodeps to check syntax/prep logic without requiring local RPM DB to have all deps
+    local temp_output=$(mktemp)
+    if rpmbuild -bp --nodeps "$spec_file" &> "$temp_output"; then
+        echo "✓ Spec file syntax is valid"
+        rm -f "$temp_output"
+        return 0
+    else
+        # Check if it's a real syntax error or just missing source files
+        if grep -q "No such file or directory" "$temp_output" || grep -q "does not exist" "$temp_output"; then
+            echo "✓ Spec file syntax appears valid (source files not present for full validation)"
+            rm -f "$temp_output"
+            return 0
+        else
+            echo "✗ Spec file has syntax errors:" >&2
+            cat "$temp_output" | head -20
+            rm -f "$temp_output"
+            return 1
+        fi
+    fi
+}
+
+# Function to run rpmlint on spec file
+run_rpmlint() {
+    local spec_file="$1"
+    
+    echo ""
+    echo "=========================================="
+    echo "Running rpmlint checks..."
+    echo "=========================================="
+    echo ""
+    
+    # Check if rpmlint is available
+    if ! command -v rpmlint &> /dev/null; then
+        echo "Note: rpmlint not found, skipping quality checks"
+        echo "Install rpmlint for additional spec file validation"
+        return 0
+    fi
+    
+    # Run rpmlint
+    local rpmlint_output
+    rpmlint_output=$(rpmlint "$spec_file" 2>&1)
+    local rpmlint_exit=$?
+    
+    echo "$rpmlint_output"
+    echo ""
+    
+    # Count errors and warnings
+    local errors=$(echo "$rpmlint_output" | grep -c "E:" || true)
+    local warnings=$(echo "$rpmlint_output" | grep -c "W:" || true)
+    
+    if [ $errors -gt 0 ]; then
+        echo "⚠ Found $errors error(s) and $warnings warning(s)"
+        echo "Please review and fix errors before building"
+        return 1
+    elif [ $warnings -gt 0 ]; then
+        echo "⚠ Found $warnings warning(s)"
+        echo "Warnings can often be ignored, but please review them"
+        return 0
+    else
+        echo "✓ No errors or warnings found"
+        return 0
+    fi
+}
+
+# Function to validate generated spec file
+validate_spec_file() {
+    local spec_file="$1"
+    local pax_file="$2"
+    local buildroot="$3"
+    local validation_failed=false
+    
+    echo ""
+    echo "=========================================="
+    echo "Validating generated spec file..."
+    echo "=========================================="
+    
+    # Setup environment for validation (rpmbuild -bp needs source)
+    setup_rpmbuild "$buildroot"
+    
+    # Copy pax file to SOURCES if not already there
+    local source_name=$(basename "$pax_file")
+    if [ ! -f "$buildroot/SOURCES/$source_name" ] || [ "$pax_file" -nt "$buildroot/SOURCES/$source_name" ]; then
+        echo "Copying source file to $buildroot/SOURCES/$source_name for validation"
+        cp "$pax_file" "$buildroot/SOURCES/"
+    fi
+    
+    # Check syntax
+    if ! validate_spec_syntax "$spec_file"; then
+        validation_failed=true
+    fi
+    
+    # Run rpmlint
+    if ! run_rpmlint "$spec_file"; then
+        validation_failed=true
+    fi
+    
+    if [ "$validation_failed" = true ]; then
+        echo ""
+        echo "=========================================="
+        echo "✗ Validation failed"
+        echo "=========================================="
+        echo ""
+        echo "Please review the errors above and edit the spec file:"
+        echo "  $spec_file"
+        echo ""
+        return 1
+    else
+        echo ""
+        echo "=========================================="
+        echo "✓ Validation passed"
+        echo "=========================================="
+        echo ""
+        return 0
+    fi
+}
+
+# Function to perform dry run
+perform_dry_run() {
+    local pax_file="$1"
+    
+    echo ""
+    echo "=========================================="
+    echo "DRY RUN MODE - No files will be created"
+    echo "=========================================="
+    echo ""
+    
+    echo "Would perform the following actions:"
+    echo ""
+    echo "1. Analyze pax file: $pax_file"
+    echo "2. Extract package information:"
+    echo "   - Name: $PKG_NAME"
+    echo "   - Version: $PKG_VERSION"
+    echo "   - Release: $RELEASE"
+    echo "3. Generate spec file: $OUTPUT_FILE"
+    
+    if [ "$VALIDATE_SPEC" = true ]; then
+        echo "4. Validate spec file syntax and run rpmlint"
+    fi
+    
+    if [ "$BUILD_RPM" = true ]; then
+        echo "5. Build RPM package in: $BUILDROOT"
+        echo "   - Copy $pax_file to $BUILDROOT/SOURCES/"
+        echo "   - Copy spec file to $BUILDROOT/SPECS/"
+        echo "   - Run: rpmbuild -ba $OUTPUT_FILE"
+    fi
+    
+    echo ""
+    echo "To execute these actions, run without --dry-run flag"
+    echo ""
+}
+
+# Function to build RPM
+build_rpm() {
+    local spec_file="$1"
+    local pax_file="$2"
+    local buildroot="$3"
+    
+    echo ""
+    echo "=========================================="
+    echo "Building RPM package..."
+    echo "=========================================="
+    echo ""
+    
+    # Setup rpmbuild directories
+    setup_rpmbuild "$buildroot"
+    
+    # Copy pax file to SOURCES
+    local source_name=$(basename "$pax_file")
+    echo "Copying source file to $buildroot/SOURCES/$source_name"
+    cp "$pax_file" "$buildroot/SOURCES/"
+    
+    # Copy spec file to SPECS
+    echo "Copying spec file to $buildroot/SPECS/"
+    cp "$spec_file" "$buildroot/SPECS/"
+    
+    # Build the RPM
+    echo ""
+    echo "Running rpmbuild -ba $spec_file"
+    echo ""
+    
+    if rpmbuild -ba "$spec_file"; then
+        echo ""
+        echo "=========================================="
+        echo "✓ RPM build completed successfully!"
+        echo "=========================================="
+        echo ""
+        echo "Generated packages:"
+        echo ""
+        echo "Binary RPMs:"
+        find "$buildroot/RPMS" -name "*.rpm" -type f 2>/dev/null | while read rpm; do
+            echo "  - $rpm"
+        done
+        echo ""
+        echo "Source RPMs:"
+        find "$buildroot/SRPMS" -name "*.rpm" -type f 2>/dev/null | while read rpm; do
+            echo "  - $rpm"
+        done
+        echo ""
+        return 0
+    else
+        echo ""
+        echo "=========================================="
+        echo "✗ RPM build failed!"
+        echo "=========================================="
+        echo ""
+        echo "Please review the spec file and build output above."
+        echo "Common issues:"
+        echo "  - Missing BuildRequires dependencies"
+        echo "  - Incorrect file paths in %install or %files sections"
+        echo "  - Pax extraction errors"
+        echo ""
+        return 1
+    fi
+}
+
+# Main script
+main() {
+    if [ $# -eq 0 ]; then
+        usage
+    fi
+    
+    PAX_FILE="$1"
+    shift
+    
+    # Check if pax file exists
+    if [ ! -f "$PAX_FILE" ]; then
+        echo "Error: Pax file not found: $PAX_FILE" >&2
+        exit 1
+    fi
+    
+    # Parse filename to get default name and version
+    parse_filename "$PAX_FILE"
+    
+    # Parse command line options
+    while [ $# -gt 0 ]; do
+        case "$1" in
+            --name)
+                PKG_NAME="$2"
+                shift 2
+                ;;
+            --version)
+                PKG_VERSION="$2"
+                shift 2
+                ;;
+            --release)
+                RELEASE="$2"
+                shift 2
+                ;;
+            --license)
+                LICENSE="$2"
+                shift 2
+                ;;
+            --summary)
+                SUMMARY="$2"
+                shift 2
+                ;;
+            --description)
+                DESCRIPTION="$2"
+                shift 2
+                ;;
+            --url)
+                URL="$2"
+                shift 2
+                ;;
+            --output)
+                OUTPUT_FILE="$2"
+                shift 2
+                ;;
+            --requires)
+                REQUIRES="$2"
+                shift 2
+                ;;
+            --build)
+                BUILD_RPM=true
+                shift
+                ;;
+            --buildroot)
+                BUILDROOT="$2"
+                shift 2
+                ;;
+            --validate)
+                VALIDATE_SPEC=true
+                shift
+                ;;
+            --dry-run)
+                DRY_RUN=true
+                shift
+                ;;
+            --verbose)
+                VERBOSE=true
+                set -x
+                shift
+                ;;
+            --help)
+                usage
+                ;;
+            *)
+                echo "Error: Unknown option: $1" >&2
+                usage
+                ;;
+        esac
+    done
+    
+    # Set defaults for required fields
+    if [ -z "$SUMMARY" ]; then
+        echo "Error: --summary is required" >&2
+        exit 1
+    fi
+    
+    if [ -z "$DESCRIPTION" ]; then
+        DESCRIPTION="$SUMMARY"
+    fi
+    
+    if [ -z "$OUTPUT_FILE" ]; then
+        OUTPUT_FILE="${PKG_NAME}.spec"
+    fi
+    
+    # Check for required tools
+    if ! check_required_tools "$PAX_FILE"; then
+        exit 1
+    fi
+    
+    # Display extracted information
+    echo "Package Information:"
+    echo "  Name:        $PKG_NAME"
+    echo "  Version:     $PKG_VERSION"
+    echo "  Release:     $RELEASE"
+    echo "  License:     $LICENSE"
+    echo "  Summary:     $SUMMARY"
+    echo "  Source:      $(basename "$PAX_FILE")"
+    echo "  Output:      $OUTPUT_FILE"
+    echo ""
+    
+    # Handle dry-run mode
+    if [ "$DRY_RUN" = true ]; then
+        perform_dry_run "$PAX_FILE"
+        exit 0
+    fi
+    
+    # List pax contents for reference
+    list_pax_contents "$PAX_FILE" || echo "  (Could not list contents)"
+    echo ""
+    
+    # Generate spec file
+    generate_spec "$OUTPUT_FILE" "$PAX_FILE"
+    
+    # Validate spec file if requested
+    if [ "$VALIDATE_SPEC" = true ]; then
+        if ! validate_spec_file "$OUTPUT_FILE" "$PAX_FILE" "$BUILDROOT"; then
+            echo "Validation failed. Please fix the errors and try again." >&2
+            exit 1
+        fi
+    fi
+    
+    # Build RPM if requested
+    if [ "$BUILD_RPM" = true ]; then
+        if build_rpm "$OUTPUT_FILE" "$PAX_FILE" "$BUILDROOT"; then
+            echo "RPM package built successfully!"
+        else
+            echo "Warning: RPM build failed. Please review the spec file and try again." >&2
+            exit 1
+        fi
+    else
+        echo ""
+        echo "Next steps:"
+        echo "  1. Review and edit the generated spec file: $OUTPUT_FILE"
+        echo "  2. Adjust the %install and %files sections if needed"
+        if [ "$VALIDATE_SPEC" = false ]; then
+            echo "  3. Validate the spec: $0 $PAX_FILE --summary \"$SUMMARY\" --validate"
+            echo "  4. Copy the pax file to rpmbuild/SOURCES/"
+            echo "  5. Build the RPM: rpmbuild -ba $OUTPUT_FILE"
+        else
+            echo "  3. Copy the pax file to rpmbuild/SOURCES/"
+            echo "  4. Build the RPM: rpmbuild -ba $OUTPUT_FILE"
+        fi
+        echo ""
+        echo "Or run with --build flag to build automatically:"
+        echo "  $0 $PAX_FILE --summary \"$SUMMARY\" --build"
+    fi
+}
+
+main "$@"
