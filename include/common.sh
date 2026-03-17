@@ -2582,10 +2582,11 @@ getInstallFile()
   fi
 
   # Check if this is a pax-flie install; in which case there is no "remote" JSON
-  case "${installurl}" in
-    file://*) return 0 ;;
-    *) :;;
-  esac
+  if ${fileinstall}; then
+    printVerbose "Local file install; no remote meta information"
+    return 0
+  fi
+
 
   metadataFile="$(basename "${installurl}").json"
   if [ -e "${downloadToDir}/${metadataFile}" ]; then
