@@ -1363,20 +1363,26 @@ applyPatches()
             printWarning "Initial patch failed: ${p}"
             printSoftError "${out}"
 
-            # Check if repo is shallow
-            if (cd "${code_dir}" && git rev-parse --is-shallow-repository) | grep -q true; then
-              printInfo "Repository is shallow, attempting to unshallow..."
-              (cd "${code_dir}" && git fetch --unshallow)
-            fi
+            # Only attempt 3-way merge for git-based sources as it requires history
+            if [ "${ZOPEN_TYPE}x" = "GITx" ]; then
+              # Check if repo is shallow
+              if (cd "${code_dir}" && git rev-parse --is-shallow-repository) | grep -q true; then
+                printInfo "Repository is shallow, attempting to unshallow..."
+                (cd "${code_dir}" && git fetch --unshallow)
+              fi
 
-            # Retry with 3way
-            if ! out=$( (cd "${code_dir}" && git apply --3way --ignore-space-change "${p}" 2>&1)); then
-              printSoftError "3way patch attempt failed: ${p}"
-              printSoftError "${out}"
+              # Retry with 3way
+              if ! out=$( (cd "${code_dir}" && git apply --3way --ignore-space-change "${p}" 2>&1)); then
+                printSoftError "3way patch attempt failed: ${p}"
+                printSoftError "${out}"
+                failedcount=$((failedcount + 1))
+                break
+              else
+                printInfo "Patch applied with 3way merge: ${p}"
+              fi
+            else
               failedcount=$((failedcount + 1))
               break
-            else
-              printInfo "Patch applied with 3way merge: ${p}"
             fi
           fi
         fi
