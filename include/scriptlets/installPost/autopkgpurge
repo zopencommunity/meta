@@ -1,0 +1,25 @@
+#!/bin/sh
+this="autopkgpurge"
+printVerbose "Running '${this}' script"
+pkg=$1
+[ -z "${pkg}" ] && return
+if type zopen-config-helper >/dev/null 2>&1; then
+  isactive=$(zopen-config-helper --get autopkgpurge)
+else
+  isactive=false
+fi
+
+if isTrue "${isactive}"; then
+  (zopen clean --unused "${pkg}" >/dev/null 2>&1)
+elif isFalse "${isactive}"; then
+  printVerbose "autopkgpurge is disabled; no clean will occur"
+else
+  printWarning "Invalid value '${isactive}' for autopkgpurge config parameter [should be true or false]."
+  if type zopen-config-helper >/dev/null 2>&1; then
+    printWarning "Run zopen config --set autopkgpurge [true|false] to update configuration"
+  else
+    printWarning "Update zopen configuration file to contain a valid value for parameter 'autopkgpurge'"
+  fi
+  printWarning "Unused package clean will not be performed"
+fi
+

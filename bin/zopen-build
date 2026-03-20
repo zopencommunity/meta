@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -x
 #
 # General purpose build script for zopen community ports - https://github.com/zopencommunity
 ZOPEN_DONT_PROCESS_CONFIG=1
@@ -774,6 +774,7 @@ setDepsEnv()
   deps="${ZOPEN_DEPS}"
 
   orig="${PWD}"
+  printVerbose "Saving original work directory '${orig}'"
   # Filter out duplicate deps
   deps=$(echo "${deps}" | xargs | tr ' ' '\n' | sort -u)
   for dep in ${deps}; do
@@ -801,10 +802,13 @@ setDepsEnv()
           fi
 
           printVerbose "Setting up ${depdir} dependency environment"
-          cd "${depdir}" && . ./.env
+          curDir="$(pwd -P)"
+          cd "${depdir}" || printError "Failed to change to '${depdir}'"
+          . ./.env
           if [ $? -gt 0 ]; then
             printError "Failed to source ${depdir} .env"
           fi
+          cd "${curDir}" || printError "Failed to return to '${curDir}'"
         fi
         foundDep=true
         break
@@ -827,10 +831,13 @@ setDepsEnv()
       fi
       depdir="${path}/${dep}/${dep}"
       printVerbose "Setting up upgraded ${depdir} dependency environment"
-      cd "${depdir}" && . ./.env
+      curDir="$(pwd -P)"
+      cd "${depdir}" || printError "Failed to change to '${depdir}'"
+      ./.env
       if [ $? -gt 0 ]; then
         printError "Failed to source ${depdir} .env"
       fi
+      cd "${curDir}" || printError "Failed to change back to '${curDir}'"
       versionPath="${depdir}/.version"
       if [ -r "${versionPath}" ]; then
         version=$(cat "${versionPath}")
@@ -840,7 +847,8 @@ setDepsEnv()
       fi
     fi
   done
-  cd "${orig}" || exit 99
+  cd "${orig}" || printError "Unable to change back to '${orig}'"
+  printVerbose "Changed back to directory '${orig}'"
 }
 
 setEnv()
@@ -1074,6 +1082,7 @@ extractTarBall()
   fi
   rm -f "${tarballz}"
   tagTree "${sourcedir}"
+  curDir="$(pwd -P)" # TODO: Do we need to return here??
   cd "${sourcedir}" || printError "Cannot cd to ${sourcedir}"
 
   # Clean up .git* files since we will be creating our own local git repo for applying patches
@@ -1675,14 +1684,14 @@ replaceHardcodedPath()
 
 replaceHardcodedPaths()
 {
-  ZOPEN_INSTALL_PREFIX="${ZOPEN_INSTALL_DIR}/../../"
-  ZOPEN_INSTALL_PREFIX=$(cd "${ZOPEN_INSTALL_PREFIX}" > /dev/null 2>&1 && pwd -P)
+  ZOPEN_HARDCODED_PREFIX="${ZOPEN_INSTALL_DIR}/../../"
+  ZOPEN_HARDCODED_PREFIX=$(cd "${ZOPEN_HARDCODED_PREFIX}" > /dev/null 2>&1 && pwd -P)
 
-  printHeader "Replacing hardcoded ${ZOPEN_INSTALL_PREFIX} path"
+  printHeader "Replacing hardcoded ${ZOPEN_HARDCODED_PREFIX} path"
   hasHardcodedPaths=false
-  for f in $(find ${ZOPEN_INSTALL_DIR}/ -type f | xargs grep -l "${ZOPEN_INSTALL_PREFIX}" 2> /dev/null); do
+  for f in $(find ${ZOPEN_INSTALL_DIR}/ -type f | xargs grep -l "${ZOPEN_HARDCODED_PREFIX}" 2> /dev/null); do
     hasHardcodedPaths=true
-    replaceHardcodedPath "${ZOPEN_INSTALL_PREFIX}" "ZOPEN_INSTALL_PREFIX" "${f}"
+    replaceHardcodedPath "${ZOPEN_HARDCODED_PREFIX}" "ZOPEN_INSTALL_PREFIX" "${f}"
   done
 }
 

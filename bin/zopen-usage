@@ -80,8 +80,8 @@ render_pie_chart_awk(){
   center_x=$((radius + 1))
   center_y=$radius
   aspect="0.6" # Reasonable guess?
-  
-  if ! pie=$(/bin/awk -v FS="|" \
+
+  if ! pie=$(awk -v FS="|" \
         -v title="${title}" \
         -v legend_title="${legend_title}" \
         -v radius="${radius}" \
@@ -102,10 +102,10 @@ render_pie_chart_awk(){
             for (theta = current_angle; theta <= end_angle; theta++) {
               rad = theta * a2r;
               # Calculate Cartesian coordinates - sohcahtoa...
-              x = round(cx + r * cos(rad));  
+              x = round(cx + r * cos(rad));
               y = round(cy + r * sin(rad)*aspect);
               # Bounds check
- 
+
               if (x >= 0 && x <= (width+1) && y >= 0 && y < height) {
                 if (use_ansi == "true") {
                   chart[x,y] = ansi_csi "[" color "m" color_symbol ansi_csi "[0m";
@@ -165,7 +165,7 @@ render_pie_chart_awk(){
           end_angle = int(current_angle + angle_size);
           if (use_ansi == "true") {
             modidx=idx % colors_size + 1  # Note % to wrap??
-            color = colors_array[modidx] ; 
+            color = colors_array[modidx] ;
             if (NR > colors_size) {
               # We cannot chart this, so add it to the "other" category
               color="31"
@@ -200,7 +200,7 @@ render_pie_chart_awk(){
             legend[31] = sprintf("%7s: %11sk (%4.1f%%): %25s", ansi_csi "[31m" color_symbol ansi_csi "[0m", (datasize - pie_size)/1024, ((datasize - pie_size) / datasize*100), "Other assorted")
           } else {
             legend["?"] = sprintf("%7s: %11sk (%4.1f%%): %25s", "?", (datasize - pie_size)/1024, ((datasize - pie_size) / datasize*100), "Other assorted")
-          } 
+          }
         }
         # Set the centre character to a generic, unused value
         chart[cx,cy] = "O";
@@ -224,12 +224,12 @@ render_pie_chart_awk(){
         for (i = 1; i <= n; i++) {
           print legendrev[i]
         }
-       
+
       }' "${datafile}" ); then
     printError "Could not generate pie chart: ${pie}"
   fi
   # shellcheck disable=SC2059
-  /bin/printf "${pie}\n"
+  printf "${pie}\n"
   return 0
 }
 
@@ -251,7 +251,7 @@ list_usage(){
     percentage=$(echo "scale=2; 100 * ${other_size} / ${datasize}" | bc)
     printf "%10sK %-10s: Other\n" "${other_size}" "(${percentage}%)"
   fi
-  zopen_env_size=$(zosdu -kts "${zopen_rootfs}" 2>/dev/null | awk '{printf "%.2f", ($1 / 1024)}')
+  zopen_env_size=$(du -kts "${zopen_rootfs}" 2>/dev/null | awk '{printf "%.2f", ($1 / 1024)}')
   available=$(df -k "${zopen_rootfs}" | tail -n 1 | tr -s " " | cut -d' ' -f3)
   printf "  The zopen environment is using %sMb of total storage\n" "${zopen_env_size}"
   echo "${available}" | awk -F'/' '{ printf "  There is %.2f Mb available for the zopen environment\n" , ($1 / 1024) }'
@@ -260,7 +260,7 @@ list_usage(){
 add_dir_size(){
   dir=$1
   [ -e "${dir}" ] || return 1
-  size=$(zosdu -kts "${dir}" 2>/dev/null | awk '{print $1}')
+  size=$(du -kts "${dir}" 2>/dev/null | awk '{print $1}')
   # Do size first as it gets sorted on
   echo "${size}|${dir}" >> "${datafile}"
   echo "${size}"
@@ -276,7 +276,7 @@ create_datafile() {
       printError "Specified zopen environment '${zopen_rootfs}' does not appear to be valid"
 
   datafile=$(mktempfile "pie" ".data")
-  zopen_env_size=$(zosdu -kts "${zopen_rootfs}" 2>/dev/null | awk '{print $1}')
+  zopen_env_size=$(du -kts "${zopen_rootfs}" 2>/dev/null | awk '{print $1}')
   # Get explicit directories to include
   for dir in "${zopen_rootfs}"/usr/local/zopen/*; do
     # Get space usage of the directory (in format "size   dir")
