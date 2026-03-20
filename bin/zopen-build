@@ -2404,6 +2404,17 @@ resolveCommands()
 
   [[ -d ${ZOPEN_LOG_DIR} ]] || mkdir -p ${ZOPEN_LOG_DIR}
 
+  ZOPEN_EXTRA_CC_OPTS=""
+  ZOPEN_EXTRA_CMAKE_CC_OPTS=""
+  ZOPEN_EXTRA_MAKE_CC_OPTS=""
+  ZOPEN_EXTRA_INSTALL_CC_OPTS=""
+  if [ -n "${CC}" ]; then
+    ZOPEN_EXTRA_CC_OPTS="CC=\"${CC}\" CPPFLAGS=\"${CPPFLAGS}\" CFLAGS=\"${CFLAGS}\" CXX=\"${CXX}\" CXXFLAGS=\"${CXXFLAGS}\" LDFLAGS=\"${LDFLAGS}\" LIBS=\"${LIBS}\" LDLIBS=\"${LIBS}\""
+    ZOPEN_EXTRA_CMAKE_CC_OPTS="-DCMAKE_C_COMPILER=\"${CC}\" -DCMAKE_C_FLAGS=\"${CPPFLAGS} ${CFLAGS}\" -DCMAKE_CXX_COMPILER=\"${CXX}\" -DCMAKE_CXX_FLAGS=\"${CPPFLAGS} ${CXXFLAGS}\" -DCMAKE_CXX_LINK_LIBRARY_FLAG=\"${LDFLAGS}\" -DCMAKE_C_LINK_LIBRARY_FLAG=\"${LDFLAGS}\" -DCMAKE_CXX_STANDARD_LIBRARIES=\"${LIBS}\" -DCMAKE_C_STANDARD_LIBRARIES=\"${LIBS}\""
+    ZOPEN_EXTRA_MAKE_CC_OPTS="CC=\"${CC}\" \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=\"${CXX}\" \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\" \"LDLIBS=${LIBS}\""
+    ZOPEN_EXTRA_INSTALL_CC_OPTS="CC=\"${CC}\" \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=\"${CXX}\" \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\""
+  fi
+
   if [ "${ZOPEN_BOOTSTRAP}x" != "skipx" ] && [ ! -z "$(command -v ${ZOPEN_BOOTSTRAP})" ]; then
     export ZOPEN_BOOTSTRAP_CMD="\"${ZOPEN_BOOTSTRAP}\" ${ZOPEN_BOOTSTRAP_OPTS}"
   else
@@ -2424,10 +2435,10 @@ resolveCommands()
     if [ -z "${ZOPEN_CONFIGURE_MINIMAL}" ]; then
       case "${ZOPEN_CONFIGURE}" in
       *cmake*)
-        export ZOPEN_CONFIGURE_CMD="\"${ZOPEN_CONFIGURE}\" ${ZOPEN_CONFIGURE_OPTS} -DCMAKE_C_COMPILER=\"${CC}\" -DCMAKE_C_FLAGS=\"${CPPFLAGS} ${CFLAGS}\" -DCMAKE_CXX_COMPILER=\"${CXX}\" -DCMAKE_CXX_FLAGS=\"${CPPFLAGS} ${CXXFLAGS}\" -DCMAKE_CXX_LINK_LIBRARY_FLAG=\"${LDFLAGS}\" -DCMAKE_C_LINK_LIBRARY_FLAG=\"${LDFLAGS}\" -DCMAKE_CXX_STANDARD_LIBRARIES=\"${LIBS}\" -DCMAKE_C_STANDARD_LIBRARIES=\"${LIBS}\""
+        export ZOPEN_CONFIGURE_CMD="\"${ZOPEN_CONFIGURE}\" ${ZOPEN_CONFIGURE_OPTS} ${ZOPEN_EXTRA_CMAKE_CC_OPTS}"
         ;;
       *)
-        export ZOPEN_CONFIGURE_CMD="\"${ZOPEN_CONFIGURE}\" ${ZOPEN_CONFIGURE_OPTS} CC=\"${CC}\" CPPFLAGS=\"${CPPFLAGS}\" CFLAGS=\"${CFLAGS}\" CXX=\"${CXX}\" CXXFLAGS=\"${CXXFLAGS}\" LDFLAGS=\"${LDFLAGS}\" LIBS=\"${LIBS}\" LDLIBS=\"${LIBS}\""
+        export ZOPEN_CONFIGURE_CMD="\"${ZOPEN_CONFIGURE}\" ${ZOPEN_CONFIGURE_OPTS} ${ZOPEN_EXTRA_CC_OPTS}"
         ;;
       esac
       export ZOPEN_CONFIGURE_MINIMAL="no"
@@ -2447,7 +2458,7 @@ resolveCommands()
 
   if [ "${ZOPEN_MAKE}x" != "skipx" ] && [ ! -z "$(command -v ${ZOPEN_MAKE})" ]; then
     if [ -z "${ZOPEN_MAKE_MINIMAL}" ]; then
-      export ZOPEN_MAKE_CMD="\"${ZOPEN_MAKE}\" ${ZOPEN_MAKE_OPTS} ${verboseOpts} CC=\"${CC}\" \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=\"${CXX}\" \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\" \"LDLIBS=${LIBS}\""
+      export ZOPEN_MAKE_CMD="\"${ZOPEN_MAKE}\" ${ZOPEN_MAKE_OPTS} ${verboseOpts} ${ZOPEN_EXTRA_MAKE_CC_OPTS}"
       export ZOPEN_MAKE_MINIMAL="no"
     else
       export ZOPEN_MAKE_CMD="\"${ZOPEN_MAKE}\" ${ZOPEN_MAKE_OPTS}"
@@ -2459,7 +2470,7 @@ resolveCommands()
 
   if [ "${ZOPEN_CHECK}x" != "skipx" ] && ! ${skipcheck}; then
     if [ -z "${ZOPEN_CHECK_MINIMAL}" ]; then
-      export ZOPEN_CHECK_CMD="\"${ZOPEN_CHECK}\" ${ZOPEN_CHECK_OPTS} ${verboseOpts} CC=\"${CC}\" \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=\"${CXX}\" \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\""
+      export ZOPEN_CHECK_CMD="\"${ZOPEN_CHECK}\" ${ZOPEN_CHECK_OPTS} ${verboseOpts} ${ZOPEN_EXTRA_INSTALL_CC_OPTS}"
     else
       export ZOPEN_CHECK_CMD="\"${ZOPEN_CHECK}\" ${ZOPEN_CHECK_OPTS}"
     fi
@@ -2478,7 +2489,7 @@ resolveCommands()
       export ZOPEN_INSTALL_CMD="\"${ZOPEN_INSTALL}\" ${ZOPEN_INSTALL_OPTS}"
       ;;
     *)
-      export ZOPEN_INSTALL_CMD="\"${ZOPEN_INSTALL}\" ${ZOPEN_INSTALL_OPTS} ${verboseOpts} CC=\"${CC}\" \"CPPFLAGS=${CPPFLAGS}\" \"CFLAGS=${CFLAGS}\" CXX=\"${CXX}\" \"CXXFLAGS=${CXXFLAGS}\" \"LDFLAGS=${LDFLAGS}\""
+      export ZOPEN_INSTALL_CMD="\"${ZOPEN_INSTALL}\" ${ZOPEN_INSTALL_OPTS} ${verboseOpts} ${ZOPEN_EXTRA_INSTALL_CC_OPTS}"
       ;;
     esac
     [[ -d ${ZOPEN_ROOT}/install ]] || mkdir -p ${ZOPEN_ROOT}/install
