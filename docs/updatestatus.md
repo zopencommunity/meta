@@ -22,8 +22,8 @@
 - 2025-09-09: [Update ansible-version to 2.19.2 from 2.19.0](https://github.com/zopencommunity/ansibleport/pull/3) ❌
 - 2025-08-26: [Update ansible-version to 2.19.1 from 2.19.0](https://github.com/zopencommunity/ansibleport/pull/2) ❌
 
-### bash-completionport
-- 2024-12-11: [Update bash-completion-version to 20060301 from V.R.M](https://github.com/zopencommunity/bash-completionport/pull/1) ❓
+### autoconfport
+- 2026-03-21: [Update autoconf-version to 2.73 from 2.72](https://github.com/zopencommunity/autoconfport/pull/53) ❌
 
 ### buildkiteport
 - 2026-03-18: [Update buildkite-version to 3.120.1 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/96) ❌
@@ -148,6 +148,7 @@
 - 2025-02-01: [Update creduce-version to 2.10.0 from V.R.M](https://github.com/zopencommunity/creduceport/pull/1) ❌
 
 ### crushport
+- 2026-03-21: [Update crush-version to 0.51.2 from 0.11.0](https://github.com/zopencommunity/crushport/pull/97) ❌
 - 2026-03-20: [Update crush-version to 0.51.1 from 0.11.0](https://github.com/zopencommunity/crushport/pull/96) ❌
 - 2026-03-18: [Update crush-version to 0.50.1 from 0.11.0](https://github.com/zopencommunity/crushport/pull/95) ❌
 - 2026-03-17: [Update crush-version to 0.50.0 from 0.11.0](https://github.com/zopencommunity/crushport/pull/94) ❌
@@ -177,7 +178,6 @@
 - 2026-01-24: [Update crush-version to 0.35.0 from 0.11.0](https://github.com/zopencommunity/crushport/pull/70) ❌
 - 2026-01-22: [Update crush-version to 0.34.0 from 0.11.0](https://github.com/zopencommunity/crushport/pull/69) ❌
 - 2026-01-18: [Update crush-version to 0.33.3 from 0.11.0](https://github.com/zopencommunity/crushport/pull/68) ❌
-- 2026-01-17: [Update crush-version to 0.33.2 from 0.11.0](https://github.com/zopencommunity/crushport/pull/67) ❌
 
 ### cunitport
 - 2026-01-20: [Update cunit-version to 3.5.4 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/11) ❌
@@ -1043,5 +1043,5 @@
 ---
 
 
-> Last updated: 2026-03-21 06:09:46 EDT
+> Last updated: 2026-03-22 06:10:23 EDT
 
