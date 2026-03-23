@@ -124,7 +124,7 @@ analyze_pax_contents() {
     if [ -z "$pax_listing" ]; then
         echo "# Warning: Could not analyze pax contents, using default structure" >&2
         rm -rf "$temp_dir"
-        return 1
+        return 0
     fi
     
     # Initialize arrays for different file types
@@ -496,6 +496,7 @@ check_required_tools() {
 # Function to validate spec file syntax
 validate_spec_syntax() {
     local spec_file="$1"
+    local buildroot="$2"
     
     echo ""
     echo "=========================================="
@@ -598,7 +599,7 @@ validate_spec_file() {
     fi
     
     # Check syntax
-    if ! validate_spec_syntax "$spec_file"; then
+    if ! validate_spec_syntax "$spec_file" "$buildroot"; then
         validation_failed=true
     fi
     
@@ -654,7 +655,7 @@ perform_dry_run() {
         echo "5. Build RPM package in: $BUILDROOT"
         echo "   - Copy $pax_file to $BUILDROOT/SOURCES/"
         echo "   - Copy spec file to $BUILDROOT/SPECS/"
-        echo "   - Run: rpmbuild --define \"_topdir $buildroot\" -ba $OUTPUT_FILE"
+        echo "   - Run: rpmbuild --define \"_topdir $BUILDROOT\" -ba $OUTPUT_FILE"
     fi
     
     echo ""
