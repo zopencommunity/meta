@@ -21,9 +21,9 @@ PORT_NAME=${RELEASE_PREFIX%%port}
 GITHUB_REPO=$RELEASE_PREFIX
 
 # PAX file should be a copied artifact
-PAX=`find . -type f -path "*install/*zos.pax.Z"`
-RPM=`find rpmbuild/RPMS -type f -name "*.rpm"`
-METADATA=`find . -type f -path "*install/metadata.json"`
+PAX=`find . -type f -path "*install/*zos.pax.Z" | head -n 1`
+RPM=`find rpmbuild/RPMS -type f -name "*.rpm" | head -n 1`
+METADATA=`find . -type f -path "*install/metadata.json" | head -n 1`
 BUILD_STATUS=`find . -name "test.status" | xargs cat`
 DEPENDENCIES=`find . -name ".runtimedeps" | xargs cat`
 BUILD_DEPENDENCIES=`find . -name ".builddeps" | xargs cat`
