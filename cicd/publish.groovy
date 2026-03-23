@@ -21,9 +21,23 @@ PORT_NAME=${RELEASE_PREFIX%%port}
 GITHUB_REPO=$RELEASE_PREFIX
 
 # PAX file should be a copied artifact
-PAX=`find . -type f -path "*install/*zos.pax.Z" | head -n 1`
-RPM=`find rpmbuild/RPMS -type f -name "*.rpm" | head -n 1`
-METADATA=`find . -type f -path "*install/metadata.json" | head -n 1`
+PAX=`find . -type f -path "*install/*zos.pax.Z"`
+if [ $(echo "$PAX" | grep -c /) -ne 1 ]; then
+  echo "Error: Expected exactly 1 PAX file, found: $PAX"
+  exit 1
+fi
+
+RPM=`find rpmbuild/RPMS -type f -name "*.rpm"`
+if [ $(echo "$RPM" | grep -c /) -ne 1 ]; then
+  echo "Error: Expected exactly 1 RPM file, found: $RPM"
+  exit 1
+fi
+
+METADATA=`find . -type f -path "*install/metadata.json"`
+if [ $(echo "$METADATA" | grep -c /) -ne 1 ]; then
+  echo "Error: Expected exactly 1 metadata.json file, found: $METADATA"
+  exit 1
+fi
 BUILD_STATUS=`find . -name "test.status" | xargs cat`
 DEPENDENCIES=`find . -name ".runtimedeps" | xargs cat`
 BUILD_DEPENDENCIES=`find . -name ".builddeps" | xargs cat`
@@ -32,11 +46,6 @@ VERSION=`find . -name "*install/.version" | xargs cat`
 if [ ! -f "$PAX" ]; then
   echo "Port pax file does not exist";
   exit 1;
-fi
-
-if [ ! -f "$RPM" ]; then
-   echo "Port RPM file does not exist";
-   exit 1;
 fi
 
 if [ ! -f "$METADATA" ]; then

@@ -392,6 +392,13 @@ setup_rpmbuild() {
 %_topdir $buildroot
 EOF
         echo "Created ~/.rpmmacros with _topdir set to $buildroot"
+    else
+        # Check if _topdir is already defined and different
+        local existing_topdir=$(grep "%_topdir" "$HOME/.rpmmacros" | awk '{print $2}')
+        if [ "$existing_topdir" != "$buildroot" ]; then
+            echo "Warning: ~/.rpmmacros exists and has _topdir set to '$existing_topdir'."
+            echo "The script will use '$buildroot' by overriding it with --define \"_topdir $buildroot\"."
+        fi
     fi
 }
 
@@ -506,7 +513,7 @@ validate_spec_syntax() {
     # This will check syntax without actually building
     # Use --nodeps to check syntax/prep logic without requiring local RPM DB to have all deps
     local temp_output=$(mktemp)
-    if rpmbuild -bp --nodeps "$spec_file" &> "$temp_output"; then
+    if rpmbuild --define "_topdir $buildroot" -bp --nodeps "$spec_file" &> "$temp_output"; then
         echo "✓ Spec file syntax is valid"
         rm -f "$temp_output"
         return 0
@@ -647,7 +654,7 @@ perform_dry_run() {
         echo "5. Build RPM package in: $BUILDROOT"
         echo "   - Copy $pax_file to $BUILDROOT/SOURCES/"
         echo "   - Copy spec file to $BUILDROOT/SPECS/"
-        echo "   - Run: rpmbuild -ba $OUTPUT_FILE"
+        echo "   - Run: rpmbuild --define \"_topdir $buildroot\" -ba $OUTPUT_FILE"
     fi
     
     echo ""
@@ -681,10 +688,10 @@ build_rpm() {
     
     # Build the RPM
     echo ""
-    echo "Running rpmbuild -ba $spec_file"
+    echo "Running rpmbuild --define \"_topdir $buildroot\" -ba $spec_file"
     echo ""
     
-    if rpmbuild -ba "$spec_file"; then
+    if rpmbuild --define "_topdir $buildroot" -ba "$spec_file"; then
         echo ""
         echo "=========================================="
         echo "✓ RPM build completed successfully!"
@@ -874,10 +881,10 @@ main() {
         if [ "$VALIDATE_SPEC" = false ]; then
             echo "  3. Validate the spec: $0 $PAX_FILE --summary \"$SUMMARY\" --validate"
             echo "  4. Copy the pax file to rpmbuild/SOURCES/"
-            echo "  5. Build the RPM: rpmbuild -ba $OUTPUT_FILE"
+            echo "  5. Build the RPM: rpmbuild --define \"_topdir $BUILDROOT\" -ba $OUTPUT_FILE"
         else
             echo "  3. Copy the pax file to rpmbuild/SOURCES/"
-            echo "  4. Build the RPM: rpmbuild -ba $OUTPUT_FILE"
+            echo "  4. Build the RPM: rpmbuild --define \"_topdir $BUILDROOT\" -ba $OUTPUT_FILE"
         fi
         echo ""
         echo "Or run with --build flag to build automatically:"
