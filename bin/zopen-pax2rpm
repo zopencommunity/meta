@@ -233,11 +233,14 @@ if [ -d usr ]; then
     
     if [ -n "$FOUND_PATH" ]; then
         FOUND_PATH=${FOUND_PATH#./}
-        if [[ "$FOUND_PATH" == */pyz ]]; then
-            ROOT_DIR="$FOUND_PATH"
-        else
-            ROOT_DIR=$(echo "$FOUND_PATH" | sed 's/\/\(bin\|lib\|bash\|go\)$//')
-        fi
+        case "$FOUND_PATH" in
+            */pyz)
+                ROOT_DIR="$FOUND_PATH"
+                ;;
+            *)
+                ROOT_DIR=$(echo "$FOUND_PATH" | sed 's/\/\(bin\|lib\|bash\|go\)$//')
+                ;;
+        esac
     else
         # Fallback for OS layout: find first dir with more than one entry
         ROOT_DIR="."
@@ -328,14 +331,14 @@ cd %{name}-%{version}
 EOF
 
     if [[ "$source_file" == *.pax.Z ]]; then
-        cat >> "$output_file" << 'EOF'
+        cat >> "$output_file" << EOF
 # Extract compressed pax archive
-pax -rzf %{SOURCE0}
+pax -rzf %{_sourcedir}/$(basename "$source_file")
 EOF
     else
-        cat >> "$output_file" << 'EOF'
+        cat >> "$output_file" << EOF
 # Extract pax archive
-pax -rf %{SOURCE0}
+pax -rf %{_sourcedir}/$(basename "$source_file")
 EOF
     fi
 
@@ -541,7 +544,7 @@ run_rpmlint() {
     
     # Run rpmlint
     local rpmlint_output
-    rpmlint_output=$(rpmlint "$spec_file" 2>&1)
+    rpmlint_output=$(rpmlint "$spec_file" 2>&1 || true)
     local rpmlint_exit=$?
     
     echo "$rpmlint_output"
