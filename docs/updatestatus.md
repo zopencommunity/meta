@@ -71,6 +71,7 @@
 - 2024-05-30: [Update caddy-version to 2.8.1 from 2.7.6](https://github.com/zopencommunity/caddyport/pull/1) ❓
 
 ### ccacheport
+- 2026-03-22: [Update ccache-version to 4.13.2 from 4.11.3](https://github.com/zopencommunity/ccacheport/pull/8) ❌
 - 2026-03-05: [Update ccache-version to 4.13 from 4.11.3](https://github.com/zopencommunity/ccacheport/pull/6) ❌
 - 2026-03-10: [Update ccache-version to 4.13.1 from 4.11.3](https://github.com/zopencommunity/ccacheport/pull/7) ❌
 - 2026-02-07: [Update ccache-version to 4.12.3 from 4.11.3](https://github.com/zopencommunity/ccacheport/pull/5) ❌
@@ -481,11 +482,6 @@
 
 ### netpbmport
 - 2025-12-30: [Update netpbm-version to 11.13.00 from 11.12.00](https://github.com/zopencommunity/netpbmport/pull/11) ❌
-
-### ninjaport
-- 2025-11-21: [Update ninja-version to 1.13.2 from 1.12.1](https://github.com/zopencommunity/ninjaport/pull/15) ❌
-- 2025-07-11: [Update ninja-version to 1.13.1 from 1.12.1](https://github.com/zopencommunity/ninjaport/pull/14) ❌
-- 2025-06-18: [Update ninja-version to 1.13.0 from 1.12.1](https://github.com/zopencommunity/ninjaport/pull/13) ❌
 
 ### openldapport
 - 2026-03-10: [Update openldap-version to 2.6.13 from 2.6.10](https://github.com/zopencommunity/openldapport/pull/2) ❌
@@ -1043,5 +1039,5 @@
 ---
 
 
-> Last updated: 2026-03-22 06:10:23 EDT
+> Last updated: 2026-03-23 06:11:25 EDT
 

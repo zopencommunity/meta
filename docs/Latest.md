@@ -2650,12 +2650,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="ninja" data-searchable-text="ninja Blue 98.2% STABLE_ninja_3354 Build automation tool used with GNU Autotools uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="ninja" data-searchable-text="ninja Blue 98.3% STABLE_ninja_4156 Build automation tool used with GNU Autotools uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/ninjaport" target="_blank" rel="noopener noreferrer">ninja</a></strong></div>
     <div class="tool-status">Status: Blue</div>
-    <div class="tool-test">Test: 98.2%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/ninjaport/releases/download/STABLE_ninjaport_3354/ninja-v1.12.1.20250526_012627.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_ninja_3354</a></div>
+    <div class="tool-test">Test: 98.3%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/ninjaport/releases/download/STABLE_ninjaport_4156/ninja-v1.13.2.20260323_072922.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_ninja_4156</a></div>
     <div class="tool-desc" title="Build automation tool used with GNU Autotools">Build automation tool used with GNU Autotools</div>
   </div>
 </div>
@@ -3339,4 +3339,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2026-03-22 06:17:40 UTC
+Last updated:  2026-03-23 06:19:11 UTC

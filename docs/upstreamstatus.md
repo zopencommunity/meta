@@ -1,13 +1,13 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2026-03-22 06:16:04 EDT.*
+*Report generated on: 2026-03-23 06:17:31 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 302
-- **Total Current Lines of Code (LOC) in Patches:** 55,817
+- **Total Current Lines of Code (LOC) in Patches:** 55,831
 - **Total Number of Current Patch Files:** 999
-- **Average Current Patch LOC per Project:** 184.82
+- **Average Current Patch LOC per Project:** 184.87
 - **Average Current Patch Count per Project:** 3.31
 
 ### Historical Trends (All Projects)
@@ -83,11 +83,11 @@
 | [zstdport](#repo-zstdport) | 236 | +0 | 4 |
 | [libarchiveport](#repo-libarchiveport) | 220 | +0 | 5 |
 | [toml11port](#repo-toml11port) | 217 | +0 | 3 |
+| [ninjaport](#repo-ninjaport) | 210 | +14 | 8 |
 | [nnnport](#repo-nnnport) | 206 | +24 | 1 |
 | [protobufport](#repo-protobufport) | 201 | +0 | 9 |
 | [findutilsport](#repo-findutilsport) | 199 | +0 | 10 |
 | [libgcryptport](#repo-libgcryptport) | 199 | +0 | 4 |
-| [ninjaport](#repo-ninjaport) | 196 | +0 | 8 |
 | [blisport](#repo-blisport) | 185 | +0 | 2 |
 | [diffutilsport](#repo-diffutilsport) | 184 | +0 | 8 |
 | [aflplusplusport](#repo-aflplusplusport) | 184 | +0 | 5 |
@@ -2166,6 +2166,33 @@
 
 ---
 
+<a id="repo-ninjaport"></a>
+## ninjaport
+
+- **Origin Date (First Commit):** 2022-04-21
+- **Current Patch LOC:** 210
+- **Current Patch Count:** 8
+
+### Historical Trends
+
+![LOC Trend for ninjaport](images/upstream/ninjaport_current_loc_trend.png)
+![Count Trend for ninjaport](images/upstream/ninjaport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/PR1/CMakeLists.txt.patch` | `patches` | 24 |
+| `patches/PR1/configure.py.patch` | `patches` | 94 |
+| `patches/PR1/src/disk_interface.cc.patch` | `patches` | 15 |
+| `patches/PR1/src/getopt.c.patch` | `patches` | 13 |
+| `patches/PR1/src/getopt.h.patch` | `patches` | 13 |
+| `patches/PR1/src/manifest_parser_perftest.cc.patch` | `patches` | 13 |
+| `patches/PR1/src/ninja.cc.patch` | `patches` | 13 |
+| `patches/PR1/src/util.cc.patch` | `patches` | 25 |
+
+---
+
 <a id="repo-nnnport"></a>
 ## nnnport
 
@@ -2263,33 +2290,6 @@
 | `patches/doc_Makefile.in.patch` | `patches` | 13 |
 | `patches/fips.c.patch` | `patches` | 87 |
 | `patches/t-thread-local.c.patch` | `patches` | 86 |
-
----
-
-<a id="repo-ninjaport"></a>
-## ninjaport
-
-- **Origin Date (First Commit):** 2022-04-21
-- **Current Patch LOC:** 196
-- **Current Patch Count:** 8
-
-### Historical Trends
-
-![LOC Trend for ninjaport](images/upstream/ninjaport_current_loc_trend.png)
-![Count Trend for ninjaport](images/upstream/ninjaport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/PR1/CMakeLists.txt.patch` | `patches` | 13 |
-| `patches/PR1/configure.py.patch` | `patches` | 91 |
-| `patches/PR1/src/disk_interface.cc.patch` | `patches` | 15 |
-| `patches/PR1/src/getopt.c.patch` | `patches` | 13 |
-| `patches/PR1/src/getopt.h.patch` | `patches` | 13 |
-| `patches/PR1/src/manifest_parser_perftest.cc.patch` | `patches` | 13 |
-| `patches/PR1/src/ninja.cc.patch` | `patches` | 13 |
-| `patches/PR1/src/util.cc.patch` | `patches` | 25 |
 
 ---
 
