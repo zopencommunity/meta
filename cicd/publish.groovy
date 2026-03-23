@@ -22,7 +22,22 @@ GITHUB_REPO=$RELEASE_PREFIX
 
 # PAX file should be a copied artifact
 PAX=`find . -type f -path "*install/*zos.pax.Z"`
+if [ $(echo "$PAX" | grep -c /) -ne 1 ]; then
+  echo "Error: Expected exactly 1 PAX file, found: $PAX"
+  exit 1
+fi
+
+RPM=`find rpmbuild/RPMS -type f -name "*.rpm"`
+if [ $(echo "$RPM" | grep -c /) -ne 1 ]; then
+  echo "Error: Expected exactly 1 RPM file, found: $RPM"
+  exit 1
+fi
+
 METADATA=`find . -type f -path "*install/metadata.json"`
+if [ $(echo "$METADATA" | grep -c /) -ne 1 ]; then
+  echo "Error: Expected exactly 1 metadata.json file, found: $METADATA"
+  exit 1
+fi
 BUILD_STATUS=`find . -name "test.status" | xargs cat`
 DEPENDENCIES=`find . -name ".runtimedeps" | xargs cat`
 BUILD_DEPENDENCIES=`find . -name ".builddeps" | xargs cat`
@@ -57,6 +72,8 @@ PAX_BASENAME=$(basename "${PAX}")
 DIR_NAME=${PAX_BASENAME%%.pax.Z}
 DIR_NAME=$(echo "$DIR_NAME" | sed -e "s/\.202[0-9]*_[0-9]*\.zos/.zos/g" -e "s/\.zos//g")
 BUILD_ID=${BUILD_NUMBER}
+RPM_BASENAME=$(basename "${RPM}")
+
 
 # Check for python dependencies
 if pip3 show numpy &> /dev/null; then
@@ -196,6 +213,15 @@ if [ $? -eq 0 ]; then
 else
   echo "Failed to upload PAX artifact!"
   exit 1
+fi
+
+echo "Uploading the RPM artifacts into github"
+github-release -v upload --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --tag "${TAG}" --name "${RPM_BASENAME}" --file "${RPM}"
+if [ $? -eq 0 ]; then
+   echo "RPM Artifact uploaded successfully!"
+else
+   echo "Failed to upload RPM artifact!"
+   exit 1
 fi
 
 echo "Uploading metadata artifacts into github"

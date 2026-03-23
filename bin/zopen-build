@@ -335,6 +335,7 @@ Option:
                         with the .rej extension.
   -g, --get-source      get the source and apply patch without building.
   -gp, --generate-pax   generate a pax.Z file based on the install contents.
+  -gr, --generate-rpm   generate an RPM package from the pax archive.
   -h, --help, -?        print this information.
   --no-set-active       do not change the pinned version.
   --no-install-deps     do not install project's runtime dependencies.
@@ -379,6 +380,7 @@ processOptions()
   buildEnvFile="./buildenv"
   getSourceOnly=false
   generatePax=false
+  generateRPM=false
   setActive=true
   signPax=false
   forcePatchApply=false
@@ -476,11 +478,16 @@ processOptions()
     "-gp" | "--generate-pax")
       generatePax=true
       ;;
+     "-gr" | "--generate-rpm")
+      generateRPM=true
+      generatePax=true
+      ;;
     "-s" | "--shell")
       startShell=true
       ;;
     "-sp" | "--sign-pax")
       signPax=true
+      generatePax=true
       ;;
     *)
       printError "Unknown option ${1} specified"
@@ -2304,7 +2311,19 @@ install()
       if ! runAndLog "${ZOPEN_PAX_CMD}"; then
         printError "Could not generate pax \"${paxFileName}\""
       fi
+    fi
 
+    if ${generateRPM}; then
+      if [ -f "${paxFileName}" ]; then
+        printHeader "Generating RPM from ${ZOPEN_INSTALL_DIR}"
+        rpm_deps=$(echo "${ZOPEN_RUNTIME_DEPS}" | xargs -n1 | sort -u | xargs)
+        PATH="${ZOPEN_ROOTFS}/usr/local/bin:${PATH}" "${MYDIR}/zopen-pax2rpm" "${paxFileName}" --summary "${ZOPEN_NAME} package" --requires "${rpm_deps}" --build
+      else
+        printError "Pax file ${paxFileName} not found. Ensure --generate-pax is also used."
+      fi
+    fi
+
+    if ${generatePax}; then
       #TODO: Hack so that we can use coreutils md5sum without impacting builds
       ZOPEN_DEPS="${ZOPEN_DEPS} coreutils jq"
       if [ "${signPax}" = "true" ] && ( [ -z "${ZOPEN_GPG_SECRET_KEY_FILE}" ] || [ -z "${ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE}" ] || [ -z "${ZOPEN_GPG_PUBLIC_KEY_FILE}" ] || [ ! -r "${ZOPEN_GPG_SECRET_KEY_FILE}" ] || [ ! -r "${ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE}" ] || [ ! -r "${ZOPEN_GPG_PUBLIC_KEY_FILE}" ] ); then
