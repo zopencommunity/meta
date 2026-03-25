@@ -869,8 +869,10 @@ if [ -n "${invalidlist}" ]; then
   printSoftError "Check port name(s), remove any port suffixes and retry command."
 fi
 
-if [[ " $invalidlist " == *" $chosenRepo "* ]]; then
-  exit 0
-fi
+for item in ${invalidlist}; do
+  if [[ "$(echo $item)" == "$(echo $chosenRepo)" ]]; then
+    exit 0
+  fi
+done
 
 installPorts "${installArray}"
