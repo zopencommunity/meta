@@ -388,10 +388,15 @@ setup_rpmbuild() {
     mkdir -p "$buildroot"/{BUILD,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS}
     
     if [ ! -f "$HOME/.rpmmacros" ]; then
-        cat > "$HOME/.rpmmacros" << EOF
+        if touch "$HOME/.rpmmacros" 2>/dev/null; then
+            cat > "$HOME/.rpmmacros" << EOF
 %_topdir $buildroot
 EOF
-        echo "Created ~/.rpmmacros with _topdir set to $buildroot"
+            echo "Created ~/.rpmmacros with _topdir set to $buildroot"
+        else
+            echo "Warning: could not create ~/.rpmmacros. This is normal in some CI environments."
+            echo "The script will use '$buildroot' by overriding it with --define \"_topdir $buildroot\"."
+        fi
     else
         # Check if _topdir is already defined and different
         local existing_topdir=$(grep "%_topdir" "$HOME/.rpmmacros" | awk '{print $2}')

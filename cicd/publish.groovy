@@ -27,10 +27,13 @@ if [ $(echo "$PAX" | grep -c /) -ne 1 ]; then
   exit 1
 fi
 
-RPM=`find rpmbuild/RPMS -type f -name "*.rpm"`
-if [ $(echo "$RPM" | grep -c /) -ne 1 ]; then
-  echo "Error: Expected exactly 1 RPM file, found: $RPM"
-  exit 1
+RPM_FILES=($(find rpmbuild/RPMS -type f -name "*.rpm" 2>/dev/null))
+NUM_RPMS=${#RPM_FILES[@]}
+
+if [ $NUM_RPMS -gt 0 ]; then
+  echo "Found $NUM_RPMS RPM file(s): ${RPM_FILES[@]}"
+else
+  echo "No RPM files found. Skipping RPM upload."
 fi
 
 METADATA=`find . -type f -path "*install/metadata.json"`
@@ -72,7 +75,6 @@ PAX_BASENAME=$(basename "${PAX}")
 DIR_NAME=${PAX_BASENAME%%.pax.Z}
 DIR_NAME=$(echo "$DIR_NAME" | sed -e "s/\.202[0-9]*_[0-9]*\.zos/.zos/g" -e "s/\.zos//g")
 BUILD_ID=${BUILD_NUMBER}
-RPM_BASENAME=$(basename "${RPM}")
 
 
 # Check for python dependencies
@@ -215,13 +217,21 @@ else
   exit 1
 fi
 
-echo "Uploading the RPM artifacts into github"
-github-release -v upload --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --tag "${TAG}" --name "${RPM_BASENAME}" --file "${RPM}"
-if [ $? -eq 0 ]; then
-   echo "RPM Artifact uploaded successfully!"
+if [ $NUM_RPMS -gt 0 ]; then
+  echo "Uploading the RPM artifacts into github"
+  for RPM in "${RPM_FILES[@]}"; do
+    RPM_BASENAME=$(basename "${RPM}")
+    echo "Uploading ${RPM_BASENAME}..."
+    github-release -v upload --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --tag "${TAG}" --name "${RPM_BASENAME}" --file "${RPM}"
+    if [ $? -eq 0 ]; then
+       echo "RPM Artifact ${RPM_BASENAME} uploaded successfully!"
+    else
+       echo "Failed to upload RPM artifact ${RPM_BASENAME}!"
+       exit 1
+    fi
+  done
 else
-   echo "Failed to upload RPM artifact!"
-   exit 1
+  echo "No RPM artifacts to upload."
 fi
 
 echo "Uploading metadata artifacts into github"
