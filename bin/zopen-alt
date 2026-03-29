@@ -55,14 +55,29 @@ mergeNewVersion()
 {
   package="$1"
   newver="$2"
-  oldver="$2"
-  [ -z "${package}" ] && printError "Internal error; no packagename provided to merge."
-  [ -d "${ZOPEN_PKGINSTALL}/${package}/${newver}" ] || printError "Version '${newver}' was not available to set as current"
+
+  [ -z "${package}" ] && printError "Internal error; no package name provided to merge."
+  newVerDir="${ZOPEN_PKGINSTALL}/${package}/${newver}"
+  [ -d "${newVerDir}" ] || printError "Version '${newver}' was not available to set as current"
+
+  # We are effectively re-installing so run some scriptlets, noting that for the
+  # alternative to be  available on the system, it must have passed various the
+  # checks in installPre (GPG/prereq)
+  if ! processActionScripts "transactionPre"; then
+    exit 1
+  fi
   if [ -e "${ZOPEN_PKGINSTALL}/${package}/${package}" ]; then
     printVerbose "Removing main link"
-    rm -rf "${ZOPEN_PKGINSTALL}/${package}/${package}"
+    if ! rm -rf "${ZOPEN_PKGINSTALL}/${package}/${package}:?"; then
+      printSoftError "Unable to remove previously set package link: ${ZOPEN_PKGINSTALL}/${package}/${package}"
+      printError "Check permissions and retry command."
+    fi
   fi
-  mergeIntoSystem "${package}" "${ZOPEN_PKGINSTALL}/${package}/${newver}" "${ZOPEN_ROOTFS}"
+  if ! runLogProgress "mergeIntoSystem \"${package}\" \"${ZOPEN_PKGINSTALL}/${package}//${newver}\" \"${ZOPEN_ROOTFS}\"" \
+      "Merging ${package} into symlink mesh" "Merged ${package} into symlink mesh"; then
+    printSoftError "Unexpected errors merging symlinks into mesh tree"
+    printError "Use zopen alt to select previous version to ensure known state"
+  fi
   printVerbose "New version merged; checking for orphaned files from previous version"
   # This will remove any old symlinks or dirs that might have changed in an up/downgrade
   # as the merge process overwrites existing files to point to different version. If there was
@@ -84,7 +99,12 @@ mergeNewVersion()
   if [ -e "${ZOPEN_PKGINSTALL}/${package}/${package}/.releaseinfo" ]; then
     version=$(cat "${ZOPEN_PKGINSTALL}/${package}/${package}/.releaseinfo")
   fi
+  printVerbose "Updating package DB"
+  updatePackageDB
+
   syslog "${ZOPEN_LOG_PATH}/audit.log" "${LOG_A}" "${CAT_PACKAGE}" "ALT" "setAlt" "Set '${package}' to version:${version};"
+  processActionScripts "installPost" "${package}"
+  processActionScripts "transactionPost"
 }
 
 setAlt()
@@ -93,7 +113,7 @@ setAlt()
   newver="$2"
   if [ -e "${ZOPEN_PKGINSTALL}/${package}/" ]; then
     printVerbose "${package} is either installed or has been previously"
-    found=$(zosfind "${ZOPEN_PKGINSTALL}/${package}/" -type l -prune -o -type d -print | sed -e "s#${ZOPEN_PKGINSTALL}/${package}/\([^/]*\).*#\1#" | uniq)
+    found=$(find "${ZOPEN_PKGINSTALL}/${package}/" -type l -prune -o -type d -print | sed -e "s#${ZOPEN_PKGINSTALL}/${package}/\([^/]*\).*#\1#" | uniq)
   else
     printVerbose "${package} has never been installed on the system"
   fi
@@ -145,7 +165,7 @@ listAlts()
   package=$(echo "${package}" | awk '{$1=$1};1')
   if [ -e "${ZOPEN_PKGINSTALL}/${package}/" ]; then
     printVerbose "${package} is either installed or has been previously"
-    found=$(zosfind "${ZOPEN_PKGINSTALL}/${package}/" -type l -prune -o -type d -print | sed -e "s#${ZOPEN_PKGINSTALL}/${package}/\([^/]*\).*#\1#" | uniq)
+    found=$(find "${ZOPEN_PKGINSTALL}/${package}/" -type l -prune -o -type d -print | sed -e "s#${ZOPEN_PKGINSTALL}/${package}/\([^/]*\).*#\1#" | uniq)
   else
     printVerbose "${package} has never been installed on the system"
   fi
@@ -164,11 +184,11 @@ listAlts()
   #  echo "${found}" | xargs | tr ' ' '\n' | while read repo; do
   TMP_FIFO_PIPE="${HOME}/altselect.pipe"
   [ ! -p "${TMP_FIFO_PIPE}" ] || rm -f "${TMP_FIFO_PIPE}"
-  mkfifo ${TMP_FIFO_PIPE}
+  mkfifo "${TMP_FIFO_PIPE}"
   echo "${found}" | xargs | tr ' ' '\n' >> "${TMP_FIFO_PIPE}" &
   while read repo; do
     printVerbose "Parsing repo: '${repo}' as '${repo#"${ZOPEN_PKGINSTALL}"/}'"
-    i=$(expr ${i} + 1)
+    i=$((i + 1))
     if [ "${deref#"${ZOPEN_PKGINSTALL}"/}" = "${repo#"${ZOPEN_PKGINSTALL}"/}" ]; then
       current=${i}
       printInfo "${NC}${GREEN}${i}: ${repo#"${ZOPEN_PKGINSTALL}"/}  <-  current${NC}"
@@ -176,7 +196,7 @@ listAlts()
       printInfo "${i}: ${repo#"${ZOPEN_PKGINSTALL}"/}"
     fi
   done < "${TMP_FIFO_PIPE}"
-  [ ! -p ${TMP_FIFO_PIPE} ] || rm -rf "${TMP_FIFO_PIPE}"
+  [ ! -p "${TMP_FIFO_PIPE}" ] || rm -rf "${TMP_FIFO_PIPE}"
 
   if ${select}; then
     mutexReq "zopen" "zopen"
@@ -202,19 +222,14 @@ while [ $# -gt 0 ]; do
   case "$1" in
   "-s" | "--set")
     shift
-    [ $# -lt 2 ] && printError "Missing argument(s) for set option. Check program arguments"
+    [ $# -lt 1 ] && printError "Missing argument for 'set' option. Check program arguments"
     sett=true
     select=false
-    package="$1"
-    newver="$2"
-    shift
+    newver="$1"
     ;;
   "--select")
     select=true
     sett=false
-    shift
-    [ $# -lt 1 ] && printError "Missing argument for select option."
-    package="$1"
     ;;
   "-h" | "--help" | "-?")
     printHelp "${args}"
@@ -228,7 +243,9 @@ while [ $# -gt 0 ]; do
     verbose=true
     ;;
   "--debug")
+    # shellcheck disable=SC2034
     verbose=true
+    # shellcheck disable=SC2034
     debug=true
     ;;
   *)
@@ -237,6 +254,10 @@ while [ $# -gt 0 ]; do
   esac
   shift
 done
+
+if ${select} && [ -z "${package}" ]; then
+  printError "Missing argument for select option."
+fi
 
 if ${sett}; then
   setAlt "${package}" "${newver}"
