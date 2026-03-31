@@ -19,14 +19,31 @@
 #   --dry-run               Show what would be done without doing it
 #
 
-set -e
+#
+# All zopen-* scripts MUST start with this code to maintain consistency.
+#
+setupMyself()
+{
+  ME=$(basename "$0")
+  MYDIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
+  INCDIR="${MYDIR}/../include"
+  if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
+    echo "Internal Error. Unable to find common.sh file to source." >&2
+    exit 8
+  fi
+  . "${INCDIR}/common.sh"
+}
+setupMyself
 
 # Default values
 RELEASE="1"
 LICENSE="Proprietary"
 BUILD_ARCH=$(uname -m 2>/dev/null || echo "s390x")
-PACKAGER_NAME="${USER}"
-PACKAGER_EMAIL="${USER}@$(hostname)"
+
+# Get current user safely for packager info
+CURRENT_USER="${USER:-$(whoami 2>/dev/null || echo "zopen-community")}"
+PACKAGER_NAME="${CURRENT_USER}"
+PACKAGER_EMAIL="${CURRENT_USER}@$(hostname 2>/dev/null || echo "localhost")"
 
 # Build flag
 BUILD_RPM=false
@@ -37,6 +54,7 @@ VERBOSE=false
 
 # Function to display usage
 usage() {
+    local exit_code="${1:-1}"
     cat << EOF
 Usage: $0 <pax_file> [options]
 
@@ -69,7 +87,7 @@ Example:
      --url "https://www.ibm.com"
 
 EOF
-    exit 1
+    exit "$exit_code"
 }
 
 # Function to extract package name and version from filename
@@ -80,17 +98,19 @@ parse_filename() {
     # Remove .pax.Z or .pax extension
     basename="${basename%.pax.Z}"
     basename="${basename%.pax}"
+
+    # Handle .zos suffix commonly used in zopen packages
+    basename="${basename%.zos}"
     
     # Try to extract name and version
-    # Pattern 1: NAME-VERSION (e.g., package-1.0)
-    if [[ "$basename" =~ ^(.+)-([0-9]+\.[0-9]+.*)$ ]]; then
+    # Pattern 1: NAME-VERSION (e.g., package-1.0, curl-8.10.1.20241001_214340)
+    if [[ "$basename" =~ ^(.+)-([0-9].*)$ ]]; then
         PKG_NAME="${BASH_REMATCH[1]}"
         PKG_VERSION="${BASH_REMATCH[2]}"
     # Pattern 2: NAMEVERSION.suffix (e.g., HAMN110.runnable)
     elif [[ "$basename" =~ ^([A-Za-z]+)([0-9]+)\.(.+)$ ]]; then
         PKG_NAME="${BASH_REMATCH[1]}"
         PKG_VERSION="${BASH_REMATCH[2]}"
-        # Don't include suffix like "runnable" in version
     # Pattern 3: NAMEVERSION (e.g., HAMN110)
     elif [[ "$basename" =~ ^([A-Za-z]+)([0-9]+)$ ]]; then
         PKG_NAME="${BASH_REMATCH[1]}"
@@ -107,23 +127,21 @@ parse_filename() {
 # Function to analyze pax contents and categorize files
 analyze_pax_contents() {
     local pax_file="$1"
-    local temp_dir=$(mktemp -d)
+    local temp_dir=$(mktempdir "pax2rpm")
     
-    echo "# Analyzing pax file structure..." >&2
+    printInfo "# Analyzing pax file structure..."
     
-    # Extract pax listing (limit to first 1000 entries for performance)
+    # Extract pax listing (limit to first 5000 entries for performance/accuracy balance)
     local pax_listing
     if [[ "$pax_file" == *.pax.Z ]]; then
-        pax_listing=$(pax -vzf "$pax_file" 2>&1 | head -1000)
+        pax_listing=$(pax -vzf "$pax_file" 2>&1 | head -5000)
     else
-        pax_listing=$(pax -vf "$pax_file" 2>&1 | head -1000)
+        pax_listing=$(pax -vf "$pax_file" 2>&1 | head -5000)
     fi
     
     # Check if pax listing failed or is empty
-    # Only treat as error if pax command actually failed (not just listing files)
     if [ -z "$pax_listing" ]; then
-        echo "# Warning: Could not analyze pax contents, using default structure" >&2
-        rm -rf "$temp_dir"
+        printWarning "Could not analyze pax contents, using default structure"
         return 0
     fi
     
@@ -207,7 +225,7 @@ analyze_pax_contents() {
 list_pax_contents() {
     local pax_file="$1"
     
-    echo "# Pax file contents (first 100 entries):" >&2
+    printHeader "# Pax file contents (first 100 entries):"
     
     if [[ "$pax_file" == *.pax.Z ]]; then
         pax -vzf "$pax_file" 2>&1 | head -100
@@ -418,11 +436,6 @@ check_required_tools() {
         missing_tools+=("pax")
     fi
     
-    # Check for uncompress if dealing with .Z files
-    if [[ "$pax_file" == *.pax.Z ]] && ! command -v uncompress &> /dev/null; then
-        missing_tools+=("uncompress")
-    fi
-    
     # Check for rpmbuild if building or validating
     if [ "$BUILD_RPM" = true ] || [ "$VALIDATE_SPEC" = true ]; then
         if [ "$VERBOSE" = true ]; then
@@ -435,10 +448,7 @@ check_required_tools() {
     
     if [ ${#missing_tools[@]} -gt 0 ]; then
         echo "" >&2
-        echo "=========================================" >&2
-        echo "ERROR: Missing Required Tools" >&2
-        echo "=========================================" >&2
-        echo "" >&2
+        printError "Missing Required Tools"
         echo "The following tools are required but not found:" >&2
         echo "" >&2
         
@@ -449,29 +459,19 @@ check_required_tools() {
                 pax)
                     echo "    Purpose: Extract pax archives" >&2
                     echo "    Install: Usually pre-installed on z/OS" >&2
-                    echo "             On Linux: apt-get install pax (Debian/Ubuntu)" >&2
-                    echo "                       yum install pax (RHEL/CentOS)" >&2
-                    ;;
-                uncompress)
-                    echo "    Purpose: Decompress .Z files" >&2
-                    echo "    Install: Usually part of ncompress package" >&2
-                    echo "             On z/OS: May be in /usr/bin or /bin" >&2
-                    echo "             On Linux: apt-get install ncompress (Debian/Ubuntu)" >&2
-                    echo "                       yum install ncompress (RHEL/CentOS)" >&2
+                    echo "             On Linux: apt-get install pax (Debian/Ubuntu/RHEL/CentOS)" >&2
                     ;;
                 rpmbuild)
                     echo "    Purpose: Build RPM packages and validate spec files" >&2
                     echo "    Install: Part of rpm-build package" >&2
                     echo "             On z/OS: zopen install rpm" >&2
-                    echo "             On Linux: apt-get install rpm (Debian/Ubuntu)" >&2
-                    echo "                       yum install rpm-build (RHEL/CentOS)" >&2
+                    echo "             On Linux: apt-get install rpm (Debian/Ubuntu/RHEL/CentOS)" >&2
                     ;;
             esac
             echo "" >&2
         done
         
-        echo "Please install the missing tools and try again." >&2
-        echo "" >&2
+        printInfo "Please install the missing tools and try again."
         return 1
     fi
     
@@ -741,6 +741,10 @@ main() {
         usage
     fi
     
+    if [ "$1" == "--help" ]; then
+        usage 0
+    fi
+
     PAX_FILE="$1"
     shift
     
@@ -824,7 +828,7 @@ main() {
                 shift
                 ;;
             --help)
-                usage
+                usage 0
                 ;;
             *)
                 echo "Error: Unknown option: $1" >&2
