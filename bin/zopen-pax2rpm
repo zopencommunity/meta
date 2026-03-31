@@ -229,7 +229,8 @@ generate_install_commands() {
 if [ -d usr ]; then
     echo "OS layout (usr/) detected, searching for actual content root..."
     # Find the deepest directory that contains bin, lib, pyz, bash, or go
-    FOUND_PATH=$(find . -type d \( -name bin -o -name lib -o -name pyz -o -name bash -o -name go \) -print -quit)
+    # We sort by the number of slashes to find the deepest one
+    FOUND_PATH=$(find . -type d \( -name bin -o -name lib -o -name pyz -o -name bash -o -name go \) -print | awk -F/ '{print NF, $0}' | sort -rn | head -n 1 | cut -d' ' -f2-)
     
     if [ -n "$FOUND_PATH" ]; then
         FOUND_PATH=${FOUND_PATH#./}
@@ -424,7 +425,9 @@ check_required_tools() {
     
     # Check for rpmbuild if building or validating
     if [ "$BUILD_RPM" = true ] || [ "$VALIDATE_SPEC" = true ]; then
-        echo "DEBUG: Current PATH is $PATH" >&2
+        if [ "$VERBOSE" = true ]; then
+            echo "DEBUG: Current PATH is $PATH" >&2
+        fi
         if ! command -v rpmbuild &> /dev/null; then
             missing_tools+=("rpmbuild")
         fi
@@ -754,38 +757,47 @@ main() {
     while [ $# -gt 0 ]; do
         case "$1" in
             --name)
+                [ -n "$2" ] || { echo "Error: --name requires a value" >&2; usage; }
                 PKG_NAME="$2"
                 shift 2
                 ;;
             --version)
+                [ -n "$2" ] || { echo "Error: --version requires a value" >&2; usage; }
                 PKG_VERSION="$2"
                 shift 2
                 ;;
             --release)
+                [ -n "$2" ] || { echo "Error: --release requires a value" >&2; usage; }
                 RELEASE="$2"
                 shift 2
                 ;;
             --license)
+                [ -n "$2" ] || { echo "Error: --license requires a value" >&2; usage; }
                 LICENSE="$2"
                 shift 2
                 ;;
             --summary)
+                [ -n "$2" ] || { echo "Error: --summary requires a value" >&2; usage; }
                 SUMMARY="$2"
                 shift 2
                 ;;
             --description)
+                [ -n "$2" ] || { echo "Error: --description requires a value" >&2; usage; }
                 DESCRIPTION="$2"
                 shift 2
                 ;;
             --url)
+                [ -n "$2" ] || { echo "Error: --url requires a value" >&2; usage; }
                 URL="$2"
                 shift 2
                 ;;
             --output)
+                [ -n "$2" ] || { echo "Error: --output requires a value" >&2; usage; }
                 OUTPUT_FILE="$2"
                 shift 2
                 ;;
             --requires)
+                [ -n "$2" ] || { echo "Error: --requires requires a value" >&2; usage; }
                 REQUIRES="$2"
                 shift 2
                 ;;
@@ -794,6 +806,7 @@ main() {
                 shift
                 ;;
             --buildroot)
+                [ -n "$2" ] || { echo "Error: --buildroot requires a value" >&2; usage; }
                 BUILDROOT="$2"
                 shift 2
                 ;;

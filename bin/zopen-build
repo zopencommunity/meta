@@ -2317,7 +2317,9 @@ install()
       if [ -f "${paxFileName}" ]; then
         printHeader "Generating RPM from ${ZOPEN_INSTALL_DIR}"
         rpm_deps=$(echo "${ZOPEN_RUNTIME_DEPS}" | xargs -n1 | sort -u | xargs)
-        PATH="${ZOPEN_ROOTFS}/usr/local/bin:${PATH}" "${MYDIR}/zopen-pax2rpm" "${paxFileName}" --summary "${ZOPEN_NAME} package" --requires "${rpm_deps}" --build --buildroot "${ZOPEN_ROOT}/rpmbuild"
+        if ! runAndLog "PATH=\"${ZOPEN_ROOTFS}/usr/local/bin:${PATH}\" \"${MYDIR}/zopen-pax2rpm\" \"${paxFileName}\" --summary \"${ZOPEN_NAME} package\" --requires \"${rpm_deps}\" --build --buildroot \"${ZOPEN_ROOT}/rpmbuild\""; then
+          printError "Could not generate RPM from \"${paxFileName}\""
+        fi
       else
         printError "Pax file ${paxFileName} not found. Ensure --generate-pax is also used."
       fi
