@@ -210,9 +210,9 @@ list_pax_contents() {
     echo "# Pax file contents (first 100 entries):" >&2
     
     if [[ "$pax_file" == *.pax.Z ]]; then
-        pax -rvzf "$pax_file" 2>&1 | head -100
+        pax -vzf "$pax_file" 2>&1 | head -100
     else
-        pax -rvf "$pax_file" 2>&1 | head -100
+        pax -vf "$pax_file" 2>&1 | head -100
     fi
 }
 
