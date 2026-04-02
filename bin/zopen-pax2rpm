@@ -66,6 +66,7 @@ Arguments:
 Options:
   --name <name>           Override package name (default: extracted from filename)
   --version <version>     Override version (default: extracted from filename)
+  --pkg-version <version> Override version (alternative to --version)
   --release <release>     Override release number (default: 1)
   --license <license>     Specify license (default: Proprietary)
   --summary <summary>     Package summary (required)
@@ -79,6 +80,7 @@ Options:
   --dry-run               Show what would be done without actually doing it
   --verbose               Enable verbose debug output
   --help                  Display this help message
+  --version               Display tool version
 
 Example:
   $0 /nfsmnts/bpidrivers/oefv1r1/os390/latest/HAMN110.runnable.pax.Z \\
@@ -745,6 +747,15 @@ main() {
         usage 0
     fi
 
+    if [ "$1" == "--version" ]; then
+        if [ -x "${MYDIR}/zopen-version" ]; then
+            "${MYDIR}/zopen-version" "${ME}"
+        else
+            echo "${ME} version $(cat "${INCDIR}/zopen_version" 2>/dev/null || echo "unknown")"
+        fi
+        exit 0
+    fi
+
     PAX_FILE="$1"
     shift
     
@@ -766,7 +777,19 @@ main() {
                 shift 2
                 ;;
             --version)
-                [ -n "$2" ] || { echo "Error: --version requires a value" >&2; usage; }
+                if [ -z "$2" ] || [[ "$2" == --* ]]; then
+                    if [ -x "${MYDIR}/zopen-version" ]; then
+                        "${MYDIR}/zopen-version" "${ME}"
+                    else
+                        echo "${ME} version $(cat "${INCDIR}/zopen_version" 2>/dev/null || echo "unknown")"
+                    fi
+                    exit 0
+                fi
+                PKG_VERSION="$2"
+                shift 2
+                ;;
+            --pkg-version)
+                [ -n "$2" ] || { echo "Error: --pkg-version requires a value" >&2; usage; }
                 PKG_VERSION="$2"
                 shift 2
                 ;;
