@@ -1,22 +1,6 @@
-#!/bin/bash
+#!/bin/sh
 #
-# pax2rpm.sh - Generate RPM spec file from z/OS pax archive
-#
-# Usage: pax2rpm.sh <pax_file> [options]
-#
-# Options:
-#   --name <name>           Override package name
-#   --version <version>     Override version
-#   --release <release>     Override release number (default: 1)
-#   --license <license>     Specify license (default: Proprietary)
-#   --summary <summary>     Package summary
-#   --description <desc>    Package description
-#   --url <url>             Project URL
-#   --output <file>         Output spec file (default: <name>.spec)
-#   --build                 Build the RPM after generating spec file
-#   --buildroot <dir>       RPM build root directory (default: ~/rpmbuild)
-#   --validate              Validate spec file after generation
-#   --dry-run               Show what would be done without doing it
+# RPM generation utility for zopen community - https://github.com/zopencommunity
 #
 
 #
@@ -24,8 +8,8 @@
 #
 setupMyself()
 {
-  ME=$(basename "$0")
-  MYDIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P )"
+  ME=$(basename $0)
+  MYDIR="$(cd "$(dirname "$0")" > /dev/null 2>&1 && pwd -P)"
   INCDIR="${MYDIR}/../include"
   if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
     echo "Internal Error. Unable to find common.sh file to source." >&2
@@ -54,7 +38,7 @@ VERBOSE=false
 
 # Function to display usage
 usage() {
-    local exit_code="${1:-1}"
+exit_code="${1:-1}"
     cat << EOF
 Usage: $0 <pax_file> [options]
 
@@ -94,8 +78,8 @@ EOF
 
 # Function to extract package name and version from filename
 parse_filename() {
-    local filename="$1"
-    local basename=$(basename "$filename")
+    filename="$1"
+    basename=$(basename "$filename")
     
     # Remove .pax.Z or .pax extension
     basename="${basename%.pax.Z}"
@@ -104,19 +88,19 @@ parse_filename() {
     # Handle .zos suffix commonly used in zopen packages
     basename="${basename%.zos}"
     
-    # Try to extract name and version
+    # Try to extract name and version using sed since BASH_REMATCH is a bashism
     # Pattern 1: NAME-VERSION (e.g., package-1.0, curl-8.10.1.20241001_214340)
-    if [[ "$basename" =~ ^(.+)-([0-9].*)$ ]]; then
-        PKG_NAME="${BASH_REMATCH[1]}"
-        PKG_VERSION="${BASH_REMATCH[2]}"
+    if echo "$basename" | grep -qE '^(.+)-([0-9].*)$'; then
+        PKG_NAME=$(echo "$basename" | sed -E 's/^(.+)-([0-9].*)$/\1/')
+        PKG_VERSION=$(echo "$basename" | sed -E 's/^(.+)-([0-9].*)$/\2/')
     # Pattern 2: NAMEVERSION.suffix (e.g., HAMN110.runnable)
-    elif [[ "$basename" =~ ^([A-Za-z]+)([0-9]+)\.(.+)$ ]]; then
-        PKG_NAME="${BASH_REMATCH[1]}"
-        PKG_VERSION="${BASH_REMATCH[2]}"
+    elif echo "$basename" | grep -qE '^([A-Za-z]+)([0-9]+)\.(.+)$'; then
+        PKG_NAME=$(echo "$basename" | sed -E 's/^([A-Za-z]+)([0-9]+)\.(.+)$/\1/')
+        PKG_VERSION=$(echo "$basename" | sed -E 's/^([A-Za-z]+)([0-9]+)\.(.+)$/\2/')
     # Pattern 3: NAMEVERSION (e.g., HAMN110)
-    elif [[ "$basename" =~ ^([A-Za-z]+)([0-9]+)$ ]]; then
-        PKG_NAME="${BASH_REMATCH[1]}"
-        PKG_VERSION="${BASH_REMATCH[2]}"
+    elif echo "$basename" | grep -qE '^([A-Za-z]+)([0-9]+)$'; then
+        PKG_NAME=$(echo "$basename" | sed -E 's/^([A-Za-z]+)([0-9]+)$/\1/')
+        PKG_VERSION=$(echo "$basename" | sed -E 's/^([A-Za-z]+)([0-9]+)$/\2/')
     else
         PKG_NAME="$basename"
         PKG_VERSION="1.0"
@@ -128,18 +112,20 @@ parse_filename() {
 
 # Function to analyze pax contents and categorize files
 analyze_pax_contents() {
-    local pax_file="$1"
-    local temp_dir=$(mktempdir "pax2rpm")
+    pax_file="$1"
+    temp_dir=$(mktempdir "pax2rpm")
     
     printInfo "# Analyzing pax file structure..."
     
     # Extract pax listing (limit to first 5000 entries for performance/accuracy balance)
-    local pax_listing
-    if [[ "$pax_file" == *.pax.Z ]]; then
-        pax_listing=$(pax -vzf "$pax_file" 2>&1 | head -5000)
-    else
-        pax_listing=$(pax -vf "$pax_file" 2>&1 | head -5000)
-    fi
+    case "$pax_file" in
+        *.pax.Z)
+            pax_listing=$(pax -vzf "$pax_file" 2>&1 | head -5000)
+            ;;
+        *)
+            pax_listing=$(pax -vf "$pax_file" 2>&1 | head -5000)
+            ;;
+    esac
     
     # Check if pax listing failed or is empty
     if [ -z "$pax_listing" ]; then
@@ -147,100 +133,74 @@ analyze_pax_contents() {
         return 0
     fi
     
-    # Initialize arrays for different file types
-    declare -g -A FILE_CATEGORIES
-    FILE_CATEGORIES[bins]=""
-    FILE_CATEGORIES[libs]=""
-    FILE_CATEGORIES[includes]=""
-    FILE_CATEGORIES[configs]=""
-    FILE_CATEGORIES[docs]=""
-    FILE_CATEGORIES[data]=""
-    FILE_CATEGORIES[scripts]=""
-    FILE_CATEGORIES[other]=""
-    
-    declare -g -A DIR_STRUCTURE
-    DIR_STRUCTURE[has_bin]=false
-    DIR_STRUCTURE[has_lib]=false
-    DIR_STRUCTURE[has_include]=false
-    DIR_STRUCTURE[has_etc]=false
-    DIR_STRUCTURE[has_share]=false
-    DIR_STRUCTURE[has_doc]=false
-    DIR_STRUCTURE[has_man]=false
+    # Initialize variables for different file types (removed unused FILE_CATEGORIES)
+    has_bin=false
+    has_lib=false
+    has_include=false
+    has_etc=false
+    has_share=false
+    has_doc=false
+    has_man=false
+    has_scripts=false
+    is_os_layout=false
     
     # Analyze each file
-    while IFS= read -r line; do
+    echo "$pax_listing" | while IFS= read -r line; do
         # Skip empty lines and headers
-        [[ -z "$line" ]] && continue
+        [ -z "$line" ] && continue
         
         # Extract filename (last field in pax -v output)
-        local filename=$(echo "$line" | awk '{print $NF}')
-        [[ -z "$filename" ]] && continue
+        filename=$(echo "$line" | awk '{print $NF}')
+        [ -z "$filename" ] && continue
         
         # Detect directory structure (handles top-level dir if present)
         # Matches: bin/, ./bin/, package-ver/bin/, ./package-ver/bin/
         # Does NOT match: usr/lpp/IBM/bin/ (too deep)
-        if [[ "$filename" =~ ^(\./)?([^/]+/)?bin/ ]]; then
-            DIR_STRUCTURE[has_bin]=true
-        elif [[ "$filename" =~ ^(\./)?([^/]+/)?lib/ ]]; then
-            DIR_STRUCTURE[has_lib]=true
-        elif [[ "$filename" =~ ^(\./)?([^/]+/)?include/ ]]; then
-            DIR_STRUCTURE[has_include]=true
-        elif [[ "$filename" =~ ^(\./)?([^/]+/)?etc/ ]]; then
-            DIR_STRUCTURE[has_etc]=true
-        elif [[ "$filename" =~ ^(\./)?([^/]+/)?share/ ]]; then
-            DIR_STRUCTURE[has_share]=true
-        elif [[ "$filename" =~ ^(\./)?([^/]+/)?(doc|docs)/ ]]; then
-            DIR_STRUCTURE[has_doc]=true
-        elif [[ "$filename" =~ ^(\./)?([^/]+/)?man/ ]]; then
-            DIR_STRUCTURE[has_man]=true
-        elif [[ "$filename" =~ ^(\./)?([^/]+/)?scripts/ ]]; then
-            DIR_STRUCTURE[has_scripts]=true
-        elif [[ "$filename" =~ ^(\./)?usr/lpp/ ]]; then
-            DIR_STRUCTURE[is_os_layout]=true
-        fi
-        
-        # Categorize by file type
-        if [[ "$filename" =~ \.(so|so\.[0-9]+|a|dylib)$ ]]; then
-            FILE_CATEGORIES[libs]+="$filename"$'\n'
-        elif [[ "$filename" =~ \.(h|hpp|hxx)$ ]]; then
-            FILE_CATEGORIES[includes]+="$filename"$'\n'
-        elif [[ "$filename" =~ \.(conf|cfg|ini|yaml|yml|json|xml|properties)$ ]]; then
-            FILE_CATEGORIES[configs]+="$filename"$'\n'
-        elif [[ "$filename" =~ \.(md|txt|pdf|html|htm|README|LICENSE|COPYING|CHANGELOG|AUTHORS)$ ]] || [[ "$filename" =~ (README|LICENSE|COPYING|CHANGELOG|AUTHORS|INSTALL|NEWS)$ ]]; then
-            FILE_CATEGORIES[docs]+="$filename"$'\n'
-        elif [[ "$filename" =~ \.(sh|bash|ksh|pl|py|rb)$ ]] && [[ "$line" =~ ^-r.x ]]; then
-            FILE_CATEGORIES[scripts]+="$filename"$'\n'
-        elif [[ "$line" =~ ^-r.x ]] && [[ ! "$filename" =~ \. ]]; then
-            # Executable without extension (likely binary)
-            FILE_CATEGORIES[bins]+="$filename"$'\n'
-        elif [[ "$filename" =~ \.(dat|data|db|sqlite)$ ]]; then
-            FILE_CATEGORIES[data]+="$filename"$'\n'
-        else
-            FILE_CATEGORIES[other]+="$filename"$'\n'
-        fi
-    done <<< "$pax_listing"
+        case "$filename" in
+            bin/* | */bin/*)
+                has_bin=true ;;
+            lib/* | */lib/*)
+                has_lib=true ;;
+            include/* | */include/*)
+                has_include=true ;;
+            etc/* | */etc/*)
+                has_etc=true ;;
+            share/* | */share/*)
+                has_share=true ;;
+            doc/* | docs/* | */doc/* | */docs/*)
+                has_doc=true ;;
+            man/* | */man/*)
+                has_man=true ;;
+            scripts/* | */scripts/*)
+                has_scripts=true ;;
+            usr/lpp/* | */usr/lpp/*)
+                is_os_layout=true ;;
+        esac
+    done
     
     rm -rf "$temp_dir"
 }
 
 # Function to list contents of pax file
 list_pax_contents() {
-    local pax_file="$1"
-    
-    printHeader "# Pax file contents (first 100 entries):"
-    
-    if [[ "$pax_file" == *.pax.Z ]]; then
-        pax -vzf "$pax_file" 2>&1 | head -100
-    else
-        pax -vf "$pax_file" 2>&1 | head -100
-    fi
-}
+    pax_file="$1"
 
+    printHeader "# Pax file contents (first 100 entries):"
+
+    case "$pax_file" in
+        *.pax.Z)
+            pax -vzf "$pax_file" 2>&1 | head -100
+            ;;
+        *)
+            pax -vf "$pax_file" 2>&1 | head -100
+            ;;
+    esac
+}
 # Function to generate install commands based on analyzed contents
 # Function to generate install commands based on analyzed contents
 # Function to generate install commands based on analyzed contents
 generate_install_commands() {
-    local pax_file="$1"
+pax_file="$1"
     
     cat << 'EOF'
 # Install files based on detected structure
@@ -311,9 +271,9 @@ EOF
 
 # Function to generate spec file
 generate_spec() {
-    local output_file="$1"
-    local source_file="$2"
-    local date=$(date "+%a %b %d %Y")
+output_file="$1"
+source_file="$2"
+date=$(date "+%a %b %d %Y")
     
     # Analyze the pax contents first (populate global DIR_STRUCTURE)
     analyze_pax_contents "$source_file"
@@ -351,17 +311,20 @@ cd %{name}-%{version}
 
 EOF
 
-    if [[ "$source_file" == *.pax.Z ]]; then
-        cat >> "$output_file" << EOF
+    case "$source_file" in
+        *.pax.Z)
+            cat >> "$output_file" << EOF
 # Extract compressed pax archive
 pax -rzf %{_sourcedir}/$(basename "$source_file")
 EOF
-    else
-        cat >> "$output_file" << EOF
+            ;;
+        *)
+            cat >> "$output_file" << EOF
 # Extract pax archive
 pax -rf %{_sourcedir}/$(basename "$source_file")
 EOF
-    fi
+            ;;
+    esac
 
     cat >> "$output_file" << EOF
 
@@ -388,21 +351,21 @@ EOF
     echo "RPM spec file generated: $output_file"
     echo ""
     echo "Detected structure:"
-    [[ "${DIR_STRUCTURE[has_bin]}" == "true" ]] && echo "  ✓ Binaries in bin/"
-    [[ "${DIR_STRUCTURE[has_lib]}" == "true" ]] && echo "  ✓ Libraries in lib/"
-    [[ "${DIR_STRUCTURE[has_include]}" == "true" ]] && echo "  ✓ Headers in include/"
-    [[ "${DIR_STRUCTURE[has_etc]}" == "true" ]] && echo "  ✓ Configuration files in etc/"
-    [[ "${DIR_STRUCTURE[has_share]}" == "true" ]] && echo "  ✓ Data files in share/"
-    [[ "${DIR_STRUCTURE[has_doc]}" == "true" ]] && echo "  ✓ Documentation in doc/"
-    [[ "${DIR_STRUCTURE[has_man]}" == "true" ]] && echo "  ✓ Man pages in man/"
-    [[ "${DIR_STRUCTURE[has_scripts]}" == "true" ]] && echo "  ✓ Scripts in scripts/"
+    [ "$has_bin" = "true" ] && echo "  ✓ Binaries in bin/"
+    [ "$has_lib" = "true" ] && echo "  ✓ Libraries in lib/"
+    [ "$has_include" = "true" ] && echo "  ✓ Headers in include/"
+    [ "$has_etc" = "true" ] && echo "  ✓ Configuration files in etc/"
+    [ "$has_share" = "true" ] && echo "  ✓ Data files in share/"
+    [ "$has_doc" = "true" ] && echo "  ✓ Documentation in doc/"
+    [ "$has_man" = "true" ] && echo "  ✓ Man pages in man/"
+    [ "$has_scripts" = "true" ] && echo "  ✓ Scripts in scripts/"
     
     return 0
 }
 
 # Function to setup rpmbuild directories
 setup_rpmbuild() {
-    local buildroot="$1"
+buildroot="$1"
     
     echo "Setting up RPM build directories in: $buildroot"
     
@@ -420,7 +383,7 @@ EOF
         fi
     else
         # Check if _topdir is already defined and different
-        local existing_topdir=$(grep "%_topdir" "$HOME/.rpmmacros" | awk '{print $2}')
+existing_topdir=$(grep "%_topdir" "$HOME/.rpmmacros" | awk '{print $2}')
         if [ "$existing_topdir" != "$buildroot" ]; then
             echo "Warning: ~/.rpmmacros exists and has _topdir set to '$existing_topdir'."
             echo "The script will use '$buildroot' by overriding it with --define \"_topdir $buildroot\"."
@@ -430,8 +393,8 @@ EOF
 
 # Function to check for required tools
 check_required_tools() {
-    local missing_tools=()
-    local pax_file="$1"
+missing_tools=()
+pax_file="$1"
     
     # Check for pax
     if ! command -v pax &> /dev/null; then
@@ -478,7 +441,7 @@ check_required_tools() {
     fi
     
     # Optional tools check (informational only)
-    local optional_missing=()
+optional_missing=()
     
     if [ "$VALIDATE_SPEC" = true ] && ! command -v rpmlint &> /dev/null; then
         optional_missing+=("rpmlint")
@@ -505,8 +468,8 @@ check_required_tools() {
 
 # Function to validate spec file syntax
 validate_spec_syntax() {
-    local spec_file="$1"
-    local buildroot="$2"
+spec_file="$1"
+buildroot="$2"
     
     echo ""
     echo "=========================================="
@@ -523,7 +486,7 @@ validate_spec_syntax() {
     # Try to use rpmbuild -bp (prep stage) to validate syntax
     # This will check syntax without actually building
     # Use --nodeps to check syntax/prep logic without requiring local RPM DB to have all deps
-    local temp_output=$(mktemp)
+temp_output=$(mktemp)
     if rpmbuild --define "_topdir $buildroot" -bp --nodeps "$spec_file" &> "$temp_output"; then
         echo "✓ Spec file syntax is valid"
         rm -f "$temp_output"
@@ -545,7 +508,7 @@ validate_spec_syntax() {
 
 # Function to run rpmlint on spec file
 run_rpmlint() {
-    local spec_file="$1"
+spec_file="$1"
     
     echo ""
     echo "=========================================="
@@ -561,16 +524,16 @@ run_rpmlint() {
     fi
     
     # Run rpmlint
-    local rpmlint_output
+rpmlint_output
     rpmlint_output=$(rpmlint "$spec_file" 2>&1 || true)
-    local rpmlint_exit=$?
+rpmlint_exit=$?
     
     echo "$rpmlint_output"
     echo ""
     
     # Count errors and warnings
-    local errors=$(echo "$rpmlint_output" | grep -c "E:" || true)
-    local warnings=$(echo "$rpmlint_output" | grep -c "W:" || true)
+errors=$(echo "$rpmlint_output" | grep -c "E:" || true)
+warnings=$(echo "$rpmlint_output" | grep -c "W:" || true)
     
     if [ $errors -gt 0 ]; then
         echo "⚠ Found $errors error(s) and $warnings warning(s)"
@@ -588,10 +551,10 @@ run_rpmlint() {
 
 # Function to validate generated spec file
 validate_spec_file() {
-    local spec_file="$1"
-    local pax_file="$2"
-    local buildroot="$3"
-    local validation_failed=false
+spec_file="$1"
+pax_file="$2"
+buildroot="$3"
+validation_failed=false
     
     echo ""
     echo "=========================================="
@@ -602,7 +565,7 @@ validate_spec_file() {
     setup_rpmbuild "$buildroot"
     
     # Copy pax file to SOURCES if not already there
-    local source_name=$(basename "$pax_file")
+source_name=$(basename "$pax_file")
     if [ ! -f "$buildroot/SOURCES/$source_name" ] || [ "$pax_file" -nt "$buildroot/SOURCES/$source_name" ]; then
         echo "Copying source file to $buildroot/SOURCES/$source_name for validation"
         cp "$pax_file" "$buildroot/SOURCES/"
@@ -640,7 +603,7 @@ validate_spec_file() {
 
 # Function to perform dry run
 perform_dry_run() {
-    local pax_file="$1"
+pax_file="$1"
     
     echo ""
     echo "=========================================="
@@ -675,9 +638,9 @@ perform_dry_run() {
 
 # Function to build RPM
 build_rpm() {
-    local spec_file="$1"
-    local pax_file="$2"
-    local buildroot="$3"
+spec_file="$1"
+pax_file="$2"
+buildroot="$3"
     
     echo ""
     echo "=========================================="
@@ -689,7 +652,7 @@ build_rpm() {
     setup_rpmbuild "$buildroot"
     
     # Copy pax file to SOURCES
-    local source_name=$(basename "$pax_file")
+source_name=$(basename "$pax_file")
     echo "Copying source file to $buildroot/SOURCES/$source_name"
     cp "$pax_file" "$buildroot/SOURCES/"
     
@@ -743,11 +706,11 @@ main() {
         usage
     fi
     
-    if [ "$1" == "--help" ]; then
+    if [ "$1" = "--help" ]; then
         usage 0
     fi
 
-    if [ "$1" == "--version" ]; then
+    if [ "$1" = "--version" ]; then
         if [ -x "${MYDIR}/zopen-version" ]; then
             "${MYDIR}/zopen-version" "${ME}"
         else
@@ -777,16 +740,20 @@ main() {
                 shift 2
                 ;;
             --version)
-                if [ -z "$2" ] || [[ "$2" == --* ]]; then
-                    if [ -x "${MYDIR}/zopen-version" ]; then
-                        "${MYDIR}/zopen-version" "${ME}"
-                    else
-                        echo "${ME} version $(cat "${INCDIR}/zopen_version" 2>/dev/null || echo "unknown")"
-                    fi
-                    exit 0
-                fi
-                PKG_VERSION="$2"
-                shift 2
+                case "$2" in
+                    "" | --*)
+                        if [ -x "${MYDIR}/zopen-version" ]; then
+                            "${MYDIR}/zopen-version" "${ME}"
+                        else
+                            echo "${ME} version $(cat "${INCDIR}/zopen_version" 2>/dev/null || echo "unknown")"
+                        fi
+                        exit 0
+                        ;;
+                    *)
+                        PKG_VERSION="$2"
+                        shift 2
+                        ;;
+                esac
                 ;;
             --pkg-version)
                 [ -n "$2" ] || { echo "Error: --pkg-version requires a value" >&2; usage; }
