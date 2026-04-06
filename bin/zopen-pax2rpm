@@ -369,7 +369,7 @@ buildroot="$1"
     
     echo "Setting up RPM build directories in: $buildroot"
     
-    mkdir -p "$buildroot"/{BUILD,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS}
+    mkdir -p "$buildroot/BUILD" "$buildroot/BUILDROOT" "$buildroot/RPMS" "$buildroot/SOURCES" "$buildroot/SPECS" "$buildroot/SRPMS"
     
     if [ ! -f "$HOME/.rpmmacros" ]; then
         if touch "$HOME/.rpmmacros" 2>/dev/null; then
@@ -393,12 +393,12 @@ existing_topdir=$(grep "%_topdir" "$HOME/.rpmmacros" | awk '{print $2}')
 
 # Function to check for required tools
 check_required_tools() {
-missing_tools=()
-pax_file="$1"
+    missing_tools=""
+    pax_file="$1"
     
     # Check for pax
-    if ! command -v pax &> /dev/null; then
-        missing_tools+=("pax")
+    if ! command -v pax > /dev/null 2>&1; then
+        missing_tools="${missing_tools} pax"
     fi
     
     # Check for rpmbuild if building or validating
@@ -406,18 +406,18 @@ pax_file="$1"
         if [ "$VERBOSE" = true ]; then
             echo "DEBUG: Current PATH is $PATH" >&2
         fi
-        if ! command -v rpmbuild &> /dev/null; then
-            missing_tools+=("rpmbuild")
+        if ! command -v rpmbuild > /dev/null 2>&1; then
+            missing_tools="${missing_tools} rpmbuild"
         fi
     fi
     
-    if [ ${#missing_tools[@]} -gt 0 ]; then
+    if [ -n "$missing_tools" ]; then
         echo "" >&2
         printError "Missing Required Tools"
         echo "The following tools are required but not found:" >&2
         echo "" >&2
         
-        for tool in "${missing_tools[@]}"; do
+        for tool in $missing_tools; do
             echo "  ✗ $tool" >&2
             
             case "$tool" in
@@ -441,16 +441,16 @@ pax_file="$1"
     fi
     
     # Optional tools check (informational only)
-optional_missing=()
+    optional_missing=""
     
-    if [ "$VALIDATE_SPEC" = true ] && ! command -v rpmlint &> /dev/null; then
-        optional_missing+=("rpmlint")
+    if [ "$VALIDATE_SPEC" = true ] && ! command -v rpmlint > /dev/null 2>&1; then
+        optional_missing="${optional_missing} rpmlint"
     fi
     
-    if [ ${#optional_missing[@]} -gt 0 ]; then
+    if [ -n "$optional_missing" ]; then
         echo "" >&2
         echo "Note: Optional tools not found (validation will be limited):" >&2
-        for tool in "${optional_missing[@]}"; do
+        for tool in $optional_missing; do
             echo "  - $tool (for enhanced spec file quality checks)" >&2
             case "$tool" in
                 rpmlint)
@@ -468,26 +468,26 @@ optional_missing=()
 
 # Function to validate spec file syntax
 validate_spec_syntax() {
-spec_file="$1"
-buildroot="$2"
-    
+    spec_file="$1"
+    buildroot="$2"
+
     echo ""
     echo "=========================================="
     echo "Validating spec file syntax..."
     echo "=========================================="
     echo ""
-    
+
     # Check if rpmbuild is available
-    if ! command -v rpmbuild &> /dev/null; then
+    if ! command -v rpmbuild > /dev/null 2>&1; then
         echo "Warning: rpmbuild not found, skipping syntax validation" >&2
         return 0
     fi
-    
+
     # Try to use rpmbuild -bp (prep stage) to validate syntax
     # This will check syntax without actually building
     # Use --nodeps to check syntax/prep logic without requiring local RPM DB to have all deps
-temp_output=$(mktemp)
-    if rpmbuild --define "_topdir $buildroot" -bp --nodeps "$spec_file" &> "$temp_output"; then
+    temp_output=$(mktemp)
+    if rpmbuild --define "_topdir $buildroot" -bp --nodeps "$spec_file" > "$temp_output" 2>&1; then
         echo "✓ Spec file syntax is valid"
         rm -f "$temp_output"
         return 0
@@ -508,33 +508,32 @@ temp_output=$(mktemp)
 
 # Function to run rpmlint on spec file
 run_rpmlint() {
-spec_file="$1"
-    
+    spec_file="$1"
+
     echo ""
     echo "=========================================="
     echo "Running rpmlint checks..."
     echo "=========================================="
     echo ""
-    
+
     # Check if rpmlint is available
-    if ! command -v rpmlint &> /dev/null; then
+    if ! command -v rpmlint > /dev/null 2>&1; then
         echo "Note: rpmlint not found, skipping quality checks"
         echo "Install rpmlint for additional spec file validation"
         return 0
     fi
-    
+
     # Run rpmlint
-rpmlint_output
     rpmlint_output=$(rpmlint "$spec_file" 2>&1 || true)
-rpmlint_exit=$?
+    rpmlint_exit=$?
     
     echo "$rpmlint_output"
     echo ""
-    
+
     # Count errors and warnings
-errors=$(echo "$rpmlint_output" | grep -c "E:" || true)
-warnings=$(echo "$rpmlint_output" | grep -c "W:" || true)
-    
+    errors=$(echo "$rpmlint_output" | grep -c "E:" || true)
+    warnings=$(echo "$rpmlint_output" | grep -c "W:" || true)
+
     if [ $errors -gt 0 ]; then
         echo "⚠ Found $errors error(s) and $warnings warning(s)"
         echo "Please review and fix errors before building"
@@ -706,18 +705,19 @@ main() {
         usage
     fi
     
-    if [ "$1" = "--help" ]; then
-        usage 0
-    fi
-
-    if [ "$1" = "--version" ]; then
-        if [ -x "${MYDIR}/zopen-version" ]; then
-            "${MYDIR}/zopen-version" "${ME}"
-        else
-            echo "${ME} version $(cat "${INCDIR}/zopen_version" 2>/dev/null || echo "unknown")"
-        fi
-        exit 0
-    fi
+    case "$1" in
+        --help)
+            usage 0
+            ;;
+        --version)
+            if [ -x "${MYDIR}/zopen-version" ]; then
+                "${MYDIR}/zopen-version" "${ME}"
+            else
+                echo "${ME} version $(cat "${INCDIR}/zopen_version" 2>/dev/null || echo "unknown")"
+            fi
+            exit 0
+            ;;
+    esac
 
     PAX_FILE="$1"
     shift
