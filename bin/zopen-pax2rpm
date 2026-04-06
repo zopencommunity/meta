@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# RPM generation utility for zopen community - https://github.com/zopencommunity
+# RPM generation from the PAX generated file utility for zopen
 #
 
 #
