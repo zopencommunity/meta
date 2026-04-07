@@ -385,8 +385,8 @@ EOF
         fi
     else
         # Check if _topdir is already defined and different
-existing_topdir=$(grep "%_topdir" "$HOME/.rpmmacros" | awk '{print $2}')
-        if [ "$existing_topdir" != "$buildroot" ]; then
+        existing_topdir=$(grep "%_topdir" "$HOME/.rpmmacros" | awk '{print $2}')
+        if [ -n "$existing_topdir" ] && [ "$existing_topdir" != "$buildroot" ]; then
             echo "Warning: ~/.rpmmacros exists and has _topdir set to '$existing_topdir'."
             echo "The script will use '$buildroot' by overriding it with --define \"_topdir $buildroot\"."
         fi
