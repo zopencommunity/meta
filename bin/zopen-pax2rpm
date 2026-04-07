@@ -145,7 +145,7 @@ analyze_pax_contents() {
     is_os_layout=false
     
     # Analyze each file
-    echo "$pax_listing" | while IFS= read -r line; do
+    while IFS= read -r line; do
         # Skip empty lines and headers
         [ -z "$line" ] && continue
         
@@ -176,7 +176,9 @@ analyze_pax_contents() {
             usr/lpp/* | */usr/lpp/*)
                 is_os_layout=true ;;
         esac
-    done
+    done << EOF
+$pax_listing
+EOF
     
     rm -rf "$temp_dir"
 }
