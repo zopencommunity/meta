@@ -22,7 +22,15 @@ setupMyself
 # Default values
 RELEASE="1"
 LICENSE="Proprietary"
-BUILD_ARCH=$(uname -m 2>/dev/null || echo "s390x")
+BUILD_ARCH=$(rpm --eval "%{_target_cpu}" 2>/dev/null || uname -m 2>/dev/null || echo "s390x")
+
+# On z/OS, uname -m returns numeric machine types (e.g., 8561, 3931).
+# RPM expects 's390x' for the build architecture.
+if [ "$(uname -s)" = "OS/390" ]; then
+  case "${BUILD_ARCH}" in
+    [0-9]*) BUILD_ARCH="s390x" ;;
+  esac
+fi
 
 # Get current user safely for packager info
 CURRENT_USER="${USER:-$(whoami 2>/dev/null || echo "zopen-community")}"
