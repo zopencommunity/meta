@@ -285,7 +285,6 @@ fi
 
 build_system_config=""
 custom_functions=""
-build_system=""
 
 if [ "$port_type" = "BARE" ]; then
     build_system="N/A" # Set here because it's only applicable for BARE
