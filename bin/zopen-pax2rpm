@@ -309,6 +309,17 @@ Source0:        $(basename "$source_file")
 BuildArch:      ${BUILD_ARCH}
 ${REQUIRES:+Requires:       $REQUIRES}
 
+EOF
+
+    if [ "$(uname -s)" = "OS/390" ]; then
+        cat >> "$output_file" << EOF
+# On z/OS, disable broken post-install processing (stripping, etc.)
+%define __os_install_post %{nil}
+
+EOF
+    fi
+
+    cat >> "$output_file" << EOF
 %description
 ${DESCRIPTION}
 
