@@ -545,7 +545,62 @@ export ZOPEN_INSTALL="zopen_custom_install"
 EOF
 )
         fi
-        custom_functions=$(cat <<'EOF'
+        if [ "$c_extensions" = "true" ]; then
+          custom_functions=$(cat <<'EOF'
+# Merge LIBS into LDFLAGS so Python's build system picks up linked libraries
+zopen_init() {
+  export LDFLAGS="$LDFLAGS $LIBS"
+}
+
+zopen_custom_build() {
+  python -m venv .venv
+  . .venv/bin/activate
+  pip install setuptools build installer wheel
+  rm -rf dist
+  python -m build --wheel
+  zopen_build_result=$?
+  deactivate
+  return "${zopen_build_result}"
+}
+
+zopen_custom_check() {
+  . .venv/bin/activate
+  pip install pytest
+  # Install the built wheel so C extensions (.so files) are available
+  pip install dist/*.whl
+  python -m pytest -v
+  zopen_check_result=$?
+  deactivate
+  return "${zopen_check_result}"
+}
+
+zopen_custom_install() {
+  mkdir -p "${ZOPEN_INSTALL_DIR}/lib/python"
+  mkdir -p "${ZOPEN_INSTALL_DIR}/bin"
+  . .venv/bin/activate
+  # Install the built wheel to the target directory
+  pip install --no-deps --target="${ZOPEN_INSTALL_DIR}/lib/python" dist/*.whl
+  # Install runtime dependencies
+  # pip install --target="${ZOPEN_INSTALL_DIR}/lib/python" -r requirements.txt
+  # Symlink any scripts into bin/ so they are on PATH
+  for f in "${ZOPEN_INSTALL_DIR}/lib/python/bin/"*; do
+    [ -e "$f" ] || continue
+    ln -sf "../lib/python/bin/$(basename "$f")" "${ZOPEN_INSTALL_DIR}/bin/$(basename "$f")"
+  done
+  deactivate
+}
+
+zopen_append_to_env() {
+  cat <<END
+# Add the zopen installed packages to PYTHONPATH
+PYTHONPATH="\${PYTHONPATH}:\${PWD}/lib/python"
+export PYTHONPATH="\$(deleteDuplicateEntries "\$PYTHONPATH" ":")"
+END
+}
+EOF
+)
+        else
+          custom_functions=$(cat <<'EOF'
 zopen_custom_build() {
   python -m venv .venv
   . .venv/bin/activate
@@ -591,6 +646,7 @@ END
 }
 EOF
 )
+        fi
     ;;
     esac
 fi
