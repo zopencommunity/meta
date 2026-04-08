@@ -722,7 +722,7 @@ if [ "$port_type" = "BUILD" ]; then
       "Gradle") auto_dep="gradle check_java" ;;
       "Maven") auto_dep="maven check_java" ;;
       "Meson") auto_dep="meson" ;;
-      "Python") auto_dep="check_python" ;;
+      "Python") auto_dep="check_python grep" ;;  # grep needed for zopen_check_results (z/OS grep lacks -oE)
     esac
 
     if [ -n "$auto_dep" ]; then
