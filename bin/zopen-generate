@@ -50,6 +50,7 @@ printSyntax()
   echo "  --license LICENSE           License name" >&2
   echo "  --type TYPE                 Port type: 'BUILD' (from source) or 'BARE' (binary download)" >&2
   echo "  --build-system SYSTEM       Build system if type is BUILD (GNU Make, CMake, Gradle, Maven, etc.)" >&2
+  echo "  --c-extensions              Python project contains C extensions (requires C compiler)" >&2
   echo "  --stable-url URL            Stable release source URL" >&2
   echo "  --stable-deps DEPS          Stable build dependencies (space-delimited)" >&2
   echo "  --dev-url URL               Dev-line source URL" >&2
@@ -77,6 +78,7 @@ runtimedeps=""
 force=false
 non_interactive=false
 json=false
+c_extensions=""
 
 # Parse command-line arguments. If an argument is not provided, the corresponding variable remains empty.
 while [ $# -gt 0 ]; do
@@ -128,6 +130,7 @@ while [ $# -gt 0 ]; do
     --license) shift; license_name="$1";;
     --type) shift; port_type="$1";;
     --build-system) shift; build_system="$1";;
+    --c-extensions) c_extensions=true;;
     --stable-url) shift; stablePath="$1";;
     --stable-deps) shift; stableDeps="$1";;
     --dev-url) shift; devPath="$1";;
@@ -503,19 +506,51 @@ EOF
 )
     ;;
       "Python")
-        build_system_config=$(cat <<'EOF'
-### Settings for Python build system
+        # Ask about C extensions if not already specified
+        if [ -z "$c_extensions" ]; then
+          if $non_interactive; then
+            c_extensions=false
+          else
+            c_ext_input=$(getInputOrArg "" "Does this Python project contain C extensions? (y/n) [default: n]")
+            c_ext_upper=$(echo "$c_ext_input" | tr '[:lower:]' '[:upper:]')
+            if [ "$c_ext_upper" = "Y" ] || [ "$c_ext_upper" = "YES" ]; then
+              c_extensions=true
+            else
+              c_extensions=false
+            fi
+          fi
+        fi
+
+        if [ "$c_extensions" = "true" ]; then
+          build_system_config=$(cat <<'EOF'
+### Settings for Python build system (with C extensions)
 export ZOPEN_CONFIGURE="skip"
-export ZOPEN_CHECK="zopen_custom_check"
 export ZOPEN_MAKE="zopen_custom_build"
+export ZOPEN_MAKE_MINIMAL="yes"
+export ZOPEN_CHECK="zopen_custom_check"
+export ZOPEN_CHECK_MINIMAL="yes"
 export ZOPEN_INSTALL="zopen_custom_install"
 EOF
 )
+        else
+          build_system_config=$(cat <<'EOF'
+### Settings for Python build system
+export ZOPEN_CONFIGURE="skip"
+export ZOPEN_COMP="skip"
+export ZOPEN_MAKE="zopen_custom_build"
+export ZOPEN_MAKE_MINIMAL="yes"
+export ZOPEN_CHECK="zopen_custom_check"
+export ZOPEN_CHECK_MINIMAL="yes"
+export ZOPEN_INSTALL="zopen_custom_install"
+EOF
+)
+        fi
         custom_functions=$(cat <<'EOF'
 zopen_custom_build() {
   python -m venv .venv
   . .venv/bin/activate
-  pip install --upgrade pip build
+  pip install setuptools build installer wheel
+  rm -rf dist
   python -m build --wheel
   zopen_build_result=$?
   deactivate
@@ -524,32 +559,72 @@ zopen_custom_build() {
 
 zopen_custom_check() {
   . .venv/bin/activate
-  # Add test commands here, e.g., pytest
+  pip install pytest
+  python -m pytest -v
   zopen_check_result=$?
   deactivate
   return "${zopen_check_result}"
 }
 
 zopen_custom_install() {
+  mkdir -p "${ZOPEN_INSTALL_DIR}/lib/python"
+  mkdir -p "${ZOPEN_INSTALL_DIR}/bin"
   . .venv/bin/activate
   # Install the built wheel to the target directory
   pip install --no-deps --target="${ZOPEN_INSTALL_DIR}/lib/python" dist/*.whl
-  # Example: Install dependencies from a requirements file
+  # Install runtime dependencies
   # pip install --target="${ZOPEN_INSTALL_DIR}/lib/python" -r requirements.txt
+  # Symlink any scripts into bin/ so they are on PATH
+  for f in "${ZOPEN_INSTALL_DIR}/lib/python/bin/"*; do
+    [ -e "$f" ] || continue
+    ln -sf "../lib/python/bin/$(basename "$f")" "${ZOPEN_INSTALL_DIR}/bin/$(basename "$f")"
+  done
   deactivate
 }
 
 zopen_append_to_env() {
   cat <<END
 # Add the zopen installed packages to PYTHONPATH
-PYTHONPATH="${PYTHONPATH}:\${PWD}/lib/python"
-export PYTHONPATH="$(deleteDuplicateEntries "$PYTHONPATH" ":")"
+PYTHONPATH="\${PYTHONPATH}:\${PWD}/lib/python"
+export PYTHONPATH="\$(deleteDuplicateEntries "\$PYTHONPATH" ":")"
 END
 }
 EOF
 )
     ;;
     esac
+fi
+
+# Set zopen_check_results based on build system
+SQ="'"
+if [ "${build_system}" = "Python" ]; then
+  check_results_func="zopen_check_results() {
+  dir=\"\$1\"
+  pfx=\"\$2\"
+  chk=\"\$1/\$2_check.log\"
+  # Parse pytest output: \"X passed, Y failed\" or \"X passed\"
+  passed=\$(grep -oE \"[0-9]+ passed\" \"\${chk}\" | awk ${SQ}{print \$1}${SQ})
+  failed=\$(grep -oE \"[0-9]+ failed\" \"\${chk}\" | awk ${SQ}{print \$1}${SQ})
+  errors=\$(grep -oE \"[0-9]+ error\" \"\${chk}\" | awk ${SQ}{print \$1}${SQ})
+  passed=\${passed:-0}
+  failed=\${failed:-0}
+  errors=\${errors:-0}
+  totalTests=\$((passed + failed + errors))
+  echo \"actualFailures:\$((failed + errors))\"
+  echo \"totalTests:\${totalTests}\"
+  echo \"expectedFailures:0\"
+}"
+else
+  check_results_func="zopen_check_results() {
+  dir=\"\$1\"
+  pfx=\"\$2\"
+  chk=\"\$1/\$2_check.log\"
+  # Add logic to extract the test results here:
+  echo \"actualFailures:0\"
+  echo \"totalTests:1\"
+  echo \"expectedFailures:0\"
+  echo \"expectedTotalTests:1\"
+}"
 fi
 
 stablePath=$(getInputOrArg "$stablePath" "Enter ${name}'s stable release source url:")
@@ -673,16 +748,7 @@ ${build_system_config}
 ### Required user-supplied functions
 ###
 
-zopen_check_results() {
-  dir=\"\$1\" 
-  pfx=\"\$2\" 
-  chk=\"\$1/\$2_check.log\"
-  # Add logic to extract the test results here:
-  echo \"actualFailures:0\" 
-  echo \"totalTests:1\" 
-  echo \"expectedFailures:0\"
-  echo \"expectedTotalTests:1\"
-}
+${check_results_func}
 
 zopen_get_version() {
   ${get_version_impl}
