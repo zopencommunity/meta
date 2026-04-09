@@ -18,35 +18,49 @@ setupMyself
 
 printSyntax()
 {
-  echo "${ME} - Publish zopen package release to GitHub."
+  echo "${ME} - Publish zopen package release to GitHub and/or Pulp PyPI."
   echo ""
   echo "Usage: ${ME} [OPTION] -p PAX_FILE -m METADATA_FILE -g TAG"
+  echo "       ${ME} [OPTION] --whl WHL_FILE --pulp-url URL"
   echo ""
   echo "Options:"
   echo "  -h, --help              print this help"
   echo "  -v, --verbose           run in verbose mode."
   echo "  -f, --force             Force overwrite release if tag exists."
-  echo "  -p, --pax-file PAX_FILE   Path to the pax.Z file (required)"
+  echo "  -p, --pax-file PAX_FILE   Path to the pax.Z file (required for GitHub publish)"
   echo "  -m, --metadata-file METADATA_FILE"
-  echo "                          Path to the metadata.json file (required)"
-  echo "  -g, --tag TAG             Tag name for the release (required)"
+  echo "                          Path to the metadata.json file (required for GitHub publish)"
+  echo "  -g, --tag TAG             Tag name for the release (required for GitHub publish)"
   echo "                          e.g., DEV_mypackage_12345"
   echo "  -r, --repo REPO_URL     GitHub repository URL (optional, overrides metadata.json)"
   echo "                          e.g., https://github.com/zopencommunity/xzport.git"
   echo "  -d, --description TEXT  Description for the GitHub release (optional, from metadata.json 'summary' if omitted)"
   echo "  -b, --build-line LINE   Build line (DEV or STABLE) (optional, from metadata.json 'buildline' if omitted)"
   echo "  -t, --github-token TOKEN"
-  echo "                          GitHub Personal Access Token (required, or set GITHUB_TOKEN env var)"
+  echo "                          GitHub Personal Access Token (required for GitHub publish, or set GITHUB_TOKEN env var)"
   echo "  -o, --github-org ORG     GitHub Organization (default: zopencommunity)"
   echo "  -l, --latest            Mark release as 'Latest' (not pre-release)."
+  echo "  -w, --whl WHL_FILE     Path to a Python wheel file to publish to Pulp PyPI"
+  echo "  --pulp-url URL          Pulp PyPI repository URL (e.g., http://host:8080/pypi/repo/)"
+  echo "  --pulp-user USER        Pulp username (or set PULP_USER env var, default: admin)"
+  echo "  --pulp-password PASS    Pulp password (or set PULP_PASSWORD env var)"
   echo "     --version            print version"
   echo ""
   echo "Environment Variables:"
   echo "  GITHUB_TOKEN            GitHub Personal Access Token (alternative to --github-token)"
+  echo "  PULP_URL                Pulp PyPI repository URL (alternative to --pulp-url)"
+  echo "  PULP_USER               Pulp username (alternative to --pulp-user)"
+  echo "  PULP_PASSWORD           Pulp password (alternative to --pulp-password)"
   echo ""
-  echo "Example:"
-  echo "  zopen-publish -f -p install/mypackage.zos.pax.Z -m metadata.json -g DEV_mypackage_12345 -t <your_github_token>"
-  echo "  zopen-publish -v -f -p install/mypackage.zos.pax.Z -m metadata.json -r https://github.com/zopencommunity/override-repo.git -d \"My custom release description\" -b DEV -g REL-1.0.1 -t <your_github_token> -l"
+  echo "Examples:"
+  echo "  # Publish pax to GitHub"
+  echo "  zopen-publish -f -p install/mypackage.zos.pax.Z -m metadata.json -g DEV_mypackage_12345 -t <token>"
+  echo ""
+  echo "  # Publish wheel to Pulp PyPI"
+  echo "  zopen-publish --whl dist/mypackage-1.0-py3-none-any.whl --pulp-url http://host:8080/pypi/zopen/"
+  echo ""
+  echo "  # Publish both"
+  echo "  zopen-publish -f -p install/mypackage.zos.pax.Z -m metadata.json -g TAG -t <token> --whl dist/*.whl --pulp-url http://host:8080/pypi/zopen/"
 }
 
 checkDependencies() {
@@ -122,8 +136,24 @@ processOptions() {
         RELEASE_TAG_OPT="$2"
         shift
         ;;
+      "-w" | "--whl")
+        WHL_FILE="$2"
+        shift
+        ;;
+      "--pulp-url")
+        PULP_URL_OPT="$2"
+        shift
+        ;;
+      "--pulp-user")
+        PULP_USER_OPT="$2"
+        shift
+        ;;
+      "--pulp-password")
+        PULP_PASSWORD_OPT="$2"
+        shift
+        ;;
       "--version")
-        zopen-version "${ME}" 
+        zopen-version "${ME}"
         exit 0
         ;;
       -*)
@@ -132,7 +162,7 @@ processOptions() {
         exit 1
         ;;
       *)
-        printError "Unexpected argument '$1'" 
+        printError "Unexpected argument '$1'"
         printSyntax
         exit 1
         ;;
@@ -140,38 +170,94 @@ processOptions() {
     shift
   done
 
-  if [ -z "$PAX_FILE" ] || [ -z "$METADATA_FILE" ] || [ -z "$RELEASE_TAG_OPT" ]; then
-    printError "Missing required options: -p PAX_FILE, -m METADATA_FILE, and -g TAG are required."
+  # Determine which publish modes are active
+  PUBLISH_GITHUB=false
+  PUBLISH_PULP=false
+
+  if [ -n "$PAX_FILE" ] || [ -n "$METADATA_FILE" ] || [ -n "$RELEASE_TAG_OPT" ]; then
+    PUBLISH_GITHUB=true
+  fi
+
+  if [ -n "$WHL_FILE" ] || [ -n "$PULP_URL_OPT" ] || [ -n "$PULP_URL" ]; then
+    PUBLISH_PULP=true
+  fi
+
+  if ! ${PUBLISH_GITHUB} && ! ${PUBLISH_PULP}; then
+    printError "No publish target specified. Provide -p/-m/-g for GitHub or --whl/--pulp-url for Pulp."
     printSyntax
     exit 1
   fi
 
-  if [ ! -f "$PAX_FILE" ]; then
-    printError "PAX file not found: $PAX_FILE"
-    exit 1
-  fi
+  # Validate GitHub publish options
+  if ${PUBLISH_GITHUB}; then
+    if [ -z "$PAX_FILE" ] || [ -z "$METADATA_FILE" ] || [ -z "$RELEASE_TAG_OPT" ]; then
+      printError "GitHub publish requires: -p PAX_FILE, -m METADATA_FILE, and -g TAG."
+      printSyntax
+      exit 1
+    fi
 
-  if [ ! -f "$METADATA_FILE" ]; then
-    printError "Metadata file not found: $METADATA_FILE"
-    exit 1
-  fi
+    if [ ! -f "$PAX_FILE" ]; then
+      printError "PAX file not found: $PAX_FILE"
+      exit 1
+    fi
 
-  if [ -z "$GITHUB_TOKEN_OPT" ] && [ -z "$GITHUB_TOKEN" ]; then
+    if [ ! -f "$METADATA_FILE" ]; then
+      printError "Metadata file not found: $METADATA_FILE"
+      exit 1
+    fi
+
+    if [ -z "$GITHUB_TOKEN_OPT" ] && [ -z "$GITHUB_TOKEN" ]; then
       printError "GitHub token is required. Please provide it via --github-token option or GITHUB_TOKEN environment variable."
       printSyntax
       exit 1
+    fi
+
+    if [ -n "$GITHUB_TOKEN_OPT" ]; then
+      export GITHUB_TOKEN="$GITHUB_TOKEN_OPT"
+    fi
+
+    if [ -z "$GITHUB_ORGANIZATION" ]; then
+      export GITHUB_ORGANIZATION="zopencommunity"
+    fi
   fi
 
-  if [ -n "$GITHUB_TOKEN_OPT" ]; then
-    export GITHUB_TOKEN="$GITHUB_TOKEN_OPT"
+  # Validate Pulp publish options
+  if ${PUBLISH_PULP}; then
+    if [ -z "$WHL_FILE" ]; then
+      printError "Pulp publish requires: --whl WHL_FILE"
+      exit 1
+    fi
+
+    if [ ! -f "$WHL_FILE" ]; then
+      printError "Wheel file not found: $WHL_FILE"
+      exit 1
+    fi
+
+    # Resolve Pulp URL from option or env var
+    if [ -n "$PULP_URL_OPT" ]; then
+      PULP_URL="$PULP_URL_OPT"
+    fi
+    if [ -z "$PULP_URL" ]; then
+      printError "Pulp URL is required. Please provide it via --pulp-url or PULP_URL environment variable."
+      exit 1
+    fi
+
+    # Resolve Pulp credentials
+    if [ -n "$PULP_USER_OPT" ]; then
+      PULP_USER="$PULP_USER_OPT"
+    fi
+    : "${PULP_USER:=admin}"
+
+    if [ -n "$PULP_PASSWORD_OPT" ]; then
+      PULP_PASSWORD="$PULP_PASSWORD_OPT"
+    fi
+    if [ -z "$PULP_PASSWORD" ]; then
+      printError "Pulp password is required. Please provide it via --pulp-password or PULP_PASSWORD environment variable."
+      exit 1
+    fi
   fi
 
-
-  if [ -z "$GITHUB_ORGANIZATION" ]; then
-    export GITHUB_ORGANIZATION="zopencommunity" # Default organization
-  fi
-
-  export FORCE_OVERWRITE 
+  export FORCE_OVERWRITE
 }
 
 # --- GitHub API Functions ---
@@ -449,22 +535,100 @@ publishRelease() {
 }
 
 
+# --- Pulp PyPI Functions ---
+
+publishToPulp() {
+  whl_basename=$(basename "${WHL_FILE}")
+  # Ensure URL ends with /legacy/
+  pulp_upload_url="${PULP_URL%/}"
+  case "$pulp_upload_url" in
+    */legacy) pulp_upload_url="${pulp_upload_url}/" ;;
+    */legacy/) ;;
+    *) pulp_upload_url="${pulp_upload_url}/legacy/" ;;
+  esac
+
+  printInfo "Uploading ${whl_basename} to ${pulp_upload_url}"
+
+  UPLOAD_RESPONSE=$(curl -s -w "\n%{http_code}" \
+    -u "${PULP_USER}:${PULP_PASSWORD}" \
+    -F "content=@${WHL_FILE}" \
+    -F ":action=file_upload" \
+    -F "filetype=bdist_wheel" \
+    "${pulp_upload_url}" 2>&1)
+
+  http_code=$(echo "$UPLOAD_RESPONSE" | tail -1)
+  response_body=$(echo "$UPLOAD_RESPONSE" | sed '$d')
+
+  if [ "$http_code" != "200" ] && [ "$http_code" != "201" ]; then
+    printSoftError "Pulp upload failed with HTTP ${http_code}"
+    printSoftError "Response: ${response_body}"
+    return 1
+  fi
+
+  # Check if the response contains a task URL (Pulp async processing)
+  task_url=$(echo "$response_body" | jq -r '.task // empty' 2>/dev/null)
+  if [ -n "$task_url" ]; then
+    printVerbose "Pulp task created: ${task_url}"
+    # Poll task status
+    pulp_base_url="${PULP_URL%/pypi*}"
+    task_full_url="${pulp_base_url}${task_url}"
+    printVerbose "Checking task status at: ${task_full_url}"
+
+    retries=0
+    while [ $retries -lt 30 ]; do
+      task_response=$(curl -s -u "${PULP_USER}:${PULP_PASSWORD}" "${task_full_url}" 2>&1)
+      task_state=$(echo "$task_response" | jq -r '.state // empty' 2>/dev/null)
+
+      case "$task_state" in
+        completed)
+          printInfo "Wheel ${whl_basename} published to Pulp successfully."
+          return 0
+          ;;
+        failed)
+          task_error=$(echo "$task_response" | jq -r '.error.description // empty' 2>/dev/null)
+          printSoftError "Pulp task failed: ${task_error}"
+          return 1
+          ;;
+        canceled)
+          printSoftError "Pulp task was canceled."
+          return 1
+          ;;
+      esac
+
+      retries=$((retries + 1))
+      sleep 2
+    done
+    printSoftError "Pulp task did not complete within 60 seconds."
+    return 1
+  fi
+
+  printInfo "Wheel ${whl_basename} published to Pulp successfully."
+  return 0
+}
+
+
 # --- Main Script ---
 
 # Initialize variables
-GITHUB_ORGANIZATION="zopencommunity" 
+GITHUB_ORGANIZATION="zopencommunity"
 PAX_FILE=""
 METADATA_FILE=""
-PORT_GITHUB_REPO="" 
-PORT_GITHUB_REPO_OPT="" 
-PORT_DESCRIPTION="" 
-PORT_DESCRIPTION_OPT="" 
-BUILD_LINE="" 
-BUILD_LINE_OPT="" 
+PORT_GITHUB_REPO=""
+PORT_GITHUB_REPO_OPT=""
+PORT_DESCRIPTION=""
+PORT_DESCRIPTION_OPT=""
+BUILD_LINE=""
+BUILD_LINE_OPT=""
 GITHUB_TOKEN_OPT=""
-MAKE_LATEST_RELEASE=false 
-RELEASE_TAG_OPT="" 
-FORCE_OVERWRITE=false 
+MAKE_LATEST_RELEASE=false
+RELEASE_TAG_OPT=""
+FORCE_OVERWRITE=false
+WHL_FILE=""
+PULP_URL_OPT=""
+PULP_USER_OPT=""
+PULP_PASSWORD_OPT=""
+PUBLISH_GITHUB=false
+PUBLISH_PULP=false
 
 verbose=false # Initialize verbose flag
 
@@ -477,11 +641,30 @@ else
   exit 1
 fi
 
+publish_failed=false
 
-if publishRelease; then
-  echo "zopen-publish completed successfully."
-  exit 0
-else
-  printError "zopen-publish failed."
+if ${PUBLISH_GITHUB}; then
+  if publishRelease; then
+    echo "GitHub publish completed successfully."
+  else
+    printSoftError "GitHub publish failed."
+    publish_failed=true
+  fi
+fi
+
+if ${PUBLISH_PULP}; then
+  if publishToPulp; then
+    echo "Pulp publish completed successfully."
+  else
+    printSoftError "Pulp publish failed."
+    publish_failed=true
+  fi
+fi
+
+if ${publish_failed}; then
+  printError "zopen-publish completed with errors."
   exit 1
 fi
+
+echo "zopen-publish completed successfully."
+exit 0
