@@ -674,7 +674,7 @@ checkEnv()
     fi
   fi
 
-  implicitDeps="sed git jq curl"
+  implicitDeps="sed:bin git:bin jq:bin curl:bin"
   langDeps=""
 
   if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
@@ -684,18 +684,18 @@ checkEnv()
     if [ -z "${ZOPEN_DEPS}" ]; then
       printError "ZOPEN_STABLE_DEPS, ZOPEN_DEV_DEPS, ZOPEN_DEPS or ZOPEN_TARBALL_DEPS needs to be defined"
     fi
-    implicitDeps="${implicitDeps} tar"
+    implicitDeps="${implicitDeps} tar:bin"
     ext=${ZOPEN_URL##*.}
     if [ "${ext}x" = "xzx" ]; then
-      implicitDeps="${implicitDeps} xz"
+      implicitDeps="${implicitDeps} xz:bin"
     elif [ "${ext}x" = "gzx" -o "${ext}x" = "tgzx" ]; then
-      implicitDeps="${implicitDeps} gzip"
+      implicitDeps="${implicitDeps} gzip:bin"
     elif [ "${ext}x" = "bz2x" ]; then
-      implicitDeps="${implicitDeps} bzip2"
+      implicitDeps="${implicitDeps} bzip2:bin"
     elif [ "${ext}x" = "lzx" ]; then
-      implicitDeps="${implicitDeps} lzip"
+      implicitDeps="${implicitDeps} lzip:bin"
     elif [ "${ext}x" = "zipx" ]; then
-      implicitDeps="${implicitDeps} unzip"
+      implicitDeps="${implicitDeps} unzip:bin"
     fi
     printVerbose "Implicitly adding tarball dependencies: ${implicitDeps}"
   elif [ "${ZOPEN_TYPE}x" = "GITx" ]; then
@@ -783,72 +783,72 @@ checkEnv()
 setDepsEnv()
 {
   deps="${ZOPEN_DEPS}"
-
   orig="${PWD}"
-  # Filter out duplicate deps
-  deps=$(echo "${deps}" | xargs | tr ' ' '\n' | sort -u)
+  deps=$(normalizeDeps "${deps}")
   for dep in ${deps}; do
-    printVerbose "Searching for dependency ${dep}"
     parseline=$(parseDeps ${dep})
-    dep=$(echo ${parseline} | awk -F'|' '{print $1}')
+    depName=$(echo ${parseline} | awk -F'|' '{print $1}')
     operator=$(echo ${parseline} | awk -F'|' '{print $2}')
     requestedMajor=$(echo ${parseline} | awk -F'|' '{print $3}')
     requestedMinor=$(echo ${parseline} | awk -F'|' '{print $4}')
     requestedPatch=$(echo ${parseline} | awk -F'|' '{print $5}')
     requestedSubrelease=$(echo ${parseline} | awk -F'|' '{print $6}')
     requestedVersion="${requestedMajor}.${requestedMinor}.${requestedPatch}.${requestedSubrelease}"
+    binOnly=$(echo ${parseline} | awk -F'|' '{print $7}')
+    
+    foundDep=false
+    if ! ${forceUpgradeDeps}; then
+      for path in $(echo ${depsPath} | tr '|' '\n'); do
+        depdir="${path}/${depName}/${depName}"
+        if [ -r "${depdir}/.env" ]; then
+          version=$(cat "${depdir}/.version" 2>/dev/null)
+          if validateVersion "${version}" "${operator}" "${requestedVersion}" "${depdir}"; then
+            foundDep=true
+            break
+          fi
+        fi
+      done
+    fi
+
+    if ! ${foundDep} || ${forceUpgradeDeps}; then
+      if ! ${forceUpgradeDeps}; then
+        if [ -z "${operator}" ]; then
+          printWarning "Dependency ${depName} not found. Downloading via zopen install"
+        else
+          printWarning "Dependency ${depName} ${operator} ${requestedVersion} not found. Downloading via zopen install"
+        fi
+      else
+        printHeader "Upgrading dependency ${depName}. Installing via zopen install"
+      fi
+      if ! runAndLog "PATH=\"${ZOPEN_OLD_PATH}\" ${MYDIR}/zopen-install --install-or-upgrade ${depName} -v -y"; then
+        printError "zopen install command failed"
+      fi
+    fi
+
+    # Re-verify and source the environment
     foundDep=false
     for path in $(echo ${depsPath} | tr '|' '\n'); do
-      if [ -r "${path}/${dep}/${dep}/.env" ]; then
-        depdir="${path}/${dep}/${dep}"
-        versionPath="${depdir}/.version"
-        if [ -r "${versionPath}" ]; then
-          version=$(cat "${versionPath}")
-        fi
-        # Avoid double sourcing the .env if we're forcing an upgrade on it
-        if ! ${forceUpgradeDeps}; then
-          if ! validateVersion "${version}" "${operator}" "${requestedVersion}" "${depdir}"; then
-            continue
-          fi
-
+      depdir="${path}/${depName}/${depName}"
+      if [ -r "${depdir}/.env" ]; then
+        version=$(cat "${depdir}/.version" 2>/dev/null)
+        if validateVersion "${version}" "${operator}" "${requestedVersion}" "${depdir}"; then
           printVerbose "Setting up ${depdir} dependency environment"
+          _save_zos_build="${ZOPEN_IN_ZOPEN_BUILD}"
+          if [ "${binOnly}" = "true" ]; then
+            unset ZOPEN_IN_ZOPEN_BUILD
+          fi
           cd "${depdir}" && . ./.env
           if [ $? -gt 0 ]; then
             printError "Failed to source ${depdir} .env"
           fi
+          export ZOPEN_IN_ZOPEN_BUILD="${_save_zos_build}"
+          foundDep=true
+          break
         fi
-        foundDep=true
-        break
       fi
     done
-    if ! ${foundDep} || ${forceUpgradeDeps}; then
-      # Skip dependency installation when using --get-source mode
-      if ! ${forceUpgradeDeps}; then
-        if [ -z "${operator}" ]; then
-          printWarning "Dependency ${dep} not found. Downloading via zopen install"
-        else
-          printWarning "Dependency ${dep} ${operator} ${requestedVersion} not found. Downloading via zopen install"
-        fi
-      else
-        printHeader "Upgrading dependency ${dep}. Installing via zopen install"
-      fi
-      path=${ZOPEN_PKGINSTALL} # Install location
-      if ! runAndLog "PATH=\"${ZOPEN_OLD_PATH}\" ${MYDIR}/zopen-install --install-or-upgrade ${dep} -v -y"; then
-        printError "zopen install command failed"
-      fi
-      depdir="${path}/${dep}/${dep}"
-      printVerbose "Setting up upgraded ${depdir} dependency environment"
-      cd "${depdir}" && . ./.env
-      if [ $? -gt 0 ]; then
-        printError "Failed to source ${depdir} .env"
-      fi
-      versionPath="${depdir}/.version"
-      if [ -r "${versionPath}" ]; then
-        version=$(cat "${versionPath}")
-      fi
-      if ! validateVersion "${version}" "${operator}" "${requestedVersion}" "${depdir}"; then
-        printError "Dependency ${depdir} upgraded, but does not satisfy \"${operator}\" \"${requestedVersion}\""
-      fi
+    if ! ${foundDep}; then
+       printError "Compatible version of dependency ${depName} not found for sourcing"
     fi
   done
   cd "${orig}" || exit 99
@@ -1752,14 +1752,19 @@ zz
     echo "LIBPATH=\"\${${projectName}_HOME}/lib:\$LIBPATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
     echo "export LIBPATH=\"\$(deleteDuplicateEntries \"\$LIBPATH\" \":\")\"" >> "${ZOPEN_INSTALL_DIR}/.env"
   fi
-  if [ -d "${ZOPEN_INSTALL_DIR}/lib/pkgconfig" ]; then
-    echo "PKG_CONFIG_PATH=\"\${${projectName}_HOME}/lib/pkgconfig:\$PKG_CONFIG_PATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
-    echo "export PKG_CONFIG_PATH=\"\$(deleteDuplicateEntries \"\$PKG_CONFIG_PATH\" \":\")\"" >> "${ZOPEN_INSTALL_DIR}/.env"
+
+  cat << zz >> "${ZOPEN_INSTALL_DIR}/.env"
+if [ ! -z "\${ZOPEN_IN_ZOPEN_BUILD}" ]; then
+  if [ -d "\${${projectName}_HOME}/lib/pkgconfig" ]; then
+    PKG_CONFIG_PATH="\${${projectName}_HOME}/lib/pkgconfig:\$PKG_CONFIG_PATH"
+    export PKG_CONFIG_PATH="\$(deleteDuplicateEntries "\$PKG_CONFIG_PATH" ":")"
   fi
-  if [ -d "${ZOPEN_INSTALL_DIR}/share/pkgconfig" ]; then
-    echo "PKG_CONFIG_PATH=\"\${${projectName}_HOME}/share/pkgconfig:\$PKG_CONFIG_PATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
-    echo "export PKG_CONFIG_PATH=\"\$(deleteDuplicateEntries \"\$PKG_CONFIG_PATH\" \":\")\"" >> "${ZOPEN_INSTALL_DIR}/.env"
+  if [ -d "\${${projectName}_HOME}/share/pkgconfig" ]; then
+    PKG_CONFIG_PATH="\${${projectName}_HOME}/share/pkgconfig:\$PKG_CONFIG_PATH"
+    export PKG_CONFIG_PATH="\$(deleteDuplicateEntries "\$PKG_CONFIG_PATH\" ":")"
   fi
+fi
+zz
   if [ -d "${ZOPEN_INSTALL_DIR}/share/man" ] || [ "${projectName}" = "GIT" ]; then
     echo "MANPATH=\"\${${projectName}_HOME}/share/man:\$MANPATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
     echo "export MANPATH=\"\$(deleteDuplicateEntries \"\$MANPATH\" \":\")\"" >> "${ZOPEN_INSTALL_DIR}/.env"
@@ -1808,13 +1813,13 @@ replaceHardcodedPath() {
     if [ \"\$f\" != \"\${root}/setup.sh\" ] && [ \"\$f\" != \"\${root}/.env\" ] && [ \"\$f\" != \"\${root}/.replacedpath\" ]; then
       isWritable=true
       if [ ! -w "\$f" ]; then
-        isWriteable=false
-        chmod "+w" \$f
-      fi
-      cp \$f \$f.tmp && \\
-      /bin/sed -e \"s#\${orig}#\${replaced}#g\" \$f.tmp > \$f && \\
-      rm -f \$f.tmp;
-      if ! \$isWriteable; then
+        isWritable=false
+          chmod "+w" \$f
+        fi
+        cp \$f \$f.tmp && \
+        /bin/sed -e \"s#\${orig}#\${replaced}#g\" \$f.tmp > \$f && \
+        rm -f \$f.tmp;
+        if ! \$isWritable; then
         chmod "-w" \$f
       fi
     fi
@@ -1879,6 +1884,7 @@ ZZ
 ${varName}_originalDir="\$OLDPWD"
 ZZ
     echo "${ZOPEN_RUNTIME_DEPS}" | xargs | tr ' ' '\n' | sort | while read dep; do
+
       # Use the first path specified in the dependency search list to install to
       if $noInstallRuntimeDeps; then
         if ! runAndLog "PATH=\"${ZOPEN_OLD_PATH}\" ${MYDIR}/zopen-install --install-or-upgrade ${dep} -v --no-deps -y"; then
@@ -2003,7 +2009,7 @@ generateMetadataJSON()
   fi
     
   metadata_version_scheme="0.2" # Update if we add breaking changes to the json format
-  cat <<zz > "${ZOPEN_INSTALL_DIR}/metadata.json"
+  cat << zz > "${ZOPEN_INSTALL_DIR}/metadata.json"
 {
 "version_scheme": "${metadata_version_scheme}",
 "product": {
@@ -2028,7 +2034,7 @@ zz
 
 #TODO: Clean this code up
 # Build Dependencies
-cat <<zz >> "${ZOPEN_INSTALL_DIR}/metadata.json"
+cat << zz >> "${ZOPEN_INSTALL_DIR}/metadata.json"
   "build_dependencies": [
 zz
 
@@ -2038,7 +2044,7 @@ echo "${ZOPEN_DEPS}" | xargs | tr ' ' '\n' | sort | while read dep; do
 if ! $isFirst; then
   echo "," >> "${ZOPEN_INSTALL_DIR}/metadata.json"
 fi
-cat <<zz >> "${ZOPEN_INSTALL_DIR}/metadata.json"
+cat << zz >> "${ZOPEN_INSTALL_DIR}/metadata.json"
       {
         "name": "${dep}",
         "versionRange": null
@@ -2048,7 +2054,7 @@ isFirst=false
 done
 
 # Runtime Dependencies
-cat <<zz >> "${ZOPEN_INSTALL_DIR}/metadata.json"
+cat << zz >> "${ZOPEN_INSTALL_DIR}/metadata.json"
   ],"runtime_dependencies": [
 zz
 
@@ -2058,7 +2064,7 @@ echo "${ZOPEN_RUNTIME_DEPS}" | xargs | tr ' ' '\n' | sort | while read dep; do
 if ! $isFirst; then
   echo "," >> "${ZOPEN_INSTALL_DIR}/metadata.json"
 fi
-cat <<zz >> "${ZOPEN_INSTALL_DIR}/metadata.json"
+cat << zz >> "${ZOPEN_INSTALL_DIR}/metadata.json"
       {
         "name": "${dep}",
         "versionRange": null
@@ -2068,7 +2074,7 @@ isFirst=false
 done
 
 # System Prerequisites
-cat <<zz >> "${ZOPEN_INSTALL_DIR}/metadata.json"
+cat << zz >> "${ZOPEN_INSTALL_DIR}/metadata.json"
   ],"system_prereqs": [
 zz
 
@@ -2077,7 +2083,7 @@ echo "${ZOPEN_SYSTEM_PREREQ}" | xargs | tr ' ' '\n' | sort | while read prereq; 
 if ! $isFirst; then
   echo "," >> "${ZOPEN_INSTALL_DIR}/metadata.json"
 fi
-cat <<zz >> "${ZOPEN_INSTALL_DIR}/metadata.json"
+cat << zz >> "${ZOPEN_INSTALL_DIR}/metadata.json"
       {
         "name": "${prereq}"
       }
@@ -2085,7 +2091,7 @@ zz
 isFirst=false
 done
 
-cat <<zz >> "${ZOPEN_INSTALL_DIR}/metadata.json"
+cat << zz >> "${ZOPEN_INSTALL_DIR}/metadata.json"
   ]
 }}
 zz
@@ -2115,7 +2121,7 @@ set_install_caveats()
       *) tool_label="$name" ;;
   esac
 
-  cat <<ZZ
+  cat << ZZ
 
 $tool_label has been installed with the prefix "$prefix" under bin/ to avoid collision with z/OS /bin/ tools.
 

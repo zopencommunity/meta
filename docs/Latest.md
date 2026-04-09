@@ -70,12 +70,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="sqlite-vec" data-searchable-text="sqlite-vec Green 100.0% STABLE_sqlite-vec_4175 zopen port of sqlite-vec ai port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="sqlite-vec" data-searchable-text="sqlite-vec Green 100.0% STABLE_sqlite-vec_4180 zopen port of sqlite-vec ai port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/sqlite-vecport" target="_blank" rel="noopener noreferrer">sqlite-vec</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/sqlite-vecport/releases/download/STABLE_sqlite-vecport_4175/sqlite-vec-v0.1.7-alpha.10.20260330_154722.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_sqlite-vec_4175</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/sqlite-vecport/releases/download/STABLE_sqlite-vecport_4180/sqlite-vec-v0.1.7-alpha.10.20260331_154557.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_sqlite-vec_4180</a></div>
     <div class="tool-desc" title="zopen port of sqlite-vec">zopen port of sqlite-vec</div>
   </div>
 </div>
@@ -288,12 +288,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="rpm" data-searchable-text="rpm Green 100.0% STABLE_rpm_3925 The RPM Package Manager (RPM) is a powerful package management system capable of building computer software from source into easily distributable packages, installing, updating and uninstalling packaged software core port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="rpm" data-searchable-text="rpm Green 100.0% STABLE_rpm_4188 The RPM Package Manager (RPM) is a powerful package management system capable of building computer software from source into easily distributable packages, installing, updating and uninstalling packaged software core port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/rpmport" target="_blank" rel="noopener noreferrer">rpm</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/rpmport/releases/download/STABLE_rpmport_3925/rpm-6.0.0.20251205_114931.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_rpm_3925</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/rpmport/releases/download/STABLE_rpmport_4188/rpm-6.0.1.20260406_113700.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_rpm_4188</a></div>
     <div class="tool-desc" title="The RPM Package Manager (RPM) is a powerful package management system capable of building computer software from source into easily distributable packages, installing, updating and uninstalling packaged software">The RPM Package Manager (RPM) is a powerful package management system capable of building computer software from source into easily distributable packages, installing, updating and uninstalling packaged software</div>
   </div>
 </div>
@@ -394,12 +394,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="sqlite-vec" data-searchable-text="sqlite-vec Green 100.0% STABLE_sqlite-vec_4175 zopen port of sqlite-vec database port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="sqlite-vec" data-searchable-text="sqlite-vec Green 100.0% STABLE_sqlite-vec_4180 zopen port of sqlite-vec database port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/sqlite-vecport" target="_blank" rel="noopener noreferrer">sqlite-vec</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/sqlite-vecport/releases/download/STABLE_sqlite-vecport_4175/sqlite-vec-v0.1.7-alpha.10.20260330_154722.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_sqlite-vec_4175</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/sqlite-vecport/releases/download/STABLE_sqlite-vecport_4180/sqlite-vec-v0.1.7-alpha.10.20260331_154557.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_sqlite-vec_4180</a></div>
     <div class="tool-desc" title="zopen port of sqlite-vec">zopen port of sqlite-vec</div>
   </div>
 </div>
@@ -410,12 +410,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 ## Development 
 
-<div class="tool-item-filterable" data-package-name="ant" data-searchable-text="ant Skipped N/A STABLE_ant_3998 A build automation tool development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="ant" data-searchable-text="ant Skipped N/A STABLE_ant_4183 A build automation tool development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/antport" target="_blank" rel="noopener noreferrer">ant</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/antport/releases/download/STABLE_antport_3998/ant-DEV.20260122_133015.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_ant_3998</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/antport/releases/download/STABLE_antport_4183/ant-DEV.20260401_153948.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_ant_4183</a></div>
     <div class="tool-desc" title="A build automation tool">A build automation tool</div>
   </div>
 </div>
@@ -630,12 +630,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="dos2unix" data-searchable-text="dos2unix Blue 99.2% STABLE_dos2unix_4024 A tool for converting DOS/Windows text files to Unix format development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="dos2unix" data-searchable-text="dos2unix Blue 99.2% STABLE_dos2unix_4196 A tool for converting DOS/Windows text files to Unix format development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/dos2unixport" target="_blank" rel="noopener noreferrer">dos2unix</a></strong></div>
     <div class="tool-status">Status: Blue</div>
     <div class="tool-test">Test: 99.2%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/dos2unixport/releases/download/STABLE_dos2unixport_4024/dos2unix-7.5.4.20260131_151806.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_dos2unix_4024</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/dos2unixport/releases/download/STABLE_dos2unixport_4196/dos2unix-7.5.5.20260408_154411.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_dos2unix_4196</a></div>
     <div class="tool-desc" title="A tool for converting DOS/Windows text files to Unix format">A tool for converting DOS/Windows text files to Unix format</div>
   </div>
 </div>
@@ -760,12 +760,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="hlasm-language-server" data-searchable-text="hlasm-language-server Green 100.0% STABLE_hlasm-language-server_4037 development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="hlasm-language-server" data-searchable-text="hlasm-language-server Green 100.0% STABLE_hlasm-language-server_4185 development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/hlasm-language-serverport" target="_blank" rel="noopener noreferrer">hlasm-language-server</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/hlasm-language-serverport/releases/download/STABLE_hlasm-language-serverport_4037/HLASM_LANGUAGE_SERVER_VERSION-DEV.20260208_092414.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_hlasm-language-server_4037</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/hlasm-language-serverport/releases/download/STABLE_hlasm-language-serverport_4185/HLASM_LANGUAGE_SERVER_VERSION-DEV.20260401_155120.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_hlasm-language-server_4185</a></div>
     <div class="tool-desc" title=""></div>
   </div>
 </div>
@@ -990,12 +990,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_4169 A TUI editor development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_4189 A TUI editor development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/vimport" target="_blank" rel="noopener noreferrer">vim</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_4169/vim-v9.2.0250.20260327_124039.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_4169</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_4189/vim-v9.2.0300.20260406_154445.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_4189</a></div>
     <div class="tool-desc" title="A TUI editor">A TUI editor</div>
   </div>
 </div>
@@ -1096,12 +1096,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="jenkins" data-searchable-text="jenkins Skipped N/A STABLE_jenkins_4161 A continuous integration server devops port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="jenkins" data-searchable-text="jenkins Skipped N/A STABLE_jenkins_4194 A continuous integration server devops port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/jenkinsport" target="_blank" rel="noopener noreferrer">jenkins</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/jenkinsport/releases/download/STABLE_jenkinsport_4161/jenkins-DEV.20260324_155410.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_jenkins_4161</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/jenkinsport/releases/download/STABLE_jenkinsport_4194/jenkins-2.558.20260408_060412.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_jenkins_4194</a></div>
     <div class="tool-desc" title="A continuous integration server">A continuous integration server</div>
   </div>
 </div>
@@ -1248,12 +1248,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="dos2unix" data-searchable-text="dos2unix Blue 99.2% STABLE_dos2unix_4024 A tool for converting DOS/Windows text files to Unix format editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="dos2unix" data-searchable-text="dos2unix Blue 99.2% STABLE_dos2unix_4196 A tool for converting DOS/Windows text files to Unix format editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/dos2unixport" target="_blank" rel="noopener noreferrer">dos2unix</a></strong></div>
     <div class="tool-status">Status: Blue</div>
     <div class="tool-test">Test: 99.2%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/dos2unixport/releases/download/STABLE_dos2unixport_4024/dos2unix-7.5.4.20260131_151806.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_dos2unix_4024</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/dos2unixport/releases/download/STABLE_dos2unixport_4196/dos2unix-7.5.5.20260408_154411.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_dos2unix_4196</a></div>
     <div class="tool-desc" title="A tool for converting DOS/Windows text files to Unix format">A tool for converting DOS/Windows text files to Unix format</div>
   </div>
 </div>
@@ -1328,22 +1328,22 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="neovim" data-searchable-text="neovim Green 100.0% STABLE_neovim_4173 A text editor editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="neovim" data-searchable-text="neovim Green 100.0% STABLE_neovim_4195 A text editor editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/neovimport" target="_blank" rel="noopener noreferrer">neovim</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/neovimport/releases/download/STABLE_neovimport_4173/neovim-v0.11.7.20260329_032329.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_neovim_4173</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/neovimport/releases/download/STABLE_neovimport_4195/neovim-v0.11.7.20260408_133540.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_neovim_4195</a></div>
     <div class="tool-desc" title="A text editor">A text editor</div>
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_4169 A TUI editor editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_4189 A TUI editor editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/vimport" target="_blank" rel="noopener noreferrer">vim</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_4169/vim-v9.2.0250.20260327_124039.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_4169</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_4189/vim-v9.2.0300.20260406_154445.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_4189</a></div>
     <div class="tool-desc" title="A TUI editor">A TUI editor</div>
   </div>
 </div>
@@ -1742,12 +1742,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="librdkafka" data-searchable-text="librdkafka Green 100.0% STABLE_librdkafka_4134 A high-performance C/C++ library for Apache Kafka library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="librdkafka" data-searchable-text="librdkafka Green 100.0% STABLE_librdkafka_4186 A high-performance C/C++ library for Apache Kafka library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/librdkafkaport" target="_blank" rel="noopener noreferrer">librdkafka</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/librdkafkaport/releases/download/STABLE_librdkafkaport_4134/librdkafka-v2.5.0.20260312_161729.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_librdkafka_4134</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/librdkafkaport/releases/download/STABLE_librdkafkaport_4186/librdkafka-v2.5.0.20260401_160431.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_librdkafka_4186</a></div>
     <div class="tool-desc" title="A high-performance C/C++ library for Apache Kafka">A high-performance C/C++ library for Apache Kafka</div>
   </div>
 </div>
@@ -1782,12 +1782,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="libuv" data-searchable-text="libuv Blue 83.5% STABLE_libuv_4176 An asynchronous I/O library library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="libuv" data-searchable-text="libuv Blue 83.5% STABLE_libuv_4182 An asynchronous I/O library library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libuvport" target="_blank" rel="noopener noreferrer">libuv</a></strong></div>
     <div class="tool-status">Status: Blue</div>
     <div class="tool-test">Test: 83.5%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/libuvport/releases/download/STABLE_libuvport_4176/libuv-v1.51.0.20260331_081904.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libuv_4176</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/libuvport/releases/download/STABLE_libuvport_4182/libuv-v1.52.1.20260401_093519.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libuv_4182</a></div>
     <div class="tool-desc" title="An asynchronous I/O library">An asynchronous I/O library</div>
   </div>
 </div>
@@ -2196,12 +2196,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="gpg" data-searchable-text="gpg Blue 93.9% STABLE_gpg_4018 A free software implementation of the GNU Privacy Guard security port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="gpg" data-searchable-text="gpg Blue 94.0% STABLE_gpg_4178 A free software implementation of the GNU Privacy Guard security port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/gpgport" target="_blank" rel="noopener noreferrer">gpg</a></strong></div>
     <div class="tool-status">Status: Blue</div>
-    <div class="tool-test">Test: 93.9%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/gpgport/releases/download/STABLE_gpgport_4018/gnupg-2.5.17.20260130_021013.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_gpg_4018</a></div>
+    <div class="tool-test">Test: 94.0%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/gpgport/releases/download/STABLE_gpgport_4178/gnupg-2.5.18.20260331_123949.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_gpg_4178</a></div>
     <div class="tool-desc" title="A free software implementation of the GNU Privacy Guard">A free software implementation of the GNU Privacy Guard</div>
   </div>
 </div>
@@ -2540,12 +2540,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="curl" data-searchable-text="curl Blue 99.7% STABLE_curl_4034 Networking tool uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="curl" data-searchable-text="curl Blue 99.7% STABLE_curl_4177 Networking tool uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/curlport" target="_blank" rel="noopener noreferrer">curl</a></strong></div>
     <div class="tool-status">Status: Blue</div>
     <div class="tool-test">Test: 99.7%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/curlport/releases/download/STABLE_curlport_4034/curl-8.18.0.20260205_151329.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_curl_4034</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/curlport/releases/download/STABLE_curlport_4177/curl-8.18.0.20260331_120737.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_curl_4177</a></div>
     <div class="tool-desc" title="Networking tool">Networking tool</div>
   </div>
 </div>
@@ -2866,12 +2866,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="fzf" data-searchable-text="fzf Blue 99.2% STABLE_fzf_4147 A fuzzy finder tool utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="fzf" data-searchable-text="fzf Blue 99.2% STABLE_fzf_4187 A fuzzy finder tool utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/fzfport" target="_blank" rel="noopener noreferrer">fzf</a></strong></div>
     <div class="tool-status">Status: Blue</div>
     <div class="tool-test">Test: 99.2%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/fzfport/releases/download/STABLE_fzfport_4147/fzf-v0.70.0.20260318_084439.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_fzf_4147</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/fzfport/releases/download/STABLE_fzfport_4187/fzf-v0.71.0.20260404_152510.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_fzf_4187</a></div>
     <div class="tool-desc" title="A fuzzy finder tool">A fuzzy finder tool</div>
   </div>
 </div>
@@ -3016,12 +3016,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="meta" data-searchable-text="meta Green 100.0% STABLE_meta_4154 zopen package manager utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="meta" data-searchable-text="meta Green 100.0% STABLE_meta_4197 zopen package manager utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/metaport" target="_blank" rel="noopener noreferrer">meta</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/metaport/releases/download/STABLE_metaport_4154/meta-main.20260320_161558.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_meta_4154</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/metaport/releases/download/STABLE_metaport_4197/meta-main.20260408_153554.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_meta_4197</a></div>
     <div class="tool-desc" title="zopen package manager">zopen package manager</div>
   </div>
 </div>
@@ -3146,12 +3146,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="rpm" data-searchable-text="rpm Green 100.0% STABLE_rpm_3925 The RPM Package Manager (RPM) is a powerful package management system capable of building computer software from source into easily distributable packages, installing, updating and uninstalling packaged software utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="rpm" data-searchable-text="rpm Green 100.0% STABLE_rpm_4188 The RPM Package Manager (RPM) is a powerful package management system capable of building computer software from source into easily distributable packages, installing, updating and uninstalling packaged software utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/rpmport" target="_blank" rel="noopener noreferrer">rpm</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/rpmport/releases/download/STABLE_rpmport_3925/rpm-6.0.0.20251205_114931.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_rpm_3925</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/rpmport/releases/download/STABLE_rpmport_4188/rpm-6.0.1.20260406_113700.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_rpm_4188</a></div>
     <div class="tool-desc" title="The RPM Package Manager (RPM) is a powerful package management system capable of building computer software from source into easily distributable packages, installing, updating and uninstalling packaged software">The RPM Package Manager (RPM) is a powerful package management system capable of building computer software from source into easily distributable packages, installing, updating and uninstalling packaged software</div>
   </div>
 </div>
@@ -3286,12 +3286,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="yq" data-searchable-text="yq Green 100.0% STABLE_yq_4170 A command-line JSON and YAML processor utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="yq" data-searchable-text="yq Green 100.0% STABLE_yq_4179 A command-line JSON and YAML processor utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/yqport" target="_blank" rel="noopener noreferrer">yq</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/yqport/releases/download/STABLE_yqport_4170/yq-master.20260327_152120.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_yq_4170</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/yqport/releases/download/STABLE_yqport_4179/yq-v4.52.5.20260331_140725.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_yq_4179</a></div>
     <div class="tool-desc" title="A command-line JSON and YAML processor">A command-line JSON and YAML processor</div>
   </div>
 </div>
@@ -3369,4 +3369,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2026-03-31 06:20:50 UTC
+Last updated:  2026-04-09 06:19:41 UTC

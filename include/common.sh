@@ -1141,6 +1141,13 @@ checkIfConfigLoaded()
 parseDeps()
 {
   dep="$1"
+  binOnly="false"
+  case "${dep}" in
+    *:bin*)
+      dep=$(echo "${dep}" | sed 's/:bin//')
+      binOnly="true"
+      ;;
+  esac
   version=$(echo ${dep} | awk -F '[>=<]+' '{print $2}')
   if [ -z "${version}" ]; then
     operator=""
@@ -1168,7 +1175,51 @@ parseDeps()
     fi
   fi
 
-  echo "${dep}|${operator}|${major}|${minor}|${patch}|${prerelease}"
+  echo "${dep}|${operator}|${major}|${minor}|${patch}|${prerelease}|${binOnly}"
+}
+
+normalizeDeps()
+{
+  # Given a list of deps, if both pkg and pkg:bin are present, prefer pkg
+  # and "upgrade" pkg:bin to pkg to ensure the full environment is available.
+  printf "%s\n" $1 | awk '
+    {
+      deps[NR] = $0
+      dep = $0
+      is_bin = 0
+      if (match(dep, /:bin/)) {
+        is_bin = 1
+        sub(/:bin/, "", dep)
+      }
+      split(dep, parts, /[>=<]/)
+      pkg = parts[1]
+      if (!is_bin) {
+        full_pkgs[pkg] = 1
+      }
+    }
+    END {
+      for (i=1; i<=NR; i++) {
+        dep = deps[i]
+        if (match(dep, /:bin/)) {
+          temp_dep = dep
+          sub(/:bin/, "", temp_dep)
+          split(temp_dep, parts, /[>=<]/)
+          pkg = parts[1]
+          if (pkg in full_pkgs) {
+            if (!(temp_dep in seen)) {
+              print temp_dep
+              seen[temp_dep] = 1
+            }
+            continue
+          }
+        }
+        if (!(dep in seen)) {
+          print dep
+          seen[dep] = 1
+        }
+      }
+    }
+  ' | tr '\n' ' '
 }
 
 compareVersions()

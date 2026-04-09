@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2026-03-31 06:18:27 EDT.*
+*Report generated on: 2026-04-09 06:17:38 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 304
-- **Total Current Lines of Code (LOC) in Patches:** 56,775
-- **Total Number of Current Patch Files:** 1,006
-- **Average Current Patch LOC per Project:** 186.76
-- **Average Current Patch Count per Project:** 3.31
+- **Total Current Lines of Code (LOC) in Patches:** 57,803
+- **Total Number of Current Patch Files:** 1,040
+- **Average Current Patch LOC per Project:** 190.14
+- **Average Current Patch Count per Project:** 3.42
 
 ### Historical Trends (All Projects)
 
@@ -27,13 +27,14 @@
 | [htopport](#repo-htopport) | 4,550 | +0 | 22 |
 | [stablediffusionport](#repo-stablediffusionport) | 2,905 | +0 | 6 |
 | [librdkafkaport](#repo-librdkafkaport) | 2,638 | +0 | 54 |
-| [libuvport](#repo-libuvport) | 2,485 | +1,023 | 32 |
+| [libuvport](#repo-libuvport) | 2,494 | +9 | 32 |
 | [oqs-providerport](#repo-oqs-providerport) | 2,037 | +0 | 18 |
-| [rpmport](#repo-rpmport) | 1,813 | +0 | 34 |
-| [llamacppport](#repo-llamacppport) | 1,649 | -131 | 35 |
+| [curlport](#repo-curlport) | 1,841 | +0 | 47 |
+| [rpmport](#repo-rpmport) | 1,792 | -22 | 32 |
+| [llamacppport](#repo-llamacppport) | 1,649 | +0 | 35 |
 | [bashport](#repo-bashport) | 1,635 | -2,791 | 25 |
 | [gpgport](#repo-gpgport) | 1,560 | +0 | 32 |
-| [rsyncport](#repo-rsyncport) | 1,430 | +470 | 21 |
+| [rsyncport](#repo-rsyncport) | 1,430 | +0 | 21 |
 | [cmakeport](#repo-cmakeport) | 1,348 | +0 | 1 |
 | [coreutilsport](#repo-coreutilsport) | 1,327 | +0 | 20 |
 | [sudoport](#repo-sudoport) | 1,278 | +0 | 30 |
@@ -42,11 +43,10 @@
 | [valgrindport](#repo-valgrindport) | 896 | +0 | 3 |
 | [dnf5port](#repo-dnf5port) | 879 | +0 | 29 |
 | [alternativesport](#repo-alternativesport) | 838 | +0 | 1 |
-| [curlport](#repo-curlport) | 801 | +0 | 11 |
 | [vimport](#repo-vimport) | 710 | +0 | 16 |
-| [gzipport](#repo-gzipport) | 704 | +14 | 8 |
+| [gzipport](#repo-gzipport) | 704 | +0 | 8 |
 | [procpsport](#repo-procpsport) | 687 | +0 | 1 |
-| [unzipport](#repo-unzipport) | 630 | +80 | 14 |
+| [unzipport](#repo-unzipport) | 630 | +0 | 14 |
 | [util-linuxport](#repo-util-linuxport) | 630 | +0 | 16 |
 | [redisport](#repo-redisport) | 588 | +0 | 3 |
 | [gettextport](#repo-gettextport) | 577 | +0 | 11 |
@@ -67,15 +67,15 @@
 | [flexport](#repo-flexport) | 351 | +0 | 2 |
 | [prometheusport](#repo-prometheusport) | 348 | +0 | 1 |
 | [pocoport](#repo-pocoport) | 343 | +0 | 9 |
-| [zipport](#repo-zipport) | 333 | +36 | 9 |
+| [zipport](#repo-zipport) | 333 | +0 | 9 |
 | [phpport](#repo-phpport) | 320 | +0 | 13 |
-| [tmuxport](#repo-tmuxport) | 320 | -120 | 11 |
+| [tmuxport](#repo-tmuxport) | 320 | +0 | 11 |
 | [mimallocport](#repo-mimallocport) | 313 | +0 | 6 |
 | [liboqsport](#repo-liboqsport) | 311 | +0 | 11 |
 | [conanport](#repo-conanport) | 299 | +0 | 8 |
-| [perlport](#repo-perlport) | 297 | -396 | 7 |
+| [perlport](#repo-perlport) | 297 | +0 | 7 |
 | [tarport](#repo-tarport) | 293 | +0 | 2 |
-| [libarchiveport](#repo-libarchiveport) | 272 | +52 | 8 |
+| [libarchiveport](#repo-libarchiveport) | 272 | +0 | 8 |
 | [clangdport](#repo-clangdport) | 272 | +0 | 10 |
 | [ccacheport](#repo-ccacheport) | 264 | +0 | 1 |
 | [fishport](#repo-fishport) | 258 | +0 | 1 |
@@ -83,8 +83,8 @@
 | [gitlab-runnerport](#repo-gitlab-runnerport) | 241 | +0 | 10 |
 | [zstdport](#repo-zstdport) | 236 | +0 | 4 |
 | [toml11port](#repo-toml11port) | 217 | +0 | 3 |
-| [ninjaport](#repo-ninjaport) | 210 | +14 | 8 |
-| [nnnport](#repo-nnnport) | 206 | +24 | 1 |
+| [ninjaport](#repo-ninjaport) | 210 | +0 | 8 |
+| [nnnport](#repo-nnnport) | 206 | +0 | 1 |
 | [protobufport](#repo-protobufport) | 201 | +0 | 9 |
 | [findutilsport](#repo-findutilsport) | 199 | +0 | 10 |
 | [libgcryptport](#repo-libgcryptport) | 199 | +0 | 4 |
@@ -115,7 +115,7 @@
 | [mkcertport](#repo-mkcertport) | 105 | +0 | 1 |
 | [ansibleport](#repo-ansibleport) | 100 | +0 | 4 |
 | [pkgconfigport](#repo-pkgconfigport) | 98 | +0 | 1 |
-| [jqport](#repo-jqport) | 98 | +13 | 7 |
+| [jqport](#repo-jqport) | 98 | +0 | 7 |
 | [doxygenport](#repo-doxygenport) | 97 | +0 | 5 |
 | [libiconvport](#repo-libiconvport) | 96 | +0 | 4 |
 | [opensslport](#repo-opensslport) | 95 | +0 | 4 |
@@ -124,7 +124,7 @@
 | [libx11port](#repo-libx11port) | 87 | +0 | 1 |
 | [openldapport](#repo-openldapport) | 85 | +0 | 1 |
 | [gawkport](#repo-gawkport) | 81 | +0 | 4 |
-| [sqlite-vecport](#repo-sqlite-vecport) | 81 | +81 | 1 |
+| [sqlite-vecport](#repo-sqlite-vecport) | 81 | +0 | 1 |
 | [expectport](#repo-expectport) | 79 | +0 | 4 |
 | [librabbitmqport](#repo-librabbitmqport) | 78 | +0 | 2 |
 | [libassuanport](#repo-libassuanport) | 77 | +0 | 4 |
@@ -133,7 +133,7 @@
 | [libtoolport](#repo-libtoolport) | 71 | +0 | 3 |
 | [gradleport](#repo-gradleport) | 67 | +0 | 1 |
 | [getoptport](#repo-getoptport) | 66 | +0 | 1 |
-| [lazygitport](#repo-lazygitport) | 66 | +20 | 1 |
+| [lazygitport](#repo-lazygitport) | 66 | +0 | 1 |
 | [librepoport](#repo-librepoport) | 66 | +0 | 1 |
 | [logrotateport](#repo-logrotateport) | 65 | +0 | 1 |
 | [libkqueueport](#repo-libkqueueport) | 61 | +0 | 4 |
@@ -150,7 +150,7 @@
 | [tigport](#repo-tigport) | 47 | +0 | 1 |
 | [automakeport](#repo-automakeport) | 41 | +0 | 2 |
 | [catimgport](#repo-catimgport) | 37 | +0 | 1 |
-| [zlib-ngport](#repo-zlib-ngport) | 35 | -65 | 2 |
+| [zlib-ngport](#repo-zlib-ngport) | 35 | +0 | 2 |
 | [poptport](#repo-poptport) | 35 | +0 | 1 |
 | [tcltlsport](#repo-tcltlsport) | 34 | +0 | 1 |
 | [texinfoport](#repo-texinfoport) | 33 | +0 | 2 |
@@ -178,7 +178,7 @@
 | [libpkgmanifestport](#repo-libpkgmanifestport) | 26 | +0 | 2 |
 | [z3port](#repo-z3port) | 25 | +0 | 1 |
 | [libxcbport](#repo-libxcbport) | 24 | +0 | 1 |
-| [lessport](#repo-lessport) | 22 | +22 | 1 |
+| [lessport](#repo-lessport) | 22 | +0 | 1 |
 | [my_basicport](#repo-my-basicport) | 22 | +0 | 1 |
 | [k6port](#repo-k6port) | 21 | +0 | 2 |
 | [shdocport](#repo-shdocport) | 20 | +0 | 2 |
@@ -476,7 +476,7 @@
 ## libuvport
 
 - **Origin Date (First Commit):** 2023-09-14
-- **Current Patch LOC:** 2,485
+- **Current Patch LOC:** 2,494
 - **Current Patch Count:** 32
 
 ### Historical Trends
@@ -494,32 +494,32 @@
 | `stable-patches/include/uv/errno.h.patch` | `stable-patches` | 17 |
 | `stable-patches/include/uv/os390.h.patch` | `stable-patches` | 26 |
 | `stable-patches/src/unix/core.c.patch` | `stable-patches` | 143 |
-| `stable-patches/src/unix/fs.c.patch` | `stable-patches` | 181 |
-| `stable-patches/src/unix/internal.h.patch` | `stable-patches` | 19 |
+| `stable-patches/src/unix/fs.c.patch` | `stable-patches` | 175 |
+| `stable-patches/src/unix/internal.h.patch` | `stable-patches` | 28 |
 | `stable-patches/src/unix/os390-syscalls.c.patch` | `stable-patches` | 364 |
 | `stable-patches/src/unix/os390-syscalls.h.patch` | `stable-patches` | 54 |
-| `stable-patches/src/unix/os390.c.patch` | `stable-patches` | 749 |
+| `stable-patches/src/unix/os390.c.patch` | `stable-patches` | 746 |
 | `stable-patches/src/unix/pipe.c.patch` | `stable-patches` | 15 |
 | `stable-patches/src/unix/process.c.patch` | `stable-patches` | 107 |
 | `stable-patches/src/unix/signal.c.patch` | `stable-patches` | 19 |
-| `stable-patches/src/unix/stream.c.patch` | `stable-patches` | 145 |
+| `stable-patches/src/unix/stream.c.patch` | `stable-patches` | 148 |
 | `stable-patches/src/unix/tcp.c.patch` | `stable-patches` | 40 |
 | `stable-patches/src/unix/thread.c.patch` | `stable-patches` | 25 |
 | `stable-patches/src/unix/tty.c.patch` | `stable-patches` | 19 |
-| `stable-patches/src/unix/udp.c.patch` | `stable-patches` | 13 |
+| `stable-patches/src/unix/udp.c.patch` | `stable-patches` | 22 |
 | `stable-patches/src/uv-common.c.patch` | `stable-patches` | 15 |
 | `stable-patches/test/run-tests.c.patch` | `stable-patches` | 27 |
 | `stable-patches/test/task.h.patch` | `stable-patches` | 25 |
 | `stable-patches/test/test-fs-copyfile.c.patch` | `stable-patches` | 31 |
 | `stable-patches/test/test-fs-event.c.patch` | `stable-patches` | 22 |
 | `stable-patches/test/test-fs.c.patch` | `stable-patches` | 16 |
-| `stable-patches/test/test-get-currentexe.c.patch` | `stable-patches` | 159 |
+| `stable-patches/test/test-get-currentexe.c.patch` | `stable-patches` | 158 |
 | `stable-patches/test/test-get-passwd.c.patch` | `stable-patches` | 14 |
 | `stable-patches/test/test-list.h.patch` | `stable-patches` | 20 |
 | `stable-patches/test/test-loop-oom.c.patch` | `stable-patches` | 16 |
 | `stable-patches/test/test-spawn.c.patch` | `stable-patches` | 59 |
 | `stable-patches/test/test-thread-name.c.patch` | `stable-patches` | 14 |
-| `stable-patches/test/test-thread-priority.c.patch` | `stable-patches` | 23 |
+| `stable-patches/test/test-thread-priority.c.patch` | `stable-patches` | 21 |
 
 ---
 
@@ -560,12 +560,78 @@
 
 ---
 
+<a id="repo-curlport"></a>
+## curlport
+
+- **Origin Date (First Commit):** 2022-04-08
+- **Current Patch LOC:** 1,841
+- **Current Patch Count:** 47
+
+### Historical Trends
+
+![LOC Trend for curlport](images/upstream/curlport_current_loc_trend.png)
+![Count Trend for curlport](images/upstream/curlport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `stable-patches/add-download-encoding.patch` | `stable-patches` | 36 |
+| `stable-patches/add-upload-encoding.patch` | `stable-patches` | 32 |
+| `stable-patches/configure.patch` | `stable-patches` | 15 |
+| `stable-patches/src/tool_cb_rea.c.patch` | `stable-patches` | 71 |
+| `stable-patches/src/tool_cb_wrt.c.patch` | `stable-patches` | 122 |
+| `stable-patches/src/tool_cfgable.c.patch` | `stable-patches` | 16 |
+| `stable-patches/src/tool_cfgable.h.patch` | `stable-patches` | 22 |
+| `stable-patches/src/tool_getparam.c.patch` | `stable-patches` | 83 |
+| `stable-patches/src/tool_getparam.h.patch` | `stable-patches` | 21 |
+| `stable-patches/src/tool_listhelp.c.patch` | `stable-patches` | 28 |
+| `stable-patches/src/tool_operate.c.patch` | `stable-patches` | 395 |
+| `stable-patches/src/tool_operate.h.patch` | `stable-patches` | 63 |
+| `stable-patches/src/tool_sdecls.h.patch` | `stable-patches` | 12 |
+| `stable-patches/tests/data/Makefile.am.patch` | `stable-patches` | 13 |
+| `stable-patches/tests/data/data1400.c.patch` | `stable-patches` | 12 |
+| `stable-patches/tests/data/data1401.c.patch` | `stable-patches` | 12 |
+| `stable-patches/tests/data/data1402.c.patch` | `stable-patches` | 12 |
+| `stable-patches/tests/data/data1403.c.patch` | `stable-patches` | 12 |
+| `stable-patches/tests/data/data1404.c.patch` | `stable-patches` | 12 |
+| `stable-patches/tests/data/data1405.c.patch` | `stable-patches` | 12 |
+| `stable-patches/tests/data/data1406.c.patch` | `stable-patches` | 12 |
+| `stable-patches/tests/data/data1407.c.patch` | `stable-patches` | 12 |
+| `stable-patches/tests/data/data1420.c.patch` | `stable-patches` | 12 |
+| `stable-patches/tests/data/data1461.txt.patch` | `stable-patches` | 12 |
+| `stable-patches/tests/data/data1465.c.patch` | `stable-patches` | 12 |
+| `stable-patches/tests/data/data1481.c.patch` | `stable-patches` | 12 |
+| `stable-patches/tests/data/test1400.patch` | `stable-patches` | 22 |
+| `stable-patches/tests/data/test1401.patch` | `stable-patches` | 22 |
+| `stable-patches/tests/data/test1402.patch` | `stable-patches` | 22 |
+| `stable-patches/tests/data/test1403.patch` | `stable-patches` | 22 |
+| `stable-patches/tests/data/test1404.patch` | `stable-patches` | 22 |
+| `stable-patches/tests/data/test1405.patch` | `stable-patches` | 22 |
+| `stable-patches/tests/data/test1406.patch` | `stable-patches` | 22 |
+| `stable-patches/tests/data/test1407.patch` | `stable-patches` | 22 |
+| `stable-patches/tests/data/test1420.patch` | `stable-patches` | 22 |
+| `stable-patches/tests/data/test1465.patch` | `stable-patches` | 22 |
+| `stable-patches/tests/data/test1481.patch` | `stable-patches` | 22 |
+| `stable-patches/tests/data/test4002.patch` | `stable-patches` | 63 |
+| `stable-patches/tests/data/test4003.patch` | `stable-patches` | 63 |
+| `stable-patches/tests/data/test4004.patch` | `stable-patches` | 63 |
+| `stable-patches/tests/data/test4005.patch` | `stable-patches` | 63 |
+| `stable-patches/tests/data/test4006.patch` | `stable-patches` | 63 |
+| `stable-patches/tests/data/test4007.patch` | `stable-patches` | 63 |
+| `stable-patches/tests/data/test4008.patch` | `stable-patches` | 54 |
+| `stable-patches/tests/data/test4009.patch` | `stable-patches` | 63 |
+| `stable-patches/tests/libtest/lib1565.c.patch` | `stable-patches` | 17 |
+| `stable-patches/tests/runtests.pl.patch` | `stable-patches` | 14 |
+
+---
+
 <a id="repo-rpmport"></a>
 ## rpmport
 
 - **Origin Date (First Commit):** 2025-06-26
-- **Current Patch LOC:** 1,813
-- **Current Patch Count:** 34
+- **Current Patch LOC:** 1,792
+- **Current Patch Count:** 32
 
 ### Historical Trends
 
@@ -585,30 +651,28 @@
 | `patches/lib_backend_ndb_rpmidx.c.patch` | `patches` | 43 |
 | `patches/lib_backend_ndb_rpmxdb.c.patch` | `patches` | 46 |
 | `patches/lib_headerfmt.cc.patch` | `patches` | 28 |
-| `patches/lib_keystore.cc.patch` | `patches` | 45 |
+| `patches/lib_keystore.cc.patch` | `patches` | 54 |
 | `patches/lib_rpmfi_internal.hh.patch` | `patches` | 23 |
 | `patches/lib_rpmrc.cc.patch` | `patches` | 17 |
 | `patches/lib_rpmug.cc.patch` | `patches` | 28 |
 | `patches/lib_transaction.cc.patch` | `patches` | 28 |
 | `patches/macros.in.patch` | `patches` | 78 |
-| `patches/misc_fts.c.patch` | `patches` | 67 |
-| `patches/misc_system.h.patch` | `patches` | 33 |
+| `patches/misc_fts.c.patch` | `patches` | 70 |
 | `patches/rpmfi.cc.patch` | `patches` | 258 |
 | `patches/rpmfiles.h.patch` | `patches` | 18 |
-| `patches/rpmio_CMakeLists.txt.patch` | `patches` | 89 |
-| `patches/rpmio_dummy.cc.patch` | `patches` | 16 |
+| `patches/rpmio_CMakeLists.txt.patch` | `patches` | 90 |
 | `patches/rpmio_lposix.cc.patch` | `patches` | 28 |
 | `patches/rpmio_macro.cc.patch` | `patches` | 57 |
+| `patches/rpmio_progname.cc.patch` | `patches` | 17 |
 | `patches/rpmio_rpmglob.cc.patch` | `patches` | 20 |
 | `patches/rpmio_rpmlog.cc.patch` | `patches` | 41 |
 | `patches/rpmio_rpmsq.cc.patch` | `patches` | 13 |
 | `patches/rpmio_rpmstrpool.cc.patch` | `patches` | 25 |
 | `patches/rpmrc.in.patch` | `patches` | 12 |
 | `patches/rpmtag.h.patch` | `patches` | 15 |
-| `patches/rpmtypes.h.patch` | `patches` | 95 |
+| `patches/rpmtypes.h.patch` | `patches` | 93 |
 | `patches/scripts.patch` | `patches` | 35 |
 | `patches/sign_CMakeLists.txt.patch` | `patches` | 10 |
-| `patches/tagname.cc.patch` | `patches` | 0 |
 | `patches/tools_CMakeLists.txt.patch` | `patches` | 47 |
 
 ---
@@ -1076,36 +1140,6 @@
 | Patch File (Repo Relative Path) | Source | LOC |
 |---|---|:---|
 | `patches/PR1.patch` | `patches` | 838 |
-
----
-
-<a id="repo-curlport"></a>
-## curlport
-
-- **Origin Date (First Commit):** 2022-04-08
-- **Current Patch LOC:** 801
-- **Current Patch Count:** 11
-
-### Historical Trends
-
-![LOC Trend for curlport](images/upstream/curlport_current_loc_trend.png)
-![Count Trend for curlport](images/upstream/curlport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `stable-patches/configure.patch` | `stable-patches` | 15 |
-| `stable-patches/src/tool_cb_rea.c.patch` | `stable-patches` | 71 |
-| `stable-patches/src/tool_cb_wrt.c.patch` | `stable-patches` | 101 |
-| `stable-patches/src/tool_cfgable.c.patch` | `stable-patches` | 16 |
-| `stable-patches/src/tool_cfgable.h.patch` | `stable-patches` | 22 |
-| `stable-patches/src/tool_getparam.c.patch` | `stable-patches` | 83 |
-| `stable-patches/src/tool_getparam.h.patch` | `stable-patches` | 21 |
-| `stable-patches/src/tool_listhelp.c.patch` | `stable-patches` | 28 |
-| `stable-patches/src/tool_operate.c.patch` | `stable-patches` | 364 |
-| `stable-patches/src/tool_operate.h.patch` | `stable-patches` | 63 |
-| `stable-patches/tests/libtest/lib1565.c.patch` | `stable-patches` | 17 |
 
 ---
 
