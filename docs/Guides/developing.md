@@ -1,6 +1,6 @@
 # Developing zopen community
 
-Please read [Quick Start](QuickStart.md) and [The package manager](ThePackageManager.md) if you haven't already done so.
+Please read [Quick Start](QuickStart) and [The package manager](ThePackageManager) if you haven't already done so.
 
 ## zopen directory structure
 

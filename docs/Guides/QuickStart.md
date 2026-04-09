@@ -9,7 +9,7 @@ source code on your z/OS system.
 Whether you want to _use_ the tools or also _improve_ the tools is up to you.
 
 If you have installed a version of the zopen package manager prior to September 2023, 
-please note you will need to [migrate to the new package manager](Migration.md). 
+please note you will need to [migrate to the new package manager](Migration). 
 
 ## Installing zopen package manager <!-- {docsify-ignore} -->
 
@@ -82,7 +82,7 @@ If `curl` or `bash` are **not** available, follow these steps:
 
 * **Note**: We recommend that you add the line `. $ZOPEN_ROOTFS/etc/zopen-config` to your `.profile` startup script. Alternatively, you can use `zopen init --append-to-profile` when setting up your zopen file-system.
 
-See [The package manager](ThePackageManager.md) and [Developing Tools](developing.md) for more details.
+See [The package manager](ThePackageManager) and [Developing Tools](developing) for more details.
 
 ## Getting Started Video <!-- {docsify-ignore} -->
 If you like learning through watching, check out our getting started Video:

@@ -1,43 +1,24 @@
 {
-  "generation_timestamp_utc": "2025-10-15T10:16:41+00:00Z",
+  "generation_timestamp_utc": "2026-04-09T10:19:40+00:00Z",
   "source_input_url": "https://raw.githubusercontent.com/zopencommunity/meta/main/docs/api/zopen_releases_latest.json",
-  "projects_processed_attempt": 238,
-  "projects_successfully_scanned": 238,
+  "projects_processed_attempt": 263,
+  "projects_successfully_scanned": 192,
   "project_files": {
-    "rsync": {
+    "m4": {
       "binaries": [
-        "rsync",
-        "rsync-ssl"
+        "m4"
       ],
       "libs": []
     },
-    "automake": {
+    "ninja": {
       "binaries": [
-        "aclocal",
-        "aclocal-1.17",
-        "automake",
-        "automake-1.17"
-      ],
-      "libs": []
-    },
-    "tcl": {
-      "binaries": [
-        "tclsh9.0"
+        "ninja"
       ],
       "libs": [
-        "libtcl9.0.a",
-        "libtclstub.a"
-      ]
-    },
-    "zstd": {
-      "binaries": [
-        "zstd",
-        "zstdgrep",
-        "zstdless"
-      ],
-      "libs": [
-        "libzstd.a",
-        "libzstd.so"
+        "libgmock.a",
+        "libgmock_main.a",
+        "libgtest.a",
+        "libgtest_main.a"
       ]
     },
     "vim": {
@@ -53,38 +34,29 @@
       ],
       "libs": []
     },
-    "tar": {
+    "jq": {
       "binaries": [
-        "gtar",
-        "tar"
-      ],
-      "libs": []
-    },
-    "bash": {
-      "binaries": [
-        "bash",
-        "bashbug"
-      ],
-      "libs": []
-    },
-    "xxhash": {
-      "binaries": [
-        "xxh128sum",
-        "xxh32sum",
-        "xxh64sum",
-        "xxhsum"
+        "jq"
       ],
       "libs": [
-        "libxxhash.a",
-        "libxxhash.so"
+        "libjq.a"
       ]
     },
-    "make": {
+    "zlib": {
+      "binaries": [],
+      "libs": [
+        "libz.a"
+      ]
+    },
+    "openssl": {
       "binaries": [
-        "gmake",
-        "make"
+        "c_rehash",
+        "openssl"
       ],
-      "libs": []
+      "libs": [
+        "libcrypto.a",
+        "libssl.a"
+      ]
     },
     "coreutils": {
       "binaries": [
@@ -93,7 +65,6 @@
         "base64",
         "basename",
         "cat",
-        "chcon",
         "chgrp",
         "chmod",
         "chown",
@@ -195,30 +166,14 @@
         "libstdbuf.so"
       ]
     },
-    "expat": {
+    "lz4": {
       "binaries": [
-        "xmlwf"
+        "lz4"
       ],
       "libs": [
-        "libexpat.a"
+        "liblz4.a",
+        "liblz4.so"
       ]
-    },
-    "bison": {
-      "binaries": [
-        "bison",
-        "yacc"
-      ],
-      "libs": [
-        "liby.a"
-      ]
-    },
-    "less": {
-      "binaries": [
-        "less",
-        "lessecho",
-        "lesskey"
-      ],
-      "libs": []
     },
     "xz": {
       "binaries": [
@@ -250,71 +205,55 @@
         "liblzma.a"
       ]
     },
-    "man-db": {
+    "ncurses": {
       "binaries": [
-        "accessdb",
-        "apropos",
-        "catman",
-        "gman",
-        "lexgrog",
-        "man",
-        "man-recode",
-        "mandb",
-        "manpath",
-        "oldman",
-        "whatis"
+        "clear",
+        "gclear",
+        "ginfocmp",
+        "gtabs",
+        "gtic",
+        "gtput",
+        "infocmp",
+        "ncurses6-config",
+        "ncursesw6-config",
+        "reset",
+        "tabs",
+        "tic",
+        "toe",
+        "tput",
+        "tset"
       ],
       "libs": [
-        "libman.a",
-        "libmandb.a"
+        "libcurses.a",
+        "libform.a",
+        "libform_g.a",
+        "libformw.a",
+        "libformw_g.a",
+        "libmenu.a",
+        "libmenu_g.a",
+        "libmenuw.a",
+        "libmenuw_g.a",
+        "libncurses++.a",
+        "libncurses++_g.a",
+        "libncurses++w.a",
+        "libncurses++w_g.a",
+        "libncurses.a",
+        "libncurses_g.a",
+        "libncursesw.a",
+        "libncursesw_g.a",
+        "libpanel.a",
+        "libpanel_g.a",
+        "libpanelw.a",
+        "libpanelw_g.a"
       ]
     },
-    "curl": {
+    "expat": {
       "binaries": [
-        "curl",
-        "curl-config",
-        "wcurl"
+        "xmlwf"
       ],
       "libs": [
-        "libcurl.a"
+        "libexpat.a"
       ]
-    },
-    "zlib": {
-      "binaries": [],
-      "libs": [
-        "libz.a"
-      ]
-    },
-    "gawk": {
-      "binaries": [
-        "awk",
-        "gawk",
-        "gawk-5.3.1",
-        "gawkbug"
-      ],
-      "libs": []
-    },
-    "openssl": {
-      "binaries": [
-        "c_rehash",
-        "openssl"
-      ],
-      "libs": [
-        "libcrypto.a",
-        "libssl.a"
-      ]
-    },
-    "help2man": {
-      "binaries": [
-        "help2man"
-      ],
-      "libs": []
-    },
-    "zotsample": {
-      "binaries": [
-        "zotsample"
-      ],
-      "libs": []
     },
     "autoconf": {
       "binaries": [
@@ -325,6 +264,129 @@
         "autoscan",
         "autoupdate",
         "ifnames"
+      ],
+      "libs": []
+    },
+    "gawk": {
+      "binaries": [
+        "awk",
+        "gawk",
+        "gawk-5.4.0",
+        "gawkbug"
+      ],
+      "libs": []
+    },
+    "bzip2": {
+      "binaries": [
+        "bunzip2",
+        "bzcat",
+        "bzcmp",
+        "bzdiff",
+        "bzegrep",
+        "bzfgrep",
+        "bzgrep",
+        "bzip2",
+        "bzip2recover",
+        "bzless",
+        "bzmore"
+      ],
+      "libs": [
+        "libbz2.a"
+      ]
+    },
+    "gettext": {
+      "binaries": [
+        "autopoint",
+        "envsubst",
+        "gettext",
+        "gettext.sh",
+        "gettextize",
+        "msgattrib",
+        "msgcat",
+        "msgcmp",
+        "msgcomm",
+        "msgconv",
+        "msgen",
+        "msgexec",
+        "msgfilter",
+        "msgfmt",
+        "msggrep",
+        "msginit",
+        "msgmerge",
+        "msgpre",
+        "msgunfmt",
+        "msguniq",
+        "ngettext",
+        "po-fetch",
+        "printf_gettext",
+        "printf_ngettext",
+        "recode-sr-latin",
+        "spit",
+        "xgettext"
+      ],
+      "libs": [
+        "libasprintf.a",
+        "libgettextpo.a",
+        "libintl.a",
+        "libtextstyle.a"
+      ]
+    },
+    "make": {
+      "binaries": [
+        "gmake",
+        "make"
+      ],
+      "libs": []
+    },
+    "bison": {
+      "binaries": [
+        "bison",
+        "yacc"
+      ],
+      "libs": [
+        "liby.a"
+      ]
+    },
+    "tcl": {
+      "binaries": [
+        "tclsh9.0"
+      ],
+      "libs": [
+        "libtcl9.0.a",
+        "libtclstub.a"
+      ]
+    },
+    "gzip": {
+      "binaries": [
+        "guncompress",
+        "gunzip",
+        "gzcat",
+        "gzexe",
+        "gzip",
+        "uncompress",
+        "zcat",
+        "zcmp",
+        "zdiff",
+        "zegrep",
+        "zfgrep",
+        "zforce",
+        "zgrep",
+        "zless",
+        "zmore",
+        "znew"
+      ],
+      "libs": []
+    },
+    "bash": {
+      "binaries": [
+        "bash",
+        "bashbug"
+      ],
+      "libs": []
+    },
+    "help2man": {
+      "binaries": [
+        "help2man"
       ],
       "libs": []
     },
@@ -342,6 +404,122 @@
       ],
       "libs": []
     },
+    "xxhash": {
+      "binaries": [
+        "xxh128sum",
+        "xxh32sum",
+        "xxh64sum",
+        "xxhsum"
+      ],
+      "libs": [
+        "libxxhash.a",
+        "libxxhash.so"
+      ]
+    },
+    "less": {
+      "binaries": [
+        "less",
+        "lessecho",
+        "lesskey"
+      ],
+      "libs": []
+    },
+    "zstd": {
+      "binaries": [
+        "zstd",
+        "zstdgrep",
+        "zstdless"
+      ],
+      "libs": [
+        "libzstd.a",
+        "libzstd.so"
+      ]
+    },
+    "pkgconfig": {
+      "binaries": [
+        "i370-ibm-openedition-pkg-config",
+        "pkg-config"
+      ],
+      "libs": []
+    },
+    "man-db": {
+      "binaries": [
+        "accessdb",
+        "apropos",
+        "catman",
+        "lexgrog",
+        "man",
+        "man-recode",
+        "mandb",
+        "manpath",
+        "oldman",
+        "whatis",
+        "zotman"
+      ],
+      "libs": [
+        "libman.a",
+        "libmandb.a"
+      ]
+    },
+    "zotsample": {
+      "binaries": [
+        "zotsample"
+      ],
+      "libs": []
+    },
+    "tar": {
+      "binaries": [
+        "gtar",
+        "tar"
+      ],
+      "libs": []
+    },
+    "libtool": {
+      "binaries": [
+        "libtool",
+        "libtoolize"
+      ],
+      "libs": [
+        "libltdl.a"
+      ]
+    },
+    "automake": {
+      "binaries": [
+        "aclocal",
+        "aclocal-1.18",
+        "automake",
+        "automake-1.18"
+      ],
+      "libs": []
+    },
+    "curl": {
+      "binaries": [
+        "curl",
+        "curl-config",
+        "wcurl"
+      ],
+      "libs": [
+        "libcurl.a"
+      ]
+    },
+    "sed": {
+      "binaries": [
+        "gsed",
+        "sed"
+      ],
+      "libs": []
+    },
+    "grep": {
+      "binaries": [
+        "egrep",
+        "fgrep",
+        "gegrep",
+        "gfgrep",
+        "ggrep",
+        "grep"
+      ],
+      "libs": []
+    },
     "perl": {
       "binaries": [
         "corelist",
@@ -354,7 +532,7 @@
         "json_pp",
         "libnetcfg",
         "perl",
-        "perl5.43.2",
+        "perl5.43.9",
         "perlbug",
         "perldoc",
         "perlivp",
@@ -428,181 +606,6 @@
         "via.so"
       ]
     },
-    "m4": {
-      "binaries": [
-        "m4"
-      ],
-      "libs": []
-    },
-    "gzip": {
-      "binaries": [
-        "gunzip",
-        "gzexe",
-        "gzip",
-        "uncompress",
-        "zcat",
-        "zcmp",
-        "zdiff",
-        "zegrep",
-        "zfgrep",
-        "zforce",
-        "zgrep",
-        "zless",
-        "zmore",
-        "znew"
-      ],
-      "libs": []
-    },
-    "ncurses": {
-      "binaries": [
-        "clear",
-        "gclear",
-        "ginfocmp",
-        "gtabs",
-        "gtic",
-        "gtput",
-        "infocmp",
-        "ncurses6-config",
-        "reset",
-        "tabs",
-        "tic",
-        "toe",
-        "tput",
-        "tset"
-      ],
-      "libs": [
-        "libform.a",
-        "libform_g.a",
-        "libmenu.a",
-        "libmenu_g.a",
-        "libncurses++.a",
-        "libncurses++_g.a",
-        "libncurses.a",
-        "libncurses_g.a",
-        "libpanel.a",
-        "libpanel_g.a"
-      ]
-    },
-    "ninja": {
-      "binaries": [
-        "ninja"
-      ],
-      "libs": [
-        "libgmock.a",
-        "libgmock_main.a",
-        "libgtest.a",
-        "libgtest_main.a"
-      ]
-    },
-    "gettext": {
-      "binaries": [
-        "autopoint",
-        "envsubst",
-        "gettext",
-        "gettext.sh",
-        "gettextize",
-        "msgattrib",
-        "msgcat",
-        "msgcmp",
-        "msgcomm",
-        "msgconv",
-        "msgen",
-        "msgexec",
-        "msgfilter",
-        "msgfmt",
-        "msggrep",
-        "msginit",
-        "msgmerge",
-        "msgunfmt",
-        "msguniq",
-        "ngettext",
-        "recode-sr-latin",
-        "xgettext"
-      ],
-      "libs": [
-        "libasprintf.a",
-        "libgettextpo.a",
-        "libintl.a",
-        "libtextstyle.a"
-      ]
-    },
-    "pkgconfig": {
-      "binaries": [
-        "i370-ibm-openedition-pkg-config",
-        "pkg-config"
-      ],
-      "libs": []
-    },
-    "libtool": {
-      "binaries": [
-        "libtool",
-        "libtoolize"
-      ],
-      "libs": [
-        "libltdl.a"
-      ]
-    },
-    "lz4": {
-      "binaries": [
-        "lz4"
-      ],
-      "libs": [
-        "liblz4.a",
-        "liblz4.so"
-      ]
-    },
-    "cmake": {
-      "binaries": [
-        "cmake",
-        "cpack",
-        "ctest"
-      ],
-      "libs": []
-    },
-    "bzip2": {
-      "binaries": [
-        "bunzip2",
-        "bzcat",
-        "bzcmp",
-        "bzdiff",
-        "bzegrep",
-        "bzfgrep",
-        "bzgrep",
-        "bzip2",
-        "bzip2recover",
-        "bzless",
-        "bzmore"
-      ],
-      "libs": [
-        "libbz2.a"
-      ]
-    },
-    "jq": {
-      "binaries": [
-        "jq"
-      ],
-      "libs": [
-        "libjq.a"
-      ]
-    },
-    "grep": {
-      "binaries": [
-        "egrep",
-        "fgrep",
-        "gegrep",
-        "gfgrep",
-        "ggrep",
-        "grep"
-      ],
-      "libs": []
-    },
-    "sed": {
-      "binaries": [
-        "gsed",
-        "sed"
-      ],
-      "libs": []
-    },
     "diffutils": {
       "binaries": [
         "cmp",
@@ -619,22 +622,6 @@
         "sshpass"
       ],
       "libs": []
-    },
-    "gperf": {
-      "binaries": [
-        "gperf"
-      ],
-      "libs": []
-    },
-    "zoslib": {
-      "binaries": [
-        "zoslib-help"
-      ],
-      "libs": [
-        "libzoslib-supp.a",
-        "libzoslib.a",
-        "libzoslib.so"
-      ]
     },
     "texinfo": {
       "binaries": [
@@ -656,6 +643,29 @@
       ],
       "libs": []
     },
+    "gperf": {
+      "binaries": [
+        "gperf"
+      ],
+      "libs": []
+    },
+    "zoslib": {
+      "binaries": [
+        "zoslib-help"
+      ],
+      "libs": [
+        "libzoslib-supp.a",
+        "libzoslib.a",
+        "libzoslib.so"
+      ]
+    },
+    "patch": {
+      "binaries": [
+        "gpatch",
+        "patch"
+      ],
+      "libs": []
+    },
     "libgdbm": {
       "binaries": [
         "gdbm_dump",
@@ -666,18 +676,26 @@
         "libgdbm.a"
       ]
     },
-    "patch": {
-      "binaries": [
-        "gpatch",
-        "patch"
-      ],
-      "libs": []
-    },
     "libpipeline": {
       "binaries": [],
       "libs": [
         "libpipeline.a"
       ]
+    },
+    "rsync": {
+      "binaries": [
+        "rsync",
+        "rsync-ssl"
+      ],
+      "libs": []
+    },
+    "cmake": {
+      "binaries": [
+        "cmake",
+        "cpack",
+        "ctest"
+      ],
+      "libs": []
     },
     "findutils": {
       "binaries": [
@@ -751,9 +769,13 @@
       ],
       "libs": []
     },
-    "zip": {
+    "php": {
       "binaries": [
-        "zip"
+        "php",
+        "php-cgi",
+        "php-config",
+        "phpdbg",
+        "phpize"
       ],
       "libs": []
     },
@@ -764,13 +786,12 @@
       ],
       "libs": []
     },
-    "php": {
+    "zip": {
       "binaries": [
-        "php",
-        "php-cgi",
-        "php-config",
-        "phpdbg",
-        "phpize"
+        "zip",
+        "zipcloak",
+        "zipnote",
+        "zipsplit"
       ],
       "libs": []
     },
@@ -782,14 +803,11 @@
     },
     "unzip": {
       "binaries": [
-        "unzip"
-      ],
-      "libs": []
-    },
-    "nano": {
-      "binaries": [
-        "nano",
-        "rnano"
+        "funzip",
+        "unzip",
+        "unzipsfx",
+        "zipgrep",
+        "zipinfo"
       ],
       "libs": []
     },
@@ -811,6 +829,13 @@
       ],
       "libs": []
     },
+    "nano": {
+      "binaries": [
+        "nano",
+        "rnano"
+      ],
+      "libs": []
+    },
     "cscope": {
       "binaries": [
         "cscope",
@@ -824,14 +849,11 @@
       ],
       "libs": []
     },
-    "lua": {
+    "htop": {
       "binaries": [
-        "lua",
-        "luac"
+        "htop"
       ],
-      "libs": [
-        "liblua.a"
-      ]
+      "libs": []
     },
     "sqlite": {
       "binaries": [
@@ -841,19 +863,14 @@
         "libsqlite3.a"
       ]
     },
-    "libiconv": {
+    "lua": {
       "binaries": [
-        "giconv",
-        "iconv"
+        "lua",
+        "luac"
       ],
       "libs": [
-        "libcharset.a",
-        "libiconv.a"
+        "liblua.a"
       ]
-    },
-    "zigi": {
-      "binaries": [],
-      "libs": []
     },
     "libxml2": {
       "binaries": [
@@ -865,11 +882,8 @@
         "libxml2.a"
       ]
     },
-    "xmlto": {
-      "binaries": [
-        "xmlif",
-        "xmlto"
-      ],
+    "zigi": {
+      "binaries": [],
       "libs": []
     },
     "libpcre2": {
@@ -883,6 +897,13 @@
         "libpcre2-posix.a"
       ]
     },
+    "xmlto": {
+      "binaries": [
+        "xmlif",
+        "xmlto"
+      ],
+      "libs": []
+    },
     "getopt": {
       "binaries": [
         "getopt"
@@ -890,22 +911,6 @@
       "libs": [
         "libgetopt.a"
       ]
-    },
-    "libxslt": {
-      "binaries": [
-        "xslt-config",
-        "xsltproc"
-      ],
-      "libs": [
-        "libexslt.a",
-        "libxslt.a"
-      ]
-    },
-    "lynx": {
-      "binaries": [
-        "lynx"
-      ],
-      "libs": []
     },
     "meta": {
       "binaries": [
@@ -941,6 +946,32 @@
       ],
       "libs": []
     },
+    "libxslt": {
+      "binaries": [
+        "xslt-config",
+        "xsltproc"
+      ],
+      "libs": [
+        "libexslt.a",
+        "libxslt.a"
+      ]
+    },
+    "lynx": {
+      "binaries": [
+        "lynx"
+      ],
+      "libs": []
+    },
+    "libiconv": {
+      "binaries": [
+        "giconv",
+        "iconv"
+      ],
+      "libs": [
+        "libcharset.a",
+        "libiconv.a"
+      ]
+    },
     "which": {
       "binaries": [
         "which"
@@ -956,14 +987,6 @@
         "sudoedit",
         "sudoreplay",
         "visudo"
-      ],
-      "libs": []
-    },
-    "fzf": {
-      "binaries": [
-        "fzf",
-        "fzf-preview.sh",
-        "fzf-tmux"
       ],
       "libs": []
     },
@@ -996,6 +1019,14 @@
         "libexpect5.45.4.a"
       ]
     },
+    "fzf": {
+      "binaries": [
+        "fzf",
+        "fzf-preview.sh",
+        "fzf-tmux"
+      ],
+      "libs": []
+    },
     "npth": {
       "binaries": [
         "npth-config"
@@ -1004,9 +1035,21 @@
         "libnpth.a"
       ]
     },
-    "gnulib": {
-      "binaries": [],
+    "yq": {
+      "binaries": [
+        "yq"
+      ],
       "libs": []
+    },
+    "libgpgerror": {
+      "binaries": [
+        "gpg-error",
+        "gpgrt-config",
+        "yat2m"
+      ],
+      "libs": [
+        "libgpg-error.a"
+      ]
     },
     "neovim": {
       "binaries": [
@@ -1021,22 +1064,6 @@
         "vim.so",
         "vimdoc.so"
       ]
-    },
-    "libgpgerror": {
-      "binaries": [
-        "gpg-error",
-        "gpgrt-config",
-        "yat2m"
-      ],
-      "libs": [
-        "libgpg-error.a"
-      ]
-    },
-    "yq": {
-      "binaries": [
-        "yq"
-      ],
-      "libs": []
     },
     "libassuan": {
       "binaries": [
@@ -1070,6 +1097,10 @@
       "libs": [
         "libssh2.a"
       ]
+    },
+    "gnulib": {
+      "binaries": [],
+      "libs": []
     },
     "direnv": {
       "binaries": [
@@ -1105,6 +1136,20 @@
       ],
       "libs": []
     },
+    "powerlinego": {
+      "binaries": [
+        "powerline-go"
+      ],
+      "libs": []
+    },
+    "pinentry": {
+      "binaries": [
+        "pinentry",
+        "pinentry-curses",
+        "pinentry-tty"
+      ],
+      "libs": []
+    },
     "gpg": {
       "binaries": [
         "addgnupghome",
@@ -1131,20 +1176,6 @@
       ],
       "libs": []
     },
-    "powerlinego": {
-      "binaries": [
-        "powerline-go"
-      ],
-      "libs": []
-    },
-    "pinentry": {
-      "binaries": [
-        "pinentry",
-        "pinentry-curses",
-        "pinentry-tty"
-      ],
-      "libs": []
-    },
     "byacc": {
       "binaries": [
         "yacc",
@@ -1155,12 +1186,6 @@
     "tig": {
       "binaries": [
         "tig"
-      ],
-      "libs": []
-    },
-    "bump": {
-      "binaries": [
-        "bump"
       ],
       "libs": []
     },
@@ -1182,6 +1207,12 @@
         "libduckdb_utf8proc.a",
         "libparquet_extension.a"
       ]
+    },
+    "bump": {
+      "binaries": [
+        "bump"
+      ],
+      "libs": []
     },
     "ntbtls": {
       "binaries": [
@@ -1219,15 +1250,11 @@
       ],
       "libs": []
     },
-    "librdkafka": {
-      "binaries": [],
-      "libs": [
-        "librdkafka++.a",
-        "librdkafka++.so",
-        "librdkafka-static.a",
-        "librdkafka.a",
-        "librdkafka.so"
-      ]
+    "wharf": {
+      "binaries": [
+        "wharf"
+      ],
+      "libs": []
     },
     "oniguruma": {
       "binaries": [
@@ -1249,12 +1276,6 @@
         "libpcreposix.a"
       ]
     },
-    "wharf": {
-      "binaries": [
-        "wharf"
-      ],
-      "libs": []
-    },
     "multitail": {
       "binaries": [
         "multitail"
@@ -1267,33 +1288,32 @@
         "libmd.a"
       ]
     },
-    "libbsd": {
-      "binaries": [],
-      "libs": [
-        "libbsd.a"
-      ]
-    },
     "jansson": {
       "binaries": [],
       "libs": [
         "libjansson.a"
       ]
     },
+    "libbsd": {
+      "binaries": [],
+      "libs": [
+        "libbsd.a"
+      ]
+    },
+    "librdkafka": {
+      "binaries": [],
+      "libs": [
+        "librdkafka++.a",
+        "librdkafka++.so",
+        "librdkafka-static.a",
+        "librdkafka.a",
+        "librdkafka.so"
+      ]
+    },
     "luarocks": {
       "binaries": [
         "luarocks",
         "luarocks-admin"
-      ],
-      "libs": []
-    },
-    "redis": {
-      "binaries": [
-        "redis-benchmark",
-        "redis-check-aof",
-        "redis-check-rdb",
-        "redis-cli",
-        "redis-sentinel",
-        "redis-server"
       ],
       "libs": []
     },
@@ -1308,11 +1328,16 @@
         "libavro.a"
       ]
     },
-    "libuv": {
-      "binaries": [],
-      "libs": [
-        "libuv.a"
-      ]
+    "redis": {
+      "binaries": [
+        "redis-benchmark",
+        "redis-check-aof",
+        "redis-check-rdb",
+        "redis-cli",
+        "redis-sentinel",
+        "redis-server"
+      ],
+      "libs": []
     },
     "libserdes": {
       "binaries": [],
@@ -1321,9 +1346,15 @@
         "libserdes.so"
       ]
     },
-    "shdoc": {
+    "libuv": {
+      "binaries": [],
+      "libs": [
+        "libuv.a"
+      ]
+    },
+    "nginx": {
       "binaries": [
-        "shdoc"
+        "nginx"
       ],
       "libs": []
     },
@@ -1333,8 +1364,20 @@
       ],
       "libs": []
     },
+    "shdoc": {
+      "binaries": [
+        "shdoc"
+      ],
+      "libs": []
+    },
     "depot_tools": {
       "binaries": [],
+      "libs": []
+    },
+    "githubcli": {
+      "binaries": [
+        "gh"
+      ],
       "libs": []
     },
     "moreutils": {
@@ -1363,15 +1406,6 @@
         "utf8-verify"
       ],
       "libs": []
-    },
-    "gn": {
-      "binaries": [
-        "gn"
-      ],
-      "libs": [
-        "base.a",
-        "gn_lib.a"
-      ]
     },
     "protobuf": {
       "binaries": [
@@ -1485,9 +1519,18 @@
       ],
       "libs": []
     },
-    "githubcli": {
+    "gn": {
       "binaries": [
-        "gh"
+        "gn"
+      ],
+      "libs": [
+        "base.a",
+        "gn_lib.a"
+      ]
+    },
+    "zospstree": {
+      "binaries": [
+        "pstree"
       ],
       "libs": []
     },
@@ -1497,12 +1540,6 @@
         "mac2unix",
         "unix2dos",
         "unix2mac"
-      ],
-      "libs": []
-    },
-    "zospstree": {
-      "binaries": [
-        "pstree"
       ],
       "libs": []
     },
@@ -1612,6 +1649,43 @@
       ],
       "libs": []
     },
+    "prometheus": {
+      "binaries": [
+        "prometheus",
+        "promtool"
+      ],
+      "libs": []
+    },
+    "gitlab-runner": {
+      "binaries": [
+        "gitlab-runner"
+      ],
+      "libs": []
+    },
+    "gmp": {
+      "binaries": [],
+      "libs": [
+        "libgmp.a"
+      ]
+    },
+    "ant": {
+      "binaries": [
+        "ant",
+        "ant.bat",
+        "ant.cmd",
+        "antRun",
+        "antRun.bat",
+        "antRun.pl",
+        "antenv.cmd",
+        "complete-ant-cmd.pl",
+        "envset.cmd",
+        "lcp.bat",
+        "runant.pl",
+        "runant.py",
+        "runrc.cmd"
+      ],
+      "libs": []
+    },
     "boost": {
       "binaries": [],
       "libs": [
@@ -1656,29 +1730,11 @@
         "libboost_wserialization.so"
       ]
     },
-    "ant": {
+    "my_basic": {
       "binaries": [
-        "ant",
-        "ant.bat",
-        "ant.cmd",
-        "antRun",
-        "antRun.bat",
-        "antRun.pl",
-        "antenv.cmd",
-        "complete-ant-cmd.pl",
-        "envset.cmd",
-        "lcp.bat",
-        "runant.pl",
-        "runant.py",
-        "runrc.cmd"
+        "my_basic"
       ],
       "libs": []
-    },
-    "gmp": {
-      "binaries": [],
-      "libs": [
-        "libgmp.a"
-      ]
     },
     "nghttp2": {
       "binaries": [],
@@ -1686,21 +1742,27 @@
         "libnghttp2.a"
       ]
     },
-    "my_basic": {
-      "binaries": [
-        "my_basic"
-      ],
-      "libs": []
-    },
     "meson": {
       "binaries": [
         "meson"
       ],
       "libs": []
     },
-    "gitlab-runner": {
+    "libevent": {
       "binaries": [
-        "gitlab-runner"
+        "event_rpcgen.py"
+      ],
+      "libs": [
+        "libevent.a",
+        "libevent_core.a",
+        "libevent_extra.a",
+        "libevent_openssl.a",
+        "libevent_pthreads.a"
+      ]
+    },
+    "tmux": {
+      "binaries": [
+        "tmux"
       ],
       "libs": []
     },
@@ -1732,60 +1794,37 @@
       ],
       "libs": []
     },
-    "libevent": {
-      "binaries": [
-        "event_rpcgen.py"
-      ],
-      "libs": [
-        "libevent.a",
-        "libevent_core.a",
-        "libevent_extra.a",
-        "libevent_openssl.a",
-        "libevent_pthreads.a"
-      ]
-    },
-    "tmux": {
-      "binaries": [
-        "tmux"
-      ],
-      "libs": []
-    },
-    "prometheus": {
-      "binaries": [
-        "prometheus",
-        "promtool"
-      ],
-      "libs": []
-    },
     "gitlabcli": {
       "binaries": [
         "glab"
       ],
       "libs": []
     },
-    "fq": {
+    "caddy": {
       "binaries": [
-        "fq"
+        "caddy"
       ],
       "libs": []
     },
     "zlib-ng": {
       "binaries": [],
       "libs": [
-        "libz.a"
+        "libz-ng.a"
       ]
+    },
+    "fq": {
+      "binaries": [
+        "doc",
+        "fq",
+        "gen"
+      ],
+      "libs": []
     },
     "prompters": {
       "binaries": [
         "mantastic",
         "zotfile",
         "zothelper"
-      ],
-      "libs": []
-    },
-    "caddy": {
-      "binaries": [
-        "caddy"
       ],
       "libs": []
     },
@@ -1813,6 +1852,10 @@
       ],
       "libs": []
     },
+    "gin": {
+      "binaries": [],
+      "libs": []
+    },
     "victoriametrics": {
       "binaries": [
         "vmagent-pure"
@@ -1836,13 +1879,6 @@
         "libpopt.a"
       ]
     },
-    "frp": {
-      "binaries": [
-        "frpc",
-        "frps"
-      ],
-      "libs": []
-    },
     "logrotate": {
       "binaries": [
         "logrotate"
@@ -1859,6 +1895,13 @@
         "libgpgme.a",
         "libgpgmepp.a"
       ]
+    },
+    "frp": {
+      "binaries": [
+        "frpc",
+        "frps"
+      ],
+      "libs": []
     },
     "ttype": {
       "binaries": [
@@ -1885,18 +1928,6 @@
       ],
       "libs": []
     },
-    "gin": {
-      "binaries": [],
-      "libs": []
-    },
-    "murex": {
-      "binaries": [
-        "murex"
-      ],
-      "libs": [
-        "sqlite3-binding.so"
-      ]
-    },
     "procps": {
       "binaries": [
         "pgrep",
@@ -1907,6 +1938,14 @@
       ],
       "libs": [
         "libproc2.a"
+      ]
+    },
+    "murex": {
+      "binaries": [
+        "murex"
+      ],
+      "libs": [
+        "sqlite3-binding.so"
       ]
     },
     "cppcheck": {
@@ -1922,12 +1961,8 @@
       "libs": []
     },
     "s5cmd": {
-      "binaries": [],
-      "libs": []
-    },
-    "jenkins": {
       "binaries": [
-        "jenkins.war"
+        "s5cmd"
       ],
       "libs": []
     },
@@ -1938,10 +1973,9 @@
       ],
       "libs": []
     },
-    "check_clang": {
+    "jenkins": {
       "binaries": [
-        "ar",
-        "zotar"
+        "jenkins.war"
       ],
       "libs": []
     },
@@ -1951,89 +1985,11 @@
       ],
       "libs": []
     },
-    "llamacpp": {
+    "check_clang": {
       "binaries": [
-        "convert_hf_to_gguf.py",
-        "llama-batched",
-        "llama-batched-bench",
-        "llama-bench",
-        "llama-cli",
-        "llama-convert-llama2c-to-ggml",
-        "llama-cvector-generator",
-        "llama-diffusion-cli",
-        "llama-embedding",
-        "llama-eval-callback",
-        "llama-export-lora",
-        "llama-finetune",
-        "llama-gen-docs",
-        "llama-gguf",
-        "llama-gguf-hash",
-        "llama-gguf-split",
-        "llama-gritlm",
-        "llama-imatrix",
-        "llama-lookahead",
-        "llama-lookup",
-        "llama-lookup-create",
-        "llama-lookup-merge",
-        "llama-lookup-stats",
-        "llama-mtmd-cli",
-        "llama-parallel",
-        "llama-passkey",
-        "llama-perplexity",
-        "llama-quantize",
-        "llama-retrieval",
-        "llama-run",
-        "llama-save-load-state",
-        "llama-server",
-        "llama-simple",
-        "llama-simple-chat",
-        "llama-speculative",
-        "llama-speculative-simple",
-        "llama-tokenize",
-        "llama-tts",
-        "test-arg-parser",
-        "test-autorelease",
-        "test-backend-ops",
-        "test-barrier",
-        "test-chat",
-        "test-chat-parser",
-        "test-chat-template",
-        "test-gbnf-validator",
-        "test-gguf",
-        "test-grammar-integration",
-        "test-grammar-parser",
-        "test-json-partial",
-        "test-json-schema-to-grammar",
-        "test-llama-grammar",
-        "test-log",
-        "test-model-load-cancel",
-        "test-mtmd-c-api",
-        "test-quantize-fns",
-        "test-quantize-perf",
-        "test-quantize-stats",
-        "test-regex-partial",
-        "test-rope",
-        "test-sampling",
-        "test-thread-safety",
-        "test-tokenizer-0",
-        "test-tokenizer-1-bpe",
-        "test-tokenizer-1-spm"
+        "ar",
+        "zotar"
       ],
-      "libs": [
-        "libggml-base.a",
-        "libggml-blas.a",
-        "libggml-cpu.a",
-        "libggml.a",
-        "libllama.a",
-        "libmtmd.a"
-      ]
-    },
-    "check_xlclang": {
-      "binaries": [],
-      "libs": []
-    },
-    "check_python": {
-      "binaries": [],
       "libs": []
     },
     "libsasl2": {
@@ -2052,6 +2008,14 @@
         "libsasldb.a",
         "libscram.a"
       ]
+    },
+    "check_xlclang": {
+      "binaries": [],
+      "libs": []
+    },
+    "check_python": {
+      "binaries": [],
+      "libs": []
     },
     "check_java": {
       "binaries": [],
@@ -2076,6 +2040,16 @@
       ],
       "libs": [
         "libdialog.a"
+      ]
+    },
+    "grafana": {
+      "binaries": [
+        "grafana",
+        "grafana-cli",
+        "grafana-server"
+      ],
+      "libs": [
+        "sqlite3-binding.so"
       ]
     },
     "cjson": {
@@ -2183,31 +2157,11 @@
         "libzedc_ascii.a"
       ]
     },
-    "zusage": {
-      "binaries": [],
-      "libs": [
-        "libzusage.a"
-      ]
-    },
-    "bash-completion": {
-      "binaries": [],
-      "libs": []
-    },
     "hugo": {
       "binaries": [
         "hugo"
       ],
       "libs": []
-    },
-    "grafana": {
-      "binaries": [
-        "grafana",
-        "grafana-cli",
-        "grafana-server"
-      ],
-      "libs": [
-        "sqlite3-binding.so"
-      ]
     },
     "spdlog": {
       "binaries": [],
@@ -2221,6 +2175,16 @@
       ],
       "libs": []
     },
+    "zusage": {
+      "binaries": [],
+      "libs": [
+        "libzusage.a"
+      ]
+    },
+    "bash-completion": {
+      "binaries": [],
+      "libs": []
+    },
     "librabbitmq": {
       "binaries": [],
       "libs": [
@@ -2228,18 +2192,18 @@
         "librabbitmq.so"
       ]
     },
-    "cpio": {
-      "binaries": [
-        "cpio",
-        "gcpio"
-      ],
-      "libs": []
-    },
     "ed": {
       "binaries": [
         "ed",
         "ged",
         "red"
+      ],
+      "libs": []
+    },
+    "cpio": {
+      "binaries": [
+        "cpio",
+        "gcpio"
       ],
       "libs": []
     },
@@ -2268,571 +2232,12 @@
       ],
       "libs": []
     },
-    "git-sizer": {
-      "binaries": [
-        "git-sizer"
-      ],
-      "libs": []
-    },
-    "lzip": {
-      "binaries": [
-        "lzip"
-      ],
-      "libs": []
-    },
-    "jd": {
-      "binaries": [
-        "jd"
-      ],
-      "libs": []
-    },
-    "libarchive": {
-      "binaries": [
-        "bsdcat",
-        "bsdcpio",
-        "bsdtar",
-        "bsdunzip"
-      ],
-      "libs": [
-        "libarchive.a"
-      ]
-    },
-    "glow": {
-      "binaries": [
-        "glow"
-      ],
-      "libs": []
-    },
     "apr": {
       "binaries": [
         "apr-2-config"
       ],
       "libs": [
         "libapr-2.a"
-      ]
-    },
-    "chezmoi": {
-      "binaries": [
-        "chezmoi"
-      ],
-      "libs": []
-    },
-    "scc": {
-      "binaries": [
-        "scc"
-      ],
-      "libs": []
-    },
-    "gflags": {
-      "binaries": [
-        "gflags_completions.sh"
-      ],
-      "libs": [
-        "libgflags.a",
-        "libgflags_nothreads.a"
-      ]
-    },
-    "fish": {
-      "binaries": [
-        "fish",
-        "fish_indent",
-        "fish_key_reader"
-      ],
-      "libs": []
-    },
-    "doom-ascii": {
-      "binaries": [
-        "doom_ascii"
-      ],
-      "libs": []
-    },
-    "readline": {
-      "binaries": [],
-      "libs": [
-        "libhistory.a",
-        "libreadline.a"
-      ]
-    },
-    "jemalloc": {
-      "binaries": [
-        "jemalloc-config",
-        "jemalloc.sh",
-        "jeprof"
-      ],
-      "libs": [
-        "libjemalloc.a",
-        "libjemalloc_pic.a"
-      ]
-    },
-    "quilt": {
-      "binaries": [
-        "guards",
-        "quilt"
-      ],
-      "libs": []
-    },
-    "snappy-c": {
-      "binaries": [],
-      "libs": []
-    },
-    "ccache": {
-      "binaries": [
-        "ccache"
-      ],
-      "libs": []
-    },
-    "file": {
-      "binaries": [
-        "file",
-        "zotfile"
-      ],
-      "libs": [
-        "libmagic.a"
-      ]
-    },
-    "scdoc": {
-      "binaries": [
-        "scdoc"
-      ],
-      "libs": []
-    },
-    "libpsl": {
-      "binaries": [
-        "psl",
-        "psl-make-dafsa"
-      ],
-      "libs": [
-        "libpsl.a"
-      ]
-    },
-    "metaldio": {
-      "binaries": [],
-      "libs": [
-        "libbpamiocore.a",
-        "libbpamiosvcs.a"
-      ]
-    },
-    "asio": {
-      "binaries": [],
-      "libs": []
-    },
-    "gradle": {
-      "binaries": [
-        "gradle",
-        "gradle.bat"
-      ],
-      "libs": []
-    },
-    "fmt": {
-      "binaries": [],
-      "libs": [
-        "libfmt.a"
-      ]
-    },
-    "mpfr": {
-      "binaries": [],
-      "libs": [
-        "libmpfr.a"
-      ]
-    },
-    "tcltls": {
-      "binaries": [],
-      "libs": [
-        "libtcl9tls1.8.0.so"
-      ]
-    },
-    "blis": {
-      "binaries": [],
-      "libs": [
-        "libblis.a"
-      ]
-    },
-    "mkcert": {
-      "binaries": [
-        "mkcert"
-      ],
-      "libs": []
-    },
-    "rpm": {
-      "binaries": [
-        "gendiff",
-        "rpm",
-        "rpm2archive",
-        "rpm2cpio",
-        "rpmbuild",
-        "rpmdb",
-        "rpmgraph",
-        "rpmkeys",
-        "rpmlua",
-        "rpmquery",
-        "rpmsign",
-        "rpmsort",
-        "rpmspec",
-        "rpmverify"
-      ],
-      "libs": [
-        "liblibrpm.a",
-        "liblibrpmbuild.a",
-        "liblibrpmsign.a",
-        "librpmio.a"
-      ]
-    },
-    "libyaml": {
-      "binaries": [],
-      "libs": [
-        "libyaml.a"
-      ]
-    },
-    "grpc": {
-      "binaries": [
-        "acountry",
-        "adig",
-        "ahost",
-        "grpc_cpp_plugin",
-        "grpc_csharp_plugin",
-        "grpc_node_plugin",
-        "grpc_objective_c_plugin",
-        "grpc_php_plugin",
-        "grpc_python_plugin",
-        "grpc_ruby_plugin",
-        "protoc",
-        "protoc-31.0.0",
-        "protoc-gen-upb",
-        "protoc-gen-upb-31.0.0",
-        "protoc-gen-upbdefs",
-        "protoc-gen-upbdefs-31.0.0"
-      ],
-      "libs": [
-        "libabsl_bad_any_cast_impl.a",
-        "libabsl_bad_optional_access.a",
-        "libabsl_bad_variant_access.a",
-        "libabsl_base.a",
-        "libabsl_city.a",
-        "libabsl_civil_time.a",
-        "libabsl_cord.a",
-        "libabsl_cord_internal.a",
-        "libabsl_cordz_functions.a",
-        "libabsl_cordz_handle.a",
-        "libabsl_cordz_info.a",
-        "libabsl_cordz_sample_token.a",
-        "libabsl_crc32c.a",
-        "libabsl_crc_cord_state.a",
-        "libabsl_crc_cpu_detect.a",
-        "libabsl_crc_internal.a",
-        "libabsl_debugging_internal.a",
-        "libabsl_decode_rust_punycode.a",
-        "libabsl_demangle_internal.a",
-        "libabsl_demangle_rust.a",
-        "libabsl_die_if_null.a",
-        "libabsl_examine_stack.a",
-        "libabsl_exponential_biased.a",
-        "libabsl_failure_signal_handler.a",
-        "libabsl_flags_commandlineflag.a",
-        "libabsl_flags_commandlineflag_internal.a",
-        "libabsl_flags_config.a",
-        "libabsl_flags_internal.a",
-        "libabsl_flags_marshalling.a",
-        "libabsl_flags_parse.a",
-        "libabsl_flags_private_handle_accessor.a",
-        "libabsl_flags_program_name.a",
-        "libabsl_flags_reflection.a",
-        "libabsl_flags_usage.a",
-        "libabsl_flags_usage_internal.a",
-        "libabsl_graphcycles_internal.a",
-        "libabsl_hash.a",
-        "libabsl_hashtablez_sampler.a",
-        "libabsl_int128.a",
-        "libabsl_kernel_timeout_internal.a",
-        "libabsl_leak_check.a",
-        "libabsl_log_entry.a",
-        "libabsl_log_flags.a",
-        "libabsl_log_globals.a",
-        "libabsl_log_initialize.a",
-        "libabsl_log_internal_check_op.a",
-        "libabsl_log_internal_conditions.a",
-        "libabsl_log_internal_fnmatch.a",
-        "libabsl_log_internal_format.a",
-        "libabsl_log_internal_globals.a",
-        "libabsl_log_internal_log_sink_set.a",
-        "libabsl_log_internal_message.a",
-        "libabsl_log_internal_nullguard.a",
-        "libabsl_log_internal_proto.a",
-        "libabsl_log_internal_structured_proto.a",
-        "libabsl_log_severity.a",
-        "libabsl_log_sink.a",
-        "libabsl_low_level_hash.a",
-        "libabsl_malloc_internal.a",
-        "libabsl_periodic_sampler.a",
-        "libabsl_poison.a",
-        "libabsl_random_distributions.a",
-        "libabsl_random_internal_distribution_test_util.a",
-        "libabsl_random_internal_platform.a",
-        "libabsl_random_internal_pool_urbg.a",
-        "libabsl_random_internal_randen.a",
-        "libabsl_random_internal_randen_hwaes.a",
-        "libabsl_random_internal_randen_hwaes_impl.a",
-        "libabsl_random_internal_randen_slow.a",
-        "libabsl_random_internal_seed_material.a",
-        "libabsl_random_seed_gen_exception.a",
-        "libabsl_random_seed_sequences.a",
-        "libabsl_raw_hash_set.a",
-        "libabsl_raw_logging_internal.a",
-        "libabsl_scoped_set_env.a",
-        "libabsl_spinlock_wait.a",
-        "libabsl_stacktrace.a",
-        "libabsl_status.a",
-        "libabsl_statusor.a",
-        "libabsl_str_format_internal.a",
-        "libabsl_strerror.a",
-        "libabsl_string_view.a",
-        "libabsl_strings.a",
-        "libabsl_strings_internal.a",
-        "libabsl_symbolize.a",
-        "libabsl_synchronization.a",
-        "libabsl_throw_delegate.a",
-        "libabsl_time.a",
-        "libabsl_time_zone.a",
-        "libabsl_tracing_internal.a",
-        "libabsl_utf8_for_code_point.a",
-        "libabsl_vlog_config_internal.a",
-        "libaddress_sorting.a",
-        "libcares.a",
-        "libgpr.a",
-        "libgrpc++.a",
-        "libgrpc++_alts.a",
-        "libgrpc++_error_details.a",
-        "libgrpc++_reflection.a",
-        "libgrpc++_unsecure.a",
-        "libgrpc.a",
-        "libgrpc_authorization_provider.a",
-        "libgrpc_plugin_support.a",
-        "libgrpc_unsecure.a",
-        "libgrpcpp_channelz.a",
-        "libprotobuf-lite.a",
-        "libprotobuf.a",
-        "libprotoc.a",
-        "libre2.a",
-        "libupb.a",
-        "libupb_base_lib.a",
-        "libupb_hash_lib.a",
-        "libupb_json_lib.a",
-        "libupb_lex_lib.a",
-        "libupb_mem_lib.a",
-        "libupb_message_lib.a",
-        "libupb_mini_descriptor_lib.a",
-        "libupb_mini_table_lib.a",
-        "libupb_reflection_lib.a",
-        "libupb_textformat_lib.a",
-        "libupb_wire_lib.a",
-        "libutf8_range.a",
-        "libutf8_range_lib.a",
-        "libutf8_validity.a"
-      ]
-    },
-    "libsolv": {
-      "binaries": [
-        "comps2solv",
-        "deltainfoxml2solv",
-        "dumpsolv",
-        "installcheck",
-        "mergesolv",
-        "repo2solv",
-        "repomdxml2solv",
-        "rpmdb2solv",
-        "rpmmd2solv",
-        "rpms2solv",
-        "testsolv",
-        "updateinfoxml2solv"
-      ],
-      "libs": [
-        "libsolv.a",
-        "libsolvext.a"
-      ]
-    },
-    "jsonc": {
-      "binaries": [],
-      "libs": [
-        "libjson-c.a"
-      ]
-    },
-    "toml11": {
-      "binaries": [],
-      "libs": []
-    },
-    "librepo": {
-      "binaries": [],
-      "libs": [
-        "librepo.a"
-      ]
-    },
-    "check": {
-      "binaries": [
-        "checkmk"
-      ],
-      "libs": [
-        "libcheck.a"
-      ]
-    },
-    "openldap": {
-      "binaries": [
-        "ldapadd",
-        "ldapcompare",
-        "ldapdelete",
-        "ldapexop",
-        "ldapmodify",
-        "ldapmodrdn",
-        "ldappasswd",
-        "ldapsearch",
-        "ldapurl",
-        "ldapvc",
-        "ldapwhoami",
-        "slapacl",
-        "slapadd",
-        "slapauth",
-        "slapcat",
-        "slapdn",
-        "slapindex",
-        "slapmodify",
-        "slappasswd",
-        "slapschema",
-        "slaptest"
-      ],
-      "libs": [
-        "liblber.a",
-        "libldap.a"
-      ]
-    },
-    "clang-format": {
-      "binaries": [
-        "clang-format",
-        "git-clang-format"
-      ],
-      "libs": []
-    },
-    "glib": {
-      "binaries": [
-        "gapplication",
-        "gdbus",
-        "gdbus-codegen",
-        "gi-compile-repository",
-        "gi-decompile-typelib",
-        "gi-inspect-typelib",
-        "gio",
-        "gio-querymodules",
-        "glib-compile-resources",
-        "glib-compile-schemas",
-        "glib-genmarshal",
-        "glib-gettextize",
-        "glib-mkenums",
-        "gobject-query",
-        "gresource",
-        "gsettings",
-        "gtester",
-        "gtester-report"
-      ],
-      "libs": [
-        "libffi.a",
-        "libgio-2.0.a",
-        "libgirepository-2.0.a",
-        "libglib-2.0.a",
-        "libgmodule-2.0.a",
-        "libgobject-2.0.a",
-        "libgthread-2.0.a"
-      ]
-    },
-    "libkqueue": {
-      "binaries": [],
-      "libs": [
-        "libkqueue.a"
-      ]
-    },
-    "alternatives": {
-      "binaries": [
-        "alternatives",
-        "update-alternatives"
-      ],
-      "libs": []
-    },
-    "crush": {
-      "binaries": [
-        "crush"
-      ],
-      "libs": []
-    },
-    "cppunit": {
-      "binaries": [
-        "DllPlugInTester"
-      ],
-      "libs": [
-        "libcppunit.a"
-      ]
-    },
-    "pv": {
-      "binaries": [
-        "pv"
-      ],
-      "libs": []
-    },
-    "createrepo_c": {
-      "binaries": [
-        "createrepo_c",
-        "mergerepo_c",
-        "modifyrepo_c",
-        "sqliterepo_c"
-      ],
-      "libs": [
-        "libcreaterepo_c.a"
-      ]
-    },
-    "check_podman": {
-      "binaries": [],
-      "libs": []
-    },
-    "mc": {
-      "binaries": [
-        "mc",
-        "mcdiff",
-        "mcedit",
-        "mcview"
-      ],
-      "libs": []
-    },
-    "hazelcast": {
-      "binaries": [
-        "common.bat",
-        "common.sh",
-        "hz",
-        "hz-cli",
-        "hz-cli.bat",
-        "hz-cluster-admin",
-        "hz-cluster-cp-admin",
-        "hz-healthcheck",
-        "hz-start",
-        "hz-start.bat",
-        "hz-stop",
-        "hz-stop.bat"
-      ],
-      "libs": []
-    },
-    "dnf5": {
-      "binaries": [
-        "dnf-automatic",
-        "dnf5"
-      ],
-      "libs": [
-        "actions.so",
-        "automatic_cmd_plugin.so",
-        "builddep_cmd_plugin.so",
-        "changelog_cmd_plugin.so",
-        "config-manager_cmd_plugin.so",
-        "copr_cmd_plugin.so",
-        "expired-pgp-keys.so",
-        "libdnf5-cli.a",
-        "libdnf5.a",
-        "libdnf5_core.a",
-        "repoclosure_cmd_plugin.so",
-        "repomanage_cmd_plugin.so",
-        "reposync_cmd_plugin.so"
       ]
     }
   }

@@ -1,0 +1,46 @@
+
+.tool-info-grid {
+  display: grid;
+  grid-template-columns:
+    minmax(140px, 1.5fr)
+    minmax(100px, 0.8fr)
+    minmax(90px, 0.7fr)
+    minmax(180px, 1.2fr)
+    minmax(200px, 2fr);
+  gap: 0px 12px;
+  align-items: baseline;
+  font-size: 0.9em;
+  line-height: 1.4;
+}
+
+.tool-info-grid > div {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tool-name {
+  font-size: 1.15em;
+  font-weight: bold;
+  white-space: normal;
+}
+.tool-desc {
+  white-space: normal;
+}
+
+.tool-info-grid a {
+  text-decoration: none;
+  color: inherit;
+}
+.tool-info-grid a:hover {
+  text-decoration: underline;
+}
+
+/* Striping for both light and dark modes */
+.tool-item-filterable:nth-child(even) {
+  background-color: var(--vp-c-bg-soft);
+}
+
+.tool-item-filterable:nth-child(odd) {
+  background-color: var(--vp-c-bg-mute);
+}

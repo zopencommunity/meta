@@ -388,7 +388,7 @@ EOF
 #  export ZOPEN_EXTRA_LIBS="\\\${ZOPEN_EXTRA_LIBS} -l${name}"
 #fi
 #END
-}
+#}
 EOF
 )
     ;;

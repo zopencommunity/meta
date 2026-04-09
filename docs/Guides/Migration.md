@@ -7,7 +7,7 @@ The new zopen package manager is not compatible with the previous version of zop
 * Identify the tools you have already installed. Use `zopen install --list`.
 * If you plan to reuse the existing zopen root directory for installing the new tools, 
   make sure to back it up to a different directory.
-* Proceed to [Getting Started](QuickStart.md) and install the new package manager, and the tools you had before.
+* Proceed to [Getting Started](QuickStart) and install the new package manager, and the tools you had before.
 
 ## Migration process from Rocket Software Tools 
 * Some Rocket Software tools, such as Git, ask the user to export a set of environment variables prior to running the tool.

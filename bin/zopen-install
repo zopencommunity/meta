@@ -866,7 +866,14 @@ fi
 printVerbose "Checking whether any invalid ports were specified."
 if [ -n "${invalidlist}" ]; then
   printSoftError "The following requested port(s) do not exist:\n\t$(echo "${invalidlist}" | tr -s '[:space:]')"
-  printError "Check port name(s), remove any port suffixes and retry command."
+  printSoftError "Check port name(s), remove any port suffixes and retry command."
 fi
+
+for item in ${invalidlist}; do
+  if [[ "$(echo $item)" == "$(echo $chosenRepo)" ]]; then
+    #printInfo "item $item chosenrepo $chosenRepo not found Skipping Installation"
+    exit 1
+  fi
+done
 
 installPorts "${installArray}"
