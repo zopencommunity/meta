@@ -27,6 +27,7 @@
 - 2026-03-21: [Update autoconf-version to 2.73 from 2.72](https://github.com/zopencommunity/autoconfport/pull/53) ❌
 
 ### buildkiteport
+- 2026-04-08: [Update buildkite-version to 3.121.1 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/100) ❌
 - 2026-03-31: [Update buildkite-version to 3.121.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/99) ❌
 - 2026-03-24: [Update buildkite-version to 3.120.3 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/98) ❌
 - 2026-03-23: [Update buildkite-version to 3.120.2 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/97) ❌
@@ -56,7 +57,6 @@
 - 2025-09-18: [Update buildkite-version to 3.107.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/73) ❌
 - 2025-09-16: [Update buildkite-version to 3.106.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/72) ❌
 - 2025-09-11: [Update buildkite-version to 3.105.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/71) ❌
-- 2025-09-05: [Update buildkite-version to 3.104.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/70) ❌
 
 ### c3270port
 - 2025-12-23: [Update c3270-version to 4.5ga5 from 4.4ga6](https://github.com/zopencommunity/c3270port/pull/32) ❌
@@ -387,6 +387,7 @@
 - 2025-05-19: [Update hello-version to 2.12.2 from 2.12.1](https://github.com/zopencommunity/helloport/pull/11) ❌
 
 ### hugoport
+- 2026-04-08: [Update hugo-version to 0.160.1 from 0.158.0](https://github.com/zopencommunity/hugoport/pull/71) ❌
 - 2026-04-04: [Update hugo-version to 0.160.0 from 0.158.0](https://github.com/zopencommunity/hugoport/pull/70) ❌
 - 2026-04-01: [Update hugo-version to 0.159.2 from 0.158.0](https://github.com/zopencommunity/hugoport/pull/69) ❌
 - 2026-03-26: [Update hugo-version to 0.159.1 from 0.158.0](https://github.com/zopencommunity/hugoport/pull/68) ❌
@@ -474,6 +475,9 @@
 - 2024-07-19: [Update murex-version to 6.2.3000 from 6.0.1000](https://github.com/zopencommunity/murexport/pull/2) ❓
 - 2024-06-27: [Update murex-version to 6.1.8300 from 6.0.1000](https://github.com/zopencommunity/murexport/pull/1) ❓
 
+### nanoport
+- 2026-04-08: [Update nano-version to 9.0 from 8.7.1](https://github.com/zopencommunity/nanoport/pull/23) ❌
+
 ### natsport
 - 2026-03-25: [Update nats-version to 2.12.6 from 2.12.5](https://github.com/zopencommunity/natsport/pull/39) ❌
 
@@ -498,6 +502,7 @@
 - 2024-10-02: [Update openssh-version to 9.9p1 from 9.8p1](https://github.com/zopencommunity/opensshport/pull/15) ❓
 
 ### opensslport
+- 2026-04-08: [Update openssl-3-version to 3.6.2 from 3.6.0](https://github.com/zopencommunity/opensslport/pull/63) ❌
 - 2026-01-27: [Update openssl-3-version to 3.6.1 from 3.6.0](https://github.com/zopencommunity/opensslport/pull/61) ❌
 
 ### osv-scannerport
@@ -1049,5 +1054,5 @@
 ---
 
 
-> Last updated: 2026-04-08 06:11:07 EDT
+> Last updated: 2026-04-09 06:11:20 EDT
 

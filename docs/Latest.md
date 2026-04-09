@@ -630,12 +630,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="dos2unix" data-searchable-text="dos2unix Blue 99.2% STABLE_dos2unix_4024 A tool for converting DOS/Windows text files to Unix format development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="dos2unix" data-searchable-text="dos2unix Blue 99.2% STABLE_dos2unix_4196 A tool for converting DOS/Windows text files to Unix format development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/dos2unixport" target="_blank" rel="noopener noreferrer">dos2unix</a></strong></div>
     <div class="tool-status">Status: Blue</div>
     <div class="tool-test">Test: 99.2%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/dos2unixport/releases/download/STABLE_dos2unixport_4024/dos2unix-7.5.4.20260131_151806.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_dos2unix_4024</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/dos2unixport/releases/download/STABLE_dos2unixport_4196/dos2unix-7.5.5.20260408_154411.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_dos2unix_4196</a></div>
     <div class="tool-desc" title="A tool for converting DOS/Windows text files to Unix format">A tool for converting DOS/Windows text files to Unix format</div>
   </div>
 </div>
@@ -1248,12 +1248,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="dos2unix" data-searchable-text="dos2unix Blue 99.2% STABLE_dos2unix_4024 A tool for converting DOS/Windows text files to Unix format editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="dos2unix" data-searchable-text="dos2unix Blue 99.2% STABLE_dos2unix_4196 A tool for converting DOS/Windows text files to Unix format editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/dos2unixport" target="_blank" rel="noopener noreferrer">dos2unix</a></strong></div>
     <div class="tool-status">Status: Blue</div>
     <div class="tool-test">Test: 99.2%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/dos2unixport/releases/download/STABLE_dos2unixport_4024/dos2unix-7.5.4.20260131_151806.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_dos2unix_4024</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/dos2unixport/releases/download/STABLE_dos2unixport_4196/dos2unix-7.5.5.20260408_154411.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_dos2unix_4196</a></div>
     <div class="tool-desc" title="A tool for converting DOS/Windows text files to Unix format">A tool for converting DOS/Windows text files to Unix format</div>
   </div>
 </div>
@@ -1328,12 +1328,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="neovim" data-searchable-text="neovim Green 100.0% STABLE_neovim_4173 A text editor editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="neovim" data-searchable-text="neovim Green 100.0% STABLE_neovim_4195 A text editor editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/neovimport" target="_blank" rel="noopener noreferrer">neovim</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/neovimport/releases/download/STABLE_neovimport_4173/neovim-v0.11.7.20260329_032329.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_neovim_4173</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/neovimport/releases/download/STABLE_neovimport_4195/neovim-v0.11.7.20260408_133540.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_neovim_4195</a></div>
     <div class="tool-desc" title="A text editor">A text editor</div>
   </div>
 </div>
@@ -3016,12 +3016,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="meta" data-searchable-text="meta Green 100.0% STABLE_meta_4192 zopen package manager utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="meta" data-searchable-text="meta Green 100.0% STABLE_meta_4197 zopen package manager utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/metaport" target="_blank" rel="noopener noreferrer">meta</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/metaport/releases/download/STABLE_metaport_4192/meta-main.20260407_123326.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_meta_4192</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/metaport/releases/download/STABLE_metaport_4197/meta-main.20260408_153554.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_meta_4197</a></div>
     <div class="tool-desc" title="zopen package manager">zopen package manager</div>
   </div>
 </div>
@@ -3369,4 +3369,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2026-04-08 06:19:38 UTC
+Last updated:  2026-04-09 06:19:41 UTC
