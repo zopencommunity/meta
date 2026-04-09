@@ -334,7 +334,8 @@ _zopen_python_check() {
   . .venv/bin/activate
   pip install pytest
   # Install the built wheel so C extensions (.so files) are available
-  pip install dist/*.whl
+  # Use --force-reinstall to ensure the newly built wheel is used
+  pip install --force-reinstall --no-deps dist/*.whl
   python -m pytest -v
   _zopen_python_check_rc=$?
   deactivate
