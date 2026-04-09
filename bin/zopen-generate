@@ -524,152 +524,28 @@ EOF
         if [ "$c_extensions" = "true" ]; then
           build_system_config=$(cat <<'EOF'
 ### Settings for Python build system (with C extensions)
-export ZOPEN_CONFIGURE="skip"
-export ZOPEN_MAKE="zopen_custom_build"
-export ZOPEN_MAKE_MINIMAL="yes"
-export ZOPEN_CHECK="zopen_custom_check"
-export ZOPEN_CHECK_MINIMAL="yes"
-export ZOPEN_INSTALL="zopen_custom_install"
+### Build, check, install, and env are handled natively by zopen-build
+export ZOPEN_BUILD_SYSTEM="Python"
 EOF
 )
         else
           build_system_config=$(cat <<'EOF'
 ### Settings for Python build system
-export ZOPEN_CONFIGURE="skip"
+### Build, check, install, and env are handled natively by zopen-build
+export ZOPEN_BUILD_SYSTEM="Python"
 export ZOPEN_COMP="skip"
-export ZOPEN_MAKE="zopen_custom_build"
-export ZOPEN_MAKE_MINIMAL="yes"
-export ZOPEN_CHECK="zopen_custom_check"
-export ZOPEN_CHECK_MINIMAL="yes"
-export ZOPEN_INSTALL="zopen_custom_install"
 EOF
 )
         fi
-        if [ "$c_extensions" = "true" ]; then
-          custom_functions=$(cat <<'EOF'
-# Merge LIBS into LDFLAGS so Python's build system picks up linked libraries
-zopen_init() {
-  export LDFLAGS="$LDFLAGS $LIBS"
-}
-
-zopen_custom_build() {
-  python -m venv .venv
-  . .venv/bin/activate
-  pip install setuptools build installer wheel
-  rm -rf dist
-  python -m build --wheel
-  zopen_build_result=$?
-  deactivate
-  return "${zopen_build_result}"
-}
-
-zopen_custom_check() {
-  . .venv/bin/activate
-  pip install pytest
-  # Install the built wheel so C extensions (.so files) are available
-  pip install dist/*.whl
-  python -m pytest -v
-  zopen_check_result=$?
-  deactivate
-  return "${zopen_check_result}"
-}
-
-zopen_custom_install() {
-  mkdir -p "${ZOPEN_INSTALL_DIR}/lib/python"
-  mkdir -p "${ZOPEN_INSTALL_DIR}/bin"
-  . .venv/bin/activate
-  # Install the built wheel to the target directory
-  pip install --no-deps --target="${ZOPEN_INSTALL_DIR}/lib/python" dist/*.whl
-  # Install runtime dependencies
-  # pip install --target="${ZOPEN_INSTALL_DIR}/lib/python" -r requirements.txt
-  # Symlink any scripts into bin/ so they are on PATH
-  for f in "${ZOPEN_INSTALL_DIR}/lib/python/bin/"*; do
-    [ -e "$f" ] || continue
-    ln -sf "../lib/python/bin/$(basename "$f")" "${ZOPEN_INSTALL_DIR}/bin/$(basename "$f")"
-  done
-  deactivate
-}
-
-zopen_append_to_env() {
-  cat <<END
-# Add the zopen installed packages to PYTHONPATH
-PYTHONPATH="\${PYTHONPATH}:\${PWD}/lib/python"
-export PYTHONPATH="\$(deleteDuplicateEntries "\$PYTHONPATH" ":")"
-END
-}
-EOF
-)
-        else
-          custom_functions=$(cat <<'EOF'
-zopen_custom_build() {
-  python -m venv .venv
-  . .venv/bin/activate
-  pip install setuptools build installer wheel
-  rm -rf dist
-  python -m build --wheel
-  zopen_build_result=$?
-  deactivate
-  return "${zopen_build_result}"
-}
-
-zopen_custom_check() {
-  . .venv/bin/activate
-  pip install pytest
-  python -m pytest -v
-  zopen_check_result=$?
-  deactivate
-  return "${zopen_check_result}"
-}
-
-zopen_custom_install() {
-  mkdir -p "${ZOPEN_INSTALL_DIR}/lib/python"
-  mkdir -p "${ZOPEN_INSTALL_DIR}/bin"
-  . .venv/bin/activate
-  # Install the built wheel to the target directory
-  pip install --no-deps --target="${ZOPEN_INSTALL_DIR}/lib/python" dist/*.whl
-  # Install runtime dependencies
-  # pip install --target="${ZOPEN_INSTALL_DIR}/lib/python" -r requirements.txt
-  # Symlink any scripts into bin/ so they are on PATH
-  for f in "${ZOPEN_INSTALL_DIR}/lib/python/bin/"*; do
-    [ -e "$f" ] || continue
-    ln -sf "../lib/python/bin/$(basename "$f")" "${ZOPEN_INSTALL_DIR}/bin/$(basename "$f")"
-  done
-  deactivate
-}
-
-zopen_append_to_env() {
-  cat <<END
-# Add the zopen installed packages to PYTHONPATH
-PYTHONPATH="\${PYTHONPATH}:\${PWD}/lib/python"
-export PYTHONPATH="\$(deleteDuplicateEntries "\$PYTHONPATH" ":")"
-END
-}
-EOF
-)
-        fi
+        custom_functions=""
     ;;
     esac
 fi
 
 # Set zopen_check_results based on build system
-SQ="'"
 if [ "${build_system}" = "Python" ]; then
-  check_results_func="zopen_check_results() {
-  dir=\"\$1\"
-  pfx=\"\$2\"
-  chk=\"\$1/\$2_check.log\"
-  # Parse pytest output: \"X passed, Y failed\" or \"X passed\"
-  passed=\$(grep -oE \"[0-9]+ passed\" \"\${chk}\" | awk ${SQ}{print \$1}${SQ})
-  failed=\$(grep -oE \"[0-9]+ failed\" \"\${chk}\" | awk ${SQ}{print \$1}${SQ})
-  errors=\$(grep -oE \"[0-9]+ error\" \"\${chk}\" | awk ${SQ}{print \$1}${SQ})
-  passed=\${passed:-0}
-  failed=\${failed:-0}
-  errors=\${errors:-0}
-  totalTests=\$((passed + failed + errors))
-  echo \"actualFailures:\$((failed + errors))\"
-  echo \"totalTests:\${totalTests}\"
-  echo \"expectedFailures:0\"
-}"
+  # Python check results are handled natively by zopen-build
+  check_results_func="# zopen_check_results is provided natively by zopen-build for Python"
 else
   check_results_func="zopen_check_results() {
   dir=\"\$1\"

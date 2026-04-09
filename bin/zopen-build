@@ -310,6 +310,56 @@ setDefaults()
   return 0
 }
 
+# --- Built-in Python build system functions ---
+
+_zopen_python_ensure_venv() {
+  if [ ! -f ".venv/bin/activate" ]; then
+    printInfo "Creating Python virtual environment..."
+    python -m venv .venv
+  fi
+  . .venv/bin/activate
+  pip install setuptools build installer wheel
+}
+
+_zopen_python_build() {
+  _zopen_python_ensure_venv
+  rm -rf dist
+  python -m build --wheel
+  _zopen_python_build_rc=$?
+  deactivate
+  return ${_zopen_python_build_rc}
+}
+
+_zopen_python_check() {
+  . .venv/bin/activate
+  pip install pytest
+  # Install the built wheel so C extensions (.so files) are available
+  pip install dist/*.whl
+  python -m pytest -v
+  _zopen_python_check_rc=$?
+  deactivate
+  return ${_zopen_python_check_rc}
+}
+
+_zopen_python_install() {
+  mkdir -p "${ZOPEN_INSTALL_DIR}/lib/python"
+  mkdir -p "${ZOPEN_INSTALL_DIR}/bin"
+  mkdir -p "${ZOPEN_INSTALL_DIR}/dist"
+  . .venv/bin/activate
+  # Install the built wheel to the target directory
+  pip install --no-deps --target="${ZOPEN_INSTALL_DIR}/lib/python" dist/*.whl
+  # Symlink any scripts into bin/ so they are on PATH
+  for f in "${ZOPEN_INSTALL_DIR}/lib/python/bin/"*; do
+    [ -e "$f" ] || continue
+    ln -sf "../lib/python/bin/$(basename "$f")" "${ZOPEN_INSTALL_DIR}/bin/$(basename "$f")"
+  done
+  # Preserve wheel for publishing
+  cp dist/*.whl "${ZOPEN_INSTALL_DIR}/dist/"
+  deactivate
+}
+
+# --- End Python build system functions ---
+
 printSyntax()
 {
   args=$*
@@ -662,6 +712,59 @@ checkEnv()
   ZOPEN_CHECK_RESULTS_CODE="zopen_check_results"
   ZOPEN_PRE_TERMINATE_CODE="zopen_pre_terminate"
 
+  # --- Python build system defaults ---
+  if [ -n "${ZOPEN_BUILD_SYSTEM}" ]; then
+    case "${ZOPEN_BUILD_SYSTEM}" in
+      Python) ;;
+      *) printError "Unknown ZOPEN_BUILD_SYSTEM: ${ZOPEN_BUILD_SYSTEM}. Supported values: Python" ;;
+    esac
+  fi
+
+  if [ "${ZOPEN_BUILD_SYSTEM}" = "Python" ]; then
+    # Set defaults using := so user overrides from buildenv are preserved
+    : "${ZOPEN_CONFIGURE:=skip}"
+    : "${ZOPEN_MAKE:=_zopen_python_build}"
+    : "${ZOPEN_MAKE_MINIMAL:=yes}"
+    : "${ZOPEN_CHECK:=_zopen_python_check}"
+    : "${ZOPEN_CHECK_MINIMAL:=yes}"
+    : "${ZOPEN_INSTALL:=_zopen_python_install}"
+
+    # Provide built-in zopen_check_results if user did not define one
+    if ! command -V zopen_check_results > /dev/null 2>&1; then
+      zopen_check_results() {
+        dir="$1"; pfx="$2"; chk="$1/$2_check.log"
+        passed=$(grep -oE "[0-9]+ passed" "${chk}" | awk '{print $1}')
+        failed=$(grep -oE "[0-9]+ failed" "${chk}" | awk '{print $1}')
+        errors=$(grep -oE "[0-9]+ error" "${chk}" | awk '{print $1}')
+        passed=${passed:-0}; failed=${failed:-0}; errors=${errors:-0}
+        totalTests=$((passed + failed + errors))
+        echo "actualFailures:$((failed + errors))"
+        echo "totalTests:${totalTests}"
+        echo "expectedFailures:0"
+      }
+    fi
+
+    # Provide built-in zopen_append_to_env if user did not define one
+    if ! command -V zopen_append_to_env > /dev/null 2>&1; then
+      zopen_append_to_env() {
+        cat <<PYENVEOF
+PYTHONPATH="\${PYTHONPATH}:\${PWD}/lib/python"
+export PYTHONPATH="\$(deleteDuplicateEntries "\$PYTHONPATH" ":")"
+PYENVEOF
+      }
+    fi
+
+    # Merge LIBS into LDFLAGS for C extension ports (Python ignores LIBS)
+    if [ "${ZOPEN_COMP}" != "skip" ]; then
+      if ! command -V zopen_init > /dev/null 2>&1; then
+        zopen_init() {
+          export LDFLAGS="$LDFLAGS $LIBS"
+        }
+      fi
+    fi
+  fi
+  # --- End Python build system defaults ---
+
   if ! command -V "${ZOPEN_CHECK_RESULTS_CODE}" > /dev/null 2>&1; then
     if [ "${ZOPEN_CHECK}x" != "skipx" ] && ! ${skipcheck}; then
       export ZOPEN_CHECK_RESULTS_CODE="${ZOPEN_ROOT}/portchk.sh"
@@ -673,6 +776,10 @@ checkEnv()
 
   implicitDeps="sed:bin git:bin jq:bin curl:bin"
   langDeps=""
+
+  if [ "${ZOPEN_BUILD_SYSTEM}" = "Python" ]; then
+    implicitDeps="${implicitDeps} check_python grep"
+  fi
 
   if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
     if [ -z "${ZOPEN_URL}" ]; then
