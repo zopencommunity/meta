@@ -44,23 +44,35 @@ This page provides information about the zopen interface. Click on any of the zo
 
 EOF
 
-# Generate html and markdown pages
+# Generate markdown pages with embedded HTML
 for man in man/man1/*.1;
 do
   base=${man##*/};
   name=${base%%.1};
-  html="docs/reference/${name}.html";
-  cat <<EOF > docs/reference/${name}.md
+  md="docs/reference/${name}.md";
+  
+  # Generate temporary HTML
+  groff -m mandoc -Thtml -Wall "${man}" > "${name}.tmp.html";
+  
+  # Create the MD file with frontmatter and extracted body content
+  cat <<EOF > "${md}"
 ---
 layout: doc
 ---
 
 # ${name}
 
-<iframe src="./${name}.html" width="100%" height="800px" frameborder="0"></iframe>
+<div class="man-page">
 EOF
+
+  # Extract content between <body> and </body>
+  sed -n '/<body>/,/<\/body>/p' "${name}.tmp.html" | sed 's/<body>//;s/<\/body>//' >> "${md}"
+  
+  echo "</div>" >> "${md}"
   echo "- [${name}](/reference/${name})" >> docs/reference/zopen-reference.md
-  groff -m mandoc -Thtml -Wall "${man}" >"${html}";
+  
+  # Clean up temp file
+  rm "${name}.tmp.html"
 done
 
   # Commit it all back to the repo
