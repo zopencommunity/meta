@@ -777,10 +777,22 @@
       ],
       "libs": []
     },
-    "screen": {
+    "findutils": {
       "binaries": [
-        "screen",
-        "screen-4.9.1"
+        "find",
+        "gfind",
+        "gxargs",
+        "locate",
+        "updatedb",
+        "xargs"
+      ],
+      "libs": []
+    },
+    "cmake": {
+      "binaries": [
+        "cmake",
+        "cpack",
+        "ctest"
       ],
       "libs": []
     },
@@ -801,9 +813,23 @@
       ],
       "libs": []
     },
+    "screen": {
+      "binaries": [
+        "screen",
+        "screen-4.9.1"
+      ],
+      "libs": []
+    },
     "ncdu": {
       "binaries": [
         "ncdu"
+      ],
+      "libs": []
+    },
+    "nano": {
+      "binaries": [
+        "nano",
+        "rnano"
       ],
       "libs": []
     },
@@ -1096,6 +1122,10 @@
         "libksba.a"
       ]
     },
+    "gnulib": {
+      "binaries": [],
+      "libs": []
+    },
     "libssh2": {
       "binaries": [],
       "libs": [
@@ -1116,6 +1146,12 @@
         "emacs-29.4",
         "emacsclient",
         "etags"
+      ],
+      "libs": []
+    },
+    "direnv": {
+      "binaries": [
+        "direnv"
       ],
       "libs": []
     },
@@ -1316,6 +1352,12 @@
       "binaries": [],
       "libs": [
         "libbsd.a"
+      ]
+    },
+    "jansson": {
+      "binaries": [],
+      "libs": [
+        "libjansson.a"
       ]
     },
     "jansson": {
@@ -1889,6 +1931,12 @@
       ],
       "libs": []
     },
+    "popt": {
+      "binaries": [],
+      "libs": [
+        "libpopt.a"
+      ]
+    },
     "maven": {
       "binaries": [
         "m2.conf",
@@ -1916,6 +1964,13 @@
     "logrotate": {
       "binaries": [
         "logrotate"
+      ],
+      "libs": []
+    },
+    "frp": {
+      "binaries": [
+        "frpc",
+        "frps"
       ],
       "libs": []
     },
@@ -2107,6 +2162,13 @@
         "conan"
       ],
       "libs": []
+    },
+    "zedc_ascii": {
+      "binaries": [],
+      "libs": [
+        "libz.a",
+        "libzedc_ascii.a"
+      ]
     },
     "git-extras": {
       "binaries": [
