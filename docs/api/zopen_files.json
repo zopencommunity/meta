@@ -247,7 +247,7 @@
         "xzmore"
       ],
       "libs": [
-        "liblzma.a"
+        "libz.a"
       ]
     },
     "man-db": {
@@ -757,10 +757,22 @@
       ],
       "libs": []
     },
-    "screen": {
+    "findutils": {
       "binaries": [
-        "screen",
-        "screen-4.9.1"
+        "find",
+        "gfind",
+        "gxargs",
+        "locate",
+        "updatedb",
+        "xargs"
+      ],
+      "libs": []
+    },
+    "cmake": {
+      "binaries": [
+        "cmake",
+        "cpack",
+        "ctest"
       ],
       "libs": []
     },
@@ -774,9 +786,23 @@
       ],
       "libs": []
     },
+    "screen": {
+      "binaries": [
+        "screen",
+        "screen-4.9.1"
+      ],
+      "libs": []
+    },
     "ncdu": {
       "binaries": [
         "ncdu"
+      ],
+      "libs": []
+    },
+    "nano": {
+      "binaries": [
+        "nano",
+        "rnano"
       ],
       "libs": []
     },
@@ -793,15 +819,6 @@
       ],
       "libs": []
     },
-    "flex": {
-      "binaries": [
-        "flex",
-        "flex++"
-      ],
-      "libs": [
-        "libfl.a"
-      ]
-    },
     "ctags": {
       "binaries": [
         "ctags",
@@ -815,6 +832,12 @@
       "binaries": [
         "cscope",
         "ocs"
+      ],
+      "libs": []
+    },
+    "htop": {
+      "binaries": [
+        "htop"
       ],
       "libs": []
     },
@@ -1065,6 +1088,10 @@
         "libksba.a"
       ]
     },
+    "gnulib": {
+      "binaries": [],
+      "libs": []
+    },
     "libssh2": {
       "binaries": [],
       "libs": [
@@ -1085,6 +1112,12 @@
         "emacs-29.4",
         "emacsclient",
         "etags"
+      ],
+      "libs": []
+    },
+    "direnv": {
+      "binaries": [
+        "direnv"
       ],
       "libs": []
     },
@@ -1229,14 +1262,6 @@
         "librdkafka.so"
       ]
     },
-    "oniguruma": {
-      "binaries": [
-        "onig-config"
-      ],
-      "libs": [
-        "libonig.a"
-      ]
-    },
     "libpcre": {
       "binaries": [
         "pcre-config",
@@ -1271,6 +1296,12 @@
       "binaries": [],
       "libs": [
         "libbsd.a"
+      ]
+    },
+    "jansson": {
+      "binaries": [],
+      "libs": [
+        "libjansson.a"
       ]
     },
     "jansson": {
@@ -1807,6 +1838,10 @@
       ],
       "libs": []
     },
+    "gin": {
+      "binaries": [],
+      "libs": []
+    },
     "git-lfs": {
       "binaries": [
         "git-lfs"
@@ -1818,6 +1853,12 @@
         "vmagent-pure"
       ],
       "libs": []
+    },
+    "popt": {
+      "binaries": [],
+      "libs": [
+        "libpopt.a"
+      ]
     },
     "maven": {
       "binaries": [
@@ -1849,6 +1890,13 @@
       ],
       "libs": []
     },
+    "frp": {
+      "binaries": [
+        "frpc",
+        "frps"
+      ],
+      "libs": []
+    },
     "libgpgme": {
       "binaries": [
         "gpgme-config",
@@ -1865,12 +1913,6 @@
         "ttype"
       ],
       "libs": []
-    },
-    "lpeg": {
-      "binaries": [],
-      "libs": [
-        "lpeg.so"
-      ]
     },
     "luv": {
       "binaries": [],
@@ -2095,6 +2137,13 @@
         "conan"
       ],
       "libs": []
+    },
+    "zedc_ascii": {
+      "binaries": [],
+      "libs": [
+        "libz.a",
+        "libzedc_ascii.a"
+      ]
     },
     "git-extras": {
       "binaries": [
