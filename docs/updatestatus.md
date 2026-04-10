@@ -27,6 +27,7 @@
 - 2026-03-21: [Update autoconf-version to 2.73 from 2.72](https://github.com/zopencommunity/autoconfport/pull/53) ❌
 
 ### buildkiteport
+- 2026-04-09: [Update buildkite-version to 3.122.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/101) ❌
 - 2026-04-08: [Update buildkite-version to 3.121.1 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/100) ❌
 - 2026-03-31: [Update buildkite-version to 3.121.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/99) ❌
 - 2026-03-24: [Update buildkite-version to 3.120.3 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/98) ❌
@@ -56,7 +57,6 @@
 - 2025-09-24: [Update buildkite-version to 3.107.2 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/74) ❌
 - 2025-09-18: [Update buildkite-version to 3.107.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/73) ❌
 - 2025-09-16: [Update buildkite-version to 3.106.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/72) ❌
-- 2025-09-11: [Update buildkite-version to 3.105.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/71) ❌
 
 ### c3270port
 - 2025-12-23: [Update c3270-version to 4.5ga5 from 4.4ga6](https://github.com/zopencommunity/c3270port/pull/32) ❌
@@ -82,6 +82,7 @@
 - 2025-05-26: [Update ccache-version to 4.11.3 from V.R.M](https://github.com/zopencommunity/ccacheport/pull/1) ❌
 
 ### chezmoiport
+- 2026-04-09: [Update chezmoi-version to 2.70.1 from 2.62.5](https://github.com/zopencommunity/chezmoiport/pull/23) ❌
 - 2026-03-10: [Update chezmoi-version to 2.70.0 from 2.62.5](https://github.com/zopencommunity/chezmoiport/pull/22) ❌
 - 2026-02-11: [Update chezmoi-version to 2.69.4 from 2.62.5](https://github.com/zopencommunity/chezmoiport/pull/21) ❌
 - 2026-01-16: [Update chezmoi-version to 2.69.3 from 2.62.5](https://github.com/zopencommunity/chezmoiport/pull/20) ❌
@@ -143,7 +144,7 @@
 - 2025-08-22: [Update cppcheck-version to 2.18.1 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/14) ❌
 - 2025-07-20: [Update cppcheck-version to 2.18.0 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/13) ❌
 - 2025-02-26: [Update cppcheck-version to 2.17.1 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/12) ❌
-- 2025-02-23: [Update cppcheck-version to 2.17.0 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/11) ❌
+- 2025-02-23: [Update cppcheck-version to 2.17.0 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/11) ❓
 - 2024-12-19: [Update cppcheck-version to 2.16.2 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/10) ❓
 - 2024-11-29: [Update cppcheck-version to 2.16.1 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/8) ❓
 - 2024-10-28: [Update cppcheck-version to 2.16.0 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/7) ❓
@@ -157,6 +158,7 @@
 - 2025-02-01: [Update creduce-version to 2.10.0 from V.R.M](https://github.com/zopencommunity/creduceport/pull/1) ❓
 
 ### crushport
+- 2026-04-09: [Update crush-version to 0.56.0 from 0.11.0](https://github.com/zopencommunity/crushport/pull/104) ❌
 - 2026-04-07: [Update crush-version to 0.55.1 from 0.11.0](https://github.com/zopencommunity/crushport/pull/103) ❌
 - 2026-04-03: [Update crush-version to 0.55.0 from 0.11.0](https://github.com/zopencommunity/crushport/pull/102) ❌
 - 2026-04-01: [Update crush-version to 0.54.0 from 0.11.0](https://github.com/zopencommunity/crushport/pull/101) ❌
@@ -186,7 +188,6 @@
 - 2026-02-09: [Update crush-version to 0.40.0 from 0.11.0](https://github.com/zopencommunity/crushport/pull/77) ❌
 - 2026-02-05: [Update crush-version to 0.39.3 from 0.11.0](https://github.com/zopencommunity/crushport/pull/76) ❌
 - 2026-02-04: [Update crush-version to 0.39.1 from 0.11.0](https://github.com/zopencommunity/crushport/pull/75) ❌
-- 2026-02-03: [Update crush-version to 0.38.1 from 0.11.0](https://github.com/zopencommunity/crushport/pull/74) ❌
 
 ### cunitport
 - 2026-01-20: [Update cunit-version to 3.5.4 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/11) ❌
@@ -385,6 +386,9 @@
 
 ### helloport
 - 2025-05-19: [Update hello-version to 2.12.2 from 2.12.1](https://github.com/zopencommunity/helloport/pull/11) ❌
+
+### htopport
+- 2026-04-09: [Update htop-version to 3.5.0 from 3.4.1](https://github.com/zopencommunity/htopport/pull/12) ❌
 
 ### hugoport
 - 2026-04-08: [Update hugo-version to 0.160.1 from 0.158.0](https://github.com/zopencommunity/hugoport/pull/71) ❌
@@ -611,6 +615,7 @@
 - 2025-05-15: [Update screen-version to 5.0.1 from 4.9.1](https://github.com/zopencommunity/screenport/pull/11) ❌
 
 ### sqliteport
+- 2026-04-09: [Update sqlite-version to 2026-3530000 from 2025-3480000](https://github.com/zopencommunity/sqliteport/pull/36) ❌
 - 2026-03-13: [Update sqlite-version to 2026-3510300 from 2025-3480000](https://github.com/zopencommunity/sqliteport/pull/35) ❌
 - 2026-03-07: [Update sqlite-version to 2026-3520000 from 2025-3480000](https://github.com/zopencommunity/sqliteport/pull/34) ❌
 - 2026-01-10: [Update sqlite-version to 2026-3510200 from 2025-3480000](https://github.com/zopencommunity/sqliteport/pull/33) ❌
@@ -1054,5 +1059,5 @@
 ---
 
 
-> Last updated: 2026-04-09 06:11:20 EDT
+> Last updated: 2026-04-10 06:10:56 EDT
 
