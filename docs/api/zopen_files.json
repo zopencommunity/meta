@@ -406,14 +406,10 @@
       ],
       "libs": []
     },
-    "openssl": {
-      "binaries": [
-        "c_rehash",
-        "openssl"
-      ],
+    "zlib": {
+      "binaries": [],
       "libs": [
-        "libcrypto.a",
-        "libssl.a"
+        "libz.a"
       ]
     },
     "zstd": {
@@ -788,7 +784,7 @@
       ],
       "libs": []
     },
-    "cmake": {
+    "php": {
       "binaries": [
         "cmake",
         "cpack",
@@ -826,10 +822,12 @@
       ],
       "libs": []
     },
-    "nano": {
+    "zip": {
       "binaries": [
-        "nano",
-        "rnano"
+        "zip",
+        "zipcloak",
+        "zipnote",
+        "zipsplit"
       ],
       "libs": []
     },
@@ -1122,10 +1120,6 @@
         "libksba.a"
       ]
     },
-    "gnulib": {
-      "binaries": [],
-      "libs": []
-    },
     "libssh2": {
       "binaries": [],
       "libs": [
@@ -1149,10 +1143,8 @@
       ],
       "libs": []
     },
-    "direnv": {
-      "binaries": [
-        "direnv"
-      ],
+    "gnulib": {
+      "binaries": [],
       "libs": []
     },
     "openssh": {
@@ -1239,7 +1231,8 @@
     },
     "tig": {
       "binaries": [
-        "tig"
+        "yacc",
+        "zotyacc"
       ],
       "libs": []
     },
@@ -1318,6 +1311,12 @@
         "libonig.a"
       ]
     },
+    "gum": {
+      "binaries": [
+        "gum"
+      ],
+      "libs": []
+    },
     "libpcre": {
       "binaries": [
         "pcre-config",
@@ -1360,27 +1359,28 @@
         "libjansson.a"
       ]
     },
+    "libmd": {
+      "binaries": [],
+      "libs": [
+        "libmd.a"
+      ]
+    },
     "jansson": {
       "binaries": [],
       "libs": [
         "libjansson.a"
       ]
     },
+    "libbsd": {
+      "binaries": [],
+      "libs": [
+        "libbsd.a"
+      ]
+    },
     "luarocks": {
       "binaries": [
         "luarocks",
         "luarocks-admin"
-      ],
-      "libs": []
-    },
-    "redis": {
-      "binaries": [
-        "redis-benchmark",
-        "redis-check-aof",
-        "redis-check-rdb",
-        "redis-cli",
-        "redis-sentinel",
-        "redis-server"
       ],
       "libs": []
     },
@@ -1394,6 +1394,17 @@
       "libs": [
         "libavro.a"
       ]
+    },
+    "redis": {
+      "binaries": [
+        "redis-benchmark",
+        "redis-check-aof",
+        "redis-check-rdb",
+        "redis-cli",
+        "redis-sentinel",
+        "redis-server"
+      ],
+      "libs": []
     },
     "libuv": {
       "binaries": [],
@@ -1428,6 +1439,12 @@
     },
     "depot_tools": {
       "binaries": [],
+      "libs": []
+    },
+    "githubcli": {
+      "binaries": [
+        "gh"
+      ],
       "libs": []
     },
     "moreutils": {
@@ -1921,6 +1938,12 @@
       ],
       "libs": []
     },
+    "git-lfs": {
+      "binaries": [
+        "git-lfs"
+      ],
+      "libs": []
+    },
     "gin": {
       "binaries": [],
       "libs": []
@@ -1967,10 +1990,9 @@
       ],
       "libs": []
     },
-    "frp": {
+    "ttype": {
       "binaries": [
-        "frpc",
-        "frps"
+        "ttype"
       ],
       "libs": []
     },
