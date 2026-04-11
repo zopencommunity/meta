@@ -257,6 +257,9 @@
 - 2025-09-05: [Update glib-version to 2.86.0 from 2.85.2](https://github.com/zopencommunity/glibport/pull/3) ❌
 - 2025-08-22: [Update glib-version to 2.85.4 from 2.85.2](https://github.com/zopencommunity/glibport/pull/2) ❌
 
+### glowport
+- 2026-04-10: [Update glow-version to 2.1.2 from 2.1.1](https://github.com/zopencommunity/glowport/pull/3) ❌
+
 ### gnulibport
 - 2024-10-22: [Update gnulib-version to 1.0 from 20030404](https://github.com/zopencommunity/gnulibport/pull/10) ✅
 

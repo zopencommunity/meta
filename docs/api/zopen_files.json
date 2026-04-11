@@ -222,29 +222,10 @@
     },
     "xz": {
       "binaries": [
-        "lzcat",
-        "lzcmp",
-        "lzdiff",
-        "lzegrep",
-        "lzfgrep",
-        "lzgrep",
-        "lzless",
-        "lzma",
-        "lzmadec",
-        "lzmainfo",
-        "lzmore",
-        "unlzma",
-        "unxz",
-        "xz",
-        "xzcat",
-        "xzcmp",
-        "xzdec",
-        "xzdiff",
-        "xzegrep",
-        "xzfgrep",
-        "xzgrep",
-        "xzless",
-        "xzmore"
+        "xxh128sum",
+        "xxh32sum",
+        "xxh64sum",
+        "xxhsum"
       ],
       "libs": [
         "libz.a"
@@ -294,14 +275,10 @@
       ],
       "libs": []
     },
-    "openssl": {
-      "binaries": [
-        "c_rehash",
-        "openssl"
-      ],
+    "zlib": {
+      "binaries": [],
       "libs": [
-        "libcrypto.a",
-        "libssl.a"
+        "libz.a"
       ]
     },
     "help2man": {
@@ -768,7 +745,7 @@
       ],
       "libs": []
     },
-    "cmake": {
+    "php": {
       "binaries": [
         "cmake",
         "cpack",
@@ -799,16 +776,25 @@
       ],
       "libs": []
     },
-    "nano": {
+    "zip": {
       "binaries": [
-        "nano",
-        "rnano"
+        "zip",
+        "zipcloak",
+        "zipnote",
+        "zipsplit"
       ],
       "libs": []
     },
     "unzip": {
       "binaries": [
         "unzip"
+      ],
+      "libs": []
+    },
+    "nano": {
+      "binaries": [
+        "nano",
+        "rnano"
       ],
       "libs": []
     },
@@ -832,6 +818,14 @@
       "binaries": [
         "cscope",
         "ocs"
+      ],
+      "libs": []
+    },
+    "cmake": {
+      "binaries": [
+        "cmake",
+        "cpack",
+        "ctest"
       ],
       "libs": []
     },
@@ -1088,10 +1082,6 @@
         "libksba.a"
       ]
     },
-    "gnulib": {
-      "binaries": [],
-      "libs": []
-    },
     "libssh2": {
       "binaries": [],
       "libs": [
@@ -1115,10 +1105,8 @@
       ],
       "libs": []
     },
-    "direnv": {
-      "binaries": [
-        "direnv"
-      ],
+    "gnulib": {
+      "binaries": [],
       "libs": []
     },
     "openssh": {
@@ -1187,7 +1175,8 @@
     },
     "tig": {
       "binaries": [
-        "tig"
+        "yacc",
+        "zotyacc"
       ],
       "libs": []
     },
@@ -1196,6 +1185,20 @@
         "bump"
       ],
       "libs": []
+    },
+    "tig": {
+      "binaries": [
+        "tig"
+      ],
+      "libs": []
+    },
+    "ntbtls": {
+      "binaries": [
+        "ntbtls-config"
+      ],
+      "libs": [
+        "libntbtls.a"
+      ]
     },
     "duckdb": {
       "binaries": [
@@ -1216,13 +1219,11 @@
         "libparquet_extension.a"
       ]
     },
-    "ntbtls": {
+    "terraform": {
       "binaries": [
-        "ntbtls-config"
+        "terraform"
       ],
-      "libs": [
-        "libntbtls.a"
-      ]
+      "libs": []
     },
     "c3270": {
       "binaries": [
@@ -1231,12 +1232,6 @@
         "prtodir",
         "s3270",
         "x3270if"
-      ],
-      "libs": []
-    },
-    "terraform": {
-      "binaries": [
-        "terraform"
       ],
       "libs": []
     },
@@ -1261,6 +1256,12 @@
         "librdkafka.a",
         "librdkafka.so"
       ]
+    },
+    "gum": {
+      "binaries": [
+        "gum"
+      ],
+      "libs": []
     },
     "libpcre": {
       "binaries": [
@@ -1304,27 +1305,28 @@
         "libjansson.a"
       ]
     },
+    "libmd": {
+      "binaries": [],
+      "libs": [
+        "libmd.a"
+      ]
+    },
     "jansson": {
       "binaries": [],
       "libs": [
         "libjansson.a"
       ]
     },
+    "libbsd": {
+      "binaries": [],
+      "libs": [
+        "libbsd.a"
+      ]
+    },
     "luarocks": {
       "binaries": [
         "luarocks",
         "luarocks-admin"
-      ],
-      "libs": []
-    },
-    "redis": {
-      "binaries": [
-        "redis-benchmark",
-        "redis-check-aof",
-        "redis-check-rdb",
-        "redis-cli",
-        "redis-sentinel",
-        "redis-server"
       ],
       "libs": []
     },
@@ -1338,6 +1340,17 @@
       "libs": [
         "libavro.a"
       ]
+    },
+    "redis": {
+      "binaries": [
+        "redis-benchmark",
+        "redis-check-aof",
+        "redis-check-rdb",
+        "redis-cli",
+        "redis-sentinel",
+        "redis-server"
+      ],
+      "libs": []
     },
     "libuv": {
       "binaries": [],
@@ -1366,6 +1379,12 @@
     },
     "depot_tools": {
       "binaries": [],
+      "libs": []
+    },
+    "githubcli": {
+      "binaries": [
+        "gh"
+      ],
       "libs": []
     },
     "moreutils": {
@@ -1711,6 +1730,12 @@
         "libgmp.a"
       ]
     },
+    "gitlab-runner": {
+      "binaries": [
+        "gitlab-runner"
+      ],
+      "libs": []
+    },
     "nghttp2": {
       "binaries": [],
       "libs": [
@@ -1806,6 +1831,14 @@
         "libz.a"
       ]
     },
+    "fq": {
+      "binaries": [
+        "doc",
+        "fq",
+        "gen"
+      ],
+      "libs": []
+    },
     "prompters": {
       "binaries": [
         "mantastic",
@@ -1826,15 +1859,15 @@
       ],
       "libs": []
     },
-    "osv-scanner": {
-      "binaries": [
-        "osv-scanner"
-      ],
-      "libs": []
-    },
     "lazygit": {
       "binaries": [
         "lazygit"
+      ],
+      "libs": []
+    },
+    "git-lfs": {
+      "binaries": [
+        "git-lfs"
       ],
       "libs": []
     },
@@ -1842,9 +1875,9 @@
       "binaries": [],
       "libs": []
     },
-    "git-lfs": {
+    "osv-scanner": {
       "binaries": [
-        "git-lfs"
+        "osv-scanner"
       ],
       "libs": []
     },
@@ -1890,10 +1923,9 @@
       ],
       "libs": []
     },
-    "frp": {
+    "ttype": {
       "binaries": [
-        "frpc",
-        "frps"
+        "ttype"
       ],
       "libs": []
     },
