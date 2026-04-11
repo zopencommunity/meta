@@ -192,7 +192,7 @@
 ### cunitport
 - 2026-01-20: [Update cunit-version to 3.5.4 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/11) ❌
 - 2025-02-26: [Update cunit-version to 3.5.2 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/10) ❌
-- 2025-02-24: [Update cunit-version to 3.5.1 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/9) ❌
+- 2025-02-24: [Update cunit-version to 3.5.1 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/9) ❓
 - 2024-09-18: [Update cunit-version to 3.4.4 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/7) ❓
 - 2024-09-11: [Update cunit-version to 3.4.3 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/6) ❓
 - 2024-09-10: [Update cunit-version to 3.4.2 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/5) ❓
@@ -252,6 +252,7 @@
 - 2026-03-26: [Update ghcli-version to 2.89.0 from 2.86.0](https://github.com/zopencommunity/githubcliport/pull/79) ❌
 
 ### gitlabcliport
+- 2026-04-10: [Update glab-version to 1.92.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/67) ❌
 - 2026-04-02: [Update glab-version to 1.91.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/66) ❌
 - 2026-03-24: [Update glab-version to 1.90.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/65) ❌
 - 2026-03-06: [Update glab-version to 1.89.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/64) ❌
@@ -281,7 +282,6 @@
 - 2025-09-15: [Update glab-version to 1.69.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/40) ❌
 - 2025-09-05: [Update glab-version to 1.68.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/39) ❌
 - 2025-08-22: [Update glab-version to 1.67.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/38) ❌
-- 2025-07-29: [Update glab-version to 1.65.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/37) ❌
 
 ### gitlab-runnerport
 - 2026-04-05: [Update gitlab-runner-version to 18.10.1 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/65) ❌
@@ -324,6 +324,9 @@
 - 2026-02-25: [Update glib-version to 2.87.3 from 2.87.0](https://github.com/zopencommunity/glibport/pull/8) ❌
 - 2026-01-20: [Update glib-version to 2.87.2 from 2.87.0](https://github.com/zopencommunity/glibport/pull/7) ❌
 - 2025-12-31: [Update glib-version to 2.87.1 from 2.87.0](https://github.com/zopencommunity/glibport/pull/6) ❌
+
+### glowport
+- 2026-04-10: [Update glow-version to 2.1.2 from 2.1.1](https://github.com/zopencommunity/glowport/pull/3) ❌
 
 ### gnulibport
 - 2024-10-22: [Update gnulib-version to 1.0 from 20030404](https://github.com/zopencommunity/gnulibport/pull/10) ❓
@@ -1059,5 +1062,5 @@
 ---
 
 
-> Last updated: 2026-04-10 06:10:56 EDT
+> Last updated: 2026-04-11 06:09:53 EDT
 
