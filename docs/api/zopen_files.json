@@ -30,8 +30,8 @@
         "tclsh9.0"
       ],
       "libs": [
-        "libtcl9.0.a",
-        "libtclstub.a"
+        "libman.a",
+        "libmandb.a"
       ]
     },
     "gettext": {
@@ -453,13 +453,8 @@
     },
     "autoconf": {
       "binaries": [
-        "autoconf",
-        "autoheader",
-        "autom4te",
-        "autoreconf",
-        "autoscan",
-        "autoupdate",
-        "ifnames"
+        "rsync",
+        "rsync-ssl"
       ],
       "libs": []
     },
@@ -773,14 +768,10 @@
       ],
       "libs": []
     },
-    "findutils": {
+    "screen": {
       "binaries": [
-        "find",
-        "gfind",
-        "gxargs",
-        "locate",
-        "updatedb",
-        "xargs"
+        "screen",
+        "screen-4.9.1"
       ],
       "libs": []
     },
@@ -809,25 +800,9 @@
       ],
       "libs": []
     },
-    "screen": {
-      "binaries": [
-        "screen",
-        "screen-4.9.1"
-      ],
-      "libs": []
-    },
     "ncdu": {
       "binaries": [
         "ncdu"
-      ],
-      "libs": []
-    },
-    "zip": {
-      "binaries": [
-        "zip",
-        "zipcloak",
-        "zipnote",
-        "zipsplit"
       ],
       "libs": []
     },
@@ -1020,6 +995,12 @@
       ],
       "libs": []
     },
+    "which": {
+      "binaries": [
+        "which"
+      ],
+      "libs": []
+    },
     "fzf": {
       "binaries": [
         "fzf",
@@ -1120,6 +1101,17 @@
         "libksba.a"
       ]
     },
+    "emacs": {
+      "binaries": [
+        "ctags",
+        "ebrowse",
+        "emacs",
+        "emacs-29.4",
+        "emacsclient",
+        "etags"
+      ],
+      "libs": []
+    },
     "libssh2": {
       "binaries": [],
       "libs": [
@@ -1129,17 +1121,6 @@
     "direnv": {
       "binaries": [
         "direnv"
-      ],
-      "libs": []
-    },
-    "emacs": {
-      "binaries": [
-        "ctags",
-        "ebrowse",
-        "emacs",
-        "emacs-29.4",
-        "emacsclient",
-        "etags"
       ],
       "libs": []
     },
@@ -1297,6 +1278,18 @@
       ],
       "libs": []
     },
+    "terraform": {
+      "binaries": [
+        "terraform"
+      ],
+      "libs": []
+    },
+    "gum": {
+      "binaries": [
+        "gum"
+      ],
+      "libs": []
+    },
     "thesilversearcher": {
       "binaries": [
         "ag"
@@ -1313,9 +1306,11 @@
     },
     "gum": {
       "binaries": [
-        "gum"
+        "onig-config"
       ],
-      "libs": []
+      "libs": [
+        "libonig.a"
+      ]
     },
     "libpcre": {
       "binaries": [
@@ -1357,24 +1352,6 @@
       "binaries": [],
       "libs": [
         "libjansson.a"
-      ]
-    },
-    "libmd": {
-      "binaries": [],
-      "libs": [
-        "libmd.a"
-      ]
-    },
-    "jansson": {
-      "binaries": [],
-      "libs": [
-        "libjansson.a"
-      ]
-    },
-    "libbsd": {
-      "binaries": [],
-      "libs": [
-        "libbsd.a"
       ]
     },
     "luarocks": {
@@ -1479,6 +1456,15 @@
         "utf8-verify"
       ],
       "libs": []
+    },
+    "gn": {
+      "binaries": [
+        "gn"
+      ],
+      "libs": [
+        "base.a",
+        "gn_lib.a"
+      ]
     },
     "gn": {
       "binaries": [
@@ -1889,7 +1875,7 @@
     "zlib-ng": {
       "binaries": [],
       "libs": [
-        "libz.a"
+        "libz-ng.a"
       ]
     },
     "caddy": {
@@ -1903,6 +1889,14 @@
         "mantastic",
         "zotfile",
         "zothelper"
+      ],
+      "libs": []
+    },
+    "fq": {
+      "binaries": [
+        "doc",
+        "fq",
+        "gen"
       ],
       "libs": []
     },
@@ -1934,7 +1928,7 @@
     },
     "lazygit": {
       "binaries": [
-        "lazygit"
+        "osv-scanner"
       ],
       "libs": []
     },
@@ -1990,9 +1984,10 @@
       ],
       "libs": []
     },
-    "ttype": {
+    "frp": {
       "binaries": [
-        "ttype"
+        "frpc",
+        "frps"
       ],
       "libs": []
     },
@@ -2071,13 +2066,13 @@
     },
     "fx": {
       "binaries": [
-        "fx"
+        "cppcheck"
       ],
       "libs": []
     },
     "jenkins": {
       "binaries": [
-        "jenkins.war"
+        "fx"
       ],
       "libs": []
     },
