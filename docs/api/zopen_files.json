@@ -25,8 +25,8 @@
         "tclsh9.0"
       ],
       "libs": [
-        "libtcl9.0.a",
-        "libtclstub.a"
+        "libman.a",
+        "libmandb.a"
       ]
     },
     "zstd": {
@@ -295,13 +295,8 @@
     },
     "autoconf": {
       "binaries": [
-        "autoconf",
-        "autoheader",
-        "autom4te",
-        "autoreconf",
-        "autoscan",
-        "autoupdate",
-        "ifnames"
+        "rsync",
+        "rsync-ssl"
       ],
       "libs": []
     },
@@ -734,14 +729,10 @@
       ],
       "libs": []
     },
-    "findutils": {
+    "screen": {
       "binaries": [
-        "find",
-        "gfind",
-        "gxargs",
-        "locate",
-        "updatedb",
-        "xargs"
+        "screen",
+        "screen-4.9.1"
       ],
       "libs": []
     },
@@ -763,25 +754,9 @@
       ],
       "libs": []
     },
-    "screen": {
-      "binaries": [
-        "screen",
-        "screen-4.9.1"
-      ],
-      "libs": []
-    },
     "ncdu": {
       "binaries": [
         "ncdu"
-      ],
-      "libs": []
-    },
-    "zip": {
-      "binaries": [
-        "zip",
-        "zipcloak",
-        "zipnote",
-        "zipsplit"
       ],
       "libs": []
     },
@@ -821,11 +796,9 @@
       ],
       "libs": []
     },
-    "cmake": {
+    "hello": {
       "binaries": [
-        "cmake",
-        "cpack",
-        "ctest"
+        "hello"
       ],
       "libs": []
     },
@@ -835,11 +808,13 @@
       ],
       "libs": []
     },
-    "hello": {
+    "sqlite": {
       "binaries": [
-        "hello"
+        "sqlite3"
       ],
-      "libs": []
+      "libs": [
+        "libsqlite3.a"
+      ]
     },
     "lua": {
       "binaries": [
@@ -848,14 +823,6 @@
       ],
       "libs": [
         "liblua.a"
-      ]
-    },
-    "sqlite": {
-      "binaries": [
-        "sqlite3"
-      ],
-      "libs": [
-        "libsqlite3.a"
       ]
     },
     "libiconv": {
@@ -958,12 +925,6 @@
       ],
       "libs": []
     },
-    "which": {
-      "binaries": [
-        "which"
-      ],
-      "libs": []
-    },
     "sudo": {
       "binaries": [
         "cvtsudoers",
@@ -973,6 +934,12 @@
         "sudoedit",
         "sudoreplay",
         "visudo"
+      ],
+      "libs": []
+    },
+    "which": {
+      "binaries": [
+        "which"
       ],
       "libs": []
     },
@@ -1082,6 +1049,17 @@
         "libksba.a"
       ]
     },
+    "emacs": {
+      "binaries": [
+        "ctags",
+        "ebrowse",
+        "emacs",
+        "emacs-29.4",
+        "emacsclient",
+        "etags"
+      ],
+      "libs": []
+    },
     "libssh2": {
       "binaries": [],
       "libs": [
@@ -1091,17 +1069,6 @@
     "direnv": {
       "binaries": [
         "direnv"
-      ],
-      "libs": []
-    },
-    "emacs": {
-      "binaries": [
-        "ctags",
-        "ebrowse",
-        "emacs",
-        "emacs-29.4",
-        "emacsclient",
-        "etags"
       ],
       "libs": []
     },
@@ -1192,6 +1159,12 @@
       ],
       "libs": []
     },
+    "bump": {
+      "binaries": [
+        "bump"
+      ],
+      "libs": []
+    },
     "ntbtls": {
       "binaries": [
         "ntbtls-config"
@@ -1219,12 +1192,6 @@
         "libparquet_extension.a"
       ]
     },
-    "terraform": {
-      "binaries": [
-        "terraform"
-      ],
-      "libs": []
-    },
     "c3270": {
       "binaries": [
         "c3270",
@@ -1232,6 +1199,18 @@
         "prtodir",
         "s3270",
         "x3270if"
+      ],
+      "libs": []
+    },
+    "terraform": {
+      "binaries": [
+        "terraform"
+      ],
+      "libs": []
+    },
+    "gum": {
+      "binaries": [
+        "gum"
       ],
       "libs": []
     },
@@ -1259,9 +1238,11 @@
     },
     "gum": {
       "binaries": [
-        "gum"
+        "onig-config"
       ],
-      "libs": []
+      "libs": [
+        "libonig.a"
+      ]
     },
     "libpcre": {
       "binaries": [
@@ -1303,24 +1284,6 @@
       "binaries": [],
       "libs": [
         "libjansson.a"
-      ]
-    },
-    "libmd": {
-      "binaries": [],
-      "libs": [
-        "libmd.a"
-      ]
-    },
-    "jansson": {
-      "binaries": [],
-      "libs": [
-        "libjansson.a"
-      ]
-    },
-    "libbsd": {
-      "binaries": [],
-      "libs": [
-        "libbsd.a"
       ]
     },
     "luarocks": {
@@ -1413,6 +1376,15 @@
         "utf8-verify"
       ],
       "libs": []
+    },
+    "gn": {
+      "binaries": [
+        "gn"
+      ],
+      "libs": [
+        "base.a",
+        "gn_lib.a"
+      ]
     },
     "gn": {
       "binaries": [
@@ -1730,12 +1702,6 @@
         "libgmp.a"
       ]
     },
-    "gitlab-runner": {
-      "binaries": [
-        "gitlab-runner"
-      ],
-      "libs": []
-    },
     "nghttp2": {
       "binaries": [],
       "libs": [
@@ -1823,21 +1789,40 @@
       "binaries": [
         "fq"
       ],
+      "libs": [
+        "libz.a"
+      ]
+    },
+    "tmux": {
+      "binaries": [
+        "tmux"
+      ],
+      "libs": []
+    },
+    "gitlab-runner": {
+      "binaries": [
+        "gitlab-runner"
+      ],
+      "libs": []
+    },
+    "prometheus": {
+      "binaries": [
+        "prometheus",
+        "promtool"
+      ],
+      "libs": []
+    },
+    "caddy": {
+      "binaries": [
+        "caddy"
+      ],
       "libs": []
     },
     "zlib-ng": {
       "binaries": [],
       "libs": [
-        "libz.a"
+        "libz-ng.a"
       ]
-    },
-    "fq": {
-      "binaries": [
-        "doc",
-        "fq",
-        "gen"
-      ],
-      "libs": []
     },
     "prompters": {
       "binaries": [
@@ -1853,15 +1838,23 @@
       ],
       "libs": []
     },
+    "fq": {
+      "binaries": [
+        "doc",
+        "fq",
+        "gen"
+      ],
+      "libs": []
+    },
     "doxygen": {
       "binaries": [
         "doxygen"
       ],
       "libs": []
     },
-    "lazygit": {
+    "osv-scanner": {
       "binaries": [
-        "lazygit"
+        "osv-scanner"
       ],
       "libs": []
     },
@@ -1875,9 +1868,9 @@
       "binaries": [],
       "libs": []
     },
-    "osv-scanner": {
+    "lazygit": {
       "binaries": [
-        "osv-scanner"
+        "lazygit"
       ],
       "libs": []
     },
@@ -1923,9 +1916,10 @@
       ],
       "libs": []
     },
-    "ttype": {
+    "frp": {
       "binaries": [
-        "ttype"
+        "frpc",
+        "frps"
       ],
       "libs": []
     },
@@ -1991,7 +1985,7 @@
     },
     "fx": {
       "binaries": [
-        "fx"
+        "cppcheck"
       ],
       "libs": []
     },
@@ -2001,7 +1995,7 @@
     },
     "jenkins": {
       "binaries": [
-        "jenkins.war"
+        "fx"
       ],
       "libs": []
     },
