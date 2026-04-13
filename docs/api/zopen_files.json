@@ -626,9 +626,10 @@
       ],
       "libs": []
     },
-    "sshpass": {
+    "openssl": {
       "binaries": [
-        "sshpass"
+        "c_rehash",
+        "openssl"
       ],
       "libs": []
     },
@@ -762,9 +763,18 @@
       ],
       "libs": []
     },
-    "zip": {
+    "php": {
       "binaries": [
         "zip"
+      ],
+      "libs": []
+    },
+    "zip": {
+      "binaries": [
+        "zip",
+        "zipcloak",
+        "zipnote",
+        "zipsplit"
       ],
       "libs": []
     },
@@ -894,10 +904,6 @@
         "libiconv.a"
       ]
     },
-    "zigi": {
-      "binaries": [],
-      "libs": []
-    },
     "libxml2": {
       "binaries": [
         "xml2-config",
@@ -918,6 +924,17 @@
         "libpcre2-8.a",
         "libpcre2-posix.a"
       ]
+    },
+    "zigi": {
+      "binaries": [],
+      "libs": []
+    },
+    "xmlto": {
+      "binaries": [
+        "xmlif",
+        "xmlto"
+      ],
+      "libs": []
     },
     "getopt": {
       "binaries": [
@@ -985,15 +1002,19 @@
     },
     "sudo": {
       "binaries": [
-        "cvtsudoers",
-        "sudo",
-        "sudo_logsrvd",
-        "sudo_sendlog",
-        "sudoedit",
-        "sudoreplay",
-        "visudo"
+        "lynx"
       ],
       "libs": []
+    },
+    "libxslt": {
+      "binaries": [
+        "xslt-config",
+        "xsltproc"
+      ],
+      "libs": [
+        "libexslt.a",
+        "libxslt.a"
+      ]
     },
     "which": {
       "binaries": [
@@ -1006,6 +1027,18 @@
         "fzf",
         "fzf-preview.sh",
         "fzf-tmux"
+      ],
+      "libs": []
+    },
+    "sudo": {
+      "binaries": [
+        "cvtsudoers",
+        "sudo",
+        "sudo_logsrvd",
+        "sudo_sendlog",
+        "sudoedit",
+        "sudoreplay",
+        "visudo"
       ],
       "libs": []
     },
@@ -1064,6 +1097,16 @@
         "vimdoc.so"
       ]
     },
+    "yq": {
+      "binaries": [
+        "yq"
+      ],
+      "libs": []
+    },
+    "gnulib": {
+      "binaries": [],
+      "libs": []
+    },
     "libgpgerror": {
       "binaries": [
         "gpg-error",
@@ -1098,7 +1141,7 @@
         "ksba-config"
       ],
       "libs": [
-        "libksba.a"
+        "libssh2.a"
       ]
     },
     "emacs": {
@@ -1112,20 +1155,10 @@
       ],
       "libs": []
     },
-    "libssh2": {
-      "binaries": [],
-      "libs": [
-        "libssh2.a"
-      ]
-    },
     "direnv": {
       "binaries": [
         "direnv"
       ],
-      "libs": []
-    },
-    "gnulib": {
-      "binaries": [],
       "libs": []
     },
     "openssh": {
@@ -1361,17 +1394,6 @@
       ],
       "libs": []
     },
-    "avro-c-lib": {
-      "binaries": [
-        "avroappend",
-        "avrocat",
-        "avromod",
-        "avropipe"
-      ],
-      "libs": [
-        "libavro.a"
-      ]
-    },
     "redis": {
       "binaries": [
         "redis-benchmark",
@@ -1382,6 +1404,17 @@
         "redis-server"
       ],
       "libs": []
+    },
+    "avro-c-lib": {
+      "binaries": [
+        "avroappend",
+        "avrocat",
+        "avromod",
+        "avropipe"
+      ],
+      "libs": [
+        "libavro.a"
+      ]
     },
     "libuv": {
       "binaries": [],
@@ -1900,11 +1933,11 @@
       ],
       "libs": []
     },
-    "fq": {
+    "prompters": {
       "binaries": [
-        "doc",
-        "fq",
-        "gen"
+        "mantastic",
+        "zotfile",
+        "zothelper"
       ],
       "libs": []
     },
@@ -1917,6 +1950,12 @@
     "osv-scanner": {
       "binaries": [
         "osv-scanner"
+      ],
+      "libs": []
+    },
+    "lazygit": {
+      "binaries": [
+        "lazygit"
       ],
       "libs": []
     },
@@ -1948,12 +1987,6 @@
       ],
       "libs": []
     },
-    "popt": {
-      "binaries": [],
-      "libs": [
-        "libpopt.a"
-      ]
-    },
     "maven": {
       "binaries": [
         "m2.conf",
@@ -1984,13 +2017,6 @@
       ],
       "libs": []
     },
-    "frp": {
-      "binaries": [
-        "frpc",
-        "frps"
-      ],
-      "libs": []
-    },
     "libgpgme": {
       "binaries": [
         "gpgme-config",
@@ -2001,6 +2027,13 @@
         "libgpgme.a",
         "libgpgmepp.a"
       ]
+    },
+    "frp": {
+      "binaries": [
+        "frpc",
+        "frps"
+      ],
+      "libs": []
     },
     "ttype": {
       "binaries": [
