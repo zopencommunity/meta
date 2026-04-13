@@ -1,13 +1,13 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2026-04-12 06:14:55 EDT.*
+*Report generated on: 2026-04-13 06:17:19 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 304
-- **Total Current Lines of Code (LOC) in Patches:** 57,803
+- **Total Current Lines of Code (LOC) in Patches:** 57,859
 - **Total Number of Current Patch Files:** 1,040
-- **Average Current Patch LOC per Project:** 190.14
+- **Average Current Patch LOC per Project:** 190.33
 - **Average Current Patch Count per Project:** 3.42
 
 ### Historical Trends (All Projects)
@@ -49,9 +49,9 @@
 | [unzipport](#repo-unzipport) | 630 | +0 | 14 |
 | [util-linuxport](#repo-util-linuxport) | 630 | +0 | 16 |
 | [redisport](#repo-redisport) | 588 | +0 | 3 |
+| [cpioport](#repo-cpioport) | 588 | +0 | 5 |
 | [gettextport](#repo-gettextport) | 577 | +0 | 11 |
 | [glibport](#repo-glibport) | 537 | +0 | 7 |
-| [cpioport](#repo-cpioport) | 532 | +0 | 5 |
 | [inetutilsport](#repo-inetutilsport) | 514 | +0 | 20 |
 | [cronieport](#repo-cronieport) | 510 | +0 | 13 |
 | [screenport](#repo-screenport) | 485 | +0 | 7 |
@@ -1315,6 +1315,30 @@
 
 ---
 
+<a id="repo-cpioport"></a>
+## cpioport
+
+- **Origin Date (First Commit):** 2025-04-09
+- **Current Patch LOC:** 588
+- **Current Patch Count:** 5
+
+### Historical Trends
+
+![LOC Trend for cpioport](images/upstream/cpioport_current_loc_trend.png)
+![Count Trend for cpioport](images/upstream/cpioport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/copyin.c.patch` | `patches` | 240 |
+| `patches/filetypes.c.patch` | `patches` | 88 |
+| `patches/filetypes.h.patch` | `patches` | 86 |
+| `patches/tar.c.patch` | `patches` | 150 |
+| `patches/util.c.patch` | `patches` | 24 |
+
+---
+
 <a id="repo-gettextport"></a>
 ## gettextport
 
@@ -1368,30 +1392,6 @@
 | `patches/glib_tests.patch` | `patches` | 86 |
 | `patches/gobject.patch` | `patches` | 32 |
 | `patches/meson.build.patch` | `patches` | 36 |
-
----
-
-<a id="repo-cpioport"></a>
-## cpioport
-
-- **Origin Date (First Commit):** 2025-04-09
-- **Current Patch LOC:** 532
-- **Current Patch Count:** 5
-
-### Historical Trends
-
-![LOC Trend for cpioport](images/upstream/cpioport_current_loc_trend.png)
-![Count Trend for cpioport](images/upstream/cpioport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/copyin.c.patch` | `patches` | 240 |
-| `patches/copyout.c.patch` | `patches` | 32 |
-| `patches/filetypes.c.patch` | `patches` | 88 |
-| `patches/tar.c.patch` | `patches` | 151 |
-| `patches/util.c.patch` | `patches` | 21 |
 
 ---
 
