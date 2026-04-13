@@ -466,6 +466,14 @@
         "libgtest_main.a"
       ]
     },
+    "cmake": {
+      "binaries": [
+        "cmake",
+        "cpack",
+        "ctest"
+      ],
+      "libs": []
+    },
     "gettext": {
       "binaries": [
         "autopoint",
@@ -586,9 +594,10 @@
       ],
       "libs": []
     },
-    "sshpass": {
+    "openssl": {
       "binaries": [
-        "sshpass"
+        "c_rehash",
+        "openssl"
       ],
       "libs": []
     },
@@ -723,9 +732,18 @@
       ],
       "libs": []
     },
-    "zip": {
+    "php": {
       "binaries": [
         "zip"
+      ],
+      "libs": []
+    },
+    "zip": {
+      "binaries": [
+        "zip",
+        "zipcloak",
+        "zipnote",
+        "zipsplit"
       ],
       "libs": []
     },
@@ -835,10 +853,6 @@
         "libiconv.a"
       ]
     },
-    "zigi": {
-      "binaries": [],
-      "libs": []
-    },
     "libxml2": {
       "binaries": [
         "xml2-config",
@@ -848,13 +862,6 @@
       "libs": [
         "libxml2.a"
       ]
-    },
-    "xmlto": {
-      "binaries": [
-        "xmlif",
-        "xmlto"
-      ],
-      "libs": []
     },
     "libpcre2": {
       "binaries": [
@@ -867,6 +874,17 @@
         "libpcre2-posix.a"
       ]
     },
+    "zigi": {
+      "binaries": [],
+      "libs": []
+    },
+    "xmlto": {
+      "binaries": [
+        "xmlif",
+        "xmlto"
+      ],
+      "libs": []
+    },
     "getopt": {
       "binaries": [
         "getopt"
@@ -874,22 +892,6 @@
       "libs": [
         "libgetopt.a"
       ]
-    },
-    "libxslt": {
-      "binaries": [
-        "xslt-config",
-        "xsltproc"
-      ],
-      "libs": [
-        "libexslt.a",
-        "libxslt.a"
-      ]
-    },
-    "lynx": {
-      "binaries": [
-        "lynx"
-      ],
-      "libs": []
     },
     "meta": {
       "binaries": [
@@ -925,17 +927,21 @@
       ],
       "libs": []
     },
-    "sudo": {
+    "lynx": {
       "binaries": [
-        "cvtsudoers",
-        "sudo",
-        "sudo_logsrvd",
-        "sudo_sendlog",
-        "sudoedit",
-        "sudoreplay",
-        "visudo"
+        "lynx"
       ],
       "libs": []
+    },
+    "libxslt": {
+      "binaries": [
+        "xslt-config",
+        "xsltproc"
+      ],
+      "libs": [
+        "libexslt.a",
+        "libxslt.a"
+      ]
     },
     "which": {
       "binaries": [
@@ -948,6 +954,18 @@
         "fzf",
         "fzf-preview.sh",
         "fzf-tmux"
+      ],
+      "libs": []
+    },
+    "sudo": {
+      "binaries": [
+        "cvtsudoers",
+        "sudo",
+        "sudo_logsrvd",
+        "sudo_sendlog",
+        "sudoedit",
+        "sudoreplay",
+        "visudo"
       ],
       "libs": []
     },
@@ -1006,6 +1024,16 @@
         "vimdoc.so"
       ]
     },
+    "yq": {
+      "binaries": [
+        "yq"
+      ],
+      "libs": []
+    },
+    "gnulib": {
+      "binaries": [],
+      "libs": []
+    },
     "libgpgerror": {
       "binaries": [
         "gpg-error",
@@ -1030,6 +1058,14 @@
         "libassuan.a"
       ]
     },
+    "libksba": {
+      "binaries": [
+        "ksba-config"
+      ],
+      "libs": [
+        "libksba.a"
+      ]
+    },
     "libgcrypt": {
       "binaries": [
         "dumpsexp",
@@ -1041,12 +1077,10 @@
         "libgcrypt.a"
       ]
     },
-    "libksba": {
-      "binaries": [
-        "ksba-config"
-      ],
+    "libssh2": {
+      "binaries": [],
       "libs": [
-        "libksba.a"
+        "libssh2.a"
       ]
     },
     "emacs": {
@@ -1060,20 +1094,10 @@
       ],
       "libs": []
     },
-    "libssh2": {
-      "binaries": [],
-      "libs": [
-        "libssh2.a"
-      ]
-    },
     "direnv": {
       "binaries": [
         "direnv"
       ],
-      "libs": []
-    },
-    "gnulib": {
-      "binaries": [],
       "libs": []
     },
     "openssh": {
@@ -1140,6 +1164,25 @@
       ],
       "libs": []
     },
+    "duckdb": {
+      "binaries": [
+        "duckdb"
+      ],
+      "libs": [
+        "libduckdb_fastpforlib.a",
+        "libduckdb_fmt.a",
+        "libduckdb_fsst.a",
+        "libduckdb_hyperloglog.a",
+        "libduckdb_mbedtls.a",
+        "libduckdb_miniz.a",
+        "libduckdb_pg_query.a",
+        "libduckdb_re2.a",
+        "libduckdb_skiplistlib.a",
+        "libduckdb_static.a",
+        "libduckdb_utf8proc.a",
+        "libparquet_extension.a"
+      ]
+    },
     "tig": {
       "binaries": [
         "yacc",
@@ -1171,25 +1214,6 @@
       ],
       "libs": [
         "libntbtls.a"
-      ]
-    },
-    "duckdb": {
-      "binaries": [
-        "duckdb"
-      ],
-      "libs": [
-        "libduckdb_fastpforlib.a",
-        "libduckdb_fmt.a",
-        "libduckdb_fsst.a",
-        "libduckdb_hyperloglog.a",
-        "libduckdb_mbedtls.a",
-        "libduckdb_miniz.a",
-        "libduckdb_pg_query.a",
-        "libduckdb_re2.a",
-        "libduckdb_skiplistlib.a",
-        "libduckdb_static.a",
-        "libduckdb_utf8proc.a",
-        "libparquet_extension.a"
       ]
     },
     "c3270": {
@@ -1293,17 +1317,6 @@
       ],
       "libs": []
     },
-    "avro-c-lib": {
-      "binaries": [
-        "avroappend",
-        "avrocat",
-        "avromod",
-        "avropipe"
-      ],
-      "libs": [
-        "libavro.a"
-      ]
-    },
     "redis": {
       "binaries": [
         "redis-benchmark",
@@ -1314,6 +1327,17 @@
         "redis-server"
       ],
       "libs": []
+    },
+    "avro-c-lib": {
+      "binaries": [
+        "avroappend",
+        "avrocat",
+        "avromod",
+        "avropipe"
+      ],
+      "libs": [
+        "libavro.a"
+      ]
     },
     "libuv": {
       "binaries": [],
@@ -1521,6 +1545,15 @@
         "unix2mac"
       ],
       "libs": []
+    },
+    "gn": {
+      "binaries": [
+        "gn"
+      ],
+      "libs": [
+        "base.a",
+        "gn_lib.a"
+      ]
     },
     "zospstree": {
       "binaries": [
@@ -1824,25 +1857,17 @@
         "libz-ng.a"
       ]
     },
-    "prompters": {
-      "binaries": [
-        "mantastic",
-        "zotfile",
-        "zothelper"
-      ],
-      "libs": []
-    },
     "caddy": {
       "binaries": [
         "caddy"
       ],
       "libs": []
     },
-    "fq": {
+    "prompters": {
       "binaries": [
-        "doc",
-        "fq",
-        "gen"
+        "mantastic",
+        "zotfile",
+        "zothelper"
       ],
       "libs": []
     },
@@ -1858,6 +1883,12 @@
       ],
       "libs": []
     },
+    "lazygit": {
+      "binaries": [
+        "lazygit"
+      ],
+      "libs": []
+    },
     "git-lfs": {
       "binaries": [
         "git-lfs"
@@ -1868,23 +1899,11 @@
       "binaries": [],
       "libs": []
     },
-    "lazygit": {
-      "binaries": [
-        "lazygit"
-      ],
-      "libs": []
-    },
     "victoriametrics": {
       "binaries": [
         "vmagent-pure"
       ],
       "libs": []
-    },
-    "popt": {
-      "binaries": [],
-      "libs": [
-        "libpopt.a"
-      ]
     },
     "maven": {
       "binaries": [
@@ -1916,13 +1935,6 @@
       ],
       "libs": []
     },
-    "frp": {
-      "binaries": [
-        "frpc",
-        "frps"
-      ],
-      "libs": []
-    },
     "libgpgme": {
       "binaries": [
         "gpgme-config",
@@ -1933,6 +1945,13 @@
         "libgpgme.a",
         "libgpgmepp.a"
       ]
+    },
+    "frp": {
+      "binaries": [
+        "frpc",
+        "frps"
+      ],
+      "libs": []
     },
     "ttype": {
       "binaries": [
@@ -2100,10 +2119,6 @@
       "binaries": [],
       "libs": []
     },
-    "check_python": {
-      "binaries": [],
-      "libs": []
-    },
     "libsasl2": {
       "binaries": [
         "pluginviewer",
@@ -2120,6 +2135,10 @@
         "libsasldb.a",
         "libscram.a"
       ]
+    },
+    "check_python": {
+      "binaries": [],
+      "libs": []
     },
     "check_java": {
       "binaries": [],

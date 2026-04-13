@@ -1125,30 +1125,6 @@
 
 ---
 
-<a id="repo-cpioport"></a>
-## cpioport
-
-- **Origin Date (First Commit):** 2025-04-09
-- **Current Patch LOC:** 532
-- **Current Patch Count:** 5
-
-### Historical Trends
-
-![LOC Trend for cpioport](images/upstream/cpioport_current_loc_trend.png)
-![Count Trend for cpioport](images/upstream/cpioport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/copyin.c.patch` | `patches` | 240 |
-| `patches/copyout.c.patch` | `patches` | 32 |
-| `patches/filetypes.c.patch` | `patches` | 88 |
-| `patches/tar.c.patch` | `patches` | 151 |
-| `patches/util.c.patch` | `patches` | 21 |
-
----
-
 <a id="repo-inetutilsport"></a>
 ## inetutilsport
 
