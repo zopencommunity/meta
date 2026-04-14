@@ -1,13 +1,13 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2026-04-13 06:17:19 EDT.*
+*Report generated on: 2026-04-14 06:18:24 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 304
-- **Total Current Lines of Code (LOC) in Patches:** 57,859
-- **Total Number of Current Patch Files:** 1,040
-- **Average Current Patch LOC per Project:** 190.33
+- **Total Current Lines of Code (LOC) in Patches:** 57,876
+- **Total Number of Current Patch Files:** 1,041
+- **Average Current Patch LOC per Project:** 190.38
 - **Average Current Patch Count per Project:** 3.42
 
 ### Historical Trends (All Projects)
@@ -54,7 +54,7 @@
 | [glibport](#repo-glibport) | 537 | +0 | 7 |
 | [inetutilsport](#repo-inetutilsport) | 514 | +0 | 20 |
 | [cronieport](#repo-cronieport) | 510 | +0 | 13 |
-| [screenport](#repo-screenport) | 485 | +0 | 7 |
+| [screenport](#repo-screenport) | 502 | -67 | 8 |
 | [libpcapport](#repo-libpcapport) | 440 | +0 | 8 |
 | [libompport](#repo-libompport) | 437 | +0 | 2 |
 | [treeport](#repo-treeport) | 425 | +0 | 3 |
@@ -1470,8 +1470,8 @@
 ## screenport
 
 - **Origin Date (First Commit):** 2022-10-31
-- **Current Patch LOC:** 485
-- **Current Patch Count:** 7
+- **Current Patch LOC:** 502
+- **Current Patch Count:** 8
 
 ### Historical Trends
 
@@ -1482,10 +1482,11 @@
 
 | Patch File (Repo Relative Path) | Source | LOC |
 |---|---|:---|
-| `patches/PR1.patch` | `patches` | 140 |
+| `patches/PR1.patch` | `patches` | 73 |
 | `patches/acls.c.patch` | `patches` | 16 |
 | `patches/comm.sh.patch` | `patches` | 14 |
-| `patches/pty.c.patch` | `patches` | 83 |
+| `patches/os.h.patch` | `patches` | 74 |
+| `patches/pty.c.patch` | `patches` | 93 |
 | `patches/screen.c.patch` | `patches` | 80 |
 | `patches/tty.sh.patch` | `patches` | 40 |
 | `patches/utmp.c.patch` | `patches` | 112 |

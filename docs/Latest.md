@@ -142,12 +142,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="libarchive" data-searchable-text="libarchive Blue 85.7% STABLE_libarchive_4164 Multi-format archive and compression library compression port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="libarchive" data-searchable-text="libarchive Blue 85.8% STABLE_libarchive_4202 Multi-format archive and compression library compression port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libarchiveport" target="_blank" rel="noopener noreferrer">libarchive</a></strong></div>
     <div class="tool-status">Status: Blue</div>
-    <div class="tool-test">Test: 85.7%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/libarchiveport/releases/download/STABLE_libarchiveport_4164/libarchive-v3.8.6.20260325_100049.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libarchive_4164</a></div>
+    <div class="tool-test">Test: 85.8%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/libarchiveport/releases/download/STABLE_libarchiveport_4202/libarchive-v3.8.7.20260413_155836.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libarchive_4202</a></div>
     <div class="tool-desc" title="Multi-format archive and compression library">Multi-format archive and compression library</div>
   </div>
 </div>
@@ -1742,12 +1742,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="librdkafka" data-searchable-text="librdkafka Green 100.0% STABLE_librdkafka_4186 A high-performance C/C++ library for Apache Kafka library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="librdkafka" data-searchable-text="librdkafka Green 100.0% STABLE_librdkafka_4201 A high-performance C/C++ library for Apache Kafka library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/librdkafkaport" target="_blank" rel="noopener noreferrer">librdkafka</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/librdkafkaport/releases/download/STABLE_librdkafkaport_4186/librdkafka-v2.5.0.20260401_160431.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_librdkafka_4186</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/librdkafkaport/releases/download/STABLE_librdkafkaport_4201/librdkafka-v2.5.0.20260413_155222.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_librdkafka_4201</a></div>
     <div class="tool-desc" title="A high-performance C/C++ library for Apache Kafka">A high-performance C/C++ library for Apache Kafka</div>
   </div>
 </div>
@@ -3369,4 +3369,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2026-04-13 06:19:30 UTC
+Last updated:  2026-04-14 06:20:24 UTC

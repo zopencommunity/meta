@@ -144,7 +144,7 @@
 - 2025-08-30: [Update cppcheck-version to 2.18.2 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/15) ❌
 - 2025-08-22: [Update cppcheck-version to 2.18.1 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/14) ❌
 - 2025-07-20: [Update cppcheck-version to 2.18.0 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/13) ❌
-- 2025-02-26: [Update cppcheck-version to 2.17.1 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/12) ❌
+- 2025-02-26: [Update cppcheck-version to 2.17.1 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/12) ❓
 - 2025-02-23: [Update cppcheck-version to 2.17.0 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/11) ❓
 - 2024-12-19: [Update cppcheck-version to 2.16.2 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/10) ❓
 - 2024-11-29: [Update cppcheck-version to 2.16.1 from 2.14.2](https://github.com/zopencommunity/cppcheckport/pull/8) ❓
@@ -192,7 +192,7 @@
 
 ### cunitport
 - 2026-01-20: [Update cunit-version to 3.5.4 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/11) ❌
-- 2025-02-26: [Update cunit-version to 3.5.2 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/10) ❌
+- 2025-02-26: [Update cunit-version to 3.5.2 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/10) ❓
 - 2025-02-24: [Update cunit-version to 3.5.1 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/9) ❓
 - 2024-09-18: [Update cunit-version to 3.4.4 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/7) ❓
 - 2024-09-11: [Update cunit-version to 3.4.3 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/6) ❓
@@ -216,6 +216,7 @@
 - 2025-07-26: [Update doxygen-version to Release_1_14_0 from Release_1_13_2](https://github.com/zopencommunity/doxygenport/pull/10) ❌
 
 ### duckdbport
+- 2026-04-13: [Update duckdb-version to 1.5.2 from 1.4.2](https://github.com/zopencommunity/duckdbport/pull/39) ❌
 - 2026-03-23: [Update duckdb-version to 1.5.1 from 1.4.2](https://github.com/zopencommunity/duckdbport/pull/38) ❌
 - 2026-03-09: [Update duckdb-version to 1.5.0 from 1.4.2](https://github.com/zopencommunity/duckdbport/pull/36) ❌
 
@@ -460,6 +461,7 @@
 - 2026-03-06: [Update maven-version to 3.9.13 from 3.9.12](https://github.com/zopencommunity/mavenport/pull/15) ❌
 
 ### mesonport
+- 2026-04-13: [Update meson-version to 1.11.0 from 1.7.0](https://github.com/zopencommunity/mesonport/pull/13) ❌
 - 2026-03-15: [Update meson-version to 1.10.2 from 1.7.0](https://github.com/zopencommunity/mesonport/pull/12) ❌
 - 2026-02-24: [Update meson-version to 1.10.1 from 1.7.0](https://github.com/zopencommunity/mesonport/pull/11) ❌
 
@@ -693,6 +695,7 @@
 - 2026-04-01: [Update util-linux-version to 2.42 from 2.41.3](https://github.com/zopencommunity/util-linuxport/pull/23) ❌
 
 ### victoriametricsport
+- 2026-04-13: [Update victoriametrics-version to 1.140.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/52) ❌
 - 2026-04-01: [Update victoriametrics-version to 1.139.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/51) ❌
 - 2026-03-16: [Update victoriametrics-version to 1.138.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/50) ❌
 - 2026-03-02: [Update victoriametrics-version to 1.137.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/49) ❌
@@ -728,6 +731,7 @@
 - 2025-12-17: [Update xz-version to 5.8.2 from 5.8.1](https://github.com/zopencommunity/xzport/pull/26) ❌
 
 ### yqport
+- 2026-04-13: [Update yq-version to 4.53.3 from 4.52.5](https://github.com/zopencommunity/yqport/pull/41) ❌
 - 2026-04-12: [Update yq-version to 4.53.2 from 4.52.5](https://github.com/zopencommunity/yqport/pull/40) ❌
 
 ### z3port
@@ -1066,5 +1070,5 @@
 ---
 
 
-> Last updated: 2026-04-13 06:11:21 EDT
+> Last updated: 2026-04-14 06:11:26 EDT
 
