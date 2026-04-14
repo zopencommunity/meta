@@ -73,14 +73,8 @@
     },
     "vim": {
       "binaries": [
-        "ex",
-        "rview",
-        "rvim",
-        "view",
-        "vim",
-        "vimdiff",
-        "vimtutor",
-        "xxd"
+        "rsync",
+        "rsync-ssl"
       ],
       "libs": []
     },
@@ -626,10 +620,9 @@
       ],
       "libs": []
     },
-    "openssl": {
+    "sshpass": {
       "binaries": [
-        "c_rehash",
-        "openssl"
+        "sshpass"
       ],
       "libs": []
     },
@@ -852,6 +845,20 @@
       ],
       "libs": []
     },
+    "cscope": {
+      "binaries": [
+        "cscope",
+        "ocs"
+      ],
+      "libs": []
+    },
+    "nano": {
+      "binaries": [
+        "nano",
+        "rnano"
+      ],
+      "libs": []
+    },
     "ctags": {
       "binaries": [
         "ctags",
@@ -904,6 +911,10 @@
         "libiconv.a"
       ]
     },
+    "zigi": {
+      "binaries": [],
+      "libs": []
+    },
     "libxml2": {
       "binaries": [
         "xml2-config",
@@ -924,10 +935,6 @@
         "libpcre2-8.a",
         "libpcre2-posix.a"
       ]
-    },
-    "zigi": {
-      "binaries": [],
-      "libs": []
     },
     "xmlto": {
       "binaries": [
@@ -1022,14 +1029,6 @@
       ],
       "libs": []
     },
-    "fzf": {
-      "binaries": [
-        "fzf",
-        "fzf-preview.sh",
-        "fzf-tmux"
-      ],
-      "libs": []
-    },
     "sudo": {
       "binaries": [
         "cvtsudoers",
@@ -1039,6 +1038,14 @@
         "sudoedit",
         "sudoreplay",
         "visudo"
+      ],
+      "libs": []
+    },
+    "fzf": {
+      "binaries": [
+        "fzf",
+        "fzf-preview.sh",
+        "fzf-tmux"
       ],
       "libs": []
     },
@@ -1097,16 +1104,6 @@
         "vimdoc.so"
       ]
     },
-    "yq": {
-      "binaries": [
-        "yq"
-      ],
-      "libs": []
-    },
-    "gnulib": {
-      "binaries": [],
-      "libs": []
-    },
     "libgpgerror": {
       "binaries": [
         "gpg-error",
@@ -1144,6 +1141,12 @@
         "libssh2.a"
       ]
     },
+    "direnv": {
+      "binaries": [
+        "direnv"
+      ],
+      "libs": []
+    },
     "emacs": {
       "binaries": [
         "ctags",
@@ -1152,12 +1155,6 @@
         "emacs-29.4",
         "emacsclient",
         "etags"
-      ],
-      "libs": []
-    },
-    "direnv": {
-      "binaries": [
-        "direnv"
       ],
       "libs": []
     },
@@ -1317,9 +1314,9 @@
       ],
       "libs": []
     },
-    "gum": {
+    "wharf": {
       "binaries": [
-        "gum"
+        "wharf"
       ],
       "libs": []
     },
@@ -1373,12 +1370,6 @@
       "binaries": [],
       "libs": [
         "libmd.a"
-      ]
-    },
-    "libbsd": {
-      "binaries": [],
-      "libs": [
-        "libbsd.a"
       ]
     },
     "jansson": {
@@ -1449,12 +1440,6 @@
     },
     "depot_tools": {
       "binaries": [],
-      "libs": []
-    },
-    "githubcli": {
-      "binaries": [
-        "gh"
-      ],
       "libs": []
     },
     "moreutils": {
@@ -1953,12 +1938,6 @@
       ],
       "libs": []
     },
-    "lazygit": {
-      "binaries": [
-        "lazygit"
-      ],
-      "libs": []
-    },
     "git-lfs": {
       "binaries": [
         "git-lfs"
@@ -2027,6 +2006,12 @@
         "libgpgme.a",
         "libgpgmepp.a"
       ]
+    },
+    "ttype": {
+      "binaries": [
+        "ttype"
+      ],
+      "libs": []
     },
     "frp": {
       "binaries": [
@@ -2106,6 +2091,24 @@
     "jenkins": {
       "binaries": [
         "fx"
+      ],
+      "libs": []
+    },
+    "cppcheck": {
+      "binaries": [
+        "cppcheck"
+      ],
+      "libs": []
+    },
+    "fx": {
+      "binaries": [
+        "fx"
+      ],
+      "libs": []
+    },
+    "jenkins": {
+      "binaries": [
+        "jenkins.war"
       ],
       "libs": []
     },
@@ -2212,13 +2215,6 @@
         "conan"
       ],
       "libs": []
-    },
-    "zedc_ascii": {
-      "binaries": [],
-      "libs": [
-        "libz.a",
-        "libzedc_ascii.a"
-      ]
     },
     "git-extras": {
       "binaries": [
