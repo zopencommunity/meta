@@ -84,14 +84,20 @@ If `curl` or `bash` are **not** available, follow these steps:
 
 See [The package manager](ThePackageManager.md) and [Developing Tools](developing.md) for more details.
 
-## Getting Started Video <!-- {docsify-ignore} -->
-If you like learning through watching, check out our getting started Video:
+## Getting Started Video
+
+If you like learning through watching, check out our getting started video:
+
 <video height="1080" controls>
-  <source src="https://github.com/zopencommunity/collateral/raw/main/ZOSOpenToolsIntroV2-cropped.mp4" type="video/mp4">
+  <source
+    src="https://github.com/zopencommunity/collateral/raw/main/ZOSOpenToolsIntroV2-cropped.mp4"
+    type="video/mp4"
+  />
+  Your browser does not support the video tag.
 </video>
 
 
-## Upgrading zopen community <!-- {docsify-ignore} -->
+## Upgrading zopen community 
 
 zopen community can be upgraded like so:
 
@@ -138,5 +144,3 @@ $ rm ./usr/local/zopen/meta/meta-dt/.pinned
 # can be safely removed once installed.
 $ rm -rf ./meta-0.6.2/.pinned
 ```
-
-

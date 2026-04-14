@@ -306,6 +306,7 @@
 <details>
 <summary>Week of 2026-01-05 to 2026-01-11</summary>
 
+- **ncurses**: [ncurses-6.6.20260105_150454.zos.pax.Z](https://github.com/zopencommunity/ncursesport/releases/tag/STABLE_ncursesport_3958) - (category: Uncategorized)
 - **curl**: [curl-8.18.0.20260108_142457.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/STABLE_curlport_3970) - (category: Uncategorized)
 - **ncurses**: [ncurses-6.6.20260105_150454.zos.pax.Z](https://github.com/zopencommunity/ncursesport/releases/tag/STABLE_ncursesport_3958) - (category: Uncategorized)
 - **cmake**: [cmake-4.2.1.20260108_041701.zos.pax.Z](https://github.com/zopencommunity/cmakeport/releases/tag/STABLE_cmakeport_3969) - (category: Uncategorized)
@@ -630,6 +631,9 @@
 <details>
 <summary>Week of 2025-09-08 to 2025-09-14</summary>
 
+- **vim**: [vim-v9.1.1750.20250910_162743.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720) - (category: editor development)
+- **vim**: [vim-v9.1.1740.20250908_153051.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3712) - (category: editor development)
+- **vim**: [vim-v9.1.0697.20250907_232548.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/datasetio_ispf) - (category: Uncategorized)
 - **curl**: [curl-8.16.0.20250910_155853.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/STABLE_curlport_3718) - (category: Uncategorized)
 - **vim**: [vim-v9.1.1750.20250910_162743.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3720) - (category: editor development)
 - **vim**: [vim-v9.1.1740.20250908_153051.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3712) - (category: editor development)
@@ -753,6 +757,9 @@
 <details>
 <summary>Week of 2025-07-28 to 2025-08-03</summary>
 
+- **vim**: [vim-v9.1.1590.20250731_175213.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3632) - (category: editor development)
+- **vim**: [vim-v9.1.1590.20250728_205054.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3601) - (category: editor development)
+- **lz4**: [lz4-1.10.0.20250730_074833.zos.pax.Z](https://github.com/zopencommunity/lz4port/releases/tag/STABLE_lz4port_3613) - (category: compression)
 - **curl**: [curl-8.15.0.20250728_192752.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/STABLE_curlport_3596) - (category: Uncategorized)
 - **bash**: [bash-5.3.20250801_121247.zos.pax.Z](https://github.com/zopencommunity/bashport/releases/tag/STABLE_bashport_3633) - (category: shell)
 - **zstd**: [zstd-1.5.5.20250730_094335.zos.pax.Z](https://github.com/zopencommunity/zstdport/releases/tag/STABLE_zstdport_3616) - (category: compression)
@@ -799,6 +806,11 @@
 <details>
 <summary>Week of 2025-07-21 to 2025-07-27</summary>
 
+- **vim**: [vim-v9.1.1590.20250726_152639.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3594) - (category: editor development)
+- **vim**: [vim-v9.1.1580.20250723_152838.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3585) - (category: editor development)
+- **gettext**: [gettext-0.21.20250722_213833.zos.pax.Z](https://github.com/zopencommunity/gettextport/releases/tag/STABLE_gettextport_3579) - (category: Uncategorized)
+- **gettext**: [gettext-0.21.20250721_140022.zos.pax.Z](https://github.com/zopencommunity/gettextport/releases/tag/STABLE_gettextport_3575) - (category: Uncategorized)
+- **gettext**: [gettext-0.21.20250721_134351.zos.pax.Z](https://github.com/zopencommunity/gettextport/releases/tag/STABLE_gettextport_3573) - (category: Uncategorized)
 - **zlib**: [zlib-v1.3.1.20250721_154923.zos.pax.Z](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_3574) - (category: Uncategorized)
 - **vim**: [vim-v9.1.1590.20250726_152639.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3594) - (category: editor development)
 - **vim**: [vim-v9.1.1580.20250723_152838.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3585) - (category: editor development)
@@ -827,6 +839,9 @@
 <details>
 <summary>Week of 2025-07-14 to 2025-07-20</summary>
 
+- **vim**: [vim-v9.1.1570.20250720_153237.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3569) - (category: editor development)
+- **vim**: [vim-v9.1.1550.20250716_152831.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3560) - (category: editor development)
+- **vim**: [vim-v9.1.1540.20250714_152835.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3551) - (category: editor development)
 - **curl**: [curl-8.15.0.20250716_153936.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/STABLE_curlport_3561) - (category: Uncategorized)
 - **git**: [git-v2.50.1.20250720_161645.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/STABLE_gitport_3570) - (category: development source_control)
 - **coreutils**: [coreutils-9.7.20250720_200003.zos.pax.Z](https://github.com/zopencommunity/coreutilsport/releases/tag/STABLE_coreutilsport_3571) - (category: Uncategorized)
@@ -959,7 +974,14 @@
 <details>
 <summary>Week of 2025-06-09 to 2025-06-15</summary>
 
+- **vim**: [vim-v9.1.1460.20250615_171057.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3463) - (category: editor development)
+- **vim**: [vim-v9.1.1450.20250611_152631.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3457) - (category: editor development)
+- **ncurses**: [ncurses-6.5.20250609_163428.zos.pax.Z](https://github.com/zopencommunity/ncursesport/releases/tag/STABLE_ncursesport_3440) - (category: Uncategorized)
 - **curl**: [curl-8.14.1.20250610_010840.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/STABLE_curlport_3445) - (category: Uncategorized)
+- **git**: [git-v2.49.0.20250612_153313.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/STABLE_gitport_3459) - (category: development source_control)
+- **openssl**: [openssl-3.5.0.20250614_124411.zos.pax.Z](https://github.com/zopencommunity/opensslport/releases/tag/STABLE_opensslport_3462) - (category: Uncategorized)
+- **openssl**: [openssl-3.5.0.20250611_092430.zos.pax.Z](https://github.com/zopencommunity/opensslport/releases/tag/STABLE_opensslport_3456) - (category: Uncategorized)
+- **make**: [make-4.4.1.20250609_163324.zos.pax.Z](https://github.com/zopencommunity/makeport/releases/tag/STABLE_makeport_3439) - (category: development build_system)
 - **zlib**: [zlib-develop.20250610_041524.zos.pax.Z](https://github.com/zopencommunity/zlibport/releases/tag/DEV_zlibport_3448) - (category: Uncategorized)
 - **zlib**: [zlib-v1.3.1.20250610_041517.zos.pax.Z](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_3447) - (category: Uncategorized)
 - **git**: [git-v2.49.0.20250612_153313.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/STABLE_gitport_3459) - (category: development source_control)
@@ -989,6 +1011,9 @@
 <details>
 <summary>Week of 2025-06-02 to 2025-06-08</summary>
 
+- **vim**: [vim-v9.1.1440.20250608_153435.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3438) - (category: editor development)
+- **vim**: [vim-v9.1.1440.20250608_152435.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3437) - (category: editor development)
+- **vim**: [vim-v9.1.1430.20250605_152627.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3429) - (category: editor development)
 - **curl**: [curl-8.14.1.20250606_010904.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/STABLE_curlport_3432) - (category: Uncategorized)
 - **curl**: [curl-8.14.1.20250605_181336.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/STABLE_curlport_3430) - (category: Uncategorized)
 - **curl**: [curl-8.14.1.20250604_142123.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/STABLE_curlport_3424) - (category: Uncategorized)
@@ -1030,6 +1055,10 @@
 <details>
 <summary>Week of 2025-05-26 to 2025-06-01</summary>
 
+- **vim**: [vim-v9.1.1420.20250531_153425.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3406) - (category: editor development)
+- **vim**: [vim-v9.1.1420.20250531_152439.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3404) - (category: editor development)
+- **vim**: [vim-v9.1.1410.20250527_153429.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3365) - (category: editor development)
+- **vim**: [vim-v9.1.1390.20250526_010125.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3351) - (category: editor development)
 - **curl**: [curl-8.14.0.20250528_160123.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/STABLE_curlport_3369) - (category: Uncategorized)
 - **curl**: [curl-8.13.0.20250526_025314.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/STABLE_curlport_3357) - (category: Uncategorized)
 - **zlib**: [zlib-develop.20250530_170406.zos.pax.Z](https://github.com/zopencommunity/zlibport/releases/tag/DEV_zlibport_3399) - (category: Uncategorized)
@@ -1262,6 +1291,8 @@
 <details>
 <summary>Week of 2025-03-31 to 2025-04-06</summary>
 
+- **vim**: [vim-HEAD.20250402_153226.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3192) - (category: editor development)
+- **ncurses**: [ncurses-6.5.20250331_175748.zos.pax.Z](https://github.com/zopencommunity/ncursesport/releases/tag/STABLE_ncursesport_3183) - (category: Uncategorized)
 - **curl**: [curl-8.13.0.20250404_111040.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/STABLE_curlport_3213) - (category: Uncategorized)
 - **curl**: [curl-8.13.0.20250404_110033.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/STABLE_curlport_3212) - (category: Uncategorized)
 - **curl**: [curl-8.12.1.20250402_154613.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/STABLE_curlport_3198) - (category: Uncategorized)
@@ -1348,6 +1379,7 @@
 <details>
 <summary>Week of 2025-02-24 to 2025-03-02</summary>
 
+- **vim**: [vim-heads.v9.1.1016.20250226_170120.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/zusage) - (category: editor development)
 - **curl**: [curl-8.12.1.20250226_160101.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/zusage) - (category: Uncategorized)
 - **bash**: [bash-5.2.37.20250226_160642.zos.pax.Z](https://github.com/zopencommunity/bashport/releases/tag/zusage) - (category: shell)
 - **git**: [git-heads.v2.48.1.20250226_114803.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/zusage) - (category: development source_control)
@@ -1395,6 +1427,7 @@
 <details>
 <summary>Week of 2025-02-10 to 2025-02-16</summary>
 
+- **vim**: [vim-heads.v9.1.1100.20250216_161352.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_3107) - (category: editor development)
 - **curl**: [curl-8.12.1.20250214_145238.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/STABLE_curlport_3105) - (category: Uncategorized)
 - **curl**: [curl-8.12.1.20250214_144222.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/STABLE_curlport_3104) - (category: Uncategorized)
 - **curl**: [curl-8.12.0.20250212_072831.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/STABLE_curlport_3096) - (category: Uncategorized)
@@ -1418,6 +1451,7 @@
 <details>
 <summary>Week of 2025-02-03 to 2025-02-09</summary>
 
+- **xz**: [xz-5.6.4.20250205_033706.zos.pax.Z](https://github.com/zopencommunity/xzport/releases/tag/STABLE_xzport_3075) - (category: Uncategorized)
 - **zlib**: [zlib-heads.v1.3.1.20250205_034023.zos.pax.Z](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_3071) - (category: Uncategorized)
 - **zlib**: [zlib-develop.20250204_223712.zos.pax.Z](https://github.com/zopencommunity/zlibport/releases/tag/DEV_zlibport_3069) - (category: Uncategorized)
 - **xz**: [xz-5.6.4.20250205_033706.zos.pax.Z](https://github.com/zopencommunity/xzport/releases/tag/STABLE_xzport_3075) - (category: Uncategorized)
@@ -2087,6 +2121,10 @@
 <details>
 <summary>Week of 2024-09-23 to 2024-09-29</summary>
 
+- **bzip2**: [bzip2-1.0.8.20240923_045931.zos.pax.Z](https://github.com/zopencommunity/bzip2port/releases/tag/STABLE_bzip2port_2462) - (category: Uncategorized)
+- **bzip2**: [bzip2-1.0.8.20240923_014138.zos.pax.Z](https://github.com/zopencommunity/bzip2port/releases/tag/STABLE_bzip2port_2454) - (category: Uncategorized)
+- **vim**: [vim-heads.v9.1.0736.20240923_045240.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2461) - (category: Uncategorized)
+- **ncurses**: [ncurses-6.5.20240923_050025.zos.pax.Z](https://github.com/zopencommunity/ncursesport/releases/tag/STABLE_ncursesport_2463) - (category: Uncategorized)
 - **curl**: [curl-8.9.1.20240923_023409.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/STABLE_curlport_2472) - (category: Uncategorized)
 - **git**: [git-heads.v2.46.1.20240924_094527.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/STABLE_gitport_2481) - (category: Uncategorized)
 - **git**: [git-heads.v2.46.0.20240923_001607.zos.pax.Z](https://github.com/zopencommunity/gitport/releases/tag/STABLE_gitport_2465) - (category: Uncategorized)
@@ -2170,6 +2208,7 @@
 <details>
 <summary>Week of 2024-08-26 to 2024-09-01</summary>
 
+- **vim**: [vim-heads.v9.1.0697.20240829_180335.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2421) - (category: Uncategorized)
 - **curl**: [curl-8.9.1.20240829_180329.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/STABLE_curlport_2422) - (category: Uncategorized)
 - **vim**: [vim-heads.v9.1.0697.20240829_180335.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2421) - (category: Uncategorized)
 - **zoslib**: [zoslib-zopen2.20240829_172713.zos.pax.Z](https://github.com/zopencommunity/zoslibport/releases/tag/STABLE_zoslibport_2420) - (category: Uncategorized)
@@ -2380,6 +2419,7 @@
 <details>
 <summary>Week of 2024-05-20 to 2024-05-26</summary>
 
+- **vim**: [vim-heads.v9.1.0413.20240521_211543.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2271) - (category: Uncategorized)
 - **curl**: [curl-8.8.0.20240523_003508.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/STABLE_curlport_2274) - (category: Uncategorized)
 - **curl**: [curl-8.8.0.20240523_004606.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/STABLE_curlport_2273) - (category: Uncategorized)
 - **curl**: [curl-8.8.0.20240522_160837.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/STABLE_curlport_2272) - (category: Uncategorized)
@@ -2636,6 +2676,7 @@
 <details>
 <summary>Week of 2024-01-29 to 2024-02-04</summary>
 
+- **bzip2**: [bzip2-1.0.8.20240128_234041.zos.pax.Z](https://github.com/zopencommunity/bzip2port/releases/tag/STABLE_bzip2port_2048) - (category: Uncategorized)
 - **curl**: [curl-8.5.0.20240130_020020.zos.pax.Z](https://github.com/zopencommunity/curlport/releases/tag/STABLE_curlport_2067) - (category: Uncategorized)
 - **bzip2**: [bzip2-1.0.8.20240128_234041.zos.pax.Z](https://github.com/zopencommunity/bzip2port/releases/tag/STABLE_bzip2port_2048) - (category: Uncategorized)
 - **libtool**: [libtool-2.4.20240129_152529.zos.pax.Z](https://github.com/zopencommunity/libtoolport/releases/tag/STABLE_libtoolport_2064) - (category: Uncategorized)

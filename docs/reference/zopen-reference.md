@@ -1,6 +1,7 @@
 # zopen reference documentation
+
 This page provides information about the zopen interface. Click on any of the zopen commands listed below to access the reference guide describing how to utilize that command.
-* [zopen](/reference/zopen)
+
 * [zopen-alt](/reference/zopen-alt)
 * [zopen-audit](/reference/zopen-audit)
 * [zopen-build](/reference/zopen-build)
@@ -13,6 +14,7 @@ This page provides information about the zopen interface. Click on any of the zo
 * [zopen-diagnostics](/reference/zopen-diagnostics)
 * [zopen-generate](/reference/zopen-generate)
 * [zopen-help2man](/reference/zopen-help2man)
+* [zopen-importenvs](/reference/zopen-importenvs)
 * [zopen-info](/reference/zopen-info)
 * [zopen-init](/reference/zopen-init)
 * [zopen-install](/reference/zopen-install)
@@ -27,4 +29,6 @@ This page provides information about the zopen interface. Click on any of the zo
 * [zopen-update-cacert](/reference/zopen-update-cacert)
 * [zopen-usage](/reference/zopen-usage)
 * [zopen-version](/reference/zopen-version)
+* [zopen-versions](/reference/zopen-versions)
 * [zopen-whichproject](/reference/zopen-whichproject)
+* [zopen](/reference/zopen)

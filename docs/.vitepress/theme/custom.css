@@ -1,0 +1,476 @@
+/* Custom styles migrated from Docsify */
+
+:root {
+  --vp-c-brand: #3eaf7c;
+  --vp-c-brand-light: #4abf8a;
+  --vp-c-brand-lighter: #63d4a0;
+  --vp-c-brand-dark: #2c8e5d;
+  --vp-c-brand-darker: #1e6b45;
+}
+
+/* Logo styling - horizontal logo with text - INCREASED SIZE with breathing space */
+.VPImage.logo {
+  height: 60px !important;
+  width: auto !important;
+  max-width: 350px !important;
+  padding: 8px 16px !important;
+  margin: 4px 0 !important;
+}
+
+.VPNavBarTitle .logo {
+  height: 60px !important;
+  width: auto !important;
+  max-width: 350px !important;
+  padding: 8px 16px !important;
+  margin: 4px 0 !important;
+}
+
+.VPNavBar .logo img {
+  height: 60px !important;
+  width: auto !important;
+  max-width: 350px !important;
+}
+
+/* Add breathing space to the navbar title container */
+.VPNavBarTitle {
+  padding: 8px 12px !important;
+}
+
+/* Adjust navbar height to accommodate larger logo */
+.VPNavBar {
+  height: auto !important;
+  min-height: 80px !important;
+  padding: 12px 24px !important;
+}
+
+/* Hero image styling - add border radius and make bigger */
+.VPImage.image-src {
+  border-radius: 16px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.vp-doc .VPHero .image {
+  border-radius: 16px;
+}
+
+.VPHero .image-container {
+  max-width: 900px !important;
+  margin-left: 3rem !important;
+  padding-left: 2rem !important;
+}
+
+.VPHero .image-container img {
+  border-radius: 16px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  width: 100%;
+}
+
+/* Tool info grid styles */
+.tool-info-grid {
+  display: grid;
+  grid-template-columns:
+    minmax(140px, 1.5fr) /* Name */
+    minmax(100px, 0.8fr) /* Status */
+    minmax(90px, 0.7fr) /* Test */
+    minmax(180px, 1.2fr) /* Release */
+    minmax(200px, 2fr); /* Description */
+  gap: 0px 12px;
+  align-items: baseline;
+  font-size: 0.9em;
+  line-height: 1.4;
+}
+
+.tool-info-grid > div {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tool-name {
+  font-size: 1.15em;
+  font-weight: bold;
+  white-space: normal;
+}
+
+.tool-desc {
+  white-space: normal;
+}
+
+.tool-info-grid a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.tool-info-grid a:hover {
+  text-decoration: underline;
+}
+
+/* Zebra striping for tool items */
+.tool-item-filterable:nth-child(even) {
+  background-color: #f8f9fa;
+}
+
+.tool-item-filterable:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+/* Dark mode adjustments */
+.dark .tool-item-filterable:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.dark .tool-item-filterable:nth-child(odd) {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* Table styles */
+.vp-doc table,
+.vp-doc th,
+.vp-doc td {
+  background-color: transparent !important;
+}
+
+/* Allow tables to scroll horizontally when necessary */
+.vp-doc .table-wrapper {
+  overflow-x: auto;
+}
+
+/* Responsive table cells */
+@media (max-width: 30em) {
+  .vp-doc .table-wrapper td {
+    flex-wrap: wrap;
+  }
+}
+
+/* Layout styles for homepage */
+.layout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.grow1 {
+  flex: 1;
+  min-width: 300px;
+}
+
+/* Custom container styles */
+.custom-block {
+  padding: 16px;
+  border-radius: 8px;
+  margin: 16px 0;
+}
+
+/* Ensure images are responsive and larger */
+.vp-doc img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Make content images MUCH larger - demo gifs and screenshots with left spacing */
+.vp-doc img[src*="demo"],
+.vp-doc img[src*="Demo"],
+.vp-doc img[src*=".gif"],
+.vp-doc img[src*=".png"],
+.vp-doc img[alt*="demo"],
+.vp-doc img[alt*="Demo"] {
+  max-width: 1200px !important;
+  width: 100% !important;
+  margin: 2rem auto 2rem 3rem !important;
+  padding-left: 2rem !important;
+  display: block !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Images in layout sections - FORCE larger size */
+.layout img {
+  max-width: 100% !important;
+  width: 100% !important;
+  height: auto !important;
+  min-width: 600px !important;
+}
+
+.layout div img {
+  max-width: 100% !important;
+  width: 100% !important;
+  height: auto !important;
+}
+
+/* Specific targeting for demo.gif */
+img[src*="demo.gif"],
+img[src="images/demo.gif"],
+img[alt*="Installation demo"] {
+  max-width: 1200px !important;
+  width: 100% !important;
+  height: auto !important;
+  display: block !important;
+  margin: 2rem auto !important;
+}
+
+/* Make the layout section divs larger */
+.layout > div {
+  min-width: 45% !important;
+}
+
+@media (max-width: 768px) {
+  .vp-doc img[src*="demo"],
+  .vp-doc img[src*="Demo"],
+  .vp-doc img[src*=".gif"],
+  .vp-doc img[src*=".png"] {
+    max-width: 100% !important;
+    min-width: auto !important;
+  }
+  
+  .layout img {
+    min-width: auto !important;
+  }
+  
+  .VPHero .image-container {
+    max-width: 100% !important;
+  }
+}
+
+/* Edit link styling - Similar to theme toggle button */
+.VPDocFooter {
+  position: relative;
+}
+
+.VPDocFooter .edit-link {
+  position: fixed !important;
+  top: calc(var(--vp-nav-height) + 20px) !important;
+  right: 280px !important;
+  z-index: 20 !important;
+  margin: 0 !important;
+}
+
+@media (min-width: 1440px) {
+  .VPDocFooter .edit-link {
+    right: max(280px, calc((100vw - (var(--vp-layout-max-width) - 64px)) / 2 + 120px)) !important;
+  }
+}
+
+@media (max-width: 1280px) {
+  .VPDocFooter .edit-link {
+    right: 0px !important;
+  }
+}
+
+.VPDocFooter .edit-link .edit-link-button {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100px !important;
+  height: 40px !important;
+  padding: 0 !important;
+  background-color: var(--vp-c-bg-soft) !important;
+  color: var(--vp-c-text-2) !important;
+  border-radius: 8px !important;
+  border: 1px solid var(--vp-c-divider) !important;
+  transition: background-color 0.25s, color 0.25s, border-color 0.25s !important;
+  text-decoration: none !important;
+  position: relative !important;
+}
+
+.VPDocFooter .edit-link .edit-link-button:hover {
+  background-color: var(--vp-c-brand-soft) !important;
+  color: var(--vp-c-brand) !important;
+}
+
+/* Show only edit icon - no text */
+.VPDocFooter .edit-link .edit-link-button .vpi-square-pen {
+  width: 20px !important;
+  height: 20px !important;
+  opacity: 1 !important;
+}
+
+/* Hide text, show only icon */
+.VPDocFooter .edit-link .edit-link-button .text {
+  display: none !important;
+}
+
+/* Tooltip - "Edit this page on GitHub" - shown on hover at bottom */
+.VPDocFooter .edit-link .edit-link-button::before {
+  content: "Edit this page on GitHub" !important;
+  position: absolute !important;
+  top: calc(100% + 8px) !important;
+  right: 0 !important;
+  background: #1F2328 !important;
+  color: #FFFFFF !important;
+  padding: 6px 12px !important;
+  border-radius: 6px !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  white-space: nowrap !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: opacity 150ms ease !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+  z-index: 9999 !important;
+}
+
+/* Tooltip arrow - pointing up */
+.VPDocFooter .edit-link .edit-link-button::after {
+  content: "" !important;
+  position: absolute !important;
+  top: calc(100% + 2px) !important;
+  right: 16px !important;
+  width: 0 !important;
+  height: 0 !important;
+  border-left: 6px solid transparent !important;
+  border-right: 6px solid transparent !important;
+  border-bottom: 6px solid #1F2328 !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: opacity 150ms ease !important;
+  z-index: 9999 !important;
+}
+
+/* Show tooltip on hover */
+.VPDocFooter .edit-link .edit-link-button:hover::before,
+.VPDocFooter .edit-link .edit-link-button:hover::after {
+  opacity: 1 !important;
+}
+
+.VPDocFooter .edit-link:hover .edit-link-button {
+  background-color: #2F363D !important;
+}
+
+.VPDocFooter .edit-link:active .edit-link-button {
+  background-color: #1F2328 !important;
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0) !important;
+}
+
+/* Dark mode adjustments */
+.dark .VPDocFooter .edit-link .edit-link-button {
+  background-color: #21262d !important;
+  border-color: rgba(240, 246, 252, 0.1) !important;
+  color: #c9d1d9 !important;
+}
+
+.dark .VPDocFooter .edit-link:hover .edit-link-button {
+  background-color: #30363d !important;
+}
+
+.dark .VPDocFooter .edit-link:active .edit-link-button {
+  background-color: #161b22 !important;
+}
+
+.dark .VPDocFooter .edit-link .edit-link-button::before {
+  background: #161b22 !important;
+}
+
+.dark .VPDocFooter .edit-link .edit-link-button::after {
+  border-top-color: #161b22 !important;
+}
+
+/* Hide the last updated info to keep only edit link */
+.VPDocFooter .last-updated {
+  display: none;
+}
+
+/* Made with Bob */
+
+/* Colorful Social Icons */
+.VPSocialLink {
+  transition: all 0.3s ease !important;
+}
+
+/* GitHub - Black/Dark Gray */
+.VPSocialLink[aria-label*="github" i] svg,
+.VPSocialLink[href*="github" i] svg {
+  fill: #181717 !important;
+}
+
+.dark .VPSocialLink[aria-label*="github" i] svg,
+.dark .VPSocialLink[href*="github" i] svg {
+  fill: #ffffff !important;
+}
+
+.VPSocialLink[aria-label*="github" i]:hover svg,
+.VPSocialLink[href*="github" i]:hover svg {
+  fill: #4078c0 !important;
+  transform: scale(1.1);
+}
+
+/* LinkedIn - Official Blue */
+.VPSocialLink[aria-label*="linkedin" i] svg,
+.VPSocialLink[href*="linkedin" i] svg {
+  fill: #0A66C2 !important;
+}
+
+.VPSocialLink[aria-label*="linkedin" i]:hover svg,
+.VPSocialLink[href*="linkedin" i]:hover svg {
+  fill: #004182 !important;
+  transform: scale(1.1);
+}
+
+/* Discord - Blurple */
+.VPSocialLink[aria-label*="discord" i] svg,
+.VPSocialLink[href*="discord" i] svg {
+  fill: #5865F2 !important;
+}
+
+.VPSocialLink[aria-label*="discord" i]:hover svg,
+.VPSocialLink[href*="discord" i]:hover svg {
+  fill: #4752C4 !important;
+  transform: scale(1.1);
+}
+
+/* Add background circles for better visibility */
+.VPSocialLink {
+  background: rgba(0, 0, 0, 0.05) !important;
+  border-radius: 50% !important;
+  padding: 8px !important;
+  width: 40px !important;
+  height: 40px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.dark .VPSocialLink {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.VPSocialLink:hover {
+  background: rgba(0, 0, 0, 0.1) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+}
+
+.dark .VPSocialLink:hover {
+  background: rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Add 20px top spacing to aside panel */
+.VPDocAside {
+  padding-top: 20px !important;
+}
+
+.VPDocAsideOutline {
+  padding-top: 20px !important;
+
+/* Fix tab/link highlighting in aside panel */
+.VPDocAsideOutline .outline-link {
+  transition: color 0.25s, opacity 0.25s;
+}
+
+.VPDocAsideOutline .outline-link:hover {
+  color: var(--vp-c-brand-1) !important;
+  opacity: 1 !important;
+}
+
+.VPDocAsideOutline .outline-link.active {
+  color: var(--vp-c-brand-1) !important;
+  font-weight: 600 !important;
+  opacity: 1 !important;
+}
+
+/* Ensure outline markers are visible */
+.VPDocAsideOutline .outline-marker {
+  opacity: 1 !important;
+  background-color: var(--vp-c-brand-1) !important;
+}
+
+}

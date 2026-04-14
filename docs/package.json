@@ -2,13 +2,17 @@
   "name": "zosopentools",
   "version": "0.0.1",
   "description": "zopen community Docs",
+  "type": "module",
   "scripts": {
-    "serve": "docsify serve",
-    "update-sidebar": "docsify-auto-sidebar -d ."
+    "docs:dev": "vitepress dev",
+    "docs:build": "vitepress build",
+    "docs:preview": "vitepress preview",
+    "serve": "vitepress dev",
+    "build": "vitepress build"
   },
   "author": "",
-  "dependencies": {
-    "docsify-cli": "^4.4.2",
-    "docsify-tools": "^1.0.20"
+  "devDependencies": {
+    "vitepress": "^1.6.4",
+    "vue": "^3.5.32"
   }
 }

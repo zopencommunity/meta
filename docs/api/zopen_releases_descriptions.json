@@ -302,9 +302,6 @@
     "hlasm-language-server": "",
     "k6": "",
     "botan": "Botan is a C++ cryptography library released under the permissive BSD-2-Clause license",
-    "thrift": "Apache Thrift - Software framework for scalable cross-language services development",
-    "sqlite-vec": "zopen port of sqlite-vec",
-    "z-vector-search": "A Port of z-vector-search",
-    "usearch": "zopen port of usearch"
+    "thrift": "Apache Thrift - Software framework for scalable cross-language services development"
   }
 }

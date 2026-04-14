@@ -277,6 +277,7 @@
         "base64",
         "basename",
         "cat",
+        "chcon",
         "chgrp",
         "chmod",
         "chown",
@@ -386,12 +387,14 @@
       ],
       "libs": []
     },
-    "expat": {
+    "curl": {
       "binaries": [
-        "xmlwf"
+        "curl",
+        "curl-config",
+        "wcurl"
       ],
       "libs": [
-        "libexpat.a"
+        "libcurl.a"
       ]
     },
     "gawk": {
@@ -494,7 +497,7 @@
         "json_pp",
         "libnetcfg",
         "perl",
-        "perl5.43.9",
+        "perl5.43.2",
         "perlbug",
         "perldoc",
         "perlivp",
@@ -691,6 +694,13 @@
         "libgdbm.a"
       ]
     },
+    "patch": {
+      "binaries": [
+        "gpatch",
+        "patch"
+      ],
+      "libs": []
+    },
     "libpipeline": {
       "binaries": [],
       "libs": [
@@ -761,13 +771,9 @@
       ],
       "libs": []
     },
-    "php": {
+    "zip": {
       "binaries": [
-        "php",
-        "php-cgi",
-        "php-config",
-        "phpdbg",
-        "phpize"
+        "zip"
       ],
       "libs": []
     },
@@ -803,11 +809,14 @@
     },
     "unzip": {
       "binaries": [
-        "funzip",
-        "unzip",
-        "unzipsfx",
-        "zipgrep",
-        "zipinfo"
+        "unzip"
+      ],
+      "libs": []
+    },
+    "nano": {
+      "binaries": [
+        "nano",
+        "rnano"
       ],
       "libs": []
     },
@@ -843,11 +852,14 @@
       ],
       "libs": []
     },
-    "htop": {
+    "lua": {
       "binaries": [
-        "htop"
+        "lua",
+        "luac"
       ],
-      "libs": []
+      "libs": [
+        "liblua.a"
+      ]
     },
     "hello": {
       "binaries": [
@@ -863,13 +875,14 @@
         "libsqlite3.a"
       ]
     },
-    "lua": {
+    "libiconv": {
       "binaries": [
-        "lua",
-        "luac"
+        "giconv",
+        "iconv"
       ],
       "libs": [
-        "liblua.a"
+        "libcharset.a",
+        "libiconv.a"
       ]
     },
     "libiconv": {
@@ -906,13 +919,6 @@
         "libpcre2-8.a",
         "libpcre2-posix.a"
       ]
-    },
-    "xmlto": {
-      "binaries": [
-        "xmlif",
-        "xmlto"
-      ],
-      "libs": []
     },
     "getopt": {
       "binaries": [
@@ -1035,10 +1041,8 @@
         "libnpth.a"
       ]
     },
-    "yq": {
-      "binaries": [
-        "yq"
-      ],
+    "gnulib": {
+      "binaries": [],
       "libs": []
     },
     "neovim": {
@@ -1168,6 +1172,20 @@
       ],
       "libs": []
     },
+    "powerlinego": {
+      "binaries": [
+        "powerline-go"
+      ],
+      "libs": []
+    },
+    "pinentry": {
+      "binaries": [
+        "pinentry",
+        "pinentry-curses",
+        "pinentry-tty"
+      ],
+      "libs": []
+    },
     "byacc": {
       "binaries": [
         "yacc",
@@ -1276,6 +1294,12 @@
         "libpcreposix.a"
       ]
     },
+    "wharf": {
+      "binaries": [
+        "wharf"
+      ],
+      "libs": []
+    },
     "multitail": {
       "binaries": [
         "multitail"
@@ -1288,26 +1312,16 @@
         "libmd.a"
       ]
     },
-    "jansson": {
-      "binaries": [],
-      "libs": [
-        "libjansson.a"
-      ]
-    },
     "libbsd": {
       "binaries": [],
       "libs": [
         "libbsd.a"
       ]
     },
-    "librdkafka": {
+    "jansson": {
       "binaries": [],
       "libs": [
-        "librdkafka++.a",
-        "librdkafka++.so",
-        "librdkafka-static.a",
-        "librdkafka.a",
-        "librdkafka.so"
+        "libjansson.a"
       ]
     },
     "luarocks": {
@@ -1354,7 +1368,7 @@
     },
     "nginx": {
       "binaries": [
-        "nginx"
+        "shdoc"
       ],
       "libs": []
     },
@@ -1406,6 +1420,15 @@
         "utf8-verify"
       ],
       "libs": []
+    },
+    "gn": {
+      "binaries": [
+        "gn"
+      ],
+      "libs": [
+        "base.a",
+        "gn_lib.a"
+      ]
     },
     "protobuf": {
       "binaries": [
@@ -1530,16 +1553,7 @@
     },
     "gn": {
       "binaries": [
-        "gn"
-      ],
-      "libs": [
-        "base.a",
-        "gn_lib.a"
-      ]
-    },
-    "zospstree": {
-      "binaries": [
-        "pstree"
+        "gh"
       ],
       "libs": []
     },
@@ -1748,21 +1762,9 @@
       ],
       "libs": []
     },
-    "libevent": {
+    "gitlab-runner": {
       "binaries": [
-        "event_rpcgen.py"
-      ],
-      "libs": [
-        "libevent.a",
-        "libevent_core.a",
-        "libevent_extra.a",
-        "libevent_openssl.a",
-        "libevent_pthreads.a"
-      ]
-    },
-    "tmux": {
-      "binaries": [
-        "tmux"
+        "gitlab-runner"
       ],
       "libs": []
     },
@@ -1794,6 +1796,31 @@
       ],
       "libs": []
     },
+    "libevent": {
+      "binaries": [
+        "event_rpcgen.py"
+      ],
+      "libs": [
+        "libevent.a",
+        "libevent_core.a",
+        "libevent_extra.a",
+        "libevent_openssl.a",
+        "libevent_pthreads.a"
+      ]
+    },
+    "tmux": {
+      "binaries": [
+        "tmux"
+      ],
+      "libs": []
+    },
+    "prometheus": {
+      "binaries": [
+        "prometheus",
+        "promtool"
+      ],
+      "libs": []
+    },
     "gitlabcli": {
       "binaries": [
         "glab"
@@ -1803,7 +1830,7 @@
     "zlib-ng": {
       "binaries": [],
       "libs": [
-        "libz-ng.a"
+        "libz.a"
       ]
     },
     "caddy": {
@@ -1879,6 +1906,13 @@
         "libpopt.a"
       ]
     },
+    "frp": {
+      "binaries": [
+        "frpc",
+        "frps"
+      ],
+      "libs": []
+    },
     "logrotate": {
       "binaries": [
         "logrotate"
@@ -1928,6 +1962,18 @@
       ],
       "libs": []
     },
+    "gin": {
+      "binaries": [],
+      "libs": []
+    },
+    "murex": {
+      "binaries": [
+        "murex"
+      ],
+      "libs": [
+        "sqlite3-binding.so"
+      ]
+    },
     "procps": {
       "binaries": [
         "pgrep",
@@ -1938,14 +1984,6 @@
       ],
       "libs": [
         "libproc2.a"
-      ]
-    },
-    "murex": {
-      "binaries": [
-        "murex"
-      ],
-      "libs": [
-        "sqlite3-binding.so"
       ]
     },
     "cppcheck": {
@@ -2192,18 +2230,18 @@
         "librabbitmq.so"
       ]
     },
+    "cpio": {
+      "binaries": [
+        "cpio",
+        "gcpio"
+      ],
+      "libs": []
+    },
     "ed": {
       "binaries": [
         "ed",
         "ged",
         "red"
-      ],
-      "libs": []
-    },
-    "cpio": {
-      "binaries": [
-        "cpio",
-        "gcpio"
       ],
       "libs": []
     },
