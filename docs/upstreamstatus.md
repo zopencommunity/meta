@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2026-04-14 06:18:24 EDT.*
+*Report generated on: 2025-10-15 06:15:09 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 304
-- **Total Current Lines of Code (LOC) in Patches:** 57,876
-- **Total Number of Current Patch Files:** 1,041
-- **Average Current Patch LOC per Project:** 190.38
-- **Average Current Patch Count per Project:** 3.42
+- **Total Projects Analyzed:** 276
+- **Total Current Lines of Code (LOC) in Patches:** 44,145
+- **Total Number of Current Patch Files:** 885
+- **Average Current Patch LOC per Project:** 159.95
+- **Average Current Patch Count per Project:** 3.21
 
 ### Historical Trends (All Projects)
 
@@ -45,12 +45,13 @@
 | [vimport](#repo-vimport) | 672 | +0 | 15 |
 | [util-linuxport](#repo-util-linuxport) | 630 | +0 | 16 |
 | [redisport](#repo-redisport) | 588 | +0 | 3 |
-| [cpioport](#repo-cpioport) | 588 | +0 | 5 |
-| [gettextport](#repo-gettextport) | 577 | +0 | 11 |
-| [glibport](#repo-glibport) | 537 | +0 | 7 |
+| [unzipport](#repo-unzipport) | 549 | +0 | 12 |
+| [cpioport](#repo-cpioport) | 532 | +0 | 5 |
 | [inetutilsport](#repo-inetutilsport) | 514 | +0 | 20 |
 | [cronieport](#repo-cronieport) | 510 | +0 | 13 |
-| [screenport](#repo-screenport) | 502 | -67 | 8 |
+| [screenport](#repo-screenport) | 485 | +0 | 7 |
+| [glibport](#repo-glibport) | 459 | +0 | 2 |
+| [tmuxport](#repo-tmuxport) | 440 | +0 | 13 |
 | [libpcapport](#repo-libpcapport) | 440 | +0 | 8 |
 | [treeport](#repo-treeport) | 425 | +0 | 3 |
 | [nginxport](#repo-nginxport) | 414 | +0 | 1 |
@@ -1093,32 +1094,8 @@
 
 ---
 
-<a id="repo-cpioport"></a>
-## cpioport
-
-- **Origin Date (First Commit):** 2025-04-09
-- **Current Patch LOC:** 588
-- **Current Patch Count:** 5
-
-### Historical Trends
-
-![LOC Trend for cpioport](images/upstream/cpioport_current_loc_trend.png)
-![Count Trend for cpioport](images/upstream/cpioport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/copyin.c.patch` | `patches` | 240 |
-| `patches/filetypes.c.patch` | `patches` | 88 |
-| `patches/filetypes.h.patch` | `patches` | 86 |
-| `patches/tar.c.patch` | `patches` | 150 |
-| `patches/util.c.patch` | `patches` | 24 |
-
----
-
-<a id="repo-gettextport"></a>
-## gettextport
+<a id="repo-unzipport"></a>
+## unzipport
 
 - **Origin Date (First Commit):** 2022-11-14
 - **Current Patch LOC:** 549
@@ -1145,6 +1122,30 @@
 | `patches/unzip.h.patch` | `patches` | 27 |
 | `patches/unzpriv.h.patch` | `patches` | 25 |
 | `patches/zipinfo.c.patch` | `patches` | 14 |
+
+---
+
+<a id="repo-cpioport"></a>
+## cpioport
+
+- **Origin Date (First Commit):** 2025-04-09
+- **Current Patch LOC:** 532
+- **Current Patch Count:** 5
+
+### Historical Trends
+
+![LOC Trend for cpioport](images/upstream/cpioport_current_loc_trend.png)
+![Count Trend for cpioport](images/upstream/cpioport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/copyin.c.patch` | `patches` | 240 |
+| `patches/copyout.c.patch` | `patches` | 32 |
+| `patches/filetypes.c.patch` | `patches` | 88 |
+| `patches/tar.c.patch` | `patches` | 151 |
+| `patches/util.c.patch` | `patches` | 21 |
 
 ---
 
@@ -1223,8 +1224,8 @@
 ## screenport
 
 - **Origin Date (First Commit):** 2022-10-31
-- **Current Patch LOC:** 502
-- **Current Patch Count:** 8
+- **Current Patch LOC:** 485
+- **Current Patch Count:** 7
 
 ### Historical Trends
 
@@ -1235,11 +1236,10 @@
 
 | Patch File (Repo Relative Path) | Source | LOC |
 |---|---|:---|
-| `patches/PR1.patch` | `patches` | 73 |
+| `patches/PR1.patch` | `patches` | 140 |
 | `patches/acls.c.patch` | `patches` | 16 |
 | `patches/comm.sh.patch` | `patches` | 14 |
-| `patches/os.h.patch` | `patches` | 74 |
-| `patches/pty.c.patch` | `patches` | 93 |
+| `patches/pty.c.patch` | `patches` | 83 |
 | `patches/screen.c.patch` | `patches` | 80 |
 | `patches/tty.sh.patch` | `patches` | 40 |
 | `patches/utmp.c.patch` | `patches` | 112 |

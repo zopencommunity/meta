@@ -132,12 +132,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="libarchive" data-searchable-text="libarchive Blue 85.8% STABLE_libarchive_4202 Multi-format archive and compression library compression port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="libarchive" data-searchable-text="libarchive Yellow 62.2% STABLE_libarchive_3799 Multi-format archive and compression library compression port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libarchiveport" target="_blank" rel="noopener noreferrer">libarchive</a></strong></div>
-    <div class="tool-status">Status: Blue</div>
-    <div class="tool-test">Test: 85.8%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/libarchiveport/releases/download/STABLE_libarchiveport_4202/libarchive-v3.8.7.20260413_155836.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libarchive_4202</a></div>
+    <div class="tool-status">Status: Yellow</div>
+    <div class="tool-test">Test: 62.2%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/libarchiveport/releases/download/STABLE_libarchiveport_3799/libarchive-v3.7.9.20251010_041241.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libarchive_3799</a></div>
     <div class="tool-desc" title="Multi-format archive and compression library">Multi-format archive and compression library</div>
   </div>
 </div>
@@ -258,12 +258,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="readline" data-searchable-text="readline Green 100.0% STABLE_readline_4199 The GNU Readline library provides a set of functions for use by applications that allow users to edit command lines as they are typed in core port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="readline" data-searchable-text="readline Green 100.0% STABLE_readline_3528 The GNU Readline library provides a set of functions for use by applications that allow users to edit command lines as they are typed in core port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/readlineport" target="_blank" rel="noopener noreferrer">readline</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/readlineport/releases/download/STABLE_readlineport_4199/readline-8.3.20260410_131127.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_readline_4199</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/readlineport/releases/download/STABLE_readlineport_3528/readline-8.3.20250705_134538.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_readline_3528</a></div>
     <div class="tool-desc" title="The GNU Readline library provides a set of functions for use by applications that allow users to edit command lines as they are typed in">The GNU Readline library provides a set of functions for use by applications that allow users to edit command lines as they are typed in</div>
   </div>
 </div>
@@ -380,12 +380,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 ## Development 
 
-<div class="tool-item-filterable" data-package-name="ant" data-searchable-text="ant Skipped N/A STABLE_ant_4200 A build automation tool development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="ant" data-searchable-text="ant Skipped N/A STABLE_ant_3011 A build automation tool development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/antport" target="_blank" rel="noopener noreferrer">ant</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/antport/releases/download/STABLE_antport_4200/ant-DEV.20260411_152113.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_ant_4200</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/antport/releases/download/STABLE_antport_3011/ant-DEV.20250131_063159.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_ant_3011</a></div>
     <div class="tool-desc" title="A build automation tool">A build automation tool</div>
   </div>
 </div>
@@ -1542,12 +1542,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="librdkafka" data-searchable-text="librdkafka Green 100.0% STABLE_librdkafka_4201 A high-performance C/C++ library for Apache Kafka library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="librdkafka" data-searchable-text="librdkafka Green 100.0% STABLE_librdkafka_2997 A high-performance C/C++ library for Apache Kafka library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/librdkafkaport" target="_blank" rel="noopener noreferrer">librdkafka</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/librdkafkaport/releases/download/STABLE_librdkafkaport_4201/librdkafka-v2.5.0.20260413_155222.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_librdkafka_4201</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/librdkafkaport/releases/download/STABLE_librdkafkaport_2997/librdkafka-HEAD.20250131_055226.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_librdkafka_2997</a></div>
     <div class="tool-desc" title="A high-performance C/C++ library for Apache Kafka">A high-performance C/C++ library for Apache Kafka</div>
   </div>
 </div>
@@ -1662,12 +1662,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="readline" data-searchable-text="readline Green 100.0% STABLE_readline_4199 The GNU Readline library provides a set of functions for use by applications that allow users to edit command lines as they are typed in library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="readline" data-searchable-text="readline Green 100.0% STABLE_readline_3528 The GNU Readline library provides a set of functions for use by applications that allow users to edit command lines as they are typed in library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/readlineport" target="_blank" rel="noopener noreferrer">readline</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/readlineport/releases/download/STABLE_readlineport_4199/readline-8.3.20260410_131127.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_readline_4199</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/readlineport/releases/download/STABLE_readlineport_3528/readline-8.3.20250705_134538.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_readline_3528</a></div>
     <div class="tool-desc" title="The GNU Readline library provides a set of functions for use by applications that allow users to edit command lines as they are typed in">The GNU Readline library provides a set of functions for use by applications that allow users to edit command lines as they are typed in</div>
   </div>
 </div>
@@ -3019,4 +3019,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2026-04-14 06:20:24 UTC
+Last updated:  2025-10-15 06:16:42 UTC
