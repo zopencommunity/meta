@@ -1200,8 +1200,8 @@
 ## screenport
 
 - **Origin Date (First Commit):** 2022-10-31
-- **Current Patch LOC:** 485
-- **Current Patch Count:** 7
+- **Current Patch LOC:** 502
+- **Current Patch Count:** 8
 
 ### Historical Trends
 
@@ -1212,10 +1212,11 @@
 
 | Patch File (Repo Relative Path) | Source | LOC |
 |---|---|:---|
-| `patches/PR1.patch` | `patches` | 140 |
+| `patches/PR1.patch` | `patches` | 73 |
 | `patches/acls.c.patch` | `patches` | 16 |
 | `patches/comm.sh.patch` | `patches` | 14 |
-| `patches/pty.c.patch` | `patches` | 83 |
+| `patches/os.h.patch` | `patches` | 74 |
+| `patches/pty.c.patch` | `patches` | 93 |
 | `patches/screen.c.patch` | `patches` | 80 |
 | `patches/tty.sh.patch` | `patches` | 40 |
 | `patches/utmp.c.patch` | `patches` | 112 |
