@@ -42,56 +42,57 @@ This page provides information about the zopen interface. Click on any of the zo
 EOF
 
   # Generate HTML and markdown pages
-  for man in man/man1/*.1;
+ for man in man/man1/*.1;
   do
     base=${man##*/};
     name=${base%%.1};
     html="docs/reference/${name}.html";
     md="docs/reference/${name}.md";
     
-    # Generate HTML file from man page
-    groff -m mandoc -Thtml -Wall "${man}" >"${html}";
+    # 1. Generate the raw HTML from the man page
+    groff -m mandoc -Thtml -Wall "${man}" > "${html}";
     
-    # Extract only the body content from HTML
+    # 2. Extract ONLY the content between <body> and </body>
+    # This prevents injecting <html> and <head> tags which break MD files
     body_content=$(sed -n '/<body>/,/<\/body>/p' "${html}" | sed '1d;$d')
     
-    # Create markdown file with v-pre to prevent Vue compilation errors
-    cat <<'OUTER_EOF' > "${md}"
-<div v-pre>
+    # 3. Write the Markdown file using Raw HTML Injection
+    cat <<EOF > "${md}"
+# ${name} reference
 
-::: raw
-OUTER_EOF
-    
-    echo "${body_content}" >> "${md}"
-    
-    cat <<'OUTER_EOF' >> "${md}"
-:::
+<div v-pre class="man-page-content">
+
+${body_content}
 
 </div>
 
 <style scoped>
-h1 {
-  text-align: center;
-  font-size: 2em;
-  margin: 1em 0;
+/* Scoped styles to make the injected HTML look like a man page */
+.man-page-content {
+  padding: 20px;
+  line-height: 1.6;
 }
-a {
+:deep(table) {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+:deep(b) {
   color: var(--vp-c-brand-1);
-  text-decoration: none;
 }
-a:hover {
-  text-decoration: underline;
-}
-pre {
+:deep(pre) {
   background: var(--vp-c-bg-soft);
-  padding: 1em;
-  border-radius: 6px;
+  padding: 1rem;
+  border-radius: 8px;
   overflow-x: auto;
 }
 </style>
-OUTER_EOF
+EOF
     
-    echo "* [${name}](/reference/${name})" >> docs/reference/zopen-reference.md
+    echo "* [${name}](./${name})" >> docs/reference/zopen-reference.md
+    
+    # Optional: remove the temporary .html file
+    rm "${html}"
   done
 
   # Commit it all back to the repo
