@@ -14,7 +14,7 @@ setupMyself()
   ME=$(basename "$0")
   MYDIR="$(cd "$(dirname "$0")" > /dev/null 2>&1 && pwd -P)"
   INCDIR="${MYDIR}/../include"
-  if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
+  if ! [ -d "${INCDIR}" ] || ! [ -f "${INCDIR}/common.sh" ]; then
     echo "Internal Error. Unable to find common.sh file to source." >&2
     exit 8
   fi
@@ -79,6 +79,7 @@ force=false
 non_interactive=false
 json=false
 c_extensions=""
+list_action=""
 
 # Parse command-line arguments. If an argument is not provided, the corresponding variable remains empty.
 while [ $# -gt 0 ]; do
@@ -86,44 +87,9 @@ while [ $# -gt 0 ]; do
     --help) printSyntax; exit 0;;
     --version) zopen-version "$ME"; exit 0;;
     --json) json=true;;
-    --list-licenses)
-      buildLicenseLookup
-      if ${json}; then
-        if ! command -v "jq" >/dev/null 2>&1; then
-          echo "Error: jq is required for --json output." >&2
-          exit 1
-        fi
-        echo "${validLicenseNames}" | tr ' ' '\n' | tr -d '"' | jq -R . | jq -s '{"licenses": .}'
-      else
-        echo "Available licenses:"
-        echo "${validLicenseNames}" | tr ' ' '\n' | sed 's/,/ /g' | xargs -n 1 | sort | xargs
-      fi
-      exit 0;;
-    --list-categories)
-      ZOPEN_VALID_CATEGORIES="$(cat "${MYDIR}/../data/tool_categories.txt")"
-      if ${json}; then
-        if ! command -v "jq" >/dev/null 2>&1; then
-          echo "Error: jq is required for --json output." >&2
-          exit 1
-        fi
-        echo "${ZOPEN_VALID_CATEGORIES}" | tr ' ' '\n' | jq -R . | jq -s '{"categories": .}'
-      else
-        echo "Available categories:"
-        echo "${ZOPEN_VALID_CATEGORIES}" | tr ' ' '\n'
-      fi
-      exit 0;;
-    --list-build-systems)
-      if ${json}; then
-        if ! command -v "jq" >/dev/null 2>&1; then
-          echo "Error: jq is required for --json output." >&2
-          exit 1
-        fi
-        printf "GNU Make\nCMake\nGo\nGradle\nMaven\nMeson\nPython" | jq -R . | jq -s '{"build_systems": .}'
-      else
-        echo "Supported build systems:"
-        echo "GNU Make, CMake, Go, Gradle, Maven, Meson, Python"
-      fi
-      exit 0;;
+    --list-licenses) list_action="licenses";;
+    --list-categories) list_action="categories";;
+    --list-build-systems) list_action="build_systems";;
     --name) shift; name="$1";;
     --description) shift; description="$1";;
     --categories) shift; categories="$1";;
@@ -143,6 +109,45 @@ while [ $# -gt 0 ]; do
   esac
   shift
 done
+
+# Handle deferred --list-* actions (must run after --json is fully parsed)
+if [ -n "${list_action}" ]; then
+  if ${json}; then
+    if ! command -v "jq" >/dev/null 2>&1; then
+      echo "Error: jq is required for --json output." >&2
+      exit 1
+    fi
+  fi
+  case "${list_action}" in
+    licenses)
+      buildLicenseLookup
+      if ${json}; then
+        echo "${validLicenseNames}" | tr ' ' '\n' | tr -d '"' | jq -R . | jq -s '{"licenses": .}'
+      else
+        echo "Available licenses:"
+        echo "${validLicenseNames}" | tr ' ' '\n' | sed 's/,/ /g' | xargs -n 1 | sort | xargs
+      fi
+      ;;
+    categories)
+      ZOPEN_VALID_CATEGORIES="$(cat "${MYDIR}/../data/tool_categories.txt")"
+      if ${json}; then
+        echo "${ZOPEN_VALID_CATEGORIES}" | tr ' ' '\n' | jq -R . | jq -s '{"categories": .}'
+      else
+        echo "Available categories:"
+        echo "${ZOPEN_VALID_CATEGORIES}" | tr ' ' '\n'
+      fi
+      ;;
+    build_systems)
+      if ${json}; then
+        printf "GNU Make\nCMake\nGo\nGradle\nMaven\nMeson\nPython" | jq -R . | jq -s '{"build_systems": .}'
+      else
+        echo "Supported build systems:"
+        echo "GNU Make, CMake, Go, Gradle, Maven, Meson, Python"
+      fi
+      ;;
+  esac
+  exit 0
+fi
 
 # Check for non-interactive mode requirements
 if $non_interactive; then
@@ -371,7 +376,8 @@ EOF
 export ZOPEN_CONFIGURE="cmake"
 export ZOPEN_CONFIGURE_OPTS="-B ../build -DCMAKE_INSTALL_PREFIX=\${ZOPEN_INSTALL_DIR}"
 export ZOPEN_MAKE="cmake"
-export ZOPEN_MAKE_OPTS="--build ../build"
+export ZOPEN_MAKE_OPTS="--build ../build --parallel \\\$ZOPEN_NUM_JOBS --config Release"
+export ZOPEN_MAKE_MINIMAL=Y
 export ZOPEN_INSTALL="cmake"
 export ZOPEN_INSTALL_OPTS="--install ../build"
 # ZOPEN_CHECK is often 'ctest' or a custom function.
@@ -628,7 +634,7 @@ buildenv="${name}port/buildenv"; touch "${buildenv}" && chtag -tc 819 "${builden
 cp "${MYDIR}/../data/CONTRIBUTING.md" "${name}port/CONTRIBUTING.md"
 cp "${MYDIR}/../data/CODEOWNERS" "${name}port/CODEOWNERS"
 mkdir -p "${name}port/.github/workflows"; cp "${MYDIR}"/../data/*.yml "${name}port/.github/workflows/" 2>/dev/null
-default_build_line="STABLE"; if [ "${buildline}" = "dev" ]; then default_build_line="DEV"; fi
+default_build_line="STABLE"; if [ "$(echo "${buildline}" | tr '[:upper:]' '[:lower:]')" = "dev" ]; then default_build_line="DEV"; fi
 
 # Prepare version variables based on whether a tag was found
 nameUpper=$(echo "$name" | awk '{print toupper($0)}')
