@@ -63,28 +63,52 @@ const applyFilters = () => {
   const categoryContainers = document.querySelectorAll('.table-category')
   
   let count = 0
-  const displayedPackageNames = new Set<string>()
 
-  // Apply text search filter
+  // First pass: determine which categories are visible based on category filter
+  const visibleCategories = new Set<string>()
+  categoryContainers.forEach((container) => {
+    const element = container as HTMLElement
+    const containerCategory = element.dataset.category || ''
+    if (categoryValue === 'all' || containerCategory === categoryValue) {
+      visibleCategories.add(containerCategory)
+    }
+  })
+
+  // Second pass: apply search filter with category-aware de-duplication
   if (filterText !== '') {
+    // Track displayed packages per category
+    const displayedPackagesPerCategory = new Map<string, Set<string>>()
+    
     allToolItems.forEach((item) => {
       const element = item as HTMLElement
       const packageName = element.dataset.packageName || 'N/A_PKG_NAME'
       const rawSearchableAttr = element.dataset.searchableText
       const processedSearchableText = rawSearchableAttr ? rawSearchableAttr.toLowerCase().trim() : ''
       
+      // Find the parent category container
+      const parentCategory = element.closest('.table-category') as HTMLElement
+      const itemCategory = parentCategory?.dataset.category || ''
+      
       let isMatch = false
       if (processedSearchableText && filterText) {
         isMatch = processedSearchableText.includes(filterText)
       }
 
-      if (isMatch) {
-        if (packageName !== 'N/A_PKG_NAME' && !displayedPackageNames.has(packageName)) {
-          element.style.display = ''
-          displayedPackageNames.add(packageName)
-          count++
-        } else if (packageName !== 'N/A_PKG_NAME' && displayedPackageNames.has(packageName)) {
-          element.style.display = 'none'
+      if (isMatch && visibleCategories.has(itemCategory)) {
+        // Only apply de-duplication within visible categories
+        if (packageName !== 'N/A_PKG_NAME') {
+          if (!displayedPackagesPerCategory.has(itemCategory)) {
+            displayedPackagesPerCategory.set(itemCategory, new Set<string>())
+          }
+          const categorySet = displayedPackagesPerCategory.get(itemCategory)!
+          
+          if (!categorySet.has(packageName)) {
+            element.style.display = ''
+            categorySet.add(packageName)
+            count++
+          } else {
+            element.style.display = 'none'
+          }
         } else {
           element.style.display = ''
           count++
@@ -100,7 +124,7 @@ const applyFilters = () => {
     })
   }
 
-  // Apply category filter to containers
+  // Third pass: show/hide category containers based on visibility and content
   categoryContainers.forEach((container) => {
     const element = container as HTMLElement
     const containerCategory = element.dataset.category || ''
@@ -109,18 +133,14 @@ const applyFilters = () => {
       // When searching, only show categories that have visible items
       const visibleChildrenInContainer = element.querySelectorAll('.tool-item-filterable:not([style*="display: none"])')
       
-      if (visibleChildrenInContainer.length > 0) {
-        if (categoryValue === 'all' || containerCategory === categoryValue) {
-          element.style.display = ''
-        } else {
-          element.style.display = 'none'
-        }
+      if (visibleChildrenInContainer.length > 0 && visibleCategories.has(containerCategory)) {
+        element.style.display = ''
       } else {
         element.style.display = 'none'
       }
     } else {
       // No search text - respect category filter only
-      if (categoryValue === 'all' || containerCategory === categoryValue) {
+      if (visibleCategories.has(containerCategory)) {
         element.style.display = ''
       } else {
         element.style.display = 'none'

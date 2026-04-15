@@ -208,7 +208,7 @@ with open('docs/Latest.md', 'w') as f:
 
     for category_key, packages_list in sorted(packages_by_category.items()):
         print(f"<div class=\"table-category\" data-category=\"{html.escape(category_key)}\">")
-        print(f"\n## {html.escape(category_key.title())} \n")
+        print(f"\n<h2>{html.escape(category_key.title())}</h2>\n")
         
         sorted_packages_list = sorted(packages_list, key=lambda x: x['package'].lower())
         

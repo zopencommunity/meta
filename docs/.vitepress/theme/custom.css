@@ -217,9 +217,13 @@ img[alt*="Installation demo"] {
   .vp-doc img[src*="demo"],
   .vp-doc img[src*="Demo"],
   .vp-doc img[src*=".gif"],
-  .vp-doc img[src*=".png"] {
+  .vp-doc img[src*=".png"],
+  .vp-doc img[alt*="demo"],
+  .vp-doc img[alt*="Demo"] {
     max-width: 100% !important;
     min-width: auto !important;
+    margin: 1rem auto !important;
+    padding-left: 0 !important;
   }
   
   .layout img {
@@ -228,6 +232,8 @@ img[alt*="Installation demo"] {
   
   .VPHero .image-container {
     max-width: 100% !important;
+    margin-left: 0 !important;
+    padding-left: 0 !important;
   }
 }
 

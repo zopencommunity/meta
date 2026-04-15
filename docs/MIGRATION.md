@@ -22,7 +22,7 @@ docs/
 │   │   ├── custom.css          # Custom styles
 │   │   ├── vue-shim.d.ts       # TypeScript declarations
 │   │   └── components/
-│   │       └── ToolSearch.vue  # Custom search component
+│   │       └── ToolFilters.vue  # Custom search component
 │   └── docsify-backup/         # Backup of old Docsify files
 │       ├── index.html
 │       ├── _sidebar.md
