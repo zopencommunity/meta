@@ -46,7 +46,7 @@ Once a nomination form is submitted, please allow **up to 1 month** for the revi
 <table style="width: 100%; display: table;">
   <tr>
     <td width="280" align="center">
-      <img src="images/ZopenCommunity-Contributor-Color.png" width="240" alt="zopen community contributor" />
+      <img src="/images/ZopenCommunity-Contributor-Color.png" width="240" alt="zopen community contributor" />
     </td>
     <td>
       <strong>zopen community contributor: Awarded for making a substantive, accepted contribution to the zopen community.</strong>
@@ -85,7 +85,7 @@ Once a nomination form is submitted, please allow **up to 1 month** for the revi
 <table style="width: 100%; display: table;">
   <tr>
     <td width="280" align="center">
-      <img src="images/ZopenCommunity-SignificantContributor-Color.png" width="240" alt="zopen community contributor" />
+      <img src="/images/ZopenCommunity-SignificantContributor-Color.png" width="240" alt="zopen community contributor" />
     </td>
     <td>
       <strong>zopen community significant contributor: Awarded to individuals who demonstrate sustained and impactful contributions over time.</strong>

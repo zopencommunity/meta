@@ -32,9 +32,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </select>
 </div>
 
-<div class="tool-search-container" style="margin-top: 15px; margin-bottom: 20px;">
-  <input type="text" id="toolSearchInput" placeholder="Type to search tools by name, description, release, status, etc..." style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">
-</div>
+<ToolSearch />
 
 <div class="table-category" data-category="ai">
 

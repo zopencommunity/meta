@@ -274,7 +274,7 @@ img[alt*="Installation demo"] {
 
 .VPDocFooter .edit-link .edit-link-button:hover {
   background-color: var(--vp-c-brand-soft) !important;
-  color: var(--vp-c-brand) !important;
+  color: #ffffff !important;
 }
 
 /* Show only edit icon - no text */
