@@ -2,37 +2,7 @@
 
 Note: to download the latest packages, use the [zopen package manager](/Guides/QuickStart)
 
-<div>
-  <label for="category-filter">Filter by Category: </label>
-  <select id="category-filter" onchange="filterTable()">
-    <option value="All">All</option>
-    <option value="ai">Ai</option>
-    <option value="build_system">Build_System</option>
-    <option value="compression">Compression</option>
-    <option value="core">Core</option>
-    <option value="database">Database</option>
-    <option value="development">Development</option>
-    <option value="devops">Devops</option>
-    <option value="documentation">Documentation</option>
-    <option value="editor">Editor</option>
-    <option value="graphics">Graphics</option>
-    <option value="json">Json</option>
-    <option value="language">Language</option>
-    <option value="library">Library</option>
-    <option value="math">Math</option>
-    <option value="monitoring">Monitoring</option>
-    <option value="networking">Networking</option>
-    <option value="security">Security</option>
-    <option value="shell">Shell</option>
-    <option value="source_control">Source_Control</option>
-    <option value="testing">Testing</option>
-    <option value="uncategorized">Uncategorized</option>
-    <option value="utilities">Utilities</option>
-    <option value="webframework">Webframework</option>
-  </select>
-</div>
-
-<ToolSearch />
+<ToolFilters />
 
 <div class="table-category" data-category="ai">
 
