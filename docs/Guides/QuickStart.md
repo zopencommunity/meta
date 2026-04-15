@@ -9,9 +9,9 @@ source code on your z/OS system.
 Whether you want to _use_ the tools or also _improve_ the tools is up to you.
 
 If you have installed a version of the zopen package manager prior to September 2023, 
-please note you will need to [migrate to the new package manager](Migration.md). 
+please note you will need to [migrate to the new package manager](Migration).
 
-## Installing zopen package manager <!-- {docsify-ignore} -->
+## Installing zopen package manager
 
 Before installing, ensure **auto-conversion** is enabled by checking the environment variables `_BPXK_AUTOCVT` and `_CEE_RUNOPTS`. If they are not set, run:
 
@@ -82,7 +82,7 @@ If `curl` or `bash` are **not** available, follow these steps:
 
 * **Note**: We recommend that you add the line `. $ZOPEN_ROOTFS/etc/zopen-config` to your `.profile` startup script. Alternatively, you can use `zopen init --append-to-profile` when setting up your zopen file-system.
 
-See [The package manager](ThePackageManager.md) and [Developing Tools](developing.md) for more details.
+See [The package manager](ThePackageManager) and [Developing Tools](developing) for more details.
 
 ## Getting Started Video
 
@@ -115,7 +115,7 @@ $ zopen upgrade -y
 ```
 
 
-## Upgrading a single package <!-- {docsify-ignore} -->
+## Upgrading a single package
 
 Individual packages can be upgraded by specifiying the package
 name.  For example upgrading just the package manager is

@@ -20,7 +20,7 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/zopencommunity/meta/HEAD
 
 ## 🛠️ Explore & Engage
 
-- **Start Here**: Jumpstart your zopen community journey with our [Quick Start Guide](/Guides/QuickStart.md).
+- **Start Here**: Jumpstart your zopen community journey with our [Quick Start Guide](/Guides/QuickStart).
 - **Discover**: Browse our [available tools](/Latest).
 - **Status Check**: Stay informed with our [progress](/Progress).
 
@@ -28,7 +28,7 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/zopencommunity/meta/HEAD
 
 - **Feedback Hub**: Share insights and spark discussions through the [community discussion](https://github.com/orgs/zopencommunity/discussions/categories/security).
 - **Issues**: Discovered a bug? Open an [issue](https://github.com/zopencommunity/meta/issues).
-- **Get Involved**: Whether you're looking to [use](/Guides/ThePackageManager.md), [develop](/Guides/developing.md), or [document](/UpdateDocs.md) tools, there’s a place for you here.
+- **Get Involved**: Whether you're looking to [use](/Guides/ThePackageManager), [develop](/Guides/developing), or [document](/UpdateDocs) tools, there's a place for you here.
 
 ## 📣 Let's Shape the Future Together!
 
@@ -40,9 +40,3 @@ Let's make our tools even better together! 🌟
 
 </div>
 </section>
-
-<script>
-  window.$docsify = {
-    maxLevel: 0,  // Disables the floating TOC on all pages
-  }
-</script>

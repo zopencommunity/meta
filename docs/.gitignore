@@ -1,3 +1,4 @@
 node_modules
 .DS_Store
-docs/.vitepress/cache/
+.vitepress/cache/
+.vitepress/docsify-backup/

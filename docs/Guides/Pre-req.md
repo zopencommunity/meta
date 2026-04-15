@@ -31,4 +31,4 @@ You will need the IBM C/C++ compiler on your system. There are two options:
 
 If you are building Go projects, you will need the IBM Open Enterprise SDK for Go compiler installed. You can obtain it here: https://www.ibm.com/products/open-enterprise-sdk-go-zos
 
-For more details on porting, visit the [porting to z/OS guide](Porting.md).
+For more details on porting, visit the [porting to z/OS guide](Porting).
