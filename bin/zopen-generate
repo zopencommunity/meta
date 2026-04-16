@@ -51,9 +51,11 @@ printSyntax()
   echo "  --type TYPE                 Port type: 'BUILD' (from source) or 'BARE' (binary download)" >&2
   echo "  --build-system SYSTEM       Build system if type is BUILD (GNU Make, CMake, Gradle, Maven, etc.)" >&2
   echo "  --c-extensions              Python project contains C extensions (requires C compiler)" >&2
-  echo "  --stable-url URL            Stable release source URL" >&2
+  echo "  --stable-url URL            Stable release source URL (Git HTTPS clone URL ending in .git," >&2
+  echo "                              or a direct archive URL ending in .tar.gz, .tar.xz, .tar.bz2, .zip, etc.)" >&2
   echo "  --stable-deps DEPS          Stable build dependencies (space-delimited)" >&2
-  echo "  --dev-url URL               Dev-line source URL" >&2
+  echo "  --dev-url URL               Dev-line source URL (same formats as --stable-url;" >&2
+  echo "                              typically the main-branch Git clone URL)" >&2
   echo "  --dev-deps DEPS             Dev build dependencies (space-delimited)" >&2
   echo "  --build-line LINE           Default build line (stable or dev)" >&2
   echo "  --runtime-deps DEPS         Runtime dependencies (space-delimited)" >&2
@@ -571,18 +573,19 @@ stablePath=$(getInputOrArg "$stablePath" "Enter ${name}'s stable release source 
 latest_tag=""
 if echo "${stablePath}" | grep -q -E "\.git$"; then
     printInfo "Attempting to find the latest git tag from ${stablePath}..."
-    latest_tag_line=$(git ls-remote --tags --sort="-v:refname" "${stablePath}" 2>/dev/null | head -n 1)
-    if [ -n "${latest_tag_line}" ]; then
-        tag_candidate=$(echo "${latest_tag_line}" | awk '{print $2}' | sed 's#refs/tags/##')
-        if [ -n "$tag_candidate" ]; then
-            confirmed_tag=$(getInputOrArg "" "Latest tag found: ${tag_candidate}. Press Enter to use this tag, or enter a different one:")
-            if [ -n "$confirmed_tag" ]; then
-                latest_tag="${confirmed_tag}"
-            else
-                latest_tag="${tag_candidate}"
-            fi
-            printInfo "Using tag: ${latest_tag}"
+    # Filter to stable tags only (vX.Y.Z or X.Y.Z with no pre-release suffix)
+    # This excludes tags like v3.0.0-0.9.1.1, v2.14.0rc1, v2.14.0-dev11
+    tag_candidate=$(git ls-remote --tags --sort="-v:refname" "${stablePath}" 2>/dev/null \
+        | awk '{print $2}' | sed 's#refs/tags/##' | grep -v '\^{}' \
+        | grep -E '^v?[0-9]+\.[0-9]+(\.[0-9]+)?$' | head -n 1)
+    if [ -n "${tag_candidate}" ]; then
+        confirmed_tag=$(getInputOrArg "" "Latest tag found: ${tag_candidate}. Press Enter to use this tag, or enter a different one:")
+        if [ -n "$confirmed_tag" ]; then
+            latest_tag="${confirmed_tag}"
+        else
+            latest_tag="${tag_candidate}"
         fi
+        printInfo "Using tag: ${latest_tag}"
     else
         printWarning "Could not automatically determine the latest tag."
     fi
