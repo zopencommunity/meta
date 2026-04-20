@@ -223,6 +223,7 @@ if [ $NUM_RPMS -gt 0 ]; then
     RPM_BASENAME=$(basename "${RPM}")
     echo "Uploading ${RPM_BASENAME}..."
     github-release -v upload --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --tag "${TAG}" --name "${RPM_BASENAME}" --file "${RPM}"
+    pulp artifact upload --file "${RPM}"
     if [ $? -eq 0 ]; then
        echo "RPM Artifact ${RPM_BASENAME} uploaded successfully!"
     else
