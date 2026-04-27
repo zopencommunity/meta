@@ -64,7 +64,7 @@ property from the store</p>
 
 
 <p>display the current value for the named KEY property or
-the empty string if the property is not foundd/#47;set</p></td></tr>
+the empty string if the property is not foundd//set</p></td></tr>
 <tr valign="top" align="left">
 <td width="11%"></td>
 <td width="9%">
@@ -126,11 +126,11 @@ functionality</p>
 <p style="margin-left:11%; margin-top: 1em"><b>Notes:</b></p>
 
 <p style="margin-left:22%;">Configuration options are not
-validated such that any keyy/#47;value pairs can be added into
+validated such that any keyy//value pairs can be added into
 the global configuration. 3rd&minus;party utilities can
 store their global configuration into the zopen runtime
 environment store and use the zopen config tooling to
-sett/#47;retrieve values. Key names for stored properties must
+sett//retrieve values. Key names for stored properties must
 conform to the following rules
 [0&minus;9a&minus;zA&minus;Z_]:</p>
 
@@ -144,7 +144,7 @@ non&minus;relocatable global configuration file,
 config.json, can be found at:</p>
 
 
-<p style="margin-left:22%; margin-top: 1em">&lt;$ZOPEN_ROOTFS&gt;;/#47;etcc/#47;zopenn/#47;config.json</p>
+<p style="margin-left:22%; margin-top: 1em">&lt;$ZOPEN_ROOTFS&gt;;//etcc//zopenn//config.json</p>
 
 <p style="margin-left:22%; margin-top: 1em">Manual editing
 of this configuration file is not recommended and might
@@ -158,7 +158,7 @@ misconfigured.</p>
 
 <p style="margin-left:11%; margin-top: 1em">Written by
 contributors to the zopen community.
-&lt;https::/#47;/github.comm/#47;zopencommunityy/#47;metaa/#47;graphss/#47;contributors&gt;</p>
+<a href="https://github.com/zopencommunity/meta/graphs/contributors" target="_blank">https://github.com/zopencommunity/meta/graphs/contributors</a></p>
 
 <h2>REPORTING BUGS
 <a name="REPORTING BUGS"></a>
@@ -166,12 +166,12 @@ contributors to the zopen community.
 
 
 <p style="margin-left:11%; margin-top: 1em">Report bugs at
-https::/#47;/github.comm/#47;zopencommunityy/#47;metaa/#47;issues.</p>
+https://github.com/zopencommunity/meta/issues.</p>
 
 <p style="margin-left:11%; margin-top: 1em">This is free
 software: you are free to change and redistribute it under
 the terms of the Apache License, Version 2.0.
-&lt;https::/#47;/www.apache.orgg/#47;licensess/#47;LICENSE&minus;2.0.html&gt;
+<a href="https://www.apache.org/licenses/LICENSE-2.0.html" target="_blank">https://www.apache.org/licenses/LICENSE-2.0.html</a>
 There is NO WARRANTY, to the extent permitted by law.</p>
 
 </div>

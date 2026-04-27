@@ -59,12 +59,12 @@ EOF
     # Remove <i> and <em> tags to avoid Vue parsing issues
     body_content=$(echo "${body_content}" | sed 's|<i>||g' | sed 's|</i>||g' | sed 's|<em>||g' | sed 's|</em>||g')
     
-    # Escape forward slashes in file paths (but not in HTML tags)
-    # This regex matches forward slashes that are NOT preceded by < (to avoid breaking </tag>)
-    body_content=$(echo "${body_content}" | sed 's|\([^<]\)/|\1&#47;|g')
+    # Escape forward slashes in file paths (but not in HTML tags or URLs)
+    # This regex matches forward slashes that are NOT preceded by < or : (to avoid breaking </tag> and URLs)
+    body_content=$(echo "${body_content}" | sed 's|\([^<:]\)/|\1&#47;|g')
     
-    # Escape angle brackets in URLs to prevent Vue from parsing them as tags
-    body_content=$(echo "${body_content}" | sed 's|<http|<http|g' | sed 's|<ftp|<ftp|g' | sed 's|contributors>|contributors>|g' | sed 's|\.0>|\.0>|g')
+    # Convert URLs in angle brackets to proper HTML links with target="_blank"
+    body_content=$(echo "${body_content}" | sed 's|<\(https\?://[^>]*\)>|<a href="\1" target="_blank">\1</a>|g' | sed 's|<\(ftp://[^>]*\)>|<a href="\1" target="_blank">\1</a>|g')
     
     # Clean up temporary HTML file
     rm -f "${temp_html}"

@@ -27,7 +27,7 @@
 </h2>
 
 <p style="margin-left:11%; margin-top: 1em">zopen&minus;install
-is a utility to downloadd/#47;install a zopen community
+is a utility to downloadd//install a zopen community
 package.</p>
 
 <p style="margin-left:22%; margin-top: 1em">[PACKAGE] is a
@@ -47,7 +47,7 @@ package to install. Multiple packages can be specified.</p>
 <td width="4%"></td>
 <td width="70%">
 
-<p style="margin-top: 1em">downloadd/#47;install all zopen
+<p style="margin-top: 1em">downloadd//install all zopen
 community packages.</p></td>
 <td width="8%">
 </td></tr>
@@ -163,7 +163,7 @@ prompts.</p>
 <p style="margin-left:11%; margin-top: 1em">This is free
 software: you are free to change and redistribute it under
 the terms of the Apache License, Version 2.0.
-&lt;https::/#47;/www.apache.orgg/#47;licensess/#47;LICENSE&minus;2.0.html&gt;
+<a href="https://www.apache.org/licenses/LICENSE-2.0.html" target="_blank">https://www.apache.org/licenses/LICENSE-2.0.html</a>
 There is NO WARRANTY, to the extent permitted by law.</p>
 
 <h2>AUTHOR
@@ -172,6 +172,6 @@ There is NO WARRANTY, to the extent permitted by law.</p>
 
 <p style="margin-left:11%; margin-top: 1em">Written by
 contributors to the zopen community.
-&lt;https::/#47;/github.comm/#47;zopencommunityy/#47;metaa/#47;graphss/#47;contributors&gt;</p>
+<a href="https://github.com/zopencommunity/meta/graphs/contributors" target="_blank">https://github.com/zopencommunity/meta/graphs/contributors</a></p>
 
 </div>

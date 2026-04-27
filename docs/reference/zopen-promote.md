@@ -51,7 +51,7 @@ production area.</p>
 
 <p style="margin-left:22%;">Update the permissions for the
 configuration file
-&lt;promotedroot&gt;;/#47;etcc/#47;zopen&minus;config with the given
+&lt;promotedroot&gt;;//etcc//zopen&minus;config with the given
 [PERMISSIONS] string, specified in symbolic mode.</p>
 
 <p style="margin-left:11%;"><b>&minus;f</b>,
@@ -121,32 +121,32 @@ promote</p>
 <p style="margin-left:22%;">Interactively promote current
 zopen environment.</p>
 
-<p style="margin-left:11%;">zopen promote  /#47;prod</p>
+<p style="margin-left:11%;">zopen promote  //prod</p>
 
 <p style="margin-left:22%;">Promote current zopen
-environment to &rsquo;;/#47;prod&rsquo;, setting file ownership
+environment to &rsquo;;//prod&rsquo;, setting file ownership
 to current user and group to default.</p>
 
-<p style="margin-left:11%;">zopen promote  /#47;prod
+<p style="margin-left:11%;">zopen promote  //prod
 &minus;&minus;owner FOO</p>
 
 <p style="margin-left:22%;">Promote current zopen
-environment to &rsquo;;/#47;prod&rsquo;, setting file ownership
+environment to &rsquo;;//prod&rsquo;, setting file ownership
 to &rsquo;FOO&rsquo; and group to default.</p>
 
-<p style="margin-left:11%;">zopen promote  /#47;prod
+<p style="margin-left:11%;">zopen promote  //prod
 &minus;&minus;group BAR</p>
 
 <p style="margin-left:22%;">Promote current zopen
-environment to &rsquo;;/#47;prod&rsquo;, setting file ownership
+environment to &rsquo;;//prod&rsquo;, setting file ownership
 to current user and group to &rsquo;BAR&rsquo;.</p>
 
-<p style="margin-left:11%;">zopen promote  /#47;mytest &minus;cp
+<p style="margin-left:11%;">zopen promote  //mytest &minus;cp
 g&minus;wx,o&minus;rwx &minus;zp g&minus;rwx,o&minus;rwx
 &minus;&minus;owner FOO</p>
 
 <p style="margin-left:22%;">Promote current zopen
-environment to &rsquo;;/#47;mytest&rsquo;, allowing only the
+environment to &rsquo;;//mytest&rsquo;, allowing only the
 current user to source the zopen&minus;config environment
 file and only permit access to zopen environment files to
 the user &rsquo;FOO&rsquo;.</p>
@@ -158,7 +158,7 @@ the user &rsquo;FOO&rsquo;.</p>
 
 <p style="margin-left:11%; margin-top: 1em">Written by
 contributors to the zopen community.
-&lt;https::/#47;/github.comm/#47;zopencommunityy/#47;metaa/#47;graphss/#47;contributors&gt;</p>
+<a href="https://github.com/zopencommunity/meta/graphs/contributors" target="_blank">https://github.com/zopencommunity/meta/graphs/contributors</a></p>
 
 <h2>REPORTING BUGS
 <a name="REPORTING BUGS"></a>
@@ -166,12 +166,12 @@ contributors to the zopen community.
 
 
 <p style="margin-left:11%; margin-top: 1em">Report bugs at
-https::/#47;/github.comm/#47;zopencommunityy/#47;metaa/#47;issues</p>
+https://github.com/zopencommunity/meta/issues</p>
 
 <p style="margin-left:11%; margin-top: 1em">This is free
 software: you are free to change and redistribute it under
 the terms of the Apache License, Version 2.0.
-&lt;https::/#47;/www.apache.orgg/#47;licensess/#47;LICENSE&minus;2.0.html&gt;
+<a href="https://www.apache.org/licenses/LICENSE-2.0.html" target="_blank">https://www.apache.org/licenses/LICENSE-2.0.html</a>
 There is NO WARRANTY, to the extent permitted by law.</p>
 
 </div>

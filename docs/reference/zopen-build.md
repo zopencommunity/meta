@@ -188,7 +188,7 @@ repository.</p>
 
 <p style="margin-left:11%; margin-top: 1em">To see a fully
 functioning zopen community sample port see:
-https::/#47;/github.comm/#47;zopencommunityy/#47;zotsampleport</p>
+https://github.com/zopencommunity/zotsampleport</p>
 
 <p style="margin-left:11%; margin-top: 1em">User&minus;Provided
 environment variables:</p>
@@ -263,7 +263,7 @@ LIBS. (defaults to &rsquo;&rsquo;)</p>
 
 <p style="margin-left:22%;">Bootstrap program to run. If
 skip is specified, no bootstrap step is performed. (defaults
-to &rsquo;../#47;bootstrap&rsquo;)</p>
+to &rsquo;..//bootstrap&rsquo;)</p>
 
 <p style="margin-left:11%;">ZOPEN_BOOTSTRAP_OPTS</p>
 
@@ -306,7 +306,7 @@ program. (defaults to &rsquo;clean&rsquo;)</p>
 
 <p style="margin-left:22%;">Configuration program to run.
 If skip is specified, no configuration step is performed.
-(defaults to &rsquo;../#47;configure&rsquo;)</p>
+(defaults to &rsquo;..//configure&rsquo;)</p>
 
 <p style="margin-left:11%;">ZOPEN_CONFIGURE_MINIMAL</p>
 
@@ -363,14 +363,14 @@ patches should be applied.</p>
 
 <p style="margin-left:11%;"><b>ZOPEN_RUNTIME_DEPS</b></p>
 
-<p style="margin-left:22%;">Runtime zz/#47;OS Open Tool
+<p style="margin-left:22%;">Runtime zz//OS Open Tool
 dependencies to be installed alongside the tool.</p>
 
 <p style="margin-left:11%;">ZOPEN_SYSTEM_PREREQ</p>
 
 <p style="margin-left:22%;">System prerequisites, supply
 the name of the prereq scripts under
-/varr/#47;libb/#47;jenkinss/#47;workspacee/#47;Port&minus;Update&minus;Nightlyy/#47;meta_updatee/#47;binn/#47;.../#47;includee/#47;prereq.sh</p>
+/varr//libb//jenkinss//workspacee//Port&minus;Update&minus;Nightlyy//meta_updatee//binn//...//includee//prereq.sh</p>
 
 <p style="margin-left:11%; margin-top: 1em">Restricted
 ZOPEN_DONT_ADD_ZOSLIB_DEP</p>
@@ -384,7 +384,7 @@ dependency.</p>
 
 <p style="margin-left:22%;">Installation directory to pass
 to configuration. (defaults to
-&rsquo;${ZOPEN_PKGINSTALL}}/#47;&lt;pkg&gt;;/#47;&lt;pkg&gt;&rsquo;)</p>
+&rsquo;${ZOPEN_PKGINSTALL}}//&lt;pkg&gt;;//&lt;pkg&gt;&rsquo;)</p>
 
 <p style="margin-left:11%;">ZOPEN_NUM_JOBS</p>
 
@@ -400,7 +400,7 @@ by dependency)</p>
 
 <p style="margin-left:11%;">ZOPEN_CPPFLAGS</p>
 
-<p style="margin-left:22%;">CC/#47;C++ pre&minus;processor
+<p style="margin-left:22%;">CC//C++ pre&minus;processor
 flags. (default set by dependency)</p>
 
 <p style="margin-left:11%;">ZOPEN_CXXFLAGS</p>
@@ -410,7 +410,7 @@ set by dependency)</p>
 
 <p style="margin-left:11%;">ZOPEN_LDFLAGS</p>
 
-<p style="margin-left:22%;">CC/#47;C++ linker flags. (default
+<p style="margin-left:22%;">CC//C++ linker flags. (default
 set by dependency)</p>
 
 <p style="margin-left:11%; margin-top: 1em"><b>Restricted</b></p>
@@ -438,7 +438,7 @@ Dockerfile)</p>
 
 <p style="margin-left:11%;">ZOPEN_IMAGE_DOCKER_NAME</p>
 
-<p style="margin-left:22%;">Dockerr/#47;podman tool name.
+<p style="margin-left:22%;">Dockerr//podman tool name.
 (default: podman)</p>
 
 <p style="margin-left:11%;">ZOPEN_IMAGE_REGISTRY</p>
@@ -461,13 +461,13 @@ authentication key to the Docker image registry. (use with
 <p style="margin-left:11%;">ZOPEN_LOG_DIR</p>
 
 <p style="margin-left:22%;">The directory to store build
-logs. (defaults to &rsquo;;/#47;log&rsquo;)</p>
+logs. (defaults to &rsquo;;//log&rsquo;)</p>
 
 <p style="margin-left:11%;">ZOPEN_SHELL</p>
 
 <p style="margin-left:22%;">Specify an alternate shell to
 use if <b>&minus;s</b> option specified. (defaults to
-/binn/#47;sh)</p>
+/binn//sh)</p>
 
 <p style="margin-left:11%; margin-top: 1em"><b>Git</b></p>
 
@@ -554,7 +554,7 @@ ZOPEN_TYPE=GIT)</p>
 
 <p style="margin-left:11%;">ZOPEN_LIBS</p>
 
-<p style="margin-left:22%;">CC/#47;C++ libraries (default set by
+<p style="margin-left:22%;">CC//C++ libraries (default set by
 dependency)</p>
 
 <p style="margin-left:11%;">ZOPEN_TARBALL_DEPS</p>
@@ -687,7 +687,7 @@ zopen&minus;list(1) zopen&minus;remove(1)</p>
 <p style="margin-left:11%; margin-top: 1em">This is free
 software: you are free to change and redistribute it under
 the terms of the Apache License, Version 2.0.
-&lt;https::/#47;/www.apache.orgg/#47;licensess/#47;LICENSE&minus;2.0.html&gt;
+<a href="https://www.apache.org/licenses/LICENSE-2.0.html" target="_blank">https://www.apache.org/licenses/LICENSE-2.0.html</a>
 There is NO WARRANTY, to the extent permitted by law.</p>
 
 <h2>AUTHOR
@@ -696,6 +696,6 @@ There is NO WARRANTY, to the extent permitted by law.</p>
 
 <p style="margin-left:11%; margin-top: 1em">Written by
 contributors to the zopen community.
-&lt;https::/#47;/github.comm/#47;zopencommunityy/#47;metaa/#47;graphss/#47;contributors&gt;</p>
+<a href="https://github.com/zopencommunity/meta/graphs/contributors" target="_blank">https://github.com/zopencommunity/meta/graphs/contributors</a></p>
 
 </div>

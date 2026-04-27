@@ -90,7 +90,7 @@ collection of usage statistics</p>
 </table>
 
 <p style="margin-left:22%; margin-top: 1em">Toggle default
-mode for overriding zz/#47;OS  /#47;bin tools in the
+mode for overriding zz//OS  //bin tools in the
 zopen&minus;config. Default is
 <b>&minus;&minus;nooverride&minus;zos&minus;tools</b></p>
 
@@ -132,10 +132,10 @@ rootfs&gt;.</p>
 should be one of:</p>
 
 <p style="margin-left:22%; margin-top: 1em">usrlclz:
-/usrr/#47;locall/#47;zopen (default), zopen:  /#47;usrr/#47;zopen,
-prod: legacy zopen standard location, ibm:  /#47;usrr/#47;lpp,
-fhs: File Hierarchical Standard ((/#47;opt), usrlcl:
-usrr/#47;local</p>
+/usrr//locall//zopen (default), zopen:  //usrr//zopen,
+prod: legacy zopen standard location, ibm:  //usrr//lpp,
+fhs: File Hierarchical Standard ((//opt), usrlcl:
+usrr//local</p>
 
 <table width="100%" border="0" rules="none" frame="void"
        cellspacing="0" cellpadding="0">
@@ -260,15 +260,15 @@ Releaseline packages</p>
 <p style="margin-left:22%; margin-top: 1em">zopen init
 &minus;&minus;yes
 &minus;&minus;append&minus;to&minus;profile
-&minus;&minus;fs&minus;layout fhs  /#47;zopen</p>
+&minus;&minus;fs&minus;layout fhs  //zopen</p>
 
 
 <p style="margin-left:22%; margin-top: 1em">non&minus;interactively
-create a zopen environment at location &rsquo;;/#47;zopen&rsquo;
+create a zopen environment at location &rsquo;;//zopen&rsquo;
 on disk, with packages installed to
-&rsquo;;/#47;zopenn/#47;opt&rsquo;. The user&rsquo;s .profile will be
+&rsquo;;//zopenn//opt&rsquo;. The user&rsquo;s .profile will be
 updated to source the configuration file at
-&rsquo;;/#47;zopenn/#47;etcc/#47;zopen&minus;config&rsquo; when new
+&rsquo;;//zopenn//etcc//zopen&minus;config&rsquo; when new
 terminal sessions start</p>
 
 <h2>AUTHOR
@@ -278,7 +278,7 @@ terminal sessions start</p>
 
 <p style="margin-left:11%; margin-top: 1em">Written by
 contributors to the zopen community.
-&lt;https::/#47;/github.comm/#47;zopencommunityy/#47;metaa/#47;graphss/#47;contributors&gt;</p>
+<a href="https://github.com/zopencommunity/meta/graphs/contributors" target="_blank">https://github.com/zopencommunity/meta/graphs/contributors</a></p>
 
 <h2>REPORTING BUGS
 <a name="REPORTING BUGS"></a>
@@ -286,12 +286,12 @@ contributors to the zopen community.
 
 
 <p style="margin-left:11%; margin-top: 1em">Report bugs at
-https::/#47;/github.comm/#47;zopencommunityy/#47;metaa/#47;issues</p>
+https://github.com/zopencommunity/meta/issues</p>
 
 <p style="margin-left:11%; margin-top: 1em">This is free
 software: you are free to change and redistribute it under
 the terms of the Apache License, Version 2.0.
-&lt;https::/#47;/www.apache.orgg/#47;licensess/#47;LICENSE&minus;2.0.html&gt;
+<a href="https://www.apache.org/licenses/LICENSE-2.0.html" target="_blank">https://www.apache.org/licenses/LICENSE-2.0.html</a>
 There is NO WARRANTY, to the extent permitted by law.</p>
 
 </div>
