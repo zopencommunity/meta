@@ -6,11 +6,16 @@
   </div>
 </div>
 
+
 <h1 align="center">ZOPEN-USAGE</h1>
+
+
+
 
 <h2>NAME
 <a name="NAME"></a>
 </h2>
+
 
 <p style="margin-left:11%; margin-top: 1em">zopen-usage
 &minus; manual page for zopen-usage 0.8.4</p>
@@ -18,6 +23,8 @@
 <h2>SYNOPSIS
 <a name="SYNOPSIS"></a>
 </h2>
+
+
 
 <p style="margin-left:11%; margin-top: 1em"><b>zopen-usage</b>
 [OPTION] [ZOPEN_ROOTFS]
@@ -27,6 +34,8 @@
 <a name="DESCRIPTION"></a>
 </h2>
 
+
+
 <p style="margin-left:11%; margin-top: 1em">zopen&minus;usage
 is a utility to display the file system usage by a zopen
 environment</p>
@@ -35,15 +44,18 @@ environment</p>
 <a name="OPTIONS"></a>
 </h2>
 
+
 <table width="100%" border="0" rules="none" frame="void"
        cellspacing="0" cellpadding="0">
 <tr valign="top" align="left">
 <td width="11%"></td>
 <td width="7%">
 
+
 <p style="margin-top: 1em"><b>&minus;&minus;pie</b></p></td>
 <td width="4%"></td>
 <td width="60%">
+
 
 <p style="margin-top: 1em">generate a pie chart showing
 space hogs</p></td>
@@ -61,6 +73,7 @@ space hogs</p></td>
 
 <p style="margin-left:22%;">run in verbose mode.</p>
 
+
 <p style="margin-left:11%;"><b>&minus;&minus;version</b></p>
 
 <p style="margin-left:22%;">print version</p>
@@ -69,16 +82,18 @@ space hogs</p></td>
 <a name="EXAMPLES"></a>
 </h2>
 
+
 <p style="margin-left:11%; margin-top: 1em">zopen usage</p>
 
 <p style="margin-left:22%;">list the file system usage for
 the environment</p>
 
 <p style="margin-left:11%;">zopen usage &minus;&minus;pie
-/mnt/zopen</p>
+/mntt/#47;zopen</p>
 
 <p style="margin-left:22%;">list the file system usage for
-the zopen environment at the mount point /mnt/zopen</p>
+the zopen environment at the mount point  /#47;mntt/#47;zopen</p>
+
 
 <p style="margin-left:11%; margin-top: 1em"><b>Notes:</b></p>
 
@@ -91,21 +106,23 @@ example.</p>
 <a name="AUTHOR"></a>
 </h2>
 
+
 <p style="margin-left:11%; margin-top: 1em">Written by
 contributors to the zopen community.
-<a href="https://github.com/zopencommunity/meta/graphs/contributors" target="_blank">https://github.com/zopencommunity/meta/graphs/contributors</a></p>
+&lt;https:///#47;github.comm/#47;zopencommunityy/#47;metaa/#47;graphss/#47;contributors&gt;</p>
 
 <h2>REPORTING BUGS
 <a name="REPORTING BUGS"></a>
 </h2>
 
+
 <p style="margin-left:11%; margin-top: 1em">Report bugs at
-https://github.com/zopencommunity/meta/issues</p>
+https:///#47;github.comm/#47;zopencommunityy/#47;metaa/#47;issues</p>
 
 <p style="margin-left:11%; margin-top: 1em">This is free
 software: you are free to change and redistribute it under
 the terms of the Apache License, Version 2.0.
-<a href="https://www.apache.org/licenses/LICENSE-2.0.html" target="_blank">https://www.apache.org/licenses/LICENSE-2.0.html</a>
+&lt;https:///#47;www.apache.orgg/#47;licensess/#47;LICENSE&minus;2.0.html&gt;
 There is NO WARRANTY, to the extent permitted by law.</p>
 
 </div>

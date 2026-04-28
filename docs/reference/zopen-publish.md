@@ -6,14 +6,25 @@
   </div>
 </div>
 
+
 <h1 align="center">ZOPEN-PUBLISH</h1>
 
-<h2>NAME</h2>
+
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
 
 <p style="margin-left:11%; margin-top: 1em">zopen-publish
 &minus; manual page for zopen-publish 0.8.4</p>
 
-<h2>SYNOPSIS</h2>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
 
 <p style="margin-left:11%; margin-top: 1em"><b>zopen-publish</b>
 [OPTION] -p PAX_FILE -m METADATA_FILE -g
@@ -23,12 +34,16 @@ TAG</p>
 <a name="DESCRIPTION"></a>
 </h2>
 
+
+
 <p style="margin-left:11%; margin-top: 1em">zopen&minus;publish
 &minus; Publish zopen package release to GitHub.</p>
 
 <h2>OPTIONS
 <a name="OPTIONS"></a>
 </h2>
+
+
 
 <p style="margin-left:11%; margin-top: 1em"><b>&minus;h</b>,
 <b>&minus;&minus;help</b></p>
@@ -69,7 +84,7 @@ exists.</p>
 
 <p style="margin-left:22%;">GitHub repository URL
 (optional, overrides metadata.json) e.g.,
-https://github.com/zopencommunity/xzport.git</p>
+https:///#47;github.comm/#47;zopencommunityy/#47;xzport.git</p>
 
 <p style="margin-left:11%;"><b>&minus;d</b>,
 <b>&minus;&minus;description</b> TEXT</p>
@@ -103,26 +118,28 @@ zopencommunity)</p>
 <p style="margin-left:22%;">Mark release as
 &rsquo;Latest&rsquo; (not pre&minus;release).</p>
 
+
 <p style="margin-left:11%;"><b>&minus;&minus;version</b></p>
 
 <p style="margin-left:22%;">print version</p>
 
 <p style="margin-left:11%; margin-top: 1em"><b>Environment
-GITHUB_TOKEN</b></p>
+GITHUB_TOKEN</p>
 
 <p style="margin-left:22%;">GitHub Personal Access Token
 (alternative to <b>&minus;&minus;github&minus;token</b>)</p>
 
+
 <p style="margin-left:11%; margin-top: 1em"><b>Example:</b></p>
 
 <p style="margin-left:22%;">zopen&minus;publish <b>&minus;f
-&minus;p</b> install/mypackage.zos.pax.Z <b>&minus;m</b>
+&minus;p</b> installl/#47;mypackage.zos.pax.Z <b>&minus;m</b>
 metadata.json <b>&minus;g</b> DEV_mypackage_12345
 <b>&minus;t</b> &lt;your_github_token&gt;
 zopen&minus;publish <b>&minus;v &minus;f &minus;p</b>
-install/mypackage.zos.pax.Z <b>&minus;m</b> metadata.json
+installl/#47;mypackage.zos.pax.Z <b>&minus;m</b> metadata.json
 <b>&minus;r</b>
-https::///github.comm//zopencommunityy//override&minus;repo.git
+https:///#47;github.comm/#47;zopencommunityy/#47;override&minus;repo.git
 <b>&minus;d</b> &quot;My custom release description&quot;
 <b>&minus;b</b> DEV <b>&minus;g</b> REL&minus;1.0.1
 <b>&minus;t</b> &lt;your_github_token&gt;
@@ -131,15 +148,16 @@ https::///github.comm//zopencommunityy//override&minus;repo.git
 <p style="margin-left:11%; margin-top: 1em">This is free
 software: you are free to change and redistribute it under
 the terms of the Apache License, Version 2.0.
-<a href="https://www.apache.org/licenses/LICENSE-2.0.html" target="_blank">https://www.apache.org/licenses/LICENSE-2.0.html</a>
+&lt;https:///#47;www.apache.orgg/#47;licensess/#47;LICENSE&minus;2.0.html&gt;
 There is NO WARRANTY, to the extent permitted by law.</p>
 
 <h2>AUTHOR
 <a name="AUTHOR"></a>
 </h2>
 
+
 <p style="margin-left:11%; margin-top: 1em">Written by
 contributors to the zopen community.
-<a href="https://github.com/zopencommunity/meta/graphs/contributors" target="_blank">https://github.com/zopencommunity/meta/graphs/contributors</a></p>
+&lt;https:///#47;github.comm/#47;zopencommunityy/#47;metaa/#47;graphss/#47;contributors&gt;</p>
 
 </div>

@@ -70,15 +70,15 @@ the man pages.</p>
 <p style="margin-left:22%;">print version</p>
 
 <p style="margin-left:11%; margin-top: 1em">Example:&quot;
-zopen&minus;help2man  //tmpp//man1</p>
+zopen&minus;help2man  /#47;tmpp/#47;man1</p>
 
 <p style="margin-left:22%;">write the man pages to the
-/tmpp//man1 directory.</p>
+/tmpp/#47;man1 directory.</p>
 
 <p style="margin-left:11%; margin-top: 1em">This is free
 software: you are free to change and redistribute it under
 the terms of the Apache License, Version 2.0.
-<a href="https://www.apache.org/licenses/LICENSE-2.0.html" target="_blank">https://www.apache.org/licenses/LICENSE-2.0.html</a>
+&lt;https:///#47;www.apache.orgg/#47;licensess/#47;LICENSE&minus;2.0.html&gt;
 There is NO WARRANTY, to the extent permitted by law.</p>
 
 <h2>AUTHOR
@@ -88,6 +88,6 @@ There is NO WARRANTY, to the extent permitted by law.</p>
 
 <p style="margin-left:11%; margin-top: 1em">Written by
 contributors to the zopen community.
-<a href="https://github.com/zopencommunity/meta/graphs/contributors" target="_blank">https://github.com/zopencommunity/meta/graphs/contributors</a></p>
+&lt;https:///#47;github.comm/#47;zopencommunityy/#47;metaa/#47;graphss/#47;contributors&gt;</p>
 
 </div>

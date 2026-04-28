@@ -990,12 +990,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_4210 A TUI editor development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_4235 A TUI editor development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/vimport" target="_blank" rel="noopener noreferrer">vim</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_4210/vim-v9.2.0350.20260416_070634.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_4210</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_4235/vim-v9.2.0400.20260428_022454.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_4235</a></div>
     <div class="tool-desc" title="A TUI editor">A TUI editor</div>
   </div>
 </div>
@@ -1338,12 +1338,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_4210 A TUI editor editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_4235 A TUI editor editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/vimport" target="_blank" rel="noopener noreferrer">vim</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_4210/vim-v9.2.0350.20260416_070634.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_4210</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_4235/vim-v9.2.0400.20260428_022454.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_4235</a></div>
     <div class="tool-desc" title="A TUI editor">A TUI editor</div>
   </div>
 </div>
@@ -1732,16 +1732,6 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="librabbitmq" data-searchable-text="librabbitmq Green 100.0% STABLE_librabbitmq_3162 library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
-  <div class="tool-info-grid">
-    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/librabbitmqport" target="_blank" rel="noopener noreferrer">librabbitmq</a></strong></div>
-    <div class="tool-status">Status: Green</div>
-    <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/librabbitmqport/releases/download/STABLE_librabbitmqport_3162/librabbitmq-DEV.20250311_121219.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_librabbitmq_3162</a></div>
-    <div class="tool-desc" title=""></div>
-  </div>
-</div>
-
 <div class="tool-item-filterable" data-package-name="librdkafka" data-searchable-text="librdkafka Green 100.0% STABLE_librdkafka_4213 A high-performance C/C++ library for Apache Kafka library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/librdkafkaport" target="_blank" rel="noopener noreferrer">librdkafka</a></strong></div>
@@ -2097,16 +2087,6 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
     <div class="tool-test">Test: 100.0%</div>
     <div class="tool-release"><a href="https://github.com/zopencommunity/libpslport/releases/download/STABLE_libpslport_4120/libpsl-0.21.5.20260310_092221.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libpsl_4120</a></div>
     <div class="tool-desc" title="C library for the Public Suffix List">C library for the Public Suffix List</div>
-  </div>
-</div>
-
-<div class="tool-item-filterable" data-package-name="librabbitmq" data-searchable-text="librabbitmq Green 100.0% STABLE_librabbitmq_3162 networking port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
-  <div class="tool-info-grid">
-    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/librabbitmqport" target="_blank" rel="noopener noreferrer">librabbitmq</a></strong></div>
-    <div class="tool-status">Status: Green</div>
-    <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/librabbitmqport/releases/download/STABLE_librabbitmqport_3162/librabbitmq-DEV.20250311_121219.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_librabbitmq_3162</a></div>
-    <div class="tool-desc" title=""></div>
   </div>
 </div>
 
@@ -2600,12 +2580,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="less" data-searchable-text="less Green 100.0% STABLE_less_4136 A text pager uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="less" data-searchable-text="less Green 100.0% STABLE_less_4234 A text pager uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/lessport" target="_blank" rel="noopener noreferrer">less</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/lessport/releases/download/STABLE_lessport_4136/less-v692-rel.20260313_123027.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_less_4136</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/lessport/releases/download/STABLE_lessport_4234/less-v692-rel.20260427_160826.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_less_4234</a></div>
     <div class="tool-desc" title="A text pager">A text pager</div>
   </div>
 </div>
@@ -3369,4 +3349,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2026-04-27 09:16:08 UTC
+Last updated:  2026-04-28 06:18:07 UTC

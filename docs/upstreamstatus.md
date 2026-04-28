@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2026-04-27 09:13:52 EDT.*
+*Report generated on: 2026-04-28 06:15:40 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 304
-- **Total Current Lines of Code (LOC) in Patches:** 57,921
-- **Total Number of Current Patch Files:** 1,042
-- **Average Current Patch LOC per Project:** 190.53
-- **Average Current Patch Count per Project:** 3.43
+- **Total Projects Analyzed:** 305
+- **Total Current Lines of Code (LOC) in Patches:** 57,899
+- **Total Number of Current Patch Files:** 1,041
+- **Average Current Patch LOC per Project:** 189.83
+- **Average Current Patch Count per Project:** 3.41
 
 ### Historical Trends (All Projects)
 
@@ -179,7 +179,6 @@
 | [libpkgmanifestport](#repo-libpkgmanifestport) | 26 | +0 | 2 |
 | [z3port](#repo-z3port) | 25 | +0 | 1 |
 | [libxcbport](#repo-libxcbport) | 24 | +0 | 1 |
-| [lessport](#repo-lessport) | 22 | +0 | 1 |
 | [my_basicport](#repo-my-basicport) | 22 | +0 | 1 |
 | [k6port](#repo-k6port) | 21 | +0 | 2 |
 | [shdocport](#repo-shdocport) | 20 | +0 | 2 |
@@ -215,6 +214,7 @@
 | [libpslport](#repo-libpslport) | 12 | +0 | 1 |
 | [quiltport](#repo-quiltport) | 10 | +0 | 1 |
 | [zlibport](#repo-zlibport) | 0 | +0 | 0 |
+| [lessport](#repo-lessport) | 0 | -22 | 0 |
 | [help2manport](#repo-help2manport) | 0 | +0 | 0 |
 | [zotsampleport](#repo-zotsampleport) | 0 | +0 | 0 |
 | [man-dbport](#repo-man-dbport) | 0 | +0 | 0 |
@@ -328,6 +328,7 @@
 | [thriftport](#repo-thriftport) | 0 | +0 | 0 |
 | [z-vector-searchport](#repo-z-vector-searchport) | 0 | +0 | 0 |
 | [usearchport](#repo-usearchport) | 0 | N/A | 0 |
+| [subscription-managerport](#repo-subscription-managerport) | 0 | +0 | 0 |
 
 ---
 
@@ -4282,26 +4283,6 @@
 
 ---
 
-<a id="repo-lessport"></a>
-## lessport
-
-- **Origin Date (First Commit):** 2022-04-21
-- **Current Patch LOC:** 22
-- **Current Patch Count:** 1
-
-### Historical Trends
-
-![LOC Trend for lessport](images/upstream/lessport_current_loc_trend.png)
-![Count Trend for lessport](images/upstream/lessport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `stable-patches/configure.ac.patch` | `stable-patches` | 22 |
-
----
-
 <a id="repo-my-basicport"></a>
 ## my_basicport
 
@@ -4996,6 +4977,24 @@
 
 ![LOC Trend for zlibport](images/upstream/zlibport_current_loc_trend.png)
 ![Count Trend for zlibport](images/upstream/zlibport_current_count_trend.png)
+
+### Current Patch Details
+
+*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
+
+---
+
+<a id="repo-lessport"></a>
+## lessport
+
+- **Origin Date (First Commit):** 2022-04-21
+- **Current Patch LOC:** 0
+- **Current Patch Count:** 0
+
+### Historical Trends
+
+![LOC Trend for lessport](images/upstream/lessport_current_loc_trend.png)
+![Count Trend for lessport](images/upstream/lessport_current_count_trend.png)
 
 ### Current Patch Details
 
@@ -7023,6 +7022,24 @@
 ## usearchport
 
 - **Origin Date (First Commit):** Unknown
+- **Current Patch LOC:** 0
+- **Current Patch Count:** 0
+
+### Historical Trends
+
+*(Patch LOC trend graph not generated)*
+*(Patch count trend graph not generated)*
+
+### Current Patch Details
+
+*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
+
+---
+
+<a id="repo-subscription-managerport"></a>
+## subscription-managerport
+
+- **Origin Date (First Commit):** 2026-04-27
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 
