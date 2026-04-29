@@ -308,12 +308,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="sed" data-searchable-text="sed Blue 91.5% STABLE_sed_4066 A stream editor for manipulating text files core port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="sed" data-searchable-text="sed Blue 92.3% STABLE_sed_4236 A stream editor for manipulating text files core port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/sedport" target="_blank" rel="noopener noreferrer">sed</a></strong></div>
     <div class="tool-status">Status: Blue</div>
-    <div class="tool-test">Test: 91.5%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/sedport/releases/download/STABLE_sedport_4066/sed-4.9.20260219_053947.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_sed_4066</a></div>
+    <div class="tool-test">Test: 92.3%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/sedport/releases/download/STABLE_sedport_4236/sed-4.10.20260428_111640.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_sed_4236</a></div>
     <div class="tool-desc" title="A stream editor for manipulating text files">A stream editor for manipulating text files</div>
   </div>
 </div>
@@ -1400,6 +1400,16 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 ## Json 
 
+<div class="tool-item-filterable" data-package-name="cbxp" data-searchable-text="cbxp Green 100.0% STABLE_cbxp_4238 json port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/cbxpport" target="_blank" rel="noopener noreferrer">cbxp</a></strong></div>
+    <div class="tool-status">Status: Green</div>
+    <div class="tool-test">Test: 100.0%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/cbxpport/releases/download/STABLE_cbxpport_4238/cbxp-v0.0.3.20260428_195236.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_cbxp_4238</a></div>
+    <div class="tool-desc" title=""></div>
+  </div>
+</div>
+
 <div class="tool-item-filterable" data-package-name="jd" data-searchable-text="jd Skipped N/A STABLE_jd_4085 JSON diff and patch json port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/jdport" target="_blank" rel="noopener noreferrer">jd</a></strong></div>
@@ -1529,6 +1539,16 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
     <div class="tool-test">Test: 100.0%</div>
     <div class="tool-release"><a href="https://github.com/zopencommunity/blisport/releases/download/STABLE_blisport_3689/blis-2.0.20250828_014142.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_blis_3689</a></div>
     <div class="tool-desc" title="BLAS-like Library Instantiation Software Framework for z/OS">BLAS-like Library Instantiation Software Framework for z/OS</div>
+  </div>
+</div>
+
+<div class="tool-item-filterable" data-package-name="cbxp" data-searchable-text="cbxp Green 100.0% STABLE_cbxp_4238 library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/cbxpport" target="_blank" rel="noopener noreferrer">cbxp</a></strong></div>
+    <div class="tool-status">Status: Green</div>
+    <div class="tool-test">Test: 100.0%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/cbxpport/releases/download/STABLE_cbxpport_4238/cbxp-v0.0.3.20260428_195236.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_cbxp_4238</a></div>
+    <div class="tool-desc" title=""></div>
   </div>
 </div>
 
@@ -1729,6 +1749,16 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
     <div class="tool-test">Test: 100.0%</div>
     <div class="tool-release"><a href="https://github.com/zopencommunity/libpkgmanifestport/releases/download/STABLE_libpkgmanifestport_3873/libpkgmanifest-0.5.9.20251111_132344.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libpkgmanifest_3873</a></div>
     <div class="tool-desc" title="Library for working with RPM manifests">Library for working with RPM manifests</div>
+  </div>
+</div>
+
+<div class="tool-item-filterable" data-package-name="librabbitmq" data-searchable-text="librabbitmq Green 100.0% STABLE_librabbitmq_3162 library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/librabbitmqport" target="_blank" rel="noopener noreferrer">librabbitmq</a></strong></div>
+    <div class="tool-status">Status: Green</div>
+    <div class="tool-test">Test: 100.0%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/librabbitmqport/releases/download/STABLE_librabbitmqport_3162/librabbitmq-DEV.20250311_121219.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_librabbitmq_3162</a></div>
+    <div class="tool-desc" title=""></div>
   </div>
 </div>
 
@@ -2090,6 +2120,16 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
+<div class="tool-item-filterable" data-package-name="librabbitmq" data-searchable-text="librabbitmq Green 100.0% STABLE_librabbitmq_3162 networking port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/librabbitmqport" target="_blank" rel="noopener noreferrer">librabbitmq</a></strong></div>
+    <div class="tool-status">Status: Green</div>
+    <div class="tool-test">Test: 100.0%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/librabbitmqport/releases/download/STABLE_librabbitmqport_3162/librabbitmq-DEV.20250311_121219.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_librabbitmq_3162</a></div>
+    <div class="tool-desc" title=""></div>
+  </div>
+</div>
+
 <div class="tool-item-filterable" data-package-name="libssh2" data-searchable-text="libssh2 Red 6.8% STABLE_libssh2_3952 A library for SSH2 protocol networking port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libssh2port" target="_blank" rel="noopener noreferrer">libssh2</a></strong></div>
@@ -2322,12 +2362,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 ## Shell 
 
-<div class="tool-item-filterable" data-package-name="bash" data-searchable-text="bash Blue 85.5% STABLE_bash_4031 The Bourne Again shell shell port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="bash" data-searchable-text="bash Blue 87.0% STABLE_bash_4237 The Bourne Again shell shell port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/bashport" target="_blank" rel="noopener noreferrer">bash</a></strong></div>
     <div class="tool-status">Status: Blue</div>
-    <div class="tool-test">Test: 85.5%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/bashport/releases/download/STABLE_bashport_4031/bash-5.3.20260204_143226.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_bash_4031</a></div>
+    <div class="tool-test">Test: 87.0%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/bashport/releases/download/STABLE_bashport_4237/bash-5.3.20260428_150127.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_bash_4237</a></div>
     <div class="tool-desc" title="The Bourne Again shell">The Bourne Again shell</div>
   </div>
 </div>
@@ -2339,6 +2379,16 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
     <div class="tool-test">Test: 100.0%</div>
     <div class="tool-release"><a href="https://github.com/zopencommunity/bash-completionport/releases/download/STABLE_bash-completionport_4053/bashcompletion-2.17.0.20260214_153525.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_bash-completion_4053</a></div>
     <div class="tool-desc" title="bash completion scripts for your bash shell">bash completion scripts for your bash shell</div>
+  </div>
+</div>
+
+<div class="tool-item-filterable" data-package-name="cbxp" data-searchable-text="cbxp Green 100.0% STABLE_cbxp_4238 shell port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/cbxpport" target="_blank" rel="noopener noreferrer">cbxp</a></strong></div>
+    <div class="tool-status">Status: Green</div>
+    <div class="tool-test">Test: 100.0%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/cbxpport/releases/download/STABLE_cbxpport_4238/cbxp-v0.0.3.20260428_195236.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_cbxp_4238</a></div>
+    <div class="tool-desc" title=""></div>
   </div>
 </div>
 
@@ -2776,6 +2826,16 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
+<div class="tool-item-filterable" data-package-name="cbxp" data-searchable-text="cbxp Green 100.0% STABLE_cbxp_4238 utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+  <div class="tool-info-grid">
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/cbxpport" target="_blank" rel="noopener noreferrer">cbxp</a></strong></div>
+    <div class="tool-status">Status: Green</div>
+    <div class="tool-test">Test: 100.0%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/cbxpport/releases/download/STABLE_cbxpport_4238/cbxp-v0.0.3.20260428_195236.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_cbxp_4238</a></div>
+    <div class="tool-desc" title=""></div>
+  </div>
+</div>
+
 <div class="tool-item-filterable" data-package-name="check_podman" data-searchable-text="check_podman Skipped N/A STABLE_check_podman_3804 Find and export podman path utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/check_podmanport" target="_blank" rel="noopener noreferrer">check_podman</a></strong></div>
@@ -3156,12 +3216,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="sed" data-searchable-text="sed Blue 91.5% STABLE_sed_4066 A stream editor for manipulating text files utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="sed" data-searchable-text="sed Blue 92.3% STABLE_sed_4236 A stream editor for manipulating text files utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/sedport" target="_blank" rel="noopener noreferrer">sed</a></strong></div>
     <div class="tool-status">Status: Blue</div>
-    <div class="tool-test">Test: 91.5%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/sedport/releases/download/STABLE_sedport_4066/sed-4.9.20260219_053947.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_sed_4066</a></div>
+    <div class="tool-test">Test: 92.3%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/sedport/releases/download/STABLE_sedport_4236/sed-4.10.20260428_111640.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_sed_4236</a></div>
     <div class="tool-desc" title="A stream editor for manipulating text files">A stream editor for manipulating text files</div>
   </div>
 </div>
@@ -3349,4 +3409,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2026-04-28 06:18:07 UTC
+Last updated:  2026-04-29 06:18:29 UTC

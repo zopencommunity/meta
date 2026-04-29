@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2026-04-28 06:15:40 EDT.*
+*Report generated on: 2026-04-29 06:15:57 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 305
-- **Total Current Lines of Code (LOC) in Patches:** 57,899
-- **Total Number of Current Patch Files:** 1,041
-- **Average Current Patch LOC per Project:** 189.83
-- **Average Current Patch Count per Project:** 3.41
+- **Total Projects Analyzed:** 307
+- **Total Current Lines of Code (LOC) in Patches:** 58,045
+- **Total Number of Current Patch Files:** 1,042
+- **Average Current Patch LOC per Project:** 189.07
+- **Average Current Patch Count per Project:** 3.39
 
 ### Historical Trends (All Projects)
 
@@ -30,9 +30,9 @@
 | [librdkafkaport](#repo-librdkafkaport) | 2,490 | -148 | 54 |
 | [oqs-providerport](#repo-oqs-providerport) | 2,037 | +0 | 18 |
 | [curlport](#repo-curlport) | 1,844 | +3 | 47 |
+| [bashport](#repo-bashport) | 1,797 | -2,629 | 27 |
 | [rpmport](#repo-rpmport) | 1,792 | -22 | 32 |
 | [llamacppport](#repo-llamacppport) | 1,649 | +0 | 35 |
-| [bashport](#repo-bashport) | 1,635 | -2,791 | 25 |
 | [gpgport](#repo-gpgport) | 1,560 | +0 | 32 |
 | [rsyncport](#repo-rsyncport) | 1,430 | +0 | 21 |
 | [cmakeport](#repo-cmakeport) | 1,348 | +0 | 1 |
@@ -138,7 +138,6 @@
 | [librepoport](#repo-librepoport) | 66 | +0 | 1 |
 | [logrotateport](#repo-logrotateport) | 65 | +0 | 1 |
 | [libkqueueport](#repo-libkqueueport) | 61 | +0 | 4 |
-| [sedport](#repo-sedport) | 60 | +0 | 2 |
 | [doom-asciiport](#repo-doom-asciiport) | 60 | +0 | 1 |
 | [lz4port](#repo-lz4port) | 58 | +0 | 4 |
 | [snappy-cport](#repo-snappy-cport) | 56 | +0 | 1 |
@@ -149,6 +148,7 @@
 | [xxhashport](#repo-xxhashport) | 47 | +0 | 2 |
 | [whichport](#repo-whichport) | 47 | +0 | 2 |
 | [tigport](#repo-tigport) | 47 | +0 | 1 |
+| [sedport](#repo-sedport) | 44 | -16 | 1 |
 | [automakeport](#repo-automakeport) | 41 | +0 | 2 |
 | [catimgport](#repo-catimgport) | 37 | +0 | 1 |
 | [zlib-ngport](#repo-zlib-ngport) | 35 | +0 | 2 |
@@ -329,6 +329,8 @@
 | [z-vector-searchport](#repo-z-vector-searchport) | 0 | +0 | 0 |
 | [usearchport](#repo-usearchport) | 0 | N/A | 0 |
 | [subscription-managerport](#repo-subscription-managerport) | 0 | +0 | 0 |
+| [cbxpport](#repo-cbxpport) | 0 | +0 | 0 |
+| [notispfport](#repo-notispfport) | 0 | N/A | 0 |
 
 ---
 
@@ -627,6 +629,52 @@
 
 ---
 
+<a id="repo-bashport"></a>
+## bashport
+
+- **Origin Date (First Commit):** 2022-10-26
+- **Current Patch LOC:** 1,797
+- **Current Patch Count:** 27
+
+### Historical Trends
+
+![LOC Trend for bashport](images/upstream/bashport_current_loc_trend.png)
+![Count Trend for bashport](images/upstream/bashport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `dev-patches/aclocal.patch` | `dev-patches` | 23 |
+| `dev-patches/array.tests.patch` | `dev-patches` | 64 |
+| `dev-patches/dontupstream/read.tests.patch` | `dev-patches` | 13 |
+| `dev-patches/dontupstream/redir10.patch` | `dev-patches` | 13 |
+| `dev-patches/dontupstream/run-all_and_diff.patch` | `dev-patches` | 72 |
+| `dev-patches/redir.tests.patch` | `dev-patches` | 13 |
+| `dev-patches/source6.sub.patch` | `dev-patches` | 13 |
+| `stable-patches/MANIFEST.patch` | `stable-patches` | 21 |
+| `stable-patches/Makefile.in.patch` | `stable-patches` | 13 |
+| `stable-patches/configure.patch` | `stable-patches` | 54 |
+| `stable-patches/gettextP.h.patch` | `stable-patches` | 25 |
+| `stable-patches/ignore_pipe.patch` | `stable-patches` | 13 |
+| `stable-patches/kill.def.patch` | `stable-patches` | 123 |
+| `stable-patches/sig.c.patch` | `stable-patches` | 30 |
+| `stable-patches/smatch.c.patch` | `stable-patches` | 49 |
+| `stable-patches/tests/builtins.patch` | `stable-patches` | 31 |
+| `stable-patches/tests/coproc.tests.patch` | `stable-patches` | 13 |
+| `stable-patches/tests/errors.right.patch` | `stable-patches` | 18 |
+| `stable-patches/tests/heredoc.right.patch` | `stable-patches` | 13 |
+| `stable-patches/tests/rbash_test.patch` | `stable-patches` | 141 |
+| `stable-patches/tests/redir.patch` | `stable-patches` | 49 |
+| `stable-patches/tests/run.patch` | `stable-patches` | 744 |
+| `stable-patches/tests/test.patch` | `stable-patches` | 49 |
+| `stable-patches/tests/trap.patch` | `stable-patches` | 61 |
+| `stable-patches/tests/varenv.patch` | `stable-patches` | 13 |
+| `stable-patches/tests/vredir.patch` | `stable-patches` | 53 |
+| `stable-patches/variable.patch` | `stable-patches` | 73 |
+
+---
+
 <a id="repo-rpmport"></a>
 ## rpmport
 
@@ -729,50 +777,6 @@
 | `patches/vendor/cpp-httplib/httplib.h.patch` | `patches` | 31 |
 | `patches/vendor/miniaudio/miniaudio.h.patch` | `patches` | 13 |
 | `patches/vendor/stb/stb_image.h.patch` | `patches` | 60 |
-
----
-
-<a id="repo-bashport"></a>
-## bashport
-
-- **Origin Date (First Commit):** 2022-10-26
-- **Current Patch LOC:** 1,635
-- **Current Patch Count:** 25
-
-### Historical Trends
-
-![LOC Trend for bashport](images/upstream/bashport_current_loc_trend.png)
-![Count Trend for bashport](images/upstream/bashport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `dev-patches/aclocal.patch` | `dev-patches` | 23 |
-| `dev-patches/array.tests.patch` | `dev-patches` | 64 |
-| `dev-patches/dontupstream/read.tests.patch` | `dev-patches` | 13 |
-| `dev-patches/dontupstream/redir10.patch` | `dev-patches` | 13 |
-| `dev-patches/dontupstream/run-all_and_diff.patch` | `dev-patches` | 72 |
-| `dev-patches/redir.tests.patch` | `dev-patches` | 13 |
-| `dev-patches/source6.sub.patch` | `dev-patches` | 13 |
-| `stable-patches/Makefile.in.patch` | `stable-patches` | 13 |
-| `stable-patches/configure.patch` | `stable-patches` | 54 |
-| `stable-patches/gettextP.h.patch` | `stable-patches` | 25 |
-| `stable-patches/ignore_pipe.patch` | `stable-patches` | 13 |
-| `stable-patches/kill.def.patch` | `stable-patches` | 123 |
-| `stable-patches/sig.c.patch` | `stable-patches` | 30 |
-| `stable-patches/smatch.c.patch` | `stable-patches` | 49 |
-| `stable-patches/tests/builtins.patch` | `stable-patches` | 31 |
-| `stable-patches/tests/coproc.tests.patch` | `stable-patches` | 13 |
-| `stable-patches/tests/errors.right.patch` | `stable-patches` | 18 |
-| `stable-patches/tests/heredoc.right.patch` | `stable-patches` | 13 |
-| `stable-patches/tests/redir.patch` | `stable-patches` | 49 |
-| `stable-patches/tests/run.patch` | `stable-patches` | 744 |
-| `stable-patches/tests/test.patch` | `stable-patches` | 49 |
-| `stable-patches/tests/trap.patch` | `stable-patches` | 61 |
-| `stable-patches/tests/varenv.patch` | `stable-patches` | 13 |
-| `stable-patches/tests/vredir.patch` | `stable-patches` | 53 |
-| `stable-patches/variable.patch` | `stable-patches` | 73 |
 
 ---
 
@@ -3436,27 +3440,6 @@
 
 ---
 
-<a id="repo-sedport"></a>
-## sedport
-
-- **Origin Date (First Commit):** 2022-08-31
-- **Current Patch LOC:** 60
-- **Current Patch Count:** 2
-
-### Historical Trends
-
-![LOC Trend for sedport](images/upstream/sedport_current_loc_trend.png)
-![Count Trend for sedport](images/upstream/sedport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `stable-patches/execute.c.patch` | `stable-patches` | 44 |
-| `stable-patches/xmalloc.c.patch` | `stable-patches` | 16 |
-
----
-
 <a id="repo-doom-asciiport"></a>
 ## doom-asciiport
 
@@ -3663,6 +3646,26 @@
 | Patch File (Repo Relative Path) | Source | LOC |
 |---|---|:---|
 | `patches/PR1.patch` | `patches` | 47 |
+
+---
+
+<a id="repo-sedport"></a>
+## sedport
+
+- **Origin Date (First Commit):** 2022-08-31
+- **Current Patch LOC:** 44
+- **Current Patch Count:** 1
+
+### Historical Trends
+
+![LOC Trend for sedport](images/upstream/sedport_current_loc_trend.png)
+![Count Trend for sedport](images/upstream/sedport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `stable-patches/execute.c.patch` | `stable-patches` | 44 |
 
 ---
 
@@ -7040,6 +7043,42 @@
 ## subscription-managerport
 
 - **Origin Date (First Commit):** 2026-04-27
+- **Current Patch LOC:** 0
+- **Current Patch Count:** 0
+
+### Historical Trends
+
+*(Patch LOC trend graph not generated)*
+*(Patch count trend graph not generated)*
+
+### Current Patch Details
+
+*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
+
+---
+
+<a id="repo-cbxpport"></a>
+## cbxpport
+
+- **Origin Date (First Commit):** 2026-04-28
+- **Current Patch LOC:** 0
+- **Current Patch Count:** 0
+
+### Historical Trends
+
+*(Patch LOC trend graph not generated)*
+*(Patch count trend graph not generated)*
+
+### Current Patch Details
+
+*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
+
+---
+
+<a id="repo-notispfport"></a>
+## notispfport
+
+- **Origin Date (First Commit):** Unknown
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 
