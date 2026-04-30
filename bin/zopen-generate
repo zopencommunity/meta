@@ -14,7 +14,7 @@ setupMyself()
   ME=$(basename "$0")
   MYDIR="$(cd "$(dirname "$0")" > /dev/null 2>&1 && pwd -P)"
   INCDIR="${MYDIR}/../include"
-  if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
+  if ! [ -d "${INCDIR}" ] || ! [ -f "${INCDIR}/common.sh" ]; then
     echo "Internal Error. Unable to find common.sh file to source." >&2
     exit 8
   fi
@@ -50,9 +50,12 @@ printSyntax()
   echo "  --license LICENSE           License name" >&2
   echo "  --type TYPE                 Port type: 'BUILD' (from source) or 'BARE' (binary download)" >&2
   echo "  --build-system SYSTEM       Build system if type is BUILD (GNU Make, CMake, Gradle, Maven, etc.)" >&2
-  echo "  --stable-url URL            Stable release source URL" >&2
+  echo "  --c-extensions              Python project contains C extensions (requires C compiler)" >&2
+  echo "  --stable-url URL            Stable release source URL (Git HTTPS clone URL ending in .git," >&2
+  echo "                              or a direct archive URL ending in .tar.gz, .tar.xz, .tar.bz2, .zip, etc.)" >&2
   echo "  --stable-deps DEPS          Stable build dependencies (space-delimited)" >&2
-  echo "  --dev-url URL               Dev-line source URL" >&2
+  echo "  --dev-url URL               Dev-line source URL (same formats as --stable-url;" >&2
+  echo "                              typically the main-branch Git clone URL)" >&2
   echo "  --dev-deps DEPS             Dev build dependencies (space-delimited)" >&2
   echo "  --build-line LINE           Default build line (stable or dev)" >&2
   echo "  --runtime-deps DEPS         Runtime dependencies (space-delimited)" >&2
@@ -77,6 +80,8 @@ runtimedeps=""
 force=false
 non_interactive=false
 json=false
+c_extensions=""
+list_action=""
 
 # Parse command-line arguments. If an argument is not provided, the corresponding variable remains empty.
 while [ $# -gt 0 ]; do
@@ -84,50 +89,16 @@ while [ $# -gt 0 ]; do
     --help) printSyntax; exit 0;;
     --version) zopen-version "$ME"; exit 0;;
     --json) json=true;;
-    --list-licenses)
-      buildLicenseLookup
-      if ${json}; then
-        if ! command -v "jq" >/dev/null 2>&1; then
-          echo "Error: jq is required for --json output." >&2
-          exit 1
-        fi
-        echo "${validLicenseNames}" | tr ' ' '\n' | tr -d '"' | jq -R . | jq -s '{"licenses": .}'
-      else
-        echo "Available licenses:"
-        echo "${validLicenseNames}" | tr ' ' '\n' | sed 's/,/ /g' | xargs -n 1 | sort | xargs
-      fi
-      exit 0;;
-    --list-categories)
-      ZOPEN_VALID_CATEGORIES="$(cat "${MYDIR}/../data/tool_categories.txt")"
-      if ${json}; then
-        if ! command -v "jq" >/dev/null 2>&1; then
-          echo "Error: jq is required for --json output." >&2
-          exit 1
-        fi
-        echo "${ZOPEN_VALID_CATEGORIES}" | tr ' ' '\n' | jq -R . | jq -s '{"categories": .}'
-      else
-        echo "Available categories:"
-        echo "${ZOPEN_VALID_CATEGORIES}" | tr ' ' '\n'
-      fi
-      exit 0;;
-    --list-build-systems)
-      if ${json}; then
-        if ! command -v "jq" >/dev/null 2>&1; then
-          echo "Error: jq is required for --json output." >&2
-          exit 1
-        fi
-        printf "GNU Make\nCMake\nGo\nGradle\nMaven\nMeson\nPython" | jq -R . | jq -s '{"build_systems": .}'
-      else
-        echo "Supported build systems:"
-        echo "GNU Make, CMake, Go, Gradle, Maven, Meson, Python"
-      fi
-      exit 0;;
+    --list-licenses) list_action="licenses";;
+    --list-categories) list_action="categories";;
+    --list-build-systems) list_action="build_systems";;
     --name) shift; name="$1";;
     --description) shift; description="$1";;
     --categories) shift; categories="$1";;
     --license) shift; license_name="$1";;
     --type) shift; port_type="$1";;
     --build-system) shift; build_system="$1";;
+    --c-extensions) c_extensions=true;;
     --stable-url) shift; stablePath="$1";;
     --stable-deps) shift; stableDeps="$1";;
     --dev-url) shift; devPath="$1";;
@@ -140,6 +111,45 @@ while [ $# -gt 0 ]; do
   esac
   shift
 done
+
+# Handle deferred --list-* actions (must run after --json is fully parsed)
+if [ -n "${list_action}" ]; then
+  if ${json}; then
+    if ! command -v "jq" >/dev/null 2>&1; then
+      echo "Error: jq is required for --json output." >&2
+      exit 1
+    fi
+  fi
+  case "${list_action}" in
+    licenses)
+      buildLicenseLookup
+      if ${json}; then
+        echo "${validLicenseNames}" | tr ' ' '\n' | tr -d '"' | jq -R . | jq -s '{"licenses": .}'
+      else
+        echo "Available licenses:"
+        echo "${validLicenseNames}" | tr ' ' '\n' | sed 's/,/ /g' | xargs -n 1 | sort | xargs
+      fi
+      ;;
+    categories)
+      ZOPEN_VALID_CATEGORIES="$(cat "${MYDIR}/../data/tool_categories.txt")"
+      if ${json}; then
+        echo "${ZOPEN_VALID_CATEGORIES}" | tr ' ' '\n' | jq -R . | jq -s '{"categories": .}'
+      else
+        echo "Available categories:"
+        echo "${ZOPEN_VALID_CATEGORIES}" | tr ' ' '\n'
+      fi
+      ;;
+    build_systems)
+      if ${json}; then
+        printf "GNU Make\nCMake\nGo\nGradle\nMaven\nMeson\nPython" | jq -R . | jq -s '{"build_systems": .}'
+      else
+        echo "Supported build systems:"
+        echo "GNU Make, CMake, Go, Gradle, Maven, Meson, Python"
+      fi
+      ;;
+  esac
+  exit 0
+fi
 
 # Check for non-interactive mode requirements
 if $non_interactive; then
@@ -285,7 +295,6 @@ fi
 
 build_system_config=""
 custom_functions=""
-build_system=""
 
 if [ "$port_type" = "BARE" ]; then
     build_system="N/A" # Set here because it's only applicable for BARE
@@ -369,7 +378,8 @@ EOF
 export ZOPEN_CONFIGURE="cmake"
 export ZOPEN_CONFIGURE_OPTS="-B ../build -DCMAKE_INSTALL_PREFIX=\${ZOPEN_INSTALL_DIR}"
 export ZOPEN_MAKE="cmake"
-export ZOPEN_MAKE_OPTS="--build ../build"
+export ZOPEN_MAKE_OPTS="--build ../build --parallel \\\$ZOPEN_NUM_JOBS --config Release"
+export ZOPEN_MAKE_MINIMAL=Y
 export ZOPEN_INSTALL="cmake"
 export ZOPEN_INSTALL_OPTS="--install ../build"
 # ZOPEN_CHECK is often 'ctest' or a custom function.
@@ -504,53 +514,57 @@ EOF
 )
     ;;
       "Python")
-        build_system_config=$(cat <<'EOF'
+        # Ask about C extensions if not already specified
+        if [ -z "$c_extensions" ]; then
+          if $non_interactive; then
+            c_extensions=false
+          else
+            c_ext_input=$(getInputOrArg "" "Does this Python project contain C extensions? (y/n) [default: n]")
+            c_ext_upper=$(echo "$c_ext_input" | tr '[:lower:]' '[:upper:]')
+            if [ "$c_ext_upper" = "Y" ] || [ "$c_ext_upper" = "YES" ]; then
+              c_extensions=true
+            else
+              c_extensions=false
+            fi
+          fi
+        fi
+
+        if [ "$c_extensions" = "true" ]; then
+          build_system_config=$(cat <<'EOF'
+### Settings for Python build system (with C extensions)
+### Build, check, install, and env are handled natively by zopen-build
+export ZOPEN_BUILD_SYSTEM="Python"
+EOF
+)
+        else
+          build_system_config=$(cat <<'EOF'
 ### Settings for Python build system
-export ZOPEN_CONFIGURE="skip"
-export ZOPEN_CHECK="zopen_custom_check"
-export ZOPEN_MAKE="zopen_custom_build"
-export ZOPEN_INSTALL="zopen_custom_install"
+### Build, check, install, and env are handled natively by zopen-build
+export ZOPEN_BUILD_SYSTEM="Python"
+export ZOPEN_COMP="skip"
 EOF
 )
-        custom_functions=$(cat <<'EOF'
-zopen_custom_build() {
-  python -m venv .venv
-  . .venv/bin/activate
-  pip install --upgrade pip build
-  python -m build --wheel
-  zopen_build_result=$?
-  deactivate
-  return "${zopen_build_result}"
-}
-
-zopen_custom_check() {
-  . .venv/bin/activate
-  # Add test commands here, e.g., pytest
-  zopen_check_result=$?
-  deactivate
-  return "${zopen_check_result}"
-}
-
-zopen_custom_install() {
-  . .venv/bin/activate
-  # Install the built wheel to the target directory
-  pip install --no-deps --target="${ZOPEN_INSTALL_DIR}/lib/python" dist/*.whl
-  # Example: Install dependencies from a requirements file
-  # pip install --target="${ZOPEN_INSTALL_DIR}/lib/python" -r requirements.txt
-  deactivate
-}
-
-zopen_append_to_env() {
-  cat <<END
-# Add the zopen installed packages to PYTHONPATH
-PYTHONPATH="${PYTHONPATH}:\${PWD}/lib/python"
-export PYTHONPATH="$(deleteDuplicateEntries "$PYTHONPATH" ":")"
-END
-}
-EOF
-)
+        fi
+        custom_functions=""
     ;;
     esac
+fi
+
+# Set zopen_check_results based on build system
+if [ "${build_system}" = "Python" ]; then
+  # Python check results are handled natively by zopen-build
+  check_results_func="# zopen_check_results is provided natively by zopen-build for Python"
+else
+  check_results_func="zopen_check_results() {
+  dir=\"\$1\"
+  pfx=\"\$2\"
+  chk=\"\$1/\$2_check.log\"
+  # Add logic to extract the test results here:
+  echo \"actualFailures:0\"
+  echo \"totalTests:1\"
+  echo \"expectedFailures:0\"
+  echo \"expectedTotalTests:1\"
+}"
 fi
 
 stablePath=$(getInputOrArg "$stablePath" "Enter ${name}'s stable release source url:")
@@ -559,18 +573,19 @@ stablePath=$(getInputOrArg "$stablePath" "Enter ${name}'s stable release source 
 latest_tag=""
 if echo "${stablePath}" | grep -q -E "\.git$"; then
     printInfo "Attempting to find the latest git tag from ${stablePath}..."
-    latest_tag_line=$(git ls-remote --tags --sort="-v:refname" "${stablePath}" 2>/dev/null | head -n 1)
-    if [ -n "${latest_tag_line}" ]; then
-        tag_candidate=$(echo "${latest_tag_line}" | awk '{print $2}' | sed 's#refs/tags/##')
-        if [ -n "$tag_candidate" ]; then
-            confirmed_tag=$(getInputOrArg "" "Latest tag found: ${tag_candidate}. Press Enter to use this tag, or enter a different one:")
-            if [ -n "$confirmed_tag" ]; then
-                latest_tag="${confirmed_tag}"
-            else
-                latest_tag="${tag_candidate}"
-            fi
-            printInfo "Using tag: ${latest_tag}"
+    # Filter to stable tags only (vX.Y.Z or X.Y.Z with no pre-release suffix)
+    # This excludes tags like v3.0.0-0.9.1.1, v2.14.0rc1, v2.14.0-dev11
+    tag_candidate=$(git ls-remote --tags --sort="-v:refname" "${stablePath}" 2>/dev/null \
+        | awk '{print $2}' | sed 's#refs/tags/##' | grep -v '\^{}' \
+        | grep -E '^v?[0-9]+\.[0-9]+(\.[0-9]+)?$' | head -n 1)
+    if [ -n "${tag_candidate}" ]; then
+        confirmed_tag=$(getInputOrArg "" "Latest tag found: ${tag_candidate}. Press Enter to use this tag, or enter a different one:")
+        if [ -n "$confirmed_tag" ]; then
+            latest_tag="${confirmed_tag}"
+        else
+            latest_tag="${tag_candidate}"
         fi
+        printInfo "Using tag: ${latest_tag}"
     else
         printWarning "Could not automatically determine the latest tag."
     fi
@@ -592,7 +607,7 @@ if [ "$port_type" = "BUILD" ]; then
       "Gradle") auto_dep="gradle check_java" ;;
       "Maven") auto_dep="maven check_java" ;;
       "Meson") auto_dep="meson" ;;
-      "Python") auto_dep="check_python" ;;
+      "Python") auto_dep="check_python grep" ;;  # grep needed for zopen_check_results (z/OS grep lacks -oE)
     esac
 
     if [ -n "$auto_dep" ]; then
@@ -622,7 +637,7 @@ buildenv="${name}port/buildenv"; touch "${buildenv}" && chtag -tc 819 "${builden
 cp "${MYDIR}/../data/CONTRIBUTING.md" "${name}port/CONTRIBUTING.md"
 cp "${MYDIR}/../data/CODEOWNERS" "${name}port/CODEOWNERS"
 mkdir -p "${name}port/.github/workflows"; cp "${MYDIR}"/../data/*.yml "${name}port/.github/workflows/" 2>/dev/null
-default_build_line="STABLE"; if [ "${buildline}" = "dev" ]; then default_build_line="DEV"; fi
+default_build_line="STABLE"; if [ "$(echo "${buildline}" | tr '[:upper:]' '[:lower:]')" = "dev" ]; then default_build_line="DEV"; fi
 
 # Prepare version variables based on whether a tag was found
 nameUpper=$(echo "$name" | awk '{print toupper($0)}')
@@ -674,16 +689,7 @@ ${build_system_config}
 ### Required user-supplied functions
 ###
 
-zopen_check_results() {
-  dir=\"\$1\" 
-  pfx=\"\$2\" 
-  chk=\"\$1/\$2_check.log\"
-  # Add logic to extract the test results here:
-  echo \"actualFailures:0\" 
-  echo \"totalTests:1\" 
-  echo \"expectedFailures:0\"
-  echo \"expectedTotalTests:1\"
-}
+${check_results_func}
 
 zopen_get_version() {
   ${get_version_impl}
