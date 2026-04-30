@@ -951,7 +951,7 @@ will be used, which include attempting to hard link the object files instead of 
 - Affected release URL: [zlib (Build 2529) - (STABLE)](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_2529)
 
 - **(CRITICAL severity) CVE-2023-45853**: MiniZip in zlib through 1.3 has an integer overflow and resultant heap-based buffer overflow in zipOpenNewFileInZip4_64 via a long filename, comment, or extra field. NOTE: MiniZip is not a supported part of the zlib product. NOTE: pyminizip through 0.2.6 is also vulnerable because it bundles an affected zlib version, and exposes the applicable MiniZip code through its compress API.
-  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/zlibport/releases/tag/DEV_zlibport_4077)**.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_4242)**.
 
 </details>
 
@@ -961,7 +961,7 @@ will be used, which include attempting to hard link the object files instead of 
 - Affected release URL: [zlib (Build 2700) - (STABLE)](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_2700)
 
 - **(CRITICAL severity) CVE-2023-45853**: MiniZip in zlib through 1.3 has an integer overflow and resultant heap-based buffer overflow in zipOpenNewFileInZip4_64 via a long filename, comment, or extra field. NOTE: MiniZip is not a supported part of the zlib product. NOTE: pyminizip through 0.2.6 is also vulnerable because it bundles an affected zlib version, and exposes the applicable MiniZip code through its compress API.
-  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/zlibport/releases/tag/DEV_zlibport_4077)**.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_4242)**.
 
 </details>
 
@@ -971,7 +971,7 @@ will be used, which include attempting to hard link the object files instead of 
 - Affected release URL: [zlib (Build 2930) - (STABLE)](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_2930)
 
 - **(CRITICAL severity) CVE-2023-45853**: MiniZip in zlib through 1.3 has an integer overflow and resultant heap-based buffer overflow in zipOpenNewFileInZip4_64 via a long filename, comment, or extra field. NOTE: MiniZip is not a supported part of the zlib product. NOTE: pyminizip through 0.2.6 is also vulnerable because it bundles an affected zlib version, and exposes the applicable MiniZip code through its compress API.
-  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/zlibport/releases/tag/DEV_zlibport_4077)**.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_4242)**.
 
 </details>
 
@@ -981,7 +981,7 @@ will be used, which include attempting to hard link the object files instead of 
 - Affected release URL: [zlib (Build 2985) - (STABLE)](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_2985)
 
 - **(CRITICAL severity) CVE-2023-45853**: MiniZip in zlib through 1.3 has an integer overflow and resultant heap-based buffer overflow in zipOpenNewFileInZip4_64 via a long filename, comment, or extra field. NOTE: MiniZip is not a supported part of the zlib product. NOTE: pyminizip through 0.2.6 is also vulnerable because it bundles an affected zlib version, and exposes the applicable MiniZip code through its compress API.
-  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/zlibport/releases/tag/DEV_zlibport_4077)**.
+  - **This vulnerability is resolved in the [latest release](https://github.com/zopencommunity/zlibport/releases/tag/STABLE_zlibport_4242)**.
 
 </details>
 

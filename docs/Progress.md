@@ -105,9 +105,9 @@
 <div class="tool-item-filterable" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/zoslibport" target="_blank" rel="noopener noreferrer">zoslibport</a></strong></div>
-    <div class="tool-status">154</div>
+    <div class="tool-status">153</div>
     <div class="tool-test">100.0%</div>
-    <div class="tool-release">alternatives, apr, avro-c-lib, bash, bash-completion, bc, bison, boost, byacc, bzip2, c3270, check, clang_wrapper, clangd, cmake, coreutils, cpio, cppcheck, cppunit, cronie, cscope, ctags, curl, dialog, diffutils, dnf5, doom-ascii, doxygen, duckdb, ed, expat, expect, findutils, fish, flex, fmt, gawk, getopt, gettext, gflags, git, glib, gn, gnulib, gperf, gpg, grep, groff, grpc, gzip, hello, hexcurse, htop, jansson, jemalloc, jenkins, jq, jsonc, less, libarchive, libassuan, libbsd, libevent, libgcrypt, libgdbm, libgpgerror, libgpgme, libkqueue, libksba, libmd, libpcre, libpcre2, libpipeline, librabbitmq, librdkafka, librepo, libsasl2, libserdes, libsolv, libssh2, libtool, libuv, libxml2, libxslt, libyaml, llamacpp, logrotate, lpeg, lua, luv, lynx, lzip, m4, make, man-db, meta, moreutils, mpfr, multitail, my_basic, nano, ncdu, neovim, netpbm, nginx, ninja, npth, ntbtls, oniguruma, openldap, openssh, openssl, patch, perl, php, pinentry, pkgconfig, popt, procps, protobuf, quilt, re2c, rsync, ruby, scdoc, screen, sed, shdoc, snappy-c, spdlog, sqlite, sshpass, sudo, tar, tcl, tcltls, texinfo, thesilversearcher, tig, tmux, toml11, unzip, util-linux, uucp, vim, wget, xmlto, xxhash, xz, z-vector-search, zip, zlib, zstd, zusage</div>
+    <div class="tool-release">alternatives, apr, avro-c-lib, bash, bash-completion, bc, bison, boost, byacc, c3270, check, clang_wrapper, clangd, cmake, coreutils, cpio, cppcheck, cppunit, cronie, cscope, ctags, curl, dialog, diffutils, dnf5, doom-ascii, doxygen, duckdb, ed, expat, expect, findutils, fish, flex, fmt, gawk, getopt, gettext, gflags, git, glib, gn, gnulib, gperf, gpg, grep, groff, grpc, gzip, hello, hexcurse, htop, jansson, jemalloc, jenkins, jq, jsonc, less, libarchive, libassuan, libbsd, libevent, libgcrypt, libgdbm, libgpgerror, libgpgme, libkqueue, libksba, libmd, libpcre, libpcre2, libpipeline, librabbitmq, librdkafka, librepo, libsasl2, libserdes, libsolv, libssh2, libtool, libuv, libxml2, libxslt, libyaml, llamacpp, logrotate, lpeg, lua, luv, lynx, lzip, m4, make, man-db, meta, moreutils, mpfr, multitail, my_basic, nano, ncdu, neovim, netpbm, nginx, ninja, npth, ntbtls, oniguruma, openldap, openssh, openssl, patch, perl, php, pinentry, pkgconfig, popt, procps, protobuf, quilt, re2c, rsync, ruby, scdoc, screen, sed, shdoc, snappy-c, spdlog, sqlite, sshpass, sudo, tar, tcl, tcltls, texinfo, thesilversearcher, tig, tmux, toml11, unzip, util-linux, uucp, vim, wget, xmlto, xxhash, xz, z-vector-search, zip, zlib, zstd, zusage</div>
     <div class="tool-desc"></div>
   </div>
 </div>
@@ -115,7 +115,7 @@
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/coreutilsport" target="_blank" rel="noopener noreferrer">coreutilsport</a></strong></div>
     <div class="tool-status">129</div>
-    <div class="tool-test">92.5%</div>
+    <div class="tool-test">92.8%</div>
     <div class="tool-release">alternatives, apr, autoconf, automake, avro-c-lib, bash, bash-completion, bc, bison, blis, boost, byacc, c3270, ccache, check, cppcheck, cppunit, cronie, crush, curl, diffutils, direnv, doom-ascii, dos2unix, doxygen, ed, expat, findutils, flex, fq, getopt, gettext, git, git-extras, git-lfs, githubcli, gitlabcli, glib, glow, gnulib, grep, groff, gzip, hello, htop, jansson, jd, jemalloc, jq, less, libarchive, libbsd, libdio, libevent, libgdbm, libgpgerror, libiconv, libkqueue, libmd, liboqs, libpcre, libpcre2, libpsl, librdkafka, libsasl2, libserdes, libtool, libxml2, logrotate, lua, luarocks, lz4, lzip, m4, man-db, meta, metaldio, moreutils, multitail, ncurses, neovim, netpbm, nnn, ntbtls, oniguruma, openldap, openssh, oqs-provider, p7zip, patch, perl, php, pkgconfig, procps, protobuf, quilt, re2c, readline, redis, rpm, rsync, ruby, scc, scdoc, sed, shdoc, spdlog, sqlite-vec, sudo, texinfo, thesilversearcher, tig, tmux, tree, util-linux, util-macros, vim, which, xorgproto, xxhash, z3, zedc_ascii, zlib-ng, zos-code-page-tools, zoslib, zosnc, zospstree, zstd, zusage</div>
     <div class="tool-desc"></div>
   </div>
@@ -123,9 +123,9 @@
 <div class="tool-item-filterable" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/curlport" target="_blank" rel="noopener noreferrer">curlport</a></strong></div>
-    <div class="tool-status">83</div>
+    <div class="tool-status">81</div>
     <div class="tool-test">99.7%</div>
-    <div class="tool-release">automake, avro-c-lib, bash, bison, buildkite, bzip2, c3270, cmake, coreutils, createrepo_c, cronie, cscope, curl, diffutils, dnf5, dos2unix, doxygen, expat, findutils, frp, gawk, gettext, gin, git, gitlab-runner, gn, gnulib, gperf, gpg, grep, groff, gzip, hello, help2man, less, libassuan, libgcrypt, libgpgerror, libgpgme, libksba, liboqs, libpipeline, librdkafka, libserdes, libtool, libyaml, llamacpp, luarocks, lz4, make, man-db, maven, meta, moreutils, ncdu, ncurses, neovim, ninja, npth, ntbtls, oniguruma, openssl, oqs-provider, patch, perl, php, pinentry, procps, rsync, screen, sed, snappy-c, tar, tcl, terraform, texinfo, unzip, uucp, wget, which, xxhash, xz, zstd</div>
+    <div class="tool-release">automake, avro-c-lib, bash, bison, buildkite, c3270, cmake, coreutils, createrepo_c, cronie, cscope, curl, diffutils, dnf5, dos2unix, doxygen, expat, findutils, frp, gawk, gin, git, gitlab-runner, gn, gnulib, gperf, gpg, grep, groff, gzip, hello, help2man, less, libassuan, libgcrypt, libgpgerror, libgpgme, libksba, liboqs, libpipeline, librdkafka, libserdes, libtool, libyaml, llamacpp, luarocks, lz4, make, man-db, maven, meta, moreutils, ncdu, ncurses, neovim, ninja, npth, ntbtls, oniguruma, openssl, oqs-provider, patch, perl, php, pinentry, procps, rsync, screen, sed, snappy-c, tar, tcl, terraform, texinfo, unzip, uucp, wget, which, xxhash, xz, zstd</div>
     <div class="tool-desc"></div>
   </div>
 </div>
@@ -177,18 +177,18 @@
 <div class="tool-item-filterable" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/gzipport" target="_blank" rel="noopener noreferrer">gzipport</a></strong></div>
-    <div class="tool-status">62</div>
+    <div class="tool-status">60</div>
     <div class="tool-test">100.0%</div>
-    <div class="tool-release">automake, bash, bison, bzip2, ccache, coreutils, cscope, curl, direnv, dos2unix, findutils, flex, gawk, gettext, git, git-lfs, gn, gperf, hello, htop, less, libpsl, libtool, logrotate, lpeg, lz4, m4, make, man-db, mc, meta, moreutils, multitail, ncdu, neovim, ninja, oniguruma, openssh, openssl, p7zip, patch, perl, php, procps, prometheus, rpm, rsync, screen, sed, sqlite, sshpass, tar, tcl, texinfo, thesilversearcher, util-linux, uucp, wget, which, xxhash, xz, zstd</div>
+    <div class="tool-release">automake, bash, bison, ccache, coreutils, cscope, curl, direnv, dos2unix, findutils, flex, gawk, git, git-lfs, gn, gperf, hello, htop, less, libpsl, libtool, logrotate, lpeg, lz4, m4, make, man-db, mc, meta, moreutils, multitail, ncdu, neovim, ninja, oniguruma, openssh, openssl, p7zip, patch, perl, php, procps, prometheus, rpm, rsync, screen, sed, sqlite, sshpass, tar, tcl, texinfo, thesilversearcher, util-linux, uucp, wget, which, xxhash, xz, zstd</div>
     <div class="tool-desc"></div>
   </div>
 </div>
 <div class="tool-item-filterable" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/tarport" target="_blank" rel="noopener noreferrer">tarport</a></strong></div>
-    <div class="tool-status">60</div>
+    <div class="tool-status">59</div>
     <div class="tool-test">88.6%</div>
-    <div class="tool-release">apr, automake, bash, bzip2, ccache, check, coreutils, cscope, curl, direnv, ed, findutils, flex, gawk, gettext, git, git-lfs, gpg, grep, hello, htop, jansson, less, libassuan, libbsd, libgcrypt, libgpgerror, libgpgme, libksba, libmd, libsasl2, libtool, libyaml, lpeg, m4, make, man-db, mc, meta, multitail, ncdu, neovim, ninja, npth, ntbtls, oniguruma, openssh, openssl, pinentry, procps, prometheus, re2c, rpm, screen, sqlite, sshpass, thesilversearcher, unzip, util-linux, uucp</div>
+    <div class="tool-release">apr, automake, bash, ccache, check, coreutils, cscope, curl, direnv, ed, findutils, flex, gawk, gettext, git, git-lfs, gpg, grep, hello, htop, jansson, less, libassuan, libbsd, libgcrypt, libgpgerror, libgpgme, libksba, libmd, libsasl2, libtool, libyaml, lpeg, m4, make, man-db, mc, meta, multitail, ncdu, neovim, ninja, npth, ntbtls, oniguruma, openssh, openssl, pinentry, procps, prometheus, re2c, rpm, screen, sqlite, sshpass, thesilversearcher, unzip, util-linux, uucp</div>
     <div class="tool-desc"></div>
   </div>
 </div>
@@ -2515,4 +2515,4 @@
   </div>
 </div>
 
-Last updated:  2026-04-29 06:18:29 UTC
+Last updated:  2026-04-30 06:19:50 UTC

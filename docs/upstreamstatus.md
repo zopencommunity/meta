@@ -1,11 +1,11 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2026-04-29 06:15:57 EDT.*
+*Report generated on: 2026-04-30 06:17:15 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 307
-- **Total Current Lines of Code (LOC) in Patches:** 58,045
+- **Total Current Lines of Code (LOC) in Patches:** 58,046
 - **Total Number of Current Patch Files:** 1,042
 - **Average Current Patch LOC per Project:** 189.07
 - **Average Current Patch Count per Project:** 3.39
@@ -36,7 +36,7 @@
 | [gpgport](#repo-gpgport) | 1,560 | +0 | 32 |
 | [rsyncport](#repo-rsyncport) | 1,430 | +0 | 21 |
 | [cmakeport](#repo-cmakeport) | 1,348 | +0 | 1 |
-| [coreutilsport](#repo-coreutilsport) | 1,327 | +0 | 20 |
+| [coreutilsport](#repo-coreutilsport) | 1,328 | +1 | 20 |
 | [sudoport](#repo-sudoport) | 1,278 | +0 | 30 |
 | [gitport](#repo-gitport) | 1,056 | +0 | 33 |
 | [grpcport](#repo-grpcport) | 1,017 | +0 | 8 |
@@ -895,7 +895,7 @@
 ## coreutilsport
 
 - **Origin Date (First Commit):** 2022-04-29
-- **Current Patch LOC:** 1,327
+- **Current Patch LOC:** 1,328
 - **Current Patch Count:** 20
 
 ### Historical Trends
@@ -918,13 +918,13 @@
 | `stable-patches/lib/renameatu.c.patch` | `stable-patches` | 12 |
 | `stable-patches/lib/stat-time.h.patch` | `stable-patches` | 13 |
 | `stable-patches/src/basenc.c.patch` | `stable-patches` | 25 |
-| `stable-patches/src/cat.c.patch` | `stable-patches` | 316 |
+| `stable-patches/src/cat.c.patch` | `stable-patches` | 318 |
 | `stable-patches/src/cksum.c.patch` | `stable-patches` | 72 |
 | `stable-patches/src/copy.c.patch` | `stable-patches` | 100 |
 | `stable-patches/src/cp.c.patch` | `stable-patches` | 81 |
 | `stable-patches/src/ls.c.patch` | `stable-patches` | 209 |
 | `stable-patches/src/od.c.patch` | `stable-patches` | 27 |
-| `stable-patches/src/pinky.c.patch` | `stable-patches` | 50 |
+| `stable-patches/src/pinky.c.patch` | `stable-patches` | 49 |
 | `stable-patches/src/stat.c.patch` | `stable-patches` | 253 |
 | `stable-patches/src/timeout.c.patch` | `stable-patches` | 30 |
 
