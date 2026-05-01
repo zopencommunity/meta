@@ -219,6 +219,7 @@
 - 2026-02-17: [Update dnf5-version to 5.4.0.0 from 5.3.0.0](https://github.com/zopencommunity/dnf5port/pull/8) ❌
 
 ### doxygenport
+- 2026-04-30: [Update doxygen-version to Release_1_17_0 from Release_1_13_2](https://github.com/zopencommunity/doxygenport/pull/14) ❌
 - 2026-01-11: [Update doxygen-version to Release_1_16_1 from Release_1_13_2](https://github.com/zopencommunity/doxygenport/pull/13) ❌
 - 2026-01-05: [Update doxygen-version to Release_1_16_0 from Release_1_13_2](https://github.com/zopencommunity/doxygenport/pull/12) ❌
 - 2025-10-22: [Update doxygen-version to Release_1_15_0 from Release_1_13_2](https://github.com/zopencommunity/doxygenport/pull/11) ❌
@@ -494,6 +495,7 @@
 - 2025-12-31: [Update micro-version to 2.0.15 from 2.0.14](https://github.com/zopencommunity/microport/pull/1) ❌
 
 ### mimallocport
+- 2026-04-30: [Update mimalloc-version to 2.3.2 from 2.2.3](https://github.com/zopencommunity/mimallocport/pull/6) ❌
 - 2026-04-21: [Update mimalloc-version to 2.3.1 from 2.2.3](https://github.com/zopencommunity/mimallocport/pull/5) ❌
 - 2026-04-16: [Update mimalloc-version to 2.3.0 from 2.2.3](https://github.com/zopencommunity/mimallocport/pull/4) ❌
 - 2026-01-16: [Update mimalloc-version to 2.2.7 from 2.2.3](https://github.com/zopencommunity/mimallocport/pull/3) ❌
@@ -516,6 +518,7 @@
 - 2026-04-08: [Update nano-version to 9.0 from 8.7.1](https://github.com/zopencommunity/nanoport/pull/23) ❌
 
 ### natsport
+- 2026-04-30: [Update nats-version to 2.14.0 from 2.12.5](https://github.com/zopencommunity/natsport/pull/42) ❌
 - 2026-04-28: [Update nats-version to 2.12.8 from 2.12.5](https://github.com/zopencommunity/natsport/pull/41) ❌
 - 2026-04-15: [Update nats-version to 2.12.7 from 2.12.5](https://github.com/zopencommunity/natsport/pull/40) ❌
 - 2026-03-25: [Update nats-version to 2.12.6 from 2.12.5](https://github.com/zopencommunity/natsport/pull/39) ❌
@@ -1113,5 +1116,5 @@
 ---
 
 
-> Last updated: 2026-04-30 06:11:53 EDT
+> Last updated: 2026-05-01 06:10:27 EDT
 

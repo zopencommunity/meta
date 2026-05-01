@@ -110,10 +110,18 @@ SYSTEM</p>
 (GNU Make, CMake, Gradle, Maven, etc.)</p>
 
 
+<p style="margin-left:11%;"><b>&minus;&minus;c&minus;extensions</b></p>
+
+<p style="margin-left:22%;">Python project contains C
+extensions (requires C compiler)</p>
+
+
 <p style="margin-left:11%;"><b>&minus;&minus;stable&minus;url</b>
 URL</p>
 
-<p style="margin-left:22%;">Stable release source URL</p>
+<p style="margin-left:22%;">Stable release source URL (Git
+HTTPS clone URL ending in .git, or a direct archive URL
+ending in .tar.gz, .tar.xz, .tar.bz2, .zip, etc.)</p>
 
 
 <p style="margin-left:11%;"><b>&minus;&minus;stable&minus;deps</b>
@@ -126,7 +134,9 @@ DEPS</p>
 <p style="margin-left:11%;"><b>&minus;&minus;dev&minus;url</b>
 URL</p>
 
-<p style="margin-left:22%;">Dev&minus;line source URL</p>
+<p style="margin-left:22%;">Dev&minus;line source URL (same
+formats as <b>&minus;&minus;stable&minus;url</b>; typically
+the main&minus;branch Git clone URL)</p>
 
 
 <p style="margin-left:11%;"><b>&minus;&minus;dev&minus;deps</b>

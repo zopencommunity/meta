@@ -480,12 +480,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="byacc" data-searchable-text="byacc Red 45.6% STABLE_byacc_4002 A parser generator compatible with Yacc development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="byacc" data-searchable-text="byacc Red 45.6% STABLE_byacc_3278 A parser generator compatible with Yacc development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/byaccport" target="_blank" rel="noopener noreferrer">byacc</a></strong></div>
     <div class="tool-status">Status: Red</div>
     <div class="tool-test">Test: 45.6%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/byaccport/releases/download/STABLE_byaccport_4002/byacc-20260126.20260125_151944.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_byacc_4002</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/byaccport/releases/download/STABLE_byaccport_3278/byacc-20241231.20250505_035356.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_byacc_3278</a></div>
     <div class="tool-desc" title="A parser generator compatible with Yacc">A parser generator compatible with Yacc</div>
   </div>
 </div>
@@ -1622,12 +1622,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="libassuan" data-searchable-text="libassuan Green 100.0% STABLE_libassuan_3650 A library for the Assuan protocol, used for IPC between GnuPG components library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="libassuan" data-searchable-text="libassuan Green 100.0% STABLE_libassuan_3239 A library for the Assuan protocol, used for IPC between GnuPG components library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libassuanport" target="_blank" rel="noopener noreferrer">libassuan</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/libassuanport/releases/download/STABLE_libassuanport_3650/libassuan-3.0.2.20250807_094158.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libassuan_3650</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/libassuanport/releases/download/STABLE_libassuanport_3239/libassuan-3.0.2.20250417_071410.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libassuan_3239</a></div>
     <div class="tool-desc" title="A library for the Assuan protocol, used for IPC between GnuPG components">A library for the Assuan protocol, used for IPC between GnuPG components</div>
   </div>
 </div>
@@ -2226,12 +2226,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="libassuan" data-searchable-text="libassuan Green 100.0% STABLE_libassuan_3650 A library for the Assuan protocol, used for IPC between GnuPG components security port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="libassuan" data-searchable-text="libassuan Green 100.0% STABLE_libassuan_3239 A library for the Assuan protocol, used for IPC between GnuPG components security port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libassuanport" target="_blank" rel="noopener noreferrer">libassuan</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/libassuanport/releases/download/STABLE_libassuanport_3650/libassuan-3.0.2.20250807_094158.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libassuan_3650</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/libassuanport/releases/download/STABLE_libassuanport_3239/libassuan-3.0.2.20250417_071410.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libassuan_3239</a></div>
     <div class="tool-desc" title="A library for the Assuan protocol, used for IPC between GnuPG components">A library for the Assuan protocol, used for IPC between GnuPG components</div>
   </div>
 </div>
@@ -2336,12 +2336,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="pinentry" data-searchable-text="pinentry Green 100.0% STABLE_pinentry_3595 A secure passphrase entry utility security port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="pinentry" data-searchable-text="pinentry Green 100.0% STABLE_pinentry_4249 A secure passphrase entry utility security port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/pinentryport" target="_blank" rel="noopener noreferrer">pinentry</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/pinentryport/releases/download/STABLE_pinentryport_3595/pinentry-1.3.2.20250728_152330.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_pinentry_3595</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/pinentryport/releases/download/STABLE_pinentryport_4249/pinentry-1.3.2.20260430_131539.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_pinentry_4249</a></div>
     <div class="tool-desc" title="A secure passphrase entry utility">A secure passphrase entry utility</div>
   </div>
 </div>
@@ -2590,12 +2590,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="gettext" data-searchable-text="gettext Blue 97.5% STABLE_gettext_4087 A library for internationalization and localization uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="gettext" data-searchable-text="gettext Blue 97.5% STABLE_gettext_4248 A library for internationalization and localization uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/gettextport" target="_blank" rel="noopener noreferrer">gettext</a></strong></div>
     <div class="tool-status">Status: Blue</div>
     <div class="tool-test">Test: 97.5%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/gettextport/releases/download/STABLE_gettextport_4087/gettext-1.0.20260225_035324.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_gettext_4087</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/gettextport/releases/download/STABLE_gettextport_4248/gettext-1.0.20260430_082423.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_gettext_4248</a></div>
     <div class="tool-desc" title="A library for internationalization and localization">A library for internationalization and localization</div>
   </div>
 </div>
@@ -3056,12 +3056,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="meta" data-searchable-text="meta Green 100.0% STABLE_meta_4246 zopen package manager utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="meta" data-searchable-text="meta Green 100.0% STABLE_meta_4250 zopen package manager utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/metaport" target="_blank" rel="noopener noreferrer">meta</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/metaport/releases/download/STABLE_metaport_4246/meta-main.20260430_080623.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_meta_4246</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/metaport/releases/download/STABLE_metaport_4250/meta-main.20260430_191058.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_meta_4250</a></div>
     <div class="tool-desc" title="zopen package manager">zopen package manager</div>
   </div>
 </div>
@@ -3409,4 +3409,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2026-04-30 06:19:50 UTC
+Last updated:  2026-05-01 06:18:30 UTC

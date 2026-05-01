@@ -1,13 +1,13 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2026-04-30 06:17:15 EDT.*
+*Report generated on: 2026-05-01 06:16:15 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 307
-- **Total Current Lines of Code (LOC) in Patches:** 58,046
+- **Total Current Lines of Code (LOC) in Patches:** 58,057
 - **Total Number of Current Patch Files:** 1,042
-- **Average Current Patch LOC per Project:** 189.07
+- **Average Current Patch LOC per Project:** 189.11
 - **Average Current Patch Count per Project:** 3.39
 
 ### Historical Trends (All Projects)
@@ -26,17 +26,17 @@
 |---|:---|:---|:---|
 | [htopport](#repo-htopport) | 4,550 | +0 | 22 |
 | [stablediffusionport](#repo-stablediffusionport) | 2,905 | +0 | 6 |
-| [libuvport](#repo-libuvport) | 2,494 | +9 | 32 |
-| [librdkafkaport](#repo-librdkafkaport) | 2,490 | -148 | 54 |
+| [libuvport](#repo-libuvport) | 2,494 | +0 | 32 |
+| [librdkafkaport](#repo-librdkafkaport) | 2,490 | +0 | 54 |
 | [oqs-providerport](#repo-oqs-providerport) | 2,037 | +0 | 18 |
-| [curlport](#repo-curlport) | 1,844 | +3 | 47 |
+| [curlport](#repo-curlport) | 1,844 | +0 | 47 |
 | [bashport](#repo-bashport) | 1,797 | -2,629 | 27 |
-| [rpmport](#repo-rpmport) | 1,792 | -22 | 32 |
+| [rpmport](#repo-rpmport) | 1,792 | +0 | 32 |
 | [llamacppport](#repo-llamacppport) | 1,649 | +0 | 35 |
 | [gpgport](#repo-gpgport) | 1,560 | +0 | 32 |
 | [rsyncport](#repo-rsyncport) | 1,430 | +0 | 21 |
 | [cmakeport](#repo-cmakeport) | 1,348 | +0 | 1 |
-| [coreutilsport](#repo-coreutilsport) | 1,328 | +1 | 20 |
+| [coreutilsport](#repo-coreutilsport) | 1,328 | +0 | 20 |
 | [sudoport](#repo-sudoport) | 1,278 | +0 | 30 |
 | [gitport](#repo-gitport) | 1,056 | +0 | 33 |
 | [grpcport](#repo-grpcport) | 1,017 | +0 | 8 |
@@ -54,7 +54,7 @@
 | [glibport](#repo-glibport) | 537 | +0 | 7 |
 | [inetutilsport](#repo-inetutilsport) | 514 | +0 | 20 |
 | [cronieport](#repo-cronieport) | 510 | +0 | 13 |
-| [screenport](#repo-screenport) | 502 | -67 | 8 |
+| [screenport](#repo-screenport) | 502 | +0 | 8 |
 | [libpcapport](#repo-libpcapport) | 440 | +0 | 8 |
 | [libompport](#repo-libompport) | 437 | +0 | 2 |
 | [treeport](#repo-treeport) | 425 | +0 | 3 |
@@ -82,7 +82,7 @@
 | [mesonport](#repo-mesonport) | 257 | +0 | 9 |
 | [gitlab-runnerport](#repo-gitlab-runnerport) | 241 | +0 | 10 |
 | [zstdport](#repo-zstdport) | 236 | +0 | 4 |
-| [fileport](#repo-fileport) | 234 | +219 | 3 |
+| [fileport](#repo-fileport) | 234 | +0 | 3 |
 | [toml11port](#repo-toml11port) | 217 | +0 | 3 |
 | [ninjaport](#repo-ninjaport) | 210 | +0 | 8 |
 | [nnnport](#repo-nnnport) | 206 | +0 | 1 |
@@ -95,13 +95,13 @@
 | [tclport](#repo-tclport) | 180 | +0 | 2 |
 | [jemallocport](#repo-jemallocport) | 166 | +0 | 1 |
 | [groffport](#repo-groffport) | 165 | +0 | 13 |
-| [autoconfport](#repo-autoconfport) | 162 | +11 | 6 |
+| [autoconfport](#repo-autoconfport) | 162 | +0 | 6 |
 | [mcport](#repo-mcport) | 155 | +0 | 1 |
 | [moreutilsport](#repo-moreutilsport) | 151 | +0 | 1 |
 | [libserdesport](#repo-libserdesport) | 142 | +0 | 4 |
+| [pinentryport](#repo-pinentryport) | 135 | +0 | 5 |
 | [multitailport](#repo-multitailport) | 130 | +0 | 1 |
 | [p7zipport](#repo-p7zipport) | 126 | +0 | 1 |
-| [pinentryport](#repo-pinentryport) | 124 | +0 | 5 |
 | [ncursesport](#repo-ncursesport) | 121 | +0 | 3 |
 | [thesilversearcherport](#repo-thesilversearcherport) | 118 | +0 | 4 |
 | [gas2asmport](#repo-gas2asmport) | 116 | +0 | 4 |
@@ -148,7 +148,7 @@
 | [xxhashport](#repo-xxhashport) | 47 | +0 | 2 |
 | [whichport](#repo-whichport) | 47 | +0 | 2 |
 | [tigport](#repo-tigport) | 47 | +0 | 1 |
-| [sedport](#repo-sedport) | 44 | -16 | 1 |
+| [sedport](#repo-sedport) | 44 | +0 | 1 |
 | [automakeport](#repo-automakeport) | 41 | +0 | 2 |
 | [catimgport](#repo-catimgport) | 37 | +0 | 1 |
 | [zlib-ngport](#repo-zlib-ngport) | 35 | +0 | 2 |
@@ -196,7 +196,7 @@
 | [libmdport](#repo-libmdport) | 15 | +0 | 1 |
 | [cppunitport](#repo-cppunitport) | 15 | +0 | 1 |
 | [libxauport](#repo-libxauport) | 15 | +0 | 1 |
-| [onigurumaport](#repo-onigurumaport) | 14 | +14 | 1 |
+| [onigurumaport](#repo-onigurumaport) | 14 | +0 | 1 |
 | [nghttp2port](#repo-nghttp2port) | 14 | +0 | 1 |
 | [bisonport](#repo-bisonport) | 13 | +0 | 1 |
 | [ncduport](#repo-ncduport) | 13 | +0 | 1 |
@@ -214,7 +214,7 @@
 | [libpslport](#repo-libpslport) | 12 | +0 | 1 |
 | [quiltport](#repo-quiltport) | 10 | +0 | 1 |
 | [zlibport](#repo-zlibport) | 0 | +0 | 0 |
-| [lessport](#repo-lessport) | 0 | -22 | 0 |
+| [lessport](#repo-lessport) | 0 | +0 | 0 |
 | [help2manport](#repo-help2manport) | 0 | +0 | 0 |
 | [zotsampleport](#repo-zotsampleport) | 0 | +0 | 0 |
 | [man-dbport](#repo-man-dbport) | 0 | +0 | 0 |
@@ -2597,6 +2597,30 @@
 
 ---
 
+<a id="repo-pinentryport"></a>
+## pinentryport
+
+- **Origin Date (First Commit):** 2023-05-18
+- **Current Patch LOC:** 135
+- **Current Patch Count:** 5
+
+### Historical Trends
+
+![LOC Trend for pinentryport](images/upstream/pinentryport_current_loc_trend.png)
+![Count Trend for pinentryport](images/upstream/pinentryport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/configure.ac.patch` | `patches` | 20 |
+| `patches/configure.patch` | `patches` | 32 |
+| `patches/pinentry-emacs.c.patch` | `patches` | 15 |
+| `patches/pinentry.c.patch` | `patches` | 15 |
+| `patches/secmem.c.patch` | `patches` | 53 |
+
+---
+
 <a id="repo-multitailport"></a>
 ## multitailport
 
@@ -2634,30 +2658,6 @@
 | Patch File (Repo Relative Path) | Source | LOC |
 |---|---|:---|
 | `patches/PR1.patch` | `patches` | 126 |
-
----
-
-<a id="repo-pinentryport"></a>
-## pinentryport
-
-- **Origin Date (First Commit):** 2023-05-18
-- **Current Patch LOC:** 124
-- **Current Patch Count:** 5
-
-### Historical Trends
-
-![LOC Trend for pinentryport](images/upstream/pinentryport_current_loc_trend.png)
-![Count Trend for pinentryport](images/upstream/pinentryport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/configure.ac.patch` | `patches` | 20 |
-| `patches/configure.patch` | `patches` | 32 |
-| `patches/pinentry-emacs.c.patch` | `patches` | 15 |
-| `patches/pinentry.c.patch` | `patches` | 15 |
-| `patches/secmem.c.patch` | `patches` | 42 |
 
 ---
 

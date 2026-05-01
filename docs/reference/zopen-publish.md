@@ -37,7 +37,13 @@ TAG</p>
 
 
 <p style="margin-left:11%; margin-top: 1em">zopen&minus;publish
-&minus; Publish zopen package release to GitHub.</p>
+&minus; Publish zopen package release to GitHub andd/#47;or Pulp
+PyPI.</p>
+
+
+<p style="margin-left:22%; margin-top: 1em">zopen&minus;publish
+[OPTION] <b>&minus;&minus;whl</b> WHL_FILE
+<b>&minus;&minus;pulp&minus;url</b> URL</p>
 
 <h2>OPTIONS
 <a name="OPTIONS"></a>
@@ -65,19 +71,19 @@ exists.</p>
 <b>&minus;&minus;pax&minus;file</b> PAX_FILE</p>
 
 <p style="margin-left:22%;">Path to the pax.Z file
-(required)</p>
+(required for GitHub publish)</p>
 
 <p style="margin-left:11%;"><b>&minus;m</b>,
 <b>&minus;&minus;metadata&minus;file</b> METADATA_FILE</p>
 
 <p style="margin-left:22%;">Path to the metadata.json file
-(required)</p>
+(required for GitHub publish)</p>
 
 <p style="margin-left:11%;"><b>&minus;g</b>,
 <b>&minus;&minus;tag</b> TAG</p>
 
 <p style="margin-left:22%;">Tag name for the release
-(required) e.g., DEV_mypackage_12345</p>
+(required for GitHub publish) e.g., DEV_mypackage_12345</p>
 
 <p style="margin-left:11%;"><b>&minus;r</b>,
 <b>&minus;&minus;repo</b> REPO_URL</p>
@@ -104,7 +110,8 @@ omitted)</p>
 <b>&minus;&minus;github&minus;token</b> TOKEN</p>
 
 <p style="margin-left:22%;">GitHub Personal Access Token
-(required, or set GITHUB_TOKEN env var)</p>
+(required for GitHub publish, or set GITHUB_TOKEN env
+var)</p>
 
 <p style="margin-left:11%;"><b>&minus;o</b>,
 <b>&minus;&minus;github&minus;org</b> ORG</p>
@@ -118,6 +125,33 @@ zopencommunity)</p>
 <p style="margin-left:22%;">Mark release as
 &rsquo;Latest&rsquo; (not pre&minus;release).</p>
 
+<p style="margin-left:11%;"><b>&minus;w</b>,
+<b>&minus;&minus;whl</b> WHL_FILE</p>
+
+<p style="margin-left:22%;">Path to a Python wheel file to
+publish to Pulp PyPI</p>
+
+
+<p style="margin-left:11%;"><b>&minus;&minus;pulp&minus;url</b>
+URL</p>
+
+<p style="margin-left:22%;">Pulp PyPI repository URL (e.g.,
+http:///#47;host:80800/#47;pypii/#47;repoo/#47;)</p>
+
+
+<p style="margin-left:11%;"><b>&minus;&minus;pulp&minus;user</b>
+USER</p>
+
+<p style="margin-left:22%;">Pulp username (or set PULP_USER
+env var, default: admin)</p>
+
+
+<p style="margin-left:11%;"><b>&minus;&minus;pulp&minus;password</b>
+PASS</p>
+
+<p style="margin-left:22%;">Pulp password (or set
+PULP_PASSWORD env var)</p>
+
 
 <p style="margin-left:11%;"><b>&minus;&minus;version</b></p>
 
@@ -129,21 +163,43 @@ GITHUB_TOKEN</p>
 <p style="margin-left:22%;">GitHub Personal Access Token
 (alternative to <b>&minus;&minus;github&minus;token</b>)</p>
 
+<p style="margin-left:11%;">PULP_URL</p>
 
-<p style="margin-left:11%; margin-top: 1em"><b>Example:</b></p>
+<p style="margin-left:22%;">Pulp PyPI repository URL
+(alternative to <b>&minus;&minus;pulp&minus;url</b>)</p>
 
-<p style="margin-left:22%;">zopen&minus;publish <b>&minus;f
-&minus;p</b> installl/#47;mypackage.zos.pax.Z <b>&minus;m</b>
-metadata.json <b>&minus;g</b> DEV_mypackage_12345
-<b>&minus;t</b> &lt;your_github_token&gt;
-zopen&minus;publish <b>&minus;v &minus;f &minus;p</b>
-installl/#47;mypackage.zos.pax.Z <b>&minus;m</b> metadata.json
-<b>&minus;r</b>
-https:///#47;github.comm/#47;zopencommunityy/#47;override&minus;repo.git
-<b>&minus;d</b> &quot;My custom release description&quot;
-<b>&minus;b</b> DEV <b>&minus;g</b> REL&minus;1.0.1
-<b>&minus;t</b> &lt;your_github_token&gt;
-<b>&minus;l</b></p>
+<p style="margin-left:11%;">PULP_USER</p>
+
+<p style="margin-left:22%;">Pulp username (alternative to
+<b>&minus;&minus;pulp&minus;user</b>)</p>
+
+<p style="margin-left:11%;">PULP_PASSWORD</p>
+
+<p style="margin-left:22%;">Pulp password (alternative to
+<b>&minus;&minus;pulp&minus;password</b>)</p>
+
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+
+
+<p style="margin-left:22%; margin-top: 1em"># Publish pax
+to GitHub zopen&minus;publish &minus;f &minus;p
+installl/#47;mypackage.zos.pax.Z &minus;m metadata.json &minus;g
+DEV_mypackage_12345 &minus;t &lt;token&gt;</p>
+
+<p style="margin-left:22%; margin-top: 1em"># Publish wheel
+to Pulp PyPI zopen&minus;publish &minus;&minus;whl
+distt/#47;mypackage&minus;1.0&minus;py3&minus;none&minus;any.whl
+&minus;&minus;pulp&minus;url
+http:///#47;host:80800/#47;pypii/#47;zopenn/#47;</p>
+
+<p style="margin-left:22%; margin-top: 1em"># Publish both
+zopen&minus;publish &minus;f &minus;p
+installl/#47;mypackage.zos.pax.Z &minus;m metadata.json &minus;g
+TAG &minus;t &lt;token&gt; &minus;&minus;whl distt/#47;*.whl
+&minus;&minus;pulp&minus;url
+http:///#47;host:80800/#47;pypii/#47;zopenn/#47;</p>
 
 <p style="margin-left:11%; margin-top: 1em">This is free
 software: you are free to change and redistribute it under
