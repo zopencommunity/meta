@@ -549,11 +549,12 @@
 - 2026-01-27: [Update openssl-3-version to 3.6.1 from 3.6.0](https://github.com/zopencommunity/opensslport/pull/61) ❌
 
 ### osv-scannerport
+- 2026-05-01: [Update osv-scanner-version to 2.3.6 from 2.3.3](https://github.com/zopencommunity/osv-scannerport/pull/34) ❌
 - 2026-03-24: [Update osv-scanner-version to 2.3.5 from 2.3.3](https://github.com/zopencommunity/osv-scannerport/pull/33) ❌
 - 2026-03-19: [Update osv-scanner-version to 2.3.4 from 2.3.3](https://github.com/zopencommunity/osv-scannerport/pull/32) ❌
 - 2025-04-30: [Update osv-scanner-version to 2.0.2 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/20) ✅
 - 2025-04-03: [Update osv-scanner-version to 2.0.1 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/19) ✅
-- 2025-03-17: [Update osv-scanner-version to 2.0.0 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/18) ✅
+- 2025-03-17: [Update osv-scanner-version to 2.0.0 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/18) ❓
 - 2024-12-19: [Update osv-scanner-version to 1.9.2 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/17) ❓
 - 2024-10-31: [Update osv-scanner-version to 1.9.1 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/15) ❓
 - 2024-10-02: [Update osv-scanner-version to 1.9.0 from V.R.M](https://github.com/zopencommunity/osv-scannerport/pull/14) ❓
@@ -1116,5 +1117,5 @@
 ---
 
 
-> Last updated: 2026-05-01 06:10:27 EDT
+> Last updated: 2026-05-02 06:10:15 EDT
 
