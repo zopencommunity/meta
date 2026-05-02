@@ -262,7 +262,7 @@ export ZOPEN_ROOTFS
 
 # When running under Gemini or Bob shell, stderr output is garbled.
 # Redirect messages to stdout instead.
-if [ -n "${BOBSHELL_CLI}" ] || [ -n "${GEMINI_CLI}" ]; then
+if [ -n "\${BOBSHELL_CLI}" ] || [ -n "\${GEMINI_CLI}" ]; then
   ZOPEN_STDERR_TO_STDOUT=true
 else
   ZOPEN_STDERR_TO_STDOUT=false
@@ -275,7 +275,7 @@ else
   if [ "\${CUR_CVT}" = "ON" ] || [ "\${CUR_CVT}" = "ALL" ]; then
     : # ok - we can source the config with these settings
   else
-    if ${ZOPEN_STDERR_TO_STDOUT}; then
+    if \${ZOPEN_STDERR_TO_STDOUT}; then
       echo "Error. You have _BPXK_AUTOCVT=\${CUR_CVT} and we can not source the configuration."
     else
       echo "Error. You have _BPXK_AUTOCVT=\${CUR_CVT} and we can not source the configuration." >&2
