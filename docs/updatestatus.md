@@ -166,6 +166,7 @@
 - 2025-02-01: [Update creduce-version to 2.10.0 from V.R.M](https://github.com/zopencommunity/creduceport/pull/1) ❓
 
 ### crushport
+- 2026-05-02: [Update crush-version to 0.65.2 from 0.11.0](https://github.com/zopencommunity/crushport/pull/114) ❌
 - 2026-04-29: [Update crush-version to 0.64.0 from 0.11.0](https://github.com/zopencommunity/crushport/pull/113) ❌
 - 2026-04-28: [Update crush-version to 0.63.0 from 0.11.0](https://github.com/zopencommunity/crushport/pull/112) ❌
 - 2026-04-25: [Update crush-version to 0.62.1 from 0.11.0](https://github.com/zopencommunity/crushport/pull/111) ❌
@@ -195,7 +196,6 @@
 - 2026-02-28: [Update crush-version to 0.46.1 from 0.11.0](https://github.com/zopencommunity/crushport/pull/87) ❌
 - 2026-02-27: [Update crush-version to 0.46.0 from 0.11.0](https://github.com/zopencommunity/crushport/pull/86) ❌
 - 2026-02-26: [Update crush-version to 0.45.1 from 0.11.0](https://github.com/zopencommunity/crushport/pull/85) ❌
-- 2026-02-25: [Update crush-version to 0.45.0 from 0.11.0](https://github.com/zopencommunity/crushport/pull/84) ❌
 
 ### cunitport
 - 2026-01-20: [Update cunit-version to 3.5.4 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/11) ❌
@@ -338,6 +338,7 @@
 - 2025-04-10: [Update git-sizer-version to 1.5.0 from V.R.M](https://github.com/zopencommunity/git-sizerport/pull/1) ✅
 
 ### glibport
+- 2026-05-02: [Update glib-version to 2.88.1 from 2.87.0](https://github.com/zopencommunity/glibport/pull/11) ❌
 - 2026-03-16: [Update glib-version to 2.88.0 from 2.87.0](https://github.com/zopencommunity/glibport/pull/10) ❌
 - 2026-03-13: [Update glib-version to 2.87.5 from 2.87.0](https://github.com/zopencommunity/glibport/pull/9) ❌
 - 2026-02-25: [Update glib-version to 2.87.3 from 2.87.0](https://github.com/zopencommunity/glibport/pull/8) ❌
@@ -475,6 +476,7 @@
 - 2025-11-26: [Update libxslt-version to 1.1.44 from 1.1.43](https://github.com/zopencommunity/libxsltport/pull/14) ❌
 
 ### llamacppport
+- 2026-05-02: [Update llamacpp-version to 9000 from 8492](https://github.com/zopencommunity/llamacppport/pull/9) ❌
 - 2026-04-01: [Update llamacpp-version to 8600 from 8492](https://github.com/zopencommunity/llamacppport/pull/8) ❌
 - 2026-03-26: [Update llamacpp-version to 8500 from 8492](https://github.com/zopencommunity/llamacppport/pull/7) ❌
 
@@ -694,6 +696,7 @@
 - 2025-11-04: [Update tcl-version to 9.0.3 from 9.0.2](https://github.com/zopencommunity/tclport/pull/22) ❌
 
 ### terraformport
+- 2026-05-02: [Update terraform-version to 1.15.1 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/58) ❌
 - 2026-04-29: [Update terraform-version to 1.15.0 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/57) ❌
 - 2026-04-21: [Update terraform-version to 1.14.9 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/56) ❌
 - 2026-03-25: [Update terraform-version to 1.14.8 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/55) ❌
@@ -723,7 +726,6 @@
 - 2025-01-08: [Update terraform-version to 1.10.4 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/31) ❓
 - 2024-12-18: [Update terraform-version to 1.10.3 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/30) ❓
 - 2024-12-11: [Update terraform-version to 1.10.2 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/29) ❓
-- 2024-12-04: [Update terraform-version to 1.10.1 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/27) ❓
 
 ### texinfoport
 - 2026-03-03: [Update texinfo-version to 7.3 from 7.2](https://github.com/zopencommunity/texinfoport/pull/24) ❌
@@ -824,7 +826,7 @@
 - ✅ clangdport - [![Bump Status](https://github.com/zopencommunity/clangdport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/clangdport/actions/workflows/bump.yml)
 - ✅ clang-formatport - [![Bump Status](https://github.com/zopencommunity/clang-formatport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/clang-formatport/actions/workflows/bump.yml)
 - ✅ clang-tidyport - [![Bump Status](https://github.com/zopencommunity/clang-tidyport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/clang-tidyport/actions/workflows/bump.yml)
-- ✅ clang_wrapperport - [![Bump Status](https://github.com/zopencommunity/clang_wrapperport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/clang_wrapperport/actions/workflows/bump.yml)
+- ✅ clang_zos_wrapperport - [![Bump Status](https://github.com/zopencommunity/clang_zos_wrapperport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/clang_zos_wrapperport/actions/workflows/bump.yml)
 - ✅ cmakeport - [![Bump Status](https://github.com/zopencommunity/cmakeport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/cmakeport/actions/workflows/bump.yml)
 - ❌ collateral - Workflow not configured
 - ✅ conanport - [![Bump Status](https://github.com/zopencommunity/conanport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/conanport/actions/workflows/bump.yml)
@@ -1117,5 +1119,5 @@
 ---
 
 
-> Last updated: 2026-05-02 06:10:15 EDT
+> Last updated: 2026-05-03 06:10:02 EDT
 
