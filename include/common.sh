@@ -928,7 +928,7 @@ runAndLog()
   eval "$1"
   rc=$?
   if [ ! -z "${SSH_TTY}" ]; then
-    chtag -r ${SSH_TTY}
+    chtag -r ${SSH_TTY} 2>/dev/null
   fi
   return "${rc}"
 }
@@ -953,7 +953,7 @@ runLogProgress()
   eval "$1"
   rc=$?
   if [ ! -z "${SSH_TTY}" ]; then
-    chtag -r ${SSH_TTY}
+    chtag -r ${SSH_TTY} 2>/dev/null
   fi
   ${killph} 2> /dev/null # if the timer is not running, the kill will fail
   return "${rc}"
@@ -1031,7 +1031,7 @@ runInBackgroundWithTimeoutAndLog()
     if [ $? != 0 ]; then
       wait "${PID}"
       if [ ! -z "${SSH_TTY}" ]; then
-        chtag -r ${SSH_TTY}
+        chtag -r ${SSH_TTY} 2>/dev/null
       fi
       rc=$?
       return "${rc}"
