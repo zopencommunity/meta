@@ -39,14 +39,16 @@ printSyntax()
   echo "                          GitHub Personal Access Token (required, or set GITHUB_TOKEN env var)"
   echo "  -o, --github-org ORG     GitHub Organization (default: zopencommunity)"
   echo "  -l, --latest            Mark release as 'Latest' (not pre-release)."
+  echo "  --pulp                  Push RPM artifacts to Pulp repository."
+  echo "  --pulp-repo REPO        Pulp repository name (default: zopen-stable or zopen-dev)"
   echo "     --version            print version"
   echo ""
   echo "Environment Variables:"
   echo "  GITHUB_TOKEN            GitHub Personal Access Token (alternative to --github-token)"
   echo ""
   echo "Example:"
-  echo "  zopen-publish -f -p install/mypackage.zos.pax.Z -m metadata.json -g DEV_mypackage_12345 -t <your_github_token>"
-  echo "  zopen-publish -v -f -p install/mypackage.zos.pax.Z -m metadata.json -r https://github.com/zopencommunity/override-repo.git -d \"My custom release description\" -b DEV -g REL-1.0.1 -t <your_github_token> -l"
+  echo "  zopen-publish -f -p install/mypackage.zos.pax.Z -m metadata.json -g DEV_mypackage_12345 -t <your_github_token> --pulp"
+  echo "  zopen-publish -v -f -p install/mypackage.zos.pax.Z -m metadata.json -r https://github.com/zopencommunity/override-repo.git -d \"My custom release description\" -b DEV -g REL-1.0.1 -t <your_github_token> -l --pulp"
 }
 
 checkDependencies() {
@@ -57,6 +59,12 @@ checkDependencies() {
   if ! command -v jq > /dev/null 2>&1; then
     printError "Error: jq command not found. Please install it."
     return 1
+  fi
+  if [ "$PUSH_TO_PULP" = true ]; then
+    if ! command -v pulp > /dev/null 2>&1; then
+      printError "Error: pulp command not found. Please install it to use --pulp option."
+      return 1
+    fi
   fi
   return 0
 }
@@ -120,6 +128,13 @@ processOptions() {
         ;;
       "-g" | "--tag")
         RELEASE_TAG_OPT="$2"
+        shift
+        ;;
+      "--pulp")
+        PUSH_TO_PULP=true
+        ;;
+      "--pulp-repo")
+        CUSTOM_PULP_REPO="$2"
         shift
         ;;
       "--version")
@@ -342,6 +357,36 @@ deleteGitHubReleaseByTag() {
   return 0
 }
 
+uploadToPulp() {
+  rpm_file="$1"
+  build_line="$2"
+  
+  # Default to repo.zopen.community if not specified in environment
+  if [ -z "$PULP_BASE_ADDR" ]; then
+    export PULP_BASE_ADDR="https://repo.zopen.community"
+    printVerbose "PULP_BASE_ADDR not set; defaulting to $PULP_BASE_ADDR"
+  fi
+
+  if [ -n "$CUSTOM_PULP_REPO" ]; then
+    PULP_REPO="$CUSTOM_PULP_REPO"
+  elif [ "$build_line" = "STABLE" ]; then
+    PULP_REPO="zopen-stable"
+  else
+    PULP_REPO="zopen-dev"
+  fi
+
+  printInfo "- Pushing $rpm_file to Pulp repository: $PULP_REPO..."
+  
+  # Perform the upload and automatic repository version update
+  if ! pulp rpm repository upload --name "$PULP_REPO" --file "$rpm_file"; then
+    printError "Failed to push RPM to Pulp repository: $PULP_REPO"
+    return 1
+  fi
+
+  printVerbose "Successfully pushed $rpm_file to Pulp repository: $PULP_REPO"
+  return 0
+}
+
 
 publishRelease() {
   PAX_BASENAME=$(basename "${PAX_FILE}")
@@ -443,6 +488,28 @@ publishRelease() {
       return 1 # metadata.json upload failed
   fi
 
+  if [ "$PUSH_TO_PULP" = true ]; then
+    # Look for RPMs in rpmbuild/RPMS first (typical build location)
+    RPM_FILES=($(find rpmbuild/RPMS -type f -name "*.rpm" 2>/dev/null))
+    
+    # If not found there, look in the same directory as the PAX file
+    if [ ${#RPM_FILES[@]} -eq 0 ]; then
+      PAX_DIR=$(dirname "$PAX_FILE")
+      RPM_FILES=($(find "$PAX_DIR" -type f -name "*.rpm" 2>/dev/null))
+    fi
+
+    if [ ${#RPM_FILES[@]} -gt 0 ]; then
+      printInfo "- Found ${#RPM_FILES[@]} RPM(s) to push to Pulp."
+      for RPM in "${RPM_FILES[@]}"; do
+        if ! uploadToPulp "$RPM" "$BUILD_LINE"; then
+          return 1
+        fi
+      done
+    else
+      printWarning "Pulp push requested, but no RPM files were found."
+    fi
+  fi
+
 
   echo "Release published successfully to https://github.com/${GITHUB_ORGANIZATION}/${GITHUB_REPO}/releases/tag/${TAG}"
   return 0
@@ -465,6 +532,8 @@ GITHUB_TOKEN_OPT=""
 MAKE_LATEST_RELEASE=false 
 RELEASE_TAG_OPT="" 
 FORCE_OVERWRITE=false 
+PUSH_TO_PULP=false
+CUSTOM_PULP_REPO=""
 
 verbose=false # Initialize verbose flag
 

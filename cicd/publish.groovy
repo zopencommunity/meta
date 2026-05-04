@@ -218,16 +218,24 @@ else
 fi
 
 if [ $NUM_RPMS -gt 0 ]; then
-  echo "Uploading the RPM artifacts into github"
+  if [ "$BUILD_LINE" = "STABLE" ]; then
+    PULP_REPO="zopen-stable"
+  else
+    PULP_REPO="zopen-dev"
+  fi
+
+  echo "Uploading the RPM artifacts into github and Pulp repository: ${PULP_REPO}"
   for RPM in "${RPM_FILES[@]}"; do
     RPM_BASENAME=$(basename "${RPM}")
     echo "Uploading ${RPM_BASENAME}..."
     github-release -v upload --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --tag "${TAG}" --name "${RPM_BASENAME}" --file "${RPM}"
-    pulp artifact upload --file "${RPM}"
+    
+    # Push to the specific Pulp repository
+    pulp rpm repository upload --name "${PULP_REPO}" --file "${RPM}"
     if [ $? -eq 0 ]; then
-       echo "RPM Artifact ${RPM_BASENAME} uploaded successfully!"
+       echo "RPM Artifact ${RPM_BASENAME} uploaded successfully to GitHub and Pulp!"
     else
-       echo "Failed to upload RPM artifact ${RPM_BASENAME}!"
+       echo "Failed to upload RPM artifact ${RPM_BASENAME} to Pulp!"
        exit 1
     fi
   done
