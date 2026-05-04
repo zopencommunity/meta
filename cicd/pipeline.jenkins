@@ -27,7 +27,7 @@ node('linux')
 {
   stage('Build and Test') {
     // Build Job : https://cicd.zopen.community/view/Framework/job/Port-Build/
-    buildResult = build job: 'Port-Build-Test', propagate: false, parameters: [string(name: 'PORT_GITHUB_REPO', value: "${repo}"),
+    buildResult = build job: 'Port-Publish-Test', propagate: false, parameters: [string(name: 'PORT_GITHUB_REPO', value: "${repo}"),
                    string(name: 'PORT_BRANCH', value: "${branch}"),
                    string(name: 'node', value: "${node_label}"),
                    booleanParam(name: 'FORCE_CLANG', value: params.FORCE_CLANG),
@@ -39,7 +39,7 @@ node('linux')
     }
     copyArtifacts filter: '**/test.status',
         fingerprintArtifacts: true,
-        projectName: 'Port-Build-Test',
+        projectName: 'Port-Publish-Test',
         selector: specific(buildResult.number.toString()),
         optional: true
     def testStatusFile = sh(script: 'find . -name test.status | head -n 1', returnStdout: true).trim()
