@@ -848,6 +848,12 @@ PYENVEOF
     ZOPEN_DEPS="${implicitDeps} ${langDeps} ${ZOPEN_DEPS}"
   fi
 
+  # Handle USE_CLANG_WRAPPER: replace check_clang and zoslib with clang_zos_wrapper
+  if [ -n "${USE_CLANG_WRAPPER}" ]; then
+    ZOPEN_DEPS=$(echo "${ZOPEN_DEPS}" | sed 's/\bcheck_clang\b//g' | sed 's/\bzoslib\b//g' | xargs)
+    ZOPEN_DEPS="${ZOPEN_DEPS} clang_zos_wrapper"
+  fi
+
   # Add meta as an implicit runtime dependency
   # TODO: remove this once zopen-install is updated to handle this
   export ZOPEN_RUNTIME_DEPS="${ZOPEN_RUNTIME_DEPS} meta"
