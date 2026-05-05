@@ -19,6 +19,10 @@ RELEASE_PREFIX=${RELEASE_PREFIX%%.*}
 PORT_NAME=${RELEASE_PREFIX%%port}
 # Get the REPO name
 GITHUB_REPO=$RELEASE_PREFIX
+: "${PULP_HOST:?Missing PULP_HOST}"
+: "${PULP_USERNAME:?Missing PULP_USERNAME}"
+: "${PULP_PASSWORD:?Missing PULP_PASSWORD}"
+                                                              
 
 # PAX file should be a copied artifact
 PAX=`find . -type f -path "*install/*zos.pax.Z"`
@@ -223,7 +227,15 @@ if [ $NUM_RPMS -gt 0 ]; then
   else
     PULP_REPO="zopen-dev"
   fi
+  echo "Configuring Pulp server..."
 
+pulp config create \
+  --base-url "$PULP_HOST" \
+  --username "$PULP_USERNAME" \
+  --password "$PULP_PASSWORD" \
+  --overwrite
+pulp status || exit 1
+                                                              
   echo "Uploading the RPM artifacts into github and Pulp repository: ${PULP_REPO}"
   for RPM in "${RPM_FILES[@]}"; do
     RPM_BASENAME=$(basename "${RPM}")
