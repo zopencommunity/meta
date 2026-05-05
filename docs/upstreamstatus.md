@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2026-05-04 06:17:15 EDT.*
+*Report generated on: 2026-05-05 06:18:10 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 307
-- **Total Current Lines of Code (LOC) in Patches:** 58,057
-- **Total Number of Current Patch Files:** 1,042
-- **Average Current Patch LOC per Project:** 189.11
-- **Average Current Patch Count per Project:** 3.39
+- **Total Current Lines of Code (LOC) in Patches:** 57,817
+- **Total Number of Current Patch Files:** 1,038
+- **Average Current Patch LOC per Project:** 188.33
+- **Average Current Patch Count per Project:** 3.38
 
 ### Historical Trends (All Projects)
 
@@ -31,9 +31,9 @@
 | [oqs-providerport](#repo-oqs-providerport) | 2,037 | +0 | 18 |
 | [curlport](#repo-curlport) | 1,844 | +0 | 47 |
 | [bashport](#repo-bashport) | 1,797 | -2,629 | 27 |
-| [rpmport](#repo-rpmport) | 1,792 | +0 | 32 |
 | [llamacppport](#repo-llamacppport) | 1,649 | +0 | 35 |
 | [gpgport](#repo-gpgport) | 1,560 | +0 | 32 |
+| [rpmport](#repo-rpmport) | 1,559 | +24 | 29 |
 | [rsyncport](#repo-rsyncport) | 1,430 | +0 | 21 |
 | [cmakeport](#repo-cmakeport) | 1,348 | +0 | 1 |
 | [coreutilsport](#repo-coreutilsport) | 1,328 | +0 | 20 |
@@ -88,11 +88,11 @@
 | [nnnport](#repo-nnnport) | 206 | +0 | 1 |
 | [protobufport](#repo-protobufport) | 201 | +0 | 9 |
 | [findutilsport](#repo-findutilsport) | 199 | +0 | 10 |
-| [libgcryptport](#repo-libgcryptport) | 199 | +0 | 4 |
 | [blisport](#repo-blisport) | 185 | +0 | 2 |
 | [diffutilsport](#repo-diffutilsport) | 184 | +0 | 8 |
 | [aflplusplusport](#repo-aflplusplusport) | 184 | +0 | 5 |
 | [tclport](#repo-tclport) | 180 | +0 | 2 |
+| [libgcryptport](#repo-libgcryptport) | 173 | -26 | 2 |
 | [jemallocport](#repo-jemallocport) | 166 | +0 | 1 |
 | [groffport](#repo-groffport) | 165 | +0 | 13 |
 | [autoconfport](#repo-autoconfport) | 162 | +0 | 6 |
@@ -153,6 +153,7 @@
 | [catimgport](#repo-catimgport) | 37 | +0 | 1 |
 | [zlib-ngport](#repo-zlib-ngport) | 35 | +0 | 2 |
 | [poptport](#repo-poptport) | 35 | +0 | 1 |
+| [xzport](#repo-xzport) | 34 | +19 | 2 |
 | [tcltlsport](#repo-tcltlsport) | 34 | +0 | 1 |
 | [texinfoport](#repo-texinfoport) | 33 | +0 | 2 |
 | [ntbtlsport](#repo-ntbtlsport) | 33 | +0 | 1 |
@@ -187,7 +188,6 @@
 | [bzip2port](#repo-bzip2port) | 17 | +0 | 1 |
 | [cunitport](#repo-cunitport) | 17 | +0 | 2 |
 | [makeport](#repo-makeport) | 16 | +0 | 1 |
-| [xzport](#repo-xzport) | 15 | +0 | 1 |
 | [libgdbmport](#repo-libgdbmport) | 15 | +0 | 1 |
 | [libpipelineport](#repo-libpipelineport) | 15 | +0 | 1 |
 | [libpcre2port](#repo-libpcre2port) | 15 | +0 | 1 |
@@ -675,57 +675,6 @@
 
 ---
 
-<a id="repo-rpmport"></a>
-## rpmport
-
-- **Origin Date (First Commit):** 2025-06-26
-- **Current Patch LOC:** 1,792
-- **Current Patch Count:** 32
-
-### Historical Trends
-
-![LOC Trend for rpmport](images/upstream/rpmport_current_loc_trend.png)
-![Count Trend for rpmport](images/upstream/rpmport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/CMakeLists.txt.patch` | `patches` | 82 |
-| `patches/build_CMakeLists.txt.patch` | `patches` | 41 |
-| `patches/files.cc.patch` | `patches` | 132 |
-| `patches/fsm.cc.patch` | `patches` | 303 |
-| `patches/headerutil.cc.patch` | `patches` | 28 |
-| `patches/lib_CMakeLists.txt.patch` | `patches` | 12 |
-| `patches/lib_backend_ndb_rpmidx.c.patch` | `patches` | 43 |
-| `patches/lib_backend_ndb_rpmxdb.c.patch` | `patches` | 46 |
-| `patches/lib_headerfmt.cc.patch` | `patches` | 28 |
-| `patches/lib_keystore.cc.patch` | `patches` | 54 |
-| `patches/lib_rpmfi_internal.hh.patch` | `patches` | 23 |
-| `patches/lib_rpmrc.cc.patch` | `patches` | 17 |
-| `patches/lib_rpmug.cc.patch` | `patches` | 28 |
-| `patches/lib_transaction.cc.patch` | `patches` | 28 |
-| `patches/macros.in.patch` | `patches` | 78 |
-| `patches/misc_fts.c.patch` | `patches` | 70 |
-| `patches/rpmfi.cc.patch` | `patches` | 258 |
-| `patches/rpmfiles.h.patch` | `patches` | 18 |
-| `patches/rpmio_CMakeLists.txt.patch` | `patches` | 90 |
-| `patches/rpmio_lposix.cc.patch` | `patches` | 28 |
-| `patches/rpmio_macro.cc.patch` | `patches` | 57 |
-| `patches/rpmio_progname.cc.patch` | `patches` | 17 |
-| `patches/rpmio_rpmglob.cc.patch` | `patches` | 20 |
-| `patches/rpmio_rpmlog.cc.patch` | `patches` | 41 |
-| `patches/rpmio_rpmsq.cc.patch` | `patches` | 13 |
-| `patches/rpmio_rpmstrpool.cc.patch` | `patches` | 25 |
-| `patches/rpmrc.in.patch` | `patches` | 12 |
-| `patches/rpmtag.h.patch` | `patches` | 15 |
-| `patches/rpmtypes.h.patch` | `patches` | 93 |
-| `patches/scripts.patch` | `patches` | 35 |
-| `patches/sign_CMakeLists.txt.patch` | `patches` | 10 |
-| `patches/tools_CMakeLists.txt.patch` | `patches` | 47 |
-
----
-
 <a id="repo-llamacppport"></a>
 ## llamacppport
 
@@ -828,6 +777,54 @@
 | `patches/signencrypt.scm.patch` | `patches` | 13 |
 | `patches/t-exectool.c.patch` | `patches` | 15 |
 | `patches/t-stutter.c.patch` | `patches` | 14 |
+
+---
+
+<a id="repo-rpmport"></a>
+## rpmport
+
+- **Origin Date (First Commit):** 2025-06-26
+- **Current Patch LOC:** 1,559
+- **Current Patch Count:** 29
+
+### Historical Trends
+
+![LOC Trend for rpmport](images/upstream/rpmport_current_loc_trend.png)
+![Count Trend for rpmport](images/upstream/rpmport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/CMakeLists.txt.patch` | `patches` | 50 |
+| `patches/build_CMakeLists.txt.patch` | `patches` | 16 |
+| `patches/files.cc.patch` | `patches` | 132 |
+| `patches/fsm.cc.patch` | `patches` | 303 |
+| `patches/lib_CMakeLists.txt.patch` | `patches` | 10 |
+| `patches/lib_backend_ndb_rpmidx.c.patch` | `patches` | 43 |
+| `patches/lib_backend_ndb_rpmxdb.c.patch` | `patches` | 46 |
+| `patches/lib_headerfmt.cc.patch` | `patches` | 28 |
+| `patches/lib_keystore.cc.patch` | `patches` | 48 |
+| `patches/lib_rpmfi_internal.hh.patch` | `patches` | 23 |
+| `patches/lib_rpmrc.cc.patch` | `patches` | 17 |
+| `patches/lib_rpmug.cc.patch` | `patches` | 28 |
+| `patches/macros.in.patch` | `patches` | 87 |
+| `patches/misc_fts.c.patch` | `patches` | 70 |
+| `patches/rpmfi.cc.patch` | `patches` | 258 |
+| `patches/rpmfiles.h.patch` | `patches` | 18 |
+| `patches/rpmio_CMakeLists.txt.patch` | `patches` | 10 |
+| `patches/rpmio_lposix.cc.patch` | `patches` | 24 |
+| `patches/rpmio_macro.cc.patch` | `patches` | 33 |
+| `patches/rpmio_progname.cc.patch` | `patches` | 17 |
+| `patches/rpmio_rpmglob.cc.patch` | `patches` | 20 |
+| `patches/rpmio_rpmlog.cc.patch` | `patches` | 41 |
+| `patches/rpmio_rpmsq.cc.patch` | `patches` | 13 |
+| `patches/rpmio_rpmstrpool.cc.patch` | `patches` | 24 |
+| `patches/rpmrc.in.patch` | `patches` | 12 |
+| `patches/rpmtag.h.patch` | `patches` | 15 |
+| `patches/rpmtypes.h.patch` | `patches` | 93 |
+| `patches/scripts.patch` | `patches` | 70 |
+| `patches/sign_CMakeLists.txt.patch` | `patches` | 10 |
 
 ---
 
@@ -2341,29 +2338,6 @@
 
 ---
 
-<a id="repo-libgcryptport"></a>
-## libgcryptport
-
-- **Origin Date (First Commit):** 2023-04-21
-- **Current Patch LOC:** 199
-- **Current Patch Count:** 4
-
-### Historical Trends
-
-![LOC Trend for libgcryptport](images/upstream/libgcryptport_current_loc_trend.png)
-![Count Trend for libgcryptport](images/upstream/libgcryptport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/Makefile.in.patch` | `patches` | 13 |
-| `patches/doc_Makefile.in.patch` | `patches` | 13 |
-| `patches/fips.c.patch` | `patches` | 87 |
-| `patches/t-thread-local.c.patch` | `patches` | 86 |
-
----
-
 <a id="repo-blisport"></a>
 ## blisport
 
@@ -2454,6 +2428,27 @@
 |---|---|:---|
 | `patches/generic.patch` | `patches` | 67 |
 | `patches/unix.patch` | `patches` | 113 |
+
+---
+
+<a id="repo-libgcryptport"></a>
+## libgcryptport
+
+- **Origin Date (First Commit):** 2023-04-21
+- **Current Patch LOC:** 173
+- **Current Patch Count:** 2
+
+### Historical Trends
+
+![LOC Trend for libgcryptport](images/upstream/libgcryptport_current_loc_trend.png)
+![Count Trend for libgcryptport](images/upstream/libgcryptport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/fips.c.patch` | `patches` | 87 |
+| `patches/t-thread-local.c.patch` | `patches` | 86 |
 
 ---
 
@@ -3751,6 +3746,27 @@
 
 ---
 
+<a id="repo-xzport"></a>
+## xzport
+
+- **Origin Date (First Commit):** 2022-04-21
+- **Current Patch LOC:** 34
+- **Current Patch Count:** 2
+
+### Historical Trends
+
+![LOC Trend for xzport](images/upstream/xzport_current_loc_trend.png)
+![Count Trend for xzport](images/upstream/xzport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/PR2.patch` | `patches` | 19 |
+| `patches/configure.patch` | `patches` | 15 |
+
+---
+
 <a id="repo-tcltlsport"></a>
 ## tcltlsport
 
@@ -4446,26 +4462,6 @@
 | Patch File (Repo Relative Path) | Source | LOC |
 |---|---|:---|
 | `patches/getopt.c.patch` | `patches` | 16 |
-
----
-
-<a id="repo-xzport"></a>
-## xzport
-
-- **Origin Date (First Commit):** 2022-04-21
-- **Current Patch LOC:** 15
-- **Current Patch Count:** 1
-
-### Historical Trends
-
-![LOC Trend for xzport](images/upstream/xzport_current_loc_trend.png)
-![Count Trend for xzport](images/upstream/xzport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/configure.patch` | `patches` | 15 |
 
 ---
 

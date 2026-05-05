@@ -288,12 +288,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="rpm" data-searchable-text="rpm Green 100.0% STABLE_rpm_4188 The RPM Package Manager (RPM) is a powerful package management system capable of building computer software from source into easily distributable packages, installing, updating and uninstalling packaged software core port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="rpm" data-searchable-text="rpm Green 100.0% STABLE_rpm_4259 The RPM Package Manager (RPM) is a powerful package management system capable of building computer software from source into easily distributable packages, installing, updating and uninstalling packaged software core port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/rpmport" target="_blank" rel="noopener noreferrer">rpm</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/rpmport/releases/download/STABLE_rpmport_4188/rpm-6.0.1.20260406_113700.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_rpm_4188</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/rpmport/releases/download/STABLE_rpmport_4259/rpm-6.0.1.20260505_094042.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_rpm_4259</a></div>
     <div class="tool-desc" title="The RPM Package Manager (RPM) is a powerful package management system capable of building computer software from source into easily distributable packages, installing, updating and uninstalling packaged software">The RPM Package Manager (RPM) is a powerful package management system capable of building computer software from source into easily distributable packages, installing, updating and uninstalling packaged software</div>
   </div>
 </div>
@@ -480,12 +480,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="byacc" data-searchable-text="byacc Red 45.6% STABLE_byacc_3278 A parser generator compatible with Yacc development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="byacc" data-searchable-text="byacc Red 45.6% STABLE_byacc_4002 A parser generator compatible with Yacc development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/byaccport" target="_blank" rel="noopener noreferrer">byacc</a></strong></div>
     <div class="tool-status">Status: Red</div>
     <div class="tool-test">Test: 45.6%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/byaccport/releases/download/STABLE_byaccport_3278/byacc-20241231.20250505_035356.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_byacc_3278</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/byaccport/releases/download/STABLE_byaccport_4002/byacc-20260126.20260125_151944.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_byacc_4002</a></div>
     <div class="tool-desc" title="A parser generator compatible with Yacc">A parser generator compatible with Yacc</div>
   </div>
 </div>
@@ -1622,12 +1622,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="libassuan" data-searchable-text="libassuan Green 100.0% STABLE_libassuan_3239 A library for the Assuan protocol, used for IPC between GnuPG components library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="libassuan" data-searchable-text="libassuan Green 100.0% STABLE_libassuan_3650 A library for the Assuan protocol, used for IPC between GnuPG components library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libassuanport" target="_blank" rel="noopener noreferrer">libassuan</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/libassuanport/releases/download/STABLE_libassuanport_3239/libassuan-3.0.2.20250417_071410.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libassuan_3239</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/libassuanport/releases/download/STABLE_libassuanport_3650/libassuan-3.0.2.20250807_094158.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libassuan_3650</a></div>
     <div class="tool-desc" title="A library for the Assuan protocol, used for IPC between GnuPG components">A library for the Assuan protocol, used for IPC between GnuPG components</div>
   </div>
 </div>
@@ -1642,12 +1642,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="libgcrypt" data-searchable-text="libgcrypt Green 100.0% STABLE_libgcrypt_4208 A general-purpose cryptographic library library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="libgcrypt" data-searchable-text="libgcrypt Green 100.0% STABLE_libgcrypt_4258 A general-purpose cryptographic library library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libgcryptport" target="_blank" rel="noopener noreferrer">libgcrypt</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/libgcryptport/releases/download/STABLE_libgcryptport_4208/libgcrypt-1.12.2.20260415_171543.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libgcrypt_4208</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/libgcryptport/releases/download/STABLE_libgcryptport_4258/libgcrypt-1.12.2.20260505_080614.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libgcrypt_4258</a></div>
     <div class="tool-desc" title="A general-purpose cryptographic library">A general-purpose cryptographic library</div>
   </div>
 </div>
@@ -1662,12 +1662,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="libgpgerror" data-searchable-text="libgpgerror Green 100.0% STABLE_libgpgerror_4065 A library for handling errors library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="libgpgerror" data-searchable-text="libgpgerror Green 100.0% STABLE_libgpgerror_4257 A library for handling errors library port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libgpgerrorport" target="_blank" rel="noopener noreferrer">libgpgerror</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/libgpgerrorport/releases/download/STABLE_libgpgerrorport_4065/libgpgerror-DEV.20260218_153708.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libgpgerror_4065</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/libgpgerrorport/releases/download/STABLE_libgpgerrorport_4257/libgpgerror-1.60.20260505_053704.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libgpgerror_4257</a></div>
     <div class="tool-desc" title="A library for handling errors">A library for handling errors</div>
   </div>
 </div>
@@ -2226,32 +2226,32 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="libassuan" data-searchable-text="libassuan Green 100.0% STABLE_libassuan_3239 A library for the Assuan protocol, used for IPC between GnuPG components security port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="libassuan" data-searchable-text="libassuan Green 100.0% STABLE_libassuan_3650 A library for the Assuan protocol, used for IPC between GnuPG components security port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libassuanport" target="_blank" rel="noopener noreferrer">libassuan</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/libassuanport/releases/download/STABLE_libassuanport_3239/libassuan-3.0.2.20250417_071410.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libassuan_3239</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/libassuanport/releases/download/STABLE_libassuanport_3650/libassuan-3.0.2.20250807_094158.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libassuan_3650</a></div>
     <div class="tool-desc" title="A library for the Assuan protocol, used for IPC between GnuPG components">A library for the Assuan protocol, used for IPC between GnuPG components</div>
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="libgcrypt" data-searchable-text="libgcrypt Green 100.0% STABLE_libgcrypt_4208 A general-purpose cryptographic library security port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="libgcrypt" data-searchable-text="libgcrypt Green 100.0% STABLE_libgcrypt_4258 A general-purpose cryptographic library security port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libgcryptport" target="_blank" rel="noopener noreferrer">libgcrypt</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/libgcryptport/releases/download/STABLE_libgcryptport_4208/libgcrypt-1.12.2.20260415_171543.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libgcrypt_4208</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/libgcryptport/releases/download/STABLE_libgcryptport_4258/libgcrypt-1.12.2.20260505_080614.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libgcrypt_4258</a></div>
     <div class="tool-desc" title="A general-purpose cryptographic library">A general-purpose cryptographic library</div>
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="libgpgerror" data-searchable-text="libgpgerror Green 100.0% STABLE_libgpgerror_4065 A library for handling errors security port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="libgpgerror" data-searchable-text="libgpgerror Green 100.0% STABLE_libgpgerror_4257 A library for handling errors security port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libgpgerrorport" target="_blank" rel="noopener noreferrer">libgpgerror</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/libgpgerrorport/releases/download/STABLE_libgpgerrorport_4065/libgpgerror-DEV.20260218_153708.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libgpgerror_4065</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/libgpgerrorport/releases/download/STABLE_libgpgerrorport_4257/libgpgerror-1.60.20260505_053704.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_libgpgerror_4257</a></div>
     <div class="tool-desc" title="A library for handling errors">A library for handling errors</div>
   </div>
 </div>
@@ -2540,12 +2540,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="clang_wrapper" data-searchable-text="clang_wrapper Skipped N/A STABLE_clang_wrapper_4108 zopen port of clang_wrapper uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="clang_zos_wrapper" data-searchable-text="clang_zos_wrapper Skipped N/A STABLE_clang_zos_wrapper_4252 zopen port of clang_wrapper uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
-    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/clang_wrapperport" target="_blank" rel="noopener noreferrer">clang_wrapper</a></strong></div>
+    <div class="tool-name"><strong><a href="https://github.com/zopencommunity/clang_zos_wrapperport" target="_blank" rel="noopener noreferrer">clang_zos_wrapper</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/clang_wrapperport/releases/download/STABLE_clang_wrapperport_4108/clang_zos_wrapper-DEV.20260305_142006.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_clang_wrapper_4108</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/clang_zos_wrapperport/releases/download/STABLE_clang_zos_wrapperport_4252/clang_zos_wrapper-1.0.0.20260504_124642.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_clang_zos_wrapper_4252</a></div>
     <div class="tool-desc" title="zopen port of clang_wrapper">zopen port of clang_wrapper</div>
   </div>
 </div>
@@ -2770,12 +2770,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="xz" data-searchable-text="xz Green 100.0% STABLE_xz_4074 A compression utility uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="xz" data-searchable-text="xz Green 100.0% STABLE_xz_4256 A compression utility uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/xzport" target="_blank" rel="noopener noreferrer">xz</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/xzport/releases/download/STABLE_xzport_4074/xz-5.8.1.20260223_161902.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_xz_4074</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/xzport/releases/download/STABLE_xzport_4256/xz-5.8.3.20260504_154259.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_xz_4256</a></div>
     <div class="tool-desc" title="A compression utility">A compression utility</div>
   </div>
 </div>
@@ -3056,12 +3056,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="meta" data-searchable-text="meta Green 100.0% STABLE_meta_4250 zopen package manager utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="meta" data-searchable-text="meta Green 100.0% STABLE_meta_4255 zopen package manager utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/metaport" target="_blank" rel="noopener noreferrer">meta</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/metaport/releases/download/STABLE_metaport_4250/meta-main.20260430_191058.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_meta_4250</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/metaport/releases/download/STABLE_metaport_4255/meta-main.20260504_152555.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_meta_4255</a></div>
     <div class="tool-desc" title="zopen package manager">zopen package manager</div>
   </div>
 </div>
@@ -3186,12 +3186,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="rpm" data-searchable-text="rpm Green 100.0% STABLE_rpm_4188 The RPM Package Manager (RPM) is a powerful package management system capable of building computer software from source into easily distributable packages, installing, updating and uninstalling packaged software utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="rpm" data-searchable-text="rpm Green 100.0% STABLE_rpm_4259 The RPM Package Manager (RPM) is a powerful package management system capable of building computer software from source into easily distributable packages, installing, updating and uninstalling packaged software utilities port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/rpmport" target="_blank" rel="noopener noreferrer">rpm</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/rpmport/releases/download/STABLE_rpmport_4188/rpm-6.0.1.20260406_113700.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_rpm_4188</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/rpmport/releases/download/STABLE_rpmport_4259/rpm-6.0.1.20260505_094042.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_rpm_4259</a></div>
     <div class="tool-desc" title="The RPM Package Manager (RPM) is a powerful package management system capable of building computer software from source into easily distributable packages, installing, updating and uninstalling packaged software">The RPM Package Manager (RPM) is a powerful package management system capable of building computer software from source into easily distributable packages, installing, updating and uninstalling packaged software</div>
   </div>
 </div>
@@ -3409,4 +3409,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2026-05-04 06:19:41 UTC
+Last updated:  2026-05-05 06:20:40 UTC

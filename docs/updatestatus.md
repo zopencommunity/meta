@@ -445,9 +445,6 @@
 ### libgdbmport
 - 2025-03-22: [Update libgdbm-version to 1.25 from 1.24](https://github.com/zopencommunity/libgdbmport/pull/10) ❌
 
-### libgpgerrorport
-- 2026-04-24: [Update libgpgerror-version to 1.60 from 1.59](https://github.com/zopencommunity/libgpgerrorport/pull/25) ❌
-
 ### libgpgmeport
 - 2025-10-10: [Update libgpgme-version to 2.0.1 from 1.23.2](https://github.com/zopencommunity/libgpgmeport/pull/3) ❌
 
@@ -771,10 +768,6 @@
 
 ### xxhashport
 - 2024-12-30: [Update xxhash-version to 0.8.3 from 0.8.2](https://github.com/zopencommunity/xxhashport/pull/18) ❓
-
-### xzport
-- 2026-04-01: [Update xz-version to 5.8.3 from 5.8.1](https://github.com/zopencommunity/xzport/pull/27) ❌
-- 2025-12-17: [Update xz-version to 5.8.2 from 5.8.1](https://github.com/zopencommunity/xzport/pull/26) ❌
 
 ### yqport
 - 2026-04-13: [Update yq-version to 4.53.3 from 4.52.5](https://github.com/zopencommunity/yqport/pull/41) ❌
@@ -1119,5 +1112,5 @@
 ---
 
 
-> Last updated: 2026-05-04 06:11:06 EDT
+> Last updated: 2026-05-05 06:11:37 EDT
 
