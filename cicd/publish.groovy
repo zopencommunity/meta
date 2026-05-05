@@ -19,6 +19,8 @@ RELEASE_PREFIX=${RELEASE_PREFIX%%.*}
 PORT_NAME=${RELEASE_PREFIX%%port}
 # Get the REPO name
 GITHUB_REPO=$RELEASE_PREFIX
+
+PULP_HOST="https://repo.zopen.community/pulp/content/rpm/zopen/Packages/z/"
 : "${PULP_HOST:?Missing PULP_HOST}"
 : "${PULP_USERNAME:?Missing PULP_USERNAME}"
 : "${PULP_PASSWORD:?Missing PULP_PASSWORD}"
