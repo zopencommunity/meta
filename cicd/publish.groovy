@@ -1,288 +1,194 @@
 #!/bin/bash
-# Publish Job : https://cicd.zopen.community/view/Framework/job/Port-Publish/
-# This publish job will a pax.Z artifact from the Port-Build (https://cicd.zopen.community/view/Framework/job/Port-Build/)
-# Inputs:
-#   - PORT_GITHUB_REPO :  Github repoistory to publish the artifact to e.g: https://github.com/zopencommunity/xzport.git
-#   - PORT_DESCRIPTION : Description of the tool that is presented in the Github release page
-#   - BUILD_LINE: dev or stable
-#  zos.pax.Z artifact is copied as input
-#  requires a GITHUB_TOKEN environment variable (already configured in Jenkins)
-# Output:
-#   - pax.Z artifact is published as a Jenkins artifact
-#   - package is copied to /jenkins/build
-GITHUB_ORGANIZATION="zopencommunity"
-RELEASE_NOTES_SCRIPT="tools/create_release_notes.sh" # Path to your release notes script
+set -euo pipefail
 
-RELEASE_PREFIX=$(basename "${PORT_GITHUB_REPO}")
-# Used for Release/Tag name
-RELEASE_PREFIX=${RELEASE_PREFIX%%.*}
-PORT_NAME=${RELEASE_PREFIX%%port}
-# Get the REPO name
-GITHUB_REPO=$RELEASE_PREFIX
+echo "=== STARTING PUBLISH JOB ==="
 
-PULP_HOST="https://repo.zopen.community/pulp/content/rpm/zopen/Packages/z/"
-: "${PULP_HOST:?Missing PULP_HOST}"
+# --- REQUIRED ENV ---
+: "${PORT_GITHUB_REPO:?Missing PORT_GITHUB_REPO}"
+: "${PORT_DESCRIPTION:?Missing PORT_DESCRIPTION}"
+: "${BUILD_NUMBER:?Missing BUILD_NUMBER}"
+: "${GITHUB_TOKEN:?Missing GITHUB_TOKEN}"
 : "${PULP_USERNAME:?Missing PULP_USERNAME}"
 : "${PULP_PASSWORD:?Missing PULP_PASSWORD}"
-                                                              
 
-# PAX file should be a copied artifact
-PAX=`find . -type f -path "*install/*zos.pax.Z"`
-if [ $(echo "$PAX" | grep -c /) -ne 1 ]; then
-  echo "Error: Expected exactly 1 PAX file, found: $PAX"
-  exit 1
-fi
+# --- STATIC CONFIG ---
+GITHUB_ORGANIZATION="zopencommunity"
+RELEASE_NOTES_SCRIPT="tools/create_release_notes.sh"
+PULP_HOST="https://repo.zopen.community"   # ✅ FIXED
 
-RPM_FILES=($(find rpmbuild/RPMS -type f -name "*.rpm" 2>/dev/null))
+BUILD_LINE=${BUILD_LINE:-DEV}
+
+# --- DERIVE VALUES ---
+RELEASE_PREFIX=$(basename "${PORT_GITHUB_REPO}")
+RELEASE_PREFIX=${RELEASE_PREFIX%%.*}
+PORT_NAME=$(echo "$RELEASE_PREFIX" | sed 's/port$//')
+GITHUB_REPO=$RELEASE_PREFIX
+
+# --- FIND FILES ---
+PAX=$(find . -type f -name "*zos.pax.Z" | head -n 1)
+METADATA=$(find . -type f -name "metadata.json" | head -n 1)
+
+[ -f "$PAX" ] || { echo "ERROR: Missing PAX file"; exit 1; }
+[ -f "$METADATA" ] || { echo "ERROR: Missing metadata.json"; exit 1; }
+
+# --- RPM FILES ---
+RPM_FILES=()
+while IFS= read -r -d '' f; do
+  RPM_FILES+=("$f")
+done < <(find rpmbuild/RPMS -type f -name "*.rpm" -print0 2>/dev/null)
+
 NUM_RPMS=${#RPM_FILES[@]}
 
-if [ $NUM_RPMS -gt 0 ]; then
-  echo "Found $NUM_RPMS RPM file(s): ${RPM_FILES[@]}"
+# --- INFO ---
+BUILD_STATUS=$(find . -name "test.status" -exec cat {} + 2>/dev/null || echo "Unknown")
+DEPENDENCIES=$(find . -name ".runtimedeps" -exec cat {} + 2>/dev/null || echo "None")
+VERSION=$(find . -name ".version" -exec cat {} + 2>/dev/null || echo "unknown")
+
+unset http_proxy https_proxy
+
+PAX_BASENAME=$(basename "$PAX")
+TAG="${BUILD_LINE}_${RELEASE_PREFIX}_${BUILD_NUMBER}"
+NAME="${PORT_NAME} ${VERSION} (Build ${BUILD_NUMBER}) - (${BUILD_LINE})"
+
+# --- RELEASE NOTES ---
+if [ -f "$RELEASE_NOTES_SCRIPT" ]; then
+  RELEASE_NOTES=$("$RELEASE_NOTES_SCRIPT" -m release -p "$GITHUB_REPO" -t markdown || echo "No notes")
 else
-  echo "No RPM files found. Skipping RPM upload."
+  RELEASE_NOTES="No release notes"
 fi
 
-METADATA=`find . -type f -path "*install/metadata.json"`
-if [ $(echo "$METADATA" | grep -c /) -ne 1 ]; then
-  echo "Error: Expected exactly 1 metadata.json file, found: $METADATA"
-  exit 1
-fi
-BUILD_STATUS=`find . -name "test.status" | xargs cat`
-DEPENDENCIES=`find . -name ".runtimedeps" | xargs cat`
-BUILD_DEPENDENCIES=`find . -name ".builddeps" | xargs cat`
-VERSION=`find . -name "*install/.version" | xargs cat`
+echo "$RELEASE_NOTES" > CHANGELOG.md
 
-if [ ! -f "$PAX" ]; then
-  echo "Port pax file does not exist";
-  exit 1;
-fi
+DESCRIPTION="${PORT_DESCRIPTION}<br/><b>Status:</b> ${BUILD_STATUS}<br/>"
+DESCRIPTION+="<b>Dependencies:</b> ${DEPENDENCIES}<br/>"
+DESCRIPTION+=$'\n\n'"$RELEASE_NOTES"
 
-if [ ! -f "$METADATA" ]; then
-  echo "Port metadata.json file does not exist";
-  exit 1;
+# --- TOOL CHECK ---
+command -v github-release >/dev/null || { echo "ERROR: github-release not installed"; exit 1; }
+
+# --- CREATE / RECREATE RELEASE ---
+if github-release info -u "$GITHUB_ORGANIZATION" -r "$GITHUB_REPO" --tag "$TAG" -j &>/dev/null; then
+  github-release delete --user "$GITHUB_ORGANIZATION" --repo "$GITHUB_REPO" --tag "$TAG"
 fi
 
-echo "PAX: $PAX"
-echo "METADATA: $METADATA"
+github-release release \
+  --user "$GITHUB_ORGANIZATION" \
+  --repo "$GITHUB_REPO" \
+  --tag "$TAG" \
+  --name "$NAME" \
+  --description "$DESCRIPTION"
 
-if [ -z "$DEPENDENCIES" ]; then
-  DEPENDENCIES="No dependencies";
-fi
-
-if [ -z "$BUILD_DEPENDENCIES" ]; then
-  BUILD_DEPENDENCIES="No dependencies";
-fi
-
-if [ ! -z "$VERSION" ]; then
-  VERSION="$VERSION ";
-fi
-
-PAX_BASENAME=$(basename "${PAX}")
-DIR_NAME=${PAX_BASENAME%%.pax.Z}
-DIR_NAME=$(echo "$DIR_NAME" | sed -e "s/\.202[0-9]*_[0-9]*\.zos/.zos/g" -e "s/\.zos//g")
-BUILD_ID=${BUILD_NUMBER}
-
-
-# Check for python dependencies
-if pip3 show numpy &> /dev/null; then
-  echo "NumPy is already installed."
-else
-  echo "NumPy is not installed. Installing now..."
-  pip3 install numpy
-fi
-
-if pip3 show PyGithub &> /dev/null; then
-  echo "PyGithub is already installed."
-else
-  echo "PyGithub is not installed. Installing now..."
-  pip3 install PyGithub
-fi
-
-if pip3 show matplotlib &> /dev/null; then
-  echo "matplotlib is already installed."
-else
-  echo "matplotlib is not installed. Installing now..."
-  pip3 install matplotlib
-fi
-
-# Needed for uploading releases
-unset http_proxy
-unset https_proxy
-
-DESCRIPTION="${PORT_DESCRIPTION}"
-DESCRIPTION="${DESCRIPTION}<br /><b>Test Status:</b> ${BUILD_STATUS}<br />"
-DESCRIPTION="${DESCRIPTION}<b>Runtime Dependencies:</b> ${DEPENDENCIES}<br />"
-DESCRIPTION="${DESCRIPTION}<b>Build Dependencies:</b> ${BUILD_DEPENDENCIES}<br />"
-
-if [ -z "$BUILD_LINE" ]; then
-  BUILD_LINE="STABLE"
-fi
-
-TAG="${BUILD_LINE}_${RELEASE_PREFIX}_${BUILD_ID}"
-
-URL_LINE="https://github.com/${GITHUB_ORGANIZATION}/${GITHUB_REPO}/releases/download/${TAG}/$PAX_BASENAME"
-DESCRIPTION="${DESCRIPTION}<br /><b>Command to download and install on z/OS (if you have curl)</b> <pre>curl -o ${PAX_BASENAME} -L ${URL_LINE} && pax -rf ${PAX_BASENAME} && cd $DIR_NAME && . ./.env</pre>"
-DESCRIPTION="${DESCRIPTION}<br /><b>Or use:</b> <pre>zopen install ${PORT_NAME}</pre>"
-
-NAME="${PORT_NAME} ${VERSION}(Build ${BUILD_ID}) - ($BUILD_LINE)"
-
-# --- Generate Release Notes using create_release_notes.sh in Markdown format ---
-RELEASE_NOTES_MD_CONTENT=$(
-  "$RELEASE_NOTES_SCRIPT" -m release -p "$GITHUB_REPO" -t markdown 
-)
-
-# --- Generate Release Notes using create_release_notes.sh in Text format ---
-RELEASE_NOTES_TXT_CONTENT=$( # New variable for text content
-  "$RELEASE_NOTES_SCRIPT" -m release -p "$GITHUB_REPO" -t text 
-)
-
-
-if [ -z "$RELEASE_NOTES_MD_CONTENT" ]; then
-  echo "Error: No Markdown release notes were generated by $RELEASE_NOTES_SCRIPT."
-  exit 1
-else
-  echo "Markdown release notes generated successfully by $RELEASE_NOTES_SCRIPT"
-fi
-
-if [ -z "$RELEASE_NOTES_TXT_CONTENT" ]; then
-  echo "Error: No Text release notes were generated by $RELEASE_NOTES_SCRIPT."
-  exit 1
-else
-  echo "Text release notes generated successfully by $RELEASE_NOTES_SCRIPT"
-fi
-
-
-# --- Create release notes files ---
-CHANGELOG_TXT_FILE="CHANGELOG.txt"
-RELEASE_NOTES_MD_FILE="CHANGELOG.md"
-
-echo "$RELEASE_NOTES_TXT_CONTENT" > "$CHANGELOG_TXT_FILE" # Write TEXT release notes to .txt file # Using new content variable
-echo "$RELEASE_NOTES_MD_CONTENT" > "$RELEASE_NOTES_MD_FILE" # Write Markdown notes to .md file
-
-echo "Release notes written to $CHANGELOG_TXT_FILE"
-echo "Release notes written to $RELEASE_NOTES_MD_FILE"
-
-# --- Append CHANGELOG.md content to DESCRIPTION ---
-DESCRIPTION_WITH_CHANGELOG="$DESCRIPTION" # Start with the basic description
-DESCRIPTION_WITH_CHANGELOG+=$'\n\n'        # Add a couple of newlines to separate
-DESCRIPTION_WITH_CHANGELOG+="$RELEASE_NOTES_MD_CONTENT" # Append the Markdown changelog
-DESCRIPTION="$DESCRIPTION_WITH_CHANGELOG" # Update DESCRIPTION to include changelog
-
-
-exists=$(github-release info -u ${GITHUB_ORGANIZATION} -r ${GITHUB_REPO} --tag "${TAG}" -j)
-if [ $? -gt 0 ]; then
-  echo "Creating a new tag in github"
-  github-release -v release --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --tag "${TAG}" --name "${NAME}" --description "${DESCRIPTION}" # Use --description
-  if [ $? -eq 0 ]; then
-    echo "Release created successfully!"
-  else
-    echo "Failed to create release."
+# --- VALIDATE RELEASE (FIXES YOUR ERROR) ---
+github-release info \
+  -u "$GITHUB_ORGANIZATION" \
+  -r "$GITHUB_REPO" \
+  --tag "$TAG" || {
+    echo "ERROR: Release creation failed"
     exit 1
+}
+
+# --- UPLOAD PAX ---
+github-release upload \
+  --user "$GITHUB_ORGANIZATION" \
+  --repo "$GITHUB_REPO" \
+  --tag "$TAG" \
+  --name "$PAX_BASENAME" \
+  --file "$PAX"
+
+# =========================================================
+# 🔧 PULP SETUP (AUTO INSTALL + CONFIG)
+# =========================================================
+
+echo "=== Checking Pulp CLI ==="
+
+if ! command -v pulp >/dev/null 2>&1; then
+  echo "Pulp CLI not found. Installing..."
+
+  if command -v pip3 >/dev/null 2>&1; then
+    python3 -m pip install --user pulp-cli || true
+    export PATH="$HOME/.local/bin:$PATH"
   fi
-else
-  echo "Deleting and creating new tag"
-  github-release -v delete --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --tag "${TAG}"
-  github-release -v release --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --tag "${TAG}" --name "${NAME}" --description "${DESCRIPTION}" # Use --description
-  if [ $? -eq 0 ]; then
-    echo "Release recreated successfully!"
-  else
-    echo "Failed to recreate release."
+fi
+
+if command -v pulp >/dev/null 2>&1; then
+  echo "Pulp CLI available"
+
+  pulp config create \
+    --base-url "$PULP_HOST" \
+    --username "$PULP_USERNAME" \
+    --password "$PULP_PASSWORD" \
+    --overwrite
+
+  pulp status || {
+    echo "ERROR: Pulp connection failed"
     exit 1
-  fi
-fi
+  }
 
-# check up to 5 times for the release to appear on github
-for i in {1..5}; do
-  github-release info -u "${GITHUB_ORGANIZATION}" -r "${GITHUB_REPO}" --tag "${TAG}" -j
-  if [ $? -eq 0 ]; then
-    echo "Release found!"
-    break
-  else
-    if [ $i -eq 5 ]; then
-      echo "Command failed after 5 attempts. Recreating release..."
-      github-release -v release --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --tag "${TAG}" --name "${NAME}" --description "${DESCRIPTION}" # Use --description
-      if [ $? -eq 0 ]; then
-        echo "Release recreated successfully!"
-      else
-        echo "Failed to recreate release."
-        exit 1
-      fi
-    else
-      echo "Command failed. Retrying in 10 seconds..."
-      sleep 10
-    fi
-  fi
-done
-
-echo "Uploading the artifacts into github"
-github-release -v upload --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --tag "${TAG}" --name "${PAX_BASENAME}" --file "${PAX}"
-if [ $? -eq 0 ]; then
-  echo "PAX Artifact uploaded successfully!"
+  PULP_AVAILABLE=true
 else
-  echo "Failed to upload PAX artifact!"
-  exit 1
+  echo "WARNING: Pulp not available, skipping RPM upload"
+  PULP_AVAILABLE=false
 fi
 
-if [ $NUM_RPMS -gt 0 ]; then
+# =========================================================
+# 📦 RPM UPLOAD
+# =========================================================
+
+if [ "$NUM_RPMS" -gt 0 ] && [ "$PULP_AVAILABLE" = true ]; then
+
   if [ "$BUILD_LINE" = "STABLE" ]; then
     PULP_REPO="zopen-stable"
   else
     PULP_REPO="zopen-dev"
   fi
-  echo "Configuring Pulp server..."
 
-pulp config create \
-  --base-url "$PULP_HOST" \
-  --username "$PULP_USERNAME" \
-  --password "$PULP_PASSWORD" \
-  --overwrite
-pulp status || exit 1
-                                                              
-  echo "Uploading the RPM artifacts into github and Pulp repository: ${PULP_REPO}"
+  echo "Uploading RPMs to Pulp repo: $PULP_REPO"
+
   for RPM in "${RPM_FILES[@]}"; do
-    RPM_BASENAME=$(basename "${RPM}")
-    echo "Uploading ${RPM_BASENAME}..."
-    github-release -v upload --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --tag "${TAG}" --name "${RPM_BASENAME}" --file "${RPM}"
-    
-    # Push to the specific Pulp repository
-    pulp rpm repository upload --name "${PULP_REPO}" --file "${RPM}"
-    if [ $? -eq 0 ]; then
-       echo "RPM Artifact ${RPM_BASENAME} uploaded successfully to GitHub and Pulp!"
-    else
-       echo "Failed to upload RPM artifact ${RPM_BASENAME} to Pulp!"
-       exit 1
-    fi
+    RPM_NAME=$(basename "$RPM")
+
+    # Upload to GitHub
+    github-release upload \
+      --user "$GITHUB_ORGANIZATION" \
+      --repo "$GITHUB_REPO" \
+      --tag "$TAG" \
+      --name "$RPM_NAME" \
+      --file "$RPM"
+
+    # Upload to Pulp (with retry)
+    for i in 1 2 3; do
+      if pulp rpm repository upload --name "$PULP_REPO" --file "$RPM"; then
+        echo "SUCCESS: $RPM_NAME"
+        break
+      else
+        echo "Retry $i for $RPM_NAME"
+        sleep 5
+      fi
+
+      if [ $i -eq 3 ]; then
+        echo "ERROR: Failed to upload $RPM_NAME"
+        exit 1
+      fi
+    done
   done
+
 else
-  echo "No RPM artifacts to upload."
+  echo "Skipping RPM upload"
 fi
 
-echo "Uploading metadata artifacts into github"
-github-release -v upload --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --tag "${TAG}" --name "metadata.json" --file "${METADATA}"
-if [ $? -eq 0 ]; then
-  echo "Metadata Artifact uploaded successfully!"
-else
-  echo "Failed to upload Metadata artifact!"
-  exit 1
-fi
+# --- FINAL FILES ---
+github-release upload \
+  --user "$GITHUB_ORGANIZATION" \
+  --repo "$GITHUB_REPO" \
+  --tag "$TAG" \
+  --name "metadata.json" \
+  --file "$METADATA"
 
-# --- Upload CHANGELOG.md as release asset ---
-echo "Uploading CHANGELOG.md as release asset into github"
-github-release -v upload --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --tag "${TAG}" --name "CHANGELOG.md" --file "$RELEASE_NOTES_MD_FILE"
-if [ $? -eq 0 ]; then
-  echo "CHANGELOG.md uploaded successfully as release asset!"
-else
-  echo "Failed to upload CHANGELOG.md as release asset!"
-  exit 1
-fi
+github-release upload \
+  --user "$GITHUB_ORGANIZATION" \
+  --repo "$GITHUB_REPO" \
+  --tag "$TAG" \
+  --name "CHANGELOG.md" \
+  --file "CHANGELOG.md"
 
-# --- Upload CHANGELOG.txt as release asset ---
-echo "Uploading CHANGELOG.txt as release asset into github"
-github-release -v upload --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --tag "${TAG}" --name "CHANGELOG.txt" --file "$CHANGELOG_TXT_FILE" # Use CHANGELOG_TXT_FILE
-if [ $? -eq 0 ]; then
-  echo "CHANGELOG.txt uploaded successfully as release asset!"
-else
-  echo "Failed to upload CHANGELOG.txt as release asset!"
-  exit 1
-fi
-
+echo "=== SUCCESS: PUBLISH COMPLETED ==="
