@@ -2570,12 +2570,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="curl" data-searchable-text="curl Blue 99.7% STABLE_curl_4203 Networking tool uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="curl" data-searchable-text="curl Blue 99.7% STABLE_curl_4260 Networking tool uncategorized port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/curlport" target="_blank" rel="noopener noreferrer">curl</a></strong></div>
     <div class="tool-status">Status: Blue</div>
     <div class="tool-test">Test: 99.7%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/curlport/releases/download/STABLE_curlport_4203/curl-8.19.0.20260414_105046.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_curl_4203</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/curlport/releases/download/STABLE_curlport_4260/curl-8.20.0.20260505_144335.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_curl_4260</a></div>
     <div class="tool-desc" title="Networking tool">Networking tool</div>
   </div>
 </div>
@@ -3409,4 +3409,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2026-05-05 06:20:40 UTC
+Last updated:  2026-05-06 06:22:25 UTC

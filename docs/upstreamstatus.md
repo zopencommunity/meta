@@ -1,13 +1,13 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2026-05-05 06:18:10 EDT.*
+*Report generated on: 2026-05-06 06:19:58 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 307
-- **Total Current Lines of Code (LOC) in Patches:** 57,817
+- **Total Current Lines of Code (LOC) in Patches:** 57,801
 - **Total Number of Current Patch Files:** 1,038
-- **Average Current Patch LOC per Project:** 188.33
+- **Average Current Patch LOC per Project:** 188.28
 - **Average Current Patch Count per Project:** 3.38
 
 ### Historical Trends (All Projects)
@@ -29,7 +29,7 @@
 | [libuvport](#repo-libuvport) | 2,494 | +0 | 32 |
 | [librdkafkaport](#repo-librdkafkaport) | 2,490 | +0 | 54 |
 | [oqs-providerport](#repo-oqs-providerport) | 2,037 | +0 | 18 |
-| [curlport](#repo-curlport) | 1,844 | +0 | 47 |
+| [curlport](#repo-curlport) | 1,828 | -16 | 47 |
 | [bashport](#repo-bashport) | 1,797 | -2,629 | 27 |
 | [llamacppport](#repo-llamacppport) | 1,649 | +0 | 35 |
 | [gpgport](#repo-gpgport) | 1,560 | +0 | 32 |
@@ -567,7 +567,7 @@
 ## curlport
 
 - **Origin Date (First Commit):** 2022-04-08
-- **Current Patch LOC:** 1,844
+- **Current Patch LOC:** 1,828
 - **Current Patch Count:** 47
 
 ### Historical Trends
@@ -584,12 +584,12 @@
 | `stable-patches/configure.patch` | `stable-patches` | 15 |
 | `stable-patches/src/tool_cb_rea.c.patch` | `stable-patches` | 71 |
 | `stable-patches/src/tool_cb_wrt.c.patch` | `stable-patches` | 121 |
-| `stable-patches/src/tool_cfgable.c.patch` | `stable-patches` | 16 |
+| `stable-patches/src/tool_cfgable.c.patch` | `stable-patches` | 14 |
 | `stable-patches/src/tool_cfgable.h.patch` | `stable-patches` | 22 |
 | `stable-patches/src/tool_getparam.c.patch` | `stable-patches` | 83 |
 | `stable-patches/src/tool_getparam.h.patch` | `stable-patches` | 21 |
 | `stable-patches/src/tool_listhelp.c.patch` | `stable-patches` | 28 |
-| `stable-patches/src/tool_operate.c.patch` | `stable-patches` | 400 |
+| `stable-patches/src/tool_operate.c.patch` | `stable-patches` | 386 |
 | `stable-patches/src/tool_operate.h.patch` | `stable-patches` | 62 |
 | `stable-patches/src/tool_sdecls.h.patch` | `stable-patches` | 12 |
 | `stable-patches/tests/data/Makefile.am.patch` | `stable-patches` | 13 |

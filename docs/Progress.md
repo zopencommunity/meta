@@ -132,9 +132,9 @@
 <div class="tool-item-filterable" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/gitport" target="_blank" rel="noopener noreferrer">gitport</a></strong></div>
-    <div class="tool-status">78</div>
+    <div class="tool-status">77</div>
     <div class="tool-test">96.7%</div>
-    <div class="tool-release">autoconf, automake, bison, boost, buildkite, caddy, cmake, cronie, ctags, doom-ascii, dos2unix, doxygen, expat, frp, gettext, gflags, gin, git, git-extras, githubcli, gitlab-runner, gitlabcli, gn, gnulib, grafana, grpc, gzip, hello, help2man, htop, jansson, k6, libbsd, libgdbm, libgpgme, libkqueue, libmd, liboqs, libpipeline, librdkafka, libtool, libyaml, m4, make, man-db, meta, murex, ncdu, ncurses, ninja, openssl, oqs-provider, patch, perl, php, prometheus, protobuf, re2c, rpm, rsync, shdoc, sqlite, sshpass, tar, terraform, texinfo, thesilversearcher, tig, unzip, victoriametrics, vim, wget, which, xz, zigi, zip, zoslib, zusage</div>
+    <div class="tool-release">autoconf, automake, bison, boost, buildkite, caddy, cmake, cronie, ctags, doom-ascii, dos2unix, doxygen, expat, frp, gettext, gflags, gin, git, git-extras, githubcli, gitlab-runner, gitlabcli, gn, gnulib, grafana, grpc, gzip, hello, help2man, htop, jansson, k6, libbsd, libgdbm, libgpgme, libkqueue, libmd, liboqs, libpipeline, librdkafka, libtool, libyaml, m4, make, man-db, meta, murex, ncdu, ncurses, ninja, openssl, oqs-provider, patch, perl, php, prometheus, protobuf, re2c, rpm, rsync, shdoc, sqlite, sshpass, tar, terraform, texinfo, thesilversearcher, tig, unzip, victoriametrics, vim, wget, which, xz, zigi, zip, zusage</div>
     <div class="tool-desc"></div>
   </div>
 </div>
@@ -2515,4 +2515,4 @@
   </div>
 </div>
 
-Last updated:  2026-05-05 06:20:40 UTC
+Last updated:  2026-05-06 06:22:25 UTC

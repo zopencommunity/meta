@@ -25,6 +25,7 @@
 - 2025-08-26: [Update ansible-version to 2.19.1 from 2.19.0](https://github.com/zopencommunity/ansibleport/pull/2) ❌
 
 ### buildkiteport
+- 2026-05-05: [Update buildkite-version to 3.125.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/105) ❌
 - 2026-04-28: [Update buildkite-version to 3.124.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/104) ❌
 - 2026-04-17: [Update buildkite-version to 3.123.1 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/103) ❌
 - 2026-04-14: [Update buildkite-version to 3.123.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/102) ❌
@@ -54,7 +55,6 @@
 - 2025-10-22: [Update buildkite-version to 3.110.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/78) ❌
 - 2025-10-15: [Update buildkite-version to 3.109.1 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/77) ❌
 - 2025-10-09: [Update buildkite-version to 3.109.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/76) ❌
-- 2025-10-02: [Update buildkite-version to 3.108.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/75) ❌
 
 ### c3270port
 - 2025-12-23: [Update c3270-version to 4.5ga5 from 4.4ga6](https://github.com/zopencommunity/c3270port/pull/32) ❌
@@ -70,6 +70,7 @@
 - 2024-05-30: [Update caddy-version to 2.8.1 from 2.7.6](https://github.com/zopencommunity/caddyport/pull/1) ❓
 
 ### ccacheport
+- 2026-05-05: [Update ccache-version to 4.13.6 from 4.11.3](https://github.com/zopencommunity/ccacheport/pull/12) ❌
 - 2026-04-26: [Update ccache-version to 4.13.5 from 4.11.3](https://github.com/zopencommunity/ccacheport/pull/11) ❌
 - 2026-04-19: [Update ccache-version to 4.13.4 from 4.11.3](https://github.com/zopencommunity/ccacheport/pull/10) ❌
 - 2026-04-12: [Update ccache-version to 4.13.3 from 4.11.3](https://github.com/zopencommunity/ccacheport/pull/9) ❌
@@ -166,6 +167,7 @@
 - 2025-02-01: [Update creduce-version to 2.10.0 from V.R.M](https://github.com/zopencommunity/creduceport/pull/1) ❓
 
 ### crushport
+- 2026-05-05: [Update crush-version to 0.65.3 from 0.11.0](https://github.com/zopencommunity/crushport/pull/115) ❌
 - 2026-05-02: [Update crush-version to 0.65.2 from 0.11.0](https://github.com/zopencommunity/crushport/pull/114) ❌
 - 2026-04-29: [Update crush-version to 0.64.0 from 0.11.0](https://github.com/zopencommunity/crushport/pull/113) ❌
 - 2026-04-28: [Update crush-version to 0.63.0 from 0.11.0](https://github.com/zopencommunity/crushport/pull/112) ❌
@@ -195,7 +197,6 @@
 - 2026-03-03: [Update crush-version to 0.46.2 from 0.11.0](https://github.com/zopencommunity/crushport/pull/88) ❌
 - 2026-02-28: [Update crush-version to 0.46.1 from 0.11.0](https://github.com/zopencommunity/crushport/pull/87) ❌
 - 2026-02-27: [Update crush-version to 0.46.0 from 0.11.0](https://github.com/zopencommunity/crushport/pull/86) ❌
-- 2026-02-26: [Update crush-version to 0.45.1 from 0.11.0](https://github.com/zopencommunity/crushport/pull/85) ❌
 
 ### cunitport
 - 2026-01-20: [Update cunit-version to 3.5.4 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/11) ❌
@@ -206,9 +207,6 @@
 - 2024-09-10: [Update cunit-version to 3.4.2 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/5) ❓
 - 2024-08-23: [Update cunit-version to 3.4.1 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/4) ❓
 - 2024-06-08: [Update cunit-version to 3.3.1 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/3) ❓
-
-### curlport
-- 2026-04-29: [Update curl-version to 8.20.0 from 8.19.0](https://github.com/zopencommunity/curlport/pull/65) ❌
 
 ### direnvport
 - 2025-04-11: [Update direnv-version to 2.36.0 from 2.35.0](https://github.com/zopencommunity/direnvport/pull/11) ❌
@@ -631,6 +629,7 @@
 - 2025-12-21: [Update re2c-version to 4.4 from 4.3.1](https://github.com/zopencommunity/re2cport/pull/18) ❌
 
 ### redisport
+- 2026-05-05: [Update redis-version to 8.6.3 from 8.2.3](https://github.com/zopencommunity/redisport/pull/24) ❌
 - 2026-03-24: [Update redis-version to 8.6.2 from 8.2.3](https://github.com/zopencommunity/redisport/pull/23) ❌
 - 2026-02-23: [Update redis-version to 8.6.1 from 8.2.3](https://github.com/zopencommunity/redisport/pull/22) ❌
 - 2026-02-10: [Update redis-version to 8.6.0 from 8.2.3](https://github.com/zopencommunity/redisport/pull/21) ❌
@@ -662,6 +661,7 @@
 - 2026-04-22: [Update sed-version to 4.10 from 4.9](https://github.com/zopencommunity/sedport/pull/18) ❌
 
 ### sqliteport
+- 2026-05-05: [Update sqlite-version to 2026-3530100 from 2025-3480000](https://github.com/zopencommunity/sqliteport/pull/37) ❌
 - 2026-04-09: [Update sqlite-version to 2026-3530000 from 2025-3480000](https://github.com/zopencommunity/sqliteport/pull/36) ❌
 - 2026-03-13: [Update sqlite-version to 2026-3510300 from 2025-3480000](https://github.com/zopencommunity/sqliteport/pull/35) ❌
 - 2026-03-07: [Update sqlite-version to 2026-3520000 from 2025-3480000](https://github.com/zopencommunity/sqliteport/pull/34) ❌
@@ -1112,5 +1112,5 @@
 ---
 
 
-> Last updated: 2026-05-05 06:11:37 EDT
+> Last updated: 2026-05-06 06:14:06 EDT
 
