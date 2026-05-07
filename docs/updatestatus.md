@@ -107,10 +107,8 @@
 - 2025-06-07: [Update chezmoi-version to 2.62.6 from 2.62.5](https://github.com/zopencommunity/chezmoiport/pull/4) ❌
 - 2025-05-10: [Update chezmoi-version to 2.62.3 from 2.62.2](https://github.com/zopencommunity/chezmoiport/pull/1) ❌
 
-### cjsonport
-- 2025-09-09: [Update cjson-version to 1.7.19 from 1.7.18](https://github.com/zopencommunity/cjsonport/pull/3) ❓
-
 ### clangdport
+- 2026-05-06: [Update clangd-version to 22.1.5 from 21.1.8](https://github.com/zopencommunity/clangdport/pull/10) ❌
 - 2026-04-21: [Update clangd-version to 22.1.4 from 21.1.8](https://github.com/zopencommunity/clangdport/pull/9) ❌
 - 2026-04-07: [Update clangd-version to 22.1.3 from 21.1.8](https://github.com/zopencommunity/clangdport/pull/8) ❌
 - 2026-03-25: [Update clangd-version to 22.1.2 from 21.1.8](https://github.com/zopencommunity/clangdport/pull/7) ❌
@@ -118,6 +116,7 @@
 - 2026-02-24: [Update clangd-version to 22.1.0 from 21.1.8](https://github.com/zopencommunity/clangdport/pull/5) ❌
 
 ### clang-formatport
+- 2026-05-06: [Update clang-format-version to 22.1.5 from 21.1.8](https://github.com/zopencommunity/clang-formatport/pull/15) ❌
 - 2026-04-21: [Update clang-format-version to 22.1.4 from 21.1.8](https://github.com/zopencommunity/clang-formatport/pull/14) ❌
 - 2026-04-07: [Update clang-format-version to 22.1.3 from 21.1.8](https://github.com/zopencommunity/clang-formatport/pull/13) ❌
 - 2026-03-25: [Update clang-format-version to 22.1.2 from 21.1.8](https://github.com/zopencommunity/clang-formatport/pull/12) ❌
@@ -125,6 +124,7 @@
 - 2026-02-24: [Update clang-format-version to 22.1.0 from 21.1.8](https://github.com/zopencommunity/clang-formatport/pull/10) ❌
 
 ### clang-tidyport
+- 2026-05-06: [Update clang-tidy-version to 22.1.5 from 21.1.8](https://github.com/zopencommunity/clang-tidyport/pull/8) ❌
 - 2026-04-21: [Update clang-tidy-version to 22.1.4 from 21.1.8](https://github.com/zopencommunity/clang-tidyport/pull/7) ❌
 - 2026-04-07: [Update clang-tidy-version to 22.1.3 from 21.1.8](https://github.com/zopencommunity/clang-tidyport/pull/6) ❌
 - 2026-03-25: [Update clang-tidy-version to 22.1.2 from 21.1.8](https://github.com/zopencommunity/clang-tidyport/pull/5) ❌
@@ -266,6 +266,7 @@
 - 2026-03-26: [Update ghcli-version to 2.89.0 from 2.86.0](https://github.com/zopencommunity/githubcliport/pull/79) ❌
 
 ### gitlabcliport
+- 2026-05-06: [Update glab-version to 1.94.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/70) ❌
 - 2026-04-23: [Update glab-version to 1.93.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/69) ❌
 - 2026-04-11: [Update glab-version to 1.92.1 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/68) ❌
 - 2026-04-10: [Update glab-version to 1.92.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/67) ❌
@@ -295,7 +296,6 @@
 - 2025-10-07: [Update glab-version to 1.73.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/43) ❌
 - 2025-09-17: [Update glab-version to 1.72.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/42) ❓
 - 2025-09-16: [Update glab-version to 1.71.2 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/41) ❌
-- 2025-09-15: [Update glab-version to 1.69.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/40) ❌
 
 ### gitlab-runnerport
 - 2026-05-03: [Update gitlab-runner-version to 18.11.2 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/68) ❌
@@ -328,9 +328,6 @@
 - 2025-05-16: [Update gitlab-runner-version to 18.0.0 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/40) ❌
 - 2025-05-10: [Update gitlab-runner-version to 17.11.1 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/39) ❌
 - 2025-04-17: [Update gitlab-runner-version to 17.11.0 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/38) ❌
-
-### gitport
-- 2026-04-21: [Update git-version to 2.54.0 from 2.53.0](https://github.com/zopencommunity/gitport/pull/178) ❌
 
 ### git-sizerport
 - 2025-04-10: [Update git-sizer-version to 1.5.0 from V.R.M](https://github.com/zopencommunity/git-sizerport/pull/1) ✅
@@ -441,7 +438,7 @@
 - 2026-04-07: [Update lazygit-version to 0.61.0 from 0.60.0](https://github.com/zopencommunity/lazygitport/pull/37) ❌
 
 ### libgdbmport
-- 2025-03-22: [Update libgdbm-version to 1.25 from 1.24](https://github.com/zopencommunity/libgdbmport/pull/10) ❌
+- 2025-03-22: [Update libgdbm-version to 1.25 from 1.24](https://github.com/zopencommunity/libgdbmport/pull/10) ❓
 
 ### libgpgmeport
 - 2025-10-10: [Update libgpgme-version to 2.0.1 from 1.23.2](https://github.com/zopencommunity/libgpgmeport/pull/3) ❌
@@ -450,6 +447,7 @@
 - 2026-04-30: [Update libiconv-version to 1.19 from 1.18](https://github.com/zopencommunity/libiconvport/pull/47) ❌
 
 ### libompport
+- 2026-05-06: [Update libomp-version to 22.1.5 from 21.1.8](https://github.com/zopencommunity/libompport/pull/9) ❌
 - 2026-04-21: [Update libomp-version to 22.1.4 from 21.1.8](https://github.com/zopencommunity/libompport/pull/8) ❌
 - 2026-04-07: [Update libomp-version to 22.1.3 from 21.1.8](https://github.com/zopencommunity/libompport/pull/7) ❌
 - 2026-03-25: [Update libomp-version to 22.1.2 from 21.1.8](https://github.com/zopencommunity/libompport/pull/6) ❌
@@ -693,6 +691,7 @@
 - 2025-11-04: [Update tcl-version to 9.0.3 from 9.0.2](https://github.com/zopencommunity/tclport/pull/22) ❌
 
 ### terraformport
+- 2026-05-06: [Update terraform-version to 1.15.2 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/59) ❌
 - 2026-05-02: [Update terraform-version to 1.15.1 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/58) ❌
 - 2026-04-29: [Update terraform-version to 1.15.0 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/57) ❌
 - 2026-04-21: [Update terraform-version to 1.14.9 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/56) ❌
@@ -722,7 +721,6 @@
 - 2025-01-23: [Update terraform-version to 1.10.5 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/32) ❓
 - 2025-01-08: [Update terraform-version to 1.10.4 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/31) ❓
 - 2024-12-18: [Update terraform-version to 1.10.3 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/30) ❓
-- 2024-12-11: [Update terraform-version to 1.10.2 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/29) ❓
 
 ### texinfoport
 - 2026-03-03: [Update texinfo-version to 7.3 from 7.2](https://github.com/zopencommunity/texinfoport/pull/24) ❌
@@ -1112,5 +1110,5 @@
 ---
 
 
-> Last updated: 2026-05-06 06:14:06 EDT
+> Last updated: 2026-05-07 06:11:55 EDT
 

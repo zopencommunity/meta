@@ -1,13 +1,13 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2026-05-06 06:19:58 EDT.*
+*Report generated on: 2026-05-07 06:17:43 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 307
-- **Total Current Lines of Code (LOC) in Patches:** 57,801
-- **Total Number of Current Patch Files:** 1,038
-- **Average Current Patch LOC per Project:** 188.28
+- **Total Current Lines of Code (LOC) in Patches:** 57,825
+- **Total Number of Current Patch Files:** 1,039
+- **Average Current Patch LOC per Project:** 188.36
 - **Average Current Patch Count per Project:** 3.38
 
 ### Historical Trends (All Projects)
@@ -38,7 +38,7 @@
 | [cmakeport](#repo-cmakeport) | 1,348 | +0 | 1 |
 | [coreutilsport](#repo-coreutilsport) | 1,328 | +0 | 20 |
 | [sudoport](#repo-sudoport) | 1,278 | +0 | 30 |
-| [gitport](#repo-gitport) | 1,056 | +0 | 33 |
+| [gitport](#repo-gitport) | 1,060 | +4 | 33 |
 | [grpcport](#repo-grpcport) | 1,017 | +0 | 8 |
 | [valgrindport](#repo-valgrindport) | 896 | +0 | 3 |
 | [dnf5port](#repo-dnf5port) | 879 | +0 | 29 |
@@ -183,6 +183,7 @@
 | [my_basicport](#repo-my-basicport) | 22 | +0 | 1 |
 | [k6port](#repo-k6port) | 21 | +0 | 2 |
 | [shdocport](#repo-shdocport) | 20 | +0 | 2 |
+| [cjsonport](#repo-cjsonport) | 20 | +20 | 1 |
 | [sshpassport](#repo-sshpassport) | 18 | +0 | 1 |
 | [git-lfsport](#repo-git-lfsport) | 18 | +0 | 1 |
 | [bzip2port](#repo-bzip2port) | 17 | +0 | 1 |
@@ -286,7 +287,6 @@
 | [hugoport](#repo-hugoport) | 0 | +0 | 0 |
 | [dialogport](#repo-dialogport) | 0 | +0 | 0 |
 | [joeport](#repo-joeport) | 0 | N/A | 0 |
-| [cjsonport](#repo-cjsonport) | 0 | +0 | 0 |
 | [libdioport](#repo-libdioport) | 0 | +0 | 0 |
 | [git-chglogport](#repo-git-chglogport) | 0 | N/A | 0 |
 | [zedc_asciiport](#repo-zedc-asciiport) | 0 | +0 | 0 |
@@ -980,7 +980,7 @@
 ## gitport
 
 - **Origin Date (First Commit):** 2022-05-25
-- **Current Patch LOC:** 1,056
+- **Current Patch LOC:** 1,060
 - **Current Patch Count:** 33
 
 ### Historical Trends
@@ -1016,7 +1016,7 @@
 | `stable-patches/git-compat-util.h.patch` | `stable-patches` | 15 |
 | `stable-patches/hash-object.c.patch` | `stable-patches` | 15 |
 | `stable-patches/http.c.patch` | `stable-patches` | 23 |
-| `stable-patches/lockfile.c.patch` | `stable-patches` | 15 |
+| `stable-patches/lockfile.c.patch` | `stable-patches` | 19 |
 | `stable-patches/object-file.c.patch` | `stable-patches` | 48 |
 | `stable-patches/odb.c.patch` | `stable-patches` | 29 |
 | `stable-patches/quote.c.patch` | `stable-patches` | 22 |
@@ -4364,6 +4364,26 @@
 
 ---
 
+<a id="repo-cjsonport"></a>
+## cjsonport
+
+- **Origin Date (First Commit):** 2024-08-16
+- **Current Patch LOC:** 20
+- **Current Patch Count:** 1
+
+### Historical Trends
+
+![LOC Trend for cjsonport](images/upstream/cjsonport_current_loc_trend.png)
+![Count Trend for cjsonport](images/upstream/cjsonport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/CMakeLists.txt.patch` | `patches` | 20 |
+
+---
+
 <a id="repo-sshpassport"></a>
 ## sshpassport
 
@@ -6265,24 +6285,6 @@
 ## joeport
 
 - **Origin Date (First Commit):** Unknown
-- **Current Patch LOC:** 0
-- **Current Patch Count:** 0
-
-### Historical Trends
-
-*(Patch LOC trend graph not generated)*
-*(Patch count trend graph not generated)*
-
-### Current Patch Details
-
-*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
-
----
-
-<a id="repo-cjsonport"></a>
-## cjsonport
-
-- **Origin Date (First Commit):** 2024-08-16
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 

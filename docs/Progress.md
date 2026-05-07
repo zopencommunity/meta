@@ -123,9 +123,9 @@
 <div class="tool-item-filterable" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/curlport" target="_blank" rel="noopener noreferrer">curlport</a></strong></div>
-    <div class="tool-status">78</div>
+    <div class="tool-status">77</div>
     <div class="tool-test">99.7%</div>
-    <div class="tool-release">automake, avro-c-lib, bash, bison, buildkite, c3270, cmake, coreutils, createrepo_c, cronie, cscope, curl, diffutils, dnf5, dos2unix, doxygen, expat, findutils, frp, gawk, gin, git, gitlab-runner, gn, gnulib, gperf, gpg, grep, groff, gzip, hello, help2man, less, libassuan, libgpgme, libksba, liboqs, libpipeline, librdkafka, libserdes, libtool, libyaml, llamacpp, luarocks, lz4, make, man-db, maven, meta, moreutils, ncdu, ncurses, neovim, ninja, npth, ntbtls, oniguruma, openssl, oqs-provider, patch, perl, php, pinentry, procps, rsync, screen, sed, snappy-c, tar, tcl, terraform, texinfo, unzip, uucp, wget, which, xxhash, zstd</div>
+    <div class="tool-release">automake, avro-c-lib, bash, bison, buildkite, c3270, cmake, coreutils, createrepo_c, cronie, cscope, curl, diffutils, dnf5, dos2unix, doxygen, expat, findutils, frp, gawk, gin, git, gitlab-runner, gn, gnulib, gperf, gpg, grep, groff, gzip, hello, help2man, less, libassuan, libgpgme, libksba, liboqs, libpipeline, librdkafka, libserdes, libtool, libyaml, llamacpp, luarocks, lz4, make, man-db, maven, meta, moreutils, ncdu, ncurses, neovim, ninja, npth, ntbtls, oniguruma, openssl, oqs-provider, patch, php, pinentry, procps, rsync, screen, sed, snappy-c, tar, tcl, terraform, texinfo, unzip, uucp, wget, which, xxhash, zstd</div>
     <div class="tool-desc"></div>
   </div>
 </div>
@@ -177,9 +177,9 @@
 <div class="tool-item-filterable" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/gzipport" target="_blank" rel="noopener noreferrer">gzipport</a></strong></div>
-    <div class="tool-status">59</div>
+    <div class="tool-status">58</div>
     <div class="tool-test">100.0%</div>
-    <div class="tool-release">automake, bash, bison, ccache, coreutils, cscope, curl, direnv, dos2unix, findutils, flex, gawk, git, git-lfs, gn, gperf, hello, htop, less, libpsl, libtool, logrotate, lpeg, lz4, m4, make, man-db, mc, meta, moreutils, multitail, ncdu, neovim, ninja, oniguruma, openssh, openssl, p7zip, patch, perl, php, procps, prometheus, rpm, rsync, screen, sed, sqlite, sshpass, tar, tcl, texinfo, thesilversearcher, util-linux, uucp, wget, which, xxhash, zstd</div>
+    <div class="tool-release">automake, bash, bison, ccache, coreutils, cscope, curl, direnv, dos2unix, findutils, flex, gawk, git, git-lfs, gn, gperf, hello, htop, less, libpsl, libtool, logrotate, lpeg, lz4, m4, make, man-db, mc, meta, moreutils, multitail, ncdu, neovim, ninja, oniguruma, openssh, openssl, p7zip, patch, php, procps, prometheus, rpm, rsync, screen, sed, sqlite, sshpass, tar, tcl, texinfo, thesilversearcher, util-linux, uucp, wget, which, xxhash, zstd</div>
     <div class="tool-desc"></div>
   </div>
 </div>
@@ -2515,4 +2515,4 @@
   </div>
 </div>
 
-Last updated:  2026-05-06 06:22:25 UTC
+Last updated:  2026-05-07 06:20:11 UTC
