@@ -5,6 +5,7 @@
 # Inputs: 
 #   - PORT_GITHUB_REPO : e.g: https://github.com/zopencommunity/makeport.git
 #   - PORT_BRANCH : (default: main)
+#   - PORT_GIT_SOURCE_URL : optional alternate source URL passed through to zopen-build as ZOPEN_EXTERNAL_URL
 #   - BUILD_LINE: dev or stable
 #   - FORCE_CLANG : Build using clang
 # Output:
@@ -51,6 +52,9 @@ fi
 
 if [ ! -z "$BUILD_BRANCH" ]; then
   export ZOPEN_GIT_BRANCH="$BUILD_BRANCH"
+fi
+if [ ! -z "$PORT_GIT_SOURCE_URL" ]; then
+  export ZOPEN_EXTERNAL_URL="$PORT_GIT_SOURCE_URL"
 fi
 git clone -b "${PORT_BRANCH}" "${PORT_GITHUB_REPO}" ${PORT_NAME} && cd ${PORT_NAME}
 
