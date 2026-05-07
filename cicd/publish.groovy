@@ -239,6 +239,25 @@ if [ $NUM_RPMS -gt 0 ]; then
        exit 1
     fi
   done
+
+  # After all RPMs are uploaded, update the distribution to the latest publication
+  echo "Updating Pulp distribution for ${PULP_REPO}..."
+  
+  # Determine distribution name (matching the repo name in this setup)
+  DIST_NAME="$PULP_REPO"
+
+  LATEST_PUB=$(pulp rpm publication list --repository "${PULP_REPO}" --limit 1 | jq -r '.[0].pulp_href')
+  if [ -n "$LATEST_PUB" ] && [ "$LATEST_PUB" != "null" ]; then
+    echo "Updating distribution ${DIST_NAME} to publication ${LATEST_PUB}"
+    pulp rpm distribution update --name "${DIST_NAME}" --publication "${LATEST_PUB}"
+    if [ $? -eq 0 ]; then
+      echo "Successfully updated Pulp distribution ${DIST_NAME}"
+    else
+      echo "Warning: Failed to update Pulp distribution ${DIST_NAME}"
+    fi
+  else
+    echo "Warning: Could not find latest publication for ${PULP_REPO}"
+  fi
 else
   echo "No RPM artifacts to upload."
 fi

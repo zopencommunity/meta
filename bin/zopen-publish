@@ -384,6 +384,20 @@ uploadToPulp() {
   fi
 
   printVerbose "Successfully pushed $rpm_file to Pulp repository: $PULP_REPO"
+
+  # Update the distribution to point to the latest publication
+  DIST_NAME="$PULP_REPO"
+
+  printInfo "- Updating Pulp distribution $DIST_NAME..."
+  LATEST_PUB=$(pulp rpm publication list --repository "${PULP_REPO}" --limit 1 | jq -r '.[0].pulp_href')
+  if [ -n "$LATEST_PUB" ] && [ "$LATEST_PUB" != "null" ]; then
+    if ! pulp rpm distribution update --name "${DIST_NAME}" --publication "${LATEST_PUB}" > /dev/null; then
+       printWarning "Warning: Failed to update Pulp distribution ${DIST_NAME}"
+    fi
+  else
+    printWarning "Warning: Could not find latest publication for ${PULP_REPO}"
+  fi
+
   return 0
 }
 
