@@ -11,10 +11,14 @@ on:
         required: false
         default: ""
         type: string
-      git_source_url:
+      source_url:
         required: false
         default: ""
         type: string
+      use_pr_source_url:
+        required: false
+        default: false
+        type: boolean
       use_prbranch_as_build_branch:
         required: false
         default: false
@@ -63,22 +67,26 @@ jobs:
           if [ -z "${branch}" ]; then
             branch="${{ fromJson(steps.request.outputs.data).head.ref }}"
           fi
-          git_source_url="${{ inputs.git_source_url }}"
-          GIT_SOURCE_URL_OPT=""
-          if [ -n "${git_source_url}" ]; then
-            GIT_SOURCE_URL_OPT="-F PORT_GIT_SOURCE_URL=${git_source_url}"
+          if ${{ inputs.use_pr_source_url }}; then
+            source_url="${{ fromJson(steps.request.outputs.data).head.repo.clone_url }}"
+          else
+            source_url="${{ inputs.source_url }}"
+          fi
+          SOURCE_URL_OPT=""
+          if [ -n "${source_url}" ]; then
+            SOURCE_URL_OPT="-F PORT_SOURCE_URL=${source_url}"
           fi
           BUILD_BRANCH_OPT=""
           if ${{ inputs.use_prbranch_as_build_branch }}; then
             BUILD_BRANCH_OPT="-F BUILD_BRANCH=${branch}"
             branch="main"
           fi
-          CAUSE="Triggered by GH Action from PR: ${{ github.event.issue.pull_request.url || github.event.pull_request.url }} - Repo ${repo}, Branch: ${branch}, Git Source URL: ${git_source_url}, Build Opts: ${BUILD_BRANCH_OPT}"
+          CAUSE="Triggered by GH Action from PR: ${{ github.event.issue.pull_request.url || github.event.pull_request.url }} - Repo ${repo}, Branch: ${branch}, Source URL: ${source_url}, Build Opts: ${BUILD_BRANCH_OPT}"
 
           ENCODED_CAUSE=$(echo -n "$CAUSE" | jq -s -R -r @uri)
           JENKINS_JOB_URL="${{ vars.JENKINS_HOST_URL }}/job/Port-Build/buildWithParameters?token=jenkinstest&cause=${ENCODED_CAUSE}"
 
-          RESPONSE=$(curl -k -X POST -s -i -u "${{ secrets.JENKINS_USER }}:${{ secrets.JENKINS_API_TOKEN }}" "${JENKINS_JOB_URL}" -F PORT_GITHUB_REPO="${repo}" -F PORT_DESCRIPTION="Github CI Test of ${repo}" -F PORT_BRANCH="${branch}" ${GIT_SOURCE_URL_OPT} ${BUILD_BRANCH_OPT})
+          RESPONSE=$(curl -k -X POST -s -i -u "${{ secrets.JENKINS_USER }}:${{ secrets.JENKINS_API_TOKEN }}" "${JENKINS_JOB_URL}" -F PORT_GITHUB_REPO="${repo}" -F PORT_DESCRIPTION="Github CI Test of ${repo}" -F PORT_BRANCH="${branch}" ${SOURCE_URL_OPT} ${BUILD_BRANCH_OPT})
 
           # Extract the build URL from the response headers
           BUILD_URL=$(echo "$RESPONSE" | grep -oP "location: \K(.*)" | tr -d '\r')

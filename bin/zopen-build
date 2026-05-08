@@ -50,7 +50,7 @@ Required:
                       stable build URL (either git or tarball).
 
 Optional:
-  ZOPEN_EXTERNAL_URL    If set, use this as ZOPEN_URL before checking
+  ZOPEN_SOURCE_URL      If set, use this as ZOPEN_URL before checking
                         ZOPEN_DEV_URL or ZOPEN_STABLE_URL.
   ZOPEN_EXTRA_CFLAGS    C compiler flags to append to CFLAGS (defaults to '').
   ZOPEN_EXTRA_CPPFLAGS  C,C++ pre-processor flags to append to CPPFLAGS.
@@ -630,8 +630,8 @@ checkEnv()
         printError "Building from dev, but ZOPEN_DEV_DEPS not specified"
       fi
       ZOPEN_DEPS="${ZOPEN_DEV_DEPS}"
-      if [ ! -z "${ZOPEN_EXTERNAL_URL}" ]; then
-        ZOPEN_URL="${ZOPEN_EXTERNAL_URL}"
+      if [ ! -z "${ZOPEN_SOURCE_URL}" ]; then
+        ZOPEN_URL="${ZOPEN_SOURCE_URL}"
       else
         if [ -z "${ZOPEN_DEV_URL}" ]; then
           printError "Building from dev, but ZOPEN_DEV_URL not specified"
@@ -659,8 +659,8 @@ checkEnv()
         printError "Building from stable, but ZOPEN_STABLE_DEPS not specified"
       fi
       ZOPEN_DEPS="${ZOPEN_STABLE_DEPS}"
-      if [ ! -z "${ZOPEN_EXTERNAL_URL}" ]; then
-        ZOPEN_URL="${ZOPEN_EXTERNAL_URL}"
+      if [ ! -z "${ZOPEN_SOURCE_URL}" ]; then
+        ZOPEN_URL="${ZOPEN_SOURCE_URL}"
       else
         if [ -z "${ZOPEN_STABLE_URL}" ]; then
           printError "Building from stable, but ZOPEN_STABLE_URL not specified"

@@ -25,5 +25,5 @@ jobs:
     secrets: inherit
     with:
       repo: 'https://github.com/zopencommunity/metaport.git'
-      git_source_url: ${{ github.event.pull_request.head.repo.clone_url }}
+      use_pr_source_url: true
       use_prbranch_as_build_branch: true
