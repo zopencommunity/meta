@@ -25,6 +25,7 @@
 - 2025-08-26: [Update ansible-version to 2.19.1 from 2.19.0](https://github.com/zopencommunity/ansibleport/pull/2) ❌
 
 ### buildkiteport
+- 2026-05-07: [Update buildkite-version to 3.126.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/106) ❌
 - 2026-05-05: [Update buildkite-version to 3.125.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/105) ❌
 - 2026-04-28: [Update buildkite-version to 3.124.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/104) ❌
 - 2026-04-17: [Update buildkite-version to 3.123.1 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/103) ❌
@@ -54,7 +55,6 @@
 - 2025-11-05: [Update buildkite-version to 3.111.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/79) ❌
 - 2025-10-22: [Update buildkite-version to 3.110.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/78) ❌
 - 2025-10-15: [Update buildkite-version to 3.109.1 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/77) ❌
-- 2025-10-09: [Update buildkite-version to 3.109.0 from 3.61.0](https://github.com/zopencommunity/buildkiteport/pull/76) ❌
 
 ### c3270port
 - 2025-12-23: [Update c3270-version to 4.5ga5 from 4.4ga6](https://github.com/zopencommunity/c3270port/pull/32) ❌
@@ -167,6 +167,7 @@
 - 2025-02-01: [Update creduce-version to 2.10.0 from V.R.M](https://github.com/zopencommunity/creduceport/pull/1) ❓
 
 ### crushport
+- 2026-05-07: [Update crush-version to 0.66.0 from 0.11.0](https://github.com/zopencommunity/crushport/pull/116) ❌
 - 2026-05-05: [Update crush-version to 0.65.3 from 0.11.0](https://github.com/zopencommunity/crushport/pull/115) ❌
 - 2026-05-02: [Update crush-version to 0.65.2 from 0.11.0](https://github.com/zopencommunity/crushport/pull/114) ❌
 - 2026-04-29: [Update crush-version to 0.64.0 from 0.11.0](https://github.com/zopencommunity/crushport/pull/113) ❌
@@ -196,7 +197,6 @@
 - 2026-03-04: [Update crush-version to 0.47.0 from 0.11.0](https://github.com/zopencommunity/crushport/pull/89) ❌
 - 2026-03-03: [Update crush-version to 0.46.2 from 0.11.0](https://github.com/zopencommunity/crushport/pull/88) ❌
 - 2026-02-28: [Update crush-version to 0.46.1 from 0.11.0](https://github.com/zopencommunity/crushport/pull/87) ❌
-- 2026-02-27: [Update crush-version to 0.46.0 from 0.11.0](https://github.com/zopencommunity/crushport/pull/86) ❌
 
 ### cunitport
 - 2026-01-20: [Update cunit-version to 3.5.4 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/11) ❌
@@ -388,6 +388,7 @@
 - 2026-03-01: [Update groff-version to 1.24.0 from 1.23.0](https://github.com/zopencommunity/groffport/pull/17) ❌
 
 ### groovyport
+- 2026-05-07: [Update groovy-version to 5.0.6 from 5.0.5](https://github.com/zopencommunity/groovyport/pull/26) ❌
 - 2025-10-18: [Update groovy-version to 5.0.2 from 5.0.1](https://github.com/zopencommunity/groovyport/pull/22) ❌
 - 2025-08-24: [Update groovy-version to 5.0.0 from 4.0.28](https://github.com/zopencommunity/groovyport/pull/20) ❌
 
@@ -544,6 +545,7 @@
 - 2026-01-27: [Update openssl-3-version to 3.6.1 from 3.6.0](https://github.com/zopencommunity/opensslport/pull/61) ❌
 
 ### osv-scannerport
+- 2026-05-07: [Update osv-scanner-version to 2.3.7 from 2.3.3](https://github.com/zopencommunity/osv-scannerport/pull/35) ❌
 - 2026-05-01: [Update osv-scanner-version to 2.3.6 from 2.3.3](https://github.com/zopencommunity/osv-scannerport/pull/34) ❌
 - 2026-03-24: [Update osv-scanner-version to 2.3.5 from 2.3.3](https://github.com/zopencommunity/osv-scannerport/pull/33) ❌
 - 2026-03-19: [Update osv-scanner-version to 2.3.4 from 2.3.3](https://github.com/zopencommunity/osv-scannerport/pull/32) ❌
@@ -1110,5 +1112,5 @@
 ---
 
 
-> Last updated: 2026-05-07 06:11:55 EDT
+> Last updated: 2026-05-08 06:11:26 EDT
 

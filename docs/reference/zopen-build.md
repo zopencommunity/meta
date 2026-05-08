@@ -260,7 +260,12 @@ build URL (either git or tarball).</p>
 
 
 <p style="margin-left:11%; margin-top: 1em"><b>Optional:</b>
-ZOPEN_EXTRA_CFLAGS</p>
+ZOPEN_SOURCE_URL</p>
+
+<p style="margin-left:22%;">If set, use this as ZOPEN_URL
+before checking ZOPEN_DEV_URL or ZOPEN_STABLE_URL.</p>
+
+<p style="margin-left:11%;">ZOPEN_EXTRA_CFLAGS</p>
 
 <p style="margin-left:22%;">C compiler flags to append to
 CFLAGS (defaults to &rsquo;&rsquo;).</p>
