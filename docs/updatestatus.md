@@ -84,6 +84,7 @@
 - 2025-05-26: [Update ccache-version to 4.11.3 from V.R.M](https://github.com/zopencommunity/ccacheport/pull/1) ❌
 
 ### chezmoiport
+- 2026-05-08: [Update chezmoi-version to 2.70.3 from 2.62.5](https://github.com/zopencommunity/chezmoiport/pull/25) ❌
 - 2026-04-17: [Update chezmoi-version to 2.70.2 from 2.62.5](https://github.com/zopencommunity/chezmoiport/pull/24) ❌
 - 2026-04-09: [Update chezmoi-version to 2.70.1 from 2.62.5](https://github.com/zopencommunity/chezmoiport/pull/23) ❌
 - 2026-03-10: [Update chezmoi-version to 2.70.0 from 2.62.5](https://github.com/zopencommunity/chezmoiport/pull/22) ❌
@@ -266,6 +267,7 @@
 - 2026-03-26: [Update ghcli-version to 2.89.0 from 2.86.0](https://github.com/zopencommunity/githubcliport/pull/79) ❌
 
 ### gitlabcliport
+- 2026-05-08: [Update glab-version to 1.95.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/71) ❌
 - 2026-05-06: [Update glab-version to 1.94.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/70) ❌
 - 2026-04-23: [Update glab-version to 1.93.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/69) ❌
 - 2026-04-11: [Update glab-version to 1.92.1 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/68) ❌
@@ -295,7 +297,6 @@
 - 2025-10-11: [Update glab-version to 1.73.1 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/44) ❌
 - 2025-10-07: [Update glab-version to 1.73.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/43) ❌
 - 2025-09-17: [Update glab-version to 1.72.0 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/42) ❓
-- 2025-09-16: [Update glab-version to 1.71.2 from 1.57.0](https://github.com/zopencommunity/gitlabcliport/pull/41) ❌
 
 ### gitlab-runnerport
 - 2026-05-03: [Update gitlab-runner-version to 18.11.2 from 17.6.0](https://github.com/zopencommunity/gitlab-runnerport/pull/68) ❌
@@ -441,9 +442,6 @@
 ### libgdbmport
 - 2025-03-22: [Update libgdbm-version to 1.25 from 1.24](https://github.com/zopencommunity/libgdbmport/pull/10) ❓
 
-### libgpgmeport
-- 2025-10-10: [Update libgpgme-version to 2.0.1 from 1.23.2](https://github.com/zopencommunity/libgpgmeport/pull/3) ❌
-
 ### libiconvport
 - 2026-04-30: [Update libiconv-version to 1.19 from 1.18](https://github.com/zopencommunity/libiconvport/pull/47) ❌
 
@@ -545,6 +543,7 @@
 - 2026-01-27: [Update openssl-3-version to 3.6.1 from 3.6.0](https://github.com/zopencommunity/opensslport/pull/61) ❌
 
 ### osv-scannerport
+- 2026-05-08: [Update osv-scanner-version to 2.3.8 from 2.3.3](https://github.com/zopencommunity/osv-scannerport/pull/36) ❌
 - 2026-05-07: [Update osv-scanner-version to 2.3.7 from 2.3.3](https://github.com/zopencommunity/osv-scannerport/pull/35) ❌
 - 2026-05-01: [Update osv-scanner-version to 2.3.6 from 2.3.3](https://github.com/zopencommunity/osv-scannerport/pull/34) ❌
 - 2026-03-24: [Update osv-scanner-version to 2.3.5 from 2.3.3](https://github.com/zopencommunity/osv-scannerport/pull/33) ❌
@@ -1112,5 +1111,5 @@
 ---
 
 
-> Last updated: 2026-05-08 06:11:26 EDT
+> Last updated: 2026-05-09 06:10:52 EDT
 

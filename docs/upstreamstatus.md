@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2026-05-08 06:16:35 EDT.*
+*Report generated on: 2026-05-09 06:16:15 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 307
-- **Total Current Lines of Code (LOC) in Patches:** 57,825
-- **Total Number of Current Patch Files:** 1,039
-- **Average Current Patch LOC per Project:** 188.36
-- **Average Current Patch Count per Project:** 3.38
+- **Total Current Lines of Code (LOC) in Patches:** 57,847
+- **Total Number of Current Patch Files:** 1,040
+- **Average Current Patch LOC per Project:** 188.43
+- **Average Current Patch Count per Project:** 3.39
 
 ### Historical Trends (All Projects)
 
@@ -143,6 +143,7 @@
 | [snappy-cport](#repo-snappy-cport) | 56 | +0 | 1 |
 | [expatport](#repo-expatport) | 52 | +0 | 2 |
 | [terraformport](#repo-terraformport) | 51 | +0 | 2 |
+| [libgpgmeport](#repo-libgpgmeport) | 51 | +22 | 3 |
 | [libsasl2port](#repo-libsasl2port) | 50 | +0 | 3 |
 | [libsolvport](#repo-libsolvport) | 50 | +0 | 1 |
 | [xxhashport](#repo-xxhashport) | 47 | +0 | 2 |
@@ -166,7 +167,6 @@
 | [createrepo_cport](#repo-createrepo-cport) | 30 | +0 | 1 |
 | [patchport](#repo-patchport) | 29 | +0 | 2 |
 | [netpbmport](#repo-netpbmport) | 29 | +0 | 2 |
-| [libgpgmeport](#repo-libgpgmeport) | 29 | +0 | 2 |
 | [pvport](#repo-pvport) | 29 | +0 | 1 |
 | [npthport](#repo-npthport) | 28 | +0 | 2 |
 | [libksbaport](#repo-libksbaport) | 28 | +0 | 2 |
@@ -3540,6 +3540,28 @@
 
 ---
 
+<a id="repo-libgpgmeport"></a>
+## libgpgmeport
+
+- **Origin Date (First Commit):** 2024-03-04
+- **Current Patch LOC:** 51
+- **Current Patch Count:** 3
+
+### Historical Trends
+
+![LOC Trend for libgpgmeport](images/upstream/libgpgmeport_current_loc_trend.png)
+![Count Trend for libgpgmeport](images/upstream/libgpgmeport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `dev-patches/ath.h.patch` | `dev-patches` | 22 |
+| `dev-patches/libtool.m4.patch` | `dev-patches` | 15 |
+| `stable-patches/posix-io.c.patch` | `stable-patches` | 14 |
+
+---
+
 <a id="repo-libsasl2port"></a>
 ## libsasl2port
 
@@ -4010,27 +4032,6 @@
 |---|---|:---|
 | `patches/Execute-Tests.patch` | `patches` | 10 |
 | `patches/GNUmakefile.patch` | `patches` | 19 |
-
----
-
-<a id="repo-libgpgmeport"></a>
-## libgpgmeport
-
-- **Origin Date (First Commit):** 2024-03-04
-- **Current Patch LOC:** 29
-- **Current Patch Count:** 2
-
-### Historical Trends
-
-![LOC Trend for libgpgmeport](images/upstream/libgpgmeport_current_loc_trend.png)
-![Count Trend for libgpgmeport](images/upstream/libgpgmeport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `stable-patches/ath.h.patch` | `stable-patches` | 14 |
-| `stable-patches/libtool.m4.patch` | `stable-patches` | 15 |
 
 ---
 
