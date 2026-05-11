@@ -372,7 +372,7 @@
 - 2025-05-10: [Update grafana-version to 12.0.0 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/21) ❌
 - 2025-04-24: [Update grafana-version to 11.6.1 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/20) ❌
 - 2025-03-26: [Update grafana-version to 11.6.0 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/19) ❌
-- 2025-03-25: [Update grafana-version to 11.5.3 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/18) ❌
+- 2025-03-25: [Update grafana-version to 11.5.3 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/18) ❓
 - 2025-02-19: [Update grafana-version to 11.5.2 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/17) ❓
 - 2025-02-03: [Update grafana-version to 11.5.1 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/16) ❓
 - 2025-01-28: [Update grafana-version to 11.5.0 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/15) ❓
@@ -1111,5 +1111,5 @@
 ---
 
 
-> Last updated: 2026-05-10 06:10:46 EDT
+> Last updated: 2026-05-11 06:11:54 EDT
 

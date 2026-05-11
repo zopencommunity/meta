@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2026-05-10 06:16:56 EDT.*
+*Report generated on: 2026-05-11 06:18:26 EDT.*
 
 ## Overall Summary
 
 - **Total Projects Analyzed:** 307
-- **Total Current Lines of Code (LOC) in Patches:** 57,847
-- **Total Number of Current Patch Files:** 1,040
-- **Average Current Patch LOC per Project:** 188.43
-- **Average Current Patch Count per Project:** 3.39
+- **Total Current Lines of Code (LOC) in Patches:** 58,632
+- **Total Number of Current Patch Files:** 1,044
+- **Average Current Patch LOC per Project:** 190.98
+- **Average Current Patch Count per Project:** 3.40
 
 ### Historical Trends (All Projects)
 
@@ -28,10 +28,10 @@
 | [stablediffusionport](#repo-stablediffusionport) | 2,905 | +0 | 6 |
 | [libuvport](#repo-libuvport) | 2,494 | +0 | 32 |
 | [librdkafkaport](#repo-librdkafkaport) | 2,490 | +0 | 54 |
+| [llamacppport](#repo-llamacppport) | 2,434 | -20 | 39 |
 | [oqs-providerport](#repo-oqs-providerport) | 2,037 | +0 | 18 |
 | [curlport](#repo-curlport) | 1,828 | -16 | 47 |
 | [bashport](#repo-bashport) | 1,797 | -2,629 | 27 |
-| [llamacppport](#repo-llamacppport) | 1,649 | +0 | 35 |
 | [gpgport](#repo-gpgport) | 1,560 | +0 | 32 |
 | [rpmport](#repo-rpmport) | 1,559 | +24 | 29 |
 | [rsyncport](#repo-rsyncport) | 1,430 | +0 | 21 |
@@ -526,6 +526,64 @@
 
 ---
 
+<a id="repo-llamacppport"></a>
+## llamacppport
+
+- **Origin Date (First Commit):** 2023-08-21
+- **Current Patch LOC:** 2,434
+- **Current Patch Count:** 39
+
+### Historical Trends
+
+![LOC Trend for llamacppport](images/upstream/llamacppport_current_loc_trend.png)
+![Count Trend for llamacppport](images/upstream/llamacppport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/common/arg.cpp.patch` | `patches` | 13 |
+| `patches/common/common.cpp.patch` | `patches` | 21 |
+| `patches/common/download.cpp.patch` | `patches` | 23 |
+| `patches/common/http.h.patch` | `patches` | 17 |
+| `patches/examples/convert-llama2c-to-ggml/convert-llama2c-to-ggml.cpp.patch` | `patches` | 12 |
+| `patches/examples/gguf-hash/gguf-hash.cpp.patch` | `patches` | 12 |
+| `patches/examples/gguf/gguf.cpp.patch` | `patches` | 12 |
+| `patches/ggml/include/ggml.h.patch` | `patches` | 20 |
+| `patches/ggml/include/gguf.h.patch` | `patches` | 23 |
+| `patches/ggml/src/ggml-backend-reg.cpp.patch` | `patches` | 14 |
+| `patches/ggml/src/ggml-cpu/CMakeLists.txt.patch` | `patches` | 35 |
+| `patches/ggml/src/ggml-cpu/arch-fallback.h.patch` | `patches` | 34 |
+| `patches/ggml/src/ggml-cpu/arch/s390/quants.c.patch` | `patches` | 220 |
+| `patches/ggml/src/ggml-cpu/ggml-cpu-impl.h.patch` | `patches` | 32 |
+| `patches/ggml/src/ggml-cpu/ggml-cpu.c.patch` | `patches` | 13 |
+| `patches/ggml/src/ggml-cpu/ggml-cpu.cpp.patch` | `patches` | 55 |
+| `patches/ggml/src/ggml-cpu/ops.cpp.patch` | `patches` | 29 |
+| `patches/ggml/src/ggml-cpu/ops.h.patch` | `patches` | 14 |
+| `patches/ggml/src/ggml-cpu/repack.cpp.patch` | `patches` | 16 |
+| `patches/ggml/src/ggml-cpu/simd-mappings.h.patch` | `patches` | 13 |
+| `patches/ggml/src/ggml-cpu/unary-ops.h.patch` | `patches` | 14 |
+| `patches/ggml/src/ggml-cpu/vec.cpp.patch` | `patches` | 197 |
+| `patches/ggml/src/ggml-cpu/vec.h.patch` | `patches` | 366 |
+| `patches/ggml/src/ggml-impl.h.patch` | `patches` | 70 |
+| `patches/ggml/src/ggml.c.patch` | `patches` | 537 |
+| `patches/gguf-py/gguf/gguf_writer.py.patch` | `patches` | 16 |
+| `patches/src/llama-adapter.cpp.patch` | `patches` | 12 |
+| `patches/src/llama-hparams.h.patch` | `patches` | 12 |
+| `patches/src/llama-model-loader.cpp.patch` | `patches` | 107 |
+| `patches/tools/export-lora/export-lora.cpp.patch` | `patches` | 12 |
+| `patches/tools/gguf-split/gguf-split.cpp.patch` | `patches` | 77 |
+| `patches/tools/imatrix/imatrix.cpp.patch` | `patches` | 12 |
+| `patches/tools/mtmd/clip.cpp.patch` | `patches` | 12 |
+| `patches/tools/quantize/quantize.cpp.patch` | `patches` | 12 |
+| `patches/tools/server/server-context.cpp.patch` | `patches` | 16 |
+| `patches/vendor/cpp-httplib/httplib.cpp.patch` | `patches` | 247 |
+| `patches/vendor/cpp-httplib/httplib.h.patch` | `patches` | 14 |
+| `patches/vendor/miniaudio/miniaudio.h.patch` | `patches` | 13 |
+| `patches/vendor/stb/stb_image.h.patch` | `patches` | 60 |
+
+---
+
 <a id="repo-oqs-providerport"></a>
 ## oqs-providerport
 
@@ -672,60 +730,6 @@
 | `stable-patches/tests/varenv.patch` | `stable-patches` | 13 |
 | `stable-patches/tests/vredir.patch` | `stable-patches` | 53 |
 | `stable-patches/variable.patch` | `stable-patches` | 73 |
-
----
-
-<a id="repo-llamacppport"></a>
-## llamacppport
-
-- **Origin Date (First Commit):** 2023-08-21
-- **Current Patch LOC:** 1,649
-- **Current Patch Count:** 35
-
-### Historical Trends
-
-![LOC Trend for llamacppport](images/upstream/llamacppport_current_loc_trend.png)
-![Count Trend for llamacppport](images/upstream/llamacppport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/common/arg.cpp.patch` | `patches` | 13 |
-| `patches/common/common.cpp.patch` | `patches` | 21 |
-| `patches/common/download.cpp.patch` | `patches` | 31 |
-| `patches/common/http.h.patch` | `patches` | 17 |
-| `patches/examples/convert-llama2c-to-ggml/convert-llama2c-to-ggml.cpp.patch` | `patches` | 12 |
-| `patches/examples/gguf-hash/gguf-hash.cpp.patch` | `patches` | 12 |
-| `patches/examples/gguf/gguf.cpp.patch` | `patches` | 12 |
-| `patches/ggml/include/ggml.h.patch` | `patches` | 20 |
-| `patches/ggml/include/gguf.h.patch` | `patches` | 23 |
-| `patches/ggml/src/ggml-backend-reg.cpp.patch` | `patches` | 15 |
-| `patches/ggml/src/ggml-cpu/CMakeLists.txt.patch` | `patches` | 40 |
-| `patches/ggml/src/ggml-cpu/ggml-cpu-impl.h.patch` | `patches` | 15 |
-| `patches/ggml/src/ggml-cpu/ggml-cpu.c.patch` | `patches` | 13 |
-| `patches/ggml/src/ggml-cpu/ggml-cpu.cpp.patch` | `patches` | 55 |
-| `patches/ggml/src/ggml-cpu/ops.h.patch` | `patches` | 12 |
-| `patches/ggml/src/ggml-cpu/simd-mappings.h.patch` | `patches` | 13 |
-| `patches/ggml/src/ggml-cpu/unary-ops.h.patch` | `patches` | 12 |
-| `patches/ggml/src/ggml-cpu/vec.h.patch` | `patches` | 10 |
-| `patches/ggml/src/ggml-impl.h.patch` | `patches` | 78 |
-| `patches/ggml/src/ggml.c.patch` | `patches` | 544 |
-| `patches/gguf-py/gguf/gguf_writer.py.patch` | `patches` | 16 |
-| `patches/src/llama-adapter.cpp.patch` | `patches` | 12 |
-| `patches/src/llama-context.cpp.patch` | `patches` | 35 |
-| `patches/src/llama-hparams.h.patch` | `patches` | 12 |
-| `patches/src/llama-model-loader.cpp.patch` | `patches` | 107 |
-| `patches/tests/test-gguf.cpp.patch` | `patches` | 20 |
-| `patches/tools/export-lora/export-lora.cpp.patch` | `patches` | 12 |
-| `patches/tools/gguf-split/gguf-split.cpp.patch` | `patches` | 80 |
-| `patches/tools/imatrix/imatrix.cpp.patch` | `patches` | 12 |
-| `patches/tools/mtmd/clip.cpp.patch` | `patches` | 12 |
-| `patches/tools/quantize/quantize.cpp.patch` | `patches` | 12 |
-| `patches/vendor/cpp-httplib/httplib.cpp.patch` | `patches` | 247 |
-| `patches/vendor/cpp-httplib/httplib.h.patch` | `patches` | 31 |
-| `patches/vendor/miniaudio/miniaudio.h.patch` | `patches` | 13 |
-| `patches/vendor/stb/stb_image.h.patch` | `patches` | 60 |
 
 ---
 

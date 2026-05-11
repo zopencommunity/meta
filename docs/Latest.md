@@ -2438,12 +2438,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="git-extras" data-searchable-text="git-extras Skipped N/A STABLE_git-extras_3477 source_control port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="git-extras" data-searchable-text="git-extras Skipped N/A STABLE_git-extras_4276 source_control port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/git-extrasport" target="_blank" rel="noopener noreferrer">git-extras</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/git-extrasport/releases/download/STABLE_git-extrasport_3477/gitextras-DEV.20250620_151520.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_git-extras_3477</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/git-extrasport/releases/download/STABLE_git-extrasport_4276/gitextras-DEV.20260510_153913.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_git-extras_4276</a></div>
     <div class="tool-desc" title=""></div>
   </div>
 </div>
@@ -3409,4 +3409,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2026-05-10 06:19:19 UTC
+Last updated:  2026-05-11 06:20:44 UTC
