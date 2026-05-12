@@ -8,7 +8,7 @@ setupMyself() {
   ME=$(basename "$0")
   MYDIR="$(cd "$(dirname "$0")" > /dev/null 2>&1 && pwd -P)"
   INCDIR="${MYDIR}/../include"
-  if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
+  if ! [ -d "${INCDIR}" ] || ! [ -f "${INCDIR}/common.sh" ]; then
     echo "Internal Error. Unable to find common.sh file to source." >&2
     exit 8
   fi
@@ -40,6 +40,8 @@ printSyntax()
   echo "                          GitHub Personal Access Token (required for GitHub publish, or set GITHUB_TOKEN env var)"
   echo "  -o, --github-org ORG     GitHub Organization (default: zopencommunity)"
   echo "  -l, --latest            Mark release as 'Latest' (not pre-release)."
+  echo "  --pulp                  Push RPM artifacts to Pulp repository."
+  echo "  --pulp-repo REPO        Pulp repository name (default: zopen-stable or zopen-dev)"
   echo "  -w, --whl WHL_FILE     Path to a Python wheel file to publish to Pulp PyPI"
   echo "  --pulp-url URL          Pulp PyPI repository URL (e.g., http://host:8080/pypi/repo/)"
   echo "  --pulp-user USER        Pulp username (or set PULP_USER env var, default: admin)"
@@ -71,6 +73,12 @@ checkDependencies() {
   if ! command -v jq > /dev/null 2>&1; then
     printError "Error: jq command not found. Please install it."
     return 1
+  fi
+  if [ "$PUSH_TO_PULP" = true ]; then
+    if ! command -v pulp > /dev/null 2>&1; then
+      printError "Error: pulp command not found. Please install it to use --pulp option."
+      return 1
+    fi
   fi
   return 0
 }
@@ -302,9 +310,9 @@ createGitHubRelease() {
   fi
 
 
-  if [ -z "$release_id" ] || [[ "$release_id" == "null" ]]; then
+  if [ -z "$release_id" ] || [ "$release_id" = "null" ]; then
     printError "Error creating GitHub release tag: $tag.\n$error_message"
-    if [ -n "$api_error_message" ] && [[ "$api_error_message" != "null" ]]; then
+    if [ -n "$api_error_message" ] && [ "$api_error_message" != "null" ]; then
       printError "GitHub API Error: $api_error_message"
     fi
     printError "Full GitHub API response (for debugging):" 
@@ -349,9 +357,9 @@ uploadGitHubReleaseAsset() {
     return 1 
   fi
 
-  if [ -z "$asset_state" ] || [[ "$asset_state" == "null" ]] || [ "$asset_state" != "uploaded" ]; then
+  if [ -z "$asset_state" ] || [ "$asset_state" = "null" ] || [ "$asset_state" != "uploaded" ]; then
     printError "Error uploading asset: $asset_file to release ID: $release_id"
-    if [ -n "$api_error_message" ] && [[ "$api_error_message" != "null" ]]; then
+    if [ -n "$api_error_message" ] && [ "$api_error_message" != "null" ]; then
       printError "GitHub API Error: $api_error_message"
     fi
     printError "Full GitHub API response (for debugging):" # Print full response for debugging
@@ -389,7 +397,7 @@ deleteGitHubReleaseByTag() {
   fi
 
 
-  if [ -z "$release_id" ] || [[ "$release_id" == "null" ]]; then
+  if [ -z "$release_id" ] || [ "$release_id" = "null" ]; then
     printVerbose "No existing release found for tag: $tag. Skipping deletion."
     return 0 # No release to delete - consider it success.
   fi
@@ -419,12 +427,56 @@ deleteGitHubReleaseByTag() {
   fi
 
 
-  if [ -n "$delete_api_error_message" ] && [[ "$delete_api_error_message" != "null" ]]; then
+  if [ -n "$delete_api_error_message" ] && [ "$delete_api_error_message" != "null" ]; then
     printError "Error deleting GitHub release ID: $release_id for tag: $tag. GitHub API Error: $delete_api_error_message. Full GitHub API response (for debugging): $DELETE_RESPONSE"
     return 1
   fi
 
   printVerbose "GitHub release ID: $release_id for tag: $tag deleted successfully." 
+  return 0
+}
+
+uploadToPulp() {
+  rpm_file="$1"
+  build_line="$2"
+  
+  # Default to repo.zopen.community if not specified in environment
+  if [ -z "$PULP_BASE_ADDR" ]; then
+    export PULP_BASE_ADDR="https://repo.zopen.community"
+    printVerbose "PULP_BASE_ADDR not set; defaulting to $PULP_BASE_ADDR"
+  fi
+
+  if [ -n "$CUSTOM_PULP_REPO" ]; then
+    PULP_REPO="$CUSTOM_PULP_REPO"
+  elif [ "$build_line" = "STABLE" ]; then
+    PULP_REPO="zopen-stable"
+  else
+    PULP_REPO="zopen-dev"
+  fi
+
+  printInfo "- Pushing $rpm_file to Pulp repository: $PULP_REPO..."
+  
+  # Perform the upload and automatic repository version update
+  if ! pulp rpm repository upload --name "$PULP_REPO" --file "$rpm_file"; then
+    printError "Failed to push RPM to Pulp repository: $PULP_REPO"
+    return 1
+  fi
+
+  printVerbose "Successfully pushed $rpm_file to Pulp repository: $PULP_REPO"
+
+  # Update the distribution to point to the latest publication
+  DIST_NAME="$PULP_REPO"
+
+  printInfo "- Updating Pulp distribution $DIST_NAME..."
+  LATEST_PUB=$(pulp rpm publication list --repository "${PULP_REPO}" --limit 1 | jq -r '.[0].pulp_href')
+  if [ -n "$LATEST_PUB" ] && [ "$LATEST_PUB" != "null" ]; then
+    if ! pulp rpm distribution update --name "${DIST_NAME}" --publication "${LATEST_PUB}" > /dev/null; then
+       printWarning "Warning: Failed to update Pulp distribution ${DIST_NAME}"
+    fi
+  else
+    printWarning "Warning: Could not find latest publication for ${PULP_REPO}"
+  fi
+
   return 0
 }
 
@@ -472,7 +524,7 @@ publishRelease() {
   if [ -z "$BUILD_LINE_OPT" ]; then
     BUILD_LINE=$(jq -r '.product.buildline' "$METADATA_FILE")
     BUILD_LINE_UPPER=$(echo "$BUILD_LINE" | tr '[:lower:]' '[:upper:]')
-    if [[ "$BUILD_LINE_UPPER" != "DEV" && "$BUILD_LINE_UPPER" != "STABLE" ]]; then
+    if [ "$BUILD_LINE_UPPER" != "DEV" ] && [ "$BUILD_LINE_UPPER" != "STABLE" ]; then
       printError "Error: Invalid build line in metadata.json: $BUILD_LINE. Must be 'DEV' or 'STABLE'."
       return 1
     fi
@@ -482,7 +534,7 @@ publishRelease() {
   else
     BUILD_LINE="$BUILD_LINE_OPT"
     BUILD_LINE_UPPER=$(echo "$BUILD_LINE" | tr '[:lower:]' '[:upper:]')
-    if [[ "$BUILD_LINE_UPPER" != "DEV" && "$BUILD_LINE_UPPER" != "STABLE" ]]; then
+    if [ "$BUILD_LINE_UPPER" != "DEV" ] && [ "$BUILD_LINE_UPPER" != "STABLE" ]; then
       printError "Invalid build line: $BUILD_LINE. Must be 'DEV' or 'STABLE'."
       printSyntax
       return 1
@@ -498,7 +550,7 @@ publishRelease() {
   DESCRIPTION="${PORT_DESCRIPTION}<br />"
   DESCRIPTION="${DESCRIPTION}<b>Version:</b> ${VERSION}<br />"
   URL_LINE="https://github.com/${GITHUB_ORGANIZATION}/${GITHUB_REPO}/releases/download/${TAG}/${PAX_BASENAME}"
-  DESCRIPTION="${DESCRIPTION}<br /><b>Command to download and install on z/OS (if you have curl)</b> <pre>curl -o ${PAX_BASENAME} -L ${URL_LINE} && pax -rf ${PAX_BASENAME} && cd ${PORT_NAME} && . ./.env</pre>"
+  DESCRIPTION="${DESCRIPTION}<br /><b>Command to download and install on z/OS (if you have curl)</b> <pre>curl -o ${PAX_BASENAME} -L ${URL_LINE} && pax -rf ${PAX_BASENAME} && cd ${PORT_NAME} && . ./setup.sh</pre>"
   DESCRIPTION="${DESCRIPTION}<br /><b>Or use:</b> <pre>zopen install ${PORT_NAME}</pre>"
 
   if ${FORCE_OVERWRITE} || ! deleteGitHubReleaseByTag "${TAG}"; then 
@@ -527,6 +579,43 @@ publishRelease() {
   # Upload metadata.json artifact
   if ! uploadGitHubReleaseAsset "${RELEASE_ID}" "${METADATA_FILE}"; then
       return 1 # metadata.json upload failed
+  fi
+
+  if [ "$PUSH_TO_PULP" = true ]; then
+    # Look for RPMs in rpmbuild/RPMS first (typical build location)
+    RPM_COUNT=0
+    RPM_DIRS="rpmbuild/RPMS"
+    
+    # Check if rpmbuild/RPMS exists
+    if [ -d "$RPM_DIRS" ]; then
+      for rpm_file in "$RPM_DIRS"/*.rpm; do
+        if [ -f "$rpm_file" ]; then
+          if ! uploadToPulp "$rpm_file" "$BUILD_LINE"; then
+            return 1
+          fi
+          RPM_COUNT=$((RPM_COUNT + 1))
+        fi
+      done
+    fi
+    
+    # If not found there, look in the same directory as the PAX file
+    if [ $RPM_COUNT -eq 0 ]; then
+      PAX_DIR=$(dirname "$PAX_FILE")
+      for rpm_file in "$PAX_DIR"/*.rpm; do
+        if [ -f "$rpm_file" ]; then
+          if ! uploadToPulp "$rpm_file" "$BUILD_LINE"; then
+            return 1
+          fi
+          RPM_COUNT=$((RPM_COUNT + 1))
+        fi
+      done
+    fi
+
+    if [ $RPM_COUNT -gt 0 ]; then
+      printInfo "- Found $RPM_COUNT RPM(s) to push to Pulp."
+    else
+      printWarning "Pulp push requested, but no RPM files were found."
+    fi
   fi
 
 

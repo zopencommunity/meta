@@ -27,7 +27,7 @@ node('linux')
 {
   stage('Build and Test') {
     // Build Job : https://cicd.zopen.community/view/Framework/job/Port-Build/
-    buildResult = build job: 'Port-Build', propagate: false, parameters: [string(name: 'PORT_GITHUB_REPO', value: "${repo}"),
+    buildResult = build job: 'Port-Build-Test', propagate: false, parameters: [string(name: 'PORT_GITHUB_REPO', value: "${repo}"),
                    string(name: 'PORT_BRANCH', value: "${branch}"),
                    string(name: 'node', value: "${node_label}"),
                    booleanParam(name: 'FORCE_CLANG', value: params.FORCE_CLANG),
@@ -39,7 +39,7 @@ node('linux')
     }
     copyArtifacts filter: '**/test.status',
         fingerprintArtifacts: true,
-        projectName: 'Port-Build',
+        projectName: 'Port-Build-Test',
         selector: specific(buildResult.number.toString()),
         optional: true
     def testStatusFile = sh(script: 'find . -name test.status | head -n 1', returnStdout: true).trim()
@@ -52,7 +52,7 @@ node('linux')
   stage('Promote') {
       if(!params.NO_PROMOTE) {
               // Publish Job : https://128.168.139.253:8443/view/Framework/job/Port-Publish/
-              promoteResult = build job: 'Port-Publish', propagate: false, parameters:
+              promoteResult = build job: 'Port-Publish-Test', propagate: false, parameters:
                  [string(name: 'BUILD_SELECTOR', value: "<SpecificBuildSelector plugin=\"copyartifact@1.46.2\">  <buildNumber>${buildResult.number.toString()}</buildNumber></SpecificBuildSelector>"),
                  string(name: 'PORT_GITHUB_REPO', value: "${repo}"), string(name: 'PORT_DESCRIPTION', value: "${description}"),
                  string(name: 'BUILD_LINE', value: "${build_line}")
