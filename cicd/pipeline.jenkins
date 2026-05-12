@@ -39,7 +39,7 @@ node('linux')
     }
     copyArtifacts filter: '**/test.status',
         fingerprintArtifacts: true,
-        projectName: 'Port-Build-Test',
+        projectName: 'Port-Build',
         selector: specific(buildResult.number.toString()),
         optional: true
     def testStatusFile = sh(script: 'find . -name test.status | head -n 1', returnStdout: true).trim()
