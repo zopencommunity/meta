@@ -8,7 +8,7 @@ setupMyself() {
   ME=$(basename "$0")
   MYDIR="$(cd "$(dirname "$0")" > /dev/null 2>&1 && pwd -P)"
   INCDIR="${MYDIR}/../include"
-  if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
+  if ! [ -d "${INCDIR}" ] || ! [ -f "${INCDIR}/common.sh" ]; then
     echo "Internal Error. Unable to find common.sh file to source." >&2
     exit 8
   fi
@@ -48,7 +48,7 @@ printSyntax()
   echo ""
   echo "Example:"
   echo "  zopen-publish -f -p install/mypackage.zos.pax.Z -m metadata.json -g DEV_mypackage_12345 -t <your_github_token> --pulp"
-  echo "  zopen-publish -v -f -p install/mypackage.zos.pax.Z -m metadata.json -r https://github.com/zopencommunity/override-repo.git -d \"My custom release description\" -b DEV -g REL-1.0.1 -t <your_github_token> -l --pulp"
+  echo "  zopen-publish -v -f -p install/mypackage.zos.pax.Z -m metadata.json -r https://github.com/zopencommunity/override-repo.git -d \"My custom release description\" -b DEV -g REL-1.0.1 -t <your_github_token>"
 }
 
 checkDependencies() {
@@ -231,9 +231,9 @@ createGitHubRelease() {
   fi
 
 
-  if [ -z "$release_id" ] || [[ "$release_id" == "null" ]]; then
+  if [ -z "$release_id" ] || [ "$release_id" = "null" ]; then
     printError "Error creating GitHub release tag: $tag.\n$error_message"
-    if [ -n "$api_error_message" ] && [[ "$api_error_message" != "null" ]]; then
+    if [ -n "$api_error_message" ] && [ "$api_error_message" != "null" ]; then
       printError "GitHub API Error: $api_error_message"
     fi
     printError "Full GitHub API response (for debugging):" 
@@ -278,9 +278,9 @@ uploadGitHubReleaseAsset() {
     return 1 
   fi
 
-  if [ -z "$asset_state" ] || [[ "$asset_state" == "null" ]] || [ "$asset_state" != "uploaded" ]; then
+  if [ -z "$asset_state" ] || [ "$asset_state" = "null" ] || [ "$asset_state" != "uploaded" ]; then
     printError "Error uploading asset: $asset_file to release ID: $release_id"
-    if [ -n "$api_error_message" ] && [[ "$api_error_message" != "null" ]]; then
+    if [ -n "$api_error_message" ] && [ "$api_error_message" != "null" ]; then
       printError "GitHub API Error: $api_error_message"
     fi
     printError "Full GitHub API response (for debugging):" # Print full response for debugging
@@ -318,7 +318,7 @@ deleteGitHubReleaseByTag() {
   fi
 
 
-  if [ -z "$release_id" ] || [[ "$release_id" == "null" ]]; then
+  if [ -z "$release_id" ] || [ "$release_id" = "null" ]; then
     printVerbose "No existing release found for tag: $tag. Skipping deletion."
     return 0 # No release to delete - consider it success.
   fi
@@ -348,7 +348,7 @@ deleteGitHubReleaseByTag() {
   fi
 
 
-  if [ -n "$delete_api_error_message" ] && [[ "$delete_api_error_message" != "null" ]]; then
+  if [ -n "$delete_api_error_message" ] && [ "$delete_api_error_message" != "null" ]; then
     printError "Error deleting GitHub release ID: $release_id for tag: $tag. GitHub API Error: $delete_api_error_message. Full GitHub API response (for debugging): $DELETE_RESPONSE"
     return 1
   fi
@@ -445,7 +445,7 @@ publishRelease() {
   if [ -z "$BUILD_LINE_OPT" ]; then
     BUILD_LINE=$(jq -r '.product.buildline' "$METADATA_FILE")
     BUILD_LINE_UPPER=$(echo "$BUILD_LINE" | tr '[:lower:]' '[:upper:]')
-    if [[ "$BUILD_LINE_UPPER" != "DEV" && "$BUILD_LINE_UPPER" != "STABLE" ]]; then
+    if [ "$BUILD_LINE_UPPER" != "DEV" ] && [ "$BUILD_LINE_UPPER" != "STABLE" ]; then
       printError "Error: Invalid build line in metadata.json: $BUILD_LINE. Must be 'DEV' or 'STABLE'."
       return 1
     fi
@@ -455,7 +455,7 @@ publishRelease() {
   else
     BUILD_LINE="$BUILD_LINE_OPT"
     BUILD_LINE_UPPER=$(echo "$BUILD_LINE" | tr '[:lower:]' '[:upper:]')
-    if [[ "$BUILD_LINE_UPPER" != "DEV" && "$BUILD_LINE_UPPER" != "STABLE" ]]; then
+    if [ "$BUILD_LINE_UPPER" != "DEV" ] && [ "$BUILD_LINE_UPPER" != "STABLE" ]; then
       printError "Invalid build line: $BUILD_LINE. Must be 'DEV' or 'STABLE'."
       printSyntax
       return 1
@@ -471,7 +471,7 @@ publishRelease() {
   DESCRIPTION="${PORT_DESCRIPTION}<br />"
   DESCRIPTION="${DESCRIPTION}<b>Version:</b> ${VERSION}<br />"
   URL_LINE="https://github.com/${GITHUB_ORGANIZATION}/${GITHUB_REPO}/releases/download/${TAG}/${PAX_BASENAME}"
-  DESCRIPTION="${DESCRIPTION}<br /><b>Command to download and install on z/OS (if you have curl)</b> <pre>curl -o ${PAX_BASENAME} -L ${URL_LINE} && pax -rf ${PAX_BASENAME} && cd ${PORT_NAME} && . ./.env</pre>"
+  DESCRIPTION="${DESCRIPTION}<br /><b>Command to download and install on z/OS (if you have curl)</b> <pre>curl -o ${PAX_BASENAME} -L ${URL_LINE} && pax -rf ${PAX_BASENAME} && cd ${PORT_NAME} && . ./setup.sh</pre>"
   DESCRIPTION="${DESCRIPTION}<br /><b>Or use:</b> <pre>zopen install ${PORT_NAME}</pre>"
 
   if ${FORCE_OVERWRITE} || ! deleteGitHubReleaseByTag "${TAG}"; then 
@@ -504,21 +504,36 @@ publishRelease() {
 
   if [ "$PUSH_TO_PULP" = true ]; then
     # Look for RPMs in rpmbuild/RPMS first (typical build location)
-    RPM_FILES=($(find rpmbuild/RPMS -type f -name "*.rpm" 2>/dev/null))
+    RPM_COUNT=0
+    RPM_DIRS="rpmbuild/RPMS"
     
-    # If not found there, look in the same directory as the PAX file
-    if [ ${#RPM_FILES[@]} -eq 0 ]; then
-      PAX_DIR=$(dirname "$PAX_FILE")
-      RPM_FILES=($(find "$PAX_DIR" -type f -name "*.rpm" 2>/dev/null))
-    fi
-
-    if [ ${#RPM_FILES[@]} -gt 0 ]; then
-      printInfo "- Found ${#RPM_FILES[@]} RPM(s) to push to Pulp."
-      for RPM in "${RPM_FILES[@]}"; do
-        if ! uploadToPulp "$RPM" "$BUILD_LINE"; then
-          return 1
+    # Check if rpmbuild/RPMS exists
+    if [ -d "$RPM_DIRS" ]; then
+      for rpm_file in "$RPM_DIRS"/*.rpm; do
+        if [ -f "$rpm_file" ]; then
+          if ! uploadToPulp "$rpm_file" "$BUILD_LINE"; then
+            return 1
+          fi
+          RPM_COUNT=$((RPM_COUNT + 1))
         fi
       done
+    fi
+    
+    # If not found there, look in the same directory as the PAX file
+    if [ $RPM_COUNT -eq 0 ]; then
+      PAX_DIR=$(dirname "$PAX_FILE")
+      for rpm_file in "$PAX_DIR"/*.rpm; do
+        if [ -f "$rpm_file" ]; then
+          if ! uploadToPulp "$rpm_file" "$BUILD_LINE"; then
+            return 1
+          fi
+          RPM_COUNT=$((RPM_COUNT + 1))
+        fi
+      done
+    fi
+
+    if [ $RPM_COUNT -gt 0 ]; then
+      printInfo "- Found $RPM_COUNT RPM(s) to push to Pulp."
     else
       printWarning "Pulp push requested, but no RPM files were found."
     fi
