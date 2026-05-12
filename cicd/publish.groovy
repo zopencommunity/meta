@@ -134,15 +134,19 @@ fi
 # 📦 RPM UPLOAD
 # =========================================================
 
+PULP_REPO="zopen"
+
 if [ "$NUM_RPMS" -gt 0 ] && [ "$PULP_AVAILABLE" = true ]; then
 
-  if [ "$BUILD_LINE" = "STABLE" ]; then
-    PULP_REPO="zopen-stable"
-  else
-    PULP_REPO="zopen-dev"
-  fi
+  echo "--- Configuring Pulp Pipeline ---"
 
-  echo "Uploading RPMs to Pulp repo: $PULP_REPO"
+  # 1. Enable autopublish so every upload triggers a new live version
+  pulp rpm repository update --name "$PULP_REPO" --autopublish
+
+  # 2. Link the distribution to the repository
+  pulp rpm distribution update --name "$PULP_REPO" --repository "$PULP_REPO"
+
+  echo "Uploading $NUM_RPMS RPMs to Pulp repo: $PULP_REPO"
 
   for RPM in "${RPM_FILES[@]}"; do
     RPM_NAME=$(basename "$RPM")
@@ -171,6 +175,9 @@ if [ "$NUM_RPMS" -gt 0 ] && [ "$PULP_AVAILABLE" = true ]; then
       fi
     done
   done
+
+  echo "=== SUCCESS: Packages are being processed ==="
+  echo "Check the status at: ${PULP_HOST}/pulp/content/rpm/${PULP_REPO}/"
 
 else
   echo "Skipping RPM upload"
