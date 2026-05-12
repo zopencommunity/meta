@@ -11,7 +11,7 @@ If you're new to porting open source to z/OS, we recommend watching the followin
 
 ## Getting Started
 
-Before you get started with porting open source to z/OS, read the [Getting Started Guide](Pre-req.md) to set up your environment. We also recommend that you read the [contributing guide](https://github.com/zopencommunity/meta/blob/main/CONTRIBUTING.md).
+Before you get started with porting open source to z/OS, read the [Getting Started Guide](Pre-req) to set up your environment. We also recommend that you read the [contributing guide](https://github.com/zopencommunity/meta/blob/main/CONTRIBUTING.md).
 
 Once you have a z/OS system set up with the required zopen directory structure and pre-requisite boot tools, you will then need to set up Git as follows:
 
@@ -249,7 +249,7 @@ Please follow the [contributing guidelines](https://github.com/zopencommunity/me
 
 Once you have a working build of your z/OS Open Source tool, then you may add it to the z/OS Open Source Jenkins CI/CD pipeline.
 
-View [CI/CD Pipeline](/Guides/Testing.md) for more details
+View [CI/CD Pipeline](/Guides/Testing) for more details
 
 ## Porting Go Packages
 

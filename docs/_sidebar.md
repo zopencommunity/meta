@@ -1,46 +1,46 @@
-  - [Getting Started](/Guides/QuickStart.md)
-    - [Prerequisites](/Guides/Pre-req.md)
-    - [The package manager](/Guides/ThePackageManager.md)
-    - [Developing tools](/Guides/developing.md)
-    - [Recommended tools](/Guides/recommended.md)
-    - [Usage Analytics](/Guides/Analytics.md)
-    - [Updating the Docs](/Guides/../UpdateDocs.md)
-  - [Available Tools and Libraries](/Latest.md)
-    - [Newly Released Packages](/newly_released.md)
-    - [Package Vulnerabilities](/Vulnerabilities.md)
-    - Status
-      - [Overall Status](/Progress.md)
-      - [Currency](/updatestatus.md)
-      - [Upstreaming](/upstreamstatus.md)
-    - [Usage Stats](https://usage.zopen.community)
-    - [CICD Pipeline](/Guides/Testing.md)
-  - Reference
-    - [zopen](/reference/zopen-reference.md)
-  - Contributing
-    - [Porting guide](/Guides/Porting.md)
-    - [Leveraging the zoslib library](/Guides/Zoslib.md)
-    - [Troubleshooting](/Guides/CommonSolutions.md)
-    - [Getting z/OS Access](https://community.ibm.com/zsystems/form/zos-program/)
-  - [Badges](/Badges.md)
-  - [FAQ](/Guides/FAQ.md)
-  - Workshops
-  	- [Beginner](/workshop/workshop.md) 
-  - Resources
-    - [Discussions](https://github.com/zopencommunity/meta/discussions)
-    - [Guild Meetings](https://github.com/zopencommunity/meta/discussions/categories/guild)
-    - [Guild Meetings By Topics](/Guides/ToolsGuildMeetingLinks.md)
-    - [External Blogs](/Guides/blogs.md)
-  - Articles
-    - [Using GPG on z/OS](/Guides/GpgOnZOS.md)  
-    - [Using Git on z/OS](/Guides/GitOnZOS.md)
-    - [Using Vim on z/OS](/Guides/VimOnZOS.md)
-    - [Using Bash on z/OS](/Guides/BashOnZOS.md)
-    - [Using Neovim on z/OS](/Guides/NeovimOnZOS.md)
-    - [Terminal Settings on z/OS](/Guides/TerminalOnZOS.md) 
-  - [Meet the Team](/team.md)
-  - [Success Stories](/SuccessStories.md)
-  - **Links**
-  - <a href="https://github.com/zopencommunity"><img src="images/Octicons-mark-github.svg" width="20" height="20" alt="Github"> Github</a>
-  - <a href="https://www.linkedin.com/groups/9588308/"><img src="images/LinkedIn_icon.svg" width="20" height="20" alt="LinkedIn"> Linkedin</a>
-  - <a href="https://discord.com/invite/sze"><img src="images/discord-icon.svg" width="20" height="20" alt="Discord"> Discord</a>
-  - <a href="https://openmainframeproject.org/projects/zopen-community/"><img src="images/open-mainframe-project-icon-color.svg" width="20" height="20" alt="Open Mainframe Project"> Open Mainframe Project</a>
+- [Getting Started](/Guides/QuickStart.md)
+  - [Prerequisites](/Guides/Pre-req.md)
+  - [The package manager](/Guides/ThePackageManager.md)
+  - [Developing tools](/Guides/developing.md)
+  - [Recommended tools](/Guides/recommended.md)
+  - [Usage Analytics](/Guides/Analytics.md)
+  - [Updating the Docs](/UpdateDocs.md)
+- [Available Tools and Libraries](/Latest.md)
+  - [Newly Released Packages](/newly_released.md)
+  - [Package Vulnerabilities](/Vulnerabilities.md)
+  - Status
+    - [Overall Status](/Progress.md)
+    - [Currency](/updatestatus.md)
+    - [Upstreaming](/upstreamstatus.md)
+  - [Usage Stats](https://usage.zopen.community)
+  - [CICD Pipeline](/Guides/Testing.md)
+- Reference
+  - [zopen](/reference/zopen-reference.md)
+- Contributing
+  - [Porting guide](/Guides/Porting.md)
+  - [Leveraging the zoslib library](/Guides/Zoslib.md)
+  - [Troubleshooting](/Guides/CommonSolutions.md)
+  - [Getting z/OS Access](https://community.ibm.com/zsystems/form/zos-program/)
+- [Badges](/Badges.md)
+- [FAQ](/Guides/FAQ.md)
+- Workshops
+  - [Beginner](/workshop/workshop.md)
+- Resources
+  - [Discussions](https://github.com/zopencommunity/meta/discussions)
+  - [Guild Meetings](https://github.com/zopencommunity/meta/discussions/categories/guild)
+  - [Guild Meetings By Topics](/Guides/ToolsGuildMeetingLinks.md)
+  - [External Blogs](/Guides/blogs.md)
+- Articles
+  - [Using GPG on z/OS](/Guides/GpgOnZOS.md)
+  - [Using Git on z/OS](/Guides/GitOnZOS.md)
+  - [Using Vim on z/OS](/Guides/VimOnZOS.md)
+  - [Using Bash on z/OS](/Guides/BashOnZOS.md)
+  - [Using Neovim on z/OS](/Guides/NeovimOnZOS.md)
+  - [Terminal Settings on z/OS](/Guides/TerminalOnZOS.md)
+- [Meet the Team](/team.md)
+- [Success Stories](/SuccessStories.md)
+- **Links**
+- <a href="https://github.com/zopencommunity"><img src="./images/Octicons-mark-github.svg" width="20" height="20" alt="Github"> Github</a>
+- <a href="https://www.linkedin.com/groups/9588308/"><img src="./images/LinkedIn_icon.svg" width="20" height="20" alt="LinkedIn"> Linkedin</a>
+- <a href="https://discord.com/invite/sze"><img src="./images/discord-icon.svg" width="20" height="20" alt="Discord"> Discord</a>
+- <a href="https://openmainframeproject.org/projects/zopen-community/"><img src="./images/open-mainframe-project-icon-color.svg" width="20" height="20" alt="Open Mainframe Project"> Open Mainframe Project</a>

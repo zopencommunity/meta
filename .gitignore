@@ -76,3 +76,4 @@ meta.iml
 # Generated files from md2man tooling
 
 docs/zopen/man1/zopen*.gz
+docs/.vitepress/cache/

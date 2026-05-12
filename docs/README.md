@@ -1,8 +1,7 @@
 ## Welcome to the zopen community
 
-
-The [zopen community](https://github.com/zopencommunity) is here to provide popular Open Source tools and to encourage z/OS Open Source tools development. 
-We currently host **200+ z/OS Open Source projects** and we're looking for more! 
+The [zopen community](https://github.com/zopencommunity) is here to provide popular Open Source tools and to encourage z/OS Open Source tools development.
+We currently host **200+ z/OS Open Source projects** and we're looking for more!
 
 <section class="layout">
 <div style="float: right; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); width: 50%">
@@ -13,10 +12,9 @@ We currently host **200+ z/OS Open Source projects** and we're looking for more!
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/zopencommunity/meta/HEAD/tools/zopen_install.sh)"
 ```
 
- <img src="images/demo.gif"  style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);" />
+ <img src="./images/demo.gif"  style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);" />
 </div>
 <div class="grow1" style="float: left; width: 50%">
-
 
 ## 🛠️ Explore & Engage
 
@@ -33,6 +31,7 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/zopencommunity/meta/HEAD
 ## 📣 Let's Shape the Future Together!
 
 Your passion drives our progress. Engage, innovate, and collaborate to elevate the zopen community.
+
 - **Fill our survey**: [Fill our survey](https://forms.gle/A6U4jz1GpC9RqnfD7) to help shape the future of the zopen community.
 - **Enjoying zopen community?** We'd love to get a testimonial from you! Share it by [emailing us](mailto:fultonm@ca.ibm.com).
 
@@ -40,9 +39,3 @@ Let's make our tools even better together! 🌟
 
 </div>
 </section>
-
-<script>
-  window.$docsify = {
-    maxLevel: 0,  // Disables the floating TOC on all pages
-  }
-</script>

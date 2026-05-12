@@ -35,7 +35,7 @@ DEFAULT_MAX_WORKERS = 4 # Default concurrency level
 MAX_RETRIES = 20             # Max attempts for secondary limit errors
 INITIAL_BACKOFF_SECONDS = 180 # Initial wait time for secondary limit retry
 MAX_BACKOFF_SECONDS = 300    # Maximum wait time between retries
-MIN_RELEASE_YEAR = 2023     # Ignore releases published before this year (can be overridden by arg)
+MIN_RELEASE_YEAR = 2024     # Ignore releases published before this year (can be overridden by arg)
 
 # --- GitHub Connection & Rate Limiting Logic ---
 try:
@@ -44,6 +44,31 @@ try:
 except ImportError:
     logger.error("Fatal Error: PyGithub library not found. Please install it (`pip install PyGithub`)")
     sys.exit(1)
+
+def should_log_tracebacks():
+    """Return True when stack traces should be included in logs."""
+    return logger.isEnabledFor(logging.DEBUG)
+
+def get_github_error_message(error):
+    """Extract a readable message from a GitHub exception."""
+    err_data = getattr(error, "data", None)
+    if isinstance(err_data, dict):
+        return str(err_data.get("message", "")).strip()
+    if err_data:
+        return str(err_data).strip()
+    return str(error).strip()
+
+def is_secondary_rate_limit_error(error):
+    """Detect GitHub secondary rate limit or abuse-throttling responses."""
+    message = get_github_error_message(error).lower()
+    return "secondary rate limit" in message or "abuse" in message
+
+def is_primary_rate_limit_error(error):
+    """Detect GitHub primary rate limit exhaustion responses."""
+    message = get_github_error_message(error).lower()
+    if is_secondary_rate_limit_error(error):
+        return False
+    return "api rate limit exceeded" in message or "rate limit exceeded" in message
 
 # --- !! REVISED DECORATOR START !! ---
 def create_github_retry_decorator(github_instance):
@@ -58,7 +83,7 @@ def create_github_retry_decorator(github_instance):
 
     def decorator(func):
         @wraps(func) # Preserves original function metadata (name, docstring)
-        def wrapper(*args, **kwargs):
+        def wrapper(*call_args, **call_kwargs):
             func_name = func.__name__ # Cache for logging clarity
             retries = 0
             backoff_seconds = INITIAL_BACKOFF_SECONDS
@@ -66,7 +91,7 @@ def create_github_retry_decorator(github_instance):
             while retries <= MAX_RETRIES:
                 try:
                     # Attempt the actual PyGithub call
-                    result = func(*args, **kwargs)
+                    result = func(*call_args, **call_kwargs)
                     # If successful after retries, log it for info
                     if retries > 0:
                          logger.info(f"Call to {func_name} succeeded after {retries} retries.")
@@ -76,13 +101,12 @@ def create_github_retry_decorator(github_instance):
                     # --- Handle Rate Limits (Primary or Secondary reported via this exception type) ---
                     logger.warning(f"Rate limit hit calling {func_name} (Status: {e_rate_limit.status}).")
 
-                    # Check if it's a secondary limit (often 403) reported via RateLimitExceededException
-                    # Or if primary limit info fetch fails, fall back to backoff.
-                    is_secondary_limit_behavior = (e_rate_limit.status == 403) # Treat 403 as needing backoff
+                    # Distinguish between primary quota exhaustion and secondary throttling.
+                    is_secondary_limit_behavior = is_secondary_rate_limit_error(e_rate_limit)
                     primary_limit_info_fetched = False
                     sleep_duration = 0
 
-                    if not is_secondary_limit_behavior:
+                    if is_primary_rate_limit_error(e_rate_limit) or not is_secondary_limit_behavior:
                         # Attempt to handle as a PRIMARY rate limit (wait for reset)
                         logger.debug(f"Attempting primary rate limit handling (wait for reset) for {func_name}.")
                         try:
@@ -99,7 +123,7 @@ def create_github_retry_decorator(github_instance):
                             # Handle potential errors fetching rate limit info itself (e.g., network issue during check)
                             # Fallback to basic exponential backoff if limit info fetch fails
                             logger.error(f"Error getting rate limit info after hitting non-403 limit for {func_name}: {inner_e}. "
-                                         f"Falling back to exponential backoff.", exc_info=args.verbose)
+                                         f"Falling back to exponential backoff.", exc_info=should_log_tracebacks())
                             # Force fallback to exponential backoff below
                             is_secondary_limit_behavior = True # Treat as needing backoff if we can't get primary info
 
@@ -132,23 +156,41 @@ def create_github_retry_decorator(github_instance):
                     # --- Handle OTHER specific Github errors that are NOT RateLimitExceededException ---
                     # Catch potential 403s NOT reported as RateLimitExceededException, OR other errors like 404
                     if e_github.status == 403:
-                         # It's possible a 403 might occur NOT as a RateLimitExceededException subtype
-                         # Apply secondary limit backoff here as well, as a safety net.
-                        retries += 1
-                        if retries > MAX_RETRIES:
-                            logger.error(f"Max retries ({MAX_RETRIES}) exceeded for {func_name} after hitting generic 403 error.")
-                            raise e_github # Re-raise the exception after max retries
-
                         err_data = e_github.data if hasattr(e_github, 'data') else '(no details)'
-                        logger.warning(f"Generic 403 GithubException hit calling {func_name} (not RateLimitExceededException type). "
-                                       f"Retrying in {backoff_seconds:.2f}s... (Attempt {retries}/{MAX_RETRIES}) | Error data: {err_data}")
-                        time.sleep(backoff_seconds)
-                        backoff_seconds = min(MAX_BACKOFF_SECONDS, backoff_seconds * 2)
-                        continue # Retry the operation
+                        if is_primary_rate_limit_error(e_github):
+                            logger.debug(f"Attempting primary rate limit handling (wait for reset) for generic 403 in {func_name}.")
+                            try:
+                                limits = github_instance.get_rate_limit().core
+                                reset_time_naive = limits.reset
+                                reset_time_utc = reset_time_naive.replace(tzinfo=datetime.timezone.utc)
+                                now_utc = datetime.datetime.now(datetime.timezone.utc)
+                                sleep_duration = max(1.0, (reset_time_utc - now_utc).total_seconds()) + 5
+                                logger.warning(f"Primary rate limit details: Limit={limits.limit}, Used={limits.used}, Remaining={limits.remaining}. "
+                                               f"Waiting for {sleep_duration:.2f} seconds until reset at {reset_time_utc.isoformat()}.")
+                                time.sleep(sleep_duration)
+                                continue
+                            except Exception as inner_e:
+                                logger.error(f"Error getting rate limit info after hitting generic 403 limit for {func_name}: {inner_e}. "
+                                             f"Falling back to exponential backoff.", exc_info=should_log_tracebacks())
+
+                        if is_secondary_rate_limit_error(e_github) or is_primary_rate_limit_error(e_github):
+                            retries += 1
+                            if retries > MAX_RETRIES:
+                                logger.error(f"Max retries ({MAX_RETRIES}) exceeded for {func_name} after hitting generic 403 error.")
+                                raise e_github # Re-raise the exception after max retries
+
+                            logger.warning(f"Generic 403 GithubException hit calling {func_name}. "
+                                           f"Retrying in {backoff_seconds:.2f}s... (Attempt {retries}/{MAX_RETRIES}) | Error data: {err_data}")
+                            time.sleep(backoff_seconds)
+                            backoff_seconds = min(MAX_BACKOFF_SECONDS, backoff_seconds * 2)
+                            continue # Retry the operation
+
+                        logger.error(f"Unhandled GithubException calling {func_name} (Status: {e_github.status}): {err_data}")
+                        raise e_github
 
                     elif e_github.status == 404:
                          # Usually no point retrying a 404 Not Found
-                         logger.error(f"GitHub resource not found (404) calling {func_name} with args: {args}, kwargs: {kwargs}")
+                         logger.error(f"GitHub resource not found (404) calling {func_name} with args: {call_args}, kwargs: {call_kwargs}")
                          raise e_github # Re-raise immediately
                     # Handle other GitHub API errors (e.g., 401 Unauthorized, 5xx Server Errors)
                     else:
@@ -158,7 +200,7 @@ def create_github_retry_decorator(github_instance):
 
                 except Exception as e_unexpected:
                     # --- Catch any other unexpected errors during the API call attempt ---
-                    logger.error(f"Unexpected error calling {func_name}: {e_unexpected}", exc_info=args.verbose)
+                    logger.error(f"Unexpected error calling {func_name}: {e_unexpected}", exc_info=should_log_tracebacks())
                     raise e_unexpected # Re-raise unexpected errors immediately
 
             # --- End of While Loop ---
@@ -245,22 +287,26 @@ try:
     def get_repos_with_retry(org_obj):
         """Gets the list of repository objects for the org with retry logic."""
         logger.debug(f"Fetching repositories for organization: {org_obj.login}")
-        # Returns a PaginatedList, iteration handles subsequent pages
-        return org_obj.get_repos()
+        # Materialize pagination inside the retry wrapper so later iteration does not bypass retries.
+        return list(org_obj.get_repos())
 
     @github_retry
     def get_releases_with_retry(repo_obj):
         """Gets the list of release objects for the repo with retry logic."""
         logger.debug(f"Fetching releases for repository: {repo_obj.name}")
-        # Returns a PaginatedList
-        return repo_obj.get_releases()
+        # Materialize pagination inside the retry wrapper so later iteration does not bypass retries.
+        return list(repo_obj.get_releases())
 
     @github_retry
     def get_assets_with_retry(release_obj):
         """Gets the list of asset objects for the release with retry logic."""
         logger.debug(f"Fetching assets for release tag: {release_obj.tag_name}")
-        # Returns a PaginatedList
-        return release_obj.get_assets()
+        # Prefer assets already embedded in the release payload to avoid an extra API call per release.
+        assets = release_obj.assets
+        if isinstance(assets, list):
+            return list(assets)
+        # Fall back to the dedicated assets endpoint if needed.
+        return list(release_obj.get_assets())
 
     # --- Verify authentication and connectivity ---
     user_login = get_authenticated_user_login(g.get_user())
@@ -280,7 +326,7 @@ except GithubException as e:
      logger.error(f"Fatal Error: GitHub API error during initialization (Status: {e.status}): {e.data if hasattr(e, 'data') else '(no data)'}")
      sys.exit(1)
 except Exception as e:
-    logger.error(f"Fatal Error: Unexpected error initializing GitHub connection: {e}", exc_info=args.verbose)
+    logger.error(f"Fatal Error: Unexpected error initializing GitHub connection: {e}", exc_info=should_log_tracebacks())
     sys.exit(1)
 
 # --- Core Processing Functions ---
@@ -374,7 +420,7 @@ def process_asset(asset):
         return None
     except Exception as e:
         # Catch-all for any other unexpected errors during asset processing
-        logger.error(f"Unexpected error processing asset {asset.name} (URL: {download_url}): {e}", exc_info=args.verbose)
+        logger.error(f"Unexpected error processing asset {asset.name} (URL: {download_url}): {e}", exc_info=should_log_tracebacks())
         return None
 
 # Process a single GitHub release object
@@ -382,7 +428,7 @@ def process_release(repo_name, release_obj):
     """
     Processes assets within a single GitHub release object.
     Uses decorated helper to fetch assets, then calls process_asset for each.
-    Returns a tuple: (filtered_release_dict, repo_name) or (None, repo_name) on failure.
+    Returns a tuple: (filtered_release_dict, repo_name, failed_processing).
     The filtered_release_dict contains release metadata and a list of processed assets.
     """
     release_title = release_obj.title
@@ -401,11 +447,11 @@ def process_release(repo_name, release_obj):
     except GithubException as e:
         # Catch error if get_assets_with_retry fails definitively after all retries
         logger.error(f"Failed to get assets for release '{release_title}' (tag: {release_tag}) in repo {repo_name} after retries: {e}")
-        return None, repo_name # Indicate failure for this specific release
+        return None, repo_name, True # Indicate failure for this specific release
     except Exception as e:
         # Catch any other unexpected error during asset fetching
-        logger.error(f"Unexpected error fetching assets for release '{release_title}' (tag: {release_tag}) in repo {repo_name}: {e}", exc_info=args.verbose)
-        return None, repo_name
+        logger.error(f"Unexpected error fetching assets for release '{release_title}' (tag: {release_tag}) in repo {repo_name}: {e}", exc_info=should_log_tracebacks())
+        return None, repo_name, True
 
     # --- Process the assets retrieved ---
     filtered_assets = [] # List to hold successfully processed asset data dicts
@@ -414,10 +460,9 @@ def process_release(repo_name, release_obj):
     if assets is None:
          logger.warning(f"Asset list is None for release '{release_title}' (tag: {release_tag}) in repo {repo_name}, likely due to prior fetch error.")
          # Even though decorator should raise, handle defensively
-         return None, repo_name
+         return None, repo_name, True
 
-    # The 'assets' object might be a PaginatedList; direct iteration works fine
-    # Wrap asset iteration in try/except as iteration itself can trigger API calls for pagination
+    # Iterate defensively in case asset access or parsing still raises unexpectedly.
     try:
         for asset in assets:
             asset_count += 1
@@ -428,12 +473,12 @@ def process_release(repo_name, release_obj):
                 filtered_assets.append(filtered_asset_data)
         logger.debug(f"Checked {asset_count} assets in release '{release_title}', found {len(filtered_assets)} matching '{METADATA_ASSET_NAME}' with valid data.")
     except GithubException as e:
-         # Catch rate limit or other GitHub errors during asset list PAGINATION
+         # Catch any residual GitHub errors while processing assets.
         logger.error(f"GitHub error occurred while iterating through assets for release '{release_title}' (tag: {release_tag}) in repo {repo_name}: {e}")
-        return None, repo_name # Fail the release processing if we can't iterate assets
+        return None, repo_name, True # Fail the release processing if we can't iterate assets
     except Exception as e:
-        logger.error(f"Unexpected error iterating assets for release '{release_title}' (tag: {release_tag}) in repo {repo_name}: {e}", exc_info=args.verbose)
-        return None, repo_name
+        logger.error(f"Unexpected error iterating assets for release '{release_title}' (tag: {release_tag}) in repo {repo_name}: {e}", exc_info=should_log_tracebacks())
+        return None, repo_name, True
 
 
     # --- Construct final release data ---
@@ -450,11 +495,11 @@ def process_release(repo_name, release_obj):
             "tag_name": release_tag,
             "assets": filtered_assets  # List of processed asset data dictionaries
         }
-        return filtered_release_dict, repo_name # Success
+        return filtered_release_dict, repo_name, False # Success
     else:
         # No relevant/processable assets found in this release, return None for the data part
         logger.debug(f"No relevant assets found or processed in release '{release_title}'")
-        return None, repo_name
+        return None, repo_name, False
 
 # --- Main Execution Logic ---
 logger.info(f"Starting processing for organization '{ORGANIZATION}', repo suffix '{REPO_SUFFIX_FILTER}', min year {args.min_year}.")
@@ -467,6 +512,8 @@ repo_descriptions = {}
 total_repos_processed = 0
 skipped_old_releases = 0
 skipped_failed_futures = 0
+repo_release_fetch_failures = 0
+output_write_failures = 0
 
 try:
     # Get the organization object using decorated helper with retries
@@ -534,9 +581,11 @@ try:
             except GithubException as e:
                 # Catch error if get_releases_with_retry fails definitively for this repo after all retries
                 logger.error(f"Could not fetch releases for repository {repo_name} after retries: {e}")
+                repo_release_fetch_failures += 1
             except Exception as e:
                  # Catch other unexpected errors during processing of a specific repository's releases
-                 logger.error(f"Unexpected error processing repository {repo_name}: {e}", exc_info=args.verbose)
+                 logger.error(f"Unexpected error processing repository {repo_name}: {e}", exc_info=should_log_tracebacks())
+                 repo_release_fetch_failures += 1
 
         # --- Process results from worker threads as they complete ---
         total_futures = len(futures)
@@ -554,9 +603,13 @@ try:
                  logger.info(f"Processing results... ({processed_futures}/{total_futures} tasks completed)")
 
             try:
-                # Get the result tuple from the completed future: (dict, str) or (None, str)
+                # Get the result tuple from the completed future: (dict, str, bool) or (None, str, bool)
                 # .result() will re-raise any exception that occurred in the worker thread
-                filtered_release_dict, repo_name_result = future.result()
+                filtered_release_dict, repo_name_result, release_failed = future.result()
+
+                if release_failed:
+                    skipped_failed_futures += 1
+                    continue
 
                 # --- Filter the result based on Date ---
                 # Check if the processing was successful (dict is not None) and repo name is valid
@@ -594,10 +647,10 @@ try:
             # Catch exceptions raised *within* the worker thread task execution (e.g., from process_release)
             # This includes GitHub errors that exhausted retries in the decorator
             except Exception as e:
-                logger.error(f"Error retrieving result from a release processing future: {e}", exc_info=args.verbose)
+                logger.error(f"Error retrieving result from a release processing future: {e}", exc_info=should_log_tracebacks())
                 skipped_failed_futures += 1
 
-        logger.info(f"Finished processing futures. Skipped {skipped_old_releases} releases published before {args.min_year}. Encountered {skipped_failed_futures} failed tasks.")
+        logger.info(f"Finished processing futures. Skipped {skipped_old_releases} releases published before {args.min_year}. Encountered {skipped_failed_futures} failed release tasks.")
 
 # --- Catch potential exceptions during overall script execution ---
 except BadCredentialsException:
@@ -610,7 +663,7 @@ except GithubException as e:
     sys.exit(1)
 except Exception as e:
     # Catch-all for any other unexpected errors during main setup or processing loops
-    logger.error(f"Fatal Error: An unexpected error occurred during main execution: {e}", exc_info=args.verbose)
+    logger.error(f"Fatal Error: An unexpected error occurred during main execution: {e}", exc_info=should_log_tracebacks())
     sys.exit(1)
 
 
@@ -668,8 +721,10 @@ try:
     logger.info(f"Full JSON cache file created successfully: {args.output_file}")
 except IOError as e:
     logger.error(f"Error writing main JSON file to {args.output_file}: {e}")
+    output_write_failures += 1
 except TypeError as e:
      logger.error(f"Error serializing full data to JSON (check data types): {e}")
+     output_write_failures += 1
 
 
 # --- Generate Latest Releases JSON Output File (Minified) ---
@@ -709,8 +764,10 @@ try:
     logger.info(f"JSON file with the latest releases created successfully: {latest_output_file}")
 except IOError as e:
     logger.error(f"Error writing latest releases JSON file to {latest_output_file}: {e}")
+    output_write_failures += 1
 except TypeError as e:
      logger.error(f"Error serializing latest data to JSON: {e}")
+     output_write_failures += 1
 
 
 # --- Generate Descriptions JSON File (Human-Readable) ---
@@ -738,20 +795,30 @@ try:
     logger.info(f"JSON file with repository descriptions created successfully: {desc_output_file}")
 except IOError as e:
     logger.error(f"Error writing descriptions JSON file to {desc_output_file}: {e}")
+    output_write_failures += 1
 except TypeError as e:
      logger.error(f"Error serializing descriptions data to JSON: {e}")
+     output_write_failures += 1
 
 
 # --- Final Summary Output ---
-logger.info("Script finished successfully.")
+total_failures = skipped_failed_futures + repo_release_fetch_failures + output_write_failures
+if total_failures == 0:
+    logger.info("Script finished successfully.")
+else:
+    logger.error("Script completed with failures.")
 # Always print basic summary stats to INFO level
 logger.info(f"--- Summary ---")
 logger.info(f"Processed {total_repos_processed} '{REPO_SUFFIX_FILTER}' repositories from '{ORGANIZATION}'.")
 logger.info(f"Included {total_releases_included} releases (published >= {args.min_year}).")
 logger.info(f"Skipped {skipped_old_releases} releases (published < {args.min_year}).")
+if repo_release_fetch_failures > 0:
+    logger.warning(f"Encountered {repo_release_fetch_failures} repository-level release listing failures.")
 if skipped_failed_futures > 0:
     # Log failures as warning if any occurred
-    logger.warning(f"Encountered {skipped_failed_futures} failed release processing tasks (check logs above for details).")
+    logger.warning(f"Encountered {skipped_failed_futures} failed release processing tasks.")
+if output_write_failures > 0:
+    logger.warning(f"Encountered {output_write_failures} output file write/serialization failures.")
 logger.info(f"Main releases file: {args.output_file}")
 logger.info(f"Latest releases file: {latest_output_file}")
 logger.info(f"Descriptions file: {desc_output_file}") # Mention descriptions file
@@ -770,4 +837,4 @@ try:
 except Exception as e:
     logger.warning(f"Could not retrieve final rate limit status: {e}")
 
-sys.exit(0) # Explicitly exit with success code
+sys.exit(1 if total_failures > 0 else 0) # Fail the job rather than publishing partial data.

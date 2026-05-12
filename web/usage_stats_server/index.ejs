@@ -70,7 +70,10 @@ https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js
   <script>
   const dates = [
     <% Object.keys(totalDownloadsPerMonth)
-         .map(timestamp => new Date(`${timestamp}-01`))
+         .map(timestamp => {
+           const [year, month] = timestamp.split('/');
+           return new Date(`${year}-${String(month).padStart(2, '0')}-01`);
+         })
          .sort((a, b) => a - b)
          .forEach(date => { %>
       '<%= `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}` %>',

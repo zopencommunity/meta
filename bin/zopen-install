@@ -24,6 +24,16 @@ checkWritable
 startGPGAgent() {
   printInfo "- Starting gpg-agent..."
 
+  if [ -z "$GPG_TTY" ]; then
+    export GPG_TTY=$(tty 2>/dev/null)
+  fi
+
+  # Attempt to start the agent using gpgconf --launch, which is more robust
+  if gpgconf --launch gpg-agent >/dev/null 2>&1; then
+    printVerbose "gpg-agent launched successfully."
+    return 0
+  fi
+
   SOCKET_PATH=$(gpgconf --list-dirs agent-socket)
   if [ -r "$SOCKET_PATH" ]; then
     printVerbose "gpg-agent is already running (socket found at $SOCKET_PATH)."
@@ -47,9 +57,13 @@ startGPGAgent() {
 
 gpgCleanup() {
   printVerbose "Cleaning up $SIGNATURE_FILE, $PUBLIC_KEY_FILE and $TMP_GPG_DIR"
+  if [ -d "$TMP_GPG_DIR" ]; then
+    GNUPGHOME="$TMP_GPG_DIR" gpgconf --kill gpg-agent >/dev/null 2>&1
+  fi
   [ -e "$SIGNATURE_FILE" ] && rm -f "$SIGNATURE_FILE"
   [ -e "$PUBLIC_KEY_FILE" ] && rm -f "$PUBLIC_KEY_FILE"
   [ -d "$TMP_GPG_DIR" ] && rm -rf "$TMP_GPG_DIR"
+  unset GNUPGHOME
 }
 
 verifySignatureOfPax()
@@ -73,6 +87,8 @@ verifySignatureOfPax()
   # Create a temporary directory for GPG keyring
   TMP_GPG_DIR="$zopen_tmp_dir/zopen_gpg_verify_$LOGNAME_$$"
   mkdir -p "$TMP_GPG_DIR"
+  chmod 700 "$TMP_GPG_DIR"
+  export GNUPGHOME="$TMP_GPG_DIR"
 
   SIGNATURE_FILE="$zopen_tmp_dir/zopen_signedfile.$LOGNAME.$$.asc"
   PUBLIC_KEY_FILE="$zopen_tmp_dir/zopen_scriptpubkey.$LOGNAME.$$.asc"

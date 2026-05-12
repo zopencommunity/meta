@@ -260,6 +260,14 @@ fi
 ZOPEN_ROOTFS="${rootfs}"
 export ZOPEN_ROOTFS
 
+# When running under Gemini or Bob shell, stderr output is garbled.
+# Redirect messages to stdout instead.
+if [ -n "\${BOBSHELL_CLI}" ] || [ -n "\${GEMINI_CLI}" ]; then
+  ZOPEN_STDERR_TO_STDOUT=true
+else
+  ZOPEN_STDERR_TO_STDOUT=false
+fi
+
 if [ -z "\${_BPXK_AUTOCVT}" ]; then
   export _BPXK_AUTOCVT=ON
 else
@@ -267,7 +275,11 @@ else
   if [ "\${CUR_CVT}" = "ON" ] || [ "\${CUR_CVT}" = "ALL" ]; then
     : # ok - we can source the config with these settings
   else
-    echo "Error. You have _BPXK_AUTOCVT=\${CUR_CVT} and we can not source the configuration." >&2
+    if \${ZOPEN_STDERR_TO_STDOUT}; then
+      echo "Error. You have _BPXK_AUTOCVT=\${CUR_CVT} and we can not source the configuration."
+    else
+      echo "Error. You have _BPXK_AUTOCVT=\${CUR_CVT} and we can not source the configuration." >&2
+    fi
     return 4
   fi
 fi
@@ -916,7 +928,7 @@ runAndLog()
   eval "$1"
   rc=$?
   if [ ! -z "${SSH_TTY}" ]; then
-    chtag -r ${SSH_TTY}
+    chtag -r ${SSH_TTY} 2>/dev/null
   fi
   return "${rc}"
 }
@@ -941,7 +953,7 @@ runLogProgress()
   eval "$1"
   rc=$?
   if [ ! -z "${SSH_TTY}" ]; then
-    chtag -r ${SSH_TTY}
+    chtag -r ${SSH_TTY} 2>/dev/null
   fi
   ${killph} 2> /dev/null # if the timer is not running, the kill will fail
   return "${rc}"
@@ -1019,7 +1031,7 @@ runInBackgroundWithTimeoutAndLog()
     if [ $? != 0 ]; then
       wait "${PID}"
       if [ ! -z "${SSH_TTY}" ]; then
-        chtag -r ${SSH_TTY}
+        chtag -r ${SSH_TTY} 2>/dev/null
       fi
       rc=$?
       return "${rc}"
@@ -1036,14 +1048,22 @@ runInBackgroundWithTimeoutAndLog()
 printSoftError()
 {
   [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
-  printColors "${NC}${RED}${BOLD}***ERROR: ${NC}${RED}${1}${NC}" >&2
+  if ${ZOPEN_STDERR_TO_STDOUT}; then
+    printColors "${NC}${RED}${BOLD}***ERROR: ${NC}${RED}${1}${NC}"
+  else
+    printColors "${NC}${RED}${BOLD}***ERROR: ${NC}${RED}${1}${NC}" >&2
+  fi
   [ -n "${xtrc}" ] && set -x
 }
 
 printError()
 {
   [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
-  printColors "${NC}${RED}${BOLD}***ERROR: ${NC}${RED}${1}${NC}" >&2
+  if ${ZOPEN_STDERR_TO_STDOUT}; then
+    printColors "${NC}${RED}${BOLD}***ERROR: ${NC}${RED}${1}${NC}"
+  else
+    printColors "${NC}${RED}${BOLD}***ERROR: ${NC}${RED}${1}${NC}" >&2
+  fi
   [ -n "${xtrc}" ] && set -x
   mutexFree "zopen" # prevent lock from lingering around after an error
   cleanupFunction
@@ -1053,7 +1073,11 @@ printError()
 printWarning()
 {
   [ -z "${-%%*x*}" ] && set +x && xtrc="-x" || xtrc=""
-  printColors "${NC}${WARNINGCOLOR}${BOLD}***WARNING: ${NC}${YELLOW}${1}${NC}" >&2
+  if ${ZOPEN_STDERR_TO_STDOUT}; then
+    printColors "${NC}${WARNINGCOLOR}${BOLD}***WARNING: ${NC}${YELLOW}${1}${NC}"
+  else
+    printColors "${NC}${WARNINGCOLOR}${BOLD}***WARNING: ${NC}${YELLOW}${1}${NC}" >&2
+  fi
   [ -n "${xtrc}" ] && set -x
   return 0
 }
@@ -1396,12 +1420,16 @@ initDefaultEnvironment()
 checkWritable()
 {
   if [ -z "${INCDIR}" ]; then
-    echo "Internal error. Caller has to have set INCDIR" >&2
+    if ${ZOPEN_STDERR_TO_STDOUT}; then
+      echo "Internal error. Caller has to have set INCDIR"
+    else
+      echo "Internal error. Caller has to have set INCDIR" >&2
+    fi
     exit 16
   fi
   ROOTDIR="$(cd "${INCDIR}/../" > /dev/null 2>&1 && pwd -P)"
   if ! [ -w "${ROOTDIR}" ]; then
-    printError "Tools distribution is read-only. Cannot run update operation '${ME}'." >&2
+    printError "Tools distribution is read-only. Cannot run update operation '${ME}'."
   fi
 }
 
@@ -1485,12 +1513,16 @@ asciiecho()
   file="$2"
 
   if ! echo "${text}" > "${file}"; then
-    echo "Unable to echo text to ${file}" >&2
+    if ${ZOPEN_STDERR_TO_STDOUT}; then
+      echo "Unable to echo text to ${file}"
+    else
+      echo "Unable to echo text to ${file}" >&2
+    fi
     return 2
   fi
   if [ "$(chtag -p "${file}" | cut -f2 -d' ')" = "IBM-1047" ]; then
     if ! /bin/iconv -f IBM-1047 -t ISO8859-1 < "${file}" > "${file}_ascii" || ! chtag -tc ISO8859-1 "${file}_ascii" || ! mv "${file}_ascii" "${file}"; then
-      printError "Unable to convert EBCDIC text to ASCII for ${file}" >&2
+      printError "Unable to convert EBCDIC text to ASCII for ${file}"
     fi
   fi
   return 0

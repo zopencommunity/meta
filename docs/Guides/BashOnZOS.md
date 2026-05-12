@@ -29,22 +29,27 @@ type bash
 ```
 
 If Bash is not installed, you can install it using the following command:
+
 ```
 zopen install bash
 ```
-For more details on how to use and setup zopen, see the [zopen guide](/Guides/using).
+
+For more details on how to use and setup zopen, see the [zopen guide](/Guides/ThePackageManager).
 
 Alternatively, you can download bash directly from https://github.com/zopencommunity/bashport/releases.
 
 3. Enter the following command to set Bash as your default shell in your OMVS segment:
+
 ```
 tsocmd "ALTUSER USERID omvs(program(/path/to/bash))"
 ```
+
 where USERID is your z/OS user id and `/path/to/bash` is the path to your bash executable.
 
 Please note that running this command requires elevated authority. For more information on authorization, please refer to the 'Authorization' section of the following link: https://www.ibm.com/docs/en/zos/latest?topic=syntax-altuser-alter-user-profile. In case you do not have the necessary permissions, please consider requesting assistance from a system administrator to execute the command.
 
 4. To confirm that your OMVS Program Segment is set to bash, run the following command:
+
 ```
 tsocmd "LISTUSER USERID OMVS" | grep PROGRAM
 ```
@@ -62,6 +67,7 @@ export LANG=en_US.UTF-8
 ```
 
 Now try copying and pasting an emoji such as: ð
+
 ```
 echo ð
 ```

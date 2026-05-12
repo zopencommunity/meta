@@ -20,7 +20,11 @@ setupMyself()
   MYDIR="$(cd "$(dirname "$0")" > /dev/null 2>&1 && pwd -P)"
   INCDIR="${MYDIR}/../include"
   if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
-    echo "Internal Error. Unable to find common.sh file to source." >&2
+    if [ -n "${BOBSHELL_CLI}" ] || [ -n "${GEMINI_CLI}" ]; then
+      echo "Internal Error. Unable to find common.sh file to source."
+    else
+      echo "Internal Error. Unable to find common.sh file to source." >&2
+    fi
     exit 8
   fi
   . "${INCDIR}/common.sh"
@@ -46,6 +50,8 @@ Required:
                       stable build URL (either git or tarball).
 
 Optional:
+  ZOPEN_SOURCE_URL      If set, use this as ZOPEN_URL before checking
+                        ZOPEN_DEV_URL or ZOPEN_STABLE_URL.
   ZOPEN_EXTRA_CFLAGS    C compiler flags to append to CFLAGS (defaults to '').
   ZOPEN_EXTRA_CPPFLAGS  C,C++ pre-processor flags to append to CPPFLAGS.
                         (defaults to '')
@@ -306,6 +312,57 @@ setDefaults()
   return 0
 }
 
+# --- Built-in Python build system functions ---
+
+_zopen_python_ensure_venv() {
+  if [ ! -f ".venv/bin/activate" ]; then
+    printInfo "Creating Python virtual environment..."
+    python -m venv .venv
+  fi
+  . .venv/bin/activate
+  pip install setuptools build installer wheel
+}
+
+_zopen_python_build() {
+  _zopen_python_ensure_venv
+  rm -rf dist
+  python -m build --wheel
+  _zopen_python_build_rc=$?
+  deactivate
+  return ${_zopen_python_build_rc}
+}
+
+_zopen_python_check() {
+  . .venv/bin/activate
+  pip install pytest
+  # Install the built wheel so C extensions (.so files) are available
+  # Use --force-reinstall to ensure the newly built wheel is used
+  pip install --force-reinstall --no-deps dist/*.whl
+  python -m pytest -v
+  _zopen_python_check_rc=$?
+  deactivate
+  return ${_zopen_python_check_rc}
+}
+
+_zopen_python_install() {
+  mkdir -p "${ZOPEN_INSTALL_DIR}/lib/python"
+  mkdir -p "${ZOPEN_INSTALL_DIR}/bin"
+  mkdir -p "${ZOPEN_INSTALL_DIR}/dist"
+  . .venv/bin/activate
+  # Install the built wheel to the target directory
+  pip install --no-deps --target="${ZOPEN_INSTALL_DIR}/lib/python" dist/*.whl
+  # Symlink any scripts into bin/ so they are on PATH
+  for f in "${ZOPEN_INSTALL_DIR}/lib/python/bin/"*; do
+    [ -e "$f" ] || continue
+    ln -sf "../lib/python/bin/$(basename "$f")" "${ZOPEN_INSTALL_DIR}/bin/$(basename "$f")"
+  done
+  # Preserve wheel for publishing
+  cp dist/*.whl "${ZOPEN_INSTALL_DIR}/dist/"
+  deactivate
+}
+
+# --- End Python build system functions ---
+
 printSyntax()
 {
   args=$*
@@ -327,6 +384,7 @@ Option:
                         python. The default is clang.
   -e ENV_FILE           source ENV_FILE instead of buildenv to establish
                         build environment.
+  -E, --editable        enable editing of the executable (adds -Wl,-bedit=yes to LDFLAGS).
   --instrument          instruments the application with option -finstrument-functions (clang only)
   -f, --force-rebuild   forces a rebuild, including running bootstrap
                         and configure again.
@@ -390,6 +448,7 @@ processOptions()
   instrument=false
   printSourceDir=false
   use_ccache=false
+  editable=false
   depsDepth=2
   while [ $# -gt 0 ]; do
     case $1 in
@@ -465,6 +524,9 @@ processOptions()
     "-e" | "--env")
       shift
       buildEnvFile=$1
+      ;;
+    "-E" | "--editable")
+      editable=true
       ;;
     "-c" | "--clean")
       cleanupBuild=true
@@ -575,10 +637,14 @@ checkEnv()
         printError "Building from dev, but ZOPEN_DEV_DEPS not specified"
       fi
       ZOPEN_DEPS="${ZOPEN_DEV_DEPS}"
-      if [ -z "${ZOPEN_DEV_URL}" ]; then
-        printError "Building from dev, but ZOPEN_DEV_URL not specified"
+      if [ ! -z "${ZOPEN_SOURCE_URL}" ]; then
+        ZOPEN_URL="${ZOPEN_SOURCE_URL}"
+      else
+        if [ -z "${ZOPEN_DEV_URL}" ]; then
+          printError "Building from dev, but ZOPEN_DEV_URL not specified"
+        fi
+        ZOPEN_URL="${ZOPEN_DEV_URL}"
       fi
-      ZOPEN_URL="${ZOPEN_DEV_URL}"
       if [ ! -z "${ZOPEN_DEV_BRANCH}" ]; then
         export ZOPEN_GIT_BRANCH="${ZOPEN_DEV_BRANCH}"
       fi
@@ -600,10 +666,14 @@ checkEnv()
         printError "Building from stable, but ZOPEN_STABLE_DEPS not specified"
       fi
       ZOPEN_DEPS="${ZOPEN_STABLE_DEPS}"
-      if [ -z "${ZOPEN_STABLE_URL}" ]; then
-        printError "Building from stable, but ZOPEN_STABLE_URL not specified"
+      if [ ! -z "${ZOPEN_SOURCE_URL}" ]; then
+        ZOPEN_URL="${ZOPEN_SOURCE_URL}"
+      else
+        if [ -z "${ZOPEN_STABLE_URL}" ]; then
+          printError "Building from stable, but ZOPEN_STABLE_URL not specified"
+        fi
+        ZOPEN_URL="${ZOPEN_STABLE_URL}"
       fi
-      ZOPEN_URL="${ZOPEN_STABLE_URL}"
       if [ ! -z "${ZOPEN_STABLE_BRANCH}" ]; then
         export ZOPEN_GIT_BRANCH="${ZOPEN_STABLE_BRANCH}"
       fi
@@ -665,6 +735,59 @@ checkEnv()
   ZOPEN_CHECK_RESULTS_CODE="zopen_check_results"
   ZOPEN_PRE_TERMINATE_CODE="zopen_pre_terminate"
 
+  # --- Python build system defaults ---
+  if [ -n "${ZOPEN_BUILD_SYSTEM}" ]; then
+    case "${ZOPEN_BUILD_SYSTEM}" in
+      Python) ;;
+      *) printError "Unknown ZOPEN_BUILD_SYSTEM: ${ZOPEN_BUILD_SYSTEM}. Supported values: Python" ;;
+    esac
+  fi
+
+  if [ "${ZOPEN_BUILD_SYSTEM}" = "Python" ]; then
+    # Set defaults using := so user overrides from buildenv are preserved
+    : "${ZOPEN_CONFIGURE:=skip}"
+    : "${ZOPEN_MAKE:=_zopen_python_build}"
+    : "${ZOPEN_MAKE_MINIMAL:=yes}"
+    : "${ZOPEN_CHECK:=_zopen_python_check}"
+    : "${ZOPEN_CHECK_MINIMAL:=yes}"
+    : "${ZOPEN_INSTALL:=_zopen_python_install}"
+
+    # Provide built-in zopen_check_results if user did not define one
+    if ! command -V zopen_check_results > /dev/null 2>&1; then
+      zopen_check_results() {
+        dir="$1"; pfx="$2"; chk="$1/$2_check.log"
+        passed=$(grep -oE "[0-9]+ passed" "${chk}" | awk '{print $1}')
+        failed=$(grep -oE "[0-9]+ failed" "${chk}" | awk '{print $1}')
+        errors=$(grep -oE "[0-9]+ error" "${chk}" | awk '{print $1}')
+        passed=${passed:-0}; failed=${failed:-0}; errors=${errors:-0}
+        totalTests=$((passed + failed + errors))
+        echo "actualFailures:$((failed + errors))"
+        echo "totalTests:${totalTests}"
+        echo "expectedFailures:0"
+      }
+    fi
+
+    # Provide built-in zopen_append_to_env if user did not define one
+    if ! command -V zopen_append_to_env > /dev/null 2>&1; then
+      zopen_append_to_env() {
+        cat <<PYENVEOF
+PYTHONPATH="\${PYTHONPATH}:\${PWD}/lib/python"
+export PYTHONPATH="\$(deleteDuplicateEntries "\$PYTHONPATH" ":")"
+PYENVEOF
+      }
+    fi
+
+    # Merge LIBS into LDFLAGS for C extension ports (Python ignores LIBS)
+    if [ "${ZOPEN_COMP}" != "skip" ]; then
+      if ! command -V zopen_init > /dev/null 2>&1; then
+        zopen_init() {
+          export LDFLAGS="$LDFLAGS $LIBS"
+        }
+      fi
+    fi
+  fi
+  # --- End Python build system defaults ---
+
   if ! command -V "${ZOPEN_CHECK_RESULTS_CODE}" > /dev/null 2>&1; then
     if [ "${ZOPEN_CHECK}x" != "skipx" ] && ! ${skipcheck}; then
       export ZOPEN_CHECK_RESULTS_CODE="${ZOPEN_ROOT}/portchk.sh"
@@ -676,6 +799,10 @@ checkEnv()
 
   implicitDeps="sed:bin git:bin jq:bin curl:bin"
   langDeps=""
+
+  if [ "${ZOPEN_BUILD_SYSTEM}" = "Python" ]; then
+    implicitDeps="${implicitDeps} check_python grep"
+  fi
 
   if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
     if [ -z "${ZOPEN_URL}" ]; then
@@ -736,6 +863,12 @@ checkEnv()
     ZOPEN_DEPS="${implicitDeps}"
   else
     ZOPEN_DEPS="${implicitDeps} ${langDeps} ${ZOPEN_DEPS}"
+  fi
+
+  # Handle USE_CLANG_WRAPPER: replace check_clang and zoslib with clang_zos_wrapper
+  if [ -n "${USE_CLANG_WRAPPER}" ]; then
+    ZOPEN_DEPS=$(echo "${ZOPEN_DEPS}" | sed 's/\bcheck_clang\b//g' | sed 's/\bzoslib\b//g' | xargs)
+    ZOPEN_DEPS="${ZOPEN_DEPS} clang_zos_wrapper"
   fi
 
   # Add meta as an implicit runtime dependency
@@ -889,6 +1022,9 @@ setEnv()
   fi
 
   # Dependencies such as libraries may add flags
+  if ${editable}; then
+    ZOPEN_EXTRA_LDFLAGS="${ZOPEN_EXTRA_LDFLAGS} -Wl,-bedit=yes"
+  fi
   export CPPFLAGS="${ZOPEN_CPPFLAGS} ${ZOPEN_EXTRA_CPPFLAGS}"
   export CFLAGS="${ZOPEN_CFLAGS} ${ZOPEN_EXTRA_CFLAGS} ${instrumentOptions}"
   export CXXFLAGS="${ZOPEN_CXXFLAGS} ${ZOPEN_EXTRA_CXXFLAGS} ${instrumentOptions}"
@@ -1074,7 +1210,7 @@ extractTarBall()
     out=$(unzip "${tarballz}" 2> /dev/null)
     if [ $? -gt 1 ]; then
       printError "unzip failed for ${tarballz}."
-      echo "${out}" >&2
+      printSoftError "${out}"
     fi
   fi
   if command -V "zopen_post_extract" > /dev/null 2>&1; then
@@ -1214,7 +1350,7 @@ attemptDownload()
     # Show diagnostic info for small files before deleting
     if [ -f "${output}" ] && [ $(wc -c "${output}" | awk '{print $1}') -lt 1024 ]; then
       printWarning "File content (first 512 bytes):"
-      head -c 512 "${output}" >&2
+      printWarning "$(head -c 512 "${output}")"
     fi
     rm -f "${output}"
   else
@@ -1280,7 +1416,7 @@ EOF
   fi
   
   if [ -d "${sourcedir}" ]; then
-    echo "Using existing tarball directory ${sourcedir}" >&2
+    printInfo "Using existing tarball directory ${sourcedir}"
     rm -f "${tarballz}"
   else
     freshBuild=true
@@ -1462,7 +1598,7 @@ cleanup()
     cleanlog="${ZOPEN_LOG_DIR}/${LOG_PFX}_clean.log"
     create_fifo_pipe "${cleanlog}"
     if ! runAndLog "${ZOPEN_CLEAN_CMD} >${TMP_FIFO_PIPE} 2>&1"; then
-      printError "Cleanup failed. Log: ${cleanlog}" >&2
+      printError "Cleanup failed. Log: ${cleanlog}"
     fi
   fi
   rm -f ${ZOPEN_LOG_DIR}/bootstrap.success
@@ -1475,12 +1611,12 @@ bootstrap()
   if [ -n "${ZOPEN_BOOTSTRAP_CMD}" ]; then
     printHeader "Running Bootstrap"
     if [ -r "${ZOPEN_LOG_DIR}/bootstrap.success" ]; then
-      echo "Using previous successful bootstrap. Specify -f to force a bootstrap." >&2
+      printInfo "Using previous successful bootstrap. Specify -f to force a bootstrap."
     else
       bootlog="${ZOPEN_LOG_DIR}/${LOG_PFX}_bootstrap.log"
       create_fifo_pipe "${bootlog}"
       if ! runAndLog "${ZOPEN_BOOTSTRAP_CMD} >${TMP_FIFO_PIPE} 2>&1"; then
-        printError "Bootstrap failed. Log: ${bootlog}" >&2
+        printError "Bootstrap failed. Log: ${bootlog}"
       fi
       touch ${ZOPEN_LOG_DIR}/bootstrap.success
     fi
@@ -1520,7 +1656,7 @@ configure()
   if [ -n "${ZOPEN_CONFIGURE_CMD}" ]; then
     printHeader "Running Configure"
     if [ -r "${ZOPEN_LOG_DIR}/config.success" ]; then
-      echo "Using previous successful configuration. Specify -f to force a configure." >&2
+      printInfo "Using previous successful configuration. Specify -f to force a configure."
     else
       configlog="${ZOPEN_LOG_DIR}/${LOG_PFX}_config.log"
       create_fifo_pipe "${configlog}"
