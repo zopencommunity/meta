@@ -1168,7 +1168,7 @@
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/llamacppport" target="_blank" rel="noopener noreferrer">llamacppport</a></strong></div>
     <div class="tool-status">1</div>
-    <div class="tool-test">84.3%</div>
+    <div class="tool-test">84.6%</div>
     <div class="tool-release">z-vector-search</div>
     <div class="tool-desc"></div>
   </div>
@@ -2515,4 +2515,4 @@
   </div>
 </div>
 
-Last updated:  2026-05-11 06:20:44 UTC
+Last updated:  2026-05-12 06:19:44 UTC

@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2026-05-11 06:18:26 EDT.*
+*Report generated on: 2026-05-12 06:17:19 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 307
+- **Total Projects Analyzed:** 308
 - **Total Current Lines of Code (LOC) in Patches:** 58,632
 - **Total Number of Current Patch Files:** 1,044
-- **Average Current Patch LOC per Project:** 190.98
-- **Average Current Patch Count per Project:** 3.40
+- **Average Current Patch LOC per Project:** 190.36
+- **Average Current Patch Count per Project:** 3.39
 
 ### Historical Trends (All Projects)
 
@@ -331,6 +331,7 @@
 | [subscription-managerport](#repo-subscription-managerport) | 0 | +0 | 0 |
 | [cbxpport](#repo-cbxpport) | 0 | +0 | 0 |
 | [notispfport](#repo-notispfport) | 0 | N/A | 0 |
+| [trivyport](#repo-trivyport) | 0 | +0 | 0 |
 
 ---
 
@@ -7082,6 +7083,24 @@
 ## notispfport
 
 - **Origin Date (First Commit):** Unknown
+- **Current Patch LOC:** 0
+- **Current Patch Count:** 0
+
+### Historical Trends
+
+*(Patch LOC trend graph not generated)*
+*(Patch count trend graph not generated)*
+
+### Current Patch Details
+
+*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
+
+---
+
+<a id="repo-trivyport"></a>
+## trivyport
+
+- **Origin Date (First Commit):** 2026-05-04
 - **Current Patch LOC:** 0
 - **Current Patch Count:** 0
 

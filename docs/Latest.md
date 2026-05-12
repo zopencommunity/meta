@@ -60,12 +60,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="llamacpp" data-searchable-text="llamacpp Blue 84.3% STABLE_llamacpp_4165 A C++ library for writing high-performance network applications ai port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="llamacpp" data-searchable-text="llamacpp Blue 84.6% STABLE_llamacpp_4279 A C++ library for writing high-performance network applications ai port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/llamacppport" target="_blank" rel="noopener noreferrer">llamacpp</a></strong></div>
     <div class="tool-status">Status: Blue</div>
-    <div class="tool-test">Test: 84.3%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/llamacppport/releases/download/STABLE_llamacppport_4165/llamacpp-DEV.20260325_200259.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_llamacpp_4165</a></div>
+    <div class="tool-test">Test: 84.6%</div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/llamacppport/releases/download/STABLE_llamacppport_4279/llamacpp-DEV.20260511_234201.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_llamacpp_4279</a></div>
     <div class="tool-desc" title="A C++ library for writing high-performance network applications">A C++ library for writing high-performance network applications</div>
   </div>
 </div>
@@ -248,12 +248,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="libdio" data-searchable-text="libdio Green 100.0% DEV_libdio_4274 A dataset I/O library core port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="libdio" data-searchable-text="libdio Green 100.0% DEV_libdio_4277 A dataset I/O library core port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libdioport" target="_blank" rel="noopener noreferrer">libdio</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/libdioport/releases/download/DEV_libdioport_4274/libdio-ispf_integration.20260508_160429.zos.pax.Z" target="_blank" rel="noopener noreferrer">DEV_libdio_4274</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/libdioport/releases/download/DEV_libdioport_4277/libdio-main.20260511_133336.zos.pax.Z" target="_blank" rel="noopener noreferrer">DEV_libdio_4277</a></div>
     <div class="tool-desc" title="A dataset I/O library">A dataset I/O library</div>
   </div>
 </div>
@@ -790,12 +790,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="libdio" data-searchable-text="libdio Green 100.0% DEV_libdio_4274 A dataset I/O library development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="libdio" data-searchable-text="libdio Green 100.0% DEV_libdio_4277 A dataset I/O library development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/libdioport" target="_blank" rel="noopener noreferrer">libdio</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/libdioport/releases/download/DEV_libdioport_4274/libdio-ispf_integration.20260508_160429.zos.pax.Z" target="_blank" rel="noopener noreferrer">DEV_libdio_4274</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/libdioport/releases/download/DEV_libdioport_4277/libdio-main.20260511_133336.zos.pax.Z" target="_blank" rel="noopener noreferrer">DEV_libdio_4277</a></div>
     <div class="tool-desc" title="A dataset I/O library">A dataset I/O library</div>
   </div>
 </div>
@@ -990,12 +990,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_4275 A TUI editor development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_4278 A TUI editor development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/vimport" target="_blank" rel="noopener noreferrer">vim</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_4275/vim-v9.2.0450.20260508_160041.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_4275</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_4278/vim-v9.2.0450.20260511_144904.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_4278</a></div>
     <div class="tool-desc" title="A TUI editor">A TUI editor</div>
   </div>
 </div>
@@ -1338,12 +1338,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_4275 A TUI editor editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="vim" data-searchable-text="vim Skipped N/A STABLE_vim_4278 A TUI editor editor port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/vimport" target="_blank" rel="noopener noreferrer">vim</a></strong></div>
     <div class="tool-status">Status: Skipped</div>
     <div class="tool-test">Test: N/A</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_4275/vim-v9.2.0450.20260508_160041.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_4275</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/vimport/releases/download/STABLE_vimport_4278/vim-v9.2.0450.20260511_144904.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_vim_4278</a></div>
     <div class="tool-desc" title="A TUI editor">A TUI editor</div>
   </div>
 </div>
@@ -3409,4 +3409,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2026-05-11 06:20:44 UTC
+Last updated:  2026-05-12 06:19:44 UTC

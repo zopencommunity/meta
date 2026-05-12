@@ -371,7 +371,7 @@
 - 2025-05-23: [Update grafana-version to 12.0.1 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/22) ❌
 - 2025-05-10: [Update grafana-version to 12.0.0 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/21) ❌
 - 2025-04-24: [Update grafana-version to 11.6.1 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/20) ❌
-- 2025-03-26: [Update grafana-version to 11.6.0 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/19) ❌
+- 2025-03-26: [Update grafana-version to 11.6.0 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/19) ❓
 - 2025-03-25: [Update grafana-version to 11.5.3 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/18) ❓
 - 2025-02-19: [Update grafana-version to 11.5.2 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/17) ❓
 - 2025-02-03: [Update grafana-version to 11.5.1 from 11.1.3](https://github.com/zopencommunity/grafanaport/pull/16) ❓
@@ -468,6 +468,7 @@
 - 2025-11-26: [Update libxslt-version to 1.1.44 from 1.1.43](https://github.com/zopencommunity/libxsltport/pull/14) ❌
 
 ### llamacppport
+- 2026-05-11: [Update llamacpp-version to 9100 from 8671](https://github.com/zopencommunity/llamacppport/pull/11) ❌
 - 2026-05-02: [Update llamacpp-version to 9000 from 8492](https://github.com/zopencommunity/llamacppport/pull/9) ❌
 - 2026-04-01: [Update llamacpp-version to 8600 from 8492](https://github.com/zopencommunity/llamacppport/pull/8) ❌
 - 2026-03-26: [Update llamacpp-version to 8500 from 8492](https://github.com/zopencommunity/llamacppport/pull/7) ❌
@@ -715,7 +716,7 @@
 - 2025-05-21: [Update terraform-version to 1.12.1 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/39) ❌
 - 2025-05-15: [Update terraform-version to 1.12.0 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/38) ❌
 - 2025-04-09: [Update terraform-version to 1.11.4 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/37) ❌
-- 2025-03-26: [Update terraform-version to 1.11.3 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/36) ❌
+- 2025-03-26: [Update terraform-version to 1.11.3 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/36) ❓
 - 2025-03-12: [Update terraform-version to 1.11.2 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/35) ❓
 - 2025-03-05: [Update terraform-version to 1.11.1 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/34) ❓
 - 2025-02-27: [Update terraform-version to 1.11.0 from 1.7.4](https://github.com/zopencommunity/terraformport/pull/33) ❓
@@ -735,6 +736,7 @@
 - 2026-04-01: [Update util-linux-version to 2.42 from 2.41.3](https://github.com/zopencommunity/util-linuxport/pull/23) ❌
 
 ### victoriametricsport
+- 2026-05-11: [Update victoriametrics-version to 1.143.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/55) ❌
 - 2026-04-28: [Update victoriametrics-version to 1.142.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/54) ❌
 - 2026-04-27: [Update victoriametrics-version to 1.141.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/53) ❌
 - 2026-04-13: [Update victoriametrics-version to 1.140.0 from 1.97.1](https://github.com/zopencommunity/victoriametricsport/pull/52) ❌
@@ -767,9 +769,6 @@
 
 ### xxhashport
 - 2024-12-30: [Update xxhash-version to 0.8.3 from 0.8.2](https://github.com/zopencommunity/xxhashport/pull/18) ❓
-
-### yqport
-- 2026-04-13: [Update yq-version to 4.53.3 from 4.52.5](https://github.com/zopencommunity/yqport/pull/41) ❌
 
 ### z3port
 - 2025-10-30: [Update z3-version to 4.15.4 from 4.15.3](https://github.com/zopencommunity/z3port/pull/1) ❌
@@ -1060,6 +1059,7 @@
 - ✅ toml11port - [![Bump Status](https://github.com/zopencommunity/toml11port/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/toml11port/actions/workflows/bump.yml)
 - ❌ toolsandtoysport - Workflow not configured
 - ✅ treeport - [![Bump Status](https://github.com/zopencommunity/treeport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/treeport/actions/workflows/bump.yml)
+- ✅ trivyport - [![Bump Status](https://github.com/zopencommunity/trivyport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/trivyport/actions/workflows/bump.yml)
 - ✅ ttypeport - [![Bump Status](https://github.com/zopencommunity/ttypeport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/ttypeport/actions/workflows/bump.yml)
 - ✅ unzipport - [![Bump Status](https://github.com/zopencommunity/unzipport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/unzipport/actions/workflows/bump.yml)
 - ❌ usearchport - Workflow not configured
@@ -1106,10 +1106,10 @@
 
 </details>
 
-**Summary:** 268 active | 56 missing
+**Summary:** 269 active | 56 missing
 
 ---
 
 
-> Last updated: 2026-05-11 06:11:54 EDT
+> Last updated: 2026-05-12 06:12:00 EDT
 
