@@ -112,6 +112,12 @@ without building.</p>
 <p style="margin-left:22%;">generate a pax.Z file based on
 the install contents.</p>
 
+<p style="margin-left:11%;"><b>&minus;gr</b>,
+<b>&minus;&minus;generate&minus;rpm</b></p>
+
+<p style="margin-left:22%;">generate an RPM package from
+the pax archive.</p>
+
 <p style="margin-left:11%;"><b>&minus;h</b>,
 <b>&minus;&minus;help</b>, &minus;?</p>
 
@@ -260,7 +266,12 @@ build URL (either git or tarball).</p>
 
 
 <p style="margin-left:11%; margin-top: 1em"><b>Optional:</b>
-ZOPEN_EXTRA_CFLAGS</p>
+ZOPEN_SOURCE_URL</p>
+
+<p style="margin-left:22%;">If set, use this as ZOPEN_URL
+before checking ZOPEN_DEV_URL or ZOPEN_STABLE_URL.</p>
+
+<p style="margin-left:11%;">ZOPEN_EXTRA_CFLAGS</p>
 
 <p style="margin-left:22%;">C compiler flags to append to
 CFLAGS (defaults to &rsquo;&rsquo;).</p>
