@@ -1,14 +1,14 @@
 # Upstream Patch Status Report
 
-*Report generated on: 2026-05-12 06:17:19 EDT.*
+*Report generated on: 2026-05-14 06:17:04 EDT.*
 
 ## Overall Summary
 
-- **Total Projects Analyzed:** 308
-- **Total Current Lines of Code (LOC) in Patches:** 58,632
+- **Total Projects Analyzed:** 309
+- **Total Current Lines of Code (LOC) in Patches:** 58,611
 - **Total Number of Current Patch Files:** 1,044
-- **Average Current Patch LOC per Project:** 190.36
-- **Average Current Patch Count per Project:** 3.39
+- **Average Current Patch LOC per Project:** 189.68
+- **Average Current Patch Count per Project:** 3.38
 
 ### Historical Trends (All Projects)
 
@@ -34,7 +34,7 @@
 | [bashport](#repo-bashport) | 1,797 | -2,629 | 27 |
 | [gpgport](#repo-gpgport) | 1,560 | +0 | 32 |
 | [rpmport](#repo-rpmport) | 1,559 | +24 | 29 |
-| [rsyncport](#repo-rsyncport) | 1,430 | +0 | 21 |
+| [rsyncport](#repo-rsyncport) | 1,416 | -14 | 20 |
 | [cmakeport](#repo-cmakeport) | 1,348 | +0 | 1 |
 | [coreutilsport](#repo-coreutilsport) | 1,328 | +0 | 20 |
 | [sudoport](#repo-sudoport) | 1,278 | +0 | 30 |
@@ -112,19 +112,19 @@
 | [hexcurseport](#repo-hexcurseport) | 108 | +0 | 4 |
 | [libbsdport](#repo-libbsdport) | 107 | +0 | 4 |
 | [victoriametricsport](#repo-victoriametricsport) | 107 | +0 | 3 |
+| [opensslport](#repo-opensslport) | 106 | +0 | 6 |
 | [mkcertport](#repo-mkcertport) | 105 | +0 | 1 |
 | [ansibleport](#repo-ansibleport) | 100 | +0 | 4 |
 | [pkgconfigport](#repo-pkgconfigport) | 98 | +0 | 1 |
-| [jqport](#repo-jqport) | 98 | +0 | 7 |
 | [doxygenport](#repo-doxygenport) | 97 | +0 | 5 |
 | [libiconvport](#repo-libiconvport) | 96 | +0 | 4 |
-| [opensslport](#repo-opensslport) | 95 | +0 | 4 |
 | [depot_toolsport](#repo-depot-toolsport) | 91 | +0 | 1 |
 | [libeventport](#repo-libeventport) | 87 | +0 | 3 |
 | [libx11port](#repo-libx11port) | 87 | +0 | 1 |
 | [openldapport](#repo-openldapport) | 85 | +0 | 1 |
 | [gawkport](#repo-gawkport) | 81 | +0 | 4 |
 | [sqlite-vecport](#repo-sqlite-vecport) | 81 | +0 | 1 |
+| [jqport](#repo-jqport) | 80 | -18 | 6 |
 | [expectport](#repo-expectport) | 79 | +0 | 4 |
 | [librabbitmqport](#repo-librabbitmqport) | 78 | +0 | 2 |
 | [libassuanport](#repo-libassuanport) | 77 | +0 | 4 |
@@ -332,6 +332,7 @@
 | [cbxpport](#repo-cbxpport) | 0 | +0 | 0 |
 | [notispfport](#repo-notispfport) | 0 | N/A | 0 |
 | [trivyport](#repo-trivyport) | 0 | +0 | 0 |
+| [grypeport](#repo-grypeport) | 0 | +0 | 0 |
 
 ---
 
@@ -837,8 +838,8 @@
 ## rsyncport
 
 - **Origin Date (First Commit):** 2022-07-17
-- **Current Patch LOC:** 1,430
-- **Current Patch Count:** 21
+- **Current Patch LOC:** 1,416
+- **Current Patch Count:** 20
 
 ### Historical Trends
 
@@ -852,10 +853,9 @@
 | `patches/Makefile.in.patch` | `patches` | 40 |
 | `patches/batch.c.patch` | `patches` | 35 |
 | `patches/compat.c.patch` | `patches` | 86 |
-| `patches/findme.c.patch` | `patches` | 12 |
 | `patches/flist.c.patch` | `patches` | 119 |
 | `patches/generator.c.patch` | `patches` | 52 |
-| `patches/hardlinks.test.patch` | `patches` | 25 |
+| `patches/hardlinks.test.patch` | `patches` | 23 |
 | `patches/itemize.test.patch` | `patches` | 83 |
 | `patches/mkproto.awk.patch` | `patches` | 11 |
 | `patches/options.c.patch` | `patches` | 39 |
@@ -2879,6 +2879,31 @@
 
 ---
 
+<a id="repo-opensslport"></a>
+## opensslport
+
+- **Origin Date (First Commit):** 2022-05-24
+- **Current Patch LOC:** 106
+- **Current Patch Count:** 6
+
+### Historical Trends
+
+![LOC Trend for opensslport](images/upstream/opensslport_current_loc_trend.png)
+![Count Trend for opensslport](images/upstream/opensslport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `stable-patches/50-os390.conf.patch` | `stable-patches` | 15 |
+| `stable-patches/bio_dgram_test.c.patch` | `stable-patches` | 21 |
+| `stable-patches/lhash_test.c.patch` | `stable-patches` | 12 |
+| `stable-patches/rsa_ossl.c.patch` | `stable-patches` | 13 |
+| `stable-patches/test_skip.patch` | `stable-patches` | 28 |
+| `stable-patches/ui_disable.patch` | `stable-patches` | 17 |
+
+---
+
 <a id="repo-mkcertport"></a>
 ## mkcertport
 
@@ -2942,32 +2967,6 @@
 
 ---
 
-<a id="repo-jqport"></a>
-## jqport
-
-- **Origin Date (First Commit):** 2022-06-05
-- **Current Patch LOC:** 98
-- **Current Patch Count:** 7
-
-### Historical Trends
-
-![LOC Trend for jqport](images/upstream/jqport_current_loc_trend.png)
-![Count Trend for jqport](images/upstream/jqport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `patches/configure.patch` | `patches` | 15 |
-| `patches/zOS.patch` | `patches` | 15 |
-| `stable-patches/builtin.c.patch` | `stable-patches` | 13 |
-| `stable-patches/jq.test.patch` | `stable-patches` | 18 |
-| `stable-patches/mantest.patch` | `stable-patches` | 10 |
-| `stable-patches/shtest.patch` | `stable-patches` | 11 |
-| `stable-patches/version.patch` | `stable-patches` | 16 |
-
----
-
 <a id="repo-doxygenport"></a>
 ## doxygenport
 
@@ -3012,29 +3011,6 @@
 | `stable-patches/IBM-1047.TXT.patch` | `stable-patches` | 22 |
 | `stable-patches/Makefile.in.patch` | `stable-patches` | 22 |
 | `stable-patches/ebcdic1047.h.patch` | `stable-patches` | 35 |
-
----
-
-<a id="repo-opensslport"></a>
-## opensslport
-
-- **Origin Date (First Commit):** 2022-05-24
-- **Current Patch LOC:** 95
-- **Current Patch Count:** 4
-
-### Historical Trends
-
-![LOC Trend for opensslport](images/upstream/opensslport_current_loc_trend.png)
-![Count Trend for opensslport](images/upstream/opensslport_current_count_trend.png)
-
-### Current Patch Details
-
-| Patch File (Repo Relative Path) | Source | LOC |
-|---|---|:---|
-| `stable-patches/50-os390.conf.patch` | `stable-patches` | 15 |
-| `stable-patches/rsa_ossl.c.patch` | `stable-patches` | 28 |
-| `stable-patches/test_skip.patch` | `stable-patches` | 33 |
-| `stable-patches/ui_disable.patch` | `stable-patches` | 19 |
 
 ---
 
@@ -3160,6 +3136,31 @@
 | Patch File (Repo Relative Path) | Source | LOC |
 |---|---|:---|
 | `patches/001-zos-port.patch` | `patches` | 81 |
+
+---
+
+<a id="repo-jqport"></a>
+## jqport
+
+- **Origin Date (First Commit):** 2022-06-05
+- **Current Patch LOC:** 80
+- **Current Patch Count:** 6
+
+### Historical Trends
+
+![LOC Trend for jqport](images/upstream/jqport_current_loc_trend.png)
+![Count Trend for jqport](images/upstream/jqport_current_count_trend.png)
+
+### Current Patch Details
+
+| Patch File (Repo Relative Path) | Source | LOC |
+|---|---|:---|
+| `patches/configure.patch` | `patches` | 15 |
+| `patches/zOS.patch` | `patches` | 15 |
+| `stable-patches/builtin.c.patch` | `stable-patches` | 13 |
+| `stable-patches/mantest.patch` | `stable-patches` | 10 |
+| `stable-patches/shtest.patch` | `stable-patches` | 11 |
+| `stable-patches/version.patch` | `stable-patches` | 16 |
 
 ---
 
@@ -7099,6 +7100,24 @@
 
 <a id="repo-trivyport"></a>
 ## trivyport
+
+- **Origin Date (First Commit):** 2026-05-04
+- **Current Patch LOC:** 0
+- **Current Patch Count:** 0
+
+### Historical Trends
+
+*(Patch LOC trend graph not generated)*
+*(Patch count trend graph not generated)*
+
+### Current Patch Details
+
+*No current patches found in tracked directories (stable-patches, dev-patches, patches).*
+
+---
+
+<a id="repo-grypeport"></a>
+## grypeport
 
 - **Origin Date (First Commit):** 2026-05-04
 - **Current Patch LOC:** 0

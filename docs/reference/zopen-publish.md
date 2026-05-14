@@ -125,6 +125,30 @@ zopencommunity)</p>
 <p style="margin-left:22%;">Mark release as
 &rsquo;Latest&rsquo; (not pre&minus;release).</p>
 
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="9%">
+
+
+<p><b>&minus;&minus;pulp</b></p></td>
+<td width="2%"></td>
+<td width="58%">
+
+
+<p>Push RPM artifacts to Pulp repository.</p></td>
+<td width="20%">
+</td></tr>
+</table>
+
+
+<p style="margin-left:11%;"><b>&minus;&minus;pulp&minus;repo</b>
+REPO</p>
+
+<p style="margin-left:22%;">Pulp repository name (default:
+zopen&minus;stable or zopen&minus;dev)</p>
+
 <p style="margin-left:11%;"><b>&minus;w</b>,
 <b>&minus;&minus;whl</b> WHL_FILE</p>
 

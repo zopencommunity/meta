@@ -112,6 +112,12 @@ without building.</p>
 <p style="margin-left:22%;">generate a pax.Z file based on
 the install contents.</p>
 
+<p style="margin-left:11%;"><b>&minus;gr</b>,
+<b>&minus;&minus;generate&minus;rpm</b></p>
+
+<p style="margin-left:22%;">generate an RPM package from
+the pax archive.</p>
+
 <p style="margin-left:11%;"><b>&minus;h</b>,
 <b>&minus;&minus;help</b>, &minus;?</p>
 

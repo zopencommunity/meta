@@ -19,6 +19,7 @@ This page provides information about the zopen interface. Click on any of the zo
 * [zopen-md2man](./zopen-md2man)
 * [zopen-migrate-buildenv](./zopen-migrate-buildenv)
 * [zopen-migrate-groovy](./zopen-migrate-groovy)
+* [zopen-pax2rpm](./zopen-pax2rpm)
 * [zopen-promote](./zopen-promote)
 * [zopen-publish](./zopen-publish)
 * [zopen-query](./zopen-query)
