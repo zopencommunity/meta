@@ -86,7 +86,7 @@ jobs:
           ENCODED_CAUSE=$(echo -n "$CAUSE" | jq -s -R -r @uri)
           JENKINS_JOB_URL="${{ vars.JENKINS_HOST_URL }}/job/Port-Build/buildWithParameters?token=jenkinstest&cause=${ENCODED_CAUSE}"
 
-          RESPONSE=$(curl -k -X POST -s -i -u "${{ secrets.JENKINS_USER }}:${{ secrets.JENKINS_API_TOKEN }}" "${JENKINS_JOB_URL}" -F PORT_GITHUB_REPO="${repo}" -F PORT_DESCRIPTION="Github CI Test of ${repo}" -F PORT_BRANCH="${branch}" ${SOURCE_URL_OPT} ${BUILD_BRANCH_OPT})
+          RESPONSE=$(curl -k -X POST -s -i -u "${{ secrets.JENKINS_USER }}:${{ secrets.JENKINS_API_TOKEN }}" "${JENKINS_JOB_URL}" -F PORT_GITHUB_REPO="${repo}" -F PORT_DESCRIPTION="Github CI Test of ${repo}" -F PORT_BRANCH="${branch}" -F GENERATE_PAX_RPM=false ${SOURCE_URL_OPT} ${BUILD_BRANCH_OPT})
 
           # Extract the build URL from the response headers
           BUILD_URL=$(echo "$RESPONSE" | grep -oP "location: \K(.*)" | tr -d '\r')

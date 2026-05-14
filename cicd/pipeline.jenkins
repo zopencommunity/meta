@@ -4,6 +4,7 @@
 //   PORT_DESCRIPTION : Description of the project
 //   BUILD_LINE: dev or stable line to build against (default: stable)
 //   FORCE_CLANG : Boolean to enforce building with Clang vs xlclang
+//   GENERATE_PAX_RPM : Boolean to generate pax/RPM artifacts (default: true)
 //   NO_PROMOTE : Boolean, if true, avoid promotion
 //   NODE_LABEL : A label for the node to build on, default is "zos"
 import org.jenkinsci.plugins.workflow.support.steps.build.RunWrapper
@@ -31,6 +32,7 @@ node('linux')
                    string(name: 'PORT_BRANCH', value: "${branch}"),
                    string(name: 'node', value: "${node_label}"),
                    booleanParam(name: 'FORCE_CLANG', value: params.FORCE_CLANG),
+                   booleanParam(name: 'GENERATE_PAX_RPM', value: true),
                    string(name: 'BUILD_LINE', value: "${build_line}"),
                    ]
     def result = buildResult.getResult()
