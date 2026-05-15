@@ -1026,6 +1026,7 @@
 - ✅ protobufport - [![Bump Status](https://github.com/zopencommunity/protobufport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/protobufport/actions/workflows/bump.yml)
 - ✅ pvport - [![Bump Status](https://github.com/zopencommunity/pvport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/pvport/actions/workflows/bump.yml)
 - ✅ quiltport - [![Bump Status](https://github.com/zopencommunity/quiltport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/quiltport/actions/workflows/bump.yml)
+- ❌ rcloneport - Workflow not configured
 - ✅ re2cport - [![Bump Status](https://github.com/zopencommunity/re2cport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/re2cport/actions/workflows/bump.yml)
 - ✅ readlineport - [![Bump Status](https://github.com/zopencommunity/readlineport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/readlineport/actions/workflows/bump.yml)
 - ✅ redisport - [![Bump Status](https://github.com/zopencommunity/redisport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/redisport/actions/workflows/bump.yml)
@@ -1109,10 +1110,10 @@
 
 </details>
 
-**Summary:** 270 active | 56 missing
+**Summary:** 270 active | 57 missing
 
 ---
 
 
-> Last updated: 2026-05-14 06:11:34 EDT
+> Last updated: 2026-05-15 06:12:14 EDT
 
