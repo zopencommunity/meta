@@ -54,7 +54,7 @@ EOF
     
     # Extract only the content between <body> and </body>
     # This avoids injecting full-document tags (<html>, <head>, <body>) into markdown
-    body_content=$(sed -n '/<body>/,/<\/body>/p' "${temp_html}" | sed '1d;$d' | sed '/<a href="#/d' | sed '/<br>$/d' | sed '/<hr>/d')
+    body_content=$(sed -n '/<body>/,/<\/body>/p' "${temp_html}" | sed '1d;$d' | sed '/<a href="#/d' | sed '/<a name="[^"]*"><\/a>/d' | sed '/<br>$/d' | sed '/<hr>/d')
     
     # Remove <i>, <em>, <b>, and <strong> tags to avoid Vue parsing issues
     body_content=$(echo "${body_content}" | sed 's|<i>||g' | sed 's|</i>||g' | sed 's|<em>||g' | sed 's|</em>||g' | sed 's|<b>||g' | sed 's|</b>||g' | sed 's|<strong>||g' | sed 's|</strong>||g')
