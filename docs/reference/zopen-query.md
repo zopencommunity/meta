@@ -42,19 +42,29 @@ repos.</p>
 <p style="margin-left:22%; margin-top: 1em">VERB is the
 action to take, which is one of</p>
 
+
 <table width="100%" border="0" rules="none" frame="void"
        cellspacing="0" cellpadding="0">
+
 <tr valign="top" align="left">
+
 <td width="11%"></td>
+
+
 <td width="55%">
 
 
 <p style="margin-top: 1em"><b>&minus;&minus;list</b>,
 <b>&minus;&minus;remote&minus;search</b>,
-<b>&minus;&minus;installed</b></p> </td>
+<b>&minus;&minus;installed</b></p></td>
+
+
 <td width="34%">
-</td></tr>
+</td>
+</tr>
+
 </table>
+
 
 <p style="margin-left:22%; margin-top: 1em">PACKAGE is a
 package, specified for
@@ -62,28 +72,43 @@ package, specified for
 
 <p><b>Verbs:</b></p></table>
 
+
 <p style="margin-left:11%;"><b>&minus;i</b>,
 <b>&minus;&minus;installed</b></p>
 
 <p style="margin-left:22%;">list installed zopen
 community.</p>
 
+
 <table width="100%" border="0" rules="none" frame="void"
        cellspacing="0" cellpadding="0">
+
 <tr valign="top" align="left">
+
 <td width="11%"></td>
+
+
 <td width="9%">
 
 
 <p><b>&minus;&minus;list</b></p></td>
+
+
 <td width="2%"></td>
+
+
 <td width="53%">
 
 
 <p>list all available zopen community.</p></td>
+
+
 <td width="25%">
-</td></tr>
+</td>
+</tr>
+
 </table>
+
 
 
 <p style="margin-left:11%;"><b>&minus;&minus;remote&minus;search</b></p>
@@ -103,20 +128,31 @@ available zopen community</p>
 <p style="margin-left:22%;">include full details for
 listings.</p>
 
+
 <table width="100%" border="0" rules="none" frame="void"
        cellspacing="0" cellpadding="0">
+
 <tr valign="top" align="left">
+
 <td width="11%"></td>
+
+
 <td width="71%">
 
 
 <p style="margin-top: 1em"><b>&minus;&minus;category</b>
 &lt;category&gt; apply a category filter.</p></td>
+
+
 <td width="18%">
-</td></tr>
+</td>
+</tr>
+
 </table>
 
+
 <p><b>&minus;&minus;help</b></p></table>
+
 
 <p style="margin-left:22%;">print this help</p>
 
@@ -132,22 +168,36 @@ output.</p>
 <p style="margin-left:22%;">suppress version information,
 return package names.</p>
 
+
 <table width="100%" border="0" rules="none" frame="void"
        cellspacing="0" cellpadding="0">
+
 <tr valign="top" align="left">
+
 <td width="11%"></td>
+
+
 <td width="3%">
 
 
 <p><b>&minus;v</b></p></td>
+
+
 <td width="8%"></td>
+
+
 <td width="30%">
 
 
 <p>run in verbose mode.</p></td>
+
+
 <td width="48%">
-</td></tr>
+</td>
+</tr>
+
 </table>
+
 
 
 <p style="margin-left:11%;"><b>&minus;&minus;version</b></p>

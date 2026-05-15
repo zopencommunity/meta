@@ -62,20 +62,29 @@ extracted from filename)</p>
 <p style="margin-left:22%;">Override version (default:
 extracted from filename)</p>
 
+
 <table width="100%" border="0" rules="none" frame="void"
        cellspacing="0" cellpadding="0">
+
 <tr valign="top" align="left">
+
 <td width="11%"></td>
+
+
 <td width="89%">
 
 
 
 <p style="margin-top: 1em"><b>&minus;&minus;pkg&minus;version</b>
 &lt;version&gt; Override version (alternative to
-<b>&minus;&minus;version</b>)</p> </td></tr>
+<b>&minus;&minus;version</b>)</p></td>
+</tr>
+
 </table>
 
+
 <p><b>&minus;&minus;release</b> &lt;release&gt;</p></table>
+
 
 <p style="margin-left:22%;">Override release number
 (default: 1)</p>
@@ -143,22 +152,36 @@ actually doing it</p>
 
 <p style="margin-left:22%;">Enable verbose debug output</p>
 
+
 <table width="100%" border="0" rules="none" frame="void"
        cellspacing="0" cellpadding="0">
+
 <tr valign="top" align="left">
+
 <td width="11%"></td>
+
+
 <td width="9%">
 
 
 <p><b>&minus;&minus;help</b></p></td>
+
+
 <td width="2%"></td>
+
+
 <td width="38%">
 
 
 <p>Display this help message</p></td>
+
+
 <td width="40%">
-</td></tr>
+</td>
+</tr>
+
 </table>
+
 
 
 <p style="margin-left:11%;"><b>&minus;&minus;version</b></p>
@@ -173,36 +196,62 @@ actually doing it</p>
 /nfsmntss/#47;bpidriverss/#47;oefv1r11/#47;os3900/#47;latestt/#47;HAMN110.runnable.pax.Z
 \</p>
 
+
 <table width="100%" border="0" rules="none" frame="void"
        cellspacing="0" cellpadding="0">
+
 <tr valign="top" align="left">
+
 <td width="11%"></td>
+
+
 <td width="57%">
 
 
 <p style="margin-top: 1em"><b>&minus;&minus;summary</b>
 &quot;HAMN110 Runtime Package&quot; \</p></td>
+
+
 <td width="32%">
-</td></tr>
+</td>
+</tr>
+
+
 <tr valign="top" align="left">
+
 <td width="11%"></td>
+
+
 <td width="57%">
 
 
 <p style="margin-top: 1em"><b>&minus;&minus;license</b>
 &quot;IBM&quot; \</p></td>
+
+
 <td width="32%">
-</td></tr>
+</td>
+</tr>
+
+
 <tr valign="top" align="left">
+
 <td width="11%"></td>
+
+
 <td width="57%">
 
 
 <p style="margin-top: 1em"><b>&minus;&minus;url</b>
-&quot;https:///#47;www.ibm.com&quot;</p> </td>
+&quot;https:///#47;www.ibm.com&quot;</p></td>
+
+
 <td width="32%">
-</td></tr>
+</td>
+</tr>
+
 </table>
+
 
 <p style="margin-left:11%; margin-top: 1em">This is free
 software: you are free to change and redistribute it under

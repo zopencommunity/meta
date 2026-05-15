@@ -51,44 +51,76 @@ environment.</p>
 <p style="margin-left:22%;">unset and remove the named KEY
 property from the store</p>
 
+
 <table width="100%" border="0" rules="none" frame="void"
        cellspacing="0" cellpadding="0">
+
 <tr valign="top" align="left">
+
 <td width="11%"></td>
+
+
 <td width="9%">
 
 
 <p><b>&minus;&minus;get</b></p></td>
+
+
 <td width="2%"></td>
+
+
 <td width="78%">
 
 
 <p>display the current value for the named KEY property or
-the empty string if the property is not foundd/#47;set</p></td></tr>
+the empty string if the property is not foundd/#47;set</p></td>
+</tr>
+
+
 <tr valign="top" align="left">
+
 <td width="11%"></td>
+
+
 <td width="9%">
 
 
 <p><b>&minus;&minus;set</b></p></td>
+
+
 <td width="2%"></td>
+
+
 <td width="78%">
 
 
 <p>set the configuration value for the named KEY
-property</p> </td></tr>
+property</p></td>
+</tr>
+
+
 <tr valign="top" align="left">
+
 <td width="11%"></td>
+
+
 <td width="9%">
 
 
 <p><b>&minus;&minus;list</b></p></td>
+
+
 <td width="2%"></td>
+
+
 <td width="78%">
 
 
-<p>list all current configuration values</p></td></tr>
+<p>list all current configuration values</p></td>
+</tr>
+
 </table>
+
 
 <p style="margin-left:11%;">&minus;?,
 <b>&minus;&minus;help</b></p>

@@ -56,8 +56,17 @@ EOF
     # This avoids injecting full-document tags (<html>, <head>, <body>) into markdown
     body_content=$(sed -n '/<body>/,/<\/body>/p' "${temp_html}" | sed '1d;$d' | sed '/<a href="#/d' | sed '/<br>$/d' | sed '/<hr>/d')
     
-    # Remove <i> and <em> tags to avoid Vue parsing issues
-    body_content=$(echo "${body_content}" | sed 's|<i>||g' | sed 's|</i>||g' | sed 's|<em>||g' | sed 's|</em>||g')
+    # Remove <i>, <em>, <b>, and <strong> tags to avoid Vue parsing issues
+    body_content=$(echo "${body_content}" | sed 's|<i>||g' | sed 's|</i>||g' | sed 's|<em>||g' | sed 's|</em>||g' | sed 's|<b>||g' | sed 's|</b>||g' | sed 's|<strong>||g' | sed 's|</strong>||g')
+    
+    # Fix table cell closing tags that appear on the same line as content
+    # This handles cases like: <p>content</p> </td> which Vue can't parse properly
+    body_content=$(echo "${body_content}" | sed 's|</p> </td>|</p></td>|g')
+    
+    # Ensure all table-related tags are on their own lines for proper Vue parsing
+    body_content=$(echo "${body_content}" | sed 's|<table|\'$'\n''<table|g' | sed 's|</table>|</table>\'$'\n''|g')
+    body_content=$(echo "${body_content}" | sed 's|<tr|\'$'\n''<tr|g' | sed 's|</tr>|</tr>\'$'\n''|g')
+    body_content=$(echo "${body_content}" | sed 's|<td|\'$'\n''<td|g' | sed 's|</td>|</td>\'$'\n''|g')
     
     # Escape forward slashes in file paths (but not in HTML tags or URLs)
     # This regex matches forward slashes that are NOT preceded by < or : (to avoid breaking </tag> and URLs)

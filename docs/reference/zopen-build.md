@@ -135,33 +135,55 @@ version.</p>
 <p style="margin-left:22%;">do not install project&rsquo;s
 runtime dependencies.</p>
 
+
 <table width="100%" border="0" rules="none" frame="void"
        cellspacing="0" cellpadding="0">
+
 <tr valign="top" align="left">
+
 <td width="11%"></td>
+
+
 <td width="7%">
 
 
 <p><b>&minus;&minus;oci</b></p></td>
+
+
 <td width="4%"></td>
+
+
 <td width="78%">
 
 
 <p>build and publish an OCI image to
-$ZOPEN_IMAGE_REGISTRY.</p> </td></tr>
+$ZOPEN_IMAGE_REGISTRY.</p></td>
+</tr>
+
+
 <tr valign="top" align="left">
+
 <td width="11%"></td>
+
+
 <td width="7%">
 
 
 <p><b>&minus;s</b></p></td>
+
+
 <td width="4%"></td>
+
+
 <td width="78%">
 
 
 <p>exec a shell before running configure. Useful when
-manually building ports.</p></td></tr>
+manually building ports.</p></td>
+</tr>
+
 </table>
+
 
 
 <p style="margin-left:11%;"><b>&minus;&minus;sign&minus;pax</b>,
@@ -173,32 +195,54 @@ ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE and
 ZOPEN_GPG_PUBLIC_KEY_FILE must be set for signing the
 file.</p>
 
+
 <table width="100%" border="0" rules="none" frame="void"
        cellspacing="0" cellpadding="0">
+
 <tr valign="top" align="left">
+
 <td width="11%"></td>
+
+
 <td width="4%">
 
 
 <p><b>&minus;v</b></p></td>
+
+
 <td width="7%"></td>
+
+
 <td width="78%">
 
 
-<p>run in verbose mode.</p></td></tr>
+<p>run in verbose mode.</p></td>
+</tr>
+
+
 <tr valign="top" align="left">
+
 <td width="11%"></td>
+
+
 <td width="4%">
 
 
 <p><b>&minus;vv</b></p></td>
+
+
 <td width="7%"></td>
+
+
 <td width="78%">
 
 
 <p>run in very verbose mode (sets environment variables V=1
-and VERBOSE=1).</p></td></tr>
+and VERBOSE=1).</p></td>
+</tr>
+
 </table>
+
 
 <p style="margin-left:11%;"><b>&minus;u</b>,
 <b>&minus;&minus;upgradedeps</b></p>
