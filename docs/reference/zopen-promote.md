@@ -12,25 +12,22 @@
 
 
 
-<h2>NAME
+<h2>NAME</h2>
 <a name="NAME"></a>
-</h2>
 
 
 <p style="margin-left:11%; margin-top: 1em">zopen-version
 &minus; manual page for zopen-version 0.8.4</p>
 
-<h2>SYNOPSIS
+<h2>SYNOPSIS</h2>
 <a name="SYNOPSIS"></a>
-</h2>
 
 
 <p style="margin-left:11%; margin-top: 1em"><b>zopen</b>
 promote [OPTION] [DESTINATION]...</p>
 
-<h2>DESCRIPTION
+<h2>DESCRIPTION</h2>
 <a name="DESCRIPTION"></a>
-</h2>
 
 
 
@@ -40,9 +37,8 @@ existing zopen environment. For example, a user can install
 to a test area, validate the behavior, and promote to a
 production area.</p>
 
-<h2>OPTIONS
+<h2>OPTIONS</h2>
 <a name="OPTIONS"></a>
-</h2>
 
 
 
@@ -110,9 +106,8 @@ will be purged before promote occurs.</p>
 files within the promoted zopen environment with the given
 [PERMISSIONS] string, specified in symbolic mode.</p>
 
-<h2>EXAMPLES
+<h2>EXAMPLES</h2>
 <a name="EXAMPLES"></a>
-</h2>
 
 
 <p style="margin-left:11%; margin-top: 1em">zopen
@@ -151,18 +146,16 @@ current user to source the zopen&minus;config environment
 file and only permit access to zopen environment files to
 the user &rsquo;FOO&rsquo;.</p>
 
-<h2>AUTHOR
+<h2>AUTHOR</h2>
 <a name="AUTHOR"></a>
-</h2>
 
 
 <p style="margin-left:11%; margin-top: 1em">Written by
 contributors to the zopen community.
 &lt;https:///#47;github.comm/#47;zopencommunityy/#47;metaa/#47;graphss/#47;contributors&gt;</p>
 
-<h2>REPORTING BUGS
+<h2>REPORTING BUGS</h2>
 <a name="REPORTING BUGS"></a>
-</h2>
 
 
 <p style="margin-left:11%; margin-top: 1em">Report bugs at

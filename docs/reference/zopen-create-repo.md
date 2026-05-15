@@ -6,35 +6,22 @@
   </div>
 </div>
 
-
 <h1 align="center">ZOPEN-CREATE-REPO</h1>
 
-
-
-
-<h2>NAME
+<h2>NAME</h2>
 <a name="NAME"></a>
-</h2>
-
-
 
 <p style="margin-left:11%; margin-top: 1em">zopen-create-repo
 &minus; manual page for zopen-create-repo 0.8.4</p>
 
-<h2>SYNOPSIS
+<h2>SYNOPSIS</h2>
 <a name="SYNOPSIS"></a>
-</h2>
-
-
 
 <p style="margin-left:11%; margin-top: 1em"><b>zopen-create-repo</b>
 [OPTION] -n PORT_NAME</p>
 
-<h2>DESCRIPTION
+<h2>DESCRIPTION</h2>
 <a name="DESCRIPTION"></a>
-</h2>
-
-
 
 <p style="margin-left:11%; margin-top: 1em">zopen&minus;create&minus;repo
 &minus; Create a new port repository in zopencommunity.</p>
@@ -45,11 +32,8 @@ script is intended for use by core contributors only.</p>
 <p style="margin-left:22%; margin-top: 1em">You must have
 admin permissions in the zopencommunity organization.</p>
 
-<h2>OPTIONS
+<h2>OPTIONS</h2>
 <a name="OPTIONS"></a>
-</h2>
-
-
 
 <p style="margin-left:11%; margin-top: 1em"><b>&minus;h</b>,
 <b>&minus;&minus;help</b></p>
@@ -92,17 +76,15 @@ zopencommunity)</p>
 <p style="margin-left:22%;">GitHub Personal Access Token
 (required, or set GITHUB_TOKEN env var)</p>
 
-
 <p style="margin-left:11%;"><b>&minus;&minus;version</b></p>
 
 <p style="margin-left:22%;">print version</p>
 
 <p style="margin-left:11%; margin-top: 1em"><b>Environment
-GITHUB_TOKEN</p>
+GITHUB_TOKEN</b></p>
 
 <p style="margin-left:22%;">GitHub Personal Access Token
 (alternative to <b>&minus;&minus;github&minus;token</b>)</p>
-
 
 <p style="margin-left:11%; margin-top: 1em"><b>Example:</b></p>
 
@@ -120,10 +102,8 @@ the terms of the Apache License, Version 2.0.
 &lt;https:///#47;www.apache.orgg/#47;licensess/#47;LICENSE&minus;2.0.html&gt;
 There is NO WARRANTY, to the extent permitted by law.</p>
 
-<h2>AUTHOR
+<h2>AUTHOR</h2>
 <a name="AUTHOR"></a>
-</h2>
-
 
 <p style="margin-left:11%; margin-top: 1em">Written by
 contributors to the zopen community.

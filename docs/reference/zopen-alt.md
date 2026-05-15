@@ -12,26 +12,23 @@
 
 
 
-<h2>NAME
+<h2>NAME</h2>
 <a name="NAME"></a>
-</h2>
 
 
 <p style="margin-left:11%; margin-top: 1em">zopen-alt
 &minus; manual page for zopen-alt 0.8.4</p>
 
-<h2>SYNOPSIS
+<h2>SYNOPSIS</h2>
 <a name="SYNOPSIS"></a>
-</h2>
 
 
 
 <p style="margin-left:11%; margin-top: 1em"><b>zopen-alt</b>
 [OPTION] [PACKAGE] [PARAMETERS]...</p>
 
-<h2>DESCRIPTION
+<h2>DESCRIPTION</h2>
 <a name="DESCRIPTION"></a>
-</h2>
 
 
 
@@ -39,9 +36,8 @@
 is a utility for zopen community to switch package versions
 for currently installed packages.</p>
 
-<h2>OPTIONS
+<h2>OPTIONS</h2>
 <a name="OPTIONS"></a>
-</h2>
 
 
 
@@ -72,9 +68,8 @@ PACKAGE to VERSION.</p>
 
 <p style="margin-left:22%;">print version</p>
 
-<h2>EXAMPLES
+<h2>EXAMPLES</h2>
 <a name="EXAMPLES"></a>
-</h2>
 
 
 <p style="margin-left:11%; margin-top: 1em">zopen alt
@@ -97,18 +92,16 @@ foo&minus;1.2.3.19700101_012345.zos</p>
 package &rsquo;foo&rsquo; to version
 foo&minus;1.2.3.19700101_012345.zos if available</p>
 
-<h2>AUTHOR
+<h2>AUTHOR</h2>
 <a name="AUTHOR"></a>
-</h2>
 
 
 <p style="margin-left:11%; margin-top: 1em">Written by
 contributors to the zopen community.
 &lt;https:///#47;github.comm/#47;zopencommunityy/#47;metaa/#47;graphss/#47;contributors&gt;</p>
 
-<h2>REPORTING BUGS
+<h2>REPORTING BUGS</h2>
 <a name="REPORTING BUGS"></a>
-</h2>
 
 
 <p style="margin-left:11%; margin-top: 1em">Report bugs at

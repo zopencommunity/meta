@@ -12,25 +12,22 @@
 
 
 
-<h2>NAME
+<h2>NAME</h2>
 <a name="NAME"></a>
-</h2>
 
 
 <p style="margin-left:11%; margin-top: 1em">zopen-version
 &minus; manual page for zopen-version 0.8.4</p>
 
-<h2>SYNOPSIS
+<h2>SYNOPSIS</h2>
 <a name="SYNOPSIS"></a>
-</h2>
 
 
 <p style="margin-left:11%; margin-top: 1em"><b>zopen</b>
 [COMMAND] [OPTION] [PARAMETERS]...</p>
 
-<h2>DESCRIPTION
+<h2>DESCRIPTION</h2>
 <a name="DESCRIPTION"></a>
-</h2>
 
 
 <p style="margin-left:11%; margin-top: 1em">zopen is a
@@ -354,9 +351,8 @@ zopen environment</p></td>
 <p style="margin-left:22%;">determine the package a command
 or library belongs to</p>
 
-<h2>OPTIONS
+<h2>OPTIONS</h2>
 <a name="OPTIONS"></a>
-</h2>
 
 
 
@@ -370,9 +366,8 @@ or library belongs to</p>
 
 <p style="margin-left:22%;">run in verbose mode</p>
 
-<h2>EXAMPLES
+<h2>EXAMPLES</h2>
 <a name="EXAMPLES"></a>
-</h2>
 
 
 <p style="margin-left:11%; margin-top: 1em">zopen
@@ -420,18 +415,16 @@ zopen&minus;remove(1) zopen&minus;update&minus;cacert(1)
 zopen&minus;usage(1) zopen&minus;whichproject(1)
 zopen&minus;version(1)</p>
 
-<h2>AUTHOR
+<h2>AUTHOR</h2>
 <a name="AUTHOR"></a>
-</h2>
 
 
 <p style="margin-left:11%; margin-top: 1em">Written by
 contributors to the zopen community.
 &lt;https:///#47;github.comm/#47;zopencommunityy/#47;metaa/#47;graphss/#47;contributors&gt;</p>
 
-<h2>REPORTING BUGS
+<h2>REPORTING BUGS</h2>
 <a name="REPORTING BUGS"></a>
-</h2>
 
 
 <p style="margin-left:11%; margin-top: 1em">Report bugs at

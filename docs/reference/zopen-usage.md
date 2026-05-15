@@ -12,17 +12,15 @@
 
 
 
-<h2>NAME
+<h2>NAME</h2>
 <a name="NAME"></a>
-</h2>
 
 
 <p style="margin-left:11%; margin-top: 1em">zopen-usage
 &minus; manual page for zopen-usage 0.8.4</p>
 
-<h2>SYNOPSIS
+<h2>SYNOPSIS</h2>
 <a name="SYNOPSIS"></a>
-</h2>
 
 
 
@@ -30,9 +28,8 @@
 [OPTION] [ZOPEN_ROOTFS]
 [PARAMETERS]...</p>
 
-<h2>DESCRIPTION
+<h2>DESCRIPTION</h2>
 <a name="DESCRIPTION"></a>
-</h2>
 
 
 
@@ -40,9 +37,8 @@
 is a utility to display the file system usage by a zopen
 environment</p>
 
-<h2>OPTIONS
+<h2>OPTIONS</h2>
 <a name="OPTIONS"></a>
-</h2>
 
 
 <table width="100%" border="0" rules="none" frame="void"
@@ -78,9 +74,8 @@ space hogs</p></td>
 
 <p style="margin-left:22%;">print version</p>
 
-<h2>EXAMPLES
+<h2>EXAMPLES</h2>
 <a name="EXAMPLES"></a>
-</h2>
 
 
 <p style="margin-left:11%; margin-top: 1em">zopen usage</p>
@@ -102,18 +97,16 @@ due to rounding during calculations; use the reported values
 as guidance, rounding up for capacity planning for
 example.</p>
 
-<h2>AUTHOR
+<h2>AUTHOR</h2>
 <a name="AUTHOR"></a>
-</h2>
 
 
 <p style="margin-left:11%; margin-top: 1em">Written by
 contributors to the zopen community.
 &lt;https:///#47;github.comm/#47;zopencommunityy/#47;metaa/#47;graphss/#47;contributors&gt;</p>
 
-<h2>REPORTING BUGS
+<h2>REPORTING BUGS</h2>
 <a name="REPORTING BUGS"></a>
-</h2>
 
 
 <p style="margin-left:11%; margin-top: 1em">Report bugs at

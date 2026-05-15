@@ -12,26 +12,23 @@
 
 
 
-<h2>NAME
+<h2>NAME</h2>
 <a name="NAME"></a>
-</h2>
 
 
 <p style="margin-left:11%; margin-top: 1em">zopen-help2man
 &minus; manual page for zopen-help2man 0.8.4</p>
 
-<h2>SYNOPSIS
+<h2>SYNOPSIS</h2>
 <a name="SYNOPSIS"></a>
-</h2>
 
 
 
 <p style="margin-left:11%; margin-top: 1em"><b>zopen-help2man</b>
 [OPTION] DIRECTORY</p>
 
-<h2>DESCRIPTION
+<h2>DESCRIPTION</h2>
 <a name="DESCRIPTION"></a>
-</h2>
 
 
 
@@ -42,9 +39,8 @@ DIRECTORY</p>
 <p style="margin-left:22%;">the existing directory to write
 the man pages.</p>
 
-<h2>OPTIONS
+<h2>OPTIONS</h2>
 <a name="OPTIONS"></a>
-</h2>
 
 
 <table width="100%" border="0" rules="none" frame="void"
@@ -81,9 +77,8 @@ the terms of the Apache License, Version 2.0.
 &lt;https:///#47;www.apache.orgg/#47;licensess/#47;LICENSE&minus;2.0.html&gt;
 There is NO WARRANTY, to the extent permitted by law.</p>
 
-<h2>AUTHOR
+<h2>AUTHOR</h2>
 <a name="AUTHOR"></a>
-</h2>
 
 
 <p style="margin-left:11%; margin-top: 1em">Written by

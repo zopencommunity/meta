@@ -12,25 +12,22 @@
 
 
 
-<h2>NAME
+<h2>NAME</h2>
 <a name="NAME"></a>
-</h2>
 
 
 <p style="margin-left:11%; margin-top: 1em">zopen-init
 &minus; manual page for zopen-init 0.8.4</p>
 
-<h2>SYNOPSIS
+<h2>SYNOPSIS</h2>
 <a name="SYNOPSIS"></a>
-</h2>
 
 
 <p style="margin-left:11%; margin-top: 1em"><b>zopen</b>
 init [OPTION] [PARAMETERS]...</p>
 
-<h2>DESCRIPTION
+<h2>DESCRIPTION</h2>
 <a name="DESCRIPTION"></a>
-</h2>
 
 
 <p style="margin-left:11%; margin-top: 1em">zopen init is a
@@ -38,9 +35,8 @@ utility for zopen community to generate a zopen environment,
 bootstrapping initial tools and creating a configuration
 file</p>
 
-<h2>OPTIONS
+<h2>OPTIONS</h2>
 <a name="OPTIONS"></a>
-</h2>
 
 
 
@@ -350,9 +346,8 @@ mode</p>
 <p style="margin-left:22%; margin-top: 1em">automatically
 answer &rsquo;yes&rsquo; to prompts</p>
 
-<h2>EXAMPLES
+<h2>EXAMPLES</h2>
 <a name="EXAMPLES"></a>
-</h2>
 
 
 <p style="margin-left:22%; margin-top: 1em">zopen init</p>
@@ -381,18 +376,16 @@ updated to source the configuration file at
 &rsquo;;/#47;zopenn/#47;etcc/#47;zopen&minus;config&rsquo; when new
 terminal sessions start</p>
 
-<h2>AUTHOR
+<h2>AUTHOR</h2>
 <a name="AUTHOR"></a>
-</h2>
 
 
 <p style="margin-left:11%; margin-top: 1em">Written by
 contributors to the zopen community.
 &lt;https:///#47;github.comm/#47;zopencommunityy/#47;metaa/#47;graphss/#47;contributors&gt;</p>
 
-<h2>REPORTING BUGS
+<h2>REPORTING BUGS</h2>
 <a name="REPORTING BUGS"></a>
-</h2>
 
 
 <p style="margin-left:11%; margin-top: 1em">Report bugs at
