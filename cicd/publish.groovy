@@ -35,7 +35,7 @@ METADATA=$(find . -type f -name "metadata.json" | head -n 1)
 RPM_FILES=()
 while IFS= read -r -d '' f; do
   RPM_FILES+=("$f")
-done < <(find rpmbuild/RPMS -type f -name "*.rpm" -print0 2>/dev/null)
+done < <(find rpmbuild/RPMS -type f -name "*.rpm" ! -name "*.src.rpm" -print0 2>/dev/null)
 
 NUM_RPMS=${#RPM_FILES[@]}
 
