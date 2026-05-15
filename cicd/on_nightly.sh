@@ -145,7 +145,7 @@ EOF
     all_tags=$(grep -oE '<[a-z]+[^>]*>' "${md}" | grep -v '</' | sed 's|<||' | sed 's| .*||' | sed 's|>||' | sort | uniq)
     for tag_name in ${all_tags}; do
       # Skip self-closing tags and special tags
-      if [[ "${tag_name}" =~ ^(br|hr|img|input|meta|link)$ ]]; then
+      if [[ "${tag_name}" =~ ^(br|hr|img|input|meta|link|[a-z]+[0-9]+)$ ]]; then
         continue
       fi
       
