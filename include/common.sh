@@ -13,12 +13,15 @@ zopenInitialize()
   
   # Temporary files
   for zopen_tmp_dir in "${TMPDIR}" "${TMP}" /tmp; do
-    if [ ! -z ${zopen_tmp_dir} ] && [ -d ${zopen_tmp_dir} ]; then
+    [ -z "${zopen_tmp_dir}" ] && continue
+    # Remove trailing slashes to avoid issues with some shells/filesystems
+    zopen_tmp_dir=$(echo "${zopen_tmp_dir}" | /bin/sed 's#/*$##')
+    if [ -d "${zopen_tmp_dir}" ] || [ -d "${zopen_tmp_dir}/." ]; then
       break
     fi
   done
   
-  if [ ! -d "${zopen_tmp_dir}" ]; then
+  if [ ! -d "${zopen_tmp_dir}" ] && [ ! -d "${zopen_tmp_dir}/." ]; then
     printError "Temporary directory not found. Please specify \$TMPDIR, \$TMP or have a valid /tmp directory."
   fi
 
@@ -168,9 +171,15 @@ mktempfile()
   suffix=".tmp"
   [ -n "$2" ] && [ ! "$2" = "." ] && suffix="$2"
   for tmp in "${TMPDIR}" "${TMP}" /tmp; do
-    [ -n "${tmp}" ] && [ -d "${tmp}" ] && break
+    [ -z "${tmp}" ] && continue
+    tmp=$(echo "${tmp}" | /bin/sed 's#/*$##')
+    if [ -d "${tmp}" ] || [ -d "${tmp}/." ]; then
+      break
+    fi
   done
-  [ ! -d "${tmp}" ] && printError "Could not locate suitable temporary directory [tried \$TMPDIR \$TMP & /tmp]. Define a temporary location and retry command"
+  if [ ! -d "${tmp}" ] && [ ! -d "${tmp}/." ]; then
+    printError "Could not locate suitable temporary directory [tried \$TMPDIR \$TMP & /tmp]. Define a temporary location and retry command"
+  fi
   rnd=$(od -vAn -tu8 -N8  < /dev/urandom | tr -d "[:blank:]")
   tempfile="${tmp}/${prefix%%_}_${rnd}.${suffix##.}"
   if [ -e  "${tempfile}" ]; then
