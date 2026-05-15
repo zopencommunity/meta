@@ -8,6 +8,7 @@
 #   - PORT_SOURCE_URL : optional alternate source URL passed through to zopen-build as ZOPEN_SOURCE_URL
 #   - BUILD_LINE: dev or stable
 #   - FORCE_CLANG : Build using clang
+#   - GENERATE_PAX_RPM : (default: true) Generate pax and RPM packages. Set to false to skip -gr -sp options
 # Output:
 #   - pax.Z artifact is published as a Jenkins artifact
 #   - package is copied to /jenkins/build on z/OS zot system
@@ -58,8 +59,14 @@ if [ ! -z "$PORT_SOURCE_URL" ]; then
 fi
 git clone -b "${PORT_BRANCH}" "${PORT_GITHUB_REPO}" ${PORT_NAME} && cd ${PORT_NAME}
 
-# Always run tests and update dependencies and generate pax file
-zopen build -v -b release -u -gr -sp --no-set-active $extraOptions
+# Conditionally add -gr -sp options based on GENERATE_PAX_RPM parameter
+paxRpmOptions="-gr -sp"
+if [ "${GENERATE_PAX_RPM}" = "false" ]; then
+  paxRpmOptions=""
+fi
+
+# Always run tests and update dependencies
+zopen build -v -b release -u $paxRpmOptions --no-set-active $extraOptions
 
 # Clean the cache after build is complete
 zopen clean -c -v
