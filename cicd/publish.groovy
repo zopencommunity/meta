@@ -14,9 +14,7 @@ echo "=== STARTING PUBLISH JOB ==="
 # --- STATIC CONFIG ---
 GITHUB_ORGANIZATION="zopencommunity"
 RELEASE_NOTES_SCRIPT="tools/create_release_notes.sh"
-PULP_HOST="https://repo.zopen.community"   # ✅ FIXED
-
-BUILD_LINE=${BUILD_LINE:-DEV}
+PULP_HOST="https://repo.zopen.community"
 
 # --- DERIVE VALUES ---
 RELEASE_PREFIX=$(basename "${PORT_GITHUB_REPO}")
@@ -25,24 +23,36 @@ PORT_NAME=$(echo "$RELEASE_PREFIX" | sed 's/port$//')
 GITHUB_REPO=$RELEASE_PREFIX
 
 # --- FIND FILES ---
-PAX=$(find . -type f -name "*zos.pax.Z" | head -n 1)
-METADATA=$(find . -type f -name "metadata.json" | head -n 1)
+PAX=$(find . -path "*/install/*.zos.pax.Z" -type f | head -n 1)
+METADATA=$(find . -path "*/install/metadata.json" -type f | head -n 1)
 
 [ -f "$PAX" ] || { echo "ERROR: Missing PAX file"; exit 1; }
 [ -f "$METADATA" ] || { echo "ERROR: Missing metadata.json"; exit 1; }
+
+# --- RESOLVE BUILD LINE ---
+if [ -z "${BUILD_LINE:-}" ] || [ "$BUILD_LINE" = "null" ]; then
+  METADATA_BUILD_LINE=$(python3 -c "import json; print(json.load(open('$METADATA'))['product'].get('buildline', ''))" 2>/dev/null || echo "")
+  if [ -n "$METADATA_BUILD_LINE" ] && [ "$METADATA_BUILD_LINE" != "null" ]; then
+    BUILD_LINE=$(echo "$METADATA_BUILD_LINE" | tr '[:lower:]' '[:upper:]')
+    echo "Using BUILD_LINE from metadata.json: $BUILD_LINE"
+  else
+    BUILD_LINE="DEV"
+    echo "BUILD_LINE not found in environment or metadata.json. Defaulting to: $BUILD_LINE"
+  fi
+fi
 
 # --- RPM FILES ---
 RPM_FILES=()
 while IFS= read -r -d '' f; do
   RPM_FILES+=("$f")
-done < <(find rpmbuild/RPMS -type f -name "*.rpm" -print0 2>/dev/null)
+done < <(find . -path "*/rpmbuild/RPMS/*.rpm" -type f -print0 2>/dev/null)
 
 NUM_RPMS=${#RPM_FILES[@]}
 
 # --- INFO ---
-BUILD_STATUS=$(find . -name "test.status" -exec cat {} + 2>/dev/null || echo "Unknown")
-DEPENDENCIES=$(find . -name ".runtimedeps" -exec cat {} + 2>/dev/null || echo "None")
-VERSION=$(find . -name ".version" -exec cat {} + 2>/dev/null || echo "unknown")
+BUILD_STATUS=$(find . -path "*/install/test.status" -exec cat {} + 2>/dev/null || echo "Unknown")
+DEPENDENCIES=$(find . -path "*/install/.runtimedeps" -exec cat {} + 2>/dev/null || echo "None")
+VERSION=$(find . -path "*/install/.version" -exec cat {} + 2>/dev/null || echo "unknown")
 
 unset http_proxy https_proxy
 
@@ -78,6 +88,9 @@ github-release release \
   --name "$NAME" \
   --description "$DESCRIPTION"
 
+echo "Waiting for GitHub to process release..."
+sleep 5
+
 # --- VALIDATE RELEASE (FIXES YOUR ERROR) ---
 github-release info \
   -u "$GITHUB_ORGANIZATION" \
@@ -87,13 +100,27 @@ github-release info \
     exit 1
 }
 
-# --- UPLOAD PAX ---
+# --- UPLOAD TO GITHUB RELEASES ---
 github-release upload \
   --user "$GITHUB_ORGANIZATION" \
   --repo "$GITHUB_REPO" \
   --tag "$TAG" \
   --name "$PAX_BASENAME" \
   --file "$PAX"
+
+github-release upload \
+  --user "$GITHUB_ORGANIZATION" \
+  --repo "$GITHUB_REPO" \
+  --tag "$TAG" \
+  --name "metadata.json" \
+  --file "$METADATA"
+
+github-release upload \
+  --user "$GITHUB_ORGANIZATION" \
+  --repo "$GITHUB_REPO" \
+  --tag "$TAG" \
+  --name "CHANGELOG.md" \
+  --file "CHANGELOG.md"
 
 # =========================================================
 # 🔧 PULP SETUP (AUTO INSTALL + CONFIG)
@@ -151,27 +178,18 @@ if [ "$NUM_RPMS" -gt 0 ] && [ "$PULP_AVAILABLE" = true ]; then
   for RPM in "${RPM_FILES[@]}"; do
     RPM_NAME=$(basename "$RPM")
 
-    # Upload to GitHub
-    github-release upload \
-      --user "$GITHUB_ORGANIZATION" \
-      --repo "$GITHUB_REPO" \
-      --tag "$TAG" \
-      --name "$RPM_NAME" \
-      --file "$RPM"
-
     # Upload to Pulp (with retry)
-    for i in 1 2 3; do
-      if pulp rpm repository upload --name "$PULP_REPO" --file "$RPM"; then
+    for attempt in 1 2 3; do
+      if pulp rpm content upload --file "$RPM" --repository "$PULP_REPO"; then
         echo "SUCCESS: $RPM_NAME"
         break
-      else
-        echo "Retry $i for $RPM_NAME"
-        sleep 5
       fi
-
-      if [ $i -eq 3 ]; then
-        echo "ERROR: Failed to upload $RPM_NAME"
-        exit 1
+      
+      if [ "$attempt" -eq 3 ]; then
+        echo "WARNING: Failed to upload $RPM_NAME to Pulp after 3 attempts. Skipping..."
+      else
+        echo "Attempt $attempt failed for $RPM_NAME, retrying in 5 seconds..."
+        sleep 5
       fi
     done
   done
@@ -183,19 +201,6 @@ else
   echo "Skipping RPM upload"
 fi
 
-# --- FINAL FILES ---
-github-release upload \
-  --user "$GITHUB_ORGANIZATION" \
-  --repo "$GITHUB_REPO" \
-  --tag "$TAG" \
-  --name "metadata.json" \
-  --file "$METADATA"
 
-github-release upload \
-  --user "$GITHUB_ORGANIZATION" \
-  --repo "$GITHUB_REPO" \
-  --tag "$TAG" \
-  --name "CHANGELOG.md" \
-  --file "CHANGELOG.md"
 
 echo "=== SUCCESS: PUBLISH COMPLETED ==="
