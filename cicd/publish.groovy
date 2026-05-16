@@ -14,9 +14,7 @@ echo "=== STARTING PUBLISH JOB ==="
 # --- STATIC CONFIG ---
 GITHUB_ORGANIZATION="zopencommunity"
 RELEASE_NOTES_SCRIPT="tools/create_release_notes.sh"
-PULP_HOST="https://repo.zopen.community"   # ✅ FIXED
-
-BUILD_LINE=${BUILD_LINE:-DEV}
+PULP_HOST="https://repo.zopen.community"
 
 # --- DERIVE VALUES ---
 RELEASE_PREFIX=$(basename "${PORT_GITHUB_REPO}")
@@ -30,6 +28,18 @@ METADATA=$(find . -path "*/install/metadata.json" -type f | head -n 1)
 
 [ -f "$PAX" ] || { echo "ERROR: Missing PAX file"; exit 1; }
 [ -f "$METADATA" ] || { echo "ERROR: Missing metadata.json"; exit 1; }
+
+# --- RESOLVE BUILD LINE ---
+if [ -z "${BUILD_LINE:-}" ] || [ "$BUILD_LINE" = "null" ]; then
+  METADATA_BUILD_LINE=$(python3 -c "import json; print(json.load(open('$METADATA'))['product'].get('buildline', ''))" 2>/dev/null || echo "")
+  if [ -n "$METADATA_BUILD_LINE" ] && [ "$METADATA_BUILD_LINE" != "null" ]; then
+    BUILD_LINE=$(echo "$METADATA_BUILD_LINE" | tr '[:lower:]' '[:upper:]')
+    echo "Using BUILD_LINE from metadata.json: $BUILD_LINE"
+  else
+    BUILD_LINE="DEV"
+    echo "BUILD_LINE not found in environment or metadata.json. Defaulting to: $BUILD_LINE"
+  fi
+fi
 
 # --- RPM FILES ---
 RPM_FILES=()
