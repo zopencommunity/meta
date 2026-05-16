@@ -500,12 +500,12 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   </div>
 </div>
 
-<div class="tool-item-filterable" data-package-name="check_clang" data-searchable-text="check_clang Green 100.0% STABLE_check_clang_4089 A script to check for the existence of Clang development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+<div class="tool-item-filterable" data-package-name="check_clang" data-searchable-text="check_clang Green 100.0% DEV_check_clang_4293 A script to check for the existence of Clang development port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">
     <div class="tool-name"><strong><a href="https://github.com/zopencommunity/check_clangport" target="_blank" rel="noopener noreferrer">check_clang</a></strong></div>
     <div class="tool-status">Status: Green</div>
     <div class="tool-test">Test: 100.0%</div>
-    <div class="tool-release"><a href="https://github.com/zopencommunity/check_clangport/releases/download/STABLE_check_clangport_4089/check_clang-DEV.20260226_131331.zos.pax.Z" target="_blank" rel="noopener noreferrer">STABLE_check_clang_4089</a></div>
+    <div class="tool-release"><a href="https://github.com/zopencommunity/check_clangport/releases/download/DEV_check_clangport_4293/check_clang-DEV.20260515_154726.zos.pax.Z" target="_blank" rel="noopener noreferrer">DEV_check_clang_4293</a></div>
     <div class="tool-desc" title="A script to check for the existence of Clang">A script to check for the existence of Clang</div>
   </div>
 </div>
@@ -3449,4 +3449,4 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 </div>
 
 
-Last updated:  2026-05-15 06:20:16 UTC
+Last updated:  2026-05-16 06:18:33 UTC
