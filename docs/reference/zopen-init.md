@@ -12,25 +12,22 @@
 
 
 
-<h2>NAME
+<h2>NAME</h2>
 <a name="NAME"></a>
-</h2>
 
 
 <p style="margin-left:11%; margin-top: 1em">zopen-init
 &minus; manual page for zopen-init 0.8.4</p>
 
-<h2>SYNOPSIS
+<h2>SYNOPSIS</h2>
 <a name="SYNOPSIS"></a>
-</h2>
 
 
 <p style="margin-left:11%; margin-top: 1em"><b>zopen</b>
 init [OPTION] [PARAMETERS]...</p>
 
-<h2>DESCRIPTION
+<h2>DESCRIPTION</h2>
 <a name="DESCRIPTION"></a>
-</h2>
 
 
 <p style="margin-left:11%; margin-top: 1em">zopen init is a
@@ -38,90 +35,139 @@ utility for zopen community to generate a zopen environment,
 bootstrapping initial tools and creating a configuration
 file</p>
 
-<h2>OPTIONS
+<h2>OPTIONS</h2>
 <a name="OPTIONS"></a>
-</h2>
+
 
 
 <table width="100%" border="0" rules="none" frame="void"
        cellspacing="0" cellpadding="0">
+
 <tr valign="top" align="left">
+
 <td width="11%"></td>
+
+
 <td width="29%">
 
 
 
-<p style="margin-top: 1em"><b>&minus;&minus;append&minus;to&minus;profile</b></p> </td>
+<p style="margin-top: 1em"><b>&minus;&minus;append&minus;to&minus;profile</b></p></td>
+
+
 <td width="60%">
-</td></tr>
+</td>
+</tr>
+
 </table>
+
 
 <p style="margin-left:22%; margin-top: 1em">appends
 sourcing of zopen&minus;config to current user&rsquo;s
 .profile</p>
 
+
 <table width="100%" border="0" rules="none" frame="void"
        cellspacing="0" cellpadding="0">
+
 <tr valign="top" align="left">
+
 <td width="11%"></td>
+
+
 <td width="27%">
 
 
 
-<p style="margin-top: 1em"><b>&minus;&minus;[no]enable&minus;stats</b></p> </td>
+<p style="margin-top: 1em"><b>&minus;&minus;[no]enable&minus;stats</b></p></td>
+
+
 <td width="62%">
-</td></tr>
+</td>
+</tr>
+
 </table>
+
 
 <p style="margin-left:22%; margin-top: 1em">Toggle enabling
 collection of usage statistics</p>
 
+
 <table width="100%" border="0" rules="none" frame="void"
        cellspacing="0" cellpadding="0">
+
 <tr valign="top" align="left">
+
 <td width="11%"></td>
+
+
 <td width="37%">
 
 
 
-<p style="margin-top: 1em"><b>&minus;&minus;[no]override&minus;zos&minus;tools</b></p> </td>
+<p style="margin-top: 1em"><b>&minus;&minus;[no]override&minus;zos&minus;tools</b></p></td>
+
+
 <td width="52%">
-</td></tr>
+</td>
+</tr>
+
 </table>
+
 
 <p style="margin-left:22%; margin-top: 1em">Toggle default
 mode for overriding zz/#47;OS  /#47;bin tools in the
 zopen&minus;config. Default is
 <b>&minus;&minus;nooverride&minus;zos&minus;tools</b></p>
 
+
 <table width="100%" border="0" rules="none" frame="void"
        cellspacing="0" cellpadding="0">
+
 <tr valign="top" align="left">
+
 <td width="11%"></td>
+
+
 <td width="34%">
 
 
 
-<p style="margin-top: 1em"><b>&minus;&minus;bypass&minus;prereq&minus;checks</b></p> </td>
+<p style="margin-top: 1em"><b>&minus;&minus;bypass&minus;prereq&minus;checks</b></p></td>
+
+
 <td width="55%">
-</td></tr>
+</td>
+</tr>
+
 </table>
+
 
 <p style="margin-left:22%; margin-top: 1em">Bypasses
 pre&minus;requisite checks</p>
 
+
 <table width="100%" border="0" rules="none" frame="void"
        cellspacing="0" cellpadding="0">
+
 <tr valign="top" align="left">
+
 <td width="11%"></td>
+
+
 <td width="37%">
 
 
 <p style="margin-top: 1em"><b>&minus;f</b>,
 <b>&minus;&minus;fs&minus;layout</b> &lt;LAYOUT&gt;</p></td>
+
+
 <td width="52%">
-</td></tr>
+</td>
+</tr>
+
 </table>
+
 
 <p style="margin-left:22%; margin-top: 1em">The filesystem
 structure to use for installed packages on disk; packages
@@ -137,34 +183,54 @@ prod: legacy zopen standard location, ibm:  /#47;usrr/#47;lpp,
 fhs: File Hierarchical Standard ((/#47;opt), usrlcl:
 usrr/#47;local</p>
 
+
 <table width="100%" border="0" rules="none" frame="void"
        cellspacing="0" cellpadding="0">
+
 <tr valign="top" align="left">
+
 <td width="11%"></td>
+
+
 <td width="21%">
 
 
 <p style="margin-top: 1em"><b>&minus;h</b>, &minus;?,
-<b>&minus;&minus;help</b></p> </td>
+<b>&minus;&minus;help</b></p></td>
+
+
 <td width="68%">
-</td></tr>
+</td>
+</tr>
+
 </table>
+
 
 <p style="margin-left:22%; margin-top: 1em">display this
 help and exit</p>
 
+
 <table width="100%" border="0" rules="none" frame="void"
        cellspacing="0" cellpadding="0">
+
 <tr valign="top" align="left">
+
 <td width="11%"></td>
+
+
 <td width="14%">
 
 
 
-<p style="margin-top: 1em"><b>&minus;&minus;re&minus;init</b></p> </td>
+<p style="margin-top: 1em"><b>&minus;&minus;re&minus;init</b></p></td>
+
+
 <td width="75%">
-</td></tr>
+</td>
+</tr>
+
 </table>
+
 
 
 <p style="margin-left:22%; margin-top: 1em">Re&minus;initializes
@@ -174,75 +240,114 @@ installation will re&minus;use existing package structures
 and configuration and regenerate configuration files. select
 the active version for PACKAGE from a list</p>
 
+
 <table width="100%" border="0" rules="none" frame="void"
        cellspacing="0" cellpadding="0">
+
 <tr valign="top" align="left">
+
 <td width="11%"></td>
+
+
 <td width="14%">
 
 
 
-<p style="margin-top: 1em"><b>&minus;&minus;refresh</b></p> </td>
+<p style="margin-top: 1em"><b>&minus;&minus;refresh</b></p></td>
+
+
 <td width="75%">
-</td></tr>
+</td>
+</tr>
+
 </table>
+
 
 <p style="margin-left:22%; margin-top: 1em">Refreshes the
 zopen&minus;config file</p>
 
+
 <table width="100%" border="0" rules="none" frame="void"
        cellspacing="0" cellpadding="0">
+
 <tr valign="top" align="left">
+
 <td width="11%"></td>
+
+
 <td width="26%">
 
 
 
-<p style="margin-top: 1em"><b>&minus;&minus;releaseline&minus;dev</b></p> </td>
+<p style="margin-top: 1em"><b>&minus;&minus;releaseline&minus;dev</b></p></td>
+
+
 <td width="63%">
-</td></tr>
+</td>
+</tr>
+
 </table>
+
 
 <p style="margin-left:22%; margin-top: 1em">globally
 configure the release line for package installs to enable
 Development (DEV) packages; the default is for a system to
 use STABLE packages</p>
 
+
 <table width="100%" border="0" rules="none" frame="void"
        cellspacing="0" cellpadding="0">
+
 <tr valign="top" align="left">
+
 <td width="11%"></td>
+
+
 <td width="20%">
 
 
 <p style="margin-top: 1em"><b>&minus;v</b>,
-<b>&minus;&minus;verbose</b></p> </td>
+<b>&minus;&minus;verbose</b></p></td>
+
+
 <td width="69%">
-</td></tr>
+</td>
+</tr>
+
 </table>
+
 
 <p style="margin-left:22%; margin-top: 1em">run in verbose
 mode</p>
 
+
 <table width="100%" border="0" rules="none" frame="void"
        cellspacing="0" cellpadding="0">
+
 <tr valign="top" align="left">
+
 <td width="11%"></td>
+
+
 <td width="14%">
 
 
 <p style="margin-top: 1em"><b>&minus;y</b>,
-<b>&minus;&minus;yes</b></p> </td>
+<b>&minus;&minus;yes</b></p></td>
+
+
 <td width="75%">
-</td></tr>
+</td>
+</tr>
+
 </table>
+
 
 <p style="margin-left:22%; margin-top: 1em">automatically
 answer &rsquo;yes&rsquo; to prompts</p>
 
-<h2>EXAMPLES
+<h2>EXAMPLES</h2>
 <a name="EXAMPLES"></a>
-</h2>
 
 
 <p style="margin-left:22%; margin-top: 1em">zopen init</p>
@@ -271,18 +376,16 @@ updated to source the configuration file at
 &rsquo;;/#47;zopenn/#47;etcc/#47;zopen&minus;config&rsquo; when new
 terminal sessions start</p>
 
-<h2>AUTHOR
+<h2>AUTHOR</h2>
 <a name="AUTHOR"></a>
-</h2>
 
 
 <p style="margin-left:11%; margin-top: 1em">Written by
 contributors to the zopen community.
 &lt;https:///#47;github.comm/#47;zopencommunityy/#47;metaa/#47;graphss/#47;contributors&gt;</p>
 
-<h2>REPORTING BUGS
+<h2>REPORTING BUGS</h2>
 <a name="REPORTING BUGS"></a>
-</h2>
 
 
 <p style="margin-left:11%; margin-top: 1em">Report bugs at

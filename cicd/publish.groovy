@@ -45,7 +45,7 @@ fi
 RPM_FILES=()
 while IFS= read -r -d '' f; do
   RPM_FILES+=("$f")
-done < <(find . -path "*/rpmbuild/RPMS/*.rpm" -type f -print0 2>/dev/null)
+done < <(find . -path "*/rpmbuild/RPMS/*.rpm" ! -name "*.src.rpm" -type f -print0 2>/dev/null)
 
 NUM_RPMS=${#RPM_FILES[@]}
 

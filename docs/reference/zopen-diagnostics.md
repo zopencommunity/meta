@@ -12,27 +12,24 @@
 
 
 
-<h2>NAME
+<h2>NAME</h2>
 <a name="NAME"></a>
-</h2>
 
 
 
 <p style="margin-left:11%; margin-top: 1em">zopen-diagnostics
 &minus; manual page for zopen-diagnostics 0.8.4</p>
 
-<h2>SYNOPSIS
+<h2>SYNOPSIS</h2>
 <a name="SYNOPSIS"></a>
-</h2>
 
 
 
 <p style="margin-left:11%; margin-top: 1em"><b>zopen-diagnostics</b>
 [OPTION]</p>
 
-<h2>DESCRIPTION
+<h2>DESCRIPTION</h2>
 <a name="DESCRIPTION"></a>
-</h2>
 
 
 
@@ -40,9 +37,8 @@
 &minus; display diagnostics information for issue
 reporting.</p>
 
-<h2>OPTIONS
+<h2>OPTIONS</h2>
 <a name="OPTIONS"></a>
-</h2>
 
 
 
@@ -67,9 +63,8 @@ the terms of the Apache License, Version 2.0.
 &lt;https:///#47;www.apache.orgg/#47;licensess/#47;LICENSE&minus;2.0.html&gt;
 There is NO WARRANTY, to the extent permitted by law.</p>
 
-<h2>AUTHOR
+<h2>AUTHOR</h2>
 <a name="AUTHOR"></a>
-</h2>
 
 
 <p style="margin-left:11%; margin-top: 1em">Written by

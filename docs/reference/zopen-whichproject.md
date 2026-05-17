@@ -12,27 +12,24 @@
 
 
 
-<h2>NAME
+<h2>NAME</h2>
 <a name="NAME"></a>
-</h2>
 
 
 
 <p style="margin-left:11%; margin-top: 1em">zopen-whichproject
 &minus; manual page for zopen-whichproject 0.8.4</p>
 
-<h2>SYNOPSIS
+<h2>SYNOPSIS</h2>
 <a name="SYNOPSIS"></a>
-</h2>
 
 
 
 <p style="margin-left:11%; margin-top: 1em"><b>zopen-whichproject</b>
 [OPTION]... &lt;COMMAND|LIBRARY&gt;</p>
 
-<h2>DESCRIPTION
+<h2>DESCRIPTION</h2>
 <a name="DESCRIPTION"></a>
-</h2>
 
 
 
@@ -45,9 +42,8 @@ name of an executable (e.g., &rsquo;git&rsquo;,
 &rsquo;curl&rsquo;). LIBRARY is the name of a library file
 (e.g., &rsquo;libssl.so&rsquo;, &rsquo;libz.a&rsquo;).</p>
 
-<h2>OPTIONS
+<h2>OPTIONS</h2>
 <a name="OPTIONS"></a>
-</h2>
 
 
 
@@ -74,9 +70,8 @@ the terms of the Apache License, Version 2.0.
 &lt;https:///#47;www.apache.orgg/#47;licensess/#47;LICENSE&minus;2.0.html&gt;
 There is NO WARRANTY, to the extent permitted by law.</p>
 
-<h2>AUTHOR
+<h2>AUTHOR</h2>
 <a name="AUTHOR"></a>
-</h2>
 
 
 <p style="margin-left:11%; margin-top: 1em">Written by

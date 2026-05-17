@@ -300,7 +300,7 @@ Version:        ${PKG_VERSION}
 Release:        ${RELEASE}%{?dist}
 Summary:        ${SUMMARY}
 
-%define install_dir /usr/lpp/pkg/IBM/%{name}/%{version}
+%define install_dir /opt/pkg/%{name}/%{version}
 
 License:        ${LICENSE}
 ${URL:+URL:            $URL}

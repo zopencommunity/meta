@@ -6,50 +6,34 @@
   </div>
 </div>
 
-
 <h1 align="center">ZOPEN-PUBLISH</h1>
 
-
-
-
-<h2>NAME
+<h2>NAME</h2>
 <a name="NAME"></a>
-</h2>
-
 
 <p style="margin-left:11%; margin-top: 1em">zopen-publish
 &minus; manual page for zopen-publish 0.8.4</p>
 
-<h2>SYNOPSIS
+<h2>SYNOPSIS</h2>
 <a name="SYNOPSIS"></a>
-</h2>
-
-
 
 <p style="margin-left:11%; margin-top: 1em"><b>zopen-publish</b>
 [OPTION] -p PAX_FILE -m METADATA_FILE -g
 TAG</p>
 
-<h2>DESCRIPTION
+<h2>DESCRIPTION</h2>
 <a name="DESCRIPTION"></a>
-</h2>
-
-
 
 <p style="margin-left:11%; margin-top: 1em">zopen&minus;publish
 &minus; Publish zopen package release to GitHub andd/#47;or Pulp
 PyPI.</p>
 
-
 <p style="margin-left:22%; margin-top: 1em">zopen&minus;publish
 [OPTION] <b>&minus;&minus;whl</b> WHL_FILE
 <b>&minus;&minus;pulp&minus;url</b> URL</p>
 
-<h2>OPTIONS
+<h2>OPTIONS</h2>
 <a name="OPTIONS"></a>
-</h2>
-
-
 
 <p style="margin-left:11%; margin-top: 1em"><b>&minus;h</b>,
 <b>&minus;&minus;help</b></p>
@@ -125,23 +109,19 @@ zopencommunity)</p>
 <p style="margin-left:22%;">Mark release as
 &rsquo;Latest&rsquo; (not pre&minus;release).</p>
 
-<table width="100%" border="0" rules="none" frame="void"
-       cellspacing="0" cellpadding="0">
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
 <tr valign="top" align="left">
 <td width="11%"></td>
 <td width="9%">
-
 
 <p><b>&minus;&minus;pulp</b></p></td>
 <td width="2%"></td>
 <td width="58%">
 
-
 <p>Push RPM artifacts to Pulp repository.</p></td>
 <td width="20%">
 </td></tr>
 </table>
-
 
 <p style="margin-left:11%;"><b>&minus;&minus;pulp&minus;repo</b>
 REPO</p>
@@ -155,13 +135,11 @@ zopen&minus;stable or zopen&minus;dev)</p>
 <p style="margin-left:22%;">Path to a Python wheel file to
 publish to Pulp PyPI</p>
 
-
 <p style="margin-left:11%;"><b>&minus;&minus;pulp&minus;url</b>
 URL</p>
 
 <p style="margin-left:22%;">Pulp PyPI repository URL (e.g.,
 http:///#47;host:80800/#47;pypii/#47;repoo/#47;)</p>
-
 
 <p style="margin-left:11%;"><b>&minus;&minus;pulp&minus;user</b>
 USER</p>
@@ -169,20 +147,18 @@ USER</p>
 <p style="margin-left:22%;">Pulp username (or set PULP_USER
 env var, default: admin)</p>
 
-
 <p style="margin-left:11%;"><b>&minus;&minus;pulp&minus;password</b>
 PASS</p>
 
 <p style="margin-left:22%;">Pulp password (or set
 PULP_PASSWORD env var)</p>
 
-
 <p style="margin-left:11%;"><b>&minus;&minus;version</b></p>
 
 <p style="margin-left:22%;">print version</p>
 
 <p style="margin-left:11%; margin-top: 1em"><b>Environment
-GITHUB_TOKEN</p>
+GITHUB_TOKEN</b></p>
 
 <p style="margin-left:22%;">GitHub Personal Access Token
 (alternative to <b>&minus;&minus;github&minus;token</b>)</p>
@@ -202,10 +178,8 @@ GITHUB_TOKEN</p>
 <p style="margin-left:22%;">Pulp password (alternative to
 <b>&minus;&minus;pulp&minus;password</b>)</p>
 
-<h2>EXAMPLES
+<h2>EXAMPLES</h2>
 <a name="EXAMPLES"></a>
-</h2>
-
 
 <p style="margin-left:22%; margin-top: 1em"># Publish pax
 to GitHub zopen&minus;publish &minus;f &minus;p
@@ -231,10 +205,8 @@ the terms of the Apache License, Version 2.0.
 &lt;https:///#47;www.apache.orgg/#47;licensess/#47;LICENSE&minus;2.0.html&gt;
 There is NO WARRANTY, to the extent permitted by law.</p>
 
-<h2>AUTHOR
+<h2>AUTHOR</h2>
 <a name="AUTHOR"></a>
-</h2>
-
 
 <p style="margin-left:11%; margin-top: 1em">Written by
 contributors to the zopen community.
