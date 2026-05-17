@@ -169,6 +169,8 @@
 - 2025-02-01: [Update creduce-version to 2.10.0 from V.R.M](https://github.com/zopencommunity/creduceport/pull/1) ❓
 
 ### crushport
+- 2026-05-16: [Update crush-version to 0.69.1 from 0.11.0](https://github.com/zopencommunity/crushport/pull/120) ❌
+- 2026-05-15: [Update crush-version to 0.69.0 from 0.11.0](https://github.com/zopencommunity/crushport/pull/119) ❌
 - 2026-05-12: [Update crush-version to 0.67.0 from 0.11.0](https://github.com/zopencommunity/crushport/pull/118) ❌
 - 2026-05-09: [Update crush-version to 0.66.1 from 0.11.0](https://github.com/zopencommunity/crushport/pull/117) ❌
 - 2026-05-07: [Update crush-version to 0.66.0 from 0.11.0](https://github.com/zopencommunity/crushport/pull/116) ❌
@@ -197,8 +199,6 @@
 - 2026-03-14: [Update crush-version to 0.49.0 from 0.11.0](https://github.com/zopencommunity/crushport/pull/93) ❌
 - 2026-03-13: [Update crush-version to 0.48.0 from 0.11.0](https://github.com/zopencommunity/crushport/pull/92) ❌
 - 2026-03-06: [Update crush-version to 0.47.2 from 0.11.0](https://github.com/zopencommunity/crushport/pull/91) ❌
-- 2026-03-05: [Update crush-version to 0.47.1 from 0.11.0](https://github.com/zopencommunity/crushport/pull/90) ❌
-- 2026-03-04: [Update crush-version to 0.47.0 from 0.11.0](https://github.com/zopencommunity/crushport/pull/89) ❌
 
 ### cunitport
 - 2026-01-20: [Update cunit-version to 3.5.4 from 3.2.7](https://github.com/zopencommunity/cunitport/pull/11) ❌
@@ -654,7 +654,7 @@
 
 ### screenport
 - 2025-05-15: [Update screen-version to 5.0.1 from 4.9.1](https://github.com/zopencommunity/screenport/pull/11) ❌
-- 2024-08-29: [Update screen-version to 5.0.0 from 4.9.1](https://github.com/zopencommunity/screenport/pull/8) ❌
+- 2024-08-29: [Update screen-version to 5.0.0 from 4.9.1](https://github.com/zopencommunity/screenport/pull/8) ❓
 
 ### sedport
 - 2026-04-22: [Update sed-version to 4.10 from 4.9](https://github.com/zopencommunity/sedport/pull/18) ❌
@@ -1115,5 +1115,5 @@
 ---
 
 
-> Last updated: 2026-05-15 06:12:14 EDT
+> Last updated: 2026-05-17 06:10:47 EDT
 
