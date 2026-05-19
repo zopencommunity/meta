@@ -402,7 +402,8 @@ Option:
   --oci                 build and publish an OCI image to \$ZOPEN_IMAGE_REGISTRY.
   -s                    exec a shell before running configure. Useful when
                         manually building ports.
-  --sign-pax, -sp       This option signs the pax file.
+  --sign-pax, --sign-package, -sp
+                        This option signs the pax file.
 			ZOPEN_GPG_SECRET_KEY_FILE, ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE
                         and ZOPEN_GPG_PUBLIC_KEY_FILE must be set for signing the file.
   -v                    run in verbose mode.
@@ -442,7 +443,7 @@ processOptions()
   generatePax=false
   generateRPM=false
   setActive=true
-  signPax=false
+  signPackage=false
   forcePatchApply=false
   depsPath="${ZOPEN_PKGINSTALL}"
   forceUpgradeDeps=false
@@ -549,8 +550,8 @@ processOptions()
     "-s" | "--shell")
       startShell=true
       ;;
-    "-sp" | "--sign-pax")
-      signPax=true
+    "-sp" | "--sign-pax" | "--sign-package")
+      signPackage=true
       generatePax=true
       ;;
     *)
@@ -2514,6 +2515,9 @@ create_rpm()
     if [ -n "${rpm_deps}" ]; then
       cmd="${cmd} --requires \"${rpm_deps}\""
     fi
+    if [ "${signPackage}" = "true" ]; then
+      cmd="${cmd} --sign"
+    fi
     if ! runAndLog "${cmd}"; then
       printError "Could not generate RPM from \"${paxFileName}\""
     fi
@@ -2527,8 +2531,8 @@ finalize_pax_metadata()
   pax_size=$(getPathSizeInBytes "${paxFileName}")
   md5sum=$(md5sum "${paxFileName}" | awk '{print $1}')
 
-  #If signPax is true, rest of variables check is done before setDepsEnv
-  if [ "${signPax}" = "true" ]; then
+  #If signPackage is true, rest of variables check is done before setDepsEnv
+  if [ "${signPackage}" = "true" ]; then
     signPaxFile
     public_key=$(jq -Rs . < ${ZOPEN_GPG_PUBLIC_KEY_FILE})
   fi
@@ -2553,8 +2557,8 @@ package()
   if [ -n "${ZOPEN_INSTALL_CMD}" ]; then
     #TODO: Hack so that we can use coreutils md5sum without impacting builds
     ZOPEN_DEPS="coreutils jq"
-    if [ "${signPax}" = "true" ] && ( [ -z "${ZOPEN_GPG_SECRET_KEY_FILE}" ] || [ -z "${ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE}" ] || [ -z "${ZOPEN_GPG_PUBLIC_KEY_FILE}" ] || [ ! -r "${ZOPEN_GPG_SECRET_KEY_FILE}" ] || [ ! -r "${ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE}" ] || [ ! -r "${ZOPEN_GPG_PUBLIC_KEY_FILE}" ] ); then
-      printError "GPG keyring environment variables are not set! You can omit the --sign-pax option to bypass this"
+    if [ "${signPackage}" = "true" ] && ( [ -z "${ZOPEN_GPG_SECRET_KEY_FILE}" ] || [ -z "${ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE}" ] || [ -z "${ZOPEN_GPG_PUBLIC_KEY_FILE}" ] || [ ! -r "${ZOPEN_GPG_SECRET_KEY_FILE}" ] || [ ! -r "${ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE}" ] || [ ! -r "${ZOPEN_GPG_PUBLIC_KEY_FILE}" ] ); then
+      printError "GPG keyring environment variables are not set! You can omit the --sign-pax/--sign-package option to bypass this"
     else
       ZOPEN_DEPS="${ZOPEN_DEPS} gpg"
     fi
