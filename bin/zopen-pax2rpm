@@ -403,20 +403,29 @@ sign_rpm() {
 
     # Create a temporary directory for GPG keyring
     TMP_GPG_DIR=$(mktempdir "rpm_gpg")
+    if [ -z "${TMP_GPG_DIR}" ] || [ ! -d "${TMP_GPG_DIR}" ]; then
+        printError "Failed to create temporary directory for GPG signing"
+    fi
+    chmod 700 "${TMP_GPG_DIR}"
+    
+    OLD_GNUPGHOME="$GNUPGHOME"
     export GNUPGHOME="$TMP_GPG_DIR"
+    RPM_LIST=""
+
+    # Use the framework's helper to ensure files are cleaned up on exit/interrupt
+    # without overwriting the global traps set in common.sh
+    addCleanupTrapCmd "rm -rf ${TMP_GPG_DIR}"
 
     # Import the private key
     echo "Importing private key..."
     if ! gpg --batch --yes --import "${ZOPEN_GPG_SECRET_KEY_FILE}" >/dev/null 2>&1; then
         printError "Failed to import GPG secret key"
-        return 1
     fi
 
     # Identify the GPG key ID (long ID)
-    GPG_KEY_ID=$(gpg --list-secret-keys --with-colons | grep '^sec' | cut -d: -f5)
+    GPG_KEY_ID=$(gpg --list-secret-keys --with-colons | grep '^sec' | cut -d: -f5 | head -n 1)
     if [ -z "${GPG_KEY_ID}" ]; then
         printError "Could not identify GPG key ID from imported key"
-        return 1
     fi
 
     # Create a wrapper script for gpg to handle the passphrase file
@@ -434,13 +443,26 @@ EOF
         --define '__gpg ${GPG_WRAPPER}' \
         --define '_gpg_path ${TMP_GPG_DIR}'"
 
-    find "$buildroot/RPMS" -name "*.rpm" -type f | while read rpm; do
+    # Use a temporary file to avoid subshell return issues
+    RPM_LIST=$(mktempfile "rpmlist")
+    addCleanupTrapCmd "rm -f ${RPM_LIST}"
+    find "$buildroot/RPMS" -name "*.rpm" -type f > "$RPM_LIST"
+    
+    if [ ! -s "$RPM_LIST" ]; then
+        printError "No RPM packages found to sign in $buildroot/RPMS"
+    fi
+
+    while read rpm; do
+        [ -z "$rpm" ] && continue
         echo "Signing $rpm..."
         if ! eval "${SIGN_CMD} \"${rpm}\""; then
             printError "Failed to sign RPM: $rpm"
-            return 1
         fi
-    done
+    done < "$RPM_LIST"
+
+    rm -f "$RPM_LIST"
+    rm -rf "$TMP_GPG_DIR"
+    [ -n "$OLD_GNUPGHOME" ] && export GNUPGHOME="$OLD_GNUPGHOME" || unset GNUPGHOME
 
     echo "✓ All RPMs signed successfully"
     return 0
