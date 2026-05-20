@@ -2448,64 +2448,6 @@ install()
 
     generateMetadataJSON
 
-    if ${generatePax}; then
-      printHeader "Generating pax.Z from ${ZOPEN_INSTALL_DIR}"
-      if ! runAndLog "${ZOPEN_PAX_CMD}"; then
-        printError "Could not generate pax \"${paxFileName}\""
-      fi
-    fi
-
-    if ${generateRPM}; then
-      if [ -f "${paxFileName}" ]; then
-        printHeader "Generating RPM from ${ZOPEN_INSTALL_DIR}"
-        rpm_deps=$(echo "${ZOPEN_RUNTIME_DEPS}" | xargs -n1 | sort -u | xargs)
-        cmd="PATH=\"${ZOPEN_ROOTFS}/usr/local/bin:${PATH}\" \"${MYDIR}/zopen-pax2rpm\" \"${paxFileName}\" --summary \"${ZOPEN_NAME} package\" --build --buildroot \"${ZOPEN_ROOT}/rpmbuild\""
-        if [ -n "${rpm_deps}" ]; then
-          cmd="${cmd} --requires \"${rpm_deps}\""
-        fi
-        if ! runAndLog "${cmd}"; then
-          printError "Could not generate RPM from \"${paxFileName}\""
-        fi
-      else
-        printError "Pax file ${paxFileName} not found. Ensure --generate-pax is also used."
-      fi
-    fi
-
-    if ${generatePax}; then
-      #TODO: Hack so that we can use coreutils md5sum without impacting builds
-      ZOPEN_DEPS="${ZOPEN_DEPS} coreutils jq"
-      if [ "${signPax}" = "true" ] && ( [ -z "${ZOPEN_GPG_SECRET_KEY_FILE}" ] || [ -z "${ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE}" ] || [ -z "${ZOPEN_GPG_PUBLIC_KEY_FILE}" ] || [ ! -r "${ZOPEN_GPG_SECRET_KEY_FILE}" ] || [ ! -r "${ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE}" ] || [ ! -r "${ZOPEN_GPG_PUBLIC_KEY_FILE}" ] ); then
-		printError "GPG keyring environment variables are not set! You can omit the --sign-pax option to bypass this"
-       else
-		ZOPEN_DEPS="${ZOPEN_DEPS} gpg"
-       fi
-
-       setDepsEnv
-
-      pax_size=$(getPathSizeInBytes "${paxFileName}")
-      md5sum=$(md5sum "${paxFileName}" | awk '{print $1}')
-
-      #If signPax is true, rest of variables check is done before setDepsEnv
-      if [ "${signPax}" = "true" ]; then
-                signPaxFile
-                public_key=$(jq -Rs . < ${ZOPEN_GPG_PUBLIC_KEY_FILE})
-      fi
-
-      if [[ -n "${SIGNATURE}" ]]; then
-         cat ${ZOPEN_INSTALL_DIR}/metadata.json
-         jq --arg pax "${ZOPEN_NAME}.${LOG_PFX}.zos.pax.Z" \
-            --arg pax_size "$pax_size" \
-            --arg md5 "$md5sum" \
-            --arg signature "$SIGNATURE" \
-            --arg public_key "$public_key" \
-            '.product |= . + { "pax": $pax, "pax_size": $pax_size, "md5": $md5, "signature": $signature, "public_key": $public_key }' \
-            "${ZOPEN_ROOT}/install/metadata.json" > "${ZOPEN_ROOT}/install/metadata.json.tmp"
-      else
-        jq '.product |= . + { "pax": "'${ZOPEN_NAME}.${LOG_PFX}.zos.pax.Z'", "pax_size": "'${pax_size}'", "md5": "'${md5sum}'" }' "${ZOPEN_ROOT}/install/metadata.json" > "${ZOPEN_ROOT}/install/metadata.json.tmp"
-      fi
-      mv "${ZOPEN_ROOT}/install/metadata.json.tmp" "${ZOPEN_ROOT}/install/metadata.json"
-    fi
-
     if ${setActive}; then
       PROJECT_NAME="$(echo ${ZOPEN_NAME} | cut -d'-' -f1)"
       mergeIntoSystem "${PROJECT_NAME}" "${ZOPEN_INSTALL_DIR}" "${ZOPEN_ROOTFS}"
@@ -2528,6 +2470,92 @@ EOF
     printHeader "Skipping Install"
   fi
   printElapsedTime verbose "install" "${installStartTime}"
+}
+
+create_pax()
+{
+  printHeader "Generating pax.Z from ${ZOPEN_INSTALL_DIR}"
+  if ! runAndLog "${ZOPEN_PAX_CMD}"; then
+    printError "Could not generate pax \"${paxFileName}\""
+  fi
+}
+
+create_rpm()
+{
+  if [ -f "${paxFileName}" ]; then
+    printHeader "Generating RPM from ${ZOPEN_INSTALL_DIR}"
+    rpm_deps=$(echo "${ZOPEN_RUNTIME_DEPS}" | xargs -n1 | sort -u | xargs)
+    cmd="PATH=\"${ZOPEN_ROOTFS}/usr/local/bin:${PATH}\" \"${MYDIR}/zopen-pax2rpm\" \"${paxFileName}\" --summary \"${ZOPEN_NAME} package\" --build --buildroot \"${ZOPEN_ROOT}/rpmbuild\""
+    if [ "${signPax}" = "true" ]; then
+      cmd="${cmd} --sign"
+    fi
+    if [ -n "${rpm_deps}" ]; then
+      cmd="${cmd} --requires \"${rpm_deps}\""
+    fi
+    if ! runAndLog "${cmd}"; then
+      printError "Could not generate RPM from \"${paxFileName}\""
+    fi
+  else
+    printError "Pax file ${paxFileName} not found. Packaging failed."
+  fi
+}
+
+pax_finalize()
+{
+  pax_size=$(getPathSizeInBytes "${paxFileName}")
+  md5sum=$(md5sum "${paxFileName}" | awk '{print $1}')
+
+  #If signPax is true, rest of variables check is done before setDepsEnv
+  if [ "${signPax}" = "true" ]; then
+    signPaxFile
+    public_key=$(jq -Rs . < ${ZOPEN_GPG_PUBLIC_KEY_FILE})
+  fi
+
+  if [[ -n "${SIGNATURE}" ]]; then
+    jq --arg pax "${ZOPEN_NAME}.${LOG_PFX}.zos.pax.Z" \
+       --arg pax_size "$pax_size" \
+       --arg md5 "$md5sum" \
+       --arg signature "$SIGNATURE" \
+       --arg public_key "$public_key" \
+       '.product |= . + { "pax": $pax, "pax_size": $pax_size, "md5": $md5, "signature": $signature, "public_key": $public_key }' \
+       "${ZOPEN_ROOT}/install/metadata.json" > "${ZOPEN_ROOT}/install/metadata.json.tmp"
+  else
+    jq '.product |= . + { "pax": "'${ZOPEN_NAME}.${LOG_PFX}.zos.pax.Z'", "pax_size": "'${pax_size}'", "md5": "'${md5sum}'" }' "${ZOPEN_ROOT}/install/metadata.json" > "${ZOPEN_ROOT}/install/metadata.json.tmp"
+  fi
+  mv "${ZOPEN_ROOT}/install/metadata.json.tmp" "${ZOPEN_ROOT}/install/metadata.json"
+}
+
+package()
+{
+  packageStartTime=${SECONDS}
+  if [ -n "${ZOPEN_INSTALL_CMD}" ]; then
+    # Ensure dependencies for packaging (md5sum, gpg, rpm) are available
+    # TODO: Hack so that we can use coreutils md5sum without impacting builds
+    ZOPEN_DEPS="coreutils jq"
+    if [ "${signPax}" = "true" ]; then
+      if ( [ -z "${ZOPEN_GPG_SECRET_KEY_FILE}" ] || [ -z "${ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE}" ] || [ -z "${ZOPEN_GPG_PUBLIC_KEY_FILE}" ] || [ ! -r "${ZOPEN_GPG_SECRET_KEY_FILE}" ] || [ ! -r "${ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE}" ] || [ ! -r "${ZOPEN_GPG_PUBLIC_KEY_FILE}" ] ); then
+        printError "GPG keyring environment variables are not set! You can omit the --sign-pax option to bypass this"
+      fi
+      ZOPEN_DEPS="${ZOPEN_DEPS} gpg"
+    fi
+    if ${generateRPM}; then
+      ZOPEN_DEPS="${ZOPEN_DEPS} rpm"
+    fi
+    setDepsEnv
+
+    create_pax
+
+    if ${generateRPM}; then
+      create_rpm
+    fi
+
+    if ${generatePax}; then
+      pax_finalize
+    fi
+  else
+    printHeader "Skipping Package"
+  fi
+  printElapsedTime verbose "package" "${packageStartTime}"
 }
 
 #
@@ -3076,6 +3104,10 @@ fi
 
 if ! install; then
   exit 4
+fi
+
+if ${generatePax} || ${generateRPM}; then
+  package
 fi
 
 if command -V "${ZOPEN_PRE_TERMINATE_CODE}" > /dev/null 2>&1; then
