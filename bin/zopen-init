@@ -117,9 +117,11 @@ RM_FILEPROCS=5 #TODO: adjust based on number of online cpus on system
 
 # Boostrap pax files
 CURL_PAX_LOCATION="packages/curl-8.10.1.20241001_214340.zos.pax.Z"
-JQ_PAX_LOCATION="packages/jq-1.6.20241001_204116.zos.pax.Z"
-GPG_PAX_LOCATION="packages/gnupg-2.5.5.20250407_125451.zos.pax.Z"
-PINENTRY_PAX_LOCATION="packages/pinentry-1.3.1.20250131_041514.zos.pax.Z"
+
+# Bootstrap download URLs (downloaded via curl during init)
+JQ_DOWNLOAD_URL="https://github.com/zopencommunity/jqport/releases/download/STABLE_jqport_2489/jq-1.6.20241001_204116.zos.pax.Z"
+GPG_DOWNLOAD_URL="https://github.com/zopencommunity/gpgport/releases/download/STABLE_gpgport_3214/gnupg-2.5.5.20250407_125451.zos.pax.Z"
+PINENTRY_DOWNLOAD_URL="https://github.com/zopencommunity/pinentryport/releases/download/STABLE_pinentryport_2979/pinentry-1.3.1.20250131_041514.zos.pax.Z"
 
 verbose=false
 isHostIBM=false
@@ -511,46 +513,71 @@ zz
 installPrereqs()
 {
   printHeader "Installing zopen pre-requisites"
-  # Comma-separated list of pax locations
-  PAX_LOCATIONS="$CURL_PAX_LOCATION,$JQ_PAX_LOCATION,${GPG_PAX_LOCATION},${PINENTRY_PAX_LOCATION}"
+  cachedir="${rootfs}/var/cache/zopen"
+  
+  # Step 1: Install curl from local packages folder
+  printVerbose "- Installing curl from local packages folder"
+  paxLocation=$(findrev "${MYDIR}" "${CURL_PAX_LOCATION}")
+  
+  if [ -e "${paxLocation}/${CURL_PAX_LOCATION}" ]; then
+    printVerbose "- Found ${CURL_PAX_LOCATION}. Adding to zopen cache"
+    cp -f "${paxLocation}/${CURL_PAX_LOCATION}" "${cachedir}"
+  else
+    printError "Could not locate ${CURL_PAX_LOCATION} in packages folder"
+  fi
 
-  echo "$PAX_LOCATIONS" | tr ',' '\n' | while read -r pax; do
-    printVerbose "- Check for shipped ${pax}"
+  basepax=$(basename ${CURL_PAX_LOCATION})
+  printVerbose "- Expanding ${basepax} to bootstrap dir..."
+  [ -e "${cachedir}/${basepax}" ] || printError "Could not locate bootstrap ${basepax}."
+  paxrc=$(pax -rf "${cachedir}/${basepax}" -s##${rootfs}/boot/#)
 
-    paxLocation=$(findrev "${MYDIR}" "${pax}")
-    echo "${paxLocation}/${pax}"
+  if [ $? -gt 0 ]; then
+    printError "Failed to extract pax file ${basepax}"
+  fi
 
-    if [ -e "${paxLocation}/${pax}" ]; then
-      printVerbose "- Found ${pax}. Adding to zopen cache to install as bootstrap"
-      cp -f "${paxLocation}/${pax}" "${rootfs}/var/cache/zopen"
-    else
-      printError "Could not locate ${pax} in the zopen cache"
+  # Source curl environment
+  printVerbose "Sourcing environment for curl"
+  tooldir=$(ls "${rootfs}/boot" | grep curl | head -1)
+  [ -e "${rootfs}/boot/${tooldir}" ] || printError "Could not locate curl directory '${rootfs}/boot/${tooldir}/'"
+  chmod -R 755 "${rootfs}/boot/${tooldir}"
+  curwd="${PWD}"
+  cd "${rootfs}/boot/${tooldir}/" || printError "Could not access curl bootstrap"
+  . ./.env
+  cd "${curwd}" || printError "Could not change to ${curwd}"
+
+  # Step 2: Download jq, gpg, pinentry using curl
+  printInfo "- Downloading bootstrap packages using curl..."
+  
+  for url in "${JQ_DOWNLOAD_URL}" "${GPG_DOWNLOAD_URL}" "${PINENTRY_DOWNLOAD_URL}"; do
+    filename=$(basename "${url}")
+    printVerbose "- Downloading ${filename} from ${url}"
+    
+    if ! curl -L "${url}" -o "${cachedir}/${filename}"; then
+      printError "Failed to download ${filename} from ${url}"
     fi
-
-    printVerbose "- Expanding ${pax} to bootstrap dir..."
-    cachedir="${rootfs}/var/cache/zopen"
-    basepax=$(basename ${pax})
-    [ -e "${cachedir}/${basepax}" ] || printError "Could not locate bootstrap ${pax}."
-    paxrc=$(pax -rf "${cachedir}/${basepax}" -s##${rootfs}/boot/#)
-
+    
+    printVerbose "- Expanding ${filename} to bootstrap dir..."
+    paxrc=$(pax -rf "${cachedir}/${filename}" -s##${rootfs}/boot/#)
+    
     if [ $? -gt 0 ]; then
-      printError "Failed to extract pax file ${basepax}"
+      printError "Failed to extract pax file ${filename}"
     fi
- done
+  done
 
-  # Sourcing the environment from within the actual directories
-  for tool in "curl" "jq" "gnupg" "pinentry"; do
+  # Step 3: Source environments for jq, gnupg, pinentry
+  for tool in "jq" "gnupg" "pinentry"; do
      printVerbose "Sourcing environment to trigger any setup required for ${tool}"
 
      tooldir=$(ls "${rootfs}/boot" | grep ${tool} | head -1)
-     [ -e "${rootfs}/boot/${tooldir}" ] || printError "Could not locate ${tool} directory '${rootfs}/boot/${tooldir}/' for bootstrap. Re-run 'zopen init' to retry"
+     [ -e "${rootfs}/boot/${tooldir}" ] || printError "Could not locate ${tool} directory '${rootfs}/boot/${tooldir}/'"
      chmod -R 755 "${rootfs}/boot/${tooldir}"
      curwd="${PWD}"
-     cd "${rootfs}/boot/${tooldir}/" || printError "Could not access ${tool} bootstrap in directory '${rootfs}/boot/${tooldir}/'. Re-run 'zopen init' to retry"
+     cd "${rootfs}/boot/${tooldir}/" || printError "Could not access ${tool} bootstrap"
      . ./.env
-     cd "${curwd}" || printError "Could not change to ${curwd}. Re-run 'zopen init' to retry"
+     cd "${curwd}" || printError "Could not change to ${curwd}"
   done
-  printInfo "- Sourcing environment"
+  
+  printInfo "- Bootstrap prerequisites installed successfully"
 }
 
 updateBootstrappedTools() {
