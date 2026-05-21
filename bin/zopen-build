@@ -1187,8 +1187,8 @@ gitClone()
 extractTarBall()
 {
   if ${getSourceOnly} && [ "$(uname -s)" != "OS/390" ]; then
-    printVerbose "Skipping Tarball Extraction on --get-source mode and on non-z/OS system"
-    return
+    printInfo "Skipping Tarball Extraction on --get-source mode and on non-z/OS system"
+    exit 0
   fi
   tarballz="$1"
   noext=${tarballz%%.zip}
