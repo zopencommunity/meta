@@ -3025,7 +3025,7 @@ if ! applyPatches; then
   exit 4
 fi
 
-if ${getSourceOnly}; then
+if ${getSourceOnly} && [ "$(uname -s)" != "OS/390" ]; then
   exit 0
 fi
 
