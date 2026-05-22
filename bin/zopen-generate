@@ -545,7 +545,11 @@ export ZOPEN_COMP="skip"
 EOF
 )
         fi
-        custom_functions=""
+        custom_functions='
+# If pytest imports the source tree instead of the installed wheel, override
+# zopen_custom_check() to install dist/*.whl into .venv and run tests from a
+# copied tests directory outside the source checkout. If you do this, also
+# override zopen_check_results() to parse the custom pytest summary output.'
     ;;
     esac
 fi
@@ -619,7 +623,7 @@ if [ "$port_type" = "BUILD" ]; then
     fi
 fi
 
-project_path="${name}port"; nameUpper=$(echo "$name" | awk '{print toupper($0)}')
+project_path="${name}port"; nameUpper=$(echo "$name" | awk '{print toupper($0)}' | tr '-' '_')
 if [ -d "${project_path}" ]; then
   if $force; then :; else
     while true; do echo "Directory ${project_path} exists. Update it? (y, n)" >&2; clobber=$(getInput)
@@ -640,7 +644,7 @@ mkdir -p "${name}port/.github/workflows"; cp "${MYDIR}"/../data/*.yml "${name}po
 default_build_line="STABLE"; if [ "$(echo "${buildline}" | tr '[:upper:]' '[:lower:]')" = "dev" ]; then default_build_line="DEV"; fi
 
 # Prepare version variables based on whether a tag was found
-nameUpper=$(echo "$name" | awk '{print toupper($0)}')
+nameUpper=$(echo "$name" | awk '{print toupper($0)}' | tr '-' '_')
 version_var_name="${nameUpper}_VERSION"
 version_block=""
 tag_export_for_insert=""
