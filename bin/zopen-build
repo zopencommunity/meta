@@ -2487,8 +2487,20 @@ create_rpm()
 {
   if [ -f "${paxFileName}" ]; then
     printHeader "Generating RPM from ${ZOPEN_INSTALL_DIR}"
+    
+    # Extract package name using same logic as metadata.json
+    rpm_name=$(getProjectName "${ZOPEN_NAME}")
+    
+    # Read version and release from install directory files
+    rpm_version=$(cat "${ZOPEN_INSTALL_DIR}/.version")
+    build_timestamp=$(cat "${ZOPEN_INSTALL_DIR}/.buildtimestamp")
+    
+    # Convert timestamp format for RPM (underscore to dot)
+    # 20250205_142114 → 20250205.142114
+    rpm_release=$(echo ${build_timestamp} | tr '_' '.')
+    
     rpm_deps=$(echo "${ZOPEN_RUNTIME_DEPS}" | xargs -n1 | sort -u | xargs)
-    cmd="PATH=\"${ZOPEN_ROOTFS}/usr/local/bin:${PATH}\" \"${MYDIR}/zopen-pax2rpm\" \"${paxFileName}\" --summary \"${ZOPEN_NAME} package\" --build --buildroot \"${ZOPEN_ROOT}/rpmbuild\""
+    cmd="PATH=\"${ZOPEN_ROOTFS}/usr/local/bin:${PATH}\" \"${MYDIR}/zopen-pax2rpm\" \"${paxFileName}\" --name \"${rpm_name}\" --version \"${rpm_version}\" --release \"${rpm_release}\" --summary \"${ZOPEN_NAME} package\" --build-binary --buildroot \"${ZOPEN_ROOT}/rpmbuild\""
     if [ -n "${rpm_deps}" ]; then
       cmd="${cmd} --requires \"${rpm_deps}\""
     fi
