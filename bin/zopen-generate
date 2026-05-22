@@ -549,7 +549,37 @@ EOF
 # If pytest imports the source tree instead of the installed wheel, override
 # zopen_custom_check() to install dist/*.whl into .venv and run tests from a
 # copied tests directory outside the source checkout. If you do this, also
-# override zopen_check_results() to parse the custom pytest summary output.'
+# override zopen_check_results() to parse the custom pytest summary output.
+#
+# Example troubleshooting pattern for import-shadowing during pytest:
+#zopen_custom_check() {
+#  . .venv/bin/activate
+#  pip install --force-reinstall --no-deps dist/*.whl || return $?
+#  mkdir -p /tmp/${ZOPEN_PROJECT_NAME}-zopen-check || return $?
+#  cp -R tests /tmp/${ZOPEN_PROJECT_NAME}-zopen-check/ || return $?
+#  cd /tmp/${ZOPEN_PROJECT_NAME}-zopen-check || return $?
+#  python -m pytest -v tests
+#  zopen_check_result=$?
+#  deactivate
+#  return "${zopen_check_result}"
+#}
+#
+## Matching parser for the verbose pytest summary above:
+#zopen_check_results() {
+#  dir="$1"; pfx="$2"; chk="$1/$2_check.log"
+#  totalTests=$(grep -oE "([0-9]+) passed" "${chk}" | awk '"'"'{sum += $1} END {print sum+0}'"'"')
+#  actualFailures=$(grep -oE "([0-9]+) error|([0-9]+) failed" "${chk}" | awk '"'"'{sum += $1} END {print sum+0}'"'"')
+#  if grep -q "collected 0 items /" "${chk}"; then
+#    totalTests=0
+#  elif [ "${totalTests}" -eq 0 ] && grep -q "passed" "${chk}"; then
+#    totalTests=$(grep -oE "([0-9]+) passed" "${chk}" | tail -1 | awk '"'"'{print $1+0}'"'"')
+#  fi
+#  echo "actualFailures:${actualFailures}"
+#  echo "totalTests:${totalTests}"
+#  echo "expectedFailures:0"
+#}
+#
+#export ZOPEN_CHECK="zopen_custom_check"'
     ;;
     esac
 fi
