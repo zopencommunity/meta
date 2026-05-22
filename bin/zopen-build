@@ -2500,18 +2500,8 @@ create_rpm()
   fi
 }
 
-pax_finalize()
+sign_pax_finalize()
 {
-  #TODO: Hack so that we can use coreutils md5sum without impacting builds
-  ZOPEN_DEPS="coreutils jq"
-  if [ "${signPax}" = "true" ] && ( [ -z "${ZOPEN_GPG_SECRET_KEY_FILE}" ] || [ -z "${ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE}" ] || [ -z "${ZOPEN_GPG_PUBLIC_KEY_FILE}" ] || [ ! -r "${ZOPEN_GPG_SECRET_KEY_FILE}" ] || [ ! -r "${ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE}" ] || [ ! -r "${ZOPEN_GPG_PUBLIC_KEY_FILE}" ] ); then
-    printError "GPG keyring environment variables are not set! You can omit the --sign-pax option to bypass this"
-  else
-    ZOPEN_DEPS="${ZOPEN_DEPS} gpg"
-  fi
-
-  setDepsEnv
-
   pax_size=$(getPathSizeInBytes "${paxFileName}")
   md5sum=$(md5sum "${paxFileName}" | awk '{print $1}')
 
@@ -2539,8 +2529,19 @@ package()
 {
   packageStartTime=${SECONDS}
   if [ -n "${ZOPEN_INSTALL_CMD}" ]; then
-    generateMetadataJSON
-    
+    #TODO: Hack so that we can use coreutils md5sum without impacting builds
+    ZOPEN_DEPS="coreutils jq"
+    if [ "${signPax}" = "true" ] && ( [ -z "${ZOPEN_GPG_SECRET_KEY_FILE}" ] || [ -z "${ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE}" ] || [ -z "${ZOPEN_GPG_PUBLIC_KEY_FILE}" ] || [ ! -r "${ZOPEN_GPG_SECRET_KEY_FILE}" ] || [ ! -r "${ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE}" ] || [ ! -r "${ZOPEN_GPG_PUBLIC_KEY_FILE}" ] ); then
+      printError "GPG keyring environment variables are not set! You can omit the --sign-pax option to bypass this"
+    else
+      ZOPEN_DEPS="${ZOPEN_DEPS} gpg"
+    fi
+
+    if ${generateRPM}; then
+      ZOPEN_DEPS="${ZOPEN_DEPS} rpm"
+    fi
+
+    setDepsEnv 
     create_pax
 
     if ${generateRPM}; then
@@ -2548,7 +2549,8 @@ package()
     fi
 
     if ${generatePax}; then
-      pax_finalize
+      generateMetadataJSON
+      sign_pax_finalize
     fi
   else
     printHeader "Skipping Package"
