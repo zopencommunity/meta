@@ -687,14 +687,18 @@ source_name=$(basename "$pax_file")
     if [ "$BUILD_BINARY_ONLY" = true ]; then
         echo "Running rpmbuild --define \"_topdir $buildroot\" -bb $spec_file"
         echo ""
-        rpmbuild_result=$(rpmbuild --define "_topdir $buildroot" -bb "$spec_file")
+        rpmbuild_result=$(rpmbuild --define "_topdir $buildroot" -bb "$spec_file" 2>&1)
+        rpmbuild_exit=$?
+        echo "$rpmbuild_result"
     else
         echo "Running rpmbuild --define \"_topdir $buildroot\" -ba $spec_file"
         echo ""
-        rpmbuild_result=$(rpmbuild --define "_topdir $buildroot" -ba "$spec_file")
+        rpmbuild_result=$(rpmbuild --define "_topdir $buildroot" -ba "$spec_file" 2>&1)
+        rpmbuild_exit=$?
+        echo "$rpmbuild_result"
     fi
     
-    if [ $? -eq 0 ]; then
+    if [ $rpmbuild_exit -eq 0 ]; then
         echo ""
         echo "=========================================="
         echo "✓ RPM build completed successfully!"
@@ -706,11 +710,13 @@ source_name=$(basename "$pax_file")
         find "$buildroot/RPMS" -name "*.rpm" -type f 2>/dev/null | while read rpm; do
             echo "  - $rpm"
         done
-        echo ""
-        echo "Source RPMs:"
-        find "$buildroot/SRPMS" -name "*.rpm" -type f 2>/dev/null | while read rpm; do
-            echo "  - $rpm"
-        done
+        if [ "$BUILD_BINARY_ONLY" != true ]; then
+            echo ""
+            echo "Source RPMs:"
+            find "$buildroot/SRPMS" -name "*.rpm" -type f 2>/dev/null | while read rpm; do
+                echo "  - $rpm"
+            done
+        fi
         echo ""
         return 0
     else
