@@ -39,6 +39,7 @@ PACKAGER_EMAIL="${CURRENT_USER}@$(hostname 2>/dev/null || echo "localhost")"
 
 # Build flag
 BUILD_RPM=false
+BUILD_BINARY_ONLY=false
 BUILDROOT="${HOME}/rpmbuild"
 VALIDATE_SPEC=false
 DRY_RUN=false
@@ -66,7 +67,8 @@ Options:
   --url <url>             Project URL (default: none)
   --requires <deps>       Package dependencies (e.g., "oef >= 1.1.0")
   --output <file>         Output spec file (default: <name>.spec)
-  --build                 Build the RPM after generating spec file
+  --build                 Build the RPM after generating spec file (binary + source)
+  --build-binary          Build binary RPM only (faster, no source RPM)
   --buildroot <dir>       RPM build root directory (default: ~/rpmbuild)
   --validate              Validate spec file after generation (checks syntax and runs rpmlint)
   --dry-run               Show what would be done without actually doing it
@@ -682,10 +684,21 @@ source_name=$(basename "$pax_file")
     
     # Build the RPM
     echo ""
-    echo "Running rpmbuild --define \"_topdir $buildroot\" -ba $spec_file"
-    echo ""
+    if [ "$BUILD_BINARY_ONLY" = true ]; then
+        echo "Running rpmbuild --define \"_topdir $buildroot\" -bb $spec_file"
+        echo ""
+        rpmbuild_result=$(rpmbuild --define "_topdir $buildroot" -bb "$spec_file" 2>&1)
+        rpmbuild_exit=$?
+        echo "$rpmbuild_result"
+    else
+        echo "Running rpmbuild --define \"_topdir $buildroot\" -ba $spec_file"
+        echo ""
+        rpmbuild_result=$(rpmbuild --define "_topdir $buildroot" -ba "$spec_file" 2>&1)
+        rpmbuild_exit=$?
+        echo "$rpmbuild_result"
+    fi
     
-    if rpmbuild --define "_topdir $buildroot" -ba "$spec_file"; then
+    if [ $rpmbuild_exit -eq 0 ]; then
         echo ""
         echo "=========================================="
         echo "✓ RPM build completed successfully!"
@@ -697,11 +710,13 @@ source_name=$(basename "$pax_file")
         find "$buildroot/RPMS" -name "*.rpm" -type f 2>/dev/null | while read rpm; do
             echo "  - $rpm"
         done
-        echo ""
-        echo "Source RPMs:"
-        find "$buildroot/SRPMS" -name "*.rpm" -type f 2>/dev/null | while read rpm; do
-            echo "  - $rpm"
-        done
+        if [ "$BUILD_BINARY_ONLY" != true ]; then
+            echo ""
+            echo "Source RPMs:"
+            find "$buildroot/SRPMS" -name "*.rpm" -type f 2>/dev/null | while read rpm; do
+                echo "  - $rpm"
+            done
+        fi
         echo ""
         return 0
     else
@@ -818,6 +833,11 @@ main() {
                 ;;
             --build)
                 BUILD_RPM=true
+                shift
+                ;;
+            --build-binary)
+                BUILD_RPM=true
+                BUILD_BINARY_ONLY=true
                 shift
                 ;;
             --buildroot)

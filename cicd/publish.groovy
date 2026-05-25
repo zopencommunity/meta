@@ -51,7 +51,8 @@ NUM_RPMS=${#RPM_FILES[@]}
 
 # --- INFO ---
 BUILD_STATUS=$(find . -path "*/install/test.status" -exec cat {} + 2>/dev/null || echo "Unknown")
-DEPENDENCIES=$(find . -path "*/install/.runtimedeps" -exec cat {} + 2>/dev/null || echo "None")
+RUNTIME_DEPS=$(find . -path "*/install/.runtimedeps" -exec cat {} + 2>/dev/null || echo "None")
+BUILD_DEPS=$(find . -path "*/install/.builddeps" -exec cat {} + 2>/dev/null || echo "None")
 VERSION=$(find . -path "*/install/.version" -exec cat {} + 2>/dev/null || echo "unknown")
 
 unset http_proxy https_proxy
@@ -69,8 +70,14 @@ fi
 
 echo "$RELEASE_NOTES" > CHANGELOG.md
 
-DESCRIPTION="${PORT_DESCRIPTION}<br/><b>Status:</b> ${BUILD_STATUS}<br/>"
-DESCRIPTION+="<b>Dependencies:</b> ${DEPENDENCIES}<br/>"
+DESCRIPTION="${PORT_DESCRIPTION}<br/>"
+DESCRIPTION+="<b>Version:</b> ${VERSION}<br/>"
+DESCRIPTION+="<b>Test Status:</b> ${BUILD_STATUS}<br/>"
+DESCRIPTION+="<b>Runtime Dependencies:</b> ${RUNTIME_DEPS}<br/>"
+DESCRIPTION+="<b>Build Dependencies:</b> ${BUILD_DEPS}<br/>"
+URL_LINE="https://github.com/${GITHUB_ORGANIZATION}/${GITHUB_REPO}/releases/download/${TAG}/${PAX_BASENAME}"
+DESCRIPTION+="<br/><b>Command to download and install on z/OS (if you have curl)</b> <pre>curl -o ${PAX_BASENAME} -L ${URL_LINE} && pax -rf ${PAX_BASENAME} && cd ${PORT_NAME} && . ./setup.sh</pre>"
+DESCRIPTION+="<br/><b>Or use:</b> <pre>zopen install ${PORT_NAME}</pre>"
 DESCRIPTION+=$'\n\n'"$RELEASE_NOTES"
 
 # --- TOOL CHECK ---
