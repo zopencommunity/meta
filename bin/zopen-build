@@ -2472,9 +2472,11 @@ fi
 cd \$curdir  >/dev/null 2>&1
 EOF
   printInfo "- Sourcing environment to run any setup"
-  (cd "${ZOPEN_INSTALL_DIR}" && ./setup.sh)
+  original_dir=$(pwd)
+  cd "${ZOPEN_INSTALL_DIR}" && ./setup.sh
   printVerbose "Marking this version as installed"
   touch "${ZOPEN_INSTALL_DIR}/.active"
+  cd "${original_dir}"
 }
 
 create_pax()
