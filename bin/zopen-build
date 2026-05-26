@@ -1846,6 +1846,7 @@ replaceHardcodedPaths()
 
 createEnvAndSetup()
 {
+  set -x
   printHeader "Creating ${ZOPEN_INSTALL_DIR}/.env"
 
   # Get project name and convert to valid shell variable name
@@ -2077,6 +2078,7 @@ zz
   a2e ${ZOPEN_INSTALL_DIR}/.env
 
   chmod 755 "${ZOPEN_INSTALL_DIR}/setup.sh"
+  set +x
 }
 
 createReadme()
