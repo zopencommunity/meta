@@ -1833,6 +1833,7 @@ replaceHardcodedPath()
 
 replaceHardcodedPaths()
 {
+  set -x
   ZOPEN_INSTALL_PREFIX="${ZOPEN_INSTALL_DIR}/../../"
   ZOPEN_INSTALL_PREFIX=$(cd "${ZOPEN_INSTALL_PREFIX}" > /dev/null 2>&1 && pwd -P)
 
@@ -1842,6 +1843,7 @@ replaceHardcodedPaths()
     hasHardcodedPaths=true
     replaceHardcodedPath "${ZOPEN_INSTALL_PREFIX}" "ZOPEN_INSTALL_PREFIX" "${f}"
   done
+  set +x
 }
 
 createEnvAndSetup()
