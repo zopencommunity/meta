@@ -1,34 +1,17 @@
-name: "CodeQL Analysis"
+name: "CodeQL"
 
 on:
-  workflow_call:
-    inputs:
-      languages:
-        required: false
-        type: string
-        default: "c-cpp"
-        description: "Languages to analyze (comma-separated)"
-      build_mode:
-        required: false
-        type: string
-        default: "none"
-        description: "CodeQL build mode (none, manual, autobuild)"
-      repo:
-        required: false
-        type: string
-        default: ""
-        description: "Repository to analyze (defaults to calling repo)"
-      branch:
-        required: false
-        type: string
-        default: ""
-        description: "Branch to analyze (defaults to calling branch)"
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  schedule:
+    - cron: "0 0 * * 1"
 
 jobs:
   analyze:
-    name: Analyze (${{ inputs.languages }})
+    name: Analyze
     runs-on: ubuntu-latest
-    timeout-minutes: 360
 
     permissions:
       actions: read
@@ -38,41 +21,35 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          repository: ${{ inputs.repo || github.repository }}
-          ref: ${{ inputs.branch || github.ref }}
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
-          languages: ${{ inputs.languages }}
-          build-mode: ${{ inputs.build_mode }}
+          languages: c-cpp
+          build-mode: none
 
       - name: Download and setup metaport
         run: |
           sudo apt-get update
           sudo apt-get install -y pax ncompress curl
 
-      - name: Setup meta and build with zopen
+      - name: Build with zopen
         run: |
-          # Clone meta repository
           git clone https://github.com/zopencommunity/meta.git
           echo "Metaport setup completed"
           
           cd meta
+  
           export PATH="$PWD/bin:$PATH"
           cd -
           
-          # Configure git
+          git clone https://github.com/zopencommunity/sedport.git
+          cd sedport
+          ls -lrt
           git config --global user.email "zopenCommunity@ibm.com"
           git config --global user.name "Zopen Community"
           
-          # Build the project
-          echo "Building project..."
           zopen build -g
           ls -lrt
-
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
-        with:
-          category: "/language:${{ inputs.languages }}"
