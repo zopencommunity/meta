@@ -1,12 +1,26 @@
 name: "CodeQL"
 
 on:
-  push:
-    branches: ["main"]
-  pull_request:
-    branches: ["main"]
-  schedule:
-    - cron: "0 0 * * 1"
+  workflow_call:
+    inputs:
+      repo:
+        required: false
+        type: string
+        default: ""
+      branch:
+        required: false
+        default: ""
+        type: string
+      languages:
+        description: 'CodeQL languages to analyze (e.g., c-cpp, python, javascript)'
+        required: false
+        type: string
+        default: 'c-cpp'
+      build-mode:
+        description: 'CodeQL build mode (none, manual, autobuild)'
+        required: false
+        type: string
+        default: 'none'
 
 jobs:
   analyze:
@@ -19,14 +33,53 @@ jobs:
       security-events: write
 
     steps:
+      - name: Get PR details
+        if: ${{ github.event_name == 'issue_comment'}}
+        uses: xt0rted/pull-request-comment-branch@v1
+        id: comment-branch
+
+      - name: Github API Request
+        id: request
+        uses: octokit/request-action@v2.x
+        with:
+          route: |
+            ${{ github.event.issue.pull_request.url || github.event.pull_request.url }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Determine Repository and Branch
+        id: repo-info
+        run: |
+          repo="${{ inputs.repo }}"
+          if [ -z "${repo}" ]; then
+            if [ "${{ github.event_name }}" == "issue_comment" ] || [ "${{ github.event_name }}" == "pull_request_target" ]; then
+              repo="${{ fromJson(steps.request.outputs.data).head.repo.clone_url }}"
+            else
+              repo="${{ github.repository }}"
+            fi
+          fi
+          branch="${{ inputs.branch }}"
+          if [ -z "${branch}" ]; then
+            if [ "${{ github.event_name }}" == "issue_comment" ] || [ "${{ github.event_name }}" == "pull_request_target" ]; then
+              branch="${{ fromJson(steps.request.outputs.data).head.ref }}"
+            else
+              branch="${{ github.ref_name }}"
+            fi
+          fi
+          echo "repo=${repo}" >> $GITHUB_OUTPUT
+          echo "branch=${branch}" >> $GITHUB_OUTPUT
+
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          repository: ${{ steps.repo-info.outputs.repo }}
+          ref: ${{ steps.repo-info.outputs.branch }}
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
-          languages: c-cpp
-          build-mode: none
+          languages: ${{ inputs.languages }}
+          build-mode: ${{ inputs.build-mode }}
 
       - name: Download and setup metaport
         run: |
@@ -43,13 +96,14 @@ jobs:
           export PATH="$PWD/bin:$PATH"
           cd -
           
-          git clone https://github.com/zopencommunity/sedport.git
-          cd sedport
           ls -lrt
           git config --global user.email "zopenCommunity@ibm.com"
           git config --global user.name "Zopen Community"
           
           zopen build -g
           ls -lrt
+
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
+
+# Made with Bob
