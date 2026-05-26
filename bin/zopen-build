@@ -106,6 +106,8 @@ Optional:
 Optional settings for installation:
   ZOPEN_RUNTIME_DEPS          Runtime z/OS Open Tool dependencies to be installed
                               alongside the tool.
+  ZOPEN_SETUP_NO_REPLACE      If set, do not replace hardcoded paths with
+                              placeholders.
   ZOPEN_SYSTEM_PREREQ         System prerequisites, supply the name of the prereq
                               scripts under $ZOPEN_SYSTEM_PREREQ_SCRIPT
 
@@ -1833,11 +1835,14 @@ replaceHardcodedPath()
 
 replaceHardcodedPaths()
 {
+  hasHardcodedPaths=false
+  if [ -n "${ZOPEN_SETUP_NO_REPLACE}" ]; then
+    return
+  fi
   ZOPEN_INSTALL_PREFIX="${ZOPEN_INSTALL_DIR}/../../"
   ZOPEN_INSTALL_PREFIX=$(cd "${ZOPEN_INSTALL_PREFIX}" > /dev/null 2>&1 && pwd -P)
 
   printHeader "Replacing hardcoded ${ZOPEN_INSTALL_PREFIX} path"
-  hasHardcodedPaths=false
   for f in $(find ${ZOPEN_INSTALL_DIR}/ -type f | xargs grep -l "${ZOPEN_INSTALL_PREFIX}" 2> /dev/null); do
     hasHardcodedPaths=true
     replaceHardcodedPath "${ZOPEN_INSTALL_PREFIX}" "ZOPEN_INSTALL_PREFIX" "${f}"
@@ -1936,7 +1941,7 @@ SETUPDIR="\$(cd "\$(dirname "\$0")" > /dev/null 2>&1 && pwd -P)"
 echo \"Setting up ${projectName_lower}...\"
 zz
 
-  if ${hasHardcodedPaths}; then
+  if ${hasHardcodedPaths} && [ -z "${ZOPEN_SETUP_NO_REPLACE}" ]; then
     cat << zz >> "${ZOPEN_INSTALL_DIR}/setup.sh"
 if [ -f .replacedpath ]; then
   REPLACE_PREFIX_PATH="\$(cat .replacedpath | head -1)"
