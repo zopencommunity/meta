@@ -405,18 +405,11 @@ sign_rpm() {
 
     # Create a temporary directory for GPG keyring
     TMP_GPG_DIR=$(mktempdir "rpm_gpg")
-    if [ -z "${TMP_GPG_DIR}" ] || [ ! -d "${TMP_GPG_DIR}" ]; then
-        printError "Failed to create temporary directory for GPG signing"
-    fi
     chmod 700 "${TMP_GPG_DIR}"
     
     OLD_GNUPGHOME="$GNUPGHOME"
     export GNUPGHOME="$TMP_GPG_DIR"
     RPM_LIST=""
-
-    # Use the framework's helper to ensure files are cleaned up on exit/interrupt
-    # without overwriting the global traps set in common.sh
-    addCleanupTrapCmd "rm -rf ${TMP_GPG_DIR}"
 
     # Import the private key
     echo "Importing private key..."
@@ -447,7 +440,6 @@ EOF
 
     # Use a temporary file to avoid subshell return issues
     RPM_LIST=$(mktempfile "rpmlist")
-    addCleanupTrapCmd "rm -f ${RPM_LIST}"
     find "$buildroot/RPMS" -name "*.rpm" -type f > "$RPM_LIST"
     
     if [ ! -s "$RPM_LIST" ]; then
