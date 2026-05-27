@@ -11,178 +11,160 @@ UpdateGithub() {
 UpdateDocs() {
   # Update Progress page in documentation
   git clone git@github.com:zopencommunity/meta.git meta_update
-  cd meta_update
+  
+  # Use a subshell to safely manage context switching and error catching
+  (
+    cd meta_update || exit 1
 
-  # Generate the currency status
-  ./tools/get_bump_status.sh docs/updatestatus.md
+    # Generate the currency status
+    ./tools/get_bump_status.sh docs/updatestatus.md
 
-  # Generate the upstream status
-  python3 ./tools/generate_zopencommunity_patch_report.py --report docs/upstreamstatus.md --images docs/images/upstream --start-date=2023-01-01
+    # Generate the upstream status
+    python3 ./tools/generate_zopencommunity_patch_report.py --report docs/upstreamstatus.md --images docs/images/upstream --start-date=2023-01-01
+    python3 ./tools/generate_zopen_files_list.py -o docs/api/zopen_files.json
+    python3 tools/getbinaries.py
 
-  python3 ./tools/generate_zopen_files_list.py -o docs/api/zopen_files.json
+    # Generate a view of the vulnerabilities in package releases
+    python3 tools/create_vulnerability_doc.py --md-output-file docs/Vulnerabilities.md --xml-output-file docs/vulnerabilities_rss.xml
 
-  # This script updates the status page
-  python3 tools/getbinaries.py
+    set -x
+    # Generate zopen API Reference
+    mkdir -p docs/api docs/reference
+    
+    # Safely source .env if it exists
+    if [ -f .env ]; then . ./.env; fi
+    export ZOPEN_ROOTFS="na" 
+    
+    mkdir -p "man/man1/"
+    zopen-help2man "man/man1/"
 
-  # Generate a view of the vulnerabilities in package releases
-  python3 tools/create_vulnerability_doc.py --md-output-file docs/Vulnerabilities.md --xml-output-file docs/vulnerabilities_rss.xml
-
-  set -x
-  # Generate zopen API Reference
-  mkdir -p docs/api
-  mkdir -p docs/reference
-  . ./.env
-  export ZOPEN_ROOTFS="na" # To workaround sourcing zopen-config error
-  mkdir -p "man/man1/"
-  zopen-help2man "man/man1/" # Generate man pages
-
-  cat <<EOF > docs/reference/zopen-reference.md
+    cat <<EOF > docs/reference/zopen-reference.md
 # zopen reference documentation
 This page provides information about the zopen interface. Click on any of the zopen commands listed below to access the reference guide describing how to utilize that command.
 EOF
 
-  # Generate markdown pages only
-  for man in man/man1/*.1;
-  do
-    base=${man##*/};
-    name=${base%%.1};
-    md="docs/reference/${name}.md";
-    
-    # Generate temporary HTML from the man page
+    man_files=(man/man1/*.1)
+    total_files=${#man_files[@]}
     temp_html=$(mktemp)
-    groff -m mandoc -Thtml -Wall "${man}" > "${temp_html}";
-    
-    # Extract only the content between <body> and </body>
-    # This avoids injecting full-document tags (<html>, <head>, <body>) into markdown
-    body_content=$(sed -n '/<body>/,/<\/body>/p' "${temp_html}" | sed '1d;$d' | sed '/<a href="#/d' | sed '/<a name="[^"]*"><\/a>/d' | sed '/<br>$/d' | sed '/<hr>/d')
-    
-    # Remove <i>, <em>, <b>, and <strong> tags to avoid Vue parsing issues
-    body_content=$(echo "${body_content}" | sed 's|<i>||g' | sed 's|</i>||g' | sed 's|<em>||g' | sed 's|</em>||g' | sed 's|<b>||g' | sed 's|</b>||g' | sed 's|<strong>||g' | sed 's|</strong>||g')
-    
-    # Fix table cell closing tags that appear on the same line as content
-    # This handles cases like: <p>content</p> </td> which Vue can't parse properly
-    body_content=$(echo "${body_content}" | sed 's|</p> </td>|</p></td>|g')
-    
-    # Ensure all table-related tags are on their own lines for proper Vue parsing
-    body_content=$(echo "${body_content}" | sed 's|<table|\'$'\n''<table|g' | sed 's|</table>|</table>\'$'\n''|g')
-    body_content=$(echo "${body_content}" | sed 's|<tr|\'$'\n''<tr|g' | sed 's|</tr>|</tr>\'$'\n''|g')
-    body_content=$(echo "${body_content}" | sed 's|<td|\'$'\n''<td|g' | sed 's|</td>|</td>\'$'\n''|g')
-    
-    # Escape forward slashes in file paths (but not in HTML tags or URLs)
-    # This regex matches forward slashes that are NOT preceded by < or : (to avoid breaking </tag> and URLs)
-    body_content=$(echo "${body_content}" | sed 's|\([^<:]\)/|\1&#47;|g')
-    
-    # Convert URLs in angle brackets to proper HTML links with target="_blank"
-    body_content=$(echo "${body_content}" | sed 's|<\(https\?://[^>]*\)>|<a href="\1" target="_blank">\1</a>|g' | sed 's|<\(ftp://[^>]*\)>|<a href="\1" target="_blank">\1</a>|g')
-    
-    # Validate HTML: Check for orphaned closing tags (closing tags without matching opening tags)
-    # This prevents Vue parsing errors from invalid HTML structure
-    orphaned_tags=$(echo "${body_content}" | grep -oE '</[a-z]+>' | sort | uniq)
-    for closing_tag in ${orphaned_tags}; do
-      tag_name=$(echo "${closing_tag}" | sed 's|</||' | sed 's|>||')
-      opening_tag="<${tag_name}"
+
+    for i in "${!man_files[@]}"; do
+      man="${man_files[$i]}"
+      name=$(basename "${man}" .1)
+      md="docs/reference/${name}.md"
       
-      # Count opening and closing tags
-      opening_count=$(echo "${body_content}" | grep -o "${opening_tag}" | wc -l)
-      closing_count=$(echo "${body_content}" | grep -o "${closing_tag}" | wc -l)
-      
-      # If there are more closing tags than opening tags, remove the orphaned ones
-      if [ ${closing_count} -gt ${opening_count} ]; then
-        echo "Warning: Found ${closing_count} closing ${closing_tag} but only ${opening_count} opening tags in ${name}. Removing orphaned closing tags."
-        # Remove orphaned closing tags that appear after paragraph or other inline content
-        body_content=$(echo "${body_content}" | sed "s|</p>${closing_tag}|</p>|g")
-        body_content=$(echo "${body_content}" | sed "s|</b>${closing_tag}|</b>|g")
-        body_content=$(echo "${body_content}" | sed "s|^${closing_tag}$||g")
+      # Determine previous and next files for navigation links
+      prev_name="zopen-reference"
+      next_name=""
+      if [ "${i}" -gt 0 ]; then
+        prev_name=$(basename "${man_files[$((i - 1))]}" .1)
       fi
-    done
-    
-    # Clean up temporary HTML file
-    rm -f "${temp_html}"
-    
-    # Write the markdown file using raw HTML injection
-    cat <<EOF > "${md}"
+      if [ $((i + 1)) -lt ${total_files} ]; then
+        next_name=$(basename "${man_files[$((i + 1))]}" .1)
+      fi
+      
+      # Generate temporary HTML from the man page
+      groff -m mandoc -Thtml -Wall "${man}" > "${temp_html}"
+      
+      # Single-pass parsing: Cleans up text elements and safely strips empty anchors
+      body_content=$(sed -n '/<body>/,/<\/body>/p' "${temp_html}" | sed '1d;$d' | sed -E '
+        /<a href="#/d;
+        s|<a name="[^"]*"></a>||g;
+        /<br>$/d;
+        /<hr>/d;
+        s|<\/?(i|em|b|strong)>||g;
+        s|</p> </td>|</p></td>|g;
+        s|<table|\n<table|g;
+        s|</table>|</table>\n|g;
+        s|<tr|\n<tr|g;
+        s|</tr>|</tr>\n|g;
+        s|<td|\n<td|g;
+        s|</td>|</td>\n|g;
+      ')
+
+      # Protect structural slashes, isolate placeholders, and wrap in raw code blocks
+      body_content=$(echo "${body_content}" | sed -E '
+        s|https://|HTTPS_PLACEHOLDER|g;
+        s|http://|HTTP_PLACEHOLDER|g;
+        s|ftp://|FTP_PLACEHOLDER|g;
+        s|([^<])/|\1\&#47;|g;
+        s|HTTPS_PLACEHOLDER|https://|g;
+        s|HTTP_PLACEHOLDER|http://|g;
+        s|FTP_PLACEHOLDER|ftp://|g;
+      ')
+
+      # Convert bracketed plain links into anchor targets
+      body_content=$(echo "${body_content}" | sed -E '
+        s|<(https?://[^>[:space:]&]+)>|<a href="\1" target="_blank">\1</a>|g;
+        s|<(ftp://[^>[:space:]&]+)>|<a href="\1" target="_blank">\1</a>|g;
+      ')
+
+      # Parse through Python to catch variables like <directory> and wrap them in raw <code> blocks
+      body_content=$(printf '%s\n' "${body_content}" | python3 -c '
+import re
+import sys
+
+text = sys.stdin.read()
+VALID_TAGS = {"p", "b", "i", "em", "strong", "pre", "code", "table", "tr", "td", "h1", "h2", "h3", "a", "div", "br", "hr"}
+
+def process_brackets(match):
+    token = match.group(0)
+    is_closing = token.startswith("</")
+    tag_name = token[2:-1] if is_closing else token[1:-1]
+    tag_base = tag_name.split()[0].lower()
+
+    if tag_base in VALID_TAGS:
+        return token
+        
+    if is_closing:
+        return f"<code></{tag_name}></code>"
+    else:
+        return f"<code><{tag_name}></code>"
+
+pattern = re.compile(r"</?[a-zA-Z0-9_| /:-]+>")
+print(pattern.sub(process_brackets, text), end="")
+')
+
+      # Inject target="_blank" into remaining pre-existing anchor href paths safely
+      body_content=$(python3 -c "import sys, re; text = sys.stdin.read(); print(re.sub(r'<a href=\"([^\"]+)\"(?!.*target=)', r'<a href=\"\1\" target=\"_blank\"', text))" <<< "${body_content}")
+
+      # Build non-breaking navigation block header structures
+      nav_links='<div class="header-with-back"><div class="link" style="float: left;"><a href="./'"${prev_name}"'">← Previous</a></div>'
+      if [ -n "${next_name}" ]; then
+        nav_links="${nav_links}<div class='link' style='float: right;'><a href='./${next_name}'>Next →</a></div>"
+      fi
+      nav_links="${nav_links}<div style=\"clear: both;\"></div></div>"
+      
+      # Write out final documentation files within a solid layout wrapper
+      cat <<EOF > "${md}"
 <div v-pre class="man-page-content">
 
-<div class="header-with-back">
-  <div class="back-link">
-    <a href="./zopen-reference">← Back</a>
-  </div>
-</div>
+${nav_links}
 
 ${body_content}
 
 </div>
 EOF
-    
-    # Validate the generated markdown file for HTML tag issues
-    echo "Validating ${md} for HTML tag issues..."
-    
-    # Check for orphaned closing tags (closing tags without matching opening tags)
-    validation_errors=0
-    while IFS= read -r line_num; do
-      line_content=$(sed -n "${line_num}p" "${md}")
-      # Extract closing tags from this line
-      closing_tags=$(echo "${line_content}" | grep -oE '</[a-z]+>' || true)
       
-      for closing_tag in ${closing_tags}; do
-        tag_name=$(echo "${closing_tag}" | sed 's|</||' | sed 's|>||')
-        opening_tag="<${tag_name}"
-        
-        # Count opening and closing tags up to this line
-        opening_count=$(head -n "${line_num}" "${md}" | grep -o "${opening_tag}" | wc -l | tr -d ' ')
-        closing_count=$(head -n "${line_num}" "${md}" | grep -o "${closing_tag}" | wc -l | tr -d ' ')
-        
-        # If there are more closing tags than opening tags at this point, it's an error
-        if [ "${closing_count}" -gt "${opening_count}" ]; then
-          echo "ERROR: Orphaned ${closing_tag} found at line ${line_num} in ${md}"
-          echo "  Line content: ${line_content}"
-          validation_errors=$((validation_errors + 1))
-        fi
-      done
-    done < <(grep -n '</' "${md}" | cut -d: -f1)
-    
-    # Check for unclosed opening tags (opening tags without matching closing tags)
-    all_tags=$(grep -oE '<[a-z]+[^>]*>' "${md}" | grep -v '</' | sed 's|<||' | sed 's| .*||' | sed 's|>||' | sort | uniq)
-    for tag_name in ${all_tags}; do
-      # Skip self-closing tags and special tags
-      if [[ "${tag_name}" =~ ^(br|hr|img|input|meta|link|[a-z]+[0-9]+)$ ]]; then
-        continue
-      fi
-      
-      opening_tag="<${tag_name}"
-      closing_tag="</${tag_name}>"
-      
-      opening_count=$(grep -o "${opening_tag}" "${md}" | wc -l | tr -d ' ')
-      closing_count=$(grep -o "${closing_tag}" "${md}" | wc -l | tr -d ' ')
-      
+      # Quick-look general file validation check
+      opening_count=$(grep -o "<div" "${md}" | wc -l | tr -d ' ')
+      closing_count=$(grep -o "</div" "${md}" | wc -l | tr -d ' ')
       if [ "${opening_count}" -ne "${closing_count}" ]; then
-        echo "ERROR: Tag mismatch in ${md}: ${opening_count} opening <${tag_name}> tags but ${closing_count} closing tags"
-        validation_errors=$((validation_errors + 1))
+         echo "WARNING: Root layout tag asymmetry detected in ${md} (${opening_count} open vs ${closing_count} close)"
       fi
-    done
-    
-    if [ ${validation_errors} -gt 0 ]; then
-      echo "WARNING: Found ${validation_errors} HTML validation error(s) in ${md}"
-    else
-      echo "✓ ${md} passed HTML validation"
-    fi
-    
-    echo "* [${name}](./${name})" >> docs/reference/zopen-reference.md
-  done
 
-  # Commit it all back to the repo
-  git config --global user.email "zosopentools@ibm.com"
-  git config --global user.name "ZOS Open Tools"
-  git add docs/*.md
-  git add docs/*.xml
-  git add docs/images/*.png
-  git add docs/images/upstream/*
-  git add docs/api/*
-  git add docs/reference/*
-  git commit -m "Updating docs/apis/reference"
-  git status
-  git pull --rebase
-  git push origin
+      echo "* [${name}](./${name})" >> docs/reference/zopen-reference.md
+    done
+
+    rm -f "${temp_html}"
+
+    # Commit phase
+    git config --global user.email "zosopentools@ibm.com"
+    git config --global user.name "ZOS Open Tools"
+    git add docs/*.md docs/*.xml docs/images/ docs/api/ docs/reference/
+    git commit -m "Updating docs/apis/reference"
+    git pull --rebase
+    git push origin
+  )
 }
 
 UpdateGithub

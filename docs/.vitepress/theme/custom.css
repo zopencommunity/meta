@@ -234,15 +234,10 @@
 .man-page-content .header-with-back {
   position: relative;
   margin-bottom: 1rem;
+  display: flex;
 }
 
-.man-page-content .back-link {
-  position: absolute;
-  top: 0;
-  right: 15px;
-}
-
-.man-page-content .back-link a {
+.man-page-content .link a {
   color: var(--vp-c-brand-1);
   text-decoration: none;
   font-weight: 600;
