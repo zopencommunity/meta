@@ -389,6 +389,9 @@ EOF
 
 # Function to sign generated RPMs
 sign_rpm() {
+    set -x
+    echo "In sign_rpm"
+    pwd
     buildroot="$1"
     
     # Check for required environment variables
@@ -459,6 +462,7 @@ EOF
     [ -n "$OLD_GNUPGHOME" ] && export GNUPGHOME="$OLD_GNUPGHOME" || unset GNUPGHOME
 
     echo "✓ All RPMs signed successfully"
+	set +x
     return 0
 }
 
