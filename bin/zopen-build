@@ -2134,7 +2134,7 @@ generateMetadataJSON()
     version="${versionString}"
   else
     # Try to extract version from package name (rightmost segment starting with digit)
-    version=$(echo "$package" | sed -E 's/.*-([0-9].*)$/\1/')
+    version=$(echo "$package" | sed -E 's/.*-([vV]?[0-9].*)$/\1/')
     # If sed didn't find a pattern (returns whole string), fall back to old method
     if [ "$version" = "$package" ]; then
       version=$(echo ${package} | cut -d "-" -f 2)
