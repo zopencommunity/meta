@@ -2112,8 +2112,8 @@ getProjectName()
     return 0
   fi
 
-  # Intelligent fallback: try to extract version and derive name
-  version=$(echo "$package" | sed -E 's/.*-([0-9].*)$/\1/')
+  # Intelligent fallback: try to extract version (handling optional 'v' prefix) and derive name
+  version=$(echo "$package" | sed -E 's/.*-([vV]?[0-9].*)$/\1/')
   if [ "$version" != "$package" ] && [ -n "$version" ]; then
     # Version was successfully extracted, remove it to get name
     echo "${package%-${version}}"
