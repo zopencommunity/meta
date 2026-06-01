@@ -86,6 +86,16 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y pax ncompress curl
 
+      - name: Clone tool repository
+        run: |
+          TOOL_NAME=$(basename ${{ github.repository }})
+          if [ -d "$TOOL_NAME" ]; then
+            echo "Tool repository already exists, skipping clone"
+          else
+            git clone https://github.com/${{ github.repository }}.git
+            echo "Tool repository cloned: $TOOL_NAME"
+          fi
+
       - name: Build with zopen
         run: |
           git clone https://github.com/zopencommunity/meta.git
@@ -100,6 +110,8 @@ jobs:
           git config --global user.email "zopenCommunity@ibm.com"
           git config --global user.name "Zopen Community"
           
+          TOOL_NAME=$(basename ${{ github.repository }})
+          cd $TOOL_NAME
           zopen build -g
           ls -lrt
 
