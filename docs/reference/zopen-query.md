@@ -1,173 +1,173 @@
 <div v-pre class="man-page-content">
 
-<div class="header-with-back">
-  <div class="back-link">
-    <a href="./zopen-reference">← Back</a>
-  </div>
-</div>
+<div class="header-with-back"><div class="link" style="float: left;"><a href="./zopen-publish">← Previous</a></div><div class='link' style='float: right;'><a href='./zopen-remove'>Next →</a></div><div style="clear: both;"></div></div>
+
 
 <h1 align="center">ZOPEN-QUERY</h1>
 
-<h2>NAME</h2>
-<a name="NAME"></a>
 
-<p style="margin-left:11%; margin-top: 1em">zopen-query
-&minus; manual page for zopen-query 0.8.4</p>
+
+
+<h2>NAME</h2>
+
+
+<p style="margin-left:6%; margin-top: 1em">zopen-query -
+manual page for zopen-query 0.8.5</p>
 
 <h2>SYNOPSIS</h2>
-<a name="SYNOPSIS"></a>
 
-<p style="margin-left:11%; margin-top: 1em"><b>zopen-query</b>
+
+
+<p style="margin-left:6%; margin-top: 1em">zopen-query
 [OPTION] [VERB] [PACKAGE]</p>
 
 <h2>DESCRIPTION</h2>
-<a name="DESCRIPTION"></a>
 
-<p style="margin-left:11%; margin-top: 1em">zopen&minus;query
-&minus; a utility for zopen community to query packages and
-repos.</p>
 
-<p style="margin-left:22%; margin-top: 1em">VERB is the
+<p style="margin-left:6%; margin-top: 1em">zopen-query - a
+utility for zopen community to query packages and repos.</p>
+
+<p style="margin-left:15%; margin-top: 1em">VERB is the
 action to take, which is one of</p>
 
+
 <table width="100%" border="0" rules="none" frame="void"
        cellspacing="0" cellpadding="0">
 
 <tr valign="top" align="left">
 
-<td width="11%"></td>
+<td width="6%"></td>
 
-<td width="55%">
 
-<p style="margin-top: 1em"><b>&minus;&minus;list</b>,
-<b>&minus;&minus;remote&minus;search</b>,
-<b>&minus;&minus;installed</b></p></td>
+<td width="45%">
 
-<td width="34%">
+
+<p style="margin-top: 1em">--list,
+--remote-search, --installed</p></td>
+
+
+<td width="49%">
 </td>
 </tr>
 
 </table>
 
-<p style="margin-left:22%; margin-top: 1em">PACKAGE is a
-package, specified for
-<b>&minus;&minus;remote&minus;search</b></p>
 
-<p><b>Verbs:</b></p>
+<p style="margin-left:15%; margin-top: 1em">PACKAGE is a
+package, specified for --remote-search</p>
 
-<p style="margin-left:11%;"><b>&minus;i</b>,
-<b>&minus;&minus;installed</b></p>
+<h3>Verbs:</h3>
 
-<p style="margin-left:22%;">list installed zopen
+
+<p style="margin-left:6%; margin-top: 1em">-i,
+--installed</p>
+
+<p style="margin-left:15%;">list installed zopen
 community.</p>
 
-<table width="100%" border="0" rules="none" frame="void"
-       cellspacing="0" cellpadding="0">
+<p style="margin-left:6%;">--list</p>
 
-<tr valign="top" align="left">
+<p style="margin-left:15%;">list all available zopen
+community.</p>
 
-<td width="11%"></td>
+<p style="margin-left:6%;">--remote-search</p>
 
-<td width="9%">
-
-<p><b>&minus;&minus;list</b></p></td>
-
-<td width="2%"></td>
-
-<td width="53%">
-
-<p>list all available zopen community.</p></td>
-
-<td width="25%">
-</td>
-</tr>
-
-</table>
-
-<p style="margin-left:11%;"><b>&minus;&minus;remote&minus;search</b></p>
-
-<p style="margin-left:22%;">regex match package against
+<p style="margin-left:15%;">regex match package against
 available zopen community</p>
 
 <h2>OPTIONS</h2>
-<a name="OPTIONS"></a>
 
-<p style="margin-left:11%; margin-top: 1em"><b>&minus;d</b>,
-<b>&minus;&minus;details</b></p>
 
-<p style="margin-left:22%;">include full details for
+<p style="margin-left:6%; margin-top: 1em">-d,
+--details</p>
+
+<p style="margin-left:15%;">include full details for
 listings.</p>
+
 
 <table width="100%" border="0" rules="none" frame="void"
        cellspacing="0" cellpadding="0">
 
 <tr valign="top" align="left">
 
-<td width="11%"></td>
+<td width="6%"></td>
 
-<td width="71%">
 
-<p style="margin-top: 1em"><b>&minus;&minus;category</b>
+<td width="58%">
+
+
+<p style="margin-top: 1em">--category
 &lt;category&gt; apply a category filter.</p></td>
 
-<td width="18%">
+
+<td width="36%">
 </td>
 </tr>
 
 </table>
 
-<p><b>&minus;&minus;help</b></p>
 
-<p style="margin-left:22%;">print this help</p>
+<p style="margin-left:6%;">--help</p>
 
-<p style="margin-left:11%;"><b>&minus;&minus;no&minus;header</b>,</p>
 
-<p style="margin-left:22%;">suppress the header for the
+<p style="margin-left:15%;">print this help</p>
+
+<p style="margin-left:6%;">--no-header,</p>
+
+<p style="margin-left:15%;">suppress the header for the
 output.</p>
 
-<p style="margin-left:11%;"><b>&minus;&minus;no&minus;version</b>,</p>
+<p style="margin-left:6%;">--no-version,</p>
 
-<p style="margin-left:22%;">suppress version information,
+<p style="margin-left:15%;">suppress version information,
 return package names.</p>
+
 
 <table width="100%" border="0" rules="none" frame="void"
        cellspacing="0" cellpadding="0">
 
 <tr valign="top" align="left">
 
-<td width="11%"></td>
+<td width="6%"></td>
+
 
 <td width="3%">
 
-<p><b>&minus;v</b></p></td>
 
-<td width="8%"></td>
+<p>-v</p></td>
 
-<td width="30%">
+
+<td width="6%"></td>
+
+
+<td width="25%">
+
 
 <p>run in verbose mode.</p></td>
 
-<td width="48%">
+
+<td width="60%">
 </td>
 </tr>
 
 </table>
 
-<p style="margin-left:11%;"><b>&minus;&minus;version</b></p>
 
-<p style="margin-left:22%;">print version</p>
+<p style="margin-left:6%;">--version</p>
 
-<p style="margin-left:11%; margin-top: 1em">This is free
+<p style="margin-left:15%;">print version</p>
+
+<p style="margin-left:6%; margin-top: 1em">This is free
 software: you are free to change and redistribute it under
 the terms of the Apache License, Version 2.0.
-&lt;https:///#47;www.apache.orgg/#47;licensess/#47;LICENSE&minus;2.0.html&gt;
+<a href="https://www.apache.org/licenses/LICENSE-2.0.html" target="_blank">https://www.apache.org/licenses/LICENSE-2.0.html</a>
 There is NO WARRANTY, to the extent permitted by law.</p>
 
 <h2>AUTHOR</h2>
-<a name="AUTHOR"></a>
 
-<p style="margin-left:11%; margin-top: 1em">Written by
+
+<p style="margin-left:6%; margin-top: 1em">Written by
 contributors to the zopen community.
-&lt;https:///#47;github.comm/#47;zopencommunityy/#47;metaa/#47;graphss/#47;contributors&gt;</p>
+<a href="https://github.com/zopencommunity/meta/graphs/contributors" target="_blank">https://github.com/zopencommunity/meta/graphs/contributors</a></p>
 
 </div>

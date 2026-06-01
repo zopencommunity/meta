@@ -247,7 +247,7 @@
   transition: color 0.25s;
 }
 
-.man-page-content .back-link a:hover {
+.man-page-content .link a:hover {
   color: var(--vp-c-brand-2);
   text-decoration: underline;
 }

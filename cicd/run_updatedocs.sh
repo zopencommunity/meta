@@ -1,12 +1,9 @@
-#!/bin/env bash
+#!/bin/bash
 #
-# This script will run nightly
+# Run only the UpdateDocs function from on_nightly.sh
+# This script can be run locally without requiring multi-gitter
 #
 set -e
-
-UpdateGithub() {
-  multi-gitter --config ./cicd/multi-gitter-config run ./bulk-utils/enable_disabled_workflow.sh
-}
 
 UpdateDocs() {
   # Update Progress page in documentation
@@ -71,10 +68,7 @@ EOF
         s|<a name="[^"]*"></a>||g;
         /<br>$/d;
         /<hr>/d;
-        s|</?i>||g;
-        s|</?em>||g;
-        s|</?b>||g;
-        s|</?strong>||g;
+        s|<\/?(i|em|b|strong)>||g;
         s|</p> </td>|</p></td>|g;
         s|<table|\n<table|g;
         s|</table>|</table>\n|g;
@@ -82,33 +76,7 @@ EOF
         s|</tr>|</tr>\n|g;
         s|<td|\n<td|g;
         s|</td>|</td>\n|g;
-        s|<p([^>]*)>([^<]*)</td>|<p\1>\2</p></td>|g;
       ')
-
-      # Fix multi-line h3 tags (e.g., <h3>Text\n\n</h3> -> <h3>Text</h3>)
-      body_content=$(echo "${body_content}" | perl -0pe 's|<(h[1-6])>([^\n<]+)\n+</\1>|<\1>\2</\1>|g')
-
-      # Remove orphaned closing tags (closing tags without matching opening tags)
-      body_content=$(echo "${body_content}" | python3 -c '
-import re
-import sys
-
-text = sys.stdin.read()
-
-# Remove lines that contain orphaned </table>, </p>, </h2>, etc. tags
-# These are closing tags that appear without proper context
-lines = text.split("\n")
-cleaned_lines = []
-
-for line in lines:
-    # Check if line contains a closing tag followed by another closing tag (orphaned pattern)
-    if re.search(r"</[a-z0-9]+></[a-z0-9]+>", line):
-        # Remove the orphaned closing tag
-        line = re.sub(r"</([a-z0-9]+)>(?=</[a-z0-9]+>)", "", line)
-    cleaned_lines.append(line)
-
-print("\n".join(cleaned_lines), end="")
-')
 
       # Protect structural slashes, isolate placeholders, and wrap in raw code blocks
       body_content=$(echo "${body_content}" | sed -E '
@@ -121,22 +89,7 @@ print("\n".join(cleaned_lines), end="")
         s|FTP_PLACEHOLDER|ftp://|g;
       ')
 
-      # Convert HTML entity URLs to clickable links first
-      body_content=$(echo "${body_content}" | python3 -c '
-import sys
-import re
-
-text = sys.stdin.read()
-
-# Convert <URL> to <a href="URL">URL</a>
-# Build pattern using concatenation to avoid shell interpretation
-pattern = "&" + "lt;(https?://.*?)&" + "gt;"
-text = re.sub(pattern, r'"'"'<a href="\1" target="_blank">\1</a>'"'"', text)
-
-sys.stdout.write(text)
-')
-
-      # Convert bracketed plain links into anchor targets (for any remaining <URL> patterns)
+      # Convert bracketed plain links into anchor targets
       body_content=$(echo "${body_content}" | sed -E '
         s|<(https?://[^>[:space:]&]+)>|<a href="\1" target="_blank">\1</a>|g;
         s|<(ftp://[^>[:space:]&]+)>|<a href="\1" target="_blank">\1</a>|g;
@@ -171,46 +124,24 @@ print(pattern.sub(process_brackets, text), end="")
       # Inject target="_blank" into remaining pre-existing anchor href paths safely
       body_content=$(python3 -c "import sys, re; text = sys.stdin.read(); print(re.sub(r'<a href=\"([^\"]+)\"(?!.*target=)', r'<a href=\"\1\" target=\"_blank\"', text))" <<< "${body_content}")
 
-      # Remove orphaned closing tags like </p></table> or </p></td>
-      body_content=$(echo "${body_content}" | sed -E 's|</p></table>|</p>|g; s|></p></td>|></td>|g')
-
-      # Remove HTML entities and convert URLs to links
-      body_content=$(echo "${body_content}" | python3 -c '
-import re
-import sys
-
-text = sys.stdin.read()
-
-# First, convert < and > around URLs directly to clickable links
-text = re.sub(r"<(https?://[^<>]+?)>", r"<a href=\"\1\" target=\"_blank\">\1</a>", text)
-text = re.sub(r"<(ftp://[^<>]+?)>", r"<a href=\"\1\" target=\"_blank\">\1</a>", text)
-
-# Remove other HTML entities
-replacements = {
-    "&minus;": "-",
-    "&#47;": "/",
-    "&rsquo;": "'\''",
-    "&lsquo;": "'\''",
-    "&rdquo;": "\"",
-    "&ldquo;": "\"",
-    "&nbsp;": " ",
-}
-
-for entity, replacement in replacements.items():
-    text = text.replace(entity, replacement)
-
-# Handle remaining entities (but not in URLs which are already converted)
-text = text.replace("<", "<")
-text = text.replace(">", ">")
-text = text.replace("&", "&")
-
-print(text, end="")
-')
+      # Remove HTML entities
+      body_content=$(echo "${body_content}" | sed -E '
+        s/&minus;/-/g
+        s/&rsquo;/'\''/g
+        s/&lsquo;/'\''/g
+        s/&rdquo;/"/g
+        s/&ldquo;/"/g
+        s/&nbsp;/ /g
+        s/&/\&/g
+        s/</</g
+        s/>/>/g
+        s/"/"/g
+      ')
 
       # Build non-breaking navigation block header structures
-      nav_links='<div class="header-with-back"><div class="link" style="float: left;"><a href="./'"${prev_name}"'">← Previous</a></div>'
+      nav_links='<div class="header-with-back"><div class="link" style="float: left;"><a href="./'"${prev_name}.md"'">← Previous</a></div>'
       if [ -n "${next_name}" ]; then
-        nav_links="${nav_links}<div class='link' style='float: right;'><a href='./${next_name}'>Next →</a></div>"
+        nav_links="${nav_links}<div class='link' style='float: right;'><a href='./${next_name}.md'>Next →</a></div>"
       fi
       nav_links="${nav_links}<div style=\"clear: both;\"></div></div>"
       
@@ -247,5 +178,13 @@ EOF
   )
 }
 
-UpdateGithub
+echo "Running UpdateDocs function..."
 UpdateDocs
+echo "UpdateDocs completed successfully!"
+echo ""
+echo "Starting VitePress dev server in meta_update..."
+cd meta_update/docs
+npm install
+npm run docs:dev
+
+# Made with Bob

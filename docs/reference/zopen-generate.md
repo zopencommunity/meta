@@ -1,10 +1,6 @@
 <div v-pre class="man-page-content">
 
-<div class="header-with-back">
-  <div class="back-link">
-    <a href="./zopen-reference">← Back</a>
-  </div>
-</div>
+<div class="header-with-back"><div class="link" style="float: left;"><a href="./zopen-diagnostics">← Previous</a></div><div class='link' style='float: right;'><a href='./zopen-help2man'>Next →</a></div><div style="clear: both;"></div></div>
 
 
 <h1 align="center">ZOPEN-GENERATE</h1>
@@ -13,189 +9,133 @@
 
 
 <h2>NAME</h2>
-<a name="NAME"></a>
 
 
-<p style="margin-left:11%; margin-top: 1em">zopen-generate
-&minus; manual page for zopen-generate 0.8.4</p>
+<p style="margin-left:6%; margin-top: 1em">zopen-generate -
+manual page for zopen-generate 0.8.5</p>
 
 <h2>DESCRIPTION</h2>
-<a name="DESCRIPTION"></a>
 
 
-
-<p style="margin-left:11%; margin-top: 1em">zopen&minus;generate
+<p style="margin-left:6%; margin-top: 1em">zopen-generate
 will generate a zopen compatible project Syntax:
-zopen&minus;generate [options]</p>
+zopen-generate [options]</p>
 
 <h2>OPTIONS</h2>
-<a name="OPTIONS"></a>
 
 
-<table width="100%" border="0" rules="none" frame="void"
-       cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="11%"></td>
-<td width="9%">
 
+<p style="margin-left:6%; margin-top: 1em">--help</p>
 
-<p style="margin-top: 1em"><b>&minus;&minus;help</b></p></td>
-<td width="2%"></td>
-<td width="38%">
+<p style="margin-left:15%;">Display this help message</p>
 
+<p style="margin-left:6%;">--version</p>
 
-<p style="margin-top: 1em">Display this help message</p></td>
-<td width="40%">
-</td></tr>
-</table>
+<p style="margin-left:15%;">Display version information</p>
 
+<p style="margin-left:6%;">--list-licenses</p>
 
-<p style="margin-left:11%;"><b>&minus;&minus;version</b></p>
+<p style="margin-left:15%;">List available licenses</p>
 
-<p style="margin-left:22%;">Display version information</p>
+<p style="margin-left:6%;">--list-categories</p>
 
+<p style="margin-left:15%;">List available categories</p>
 
-<p style="margin-left:11%;"><b>&minus;&minus;list&minus;licenses</b></p>
+<p style="margin-left:6%;">--list-build-systems</p>
 
-<p style="margin-left:22%;">List available licenses</p>
-
-
-<p style="margin-left:11%;"><b>&minus;&minus;list&minus;categories</b></p>
-
-<p style="margin-left:22%;">List available categories</p>
-
-
-<p style="margin-left:11%;"><b>&minus;&minus;list&minus;build&minus;systems</b></p>
-
-<p style="margin-left:22%;">List supported build
+<p style="margin-left:15%;">List supported build
 systems</p>
 
-<p style="margin-left:11%;"><b>&minus;&minus;name</b>
-NAME</p>
+<p style="margin-left:6%;">--name NAME</p>
 
-<p style="margin-left:22%;">Project name</p>
+<p style="margin-left:15%;">Project name</p>
 
+<p style="margin-left:6%;">--description DESC</p>
 
-<p style="margin-left:11%;"><b>&minus;&minus;description</b>
-DESC</p>
+<p style="margin-left:15%;">Project description</p>
 
-<p style="margin-left:22%;">Project description</p>
+<p style="margin-left:6%;">--categories CATS</p>
 
+<p style="margin-left:15%;">Project categories
+(space-delimited)</p>
 
-<p style="margin-left:11%;"><b>&minus;&minus;categories</b>
-CATS</p>
+<p style="margin-left:6%;">--license LICENSE</p>
 
-<p style="margin-left:22%;">Project categories
-(space&minus;delimited)</p>
+<p style="margin-left:15%;">License name</p>
 
-<p style="margin-left:11%;"><b>&minus;&minus;license</b>
-LICENSE</p>
+<p style="margin-left:6%;">--type TYPE</p>
 
-<p style="margin-left:22%;">License name</p>
+<p style="margin-left:15%;">Port type: 'BUILD'
+(from source) or 'BARE' (binary download)</p>
 
-<p style="margin-left:11%;"><b>&minus;&minus;type</b>
-TYPE</p>
+<p style="margin-left:6%;">--build-system SYSTEM</p>
 
-<p style="margin-left:22%;">Port type: &rsquo;BUILD&rsquo;
-(from source) or &rsquo;BARE&rsquo; (binary download)</p>
-
-
-<p style="margin-left:11%;"><b>&minus;&minus;build&minus;system</b>
-SYSTEM</p>
-
-<p style="margin-left:22%;">Build system if type is BUILD
+<p style="margin-left:15%;">Build system if type is BUILD
 (GNU Make, CMake, Gradle, Maven, etc.)</p>
 
+<p style="margin-left:6%;">--c-extensions</p>
 
-<p style="margin-left:11%;"><b>&minus;&minus;c&minus;extensions</b></p>
-
-<p style="margin-left:22%;">Python project contains C
+<p style="margin-left:15%;">Python project contains C
 extensions (requires C compiler)</p>
 
+<p style="margin-left:6%;">--stable-url URL</p>
 
-<p style="margin-left:11%;"><b>&minus;&minus;stable&minus;url</b>
-URL</p>
-
-<p style="margin-left:22%;">Stable release source URL (Git
+<p style="margin-left:15%;">Stable release source URL (Git
 HTTPS clone URL ending in .git, or a direct archive URL
 ending in .tar.gz, .tar.xz, .tar.bz2, .zip, etc.)</p>
 
+<p style="margin-left:6%;">--stable-deps DEPS</p>
 
-<p style="margin-left:11%;"><b>&minus;&minus;stable&minus;deps</b>
-DEPS</p>
+<p style="margin-left:15%;">Stable build dependencies
+(space-delimited)</p>
 
-<p style="margin-left:22%;">Stable build dependencies
-(space&minus;delimited)</p>
+<p style="margin-left:6%;">--dev-url URL</p>
 
+<p style="margin-left:15%;">Dev-line source URL (same
+formats as --stable-url; typically the main-branch
+Git clone URL)</p>
 
-<p style="margin-left:11%;"><b>&minus;&minus;dev&minus;url</b>
-URL</p>
+<p style="margin-left:6%;">--dev-deps DEPS</p>
 
-<p style="margin-left:22%;">Dev&minus;line source URL (same
-formats as <b>&minus;&minus;stable&minus;url</b>; typically
-the main&minus;branch Git clone URL)</p>
+<p style="margin-left:15%;">Dev build dependencies
+(space-delimited)</p>
 
+<p style="margin-left:6%;">--build-line LINE</p>
 
-<p style="margin-left:11%;"><b>&minus;&minus;dev&minus;deps</b>
-DEPS</p>
-
-<p style="margin-left:22%;">Dev build dependencies
-(space&minus;delimited)</p>
-
-
-<p style="margin-left:11%;"><b>&minus;&minus;build&minus;line</b>
-LINE</p>
-
-<p style="margin-left:22%;">Default build line (stable or
+<p style="margin-left:15%;">Default build line (stable or
 dev)</p>
 
+<p style="margin-left:6%;">--runtime-deps DEPS</p>
 
-<p style="margin-left:11%;"><b>&minus;&minus;runtime&minus;deps</b>
-DEPS</p>
+<p style="margin-left:15%;">Runtime dependencies
+(space-delimited)</p>
 
-<p style="margin-left:22%;">Runtime dependencies
-(space&minus;delimited)</p>
+<p style="margin-left:6%;">--force</p>
 
-<p style="margin-left:11%;"><b>&minus;&minus;force</b></p>
-
-<p style="margin-left:22%;">Force update if project
+<p style="margin-left:15%;">Force update if project
 directory exists</p>
 
+<p style="margin-left:6%;">--non-interactive</p>
 
-<p style="margin-left:11%;"><b>&minus;&minus;non&minus;interactive</b></p>
+<p style="margin-left:15%;">Run in non-interactive mode
+(requires all necessary options)</p>
 
-<p style="margin-left:22%;">Run in non&minus;interactive
-mode (requires all necessary options)</p>
+<p style="margin-left:6%;">--json</p>
 
-<table width="100%" border="0" rules="none" frame="void"
-       cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="11%"></td>
-<td width="9%">
+<p style="margin-left:15%;">Display list output in JSON
+format</p>
 
-
-<p><b>&minus;&minus;json</b></p></td>
-<td width="2%"></td>
-<td width="52%">
-
-
-<p>Display list output in JSON format</p></td>
-<td width="26%">
-</td></tr>
-</table>
-
-<p style="margin-left:11%; margin-top: 1em">This is free
+<p style="margin-left:6%; margin-top: 1em">This is free
 software: you are free to change and redistribute it under
 the terms of the Apache License, Version 2.0.
-&lt;https:///#47;www.apache.orgg/#47;licensess/#47;LICENSE&minus;2.0.html&gt;
+<a href="https://www.apache.org/licenses/LICENSE-2.0.html" target="_blank">https://www.apache.org/licenses/LICENSE-2.0.html</a>
 There is NO WARRANTY, to the extent permitted by law.</p>
 
 <h2>AUTHOR</h2>
-<a name="AUTHOR"></a>
 
 
-<p style="margin-left:11%; margin-top: 1em">Written by
+<p style="margin-left:6%; margin-top: 1em">Written by
 contributors to the zopen community.
-&lt;https:///#47;github.comm/#47;zopencommunityy/#47;metaa/#47;graphss/#47;contributors&gt;</p>
+<a href="https://github.com/zopencommunity/meta/graphs/contributors" target="_blank">https://github.com/zopencommunity/meta/graphs/contributors</a></p>
 
 </div>

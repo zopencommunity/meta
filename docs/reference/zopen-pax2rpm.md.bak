@@ -64,7 +64,7 @@ extracted from filename)</p>
 
 <p style="margin-top: 1em">--pkg-version
 &lt;version&gt; Override version (alternative to
---version)</p></td>
+--version)</td>
 
 
 <td width="10%">
@@ -74,7 +74,7 @@ extracted from filename)</p>
 </table>
 
 
-<p style="margin-left:6%;">--release &lt;release&gt;</p>
+<p>--release &lt;release&gt;</table>
 
 
 <p style="margin-left:15%;">Override release number
@@ -171,7 +171,7 @@ actually doing it</p>
 
 
 <p style="margin-top: 1em">--summary &quot;HAMN110
-Runtime Package&quot; \</p></td>
+Runtime Package&quot; \</td>
 
 
 <td width="47%">
@@ -188,7 +188,7 @@ Runtime Package&quot; \</p></td>
 
 
 <p style="margin-top: 1em">--license &quot;IBM&quot;
-\</p></td>
+\</td>
 
 
 <td width="47%">
@@ -205,7 +205,7 @@ Runtime Package&quot; \</p></td>
 
 
 <p style="margin-top: 1em">--url
-&quot;https://www.ibm.com&quot;</p></td>
+&quot;https://www.ibm.com&quot;</td>
 
 
 <td width="47%">
