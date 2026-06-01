@@ -9,7 +9,7 @@
   --vp-c-brand-darker: #1e6b45;
 
   /* Increase layout max-width to reduce left/right spacing on larger screens */
-  --vp-layout-max-width: 1720px;
+  /* --vp-layout-max-width: 1720px; */
 }
 
 /* Increase search box width - responsive based on screen size */
