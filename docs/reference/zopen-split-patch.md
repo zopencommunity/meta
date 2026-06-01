@@ -1,8 +1,9 @@
 <div v-pre class="man-page-content">
 
-<div class="header-with-back"><div class="link"><a href="./zopen-usage">← Previous</a></div><div class='link'><a href='./zopen-whichproject'>Next →</a></div></div>
+<div class="header-with-back"><div class="link"><a href="./zopen-remove">← Previous</a></div><div class='link'><a href='./zopen-update-cacert'>Next →</a></div></div>
 
-<h1 align="center">ZOPEN-VERSION</h1>
+<h1 align="center">ZOPEN-SPLIT-PATCH</h1>
+
 
 
 
@@ -16,22 +17,25 @@
 <h2>NAME</h2>
 
 
-<table><tr><td style="width: 25%; vertical-align: top;"><b>zopen-version
-- manual page for zopen-version 0.8.5
+
+<table><tr><td style="width: 25%; vertical-align: top;"><b>zopen-split-patch
+- manual page for zopen-split-patch 0.8.5
 
 <h2>SYNOPSIS</h2>
 
 
 
-<b>zopen-version</b>
-[<i>OPTION</i>] <i>tool</i>
+<b>zopen-split-patch</b>
+[<i>OPTION</i>] [<i>PATCHFILE</i>]
 
 <h2>DESCRIPTION</h2>
 
 
 
-zopen-version
-prints version information for zopen tools.
+zopen-split-patch
+- split a patch file into one patch file for each
+patch.</b></td><td style="vertical-align: top;">Patches are
+written to split-patches in the current directory.</td></tr></table>
 
 <h2>OPTIONS</h2>
 
@@ -39,6 +43,14 @@ prints version information for zopen tools.
 <table>
 <tr><td style="width: 25%; vertical-align: top;"><b>--help</b></td><td style="vertical-align: top;">display this help and exit.</td></tr>
 <tr><td style="width: 25%; vertical-align: top;"><b>--version</b></td><td style="vertical-align: top;">print version.</td></tr></table>
+
+<h3>Example:</h3>
+
+
+
+<table><tr><td style="width: 25%; vertical-align: top;"><b>zopen-split-patch
+P1.patch</b></td><td style="vertical-align: top;">write P1.patch into multiple
+patches under split-patches</td></tr></table>
 
 <p style="margin-left:9%; margin-top: 1em">This is free
 software: you are free to change and redistribute it under

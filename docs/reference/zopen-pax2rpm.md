@@ -1,9 +1,16 @@
 <div v-pre class="man-page-content">
 
-<div class="header-with-back"><div class="link" style="float: left;"><a href="./zopen-migrate-groovy">← Previous</a></div><div class='link' style='float: right;'><a href='./zopen-promote'>Next →</a></div><div style="clear: both;"></div></div>
-
+<div class="header-with-back"><div class="link"><a href="./zopen-migrate-groovy">← Previous</a></div><div class='link'><a href='./zopen-promote'>Next →</a></div></div>
 
 <h1 align="center">ZOPEN-PAX2RPM</h1>
+
+
+
+
+
+
+
+
 
 
 
@@ -11,211 +18,63 @@
 <h2>NAME</h2>
 
 
-<p style="margin-left:6%; margin-top: 1em">zopen-pax2rpm -
-manual page for zopen-pax2rpm 0.8.5</p>
+<table><tr><td style="width: 25%; vertical-align: top;"><b>zopen-pax2rpm
+- manual page for zopen-pax2rpm 0.8.5
 
 <h2>SYNOPSIS</h2>
 
 
 
-<p style="margin-left:6%; margin-top: 1em">zopen-pax2rpm
-&lt;pax_file&gt; [options]</p>
+<b>zopen-pax2rpm</b>
+<i><code>&lt;pax_file&gt;</code></i> [<i>options</i>]
 
 <h2>DESCRIPTION</h2>
 
 
-<p style="margin-left:6%; margin-top: 1em">Generate an RPM
-spec file from a z/OS pax archive.</p>
+Generate an RPM
+spec file from a z/OS pax archive.
 
 <h3>Arguments:</h3>
 
 
-<p style="margin-left:6%; margin-top: 1em">pax_file</p>
-
-<p style="margin-left:15%;">Path to the pax file (e.g.,
-/path/to/file.pax or file.pax.Z)</p>
+pax_file</b></td><td style="vertical-align: top;">Path to the pax file (e.g.,
+<i>/path/to/file.pax</i> or file.pax.Z)</td></tr></table>
 
 <h2>OPTIONS</h2>
 
 
-<p style="margin-left:6%; margin-top: 1em">--name
-&lt;name&gt;</p>
 
-<p style="margin-left:15%;">Override package name (default:
-extracted from filename)</p>
-
-<p style="margin-left:6%;">--version
-&lt;version&gt;</p>
-
-<p style="margin-left:15%;">Override version (default:
-extracted from filename)</p>
-
-
-<table width="100%" border="0" rules="none" frame="void"
-       cellspacing="0" cellpadding="0">
-
-<tr valign="top" align="left">
-
-<td width="6%"></td>
-
-
-<td width="84%">
-
-
-<p style="margin-top: 1em">--pkg-version
-&lt;version&gt; Override version (alternative to
---version)</p></td>
-
-
-<td width="10%">
-</td>
-</tr>
-
-</table>
-
-
-<p style="margin-left:6%;">--release &lt;release&gt;</p>
-
-
-<p style="margin-left:15%;">Override release number
-(default: 1)</p>
-
-<p style="margin-left:6%;">--license
-&lt;license&gt;</p>
-
-<p style="margin-left:15%;">Specify license (default:
-Proprietary)</p>
-
-<p style="margin-left:6%;">--summary
-&lt;summary&gt;</p>
-
-<p style="margin-left:15%;">Package summary (required)</p>
-
-<p style="margin-left:6%;">--description
-&lt;desc&gt;</p>
-
-<p style="margin-left:15%;">Package description (default:
-same as summary)</p>
-
-<p style="margin-left:6%;">--url &lt;url&gt;</p>
-
-<p style="margin-left:15%;">Project URL (default: none)</p>
-
-<p style="margin-left:6%;">--requires
-&lt;deps&gt;</p>
-
-<p style="margin-left:15%;">Package dependencies (e.g.,
-&quot;oef &gt;= 1.1.0&quot;)</p>
-
-<p style="margin-left:6%;">--output &lt;file&gt;</p>
-
-<p style="margin-left:15%;">Output spec file (default:
-&lt;name&gt;.spec)</p>
-
-<p style="margin-left:6%;">--build</p>
-
-<p style="margin-left:15%;">Build the RPM after generating
-spec file (binary + source)</p>
-
-<p style="margin-left:6%;">--build-binary</p>
-
-<p style="margin-left:15%;">Build binary RPM only (faster,
-no source RPM)</p>
-
-<p style="margin-left:6%;">--buildroot
-&lt;dir&gt;</p>
-
-<p style="margin-left:15%;">RPM build root directory
-(default: ˜/rpmbuild)</p>
-
-<p style="margin-left:6%;">--validate</p>
-
-<p style="margin-left:15%;">Validate spec file after
-generation (checks syntax and runs rpmlint)</p>
-
-<p style="margin-left:6%;">--dry-run</p>
-
-<p style="margin-left:15%;">Show what would be done without
-actually doing it</p>
-
-<p style="margin-left:6%;">--verbose</p>
-
-<p style="margin-left:15%;">Enable verbose debug output</p>
-
-<p style="margin-left:6%;">--help</p>
-
-<p style="margin-left:15%;">Display this help message</p>
-
-<p style="margin-left:6%;">--version</p>
-
-<p style="margin-left:15%;">Display tool version</p>
+<table><tr><td style="width: 25%; vertical-align: top;"><b>--name</b>
+<code>&lt;name&gt;</code></td><td style="vertical-align: top;">Override package name (default:
+extracted from filename)</td></tr><tr><td style="width: 25%; vertical-align: top;"><b>--version</b>
+<code>&lt;version&gt;</code></td><td style="vertical-align: top;">Override version (default:
+extracted from filename)</td></tr>
+<tr><td style="width: 25%; vertical-align: top;"><b>--pkg-version</b>
+<code>&lt;version&gt;</code> Override version (alternative to
+<b>--version</b>)</td><td style="vertical-align: top;"><b>--help</b></td></tr>
+<tr><td style="width: 25%; vertical-align: top;"><b>--version</b></td><td style="vertical-align: top;">Display tool version</td></tr></table>
 
 <h3>Example:</h3>
 
 
 
-<p style="margin-left:15%; margin-top: 1em">/Users/tejaswini/Documents/tejaswini/zopen/meta_fork/meta/bin/zopen-pax2rpm
+<p style="margin-left:18%; margin-top: 1em"><i>/u/tejas/new_zopen/zostools_dev/doc/meta/bin/zopen-pax2rpm</i>
 /nfsmnts/bpidrivers/oefv1r1/os390/latest/HAMN110.runnable.pax.Z
 \</p>
 
-
-<table width="100%" border="0" rules="none" frame="void"
-       cellspacing="0" cellpadding="0">
-
+<table>
+<tr><td style="width: 25%; vertical-align: top;"><b>--summary</b>
+&quot;HAMN110 Runtime Package&quot; \</td><td style="vertical-align: top;"><b>--license</b>
+&quot;IBM&quot; \</td></tr>
 <tr valign="top" align="left">
-
-<td width="6%"></td>
-
-
-<td width="47%">
-
-
-<p style="margin-top: 1em">--summary &quot;HAMN110
-Runtime Package&quot; \</p></td>
-
-
-<td width="47%">
-</td>
-</tr>
-
-
-<tr valign="top" align="left">
-
-<td width="6%"></td>
-
-
-<td width="47%">
-
-
-<p style="margin-top: 1em">--license &quot;IBM&quot;
-\</p></td>
-
-
-<td width="47%">
-</td>
-</tr>
-
-
-<tr valign="top" align="left">
-
-<td width="6%"></td>
-
-
-<td width="47%">
-
-
-<p style="margin-top: 1em">--url
-&quot;https://www.ibm.com&quot;</p></td>
-
-
-<td width="47%">
-</td>
-</tr>
-
+<td width="9%"></td>
+<td width="47%"><b>--url</b>
+&quot;https://www.ibm.com&quot;</td>
+<td width="44%">
+</td></tr>
 </table>
 
-
-<p style="margin-left:6%; margin-top: 1em">This is free
+<p style="margin-left:9%; margin-top: 1em">This is free
 software: you are free to change and redistribute it under
 the terms of the Apache License, Version 2.0.
 <a href="https://www.apache.org/licenses/LICENSE-2.0.html" target="_blank">https://www.apache.org/licenses/LICENSE-2.0.html</a>
@@ -224,7 +83,7 @@ There is NO WARRANTY, to the extent permitted by law.</p>
 <h2>AUTHOR</h2>
 
 
-<p style="margin-left:6%; margin-top: 1em">Written by
+<p style="margin-left:9%; margin-top: 1em">Written by
 contributors to the zopen community.
 <a href="https://github.com/zopencommunity/meta/graphs/contributors" target="_blank">https://github.com/zopencommunity/meta/graphs/contributors</a></p>
 

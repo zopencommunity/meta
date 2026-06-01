@@ -233,8 +233,12 @@
 
 .man-page-content .header-with-back {
   position: relative;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--vp-c-divider);
+  padding-bottom: 1rem;
 }
 
 .man-page-content .link a {
@@ -281,6 +285,12 @@
 
 .man-page-content a {
   color: var(--vp-c-brand-1);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.man-page-content a:hover {
+  color: var(--vp-c-brand-2);
 }
 
 /* Table styles */
