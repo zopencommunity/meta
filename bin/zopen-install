@@ -183,93 +183,6 @@ installDependencies()
 )
 
 
-# Helper function to parse package specification
-parse_package_spec() {
-  _fullname="$1"
-  
-  # Extract name (everything before operators/%)
-  name=$(echo "${_fullname}" | sed 's/[=><%].*//')
-  repo="${name}"
-  
-  # Extract operator using case statement for efficiency
-  case "${_fullname}" in
-    *">="*) operator=">=" ;;
-    *"<="*) operator="<=" ;;
-    *">"*)  operator=">" ;;
-    *"<"*)  operator="<" ;;
-    *"="*)  operator="=" ;;
-    *)      operator="" ;;
-  esac
-  
-  # Extract version (between operator and %)
-  if [ -n "${operator}" ]; then
-    versioned=$(echo "${_fullname}" | sed "s/^${name}${operator}//; s/%.*//")
-  fi
-  
-  # Extract tag (after %)
-  tagged=$(echo "${_fullname}" | sed -n 's/.*%\(.*\)/\1/p')
-}
-
-# Helper function to validate version format
-validate_version() {
-  _version="$1"
-  _v_check="${_version#v}"
-  
-  # Check for empty or invalid patterns using case statement
-  case "${_v_check}" in
-    ""|.*|*.|*..*|*[!0-9a-zA-Z._-]*)
-      printError "Invalid version '${_version}'. Use format: 1.2.3 or 1.2.3-rc1"
-      ;;
-    *[0-9]*) 
-      # Valid - contains at least one digit
-      ;;
-    *)
-      printError "Version must contain at least one digit: ${_version}"
-      ;;
-  esac
-}
-
-# Helper function to validate operator
-validate_operator() {
-  _op="$1"
-  
-  case "${_op}" in
-    "="|">"|">="|"<"|"<=")
-      # Valid operator
-      ;;
-    "")
-      # No operator is valid
-      ;;
-    *)
-      printError "Invalid operator '${_op}'. Supported: =, >, >=, <, <="
-      ;;
-  esac
-  
-  # Check version required with operator
-  if [ -n "${_op}" ] && [ -z "${versioned}" ]; then
-    printError "Version required with operator (e.g., ${name}${_op}1.0)"
-  fi
-}
-
-# Helper function to validate all package inputs
-validate_package_inputs() {
-  # Check for conflicting specifications
-  if [ -n "${versioned}" ] && [ -n "${tagged}" ]; then
-    printError "Ambiguous package specification '${fullname}'. Provide either a version constraint or a tag, but not both."
-  fi
-  
-  # Validate operator if present
-  if [ -n "${operator}" ]; then
-    validate_operator "${operator}"
-  fi
-  
-  # Validate version format if present
-  if [ -n "${versioned}" ]; then
-    validate_version "${versioned}"
-  fi
-}
-
-
 handlePackageInstall()
 {
   fullname="$1"
@@ -278,17 +191,49 @@ handlePackageInstall()
     isRuntimeDependency=false
   fi
 
-  operator=""
-  versioned=""
-  tagged=""
-  name=""
-  repo=""
-
-  # Parse package specification using helper function
-  parse_package_spec "${fullname}"
+  # Parse package specification (name, operator, version, tag) using POSIX parameter expansion
+  name="${fullname%%[=><%]*}"
+  repo="${name}"
   
-  # Validate all inputs using helper function
-  validate_package_inputs
+  case "${fullname}" in
+    *">="*) operator=">=" ;;
+    *"<="*) operator="<=" ;;
+    *">"*)  operator=">" ;;
+    *"<"*)  operator="<" ;;
+    *"="*)  operator="=" ;;
+    *)      operator="" ;;
+  esac
+  
+  if [ -n "${operator}" ]; then
+    versioned="${fullname#*$operator}"
+    versioned="${versioned%%"%"*}"
+    if [ -z "${versioned}" ]; then
+      printError "Version required with operator (e.g., ${name}${operator}1.0)"
+    fi
+  else
+    versioned=""
+  fi
+  
+  case "${fullname}" in
+    *%*) tagged="${fullname#*%}" ;;
+    *)   tagged="" ;;
+  esac
+
+  # Validate package specification
+  if [ -n "${versioned}" ] && [ -n "${tagged}" ]; then
+    printError "Ambiguous package specification '${fullname}'. Provide either a version constraint or a tag, but not both."
+  fi
+
+  _v_check="${versioned#v}"
+  case "${_v_check}" in
+    "") ;; # Valid
+    .*|*.|*..*|*[!0-9a-zA-Z._-]*)
+      printError "Invalid version '${versioned}'. Use format: 1.2.3 or 1.2.3-rc1"
+      ;;
+    *[0-9]*) ;; # Valid
+    *) printError "Version must contain at least one digit: ${versioned}" ;;
+  esac
+
   printDebug "Name:${name};operator:${operator};version:${versioned};tag:${tagged};repo:${repo}"
   printInfo "${NC}${HEADERCOLOR}${BOLD}Processing package: ${name}${NC}"
 
@@ -337,7 +282,7 @@ handlePackageInstall()
   # either for a previous package install or system default
   if [ -n "${versioned}" ]; then
     printVerbose "Specific version ${versioned} requested with operator '${operator}' - checking existence and URL."
-    requestedMajor=$(echo "${versioned}" | awk -F'.' '{print $1}')
+    requestedMajor="${versioned%%.*}"
     if [ -z "${requestedMajor}" ]; then
       printError "A major version must be provided when specifying a version (e.g., ${name}=1)."
     fi
@@ -356,15 +301,11 @@ handlePackageInstall()
       def match_v(rv; op):
         (get_ver | to_v) as $av |
         if op == "=" then $av[0:(rv | length)] == rv
-        else
-          (($av + [0,0,0,0,0,0,0,0])[0:8]) as $pav |
-          ((rv + [0,0,0,0,0,0,0,0])[0:8]) as $prv |
-          if op == ">=" then $pav >= $prv
-          elif op == ">" then $pav > $prv
-          elif op == "<=" then $pav <= $prv
-          elif op == "<" then $pav < $prv
-          else false end
-        end;
+        elif op == ">=" then $av >= rv
+        elif op == ">" then $av > rv
+        elif op == "<=" then $av <= rv
+        elif op == "<" then $av < rv
+        else false end;
       map(select(.assets[0] != null and match_v($req_v; $op))) | 
       sort_by([(get_ver | to_v), .assets[0].release, .date, .tag_name]) | reverse | .[0]')
     if [ -z "${releaseMetadata}" ] || [ "${releaseMetadata}" = "null" ]; then
@@ -495,7 +436,8 @@ handlePackageInstall()
   fi
   downloadFile=$(basename "${downloadURL}")
   metadataFile="${downloadFile}.json" # use the same basename as the pax + .json to avoid collision
-  downloadFileVer=$(echo "${downloadFile}" | sed -E 's/.*-(.*)\.zos\.pax\.Z/\1/')
+  _tmp="${downloadFile#*-}"
+  downloadFileVer="${_tmp%.zos.pax.Z}"
   printVerbose "Downloading port from URL: ${downloadURL} to file: ${downloadFile} (ver=${downloadFileVer})"
 
   if ${downloadOnly}; then
@@ -987,7 +929,7 @@ else
   for chosenRepo in ${chosenRepos}; do
     printVerbose "Processing repo: ${chosenRepo}"
     printVerbose "Stripping any version operator (>, >=, <, <=, =), tag (%) or port suffixes"
-    toolrepo=$(echo "${chosenRepo}" | sed -E 's/[=><%].*//')
+    toolrepo="${chosenRepo%%[=><%]*}"
     toolfound=$(echo "${repo_results}" | awk -vtoolrepo="${toolrepo}" '$0 == toolrepo {print}')
     if [ "${toolfound}" = "${toolrepo}" ]; then
       printVerbose "Adding '${chosenRepo}' to the install queue."
