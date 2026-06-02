@@ -48,6 +48,9 @@ Options:
   --bypass-prereq-checks
           Bypasses pre-requisite checks
 
+  --bypass-size-checks
+          Bypasses available size checks
+
   -f, --fs-layout <LAYOUT>
           The filesystem structure to use for installed
           packages on disk; packages will be installed to
@@ -138,6 +141,7 @@ fslayout="usrlclz"
 isCollectingStats=false
 isBot=false # used by jenkins, CI/CD
 bypassPrereqs=false
+bypassSizeCheck=false
 while [ $# -gt 0 ]; do
   case "$1" in
     "-f" | "--fs-layout" )
@@ -148,7 +152,10 @@ while [ $# -gt 0 ]; do
       reinitExisting=true
       ;;
     "--bypass-prereq-checks")
-      bypassPrereqs=true 
+      bypassPrereqs=true
+      ;;
+    "--bypass-size-checks")
+      bypassSizeCheck=true
       ;;
     "--refresh" )
       refresh=true
@@ -560,7 +567,10 @@ updateBootstrappedTools() {
   printInfo "- Installing/updating bootstrapped curl, jq, gpg, pinentry and meta to install updated versions (if available)"
   installOptions="--force"
   if $bypassPrereqs; then
-    installOptions="${installOptions} --bypass-prereq-checks";
+    installOptions="${installOptions} --bypass-prereq-checks"
+  fi
+  if $bypassSizeCheck; then
+    installOptions="${installOptions} --bypass-size-checks"
   fi
   if ${refresh}; then
     ${MYDIR}/zopen-install ${installOptions} -y curl jq gpg pinentry
