@@ -2118,8 +2118,8 @@ getProjectName()
     # Version was successfully extracted, remove it to get name
     echo "${package%-${version}}"
   else
-    # No version pattern found, fall back to old cut method
-    echo "$package" | cut -d "-" -f 1
+    # No version pattern found, return the full package name
+    echo "$package"
   fi
 }
 
@@ -2133,11 +2133,15 @@ generateMetadataJSON()
   if [ -n "${versionString}" ]; then
     version="${versionString}"
   else
-    # Try to extract version from package name (rightmost segment starting with digit)
+    # Try to extract version from package name (rightmost segment starting with digit or v/V prefix)
     version=$(echo "$package" | sed -E 's/.*-([vV]?[0-9].*)$/\1/')
-    # If sed didn't find a pattern (returns whole string), fall back to old method
-    if [ "$version" = "$package" ]; then
-      version=$(echo ${package} | cut -d "-" -f 2)
+    if [ "$version" != "$package" ] && [ -n "$version" ]; then
+      # Strip optional v/V prefix for consistency with numeric versioning
+      version="${version#[vV]}"
+    else
+      # Fallback to the last segment of the package name
+      version=$(echo "${package}" | sed 's/.*-//')
+      version="${version#[vV]}"
     fi
   fi
 
@@ -2421,6 +2425,7 @@ install()
       printError "A zopen_get_version() function must be defined in the buildenv to extract the version contents"
     else
       versionString=$(zopen_get_version)
+      versionString="${versionString#[vV]}"
       echo ${versionString} | awk -F. '{
         if (NF < 1 || NF > 4) {
           exit 1
