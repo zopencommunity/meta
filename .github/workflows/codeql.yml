@@ -42,8 +42,7 @@ jobs:
         id: request
         uses: octokit/request-action@v2.x
         with:
-          route: |
-            ${{ github.event.issue.pull_request.url || github.event.pull_request.url }}
+          route: ${{ github.event.issue.pull_request.url || github.event.pull_request.url }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -53,7 +52,7 @@ jobs:
           repo="${{ inputs.repo }}"
           if [ -z "${repo}" ]; then
             if [ "${{ github.event_name }}" == "issue_comment" ] || [ "${{ github.event_name }}" == "pull_request_target" ]; then
-              repo="${{ fromJson(steps.request.outputs.data).head.repo.clone_url }}"
+              repo="${{ fromJson(steps.request.outputs.data).head.repo.full_name }}"
             else
               repo="${{ github.repository }}"
             fi
@@ -85,13 +84,9 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y pax ncompress curl
-
           git clone https://github.com/zopencommunity/meta.git
-
           echo "Metaport setup completed"
 
-          cd meta
-          
       - name: Clone tool repository
         run: |
           TOOL_NAME=$(basename ${{ github.repository }})
@@ -104,11 +99,7 @@ jobs:
 
       - name: Build with zopen
         run: |
-  
-          export PATH="$PWD/bin:$PATH"
-          cd -
-          
-          ls -lrt
+          export PATH="$PWD/meta/bin:$PATH"
           git config --global user.email "zopenCommunity@ibm.com"
           git config --global user.name "Zopen Community"
           
