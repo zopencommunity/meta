@@ -89,7 +89,9 @@ jobs:
 
       - name: Clone tool repository
         run: |
+          echo "GitHub Repository: ${{ github.repository }}"
           TOOL_NAME=$(basename ${{ github.repository }})
+          echo "Tool Name: ${TOOL_NAME}"
           if [ -d "$TOOL_NAME" ]; then
             echo "Tool repository already exists, skipping clone"
           else
@@ -103,7 +105,9 @@ jobs:
           git config --global user.email "zopenCommunity@ibm.com"
           git config --global user.name "Zopen Community"
           
+          echo "GitHub Repository: ${{ github.repository }}"
           TOOL_NAME=$(basename ${{ github.repository }})
+          echo "Tool Name: ${TOOL_NAME}"
           cd $TOOL_NAME
           zopen build -g
           ls -lrt
