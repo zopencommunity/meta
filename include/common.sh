@@ -1476,6 +1476,7 @@ checkAvailableSize()
   printDebug "Package Size: ${packageSize} k"
   partitionSize=$(/bin/df -k . 2>/dev/null | tail -1 | awk '{print $3}' | cut -f1 -d '/')
   printDebug "Partition Size: ${partitionSize}k [free on '$(pwd -P)']"
+  
   if [ 1 -eq "$(echo "${packageSize} > ${partitionSize}" | bc)" ]; then
     printError "Not enough space in partition. Use --bypass-size-checks to skip this check."
   fi
