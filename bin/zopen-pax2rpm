@@ -40,6 +40,7 @@ PACKAGER_EMAIL="${CURRENT_USER}@$(hostname 2>/dev/null || echo "localhost")"
 # Build flag
 BUILD_RPM=false
 BUILD_BINARY_ONLY=false
+SIGN_RPM=false
 BUILDROOT="${HOME}/rpmbuild"
 VALIDATE_SPEC=false
 DRY_RUN=false
@@ -386,6 +387,85 @@ EOF
     return 0
 }
 
+# Function to sign generated RPMs
+sign_rpm() {
+    set -x
+    echo "In sign_rpm"
+    pwd
+    buildroot="$1"
+    
+    # Check for required environment variables
+    if [ -z "${ZOPEN_GPG_SECRET_KEY_FILE}" ] || [ -z "${ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE}" ]; then
+        printError "Signing requested but ZOPEN_GPG_SECRET_KEY_FILE or ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE not set"
+        return 1
+    fi
+
+    echo ""
+    echo "=========================================="
+    echo "Signing RPM packages..."
+    echo "=========================================="
+    echo ""
+
+    # Create a temporary directory for GPG keyring
+    TMP_GPG_DIR=$(mktempdir "rpm_gpg")
+    chmod 700 "${TMP_GPG_DIR}"
+    
+    OLD_GNUPGHOME="$GNUPGHOME"
+    export GNUPGHOME="$TMP_GPG_DIR"
+    RPM_LIST=""
+
+    # Import the private key
+    echo "Importing private key..."
+    if ! gpg --batch --yes --import "${ZOPEN_GPG_SECRET_KEY_FILE}" >/dev/null 2>&1; then
+        printError "Failed to import GPG secret key"
+    fi
+
+    # Identify the GPG key ID (long ID)
+    GPG_KEY_ID=$(gpg --list-secret-keys --with-colons | grep '^sec' | cut -d: -f5 | head -n 1)
+    if [ -z "${GPG_KEY_ID}" ]; then
+        printError "Could not identify GPG key ID from imported key"
+    fi
+
+    # Create a wrapper script for gpg to handle the passphrase file
+    GPG_WRAPPER="${TMP_GPG_DIR}/gpg_wrapper.sh"
+    cat << EOF > "${GPG_WRAPPER}"
+#!/bin/sh
+gpg --batch --pinentry-mode loopback --passphrase-file "${ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE}" "\$@"
+EOF
+    chmod +x "${GPG_WRAPPER}"
+
+    # Sign the RPMs using the wrapper and key ID
+    # We use --define to override the GPG command and key details
+    SIGN_CMD="rpmsign --addsign --key-id ${GPG_KEY_ID} \
+        --define '_gpg_name ${GPG_KEY_ID}' \
+        --define '__gpg ${GPG_WRAPPER}' \
+        --define '_gpg_path ${TMP_GPG_DIR}'"
+
+    # Use a temporary file to avoid subshell return issues
+    RPM_LIST=$(mktempfile "rpmlist")
+    find "$buildroot/RPMS" -name "*.rpm" -type f > "$RPM_LIST"
+    
+    if [ ! -s "$RPM_LIST" ]; then
+        printError "No RPM packages found to sign in $buildroot/RPMS"
+    fi
+
+    while read rpm; do
+        [ -z "$rpm" ] && continue
+        echo "Signing $rpm..."
+        if ! eval "${SIGN_CMD} \"${rpm}\""; then
+            printError "Failed to sign RPM: $rpm"
+        fi
+    done < "$RPM_LIST"
+
+    rm -f "$RPM_LIST"
+    rm -rf "$TMP_GPG_DIR"
+    [ -n "$OLD_GNUPGHOME" ] && export GNUPGHOME="$OLD_GNUPGHOME" || unset GNUPGHOME
+
+    echo "✓ All RPMs signed successfully"
+	set +x
+    return 0
+}
+
 # Function to setup rpmbuild directories
 setup_rpmbuild() {
 buildroot="$1"
@@ -718,6 +798,11 @@ source_name=$(basename "$pax_file")
             done
         fi
         echo ""
+
+        if [ "$SIGN_RPM" = true ]; then
+            sign_rpm "$buildroot"
+        fi
+
         return 0
     else
         echo ""
@@ -838,6 +923,10 @@ main() {
             --build-binary)
                 BUILD_RPM=true
                 BUILD_BINARY_ONLY=true
+                shift
+                ;;
+	    --sign)
+                SIGN_RPM=true
                 shift
                 ;;
             --buildroot)

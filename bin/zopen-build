@@ -2514,6 +2514,9 @@ create_rpm()
     if [ -n "${rpm_deps}" ]; then
       cmd="${cmd} --requires \"${rpm_deps}\""
     fi
+    if [ "${signPax}" = "true" ]; then
+      cmd="${cmd} --sign"
+    fi
     if ! runAndLog "${cmd}"; then
       printError "Could not generate RPM from \"${paxFileName}\""
     fi
