@@ -182,26 +182,65 @@ installDependencies()
   skipupgrade=${skipupgrade_lcl}
 )
 
+
 handlePackageInstall()
 {
-
   fullname="$1"
   isRuntimeDependency=$2
   if [ -z "$isRuntimeDependency" ]; then
     isRuntimeDependency=false
   fi
-  printVerbose "Name to install: ${fullname}, parsing any version ('=') or tag ('%') has been specified"
-  name=$(echo "${fullname}" | sed -e 's#[=%].*##')
+
+  # Parse package specification (name, operator, version, tag) using POSIX parameter expansion
+  name="${fullname%%[=><%]*}"
   repo="${name}"
-  versioned=$(echo "${fullname}" | cut -s -d '=' -f 2)
-  tagged=$(echo "${fullname}" | cut -s -d '%' -f 2)
-  printDebug "Name:${name};version:${versioned};tag:${tagged};repo:${repo}"
+  
+  case "${fullname}" in
+    *">="*) operator=">=" ;;
+    *"<="*) operator="<=" ;;
+    *">"*)  operator=">" ;;
+    *"<"*)  operator="<" ;;
+    *"="*)  operator="=" ;;
+    *)      operator="" ;;
+  esac
+  
+  if [ -n "${operator}" ]; then
+    versioned="${fullname#*$operator}"
+    versioned="${versioned%%"%"*}"
+    if [ -z "${versioned}" ]; then
+      printError "Version required with operator (e.g., ${name}${operator}1.0)"
+    fi
+  else
+    versioned=""
+  fi
+  
+  case "${fullname}" in
+    *%*) tagged="${fullname#*%}" ;;
+    *)   tagged="" ;;
+  esac
+
+  # Validate package specification
+  if [ -n "${versioned}" ] && [ -n "${tagged}" ]; then
+    printError "Ambiguous package specification '${fullname}'. Provide either a version constraint or a tag, but not both."
+  fi
+
+  _v_check="${versioned#v}"
+  case "${_v_check}" in
+    "") ;; # Valid
+    .*|*.|*..*|*[!0-9a-zA-Z._-]*)
+      printError "Invalid version '${versioned}'. Use format: 1.2.3 or 1.2.3-rc1"
+      ;;
+    *[0-9]*) ;; # Valid
+    *) printError "Version must contain at least one digit: ${versioned}" ;;
+  esac
+
+  printDebug "Name:${name};operator:${operator};version:${versioned};tag:${tagged};repo:${repo}"
   printInfo "${NC}${HEADERCOLOR}${BOLD}Processing package: ${name}${NC}"
 
-  nameSansPort=$(echo "${name}" | sed -e 's#\(.*\)port$#\1#')
+  nameSansPort="${name%port}"
   # findutilsport -> findutils
   # findutils -> findutils
-  if [[ "${nameSansPort}" != "${name}" ]] ; then
+  if [ "${nameSansPort}" != "${name}" ] ; then
     printError "Please install using base project name without port suffix.\nTry: zopen install ${nameSansPort}"
   fi
 
@@ -242,14 +281,36 @@ handlePackageInstall()
   # Options where the user explicitly sets a version/tag/releaseline currently ignore any configured release-line,
   # either for a previous package install or system default
   if [ -n "${versioned}" ]; then
-    printVerbose "Specific version ${versioned} requested - checking existence and URL."
-    requestedMajor=$(echo "${versioned}" | awk -F'.' '{print $1}')
-    requestedMinor=$(echo "${versioned}" | awk -F'.' '{print $2}')
-    requestedPatch=$(echo "${versioned}" | awk -F'.' '{print $3}')
-    requestedSubrelease=$(echo "${versioned}" | awk -F'.' '{print $4}')
-    requestedVersion="${requestedMajor}\\\.${requestedMinor}\\\.${requestedPatch}\\\.${requestedSubrelease}"
-    printVerbose "Finding URL for latest release matching version prefix: requestedVersion: ${requestedVersion}"
-    releaseMetadata=$(/bin/printf "%s" "${releases}" | jq -e -r '. | map(select(.assets[].name | test("'${requestedVersion}'")))[0]')
+    printVerbose "Specific version ${versioned} requested with operator '${operator}' - checking existence and URL."
+    requestedMajor="${versioned%%.*}"
+    if [ -z "${requestedMajor}" ]; then
+      printError "A major version must be provided when specifying a version (e.g., ${name}=1)."
+    fi
+
+    # Convert requested version string to a JSON array of numbers/strings for jq
+    req_v_json=$(/bin/printf "%s" "${versioned#v}" | jq -R -c 'split(".") | map(tonumber? // .)')
+
+    printVerbose "Finding latest release matching ${operator} ${versioned}"
+    # Unified selection logic using jq:
+    # 1. to_v: Converts a dot-delimited version string to a numeric array
+    # 2. get_ver: Extracts the version string from the asset name (consistent with user input)
+    # 3. match_v: Handles prefix match for '=' and numeric/string comparison for others
+    releaseMetadata=$(/bin/printf "%s" "${releases}" | jq -e -r --arg op "${operator}" --argjson req_v "${req_v_json}" '
+      def to_v: if . == null then [0] else sub("^v"; "") | split(".") | map(tonumber? // .) end;
+      def get_ver: .assets[0].name | split("-")[-1] | split(".zos.pax.Z")[0];
+      def match_v(rv; op):
+        (get_ver | to_v) as $av |
+        if op == "=" then $av[0:(rv | length)] == rv
+        elif op == ">=" then $av >= rv
+        elif op == ">" then $av > rv
+        elif op == "<=" then $av <= rv
+        elif op == "<" then $av < rv
+        else false end;
+      map(select(.assets[0] != null and match_v($req_v; $op))) | 
+      sort_by([(get_ver | to_v), .assets[0].release, .date, .tag_name]) | reverse | .[0]')
+    if [ -z "${releaseMetadata}" ] || [ "${releaseMetadata}" = "null" ]; then
+      printError "Could not find a release of '${name}' matching '${operator}${versioned}'"
+    fi
   elif [ -n "${tagged}" ]; then
     printVerbose "Explicit tagged version '${tagged}' specified. Checking for match."
     releaseMetadata=$(/bin/printf "%s" "${releases}" | jq -e -r '.[] | select(.tag_name == "'${tagged}'")')
@@ -271,7 +332,7 @@ handlePackageInstall()
     while ! ${valid}; do
       echo "Enter version to install (0-${i}): "
       read selection < /dev/tty
-      if [[ ! -z $(echo "${selection}" | sed -e 's/[0-9]*//') ]]; then
+      if [ -n "$(echo "${selection}" | tr -d '0-9')" ]; then
         echo "Invalid input, must be a number between 0 and ${i}."
       elif [ "${selection}" -ge 0 ] && [ "${selection}" -le "${i}" ]; then
         valid=true
@@ -375,7 +436,8 @@ handlePackageInstall()
   fi
   downloadFile=$(basename "${downloadURL}")
   metadataFile="${downloadFile}.json" # use the same basename as the pax + .json to avoid collision
-  downloadFileVer=$(echo "${downloadFile}" | sed -E 's/.*-(.*)\.zos\.pax\.Z/\1/')
+  _tmp="${downloadFile#*-}"
+  downloadFileVer="${_tmp%.zos.pax.Z}"
   printVerbose "Downloading port from URL: ${downloadURL} to file: ${downloadFile} (ver=${downloadFileVer})"
 
   if ${downloadOnly}; then
@@ -861,18 +923,26 @@ if ${all}; then
   done
   installArray=$(strtrim "${installArray}")
 else
+  chosenRepos=$(echo "${chosenRepos}" | tr ',' ' ' | tr -s ' ')
   chosenRepos=$(strtrim "${chosenRepos}")
   invalidlist=""
-  for chosenRepo in $(echo "${chosenRepos}" | tr ',' ' ' | tr -s ' '); do
+  for chosenRepo in ${chosenRepos}; do
     printVerbose "Processing repo: ${chosenRepo}"
-    printVerbose "Stripping any version (%), tag (#) or port suffixes"
-    toolrepo=$(echo "${chosenRepo}" | sed -e 's#%.*##' -e 's#=.*##')
+    printVerbose "Stripping any version operator (>, >=, <, <=, =), tag (%) or port suffixes"
+    toolrepo="${chosenRepo%%[=><%]*}"
     toolfound=$(echo "${repo_results}" | awk -vtoolrepo="${toolrepo}" '$0 == toolrepo {print}')
     if [ "${toolfound}" = "${toolrepo}" ]; then
       printVerbose "Adding '${chosenRepo}' to the install queue."
       installArray="${installArray} ${chosenRepo}"
       printVerbose "Removing valid port from input list."
-      chosenRepos=$(echo "${chosenRepos}" | sed -e "s#^${chosenRepo}\$##")
+      # Safely remove the word from the space-separated list
+      newChosenRepos=""
+      for r in ${chosenRepos}; do
+        if [ "$r" != "${chosenRepo}" ]; then
+          newChosenRepos="${newChosenRepos} $r"
+        fi
+      done
+      chosenRepos=$(strtrim "${newChosenRepos}")
     else
       invalidlist=$(/bin/printf "%s %s" "${invalidlist}" "${chosenRepo}")
     fi
@@ -886,7 +956,7 @@ if [ -n "${invalidlist}" ]; then
 fi
 
 for item in ${invalidlist}; do
-  if [[ "$(echo $item)" == "$(echo $chosenRepo)" ]]; then
+  if [ "$item" = "$chosenRepo" ]; then
     #printInfo "item $item chosenrepo $chosenRepo not found Skipping Installation"
     exit 1
   fi
