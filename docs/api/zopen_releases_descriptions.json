@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2026-06-08T22:55:11+00:00Z",
+  "generation_timestamp_utc": "2026-06-09T05:45:18+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -314,7 +314,7 @@
     "rclone": "z/OS Port of rclone",
     "python-xxhash": "zopen port of python-xxhash",
     "zosinfo": "",
-    "mbedtls3.6.6": "",
+    "mbedtls": "",
     "openssl3": "",
     "syft": "A CLI tool and Go library for generating a Software Bill of Materials (SBOM) from container images and filesystems. Exceptional for vulnerability detection when used with a scanner like Grype."
   }
