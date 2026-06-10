@@ -149,6 +149,7 @@ Options:
   --install-or-upgrade     installs the package if not installed,
                            or upgrades the package if installed.
   --bypass-prereq-checks   Ignores pre-req checks
+  --bypass-size-checks     Ignores available size checks
   --local-install          download and unpackage to current directory.
   --no-deps                do not install dependencies.
   --no-set-active          do not change the pinned version.
@@ -447,7 +448,9 @@ handlePackageInstall()
     fi
 
     # Check partition size before download package spinner starts
-    checkAvailableSize "${name}" "${size}"
+    if ! $bypassSizeCheck; then
+      checkAvailableSize "${name}" "${size}"
+    fi
     progressHandler "network" "- Download complete." &
     ph=$!
     killph="kill -HUP ${ph}"
@@ -696,6 +699,7 @@ doNotInstallDeps=false
 all=false
 yesToPrompts=false
 bypassPrereqs=false
+bypassSizeCheck=false
 force=false
 chosenRepos=""
 while [ $# -gt 0 ]; do
@@ -710,7 +714,10 @@ while [ $# -gt 0 ]; do
     installOrUpgrade=true # Upgrade package or install if not present
     ;;
   "--bypass-prereq-checks")
-    bypassPrereqs=true 
+    bypassPrereqs=true
+    ;;
+  "--bypass-size-checks")
+    bypassSizeCheck=true
     ;;
   "--local-install")
     localInstall=true # Install the package into current directory
