@@ -79,6 +79,9 @@ jobs:
         with:
           languages: ${{ inputs.languages }}
           build-mode: ${{ inputs.build-mode }}
+          paths-ignore:
+            - 'meta/**'
+            - '**/meta/**'
 
       - name: Download and setup metaport
         run: |
