@@ -3,6 +3,12 @@ name: "CodeQL Config"
 paths-ignore:
   - meta/**
   - '**/meta/**'
+  - '**/test-*.c'
+  - '**/test-*.cpp'
+  - '**/test-*.h'
+  - '**/test-*.hpp'
+  - '**/*-tests/**'
+  - '**/tests/**'
 
 queries:
   - uses: security-and-quality
