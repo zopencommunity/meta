@@ -84,6 +84,21 @@ jobs:
           ln -s /tmp/meta meta
           echo "Metaport setup completed"
 
+      - name: Create CodeQL config
+        run: |
+          mkdir -p .github/codeql
+          cat > .github/codeql/codeql-config.yml << 'EOF'
+          name: "CodeQL Config"
+
+          paths-ignore:
+            - meta/**
+            - '**/meta/**'
+
+          queries:
+            - uses: security-and-quality
+          EOF
+          echo "CodeQL config created"
+
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
