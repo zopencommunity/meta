@@ -74,21 +74,21 @@ jobs:
           repository: ${{ steps.repo-info.outputs.repo }}
           ref: ${{ steps.repo-info.outputs.branch }}
 
+      - name: Download and setup metaport
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pax ncompress curl
+          # Clone meta to a directory outside the workspace to avoid scanning it
+          git clone https://github.com/zopencommunity/meta.git /tmp/meta
+          # Create symlink in workspace for build process
+          ln -s /tmp/meta meta
+          echo "Metaport setup completed"
+
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
           languages: ${{ inputs.languages }}
           build-mode: ${{ inputs.build-mode }}
-          paths-ignore:
-            - 'meta/**'
-            - '**/meta/**'
-
-      - name: Download and setup metaport
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y pax ncompress curl
-          git clone https://github.com/zopencommunity/meta.git
-          echo "Metaport setup completed"
 
       - name: Clone tool repository
         run: |
