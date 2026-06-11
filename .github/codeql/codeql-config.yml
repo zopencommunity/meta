@@ -1,0 +1,10 @@
+name: "CodeQL Config"
+
+paths-ignore:
+  - meta/**
+  - '**/meta/**'
+
+queries:
+  - uses: security-and-quality
+
+# Made with Bob
