@@ -89,6 +89,7 @@ jobs:
         with:
           languages: ${{ inputs.languages }}
           build-mode: ${{ inputs.build-mode }}
+          config-file: ./.github/codeql/codeql-config.yml
 
       - name: Clone tool repository
         run: |
