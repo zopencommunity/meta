@@ -245,7 +245,7 @@ while [ \$# -gt 0 ]; do
     --nooverride-zos-tools)  unset ZOPEN_TOOLSET_OVERRIDE;;
     --override-zos-tools-subset) shift;  export ZOPEN_TOOLSET_OVERRIDE=1; overrideFile="\$1";;
     --quiet) displayText=false;;
-    -?|--help) displayHelp; return 0;;
+    '-?'|--help) displayHelp; return 0;;
   esac
   shift
 done
