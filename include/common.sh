@@ -1474,11 +1474,11 @@ checkAvailableSize()
   printDebug "Package Size: ${packageSize} bytes"
   packageSize=$(echo "scale=2; ${packageSize} / 1024" | bc)
   printDebug "Package Size: ${packageSize} k"
-  partitionSize=$(/bin/df -k . | tail -1 | awk '{print $3}' | cut -f1 -d '/')
+  partitionSize=$(/bin/df -k . 2>/dev/null | tail -1 | awk '{print $3}' | cut -f1 -d '/')
   printDebug "Partition Size: ${partitionSize}k [free on '$(pwd -P)']"
   
   if [ 1 -eq "$(echo "${packageSize} > ${partitionSize}" | bc)" ]; then
-    printError "Not enough space in partition."
+    printError "Not enough space in partition. Use --bypass-size-checks to skip this check."
   fi
   printInfo "- Enough space to install ${package}. Proceeding with installation."
   return 0
