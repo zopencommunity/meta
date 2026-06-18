@@ -57,29 +57,35 @@ echo -e "${GREEN}Detected language: ${LANGUAGE}, Build mode: ${BUILD_MODE}${NC}"
 
 # Create the CodeQL workflow that calls YOUR reusable workflow
 cat > "$CODEQL_WORKFLOW" << EOF
-name: "CodeQL Analysis"
+name: "CodeQL"
+
+permissions:
+  actions: read
+  contents: read
+  security-events: write
 
 on:
   push:
-    branches: [ main ]
+    branches: ["main"]
   pull_request:
-    branches: [ main ]
+    branches: ["main"]
+  pull_request_target:
+    types: [opened, synchronize, reopened]
   schedule:
-    # Run at 2:00 AM UTC every Monday
-    - cron: '0 2 * * 1'
+    - cron: "0 0 * * 1"
   workflow_dispatch:
 
 jobs:
   codeql:
-    name: CodeQL Security Scan
     uses: Sanjana-Kondalwade/meta/.github/workflows/codeql.yml@main
-    with:
-      languages: '${LANGUAGE}'
-      build-mode: '${BUILD_MODE}'
+    secrets: inherit
     permissions:
       actions: read
       contents: read
       security-events: write
+    with:
+      languages: "${LANGUAGE}"
+      build-mode: "${BUILD_MODE}"
 EOF
 
 echo -e "${GREEN}✓ CodeQL workflow created successfully (using YOUR meta fork)${NC}"
