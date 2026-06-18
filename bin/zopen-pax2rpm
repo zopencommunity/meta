@@ -1029,7 +1029,12 @@ main() {
     # Build RPM if requested
     if [ "$BUILD_RPM" = true ]; then
         if build_rpm "$OUTPUT_FILE" "$PAX_FILE" "$BUILDROOT"; then
+            echo ""
+            echo "=========================================="
+            echo "RPM Build Complete!"
             echo "RPM package built successfully!"
+            echo "=========================================="
+            echo ""
         else
             echo "Warning: RPM build failed. Please review the spec file and try again." >&2
             exit 1
