@@ -3,16 +3,24 @@ name: "CodeQL"
 on:
   workflow_call:
     inputs:
+      repo:
+        required: false
+        type: string
+        default: ""
+      branch:
+        required: false
+        default: ""
+        type: string
       languages:
-        description: "CodeQL languages to analyze (e.g., c-cpp, python, javascript)"
+        description: 'CodeQL languages to analyze (e.g., c-cpp, python, javascript)'
         required: false
         type: string
-        default: "c-cpp"
+        default: 'c-cpp'
       build-mode:
-        description: "CodeQL build mode (none, manual, autobuild)"
+        description: 'CodeQL build mode (none, manual, autobuild)'
         required: false
         type: string
-        default: "none"
+        default: 'none'
 
 jobs:
   analyze:
@@ -25,8 +33,46 @@ jobs:
       security-events: write
 
     steps:
+      - name: Get PR details
+        if: ${{ github.event_name == 'issue_comment'}}
+        uses: xt0rted/pull-request-comment-branch@v1
+        id: comment-branch
+
+      - name: Github API Request
+        id: request
+        uses: octokit/request-action@v2.x
+        with:
+          route: ${{ github.event.issue.pull_request.url || github.event.pull_request.url }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Determine Repository and Branch
+        id: repo-info
+        run: |
+          repo="${{ inputs.repo }}"
+          if [ -z "${repo}" ]; then
+            if [ "${{ github.event_name }}" == "issue_comment" ] || [ "${{ github.event_name }}" == "pull_request_target" ]; then
+              repo="${{ fromJson(steps.request.outputs.data).head.repo.full_name }}"
+            else
+              repo="${{ github.repository }}"
+            fi
+          fi
+          branch="${{ inputs.branch }}"
+          if [ -z "${branch}" ]; then
+            if [ "${{ github.event_name }}" == "issue_comment" ] || [ "${{ github.event_name }}" == "pull_request_target" ]; then
+              branch="${{ fromJson(steps.request.outputs.data).head.ref }}"
+            else
+              branch="${{ github.ref_name }}"
+            fi
+          fi
+          echo "repo=${repo}" >> $GITHUB_OUTPUT
+          echo "branch=${branch}" >> $GITHUB_OUTPUT
+
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          repository: ${{ steps.repo-info.outputs.repo }}
+          ref: ${{ steps.repo-info.outputs.branch }}
 
       - name: Download and setup metaport
         run: |
@@ -66,21 +112,31 @@ jobs:
           build-mode: ${{ inputs.build-mode }}
           config-file: ./.github/codeql/codeql-config.yml
 
+      - name: Clone tool repository
+        run: |
+          echo "GitHub Repository: ${{ github.repository }}"
+          TOOL_NAME=$(basename ${{ github.repository }})
+          echo "Tool Name: ${TOOL_NAME}"
+          if [ -d "$TOOL_NAME" ]; then
+            echo "Tool repository already exists, skipping clone"
+          else
+            git clone https://github.com/${{ github.repository }}.git
+            echo "Tool repository cloned: $TOOL_NAME"
+          fi
+
       - name: Build with zopen
-        if: ${{ inputs.build-mode != 'none' }}
         run: |
           export PATH="$PWD/meta/bin:$PATH"
           git config --global user.email "zopenCommunity@ibm.com"
           git config --global user.name "Zopen Community"
           
           echo "GitHub Repository: ${{ github.repository }}"
-          echo "Repository already checked out in current directory"
-          pwd
-          ls -la
-          
-          # Build in current directory (repository was checked out in step 1)
+          TOOL_NAME=$(basename ${{ github.repository }})
+          echo "Tool Name: ${TOOL_NAME}"
+          cd $TOOL_NAME
           zopen build -g
           ls -lrt
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
+        
