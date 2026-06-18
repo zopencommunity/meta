@@ -1,0 +1,45 @@
+base-branch:
+  - main
+branch: codeql-security-scanning
+concurrent: 5
+conflict-strategy: skip
+draft: false
+dry-run: false
+fetch-depth: 1
+fork: true
+fork-owner:
+git-type: cmd
+interactive: false
+log-file: "codeql-rollout.log"
+log-format: text
+log-level: debug
+max-reviewers: 0
+max-team-reviewers: 0
+org:
+  - zopencommunity
+output: "-"
+plain-output: false
+platform: github
+pr-title: "Add CodeQL Security Scanning Workflow"
+pr-body: |
+  This PR adds CodeQL security scanning to this repository.
+  
+  ## What's included:
+  - CodeQL workflow that runs on push, pull requests, and weekly schedule
+  - Uses the reusable workflow from zopencommunity/meta
+  - Automatically detects the primary language
+  - Adds CodeQL badge to README.md
+  
+  ## Benefits:
+  - Automated security vulnerability detection
+  - Code quality analysis
+  - Integration with GitHub Security tab
+  - Weekly scheduled scans to catch new vulnerabilities
+  
+  This is part of the zopen community initiative to improve security across all repositories.
+repo-include: ".*port$"
+skip-forks: false
+skip-pr: false
+skip-repo:
+  - zopencommunity/zotsampleport
+  - zopencommunity/meta
