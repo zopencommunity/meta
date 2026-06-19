@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2026-06-19T13:23:52+00:00Z",
+  "generation_timestamp_utc": "2026-06-19T16:48:22+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -318,6 +318,7 @@
     "openssl3": "",
     "syft": "A CLI tool and Go library for generating a Software Bill of Materials (SBOM) from container images and filesystems. Exceptional for vulnerability detection when used with a scanner like Grype.",
     "csmith": "Csmith is a random generator of C programs. It's primary purpose is to find compiler bugs with random programs, using differential testing as the test oracle.",
-    "confluent-kafka": "zopen port of confluent-kafka"
+    "confluent-kafka": "zopen port of confluent-kafka",
+    "duckdb-python": "zopen port of duckdb-python"
   }
 }
