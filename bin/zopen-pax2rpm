@@ -250,18 +250,18 @@ if [ -d usr ]; then
     fi
     echo "Detected nested root: $ROOT_DIR"
     mkdir -p %{buildroot}%{install_dir}
-    cp -RP "$ROOT_DIR"/* %{buildroot}%{install_dir}/
+    (cd "$ROOT_DIR" && pax -rw -p p . %{buildroot}%{install_dir}/)
 elif [ $(ls -1 | grep -v "^$" | wc -l) -eq 1 ] && [ -d * ]; then
     # Standard single-directory layout (e.g., go/)
     SUB_DIR=$(ls -1)
     echo "Standard single-directory layout detected: $SUB_DIR"
     mkdir -p %{buildroot}%{install_dir}
-    cp -RP "$SUB_DIR"/* %{buildroot}%{install_dir}/
+    (cd "$SUB_DIR" && pax -rw -p p . %{buildroot}%{install_dir}/)
 else
     # Flat or mixed layout
     echo "Flat or mixed layout detected"
     mkdir -p %{buildroot}%{install_dir}
-    cp -RP * %{buildroot}%{install_dir}/
+    (pax -rw -p p . %{buildroot}%{install_dir}/)
 fi
 
 # Install root-level documentation if it hasn't been copied already
@@ -269,7 +269,7 @@ fi
 for doc in README* LICENSE* COPYING* CHANGELOG* AUTHORS* INSTALL* NEWS*; do
     if [ -f "$doc" ]; then
         mkdir -p %{buildroot}%{install_dir}/doc
-        cp -RP "$doc" %{buildroot}%{install_dir}/doc/
+        pax -rw -p p "$doc" %{buildroot}%{install_dir}/doc/
     fi
 done
 EOF
