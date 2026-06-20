@@ -58,6 +58,8 @@ VERSION=$(find . -path "*/install/.version" -exec cat {} + 2>/dev/null || echo "
 unset http_proxy https_proxy
 
 PAX_BASENAME=$(basename "$PAX")
+DIR_NAME=${PAX_BASENAME%%.pax.Z}
+DIR_NAME=$(echo "$DIR_NAME" | sed -e "s/\.202[0-9]*_[0-9]*\.zos/.zos/g" -e "s/\.zos//g")
 TAG="${BUILD_LINE}_${RELEASE_PREFIX}_${BUILD_NUMBER}"
 NAME="${PORT_NAME} ${VERSION} (Build ${BUILD_NUMBER}) - (${BUILD_LINE})"
 
@@ -76,7 +78,7 @@ DESCRIPTION+="<b>Test Status:</b> ${BUILD_STATUS}<br/>"
 DESCRIPTION+="<b>Runtime Dependencies:</b> ${RUNTIME_DEPS}<br/>"
 DESCRIPTION+="<b>Build Dependencies:</b> ${BUILD_DEPS}<br/>"
 URL_LINE="https://github.com/${GITHUB_ORGANIZATION}/${GITHUB_REPO}/releases/download/${TAG}/${PAX_BASENAME}"
-DESCRIPTION+="<br/><b>Command to download and install on z/OS (if you have curl)</b> <pre>curl -o ${PAX_BASENAME} -L ${URL_LINE} && pax -rf ${PAX_BASENAME} && cd ${PORT_NAME} && . ./setup.sh</pre>"
+DESCRIPTION+="<br/><b>Command to download and install on z/OS (if you have curl)</b> <pre>curl -o ${PAX_BASENAME} -L ${URL_LINE} && pax -rf ${PAX_BASENAME} && cd ${DIR_NAME} && . ./setup.sh</pre>"
 DESCRIPTION+="<br/><b>Or use:</b> <pre>zopen install ${PORT_NAME}</pre>"
 DESCRIPTION+=$'\n\n'"$RELEASE_NOTES"
 
