@@ -340,13 +340,13 @@ EOF
         *.pax.Z)
             cat >> "$output_file" << EOF
 # Extract compressed pax archive
-pax -rzf %{_sourcedir}/$(basename "$source_file")
+pax -r -p p -zf %{_sourcedir}/$(basename "$source_file")
 EOF
             ;;
         *)
             cat >> "$output_file" << EOF
 # Extract pax archive
-pax -rf %{_sourcedir}/$(basename "$source_file")
+pax -r -p p -f %{_sourcedir}/$(basename "$source_file")
 EOF
             ;;
     esac
