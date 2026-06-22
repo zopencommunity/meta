@@ -311,6 +311,8 @@ setDefaults()
   unset ZOPEN_EXTRA_CXXFLAGS
   unset ZOPEN_EXTRA_LDFLAGS
   unset ZOPEN_EXTRA_LIBS
+  export ZOSLIB_HOOK_OBJ=""
+  export ZOPEN_INSTRUMENT=0
   return 0
 }
 
@@ -405,6 +407,9 @@ Option:
   --sign-pax, -sp       This option signs the pax file.
 			ZOPEN_GPG_SECRET_KEY_FILE, ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE
                         and ZOPEN_GPG_PUBLIC_KEY_FILE must be set for signing the file.
+  --sign-rpm, -sr       This option signs the RPM package.
+			ZOPEN_GPG_SECRET_KEY_FILE and ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE
+                        must be set for signing the RPM.
   -v                    run in verbose mode.
   -vv                   run in very verbose mode (sets environment variables
                         V=1 and VERBOSE=1).
@@ -443,6 +448,7 @@ processOptions()
   generateRPM=false
   setActive=true
   signPax=false
+  signRPM=false
   forcePatchApply=false
   depsPath="${ZOPEN_PKGINSTALL}"
   forceUpgradeDeps=false
@@ -450,6 +456,7 @@ processOptions()
   instrument=false
   printSourceDir=false
   use_ccache=false
+  generate_zoslib_hooks=false
   editable=false
   depsDepth=2
   while [ $# -gt 0 ]; do
@@ -551,6 +558,11 @@ processOptions()
       ;;
     "-sp" | "--sign-pax")
       signPax=true
+      generatePax=true
+      ;;
+    "-sr" | "--sign-rpm")
+      signRPM=true
+      generateRPM=true
       generatePax=true
       ;;
     *)
@@ -852,25 +864,39 @@ PYENVEOF
   
   if echo "${langDeps}" | grep -E "(check_clang|check_xlclang)" > /dev/null 2>&1; then
     if [ -z "${ZOPEN_DONT_ADD_ZOSLIB_DEP}" ]; then
-      # Add zoslib as an implicit library
       langDeps="${langDeps} zoslib"
+      
+      # Set ZOSLIB hook generation flag and object path
+      if [ -z "${ZOPEN_SKIP_ZOSLIB_ENV_HOOK}" ]; then
+        generate_zoslib_hooks=true
+        export ZOSLIB_HOOK_OBJ="$ZOPEN_ROOT/.zoslib_hooks/zoslib_env_hook.o"
+      fi
+
+      if ${instrument}; then
+        export ZOPEN_INSTRUMENT=1
+      fi
     fi
 
     if ${use_ccache}; then
       langDeps="${langDeps} ccache"
     fi
+  else
+    if ${instrument}; then
+      printWarning "In order to instrument your application, you must build with clang."
+    fi
+  fi
+
+  # Handle USE_CLANG_WRAPPER: replace check_clang and zoslib with clang_zos_wrapper
+  if [ -n "${USE_CLANG_WRAPPER}" ]; then
+    langDeps=$(echo "${langDeps}" | sed 's/\bcheck_clang\b//g' | sed 's/\bzoslib\b//g' | xargs)
+    ZOPEN_DEPS=$(echo "${ZOPEN_DEPS}" | sed 's/\bcheck_clang\b//g' | sed 's/\bzoslib\b//g' | xargs)
+    langDeps="${langDeps} clang_zos_wrapper"
   fi
 
   if ${getSourceOnly}; then
     ZOPEN_DEPS="${implicitDeps}"
   else
-    ZOPEN_DEPS="${implicitDeps} ${langDeps} ${ZOPEN_DEPS}"
-  fi
-
-  # Handle USE_CLANG_WRAPPER: replace check_clang and zoslib with clang_zos_wrapper
-  if [ -n "${USE_CLANG_WRAPPER}" ]; then
-    ZOPEN_DEPS=$(echo "${ZOPEN_DEPS}" | sed 's/\bcheck_clang\b//g' | sed 's/\bzoslib\b//g' | xargs)
-    ZOPEN_DEPS="${ZOPEN_DEPS} clang_zos_wrapper"
+    ZOPEN_DEPS="${langDeps} ${implicitDeps} ${ZOPEN_DEPS}"
   fi
 
   # Add meta as an implicit runtime dependency
@@ -915,14 +941,21 @@ PYENVEOF
 
 }
 
+# setDepsEnv
+# Sources the environment of the specified dependencies.
+# Inputs: $* - list of dependencies to source
 setDepsEnv()
 {
+  if [ $# -eq 0 ]; then
+    return
+  fi
+
   if ${getSourceOnly} && [ "$(uname -s)" != "OS/390" ]; then
     printVerbose "Skipping dependency installation in --get-source mode and on non-z/OS system"
     return
   fi
 
-  deps="${ZOPEN_DEPS}"
+  deps="$*"
   orig="${PWD}"
   deps=$(normalizeDeps "${deps}")
   for dep in ${deps}; do
@@ -1005,7 +1038,7 @@ setEnv()
   fi
 
   initDefaultEnvironment
-  setDepsEnv
+  setDepsEnv ${ZOPEN_DEPS}
 
   # Add ccache support if requested and using clang
   if ${use_ccache}; then
@@ -1020,21 +1053,13 @@ setEnv()
     fi
   fi
 
-  if ${instrument}; then
-    if [[ "${CC}" == *clang* ]]; then
-      instrumentOptions="-finstrument-functions"
-    else
-      printWarning "In order to instrument your application, you must build with clang."
-    fi
-  fi
-
   # Dependencies such as libraries may add flags
   if ${editable}; then
     ZOPEN_EXTRA_LDFLAGS="${ZOPEN_EXTRA_LDFLAGS} -Wl,-bedit=yes"
   fi
   export CPPFLAGS="${ZOPEN_CPPFLAGS} ${ZOPEN_EXTRA_CPPFLAGS}"
-  export CFLAGS="${ZOPEN_CFLAGS} ${ZOPEN_EXTRA_CFLAGS} ${instrumentOptions}"
-  export CXXFLAGS="${ZOPEN_CXXFLAGS} ${ZOPEN_EXTRA_CXXFLAGS} ${instrumentOptions}"
+  export CFLAGS="${ZOPEN_CFLAGS} ${ZOPEN_EXTRA_CFLAGS}"
+  export CXXFLAGS="${ZOPEN_CXXFLAGS} ${ZOPEN_EXTRA_CXXFLAGS}"
   export LDFLAGS="${ZOPEN_LDFLAGS} ${ZOPEN_EXTRA_LDFLAGS}"
   export LIBS="${ZOPEN_LIBS} ${ZOPEN_EXTRA_LIBS}"
 
@@ -1811,21 +1836,35 @@ replaceHardcodedPath()
   replaced=$2
   f=$3
   hasHardcodedPaths=true
-  printVerbose "Replacing ${orig} in ${f}"
+  
   # only substitute text files
   if /bin/sed -e "" "${f}" 2> /dev/null 1>&2; then
+    printVerbose "Replacing ${orig} in ${f}"
     isWritable=true
     if [ ! -w "${f}" ]; then
       isWritable=false
       chmod "+w" "${f}"
     fi
 
-    cp "${f}" "${f}.old" &&
-      sed \
-        -e "s#${orig}/\([^/]\+\)/[^/\n '\";]*#${replaced}/\1/\1#g" \
-        -e "s#${ZOSLIB_HOOK_OBJ}##g" \
-        "${f}.old" > "${f}" &&
-      rm "${f}.old"
+    if cp "${f}" "${f}.old"; then
+      if [ -n "${ZOSLIB_HOOK_OBJ}" ]; then
+        sed \
+          -e "s#${orig}/\([^/]\+\)/[^/\n '\";]*#${replaced}/\1/\1#g" \
+          -e "s#${ZOSLIB_HOOK_OBJ}##g" \
+          "${f}.old" > "${f}"
+      else
+        sed \
+          -e "s#${orig}/\([^/]\+\)/[^/\n '\";]*#${replaced}/\1/\1#g" \
+          "${f}.old" > "${f}"
+      fi
+
+      if [ $? -eq 0 ]; then
+        rm "${f}.old"
+      else
+        mv "${f}.old" "${f}"
+        printError "Failed to replace hardcoded paths in ${f}"
+      fi
+    fi
 
     if ! ${isWritable}; then
       chmod "-w" "${f}"
@@ -2514,6 +2553,9 @@ create_rpm()
     if [ -n "${rpm_deps}" ]; then
       cmd="${cmd} --requires \"${rpm_deps}\""
     fi
+    if [ "${signRPM}" = "true" ]; then
+      cmd="${cmd} --sign"
+    fi
     if ! runAndLog "${cmd}"; then
       printError "Could not generate RPM from \"${paxFileName}\""
     fi
@@ -2553,9 +2595,13 @@ package()
   if [ -n "${ZOPEN_INSTALL_CMD}" ]; then
     #TODO: Hack so that we can use coreutils md5sum without impacting builds
     ZOPEN_DEPS="coreutils jq"
-    if [ "${signPax}" = "true" ] && ( [ -z "${ZOPEN_GPG_SECRET_KEY_FILE}" ] || [ -z "${ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE}" ] || [ -z "${ZOPEN_GPG_PUBLIC_KEY_FILE}" ] || [ ! -r "${ZOPEN_GPG_SECRET_KEY_FILE}" ] || [ ! -r "${ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE}" ] || [ ! -r "${ZOPEN_GPG_PUBLIC_KEY_FILE}" ] ); then
-      printError "GPG keyring environment variables are not set! You can omit the --sign-pax option to bypass this"
-    else
+    if [ "${signPax}" = "true" ] || [ "${signRPM}" = "true" ]; then
+      if ( [ -z "${ZOPEN_GPG_SECRET_KEY_FILE}" ] || [ -z "${ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE}" ] || [ ! -r "${ZOPEN_GPG_SECRET_KEY_FILE}" ] || [ ! -r "${ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE}" ] ); then
+        printError "GPG keyring environment variables are not set! You can omit the --sign-pax or --sign-rpm option to bypass this"
+      fi
+      if [ "${signPax}" = "true" ] && ( [ -z "${ZOPEN_GPG_PUBLIC_KEY_FILE}" ] || [ ! -r "${ZOPEN_GPG_PUBLIC_KEY_FILE}" ] ); then
+        printError "ZOPEN_GPG_PUBLIC_KEY_FILE not set or not readable! Required for PAX signing."
+      fi
       ZOPEN_DEPS="${ZOPEN_DEPS} gpg"
     fi
 
@@ -2563,7 +2609,7 @@ package()
       ZOPEN_DEPS="${ZOPEN_DEPS} rpm"
     fi
 
-    setDepsEnv 
+    setDepsEnv ${ZOPEN_DEPS}
     create_pax
 
     if ${generateRPM}; then
@@ -2801,9 +2847,15 @@ terminate()
   fi
 }
 
+
 generateZOSLIBHooks()
 {
-  # Background:
+  # Fail fast if ZOSLIB_HOOK_OBJ is not set
+  if [ -z "${ZOSLIB_HOOK_OBJ}" ]; then
+    printError "ZOSLIB_HOOK_OBJ must be set before calling generateZOSLIBHooks"
+  fi
+
+# Background:
   #  As part of the build/install process, various tools may require application specific environment variables to be set.
   #  This function generates a C hook zoslib_env_hook() that will be called by ZOSLIB before main is entered.
   #  The function's purpose is to automatically set environment variables before main.
@@ -2823,26 +2875,6 @@ generateZOSLIBHooks()
   #LIBPATH|prepend|PROJECT_ROOT/lib
   #"
 
-  if [ "${ZOPEN_TYPE}x" = "BAREx" ]; then
-    printVerbose "Skipping GenerateZOSLIBHooks for BARE build type"
-    return
-  fi
-
-  if [ -z "${CC}" ]; then
-    printVerbose "Skipping GenerateZOSLIBHooks since CC is not set"
-    return
-  fi
-
-  if [ -n "${ZOPEN_DONT_ADD_ZOSLIB_DEP}" ]; then
-    printVerbose "Skipping GenerateZOSLIBHooks since ZOPEN_DONT_ADD_ZOSLIB_DEP is set"
-    return
-  fi
-
-  if ! command -v "$(echo ${CC} | awk '{print $NF}')" > /dev/null 2>&1; then
-    printVerbose "Skipping GenerateZOSLIBHooks since CC is not a command"
-    return
-  fi
-
   if command -V "${ZOPEN_APPEND_TO_ZOSLIB_ENV_CODE}" > /dev/null 2>&1; then
     printVerbose "Appending additional environment zoslib variables..."
     zoslib_env="${zoslib_env}$(${ZOPEN_APPEND_TO_ZOSLIB_ENV_CODE})"
@@ -2851,11 +2883,16 @@ generateZOSLIBHooks()
   printHeader "Generating ZOSLIB Environment Hooks"
 
   prevpath="${PWD}"
+  
+  # Extract directory and filename from ZOSLIB_HOOK_OBJ
+  zoslib_hooks_dir=$(dirname "${ZOSLIB_HOOK_OBJ}")
+  output_obj=$(basename "${ZOSLIB_HOOK_OBJ}")
+  output_base="${output_obj%.o}"
+  output="${output_base}.c"
+  
   # Generate directories under project root dir
-  mkdir -p "$ZOPEN_ROOT/.zoslib_hooks"
-  cd "$ZOPEN_ROOT/.zoslib_hooks" || exit
-
-  output="zoslib_env_hook.c"
+  mkdir -p "${zoslib_hooks_dir}"
+  cd "${zoslib_hooks_dir}" || exit
 
   commit="local"
   if [ -n "$ZOPEN_COMMIT_SHA" ]; then
@@ -3012,16 +3049,12 @@ zz
     extraOptions="-qexportall"
   fi
 
-  if ! runAndLog "${CC} ${CFLAGS} ${CPPFLAGS} -DPATH_MAX=1024 ${extraOptions} -c ${output} -o ${output}.o"; then
+  if ! runAndLog "${CC} ${ZOPEN_CFLAGS} ${ZOPEN_CPPFLAGS} -DPATH_MAX=1024 ${extraOptions} -c ${output} -o ${output_obj}"; then
     printError "Compiler command for ${output} failed to compile"
   fi
 
-  # Apply it in both LIB envars because some ports use ZOPEN_EXTRA_LIBS directly
-  export ZOPEN_EXTRA_LIBS="${ZOPEN_EXTRA_LIBS} ${PWD}/${output}.o"
-  export LIBS="${LIBS} ${PWD}/${output}.o"
-  export ZOSLIB_HOOK_OBJ="${PWD}/${output}.o"
-
   cd "${prevpath}" || printError "Could not change back to the original path ${prevpath}"
+
 }
 
 #
@@ -3076,7 +3109,7 @@ if [ -n "${ZOPEN_SRC_DIR}" ]; then
   cd "${ZOPEN_SRC_DIR}" || exit 99
 fi
 
-if [ -z "${ZOPEN_SKIP_ZOSLIB_ENV_HOOK}" ]; then
+if [ "${generate_zoslib_hooks}" = "true" ]; then
   generateZOSLIBHooks
 fi
 

@@ -59,8 +59,8 @@ if [ ! -z "$PORT_SOURCE_URL" ]; then
 fi
 git clone -b "${PORT_BRANCH}" "${PORT_GITHUB_REPO}" ${PORT_NAME} && cd ${PORT_NAME}
 
-# Conditionally add -gr -sp options based on GENERATE_PAX_RPM parameter
-paxRpmOptions="-gr -sp"
+# Conditionally add -gp -sp -gr -sr options based on GENERATE_PAX_RPM parameter
+paxRpmOptions="-gp -sp -gr -sr"
 if [ "${GENERATE_PAX_RPM}" = "false" ]; then
   paxRpmOptions=""
 fi

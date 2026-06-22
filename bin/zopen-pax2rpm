@@ -40,6 +40,7 @@ PACKAGER_EMAIL="${CURRENT_USER}@$(hostname 2>/dev/null || echo "localhost")"
 # Build flag
 BUILD_RPM=false
 BUILD_BINARY_ONLY=false
+SIGN_RPM=false
 BUILDROOT="${HOME}/rpmbuild"
 VALIDATE_SPEC=false
 DRY_RUN=false
@@ -386,6 +387,103 @@ EOF
     return 0
 }
 
+# Function to sign generated RPMs
+sign_rpm() {
+    buildroot="$1"
+    
+    # Check for required environment variables
+    if [ -z "${ZOPEN_GPG_SECRET_KEY_FILE}" ] || [ -z "${ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE}" ]; then
+        printError "Signing requested but ZOPEN_GPG_SECRET_KEY_FILE or ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE not set"
+        return 1
+    fi
+
+    echo ""
+    echo "=========================================="
+    echo "Signing RPM packages..."
+    echo "=========================================="
+    echo ""
+
+    # Create a temporary directory for GPG keyring using zopen_tmp_dir
+    if [ -z "${zopen_tmp_dir}" ] || [ ! -d "${zopen_tmp_dir}" ]; then
+        printError "zopen_tmp_dir not set or not a directory. Cannot create temporary GPG directory."
+    fi
+    TMP_GPG_DIR="${zopen_tmp_dir}/rpm_gpg_$$"
+    echo "Creating temporary GPG directory: ${TMP_GPG_DIR}"
+    if ! mkdir -p "${TMP_GPG_DIR}" 2>/dev/null; then
+        printError "Failed to create temporary directory for GPG signing"
+    fi
+    chmod 700 "${TMP_GPG_DIR}"
+    echo "Temporary GPG directory created"
+    
+    # Register cleanup trap
+    addCleanupTrapCmd "rm -rf ${TMP_GPG_DIR}"
+    echo "Cleanup trap registered"
+    
+    OLD_GNUPGHOME="$GNUPGHOME"
+    export GNUPGHOME="$TMP_GPG_DIR"
+    echo "GNUPGHOME set to: ${GNUPGHOME}"
+    RPM_LIST=""
+
+    # Import the private key
+    echo "Importing private key..."
+    if ! gpg --batch --yes --import "${ZOPEN_GPG_SECRET_KEY_FILE}" >/dev/null 2>&1; then
+        printError "Failed to import GPG secret key"
+    fi
+    echo "Private key imported successfully"
+
+    # Identify the GPG key ID (long ID)
+    echo "Extracting GPG key ID..."
+    GPG_KEY_ID=$(gpg --list-secret-keys --with-colons | grep '^sec' | cut -d: -f5 | head -n 1)
+    if [ -z "${GPG_KEY_ID}" ]; then
+        printError "Could not identify GPG key ID from imported key"
+    fi
+    echo "GPG key ID: ${GPG_KEY_ID}"
+
+    # Create a wrapper script for gpg to handle the passphrase file
+    echo "Creating GPG wrapper script..."
+    GPG_WRAPPER="${TMP_GPG_DIR}/gpg_wrapper.sh"
+    cat << EOF > "${GPG_WRAPPER}"
+#!/bin/sh
+gpg --batch --pinentry-mode loopback --passphrase-file "${ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE}" "\$@"
+EOF
+    chmod +x "${GPG_WRAPPER}"
+    echo "GPG wrapper script created"
+
+    # Sign the RPMs using the wrapper and key ID
+    # We use --define to override the GPG command and key details
+    SIGN_CMD="rpmsign --addsign --key-id ${GPG_KEY_ID} \
+        --define '_gpg_name ${GPG_KEY_ID}' \
+        --define '__gpg ${GPG_WRAPPER}' \
+        --define '_gpg_path ${TMP_GPG_DIR}'"
+
+    # Use a temporary file to avoid subshell return issues
+    echo "Finding RPM files to sign..."
+    RPM_LIST=$(mktempfile "rpmlist")
+    find "$buildroot/RPMS" -name "*.rpm" -type f > "$RPM_LIST"
+    
+    if [ ! -s "$RPM_LIST" ]; then
+        printError "No RPM packages found to sign in $buildroot/RPMS"
+    fi
+    
+    rpm_count=$(wc -l < "$RPM_LIST")
+    echo "Found ${rpm_count} RPM(s) to sign"
+
+    while read rpm; do
+        [ -z "$rpm" ] && continue
+        echo "Signing $rpm..."
+        if ! eval "${SIGN_CMD} \"${rpm}\""; then
+            printError "Failed to sign RPM: $rpm"
+        fi
+    done < "$RPM_LIST"
+
+    rm -f "$RPM_LIST"
+    rm -rf "$TMP_GPG_DIR"
+    [ -n "$OLD_GNUPGHOME" ] && export GNUPGHOME="$OLD_GNUPGHOME" || unset GNUPGHOME
+
+    echo "All RPMs signed successfully"
+    return 0
+}
+
 # Function to setup rpmbuild directories
 setup_rpmbuild() {
 buildroot="$1"
@@ -718,6 +816,11 @@ source_name=$(basename "$pax_file")
             done
         fi
         echo ""
+
+        if [ "$SIGN_RPM" = true ]; then
+            sign_rpm "$buildroot"
+        fi
+
         return 0
     else
         echo ""
@@ -840,6 +943,10 @@ main() {
                 BUILD_BINARY_ONLY=true
                 shift
                 ;;
+	    --sign)
+                SIGN_RPM=true
+                shift
+                ;;
             --buildroot)
                 [ -n "$2" ] || { echo "Error: --buildroot requires a value" >&2; usage; }
                 BUILDROOT="$2"
@@ -922,7 +1029,12 @@ main() {
     # Build RPM if requested
     if [ "$BUILD_RPM" = true ]; then
         if build_rpm "$OUTPUT_FILE" "$PAX_FILE" "$BUILDROOT"; then
+            echo ""
+            echo "=========================================="
+            echo "RPM Build Complete!"
             echo "RPM package built successfully!"
+            echo "=========================================="
+            echo ""
         else
             echo "Warning: RPM build failed. Please review the spec file and try again." >&2
             exit 1

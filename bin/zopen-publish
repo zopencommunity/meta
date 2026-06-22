@@ -62,7 +62,7 @@ printSyntax()
   echo ""
   echo "Examples:"
   echo "  zopen-publish -f -p install/mypackage.zos.pax.Z -m metadata.json -g DEV_mypackage_12345 -t <token>"
-  echo "  zopen-publish --whl dist/mypackage-1.0-py3-none-any.whl --pulp-url http://host:8080/pypi/zopen/"
+  echo "  zopen-publish --whl dist/mypackage-1.0-py3-none-any.whl --pulp-url https://host/pulp/content/zopen/simple/"
   echo "  zopen-publish -f -p install/mypackage.zos.pax.Z -m metadata.json -g TAG -t <token> --pulp"
 }
 
@@ -74,6 +74,11 @@ checkDependencies() {
 
   if ! command -v jq > /dev/null 2>&1; then
     printError "Error: jq command not found. Please install it."
+    return 1
+  fi
+
+  if [ "${PUBLISH_PULP:-false}" = true ] && ! command -v python3 > /dev/null 2>&1; then
+    printError "Error: python3 command not found. It is required for Python wheel metadata processing."
     return 1
   fi
 
@@ -695,28 +700,246 @@ publishRelease() {
   return 0
 }
 
-publishToPulp() {
-  whl_basename=$(basename "${WHL_FILE}")
+normalizePulpUploadUrl() {
+  url="${1%/}"
 
-  pulp_upload_url="${PULP_URL%/}"
-  case "$pulp_upload_url" in
+  case "$url" in
     */legacy)
-      pulp_upload_url="${pulp_upload_url}/"
+      printf '%s/\n' "$url"
+      return 0
       ;;
     */legacy/)
-      ;;
-    *)
-      pulp_upload_url="${pulp_upload_url}/legacy/"
+      printf '%s\n' "$url"
+      return 0
       ;;
   esac
+
+  # Accept pip install/content URLs such as:
+  #   https://host/pulp/content/zopen/simple/
+  #   https://host/pulp/content/zopen/
+  # and convert them to the Pulp Python legacy upload endpoint:
+  #   https://host/pypi/zopen/legacy/
+  case "$url" in
+    */pulp/content/*)
+      base=${url%%/pulp/content/*}
+      repo=${url#*/pulp/content/}
+      repo=${repo%%/simple*}
+      repo=${repo%%/*}
+      printf '%s/pypi/%s/legacy/\n' "$base" "$repo"
+      return 0
+      ;;
+  esac
+
+  case "$url" in
+    */pypi/*)
+      printf '%s/legacy/\n' "$url"
+      ;;
+    *)
+      printf '%s/legacy/\n' "$url"
+      ;;
+  esac
+}
+
+preparePulpWheelMetadata() {
+  meta_env="$1"
+  compat_dir="$2"
+
+  python3 - "$WHL_FILE" "$meta_env" "$compat_dir" <<'PY'
+import base64
+import csv
+import email
+import hashlib
+import io
+import pathlib
+import shlex
+import sys
+import tempfile
+import zipfile
+
+src = pathlib.Path(sys.argv[1])
+meta_env = pathlib.Path(sys.argv[2])
+compat_dir = pathlib.Path(sys.argv[3])
+compat_dir.mkdir(parents=True, exist_ok=True)
+
+with zipfile.ZipFile(src) as zf:
+    metadata_names = [n for n in zf.namelist() if n.endswith('.dist-info/METADATA')]
+    if not metadata_names:
+        raise SystemExit('Wheel does not contain a .dist-info/METADATA file')
+    metadata_name = metadata_names[0]
+    metadata_text = zf.read(metadata_name).decode('utf-8', 'replace')
+
+msg = email.message_from_string(metadata_text)
+metadata_version = msg.get('Metadata-Version', '')
+name = msg.get('Name', '')
+version = msg.get('Version', '')
+summary = msg.get('Summary', '') or ''
+
+if not name or not version:
+    raise SystemExit('Wheel metadata is missing Name or Version')
+
+upload_whl = src
+upload_metadata_version = metadata_version
+
+# Older pulp_python releases do not correctly parse newer wheel metadata (for
+# example Metadata-Version: 2.4), which can lead to a null Version in Pulp even
+# though the wheel is valid. Create a temporary upload copy with conservative
+# metadata while preserving the original filename and package contents.
+try:
+    major, minor = [int(x) for x in metadata_version.split('.', 1)]
+except Exception:
+    major, minor = (0, 0)
+
+if (major, minor) > (2, 3):
+    upload_metadata_version = '2.1'
+    upload_whl = compat_dir / src.name
+    with tempfile.TemporaryDirectory() as td_s:
+        td = pathlib.Path(td_s)
+        with zipfile.ZipFile(src) as zf:
+            zf.extractall(td)
+
+        dist_info_dirs = list(td.glob('*.dist-info'))
+        if not dist_info_dirs:
+            raise SystemExit('Wheel does not contain a .dist-info directory')
+        dist_info = dist_info_dirs[0]
+        metadata_path = dist_info / 'METADATA'
+        text = metadata_path.read_text()
+        text = text.replace(f'Metadata-Version: {metadata_version}\n',
+                            f'Metadata-Version: {upload_metadata_version}\n', 1)
+        metadata_path.write_text(text)
+
+        record_path = dist_info / 'RECORD'
+        rows = []
+        for path in sorted(p for p in td.rglob('*') if p.is_file()):
+            rel = path.relative_to(td).as_posix()
+            if rel.endswith('/RECORD'):
+                rows.append([rel, '', ''])
+            else:
+                data = path.read_bytes()
+                digest = base64.urlsafe_b64encode(hashlib.sha256(data).digest()).decode().rstrip('=')
+                rows.append([rel, 'sha256=' + digest, str(len(data))])
+        out = io.StringIO(newline='')
+        csv.writer(out).writerows(rows)
+        record_path.write_text(out.getvalue())
+
+        with zipfile.ZipFile(upload_whl, 'w', zipfile.ZIP_DEFLATED) as zf:
+            for path in sorted(p for p in td.rglob('*') if p.is_file()):
+                zf.write(path, path.relative_to(td).as_posix())
+
+sha256 = hashlib.sha256(upload_whl.read_bytes()).hexdigest()
+
+values = {
+    'PULP_UPLOAD_WHL': str(upload_whl),
+    'PULP_WHL_SHA256': sha256,
+    'PULP_WHL_METADATA_VERSION': upload_metadata_version,
+    'PULP_WHL_NAME': name,
+    'PULP_WHL_VERSION': version,
+    'PULP_WHL_SUMMARY': summary,
+}
+
+with meta_env.open('w') as f:
+    for key, value in values.items():
+        f.write(f'{key}={shlex.quote(value)}\n')
+PY
+}
+
+publishPulpPythonRepository() {
+  upload_url="$1"
+
+  case "$upload_url" in
+    */pypi/*)
+      api_base="${upload_url%%/pypi/*}"
+      repo_base_path="${upload_url#*/pypi/}"
+      repo_base_path="${repo_base_path%%/*}"
+      ;;
+    *)
+      printVerbose "Unable to derive Pulp API URL from upload URL: ${upload_url}"
+      return 0
+      ;;
+  esac
+
+  encoded_base_path=$(printf '%s' "$repo_base_path" | jq -sRr @uri)
+  dist_response=$(curl -sS -u "${PULP_USER}:${PULP_PASSWORD}" \
+    "${api_base}/pulp/api/v3/distributions/python/pypi/?base_path=${encoded_base_path}" 2>&1)
+  repo_href=$(echo "$dist_response" | jq -r '.results[0].repository // empty' 2>/dev/null)
+
+  if [ -z "$repo_href" ]; then
+    printVerbose "Unable to find Pulp Python repository for base path: ${repo_base_path}"
+    return 0
+  fi
+
+  printVerbose "Creating Pulp Python publication for ${repo_base_path} (${repo_href})"
+  pub_payload=$(jq -cn --arg repository "$repo_href" '{repository:$repository}')
+  pub_response=$(curl -sS -u "${PULP_USER}:${PULP_PASSWORD}" \
+    -H 'Content-Type: application/json' \
+    -X POST "${api_base}/pulp/api/v3/publications/python/pypi/" \
+    -d "$pub_payload" 2>&1)
+  pub_task=$(echo "$pub_response" | jq -r '.task // empty' 2>/dev/null)
+
+  if [ -z "$pub_task" ]; then
+    printVerbose "No Pulp publication task was returned: ${pub_response}"
+    return 0
+  fi
+
+  retries=0
+  while [ $retries -lt 30 ]; do
+    pub_task_response=$(curl -sS -u "${PULP_USER}:${PULP_PASSWORD}" "${api_base}${pub_task}" 2>&1)
+    pub_task_state=$(echo "$pub_task_response" | jq -r '.state // empty' 2>/dev/null)
+
+    case "$pub_task_state" in
+      completed)
+        printVerbose "Pulp Python publication completed for ${repo_base_path}."
+        return 0
+        ;;
+      failed)
+        pub_task_error=$(echo "$pub_task_response" | jq -r '.error.description // empty' 2>/dev/null)
+        printSoftError "Pulp publication task failed: ${pub_task_error}"
+        return 1
+        ;;
+      canceled)
+        printSoftError "Pulp publication task was canceled."
+        return 1
+        ;;
+    esac
+
+    retries=$((retries + 1))
+    sleep 2
+  done
+
+  printSoftError "Pulp publication task did not complete within 60 seconds."
+  return 1
+}
+
+publishToPulp() {
+  whl_basename=$(basename "${WHL_FILE}")
+  pulp_upload_url=$(normalizePulpUploadUrl "${PULP_URL}")
+
+  tmp_dir=$(mktemp -d /tmp/zopen-publish-whl.XXXXXX) || return 1
+  meta_env="${tmp_dir}/wheel.env"
+
+  if ! preparePulpWheelMetadata "$meta_env" "$tmp_dir"; then
+    rm -rf "$tmp_dir"
+    return 1
+  fi
+
+  . "$meta_env"
+
+  if [ "$PULP_UPLOAD_WHL" != "$WHL_FILE" ]; then
+    printInfo "Created Pulp-compatible wheel metadata copy: ${PULP_UPLOAD_WHL}"
+  fi
 
   printInfo "Uploading ${whl_basename} to ${pulp_upload_url}"
 
   UPLOAD_RESPONSE=$(curl -sS -w "\n%{http_code}" \
     -u "${PULP_USER}:${PULP_PASSWORD}" \
-    -F "content=@${WHL_FILE}" \
+    -F "content=@${PULP_UPLOAD_WHL}" \
     -F ":action=file_upload" \
+    -F "protocol_version=1" \
+    -F "metadata_version=${PULP_WHL_METADATA_VERSION}" \
+    -F "name=${PULP_WHL_NAME}" \
+    -F "version=${PULP_WHL_VERSION}" \
+    -F "summary=${PULP_WHL_SUMMARY}" \
     -F "filetype=bdist_wheel" \
+    -F "sha256_digest=${PULP_WHL_SHA256}" \
     "${pulp_upload_url}" 2>&1)
 
   http_code=$(echo "$UPLOAD_RESPONSE" | tail -1)
@@ -725,6 +948,7 @@ publishToPulp() {
   if [ "$http_code" != "200" ] && [ "$http_code" != "201" ]; then
     printSoftError "Pulp upload failed with HTTP ${http_code}"
     printSoftError "Response: ${response_body}"
+    rm -rf "$tmp_dir"
     return 1
   fi
 
@@ -733,7 +957,14 @@ publishToPulp() {
   if [ -n "$task_url" ]; then
     printVerbose "Pulp task created: ${task_url}"
 
-    pulp_base_url="${PULP_URL%/pypi*}"
+    case "$pulp_upload_url" in
+      */pypi/*)
+        pulp_base_url="${pulp_upload_url%%/pypi/*}"
+        ;;
+      *)
+        pulp_base_url="${PULP_URL%/pypi*}"
+        ;;
+    esac
     task_full_url="${pulp_base_url}${task_url}"
 
     printVerbose "Checking task status at: ${task_full_url}"
@@ -745,18 +976,25 @@ publishToPulp() {
 
       case "$task_state" in
         completed)
+          if ! publishPulpPythonRepository "$pulp_upload_url"; then
+            rm -rf "$tmp_dir"
+            return 1
+          fi
           printInfo "Wheel ${whl_basename} published to Pulp successfully."
+          rm -rf "$tmp_dir"
           return 0
           ;;
 
         failed)
           task_error=$(echo "$task_response" | jq -r '.error.description // empty' 2>/dev/null)
           printSoftError "Pulp task failed: ${task_error}"
+          rm -rf "$tmp_dir"
           return 1
           ;;
 
         canceled)
           printSoftError "Pulp task was canceled."
+          rm -rf "$tmp_dir"
           return 1
           ;;
       esac
@@ -766,10 +1004,17 @@ publishToPulp() {
     done
 
     printSoftError "Pulp task did not complete within 60 seconds."
+    rm -rf "$tmp_dir"
+    return 1
+  fi
+
+  if ! publishPulpPythonRepository "$pulp_upload_url"; then
+    rm -rf "$tmp_dir"
     return 1
   fi
 
   printInfo "Wheel ${whl_basename} published to Pulp successfully."
+  rm -rf "$tmp_dir"
   return 0
 }
 
