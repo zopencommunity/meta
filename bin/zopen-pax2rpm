@@ -316,6 +316,7 @@ done
 for item in *; do
     case "$item" in
         bin|altbin|lib|libexec|include|etc|share|man|doc|docs|scripts|data) continue ;;
+        install_test.sh|metadata.json|setup.sh|test.status|README.md) continue ;;
     esac
     if [ -e "$item" ]; then
         echo "Installing misc item: $item -> %{_miscdir}"
@@ -326,6 +327,9 @@ done
 
 # Install root-level documentation (README, LICENSE, etc.)
 for docfile in README* LICENSE* COPYING* CHANGELOG* AUTHORS* INSTALL* NEWS*; do
+    case "$docfile" in
+        README.md) continue ;;
+    esac
     if [ -f "$docfile" ]; then
         mkdir -p %{buildroot}%{_docdir}
         pax -rw -p p "$docfile" %{buildroot}%{_docdir}/
