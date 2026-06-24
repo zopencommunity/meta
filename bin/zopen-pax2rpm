@@ -154,6 +154,9 @@ analyze_pax_contents() {
     has_doc=false
     has_man=false
     has_scripts=false
+    has_altbin=false
+    has_libexec=false
+    has_data=false
     is_os_layout=false
     
     # Analyze each file
@@ -185,6 +188,12 @@ analyze_pax_contents() {
                 has_man=true ;;
             scripts/* | */scripts/*)
                 has_scripts=true ;;
+            altbin/* | */altbin/*)
+                has_altbin=true ;;
+            libexec/* | */libexec/*)
+                has_libexec=true ;;
+            data/* | */data/*)
+                has_data=true ;;
             usr/lpp/* | */usr/lpp/*)
                 is_os_layout=true ;;
         esac
@@ -211,15 +220,14 @@ list_pax_contents() {
     esac
 }
 # Function to generate install commands based on analyzed contents
-# Function to generate install commands based on analyzed contents
-# Function to generate install commands based on analyzed contents
+# Distributes files into FHS-like directories under /opt/pkg/
 generate_install_commands() {
 pax_file="$1"
     
     cat << 'EOF'
-# Install files based on detected structure
+# Install files into FHS-like filesystem hierarchy under /opt/pkg/
 
-# Detect the source layout
+# Detect the source layout and find the content root
 if [ -d usr ]; then
     echo "OS layout (usr/) detected, searching for actual content root..."
     # Find the deepest directory that contains bin, lib, pyz, bash, or go
@@ -249,37 +257,116 @@ if [ -d usr ]; then
         done
     fi
     echo "Detected nested root: $ROOT_DIR"
-    mkdir -p %{buildroot}%{install_dir}
-    (cd "$ROOT_DIR" && pax -rw -p p . %{buildroot}%{install_dir}/)
+    cd "$ROOT_DIR"
 elif [ $(ls -1 | grep -v "^$" | wc -l) -eq 1 ] && [ -d * ]; then
     # Standard single-directory layout (e.g., go/)
     SUB_DIR=$(ls -1)
     echo "Standard single-directory layout detected: $SUB_DIR"
-    mkdir -p %{buildroot}%{install_dir}
-    (cd "$SUB_DIR" && pax -rw -p p . %{buildroot}%{install_dir}/)
+    cd "$SUB_DIR"
 else
-    # Flat or mixed layout
+    # Flat or mixed layout — already in the right place
     echo "Flat or mixed layout detected"
-    mkdir -p %{buildroot}%{install_dir}
-    (pax -rw -p p . %{buildroot}%{install_dir}/)
 fi
 
-# Install root-level documentation if it hasn't been copied already
-# (Matches files in the CURRENT directory, not ROOT_DIR)
-for doc in README* LICENSE* COPYING* CHANGELOG* AUTHORS* INSTALL* NEWS*; do
-    if [ -f "$doc" ]; then
-        mkdir -p %{buildroot}%{install_dir}/doc
-        pax -rw -p p "$doc" %{buildroot}%{install_dir}/doc/
+# Distribute known directories to their FHS-correct paths
+for dir in bin altbin lib libexec include etc share man doc docs scripts data; do
+    if [ -d "$dir" ]; then
+        case "$dir" in
+            bin)
+                dest="%{buildroot}%{_bindir}"
+                ;;
+            altbin)
+                dest="%{buildroot}%{_altbindir}"
+                ;;
+            lib)
+                dest="%{buildroot}%{_libdir}"
+                ;;
+            libexec)
+                dest="%{buildroot}%{_libexecdir}"
+                ;;
+            include)
+                dest="%{buildroot}%{_includedir}"
+                ;;
+            etc)
+                dest="%{buildroot}%{_sysconfdir}"
+                ;;
+            share)
+                dest="%{buildroot}%{_datadir}"
+                ;;
+            man)
+                dest="%{buildroot}%{_mandir}"
+                ;;
+            doc|docs)
+                dest="%{buildroot}%{_docdir}"
+                ;;
+            scripts)
+                dest="%{buildroot}%{_libexecdir}/%{name}"
+                ;;
+            data)
+                dest="%{buildroot}%{_pkgdatadir}"
+                ;;
+        esac
+        echo "Installing $dir/ -> $dest"
+        mkdir -p "$dest"
+        (cd "$dir" && pax -rw -p p . "$dest/")
     fi
 done
-EOF
-}
 
+# Install remaining files/directories that don't match known FHS dirs
+for item in *; do
+    case "$item" in
+        bin|altbin|lib|libexec|include|etc|share|man|doc|docs|scripts|data) continue ;;
+    esac
+    if [ -e "$item" ]; then
+        echo "Installing misc item: $item -> %{_miscdir}"
+        mkdir -p "%{buildroot}%{_miscdir}"
+        pax -rw -p p "$item" "%{buildroot}%{_miscdir}/"
+    fi
+done
 
-generate_files_list() {
-    cat << 'EOF'
-%defattr(-,root,root,-)
-%{install_dir}
+# Install root-level documentation (README, LICENSE, etc.)
+for docfile in README* LICENSE* COPYING* CHANGELOG* AUTHORS* INSTALL* NEWS*; do
+    if [ -f "$docfile" ]; then
+        mkdir -p %{buildroot}%{_docdir}
+        pax -rw -p p "$docfile" %{buildroot}%{_docdir}/
+    fi
+done
+
+# Generate RPM file list based on what was actually installed in buildroot.
+# Only list directories that exist and are non-empty to avoid RPM "File not found" errors.
+_FILELIST="%{_builddir}/%{name}-%{version}/rpm_filelist.txt"
+echo '%defattr(-,root,root,-)' > "$_FILELIST"
+
+# Check each FHS directory in buildroot
+for _dir in "%{_bindir}" "%{_altbindir}" "%{_libdir}" "%{_libexecdir}" "%{_includedir}" "%{_libexecdir}/%{name}"; do
+    if [ -d "%{buildroot}${_dir}" ] && [ "$(ls -A "%{buildroot}${_dir}" 2>/dev/null)" ]; then
+        echo "${_dir}" >> "$_FILELIST"
+    fi
+done
+
+# Config files get %config tag
+if [ -d "%{buildroot}%{_sysconfdir}" ] && [ "$(ls -A "%{buildroot}%{_sysconfdir}" 2>/dev/null)" ]; then
+    echo "%config %{_sysconfdir}" >> "$_FILELIST"
+fi
+
+# share/ is parent of docdir, mandir, miscdir — list it if non-empty
+if [ -d "%{buildroot}%{_datadir}" ] && [ "$(ls -A "%{buildroot}%{_datadir}" 2>/dev/null)" ]; then
+    echo "%{_datadir}" >> "$_FILELIST"
+else
+    # Fall back to listing individual subdirs under share/
+    if [ -d "%{buildroot}%{_docdir}" ] && [ "$(ls -A "%{buildroot}%{_docdir}" 2>/dev/null)" ]; then
+        echo "%doc %{_docdir}" >> "$_FILELIST"
+    fi
+    if [ -d "%{buildroot}%{_pkgdatadir}" ] && [ "$(ls -A "%{buildroot}%{_pkgdatadir}" 2>/dev/null)" ]; then
+        echo "%{_pkgdatadir}" >> "$_FILELIST"
+    fi
+    if [ -d "%{buildroot}%{_miscdir}" ] && [ "$(ls -A "%{buildroot}%{_miscdir}" 2>/dev/null)" ]; then
+        echo "%{_miscdir}" >> "$_FILELIST"
+    fi
+fi
+
+echo "Generated RPM file list:"
+cat "$_FILELIST"
 EOF
 }
 
@@ -304,7 +391,18 @@ Version:        ${PKG_VERSION}
 Release:        ${RELEASE}%{?dist}
 Summary:        ${SUMMARY}
 
-%define install_dir /opt/pkg/%{name}/%{version}
+%define _prefix /opt/pkg
+%define _bindir %{_prefix}/bin
+%define _libdir %{_prefix}/lib
+%define _includedir %{_prefix}/include
+%define _sysconfdir %{_prefix}/etc
+%define _datadir %{_prefix}/share
+%define _docdir %{_datadir}/doc/%{name}
+%define _mandir %{_datadir}/man
+%define _libexecdir %{_prefix}/libexec
+%define _altbindir %{_prefix}/altbin
+%define _miscdir %{_prefix}/share/%{name}
+%define _pkgdatadir %{_datadir}/%{name}
 
 License:        ${LICENSE}
 ${URL:+URL:            $URL}
@@ -359,13 +457,9 @@ EOF
 %install
 rm -rf %{buildroot}
 
-# Create base installation directories
-mkdir -p %{buildroot}%{install_dir}
-
 $(generate_install_commands "$source_file")
 
-%files
-$(generate_files_list)
+%files -f rpm_filelist.txt
 
 %changelog
 * ${date} ${PACKAGER_NAME} <${PACKAGER_EMAIL}> - ${PKG_VERSION}-${RELEASE}
@@ -377,6 +471,7 @@ EOF
     echo ""
     echo "Detected structure:"
     [ "$has_bin" = "true" ] && echo "  ✓ Binaries in bin/"
+    [ "$has_altbin" = "true" ] && echo "  ✓ Alt binaries in altbin/"
     [ "$has_lib" = "true" ] && echo "  ✓ Libraries in lib/"
     [ "$has_include" = "true" ] && echo "  ✓ Headers in include/"
     [ "$has_etc" = "true" ] && echo "  ✓ Configuration files in etc/"
@@ -384,6 +479,8 @@ EOF
     [ "$has_doc" = "true" ] && echo "  ✓ Documentation in doc/"
     [ "$has_man" = "true" ] && echo "  ✓ Man pages in man/"
     [ "$has_scripts" = "true" ] && echo "  ✓ Scripts in scripts/"
+    [ "$has_libexec" = "true" ] && echo "  ✓ Helper binaries in libexec/"
+    [ "$has_data" = "true" ] && echo "  ✓ Application data in data/"
     
     return 0
 }
