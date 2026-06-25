@@ -377,6 +377,7 @@ handlePackageInstall()
   downloadFile=$(basename "${downloadURL}")
   metadataFile="${downloadFile}.json" # use the same basename as the pax + .json to avoid collision
   downloadFileVer=$(echo "${downloadFile}" | sed -E 's/.*-(.*)\.zos\.pax\.Z/\1/')
+  downloadFileVer=$(normalizeVersion "$downloadFileVer")
   printVerbose "Downloading port from URL: ${downloadURL} to file: ${downloadFile} (ver=${downloadFileVer})"
 
   if ${downloadOnly}; then

@@ -1255,6 +1255,15 @@ normalizeDeps()
   ' | tr '\n' ' '
 }
 
+#
+# Strip v/V prefix from a version string for consistent numeric versioning
+# "v1.2.3" → "1.2.3", "V1.2.3" → "1.2.3", "1.2.3" → "1.2.3", "" → ""
+#
+normalizeVersion()
+{
+  echo "${1#[vV]}"
+}
+
 compareVersions()
 {
   v1="$1"

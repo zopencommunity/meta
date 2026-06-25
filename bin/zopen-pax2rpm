@@ -101,9 +101,10 @@ parse_filename() {
     
     # Try to extract name and version using sed since BASH_REMATCH is a bashism
     # Pattern 1: NAME-VERSION (e.g., package-1.0, curl-8.10.1.20241001_214340)
-    if echo "$basename" | grep -qE '^(.+)-([0-9].*)$'; then
-        PKG_NAME=$(echo "$basename" | sed -E 's/^(.+)-([0-9].*)$/\1/')
-        PKG_VERSION=$(echo "$basename" | sed -E 's/^(.+)-([0-9].*)$/\2/')
+    if echo "$basename" | grep -qE '^(.+)-([vV]?[0-9].*)$'; then
+        PKG_NAME=$(echo "$basename" | sed -E 's/^(.+)-([vV]?[0-9].*)$/\1/')
+        PKG_VERSION=$(echo "$basename" | sed -E 's/^(.+)-([vV]?[0-9].*)$/\2/')
+        PKG_VERSION=$(normalizeVersion "$PKG_VERSION")
     # Pattern 2: NAMEVERSION.suffix (e.g., HAMN110.runnable)
     elif echo "$basename" | grep -qE '^([A-Za-z]+)([0-9]+)\.(.+)$'; then
         PKG_NAME=$(echo "$basename" | sed -E 's/^([A-Za-z]+)([0-9]+)\.(.+)$/\1/')
@@ -988,6 +989,9 @@ main() {
     if [ -z "$OUTPUT_FILE" ]; then
         OUTPUT_FILE="${PKG_NAME}.spec"
     fi
+    
+    # Normalize version: strip optional v/V prefix for RPM compatibility
+    PKG_VERSION=$(normalizeVersion "$PKG_VERSION")
     
     # Check for required tools
     if ! check_required_tools "$PAX_FILE"; then
