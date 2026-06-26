@@ -2139,14 +2139,27 @@ getPathSizeInBytes()
 }
 
 #
+# Extract raw version suffix from a package name string (e.g., "curl-v8.10.1" → "v8.10.1")
+# Returns empty string if no version found
+#
+extractRawVersionFromPackage()
+{
+  _erfp_package="$1"
+  _erfp_version=$(echo "$_erfp_package" | sed -E 's/.*-([vV]?[0-9].*)$/\1/')
+  if [ "$_erfp_version" != "$_erfp_package" ] && [ -n "$_erfp_version" ]; then
+    echo "$_erfp_version"
+  fi
+}
+
+#
 # Extract version from a package name string (e.g., "curl-v8.10.1" → "8.10.1")
 # Handles optional v/V prefix and returns empty string if no version found
 #
 extractVersionFromPackage()
 {
   _evfp_package="$1"
-  _evfp_version=$(echo "$_evfp_package" | sed -E 's/.*-([vV]?[0-9].*)$/\1/')
-  if [ "$_evfp_version" != "$_evfp_package" ] && [ -n "$_evfp_version" ]; then
+  _evfp_version=$(extractRawVersionFromPackage "$_evfp_package")
+  if [ -n "$_evfp_version" ]; then
     normalizeVersion "$_evfp_version"
   fi
 }
@@ -2164,11 +2177,11 @@ getProjectName()
     return 0
   fi
 
-  # Intelligent fallback: try to extract version and derive name
-  version=$(extractVersionFromPackage "$package")
-  if [ -n "$version" ]; then
-    # Version was successfully extracted, remove the version segment (including any v/V prefix) to get name
-    echo "$package" | sed -E 's/-[vV]?'"$(echo "$version" | sed 's/[.[\*^$]/\\&/g')"'$//'
+  # Intelligent fallback: try to extract raw version and derive name
+  rawVersion=$(extractRawVersionFromPackage "$package")
+  if [ -n "$rawVersion" ]; then
+    # Remove the raw matched suffix directly from the end using parameter expansion
+    echo "${package%-${rawVersion}}"
   else
     # No version pattern found, return the full package name
     echo "$package"
