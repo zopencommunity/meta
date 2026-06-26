@@ -1392,6 +1392,38 @@ validateVersion()
   return 0
 }
 
+#
+# Check if a version string follows a valid format (1-4 dot-separated parts, first two numeric)
+# Returns 0 if valid, 1 if invalid
+#
+isValidVersion()
+{
+  _ivv_version="$1"
+  if [ -z "${_ivv_version}" ]; then
+    return 1
+  fi
+  echo "${_ivv_version}" | awk -F. '{
+    if (NF < 1 || NF > 4) {
+      exit 1
+    }
+    if ($1 ~ /[^0-9]/) {
+      exit 1
+    }
+    if ($2 ~ /[^0-9]/) {
+      exit 1
+    }
+    if (NF >= 3 && $3 ~ /[^0-9A-Za-z-]+/) {
+      exit 1
+    }
+    if (NF == 4 && $4 !~ /[0-9A-Za-z-]+/) {
+      exit 1
+    }
+    exit 0
+  }'
+  return $?
+}
+
+
 deleteDuplicateEntries()
 {
   value=$1

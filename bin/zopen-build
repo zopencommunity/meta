@@ -2194,17 +2194,8 @@ generateMetadataJSON()
   package=${ZOPEN_NAME}
   name=$(getProjectName "$package")
 
-  # Determine version
-  if [ -n "${versionString}" ]; then
-    version="${versionString}"
-  else
-    # Try to extract version from package name (handles optional v/V prefix)
-    version=$(extractVersionFromPackage "$package")
-    if [ -z "$version" ]; then
-      # Fallback to the last segment of the package name
-      version=$(normalizeVersion "$(echo "${package}" | sed 's/.*-//')")
-    fi
-  fi
+  # Determine version (guaranteed to be set and validated by install())
+  version="${versionString}"
 
   total_size=$(getPathSizeInBytes "${ZOPEN_INSTALL_DIR}")
 
@@ -2487,26 +2478,7 @@ install()
     else
       versionString=$(zopen_get_version)
       versionString=$(normalizeVersion "$versionString")
-      echo ${versionString} | awk -F. '{
-        if (NF < 1 || NF > 4) {
-          exit 1
-        }
-        if ($1 ~ /[^0-9]/) {
-          exit 1
-        }
-        if ($2 ~ /[^0-9]/) {
-          exit 1
-        }
-        if (NF >= 3 && $3 ~ /[^0-9A-Za-z-]+/) {
-          exit 1
-        }
-        if (NF == 4 && $4 !~ /[0-9A-Za-z-]+/) {
-          exit 1
-        }
-        exit 0
-      }'
-
-      if [ $? -ne 0 ]; then
+      if ! isValidVersion "${versionString}"; then
         printError "The version string \"${versionString}\" uses an invalid version format"
       fi
       asciiecho "${versionString}" "${ZOPEN_INSTALL_DIR}/.version"
