@@ -104,7 +104,7 @@ parse_filename() {
     if echo "$basename" | grep -qE '^(.+)-([vV]?[0-9].*)$'; then
         PKG_NAME=$(echo "$basename" | sed -E 's/^(.+)-([vV]?[0-9].*)$/\1/')
         PKG_VERSION=$(echo "$basename" | sed -E 's/^(.+)-([vV]?[0-9].*)$/\2/')
-        PKG_VERSION=$(normalizeVersion "$PKG_VERSION")
+        PKG_VERSION=$(normalizeRpmVersion "$PKG_VERSION")
     # Pattern 2: NAMEVERSION.suffix (e.g., HAMN110.runnable)
     elif echo "$basename" | grep -qE '^([A-Za-z]+)([0-9]+)\.(.+)$'; then
         PKG_NAME=$(echo "$basename" | sed -E 's/^([A-Za-z]+)([0-9]+)\.(.+)$/\1/')
@@ -990,8 +990,8 @@ main() {
         OUTPUT_FILE="${PKG_NAME}.spec"
     fi
     
-    # Normalize version: strip optional v/V prefix for RPM compatibility
-    PKG_VERSION=$(normalizeVersion "$PKG_VERSION")
+    # Normalize version for RPM compatibility: strip optional v/V prefix and convert pre-release suffixes
+    PKG_VERSION=$(normalizeRpmVersion "$PKG_VERSION")
     
     # Check for required tools
     if ! check_required_tools "$PAX_FILE"; then

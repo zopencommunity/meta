@@ -1264,21 +1264,104 @@ normalizeVersion()
   echo "${1#[vV]}"
 }
 
+#
+# Normalize version for RPM: strip v/V prefix and convert pre-releases to use ~
+# "1.8.2rc1" → "1.8.2~rc1", "1.8.2-rc1" → "1.8.2~rc1", "1.8.2.rc1" → "1.8.2~rc1"
+#
+normalizeRpmVersion()
+{
+  _nrv_version=$(normalizeVersion "$1")
+  echo "$_nrv_version" | /bin/sed -E 's/^([0-9]+(\.[0-9]+)*)[-.]?([a-zA-Z].*)$/\1~\3/'
+}
+
+
 compareVersions()
 {
-  v1="$1"
-  v2="$2"
-  awk -v v1="${v1}" -v v2="${v2}" '
-  function vercmp(v1, v2) {
-    n1 = split(v1, v1_array, ".")
-    n2 = split(v2, v2_array, ".")
+  _cv_v1=$(normalizeVersion "$1")
+  _cv_v2=$(normalizeVersion "$2")
+  awk -v v1="${_cv_v1}" -v v2="${_cv_v2}" '
+  # Helper to compare prerelease suffixes (e.g., "rc2" vs "rc12") by tokenizing
+  # them into alternating numeric and non-numeric chunks.
+  function cmp_prerelease(p1, p2) {
+    while (p1 != "" || p2 != "") {
+      if (p1 == "") return -1 # p1 has fewer tokens (is older)
+      if (p2 == "") return 1  # p2 has fewer tokens (is older)
 
-    for (i = 1; i <= n1 || i <= n2; i++) {
-      if (v1_array[i] != v2_array[i]) {
-        return (v1_array[i] < v2_array[i] ? -1 : 1)
+      # Extract next token from p1
+      if (match(p1, /^[0-9]+/)) {
+        tok1 = substr(p1, RSTART, RLENGTH)
+        is_num1 = 1
+        p1 = substr(p1, RSTART + RLENGTH)
+      } else {
+        match(p1, /^[^0-9]+/)
+        tok1 = substr(p1, RSTART, RLENGTH)
+        is_num1 = 0
+        p1 = substr(p1, RSTART + RLENGTH)
+      }
+
+      # Extract next token from p2
+      if (match(p2, /^[0-9]+/)) {
+        tok2 = substr(p2, RSTART, RLENGTH)
+        is_num2 = 1
+        p2 = substr(p2, RSTART + RLENGTH)
+      } else {
+        match(p2, /^[^0-9]+/)
+        tok2 = substr(p2, RSTART, RLENGTH)
+        is_num2 = 0
+        p2 = substr(p2, RSTART + RLENGTH)
+      }
+
+      # Compare the tokens
+      if (is_num1 && is_num2) {
+        val1 = tok1 + 0
+        val2 = tok2 + 0
+        if (val1 != val2) {
+          return (val1 < val2 ? -1 : 1)
+        }
+      } else {
+        if (tok1 != tok2) {
+          return (tok1 < tok2 ? -1 : 1)
+        }
       }
     }
     return 0
+  }
+
+  function vercmp(v1, v2) {
+    # 1. Separate release version from pre-release suffix
+    # Release part matches the leading numeric/dot portion: e.g., "1.2.3"
+    rel1 = ""; pre1 = ""
+    if (match(v1, /^[0-9]+(\.[0-9]+)*/)) {
+      rel1 = substr(v1, RSTART, RLENGTH)
+      pre1 = substr(v1, RSTART + RLENGTH)
+      sub(/^[-.]/, "", pre1) # strip leading - or .
+    }
+    
+    rel2 = ""; pre2 = ""
+    if (match(v2, /^[0-9]+(\.[0-9]+)*/)) {
+      rel2 = substr(v2, RSTART, RLENGTH)
+      pre2 = substr(v2, RSTART + RLENGTH)
+      sub(/^[-.]/, "", pre2) # strip leading - or .
+    }
+
+    # 2. Compare release versions component by component
+    n1 = split(rel1, r1_array, ".")
+    n2 = split(rel2, r2_array, ".")
+    max_len = (n1 > n2 ? n1 : n2)
+    for (i = 1; i <= max_len; i++) {
+      val1 = (i <= n1 ? r1_array[i] + 0 : 0)
+      val2 = (i <= n2 ? r2_array[i] + 0 : 0)
+      if (val1 != val2) {
+        return (val1 < val2 ? -1 : 1)
+      }
+    }
+
+    # 3. Compare pre-releases if release versions are identical
+    if (pre1 == "" && pre2 == "") return 0
+    if (pre1 != "" && pre2 == "") return -1 # pre-release is older than release
+    if (pre1 == "" && pre2 != "") return 1  # release is newer than pre-release
+
+    return cmp_prerelease(pre1, pre2)
   }
 
   BEGIN {
