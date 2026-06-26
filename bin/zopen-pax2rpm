@@ -336,37 +336,38 @@ for docfile in README* LICENSE* COPYING* CHANGELOG* AUTHORS* INSTALL* NEWS*; do
     fi
 done
 
-# Generate RPM file list based on what was actually installed in buildroot.
-# Only list directories that exist and are non-empty to avoid RPM "File not found" errors.
+# Generate RPM file list by walking the actual buildroot tree.
+# We enumerate every file and directory installed under %{buildroot} so that
+# RPM owns exactly what was installed — no "Installed (but unpackaged)" errors
+# and no empty payload from listing a directory that rpmbuild cannot traverse.
 _FILELIST="%{_builddir}/%{name}-%{version}/rpm_filelist.txt"
 echo '%defattr(-,root,root,-)' > "$_FILELIST"
+_BR="%{buildroot}"
+_BR_LEN=$(echo "$_BR" | wc -c)   # includes trailing newline — used to strip prefix
 
-# Check each FHS directory in buildroot
-for _dir in "%{_bindir}" "%{_altbindir}" "%{_libdir}" "%{_libexecdir}" "%{_includedir}" "%{_libexecdir}/%{name}"; do
-    if [ -d "%{buildroot}${_dir}" ] && [ "$(ls -A "%{buildroot}${_dir}" 2>/dev/null)" ]; then
-        echo "${_dir}" >> "$_FILELIST"
-    fi
+# Walk every regular file and symlink under buildroot and emit its
+# package-relative path.  Directories are intentionally omitted: RPM
+# creates them automatically when it installs the files they contain,
+# which avoids ownership conflicts between packages that share a directory
+# (e.g. /opt/pkg/bin).  The sole exception is an empty top-level directory,
+# handled at the end.
+_HAVE_FILES=false
+find "$_BR" \( -type f -o -type l \) | sort | while IFS= read -r _abs; do
+    _rel="/${_abs#${_BR}/}"
+    # Tag config files
+    case "$_rel" in
+        %{_sysconfdir}/*) echo "%config(noreplace) $_rel" >> "$_FILELIST" ;;
+        %{_docdir}/*)     echo "%doc $_rel"              >> "$_FILELIST" ;;
+        %{_mandir}/*)     echo "%doc $_rel"              >> "$_FILELIST" ;;
+        *)                echo "$_rel"                   >> "$_FILELIST" ;;
+    esac
+    _HAVE_FILES=true
 done
 
-# Config files get %config tag
-if [ -d "%{buildroot}%{_sysconfdir}" ] && [ "$(ls -A "%{buildroot}%{_sysconfdir}" 2>/dev/null)" ]; then
-    echo "%config %{_sysconfdir}" >> "$_FILELIST"
-fi
-
-# share/ is parent of docdir, mandir, miscdir — list it if non-empty
-if [ -d "%{buildroot}%{_datadir}" ] && [ "$(ls -A "%{buildroot}%{_datadir}" 2>/dev/null)" ]; then
-    echo "%{_datadir}" >> "$_FILELIST"
-else
-    # Fall back to listing individual subdirs under share/
-    if [ -d "%{buildroot}%{_docdir}" ] && [ "$(ls -A "%{buildroot}%{_docdir}" 2>/dev/null)" ]; then
-        echo "%doc %{_docdir}" >> "$_FILELIST"
-    fi
-    if [ -d "%{buildroot}%{_pkgdatadir}" ] && [ "$(ls -A "%{buildroot}%{_pkgdatadir}" 2>/dev/null)" ]; then
-        echo "%{_pkgdatadir}" >> "$_FILELIST"
-    fi
-    if [ -d "%{buildroot}%{_miscdir}" ] && [ "$(ls -A "%{buildroot}%{_miscdir}" 2>/dev/null)" ]; then
-        echo "%{_miscdir}" >> "$_FILELIST"
-    fi
+# If nothing was installed at all, emit a warning so the build fails loudly
+# rather than producing a silent empty package.
+if [ ! -s "$_FILELIST" ] || [ "$(grep -c . "$_FILELIST")" -le 1 ]; then
+    echo "WARNING: No files were installed into %{buildroot}. RPM payload will be empty." >&2
 fi
 
 echo "Generated RPM file list:"
