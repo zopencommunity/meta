@@ -2139,6 +2139,32 @@ getPathSizeInBytes()
 }
 
 #
+# Extract raw version suffix from a package name string (e.g., "curl-v8.10.1" → "v8.10.1")
+# Returns empty string if no version found
+#
+extractRawVersionFromPackage()
+{
+  _erfp_package="$1"
+  _erfp_version=$(echo "$_erfp_package" | sed -E 's/.*-([vV]?[0-9].*)$/\1/')
+  if [ "$_erfp_version" != "$_erfp_package" ] && [ -n "$_erfp_version" ]; then
+    echo "$_erfp_version"
+  fi
+}
+
+#
+# Extract version from a package name string (e.g., "curl-v8.10.1" → "8.10.1")
+# Handles optional v/V prefix and returns empty string if no version found
+#
+extractVersionFromPackage()
+{
+  _evfp_package="$1"
+  _evfp_version=$(extractRawVersionFromPackage "$_evfp_package")
+  if [ -n "$_evfp_version" ]; then
+    normalizeVersion "$_evfp_version"
+  fi
+}
+
+#
 # Extract project name from package name (e.g., xcb-proto-1.17.0 -> xcb-proto)
 # Uses ZOPEN_PROJECT_NAME if set, otherwise intelligently parses package name
 #
@@ -2151,14 +2177,14 @@ getProjectName()
     return 0
   fi
 
-  # Intelligent fallback: try to extract version and derive name
-  version=$(echo "$package" | sed -E 's/.*-([0-9].*)$/\1/')
-  if [ "$version" != "$package" ] && [ -n "$version" ]; then
-    # Version was successfully extracted, remove it to get name
-    echo "${package%-${version}}"
+  # Intelligent fallback: try to extract raw version and derive name
+  rawVersion=$(extractRawVersionFromPackage "$package")
+  if [ -n "$rawVersion" ]; then
+    # Remove the raw matched suffix directly from the end using parameter expansion
+    echo "${package%-${rawVersion}}"
   else
-    # No version pattern found, fall back to old cut method
-    echo "$package" | cut -d "-" -f 1
+    # No version pattern found, return the full package name
+    echo "$package"
   fi
 }
 
@@ -2168,17 +2194,8 @@ generateMetadataJSON()
   package=${ZOPEN_NAME}
   name=$(getProjectName "$package")
 
-  # Determine version
-  if [ -n "${versionString}" ]; then
-    version="${versionString}"
-  else
-    # Try to extract version from package name (rightmost segment starting with digit)
-    version=$(echo "$package" | sed -E 's/.*-([0-9].*)$/\1/')
-    # If sed didn't find a pattern (returns whole string), fall back to old method
-    if [ "$version" = "$package" ]; then
-      version=$(echo ${package} | cut -d "-" -f 2)
-    fi
-  fi
+  # Determine version (guaranteed to be set and validated by install())
+  version="${versionString}"
 
   total_size=$(getPathSizeInBytes "${ZOPEN_INSTALL_DIR}")
 
@@ -2460,26 +2477,8 @@ install()
       printError "A zopen_get_version() function must be defined in the buildenv to extract the version contents"
     else
       versionString=$(zopen_get_version)
-      echo ${versionString} | awk -F. '{
-        if (NF < 1 || NF > 4) {
-          exit 1
-        }
-        if ($1 ~ /[^0-9]/) {
-          exit 1
-        }
-        if ($2 ~ /[^0-9]/) {
-          exit 1
-        }
-        if (NF >= 3 && $3 ~ /[^0-9A-Za-z-]+/) {
-          exit 1
-        }
-        if (NF == 4 && $4 !~ /[0-9A-Za-z-]+/) {
-          exit 1
-        }
-        exit 0
-      }'
-
-      if [ $? -ne 0 ]; then
+      versionString=$(normalizeVersion "$versionString")
+      if ! isValidVersion "${versionString}"; then
         printError "The version string \"${versionString}\" uses an invalid version format"
       fi
       asciiecho "${versionString}" "${ZOPEN_INSTALL_DIR}/.version"
@@ -2516,11 +2515,9 @@ fi
 cd \$curdir  >/dev/null 2>&1
 EOF
   printInfo "- Sourcing environment to run any setup"
-  original_dir=$(pwd)
-  cd "${ZOPEN_INSTALL_DIR}" && ./setup.sh
+  (cd "${ZOPEN_INSTALL_DIR}" && ./setup.sh)
   printVerbose "Marking this version as installed"
   touch "${ZOPEN_INSTALL_DIR}/.active"
-  cd "${original_dir}"
 }
 
 create_pax()
@@ -2645,6 +2642,13 @@ resolveCommands()
     fi
   fi
   ZOPEN_PROJECT_HEAD_COMMIT_SHA="$(git rev-parse HEAD)"
+
+  # Normalize ZOPEN_NAME to remove any v/V prefix in the version portion
+  _zn_version=$(extractVersionFromPackage "${ZOPEN_NAME}")
+  if [ -n "${_zn_version}" ]; then
+    _zn_name=$(getProjectName "${ZOPEN_NAME}")
+    ZOPEN_NAME="${_zn_name}-${_zn_version}"
+  fi
 
   # Check if ZOPEN_NAME contains a "-"
   if [ -z "$(echo "${ZOPEN_NAME}" | grep '-')" ]; then
