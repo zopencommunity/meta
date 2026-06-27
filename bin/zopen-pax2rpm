@@ -125,8 +125,7 @@ parse_filename() {
 # Function to analyze pax contents and categorize files
 analyze_pax_contents() {
     pax_file="$1"
-    temp_dir=$(mktempdir "pax2rpm")
-    
+
     printInfo "# Analyzing pax file structure..."
     
     # Extract pax listing (limit to first 5000 entries for performance/accuracy balance)
@@ -168,9 +167,10 @@ analyze_pax_contents() {
         filename=$(echo "$line" | awk '{print $NF}')
         [ -z "$filename" ] && continue
         
-        # Detect directory structure (handles top-level dir if present)
-        # Matches: bin/, ./bin/, package-ver/bin/, ./package-ver/bin/
-        # Does NOT match: usr/lpp/IBM/bin/ (too deep)
+        # Detect directory structure using shell globs.
+        # Patterns like */bin/* match at any depth (e.g. usr/lpp/IBM/bin/).
+        # This is intentional: we only need to know whether a category exists,
+        # not where exactly — root detection is handled separately in generate_install_commands().
         case "$filename" in
             bin/* | */bin/*)
                 has_bin=true ;;
@@ -200,8 +200,6 @@ analyze_pax_contents() {
     done << EOF
 $pax_listing
 EOF
-    
-    rm -rf "$temp_dir"
 }
 
 # Function to list contents of pax file
@@ -229,25 +227,29 @@ pax_file="$1"
 
 # Detect the source layout and find the content root
 if [ -d usr ]; then
-    echo "OS layout (usr/) detected, searching for actual content root..."
-    # Find the deepest directory that contains bin, lib, pyz, bash, or go
-    # We sort by the number of slashes to find the deepest one
-    FOUND_PATH=$(find . -type d \( -name bin -o -name lib -o -name pyz -o -name bash -o -name go \) -print | awk -F/ '{print NF, $0}' | sort -rn | head -n 1 | cut -d' ' -f2-)
-    
-    if [ -n "$FOUND_PATH" ]; then
-        FOUND_PATH=${FOUND_PATH#./}
-        case "$FOUND_PATH" in
-            */pyz)
-                ROOT_DIR="$FOUND_PATH"
-                ;;
-            *)
-                ROOT_DIR=$(echo "$FOUND_PATH" | sed 's/\/\(bin\|lib\|bash\|go\)$//')
-                ;;
-        esac
-    else
-        # Fallback for OS layout: find first dir with more than one entry
+    echo "OS layout (usr/) detected, searching for actual package root..."
+    # Strategy: find the shallowest directory that contains at least one
+    # known FHS child (bin, lib, libexec, include, etc, share, altbin).
+    # Using the shallowest match avoids mistakenly descending into a nested
+    # directory such as lib/plugin/bin/ when the real root is one level up.
+    ROOT_DIR=""
+    # Collect all candidate parent dirs that have at least one FHS child,
+    # sort by depth (fewest slashes first), and take the first one.
+    ROOT_DIR=$(find . -type d \( \
+            -name bin -o -name lib -o -name libexec -o \
+            -name include -o -name etc -o -name share -o \
+            -name altbin -o -name pyz -o -name bash -o -name go \) -print | \
+        sed 's|/[^/]*$||' | \
+        sed 's|^\./||' | \
+        awk -F/ '{ print NF" "$0 }' | \
+        sort -n | \
+        awk 'NR==1{ print $2 }')
+
+    if [ -z "$ROOT_DIR" ] || [ "$ROOT_DIR" = "." ]; then
+        # Fallback: walk down single-child directories until we find a
+        # directory with more than one entry (the real content root).
         ROOT_DIR="."
-        while [ $(ls -1 "$ROOT_DIR" 2>/dev/null | wc -l) -eq 1 ]; do
+        while [ "$(ls -1 "$ROOT_DIR" 2>/dev/null | wc -l)" -eq 1 ]; do
             SUB_DIR=$(ls -1 "$ROOT_DIR")
             if [ -d "$ROOT_DIR/$SUB_DIR" ]; then
                 ROOT_DIR="$ROOT_DIR/$SUB_DIR"
@@ -256,8 +258,8 @@ if [ -d usr ]; then
             fi
         done
     fi
-    echo "Detected nested root: $ROOT_DIR"
-    cd "$ROOT_DIR"
+    echo "Detected package root: $ROOT_DIR"
+    cd "$ROOT_DIR" || { echo "ERROR: could not cd into $ROOT_DIR" >&2; exit 1; }
 elif [ $(ls -1 | grep -v "^$" | wc -l) -eq 1 ] && [ -d * ]; then
     # Standard single-directory layout (e.g., go/)
     SUB_DIR=$(ls -1)
@@ -316,7 +318,8 @@ done
 for item in *; do
     case "$item" in
         bin|altbin|lib|libexec|include|etc|share|man|doc|docs|scripts|data) continue ;;
-        install_test.sh|metadata.json|setup.sh|test.status|README.md) continue ;;
+        install_test.sh|metadata.json|setup.sh|test.status) continue ;;
+        README*|LICENSE*|COPYING*|CHANGELOG*|AUTHORS*|INSTALL*|NEWS*) continue ;;
     esac
     if [ -e "$item" ]; then
         echo "Installing misc item: $item -> %{_miscdir}"
@@ -327,46 +330,46 @@ done
 
 # Install root-level documentation (README, LICENSE, etc.)
 for docfile in README* LICENSE* COPYING* CHANGELOG* AUTHORS* INSTALL* NEWS*; do
-    case "$docfile" in
-        README.md) continue ;;
-    esac
     if [ -f "$docfile" ]; then
         mkdir -p %{buildroot}%{_docdir}
         pax -rw -p p "$docfile" %{buildroot}%{_docdir}/
     fi
 done
 
-# Generate RPM file list by walking the actual buildroot tree.
-# We enumerate every file and directory installed under %{buildroot} so that
-# RPM owns exactly what was installed — no "Installed (but unpackaged)" errors
-# and no empty payload from listing a directory that rpmbuild cannot traverse.
+# Generate RPM file list — standard Fedora/RHEL approach:
+# Use find to enumerate every file installed under %{buildroot}, then
+# strip the buildroot prefix with sed to get package-relative paths.
+# Config and doc files are tagged separately via post-processing.
 _FILELIST="%{_builddir}/%{name}-%{version}/rpm_filelist.txt"
-echo '%defattr(-,root,root,-)' > "$_FILELIST"
 _BR="%{buildroot}"
-_BR_LEN=$(echo "$_BR" | wc -c)   # includes trailing newline — used to strip prefix
 
-# Walk every regular file and symlink under buildroot and emit its
-# package-relative path.  Directories are intentionally omitted: RPM
-# creates them automatically when it installs the files they contain,
-# which avoids ownership conflicts between packages that share a directory
-# (e.g. /opt/pkg/bin).  The sole exception is an empty top-level directory,
-# handled at the end.
-_HAVE_FILES=false
-find "$_BR" \( -type f -o -type l \) | sort | while IFS= read -r _abs; do
-    _rel="/${_abs#${_BR}/}"
-    # Tag config files
-    case "$_rel" in
-        %{_sysconfdir}/*) echo "%config(noreplace) $_rel" >> "$_FILELIST" ;;
-        %{_docdir}/*)     echo "%doc $_rel"              >> "$_FILELIST" ;;
-        %{_mandir}/*)     echo "%doc $_rel"              >> "$_FILELIST" ;;
-        *)                echo "$_rel"                   >> "$_FILELIST" ;;
+# Separate config and doc files so they get the right RPM tags
+_ALLFILES=$(mktemp)
+_CFGFILES=$(mktemp)
+_DOCFILES=$(mktemp)
+
+find "${_BR}" -type f -o -type l | sed "s|^${_BR}||" | sort > "$_ALLFILES"
+
+# Split into tagged buckets
+while IFS= read -r _f; do
+    case "$_f" in
+        %{_sysconfdir}/*) echo "%config(noreplace) $_f" >> "$_CFGFILES" ;;
+        %{_docdir}/*|%{_mandir}/*) echo "%doc $_f"     >> "$_DOCFILES" ;;
+        *) echo "$_f" >> "$_FILELIST.plain" ;;
     esac
-    _HAVE_FILES=true
-done
+done < "$_ALLFILES"
 
-# If nothing was installed at all, emit a warning so the build fails loudly
-# rather than producing a silent empty package.
-if [ ! -s "$_FILELIST" ] || [ "$(grep -c . "$_FILELIST")" -le 1 ]; then
+# Assemble final filelist: defattr first, then plain, config, doc
+echo '%defattr(-,root,root,-)' > "$_FILELIST"
+[ -f "$_FILELIST.plain" ] && cat "$_FILELIST.plain" >> "$_FILELIST"
+[ -f "$_CFGFILES" ]       && cat "$_CFGFILES"       >> "$_FILELIST"
+[ -f "$_DOCFILES" ]       && cat "$_DOCFILES"        >> "$_FILELIST"
+
+# Cleanup temp files
+rm -f "$_ALLFILES" "$_CFGFILES" "$_DOCFILES" "$_FILELIST.plain"
+
+# Warn if nothing was installed
+if [ "$(grep -c . "$_FILELIST" 2>/dev/null)" -le 1 ]; then
     echo "WARNING: No files were installed into %{buildroot}. RPM payload will be empty." >&2
 fi
 
