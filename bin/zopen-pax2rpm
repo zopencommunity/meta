@@ -220,8 +220,8 @@ list_pax_contents() {
 # Function to generate install commands based on analyzed contents
 # Distributes files into FHS-like directories under /opt/pkg/
 generate_install_commands() {
-pax_file="$1"
-    
+    pax_file="$1"
+
     cat << 'EOF'
 # Install files into FHS-like filesystem hierarchy under /opt/pkg/
 
@@ -234,25 +234,27 @@ if [ -d usr ]; then
     # directory such as lib/plugin/bin/ when the real root is one level up.
     ROOT_DIR=""
     # Collect all candidate parent dirs that have at least one FHS child,
-    # sort by depth (fewest slashes first), and take the first one.
+    # sort by depth (fewest slashes first) then alphabetically for determinism.
     ROOT_DIR=$(find . -type d \( \
             -name bin -o -name lib -o -name libexec -o \
             -name include -o -name etc -o -name share -o \
             -name altbin -o -name pyz -o -name bash -o -name go \) -print | \
         sed 's|/[^/]*$||' | \
         sed 's|^\./||' | \
+        sort -u | \
         awk -F/ '{ print NF" "$0 }' | \
-        sort -n | \
+        sort -n -k2 | \
         awk 'NR==1{ print $2 }')
 
     if [ -z "$ROOT_DIR" ] || [ "$ROOT_DIR" = "." ]; then
         # Fallback: walk down single-child directories until we find a
         # directory with more than one entry (the real content root).
+        # Use find instead of ls -1 so dotfiles are counted correctly.
         ROOT_DIR="."
-        while [ "$(ls -1 "$ROOT_DIR" 2>/dev/null | wc -l)" -eq 1 ]; do
-            SUB_DIR=$(ls -1 "$ROOT_DIR")
-            if [ -d "$ROOT_DIR/$SUB_DIR" ]; then
-                ROOT_DIR="$ROOT_DIR/$SUB_DIR"
+        while [ "$(find "$ROOT_DIR" -maxdepth 1 -mindepth 1 | wc -l)" -eq 1 ]; do
+            SUB_DIR=$(find "$ROOT_DIR" -maxdepth 1 -mindepth 1)
+            if [ -d "$SUB_DIR" ]; then
+                ROOT_DIR="$SUB_DIR"
             else
                 break
             fi
@@ -260,9 +262,9 @@ if [ -d usr ]; then
     fi
     echo "Detected package root: $ROOT_DIR"
     cd "$ROOT_DIR" || { echo "ERROR: could not cd into $ROOT_DIR" >&2; exit 1; }
-elif [ $(ls -1 | grep -v "^$" | wc -l) -eq 1 ] && [ -d * ]; then
+elif [ "$(find . -maxdepth 1 -mindepth 1 | wc -l)" -eq 1 ] && [ -d "$(find . -maxdepth 1 -mindepth 1)" ]; then
     # Standard single-directory layout (e.g., go/)
-    SUB_DIR=$(ls -1)
+    SUB_DIR=$(find . -maxdepth 1 -mindepth 1)
     echo "Standard single-directory layout detected: $SUB_DIR"
     cd "$SUB_DIR" || { echo "ERROR: could not cd into $SUB_DIR" >&2; exit 1; }
 else
@@ -347,10 +349,17 @@ _BR="%{buildroot}"
 _ALLFILES=$(mktemp)
 _CFGFILES=$(mktemp)
 _DOCFILES=$(mktemp)
+_EMPTYDIRS=$(mktemp)
 
 find "${_BR}" -type f -o -type l | sed "s|^${_BR}||" | sort > "$_ALLFILES"
 
-# Split into tagged buckets
+# Collect empty directories — these must be listed explicitly with %dir
+# otherwise RPM won't create them and packages relying on them will break.
+find "${_BR}" -type d -empty | sed "s|^${_BR}||" | sort > "$_EMPTYDIRS"
+
+# Split files into tagged buckets
+# Remove $_FILELIST.plain upfront in case a previous run left it behind.
+rm -f "$_FILELIST.plain"
 while IFS= read -r _f; do
     case "$_f" in
         %{_sysconfdir}/*) echo "%config(noreplace) $_f" >> "$_CFGFILES" ;;
@@ -359,14 +368,18 @@ while IFS= read -r _f; do
     esac
 done < "$_ALLFILES"
 
-# Assemble final filelist: defattr first, then plain, config, doc
+# Assemble final filelist: defattr first, then plain, config, doc, empty dirs
 echo '%defattr(-,root,root,-)' > "$_FILELIST"
 [ -f "$_FILELIST.plain" ] && cat "$_FILELIST.plain" >> "$_FILELIST"
 [ -f "$_CFGFILES" ]       && cat "$_CFGFILES"       >> "$_FILELIST"
 [ -f "$_DOCFILES" ]       && cat "$_DOCFILES"        >> "$_FILELIST"
+# Emit empty directories with %dir so RPM owns and creates them at install time
+while IFS= read -r _d; do
+    [ -n "$_d" ] && echo "%dir $_d" >> "$_FILELIST"
+done < "$_EMPTYDIRS"
 
 # Cleanup temp files
-rm -f "$_ALLFILES" "$_CFGFILES" "$_DOCFILES" "$_FILELIST.plain"
+rm -f "$_ALLFILES" "$_CFGFILES" "$_DOCFILES" "$_FILELIST.plain" "$_EMPTYDIRS"
 
 # Warn if nothing was installed
 if [ "$(grep -c . "$_FILELIST" 2>/dev/null)" -le 1 ]; then
@@ -383,7 +396,7 @@ generate_spec() {
 output_file="$1"
 source_file="$2"
 date=$(date "+%a %b %d %Y")
-    
+
     # Analyze the pax contents first (populate global DIR_STRUCTURE)
     analyze_pax_contents "$source_file"
     
@@ -467,7 +480,7 @@ rm -rf %{buildroot}
 
 $(generate_install_commands "$source_file")
 
-%files -f rpm_filelist.txt
+%files -f %{_builddir}/%{name}-%{version}/rpm_filelist.txt
 
 %changelog
 * ${date} ${PACKAGER_NAME} <${PACKAGER_EMAIL}> - ${PKG_VERSION}-${RELEASE}
@@ -881,7 +894,7 @@ buildroot="$3"
 source_name=$(basename "$pax_file")
     echo "Copying source file to $buildroot/SOURCES/$source_name"
     cp "$pax_file" "$buildroot/SOURCES/"
-    
+
     # Copy spec file to SPECS
     echo "Copying spec file to $buildroot/SPECS/"
     cp "$spec_file" "$buildroot/SPECS/"
