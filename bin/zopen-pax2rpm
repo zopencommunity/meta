@@ -222,16 +222,15 @@ generate_install_commands() {
     cat << 'EOF'
 # Install files into FHS-like filesystem hierarchy under /opt/pkg/
 
-# Detect the source layout and find the content root
-if [ "$(find . -maxdepth 1 -mindepth 1 | wc -l)" -eq 1 ] && [ -d "$(find . -maxdepth 1 -mindepth 1)" ]; then
-    # Standard single-directory layout (e.g., go/)
-    SUB_DIR=$(find . -maxdepth 1 -mindepth 1)
-    echo "Standard single-directory layout detected: $SUB_DIR"
-    cd "$SUB_DIR" || { echo "ERROR: could not cd into $SUB_DIR" >&2; exit 1; }
-else
-    # Flat or mixed layout — already in the right place
-    echo "Flat or mixed layout detected"
+# zopen tool archives always extract to a single top-level directory
+# (e.g. curl-8.10.1/) containing bin/, lib/, etc. cd into it.
+SUB_DIR=$(find . -maxdepth 1 -mindepth 1 -type d | head -1)
+if [ -z "$SUB_DIR" ]; then
+    echo "ERROR: could not find top-level directory in extracted archive" >&2
+    exit 1
 fi
+echo "Entering package root: $SUB_DIR"
+cd "$SUB_DIR" || { echo "ERROR: could not cd into $SUB_DIR" >&2; exit 1; }
 
 # Distribute known directories to their FHS-correct paths
 for dir in bin altbin lib libexec include etc share man doc docs scripts data; do
@@ -324,8 +323,8 @@ rm -f "$_FILELIST.plain"
 while IFS= read -r _f; do
     case "$_f" in
         %{_sysconfdir}/*) echo "%config(noreplace) $_f" >> "$_CFGFILES" ;;
-        %{_docdir}/*|%{_mandir}/*) echo "%doc $_f"     >> "$_DOCFILES" ;;
-        *) echo "$_f" >> "$_FILELIST.plain" ;;
+        %{_docdir}/*)     echo "%doc $_f"              >> "$_DOCFILES" ;;
+        *)                echo "$_f"                   >> "$_FILELIST.plain" ;;
     esac
 done < "$_ALLFILES"
 
@@ -342,9 +341,11 @@ done < "$_EMPTYDIRS"
 # Cleanup temp files
 rm -f "$_ALLFILES" "$_CFGFILES" "$_DOCFILES" "$_FILELIST.plain" "$_EMPTYDIRS"
 
-# Warn if nothing was installed
+# Fail the build if nothing was installed — an empty RPM is always a bug.
+# A warning here would be silently ignored and produce a broken package.
 if [ "$(grep -c . "$_FILELIST" 2>/dev/null)" -le 1 ]; then
-    echo "WARNING: No files were installed into %{buildroot}. RPM payload will be empty." >&2
+    echo "ERROR: No files were installed into %{buildroot}. Refusing to build an empty RPM." >&2
+    exit 1
 fi
 
 echo "Generated RPM file list:"
