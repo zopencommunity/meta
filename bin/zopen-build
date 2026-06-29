@@ -2592,18 +2592,14 @@ package()
   if [ -n "${ZOPEN_INSTALL_CMD}" ]; then
     #TODO: Hack so that we can use coreutils md5sum without impacting builds
     ZOPEN_DEPS="coreutils jq"
-    if [ "${signPax}" = "true" ] || [ "${signRPM}" = "true" ]; then
+    if [ "${signPax}" = "true" ]; then
       if ( [ -z "${ZOPEN_GPG_SECRET_KEY_FILE}" ] || [ -z "${ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE}" ] || [ ! -r "${ZOPEN_GPG_SECRET_KEY_FILE}" ] || [ ! -r "${ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE}" ] ); then
-        printError "GPG keyring environment variables are not set! You can omit the --sign-pax or --sign-rpm option to bypass this"
+        printError "GPG keyring environment variables are not set! You can omit the --sign-pax option to bypass this"
       fi
-      if [ "${signPax}" = "true" ] && ( [ -z "${ZOPEN_GPG_PUBLIC_KEY_FILE}" ] || [ ! -r "${ZOPEN_GPG_PUBLIC_KEY_FILE}" ] ); then
+      if [ -z "${ZOPEN_GPG_PUBLIC_KEY_FILE}" ] || [ ! -r "${ZOPEN_GPG_PUBLIC_KEY_FILE}" ]; then
         printError "ZOPEN_GPG_PUBLIC_KEY_FILE not set or not readable! Required for PAX signing."
       fi
       ZOPEN_DEPS="${ZOPEN_DEPS} gpg"
-    fi
-
-    if ${generateRPM}; then
-      ZOPEN_DEPS="${ZOPEN_DEPS} rpm"
     fi
 
     setDepsEnv ${ZOPEN_DEPS}
