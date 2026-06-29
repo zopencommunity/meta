@@ -228,23 +228,25 @@ generate_install_commands() {
 # Detect the source layout and find the content root
 if [ -d usr ]; then
     echo "OS layout (usr/) detected, searching for actual package root..."
-    # Strategy: find the shallowest directory that contains at least one
-    # known FHS child (bin, lib, libexec, include, etc, share, altbin).
-    # Using the shallowest match avoids mistakenly descending into a nested
-    # directory such as lib/plugin/bin/ when the real root is one level up.
+    # Strategy: find the shallowest directory whose parent contains at least
+    # one *binary/library* FHS child (bin, lib, libexec, include, altbin).
+    # We intentionally exclude 'share', 'etc', and 'man' as anchors because
+    # these exist at the OS level (e.g. usr/share/) and would incorrectly
+    # select 'usr' instead of the real package root deeper in the tree
+    # (e.g. usr/lpp/foo/ which contains the actual bin/ and lib/).
     ROOT_DIR=""
-    # Collect all candidate parent dirs that have at least one FHS child,
-    # sort by depth (fewest slashes first) then alphabetically for determinism.
+    # Collect all candidate parent dirs that have at least one binary/library
+    # FHS child, sort by depth (fewest slashes first) then alphabetically.
     ROOT_DIR=$(find . -type d \( \
             -name bin -o -name lib -o -name libexec -o \
-            -name include -o -name etc -o -name share -o \
-            -name altbin -o -name pyz -o -name bash -o -name go \) -print | \
+            -name include -o -name altbin -o \
+            -name pyz -o -name bash -o -name go \) -print | \
         sed 's|/[^/]*$||' | \
         sed 's|^\./||' | \
         sort -u | \
         awk -F/ '{ print NF" "$0 }' | \
-        sort -n -k2 | \
-        awk 'NR==1{ print $2 }')
+        sort -n -k1,1 -k2 | \
+        awk 'NR==1{ sub(/^[0-9]+ /,""); print }')
 
     if [ -z "$ROOT_DIR" ] || [ "$ROOT_DIR" = "." ]; then
         # Fallback: walk down single-child directories until we find a
@@ -312,7 +314,7 @@ for dir in bin altbin lib libexec include etc share man doc docs scripts data; d
         esac
         echo "Installing $dir/ -> $dest"
         mkdir -p "$dest"
-        (cd "$dir" && pax -rw -p p . "$dest/")
+        (cd "$dir" && pax -rw -p p . "$dest/") || { echo "ERROR: failed to install $dir/ -> $dest" >&2; exit 1; }
     fi
 done
 
@@ -326,7 +328,7 @@ for item in *; do
     if [ -e "$item" ]; then
         echo "Installing misc item: $item -> %{_miscdir}"
         mkdir -p "%{buildroot}%{_miscdir}"
-        pax -rw -p p "$item" "%{buildroot}%{_miscdir}/"
+        pax -rw -p p "$item" "%{buildroot}%{_miscdir}/" || { echo "ERROR: failed to install misc item $item" >&2; exit 1; }
     fi
 done
 
@@ -334,7 +336,7 @@ done
 for docfile in README* LICENSE* COPYING* CHANGELOG* AUTHORS* INSTALL* NEWS*; do
     if [ -f "$docfile" ]; then
         mkdir -p %{buildroot}%{_docdir}
-        pax -rw -p p "$docfile" %{buildroot}%{_docdir}/
+        pax -rw -p p "$docfile" %{buildroot}%{_docdir}/ || { echo "ERROR: failed to install doc file $docfile" >&2; exit 1; }
     fi
 done
 
@@ -351,7 +353,7 @@ _CFGFILES=$(mktemp)
 _DOCFILES=$(mktemp)
 _EMPTYDIRS=$(mktemp)
 
-find "${_BR}" -type f -o -type l | sed "s|^${_BR}||" | sort > "$_ALLFILES"
+find "${_BR}" \( -type f -o -type l \) -print | sed "s|^${_BR}||" | sort > "$_ALLFILES"
 
 # Collect empty directories — these must be listed explicitly with %dir
 # otherwise RPM won't create them and packages relying on them will break.
