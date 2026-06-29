@@ -264,7 +264,7 @@ elif [ $(ls -1 | grep -v "^$" | wc -l) -eq 1 ] && [ -d * ]; then
     # Standard single-directory layout (e.g., go/)
     SUB_DIR=$(ls -1)
     echo "Standard single-directory layout detected: $SUB_DIR"
-    cd "$SUB_DIR"
+    cd "$SUB_DIR" || { echo "ERROR: could not cd into $SUB_DIR" >&2; exit 1; }
 else
     # Flat or mixed layout — already in the right place
     echo "Flat or mixed layout detected"
@@ -409,7 +409,7 @@ Summary:        ${SUMMARY}
 %define _mandir %{_datadir}/man
 %define _libexecdir %{_prefix}/libexec
 %define _altbindir %{_prefix}/altbin
-%define _miscdir %{_prefix}/share/%{name}
+%define _miscdir %{_prefix}/share/%{name}/misc
 %define _pkgdatadir %{_datadir}/%{name}
 
 License:        ${LICENSE}
