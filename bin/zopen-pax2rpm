@@ -156,7 +156,6 @@ analyze_pax_contents() {
     has_altbin=false
     has_libexec=false
     has_data=false
-    is_os_layout=false
     
     # Analyze each file
     while IFS= read -r line; do
@@ -168,7 +167,7 @@ analyze_pax_contents() {
         [ -z "$filename" ] && continue
         
         # Detect directory structure using shell globs.
-        # Patterns like */bin/* match at any depth (e.g. usr/lpp/IBM/bin/).
+        # Patterns like */bin/* match at any depth (e.g. deeply nested bin/ dirs).
         # This is intentional: we only need to know whether a category exists,
         # not where exactly — root detection is handled separately in generate_install_commands().
         case "$filename" in
@@ -194,8 +193,6 @@ analyze_pax_contents() {
                 has_libexec=true ;;
             data/* | */data/*)
                 has_data=true ;;
-            usr/lpp/* | */usr/lpp/*)
-                is_os_layout=true ;;
         esac
     done << EOF
 $pax_listing
@@ -226,45 +223,7 @@ generate_install_commands() {
 # Install files into FHS-like filesystem hierarchy under /opt/pkg/
 
 # Detect the source layout and find the content root
-if [ -d usr ]; then
-    echo "OS layout (usr/) detected, searching for actual package root..."
-    # Strategy: find the shallowest directory whose parent contains at least
-    # one *binary/library* FHS child (bin, lib, libexec, include, altbin).
-    # We intentionally exclude 'share', 'etc', and 'man' as anchors because
-    # these exist at the OS level (e.g. usr/share/) and would incorrectly
-    # select 'usr' instead of the real package root deeper in the tree
-    # (e.g. usr/lpp/foo/ which contains the actual bin/ and lib/).
-    ROOT_DIR=""
-    # Collect all candidate parent dirs that have at least one binary/library
-    # FHS child, sort by depth (fewest slashes first) then alphabetically.
-    ROOT_DIR=$(find . -type d \( \
-            -name bin -o -name lib -o -name libexec -o \
-            -name include -o -name altbin -o \
-            -name pyz -o -name bash -o -name go \) -print | \
-        sed 's|/[^/]*$||' | \
-        sed 's|^\./||' | \
-        sort -u | \
-        awk -F/ '{ print NF" "$0 }' | \
-        sort -n -k1,1 -k2 | \
-        awk 'NR==1{ sub(/^[0-9]+ /,""); print }')
-
-    if [ -z "$ROOT_DIR" ] || [ "$ROOT_DIR" = "." ]; then
-        # Fallback: walk down single-child directories until we find a
-        # directory with more than one entry (the real content root).
-        # Use find instead of ls -1 so dotfiles are counted correctly.
-        ROOT_DIR="."
-        while [ "$(find "$ROOT_DIR" -maxdepth 1 -mindepth 1 | wc -l)" -eq 1 ]; do
-            SUB_DIR=$(find "$ROOT_DIR" -maxdepth 1 -mindepth 1)
-            if [ -d "$SUB_DIR" ]; then
-                ROOT_DIR="$SUB_DIR"
-            else
-                break
-            fi
-        done
-    fi
-    echo "Detected package root: $ROOT_DIR"
-    cd "$ROOT_DIR" || { echo "ERROR: could not cd into $ROOT_DIR" >&2; exit 1; }
-elif [ "$(find . -maxdepth 1 -mindepth 1 | wc -l)" -eq 1 ] && [ -d "$(find . -maxdepth 1 -mindepth 1)" ]; then
+if [ "$(find . -maxdepth 1 -mindepth 1 | wc -l)" -eq 1 ] && [ -d "$(find . -maxdepth 1 -mindepth 1)" ]; then
     # Standard single-directory layout (e.g., go/)
     SUB_DIR=$(find . -maxdepth 1 -mindepth 1)
     echo "Standard single-directory layout detected: $SUB_DIR"
