@@ -27,96 +27,81 @@ def sign_rpm       = params.SIGN_RPM             ?: true
 def gpg_key_cred   = params.GPG_KEY_CREDENTIAL   ?: "ZOPEN_GPG_SECRET_KEY_FILE"
 def gpg_pass_cred  = params.GPG_PASS_CREDENTIAL  ?: "ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE"
 
-// Helper to run a bash script — writes content to a temp file and
-// invokes bash explicitly so z/OS sh is bypassed entirely.
-def runBash(script) {
-  sh "bash -xe -c '${script.replace("'", "'\\''")}'"
-}
-
 node(node_label) {
 
   def ws = env.WORKSPACE
 
-  // Common environment setup sourced at the start of every bash invocation
-  def envSetup = """
-    set +e
-    . /jenkins/.env
-    set -e
-    export PATH="${ws}/bin:\$PATH"
-    export NO_COLOR=1
-    export ZOPEN_IS_BOT=1
-    export GIT_UTF8_CCSID=819
-    export TMPDIR="${ws}/tmp"
-    mkdir -p "\$TMPDIR"
-  """
-
-  stage('Setup') {
-    deleteDir()
-    checkout scm
-    sh "bash -xe '${ws}/bin/zopen-rpmbuild' --version || true"
-    sh """bash -xe -s << 'BASH'
-${envSetup}
-echo "Setup complete. PATH=\$PATH"
-BASH"""
-  }
-
-  stage('Checkout') {
+  stage('Build RPM') {
     if (!project_repo) {
       error "PROJECT_GITHUB_REPO is required"
     }
 
     def project_name = project_repo.tokenize('/').last().replaceAll('\\.git$', '')
 
-    sh """bash -xe -s << 'BASH'
-${envSetup}
-git clone -b '${project_branch}' '${project_repo}' '${project_name}'
-BASH"""
+    // Set default buildroot as the cloned project repository directory inside the workspace
+    def localBuildroot = buildroot ?: "${ws}/${project_name}/rpmbuild"
 
-    env.PROJECT_NAME = project_name
-  }
-
-  stage('RPM Build') {
-    dir("${ws}/${env.PROJECT_NAME}") {
-
-      def cmd = "zopen-rpmbuild \"${spec_file}\""
-
-      if (source_file) {
-        cmd += " --source \"${source_file}\""
-      }
-
-      if (buildroot) {
-        cmd += " --buildroot \"${buildroot}\""
-      }
-
-      if (build_binary) {
-        cmd += " --build-binary"
-      }
-
-      cmd += " --verbose"
-
-      if (sign_rpm) {
-        withCredentials([
-          file(credentialsId: gpg_key_cred,  variable: 'ZOPEN_GPG_SECRET_KEY_FILE'),
-          file(credentialsId: gpg_pass_cred, variable: 'ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE')
-        ]) {
-          sh """bash -xe -s << 'BASH'
-${envSetup}
-${cmd} --sign
-BASH"""
-        }
-      } else {
-        sh """bash -xe -s << 'BASH'
-${envSetup}
-${cmd}
-BASH"""
-      }
+    // Construct the zopen-rpmbuild command options
+    def cmdOptions = "\"${spec_file}\" --buildroot \"${localBuildroot}\""
+    if (source_file) {
+      cmdOptions += " --source \"${source_file}\""
     }
-  }
+    if (build_binary) {
+      cmdOptions += " --build-binary"
+    }
 
-  stage('Archive') {
-    def rpmDir = buildroot ? "${buildroot}/RPMS" : "${env.HOME}/rpmbuild/RPMS"
+    // Run everything in a single, robust bash execution
+    deleteDir()
+    checkout scm
 
-    archiveArtifacts artifacts: "${rpmDir}/**/*.rpm",
+    // Construct sign flag for command execution
+    if (sign_rpm) {
+      cmdOptions += " --sign"
+    }
+
+    // Set up dynamic credentials mapping based on sign_rpm parameter
+    def gpgBindings = sign_rpm ? [
+      file(credentialsId: gpg_key_cred,  variable: 'ZOPEN_GPG_SECRET_KEY_FILE'),
+      file(credentialsId: gpg_pass_cred, variable: 'ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE')
+    ] : []
+
+    withCredentials(gpgBindings) {
+      sh """bash -e -s << 'BASH'
+        set +e
+        . /jenkins/.env
+        set -e
+        export PATH="${ws}/bin:\$PATH"
+        export NO_COLOR=1
+        export ZOPEN_IS_BOT=1
+        export GIT_UTF8_CCSID=819
+        export TMPDIR="${ws}/tmp"
+        export GPG_TTY="/dev/null"
+        mkdir -p "\$TMPDIR"
+
+        # 1. Print version diagnostics
+        zopen-rpmbuild --version || true
+
+        # 2. Clone repo clean
+        rm -rf "${project_name}"
+        git clone -b "${project_branch}" "${project_repo}" "${project_name}"
+
+        # 3. Verify spec file exists
+        if [ ! -f "${project_name}/${spec_file}" ]; then
+          echo "ERROR: Spec file not found in repository: ${project_name}/${spec_file}" >&2
+          exit 1
+        fi
+
+        # 4. Build
+        cd "${project_name}"
+        zopen-rpmbuild ${cmdOptions}
+
+        # 5. Copy RPMs to workspace for archiving
+        mkdir -p "${ws}/rpms"
+        cp -R "${localBuildroot}/RPMS/"* "${ws}/rpms/" 2>/dev/null || true
+BASH"""
+    }
+
+    archiveArtifacts artifacts: "rpms/**/*.rpm",
                      allowEmptyArchive: false,
                      fingerprint: true
   }
