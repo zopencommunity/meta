@@ -277,6 +277,32 @@ perform_dry_run()
 }
 
 # ──────────────────────────────────────────────────────────────────────────────
+# setup_rpm_env  — ensure zopen rpm is installed and source its .env so
+# rpmbuild and brp-* scripts use GNU tools (e.g. xargs -0) on z/OS.
+# ──────────────────────────────────────────────────────────────────────────────
+setup_rpm_env()
+{
+  # ZOPEN_PKGINSTALL is set by common.sh (sourced via setupMyself)
+  RPM_ENV="${ZOPEN_PKGINSTALL}/rpm/rpm/.env"
+
+  # Install rpm via zopen if not already present
+  if [ ! -r "${RPM_ENV}" ]; then
+    printInfo "zopen rpm not found. Installing via zopen install..."
+    if ! zopen install rpm -y; then
+      printError "Failed to install rpm via zopen install"
+    fi
+  fi
+
+  # Source the rpm .env to put GNU tools on PATH
+  if [ -r "${RPM_ENV}" ]; then
+    printInfo "Sourcing zopen rpm environment: ${RPM_ENV}"
+    . "${RPM_ENV}"
+  else
+    printWarning "zopen rpm .env not found at ${RPM_ENV} — using system rpm"
+  fi
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
 # do_build  — the actual rpmbuild invocation
 # ──────────────────────────────────────────────────────────────────────────────
 do_build()
@@ -284,6 +310,9 @@ do_build()
   spec_file="$1"
 
   printHeader "Building RPM package from spec: $spec_file"
+
+  # Source zopen rpm .env so rpmbuild and brp-* scripts use GNU tools
+  setup_rpm_env
 
   setup_rpmbuild "$BUILDROOT"
 
