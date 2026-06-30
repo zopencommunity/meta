@@ -277,29 +277,68 @@ perform_dry_run()
 }
 
 # ──────────────────────────────────────────────────────────────────────────────
+# setDepsEnv  — Simplified version for zopen-rpmbuild.
+# Installs a zopen dependency if not present and sources its .env.
+# ──────────────────────────────────────────────────────────────────────────────
+depsPath="${ZOPEN_PKGINSTALL}"
+
+# Find the directory containing a dependency's .env file in the depsPath
+find_dep_dir()
+{
+  _fd_name="$1"
+  for _fd_path in $(echo "${depsPath}" | tr '|' '\n'); do
+    _fd_dir="${_fd_path}/${_fd_name}/${_fd_name}"
+    if [ -r "${_fd_dir}/.env" ]; then
+      echo "${_fd_dir}"
+      return 0
+    fi
+  done
+  return 1
+}
+
+setDepsEnv()
+{
+  if [ $# -eq 0 ]; then
+    return
+  fi
+
+  _sde_deps=$(normalizeDeps "$*")
+  _sde_orig="${PWD}"
+
+  for _sde_dep in ${_sde_deps}; do
+    _sde_name=$(parseDeps "${_sde_dep}" | cut -d'|' -f1)
+
+    # Install the dependency if not already found in depsPath
+    if ! find_dep_dir "${_sde_name}" >/dev/null; then
+      printWarning "Dependency ${_sde_name} not found. Downloading via zopen install"
+      if ! runAndLog "PATH=\"${ZOPEN_OLD_PATH}\" ${MYDIR}/zopen-install --install-or-upgrade ${_sde_name} -v -y"; then
+        printError "zopen install command failed"
+      fi
+    fi
+
+    # Locate and source the dependency environment
+    if _sde_dir=$(find_dep_dir "${_sde_name}"); then
+      printVerbose "Setting up ${_sde_name} dependency environment from ${_sde_dir}"
+      cd "${_sde_dir}" && . ./.env
+      if [ $? -gt 0 ]; then
+        printError "Failed to source ${_sde_dir}/.env"
+      fi
+    else
+      printError "Dependency ${_sde_name} not found for sourcing"
+    fi
+  done
+
+  cd "${_sde_orig}" || exit 99
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
 # setup_rpm_env  — ensure zopen rpm is installed and source its .env so
 # rpmbuild and brp-* scripts use GNU tools (e.g. xargs -0) on z/OS.
 # ──────────────────────────────────────────────────────────────────────────────
 setup_rpm_env()
 {
-  # ZOPEN_PKGINSTALL is set by common.sh (sourced via setupMyself)
-  RPM_ENV="${ZOPEN_PKGINSTALL}/rpm/rpm/.env"
-
-  # Install rpm via zopen if not already present
-  if [ ! -r "${RPM_ENV}" ]; then
-    printInfo "zopen rpm not found. Installing via zopen install..."
-    if ! zopen install rpm -y; then
-      printError "Failed to install rpm via zopen install"
-    fi
-  fi
-
-  # Source the rpm .env to put GNU tools on PATH
-  if [ -r "${RPM_ENV}" ]; then
-    printInfo "Sourcing zopen rpm environment: ${RPM_ENV}"
-    . "${RPM_ENV}"
-  else
-    printWarning "zopen rpm .env not found at ${RPM_ENV} — using system rpm"
-  fi
+  printInfo "Ensuring zopen rpm is installed and sourcing its environment..."
+  setDepsEnv rpm
 }
 
 # ──────────────────────────────────────────────────────────────────────────────

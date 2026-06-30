@@ -732,14 +732,14 @@ build_rpm() {
 Please ensure it is installed alongside zopen-pax2rpm."
     fi
 
-    # Compose the zopen-rpmbuild command
-    rpmbuild_cmd="${ZOPEN_RPMBUILD} \"$spec_file\" --source \"$pax_file\" --buildroot \"$buildroot\""
-    [ "$BUILD_BINARY_ONLY" = true ] && rpmbuild_cmd="$rpmbuild_cmd --build-binary"
-    [ "$SIGN_RPM"          = true ] && rpmbuild_cmd="$rpmbuild_cmd --sign"
-    [ "$VERBOSE"           = true ] && rpmbuild_cmd="$rpmbuild_cmd --verbose"
+    # Build the zopen-rpmbuild argument list
+    set -- "$spec_file" --source "$pax_file" --buildroot "$buildroot"
+    [ "$BUILD_BINARY_ONLY" = true ] && set -- "$@" --build-binary
+    [ "$SIGN_RPM"          = true ] && set -- "$@" --sign
+    [ "$VERBOSE"           = true ] && set -- "$@" --verbose
 
-    printInfo "Delegating to: $rpmbuild_cmd"
-    eval "$rpmbuild_cmd"
+    printInfo "Delegating to: ${ZOPEN_RPMBUILD} $*"
+    "${ZOPEN_RPMBUILD}" "$@"
 }
 
 # Main script
