@@ -15,8 +15,8 @@ log-format: text
 log-level: debug
 max-reviewers: 0
 max-team-reviewers: 0
-org:
-  - zopencommunity
+user:
+  - Sanjana-Kondalwade
 output: "-"
 plain-output: false
 platform: github
