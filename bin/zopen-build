@@ -2573,7 +2573,7 @@ finalize_pax_metadata()
   fi
 
   if [[ -n "${SIGNATURE}" ]]; then
-    jq --arg pax "${ZOPEN_NAME}.${LOG_PFX}.zos.pax.Z" \
+    jq --arg pax "$(basename "${paxFileName}")" \
        --arg pax_size "$pax_size" \
        --arg md5 "$md5sum" \
        --arg signature "$SIGNATURE" \
@@ -2581,7 +2581,7 @@ finalize_pax_metadata()
        '.product |= . + { "pax": $pax, "pax_size": $pax_size, "md5": $md5, "signature": $signature, "public_key": $public_key }' \
        "${ZOPEN_ROOT}/install/metadata.json" > "${ZOPEN_ROOT}/install/metadata.json.tmp"
   else
-    jq '.product |= . + { "pax": "'${ZOPEN_NAME}.${LOG_PFX}.zos.pax.Z'", "pax_size": "'${pax_size}'", "md5": "'${md5sum}'" }' "${ZOPEN_ROOT}/install/metadata.json" > "${ZOPEN_ROOT}/install/metadata.json.tmp"
+    jq '.product |= . + { "pax": "'$(basename "${paxFileName}")'", "pax_size": "'${pax_size}'", "md5": "'${md5sum}'" }' "${ZOPEN_ROOT}/install/metadata.json" > "${ZOPEN_ROOT}/install/metadata.json.tmp"
   fi
   mv "${ZOPEN_ROOT}/install/metadata.json.tmp" "${ZOPEN_ROOT}/install/metadata.json"
 }
@@ -2607,6 +2607,20 @@ package()
     fi
 
     setDepsEnv ${ZOPEN_DEPS}
+    # Build paxFileName here (after install) so the version from .version is available
+    # Use same name/version/release convention as RPM: name.version.timestamp.zos.pax.Z
+    _pax_name=$(getProjectName "${ZOPEN_NAME}")
+    _pax_version=$(cat "${ZOPEN_INSTALL_DIR}/.version" 2>/dev/null)
+    if [ -z "${_pax_version}" ]; then
+      _pax_version=$(cat "${ZOPEN_ROOT}/install/.version" 2>/dev/null)
+    fi
+    _pax_release=$(echo "${LOG_PFX}" | tr '_' '.')
+    if [ -n "${_pax_version}" ]; then
+      paxFileName="${ZOPEN_ROOT}/install/${_pax_name}.${_pax_version}.${_pax_release}.zos.pax.Z"
+    else
+      paxFileName="${ZOPEN_ROOT}/install/${_pax_name}.${_pax_release}.zos.pax.Z"
+    fi
+    export ZOPEN_PAX_CMD="pax -w -z -x pax \"-s#${ZOPEN_INSTALL_DIR}/#${ZOPEN_NAME}/#\" -f \"${paxFileName}\" \"${ZOPEN_INSTALL_DIR}/\""
     create_pax
 
     if ${generateRPM}; then
@@ -2759,8 +2773,6 @@ resolveCommands()
       ;;
     esac
     [[ -d ${ZOPEN_ROOT}/install ]] || mkdir -p ${ZOPEN_ROOT}/install
-    paxFileName="${ZOPEN_ROOT}/install/${ZOPEN_NAME}.${LOG_PFX}.zos.pax.Z"
-    export ZOPEN_PAX_CMD="pax -w -z -x pax \"-s#${ZOPEN_INSTALL_DIR}/#${ZOPEN_NAME}/#\" -f \"${paxFileName}\" \"${ZOPEN_INSTALL_DIR}/\""
   else
     unset ZOPEN_INSTALL_CMD
     unset ZOPEN_PAX_CMD
