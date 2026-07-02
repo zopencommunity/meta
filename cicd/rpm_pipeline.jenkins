@@ -69,27 +69,25 @@ node('linux')
   }
 
   stage('Cleanup') {
-    def extraText = ""
-    if (params.NO_PROMOTE) {
-      extraText = "\nBuilt with NO_PROMOTE set to true."
-    } else {
-      extraText = "\nRPM packages successfully promoted to Pulp package repository."
+    if (!params.NO_PROMOTE) {
+      def extraText = "\nRPM packages successfully promoted to Pulp package repository."
+      slackSend color: 'good', 
+        message: "RPM Build Pipeline for ${repo} *successful* <${currentBuild.absoluteUrl}|Build #${currentBuild.number}>${extraText}"
     }
-
-    slackSend color: 'good', 
-      message: "RPM Build Pipeline for ${repo} *successful* <${currentBuild.absoluteUrl}|Build #${currentBuild.number}>${extraText}"
   }
 }
 
 def handleError(reason, repo, output="none") {
   def message = "RPM Build Pipeline for ${repo}:\n<${currentBuild.absoluteUrl}|Build #${currentBuild.number}> *Failed*\n*Reason:* ${reason}\nLast 50 lines of output:\n```${output}```"
-  def attachments = [
-    [
-      text: message,
-      fallback: 'Fallback',
-      color: 'danger'
+  if (!params.NO_PROMOTE) {
+    def attachments = [
+      [
+        text: message,
+        fallback: 'Fallback',
+        color: 'danger'
+      ]
     ]
-  ]
-  slackSend(attachments: attachments)
+    slackSend(attachments: attachments)
+  }
   error "Job failed..."
 }
