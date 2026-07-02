@@ -23,7 +23,7 @@ on:
 
 jobs:
   test-run:
-    uses: zopencommunity/meta/.github/workflows/rpm_workflow.yml@main
+    uses: ./.github/workflows/rpm_workflow.yml
     with:
       repo: ${{ inputs.repo }}
       branch: ${{ inputs.branch }}

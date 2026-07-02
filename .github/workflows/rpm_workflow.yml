@@ -58,7 +58,7 @@ jobs:
         run: |
           repo="${{ inputs.repo }}"
           if [ -z "${repo}" ]; then
-            if [ "${{ github.event_name }}" = "push" ]; then
+            if [ "${{ github.event_name }}" = "push" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
               repo="${{ github.event.repository.clone_url }}"
             else
               repo="${{ fromJson(steps.request.outputs.data).head.repo.clone_url }}"
@@ -66,13 +66,21 @@ jobs:
           fi
           branch="${{ inputs.branch }}"
           if [ -z "${branch}" ]; then
-            if [ "${{ github.event_name }}" = "push" ]; then
+            if [ "${{ github.event_name }}" = "push" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
               branch="${{ github.ref_name }}"
             else
               branch="${{ fromJson(steps.request.outputs.data).head.ref }}"
             fi
           fi
           
+          echo "=========================================="
+          echo " Triggering Jenkins Pipeline"
+          echo " Target Repo : ${repo}"
+          echo " Target Branch: ${branch}"
+          echo " Spec File   : ${{ inputs.spec_file }}"
+          echo " No Promote  : ${{ inputs.no_promote }}"
+          echo "=========================================="
+
           CAUSE="Triggered by GH Action: Repo ${repo}, Branch: ${branch}"
           ENCODED_CAUSE=$(echo -n "$CAUSE" | jq -s -R -r @uri)
           
