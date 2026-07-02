@@ -46,6 +46,9 @@ VALIDATE_SPEC=false
 DRY_RUN=false
 VERBOSE=false
 
+# Path to the companion build/sign script
+ZOPEN_RPMBUILD="${MYDIR}/zopen-rpmbuild"
+
 # Function to display usage
 usage() {
 exit_code="${1:-1}"
@@ -507,203 +510,43 @@ EOF
     return 0
 }
 
-# Function to sign generated RPMs
-sign_rpm() {
-    buildroot="$1"
-    
-    # Check for required environment variables
-    if [ -z "${ZOPEN_GPG_SECRET_KEY_FILE}" ] || [ -z "${ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE}" ]; then
-        printError "Signing requested but ZOPEN_GPG_SECRET_KEY_FILE or ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE not set"
-        return 1
-    fi
-
-    echo ""
-    echo "=========================================="
-    echo "Signing RPM packages..."
-    echo "=========================================="
-    echo ""
-
-    # Create a temporary directory for GPG keyring using zopen_tmp_dir
-    if [ -z "${zopen_tmp_dir}" ] || [ ! -d "${zopen_tmp_dir}" ]; then
-        printError "zopen_tmp_dir not set or not a directory. Cannot create temporary GPG directory."
-    fi
-    TMP_GPG_DIR="${zopen_tmp_dir}/rpm_gpg_$$"
-    echo "Creating temporary GPG directory: ${TMP_GPG_DIR}"
-    if ! mkdir -p "${TMP_GPG_DIR}" 2>/dev/null; then
-        printError "Failed to create temporary directory for GPG signing"
-    fi
-    chmod 700 "${TMP_GPG_DIR}"
-    echo "Temporary GPG directory created"
-    
-    # Register cleanup trap
-    addCleanupTrapCmd "rm -rf ${TMP_GPG_DIR}"
-    echo "Cleanup trap registered"
-    
-    OLD_GNUPGHOME="$GNUPGHOME"
-    export GNUPGHOME="$TMP_GPG_DIR"
-    echo "GNUPGHOME set to: ${GNUPGHOME}"
-    RPM_LIST=""
-
-    # Import the private key
-    echo "Importing private key..."
-    if ! gpg --batch --yes --import "${ZOPEN_GPG_SECRET_KEY_FILE}" >/dev/null 2>&1; then
-        printError "Failed to import GPG secret key"
-    fi
-    echo "Private key imported successfully"
-
-    # Identify the GPG key ID (long ID)
-    echo "Extracting GPG key ID..."
-    GPG_KEY_ID=$(gpg --list-secret-keys --with-colons | grep '^sec' | cut -d: -f5 | head -n 1)
-    if [ -z "${GPG_KEY_ID}" ]; then
-        printError "Could not identify GPG key ID from imported key"
-    fi
-    echo "GPG key ID: ${GPG_KEY_ID}"
-
-    # Create a wrapper script for gpg to handle the passphrase file
-    echo "Creating GPG wrapper script..."
-    GPG_WRAPPER="${TMP_GPG_DIR}/gpg_wrapper.sh"
-    cat << EOF > "${GPG_WRAPPER}"
-#!/bin/sh
-gpg --batch --pinentry-mode loopback --passphrase-file "${ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE}" "\$@"
-EOF
-    chmod +x "${GPG_WRAPPER}"
-    echo "GPG wrapper script created"
-
-    # Sign the RPMs using the wrapper and key ID
-    # We use --define to override the GPG command and key details
-    SIGN_CMD="rpmsign --addsign --key-id ${GPG_KEY_ID} \
-        --define '_gpg_name ${GPG_KEY_ID}' \
-        --define '__gpg ${GPG_WRAPPER}' \
-        --define '_gpg_path ${TMP_GPG_DIR}'"
-
-    # Use a temporary file to avoid subshell return issues
-    echo "Finding RPM files to sign..."
-    RPM_LIST=$(mktempfile "rpmlist")
-    find "$buildroot/RPMS" -name "*.rpm" -type f > "$RPM_LIST"
-    
-    if [ ! -s "$RPM_LIST" ]; then
-        printError "No RPM packages found to sign in $buildroot/RPMS"
-    fi
-    
-    rpm_count=$(wc -l < "$RPM_LIST")
-    echo "Found ${rpm_count} RPM(s) to sign"
-
-    while read rpm; do
-        [ -z "$rpm" ] && continue
-        echo "Signing $rpm..."
-        if ! eval "${SIGN_CMD} \"${rpm}\""; then
-            printError "Failed to sign RPM: $rpm"
-        fi
-    done < "$RPM_LIST"
-
-    rm -f "$RPM_LIST"
-    rm -rf "$TMP_GPG_DIR"
-    [ -n "$OLD_GNUPGHOME" ] && export GNUPGHOME="$OLD_GNUPGHOME" || unset GNUPGHOME
-
-    echo "All RPMs signed successfully"
-    return 0
-}
-
-# Function to setup rpmbuild directories
-setup_rpmbuild() {
-buildroot="$1"
-    
-    echo "Setting up RPM build directories in: $buildroot"
-    
-    mkdir -p "$buildroot/BUILD" "$buildroot/BUILDROOT" "$buildroot/RPMS" "$buildroot/SOURCES" "$buildroot/SPECS" "$buildroot/SRPMS"
-    
-    if [ ! -f "$HOME/.rpmmacros" ]; then
-        if touch "$HOME/.rpmmacros" 2>/dev/null; then
-            cat > "$HOME/.rpmmacros" << EOF
-%_topdir $buildroot
-EOF
-            echo "Created ~/.rpmmacros with _topdir set to $buildroot"
-        else
-            echo "Warning: could not create ~/.rpmmacros. This is normal in some CI environments."
-            echo "The script will use '$buildroot' by overriding it with --define \"_topdir $buildroot\"."
-        fi
-    else
-        # Check if _topdir is already defined and different
-        existing_topdir=$(grep "%_topdir" "$HOME/.rpmmacros" | awk '{print $2}')
-        if [ -n "$existing_topdir" ] && [ "$existing_topdir" != "$buildroot" ]; then
-            echo "Warning: ~/.rpmmacros exists and has _topdir set to '$existing_topdir'."
-            echo "The script will use '$buildroot' by overriding it with --define \"_topdir $buildroot\"."
-        fi
-    fi
-}
+# sign_rpm and setup_rpmbuild have been moved to zopen-rpmbuild.
 
 # Function to check for required tools
 check_required_tools() {
     missing_tools=""
-    pax_file="$1"
-    
-    # Check for pax
+    # pax is always needed by zopen-pax2rpm
     if ! command -v pax > /dev/null 2>&1; then
         missing_tools="${missing_tools} pax"
     fi
-    
-    # Check for rpmbuild if building or validating
-    if [ "$BUILD_RPM" = true ] || [ "$VALIDATE_SPEC" = true ]; then
-        if [ "$VERBOSE" = true ]; then
-            echo "DEBUG: Current PATH is $PATH" >&2
-        fi
-        if ! command -v rpmbuild > /dev/null 2>&1; then
-            missing_tools="${missing_tools} rpmbuild"
-        fi
-    fi
-    
+
     if [ -n "$missing_tools" ]; then
         echo "" >&2
-        printError "Missing Required Tools"
-        echo "The following tools are required but not found:" >&2
-        echo "" >&2
-        
+        printError "Missing required tools:"
         for tool in $missing_tools; do
             echo "  ✗ $tool" >&2
-            
             case "$tool" in
                 pax)
                     echo "    Purpose: Extract pax archives" >&2
                     echo "    Install: Usually pre-installed on z/OS" >&2
-                    echo "             On Linux: apt-get install pax (Debian/Ubuntu/RHEL/CentOS)" >&2
-                    ;;
-                rpmbuild)
-                    echo "    Purpose: Build RPM packages and validate spec files" >&2
-                    echo "    Install: Part of rpm-build package" >&2
-                    echo "             On z/OS: zopen install rpm" >&2
-                    echo "             On Linux: apt-get install rpm (Debian/Ubuntu/RHEL/CentOS)" >&2
+                    echo "             On Linux: apt-get install pax" >&2
                     ;;
             esac
             echo "" >&2
         done
-        
         printInfo "Please install the missing tools and try again."
         return 1
     fi
-    
+
     # Optional tools check (informational only)
-    optional_missing=""
-    
     if [ "$VALIDATE_SPEC" = true ] && ! command -v rpmlint > /dev/null 2>&1; then
-        optional_missing="${optional_missing} rpmlint"
-    fi
-    
-    if [ -n "$optional_missing" ]; then
         echo "" >&2
-        echo "Note: Optional tools not found (validation will be limited):" >&2
-        for tool in $optional_missing; do
-            echo "  - $tool (for enhanced spec file quality checks)" >&2
-            case "$tool" in
-                rpmlint)
-                    echo "    Install: On z/OS: zopen install rpmlint" >&2
-                    echo "             On Linux: apt-get install rpmlint (Debian/Ubuntu)" >&2
-                    echo "                       yum install rpmlint (RHEL/CentOS)" >&2
-                    ;;
-            esac
-        done
+        echo "Note: rpmlint not found — spec quality checks will be limited." >&2
+        echo "      Install: On z/OS: zopen install rpmlint" >&2
+        echo "               On Linux: apt-get install rpmlint" >&2
         echo "" >&2
     fi
-    
+
     return 0
 }
 
@@ -801,9 +644,11 @@ validation_failed=false
     echo "Validating generated spec file..."
     echo "=========================================="
     
-    # Setup environment for validation (rpmbuild -bp needs source)
-    setup_rpmbuild "$buildroot"
-    
+    # Ensure SOURCES directory exists so rpmbuild -bp can find the source
+    mkdir -p "$buildroot/BUILD" "$buildroot/BUILDROOT" \
+             "$buildroot/RPMS"  "$buildroot/SOURCES"   \
+             "$buildroot/SPECS" "$buildroot/SRPMS"
+
     # Copy pax file to SOURCES if not already there
 source_name=$(basename "$pax_file")
     if [ ! -f "$buildroot/SOURCES/$source_name" ] || [ "$pax_file" -nt "$buildroot/SOURCES/$source_name" ]; then
@@ -876,86 +721,25 @@ pax_file="$1"
     echo ""
 }
 
-# Function to build RPM
+# Function to build (and optionally sign) an RPM by delegating to zopen-rpmbuild
 build_rpm() {
-spec_file="$1"
-pax_file="$2"
-buildroot="$3"
-    
-    echo ""
-    echo "=========================================="
-    echo "Building RPM package..."
-    echo "=========================================="
-    echo ""
-    
-    # Setup rpmbuild directories
-    setup_rpmbuild "$buildroot"
-    
-    # Copy pax file to SOURCES
-source_name=$(basename "$pax_file")
-    echo "Copying source file to $buildroot/SOURCES/$source_name"
-    cp "$pax_file" "$buildroot/SOURCES/"
+    spec_file="$1"
+    pax_file="$2"
+    buildroot="$3"
 
-    # Copy spec file to SPECS
-    echo "Copying spec file to $buildroot/SPECS/"
-    cp "$spec_file" "$buildroot/SPECS/"
-    
-    # Build the RPM
-    echo ""
-    if [ "$BUILD_BINARY_ONLY" = true ]; then
-        echo "Running rpmbuild --define \"_topdir $buildroot\" -bb $spec_file"
-        echo ""
-        rpmbuild_result=$(rpmbuild --define "_topdir $buildroot" -bb "$spec_file" 2>&1)
-        rpmbuild_exit=$?
-        echo "$rpmbuild_result"
-    else
-        echo "Running rpmbuild --define \"_topdir $buildroot\" -ba $spec_file"
-        echo ""
-        rpmbuild_result=$(rpmbuild --define "_topdir $buildroot" -ba "$spec_file" 2>&1)
-        rpmbuild_exit=$?
-        echo "$rpmbuild_result"
+    if [ ! -x "${ZOPEN_RPMBUILD}" ]; then
+        printError "Cannot find zopen-rpmbuild at '${ZOPEN_RPMBUILD}'. \
+Please ensure it is installed alongside zopen-pax2rpm."
     fi
-    
-    if [ $rpmbuild_exit -eq 0 ]; then
-        echo ""
-        echo "=========================================="
-        echo "✓ RPM build completed successfully!"
-        echo "=========================================="
-        echo ""
-        echo "Generated packages:"
-        echo ""
-        echo "Binary RPMs:"
-        find "$buildroot/RPMS" -name "*.rpm" -type f 2>/dev/null | while read rpm; do
-            echo "  - $rpm"
-        done
-        if [ "$BUILD_BINARY_ONLY" != true ]; then
-            echo ""
-            echo "Source RPMs:"
-            find "$buildroot/SRPMS" -name "*.rpm" -type f 2>/dev/null | while read rpm; do
-                echo "  - $rpm"
-            done
-        fi
-        echo ""
 
-        if [ "$SIGN_RPM" = true ]; then
-            sign_rpm "$buildroot"
-        fi
+    # Build the zopen-rpmbuild argument list
+    set -- "$spec_file" --source "$pax_file" --buildroot "$buildroot"
+    [ "$BUILD_BINARY_ONLY" = true ] && set -- "$@" --build-binary
+    [ "$SIGN_RPM"          = true ] && set -- "$@" --sign
+    [ "$VERBOSE"           = true ] && set -- "$@" --verbose
 
-        return 0
-    else
-        echo ""
-        echo "=========================================="
-        echo "✗ RPM build failed!"
-        echo "=========================================="
-        echo ""
-        echo "Please review the spec file and build output above."
-        echo "Common issues:"
-        echo "  - Missing BuildRequires dependencies"
-        echo "  - Incorrect file paths in %install or %files sections"
-        echo "  - Pax extraction errors"
-        echo ""
-        return 1
-    fi
+    printInfo "Delegating to: ${ZOPEN_RPMBUILD} $*"
+    "${ZOPEN_RPMBUILD}" "$@"
 }
 
 # Main script
@@ -1112,8 +896,8 @@ main() {
     # Normalize version for RPM compatibility: strip optional v/V prefix and convert pre-release suffixes
     PKG_VERSION=$(normalizeRpmVersion "$PKG_VERSION")
     
-    # Check for required tools
-    if ! check_required_tools "$PAX_FILE"; then
+    # Check for required tools (pax is always needed; rpmbuild is handled by zopen-rpmbuild)
+    if ! check_required_tools; then
         exit 1
     fi
     
@@ -1128,7 +912,8 @@ main() {
     echo "  Output:      $OUTPUT_FILE"
     echo ""
     
-    # Handle dry-run mode
+    # Handle dry-run mode — delegate build dry-run to zopen-rpmbuild so it is
+    # consistent with what would actually be executed.
     if [ "$DRY_RUN" = true ]; then
         perform_dry_run "$PAX_FILE"
         exit 0
@@ -1169,11 +954,9 @@ main() {
         echo "  2. Adjust the %install and %files sections if needed"
         if [ "$VALIDATE_SPEC" = false ]; then
             echo "  3. Validate the spec: $0 $PAX_FILE --summary \"$SUMMARY\" --validate"
-            echo "  4. Copy the pax file to rpmbuild/SOURCES/"
-            echo "  5. Build the RPM: rpmbuild --define \"_topdir $BUILDROOT\" -ba $OUTPUT_FILE"
+            echo "  4. Build the RPM:     zopen-rpmbuild $OUTPUT_FILE --source $PAX_FILE"
         else
-            echo "  3. Copy the pax file to rpmbuild/SOURCES/"
-            echo "  4. Build the RPM: rpmbuild --define \"_topdir $BUILDROOT\" -ba $OUTPUT_FILE"
+            echo "  3. Build the RPM:     zopen-rpmbuild $OUTPUT_FILE --source $PAX_FILE"
         fi
         echo ""
         echo "Or run with --build flag to build automatically:"

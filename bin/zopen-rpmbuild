@@ -1,0 +1,512 @@
+#!/bin/sh
+#
+# RPM build and signing utility for zopen
+# Accepts a pre-generated spec file and drives rpmbuild + optional GPG signing.
+#
+
+#
+# All zopen-* scripts MUST start with this code to maintain consistency.
+#
+setupMyself()
+{
+  ME=$(basename $0)
+  MYDIR="$(cd "$(dirname "$0")" > /dev/null 2>&1 && pwd -P)"
+  INCDIR="${MYDIR}/../include"
+  if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
+    echo "Internal Error. Unable to find common.sh file to source." >&2
+    exit 8
+  fi
+  . "${INCDIR}/common.sh"
+}
+setupMyself
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Defaults
+# ──────────────────────────────────────────────────────────────────────────────
+BUILD_BINARY_ONLY=false
+SIGN_RPM=false
+BUILDROOT="${HOME}/rpmbuild"
+DRY_RUN=false
+VERBOSE=false
+# Extra source files to copy into SOURCES/ before building (space-separated)
+EXTRA_SOURCES=""
+
+# ──────────────────────────────────────────────────────────────────────────────
+# usage
+# ──────────────────────────────────────────────────────────────────────────────
+usage()
+{
+  exit_code="${1:-1}"
+  cat << EOF
+Usage: $ME <spec_file> [options]
+
+Build an RPM package from an existing spec file, and optionally sign it.
+
+Works for both regular packages (with source files) and virtual/meta packages
+(spec files with no Source: tag and no %install/%files section).
+
+Arguments:
+  spec_file               Path to the RPM spec file to build
+
+Options:
+  --source <file>         Source file to copy into SOURCES/ before building.
+                          May be repeated for multiple source files.
+                          Omit entirely for virtual/meta packages that have
+                          no sources (e.g. dependency group packages).
+  --build-binary          Build binary RPM only (no source RPM, faster)
+  --buildroot <dir>       RPM build root directory (default: ~/rpmbuild)
+  --sign                  GPG-sign all generated RPM packages after a
+                          successful build.  Requires:
+                            ZOPEN_GPG_SECRET_KEY_FILE
+                            ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE
+  --dry-run               Show what would be done without doing it
+  --verbose               Enable verbose/debug output (set -x)
+  --help                  Display this help message
+  --version               Display tool version
+
+Environment (required for --sign):
+  ZOPEN_GPG_SECRET_KEY_FILE             Path to the GPG secret key (armored)
+  ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE  Path to a file containing the passphrase
+
+Examples:
+  # Build a virtual/meta package (no sources needed)
+  $ME meta-zopen-devtools.spec
+
+  # Build a regular package with a pax source file
+  $ME mypackage.spec --source /path/to/mypackage.pax.Z
+
+  # Build binary RPM only
+  $ME mypackage.spec --source /path/to/mypackage.pax.Z --build-binary
+
+  # Build and sign
+  $ME mypackage.spec --source /path/to/mypackage.pax.Z --sign
+
+  # Multiple source files
+  $ME mypackage.spec --source pkg.pax.Z --source extra-data.tar.gz
+
+EOF
+  exit "$exit_code"
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# setup_rpmbuild  — create the standard rpmbuild directory tree and ~/.rpmmacros
+# ──────────────────────────────────────────────────────────────────────────────
+setup_rpmbuild()
+{
+  buildroot="$1"
+
+  printInfo "Setting up RPM build directories in: $buildroot"
+  mkdir -p "$buildroot/BUILD" "$buildroot/BUILDROOT" \
+           "$buildroot/RPMS"  "$buildroot/SOURCES"   \
+           "$buildroot/SPECS" "$buildroot/SRPMS"
+
+  if [ ! -f "$HOME/.rpmmacros" ]; then
+    if touch "$HOME/.rpmmacros" 2>/dev/null; then
+      cat > "$HOME/.rpmmacros" << EOF
+%_topdir $buildroot
+EOF
+      printInfo "Created ~/.rpmmacros with _topdir set to $buildroot"
+    else
+      printWarning "Could not create ~/.rpmmacros. Will pass --define \"_topdir $buildroot\" to rpmbuild."
+    fi
+  else
+    existing_topdir=$(grep "%_topdir" "$HOME/.rpmmacros" | awk '{print $2}')
+    if [ -n "$existing_topdir" ] && [ "$existing_topdir" != "$buildroot" ]; then
+      printWarning "~/.rpmmacros has _topdir='$existing_topdir'; overriding with --define \"_topdir $buildroot\"."
+    fi
+  fi
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# sign_rpm  — GPG-sign every RPM under buildroot/RPMS/
+# ──────────────────────────────────────────────────────────────────────────────
+sign_rpm()
+{
+  buildroot="$1"
+
+  # Validate required env vars
+  if [ -z "${ZOPEN_GPG_SECRET_KEY_FILE}" ] || \
+     [ -z "${ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE}" ]; then
+    printError "Signing requested but ZOPEN_GPG_SECRET_KEY_FILE or \
+ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE is not set"
+    return 1
+  fi
+
+  printHeader "Signing RPM packages..."
+
+  # Temporary isolated GPG home
+  if [ -z "${zopen_tmp_dir}" ] || [ ! -d "${zopen_tmp_dir}" ]; then
+    printError "zopen_tmp_dir is not set or is not a directory. Cannot create temporary GPG directory."
+  fi
+  TMP_GPG_DIR="${zopen_tmp_dir}/rpm_gpg_$$"
+  if ! mkdir -p "${TMP_GPG_DIR}" 2>/dev/null; then
+    printError "Failed to create temporary GPG directory: ${TMP_GPG_DIR}"
+  fi
+  chmod 700 "${TMP_GPG_DIR}"
+  addCleanupTrapCmd "rm -rf ${TMP_GPG_DIR}"
+
+  OLD_GNUPGHOME="$GNUPGHOME"
+  export GNUPGHOME="$TMP_GPG_DIR"
+
+  # Import private key
+  printInfo "Importing GPG private key..."
+  if ! gpg --batch --yes --import "${ZOPEN_GPG_SECRET_KEY_FILE}" >/dev/null 2>&1; then
+    printError "Failed to import GPG secret key from ${ZOPEN_GPG_SECRET_KEY_FILE}"
+  fi
+
+  # Extract key ID
+  GPG_KEY_ID=$(gpg --list-secret-keys --with-colons | grep '^sec' | cut -d: -f5 | head -n 1)
+  if [ -z "${GPG_KEY_ID}" ]; then
+    printError "Could not determine GPG key ID from imported key"
+  fi
+  printInfo "Using GPG key ID: ${GPG_KEY_ID}"
+
+  # Passphrase wrapper
+  GPG_WRAPPER="${TMP_GPG_DIR}/gpg_wrapper.sh"
+  cat << WRAPPER_EOF > "${GPG_WRAPPER}"
+#!/bin/sh
+gpg --batch --pinentry-mode loopback \
+    --passphrase-file "${ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE}" "\$@"
+WRAPPER_EOF
+  chmod +x "${GPG_WRAPPER}"
+
+  SIGN_CMD="rpmsign --addsign --key-id ${GPG_KEY_ID} \
+    --define '_gpg_name ${GPG_KEY_ID}' \
+    --define '__gpg ${GPG_WRAPPER}' \
+    --define '_gpg_path ${TMP_GPG_DIR}'"
+
+  RPM_LIST=$(mktempfile "rpmlist")
+  find "$buildroot/RPMS" -name "*.rpm" -type f > "$RPM_LIST"
+
+  if [ ! -s "$RPM_LIST" ]; then
+    rm -f "$RPM_LIST"
+    printError "No RPM packages found to sign under $buildroot/RPMS"
+  fi
+
+  rpm_count=$(wc -l < "$RPM_LIST")
+  printInfo "Signing ${rpm_count} RPM(s)..."
+
+  while IFS= read -r rpm; do
+    [ -z "$rpm" ] && continue
+    printInfo "  Signing: $rpm"
+    if ! eval "${SIGN_CMD} \"${rpm}\""; then
+      rm -f "$RPM_LIST"
+      printError "Failed to sign RPM: $rpm"
+    fi
+  done < "$RPM_LIST"
+
+  rm -f "$RPM_LIST"
+  rm -rf "$TMP_GPG_DIR"
+  [ -n "$OLD_GNUPGHOME" ] && export GNUPGHOME="$OLD_GNUPGHOME" || unset GNUPGHOME
+
+  printInfo "All RPMs signed successfully."
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# check_required_tools
+# ──────────────────────────────────────────────────────────────────────────────
+check_required_tools()
+{
+  missing_tools=""
+
+  if ! command -v rpmbuild > /dev/null 2>&1; then
+    missing_tools="${missing_tools} rpmbuild"
+  fi
+
+  if [ "$SIGN_RPM" = true ] && ! command -v gpg > /dev/null 2>&1; then
+    missing_tools="${missing_tools} gpg"
+  fi
+
+  if [ -n "$missing_tools" ]; then
+    printError "Missing required tools:${missing_tools}"
+    for tool in $missing_tools; do
+      case "$tool" in
+        rpmbuild)
+          echo "  rpmbuild: part of rpm-build package" >&2
+          echo "            On z/OS: zopen install rpm" >&2
+          echo "            On Linux: apt-get install rpm / yum install rpm-build" >&2
+          ;;
+        gpg)
+          echo "  gpg: GNU Privacy Guard" >&2
+          echo "       On z/OS: zopen install gpg" >&2
+          echo "       On Linux: apt-get install gnupg / yum install gnupg2" >&2
+          ;;
+      esac
+    done
+    return 1
+  fi
+  return 0
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# perform_dry_run
+# ──────────────────────────────────────────────────────────────────────────────
+perform_dry_run()
+{
+  spec_file="$1"
+
+  printHeader "DRY RUN MODE — no files will be created or modified"
+  echo ""
+  echo "Would perform the following actions:"
+  echo ""
+  echo "1. Set up rpmbuild tree in:  $BUILDROOT"
+  if [ -n "$EXTRA_SOURCES" ]; then
+    step=2
+    for src in $EXTRA_SOURCES; do
+      echo "$step. Copy source file:         $src -> $BUILDROOT/SOURCES/"
+      step=$((step + 1))
+    done
+  else
+    echo "   (no source files — virtual/meta package)"
+    step=2
+  fi
+  echo "$step. Copy spec file:           $spec_file -> $BUILDROOT/SPECS/"
+  step=$((step + 1))
+  if [ "$BUILD_BINARY_ONLY" = true ]; then
+    echo "$step. Run: rpmbuild --define \"_topdir $BUILDROOT\" -bb $spec_file"
+  else
+    echo "$step. Run: rpmbuild --define \"_topdir $BUILDROOT\" -ba $spec_file"
+  fi
+  if [ "$SIGN_RPM" = true ]; then
+    step=$((step + 1))
+    echo "$step. GPG-sign all generated RPMs"
+  fi
+  echo ""
+  echo "To execute, re-run without --dry-run."
+  echo ""
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# setDepsEnv  — Simplified version for zopen-rpmbuild.
+# Installs a zopen dependency if not present and sources its .env.
+# ──────────────────────────────────────────────────────────────────────────────
+depsPath="${ZOPEN_PKGINSTALL}"
+
+# Find the directory containing a dependency's .env file in the depsPath
+find_dep_dir()
+{
+  _fd_name="$1"
+  for _fd_path in $(echo "${depsPath}" | tr '|' '\n'); do
+    _fd_dir="${_fd_path}/${_fd_name}/${_fd_name}"
+    if [ -r "${_fd_dir}/.env" ]; then
+      echo "${_fd_dir}"
+      return 0
+    fi
+  done
+  return 1
+}
+
+setDepsEnv()
+{
+  if [ $# -eq 0 ]; then
+    return
+  fi
+
+  _sde_deps=$(normalizeDeps "$*")
+  _sde_orig="${PWD}"
+
+  for _sde_dep in ${_sde_deps}; do
+    _sde_name=$(parseDeps "${_sde_dep}" | cut -d'|' -f1)
+
+    # Install the dependency if not already found in depsPath
+    if ! find_dep_dir "${_sde_name}" >/dev/null; then
+      printWarning "Dependency ${_sde_name} not found. Downloading via zopen install"
+      if ! runAndLog "PATH=\"${ZOPEN_OLD_PATH}\" ${MYDIR}/zopen-install --install-or-upgrade ${_sde_name} -v -y"; then
+        printError "zopen install command failed"
+      fi
+    fi
+
+    # Locate and source the dependency environment
+    if _sde_dir=$(find_dep_dir "${_sde_name}"); then
+      printVerbose "Setting up ${_sde_name} dependency environment from ${_sde_dir}"
+      cd "${_sde_dir}" && . ./.env
+      if [ $? -gt 0 ]; then
+        printError "Failed to source ${_sde_dir}/.env"
+      fi
+    else
+      printError "Dependency ${_sde_name} not found for sourcing"
+    fi
+  done
+
+  cd "${_sde_orig}" || exit 99
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# setup_rpm_env  — ensure zopen rpm is installed and source its .env so
+# rpmbuild and brp-* scripts use GNU tools (e.g. xargs -0) on z/OS.
+# ──────────────────────────────────────────────────────────────────────────────
+setup_rpm_env()
+{
+  printInfo "Ensuring zopen rpm is installed and sourcing its environment..."
+  setDepsEnv rpm
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# do_build  — the actual rpmbuild invocation
+# ──────────────────────────────────────────────────────────────────────────────
+do_build()
+{
+  spec_file="$1"
+
+  printHeader "Building RPM package from spec: $spec_file"
+
+  # Source zopen rpm .env so rpmbuild and brp-* scripts use GNU tools
+  setup_rpm_env
+
+  setup_rpmbuild "$BUILDROOT"
+
+  # Copy any extra source files into SOURCES/
+  for src in $EXTRA_SOURCES; do
+    src_name=$(basename "$src")
+    printInfo "Copying source file: $src -> $BUILDROOT/SOURCES/$src_name"
+    cp "$src" "$BUILDROOT/SOURCES/"
+  done
+
+  # Copy spec file into SPECS/
+  printInfo "Copying spec file to $BUILDROOT/SPECS/"
+  cp "$spec_file" "$BUILDROOT/SPECS/"
+
+  # Run rpmbuild
+  if [ "$BUILD_BINARY_ONLY" = true ]; then
+    printInfo "Running: rpmbuild --define \"_topdir $BUILDROOT\" -bb $spec_file"
+    rpmbuild --define "_topdir $BUILDROOT" -bb "$spec_file"
+    rpmbuild_exit=$?
+  else
+    printInfo "Running: rpmbuild --define \"_topdir $BUILDROOT\" -ba $spec_file"
+    rpmbuild --define "_topdir $BUILDROOT" -ba "$spec_file"
+    rpmbuild_exit=$?
+  fi
+
+  if [ $rpmbuild_exit -eq 0 ]; then
+    printHeader "RPM build completed successfully!"
+    echo ""
+    echo "Generated binary RPMs:"
+    find "$BUILDROOT/RPMS" -name "*.rpm" -type f 2>/dev/null | while IFS= read -r rpm; do
+      echo "  $rpm"
+    done
+    if [ "$BUILD_BINARY_ONLY" != true ]; then
+      echo ""
+      echo "Generated source RPMs:"
+      find "$BUILDROOT/SRPMS" -name "*.rpm" -type f 2>/dev/null | while IFS= read -r rpm; do
+        echo "  $rpm"
+      done
+    fi
+    echo ""
+
+    if [ "$SIGN_RPM" = true ]; then
+      sign_rpm "$BUILDROOT"
+    fi
+
+    return 0
+  else
+    printError "rpmbuild failed (exit $rpmbuild_exit). Review the output above for details."
+  fi
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# main
+# ──────────────────────────────────────────────────────────────────────────────
+main()
+{
+  if [ $# -eq 0 ]; then
+    usage
+  fi
+
+  # Handle bare --help / --version before positional arg parsing
+  case "$1" in
+    --help)
+      usage 0
+      ;;
+    --version)
+      if [ -x "${MYDIR}/zopen-version" ]; then
+        "${MYDIR}/zopen-version" "${ME}"
+      else
+        echo "${ME} version $(cat "${INCDIR}/zopen_version" 2>/dev/null || echo "unknown")"
+      fi
+      exit 0
+      ;;
+  esac
+
+  SPEC_FILE="$1"
+  shift
+
+  # Validate spec file exists
+  if [ ! -f "$SPEC_FILE" ]; then
+    printError "Spec file not found: $SPEC_FILE"
+  fi
+
+  # Parse remaining options
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      --source)
+        [ -n "$2" ] || { echo "Error: --source requires a value" >&2; usage; }
+        if [ -n "$EXTRA_SOURCES" ]; then
+          EXTRA_SOURCES="$EXTRA_SOURCES $2"
+        else
+          EXTRA_SOURCES="$2"
+        fi
+        shift 2
+        ;;
+      --build-binary)
+        BUILD_BINARY_ONLY=true
+        shift
+        ;;
+      --buildroot)
+        [ -n "$2" ] || { echo "Error: --buildroot requires a value" >&2; usage; }
+        BUILDROOT="$2"
+        shift 2
+        ;;
+      --sign)
+        SIGN_RPM=true
+        shift
+        ;;
+      --dry-run)
+        DRY_RUN=true
+        shift
+        ;;
+      --verbose)
+        VERBOSE=true
+        set -x
+        shift
+        ;;
+      --help)
+        usage 0
+        ;;
+      --version)
+        if [ -x "${MYDIR}/zopen-version" ]; then
+          "${MYDIR}/zopen-version" "${ME}"
+        else
+          echo "${ME} version $(cat "${INCDIR}/zopen_version" 2>/dev/null || echo "unknown")"
+        fi
+        exit 0
+        ;;
+      *)
+        echo "Error: Unknown option: $1" >&2
+        usage
+        ;;
+    esac
+  done
+
+  # Validate extra source files exist
+  for src in $EXTRA_SOURCES; do
+    if [ ! -f "$src" ]; then
+      printError "Source file not found: $src"
+    fi
+  done
+
+  # Dry-run — just describe what would happen and exit
+  if [ "$DRY_RUN" = true ]; then
+    perform_dry_run "$SPEC_FILE"
+    exit 0
+  fi
+
+  # Check that required tools are present
+  if ! check_required_tools; then
+    exit 1
+  fi
+
+  # Build (and optionally sign)
+  do_build "$SPEC_FILE"
+}
+
+main "$@"
