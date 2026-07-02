@@ -1,0 +1,95 @@
+// Inputs:
+//   PROJECT_GITHUB_REPO   : Github repository (e.g. https://github.com/zopencommunity/base-os.git)
+//   PROJECT_BRANCH        : (default: main)
+//   SPEC_FILE             : Path to spec file relative to project root (default: build.spec)
+//   SOURCE_FILE           : Optional source file path relative to project root (e.g. mypackage.pax.Z)
+//   PORT_DESCRIPTION      : Description of the project
+//   BUILD_BINARY          : Boolean - build binary RPM only, skip source RPM (default: true)
+//   SIGN_RPM              : Boolean - GPG-sign generated RPMs after build (default: true)
+//   BUILDROOT             : RPM build root directory (default: ~/rpmbuild)
+//   NODE_LABEL            : Label of the Jenkins node to run on (default: zos)
+//   NO_PROMOTE            : Boolean, if true, avoid promotion (default: false)
+
+import org.jenkinsci.plugins.workflow.support.steps.build.RunWrapper
+
+@NonCPS
+String getLogFromRunWrapper(RunWrapper runWrapper, int logLines) {
+    runWrapper.getRawBuild().getLog(logLines).join('\n')
+}
+
+def repo = params.get("PROJECT_GITHUB_REPO")
+def branch = params.get("PROJECT_BRANCH") ?: "main"
+def spec_file = params.get("SPEC_FILE") ?: "build.spec"
+def source_file = params.get("SOURCE_FILE") ?: ""
+def description = params.get("PORT_DESCRIPTION")
+def buildroot = params.get("BUILDROOT") ?: ""
+def build_binary = params.get("BUILD_BINARY") != null ? params.get("BUILD_BINARY") : true
+def sign_rpm = params.get("SIGN_RPM") != null ? params.get("SIGN_RPM") : true
+def node_label = params.get("NODE_LABEL") ?: "zos"
+
+RunWrapper buildResult;
+RunWrapper promoteResult;
+
+node('linux')
+{
+  stage('RPM Build') {
+    // Build Job: RPM-Build
+    buildResult = build job: 'RPM-Build', propagate: false, parameters: [
+      string(name: 'PROJECT_GITHUB_REPO', value: "${repo}"),
+      string(name: 'PROJECT_BRANCH', value: "${branch}"),
+      string(name: 'SPEC_FILE', value: "${spec_file}"),
+      string(name: 'SOURCE_FILE', value: "${source_file}"),
+      string(name: 'BUILDROOT', value: "${buildroot}"),
+      booleanParam(name: 'BUILD_BINARY', value: build_binary),
+      booleanParam(name: 'SIGN_RPM', value: sign_rpm),
+      string(name: 'NODE_LABEL', value: "${node_label}")
+    ]
+    
+    def result = buildResult.getResult()
+    if(result == "FAILURE"){
+      handleError("RPM Build stage failed. View details in ${buildResult.absoluteUrl}", repo, getLogFromRunWrapper(buildResult, 50));
+    }
+  }
+  
+  stage('Promote') {
+    if(!params.NO_PROMOTE) {
+      // Publish Job: RPM-Publish
+      promoteResult = build job: 'RPM-Publish', propagate: false, parameters: [
+        string(name: 'BUILD_SELECTOR', value: buildResult.number.toString()),
+        string(name: 'PORT_GITHUB_REPO', value: "${repo}"),
+        string(name: 'PORT_DESCRIPTION', value: "${description}"),
+        string(name: 'BUILD_LINE', value: "STABLE") // Default build line for promotion
+      ]
+      
+      def result = promoteResult.getResult()
+      if(result == "FAILURE"){
+        handleError("Promote stage failed. View details in ${promoteResult.absoluteUrl}", repo, getLogFromRunWrapper(promoteResult, 50));
+      }
+    }
+  }
+
+  stage('Cleanup') {
+    def extraText = ""
+    if (params.NO_PROMOTE) {
+      extraText = "\nBuilt with NO_PROMOTE set to true."
+    } else {
+      extraText = "\nRPM packages successfully promoted to Pulp package repository."
+    }
+
+    slackSend color: 'good', 
+      message: "RPM Build Pipeline for ${repo} *successful* <${currentBuild.absoluteUrl}|Build #${currentBuild.number}>${extraText}"
+  }
+}
+
+def handleError(reason, repo, output="none") {
+  def message = "RPM Build Pipeline for ${repo}:\n<${currentBuild.absoluteUrl}|Build #${currentBuild.number}> *Failed*\n*Reason:* ${reason}\nLast 50 lines of output:\n```${output}```"
+  def attachments = [
+    [
+      text: message,
+      fallback: 'Fallback',
+      color: 'danger'
+    ]
+  ]
+  slackSend(attachments: attachments)
+  error "Job failed..."
+}
