@@ -21,6 +21,13 @@ on:
       context_name:
         required: true
         type: string
+      github_event_name:
+        required: true
+        type: string
+      pr_url:
+        required: false
+        type: string
+        default: ""
     secrets:
       JENKINS_USER:
         required: true
@@ -32,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Get PR details
-        if: ${{ github.event_name == 'issue_comment'}}
+        if: ${{ inputs.github_event_name == 'issue_comment'}}
         uses: xt0rted/pull-request-comment-branch@v1
         id: comment-branch
 
@@ -46,11 +53,11 @@ jobs:
 
       - name: Github API Request
         id: request
-        if: ${{ github.event_name != 'push' }}
+        if: ${{ inputs.github_event_name != 'push' && inputs.github_event_name != 'workflow_dispatch' }}
         uses: octokit/request-action@v2.x
         with:
           route: |
-            ${{ github.event.issue.pull_request.url || github.event.pull_request.url }}
+            GET ${{ inputs.pr_url }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -58,7 +65,7 @@ jobs:
         run: |
           repo="${{ inputs.repo }}"
           if [ -z "${repo}" ]; then
-            if [ "${{ github.event_name }}" = "push" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            if [ "${{ inputs.github_event_name }}" = "push" ] || [ "${{ inputs.github_event_name }}" = "workflow_dispatch" ]; then
               repo="${{ github.event.repository.clone_url }}"
             else
               repo="${{ fromJson(steps.request.outputs.data).head.repo.clone_url }}"
@@ -66,7 +73,7 @@ jobs:
           fi
           branch="${{ inputs.branch }}"
           if [ -z "${branch}" ]; then
-            if [ "${{ github.event_name }}" = "push" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            if [ "${{ inputs.github_event_name }}" = "push" ] || [ "${{ inputs.github_event_name }}" = "workflow_dispatch" ]; then
               branch="${{ github.ref_name }}"
             else
               branch="${{ fromJson(steps.request.outputs.data).head.ref }}"
@@ -94,8 +101,15 @@ jobs:
             -F NO_PROMOTE="${{ inputs.no_promote }}" \
             -F PORT_DESCRIPTION="CI run for ${repo}")
 
-          # Extract the build URL from the response headers
-          BUILD_URL=$(echo "$RESPONSE" | grep -oP "location: \K(.*)" | tr -d '\r')
+          # Extract the build URL from the response headers (case-insensitive location match)
+          BUILD_URL=$(echo "$RESPONSE" | grep -ioP "location: \K(.*)" | tr -d '\r')
+
+          if [ -z "$BUILD_URL" ]; then
+            echo "ERROR: Failed to trigger Jenkins job or retrieve Queue Location URL." >&2
+            echo "HTTP Response was:" >&2
+            echo "$RESPONSE" >&2
+            exit 1
+          fi
 
           # Extract the build number from the BUILD_URL
           BUILD_NUMBER=$(basename "$BUILD_URL" | tr -d '/')

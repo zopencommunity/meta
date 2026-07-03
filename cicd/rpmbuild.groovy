@@ -22,8 +22,8 @@ def project_branch = params.PROJECT_BRANCH       ?: "main"
 def spec_file      = params.SPEC_FILE            ?: "build.spec"
 def source_file    = params.SOURCE_FILE          ?: ""
 def buildroot      = params.BUILDROOT            ?: ""
-def build_binary   = params.BUILD_BINARY         ?: true
-def sign_rpm       = params.SIGN_RPM             ?: true
+def build_binary   = params.BUILD_BINARY != null ? params.BUILD_BINARY : true
+def sign_rpm       = params.SIGN_RPM != null     ? params.SIGN_RPM     : true
 def gpg_key_cred   = params.GPG_KEY_CREDENTIAL   ?: "ZOPEN_GPG_SECRET_KEY_FILE"
 def gpg_pass_cred  = params.GPG_PASS_CREDENTIAL  ?: "ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE"
 
@@ -65,40 +65,59 @@ node(node_label) {
       file(credentialsId: gpg_pass_cred, variable: 'ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE')
     ] : []
 
-    withCredentials(gpgBindings) {
-      sh """bash -e -s << 'BASH'
-        set +e
-        . /jenkins/.env
-        set -e
-        export PATH="${ws}/bin:\$PATH"
-        export NO_COLOR=1
-        export ZOPEN_IS_BOT=1
-        export GIT_UTF8_CCSID=819
-        export TMPDIR="${ws}/tmp"
-        export GPG_TTY="/dev/null"
-        mkdir -p "\$TMPDIR"
+    // Define the build commands closure
+    def runBuild = {
+      withEnv([
+        "PROJECT_REPO=${project_repo}",
+        "PROJECT_BRANCH=${project_branch}",
+        "PROJECT_NAME=${project_name}",
+        "SPEC_FILE=${spec_file}",
+        "LOCAL_BUILDROOT=${localBuildroot}",
+        "CMD_OPTIONS=${cmdOptions}"
+      ]) {
+        sh '''bash -e -s << \'BASH\'
+          set +e
+          . /jenkins/.env
+          set -e
+          export PATH="${WORKSPACE}/bin:$PATH"
+          export NO_COLOR=1
+          export ZOPEN_IS_BOT=1
+          export GIT_UTF8_CCSID=819
+          export TMPDIR="${WORKSPACE}/tmp"
+          export GPG_TTY="/dev/null"
+          mkdir -p "$TMPDIR"
 
-        # 1. Print version diagnostics
-        zopen-rpmbuild --version || true
+          # 1. Print version diagnostics
+          zopen-rpmbuild --version || true
 
-        # 2. Clone repo clean
-        rm -rf "${project_name}"
-        git clone -b "${project_branch}" "${project_repo}" "${project_name}"
+          # 2. Clone repo clean
+          rm -rf "${PROJECT_NAME}"
+          git clone -b "${PROJECT_BRANCH}" "${PROJECT_REPO}" "${PROJECT_NAME}"
 
-        # 3. Verify spec file exists
-        if [ ! -f "${project_name}/${spec_file}" ]; then
-          echo "ERROR: Spec file not found in repository: ${project_name}/${spec_file}" >&2
-          exit 1
-        fi
+          # 3. Verify spec file exists
+          if [ ! -f "${PROJECT_NAME}/${SPEC_FILE}" ]; then
+            echo "ERROR: Spec file not found in repository: ${PROJECT_NAME}/${SPEC_FILE}" >&2
+            exit 1
+          fi
 
-        # 4. Build
-        cd "${project_name}"
-        zopen-rpmbuild ${cmdOptions}
+          # 4. Build
+          cd "${PROJECT_NAME}"
+          eval "zopen-rpmbuild ${CMD_OPTIONS}"
 
-        # 5. Copy RPMs to workspace for archiving
-        mkdir -p "${ws}/rpms"
-        cp -R "${localBuildroot}/RPMS/"* "${ws}/rpms/" 2>/dev/null || true
-BASH"""
+          # 5. Copy binary and source RPMs to workspace for archiving
+          mkdir -p "${WORKSPACE}/rpms"
+          cp -R "${LOCAL_BUILDROOT}/RPMS/"* "${WORKSPACE}/rpms/" 2>/dev/null || true
+          cp -R "${LOCAL_BUILDROOT}/SRPMS/"* "${WORKSPACE}/rpms/" 2>/dev/null || true
+BASH'''
+      }
+    }
+
+    if (sign_rpm) {
+      withCredentials(gpgBindings) {
+        runBuild()
+      }
+    } else {
+      runBuild()
     }
 
     archiveArtifacts artifacts: "rpms/**/*.rpm",

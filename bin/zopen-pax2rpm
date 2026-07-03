@@ -74,7 +74,7 @@ Options:
   --build                 Build the RPM after generating spec file (binary + source)
   --build-binary          Build binary RPM only (faster, no source RPM)
   --buildroot <dir>       RPM build root directory (default: ~/rpmbuild)
-  --validate              Validate spec file after generation (checks syntax and runs rpmlint)
+  --validate              Validate spec file after generation (checks syntax using rpmbuild -bp)
   --dry-run               Show what would be done without actually doing it
   --verbose               Enable verbose debug output
   --help                  Display this help message
@@ -512,44 +512,6 @@ EOF
 
 # sign_rpm and setup_rpmbuild have been moved to zopen-rpmbuild.
 
-# Function to check for required tools
-check_required_tools() {
-    missing_tools=""
-    # pax is always needed by zopen-pax2rpm
-    if ! command -v pax > /dev/null 2>&1; then
-        missing_tools="${missing_tools} pax"
-    fi
-
-    if [ -n "$missing_tools" ]; then
-        echo "" >&2
-        printError "Missing required tools:"
-        for tool in $missing_tools; do
-            echo "  ✗ $tool" >&2
-            case "$tool" in
-                pax)
-                    echo "    Purpose: Extract pax archives" >&2
-                    echo "    Install: Usually pre-installed on z/OS" >&2
-                    echo "             On Linux: apt-get install pax" >&2
-                    ;;
-            esac
-            echo "" >&2
-        done
-        printInfo "Please install the missing tools and try again."
-        return 1
-    fi
-
-    # Optional tools check (informational only)
-    if [ "$VALIDATE_SPEC" = true ] && ! command -v rpmlint > /dev/null 2>&1; then
-        echo "" >&2
-        echo "Note: rpmlint not found — spec quality checks will be limited." >&2
-        echo "      Install: On z/OS: zopen install rpmlint" >&2
-        echo "               On Linux: apt-get install rpmlint" >&2
-        echo "" >&2
-    fi
-
-    return 0
-}
-
 # Function to validate spec file syntax
 validate_spec_syntax() {
     spec_file="$1"
@@ -590,48 +552,6 @@ validate_spec_syntax() {
     fi
 }
 
-# Function to run rpmlint on spec file
-run_rpmlint() {
-    spec_file="$1"
-
-    echo ""
-    echo "=========================================="
-    echo "Running rpmlint checks..."
-    echo "=========================================="
-    echo ""
-
-    # Check if rpmlint is available
-    if ! command -v rpmlint > /dev/null 2>&1; then
-        echo "Note: rpmlint not found, skipping quality checks"
-        echo "Install rpmlint for additional spec file validation"
-        return 0
-    fi
-
-    # Run rpmlint
-    rpmlint_output=$(rpmlint "$spec_file" 2>&1 || true)
-    rpmlint_exit=$?
-    
-    echo "$rpmlint_output"
-    echo ""
-
-    # Count errors and warnings
-    errors=$(echo "$rpmlint_output" | grep -c "E:" || true)
-    warnings=$(echo "$rpmlint_output" | grep -c "W:" || true)
-
-    if [ $errors -gt 0 ]; then
-        echo "⚠ Found $errors error(s) and $warnings warning(s)"
-        echo "Please review and fix errors before building"
-        return 1
-    elif [ $warnings -gt 0 ]; then
-        echo "⚠ Found $warnings warning(s)"
-        echo "Warnings can often be ignored, but please review them"
-        return 0
-    else
-        echo "✓ No errors or warnings found"
-        return 0
-    fi
-}
-
 # Function to validate generated spec file
 validate_spec_file() {
 spec_file="$1"
@@ -658,11 +578,6 @@ source_name=$(basename "$pax_file")
     
     # Check syntax
     if ! validate_spec_syntax "$spec_file" "$buildroot"; then
-        validation_failed=true
-    fi
-    
-    # Run rpmlint
-    if ! run_rpmlint "$spec_file"; then
         validation_failed=true
     fi
     
@@ -706,14 +621,14 @@ pax_file="$1"
     echo "3. Generate spec file: $OUTPUT_FILE"
     
     if [ "$VALIDATE_SPEC" = true ]; then
-        echo "4. Validate spec file syntax and run rpmlint"
+        echo "4. Validate spec file syntax"
     fi
     
     if [ "$BUILD_RPM" = true ]; then
         echo "5. Build RPM package in: $BUILDROOT"
         echo "   - Copy $pax_file to $BUILDROOT/SOURCES/"
         echo "   - Copy spec file to $BUILDROOT/SPECS/"
-        echo "   - Run: rpmbuild --define \"_topdir $BUILDROOT\" -ba $OUTPUT_FILE"
+        echo "   - Run: zopen-rpmbuild \"$OUTPUT_FILE\" --source \"$pax_file\" --buildroot \"$BUILDROOT\""
     fi
     
     echo ""
@@ -896,11 +811,7 @@ main() {
     # Normalize version for RPM compatibility: strip optional v/V prefix and convert pre-release suffixes
     PKG_VERSION=$(normalizeRpmVersion "$PKG_VERSION")
     
-    # Check for required tools (pax is always needed; rpmbuild is handled by zopen-rpmbuild)
-    if ! check_required_tools; then
-        exit 1
-    fi
-    
+
     # Display extracted information
     echo "Package Information:"
     echo "  Name:        $PKG_NAME"

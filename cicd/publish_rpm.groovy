@@ -40,10 +40,10 @@ node('linux') {
                   projectName: 'RPM-Build',
                   selector: selectorObj
 
-    // Verify we actually have RPMs to publish
-    def numRpms = sh(script: 'find rpms/ -name "*.rpm" | wc -l', returnStdout: true).trim().toInteger()
+    // Verify we actually have RPMs to publish (excluding source RPMs)
+    def numRpms = sh(script: 'find rpms/ -name "*.rpm" ! -name "*.src.rpm" | wc -l', returnStdout: true).trim().toInteger()
     if (numRpms == 0) {
-      error "No RPM files found to publish in the copied artifacts (rpms/)"
+      error "No binary RPM files found to publish in the copied artifacts (rpms/)"
     }
     
     echo "Found ${numRpms} RPMs to publish."
@@ -97,14 +97,16 @@ node('linux') {
                 break
               fi
               if [ "\$attempt" -eq 3 ]; then
-                echo "WARNING: Failed to upload \$RPM_NAME to Pulp after 3 attempts."
+                echo "ERROR: Failed to upload \$RPM_NAME to Pulp after 3 attempts."
+                exit 1
               else
                 sleep 5
               fi
             done
           done
         else
-          echo "WARNING: Pulp CLI not available, skipping RPM upload"
+          echo "ERROR: Pulp CLI is not available. Aborting publish run." >&2
+          exit 1
         fi
       """
     }

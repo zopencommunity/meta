@@ -46,7 +46,7 @@ node('linux')
     ]
     
     def result = buildResult.getResult()
-    if(result == "FAILURE"){
+    if(result != "SUCCESS"){
       handleError("RPM Build stage failed. View details in ${buildResult.absoluteUrl}", repo, getLogFromRunWrapper(buildResult, 50));
     }
   }
@@ -62,7 +62,7 @@ node('linux')
       ]
       
       def result = promoteResult.getResult()
-      if(result == "FAILURE"){
+      if(result != "SUCCESS"){
         handleError("Promote stage failed. View details in ${promoteResult.absoluteUrl}", repo, getLogFromRunWrapper(promoteResult, 50));
       }
     }

@@ -12,7 +12,8 @@ setupMyself()
   ME=$(basename $0)
   MYDIR="$(cd "$(dirname "$0")" > /dev/null 2>&1 && pwd -P)"
   INCDIR="${MYDIR}/../include"
-  if ! [ -d "${INCDIR}" ] && ! [ -f "${INCDIR}/common.sh" ]; then
+  ZOPEN_OLD_PATH="${PATH}"
+  if ! [ -d "${INCDIR}" ] || ! [ -f "${INCDIR}/common.sh" ]; then
     echo "Internal Error. Unable to find common.sh file to source." >&2
     exit 8
   fi
@@ -213,18 +214,23 @@ check_required_tools()
     missing_tools="${missing_tools} rpmbuild"
   fi
 
-  if [ "$SIGN_RPM" = true ] && ! command -v gpg > /dev/null 2>&1; then
-    missing_tools="${missing_tools} gpg"
+  if [ "$SIGN_RPM" = true ]; then
+    if ! command -v gpg > /dev/null 2>&1; then
+      missing_tools="${missing_tools} gpg"
+    fi
+    if ! command -v rpmsign > /dev/null 2>&1; then
+      missing_tools="${missing_tools} rpmsign"
+    fi
   fi
 
   if [ -n "$missing_tools" ]; then
-    printError "Missing required tools:${missing_tools}"
+    echo "ERROR: Missing required tools:${missing_tools}" >&2
     for tool in $missing_tools; do
       case "$tool" in
-        rpmbuild)
-          echo "  rpmbuild: part of rpm-build package" >&2
-          echo "            On z/OS: zopen install rpm" >&2
-          echo "            On Linux: apt-get install rpm / yum install rpm-build" >&2
+        rpmbuild|rpmsign)
+          echo "  $tool: part of rpm-build / rpm-sign package" >&2
+          echo "         On z/OS: zopen install rpm" >&2
+          echo "         On Linux: apt-get install rpm-sign / yum install rpm-build" >&2
           ;;
         gpg)
           echo "  gpg: GNU Privacy Guard" >&2
@@ -337,8 +343,12 @@ setDepsEnv()
 # ──────────────────────────────────────────────────────────────────────────────
 setup_rpm_env()
 {
-  printInfo "Ensuring zopen rpm is installed and sourcing its environment..."
-  setDepsEnv rpm
+  printInfo "Ensuring required zopen packages are installed and sourced..."
+  _sre_deps="rpm"
+  if [ "$SIGN_RPM" = true ]; then
+    _sre_deps="${_sre_deps} gpg"
+  fi
+  setDepsEnv ${_sre_deps}
 }
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -349,9 +359,6 @@ do_build()
   spec_file="$1"
 
   printHeader "Building RPM package from spec: $spec_file"
-
-  # Source zopen rpm .env so rpmbuild and brp-* scripts use GNU tools
-  setup_rpm_env
 
   setup_rpmbuild "$BUILDROOT"
 
@@ -499,6 +506,9 @@ main()
     perform_dry_run "$SPEC_FILE"
     exit 0
   fi
+
+  # Ensure dependencies (such as rpm) are installed and sourced before checking tools
+  setup_rpm_env
 
   # Check that required tools are present
   if ! check_required_tools; then
