@@ -33,34 +33,17 @@ jobs:
       security-events: write
 
     steps:
-      - name: Get PR details
-        if: ${{ github.event_name == 'issue_comment'}}
-        uses: xt0rted/pull-request-comment-branch@v1
-        id: comment-branch
-
-      - name: Github API Request
-        id: request
-        uses: octokit/request-action@v2.x
-        with:
-          route: ${{ github.event.issue.pull_request.url || github.event.pull_request.url }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Determine Repository and Branch
         id: repo-info
         run: |
           repo="${{ inputs.repo }}"
           if [ -z "${repo}" ]; then
-            if [ "${{ github.event_name }}" == "issue_comment" ] || [ "${{ github.event_name }}" == "pull_request_target" ]; then
-              repo="${{ fromJson(steps.request.outputs.data).head.repo.full_name }}"
-            else
-              repo="${{ github.repository }}"
-            fi
+            repo="${{ github.repository }}"
           fi
           branch="${{ inputs.branch }}"
           if [ -z "${branch}" ]; then
-            if [ "${{ github.event_name }}" == "issue_comment" ] || [ "${{ github.event_name }}" == "pull_request_target" ]; then
-              branch="${{ fromJson(steps.request.outputs.data).head.ref }}"
+            if [ "${{ github.event_name }}" == "pull_request" ] || [ "${{ github.event_name }}" == "pull_request_target" ]; then
+              branch="${{ github.head_ref }}"
             else
               branch="${{ github.ref_name }}"
             fi
@@ -114,13 +97,14 @@ jobs:
 
       - name: Clone tool repository
         run: |
-          echo "GitHub Repository: ${{ github.repository }}"
-          TOOL_NAME=$(basename ${{ github.repository }})
+          TARGET_REPO="${{ steps.repo-info.outputs.repo }}"
+          echo "Target Repository: ${TARGET_REPO}"
+          TOOL_NAME=$(basename "${TARGET_REPO}")
           echo "Tool Name: ${TOOL_NAME}"
           if [ -d "$TOOL_NAME" ]; then
             echo "Tool repository already exists, skipping clone"
           else
-            git clone https://github.com/${{ github.repository }}.git
+            git clone https://github.com/${TARGET_REPO}.git
             echo "Tool repository cloned: $TOOL_NAME"
           fi
 
@@ -129,9 +113,9 @@ jobs:
           export PATH="$PWD/meta/bin:$PATH"
           git config --global user.email "zopenCommunity@ibm.com"
           git config --global user.name "Zopen Community"
-          
-          echo "GitHub Repository: ${{ github.repository }}"
-          TOOL_NAME=$(basename ${{ github.repository }})
+
+          TARGET_REPO="${{ steps.repo-info.outputs.repo }}"
+          TOOL_NAME=$(basename "${TARGET_REPO}")
           echo "Tool Name: ${TOOL_NAME}"
           cd $TOOL_NAME
           zopen build -g

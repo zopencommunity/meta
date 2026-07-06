@@ -4,10 +4,6 @@
 #
 set -e
 
-UpdateGithub() {
-  multi-gitter --config ./cicd/multi-gitter-config run ./bulk-utils/enable_disabled_workflow.sh
-}
-
 UpdateDocs() {
   # Update Progress page in documentation
   git clone git@github.com:zopencommunity/meta.git meta_update
@@ -185,5 +181,4 @@ EOF
   git push origin
 }
 
-UpdateGithub
 UpdateDocs
