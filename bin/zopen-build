@@ -40,14 +40,14 @@ Required:
   ZOPEN_CATEGORIES    Specify a space-delimited list of applicable categories.
                       Valid categories:
                       ('${ZOPEN_VALID_CATEGORIES}')
-  ZOPEN_DEV_DEPS      Required IF ZOPEN_BUILD_LINE='DEV'.
+  ZOPEN_DEV_DEPS      Required IF ZOPEN_BUILD_LINE='DEV' (unless type is LOCAL).
                       Specify the dev build dependencies
-  ZOPEN_DEV_URL       Required IF ZOPEN_BUILD_LINE='DEV'. Specify the dev
-                      build URL (either git or tarball).
-  ZOPEN_STABLE_DEPS   Required IF ZOPEN_BUILD_LINE='STABLE'.
+  ZOPEN_DEV_URL       Required IF ZOPEN_BUILD_LINE='DEV' (unless type is LOCAL).
+                      Specify the dev build URL (either git or tarball).
+  ZOPEN_STABLE_DEPS   Required IF ZOPEN_BUILD_LINE='STABLE' (unless type is LOCAL).
                       Specify the stable build dependencies.
-  ZOPEN_STABLE_URL    Required IF ZOPEN_BUILD_LINE='STABLE'. Specify the
-                      stable build URL (either git or tarball).
+  ZOPEN_STABLE_URL    Required IF ZOPEN_BUILD_LINE='STABLE' (unless type is LOCAL).
+                      Specify the stable build URL (either git or tarball).
 
 Optional:
   ZOPEN_SOURCE_URL      If set, use this as ZOPEN_URL before checking
@@ -161,12 +161,12 @@ Git variables:
   ZOPEN_CLONE_SUBMODULES  Set to "yes" to recursively clone submodules.
   ZOPEN_CLONE_FULL        Set to "yes" to perform a full clone as opposed to the
                           default shallow clone (depth of 1).
-
-Currently unused:
-  ZOPEN_DEV_TYPE        The type of package to download. Valid types are
-                        TARBALL, BARE and GIT.
-  ZOPEN_STABLE_TYPE     The type of package to download. Valid types are
-                        TARBALL, BARE and GIT.
+  ZOPEN_DEV_TYPE        The type of source for dev builds. Valid types are
+                        TARBALL, BARE, LOCAL and GIT. If set to LOCAL, no
+                        source is fetched and the build runs in-place.
+  ZOPEN_STABLE_TYPE     The type of source for stable builds. Valid types are
+                        TARBALL, BARE, LOCAL and GIT. If set to LOCAL, no
+                        source is fetched and the build runs in-place.
 
 Deprecated:
   ZOPEN_CC              C compiler. (default set by dependency)
@@ -186,7 +186,7 @@ Deprecated:
   ZOPEN_TARBALL_URL     The fully qualified URL that the tarball should be
                         downloaded from. (required if ZOPEN_TYPE=TARBALL)
   ZOPEN_TYPE            The type of package to download. Valid types are
-                        TARBALL, BARE and GIT.
+                        TARBALL, BARE, LOCAL and GIT.
   ZOPEN_URL             Alternate environment variable instead of
                         ZOPEN_TARBALL_URL or ZOPEN_GIT_URL.
 "
@@ -647,14 +647,14 @@ checkEnv()
 
   if [ ! -z "${ZOPEN_BUILD_LINE}" ]; then
     if [ "${ZOPEN_BUILD_LINE}x" = "DEVx" ]; then
-      if [ -z "${ZOPEN_DEV_DEPS}" ]; then
+      if [ -z "${ZOPEN_DEV_DEPS}" ] && [ "${ZOPEN_DEV_TYPE}" != "LOCAL" ] && [ "${ZOPEN_TYPE}" != "LOCAL" ]; then
         printError "Building from dev, but ZOPEN_DEV_DEPS not specified"
       fi
       ZOPEN_DEPS="${ZOPEN_DEV_DEPS}"
       if [ ! -z "${ZOPEN_SOURCE_URL}" ]; then
         ZOPEN_URL="${ZOPEN_SOURCE_URL}"
       else
-        if [ -z "${ZOPEN_DEV_URL}" ]; then
+        if [ -z "${ZOPEN_DEV_URL}" ] && [ "${ZOPEN_DEV_TYPE}" != "LOCAL" ] && [ "${ZOPEN_TYPE}" != "LOCAL" ]; then
           printError "Building from dev, but ZOPEN_DEV_URL not specified"
         fi
         ZOPEN_URL="${ZOPEN_DEV_URL}"
@@ -668,22 +668,24 @@ checkEnv()
       if [ ! -z "${ZOPEN_DEV_TYPE}" ]; then
         export ZOPEN_TYPE="${ZOPEN_DEV_TYPE}"
       else
-        extension="${ZOPEN_URL##*.}"
-        if [ "${extension}" = "git" ]; then
-          ZOPEN_TYPE="GIT"
-        else
-          ZOPEN_TYPE="TARBALL"
+        if [ -n "${ZOPEN_URL}" ]; then
+          extension="${ZOPEN_URL##*.}"
+          if [ "${extension}" = "git" ]; then
+            ZOPEN_TYPE="GIT"
+          else
+            ZOPEN_TYPE="TARBALL"
+          fi
         fi
       fi
     elif [ "${ZOPEN_BUILD_LINE}x" = "STABLEx" ]; then
-      if [ -z "${ZOPEN_STABLE_DEPS}" ]; then
+      if [ -z "${ZOPEN_STABLE_DEPS}" ] && [ "${ZOPEN_STABLE_TYPE}" != "LOCAL" ] && [ "${ZOPEN_TYPE}" != "LOCAL" ]; then
         printError "Building from stable, but ZOPEN_STABLE_DEPS not specified"
       fi
       ZOPEN_DEPS="${ZOPEN_STABLE_DEPS}"
       if [ ! -z "${ZOPEN_SOURCE_URL}" ]; then
         ZOPEN_URL="${ZOPEN_SOURCE_URL}"
       else
-        if [ -z "${ZOPEN_STABLE_URL}" ]; then
+        if [ -z "${ZOPEN_STABLE_URL}" ] && [ "${ZOPEN_STABLE_TYPE}" != "LOCAL" ] && [ "${ZOPEN_TYPE}" != "LOCAL" ]; then
           printError "Building from stable, but ZOPEN_STABLE_URL not specified"
         fi
         ZOPEN_URL="${ZOPEN_STABLE_URL}"
@@ -697,11 +699,13 @@ checkEnv()
       if [ ! -z "${ZOPEN_STABLE_TYPE}" ]; then
         export ZOPEN_TYPE="${ZOPEN_STABLE_TYPE}"
       else
-        extension="${ZOPEN_URL##*.}"
-        if [ "${extension}" = "git" ]; then
-          ZOPEN_TYPE="GIT"
-        else
-          ZOPEN_TYPE="TARBALL"
+        if [ -n "${ZOPEN_URL}" ]; then
+          extension="${ZOPEN_URL##*.}"
+          if [ "${extension}" = "git" ]; then
+            ZOPEN_TYPE="GIT"
+          else
+            ZOPEN_TYPE="TARBALL"
+          fi
         fi
       fi
     else
@@ -726,6 +730,8 @@ checkEnv()
       printHeader "Using dev environment"
     elif [ "${ZOPEN_TYPE}x" = "BAREx" ]; then
       printHeader "Using bare environment"
+    elif [ "${ZOPEN_TYPE}x" = "LOCALx" ]; then
+      printHeader "Using local source environment"
     else
       extension="${ZOPEN_URL##*.}"
       if [ "${extension}" = "git" ]; then
@@ -848,6 +854,8 @@ PYENVEOF
     fi
     implicitDeps="${implicitDeps}"
     printVerbose "Implicitly adding git dependencies: ${implicitDeps}"
+  elif [ "${ZOPEN_TYPE}x" = "LOCALx" ]; then
+    printVerbose "Using local source (no fetch required)"
   fi
 
   if [ -z "${ZOPEN_COMP}" ]; then
@@ -1587,7 +1595,11 @@ getCode()
   printHeader "Building ${ZOPEN_ROOT}"
   cd "${ZOPEN_ROOT}" || exit 99
 
-  if [ "${ZOPEN_TYPE}x" = "BAREx" ]; then
+  if [ "${ZOPEN_TYPE}x" = "BAREx" ] || [ "${ZOPEN_TYPE}x" = "LOCALx" ]; then
+    if $printSourceDir; then
+      echo "."
+      exit 0
+    fi
     return 0
   fi
 
@@ -1604,7 +1616,7 @@ getCode()
       return 4
     fi
   else
-    printError "ZOPEN_TYPE should be one of GIT or TARBALL"
+    printError "ZOPEN_TYPE should be one of GIT, TARBALL, BARE or LOCAL"
     return 4
   fi
 
@@ -2625,15 +2637,20 @@ package()
 resolveCommands()
 {
   if [ -z "${ZOPEN_NAME}" ]; then
-    ZOPEN_NAME="${sourcedir}"
-    if [ "${ZOPEN_TYPE}x" = "GITx" ]; then
+    if [ -z "${sourcedir}" ]; then
+      # LOCAL/BARE type: derive name from the directory containing buildenv
+      ZOPEN_NAME="$(basename "${ZOPEN_ROOT}")"
+    else
+      ZOPEN_NAME="${sourcedir}"
+    fi
+    if [ "${ZOPEN_TYPE}x" = "GITx" ] || [ "${ZOPEN_TYPE}x" = "LOCALx" ]; then
       tag_name=$(git describe --tags --exact-match HEAD 2>/dev/null)
 
       if [ -n "$tag_name" ]; then
-        ZOPEN_NAME="${sourcedir}-${tag_name}"
-      elif [ "${ZOPEN_TYPE}x" = "GITx" ]; then
+        ZOPEN_NAME="${ZOPEN_NAME}-${tag_name}"
+      elif [ "${ZOPEN_TYPE}x" = "GITx" ] || [ "${ZOPEN_TYPE}x" = "LOCALx" ]; then
         branch=$(git rev-parse --abbrev-ref HEAD 2>&1 | sed "s/\//./g")
-        ZOPEN_NAME="${sourcedir}-${branch}"
+        ZOPEN_NAME="${ZOPEN_NAME}-${branch}"
       fi
     fi
   fi
