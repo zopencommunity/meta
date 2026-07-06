@@ -1,0 +1,22 @@
+name: "Rollout CodeQL Workflow"
+
+on:
+  workflow_dispatch:
+
+jobs:
+  rollout:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout meta
+        uses: actions/checkout@v4
+
+      - name: Configure git
+        run: |
+          git config --global user.email "zopenCommunity@ibm.com"
+          git config --global user.name "Zopen Community"
+
+      - name: Rollout CodeQL workflow via gh
+        run: bash ./bulk-utils/rollout_codeql.sh
+        env:
+          # Needs a PAT with repo scope to push to and open PRs on other repos
+          GH_TOKEN: ${{ secrets.GH_PAT }}
