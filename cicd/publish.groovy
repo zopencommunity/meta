@@ -1,15 +1,16 @@
 // Inputs:
-//   PORT_GITHUB_REPO   : GitHub repository URL
-//   PORT_DESCRIPTION   : Project description
-//   BUILD_LINE         : dev or stable line (default: dev/stable from metadata.json)
-//   NODE_LABEL         : Label of the Jenkins node to run on (default: linux)
-// Required Environment Variables (usually injected by credentials/Jenkins):
-//   GITHUB_TOKEN
+//   PORT_GITHUB_REPO        : GitHub repository URL
+//   PORT_DESCRIPTION        : Project description
+//   BUILD_LINE              : dev or stable line (default: dev/stable from metadata.json)
+//   NODE_LABEL              : Label of the Jenkins node to run on (default: linux)
+//   BUILD_SELECTOR          : Selector for copying artifacts from Port-Build
+//   GITHUB_TOKEN_CREDENTIAL : ID of the GitHub Token credential in Jenkins (default: GITHUB_TOKEN)
 
-def port_github_repo = params.PORT_GITHUB_REPO ?: ""
-def port_description = params.PORT_DESCRIPTION ?: ""
-def build_line       = params.BUILD_LINE       ?: ""
-def node_label       = params.NODE_LABEL       ?: "linux"
+def port_github_repo   = params.PORT_GITHUB_REPO   ?: ""
+def port_description   = params.PORT_DESCRIPTION   ?: ""
+def build_line         = params.BUILD_LINE         ?: ""
+def node_label         = params.NODE_LABEL         ?: "linux"
+def github_token_cred  = params.GITHUB_TOKEN_CREDENTIAL ?: "GITHUB_TOKEN"
 
 node(node_label) {
   stage('Publish') {
@@ -17,12 +18,25 @@ node(node_label) {
       error "PORT_GITHUB_REPO is required"
     }
 
-    withEnv([
-      "PORT_GITHUB_REPO=${port_github_repo}",
-      "PORT_DESCRIPTION=${port_description}",
-      "BUILD_LINE=${build_line}"
-    ]) {
-      sh '''#!/bin/bash
+    deleteDir()
+
+    // Copy artifacts from Port-Build using the BUILD_SELECTOR parameter
+    if (params.BUILD_SELECTOR) {
+      copyArtifacts filter: '**/*.pax.Z,**/metadata.json,**/test.status,**/.builddeps,**/.version,**/.runtimedeps',
+                    projectName: 'Port-Build',
+                    selector: buildParameter('BUILD_SELECTOR'),
+                    optional: false
+    } else {
+      echo "Warning: BUILD_SELECTOR not provided, skipping copyArtifacts"
+    }
+
+    withCredentials([string(credentialsId: github_token_cred, variable: 'GITHUB_TOKEN')]) {
+      withEnv([
+        "PORT_GITHUB_REPO=${port_github_repo}",
+        "PORT_DESCRIPTION=${port_description}",
+        "BUILD_LINE=${build_line}"
+      ]) {
+        sh '''#!/bin/bash
 set -euo pipefail
 
 echo "=== STARTING PUBLISH JOB ==="
@@ -146,6 +160,7 @@ github-release upload \
 
 echo "=== SUCCESS: PUBLISH COMPLETED ==="
 '''
+      }
     }
   }
 }
