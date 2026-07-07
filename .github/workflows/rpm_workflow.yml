@@ -62,13 +62,15 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Trigger Jenkins Job
+        env:
+          REQUEST_DATA: ${{ steps.request.outputs.data }}
         run: |
           repo="${{ inputs.repo }}"
           if [ -z "${repo}" ]; then
             if [ "${{ inputs.github_event_name }}" = "push" ] || [ "${{ inputs.github_event_name }}" = "workflow_dispatch" ]; then
               repo="${{ github.event.repository.clone_url }}"
             else
-              repo="${{ fromJson(steps.request.outputs.data).head.repo.clone_url }}"
+              repo=$(echo "$REQUEST_DATA" | jq -r '.head.repo.clone_url')
             fi
           fi
           branch="${{ inputs.branch }}"
@@ -76,7 +78,7 @@ jobs:
             if [ "${{ inputs.github_event_name }}" = "push" ] || [ "${{ inputs.github_event_name }}" = "workflow_dispatch" ]; then
               branch="${{ github.ref_name }}"
             else
-              branch="${{ fromJson(steps.request.outputs.data).head.ref }}"
+              branch=$(echo "$REQUEST_DATA" | jq -r '.head.ref')
             fi
           fi
           
