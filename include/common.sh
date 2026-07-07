@@ -1032,7 +1032,7 @@ runInBackgroundWithTimeoutAndLog()
   timeout="$2"
 
   printVerbose "${command} with timeout of ${timeout}s."
-  eval "${command} &; TEEPID=$!"
+  eval "${command} & TEEPID=$!"
   PID=$!
   n=0
   while [ ${n} -le ${timeout} ]; do

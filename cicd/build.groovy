@@ -31,6 +31,12 @@ node(node_label) {
     }
     def port_name = port_github_repo.tokenize('/').last().replaceAll('\\.git$', '')
 
+    // Determine SCM branch fallback dynamically from the SCM definition
+    def scmBranch = "main"
+    if (scm && scm.branches && scm.branches.size() > 0) {
+      scmBranch = scm.branches[0].name.replaceAll('\\*\\/', '').replaceAll('refs/heads/', '').replaceAll('origin/', '')
+    }
+
     // Determine build options
     def extraOptions = ""
     if (force_clang) {
@@ -46,7 +52,6 @@ node(node_label) {
     }
 
     deleteDir()
-    checkout scm
 
     def gpgBindings = [
       file(credentialsId: 'ZOPEN_GPG_PUBLIC_KEY_FILE', variable: 'ZOPEN_GPG_PUBLIC_KEY_FILE'),
@@ -61,6 +66,7 @@ node(node_label) {
           "PORT_BRANCH=${port_branch}",
           "PORT_GITHUB_REPO=${port_github_repo}",
           "BUILD_BRANCH=${params.BUILD_BRANCH ?: ''}",
+          "META_BRANCH=${scmBranch}",
           "PORT_SOURCE_URL=${port_source_url}",
           "EXTRA_OPTIONS=${extraOptions}",
           "PAX_RPM_OPTIONS=${paxRpmOptions}"
@@ -76,11 +82,10 @@ node(node_label) {
             export TMPDIR="${WORKSPACE}/tmp"
             mkdir -p "$TMPDIR"
 
-            # Upgrade meta if updates are available
-            zopen upgrade meta -y
-
-            # Remove packages pax.Z files
-            rm -rf packages
+            git init
+            git remote add origin https://github.com/zopencommunity/meta.git
+            git fetch --tags --force --depth=1 origin "${META_BRANCH}:refs/remotes/origin/${META_BRANCH}"
+            git checkout -f "origin/${META_BRANCH}"
 
             if [ ! -z "${BUILD_BRANCH}" ]; then
               export ZOPEN_GIT_BRANCH="${BUILD_BRANCH}"
@@ -89,20 +94,28 @@ node(node_label) {
               export ZOPEN_SOURCE_URL="${PORT_SOURCE_URL}"
             fi
 
+
             # Clone and build
             git clone -b "${PORT_BRANCH}" "${PORT_GITHUB_REPO}" "${PORT_NAME}"
             cd "${PORT_NAME}"
 
-            zopen build -v -b release -u ${PAX_RPM_OPTIONS} --no-set-active ${EXTRA_OPTIONS}
+            # Run build using the workspace version of zopen-build to test PR changes
+            zopen-build -v -b release -u ${PAX_RPM_OPTIONS} --no-set-active ${EXTRA_OPTIONS}
 
-            # Clean the cache after build is complete
-            zopen clean -c -v
+            # Clean using the workspace version of zopen-clean
+            zopen-clean -c -v
+
+            # Copy built RPMs to workspace for archiving
+            if [ -d "rpmbuild/RPMS" ] && [ "$(ls -A "rpmbuild/RPMS" 2>/dev/null)" ]; then
+              mkdir -p "${WORKSPACE}/rpms"
+              cp -R "rpmbuild/RPMS/"* "${WORKSPACE}/rpms/" 2>/dev/null || true
+            fi
 BASH'''
         }
       }
     } finally {
       try {
-        archiveArtifacts artifacts: '**/*.pax.Z,**/*.pax.Z.asc,**/metadata.json,**/*_config.log,**/*_build.log,**/*_check.log,**/*_install.log, **/test.status, **/*_check_failures.log, **/.builddeps, **/.version, **/.runtimedeps',
+        archiveArtifacts artifacts: '**/*.pax.Z,**/*.pax.Z.asc,**/*.rpm,**/metadata.json,**/*_config.log,**/*_build.log,**/*_check.log,**/*_install.log, **/test.status, **/*_check_failures.log, **/.builddeps, **/.version, **/.runtimedeps',
                          allowEmptyArchive: true,
                          fingerprint: true
       } finally {

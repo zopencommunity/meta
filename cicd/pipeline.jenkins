@@ -51,28 +51,43 @@ node('linux')
     deleteDir()
   }
   
-  stage('Promote') {
+  stage('Port-Publish') {
       if(!params.NO_PROMOTE) {
               // Publish Job : https://128.168.139.253:8443/view/Framework/job/Port-Publish/
               promoteResult = build job: 'Port-Publish', propagate: false, parameters:
                  [string(name: 'BUILD_SELECTOR', value: "<SpecificBuildSelector plugin=\"copyartifact@1.46.2\">  <buildNumber>${buildResult.number.toString()}</buildNumber></SpecificBuildSelector>"),
-                 string(name: 'PORT_GITHUB_REPO', value: "${repo}"), string(name: 'PORT_DESCRIPTION', value: "${description}"),
-                 string(name: 'BUILD_LINE', value: "${build_line}")
+                  string(name: 'PORT_GITHUB_REPO', value: "${repo}"), string(name: 'PORT_DESCRIPTION', value: "${description}"),
+                  string(name: 'BUILD_LINE', value: "${build_line}"),
+                  string(name: 'PROMOTED_JOB_NAME', value: 'Port-Build')
                  ]
               result = promoteResult.getResult()
               if(result == "FAILURE"){
-                handleError("Promote stage failed. View details in <${promoteResult.absoluteUrl}", repo, getLogFromRunWrapper(promoteResult, 50));
+                handleError("Port Promote stage failed. View details in <${promoteResult.absoluteUrl}", repo, getLogFromRunWrapper(promoteResult, 50));
               }
-        }
+      }
   }
 
-  
   stage('UpdateReleaseAPIs') {
       if(!params.NO_PROMOTE) {
               updateDocsResult = build job: 'Port-Update-Release', propagate: false, wait: false, parameters: []
         }
   }
 
+  stage('RPM-Publish') {
+      if(!params.NO_PROMOTE) {
+              // RPM Publish Job: RPM-Publish
+              def rpmPromoteResult = build job: 'RPM-Publish', propagate: false, parameters:
+                 [string(name: 'BUILD_SELECTOR', value: "<SpecificBuildSelector plugin=\"copyartifact@1.46.2\">  <buildNumber>${buildResult.number.toString()}</buildNumber></SpecificBuildSelector>"),
+                  string(name: 'PROMOTED_JOB_NAME', value: 'Port-Build')
+                 ]
+              def rpmResult = rpmPromoteResult.getResult()
+              if(rpmResult == "FAILURE"){
+                handleError("RPM Promote stage failed. View details in ${rpmPromoteResult.absoluteUrl}", repo, getLogFromRunWrapper(rpmPromoteResult, 50));
+              }
+      }
+  }
+
+  
   stage ('Cleanup') {
     def latestRelease = repo.replaceAll('.git$', "/releases/latest")
     def extraText;
@@ -86,8 +101,8 @@ node('linux')
         
     if (params.FORCE_CLANG)
         extraText += "\nBuilt with FORCE_CLANG set to true."
-     def slackResponse = slackSend color: 'good', 
-        message: "Build for ${repo} (${build_line}) *successful* <${currentBuild.absoluteUrl}|Build #${currentBuild.number}>\n*Test Status:* ${testStatus}${extraText}"
+     // def slackResponse = slackSend color: 'good', 
+     //    message: "Build for ${repo} (${build_line}) *successful* <${currentBuild.absoluteUrl}|Build #${currentBuild.number}>\n*Test Status:* ${testStatus}${extraText}"
   }
 }
 
@@ -105,6 +120,6 @@ def handleError(reason, repo, output="none") {
       color: 'danger'
     ]
   ]
-  slackSend(attachments: attachments)
+  // slackSend(attachments: attachments)
   error "Job failed..."
 }

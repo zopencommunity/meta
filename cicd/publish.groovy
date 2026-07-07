@@ -5,12 +5,15 @@
 //   NODE_LABEL              : Label of the Jenkins node to run on (default: linux)
 //   BUILD_SELECTOR          : Selector for copying artifacts from Port-Build
 //   GITHUB_TOKEN_CREDENTIAL : ID of the GitHub Token credential in Jenkins (default: GITHUB_TOKEN)
+//   PROMOTED_JOB_NAME       : Name of the job to copy artifacts from (default: Port-Build)
 
 def port_github_repo   = params.PORT_GITHUB_REPO   ?: ""
 def port_description   = params.PORT_DESCRIPTION   ?: ""
 def build_line         = params.BUILD_LINE         ?: ""
 def node_label         = params.NODE_LABEL         ?: "linux"
-def github_token_cred  = params.GITHUB_TOKEN_CREDENTIAL ?: "GITHUB_TOKEN"
+def github_token_cred  = params.GITHUB_TOKEN_CREDENTIAL ?: "GITHUB_TOKEN3"
+def promoted_job_name  = params.PROMOTED_JOB_NAME  ?: "Port-Build"
+def build_selector     = params.BUILD_SELECTOR     ?: ""
 
 node(node_label) {
   stage('Publish') {
@@ -20,11 +23,33 @@ node(node_label) {
 
     deleteDir()
 
+    // Determine the build selector. Supports Copy Artifact XML string, raw build numbers, or lastSuccessful fallback.
+    def selectorObj
+    if (build_selector) {
+      if (build_selector.contains('SpecificBuildSelector')) {
+        // Extract build number from XML: <buildNumber>123</buildNumber>
+        def matcher = (build_selector =~ /<buildNumber>(.*?)<\/buildNumber>/)
+        if (matcher.find()) {
+          selectorObj = specific(matcher.group(1))
+        } else {
+          selectorObj = lastSuccessful()
+        }
+      } else if (build_selector.contains('StatusBuildSelector')) {
+        selectorObj = lastSuccessful()
+      } else if (build_selector == 'latest' || build_selector == 'lastSuccessful') {
+        selectorObj = lastSuccessful()
+      } else {
+        selectorObj = specific(build_selector)
+      }
+    } else {
+      selectorObj = lastSuccessful()
+    }
+
     // Copy artifacts from Port-Build using the BUILD_SELECTOR parameter
-    if (params.BUILD_SELECTOR) {
+    if (build_selector) {
       copyArtifacts filter: '**/*.pax.Z,**/metadata.json,**/test.status,**/.builddeps,**/.version,**/.runtimedeps',
-                    projectName: 'Port-Build',
-                    selector: buildParameter('BUILD_SELECTOR'),
+                    projectName: promoted_job_name,
+                    selector: selectorObj,
                     optional: false
     } else {
       echo "Warning: BUILD_SELECTOR not provided, skipping copyArtifacts"
@@ -86,7 +111,7 @@ unset http_proxy https_proxy
 
 PAX_BASENAME=$(basename "$PAX")
 DIR_NAME=${PAX_BASENAME%%.pax.Z}
-DIR_NAME=$(echo "$DIR_NAME" | sed -e "s/\.202[0-9]*_[0-9]*\.zos/.zos/g" -e "s/\.zos//g")
+DIR_NAME=$(echo "$DIR_NAME" | sed -e "s/\\.202[0-9]*_[0-9]*\\.zos/.zos/g" -e "s/\\.zos//g")
 TAG="${BUILD_LINE}_${RELEASE_PREFIX}_${BUILD_NUMBER}"
 NAME="${PORT_NAME} ${VERSION} (Build ${BUILD_NUMBER}) - (${BUILD_LINE})"
 

@@ -1,9 +1,9 @@
 // Inputs:
-//   PORT_GITHUB_REPO      : GitHub repo (e.g. https://github.com/zopencommunity/base-os.git)
 //   BUILD_SELECTOR        : Jenkins build selector XML to copy artifacts from the build job
+//   PROMOTED_JOB_NAME     : Name of the job to copy artifacts from (default: RPM-Build)
 
-def project_repo    = params.PORT_GITHUB_REPO     ?: ""
-def build_selector  = params.BUILD_SELECTOR       ?: ""
+def build_selector    = params.BUILD_SELECTOR       ?: ""
+def promoted_job_name = params.PROMOTED_JOB_NAME     ?: "RPM-Build"
 
 node('linux') {
 
@@ -37,7 +37,7 @@ node('linux') {
 
     copyArtifacts filter: 'rpms/**/*.rpm',
                   fingerprintArtifacts: true,
-                  projectName: 'RPM-Build',
+                  projectName: promoted_job_name,
                   selector: selectorObj
 
     // Verify we actually have RPMs to publish (excluding source RPMs)
