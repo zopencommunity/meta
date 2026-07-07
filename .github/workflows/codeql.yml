@@ -84,7 +84,7 @@ jobs:
             - '**/tests/**'
 
           queries:
-            - uses: security-and-quality
+            - uses: security-extended
           EOF
           echo "CodeQL config created"
 
