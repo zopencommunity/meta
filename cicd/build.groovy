@@ -48,48 +48,65 @@ node(node_label) {
     deleteDir()
     checkout scm
 
-    withEnv([
-      "PORT_NAME=${port_name}",
-      "PORT_BRANCH=${port_branch}",
-      "PORT_GITHUB_REPO=${port_github_repo}",
-      "BUILD_BRANCH=${params.BUILD_BRANCH ?: ''}",
-      "PORT_SOURCE_URL=${port_source_url}",
-      "EXTRA_OPTIONS=${extraOptions}",
-      "PAX_RPM_OPTIONS=${paxRpmOptions}"
-    ]) {
-      sh '''bash -e -s << \'BASH\'
-        set +e
-        . /jenkins/.env
-        set -e
-        export PATH="${WORKSPACE}/bin:$PATH"
-        export NO_COLOR=1
-        export ZOPEN_IS_BOT=1
-        export GIT_UTF8_CCSID=819
-        export TMPDIR="${WORKSPACE}/tmp"
-        mkdir -p "$TMPDIR"
+    def gpgBindings = [
+      file(credentialsId: 'ZOPEN_GPG_PUBLIC_KEY_FILE', variable: 'ZOPEN_GPG_PUBLIC_KEY_FILE'),
+      file(credentialsId: 'ZOPEN_GPG_SECRET_KEY_FILE', variable: 'ZOPEN_GPG_SECRET_KEY_FILE'),
+      file(credentialsId: 'ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE', variable: 'ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE')
+    ]
 
-        # Upgrade meta if updates are available
-        zopen upgrade meta -y
+    try {
+      withCredentials(gpgBindings) {
+        withEnv([
+          "PORT_NAME=${port_name}",
+          "PORT_BRANCH=${port_branch}",
+          "PORT_GITHUB_REPO=${port_github_repo}",
+          "BUILD_BRANCH=${params.BUILD_BRANCH ?: ''}",
+          "PORT_SOURCE_URL=${port_source_url}",
+          "EXTRA_OPTIONS=${extraOptions}",
+          "PAX_RPM_OPTIONS=${paxRpmOptions}"
+        ]) {
+          sh '''bash -e -s << \'BASH\'
+            set +e
+            . /jenkins/.env
+            set -e
+            export PATH="${WORKSPACE}/bin:$PATH"
+            export NO_COLOR=1
+            export ZOPEN_IS_BOT=1
+            export GIT_UTF8_CCSID=819
+            export TMPDIR="${WORKSPACE}/tmp"
+            mkdir -p "$TMPDIR"
 
-        # Remove packages pax.Z files
-        rm -rf packages
+            # Upgrade meta if updates are available
+            zopen upgrade meta -y
 
-        if [ ! -z "${BUILD_BRANCH}" ]; then
-          export ZOPEN_GIT_BRANCH="${BUILD_BRANCH}"
-        fi
-        if [ ! -z "${PORT_SOURCE_URL}" ]; then
-          export ZOPEN_SOURCE_URL="${PORT_SOURCE_URL}"
-        fi
+            # Remove packages pax.Z files
+            rm -rf packages
 
-        # Clone and build
-        git clone -b "${PORT_BRANCH}" "${PORT_GITHUB_REPO}" "${PORT_NAME}"
-        cd "${PORT_NAME}"
+            if [ ! -z "${BUILD_BRANCH}" ]; then
+              export ZOPEN_GIT_BRANCH="${BUILD_BRANCH}"
+            fi
+            if [ ! -z "${PORT_SOURCE_URL}" ]; then
+              export ZOPEN_SOURCE_URL="${PORT_SOURCE_URL}"
+            fi
 
-        zopen build -v -b release -u ${PAX_RPM_OPTIONS} --no-set-active ${EXTRA_OPTIONS}
+            # Clone and build
+            git clone -b "${PORT_BRANCH}" "${PORT_GITHUB_REPO}" "${PORT_NAME}"
+            cd "${PORT_NAME}"
 
-        # Clean the cache after build is complete
-        zopen clean -c -v
+            zopen build -v -b release -u ${PAX_RPM_OPTIONS} --no-set-active ${EXTRA_OPTIONS}
+
+            # Clean the cache after build is complete
+            zopen clean -c -v
 BASH'''
+        }
+      }
+    } finally {
+      try {
+        archiveArtifacts artifacts: '**/*.pax.Z,**/*.pax.Z.asc,**/metadata.json,**/*_config.log,**/*_build.log,**/*_check.log,**/*_install.log, **/test.status, **/*_check_failures.log, **/.builddeps, **/.version, **/.runtimedeps',
+                         allowEmptyArchive: true,
+                         fingerprint: true
+      } finally {
+        deleteDir()
       }
     }
   }
