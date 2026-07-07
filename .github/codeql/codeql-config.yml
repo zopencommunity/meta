@@ -11,6 +11,6 @@ paths-ignore:
   - '**/tests/**'
 
 queries:
-  - uses: security-extended
+  - uses: security
 
 # Made with Bob
