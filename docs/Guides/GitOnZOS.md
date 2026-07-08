@@ -17,15 +17,9 @@ You can find the latest information on Git for z/OS by visiting the [zopen commu
 
 ## Encoding considerations
 
-One of the key features of Git on z/OS is its support for various encodings. This is achieved through the use of the `.gitattributes` file, which can be specified globally or locally in repositories. The `.gitattributes` file determines the encoding of the working tree files and can be used to convert them to a specific encoding, such as IBM-1047, a commonly used EBCDIC encoding in North America.
+Git's internal standard for character encoding of text files is UTF-8, but using options specified for files on a path-specific basis it is possible to tell Git how you would like to work with those files. The `.gitattributes` file contains this information and tells Git whether you need it to convert from UTF-8 when checking out the files into a working tree (ie the workspace of VS Code, or into folders in USS). The reverse conversion will be done during `git add` and `git commit`. The standard option is `working-tree-encoding`.
 
-For example, if you want to convert all files in your repository from Git's internal UTF-8 encoding to IBM-1047, you can add the following line to your `.gitattributes` file:
-
-```text
-text working-tree-encoding=IBM-1047
-```
-
-Similarly, if you want the `working-tree-encoding` to apply to the host platform only, you can use the `[platform]-working-tree-encoding` attribute, where [platform] should be substituted with the host system that you are on, like so:
+Git for z/OS extends this idea with `zos-working-tree-encoding` so that while UTF-8 is a common choice during a clone to a developer's IDE, the conversion performed on z/OS can be to, for example, IBM-1047 which is a commonly used EBCDIC encoding in North America. An example `.gitattributes` specification to achieve that is:
 
 ```text
 text zos-working-tree-encoding=IBM-1047
@@ -35,7 +29,7 @@ It is important to note that if no encoding is specified, the default UTF-8 enco
 
 To find out all of the supported encodings by git, run `iconv -l` on z/OS.
 
-When adding files, you need to make sure that the z/OS file tag matches the `working-tree-encoding`. Otherwise, you may encounter an error.
+When adding files, you need to make sure that both the file contents and the z/OS file tag matches the `working-tree-encoding`. Otherwise, you may encounter an error.
 
 ## Binary files
 
