@@ -17,7 +17,7 @@ You can find the latest information on Git for z/OS by visiting the [zopen commu
 
 ## Encoding considerations
 
-Git's internal standard for character encoding of text files is UTF-8, but using options specified for files on a path-specific basis it is possible to tell Git how you would like to work with those files. The `.gitattributes` file contains this information and tells Git whether you need it to convert from UTF-8 when checking out the files into a working tree (ie the workspace of VS Code, or into folders in USS). The reverse conversion will be done during `git commit`. The standard option is `working-tree-encoding`.
+Git's internal standard for character encoding of text files is UTF-8, but using options specified for files on a path-specific basis it is possible to tell Git how you would like to work with those files. The `.gitattributes` file contains this information and tells Git whether you need it to convert from UTF-8 when checking out the files into a working tree (ie the workspace of VS Code, or into folders in USS). The reverse conversion will be done during `git add` and `git commit`. The standard option is `working-tree-encoding`.
 
 Git for z/OS extends this idea with `zos-working-tree-encoding` so that while UTF-8 is a common choice during a clone to a developer's IDE, the conversion performed on z/OS can be to, for example, IBM-1047 which is a commonly used EBCDIC encoding in North America. An example `.gitattributes` specification to achieve that is:
 
