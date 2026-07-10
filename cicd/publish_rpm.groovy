@@ -84,10 +84,6 @@ node('linux') {
 
           pulp status || { echo "ERROR: Pulp connection failed"; exit 1; }
 
-          echo "--- Configuring Pulp Pipeline ---"
-          pulp rpm repository update --name "\${PULP_REPO}" --autopublish
-          pulp rpm distribution update --name "\${PULP_REPO}" --repository "\${PULP_REPO}"
-
           echo "Uploading \${NUM_RPMS} RPMs to Pulp repo: \${PULP_REPO}"
           for RPM in "\${RPM_FILES[@]}"; do
             RPM_NAME=\$(basename "\$RPM")
