@@ -24,27 +24,28 @@ node(node_label) {
     deleteDir()
     checkout scm
 
-    // Determine the build selector. Supports Copy Artifact XML string, raw build numbers, or lastSuccessful fallback.
-    def selectorObj
-    if (build_selector) {
-      if (build_selector.contains('SpecificBuildSelector')) {
-        // Extract build number from XML: <buildNumber>123</buildNumber>
-        def matcher = (build_selector =~ /<buildNumber>(.*?)<\/buildNumber>/)
-        if (matcher.find()) {
-          selectorObj = specific(matcher.group(1))
-        } else {
+    try {
+      // Determine the build selector. Supports Copy Artifact XML string, raw build numbers, or lastSuccessful fallback.
+      def selectorObj
+      if (build_selector) {
+        if (build_selector.contains('SpecificBuildSelector')) {
+          // Extract build number from XML: <buildNumber>123</buildNumber>
+          def matcher = (build_selector =~ /<buildNumber>(.*?)<\/buildNumber>/)
+          if (matcher.find()) {
+            selectorObj = specific(matcher.group(1))
+          } else {
+            selectorObj = lastSuccessful()
+          }
+        } else if (build_selector.contains('StatusBuildSelector')) {
           selectorObj = lastSuccessful()
+        } else if (build_selector == 'latest' || build_selector == 'lastSuccessful') {
+          selectorObj = lastSuccessful()
+        } else {
+          selectorObj = specific(build_selector)
         }
-      } else if (build_selector.contains('StatusBuildSelector')) {
-        selectorObj = lastSuccessful()
-      } else if (build_selector == 'latest' || build_selector == 'lastSuccessful') {
-        selectorObj = lastSuccessful()
       } else {
-        selectorObj = specific(build_selector)
+        selectorObj = lastSuccessful()
       }
-    } else {
-      selectorObj = lastSuccessful()
-    }
 
     // Copy artifacts from Port-Build using the resolved selectorObj
     copyArtifacts filter: '**/*.pax.Z,**/metadata.json,**/test.status,**/.builddeps,**/.version,**/.runtimedeps',
@@ -183,6 +184,8 @@ github-release upload \
 echo "=== SUCCESS: PUBLISH COMPLETED ==="
 '''
       }
+    } finally {
+      deleteDir()
     }
   }
 }

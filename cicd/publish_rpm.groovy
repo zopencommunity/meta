@@ -13,27 +13,28 @@ node('linux') {
     deleteDir()
     checkout scm
 
-    // Determine the build selector. Supports Copy Artifact XML string from parameter widget, raw build numbers, or lastSuccessful fallback.
-    def selectorObj
-    if (build_selector) {
-      if (build_selector.contains('SpecificBuildSelector')) {
-        // Extract build number from XML: <buildNumber>123</buildNumber>
-        def matcher = (build_selector =~ /<buildNumber>(.*?)<\/buildNumber>/)
-        if (matcher.find()) {
-          selectorObj = specific(matcher.group(1))
-        } else {
+    try {
+      // Determine the build selector. Supports Copy Artifact XML string from parameter widget, raw build numbers, or lastSuccessful fallback.
+      def selectorObj
+      if (build_selector) {
+        if (build_selector.contains('SpecificBuildSelector')) {
+          // Extract build number from XML: <buildNumber>123</buildNumber>
+          def matcher = (build_selector =~ /<buildNumber>(.*?)<\/buildNumber>/)
+          if (matcher.find()) {
+            selectorObj = specific(matcher.group(1))
+          } else {
+            selectorObj = lastSuccessful()
+          }
+        } else if (build_selector.contains('StatusBuildSelector')) {
           selectorObj = lastSuccessful()
+        } else if (build_selector == 'latest' || build_selector == 'lastSuccessful') {
+          selectorObj = lastSuccessful()
+        } else {
+          selectorObj = specific(build_selector)
         }
-      } else if (build_selector.contains('StatusBuildSelector')) {
-        selectorObj = lastSuccessful()
-      } else if (build_selector == 'latest' || build_selector == 'lastSuccessful') {
-        selectorObj = lastSuccessful()
       } else {
-        selectorObj = specific(build_selector)
+        selectorObj = lastSuccessful()
       }
-    } else {
-      selectorObj = lastSuccessful()
-    }
 
     copyArtifacts filter: 'rpms/**/*.rpm',
                   fingerprintArtifacts: true,
@@ -109,7 +110,8 @@ node('linux') {
           exit 1
         fi
       """
+    } finally {
+      deleteDir()
     }
   }
-
 }
