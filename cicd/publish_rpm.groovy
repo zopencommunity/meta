@@ -1,9 +1,9 @@
 // Inputs:
-//   PORT_GITHUB_REPO      : GitHub repo (e.g. https://github.com/zopencommunity/base-os.git)
 //   BUILD_SELECTOR        : Jenkins build selector XML to copy artifacts from the build job
+//   PROMOTED_JOB_NAME     : Name of the job to copy artifacts from (default: RPM-Build)
 
-def project_repo    = params.PORT_GITHUB_REPO     ?: ""
-def build_selector  = params.BUILD_SELECTOR       ?: ""
+def build_selector    = params.BUILD_SELECTOR       ?: ""
+def promoted_job_name = params.PROMOTED_JOB_NAME     ?: "RPM-Build"
 
 node('linux') {
 
@@ -13,31 +13,32 @@ node('linux') {
     deleteDir()
     checkout scm
 
-    // Determine the build selector. Supports Copy Artifact XML string from parameter widget, raw build numbers, or lastSuccessful fallback.
-    def selectorObj
-    if (build_selector) {
-      if (build_selector.contains('SpecificBuildSelector')) {
-        // Extract build number from XML: <buildNumber>123</buildNumber>
-        def matcher = (build_selector =~ /<buildNumber>(.*?)<\/buildNumber>/)
-        if (matcher.find()) {
-          selectorObj = specific(matcher.group(1))
-        } else {
+    try {
+      // Determine the build selector. Supports Copy Artifact XML string from parameter widget, raw build numbers, or lastSuccessful fallback.
+      def selectorObj
+      if (build_selector) {
+        if (build_selector.contains('SpecificBuildSelector')) {
+          // Extract build number from XML: <buildNumber>123</buildNumber>
+          def matcher = (build_selector =~ /<buildNumber>(.*?)<\/buildNumber>/)
+          if (matcher.find()) {
+            selectorObj = specific(matcher.group(1))
+          } else {
+            selectorObj = lastSuccessful()
+          }
+        } else if (build_selector.contains('StatusBuildSelector')) {
           selectorObj = lastSuccessful()
+        } else if (build_selector == 'latest' || build_selector == 'lastSuccessful') {
+          selectorObj = lastSuccessful()
+        } else {
+          selectorObj = specific(build_selector)
         }
-      } else if (build_selector.contains('StatusBuildSelector')) {
-        selectorObj = lastSuccessful()
-      } else if (build_selector == 'latest' || build_selector == 'lastSuccessful') {
-        selectorObj = lastSuccessful()
       } else {
-        selectorObj = specific(build_selector)
+        selectorObj = lastSuccessful()
       }
-    } else {
-      selectorObj = lastSuccessful()
-    }
 
     copyArtifacts filter: 'rpms/**/*.rpm',
                   fingerprintArtifacts: true,
-                  projectName: 'RPM-Build',
+                  projectName: promoted_job_name,
                   selector: selectorObj
 
     // Verify we actually have RPMs to publish (excluding source RPMs)
@@ -109,7 +110,8 @@ node('linux') {
           exit 1
         fi
       """
+    } finally {
+      deleteDir()
     }
   }
-
 }

@@ -36,7 +36,7 @@ node('linux')
                    string(name: 'BUILD_LINE', value: "${build_line}"),
                    ]
     def result = buildResult.getResult()
-    if(result == "FAILURE"){
+    if(result != "SUCCESS"){
       handleError("Build/Test stage failed. View details in ${buildResult.absoluteUrl}", repo, getLogFromRunWrapper(buildResult, 50));
     }
     copyArtifacts filter: '**/test.status',
@@ -51,28 +51,52 @@ node('linux')
     deleteDir()
   }
   
-  stage('Promote') {
-      if(!params.NO_PROMOTE) {
-              // Publish Job : https://128.168.139.253:8443/view/Framework/job/Port-Publish/
-              promoteResult = build job: 'Port-Publish', propagate: false, parameters:
-                 [string(name: 'BUILD_SELECTOR', value: "<SpecificBuildSelector plugin=\"copyartifact@1.46.2\">  <buildNumber>${buildResult.number.toString()}</buildNumber></SpecificBuildSelector>"),
-                 string(name: 'PORT_GITHUB_REPO', value: "${repo}"), string(name: 'PORT_DESCRIPTION', value: "${description}"),
-                 string(name: 'BUILD_LINE', value: "${build_line}")
-                 ]
-              result = promoteResult.getResult()
-              if(result == "FAILURE"){
-                handleError("Promote stage failed. View details in <${promoteResult.absoluteUrl}", repo, getLogFromRunWrapper(promoteResult, 50));
-              }
+  parallel(
+    'Publish Port & Update API': {
+      stage('Port-Publish') {
+        if(!params.NO_PROMOTE) {
+          // Publish Job : https://128.168.139.253:8443/view/Framework/job/Port-Publish/
+          promoteResult = build job: 'Port-Publish', propagate: false, parameters:
+             [string(name: 'BUILD_SELECTOR', value: "<SpecificBuildSelector plugin=\"copyartifact@1.46.2\">  <buildNumber>${buildResult.number.toString()}</buildNumber></SpecificBuildSelector>"),
+              string(name: 'PORT_GITHUB_REPO', value: "${repo}"), string(name: 'PORT_DESCRIPTION', value: "${description}"),
+              string(name: 'BUILD_LINE', value: "${build_line}"),
+              string(name: 'PROMOTED_JOB_NAME', value: 'Port-Build')
+             ]
+          result = promoteResult.getResult()
+          if(result != "SUCCESS"){
+            handleError("Port Promote stage failed. View details in <${promoteResult.absoluteUrl}", repo, getLogFromRunWrapper(promoteResult, 50));
+          }
         }
-  }
+      }
+
+      stage('UpdateReleaseAPIs') {
+        if(!params.NO_PROMOTE) {
+          updateDocsResult = build job: 'Port-Update-Release', propagate: false, wait: true, parameters: []
+          def updateResult = updateDocsResult.getResult()
+          if(updateResult != "SUCCESS"){
+            handleError("UpdateReleaseAPIs stage failed. View details in ${updateDocsResult.absoluteUrl}", repo, getLogFromRunWrapper(updateDocsResult, 50));
+          }
+        }
+      }
+    },
+    'Publish RPM': {
+      stage('RPM-Publish') {
+        if(!params.NO_PROMOTE) {
+          // RPM Publish Job: RPM-Publish
+          def rpmPromoteResult = build job: 'RPM-Publish', propagate: false, parameters:
+             [string(name: 'BUILD_SELECTOR', value: "<SpecificBuildSelector plugin=\"copyartifact@1.46.2\">  <buildNumber>${buildResult.number.toString()}</buildNumber></SpecificBuildSelector>"),
+              string(name: 'PROMOTED_JOB_NAME', value: 'Port-Build')
+             ]
+          def rpmResult = rpmPromoteResult.getResult()
+          if(rpmResult != "SUCCESS"){
+            handleError("RPM Promote stage failed. View details in ${rpmPromoteResult.absoluteUrl}", repo, getLogFromRunWrapper(rpmPromoteResult, 50));
+          }
+        }
+      }
+    }
+  )
 
   
-  stage('UpdateReleaseAPIs') {
-      if(!params.NO_PROMOTE) {
-              updateDocsResult = build job: 'Port-Update-Release', propagate: false, wait: false, parameters: []
-        }
-  }
-
   stage ('Cleanup') {
     def latestRelease = repo.replaceAll('.git$', "/releases/latest")
     def extraText;

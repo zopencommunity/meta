@@ -1,4 +1,65 @@
-#!/bin/bash
+// Inputs:
+//   PORT_GITHUB_REPO        : GitHub repository URL
+//   PORT_DESCRIPTION        : Project description
+//   BUILD_LINE              : dev or stable line (default: dev/stable from metadata.json)
+//   NODE_LABEL              : Label of the Jenkins node to run on (default: linux)
+//   BUILD_SELECTOR          : Selector for copying artifacts from Port-Build
+//   GITHUB_TOKEN_CREDENTIAL : ID of the GitHub Token credential in Jenkins (default: GITHUB_TOKEN)
+//   PROMOTED_JOB_NAME       : Name of the job to copy artifacts from (default: Port-Build)
+
+def port_github_repo   = params.PORT_GITHUB_REPO   ?: ""
+def port_description   = params.PORT_DESCRIPTION   ?: ""
+def build_line         = params.BUILD_LINE         ?: ""
+def node_label         = params.NODE_LABEL         ?: "linux"
+def github_token_cred  = params.GITHUB_TOKEN_CREDENTIAL ?: "GITHUB_TOKEN3"
+def promoted_job_name  = params.PROMOTED_JOB_NAME  ?: "Port-Build"
+def build_selector     = params.BUILD_SELECTOR     ?: ""
+
+node(node_label) {
+  stage('Publish') {
+    if (!port_github_repo) {
+      error "PORT_GITHUB_REPO is required"
+    }
+
+    deleteDir()
+    checkout scm
+
+    try {
+      // Determine the build selector. Supports Copy Artifact XML string, raw build numbers, or lastSuccessful fallback.
+      def selectorObj
+      if (build_selector) {
+        if (build_selector.contains('SpecificBuildSelector')) {
+          // Extract build number from XML: <buildNumber>123</buildNumber>
+          def matcher = (build_selector =~ /<buildNumber>(.*?)<\/buildNumber>/)
+          if (matcher.find()) {
+            selectorObj = specific(matcher.group(1))
+          } else {
+            selectorObj = lastSuccessful()
+          }
+        } else if (build_selector.contains('StatusBuildSelector')) {
+          selectorObj = lastSuccessful()
+        } else if (build_selector == 'latest' || build_selector == 'lastSuccessful') {
+          selectorObj = lastSuccessful()
+        } else {
+          selectorObj = specific(build_selector)
+        }
+      } else {
+        selectorObj = lastSuccessful()
+      }
+
+    // Copy artifacts from Port-Build using the resolved selectorObj
+    copyArtifacts filter: '**/*.pax.Z,**/metadata.json,**/test.status,**/.builddeps,**/.version,**/.runtimedeps',
+                  projectName: promoted_job_name,
+                  selector: selectorObj,
+                  optional: false
+
+    withCredentials([string(credentialsId: github_token_cred, variable: 'GITHUB_TOKEN')]) {
+      withEnv([
+        "PORT_GITHUB_REPO=${port_github_repo}",
+        "PORT_DESCRIPTION=${port_description}",
+        "BUILD_LINE=${build_line}"
+      ]) {
+        sh '''#!/bin/bash
 set -euo pipefail
 
 echo "=== STARTING PUBLISH JOB ==="
@@ -8,13 +69,10 @@ echo "=== STARTING PUBLISH JOB ==="
 : "${PORT_DESCRIPTION:?Missing PORT_DESCRIPTION}"
 : "${BUILD_NUMBER:?Missing BUILD_NUMBER}"
 : "${GITHUB_TOKEN:?Missing GITHUB_TOKEN}"
-: "${PULP_USERNAME:?Missing PULP_USERNAME}"
-: "${PULP_PASSWORD:?Missing PULP_PASSWORD}"
 
 # --- STATIC CONFIG ---
 GITHUB_ORGANIZATION="zopencommunity"
 RELEASE_NOTES_SCRIPT="tools/create_release_notes.sh"
-PULP_HOST="https://repo.zopen.community"
 
 # --- DERIVE VALUES ---
 RELEASE_PREFIX=$(basename "${PORT_GITHUB_REPO}")
@@ -41,14 +99,6 @@ if [ -z "${BUILD_LINE:-}" ] || [ "$BUILD_LINE" = "null" ]; then
   fi
 fi
 
-# --- RPM FILES ---
-RPM_FILES=()
-while IFS= read -r -d '' f; do
-  RPM_FILES+=("$f")
-done < <(find . -path "*/rpmbuild/RPMS/*.rpm" ! -name "*.src.rpm" -type f -print0 2>/dev/null)
-
-NUM_RPMS=${#RPM_FILES[@]}
-
 # --- INFO ---
 BUILD_STATUS=$(find . -path "*/install/test.status" -exec cat {} + 2>/dev/null || echo "Unknown")
 RUNTIME_DEPS=$(find . -path "*/install/.runtimedeps" -exec cat {} + 2>/dev/null || echo "None")
@@ -59,7 +109,7 @@ unset http_proxy https_proxy
 
 PAX_BASENAME=$(basename "$PAX")
 DIR_NAME=${PAX_BASENAME%%.pax.Z}
-DIR_NAME=$(echo "$DIR_NAME" | sed -e "s/\.202[0-9]*_[0-9]*\.zos/.zos/g" -e "s/\.zos//g")
+DIR_NAME=$(echo "$DIR_NAME" | sed -e "s/\\.202[0-9]*_[0-9]*\\.zos/.zos/g" -e "s/\\.zos//g")
 TAG="${BUILD_LINE}_${RELEASE_PREFIX}_${BUILD_NUMBER}"
 NAME="${PORT_NAME} ${VERSION} (Build ${BUILD_NUMBER}) - (${BUILD_LINE})"
 
@@ -131,85 +181,11 @@ github-release upload \
   --name "CHANGELOG.md" \
   --file "CHANGELOG.md"
 
-# =========================================================
-# 🔧 PULP SETUP (AUTO INSTALL + CONFIG)
-# =========================================================
-
-echo "=== Checking Pulp CLI ==="
-
-if ! command -v pulp >/dev/null 2>&1; then
-  echo "Pulp CLI not found. Installing..."
-
-  if command -v pip3 >/dev/null 2>&1; then
-    python3 -m pip install --user pulp-cli || true
-    export PATH="$HOME/.local/bin:$PATH"
-  fi
-fi
-
-if command -v pulp >/dev/null 2>&1; then
-  echo "Pulp CLI available"
-
-  pulp config create \
-    --base-url "$PULP_HOST" \
-    --username "$PULP_USERNAME" \
-    --password "$PULP_PASSWORD" \
-    --overwrite
-
-  pulp status || {
-    echo "ERROR: Pulp connection failed"
-    exit 1
-  }
-
-  PULP_AVAILABLE=true
-else
-  echo "WARNING: Pulp not available, skipping RPM upload"
-  PULP_AVAILABLE=false
-fi
-
-# =========================================================
-# 📦 RPM UPLOAD
-# =========================================================
-
-PULP_REPO="zopen"
-
-if [ "$NUM_RPMS" -gt 0 ] && [ "$PULP_AVAILABLE" = true ]; then
-
-  echo "--- Configuring Pulp Pipeline ---"
-
-  # 1. Enable autopublish so every upload triggers a new live version
-  pulp rpm repository update --name "$PULP_REPO" --autopublish
-
-  # 2. Link the distribution to the repository
-  pulp rpm distribution update --name "$PULP_REPO" --repository "$PULP_REPO"
-
-  echo "Uploading $NUM_RPMS RPMs to Pulp repo: $PULP_REPO"
-
-  for RPM in "${RPM_FILES[@]}"; do
-    RPM_NAME=$(basename "$RPM")
-
-    # Upload to Pulp (with retry)
-    for attempt in 1 2 3; do
-      if pulp rpm content upload --file "$RPM" --repository "$PULP_REPO"; then
-        echo "SUCCESS: $RPM_NAME"
-        break
-      fi
-      
-      if [ "$attempt" -eq 3 ]; then
-        echo "WARNING: Failed to upload $RPM_NAME to Pulp after 3 attempts. Skipping..."
-      else
-        echo "Attempt $attempt failed for $RPM_NAME, retrying in 5 seconds..."
-        sleep 5
-      fi
-    done
-  done
-
-  echo "=== SUCCESS: Packages are being processed ==="
-  echo "Check the status at: ${PULP_HOST}/pulp/content/rpm/${PULP_REPO}/"
-
-else
-  echo "Skipping RPM upload"
-fi
-
-
-
 echo "=== SUCCESS: PUBLISH COMPLETED ==="
+'''
+      }
+    } finally {
+      deleteDir()
+    }
+  }
+}
