@@ -6,14 +6,13 @@ def build_selector    = params.BUILD_SELECTOR       ?: ""
 def promoted_job_name = params.PROMOTED_JOB_NAME     ?: "RPM-Build"
 
 node('linux') {
-
+  try {
   def ws = env.WORKSPACE
   
   stage('Setup') {
     deleteDir()
     checkout scm
 
-    try {
       // Determine the build selector. Supports Copy Artifact XML string from parameter widget, raw build numbers, or lastSuccessful fallback.
       def selectorObj
       if (build_selector) {
@@ -110,8 +109,9 @@ node('linux') {
           exit 1
         fi
       """
-    } finally {
-      deleteDir()
     }
+  }
+  } finally {
+    deleteDir()
   }
 }

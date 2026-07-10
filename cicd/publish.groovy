@@ -16,15 +16,15 @@ def promoted_job_name  = params.PROMOTED_JOB_NAME  ?: "Port-Build"
 def build_selector     = params.BUILD_SELECTOR     ?: ""
 
 node(node_label) {
-  stage('Publish') {
-    if (!port_github_repo) {
-      error "PORT_GITHUB_REPO is required"
-    }
+  try {
+    stage('Publish') {
+      if (!port_github_repo) {
+        error "PORT_GITHUB_REPO is required"
+      }
 
-    deleteDir()
-    checkout scm
+      deleteDir()
+      checkout scm
 
-    try {
       // Determine the build selector. Supports Copy Artifact XML string, raw build numbers, or lastSuccessful fallback.
       def selectorObj
       if (build_selector) {
@@ -184,8 +184,9 @@ github-release upload \
 echo "=== SUCCESS: PUBLISH COMPLETED ==="
 '''
       }
-    } finally {
-      deleteDir()
     }
+  }
+  } finally {
+    deleteDir()
   }
 }
