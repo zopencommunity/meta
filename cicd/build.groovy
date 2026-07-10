@@ -75,7 +75,6 @@ node(node_label) {
             set +e
             . /jenkins/.env
             set -e
-            export PATH="${WORKSPACE}/bin:$PATH"
             export NO_COLOR=1
             export ZOPEN_IS_BOT=1
             export GIT_UTF8_CCSID=819
@@ -86,6 +85,8 @@ node(node_label) {
             git remote add origin https://github.com/zopencommunity/meta.git
             git fetch --tags --force --depth=1 origin "${META_BRANCH}:refs/remotes/origin/${META_BRANCH}"
             git checkout -f "origin/${META_BRANCH}"
+
+            export PATH="${WORKSPACE}/bin:$PATH"
 
             if [ ! -z "${BUILD_BRANCH}" ]; then
               export ZOPEN_GIT_BRANCH="${BUILD_BRANCH}"
