@@ -36,7 +36,7 @@ node('linux')
                    string(name: 'BUILD_LINE', value: "${build_line}"),
                    ]
     def result = buildResult.getResult()
-    if(result == "FAILURE"){
+    if(result != "SUCCESS"){
       handleError("Build/Test stage failed. View details in ${buildResult.absoluteUrl}", repo, getLogFromRunWrapper(buildResult, 50));
     }
     copyArtifacts filter: '**/test.status',
@@ -63,7 +63,7 @@ node('linux')
               string(name: 'PROMOTED_JOB_NAME', value: 'Port-Build')
              ]
           result = promoteResult.getResult()
-          if(result == "FAILURE"){
+          if(result != "SUCCESS"){
             handleError("Port Promote stage failed. View details in <${promoteResult.absoluteUrl}", repo, getLogFromRunWrapper(promoteResult, 50));
           }
         }
@@ -72,6 +72,10 @@ node('linux')
       stage('UpdateReleaseAPIs') {
         if(!params.NO_PROMOTE) {
           updateDocsResult = build job: 'Port-Update-Release', propagate: false, wait: true, parameters: []
+          def updateResult = updateDocsResult.getResult()
+          if(updateResult != "SUCCESS"){
+            handleError("UpdateReleaseAPIs stage failed. View details in ${updateDocsResult.absoluteUrl}", repo, getLogFromRunWrapper(updateDocsResult, 50));
+          }
         }
       }
     },
@@ -84,7 +88,7 @@ node('linux')
               string(name: 'PROMOTED_JOB_NAME', value: 'Port-Build')
              ]
           def rpmResult = rpmPromoteResult.getResult()
-          if(rpmResult == "FAILURE"){
+          if(rpmResult != "SUCCESS"){
             handleError("RPM Promote stage failed. View details in ${rpmPromoteResult.absoluteUrl}", repo, getLogFromRunWrapper(rpmPromoteResult, 50));
           }
         }

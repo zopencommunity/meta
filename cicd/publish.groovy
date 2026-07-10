@@ -22,6 +22,7 @@ node(node_label) {
     }
 
     deleteDir()
+    checkout scm
 
     // Determine the build selector. Supports Copy Artifact XML string, raw build numbers, or lastSuccessful fallback.
     def selectorObj
@@ -45,15 +46,11 @@ node(node_label) {
       selectorObj = lastSuccessful()
     }
 
-    // Copy artifacts from Port-Build using the BUILD_SELECTOR parameter
-    if (build_selector) {
-      copyArtifacts filter: '**/*.pax.Z,**/metadata.json,**/test.status,**/.builddeps,**/.version,**/.runtimedeps',
-                    projectName: promoted_job_name,
-                    selector: selectorObj,
-                    optional: false
-    } else {
-      echo "Warning: BUILD_SELECTOR not provided, skipping copyArtifacts"
-    }
+    // Copy artifacts from Port-Build using the resolved selectorObj
+    copyArtifacts filter: '**/*.pax.Z,**/metadata.json,**/test.status,**/.builddeps,**/.version,**/.runtimedeps',
+                  projectName: promoted_job_name,
+                  selector: selectorObj,
+                  optional: false
 
     withCredentials([string(credentialsId: github_token_cred, variable: 'GITHUB_TOKEN')]) {
       withEnv([
