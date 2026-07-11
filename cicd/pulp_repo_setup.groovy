@@ -56,11 +56,9 @@ node('linux') {
           # Configure GPG on the repository
           pulp rpm repository update --name "\${PULP_REPO}" --repo-config "{\\\"gpgcheck\\\": 1, \\\"gpgkey\\\": \\\"\${DESIRED_KEY}\\\"}" --autopublish
 
-          # Generate publication
-          PUB_HREF=\$(pulp rpm publication create --repository "\${PULP_REPO}" | jq -r '.pulp_href')
-
-          # Update the distribution to point to the new publication and enable repo-config generation
-          pulp rpm distribution update --name "\${PULP_REPO}" --publication "\$PUB_HREF" --generate-repo-config
+          # Update the distribution to track the repository directly and enable repo-config generation
+          # This allows automatic publishing to update the distribution immediately on package upload.
+          pulp rpm distribution update --name "\${PULP_REPO}" --publication "" --repository "\${PULP_REPO}" --generate-repo-config
           
           echo "Pulp repository setup and GPG configuration complete."
         """
