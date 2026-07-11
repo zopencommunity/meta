@@ -1,9 +1,12 @@
-// Inputs:
 //   BUILD_SELECTOR        : Jenkins build selector XML to copy artifacts from the build job
-//   PROMOTED_JOB_NAME     : Name of the job to copy artifacts from (default: RPM-Build)
+//   PROMOTED_JOB_NAME     : Required name of the job to copy artifacts from
 
 def build_selector    = params.BUILD_SELECTOR       ?: ""
-def promoted_job_name = params.PROMOTED_JOB_NAME     ?: "RPM-Build"
+def promoted_job_name = params.PROMOTED_JOB_NAME
+
+if (!promoted_job_name) {
+  error "Required parameter 'PROMOTED_JOB_NAME' is missing or empty. Please specify the job name to copy artifacts from."
+}
 
 node('linux') {
   try {
