@@ -56,6 +56,7 @@ node('linux')
       // Publish Job: RPM-Publish
       promoteResult = build job: 'RPM-Publish', propagate: false, parameters: [
         string(name: 'BUILD_SELECTOR', value: buildResult.number.toString()),
+        string(name: 'PROMOTED_JOB_NAME', value: 'RPM-Build'),
         string(name: 'PORT_GITHUB_REPO', value: "${repo}"),
         string(name: 'PORT_DESCRIPTION', value: "${description}"),
         string(name: 'BUILD_LINE', value: "STABLE") // Default build line for promotion

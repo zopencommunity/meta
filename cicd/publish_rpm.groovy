@@ -1,9 +1,12 @@
-// Inputs:
 //   BUILD_SELECTOR        : Jenkins build selector XML to copy artifacts from the build job
-//   PROMOTED_JOB_NAME     : Name of the job to copy artifacts from (default: RPM-Build)
+//   PROMOTED_JOB_NAME     : Required name of the job to copy artifacts from
 
 def build_selector    = params.BUILD_SELECTOR       ?: ""
-def promoted_job_name = params.PROMOTED_JOB_NAME     ?: "RPM-Build"
+def promoted_job_name = params.PROMOTED_JOB_NAME
+
+if (!promoted_job_name) {
+  error "Required parameter 'PROMOTED_JOB_NAME' is missing or empty. Please specify the job name to copy artifacts from."
+}
 
 node('linux') {
   try {
@@ -84,14 +87,13 @@ node('linux') {
 
           pulp status || { echo "ERROR: Pulp connection failed"; exit 1; }
 
-          echo "--- Configuring Pulp Pipeline ---"
-          pulp rpm repository update --name "\${PULP_REPO}" --autopublish
-          pulp rpm distribution update --name "\${PULP_REPO}" --repository "\${PULP_REPO}"
-
           echo "Uploading \${NUM_RPMS} RPMs to Pulp repo: \${PULP_REPO}"
           for RPM in "\${RPM_FILES[@]}"; do
             RPM_NAME=\$(basename "\$RPM")
-            for attempt in 1 2 3; do
+            echo "Uploading \$RPM_NAME..."
+            
+            # Retry upload up to 3 times in case of transient network errors
+            for attempt in {1..3}; do
               if pulp rpm content upload --file "\$RPM" --repository "\${PULP_REPO}"; then
                 echo "SUCCESS: \$RPM_NAME"
                 break
@@ -104,6 +106,40 @@ node('linux') {
               fi
             done
           done
+
+          # 3. Create publication with no metadata compression and update the distribution using the REST API directly
+          echo "Generating uncompressed RPM publication..."
+          REPO_HREF=\$(pulp rpm repository show --name "\${PULP_REPO}" | jq -r '.pulp_href')
+          TASK_HREF=\$(curl -L -s -X POST -u "\${PULP_USERNAME}:\${PULP_PASSWORD}" \
+            -H "Content-Type: application/json" \
+            -d "{\\\"repository\\\": \\\"\${REPO_HREF}\\\", \\\"compression_type\\\": \\\"none\\\"}" \
+            "\${PULP_HOST}/pulp/api/v3/publications/rpm/rpm/" | jq -r '.task')
+
+          # Poll the task status until it completes (timeout: 120 seconds)
+          attempt=0
+          max_attempts=60
+          STATE="unknown"
+          while [ "\$attempt" -lt "\$max_attempts" ]; do
+            TASK_STATUS=\$(curl -L -s -u "\${PULP_USERNAME}:\${PULP_PASSWORD}" "\${PULP_HOST}\${TASK_HREF}")
+            STATE=\$(echo "\$TASK_STATUS" | jq -r '.state')
+            if [ "\$STATE" = "completed" ]; then
+              PUB_HREF=\$(echo "\$TASK_STATUS" | jq -r '.created_resources[0]')
+              break
+            elif [ "\$STATE" = "failed" ] || [ "\$STATE" = "canceled" ]; then
+              echo "ERROR: Publication task failed: \$(echo "\$TASK_STATUS" | jq -r '.error.description')"
+              exit 1
+            fi
+            attempt=\$((attempt + 1))
+            sleep 2
+          done
+
+          if [ "\$attempt" -eq "\$max_attempts" ]; then
+            echo "ERROR: Publication task timed out after 120 seconds. Last state: \${STATE}"
+            exit 1
+          fi
+
+          echo "Updating distribution to point to the new uncompressed publication..."
+          pulp rpm distribution update --name "\${PULP_REPO}" --publication "\${PUB_HREF}"
         else
           echo "ERROR: Pulp CLI is not available. Aborting publish run." >&2
           exit 1
