@@ -46,20 +46,40 @@ node('linux') {
 
           # 2. Setup/Bootstrap RPM Repository & Distribution
           echo "--- Setting up RPM Repository & Distribution ---"
-          pulp rpm repository update --name "\${PULP_REPO}" --autopublish || \
-          pulp rpm repository create --name "\${PULP_REPO}" --autopublish
+          pulp rpm repository update --name "\${PULP_REPO}" --no-autopublish || \
+          pulp rpm repository create --name "\${PULP_REPO}" --no-autopublish
 
-          # Re-create distribution to ensure it tracks the repository directly and generates repo config.
-          # This avoids attempting to clear the publication parameter using unsafe empty string overrides.
+          # Generate initial publication (with no compression) using the REST API directly
+          REPO_HREF=\$(pulp rpm repository show --name "\${PULP_REPO}" | jq -r '.pulp_href')
+          TASK_HREF=\$(curl -L -s -X POST -u "\${PULP_USERNAME}:\${PULP_PASSWORD}" \
+            -H "Content-Type: application/json" \
+            -d "{\\\"repository\\\": \\\"\${REPO_HREF}\\\", \\\"compression_type\\\": \\\"none\\\"}" \
+            "\${PULP_HOST}/pulp/api/v3/publications/rpm/rpm/" | jq -r '.task')
+
+          # Poll the task status until it completes
+          while true; do
+            TASK_STATUS=\$(curl -L -s -u "\${PULP_USERNAME}:\${PULP_PASSWORD}" "\${PULP_HOST}\${TASK_HREF}")
+            STATE=\$(echo "\$TASK_STATUS" | jq -r '.state')
+            if [ "\$STATE" = "completed" ]; then
+              PUB_HREF=\$(echo "\$TASK_STATUS" | jq -r '.created_resources[0]')
+              break
+            elif [ "\$STATE" = "failed" ] || [ "\$STATE" = "canceled" ]; then
+              echo "ERROR: Publication task failed: \$(echo "\$TASK_STATUS" | jq -r '.error.description')"
+              exit 1
+            fi
+            sleep 2
+          done
+
+          # Re-create distribution to point to the uncompressed publication and generate repo config
           pulp rpm distribution destroy --name "\${PULP_REPO}" || true
-          pulp rpm distribution create --name "\${PULP_REPO}" --base-path "\${PULP_REPO}" --repository "\${PULP_REPO}" --generate-repo-config
+          pulp rpm distribution create --name "\${PULP_REPO}" --base-path "\${PULP_REPO}" --publication "\${PUB_HREF}" --generate-repo-config
 
           # 3. Configure RPM Repository GPG Settings
           echo "--- Configuring GPG settings on RPM repository ---"
           DESIRED_KEY="\${PULP_HOST}/pulp/content/keys/zopen.pub"
           
           # Configure GPG on the repository
-          pulp rpm repository update --name "\${PULP_REPO}" --repo-config "{\\\"gpgcheck\\\": 1, \\\"gpgkey\\\": \\\"\${DESIRED_KEY}\\\"}" --autopublish
+          pulp rpm repository update --name "\${PULP_REPO}" --repo-config "{\\\"gpgcheck\\\": 1, \\\"gpgkey\\\": \\\"\${DESIRED_KEY}\\\"}" --no-autopublish
           
           echo "Pulp repository setup and GPG configuration complete."
         """
