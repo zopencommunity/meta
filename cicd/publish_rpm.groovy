@@ -115,8 +115,11 @@ node('linux') {
             -d "{\\\"repository\\\": \\\"\${REPO_HREF}\\\", \\\"compression_type\\\": \\\"none\\\"}" \
             "\${PULP_HOST}/pulp/api/v3/publications/rpm/rpm/" | jq -r '.task')
 
-          # Poll the task status until it completes
-          while true; do
+          # Poll the task status until it completes (timeout: 120 seconds)
+          attempt=0
+          max_attempts=60
+          STATE="unknown"
+          while [ "\$attempt" -lt "\$max_attempts" ]; do
             TASK_STATUS=\$(curl -L -s -u "\${PULP_USERNAME}:\${PULP_PASSWORD}" "\${PULP_HOST}\${TASK_HREF}")
             STATE=\$(echo "\$TASK_STATUS" | jq -r '.state')
             if [ "\$STATE" = "completed" ]; then
@@ -126,8 +129,14 @@ node('linux') {
               echo "ERROR: Publication task failed: \$(echo "\$TASK_STATUS" | jq -r '.error.description')"
               exit 1
             fi
+            attempt=\$((attempt + 1))
             sleep 2
           done
+
+          if [ "\$attempt" -eq "\$max_attempts" ]; then
+            echo "ERROR: Publication task timed out after 120 seconds. Last state: \${STATE}"
+            exit 1
+          fi
 
           echo "Updating distribution to point to the new uncompressed publication..."
           pulp rpm distribution update --name "\${PULP_REPO}" --publication "\${PUB_HREF}"
