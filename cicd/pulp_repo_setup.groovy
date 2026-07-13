@@ -1,6 +1,8 @@
 // Setup / Bootstrap script for configuring Pulp Repository GPG keys.
 // Runs on-demand when bootstrap/rotation is required.
 
+def pulp_repo = params.PULP_REPO ?: "zopen"
+
 node('linux') {
   try {
     stage('Pulp Repo Setup') {
@@ -13,7 +15,7 @@ node('linux') {
           set -euo pipefail
           
           PULP_HOST="https://repo.zopen.community"
-          PULP_REPO="zopen"
+          PULP_REPO="${pulp_repo}"
 
           # Verify pulp CLI is installed
           if ! command -v pulp >/dev/null 2>&1; then
@@ -23,15 +25,15 @@ node('linux') {
             fi
           fi
 
-          if command -v pulp >/dev/null 2>&1; then
-            pulp config create --base-url "\${PULP_HOST}" --username "\${PULP_USERNAME}" --password "\${PULP_PASSWORD}" --overwrite
-            pulp status || { echo "ERROR: Pulp connection failed"; exit 1; }
-          else
-            echo "ERROR: Pulp CLI is not available. Aborting setup run." >&2
-            exit 1
-          fi
+          pulp config create \
+            --base-url "\${PULP_HOST}" \
+            --username "\${PULP_USERNAME}" \
+            --password "\${PULP_PASSWORD}" \
+            --overwrite
 
-          # 1. Create/Update GPG Keys File Repo
+          pulp status || { echo "ERROR: Pulp connection failed"; exit 1; }
+
+          # 1. Setup GPG Keys File Repository & Distribution
           echo "--- Setting up Pulp GPG keys file repository ---"
           pulp file repository update --name "keys" --autopublish || \
           pulp file repository create --name "keys" --autopublish
@@ -39,15 +41,18 @@ node('linux') {
           pulp file distribution update --name "keys" --repository "keys" || \
           pulp file distribution create --name "keys" --base-path "keys" --repository "keys"
 
-          pulp file content upload --relative-path "zopen.pub" --file "\${ZOPEN_GPG_PUBLIC_KEY_FILE}" --repository "keys"
+          # Upload GPG public key
+          pulp file content upload --file "\${ZOPEN_GPG_PUBLIC_KEY_FILE}" --repository "keys" --relative-path "zopen.pub"
 
           # 2. Setup/Bootstrap RPM Repository & Distribution
           echo "--- Setting up RPM Repository & Distribution ---"
           pulp rpm repository update --name "\${PULP_REPO}" --autopublish || \
           pulp rpm repository create --name "\${PULP_REPO}" --autopublish
 
-          pulp rpm distribution update --name "\${PULP_REPO}" --repository "\${PULP_REPO}" || \
-          pulp rpm distribution create --name "\${PULP_REPO}" --base-path "\${PULP_REPO}" --repository "\${PULP_REPO}"
+          # Re-create distribution to ensure it tracks the repository directly and generates repo config.
+          # This avoids attempting to clear the publication parameter using unsafe empty string overrides.
+          pulp rpm distribution destroy --name "\${PULP_REPO}" || true
+          pulp rpm distribution create --name "\${PULP_REPO}" --base-path "\${PULP_REPO}" --repository "\${PULP_REPO}" --generate-repo-config
 
           # 3. Configure RPM Repository GPG Settings
           echo "--- Configuring GPG settings on RPM repository ---"
@@ -55,10 +60,6 @@ node('linux') {
           
           # Configure GPG on the repository
           pulp rpm repository update --name "\${PULP_REPO}" --repo-config "{\\\"gpgcheck\\\": 1, \\\"gpgkey\\\": \\\"\${DESIRED_KEY}\\\"}" --autopublish
-
-          # Update the distribution to track the repository directly and enable repo-config generation
-          # This allows automatic publishing to update the distribution immediately on package upload.
-          pulp rpm distribution update --name "\${PULP_REPO}" --publication "" --repository "\${PULP_REPO}" --generate-repo-config
           
           echo "Pulp repository setup and GPG configuration complete."
         """

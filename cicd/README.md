@@ -75,7 +75,7 @@ This directory contains the Jenkins Pipeline scripts (Groovy) used to orchestrat
 ### 3. Pulp Repo Setup Pipeline (`pulp_repo_setup.groovy`)
 * **Purpose**: An administrative setup pipeline to bootstrap the Pulp repository, distribution, GPG key hosting, and client `.repo` configuration. This is typically run **once** or during maintenance.
 * **Flow**:
-  1. **GPG Key Hosting**: Configures a Pulp file repository (`keys`) distributed at `/keys/` to host the public key `zopen.pub`.
+  1. **GPG Key Hosting**: Configures a Pulp file repository (`keys`) distributed at the API/client-facing path `/pulp/content/keys/` to host the public key `zopen.pub`.
   2. **RPM Repo Setup**: Bootstraps the RPM repository and base-path distribution (`zopen`).
   3. **GPG Config**: Configures the repository signature verification parameters (`gpgcheck: 1`) and automatically generates the `.repo` client configuration file.
 * **Key Parameters**:
