@@ -20,6 +20,7 @@ def port_source_url  = params.PORT_SOURCE_URL  ?: ""
 def build_line       = params.BUILD_LINE       ?: ""
 def force_clang      = params.FORCE_CLANG != null ? params.FORCE_CLANG : false
 def generate_pax_rpm = params.GENERATE_PAX_RPM != null ? params.GENERATE_PAX_RPM : true
+def skip_test        = params.SKIP_TEST != null ? params.SKIP_TEST : false
 def node_label       = params.node ?: (params.NODE_LABEL ?: "zos")
 
 node(node_label) {
@@ -51,6 +52,8 @@ node(node_label) {
       paxRpmOptions = ""
     }
 
+    def testOption = skip_test ? "-sc" : ""
+
     deleteDir()
 
     def gpgBindings = [
@@ -69,7 +72,8 @@ node(node_label) {
           "META_BRANCH=${scmBranch}",
           "PORT_SOURCE_URL=${port_source_url}",
           "EXTRA_OPTIONS=${extraOptions}",
-          "PAX_RPM_OPTIONS=${paxRpmOptions}"
+          "PAX_RPM_OPTIONS=${paxRpmOptions}",
+          "TEST_OPTION=${testOption}"
         ]) {
           sh '''bash -e -s << \'BASH\'
             set +e
@@ -101,7 +105,7 @@ node(node_label) {
             cd "${PORT_NAME}"
 
             # Run build using the workspace version of zopen-build to test PR changes
-            zopen-build -v -b release -u ${PAX_RPM_OPTIONS} --no-set-active ${EXTRA_OPTIONS}
+            zopen-build -v -b release -u ${TEST_OPTION} ${PAX_RPM_OPTIONS} --no-set-active ${EXTRA_OPTIONS}
 
             # Clean using the workspace version of zopen-clean
             zopen-clean -c -v

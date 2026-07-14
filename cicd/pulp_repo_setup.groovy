@@ -14,7 +14,7 @@ node('linux') {
         sh """#!/bin/bash
           set -euo pipefail
           
-          PULP_HOST="https://repo.zopen.community"
+          PULP_HOST="http://163.74.83.190:8080"
           PULP_REPO="${pulp_repo}"
 
           # Verify pulp CLI is installed
