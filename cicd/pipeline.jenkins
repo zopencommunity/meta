@@ -31,8 +31,9 @@ node('linux')
     buildResult = build job: 'Port-Build', propagate: false, parameters: [string(name: 'PORT_GITHUB_REPO', value: "${repo}"),
                    string(name: 'PORT_BRANCH', value: "${branch}"),
                    string(name: 'node', value: "${node_label}"),
-                   booleanParam(name: 'FORCE_CLANG', value: params.FORCE_CLANG),
+                   booleanParam(name: 'FORCE_CLANG', value: params.FORCE_CLANG != null ? params.FORCE_CLANG : false),
                    booleanParam(name: 'GENERATE_PAX_RPM', value: true),
+                   booleanParam(name: 'SKIP_TEST', value: params.SKIP_TEST != null ? params.SKIP_TEST : false),
                    string(name: 'BUILD_LINE', value: "${build_line}"),
                    ]
     def result = buildResult.getResult()
@@ -54,7 +55,7 @@ node('linux')
   parallel(
     'Publish Port & Update API': {
       stage('Port-Publish') {
-        if(!params.NO_PROMOTE) {
+        if(!params.NO_PROMOTE && !(params.SKIP_PORT_PUBLISH != null ? params.SKIP_PORT_PUBLISH : false)) {
           // Publish Job : https://128.168.139.253:8443/view/Framework/job/Port-Publish/
           promoteResult = build job: 'Port-Publish', propagate: false, parameters:
              [string(name: 'BUILD_SELECTOR', value: "<SpecificBuildSelector plugin=\"copyartifact@1.46.2\">  <buildNumber>${buildResult.number.toString()}</buildNumber></SpecificBuildSelector>"),
@@ -70,7 +71,7 @@ node('linux')
       }
 
       stage('UpdateReleaseAPIs') {
-        if(!params.NO_PROMOTE) {
+        if(!params.NO_PROMOTE && !(params.SKIP_PORT_PUBLISH != null ? params.SKIP_PORT_PUBLISH : false)) {
           updateDocsResult = build job: 'Port-Update-Release', propagate: false, wait: true, parameters: []
           def updateResult = updateDocsResult.getResult()
           if(updateResult != "SUCCESS"){
@@ -81,7 +82,7 @@ node('linux')
     },
     'Publish RPM': {
       stage('RPM-Publish') {
-        if(!params.NO_PROMOTE) {
+        if(!params.NO_PROMOTE && !(params.SKIP_RPM_PUBLISH != null ? params.SKIP_RPM_PUBLISH : false)) {
           // RPM Publish Job: RPM-Publish
           def rpmPromoteResult = build job: 'RPM-Publish', propagate: false, parameters:
              [string(name: 'BUILD_SELECTOR', value: "<SpecificBuildSelector plugin=\"copyartifact@1.46.2\">  <buildNumber>${buildResult.number.toString()}</buildNumber></SpecificBuildSelector>"),

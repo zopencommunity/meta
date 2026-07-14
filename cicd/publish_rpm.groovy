@@ -67,7 +67,7 @@ node('linux') {
         done < <(find rpms/ -name "*.rpm" ! -name "*.src.rpm" -type f -print0 2>/dev/null)
 
         NUM_RPMS=\${#RPM_FILES[@]}
-        PULP_HOST="https://repo.zopen.community"
+        PULP_HOST="http://163.74.83.190:8080"
         PULP_REPO="zopen"
 
         # Verify pulp CLI is installed
