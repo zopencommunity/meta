@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2026-07-15T14:58:36+00:00Z",
+  "generation_timestamp_utc": "2026-07-16T02:57:52+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -321,6 +321,8 @@
     "confluent-kafka": "zopen port of confluent-kafka",
     "duckdb-python": "zopen port of duckdb-python",
     "gdu": "zopen port of gdu - fast disk usage analyzer written in Go",
-    "bazel": ""
+    "bazel": "",
+    "fd": "zopen port of fd - a simple, fast and user-friendly alternative to find",
+    "ripgrep": "zopen port of ripgrep - recursively search directories for a regex pattern"
   }
 }
