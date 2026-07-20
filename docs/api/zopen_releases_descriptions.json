@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2026-07-20T05:27:09+00:00Z",
+  "generation_timestamp_utc": "2026-07-20T21:59:05+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -323,6 +323,7 @@
     "gdu": "zopen port of gdu - fast disk usage analyzer written in Go",
     "bazel": "",
     "fd": "zopen port of fd - a simple, fast and user-friendly alternative to find",
-    "ripgrep": "zopen port of ripgrep - recursively search directories for a regex pattern"
+    "ripgrep": "zopen port of ripgrep - recursively search directories for a regex pattern",
+    "bat": "bat port for z/OS (zopen community)"
   }
 }
