@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2026-07-22T12:53:13+00:00Z",
+  "generation_timestamp_utc": "2026-07-23T13:58:48+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -324,6 +324,7 @@
     "bazel": "",
     "fd": "zopen port of fd - a simple, fast and user-friendly alternative to find",
     "ripgrep": "zopen port of ripgrep - recursively search directories for a regex pattern",
-    "bat": "bat port for z/OS (zopen community)"
+    "bat": "bat port for z/OS (zopen community)",
+    "rocksdb": ""
   }
 }
