@@ -775,6 +775,10 @@ createCICD() {
   buildline=$1; touch "${name}port/cicd-${buildline}.groovy" && chtag -tc 819 "${name}port/cicd-${buildline}.groovy"
   buildlineUpper=$(echo "${buildline}" | awk '{print toupper($0)}')
   _groovy_description=$(echo "$description" | sed "s/'/\"/g")
+  publish_python_wheel=false
+  if [ "${build_system}" = "Python" ]; then
+    publish_python_wheel=true
+  fi
   cat << EOT > "${name}port/cicd-${buildline}.groovy"
 node('linux') {
   stage ('Poll') {
@@ -786,7 +790,8 @@ node('linux') {
     build job: 'Port-Pipeline', parameters: [
       string(name: 'PORT_GITHUB_REPO', value: 'https://github.com/zopencommunity/${name}port.git'),
       string(name: 'PORT_DESCRIPTION', value: '${_groovy_description}'),
-      string(name: 'BUILD_LINE', value: '${buildlineUpper}')
+      string(name: 'BUILD_LINE', value: '${buildlineUpper}'),
+      booleanParam(name: 'PUBLISH_PYTHON_WHEEL', value: ${publish_python_wheel})
     ]
   }
 }
