@@ -1,6 +1,6 @@
 # Jenkins CI/CD Pipelines
 
-This directory contains the Jenkins Pipeline scripts (Groovy) used to orchestrate the build, packaging, testing, and publication of both **Port packages** (pax.Z format) and **RPM packages** in the zopencommunity environment.
+This directory contains the Jenkins Pipeline scripts (Groovy) used to orchestrate the build, packaging, testing, and publication of **Port packages** (pax.Z format), **RPM packages**, and opt-in **Python wheels** in the zopencommunity environment.
 
 ---
 
@@ -14,23 +14,26 @@ This directory contains the Jenkins Pipeline scripts (Groovy) used to orchestrat
      - **Port-Publish**: Publishes the `.pax.Z` packages as a GitHub release on the port's repository.
      - **UpdateReleaseAPIs**: Updates the release metadata API definitions.
      - **RPM-Publish**: Triggers `RPM-Publish` to upload generated RPMs to Pulp.
+     - **Python-Publish**: For generated Python ports, uploads wheel artifacts to the zopen Pulp Python index.
 * **Key Parameters**:
   * `PORT_GITHUB_REPO`: Upstream GitHub repository URL of the port (e.g. `makeport`).
   * `PORT_BRANCH`: Git branch to build (default: `main`).
   * `BUILD_LINE`: Release line to build against (default: `stable`).
   * `NO_PROMOTE`: Boolean flag to skip the package publication step.
+  * `PUBLISH_PYTHON_WHEEL`: Enables wheel staging and publication. `zopen-generate` sets this for Python build-system ports.
 
 ### 2. Port Build Pipeline (`build.groovy`)
 * **Purpose**: Compiles, builds, and runs test suites for the target port project on the z/OS host machine.
 * **Flow**:
   1. **Build Project**: Clones the port repository and runs `zopen-build` to compile the port.
-  2. **Artifact Packaging**: Generates both `.pax.Z` and `.rpm` files and signs them using GPG keys.
+  2. **Artifact Packaging**: Generates `.pax.Z` and `.rpm` files and, for Python ports, stages preserved wheels under `wheels/`.
   3. **Archive**: Archives build artifacts (metadata, packages, logs) inside Jenkins.
 * **Key Parameters**:
   * `PORT_GITHUB_REPO`: Upstream GitHub repository URL of the port.
   * `PORT_BRANCH`: Git branch to build (default: `main`).
   * `FORCE_CLANG`: Enforces compiling the project with Clang rather than `xlclang`.
   * `GENERATE_PAX_RPM`: Boolean flag to enable/disable package generation.
+  * `PUBLISH_PYTHON_WHEEL`: Requires and archives wheels produced by the native Python build path.
 
 ### 3. Port Publish Pipeline (`publish.groovy`)
 * **Purpose**: Takes `.pax.Z` build artifacts and publishes them to public GitHub releases.
@@ -80,3 +83,24 @@ This directory contains the Jenkins Pipeline scripts (Groovy) used to orchestrat
   3. **GPG Config**: Configures the repository signature verification parameters (`gpgcheck: 1`) and automatically generates the `.repo` client configuration file.
 * **Key Parameters**:
   * `PULP_REPO`: Name of the target RPM repository (default: `zopen`).
+
+---
+
+## Python Wheel Pipeline
+
+### Python Publish Pipeline (`publish_python.groovy`)
+
+* **Purpose**: Fetches wheels from an opted-in `Port-Build`, publishes them to the `wheels` Pulp Python repository, and verifies the public index.
+* **Flow**:
+  1. Copies `wheels/**/*.whl` from the selected `Port-Build`.
+  2. Publishes every wheel through `https://repo.zopen.community/pypi/wheels/legacy/`.
+  3. Installs pure Python wheels from the public simple index in a clean virtual environment.
+  4. For platform-specific wheels, verifies that the exact filename is present in the public package index; installation must be tested on a compatible node.
+  5. Treats an existing filename with the same SHA-256 as a successful retry and rejects the same filename with different content.
+* **Key Parameters**:
+  * `PROMOTED_JOB_NAME`: Required source build job, normally `Port-Build`.
+  * `BUILD_SELECTOR`: Build number or Copy Artifact selector.
+  * `PULP_URL`: Optional upload endpoint override.
+  * `PULP_USER_CREDENTIAL` and `PULP_PASSWORD_CREDENTIAL`: Optional Jenkins credential ID overrides.
+
+Selecting `Python` as the build system in `zopen-generate` writes `PUBLISH_PYTHON_WHEEL=true` into `cicd-stable.groovy`. Development and non-Python CI/CD files use `false`, so they still build and test normally without publishing into the public wheel index.
