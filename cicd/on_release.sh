@@ -25,8 +25,14 @@ echo "=== Updating Release Metadata and Package Catalogs ==="
 
 mkdir -p docs/api
 
+TARGET_REPO="${1:-${PORT_GITHUB_REPO:-}}"
+EXTRA_CACHE_ARGS=()
+if [ -n "${TARGET_REPO}" ]; then
+  EXTRA_CACHE_ARGS+=(--repo "${TARGET_REPO}")
+fi
+
 # 1. Generate release cache (zopen_releases.json, _latest.json, _descriptions.json)
-python3 tools/create_release_cache.py --verbose --output-file docs/api/zopen_releases.json
+python3 tools/create_release_cache.py --verbose --output-file docs/api/zopen_releases.json "${EXTRA_CACHE_ARGS[@]}"
 
 # Generate sha256 checksum for lightweight cache invalidation
 if command -v sha256sum >/dev/null 2>&1; then
