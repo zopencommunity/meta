@@ -8,7 +8,11 @@ git clone git@github.com:zopencommunity/meta.git meta_update
 cd meta_update
 
 # Generate Release cache
-python3 tools/create_release_cache.py --verbose --output-file docs/api/zopen_releases.json
+REPO_ARG=""
+if [ -n "${1:-}" ]; then
+  REPO_ARG="--repo $1"
+fi
+python3 tools/create_release_cache.py --verbose --output-file docs/api/zopen_releases.json $REPO_ARG
 
 # Generate a view of the newly released tools
 python3 tools/create_latest_release_doc.py --output docs/newly_released.md
