@@ -72,7 +72,9 @@ node('linux')
 
       stage('UpdateReleaseAPIs') {
         if(!params.NO_PROMOTE && !(params.SKIP_PORT_PUBLISH != null ? params.SKIP_PORT_PUBLISH : false)) {
-          updateDocsResult = build job: 'Port-Update-Release', propagate: false, wait: true, parameters: []
+          updateDocsResult = build job: 'Port-Update-Release', propagate: false, wait: true, parameters: [
+            string(name: 'PORT_GITHUB_REPO', value: "${repo}")
+          ]
           def updateResult = updateDocsResult.getResult()
           if(updateResult != "SUCCESS"){
             handleError("UpdateReleaseAPIs stage failed. View details in ${updateDocsResult.absoluteUrl}", repo, getLogFromRunWrapper(updateDocsResult, 50));
