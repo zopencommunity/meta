@@ -103,4 +103,4 @@ This directory contains the Jenkins Pipeline scripts (Groovy) used to orchestrat
   * `PULP_URL`: Optional upload endpoint override.
   * `PULP_USER_CREDENTIAL` and `PULP_PASSWORD_CREDENTIAL`: Optional Jenkins credential ID overrides.
 
-Selecting `Python` as the build system in `zopen-generate` writes `PUBLISH_PYTHON_WHEEL=true` into `cicd-stable.groovy`. Development and non-Python CI/CD files use `false`, so they still build and test normally without publishing into the public wheel index.
+Selecting `Python` as the build system in `zopen-generate` writes `PUBLISH_PYTHON_WHEEL=true` into both `cicd-stable.groovy` and `cicd-dev.groovy`. Non-Python CI/CD files use `false`, so C and C++ ports continue through their existing publication paths without publishing into the Python wheel index.

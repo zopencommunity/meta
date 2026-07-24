@@ -776,7 +776,7 @@ createCICD() {
   buildlineUpper=$(echo "${buildline}" | awk '{print toupper($0)}')
   _groovy_description=$(echo "$description" | sed "s/'/\"/g")
   publish_python_wheel=false
-  if [ "${build_system}" = "Python" ] && [ "${buildline}" = "stable" ]; then
+  if [ "${build_system}" = "Python" ]; then
     publish_python_wheel=true
   fi
   cat << EOT > "${name}port/cicd-${buildline}.groovy"
