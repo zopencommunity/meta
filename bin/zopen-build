@@ -2640,6 +2640,9 @@ resolveCommands()
     else
       ZOPEN_NAME="${sourcedir}"
     fi
+    if [ -z "${ZOPEN_PROJECT_NAME}" ]; then
+      export ZOPEN_PROJECT_NAME="${ZOPEN_NAME}"
+    fi
     if [ "${ZOPEN_TYPE}x" = "GITx" ] || [ "${ZOPEN_TYPE}x" = "LOCALx" ]; then
       tag_name=$(git describe --tags --exact-match HEAD 2>/dev/null)
 
