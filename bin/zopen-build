@@ -377,6 +377,21 @@ _zopen_python_interpreter_path() {
     return 1
   fi
 
+  # An explicitly located runtime wins. check_python exports one of these per
+  # installed Python, because each version lives under its own prefix and only
+  # the primary ends up on PATH -- so a PATH lookup alone cannot find the rest.
+  _pi_var="ZOPEN_PYTHON_$(echo "$1" | tr '.' '_')"
+  # Stay silent on failure: this echoes the resolved path, so any diagnostic
+  # written here would be captured as if it were one. The caller reports.
+  _pi_path=$(eval "printf '%s' \"\${${_pi_var}:-}\"")
+  if [ -n "${_pi_path}" ]; then
+    if [ -x "${_pi_path}" ]; then
+      echo "${_pi_path}"
+      return 0
+    fi
+    return 1
+  fi
+
   _pi_path=$(command -v "python$1" 2> /dev/null)
   if [ -n "${_pi_path}" ]; then
     echo "${_pi_path}"
@@ -407,7 +422,15 @@ _zopen_python_verify_interpreters() {
   for _pv in $(_zopen_python_versions); do
     _pv_path=$(_zopen_python_interpreter_path "${_pv}")
     if [ -z "${_pv_path}" ]; then
-      _py_missing="${_py_missing} ${_pv}"
+      # Distinguish "nowhere to be found" from "you pointed us at something
+      # unusable", which is a different thing to go and fix.
+      _pv_var="ZOPEN_PYTHON_$(echo "${_pv}" | tr '.' '_')"
+      _pv_hint=$(eval "printf '%s' \"\${${_pv_var}:-}\"")
+      if [ -n "${_pv_hint}" ]; then
+        _py_missing="${_py_missing} ${_pv}(${_pv_var}=${_pv_hint} is not executable)"
+      else
+        _py_missing="${_py_missing} ${_pv}"
+      fi
       continue
     fi
 
