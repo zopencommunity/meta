@@ -978,15 +978,14 @@ waitForPulpWheelPublished() {
   return 1
 }
 
-# Uploading a wheel only adds it to the repository. It becomes visible on the
-# simple index when that repository version is published, which this script no
-# longer triggers explicitly -- it relies on the repository having autopublish
-# enabled and the distribution being bound to the repository rather than to a
-# pinned publication. That is server-side configuration this repository cannot
-# assert, and if it is wrong the failure is silent and confusing: uploads keep
-# succeeding, nothing ever appears on the index, and every retry re-uploads
-# because the idempotency check reads that same index. Confirm visibility here
-# so the misconfiguration surfaces immediately, at the point it can be fixed.
+# The /pypi/<base_path>/ endpoints are pulp_python's live API: the simple index
+# is generated on demand from the distribution's bound repository, so no
+# publication step is involved and autopublish is irrelevant. What the live API
+# does require is that the distribution be bound to the repository at all -- a
+# distribution pinned to a fixed publication, or pointed at a different repo,
+# will keep accepting uploads while never serving them. That failure is silent
+# and self-reinforcing, because the idempotency check reads the same index and
+# so re-uploads every time. Confirm visibility here to surface it immediately.
 confirmPulpWheelVisible() {
   confirm_upload_url="$1"
   confirm_wheel_filename="$2"
@@ -1009,8 +1008,8 @@ confirmPulpWheelVisible() {
       ;;
     1)
       printSoftError "Wheel ${confirm_wheel_filename} uploaded successfully but never appeared on the simple index."
-      printSoftError "The Pulp Python repository most likely does not have autopublish enabled,"
-      printSoftError "or its distribution points at a pinned publication instead of the repository."
+      printSoftError "Check that the Pulp Python distribution for this base path is bound to a"
+      printSoftError "repository (repository=...) rather than to a pinned publication."
       return 1
       ;;
     *)

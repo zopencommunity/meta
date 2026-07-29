@@ -121,9 +121,18 @@ Selecting `Python` as the build system in `zopen-generate` writes `PUBLISH_PYTHO
 
 #### Required Pulp configuration
 
-Both repositories must be configured so that uploaded content reaches the simple index without an explicit publication step:
+The `/pypi/<base_path>/` endpoints used here are `pulp_python`'s **live API**: the simple index is generated on demand from the distribution's bound repository. No publication is involved, and `autopublish` is irrelevant to them — both `wheels` and `wheels-dev` run with `autopublish=false`. This is why the pipeline does not create publications, unlike the RPM path in `pulp_repo_setup.groovy`.
 
-* `autopublish` enabled on the repository, **and** the distribution bound to the repository (`repository=`) rather than to a pinned publication.
-* The simple index anonymously readable — `Public Index Verification` deliberately runs without credentials, because it checks what an end user actually sees.
+What the live API does require:
 
-If autopublish is not enabled, uploads still succeed but nothing ever appears on the index; since the retry check reads that same index, every rebuild re-uploads. `zopen-publish` confirms each wheel on the index after publishing and fails with a pointer to this configuration rather than letting that state pass silently.
+* The distribution must be bound to its repository (`repository=…`, `publication=null`). A distribution pinned to a fixed publication keeps accepting uploads while never serving them.
+* The simple index must be anonymously readable — `Public Index Verification` deliberately runs without credentials, because it checks what an end user actually sees.
+
+`zopen-publish` confirms each wheel on the index after publishing, so a distribution wired to the wrong target fails loudly instead of silently re-uploading on every build.
+
+Current state, both created and verified against `https://repo.zopen.community`:
+
+| Repository | `autopublish` | Distribution | Bound to |
+| --- | --- | --- | --- |
+| `wheels` | `false` | base_path `wheels` | repository |
+| `wheels-dev` | `false` | base_path `wheels-dev` | repository |
