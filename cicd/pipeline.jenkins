@@ -5,6 +5,7 @@
 //   BUILD_LINE: dev or stable line to build against (default: stable)
 //   FORCE_CLANG : Boolean to enforce building with Clang vs xlclang
 //   GENERATE_PAX_RPM : Boolean to generate pax/RPM artifacts (default: true)
+//   PUBLISH_PYTHON_WHEEL : Boolean to publish wheels produced by Python ports
 //   NO_PROMOTE : Boolean, if true, avoid promotion
 //   NODE_LABEL : A label for the node to build on, default is "zos"
 import org.jenkinsci.plugins.workflow.support.steps.build.RunWrapper
@@ -19,6 +20,7 @@ def branch = params.get("PORT_BRANCH")
 def description = params.get("PORT_DESCRIPTION")
 def build_line = params.get("BUILD_LINE")  // DEV or STABLE
 def node_label = params.get("NODE_LABEL")  
+def publish_python_wheel = params.PUBLISH_PYTHON_WHEEL != null ? params.PUBLISH_PYTHON_WHEEL : false
 
 RunWrapper buildResult;
 RunWrapper promoteResult;
@@ -33,6 +35,7 @@ node('linux')
                    string(name: 'node', value: "${node_label}"),
                    booleanParam(name: 'FORCE_CLANG', value: params.FORCE_CLANG != null ? params.FORCE_CLANG : false),
                    booleanParam(name: 'GENERATE_PAX_RPM', value: true),
+                   booleanParam(name: 'PUBLISH_PYTHON_WHEEL', value: publish_python_wheel),
                    booleanParam(name: 'SKIP_TEST', value: params.SKIP_TEST != null ? params.SKIP_TEST : false),
                    string(name: 'BUILD_LINE', value: "${build_line}"),
                    ]
@@ -91,6 +94,21 @@ node('linux')
           def rpmResult = rpmPromoteResult.getResult()
           if(rpmResult != "SUCCESS"){
             handleError("RPM Promote stage failed. View details in ${rpmPromoteResult.absoluteUrl}", repo, getLogFromRunWrapper(rpmPromoteResult, 50));
+          }
+        }
+      }
+    },
+    'Publish Python': {
+      stage('Python-Publish') {
+        if(!params.NO_PROMOTE && publish_python_wheel &&
+           !(params.SKIP_PYTHON_PUBLISH != null ? params.SKIP_PYTHON_PUBLISH : false)) {
+          def pythonPromoteResult = build job: 'Python-Publish', propagate: false, parameters:
+             [string(name: 'BUILD_SELECTOR', value: "<SpecificBuildSelector plugin=\"copyartifact@1.46.2\">  <buildNumber>${buildResult.number.toString()}</buildNumber></SpecificBuildSelector>"),
+              string(name: 'PROMOTED_JOB_NAME', value: 'Port-Build')
+             ]
+          def pythonResult = pythonPromoteResult.getResult()
+          if(pythonResult != "SUCCESS"){
+            handleError("Python wheel publish stage failed. View details in ${pythonPromoteResult.absoluteUrl}", repo, getLogFromRunWrapper(pythonPromoteResult, 50));
           }
         }
       }

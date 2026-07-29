@@ -9,9 +9,11 @@
 //   - BUILD_LINE: dev or stable
 //   - FORCE_CLANG : Build using clang
 //   - GENERATE_PAX_RPM : (default: true) Generate pax and RPM packages. Set to false to skip -gr -sp options
+//   - PUBLISH_PYTHON_WHEEL : Stage Python wheels produced by zopen-build for publication
 //   - NODE_LABEL: Label of the Jenkins node to run on (default: zos)
 // Output:
 //   - pax.Z artifact is published as a Jenkins artifact
+//   - Python wheels are staged under wheels/ when PUBLISH_PYTHON_WHEEL is true
 //   - package is copied to /jenkins/build on z/OS zot system
 
 def port_github_repo = params.PORT_GITHUB_REPO ?: ""
@@ -20,6 +22,7 @@ def port_source_url  = params.PORT_SOURCE_URL  ?: ""
 def build_line       = params.BUILD_LINE       ?: ""
 def force_clang      = params.FORCE_CLANG != null ? params.FORCE_CLANG : false
 def generate_pax_rpm = params.GENERATE_PAX_RPM != null ? params.GENERATE_PAX_RPM : true
+def publish_python_wheel = params.PUBLISH_PYTHON_WHEEL != null ? params.PUBLISH_PYTHON_WHEEL : false
 def skip_test        = params.SKIP_TEST != null ? params.SKIP_TEST : false
 def node_label       = params.node ?: (params.NODE_LABEL ?: "zos")
 
@@ -73,6 +76,7 @@ node(node_label) {
           "PORT_SOURCE_URL=${port_source_url}",
           "EXTRA_OPTIONS=${extraOptions}",
           "PAX_RPM_OPTIONS=${paxRpmOptions}",
+          "PUBLISH_PYTHON_WHEEL=${publish_python_wheel}",
           "TEST_OPTION=${testOption}"
         ]) {
           sh '''bash -e -s << \'BASH\'
@@ -107,6 +111,24 @@ node(node_label) {
             # Run build using the workspace version of zopen-build to test PR changes
             zopen-build -v -b release -u ${TEST_OPTION} ${PAX_RPM_OPTIONS} --no-set-active ${EXTRA_OPTIONS}
 
+            # Python builds preserve their wheel under install/**/dist. Stage
+            # the final artifact separately so the publisher does not need to
+            # know anything about the port's source layout.
+            if [ "${PUBLISH_PYTHON_WHEEL}" = "true" ]; then
+              mkdir -p "${WORKSPACE}/wheels"
+              wheel_count=0
+              while IFS= read -r wheel; do
+                cp "$wheel" "${WORKSPACE}/wheels/"
+                wheel_count=$((wheel_count + 1))
+              done < <(find install -type f -name '*.whl' 2>/dev/null)
+
+              if [ "$wheel_count" -eq 0 ]; then
+                echo "ERROR: PUBLISH_PYTHON_WHEEL is enabled, but zopen-build produced no wheel under install/." >&2
+                exit 1
+              fi
+              echo "Staged ${wheel_count} Python wheel(s) for publication."
+            fi
+
             # Clean using the workspace version of zopen-clean
             zopen-clean -c -v
 
@@ -120,7 +142,7 @@ BASH'''
       }
     } finally {
       try {
-        archiveArtifacts artifacts: '**/*.pax.Z,**/*.pax.Z.asc,**/*.rpm,**/metadata.json,**/*_config.log,**/*_build.log,**/*_check.log,**/*_install.log, **/test.status, **/*_check_failures.log, **/.builddeps, **/.version, **/.runtimedeps',
+        archiveArtifacts artifacts: '**/*.pax.Z,**/*.pax.Z.asc,**/*.rpm,wheels/**/*.whl,**/metadata.json,**/*_config.log,**/*_build.log,**/*_check.log,**/*_install.log, **/test.status, **/*_check_failures.log, **/.builddeps, **/.version, **/.runtimedeps',
                          allowEmptyArchive: true,
                          fingerprint: true
       } finally {

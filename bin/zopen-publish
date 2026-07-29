@@ -62,7 +62,7 @@ printSyntax()
   echo ""
   echo "Examples:"
   echo "  zopen-publish -f -p install/mypackage.zos.pax.Z -m metadata.json -g DEV_mypackage_12345 -t <token>"
-  echo "  zopen-publish --whl dist/mypackage-1.0-py3-none-any.whl --pulp-url https://host/pulp/content/zopen/simple/"
+  echo "  zopen-publish --whl dist/mypackage-1.0-py3-none-any.whl --pulp-url https://repo.zopen.community/pypi/wheels/legacy/"
   echo "  zopen-publish -f -p install/mypackage.zos.pax.Z -m metadata.json -g TAG -t <token> --pulp"
 }
 
@@ -751,9 +751,9 @@ import email
 import hashlib
 import io
 import pathlib
+import re
 import shlex
 import sys
-import tempfile
 import zipfile
 
 src = pathlib.Path(sys.argv[1])
@@ -792,46 +792,54 @@ except Exception:
 if (major, minor) > (2, 3):
     upload_metadata_version = '2.1'
     upload_whl = compat_dir / src.name
-    with tempfile.TemporaryDirectory() as td_s:
-        td = pathlib.Path(td_s)
-        with zipfile.ZipFile(src) as zf:
-            zf.extractall(td)
+    with zipfile.ZipFile(src) as source:
+        source_infos = source.infolist()
+        files = {
+            info.filename: source.read(info.filename)
+            for info in source_infos
+            if not info.is_dir()
+        }
 
-        dist_info_dirs = list(td.glob('*.dist-info'))
-        if not dist_info_dirs:
-            raise SystemExit('Wheel does not contain a .dist-info directory')
-        dist_info = dist_info_dirs[0]
-        metadata_path = dist_info / 'METADATA'
-        text = metadata_path.read_text()
-        text = text.replace(f'Metadata-Version: {metadata_version}\n',
-                            f'Metadata-Version: {upload_metadata_version}\n', 1)
-        metadata_path.write_text(text)
+    record_name = metadata_name.rsplit('/', 1)[0] + '/RECORD'
+    if record_name not in files:
+        raise SystemExit('Wheel does not contain a .dist-info/RECORD file')
 
-        record_path = dist_info / 'RECORD'
-        rows = []
-        for path in sorted(p for p in td.rglob('*') if p.is_file()):
-            rel = path.relative_to(td).as_posix()
-            if rel.endswith('/RECORD'):
-                rows.append([rel, '', ''])
+    files[metadata_name] = metadata_text.replace(
+        f'Metadata-Version: {metadata_version}\n',
+        f'Metadata-Version: {upload_metadata_version}\n',
+        1,
+    ).encode('utf-8')
+
+    rows = []
+    for filename in sorted(files):
+        if filename == record_name:
+            rows.append([filename, '', ''])
+        else:
+            data = files[filename]
+            digest = base64.urlsafe_b64encode(hashlib.sha256(data).digest()).decode().rstrip('=')
+            rows.append([filename, 'sha256=' + digest, str(len(data))])
+    record = io.StringIO(newline='')
+    csv.writer(record).writerows(rows)
+    files[record_name] = record.getvalue().encode('utf-8')
+
+    # Preserve each original ZipInfo, including timestamps and compression,
+    # so a retry creates a byte-for-byte identical compatibility wheel.
+    with zipfile.ZipFile(upload_whl, 'w') as target:
+        for info in source_infos:
+            if info.is_dir():
+                target.writestr(info, b'')
             else:
-                data = path.read_bytes()
-                digest = base64.urlsafe_b64encode(hashlib.sha256(data).digest()).decode().rstrip('=')
-                rows.append([rel, 'sha256=' + digest, str(len(data))])
-        out = io.StringIO(newline='')
-        csv.writer(out).writerows(rows)
-        record_path.write_text(out.getvalue())
-
-        with zipfile.ZipFile(upload_whl, 'w', zipfile.ZIP_DEFLATED) as zf:
-            for path in sorted(p for p in td.rglob('*') if p.is_file()):
-                zf.write(path, path.relative_to(td).as_posix())
+                target.writestr(info, files[info.filename])
 
 sha256 = hashlib.sha256(upload_whl.read_bytes()).hexdigest()
+normalized_name = re.sub(r'[-_.]+', '-', name).lower()
 
 values = {
     'PULP_UPLOAD_WHL': str(upload_whl),
     'PULP_WHL_SHA256': sha256,
     'PULP_WHL_METADATA_VERSION': upload_metadata_version,
     'PULP_WHL_NAME': name,
+    'PULP_WHL_NORMALIZED_NAME': normalized_name,
     'PULP_WHL_VERSION': version,
     'PULP_WHL_SUMMARY': summary,
 }
@@ -842,71 +850,57 @@ with meta_env.open('w') as f:
 PY
 }
 
-publishPulpPythonRepository() {
+checkPulpWheelAlreadyPublished() {
   upload_url="$1"
+  wheel_filename="$2"
+  wheel_sha256="$3"
 
-  case "$upload_url" in
-    */pypi/*)
-      api_base="${upload_url%%/pypi/*}"
-      repo_base_path="${upload_url#*/pypi/}"
-      repo_base_path="${repo_base_path%%/*}"
-      ;;
-    *)
-      printVerbose "Unable to derive Pulp API URL from upload URL: ${upload_url}"
-      return 0
-      ;;
-  esac
+  simple_root="${upload_url%/legacy/}/simple"
+  package_url="${simple_root}/${PULP_WHL_NORMALIZED_NAME}/"
+  index_response=$(curl -sS \
+    -u "${PULP_USER}:${PULP_PASSWORD}" \
+    -H 'Accept: application/vnd.pypi.simple.v1+json' \
+    -w "\n%{http_code}" \
+    "${package_url}" 2>&1)
+  curl_rc=$?
 
-  encoded_base_path=$(printf '%s' "$repo_base_path" | jq -sRr @uri)
-  dist_response=$(curl -sS -u "${PULP_USER}:${PULP_PASSWORD}" \
-    "${api_base}/pulp/api/v3/distributions/python/pypi/?base_path=${encoded_base_path}" 2>&1)
-  repo_href=$(echo "$dist_response" | jq -r '.results[0].repository // empty' 2>/dev/null)
+  if [ ${curl_rc} -ne 0 ]; then
+    printSoftError "Unable to check existing Pulp package at ${package_url}: ${index_response}"
+    return 3
+  fi
 
-  if [ -z "$repo_href" ]; then
-    printVerbose "Unable to find Pulp Python repository for base path: ${repo_base_path}"
+  index_http_code=$(echo "${index_response}" | tail -1)
+  index_body=$(echo "${index_response}" | sed '$d')
+
+  if [ "${index_http_code}" = "404" ]; then
+    return 1
+  fi
+  if [ "${index_http_code}" != "200" ]; then
+    printSoftError "Pulp package lookup failed with HTTP ${index_http_code}: ${index_body}"
+    return 3
+  fi
+
+  if ! echo "${index_body}" | jq -e '.files | type == "array"' >/dev/null 2>&1; then
+    printSoftError "Pulp package lookup returned invalid PEP 691 JSON from ${package_url}"
+    return 3
+  fi
+
+  existing_sha256=$(echo "${index_body}" | jq -r \
+    --arg filename "${wheel_filename}" \
+    '.files[]? | select(.filename == $filename) | .hashes.sha256 // empty' \
+    2>/dev/null | head -1)
+
+  if [ -z "${existing_sha256}" ]; then
+    return 1
+  fi
+  if [ "${existing_sha256}" = "${wheel_sha256}" ]; then
     return 0
   fi
 
-  printVerbose "Creating Pulp Python publication for ${repo_base_path} (${repo_href})"
-  pub_payload=$(jq -cn --arg repository "$repo_href" '{repository:$repository}')
-  pub_response=$(curl -sS -u "${PULP_USER}:${PULP_PASSWORD}" \
-    -H 'Content-Type: application/json' \
-    -X POST "${api_base}/pulp/api/v3/publications/python/pypi/" \
-    -d "$pub_payload" 2>&1)
-  pub_task=$(echo "$pub_response" | jq -r '.task // empty' 2>/dev/null)
-
-  if [ -z "$pub_task" ]; then
-    printVerbose "No Pulp publication task was returned: ${pub_response}"
-    return 0
-  fi
-
-  retries=0
-  while [ $retries -lt 30 ]; do
-    pub_task_response=$(curl -sS -u "${PULP_USER}:${PULP_PASSWORD}" "${api_base}${pub_task}" 2>&1)
-    pub_task_state=$(echo "$pub_task_response" | jq -r '.state // empty' 2>/dev/null)
-
-    case "$pub_task_state" in
-      completed)
-        printVerbose "Pulp Python publication completed for ${repo_base_path}."
-        return 0
-        ;;
-      failed)
-        pub_task_error=$(echo "$pub_task_response" | jq -r '.error.description // empty' 2>/dev/null)
-        printSoftError "Pulp publication task failed: ${pub_task_error}"
-        return 1
-        ;;
-      canceled)
-        printSoftError "Pulp publication task was canceled."
-        return 1
-        ;;
-    esac
-
-    retries=$((retries + 1))
-    sleep 2
-  done
-
-  printSoftError "Pulp publication task did not complete within 60 seconds."
-  return 1
+  printSoftError "Immutable wheel conflict for ${wheel_filename}:"
+  printSoftError "Pulp SHA256: ${existing_sha256}"
+  printSoftError "Local SHA256: ${wheel_sha256}"
+  return 2
 }
 
 publishToPulp() {
@@ -927,6 +921,25 @@ publishToPulp() {
     printInfo "Created Pulp-compatible wheel metadata copy: ${PULP_UPLOAD_WHL}"
   fi
 
+  checkPulpWheelAlreadyPublished \
+    "${pulp_upload_url}" \
+    "${whl_basename}" \
+    "${PULP_WHL_SHA256}"
+  existing_status=$?
+  case "${existing_status}" in
+    0)
+      printInfo "Wheel ${whl_basename} is already published with the same SHA256; nothing to do."
+      rm -rf "$tmp_dir"
+      return 0
+      ;;
+    1)
+      ;;
+    2|3)
+      rm -rf "$tmp_dir"
+      return 1
+      ;;
+  esac
+
   printInfo "Uploading ${whl_basename} to ${pulp_upload_url}"
 
   UPLOAD_RESPONSE=$(curl -sS -w "\n%{http_code}" \
@@ -945,7 +958,20 @@ publishToPulp() {
   http_code=$(echo "$UPLOAD_RESPONSE" | tail -1)
   response_body=$(echo "$UPLOAD_RESPONSE" | sed '$d')
 
-  if [ "$http_code" != "200" ] && [ "$http_code" != "201" ]; then
+  if [ "$http_code" != "200" ] && [ "$http_code" != "201" ] && [ "$http_code" != "202" ]; then
+    # Another publisher may have won the race between our preflight check
+    # and upload. Re-check before reporting failure.
+    checkPulpWheelAlreadyPublished \
+      "${pulp_upload_url}" \
+      "${whl_basename}" \
+      "${PULP_WHL_SHA256}"
+    post_upload_status=$?
+    if [ "${post_upload_status}" = "0" ]; then
+      printInfo "Wheel ${whl_basename} was published concurrently with the same SHA256; treating the upload as successful."
+      rm -rf "$tmp_dir"
+      return 0
+    fi
+
     printSoftError "Pulp upload failed with HTTP ${http_code}"
     printSoftError "Response: ${response_body}"
     rm -rf "$tmp_dir"
@@ -976,10 +1002,6 @@ publishToPulp() {
 
       case "$task_state" in
         completed)
-          if ! publishPulpPythonRepository "$pulp_upload_url"; then
-            rm -rf "$tmp_dir"
-            return 1
-          fi
           printInfo "Wheel ${whl_basename} published to Pulp successfully."
           rm -rf "$tmp_dir"
           return 0
@@ -1004,11 +1026,6 @@ publishToPulp() {
     done
 
     printSoftError "Pulp task did not complete within 60 seconds."
-    rm -rf "$tmp_dir"
-    return 1
-  fi
-
-  if ! publishPulpPythonRepository "$pulp_upload_url"; then
     rm -rf "$tmp_dir"
     return 1
   fi
