@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2026-07-29T12:31:03+00:00Z",
+  "generation_timestamp_utc": "2026-07-29T15:52:03+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -326,6 +326,7 @@
     "ripgrep": "zopen port of ripgrep - recursively search directories for a regex pattern",
     "bat": "bat port for z/OS (zopen community)",
     "rocksdb": "",
-    "mmh3": "Python extension for MurmurHash (MurmurHash3), a set of fast and robust hash functions."
+    "mmh3": "Python extension for MurmurHash (MurmurHash3), a set of fast and robust hash functions.",
+    "django": "A high-level Python web framework that encourages rapid development and clean, pragmatic design."
   }
 }
