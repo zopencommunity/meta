@@ -360,12 +360,40 @@ _zopen_python_primary_version() {
   done
 }
 
+# Resolve a declared version to an interpreter. The versioned name wins, but
+# fall back to python3/python when one of those reports the version asked for:
+# a runtime may install only an unversioned binary, and refusing to pin in that
+# case would make ZOPEN_PYTHON_VERSIONS unusable on exactly the systems where
+# declaring the target version is most useful.
 _zopen_python_interpreter_path() {
   if [ "$1" = "default" ]; then
-    command -v python 2> /dev/null
-  else
-    command -v "python$1" 2> /dev/null
+    for _pi_name in python python3; do
+      _pi_path=$(command -v "${_pi_name}" 2> /dev/null)
+      if [ -n "${_pi_path}" ]; then
+        echo "${_pi_path}"
+        return 0
+      fi
+    done
+    return 1
   fi
+
+  _pi_path=$(command -v "python$1" 2> /dev/null)
+  if [ -n "${_pi_path}" ]; then
+    echo "${_pi_path}"
+    return 0
+  fi
+
+  for _pi_name in python3 python; do
+    _pi_path=$(command -v "${_pi_name}" 2> /dev/null)
+    [ -n "${_pi_path}" ] || continue
+    _pi_actual=$("${_pi_path}" -c 'import sys; print("%d.%d" % sys.version_info[:2])' 2> /dev/null)
+    if [ "${_pi_actual}" = "$1" ]; then
+      echo "${_pi_path}"
+      return 0
+    fi
+  done
+
+  return 1
 }
 
 # Verify every declared interpreter exists and reports the version it claims,
@@ -392,6 +420,11 @@ _zopen_python_verify_interpreters() {
   done
 
   if [ -n "${_py_missing}" ] || [ -n "${_py_mismatch}" ]; then
+    if [ -z "${ZOPEN_PYTHON_VERSIONS}" ]; then
+      # Nothing was declared, so the only failure possible is having no
+      # interpreter at all; naming the "default" sentinel would just confuse.
+      printError "No 'python' or 'python3' found on PATH"
+    fi
     [ -n "${_py_missing}" ] && printSoftError "Declared Python interpreter(s) not found:${_py_missing}"
     [ -n "${_py_mismatch}" ] && printSoftError "Python interpreter(s) report a different version:${_py_mismatch}"
     printSoftError "ZOPEN_PYTHON_VERSIONS=\"${ZOPEN_PYTHON_VERSIONS}\""
