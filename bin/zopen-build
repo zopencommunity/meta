@@ -351,7 +351,6 @@ _zopen_python_check() {
 _zopen_python_install() {
   mkdir -p "${ZOPEN_INSTALL_DIR}/lib/python"
   mkdir -p "${ZOPEN_INSTALL_DIR}/bin"
-  mkdir -p "${ZOPEN_INSTALL_DIR}/dist"
   . .venv/bin/activate
   # Install the built wheel to the target directory
   pip install --no-deps --target="${ZOPEN_INSTALL_DIR}/lib/python" dist/*.whl
@@ -360,8 +359,13 @@ _zopen_python_install() {
     [ -e "$f" ] || continue
     ln -sf "../lib/python/bin/$(basename "$f")" "${ZOPEN_INSTALL_DIR}/bin/$(basename "$f")"
   done
-  # Preserve wheel for publishing
-  cp dist/*.whl "${ZOPEN_INSTALL_DIR}/dist/"
+  # Preserve the wheel for publishing, in the port's artifact directory next to
+  # the pax and metadata.json. It must not go under ZOPEN_INSTALL_DIR: that tree
+  # is what gets packaged, so a wheel there ships a second copy of everything
+  # already installed under lib/python -- and it is invisible to CI, which looks
+  # for build artifacts under the port's install/ directory.
+  mkdir -p "${ZOPEN_ROOT}/install/dist"
+  cp dist/*.whl "${ZOPEN_ROOT}/install/dist/"
   deactivate
 }
 
