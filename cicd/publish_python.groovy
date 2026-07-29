@@ -97,8 +97,38 @@ fi
 # Iterate directly rather than collecting into an array first: under `set -u`
 # expanding an empty array is an error on bash < 4.4.
 while IFS= read -r -d '' wheel; do
-  ZOPEN_DONT_PROCESS_CONFIG=1 \
-    "$publisher" --whl "$wheel" --pulp-url "$PULP_URL"
+  wheel_name=$(basename "$wheel")
+
+  # Retry transient upload failures, matching the RPM publish job. zopen-publish
+  # is safe to re-run: it re-checks the index and treats an identical wheel as a
+  # no-op. Exit 2 means the failure is deterministic, so stop immediately.
+  attempt=1
+  max_attempts=3
+  while :; do
+    set +e
+    ZOPEN_DONT_PROCESS_CONFIG=1 \
+      "$publisher" --whl "$wheel" --pulp-url "$PULP_URL"
+    publish_rc=$?
+    set -e
+
+    if [ "$publish_rc" -eq 0 ]; then
+      break
+    fi
+
+    if [ "$publish_rc" -eq 2 ]; then
+      echo "ERROR: ${wheel_name} cannot be published; retrying would not help." >&2
+      exit 1
+    fi
+
+    if [ "$attempt" -ge "$max_attempts" ]; then
+      echo "ERROR: failed to publish ${wheel_name} after ${max_attempts} attempts." >&2
+      exit 1
+    fi
+
+    echo "Publish of ${wheel_name} failed (attempt ${attempt}/${max_attempts}); retrying in 5s."
+    attempt=$((attempt + 1))
+    sleep 5
+  done
 done < <(find wheels -type f -name '*.whl' -print0)
 '''
         }

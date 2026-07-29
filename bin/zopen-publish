@@ -64,6 +64,12 @@ printSyntax()
   echo "  zopen-publish -f -p install/mypackage.zos.pax.Z -m metadata.json -g DEV_mypackage_12345 -t <token>"
   echo "  zopen-publish --whl dist/mypackage-1.0-py3-none-any.whl --pulp-url https://repo.zopen.community/pypi/wheels/legacy/"
   echo "  zopen-publish -f -p install/mypackage.zos.pax.Z -m metadata.json -g TAG -t <token> --pulp"
+  echo ""
+  echo "Exit codes:"
+  echo "  0  Success"
+  echo "  1  Failure; retrying may succeed"
+  echo "  2  Failure that retrying cannot fix (for example, the same wheel"
+  echo "     filename is already published with different content)"
 }
 
 checkDependencies() {
@@ -1004,7 +1010,7 @@ confirmPulpWheelVisible() {
     2)
       # checkPulpWheelAlreadyPublished already reported both digests.
       printSoftError "Pulp is serving different content under this wheel's filename."
-      return 1
+      return 2
       ;;
     1)
       printSoftError "Wheel ${confirm_wheel_filename} uploaded successfully but never appeared on the simple index."
@@ -1050,7 +1056,12 @@ publishToPulp() {
       ;;
     1)
       ;;
-    2|3)
+    2)
+      # Same filename, different content. Deterministic -- retrying cannot help.
+      rm -rf "$tmp_dir"
+      return 2
+      ;;
+    3)
       rm -rf "$tmp_dir"
       return 1
       ;;
@@ -1119,9 +1130,11 @@ publishToPulp() {
 
       case "$task_state" in
         completed)
-          if ! confirmPulpWheelVisible "${pulp_upload_url}" "${whl_basename}" "${PULP_WHL_SHA256}"; then
+          confirmPulpWheelVisible "${pulp_upload_url}" "${whl_basename}" "${PULP_WHL_SHA256}"
+          confirm_rc=$?
+          if [ ${confirm_rc} -ne 0 ]; then
             rm -rf "$tmp_dir"
-            return 1
+            return ${confirm_rc}
           fi
           printInfo "Wheel ${whl_basename} published to Pulp successfully."
           rm -rf "$tmp_dir"
@@ -1151,9 +1164,11 @@ publishToPulp() {
     return 1
   fi
 
-  if ! confirmPulpWheelVisible "${pulp_upload_url}" "${whl_basename}" "${PULP_WHL_SHA256}"; then
+  confirmPulpWheelVisible "${pulp_upload_url}" "${whl_basename}" "${PULP_WHL_SHA256}"
+  confirm_rc=$?
+  if [ ${confirm_rc} -ne 0 ]; then
     rm -rf "$tmp_dir"
-    return 1
+    return ${confirm_rc}
   fi
 
   printInfo "Wheel ${whl_basename} published to Pulp successfully."
@@ -1196,6 +1211,7 @@ else
 fi
 
 publish_failed=false
+publish_terminal=false
 
 if ${PUBLISH_GITHUB}; then
   if publishRelease; then
@@ -1210,13 +1226,22 @@ if ${PUBLISH_PULP}; then
   if publishToPulp; then
     echo "Pulp publish completed successfully."
   else
+    pulp_rc=$?
     printSoftError "Pulp publish failed."
     publish_failed=true
+    # Exit 2 marks a failure that repeating cannot fix, so callers can stop
+    # retrying instead of hammering a deterministic error.
+    if [ "${pulp_rc}" -eq 2 ]; then
+      publish_terminal=true
+    fi
   fi
 fi
 
 if ${publish_failed}; then
   printError "zopen-publish completed with errors."
+  if ${publish_terminal}; then
+    exit 2
+  fi
   exit 1
 fi
 
