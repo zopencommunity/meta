@@ -327,6 +327,57 @@ _zopen_python_ensure_venv() {
   pip install setuptools build installer wheel
 }
 
+# Retag a compiled wheel so it is not pinned to the z/OS release and machine
+# model. CPython derives the default platform tag from uname, giving something
+# like os390_29_00_8561 -- release AND CPU model -- and pip matches that string
+# exactly, so the wheel stops installing after a z/OS upgrade or on different
+# hardware, even though the binary would run fine.
+#
+# cp3XY-none-any keeps the one constraint that is real (the extension is built
+# against a specific CPython ABI) and drops the two that are not. Note that
+# 'any' also matches non-z/OS systems, so this assumes the index is consumed
+# from z/OS; the ABI tag cannot be kept, because pip never generates a
+# cp3XY-cp3XY-any combination to match against.
+#
+# Pure Python wheels are already py3-none-any and are left untouched.
+# Set ZOPEN_PYTHON_WHEEL_RETAG=false to keep the default platform tag.
+_zopen_python_retag_wheel() {
+  if [ "${ZOPEN_PYTHON_WHEEL_RETAG}" = "false" ]; then
+    printVerbose "Wheel retagging disabled; keeping the default platform tag"
+    return 0
+  fi
+
+  for _whl in dist/*.whl; do
+    [ -f "${_whl}" ] || continue
+
+    # {name}-{version}(-{build})?-{python}-{abi}-{platform}.whl
+    _whl_base=$(basename "${_whl}" .whl)
+    _whl_plat=$(echo "${_whl_base}" | awk -F- '{print $NF}')
+    if [ "${_whl_plat}" = "any" ]; then
+      printVerbose "$(basename "${_whl}") is platform independent; leaving its tags unchanged"
+      continue
+    fi
+
+    _whl_pytag=$(python -c 'import sys; print("cp%d%d" % sys.version_info[:2])' 2> /dev/null)
+    if [ -z "${_whl_pytag}" ]; then
+      printWarning "Could not determine the interpreter tag; leaving wheel tags unchanged"
+      return 0
+    fi
+
+    printInfo "Retagging $(basename "${_whl}") as ${_whl_pytag}-none-any"
+    if ! python -m wheel tags \
+      --python-tag "${_whl_pytag}" \
+      --abi-tag none \
+      --platform-tag any \
+      --remove "${_whl}"; then
+      printError "Failed to retag $(basename "${_whl}")"
+      return 1
+    fi
+  done
+
+  return 0
+}
+
 # Derive a stable SOURCE_DATE_EPOCH for the source tree in the current
 # directory. A wheel is a zip, and zip entries carry each file's mtime, so
 # without this two builds of identical source produce different bytes -- which
@@ -372,6 +423,14 @@ _zopen_python_build() {
 
   python -m build --wheel
   _zopen_python_build_rc=$?
+
+  # Retag before anything downstream sees the wheel, so the check and install
+  # phases and the published artifact all refer to the same file.
+  if [ ${_zopen_python_build_rc} -eq 0 ]; then
+    _zopen_python_retag_wheel
+    _zopen_python_build_rc=$?
+  fi
+
   deactivate
   return ${_zopen_python_build_rc}
 }

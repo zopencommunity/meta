@@ -119,6 +119,29 @@ Renaming dev wheels is not a workaround. A PEP 440 local version (`1.2.0+dev.42`
 
 Selecting `Python` as the build system in `zopen-generate` writes `PUBLISH_PYTHON_WHEEL=true` into both `cicd-stable.groovy` and `cicd-dev.groovy`. Non-Python CI/CD files use `false`, so C and C++ ports continue through their existing publication paths without publishing into the Python wheel index.
 
+#### Wheel tags
+
+Pure Python ports build as `py3-none-any` and are published unchanged. They install on any Python and any z/OS level, and need nothing described below.
+
+Compiled ports are different. CPython derives the default platform tag from `uname`, producing something like `os390_29_00_8561` — the z/OS **release** and the **CPU model**. `packaging` offers exactly one platform tag on z/OS (unlike Linux, which gets the manylinux range) and pip matches it as an exact string, so such a wheel stops installing after a z/OS upgrade or on different hardware, even though the binary itself would run.
+
+`zopen-build` therefore retags compiled wheels to `cp3XY-none-any`, keeping the constraint that is real and dropping the two that are not:
+
+| | any z/OS release | any machine | any Python |
+| --- | --- | --- | --- |
+| `cp312-cp312-os390_29_00_8561` (default) | no | no | no |
+| `cp312-none-any` (published) | **yes** | **yes** | no — 3.12 only |
+| `py3-none-any` | yes | yes | yes — **wrong for compiled code** |
+
+`py3-none-any` is not an option for a compiled port: the extension is `mmh3.cpython-312.so`, and any other CPython silently fails to load it, leaving an importable but empty namespace package. `cp3XY` is an exact interpreter match (unlike `py3XY`, which every later version also accepts), so the wheel is offered only to the interpreter that can use it. The ABI tag cannot be preserved — pip never generates a `cp3XY-cp3XY-any` combination to match against.
+
+Two consequences worth knowing:
+
+* **`any` also matches non-z/OS systems.** This assumes the index is consumed from z/OS. A Linux CPython 3.12 with this index configured would install the wheel and fail at import. Set `ZOPEN_PYTHON_WHEEL_RETAG=false` to keep the honest platform tag instead.
+* **One wheel per Python minor version.** A 3.13 build produces `cp313-none-any`, a distinct filename, so versions coexist without colliding. Covering several requires building once per interpreter.
+
+`Public Index Verification` installs only `*-py3-none-any.whl` wheels with pip; everything else is checked for presence in the index. That split is deliberate — pip-installing a z/OS wheel on the Linux agent would appear to succeed and then be broken.
+
 #### Required Pulp configuration
 
 The `/pypi/<base_path>/` endpoints used here are `pulp_python`'s **live API**: the simple index is generated on demand from the distribution's bound repository. No publication is involved, and `autopublish` is irrelevant to them — both `wheels` and `wheels-dev` run with `autopublish=false`. This is why the pipeline does not create publications, unlike the RPM path in `pulp_repo_setup.groovy`.
