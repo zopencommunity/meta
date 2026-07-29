@@ -52,6 +52,17 @@ Required:
 Optional:
   ZOPEN_SOURCE_URL      If set, use this as ZOPEN_URL before checking
                         ZOPEN_DEV_URL or ZOPEN_STABLE_URL.
+  ZOPEN_PYTHON_VERSIONS Python build system only. Space-delimited Python minor
+                        versions to build, test and publish a wheel for, most
+                        significant first, e.g. '3.12 3.13'. The first is the
+                        primary and is what gets installed into the package;
+                        every version's wheel is published. Each interpreter
+                        must be on PATH as python<version> or the build fails
+                        before compiling. Defaults to the active python.
+  ZOPEN_PYTHON_WHEEL_RETAG
+                        Python build system only. Set to 'false' to keep the
+                        default platform tag on compiled wheels instead of
+                        retagging them to cp3XY-none-any (defaults to 'true').
   ZOPEN_EXTRA_CFLAGS    C compiler flags to append to CFLAGS (defaults to '').
   ZOPEN_EXTRA_CPPFLAGS  C,C++ pre-processor flags to append to CPPFLAGS.
                         (defaults to '')
@@ -318,13 +329,118 @@ setDefaults()
 
 # --- Built-in Python build system functions ---
 
-_zopen_python_ensure_venv() {
-  if [ ! -f ".venv/bin/activate" ]; then
-    printInfo "Creating Python virtual environment..."
-    python -m venv .venv
+# --- Multi-interpreter Python support ---
+#
+# A compiled extension is bound to one CPython ABI, so covering several
+# interpreters means building, testing and publishing one wheel per version.
+# ZOPEN_PYTHON_VERSIONS declares which, most significant first:
+#
+#   export ZOPEN_PYTHON_VERSIONS="3.12 3.13"
+#
+# The first entry is the primary. Its build is what gets installed into the
+# pax, because an installed tree can only carry one interpreter's extension;
+# every built wheel is published regardless.
+#
+# Left unset, everything runs against the active `python` exactly as before.
+
+# Echo the declared versions, or the sentinel "default" meaning "whatever
+# python is on PATH" -- which keeps single-interpreter ports unchanged.
+_zopen_python_versions() {
+  if [ -z "${ZOPEN_PYTHON_VERSIONS}" ]; then
+    echo "default"
+  else
+    echo "${ZOPEN_PYTHON_VERSIONS}"
   fi
-  . .venv/bin/activate
+}
+
+_zopen_python_primary_version() {
+  for _pv in $(_zopen_python_versions); do
+    echo "${_pv}"
+    return 0
+  done
+}
+
+_zopen_python_interpreter_path() {
+  if [ "$1" = "default" ]; then
+    command -v python 2> /dev/null
+  else
+    command -v "python$1" 2> /dev/null
+  fi
+}
+
+# Verify every declared interpreter exists and reports the version it claims,
+# before anything is compiled. Without this a node missing an interpreter would
+# quietly publish fewer wheels than intended, and nobody would find out until an
+# install failed with "no matching distribution".
+_zopen_python_verify_interpreters() {
+  _py_missing=""
+  _py_mismatch=""
+
+  for _pv in $(_zopen_python_versions); do
+    _pv_path=$(_zopen_python_interpreter_path "${_pv}")
+    if [ -z "${_pv_path}" ]; then
+      _py_missing="${_py_missing} ${_pv}"
+      continue
+    fi
+
+    [ "${_pv}" = "default" ] && continue
+
+    _pv_actual=$("${_pv_path}" -c 'import sys; print("%d.%d" % sys.version_info[:2])' 2> /dev/null)
+    if [ "${_pv_actual}" != "${_pv}" ]; then
+      _py_mismatch="${_py_mismatch} ${_pv}(reports ${_pv_actual:-unknown})"
+    fi
+  done
+
+  if [ -n "${_py_missing}" ] || [ -n "${_py_mismatch}" ]; then
+    [ -n "${_py_missing}" ] && printSoftError "Declared Python interpreter(s) not found:${_py_missing}"
+    [ -n "${_py_mismatch}" ] && printSoftError "Python interpreter(s) report a different version:${_py_mismatch}"
+    printSoftError "ZOPEN_PYTHON_VERSIONS=\"${ZOPEN_PYTHON_VERSIONS}\""
+    printError "Cannot build for every declared Python version"
+  fi
+
+  return 0
+}
+
+# The primary keeps the plain .venv name so ports that reference it directly,
+# and the existing single-interpreter layout, are unaffected.
+_zopen_python_venv_dir() {
+  if [ "$1" = "default" ] || [ "$1" = "$(_zopen_python_primary_version)" ]; then
+    echo ".venv"
+  else
+    echo ".venv-$1"
+  fi
+}
+
+_zopen_python_ensure_venv_for() {
+  _pv_venv=$(_zopen_python_venv_dir "$1")
+  if [ ! -f "${_pv_venv}/bin/activate" ]; then
+    printInfo "Creating Python virtual environment for ${1} in ${_pv_venv}..."
+    "$(_zopen_python_interpreter_path "$1")" -m venv "${_pv_venv}" || return 1
+  fi
+  . "${_pv_venv}/bin/activate" || return 1
   pip install setuptools build installer wheel
+}
+
+# Retained for ports that call it directly.
+_zopen_python_ensure_venv() {
+  _zopen_python_ensure_venv_for "$(_zopen_python_primary_version)"
+}
+
+# Interpreter tag (cp312) of the currently active python.
+_zopen_python_active_tag() {
+  python -c 'import sys; print("cp%d%d" % sys.version_info[:2])' 2> /dev/null
+}
+
+# The wheel matching an interpreter tag, falling back to a pure Python wheel,
+# which is valid for every interpreter.
+_zopen_python_wheel_for_tag() {
+  for _pw in dist/*-"$1"-none-any.whl; do
+    [ -f "${_pw}" ] && { echo "${_pw}"; return 0; }
+  done
+  for _pw in dist/*-py3-none-any.whl; do
+    [ -f "${_pw}" ] && { echo "${_pw}"; return 0; }
+  done
+  return 1
 }
 
 # Retag a compiled wheel so it is not pinned to the z/OS release and machine
@@ -354,7 +470,16 @@ _zopen_python_retag_wheel() {
     _whl_base=$(basename "${_whl}" .whl)
     _whl_plat=$(echo "${_whl_base}" | awk -F- '{print $NF}')
     if [ "${_whl_plat}" = "any" ]; then
-      printVerbose "$(basename "${_whl}") is platform independent; leaving its tags unchanged"
+      # Distinguish a genuinely portable wheel from one an earlier interpreter's
+      # pass already retagged, which is still sitting in dist/.
+      case "$(echo "${_whl_base}" | awk -F- '{print $(NF-2)}')" in
+        cp*)
+          printVerbose "$(basename "${_whl}") was already retagged; skipping"
+          ;;
+        *)
+          printVerbose "$(basename "${_whl}") is platform independent; leaving its tags unchanged"
+          ;;
+      esac
       continue
     fi
 
@@ -407,7 +532,7 @@ _zopen_python_source_date_epoch() {
 }
 
 _zopen_python_build() {
-  _zopen_python_ensure_venv
+  _zopen_python_verify_interpreters || return 1
   rm -rf dist
 
   # Respect an externally supplied value so a caller can pin it explicitly.
@@ -421,38 +546,108 @@ _zopen_python_build() {
     fi
   fi
 
-  python -m build --wheel
-  _zopen_python_build_rc=$?
+  _zopen_python_build_rc=0
+  _py_pure=false
 
-  # Retag before anything downstream sees the wheel, so the check and install
-  # phases and the published artifact all refer to the same file.
-  if [ ${_zopen_python_build_rc} -eq 0 ]; then
-    _zopen_python_retag_wheel
+  for _pv in $(_zopen_python_versions); do
+    # A pure Python wheel is identical whatever built it, and every interpreter
+    # produces the same filename, so rebuilding would only overwrite it. The
+    # venv is still created below, because the check phase needs one per
+    # interpreter even when the wheel is shared.
+    if ${_py_pure}; then
+      printInfo "Wheel is platform independent; skipping rebuild for ${_pv}"
+      _zopen_python_ensure_venv_for "${_pv}" || { _zopen_python_build_rc=1; break; }
+      deactivate
+      continue
+    fi
+
+    printHeader "Building wheel with Python ${_pv}"
+    _zopen_python_ensure_venv_for "${_pv}" || { _zopen_python_build_rc=1; break; }
+
+    python -m build --wheel
     _zopen_python_build_rc=$?
-  fi
 
-  deactivate
+    # Retag before anything downstream sees the wheel, so the check and install
+    # phases and the published artifact all refer to the same file.
+    if [ ${_zopen_python_build_rc} -eq 0 ]; then
+      _zopen_python_retag_wheel
+      _zopen_python_build_rc=$?
+    fi
+
+    if [ ${_zopen_python_build_rc} -eq 0 ]; then
+      for _pw in dist/*-py3-none-any.whl; do
+        [ -f "${_pw}" ] && _py_pure=true
+      done
+    fi
+
+    deactivate
+    [ ${_zopen_python_build_rc} -eq 0 ] || break
+  done
+
   return ${_zopen_python_build_rc}
 }
 
 _zopen_python_check() {
-  . .venv/bin/activate
-  pip install pytest
-  # Install the built wheel so C extensions (.so files) are available
-  # Use --force-reinstall to ensure the newly built wheel is used
-  pip install --force-reinstall --no-deps dist/*.whl
-  python -m pytest -v
-  _zopen_python_check_rc=$?
-  deactivate
+  _zopen_python_check_rc=0
+
+  for _pv in $(_zopen_python_versions); do
+    _pv_venv=$(_zopen_python_venv_dir "${_pv}")
+    if [ ! -f "${_pv_venv}/bin/activate" ]; then
+      printSoftError "No virtual environment at ${_pv_venv} for Python ${_pv}"
+      _zopen_python_check_rc=1
+      break
+    fi
+
+    printHeader "Running tests with Python ${_pv}"
+    . "${_pv_venv}/bin/activate"
+    pip install pytest
+
+    # Install the wheel built for *this* interpreter. Globbing dist/*.whl would
+    # hand pip every version's wheel at once, which it rightly refuses.
+    _pv_wheel=$(_zopen_python_wheel_for_tag "$(_zopen_python_active_tag)")
+    if [ -z "${_pv_wheel}" ]; then
+      printSoftError "No wheel in dist/ matches Python ${_pv}"
+      deactivate
+      _zopen_python_check_rc=1
+      break
+    fi
+
+    # --force-reinstall so the freshly built wheel wins over anything cached
+    pip install --force-reinstall --no-deps "${_pv_wheel}"
+    python -m pytest -v
+    _pv_rc=$?
+
+    # Every interpreter's pytest output lands in the same check log, and
+    # zopen_check_results sums across runs, so totals aggregate on their own.
+    [ ${_pv_rc} -eq 0 ] || _zopen_python_check_rc=${_pv_rc}
+
+    deactivate
+  done
+
   return ${_zopen_python_check_rc}
 }
 
 _zopen_python_install() {
   mkdir -p "${ZOPEN_INSTALL_DIR}/lib/python"
   mkdir -p "${ZOPEN_INSTALL_DIR}/bin"
-  . .venv/bin/activate
+
+  # The pax carries exactly one interpreter's build: lib/python holds a single
+  # extension, and a second interpreter's .so would sit there unused. The
+  # primary version wins; every wheel is still published below.
+  _pv_primary=$(_zopen_python_primary_version)
+  _pv_venv=$(_zopen_python_venv_dir "${_pv_primary}")
+  . "${_pv_venv}/bin/activate" || return 1
+
+  _pv_wheel=$(_zopen_python_wheel_for_tag "$(_zopen_python_active_tag)")
+  if [ -z "${_pv_wheel}" ]; then
+    printSoftError "No wheel in dist/ matches the primary interpreter (${_pv_primary})"
+    deactivate
+    return 1
+  fi
+  printInfo "Installing $(basename "${_pv_wheel}") into the package tree"
+
   # Install the built wheel to the target directory
-  pip install --no-deps --target="${ZOPEN_INSTALL_DIR}/lib/python" dist/*.whl
+  pip install --no-deps --target="${ZOPEN_INSTALL_DIR}/lib/python" "${_pv_wheel}"
   # Symlink any scripts into bin/ so they are on PATH
   for f in "${ZOPEN_INSTALL_DIR}/lib/python/bin/"*; do
     [ -e "$f" ] || continue
@@ -879,9 +1074,12 @@ checkEnv()
     if ! command -V zopen_check_results > /dev/null 2>&1; then
       zopen_check_results() {
         dir="$1"; pfx="$2"; chk="$1/$2_check.log"
-        passed=$(grep -oE "[0-9]+ passed" "${chk}" | awk '{print $1}')
-        failed=$(grep -oE "[0-9]+ failed" "${chk}" | awk '{print $1}')
-        errors=$(grep -oE "[0-9]+ error" "${chk}" | awk '{print $1}')
+        # Sum across runs: with ZOPEN_PYTHON_VERSIONS set, every interpreter's
+        # pytest output lands in this one log, so a plain match would yield
+        # several numbers where the arithmetic below expects one.
+        passed=$(grep -oE "[0-9]+ passed" "${chk}" | awk '{s+=$1} END {print s+0}')
+        failed=$(grep -oE "[0-9]+ failed" "${chk}" | awk '{s+=$1} END {print s+0}')
+        errors=$(grep -oE "[0-9]+ error" "${chk}" | awk '{s+=$1} END {print s+0}')
         passed=${passed:-0}; failed=${failed:-0}; errors=${errors:-0}
         totalTests=$((passed + failed + errors))
         echo "actualFailures:$((failed + errors))"
