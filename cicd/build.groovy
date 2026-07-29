@@ -116,11 +116,11 @@ node(node_label) {
             # wheels shipped as package data under lib/python, which would then
             # be published to the zopen index as if they were the port's output.
             #
-            # Piped into `while read` rather than using find -exec: this is a
-            # Groovy ''' string, which processes backslash escapes, so an
-            # -exec ... \; terminator would have to be written \\; and is easy
-            # to get wrong. Avoiding backslashes entirely keeps the shell here
-            # readable and POSIX-compatible on the z/OS node.
+            # Piped into `while read` rather than using find -exec: this shell
+            # runs inside a Groovy triple-quoted string, which consumes escape
+            # sequences, so a find -exec terminator would need double-escaping
+            # and is easy to get wrong. Keeping backslashes out of this block
+            # entirely stays readable and POSIX-compatible on the z/OS node.
             if [ "${PUBLISH_PYTHON_WHEEL}" = "true" ]; then
               mkdir -p "${WORKSPACE}/wheels"
               wheel_count=$(find install -type f -path '*/dist/*.whl' -print 2>/dev/null | wc -l | tr -d ' ')
