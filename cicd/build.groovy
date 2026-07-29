@@ -116,8 +116,11 @@ node(node_label) {
             # wheels shipped as package data under lib/python, which would then
             # be published to the zopen index as if they were the port's output.
             #
-            # Uses -exec rather than a `while read` over a process substitution
-            # so this stays POSIX-compatible on the z/OS node.
+            # Piped into `while read` rather than using find -exec: this is a
+            # Groovy ''' string, which processes backslash escapes, so an
+            # -exec ... \; terminator would have to be written \\; and is easy
+            # to get wrong. Avoiding backslashes entirely keeps the shell here
+            # readable and POSIX-compatible on the z/OS node.
             if [ "${PUBLISH_PYTHON_WHEEL}" = "true" ]; then
               mkdir -p "${WORKSPACE}/wheels"
               wheel_count=$(find install -type f -path '*/dist/*.whl' -print 2>/dev/null | wc -l | tr -d ' ')
@@ -137,7 +140,9 @@ node(node_label) {
                 exit 1
               fi
 
-              find install -type f -path '*/dist/*.whl' -exec cp {} "${WORKSPACE}/wheels/" \;
+              find install -type f -path '*/dist/*.whl' -print | while IFS= read -r wheel; do
+                cp "$wheel" "${WORKSPACE}/wheels/"
+              done
               echo "Staged ${wheel_count} Python wheel(s) for publication."
             fi
 
