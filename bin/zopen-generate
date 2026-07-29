@@ -649,7 +649,7 @@ get_version_impl='echo "1.0.0" # Modify to echo the version of your tool/library
 if [ -n "${stablePath}" ]; then
     version_block="# bump: $name-version /${version_var_name}=\"(.*)\"/ ${stablePath}|semver:*\n"
     if [ -n "$latest_tag" ]; then
-        plain_version=$(echo "${latest_tag}" | sed 's/^v//')
+        plain_version=$(normalizeVersion "${latest_tag}")
         version_block="${version_block}${version_var_name}=\"${plain_version}\""
         tag_export_for_insert="\nexport ZOPEN_STABLE_TAG=\"${latest_tag}\""
         get_version_impl="echo \"\$${version_var_name}\""
