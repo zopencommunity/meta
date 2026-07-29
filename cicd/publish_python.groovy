@@ -169,7 +169,7 @@ while IFS= read -r -d '' wheel; do
   wheel_number=$((wheel_number + 1))
   wheel_name=$(basename "$wheel")
 
-  IFS=$'\t' read -r package_name package_version normalized_name < <(
+  IFS=$'\t' read -r package_name package_version normalized_name requires_python < <(
     python3 - "$wheel" <<'PY'
 import email
 import re
@@ -191,14 +191,52 @@ if not name or not version:
     raise SystemExit("Wheel metadata is missing Name or Version")
 
 normalized = re.sub(r"[-_.]+", "-", name).lower()
-print(f"{name}\t{version}\t{normalized}")
+print(f"{name}\t{version}\t{normalized}\t{metadata.get('Requires-Python') or ''}")
 PY
   )
 
   package_page="${index_url}${normalized_name}/"
   echo "Verifying ${package_name}==${package_version} at ${package_page}"
 
-  if [[ "$wheel_name" == *-py3-none-any.whl ]]; then
+  # A wheel whose Requires-Python excludes this agent cannot be installed here,
+  # and pip reports that as "no matching distribution" -- indistinguishable from
+  # a genuinely missing package. Decide up front so a too-old agent does not
+  # fail a publish that actually succeeded.
+  agent_supported=yes
+  if [ -n "$requires_python" ]; then
+    agent_supported=$(python3 - "$requires_python" <<'PY'
+import sys
+
+spec = sys.argv[1]
+version = "%d.%d.%d" % sys.version_info[:3]
+
+SpecifierSet = None
+for module in ("packaging.specifiers", "pip._vendor.packaging.specifiers"):
+    try:
+        SpecifierSet = __import__(module, fromlist=["SpecifierSet"]).SpecifierSet
+        break
+    except Exception:
+        continue
+
+if SpecifierSet is None:
+    # Cannot evaluate the specifier; let pip make the call as before.
+    print("yes")
+else:
+    try:
+        print("yes" if SpecifierSet(spec).contains(version, prereleases=True) else "no")
+    except Exception:
+        # Malformed specifier. Say nothing definitive and let pip decide,
+        # rather than silently skipping a test that should have run.
+        print("yes")
+PY
+    )
+  fi
+
+  # Anything other than a clear "no" means proceed, so an unexpected value
+  # cannot quietly route a pure Python wheel down the presence-only path.
+  [ "$agent_supported" = no ] || agent_supported=yes
+
+  if [[ "$wheel_name" == *-py3-none-any.whl ]] && [ "$agent_supported" = yes ]; then
     venv="${smoke_root}/${wheel_number}"
     python3 -m venv "$venv"
     "$venv/bin/pip" install \
@@ -209,7 +247,13 @@ PY
     "$venv/bin/python" -m pip show "$package_name" >/dev/null
   else
     curl --fail --silent --show-error "$package_page" | grep -F "$wheel_name" >/dev/null
-    echo "Platform-specific wheel is present in the public index; install verification is deferred to a compatible node."
+    if [ "$agent_supported" = no ]; then
+      echo "Wheel is present in the public index. Skipping the install test:"
+      echo "  it requires Python ${requires_python} and this agent runs $(python3 -c 'import sys; print("%d.%d.%d" % sys.version_info[:3])')."
+      echo "  The wheel is fine; upgrade the agent to exercise the install path."
+    else
+      echo "Platform-specific wheel is present in the public index; install verification is deferred to a compatible node."
+    fi
   fi
 done < <(find wheels -type f -name '*.whl' -print0)
 '''
