@@ -3,18 +3,38 @@
 // Inputs:
 //   BUILD_SELECTOR          : Jenkins build selector XML, build number, or lastSuccessful
 //   PROMOTED_JOB_NAME       : Required job from which to copy wheel artifacts
-//   PULP_URL                : Optional upload URL override
+//   BUILD_LINE              : dev or stable; selects the target Pulp repository
+//   PULP_URL                : Optional upload URL override (must end in /legacy/)
 //   PULP_USER_CREDENTIAL    : Optional Jenkins username credential ID
 //   PULP_PASSWORD_CREDENTIAL: Optional Jenkins password credential ID
 
 def build_selector       = params.BUILD_SELECTOR ?: ""
 def promoted_job_name    = params.PROMOTED_JOB_NAME
-def pulp_url             = params.PULP_URL ?: "https://repo.zopen.community/pypi/wheels/legacy/"
+def build_line           = (params.BUILD_LINE ?: "stable").toLowerCase()
 def pulp_user_credential = params.PULP_USER_CREDENTIAL ?: "PULP_USERNAME"
 def pulp_pass_credential = params.PULP_PASSWORD_CREDENTIAL ?: "PULP_PASSWORD"
 
 if (!promoted_job_name) {
   error "Required parameter 'PROMOTED_JOB_NAME' is missing or empty."
+}
+
+if (!(build_line in ['dev', 'stable'])) {
+  error "BUILD_LINE must be 'dev' or 'stable', got '${build_line}'."
+}
+
+// Dev and stable builds compile the same upstream project at different refs, so
+// they routinely produce the same wheel filename with different content (most
+// projects only bump their declared version at release time). A PyPI index is
+// immutable per filename, so the two lines must never share one: keep the
+// filenames truthful and separate the indexes instead.
+def pulp_repo = build_line == 'dev' ? 'wheels-dev' : 'wheels'
+def pulp_url  = params.PULP_URL ?: "https://repo.zopen.community/pypi/${pulp_repo}/legacy/"
+
+// zopen-publish normalizes several URL spellings for upload, but the public
+// index URL below is derived by trimming /legacy/. Reject anything else up
+// front rather than uploading successfully and then verifying a bogus URL.
+if (!pulp_url.endsWith('/legacy/')) {
+  error "PULP_URL must be a Pulp Python legacy upload endpoint ending in '/legacy/', got '${pulp_url}'."
 }
 
 node('linux') {
@@ -52,7 +72,7 @@ node('linux') {
       if (wheelCount == 0) {
         error "No Python wheels were found in the copied build artifacts."
       }
-      echo "Found ${wheelCount} Python wheel(s) to publish."
+      echo "Found ${wheelCount} Python wheel(s) to publish to the '${pulp_repo}' repository (${build_line} line)."
     }
 
     stage('Pulp Upload') {
@@ -74,15 +94,12 @@ if [ ! -x "$publisher" ]; then
   exit 1
 fi
 
-wheel_files=()
+# Iterate directly rather than collecting into an array first: under `set -u`
+# expanding an empty array is an error on bash < 4.4.
 while IFS= read -r -d '' wheel; do
-  wheel_files+=("$wheel")
-done < <(find wheels -type f -name '*.whl' -print0)
-
-for wheel in "${wheel_files[@]}"; do
   ZOPEN_DONT_PROCESS_CONFIG=1 \
     "$publisher" --whl "$wheel" --pulp-url "$PULP_URL"
-done
+done < <(find wheels -type f -name '*.whl' -print0)
 '''
         }
       }
@@ -96,6 +113,26 @@ set -euo pipefail
 index_url="${PULP_URL%/legacy/}/simple/"
 smoke_root="${WORKSPACE}/wheel-smoke"
 mkdir -p "$smoke_root"
+
+# This stage deliberately runs outside withCredentials: it verifies what an
+# unauthenticated end user actually sees. Probe the index root first so a
+# private/misconfigured distribution fails with a diagnosable message rather
+# than an opaque pip resolution error further down.
+probe_code=$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' "$index_url" || echo 000)
+case "$probe_code" in
+  200|301|302)
+    ;;
+  401|403)
+    echo "ERROR: ${index_url} requires authentication (HTTP ${probe_code})." >&2
+    echo "       The wheel index is expected to be publicly readable; check the" >&2
+    echo "       Pulp distribution's content guard." >&2
+    exit 1
+    ;;
+  *)
+    echo "ERROR: ${index_url} is not reachable anonymously (HTTP ${probe_code})." >&2
+    exit 1
+    ;;
+esac
 
 wheel_number=0
 while IFS= read -r -d '' wheel; do

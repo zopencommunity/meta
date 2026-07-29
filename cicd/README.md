@@ -88,19 +88,42 @@ This directory contains the Jenkins Pipeline scripts (Groovy) used to orchestrat
 
 ## Python Wheel Pipeline
 
+> **Deployment order**: the `Python-Publish` job must exist in Jenkins before any port sets `PUBLISH_PYTHON_WHEEL=true`. `pipeline.jenkins` invokes it with `propagate: false`, which suppresses a failed *result* but not a missing job — an absent job throws and fails the whole Port-Pipeline. Create the job from `cicd/publish_python.groovy`, and provide the `PULP_USERNAME` and `PULP_PASSWORD` string credentials (or override the IDs per job), before enabling the flag.
+
 ### Python Publish Pipeline (`publish_python.groovy`)
 
-* **Purpose**: Fetches wheels from an opted-in `Port-Build`, publishes them to the `wheels` Pulp Python repository, and verifies the public index.
+* **Purpose**: Fetches wheels from an opted-in `Port-Build`, publishes them to the Pulp Python repository for the build line, and verifies the public index.
 * **Flow**:
   1. Copies `wheels/**/*.whl` from the selected `Port-Build`.
-  2. Publishes every wheel through `https://repo.zopen.community/pypi/wheels/legacy/`.
+  2. Publishes every wheel through the legacy upload endpoint for the build line's repository.
   3. Installs pure Python wheels from the public simple index in a clean virtual environment.
   4. For platform-specific wheels, verifies that the exact filename is present in the public package index; installation must be tested on a compatible node.
   5. Treats an existing filename with the same SHA-256 as a successful retry and rejects the same filename with different content.
 * **Key Parameters**:
   * `PROMOTED_JOB_NAME`: Required source build job, normally `Port-Build`.
   * `BUILD_SELECTOR`: Build number or Copy Artifact selector.
-  * `PULP_URL`: Optional upload endpoint override.
+  * `BUILD_LINE`: `dev` or `stable`; selects the target repository. Defaults to `stable`.
+  * `PULP_URL`: Optional upload endpoint override. Must end in `/legacy/`.
   * `PULP_USER_CREDENTIAL` and `PULP_PASSWORD_CREDENTIAL`: Optional Jenkins credential ID overrides.
 
+#### Build lines use separate repositories
+
+| Build line | Pulp repository | Upload endpoint |
+| --- | --- | --- |
+| `stable` | `wheels` | `https://repo.zopen.community/pypi/wheels/legacy/` |
+| `dev` | `wheels-dev` | `https://repo.zopen.community/pypi/wheels-dev/legacy/` |
+
+A PyPI-style index is immutable per filename, and a wheel's filename is derived from the version the *upstream* project declares — not from the zopen build line. Because the dev line builds a branch head while stable builds a release tag, and most projects only bump their declared version at release time, both lines routinely produce the same wheel filename with different content. Publishing them into one repository would make every such dev build fail on a SHA-256 conflict.
+
+Renaming dev wheels is not a workaround. A PEP 440 local version (`1.2.0+dev.42`) sorts *above* the release, so `pip install foo` would silently prefer dev builds; a PEP 427 build tag leaves the installed version unchanged, so dev still shadows stable while two different artifacts claim one version. Separate repositories keep filenames truthful and let a consumer choose a line by pointing pip at one index or the other.
+
 Selecting `Python` as the build system in `zopen-generate` writes `PUBLISH_PYTHON_WHEEL=true` into both `cicd-stable.groovy` and `cicd-dev.groovy`. Non-Python CI/CD files use `false`, so C and C++ ports continue through their existing publication paths without publishing into the Python wheel index.
+
+#### Required Pulp configuration
+
+Both repositories must be configured so that uploaded content reaches the simple index without an explicit publication step:
+
+* `autopublish` enabled on the repository, **and** the distribution bound to the repository (`repository=`) rather than to a pinned publication.
+* The simple index anonymously readable — `Public Index Verification` deliberately runs without credentials, because it checks what an end user actually sees.
+
+If autopublish is not enabled, uploads still succeed but nothing ever appears on the index; since the retry check reads that same index, every rebuild re-uploads. `zopen-publish` confirms each wheel on the index after publishing and fails with a pointer to this configuration rather than letting that state pass silently.

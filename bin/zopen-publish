@@ -804,11 +804,56 @@ if (major, minor) > (2, 3):
     if record_name not in files:
         raise SystemExit('Wheel does not contain a .dist-info/RECORD file')
 
-    files[metadata_name] = metadata_text.replace(
-        f'Metadata-Version: {metadata_version}\n',
-        f'Metadata-Version: {upload_metadata_version}\n',
-        1,
-    ).encode('utf-8')
+    # Declaring 2.1 while retaining fields introduced later leaves the metadata
+    # self-inconsistent: pip is tolerant, but strict PEP 566/643/685 consumers
+    # (packaging.metadata, twine check) reject it. Drop the fields that postdate
+    # the declared version. Done line-wise rather than through an email module
+    # round-trip so the description body, header order, and line endings all
+    # stay byte-for-byte intact -- the rewrite has to remain reproducible.
+    drop_fields = {
+        'dynamic',             # Metadata-Version 2.2
+        'license-expression',  # Metadata-Version 2.4
+        'license-file',        # Metadata-Version 2.4
+    }
+
+    rewritten = []
+    dropped = []
+    skipping = False
+    in_body = False
+    for line in metadata_text.splitlines(keepends=True):
+        if in_body:
+            rewritten.append(line)
+            continue
+
+        stripped = line.rstrip('\r\n')
+        if stripped == '':
+            in_body = True
+            skipping = False
+            rewritten.append(line)
+            continue
+
+        # RFC 822 folded continuation belongs to whichever header preceded it.
+        if stripped[:1] in (' ', '\t'):
+            if not skipping:
+                rewritten.append(line)
+            continue
+
+        field = stripped.split(':', 1)[0].strip().lower()
+        skipping = field in drop_fields
+        if skipping:
+            dropped.append(stripped.split(':', 1)[0].strip())
+        elif field == 'metadata-version':
+            rewritten.append(line.replace(metadata_version, upload_metadata_version, 1))
+        else:
+            rewritten.append(line)
+
+    if dropped:
+        sys.stderr.write(
+            'Dropped metadata field(s) newer than %s: %s\n'
+            % (upload_metadata_version, ', '.join(sorted(set(dropped))))
+        )
+
+    files[metadata_name] = ''.join(rewritten).encode('utf-8')
 
     rows = []
     for filename in sorted(files):
@@ -903,6 +948,78 @@ checkPulpWheelAlreadyPublished() {
   return 2
 }
 
+# The simple index is served from the published repository version, which Pulp
+# updates asynchronously. A single immediate lookup can therefore miss a wheel
+# that really is published, so poll briefly before concluding it is absent.
+waitForPulpWheelPublished() {
+  wait_upload_url="$1"
+  wait_wheel_filename="$2"
+  wait_wheel_sha256="$3"
+  wait_attempts="${4:-10}"
+
+  wait_retries=0
+  while [ ${wait_retries} -lt ${wait_attempts} ]; do
+    checkPulpWheelAlreadyPublished \
+      "${wait_upload_url}" \
+      "${wait_wheel_filename}" \
+      "${wait_wheel_sha256}"
+    wait_status=$?
+
+    # Only "absent" is worth retrying; a match, a SHA conflict, and a lookup
+    # failure are all terminal answers.
+    if [ ${wait_status} -ne 1 ]; then
+      return ${wait_status}
+    fi
+
+    wait_retries=$((wait_retries + 1))
+    [ ${wait_retries} -lt ${wait_attempts} ] && sleep 3
+  done
+
+  return 1
+}
+
+# Uploading a wheel only adds it to the repository. It becomes visible on the
+# simple index when that repository version is published, which this script no
+# longer triggers explicitly -- it relies on the repository having autopublish
+# enabled and the distribution being bound to the repository rather than to a
+# pinned publication. That is server-side configuration this repository cannot
+# assert, and if it is wrong the failure is silent and confusing: uploads keep
+# succeeding, nothing ever appears on the index, and every retry re-uploads
+# because the idempotency check reads that same index. Confirm visibility here
+# so the misconfiguration surfaces immediately, at the point it can be fixed.
+confirmPulpWheelVisible() {
+  confirm_upload_url="$1"
+  confirm_wheel_filename="$2"
+  confirm_wheel_sha256="$3"
+
+  waitForPulpWheelPublished \
+    "${confirm_upload_url}" \
+    "${confirm_wheel_filename}" \
+    "${confirm_wheel_sha256}"
+  confirm_status=$?
+
+  case "${confirm_status}" in
+    0)
+      return 0
+      ;;
+    2)
+      # checkPulpWheelAlreadyPublished already reported both digests.
+      printSoftError "Pulp is serving different content under this wheel's filename."
+      return 1
+      ;;
+    1)
+      printSoftError "Wheel ${confirm_wheel_filename} uploaded successfully but never appeared on the simple index."
+      printSoftError "The Pulp Python repository most likely does not have autopublish enabled,"
+      printSoftError "or its distribution points at a pinned publication instead of the repository."
+      return 1
+      ;;
+    *)
+      printSoftError "Unable to confirm ${confirm_wheel_filename} on the simple index after upload."
+      return 1
+      ;;
+  esac
+}
+
 publishToPulp() {
   whl_basename=$(basename "${WHL_FILE}")
   pulp_upload_url=$(normalizePulpUploadUrl "${PULP_URL}")
@@ -960,8 +1077,9 @@ publishToPulp() {
 
   if [ "$http_code" != "200" ] && [ "$http_code" != "201" ] && [ "$http_code" != "202" ]; then
     # Another publisher may have won the race between our preflight check
-    # and upload. Re-check before reporting failure.
-    checkPulpWheelAlreadyPublished \
+    # and upload. Re-check before reporting failure, polling so an index that
+    # has not caught up yet is not mistaken for a genuine upload failure.
+    waitForPulpWheelPublished \
       "${pulp_upload_url}" \
       "${whl_basename}" \
       "${PULP_WHL_SHA256}"
@@ -1002,6 +1120,10 @@ publishToPulp() {
 
       case "$task_state" in
         completed)
+          if ! confirmPulpWheelVisible "${pulp_upload_url}" "${whl_basename}" "${PULP_WHL_SHA256}"; then
+            rm -rf "$tmp_dir"
+            return 1
+          fi
           printInfo "Wheel ${whl_basename} published to Pulp successfully."
           rm -rf "$tmp_dir"
           return 0
@@ -1026,6 +1148,11 @@ publishToPulp() {
     done
 
     printSoftError "Pulp task did not complete within 60 seconds."
+    rm -rf "$tmp_dir"
+    return 1
+  fi
+
+  if ! confirmPulpWheelVisible "${pulp_upload_url}" "${whl_basename}" "${PULP_WHL_SHA256}"; then
     rm -rf "$tmp_dir"
     return 1
   fi
