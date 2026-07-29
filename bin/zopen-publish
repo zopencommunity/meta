@@ -64,6 +64,12 @@ printSyntax()
   echo "  zopen-publish -f -p install/mypackage.zos.pax.Z -m metadata.json -g DEV_mypackage_12345 -t <token>"
   echo "  zopen-publish --whl dist/mypackage-1.0-py3-none-any.whl --pulp-url https://repo.zopen.community/pypi/wheels/legacy/"
   echo "  zopen-publish -f -p install/mypackage.zos.pax.Z -m metadata.json -g TAG -t <token> --pulp"
+  echo ""
+  echo "Exit codes:"
+  echo "  0  Success"
+  echo "  1  Failure; retrying may succeed"
+  echo "  2  Failure that retrying cannot fix (for example, the same wheel"
+  echo "     filename is already published with different content)"
 }
 
 checkDependencies() {
@@ -804,11 +810,56 @@ if (major, minor) > (2, 3):
     if record_name not in files:
         raise SystemExit('Wheel does not contain a .dist-info/RECORD file')
 
-    files[metadata_name] = metadata_text.replace(
-        f'Metadata-Version: {metadata_version}\n',
-        f'Metadata-Version: {upload_metadata_version}\n',
-        1,
-    ).encode('utf-8')
+    # Declaring 2.1 while retaining fields introduced later leaves the metadata
+    # self-inconsistent: pip is tolerant, but strict PEP 566/643/685 consumers
+    # (packaging.metadata, twine check) reject it. Drop the fields that postdate
+    # the declared version. Done line-wise rather than through an email module
+    # round-trip so the description body, header order, and line endings all
+    # stay byte-for-byte intact -- the rewrite has to remain reproducible.
+    drop_fields = {
+        'dynamic',             # Metadata-Version 2.2
+        'license-expression',  # Metadata-Version 2.4
+        'license-file',        # Metadata-Version 2.4
+    }
+
+    rewritten = []
+    dropped = []
+    skipping = False
+    in_body = False
+    for line in metadata_text.splitlines(keepends=True):
+        if in_body:
+            rewritten.append(line)
+            continue
+
+        stripped = line.rstrip('\r\n')
+        if stripped == '':
+            in_body = True
+            skipping = False
+            rewritten.append(line)
+            continue
+
+        # RFC 822 folded continuation belongs to whichever header preceded it.
+        if stripped[:1] in (' ', '\t'):
+            if not skipping:
+                rewritten.append(line)
+            continue
+
+        field = stripped.split(':', 1)[0].strip().lower()
+        skipping = field in drop_fields
+        if skipping:
+            dropped.append(stripped.split(':', 1)[0].strip())
+        elif field == 'metadata-version':
+            rewritten.append(line.replace(metadata_version, upload_metadata_version, 1))
+        else:
+            rewritten.append(line)
+
+    if dropped:
+        sys.stderr.write(
+            'Dropped metadata field(s) newer than %s: %s\n'
+            % (upload_metadata_version, ', '.join(sorted(set(dropped))))
+        )
+
+    files[metadata_name] = ''.join(rewritten).encode('utf-8')
 
     rows = []
     for filename in sorted(files):
@@ -903,6 +954,77 @@ checkPulpWheelAlreadyPublished() {
   return 2
 }
 
+# The simple index is served from the published repository version, which Pulp
+# updates asynchronously. A single immediate lookup can therefore miss a wheel
+# that really is published, so poll briefly before concluding it is absent.
+waitForPulpWheelPublished() {
+  wait_upload_url="$1"
+  wait_wheel_filename="$2"
+  wait_wheel_sha256="$3"
+  wait_attempts="${4:-10}"
+
+  wait_retries=0
+  while [ ${wait_retries} -lt ${wait_attempts} ]; do
+    checkPulpWheelAlreadyPublished \
+      "${wait_upload_url}" \
+      "${wait_wheel_filename}" \
+      "${wait_wheel_sha256}"
+    wait_status=$?
+
+    # Only "absent" is worth retrying; a match, a SHA conflict, and a lookup
+    # failure are all terminal answers.
+    if [ ${wait_status} -ne 1 ]; then
+      return ${wait_status}
+    fi
+
+    wait_retries=$((wait_retries + 1))
+    [ ${wait_retries} -lt ${wait_attempts} ] && sleep 3
+  done
+
+  return 1
+}
+
+# The /pypi/<base_path>/ endpoints are pulp_python's live API: the simple index
+# is generated on demand from the distribution's bound repository, so no
+# publication step is involved and autopublish is irrelevant. What the live API
+# does require is that the distribution be bound to the repository at all -- a
+# distribution pinned to a fixed publication, or pointed at a different repo,
+# will keep accepting uploads while never serving them. That failure is silent
+# and self-reinforcing, because the idempotency check reads the same index and
+# so re-uploads every time. Confirm visibility here to surface it immediately.
+confirmPulpWheelVisible() {
+  confirm_upload_url="$1"
+  confirm_wheel_filename="$2"
+  confirm_wheel_sha256="$3"
+
+  waitForPulpWheelPublished \
+    "${confirm_upload_url}" \
+    "${confirm_wheel_filename}" \
+    "${confirm_wheel_sha256}"
+  confirm_status=$?
+
+  case "${confirm_status}" in
+    0)
+      return 0
+      ;;
+    2)
+      # checkPulpWheelAlreadyPublished already reported both digests.
+      printSoftError "Pulp is serving different content under this wheel's filename."
+      return 2
+      ;;
+    1)
+      printSoftError "Wheel ${confirm_wheel_filename} uploaded successfully but never appeared on the simple index."
+      printSoftError "Check that the Pulp Python distribution for this base path is bound to a"
+      printSoftError "repository (repository=...) rather than to a pinned publication."
+      return 1
+      ;;
+    *)
+      printSoftError "Unable to confirm ${confirm_wheel_filename} on the simple index after upload."
+      return 1
+      ;;
+  esac
+}
+
 publishToPulp() {
   whl_basename=$(basename "${WHL_FILE}")
   pulp_upload_url=$(normalizePulpUploadUrl "${PULP_URL}")
@@ -934,7 +1056,12 @@ publishToPulp() {
       ;;
     1)
       ;;
-    2|3)
+    2)
+      # Same filename, different content. Deterministic -- retrying cannot help.
+      rm -rf "$tmp_dir"
+      return 2
+      ;;
+    3)
       rm -rf "$tmp_dir"
       return 1
       ;;
@@ -960,8 +1087,9 @@ publishToPulp() {
 
   if [ "$http_code" != "200" ] && [ "$http_code" != "201" ] && [ "$http_code" != "202" ]; then
     # Another publisher may have won the race between our preflight check
-    # and upload. Re-check before reporting failure.
-    checkPulpWheelAlreadyPublished \
+    # and upload. Re-check before reporting failure, polling so an index that
+    # has not caught up yet is not mistaken for a genuine upload failure.
+    waitForPulpWheelPublished \
       "${pulp_upload_url}" \
       "${whl_basename}" \
       "${PULP_WHL_SHA256}"
@@ -1002,6 +1130,12 @@ publishToPulp() {
 
       case "$task_state" in
         completed)
+          confirmPulpWheelVisible "${pulp_upload_url}" "${whl_basename}" "${PULP_WHL_SHA256}"
+          confirm_rc=$?
+          if [ ${confirm_rc} -ne 0 ]; then
+            rm -rf "$tmp_dir"
+            return ${confirm_rc}
+          fi
           printInfo "Wheel ${whl_basename} published to Pulp successfully."
           rm -rf "$tmp_dir"
           return 0
@@ -1028,6 +1162,13 @@ publishToPulp() {
     printSoftError "Pulp task did not complete within 60 seconds."
     rm -rf "$tmp_dir"
     return 1
+  fi
+
+  confirmPulpWheelVisible "${pulp_upload_url}" "${whl_basename}" "${PULP_WHL_SHA256}"
+  confirm_rc=$?
+  if [ ${confirm_rc} -ne 0 ]; then
+    rm -rf "$tmp_dir"
+    return ${confirm_rc}
   fi
 
   printInfo "Wheel ${whl_basename} published to Pulp successfully."
@@ -1070,6 +1211,7 @@ else
 fi
 
 publish_failed=false
+publish_terminal=false
 
 if ${PUBLISH_GITHUB}; then
   if publishRelease; then
@@ -1084,13 +1226,22 @@ if ${PUBLISH_PULP}; then
   if publishToPulp; then
     echo "Pulp publish completed successfully."
   else
+    pulp_rc=$?
     printSoftError "Pulp publish failed."
     publish_failed=true
+    # Exit 2 marks a failure that repeating cannot fix, so callers can stop
+    # retrying instead of hammering a deterministic error.
+    if [ "${pulp_rc}" -eq 2 ]; then
+      publish_terminal=true
+    fi
   fi
 fi
 
 if ${publish_failed}; then
   printError "zopen-publish completed with errors."
+  if ${publish_terminal}; then
+    exit 2
+  fi
   exit 1
 fi
 

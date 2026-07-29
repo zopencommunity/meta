@@ -111,21 +111,33 @@ node(node_label) {
             # Run build using the workspace version of zopen-build to test PR changes
             zopen-build -v -b release -u ${TEST_OPTION} ${PAX_RPM_OPTIONS} --no-set-active ${EXTRA_OPTIONS}
 
-            # Python builds preserve their wheel under install/**/dist. Stage
-            # the final artifact separately so the publisher does not need to
-            # know anything about the port's source layout.
+            # zopen-build copies the port's own wheel to ${ZOPEN_INSTALL_DIR}/dist.
+            # Match that path exactly: an unanchored *.whl search also picks up
+            # wheels shipped as package data under lib/python, which would then
+            # be published to the zopen index as if they were the port's output.
+            #
+            # Uses -exec rather than a `while read` over a process substitution
+            # so this stays POSIX-compatible on the z/OS node.
             if [ "${PUBLISH_PYTHON_WHEEL}" = "true" ]; then
               mkdir -p "${WORKSPACE}/wheels"
-              wheel_count=0
-              while IFS= read -r wheel; do
-                cp "$wheel" "${WORKSPACE}/wheels/"
-                wheel_count=$((wheel_count + 1))
-              done < <(find install -type f -name '*.whl' 2>/dev/null)
+              wheel_count=$(find install -type f -path '*/dist/*.whl' -print 2>/dev/null | wc -l | tr -d ' ')
 
               if [ "$wheel_count" -eq 0 ]; then
-                echo "ERROR: PUBLISH_PYTHON_WHEEL is enabled, but zopen-build produced no wheel under install/." >&2
+                echo "ERROR: PUBLISH_PYTHON_WHEEL is enabled, but zopen-build produced no wheel under install/*/dist/." >&2
                 exit 1
               fi
+
+              # A flat staging directory silently drops same-named wheels from
+              # different subtrees, so refuse rather than publish an arbitrary one.
+              distinct_count=$(find install -type f -path '*/dist/*.whl' -print 2>/dev/null | sed 's|.*/||' | sort -u | wc -l | tr -d ' ')
+              if [ "$wheel_count" -ne "$distinct_count" ]; then
+                echo "ERROR: found ${wheel_count} wheels but only ${distinct_count} distinct filenames;" >&2
+                echo "       staging them flat would discard build output." >&2
+                find install -type f -path '*/dist/*.whl' >&2
+                exit 1
+              fi
+
+              find install -type f -path '*/dist/*.whl' -exec cp {} "${WORKSPACE}/wheels/" \;
               echo "Staged ${wheel_count} Python wheel(s) for publication."
             fi
 

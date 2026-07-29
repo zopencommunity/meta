@@ -104,7 +104,8 @@ node('linux')
            !(params.SKIP_PYTHON_PUBLISH != null ? params.SKIP_PYTHON_PUBLISH : false)) {
           def pythonPromoteResult = build job: 'Python-Publish', propagate: false, parameters:
              [string(name: 'BUILD_SELECTOR', value: "<SpecificBuildSelector plugin=\"copyartifact@1.46.2\">  <buildNumber>${buildResult.number.toString()}</buildNumber></SpecificBuildSelector>"),
-              string(name: 'PROMOTED_JOB_NAME', value: 'Port-Build')
+              string(name: 'PROMOTED_JOB_NAME', value: 'Port-Build'),
+              string(name: 'BUILD_LINE', value: "${build_line}")
              ]
           def pythonResult = pythonPromoteResult.getResult()
           if(pythonResult != "SUCCESS"){
