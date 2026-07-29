@@ -327,9 +327,49 @@ _zopen_python_ensure_venv() {
   pip install setuptools build installer wheel
 }
 
+# Derive a stable SOURCE_DATE_EPOCH for the source tree in the current
+# directory. A wheel is a zip, and zip entries carry each file's mtime, so
+# without this two builds of identical source produce different bytes -- which
+# the publisher rejects as an immutable-filename conflict. Prefer the upstream
+# commit date; for tarball sources fall back to the mtime of the build
+# definition, which comes from the archive and survives re-extraction.
+_zopen_python_source_date_epoch() {
+  if git rev-parse --git-dir > /dev/null 2>&1; then
+    _sde=$(git log -1 --format=%ct 2> /dev/null)
+    if [ -n "${_sde}" ]; then
+      echo "${_sde}"
+      return 0
+    fi
+  fi
+
+  for _sde_file in pyproject.toml setup.py setup.cfg; do
+    if [ -f "${_sde_file}" ]; then
+      _sde=$(python -c 'import os,sys; print(int(os.stat(sys.argv[1]).st_mtime))' "${_sde_file}" 2> /dev/null)
+      if [ -n "${_sde}" ]; then
+        echo "${_sde}"
+        return 0
+      fi
+    fi
+  done
+
+  return 1
+}
+
 _zopen_python_build() {
   _zopen_python_ensure_venv
   rm -rf dist
+
+  # Respect an externally supplied value so a caller can pin it explicitly.
+  if [ -z "${SOURCE_DATE_EPOCH}" ]; then
+    _sde_value=$(_zopen_python_source_date_epoch)
+    if [ -n "${_sde_value}" ]; then
+      export SOURCE_DATE_EPOCH="${_sde_value}"
+      printVerbose "Building with SOURCE_DATE_EPOCH=${SOURCE_DATE_EPOCH} for reproducible wheels"
+    else
+      printWarning "Could not determine SOURCE_DATE_EPOCH; wheel will not be reproducible"
+    fi
+  fi
+
   python -m build --wheel
   _zopen_python_build_rc=$?
   deactivate
