@@ -33,7 +33,11 @@ You can find the minutes from our TSC development meetings [here](https://github
 
 ## Our Contributors
 
-We are incredibly grateful for our amazing community of contributors. You can see a list of all the people who have contributed to the zopen project [here](https://insights.linuxfoundation.org/project/zopen/contributors).
+We are incredibly grateful for our amazing community of contributors. You can see a full list of everyone who has contributed to the zopen project below.
+
+[![GitHub Contributors](https://contrib.rocks/image?repo=zopencommunity/meta)](https://github.com/zopencommunity/meta/graphs/contributors)
+
+View the full contributor graph on GitHub: [github.com/zopencommunity/meta/graphs/contributors](https://github.com/zopencommunity/meta/graphs/contributors)
 
 ## How We Work
 

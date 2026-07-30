@@ -30,6 +30,37 @@ UpdateDocs() {
   # Generate a view of the vulnerabilities in package releases
   python3 tools/create_vulnerability_doc.py --md-output-file docs/Vulnerabilities.md --xml-output-file docs/vulnerabilities_rss.xml
 
+  # Update the contributors section in team.md with a live GitHub contributors graph
+  python3 - <<'PYEOF'
+import re, sys
+
+team_file = "docs/team.md"
+with open(team_file, "r") as f:
+    content = f.read()
+
+contributors_section = """## Our Contributors
+
+We are incredibly grateful for our amazing community of contributors. You can see a full list of everyone who has contributed to the zopen project below.
+
+[![GitHub Contributors](https://contrib.rocks/image?repo=zopencommunity/meta)](https://github.com/zopencommunity/meta/graphs/contributors)
+
+View the full contributor graph on GitHub: [github.com/zopencommunity/meta/graphs/contributors](https://github.com/zopencommunity/meta/graphs/contributors)
+"""
+
+# Replace existing ## Our Contributors section (up to the next ## heading or end of file)
+content = re.sub(
+    r'## Our Contributors.*?(?=^## |\Z)',
+    contributors_section + '\n',
+    content,
+    flags=re.DOTALL | re.MULTILINE
+)
+
+with open(team_file, "w") as f:
+    f.write(content)
+
+print(f"Updated contributors section in {team_file}")
+PYEOF
+
   set -x
   # Generate zopen API Reference
   mkdir -p docs/api
