@@ -24,6 +24,9 @@ UpdateDocs() {
   # This script updates the status page
   python3 tools/getbinaries.py
 
+  # Refresh the vulnerability JSON by querying osv.dev for each release commit
+  python3 tools/create_cve_json.py --output-file docs/api/zopen_vulnerability.json
+
   # Generate a view of the vulnerabilities in package releases
   python3 tools/create_vulnerability_doc.py --md-output-file docs/Vulnerabilities.md --xml-output-file docs/vulnerabilities_rss.xml
 
