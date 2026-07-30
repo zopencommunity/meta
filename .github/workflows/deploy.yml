@@ -34,9 +34,6 @@ jobs:
           cache: npm
           cache-dependency-path: docs/package-lock.json
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-
       - name: Install dependencies
         working-directory: docs
         run: npm ci
@@ -44,12 +41,9 @@ jobs:
       - name: Build with VitePress
         working-directory: docs
         # Use BASE_PATH=/ for the canonical upstream repo; /meta/ for all forks.
-        run: |
-          if [ "${{ github.repository }}" = "zopencommunity/meta" ]; then
-            npm run docs:build:prod
-          else
-            npm run docs:build:dev
-          fi
+        env:
+          BASE_PATH: ${{ github.repository == 'zopencommunity/meta' && '/' || '/meta/' }}
+        run: npm run docs:build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
