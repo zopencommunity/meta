@@ -68,12 +68,76 @@ EOF
     body_content=$(echo "${body_content}" | sed 's|<tr|\'$'\n''<tr|g' | sed 's|</tr>|</tr>\'$'\n''|g')
     body_content=$(echo "${body_content}" | sed 's|<td|\'$'\n''<td|g' | sed 's|</td>|</td>\'$'\n''|g')
     
-    # Escape forward slashes in file paths (but not in HTML tags or URLs)
-    # This regex matches forward slashes that are NOT preceded by < or : (to avoid breaking </tag> and URLs)
-    body_content=$(echo "${body_content}" | sed 's|\([^<:]\)/|\1&#47;|g')
-    
-    # Convert URLs in angle brackets to proper HTML links with target="_blank"
-    body_content=$(echo "${body_content}" | sed 's|<\(https\?://[^>]*\)>|<a href="\1" target="_blank">\1</a>|g' | sed 's|<\(ftp://[^>]*\)>|<a href="\1" target="_blank">\1</a>|g')
+    # Convert groff OPTIONS <p> pairs into <ul><li> list for VitePress rendering.
+    # Groff emits option names at margin-left:11% and descriptions at margin-left:22%.
+    # This transforms those pairs into proper HTML list items so new options added to
+    # any zopen-* script appear as a list on the generated VitePress page automatically.
+    body_content=$(echo "${body_content}" | python3 - <<'PYEOF'
+import sys, re
+
+content = sys.stdin.read()
+
+def convert_options_section(section_html):
+    """
+    Within an OPTIONS section, convert consecutive groff <p> indent pairs:
+      <p style="margin-left:11%...">OPTION</p>
+      <p style="margin-left:22%;">DESCRIPTION</p>
+    into:
+      <ul>
+        <li><strong>OPTION</strong> — DESCRIPTION</li>
+        ...
+      </ul>
+    """
+    # Match option-name paragraphs (11% indent) followed by description (22% indent)
+    pattern = re.compile(
+        r'<p[^>]*margin-left:11%[^>]*>(.*?)</p>\s*'
+        r'<p[^>]*margin-left:22%[^>]*>(.*?)</p>',
+        re.DOTALL
+    )
+    items = pattern.findall(section_html)
+    if not items:
+        return section_html
+
+    list_html = '<ul>\n'
+    for flag, desc in items:
+        flag = flag.strip().replace('\n', ' ')
+        desc = desc.strip().replace('\n', ' ')
+        list_html += f'<li><strong>{flag}</strong> &mdash; {desc}</li>\n'
+    list_html += '</ul>'
+
+    return pattern.sub('', section_html).rstrip() + '\n' + list_html
+
+# Split around <h2>OPTIONS</h2> ... next <h2>
+parts = re.split(r'(<h2[^>]*>\s*OPTIONS.*?</h2>)', content, flags=re.DOTALL|re.IGNORECASE)
+
+if len(parts) >= 3:
+    # parts[0] = before OPTIONS heading
+    # parts[1] = the OPTIONS <h2> tag
+    # parts[2] = content after OPTIONS heading (up to next section or end)
+    # Find next <h2> in parts[2] to isolate the OPTIONS body
+    next_h2 = re.search(r'<h2', parts[2], re.IGNORECASE)
+    if next_h2:
+        options_body = parts[2][:next_h2.start()]
+        rest = parts[2][next_h2.start():]
+    else:
+        options_body = parts[2]
+        rest = ''
+    converted_body = convert_options_section(options_body)
+    content = parts[0] + parts[1] + converted_body + rest
+
+print(content, end='')
+PYEOF
+)
+
+    # Convert URLs (in angle brackets or bare) to proper HTML links with target="_blank"
+    # - Angle-bracket form:  <https://...>  →  <a href="...">...</a>
+    # - Bare form:           https://...    →  <a href="...">...</a>  (skips URLs already in href="")
+    body_content=$(echo "${body_content}" | perl -pe '
+      # Angle-bracket URLs: <https://...>, <http://...>, <ftp://...>
+      s|<((https?|ftp)://[^>]+)>|<a href="$1" target="_blank">$1</a>|g;
+      # Bare URLs not already inside href="..."
+      s|(?<!href=")(https?|ftp)://([^\s<>"]+)|<a href="$1://$2" target="_blank">$1://$2</a>|g;
+    ')
     
     # Validate HTML: Check for orphaned closing tags (closing tags without matching opening tags)
     # This prevents Vue parsing errors from invalid HTML structure
