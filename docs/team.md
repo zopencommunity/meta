@@ -29,7 +29,7 @@ The zopen community TSC is composed of the following members:
 
 ## TSC Meeting Minutes
 
-You can find the minutes from our TSC development meetings [here](https://github.com/zopencommunity/meta/wiki/Development-Minutes).
+You can find the minutes from our TSC development meetings [https://github.com/zopencommunity/meta/wiki/Development-Minutes](https://github.com/zopencommunity/meta/wiki/Development-Minutes).
 
 ## Our Contributors
 
@@ -37,12 +37,12 @@ We are incredibly grateful for our amazing community of contributors. You can se
 
 [![GitHub Contributors](https://contrib.rocks/image?repo=zopencommunity/meta)](https://github.com/zopencommunity/meta/graphs/contributors)
 
-View the full contributor graph on GitHub: [github.com/zopencommunity/meta/graphs/contributors](https://github.com/zopencommunity/meta/graphs/contributors)
+View the full contributor graph on GitHub: [https://github.com/zopencommunity/meta/graphs/contributors](https://github.com/zopencommunity/meta/graphs/contributors)
 
 ## How We Work
 
-We meet regularly to discuss the project's roadmap, review contributions, and tackle technical challenges. Our doors are always open for community [feedback](https://github.com/zopencommunity/meta/issues) and [ideas](https://github.com/orgs/zopencommunity/discussions).
+We meet regularly to discuss the project's roadmap, review contributions, and tackle technical challenges. Our doors are always open for community feedback ([https://github.com/zopencommunity/meta/issues](https://github.com/zopencommunity/meta/issues)) and ideas ([https://github.com/orgs/zopencommunity/discussions](https://github.com/orgs/zopencommunity/discussions)).
 
 ## Get in Touch
 
-Have a question, an idea, or want to get more involved? The best way to reach us is through the [community discussions forum](https://github.com/orgs/zopencommunity/discussions). We'd love to hear from you!
+Have a question, an idea, or want to get more involved? The best way to reach us is through the community discussions forum: [https://github.com/orgs/zopencommunity/discussions](https://github.com/orgs/zopencommunity/discussions). We'd love to hear from you!

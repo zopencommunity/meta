@@ -44,7 +44,7 @@ We are incredibly grateful for our amazing community of contributors. You can se
 
 [![GitHub Contributors](https://contrib.rocks/image?repo=zopencommunity/meta)](https://github.com/zopencommunity/meta/graphs/contributors)
 
-View the full contributor graph on GitHub: [github.com/zopencommunity/meta/graphs/contributors](https://github.com/zopencommunity/meta/graphs/contributors)
+View the full contributor graph on GitHub: [https://github.com/zopencommunity/meta/graphs/contributors](https://github.com/zopencommunity/meta/graphs/contributors)
 """
 
 # Replace existing ## Our Contributors section (up to the next ## heading or end of file)
