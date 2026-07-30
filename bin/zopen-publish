@@ -1238,7 +1238,9 @@ if ${PUBLISH_PULP}; then
 fi
 
 if ${publish_failed}; then
-  printError "zopen-publish completed with errors."
+  # Deliberately not printError: that exits 4 itself, which would discard the
+  # exit code selected below and make every failure look retryable.
+  printSoftError "zopen-publish completed with errors."
   if ${publish_terminal}; then
     exit 2
   fi
