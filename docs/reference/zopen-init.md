@@ -27,257 +27,53 @@ file</p>
 
 <h2>OPTIONS</h2>
 
-<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
-
-<tr valign="top" align="left">
-
-<td width="11%"></td>
-
-<td width="29%">
-
-<p style="margin-top: 1em">&minus;&minus;append&minus;to&minus;profile</p></td>
-
-<td width="60%">
-</td>
+<table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
+<tr style="background-color:#f0f0f0;">
+<th style="text-align:left; border: 1px solid #ccc;">Option</th>
+<th style="text-align:left; border: 1px solid #ccc;">Description</th>
 </tr>
-
-
 <tr>
-<td style="border: 1px solid #ccc;"><code></code></td>
+<td style="border: 1px solid #ccc;"><code>&minus;&minus;append&minus;to&minus;profile</code></td>
 <td style="border: 1px solid #ccc;">appends sourcing of zopen&minus;config to current user&rsquo;s .profile</td>
 </tr>
-</table>
-
-
-<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
-
-<tr valign="top" align="left">
-
-<td width="11%"></td>
-
-<td width="27%">
-
-<p style="margin-top: 1em">&minus;&minus;[no]enable&minus;stats</p></td>
-
-<td width="62%">
-</td>
-</tr>
-
-
 <tr>
-<td style="border: 1px solid #ccc;"><code></code></td>
+<td style="border: 1px solid #ccc;"><code>&minus;&minus;[no]enable&minus;stats</code></td>
 <td style="border: 1px solid #ccc;">Toggle enabling collection of usage statistics</td>
 </tr>
-</table>
-
-
-<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
-
-<tr valign="top" align="left">
-
-<td width="11%"></td>
-
-<td width="37%">
-
-<p style="margin-top: 1em">&minus;&minus;[no]override&minus;zos&minus;tools</p></td>
-
-<td width="52%">
-</td>
-</tr>
-
-
 <tr>
-<td style="border: 1px solid #ccc;"><code></code></td>
+<td style="border: 1px solid #ccc;"><code>&minus;&minus;[no]override&minus;zos&minus;tools</code></td>
 <td style="border: 1px solid #ccc;">Toggle default mode for overriding z/OS /bin tools in the zopen&minus;config. Default is &minus;&minus;nooverride&minus;zos&minus;tools</td>
 </tr>
-</table>
-
-
-<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
-
-<tr valign="top" align="left">
-
-<td width="11%"></td>
-
-<td width="34%">
-
-<p style="margin-top: 1em">&minus;&minus;bypass&minus;prereq&minus;checks</p></td>
-
-<td width="55%">
-</td>
-</tr>
-
-
 <tr>
-<td style="border: 1px solid #ccc;"><code></code></td>
+<td style="border: 1px solid #ccc;"><code>&minus;&minus;bypass&minus;prereq&minus;checks</code></td>
 <td style="border: 1px solid #ccc;">Bypasses pre&minus;requisite checks</td>
 </tr>
-</table>
-
-
-<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
-
-<tr valign="top" align="left">
-
-<td width="11%"></td>
-
-<td width="37%">
-
-<p style="margin-top: 1em">&minus;f,
-&minus;&minus;fs&minus;layout &lt;LAYOUT&gt;</p></td>
-
-<td width="52%">
-</td>
-</tr>
-
-
 <tr>
-<td style="border: 1px solid #ccc;"><code></code></td>
-<td style="border: 1px solid #ccc;">The filesystem structure to use for installed packages on disk; packages will be installed to this location under &lt;zopen rootfs&gt;.</td>
+<td style="border: 1px solid #ccc;"><code>&minus;f, &minus;&minus;fs&minus;layout &lt;LAYOUT&gt;</code></td>
+<td style="border: 1px solid #ccc;">The filesystem structure to use for installed packages on disk; packages will be installed to this location under &lt;zopen rootfs&gt;. &lt;LAYOUT&gt; should be one of: usrlclz: /usr/local/zopen (default), zopen: /usr/zopen, prod: legacy zopen standard location, ibm: /usr/lpp, fhs: File Hierarchical Standard (/opt), usrlcl: usr/local</td>
 </tr>
-
 <tr>
-<td style="border: 1px solid #ccc;"><code></code></td>
-<td style="border: 1px solid #ccc;">&lt;LAYOUT&gt; should be one of:</td>
-</tr>
-
-<tr>
-<td style="border: 1px solid #ccc;"><code></code></td>
-<td style="border: 1px solid #ccc;">usrlclz: /usr/local/zopen (default), zopen: /usr/zopen, prod: legacy zopen standard location, ibm: /usr/lpp, fhs: File Hierarchical Standard (/opt), usrlcl: usr/local</td>
-</tr>
-</table>
-
-
-<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
-
-<tr valign="top" align="left">
-
-<td width="11%"></td>
-
-<td width="21%">
-
-<p style="margin-top: 1em">&minus;h, &minus;?,
-&minus;&minus;help</p></td>
-
-<td width="68%">
-</td>
-</tr>
-
-
-<tr>
-<td style="border: 1px solid #ccc;"><code></code></td>
+<td style="border: 1px solid #ccc;"><code>&minus;h, &minus;?, &minus;&minus;help</code></td>
 <td style="border: 1px solid #ccc;">display this help and exit</td>
 </tr>
-</table>
-
-
-<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
-
-<tr valign="top" align="left">
-
-<td width="11%"></td>
-
-<td width="14%">
-
-<p style="margin-top: 1em">&minus;&minus;re&minus;init</p></td>
-
-<td width="75%">
-</td>
-</tr>
-
-
 <tr>
-<td style="border: 1px solid #ccc;"><code></code></td>
+<td style="border: 1px solid #ccc;"><code>&minus;&minus;re&minus;init</code></td>
 <td style="border: 1px solid #ccc;">Re&minus;initializes a previous zopen environment or create a new environment using current tooling. Re&minus;initializing over a previous installation will re&minus;use existing package structures and configuration and regenerate configuration files. select the active version for PACKAGE from a list</td>
 </tr>
-</table>
-
-
-<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
-
-<tr valign="top" align="left">
-
-<td width="11%"></td>
-
-<td width="14%">
-
-<p style="margin-top: 1em">&minus;&minus;refresh</p></td>
-
-<td width="75%">
-</td>
-</tr>
-
-
 <tr>
-<td style="border: 1px solid #ccc;"><code></code></td>
+<td style="border: 1px solid #ccc;"><code>&minus;&minus;refresh</code></td>
 <td style="border: 1px solid #ccc;">Refreshes the zopen&minus;config file</td>
 </tr>
-</table>
-
-
-<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
-
-<tr valign="top" align="left">
-
-<td width="11%"></td>
-
-<td width="26%">
-
-<p style="margin-top: 1em">&minus;&minus;releaseline&minus;dev</p></td>
-
-<td width="63%">
-</td>
-</tr>
-
-
 <tr>
-<td style="border: 1px solid #ccc;"><code></code></td>
+<td style="border: 1px solid #ccc;"><code>&minus;&minus;releaseline&minus;dev</code></td>
 <td style="border: 1px solid #ccc;">globally configure the release line for package installs to enable Development (DEV) packages; the default is for a system to use STABLE packages</td>
 </tr>
-</table>
-
-
-<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
-
-<tr valign="top" align="left">
-
-<td width="11%"></td>
-
-<td width="20%">
-
-<p style="margin-top: 1em">&minus;v,
-&minus;&minus;verbose</p></td>
-
-<td width="69%">
-</td>
-</tr>
-
-
 <tr>
-<td style="border: 1px solid #ccc;"><code></code></td>
+<td style="border: 1px solid #ccc;"><code>&minus;v, &minus;&minus;verbose</code></td>
 <td style="border: 1px solid #ccc;">run in verbose mode</td>
 </tr>
-</table>
-
-
-<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
-
-<tr valign="top" align="left">
-
-<td width="11%"></td>
-
-<td width="14%">
-
-<p style="margin-top: 1em">&minus;y,
-&minus;&minus;yes</p></td>
-
-<td width="75%">
-</td>
-</tr>
-
-
 <tr>
-<td style="border: 1px solid #ccc;"><code></code></td>
+<td style="border: 1px solid #ccc;"><code>&minus;y, &minus;&minus;yes</code></td>
 <td style="border: 1px solid #ccc;">automatically answer &rsquo;yes&rsquo; to prompts</td>
 </tr>
 </table>

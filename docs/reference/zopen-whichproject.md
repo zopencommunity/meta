@@ -20,16 +20,12 @@
 
 <h2>DESCRIPTION</h2>
 
-<table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
-<tr style="background-color:#f0f0f0;">
-<th style="text-align:left; border: 1px solid #ccc;">Option</th>
-<th style="text-align:left; border: 1px solid #ccc;">Description</th>
-</tr>
-<tr>
-<td style="border: 1px solid #ccc;"><code>zopen&minus;whichproject &minus; Find which zopen project provides a command or library.</code></td>
-<td style="border: 1px solid #ccc;">COMMAND is the name of an executable (e.g., &rsquo;git&rsquo;, &rsquo;curl&rsquo;). LIBRARY is the name of a library file (e.g., &rsquo;libssl.so&rsquo;, &rsquo;libz.a&rsquo;).</td>
-</tr>
-</table>
+<p style="margin-left:11%; margin-top: 1em">zopen-whichproject
+&minus; Find which zopen project provides a command or library.</p>
+
+<p style="margin-left:11%; margin-top: 1em">COMMAND is the name of an executable
+(e.g., &rsquo;git&rsquo;, &rsquo;curl&rsquo;). LIBRARY is the name of a library file
+(e.g., &rsquo;libssl.so&rsquo;, &rsquo;libz.a&rsquo;).</p>
 
 
 <h2>OPTIONS</h2>
