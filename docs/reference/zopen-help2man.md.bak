@@ -1,15 +1,13 @@
 <div v-pre class="man-page-content">
 
 <div class="header-with-back">
-  <div class="home-link">
-    <a href="./zopen-reference">🏠 Home</a>
-  </div>
-    <div class="nav-buttons">
-    <a href="./zopen-remove" class="nav-link">← Prev</a>
-    <a href="./zopen-update-cacert" class="nav-link">Next →</a>
-    </div>
+<div class="back-link">
+<a href="./zopen-reference">← Back</a>
+            <a href="./zopen-info" class="nav-link">Next →</a>
 </div>
-<h1 align="center">ZOPEN-SPLIT-PATCH</h1>
+</div>
+
+<h1 align="center">ZOPEN-HELP2MAN</h1>
 
 <hr />
 
@@ -18,7 +16,7 @@ NAME
 </h2>
 
 <p style="margin-left: 11%; margin-top: 1em">
-zopen-split-patch &minus; manual page for zopen-split-patch 0.8.4
+zopen-help2man &minus; manual page for zopen-help2man 0.8.4
 </p>
 
 <h2>
@@ -26,7 +24,7 @@ SYNOPSIS
 </h2>
 
 <p style="margin-left: 11%; margin-top: 1em">
-zopen-split-patch [OPTION] [PATCHFILE]
+zopen-help2man [OPTION] DIRECTORY
 </p>
 
 <h2>
@@ -34,12 +32,13 @@ DESCRIPTION
 </h2>
 
 <p style="margin-left: 11%; margin-top: 1em">
-zopen&minus;split&minus;patch &minus; split a patch file into one patch
-file for each patch.
+zopen&minus;help2man &minus; generate man pages from help and version
+information for zopen and zopen&minus;* tools. <br />
+DIRECTORY
 </p>
 
-<p style="margin-left: 22%; margin-top: 1em">
-Patches are written to split&minus;patches in the current directory.
+<p style="margin-left: 22%">
+the existing directory to write the man pages.
 </p>
 
 <h2>
@@ -58,11 +57,11 @@ OPTIONS
 
 <td width="2%"></td>
 
-<td width="41%">
-<p style="margin-top: 1em">display this help and exit.</p>
+<td width="40%">
+<p style="margin-top: 1em">display this help and exit</p>
 </td>
 
-<td width="37%"></td>
+<td width="38%"></td>
 
 </tr>
 
@@ -70,16 +69,16 @@ OPTIONS
 
 <p style="margin-left: 11%">&minus;&minus;version</p>
 
-<p style="margin-left: 22%">print version.</p>
+<p style="margin-left: 22%">print version</p>
 
 <p style="margin-left: 11%; margin-top: 1em">
-Example:
+Example:&quot;
 <br />
-zopen&minus;split&minus;patch P1.patch
+zopen&minus;help2man /tmp/man1
 </p>
 
 <p style="margin-left: 22%">
-write P1.patch into multiple patches under split&minus;patches
+write the man pages to the /tmp/man1 directory.
 </p>
 
 <p style="margin-left: 11%; margin-top: 1em">

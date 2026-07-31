@@ -1,11 +1,6 @@
 <div v-pre class="man-page-content">
 
 <div class="header-with-back">
-  <div class="back-link">
-    <a href="./zopen-reference">← Back</a>
-  </div>
-</div>
-
 <h1 align="center">ZOPEN-IMPORTENVS</h1>
 
 <h2>NAME</h2>

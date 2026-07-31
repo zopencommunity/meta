@@ -1,15 +1,13 @@
 <div v-pre class="man-page-content">
 
 <div class="header-with-back">
-  <div class="home-link">
-    <a href="./zopen-reference">🏠 Home</a>
-  </div>
-    <div class="nav-buttons">
-    <a href="./zopen-remove" class="nav-link">← Prev</a>
-    <a href="./zopen-update-cacert" class="nav-link">Next →</a>
-    </div>
+<div class="back-link">
+<a href="./zopen-reference">← Back</a>
+            <a href="./zopen-compute-builddeps" class="nav-link">Next →</a>
 </div>
-<h1 align="center">ZOPEN-SPLIT-PATCH</h1>
+</div>
+
+<h1 align="center">ZOPEN-COMPARE-VERSIONS</h1>
 
 <hr />
 
@@ -18,15 +16,8 @@ NAME
 </h2>
 
 <p style="margin-left: 11%; margin-top: 1em">
-zopen-split-patch &minus; manual page for zopen-split-patch 0.8.4
-</p>
-
-<h2>
-SYNOPSIS
-</h2>
-
-<p style="margin-left: 11%; margin-top: 1em">
-zopen-split-patch [OPTION] [PATCHFILE]
+zopen-compare-versions &minus; manual page for zopen-compare-versions
+0.8.4
 </p>
 
 <h2>
@@ -34,17 +25,10 @@ DESCRIPTION
 </h2>
 
 <p style="margin-left: 11%; margin-top: 1em">
-zopen&minus;split&minus;patch &minus; split a patch file into one patch
-file for each patch.
+zopen&minus;compare&minus;versions &minus; print installed version of z/OS
+tool and corresponding BREW latest version
+zopen&minus;compare&minus;versions [OPTION] Options:
 </p>
-
-<p style="margin-left: 22%; margin-top: 1em">
-Patches are written to split&minus;patches in the current directory.
-</p>
-
-<h2>
-OPTIONS
-</h2>
 
 <table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
 
@@ -53,16 +37,16 @@ OPTIONS
 <td width="9%"></td>
 
 <td width="11%">
-<p style="margin-top: 1em">&minus;&minus;help</p>
+<p>&minus;&minus;help</p>
 </td>
 
 <td width="2%"></td>
 
-<td width="41%">
-<p style="margin-top: 1em">display this help and exit.</p>
+<td width="40%">
+<p>display this help and exit</p>
 </td>
 
-<td width="37%"></td>
+<td width="38%"></td>
 
 </tr>
 
@@ -70,17 +54,7 @@ OPTIONS
 
 <p style="margin-left: 11%">&minus;&minus;version</p>
 
-<p style="margin-left: 22%">print version.</p>
-
-<p style="margin-left: 11%; margin-top: 1em">
-Example:
-<br />
-zopen&minus;split&minus;patch P1.patch
-</p>
-
-<p style="margin-left: 22%">
-write P1.patch into multiple patches under split&minus;patches
-</p>
+<p style="margin-left: 22%">print version</p>
 
 <p style="margin-left: 11%; margin-top: 1em">
 This is free software: you are free to change and redistribute it under

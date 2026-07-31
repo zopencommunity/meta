@@ -1,35 +1,31 @@
 <div v-pre class="man-page-content">
 
 <div class="header-with-back">
-  <div class="home-link">
-    <a href="./zopen-reference">🏠 Home</a>
+  <div class="back-link">
+    <a href="./zopen-reference">← Back</a>
   </div>
-    <div class="nav-buttons">
-    <a href="./zopen-query" class="nav-link">← Prev</a>
-    <a href="./zopen-split-patch" class="nav-link">Next →</a>
-    </div>
+            <a href="./zopen-build" class="nav-link">Next →</a>
 </div>
-<h1 align="center">ZOPEN-REMOVE</h1>
+
+<h1 align="center">ZOPEN-AUDIT</h1>
 
 <h2>NAME</h2>
 
-<p style="margin-left:11%; margin-top: 1em">zopen-remove
-&minus; manual page for zopen-remove 0.8.4</p>
+<p style="margin-left:11%; margin-top: 1em">zopen-audit
+&minus; manual page for zopen-audit 0.8.4</p>
 
 <h2>SYNOPSIS</h2>
 
-<p style="margin-left:11%; margin-top: 1em">zopen-remove
-[OPTION] [PACKAGE] ...</p>
+<p style="margin-left:11%; margin-top: 1em">zopen-audit
+[OPTION]</p>
 
 <h2>DESCRIPTION</h2>
 
-<p style="margin-left:11%; margin-top: 1em">zopen&minus;remove
-is a utility for zopen community to remove an installed
-package or packages.</p>
+<p style="margin-left:11%; margin-top: 1em">zopen&minus;audit
+is a utility for zopen community to check for
+vulnerabilities in your installed packages.</p>
 
 <h2>OPTIONS</h2>
-
-
 
 
 
@@ -41,14 +37,6 @@ package or packages.</p>
 <tr style="background-color:#f0f0f0;">
 <th style="text-align:left; border: 1px solid #ccc;">Option</th>
 <th style="text-align:left; border: 1px solid #ccc;">Description</th>
-</tr>
-<tr>
-<td style="border: 1px solid #ccc;"><code>&minus;h, &minus;&minus;help, &minus;?</code></td>
-<td style="border: 1px solid #ccc;">display this help and exit.</td>
-</tr>
-<tr>
-<td style="border: 1px solid #ccc;"><code>&minus;p, &minus;&minus;purge</code></td>
-<td style="border: 1px solid #ccc;">remove package, the versioned directory, and any cached files.</td>
 </tr>
 <tr>
 <td style="border: 1px solid #ccc;"><code>&minus;v, &minus;&minus;verbose</code></td>
@@ -59,15 +47,17 @@ package or packages.</p>
 <td style="border: 1px solid #ccc;">print version.</td>
 </tr>
 <tr>
-<td style="border: 1px solid #ccc;"><code>&minus;y, &minus;&minus;yes</code></td>
-<td style="border: 1px solid #ccc;">automatically answer yes to prompts.</td>
+<td style="border: 1px solid #ccc;"><code>&minus;u, &minus;&minus;update, &minus;&minus;upgrade</code></td>
+<td style="border: 1px solid #ccc;">attempt to resolve vulnerabilities by upgrading packages.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;r, &minus;&minus;remove</code></td>
+<td style="border: 1px solid #ccc;">remove packages with vulnerabilities.</td>
 </tr>
 </table>
 
 
 <h2>EXAMPLES</h2>
-
-
 
 <table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
 <tr style="background-color:#f0f0f0;">
@@ -75,12 +65,8 @@ package or packages.</p>
 <th style="text-align:left; border: 1px solid #ccc;">Description</th>
 </tr>
 <tr>
-<td style="border: 1px solid #ccc;"><code>zopen remove foo bar</code></td>
-<td style="border: 1px solid #ccc;">interactively remove the foo and bar packages if installed</td>
-</tr>
-<tr>
-<td style="border: 1px solid #ccc;"><code>zopen remove &minus;&minus;yes foo bar</code></td>
-<td style="border: 1px solid #ccc;">remove the foo and bar packages if installed, without asking for confirmation</td>
+<td style="border: 1px solid #ccc;"><code>zopen audit</code></td>
+<td style="border: 1px solid #ccc;">check for vulnerabilities in all installed packages</td>
 </tr>
 </table>
 
@@ -94,7 +80,7 @@ contributors to the zopen community.
 <h2>REPORTING BUGS</h2>
 
 <p style="margin-left:11%; margin-top: 1em">Report bugs at
-<a href="https://github.com/zopencommunity/meta/issues" target="_blank">https://github.com/zopencommunity/meta/issues</a> .</p>
+<a href="https://github.com/zopencommunity/meta/issues." target="_blank">https://github.com/zopencommunity/meta/issues.</a></p>
 
 <p style="margin-left:11%; margin-top: 1em">This is free
 software: you are free to change and redistribute it under

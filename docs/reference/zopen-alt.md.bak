@@ -1,31 +1,29 @@
 <div v-pre class="man-page-content">
 
 <div class="header-with-back">
-  <div class="home-link">
-    <a href="./zopen-reference">🏠 Home</a>
+  <div class="back-link">
+    <a href="./zopen-reference">← Back</a>
   </div>
-    <div class="nav-buttons">
-    <a href="./zopen-query" class="nav-link">← Prev</a>
-    <a href="./zopen-split-patch" class="nav-link">Next →</a>
-    </div>
+            <a href="./zopen-audit" class="nav-link">Next →</a>
 </div>
-<h1 align="center">ZOPEN-REMOVE</h1>
+
+<h1 align="center">ZOPEN-ALT</h1>
 
 <h2>NAME</h2>
 
-<p style="margin-left:11%; margin-top: 1em">zopen-remove
-&minus; manual page for zopen-remove 0.8.4</p>
+<p style="margin-left:11%; margin-top: 1em">zopen-alt
+&minus; manual page for zopen-alt 0.8.4</p>
 
 <h2>SYNOPSIS</h2>
 
-<p style="margin-left:11%; margin-top: 1em">zopen-remove
-[OPTION] [PACKAGE] ...</p>
+<p style="margin-left:11%; margin-top: 1em">zopen-alt
+[OPTION] [PACKAGE] [PARAMETERS]...</p>
 
 <h2>DESCRIPTION</h2>
 
-<p style="margin-left:11%; margin-top: 1em">zopen&minus;remove
-is a utility for zopen community to remove an installed
-package or packages.</p>
+<p style="margin-left:11%; margin-top: 1em">zopen&minus;alt
+is a utility for zopen community to switch package versions
+for currently installed packages.</p>
 
 <h2>OPTIONS</h2>
 
@@ -47,8 +45,12 @@ package or packages.</p>
 <td style="border: 1px solid #ccc;">display this help and exit.</td>
 </tr>
 <tr>
-<td style="border: 1px solid #ccc;"><code>&minus;p, &minus;&minus;purge</code></td>
-<td style="border: 1px solid #ccc;">remove package, the versioned directory, and any cached files.</td>
+<td style="border: 1px solid #ccc;"><code>&minus;&minus;select [PACKAGE]</code></td>
+<td style="border: 1px solid #ccc;">select the active version for PACKAGE from a list.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;s, &minus;&minus;set [PACKAGE] [VERSION]</code></td>
+<td style="border: 1px solid #ccc;">set the active version for PACKAGE to VERSION.</td>
 </tr>
 <tr>
 <td style="border: 1px solid #ccc;"><code>&minus;v, &minus;&minus;verbose</code></td>
@@ -56,16 +58,14 @@ package or packages.</p>
 </tr>
 <tr>
 <td style="border: 1px solid #ccc;"><code>&minus;&minus;version</code></td>
-<td style="border: 1px solid #ccc;">print version.</td>
-</tr>
-<tr>
-<td style="border: 1px solid #ccc;"><code>&minus;y, &minus;&minus;yes</code></td>
-<td style="border: 1px solid #ccc;">automatically answer yes to prompts.</td>
+<td style="border: 1px solid #ccc;">print version</td>
 </tr>
 </table>
 
 
 <h2>EXAMPLES</h2>
+
+
 
 
 
@@ -75,12 +75,16 @@ package or packages.</p>
 <th style="text-align:left; border: 1px solid #ccc;">Description</th>
 </tr>
 <tr>
-<td style="border: 1px solid #ccc;"><code>zopen remove foo bar</code></td>
-<td style="border: 1px solid #ccc;">interactively remove the foo and bar packages if installed</td>
+<td style="border: 1px solid #ccc;"><code>zopen alt foo</code></td>
+<td style="border: 1px solid #ccc;">list the available alternatives for package &rsquo;foo&rsquo;</td>
 </tr>
 <tr>
-<td style="border: 1px solid #ccc;"><code>zopen remove &minus;&minus;yes foo bar</code></td>
-<td style="border: 1px solid #ccc;">remove the foo and bar packages if installed, without asking for confirmation</td>
+<td style="border: 1px solid #ccc;"><code>zopen alt &minus;&minus;select foo</code></td>
+<td style="border: 1px solid #ccc;">list the available alternatives for package &rsquo;foo&rsquo; and allow the user to select an alternative version</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>zopen alt &minus;&minus;set foo foo&minus;1.2.3.19700101_012345.zos</code></td>
+<td style="border: 1px solid #ccc;">set the active version of package &rsquo;foo&rsquo; to version foo&minus;1.2.3.19700101_012345.zos if available</td>
 </tr>
 </table>
 
@@ -94,7 +98,7 @@ contributors to the zopen community.
 <h2>REPORTING BUGS</h2>
 
 <p style="margin-left:11%; margin-top: 1em">Report bugs at
-<a href="https://github.com/zopencommunity/meta/issues" target="_blank">https://github.com/zopencommunity/meta/issues</a> .</p>
+<a href="https://github.com/zopencommunity/meta/issues" target="_blank">https://github.com/zopencommunity/meta/issues</a></p>
 
 <p style="margin-left:11%; margin-top: 1em">This is free
 software: you are free to change and redistribute it under

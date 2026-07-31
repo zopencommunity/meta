@@ -1,14 +1,12 @@
 <div v-pre class="man-page-content">
 
 <div class="header-with-back">
-  <div class="home-link">
-    <a href="./zopen-reference">🏠 Home</a>
+  <div class="back-link">
+    <a href="./zopen-reference">← Back</a>
   </div>
-    <div class="nav-buttons">
-    <a href="./zopen-migrate-buildenv" class="nav-link">← Prev</a>
-    <a href="./zopen-pax2rpm" class="nav-link">Next →</a>
-    </div>
+            <a href="./zopen-pax2rpm" class="nav-link">Next →</a>
 </div>
+
 <h1 align="center">ZOPEN-MIGRATE-GROOVY</h1>
 
 <h2>NAME</h2>

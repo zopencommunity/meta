@@ -1,11 +1,14 @@
 <div v-pre class="man-page-content">
 
 <div class="header-with-back">
-<div class="back-link">
-<a href="./zopen-reference">← Back</a>
+  <div class="home-link">
+    <a href="./zopen-reference">🏠 Home</a>
+  </div>
+    <div class="nav-buttons">
+    <a href="./zopen-clean" class="nav-link">← Prev</a>
+    <a href="./zopen-compute-builddeps" class="nav-link">Next →</a>
+    </div>
 </div>
-</div>
-
 <h1 align="center">ZOPEN-COMPARE-VERSIONS</h1>
 
 <hr />
