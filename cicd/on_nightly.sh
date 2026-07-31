@@ -164,13 +164,18 @@ PYEOF
 )
 
     # Convert URLs (in angle brackets or bare) to proper HTML links with target="_blank"
-    # - Angle-bracket form:  <https://...>  →  <a href="...">...</a>
-    # - Bare form:           https://...    →  <a href="...">...</a>  (skips URLs already in href="")
+    # - HTML-entity angle-bracket form:  &lt;https://...&gt;  →  <a href="...">...</a>
+    # - Literal angle-bracket form:      <https://...>        →  <a href="...">...</a>
+    # - Bare form:                        https://...          →  <a href="...">...</a>  (skips URLs already in href="")
+    # NOTE: groff -Thtml encodes angle-brackets around URLs as &lt; / &gt; entities,
+    # so the entity form must be handled first, before the bare-URL pass strips &gt; into the href.
     body_content=$(echo "${body_content}" | perl -pe '
-      # Angle-bracket URLs: <https://...>, <http://...>, <ftp://...>
-      s|<((https?|ftp)://[^>]+)>|<a href="$1" target="_blank">$1</a>|g;
-      # Bare URLs not already inside href="..."
-      s|(?<!href=")(https?|ftp)://([^\s<>"]+)|<a href="$1://$2" target="_blank">$1://$2</a>|g;
+      # Entity-encoded angle-bracket URLs: &lt;https://...&gt;
+      s{&lt;((https?|ftp)://[^&]+)&gt;}{<a href="$1" target="_blank">$1</a>}g;
+      # Literal angle-bracket URLs: <https://...>
+      s{<((https?|ftp)://[^>]+)>}{<a href="$1" target="_blank">$1</a>}g;
+      # Bare URLs not already inside an href="..." value or existing link text (preceded by " or >)
+      s{(?<![">])(https?|ftp)://([^\s<>"&]+)}{<a href="$1://$2" target="_blank">$1://$2</a>}g;
     ')
     
     # Validate HTML: Check for orphaned closing tags (closing tags without matching opening tags)
