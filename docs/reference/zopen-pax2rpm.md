@@ -24,13 +24,13 @@
 <a name="DESCRIPTION"></a>
 
 <p style="margin-left:11%; margin-top: 1em">Generate an RPM
-spec file from a zz/#47;OS pax archive.</p>
+spec file from a z/OS pax archive.</p>
 
 <p style="margin-left:11%; margin-top: 1em"><b>Arguments:</b>
 pax_file</p>
 
 <p style="margin-left:22%;">Path to the pax file (e.g.,
-/pathh/#47;too/#47;file.pax or file.pax.Z)</p>
+/path/to/file.pax or file.pax.Z)</p>
 
 <h2>OPTIONS</h2>
 <a name="OPTIONS"></a>
@@ -111,7 +111,7 @@ spec file</p>
 &lt;dir&gt;</p>
 
 <p style="margin-left:22%;">RPM build root directory
-(default: ~~/#47;rpmbuild)</p>
+(default: ~/rpmbuild)</p>
 
 <p style="margin-left:11%;"><b>&minus;&minus;validate</b></p>
 
@@ -156,8 +156,8 @@ actually doing it</p>
 
 <p style="margin-left:11%; margin-top: 1em"><b>Example:</b></p>
 
-<p style="margin-left:22%;">>/#47;varr/#47;libb/#47;jenkinss/#47;workspacee/#47;Port&minus;Update&minus;Nightlyy/#47;meta_updatee/#47;binn/#47;zopen&minus;pax2rpm
-/nfsmntss/#47;bpidriverss/#47;oefv1r11/#47;os3900/#47;latestt/#47;HAMN110.runnable.pax.Z
+<p style="margin-left:22%;">>/var/lib/jenkins/workspace/Port&minus;Update&minus;Nightlyy/meta_update/bin/zopen&minus;pax2rpm
+/nfsmounts/bpidrivers/oefv1r1/os3900/latest/HAMN110.runnable.pax.Z
 \</p>
 
 <table width="100%" border="0" rules="none" frame="void"
@@ -196,7 +196,7 @@ actually doing it</p>
 <td width="57%">
 
 <p style="margin-top: 1em"><b>&minus;&minus;url</b>
-&quot;https:///#47;www.ibm.com&quot;</p></td>
+&quot;<a href="https://www.ibm.com" target="_blank">https://www.ibm.com</a>&quot;</p></td>
 
 <td width="32%">
 </td>
@@ -207,7 +207,7 @@ actually doing it</p>
 <p style="margin-left:11%; margin-top: 1em">This is free
 software: you are free to change and redistribute it under
 the terms of the Apache License, Version 2.0.
-&lt;https:///#47;www.apache.orgg/#47;licensess/#47;LICENSE&minus;2.0.html&gt;
+&lt;<a href="https://www.apache.org/licenses/LICENSE" target="_blank">https://www.apache.org/licenses/LICENSE</a>&minus;2.0.html&gt;
 There is NO WARRANTY, to the extent permitted by law.</p>
 
 <h2>AUTHOR</h2>
@@ -215,6 +215,6 @@ There is NO WARRANTY, to the extent permitted by law.</p>
 
 <p style="margin-left:11%; margin-top: 1em">Written by
 contributors to the zopen community.
-&lt;https:///#47;github.comm/#47;zopencommunityy/#47;metaa/#47;graphss/#47;contributors&gt;</p>
+<a href="https://github.com/zopencommunity/meta/graphs/contributors" target="_blank">https://github.com/zopencommunity/meta/graphs/contributors</a></p>
 
 </div>

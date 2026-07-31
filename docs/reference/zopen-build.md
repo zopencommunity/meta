@@ -6,117 +6,126 @@
   </div>
 </div>
 
+
 <h1 align="center">ZOPEN-BUILD</h1>
 
-<h2>NAME</h2>
-<a name="NAME"></a>
+
+
+
+<h2>NAME
+</h2>
+
 
 <p style="margin-left:11%; margin-top: 1em">zopen-build
 &minus; manual page for zopen-build 0.8.4</p>
 
-<h2>SYNOPSIS</h2>
-<a name="SYNOPSIS"></a>
+<h2>SYNOPSIS
+</h2>
 
-<p style="margin-left:11%; margin-top: 1em"><b>zopen-build</b>
+
+
+<p style="margin-left:11%; margin-top: 1em">zopen-build
 [OPTION]...</p>
 
-<h2>DESCRIPTION</h2>
-<a name="DESCRIPTION"></a>
+<h2>DESCRIPTION
+</h2>
+
+
 
 <p style="margin-left:11%; margin-top: 1em">zopen&minus;build
 is a general purpose build script to be used with the zopen
 community ports.</p>
 
-<p style="margin-left:11%;"><b>&minus;&minus;build</b> LINE</p>
+&minus;&minus;build LINE</p>
 
 <p style="margin-left:22%;">LINE may be dev or stable. This
 is the build line to build off of.</p>
 
-<p style="margin-left:11%;"><b>&minus;&minus;buildtype</b>
+<p style="margin-left:11%;">&minus;&minus;buildtype
 TYPE</p>
 
 <p style="margin-left:22%;">TYPE may be release or debug.
 The default is release.</p>
 
-<p style="margin-left:11%;"><b>&minus;c</b>,
-<b>&minus;&minus;clean</b></p>
+<p style="margin-left:11%;">&minus;c,
+&minus;&minus;clean</p>
 
 <p style="margin-left:22%;">Deletes all of the build output
 and forces reconfigure with next build.</p>
 
-<p style="margin-left:11%;"><b>&minus;&minus;ccache</b></p>
+
+<p style="margin-left:11%;">&minus;&minus;ccache</p>
 
 <p style="margin-left:22%;">Enable ccache for clang builds
 to speed up recompilation.</p>
 
-<p style="margin-left:11%;"><b>&minus;&minus;comp</b>
+<p style="margin-left:11%;">&minus;&minus;comp
 COMP</p>
 
 <p style="margin-left:22%;">COMP may be xlclang, clang, go,
 java python. The default is clang.</p>
 
-<p style="margin-left:11%;"><b>&minus;e</b> ENV_FILE</p>
+<p style="margin-left:11%;">&minus;e ENV_FILE</p>
 
 <p style="margin-left:22%;">source ENV_FILE instead of
 buildenv to establish build environment.</p>
 
-<p style="margin-left:11%;"><b>&minus;E</b>,
-<b>&minus;&minus;editable</b></p>
+<p style="margin-left:11%;">&minus;E,
+&minus;&minus;editable</p>
 
 <p style="margin-left:22%;">enable editing of the
-executable (adds <b>&minus;Wl</b>,&minus;bedit=yes to
+executable (adds &minus;Wl,&minus;bedit=yes to
 LDFLAGS).</p>
 
-<p style="margin-left:11%;"><b>&minus;&minus;instrument</b></p>
+
+<p style="margin-left:11%;">&minus;&minus;instrument</p>
 
 <p style="margin-left:22%;">instruments the application
-with option <b>&minus;finstrument&minus;functions</b> (clang
+with option &minus;finstrument&minus;functions (clang
 only)</p>
 
-<p style="margin-left:11%;"><b>&minus;f</b>,
-<b>&minus;&minus;force&minus;rebuild</b></p>
+<p style="margin-left:11%;">&minus;f,
+&minus;&minus;force&minus;rebuild</p>
 
 <p style="margin-left:22%;">forces a rebuild, including
 running bootstrap and configure again.</p>
 
-<p style="margin-left:11%;"><b>&minus;&minus;forcepatchapply</b></p>
+
+<p style="margin-left:11%;">&minus;&minus;forcepatchapply</p>
 
 <p style="margin-left:22%;">force apply the patches, where
 rejected patches are placed into a corresponding file of the
 same name, with the .rej extension.</p>
 
-<p style="margin-left:11%;"><b>&minus;g</b>,
-<b>&minus;&minus;get&minus;source</b></p>
+<p style="margin-left:11%;">&minus;g,
+&minus;&minus;get&minus;source</p>
 
 <p style="margin-left:22%;">get the source and apply patch
 without building.</p>
 
-<p style="margin-left:11%;"><b>&minus;gp</b>,
-<b>&minus;&minus;generate&minus;pax</b></p>
+<p style="margin-left:11%;">&minus;gp,
+&minus;&minus;generate&minus;pax</p>
 
 <p style="margin-left:22%;">generate a pax.Z file based on
 the install contents.</p>
 
-<p style="margin-left:11%;"><b>&minus;gr</b>,
-<b>&minus;&minus;generate&minus;rpm</b></p>
-
-<p style="margin-left:22%;">generate an RPM package from
-the pax archive.</p>
-
-<p style="margin-left:11%;"><b>&minus;h</b>,
-<b>&minus;&minus;help</b>, &minus;?</p>
+<p style="margin-left:11%;">&minus;h,
+&minus;&minus;help, &minus;?</p>
 
 <p style="margin-left:22%;">print this information.</p>
 
-<p style="margin-left:11%;"><b>&minus;&minus;no&minus;set&minus;active</b></p>
+
+<p style="margin-left:11%;">&minus;&minus;no&minus;set&minus;active</p>
 
 <p style="margin-left:22%;">do not change the pinned
 version.</p>
 
-<p style="margin-left:11%;"><b>&minus;&minus;no&minus;install&minus;deps</b></p>
+
+<p style="margin-left:11%;">&minus;&minus;no&minus;install&minus;deps</p>
 
 <p style="margin-left:22%;">do not install project&rsquo;s
 runtime dependencies.</p>
+
 
 <table width="100%" border="0" rules="none" frame="void"
        cellspacing="0" cellpadding="0">
@@ -125,29 +134,40 @@ runtime dependencies.</p>
 
 <td width="11%"></td>
 
+
 <td width="7%">
 
-<p><b>&minus;&minus;oci</b></p></td>
+
+<p>&minus;&minus;oci</p></td>
+
 
 <td width="4%"></td>
 
+
 <td width="78%">
+
 
 <p>build and publish an OCI image to
 $ZOPEN_IMAGE_REGISTRY.</p></td>
 </tr>
 
+
 <tr valign="top" align="left">
 
 <td width="11%"></td>
 
+
 <td width="7%">
 
-<p><b>&minus;s</b></p></td>
+
+<p>&minus;s</p></td>
+
 
 <td width="4%"></td>
 
+
 <td width="78%">
+
 
 <p>exec a shell before running configure. Useful when
 manually building ports.</p></td>
@@ -155,14 +175,17 @@ manually building ports.</p></td>
 
 </table>
 
-<p style="margin-left:11%;"><b>&minus;&minus;sign&minus;pax</b>,
-<b>&minus;sp</b></p>
+
+
+<p style="margin-left:11%;">&minus;&minus;sign&minus;pax,
+&minus;sp</p>
 
 <p style="margin-left:22%;">This option signs the pax file.
 ZOPEN_GPG_SECRET_KEY_FILE,
 ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE and
 ZOPEN_GPG_PUBLIC_KEY_FILE must be set for signing the
 file.</p>
+
 
 <table width="100%" border="0" rules="none" frame="void"
        cellspacing="0" cellpadding="0">
@@ -171,28 +194,39 @@ file.</p>
 
 <td width="11%"></td>
 
+
 <td width="4%">
 
-<p><b>&minus;v</b></p></td>
+
+<p>&minus;v</p></td>
+
 
 <td width="7%"></td>
 
+
 <td width="78%">
+
 
 <p>run in verbose mode.</p></td>
 </tr>
+
 
 <tr valign="top" align="left">
 
 <td width="11%"></td>
 
+
 <td width="4%">
 
-<p><b>&minus;vv</b></p></td>
+
+<p>&minus;vv</p></td>
+
 
 <td width="7%"></td>
 
+
 <td width="78%">
+
 
 <p>run in very verbose mode (sets environment variables V=1
 and VERBOSE=1).</p></td>
@@ -200,8 +234,9 @@ and VERBOSE=1).</p></td>
 
 </table>
 
-<p style="margin-left:11%;"><b>&minus;u</b>,
-<b>&minus;&minus;upgradedeps</b></p>
+
+<p style="margin-left:11%;">&minus;u,
+&minus;&minus;upgradedeps</p>
 
 <p style="margin-left:22%;">upgrade all dependencies by
 running zopen install.</p>
@@ -217,12 +252,14 @@ repository.</p>
 
 <p style="margin-left:11%; margin-top: 1em">To see a fully
 functioning zopen community sample port see:
-https:///#47;github.comm/#47;zopencommunityy/#47;zotsampleport</p>
+<a href="https://github.com/zopencommunity/zotsampleport" target="_blank">https://github.com/zopencommunity/zotsampleport</a></p>
+
 
 <p style="margin-left:11%; margin-top: 1em">User&minus;Provided
 environment variables:</p>
 
-<p style="margin-left:11%; margin-top: 1em"><b>Required:</b>
+
+<p style="margin-left:11%; margin-top: 1em">Required:
 ZOPEN_BUILD_LINE</p>
 
 <p style="margin-left:22%;">Specify the default build line,
@@ -262,13 +299,9 @@ build dependencies.</p>
 ZOPEN_BUILD_LINE=&rsquo;STABLE&rsquo;. Specify the stable
 build URL (either git or tarball).</p>
 
-<p style="margin-left:11%; margin-top: 1em"><b>Optional:</b>
-ZOPEN_SOURCE_URL</p>
 
-<p style="margin-left:22%;">If set, use this as ZOPEN_URL
-before checking ZOPEN_DEV_URL or ZOPEN_STABLE_URL.</p>
-
-<p style="margin-left:11%;">ZOPEN_EXTRA_CFLAGS</p>
+<p style="margin-left:11%; margin-top: 1em">Optional:
+ZOPEN_EXTRA_CFLAGS</p>
 
 <p style="margin-left:22%;">C compiler flags to append to
 CFLAGS (defaults to &rsquo;&rsquo;).</p>
@@ -297,7 +330,7 @@ LIBS. (defaults to &rsquo;&rsquo;)</p>
 
 <p style="margin-left:22%;">Bootstrap program to run. If
 skip is specified, no bootstrap step is performed. (defaults
-to &rsquo;../#47;bootstrap&rsquo;)</p>
+to &rsquo;./bootstrap&rsquo;)</p>
 
 <p style="margin-left:11%;">ZOPEN_BOOTSTRAP_OPTS</p>
 
@@ -340,7 +373,7 @@ program. (defaults to &rsquo;clean&rsquo;)</p>
 
 <p style="margin-left:22%;">Configuration program to run.
 If skip is specified, no configuration step is performed.
-(defaults to &rsquo;../#47;configure&rsquo;)</p>
+(defaults to &rsquo;./configure&rsquo;)</p>
 
 <p style="margin-left:11%;">ZOPEN_CONFIGURE_MINIMAL</p>
 
@@ -393,17 +426,17 @@ program. (defaults to
 <p style="margin-left:22%;">Specify directory from which
 patches should be applied.</p>
 
-<p style="margin-left:11%; margin-top: 1em"><b>Optional
-ZOPEN_RUNTIME_DEPS</b></p>
+<p style="margin-left:11%; margin-top: 1em">Optional
+ZOPEN_RUNTIME_DEPS</p>
 
-<p style="margin-left:22%;">Runtime zz/#47;OS Open Tool
+<p style="margin-left:22%;">Runtime z/OS Open Tool
 dependencies to be installed alongside the tool.</p>
 
 <p style="margin-left:11%;">ZOPEN_SYSTEM_PREREQ</p>
 
 <p style="margin-left:22%;">System prerequisites, supply
 the name of the prereq scripts under
-/varr/#47;libb/#47;jenkinss/#47;workspacee/#47;Port&minus;Update&minus;Nightlyy/#47;meta_updatee/#47;binn/#47;.../#47;includee/#47;prereq.sh</p>
+/var/lib/jenkins/workspace/Port&minus;Update&minus;Nightly/meta_update/bin/../include/prereq.sh</p>
 
 <p style="margin-left:11%; margin-top: 1em">Restricted
 ZOPEN_DONT_ADD_ZOSLIB_DEP</p>
@@ -411,27 +444,27 @@ ZOPEN_DONT_ADD_ZOSLIB_DEP</p>
 <p style="margin-left:22%;">Set to avoid adding zoslib as a
 dependency.</p>
 
-<p style="margin-left:11%; margin-top: 1em"><b>Restricted
-ZOPEN_INSTALL_DIR</b></p>
+<p style="margin-left:11%; margin-top: 1em">Restricted
+ZOPEN_INSTALL_DIR</p>
 
 <p style="margin-left:22%;">Installation directory to pass
 to configuration. (defaults to
-&rsquo;${ZOPEN_PKGINSTALL}}/#47;&lt;pkg&gt;;/#47;&lt;pkg&gt;&rsquo;)</p>
+&rsquo;${ZOPEN_PKGINSTALL}/&lt;pkg&gt;/&lt;pkg&gt;&rsquo;)</p>
 
 <p style="margin-left:11%;">ZOPEN_NUM_JOBS</p>
 
 <p style="margin-left:22%;">Number of jobs that can be run
 in parallel (defaults to half the CPUs on the system)</p>
 
-<p style="margin-left:11%; margin-top: 1em"><b>Restricted
-ZOPEN_CFLAGS</b></p>
+<p style="margin-left:11%; margin-top: 1em">Restricted
+ZOPEN_CFLAGS</p>
 
 <p style="margin-left:22%;">C compiler flags. (default set
 by dependency)</p>
 
 <p style="margin-left:11%;">ZOPEN_CPPFLAGS</p>
 
-<p style="margin-left:22%;">CC/#47;C++ pre&minus;processor
+<p style="margin-left:22%;">C/C++ pre&minus;processor
 flags. (default set by dependency)</p>
 
 <p style="margin-left:11%;">ZOPEN_CXXFLAGS</p>
@@ -441,64 +474,65 @@ set by dependency)</p>
 
 <p style="margin-left:11%;">ZOPEN_LDFLAGS</p>
 
-<p style="margin-left:22%;">CC/#47;C++ linker flags. (default
+<p style="margin-left:22%;">C/C++ linker flags. (default
 set by dependency)</p>
 
-<p style="margin-left:11%; margin-top: 1em"><b>Restricted
-ZOPEN_GIT_SETUP</b></p>
+<p style="margin-left:11%; margin-top: 1em">Restricted
+ZOPEN_GIT_SETUP</p>
 
 <p style="margin-left:22%;">Specify whether git files
 should be added to a local repo or if this will be done
 manually. (defaults to Y)</p>
 
-<p style="margin-left:11%; margin-top: 1em"><b>Restricted
-ZOPEN_SRC_DIR</b></p>
+<p style="margin-left:11%; margin-top: 1em">Restricted
+ZOPEN_SRC_DIR</p>
 
 <p style="margin-left:22%;">Specify a relative source
 directory to cd to for bootstrap, configure, build, check,
 install. (defaults to &rsquo;.&rsquo;)</p>
 
-<p style="margin-left:11%; margin-top: 1em"><b>Restricted
-ZOPEN_IMAGE_DOCKERFILE_NAME</b></p>
+<p style="margin-left:11%; margin-top: 1em">Restricted
+ZOPEN_IMAGE_DOCKERFILE_NAME</p>
 
 <p style="margin-left:22%;">Dockerfile name. (default:
 Dockerfile)</p>
 
 <p style="margin-left:11%;">ZOPEN_IMAGE_DOCKER_NAME</p>
 
-<p style="margin-left:22%;">Dockerr/#47;podman tool name.
+<p style="margin-left:22%;">Docker/podman tool name.
 (default: podman)</p>
 
 <p style="margin-left:11%;">ZOPEN_IMAGE_REGISTRY</p>
 
 <p style="margin-left:22%;">Docker image registry to an OCI
-image to (use with <b>&minus;&minus;oci</b> option)</p>
+image to (use with &minus;&minus;oci option)</p>
 
 <p style="margin-left:11%;">ZOPEN_IMAGE_REGISTRY_ID</p>
 
 <p style="margin-left:22%;">The ID to authenticate to the
-Docker image registry. (use with <b>&minus;&minus;oci</b>
+Docker image registry. (use with &minus;&minus;oci
 option)</p>
+
 
 <p style="margin-left:11%;">ZOPEN_IMAGE_REGISTRY_KEY_FILE</p>
 
 <p style="margin-left:22%;">The file containing
 authentication key to the Docker image registry. (use with
-<b>&minus;&minus;oci</b> option)</p>
+&minus;&minus;oci option)</p>
 
 <p style="margin-left:11%;">ZOPEN_LOG_DIR</p>
 
 <p style="margin-left:22%;">The directory to store build
-logs. (defaults to &rsquo;;/#47;log&rsquo;)</p>
+logs. (defaults to &rsquo;/log&rsquo;)</p>
 
 <p style="margin-left:11%;">ZOPEN_SHELL</p>
 
 <p style="margin-left:22%;">Specify an alternate shell to
-use if <b>&minus;s</b> option specified. (defaults to
-/binn/#47;sh)</p>
+use if &minus;s option specified. (defaults to
+/bin/sh)</p>
 
-<p style="margin-left:11%; margin-top: 1em"><b>Git
-ZOPEN_DEV_BRANCH</b></p>
+<p style="margin-left:11%; margin-top: 1em">Git
+ZOPEN_DEV_BRANCH</p>
 
 <p style="margin-left:22%;">The branch that the git repo
 should checkout. (default is repo default)</p>
@@ -529,8 +563,8 @@ submodules.</p>
 clone as opposed to the default shallow clone (depth of
 1).</p>
 
-<p style="margin-left:11%; margin-top: 1em"><b>Currently
-ZOPEN_DEV_TYPE</b></p>
+<p style="margin-left:11%; margin-top: 1em">Currently
+ZOPEN_DEV_TYPE</p>
 
 <p style="margin-left:22%;">The type of package to
 download. Valid types are TARBALL, BARE and GIT.</p>
@@ -540,7 +574,8 @@ download. Valid types are TARBALL, BARE and GIT.</p>
 <p style="margin-left:22%;">The type of package to
 download. Valid types are TARBALL, BARE and GIT.</p>
 
-<p style="margin-left:11%; margin-top: 1em"><b>Deprecated:</b>
+
+<p style="margin-left:11%; margin-top: 1em">Deprecated:
 ZOPEN_CC</p>
 
 <p style="margin-left:22%;">C compiler. (default set by
@@ -580,7 +615,7 @@ ZOPEN_TYPE=GIT)</p>
 
 <p style="margin-left:11%;">ZOPEN_LIBS</p>
 
-<p style="margin-left:22%;">CC/#47;C++ libraries (default set by
+<p style="margin-left:22%;">C/C++ libraries (default set by
 dependency)</p>
 
 <p style="margin-left:11%;">ZOPEN_TARBALL_DEPS</p>
@@ -605,10 +640,12 @@ download. Valid types are TARBALL, BARE and GIT.</p>
 <p style="margin-left:22%;">Alternate environment variable
 instead of ZOPEN_TARBALL_URL or ZOPEN_GIT_URL.</p>
 
+
 <p style="margin-left:11%; margin-top: 1em">User&minus;Provided
 functions:</p>
 
-<p style="margin-left:11%; margin-top: 1em"><b>Required:</b>
+
+<p style="margin-left:11%; margin-top: 1em">Required:
 zopen_check_results</p>
 
 <p style="margin-left:22%;">This function runs after the
@@ -621,7 +658,8 @@ expected and actual failures.</p>
 version of the tool in accordance with semantic
 versioning.</p>
 
-<p style="margin-left:11%; margin-top: 1em"><b>Optional:</b>
+
+<p style="margin-left:11%; margin-top: 1em">Optional:
 zopen_append_to_env</p>
 
 <p style="margin-left:22%;">This function runs as part of
@@ -633,6 +671,7 @@ appended to .env.</p>
 <p style="margin-left:22%;">This function runs as part of
 generation of the setup.sh file. The output of the function
 is appended to setup.sh.</p>
+
 
 <p style="margin-left:11%;">zopen_append_to_validate_install</p>
 
@@ -703,8 +742,8 @@ uncompressed.</p>
 <p style="margin-left:22%;">This function runs before
 &rsquo;zopen build&rsquo; terminates.</p>
 
-<p style="margin-left:11%; margin-top: 1em"><b>SEE
-ALSO:</b></p>
+<p style="margin-left:11%; margin-top: 1em">SEE
+ALSO:</p>
 
 <p style="margin-left:22%;">zopen(1) zopen&minus;alt(1)
 zopen&minus;init(1) zopen&minus;install(1)
@@ -713,14 +752,15 @@ zopen&minus;list(1) zopen&minus;remove(1)</p>
 <p style="margin-left:11%; margin-top: 1em">This is free
 software: you are free to change and redistribute it under
 the terms of the Apache License, Version 2.0.
-&lt;https:///#47;www.apache.orgg/#47;licensess/#47;LICENSE&minus;2.0.html&gt;
+&lt;<a href="https://www.apache.org/licenses/LICENSE" target="_blank">https://www.apache.org/licenses/LICENSE</a>&minus;2.0.html&gt;
 There is NO WARRANTY, to the extent permitted by law.</p>
 
-<h2>AUTHOR</h2>
-<a name="AUTHOR"></a>
+<h2>AUTHOR
+</h2>
+
 
 <p style="margin-left:11%; margin-top: 1em">Written by
 contributors to the zopen community.
-&lt;https:///#47;github.comm/#47;zopencommunityy/#47;metaa/#47;graphss/#47;contributors&gt;</p>
+<a href="https://github.com/zopencommunity/meta/graphs/contributors" target="_blank">https://github.com/zopencommunity/meta/graphs/contributors</a></p>
 
 </div>

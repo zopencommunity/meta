@@ -12,16 +12,16 @@
 
 
 
-<h2>NAME</h2>
-<a name="NAME"></a>
+<h2>NAME
+</h2>
 
 
 
 <p style="margin-left:11%; margin-top: 1em">zopen-update-cacert
 &minus; manual page for zopen-update-cacert 0.8.4</p>
 
-<h2>DESCRIPTION</h2>
-<a name="DESCRIPTION"></a>
+<h2>DESCRIPTION
+</h2>
 
 
 
@@ -30,66 +30,66 @@ Update your cacert.pem file to the latest CA certificates
 extracted from Mozilla.</p>
 
 
-<p style="margin-left:11%; margin-top: 1em"><b>Syntax:</b></p>
+<p style="margin-left:11%; margin-top: 1em">Syntax:</p>
 
 
 <p style="margin-left:22%;">zopen&minus;update&minus;cacert
 [&minus;fhv] [&lt;directory&gt;]</p>
 
-<h2>OPTIONS</h2>
-<a name="OPTIONS"></a>
+<h2>OPTIONS
+</h2>
 
 
 
-<p style="margin-left:11%; margin-top: 1em"><b>&minus;f</b>,
-<b>&minus;&minus;force</b></p>
+<p style="margin-left:11%; margin-top: 1em">&minus;f,
+&minus;&minus;force</p>
 
 <p style="margin-left:22%;">update cacert.pem file even if
 up to date.</p>
 
-<p style="margin-left:11%;"><b>&minus;h</b>,
-<b>&minus;&minus;help</b></p>
+<p style="margin-left:11%;">&minus;h,
+&minus;&minus;help</p>
 
 <p style="margin-left:22%;">print this help.</p>
 
-<p style="margin-left:11%;"><b>&minus;i</b>,
-<b>&minus;&minus;insecure&minus;fallback</b></p>
+<p style="margin-left:11%;">&minus;i,
+&minus;&minus;insecure&minus;fallback</p>
 
 <p style="margin-left:22%;">(UNSAFE) Skip certificate
 validation during download.</p>
 
-<p style="margin-left:11%;"><b>&minus;v</b>,
-<b>&minus;&minus;verbose</b></p>
+<p style="margin-left:11%;">&minus;v,
+&minus;&minus;verbose</p>
 
 <p style="margin-left:22%;">print verbose messages.</p>
 
 
-<p style="margin-left:11%;"><b>&minus;&minus;version</b></p>
+<p style="margin-left:11%;">&minus;&minus;version</p>
 
 <p style="margin-left:22%;">print version.</p>
 
 
-<p style="margin-left:11%; margin-top: 1em"><b>Parameters:</b></p>
+<p style="margin-left:11%; margin-top: 1em">Parameters:</p>
 
 <p style="margin-left:22%;">&lt;directory&gt;: the
 directory where the cacert.pem will be updated.</p>
 
 <p style="margin-left:22%; margin-top: 1em">The default
 directory location is:
-/varr/#47;libb/#47;jenkinss/#47;workspacee/#47;Port&minus;Update&minus;Nightlyy/#47;meta_update</p>
+/var/lib/jenkins/workspace/Port&minus;Update&minus;Nightly/meta_update</p>
 
 <p style="margin-left:11%; margin-top: 1em">This is free
 software: you are free to change and redistribute it under
 the terms of the Apache License, Version 2.0.
-&lt;https:///#47;www.apache.orgg/#47;licensess/#47;LICENSE&minus;2.0.html&gt;
+&lt;<a href="https://www.apache.org/licenses/LICENSE" target="_blank">https://www.apache.org/licenses/LICENSE</a>&minus;2.0.html&gt;
 There is NO WARRANTY, to the extent permitted by law.</p>
 
-<h2>AUTHOR</h2>
-<a name="AUTHOR"></a>
+<h2>AUTHOR
+</h2>
 
 
 <p style="margin-left:11%; margin-top: 1em">Written by
 contributors to the zopen community.
-&lt;https:///#47;github.comm/#47;zopencommunityy/#47;metaa/#47;graphss/#47;contributors&gt;</p>
+<a href="https://github.com/zopencommunity/meta/graphs/contributors" target="_blank">https://github.com/zopencommunity/meta/graphs/contributors</a></p>
 
 </div>
