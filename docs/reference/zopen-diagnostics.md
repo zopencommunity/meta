@@ -6,41 +6,25 @@
   </div>
 </div>
 
-
 <h1 align="center">ZOPEN-DIAGNOSTICS</h1>
 
-
-
-
-<h2>NAME
-</h2>
-
-
+<h2>NAME</h2>
 
 <p style="margin-left:11%; margin-top: 1em">zopen-diagnostics
 &minus; manual page for zopen-diagnostics 0.8.4</p>
 
-<h2>SYNOPSIS
-</h2>
-
-
+<h2>SYNOPSIS</h2>
 
 <p style="margin-left:11%; margin-top: 1em">zopen-diagnostics
 [OPTION]</p>
 
-<h2>DESCRIPTION
-</h2>
-
-
+<h2>DESCRIPTION</h2>
 
 <p style="margin-left:11%; margin-top: 1em">zopen&minus;diagnostics
 &minus; display diagnostics information for issue
 reporting.</p>
 
-<h2>OPTIONS
-</h2>
-
-
+<h2>OPTIONS</h2>
 
 <p style="margin-left:11%; margin-top: 1em">&minus;h,
 &minus;&minus;help</p>
@@ -52,7 +36,6 @@ reporting.</p>
 
 <p style="margin-left:22%;">run in verbose mode.</p>
 
-
 <p style="margin-left:11%;">&minus;&minus;version</p>
 
 <p style="margin-left:22%;">print version</p>
@@ -63,9 +46,7 @@ the terms of the Apache License, Version 2.0.
 &lt;<a href="https://www.apache.org/licenses/LICENSE" target="_blank">https://www.apache.org/licenses/LICENSE</a>&minus;2.0.html&gt;
 There is NO WARRANTY, to the extent permitted by law.</p>
 
-<h2>AUTHOR
-</h2>
-
+<h2>AUTHOR</h2>
 
 <p style="margin-left:11%; margin-top: 1em">Written by
 contributors to the zopen community.

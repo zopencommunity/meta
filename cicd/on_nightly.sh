@@ -89,18 +89,25 @@ EOF
     # Extract only the content between <body> and </body>
     # This avoids injecting full-document tags (<html>, <head>, <body>) into markdown
     body_content=$(sed -n '/<body>/,/<\/body>/p' "${temp_html}" | sed '1d;$d' | sed '/<a href="#/d' | sed '/<a name="[^"]*"><\/a>/d' | sed '/<br>$/d' | sed '/<hr>/d')
-    
-    # Remove <i>, <em>, <b>, and <strong> tags to avoid Vue parsing issues
-    body_content=$(echo "${body_content}" | sed 's|<i>||g' | sed 's|</i>||g' | sed 's|<em>||g' | sed 's|</em>||g' | sed 's|<b>||g' | sed 's|</b>||g' | sed 's|<strong>||g' | sed 's|</strong>||g')
-    
-    # Fix table cell closing tags that appear on the same line as content
-    # This handles cases like: <p>content</p> </td> which Vue can't parse properly
-    body_content=$(echo "${body_content}" | sed 's|</p> </td>|</p></td>|g')
-    
-    # Ensure all table-related tags are on their own lines for proper Vue parsing
-    body_content=$(echo "${body_content}" | sed 's|<table|\'$'\n''<table|g' | sed 's|</table>|</table>\'$'\n''|g')
-    body_content=$(echo "${body_content}" | sed 's|<tr|\'$'\n''<tr|g' | sed 's|</tr>|</tr>\'$'\n''|g')
-    body_content=$(echo "${body_content}" | sed 's|<td|\'$'\n''<td|g' | sed 's|</td>|</td>\'$'\n''|g')
+
+    # Remove inline formatting tags that cause Vue template-parse issues
+    body_content=$(echo "${body_content}" | sed 's|<i>||g; s|</i>||g; s|<em>||g; s|</em>||g; s|<b>||g; s|</b>||g; s|<strong>||g; s|</strong>||g')
+
+    # Collapse multi-line <table ...> opening tags into one line.
+    # groff -Thtml emits the tag attributes across several lines which Vue cannot parse.
+    body_content=$(echo "${body_content}" | perl -0pe '
+      s{<table([^>]*?)\n([^>]*?)>}{"<table" . ($1.$2 =~ s/\s+/ /gr) . ">"}ge
+        while /<table[^>]*\n/;
+    ')
+
+    # Join <h2>TEXT\n</h2> (and <h1>) onto one line – Vue rejects split heading tags.
+    body_content=$(echo "${body_content}" | perl -0pe '
+      s{(<h[12][^>]*>[^\n]*)\n(</h[12]>)}{$1$2}g;
+    ')
+
+    # Strip trailing whitespace from every line so whitespace-only lines become
+    # truly empty lines (whitespace-only lines inside <tr>/<td> confuse Vue).
+    body_content=$(echo "${body_content}" | sed 's/[[:space:]]*$//')
     
     # Convert groff OPTIONS <p> pairs into <ul><li> list for VitePress rendering.
     # Groff emits option names at margin-left:11% and descriptions at margin-left:22%.
@@ -178,26 +185,44 @@ PYEOF
       s{(?<![">])(https?|ftp)://([^\s<>"&]+)}{<a href="$1://$2" target="_blank">$1://$2</a>}g;
     ')
     
-    # Validate HTML: Check for orphaned closing tags (closing tags without matching opening tags)
-    # This prevents Vue parsing errors from invalid HTML structure
-    orphaned_tags=$(echo "${body_content}" | grep -oE '</[a-z]+>' | sort | uniq)
-    for closing_tag in ${orphaned_tags}; do
-      tag_name=$(echo "${closing_tag}" | sed 's|</||' | sed 's|>||')
-      opening_tag="<${tag_name}"
-      
-      # Count opening and closing tags
-      opening_count=$(echo "${body_content}" | grep -o "${opening_tag}" | wc -l)
-      closing_count=$(echo "${body_content}" | grep -o "${closing_tag}" | wc -l)
-      
-      # If there are more closing tags than opening tags, remove the orphaned ones
-      if [ ${closing_count} -gt ${opening_count} ]; then
-        echo "Warning: Found ${closing_count} closing ${closing_tag} but only ${opening_count} opening tags in ${name}. Removing orphaned closing tags."
-        # Remove orphaned closing tags that appear after paragraph or other inline content
-        body_content=$(echo "${body_content}" | sed "s|</p>${closing_tag}|</p>|g")
-        body_content=$(echo "${body_content}" | sed "s|</b>${closing_tag}|</b>|g")
-        body_content=$(echo "${body_content}" | sed "s|^${closing_tag}$||g")
-      fi
-    done
+    # Remove orphaned closing tags (more closes than opens for a given tag name).
+    # Uses Python for accurate counting; handles bare tags at line-start and inline
+    # occurrences such as "text</p></table>" that the old sed approach missed.
+    body_content=$(echo "${body_content}" | python3 - <<'PYEOF'
+import sys, re
+from collections import Counter
+
+VOID = {"br","hr","img","input","meta","link","area","base","col","embed","param","source","track","wbr"}
+content = sys.stdin.read()
+
+opens  = re.findall(r'<([a-zA-Z][a-zA-Z0-9]*)\b[^>]*(?<!/)>', content)
+closes = re.findall(r'</([a-zA-Z][a-zA-Z0-9]*)>', content)
+oc = Counter(t.lower() for t in opens  if t.lower() not in VOID)
+cc = Counter(t.lower() for t in closes)
+
+for tag in sorted(cc):
+    surplus = cc[tag] - oc.get(tag, 0)
+    if surplus <= 0:
+        continue
+    print(f"Warning: removing {surplus} orphaned </{tag}> in {sys.argv[1] if len(sys.argv)>1 else 'content'}",
+          file=sys.stderr)
+    # Remove surplus closing tags – prefer line-isolated ones first, then inline
+    for _ in range(surplus):
+        # 1. bare line: just the closing tag optionally with whitespace
+        content, n = re.subn(rf'(?m)^[ \t]*</{tag}>[ \t]*\n?', '', content, count=1)
+        if n:
+            continue
+        # 2. inline after another closing tag: </x></tag>
+        content, n = re.subn(rf'(</{tag}>)(?=.*</{tag}>)', '', content, count=1,
+                              flags=re.DOTALL)
+        if n:
+            continue
+        # 3. last resort: first occurrence anywhere
+        content = re.sub(rf'</{tag}>', '', content, count=1)
+
+print(content, end='')
+PYEOF
+)
     
     # Clean up temporary HTML file
     rm -f "${temp_html}"

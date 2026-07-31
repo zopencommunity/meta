@@ -6,24 +6,14 @@
   </div>
 </div>
 
-
 <h1 align="center">ZOPEN-MIGRATE-BUILDENV</h1>
 
-
-
-
-<h2>NAME
-</h2>
-
-
+<h2>NAME</h2>
 
 <p style="margin-left:11%; margin-top: 1em">zopen-migrate-buildenv
 &minus; manual page for zopen-migrate-buildenv 0.8.4</p>
 
-<h2>DESCRIPTION
-</h2>
-
-
+<h2>DESCRIPTION</h2>
 
 <p style="margin-left:11%; margin-top: 1em">zopen&minus;migrate&minus;buildenv
 [&minus;&minus;version|&minus;&minus;help]</p>
@@ -39,9 +29,7 @@ the terms of the Apache License, Version 2.0.
 &lt;<a href="https://www.apache.org/licenses/LICENSE" target="_blank">https://www.apache.org/licenses/LICENSE</a>&minus;2.0.html&gt;
 There is NO WARRANTY, to the extent permitted by law.</p>
 
-<h2>AUTHOR
-</h2>
-
+<h2>AUTHOR</h2>
 
 <p style="margin-left:11%; margin-top: 1em">Written by
 contributors to the zopen community.

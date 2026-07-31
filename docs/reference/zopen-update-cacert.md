@@ -6,40 +6,25 @@
   </div>
 </div>
 
-
 <h1 align="center">ZOPEN-UPDATE-CACERT</h1>
 
-
-
-
-<h2>NAME
-</h2>
-
-
+<h2>NAME</h2>
 
 <p style="margin-left:11%; margin-top: 1em">zopen-update-cacert
 &minus; manual page for zopen-update-cacert 0.8.4</p>
 
-<h2>DESCRIPTION
-</h2>
-
-
+<h2>DESCRIPTION</h2>
 
 <p style="margin-left:11%; margin-top: 1em">zopen&minus;update&minus;cacert:
 Update your cacert.pem file to the latest CA certificates
 extracted from Mozilla.</p>
 
-
 <p style="margin-left:11%; margin-top: 1em">Syntax:</p>
-
 
 <p style="margin-left:22%;">zopen&minus;update&minus;cacert
 [&minus;fhv] [&lt;directory&gt;]</p>
 
-<h2>OPTIONS
-</h2>
-
-
+<h2>OPTIONS</h2>
 
 <p style="margin-left:11%; margin-top: 1em">&minus;f,
 &minus;&minus;force</p>
@@ -63,11 +48,9 @@ validation during download.</p>
 
 <p style="margin-left:22%;">print verbose messages.</p>
 
-
 <p style="margin-left:11%;">&minus;&minus;version</p>
 
 <p style="margin-left:22%;">print version.</p>
-
 
 <p style="margin-left:11%; margin-top: 1em">Parameters:</p>
 
@@ -84,9 +67,7 @@ the terms of the Apache License, Version 2.0.
 &lt;<a href="https://www.apache.org/licenses/LICENSE" target="_blank">https://www.apache.org/licenses/LICENSE</a>&minus;2.0.html&gt;
 There is NO WARRANTY, to the extent permitted by law.</p>
 
-<h2>AUTHOR
-</h2>
-
+<h2>AUTHOR</h2>
 
 <p style="margin-left:11%; margin-top: 1em">Written by
 contributors to the zopen community.

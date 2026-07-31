@@ -6,23 +6,14 @@
   </div>
 </div>
 
-
 <h1 align="center">ZOPEN-IMPORTENVS</h1>
 
-
-
-
-<h2>NAME
-</h2>
-
-
+<h2>NAME</h2>
 
 <p style="margin-left:11%; margin-top: 1em">zopen-importenvs
 &minus; manual page for zopen-importenvs 0.8.0</p>
 
-<h2>DESCRIPTION
-</h2>
-
+<h2>DESCRIPTION</h2>
 
 <p style="margin-left:11%; margin-top: 1em">USAGE: .
 ./zopen&minus;importenvs [path to buildenv to fetch
@@ -36,17 +27,13 @@ specified dependencies from
 /var/lib/jenkins/zopen/prod and
 /var/lib/jenkins/zopen/boot</p>
 
-<h2>AUTHOR
-</h2>
-
+<h2>AUTHOR</h2>
 
 <p style="margin-left:11%; margin-top: 1em">Written by
 contributors to the zopen community
 <a href="https://github.com/zopencommunity/meta/graphs/contributors" target="_blank">https://github.com/zopencommunity/meta/graphs/contributors</a>.</p>
 
-<h2>COPYRIGHT
-</h2>
-
+<h2>COPYRIGHT</h2>
 
 <p style="margin-left:11%; margin-top: 1em">Copyright
 &copy; 2023 zOS Open Tools Community.</p>

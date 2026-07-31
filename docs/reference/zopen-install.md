@@ -6,31 +6,19 @@
   </div>
 </div>
 
-
 <h1 align="center">ZOPEN-INSTALL</h1>
 
-
-
-
-<h2>NAME
-</h2>
-
+<h2>NAME</h2>
 
 <p style="margin-left:11%; margin-top: 1em">zopen-install
 &minus; manual page for zopen-install 0.8.4</p>
 
-<h2>SYNOPSIS
-</h2>
-
-
+<h2>SYNOPSIS</h2>
 
 <p style="margin-left:11%; margin-top: 1em">zopen-install
 [OPION] [PACKAGE]</p>
 
-<h2>DESCRIPTION
-</h2>
-
-
+<h2>DESCRIPTION</h2>
 
 <p style="margin-left:11%; margin-top: 1em">zopen&minus;install
 is a utility to download/install a zopen community
@@ -39,34 +27,24 @@ package.</p>
 <p style="margin-left:22%; margin-top: 1em">[PACKAGE] is a
 package to install. Multiple packages can be specified.</p>
 
-<h2>OPTIONS
-</h2>
+<h2>OPTIONS</h2>
 
-
-
-<table width="100%" border="0" rules="none" frame="void"
-       cellspacing="0" cellpadding="0">
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
 
 <tr valign="top" align="left">
 
 <td width="11%"></td>
 
-
 <td width="7%">
-
 
 <p style="margin-top: 1em">&minus;&minus;all</p></td>
 
-
 <td width="4%"></td>
-
 
 <td width="70%">
 
-
 <p style="margin-top: 1em">download/install all zopen
 community packages.</p></td>
-
 
 <td width="8%">
 </td>
@@ -74,42 +52,31 @@ community packages.</p></td>
 
 </table>
 
-
-
 <p style="margin-left:11%;">&minus;&minus;cache&minus;only</p>
 
 <p style="margin-left:22%;">do not install
 dependencies.</p>
-
 
 <p style="margin-left:11%;">&minus;&minus;download&minus;only</p>
 
 <p style="margin-left:22%;">download package to current
 directory.</p>
 
-
-<table width="100%" border="0" rules="none" frame="void"
-       cellspacing="0" cellpadding="0">
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
 
 <tr valign="top" align="left">
 
 <td width="9%"></td>
 
-
 <td width="11%">
-
 
 <p>&minus;&minus;help</p></td>
 
-
 <td width="2%"></td>
-
 
 <td width="24%">
 
-
 <p>print this help.</p></td>
-
 
 <td width="54%">
 </td>
@@ -117,37 +84,30 @@ directory.</p>
 
 </table>
 
-
-
 <p style="margin-left:11%;">&minus;&minus;install&minus;or&minus;upgrade</p>
 
 <p style="margin-left:22%;">installs the package if not
 installed, or upgrades the package if installed.</p>
-
 
 <p style="margin-left:11%;">&minus;&minus;bypass&minus;prereq&minus;checks</p>
 
 <p style="margin-left:22%;">Ignores pre&minus;req
 checks</p>
 
-
 <p style="margin-left:11%;">&minus;&minus;local&minus;install</p>
 
 <p style="margin-left:22%;">download and unpackage to
 current directory.</p>
-
 
 <p style="margin-left:11%;">&minus;&minus;no&minus;deps</p>
 
 <p style="margin-left:22%;">do not install
 dependencies.</p>
 
-
 <p style="margin-left:11%;">&minus;&minus;no&minus;set&minus;active</p>
 
 <p style="margin-left:22%;">do not change the pinned
 version.</p>
-
 
 <p style="margin-left:11%;">&minus;&minus;nosymlink</p>
 
@@ -160,18 +120,13 @@ filesystem through symlink redirection.</p>
 <p style="margin-left:22%;">reinstall already installed
 zopen community packages.</p>
 
-
-<table width="100%" border="0" rules="none" frame="void"
-       cellspacing="0" cellpadding="0">
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
 
 <tr valign="top" align="left">
 
 <td width="11%"></td>
 
-
 <td width="89%">
-
-
 
 <p style="margin-top: 1em">&minus;&minus;release&minus;line
 [stable, dev] the release line to build off of.</p></td>
@@ -179,13 +134,10 @@ zopen community packages.</p>
 
 </table>
 
-
-<p>&minus;&minus;select</p></table>
-
+<p>&minus;&minus;select</p>
 
 <p style="margin-left:22%;">select a version to
 install.</p>
-
 
 <p style="margin-left:11%;">&minus;&minus;skip&minus;upgrade</p>
 
@@ -208,7 +160,6 @@ community packages.</p>
 
 <p style="margin-left:22%;">print verbose messages.</p>
 
-
 <p style="margin-left:11%;">&minus;&minus;version</p>
 
 <p style="margin-left:22%;">print version.</p>
@@ -225,9 +176,7 @@ the terms of the Apache License, Version 2.0.
 &lt;<a href="https://www.apache.org/licenses/LICENSE" target="_blank">https://www.apache.org/licenses/LICENSE</a>&minus;2.0.html&gt;
 There is NO WARRANTY, to the extent permitted by law.</p>
 
-<h2>AUTHOR
-</h2>
-
+<h2>AUTHOR</h2>
 
 <p style="margin-left:11%; margin-top: 1em">Written by
 contributors to the zopen community.

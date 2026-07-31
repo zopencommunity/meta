@@ -6,30 +6,19 @@
   </div>
 </div>
 
-
 <h1 align="center">ZOPEN-VERSION</h1>
 
-
-
-
-<h2>NAME
-</h2>
-
+<h2>NAME</h2>
 
 <p style="margin-left:11%; margin-top: 1em">zopen-version
 &minus; manual page for zopen-version 0.8.4</p>
 
-<h2>SYNOPSIS
-</h2>
-
+<h2>SYNOPSIS</h2>
 
 <p style="margin-left:11%; margin-top: 1em">zopen
 promote [OPTION] [DESTINATION]...</p>
 
-<h2>DESCRIPTION
-</h2>
-
-
+<h2>DESCRIPTION</h2>
 
 <p style="margin-left:11%; margin-top: 1em">zopen&minus;promote
 is a utility for zopen community to generate a clone of an
@@ -37,10 +26,7 @@ existing zopen environment. For example, a user can install
 to a test area, validate the behavior, and promote to a
 production area.</p>
 
-<h2>OPTIONS
-</h2>
-
-
+<h2>OPTIONS</h2>
 
 <p style="margin-left:11%; margin-top: 1em">&minus;cp,
 &minus;&minus;configperms [PERMISSIONS]</p>
@@ -68,7 +54,6 @@ environment files from default.</p>
 
 <p style="margin-left:22%;">Display this help and exit.</p>
 
-
 <p style="margin-left:11%;">&minus;&minus;keepzopentooling</p>
 
 <p style="margin-left:22%;">Install the zopen admin tools
@@ -85,7 +70,6 @@ environment files from current user.</p>
 &minus;&minus;verbose</p>
 
 <p style="margin-left:22%;">Run in verbose mode.</p>
-
 
 <p style="margin-left:11%;">&minus;&minus;version</p>
 
@@ -106,9 +90,7 @@ will be purged before promote occurs.</p>
 files within the promoted zopen environment with the given
 [PERMISSIONS] string, specified in symbolic mode.</p>
 
-<h2>EXAMPLES
-</h2>
-
+<h2>EXAMPLES</h2>
 
 <p style="margin-left:11%; margin-top: 1em">zopen
 promote</p>
@@ -146,17 +128,13 @@ current user to source the zopen&minus;config environment
 file and only permit access to zopen environment files to
 the user &rsquo;FOO&rsquo;.</p>
 
-<h2>AUTHOR
-</h2>
-
+<h2>AUTHOR</h2>
 
 <p style="margin-left:11%; margin-top: 1em">Written by
 contributors to the zopen community.
 <a href="https://github.com/zopencommunity/meta/graphs/contributors" target="_blank">https://github.com/zopencommunity/meta/graphs/contributors</a></p>
 
-<h2>REPORTING BUGS
-</h2>
-
+<h2>REPORTING BUGS</h2>
 
 <p style="margin-left:11%; margin-top: 1em">Report bugs at
 <a href="https://github.com/zopencommunity/meta/issues" target="_blank">https://github.com/zopencommunity/meta/issues</a></p>

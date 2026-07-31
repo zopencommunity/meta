@@ -6,32 +6,19 @@
   </div>
 </div>
 
-
 <h1 align="center">ZOPEN-CREATE-CICD-JOB</h1>
 
-
-
-
-<h2>NAME
-</h2>
-
-
+<h2>NAME</h2>
 
 <p style="margin-left:11%; margin-top: 1em">zopen-create-cicd-job
 &minus; manual page for zopen-create-cicd-job 0.8.4</p>
 
-<h2>SYNOPSIS
-</h2>
-
-
+<h2>SYNOPSIS</h2>
 
 <p style="margin-left:11%; margin-top: 1em">zopen-create-cicd-job
 [OPTION] -n PORT_NAME</p>
 
-<h2>DESCRIPTION
-</h2>
-
-
+<h2>DESCRIPTION</h2>
 
 <p style="margin-left:11%; margin-top: 1em">zopen&minus;create&minus;cicd&minus;job
 &minus; Create a Jenkins CI/CD job for a port.</p>
@@ -39,10 +26,7 @@
 <p style="margin-left:11%; margin-top: 1em">NOTE: This
 script is intended for use by core contributors only.</p>
 
-<h2>OPTIONS
-</h2>
-
-
+<h2>OPTIONS</h2>
 
 <p style="margin-left:11%; margin-top: 1em">&minus;h,
 &minus;&minus;help</p>
@@ -78,14 +62,11 @@ e.g., curl, openssl (without &rsquo;port&rsquo; suffix)</p>
 <p style="margin-left:22%;">Trigger job after creation: yes
 or no (default: yes)</p>
 
-
 <p style="margin-left:11%;">&minus;&minus;version</p>
 
 <p style="margin-left:22%;">print version</p>
 
-
 <p style="margin-left:11%; margin-top: 1em">Example:</p>
-
 
 <p style="margin-left:22%;">zopen&minus;create&minus;cicd&minus;job
 &minus;n curl zopen&minus;create&minus;cicd&minus;job
@@ -100,9 +81,7 @@ the terms of the Apache License, Version 2.0.
 &lt;<a href="https://www.apache.org/licenses/LICENSE" target="_blank">https://www.apache.org/licenses/LICENSE</a>&minus;2.0.html&gt;
 There is NO WARRANTY, to the extent permitted by law.</p>
 
-<h2>AUTHOR
-</h2>
-
+<h2>AUTHOR</h2>
 
 <p style="margin-left:11%; margin-top: 1em">Written by
 contributors to the zopen community.

@@ -47,8 +47,7 @@ extracted from filename)</p>
 <p style="margin-left:22%;">Override version (default:
 extracted from filename)</p>
 
-<table width="100%" border="0" rules="none" frame="void"
-       cellspacing="0" cellpadding="0">
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
 
 <tr valign="top" align="left">
 
@@ -127,8 +126,7 @@ actually doing it</p>
 
 <p style="margin-left:22%;">Enable verbose debug output</p>
 
-<table width="100%" border="0" rules="none" frame="void"
-       cellspacing="0" cellpadding="0">
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
 
 <tr valign="top" align="left">
 
@@ -160,8 +158,7 @@ actually doing it</p>
 /nfsmounts/bpidrivers/oefv1r1/os3900/latest/HAMN110.runnable.pax.Z
 \</p>
 
-<table width="100%" border="0" rules="none" frame="void"
-       cellspacing="0" cellpadding="0">
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
 
 <tr valign="top" align="left">
 

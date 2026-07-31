@@ -6,46 +6,30 @@
   </div>
 </div>
 
-
 <h1 align="center">ZOPEN-AUDIT</h1>
 
-
-
-
-<h2>NAME
-</h2>
-
+<h2>NAME</h2>
 
 <p style="margin-left:11%; margin-top: 1em">zopen-audit
 &minus; manual page for zopen-audit 0.8.4</p>
 
-<h2>SYNOPSIS
-</h2>
-
-
+<h2>SYNOPSIS</h2>
 
 <p style="margin-left:11%; margin-top: 1em">zopen-audit
 [OPTION]</p>
 
-<h2>DESCRIPTION
-</h2>
-
-
+<h2>DESCRIPTION</h2>
 
 <p style="margin-left:11%; margin-top: 1em">zopen&minus;audit
 is a utility for zopen community to check for
 vulnerabilities in your installed packages.</p>
 
-<h2>OPTIONS
-</h2>
-
-
+<h2>OPTIONS</h2>
 
 <p style="margin-left:11%; margin-top: 1em">&minus;v,
 &minus;&minus;verbose</p>
 
 <p style="margin-left:22%;">run in verbose mode.</p>
-
 
 <p style="margin-left:11%;">&minus;&minus;version</p>
 
@@ -64,26 +48,20 @@ vulnerabilities by upgrading packages.</p>
 <p style="margin-left:22%;">remove packages with
 vulnerabilities.</p>
 
-<h2>EXAMPLES
-</h2>
-
+<h2>EXAMPLES</h2>
 
 <p style="margin-left:11%; margin-top: 1em">zopen audit</p>
 
 <p style="margin-left:22%;">check for vulnerabilities in
 all installed packages</p>
 
-<h2>AUTHOR
-</h2>
-
+<h2>AUTHOR</h2>
 
 <p style="margin-left:11%; margin-top: 1em">Written by
 contributors to the zopen community.
 <a href="https://github.com/zopencommunity/meta/graphs/contributors" target="_blank">https://github.com/zopencommunity/meta/graphs/contributors</a></p>
 
-<h2>REPORTING BUGS
-</h2>
-
+<h2>REPORTING BUGS</h2>
 
 <p style="margin-left:11%; margin-top: 1em">Report bugs at
 <a href="https://github.com/zopencommunity/meta/issues." target="_blank">https://github.com/zopencommunity/meta/issues.</a></p>

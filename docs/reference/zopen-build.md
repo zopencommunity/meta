@@ -6,37 +6,25 @@
   </div>
 </div>
 
-
 <h1 align="center">ZOPEN-BUILD</h1>
 
-
-
-
-<h2>NAME
-</h2>
-
+<h2>NAME</h2>
 
 <p style="margin-left:11%; margin-top: 1em">zopen-build
 &minus; manual page for zopen-build 0.8.4</p>
 
-<h2>SYNOPSIS
-</h2>
-
-
+<h2>SYNOPSIS</h2>
 
 <p style="margin-left:11%; margin-top: 1em">zopen-build
 [OPTION]...</p>
 
-<h2>DESCRIPTION
-</h2>
-
-
+<h2>DESCRIPTION</h2>
 
 <p style="margin-left:11%; margin-top: 1em">zopen&minus;build
 is a general purpose build script to be used with the zopen
 community ports.</p>
 
-&minus;&minus;build LINE</p>
+<p style="margin-left:11%;">&minus;&minus;build LINE</p>
 
 <p style="margin-left:22%;">LINE may be dev or stable. This
 is the build line to build off of.</p>
@@ -52,7 +40,6 @@ The default is release.</p>
 
 <p style="margin-left:22%;">Deletes all of the build output
 and forces reconfigure with next build.</p>
-
 
 <p style="margin-left:11%;">&minus;&minus;ccache</p>
 
@@ -77,7 +64,6 @@ buildenv to establish build environment.</p>
 executable (adds &minus;Wl,&minus;bedit=yes to
 LDFLAGS).</p>
 
-
 <p style="margin-left:11%;">&minus;&minus;instrument</p>
 
 <p style="margin-left:22%;">instruments the application
@@ -89,7 +75,6 @@ only)</p>
 
 <p style="margin-left:22%;">forces a rebuild, including
 running bootstrap and configure again.</p>
-
 
 <p style="margin-left:11%;">&minus;&minus;forcepatchapply</p>
 
@@ -114,68 +99,51 @@ the install contents.</p>
 
 <p style="margin-left:22%;">print this information.</p>
 
-
 <p style="margin-left:11%;">&minus;&minus;no&minus;set&minus;active</p>
 
 <p style="margin-left:22%;">do not change the pinned
 version.</p>
-
 
 <p style="margin-left:11%;">&minus;&minus;no&minus;install&minus;deps</p>
 
 <p style="margin-left:22%;">do not install project&rsquo;s
 runtime dependencies.</p>
 
-
-<table width="100%" border="0" rules="none" frame="void"
-       cellspacing="0" cellpadding="0">
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
 
 <tr valign="top" align="left">
 
 <td width="11%"></td>
 
-
 <td width="7%">
-
 
 <p>&minus;&minus;oci</p></td>
 
-
 <td width="4%"></td>
 
-
 <td width="78%">
-
 
 <p>build and publish an OCI image to
 $ZOPEN_IMAGE_REGISTRY.</p></td>
 </tr>
 
-
 <tr valign="top" align="left">
 
 <td width="11%"></td>
 
-
 <td width="7%">
-
 
 <p>&minus;s</p></td>
 
-
 <td width="4%"></td>
 
-
 <td width="78%">
-
 
 <p>exec a shell before running configure. Useful when
 manually building ports.</p></td>
 </tr>
 
 </table>
-
-
 
 <p style="margin-left:11%;">&minus;&minus;sign&minus;pax,
 &minus;sp</p>
@@ -186,54 +154,40 @@ ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE and
 ZOPEN_GPG_PUBLIC_KEY_FILE must be set for signing the
 file.</p>
 
-
-<table width="100%" border="0" rules="none" frame="void"
-       cellspacing="0" cellpadding="0">
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
 
 <tr valign="top" align="left">
 
 <td width="11%"></td>
 
-
 <td width="4%">
-
 
 <p>&minus;v</p></td>
 
-
 <td width="7%"></td>
 
-
 <td width="78%">
-
 
 <p>run in verbose mode.</p></td>
 </tr>
 
-
 <tr valign="top" align="left">
 
 <td width="11%"></td>
 
-
 <td width="4%">
-
 
 <p>&minus;vv</p></td>
 
-
 <td width="7%"></td>
 
-
 <td width="78%">
-
 
 <p>run in very verbose mode (sets environment variables V=1
 and VERBOSE=1).</p></td>
 </tr>
 
 </table>
-
 
 <p style="margin-left:11%;">&minus;u,
 &minus;&minus;upgradedeps</p>
@@ -254,10 +208,8 @@ repository.</p>
 functioning zopen community sample port see:
 <a href="https://github.com/zopencommunity/zotsampleport" target="_blank">https://github.com/zopencommunity/zotsampleport</a></p>
 
-
 <p style="margin-left:11%; margin-top: 1em">User&minus;Provided
 environment variables:</p>
-
 
 <p style="margin-left:11%; margin-top: 1em">Required:
 ZOPEN_BUILD_LINE</p>
@@ -298,7 +250,6 @@ build dependencies.</p>
 <p style="margin-left:22%;">Required IF
 ZOPEN_BUILD_LINE=&rsquo;STABLE&rsquo;. Specify the stable
 build URL (either git or tarball).</p>
-
 
 <p style="margin-left:11%; margin-top: 1em">Optional:
 ZOPEN_EXTRA_CFLAGS</p>
@@ -513,7 +464,6 @@ image to (use with &minus;&minus;oci option)</p>
 Docker image registry. (use with &minus;&minus;oci
 option)</p>
 
-
 <p style="margin-left:11%;">ZOPEN_IMAGE_REGISTRY_KEY_FILE</p>
 
 <p style="margin-left:22%;">The file containing
@@ -573,7 +523,6 @@ download. Valid types are TARBALL, BARE and GIT.</p>
 
 <p style="margin-left:22%;">The type of package to
 download. Valid types are TARBALL, BARE and GIT.</p>
-
 
 <p style="margin-left:11%; margin-top: 1em">Deprecated:
 ZOPEN_CC</p>
@@ -640,10 +589,8 @@ download. Valid types are TARBALL, BARE and GIT.</p>
 <p style="margin-left:22%;">Alternate environment variable
 instead of ZOPEN_TARBALL_URL or ZOPEN_GIT_URL.</p>
 
-
 <p style="margin-left:11%; margin-top: 1em">User&minus;Provided
 functions:</p>
-
 
 <p style="margin-left:11%; margin-top: 1em">Required:
 zopen_check_results</p>
@@ -658,7 +605,6 @@ expected and actual failures.</p>
 version of the tool in accordance with semantic
 versioning.</p>
 
-
 <p style="margin-left:11%; margin-top: 1em">Optional:
 zopen_append_to_env</p>
 
@@ -671,7 +617,6 @@ appended to .env.</p>
 <p style="margin-left:22%;">This function runs as part of
 generation of the setup.sh file. The output of the function
 is appended to setup.sh.</p>
-
 
 <p style="margin-left:11%;">zopen_append_to_validate_install</p>
 
@@ -755,9 +700,7 @@ the terms of the Apache License, Version 2.0.
 &lt;<a href="https://www.apache.org/licenses/LICENSE" target="_blank">https://www.apache.org/licenses/LICENSE</a>&minus;2.0.html&gt;
 There is NO WARRANTY, to the extent permitted by law.</p>
 
-<h2>AUTHOR
-</h2>
-
+<h2>AUTHOR</h2>
 
 <p style="margin-left:11%; margin-top: 1em">Written by
 contributors to the zopen community.

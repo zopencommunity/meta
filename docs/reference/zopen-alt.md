@@ -6,40 +6,25 @@
   </div>
 </div>
 
-
 <h1 align="center">ZOPEN-ALT</h1>
 
-
-
-
-<h2>NAME
-</h2>
-
+<h2>NAME</h2>
 
 <p style="margin-left:11%; margin-top: 1em">zopen-alt
 &minus; manual page for zopen-alt 0.8.4</p>
 
-<h2>SYNOPSIS
-</h2>
-
-
+<h2>SYNOPSIS</h2>
 
 <p style="margin-left:11%; margin-top: 1em">zopen-alt
 [OPTION] [PACKAGE] [PARAMETERS]...</p>
 
-<h2>DESCRIPTION
-</h2>
-
-
+<h2>DESCRIPTION</h2>
 
 <p style="margin-left:11%; margin-top: 1em">zopen&minus;alt
 is a utility for zopen community to switch package versions
 for currently installed packages.</p>
 
-<h2>OPTIONS
-</h2>
-
-
+<h2>OPTIONS</h2>
 
 <p style="margin-left:11%; margin-top: 1em">&minus;h,
 &minus;&minus;help, &minus;?</p>
@@ -63,14 +48,11 @@ PACKAGE to VERSION.</p>
 
 <p style="margin-left:22%;">run in verbose mode.</p>
 
-
 <p style="margin-left:11%;">&minus;&minus;version</p>
 
 <p style="margin-left:22%;">print version</p>
 
-<h2>EXAMPLES
-</h2>
-
+<h2>EXAMPLES</h2>
 
 <p style="margin-left:11%; margin-top: 1em">zopen alt
 foo</p>
@@ -92,17 +74,13 @@ foo&minus;1.2.3.19700101_012345.zos</p>
 package &rsquo;foo&rsquo; to version
 foo&minus;1.2.3.19700101_012345.zos if available</p>
 
-<h2>AUTHOR
-</h2>
-
+<h2>AUTHOR</h2>
 
 <p style="margin-left:11%; margin-top: 1em">Written by
 contributors to the zopen community.
 <a href="https://github.com/zopencommunity/meta/graphs/contributors" target="_blank">https://github.com/zopencommunity/meta/graphs/contributors</a></p>
 
-<h2>REPORTING BUGS
-</h2>
-
+<h2>REPORTING BUGS</h2>
 
 <p style="margin-left:11%; margin-top: 1em">Report bugs at
 <a href="https://github.com/zopencommunity/meta/issues" target="_blank">https://github.com/zopencommunity/meta/issues</a></p>

@@ -6,40 +6,25 @@
   </div>
 </div>
 
-
 <h1 align="center">ZOPEN-PUBLISH</h1>
 
-
-
-
-<h2>NAME
-</h2>
-
+<h2>NAME</h2>
 
 <p style="margin-left:11%; margin-top: 1em">zopen-publish
 &minus; manual page for zopen-publish 0.8.4</p>
 
-<h2>SYNOPSIS
-</h2>
-
-
+<h2>SYNOPSIS</h2>
 
 <p style="margin-left:11%; margin-top: 1em">zopen-publish
 [OPTION] -p PAX_FILE -m METADATA_FILE -g
 TAG</p>
 
-<h2>DESCRIPTION
-</h2>
-
-
+<h2>DESCRIPTION</h2>
 
 <p style="margin-left:11%; margin-top: 1em">zopen&minus;publish
 &minus; Publish zopen package release to GitHub.</p>
 
-<h2>OPTIONS
-</h2>
-
-
+<h2>OPTIONS</h2>
 
 <p style="margin-left:11%; margin-top: 1em">&minus;h,
 &minus;&minus;help</p>
@@ -114,7 +99,6 @@ zopencommunity)</p>
 <p style="margin-left:22%;">Mark release as
 &rsquo;Latest&rsquo; (not pre&minus;release).</p>
 
-
 <p style="margin-left:11%;">&minus;&minus;version</p>
 
 <p style="margin-left:22%;">print version</p>
@@ -124,7 +108,6 @@ GITHUB_TOKEN</p>
 
 <p style="margin-left:22%;">GitHub Personal Access Token
 (alternative to &minus;&minus;github&minus;token)</p>
-
 
 <p style="margin-left:11%; margin-top: 1em">Example:</p>
 
@@ -147,9 +130,7 @@ the terms of the Apache License, Version 2.0.
 &lt;<a href="https://www.apache.org/licenses/LICENSE" target="_blank">https://www.apache.org/licenses/LICENSE</a>&minus;2.0.html&gt;
 There is NO WARRANTY, to the extent permitted by law.</p>
 
-<h2>AUTHOR
-</h2>
-
+<h2>AUTHOR</h2>
 
 <p style="margin-left:11%; margin-top: 1em">Written by
 contributors to the zopen community.
