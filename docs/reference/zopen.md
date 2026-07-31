@@ -28,326 +28,136 @@ utility for managing a zopen community environment.</p>
 
 <p style="margin-left:11%; margin-top: 1em"><b>Command:</b></p>
 
-<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
-
-<tr valign="top" align="left">
-
-<td width="11%"></td>
-
-<td width="9%">
-
-<p>alt</p></td>
-
-<td width="2%"></td>
-
-<td width="78%">
-
-<p>manage alternate versions of zopen community
-packages</p></td>
+<table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
+<tr style="background-color:#f0f0f0;">
+<th style="text-align:left; border: 1px solid #ccc;">Variable</th>
+<th style="text-align:left; border: 1px solid #ccc;">Description</th>
 </tr>
-
-<tr valign="top" align="left">
-
-<td width="11%"></td>
-
-<td width="9%">
-
-<p>audit</p></td>
-
-<td width="2%"></td>
-
-<td width="78%">
-
-<p>(beta) reports known vulnerabilities for the installed
-packages</p></td>
+<tr>
+<td style="border: 1px solid #ccc;"><code>alt</code></td>
+<td style="border: 1px solid #ccc;">manage alternate versions of zopen community
+packages</td>
 </tr>
-
-<tr valign="top" align="left">
-
-<td width="11%"></td>
-
-<td width="9%">
-
-<p>build</p></td>
-
-<td width="2%"></td>
-
-<td width="78%">
-
-<p>builds the enclosing zopen community git&minus;cloned
-package</p></td>
+<tr>
+<td style="border: 1px solid #ccc;"><code>audit</code></td>
+<td style="border: 1px solid #ccc;">(beta) reports known vulnerabilities for the installed
+packages</td>
 </tr>
-
-<tr valign="top" align="left">
-
-<td width="11%"></td>
-
-<td width="9%">
-
-<p>clean</p></td>
-
-<td width="2%"></td>
-
-<td width="78%">
-
-<p>cleans up your zopen environment</p></td>
+<tr>
+<td style="border: 1px solid #ccc;"><code>build</code></td>
+<td style="border: 1px solid #ccc;">builds the enclosing zopen community git&minus;cloned
+package</td>
 </tr>
-
-<tr valign="top" align="left">
-
-<td width="11%"></td>
-
-<td width="9%">
-
-<p>config</p></td>
-
-<td width="2%"></td>
-
-<td width="78%">
-
-<p>change zopen runtime environment settings</p></td>
+<tr>
+<td style="border: 1px solid #ccc;"><code>clean</code></td>
+<td style="border: 1px solid #ccc;">cleans up your zopen environment</td>
 </tr>
-
-<tr valign="top" align="left">
-
-<td width="11%"></td>
-
-<td width="9%">
-
-<p>diagnostics</p></td>
-
-<td width="2%"></td>
-
-<td width="78%">
-
-<p>collects system info for zopen troubleshooting</p></td>
+<tr>
+<td style="border: 1px solid #ccc;"><code>config</code></td>
+<td style="border: 1px solid #ccc;">change zopen runtime environment settings</td>
 </tr>
-
-<tr valign="top" align="left">
-
-<td width="11%"></td>
-
-<td width="9%">
-
-<p>generate</p></td>
-
-<td width="2%"></td>
-
-<td width="78%">
-
-<p>generates a new zopen project</p></td>
+<tr>
+<td style="border: 1px solid #ccc;"><code>diagnostics</code></td>
+<td style="border: 1px solid #ccc;">collects system info for zopen troubleshooting</td>
 </tr>
-
-<tr valign="top" align="left">
-
-<td width="11%"></td>
-
-<td width="9%">
-
-<p>init</p></td>
-
-<td width="2%"></td>
-
-<td width="78%">
-
-<p>initializes a zopen environment at the specified
-location</p></td>
+<tr>
+<td style="border: 1px solid #ccc;"><code>generate</code></td>
+<td style="border: 1px solid #ccc;">generates a new zopen project</td>
 </tr>
-
-<tr valign="top" align="left">
-
-<td width="11%"></td>
-
-<td width="9%">
-
-<p>refresh</p></td>
-
-<td width="2%"></td>
-
-<td width="78%">
-
-<p>refreshes your zopen environment and zopen&minus;config file</p></td>
+<tr>
+<td style="border: 1px solid #ccc;"><code>init</code></td>
+<td style="border: 1px solid #ccc;">initializes a zopen environment at the specified
+location</td>
 </tr>
-
-<tr valign="top" align="left">
-
-<td width="11%"></td>
-
-<td width="9%">
-
-<p>install</p></td>
-
-<td width="2%"></td>
-
-<td width="78%">
-
-<p>installs one or more zopen community packages</p></td>
+<tr>
+<td style="border: 1px solid #ccc;"><code>refresh</code></td>
+<td style="border: 1px solid #ccc;">refreshes your zopen environment and zopen&minus;config file</td>
 </tr>
-
-<tr valign="top" align="left">
-
-<td width="11%"></td>
-
-<td width="9%">
-
-<p>info</p></td>
-
-<td width="2%"></td>
-
-<td width="78%">
-
-<p>displays detailed information about a package</p></td>
+<tr>
+<td style="border: 1px solid #ccc;"><code>install</code></td>
+<td style="border: 1px solid #ccc;">installs one or more zopen community packages</td>
 </tr>
-
-<tr valign="top" align="left">
-
-<td width="11%"></td>
-
-<td width="9%">
-
-<p>list</p></td>
-
-<td width="2%"></td>
-
-<td width="78%">
-
-<p>lists information about zopen community packages</p></td>
+<tr>
+<td style="border: 1px solid #ccc;"><code>info</code></td>
+<td style="border: 1px solid #ccc;">displays detailed information about a package</td>
 </tr>
-
-<tr valign="top" align="left">
-
-<td width="11%"></td>
-
-<td width="9%">
-
-<p>publish</p></td>
-
-<td width="2%"></td>
-
-<td width="78%">
-
-<p>publish zopen package release to github</p></td>
+<tr>
+<td style="border: 1px solid #ccc;"><code>list</code></td>
+<td style="border: 1px solid #ccc;">lists information about zopen community packages</td>
 </tr>
-
-<tr valign="top" align="left">
-
-<td width="11%"></td>
-
-<td width="9%">
-
-<p>query</p></td>
-
-<td width="2%"></td>
-
-<td width="78%">
-
-<p>list local or remote info about zopen community
-packages</p></td>
+<tr>
+<td style="border: 1px solid #ccc;"><code>publish</code></td>
+<td style="border: 1px solid #ccc;">publish zopen package release to github</td>
 </tr>
-
-<tr valign="top" align="left">
-
-<td width="11%"></td>
-
-<td width="9%">
-
-<p>remove</p></td>
-
-<td width="2%"></td>
-
-<td width="78%">
-
-<p>removes installed zopen community packages</p></td>
+<tr>
+<td style="border: 1px solid #ccc;"><code>query</code></td>
+<td style="border: 1px solid #ccc;">list local or remote info about zopen community
+packages</td>
 </tr>
-
-<tr valign="top" align="left">
-
-<td width="11%"></td>
-
-<td width="9%">
-
-<p>update&minus;cacert</p></td>
-
-<td width="2%"></td>
-
-<td width="78%">
-
-<p>update the cacert.pem file used by zopen community</p></td>
+<tr>
+<td style="border: 1px solid #ccc;"><code>remove</code></td>
+<td style="border: 1px solid #ccc;">removes installed zopen community packages</td>
 </tr>
-
-<tr valign="top" align="left">
-
-<td width="11%"></td>
-
-<td width="9%">
-
-<p>upgrade</p></td>
-
-<td width="2%"></td>
-
-<td width="78%">
-
-<p>upgrades existing zopen community packages</p></td>
+<tr>
+<td style="border: 1px solid #ccc;"><code>update&minus;cacert</code></td>
+<td style="border: 1px solid #ccc;">update the cacert.pem file used by zopen community</td>
 </tr>
-
-<tr valign="top" align="left">
-
-<td width="11%"></td>
-
-<td width="9%">
-
-<p>usage</p></td>
-
-<td width="2%"></td>
-
-<td width="78%">
-
-<p>output details about the file system usage for your
-zopen environment</p></td>
+<tr>
+<td style="border: 1px solid #ccc;"><code>upgrade</code></td>
+<td style="border: 1px solid #ccc;">upgrades existing zopen community packages</td>
 </tr>
-
-<tr valign="top" align="left">
-
-<td width="11%"></td>
-
-<td width="9%">
-
-<p>whichproject</p></td>
-
-<td width="2%"></td>
-
-<td width="78%">
-
-<p>determine the package a command or library belongs to</p></td>
+<tr>
+<td style="border: 1px solid #ccc;"><code>usage</code></td>
+<td style="border: 1px solid #ccc;">output details about the file system usage for your
+zopen environment</td>
 </tr>
-
+<tr>
+<td style="border: 1px solid #ccc;"><code>whichproject</code></td>
+<td style="border: 1px solid #ccc;">determine the package a command or library belongs to</td>
+</tr>
 </table>
 
 <h2>OPTIONS</h2>
 <a name="OPTIONS"></a>
 
-<p style="margin-left:11%; margin-top: 1em"><b>&minus;h</b>,
-<b>&minus;&minus;help</b>, &minus;?</p>
 
-<p style="margin-left:22%;">display this help and exit</p>
 
-<p style="margin-left:11%;"><b>&minus;v</b>,
-<b>&minus;&minus;verbose</b></p>
+<table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
+<tr style="background-color:#f0f0f0;">
+<th style="text-align:left; border: 1px solid #ccc;">Option</th>
+<th style="text-align:left; border: 1px solid #ccc;">Description</th>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code><b>&minus;h</b>, <b>&minus;&minus;help</b>, &minus;?</code></td>
+<td style="border: 1px solid #ccc;">display this help and exit</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code><b>&minus;v</b>, <b>&minus;&minus;verbose</b></code></td>
+<td style="border: 1px solid #ccc;">run in verbose mode</td>
+</tr>
+</table>
 
-<p style="margin-left:22%;">run in verbose mode</p>
 
 <h2>EXAMPLES</h2>
 <a name="EXAMPLES"></a>
 
-<p style="margin-left:11%; margin-top: 1em">zopen
-&minus;&minus;help</p>
 
-<p style="margin-left:22%;">displays zopen help</p>
 
-<p style="margin-left:11%;">zopen &minus;&minus;version</p>
+<table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
+<tr style="background-color:#f0f0f0;">
+<th style="text-align:left; border: 1px solid #ccc;">Option</th>
+<th style="text-align:left; border: 1px solid #ccc;">Description</th>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>zopen &minus;&minus;help</code></td>
+<td style="border: 1px solid #ccc;">displays zopen help</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>zopen &minus;&minus;version</code></td>
+<td style="border: 1px solid #ccc;">displays the installed zopen version</td>
+</tr>
+</table>
 
-<p style="margin-left:22%;">displays the installed zopen
-version</p>
 
 <p style="margin-left:22%; margin-top: 1em">zopen install
 git install the latest version of the &rsquo;git&rsquo;
@@ -357,32 +167,39 @@ packages to the latest release,</p>
 <p style="margin-left:22%; margin-top: 1em">without
 prompting</p>
 
-<p style="margin-left:11%;">zopen alt bash</p>
 
-<p style="margin-left:22%;">list installed alternative bash
-packages</p>
 
-<p style="margin-left:11%;">zopen info vim</p>
+<table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
+<tr style="background-color:#f0f0f0;">
+<th style="text-align:left; border: 1px solid #ccc;">Option</th>
+<th style="text-align:left; border: 1px solid #ccc;">Description</th>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>zopen alt bash</code></td>
+<td style="border: 1px solid #ccc;">list installed alternative bash packages</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>zopen info vim</code></td>
+<td style="border: 1px solid #ccc;">displays details information about the installed vim package</td>
+</tr>
+</table>
 
-<p style="margin-left:22%;">displays details information
-about the installed vim package</p>
 
 <p style="margin-left:22%; margin-top: 1em">zopen usage
 &minus;&minus;pie displays an ASCII&minus;art chart showing
 biggest space hogs</p>
 
-<p style="margin-left:11%; margin-top: 1em"><b>SEE
-ALSO:</b></p>
+<table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
+<tr style="background-color:#f0f0f0;">
+<th style="text-align:left; border: 1px solid #ccc;">Option</th>
+<th style="text-align:left; border: 1px solid #ccc;">Description</th>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code><b>SEE ALSO:</b></code></td>
+<td style="border: 1px solid #ccc;">zopen&minus;alt(1) zopen&minus;audit(1) zopen&minus;build(1) zopen&minus;clean(1) zopen&minus;config&minus;helper(1) zopen&minus;generate(1) zopen&minus;init(1) zopen&minus;install(1) zopen&minus;info(1) zopen&minus;publish(1) zopen&minus;query(1) zopen&minus;remove(1) zopen&minus;update&minus;cacert(1) zopen&minus;usage(1) zopen&minus;whichproject(1) zopen&minus;version(1)</td>
+</tr>
+</table>
 
-<p style="margin-left:22%;">zopen&minus;alt(1)
-zopen&minus;audit(1) zopen&minus;build(1)
-zopen&minus;clean(1) zopen&minus;config&minus;helper(1)
-zopen&minus;generate(1) zopen&minus;init(1)
-zopen&minus;install(1) zopen&minus;info(1)
-zopen&minus;publish(1) zopen&minus;query(1)
-zopen&minus;remove(1) zopen&minus;update&minus;cacert(1)
-zopen&minus;usage(1) zopen&minus;whichproject(1)
-zopen&minus;version(1)</p>
 
 <h2>AUTHOR</h2>
 <a name="AUTHOR"></a>

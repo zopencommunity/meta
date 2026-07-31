@@ -15,13 +15,17 @@
 
 <h2>DESCRIPTION</h2>
 
-<p style="margin-left:11%; margin-top: 1em">zopen&minus;migrate&minus;buildenv
-[&minus;&minus;version|&minus;&minus;help]</p>
+<table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
+<tr style="background-color:#f0f0f0;">
+<th style="text-align:left; border: 1px solid #ccc;">Option</th>
+<th style="text-align:left; border: 1px solid #ccc;">Description</th>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>zopen&minus;migrate&minus;buildenv [&minus;&minus;version|&minus;&minus;help]</code></td>
+<td style="border: 1px solid #ccc;">simple sed script to change over env vars in a buildenv from &rsquo;old style&rsquo; to &rsquo;new style&rsquo; By no means bullet&minus;proof but might save some typing</td>
+</tr>
+</table>
 
-<p style="margin-left:22%; margin-top: 1em">simple sed
-script to change over env vars in a buildenv from &rsquo;old
-style&rsquo; to &rsquo;new style&rsquo; By no means
-bullet&minus;proof but might save some typing</p>
 
 <p style="margin-left:11%; margin-top: 1em">This is free
 software: you are free to change and redistribute it under

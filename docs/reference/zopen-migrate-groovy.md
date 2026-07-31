@@ -15,15 +15,17 @@
 
 <h2>DESCRIPTION</h2>
 
-<p style="margin-left:11%; margin-top: 1em">zopen&minus;migrate&minus;groovy
-[&minus;&minus;version|&minus;&minus;help]</p>
+<table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
+<tr style="background-color:#f0f0f0;">
+<th style="text-align:left; border: 1px solid #ccc;">Option</th>
+<th style="text-align:left; border: 1px solid #ccc;">Description</th>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>zopen&minus;migrate&minus;groovy [&minus;&minus;version|&minus;&minus;help]</code></td>
+<td style="border: 1px solid #ccc;">simple script to create a cicd&minus;dev.groovy and cicd&minus;stable.groovy from a cicd.groovy. By no means bullet&minus;proof but might save some typing Has no checks in it and requires you fill in the ...&rsquo;s in the generated files.</td>
+</tr>
+</table>
 
-<p style="margin-left:22%; margin-top: 1em">simple script
-to create a cicd&minus;dev.groovy and
-cicd&minus;stable.groovy from a cicd.groovy. By no means
-bullet&minus;proof but might save some typing Has no checks
-in it and requires you fill in the ...&rsquo;s in the
-generated files.</p>
 
 <p style="margin-left:22%; margin-top: 1em">Also, spacing
 is a bit off &minus; but easy enough to change

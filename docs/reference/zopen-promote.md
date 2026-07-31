@@ -28,105 +28,109 @@ production area.</p>
 
 <h2>OPTIONS</h2>
 
-<p style="margin-left:11%; margin-top: 1em">&minus;cp,
-&minus;&minus;configperms [PERMISSIONS]</p>
 
-<p style="margin-left:22%;">Update the permissions for the
-configuration file
-&lt;promotedroot&gt;/etc/zopen&minus;config with the given
-[PERMISSIONS] string, specified in symbolic mode.</p>
 
-<p style="margin-left:11%;">&minus;f,
-&minus;&minus;from</p>
 
-<p style="margin-left:22%;">[DIRECTORY] The zopen
-environment to copy from; if not present, the default is
-taken from ZOPEN_ROOTFS (the current zopen environment).</p>
 
-<p style="margin-left:11%;">&minus;g,
-&minus;&minus;group [GROUP]</p>
 
-<p style="margin-left:22%;">Change group of promoted
-environment files from default.</p>
 
-<p style="margin-left:11%;">&minus;h, &minus;?,
-&minus;&minus;help</p>
 
-<p style="margin-left:22%;">Display this help and exit.</p>
 
-<p style="margin-left:11%;">&minus;&minus;keepzopentooling</p>
 
-<p style="margin-left:22%;">Install the zopen admin tools
-into the promoted environment for zopen system
-administration.</p>
 
-<p style="margin-left:11%;">&minus;o,
-&minus;&minus;owner [OWNER]</p>
 
-<p style="margin-left:22%;">Change owner of promoted
-environment files from current user.</p>
 
-<p style="margin-left:11%;">&minus;v,
-&minus;&minus;verbose</p>
 
-<p style="margin-left:22%;">Run in verbose mode.</p>
 
-<p style="margin-left:11%;">&minus;&minus;version</p>
 
-<p style="margin-left:22%;">Display version
-information.</p>
 
-<p style="margin-left:11%;">&minus;y,
-&minus;&minus;yes</p>
 
-<p style="margin-left:22%;">Automatically answer
-&rsquo;yes&rsquo; to prompts; existing target filesystems
-will be purged before promote occurs.</p>
 
-<p style="margin-left:11%;">&minus;zp,
-&minus;&minus;zopenperms [PERMISSIONS]</p>
+<table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
+<tr style="background-color:#f0f0f0;">
+<th style="text-align:left; border: 1px solid #ccc;">Option</th>
+<th style="text-align:left; border: 1px solid #ccc;">Description</th>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;cp, &minus;&minus;configperms [PERMISSIONS]</code></td>
+<td style="border: 1px solid #ccc;">Update the permissions for the configuration file &lt;promotedroot&gt;/etc/zopen&minus;config with the given [PERMISSIONS] string, specified in symbolic mode.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;f, &minus;&minus;from</code></td>
+<td style="border: 1px solid #ccc;">[DIRECTORY] The zopen environment to copy from; if not present, the default is taken from ZOPEN_ROOTFS (the current zopen environment).</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;g, &minus;&minus;group [GROUP]</code></td>
+<td style="border: 1px solid #ccc;">Change group of promoted environment files from default.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;h, &minus;?, &minus;&minus;help</code></td>
+<td style="border: 1px solid #ccc;">Display this help and exit.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;&minus;keepzopentooling</code></td>
+<td style="border: 1px solid #ccc;">Install the zopen admin tools into the promoted environment for zopen system administration.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;o, &minus;&minus;owner [OWNER]</code></td>
+<td style="border: 1px solid #ccc;">Change owner of promoted environment files from current user.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;v, &minus;&minus;verbose</code></td>
+<td style="border: 1px solid #ccc;">Run in verbose mode.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;&minus;version</code></td>
+<td style="border: 1px solid #ccc;">Display version information.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;y, &minus;&minus;yes</code></td>
+<td style="border: 1px solid #ccc;">Automatically answer &rsquo;yes&rsquo; to prompts; existing target filesystems will be purged before promote occurs.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;zp, &minus;&minus;zopenperms [PERMISSIONS]</code></td>
+<td style="border: 1px solid #ccc;">Update the permissions for all files within the promoted zopen environment with the given [PERMISSIONS] string, specified in symbolic mode.</td>
+</tr>
+</table>
 
-<p style="margin-left:22%;">Update the permissions for all
-files within the promoted zopen environment with the given
-[PERMISSIONS] string, specified in symbolic mode.</p>
 
 <h2>EXAMPLES</h2>
 
-<p style="margin-left:11%; margin-top: 1em">zopen
-promote</p>
 
-<p style="margin-left:22%;">Interactively promote current
-zopen environment.</p>
 
-<p style="margin-left:11%;">zopen promote /prod</p>
 
-<p style="margin-left:22%;">Promote current zopen
-environment to &rsquo;/prod&rsquo;, setting file ownership
-to current user and group to default.</p>
 
-<p style="margin-left:11%;">zopen promote /prod
-&minus;&minus;owner FOO</p>
 
-<p style="margin-left:22%;">Promote current zopen
-environment to &rsquo;/prod&rsquo;, setting file ownership
-to &rsquo;FOO&rsquo; and group to default.</p>
 
-<p style="margin-left:11%;">zopen promote /prod
-&minus;&minus;group BAR</p>
 
-<p style="margin-left:22%;">Promote current zopen
-environment to &rsquo;/prod&rsquo;, setting file ownership
-to current user and group to &rsquo;BAR&rsquo;.</p>
 
-<p style="margin-left:11%;">zopen promote /mytest &minus;cp
-g&minus;wx,o&minus;rwx &minus;zp g&minus;rwx,o&minus;rwx
-&minus;&minus;owner FOO</p>
+<table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
+<tr style="background-color:#f0f0f0;">
+<th style="text-align:left; border: 1px solid #ccc;">Variable</th>
+<th style="text-align:left; border: 1px solid #ccc;">Description</th>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>zopen promote</code></td>
+<td style="border: 1px solid #ccc;">Interactively promote current zopen environment.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>zopen promote /prod</code></td>
+<td style="border: 1px solid #ccc;">Promote current zopen environment to &rsquo;/prod&rsquo;, setting file ownership to current user and group to default.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>zopen promote /prod &minus;&minus;owner FOO</code></td>
+<td style="border: 1px solid #ccc;">Promote current zopen environment to &rsquo;/prod&rsquo;, setting file ownership to &rsquo;FOO&rsquo; and group to default.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>zopen promote /prod &minus;&minus;group BAR</code></td>
+<td style="border: 1px solid #ccc;">Promote current zopen environment to &rsquo;/prod&rsquo;, setting file ownership to current user and group to &rsquo;BAR&rsquo;.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>zopen promote /mytest &minus;cp g&minus;wx,o&minus;rwx &minus;zp g&minus;rwx,o&minus;rwx &minus;&minus;owner FOO</code></td>
+<td style="border: 1px solid #ccc;">Promote current zopen environment to &rsquo;/mytest&rsquo;, allowing only the current user to source the zopen&minus;config environment file and only permit access to zopen environment files to the user &rsquo;FOO&rsquo;.</td>
+</tr>
+</table>
 
-<p style="margin-left:22%;">Promote current zopen
-environment to &rsquo;/mytest&rsquo;, allowing only the
-current user to source the zopen&minus;config environment
-file and only permit access to zopen environment files to
-the user &rsquo;FOO&rsquo;.</p>
 
 <h2>AUTHOR</h2>
 

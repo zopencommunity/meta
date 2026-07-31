@@ -23,29 +23,38 @@
 <h2>DESCRIPTION</h2>
 <a name="DESCRIPTION"></a>
 
-<p style="margin-left:11%; margin-top: 1em">Generate an RPM
-spec file from a z/OS pax archive.</p>
+<table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
+<tr style="background-color:#f0f0f0;">
+<th style="text-align:left; border: 1px solid #ccc;">Option</th>
+<th style="text-align:left; border: 1px solid #ccc;">Description</th>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>Generate an RPM spec file from a z/OS pax archive.</p>  <p style="margin-left:11%; margin-top: 1em"><b>Arguments:</b> pax_file</code></td>
+<td style="border: 1px solid #ccc;">Path to the pax file (e.g., /path/to/file.pax or file.pax.Z)</td>
+</tr>
+</table>
 
-<p style="margin-left:11%; margin-top: 1em"><b>Arguments:</b>
-pax_file</p>
-
-<p style="margin-left:22%;">Path to the pax file (e.g.,
-/path/to/file.pax or file.pax.Z)</p>
 
 <h2>OPTIONS</h2>
 <a name="OPTIONS"></a>
 
-<p style="margin-left:11%; margin-top: 1em"><b>&minus;&minus;name</b>
-&lt;name&gt;</p>
 
-<p style="margin-left:22%;">Override package name (default:
-extracted from filename)</p>
 
-<p style="margin-left:11%;"><b>&minus;&minus;version</b>
-&lt;version&gt;</p>
+<table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
+<tr style="background-color:#f0f0f0;">
+<th style="text-align:left; border: 1px solid #ccc;">Option</th>
+<th style="text-align:left; border: 1px solid #ccc;">Description</th>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code><b>&minus;&minus;name</b> &lt;name&gt;</code></td>
+<td style="border: 1px solid #ccc;">Override package name (default: extracted from filename)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code><b>&minus;&minus;version</b> &lt;version&gt;</code></td>
+<td style="border: 1px solid #ccc;">Override version (default: extracted from filename)</td>
+</tr>
+</table>
 
-<p style="margin-left:22%;">Override version (default:
-extracted from filename)</p>
 
 <table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
 
@@ -60,71 +69,81 @@ extracted from filename)</p>
 <b>&minus;&minus;version</b>)</p></td>
 </tr>
 
+
+<tr>
+<td style="border: 1px solid #ccc;"><code><b>&minus;&minus;release</b> &lt;release&gt;</code></td>
+<td style="border: 1px solid #ccc;">Override release number (default: 1)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code><b>&minus;&minus;license</b> &lt;license&gt;</code></td>
+<td style="border: 1px solid #ccc;">Specify license (default: Proprietary)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code><b>&minus;&minus;summary</b> &lt;summary&gt;</code></td>
+<td style="border: 1px solid #ccc;">Package summary (required)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code><b>&minus;&minus;description</b> &lt;desc&gt;</code></td>
+<td style="border: 1px solid #ccc;">Package description (default: same as summary)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code><b>&minus;&minus;url</b> &lt;url&gt;</code></td>
+<td style="border: 1px solid #ccc;">Project URL (default: none)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code><b>&minus;&minus;requires</b> &lt;deps&gt;</code></td>
+<td style="border: 1px solid #ccc;">Package dependencies (e.g., &quot;oef &gt;= 1.1.0&quot;)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code><b>&minus;&minus;output</b> &lt;file&gt;</code></td>
+<td style="border: 1px solid #ccc;">Output spec file (default: &lt;name&gt;.spec)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code><b>&minus;&minus;build</b></code></td>
+<td style="border: 1px solid #ccc;">Build the RPM after generating spec file</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code><b>&minus;&minus;buildroot</b> &lt;dir&gt;</code></td>
+<td style="border: 1px solid #ccc;">RPM build root directory (default: ~/rpmbuild)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code><b>&minus;&minus;validate</b></code></td>
+<td style="border: 1px solid #ccc;">Validate spec file after generation (checks syntax and runs rpmlint)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code><b>&minus;&minus;dry&minus;run</b></code></td>
+<td style="border: 1px solid #ccc;">Show what would be done without actually doing it</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code><b>&minus;&minus;verbose</b></code></td>
+<td style="border: 1px solid #ccc;">Enable verbose debug output</td>
+</tr>
 </table>
 
-<p style="margin-left:11%;"><b>&minus;&minus;release</b> &lt;release&gt;</p>
 
-<p style="margin-left:22%;">Override release number
-(default: 1)</p>
 
-<p style="margin-left:11%;"><b>&minus;&minus;license</b>
-&lt;license&gt;</p>
 
-<p style="margin-left:22%;">Specify license (default:
-Proprietary)</p>
 
-<p style="margin-left:11%;"><b>&minus;&minus;summary</b>
-&lt;summary&gt;</p>
 
-<p style="margin-left:22%;">Package summary (required)</p>
 
-<p style="margin-left:11%;"><b>&minus;&minus;description</b>
-&lt;desc&gt;</p>
 
-<p style="margin-left:22%;">Package description (default:
-same as summary)</p>
 
-<p style="margin-left:11%;"><b>&minus;&minus;url</b>
-&lt;url&gt;</p>
 
-<p style="margin-left:22%;">Project URL (default: none)</p>
 
-<p style="margin-left:11%;"><b>&minus;&minus;requires</b>
-&lt;deps&gt;</p>
 
-<p style="margin-left:22%;">Package dependencies (e.g.,
-&quot;oef &gt;= 1.1.0&quot;)</p>
 
-<p style="margin-left:11%;"><b>&minus;&minus;output</b>
-&lt;file&gt;</p>
 
-<p style="margin-left:22%;">Output spec file (default:
-&lt;name&gt;.spec)</p>
 
-<p style="margin-left:11%;"><b>&minus;&minus;build</b></p>
 
-<p style="margin-left:22%;">Build the RPM after generating
-spec file</p>
 
-<p style="margin-left:11%;"><b>&minus;&minus;buildroot</b>
-&lt;dir&gt;</p>
 
-<p style="margin-left:22%;">RPM build root directory
-(default: ~/rpmbuild)</p>
 
-<p style="margin-left:11%;"><b>&minus;&minus;validate</b></p>
 
-<p style="margin-left:22%;">Validate spec file after
-generation (checks syntax and runs rpmlint)</p>
 
-<p style="margin-left:11%;"><b>&minus;&minus;dry&minus;run</b></p>
 
-<p style="margin-left:22%;">Show what would be done without
-actually doing it</p>
 
-<p style="margin-left:11%;"><b>&minus;&minus;verbose</b></p>
 
-<p style="margin-left:22%;">Enable verbose debug output</p>
+
 
 <table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
 
@@ -146,17 +165,21 @@ actually doing it</p>
 </td>
 </tr>
 
+
+<tr>
+<td style="border: 1px solid #ccc;"><code><b>&minus;&minus;version</b></code></td>
+<td style="border: 1px solid #ccc;">Display tool version</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code><b>Example:</b></code></td>
+<td style="border: 1px solid #ccc;">>/var/lib/jenkins/workspace/Port&minus;Update&minus;Nightlyy/meta_update/bin/zopen&minus;pax2rpm /nfsmounts/bpidrivers/oefv1r1/os3900/latest/HAMN110.runnable.pax.Z \</td>
+</tr>
 </table>
 
-<p style="margin-left:11%;"><b>&minus;&minus;version</b></p>
 
-<p style="margin-left:22%;">Display tool version</p>
 
-<p style="margin-left:11%; margin-top: 1em"><b>Example:</b></p>
 
-<p style="margin-left:22%;">>/var/lib/jenkins/workspace/Port&minus;Update&minus;Nightlyy/meta_update/bin/zopen&minus;pax2rpm
-/nfsmounts/bpidrivers/oefv1r1/os3900/latest/HAMN110.runnable.pax.Z
-\</p>
+
 
 <table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
 

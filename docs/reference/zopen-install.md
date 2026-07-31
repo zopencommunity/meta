@@ -20,12 +20,17 @@
 
 <h2>DESCRIPTION</h2>
 
-<p style="margin-left:11%; margin-top: 1em">zopen&minus;install
-is a utility to download/install a zopen community
-package.</p>
+<table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
+<tr style="background-color:#f0f0f0;">
+<th style="text-align:left; border: 1px solid #ccc;">Option</th>
+<th style="text-align:left; border: 1px solid #ccc;">Description</th>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>zopen&minus;install is a utility to download/install a zopen community package.</code></td>
+<td style="border: 1px solid #ccc;">[PACKAGE] is a package to install. Multiple packages can be specified.</td>
+</tr>
+</table>
 
-<p style="margin-left:22%; margin-top: 1em">[PACKAGE] is a
-package to install. Multiple packages can be specified.</p>
 
 <h2>OPTIONS</h2>
 
@@ -50,17 +55,21 @@ community packages.</p></td>
 </td>
 </tr>
 
+
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;&minus;cache&minus;only</code></td>
+<td style="border: 1px solid #ccc;">do not install dependencies.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;&minus;download&minus;only</code></td>
+<td style="border: 1px solid #ccc;">download package to current directory.</td>
+</tr>
 </table>
 
-<p style="margin-left:11%;">&minus;&minus;cache&minus;only</p>
 
-<p style="margin-left:22%;">do not install
-dependencies.</p>
 
-<p style="margin-left:11%;">&minus;&minus;download&minus;only</p>
 
-<p style="margin-left:22%;">download package to current
-directory.</p>
+
 
 <table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
 
@@ -82,43 +91,51 @@ directory.</p>
 </td>
 </tr>
 
+
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;&minus;install&minus;or&minus;upgrade</code></td>
+<td style="border: 1px solid #ccc;">installs the package if not installed, or upgrades the package if installed.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;&minus;bypass&minus;prereq&minus;checks</code></td>
+<td style="border: 1px solid #ccc;">Ignores pre&minus;req checks</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;&minus;local&minus;install</code></td>
+<td style="border: 1px solid #ccc;">download and unpackage to current directory.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;&minus;no&minus;deps</code></td>
+<td style="border: 1px solid #ccc;">do not install dependencies.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;&minus;no&minus;set&minus;active</code></td>
+<td style="border: 1px solid #ccc;">do not change the pinned version.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;&minus;nosymlink</code></td>
+<td style="border: 1px solid #ccc;">do not integrate into filesystem through symlink redirection.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;r, &minus;&minus;reinstall</code></td>
+<td style="border: 1px solid #ccc;">reinstall already installed zopen community packages.</td>
+</tr>
 </table>
 
-<p style="margin-left:11%;">&minus;&minus;install&minus;or&minus;upgrade</p>
 
-<p style="margin-left:22%;">installs the package if not
-installed, or upgrades the package if installed.</p>
 
-<p style="margin-left:11%;">&minus;&minus;bypass&minus;prereq&minus;checks</p>
 
-<p style="margin-left:22%;">Ignores pre&minus;req
-checks</p>
 
-<p style="margin-left:11%;">&minus;&minus;local&minus;install</p>
 
-<p style="margin-left:22%;">download and unpackage to
-current directory.</p>
 
-<p style="margin-left:11%;">&minus;&minus;no&minus;deps</p>
 
-<p style="margin-left:22%;">do not install
-dependencies.</p>
 
-<p style="margin-left:11%;">&minus;&minus;no&minus;set&minus;active</p>
 
-<p style="margin-left:22%;">do not change the pinned
-version.</p>
 
-<p style="margin-left:11%;">&minus;&minus;nosymlink</p>
 
-<p style="margin-left:22%;">do not integrate into
-filesystem through symlink redirection.</p>
 
-<p style="margin-left:11%;">&minus;r,
-&minus;&minus;reinstall</p>
 
-<p style="margin-left:22%;">reinstall already installed
-zopen community packages.</p>
+
 
 <table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
 
@@ -132,43 +149,51 @@ zopen community packages.</p>
 [stable, dev] the release line to build off of.</p></td>
 </tr>
 
+
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;&minus;select</code></td>
+<td style="border: 1px solid #ccc;">select a version to install.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;&minus;skip&minus;upgrade</code></td>
+<td style="border: 1px solid #ccc;">do not upgrade.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;&minus;force</code></td>
+<td style="border: 1px solid #ccc;">force install, bypassing locks.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;u, &minus;&minus;update, &minus;&minus;upgrade</code></td>
+<td style="border: 1px solid #ccc;">updates installed zopen community packages.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;v, &minus;&minus;verbose</code></td>
+<td style="border: 1px solid #ccc;">print verbose messages.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;&minus;version</code></td>
+<td style="border: 1px solid #ccc;">print version.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;y, &minus;&minus;yes</code></td>
+<td style="border: 1px solid #ccc;">automatically answer yes to prompts.</td>
+</tr>
 </table>
 
-<p>&minus;&minus;select</p>
 
-<p style="margin-left:22%;">select a version to
-install.</p>
 
-<p style="margin-left:11%;">&minus;&minus;skip&minus;upgrade</p>
 
-<p style="margin-left:22%;">do not upgrade.</p>
 
-<p style="margin-left:11%;">&minus;&minus;force</p>
 
-<p style="margin-left:22%;">force install, bypassing
-locks.</p>
 
-<p style="margin-left:11%;">&minus;u,
-&minus;&minus;update,
-&minus;&minus;upgrade</p>
 
-<p style="margin-left:22%;">updates installed zopen
-community packages.</p>
 
-<p style="margin-left:11%;">&minus;v,
-&minus;&minus;verbose</p>
 
-<p style="margin-left:22%;">print verbose messages.</p>
 
-<p style="margin-left:11%;">&minus;&minus;version</p>
 
-<p style="margin-left:22%;">print version.</p>
 
-<p style="margin-left:11%;">&minus;y,
-&minus;&minus;yes</p>
 
-<p style="margin-left:22%;">automatically answer yes to
-prompts.</p>
+
 
 <p style="margin-left:11%; margin-top: 1em">This is free
 software: you are free to change and redistribute it under

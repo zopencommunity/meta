@@ -26,103 +26,101 @@ TAG</p>
 
 <h2>OPTIONS</h2>
 
-<p style="margin-left:11%; margin-top: 1em">&minus;h,
-&minus;&minus;help</p>
 
-<p style="margin-left:22%;">print this help</p>
 
-<p style="margin-left:11%;">&minus;v,
-&minus;&minus;verbose</p>
 
-<p style="margin-left:22%;">run in verbose mode.</p>
 
-<p style="margin-left:11%;">&minus;f,
-&minus;&minus;force</p>
 
-<p style="margin-left:22%;">Force overwrite release if tag
-exists.</p>
 
-<p style="margin-left:11%;">&minus;p,
-&minus;&minus;pax&minus;file PAX_FILE</p>
 
-<p style="margin-left:22%;">Path to the pax.Z file
-(required)</p>
 
-<p style="margin-left:11%;">&minus;m,
-&minus;&minus;metadata&minus;file METADATA_FILE</p>
 
-<p style="margin-left:22%;">Path to the metadata.json file
-(required)</p>
 
-<p style="margin-left:11%;">&minus;g,
-&minus;&minus;tag TAG</p>
 
-<p style="margin-left:22%;">Tag name for the release
-(required) e.g., DEV_mypackage_12345</p>
 
-<p style="margin-left:11%;">&minus;r,
-&minus;&minus;repo REPO_URL</p>
 
-<p style="margin-left:22%;">GitHub repository URL
-(optional, overrides metadata.json) e.g.,
-<a href="https://github.com/zopencommunity/xzport.git" target="_blank">https://github.com/zopencommunity/xzport.git</a></p>
 
-<p style="margin-left:11%;">&minus;d,
-&minus;&minus;description TEXT</p>
 
-<p style="margin-left:22%;">Description for the GitHub
-release (optional, from metadata.json &rsquo;summary&rsquo;
-if omitted)</p>
 
-<p style="margin-left:11%;">&minus;b,
-&minus;&minus;build&minus;line LINE</p>
 
-<p style="margin-left:22%;">Build line (DEV or STABLE)
-(optional, from metadata.json &rsquo;buildline&rsquo; if
-omitted)</p>
 
-<p style="margin-left:11%;">&minus;t,
-&minus;&minus;github&minus;token TOKEN</p>
 
-<p style="margin-left:22%;">GitHub Personal Access Token
-(required, or set GITHUB_TOKEN env var)</p>
 
-<p style="margin-left:11%;">&minus;o,
-&minus;&minus;github&minus;org ORG</p>
 
-<p style="margin-left:22%;">GitHub Organization (default:
-zopencommunity)</p>
 
-<p style="margin-left:11%;">&minus;l,
-&minus;&minus;latest</p>
 
-<p style="margin-left:22%;">Mark release as
-&rsquo;Latest&rsquo; (not pre&minus;release).</p>
 
-<p style="margin-left:11%;">&minus;&minus;version</p>
 
-<p style="margin-left:22%;">print version</p>
 
-<p style="margin-left:11%; margin-top: 1em">Environment
-GITHUB_TOKEN</p>
 
-<p style="margin-left:22%;">GitHub Personal Access Token
-(alternative to &minus;&minus;github&minus;token)</p>
 
-<p style="margin-left:11%; margin-top: 1em">Example:</p>
+<table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
+<tr style="background-color:#f0f0f0;">
+<th style="text-align:left; border: 1px solid #ccc;">Option</th>
+<th style="text-align:left; border: 1px solid #ccc;">Description</th>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;h, &minus;&minus;help</code></td>
+<td style="border: 1px solid #ccc;">print this help</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;v, &minus;&minus;verbose</code></td>
+<td style="border: 1px solid #ccc;">run in verbose mode.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;f, &minus;&minus;force</code></td>
+<td style="border: 1px solid #ccc;">Force overwrite release if tag exists.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;p, &minus;&minus;pax&minus;file PAX_FILE</code></td>
+<td style="border: 1px solid #ccc;">Path to the pax.Z file (required)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;m, &minus;&minus;metadata&minus;file METADATA_FILE</code></td>
+<td style="border: 1px solid #ccc;">Path to the metadata.json file (required)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;g, &minus;&minus;tag TAG</code></td>
+<td style="border: 1px solid #ccc;">Tag name for the release (required) e.g., DEV_mypackage_12345</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;r, &minus;&minus;repo REPO_URL</code></td>
+<td style="border: 1px solid #ccc;">GitHub repository URL (optional, overrides metadata.json) e.g., <a href="https://github.com/zopencommunity/xzport.git" target="_blank">https://github.com/zopencommunity/xzport.git</a></td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;d, &minus;&minus;description TEXT</code></td>
+<td style="border: 1px solid #ccc;">Description for the GitHub release (optional, from metadata.json &rsquo;summary&rsquo; if omitted)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;b, &minus;&minus;build&minus;line LINE</code></td>
+<td style="border: 1px solid #ccc;">Build line (DEV or STABLE) (optional, from metadata.json &rsquo;buildline&rsquo; if omitted)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;t, &minus;&minus;github&minus;token TOKEN</code></td>
+<td style="border: 1px solid #ccc;">GitHub Personal Access Token (required, or set GITHUB_TOKEN env var)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;o, &minus;&minus;github&minus;org ORG</code></td>
+<td style="border: 1px solid #ccc;">GitHub Organization (default: zopencommunity)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;l, &minus;&minus;latest</code></td>
+<td style="border: 1px solid #ccc;">Mark release as &rsquo;Latest&rsquo; (not pre&minus;release).</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;&minus;version</code></td>
+<td style="border: 1px solid #ccc;">print version</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>Environment GITHUB_TOKEN</code></td>
+<td style="border: 1px solid #ccc;">GitHub Personal Access Token (alternative to &minus;&minus;github&minus;token)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>Example:</code></td>
+<td style="border: 1px solid #ccc;">zopen&minus;publish &minus;f &minus;p install/mypackage.zos.pax.Z &minus;m metadata.json &minus;g DEV_mypackage_12345 &minus;t &lt;your_github_token&gt; zopen&minus;publish &minus;v &minus;f &minus;p install/mypackage.zos.pax.Z &minus;m metadata.json &minus;r <a href="https://github.com/zopencommunity/override" target="_blank">https://github.com/zopencommunity/override</a>&minus;repo.git &minus;d &quot;My custom release description&quot; &minus;b DEV &minus;g REL&minus;1.0.1 &minus;t &lt;your_github_token&gt; &minus;l</td>
+</tr>
+</table>
 
-<p style="margin-left:22%;">zopen&minus;publish &minus;f
-&minus;p install/mypackage.zos.pax.Z &minus;m
-metadata.json &minus;g DEV_mypackage_12345
-&minus;t &lt;your_github_token&gt;
-zopen&minus;publish &minus;v &minus;f &minus;p
-install/mypackage.zos.pax.Z &minus;m metadata.json
-&minus;r
-<a href="https://github.com/zopencommunity/override" target="_blank">https://github.com/zopencommunity/override</a>&minus;repo.git
-&minus;d &quot;My custom release description&quot;
-&minus;b DEV &minus;g REL&minus;1.0.1
-&minus;t &lt;your_github_token&gt;
-&minus;l</p>
 
 <p style="margin-left:11%; margin-top: 1em">This is free
 software: you are free to change and redistribute it under

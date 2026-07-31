@@ -48,41 +48,53 @@ space hogs</p></td>
 </td>
 </tr>
 
+
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;h, &minus;&minus;help, &minus;?</code></td>
+<td style="border: 1px solid #ccc;">display this help and exit.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;v, &minus;&minus;verbose</code></td>
+<td style="border: 1px solid #ccc;">run in verbose mode.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;&minus;version</code></td>
+<td style="border: 1px solid #ccc;">print version</td>
+</tr>
 </table>
 
-<p style="margin-left:11%;">&minus;h,
-&minus;&minus;help, &minus;?</p>
 
-<p style="margin-left:22%;">display this help and exit.</p>
 
-<p style="margin-left:11%;">&minus;v,
-&minus;&minus;verbose</p>
 
-<p style="margin-left:22%;">run in verbose mode.</p>
 
-<p style="margin-left:11%;">&minus;&minus;version</p>
 
-<p style="margin-left:22%;">print version</p>
+
 
 <h2>EXAMPLES</h2>
 
-<p style="margin-left:11%; margin-top: 1em">zopen usage</p>
 
-<p style="margin-left:22%;">list the file system usage for
-the environment</p>
 
-<p style="margin-left:11%;">zopen usage &minus;&minus;pie
-/mnt/zopen</p>
 
-<p style="margin-left:22%;">list the file system usage for
-the zopen environment at the mount point /mnt/zopen</p>
 
-<p style="margin-left:11%; margin-top: 1em">Notes:</p>
+<table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
+<tr style="background-color:#f0f0f0;">
+<th style="text-align:left; border: 1px solid #ccc;">Variable</th>
+<th style="text-align:left; border: 1px solid #ccc;">Description</th>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>zopen usage</code></td>
+<td style="border: 1px solid #ccc;">list the file system usage for the environment</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>zopen usage &minus;&minus;pie /mnt/zopen</code></td>
+<td style="border: 1px solid #ccc;">list the file system usage for the zopen environment at the mount point /mnt/zopen</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>Notes:</code></td>
+<td style="border: 1px solid #ccc;">Values might not add to 100% due to rounding during calculations; use the reported values as guidance, rounding up for capacity planning for example.</td>
+</tr>
+</table>
 
-<p style="margin-left:22%;">Values might not add to 100%
-due to rounding during calculations; use the reported values
-as guidance, rounding up for capacity planning for
-example.</p>
 
 <h2>AUTHOR</h2>
 

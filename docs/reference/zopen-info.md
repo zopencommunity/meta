@@ -20,33 +20,49 @@
 
 <h2>DESCRIPTION</h2>
 
-<p style="margin-left:11%; margin-top: 1em">zopen&minus;info
-&minus; display detailed information about a zopen
-package.</p>
+<table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
+<tr style="background-color:#f0f0f0;">
+<th style="text-align:left; border: 1px solid #ccc;">Option</th>
+<th style="text-align:left; border: 1px solid #ccc;">Description</th>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>zopen&minus;info &minus; display detailed information about a zopen package.</code></td>
+<td style="border: 1px solid #ccc;">PACKAGE is the name of a zopen package.</td>
+</tr>
+</table>
 
-<p style="margin-left:22%; margin-top: 1em">PACKAGE is the
-name of a zopen package.</p>
 
 <h2>OPTIONS</h2>
 
-<p style="margin-left:11%; margin-top: 1em">&minus;h,
-&minus;&minus;help</p>
 
-<p style="margin-left:22%;">print this help</p>
 
-<p style="margin-left:11%;">&minus;v,
-&minus;&minus;verbose</p>
 
-<p style="margin-left:22%;">run in verbose mode.</p>
 
-<p style="margin-left:11%;">&minus;r,
-&minus;&minus;remote</p>
 
-<p style="margin-left:22%;">force a remote lookup</p>
 
-<p style="margin-left:11%;">&minus;&minus;version</p>
+<table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
+<tr style="background-color:#f0f0f0;">
+<th style="text-align:left; border: 1px solid #ccc;">Option</th>
+<th style="text-align:left; border: 1px solid #ccc;">Description</th>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;h, &minus;&minus;help</code></td>
+<td style="border: 1px solid #ccc;">print this help</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;v, &minus;&minus;verbose</code></td>
+<td style="border: 1px solid #ccc;">run in verbose mode.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;r, &minus;&minus;remote</code></td>
+<td style="border: 1px solid #ccc;">force a remote lookup</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;&minus;version</code></td>
+<td style="border: 1px solid #ccc;">print version</td>
+</tr>
+</table>
 
-<p style="margin-left:22%;">print version</p>
 
 <p style="margin-left:11%; margin-top: 1em">This is free
 software: you are free to change and redistribute it under

@@ -20,12 +20,17 @@
 
 <h2>DESCRIPTION</h2>
 
-<p style="margin-left:11%; margin-top: 1em">zopen&minus;query
-&minus; a utility for zopen community to query packages and
-repos.</p>
+<table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
+<tr style="background-color:#f0f0f0;">
+<th style="text-align:left; border: 1px solid #ccc;">Option</th>
+<th style="text-align:left; border: 1px solid #ccc;">Description</th>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>zopen&minus;query &minus; a utility for zopen community to query packages and repos.</code></td>
+<td style="border: 1px solid #ccc;">VERB is the action to take, which is one of</td>
+</tr>
+</table>
 
-<p style="margin-left:22%; margin-top: 1em">VERB is the
-action to take, which is one of</p>
 
 <table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
 
@@ -43,19 +48,20 @@ action to take, which is one of</p>
 </td>
 </tr>
 
+
+<tr>
+<td style="border: 1px solid #ccc;"><code></code></td>
+<td style="border: 1px solid #ccc;">PACKAGE is a package, specified for &minus;&minus;remote&minus;search</td>
+</tr>
+
+<tr>
+<td style="border: 1px solid #ccc;"><code>Verbs:</p>  <p style="margin-left:11%;">&minus;i, &minus;&minus;installed</code></td>
+<td style="border: 1px solid #ccc;">list installed zopen community.</td>
+</tr>
 </table>
 
-<p style="margin-left:22%; margin-top: 1em">PACKAGE is a
-package, specified for
-&minus;&minus;remote&minus;search</p>
 
-<p>Verbs:</p>
 
-<p style="margin-left:11%;">&minus;i,
-&minus;&minus;installed</p>
-
-<p style="margin-left:22%;">list installed zopen
-community.</p>
 
 <table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
 
@@ -77,20 +83,29 @@ community.</p>
 </td>
 </tr>
 
+
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;&minus;remote&minus;search</code></td>
+<td style="border: 1px solid #ccc;">regex match package against available zopen community</td>
+</tr>
 </table>
 
-<p style="margin-left:11%;">&minus;&minus;remote&minus;search</p>
 
-<p style="margin-left:22%;">regex match package against
-available zopen community</p>
+
 
 <h2>OPTIONS</h2>
 
-<p style="margin-left:11%; margin-top: 1em">&minus;d,
-&minus;&minus;details</p>
+<table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
+<tr style="background-color:#f0f0f0;">
+<th style="text-align:left; border: 1px solid #ccc;">Option</th>
+<th style="text-align:left; border: 1px solid #ccc;">Description</th>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;d, &minus;&minus;details</code></td>
+<td style="border: 1px solid #ccc;">include full details for listings.</td>
+</tr>
+</table>
 
-<p style="margin-left:22%;">include full details for
-listings.</p>
 
 <table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
 
@@ -107,21 +122,27 @@ listings.</p>
 </td>
 </tr>
 
+
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;&minus;help</code></td>
+<td style="border: 1px solid #ccc;">print this help</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;&minus;no&minus;header,</code></td>
+<td style="border: 1px solid #ccc;">suppress the header for the output.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;&minus;no&minus;version,</code></td>
+<td style="border: 1px solid #ccc;">suppress version information, return package names.</td>
+</tr>
 </table>
 
-<p>&minus;&minus;help</p>
 
-<p style="margin-left:22%;">print this help</p>
 
-<p style="margin-left:11%;">&minus;&minus;no&minus;header,</p>
 
-<p style="margin-left:22%;">suppress the header for the
-output.</p>
 
-<p style="margin-left:11%;">&minus;&minus;no&minus;version,</p>
 
-<p style="margin-left:22%;">suppress version information,
-return package names.</p>
+
 
 <table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
 
@@ -143,11 +164,15 @@ return package names.</p>
 </td>
 </tr>
 
+
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;&minus;version</code></td>
+<td style="border: 1px solid #ccc;">print version</td>
+</tr>
 </table>
 
-<p style="margin-left:11%;">&minus;&minus;version</p>
 
-<p style="margin-left:22%;">print version</p>
+
 
 <p style="margin-left:11%; margin-top: 1em">This is free
 software: you are free to change and redistribute it under

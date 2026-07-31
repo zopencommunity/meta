@@ -26,34 +26,49 @@ vulnerabilities in your installed packages.</p>
 
 <h2>OPTIONS</h2>
 
-<p style="margin-left:11%; margin-top: 1em">&minus;v,
-&minus;&minus;verbose</p>
 
-<p style="margin-left:22%;">run in verbose mode.</p>
 
-<p style="margin-left:11%;">&minus;&minus;version</p>
 
-<p style="margin-left:22%;">print version.</p>
 
-<p style="margin-left:11%;">&minus;u,
-&minus;&minus;update,
-&minus;&minus;upgrade</p>
 
-<p style="margin-left:22%;">attempt to resolve
-vulnerabilities by upgrading packages.</p>
 
-<p style="margin-left:11%;">&minus;r,
-&minus;&minus;remove</p>
+<table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
+<tr style="background-color:#f0f0f0;">
+<th style="text-align:left; border: 1px solid #ccc;">Option</th>
+<th style="text-align:left; border: 1px solid #ccc;">Description</th>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;v, &minus;&minus;verbose</code></td>
+<td style="border: 1px solid #ccc;">run in verbose mode.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;&minus;version</code></td>
+<td style="border: 1px solid #ccc;">print version.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;u, &minus;&minus;update, &minus;&minus;upgrade</code></td>
+<td style="border: 1px solid #ccc;">attempt to resolve vulnerabilities by upgrading packages.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;r, &minus;&minus;remove</code></td>
+<td style="border: 1px solid #ccc;">remove packages with vulnerabilities.</td>
+</tr>
+</table>
 
-<p style="margin-left:22%;">remove packages with
-vulnerabilities.</p>
 
 <h2>EXAMPLES</h2>
 
-<p style="margin-left:11%; margin-top: 1em">zopen audit</p>
+<table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
+<tr style="background-color:#f0f0f0;">
+<th style="text-align:left; border: 1px solid #ccc;">Option</th>
+<th style="text-align:left; border: 1px solid #ccc;">Description</th>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>zopen audit</code></td>
+<td style="border: 1px solid #ccc;">check for vulnerabilities in all installed packages</td>
+</tr>
+</table>
 
-<p style="margin-left:22%;">check for vulnerabilities in
-all installed packages</p>
 
 <h2>AUTHOR</h2>
 
