@@ -20,16 +20,9 @@
 
 <h2>DESCRIPTION</h2>
 
-<table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
-<tr style="background-color:#f0f0f0;">
-<th style="text-align:left; border: 1px solid #ccc;">Option</th>
-<th style="text-align:left; border: 1px solid #ccc;">Description</th>
-</tr>
-<tr>
-<td style="border: 1px solid #ccc;"><code>zopen&minus;create&minus;repo &minus; Create a new port repository in zopencommunity.</p>  <p style="margin-left:11%; margin-top: 1em">NOTE: This script is intended for use by core contributors only.</code></td>
-<td style="border: 1px solid #ccc;">You must have admin permissions in the zopencommunity organization.</td>
-</tr>
-</table>
+<p style="margin-left:11%; margin-top: 1em">zopen&minus;create&minus;repo &minus; Create a new port repository in zopencommunity.</p>
+
+<p style="margin-left:11%; margin-top: 1em">NOTE: This script is intended for use by core contributors only. You must have admin permissions in the zopencommunity organization.</p>
 
 
 <h2>OPTIONS</h2>

@@ -23,16 +23,9 @@
 <h2>DESCRIPTION</h2>
 <a name="DESCRIPTION"></a>
 
-<table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
-<tr style="background-color:#f0f0f0;">
-<th style="text-align:left; border: 1px solid #ccc;">Option</th>
-<th style="text-align:left; border: 1px solid #ccc;">Description</th>
-</tr>
-<tr>
-<td style="border: 1px solid #ccc;"><code>Generate an RPM spec file from a z/OS pax archive.</p>  <p style="margin-left:11%; margin-top: 1em"><b>Arguments:</b> pax_file</code></td>
-<td style="border: 1px solid #ccc;">Path to the pax file (e.g., /path/to/file.pax or file.pax.Z)</td>
-</tr>
-</table>
+<p style="margin-left:11%; margin-top: 1em">Generate an RPM spec file from a z/OS pax archive.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Arguments:</b> pax_file &mdash; Path to the pax file (e.g., /path/to/file.pax or file.pax.Z)</p>
 
 
 <h2>OPTIONS</h2>

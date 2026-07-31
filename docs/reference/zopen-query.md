@@ -55,7 +55,7 @@
 </tr>
 
 <tr>
-<td style="border: 1px solid #ccc;"><code>Verbs:</p>  <p style="margin-left:11%;">&minus;i, &minus;&minus;installed</code></td>
+<td style="border: 1px solid #ccc;"><code>&minus;i, &minus;&minus;installed</code></td>
 <td style="border: 1px solid #ccc;">list installed zopen community.</td>
 </tr>
 </table>

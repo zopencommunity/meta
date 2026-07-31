@@ -15,16 +15,9 @@
 
 <h2>DESCRIPTION</h2>
 
-<table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
-<tr style="background-color:#f0f0f0;">
-<th style="text-align:left; border: 1px solid #ccc;">Option</th>
-<th style="text-align:left; border: 1px solid #ccc;">Description</th>
-</tr>
-<tr>
-<td style="border: 1px solid #ccc;"><code>zopen&minus;update&minus;cacert: Update your cacert.pem file to the latest CA certificates extracted from Mozilla.</p>  <p style="margin-left:11%; margin-top: 1em">Syntax:</code></td>
-<td style="border: 1px solid #ccc;">zopen&minus;update&minus;cacert [&minus;fhv] [&lt;directory&gt;]</td>
-</tr>
-</table>
+<p style="margin-left:11%; margin-top: 1em">zopen&minus;update&minus;cacert: Update your cacert.pem file to the latest CA certificates extracted from Mozilla.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Syntax: zopen&minus;update&minus;cacert [&minus;fhv] [&lt;directory&gt;]</p>
 
 
 <h2>OPTIONS</h2>
