@@ -552,6 +552,33 @@ ${body_content}
 
 </div>
 EOF
+
+  python3 - "$md" <<'PYEOF'
+import re
+import sys
+from pathlib import Path
+
+path = Path(sys.argv[1])
+content = path.read_text()
+
+body_start = content.find('</div>\n\n', content.find('<div class="header-with-back">'))
+if body_start != -1:
+    body_start += len('</div>\n\n')
+    body_end = content.rfind('\n\n</div>')
+    if body_end != -1 and body_end > body_start:
+        body = content[body_start:body_end]
+        if '<div class="header-with-back">' in body and '</div>' not in body.split('<div class="header-with-back">', 1)[1].split('\n', 1)[0]:
+            body = re.sub(
+                r'^<div class="header-with-back">\s*\n',
+                '',
+                body,
+                count=1,
+                flags=re.MULTILINE,
+            )
+            content = content[:body_start] + body + content[body_end:]
+
+path.write_text(content)
+PYEOF
 }
 
 ValidateMarkdownFile() {
