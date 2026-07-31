@@ -83,7 +83,7 @@ write the man pages to the /tmp/man1 directory.
 <p style="margin-left: 11%; margin-top: 1em">
 This is free software: you are free to change and redistribute it under
 the terms of the Apache License, Version 2.0.
-&lt;<a href="https://www.apache.org/licenses/LICENSE" target="_blank">https://www.apache.org/licenses/LICENSE</a>&minus;2.0.html&gt; There is NO
+<a href="https://www.apache.org/licenses/LICENSE-2.0.html" target="_blank">https://www.apache.org/licenses/LICENSE-2.0.html</a> There is NO
 WARRANTY, to the extent permitted by law.
 </p>
 

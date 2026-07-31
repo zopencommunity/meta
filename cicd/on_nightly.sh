@@ -109,64 +109,172 @@ EOF
     # truly empty lines (whitespace-only lines inside <tr>/<td> confuse Vue).
     body_content=$(echo "${body_content}" | sed 's/[[:space:]]*$//')
     
-    # Convert groff OPTIONS <p> pairs into <ul><li> list for VitePress rendering.
-    # Groff emits option names at margin-left:11% and descriptions at margin-left:22%.
-    # This transforms those pairs into proper HTML list items so new options added to
-    # any zopen-* script appear as a list on the generated VitePress page automatically.
+    # Convert ALL groff <p style="margin-left:11%"> / <p style="margin-left:22%"> pairs
+    # into consistent HTML table rows, regardless of which section they appear in
+    # (DESCRIPTION, OPTIONS, EXAMPLES, ENVIRONMENT, etc.) and regardless of whether
+    # they sit inside an existing <table> gap or stand alone with no table nearby.
+    #
+    # Strategy (single Python pass):
+    #   1. Walk the document section-by-section (split on <h2> boundaries).
+    #   2. Within each section, find every run of 11%/22% <p> pairs that sits
+    #      *outside* an existing <table>...</table> block.
+    #   3. If such pairs immediately follow a </table>, absorb them as extra <tr>
+    #      rows before that table's closing tag.
+    #   4. If such pairs appear with no preceding table in the same section, wrap
+    #      them in a new <table> block.
+    #   5. Non-pair content (single 11% or 22% paragraphs, other tags) is left as-is.
     body_content=$(echo "${body_content}" | python3 - <<'PYEOF'
 import sys, re
 
 content = sys.stdin.read()
 
-def convert_options_section(section_html):
-    """
-    Within an OPTIONS section, convert consecutive groff <p> indent pairs:
-      <p style="margin-left:11%...">OPTION</p>
-      <p style="margin-left:22%;">DESCRIPTION</p>
-    into:
-      <ul>
-        <li><strong>OPTION</strong> — DESCRIPTION</li>
-        ...
-      </ul>
-    """
-    # Match option-name paragraphs (11% indent) followed by description (22% indent)
-    pattern = re.compile(
-        r'<p[^>]*margin-left:11%[^>]*>(.*?)</p>\s*'
-        r'<p[^>]*margin-left:22%[^>]*>(.*?)</p>',
-        re.DOTALL
+TABLE_OPEN = '<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">\n'
+TABLE_CLOSE = '\n</table>\n'
+
+# Primary pattern: standard 11%/22% indent pair.
+# Secondary pattern: bare <p> with NO style attribute (e.g. <p> or <p align="...">)
+# immediately followed by a 22% description paragraph.
+# Groff sometimes omits the margin-left style on the option name <p> when it follows a </table>.
+# We deliberately exclude <p style=...> tags from the bare-p branch to avoid greedy
+# cross-paragraph matches that would swallow multiple <p> elements.
+PAIR_RE = re.compile(
+    r'(<p(?:[^>]*margin-left:11%[^>]*|(?![^>]*\bstyle\b)[^>]*)>.*?</p>)\s*'
+    r'(<p[^>]*margin-left:22%[^>]*>.*?</p>)',
+    re.DOTALL,
+)
+
+def pair_to_row(p11, p22):
+    """Convert a matched 11%/22% <p> pair into a <tr> row."""
+    cmd  = re.sub(r'^<p[^>]*>|</p>$', '', p11, flags=re.DOTALL).strip().replace('\n', ' ')
+    desc = re.sub(r'^<p[^>]*>|</p>$', '', p22, flags=re.DOTALL).strip().replace('\n', ' ')
+    return (
+        '<tr valign="top" align="left">\n'
+        '<td width="11%"></td>\n'
+        '<td width="9%">\n'
+        f'<p>{cmd}</p></td>\n'
+        '<td width="2%"></td>\n'
+        '<td width="78%">\n'
+        f'<p>{desc}</p></td>\n'
+        '</tr>'
     )
-    items = pattern.findall(section_html)
-    if not items:
-        return section_html
 
-    list_html = '<ul>\n'
-    for flag, desc in items:
-        flag = flag.strip().replace('\n', ' ')
-        desc = desc.strip().replace('\n', ' ')
-        list_html += f'<li><strong>{flag}</strong> &mdash; {desc}</li>\n'
-    list_html += '</ul>'
+# Orphaned 22%-only description paragraph immediately after a </table>.
+# groff emits these for long option names that push the description off the table row.
+DESC_ONLY_RE = re.compile(
+    r'^\s*(<p[^>]*margin-left:22%[^>]*>.*?</p>)',
+    re.DOTALL,
+)
 
-    return pattern.sub('', section_html).rstrip() + '\n' + list_html
+def absorb_desc_into_table(table_html, desc_p):
+    """
+    Add a description-only row to an existing table for a dangling 22% paragraph.
+    Replaces the last </tr> ... </table> block so the description appears as a
+    continuation <td> in a new row.
+    """
+    desc = re.sub(r'^<p[^>]*>|</p>$', '', desc_p, flags=re.DOTALL).strip().replace('\n', ' ')
+    extra = (
+        '<tr valign="top" align="left">\n'
+        '<td width="11%"></td>\n'
+        '<td width="9%"></td>\n'
+        '<td width="2%"></td>\n'
+        '<td width="78%">\n'
+        f'<p>{desc}</p></td>\n'
+        '</tr>'
+    )
+    close_pos = table_html.rfind('</table>')
+    return table_html[:close_pos] + '\n' + extra + TABLE_CLOSE.lstrip('\n')
 
-# Split around <h2>OPTIONS</h2> ... next <h2>
-parts = re.split(r'(<h2[^>]*>\s*OPTIONS.*?</h2>)', content, flags=re.DOTALL|re.IGNORECASE)
+def process_outside_tables(text):
+    """
+    For a block of HTML, convert all 11%/22% <p> pairs that sit outside
+    <table>...</table> blocks into table rows.  Pairs that immediately follow
+    a </table> are absorbed into that table; otherwise a new table is opened.
+    Also absorbs orphaned 22%-only description paragraphs that follow a </table>
+    (groff split-table pattern used by zopen-init and similar pages).
+    """
+    # Split into alternating [outside, inside_table, outside, inside_table, ...]
+    # token list so we only touch content outside tables.
+    TABLE_BLOCK_RE = re.compile(r'(<table\b[^>]*>.*?</table>)', re.DOTALL | re.IGNORECASE)
+    segments = TABLE_BLOCK_RE.split(text)
+    # segments[0], segments[2], ... are outside-table text
+    # segments[1], segments[3], ... are full <table>...</table> blocks
 
-if len(parts) >= 3:
-    # parts[0] = before OPTIONS heading
-    # parts[1] = the OPTIONS <h2> tag
-    # parts[2] = content after OPTIONS heading (up to next section or end)
-    # Find next <h2> in parts[2] to isolate the OPTIONS body
-    next_h2 = re.search(r'<h2', parts[2], re.IGNORECASE)
-    if next_h2:
-        options_body = parts[2][:next_h2.start()]
-        rest = parts[2][next_h2.start():]
+    result_parts = []
+    for i, seg in enumerate(segments):
+        if i % 2 == 1:
+            result_parts.append(seg)
+            continue
+
+        # Check if this outside-segment starts with one or more orphaned 22%
+        # description paragraphs that belong to the preceding table (split-table
+        # pattern used by groff for long option names in zopen-init etc.).
+        while result_parts and result_parts[-1].rstrip().endswith('</table>'):
+            desc_m = DESC_ONLY_RE.match(seg)
+            if not desc_m:
+                break
+            prev = result_parts.pop().rstrip()
+            result_parts.append(absorb_desc_into_table(prev, desc_m.group(1)))
+            seg = seg[desc_m.end():]
+
+        # Outside a table: find all 11%/22% pairs and replace with <tr> rows.
+        # We accumulate runs of rows and wrap them (or absorb them into the
+        # preceding table block) as a unit.
+        out = ''
+        last_end = 0
+        row_buffer = []
+
+        for m in PAIR_RE.finditer(seg):
+            # Text between this match and the previous one.
+            between = seg[last_end:m.start()]
+            # Only flush accumulated rows when there is real non-whitespace content
+            # between pairs — whitespace-only gaps mean consecutive pairs belong
+            # in the same table.
+            if row_buffer and between.strip():
+                # Flush: close the current run of rows.
+                if result_parts and result_parts[-1].rstrip().endswith('</table>'):
+                    prev = result_parts.pop().rstrip()
+                    result_parts.append(
+                        prev[: prev.rfind('</table>')] +
+                        '\n' + '\n'.join(row_buffer) +
+                        TABLE_CLOSE
+                    )
+                else:
+                    out += TABLE_OPEN + '\n'.join(row_buffer) + TABLE_CLOSE
+                row_buffer = []
+            out += between
+            row_buffer.append(pair_to_row(m.group(1), m.group(2)))
+            last_end = m.end()
+
+        # Flush remaining text after the last match
+        tail = seg[last_end:]
+        if row_buffer:
+            if result_parts and result_parts[-1].rstrip().endswith('</table>'):
+                prev = result_parts.pop().rstrip()
+                result_parts.append(
+                    prev[: prev.rfind('</table>')] +
+                    '\n' + '\n'.join(row_buffer) +
+                    TABLE_CLOSE
+                )
+            else:
+                out += TABLE_OPEN + '\n'.join(row_buffer) + TABLE_CLOSE
+            row_buffer = []
+        out += tail
+        result_parts.append(out)
+
+    return ''.join(result_parts)
+
+# Split by <h2> section boundaries so each section is processed independently.
+H2_RE = re.compile(r'(<h2\b[^>]*>.*?</h2>)', re.DOTALL | re.IGNORECASE)
+sections = H2_RE.split(content)
+out_parts = []
+for j, sec in enumerate(sections):
+    if j % 2 == 1:
+        # This is an <h2> heading tag — pass through unchanged
+        out_parts.append(sec)
     else:
-        options_body = parts[2]
-        rest = ''
-    converted_body = convert_options_section(options_body)
-    content = parts[0] + parts[1] + converted_body + rest
+        out_parts.append(process_outside_tables(sec))
 
-print(content, end='')
+print(''.join(out_parts), end='')
 PYEOF
 )
 

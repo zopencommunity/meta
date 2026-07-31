@@ -108,29 +108,45 @@ package</p></td>
 <p>change zopen runtime environment settings</p></td>
 </tr>
 
-</table>
+<tr valign="top" align="left">
 
-<p style="margin-left:11%;">diagnostics</p>
+<td width="11%"></td>
 
-<p style="margin-left:22%;">collects system info for zopen
-troubleshooting</p>
+<td width="9%">
 
-<p style="margin-left:11%;">generate</p>
+<p>diagnostics</p></td>
 
-<p style="margin-left:22%;">generates a new zopen
-project</p>
+<td width="2%"></td>
 
-<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<td width="78%">
+
+<p>collects system info for zopen troubleshooting</p></td>
+</tr>
 
 <tr valign="top" align="left">
 
 <td width="11%"></td>
 
-<td width="6%">
+<td width="9%">
+
+<p>generate</p></td>
+
+<td width="2%"></td>
+
+<td width="78%">
+
+<p>generates a new zopen project</p></td>
+</tr>
+
+<tr valign="top" align="left">
+
+<td width="11%"></td>
+
+<td width="9%">
 
 <p>init</p></td>
 
-<td width="5%"></td>
+<td width="2%"></td>
 
 <td width="78%">
 
@@ -138,64 +154,80 @@ project</p>
 location</p></td>
 </tr>
 
-</table>
+<tr valign="top" align="left">
 
-<p style="margin-left:11%;">refresh</p>
+<td width="11%"></td>
 
-<p style="margin-left:22%;">refreshes your zopen
-environment and zopen&minus;config file</p>
+<td width="9%">
 
-<p style="margin-left:11%;">install</p>
+<p>refresh</p></td>
 
-<p style="margin-left:22%;">installs one or more zopen
-community packages</p>
+<td width="2%"></td>
 
-<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<td width="78%">
+
+<p>refreshes your zopen environment and zopen&minus;config file</p></td>
+</tr>
 
 <tr valign="top" align="left">
 
 <td width="11%"></td>
 
-<td width="6%">
+<td width="9%">
+
+<p>install</p></td>
+
+<td width="2%"></td>
+
+<td width="78%">
+
+<p>installs one or more zopen community packages</p></td>
+</tr>
+
+<tr valign="top" align="left">
+
+<td width="11%"></td>
+
+<td width="9%">
 
 <p>info</p></td>
 
-<td width="5%"></td>
+<td width="2%"></td>
 
-<td width="73%">
+<td width="78%">
 
 <p>displays detailed information about a package</p></td>
-
-<td width="5%">
-</td>
 </tr>
 
 <tr valign="top" align="left">
 
 <td width="11%"></td>
 
-<td width="6%">
+<td width="9%">
 
 <p>list</p></td>
 
-<td width="5%"></td>
+<td width="2%"></td>
 
-<td width="73%">
+<td width="78%">
 
 <p>lists information about zopen community packages</p></td>
-
-<td width="5%">
-</td>
 </tr>
 
-</table>
+<tr valign="top" align="left">
 
-<p style="margin-left:11%;">publish</p>
+<td width="11%"></td>
 
-<p style="margin-left:22%;">publish zopen package release
-to github</p>
+<td width="9%">
 
-<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<p>publish</p></td>
+
+<td width="2%"></td>
+
+<td width="78%">
+
+<p>publish zopen package release to github</p></td>
+</tr>
 
 <tr valign="top" align="left">
 
@@ -228,29 +260,45 @@ packages</p></td>
 <p>removes installed zopen community packages</p></td>
 </tr>
 
-</table>
+<tr valign="top" align="left">
 
-<p style="margin-left:11%;">update&minus;cacert</p>
+<td width="11%"></td>
 
-<p style="margin-left:22%;">update the cacert.pem file used
-by zopen community</p>
+<td width="9%">
 
-<p style="margin-left:11%;">upgrade</p>
+<p>update&minus;cacert</p></td>
 
-<p style="margin-left:22%;">upgrades existing zopen
-community packages</p>
+<td width="2%"></td>
 
-<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<td width="78%">
+
+<p>update the cacert.pem file used by zopen community</p></td>
+</tr>
 
 <tr valign="top" align="left">
 
 <td width="11%"></td>
 
-<td width="7%">
+<td width="9%">
+
+<p>upgrade</p></td>
+
+<td width="2%"></td>
+
+<td width="78%">
+
+<p>upgrades existing zopen community packages</p></td>
+</tr>
+
+<tr valign="top" align="left">
+
+<td width="11%"></td>
+
+<td width="9%">
 
 <p>usage</p></td>
 
-<td width="4%"></td>
+<td width="2%"></td>
 
 <td width="78%">
 
@@ -258,12 +306,22 @@ community packages</p>
 zopen environment</p></td>
 </tr>
 
+<tr valign="top" align="left">
+
+<td width="11%"></td>
+
+<td width="9%">
+
+<p>whichproject</p></td>
+
+<td width="2%"></td>
+
+<td width="78%">
+
+<p>determine the package a command or library belongs to</p></td>
+</tr>
+
 </table>
-
-<p style="margin-left:11%;">whichproject</p>
-
-<p style="margin-left:22%;">determine the package a command
-or library belongs to</p>
 
 <h2>OPTIONS</h2>
 <a name="OPTIONS"></a>
@@ -342,7 +400,7 @@ contributors to the zopen community.
 <p style="margin-left:11%; margin-top: 1em">This is free
 software: you are free to change and redistribute it under
 the terms of the Apache License, Version 2.0.
-&lt;<a href="https://www.apache.org/licenses/LICENSE" target="_blank">https://www.apache.org/licenses/LICENSE</a>&minus;2.0.html&gt;
+<a href="https://www.apache.org/licenses/LICENSE-2.0.html" target="_blank">https://www.apache.org/licenses/LICENSE-2.0.html</a>
 There is NO WARRANTY, to the extent permitted by law.</p>
 
 </div>
