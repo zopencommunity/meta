@@ -293,21 +293,14 @@
   width: 100%;
   border-collapse: collapse;
   margin: 1rem 0;
-  background-color: #ffffff;
 }
 
-.man-page-content table tr:first-child,
-.man-page-content table thead tr {
+.man-page-content table tr:nth-child(odd) {
   background-color: #ffffff !important;
 }
 
-.man-page-content table tr {
-  background-color: #ffffff;
-}
-
-.man-page-content table th,
-.man-page-content table td {
-  background-color: #ffffff !important;
+.man-page-content table tr:nth-child(even) {
+  background-color: transparent !important;
 }
 
 .man-page-content pre {
