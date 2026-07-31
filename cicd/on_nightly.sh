@@ -278,6 +278,75 @@ print(''.join(out_parts), end='')
 PYEOF
 )
 
+    # Convert groff-generated layout tables into readable bordered tables with headers.
+    # Targets the auto-generated <table width="100%"> rows produced by the 11%/22% pass above
+    # and replaces each table block with a styled <table border="1"> with Option/Variable/Function
+    # and Description column headers.
+    body_content=$(echo "${body_content}" | python3 - <<'PYEOF'
+import sys, re
+
+content = sys.stdin.read()
+
+# Match groff-layout tables: <table width="100%" border="0" rules="none" frame="void" ...>
+# Each row has: 11% spacer td, 9% option/var td, 2% spacer td, 78% description td
+GROFF_TABLE_RE = re.compile(
+    r'<table\s[^>]*width="100%"[^>]*border="0"[^>]*>.*?</table>',
+    re.DOTALL | re.IGNORECASE,
+)
+
+# A single <tr> row from the groff layout table
+ROW_RE = re.compile(
+    r'<tr\b[^>]*>.*?'
+    r'<td\s+width="9%"[^>]*>\s*<p>(.*?)</p>\s*</td>.*?'
+    r'<td\s+width="78%"[^>]*>\s*<p>(.*?)</p>\s*</td>.*?'
+    r'</tr>',
+    re.DOTALL | re.IGNORECASE,
+)
+
+def pick_header(context_before):
+    """Choose the first column header based on what section precedes this table."""
+    ctx = context_before.lower()
+    if any(k in ctx for k in ('function', 'zopen_')):
+        return 'Function'
+    if any(k in ctx for k in ('variable', 'environment', 'env', 'zopen_')):
+        return 'Variable'
+    return 'Option'
+
+STYLED_TABLE_OPEN = (
+    '<table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">\n'
+    '<tr style="background-color:#f0f0f0;">\n'
+    '<th style="text-align:left; border: 1px solid #ccc;">{header}</th>\n'
+    '<th style="text-align:left; border: 1px solid #ccc;">Description</th>\n'
+    '</tr>\n'
+)
+
+def replace_table(m):
+    table_html = m.group(0)
+    rows = ROW_RE.findall(table_html)
+    if not rows:
+        return table_html  # leave unchanged if pattern does not match
+
+    context_before = content[:m.start()]
+    header = pick_header(context_before)
+
+    styled = STYLED_TABLE_OPEN.format(header=header)
+    for option, description in rows:
+        option = option.strip()
+        description = description.strip()
+        styled += (
+            '<tr>\n'
+            f'<td style="border: 1px solid #ccc;"><code>{option}</code></td>\n'
+            f'<td style="border: 1px solid #ccc;">{description}</td>\n'
+            '</tr>\n'
+        )
+    styled += '</table>'
+    return styled
+
+result = GROFF_TABLE_RE.sub(replace_table, content)
+print(result, end='')
+PYEOF
+)
+
     # Convert URLs (in angle brackets or bare) to proper HTML links with target="_blank"
     # - HTML-entity angle-bracket form:  &lt;https://...&gt;  →  <a href="...">...</a>
     # - Literal angle-bracket form:      <https://...>        →  <a href="...">...</a>
