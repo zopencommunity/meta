@@ -29,3 +29,6 @@ This page provides information about the zopen interface. Click on any of the zo
 * [zopen-usage](./zopen-usage)
 * [zopen-version](./zopen-version)
 * [zopen-whichproject](./zopen-whichproject)
+* [zopen-importenvs](./zopen-importenvs)
+* [zopen-versions](./zopen-versions)
+

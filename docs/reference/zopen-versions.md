@@ -1,6 +1,14 @@
 <div v-pre class="man-page-content">
 
 <div class="header-with-back">
+  <div class="home-link">
+    <a href="./zopen-reference">🏠 Home</a>
+  </div>
+  <div class="nav-buttons">
+    <a href="./zopen-importenvs" class="nav-link">← Prev</a>
+  </div>
+</div>
+
 <h1 align="center">ZOPEN-VERSIONS</h1>
 
 <hr />
