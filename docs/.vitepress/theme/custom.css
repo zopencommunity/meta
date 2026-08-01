@@ -293,14 +293,31 @@
   width: 100%;
   border-collapse: collapse;
   margin: 1rem 0;
+  border: 1px solid var(--vp-c-divider) !important;
+}
+
+.man-page-content table th,
+.man-page-content table td {
+  border: 1px solid var(--vp-c-divider) !important;
+  padding: 8px 12px !important;
+  text-align: left;
+}
+
+.man-page-content table thead tr {
+  background-color: var(--vp-c-bg-soft) !important;
 }
 
 .man-page-content table tr:nth-child(odd) {
-  background-color: #ffffff !important;
+  background-color: var(--vp-c-bg) !important;
 }
 
 .man-page-content table tr:nth-child(even) {
-  background-color: transparent !important;
+  background-color: var(--vp-c-bg-soft) !important;
+}
+
+.man-page-content table thead tr th {
+  font-weight: 600;
+  background-color: var(--vp-c-bg-mute) !important;
 }
 
 .man-page-content pre {
@@ -320,7 +337,7 @@
   color: var(--vp-c-brand-1);
 }
 
-/* Table styles */
+/* Strip default VitePress table styles (man-page-content overrides below take precedence) */
 .vp-doc table,
 .vp-doc th,
 .vp-doc td {
@@ -337,6 +354,28 @@
 }
 
 .vp-doc tr {
+  border-top: none !important;
+  border-bottom: none !important;
+}
+
+/* Restore borders/backgrounds for man-page tables — higher specificity wins over .vp-doc rules above */
+.vp-doc .man-page-content table {
+  border: 1px solid var(--vp-c-divider) !important;
+  border-collapse: collapse !important;
+}
+
+.vp-doc .man-page-content table th,
+.vp-doc .man-page-content table td {
+  border: 1px solid var(--vp-c-divider) !important;
+  padding: 8px 12px !important;
+}
+
+.vp-doc .man-page-content table thead tr {
+  border-top: none !important;
+  border-bottom: none !important;
+}
+
+.vp-doc .man-page-content table tr {
   border-top: none !important;
   border-bottom: none !important;
 }

@@ -152,12 +152,29 @@ This page provides information about the zopen interface. Click on any of the zo
 EOF
 }
 
+# Build a sorted array of all man page names so ConvertSingleManPage can look
+# up the previous and next sibling for navigation links.
+_MAN_PAGE_NAMES=()
+_BuildManPageIndex() {
+  _MAN_PAGE_NAMES=()
+  for man in man/man1/*.1; do
+    local base=${man##*/}
+    _MAN_PAGE_NAMES+=("${base%%.1}")
+  done
+  # Sort to match the order appended to zopen-reference.md
+  IFS=$'\n' _MAN_PAGE_NAMES=($(printf '%s\n' "${_MAN_PAGE_NAMES[@]}" | sort))
+  unset IFS
+}
+
 # ============================================================================
 # MAN PAGE TO MARKDOWN CONVERSION
 # ============================================================================
 ConvertManPagesToMarkdown() {
   set -x
-  
+
+  # Build the sorted name index first so nav links are available
+  _BuildManPageIndex
+
   # Process each man page
   for man in man/man1/*.1; do
     ConvertSingleManPage "$man"
@@ -172,9 +189,20 @@ ConvertSingleManPage() {
   local name=${base%%.1}
   local md="docs/reference/${name}.md"
   local temp_html
-  
+
   log "Converting $name..."
-  
+
+  # Determine prev/next sibling names for navigation links
+  local prev_name="" next_name=""
+  local i total=${#_MAN_PAGE_NAMES[@]}
+  for (( i=0; i<total; i++ )); do
+    if [[ "${_MAN_PAGE_NAMES[$i]}" == "$name" ]]; then
+      (( i > 0 ))       && prev_name="${_MAN_PAGE_NAMES[$((i-1))]}"
+      (( i < total-1 )) && next_name="${_MAN_PAGE_NAMES[$((i+1))]}"
+      break
+    fi
+  done
+
   # Generate temporary HTML from the man page
   temp_html=$(mktemp) || die "Failed to create temp file"
   trap "rm -f '$temp_html'" RETURN
@@ -195,8 +223,8 @@ ConvertSingleManPage() {
   body_content=$(LinkifyUrls "$body_content")
   body_content=$(RemoveOrphanedTags "$body_content" "$md")
   
-  # Write the markdown file
-  WriteMarkdownFile "$md" "$body_content"
+  # Write the markdown file with correct nav structure
+  WriteMarkdownFile "$md" "$body_content" "$prev_name" "$next_name"
   
   # Validate the generated file
   ValidateMarkdownFile "$md" "$name"
@@ -220,7 +248,9 @@ ExtractHtmlBody() {
 }
 
 RemoveInlineFormatting() {
-  echo "$1" | sed 's|<i>||g; s|</i>||g; s|<em>||g; s|</em>||g; s|<b>||g; s|</b>||g; s|<strong>||g; s|</strong>||g'
+  # Strip italic/emphasis tags only — preserve <b>/<strong> so option names keep
+  # their bold markup when wrapped in <code> cells by ConvertGroffTablesToBordered.
+  echo "$1" | sed 's|<i>||g; s|</i>||g; s|<em>||g; s|</em>||g'
 }
 
 CollapseTableTags() {
@@ -397,27 +427,55 @@ ConvertGroffTablesToBordered() {
   # Targets the auto-generated <table width="100%"> rows produced by ConvertMarginParagraphsToTables
   # and replaces each table block with a styled <table border="1"> with Option/Variable/Function
   # and Description column headers.
-  
+  #
+  # ROW_RE is intentionally flexible: groff emits varying column widths depending on
+  # the man page content, so we match by positional order (2nd non-spacer td = label,
+  # next non-spacer td = description) rather than hard-coding specific width values.
+
   echo "$1" | python3 - <<'PYEOF'
 import sys, re
 
 content = sys.stdin.read()
 
-# Match groff-layout tables: <table width="100%" border="0" rules="none" frame="void" ...>
-# Each row has: 11% spacer td, 9% option/var td, 2% spacer td, 78% description td
+# Match any groff-layout table: border="0" rules="none" frame="void"
+# Attribute order varies so we check for each attribute independently.
 GROFF_TABLE_RE = re.compile(
-    r'<table\s[^>]*width="100%"[^>]*border="0"[^>]*>.*?</table>',
+    r'<table\b[^>]*border="0"[^>]*rules="none"[^>]*>.*?</table>',
     re.DOTALL | re.IGNORECASE,
 )
 
-# A single <tr> row from the groff layout table
-ROW_RE = re.compile(
-    r'<tr\b[^>]*>.*?'
-    r'<td\s+width="9%"[^>]*>\s*<p>(.*?)</p>\s*</td>.*?'
-    r'<td\s+width="78%"[^>]*>\s*<p>(.*?)</p>\s*</td>.*?'
-    r'</tr>',
-    re.DOTALL | re.IGNORECASE,
-)
+# Extract all <tr> blocks from a groff layout table then pick the two
+# meaningful columns: the narrower "label" td and the wider "description" td.
+# We skip pure-spacer tds (empty content or only whitespace/empty-p tags).
+TR_RE = re.compile(r'<tr\b[^>]*>(.*?)</tr>', re.DOTALL | re.IGNORECASE)
+TD_RE = re.compile(r'<td\b[^>]*>(.*?)</td>', re.DOTALL | re.IGNORECASE)
+P_CONTENT_RE = re.compile(r'<p[^>]*>(.*?)</p>', re.DOTALL | re.IGNORECASE)
+
+def td_text(td_inner):
+    """Extract visible text from a <td> cell, collapsing nested <p> tags."""
+    # Try to find a <p> tag first
+    p_m = P_CONTENT_RE.search(td_inner)
+    text = p_m.group(1) if p_m else td_inner
+    return text.strip()
+
+def is_spacer(text):
+    """Return True if this td cell carries no meaningful content."""
+    return not re.sub(r'<[^>]*>', '', text).strip()
+
+def extract_rows(table_html):
+    """Return list of (label, description) pairs from a groff layout table."""
+    rows = []
+    for tr_m in TR_RE.finditer(table_html):
+        tr_inner = tr_m.group(1)
+        tds = [td_text(m.group(1)) for m in TD_RE.finditer(tr_inner)]
+        # Filter out pure spacer cells; meaningful cells are label then description
+        meaningful = [t for t in tds if not is_spacer(t)]
+        if len(meaningful) >= 2:
+            rows.append((meaningful[0], meaningful[1]))
+        elif len(meaningful) == 1:
+            # Description-only row (continuation / orphaned desc)
+            rows.append(('', meaningful[0]))
+    return rows
 
 def pick_header(context_before):
     """Choose the first column header based on what section precedes this table."""
@@ -438,23 +496,37 @@ STYLED_TABLE_OPEN = (
 
 def replace_table(m):
     table_html = m.group(0)
-    rows = ROW_RE.findall(table_html)
+    rows = extract_rows(table_html)
     if not rows:
-        return table_html  # leave unchanged if pattern does not match
+        return table_html  # leave unchanged if no rows matched
 
     context_before = content[:m.start()]
     header = pick_header(context_before)
 
     styled = STYLED_TABLE_OPEN.format(header=header)
-    for option, description in rows:
-        option = option.strip()
+    for label, description in rows:
+        # Strip residual bold tags from label text before wrapping in <code>
+        label = re.sub(r'</?(?:b|strong)\b[^>]*>', '', label).strip()
         description = description.strip()
-        styled += (
-            '<tr>\n'
-            f'<td style="border: 1px solid #ccc;"><code>{option}</code></td>\n'
-            f'<td style="border: 1px solid #ccc;">{description}</td>\n'
-            '</tr>\n'
-        )
+        if label:
+            styled += (
+                '<tr>\n'
+                f'<td style="border: 1px solid #ccc;"><code>{label}</code></td>\n'
+                f'<td style="border: 1px solid #ccc;">{description}</td>\n'
+                '</tr>\n'
+            )
+        else:
+            # continuation description row — merge into last row's description cell
+            if styled.endswith('</tr>\n'):
+                styled = styled[:-len('</tr>\n')]
+                styled = re.sub(
+                    r'(<td style="border: 1px solid #ccc;">)(.*?)(</td>\n)$',
+                    lambda mm: mm.group(1) + mm.group(2) + ' ' + description + mm.group(3),
+                    styled,
+                    flags=re.DOTALL,
+                )
+                styled += '</tr>\n'
+            # else: orphaned description with no preceding row — skip silently
     styled += '</table>'
     return styled
 
@@ -538,47 +610,32 @@ PYEOF
 WriteMarkdownFile() {
   local md="$1"
   local body_content="$2"
-  
+  local prev_name="${3:-}"
+  local next_name="${4:-}"
+
+  # Build the prev/next navigation links
+  local nav_html=""
+  if [[ -n "$prev_name" || -n "$next_name" ]]; then
+    nav_html='    <div class="nav-buttons">'$'\n'
+    [[ -n "$prev_name" ]] && nav_html+='    <a href="./'${prev_name}'" class="nav-link">← Prev</a>'$'\n'
+    [[ -n "$next_name" ]] && nav_html+='    <a href="./'${next_name}'" class="nav-link">Next →</a>'$'\n'
+    nav_html+='    </div>'
+  fi
+
   cat <<EOF > "$md"
 <div v-pre class="man-page-content">
 
 <div class="header-with-back">
-  <div class="back-link">
-    <a href="./zopen-reference">← Back</a>
+  <div class="home-link">
+    <a href="./zopen-reference">🏠 Home</a>
   </div>
+${nav_html}
 </div>
 
 ${body_content}
 
 </div>
 EOF
-
-  python3 - "$md" <<'PYEOF'
-import re
-import sys
-from pathlib import Path
-
-path = Path(sys.argv[1])
-content = path.read_text()
-
-body_start = content.find('</div>\n\n', content.find('<div class="header-with-back">'))
-if body_start != -1:
-    body_start += len('</div>\n\n')
-    body_end = content.rfind('\n\n</div>')
-    if body_end != -1 and body_end > body_start:
-        body = content[body_start:body_end]
-        if '<div class="header-with-back">' in body and '</div>' not in body.split('<div class="header-with-back">', 1)[1].split('\n', 1)[0]:
-            body = re.sub(
-                r'^<div class="header-with-back">\s*\n',
-                '',
-                body,
-                count=1,
-                flags=re.MULTILINE,
-            )
-            content = content[:body_start] + body + content[body_end:]
-
-path.write_text(content)
-PYEOF
 }
 
 ValidateMarkdownFile() {

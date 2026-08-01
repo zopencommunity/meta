@@ -19,9 +19,15 @@
 <h2>SYNOPSIS</h2>
 
 <p style="margin-left:11%; margin-top: 1em">zopen-install
-[OPION] [PACKAGE]</p>
+[OPTION] [PACKAGE]</p>
 
 <h2>DESCRIPTION</h2>
+
+<p style="margin-left:11%; margin-top: 1em">zopen&minus;install
+is a utility to download/install a zopen community package.
+[PACKAGE] is a package to install. Multiple packages can be specified.</p>
+
+<h2>OPTIONS</h2>
 
 <table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
 <tr style="background-color:#f0f0f0;">
@@ -29,36 +35,9 @@
 <th style="text-align:left; border: 1px solid #ccc;">Description</th>
 </tr>
 <tr>
-<td style="border: 1px solid #ccc;"><code>zopen&minus;install is a utility to download/install a zopen community package.</code></td>
-<td style="border: 1px solid #ccc;">[PACKAGE] is a package to install. Multiple packages can be specified.</td>
+<td style="border: 1px solid #ccc;"><code>&minus;&minus;all</code></td>
+<td style="border: 1px solid #ccc;">download/install all zopen community packages.</td>
 </tr>
-</table>
-
-
-<h2>OPTIONS</h2>
-
-<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
-
-<tr valign="top" align="left">
-
-<td width="11%"></td>
-
-<td width="7%">
-
-<p style="margin-top: 1em">&minus;&minus;all</p></td>
-
-<td width="4%"></td>
-
-<td width="70%">
-
-<p style="margin-top: 1em">download/install all zopen
-community packages.</p></td>
-
-<td width="8%">
-</td>
-</tr>
-
-
 <tr>
 <td style="border: 1px solid #ccc;"><code>&minus;&minus;cache&minus;only</code></td>
 <td style="border: 1px solid #ccc;">do not install dependencies.</td>
@@ -67,41 +46,17 @@ community packages.</p></td>
 <td style="border: 1px solid #ccc;"><code>&minus;&minus;download&minus;only</code></td>
 <td style="border: 1px solid #ccc;">download package to current directory.</td>
 </tr>
-</table>
-
-
-
-
-
-
-<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
-
-<tr valign="top" align="left">
-
-<td width="9%"></td>
-
-<td width="11%">
-
-<p>&minus;&minus;help</p></td>
-
-<td width="2%"></td>
-
-<td width="24%">
-
-<p>print this help.</p></td>
-
-<td width="54%">
-</td>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;&minus;help</code></td>
+<td style="border: 1px solid #ccc;">print this help.</td>
 </tr>
-
-
 <tr>
 <td style="border: 1px solid #ccc;"><code>&minus;&minus;install&minus;or&minus;upgrade</code></td>
 <td style="border: 1px solid #ccc;">installs the package if not installed, or upgrades the package if installed.</td>
 </tr>
 <tr>
 <td style="border: 1px solid #ccc;"><code>&minus;&minus;bypass&minus;prereq&minus;checks</code></td>
-<td style="border: 1px solid #ccc;">Ignores pre&minus;req checks</td>
+<td style="border: 1px solid #ccc;">ignores pre&minus;req checks.</td>
 </tr>
 <tr>
 <td style="border: 1px solid #ccc;"><code>&minus;&minus;local&minus;install</code></td>
@@ -123,36 +78,10 @@ community packages.</p></td>
 <td style="border: 1px solid #ccc;"><code>&minus;r, &minus;&minus;reinstall</code></td>
 <td style="border: 1px solid #ccc;">reinstall already installed zopen community packages.</td>
 </tr>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
-
-<tr valign="top" align="left">
-
-<td width="11%"></td>
-
-<td width="89%">
-
-<p style="margin-top: 1em">&minus;&minus;release&minus;line
-[stable, dev] the release line to build off of.</p></td>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;&minus;release&minus;line [stable, dev]</code></td>
+<td style="border: 1px solid #ccc;">the release line to build off of.</td>
 </tr>
-
-
 <tr>
 <td style="border: 1px solid #ccc;"><code>&minus;&minus;select</code></td>
 <td style="border: 1px solid #ccc;">select a version to install.</td>
@@ -184,30 +113,21 @@ community packages.</p></td>
 </table>
 
 
+<h2>AUTHOR</h2>
 
+<p style="margin-left:11%; margin-top: 1em">Written by
+contributors to the zopen community.
+<a href="https://github.com/zopencommunity/meta/graphs/contributors" target="_blank">https://github.com/zopencommunity/meta/graphs/contributors</a></p>
 
+<h2>REPORTING BUGS</h2>
 
-
-
-
-
-
-
-
-
-
-
+<p style="margin-left:11%; margin-top: 1em">Report bugs at
+<a href="https://github.com/zopencommunity/meta/issues." target="_blank">https://github.com/zopencommunity/meta/issues.</a></p>
 
 <p style="margin-left:11%; margin-top: 1em">This is free
 software: you are free to change and redistribute it under
 the terms of the Apache License, Version 2.0.
 <a href="https://www.apache.org/licenses/LICENSE-2.0.html" target="_blank">https://www.apache.org/licenses/LICENSE-2.0.html</a>
 There is NO WARRANTY, to the extent permitted by law.</p>
-
-<h2>AUTHOR</h2>
-
-<p style="margin-left:11%; margin-top: 1em">Written by
-contributors to the zopen community.
-<a href="https://github.com/zopencommunity/meta/graphs/contributors" target="_blank">https://github.com/zopencommunity/meta/graphs/contributors</a></p>
 
 </div>
