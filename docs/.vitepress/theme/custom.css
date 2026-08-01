@@ -384,6 +384,7 @@
 
 /* Allow tables to scroll horizontally when necessary */
 .vp-doc .table-wrapper {
+  width: 100%;
   overflow-x: auto;
 }
 

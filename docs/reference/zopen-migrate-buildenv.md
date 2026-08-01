@@ -1,11 +1,3 @@
----
-prev:
-  text: 'zopen-md2man'
-  link: '/reference/zopen-md2man'
-next:
-  text: 'zopen-migrate-groovy'
-  link: '/reference/zopen-migrate-groovy'
----
 <div v-pre class="man-page-content">
 <div class="header-with-back">
   <div class="home-link">

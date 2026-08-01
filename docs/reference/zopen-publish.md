@@ -1,11 +1,3 @@
----
-prev:
-  text: 'zopen-promote'
-  link: '/reference/zopen-promote'
-next:
-  text: 'zopen-query'
-  link: '/reference/zopen-query'
----
 <div v-pre class="man-page-content">
 <div class="header-with-back">
   <div class="home-link">
@@ -94,13 +86,35 @@ TAG</p>
 <td style="border: 1px solid #ccc;"><code>&minus;&minus;version</code></td>
 <td style="border: 1px solid #ccc;">print version</td>
 </tr>
-<tr>
-<td style="border: 1px solid #ccc;"><code>Environment GITHUB_TOKEN</code></td>
-<td style="border: 1px solid #ccc;">GitHub Personal Access Token (alternative to &minus;&minus;github&minus;token)</td>
+</table>
+
+<h2>ENVIRONMENT</h2>
+
+<table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
+<tr style="background-color:#f0f0f0;">
+<th style="text-align:left; border: 1px solid #ccc;">Variable</th>
+<th style="text-align:left; border: 1px solid #ccc;">Description</th>
 </tr>
 <tr>
-<td style="border: 1px solid #ccc;"><code>Example:</code></td>
-<td style="border: 1px solid #ccc;">zopen&minus;publish &minus;f &minus;p install/mypackage.zos.pax.Z &minus;m metadata.json &minus;g DEV_mypackage_12345 &minus;t &lt;your_github_token&gt; zopen&minus;publish &minus;v &minus;f &minus;p install/mypackage.zos.pax.Z &minus;m metadata.json &minus;r <a href="https://github.com/zopencommunity/override" target="_blank">https://github.com/zopencommunity/override</a>&minus;repo.git &minus;d &quot;My custom release description&quot; &minus;b DEV &minus;g REL&minus;1.0.1 &minus;t &lt;your_github_token&gt; &minus;l</td>
+<td style="border: 1px solid #ccc;"><code>GITHUB_TOKEN</code></td>
+<td style="border: 1px solid #ccc;">GitHub Personal Access Token (alternative to &minus;&minus;github&minus;token)</td>
+</tr>
+</table>
+
+<h2>EXAMPLES</h2>
+
+<table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
+<tr style="background-color:#f0f0f0;">
+<th style="text-align:left; border: 1px solid #ccc;">Command</th>
+<th style="text-align:left; border: 1px solid #ccc;">Description</th>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>zopen&minus;publish &minus;f &minus;p install/mypackage.zos.pax.Z &minus;m metadata.json &minus;g DEV_mypackage_12345 &minus;t &lt;your_github_token&gt;</code></td>
+<td style="border: 1px solid #ccc;">publish a dev release using the specified pax and metadata files</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>zopen&minus;publish &minus;v &minus;f &minus;p install/mypackage.zos.pax.Z &minus;m metadata.json &minus;r https://github.com/zopencommunity/override&minus;repo.git &minus;d &quot;My custom release description&quot; &minus;b DEV &minus;g REL&minus;1.0.1 &minus;t &lt;your_github_token&gt; &minus;l</code></td>
+<td style="border: 1px solid #ccc;">publish a latest stable release with a custom repo, description, and tag</td>
 </tr>
 </table>
 

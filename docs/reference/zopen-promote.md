@@ -1,11 +1,3 @@
----
-prev:
-  text: 'zopen-pax2rpm'
-  link: '/reference/zopen-pax2rpm'
-next:
-  text: 'zopen-publish'
-  link: '/reference/zopen-publish'
----
 <div v-pre class="man-page-content">
 <div class="header-with-back">
   <div class="home-link">

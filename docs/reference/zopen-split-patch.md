@@ -1,11 +1,3 @@
----
-prev:
-  text: 'zopen-remove'
-  link: '/reference/zopen-remove'
-next:
-  text: 'zopen-update-cacert'
-  link: '/reference/zopen-update-cacert'
----
 <div v-pre class="man-page-content">
 <div class="header-with-back">
   <div class="home-link">

@@ -1,11 +1,3 @@
----
-prev:
-  text: 'zopen-usage'
-  link: '/reference/zopen-usage'
-next:
-  text: 'zopen-whichproject'
-  link: '/reference/zopen-whichproject'
----
 <div v-pre class="man-page-content">
 <div class="header-with-back">
   <div class="home-link">

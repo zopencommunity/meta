@@ -1,11 +1,3 @@
----
-prev:
-  text: 'zopen-init'
-  link: '/reference/zopen-init'
-next:
-  text: 'zopen-md2man'
-  link: '/reference/zopen-md2man'
----
 <div v-pre class="man-page-content">
 <div class="header-with-back">
   <div class="home-link">

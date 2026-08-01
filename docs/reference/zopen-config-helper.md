@@ -1,11 +1,3 @@
----
-prev:
-  text: 'zopen-compute-builddeps'
-  link: '/reference/zopen-compute-builddeps'
-next:
-  text: 'zopen-create-cicd-job'
-  link: '/reference/zopen-create-cicd-job'
----
 <div v-pre class="man-page-content">
 <div class="header-with-back">
   <div class="home-link">

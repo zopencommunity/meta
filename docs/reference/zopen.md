@@ -1,9 +1,3 @@
----
-prev: false
-next:
-  text: 'zopen-alt'
-  link: '/reference/zopen-alt'
----
 <div v-pre class="man-page-content">
 <div class="header-with-back">
   <div class="home-link">
@@ -159,20 +153,13 @@ zopen environment</td>
 <td style="border: 1px solid #ccc;"><code>zopen &minus;&minus;version</code></td>
 <td style="border: 1px solid #ccc;">displays the installed zopen version</td>
 </tr>
-</table>
-
-<p style="margin-left:22%; margin-top: 1em">zopen install
-git install the latest version of the &rsquo;git&rsquo;
-package zopen upgrade &minus;y upgrade all installed
-packages to the latest release,</p>
-
-<p style="margin-left:22%; margin-top: 1em">without
-prompting</p>
-
-<table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
-<tr style="background-color:#f0f0f0;">
-<th style="text-align:left; border: 1px solid #ccc;">Option</th>
-<th style="text-align:left; border: 1px solid #ccc;">Description</th>
+<tr>
+<td style="border: 1px solid #ccc;"><code>zopen install git</code></td>
+<td style="border: 1px solid #ccc;">install the latest version of the &rsquo;git&rsquo; package</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>zopen upgrade &minus;y</code></td>
+<td style="border: 1px solid #ccc;">upgrade all installed packages to the latest release, without prompting</td>
 </tr>
 <tr>
 <td style="border: 1px solid #ccc;"><code>zopen alt bash</code></td>
@@ -182,22 +169,16 @@ prompting</p>
 <td style="border: 1px solid #ccc;"><code>zopen info vim</code></td>
 <td style="border: 1px solid #ccc;">displays details information about the installed vim package</td>
 </tr>
-</table>
-
-<p style="margin-left:22%; margin-top: 1em">zopen usage
-&minus;&minus;pie displays an ASCII&minus;art chart showing
-biggest space hogs</p>
-
-<table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
-<tr style="background-color:#f0f0f0;">
-<th style="text-align:left; border: 1px solid #ccc;">Option</th>
-<th style="text-align:left; border: 1px solid #ccc;">Description</th>
-</tr>
 <tr>
-<td style="border: 1px solid #ccc;"><code><b>SEE ALSO:</b></code></td>
-<td style="border: 1px solid #ccc;">zopen&minus;alt(1) zopen&minus;audit(1) zopen&minus;build(1) zopen&minus;clean(1) zopen&minus;config&minus;helper(1) zopen&minus;generate(1) zopen&minus;init(1) zopen&minus;install(1) zopen&minus;info(1) zopen&minus;publish(1) zopen&minus;query(1) zopen&minus;remove(1) zopen&minus;update&minus;cacert(1) zopen&minus;usage(1) zopen&minus;whichproject(1) zopen&minus;version(1)</td>
+<td style="border: 1px solid #ccc;"><code>zopen usage &minus;&minus;pie</code></td>
+<td style="border: 1px solid #ccc;">displays an ASCII&minus;art chart showing biggest space hogs</td>
 </tr>
 </table>
+
+<h2>SEE ALSO</h2>
+<a name="SEE ALSO"></a>
+
+<p style="margin-left:11%; margin-top: 1em">zopen&minus;alt(1) zopen&minus;audit(1) zopen&minus;build(1) zopen&minus;clean(1) zopen&minus;config&minus;helper(1) zopen&minus;generate(1) zopen&minus;init(1) zopen&minus;install(1) zopen&minus;info(1) zopen&minus;publish(1) zopen&minus;query(1) zopen&minus;remove(1) zopen&minus;update&minus;cacert(1) zopen&minus;usage(1) zopen&minus;whichproject(1) zopen&minus;version(1)</p>
 
 <h2>AUTHOR</h2>
 <a name="AUTHOR"></a>

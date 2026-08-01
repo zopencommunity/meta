@@ -1,11 +1,3 @@
----
-prev:
-  text: 'zopen-compare-versions'
-  link: '/reference/zopen-compare-versions'
-next:
-  text: 'zopen-config-helper'
-  link: '/reference/zopen-config-helper'
----
 <div v-pre class="man-page-content">
 <div class="header-with-back">
   <div class="home-link">

@@ -1,11 +1,3 @@
----
-prev:
-  text: 'zopen-config-helper'
-  link: '/reference/zopen-config-helper'
-next:
-  text: 'zopen-create-repo'
-  link: '/reference/zopen-create-repo'
----
 <div v-pre class="man-page-content">
 <div class="header-with-back">
   <div class="home-link">
@@ -72,9 +64,26 @@ script is intended for use by core contributors only.</p>
 <td style="border: 1px solid #ccc;"><code>&minus;&minus;version</code></td>
 <td style="border: 1px solid #ccc;">print version</td>
 </tr>
+</table>
+
+<h2>EXAMPLES</h2>
+
+<table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
+<tr style="background-color:#f0f0f0;">
+<th style="text-align:left; border: 1px solid #ccc;">Command</th>
+<th style="text-align:left; border: 1px solid #ccc;">Description</th>
+</tr>
 <tr>
-<td style="border: 1px solid #ccc;"><code>Example:</code></td>
-<td style="border: 1px solid #ccc;">zopen&minus;create&minus;cicd&minus;job &minus;n curl zopen&minus;create&minus;cicd&minus;job &minus;v &minus;n pv &minus;b dev &minus;r no zopen&minus;create&minus;cicd&minus;job &minus;n openssl &minus;b stable &minus;s cicd&minus;stable.groovy</td>
+<td style="border: 1px solid #ccc;"><code>zopen&minus;create&minus;cicd&minus;job &minus;n curl</code></td>
+<td style="border: 1px solid #ccc;">create a CI/CD job for the curl port</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>zopen&minus;create&minus;cicd&minus;job &minus;v &minus;n pv &minus;b dev &minus;r no</code></td>
+<td style="border: 1px solid #ccc;">create a dev build CI/CD job for pv without triggering it</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>zopen&minus;create&minus;cicd&minus;job &minus;n openssl &minus;b stable &minus;s cicd&minus;stable.groovy</code></td>
+<td style="border: 1px solid #ccc;">create a stable CI/CD job for openssl using the specified Groovy script</td>
 </tr>
 </table>
 

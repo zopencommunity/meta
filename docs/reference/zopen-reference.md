@@ -1,7 +1,3 @@
----
-prev: false
-next: false
----
 
 # zopen reference documentation
 

@@ -1,11 +1,3 @@
----
-prev:
-  text: 'zopen-split-patch'
-  link: '/reference/zopen-split-patch'
-next:
-  text: 'zopen-usage'
-  link: '/reference/zopen-usage'
----
 <div v-pre class="man-page-content">
 <div class="header-with-back">
   <div class="home-link">
@@ -58,14 +50,10 @@ next:
 <td style="border: 1px solid #ccc;">print version.</td>
 </tr>
 <tr>
-<td style="border: 1px solid #ccc;"><code>Parameters:</code></td>
-<td style="border: 1px solid #ccc;">&lt;directory&gt;: the directory where the cacert.pem will be updated.</td>
+<td style="border: 1px solid #ccc;"><code>&lt;directory&gt;</code></td>
+<td style="border: 1px solid #ccc;">the directory where the cacert.pem will be updated. The default directory location is: /var/lib/jenkins/workspace/Port&minus;Update&minus;Nightly/meta_update</td>
 </tr>
 </table>
-
-<p style="margin-left:22%; margin-top: 1em">The default
-directory location is:
-/var/lib/jenkins/workspace/Port&minus;Update&minus;Nightly/meta_update</p>
 
 <p style="margin-left:11%; margin-top: 1em">This is free
 software: you are free to change and redistribute it under

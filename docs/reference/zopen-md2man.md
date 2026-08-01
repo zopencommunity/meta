@@ -1,11 +1,3 @@
----
-prev:
-  text: 'zopen-install'
-  link: '/reference/zopen-install'
-next:
-  text: 'zopen-migrate-buildenv'
-  link: '/reference/zopen-migrate-buildenv'
----
 <div v-pre class="man-page-content">
 <div class="header-with-back">
   <div class="home-link">

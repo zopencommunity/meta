@@ -1,11 +1,3 @@
----
-prev:
-  text: 'zopen-clean'
-  link: '/reference/zopen-clean'
-next:
-  text: 'zopen-compute-builddeps'
-  link: '/reference/zopen-compute-builddeps'
----
 <div v-pre class="man-page-content">
 <div class="header-with-back">
   <div class="home-link">

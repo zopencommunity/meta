@@ -1,11 +1,3 @@
----
-prev:
-  text: 'zopen-create-cicd-job'
-  link: '/reference/zopen-create-cicd-job'
-next:
-  text: 'zopen-diagnostics'
-  link: '/reference/zopen-diagnostics'
----
 <div v-pre class="man-page-content">
 <div class="header-with-back">
   <div class="home-link">
@@ -74,13 +66,39 @@ next:
 <td style="border: 1px solid #ccc;"><code>&minus;&minus;version</code></td>
 <td style="border: 1px solid #ccc;">print version</td>
 </tr>
-<tr>
-<td style="border: 1px solid #ccc;"><code>Environment GITHUB_TOKEN</code></td>
-<td style="border: 1px solid #ccc;">GitHub Personal Access Token (alternative to &minus;&minus;github&minus;token)</td>
+</table>
+
+<h2>ENVIRONMENT</h2>
+
+<table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
+<tr style="background-color:#f0f0f0;">
+<th style="text-align:left; border: 1px solid #ccc;">Variable</th>
+<th style="text-align:left; border: 1px solid #ccc;">Description</th>
 </tr>
 <tr>
-<td style="border: 1px solid #ccc;"><code>Example:</code></td>
-<td style="border: 1px solid #ccc;">zopen&minus;create&minus;repo &minus;n curl zopen&minus;create&minus;repo &minus;v &minus;n pv &minus;d &rsquo;Pipe Viewer &minus; monitor data through a pipeline&rsquo; zopen&minus;create&minus;repo &minus;v &minus;n openssl &minus;u johndoe &minus;t &lt;your_github_token&gt;</td>
+<td style="border: 1px solid #ccc;"><code>GITHUB_TOKEN</code></td>
+<td style="border: 1px solid #ccc;">GitHub Personal Access Token (alternative to &minus;&minus;github&minus;token)</td>
+</tr>
+</table>
+
+<h2>EXAMPLES</h2>
+
+<table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
+<tr style="background-color:#f0f0f0;">
+<th style="text-align:left; border: 1px solid #ccc;">Command</th>
+<th style="text-align:left; border: 1px solid #ccc;">Description</th>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>zopen&minus;create&minus;repo &minus;n curl</code></td>
+<td style="border: 1px solid #ccc;">create a new port repository for curl</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>zopen&minus;create&minus;repo &minus;v &minus;n pv &minus;d &rsquo;Pipe Viewer &minus; monitor data through a pipeline&rsquo;</code></td>
+<td style="border: 1px solid #ccc;">create a pv repository with a custom description</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>zopen&minus;create&minus;repo &minus;v &minus;n openssl &minus;u johndoe &minus;t &lt;your_github_token&gt;</code></td>
+<td style="border: 1px solid #ccc;">create an openssl repository, assigning johndoe as admin</td>
 </tr>
 </table>
 

@@ -1,11 +1,3 @@
----
-prev:
-  text: 'zopen-query'
-  link: '/reference/zopen-query'
-next:
-  text: 'zopen-split-patch'
-  link: '/reference/zopen-split-patch'
----
 <div v-pre class="man-page-content">
 <div class="header-with-back">
   <div class="home-link">

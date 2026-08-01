@@ -1,11 +1,3 @@
----
-prev:
-  text: 'zopen-help2man'
-  link: '/reference/zopen-help2man'
-next:
-  text: 'zopen-init'
-  link: '/reference/zopen-init'
----
 <div v-pre class="man-page-content">
 <div class="header-with-back">
   <div class="home-link">
@@ -31,16 +23,7 @@ next:
 
 <h2>DESCRIPTION</h2>
 
-<table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
-<tr style="background-color:#f0f0f0;">
-<th style="text-align:left; border: 1px solid #ccc;">Option</th>
-<th style="text-align:left; border: 1px solid #ccc;">Description</th>
-</tr>
-<tr>
-<td style="border: 1px solid #ccc;"><code>zopen&minus;info &minus; display detailed information about a zopen package.</code></td>
-<td style="border: 1px solid #ccc;">PACKAGE is the name of a zopen package.</td>
-</tr>
-</table>
+<p style="margin-left:11%; margin-top: 1em">zopen&minus;info &minus; display detailed information about a zopen package. PACKAGE is the name of a zopen package.</p>
 
 <h2>OPTIONS</h2>
 

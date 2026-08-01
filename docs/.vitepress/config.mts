@@ -106,7 +106,7 @@ export default defineConfig({
         },
         {
           text: "Reference",
-          collapsed: true,
+          collapsed: false,
           items: [
             { text: "zopen reference", link: "/reference/zopen-reference" },
             { text: "zopen", link: "/reference/zopen" },

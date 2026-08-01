@@ -1,9 +1,3 @@
----
-prev:
-  text: 'zopen-importenvs'
-  link: '/reference/zopen-importenvs'
-next: false
----
 <div v-pre class="man-page-content">
 <div class="header-with-back">
   <div class="home-link">
