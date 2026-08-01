@@ -1,14 +1,4 @@
 <div v-pre class="man-page-content">
-<div class="header-with-back">
-  <div class="home-link">
-    <a href="./zopen-reference">🏠 Home</a>
-  </div>
-  <div class="nav-buttons">
-    <a href="./zopen-compare-versions" class="nav-link">← Prev</a>
-    <a href="./zopen-config-helper" class="nav-link">Next →</a>
-  </div>
-</div>
-
 <h1 align="center">ZOPEN-COMPUTE-BUILDDEPS</h1>
 
 <h2>NAME</h2>

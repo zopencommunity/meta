@@ -228,57 +228,6 @@
   background: var(--vp-c-bg-soft);
 }
 
-.man-page-content .header-with-back {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-
-.man-page-content .home-link {
-  order: -1;
-}
-
-.man-page-content .home-link a {
-  color: var(--vp-c-brand-1);
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 0.9em;
-  display: inline-flex;
-  align-items: center;
-  transition: color 0.25s;
-}
-
-.man-page-content .home-link a:hover {
-  color: var(--vp-c-brand-2);
-  text-decoration: underline;
-}
-
-.man-page-content .nav-buttons {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-}
-
-.man-page-content .prev-link a,
-.man-page-content .next-link a,
-.man-page-content .nav-link {
-  color: var(--vp-c-brand-1);
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 0.9em;
-  display: inline-flex;
-  align-items: center;
-  transition: color 0.25s;
-}
-
-.man-page-content .prev-link a:hover,
-.man-page-content .next-link a:hover,
-.man-page-content .nav-link:hover {
-  color: var(--vp-c-brand-2);
-  text-decoration: underline;
-}
-
 
 .man-page-content h1 {
   margin-top: 0;
@@ -711,30 +660,6 @@ img[alt*="Installation demo"] {
 [v-pre] {
   font-size: 14px !important;
 }
-
-/* Navigation buttons styling */
-.header-with-back {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-
-.nav-link {
-  color: var(--vp-c-brand-1);
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 0.9em;
-  display: inline-flex;
-  align-items: center;
-  transition: color 0.25s;
-}
-
-.nav-link:hover {
-  color: var(--vp-c-brand-2);
-  text-decoration: underline;
-}
-
 
 
 /* Add 20px top spacing to aside panel */
