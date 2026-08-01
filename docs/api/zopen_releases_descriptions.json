@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2026-07-30T19:24:48+00:00Z",
+  "generation_timestamp_utc": "2026-08-01T15:48:31+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -328,6 +328,7 @@
     "rocksdb": "",
     "mmh3": "Python extension for MurmurHash (MurmurHash3), a set of fast and robust hash functions.",
     "django": "A high-level Python web framework that encourages rapid development and clean, pragmatic design.",
-    "cookiecutter": "A command-line utility that creates projects from project templates, e.g. creating a Python package project from a Python package project template."
+    "cookiecutter": "A command-line utility that creates projects from project templates, e.g. creating a Python package project from a Python package project template.",
+    "versioneer": "Easy VCS-based management of project version strings"
   }
 }
