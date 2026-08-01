@@ -1,5 +1,3 @@
----
-
 ## General
 
 ### What is the zopen community?
