@@ -996,44 +996,38 @@ img[alt*="Installation demo"] {
   color: var(--vp-c-text-2) !important;
 }
 
-/* Active leaf – highlighted row */
-.VPSidebar .VPSidebarItem .link.active {
+/* Active leaf – VitePress sets .is-active on the .VPSidebarItem */
+.VPSidebar .VPSidebarItem.is-active > .item > .link {
   display: block !important;
   background-color: rgba(31, 102, 209, 0.10) !important;
   border-radius: 6px !important;
   border-left: 3px solid var(--vp-c-brand-1, #1F66D1) !important;
-  margin-left: -3px !important;
+  padding-left: 9px !important;
 }
 
-.VPSidebar .VPSidebarItem .link.active .text {
+.VPSidebar .VPSidebarItem.is-active > .item .link > .text {
   font-weight: 600 !important;
   color: var(--vp-c-brand-1, #1F66D1) !important;
 }
 
 /* Dark mode active */
-.dark .VPSidebar .VPSidebarItem .link.active {
+.dark .VPSidebar .VPSidebarItem.is-active > .item > .link {
   background-color: rgba(61, 139, 255, 0.12) !important;
   border-left-color: var(--vp-c-brand-light, #3D8BFF) !important;
 }
 
-.dark .VPSidebar .VPSidebarItem .link.active .text {
+.dark .VPSidebar .VPSidebarItem.is-active > .item .link > .text {
   color: var(--vp-c-brand-light, #3D8BFF) !important;
 }
 
-/* Hover state on non-active leaf items */
-.VPSidebar .VPSidebarItem .link:not(.active):hover {
+/* Hover on non-active leaf items */
+.VPSidebar .VPSidebarItem.is-link:not(.is-active) > .item > .link:hover {
   background-color: rgba(142, 150, 170, 0.08) !important;
   border-radius: 6px !important;
 }
 
-.VPSidebar .VPSidebarItem .link:not(.active):hover .text {
+.VPSidebar .VPSidebarItem.is-link:not(.is-active) > .item > .link:hover .text {
   color: var(--vp-c-text-1) !important;
-}
-
-/* No pseudo icons on nested items */
-.VPSidebar .VPSidebarItem.level-1 > .item > .VPLink::before,
-.VPSidebar .VPSidebarItem.level-2 > .item > .VPLink::before {
-  display: none !important;
 }
 
 
