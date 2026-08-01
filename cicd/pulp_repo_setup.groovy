@@ -89,7 +89,36 @@ node('linux') {
           
           # Configure GPG on the repository
           pulp rpm repository update --name "\${PULP_REPO}" --repo-config "{\\\"gpgcheck\\\": 1, \\\"gpgkey\\\": \\\"\${DESIRED_KEY}\\\"}" --no-autopublish
-          
+
+          # 4. Setup Python Wheel Repositories & Distributions
+          #
+          # One repository per build line. A PyPI index is immutable per filename,
+          # and a wheel's filename comes from the version upstream declares, so the
+          # dev and stable lines routinely collide on it; separate indexes keep the
+          # filenames truthful. See cicd/README.md.
+          #
+          # No publication step here, unlike RPM above: the /pypi/<base_path>/
+          # endpoints are pulp_python's live API, generating the simple index on
+          # demand from the bound repository. Publications are not read by it, and
+          # autopublish is irrelevant -- what matters is that each distribution
+          # stays bound to its repository rather than to a pinned publication,
+          # which the update below enforces on every run.
+          echo "--- Setting up Python wheel repositories & distributions ---"
+          for PY_REPO in "wheels" "wheels-dev"; do
+            case "\${PY_REPO}" in
+              wheels)     PY_DESC="zopen Python wheels built from the stable build line" ;;
+              wheels-dev) PY_DESC="zopen Python wheels built from the dev build line" ;;
+            esac
+
+            pulp python repository show --name "\${PY_REPO}" >/dev/null 2>&1 || \
+            pulp python repository create --name "\${PY_REPO}" --description "\${PY_DESC}"
+
+            pulp python distribution update --name "\${PY_REPO}" --repository "\${PY_REPO}" || \
+            pulp python distribution create --name "\${PY_REPO}" --base-path "\${PY_REPO}" --repository "\${PY_REPO}"
+
+            echo "  \${PY_REPO}: ready"
+          done
+
           echo "Pulp repository setup and GPG configuration complete."
         """
       }

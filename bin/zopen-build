@@ -327,11 +327,110 @@ _zopen_python_ensure_venv() {
   pip install setuptools build installer wheel
 }
 
+# Retag a compiled wheel so it is not pinned to the z/OS release and machine
+# model. CPython derives the default platform tag from uname, giving something
+# like os390_29_00_8561 -- release AND CPU model -- and pip matches that string
+# exactly, so the wheel stops installing after a z/OS upgrade or on different
+# hardware, even though the binary would run fine.
+#
+# cp3XY-none-any keeps the one constraint that is real (the extension is built
+# against a specific CPython ABI) and drops the two that are not. Note that
+# 'any' also matches non-z/OS systems, so this assumes the index is consumed
+# from z/OS; the ABI tag cannot be kept, because pip never generates a
+# cp3XY-cp3XY-any combination to match against.
+#
+# Pure Python wheels are already py3-none-any and are left untouched.
+# Set ZOPEN_PYTHON_WHEEL_RETAG=false to keep the default platform tag.
+_zopen_python_retag_wheel() {
+  if [ "${ZOPEN_PYTHON_WHEEL_RETAG}" = "false" ]; then
+    printVerbose "Wheel retagging disabled; keeping the default platform tag"
+    return 0
+  fi
+
+  for _whl in dist/*.whl; do
+    [ -f "${_whl}" ] || continue
+
+    # {name}-{version}(-{build})?-{python}-{abi}-{platform}.whl
+    _whl_base=$(basename "${_whl}" .whl)
+    _whl_plat=$(echo "${_whl_base}" | awk -F- '{print $NF}')
+    if [ "${_whl_plat}" = "any" ]; then
+      printVerbose "$(basename "${_whl}") is platform independent; leaving its tags unchanged"
+      continue
+    fi
+
+    _whl_pytag=$(python -c 'import sys; print("cp%d%d" % sys.version_info[:2])' 2> /dev/null)
+    if [ -z "${_whl_pytag}" ]; then
+      printWarning "Could not determine the interpreter tag; leaving wheel tags unchanged"
+      return 0
+    fi
+
+    printInfo "Retagging $(basename "${_whl}") as ${_whl_pytag}-none-any"
+    if ! python -m wheel tags \
+      --python-tag "${_whl_pytag}" \
+      --abi-tag none \
+      --platform-tag any \
+      --remove "${_whl}"; then
+      printError "Failed to retag $(basename "${_whl}")"
+      return 1
+    fi
+  done
+
+  return 0
+}
+
+# Derive a stable SOURCE_DATE_EPOCH for the source tree in the current
+# directory. A wheel is a zip, and zip entries carry each file's mtime, so
+# without this two builds of identical source produce different bytes -- which
+# the publisher rejects as an immutable-filename conflict. Prefer the upstream
+# commit date; for tarball sources fall back to the mtime of the build
+# definition, which comes from the archive and survives re-extraction.
+_zopen_python_source_date_epoch() {
+  if git rev-parse --git-dir > /dev/null 2>&1; then
+    _sde=$(git log -1 --format=%ct 2> /dev/null)
+    if [ -n "${_sde}" ]; then
+      echo "${_sde}"
+      return 0
+    fi
+  fi
+
+  for _sde_file in pyproject.toml setup.py setup.cfg; do
+    if [ -f "${_sde_file}" ]; then
+      _sde=$(python -c 'import os,sys; print(int(os.stat(sys.argv[1]).st_mtime))' "${_sde_file}" 2> /dev/null)
+      if [ -n "${_sde}" ]; then
+        echo "${_sde}"
+        return 0
+      fi
+    fi
+  done
+
+  return 1
+}
+
 _zopen_python_build() {
   _zopen_python_ensure_venv
   rm -rf dist
+
+  # Respect an externally supplied value so a caller can pin it explicitly.
+  if [ -z "${SOURCE_DATE_EPOCH}" ]; then
+    _sde_value=$(_zopen_python_source_date_epoch)
+    if [ -n "${_sde_value}" ]; then
+      export SOURCE_DATE_EPOCH="${_sde_value}"
+      printVerbose "Building with SOURCE_DATE_EPOCH=${SOURCE_DATE_EPOCH} for reproducible wheels"
+    else
+      printWarning "Could not determine SOURCE_DATE_EPOCH; wheel will not be reproducible"
+    fi
+  fi
+
   python -m build --wheel
   _zopen_python_build_rc=$?
+
+  # Retag before anything downstream sees the wheel, so the check and install
+  # phases and the published artifact all refer to the same file.
+  if [ ${_zopen_python_build_rc} -eq 0 ]; then
+    _zopen_python_retag_wheel
+    _zopen_python_build_rc=$?
+  fi
+
   deactivate
   return ${_zopen_python_build_rc}
 }
@@ -351,7 +450,6 @@ _zopen_python_check() {
 _zopen_python_install() {
   mkdir -p "${ZOPEN_INSTALL_DIR}/lib/python"
   mkdir -p "${ZOPEN_INSTALL_DIR}/bin"
-  mkdir -p "${ZOPEN_INSTALL_DIR}/dist"
   . .venv/bin/activate
   # Install the built wheel to the target directory
   pip install --no-deps --target="${ZOPEN_INSTALL_DIR}/lib/python" dist/*.whl
@@ -360,8 +458,13 @@ _zopen_python_install() {
     [ -e "$f" ] || continue
     ln -sf "../lib/python/bin/$(basename "$f")" "${ZOPEN_INSTALL_DIR}/bin/$(basename "$f")"
   done
-  # Preserve wheel for publishing
-  cp dist/*.whl "${ZOPEN_INSTALL_DIR}/dist/"
+  # Preserve the wheel for publishing, in the port's artifact directory next to
+  # the pax and metadata.json. It must not go under ZOPEN_INSTALL_DIR: that tree
+  # is what gets packaged, so a wheel there ships a second copy of everything
+  # already installed under lib/python -- and it is invisible to CI, which looks
+  # for build artifacts under the port's install/ directory.
+  mkdir -p "${ZOPEN_ROOT}/install/dist"
+  cp dist/*.whl "${ZOPEN_ROOT}/install/dist/"
   deactivate
 }
 
