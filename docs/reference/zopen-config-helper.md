@@ -1,14 +1,22 @@
+---
+prev:
+  text: 'zopen-compute-builddeps'
+  link: '/reference/zopen-compute-builddeps'
+next:
+  text: 'zopen-create-cicd-job'
+  link: '/reference/zopen-create-cicd-job'
+---
 <div v-pre class="man-page-content">
-
 <div class="header-with-back">
   <div class="home-link">
     <a href="./zopen-reference">🏠 Home</a>
   </div>
-    <div class="nav-buttons">
+  <div class="nav-buttons">
     <a href="./zopen-compute-builddeps" class="nav-link">← Prev</a>
     <a href="./zopen-create-cicd-job" class="nav-link">Next →</a>
-    </div>
+  </div>
 </div>
+
 <h1 align="center">ZOPEN-CONFIG-HELPER</h1>
 
 <h2>NAME</h2>
@@ -62,7 +70,6 @@ is a utility for zopen community to change the zopen runtime environment.</p>
 <td style="border: 1px solid #ccc;">print version.</td>
 </tr>
 </table>
-
 
 <h2>EXAMPLES</h2>
 

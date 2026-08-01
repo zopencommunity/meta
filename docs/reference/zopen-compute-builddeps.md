@@ -1,14 +1,22 @@
+---
+prev:
+  text: 'zopen-compare-versions'
+  link: '/reference/zopen-compare-versions'
+next:
+  text: 'zopen-config-helper'
+  link: '/reference/zopen-config-helper'
+---
 <div v-pre class="man-page-content">
-
 <div class="header-with-back">
   <div class="home-link">
     <a href="./zopen-reference">🏠 Home</a>
   </div>
-    <div class="nav-buttons">
+  <div class="nav-buttons">
     <a href="./zopen-compare-versions" class="nav-link">← Prev</a>
     <a href="./zopen-config-helper" class="nav-link">Next →</a>
-    </div>
+  </div>
 </div>
+
 <h1 align="center">ZOPEN-COMPUTE-BUILDDEPS</h1>
 
 <h2>NAME</h2>
@@ -45,7 +53,6 @@
 </tr>
 </table>
 
-
 <h2>EXAMPLES</h2>
 
 <table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
@@ -58,7 +65,6 @@
 <td style="border: 1px solid #ccc;">print out the tools required to build git</td>
 </tr>
 </table>
-
 
 <h2>AUTHOR</h2>
 

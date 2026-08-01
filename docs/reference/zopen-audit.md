@@ -1,14 +1,22 @@
+---
+prev:
+  text: 'zopen-alt'
+  link: '/reference/zopen-alt'
+next:
+  text: 'zopen-build'
+  link: '/reference/zopen-build'
+---
 <div v-pre class="man-page-content">
-
 <div class="header-with-back">
   <div class="home-link">
     <a href="./zopen-reference">🏠 Home</a>
   </div>
-    <div class="nav-buttons">
+  <div class="nav-buttons">
     <a href="./zopen-alt" class="nav-link">← Prev</a>
     <a href="./zopen-build" class="nav-link">Next →</a>
-    </div>
+  </div>
 </div>
+
 <h1 align="center">ZOPEN-AUDIT</h1>
 
 <h2>NAME</h2>
@@ -28,12 +36,6 @@ is a utility for zopen community to check for
 vulnerabilities in your installed packages.</p>
 
 <h2>OPTIONS</h2>
-
-
-
-
-
-
 
 <table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
 <tr style="background-color:#f0f0f0;">
@@ -58,7 +60,6 @@ vulnerabilities in your installed packages.</p>
 </tr>
 </table>
 
-
 <h2>EXAMPLES</h2>
 
 <table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
@@ -71,7 +72,6 @@ vulnerabilities in your installed packages.</p>
 <td style="border: 1px solid #ccc;">check for vulnerabilities in all installed packages</td>
 </tr>
 </table>
-
 
 <h2>AUTHOR</h2>
 

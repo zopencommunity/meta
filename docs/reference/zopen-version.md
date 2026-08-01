@@ -1,14 +1,22 @@
+---
+prev:
+  text: 'zopen-usage'
+  link: '/reference/zopen-usage'
+next:
+  text: 'zopen-whichproject'
+  link: '/reference/zopen-whichproject'
+---
 <div v-pre class="man-page-content">
-
 <div class="header-with-back">
   <div class="home-link">
     <a href="./zopen-reference">🏠 Home</a>
   </div>
-    <div class="nav-buttons">
+  <div class="nav-buttons">
     <a href="./zopen-usage" class="nav-link">← Prev</a>
     <a href="./zopen-whichproject" class="nav-link">Next →</a>
-    </div>
+  </div>
 </div>
+
 <h1 align="center">ZOPEN-VERSION</h1>
 
 <h2>NAME</h2>
@@ -42,7 +50,6 @@ prints version information for zopen tools.</p>
 <td style="border: 1px solid #ccc;">print version.</td>
 </tr>
 </table>
-
 
 <h2>AUTHOR</h2>
 

@@ -1,14 +1,22 @@
+---
+prev:
+  text: 'zopen-pax2rpm'
+  link: '/reference/zopen-pax2rpm'
+next:
+  text: 'zopen-publish'
+  link: '/reference/zopen-publish'
+---
 <div v-pre class="man-page-content">
-
 <div class="header-with-back">
   <div class="home-link">
     <a href="./zopen-reference">🏠 Home</a>
   </div>
-    <div class="nav-buttons">
+  <div class="nav-buttons">
     <a href="./zopen-pax2rpm" class="nav-link">← Prev</a>
     <a href="./zopen-publish" class="nav-link">Next →</a>
-    </div>
+  </div>
 </div>
+
 <h1 align="center">ZOPEN-VERSION</h1>
 
 <h2>NAME</h2>
@@ -30,24 +38,6 @@ to a test area, validate the behavior, and promote to a
 production area.</p>
 
 <h2>OPTIONS</h2>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
 <tr style="background-color:#f0f0f0;">
@@ -96,16 +86,7 @@ production area.</p>
 </tr>
 </table>
 
-
 <h2>EXAMPLES</h2>
-
-
-
-
-
-
-
-
 
 <table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
 <tr style="background-color:#f0f0f0;">
@@ -133,7 +114,6 @@ production area.</p>
 <td style="border: 1px solid #ccc;">Promote current zopen environment to &rsquo;/mytest&rsquo;, allowing only the current user to source the zopen&minus;config environment file and only permit access to zopen environment files to the user &rsquo;FOO&rsquo;.</td>
 </tr>
 </table>
-
 
 <h2>AUTHOR</h2>
 

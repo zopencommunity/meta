@@ -1,14 +1,22 @@
+---
+prev:
+  text: 'zopen-update-cacert'
+  link: '/reference/zopen-update-cacert'
+next:
+  text: 'zopen-version'
+  link: '/reference/zopen-version'
+---
 <div v-pre class="man-page-content">
-
 <div class="header-with-back">
   <div class="home-link">
     <a href="./zopen-reference">🏠 Home</a>
   </div>
-    <div class="nav-buttons">
+  <div class="nav-buttons">
     <a href="./zopen-update-cacert" class="nav-link">← Prev</a>
     <a href="./zopen-version" class="nav-link">Next →</a>
-    </div>
+  </div>
 </div>
+
 <h1 align="center">ZOPEN-USAGE</h1>
 
 <h2>NAME</h2>
@@ -51,7 +59,6 @@ is a utility to display the file system usage by a zopen environment.</p>
 </tr>
 </table>
 
-
 <h2>EXAMPLES</h2>
 
 <table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
@@ -70,7 +77,6 @@ is a utility to display the file system usage by a zopen environment.</p>
 </table>
 
 <p style="margin-left:11%; margin-top: 1em">Notes: Values might not add to 100% due to rounding during calculations; use the reported values as guidance, rounding up for capacity planning for example.</p>
-
 
 <h2>AUTHOR</h2>
 

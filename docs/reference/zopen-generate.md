@@ -1,14 +1,22 @@
+---
+prev:
+  text: 'zopen-diagnostics'
+  link: '/reference/zopen-diagnostics'
+next:
+  text: 'zopen-help2man'
+  link: '/reference/zopen-help2man'
+---
 <div v-pre class="man-page-content">
-
 <div class="header-with-back">
   <div class="home-link">
     <a href="./zopen-reference">🏠 Home</a>
   </div>
-    <div class="nav-buttons">
+  <div class="nav-buttons">
     <a href="./zopen-diagnostics" class="nav-link">← Prev</a>
     <a href="./zopen-help2man" class="nav-link">Next →</a>
-    </div>
+  </div>
 </div>
+
 <h1 align="center">ZOPEN-GENERATE</h1>
 
 <h2>NAME</h2>
@@ -111,7 +119,6 @@ will generate a zopen compatible project.</p>
 <td style="border: 1px solid #ccc;">display list output in JSON format.</td>
 </tr>
 </table>
-
 
 <h2>AUTHOR</h2>
 

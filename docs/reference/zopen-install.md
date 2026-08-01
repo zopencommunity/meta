@@ -1,14 +1,22 @@
+---
+prev:
+  text: 'zopen-init'
+  link: '/reference/zopen-init'
+next:
+  text: 'zopen-md2man'
+  link: '/reference/zopen-md2man'
+---
 <div v-pre class="man-page-content">
-
 <div class="header-with-back">
   <div class="home-link">
     <a href="./zopen-reference">🏠 Home</a>
   </div>
-    <div class="nav-buttons">
+  <div class="nav-buttons">
     <a href="./zopen-init" class="nav-link">← Prev</a>
     <a href="./zopen-md2man" class="nav-link">Next →</a>
-    </div>
+  </div>
 </div>
+
 <h1 align="center">ZOPEN-INSTALL</h1>
 
 <h2>NAME</h2>
@@ -111,7 +119,6 @@ is a utility to download/install a zopen community package.
 <td style="border: 1px solid #ccc;">automatically answer yes to prompts.</td>
 </tr>
 </table>
-
 
 <h2>AUTHOR</h2>
 

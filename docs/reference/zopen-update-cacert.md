@@ -1,14 +1,22 @@
+---
+prev:
+  text: 'zopen-split-patch'
+  link: '/reference/zopen-split-patch'
+next:
+  text: 'zopen-usage'
+  link: '/reference/zopen-usage'
+---
 <div v-pre class="man-page-content">
-
 <div class="header-with-back">
   <div class="home-link">
     <a href="./zopen-reference">🏠 Home</a>
   </div>
-    <div class="nav-buttons">
+  <div class="nav-buttons">
     <a href="./zopen-split-patch" class="nav-link">← Prev</a>
     <a href="./zopen-usage" class="nav-link">Next →</a>
-    </div>
+  </div>
 </div>
+
 <h1 align="center">ZOPEN-UPDATE-CACERT</h1>
 
 <h2>NAME</h2>
@@ -22,18 +30,7 @@
 
 <p style="margin-left:11%; margin-top: 1em">Syntax: zopen&minus;update&minus;cacert [&minus;fhv] [&lt;directory&gt;]</p>
 
-
 <h2>OPTIONS</h2>
-
-
-
-
-
-
-
-
-
-
 
 <table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
 <tr style="background-color:#f0f0f0;">
@@ -65,7 +62,6 @@
 <td style="border: 1px solid #ccc;">&lt;directory&gt;: the directory where the cacert.pem will be updated.</td>
 </tr>
 </table>
-
 
 <p style="margin-left:22%; margin-top: 1em">The default
 directory location is:

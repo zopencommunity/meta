@@ -1,13 +1,19 @@
+---
+prev: false
+next:
+  text: 'zopen-alt'
+  link: '/reference/zopen-alt'
+---
 <div v-pre class="man-page-content">
-
 <div class="header-with-back">
   <div class="home-link">
     <a href="./zopen-reference">🏠 Home</a>
   </div>
-    <div class="nav-buttons">
+  <div class="nav-buttons">
     <a href="./zopen-alt" class="nav-link">Next →</a>
-    </div>
+  </div>
 </div>
+
 <h1 align="center">ZOPEN-VERSION</h1>
 
 <h2>NAME</h2>
@@ -122,8 +128,6 @@ zopen environment</td>
 <h2>OPTIONS</h2>
 <a name="OPTIONS"></a>
 
-
-
 <table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
 <tr style="background-color:#f0f0f0;">
 <th style="text-align:left; border: 1px solid #ccc;">Option</th>
@@ -139,11 +143,8 @@ zopen environment</td>
 </tr>
 </table>
 
-
 <h2>EXAMPLES</h2>
 <a name="EXAMPLES"></a>
-
-
 
 <table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
 <tr style="background-color:#f0f0f0;">
@@ -160,7 +161,6 @@ zopen environment</td>
 </tr>
 </table>
 
-
 <p style="margin-left:22%; margin-top: 1em">zopen install
 git install the latest version of the &rsquo;git&rsquo;
 package zopen upgrade &minus;y upgrade all installed
@@ -168,8 +168,6 @@ packages to the latest release,</p>
 
 <p style="margin-left:22%; margin-top: 1em">without
 prompting</p>
-
-
 
 <table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
 <tr style="background-color:#f0f0f0;">
@@ -186,7 +184,6 @@ prompting</p>
 </tr>
 </table>
 
-
 <p style="margin-left:22%; margin-top: 1em">zopen usage
 &minus;&minus;pie displays an ASCII&minus;art chart showing
 biggest space hogs</p>
@@ -201,7 +198,6 @@ biggest space hogs</p>
 <td style="border: 1px solid #ccc;">zopen&minus;alt(1) zopen&minus;audit(1) zopen&minus;build(1) zopen&minus;clean(1) zopen&minus;config&minus;helper(1) zopen&minus;generate(1) zopen&minus;init(1) zopen&minus;install(1) zopen&minus;info(1) zopen&minus;publish(1) zopen&minus;query(1) zopen&minus;remove(1) zopen&minus;update&minus;cacert(1) zopen&minus;usage(1) zopen&minus;whichproject(1) zopen&minus;version(1)</td>
 </tr>
 </table>
-
 
 <h2>AUTHOR</h2>
 <a name="AUTHOR"></a>

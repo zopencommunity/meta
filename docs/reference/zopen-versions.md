@@ -1,5 +1,10 @@
+---
+prev:
+  text: 'zopen-importenvs'
+  link: '/reference/zopen-importenvs'
+next: false
+---
 <div v-pre class="man-page-content">
-
 <div class="header-with-back">
   <div class="home-link">
     <a href="./zopen-reference">🏠 Home</a>
@@ -37,7 +42,6 @@
 <td style="border: 1px solid #ccc;">print version.</td>
 </tr>
 </table>
-
 
 <h2>AUTHOR</h2>
 

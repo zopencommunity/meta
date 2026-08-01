@@ -1,14 +1,22 @@
+---
+prev:
+  text: 'zopen-config-helper'
+  link: '/reference/zopen-config-helper'
+next:
+  text: 'zopen-create-repo'
+  link: '/reference/zopen-create-repo'
+---
 <div v-pre class="man-page-content">
-
 <div class="header-with-back">
   <div class="home-link">
     <a href="./zopen-reference">🏠 Home</a>
   </div>
-    <div class="nav-buttons">
+  <div class="nav-buttons">
     <a href="./zopen-config-helper" class="nav-link">← Prev</a>
     <a href="./zopen-create-repo" class="nav-link">Next →</a>
-    </div>
+  </div>
 </div>
+
 <h1 align="center">ZOPEN-CREATE-CICD-JOB</h1>
 
 <h2>NAME</h2>
@@ -30,20 +38,6 @@
 script is intended for use by core contributors only.</p>
 
 <h2>OPTIONS</h2>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
 <tr style="background-color:#f0f0f0;">
@@ -83,7 +77,6 @@ script is intended for use by core contributors only.</p>
 <td style="border: 1px solid #ccc;">zopen&minus;create&minus;cicd&minus;job &minus;n curl zopen&minus;create&minus;cicd&minus;job &minus;v &minus;n pv &minus;b dev &minus;r no zopen&minus;create&minus;cicd&minus;job &minus;n openssl &minus;b stable &minus;s cicd&minus;stable.groovy</td>
 </tr>
 </table>
-
 
 <p style="margin-left:11%; margin-top: 1em">This is free
 software: you are free to change and redistribute it under

@@ -1,14 +1,22 @@
+---
+prev:
+  text: 'zopen-query'
+  link: '/reference/zopen-query'
+next:
+  text: 'zopen-split-patch'
+  link: '/reference/zopen-split-patch'
+---
 <div v-pre class="man-page-content">
-
 <div class="header-with-back">
   <div class="home-link">
     <a href="./zopen-reference">🏠 Home</a>
   </div>
-    <div class="nav-buttons">
+  <div class="nav-buttons">
     <a href="./zopen-query" class="nav-link">← Prev</a>
     <a href="./zopen-split-patch" class="nav-link">Next →</a>
-    </div>
+  </div>
 </div>
+
 <h1 align="center">ZOPEN-REMOVE</h1>
 
 <h2>NAME</h2>
@@ -28,14 +36,6 @@ is a utility for zopen community to remove an installed
 package or packages.</p>
 
 <h2>OPTIONS</h2>
-
-
-
-
-
-
-
-
 
 <table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
 <tr style="background-color:#f0f0f0;">
@@ -64,10 +64,7 @@ package or packages.</p>
 </tr>
 </table>
 
-
 <h2>EXAMPLES</h2>
-
-
 
 <table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
 <tr style="background-color:#f0f0f0;">
@@ -83,7 +80,6 @@ package or packages.</p>
 <td style="border: 1px solid #ccc;">remove the foo and bar packages if installed, without asking for confirmation</td>
 </tr>
 </table>
-
 
 <h2>AUTHOR</h2>
 

@@ -1,14 +1,22 @@
+---
+prev:
+  text: 'zopen-create-cicd-job'
+  link: '/reference/zopen-create-cicd-job'
+next:
+  text: 'zopen-diagnostics'
+  link: '/reference/zopen-diagnostics'
+---
 <div v-pre class="man-page-content">
-
 <div class="header-with-back">
   <div class="home-link">
     <a href="./zopen-reference">🏠 Home</a>
   </div>
-    <div class="nav-buttons">
+  <div class="nav-buttons">
     <a href="./zopen-create-cicd-job" class="nav-link">← Prev</a>
     <a href="./zopen-diagnostics" class="nav-link">Next →</a>
-    </div>
+  </div>
 </div>
+
 <h1 align="center">ZOPEN-CREATE-REPO</h1>
 
 <h2>NAME</h2>
@@ -27,26 +35,7 @@
 
 <p style="margin-left:11%; margin-top: 1em">NOTE: This script is intended for use by core contributors only. You must have admin permissions in the zopencommunity organization.</p>
 
-
 <h2>OPTIONS</h2>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
 <tr style="background-color:#f0f0f0;">
@@ -94,7 +83,6 @@
 <td style="border: 1px solid #ccc;">zopen&minus;create&minus;repo &minus;n curl zopen&minus;create&minus;repo &minus;v &minus;n pv &minus;d &rsquo;Pipe Viewer &minus; monitor data through a pipeline&rsquo; zopen&minus;create&minus;repo &minus;v &minus;n openssl &minus;u johndoe &minus;t &lt;your_github_token&gt;</td>
 </tr>
 </table>
-
 
 <p style="margin-left:11%; margin-top: 1em">This is free
 software: you are free to change and redistribute it under

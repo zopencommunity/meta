@@ -1,14 +1,22 @@
+---
+prev:
+  text: 'zopen-info'
+  link: '/reference/zopen-info'
+next:
+  text: 'zopen-install'
+  link: '/reference/zopen-install'
+---
 <div v-pre class="man-page-content">
-
 <div class="header-with-back">
   <div class="home-link">
     <a href="./zopen-reference">🏠 Home</a>
   </div>
-    <div class="nav-buttons">
+  <div class="nav-buttons">
     <a href="./zopen-info" class="nav-link">← Prev</a>
     <a href="./zopen-install" class="nav-link">Next →</a>
-    </div>
+  </div>
 </div>
+
 <h1 align="center">ZOPEN-INIT</h1>
 
 <h2>NAME</h2>
@@ -81,33 +89,26 @@ file</p>
 </tr>
 </table>
 
-
 <h2>EXAMPLES</h2>
 
-<p style="margin-left:22%; margin-top: 1em">zopen init</p>
-
-<p style="margin-left:22%; margin-top: 1em">interactively
-bootstrap a zopen environment</p>
-
-<p style="margin-left:22%; margin-top: 1em">zopen init
-&minus;&minus;releaseline&minus;dev</p>
-
-<p style="margin-left:22%; margin-top: 1em">interactively
-bootstrap a zopen environment that will use Development
-Releaseline packages</p>
-
-<p style="margin-left:22%; margin-top: 1em">zopen init
-&minus;&minus;yes
-&minus;&minus;append&minus;to&minus;profile
-&minus;&minus;fs&minus;layout fhs /zopen</p>
-
-<p style="margin-left:22%; margin-top: 1em">non&minus;interactively
-create a zopen environment at location &rsquo;/zopen&rsquo;
-on disk, with packages installed to
-&rsquo;/zopen/opt&rsquo;. The user&rsquo;s .profile will be
-updated to source the configuration file at
-&rsquo;/zopen/etc/zopen&minus;config&rsquo; when new
-terminal sessions start</p>
+<table border="1" cellpadding="6" cellspacing="0" style="width:100%; border-collapse:collapse;">
+<tr style="background-color:#f0f0f0;">
+<th style="text-align:left; border: 0.5px solid #ccc;">Command</th>
+<th style="text-align:left; border: 0.5px solid #ccc;">Description</th>
+</tr>
+<tr>
+<td style="border: 0.5px solid #ccc;"><code>zopen init</code></td>
+<td style="border: 0.5px solid #ccc;">interactively bootstrap a zopen environment</td>
+</tr>
+<tr>
+<td style="border: 0.5px solid #ccc;"><code>zopen init &minus;&minus;releaseline&minus;dev</code></td>
+<td style="border: 0.5px solid #ccc;">interactively bootstrap a zopen environment that will use Development Releaseline packages</td>
+</tr>
+<tr>
+<td style="border: 0.5px solid #ccc;"><code>zopen init &minus;&minus;yes &minus;&minus;append&minus;to&minus;profile &minus;&minus;fs&minus;layout fhs /zopen</code></td>
+<td style="border: 0.5px solid #ccc;">non&minus;interactively create a zopen environment at location &lsquo;/zopen&rsquo; on disk, with packages installed to &lsquo;/zopen/opt&rsquo;. The user&rsquo;s .profile will be updated to source the configuration file at &lsquo;/zopen/etc/zopen&minus;config&rsquo; when new terminal sessions start</td>
+</tr>
+</table>
 
 <h2>AUTHOR</h2>
 

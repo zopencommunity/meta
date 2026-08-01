@@ -1,14 +1,22 @@
+---
+prev:
+  text: 'zopen-md2man'
+  link: '/reference/zopen-md2man'
+next:
+  text: 'zopen-migrate-groovy'
+  link: '/reference/zopen-migrate-groovy'
+---
 <div v-pre class="man-page-content">
-
 <div class="header-with-back">
   <div class="home-link">
     <a href="./zopen-reference">🏠 Home</a>
   </div>
-    <div class="nav-buttons">
+  <div class="nav-buttons">
     <a href="./zopen-md2man" class="nav-link">← Prev</a>
     <a href="./zopen-migrate-groovy" class="nav-link">Next →</a>
-    </div>
+  </div>
 </div>
+
 <h1 align="center">ZOPEN-MIGRATE-BUILDENV</h1>
 
 <h2>NAME</h2>
@@ -28,7 +36,6 @@
 <td style="border: 1px solid #ccc;">simple sed script to change over env vars in a buildenv from &rsquo;old style&rsquo; to &rsquo;new style&rsquo; By no means bullet&minus;proof but might save some typing</td>
 </tr>
 </table>
-
 
 <p style="margin-left:11%; margin-top: 1em">This is free
 software: you are free to change and redistribute it under

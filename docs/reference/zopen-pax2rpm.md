@@ -1,14 +1,22 @@
+---
+prev:
+  text: 'zopen-migrate-groovy'
+  link: '/reference/zopen-migrate-groovy'
+next:
+  text: 'zopen-promote'
+  link: '/reference/zopen-promote'
+---
 <div v-pre class="man-page-content">
-
 <div class="header-with-back">
   <div class="home-link">
     <a href="./zopen-reference">🏠 Home</a>
   </div>
-    <div class="nav-buttons">
+  <div class="nav-buttons">
     <a href="./zopen-migrate-groovy" class="nav-link">← Prev</a>
     <a href="./zopen-promote" class="nav-link">Next →</a>
-    </div>
+  </div>
 </div>
+
 <h1 align="center">ZOPEN-PAX2RPM</h1>
 
 <h2>NAME</h2>
@@ -104,7 +112,6 @@
 </tr>
 </table>
 
-
 <h2>EXAMPLES</h2>
 
 <p style="margin-left:11%; margin-top: 1em">Generate an RPM spec from a pax file:</p>
@@ -113,7 +120,6 @@
   --summary "HAMN110 Runtime Package" \
   --license "IBM" \
   --url "https://www.ibm.com"</pre>
-
 
 <h2>AUTHOR</h2>
 

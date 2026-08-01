@@ -146,10 +146,21 @@ GenerateApiReference() {
   mkdir -p "man/man1/"
   zopen-help2man "man/man1/" # Generate man pages
 
-  cat <<EOF > docs/reference/zopen-reference.md
+  # Write the reference index page with a styled card grid.
+  # Individual card entries are appended by ConvertSingleManPage after each
+  # man page is processed, then the grid is closed by CloseReferenceIndex.
+  cat <<'EOF' > docs/reference/zopen-reference.md
 # zopen reference documentation
+
 This page provides information about the zopen interface. Click on any of the zopen commands listed below to access the reference guide describing how to utilize that command.
+
+<div class="ref-card-grid">
 EOF
+}
+
+# Close the ref-card-grid div after all cards have been appended.
+CloseReferenceIndex() {
+  printf '</div>\n' >> docs/reference/zopen-reference.md
 }
 
 # Build a sorted array of all man page names so ConvertSingleManPage can look
@@ -179,6 +190,9 @@ ConvertManPagesToMarkdown() {
   for man in man/man1/*.1; do
     ConvertSingleManPage "$man"
   done
+
+  # Close the card grid on the reference index page
+  CloseReferenceIndex
   
   set +x
 }
@@ -228,8 +242,13 @@ ConvertSingleManPage() {
   
   # Validate the generated file
   ValidateMarkdownFile "$md" "$name"
-  
-  echo "* [${name}](./${name})" >> docs/reference/zopen-reference.md
+
+  # Append a card entry to the reference index page
+  cat <<EOF >> docs/reference/zopen-reference.md
+  <a href="./${name}" class="ref-card">
+    <span class="ref-card-name">${name}</span>
+  </a>
+EOF
 }
 
 # ============================================================================
@@ -288,7 +307,9 @@ ConvertMarginParagraphsToTables() {
   #   3. If such pairs immediately follow a </table>, absorb them as extra <tr> rows.
   #   4. If such pairs appear with no preceding table in the same section, wrap in new table.
   #   5. Non-pair content (single 11%/22% paragraphs, other tags) is left as-is.
-  
+  #   6. In EXAMPLES sections, consecutive 22%/22% <p> pairs (command then description)
+  #      are converted into a Command/Description bordered table.
+
   echo "$1" | python3 - <<'PYEOF'
 import sys, re
 
@@ -305,6 +326,61 @@ PAIR_RE = re.compile(
     r'(<p[^>]*margin-left:22%[^>]*>.*?</p>)',
     re.DOTALL,
 )
+
+# Pattern for EXAMPLES sections: two consecutive 22% paragraphs — command then description.
+EXAMPLE_PAIR_RE = re.compile(
+    r'(<p[^>]*margin-left:22%[^>]*>.*?</p>)\s*'
+    r'(<p[^>]*margin-left:22%[^>]*>.*?</p>)',
+    re.DOTALL,
+)
+
+EXAMPLES_TABLE_OPEN = (
+    '<table border="1" cellpadding="6" cellspacing="0" style="width:100%; border-collapse:collapse;">\n'
+    '<tr style="background-color:#f0f0f0;">\n'
+    '<th style="text-align:left; border: 0.5px solid #ccc;">Command</th>\n'
+    '<th style="text-align:left; border: 0.5px solid #ccc;">Description</th>\n'
+    '</tr>\n'
+)
+EXAMPLES_TABLE_CLOSE = '</table>\n'
+
+def example_pair_to_row(p_cmd, p_desc):
+    """Convert a 22%/22% <p> pair from an EXAMPLES section into a <tr> row."""
+    cmd  = re.sub(r'^<p[^>]*>|</p>$', '', p_cmd,  flags=re.DOTALL).strip().replace('\n', ' ')
+    desc = re.sub(r'^<p[^>]*>|</p>$', '', p_desc, flags=re.DOTALL).strip().replace('\n', ' ')
+    return (
+        '<tr>\n'
+        f'<td style="border: 0.5px solid #ccc;"><code>{cmd}</code></td>\n'
+        f'<td style="border: 0.5px solid #ccc;">{desc}</td>\n'
+        '</tr>\n'
+    )
+
+def convert_examples_section(text):
+    """Replace consecutive 22%/22% <p> pairs with a single bordered Command/Description table."""
+    TABLE_BLOCK_RE = re.compile(r'(<table\b[^>]*>.*?</table>)', re.DOTALL | re.IGNORECASE)
+    segments = TABLE_BLOCK_RE.split(text)
+
+    result_parts = []
+    for i, seg in enumerate(segments):
+        if i % 2 == 1:
+            result_parts.append(seg)
+            continue
+
+        out = ''
+        last_end = 0
+        row_buffer = []
+
+        for m in EXAMPLE_PAIR_RE.finditer(seg):
+            out += seg[last_end:m.start()]
+            row_buffer.append(example_pair_to_row(m.group(1), m.group(2)))
+            last_end = m.end()
+
+        tail = seg[last_end:]
+        if row_buffer:
+            out += EXAMPLES_TABLE_OPEN + ''.join(row_buffer) + EXAMPLES_TABLE_CLOSE
+        out += tail
+        result_parts.append(out)
+
+    return ''.join(result_parts)
 
 def pair_to_row(p11, p22):
     """Convert a matched 11%/22% <p> pair into a <tr> row."""
@@ -413,7 +489,14 @@ for j, sec in enumerate(sections):
         # This is an <h2> heading tag — pass through unchanged
         out_parts.append(sec)
     else:
-        out_parts.append(process_outside_tables(sec))
+        # Detect whether the immediately preceding heading was EXAMPLES
+        prev_heading = ''
+        if j > 0:
+            prev_heading = re.sub(r'<[^>]*>', '', sections[j-1]).strip().upper()
+        if prev_heading == 'EXAMPLES':
+            out_parts.append(convert_examples_section(sec))
+        else:
+            out_parts.append(process_outside_tables(sec))
 
 print(''.join(out_parts), end='')
 PYEOF
@@ -487,10 +570,10 @@ def pick_header(context_before):
     return 'Option'
 
 STYLED_TABLE_OPEN = (
-    '<table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">\n'
+    '<table border="1" cellpadding="6" cellspacing="0" style="width:100%; border-collapse:collapse;">\n'
     '<tr style="background-color:#f0f0f0;">\n'
-    '<th style="text-align:left; border: 1px solid #ccc;">{header}</th>\n'
-    '<th style="text-align:left; border: 1px solid #ccc;">Description</th>\n'
+    '<th style="text-align:left; border: 0.5px solid #ccc;">{header}</th>\n'
+    '<th style="text-align:left; border: 0.5px solid #ccc;">Description</th>\n'
     '</tr>\n'
 )
 
@@ -511,8 +594,8 @@ def replace_table(m):
         if label:
             styled += (
                 '<tr>\n'
-                f'<td style="border: 1px solid #ccc;"><code>{label}</code></td>\n'
-                f'<td style="border: 1px solid #ccc;">{description}</td>\n'
+                f'<td style="border: 0.5px solid #ccc;"><code>{label}</code></td>\n'
+                f'<td style="border: 0.5px solid #ccc;">{description}</td>\n'
                 '</tr>\n'
             )
         else:
@@ -520,7 +603,7 @@ def replace_table(m):
             if styled.endswith('</tr>\n'):
                 styled = styled[:-len('</tr>\n')]
                 styled = re.sub(
-                    r'(<td style="border: 1px solid #ccc;">)(.*?)(</td>\n)$',
+                    r'(<td style="border: 0\.5px solid #ccc;">)(.*?)(</td>\n)$',
                     lambda mm: mm.group(1) + mm.group(2) + ' ' + description + mm.group(3),
                     styled,
                     flags=re.DOTALL,
@@ -613,23 +696,37 @@ WriteMarkdownFile() {
   local prev_name="${3:-}"
   local next_name="${4:-}"
 
-  # Build the prev/next navigation links
-  local nav_html=""
+  # ── Frontmatter: drives VitePress native prev/next footer navigation ──────
+  local frontmatter="---"$'\n'
+  if [[ -n "$prev_name" ]]; then
+    frontmatter+="prev:"$'\n'
+    frontmatter+="  text: '${prev_name}'"$'\n'
+    frontmatter+="  link: '/reference/${prev_name}'"$'\n'
+  fi
+  if [[ -n "$next_name" ]]; then
+    frontmatter+="next:"$'\n'
+    frontmatter+="  text: '${next_name}'"$'\n'
+    frontmatter+="  link: '/reference/${next_name}'"$'\n'
+  fi
+  frontmatter+="---"
+
+  # ── Top nav buttons (custom header-with-back bar) ─────────────────────────
+  local nav_buttons=""
   if [[ -n "$prev_name" || -n "$next_name" ]]; then
-    nav_html='    <div class="nav-buttons">'$'\n'
-    [[ -n "$prev_name" ]] && nav_html+='    <a href="./'${prev_name}'" class="nav-link">← Prev</a>'$'\n'
-    [[ -n "$next_name" ]] && nav_html+='    <a href="./'${next_name}'" class="nav-link">Next →</a>'$'\n'
-    nav_html+='    </div>'
+    nav_buttons='  <div class="nav-buttons">'$'\n'
+    [[ -n "$prev_name" ]] && nav_buttons+='    <a href="./'${prev_name}'" class="nav-link">← Prev</a>'$'\n'
+    [[ -n "$next_name" ]] && nav_buttons+='    <a href="./'${next_name}'" class="nav-link">Next →</a>'$'\n'
+    nav_buttons+='  </div>'
   fi
 
   cat <<EOF > "$md"
+${frontmatter}
 <div v-pre class="man-page-content">
-
 <div class="header-with-back">
   <div class="home-link">
     <a href="./zopen-reference">🏠 Home</a>
   </div>
-${nav_html}
+${nav_buttons}
 </div>
 
 ${body_content}

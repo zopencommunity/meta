@@ -1,14 +1,22 @@
+---
+prev:
+  text: 'zopen-generate'
+  link: '/reference/zopen-generate'
+next:
+  text: 'zopen-info'
+  link: '/reference/zopen-info'
+---
 <div v-pre class="man-page-content">
-
 <div class="header-with-back">
   <div class="home-link">
     <a href="./zopen-reference">🏠 Home</a>
   </div>
-    <div class="nav-buttons">
+  <div class="nav-buttons">
     <a href="./zopen-generate" class="nav-link">← Prev</a>
     <a href="./zopen-info" class="nav-link">Next →</a>
-    </div>
+  </div>
 </div>
+
 <h1 align="center">ZOPEN-HELP2MAN</h1>
 
 <h2>NAME</h2>
@@ -45,7 +53,6 @@
 </tr>
 </table>
 
-
 <h2>EXAMPLES</h2>
 
 <table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
@@ -58,7 +65,6 @@
 <td style="border: 1px solid #ccc;">write the man pages to the /tmp/man1 directory</td>
 </tr>
 </table>
-
 
 <h2>AUTHOR</h2>
 

@@ -1,14 +1,22 @@
+---
+prev:
+  text: 'zopen-migrate-buildenv'
+  link: '/reference/zopen-migrate-buildenv'
+next:
+  text: 'zopen-pax2rpm'
+  link: '/reference/zopen-pax2rpm'
+---
 <div v-pre class="man-page-content">
-
 <div class="header-with-back">
   <div class="home-link">
     <a href="./zopen-reference">🏠 Home</a>
   </div>
-    <div class="nav-buttons">
+  <div class="nav-buttons">
     <a href="./zopen-migrate-buildenv" class="nav-link">← Prev</a>
     <a href="./zopen-pax2rpm" class="nav-link">Next →</a>
-    </div>
+  </div>
 </div>
+
 <h1 align="center">ZOPEN-MIGRATE-GROOVY</h1>
 
 <h2>NAME</h2>
@@ -28,7 +36,6 @@
 <td style="border: 1px solid #ccc;">simple script to create a cicd&minus;dev.groovy and cicd&minus;stable.groovy from a cicd.groovy. By no means bullet&minus;proof but might save some typing Has no checks in it and requires you fill in the ...&rsquo;s in the generated files.</td>
 </tr>
 </table>
-
 
 <p style="margin-left:22%; margin-top: 1em">Also, spacing
 is a bit off &minus; but easy enough to change

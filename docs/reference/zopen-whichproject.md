@@ -1,13 +1,22 @@
+---
+prev:
+  text: 'zopen-version'
+  link: '/reference/zopen-version'
+next:
+  text: 'zopen-importenvs'
+  link: '/reference/zopen-importenvs'
+---
 <div v-pre class="man-page-content">
-
 <div class="header-with-back">
   <div class="home-link">
     <a href="./zopen-reference">🏠 Home</a>
   </div>
-    <div class="nav-buttons">
+  <div class="nav-buttons">
     <a href="./zopen-version" class="nav-link">← Prev</a>
-    </div>
+    <a href="./zopen-importenvs" class="nav-link">Next →</a>
+  </div>
 </div>
+
 <h1 align="center">ZOPEN-WHICHPROJECT</h1>
 
 <h2>NAME</h2>
@@ -29,12 +38,7 @@
 (e.g., &rsquo;git&rsquo;, &rsquo;curl&rsquo;). LIBRARY is the name of a library file
 (e.g., &rsquo;libssl.so&rsquo;, &rsquo;libz.a&rsquo;).</p>
 
-
 <h2>OPTIONS</h2>
-
-
-
-
 
 <table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
 <tr style="background-color:#f0f0f0;">
@@ -54,7 +58,6 @@
 <td style="border: 1px solid #ccc;">Print version information (requires zopen&minus;version).</td>
 </tr>
 </table>
-
 
 <p style="margin-left:11%; margin-top: 1em">This is free
 software: you are free to change and redistribute it under

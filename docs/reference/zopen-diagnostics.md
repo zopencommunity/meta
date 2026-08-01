@@ -1,14 +1,22 @@
+---
+prev:
+  text: 'zopen-create-repo'
+  link: '/reference/zopen-create-repo'
+next:
+  text: 'zopen-generate'
+  link: '/reference/zopen-generate'
+---
 <div v-pre class="man-page-content">
-
 <div class="header-with-back">
   <div class="home-link">
     <a href="./zopen-reference">🏠 Home</a>
   </div>
-    <div class="nav-buttons">
+  <div class="nav-buttons">
     <a href="./zopen-create-repo" class="nav-link">← Prev</a>
     <a href="./zopen-generate" class="nav-link">Next →</a>
-    </div>
+  </div>
 </div>
+
 <h1 align="center">ZOPEN-DIAGNOSTICS</h1>
 
 <h2>NAME</h2>
@@ -29,10 +37,6 @@ reporting.</p>
 
 <h2>OPTIONS</h2>
 
-
-
-
-
 <table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
 <tr style="background-color:#f0f0f0;">
 <th style="text-align:left; border: 1px solid #ccc;">Option</th>
@@ -51,7 +55,6 @@ reporting.</p>
 <td style="border: 1px solid #ccc;">print version</td>
 </tr>
 </table>
-
 
 <p style="margin-left:11%; margin-top: 1em">This is free
 software: you are free to change and redistribute it under

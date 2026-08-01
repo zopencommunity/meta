@@ -1,14 +1,22 @@
+---
+prev:
+  text: 'zopen-audit'
+  link: '/reference/zopen-audit'
+next:
+  text: 'zopen-clean'
+  link: '/reference/zopen-clean'
+---
 <div v-pre class="man-page-content">
-
 <div class="header-with-back">
   <div class="home-link">
     <a href="./zopen-reference">🏠 Home</a>
   </div>
-    <div class="nav-buttons">
+  <div class="nav-buttons">
     <a href="./zopen-audit" class="nav-link">← Prev</a>
     <a href="./zopen-clean" class="nav-link">Next →</a>
-    </div>
+  </div>
 </div>
+
 <h1 align="center">ZOPEN-BUILD</h1>
 
 <h2>NAME</h2>

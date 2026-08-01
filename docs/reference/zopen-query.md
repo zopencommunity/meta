@@ -1,14 +1,22 @@
+---
+prev:
+  text: 'zopen-publish'
+  link: '/reference/zopen-publish'
+next:
+  text: 'zopen-remove'
+  link: '/reference/zopen-remove'
+---
 <div v-pre class="man-page-content">
-
 <div class="header-with-back">
   <div class="home-link">
     <a href="./zopen-reference">🏠 Home</a>
   </div>
-    <div class="nav-buttons">
+  <div class="nav-buttons">
     <a href="./zopen-publish" class="nav-link">← Prev</a>
     <a href="./zopen-remove" class="nav-link">Next →</a>
-    </div>
+  </div>
 </div>
+
 <h1 align="center">ZOPEN-QUERY</h1>
 
 <h2>NAME</h2>
@@ -26,9 +34,6 @@
 <p style="margin-left:11%; margin-top: 1em">zopen&minus;query &minus; a utility for zopen community to query packages and repos.</p>
 
 <p style="margin-left:11%; margin-top: 1em">VERB is the action to take, which is one of: &minus;&minus;list, &minus;&minus;remote&minus;search, &minus;&minus;installed</p>
-
-
-
 
 <h2>OPTIONS</h2>
 
@@ -66,9 +71,6 @@
 <td style="border: 1px solid #ccc;">print version</td>
 </tr>
 </table>
-
-
-
 
 <p style="margin-left:11%; margin-top: 1em">This is free
 software: you are free to change and redistribute it under

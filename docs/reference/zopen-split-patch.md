@@ -1,14 +1,22 @@
+---
+prev:
+  text: 'zopen-remove'
+  link: '/reference/zopen-remove'
+next:
+  text: 'zopen-update-cacert'
+  link: '/reference/zopen-update-cacert'
+---
 <div v-pre class="man-page-content">
-
 <div class="header-with-back">
   <div class="home-link">
     <a href="./zopen-reference">🏠 Home</a>
   </div>
-    <div class="nav-buttons">
+  <div class="nav-buttons">
     <a href="./zopen-remove" class="nav-link">← Prev</a>
     <a href="./zopen-update-cacert" class="nav-link">Next →</a>
-    </div>
+  </div>
 </div>
+
 <h1 align="center">ZOPEN-SPLIT-PATCH</h1>
 
 <h2>NAME</h2>
@@ -44,7 +52,6 @@ Patches are written to <code>split&minus;patches</code> in the current directory
 </tr>
 </table>
 
-
 <h2>EXAMPLES</h2>
 
 <table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
@@ -57,7 +64,6 @@ Patches are written to <code>split&minus;patches</code> in the current directory
 <td style="border: 1px solid #ccc;">write P1.patch into multiple patches under split&minus;patches</td>
 </tr>
 </table>
-
 
 <h2>AUTHOR</h2>
 

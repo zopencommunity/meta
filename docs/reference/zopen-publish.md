@@ -1,14 +1,22 @@
+---
+prev:
+  text: 'zopen-promote'
+  link: '/reference/zopen-promote'
+next:
+  text: 'zopen-query'
+  link: '/reference/zopen-query'
+---
 <div v-pre class="man-page-content">
-
 <div class="header-with-back">
   <div class="home-link">
     <a href="./zopen-reference">🏠 Home</a>
   </div>
-    <div class="nav-buttons">
+  <div class="nav-buttons">
     <a href="./zopen-promote" class="nav-link">← Prev</a>
     <a href="./zopen-query" class="nav-link">Next →</a>
-    </div>
+  </div>
 </div>
+
 <h1 align="center">ZOPEN-PUBLISH</h1>
 
 <h2>NAME</h2>
@@ -28,34 +36,6 @@ TAG</p>
 &minus; Publish zopen package release to GitHub.</p>
 
 <h2>OPTIONS</h2>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
 <tr style="background-color:#f0f0f0;">
@@ -123,7 +103,6 @@ TAG</p>
 <td style="border: 1px solid #ccc;">zopen&minus;publish &minus;f &minus;p install/mypackage.zos.pax.Z &minus;m metadata.json &minus;g DEV_mypackage_12345 &minus;t &lt;your_github_token&gt; zopen&minus;publish &minus;v &minus;f &minus;p install/mypackage.zos.pax.Z &minus;m metadata.json &minus;r <a href="https://github.com/zopencommunity/override" target="_blank">https://github.com/zopencommunity/override</a>&minus;repo.git &minus;d &quot;My custom release description&quot; &minus;b DEV &minus;g REL&minus;1.0.1 &minus;t &lt;your_github_token&gt; &minus;l</td>
 </tr>
 </table>
-
 
 <p style="margin-left:11%; margin-top: 1em">This is free
 software: you are free to change and redistribute it under

@@ -1,14 +1,22 @@
+---
+prev:
+  text: 'zopen'
+  link: '/reference/zopen'
+next:
+  text: 'zopen-audit'
+  link: '/reference/zopen-audit'
+---
 <div v-pre class="man-page-content">
-
 <div class="header-with-back">
   <div class="home-link">
     <a href="./zopen-reference">🏠 Home</a>
   </div>
-    <div class="nav-buttons">
+  <div class="nav-buttons">
     <a href="./zopen" class="nav-link">← Prev</a>
     <a href="./zopen-audit" class="nav-link">Next →</a>
-    </div>
+  </div>
 </div>
+
 <h1 align="center">ZOPEN-ALT</h1>
 
 <h2>NAME</h2>
@@ -28,14 +36,6 @@ is a utility for zopen community to switch package versions
 for currently installed packages.</p>
 
 <h2>OPTIONS</h2>
-
-
-
-
-
-
-
-
 
 <table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
 <tr style="background-color:#f0f0f0;">
@@ -64,12 +64,7 @@ for currently installed packages.</p>
 </tr>
 </table>
 
-
 <h2>EXAMPLES</h2>
-
-
-
-
 
 <table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
 <tr style="background-color:#f0f0f0;">
@@ -89,7 +84,6 @@ for currently installed packages.</p>
 <td style="border: 1px solid #ccc;">set the active version of package &rsquo;foo&rsquo; to version foo&minus;1.2.3.19700101_012345.zos if available</td>
 </tr>
 </table>
-
 
 <h2>AUTHOR</h2>
 

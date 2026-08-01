@@ -1,14 +1,22 @@
+---
+prev:
+  text: 'zopen-install'
+  link: '/reference/zopen-install'
+next:
+  text: 'zopen-migrate-buildenv'
+  link: '/reference/zopen-migrate-buildenv'
+---
 <div v-pre class="man-page-content">
-
 <div class="header-with-back">
   <div class="home-link">
     <a href="./zopen-reference">🏠 Home</a>
   </div>
-    <div class="nav-buttons">
+  <div class="nav-buttons">
     <a href="./zopen-install" class="nav-link">← Prev</a>
     <a href="./zopen-migrate-buildenv" class="nav-link">Next →</a>
-    </div>
+  </div>
 </div>
+
 <h1 align="center">ZOPEN-MD2MAN</h1>
 
 <h2>NAME</h2>
