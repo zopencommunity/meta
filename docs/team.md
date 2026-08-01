@@ -21,7 +21,6 @@ The zopen community TSC is composed of the following members:
 * Vignesh S
 * Gary Grossi
 * Lionel Dyck
-* Haritha D
 * Russell Wilson
 * Anthony Giorgio
 * Erik Janssen
