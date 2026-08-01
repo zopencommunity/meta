@@ -123,17 +123,17 @@
   padding: 0px 12px 8px !important;
 }
 
-/* Logo background when sidebar is visible */
+/* Logo background when sidebar is visible — parent only */
 .VPNavBar.has-sidebar .title {
   background-color: var(--vp-sidebar-bg-color) !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
 }
 
 /* Adjust navbar height to accommodate larger logo */
 .VPNavBar {
   height: auto !important;
   min-height: 80px !important;
-  padding: 0 12px 24px !important;
+  padding: 0 12px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
 }
 
 /* Hero image styling - add border radius and make bigger */
