@@ -1,12 +1,48 @@
 /* Custom styles migrated from Docsify */
 
+/* ============================================================
+   IBM Plex Design Language – font & global tokens
+   ============================================================ */
 :root {
+  /* Navigation */
   --vp-nav-height: 80px;
-  --vp-c-brand: #3eaf7c;
-  --vp-c-brand-light: #4abf8a;
-  --vp-c-brand-lighter: #63d4a0;
-  --vp-c-brand-dark: #2c8e5d;
-  --vp-c-brand-darker: #1e6b45;
+
+  /* Brand palette – IBM Blue */
+  --brand-primary:   #0033A6;
+  --brand-secondary: #1F66D1;
+  --brand-accent:    #3D8BFF;
+  --brand-light:     #8CC5FF;
+
+  --vp-c-brand:        #1F66D1;
+  --vp-c-brand-1:      #1F66D1;
+  --vp-c-brand-light:  #3D8BFF;
+  --vp-c-brand-lighter:#8CC5FF;
+  --vp-c-brand-dark:   #0033A6;
+  --vp-c-brand-darker: #002280;
+
+  --text-primary: #0033A6;
+  --link-color:   #1F66D1;
+  --hover-color:  #3D8BFF;
+
+  /* IBM Plex Sans – primary & mono */
+  --vp-font-family-base: "IBM Plex Sans", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif;
+  --vp-font-family-mono: "IBM Plex Mono", "SFMono-Regular", Consolas,
+    "Liberation Mono", Menlo, Courier, monospace;
+
+  /* Type scale (IBM Carbon-aligned) */
+  --zopen-fs-h1: 2rem;       /* 32px – page title   */
+  --zopen-fs-h2: 1.5rem;     /* 24px – section head */
+  --zopen-fs-h3: 1.25rem;    /* 20px – sub-section  */
+  --zopen-fs-nav: 0.9375rem; /* 15px – nav items    */
+  --zopen-fs-sidebar: 0.875rem; /* 14px – sidebar   */
+  --zopen-fs-accordion: 0.9375rem; /* 15px           */
+  --zopen-fs-body: 0.9375rem;  /* 15px – body copy  */
+  --zopen-fs-small: 0.8125rem; /* 13px – captions   */
+
+  /* Icon size token */
+  --zopen-icon-size: 18px;
+  --zopen-icon-size-sm: 14px;
 }
 
 /* Increase search box width - responsive based on screen size */
@@ -72,6 +108,88 @@
   max-width: none !important;
 }
 
+/* ============================================================
+   IBM Plex Sans applied globally
+   ============================================================ */
+body,
+.vp-doc,
+.VPNav,
+.VPSidebar,
+.VPContent {
+  font-family: var(--vp-font-family-base) !important;
+  font-size: var(--zopen-fs-body);
+  line-height: 1.6;
+}
+
+/* Headings */
+.vp-doc h1 {
+  font-size: var(--zopen-fs-h1) !important;
+  font-weight: 600 !important;
+  line-height: 1.25 !important;
+  letter-spacing: -0.01em;
+}
+
+.vp-doc h2 {
+  font-size: var(--zopen-fs-h2) !important;
+  font-weight: 600 !important;
+  line-height: 1.3 !important;
+}
+
+.vp-doc h3 {
+  font-size: var(--zopen-fs-h3) !important;
+  font-weight: 500 !important;
+  line-height: 1.35 !important;
+}
+
+/* Body paragraphs */
+.vp-doc p,
+.vp-doc li {
+  font-size: var(--zopen-fs-body);
+  line-height: 1.7;
+}
+
+/* ---- Unordered list – double chevron-right bullet icons ---- */
+.vp-doc ul {
+  list-style: none !important;
+  padding-left: 1.5rem !important;
+}
+
+.vp-doc ul li {
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+/* Double chevron (») bullet via CSS content */
+.vp-doc ul li::before {
+  content: "»";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: auto;
+  height: auto;
+  background-color: transparent;
+  -webkit-mask-image: none;
+  mask-image: none;
+  color: var(--vp-c-brand-1, #1F66D1);
+  font-size: 0.95em;
+  line-height: 1.6;
+  font-weight: 600;
+}
+
+/* Nested ul: indent but keep same icon */
+.vp-doc ul ul {
+  padding-left: 1.25rem !important;
+}
+
+/* Ordered lists keep their default numbers — no change */
+
+/* Code / mono */
+.vp-doc code,
+.vp-doc pre code {
+  font-family: var(--vp-font-family-mono) !important;
+  font-size: 0.875em;
+}
+
 .vp-doc {
   max-width: 1200px !important;
   margin: 0 auto;
@@ -128,12 +246,121 @@
   background-color: var(--vp-sidebar-bg-color) !important;
 }
 
+/* Remove the right-side border on the logo title area when sidebar is open */
+.VPNavBarTitle.has-sidebar .title {
+  border-right: none !important;
+  border-bottom: none !important;
+  border: none !important;
+}
+
+/* ============================================================
+   Top Navigation – font & icon treatment
+   ============================================================ */
+
+/* Nav link typography */
+.VPNavBar .VPNavBarMenu .VPNavBarMenuLink,
+.VPNavBar .VPNavBarMenu a {
+  font-family: var(--vp-font-family-base) !important;
+  font-size: var(--zopen-fs-nav) !important;
+  font-weight: 500 !important;
+}
+
+/* Icon prefix on each top-nav item using SVG data-URI masks */
+.VPNavBar .VPNavBarMenu .VPNavBarMenuLink {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+/* Home – house icon */
+.VPNavBar .VPNavBarMenu .VPNavBarMenuLink[href="/"]::before,
+.VPNavBar .VPNavBarMenu .VPNavBarMenuLink[href="./"]::before {
+  content: "";
+  display: inline-block;
+  width: var(--zopen-icon-size-sm);
+  height: var(--zopen-icon-size-sm);
+  background-color: currentColor;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z'/%3E%3C/svg%3E");
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  flex-shrink: 0;
+}
+
+/* Getting Started – Rocket20 icon */
+.VPNavBar .VPNavBarMenu .VPNavBarMenuLink[href*="QuickStart"]::before,
+.VPNavBar .VPNavBarMenu .VPNavBarMenuLink[href*="GettingStarted"]::before {
+  content: "";
+  display: inline-block;
+  width: var(--zopen-icon-size-sm);
+  height: var(--zopen-icon-size-sm);
+  background-color: currentColor;
+  /* Carbon Rocket20 */
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M24.814 4.998A14.942 14.942 0 0 0 17 7.077L11.655 12H7a2 2 0 0 0-1.414.586l-4 4A2 2 0 0 0 3 20h6.727l-.02.02A2 2 0 0 0 9 21.5a2.007 2.007 0 0 0 .586 1.414l1.5 1.5A2.007 2.007 0 0 0 12.5 25a2 2 0 0 0 1.48-.707l.02-.02V31a2 2 0 0 0 3.414-1.414l4-4A2 2 0 0 0 22 24v-4.654L27.077 15A14.928 14.928 0 0 0 28 7.186a3.01 3.01 0 0 0-3.186-2.188zM7 18H4.828l3-3H11l-4 4zm5.5 5-1.5-1.5 4-4 1.5 1.5-4 4zm7.5.172L16 27.172V25l4-4v2.172zM26.1 8a12.968 12.968 0 0 1-.96 6.188L20 19.328V14a2 2 0 0 0-.586-1.414l-.001-.001L18 11.173V6.04A12.984 12.984 0 0 1 24 5a1.013 1.013 0 0 1 1 1 12.776 12.776 0 0 1 1.1 2z'/%3E%3Cpath d='M23 10a1 1 0 1 1-1-1 1 1 0 0 1 1 1z'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M24.814 4.998A14.942 14.942 0 0 0 17 7.077L11.655 12H7a2 2 0 0 0-1.414.586l-4 4A2 2 0 0 0 3 20h6.727l-.02.02A2 2 0 0 0 9 21.5a2.007 2.007 0 0 0 .586 1.414l1.5 1.5A2.007 2.007 0 0 0 12.5 25a2 2 0 0 0 1.48-.707l.02-.02V31a2 2 0 0 0 3.414-1.414l4-4A2 2 0 0 0 22 24v-4.654L27.077 15A14.928 14.928 0 0 0 28 7.186a3.01 3.01 0 0 0-3.186-2.188zM7 18H4.828l3-3H11l-4 4zm5.5 5-1.5-1.5 4-4 1.5 1.5-4 4zm7.5.172L16 27.172V25l4-4v2.172zM26.1 8a12.968 12.968 0 0 1-.96 6.188L20 19.328V14a2 2 0 0 0-.586-1.414l-.001-.001L18 11.173V6.04A12.984 12.984 0 0 1 24 5a1.013 1.013 0 0 1 1 1 12.776 12.776 0 0 1 1.1 2z'/%3E%3Cpath d='M23 10a1 1 0 1 1-1-1 1 1 0 0 1 1 1z'/%3E%3C/svg%3E");
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  flex-shrink: 0;
+}
+
+/* Available Tools – ToolKit20 icon (Carbon ToolKit20) */
+.VPNavBar .VPNavBarMenu .VPNavBarMenuLink[href*="Latest"]::before {
+  content: "";
+  display: inline-block;
+  width: var(--zopen-icon-size-sm);
+  height: var(--zopen-icon-size-sm);
+  background-color: currentColor;
+  /* Carbon ToolKit20 */
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M28 10h-6V6a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v4H8a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h20a2 2 0 0 0 2-2V12a2 2 0 0 0-2-2zM16 6h4v4h-4zM8 12h20v4H8zm0 16V18h8v2h4v-2h8v10z'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M28 10h-6V6a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v4H8a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h20a2 2 0 0 0 2-2V12a2 2 0 0 0-2-2zM16 6h4v4h-4zM8 12h20v4H8zm0 16V18h8v2h4v-2h8v10z'/%3E%3C/svg%3E");
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  flex-shrink: 0;
+}
+
+/* Reference – ProductionService20 icon (Carbon ProductionService20) */
+.VPNavBar .VPNavBarMenu .VPNavBarMenuLink[href*="reference"]::before {
+  content: "";
+  display: inline-block;
+  width: var(--zopen-icon-size-sm);
+  height: var(--zopen-icon-size-sm);
+  background-color: currentColor;
+  /* Carbon <ProductionService /> (ProductionService20) */
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 19a3 3 0 1 1 3-3 3 3 0 0 1-3 3zm0-4a1 1 0 1 0 1 1 1 1 0 0 0-1-1z'/%3E%3Cpath d='m28.76 14.29-1.1-.64a11.08 11.08 0 0 0 0-3.31l1.1-.64a1 1 0 0 0 .37-1.36l-2-3.46a1 1 0 0 0-1.37-.37l-1.1.64A10.93 10.93 0 0 0 22 4.11V2.82a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v1.29a10.93 10.93 0 0 0-2.66 1.54l-1.1-.64a1 1 0 0 0-1.37.37l-2 3.46a1 1 0 0 0 .37 1.36l1.1.64a11.08 11.08 0 0 0 0 3.31l-1.1.64a1 1 0 0 0-.37 1.36l2 3.46a1 1 0 0 0 1.37.37l1.1-.64A10.93 10.93 0 0 0 16 19.89v1.29a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-1.29a10.93 10.93 0 0 0 2.66-1.54l1.1.64a1 1 0 0 0 1.37-.37l2-3.46a1 1 0 0 0-.37-1.37zM27 16.84l-1.58-.91-.44.37A8.91 8.91 0 0 1 22 18.1l-.54.19V20h-3v-1.71l-.54-.19a8.91 8.91 0 0 1-2.92-1.8l-.44-.37L13 16.84l-1.5-2.59 1.58-.91-.09-.56a9.1 9.1 0 0 1 0-2.71l.09-.56-1.58-.91L13 6.01l1.58.91.44-.37A8.91 8.91 0 0 1 17.94 5l.54-.19V3.18h3v1.63l.54.19A8.91 8.91 0 0 1 24.94 6.55l.44.37L27 6.01l1.5 2.59-1.58.91.09.56a9.1 9.1 0 0 1 0 2.71l-.09.56 1.58.91z'/%3E%3Cpath d='M6 24H2v-2h4zm0 4H2v-2h4zm16 0H8v-2h14zm2-4H8v-2h16z'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 19a3 3 0 1 1 3-3 3 3 0 0 1-3 3zm0-4a1 1 0 1 0 1 1 1 1 0 0 0-1-1z'/%3E%3Cpath d='m28.76 14.29-1.1-.64a11.08 11.08 0 0 0 0-3.31l1.1-.64a1 1 0 0 0 .37-1.36l-2-3.46a1 1 0 0 0-1.37-.37l-1.1.64A10.93 10.93 0 0 0 22 4.11V2.82a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v1.29a10.93 10.93 0 0 0-2.66 1.54l-1.1-.64a1 1 0 0 0-1.37.37l-2 3.46a1 1 0 0 0 .37 1.36l1.1.64a11.08 11.08 0 0 0 0 3.31l-1.1.64a1 1 0 0 0-.37 1.36l2 3.46a1 1 0 0 0 1.37.37l1.1-.64A10.93 10.93 0 0 0 16 19.89v1.29a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-1.29a10.93 10.93 0 0 0 2.66-1.54l1.1.64a1 1 0 0 0 1.37-.37l2-3.46a1 1 0 0 0-.37-1.37zM27 16.84l-1.58-.91-.44.37A8.91 8.91 0 0 1 22 18.1l-.54.19V20h-3v-1.71l-.54-.19a8.91 8.91 0 0 1-2.92-1.8l-.44-.37L13 16.84l-1.5-2.59 1.58-.91-.09-.56a9.1 9.1 0 0 1 0-2.71l.09-.56-1.58-.91L13 6.01l1.58.91.44-.37A8.91 8.91 0 0 1 17.94 5l.54-.19V3.18h3v1.63l.54.19A8.91 8.91 0 0 1 24.94 6.55l.44.37L27 6.01l1.5 2.59-1.58.91.09.56a9.1 9.1 0 0 1 0 2.71l-.09.56 1.58.91z'/%3E%3Cpath d='M6 24H2v-2h4zm0 4H2v-2h4zm16 0H8v-2h14zm2-4H8v-2h16z'/%3E%3C/svg%3E");
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  flex-shrink: 0;
+}
+
 /* Adjust navbar height to accommodate larger logo */
 .VPNavBar {
   height: auto !important;
   min-height: 80px !important;
   padding: 0 12px !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  border-bottom: none !important;
+}
+
+/* Remove the divider line VitePress renders below the full nav */
+.VPNav {
+  border-bottom: none !important;
+}
+
+/* Remove any border/outline on the logo image itself */
+.VPNavBar .logo img,
+.VPNavBarTitle .logo img {
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
 }
 
 /* Hero image styling - add border radius and make bigger */
@@ -253,7 +480,7 @@
 }
 
 .man-page-content table thead tr {
-  background-color: var(--vp-c-bg-soft) !important;
+  background-color: var(--brand-primary, #0033A6) !important;
 }
 
 .man-page-content table tr:nth-child(odd) {
@@ -261,12 +488,16 @@
 }
 
 .man-page-content table tr:nth-child(even) {
-  background-color: var(--vp-c-bg-soft) !important;
+  background-color: rgba(31, 102, 209, 0.04) !important;
 }
 
 .man-page-content table thead tr th {
-  font-weight: 600;
-  background-color: var(--vp-c-bg-mute) !important;
+  font-family: var(--vp-font-family-base) !important;
+  font-weight: 600 !important;
+  font-size: var(--zopen-fs-body) !important;
+  color: #ffffff !important;
+  background-color: var(--brand-primary, #0033A6) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
 }
 
 .man-page-content pre {
@@ -286,29 +517,69 @@
   color: var(--vp-c-brand-1);
 }
 
-/* Strip default VitePress table styles (man-page-content overrides below take precedence) */
-.vp-doc table,
-.vp-doc th,
-.vp-doc td {
-  background-color: transparent !important;
-  border: none !important;
-}
-
+/* ---- vp-doc tables – IBM Blue header ---- */
 .vp-doc table {
   width: 100% !important;
   border-collapse: collapse !important;
+  border: 1px solid var(--vp-c-divider) !important;
+  font-family: var(--vp-font-family-base) !important;
+  font-size: var(--zopen-fs-body) !important;
+}
+
+.vp-doc th {
+  background-color: var(--brand-primary, #0033A6) !important;
+  color: #ffffff !important;
+  font-family: var(--vp-font-family-base) !important;
+  font-size: var(--zopen-fs-body) !important;
+  font-weight: 600 !important;
+  text-align: left !important;
+  padding: 10px 14px !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  letter-spacing: 0.01em !important;
+}
+
+.vp-doc td {
+  padding: 9px 14px !important;
+  border: 1px solid var(--vp-c-divider) !important;
+  background-color: transparent !important;
+  vertical-align: top !important;
 }
 
 .vp-doc thead {
-  border-bottom: none !important;
+  border-bottom: 2px solid var(--brand-secondary, #1F66D1) !important;
 }
 
 .vp-doc tr {
   border-top: none !important;
-  border-bottom: none !important;
+  border-bottom: 1px solid var(--vp-c-divider) !important;
+  transition: background-color 0.15s !important;
 }
 
-/* Restore borders/backgrounds for man-page tables — higher specificity wins over .vp-doc rules above */
+.vp-doc tr:nth-child(even) {
+  background-color: rgba(31, 102, 209, 0.04) !important;
+}
+
+.vp-doc tbody tr:hover {
+  background-color: rgba(31, 102, 209, 0.08) !important;
+}
+
+/* Dark mode table header */
+.dark .vp-doc th {
+  background-color: var(--brand-primary, #0033A6) !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+.dark .vp-doc tr:nth-child(even) {
+  background-color: rgba(61, 139, 255, 0.06) !important;
+}
+
+.dark .vp-doc tbody tr:hover {
+  background-color: rgba(61, 139, 255, 0.10) !important;
+}
+
+/* ---- man-page-content tables — same IBM Blue header ---- */
+/* Restore borders/backgrounds; higher specificity wins over .vp-doc rules above */
 .vp-doc .man-page-content table {
   width: 100% !important;
   border: 0.5px solid var(--vp-c-divider) !important;
@@ -658,7 +929,111 @@ img[alt*="Installation demo"] {
 
 /* Font size for v-pre wrapper */
 [v-pre] {
-  font-size: 14px !important;
+  font-size: 0.875rem !important;
+}
+
+/* ============================================================
+   Sidebar Navigation – unified clean style
+   ============================================================ */
+
+/* Kill VitePress built-in dividers */
+.VPSidebar .divider {
+  display: none !important;
+}
+
+/* Strip group wrapper chrome */
+.VPSidebar .group {
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* ---- Every level-0 item gets a bottom border + tight spacing ---- */
+/* This covers both .group and bare .VPSidebarItem.level-0.is-link   */
+.VPSidebar .items > .VPSidebarItem.level-0,
+.VPSidebar > .nav > .VPSidebarItem.level-0 {
+  border-bottom: 1px solid var(--vp-c-divider) !important;
+  padding-bottom: 2px !important;
+  margin-bottom: 2px !important;
+}
+
+/* Last item: no trailing border */
+.VPSidebar .items > .VPSidebarItem.level-0:last-child,
+.VPSidebar > .nav > .VPSidebarItem.level-0:last-child {
+  border-bottom: none !important;
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* ---- All level-0 item headers: bold typography ---- */
+.VPSidebar .VPSidebarItem.level-0 > .item > h2.text,
+.VPSidebar .VPSidebarItem.level-0 > .item > h3.text,
+.VPSidebar .VPSidebarItem.level-0 > .item > p.text,
+.VPSidebar .VPSidebarItem.level-0 > .item > .link > h2.text,
+.VPSidebar .VPSidebarItem.level-0 > .item > .link > h3.text,
+.VPSidebar .VPSidebarItem.level-0 > .item > .link > p.text,
+.VPSidebar .VPSidebarItem.level-0 > .item .text {
+  font-family: var(--vp-font-family-base) !important;
+  font-size: 0.9375rem !important;
+  font-weight: 700 !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  color: var(--vp-c-text-1) !important;
+}
+
+.VPSidebar .VPSidebarItem.level-0 > .item {
+  padding: 7px 0 !important;
+}
+
+/* ---- Nested leaf items ---- */
+.VPSidebar .VPSidebarItem .link .text {
+  font-family: var(--vp-font-family-base) !important;
+  font-size: var(--zopen-fs-sidebar) !important;
+  font-weight: 400 !important;
+  font-style: normal !important;
+  text-transform: none !important;
+  color: var(--vp-c-text-2) !important;
+}
+
+/* Active leaf – highlighted row */
+.VPSidebar .VPSidebarItem .link.active {
+  display: block !important;
+  background-color: rgba(31, 102, 209, 0.10) !important;
+  border-radius: 6px !important;
+  border-left: 3px solid var(--vp-c-brand-1, #1F66D1) !important;
+  margin-left: -3px !important;
+}
+
+.VPSidebar .VPSidebarItem .link.active .text {
+  font-weight: 600 !important;
+  color: var(--vp-c-brand-1, #1F66D1) !important;
+}
+
+/* Dark mode active */
+.dark .VPSidebar .VPSidebarItem .link.active {
+  background-color: rgba(61, 139, 255, 0.12) !important;
+  border-left-color: var(--vp-c-brand-light, #3D8BFF) !important;
+}
+
+.dark .VPSidebar .VPSidebarItem .link.active .text {
+  color: var(--vp-c-brand-light, #3D8BFF) !important;
+}
+
+/* Hover state on non-active leaf items */
+.VPSidebar .VPSidebarItem .link:not(.active):hover {
+  background-color: rgba(142, 150, 170, 0.08) !important;
+  border-radius: 6px !important;
+}
+
+.VPSidebar .VPSidebarItem .link:not(.active):hover .text {
+  color: var(--vp-c-text-1) !important;
+}
+
+/* No pseudo icons on nested items */
+.VPSidebar .VPSidebarItem.level-1 > .item > .VPLink::before,
+.VPSidebar .VPSidebarItem.level-2 > .item > .VPLink::before {
+  display: none !important;
 }
 
 
@@ -673,6 +1048,8 @@ img[alt*="Installation demo"] {
 
 /* Fix tab/link highlighting in aside panel */
 .VPDocAsideOutline .outline-link {
+  font-family: var(--vp-font-family-base) !important;
+  font-size: var(--zopen-fs-small) !important;
   transition:
     color 0.25s,
     opacity 0.25s;
@@ -752,3 +1129,176 @@ img[alt*="Installation demo"] {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
+
+/* ============================================================
+   Accordion (<details> / <summary>)
+   Right-side chevron arrow only — no left icon
+   ============================================================ */
+
+/* Wrapper */
+.vp-doc details {
+  width: 100%;
+  margin: 0 0 8px;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--vp-c-bg-soft);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.vp-doc details[open] {
+  border-color: var(--vp-c-brand);
+  box-shadow: 0 2px 8px rgba(31, 102, 209, 0.12);
+}
+
+/* Summary row */
+.vp-doc details summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  font-family: var(--vp-font-family-base) !important;
+  font-size: var(--zopen-fs-accordion) !important;
+  font-weight: 500;
+  color: var(--vp-c-text-1);
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+  gap: 12px;
+}
+
+/* Hide native marker in all browsers */
+.vp-doc details summary::-webkit-details-marker { display: none; }
+.vp-doc details summary::marker { display: none; }
+
+/* Left icon on summary — CheckmarkOutline (check circle) when open */
+.vp-doc details summary::before {
+  content: "";
+  flex-shrink: 0;
+  width: var(--zopen-icon-size);
+  height: var(--zopen-icon-size);
+  /* Carbon CheckmarkOutline20 — fill-based, works correctly in mask-image */
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M14 21.414 9 16.413 10.413 15 14 18.586 21.585 11 23 12.415 14 21.414z'/%3E%3Cpath d='M16 2A14 14 0 1 0 30 16 14 14 0 0 0 16 2zm0 26A12 12 0 1 1 28 16 12 12 0 0 1 16 28z'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M14 21.414 9 16.413 10.413 15 14 18.586 21.585 11 23 12.415 14 21.414z'/%3E%3Cpath d='M16 2A14 14 0 1 0 30 16 14 14 0 0 0 16 2zm0 26A12 12 0 1 1 28 16 12 12 0 0 1 16 28z'/%3E%3C/svg%3E");
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  background-color: var(--vp-c-text-3);
+  transition: background-color 0.2s;
+}
+
+/* Trailing chevron arrow — collapsed state */
+/* Uses Carbon ChevronDown20 fill-based path (stroke-based SVGs don't work in mask-image) */
+.vp-doc details summary::after {
+  content: "";
+  flex-shrink: 0;
+  width: var(--zopen-icon-size);
+  height: var(--zopen-icon-size);
+  background-color: var(--vp-c-text-2);
+  /* Carbon ChevronDown20: fill-based, viewBox 0 0 32 32 */
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 22 6 12 7.4 10.6 16 19.2 24.6 10.6 26 12z'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 22 6 12 7.4 10.6 16 19.2 24.6 10.6 26 12z'/%3E%3C/svg%3E");
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  transition: transform 0.25s ease, background-color 0.2s;
+}
+
+/* Open state — chevron rotates to point up; check icon turns brand blue */
+.vp-doc details[open] summary::after {
+  transform: rotate(180deg);
+  background-color: var(--vp-c-brand);
+}
+
+/* Hover state */
+.vp-doc details summary:hover {
+  background: var(--vp-c-bg-mute);
+  color: var(--vp-c-brand);
+}
+
+.vp-doc details summary:hover::after {
+  background-color: var(--vp-c-brand);
+}
+
+.vp-doc details summary:hover::before {
+  background-color: var(--vp-c-brand);
+}
+
+/* Open summary row */
+.vp-doc details[open] summary {
+  border-bottom: 1px solid var(--vp-c-divider);
+  color: var(--vp-c-brand);
+}
+
+/* Content area */
+.vp-doc details > :not(summary) {
+  padding: 14px 18px;
+  margin: 0;
+  font-family: var(--vp-font-family-base) !important;
+  font-size: var(--zopen-fs-body);
+  line-height: 1.7;
+}
+
+/* Remove top margin on first child inside content */
+.vp-doc details > *:not(summary):first-of-type {
+  margin-top: 0;
+}
+
+/* Section group label above a run of accordions */
+.vp-doc .faq-section-label {
+  font-family: var(--vp-font-family-base) !important;
+  font-size: 0.75rem !important;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--vp-c-text-2);
+  margin: 36px 0 12px;
+  padding: 6px 0 8px;
+  border-bottom: 2px solid var(--vp-c-brand);
+}
+
+/* Dark mode */
+.dark .vp-doc details {
+  background: var(--vp-c-bg-soft);
+}
+
+.dark .vp-doc details[open] {
+  border-color: var(--vp-c-brand-light);
+  box-shadow: 0 2px 8px rgba(61, 139, 255, 0.15);
+}
+
+.dark .vp-doc details[open] summary {
+  color: var(--vp-c-brand-light);
+}
+
+.dark .vp-doc details[open] summary::after {
+  background-color: var(--vp-c-brand-light);
+}
+
+.dark .vp-doc details[open] summary::before {
+  background-color: var(--vp-c-brand-light);
+}
+
+.dark .vp-doc details summary:hover {
+  color: var(--vp-c-brand-light);
+}
+
+.dark .vp-doc details summary:hover::after {
+  background-color: var(--vp-c-brand-light);
+}
+
+.dark .vp-doc details summary:hover::before {
+  background-color: var(--vp-c-brand-light);
+}
+
+.dark .vp-doc details summary::after {
+  background-color: var(--vp-c-text-3);
+}
+
+.dark .vp-doc details summary::before {
+  background-color: var(--vp-c-text-3);
+}
