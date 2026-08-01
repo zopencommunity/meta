@@ -479,12 +479,12 @@ body,
   border-collapse: collapse;
   table-layout: fixed;
   margin: 1rem 0;
-  border: 0.5px solid var(--vp-c-divider) !important;
+  border: none !important;
 }
 
 .man-page-content table th,
 .man-page-content table td {
-  border: 0.5px solid var(--vp-c-divider) !important;
+  border: none !important;
   padding: 6px 12px !important;
   text-align: left;
 }
@@ -612,14 +612,14 @@ body,
 /* Restore borders/backgrounds; higher specificity wins over .vp-doc rules above */
 .vp-doc .man-page-content table {
   width: 100% !important;
-  border: 0.5px solid var(--vp-c-divider) !important;
+  border: none !important;
   border-collapse: collapse !important;
   table-layout: fixed !important;
 }
 
 .vp-doc .man-page-content table th,
 .vp-doc .man-page-content table td {
-  border: 0.5px solid var(--vp-c-divider) !important;
+  border: none !important;
   padding: 6px 12px !important;
 }
 
@@ -771,20 +771,20 @@ img[alt*="Installation demo"] {
 .VPDocFooter .edit-link {
   position: fixed !important;
   top: calc(var(--vp-nav-height) + 20px) !important;
-  right: 260px !important;
+  right: 180px !important;
   z-index: 20 !important;
   margin: 0 !important;
 }
 
 @media (min-width: 1440px) {
   .VPDocFooter .edit-link {
-    right: 260px !important;
+    right: 180px !important;
   }
 }
 
 @media (max-width: 1280px) {
   .VPDocFooter .edit-link {
-    right: 260px !important;
+    right: 180px !important;
   }
 }
 
