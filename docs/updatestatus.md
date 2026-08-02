@@ -3,7 +3,7 @@
 ---
 
 <details open>
-<summary><b>Open Update PRs</b></summary>
+<summary><b style="font-size: 28px;">Open Update PRs</b></summary>
 
 
 ### aflplusplusport
@@ -778,7 +778,7 @@
 </details>
 
 <details open>
-<summary><b>Bump Automation Status</b></summary>
+<summary><b style="font-size: 28px;">Bump Automation Status</b></summary>
 
 - ✅ aflplusplusport - [![Bump Status](https://github.com/zopencommunity/aflplusplusport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/aflplusplusport/actions/workflows/bump.yml)
 - ✅ alternativesport - [![Bump Status](https://github.com/zopencommunity/alternativesport/actions/workflows/bump.yml/badge.svg)](https://github.com/zopencommunity/alternativesport/actions/workflows/bump.yml)
