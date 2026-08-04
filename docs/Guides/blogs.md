@@ -14,3 +14,4 @@
 * [Life is easy with good tools - Jan 17, 2023](https://makingdeveloperslivesbetter.wordpress.com/2023/01/17/life-is-easy-with-good-tools/)
 * [The z/OS Open Source Community - Aug 10, 2022](https://makingdeveloperslivesbetter.wordpress.com/2022/08/10/the-z-os-open-source-community/)
 * [Enabling Open Source for z/OS: Perl - Jan 18, 2022](https://makingdeveloperslivesbetter.wordpress.com/2022/01/18/enabling-open-source-for-z-os-perl/)
+* [Modernizing z/OS Open Source Distribution with RPM and Pulp](https://community.ibm.com/community/user/blogs/tejaswini-r/2026/07/24/modernizing-zos-rpm-plup)
