@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2026-08-03T16:34:15+00:00Z",
+  "generation_timestamp_utc": "2026-08-04T03:18:22+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -117,7 +117,7 @@
     "protobuf": "A protocol buffer compiler",
     "termenv": "A terminal emulator",
     "avro-c-lib": "A data serialization framework",
-    "llamacpp": "A C++ library for writing high-performance network applications",
+    "llamacpp": "Enable AI inferencing on z/OS",
     "libserdes": "A serialization/deserialization library",
     "libuv": "An asynchronous I/O library",
     "esbuild": "A fast bundler for the web",
