@@ -227,28 +227,57 @@ with open('docs/Latest.md', 'w') as f:
 
 sys.stdout = original_stdout # Restore stdout
 
-# --- Matplotlib chart generation code ---
-# Ensure this section is uncommented and figures managed if charts are needed.
-# Example: For the pie chart
-if any(progressPerStatus.values()): # Check if there's data for the chart
-    plt.figure() # Create a new figure to avoid overlap if multiple charts are made
-    labels_pie = []
-    sizes_pie = []
-    for x, y in progressPerStatus.items():
-        labels_pie.append(x)
-        sizes_pie.append(y)
-    colors_pie = ['#00FF00','#0000FF','#FFFF00','#FF0000','#AAAAAA','#FF8888'] # Ensure enough colors if statuses change
-    plt.title("Current Porting Status")
-    # Ensure sizes_pie is not all zeros before calling plt.pie to avoid errors
-    if sum(sizes_pie) > 0:
-        p_pie, tx_pie, autotexts_pie = plt.pie(sizes_pie, labels=labels_pie, colors=colors_pie, autopct="", shadow=True)
-        for i, a_pie in enumerate(autotexts_pie):
-            a_pie.set_text("{}".format(sizes_pie[i])) # Display actual counts
-    else:
-        plt.text(0.5, 0.5, 'No data to display', horizontalalignment='center', verticalalignment='center')
-    plt.axis('equal')
-    plt.savefig('docs/images/progress.png')
-    plt.close() # Close the figure
+# --- Matplotlib pie chart generation ---
+if any(progressPerStatus.values()):
+    STATUS_COLORS = {
+        "Green":   "#22c55e",
+        "Blue":    "#3b82f6",
+        "Yellow":  "#f59e0b",
+        "Red":     "#ef4444",
+        "Skipped": "#9ca3af",
+    }
+
+    # Only include non-zero slices
+    items = [(k, v) for k, v in progressPerStatus.items() if v > 0]
+    labels_pie  = [k for k, v in items]
+    sizes_pie   = [v for k, v in items]
+    colors_pie  = [STATUS_COLORS.get(k, "#888888") for k, v in items]
+    total       = sum(sizes_pie)
+
+    fig, ax = plt.subplots(figsize=(7, 5), facecolor='white')
+    fig.subplots_adjust(left=0.0, right=0.6, top=0.9, bottom=0.05)
+
+    wedges, texts = ax.pie(
+        sizes_pie,
+        labels=None,
+        colors=colors_pie,
+        startangle=90,
+        wedgeprops=dict(width=0.55, edgecolor='white', linewidth=2),  # donut
+    )
+
+    # Centre text: total package count
+    ax.text(0, 0.08, str(total),  ha='center', va='center',
+            fontsize=22, fontweight='bold', color='#1f2328')
+    ax.text(0, -0.18, 'packages', ha='center', va='center',
+            fontsize=10, color='#57606a')
+
+    ax.set_title('Current Porting Status', fontsize=13, fontweight='bold',
+                 color='#1f2328', pad=12)
+
+    # Legend with count + percentage on the right side
+    legend_labels = [f"{lbl}  {cnt}  ({cnt/total*100:.1f}%)"
+                     for lbl, cnt in zip(labels_pie, sizes_pie)]
+    ax.legend(
+        wedges, legend_labels,
+        loc='center left',
+        bbox_to_anchor=(1.05, 0.5),
+        fontsize=10,
+        frameon=False,
+    )
+
+    plt.savefig('docs/images/progress.png', dpi=150, bbox_inches='tight',
+                facecolor='white')
+    plt.close()
 else:
     print("No data for progress pie chart.", file=sys.stderr)
 
@@ -315,11 +344,11 @@ with open('docs/Progress.md', 'w') as f_progress:
     sys.stdout = f_progress
     print("""
 ## Overall Status
-* <span style="color:green">Green</span>: All tests passing
-* <span style="color:blue">Blue</span>: Most tests passing (>=75%)
-* <span style="color:#fee12b">Yellow</span>: Some tests passing (>=50%)
-* <span style="color:red">Red</span>: Few or no tests passing (<50%)
-* <span style="color:grey">Skipped</span>: Skipped or Tests are not enabled
+* <span style="color:#22c55e">Green</span>: All tests passing
+* <span style="color:#3b82f6">Blue</span>: Most tests passing (>=75%)
+* <span style="color:#f59e0b">Yellow</span>: Some tests passing (>=50%)
+* <span style="color:#ef4444">Red</span>: Few or no tests passing (<50%)
+* <span style="color:#9ca3af">Skipped</span>: Skipped or Tests are not enabled
 
 ![image info](./images/progress.png)
 
