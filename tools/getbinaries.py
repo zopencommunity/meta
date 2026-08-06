@@ -14,8 +14,35 @@ import re # Ensure re is imported
 import subprocess # Keep if still used
 import shutil # Keep if still used
 from itertools import chain # Keep if still used
-rcParams.update({'figure.autolayout': True}) # Keep if still used
+rcParams.update({'figure.autolayout': True})
 import html # For escaping attribute values
+import urllib.request
+import tempfile
+import matplotlib.font_manager as fm
+
+def _load_ibm_plex_sans():
+    """Download IBM Plex Sans TTF files from the IBM/plex repo and register
+    them with matplotlib. Falls back silently to the default sans-serif font
+    if the download fails (e.g. no network on the build host)."""
+    PLEX_URLS = {
+        "IBMPlexSans-Regular":  "https://github.com/IBM/plex/raw/refs/heads/master/packages/plex-sans/fonts/complete/ttf/IBMPlexSans-Regular.ttf",
+        "IBMPlexSans-Bold":     "https://github.com/IBM/plex/raw/refs/heads/master/packages/plex-sans/fonts/complete/ttf/IBMPlexSans-Bold.ttf",
+        "IBMPlexSans-SemiBold": "https://github.com/IBM/plex/raw/refs/heads/master/packages/plex-sans/fonts/complete/ttf/IBMPlexSans-SemiBold.ttf",
+    }
+    font_dir = os.path.join(tempfile.gettempdir(), "ibm_plex_fonts")
+    os.makedirs(font_dir, exist_ok=True)
+    try:
+        for name, url in PLEX_URLS.items():
+            dest = os.path.join(font_dir, f"{name}.ttf")
+            if not os.path.exists(dest):
+                urllib.request.urlretrieve(url, dest)
+            fm.fontManager.addfont(dest)
+        mpl.rcParams['font.family'] = 'IBM Plex Sans'
+        print("IBM Plex Sans fonts loaded.", file=sys.stderr)
+    except Exception as e:
+        print(f"Warning: could not load IBM Plex Sans ({e}), using default font.", file=sys.stderr)
+
+_load_ibm_plex_sans()
 
 def get_status_color(passed_tests, total_tests, has_releases):
     if not total_tests:
@@ -255,14 +282,14 @@ if any(progressPerStatus.values()):
         wedgeprops=dict(width=0.55, edgecolor='white', linewidth=2),  # donut
     )
 
-    # Centre text: total package count
+    # Centre text: total released package count
     ax.text(0, 0.08, str(total),  ha='center', va='center',
             fontsize=22, fontweight='bold', color='#1f2328')
-    ax.text(0, -0.18, 'packages', ha='center', va='center',
+    ax.text(0, -0.18, 'released', ha='center', va='center',
             fontsize=10, color='#57606a')
 
-    ax.set_title('Current Porting Status', fontsize=13, fontweight='bold',
-                 color='#1f2328', pad=12)
+    ax.set_title('Current Porting Status\n(released packages)',
+                 fontsize=12, fontweight='bold', color='#1f2328', pad=12)
 
     # Legend with count + percentage on the right side
     legend_labels = [f"{lbl}  {cnt}  ({cnt/total*100:.1f}%)"
@@ -320,7 +347,7 @@ if any(progressPerStatus.values()):
         tbl[0, j].set_facecolor('#f0f0f0')
         tbl[0, j].set_text_props(fontweight='bold', color='#1f2328')
 
-    ax_tbl.set_title(f'Overall Status Summary  ({total_pkg} total packages)',
+    ax_tbl.set_title(f'Overall Status Summary  ({total_pkg} released packages)',
                      fontsize=12, fontweight='bold', color='#1f2328', pad=10)
 
     summary_chart_file = 'docs/images/progress_summary.png'
