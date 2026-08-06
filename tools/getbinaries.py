@@ -414,6 +414,52 @@ with open('docs/Progress.md', 'w') as f_progress:
         for chart_file in chart_files:
             print(f"![Project Test Quality](./images/quality.png)")
 
+    print("\n## All Ports — Complete Status List\n")
+
+    STATUS_COLOR_MAP = {
+        "Green":   "#22c55e",
+        "Blue":    "#3b82f6",
+        "Yellow":  "#f59e0b",
+        "Red":     "#ef4444",
+        "Skipped": "#9ca3af",
+    }
+
+    def rate_to_status_label(rate):
+        if rate == -1 or rate == -2:
+            return "Skipped"
+        elif rate == 100:
+            return "Green"
+        elif rate >= 75:
+            return "Blue"
+        elif rate >= 50:
+            return "Yellow"
+        else:
+            return "Red"
+
+    # Header row
+    print('<div class="tool-item-filterable" style="padding: 8px 0; border-bottom: 1px solid #eee; font-weight: bold;">')
+    print('  <div class="tool-info-grid">')
+    print('    <div class="tool-name">Package</div>')
+    print('    <div class="tool-status">Status</div>')
+    print('    <div class="tool-test">Test Success Rate</div>')
+    print('    <div class="tool-desc"></div>')
+    print('  </div>')
+    print('</div>')
+
+    for port_name, rate in sorted(statusPerPort.items(), key=lambda item: item[0]):
+        status_label = rate_to_status_label(rate)
+        color = STATUS_COLOR_MAP[status_label]
+        rate_str = f"{rate:.1f}%" if rate >= 0 else "Skipped"
+        repo_url = f"https://github.com/zopencommunity/{port_name}"
+        print(f'<div class="tool-item-filterable" style="padding: 8px 0; border-bottom: 1px solid #eee;">')
+        print(f'  <div class="tool-info-grid">')
+        print(f'    <div class="tool-name"><strong><a href="{repo_url}" target="_blank" rel="noopener noreferrer">{html.escape(port_name)}</a></strong></div>')
+        print(f'    <div class="tool-status"><span style="color:{color};">&#9632; {html.escape(status_label)}</span></div>')
+        print(f'    <div class="tool-test">{html.escape(rate_str)}</div>')
+        print(f'    <div class="tool-desc"></div>')
+        print(f'  </div>')
+        print(f'</div>')
+
     print("\n## Projects with skipped or no tests (or no releases resulting in skipped status)")
     count_skipped_no_tests = 0
     for x_prog, y_prog in sorted(statusPerPort.items(), key=lambda item: item[0]): # Sort alphabetically
