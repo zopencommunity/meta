@@ -126,6 +126,7 @@ progressPerStatus = {
     "Yellow": 0,
     "Red": 0,
     "Skipped": 0,
+    "Unreleased": 0,
 }
 
 statusPerPort = {}
@@ -184,8 +185,12 @@ for package, releases in data['release_data'].items():
     passed_tests = int(latest_asset['passed_tests']) if latest_asset.get('passed_tests') else 0
     
     totalReleases = repo.get_releases().totalCount
-    status = get_status_color(passed_tests, total_tests, totalReleases > 0)
-    success_rate = get_success_rate(passed_tests, total_tests, totalReleases > 0)
+    if totalReleases == 0:
+        status = "Unreleased"
+        success_rate = -2
+    else:
+        status = get_status_color(passed_tests, total_tests, True)
+        success_rate = get_success_rate(passed_tests, total_tests, True)
 
     progressPerStatus[status] += 1
     statusPerPort[package + "port"] = success_rate
@@ -257,11 +262,12 @@ sys.stdout = original_stdout # Restore stdout
 # --- Matplotlib pie chart generation ---
 if any(progressPerStatus.values()):
     STATUS_COLORS = {
-        "Green":   "#22c55e",
-        "Blue":    "#3b82f6",
-        "Yellow":  "#f59e0b",
-        "Red":     "#ef4444",
-        "Skipped": "#9ca3af",
+        "Green":      "#6abf8a",
+        "Blue":       "#7bafd4",
+        "Yellow":     "#f0c070",
+        "Red":        "#e88080",
+        "Skipped":    "#b8bfca",
+        "Unreleased": "#c9b8e8",
     }
 
     # Only include non-zero slices
@@ -270,11 +276,12 @@ if any(progressPerStatus.values()):
     sizes_pie   = [v for k, v in items]
     colors_pie  = [STATUS_COLORS.get(k, "#888888") for k, v in items]
     total       = sum(sizes_pie)
+    released    = total - progressPerStatus.get("Unreleased", 0)
 
     fig, ax = plt.subplots(figsize=(7, 5), facecolor='white')
     fig.subplots_adjust(left=0.0, right=0.6, top=0.9, bottom=0.05)
 
-    wedges, texts = ax.pie(
+    wedges, _ = ax.pie(
         sizes_pie,
         labels=None,
         colors=colors_pie,
@@ -282,13 +289,13 @@ if any(progressPerStatus.values()):
         wedgeprops=dict(width=0.55, edgecolor='white', linewidth=2),  # donut
     )
 
-    # Centre text: total released package count
-    ax.text(0, 0.08, str(total),  ha='center', va='center',
+    # Centre text: released package count
+    ax.text(0, 0.08, str(released), ha='center', va='center',
             fontsize=22, fontweight='bold', color='#1f2328')
-    ax.text(0, -0.18, 'released', ha='center', va='center',
+    ax.text(0, -0.18, 'released',   ha='center', va='center',
             fontsize=10, color='#57606a')
 
-    ax.set_title('Current Porting Status\n(released packages)',
+    ax.set_title('Current Porting Status\n(all tracked packages)',
                  fontsize=12, fontweight='bold', color='#1f2328', pad=12)
 
     # Legend with count + percentage on the right side
@@ -307,52 +314,6 @@ if any(progressPerStatus.values()):
     plt.close()
 else:
     print("No data for progress pie chart.", file=sys.stderr)
-
-# --- Summary table PNG (suggestion 4) ---
-summary_chart_file = None
-if any(progressPerStatus.values()):
-    STATUS_COLORS_TBL = {
-        "Green":   "#22c55e",
-        "Blue":    "#3b82f6",
-        "Yellow":  "#f59e0b",
-        "Red":     "#ef4444",
-        "Skipped": "#9ca3af",
-    }
-    total_pkg = sum(progressPerStatus.values())
-
-    fig_tbl, ax_tbl = plt.subplots(figsize=(6, 3), facecolor='white')
-    ax_tbl.axis('off')
-
-    rows_tbl = []
-    for status, color in STATUS_COLORS_TBL.items():
-        cnt = progressPerStatus.get(status, 0)
-        pct = cnt / total_pkg * 100 if total_pkg else 0
-        rows_tbl.append([f"  {status}", str(cnt), f"{pct:.1f}%"])
-
-    tbl = ax_tbl.table(
-        cellText=rows_tbl,
-        colLabels=['Status', 'Count', 'Percentage'],
-        loc='center',
-        cellLoc='left',
-    )
-    tbl.auto_set_font_size(False)
-    tbl.set_fontsize(11)
-    tbl.scale(1.4, 1.8)
-
-    for i, color in enumerate(STATUS_COLORS_TBL.values()):
-        tbl[i + 1, 0].set_facecolor(color + '33')
-        tbl[i + 1, 0].set_text_props(color='#1f2328', fontweight='bold')
-        tbl[i + 1, 1].set_text_props(fontweight='bold')
-    for j in range(3):
-        tbl[0, j].set_facecolor('#f0f0f0')
-        tbl[0, j].set_text_props(fontweight='bold', color='#1f2328')
-
-    ax_tbl.set_title(f'Overall Status Summary  ({total_pkg} released packages)',
-                     fontsize=12, fontweight='bold', color='#1f2328', pad=10)
-
-    summary_chart_file = 'docs/images/progress_summary.png'
-    plt.savefig(summary_chart_file, dpi=150, bbox_inches='tight', facecolor='white')
-    plt.close()
 
 # --- Bar Chart Generation (all packages, strip 'port' suffix from labels) ---
 chart_files = []
@@ -373,13 +334,13 @@ if active_statusPerPort:
         col_bar = []
         for val_bar in sizes_bar:
             if val_bar == 100:
-                col_bar.append('#22c55e')
+                col_bar.append('#8ecba5')   # muted sage green
             elif val_bar >= 75:
-                col_bar.append('#3b82f6')
+                col_bar.append('#85b5d9')   # muted steel blue
             elif val_bar >= 50:
-                col_bar.append('#f59e0b')
+                col_bar.append('#eec07a')   # muted amber
             else:
-                col_bar.append('#ef4444')
+                col_bar.append('#e89090')   # muted soft red
 
         row_h = 0.32
         fig_h = max(6, len(labels_bar) * row_h + 1.5)
@@ -428,16 +389,15 @@ with open('docs/Progress.md', 'w') as f_progress:
     print(f"*Last updated: {todaysDate}*\n")
     print("""
 ## Overall Status
-* <span style="color:#22c55e">Green</span>: All tests passing
-* <span style="color:#3b82f6">Blue</span>: Most tests passing (>=75%)
-* <span style="color:#f59e0b">Yellow</span>: Some tests passing (>=50%)
-* <span style="color:#ef4444">Red</span>: Few or no tests passing (<50%)
-* <span style="color:#9ca3af">Skipped</span>: Skipped or Tests are not enabled
+* <span style="color:#6abf8a">Green</span>: All tests passing
+* <span style="color:#7bafd4">Blue</span>: Most tests passing (>=75%)
+* <span style="color:#f0c070">Yellow</span>: Some tests passing (>=50%)
+* <span style="color:#e88080">Red</span>: Few or no tests passing (<50%)
+* <span style="color:#b8bfca">Skipped</span>: Skipped or Tests are not enabled
+* <span style="color:#c9b8e8">Unreleased</span>: No official release yet
 
 ![Current Porting Status](./images/progress.png)
 """)
-    if summary_chart_file:
-        print(f"![Overall Status Summary](./images/progress_summary.png)\n")
 
     print("## Overall Status Breakdown\n")
     if not chart_files:
