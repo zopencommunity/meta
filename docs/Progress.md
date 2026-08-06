@@ -3,23 +3,20 @@
 > The remaining 66 repos exist in the org but have not yet published a release.
 
 ## Overall Status
-* <span style="color:#22c55e">Green</span>: All tests passing
-* <span style="color:#3b82f6">Blue</span>: Most tests passing (>=75%)
-* <span style="color:#f59e0b">Yellow</span>: Some tests passing (>=50%)
-* <span style="color:#ef4444">Red</span>: Few or no tests passing (<50%)
-* <span style="color:#9ca3af">Skipped</span>: Skipped or Tests are not enabled
+* <span style="color:green">Green</span>: All tests passing
+* <span style="color:blue">Blue</span>: Most tests passing (>=75%)
+* <span style="color:#fee12b">Yellow</span>: Some tests passing (>=50%)
+* <span style="color:red">Red</span>: Few or no tests passing (<50%)
+* <span style="color:grey">Skipped</span>: Skipped or Tests are not enabled
 
-![Current Porting Status](./images/progress.png)
-
-![Overall Status Summary](./images/progress_summary.png)
+![image info](./images/progress.png)
 
 ## Overall Status Breakdown
 
-![Project Test Quality Part 1](./images/quality_part_1.png)
-![Project Test Quality Part 2](./images/quality_part_2.png)
-![Project Test Quality Part 3](./images/quality_part_3.png)
-![Project Test Quality Part 4](./images/quality_part_4.png)
-![Project Test Quality Part 5](./images/quality_part_5.png)
+![image info](./images/quality_part_1.png)
+![image info](./images/quality_part_2.png)
+![image info](./images/quality_part_3.png)
+![image info](./images/quality_part_4.png)
 
 ## Projects with skipped or no tests (or no releases resulting in skipped status)
 * [antport](https://github.com/zopencommunity/antport) - Tests skipped or not enabled
