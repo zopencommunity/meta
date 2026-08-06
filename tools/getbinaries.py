@@ -302,37 +302,52 @@ if active_statusPerPort:
         if not labels_bar:
             continue
 
-        fig_bar = plt.figure()
-        fig_bar.set_size_inches(20, max(10, len(labels_bar) * 0.4))
-        ax_bar = fig_bar.add_axes([0.2, 0.1, 0.7, 0.85])
-
         col_bar = []
         for val_bar in sizes_bar:
             if val_bar == 100:
-                col_bar.append('green')
+                col_bar.append('#22c55e')
             elif val_bar >= 75:
-                col_bar.append('blue')
+                col_bar.append('#3b82f6')
             elif val_bar >= 50:
-                col_bar.append('#fee12b')
+                col_bar.append('#f59e0b')
             else:
-                col_bar.append('red')
+                col_bar.append('#ef4444')
 
-        ax_bar.set_xlabel('Success Rate (%)', fontsize=12)
+        row_h    = 0.32          # bar height in inches per row
+        fig_h    = max(6, len(labels_bar) * row_h + 1.5)
+        fig_bar, ax_bar = plt.subplots(figsize=(12, fig_h), facecolor='white')
+        fig_bar.subplots_adjust(left=0.22, right=0.92, top=0.94, bottom=0.06)
+
+        bars_obj = ax_bar.barh(
+            labels_bar, sizes_bar,
+            color=col_bar,
+            height=0.6,
+            align='center',
+            edgecolor='white',
+            linewidth=0.5,
+        )
+        ax_bar.bar_label(bars_obj, fmt='%.1f%%', padding=4, fontsize=8, color='#1f2328')
+
+        ax_bar.set_xlabel('Success Rate (%)', fontsize=11, color='#1f2328')
         title = "Project Test Quality"
         if num_chunks > 1:
-            title += f" (Part {i+1}/{num_chunks})"
-        ax_bar.set_title(title, fontsize=16)
-        ax_bar.tick_params(axis='y', labelsize=10)
-        ax_bar.tick_params(axis='x', labelsize=10)
+            title += f"  (Part {i+1} / {num_chunks})"
+        ax_bar.set_title(title, fontsize=13, fontweight='bold', color='#1f2328', pad=10)
 
-        bars_obj = ax_bar.barh(labels_bar, sizes_bar, color=col_bar, height=0.6, align='center')
-        ax_bar.bar_label(bars_obj, fmt='%.1f%%', padding=3, fontsize=8)
-        
+        ax_bar.set_xlim(0, 115)          # room for the label at 100%
+        ax_bar.tick_params(axis='y', labelsize=8.5, colors='#1f2328')
+        ax_bar.tick_params(axis='x', labelsize=9,   colors='#57606a')
+        ax_bar.spines[['top', 'right']].set_visible(False)
+        ax_bar.spines[['left', 'bottom']].set_color('#e5e7eb')
+        ax_bar.set_facecolor('#fafafa')
+        ax_bar.xaxis.grid(True, color='#e5e7eb', linewidth=0.6, zorder=0)
+        ax_bar.set_axisbelow(True)
+
         chart_filename = f'docs/images/quality_part_{i+1}.png'
         if num_chunks == 1:
             chart_filename = 'docs/images/quality.png'
 
-        plt.savefig(chart_filename, bbox_inches="tight")
+        plt.savefig(chart_filename, dpi=150, bbox_inches='tight', facecolor='white')
         plt.close()
         chart_files.append(chart_filename.replace('docs/', './'))
 else:
