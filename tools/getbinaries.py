@@ -142,7 +142,7 @@ if github_token is None:
 
 g = Github(github_token)
 
-json_url = "https://raw.githubusercontent.com/ZOSOpenTools/meta/main/docs/api/zopen_releases_latest.json"
+json_url = "https://raw.githubusercontent.com/zopencommunity/meta/main/docs/api/zopen_releases_latest.json"
 response = requests.get(json_url)
 data = json.loads(response.text)
 
@@ -258,6 +258,16 @@ with open('docs/Latest.md', 'w') as f:
     print("\nLast updated: ", todaysDate)
 
 sys.stdout = original_stdout # Restore stdout
+
+# --- Fetch total org repo count (released + unreleased) for the "X of Y" summary ---
+# This is the authoritative denominator: all *port repos in the org, including ones
+# that have never published a release and therefore never appear in zopen_releases_latest.json.
+try:
+    org = g.get_organization("zopencommunity")
+    total_org_repos = sum(1 for r in org.get_repos() if r.name.endswith("port"))
+except Exception as e:
+    print(f"Warning: could not fetch org repo count: {e}", file=sys.stderr)
+    total_org_repos = None
 
 # --- Matplotlib pie chart generation ---
 if any(progressPerStatus.values()):
@@ -386,6 +396,14 @@ else:
 # --- Generation of Progress.md ---
 with open('docs/Progress.md', 'w') as f_progress:
     sys.stdout = f_progress
+
+    # "X of Y" summary header
+    released_count = sum(v for k, v in progressPerStatus.items() if k != "Unreleased")
+    if total_org_repos is not None:
+        unreleased_org = total_org_repos - released_count
+        print(f"> **{released_count} of {total_org_repos}** packages in the zopen community have been released and are tracked here.")
+        print(f"> The remaining {unreleased_org} repos exist in the org but have not yet published a release.\n")
+
     print(f"*Last updated: {todaysDate}*\n")
     print("""
 ## Overall Status
