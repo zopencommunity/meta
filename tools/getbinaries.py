@@ -327,25 +327,27 @@ if any(progressPerStatus.values()):
     plt.savefig(summary_chart_file, dpi=150, bbox_inches='tight', facecolor='white')
     plt.close()
 
-# --- Bar Chart Generation (suggestion 1: below-100 only; suggestion 7: strip 'port') ---
+# --- Bar Chart Generation (all packages, strip 'port' suffix from labels) ---
 chart_files = []
 active_statusPerPort = {k: v for k, v in statusPerPort.items() if v >= 0}
 if active_statusPerPort:
-    # Suggestion 1: only packages below 100% in the breakdown chart
-    perfect_count = sum(1 for v in active_statusPerPort.values() if v == 100)
-    below_100 = {k: v for k, v in active_statusPerPort.items() if v < 100}
+    sorted_ports = sorted(active_statusPerPort.items(), key=lambda item: item[1], reverse=True)
 
-    sorted_ports = sorted(below_100.items(), key=lambda item: item[1], reverse=True)
+    chunk_size = 50
+    num_chunks = (len(sorted_ports) + chunk_size - 1) // chunk_size
 
-    if sorted_ports:
-        sorted_ports.reverse()   # lowest at bottom of chart
-        # Suggestion 7: strip trailing 'port' from each label
-        labels_bar = [k[:-4] if k.endswith('port') else k for k in [item[0] for item in sorted_ports]]
-        sizes_bar  = [item[1] for item in sorted_ports]
+    for i in range(num_chunks):
+        chunk = sorted_ports[i * chunk_size:(i + 1) * chunk_size]
+        chunk.reverse()
+        # Strip trailing 'port' from labels
+        labels_bar = [k[:-4] if k.endswith('port') else k for k in [item[0] for item in chunk]]
+        sizes_bar  = [item[1] for item in chunk]
 
         col_bar = []
         for val_bar in sizes_bar:
-            if val_bar >= 75:
+            if val_bar == 100:
+                col_bar.append('#22c55e')
+            elif val_bar >= 75:
                 col_bar.append('#3b82f6')
             elif val_bar >= 50:
                 col_bar.append('#f59e0b')
@@ -355,7 +357,7 @@ if active_statusPerPort:
         row_h = 0.32
         fig_h = max(6, len(labels_bar) * row_h + 1.5)
         fig_bar, ax_bar = plt.subplots(figsize=(12, fig_h), facecolor='white')
-        fig_bar.subplots_adjust(left=0.18, right=0.92, top=0.93, bottom=0.07)
+        fig_bar.subplots_adjust(left=0.18, right=0.92, top=0.94, bottom=0.06)
 
         bars_obj = ax_bar.barh(
             labels_bar, sizes_bar,
@@ -368,11 +370,11 @@ if active_statusPerPort:
         ax_bar.bar_label(bars_obj, fmt='%.1f%%', padding=4, fontsize=8, color='#1f2328')
 
         ax_bar.set_xlabel('Success Rate (%)', fontsize=11, color='#1f2328')
-        ax_bar.set_title(
-            f"Project Test Quality  —  packages below 100%\n"
-            f"({perfect_count} packages at 100% not shown)",
-            fontsize=12, fontweight='bold', color='#1f2328', pad=10,
-        )
+        title = "Project Test Quality"
+        if num_chunks > 1:
+            title += f"  (Part {i+1} / {num_chunks})"
+        ax_bar.set_title(title, fontsize=13, fontweight='bold', color='#1f2328', pad=10)
+
         ax_bar.set_xlim(0, 115)
         ax_bar.tick_params(axis='y', labelsize=8.5, colors='#1f2328')
         ax_bar.tick_params(axis='x', labelsize=9,   colors='#57606a')
@@ -382,7 +384,10 @@ if active_statusPerPort:
         ax_bar.xaxis.grid(True, color='#e5e7eb', linewidth=0.6, zorder=0)
         ax_bar.set_axisbelow(True)
 
-        chart_filename = 'docs/images/quality.png'
+        chart_filename = f'docs/images/quality_part_{i+1}.png'
+        if num_chunks == 1:
+            chart_filename = 'docs/images/quality.png'
+
         plt.savefig(chart_filename, dpi=150, bbox_inches='tight', facecolor='white')
         plt.close()
         chart_files.append(chart_filename.replace('docs/', './'))

@@ -12,7 +12,11 @@
 
 ## Overall Status Breakdown
 
-![Project Test Quality](./images/quality.png)
+![Project Test Quality Part 1](./images/quality_part_1.png)
+![Project Test Quality Part 2](./images/quality_part_2.png)
+![Project Test Quality Part 3](./images/quality_part_3.png)
+![Project Test Quality Part 4](./images/quality_part_4.png)
+![Project Test Quality Part 5](./images/quality_part_5.png)
 
 ## Projects with skipped or no tests (or no releases resulting in skipped status)
 * [antport](https://github.com/zopencommunity/antport) - Tests skipped or not enabled

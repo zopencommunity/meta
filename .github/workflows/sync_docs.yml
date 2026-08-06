@@ -38,7 +38,11 @@ jobs:
           # Generated progress/quality chart images
           curl -fsSL "$UPSTREAM/docs/images/progress.png"             -o docs/images/progress.png          || true
           curl -fsSL "$UPSTREAM/docs/images/progress_summary.png"     -o docs/images/progress_summary.png  || true
-          curl -fsSL "$UPSTREAM/docs/images/quality.png"              -o docs/images/quality.png           || true
+          curl -fsSL "$UPSTREAM/docs/images/quality_part_1.png"       -o docs/images/quality_part_1.png    || true
+          curl -fsSL "$UPSTREAM/docs/images/quality_part_2.png"       -o docs/images/quality_part_2.png    || true
+          curl -fsSL "$UPSTREAM/docs/images/quality_part_3.png"       -o docs/images/quality_part_3.png    || true
+          curl -fsSL "$UPSTREAM/docs/images/quality_part_4.png"       -o docs/images/quality_part_4.png    || true
+          curl -fsSL "$UPSTREAM/docs/images/quality_part_5.png"       -o docs/images/quality_part_5.png    || true
 
           # Generated API JSON
           curl -fsSL "$UPSTREAM/docs/api/zopen_files.json"             -o docs/api/zopen_files.json
@@ -58,7 +62,11 @@ jobs:
                   docs/Progress.md \
                   docs/images/progress.png \
                   docs/images/progress_summary.png \
-                  docs/images/quality.png \
+                  docs/images/quality_part_1.png \
+                  docs/images/quality_part_2.png \
+                  docs/images/quality_part_3.png \
+                  docs/images/quality_part_4.png \
+                  docs/images/quality_part_5.png \
                   docs/api/zopen_files.json \
                   docs/api/zopen_releases.json \
                   docs/api/zopen_releases_latest.json \
