@@ -281,42 +281,81 @@ if any(progressPerStatus.values()):
 else:
     print("No data for progress pie chart.", file=sys.stderr)
 
-# --- Bar Chart Generation ---
+# --- Summary table PNG (suggestion 4) ---
+summary_chart_file = None
+if any(progressPerStatus.values()):
+    STATUS_COLORS_TBL = {
+        "Green":   "#22c55e",
+        "Blue":    "#3b82f6",
+        "Yellow":  "#f59e0b",
+        "Red":     "#ef4444",
+        "Skipped": "#9ca3af",
+    }
+    total_pkg = sum(progressPerStatus.values())
+
+    fig_tbl, ax_tbl = plt.subplots(figsize=(6, 3), facecolor='white')
+    ax_tbl.axis('off')
+
+    rows_tbl = []
+    for status, color in STATUS_COLORS_TBL.items():
+        cnt = progressPerStatus.get(status, 0)
+        pct = cnt / total_pkg * 100 if total_pkg else 0
+        rows_tbl.append([f"  {status}", str(cnt), f"{pct:.1f}%"])
+
+    tbl = ax_tbl.table(
+        cellText=rows_tbl,
+        colLabels=['Status', 'Count', 'Percentage'],
+        loc='center',
+        cellLoc='left',
+    )
+    tbl.auto_set_font_size(False)
+    tbl.set_fontsize(11)
+    tbl.scale(1.4, 1.8)
+
+    for i, color in enumerate(STATUS_COLORS_TBL.values()):
+        tbl[i + 1, 0].set_facecolor(color + '33')
+        tbl[i + 1, 0].set_text_props(color='#1f2328', fontweight='bold')
+        tbl[i + 1, 1].set_text_props(fontweight='bold')
+    for j in range(3):
+        tbl[0, j].set_facecolor('#f0f0f0')
+        tbl[0, j].set_text_props(fontweight='bold', color='#1f2328')
+
+    ax_tbl.set_title(f'Overall Status Summary  ({total_pkg} total packages)',
+                     fontsize=12, fontweight='bold', color='#1f2328', pad=10)
+
+    summary_chart_file = 'docs/images/progress_summary.png'
+    plt.savefig(summary_chart_file, dpi=150, bbox_inches='tight', facecolor='white')
+    plt.close()
+
+# --- Bar Chart Generation (suggestion 1: below-100 only; suggestion 7: strip 'port') ---
 chart_files = []
 active_statusPerPort = {k: v for k, v in statusPerPort.items() if v >= 0}
 if active_statusPerPort:
-    sorted_ports = sorted(active_statusPerPort.items(), key=lambda item: item[1], reverse=True)
-    
-    chunk_size = 50
-    if len(sorted_ports) == 0:
-        num_chunks = 0
-    else:
-        num_chunks = (len(sorted_ports) + chunk_size - 1) // chunk_size
-    
-    for i in range(num_chunks):
-        chunk = sorted_ports[i * chunk_size:(i + 1) * chunk_size]
-        chunk.reverse()
-        labels_bar = [item[0] for item in chunk]
-        sizes_bar = [item[1] for item in chunk]
+    # Suggestion 1: only packages below 100% in the breakdown chart
+    perfect_count = sum(1 for v in active_statusPerPort.values() if v == 100)
+    below_100 = {k: v for k, v in active_statusPerPort.items() if v < 100}
 
-        if not labels_bar:
-            continue
+    sorted_ports = sorted(below_100.items(), key=lambda item: item[1], reverse=True)
+
+    if sorted_ports:
+        sorted_ports.reverse()   # lowest at bottom of chart
+        # Suggestion 7: strip trailing 'port' from each label
+        labels_bar = [k[:-4] if k.endswith('port') else k for k in [item[0] for item in sorted_ports]]
+        sizes_bar  = [item[1] for item in sorted_ports]
 
         col_bar = []
         for val_bar in sizes_bar:
-            if val_bar == 100:
-                col_bar.append('#22c55e')
-            elif val_bar >= 75:
+            if val_bar >= 75:
                 col_bar.append('#3b82f6')
             elif val_bar >= 50:
                 col_bar.append('#f59e0b')
             else:
                 col_bar.append('#ef4444')
 
-        row_h    = 0.32          # bar height in inches per row
-        fig_h    = max(6, len(labels_bar) * row_h + 1.5)
+        row_h = 0.32
+        fig_h = max(6, len(labels_bar) * row_h + 1.5)
         fig_bar, ax_bar = plt.subplots(figsize=(12, fig_h), facecolor='white')
-        fig_bar.subplots_adjust(left=0.22, right=0.92, top=0.94, bottom=0.06)
+        fig_bar.subplots_adjust(left=0.18, right=0.92, top=0.93, bottom=0.07)
 
         bars_obj = ax_bar.barh(
             labels_bar, sizes_bar,
@@ -329,12 +368,12 @@ if active_statusPerPort:
         ax_bar.bar_label(bars_obj, fmt='%.1f%%', padding=4, fontsize=8, color='#1f2328')
 
         ax_bar.set_xlabel('Success Rate (%)', fontsize=11, color='#1f2328')
-        title = "Project Test Quality"
-        if num_chunks > 1:
-            title += f"  (Part {i+1} / {num_chunks})"
-        ax_bar.set_title(title, fontsize=13, fontweight='bold', color='#1f2328', pad=10)
-
-        ax_bar.set_xlim(0, 115)          # room for the label at 100%
+        ax_bar.set_title(
+            f"Project Test Quality  —  packages below 100%\n"
+            f"({perfect_count} packages at 100% not shown)",
+            fontsize=12, fontweight='bold', color='#1f2328', pad=10,
+        )
+        ax_bar.set_xlim(0, 115)
         ax_bar.tick_params(axis='y', labelsize=8.5, colors='#1f2328')
         ax_bar.tick_params(axis='x', labelsize=9,   colors='#57606a')
         ax_bar.spines[['top', 'right']].set_visible(False)
@@ -343,10 +382,7 @@ if active_statusPerPort:
         ax_bar.xaxis.grid(True, color='#e5e7eb', linewidth=0.6, zorder=0)
         ax_bar.set_axisbelow(True)
 
-        chart_filename = f'docs/images/quality_part_{i+1}.png'
-        if num_chunks == 1:
-            chart_filename = 'docs/images/quality.png'
-
+        chart_filename = 'docs/images/quality.png'
         plt.savefig(chart_filename, dpi=150, bbox_inches='tight', facecolor='white')
         plt.close()
         chart_files.append(chart_filename.replace('docs/', './'))
@@ -357,6 +393,7 @@ else:
 # --- Generation of Progress.md ---
 with open('docs/Progress.md', 'w') as f_progress:
     sys.stdout = f_progress
+    print(f"*Last updated: {todaysDate}*\n")
     print("""
 ## Overall Status
 * <span style="color:#22c55e">Green</span>: All tests passing
@@ -365,15 +402,17 @@ with open('docs/Progress.md', 'w') as f_progress:
 * <span style="color:#ef4444">Red</span>: Few or no tests passing (<50%)
 * <span style="color:#9ca3af">Skipped</span>: Skipped or Tests are not enabled
 
-![image info](./images/progress.png)
-
-## Overall Status Breakdown
+![Current Porting Status](./images/progress.png)
 """)
+    if summary_chart_file:
+        print(f"![Overall Status Summary](./images/progress_summary.png)\n")
+
+    print("## Overall Status Breakdown\n")
     if not chart_files:
         print("No quality chart generated.")
     else:
         for chart_file in chart_files:
-            print(f"![image info]({chart_file})")
+            print(f"![Project Test Quality](./images/quality.png)")
 
     print("\n## Projects with skipped or no tests (or no releases resulting in skipped status)")
     count_skipped_no_tests = 0

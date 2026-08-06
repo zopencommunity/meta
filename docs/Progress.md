@@ -1,3 +1,4 @@
+*Last updated: 2026-08-06 10:54:24 UTC*
 
 ## Overall Status
 * <span style="color:#22c55e">Green</span>: All tests passing
@@ -6,15 +7,13 @@
 * <span style="color:#ef4444">Red</span>: Few or no tests passing (<50%)
 * <span style="color:#9ca3af">Skipped</span>: Skipped or Tests are not enabled
 
-![image info](./images/progress.png)
+![Current Porting Status](./images/progress.png)
+
+![Overall Status Summary](./images/progress_summary.png)
 
 ## Overall Status Breakdown
 
-![image info](./images/quality_part_1.png)
-![image info](./images/quality_part_2.png)
-![image info](./images/quality_part_3.png)
-![image info](./images/quality_part_4.png)
-![image info](./images/quality_part_5.png)
+![Project Test Quality](./images/quality.png)
 
 ## Projects with skipped or no tests (or no releases resulting in skipped status)
 * [antport](https://github.com/zopencommunity/antport) - Tests skipped or not enabled
@@ -2537,3 +2536,4 @@
 </div>
 
 Last updated:  2026-05-17 06:19:16 UTC
+

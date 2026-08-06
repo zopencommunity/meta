@@ -35,6 +35,11 @@ jobs:
           curl -fsSL "$UPSTREAM/docs/newly_released.md"          -o docs/newly_released.md  || true
           curl -fsSL "$UPSTREAM/docs/Progress.md"                -o docs/Progress.md        || true
 
+          # Generated progress/quality chart images
+          curl -fsSL "$UPSTREAM/docs/images/progress.png"             -o docs/images/progress.png          || true
+          curl -fsSL "$UPSTREAM/docs/images/progress_summary.png"     -o docs/images/progress_summary.png  || true
+          curl -fsSL "$UPSTREAM/docs/images/quality.png"              -o docs/images/quality.png           || true
+
           # Generated API JSON
           curl -fsSL "$UPSTREAM/docs/api/zopen_files.json"             -o docs/api/zopen_files.json
           curl -fsSL "$UPSTREAM/docs/api/zopen_releases.json"          -o docs/api/zopen_releases.json
@@ -51,6 +56,9 @@ jobs:
                   docs/upstreamstatus.md \
                   docs/newly_released.md \
                   docs/Progress.md \
+                  docs/images/progress.png \
+                  docs/images/progress_summary.png \
+                  docs/images/quality.png \
                   docs/api/zopen_files.json \
                   docs/api/zopen_releases.json \
                   docs/api/zopen_releases_latest.json \
