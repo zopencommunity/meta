@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>zopen package request triage</title>
+    <style>
+      :root { color-scheme: light dark; --bg:#f5f7f6; --panel:#fff; --text:#202523; --muted:#67706c; --line:#dce3df; --accent:#167d68; --danger:#b42318; font-family:Inter,ui-sans-serif,system-ui,-apple-system,sans-serif; }
+      @media (prefers-color-scheme:dark) { :root { --bg:#111513; --panel:#1a201d; --text:#ecf1ef; --muted:#a6afab; --line:#35403b; --accent:#52bda4; } }
+      * { box-sizing:border-box; }
+      body { margin:0; color:var(--text); background:var(--bg); }
+      button,input,select,textarea { font:inherit; }
+      button { cursor:pointer; }
+      header { position:sticky; top:0; z-index:2; display:flex; justify-content:space-between; align-items:center; gap:20px; padding:18px max(24px,calc((100vw - 1180px)/2)); border-bottom:1px solid var(--line); background:color-mix(in srgb,var(--bg) 92%,transparent); backdrop-filter:blur(14px); }
+      header h1 { margin:0; font-size:20px; }
+      header span { color:var(--muted); font-size:13px; }
+      main { max-width:1180px; margin:0 auto; padding:34px 24px 80px; }
+      .login { max-width:520px; margin:12vh auto; padding:30px; border:1px solid var(--line); border-top:4px solid var(--accent); border-radius:16px; background:var(--panel); box-shadow:0 12px 30px rgb(0 0 0 / .08); }
+      .login h2 { margin:0 0 8px; }
+      .login p { color:var(--muted); line-height:1.5; }
+      .token-row { display:flex; gap:10px; }
+      input,select,textarea { width:100%; border:1px solid var(--line); border-radius:8px; color:var(--text); background:var(--bg); outline:none; }
+      input,select { height:42px; padding:0 11px; }
+      textarea { min-height:78px; padding:10px 11px; resize:vertical; }
+      input:focus,select:focus,textarea:focus { border-color:var(--accent); box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 18%,transparent); }
+      .primary,.secondary { min-height:42px; padding:0 16px; border-radius:8px; font-weight:700; }
+      .primary { border:1px solid var(--accent); color:white; background:var(--accent); }
+      .secondary { border:1px solid var(--line); color:var(--text); background:var(--panel); }
+      .toolbar { display:flex; justify-content:space-between; align-items:end; gap:18px; margin-bottom:24px; }
+      .toolbar h2 { margin:0 0 5px; }
+      .toolbar p { margin:0; color:var(--muted); }
+      .filters { display:flex; gap:10px; }
+      .filters select { width:180px; }
+      .request-list { display:grid; gap:14px; }
+      .card { border:1px solid var(--line); border-radius:14px; background:var(--panel); overflow:hidden; }
+      .summary { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:20px; padding:20px; }
+      .title-row { display:flex; flex-wrap:wrap; align-items:center; gap:9px; }
+      .title-row h3 { margin:0; font-size:20px; }
+      .pill { padding:4px 8px; border-radius:999px; color:var(--accent); background:color-mix(in srgb,var(--accent) 12%,transparent); font-size:11px; font-weight:800; text-transform:uppercase; }
+      .summary p { margin:10px 0 0; color:var(--muted); line-height:1.5; }
+      .meta { display:flex; flex-wrap:wrap; gap:12px; margin-top:12px; color:var(--muted); font-size:12px; }
+      .meta a { color:var(--accent); }
+      .votes { align-self:start; min-width:70px; padding:10px; border:1px solid var(--line); border-radius:10px; text-align:center; }
+      .votes strong { display:block; font-size:22px; }
+      .votes span { color:var(--muted); font-size:10px; text-transform:uppercase; }
+      details { border-top:1px solid var(--line); }
+      summary { padding:13px 20px; color:var(--accent); font-size:13px; font-weight:700; cursor:pointer; }
+      .editor { display:grid; grid-template-columns:1fr 1fr; gap:16px; padding:6px 20px 22px; }
+      .editor label { display:block; }
+      .editor label > span { display:block; margin-bottom:6px; color:var(--muted); font-size:12px; font-weight:700; }
+      .editor .wide { grid-column:1/-1; }
+      .editor-actions { display:flex; justify-content:flex-end; align-items:center; gap:12px; grid-column:1/-1; }
+      .save-state { color:var(--muted); font-size:13px; }
+      .error { color:var(--danger); }
+      .empty { padding:60px; border:1px dashed var(--line); border-radius:14px; color:var(--muted); text-align:center; }
+      [hidden] { display:none !important; }
+      @media (max-width:720px) { .toolbar,.token-row { align-items:stretch; flex-direction:column; } .filters { flex-direction:column; } .filters select { width:100%; } .editor { grid-template-columns:1fr; } .editor .wide,.editor-actions { grid-column:1; } }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div><h1>zopen package requests</h1><span>Maintainer triage console</span></div>
+      <button id="sign-out" class="secondary" type="button" hidden>Sign out</button>
+    </header>
+    <main>
+      <section id="login" class="login">
+        <h2>Maintainer access</h2>
+        <p>Enter the admin token configured on this service. It is retained only for this browser tab.</p>
+        <form id="login-form" class="token-row">
+          <input id="token" type="password" autocomplete="current-password" required placeholder="Admin token" />
+          <button class="primary" type="submit">Open console</button>
+        </form>
+        <p id="login-error" class="error" role="alert"></p>
+      </section>
+
+      <section id="console" hidden>
+        <div class="toolbar">
+          <div><h2>Request queue</h2><p>Acknowledge, prioritize, and publish delivery locations.</p></div>
+          <div class="filters">
+            <select id="status-filter" aria-label="Filter by status">
+              <option value="all">All statuses</option>
+              <option value="proposed">Proposed</option>
+              <option value="under_review">Under review</option>
+              <option value="accepted">Accepted</option>
+              <option value="in_progress">In progress</option>
+              <option value="available">Available</option>
+              <option value="declined">Declined</option>
+            </select>
+            <button id="refresh" class="secondary" type="button">Refresh</button>
+          </div>
+        </div>
+        <div id="request-list" class="request-list"></div>
+      </section>
+    </main>
+
+    <script>
+      const artifactLabels = {
+        "": "No published artifact",
+        zopen_package: "zopen package (other location)",
+        pulp_zopen: "zopen Pulp RPM package",
+        pulp_python: "Pulp Python package / wheel",
+        pypi: "PyPI project",
+        python_wheel: "Python wheel",
+        pulp_rpm: "Pulp RPM",
+        other: "Other package location",
+      };
+      const ecosystemLabels = { general:"General / CLI",python:"Python / PyPI",c_cpp:"C / C++",rust:"Rust / Cargo",go:"Go module",java:"Java / JVM",javascript:"JavaScript / npm",shell:"Shell",other:"Other" };
+      const statusLabels = { proposed:"Proposed",under_review:"Under review",accepted:"Accepted",in_progress:"In progress",available:"Available",declined:"Declined" };
+      let adminToken = sessionStorage.getItem("zopen-package-admin-token") || "";
+      let requests = [];
+      const login = document.querySelector("#login");
+      const consolePanel = document.querySelector("#console");
+      const requestList = document.querySelector("#request-list");
+      const signOut = document.querySelector("#sign-out");
+
+      function escapeHtml(value) {
+        return String(value ?? "").replace(/[&<>'"]/g, character => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", "'":"&#39;", '"':"&quot;" })[character]);
+      }
+
+      async function api(path, options = {}) {
+        const response = await fetch(path, {
+          ...options,
+          headers: { "Content-Type":"application/json", Authorization:`Bearer ${adminToken}`, ...(options.headers || {}) },
+        });
+        const body = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(body.error || "Request failed");
+        return body;
+      }
+
+      async function loadRequests() {
+        const result = await api("/api/admin/requests");
+        requests = result.requests;
+        render();
+      }
+
+      function render() {
+        const filter = document.querySelector("#status-filter").value;
+        const visible = requests.filter(request => filter === "all" || request.status === filter);
+        if (!visible.length) {
+          requestList.innerHTML = '<div class="empty">No requests match this status.</div>';
+          return;
+        }
+        requestList.innerHTML = visible.map(request => `
+          <article class="card" data-id="${request.id}">
+            <div class="summary">
+              <div>
+                <div class="title-row">
+                  <h3>${escapeHtml(request.packageName)}</h3>
+                  <span class="pill">${escapeHtml(ecosystemLabels[request.ecosystem] || request.ecosystem)}</span>
+                  <span class="pill">${escapeHtml(statusLabels[request.status])}</span>
+                </div>
+                <p>${escapeHtml(request.description)}</p>
+                <div class="meta">
+                  <a href="${escapeHtml(request.upstreamUrl)}" target="_blank" rel="noopener noreferrer">Upstream project ↗</a>
+                  <span>Requested ${new Date(request.createdAt).toLocaleDateString()}</span>
+                  ${request.acknowledgedAt ? `<span>Acknowledged ${new Date(request.acknowledgedAt).toLocaleDateString()}</span>` : ""}
+                </div>
+              </div>
+              <div class="votes"><strong>${request.voteCount}</strong><span>votes</span></div>
+            </div>
+            <details>
+              <summary>Review and update</summary>
+              <form class="editor">
+                <label><span>Package name</span><input name="packageName" value="${escapeHtml(request.packageName)}" maxlength="80" required /></label>
+                <label><span>Project ecosystem</span><select name="ecosystem">${Object.entries(ecosystemLabels).map(([key,label]) => `<option value="${key}" ${request.ecosystem === key ? "selected" : ""}>${label}</option>`).join("")}</select></label>
+                <label class="wide"><span>Upstream project URL</span><input name="upstreamUrl" type="url" value="${escapeHtml(request.upstreamUrl)}" required /></label>
+                <label class="wide"><span>Request description</span><textarea name="description" minlength="20" maxlength="1200" required>${escapeHtml(request.description)}</textarea></label>
+                <label><span>Use case or version</span><textarea name="useCase" maxlength="1200">${escapeHtml(request.useCase)}</textarea></label>
+                <label><span>Can help test</span><select name="canHelpTest"><option value="false" ${!request.canHelpTest ? "selected" : ""}>No</option><option value="true" ${request.canHelpTest ? "selected" : ""}>Yes</option></select></label>
+                <label><span>Requester name or alias</span><input name="requesterName" value="${escapeHtml(request.requesterName)}" maxlength="100" /></label>
+                <label><span>Organization or company</span><input name="organization" value="${escapeHtml(request.organization)}" maxlength="160" /></label>
+                <label><span>Contact email (private)</span><input name="contactEmail" type="email" value="${escapeHtml(request.contactEmail)}" maxlength="254" /></label>
+                <label><span>Public requester attribution</span><select name="showRequesterPublicly"><option value="false" ${!request.showRequesterPublicly ? "selected" : ""}>Hidden</option><option value="true" ${request.showRequesterPublicly ? "selected" : ""}>Show name and organization</option></select></label>
+                <label><span>Status</span><select name="status">${Object.entries(statusLabels).map(([key,label]) => `<option value="${key}" ${request.status === key ? "selected" : ""}>${label}</option>`).join("")}</select></label>
+                <label><span>Published artifact type</span><select name="artifactKind">${Object.entries(artifactLabels).map(([key,label]) => `<option value="${key}" ${request.artifactKind === key ? "selected" : ""}>${label}</option>`).join("")}</select></label>
+                <label><span>zopen port repository URL</span><input name="portRepositoryUrl" type="url" value="${escapeHtml(request.portRepositoryUrl)}" placeholder="https://github.com/zopencommunity/exampleport" /></label>
+                <label><span>Published artifact / Pulp URL</span><input name="artifactUrl" type="url" value="${escapeHtml(request.artifactUrl)}" placeholder="https://repo.zopen.community/pulp/content/…" /></label>
+                <label class="wide"><span>Public maintainer note</span><textarea name="maintainerNote" maxlength="1200" placeholder="Triage decision, current progress, or installation guidance">${escapeHtml(request.maintainerNote)}</textarea></label>
+                <div class="editor-actions"><span class="save-state" role="status"></span><button class="primary" type="submit">Save changes</button></div>
+              </form>
+            </details>
+          </article>`).join("");
+      }
+
+      requestList.addEventListener("submit", async event => {
+        event.preventDefault();
+        const form = event.target;
+        const card = form.closest("[data-id]");
+        const state = form.querySelector(".save-state");
+        const button = form.querySelector("button[type=submit]");
+        const payload = Object.fromEntries(new FormData(form));
+        payload.canHelpTest = payload.canHelpTest === "true";
+        payload.showRequesterPublicly = payload.showRequesterPublicly === "true";
+        state.classList.remove("error");
+        state.textContent = "Saving…";
+        button.disabled = true;
+        try {
+          const result = await api(`/api/requests/${card.dataset.id}`, { method:"PATCH", body:JSON.stringify(payload) });
+          const index = requests.findIndex(request => request.id === result.request.id);
+          requests[index] = result.request;
+          state.textContent = "Saved";
+          setTimeout(render, 650);
+        } catch (error) {
+          state.textContent = error.message;
+          state.classList.add("error");
+        } finally {
+          button.disabled = false;
+        }
+      });
+
+      document.querySelector("#login-form").addEventListener("submit", async event => {
+        event.preventDefault();
+        adminToken = document.querySelector("#token").value;
+        document.querySelector("#login-error").textContent = "";
+        try {
+          await loadRequests();
+          sessionStorage.setItem("zopen-package-admin-token", adminToken);
+          login.hidden = true;
+          consolePanel.hidden = false;
+          signOut.hidden = false;
+        } catch (error) {
+          document.querySelector("#login-error").textContent = error.message;
+        }
+      });
+      document.querySelector("#status-filter").addEventListener("change", render);
+      document.querySelector("#refresh").addEventListener("click", loadRequests);
+      signOut.addEventListener("click", () => { sessionStorage.removeItem("zopen-package-admin-token"); location.reload(); });
+      if (adminToken) document.querySelector("#token").value = adminToken;
+    </script>
+  </body>
+</html>

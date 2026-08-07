@@ -67,6 +67,7 @@ export default defineConfig({
       { text: "Home", link: "/" },
       { text: "Getting Started", link: "/Guides/QuickStart" },
       { text: "Available Tools", link: "/Latest" },
+      { text: "Request a Package", link: "/PackageRequests" },
       { text: "Reference", link: "/reference/zopen-reference" },
     ],
 
@@ -89,6 +90,7 @@ export default defineConfig({
         collapsed: false,
         items: [
           { text: "All Tools", link: "/Latest" },
+          { text: "Request a Package", link: "/PackageRequests" },
           { text: "Newly Released Packages", link: "/newly_released" },
           { text: "Package Vulnerabilities", link: "/Vulnerabilities" },
           {
