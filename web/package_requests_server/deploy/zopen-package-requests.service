@@ -7,6 +7,7 @@ Wants=network-online.target
 Type=simple
 User=zopenreq
 Group=zopenreq
+UMask=0077
 WorkingDirectory=/opt/zopen-meta/web/package_requests_server
 EnvironmentFile=/etc/zopen-package-requests.env
 ExecStart=/usr/bin/node server.js

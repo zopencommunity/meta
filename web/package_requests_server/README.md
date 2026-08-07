@@ -82,6 +82,18 @@ or Pulp credentials outside Git. The admin HTML and API code can remain public:
 authorization comes from the server-side token and private network path, not
 from hiding source code.
 
+On older enterprise Linux hosts, the prebuilt `sqlite3` native module may
+target a newer glibc. Rebuild it against the host after `npm ci`:
+
+```bash
+npm rebuild sqlite3 --build-from-source
+```
+
+When dependencies are installed as root with a restrictive umask, restore
+group read/traverse permissions for the `zopenreq` service account after the
+install. The systemd unit itself uses `UMask=0077` so databases containing
+private requester details are created without world or group access.
+
 For tunnel-only administration, connect from a maintainer workstation with:
 
 ```bash

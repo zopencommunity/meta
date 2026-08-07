@@ -33,7 +33,10 @@ interface PackageRequest {
   createdAt: string;
 }
 
-const configuredApiUrl = String(import.meta.env.VITE_PACKAGE_REQUESTS_API_URL || "").replace(/\/$/, "");
+const productionApiUrl = "https://usage.zopen.community/package-requests/api";
+const configuredApiUrl = String(
+  import.meta.env.VITE_PACKAGE_REQUESTS_API_URL || (import.meta.env.PROD ? productionApiUrl : ""),
+).replace(/\/$/, "");
 const apiUrl = ref(configuredApiUrl);
 const requests = ref<PackageRequest[]>([]);
 const availablePackages = ref(new Set<string>());
