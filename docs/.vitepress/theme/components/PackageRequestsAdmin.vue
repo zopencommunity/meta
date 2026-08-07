@@ -29,7 +29,9 @@ interface PulpMatch {
   requestId: number;
   requestPackageName: string;
   requestStatus: string;
+  requestEcosystem: string;
   source: "rpm" | "wheel";
+  isPrimary: boolean;
   packageName: string;
   version: string;
   release: string;
@@ -165,7 +167,10 @@ async function syncPulp() {
 async function reviewPulpMatch(match: PulpMatch, action: "approve" | "dismiss") {
   if (
     action === "approve" &&
-    !window.confirm(`Use ${match.packageName} ${match.version} and mark ${match.requestPackageName} available?`)
+    !window.confirm(
+      `Use the ${match.isPrimary ? "primary" : "alternative"} ${match.source === "wheel" ? "Python wheel" : "zopen RPM"} ` +
+      `${match.packageName} ${match.version} and mark ${match.requestPackageName} available?`,
+    )
   ) return;
   pulpBusy.value = true;
   pulpError.value = false;
@@ -292,7 +297,12 @@ onMounted(async () => {
         <div v-if="pulpMatches.length" class="match-list">
           <article v-for="match in pulpMatches" :key="`${match.requestId}:${match.source}`" class="match-card">
             <div>
-              <span class="source-badge">{{ match.source === "rpm" ? "zopen RPM" : "Python wheel" }}</span>
+              <div class="match-labels">
+                <span class="source-badge">{{ match.source === "rpm" ? "zopen RPM" : "Python wheel" }}</span>
+                <span :class="['preference-badge', { primary: match.isPrimary }]">
+                  {{ match.isPrimary ? `Primary for ${ecosystems[match.requestEcosystem] || match.requestEcosystem}` : "Alternative format" }}
+                </span>
+              </div>
               <h3>{{ match.requestPackageName }}</h3>
               <p>
                 Exact match: <strong>{{ match.packageName }} {{ match.version }}</strong>
@@ -303,7 +313,9 @@ onMounted(async () => {
             </div>
             <div class="match-actions">
               <button class="secondary" type="button" :disabled="pulpBusy" @click="reviewPulpMatch(match, 'dismiss')">Dismiss</button>
-              <button class="primary" type="button" :disabled="pulpBusy" @click="reviewPulpMatch(match, 'approve')">Apply and mark available</button>
+              <button class="primary" type="button" :disabled="pulpBusy" @click="reviewPulpMatch(match, 'approve')">
+                {{ match.isPrimary ? "Apply primary and mark available" : "Use alternative and mark available" }}
+              </button>
             </div>
           </article>
         </div>
@@ -402,7 +414,11 @@ button:disabled { cursor:wait; opacity:.65; }
 .match-card { justify-content:space-between; align-items:center; gap:20px; padding:16px; border:1px solid var(--vp-c-divider); border-radius:10px; background:var(--vp-c-bg); }
 .match-card h3 { margin:4px 0; }
 .match-card p { margin:0 0 5px; color:var(--vp-c-text-2); }
+.match-labels { display:flex; flex-wrap:wrap; align-items:center; gap:8px; }
 .source-badge { color:var(--vp-c-brand-1); font-size:11px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; }
+.preference-badge { padding:3px 7px; border:1px solid var(--vp-c-divider); border-radius:999px; color:var(--vp-c-text-3); font-size:10px; font-weight:750; text-transform:uppercase; }
+.preference-badge.primary { color:#09634f; border-color:#85cdbd; background:#e7f8f3; }
+.dark .preference-badge.primary { color:#a8e6d6; border-color:#275e52; background:#142d28; }
 .match-actions { flex-shrink:0; gap:8px; }
 .no-matches { margin:16px 0 0; color:var(--vp-c-text-2); }
 .toolbar { justify-content:space-between; align-items:end; gap:18px; margin-bottom:24px; }

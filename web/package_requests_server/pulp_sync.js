@@ -248,13 +248,20 @@ async function getPulpOverview(database) {
       database,
       `SELECT pm.request_id, pm.source, pm.status, pm.matched_at,
               r.package_name AS request_package_name, r.status AS request_status,
+              r.ecosystem AS request_ecosystem,
               a.id AS artifact_id, a.package_name, a.version, a.release, a.architecture,
               a.artifact_url, a.checksum, a.published_at
        FROM pulp_matches pm
        JOIN package_requests r ON r.id = pm.request_id
        JOIN pulp_artifacts a ON a.id = pm.artifact_id
        WHERE pm.status = 'suggested'
-       ORDER BY pm.matched_at DESC, r.package_name, pm.source`,
+       ORDER BY r.id DESC,
+         CASE
+           WHEN r.ecosystem = 'python' AND pm.source = 'wheel' THEN 0
+           WHEN r.ecosystem != 'python' AND pm.source = 'rpm' THEN 0
+           ELSE 1
+         END,
+         pm.matched_at DESC, pm.source`,
     ),
     all(database, "SELECT * FROM pulp_sync_runs ORDER BY id DESC LIMIT 10"),
     get(database, "SELECT COUNT(*) AS artifacts FROM pulp_artifacts"),
@@ -264,7 +271,9 @@ async function getPulpOverview(database) {
       requestId: row.request_id,
       requestPackageName: row.request_package_name,
       requestStatus: row.request_status,
+      requestEcosystem: row.request_ecosystem,
       source: row.source,
+      isPrimary: row.request_ecosystem === "python" ? row.source === "wheel" : row.source === "rpm",
       matchedAt: row.matched_at,
       artifactId: row.artifact_id,
       packageName: row.package_name,
@@ -324,6 +333,12 @@ async function approvePulpMatch(database, requestId, source) {
     await run(
       database,
       "UPDATE pulp_matches SET status = 'approved', reviewed_at = ? WHERE request_id = ? AND source = ?",
+      [now, requestId, source],
+    );
+    await run(
+      database,
+      `UPDATE pulp_matches SET status = 'dismissed', reviewed_at = ?
+       WHERE request_id = ? AND source != ? AND status = 'suggested'`,
       [now, requestId, source],
     );
     await run(database, "COMMIT");

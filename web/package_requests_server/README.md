@@ -141,6 +141,10 @@ Synchronization never changes a public request by itself. A maintainer reviews
 each suggestion in `/PackageRequests/admin`, inspects the artifact, and either
 dismisses it or applies it. Applying a suggestion records the Pulp URL and type,
 changes the request to **Available**, and appends the normal status event.
+For Python requests, an exact match from the production wheels repository is
+presented as the primary artifact and a zopen RPM match is retained as an
+alternative. Other ecosystems prefer the zopen RPM. Applying either reviewed
+artifact dismisses the remaining alternatives for that request.
 
 Run it manually with:
 

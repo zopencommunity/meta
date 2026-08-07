@@ -83,13 +83,11 @@ test("discovers exact RPM and wheel matches and requires admin review", async ()
   assert.equal(overview.matches.length, 2);
   assert.equal(overview.artifactCount, 3);
   assert.equal(overview.runs[0].status, "success");
+  assert.equal(overview.matches[0].source, "wheel");
+  assert.equal(overview.matches[0].isPrimary, true);
+  assert.equal(overview.matches[0].requestEcosystem, "python");
+  assert.equal(overview.matches.find((match) => match.source === "rpm").isPrimary, false);
   assert.equal(overview.matches.find((match) => match.source === "rpm").version, "2.14.0");
-
-  const dismissResponse = await fetch(`${baseUrl}/api/admin/pulp/matches/${requestId}/rpm/dismiss`, {
-    method: "POST",
-    headers: { Authorization: "Bearer test-admin-token" },
-  });
-  assert.equal(dismissResponse.status, 200);
 
   const approveResponse = await fetch(`${baseUrl}/api/admin/pulp/matches/${requestId}/wheel/approve`, {
     method: "POST",
@@ -104,6 +102,18 @@ test("discovers exact RPM and wheel matches and requires admin review", async ()
   assert.equal(request.status, "available");
   assert.equal(request.artifactKind, "pulp_python");
   assert.match(request.artifactUrl, /confluent_kafka-2\.14\.0-cp312-none-any\.whl$/);
+
+  const matchStatuses = await new Promise((resolve, reject) => {
+    database.all(
+      "SELECT source, status FROM pulp_matches WHERE request_id = ? ORDER BY source",
+      [requestId],
+      (error, rows) => error ? reject(error) : resolve(rows),
+    );
+  });
+  assert.deepEqual(matchStatuses, [
+    { source: "rpm", status: "dismissed" },
+    { source: "wheel", status: "approved" },
+  ]);
 
   const reviewedOverview = await fetch(`${baseUrl}/api/admin/pulp`, {
     headers: { Authorization: "Bearer test-admin-token" },
