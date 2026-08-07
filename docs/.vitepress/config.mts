@@ -68,6 +68,7 @@ export default defineConfig({
       { text: "Getting Started", link: "/Guides/QuickStart" },
       { text: "Available Tools", link: "/Latest" },
       { text: "Request a Package", link: "/PackageRequests" },
+      { text: "Governance", link: "/Governance" },
       { text: "Reference", link: "/reference/zopen-reference" },
     ],
 
@@ -127,6 +128,10 @@ export default defineConfig({
       {
         text: "Badges",
         link: "/Badges",
+      },
+      {
+        text: "Governance",
+        link: "/Governance",
       },
       {
         text: "FAQ",

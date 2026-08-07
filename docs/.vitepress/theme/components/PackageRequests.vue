@@ -298,7 +298,7 @@ onMounted(() => {
     <p class="governance-note">
       Requests and votes guide community planning; they are not delivery or support commitments.
       Ports move forward through open contribution, maintainer capacity, and the zopen governance process.
-      <a :href="withBase('/Guides/FAQ#package-requests-governance-and-responsibility')">Learn how requests are governed</a>.
+      <a :href="withBase('/Governance#package-requests-and-prioritization')">Learn how requests are governed</a>.
     </p>
 
     <p v-if="successMessage" class="notice success" role="status">{{ successMessage }}</p>

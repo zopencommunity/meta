@@ -45,7 +45,7 @@ A request records community interest in having an open-source project available 
 
 ### What does a vote mean?
 
-A vote is an advisory signal of community interest. It helps maintainers understand relative demand, but it is not a governance vote and does not by itself determine priority or approval. Formal project decisions follow the [zopen governance process](https://github.com/zopencommunity/meta/blob/main/GOVERNANCE.md).
+A vote is an advisory signal of community interest. It helps maintainers understand relative demand, but it is not a governance vote and does not by itself determine priority or approval. Formal project decisions follow the [zopen governance process](/Governance).
 
 ### How are package requests prioritized?
 
