@@ -28,7 +28,6 @@ test("creates, lists, votes, and unvotes a package request", async () => {
     body: JSON.stringify({
       packageName: "Example Tool",
       ecosystem: "rust",
-      upstreamUrl: "https://example.com/tool",
       description: "This tool would make an important z/OS workflow easier.",
       useCase: "Used in automated builds.",
       canHelpTest: true,
@@ -42,6 +41,7 @@ test("creates, lists, votes, and unvotes a package request", async () => {
   const created = await createResponse.json();
   assert.equal(created.request.packageName, "Example Tool");
   assert.equal(created.request.ecosystem, "rust");
+  assert.equal(created.request.upstreamUrl, "");
   assert.equal(created.request.requesterName, "");
   assert.equal(Object.hasOwn(created.request, "contactEmail"), false);
 

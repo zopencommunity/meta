@@ -276,7 +276,7 @@ onMounted(() => {
         <span class="eyebrow">Community package backlog</span>
         <h1>What should we bring to z/OS next?</h1>
         <p>
-          Request an open-source package, support the tools you need, and follow their progress—no GitHub account required.
+          Request an open-source package, support the tools you need, and follow its progress.
         </p>
         <div class="hero-actions">
           <button class="primary-button" type="button" @click="openForm">Request a package</button>
@@ -326,11 +326,11 @@ onMounted(() => {
         </div>
         <div class="form-grid">
           <label>
-            <span>Upstream project URL <b aria-hidden="true">*</b></span>
-            <input v-model.trim="form.upstreamUrl" type="url" maxlength="500" required placeholder="https://github.com/…" />
+            <span>Upstream project URL <small>Optional</small></span>
+            <input v-model.trim="form.upstreamUrl" type="url" maxlength="500" placeholder="GitHub, PyPI, crates.io, project homepage…" />
           </label>
           <div class="field-hint">
-            Choose the language or registry users would install this from. Use <strong>General / CLI</strong> for standalone tools.
+            Add a GitHub, project homepage, or package-registry link if you know it. Maintainers can add this later.
           </div>
         </div>
 
@@ -481,7 +481,7 @@ onMounted(() => {
               >{{ artifactLabels[request.artifactKind] || "Published package" }} ↗</a>
             </div>
             <div class="request-meta">
-              <a :href="request.upstreamUrl" target="_blank" rel="noopener noreferrer">View upstream project ↗</a>
+              <a v-if="request.upstreamUrl" :href="request.upstreamUrl" target="_blank" rel="noopener noreferrer">View upstream project ↗</a>
               <span v-if="request.canHelpTest">Tester available</span>
               <span v-if="request.acknowledgedAt">Acknowledged by maintainers</span>
               <span v-if="request.requesterName || request.organization">

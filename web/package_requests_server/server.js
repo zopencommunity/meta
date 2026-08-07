@@ -401,8 +401,8 @@ function createApp(options = {}) {
       response.status(400).json({ error: "Enter a valid package name." });
       return;
     }
-    if (!validHttpUrl(upstreamUrl)) {
-      response.status(400).json({ error: "Enter a valid upstream project URL." });
+    if (upstreamUrl && !validHttpUrl(upstreamUrl)) {
+      response.status(400).json({ error: "Enter a valid upstream project URL or leave it blank." });
       return;
     }
     if (!VALID_ECOSYSTEMS.has(ecosystem)) {
@@ -565,8 +565,8 @@ function createApp(options = {}) {
       response.status(400).json({ error: "Choose a valid project ecosystem." });
       return;
     }
-    if (upstreamUrl !== null && !validHttpUrl(upstreamUrl)) {
-      response.status(400).json({ error: "Enter a valid upstream project URL." });
+    if (upstreamUrl !== null && upstreamUrl && !validHttpUrl(upstreamUrl)) {
+      response.status(400).json({ error: "Enter a valid upstream project URL or leave it blank." });
       return;
     }
     if (description !== null && description.length < 20) {

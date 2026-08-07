@@ -151,7 +151,7 @@
                 </div>
                 <p>${escapeHtml(request.description)}</p>
                 <div class="meta">
-                  <a href="${escapeHtml(request.upstreamUrl)}" target="_blank" rel="noopener noreferrer">Upstream project ↗</a>
+                  ${request.upstreamUrl ? `<a href="${escapeHtml(request.upstreamUrl)}" target="_blank" rel="noopener noreferrer">Upstream project ↗</a>` : ""}
                   <span>Requested ${new Date(request.createdAt).toLocaleDateString()}</span>
                   ${request.acknowledgedAt ? `<span>Acknowledged ${new Date(request.acknowledgedAt).toLocaleDateString()}</span>` : ""}
                 </div>
@@ -163,7 +163,7 @@
               <form class="editor">
                 <label><span>Package name</span><input name="packageName" value="${escapeHtml(request.packageName)}" maxlength="80" required /></label>
                 <label><span>Project ecosystem</span><select name="ecosystem">${Object.entries(ecosystemLabels).map(([key,label]) => `<option value="${key}" ${request.ecosystem === key ? "selected" : ""}>${label}</option>`).join("")}</select></label>
-                <label class="wide"><span>Upstream project URL</span><input name="upstreamUrl" type="url" value="${escapeHtml(request.upstreamUrl)}" required /></label>
+                <label class="wide"><span>Upstream project URL (optional)</span><input name="upstreamUrl" type="url" value="${escapeHtml(request.upstreamUrl)}" /></label>
                 <label class="wide"><span>Request description</span><textarea name="description" minlength="20" maxlength="1200" required>${escapeHtml(request.description)}</textarea></label>
                 <label><span>Use case or version</span><textarea name="useCase" maxlength="1200">${escapeHtml(request.useCase)}</textarea></label>
                 <label><span>Can help test</span><select name="canHelpTest"><option value="false" ${!request.canHelpTest ? "selected" : ""}>No</option><option value="true" ${request.canHelpTest ? "selected" : ""}>Yes</option></select></label>
