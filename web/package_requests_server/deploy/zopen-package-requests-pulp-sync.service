@@ -1,0 +1,19 @@
+[Unit]
+Description=Synchronize zopen Pulp artifacts with package requests
+After=network-online.target zopen-package-requests.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=zopenreq
+Group=zopenreq
+UMask=0077
+WorkingDirectory=/opt/zopen-meta/web/package_requests_server
+EnvironmentFile=/etc/zopen-package-requests.env
+ExecStart=/usr/bin/node pulp_sync_cli.js
+
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/zopen-package-requests

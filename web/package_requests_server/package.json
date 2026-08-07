@@ -6,6 +6,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
+    "sync:pulp": "node pulp_sync_cli.js",
     "test": "node --test"
   },
   "engines": {

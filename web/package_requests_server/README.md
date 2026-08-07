@@ -44,6 +44,8 @@ VITE_PACKAGE_REQUESTS_API_URL=http://localhost:3100/api npm run docs:dev
 | `ALLOWED_ORIGINS` | `localhost` and `127.0.0.1` Vite ports | Comma-separated website origins allowed by CORS |
 | `ADMIN_TOKEN` | none | Bearer token required to change request status |
 | `TRUST_PROXY` | `false` | Set to `true` behind one trusted reverse proxy so rate limiting sees client IPs |
+| `PULP_RPM_BASE_URL` | production zopen RPM repository | Override the RPM repository used by synchronization |
+| `PULP_WHEEL_BASE_URL` | production wheels repository | Override the wheel directory used by synchronization |
 
 For production, use a persistent database path, set `ALLOWED_ORIGINS` to the
 exact GitHub Pages/custom-domain origin, provide a long random `ADMIN_TOKEN`, and
@@ -74,6 +76,8 @@ Reusable deployment templates live in [`deploy/`](deploy/):
   Copy it outside the checkout, set mode `0600`, and never commit the live file.
 - `zopen-package-requests.service` runs the API as an unprivileged system user,
   binds it to loopback, and grants write access only to the persistent data path.
+- `zopen-package-requests-pulp-sync.service` and `.timer` perform automatic,
+  review-first Pulp discovery approximately every six hours.
 - `Caddyfile.example` exposes the API over HTTPS while returning `404` for the
   backend's standalone admin page. Admin API calls remain protected by the
   bearer token and an additional per-IP rate limit.
@@ -118,12 +122,40 @@ the root login once the initial deployment is complete.
 - `GET /api/admin/requests` with `Authorization: Bearer <ADMIN_TOKEN>`
 - `PATCH /api/requests/:id` with `Authorization: Bearer <ADMIN_TOKEN>`
 - `DELETE /api/requests/:id` with `Authorization: Bearer <ADMIN_TOKEN>`
+- `GET /api/admin/pulp` with `Authorization: Bearer <ADMIN_TOKEN>`
+- `POST /api/admin/pulp/sync` with `Authorization: Bearer <ADMIN_TOKEN>`
+- `POST /api/admin/pulp/matches/:requestId/:source/approve` with `Authorization: Bearer <ADMIN_TOKEN>`
+- `POST /api/admin/pulp/matches/:requestId/:source/dismiss` with `Authorization: Bearer <ADMIN_TOKEN>`
+
+## Pulp synchronization
+
+The synchronizer reads the current RPM `repomd.xml` and primary package
+metadata plus the production wheel directory. It stores discovered versions,
+checksums, architectures, exact artifact URLs, sync history, and one current
+suggestion per request and source. Package matching uses normalized exact names
+(`-`, `_`, `.`, spaces, and the zopen `port` suffix are normalized); it does not
+use fuzzy matching.
+
+Synchronization never changes a public request by itself. A maintainer reviews
+each suggestion in `/PackageRequests/admin`, inspects the artifact, and either
+dismisses it or applies it. Applying a suggestion records the Pulp URL and type,
+changes the request to **Available**, and appends the normal status event.
+
+Run it manually with:
+
+```bash
+DATABASE_PATH=/var/lib/zopen-package-requests/requests.db npm run sync:pulp
+```
+
+The deployment directory includes a systemd oneshot service and timer that run
+the same command approximately every six hours. The timer needs no Pulp secret
+because both production repositories are publicly readable.
 
 ## Maintainer workflow
 
-Open `https://<api-host>/admin` and enter the configured `ADMIN_TOKEN`. The
-token is kept in browser session storage and is not compiled into the GitHub
-Pages site.
+Open `https://zopen.community/PackageRequests/admin` and enter the configured
+`ADMIN_TOKEN`. The token is kept in browser session storage and is not compiled
+into the GitHub Pages site.
 
 The console lets maintainers:
 

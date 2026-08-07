@@ -25,6 +25,29 @@ interface AdminRequest {
   acknowledgedAt: string | null;
 }
 
+interface PulpMatch {
+  requestId: number;
+  requestPackageName: string;
+  requestStatus: string;
+  source: "rpm" | "wheel";
+  packageName: string;
+  version: string;
+  release: string;
+  architecture: string;
+  artifactUrl: string;
+  publishedAt: string | null;
+}
+
+interface PulpRun {
+  id: number;
+  startedAt: string;
+  finishedAt: string | null;
+  status: "running" | "success" | "failed";
+  artifactsSeen: number;
+  matchesFound: number;
+  error: string;
+}
+
 const productionApiUrl = "https://usage.zopen.community/package-requests/api";
 const apiUrl = String(
   import.meta.env.VITE_PACKAGE_REQUESTS_API_URL || (import.meta.env.PROD ? productionApiUrl : "http://127.0.0.1:3100/api"),
@@ -37,6 +60,12 @@ const loginError = ref("");
 const requests = ref<AdminRequest[]>([]);
 const statusFilter = ref("all");
 const saveStates = reactive<Record<number, { message: string; error: boolean; busy: boolean }>>({});
+const pulpMatches = ref<PulpMatch[]>([]);
+const pulpRuns = ref<PulpRun[]>([]);
+const pulpArtifactCount = ref(0);
+const pulpBusy = ref(false);
+const pulpMessage = ref("");
+const pulpError = ref(false);
 
 const ecosystems: Record<string, string> = {
   general: "General / CLI",
@@ -87,11 +116,18 @@ async function loadRequests() {
   requests.value = result.requests;
 }
 
+async function loadPulpOverview() {
+  const result = await api("/admin/pulp");
+  pulpMatches.value = result.matches;
+  pulpRuns.value = result.runs;
+  pulpArtifactCount.value = result.artifactCount;
+}
+
 async function signIn() {
   authenticating.value = true;
   loginError.value = "";
   try {
-    await loadRequests();
+    await Promise.all([loadRequests(), loadPulpOverview()]);
     sessionStorage.setItem(storageKey, token.value);
     authenticated.value = true;
   } catch (error) {
@@ -105,7 +141,45 @@ function signOut() {
   sessionStorage.removeItem(storageKey);
   token.value = "";
   requests.value = [];
+  pulpMatches.value = [];
+  pulpRuns.value = [];
   authenticated.value = false;
+}
+
+async function syncPulp() {
+  pulpBusy.value = true;
+  pulpError.value = false;
+  pulpMessage.value = "Reading the production Pulp repositories…";
+  try {
+    const result = await api("/admin/pulp/sync", { method: "POST" });
+    pulpMessage.value = `Found ${result.run.artifactsSeen} artifacts and ${result.run.matchesFound} exact request matches.`;
+    await loadPulpOverview();
+  } catch (error) {
+    pulpError.value = true;
+    pulpMessage.value = error instanceof Error ? error.message : "Pulp synchronization failed.";
+  } finally {
+    pulpBusy.value = false;
+  }
+}
+
+async function reviewPulpMatch(match: PulpMatch, action: "approve" | "dismiss") {
+  if (
+    action === "approve" &&
+    !window.confirm(`Use ${match.packageName} ${match.version} and mark ${match.requestPackageName} available?`)
+  ) return;
+  pulpBusy.value = true;
+  pulpError.value = false;
+  pulpMessage.value = action === "approve" ? "Applying Pulp artifact…" : "Dismissing match…";
+  try {
+    await api(`/admin/pulp/matches/${match.requestId}/${match.source}/${action}`, { method: "POST" });
+    await Promise.all([loadRequests(), loadPulpOverview()]);
+    pulpMessage.value = action === "approve" ? "Pulp artifact applied and request marked available." : "Match dismissed.";
+  } catch (error) {
+    pulpError.value = true;
+    pulpMessage.value = error instanceof Error ? error.message : "The match could not be reviewed.";
+  } finally {
+    pulpBusy.value = false;
+  }
 }
 
 async function saveRequest(request: AdminRequest) {
@@ -196,6 +270,46 @@ onMounted(async () => {
     </section>
 
     <section v-else>
+      <section class="pulp-panel">
+        <div class="pulp-heading">
+          <div>
+            <p class="eyebrow">Repository discovery</p>
+            <h2>Pulp synchronization</h2>
+            <p>
+              {{ pulpArtifactCount }} artifacts indexed.
+              <template v-if="pulpRuns[0]">
+                Last run {{ new Date(pulpRuns[0].startedAt).toLocaleString() }} · {{ pulpRuns[0].status }}.
+              </template>
+            </p>
+          </div>
+          <button class="secondary" type="button" :disabled="pulpBusy" @click="syncPulp">
+            {{ pulpBusy ? "Working…" : "Sync now" }}
+          </button>
+        </div>
+        <p v-if="pulpMessage" :class="['sync-message', { error: pulpError }]" role="status">{{ pulpMessage }}</p>
+        <p v-if="pulpRuns[0]?.status === 'failed'" class="error">{{ pulpRuns[0].error }}</p>
+
+        <div v-if="pulpMatches.length" class="match-list">
+          <article v-for="match in pulpMatches" :key="`${match.requestId}:${match.source}`" class="match-card">
+            <div>
+              <span class="source-badge">{{ match.source === "rpm" ? "zopen RPM" : "Python wheel" }}</span>
+              <h3>{{ match.requestPackageName }}</h3>
+              <p>
+                Exact match: <strong>{{ match.packageName }} {{ match.version }}</strong>
+                <span v-if="match.release">-{{ match.release }}</span>
+                · {{ match.architecture }}
+              </p>
+              <a :href="match.artifactUrl" target="_blank" rel="noopener noreferrer">Inspect artifact ↗</a>
+            </div>
+            <div class="match-actions">
+              <button class="secondary" type="button" :disabled="pulpBusy" @click="reviewPulpMatch(match, 'dismiss')">Dismiss</button>
+              <button class="primary" type="button" :disabled="pulpBusy" @click="reviewPulpMatch(match, 'approve')">Apply and mark available</button>
+            </div>
+          </article>
+        </div>
+        <p v-else class="no-matches">No Pulp matches need review.</p>
+      </section>
+
       <div class="toolbar">
         <div><h2>Request queue</h2><p>Acknowledge, prioritize, and publish delivery locations.</p></div>
         <div class="filters">
@@ -260,7 +374,7 @@ onMounted(async () => {
 
 <style scoped>
 .admin-console { max-width: 1180px; margin: 0 auto; padding: 24px 0 70px; }
-.admin-heading,.toolbar,.token-row,.filters,.title-row,.meta,.editor-actions { display:flex; }
+.admin-heading,.toolbar,.token-row,.filters,.title-row,.meta,.editor-actions,.pulp-heading,.match-card,.match-actions { display:flex; }
 .admin-heading { justify-content:space-between; align-items:center; gap:20px; margin-bottom:28px; }
 .admin-heading h1,.toolbar h2,.title-row h3 { margin:0; }
 .eyebrow { margin:0 0 4px; color:var(--vp-c-brand-1); font-size:12px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
@@ -279,6 +393,18 @@ button:disabled { cursor:wait; opacity:.65; }
 .primary { border:1px solid var(--vp-c-brand-1); color:white; background:var(--vp-c-brand-1); }
 .secondary { border:1px solid var(--vp-c-divider); color:var(--vp-c-text-1); background:var(--vp-c-bg); }
 .danger { margin-right:auto; border:1px solid var(--vp-c-danger-1); color:var(--vp-c-danger-1); background:transparent; }
+.pulp-panel { margin-bottom:34px; padding:22px; border:1px solid var(--vp-c-divider); border-radius:14px; background:var(--vp-c-bg-soft); }
+.pulp-heading { justify-content:space-between; align-items:start; gap:20px; }
+.pulp-heading h2 { margin:0; }
+.pulp-heading p { margin:6px 0 0; color:var(--vp-c-text-2); }
+.sync-message { margin:14px 0 0; color:var(--vp-c-brand-1); }
+.match-list { display:grid; gap:10px; margin-top:18px; }
+.match-card { justify-content:space-between; align-items:center; gap:20px; padding:16px; border:1px solid var(--vp-c-divider); border-radius:10px; background:var(--vp-c-bg); }
+.match-card h3 { margin:4px 0; }
+.match-card p { margin:0 0 5px; color:var(--vp-c-text-2); }
+.source-badge { color:var(--vp-c-brand-1); font-size:11px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; }
+.match-actions { flex-shrink:0; gap:8px; }
+.no-matches { margin:16px 0 0; color:var(--vp-c-text-2); }
 .toolbar { justify-content:space-between; align-items:end; gap:18px; margin-bottom:24px; }
 .toolbar p { margin:5px 0 0; }
 .filters select { width:190px; }
@@ -303,5 +429,5 @@ details > summary { padding:13px 20px; color:var(--vp-c-brand-1); font-size:13px
 .save-state { color:var(--vp-c-text-2); font-size:13px; }
 .error { color:var(--vp-c-danger-1); }
 .empty { padding:60px; border:1px dashed var(--vp-c-divider); border-radius:14px; color:var(--vp-c-text-2); text-align:center; }
-@media (max-width:720px) { .toolbar,.token-row { align-items:stretch; flex-direction:column; } .filters { flex-direction:column; } .filters select { width:100%; } .editor { grid-template-columns:1fr; } .wide,.editor-actions { grid-column:1; } }
+@media (max-width:720px) { .toolbar,.token-row,.pulp-heading,.match-card { align-items:stretch; flex-direction:column; } .filters,.match-actions { flex-direction:column; } .filters select { width:100%; } .editor { grid-template-columns:1fr; } .wide,.editor-actions { grid-column:1; } }
 </style>

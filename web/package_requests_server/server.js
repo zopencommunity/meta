@@ -3,6 +3,12 @@ const express = require("express");
 const fs = require("fs");
 const path = require("path");
 const sqlite3 = require("sqlite3").verbose();
+const {
+  approvePulpMatch,
+  dismissPulpMatch,
+  getPulpOverview,
+  syncPulp,
+} = require("./pulp_sync");
 
 const VALID_STATUSES = new Set([
   "proposed",
@@ -144,6 +150,49 @@ async function initializeDatabase(database) {
   );
   await run(
     database,
+    `CREATE TABLE IF NOT EXISTS pulp_artifacts (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      source TEXT NOT NULL CHECK (source IN ('rpm', 'wheel')),
+      package_name TEXT NOT NULL,
+      normalized_name TEXT NOT NULL,
+      version TEXT NOT NULL DEFAULT '',
+      release TEXT NOT NULL DEFAULT '',
+      architecture TEXT NOT NULL DEFAULT '',
+      artifact_url TEXT NOT NULL UNIQUE,
+      checksum TEXT NOT NULL DEFAULT '',
+      published_at TEXT,
+      first_seen_at TEXT NOT NULL,
+      last_seen_at TEXT NOT NULL
+    )`,
+  );
+  await run(
+    database,
+    `CREATE TABLE IF NOT EXISTS pulp_sync_runs (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      started_at TEXT NOT NULL,
+      finished_at TEXT,
+      status TEXT NOT NULL CHECK (status IN ('running', 'success', 'failed')),
+      artifacts_seen INTEGER NOT NULL DEFAULT 0,
+      matches_found INTEGER NOT NULL DEFAULT 0,
+      error TEXT NOT NULL DEFAULT ''
+    )`,
+  );
+  await run(
+    database,
+    `CREATE TABLE IF NOT EXISTS pulp_matches (
+      request_id INTEGER NOT NULL,
+      source TEXT NOT NULL CHECK (source IN ('rpm', 'wheel')),
+      artifact_id INTEGER NOT NULL,
+      status TEXT NOT NULL DEFAULT 'suggested' CHECK (status IN ('suggested', 'approved', 'dismissed')),
+      matched_at TEXT NOT NULL,
+      reviewed_at TEXT,
+      PRIMARY KEY (request_id, source),
+      FOREIGN KEY (request_id) REFERENCES package_requests(id) ON DELETE CASCADE,
+      FOREIGN KEY (artifact_id) REFERENCES pulp_artifacts(id) ON DELETE CASCADE
+    )`,
+  );
+  await run(
+    database,
     "CREATE INDEX IF NOT EXISTS idx_package_requests_status ON package_requests(status)",
   );
   await run(
@@ -158,6 +207,8 @@ async function initializeDatabase(database) {
     database,
     "CREATE INDEX IF NOT EXISTS idx_request_events_request_id ON request_events(request_id)",
   );
+  await run(database, "CREATE INDEX IF NOT EXISTS idx_pulp_artifacts_name ON pulp_artifacts(source, normalized_name)");
+  await run(database, "CREATE INDEX IF NOT EXISTS idx_pulp_matches_status ON pulp_matches(status)");
 }
 
 function normalizePackageName(value) {
@@ -299,6 +350,7 @@ function createApp(options = {}) {
   const submissionLimiter = createRateLimiter({ limit: 5, windowMilliseconds: 60 * 60 * 1000 });
   const voteLimiter = createRateLimiter({ limit: 60, windowMilliseconds: 60 * 1000 });
   const adminLimiter = createRateLimiter({ limit: 120, windowMilliseconds: 15 * 60 * 1000 });
+  let pulpSyncPromise = null;
   const ready = initializeDatabase(database);
 
   app.use(async (request, response, next) => {
@@ -380,6 +432,86 @@ function createApp(options = {}) {
            r.created_at DESC`,
       );
       response.json({ requests: rows.map((row) => mapRequest(row, true)) });
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.get("/api/admin/pulp", adminLimiter, async (request, response, next) => {
+    const configuredToken = options.adminToken ?? process.env.ADMIN_TOKEN;
+    if (!adminTokenMatches(request, configuredToken)) {
+      response.status(401).json({ error: "Unauthorized." });
+      return;
+    }
+    try {
+      response.json(await getPulpOverview(database));
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.post("/api/admin/pulp/sync", adminLimiter, async (request, response, next) => {
+    const configuredToken = options.adminToken ?? process.env.ADMIN_TOKEN;
+    if (!adminTokenMatches(request, configuredToken)) {
+      response.status(401).json({ error: "Unauthorized." });
+      return;
+    }
+    if (pulpSyncPromise) {
+      response.status(409).json({ error: "A Pulp synchronization is already running." });
+      return;
+    }
+    try {
+      pulpSyncPromise = syncPulp({ database, fetchImpl: options.pulpFetch });
+      response.json({ run: await pulpSyncPromise });
+    } catch (error) {
+      next(error);
+    } finally {
+      pulpSyncPromise = null;
+    }
+  });
+
+  app.post("/api/admin/pulp/matches/:requestId/:source/approve", adminLimiter, async (request, response, next) => {
+    const configuredToken = options.adminToken ?? process.env.ADMIN_TOKEN;
+    if (!adminTokenMatches(request, configuredToken)) {
+      response.status(401).json({ error: "Unauthorized." });
+      return;
+    }
+    const requestId = Number.parseInt(request.params.requestId, 10);
+    const source = request.params.source;
+    if (!Number.isSafeInteger(requestId) || requestId < 1 || !["rpm", "wheel"].includes(source)) {
+      response.status(400).json({ error: "Invalid Pulp match." });
+      return;
+    }
+    try {
+      const result = await approvePulpMatch(database, requestId, source);
+      if (!result) {
+        response.status(404).json({ error: "Pulp match not found or already reviewed." });
+        return;
+      }
+      response.json({ success: true, match: result });
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.post("/api/admin/pulp/matches/:requestId/:source/dismiss", adminLimiter, async (request, response, next) => {
+    const configuredToken = options.adminToken ?? process.env.ADMIN_TOKEN;
+    if (!adminTokenMatches(request, configuredToken)) {
+      response.status(401).json({ error: "Unauthorized." });
+      return;
+    }
+    const requestId = Number.parseInt(request.params.requestId, 10);
+    const source = request.params.source;
+    if (!Number.isSafeInteger(requestId) || requestId < 1 || !["rpm", "wheel"].includes(source)) {
+      response.status(400).json({ error: "Invalid Pulp match." });
+      return;
+    }
+    try {
+      if (!(await dismissPulpMatch(database, requestId, source))) {
+        response.status(404).json({ error: "Pulp match not found or already reviewed." });
+        return;
+      }
+      response.json({ success: true });
     } catch (error) {
       next(error);
     }
