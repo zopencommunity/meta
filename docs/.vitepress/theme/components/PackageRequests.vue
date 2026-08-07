@@ -33,6 +33,22 @@ interface PackageRequest {
   createdAt: string;
 }
 
+interface BulkRow {
+  key: number;
+  packageName: string;
+  ecosystem: string;
+  upstreamUrl: string;
+  description: string;
+  useCase: string;
+  canHelpTest: boolean | null;
+}
+
+interface BulkRowState {
+  kind: "ready" | "existing" | "available" | "duplicate" | "invalid";
+  label: string;
+  existingRequest?: PackageRequest;
+}
+
 const productionApiUrl = "https://usage.zopen.community/package-requests/api";
 const configuredApiUrl = String(
   import.meta.env.VITE_PACKAGE_REQUESTS_API_URL || (import.meta.env.PROD ? productionApiUrl : ""),
@@ -47,10 +63,18 @@ const ecosystem = ref("all");
 const loading = ref(true);
 const loadError = ref("");
 const formOpen = ref(false);
+const bulkFormOpen = ref(false);
 const submitting = ref(false);
 const submitError = ref("");
 const successMessage = ref("");
 const busyVotes = ref(new Set<number>());
+const bulkRows = ref<BulkRow[]>([]);
+const bulkInput = ref("");
+const bulkReviewing = ref(false);
+const bulkSubmitting = ref(false);
+const bulkError = ref("");
+const maxBulkRequests = 25;
+let nextBulkRowKey = 1;
 
 const form = reactive({
   packageName: "",
@@ -58,6 +82,16 @@ const form = reactive({
   upstreamUrl: "",
   description: "",
   useCase: "",
+  canHelpTest: false,
+  requesterName: "",
+  organization: "",
+  contactEmail: "",
+  showRequesterPublicly: false,
+});
+
+const bulkForm = reactive({
+  defaultEcosystem: "",
+  description: "",
   canHelpTest: false,
   requesterName: "",
   organization: "",
@@ -115,9 +149,192 @@ const availableMatch = computed(() => {
   const normalized = normalizeName(form.packageName);
   return normalized && availablePackages.value.has(normalized);
 });
+const requestsByName = computed(() => new Map(
+  requests.value.map((request) => [normalizeName(request.packageName), request]),
+));
+const bulkStates = computed(() => bulkRows.value.map((row, index) => getBulkRowState(row, index)));
+const readyBulkRows = computed(() => bulkRows.value.filter((row, index) => bulkStates.value[index].kind === "ready"));
+const invalidBulkRows = computed(() => bulkStates.value.filter((state) => state.kind === "invalid").length);
+const skippedBulkRows = computed(() => bulkStates.value.filter((state) => state.kind !== "ready" && state.kind !== "invalid").length);
 
 function normalizeName(value: string) {
   return value.trim().toLowerCase().replace(/\s+/g, "-").replace(/-?port$/, "");
+}
+
+function validPackageName(value: string) {
+  return /^[a-zA-Z0-9][a-zA-Z0-9._+\s-]{0,79}$/.test(value.trim());
+}
+
+function validHttpUrl(value: string) {
+  if (!value) return true;
+  try {
+    return ["http:", "https:"].includes(new URL(value).protocol);
+  } catch {
+    return false;
+  }
+}
+
+function getBulkRowState(row: BulkRow, index: number): BulkRowState {
+  if (!validPackageName(row.packageName)) return { kind: "invalid", label: "Invalid package name" };
+  if (!Object.hasOwn(ecosystems, row.ecosystem)) return { kind: "invalid", label: "Choose an ecosystem" };
+  if (!validHttpUrl(row.upstreamUrl)) return { kind: "invalid", label: "Invalid upstream URL" };
+  if ((row.description || bulkForm.description).trim().length < 20) {
+    return { kind: "invalid", label: "Add a reason (20+ characters)" };
+  }
+
+  const normalized = normalizeName(row.packageName);
+  const firstIndex = bulkRows.value.findIndex((candidate) => normalizeName(candidate.packageName) === normalized);
+  if (firstIndex !== index) return { kind: "duplicate", label: `Duplicate of row ${firstIndex + 1}` };
+  const existingRequest = requestsByName.value.get(normalized);
+  if (existingRequest) return { kind: "existing", label: "Already requested", existingRequest };
+  if (availablePackages.value.has(normalized)) return { kind: "available", label: "Already available" };
+  return { kind: "ready", label: "Ready" };
+}
+
+function normalizeEcosystem(value: string, fallback = "") {
+  const normalized = value.trim().toLowerCase().replace(/[\s-]+/g, "_");
+  if (!normalized) return fallback;
+  if (Object.hasOwn(ecosystems, normalized)) return normalized;
+  const aliases: Record<string, string> = {
+    cli: "general",
+    general_cli: "general",
+    pypi: "python",
+    python_pypi: "python",
+    c: "c_cpp",
+    cpp: "c_cpp",
+    "c++": "c_cpp",
+    "c/c++": "c_cpp",
+    cargo: "rust",
+    rust_cargo: "rust",
+    golang: "go",
+    go_module: "go",
+    jvm: "java",
+    java_jvm: "java",
+    js: "javascript",
+    npm: "javascript",
+    javascript_npm: "javascript",
+  };
+  return aliases[normalized] || normalized;
+}
+
+function parseCsv(text: string) {
+  const rows: string[][] = [];
+  let row: string[] = [];
+  let field = "";
+  let quoted = false;
+  for (let index = 0; index < text.length; index += 1) {
+    const character = text[index];
+    if (character === '"') {
+      if (quoted && text[index + 1] === '"') {
+        field += '"';
+        index += 1;
+      } else {
+        quoted = !quoted;
+      }
+    } else if (character === "," && !quoted) {
+      row.push(field);
+      field = "";
+    } else if ((character === "\n" || character === "\r") && !quoted) {
+      if (character === "\r" && text[index + 1] === "\n") index += 1;
+      row.push(field);
+      if (row.some((value) => value.trim())) rows.push(row);
+      row = [];
+      field = "";
+    } else {
+      field += character;
+    }
+  }
+  row.push(field);
+  if (row.some((value) => value.trim())) rows.push(row);
+  if (quoted) throw new Error("The CSV contains an unclosed quoted field.");
+  return rows;
+}
+
+function csvBoolean(value: string): boolean | null {
+  const normalized = value.trim().toLowerCase();
+  if (!normalized) return null;
+  if (["yes", "true", "1", "y"].includes(normalized)) return true;
+  if (["no", "false", "0", "n"].includes(normalized)) return false;
+  return null;
+}
+
+function setBulkRows(rows: Omit<BulkRow, "key">[]) {
+  if (!rows.length) throw new Error("Add at least one package name.");
+  if (rows.length > maxBulkRequests) {
+    throw new Error(`Public bulk submissions are limited to ${maxBulkRequests} packages at a time.`);
+  }
+  bulkRows.value = rows.map((row) => ({ ...row, key: nextBulkRowKey++ }));
+  bulkReviewing.value = true;
+  bulkError.value = "";
+}
+
+function reviewPastedPackages() {
+  bulkError.value = "";
+  try {
+    const names = bulkInput.value
+      .split(/\r?\n/)
+      .map((name) => name.trim().replace(/^(?:[-*]\s+|\d+[.)]\s*)/, ""))
+      .filter(Boolean);
+    setBulkRows(names.map((packageName) => ({
+      packageName,
+      ecosystem: bulkForm.defaultEcosystem,
+      upstreamUrl: "",
+      description: "",
+      useCase: "",
+      canHelpTest: null,
+    })));
+  } catch (error) {
+    bulkError.value = error instanceof Error ? error.message : "The package list could not be read.";
+  }
+}
+
+async function loadCsv(event: Event) {
+  bulkError.value = "";
+  const input = event.target as HTMLInputElement;
+  const file = input.files?.[0];
+  input.value = "";
+  if (!file) return;
+  if (file.size > 64 * 1024) {
+    bulkError.value = "The CSV must be smaller than 64 KB.";
+    return;
+  }
+  try {
+    const records = parseCsv(await file.text());
+    const headers = (records.shift() || []).map((header) => header
+      .replace(/^\uFEFF/, "")
+      .trim()
+      .toLowerCase()
+      .replace(/[\s-]+/g, "_"));
+    const packageIndex = headers.findIndex((header) => ["package_name", "package", "name"].includes(header));
+    if (packageIndex < 0) throw new Error("The CSV needs a package_name column.");
+    const column = (...names: string[]) => headers.findIndex((header) => names.includes(header));
+    const ecosystemIndex = column("ecosystem", "project_ecosystem");
+    const upstreamIndex = column("upstream_url", "upstream", "project_url");
+    const descriptionIndex = column("description", "reason", "rationale");
+    const useCaseIndex = column("use_case", "usecase", "version_or_use_case");
+    const testerIndex = column("tester_available", "can_help_test", "help_test");
+    const valueAt = (record: string[], index: number) => index < 0 ? "" : String(record[index] || "").trim();
+    setBulkRows(records.map((record) => ({
+      packageName: valueAt(record, packageIndex),
+      ecosystem: normalizeEcosystem(valueAt(record, ecosystemIndex), bulkForm.defaultEcosystem),
+      upstreamUrl: valueAt(record, upstreamIndex),
+      description: valueAt(record, descriptionIndex),
+      useCase: valueAt(record, useCaseIndex),
+      canHelpTest: csvBoolean(valueAt(record, testerIndex)),
+    })));
+  } catch (error) {
+    bulkError.value = error instanceof Error ? error.message : "The CSV could not be read.";
+  }
+}
+
+function downloadCsvTemplate() {
+  const csv = "package_name,ecosystem,upstream_url,description,use_case,tester_available\n" +
+    'ripgrep,rust,https://github.com/BurntSushi/ripgrep,"Fast recursive search on z/OS",,yes\n';
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
+  link.download = "zopen-package-requests-template.csv";
+  link.click();
+  URL.revokeObjectURL(link.href);
 }
 
 function getVoterId() {
@@ -201,6 +418,7 @@ async function toggleVote(request: PackageRequest) {
 }
 
 function openForm() {
+  bulkFormOpen.value = false;
   formOpen.value = true;
   submitError.value = "";
   successMessage.value = "";
@@ -210,6 +428,98 @@ function openForm() {
 function closeForm() {
   formOpen.value = false;
   submitError.value = "";
+}
+
+function openBulkForm() {
+  formOpen.value = false;
+  bulkFormOpen.value = true;
+  bulkError.value = "";
+  successMessage.value = "";
+  requestAnimationFrame(() => document.querySelector<HTMLElement>("#bulk-package-request-form textarea")?.focus());
+}
+
+function closeBulkForm() {
+  bulkFormOpen.value = false;
+  bulkError.value = "";
+}
+
+function resetBulkForm() {
+  bulkRows.value = [];
+  bulkInput.value = "";
+  bulkReviewing.value = false;
+  bulkForm.defaultEcosystem = "";
+  bulkForm.description = "";
+  bulkForm.canHelpTest = false;
+  bulkForm.requesterName = "";
+  bulkForm.organization = "";
+  bulkForm.contactEmail = "";
+  bulkForm.showRequesterPublicly = false;
+}
+
+function removeBulkRow(index: number) {
+  bulkRows.value.splice(index, 1);
+  if (!bulkRows.value.length) bulkReviewing.value = false;
+}
+
+function setBulkTester(row: BulkRow, event: Event) {
+  const value = (event.target as HTMLSelectElement).value;
+  row.canHelpTest = value === "" ? null : value === "true";
+}
+
+function toggleBulkExisting(state: BulkRowState) {
+  if (state.existingRequest) void toggleVote(state.existingRequest);
+}
+
+async function submitBulkRequests() {
+  bulkError.value = "";
+  successMessage.value = "";
+  if (invalidBulkRows.value) {
+    bulkError.value = `Fix or remove the ${invalidBulkRows.value} invalid row${invalidBulkRows.value === 1 ? "" : "s"}.`;
+    return;
+  }
+  if (!readyBulkRows.value.length) {
+    bulkError.value = "There are no new package requests ready to submit.";
+    return;
+  }
+
+  bulkSubmitting.value = true;
+  try {
+    const clientSkipped = skippedBulkRows.value;
+    const result = await apiRequest("/requests/bulk", {
+      method: "POST",
+      body: JSON.stringify({
+        description: bulkForm.description,
+        canHelpTest: bulkForm.canHelpTest,
+        requesterName: bulkForm.requesterName,
+        organization: bulkForm.organization,
+        contactEmail: bulkForm.contactEmail,
+        showRequesterPublicly: bulkForm.showRequesterPublicly,
+        requests: readyBulkRows.value.map((row) => ({
+          packageName: row.packageName,
+          ecosystem: row.ecosystem,
+          upstreamUrl: row.upstreamUrl,
+          description: row.description,
+          useCase: row.useCase,
+          canHelpTest: row.canHelpTest,
+        })),
+      }),
+    });
+    requests.value.unshift(...result.created);
+    const details = [
+      `${result.summary.created} package request${result.summary.created === 1 ? "" : "s"} added`,
+    ];
+    const totalSkipped = clientSkipped + result.summary.duplicates;
+    if (totalSkipped) details.push(`${totalSkipped} duplicate or available package${totalSkipped === 1 ? "" : "s"} skipped`);
+    if (result.summary.errors) details.push(`${result.summary.errors} rejected`);
+    successMessage.value = `${details.join("; ")}.`;
+    resetBulkForm();
+    bulkFormOpen.value = false;
+    document.querySelector(".package-requests")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  } catch (error) {
+    bulkError.value = error instanceof Error ? error.message : "The bulk request could not be submitted.";
+  } finally {
+    bulkSubmitting.value = false;
+  }
 }
 
 async function submitRequest() {
@@ -280,6 +590,7 @@ onMounted(() => {
         </p>
         <div class="hero-actions">
           <button class="primary-button" type="button" @click="openForm">Request a package</button>
+          <button class="secondary-button" type="button" @click="openBulkForm">Request several</button>
           <a class="secondary-button" :href="withBase('/Latest')">Browse available tools</a>
           <a
             class="secondary-button"
@@ -400,13 +711,193 @@ onMounted(() => {
       </form>
     </section>
 
+    <section v-if="bulkFormOpen" id="bulk-package-request-form" class="request-form-panel bulk-request-panel">
+      <div class="panel-heading">
+        <div>
+          <span class="eyebrow">Bulk request</span>
+          <h2>Request several packages</h2>
+        </div>
+        <button class="close-button" type="button" aria-label="Close bulk request form" @click="closeBulkForm">×</button>
+      </div>
+
+      <p class="panel-intro">
+        Add up to {{ maxBulkRequests }} packages. Each one becomes an independent request with its own votes and status.
+        Existing requests and available packages are skipped during review.
+      </p>
+
+      <form @submit.prevent="submitBulkRequests">
+        <template v-if="!bulkReviewing">
+          <div class="form-grid">
+            <label>
+              <span>Default ecosystem <small>Can be changed during review</small></span>
+              <select v-model="bulkForm.defaultEcosystem">
+                <option value="">Select an ecosystem</option>
+                <option v-for="(label, key) in ecosystems" :key="key" :value="key">{{ label }}</option>
+              </select>
+            </label>
+            <div class="field-hint">
+              A CSV can specify a different ecosystem for each row. Unknown or missing values can be corrected before submission.
+            </div>
+          </div>
+          <label>
+            <span>Package names <b aria-hidden="true">*</b> <small>One per line</small></span>
+            <textarea
+              v-model="bulkInput"
+              rows="8"
+              :placeholder="'ripgrep\nruff\ncmake'"
+            />
+          </label>
+          <div class="bulk-import-actions">
+            <button class="primary-button" type="button" @click="reviewPastedPackages">Review pasted list</button>
+            <label class="secondary-button file-button">
+              Upload CSV
+              <input type="file" accept=".csv,text/csv" @change="loadCsv" />
+            </label>
+            <button class="text-button standalone" type="button" @click="downloadCsvTemplate">Download CSV template</button>
+          </div>
+          <p class="csv-help">
+            CSV columns: <code>package_name</code>, <code>ecosystem</code>, <code>upstream_url</code>,
+            <code>description</code>, <code>use_case</code>, and <code>tester_available</code>.
+          </p>
+        </template>
+
+        <template v-else>
+          <div class="bulk-review-heading">
+            <div>
+              <strong>Review {{ bulkRows.length }} row{{ bulkRows.length === 1 ? "" : "s" }}</strong>
+              <span>{{ readyBulkRows.length }} ready · {{ skippedBulkRows }} skipped · {{ invalidBulkRows }} need attention</span>
+            </div>
+            <button class="secondary-button compact" type="button" @click="bulkReviewing = false">← Change input</button>
+          </div>
+
+          <div class="bulk-review-list">
+            <article
+              v-for="(row, index) in bulkRows"
+              :key="row.key"
+              class="bulk-review-row"
+              :class="`bulk-row-${bulkStates[index].kind}`"
+            >
+              <div class="bulk-row-heading">
+                <strong>Row {{ index + 1 }}</strong>
+                <span class="bulk-state" :class="`bulk-state-${bulkStates[index].kind}`">{{ bulkStates[index].label }}</span>
+                <button type="button" class="remove-row-button" :aria-label="`Remove row ${index + 1}`" @click="removeBulkRow(index)">Remove</button>
+              </div>
+              <div class="bulk-row-grid">
+                <label>
+                  <span>Package name</span>
+                  <input v-model.trim="row.packageName" maxlength="80" />
+                </label>
+                <label>
+                  <span>Ecosystem</span>
+                  <select v-model="row.ecosystem">
+                    <option value="">Select an ecosystem</option>
+                    <option
+                      v-if="row.ecosystem && !Object.hasOwn(ecosystems, row.ecosystem)"
+                      :value="row.ecosystem"
+                      disabled
+                    >Unknown: {{ row.ecosystem }}</option>
+                    <option v-for="(label, key) in ecosystems" :key="key" :value="key">{{ label }}</option>
+                  </select>
+                </label>
+                <label>
+                  <span>Upstream URL <small>Optional</small></span>
+                  <input v-model.trim="row.upstreamUrl" type="url" maxlength="500" placeholder="https://…" />
+                </label>
+              </div>
+              <details class="bulk-row-details">
+                <summary>Row-specific details <span v-if="row.description || row.useCase || row.canHelpTest !== null">(provided)</span></summary>
+                <label>
+                  <span>Reason <small>Overrides the shared reason</small></span>
+                  <textarea v-model.trim="row.description" maxlength="1200" rows="2" />
+                </label>
+                <label>
+                  <span>Use case or version <small>Optional</small></span>
+                  <textarea v-model.trim="row.useCase" maxlength="1200" rows="2" />
+                </label>
+                <label>
+                  <span>Testing availability</span>
+                  <select :value="row.canHelpTest === null ? '' : String(row.canHelpTest)" @change="setBulkTester(row, $event)">
+                    <option value="">Use shared answer</option>
+                    <option value="true">Can help test</option>
+                    <option value="false">Cannot currently help test</option>
+                  </select>
+                </label>
+              </details>
+              <div v-if="bulkStates[index].kind === 'existing'" class="bulk-existing-action">
+                <span>Support the existing request instead:</span>
+                <button
+                  type="button"
+                  class="secondary-button compact"
+                  :disabled="busyVotes.has(bulkStates[index].existingRequest?.id || 0)"
+                  @click="toggleBulkExisting(bulkStates[index])"
+                >{{ bulkStates[index].existingRequest?.voted ? "Remove vote" : "Vote for it" }}</button>
+              </div>
+              <p v-else-if="bulkStates[index].kind === 'available'" class="bulk-existing-action">
+                This package is already in the <a :href="withBase('/Latest')">available-tools catalog</a>.
+              </p>
+            </article>
+          </div>
+        </template>
+
+        <label>
+          <span>Why is this group of packages useful on z/OS? <small>Used for rows without their own reason</small></span>
+          <textarea
+            v-model.trim="bulkForm.description"
+            maxlength="1200"
+            rows="4"
+            placeholder="Describe the migration, toolchain, workload, or community need behind this group."
+          />
+        </label>
+        <label class="checkbox-label">
+          <input v-model="bulkForm.canHelpTest" type="checkbox" />
+          <span>I may be able to help test these packages on z/OS.</span>
+        </label>
+        <fieldset class="requester-section">
+          <legend>About you <small>Optional—applied to every new request</small></legend>
+          <p>These details help maintainers understand the shared need and coordinate follow-up.</p>
+          <div class="form-grid requester-grid">
+            <label>
+              <span>Name or alias</span>
+              <input v-model.trim="bulkForm.requesterName" maxlength="100" autocomplete="name" placeholder="Your name" />
+            </label>
+            <label>
+              <span>Organization or company</span>
+              <input v-model.trim="bulkForm.organization" maxlength="160" autocomplete="organization" placeholder="Organization name" />
+            </label>
+          </div>
+          <label>
+            <span>Contact email <small>Private—maintainers only</small></span>
+            <input v-model.trim="bulkForm.contactEmail" type="email" maxlength="254" autocomplete="email" placeholder="you@example.com" />
+          </label>
+          <label class="checkbox-label">
+            <input v-model="bulkForm.showRequesterPublicly" type="checkbox" />
+            <span>Show my name and organization on the public requests.</span>
+          </label>
+        </fieldset>
+
+        <p v-if="bulkError" class="notice error" role="alert">{{ bulkError }}</p>
+        <div class="form-actions">
+          <button class="secondary-button" type="button" @click="closeBulkForm">Cancel</button>
+          <button
+            v-if="bulkReviewing"
+            class="primary-button"
+            type="submit"
+            :disabled="bulkSubmitting || invalidBulkRows > 0 || readyBulkRows.length === 0"
+          >{{ bulkSubmitting ? "Submitting…" : `Submit ${readyBulkRows.length} new request${readyBulkRows.length === 1 ? "" : "s"}` }}</button>
+        </div>
+      </form>
+    </section>
+
     <section class="request-board">
       <div class="board-heading">
         <div>
           <span class="eyebrow">Package requests</span>
           <h2>Vote for what matters to you</h2>
         </div>
-        <button v-if="!formOpen" class="primary-button compact" type="button" @click="openForm">+ New request</button>
+        <div v-if="!formOpen && !bulkFormOpen" class="board-actions">
+          <button class="secondary-button compact" type="button" @click="openBulkForm">Bulk request</button>
+          <button class="primary-button compact" type="button" @click="openForm">+ New request</button>
+        </div>
       </div>
 
       <div class="board-controls">
@@ -524,7 +1015,7 @@ onMounted(() => {
 .primary-button:disabled { cursor: not-allowed; opacity: .55; transform: none; }
 .secondary-button { color: var(--vp-c-text-1); border-color: var(--vp-c-divider); background: var(--vp-c-bg); }
 .secondary-button:hover { border-color: var(--request-accent); color: var(--request-accent); }
-.primary-button.compact { min-height: 38px; padding: 0 14px; font-size: 14px; }
+.primary-button.compact, .secondary-button.compact { min-height: 38px; padding: 0 14px; font-size: 14px; }
 .request-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; overflow: hidden; border: 1px solid var(--vp-c-divider); border-radius: 16px; background: var(--vp-c-divider); box-shadow: var(--vp-shadow-2); }
 .request-stats div { display: flex; min-height: 126px; flex-direction: column; align-items: center; justify-content: center; background: color-mix(in srgb, var(--vp-c-bg) 92%, transparent); }
 .request-stats strong { font-size: 34px; letter-spacing: -.03em; }
@@ -540,6 +1031,7 @@ onMounted(() => {
 .request-form-panel { padding: 28px; border-top: 4px solid var(--request-accent); }
 .panel-heading, .board-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; }
 .panel-heading h2, .board-heading h2 { margin: 0; border: 0; padding: 0; font-size: 26px; letter-spacing: -.02em; }
+.panel-intro { max-width: 780px; margin: 12px 0 0; color: var(--vp-c-text-2); line-height: 1.6; }
 .close-button { width: 38px; height: 38px; border: 1px solid var(--vp-c-divider); border-radius: 50%; color: var(--vp-c-text-2); background: var(--vp-c-bg-soft); font-size: 26px; line-height: 1; cursor: pointer; }
 .request-form-panel form { margin-top: 24px; }
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
@@ -563,6 +1055,34 @@ onMounted(() => {
 .inline-warning { padding: 10px 12px; margin: -6px 0 18px; border-radius: 8px; color: #825d00; background: #fff4ce; font-size: 14px; }
 .dark .inline-warning { color: #ffe08a; background: #3b3011; }
 .form-actions { display: flex; justify-content: flex-end; gap: 10px; }
+.bulk-import-actions, .board-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.file-button { display: inline-flex !important; margin: 0 !important; }
+.file-button input { position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0; }
+.text-button.standalone { margin-left: 4px; color: var(--request-accent); }
+.csv-help { margin: 12px 0 24px; color: var(--vp-c-text-3); font-size: 13px; line-height: 1.6; }
+.bulk-review-heading { display: flex; justify-content: space-between; gap: 20px; align-items: center; padding: 14px 16px; margin-bottom: 14px; border-radius: 10px; background: var(--vp-c-bg-soft); }
+.bulk-review-heading strong, .bulk-review-heading span { display: block; }
+.bulk-review-heading span { margin-top: 3px; color: var(--vp-c-text-3); font-size: 13px; }
+.bulk-review-list { display: grid; gap: 12px; max-height: 780px; padding-right: 4px; margin-bottom: 24px; overflow-y: auto; }
+.bulk-review-row { padding: 16px; border: 1px solid var(--vp-c-divider); border-radius: 12px; background: var(--vp-c-bg); }
+.bulk-row-invalid { border-color: var(--vp-c-danger-2); }
+.bulk-row-existing, .bulk-row-available, .bulk-row-duplicate { background: var(--vp-c-bg-soft); }
+.bulk-row-heading { display: flex; align-items: center; gap: 10px; margin-bottom: 13px; }
+.bulk-row-heading > strong { font-size: 13px; }
+.bulk-state { padding: 3px 8px; border-radius: 999px; color: var(--vp-c-text-2); background: var(--vp-c-default-soft); font-size: 11px; font-weight: 700; }
+.bulk-state-ready { color: #09634f; background: #daf4ec; }
+.bulk-state-invalid { color: var(--vp-c-danger-1); background: var(--vp-c-danger-soft); }
+.bulk-state-existing, .bulk-state-available, .bulk-state-duplicate { color: #795b00; background: #fff1bd; }
+.dark .bulk-state-ready, .dark .bulk-state-existing, .dark .bulk-state-available, .dark .bulk-state-duplicate { color: var(--vp-c-text-1); background: var(--vp-c-bg-alt); }
+.remove-row-button { margin-left: auto; padding: 3px 0; border: 0; color: var(--vp-c-danger-1); background: transparent; font: inherit; font-size: 12px; text-decoration: underline; cursor: pointer; }
+.bulk-row-grid { display: grid; grid-template-columns: minmax(150px, .8fr) minmax(150px, .7fr) minmax(220px, 1.4fr); gap: 12px; }
+.bulk-row-grid label { margin-bottom: 10px; }
+.bulk-row-details { padding-top: 3px; color: var(--vp-c-text-2); font-size: 13px; }
+.bulk-row-details summary { cursor: pointer; font-weight: 650; }
+.bulk-row-details[open] summary { margin-bottom: 12px; }
+.bulk-row-details label { margin-bottom: 10px; }
+.bulk-row-details label:last-child { max-width: 320px; margin-bottom: 0; }
+.bulk-existing-action { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 10px 12px; margin: 12px 0 0; border-radius: 8px; color: var(--vp-c-text-2); background: var(--vp-c-bg-alt); font-size: 13px; }
 .request-board { padding: 28px; }
 .board-controls { display: grid; grid-template-columns: minmax(220px, 1fr) 170px 160px auto; gap: 12px; margin: 24px 0; }
 .search-control { position: relative; }
@@ -610,10 +1130,11 @@ onMounted(() => {
   .request-hero { grid-template-columns: 1fr; gap: 30px; padding: 34px 24px; }
   .request-hero h1 { font-size: 38px; }
   .request-stats div { min-height: 96px; }
-  .form-grid, .board-controls { grid-template-columns: 1fr; }
+  .form-grid, .board-controls, .bulk-row-grid { grid-template-columns: 1fr; }
   .request-form-panel, .request-board { padding: 20px; }
   .request-card { grid-template-columns: 58px minmax(0, 1fr); gap: 14px; padding: 17px; }
   .vote-button { width: 56px; min-height: 82px; }
   .board-heading { align-items: center; }
+  .bulk-review-heading { align-items: flex-start; flex-direction: column; }
 }
 </style>

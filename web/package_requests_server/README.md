@@ -117,6 +117,7 @@ the root login once the initial deployment is complete.
 - `GET /api/health`
 - `GET /api/requests?sort=top|newest&status=proposed`
 - `POST /api/requests`
+- `POST /api/requests/bulk` with up to 25 requests and shared requester details
 - `PUT /api/requests/:id/vote`
 - `DELETE /api/requests/:id/vote`
 - `GET /api/admin/requests` with `Authorization: Bearer <ADMIN_TOKEN>`
@@ -182,3 +183,10 @@ low-friction community-interest signal, not a verified one-person-one-vote
 system. The unique database constraint prevents accidental duplicate votes from
 the same browser, and the API adds per-IP request throttling without storing IP
 addresses.
+
+The bulk-request interface accepts a pasted list or CSV, validates every row,
+and checks the public catalog before submission. The bulk API independently
+validates all fields and returns created, duplicate, and rejected rows. Public
+submissions are limited to 25 packages per batch and two batches per IP per
+hour. Each accepted row is stored as a normal independent request; a batch does
+not imply acceptance, priority, or a combined maintenance commitment.

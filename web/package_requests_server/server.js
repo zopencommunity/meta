@@ -39,6 +39,7 @@ const VALID_ARTIFACT_KINDS = new Set([
   "pulp_rpm",
   "other",
 ]);
+const MAX_BULK_REQUESTS = 25;
 
 function openDatabase(databasePath) {
   if (databasePath !== ":memory:") {
@@ -240,6 +241,73 @@ function validEmail(value) {
   return !value || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
+function validateSubmission(body) {
+  const source = body && typeof body === "object" ? body : {};
+  const submission = {
+    packageName: cleanText(source.packageName, 80),
+    ecosystem: cleanText(source.ecosystem, 30),
+    upstreamUrl: cleanText(source.upstreamUrl, 500),
+    description: cleanText(source.description, 1200),
+    useCase: cleanText(source.useCase, 1200),
+    canHelpTest: Boolean(source.canHelpTest),
+    requesterName: cleanText(source.requesterName, 100),
+    organization: cleanText(source.organization, 160),
+    contactEmail: cleanText(source.contactEmail, 254),
+    showRequesterPublicly: Boolean(source.showRequesterPublicly),
+  };
+  submission.normalizedName = normalizePackageName(submission.packageName);
+
+  if (!/^[a-zA-Z0-9][a-zA-Z0-9._+\s-]{0,79}$/.test(submission.packageName)) {
+    return { error: "Enter a valid package name." };
+  }
+  if (submission.upstreamUrl && !validHttpUrl(submission.upstreamUrl)) {
+    return { error: "Enter a valid upstream project URL or leave it blank." };
+  }
+  if (!VALID_ECOSYSTEMS.has(submission.ecosystem)) {
+    return { error: "Choose a valid project ecosystem." };
+  }
+  if (submission.description.length < 20) {
+    return { error: "Tell us a little more about why this package is useful." };
+  }
+  if (!validEmail(submission.contactEmail)) {
+    return { error: "Enter a valid contact email address or leave it blank." };
+  }
+  return { submission };
+}
+
+async function insertSubmission(database, submission) {
+  const now = new Date().toISOString();
+  const result = await run(
+    database,
+    `INSERT INTO package_requests (
+      package_name, normalized_name, ecosystem, upstream_url, description, use_case,
+      can_help_test, requester_name, organization, contact_email, show_requester_publicly,
+      status, created_at, updated_at
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'proposed', ?, ?)`,
+    [
+      submission.packageName,
+      submission.normalizedName,
+      submission.ecosystem,
+      submission.upstreamUrl,
+      submission.description,
+      submission.useCase,
+      submission.canHelpTest ? 1 : 0,
+      submission.requesterName,
+      submission.organization,
+      submission.contactEmail,
+      submission.showRequesterPublicly ? 1 : 0,
+      now,
+      now,
+    ],
+  );
+  const row = await get(
+    database,
+    "SELECT *, 0 AS vote_count, 0 AS voted FROM package_requests WHERE id = ?",
+    [result.id],
+  );
+  return mapRequest(row);
+}
+
 function mapRequest(row, includePrivate = false) {
   const showRequester = Boolean(row.show_requester_publicly);
   const request = {
@@ -326,7 +394,7 @@ function createApp(options = {}) {
   }
 
   app.disable("x-powered-by");
-  app.use(express.json({ limit: "32kb" }));
+  app.use(express.json({ limit: "128kb" }));
   app.use((request, response, next) => {
     const origin = request.get("Origin");
     if (origin && allowedOrigins.has(origin.replace(/\/$/, ""))) {
@@ -348,6 +416,7 @@ function createApp(options = {}) {
   });
 
   const submissionLimiter = createRateLimiter({ limit: 5, windowMilliseconds: 60 * 60 * 1000 });
+  const bulkSubmissionLimiter = createRateLimiter({ limit: 2, windowMilliseconds: 60 * 60 * 1000 });
   const voteLimiter = createRateLimiter({ limit: 60, windowMilliseconds: 60 * 1000 });
   const adminLimiter = createRateLimiter({ limit: 120, windowMilliseconds: 15 * 60 * 1000 });
   let pulpSyncPromise = null;
@@ -399,7 +468,7 @@ function createApp(options = {}) {
         ORDER BY ${ordering}`,
         parameters,
       );
-      response.json({ requests: rows.map(mapRequest) });
+      response.json({ requests: rows.map((row) => mapRequest(row)) });
     } catch (error) {
       next(error);
     }
@@ -518,76 +587,20 @@ function createApp(options = {}) {
   });
 
   app.post("/api/requests", submissionLimiter, async (request, response, next) => {
-    const packageName = cleanText(request.body.packageName, 80);
-    const normalizedName = normalizePackageName(packageName);
-    const ecosystem = cleanText(request.body.ecosystem, 30);
-    const upstreamUrl = cleanText(request.body.upstreamUrl, 500);
-    const description = cleanText(request.body.description, 1200);
-    const useCase = cleanText(request.body.useCase, 1200);
-    const canHelpTest = Boolean(request.body.canHelpTest);
-    const requesterName = cleanText(request.body.requesterName, 100);
-    const organization = cleanText(request.body.organization, 160);
-    const contactEmail = cleanText(request.body.contactEmail, 254);
-    const showRequesterPublicly = Boolean(request.body.showRequesterPublicly);
-
-    if (!/^[a-zA-Z0-9][a-zA-Z0-9._+\s-]{0,79}$/.test(packageName)) {
-      response.status(400).json({ error: "Enter a valid package name." });
-      return;
-    }
-    if (upstreamUrl && !validHttpUrl(upstreamUrl)) {
-      response.status(400).json({ error: "Enter a valid upstream project URL or leave it blank." });
-      return;
-    }
-    if (!VALID_ECOSYSTEMS.has(ecosystem)) {
-      response.status(400).json({ error: "Choose a valid project ecosystem." });
-      return;
-    }
-    if (description.length < 20) {
-      response.status(400).json({ error: "Tell us a little more about why this package is useful." });
-      return;
-    }
-    if (!validEmail(contactEmail)) {
-      response.status(400).json({ error: "Enter a valid contact email address or leave it blank." });
+    const validated = validateSubmission(request.body);
+    if (validated.error) {
+      response.status(400).json({ error: validated.error });
       return;
     }
 
     try {
-      const now = new Date().toISOString();
-      const result = await run(
-        database,
-        `INSERT INTO package_requests (
-          package_name, normalized_name, ecosystem, upstream_url, description, use_case,
-          can_help_test, requester_name, organization, contact_email, show_requester_publicly,
-          status, created_at, updated_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'proposed', ?, ?)`,
-        [
-          packageName,
-          normalizedName,
-          ecosystem,
-          upstreamUrl,
-          description,
-          useCase,
-          canHelpTest ? 1 : 0,
-          requesterName,
-          organization,
-          contactEmail,
-          showRequesterPublicly ? 1 : 0,
-          now,
-          now,
-        ],
-      );
-      const row = await get(
-        database,
-        "SELECT *, 0 AS vote_count, 0 AS voted FROM package_requests WHERE id = ?",
-        [result.id],
-      );
-      response.status(201).json({ request: mapRequest(row) });
+      response.status(201).json({ request: await insertSubmission(database, validated.submission) });
     } catch (error) {
       if (error.code === "SQLITE_CONSTRAINT") {
         const existing = await get(
           database,
           "SELECT id FROM package_requests WHERE normalized_name = ?",
-          [normalizedName],
+          [validated.submission.normalizedName],
         );
         response.status(409).json({
           error: "That package has already been requested. You can vote for the existing request.",
@@ -595,6 +608,94 @@ function createApp(options = {}) {
         });
         return;
       }
+      next(error);
+    }
+  });
+
+  app.post("/api/requests/bulk", bulkSubmissionLimiter, async (request, response, next) => {
+    const body = request.body && typeof request.body === "object" ? request.body : {};
+    const items = body.requests;
+    if (!Array.isArray(items) || items.length < 1) {
+      response.status(400).json({ error: "Include at least one package request." });
+      return;
+    }
+    if (items.length > MAX_BULK_REQUESTS) {
+      response.status(400).json({ error: `Bulk submissions are limited to ${MAX_BULK_REQUESTS} packages.` });
+      return;
+    }
+
+    const requester = {
+      requesterName: body.requesterName,
+      organization: body.organization,
+      contactEmail: body.contactEmail,
+      showRequesterPublicly: body.showRequesterPublicly,
+    };
+    const commonDescription = cleanText(body.description, 1200);
+    const commonCanHelpTest = Boolean(body.canHelpTest);
+    const created = [];
+    const duplicates = [];
+    const errors = [];
+    const seenNames = new Map();
+
+    try {
+      for (const [index, item] of items.entries()) {
+        const validated = validateSubmission({
+          ...requester,
+          packageName: item?.packageName,
+          ecosystem: item?.ecosystem,
+          upstreamUrl: item?.upstreamUrl,
+          description: cleanText(item?.description, 1200) || commonDescription,
+          useCase: item?.useCase,
+          canHelpTest: typeof item?.canHelpTest === "boolean" ? item.canHelpTest : commonCanHelpTest,
+        });
+        if (validated.error) {
+          errors.push({ index, packageName: cleanText(item?.packageName, 80), error: validated.error });
+          continue;
+        }
+
+        const firstIndex = seenNames.get(validated.submission.normalizedName);
+        if (firstIndex !== undefined) {
+          duplicates.push({
+            index,
+            packageName: validated.submission.packageName,
+            existingRequestId: null,
+            reason: "batch",
+            duplicateOfIndex: firstIndex,
+          });
+          continue;
+        }
+        seenNames.set(validated.submission.normalizedName, index);
+
+        try {
+          created.push(await insertSubmission(database, validated.submission));
+        } catch (error) {
+          if (error.code !== "SQLITE_CONSTRAINT") throw error;
+          const existing = await get(
+            database,
+            "SELECT id FROM package_requests WHERE normalized_name = ?",
+            [validated.submission.normalizedName],
+          );
+          duplicates.push({
+            index,
+            packageName: validated.submission.packageName,
+            existingRequestId: existing?.id || null,
+            reason: "existing",
+          });
+        }
+      }
+
+      response.status(201).json({
+        created,
+        duplicates,
+        errors,
+        summary: {
+          submitted: items.length,
+          created: created.length,
+          duplicates: duplicates.length,
+          errors: errors.length,
+        },
+      });
+    } catch (error) {
       next(error);
     }
   });

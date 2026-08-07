@@ -83,6 +83,12 @@ test("rejects duplicate package names including the port suffix", async () => {
   assert.equal(response.status, 409);
   const body = await response.json();
   assert.equal(typeof body.existingRequestId, "number");
+
+  const emptyResponse = await fetch(`${baseUrl}/api/requests`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+  });
+  assert.equal(emptyResponse.status, 400);
 });
 
 test("changes status only with the admin token", async () => {
@@ -214,4 +220,71 @@ test("changes status only with the admin token", async () => {
     );
   });
   assert.deepEqual(cascadeCounts, { votes: 0, events: 0 });
+});
+
+test("bulk creates valid requests and reports row-level duplicates and errors", async () => {
+  const tooManyResponse = await fetch(`${baseUrl}/api/requests/bulk`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ requests: Array.from({ length: 26 }, (_, index) => ({
+      packageName: `Package ${index}`,
+      ecosystem: "general",
+      description: "This is a sufficiently detailed reason for requesting the package.",
+    })) }),
+  });
+  assert.equal(tooManyResponse.status, 400);
+  assert.match((await tooManyResponse.json()).error, /limited to 25/);
+
+  const seedResponse = await fetch(`${baseUrl}/api/requests`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      packageName: "Bulk Seed",
+      ecosystem: "general",
+      description: "This package exists before the bulk request is submitted.",
+    }),
+  });
+  assert.equal(seedResponse.status, 201);
+
+  const response = await fetch(`${baseUrl}/api/requests/bulk`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      description: "These packages are needed for a shared application modernization effort.",
+      requesterName: "Bulk Requester",
+      organization: "Example Organization",
+      contactEmail: "bulk@example.com",
+      showRequesterPublicly: false,
+      canHelpTest: true,
+      requests: [
+        { packageName: "Bulk Seedport", ecosystem: "general" },
+        { packageName: "Bulk Alpha", ecosystem: "rust" },
+        { packageName: "bulk-alpha", ecosystem: "rust" },
+        { packageName: "Bulk Beta", ecosystem: "python", upstreamUrl: "not-a-url" },
+        {
+          packageName: "Bulk Gamma",
+          ecosystem: "go",
+          description: "This package has a more specific reason for being requested on z/OS.",
+          canHelpTest: false,
+        },
+      ],
+    }),
+  });
+  assert.equal(response.status, 201);
+  const body = await response.json();
+  assert.deepEqual(body.summary, { submitted: 5, created: 2, duplicates: 2, errors: 1 });
+  assert.deepEqual(body.created.map((item) => item.packageName), ["Bulk Alpha", "Bulk Gamma"]);
+  assert.equal(body.created[0].canHelpTest, true);
+  assert.equal(body.created[1].canHelpTest, false);
+  assert.equal(body.duplicates[0].reason, "existing");
+  assert.equal(typeof body.duplicates[0].existingRequestId, "number");
+  assert.equal(body.duplicates[1].reason, "batch");
+  assert.equal(body.duplicates[1].duplicateOfIndex, 1);
+  assert.match(body.errors[0].error, /valid upstream project URL/);
+
+  const publicList = await fetch(`${baseUrl}/api/requests`);
+  const publicBody = await publicList.json();
+  assert.equal(publicBody.requests.length, 3);
+  assert.equal(publicBody.requests.every((item) => item.requesterName === ""), true);
+  assert.equal(publicBody.requests.every((item) => !Object.hasOwn(item, "contactEmail")), true);
 });
