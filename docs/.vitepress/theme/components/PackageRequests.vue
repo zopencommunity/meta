@@ -68,7 +68,7 @@ const form = reactive({
 const statuses: Record<RequestStatus, { label: string; detail: string }> = {
   proposed: { label: "Proposed", detail: "Gathering community interest" },
   under_review: { label: "Under review", detail: "Being evaluated by maintainers" },
-  accepted: { label: "Accepted", detail: "Approved for future work" },
+  accepted: { label: "Accepted", detail: "Suitable for the backlog; awaiting or coordinating contributors" },
   in_progress: { label: "In progress", detail: "Someone is working on the port" },
   available: { label: "Available", detail: "The package has been released" },
   declined: { label: "Declined", detail: "Not currently planned" },
@@ -294,6 +294,12 @@ onMounted(() => {
         <div><strong>{{ totalVotes }}</strong><span>community votes</span></div>
       </div>
     </section>
+
+    <p class="governance-note">
+      Requests and votes guide community planning; they are not delivery or support commitments.
+      Ports move forward through open contribution, maintainer capacity, and the zopen governance process.
+      <a :href="withBase('/Guides/FAQ#package-requests-governance-and-responsibility')">Learn how requests are governed</a>.
+    </p>
 
     <p v-if="successMessage" class="notice success" role="status">{{ successMessage }}</p>
     <p v-if="loadError" class="notice error" role="alert">
@@ -524,6 +530,8 @@ onMounted(() => {
 .request-stats strong { font-size: 34px; letter-spacing: -.03em; }
 .request-stats span { color: var(--vp-c-text-2); font-size: 12px; text-align: center; text-transform: uppercase; letter-spacing: .08em; }
 .notice { padding: 13px 16px; border-radius: 10px; font-size: 14px; }
+.governance-note { margin: 0 0 24px; padding: 16px 18px; border-left: 4px solid var(--vp-c-brand-1); border-radius: 4px 10px 10px 4px; color: var(--vp-c-text-2); background: var(--vp-c-bg-soft); font-size: 14px; line-height: 1.6; }
+.governance-note a { font-weight: 700; }
 .notice.success { color: #09634f; border: 1px solid #85cdbd; background: #e7f8f3; }
 .dark .notice.success { color: #a8e6d6; border-color: #275e52; background: #142d28; }
 .notice.error { color: var(--vp-c-danger-1); border: 1px solid var(--vp-c-danger-2); background: var(--vp-c-danger-soft); }

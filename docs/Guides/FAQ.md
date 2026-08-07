@@ -35,6 +35,68 @@ Zopen community projects generally follow open source licenses, with many using 
 ### Where can I find a list of all ported tools?
 A comprehensive list of ported tools and their status can be found on the zopen community website, often linked from the main `meta` repository. The [Progress page](/Progress) and the [Latest Releases](/Latest) table are good starting points to explore available tools.
 
+## Package requests, governance, and responsibility
+
+The zopen community is an open, collaborative endeavor. [Package requests](/PackageRequests) and community votes help identify demand, but they do not create an obligation for any individual, organization, maintainer, or the Technical Steering Committee (TSC) to deliver or support a package. Work proceeds when contributors, infrastructure, technical feasibility, licensing, security considerations, and maintainer capacity align.
+
+### What does submitting a package request mean?
+
+A request records community interest in having an open-source project available on z/OS. It begins a discussion and evaluation; it is not a commitment that the package will be ported or delivered within a particular timeframe.
+
+### What does a vote mean?
+
+A vote is an advisory signal of community interest. It helps maintainers understand relative demand, but it is not a governance vote and does not by itself determine priority or approval. Formal project decisions follow the [zopen governance process](https://github.com/zopencommunity/meta/blob/main/GOVERNANCE.md).
+
+### How are package requests prioritized?
+
+Maintainers consider community interest, contributor availability, technical feasibility, dependencies, licensing, security, expected maintenance effort, and benefit to the broader z/OS ecosystem. Vote count is one input, not the sole deciding factor.
+
+### Who decides whether a request is accepted?
+
+Routine triage can be performed by project maintainers. Requests involving broader technical direction, infrastructure, policy, or disagreement may be referred to the zopen TSC under the project governance process. Decisions and important status changes should be explained publicly where practical.
+
+### Does "Accepted" mean someone is working on the package?
+
+No. **Accepted** means the package is considered suitable for the community backlog. It may still be waiting for a contributor or maintainer. **In progress** is used after someone has taken responsibility for the porting work.
+
+### Who is responsible for porting and maintaining a package?
+
+Responsibility is attached to stewardship, not to whoever requested or voted for a package.
+
+| Area | Primary responsibility |
+| --- | --- |
+| Upstream functionality | The original upstream project |
+| z/OS patches and build | Port contributors and repository maintainers |
+| Package publishing | Port maintainers and zopen infrastructure maintainers |
+| Project-wide policy and technical disputes | The zopen TSC |
+| Testing in a particular environment | Package users and participating organizations |
+
+A requester is not automatically responsible for implementation, although testing and contribution are encouraged.
+
+### Does identifying my company give the request higher priority?
+
+No. Organization information helps the community understand use cases, coordinate testing, and identify possible contributors. It does not purchase priority or give an organization control over community decisions. Requester attribution is shown publicly only when the requester opts in, and contact email remains private to administrators.
+
+### Can an organization sponsor or contribute work?
+
+Yes. Organizations may contribute engineering time, testing, infrastructure, documentation, or funding. Contributions remain subject to the same open governance, review, licensing, and technical requirements as other community work.
+
+### Does an IBM employee's involvement make a package an IBM-supported product?
+
+No. Unless a separate commercial support arrangement explicitly says otherwise, contributors participate in the open community regardless of their employer. Community packages do not become IBM-supported products merely because an IBM employee contributes to them.
+
+### What happens when repository synchronization finds a package?
+
+Automatic synchronization with the zopen Pulp repositories creates a proposed match for maintainers to review. It does not automatically declare a request complete. A maintainer verifies the package identity and artifact before marking the request **Available**.
+
+### Is an Available package guaranteed to be maintained indefinitely?
+
+No. Maintenance depends on active contributors and project health. A package may later need a new maintainer or be identified as stale, deprecated, or unavailable if it can no longer be responsibly maintained. Consult the individual port repository for current compatibility and maintenance information.
+
+### How can I help move a request forward?
+
+Requesters can provide use cases, version requirements, and test results; volunteer to test on z/OS; contribute documentation or code; help with dependencies; or become a port maintainer. A formal port contribution follows the [contribution and review process](https://github.com/zopencommunity/meta/blob/main/CONTRIBUTING.md).
+
 ## Consuming
 
 ### How do I consume zopen community tools?
