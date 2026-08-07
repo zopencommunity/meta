@@ -1,12 +1,16 @@
 
-## Overall Status
-* <span style="color:green">Green</span>: All tests passing
-* <span style="color:blue">Blue</span>: Most tests passing (>=75%)
-* <span style="color:#fee12b">Yellow</span>: Some tests passing (>=50%)
-* <span style="color:red">Red</span>: Few or no tests passing (<50%)
-* <span style="color:grey">Skipped</span>: Skipped or Tests are not enabled
+> **279 of 327** packages in the zopen community have been released and are tracked here.
+> The remaining 48 repos exist in the org but have not yet published a release.
 
-![image info](./images/progress.png)
+## Overall Status
+* <span style="color:#6abf8a">Green</span>: All tests passing
+* <span style="color:#7bafd4">Blue</span>: Most tests passing (>=75%)
+* <span style="color:#f0c070">Yellow</span>: Some tests passing (>=50%)
+* <span style="color:#e88080">Red</span>: Few or no tests passing (<50%)
+* <span style="color:#b8bfca">Skipped</span>: Skipped or Tests are not enabled
+* <span style="color:#c9b8e8">Unreleased</span>: No official release yet
+
+![Current Porting Status](./images/progress.png)
 
 ## Overall Status Breakdown
 

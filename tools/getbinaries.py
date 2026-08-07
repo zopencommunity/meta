@@ -14,8 +14,35 @@ import re # Ensure re is imported
 import subprocess # Keep if still used
 import shutil # Keep if still used
 from itertools import chain # Keep if still used
-rcParams.update({'figure.autolayout': True}) # Keep if still used
+rcParams.update({'figure.autolayout': True})
 import html # For escaping attribute values
+import urllib.request
+import tempfile
+import matplotlib.font_manager as fm
+
+def _load_ibm_plex_sans():
+    """Download IBM Plex Sans TTF files from the IBM/plex repo and register
+    them with matplotlib. Falls back silently to the default sans-serif font
+    if the download fails (e.g. no network on the build host)."""
+    PLEX_URLS = {
+        "IBMPlexSans-Regular":  "https://github.com/IBM/plex/raw/refs/heads/master/packages/plex-sans/fonts/complete/ttf/IBMPlexSans-Regular.ttf",
+        "IBMPlexSans-Bold":     "https://github.com/IBM/plex/raw/refs/heads/master/packages/plex-sans/fonts/complete/ttf/IBMPlexSans-Bold.ttf",
+        "IBMPlexSans-SemiBold": "https://github.com/IBM/plex/raw/refs/heads/master/packages/plex-sans/fonts/complete/ttf/IBMPlexSans-SemiBold.ttf",
+    }
+    font_dir = os.path.join(tempfile.gettempdir(), "ibm_plex_fonts")
+    os.makedirs(font_dir, exist_ok=True)
+    try:
+        for name, url in PLEX_URLS.items():
+            dest = os.path.join(font_dir, f"{name}.ttf")
+            if not os.path.exists(dest):
+                urllib.request.urlretrieve(url, dest)
+            fm.fontManager.addfont(dest)
+        mpl.rcParams['font.family'] = 'IBM Plex Sans'
+        print("IBM Plex Sans fonts loaded.", file=sys.stderr)
+    except Exception as e:
+        print(f"Warning: could not load IBM Plex Sans ({e}), using default font.", file=sys.stderr)
+
+_load_ibm_plex_sans()
 
 def get_status_color(passed_tests, total_tests, has_releases):
     if not total_tests:
@@ -99,6 +126,7 @@ progressPerStatus = {
     "Yellow": 0,
     "Red": 0,
     "Skipped": 0,
+    "Unreleased": 0,
 }
 
 statusPerPort = {}
@@ -114,7 +142,7 @@ if github_token is None:
 
 g = Github(github_token)
 
-json_url = "https://raw.githubusercontent.com/ZOSOpenTools/meta/main/docs/api/zopen_releases_latest.json"
+json_url = "https://raw.githubusercontent.com/zopencommunity/meta/main/docs/api/zopen_releases_latest.json"
 response = requests.get(json_url)
 data = json.loads(response.text)
 
@@ -157,8 +185,12 @@ for package, releases in data['release_data'].items():
     passed_tests = int(latest_asset['passed_tests']) if latest_asset.get('passed_tests') else 0
     
     totalReleases = repo.get_releases().totalCount
-    status = get_status_color(passed_tests, total_tests, totalReleases > 0)
-    success_rate = get_success_rate(passed_tests, total_tests, totalReleases > 0)
+    if totalReleases == 0:
+        status = "Unreleased"
+        success_rate = -2
+    else:
+        status = get_status_color(passed_tests, total_tests, True)
+        success_rate = get_success_rate(passed_tests, total_tests, True)
 
     progressPerStatus[status] += 1
     statusPerPort[package + "port"] = success_rate
@@ -227,83 +259,134 @@ with open('docs/Latest.md', 'w') as f:
 
 sys.stdout = original_stdout # Restore stdout
 
-# --- Matplotlib chart generation code ---
-# Ensure this section is uncommented and figures managed if charts are needed.
-# Example: For the pie chart
-if any(progressPerStatus.values()): # Check if there's data for the chart
-    plt.figure() # Create a new figure to avoid overlap if multiple charts are made
-    labels_pie = []
-    sizes_pie = []
-    for x, y in progressPerStatus.items():
-        labels_pie.append(x)
-        sizes_pie.append(y)
-    colors_pie = ['#00FF00','#0000FF','#FFFF00','#FF0000','#AAAAAA','#FF8888'] # Ensure enough colors if statuses change
-    plt.title("Current Porting Status")
-    # Ensure sizes_pie is not all zeros before calling plt.pie to avoid errors
-    if sum(sizes_pie) > 0:
-        p_pie, tx_pie, autotexts_pie = plt.pie(sizes_pie, labels=labels_pie, colors=colors_pie, autopct="", shadow=True)
-        for i, a_pie in enumerate(autotexts_pie):
-            a_pie.set_text("{}".format(sizes_pie[i])) # Display actual counts
-    else:
-        plt.text(0.5, 0.5, 'No data to display', horizontalalignment='center', verticalalignment='center')
-    plt.axis('equal')
-    plt.savefig('docs/images/progress.png')
-    plt.close() # Close the figure
+# --- Fetch total org repo count (released + unreleased) for the "X of Y" summary ---
+# This is the authoritative denominator: all *port repos in the org, including ones
+# that have never published a release and therefore never appear in zopen_releases_latest.json.
+try:
+    org = g.get_organization("zopencommunity")
+    total_org_repos = sum(1 for r in org.get_repos() if r.name.endswith("port"))
+except Exception as e:
+    print(f"Warning: could not fetch org repo count: {e}", file=sys.stderr)
+    total_org_repos = None
+
+# --- Matplotlib pie chart generation ---
+if any(progressPerStatus.values()):
+    STATUS_COLORS = {
+        "Green":      "#6abf8a",
+        "Blue":       "#7bafd4",
+        "Yellow":     "#f0c070",
+        "Red":        "#e88080",
+        "Skipped":    "#b8bfca",
+        "Unreleased": "#c9b8e8",
+    }
+
+    # Only include non-zero slices
+    items = [(k, v) for k, v in progressPerStatus.items() if v > 0]
+    labels_pie  = [k for k, v in items]
+    sizes_pie   = [v for k, v in items]
+    colors_pie  = [STATUS_COLORS.get(k, "#888888") for k, v in items]
+    total       = sum(sizes_pie)
+    released    = total - progressPerStatus.get("Unreleased", 0)
+
+    fig, ax = plt.subplots(figsize=(7, 5), facecolor='white')
+    fig.subplots_adjust(left=0.0, right=0.6, top=0.9, bottom=0.05)
+
+    wedges, _ = ax.pie(
+        sizes_pie,
+        labels=None,
+        colors=colors_pie,
+        startangle=90,
+        wedgeprops=dict(width=0.55, edgecolor='white', linewidth=2),  # donut
+    )
+
+    # Centre text: released package count
+    ax.text(0, 0.08, str(released), ha='center', va='center',
+            fontsize=22, fontweight='bold', color='#1f2328')
+    ax.text(0, -0.18, 'released',   ha='center', va='center',
+            fontsize=10, color='#57606a')
+
+    ax.set_title('Current Porting Status\n(all tracked packages)',
+                 fontsize=12, fontweight='bold', color='#1f2328', pad=12)
+
+    # Legend with count + percentage on the right side
+    legend_labels = [f"{lbl}  {cnt}  ({cnt/total*100:.1f}%)"
+                     for lbl, cnt in zip(labels_pie, sizes_pie)]
+    ax.legend(
+        wedges, legend_labels,
+        loc='center left',
+        bbox_to_anchor=(1.05, 0.5),
+        fontsize=10,
+        frameon=False,
+    )
+
+    plt.savefig('docs/images/progress.png', dpi=150, bbox_inches='tight',
+                facecolor='white')
+    plt.close()
 else:
     print("No data for progress pie chart.", file=sys.stderr)
 
-# --- Bar Chart Generation ---
+# --- Bar Chart Generation (all packages, strip 'port' suffix from labels) ---
 chart_files = []
 active_statusPerPort = {k: v for k, v in statusPerPort.items() if v >= 0}
 if active_statusPerPort:
     sorted_ports = sorted(active_statusPerPort.items(), key=lambda item: item[1], reverse=True)
-    
+
     chunk_size = 50
-    if len(sorted_ports) == 0:
-        num_chunks = 0
-    else:
-        num_chunks = (len(sorted_ports) + chunk_size - 1) // chunk_size
-    
+    num_chunks = (len(sorted_ports) + chunk_size - 1) // chunk_size
+
     for i in range(num_chunks):
         chunk = sorted_ports[i * chunk_size:(i + 1) * chunk_size]
         chunk.reverse()
-        labels_bar = [item[0] for item in chunk]
-        sizes_bar = [item[1] for item in chunk]
-
-        if not labels_bar:
-            continue
-
-        fig_bar = plt.figure()
-        fig_bar.set_size_inches(20, max(10, len(labels_bar) * 0.4))
-        ax_bar = fig_bar.add_axes([0.2, 0.1, 0.7, 0.85])
+        # Strip trailing 'port' from labels
+        labels_bar = [k[:-4] if k.endswith('port') else k for k in [item[0] for item in chunk]]
+        sizes_bar  = [item[1] for item in chunk]
 
         col_bar = []
         for val_bar in sizes_bar:
             if val_bar == 100:
-                col_bar.append('green')
+                col_bar.append('#8ecba5')   # muted sage green
             elif val_bar >= 75:
-                col_bar.append('blue')
+                col_bar.append('#85b5d9')   # muted steel blue
             elif val_bar >= 50:
-                col_bar.append('#fee12b')
+                col_bar.append('#eec07a')   # muted amber
             else:
-                col_bar.append('red')
+                col_bar.append('#e89090')   # muted soft red
 
-        ax_bar.set_xlabel('Success Rate (%)', fontsize=12)
+        row_h = 0.32
+        fig_h = max(6, len(labels_bar) * row_h + 1.5)
+        fig_bar, ax_bar = plt.subplots(figsize=(12, fig_h), facecolor='white')
+        fig_bar.subplots_adjust(left=0.18, right=0.92, top=0.94, bottom=0.06)
+
+        bars_obj = ax_bar.barh(
+            labels_bar, sizes_bar,
+            color=col_bar,
+            height=0.6,
+            align='center',
+            edgecolor='white',
+            linewidth=0.5,
+        )
+        ax_bar.bar_label(bars_obj, fmt='%.1f%%', padding=4, fontsize=8, color='#1f2328')
+
+        ax_bar.set_xlabel('Success Rate (%)', fontsize=11, color='#1f2328')
         title = "Project Test Quality"
         if num_chunks > 1:
-            title += f" (Part {i+1}/{num_chunks})"
-        ax_bar.set_title(title, fontsize=16)
-        ax_bar.tick_params(axis='y', labelsize=10)
-        ax_bar.tick_params(axis='x', labelsize=10)
+            title += f"  (Part {i+1} / {num_chunks})"
+        ax_bar.set_title(title, fontsize=13, fontweight='bold', color='#1f2328', pad=10)
 
-        bars_obj = ax_bar.barh(labels_bar, sizes_bar, color=col_bar, height=0.6, align='center')
-        ax_bar.bar_label(bars_obj, fmt='%.1f%%', padding=3, fontsize=8)
-        
+        ax_bar.set_xlim(0, 115)
+        ax_bar.tick_params(axis='y', labelsize=8.5, colors='#1f2328')
+        ax_bar.tick_params(axis='x', labelsize=9,   colors='#57606a')
+        ax_bar.spines[['top', 'right']].set_visible(False)
+        ax_bar.spines[['left', 'bottom']].set_color('#e5e7eb')
+        ax_bar.set_facecolor('#fafafa')
+        ax_bar.xaxis.grid(True, color='#e5e7eb', linewidth=0.6, zorder=0)
+        ax_bar.set_axisbelow(True)
+
         chart_filename = f'docs/images/quality_part_{i+1}.png'
         if num_chunks == 1:
             chart_filename = 'docs/images/quality.png'
 
-        plt.savefig(chart_filename, bbox_inches="tight")
+        plt.savefig(chart_filename, dpi=150, bbox_inches='tight', facecolor='white')
         plt.close()
         chart_files.append(chart_filename.replace('docs/', './'))
 else:
@@ -313,23 +396,33 @@ else:
 # --- Generation of Progress.md ---
 with open('docs/Progress.md', 'w') as f_progress:
     sys.stdout = f_progress
+
+    # "X of Y" summary header
+    released_count = sum(v for k, v in progressPerStatus.items() if k != "Unreleased")
+    if total_org_repos is not None:
+        unreleased_org = total_org_repos - released_count
+        print(f"> **{released_count} of {total_org_repos}** packages in the zopen community have been released and are tracked here.")
+        print(f"> The remaining {unreleased_org} repos exist in the org but have not yet published a release.\n")
+
+    print(f"*Last updated: {todaysDate}*\n")
     print("""
 ## Overall Status
-* <span style="color:green">Green</span>: All tests passing
-* <span style="color:blue">Blue</span>: Most tests passing (>=75%)
-* <span style="color:#fee12b">Yellow</span>: Some tests passing (>=50%)
-* <span style="color:red">Red</span>: Few or no tests passing (<50%)
-* <span style="color:grey">Skipped</span>: Skipped or Tests are not enabled
+* <span style="color:#6abf8a">Green</span>: All tests passing
+* <span style="color:#7bafd4">Blue</span>: Most tests passing (>=75%)
+* <span style="color:#f0c070">Yellow</span>: Some tests passing (>=50%)
+* <span style="color:#e88080">Red</span>: Few or no tests passing (<50%)
+* <span style="color:#b8bfca">Skipped</span>: Skipped or Tests are not enabled
+* <span style="color:#c9b8e8">Unreleased</span>: No official release yet
 
-![image info](./images/progress.png)
-
-## Overall Status Breakdown
+![Current Porting Status](./images/progress.png)
 """)
+
+    print("## Overall Status Breakdown\n")
     if not chart_files:
         print("No quality chart generated.")
     else:
         for chart_file in chart_files:
-            print(f"![image info]({chart_file})")
+            print(f"![Project Test Quality](./images/quality.png)")
 
     print("\n## Projects with skipped or no tests (or no releases resulting in skipped status)")
     count_skipped_no_tests = 0

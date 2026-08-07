@@ -1,112 +1,107 @@
 <div v-pre class="man-page-content">
-
-<div class="header-with-back">
-  <div class="back-link">
-    <a href="./zopen-reference">← Back</a>
-  </div>
-</div>
-
 <h1 align="center">ZOPEN-CREATE-REPO</h1>
 
 <h2>NAME</h2>
-<a name="NAME"></a>
 
 <p style="margin-left:11%; margin-top: 1em">zopen-create-repo
 &minus; manual page for zopen-create-repo 0.8.4</p>
 
 <h2>SYNOPSIS</h2>
-<a name="SYNOPSIS"></a>
 
-<p style="margin-left:11%; margin-top: 1em"><b>zopen-create-repo</b>
+<p style="margin-left:11%; margin-top: 1em">zopen-create-repo
 [OPTION] -n PORT_NAME</p>
 
 <h2>DESCRIPTION</h2>
-<a name="DESCRIPTION"></a>
 
-<p style="margin-left:11%; margin-top: 1em">zopen&minus;create&minus;repo
-&minus; Create a new port repository in zopencommunity.</p>
+<p style="margin-left:11%; margin-top: 1em">zopen&minus;create&minus;repo &minus; Create a new port repository in zopencommunity.</p>
 
-<p style="margin-left:11%; margin-top: 1em">NOTE: This
-script is intended for use by core contributors only.</p>
-
-<p style="margin-left:22%; margin-top: 1em">You must have
-admin permissions in the zopencommunity organization.</p>
+<p style="margin-left:11%; margin-top: 1em">NOTE: This script is intended for use by core contributors only. You must have admin permissions in the zopencommunity organization.</p>
 
 <h2>OPTIONS</h2>
-<a name="OPTIONS"></a>
 
-<p style="margin-left:11%; margin-top: 1em"><b>&minus;h</b>,
-<b>&minus;&minus;help</b></p>
+<table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
+<tr style="background-color:#f0f0f0;">
+<th style="text-align:left; border: 1px solid #ccc;">Option</th>
+<th style="text-align:left; border: 1px solid #ccc;">Description</th>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;h, &minus;&minus;help</code></td>
+<td style="border: 1px solid #ccc;">print this help</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;v, &minus;&minus;verbose</code></td>
+<td style="border: 1px solid #ccc;">run in verbose mode.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;n, &minus;&minus;name PORT_NAME</code></td>
+<td style="border: 1px solid #ccc;">Name of the port (required) e.g., curl, openssl</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;d, &minus;&minus;description TEXT</code></td>
+<td style="border: 1px solid #ccc;">Repository description (optional) Default: &rsquo;zopen port of PORT_NAME&rsquo;</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;u, &minus;&minus;user USERNAME</code></td>
+<td style="border: 1px solid #ccc;">GitHub username to assign as admin (optional)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;o, &minus;&minus;github&minus;org ORG</code></td>
+<td style="border: 1px solid #ccc;">GitHub Organization (default: zopencommunity)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;t, &minus;&minus;github&minus;token TOKEN</code></td>
+<td style="border: 1px solid #ccc;">GitHub Personal Access Token (required, or set GITHUB_TOKEN env var)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;&minus;version</code></td>
+<td style="border: 1px solid #ccc;">print version</td>
+</tr>
+</table>
 
-<p style="margin-left:22%;">print this help</p>
+<h2>ENVIRONMENT</h2>
 
-<p style="margin-left:11%;"><b>&minus;v</b>,
-<b>&minus;&minus;verbose</b></p>
+<table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
+<tr style="background-color:#f0f0f0;">
+<th style="text-align:left; border: 1px solid #ccc;">Variable</th>
+<th style="text-align:left; border: 1px solid #ccc;">Description</th>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>GITHUB_TOKEN</code></td>
+<td style="border: 1px solid #ccc;">GitHub Personal Access Token (alternative to &minus;&minus;github&minus;token)</td>
+</tr>
+</table>
 
-<p style="margin-left:22%;">run in verbose mode.</p>
+<h2>EXAMPLES</h2>
 
-<p style="margin-left:11%;"><b>&minus;n</b>,
-<b>&minus;&minus;name</b> PORT_NAME</p>
-
-<p style="margin-left:22%;">Name of the port (required)
-e.g., curl, openssl</p>
-
-<p style="margin-left:11%;"><b>&minus;d</b>,
-<b>&minus;&minus;description</b> TEXT</p>
-
-<p style="margin-left:22%;">Repository description
-(optional) Default: &rsquo;zopen port of
-PORT_NAME&rsquo;</p>
-
-<p style="margin-left:11%;"><b>&minus;u</b>,
-<b>&minus;&minus;user</b> USERNAME</p>
-
-<p style="margin-left:22%;">GitHub username to assign as
-admin (optional)</p>
-
-<p style="margin-left:11%;"><b>&minus;o</b>,
-<b>&minus;&minus;github&minus;org</b> ORG</p>
-
-<p style="margin-left:22%;">GitHub Organization (default:
-zopencommunity)</p>
-
-<p style="margin-left:11%;"><b>&minus;t</b>,
-<b>&minus;&minus;github&minus;token</b> TOKEN</p>
-
-<p style="margin-left:22%;">GitHub Personal Access Token
-(required, or set GITHUB_TOKEN env var)</p>
-
-<p style="margin-left:11%;"><b>&minus;&minus;version</b></p>
-
-<p style="margin-left:22%;">print version</p>
-
-<p style="margin-left:11%; margin-top: 1em"><b>Environment
-GITHUB_TOKEN</b></p>
-
-<p style="margin-left:22%;">GitHub Personal Access Token
-(alternative to <b>&minus;&minus;github&minus;token</b>)</p>
-
-<p style="margin-left:11%; margin-top: 1em"><b>Example:</b></p>
-
-<p style="margin-left:22%;">zopen&minus;create&minus;repo
-<b>&minus;n</b> curl zopen&minus;create&minus;repo
-<b>&minus;v &minus;n</b> pv <b>&minus;d</b> &rsquo;Pipe
-Viewer &minus; monitor data through a pipeline&rsquo;
-zopen&minus;create&minus;repo <b>&minus;v &minus;n</b>
-openssl <b>&minus;u</b> johndoe <b>&minus;t</b>
-&lt;your_github_token&gt;</p>
+<table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
+<tr style="background-color:#f0f0f0;">
+<th style="text-align:left; border: 1px solid #ccc;">Command</th>
+<th style="text-align:left; border: 1px solid #ccc;">Description</th>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>zopen&minus;create&minus;repo &minus;n curl</code></td>
+<td style="border: 1px solid #ccc;">create a new port repository for curl</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>zopen&minus;create&minus;repo &minus;v &minus;n pv &minus;d &rsquo;Pipe Viewer &minus; monitor data through a pipeline&rsquo;</code></td>
+<td style="border: 1px solid #ccc;">create a pv repository with a custom description</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>zopen&minus;create&minus;repo &minus;v &minus;n openssl &minus;u johndoe &minus;t &lt;your_github_token&gt;</code></td>
+<td style="border: 1px solid #ccc;">create an openssl repository, assigning johndoe as admin</td>
+</tr>
+</table>
 
 <p style="margin-left:11%; margin-top: 1em">This is free
 software: you are free to change and redistribute it under
 the terms of the Apache License, Version 2.0.
-&lt;https:///#47;www.apache.orgg/#47;licensess/#47;LICENSE&minus;2.0.html&gt;
+<a href="https://www.apache.org/licenses/LICENSE-2.0.html" target="_blank">https://www.apache.org/licenses/LICENSE-2.0.html</a>
 There is NO WARRANTY, to the extent permitted by law.</p>
 
 <h2>AUTHOR</h2>
-<a name="AUTHOR"></a>
 
 <p style="margin-left:11%; margin-top: 1em">Written by
 contributors to the zopen community.
-&lt;https:///#47;github.comm/#47;zopencommunityy/#47;metaa/#47;graphss/#47;contributors&gt;</p>
+<a href="https://github.com/zopencommunity/meta/graphs/contributors" target="_blank">https://github.com/zopencommunity/meta/graphs/contributors</a></p>
 
 </div>

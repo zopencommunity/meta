@@ -1,173 +1,115 @@
 <div v-pre class="man-page-content">
-
-<div class="header-with-back">
-  <div class="back-link">
-    <a href="./zopen-reference">← Back</a>
-  </div>
-</div>
-
-
 <h1 align="center">ZOPEN-CLEAN</h1>
 
-
-
-
 <h2>NAME</h2>
-<a name="NAME"></a>
-
 
 <p style="margin-left:11%; margin-top: 1em">zopen-clean
 &minus; manual page for zopen-clean 0.8.4</p>
 
 <h2>SYNOPSIS</h2>
-<a name="SYNOPSIS"></a>
 
-
-
-<p style="margin-left:11%; margin-top: 1em"><b>zopen-clean</b>
+<p style="margin-left:11%; margin-top: 1em">zopen-clean
 [OPTION] [PACKAGE]</p>
 
 <h2>DESCRIPTION</h2>
-<a name="DESCRIPTION"></a>
-
-
 
 <p style="margin-left:11%; margin-top: 1em">zopen&minus;clean
-is a utility for zopen community to remove uneeded resources
-from the system to save space and prevent clutter.</p>
+is a utility for zopen community to remove unneeded
+resources from the system to save space and prevent clutter.</p>
 
 <h2>OPTIONS</h2>
-<a name="OPTIONS"></a>
 
-
-<table width="100%" border="0" rules="none" frame="void"
-       cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="11%"></td>
-<td width="9%">
-
-
-<p style="margin-top: 1em"><b>&minus;&minus;deep</b></p></td>
-<td width="2%"></td>
-<td width="75%">
-
-
-<p style="margin-top: 1em">deep clean &minus; run all
-cleanup operations</p></td>
-<td width="3%">
-</td></tr>
-<tr valign="top" align="left">
-<td width="11%"></td>
-<td width="9%">
-
-
-<p><b>&minus;&minus;all</b></p></td>
-<td width="2%"></td>
-<td width="75%">
-
-
-<p>apply cleanup command to all applicable packages.</p></td>
-<td width="3%">
-</td></tr>
+<table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
+<tr style="background-color:#f0f0f0;">
+<th style="text-align:left; border: 1px solid #ccc;">Option</th>
+<th style="text-align:left; border: 1px solid #ccc;">Description</th>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;&minus;deep</code></td>
+<td style="border: 1px solid #ccc;">deep clean &minus; run all cleanup operations.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;&minus;all</code></td>
+<td style="border: 1px solid #ccc;">apply cleanup command to all applicable packages.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;c, &minus;&minus;cache [PACKAGE ...]</code></td>
+<td style="border: 1px solid #ccc;">cleans the downloaded package cache; packages will be re&minus;downloaded if needed.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;d, &minus;&minus;dangling</code></td>
+<td style="border: 1px solid #ccc;">removes dangling symlinks from the zopen file system in case of issues during package maintenance.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;h, &minus;&minus;help, &minus;?</code></td>
+<td style="border: 1px solid #ccc;">display this help and exit.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;m, &minus;&minus;metadata</code></td>
+<td style="border: 1px solid #ccc;">cleans and refreshes the metadata for zopen.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;u, &minus;&minus;unused [PACKAGE ...]</code></td>
+<td style="border: 1px solid #ccc;">remove versions of PACKAGEs that are available as alternatives, leaving only the currently active version.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;&minus;nostats</code></td>
+<td style="border: 1px solid #ccc;">do not output statistics from the clean operation(s).</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;v, &minus;&minus;verbose</code></td>
+<td style="border: 1px solid #ccc;">run in verbose mode.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>&minus;&minus;version</code></td>
+<td style="border: 1px solid #ccc;">print version.</td>
+</tr>
 </table>
 
-<p style="margin-left:11%;"><b>&minus;c</b>,
-<b>&minus;&minus;cache</b></p>
-
-<p style="margin-left:22%;">[PACKAGE ...] cleans the
-downloaded package cache; packages will be
-re&minus;downloaded if needed.</p>
-
-<p style="margin-left:11%;"><b>&minus;d</b>,
-<b>&minus;&minus;dangling</b></p>
-
-<p style="margin-left:22%;">removes dangling symlinks from
-the zopen file system in case of issues during package
-maintenance.</p>
-
-<p style="margin-left:11%;"><b>&minus;h</b>,
-<b>&minus;&minus;help</b>, &minus;?</p>
-
-<p style="margin-left:22%;">display this help and exit.</p>
-
-<p style="margin-left:11%;"><b>&minus;m</b>,
-<b>&minus;&minus;metadata</b></p>
-
-<p style="margin-left:22%;">cleans and refreshes the
-metadata for zopen.</p>
-
-<p style="margin-left:11%;"><b>&minus;u</b>,
-<b>&minus;&minus;unused</b> [PACKAGE ...]</p>
-
-<p style="margin-left:22%;">remove versions of PACKAGEs
-that are available as alternatives, leaving only the
-currently active version.</p>
-
-
-<p style="margin-left:11%;"><b>&minus;&minus;nostats</b></p>
-
-<p style="margin-left:22%;">do not output statistics from
-the clean operation(s)</p>
-
-<p style="margin-left:11%;"><b>&minus;v</b>,
-<b>&minus;&minus;verbose</b></p>
-
-<p style="margin-left:22%;">run in verbose mode.</p>
-
-
-<p style="margin-left:11%;"><b>&minus;&minus;version</b></p>
-
-<p style="margin-left:22%;">print version.</p>
-
 <h2>EXAMPLES</h2>
-<a name="EXAMPLES"></a>
 
-
-<p style="margin-left:11%; margin-top: 1em">zopen clean
-&minus;c</p>
-
-<p style="margin-left:22%;">clear the package download
-cache</p>
-
-<p style="margin-left:11%;">zopen clean &minus;d</p>
-
-<p style="margin-left:22%;">analyse the zopen file system
-and remove dangling symlinks</p>
-
-<p style="margin-left:11%;">zopen clean &minus;u
-[PACKAGE]</p>
-
-<p style="margin-left:22%;">remove unused versions for
-PACKAGE</p>
-
-<p style="margin-left:11%;">zopen clean &minus;u
-&minus;&minus;all</p>
-
-<p style="margin-left:22%;">remove all unused packages
-within the zopen environment</p>
-
-<p style="margin-left:22%; margin-top: 1em">zopen clean
-&minus;&minus;deep</p>
+<table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
+<tr style="background-color:#f0f0f0;">
+<th style="text-align:left; border: 1px solid #ccc;">Command</th>
+<th style="text-align:left; border: 1px solid #ccc;">Description</th>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>zopen clean &minus;c</code></td>
+<td style="border: 1px solid #ccc;">clear the package download cache</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>zopen clean &minus;d</code></td>
+<td style="border: 1px solid #ccc;">analyse the zopen file system and remove dangling symlinks</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>zopen clean &minus;u [PACKAGE]</code></td>
+<td style="border: 1px solid #ccc;">remove unused versions for PACKAGE</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>zopen clean &minus;u &minus;&minus;all</code></td>
+<td style="border: 1px solid #ccc;">remove all unused packages within the zopen environment</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code>zopen clean &minus;&minus;deep</code></td>
+<td style="border: 1px solid #ccc;">run all cleanup operations</td>
+</tr>
+</table>
 
 <h2>AUTHOR</h2>
-<a name="AUTHOR"></a>
-
 
 <p style="margin-left:11%; margin-top: 1em">Written by
 contributors to the zopen community.
-&lt;https:///#47;github.comm/#47;zopencommunityy/#47;metaa/#47;graphss/#47;contributors&gt;</p>
+<a href="https://github.com/zopencommunity/meta/graphs/contributors" target="_blank">https://github.com/zopencommunity/meta/graphs/contributors</a></p>
 
 <h2>REPORTING BUGS</h2>
-<a name="REPORTING BUGS"></a>
-
 
 <p style="margin-left:11%; margin-top: 1em">Report bugs at
-https:///#47;github.comm/#47;zopencommunityy/#47;metaa/#47;issues.</p>
+<a href="https://github.com/zopencommunity/meta/issues." target="_blank">https://github.com/zopencommunity/meta/issues.</a></p>
 
 <p style="margin-left:11%; margin-top: 1em">This is free
 software: you are free to change and redistribute it under
 the terms of the Apache License, Version 2.0.
-&lt;https:///#47;www.apache.orgg/#47;licensess/#47;LICENSE&minus;2.0.html&gt;
+<a href="https://www.apache.org/licenses/LICENSE-2.0.html" target="_blank">https://www.apache.org/licenses/LICENSE-2.0.html</a>
 There is NO WARRANTY, to the extent permitted by law.</p>
 
 </div>
