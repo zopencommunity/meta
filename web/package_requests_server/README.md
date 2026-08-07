@@ -74,8 +74,9 @@ Reusable deployment templates live in [`deploy/`](deploy/):
   Copy it outside the checkout, set mode `0600`, and never commit the live file.
 - `zopen-package-requests.service` runs the API as an unprivileged system user,
   binds it to loopback, and grants write access only to the persistent data path.
-- `Caddyfile.example` exposes the public endpoints over HTTPS while returning
-  `404` for the admin console, admin API, and status-edit endpoint.
+- `Caddyfile.example` exposes the API over HTTPS while returning `404` for the
+  backend's standalone admin page. Admin API calls remain protected by the
+  bearer token and an additional per-IP rate limit.
 
 Keep the SQLite database, backups, admin token, TLS keys, and any future email
 or Pulp credentials outside Git. The admin HTML and API code can remain public:
@@ -94,7 +95,10 @@ group read/traverse permissions for the `zopenreq` service account after the
 install. The systemd unit itself uses `UMask=0077` so databases containing
 private requester details are created without world or group access.
 
-For tunnel-only administration, connect from a maintainer workstation with:
+The integrated maintainer console is available at
+`https://zopen.community/PackageRequests/admin`. It stores the token only in
+the current tab's session storage. The standalone backend console can still be
+used through a private tunnel:
 
 ```bash
 ssh -N -L 3310:127.0.0.1:3100 \

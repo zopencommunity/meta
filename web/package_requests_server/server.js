@@ -298,6 +298,7 @@ function createApp(options = {}) {
 
   const submissionLimiter = createRateLimiter({ limit: 5, windowMilliseconds: 60 * 60 * 1000 });
   const voteLimiter = createRateLimiter({ limit: 60, windowMilliseconds: 60 * 1000 });
+  const adminLimiter = createRateLimiter({ limit: 120, windowMilliseconds: 15 * 60 * 1000 });
   const ready = initializeDatabase(database);
 
   app.use(async (request, response, next) => {
@@ -352,7 +353,7 @@ function createApp(options = {}) {
     }
   });
 
-  app.get("/api/admin/requests", async (request, response, next) => {
+  app.get("/api/admin/requests", adminLimiter, async (request, response, next) => {
     const configuredToken = options.adminToken ?? process.env.ADMIN_TOKEN;
     if (!adminTokenMatches(request, configuredToken)) {
       response.status(401).json({ error: "Unauthorized." });
@@ -509,7 +510,7 @@ function createApp(options = {}) {
     }
   });
 
-  app.patch("/api/requests/:id", async (request, response, next) => {
+  app.patch("/api/requests/:id", adminLimiter, async (request, response, next) => {
     const configuredToken = options.adminToken ?? process.env.ADMIN_TOKEN;
     if (!adminTokenMatches(request, configuredToken)) {
       response.status(401).json({ error: "Unauthorized." });
