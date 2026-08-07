@@ -145,6 +145,31 @@ async function saveRequest(request: AdminRequest) {
   }
 }
 
+async function deleteRequest(request: AdminRequest) {
+  const confirmation = window.prompt(
+    `Permanently delete this request and all of its votes and history?\n\nType "${request.packageName}" to confirm.`,
+  );
+  if (confirmation === null) return;
+  const state = saveStates[request.id] ||= { message: "", error: false, busy: false };
+  if (confirmation.trim() !== request.packageName) {
+    state.error = true;
+    state.message = "Package name did not match. Nothing was deleted.";
+    return;
+  }
+
+  state.busy = true;
+  state.error = false;
+  state.message = "Deleting…";
+  try {
+    await api(`/requests/${request.id}`, { method: "DELETE" });
+    requests.value = requests.value.filter((item) => item.id !== request.id);
+  } catch (error) {
+    state.error = true;
+    state.message = error instanceof Error ? error.message : "Delete failed.";
+    state.busy = false;
+  }
+}
+
 onMounted(async () => {
   token.value = sessionStorage.getItem(storageKey) || "";
   if (token.value) await signIn();
@@ -220,6 +245,7 @@ onMounted(async () => {
               <label><span>Published artifact / Pulp URL</span><input v-model.trim="request.artifactUrl" type="url" placeholder="https://repo.zopen.community/pulp/content/…" /></label>
               <label class="wide"><span>Public maintainer note</span><textarea v-model.trim="request.maintainerNote" maxlength="1200" placeholder="Triage decision, current progress, or installation guidance" /></label>
               <div class="editor-actions">
+                <button class="danger" type="button" :disabled="saveStates[request.id]?.busy" @click="deleteRequest(request)">Delete permanently</button>
                 <span :class="['save-state', { error: saveStates[request.id]?.error }]" role="status">{{ saveStates[request.id]?.message }}</span>
                 <button class="primary" type="submit" :disabled="saveStates[request.id]?.busy">Save changes</button>
               </div>
@@ -249,9 +275,10 @@ textarea { min-height:78px; padding:10px 11px; resize:vertical; }
 input:focus,select:focus,textarea:focus { border-color:var(--vp-c-brand-1); outline:3px solid color-mix(in srgb,var(--vp-c-brand-1) 18%,transparent); }
 button { cursor:pointer; font:inherit; }
 button:disabled { cursor:wait; opacity:.65; }
-.primary,.secondary { min-height:42px; padding:0 16px; border-radius:8px; font-weight:700; }
+.primary,.secondary,.danger { min-height:42px; padding:0 16px; border-radius:8px; font-weight:700; }
 .primary { border:1px solid var(--vp-c-brand-1); color:white; background:var(--vp-c-brand-1); }
 .secondary { border:1px solid var(--vp-c-divider); color:var(--vp-c-text-1); background:var(--vp-c-bg); }
+.danger { margin-right:auto; border:1px solid var(--vp-c-danger-1); color:var(--vp-c-danger-1); background:transparent; }
 .toolbar { justify-content:space-between; align-items:end; gap:18px; margin-bottom:24px; }
 .toolbar p { margin:5px 0 0; }
 .filters select { width:190px; }

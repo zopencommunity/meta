@@ -677,6 +677,31 @@ function createApp(options = {}) {
     }
   });
 
+  app.delete("/api/requests/:id", adminLimiter, async (request, response, next) => {
+    const configuredToken = options.adminToken ?? process.env.ADMIN_TOKEN;
+    if (!adminTokenMatches(request, configuredToken)) {
+      response.status(401).json({ error: "Unauthorized." });
+      return;
+    }
+
+    const requestId = Number.parseInt(request.params.id, 10);
+    if (!Number.isSafeInteger(requestId) || requestId < 1) {
+      response.status(400).json({ error: "Invalid package request ID." });
+      return;
+    }
+
+    try {
+      const result = await run(database, "DELETE FROM package_requests WHERE id = ?", [requestId]);
+      if (!result.changes) {
+        response.status(404).json({ error: "Package request not found." });
+        return;
+      }
+      response.json({ success: true, id: requestId });
+    } catch (error) {
+      next(error);
+    }
+  });
+
   app.use((error, request, response, next) => {
     console.error(error);
     if (response.headersSent) {

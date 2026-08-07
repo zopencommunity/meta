@@ -117,6 +117,7 @@ the root login once the initial deployment is complete.
 - `DELETE /api/requests/:id/vote`
 - `GET /api/admin/requests` with `Authorization: Bearer <ADMIN_TOKEN>`
 - `PATCH /api/requests/:id` with `Authorization: Bearer <ADMIN_TOKEN>`
+- `DELETE /api/requests/:id` with `Authorization: Bearer <ADMIN_TOKEN>`
 
 ## Maintainer workflow
 
@@ -134,6 +135,8 @@ The console lets maintainers:
 5. Add a published package location, including Pulp-hosted Python wheels or RPMs.
 6. Mark the request **Available**. At least one repository or artifact link is
    required before the API accepts this state.
+7. Permanently delete an invalid or test request after typing its exact package
+   name. Its votes and status history are deleted by the same database action.
 
 Requester name and organization are public only when the requester opts in.
 Contact email is never included by the public API; it is returned only from the

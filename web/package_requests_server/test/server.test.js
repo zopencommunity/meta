@@ -184,4 +184,34 @@ test("changes status only with the admin token", async () => {
   assert.equal(publicBody.requests[0].requesterName, "Corrected Requester");
   assert.equal(publicBody.requests[0].organization, "Corrected Company");
   assert.equal(Object.hasOwn(publicBody.requests[0], "contactEmail"), false);
+
+  const voteBeforeDelete = await fetch(`${baseUrl}/api/requests/1/vote`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ voterId: "delete-cascade-test-voter" }),
+  });
+  assert.equal(voteBeforeDelete.status, 200);
+
+  const unauthorizedDelete = await fetch(`${baseUrl}/api/requests/1`, { method: "DELETE" });
+  assert.equal(unauthorizedDelete.status, 401);
+
+  const deleteResponse = await fetch(`${baseUrl}/api/requests/1`, {
+    method: "DELETE",
+    headers: { Authorization: "Bearer test-admin-token" },
+  });
+  assert.equal(deleteResponse.status, 200);
+  assert.deepEqual(await deleteResponse.json(), { success: true, id: 1 });
+
+  const deletedAdminList = await fetch(`${baseUrl}/api/admin/requests`, {
+    headers: { Authorization: "Bearer test-admin-token" },
+  });
+  assert.deepEqual((await deletedAdminList.json()).requests, []);
+
+  const cascadeCounts = await new Promise((resolve, reject) => {
+    database.get(
+      "SELECT (SELECT COUNT(*) FROM votes) AS votes, (SELECT COUNT(*) FROM request_events) AS events",
+      (error, row) => error ? reject(error) : resolve(row),
+    );
+  });
+  assert.deepEqual(cascadeCounts, { votes: 0, events: 0 });
 });

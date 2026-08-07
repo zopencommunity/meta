@@ -23,9 +23,10 @@
       input,select { height:42px; padding:0 11px; }
       textarea { min-height:78px; padding:10px 11px; resize:vertical; }
       input:focus,select:focus,textarea:focus { border-color:var(--accent); box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 18%,transparent); }
-      .primary,.secondary { min-height:42px; padding:0 16px; border-radius:8px; font-weight:700; }
+      .primary,.secondary,.danger { min-height:42px; padding:0 16px; border-radius:8px; font-weight:700; }
       .primary { border:1px solid var(--accent); color:white; background:var(--accent); }
       .secondary { border:1px solid var(--line); color:var(--text); background:var(--panel); }
+      .danger { margin-right:auto; border:1px solid var(--danger); color:var(--danger); background:transparent; }
       .toolbar { display:flex; justify-content:space-between; align-items:end; gap:18px; margin-bottom:24px; }
       .toolbar h2 { margin:0 0 5px; }
       .toolbar p { margin:0; color:var(--muted); }
@@ -176,7 +177,7 @@
                 <label><span>zopen port repository URL</span><input name="portRepositoryUrl" type="url" value="${escapeHtml(request.portRepositoryUrl)}" placeholder="https://github.com/zopencommunity/exampleport" /></label>
                 <label><span>Published artifact / Pulp URL</span><input name="artifactUrl" type="url" value="${escapeHtml(request.artifactUrl)}" placeholder="https://repo.zopen.community/pulp/content/…" /></label>
                 <label class="wide"><span>Public maintainer note</span><textarea name="maintainerNote" maxlength="1200" placeholder="Triage decision, current progress, or installation guidance">${escapeHtml(request.maintainerNote)}</textarea></label>
-                <div class="editor-actions"><span class="save-state" role="status"></span><button class="primary" type="submit">Save changes</button></div>
+                <div class="editor-actions"><button class="danger delete-request" type="button">Delete permanently</button><span class="save-state" role="status"></span><button class="primary" type="submit">Save changes</button></div>
               </form>
             </details>
           </article>`).join("");
@@ -204,6 +205,33 @@
           state.textContent = error.message;
           state.classList.add("error");
         } finally {
+          button.disabled = false;
+        }
+      });
+
+      requestList.addEventListener("click", async event => {
+        const button = event.target.closest(".delete-request");
+        if (!button) return;
+        const card = button.closest("[data-id]");
+        const request = requests.find(item => item.id === Number(card.dataset.id));
+        const confirmation = prompt(`Permanently delete this request and all of its votes and history?\n\nType "${request.packageName}" to confirm.`);
+        if (confirmation === null) return;
+        const state = card.querySelector(".save-state");
+        state.classList.remove("error");
+        if (confirmation.trim() !== request.packageName) {
+          state.textContent = "Package name did not match. Nothing was deleted.";
+          state.classList.add("error");
+          return;
+        }
+        button.disabled = true;
+        state.textContent = "Deleting…";
+        try {
+          await api(`/api/requests/${request.id}`, { method:"DELETE" });
+          requests = requests.filter(item => item.id !== request.id);
+          render();
+        } catch (error) {
+          state.textContent = error.message;
+          state.classList.add("error");
           button.disabled = false;
         }
       });
