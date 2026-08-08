@@ -29,9 +29,9 @@ interface PulpMatch {
   requestId: number;
   requestPackageName: string;
   requestStatus: string;
-  requestEcosystem: string;
+  requestEcosystem?: string;
   source: "rpm" | "wheel";
-  isPrimary: boolean;
+  isPrimary?: boolean;
   packageName: string;
   version: string;
   release: string;
@@ -102,6 +102,19 @@ const artifacts: Record<string, string> = {
 const visibleRequests = computed(() =>
   requests.value.filter((request) => statusFilter.value === "all" || request.status === statusFilter.value),
 );
+const orderedPulpMatches = computed(() => [...pulpMatches.value].sort((left, right) => {
+  if (left.requestId !== right.requestId) return right.requestId - left.requestId;
+  return Number(isPrimaryMatch(right)) - Number(isPrimaryMatch(left));
+}));
+
+function matchEcosystem(match: PulpMatch) {
+  return match.requestEcosystem || requests.value.find((request) => request.id === match.requestId)?.ecosystem || "general";
+}
+
+function isPrimaryMatch(match: PulpMatch) {
+  if (typeof match.isPrimary === "boolean") return match.isPrimary;
+  return matchEcosystem(match) === "python" ? match.source === "wheel" : match.source === "rpm";
+}
 
 async function api(path: string, options: RequestInit = {}) {
   const headers = new Headers(options.headers);
@@ -168,7 +181,7 @@ async function reviewPulpMatch(match: PulpMatch, action: "approve" | "dismiss") 
   if (
     action === "approve" &&
     !window.confirm(
-      `Use the ${match.isPrimary ? "primary" : "alternative"} ${match.source === "wheel" ? "Python wheel" : "zopen RPM"} ` +
+      `Use the ${isPrimaryMatch(match) ? "primary" : "alternative"} ${match.source === "wheel" ? "Python wheel" : "zopen RPM"} ` +
       `${match.packageName} ${match.version} and mark ${match.requestPackageName} available?`,
     )
   ) return;
@@ -294,13 +307,13 @@ onMounted(async () => {
         <p v-if="pulpMessage" :class="['sync-message', { error: pulpError }]" role="status">{{ pulpMessage }}</p>
         <p v-if="pulpRuns[0]?.status === 'failed'" class="error">{{ pulpRuns[0].error }}</p>
 
-        <div v-if="pulpMatches.length" class="match-list">
-          <article v-for="match in pulpMatches" :key="`${match.requestId}:${match.source}`" class="match-card">
+        <div v-if="orderedPulpMatches.length" class="match-list">
+          <article v-for="match in orderedPulpMatches" :key="`${match.requestId}:${match.source}`" class="match-card">
             <div>
               <div class="match-labels">
                 <span class="source-badge">{{ match.source === "rpm" ? "zopen RPM" : "Python wheel" }}</span>
-                <span :class="['preference-badge', { primary: match.isPrimary }]">
-                  {{ match.isPrimary ? `Primary for ${ecosystems[match.requestEcosystem] || match.requestEcosystem}` : "Alternative format" }}
+                <span :class="['preference-badge', { primary: isPrimaryMatch(match) }]">
+                  {{ isPrimaryMatch(match) ? `Primary for ${ecosystems[matchEcosystem(match)] || matchEcosystem(match)}` : "Alternative format" }}
                 </span>
               </div>
               <h3>{{ match.requestPackageName }}</h3>
@@ -314,7 +327,7 @@ onMounted(async () => {
             <div class="match-actions">
               <button class="secondary" type="button" :disabled="pulpBusy" @click="reviewPulpMatch(match, 'dismiss')">Dismiss</button>
               <button class="primary" type="button" :disabled="pulpBusy" @click="reviewPulpMatch(match, 'approve')">
-                {{ match.isPrimary ? "Apply primary and mark available" : "Use alternative and mark available" }}
+                {{ isPrimaryMatch(match) ? "Apply primary and mark available" : "Use alternative and mark available" }}
               </button>
             </div>
           </article>
