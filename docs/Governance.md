@@ -61,6 +61,12 @@ Maintainers and the TSC may consider:
 
 Vote count is one input, not the sole deciding factor. **Accepted** means a request is suitable for the community backlog and may still be awaiting a contributor. **In progress** means someone has taken responsibility for moving the port forward.
 
+The discussion and activity timeline can provide use cases, testing offers,
+technical evidence, questions, and maintainer updates. Community contributions
+are moderated before publication and remain advisory; they do not create a
+delivery obligation or replace the project's decision process. Maintainer posts
+are visibly identified, and all participation is subject to the Code of Conduct.
+
 Repository synchronization may identify a possible match for a requested package, but a maintainer reviews the package identity and artifact before marking the request **Available**.
 
 ## Maintenance and support

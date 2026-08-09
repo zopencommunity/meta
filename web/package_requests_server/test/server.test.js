@@ -91,6 +91,105 @@ test("rejects duplicate package names including the port suffix", async () => {
   assert.equal(emptyResponse.status, 400);
 });
 
+test("moderates community posts and publishes a verified activity timeline", async () => {
+  const createPostResponse = await fetch(`${baseUrl}/api/requests/1/posts`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      kind: "testing_offer",
+      body: "I can validate this package against our automated z/OS build workload.",
+      authorName: "Private Tester",
+      organization: "Private Company",
+      contactEmail: "tester@example.com",
+      showAuthorPublicly: false,
+    }),
+  });
+  assert.equal(createPostResponse.status, 202);
+  const created = await createPostResponse.json();
+  assert.equal(created.post.moderationStatus, "pending");
+  assert.equal(created.post.contactEmail, "tester@example.com");
+  assert.match(created.editToken, /^[A-Za-z0-9_-]{40,}$/);
+
+  const initialActivity = await fetch(`${baseUrl}/api/requests/1/activity`);
+  const initialActivityBody = await initialActivity.json();
+  assert.deepEqual(initialActivityBody.activity.map((item) => item.type), ["created"]);
+
+  const unauthorizedOwnPost = await fetch(`${baseUrl}/api/posts/${created.post.id}`, {
+    headers: { "X-Edit-Token": "incorrect-token" },
+  });
+  assert.equal(unauthorizedOwnPost.status, 404);
+
+  const ownPostResponse = await fetch(`${baseUrl}/api/posts/${created.post.id}`, {
+    headers: { "X-Edit-Token": created.editToken },
+  });
+  assert.equal(ownPostResponse.status, 200);
+  assert.equal((await ownPostResponse.json()).post.authorName, "Private Tester");
+
+  const unauthorizedModeration = await fetch(`${baseUrl}/api/admin/posts`);
+  assert.equal(unauthorizedModeration.status, 401);
+
+  const pendingResponse = await fetch(`${baseUrl}/api/admin/posts`, {
+    headers: { Authorization: "Bearer test-admin-token" },
+  });
+  const pending = await pendingResponse.json();
+  assert.equal(pending.posts.length, 1);
+  assert.equal(pending.posts[0].contactEmail, "tester@example.com");
+
+  const publishResponse = await fetch(`${baseUrl}/api/admin/posts/${created.post.id}`, {
+    method: "PATCH",
+    headers: {
+      Authorization: "Bearer test-admin-token",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ moderationStatus: "published" }),
+  });
+  assert.equal(publishResponse.status, 200);
+
+  const maintainerResponse = await fetch(`${baseUrl}/api/admin/requests/1/posts`, {
+    method: "POST",
+    headers: {
+      Authorization: "Bearer test-admin-token",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      kind: "question",
+      body: "Which Python and z/OS versions should the initial package target?",
+    }),
+  });
+  assert.equal(maintainerResponse.status, 201);
+
+  const publishedActivity = await fetch(`${baseUrl}/api/requests/1/activity`);
+  const published = (await publishedActivity.json()).activity.filter((item) => item.type === "post");
+  assert.equal(published.length, 2);
+  const communityPost = published.find((post) => post.authorRole === "community");
+  assert.equal(communityPost.authorName, "");
+  assert.equal(communityPost.organization, "");
+  assert.equal(Object.hasOwn(communityPost, "contactEmail"), false);
+  const maintainerPost = published.find((post) => post.authorRole === "maintainer");
+  assert.equal(maintainerPost.authorName, "zopen maintainer");
+
+  const editResponse = await fetch(`${baseUrl}/api/posts/${created.post.id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Edit-Token": created.editToken,
+    },
+    body: JSON.stringify({ body: "I can test the revised package on z/OS 3.1 in our automated workload." }),
+  });
+  assert.equal(editResponse.status, 200);
+  assert.equal((await editResponse.json()).post.moderationStatus, "pending");
+
+  const afterEditActivity = await fetch(`${baseUrl}/api/requests/1/activity`);
+  const afterEditPosts = (await afterEditActivity.json()).activity.filter((item) => item.type === "post");
+  assert.deepEqual(afterEditPosts.map((post) => post.authorRole), ["maintainer"]);
+
+  const deleteResponse = await fetch(`${baseUrl}/api/posts/${created.post.id}`, {
+    method: "DELETE",
+    headers: { "X-Edit-Token": created.editToken },
+  });
+  assert.equal(deleteResponse.status, 200);
+});
+
 test("changes status only with the admin token", async () => {
   const unauthorized = await fetch(`${baseUrl}/api/requests/1`, {
     method: "PATCH",
@@ -215,11 +314,13 @@ test("changes status only with the admin token", async () => {
 
   const cascadeCounts = await new Promise((resolve, reject) => {
     database.get(
-      "SELECT (SELECT COUNT(*) FROM votes) AS votes, (SELECT COUNT(*) FROM request_events) AS events",
+      `SELECT (SELECT COUNT(*) FROM votes) AS votes,
+        (SELECT COUNT(*) FROM request_events) AS events,
+        (SELECT COUNT(*) FROM request_posts) AS posts`,
       (error, row) => error ? reject(error) : resolve(row),
     );
   });
-  assert.deepEqual(cascadeCounts, { votes: 0, events: 0 });
+  assert.deepEqual(cascadeCounts, { votes: 0, events: 0, posts: 0 });
 });
 
 test("bulk creates valid requests and reports row-level duplicates and errors", async () => {

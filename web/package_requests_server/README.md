@@ -1,8 +1,8 @@
 # Package requests server
 
-This service stores package requests and anonymous votes for the zopen community
-website. The VitePress site remains on GitHub Pages and calls this API from the
-browser.
+This service stores package requests, anonymous votes, and moderated discussion
+contributions for the zopen community website. The VitePress site remains on
+GitHub Pages and calls this API from the browser.
 
 Requires Node.js 20.17 or newer.
 
@@ -120,9 +120,15 @@ the root login once the initial deployment is complete.
 - `POST /api/requests/bulk` with up to 25 requests and shared requester details
 - `PUT /api/requests/:id/vote`
 - `DELETE /api/requests/:id/vote`
+- `GET /api/requests/:id/activity`
+- `POST /api/requests/:id/posts`
+- `GET`, `PATCH`, or `DELETE /api/posts/:id` with `X-Edit-Token`
 - `GET /api/admin/requests` with `Authorization: Bearer <ADMIN_TOKEN>`
 - `PATCH /api/requests/:id` with `Authorization: Bearer <ADMIN_TOKEN>`
 - `DELETE /api/requests/:id` with `Authorization: Bearer <ADMIN_TOKEN>`
+- `GET /api/admin/posts?status=pending|published|hidden|all` with `Authorization: Bearer <ADMIN_TOKEN>`
+- `POST /api/admin/requests/:id/posts` with `Authorization: Bearer <ADMIN_TOKEN>`
+- `PATCH` or `DELETE /api/admin/posts/:id` with `Authorization: Bearer <ADMIN_TOKEN>`
 - `GET /api/admin/pulp` with `Authorization: Bearer <ADMIN_TOKEN>`
 - `POST /api/admin/pulp/sync` with `Authorization: Bearer <ADMIN_TOKEN>`
 - `POST /api/admin/pulp/matches/:requestId/:source/approve` with `Authorization: Bearer <ADMIN_TOKEN>`
@@ -178,6 +184,31 @@ The console lets maintainers:
 Requester name and organization are public only when the requester opts in.
 Contact email is never included by the public API; it is returned only from the
 admin endpoint and shown only in this protected console.
+
+## Discussion and activity
+
+Each package request has a public chronological timeline containing its creation,
+status changes, published community contributions, and verified maintainer posts.
+Community members can add a use case, offer testing or contribution help, share a
+technical note, or ask a question. These contributions enter a moderation queue
+and are not public until a maintainer publishes them. Maintainers can edit,
+publish, hide, or permanently delete a contribution and can post verified updates
+directly to the timeline.
+
+A community contribution may include an optional name, organization, and contact
+email. Public attribution is opt-in; contact email is always private to
+maintainers. On submission, the API returns a one-time edit token and stores only
+its SHA-256 hash. The browser retains that token locally so the author can edit or
+delete the contribution without an account. Editing a published contribution
+returns it to the moderation queue. Clearing browser storage or moving to another
+browser loses this self-service access, but an administrator can still edit or
+remove the post.
+
+Post bodies are rendered as plain text with safe HTTP(S) links. The API limits
+length and link count, applies per-IP submission throttling without storing IP
+addresses, and includes a honeypot field for simple bot filtering. This is a
+focused request discussion, not a general-purpose forum; the community Code of
+Conduct applies.
 
 Status changes are appended to the `request_events` audit table. A request also
 records its first acknowledgement and availability timestamps.

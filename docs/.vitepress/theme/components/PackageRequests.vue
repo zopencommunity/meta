@@ -30,7 +30,31 @@ interface PackageRequest {
   status: RequestStatus;
   voteCount: number;
   voted: boolean;
+  discussionCount: number;
   createdAt: string;
+}
+
+interface ActivityItem {
+  id: string | number;
+  type: "created" | "status" | "post";
+  kind?: string;
+  body?: string;
+  authorRole?: "community" | "maintainer";
+  authorName?: string;
+  organization?: string;
+  fromStatus?: RequestStatus;
+  toStatus?: RequestStatus;
+  note?: string;
+  createdAt: string;
+  updatedAt?: string;
+}
+
+interface OwnPost extends ActivityItem {
+  id: number;
+  requestId: number;
+  moderationStatus: "pending" | "published" | "hidden";
+  contactEmail: string;
+  showAuthorPublicly: boolean;
 }
 
 interface BulkRow {
@@ -68,6 +92,16 @@ const submitting = ref(false);
 const submitError = ref("");
 const successMessage = ref("");
 const busyVotes = ref(new Set<number>());
+const expandedActivity = ref(new Set<number>());
+const activityByRequest = reactive<Record<number, ActivityItem[]>>({});
+const ownPostsByRequest = reactive<Record<number, OwnPost[]>>({});
+const activityBusy = ref(new Set<number>());
+const activityErrors = reactive<Record<number, string>>({});
+const postFormRequestId = ref<number | null>(null);
+const postSubmitting = ref(false);
+const postError = ref("");
+const postMessage = ref("");
+const postFeedbackRequestId = ref<number | null>(null);
 const bulkRows = ref<BulkRow[]>([]);
 const bulkInput = ref("");
 const bulkReviewing = ref(false);
@@ -99,6 +133,16 @@ const bulkForm = reactive({
   showRequesterPublicly: false,
 });
 
+const postForm = reactive({
+  kind: "use_case",
+  body: "",
+  authorName: "",
+  organization: "",
+  contactEmail: "",
+  showAuthorPublicly: false,
+  website: "",
+});
+
 const statuses: Record<RequestStatus, { label: string; detail: string }> = {
   proposed: { label: "Proposed", detail: "Gathering community interest" },
   under_review: { label: "Under review", detail: "Being evaluated by maintainers" },
@@ -128,6 +172,15 @@ const artifactLabels: Record<string, string> = {
   python_wheel: "Python wheel",
   pulp_rpm: "Pulp RPM",
   other: "Published package",
+};
+
+const postKinds: Record<string, string> = {
+  use_case: "Use case",
+  testing_offer: "Testing offer",
+  contribution_offer: "Contribution offer",
+  technical_note: "Technical information",
+  question: "Question",
+  maintainer_update: "Maintainer update",
 };
 
 const filteredRequests = computed(() => {
@@ -347,6 +400,55 @@ function getVoterId() {
   return voterId;
 }
 
+function getPostTokens(): Record<string, string> {
+  try {
+    return JSON.parse(localStorage.getItem("zopen-package-post-edit-tokens") || "{}");
+  } catch {
+    return {};
+  }
+}
+
+function savePostToken(postId: number, token: string) {
+  const tokens = getPostTokens();
+  tokens[String(postId)] = token;
+  localStorage.setItem("zopen-package-post-edit-tokens", JSON.stringify(tokens));
+}
+
+function removePostToken(postId: number) {
+  const tokens = getPostTokens();
+  delete tokens[String(postId)];
+  localStorage.setItem("zopen-package-post-edit-tokens", JSON.stringify(tokens));
+}
+
+function postToken(postId: string | number) {
+  return typeof postId === "number" ? getPostTokens()[String(postId)] || "" : "";
+}
+
+function textSegments(value = "") {
+  const segments: Array<{ text: string; url?: string }> = [];
+  const pattern = /https?:\/\/[^\s<>]+/gi;
+  let position = 0;
+  for (const match of value.matchAll(pattern)) {
+    if (match.index! > position) segments.push({ text: value.slice(position, match.index) });
+    let url = match[0];
+    const punctuation = url.match(/[),.;!?]+$/)?.[0] || "";
+    if (punctuation) url = url.slice(0, -punctuation.length);
+    segments.push({ text: url, url });
+    if (punctuation) segments.push({ text: punctuation });
+    position = match.index! + match[0].length;
+  }
+  if (position < value.length) segments.push({ text: value.slice(position) });
+  return segments;
+}
+
+function statusLabel(value?: RequestStatus) {
+  return value ? statuses[value]?.label || value : "Unknown";
+}
+
+function displayDate(value: string) {
+  return new Date(value).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" });
+}
+
 async function apiRequest(path: string, options: RequestInit = {}) {
   if (!apiUrl.value) throw new Error("The package request service has not been configured yet.");
   const headers = new Headers(options.headers);
@@ -385,6 +487,143 @@ async function loadAvailablePackages() {
     );
   } catch {
     // This hint is optional; a failure should not prevent package submissions.
+  }
+}
+
+async function loadOwnPosts(requestId: number) {
+  const tokens = getPostTokens();
+  const posts: OwnPost[] = [];
+  await Promise.all(Object.entries(tokens).map(async ([postId, token]) => {
+    try {
+      const result = await apiRequest(`/posts/${postId}`, { headers: { "X-Edit-Token": token } });
+      if (result.post.requestId === requestId) posts.push(result.post);
+    } catch {
+      // Keep the browser-held secret through temporary network or service failures.
+    }
+  }));
+  ownPostsByRequest[requestId] = posts.sort((left, right) => right.createdAt.localeCompare(left.createdAt));
+}
+
+async function loadActivity(requestId: number) {
+  activityErrors[requestId] = "";
+  activityBusy.value = new Set(activityBusy.value).add(requestId);
+  try {
+    const [result] = await Promise.all([
+      apiRequest(`/requests/${requestId}/activity`),
+      loadOwnPosts(requestId),
+    ]);
+    activityByRequest[requestId] = result.activity;
+  } catch (error) {
+    activityErrors[requestId] = error instanceof Error ? error.message : "The activity could not be loaded.";
+  } finally {
+    const next = new Set(activityBusy.value);
+    next.delete(requestId);
+    activityBusy.value = next;
+  }
+}
+
+function toggleActivity(requestId: number) {
+  const next = new Set(expandedActivity.value);
+  if (next.has(requestId)) {
+    next.delete(requestId);
+    if (postFormRequestId.value === requestId) postFormRequestId.value = null;
+  } else {
+    next.add(requestId);
+    void loadActivity(requestId);
+  }
+  expandedActivity.value = next;
+}
+
+function ownUnpublishedPosts(requestId: number) {
+  return (ownPostsByRequest[requestId] || []).filter((post) => post.moderationStatus !== "published");
+}
+
+function resetPostForm() {
+  postForm.kind = "use_case";
+  postForm.body = "";
+  postForm.authorName = "";
+  postForm.organization = "";
+  postForm.contactEmail = "";
+  postForm.showAuthorPublicly = false;
+  postForm.website = "";
+  postError.value = "";
+}
+
+function openPostForm(requestId: number) {
+  resetPostForm();
+  postFormRequestId.value = requestId;
+  postFeedbackRequestId.value = requestId;
+  postMessage.value = "";
+  requestAnimationFrame(() => document.querySelector<HTMLElement>(`#community-post-${requestId} textarea`)?.focus());
+}
+
+async function submitCommunityPost(requestId: number) {
+  postFeedbackRequestId.value = requestId;
+  postSubmitting.value = true;
+  postError.value = "";
+  postMessage.value = "";
+  try {
+    const result = await apiRequest(`/requests/${requestId}/posts`, {
+      method: "POST",
+      body: JSON.stringify(postForm),
+    });
+    if (!result.post || !result.editToken) throw new Error("The contribution could not be saved.");
+    savePostToken(result.post.id, result.editToken);
+    ownPostsByRequest[requestId] = [
+      result.post,
+      ...(ownPostsByRequest[requestId] || []).filter((post) => post.id !== result.post.id),
+    ];
+    resetPostForm();
+    postFormRequestId.value = null;
+    postMessage.value = "Your contribution is awaiting maintainer review. This browser can edit or delete it.";
+  } catch (error) {
+    postError.value = error instanceof Error ? error.message : "The contribution could not be submitted.";
+  } finally {
+    postSubmitting.value = false;
+  }
+}
+
+async function editCommunityPost(requestId: number, post: ActivityItem | OwnPost) {
+  if (typeof post.id !== "number") return;
+  const body = window.prompt(
+    "Edit your contribution. Published edits return to the moderation queue.",
+    post.body || "",
+  );
+  if (body === null || body.trim() === post.body) return;
+  postFeedbackRequestId.value = requestId;
+  postError.value = "";
+  try {
+    const result = await apiRequest(`/posts/${post.id}`, {
+      method: "PATCH",
+      headers: { "X-Edit-Token": postToken(post.id) },
+      body: JSON.stringify({ body }),
+    });
+    ownPostsByRequest[requestId] = [
+      result.post,
+      ...(ownPostsByRequest[requestId] || []).filter((item) => item.id !== post.id),
+    ];
+    postMessage.value = "Your edit is awaiting maintainer review.";
+    await loadActivity(requestId);
+  } catch (error) {
+    postError.value = error instanceof Error ? error.message : "The contribution could not be edited.";
+  }
+}
+
+async function deleteCommunityPost(requestId: number, post: ActivityItem | OwnPost) {
+  if (typeof post.id !== "number" || !window.confirm("Delete your contribution permanently?")) return;
+  postFeedbackRequestId.value = requestId;
+  postError.value = "";
+  try {
+    await apiRequest(`/posts/${post.id}`, {
+      method: "DELETE",
+      headers: { "X-Edit-Token": postToken(post.id) },
+    });
+    removePostToken(post.id);
+    ownPostsByRequest[requestId] = (ownPostsByRequest[requestId] || []).filter((item) => item.id !== post.id);
+    postMessage.value = "Your contribution was deleted.";
+    await loadActivity(requestId);
+  } catch (error) {
+    postError.value = error instanceof Error ? error.message : "The contribution could not be deleted.";
   }
 }
 
@@ -986,6 +1225,155 @@ onMounted(() => {
               </span>
               <span>Requested {{ new Date(request.createdAt).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" }) }}</span>
             </div>
+
+            <button
+              type="button"
+              class="discussion-toggle"
+              :aria-expanded="expandedActivity.has(request.id)"
+              :aria-controls="`request-activity-${request.id}`"
+              @click="toggleActivity(request.id)"
+            >
+              <span>{{ expandedActivity.has(request.id) ? "Hide" : "View" }} discussion &amp; activity</span>
+              <span class="discussion-count">{{ request.discussionCount || 0 }} community post{{ request.discussionCount === 1 ? "" : "s" }}</span>
+            </button>
+
+            <section
+              v-if="expandedActivity.has(request.id)"
+              :id="`request-activity-${request.id}`"
+              class="activity-panel"
+              :aria-label="`${request.packageName} discussion and activity`"
+            >
+              <div class="activity-heading">
+                <div>
+                  <span class="eyebrow">Open collaboration</span>
+                  <h4>Discussion and activity</h4>
+                </div>
+                <button class="secondary-button compact" type="button" @click="loadActivity(request.id)">Refresh</button>
+              </div>
+
+              <p v-if="activityBusy.has(request.id)" class="activity-loading">Loading activity…</p>
+              <p v-else-if="activityErrors[request.id]" class="notice error" role="alert">{{ activityErrors[request.id] }}</p>
+              <ol v-else class="activity-timeline">
+                <li v-for="item in activityByRequest[request.id] || []" :key="`${item.type}:${item.id}`" :class="`activity-${item.type}`">
+                  <div class="activity-marker" aria-hidden="true" />
+                  <div class="activity-entry">
+                    <template v-if="item.type === 'created'">
+                      <strong>Request submitted</strong>
+                    </template>
+                    <template v-else-if="item.type === 'status'">
+                      <strong>Status changed to {{ statusLabel(item.toStatus) }}</strong>
+                      <span class="activity-context">from {{ statusLabel(item.fromStatus) }}</span>
+                      <p v-if="item.note">{{ item.note }}</p>
+                    </template>
+                    <template v-else>
+                      <div class="post-heading">
+                        <span class="post-kind">{{ postKinds[item.kind || ''] || item.kind }}</span>
+                        <span v-if="item.authorRole === 'maintainer'" class="maintainer-badge">Verified maintainer</span>
+                      </div>
+                      <p class="post-body">
+                        <template v-for="(segment, segmentIndex) in textSegments(item.body)" :key="segmentIndex">
+                          <a v-if="segment.url" :href="segment.url" target="_blank" rel="noopener noreferrer">{{ segment.text }}</a>
+                          <template v-else>{{ segment.text }}</template>
+                        </template>
+                      </p>
+                      <span v-if="item.authorName || item.organization" class="activity-author">
+                        {{ [item.authorName, item.organization].filter(Boolean).join(" · ") }}
+                      </span>
+                      <div v-if="postToken(item.id)" class="owner-actions">
+                        <button type="button" @click="editCommunityPost(request.id, item)">Edit</button>
+                        <button type="button" @click="deleteCommunityPost(request.id, item)">Delete</button>
+                      </div>
+                    </template>
+                    <time :datetime="item.createdAt">{{ displayDate(item.createdAt) }}</time>
+                  </div>
+                </li>
+              </ol>
+
+              <div v-if="ownUnpublishedPosts(request.id).length" class="own-posts">
+                <h5>Your unpublished contributions</h5>
+                <article v-for="post in ownUnpublishedPosts(request.id)" :key="post.id" class="own-post">
+                  <div>
+                    <span class="post-kind">{{ postKinds[post.kind || ''] || post.kind }}</span>
+                    <span :class="['moderation-badge', `moderation-${post.moderationStatus}`]">{{ post.moderationStatus }}</span>
+                  </div>
+                  <p>{{ post.body }}</p>
+                  <div class="owner-actions">
+                    <button type="button" @click="editCommunityPost(request.id, post)">Edit</button>
+                    <button type="button" @click="deleteCommunityPost(request.id, post)">Delete</button>
+                  </div>
+                </article>
+              </div>
+
+              <p
+                v-if="postFeedbackRequestId === request.id && postMessage"
+                class="notice success"
+                role="status"
+              >{{ postMessage }}</p>
+              <p
+                v-if="postFeedbackRequestId === request.id && postError"
+                class="notice error"
+                role="alert"
+              >{{ postError }}</p>
+
+              <form
+                v-if="postFormRequestId === request.id"
+                :id="`community-post-${request.id}`"
+                class="community-post-form"
+                @submit.prevent="submitCommunityPost(request.id)"
+              >
+                <div class="post-form-heading">
+                  <div><strong>Add to the discussion</strong><span>Posts are reviewed before appearing publicly.</span></div>
+                  <button type="button" class="close-post-form" aria-label="Close contribution form" @click="postFormRequestId = null">×</button>
+                </div>
+                <div class="post-form-grid">
+                  <label>
+                    <span>Contribution type</span>
+                    <select v-model="postForm.kind" required>
+                      <option value="use_case">Additional use case</option>
+                      <option value="testing_offer">Offer to test</option>
+                      <option value="contribution_offer">Offer to contribute</option>
+                      <option value="technical_note">Technical information</option>
+                      <option value="question">Question</option>
+                    </select>
+                  </label>
+                  <label>
+                    <span>Contact email <small>Private—maintainers only</small></span>
+                    <input v-model.trim="postForm.contactEmail" type="email" maxlength="254" autocomplete="email" />
+                  </label>
+                </div>
+                <label>
+                  <span>Your contribution</span>
+                  <textarea v-model.trim="postForm.body" required minlength="10" maxlength="2000" rows="4" />
+                </label>
+                <div class="post-form-grid">
+                  <label><span>Name or alias <small>Optional</small></span><input v-model.trim="postForm.authorName" maxlength="100" /></label>
+                  <label><span>Organization <small>Optional</small></span><input v-model.trim="postForm.organization" maxlength="160" /></label>
+                </div>
+                <label class="checkbox-label">
+                  <input v-model="postForm.showAuthorPublicly" type="checkbox" />
+                  <span>Show my name and organization if this contribution is published.</span>
+                </label>
+                <label class="honeypot" aria-hidden="true">
+                  <span>Website</span>
+                  <input v-model="postForm.website" tabindex="-1" autocomplete="off" />
+                </label>
+                <p class="post-privacy">
+                  Your email is visible only to maintainers. An edit secret is stored in this browser so you can modify or delete your post.
+                </p>
+                <div class="form-actions">
+                  <button class="secondary-button compact" type="button" @click="postFormRequestId = null">Cancel</button>
+                  <button class="primary-button compact" type="submit" :disabled="postSubmitting">
+                    {{ postSubmitting ? "Submitting…" : "Submit for review" }}
+                  </button>
+                </div>
+              </form>
+              <button
+                v-else
+                class="secondary-button compact add-contribution"
+                type="button"
+                @click="openPostForm(request.id)"
+              >Add information or offer help</button>
+            </section>
           </div>
         </article>
       </div>
@@ -1118,6 +1506,58 @@ onMounted(() => {
 .delivery-links a { padding: 7px 10px; border: 1px solid color-mix(in srgb, var(--request-accent) 45%, var(--vp-c-divider)); border-radius: 8px; color: var(--request-accent); background: var(--vp-c-bg-soft); font-size: 13px; font-weight: 700; text-decoration: none; }
 .request-meta { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 16px; color: var(--vp-c-text-3); font-size: 12px; }
 .request-meta a { color: var(--request-accent); font-weight: 650; text-decoration: none; }
+.discussion-toggle { display:flex; width:100%; align-items:center; justify-content:space-between; gap:16px; padding:11px 13px; margin-top:18px; border:1px solid var(--vp-c-divider); border-radius:9px; color:var(--vp-c-text-1); background:var(--vp-c-bg-soft); font:inherit; font-size:13px; font-weight:700; cursor:pointer; }
+.discussion-toggle:hover { border-color:var(--request-accent); color:var(--request-accent); }
+.discussion-count { color:var(--vp-c-text-3); font-size:11px; font-weight:600; }
+.activity-panel { padding:18px; margin-top:10px; border:1px solid var(--vp-c-divider); border-radius:12px; background:var(--vp-c-bg-soft); }
+.activity-heading,.post-form-heading { display:flex; justify-content:space-between; align-items:flex-start; gap:16px; }
+.activity-heading h4 { margin:0; font-size:18px; }
+.activity-loading { color:var(--vp-c-text-3); font-size:13px; }
+.activity-timeline { position:relative; display:grid; gap:0; padding:0; margin:18px 0; list-style:none; }
+.activity-timeline::before { content:""; position:absolute; width:2px; left:6px; top:9px; bottom:9px; background:var(--vp-c-divider); }
+.activity-timeline li { position:relative; display:grid; grid-template-columns:14px minmax(0,1fr); gap:13px; padding:0 0 17px; }
+.activity-timeline li:last-child { padding-bottom:0; }
+.activity-marker { position:relative; z-index:1; width:12px; height:12px; margin-top:5px; border:3px solid var(--vp-c-bg-soft); border-radius:50%; background:var(--vp-c-text-3); box-shadow:0 0 0 1px var(--vp-c-divider); }
+.activity-post .activity-marker { background:var(--request-accent); }
+.activity-status .activity-marker { background:var(--vp-c-brand-1); }
+.activity-entry { min-width:0; }
+.activity-entry > strong { font-size:14px; }
+.activity-entry > time { display:block; margin-top:5px; color:var(--vp-c-text-3); font-size:11px; }
+.activity-entry > p { margin:6px 0; color:var(--vp-c-text-2); font-size:13px; line-height:1.55; }
+.activity-context,.activity-author { margin-left:6px; color:var(--vp-c-text-3); font-size:12px; }
+.post-heading { display:flex; flex-wrap:wrap; align-items:center; gap:7px; }
+.post-kind,.maintainer-badge,.moderation-badge { display:inline-flex; padding:3px 7px; border-radius:999px; font-size:10px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; }
+.post-kind { color:var(--request-accent); border:1px solid color-mix(in srgb,var(--request-accent) 38%,var(--vp-c-divider)); background:var(--vp-c-bg); }
+.maintainer-badge { color:#225ca8; background:#e5efff; }
+.dark .maintainer-badge { color:#b9d3ff; background:#172942; }
+.post-body { white-space:pre-wrap; overflow-wrap:anywhere; }
+.owner-actions { display:inline-flex; gap:10px; margin-top:7px; }
+.owner-actions button { padding:0; border:0; color:var(--request-accent); background:transparent; font:inherit; font-size:12px; font-weight:700; text-decoration:underline; cursor:pointer; }
+.owner-actions button:last-child { color:var(--vp-c-danger-1); }
+.own-posts { padding:14px; margin:16px 0; border:1px dashed var(--vp-c-divider); border-radius:10px; background:var(--vp-c-bg); }
+.own-posts h5 { margin:0 0 10px; font-size:14px; }
+.own-post { padding:10px 0; border-top:1px solid var(--vp-c-divider); }
+.own-post:first-of-type { padding-top:0; border-top:0; }
+.own-post:last-child { padding-bottom:0; }
+.own-post p { margin:7px 0 0; color:var(--vp-c-text-2); font-size:13px; white-space:pre-wrap; }
+.moderation-badge { margin-left:6px; color:#795b00; background:#fff1bd; }
+.moderation-hidden { color:var(--vp-c-danger-1); background:var(--vp-c-danger-soft); }
+.community-post-form { padding:16px; margin-top:16px; border:1px solid var(--vp-c-divider); border-radius:10px; background:var(--vp-c-bg); }
+.post-form-heading { margin-bottom:14px; }
+.post-form-heading strong,.post-form-heading span { display:block; }
+.post-form-heading span { margin-top:2px; color:var(--vp-c-text-3); font-size:12px; }
+.close-post-form { width:30px; height:30px; border:1px solid var(--vp-c-divider); border-radius:50%; color:var(--vp-c-text-2); background:var(--vp-c-bg-soft); font-size:20px; cursor:pointer; }
+.post-form-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.community-post-form label { display:block; margin-bottom:13px; }
+.community-post-form label > span { display:block; margin-bottom:5px; font-size:12px; font-weight:700; }
+.community-post-form label small { color:var(--vp-c-text-3); font-weight:400; }
+.community-post-form input:not([type="checkbox"]),.community-post-form select,.community-post-form textarea { box-sizing:border-box; width:100%; border:1px solid var(--vp-c-divider); border-radius:8px; color:var(--vp-c-text-1); background:var(--vp-c-bg-soft); font:inherit; outline:none; }
+.community-post-form input:not([type="checkbox"]),.community-post-form select { height:40px; padding:0 11px; }
+.community-post-form textarea { padding:10px 11px; resize:vertical; }
+.community-post-form input:focus,.community-post-form select:focus,.community-post-form textarea:focus { border-color:var(--request-accent); box-shadow:0 0 0 3px color-mix(in srgb,var(--request-accent) 15%,transparent); }
+.post-privacy { color:var(--vp-c-text-3); font-size:11px; line-height:1.5; }
+.honeypot { position:absolute !important; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0); }
+.add-contribution { margin-top:6px; }
 .request-skeletons { display: grid; gap: 12px; }
 .request-skeleton { height: 142px; border-radius: 14px; background: linear-gradient(90deg, var(--vp-c-bg-soft), var(--vp-c-bg-alt), var(--vp-c-bg-soft)); background-size: 200% 100%; animation: shimmer 1.4s infinite linear; }
 @keyframes shimmer { to { background-position: -200% 0; } }
@@ -1130,11 +1570,13 @@ onMounted(() => {
   .request-hero { grid-template-columns: 1fr; gap: 30px; padding: 34px 24px; }
   .request-hero h1 { font-size: 38px; }
   .request-stats div { min-height: 96px; }
-  .form-grid, .board-controls, .bulk-row-grid { grid-template-columns: 1fr; }
+  .form-grid, .board-controls, .bulk-row-grid, .post-form-grid { grid-template-columns: 1fr; }
   .request-form-panel, .request-board { padding: 20px; }
   .request-card { grid-template-columns: 58px minmax(0, 1fr); gap: 14px; padding: 17px; }
   .vote-button { width: 56px; min-height: 82px; }
   .board-heading { align-items: center; }
   .bulk-review-heading { align-items: flex-start; flex-direction: column; }
+  .discussion-toggle { align-items:flex-start; flex-direction:column; gap:3px; }
+  .activity-panel { padding:14px; }
 }
 </style>

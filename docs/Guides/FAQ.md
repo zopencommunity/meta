@@ -47,6 +47,18 @@ A request records community interest in having an open-source project available 
 
 A vote is an advisory signal of community interest. It helps maintainers understand relative demand, but it is not a governance vote and does not by itself determine priority or approval. Formal project decisions follow the [zopen governance process](/Governance).
 
+### What should I add to a package discussion?
+
+Use the request's discussion and activity timeline to explain a concrete use case, offer testing or implementation help, share relevant technical information, or ask a package-specific question. Contributions are reviewed by maintainers before they become public. The timeline is not a support entitlement or a way to purchase priority; the [Code of Conduct](https://github.com/zopencommunity/meta/blob/main/CODE_OF_CONDUCT.md) applies.
+
+### Will my identity or email be public in a discussion?
+
+Public attribution is optional. Your contact email is never shown by the public API and is available only to administrators for follow-up. After submission, the current browser stores a private edit key so you can edit or delete your contribution without an account. Editing a published contribution sends it through moderation again. If you clear browser storage or use another browser, an administrator can still help update or remove it.
+
+### How can I recognize an official update?
+
+Updates posted through the maintainer console are labeled **Verified maintainer**. Community posts can provide valuable evidence and coordination, but they do not represent a project decision unless a maintainer or the TSC confirms that decision through the normal governance process.
+
 ### How are package requests prioritized?
 
 Maintainers consider community interest, contributor availability, technical feasibility, dependencies, licensing, security, expected maintenance effort, and benefit to the broader z/OS ecosystem. Vote count is one input, not the sole deciding factor.

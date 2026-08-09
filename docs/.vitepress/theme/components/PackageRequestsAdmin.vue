@@ -21,6 +21,8 @@ interface AdminRequest {
   artifactUrl: string;
   maintainerNote: string;
   voteCount: number;
+  discussionCount: number;
+  pendingPostCount: number;
   createdAt: string;
   acknowledgedAt: string | null;
 }
@@ -50,6 +52,22 @@ interface PulpRun {
   error: string;
 }
 
+interface CommunityPost {
+  id: number;
+  requestId: number;
+  requestPackageName: string;
+  kind: string;
+  body: string;
+  authorRole: "community" | "maintainer";
+  authorName: string;
+  organization: string;
+  contactEmail: string;
+  showAuthorPublicly: boolean;
+  moderationStatus: "pending" | "published" | "hidden";
+  createdAt: string;
+  updatedAt: string;
+}
+
 const productionApiUrl = "https://usage.zopen.community/package-requests/api";
 const apiUrl = String(
   import.meta.env.VITE_PACKAGE_REQUESTS_API_URL || (import.meta.env.PROD ? productionApiUrl : "http://127.0.0.1:3100/api"),
@@ -68,6 +86,18 @@ const pulpArtifactCount = ref(0);
 const pulpBusy = ref(false);
 const pulpMessage = ref("");
 const pulpError = ref(false);
+const moderationPosts = ref<CommunityPost[]>([]);
+const moderationFilter = ref("pending");
+const moderationBusy = ref(false);
+const moderationMessage = ref("");
+const moderationError = ref(false);
+const maintainerDrafts = reactive<Record<number, {
+  kind: string;
+  body: string;
+  busy: boolean;
+  message: string;
+  error: boolean;
+}>>({});
 
 const ecosystems: Record<string, string> = {
   general: "General / CLI",
@@ -98,6 +128,14 @@ const artifacts: Record<string, string> = {
   pulp_rpm: "Pulp RPM",
   other: "Other package location",
 };
+const postKinds: Record<string, string> = {
+  use_case: "Use case",
+  testing_offer: "Testing offer",
+  contribution_offer: "Contribution offer",
+  technical_note: "Technical information",
+  question: "Question",
+  maintainer_update: "Maintainer update",
+};
 
 const visibleRequests = computed(() =>
   requests.value.filter((request) => statusFilter.value === "all" || request.status === statusFilter.value),
@@ -106,6 +144,10 @@ const orderedPulpMatches = computed(() => [...pulpMatches.value].sort((left, rig
   if (left.requestId !== right.requestId) return right.requestId - left.requestId;
   return Number(isPrimaryMatch(right)) - Number(isPrimaryMatch(left));
 }));
+const pendingPostTotal = computed(() => requests.value.reduce(
+  (total, request) => total + Number(request.pendingPostCount || 0),
+  0,
+));
 
 function matchEcosystem(match: PulpMatch) {
   return match.requestEcosystem || requests.value.find((request) => request.id === match.requestId)?.ecosystem || "general";
@@ -138,6 +180,11 @@ async function loadPulpOverview() {
   pulpArtifactCount.value = result.artifactCount;
 }
 
+async function loadModerationPosts() {
+  const result = await api(`/admin/posts?status=${moderationFilter.value}`);
+  moderationPosts.value = result.posts;
+}
+
 async function signIn() {
   authenticating.value = true;
   loginError.value = "";
@@ -145,6 +192,12 @@ async function signIn() {
     await Promise.all([loadRequests(), loadPulpOverview()]);
     sessionStorage.setItem(storageKey, token.value);
     authenticated.value = true;
+    try {
+      await loadModerationPosts();
+    } catch (error) {
+      moderationError.value = true;
+      moderationMessage.value = error instanceof Error ? error.message : "Discussion moderation is temporarily unavailable.";
+    }
   } catch (error) {
     loginError.value = error instanceof Error ? error.message : "Authentication failed.";
   } finally {
@@ -158,7 +211,82 @@ function signOut() {
   requests.value = [];
   pulpMatches.value = [];
   pulpRuns.value = [];
+  moderationPosts.value = [];
   authenticated.value = false;
+}
+
+async function moderatePost(post: CommunityPost, moderationStatus = post.moderationStatus) {
+  moderationBusy.value = true;
+  moderationError.value = false;
+  moderationMessage.value = "Saving community post…";
+  try {
+    await api(`/admin/posts/${post.id}`, {
+      method: "PATCH",
+      body: JSON.stringify({
+        kind: post.kind,
+        body: post.body,
+        authorName: post.authorName,
+        organization: post.organization,
+        contactEmail: post.contactEmail,
+        showAuthorPublicly: post.showAuthorPublicly,
+        moderationStatus,
+      }),
+    });
+    moderationMessage.value = moderationStatus === "published" ? "Post published." : moderationStatus === "hidden" ? "Post hidden." : "Post saved for review.";
+    await Promise.all([loadModerationPosts(), loadRequests()]);
+  } catch (error) {
+    moderationError.value = true;
+    moderationMessage.value = error instanceof Error ? error.message : "The post could not be saved.";
+  } finally {
+    moderationBusy.value = false;
+  }
+}
+
+async function deleteModerationPost(post: CommunityPost) {
+  if (!window.confirm(`Permanently delete this ${postKinds[post.kind] || "community post"} from ${post.requestPackageName}?`)) return;
+  moderationBusy.value = true;
+  moderationError.value = false;
+  try {
+    await api(`/admin/posts/${post.id}`, { method: "DELETE" });
+    moderationMessage.value = "Post deleted.";
+    await Promise.all([loadModerationPosts(), loadRequests()]);
+  } catch (error) {
+    moderationError.value = true;
+    moderationMessage.value = error instanceof Error ? error.message : "The post could not be deleted.";
+  } finally {
+    moderationBusy.value = false;
+  }
+}
+
+function maintainerDraft(requestId: number) {
+  return maintainerDrafts[requestId] ||= {
+    kind: "maintainer_update",
+    body: "",
+    busy: false,
+    message: "",
+    error: false,
+  };
+}
+
+async function publishMaintainerPost(request: AdminRequest) {
+  const draft = maintainerDraft(request.id);
+  draft.busy = true;
+  draft.error = false;
+  draft.message = "Publishing…";
+  try {
+    await api(`/admin/requests/${request.id}/posts`, {
+      method: "POST",
+      body: JSON.stringify({ kind: draft.kind, body: draft.body }),
+    });
+    draft.body = "";
+    draft.message = "Published to the public activity timeline.";
+    await loadRequests();
+  } catch (error) {
+    draft.error = true;
+    draft.message = error instanceof Error ? error.message : "The maintainer post could not be published.";
+  } finally {
+    draft.busy = false;
+  }
 }
 
 async function syncPulp() {
@@ -335,6 +463,67 @@ onMounted(async () => {
         <p v-else class="no-matches">No Pulp matches need review.</p>
       </section>
 
+      <section class="moderation-panel">
+        <div class="moderation-heading">
+          <div>
+            <p class="eyebrow">Community discussion</p>
+            <h2>Moderation queue <span v-if="pendingPostTotal" class="pending-total">{{ pendingPostTotal }}</span></h2>
+            <p>Review community contributions before they appear in public request timelines.</p>
+          </div>
+          <div class="filters">
+            <select v-model="moderationFilter" aria-label="Filter community posts" @change="loadModerationPosts">
+              <option value="pending">Pending review</option>
+              <option value="published">Published</option>
+              <option value="hidden">Hidden</option>
+              <option value="all">All posts</option>
+            </select>
+            <button class="secondary" type="button" :disabled="moderationBusy" @click="loadModerationPosts">Refresh</button>
+          </div>
+        </div>
+        <p v-if="moderationMessage" :class="['sync-message', { error: moderationError }]" role="status">{{ moderationMessage }}</p>
+
+        <div v-if="moderationPosts.length" class="moderation-list">
+          <article v-for="post in moderationPosts" :key="post.id" class="moderation-card">
+            <div class="moderation-card-heading">
+              <div>
+                <span class="source-badge">{{ postKinds[post.kind] || post.kind }}</span>
+                <h3>{{ post.requestPackageName }}</h3>
+              </div>
+              <span :class="['moderation-status', `moderation-${post.moderationStatus}`]">{{ post.moderationStatus }}</span>
+            </div>
+            <div class="moderation-editor">
+              <label>
+                <span>Contribution type</span>
+                <select v-model="post.kind">
+                  <option value="use_case">Use case</option>
+                  <option value="testing_offer">Testing offer</option>
+                  <option value="contribution_offer">Contribution offer</option>
+                  <option value="technical_note">Technical information</option>
+                  <option value="question">Question</option>
+                  <option v-if="post.authorRole === 'maintainer'" value="maintainer_update">Maintainer update</option>
+                </select>
+              </label>
+              <label class="wide"><span>Post body</span><textarea v-model.trim="post.body" minlength="10" maxlength="2000" /></label>
+              <label><span>Author name or alias</span><input v-model.trim="post.authorName" maxlength="100" /></label>
+              <label><span>Organization</span><input v-model.trim="post.organization" maxlength="160" /></label>
+              <label><span>Contact email (private)</span><input v-model.trim="post.contactEmail" type="email" maxlength="254" /></label>
+              <label><span>Public attribution</span><select v-model="post.showAuthorPublicly"><option :value="false">Hidden</option><option :value="true">Show name and organization</option></select></label>
+            </div>
+            <div class="moderation-meta">
+              Submitted {{ new Date(post.createdAt).toLocaleString() }}
+              <span v-if="post.authorRole === 'maintainer'"> · Verified maintainer post</span>
+            </div>
+            <div class="moderation-actions">
+              <button class="danger" type="button" :disabled="moderationBusy" @click="deleteModerationPost(post)">Delete</button>
+              <button class="secondary" type="button" :disabled="moderationBusy" @click="moderatePost(post, 'hidden')">Hide</button>
+              <button class="secondary" type="button" :disabled="moderationBusy" @click="moderatePost(post, 'pending')">Keep pending</button>
+              <button class="primary" type="button" :disabled="moderationBusy" @click="moderatePost(post, 'published')">Publish</button>
+            </div>
+          </article>
+        </div>
+        <p v-else class="no-matches">No {{ moderationFilter === "all" ? "" : moderationFilter }} community posts.</p>
+      </section>
+
       <div class="toolbar">
         <div><h2>Request queue</h2><p>Acknowledge, prioritize, and publish delivery locations.</p></div>
         <div class="filters">
@@ -360,6 +549,8 @@ onMounted(async () => {
                 <a v-if="request.upstreamUrl" :href="request.upstreamUrl" target="_blank" rel="noopener noreferrer">Upstream project ↗</a>
                 <span>Requested {{ new Date(request.createdAt).toLocaleDateString() }}</span>
                 <span v-if="request.acknowledgedAt">Acknowledged {{ new Date(request.acknowledgedAt).toLocaleDateString() }}</span>
+                <span>{{ request.discussionCount || 0 }} public posts</span>
+                <span v-if="request.pendingPostCount" class="pending-request-posts">{{ request.pendingPostCount }} awaiting review</span>
               </div>
             </div>
             <div class="votes"><strong>{{ request.voteCount }}</strong><span>votes</span></div>
@@ -389,6 +580,30 @@ onMounted(async () => {
                 <button class="primary" type="submit" :disabled="saveStates[request.id]?.busy">Save changes</button>
               </div>
             </form>
+            <form class="maintainer-composer" @submit.prevent="publishMaintainerPost(request)">
+              <div>
+                <strong>Post to the public activity timeline</strong>
+                <span>Published immediately with a verified maintainer badge.</span>
+              </div>
+              <div class="maintainer-compose-grid">
+                <select v-model="maintainerDraft(request.id).kind" aria-label="Maintainer post type">
+                  <option value="maintainer_update">Maintainer update</option>
+                  <option value="question">Question for the community</option>
+                  <option value="technical_note">Technical information</option>
+                </select>
+                <textarea
+                  v-model.trim="maintainerDraft(request.id).body"
+                  required
+                  minlength="10"
+                  maxlength="2000"
+                  placeholder="Share progress, ask a question, or add technical guidance."
+                />
+              </div>
+              <div class="maintainer-compose-actions">
+                <span :class="['save-state', { error: maintainerDraft(request.id).error }]" role="status">{{ maintainerDraft(request.id).message }}</span>
+                <button class="primary" type="submit" :disabled="maintainerDraft(request.id).busy">Publish update</button>
+              </div>
+            </form>
           </details>
         </article>
       </div>
@@ -399,7 +614,7 @@ onMounted(async () => {
 
 <style scoped>
 .admin-console { max-width: 1180px; margin: 0 auto; padding: 24px 0 70px; }
-.admin-heading,.toolbar,.token-row,.filters,.title-row,.meta,.editor-actions,.pulp-heading,.match-card,.match-actions { display:flex; }
+.admin-heading,.toolbar,.token-row,.filters,.title-row,.meta,.editor-actions,.pulp-heading,.match-card,.match-actions,.moderation-heading,.moderation-card-heading,.moderation-actions,.maintainer-compose-actions { display:flex; }
 .admin-heading { justify-content:space-between; align-items:center; gap:20px; margin-bottom:28px; }
 .admin-heading h1,.toolbar h2,.title-row h3 { margin:0; }
 .eyebrow { margin:0 0 4px; color:var(--vp-c-brand-1); font-size:12px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
@@ -434,6 +649,26 @@ button:disabled { cursor:wait; opacity:.65; }
 .dark .preference-badge.primary { color:#a8e6d6; border-color:#275e52; background:#142d28; }
 .match-actions { flex-shrink:0; gap:8px; }
 .no-matches { margin:16px 0 0; color:var(--vp-c-text-2); }
+.moderation-panel { margin-bottom:34px; padding:22px; border:1px solid var(--vp-c-divider); border-radius:14px; background:var(--vp-c-bg-soft); }
+.moderation-heading { justify-content:space-between; align-items:end; gap:20px; }
+.moderation-heading h2 { margin:0; }
+.moderation-heading p { margin:6px 0 0; color:var(--vp-c-text-2); }
+.pending-total { display:inline-flex; min-width:24px; height:24px; align-items:center; justify-content:center; margin-left:5px; border-radius:999px; color:white; background:var(--vp-c-danger-1); font-size:12px; vertical-align:middle; }
+.moderation-list { display:grid; gap:12px; margin-top:18px; }
+.moderation-card { padding:17px; border:1px solid var(--vp-c-divider); border-radius:10px; background:var(--vp-c-bg); }
+.moderation-card-heading { align-items:flex-start; justify-content:space-between; gap:15px; }
+.moderation-card-heading h3 { margin:4px 0 0; }
+.moderation-status { padding:4px 8px; border-radius:999px; color:var(--vp-c-text-2); background:var(--vp-c-default-soft); font-size:10px; font-weight:800; text-transform:uppercase; }
+.moderation-pending { color:#795b00; background:#fff1bd; }
+.moderation-published { color:#09634f; background:#daf4ec; }
+.moderation-hidden { color:var(--vp-c-danger-1); background:var(--vp-c-danger-soft); }
+.dark .moderation-pending,.dark .moderation-published { color:var(--vp-c-text-1); background:var(--vp-c-bg-alt); }
+.moderation-editor { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:15px; }
+.moderation-editor label > span { display:block; margin-bottom:5px; color:var(--vp-c-text-2); font-size:11px; font-weight:700; }
+.moderation-editor .wide { grid-column:1/-1; }
+.moderation-meta { margin-top:10px; color:var(--vp-c-text-3); font-size:11px; }
+.moderation-actions { justify-content:flex-end; align-items:center; gap:9px; margin-top:14px; }
+.pending-request-posts { color:var(--vp-c-danger-1); font-weight:800; }
 .toolbar { justify-content:space-between; align-items:end; gap:18px; margin-bottom:24px; }
 .toolbar p { margin:5px 0 0; }
 .filters select { width:190px; }
@@ -455,8 +690,14 @@ details > summary { padding:13px 20px; color:var(--vp-c-brand-1); font-size:13px
 .editor label > span { display:block; margin-bottom:6px; color:var(--vp-c-text-2); font-size:12px; font-weight:700; }
 .wide,.editor-actions { grid-column:1/-1; }
 .editor-actions { justify-content:flex-end; align-items:center; gap:12px; }
+.maintainer-composer { padding:18px 20px 22px; border-top:1px solid var(--vp-c-divider); background:var(--vp-c-bg); }
+.maintainer-composer > div:first-child strong,.maintainer-composer > div:first-child span { display:block; }
+.maintainer-composer > div:first-child span { margin-top:3px; color:var(--vp-c-text-2); font-size:12px; }
+.maintainer-compose-grid { display:grid; grid-template-columns:220px minmax(0,1fr); gap:12px; margin-top:13px; }
+.maintainer-compose-grid textarea { min-height:84px; }
+.maintainer-compose-actions { align-items:center; justify-content:flex-end; gap:12px; margin-top:10px; }
 .save-state { color:var(--vp-c-text-2); font-size:13px; }
 .error { color:var(--vp-c-danger-1); }
 .empty { padding:60px; border:1px dashed var(--vp-c-divider); border-radius:14px; color:var(--vp-c-text-2); text-align:center; }
-@media (max-width:720px) { .toolbar,.token-row,.pulp-heading,.match-card { align-items:stretch; flex-direction:column; } .filters,.match-actions { flex-direction:column; } .filters select { width:100%; } .editor { grid-template-columns:1fr; } .wide,.editor-actions { grid-column:1; } }
+@media (max-width:720px) { .toolbar,.token-row,.pulp-heading,.match-card,.moderation-heading { align-items:stretch; flex-direction:column; } .filters,.match-actions,.moderation-actions { flex-direction:column; } .filters select { width:100%; } .editor,.moderation-editor,.maintainer-compose-grid { grid-template-columns:1fr; } .wide,.editor-actions,.moderation-editor .wide { grid-column:1; } .moderation-actions button { width:100%; } }
 </style>

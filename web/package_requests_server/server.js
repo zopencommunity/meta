@@ -39,6 +39,15 @@ const VALID_ARTIFACT_KINDS = new Set([
   "pulp_rpm",
   "other",
 ]);
+const COMMUNITY_POST_KINDS = new Set([
+  "use_case",
+  "testing_offer",
+  "contribution_offer",
+  "technical_note",
+  "question",
+]);
+const MAINTAINER_POST_KINDS = new Set(["maintainer_update", "technical_note", "question"]);
+const VALID_POST_MODERATION_STATUSES = new Set(["pending", "published", "hidden"]);
 const MAX_BULK_REQUESTS = 25;
 
 function openDatabase(databasePath) {
@@ -151,6 +160,31 @@ async function initializeDatabase(database) {
   );
   await run(
     database,
+    `CREATE TABLE IF NOT EXISTS request_posts (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      request_id INTEGER NOT NULL,
+      kind TEXT NOT NULL CHECK (
+        kind IN ('use_case', 'testing_offer', 'contribution_offer', 'technical_note', 'question', 'maintainer_update')
+      ),
+      body TEXT NOT NULL,
+      author_name TEXT NOT NULL DEFAULT '',
+      organization TEXT NOT NULL DEFAULT '',
+      contact_email TEXT NOT NULL DEFAULT '',
+      show_author_publicly INTEGER NOT NULL DEFAULT 0 CHECK (show_author_publicly IN (0, 1)),
+      author_role TEXT NOT NULL DEFAULT 'community' CHECK (author_role IN ('community', 'maintainer')),
+      moderation_status TEXT NOT NULL DEFAULT 'pending' CHECK (
+        moderation_status IN ('pending', 'published', 'hidden')
+      ),
+      edit_token_hash TEXT NOT NULL DEFAULT '',
+      created_at TEXT NOT NULL,
+      updated_at TEXT NOT NULL,
+      published_at TEXT,
+      reviewed_at TEXT,
+      FOREIGN KEY (request_id) REFERENCES package_requests(id) ON DELETE CASCADE
+    )`,
+  );
+  await run(
+    database,
     `CREATE TABLE IF NOT EXISTS pulp_artifacts (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       source TEXT NOT NULL CHECK (source IN ('rpm', 'wheel')),
@@ -208,6 +242,8 @@ async function initializeDatabase(database) {
     database,
     "CREATE INDEX IF NOT EXISTS idx_request_events_request_id ON request_events(request_id)",
   );
+  await run(database, "CREATE INDEX IF NOT EXISTS idx_request_posts_request_id ON request_posts(request_id)");
+  await run(database, "CREATE INDEX IF NOT EXISTS idx_request_posts_moderation ON request_posts(moderation_status)");
   await run(database, "CREATE INDEX IF NOT EXISTS idx_pulp_artifacts_name ON pulp_artifacts(source, normalized_name)");
   await run(database, "CREATE INDEX IF NOT EXISTS idx_pulp_matches_status ON pulp_matches(status)");
 }
@@ -239,6 +275,66 @@ function validVoterId(value) {
 
 function validEmail(value) {
   return !value || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
+function hashEditToken(value) {
+  return crypto.createHash("sha256").update(String(value || "")).digest("hex");
+}
+
+function editTokenMatches(request, row) {
+  const suppliedHash = hashEditToken(request.get("X-Edit-Token"));
+  const storedHash = String(row?.edit_token_hash || "");
+  return Boolean(
+    storedHash &&
+      suppliedHash.length === storedHash.length &&
+      crypto.timingSafeEqual(Buffer.from(suppliedHash), Buffer.from(storedHash)),
+  );
+}
+
+function validatePost(body, role = "community") {
+  const source = body && typeof body === "object" ? body : {};
+  const post = {
+    kind: cleanText(source.kind, 40),
+    body: cleanText(source.body, 2000),
+    authorName: cleanText(source.authorName, 100),
+    organization: cleanText(source.organization, 160),
+    contactEmail: cleanText(source.contactEmail, 254),
+    showAuthorPublicly: Boolean(source.showAuthorPublicly),
+  };
+  const validKinds = role === "maintainer" ? MAINTAINER_POST_KINDS : COMMUNITY_POST_KINDS;
+  if (!validKinds.has(post.kind)) return { error: "Choose a valid contribution type." };
+  if (post.body.length < 10) return { error: "Write at least 10 characters." };
+  if ((post.body.match(/https?:\/\//gi) || []).length > 3) {
+    return { error: "A post can contain no more than three links." };
+  }
+  if (!validEmail(post.contactEmail)) {
+    return { error: "Enter a valid contact email address or leave it blank." };
+  }
+  return { post };
+}
+
+function mapPost(row, includePrivate = false) {
+  const isMaintainer = row.author_role === "maintainer";
+  const showAuthor = isMaintainer || Boolean(row.show_author_publicly);
+  const post = {
+    id: row.id,
+    requestId: row.request_id,
+    requestPackageName: row.request_package_name || "",
+    kind: row.kind,
+    body: row.body,
+    authorRole: row.author_role,
+    authorName: isMaintainer ? "zopen maintainer" : includePrivate || showAuthor ? row.author_name || "" : "",
+    organization: isMaintainer ? "" : includePrivate || showAuthor ? row.organization || "" : "",
+    showAuthorPublicly: isMaintainer || Boolean(row.show_author_publicly),
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+    publishedAt: row.published_at || null,
+  };
+  if (includePrivate) {
+    post.contactEmail = row.contact_email || "";
+    post.moderationStatus = row.moderation_status;
+  }
+  return post;
 }
 
 function validateSubmission(body) {
@@ -330,6 +426,8 @@ function mapRequest(row, includePrivate = false) {
     status: row.status,
     voteCount: Number(row.vote_count || 0),
     voted: Boolean(row.voted),
+    discussionCount: Number(row.discussion_count || 0),
+    pendingPostCount: includePrivate ? Number(row.pending_post_count || 0) : undefined,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };
@@ -400,7 +498,7 @@ function createApp(options = {}) {
     if (origin && allowedOrigins.has(origin.replace(/\/$/, ""))) {
       response.set("Access-Control-Allow-Origin", origin);
       response.set("Vary", "Origin");
-      response.set("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Voter-ID");
+      response.set("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Voter-ID, X-Edit-Token");
       response.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
     }
 
@@ -417,6 +515,7 @@ function createApp(options = {}) {
 
   const submissionLimiter = createRateLimiter({ limit: 5, windowMilliseconds: 60 * 60 * 1000 });
   const bulkSubmissionLimiter = createRateLimiter({ limit: 2, windowMilliseconds: 60 * 60 * 1000 });
+  const postSubmissionLimiter = createRateLimiter({ limit: 5, windowMilliseconds: 60 * 60 * 1000 });
   const voteLimiter = createRateLimiter({ limit: 60, windowMilliseconds: 60 * 1000 });
   const adminLimiter = createRateLimiter({ limit: 120, windowMilliseconds: 15 * 60 * 1000 });
   let pulpSyncPromise = null;
@@ -457,6 +556,8 @@ function createApp(options = {}) {
       const rows = await all(
         database,
         `SELECT r.*, COUNT(v.voter_id) AS vote_count,
+          (SELECT COUNT(*) FROM request_posts post
+           WHERE post.request_id = r.id AND post.moderation_status = 'published') AS discussion_count,
           EXISTS(
             SELECT 1 FROM votes own_vote
             WHERE own_vote.request_id = r.id AND own_vote.voter_id = ?
@@ -474,6 +575,194 @@ function createApp(options = {}) {
     }
   });
 
+  app.get("/api/requests/:id/activity", async (request, response, next) => {
+    const requestId = Number.parseInt(request.params.id, 10);
+    if (!Number.isSafeInteger(requestId) || requestId < 1) {
+      response.status(400).json({ error: "Invalid package request ID." });
+      return;
+    }
+    try {
+      const packageRequest = await get(
+        database,
+        "SELECT id, package_name, created_at FROM package_requests WHERE id = ?",
+        [requestId],
+      );
+      if (!packageRequest) {
+        response.status(404).json({ error: "Package request not found." });
+        return;
+      }
+      const [events, posts] = await Promise.all([
+        all(
+          database,
+          `SELECT id, from_status, to_status, maintainer_note, created_at
+           FROM request_events WHERE request_id = ? ORDER BY created_at`,
+          [requestId],
+        ),
+        all(
+          database,
+          `SELECT * FROM request_posts
+           WHERE request_id = ? AND moderation_status = 'published' ORDER BY created_at`,
+          [requestId],
+        ),
+      ]);
+      const activity = [
+        {
+          id: `created-${requestId}`,
+          type: "created",
+          packageName: packageRequest.package_name,
+          createdAt: packageRequest.created_at,
+        },
+        ...events.map((event) => ({
+          id: `status-${event.id}`,
+          type: "status",
+          fromStatus: event.from_status,
+          toStatus: event.to_status,
+          note: event.maintainer_note || "",
+          createdAt: event.created_at,
+        })),
+        ...posts.map((post) => ({ ...mapPost(post), type: "post" })),
+      ].sort((left, right) => left.createdAt.localeCompare(right.createdAt));
+      response.json({ requestId, activity });
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.post("/api/requests/:id/posts", postSubmissionLimiter, async (request, response, next) => {
+    const requestId = Number.parseInt(request.params.id, 10);
+    if (!Number.isSafeInteger(requestId) || requestId < 1) {
+      response.status(400).json({ error: "Invalid package request ID." });
+      return;
+    }
+    if (cleanText(request.body?.website, 200)) {
+      response.status(202).json({ accepted: true, moderationStatus: "pending" });
+      return;
+    }
+    const validated = validatePost(request.body, "community");
+    if (validated.error) {
+      response.status(400).json({ error: validated.error });
+      return;
+    }
+    try {
+      const packageRequest = await get(database, "SELECT id FROM package_requests WHERE id = ?", [requestId]);
+      if (!packageRequest) {
+        response.status(404).json({ error: "Package request not found." });
+        return;
+      }
+      const editToken = crypto.randomBytes(32).toString("base64url");
+      const now = new Date().toISOString();
+      const result = await run(
+        database,
+        `INSERT INTO request_posts (
+          request_id, kind, body, author_name, organization, contact_email,
+          show_author_publicly, author_role, moderation_status, edit_token_hash,
+          created_at, updated_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, 'community', 'pending', ?, ?, ?)`,
+        [
+          requestId,
+          validated.post.kind,
+          validated.post.body,
+          validated.post.authorName,
+          validated.post.organization,
+          validated.post.contactEmail,
+          validated.post.showAuthorPublicly ? 1 : 0,
+          hashEditToken(editToken),
+          now,
+          now,
+        ],
+      );
+      const row = await get(database, "SELECT * FROM request_posts WHERE id = ?", [result.id]);
+      response.status(202).json({ post: mapPost(row, true), editToken });
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.get("/api/posts/:id", async (request, response, next) => {
+    const postId = Number.parseInt(request.params.id, 10);
+    if (!Number.isSafeInteger(postId) || postId < 1) {
+      response.status(400).json({ error: "Invalid post ID." });
+      return;
+    }
+    try {
+      const row = await get(database, "SELECT * FROM request_posts WHERE id = ?", [postId]);
+      if (!row || row.author_role !== "community" || !editTokenMatches(request, row)) {
+        response.status(404).json({ error: "Post not found." });
+        return;
+      }
+      response.json({ post: mapPost(row, true) });
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.patch("/api/posts/:id", postSubmissionLimiter, async (request, response, next) => {
+    const postId = Number.parseInt(request.params.id, 10);
+    if (!Number.isSafeInteger(postId) || postId < 1) {
+      response.status(400).json({ error: "Invalid post ID." });
+      return;
+    }
+    try {
+      const existing = await get(database, "SELECT * FROM request_posts WHERE id = ?", [postId]);
+      if (!existing || existing.author_role !== "community" || !editTokenMatches(request, existing)) {
+        response.status(404).json({ error: "Post not found." });
+        return;
+      }
+      const validated = validatePost({
+        kind: request.body?.kind ?? existing.kind,
+        body: request.body?.body ?? existing.body,
+        authorName: request.body?.authorName ?? existing.author_name,
+        organization: request.body?.organization ?? existing.organization,
+        contactEmail: request.body?.contactEmail ?? existing.contact_email,
+        showAuthorPublicly: request.body?.showAuthorPublicly ?? Boolean(existing.show_author_publicly),
+      });
+      if (validated.error) {
+        response.status(400).json({ error: validated.error });
+        return;
+      }
+      const now = new Date().toISOString();
+      await run(
+        database,
+        `UPDATE request_posts SET kind = ?, body = ?, author_name = ?, organization = ?,
+         contact_email = ?, show_author_publicly = ?, moderation_status = 'pending',
+         updated_at = ?, published_at = NULL, reviewed_at = NULL WHERE id = ?`,
+        [
+          validated.post.kind,
+          validated.post.body,
+          validated.post.authorName,
+          validated.post.organization,
+          validated.post.contactEmail,
+          validated.post.showAuthorPublicly ? 1 : 0,
+          now,
+          postId,
+        ],
+      );
+      const updated = await get(database, "SELECT * FROM request_posts WHERE id = ?", [postId]);
+      response.json({ post: mapPost(updated, true) });
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.delete("/api/posts/:id", postSubmissionLimiter, async (request, response, next) => {
+    const postId = Number.parseInt(request.params.id, 10);
+    if (!Number.isSafeInteger(postId) || postId < 1) {
+      response.status(400).json({ error: "Invalid post ID." });
+      return;
+    }
+    try {
+      const existing = await get(database, "SELECT * FROM request_posts WHERE id = ?", [postId]);
+      if (!existing || existing.author_role !== "community" || !editTokenMatches(request, existing)) {
+        response.status(404).json({ error: "Post not found." });
+        return;
+      }
+      await run(database, "DELETE FROM request_posts WHERE id = ?", [postId]);
+      response.json({ success: true, id: postId });
+    } catch (error) {
+      next(error);
+    }
+  });
+
   app.get("/api/admin/requests", adminLimiter, async (request, response, next) => {
     const configuredToken = options.adminToken ?? process.env.ADMIN_TOKEN;
     if (!adminTokenMatches(request, configuredToken)) {
@@ -484,7 +773,11 @@ function createApp(options = {}) {
     try {
       const rows = await all(
         database,
-        `SELECT r.*, COUNT(v.voter_id) AS vote_count, 0 AS voted
+        `SELECT r.*, COUNT(v.voter_id) AS vote_count, 0 AS voted,
+          (SELECT COUNT(*) FROM request_posts post
+           WHERE post.request_id = r.id AND post.moderation_status = 'published') AS discussion_count,
+          (SELECT COUNT(*) FROM request_posts post
+           WHERE post.request_id = r.id AND post.moderation_status = 'pending') AS pending_post_count
          FROM package_requests r
          LEFT JOIN votes v ON v.request_id = r.id
          GROUP BY r.id
@@ -501,6 +794,161 @@ function createApp(options = {}) {
            r.created_at DESC`,
       );
       response.json({ requests: rows.map((row) => mapRequest(row, true)) });
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.get("/api/admin/posts", adminLimiter, async (request, response, next) => {
+    const configuredToken = options.adminToken ?? process.env.ADMIN_TOKEN;
+    if (!adminTokenMatches(request, configuredToken)) {
+      response.status(401).json({ error: "Unauthorized." });
+      return;
+    }
+    const status = request.query.status === "all" ? "" : cleanText(request.query.status || "pending", 20);
+    if (status && !VALID_POST_MODERATION_STATUSES.has(status)) {
+      response.status(400).json({ error: "Invalid moderation status." });
+      return;
+    }
+    try {
+      const rows = await all(
+        database,
+        `SELECT post.*, r.package_name AS request_package_name
+         FROM request_posts post JOIN package_requests r ON r.id = post.request_id
+         ${status ? "WHERE post.moderation_status = ?" : ""}
+         ORDER BY CASE post.moderation_status WHEN 'pending' THEN 0 WHEN 'published' THEN 1 ELSE 2 END,
+           post.created_at DESC`,
+        status ? [status] : [],
+      );
+      response.json({ posts: rows.map((row) => mapPost(row, true)) });
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.post("/api/admin/requests/:id/posts", adminLimiter, async (request, response, next) => {
+    const configuredToken = options.adminToken ?? process.env.ADMIN_TOKEN;
+    if (!adminTokenMatches(request, configuredToken)) {
+      response.status(401).json({ error: "Unauthorized." });
+      return;
+    }
+    const requestId = Number.parseInt(request.params.id, 10);
+    const validated = validatePost(request.body, "maintainer");
+    if (!Number.isSafeInteger(requestId) || requestId < 1) {
+      response.status(400).json({ error: "Invalid package request ID." });
+      return;
+    }
+    if (validated.error) {
+      response.status(400).json({ error: validated.error });
+      return;
+    }
+    try {
+      const packageRequest = await get(database, "SELECT id FROM package_requests WHERE id = ?", [requestId]);
+      if (!packageRequest) {
+        response.status(404).json({ error: "Package request not found." });
+        return;
+      }
+      const now = new Date().toISOString();
+      const result = await run(
+        database,
+        `INSERT INTO request_posts (
+          request_id, kind, body, author_role, moderation_status,
+          created_at, updated_at, published_at, reviewed_at
+        ) VALUES (?, ?, ?, 'maintainer', 'published', ?, ?, ?, ?)`,
+        [requestId, validated.post.kind, validated.post.body, now, now, now, now],
+      );
+      const row = await get(database, "SELECT * FROM request_posts WHERE id = ?", [result.id]);
+      response.status(201).json({ post: mapPost(row, true) });
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.patch("/api/admin/posts/:id", adminLimiter, async (request, response, next) => {
+    const configuredToken = options.adminToken ?? process.env.ADMIN_TOKEN;
+    if (!adminTokenMatches(request, configuredToken)) {
+      response.status(401).json({ error: "Unauthorized." });
+      return;
+    }
+    const postId = Number.parseInt(request.params.id, 10);
+    if (!Number.isSafeInteger(postId) || postId < 1) {
+      response.status(400).json({ error: "Invalid post ID." });
+      return;
+    }
+    try {
+      const existing = await get(database, "SELECT * FROM request_posts WHERE id = ?", [postId]);
+      if (!existing) {
+        response.status(404).json({ error: "Post not found." });
+        return;
+      }
+      const moderationStatus = request.body?.moderationStatus ?? existing.moderation_status;
+      if (!VALID_POST_MODERATION_STATUSES.has(moderationStatus)) {
+        response.status(400).json({ error: "Invalid moderation status." });
+        return;
+      }
+      const validated = validatePost(
+        {
+          kind: request.body?.kind ?? existing.kind,
+          body: request.body?.body ?? existing.body,
+          authorName: request.body?.authorName ?? existing.author_name,
+          organization: request.body?.organization ?? existing.organization,
+          contactEmail: request.body?.contactEmail ?? existing.contact_email,
+          showAuthorPublicly: request.body?.showAuthorPublicly ?? Boolean(existing.show_author_publicly),
+        },
+        existing.author_role,
+      );
+      if (validated.error) {
+        response.status(400).json({ error: validated.error });
+        return;
+      }
+      const now = new Date().toISOString();
+      await run(
+        database,
+        `UPDATE request_posts SET kind = ?, body = ?, author_name = ?, organization = ?,
+         contact_email = ?, show_author_publicly = ?, moderation_status = ?, updated_at = ?,
+         published_at = CASE WHEN ? = 'published' THEN COALESCE(published_at, ?) ELSE NULL END,
+         reviewed_at = CASE WHEN ? = 'pending' THEN NULL ELSE ? END WHERE id = ?`,
+        [
+          validated.post.kind,
+          validated.post.body,
+          validated.post.authorName,
+          validated.post.organization,
+          validated.post.contactEmail,
+          validated.post.showAuthorPublicly ? 1 : 0,
+          moderationStatus,
+          now,
+          moderationStatus,
+          now,
+          moderationStatus,
+          now,
+          postId,
+        ],
+      );
+      const updated = await get(database, "SELECT * FROM request_posts WHERE id = ?", [postId]);
+      response.json({ post: mapPost(updated, true) });
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.delete("/api/admin/posts/:id", adminLimiter, async (request, response, next) => {
+    const configuredToken = options.adminToken ?? process.env.ADMIN_TOKEN;
+    if (!adminTokenMatches(request, configuredToken)) {
+      response.status(401).json({ error: "Unauthorized." });
+      return;
+    }
+    const postId = Number.parseInt(request.params.id, 10);
+    if (!Number.isSafeInteger(postId) || postId < 1) {
+      response.status(400).json({ error: "Invalid post ID." });
+      return;
+    }
+    try {
+      const result = await run(database, "DELETE FROM request_posts WHERE id = ?", [postId]);
+      if (!result.changes) {
+        response.status(404).json({ error: "Post not found." });
+        return;
+      }
+      response.json({ success: true, id: postId });
     } catch (error) {
       next(error);
     }
@@ -895,7 +1343,11 @@ function createApp(options = {}) {
       }
       const updated = await get(
         database,
-        `SELECT r.*, COUNT(v.voter_id) AS vote_count, 0 AS voted
+        `SELECT r.*, COUNT(v.voter_id) AS vote_count, 0 AS voted,
+          (SELECT COUNT(*) FROM request_posts p
+           WHERE p.request_id = r.id AND p.moderation_status = 'published') AS discussion_count,
+          (SELECT COUNT(*) FROM request_posts p
+           WHERE p.request_id = r.id AND p.moderation_status = 'pending') AS pending_post_count
          FROM package_requests r LEFT JOIN votes v ON v.request_id = r.id
          WHERE r.id = ? GROUP BY r.id`,
         [requestId],
