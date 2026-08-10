@@ -61,6 +61,8 @@ Public attribution is optional. Your contact email is never shown by the public 
 
 Yes, if you sign in with GitHub before submitting it. GitHub is used only to establish ownership; the package-request application does not request repository access or private email access. Open **My submissions** on the package-request page to edit the package description, use case, upstream URL, testing availability, and requester details. Package name and ecosystem become maintainer-controlled after initial review, while status, votes, maintainer notes, and published artifacts are always maintainer-controlled. Existing requests can be attached to a GitHub account by an administrator after that user has signed in once.
 
+An owner can also permanently delete their request while it remains **Proposed**. Once maintainer review has begun, ask a maintainer to withdraw or delete it so that votes, discussion, and project history are handled deliberately.
+
 ### How can I recognize an official update?
 
 Updates posted through the maintainer console are labeled **Verified maintainer**. Community posts can provide valuable evidence and coordination, but they do not represent a project decision unless a maintainer or the TSC confirms that decision through the normal governance process.

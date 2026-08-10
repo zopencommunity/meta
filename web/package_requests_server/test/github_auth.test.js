@@ -191,6 +191,36 @@ test("uses GitHub identity to own and edit package requests and discussion posts
   assert.equal(assignOwnerResponse.status, 200);
   assert.equal((await assignOwnerResponse.json()).request.ownerGithubLogin, "octo-zopen");
 
+  const acceptResponse = await fetch(`${baseUrl}/api/requests/${created.id}`, {
+    method: "PATCH",
+    headers: { Authorization: "Bearer test-admin-token", "Content-Type": "application/json" },
+    body: JSON.stringify({ status: "accepted" }),
+  });
+  assert.equal(acceptResponse.status, 200);
+  const protectedDeleteResponse = await fetch(`${baseUrl}/api/me/requests/${created.id}`, {
+    method: "DELETE",
+    headers: { Cookie: sessionCookie },
+  });
+  assert.equal(protectedDeleteResponse.status, 409);
+
+  const deleteTargetResponse = await fetch(`${baseUrl}/api/requests`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Cookie: sessionCookie },
+    body: JSON.stringify({ packageName: "Owner Delete Target", ecosystem: "general", description: "OK" }),
+  });
+  const deleteTarget = (await deleteTargetResponse.json()).request;
+  const anonymousDeleteResponse = await fetch(`${baseUrl}/api/me/requests/${deleteTarget.id}`, { method: "DELETE" });
+  assert.equal(anonymousDeleteResponse.status, 401);
+  const ownerDeleteResponse = await fetch(`${baseUrl}/api/me/requests/${deleteTarget.id}`, {
+    method: "DELETE",
+    headers: { Cookie: sessionCookie },
+  });
+  assert.deepEqual(await ownerDeleteResponse.json(), {
+    success: true,
+    id: deleteTarget.id,
+    packageName: "Owner Delete Target",
+  });
+
   const logoutResponse = await fetch(`${baseUrl}/api/auth/logout`, {
     method: "POST",
     headers: { Cookie: sessionCookie },

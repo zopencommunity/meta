@@ -1187,6 +1187,39 @@ function createApp(options = {}) {
     }
   });
 
+  app.delete("/api/me/requests/:id", ownerEditLimiter, async (request, response, next) => {
+    if (!request.authUser) {
+      response.status(401).json({ error: "Sign in with GitHub to delete a package request." });
+      return;
+    }
+    const requestId = Number.parseInt(request.params.id, 10);
+    if (!Number.isSafeInteger(requestId) || requestId < 1) {
+      response.status(400).json({ error: "Invalid package request ID." });
+      return;
+    }
+    try {
+      const existing = await get(
+        database,
+        "SELECT id, package_name, status, github_user_id FROM package_requests WHERE id = ?",
+        [requestId],
+      );
+      if (!existing || Number(existing.github_user_id) !== request.authUser.id) {
+        response.status(404).json({ error: "Package request not found." });
+        return;
+      }
+      if (existing.status !== "proposed") {
+        response.status(409).json({
+          error: "Only Proposed requests can be deleted by their owner. Ask a maintainer to withdraw this request.",
+        });
+        return;
+      }
+      await run(database, "DELETE FROM package_requests WHERE id = ? AND github_user_id = ?", [requestId, request.authUser.id]);
+      response.json({ success: true, id: requestId, packageName: existing.package_name });
+    } catch (error) {
+      next(error);
+    }
+  });
+
   app.get("/api/admin/requests", adminLimiter, async (request, response, next) => {
     const configuredToken = options.adminToken ?? process.env.ADMIN_TOKEN;
     if (!adminTokenMatches(request, configuredToken)) {

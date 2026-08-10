@@ -136,7 +136,7 @@ the root login once the initial deployment is complete.
 - `PATCH` or `DELETE /api/admin/posts/:id` with `Authorization: Bearer <ADMIN_TOKEN>`
 - `GET /api/auth/config`, `GET /api/auth/me`, and `POST /api/auth/logout`
 - `GET /api/auth/github` and `GET /api/auth/github/callback`
-- `GET /api/me/submissions` and `PATCH /api/me/requests/:id` with a GitHub session
+- `GET /api/me/submissions` and `PATCH` or `DELETE /api/me/requests/:id` with a GitHub session
 - `POST /api/me/votes/claim` with a GitHub session to migrate this browser's guest votes
 - `GET /api/admin/pulp` with `Authorization: Bearer <ADMIN_TOKEN>`
 - `POST /api/admin/pulp/sync` with `Authorization: Bearer <ADMIN_TOKEN>`
@@ -226,6 +226,9 @@ discussion posts retain their browser-held edit token. When GitHub OAuth is
 configured, a signed-in user's new package requests and discussion contributions
 are linked to GitHub's durable numeric user ID. The user can then view **My
 submissions** and edit those items from any browser where they sign in.
+Owners may permanently delete their own requests while they remain **Proposed**.
+After maintainer review begins, deletion is restricted to administrators so that
+community votes, discussion, and project history are not removed unexpectedly.
 
 The OAuth App requests identity only: the authorization request has no repository
 or private-email scopes. The server exchanges the short-lived authorization code,

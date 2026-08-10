@@ -764,6 +764,33 @@ async function saveRequestEdit(request: PackageRequest) {
   }
 }
 
+async function deleteOwnedRequest(request: PackageRequest) {
+  const confirmation = window.prompt(
+    `Permanently delete this request, its votes, and its discussion?\n\nType "${request.packageName}" to confirm.`,
+  );
+  if (confirmation === null) return;
+  if (confirmation.trim() !== request.packageName) {
+    requestEditError.value = "Package name did not match. Nothing was deleted.";
+    return;
+  }
+  requestEditBusy.value = true;
+  requestEditError.value = "";
+  try {
+    await apiRequest(`/me/requests/${request.id}`, { method: "DELETE", body: "{}" });
+    for (const post of ownPostsByRequest[request.id] || []) removePostToken(post.id);
+    delete ownPostsByRequest[request.id];
+    delete activityByRequest[request.id];
+    githubOwnedPosts.value = githubOwnedPosts.value.filter((post) => post.requestId !== request.id);
+    requests.value = requests.value.filter((item) => item.id !== request.id);
+    editingRequestId.value = null;
+    successMessage.value = `${request.packageName} was deleted.`;
+  } catch (error) {
+    requestEditError.value = error instanceof Error ? error.message : "The request could not be deleted.";
+  } finally {
+    requestEditBusy.value = false;
+  }
+}
+
 async function changeSort() {
   await loadRequests();
 }
@@ -1447,6 +1474,13 @@ onMounted(async () => {
               <label class="checkbox-label"><input v-model="requestEditForm.showRequesterPublicly" type="checkbox" /><span>Show my name and organization publicly.</span></label>
               <p v-if="requestEditError" class="notice error" role="alert">{{ requestEditError }}</p>
               <div class="form-actions">
+                <button
+                  v-if="request.status === 'proposed'"
+                  class="danger-button compact"
+                  type="button"
+                  :disabled="requestEditBusy"
+                  @click="deleteOwnedRequest(request)"
+                >Delete request</button>
                 <button class="secondary-button compact" type="button" @click="editingRequestId = null">Cancel</button>
                 <button class="primary-button compact" type="submit" :disabled="requestEditBusy">{{ requestEditBusy ? "Saving…" : "Save changes" }}</button>
               </div>
@@ -1635,6 +1669,9 @@ onMounted(async () => {
 .secondary-button { color: var(--vp-c-text-1); border-color: var(--vp-c-divider); background: var(--vp-c-bg); }
 .secondary-button:hover { border-color: var(--request-accent); color: var(--request-accent); }
 .primary-button.compact, .secondary-button.compact { min-height: 38px; padding: 0 14px; font-size: 14px; }
+.danger-button { display:inline-flex; min-height:44px; align-items:center; justify-content:center; padding:0 20px; border:1px solid var(--vp-c-danger-2); border-radius:10px; color:var(--vp-c-danger-1); background:var(--vp-c-danger-soft); font:inherit; font-weight:650; cursor:pointer; }
+.danger-button.compact { min-height:38px; padding:0 14px; font-size:14px; }
+.danger-button:disabled { cursor:not-allowed; opacity:.55; }
 .request-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; overflow: hidden; border: 1px solid var(--vp-c-divider); border-radius: 16px; background: var(--vp-c-divider); box-shadow: var(--vp-shadow-2); }
 .request-stats div { display: flex; min-height: 126px; flex-direction: column; align-items: center; justify-content: center; background: color-mix(in srgb, var(--vp-c-bg) 92%, transparent); }
 .request-stats strong { font-size: 34px; letter-spacing: -.03em; }

@@ -573,6 +573,7 @@ onMounted(async () => {
               <label><span>Contact email (private)</span><input v-model.trim="request.contactEmail" type="email" maxlength="254" /></label>
               <label><span>Public requester attribution</span><select v-model="request.showRequesterPublicly"><option :value="false">Hidden</option><option :value="true">Show name and organization</option></select></label>
               <label><span>GitHub owner login</span><input v-model.trim="request.ownerGithubLogin" maxlength="80" placeholder="Must sign in once before assignment" /></label>
+              <p v-if="request.ownerGithubId" class="github-owner-id">GitHub user ID: <code>{{ request.ownerGithubId }}</code></p>
               <label><span>Status</span><select v-model="request.status"><option v-for="(label, key) in statuses" :key="key" :value="key">{{ label }}</option></select></label>
               <label><span>Published artifact type</span><select v-model="request.artifactKind"><option v-for="(label, key) in artifacts" :key="key" :value="key">{{ label }}</option></select></label>
               <label><span>zopen port repository URL</span><input v-model.trim="request.portRepositoryUrl" type="url" placeholder="https://github.com/zopencommunity/exampleport" /></label>
@@ -692,6 +693,7 @@ details { border-top:1px solid var(--vp-c-divider); }
 details > summary { padding:13px 20px; color:var(--vp-c-brand-1); font-size:13px; font-weight:700; cursor:pointer; }
 .editor { display:grid; grid-template-columns:1fr 1fr; gap:16px; padding:6px 20px 22px; }
 .editor label > span { display:block; margin-bottom:6px; color:var(--vp-c-text-2); font-size:12px; font-weight:700; }
+.github-owner-id { align-self:end; margin:0 0 10px; color:var(--vp-c-text-2); font-size:12px; }
 .wide,.editor-actions { grid-column:1/-1; }
 .editor-actions { justify-content:flex-end; align-items:center; gap:12px; }
 .maintainer-composer { padding:18px 20px 22px; border-top:1px solid var(--vp-c-divider); background:var(--vp-c-bg); }
