@@ -58,7 +58,11 @@ Optional:
                         primary and is what gets installed into the package;
                         every version's wheel is published. The build fails
                         before compiling if any cannot be located or reports a
-                        different version. Defaults to the active python.
+                        different version. Defaults to '3.12 3.13 3.14',
+                        narrowed to whichever of those are installed; if none
+                        are, the active python is used. That narrowing applies
+                        only to the default -- versions named here must all be
+                        present.
   ZOPEN_PYTHON_<M>_<m>  Python build system only. Path to the Python <M>.<m>
                         interpreter, e.g. ZOPEN_PYTHON_3_12, as exported by
                         check_python. Consulted first when resolving a version
@@ -350,8 +354,14 @@ setDefaults()
 #
 # Left unset, everything runs against the active `python` exactly as before.
 
+# Built when a port declares nothing. Narrowed at startup to the interpreters
+# the system actually has, so this is the matrix we would like rather than one
+# every build machine is required to provide.
+ZOPEN_PYTHON_DEFAULT_VERSIONS="3.12 3.13 3.14"
+
 # Echo the declared versions, or the sentinel "default" meaning "whatever
-# python is on PATH" -- which keeps single-interpreter ports unchanged.
+# python is on PATH" -- reached only when none of the default versions are
+# installed, which keeps a single-interpreter system building as before.
 _zopen_python_versions() {
   if [ -z "${ZOPEN_PYTHON_VERSIONS}" ]; then
     echo "default"
@@ -416,6 +426,24 @@ _zopen_python_interpreter_path() {
   done
 
   return 1
+}
+
+# Narrow a version list to those with an interpreter that is present AND
+# reports the version asked for. Used only for the default set: a version the
+# system does not have is dropped quietly, whereas one a port names explicitly
+# is an error -- see _zopen_python_verify_interpreters. Because the survivors
+# have already been run and checked here, verification of a defaulted set can
+# never fail.
+_zopen_python_available_from() {
+  _pa_out=""
+  for _pa in $1; do
+    _pa_path=$(_zopen_python_interpreter_path "${_pa}" 2> /dev/null)
+    [ -n "${_pa_path}" ] || continue
+    _pa_ver=$("${_pa_path}" -c 'import sys; print("%d.%d" % sys.version_info[:2])' 2> /dev/null)
+    [ "${_pa_ver}" = "${_pa}" ] || continue
+    _pa_out="${_pa_out}${_pa_out:+ }${_pa}"
+  done
+  echo "${_pa_out}"
 }
 
 # Verify every declared interpreter exists and reports the version it claims,
@@ -584,10 +612,17 @@ _zopen_python_retag_wheel() {
       continue
     fi
 
-    _whl_pytag=$(python -c 'import sys; print("cp%d%d" % sys.version_info[:2])' 2> /dev/null)
+    # Take the interpreter tag from the wheel itself rather than from whichever
+    # interpreter happens to be active. The filename records what the wheel was
+    # actually compiled against, so it stays correct however this loop is
+    # reached -- on a later pass, out of order, or over a dist/ holding several
+    # versions at once. Stamping the active tag instead would relabel another
+    # version's extension, and pip would then install it on a runtime whose ABI
+    # it does not match.
+    _whl_pytag=$(echo "${_whl_base}" | awk -F- 'NF>=5 {print $(NF-2)}')
     if [ -z "${_whl_pytag}" ]; then
-      printWarning "Could not determine the interpreter tag; leaving wheel tags unchanged"
-      return 0
+      printWarning "Could not read the interpreter tag from $(basename "${_whl}"); leaving its tags unchanged"
+      continue
     fi
 
     printInfo "Retagging $(basename "${_whl}") as ${_whl_pytag}-none-any"
@@ -1170,6 +1205,30 @@ checkEnv()
   fi
 
   if [ "${ZOPEN_BUILD_SYSTEM}" = "Python" ]; then
+    # Build the whole supported matrix unless the port asked for something
+    # else, narrowed to the interpreters this system has. Declaring
+    # ZOPEN_PYTHON_VERSIONS keeps the strict contract: every version named must
+    # be present, or the build stops before compiling. Defaulting cannot make
+    # that promise -- most systems carry only one Python -- so absent versions
+    # are dropped here instead of failing every Python port that never opted in.
+    if [ -z "${ZOPEN_PYTHON_VERSIONS}" ]; then
+      _pv_have=$(_zopen_python_available_from "${ZOPEN_PYTHON_DEFAULT_VERSIONS}")
+      if [ -n "${_pv_have}" ]; then
+        export ZOPEN_PYTHON_VERSIONS="${_pv_have}"
+        printInfo "Building wheels for Python: ${ZOPEN_PYTHON_VERSIONS}"
+        _pv_skip=""
+        for _pv_d in ${ZOPEN_PYTHON_DEFAULT_VERSIONS}; do
+          case " ${_pv_have} " in
+            *" ${_pv_d} "*) ;;
+            *) _pv_skip="${_pv_skip} ${_pv_d}" ;;
+          esac
+        done
+        [ -n "${_pv_skip}" ] && printInfo "Not installed, so not built:${_pv_skip}"
+      else
+        printVerbose "None of the default Python versions are installed; using the active python"
+      fi
+    fi
+
     # Set defaults using := so user overrides from buildenv are preserved
     : "${ZOPEN_CONFIGURE:=skip}"
     : "${ZOPEN_MAKE:=_zopen_python_build}"
