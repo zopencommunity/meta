@@ -34,6 +34,7 @@ jobs:
           curl -fsSL "$UPSTREAM/docs/upstreamstatus.md"          -o docs/upstreamstatus.md
           curl -fsSL "$UPSTREAM/docs/newly_released.md"          -o docs/newly_released.md  || true
           curl -fsSL "$UPSTREAM/docs/Progress.md"                -o docs/Progress.md        || true
+          curl -fsSL "$UPSTREAM/docs/Guides/ToolsGuildMeetingLinks.md" -o docs/Guides/ToolsGuildMeetingLinks.md || true
 
           # Generated progress/quality chart images
           curl -fsSL "$UPSTREAM/docs/images/progress.png"             -o docs/images/progress.png          || true
@@ -49,6 +50,7 @@ jobs:
           curl -fsSL "$UPSTREAM/docs/api/zopen_releases.json"          -o docs/api/zopen_releases.json
           curl -fsSL "$UPSTREAM/docs/api/zopen_releases_latest.json"   -o docs/api/zopen_releases_latest.json
           curl -fsSL "$UPSTREAM/docs/api/zopen_vulnerability.json"     -o docs/api/zopen_vulnerability.json
+          curl -fsSL "$UPSTREAM/docs/api/guild_meetings.json"          -o docs/api/guild_meetings.json        || true
 
       - name: Commit and push if anything changed
         run: |
@@ -60,6 +62,7 @@ jobs:
                   docs/upstreamstatus.md \
                   docs/newly_released.md \
                   docs/Progress.md \
+                  docs/Guides/ToolsGuildMeetingLinks.md \
                   docs/images/progress.png \
                   docs/images/progress_summary.png \
                   docs/images/quality_part_1.png \
@@ -70,7 +73,8 @@ jobs:
                   docs/api/zopen_files.json \
                   docs/api/zopen_releases.json \
                   docs/api/zopen_releases_latest.json \
-                  docs/api/zopen_vulnerability.json
+                  docs/api/zopen_vulnerability.json \
+                  docs/api/guild_meetings.json
           if git diff --cached --quiet; then
             echo "No changes to commit."
           else
