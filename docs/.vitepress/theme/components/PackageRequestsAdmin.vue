@@ -15,6 +15,7 @@ interface AdminRequest {
   organization: string;
   contactEmail: string;
   showRequesterPublicly: boolean;
+  showGithubPublicly: boolean;
   status: RequestStatus;
   portRepositoryUrl: string;
   artifactKind: string;
@@ -349,6 +350,7 @@ async function saveRequest(request: AdminRequest) {
         organization: request.organization,
         contactEmail: request.contactEmail,
         showRequesterPublicly: request.showRequesterPublicly,
+        showGithubPublicly: request.showGithubPublicly,
         ownerGithubLogin: request.ownerGithubLogin,
         status: request.status,
         portRepositoryUrl: request.portRepositoryUrl,
@@ -573,6 +575,7 @@ onMounted(async () => {
               <label><span>Contact email (private)</span><input v-model.trim="request.contactEmail" type="email" maxlength="254" /></label>
               <label><span>Public requester attribution</span><select v-model="request.showRequesterPublicly"><option :value="false">Hidden</option><option :value="true">Show name and organization</option></select></label>
               <label><span>GitHub owner login</span><input v-model.trim="request.ownerGithubLogin" maxlength="80" placeholder="Must sign in once before assignment" /></label>
+              <label><span>Public GitHub attribution</span><select v-model="request.showGithubPublicly"><option :value="false">Hidden</option><option :value="true">Show linked GitHub login</option></select></label>
               <p v-if="request.ownerGithubId" class="github-owner-id">GitHub user ID: <code>{{ request.ownerGithubId }}</code></p>
               <label><span>Status</span><select v-model="request.status"><option v-for="(label, key) in statuses" :key="key" :value="key">{{ label }}</option></select></label>
               <label><span>Published artifact type</span><select v-model="request.artifactKind"><option v-for="(label, key) in artifacts" :key="key" :value="key">{{ label }}</option></select></label>

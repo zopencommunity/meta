@@ -54,9 +54,16 @@ test("uses GitHub identity to own and edit package requests and discussion posts
   const guestRequestResponse = await fetch(`${baseUrl}/api/requests`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ packageName: "Guest Vote Claim", ecosystem: "general", description: "OK" }),
+    body: JSON.stringify({
+      packageName: "Guest Vote Claim",
+      ecosystem: "general",
+      description: "OK",
+      showGithubPublicly: true,
+    }),
   });
   const guestRequest = (await guestRequestResponse.json()).request;
+  assert.equal(guestRequest.showGithubPublicly, false);
+  assert.equal(guestRequest.githubRequester, null);
   const guestVoteResponse = await fetch(`${baseUrl}/api/requests/${guestRequest.id}/vote`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
@@ -124,11 +131,26 @@ test("uses GitHub identity to own and edit package requests and discussion posts
   const createResponse = await fetch(`${baseUrl}/api/requests`, {
     method: "POST",
     headers: { "Content-Type": "application/json", Cookie: sessionCookie },
-    body: JSON.stringify({ packageName: "GitHub Owned", ecosystem: "go", description: "OK" }),
+    body: JSON.stringify({
+      packageName: "GitHub Owned",
+      ecosystem: "go",
+      description: "OK",
+      showGithubPublicly: true,
+    }),
   });
   assert.equal(createResponse.status, 201);
   const created = (await createResponse.json()).request;
   assert.equal(created.ownedByCurrentUser, true);
+  assert.deepEqual(created.githubRequester, {
+    login: "octo-zopen",
+    profileUrl: "https://github.com/octo-zopen",
+  });
+  const publicOwnedResponse = await fetch(`${baseUrl}/api/requests`);
+  const publicOwned = (await publicOwnedResponse.json()).requests.find((item) => item.id === created.id);
+  assert.deepEqual(publicOwned.githubRequester, {
+    login: "octo-zopen",
+    profileUrl: "https://github.com/octo-zopen",
+  });
 
   const anonymousEdit = await fetch(`${baseUrl}/api/me/requests/${created.id}`, {
     method: "PATCH",

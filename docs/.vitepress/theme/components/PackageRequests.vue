@@ -23,6 +23,8 @@ interface PackageRequest {
   requesterName: string;
   organization: string;
   showRequesterPublicly: boolean;
+  showGithubPublicly: boolean;
+  githubRequester: { login: string; profileUrl: string } | null;
   upstreamUrl: string;
   description: string;
   useCase: string;
@@ -140,6 +142,7 @@ const form = reactive({
   organization: "",
   contactEmail: "",
   showRequesterPublicly: false,
+  showGithubPublicly: false,
 });
 
 const bulkForm = reactive({
@@ -150,6 +153,7 @@ const bulkForm = reactive({
   organization: "",
   contactEmail: "",
   showRequesterPublicly: false,
+  showGithubPublicly: false,
 });
 
 const postForm = reactive({
@@ -173,6 +177,7 @@ const requestEditForm = reactive({
   organization: "",
   contactEmail: "",
   showRequesterPublicly: false,
+  showGithubPublicly: false,
 });
 
 const statuses: Record<RequestStatus, { label: string; detail: string }> = {
@@ -512,6 +517,8 @@ async function loadAuthentication() {
     const result = await apiRequest("/auth/me");
     authUser.value = result.user || null;
     if (authUser.value) {
+      form.showGithubPublicly = true;
+      bulkForm.showGithubPublicly = true;
       try {
         await apiRequest("/me/votes/claim", {
           method: "POST",
@@ -741,6 +748,7 @@ function startEditingRequest(request: PackageRequest) {
   requestEditForm.organization = request.organization || "";
   requestEditForm.contactEmail = request.contactEmail || "";
   requestEditForm.showRequesterPublicly = request.showRequesterPublicly;
+  requestEditForm.showGithubPublicly = request.showGithubPublicly;
   requestAnimationFrame(() => document.querySelector<HTMLElement>(`#edit-package-request-${request.id} textarea`)?.focus());
 }
 
@@ -857,6 +865,7 @@ function resetBulkForm() {
   bulkForm.organization = "";
   bulkForm.contactEmail = "";
   bulkForm.showRequesterPublicly = false;
+  bulkForm.showGithubPublicly = Boolean(authUser.value);
 }
 
 function removeBulkRow(index: number) {
@@ -897,6 +906,7 @@ async function submitBulkRequests() {
         organization: bulkForm.organization,
         contactEmail: bulkForm.contactEmail,
         showRequesterPublicly: bulkForm.showRequesterPublicly,
+        showGithubPublicly: bulkForm.showGithubPublicly,
         requests: readyBulkRows.value.map((row) => ({
           packageName: row.packageName,
           ecosystem: row.ecosystem,
@@ -950,6 +960,7 @@ async function submitRequest() {
     form.organization = "";
     form.contactEmail = "";
     form.showRequesterPublicly = false;
+    form.showGithubPublicly = Boolean(authUser.value);
     formOpen.value = false;
     successMessage.value = `${result.request.packageName} was added. You can now vote for it and share this page.`;
     document.querySelector(".package-requests")?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -1137,6 +1148,10 @@ onMounted(async () => {
             <input v-model="form.showRequesterPublicly" type="checkbox" />
             <span>Show my name and organization on the public request.</span>
           </label>
+          <label v-if="authUser" class="checkbox-label">
+            <input v-model="form.showGithubPublicly" type="checkbox" />
+            <span>Show “Submitted by @{{ authUser.login }}” with a link to my GitHub profile.</span>
+          </label>
         </fieldset>
         <p v-if="submitError" class="notice error" role="alert">{{ submitError }}</p>
         <div class="form-actions">
@@ -1310,6 +1325,10 @@ onMounted(async () => {
             <input v-model="bulkForm.showRequesterPublicly" type="checkbox" />
             <span>Show my name and organization on the public requests.</span>
           </label>
+          <label v-if="authUser" class="checkbox-label">
+            <input v-model="bulkForm.showGithubPublicly" type="checkbox" />
+            <span>Show “Submitted by @{{ authUser.login }}” with a link to my GitHub profile.</span>
+          </label>
         </fieldset>
 
         <p v-if="bulkError" class="notice error" role="alert">{{ bulkError }}</p>
@@ -1429,6 +1448,10 @@ onMounted(async () => {
               <span v-if="request.requesterName || request.organization">
                 Requested by {{ [request.requesterName, request.organization].filter(Boolean).join(" · ") }}
               </span>
+              <span v-if="request.githubRequester">
+                Submitted by
+                <a :href="request.githubRequester.profileUrl" target="_blank" rel="noopener noreferrer">@{{ request.githubRequester.login }} ↗</a>
+              </span>
               <span>Requested {{ new Date(request.createdAt).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" }) }}</span>
             </div>
 
@@ -1472,6 +1495,7 @@ onMounted(async () => {
               <label><span>Contact email <small>Private—maintainers only</small></span><input v-model.trim="requestEditForm.contactEmail" type="email" maxlength="254" /></label>
               <label class="checkbox-label"><input v-model="requestEditForm.canHelpTest" type="checkbox" /><span>I may be able to help test this package.</span></label>
               <label class="checkbox-label"><input v-model="requestEditForm.showRequesterPublicly" type="checkbox" /><span>Show my name and organization publicly.</span></label>
+              <label class="checkbox-label"><input v-model="requestEditForm.showGithubPublicly" type="checkbox" /><span>Show my GitHub account as the submitter.</span></label>
               <p v-if="requestEditError" class="notice error" role="alert">{{ requestEditError }}</p>
               <div class="form-actions">
                 <button

@@ -230,6 +230,12 @@ Owners may permanently delete their own requests while they remain **Proposed**.
 After maintainer review begins, deletion is restricted to administrators so that
 community votes, discussion, and project history are not removed unexpectedly.
 
+Signed-in requesters can also opt to show **Submitted by @username** on a request,
+linked to their public GitHub profile. This is enabled by default for new signed-in
+submissions, but can be turned off before submission or later from **Edit request**.
+It is separate from the name-and-organization visibility setting. The durable
+numeric GitHub ID and contact email are never included in the public API response.
+
 The OAuth App requests identity only: the authorization request has no repository
 or private-email scopes. The server exchanges the short-lived authorization code,
 reads the authenticated public GitHub profile, then discards the GitHub access

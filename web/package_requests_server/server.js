@@ -109,6 +109,7 @@ async function initializeDatabase(database) {
       organization TEXT NOT NULL DEFAULT '',
       contact_email TEXT NOT NULL DEFAULT '',
       show_requester_publicly INTEGER NOT NULL DEFAULT 0 CHECK (show_requester_publicly IN (0, 1)),
+      show_github_publicly INTEGER NOT NULL DEFAULT 0 CHECK (show_github_publicly IN (0, 1)),
       github_user_id INTEGER,
       upstream_url TEXT NOT NULL,
       description TEXT NOT NULL,
@@ -134,6 +135,7 @@ async function initializeDatabase(database) {
     ["organization", "TEXT NOT NULL DEFAULT ''"],
     ["contact_email", "TEXT NOT NULL DEFAULT ''"],
     ["show_requester_publicly", "INTEGER NOT NULL DEFAULT 0"],
+    ["show_github_publicly", "INTEGER NOT NULL DEFAULT 0"],
     ["github_user_id", "INTEGER"],
   ];
   for (const [columnName, definition] of migrations) {
@@ -475,6 +477,7 @@ function validateSubmission(body) {
     organization: cleanText(source.organization, 160),
     contactEmail: cleanText(source.contactEmail, 254),
     showRequesterPublicly: Boolean(source.showRequesterPublicly),
+    showGithubPublicly: Boolean(source.showGithubPublicly),
   };
   submission.normalizedName = normalizePackageName(submission.packageName);
 
@@ -502,9 +505,10 @@ async function insertSubmission(database, submission, githubUserId = null) {
     database,
     `INSERT INTO package_requests (
       package_name, normalized_name, ecosystem, upstream_url, description, use_case,
-      can_help_test, requester_name, organization, contact_email, show_requester_publicly, github_user_id,
+      can_help_test, requester_name, organization, contact_email, show_requester_publicly,
+      show_github_publicly, github_user_id,
       status, created_at, updated_at
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'proposed', ?, ?)`,
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'proposed', ?, ?)`,
     [
       submission.packageName,
       submission.normalizedName,
@@ -517,6 +521,7 @@ async function insertSubmission(database, submission, githubUserId = null) {
       submission.organization,
       submission.contactEmail,
       submission.showRequesterPublicly ? 1 : 0,
+      submission.showGithubPublicly && githubUserId ? 1 : 0,
       githubUserId,
       now,
       now,
@@ -524,7 +529,9 @@ async function insertSubmission(database, submission, githubUserId = null) {
   );
   const row = await get(
     database,
-    "SELECT *, 0 AS vote_count, 0 AS voted FROM package_requests WHERE id = ?",
+    `SELECT r.*, 0 AS vote_count, 0 AS voted,
+      (SELECT login FROM github_users user WHERE user.github_user_id = r.github_user_id) AS owner_github_login
+     FROM package_requests r WHERE r.id = ?`,
     [result.id],
   );
   return mapRequest(row, Boolean(githubUserId), githubUserId);
@@ -549,6 +556,13 @@ function mapRequest(row, includePrivate = false, currentGithubUserId = null) {
     requesterName: includePrivate || showRequester ? row.requester_name || "" : "",
     organization: includePrivate || showRequester ? row.organization || "" : "",
     showRequesterPublicly: showRequester,
+    showGithubPublicly: Boolean(row.show_github_publicly),
+    githubRequester: Boolean(row.show_github_publicly) && row.owner_github_login
+      ? {
+          login: row.owner_github_login,
+          profileUrl: `https://github.com/${encodeURIComponent(row.owner_github_login)}`,
+        }
+      : null,
     status: row.status,
     voteCount: Number(row.vote_count || 0),
     voted: Boolean(row.voted),
@@ -842,6 +856,7 @@ function createApp(options = {}) {
       const rows = await all(
         database,
         `SELECT r.*,
+          (SELECT login FROM github_users user WHERE user.github_user_id = r.github_user_id) AS owner_github_login,
           (SELECT COUNT(*) FROM votes anonymous_vote WHERE anonymous_vote.request_id = r.id) +
           (SELECT COUNT(*) FROM github_votes github_vote WHERE github_vote.request_id = r.id) AS vote_count,
           (SELECT COUNT(*) FROM request_posts post
@@ -1073,6 +1088,7 @@ function createApp(options = {}) {
         all(
           database,
           `SELECT r.*,
+            (SELECT login FROM github_users user WHERE user.github_user_id = r.github_user_id) AS owner_github_login,
             (SELECT COUNT(*) FROM votes anonymous_vote WHERE anonymous_vote.request_id = r.id) +
             (SELECT COUNT(*) FROM github_votes github_vote WHERE github_vote.request_id = r.id) AS vote_count,
             0 AS voted,
@@ -1131,6 +1147,7 @@ function createApp(options = {}) {
         organization: request.body?.organization ?? existing.organization,
         contactEmail: request.body?.contactEmail ?? existing.contact_email,
         showRequesterPublicly: request.body?.showRequesterPublicly ?? Boolean(existing.show_requester_publicly),
+        showGithubPublicly: request.body?.showGithubPublicly ?? Boolean(existing.show_github_publicly),
       });
       if (validated.error) {
         response.status(400).json({ error: validated.error });
@@ -1141,7 +1158,7 @@ function createApp(options = {}) {
         database,
         `UPDATE package_requests SET package_name = ?, normalized_name = ?, ecosystem = ?, upstream_url = ?,
           description = ?, use_case = ?, can_help_test = ?, requester_name = ?, organization = ?,
-          contact_email = ?, show_requester_publicly = ?, updated_at = ?
+          contact_email = ?, show_requester_publicly = ?, show_github_publicly = ?, updated_at = ?
          WHERE id = ? AND github_user_id = ?`,
         [
           validated.submission.packageName,
@@ -1155,6 +1172,7 @@ function createApp(options = {}) {
           validated.submission.organization,
           validated.submission.contactEmail,
           validated.submission.showRequesterPublicly ? 1 : 0,
+          validated.submission.showGithubPublicly ? 1 : 0,
           now,
           requestId,
           request.authUser.id,
@@ -1538,6 +1556,7 @@ function createApp(options = {}) {
       organization: body.organization,
       contactEmail: body.contactEmail,
       showRequesterPublicly: body.showRequesterPublicly,
+      showGithubPublicly: body.showGithubPublicly,
     };
     const commonDescription = cleanText(body.description, 1200);
     const commonCanHelpTest = Boolean(body.canHelpTest);
@@ -1731,6 +1750,9 @@ function createApp(options = {}) {
     const showRequesterPublicly = request.body.showRequesterPublicly === undefined
       ? null
       : Boolean(request.body.showRequesterPublicly);
+    const showGithubPublicly = request.body.showGithubPublicly === undefined
+      ? null
+      : Boolean(request.body.showGithubPublicly);
     const ownerGithubLoginProvided = Object.hasOwn(request.body || {}, "ownerGithubLogin");
     const ownerGithubLogin = ownerGithubLoginProvided ? cleanText(request.body.ownerGithubLogin, 80) : null;
     if (!Number.isSafeInteger(requestId) || requestId < 1 || !VALID_STATUSES.has(status)) {
@@ -1790,6 +1812,7 @@ function createApp(options = {}) {
       const effectiveOrganization = organization ?? existing.organization;
       const effectiveContactEmail = contactEmail ?? existing.contact_email;
       const effectiveShowRequesterPublicly = showRequesterPublicly ?? Boolean(existing.show_requester_publicly);
+      const effectiveShowGithubPublicly = showGithubPublicly ?? Boolean(existing.show_github_publicly);
       let effectiveGithubUserId = existing.github_user_id || null;
       if (ownerGithubLoginProvided) {
         if (!ownerGithubLogin) {
@@ -1828,7 +1851,7 @@ function createApp(options = {}) {
         `UPDATE package_requests SET
           package_name = ?, normalized_name = ?, ecosystem = ?, upstream_url = ?,
           description = ?, use_case = ?, can_help_test = ?, requester_name = ?,
-          organization = ?, contact_email = ?, show_requester_publicly = ?,
+          organization = ?, contact_email = ?, show_requester_publicly = ?, show_github_publicly = ?,
           status = ?, port_repository_url = ?, artifact_kind = ?, artifact_url = ?,
           maintainer_note = ?, acknowledged_at = ?, available_at = ?, github_user_id = ?, updated_at = ?
          WHERE id = ?`,
@@ -1844,6 +1867,7 @@ function createApp(options = {}) {
           effectiveOrganization,
           effectiveContactEmail,
           effectiveShowRequesterPublicly ? 1 : 0,
+          effectiveShowGithubPublicly ? 1 : 0,
           status,
           effectivePortRepositoryUrl,
           effectiveArtifactKind,
