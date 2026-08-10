@@ -56,9 +56,16 @@ Optional:
                         versions to build, test and publish a wheel for, most
                         significant first, e.g. '3.12 3.13'. The first is the
                         primary and is what gets installed into the package;
-                        every version's wheel is published. Each interpreter
-                        must be on PATH as python<version> or the build fails
-                        before compiling. Defaults to the active python.
+                        every version's wheel is published. The build fails
+                        before compiling if any cannot be located or reports a
+                        different version. Defaults to the active python.
+  ZOPEN_PYTHON_<M>_<m>  Python build system only. Path to the Python <M>.<m>
+                        interpreter, e.g. ZOPEN_PYTHON_3_12, as exported by
+                        check_python. Consulted first when resolving a version
+                        in ZOPEN_PYTHON_VERSIONS, because each Python installs
+                        under its own prefix and only one ends up on PATH.
+                        Falls back to python<M>.<m> on PATH, then to
+                        python3/python if either reports that version.
   ZOPEN_PYTHON_WHEEL_RETAG
                         Python build system only. Set to 'false' to keep the
                         default platform tag on compiled wheels instead of
@@ -469,6 +476,22 @@ _zopen_python_venv_dir() {
 
 _zopen_python_ensure_venv_for() {
   _pv_venv=$(_zopen_python_venv_dir "$1")
+
+  # Which interpreter .venv holds depends on which version is primary, so a
+  # tree built before ZOPEN_PYTHON_VERSIONS was reordered has one for the wrong
+  # version. Reusing it would rebuild that version's wheel and never produce
+  # the declared one, and nothing downstream would catch it: the check phase
+  # derives its tag from whichever interpreter is active, so the wrong wheel
+  # still matches. Only declared versions can be verified -- "default" has no
+  # expected version to compare against.
+  if [ -n "$1" ] && [ "$1" != "default" ] && [ -x "${_pv_venv}/bin/python" ]; then
+    _pv_have=$("${_pv_venv}/bin/python" -c 'import sys; print("%d.%d" % sys.version_info[:2])' 2> /dev/null)
+    if [ "${_pv_have}" != "$1" ]; then
+      printInfo "Discarding ${_pv_venv}: it has Python ${_pv_have:-unknown}, not ${1}"
+      rm -rf "${_pv_venv}"
+    fi
+  fi
+
   if [ ! -f "${_pv_venv}/bin/activate" ]; then
     printInfo "Creating Python virtual environment for ${1} in ${_pv_venv}..."
     "$(_zopen_python_interpreter_path "$1")" -m venv "${_pv_venv}" || return 1
@@ -487,16 +510,38 @@ _zopen_python_active_tag() {
   python -c 'import sys; print("cp%d%d" % sys.version_info[:2])' 2> /dev/null
 }
 
-# The wheel matching an interpreter tag, falling back to a pure Python wheel,
-# which is valid for every interpreter.
+# A pure Python wheel in dist/, if there is one: platform independent, so
+# valid for every interpreter. A retagged compiled wheel also ends in
+# -none-any, so match on the python tag rather than the suffix and skip cp3XY;
+# picking one up here would hand an interpreter another version's extension.
+# Matching the tag also covers the legacy py2.py3 spelling, which a plain
+# py3-none-any glob misses because the tag set is dot-separated.
+_zopen_python_pure_wheel() {
+  for _pw in dist/*-none-any.whl; do
+    [ -f "${_pw}" ] || continue
+    case "$(basename "${_pw}" .whl | awk -F- '{print $(NF-2)}')" in
+      cp*) continue ;;
+    esac
+    echo "${_pw}"
+    return 0
+  done
+  return 1
+}
+
+# The wheel matching an interpreter tag, falling back to a pure Python wheel.
+#
+# A compiled wheel is normally retagged to cp3XY-none-any, but it keeps its
+# native {python}-{abi}-{platform} triple when ZOPEN_PYTHON_WHEEL_RETAG=false,
+# so match that shape too -- otherwise disabling retagging leaves the check and
+# install phases with no wheel they can recognise.
 _zopen_python_wheel_for_tag() {
   for _pw in dist/*-"$1"-none-any.whl; do
     [ -f "${_pw}" ] && { echo "${_pw}"; return 0; }
   done
-  for _pw in dist/*-py3-none-any.whl; do
+  for _pw in dist/*-"$1"-*-*.whl; do
     [ -f "${_pw}" ] && { echo "${_pw}"; return 0; }
   done
-  return 1
+  _zopen_python_pure_wheel
 }
 
 # Retag a compiled wheel so it is not pinned to the z/OS release and machine
@@ -565,7 +610,14 @@ _zopen_python_retag_wheel() {
 # the publisher rejects as an immutable-filename conflict. Prefer the upstream
 # commit date; for tarball sources fall back to the mtime of the build
 # definition, which comes from the archive and survives re-extraction.
+#
+# $1 is the interpreter to stat with. This runs before any virtual environment
+# exists, so there is no activated python to inherit and a bare 'python' need
+# not be on PATH at all -- which is the whole reason interpreters are located
+# explicitly. Defaults to 'python' for ports that call this directly.
 _zopen_python_source_date_epoch() {
+  _sde_python="${1:-python}"
+
   if git rev-parse --git-dir > /dev/null 2>&1; then
     _sde=$(git log -1 --format=%ct 2> /dev/null)
     if [ -n "${_sde}" ]; then
@@ -576,7 +628,7 @@ _zopen_python_source_date_epoch() {
 
   for _sde_file in pyproject.toml setup.py setup.cfg; do
     if [ -f "${_sde_file}" ]; then
-      _sde=$(python -c 'import os,sys; print(int(os.stat(sys.argv[1]).st_mtime))' "${_sde_file}" 2> /dev/null)
+      _sde=$("${_sde_python}" -c 'import os,sys; print(int(os.stat(sys.argv[1]).st_mtime))' "${_sde_file}" 2> /dev/null)
       if [ -n "${_sde}" ]; then
         echo "${_sde}"
         return 0
@@ -593,7 +645,9 @@ _zopen_python_build() {
 
   # Respect an externally supplied value so a caller can pin it explicitly.
   if [ -z "${SOURCE_DATE_EPOCH}" ]; then
-    _sde_value=$(_zopen_python_source_date_epoch)
+    # Verification above has already established that the primary resolves.
+    _sde_interp=$(_zopen_python_interpreter_path "$(_zopen_python_primary_version)")
+    _sde_value=$(_zopen_python_source_date_epoch "${_sde_interp}")
     if [ -n "${_sde_value}" ]; then
       export SOURCE_DATE_EPOCH="${_sde_value}"
       printVerbose "Building with SOURCE_DATE_EPOCH=${SOURCE_DATE_EPOCH} for reproducible wheels"
@@ -631,9 +685,7 @@ _zopen_python_build() {
     fi
 
     if [ ${_zopen_python_build_rc} -eq 0 ]; then
-      for _pw in dist/*-py3-none-any.whl; do
-        [ -f "${_pw}" ] && _py_pure=true
-      done
+      _zopen_python_pure_wheel > /dev/null && _py_pure=true
     fi
 
     deactivate
