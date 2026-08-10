@@ -8,7 +8,7 @@
 * <span style="color:#f0c070">Yellow</span>: Some tests passing (>=50%)
 * <span style="color:#e88080">Red</span>: Few or no tests passing (<50%)
 * <span style="color:#b8bfca">Skipped</span>: Skipped or Tests are not enabled
-* <span style="color:#c9b8e8">Unreleased</span>: No official release yet
+* <span style="color:#c9b8e8">In Progress</span>: No official release yet
 
 ![Current Porting Status](./images/progress.png)
 

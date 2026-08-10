@@ -126,7 +126,7 @@ progressPerStatus = {
     "Yellow": 0,
     "Red": 0,
     "Skipped": 0,
-    "Unreleased": 0,
+    "In Progress": 0,
 }
 
 statusPerPort = {}
@@ -186,7 +186,7 @@ for package, releases in data['release_data'].items():
     
     totalReleases = repo.get_releases().totalCount
     if totalReleases == 0:
-        status = "Unreleased"
+        status = "In Progress"
         success_rate = -2
     else:
         status = get_status_color(passed_tests, total_tests, True)
@@ -269,6 +269,15 @@ except Exception as e:
     print(f"Warning: could not fetch org repo count: {e}", file=sys.stderr)
     total_org_repos = None
 
+# Correct the "In Progress" count using the authoritative org-wide total.
+# Packages with no releases never appear in zopen_releases_latest.json so they
+# are never iterated in the main loop above, leaving progressPerStatus["In Progress"]
+# under-counted (it only catches repos in the JSON that happen to have 0 API releases).
+# The true unreleased/in-progress count is the org total minus all released repos.
+_released_count = sum(v for k, v in progressPerStatus.items() if k != "In Progress")
+if total_org_repos is not None:
+    progressPerStatus["In Progress"] = max(0, total_org_repos - _released_count)
+
 # --- Matplotlib pie chart generation ---
 if any(progressPerStatus.values()):
     STATUS_COLORS = {
@@ -277,7 +286,7 @@ if any(progressPerStatus.values()):
         "Yellow":     "#f0c070",
         "Red":        "#e88080",
         "Skipped":    "#b8bfca",
-        "Unreleased": "#c9b8e8",
+        "In Progress": "#c9b8e8",
     }
 
     # Only include non-zero slices
@@ -286,7 +295,7 @@ if any(progressPerStatus.values()):
     sizes_pie   = [v for k, v in items]
     colors_pie  = [STATUS_COLORS.get(k, "#888888") for k, v in items]
     total       = sum(sizes_pie)
-    released    = total - progressPerStatus.get("Unreleased", 0)
+    released    = total - progressPerStatus.get("In Progress", 0)
 
     fig, ax = plt.subplots(figsize=(7, 5), facecolor='white')
     fig.subplots_adjust(left=0.0, right=0.6, top=0.9, bottom=0.05)
@@ -398,7 +407,7 @@ with open('docs/Progress.md', 'w') as f_progress:
     sys.stdout = f_progress
 
     # "X of Y" summary header
-    released_count = sum(v for k, v in progressPerStatus.items() if k != "Unreleased")
+    released_count = sum(v for k, v in progressPerStatus.items() if k != "In Progress")
     if total_org_repos is not None:
         unreleased_org = total_org_repos - released_count
         print(f"> **{released_count} of {total_org_repos}** packages in the zopen community have been released and are tracked here.")
@@ -412,7 +421,7 @@ with open('docs/Progress.md', 'w') as f_progress:
 * <span style="color:#f0c070">Yellow</span>: Some tests passing (>=50%)
 * <span style="color:#e88080">Red</span>: Few or no tests passing (<50%)
 * <span style="color:#b8bfca">Skipped</span>: Skipped or Tests are not enabled
-* <span style="color:#c9b8e8">Unreleased</span>: No official release yet
+* <span style="color:#c9b8e8">In Progress</span>: No official release yet
 
 ![Current Porting Status](./images/progress.png)
 """)
