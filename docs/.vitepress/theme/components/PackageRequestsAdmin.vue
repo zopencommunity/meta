@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref } from "vue";
+import { withBase } from "vitepress";
 
 type RequestStatus = "proposed" | "under_review" | "accepted" | "in_progress" | "available" | "declined";
 
@@ -28,6 +29,21 @@ interface AdminRequest {
   ownerGithubLogin: string;
   createdAt: string;
   acknowledgedAt: string | null;
+}
+
+interface RelationshipRequest {
+  id: number;
+  packageName: string;
+  ecosystem: string;
+  status: RequestStatus;
+}
+
+interface AdminRelationship {
+  id: number;
+  type: "depends_on" | "related_to" | "duplicate_of";
+  source: RelationshipRequest;
+  target: RelationshipRequest;
+  createdAt: string;
 }
 
 interface PulpMatch {
@@ -98,6 +114,9 @@ const moderationFilter = ref("pending");
 const moderationBusy = ref(false);
 const moderationMessage = ref("");
 const moderationError = ref(false);
+const relationships = ref<AdminRelationship[]>([]);
+const relationshipStates = reactive<Record<number, { message: string; error: boolean; busy: boolean }>>({});
+const relationshipDrafts = reactive<Record<number, { type: AdminRelationship["type"]; targetRequestId: string }>>({});
 const maintainerDrafts = reactive<Record<number, {
   kind: string;
   body: string;
@@ -180,6 +199,84 @@ async function loadRequests() {
   requests.value = result.requests;
 }
 
+async function loadRelationships() {
+  relationships.value = (await api("/admin/relationships")).relationships;
+}
+
+function relationshipDraft(requestId: number) {
+  relationshipDrafts[requestId] ||= { type: "depends_on", targetRequestId: "" };
+  return relationshipDrafts[requestId];
+}
+
+function requestDetailUrl(request: Pick<AdminRequest, "id" | "packageName">) {
+  const slug = request.packageName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  return withBase(`/PackageRequest?request=${request.id}-${slug}`);
+}
+
+function relationshipsFor(requestId: number) {
+  return relationships.value.filter((relationship) =>
+    relationship.source.id === requestId || relationship.target.id === requestId,
+  );
+}
+
+function relationshipDescription(relationship: AdminRelationship, requestId: number) {
+  if (relationship.type === "depends_on") {
+    return relationship.source.id === requestId
+      ? `Depends on ${relationship.target.packageName}`
+      : `Blocks ${relationship.source.packageName}`;
+  }
+  if (relationship.type === "duplicate_of") {
+    return relationship.source.id === requestId
+      ? `Duplicate of ${relationship.target.packageName}`
+      : `Has duplicate ${relationship.source.packageName}`;
+  }
+  const other = relationship.source.id === requestId ? relationship.target : relationship.source;
+  return `Related to ${other.packageName}`;
+}
+
+async function addRelationship(request: AdminRequest) {
+  const draft = relationshipDraft(request.id);
+  const state = relationshipStates[request.id] ||= { message: "", error: false, busy: false };
+  if (!draft.targetRequestId) {
+    state.message = "Choose another request.";
+    state.error = true;
+    return;
+  }
+  state.busy = true;
+  state.error = false;
+  try {
+    await api(`/admin/requests/${request.id}/relationships`, {
+      method: "POST",
+      body: JSON.stringify({ type: draft.type, targetRequestId: Number(draft.targetRequestId) }),
+    });
+    draft.targetRequestId = "";
+    state.message = "Relationship added.";
+    await loadRelationships();
+  } catch (error) {
+    state.error = true;
+    state.message = error instanceof Error ? error.message : "The relationship could not be added.";
+  } finally {
+    state.busy = false;
+  }
+}
+
+async function deleteRelationship(request: AdminRequest, relationship: AdminRelationship) {
+  if (!window.confirm(`Remove “${relationshipDescription(relationship, request.id)}”?`)) return;
+  const state = relationshipStates[request.id] ||= { message: "", error: false, busy: false };
+  state.busy = true;
+  state.error = false;
+  try {
+    await api(`/admin/relationships/${relationship.id}`, { method: "DELETE" });
+    state.message = "Relationship removed.";
+    await loadRelationships();
+  } catch (error) {
+    state.error = true;
+    state.message = error instanceof Error ? error.message : "The relationship could not be removed.";
+  } finally {
+    state.busy = false;
+  }
+}
+
 async function loadPulpOverview() {
   const result = await api("/admin/pulp");
   pulpMatches.value = result.matches;
@@ -196,7 +293,7 @@ async function signIn() {
   authenticating.value = true;
   loginError.value = "";
   try {
-    await Promise.all([loadRequests(), loadPulpOverview()]);
+    await Promise.all([loadRequests(), loadPulpOverview(), loadRelationships()]);
     sessionStorage.setItem(storageKey, token.value);
     authenticated.value = true;
     try {
@@ -219,6 +316,7 @@ function signOut() {
   pulpMatches.value = [];
   pulpRuns.value = [];
   moderationPosts.value = [];
+  relationships.value = [];
   authenticated.value = false;
 }
 
@@ -552,7 +650,7 @@ onMounted(async () => {
           <div class="summary">
             <div>
               <div class="title-row">
-                <h3>{{ request.packageName }}</h3>
+                <h3><a :href="requestDetailUrl(request)" target="_blank">{{ request.packageName }} ↗</a></h3>
                 <span class="pill">{{ ecosystems[request.ecosystem] || request.ecosystem }}</span>
                 <span class="pill">{{ statuses[request.status] }}</span>
               </div>
@@ -595,6 +693,47 @@ onMounted(async () => {
                 <button class="primary" type="submit" :disabled="saveStates[request.id]?.busy">Save changes</button>
               </div>
             </form>
+            <section class="relationship-editor">
+              <div>
+                <strong>Dependencies and related requests</strong>
+                <span>Confirmed relationships appear on both dedicated request pages.</span>
+              </div>
+              <div v-if="relationshipsFor(request.id).length" class="admin-relationship-list">
+                <div v-for="relationship in relationshipsFor(request.id)" :key="relationship.id">
+                  <span>{{ relationshipDescription(relationship, request.id) }}</span>
+                  <button
+                    class="danger compact"
+                    type="button"
+                    :disabled="relationshipStates[request.id]?.busy"
+                    @click="deleteRelationship(request, relationship)"
+                  >Remove</button>
+                </div>
+              </div>
+              <div class="relationship-add-row">
+                <select v-model="relationshipDraft(request.id).type" aria-label="Relationship type">
+                  <option value="depends_on">Depends on</option>
+                  <option value="related_to">Related to</option>
+                  <option value="duplicate_of">Duplicate of</option>
+                </select>
+                <select v-model="relationshipDraft(request.id).targetRequestId" aria-label="Related package request">
+                  <option value="">Choose another request</option>
+                  <option v-for="target in requests.filter((item) => item.id !== request.id)" :key="target.id" :value="String(target.id)">
+                    {{ target.packageName }} · {{ statuses[target.status] }}
+                  </option>
+                </select>
+                <button
+                  class="secondary"
+                  type="button"
+                  :disabled="relationshipStates[request.id]?.busy"
+                  @click="addRelationship(request)"
+                >Add relationship</button>
+              </div>
+              <span
+                v-if="relationshipStates[request.id]?.message"
+                :class="['save-state', { error: relationshipStates[request.id]?.error }]"
+                role="status"
+              >{{ relationshipStates[request.id].message }}</span>
+            </section>
             <form class="maintainer-composer" @submit.prevent="publishMaintainerPost(request)">
               <div>
                 <strong>Post to the public activity timeline</strong>
@@ -692,6 +831,8 @@ button:disabled { cursor:wait; opacity:.65; }
 .summary { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:20px; padding:20px; }
 .title-row { flex-wrap:wrap; align-items:center; gap:9px; }
 .title-row h3 { font-size:20px; }
+.title-row h3 a { color:inherit; text-decoration:none; }
+.title-row h3 a:hover { color:var(--vp-c-brand-1); text-decoration:underline; }
 .pill { padding:4px 8px; border-radius:999px; color:var(--vp-c-brand-1); background:color-mix(in srgb,var(--vp-c-brand-1) 12%,transparent); font-size:11px; font-weight:800; text-transform:uppercase; }
 .summary p { margin:10px 0 0; color:var(--vp-c-text-2); line-height:1.5; }
 .meta { flex-wrap:wrap; gap:12px; margin-top:12px; color:var(--vp-c-text-2); font-size:12px; }
@@ -706,6 +847,13 @@ details > summary { padding:13px 20px; color:var(--vp-c-brand-1); font-size:13px
 .github-owner-id { align-self:end; margin:0 0 10px; color:var(--vp-c-text-2); font-size:12px; }
 .wide,.editor-actions { grid-column:1/-1; }
 .editor-actions { justify-content:flex-end; align-items:center; gap:12px; }
+.relationship-editor { padding:18px 20px; border-top:1px solid var(--vp-c-divider); background:var(--vp-c-bg); }
+.relationship-editor > div:first-child strong,.relationship-editor > div:first-child span { display:block; }
+.relationship-editor > div:first-child span { margin-top:3px; color:var(--vp-c-text-2); font-size:12px; }
+.admin-relationship-list { display:grid; gap:7px; margin-top:13px; }
+.admin-relationship-list > div { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:8px 10px; border:1px solid var(--vp-c-divider); border-radius:8px; font-size:13px; }
+.relationship-add-row { display:grid; grid-template-columns:180px minmax(220px,1fr) auto; gap:9px; margin-top:13px; }
+.danger.compact { min-height:32px; margin:0; padding:0 10px; font-size:12px; }
 .maintainer-composer { padding:18px 20px 22px; border-top:1px solid var(--vp-c-divider); background:var(--vp-c-bg); }
 .maintainer-composer > div:first-child strong,.maintainer-composer > div:first-child span { display:block; }
 .maintainer-composer > div:first-child span { margin-top:3px; color:var(--vp-c-text-2); font-size:12px; }
@@ -715,5 +863,5 @@ details > summary { padding:13px 20px; color:var(--vp-c-brand-1); font-size:13px
 .save-state { color:var(--vp-c-text-2); font-size:13px; }
 .error { color:var(--vp-c-danger-1); }
 .empty { padding:60px; border:1px dashed var(--vp-c-divider); border-radius:14px; color:var(--vp-c-text-2); text-align:center; }
-@media (max-width:720px) { .toolbar,.token-row,.pulp-heading,.match-card,.moderation-heading { align-items:stretch; flex-direction:column; } .filters,.match-actions,.moderation-actions { flex-direction:column; } .filters select { width:100%; } .editor,.moderation-editor,.maintainer-compose-grid { grid-template-columns:1fr; } .wide,.editor-actions,.moderation-editor .wide { grid-column:1; } .moderation-actions button { width:100%; } }
+@media (max-width:720px) { .toolbar,.token-row,.pulp-heading,.match-card,.moderation-heading { align-items:stretch; flex-direction:column; } .filters,.match-actions,.moderation-actions { flex-direction:column; } .filters select { width:100%; } .editor,.moderation-editor,.maintainer-compose-grid,.relationship-add-row { grid-template-columns:1fr; } .wide,.editor-actions,.moderation-editor .wide { grid-column:1; } .moderation-actions button { width:100%; } }
 </style>

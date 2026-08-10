@@ -257,6 +257,11 @@ function normalizeName(value: string) {
   return value.trim().toLowerCase().replace(/\s+/g, "-").replace(/-?port$/, "");
 }
 
+function requestDetailUrl(request: Pick<PackageRequest, "id" | "packageName">) {
+  const slug = request.packageName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  return withBase(`/PackageRequest?request=${request.id}-${slug}`);
+}
+
 function validPackageName(value: string) {
   return /^[a-zA-Z0-9][a-zA-Z0-9._+\s-]{0,79}$/.test(value.trim());
 }
@@ -995,8 +1000,7 @@ async function submitRequest() {
     form.showRequesterPublicly = false;
     form.showGithubPublicly = Boolean(authUser.value);
     formOpen.value = false;
-    successMessage.value = `${result.request.packageName} was added. You can now vote for it and share this page.`;
-    document.querySelector(".package-requests")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    window.location.assign(requestDetailUrl(result.request));
   } catch (error) {
     const apiError = error as Error & { existingRequestId?: number };
     submitError.value = apiError.message;
@@ -1449,7 +1453,7 @@ onMounted(async () => {
           </button>
           <div class="request-card-content">
             <div class="request-card-title">
-              <h3>{{ request.packageName }}</h3>
+              <h3><a :href="requestDetailUrl(request)">{{ request.packageName }}</a></h3>
               <span class="ecosystem-pill">{{ ecosystems[request.ecosystem] || request.ecosystem }}</span>
               <span class="status-pill" :class="`status-${request.status}`" :title="statuses[request.status].detail">
                 {{ statuses[request.status].label }}
@@ -1475,6 +1479,7 @@ onMounted(async () => {
               >{{ artifactLabels[request.artifactKind] || "Published package" }} ↗</a>
             </div>
             <div class="request-meta">
+              <a :href="requestDetailUrl(request)">View full request →</a>
               <a v-if="request.upstreamUrl" :href="request.upstreamUrl" target="_blank" rel="noopener noreferrer">View upstream project ↗</a>
               <span v-if="request.canHelpTest">Tester available</span>
               <span v-if="request.acknowledgedAt">Acknowledged by maintainers</span>
@@ -1844,6 +1849,8 @@ onMounted(async () => {
 .vote-button span { margin-top: 3px; font-size: 11px; font-weight: 650; text-transform: uppercase; letter-spacing: .05em; }
 .request-card-title { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
 .request-card-title h3 { margin: 0; font-size: 20px; line-height: 1.3; }
+.request-card-title h3 a { color:inherit; text-decoration:none; }
+.request-card-title h3 a:hover { color:var(--request-accent); text-decoration:underline; text-underline-offset:3px; }
 .status-pill { padding: 4px 9px; border-radius: 999px; color: var(--vp-c-text-2); background: var(--vp-c-default-soft); font-size: 11px; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; }
 .ecosystem-pill { padding: 4px 9px; border: 1px solid var(--vp-c-divider); border-radius: 999px; color: var(--request-accent); background: var(--vp-c-bg-soft); font-size: 11px; font-weight: 700; }
 .status-under_review { color: #795b00; background: #fff1bd; }

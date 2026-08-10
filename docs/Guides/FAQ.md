@@ -79,6 +79,10 @@ Routine triage can be performed by project maintainers. Requests involving broad
 
 No. **Accepted** means the package is considered suitable for the community backlog. It may still be waiting for a contributor or maintainer. **In progress** is used after someone has taken responsibility for the porting work.
 
+### How are dependencies and related package requests represented?
+
+Each request has a dedicated page that can show confirmed **Depends on**, **Blocks**, **Related to**, and **Duplicate of** relationships. Maintainers confirm these links so the public dependency view remains consistent. **Blocks** is calculated automatically as the reverse of **Depends on**; dependency cycles are not allowed. Community members can suggest a missing relationship in the request discussion.
+
 ### Who is responsible for porting and maintaining a package?
 
 Responsibility is attached to stewardship, not to whoever requested or voted for a package.

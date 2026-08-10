@@ -48,10 +48,12 @@ const COMMUNITY_POST_KINDS = new Set([
 ]);
 const MAINTAINER_POST_KINDS = new Set(["maintainer_update", "technical_note", "question"]);
 const VALID_POST_MODERATION_STATUSES = new Set(["pending", "published", "hidden"]);
+const VALID_RELATIONSHIP_TYPES = new Set(["depends_on", "related_to", "duplicate_of"]);
 const MAX_BULK_REQUESTS = 25;
 const AUTH_SESSION_DAYS = 30;
 const SESSION_COOKIE = "zopen_request_session";
 const OAUTH_STATE_COOKIE = "zopen_oauth_state";
+const OAUTH_RETURN_COOKIE = "zopen_oauth_return";
 
 function openDatabase(databasePath) {
   if (databasePath !== ":memory:") {
@@ -143,6 +145,22 @@ async function initializeDatabase(database) {
       await run(database, `ALTER TABLE package_requests ADD COLUMN ${columnName} ${definition}`);
     }
   }
+  await run(
+    database,
+    `CREATE TABLE IF NOT EXISTS request_relationships (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      source_request_id INTEGER NOT NULL,
+      target_request_id INTEGER NOT NULL,
+      relationship_type TEXT NOT NULL CHECK (
+        relationship_type IN ('depends_on', 'related_to', 'duplicate_of')
+      ),
+      created_at TEXT NOT NULL,
+      CHECK (source_request_id != target_request_id),
+      UNIQUE (source_request_id, target_request_id, relationship_type),
+      FOREIGN KEY (source_request_id) REFERENCES package_requests(id) ON DELETE CASCADE,
+      FOREIGN KEY (target_request_id) REFERENCES package_requests(id) ON DELETE CASCADE
+    )`,
+  );
   await run(
     database,
     `CREATE TABLE IF NOT EXISTS votes (
@@ -304,6 +322,8 @@ async function initializeDatabase(database) {
   await run(database, "CREATE INDEX IF NOT EXISTS idx_request_posts_request_id ON request_posts(request_id)");
   await run(database, "CREATE INDEX IF NOT EXISTS idx_request_posts_moderation ON request_posts(moderation_status)");
   await run(database, "CREATE INDEX IF NOT EXISTS idx_package_requests_github_user ON package_requests(github_user_id)");
+  await run(database, "CREATE INDEX IF NOT EXISTS idx_request_relationships_source ON request_relationships(source_request_id)");
+  await run(database, "CREATE INDEX IF NOT EXISTS idx_request_relationships_target ON request_relationships(target_request_id)");
   await run(database, "CREATE INDEX IF NOT EXISTS idx_request_posts_github_user ON request_posts(github_user_id)");
   await run(database, "CREATE INDEX IF NOT EXISTS idx_auth_sessions_user ON auth_sessions(github_user_id)");
   await run(database, "CREATE INDEX IF NOT EXISTS idx_auth_sessions_expiry ON auth_sessions(expires_at)");
@@ -340,6 +360,18 @@ function validVoterId(value) {
 
 function validEmail(value) {
   return !value || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
+function validOAuthReturnUrl(value, siteUrl) {
+  try {
+    const candidate = new URL(value);
+    const site = new URL(siteUrl);
+    return candidate.origin === site.origin && ["/PackageRequest", "/PackageRequests"].includes(candidate.pathname)
+      ? candidate
+      : null;
+  } catch {
+    return null;
+  }
 }
 
 function hashEditToken(value) {
@@ -600,6 +632,60 @@ function mapRequest(row, includePrivate = false, currentGithubUserId = null) {
   return request;
 }
 
+function mapRelationshipRequest(row, prefix) {
+  return {
+    id: Number(row[`${prefix}_request_id`]),
+    packageName: row[`${prefix}_package_name`],
+    ecosystem: row[`${prefix}_ecosystem`],
+    status: row[`${prefix}_status`],
+  };
+}
+
+function mapRelationship(row) {
+  return {
+    id: Number(row.id),
+    type: row.relationship_type,
+    source: mapRelationshipRequest(row, "source"),
+    target: mapRelationshipRequest(row, "target"),
+    createdAt: row.created_at,
+  };
+}
+
+function groupRelationships(rows, requestId) {
+  const grouped = { dependsOn: [], blocks: [], related: [], duplicateOf: [], duplicates: [] };
+  for (const row of rows) {
+    const relationship = mapRelationship(row);
+    if (relationship.type === "depends_on") {
+      if (relationship.source.id === requestId) grouped.dependsOn.push(relationship.target);
+      else grouped.blocks.push(relationship.source);
+    } else if (relationship.type === "related_to") {
+      grouped.related.push(relationship.source.id === requestId ? relationship.target : relationship.source);
+    } else if (relationship.source.id === requestId) {
+      grouped.duplicateOf.push(relationship.target);
+    } else {
+      grouped.duplicates.push(relationship.source);
+    }
+  }
+  return grouped;
+}
+
+async function getRelationshipRows(database, requestId = null) {
+  return all(
+    database,
+    `SELECT relationship.*,
+      source.id AS source_request_id, source.package_name AS source_package_name,
+      source.ecosystem AS source_ecosystem, source.status AS source_status,
+      target.id AS target_request_id, target.package_name AS target_package_name,
+      target.ecosystem AS target_ecosystem, target.status AS target_status
+     FROM request_relationships relationship
+     JOIN package_requests source ON source.id = relationship.source_request_id
+     JOIN package_requests target ON target.id = relationship.target_request_id
+     ${requestId === null ? "" : "WHERE relationship.source_request_id = ? OR relationship.target_request_id = ?"}
+     ORDER BY relationship.created_at, relationship.id`,
+    requestId === null ? [] : [requestId, requestId],
+  );
+}
+
 async function getVoteTotal(database, requestId) {
   const row = await get(
     database,
@@ -735,11 +821,20 @@ function createApp(options = {}) {
     }
     try {
       const state = crypto.randomBytes(32).toString("base64url");
-      response.setHeader("Set-Cookie", cookieHeader(OAUTH_STATE_COOKIE, state, {
-        path: publicApiPath,
-        secure: cookieSecure,
-        maxAge: 600,
-      }));
+      const returnUrl = validOAuthReturnUrl(cleanText(request.query.returnTo, 1000), siteUrl);
+      const cookies = [cookieHeader(OAUTH_STATE_COOKIE, state, {
+          path: publicApiPath,
+          secure: cookieSecure,
+          maxAge: 600,
+        })];
+      if (returnUrl) {
+        cookies.push(cookieHeader(OAUTH_RETURN_COOKIE, returnUrl.toString(), {
+          path: publicApiPath,
+          secure: cookieSecure,
+          maxAge: 600,
+        }));
+      }
+      response.setHeader("Set-Cookie", cookies);
       const authorizeUrl = new URL("https://github.com/login/oauth/authorize");
       authorizeUrl.searchParams.set("client_id", githubClientId);
       authorizeUrl.searchParams.set("redirect_uri", githubCallbackUrl);
@@ -757,16 +852,22 @@ function createApp(options = {}) {
     }
     const state = cleanText(request.query.state, 200);
     const code = cleanText(request.query.code, 500);
-    const stateCookie = parseCookies(request)[OAUTH_STATE_COOKIE];
-    const redirectUrl = new URL(siteUrl);
+    const oauthCookies = parseCookies(request);
+    const stateCookie = oauthCookies[OAUTH_STATE_COOKIE];
+    const redirectUrl = validOAuthReturnUrl(oauthCookies[OAUTH_RETURN_COOKIE], siteUrl) || new URL(siteUrl);
     const clearStateCookie = cookieHeader(OAUTH_STATE_COOKIE, "", {
+      path: publicApiPath,
+      secure: cookieSecure,
+      maxAge: 0,
+    });
+    const clearReturnCookie = cookieHeader(OAUTH_RETURN_COOKIE, "", {
       path: publicApiPath,
       secure: cookieSecure,
       maxAge: 0,
     });
     if (!code || !safeEqual(state, stateCookie)) {
       redirectUrl.searchParams.set("auth", "error");
-      response.setHeader("Set-Cookie", clearStateCookie);
+      response.setHeader("Set-Cookie", [clearStateCookie, clearReturnCookie]);
       response.redirect(302, redirectUrl.toString());
       return;
     }
@@ -817,6 +918,7 @@ function createApp(options = {}) {
       );
       response.setHeader("Set-Cookie", [
         clearStateCookie,
+        clearReturnCookie,
         cookieHeader(SESSION_COOKIE, sessionToken, {
           path: publicApiPath,
           secure: cookieSecure,
@@ -828,7 +930,7 @@ function createApp(options = {}) {
     } catch (error) {
       console.error("GitHub OAuth callback failed:", error.message);
       redirectUrl.searchParams.set("auth", "error");
-      response.setHeader("Set-Cookie", clearStateCookie);
+      response.setHeader("Set-Cookie", [clearStateCookie, clearReturnCookie]);
       response.redirect(302, redirectUrl.toString());
     }
   });
@@ -894,6 +996,44 @@ function createApp(options = {}) {
         parameters,
       );
       response.json({ requests: rows.map((row) => mapRequest(row, false, request.authUser?.id)) });
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.get("/api/requests/:id", async (request, response, next) => {
+    const requestId = Number.parseInt(request.params.id, 10);
+    if (!Number.isSafeInteger(requestId) || requestId < 1) {
+      response.status(400).json({ error: "Invalid package request ID." });
+      return;
+    }
+    try {
+      const voterId = validVoterId(request.get("X-Voter-ID")) ? request.get("X-Voter-ID") : "";
+      const [row, relationshipRows] = await Promise.all([
+        get(
+          database,
+          `SELECT r.*,
+            (SELECT login FROM github_users user WHERE user.github_user_id = r.github_user_id) AS owner_github_login,
+            (SELECT COUNT(*) FROM votes anonymous_vote WHERE anonymous_vote.request_id = r.id) +
+            (SELECT COUNT(*) FROM github_votes github_vote WHERE github_vote.request_id = r.id) AS vote_count,
+            (SELECT COUNT(*) FROM request_posts post
+             WHERE post.request_id = r.id AND post.moderation_status = 'published') AS discussion_count,
+            (EXISTS(SELECT 1 FROM votes own_vote WHERE own_vote.request_id = r.id AND own_vote.voter_id = ?)
+             OR EXISTS(SELECT 1 FROM github_votes own_github_vote
+               WHERE own_github_vote.request_id = r.id AND own_github_vote.github_user_id = ?)) AS voted
+           FROM package_requests r WHERE r.id = ?`,
+          [voterId, request.authUser?.id || null, requestId],
+        ),
+        getRelationshipRows(database, requestId),
+      ]);
+      if (!row) {
+        response.status(404).json({ error: "Package request not found." });
+        return;
+      }
+      response.json({
+        request: mapRequest(row, false, request.authUser?.id),
+        relationships: groupRelationships(relationshipRows, requestId),
+      });
     } catch (error) {
       next(error);
     }
@@ -1350,6 +1490,109 @@ function createApp(options = {}) {
            r.created_at DESC`,
       );
       response.json({ requests: rows.map((row) => mapRequest(row, true)) });
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.get("/api/admin/relationships", adminLimiter, async (request, response, next) => {
+    const configuredToken = options.adminToken ?? process.env.ADMIN_TOKEN;
+    if (!adminTokenMatches(request, configuredToken)) {
+      response.status(401).json({ error: "Unauthorized." });
+      return;
+    }
+    try {
+      response.json({ relationships: (await getRelationshipRows(database)).map(mapRelationship) });
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.post("/api/admin/requests/:id/relationships", adminLimiter, async (request, response, next) => {
+    const configuredToken = options.adminToken ?? process.env.ADMIN_TOKEN;
+    if (!adminTokenMatches(request, configuredToken)) {
+      response.status(401).json({ error: "Unauthorized." });
+      return;
+    }
+    let sourceRequestId = Number.parseInt(request.params.id, 10);
+    let targetRequestId = Number.parseInt(request.body?.targetRequestId, 10);
+    const relationshipType = cleanText(request.body?.type, 30);
+    if (
+      !Number.isSafeInteger(sourceRequestId) || sourceRequestId < 1 ||
+      !Number.isSafeInteger(targetRequestId) || targetRequestId < 1 ||
+      sourceRequestId === targetRequestId || !VALID_RELATIONSHIP_TYPES.has(relationshipType)
+    ) {
+      response.status(400).json({ error: "Choose two different requests and a valid relationship type." });
+      return;
+    }
+    if (relationshipType === "related_to" && sourceRequestId > targetRequestId) {
+      [sourceRequestId, targetRequestId] = [targetRequestId, sourceRequestId];
+    }
+    try {
+      const requestsExist = await get(
+        database,
+        "SELECT COUNT(*) AS total FROM package_requests WHERE id IN (?, ?)",
+        [sourceRequestId, targetRequestId],
+      );
+      if (Number(requestsExist.total) !== 2) {
+        response.status(404).json({ error: "One of those package requests no longer exists." });
+        return;
+      }
+      if (relationshipType === "depends_on") {
+        const cycle = await get(
+          database,
+          `WITH RECURSIVE dependencies(request_id) AS (
+             SELECT target_request_id FROM request_relationships
+              WHERE source_request_id = ? AND relationship_type = 'depends_on'
+             UNION
+             SELECT relationship.target_request_id
+              FROM request_relationships relationship
+              JOIN dependencies ON relationship.source_request_id = dependencies.request_id
+              WHERE relationship.relationship_type = 'depends_on'
+           ) SELECT 1 AS found FROM dependencies WHERE request_id = ? LIMIT 1`,
+          [targetRequestId, sourceRequestId],
+        );
+        if (cycle) {
+          response.status(409).json({ error: "That dependency would create a cycle." });
+          return;
+        }
+      }
+      const result = await run(
+        database,
+        `INSERT INTO request_relationships
+          (source_request_id, target_request_id, relationship_type, created_at)
+         VALUES (?, ?, ?, ?)`,
+        [sourceRequestId, targetRequestId, relationshipType, new Date().toISOString()],
+      );
+      const relationship = (await getRelationshipRows(database)).find((item) => Number(item.id) === result.id);
+      response.status(201).json({ relationship: mapRelationship(relationship) });
+    } catch (error) {
+      if (error.code === "SQLITE_CONSTRAINT") {
+        response.status(409).json({ error: "That relationship already exists." });
+        return;
+      }
+      next(error);
+    }
+  });
+
+  app.delete("/api/admin/relationships/:id", adminLimiter, async (request, response, next) => {
+    const configuredToken = options.adminToken ?? process.env.ADMIN_TOKEN;
+    if (!adminTokenMatches(request, configuredToken)) {
+      response.status(401).json({ error: "Unauthorized." });
+      return;
+    }
+    const relationshipId = Number.parseInt(request.params.id, 10);
+    if (!Number.isSafeInteger(relationshipId) || relationshipId < 1) {
+      response.status(400).json({ error: "Invalid relationship ID." });
+      return;
+    }
+    try {
+      const result = await run(database, "DELETE FROM request_relationships WHERE id = ?", [relationshipId]);
+      if (!result.changes) {
+        response.status(404).json({ error: "Relationship not found." });
+        return;
+      }
+      response.json({ success: true, id: relationshipId });
     } catch (error) {
       next(error);
     }

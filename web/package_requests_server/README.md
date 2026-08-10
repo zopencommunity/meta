@@ -121,6 +121,7 @@ the root login once the initial deployment is complete.
 
 - `GET /api/health`
 - `GET /api/requests?sort=top|newest&status=proposed`
+- `GET /api/requests/:id` with public request details and grouped relationships
 - `POST /api/requests`
 - `POST /api/requests/bulk` with up to 25 requests and shared requester details
 - `PUT /api/requests/:id/vote`
@@ -129,6 +130,9 @@ the root login once the initial deployment is complete.
 - `POST /api/requests/:id/posts`
 - `GET`, `PATCH`, or `DELETE /api/posts/:id` with `X-Edit-Token`
 - `GET /api/admin/requests` with `Authorization: Bearer <ADMIN_TOKEN>`
+- `GET /api/admin/relationships` with `Authorization: Bearer <ADMIN_TOKEN>`
+- `POST /api/admin/requests/:id/relationships` with `Authorization: Bearer <ADMIN_TOKEN>`
+- `DELETE /api/admin/relationships/:id` with `Authorization: Bearer <ADMIN_TOKEN>`
 - `PATCH /api/requests/:id` with `Authorization: Bearer <ADMIN_TOKEN>`
 - `DELETE /api/requests/:id` with `Authorization: Bearer <ADMIN_TOKEN>`
 - `GET /api/admin/posts?status=pending|published|hidden|all` with `Authorization: Bearer <ADMIN_TOKEN>`
@@ -189,10 +193,17 @@ The console lets maintainers:
    required before the API accepts this state.
 7. Permanently delete an invalid or test request after typing its exact package
    name. Its votes and status history are deleted by the same database action.
+8. Link requests as **Depends on**, **Related to**, or **Duplicate of**. Reverse
+   **Blocks** relationships are derived automatically, and dependency cycles are rejected.
 
 Requester name and organization are public only when the requester opts in.
 Contact email is never included by the public API; it is returned only from the
 admin endpoint and shown only in this protected console.
+
+Every request also has a GitHub Pages-compatible detail URL in the form
+`/PackageRequest?request=<id>-<readable-name>`. The numeric ID remains authoritative
+if a maintainer later corrects the package name. The page combines voting, status
+progress, delivery links, relationships, discussion, and activity.
 
 ## Discussion and activity
 

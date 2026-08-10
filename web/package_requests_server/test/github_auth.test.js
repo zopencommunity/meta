@@ -74,21 +74,24 @@ test("uses GitHub identity to own and edit package requests and discussion posts
   const configResponse = await fetch(`${baseUrl}/api/auth/config`);
   assert.deepEqual(await configResponse.json(), { githubEnabled: true });
 
-  const loginResponse = await fetch(`${baseUrl}/api/auth/github`, { redirect: "manual" });
+  const returnTo = "http://localhost:5173/PackageRequest?request=1-example";
+  const loginResponse = await fetch(`${baseUrl}/api/auth/github?returnTo=${encodeURIComponent(returnTo)}`, { redirect: "manual" });
   assert.equal(loginResponse.status, 302);
   const authorizationUrl = new URL(loginResponse.headers.get("location"));
   assert.equal(authorizationUrl.origin, "https://github.com");
   assert.equal(authorizationUrl.searchParams.get("client_id"), "test-client-id");
   assert.equal(authorizationUrl.searchParams.has("scope"), false);
   const state = authorizationUrl.searchParams.get("state");
-  const stateCookie = loginResponse.headers.get("set-cookie").match(/zopen_oauth_state=([^;]+)/)[1];
+  const loginCookies = loginResponse.headers.get("set-cookie");
+  const stateCookie = loginCookies.match(/zopen_oauth_state=([^;]+)/)[1];
+  const returnCookie = loginCookies.match(/zopen_oauth_return=([^;]+)/)[1];
 
   const callbackResponse = await fetch(
     `${baseUrl}/api/auth/github/callback?code=temporary-code&state=${encodeURIComponent(state)}`,
-    { headers: { Cookie: `zopen_oauth_state=${stateCookie}` }, redirect: "manual" },
+    { headers: { Cookie: `zopen_oauth_state=${stateCookie}; zopen_oauth_return=${returnCookie}` }, redirect: "manual" },
   );
   assert.equal(callbackResponse.status, 302);
-  assert.equal(callbackResponse.headers.get("location"), "http://localhost:5173/PackageRequests?auth=success");
+  assert.equal(callbackResponse.headers.get("location"), `${returnTo}&auth=success`);
   const setCookie = callbackResponse.headers.get("set-cookie");
   assert.match(setCookie, /HttpOnly/);
   assert.match(setCookie, /SameSite=Lax/);

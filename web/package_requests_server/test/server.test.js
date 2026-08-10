@@ -6,6 +6,23 @@ let database;
 let server;
 let baseUrl;
 
+function insertTestRequest(packageName, ecosystem = "general") {
+  const normalizedName = packageName.toLowerCase().replace(/[^a-z0-9]/g, "");
+  const now = new Date().toISOString();
+  return new Promise((resolve, reject) => {
+    database.run(
+      `INSERT INTO package_requests
+        (package_name, normalized_name, ecosystem, upstream_url, description, created_at, updated_at)
+       VALUES (?, ?, ?, '', 'Test relationship request.', ?, ?)`,
+      [packageName, normalizedName, ecosystem, now, now],
+      function onInsert(error) {
+        if (error) reject(error);
+        else resolve({ id: this.lastID, packageName });
+      },
+    );
+  });
+}
+
 before(async () => {
   database = openDatabase(":memory:");
   const app = createApp({ database, allowedOrigins: "http://localhost:5173", adminToken: "test-admin-token" });
@@ -96,6 +113,78 @@ test("rejects duplicate package names including the port suffix", async () => {
     body: JSON.stringify({ packageName: "Too Short", ecosystem: "general", description: "X" }),
   });
   assert.equal(oneCharacterDescriptionResponse.status, 400);
+});
+
+test("serves dedicated request details and manages typed relationships", async () => {
+  const dependency = await insertTestRequest("Example Dependency", "rust");
+  const related = await insertTestRequest("Related Example");
+
+  const unauthorizedResponse = await fetch(`${baseUrl}/api/admin/relationships`);
+  assert.equal(unauthorizedResponse.status, 401);
+
+  const dependencyResponse = await fetch(`${baseUrl}/api/admin/requests/1/relationships`, {
+    method: "POST",
+    headers: { Authorization: "Bearer test-admin-token", "Content-Type": "application/json" },
+    body: JSON.stringify({ type: "depends_on", targetRequestId: dependency.id }),
+  });
+  assert.equal(dependencyResponse.status, 201);
+  const dependencyRelationship = (await dependencyResponse.json()).relationship;
+  assert.equal(dependencyRelationship.source.packageName, "Example Tool");
+  assert.equal(dependencyRelationship.target.packageName, "Example Dependency");
+
+  const relatedResponse = await fetch(`${baseUrl}/api/admin/requests/1/relationships`, {
+    method: "POST",
+    headers: { Authorization: "Bearer test-admin-token", "Content-Type": "application/json" },
+    body: JSON.stringify({ type: "related_to", targetRequestId: related.id }),
+  });
+  assert.equal(relatedResponse.status, 201);
+  const relatedRelationship = (await relatedResponse.json()).relationship;
+
+  const detailResponse = await fetch(`${baseUrl}/api/requests/1`);
+  assert.equal(detailResponse.status, 200);
+  const detail = await detailResponse.json();
+  assert.equal(detail.request.packageName, "Example Tool");
+  assert.equal(detail.relationships.dependsOn[0].id, dependency.id);
+  assert.equal(detail.relationships.related[0].id, related.id);
+  assert.deepEqual(detail.relationships.blocks, []);
+
+  const reverseDetail = await fetch(`${baseUrl}/api/requests/${dependency.id}`);
+  const reverse = await reverseDetail.json();
+  assert.equal(reverse.relationships.blocks[0].id, 1);
+
+  const cycleResponse = await fetch(`${baseUrl}/api/admin/requests/${dependency.id}/relationships`, {
+    method: "POST",
+    headers: { Authorization: "Bearer test-admin-token", "Content-Type": "application/json" },
+    body: JSON.stringify({ type: "depends_on", targetRequestId: 1 }),
+  });
+  assert.equal(cycleResponse.status, 409);
+
+  const duplicateResponse = await fetch(`${baseUrl}/api/admin/requests/1/relationships`, {
+    method: "POST",
+    headers: { Authorization: "Bearer test-admin-token", "Content-Type": "application/json" },
+    body: JSON.stringify({ type: "depends_on", targetRequestId: dependency.id }),
+  });
+  assert.equal(duplicateResponse.status, 409);
+
+  const adminRelationships = await fetch(`${baseUrl}/api/admin/relationships`, {
+    headers: { Authorization: "Bearer test-admin-token" },
+  });
+  assert.equal((await adminRelationships.json()).relationships.length, 2);
+
+  for (const relationshipId of [dependencyRelationship.id, relatedRelationship.id]) {
+    const deleteRelationshipResponse = await fetch(`${baseUrl}/api/admin/relationships/${relationshipId}`, {
+      method: "DELETE",
+      headers: { Authorization: "Bearer test-admin-token" },
+    });
+    assert.equal(deleteRelationshipResponse.status, 200);
+  }
+  for (const requestId of [dependency.id, related.id]) {
+    const deleteRequestResponse = await fetch(`${baseUrl}/api/requests/${requestId}`, {
+      method: "DELETE",
+      headers: { Authorization: "Bearer test-admin-token" },
+    });
+    assert.equal(deleteRequestResponse.status, 200);
+  }
 });
 
 test("moderates community posts and publishes a verified activity timeline", async () => {
