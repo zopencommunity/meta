@@ -411,7 +411,7 @@ with open('docs/Progress.md', 'w') as f_progress:
     if total_org_repos is not None:
         unreleased_org = total_org_repos - released_count
         print(f"> **{released_count} of {total_org_repos}** packages in the zopen community have been released and are tracked here.")
-        print(f"> The remaining {unreleased_org} repos exist in the org but have not yet published a release.\n")
+        print(f"> The remaining {unreleased_org} repos are **in progress** and have not yet published a release.\n")
 
     print(f"*Last updated: {todaysDate}*\n")
     print("""

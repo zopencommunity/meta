@@ -1,6 +1,6 @@
 
 > **279 of 327** packages in the zopen community have been released and are tracked here.
-> The remaining 48 repos exist in the org but have not yet published a release.
+> The remaining 48 repos are **in progress** and have not yet published a release.
 
 ## Overall Status
 * <span style="color:#6abf8a">Green</span>: All tests passing
