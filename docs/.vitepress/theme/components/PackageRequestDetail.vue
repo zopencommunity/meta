@@ -174,7 +174,15 @@ async function loadRequest() {
   loading.value = true;
   error.value = "";
   try {
-    const result = await api(`/requests/${requestId.value}`);
+    let result;
+    try {
+      result = await api(`/requests/${requestId.value}`);
+    } catch (detailError) {
+      const fallback = await api("/requests?sort=newest");
+      const fallbackRequest = fallback.requests?.find((item: PackageRequest) => item.id === requestId.value);
+      if (!fallbackRequest) throw detailError;
+      result = { request: fallbackRequest, relationships: relationships.value };
+    }
     request.value = result.request;
     relationships.value = result.relationships;
     document.title = `${result.request.packageName} package request · zopen community`;
