@@ -255,6 +255,17 @@ Optional:
                                     of the build is run.
   zopen_pre_check                   This function runs before the 'check' step
                                     of the build is run.
+  zopen_python_test                 Python build system only. Runs the tests for
+                                    one interpreter, and is called once for each
+                                    one being built. Its virtual environment is
+                                    already active and the wheel built for it is
+                                    already installed, so 'python' and 'pip' are
+                                    that interpreter's and dist/ does not need
+                                    to be looked at. Defaults to
+                                    'python -m pytest -v'. Prefer this over
+                                    setting ZOPEN_CHECK, which replaces the loop
+                                    over interpreters as well as the test
+                                    command.
   zopen_pre_configure               This function runs before the 'configure'
                                     step of the build is run.
   zopen_pre_install                 This function runs before the 'install'
@@ -757,7 +768,19 @@ _zopen_python_check() {
 
     # --force-reinstall so the freshly built wheel wins over anything cached
     pip install --force-reinstall --no-deps "${_pv_wheel}"
-    python -m pytest -v
+
+    # A port that needs to run its tests differently supplies zopen_python_test
+    # and nothing else: it is called once per interpreter with that
+    # interpreter's environment already active and its wheel already installed,
+    # so `python` and `pip` are the right ones and dist/ never has to be
+    # inspected. Overriding ZOPEN_CHECK instead means reimplementing this loop,
+    # which is how ports end up testing only the primary interpreter, or
+    # passing pip every version's wheel at once.
+    if command -V zopen_python_test > /dev/null 2>&1; then
+      zopen_python_test
+    else
+      python -m pytest -v
+    fi
     _pv_rc=$?
 
     # Every interpreter's pytest output lands in the same check log, and
