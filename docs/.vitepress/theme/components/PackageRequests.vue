@@ -231,8 +231,8 @@ function getBulkRowState(row: BulkRow, index: number): BulkRowState {
   if (!validPackageName(row.packageName)) return { kind: "invalid", label: "Invalid package name" };
   if (!Object.hasOwn(ecosystems, row.ecosystem)) return { kind: "invalid", label: "Choose an ecosystem" };
   if (!validHttpUrl(row.upstreamUrl)) return { kind: "invalid", label: "Invalid upstream URL" };
-  if ((row.description || bulkForm.description).trim().length < 20) {
-    return { kind: "invalid", label: "Add a reason (20+ characters)" };
+  if ((row.description || bulkForm.description).trim().length < 2) {
+    return { kind: "invalid", label: "Add a reason (2+ characters)" };
   }
 
   const normalized = normalizeName(row.packageName);
@@ -898,7 +898,7 @@ onMounted(() => {
           <span>Why would this package be useful on z/OS? <b aria-hidden="true">*</b></span>
           <textarea
             v-model.trim="form.description"
-            minlength="20"
+            minlength="2"
             maxlength="1200"
             required
             rows="4"
@@ -1343,7 +1343,7 @@ onMounted(() => {
                 </div>
                 <label>
                   <span>Your contribution</span>
-                  <textarea v-model.trim="postForm.body" required minlength="10" maxlength="2000" rows="4" />
+                  <textarea v-model.trim="postForm.body" required minlength="2" maxlength="2000" rows="4" />
                 </label>
                 <div class="post-form-grid">
                   <label><span>Name or alias <small>Optional</small></span><input v-model.trim="postForm.authorName" maxlength="100" /></label>

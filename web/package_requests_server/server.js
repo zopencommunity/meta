@@ -303,7 +303,7 @@ function validatePost(body, role = "community") {
   };
   const validKinds = role === "maintainer" ? MAINTAINER_POST_KINDS : COMMUNITY_POST_KINDS;
   if (!validKinds.has(post.kind)) return { error: "Choose a valid contribution type." };
-  if (post.body.length < 10) return { error: "Write at least 10 characters." };
+  if (post.body.length < 2) return { error: "Write at least 2 characters." };
   if ((post.body.match(/https?:\/\//gi) || []).length > 3) {
     return { error: "A post can contain no more than three links." };
   }
@@ -362,8 +362,8 @@ function validateSubmission(body) {
   if (!VALID_ECOSYSTEMS.has(submission.ecosystem)) {
     return { error: "Choose a valid project ecosystem." };
   }
-  if (submission.description.length < 20) {
-    return { error: "Tell us a little more about why this package is useful." };
+  if (submission.description.length < 2) {
+    return { error: "Write at least 2 characters about why this package is useful." };
   }
   if (!validEmail(submission.contactEmail)) {
     return { error: "Enter a valid contact email address or leave it blank." };
@@ -1251,8 +1251,8 @@ function createApp(options = {}) {
       response.status(400).json({ error: "Enter a valid upstream project URL or leave it blank." });
       return;
     }
-    if (description !== null && description.length < 20) {
-      response.status(400).json({ error: "The package description must be at least 20 characters." });
+    if (description !== null && description.length < 2) {
+      response.status(400).json({ error: "The package description must be at least 2 characters." });
       return;
     }
     if (contactEmail !== null && !validEmail(contactEmail)) {

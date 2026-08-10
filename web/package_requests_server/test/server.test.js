@@ -28,7 +28,7 @@ test("creates, lists, votes, and unvotes a package request", async () => {
     body: JSON.stringify({
       packageName: "Example Tool",
       ecosystem: "rust",
-      description: "This tool would make an important z/OS workflow easier.",
+      description: "OK",
       useCase: "Used in automated builds.",
       canHelpTest: true,
       requesterName: "Example Requester",
@@ -89,15 +89,29 @@ test("rejects duplicate package names including the port suffix", async () => {
     headers: { "Content-Type": "application/json" },
   });
   assert.equal(emptyResponse.status, 400);
+
+  const oneCharacterDescriptionResponse = await fetch(`${baseUrl}/api/requests`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ packageName: "Too Short", ecosystem: "general", description: "X" }),
+  });
+  assert.equal(oneCharacterDescriptionResponse.status, 400);
 });
 
 test("moderates community posts and publishes a verified activity timeline", async () => {
+  const tooShortPostResponse = await fetch(`${baseUrl}/api/requests/1/posts`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ kind: "technical_note", body: "X" }),
+  });
+  assert.equal(tooShortPostResponse.status, 400);
+
   const createPostResponse = await fetch(`${baseUrl}/api/requests/1/posts`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       kind: "testing_offer",
-      body: "I can validate this package against our automated z/OS build workload.",
+      body: "OK",
       authorName: "Private Tester",
       organization: "Private Company",
       contactEmail: "tester@example.com",
@@ -262,7 +276,7 @@ test("changes status only with the admin token", async () => {
       packageName: "Example Tool Corrected",
       ecosystem: "python",
       upstreamUrl: "https://example.com/corrected-tool",
-      description: "This corrected description explains the package request clearly.",
+      description: "OK",
       useCase: "A corrected automation use case.",
       canHelpTest: false,
       requesterName: "Corrected Requester",

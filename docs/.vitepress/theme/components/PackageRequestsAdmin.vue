@@ -503,7 +503,7 @@ onMounted(async () => {
                   <option v-if="post.authorRole === 'maintainer'" value="maintainer_update">Maintainer update</option>
                 </select>
               </label>
-              <label class="wide"><span>Post body</span><textarea v-model.trim="post.body" minlength="10" maxlength="2000" /></label>
+              <label class="wide"><span>Post body</span><textarea v-model.trim="post.body" minlength="2" maxlength="2000" /></label>
               <label><span>Author name or alias</span><input v-model.trim="post.authorName" maxlength="100" /></label>
               <label><span>Organization</span><input v-model.trim="post.organization" maxlength="160" /></label>
               <label><span>Contact email (private)</span><input v-model.trim="post.contactEmail" type="email" maxlength="254" /></label>
@@ -562,7 +562,7 @@ onMounted(async () => {
               <label><span>Package name</span><input v-model.trim="request.packageName" maxlength="80" required /></label>
               <label><span>Project ecosystem</span><select v-model="request.ecosystem"><option v-for="(label, key) in ecosystems" :key="key" :value="key">{{ label }}</option></select></label>
               <label class="wide"><span>Upstream project URL (optional)</span><input v-model.trim="request.upstreamUrl" type="url" /></label>
-              <label class="wide"><span>Request description</span><textarea v-model.trim="request.description" minlength="20" maxlength="1200" required /></label>
+              <label class="wide"><span>Request description</span><textarea v-model.trim="request.description" minlength="2" maxlength="1200" required /></label>
               <label><span>Use case or version</span><textarea v-model.trim="request.useCase" maxlength="1200" /></label>
               <label><span>Can help test</span><select v-model="request.canHelpTest"><option :value="false">No</option><option :value="true">Yes</option></select></label>
               <label><span>Requester name or alias</span><input v-model.trim="request.requesterName" maxlength="100" /></label>
@@ -594,7 +594,7 @@ onMounted(async () => {
                 <textarea
                   v-model.trim="maintainerDraft(request.id).body"
                   required
-                  minlength="10"
+                  minlength="2"
                   maxlength="2000"
                   placeholder="Share progress, ask a question, or add technical guidance."
                 />
