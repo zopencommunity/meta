@@ -217,6 +217,17 @@ async function initializeDatabase(database) {
   );
   await run(
     database,
+    `CREATE TABLE IF NOT EXISTS github_votes (
+      request_id INTEGER NOT NULL,
+      github_user_id INTEGER NOT NULL,
+      created_at TEXT NOT NULL,
+      PRIMARY KEY (request_id, github_user_id),
+      FOREIGN KEY (request_id) REFERENCES package_requests(id) ON DELETE CASCADE,
+      FOREIGN KEY (github_user_id) REFERENCES github_users(github_user_id) ON DELETE CASCADE
+    )`,
+  );
+  await run(
+    database,
     `CREATE TABLE IF NOT EXISTS request_edits (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       request_id INTEGER NOT NULL,
@@ -290,6 +301,7 @@ async function initializeDatabase(database) {
   await run(database, "CREATE INDEX IF NOT EXISTS idx_request_posts_github_user ON request_posts(github_user_id)");
   await run(database, "CREATE INDEX IF NOT EXISTS idx_auth_sessions_user ON auth_sessions(github_user_id)");
   await run(database, "CREATE INDEX IF NOT EXISTS idx_auth_sessions_expiry ON auth_sessions(expires_at)");
+  await run(database, "CREATE INDEX IF NOT EXISTS idx_github_votes_user ON github_votes(github_user_id)");
   await run(database, "CREATE INDEX IF NOT EXISTS idx_request_edits_request ON request_edits(request_id)");
   await run(database, "CREATE INDEX IF NOT EXISTS idx_pulp_artifacts_name ON pulp_artifacts(source, normalized_name)");
   await run(database, "CREATE INDEX IF NOT EXISTS idx_pulp_matches_status ON pulp_matches(status)");
@@ -554,6 +566,17 @@ function mapRequest(row, includePrivate = false, currentGithubUserId = null) {
   return request;
 }
 
+async function getVoteTotal(database, requestId) {
+  const row = await get(
+    database,
+    `SELECT
+      (SELECT COUNT(*) FROM votes WHERE request_id = ?) +
+      (SELECT COUNT(*) FROM github_votes WHERE request_id = ?) AS total`,
+    [requestId, requestId],
+  );
+  return Number(row?.total || 0);
+}
+
 function createRateLimiter({ limit, windowMilliseconds }) {
   const entries = new Map();
   return (request, response, next) => {
@@ -813,20 +836,25 @@ function createApp(options = {}) {
           ? "r.created_at DESC"
           : "vote_count DESC, r.created_at DESC";
       const where = status ? "WHERE r.status = ?" : "WHERE r.status != 'declined'";
-      const parameters = status ? [voterId, status] : [voterId];
+      const parameters = status
+        ? [voterId, request.authUser?.id || null, status]
+        : [voterId, request.authUser?.id || null];
       const rows = await all(
         database,
-        `SELECT r.*, COUNT(v.voter_id) AS vote_count,
+        `SELECT r.*,
+          (SELECT COUNT(*) FROM votes anonymous_vote WHERE anonymous_vote.request_id = r.id) +
+          (SELECT COUNT(*) FROM github_votes github_vote WHERE github_vote.request_id = r.id) AS vote_count,
           (SELECT COUNT(*) FROM request_posts post
            WHERE post.request_id = r.id AND post.moderation_status = 'published') AS discussion_count,
-          EXISTS(
+          (EXISTS(
             SELECT 1 FROM votes own_vote
             WHERE own_vote.request_id = r.id AND own_vote.voter_id = ?
-          ) AS voted
+          ) OR EXISTS(
+            SELECT 1 FROM github_votes own_github_vote
+            WHERE own_github_vote.request_id = r.id AND own_github_vote.github_user_id = ?
+          )) AS voted
         FROM package_requests r
-        LEFT JOIN votes v ON v.request_id = r.id
         ${where}
-        GROUP BY r.id
         ORDER BY ${ordering}`,
         parameters,
       );
@@ -1044,11 +1072,14 @@ function createApp(options = {}) {
       const [requestRows, postRows] = await Promise.all([
         all(
           database,
-          `SELECT r.*, COUNT(v.voter_id) AS vote_count, 0 AS voted,
+          `SELECT r.*,
+            (SELECT COUNT(*) FROM votes anonymous_vote WHERE anonymous_vote.request_id = r.id) +
+            (SELECT COUNT(*) FROM github_votes github_vote WHERE github_vote.request_id = r.id) AS vote_count,
+            0 AS voted,
             (SELECT COUNT(*) FROM request_posts post
              WHERE post.request_id = r.id AND post.moderation_status = 'published') AS discussion_count
-           FROM package_requests r LEFT JOIN votes v ON v.request_id = r.id
-           WHERE r.github_user_id = ? GROUP BY r.id ORDER BY r.created_at DESC`,
+           FROM package_requests r
+           WHERE r.github_user_id = ? ORDER BY r.created_at DESC`,
           [request.authUser.id],
         ),
         all(
@@ -1136,12 +1167,14 @@ function createApp(options = {}) {
       );
       const updated = await get(
         database,
-        `SELECT r.*, COUNT(v.voter_id) AS vote_count, 0 AS voted,
+        `SELECT r.*,
+          (SELECT COUNT(*) FROM votes anonymous_vote WHERE anonymous_vote.request_id = r.id) +
+          (SELECT COUNT(*) FROM github_votes github_vote WHERE github_vote.request_id = r.id) AS vote_count,
+          0 AS voted,
           (SELECT login FROM github_users user WHERE user.github_user_id = r.github_user_id) AS owner_github_login,
           (SELECT COUNT(*) FROM request_posts post
            WHERE post.request_id = r.id AND post.moderation_status = 'published') AS discussion_count
-         FROM package_requests r LEFT JOIN votes v ON v.request_id = r.id
-         WHERE r.id = ? GROUP BY r.id`,
+         FROM package_requests r WHERE r.id = ?`,
         [requestId],
       );
       response.json({ request: mapRequest(updated, true, request.authUser.id) });
@@ -1164,15 +1197,16 @@ function createApp(options = {}) {
     try {
       const rows = await all(
         database,
-        `SELECT r.*, COUNT(v.voter_id) AS vote_count, 0 AS voted,
+        `SELECT r.*,
+          (SELECT COUNT(*) FROM votes anonymous_vote WHERE anonymous_vote.request_id = r.id) +
+          (SELECT COUNT(*) FROM github_votes github_vote WHERE github_vote.request_id = r.id) AS vote_count,
+          0 AS voted,
           (SELECT login FROM github_users user WHERE user.github_user_id = r.github_user_id) AS owner_github_login,
           (SELECT COUNT(*) FROM request_posts post
            WHERE post.request_id = r.id AND post.moderation_status = 'published') AS discussion_count,
           (SELECT COUNT(*) FROM request_posts post
            WHERE post.request_id = r.id AND post.moderation_status = 'pending') AS pending_post_count
          FROM package_requests r
-         LEFT JOIN votes v ON v.request_id = r.id
-         GROUP BY r.id
          ORDER BY
            CASE r.status
              WHEN 'proposed' THEN 0
@@ -1542,10 +1576,36 @@ function createApp(options = {}) {
     }
   });
 
+  app.post("/api/me/votes/claim", ownerEditLimiter, async (request, response, next) => {
+    if (!request.authUser) {
+      response.status(401).json({ error: "Sign in with GitHub to claim browser votes." });
+      return;
+    }
+    const voterId = request.body?.voterId;
+    if (!validVoterId(voterId)) {
+      response.status(400).json({ error: "Invalid browser voter ID." });
+      return;
+    }
+    try {
+      const now = new Date().toISOString();
+      const result = await run(
+        database,
+        `INSERT OR IGNORE INTO github_votes (request_id, github_user_id, created_at)
+         SELECT request_id, ?, COALESCE(MIN(created_at), ?)
+         FROM votes WHERE voter_id = ? GROUP BY request_id`,
+        [request.authUser.id, now, voterId],
+      );
+      await run(database, "DELETE FROM votes WHERE voter_id = ?", [voterId]);
+      response.json({ success: true, claimed: result.changes });
+    } catch (error) {
+      next(error);
+    }
+  });
+
   app.put("/api/requests/:id/vote", voteLimiter, async (request, response, next) => {
     const requestId = Number.parseInt(request.params.id, 10);
-    const voterId = request.body.voterId;
-    if (!Number.isSafeInteger(requestId) || requestId < 1 || !validVoterId(voterId)) {
+    const voterId = request.body?.voterId;
+    if (!Number.isSafeInteger(requestId) || requestId < 1 || (!request.authUser && !validVoterId(voterId))) {
       response.status(400).json({ error: "Invalid vote." });
       return;
     }
@@ -1556,13 +1616,23 @@ function createApp(options = {}) {
         response.status(404).json({ error: "Package request not found." });
         return;
       }
-      await run(
-        database,
-        "INSERT OR IGNORE INTO votes (request_id, voter_id, created_at) VALUES (?, ?, ?)",
-        [requestId, voterId, new Date().toISOString()],
-      );
-      const count = await get(database, "SELECT COUNT(*) AS total FROM votes WHERE request_id = ?", [requestId]);
-      response.json({ voted: true, voteCount: count.total });
+      if (request.authUser) {
+        await run(
+          database,
+          "INSERT OR IGNORE INTO github_votes (request_id, github_user_id, created_at) VALUES (?, ?, ?)",
+          [requestId, request.authUser.id, new Date().toISOString()],
+        );
+        if (validVoterId(voterId)) {
+          await run(database, "DELETE FROM votes WHERE request_id = ? AND voter_id = ?", [requestId, voterId]);
+        }
+      } else {
+        await run(
+          database,
+          "INSERT OR IGNORE INTO votes (request_id, voter_id, created_at) VALUES (?, ?, ?)",
+          [requestId, voterId, new Date().toISOString()],
+        );
+      }
+      response.json({ voted: true, voteCount: await getVoteTotal(database, requestId) });
     } catch (error) {
       next(error);
     }
@@ -1570,16 +1640,26 @@ function createApp(options = {}) {
 
   app.delete("/api/requests/:id/vote", voteLimiter, async (request, response, next) => {
     const requestId = Number.parseInt(request.params.id, 10);
-    const voterId = request.body.voterId;
-    if (!Number.isSafeInteger(requestId) || requestId < 1 || !validVoterId(voterId)) {
+    const voterId = request.body?.voterId;
+    if (!Number.isSafeInteger(requestId) || requestId < 1 || (!request.authUser && !validVoterId(voterId))) {
       response.status(400).json({ error: "Invalid vote." });
       return;
     }
 
     try {
-      await run(database, "DELETE FROM votes WHERE request_id = ? AND voter_id = ?", [requestId, voterId]);
-      const count = await get(database, "SELECT COUNT(*) AS total FROM votes WHERE request_id = ?", [requestId]);
-      response.json({ voted: false, voteCount: count.total });
+      if (request.authUser) {
+        await run(
+          database,
+          "DELETE FROM github_votes WHERE request_id = ? AND github_user_id = ?",
+          [requestId, request.authUser.id],
+        );
+        if (validVoterId(voterId)) {
+          await run(database, "DELETE FROM votes WHERE request_id = ? AND voter_id = ?", [requestId, voterId]);
+        }
+      } else {
+        await run(database, "DELETE FROM votes WHERE request_id = ? AND voter_id = ?", [requestId, voterId]);
+      }
+      response.json({ voted: false, voteCount: await getVoteTotal(database, requestId) });
     } catch (error) {
       next(error);
     }
@@ -1757,14 +1837,16 @@ function createApp(options = {}) {
       }
       const updated = await get(
         database,
-        `SELECT r.*, COUNT(v.voter_id) AS vote_count, 0 AS voted,
+        `SELECT r.*,
+          (SELECT COUNT(*) FROM votes anonymous_vote WHERE anonymous_vote.request_id = r.id) +
+          (SELECT COUNT(*) FROM github_votes github_vote WHERE github_vote.request_id = r.id) AS vote_count,
+          0 AS voted,
           (SELECT login FROM github_users user WHERE user.github_user_id = r.github_user_id) AS owner_github_login,
           (SELECT COUNT(*) FROM request_posts p
            WHERE p.request_id = r.id AND p.moderation_status = 'published') AS discussion_count,
           (SELECT COUNT(*) FROM request_posts p
            WHERE p.request_id = r.id AND p.moderation_status = 'pending') AS pending_post_count
-         FROM package_requests r LEFT JOIN votes v ON v.request_id = r.id
-         WHERE r.id = ? GROUP BY r.id`,
+         FROM package_requests r WHERE r.id = ?`,
         [requestId],
       );
       response.json({ success: true, request: mapRequest(updated, true) });

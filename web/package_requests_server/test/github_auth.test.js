@@ -50,6 +50,20 @@ after(async () => {
 });
 
 test("uses GitHub identity to own and edit package requests and discussion posts", async () => {
+  const browserVoterId = "browser-voter-id-1234567890";
+  const guestRequestResponse = await fetch(`${baseUrl}/api/requests`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ packageName: "Guest Vote Claim", ecosystem: "general", description: "OK" }),
+  });
+  const guestRequest = (await guestRequestResponse.json()).request;
+  const guestVoteResponse = await fetch(`${baseUrl}/api/requests/${guestRequest.id}/vote`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ voterId: browserVoterId }),
+  });
+  assert.equal((await guestVoteResponse.json()).voteCount, 1);
+
   const configResponse = await fetch(`${baseUrl}/api/auth/config`);
   assert.deepEqual(await configResponse.json(), { githubEnabled: true });
 
@@ -82,6 +96,30 @@ test("uses GitHub identity to own and edit package requests and discussion posts
     avatarUrl: "https://avatars.example.com/4242",
     profileUrl: "https://github.com/octo-zopen",
   });
+
+  const claimResponse = await fetch(`${baseUrl}/api/me/votes/claim`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Cookie: sessionCookie },
+    body: JSON.stringify({ voterId: browserVoterId }),
+  });
+  assert.deepEqual(await claimResponse.json(), { success: true, claimed: 1 });
+  const duplicateClaimResponse = await fetch(`${baseUrl}/api/me/votes/claim`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Cookie: sessionCookie },
+    body: JSON.stringify({ voterId: browserVoterId }),
+  });
+  assert.deepEqual(await duplicateClaimResponse.json(), { success: true, claimed: 0 });
+  const signedVoteResponse = await fetch(`${baseUrl}/api/requests/${guestRequest.id}/vote`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json", Cookie: sessionCookie },
+    body: JSON.stringify({ voterId: "different-browser-voter-12345" }),
+  });
+  assert.deepEqual(await signedVoteResponse.json(), { voted: true, voteCount: 1 });
+  const signedListResponse = await fetch(`${baseUrl}/api/requests`, {
+    headers: { Cookie: sessionCookie, "X-Voter-ID": "different-browser-voter-12345" },
+  });
+  const signedList = await signedListResponse.json();
+  assert.equal(signedList.requests.find((item) => item.id === guestRequest.id).voted, true);
 
   const createResponse = await fetch(`${baseUrl}/api/requests`, {
     method: "POST",

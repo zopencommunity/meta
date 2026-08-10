@@ -47,6 +47,8 @@ A request records community interest in having an open-source project available 
 
 A vote is an advisory signal of community interest. It helps maintainers understand relative demand, but it is not a governance vote and does not by itself determine priority or approval. Formal project decisions follow the [zopen governance process](/Governance).
 
+Signed-in votes are associated privately with the user's stable GitHub ID, allowing one vote per request across that user's devices. When a user first signs in, votes already made in that browser are transferred to the GitHub identity without being counted twice. Guest voting remains available, so vote totals are still a demand signal rather than a verified election or formal governance decision.
+
 ### What should I add to a package discussion?
 
 Use the request's discussion and activity timeline to explain a concrete use case, offer testing or implementation help, share relevant technical information, or ask a package-specific question. Contributions are reviewed by maintainers before they become public. The timeline is not a support entitlement or a way to purchase priority; the [Code of Conduct](https://github.com/zopencommunity/meta/blob/main/CODE_OF_CONDUCT.md) applies.

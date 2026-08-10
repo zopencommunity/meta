@@ -329,12 +329,13 @@ test("changes status only with the admin token", async () => {
   const cascadeCounts = await new Promise((resolve, reject) => {
     database.get(
       `SELECT (SELECT COUNT(*) FROM votes) AS votes,
+        (SELECT COUNT(*) FROM github_votes) AS githubVotes,
         (SELECT COUNT(*) FROM request_events) AS events,
         (SELECT COUNT(*) FROM request_posts) AS posts`,
       (error, row) => error ? reject(error) : resolve(row),
     );
   });
-  assert.deepEqual(cascadeCounts, { votes: 0, events: 0, posts: 0 });
+  assert.deepEqual(cascadeCounts, { votes: 0, githubVotes: 0, events: 0, posts: 0 });
 });
 
 test("bulk creates valid requests and reports row-level duplicates and errors", async () => {

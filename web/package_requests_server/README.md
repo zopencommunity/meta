@@ -1,6 +1,6 @@
 # Package requests server
 
-This service stores package requests, anonymous votes, and moderated discussion
+This service stores package requests, guest or GitHub-authenticated votes, and moderated discussion
 contributions for the zopen community website. The VitePress site remains on
 GitHub Pages and calls this API from the browser.
 
@@ -137,6 +137,7 @@ the root login once the initial deployment is complete.
 - `GET /api/auth/config`, `GET /api/auth/me`, and `POST /api/auth/logout`
 - `GET /api/auth/github` and `GET /api/auth/github/callback`
 - `GET /api/me/submissions` and `PATCH /api/me/requests/:id` with a GitHub session
+- `POST /api/me/votes/claim` with a GitHub session to migrate this browser's guest votes
 - `GET /api/admin/pulp` with `Authorization: Bearer <ADMIN_TOKEN>`
 - `POST /api/admin/pulp/sync` with `Authorization: Bearer <ADMIN_TOKEN>`
 - `POST /api/admin/pulp/matches/:requestId/:source/approve` with `Authorization: Bearer <ADMIN_TOKEN>`
@@ -258,11 +259,14 @@ enter that user's GitHub login in the request editor to assign ownership.
 Status changes are appended to the `request_events` audit table. A request also
 records its first acknowledgement and availability timestamps.
 
-The public interface creates an opaque voter ID in browser storage. It is a
-low-friction community-interest signal, not a verified one-person-one-vote
-system. The unique database constraint prevents accidental duplicate votes from
-the same browser, and the API adds per-IP request throttling without storing IP
-addresses.
+For guests, the public interface creates an opaque voter ID in browser storage.
+For signed-in users, votes are keyed by the durable GitHub user ID, enforcing one
+vote per request across signed-in devices. On sign-in, the browser asks the API to
+move its existing guest votes to the GitHub identity and removes the corresponding
+guest rows so they are not counted twice. The API never exposes voter identities
+publicly and adds per-IP request throttling without storing IP addresses. Guest
+voting remains a low-friction interest signal and cannot prevent a determined
+person from using multiple anonymous browsers, so all votes remain advisory.
 
 The bulk-request interface accepts a pasted list or CSV, validates every row,
 and checks the public catalog before submission. The bulk API independently

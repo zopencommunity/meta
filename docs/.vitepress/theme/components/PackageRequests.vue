@@ -511,7 +511,17 @@ async function loadAuthentication() {
     if (!githubAuthEnabled.value) return;
     const result = await apiRequest("/auth/me");
     authUser.value = result.user || null;
-    if (authUser.value) await loadMySubmissions();
+    if (authUser.value) {
+      try {
+        await apiRequest("/me/votes/claim", {
+          method: "POST",
+          body: JSON.stringify({ voterId: getVoterId() }),
+        });
+      } catch {
+        // Voting still works; a later sign-in can retry claiming this browser's guest votes.
+      }
+      await loadRequests();
+    }
   } catch {
     githubAuthEnabled.value = false;
     authUser.value = null;
@@ -986,7 +996,7 @@ onMounted(async () => {
         <img v-if="authUser.avatarUrl" :src="authUser.avatarUrl" alt="" />
         <div>
           <strong>Signed in as @{{ authUser.login }}</strong>
-          <span>Your new requests and discussion posts can be edited from any signed-in device.</span>
+          <span>Your votes are tied to this GitHub identity, and your submissions can be edited from any signed-in device.</span>
         </div>
       </div>
       <div v-else>
