@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2026-08-10T20:17:46+00:00Z",
+  "generation_timestamp_utc": "2026-08-10T23:31:44+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -329,6 +329,10 @@
     "mmh3": "Python extension for MurmurHash (MurmurHash3), a set of fast and robust hash functions.",
     "django": "A high-level Python web framework that encourages rapid development and clean, pragmatic design.",
     "cookiecutter": "A command-line utility that creates projects from project templates, e.g. creating a Python package project from a Python package project template.",
-    "versioneer": "Easy VCS-based management of project version strings"
+    "versioneer": "Easy VCS-based management of project version strings",
+    "pydantic-core": "Core functionality for Pydantic validation and serialization (Rust extension, cross-compiled for z/OS)",
+    "rpds-py": "Python bindings to Rust's persistent data structures (rpds)",
+    "fastapi": "FastAPI web framework for building APIs with Python type hints",
+    "fastmcp": "FastMCP framework for building Model Context Protocol (MCP) servers in Python"
   }
 }
