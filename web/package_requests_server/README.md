@@ -236,6 +236,11 @@ submissions, but can be turned off before submission or later from **Edit reques
 It is separate from the name-and-organization visibility setting. The durable
 numeric GitHub ID and contact email are never included in the public API response.
 
+The same independent control applies to signed-in discussion contributions, which
+can show **Posted by @username** linked to the author's public GitHub profile. An
+author may hide or restore that attribution without changing the post's moderation
+status. Existing contributions remain hidden until their owner opts in.
+
 The OAuth App requests identity only: the authorization request has no repository
 or private-email scopes. The server exchanges the short-lived authorization code,
 reads the authenticated public GitHub profile, then discards the GitHub access

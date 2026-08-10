@@ -53,6 +53,8 @@ interface ActivityItem {
   authorRole?: "community" | "maintainer";
   authorName?: string;
   organization?: string;
+  showGithubPublicly?: boolean;
+  githubAuthor?: { login: string; profileUrl: string } | null;
   fromStatus?: RequestStatus;
   toStatus?: RequestStatus;
   note?: string;
@@ -67,6 +69,7 @@ interface OwnPost extends ActivityItem {
   moderationStatus: "pending" | "published" | "hidden";
   contactEmail: string;
   showAuthorPublicly: boolean;
+  showGithubPublicly: boolean;
 }
 
 interface BulkRow {
@@ -163,6 +166,7 @@ const postForm = reactive({
   organization: "",
   contactEmail: "",
   showAuthorPublicly: false,
+  showGithubPublicly: false,
   website: "",
 });
 
@@ -222,8 +226,9 @@ const postKinds: Record<string, string> = {
 
 const filteredRequests = computed(() => {
   const query = search.value.trim().toLowerCase();
+  const contributedRequestIds = new Set(githubOwnedPosts.value.map((post) => post.requestId));
   return requests.value.filter((request) => {
-    const matchesOwner = !showMine.value || request.ownedByCurrentUser;
+    const matchesOwner = !showMine.value || request.ownedByCurrentUser || contributedRequestIds.has(request.id);
     const matchesStatus = status.value === "all" || request.status === status.value;
     const matchesEcosystem = ecosystem.value === "all" || request.ecosystem === ecosystem.value;
     const matchesSearch =
@@ -519,6 +524,7 @@ async function loadAuthentication() {
     if (authUser.value) {
       form.showGithubPublicly = true;
       bulkForm.showGithubPublicly = true;
+      postForm.showGithubPublicly = true;
       try {
         await apiRequest("/me/votes/claim", {
           method: "POST",
@@ -642,6 +648,7 @@ function resetPostForm() {
   postForm.organization = "";
   postForm.contactEmail = "";
   postForm.showAuthorPublicly = false;
+  postForm.showGithubPublicly = Boolean(authUser.value);
   postForm.website = "";
   postError.value = "";
 }
@@ -713,6 +720,32 @@ async function editCommunityPost(requestId: number, post: ActivityItem | OwnPost
     await loadActivity(requestId);
   } catch (error) {
     postError.value = error instanceof Error ? error.message : "The contribution could not be edited.";
+  }
+}
+
+async function togglePostGithubAttribution(requestId: number, post: ActivityItem | OwnPost) {
+  if (typeof post.id !== "number") return;
+  postFeedbackRequestId.value = requestId;
+  postError.value = "";
+  try {
+    const result = await apiRequest(`/posts/${post.id}/attribution`, {
+      method: "PATCH",
+      body: JSON.stringify({ showGithubPublicly: !post.showGithubPublicly }),
+    });
+    ownPostsByRequest[requestId] = [
+      result.post,
+      ...(ownPostsByRequest[requestId] || []).filter((item) => item.id !== post.id),
+    ];
+    githubOwnedPosts.value = [
+      result.post,
+      ...githubOwnedPosts.value.filter((item) => item.id !== post.id),
+    ];
+    postMessage.value = result.post.showGithubPublicly
+      ? "Your GitHub account is now shown on this contribution."
+      : "Your GitHub account is now hidden from this contribution.";
+    await loadActivity(requestId);
+  } catch (error) {
+    postError.value = error instanceof Error ? error.message : "The attribution setting could not be changed.";
   }
 }
 
@@ -1566,8 +1599,14 @@ onMounted(async () => {
                       <span v-if="item.authorName || item.organization" class="activity-author">
                         {{ [item.authorName, item.organization].filter(Boolean).join(" · ") }}
                       </span>
+                      <span v-if="item.githubAuthor" class="activity-author">
+                        Posted by <a :href="item.githubAuthor.profileUrl" target="_blank" rel="noopener noreferrer">@{{ item.githubAuthor.login }} ↗</a>
+                      </span>
                       <div v-if="postToken(item.id) || item.ownedByCurrentUser" class="owner-actions">
                         <button type="button" @click="editCommunityPost(request.id, item)">Edit</button>
+                        <button v-if="item.ownedByCurrentUser" type="button" @click="togglePostGithubAttribution(request.id, item)">
+                          {{ item.showGithubPublicly ? "Hide GitHub attribution" : "Show GitHub attribution" }}
+                        </button>
                         <button type="button" @click="deleteCommunityPost(request.id, item)">Delete</button>
                       </div>
                     </template>
@@ -1586,6 +1625,9 @@ onMounted(async () => {
                   <p>{{ post.body }}</p>
                   <div class="owner-actions">
                     <button type="button" @click="editCommunityPost(request.id, post)">Edit</button>
+                    <button v-if="post.ownedByCurrentUser" type="button" @click="togglePostGithubAttribution(request.id, post)">
+                      {{ post.showGithubPublicly ? "Hide GitHub attribution" : "Show GitHub attribution" }}
+                    </button>
                     <button type="button" @click="deleteCommunityPost(request.id, post)">Delete</button>
                   </div>
                 </article>
@@ -1639,6 +1681,10 @@ onMounted(async () => {
                 <label class="checkbox-label">
                   <input v-model="postForm.showAuthorPublicly" type="checkbox" />
                   <span>Show my name and organization if this contribution is published.</span>
+                </label>
+                <label v-if="authUser" class="checkbox-label">
+                  <input v-model="postForm.showGithubPublicly" type="checkbox" />
+                  <span>Show “Posted by @{{ authUser.login }}” with a link to my GitHub profile.</span>
                 </label>
                 <label class="honeypot" aria-hidden="true">
                   <span>Website</span>

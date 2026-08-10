@@ -170,11 +170,56 @@ test("uses GitHub identity to own and edit package requests and discussion posts
   const postResponse = await fetch(`${baseUrl}/api/requests/${created.id}/posts`, {
     method: "POST",
     headers: { "Content-Type": "application/json", Cookie: sessionCookie },
-    body: JSON.stringify({ kind: "technical_note", body: "Owned note" }),
+    body: JSON.stringify({ kind: "technical_note", body: "Owned note", showGithubPublicly: true }),
   });
   assert.equal(postResponse.status, 202);
   const post = (await postResponse.json()).post;
   assert.equal(post.ownedByCurrentUser, true);
+  assert.deepEqual(post.githubAuthor, {
+    login: "octo-zopen",
+    profileUrl: "https://github.com/octo-zopen",
+  });
+
+  const publishPostResponse = await fetch(`${baseUrl}/api/admin/posts/${post.id}`, {
+    method: "PATCH",
+    headers: { Authorization: "Bearer test-admin-token", "Content-Type": "application/json" },
+    body: JSON.stringify({ moderationStatus: "published" }),
+  });
+  assert.equal(publishPostResponse.status, 200);
+  const adminPublishedPost = (await publishPostResponse.json()).post;
+  assert.equal(adminPublishedPost.ownerGithubId, 4242);
+  assert.equal(adminPublishedPost.ownerGithubLogin, "octo-zopen");
+  const publishedActivityResponse = await fetch(`${baseUrl}/api/requests/${created.id}/activity`);
+  const publishedPost = (await publishedActivityResponse.json()).activity.find((item) => item.id === post.id);
+  assert.deepEqual(publishedPost.githubAuthor, {
+    login: "octo-zopen",
+    profileUrl: "https://github.com/octo-zopen",
+  });
+
+  const hideAttributionResponse = await fetch(`${baseUrl}/api/posts/${post.id}/attribution`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", Cookie: sessionCookie },
+    body: JSON.stringify({ showGithubPublicly: false }),
+  });
+  const hiddenPost = (await hideAttributionResponse.json()).post;
+  assert.equal(hiddenPost.moderationStatus, "published");
+  assert.equal(hiddenPost.githubAuthor, null);
+  const hiddenActivityResponse = await fetch(`${baseUrl}/api/requests/${created.id}/activity`);
+  const publiclyHiddenPost = (await hiddenActivityResponse.json()).activity.find((item) => item.id === post.id);
+  assert.equal(publiclyHiddenPost.githubAuthor, null);
+  assert.equal(Object.hasOwn(publiclyHiddenPost, "ownerGithubId"), false);
+  const anonymousAttributionResponse = await fetch(`${baseUrl}/api/posts/${post.id}/attribution`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ showGithubPublicly: true }),
+  });
+  assert.equal(anonymousAttributionResponse.status, 401);
+  const showAttributionResponse = await fetch(`${baseUrl}/api/posts/${post.id}/attribution`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", Cookie: sessionCookie },
+    body: JSON.stringify({ showGithubPublicly: true }),
+  });
+  assert.equal((await showAttributionResponse.json()).post.moderationStatus, "published");
 
   const editPostResponse = await fetch(`${baseUrl}/api/posts/${post.id}`, {
     method: "PATCH",

@@ -116,12 +116,15 @@ test("moderates community posts and publishes a verified activity timeline", asy
       organization: "Private Company",
       contactEmail: "tester@example.com",
       showAuthorPublicly: false,
+      showGithubPublicly: true,
     }),
   });
   assert.equal(createPostResponse.status, 202);
   const created = await createPostResponse.json();
   assert.equal(created.post.moderationStatus, "pending");
   assert.equal(created.post.contactEmail, "tester@example.com");
+  assert.equal(created.post.showGithubPublicly, false);
+  assert.equal(created.post.githubAuthor, null);
   assert.match(created.editToken, /^[A-Za-z0-9_-]{40,}$/);
 
   const initialActivity = await fetch(`${baseUrl}/api/requests/1/activity`);

@@ -55,7 +55,7 @@ Use the request's discussion and activity timeline to explain a concrete use cas
 
 ### Will my identity or email be public in a discussion?
 
-Public attribution is optional. Your contact email is never shown by the public API and is available only to administrators for follow-up. After submission, the current browser stores a private edit key so you can edit or delete your contribution without an account. Editing a published contribution sends it through moderation again. If you clear browser storage or use another browser, an administrator can still help update or remove it.
+Public attribution is optional. If you are signed in, new contributions default to showing **Posted by @username** with a link to your public GitHub profile, but you can turn this off before posting or hide it later without removing the contribution from the public timeline. This GitHub attribution is independent of the optional name-and-organization attribution. Your numeric GitHub ID and contact email are never shown by the public API; the email is available only to administrators for follow-up. Guest contributions remain anonymous unless the author chooses to show a name or organization. After a guest submission, the current browser stores a private edit key so you can edit or delete the contribution without an account. Editing the content of a published contribution sends it through moderation again. If you clear browser storage or use another browser, an administrator can still help update or remove it.
 
 ### Can I edit a package request after submitting it?
 

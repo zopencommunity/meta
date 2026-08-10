@@ -66,6 +66,10 @@ interface CommunityPost {
   organization: string;
   contactEmail: string;
   showAuthorPublicly: boolean;
+  showGithubPublicly: boolean;
+  githubAuthor: { login: string; profileUrl: string } | null;
+  ownerGithubId: number | null;
+  ownerGithubLogin: string;
   moderationStatus: "pending" | "published" | "hidden";
   createdAt: string;
   updatedAt: string;
@@ -232,6 +236,7 @@ async function moderatePost(post: CommunityPost, moderationStatus = post.moderat
         organization: post.organization,
         contactEmail: post.contactEmail,
         showAuthorPublicly: post.showAuthorPublicly,
+        showGithubPublicly: post.showGithubPublicly,
         moderationStatus,
       }),
     });
@@ -513,10 +518,12 @@ onMounted(async () => {
               <label><span>Organization</span><input v-model.trim="post.organization" maxlength="160" /></label>
               <label><span>Contact email (private)</span><input v-model.trim="post.contactEmail" type="email" maxlength="254" /></label>
               <label><span>Public attribution</span><select v-model="post.showAuthorPublicly"><option :value="false">Hidden</option><option :value="true">Show name and organization</option></select></label>
+              <label><span>Public GitHub attribution</span><select v-model="post.showGithubPublicly"><option :value="false">Hidden</option><option :value="true">Show linked GitHub login</option></select></label>
             </div>
             <div class="moderation-meta">
               Submitted {{ new Date(post.createdAt).toLocaleString() }}
               <span v-if="post.authorRole === 'maintainer'"> · Verified maintainer post</span>
+              <span v-else-if="post.ownerGithubLogin"> · GitHub owner: @{{ post.ownerGithubLogin }} (ID {{ post.ownerGithubId }})</span>
             </div>
             <div class="moderation-actions">
               <button class="danger" type="button" :disabled="moderationBusy" @click="deleteModerationPost(post)">Delete</button>

@@ -178,6 +178,7 @@ async function initializeDatabase(database) {
       organization TEXT NOT NULL DEFAULT '',
       contact_email TEXT NOT NULL DEFAULT '',
       show_author_publicly INTEGER NOT NULL DEFAULT 0 CHECK (show_author_publicly IN (0, 1)),
+      show_github_publicly INTEGER NOT NULL DEFAULT 0 CHECK (show_github_publicly IN (0, 1)),
       author_role TEXT NOT NULL DEFAULT 'community' CHECK (author_role IN ('community', 'maintainer')),
       moderation_status TEXT NOT NULL DEFAULT 'pending' CHECK (
         moderation_status IN ('pending', 'published', 'hidden')
@@ -194,6 +195,9 @@ async function initializeDatabase(database) {
   const postColumns = await all(database, "PRAGMA table_info(request_posts)");
   if (!postColumns.some((column) => column.name === "github_user_id")) {
     await run(database, "ALTER TABLE request_posts ADD COLUMN github_user_id INTEGER");
+  }
+  if (!postColumns.some((column) => column.name === "show_github_publicly")) {
+    await run(database, "ALTER TABLE request_posts ADD COLUMN show_github_publicly INTEGER NOT NULL DEFAULT 0");
   }
   await run(
     database,
@@ -426,6 +430,7 @@ function validatePost(body, role = "community") {
     organization: cleanText(source.organization, 160),
     contactEmail: cleanText(source.contactEmail, 254),
     showAuthorPublicly: Boolean(source.showAuthorPublicly),
+    showGithubPublicly: Boolean(source.showGithubPublicly),
   };
   const validKinds = role === "maintainer" ? MAINTAINER_POST_KINDS : COMMUNITY_POST_KINDS;
   if (!validKinds.has(post.kind)) return { error: "Choose a valid contribution type." };
@@ -452,6 +457,13 @@ function mapPost(row, includePrivate = false, currentGithubUserId = null) {
     authorName: isMaintainer ? "zopen maintainer" : includePrivate || showAuthor ? row.author_name || "" : "",
     organization: isMaintainer ? "" : includePrivate || showAuthor ? row.organization || "" : "",
     showAuthorPublicly: isMaintainer || Boolean(row.show_author_publicly),
+    showGithubPublicly: !isMaintainer && Boolean(row.show_github_publicly),
+    githubAuthor: !isMaintainer && Boolean(row.show_github_publicly) && row.owner_github_login
+      ? {
+          login: row.owner_github_login,
+          profileUrl: `https://github.com/${encodeURIComponent(row.owner_github_login)}`,
+        }
+      : null,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
     publishedAt: row.published_at || null,
@@ -462,6 +474,14 @@ function mapPost(row, includePrivate = false, currentGithubUserId = null) {
     post.moderationStatus = row.moderation_status;
   }
   return post;
+}
+
+function mapAdminPost(row) {
+  return {
+    ...mapPost(row, true),
+    ownerGithubId: row.github_user_id ? Number(row.github_user_id) : null,
+    ownerGithubLogin: row.owner_github_login || "",
+  };
 }
 
 function validateSubmission(body) {
@@ -909,7 +929,9 @@ function createApp(options = {}) {
         ),
         all(
           database,
-          `SELECT * FROM request_posts
+          `SELECT post.*,
+            (SELECT login FROM github_users user WHERE user.github_user_id = post.github_user_id) AS owner_github_login
+           FROM request_posts post
            WHERE request_id = ? AND moderation_status = 'published' ORDER BY created_at`,
           [requestId],
         ),
@@ -965,9 +987,9 @@ function createApp(options = {}) {
         database,
         `INSERT INTO request_posts (
           request_id, kind, body, author_name, organization, contact_email,
-          show_author_publicly, author_role, moderation_status, edit_token_hash,
+          show_author_publicly, show_github_publicly, author_role, moderation_status, edit_token_hash,
           created_at, updated_at, github_user_id
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, 'community', 'pending', ?, ?, ?, ?)`,
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'community', 'pending', ?, ?, ?, ?)`,
         [
           requestId,
           validated.post.kind,
@@ -976,13 +998,20 @@ function createApp(options = {}) {
           validated.post.organization,
           validated.post.contactEmail,
           validated.post.showAuthorPublicly ? 1 : 0,
+          validated.post.showGithubPublicly && request.authUser ? 1 : 0,
           hashEditToken(editToken),
           now,
           now,
           request.authUser?.id || null,
         ],
       );
-      const row = await get(database, "SELECT * FROM request_posts WHERE id = ?", [result.id]);
+      const row = await get(
+        database,
+        `SELECT post.*,
+          (SELECT login FROM github_users user WHERE user.github_user_id = post.github_user_id) AS owner_github_login
+         FROM request_posts post WHERE post.id = ?`,
+        [result.id],
+      );
       response.status(202).json({ post: mapPost(row, true, request.authUser?.id), editToken });
     } catch (error) {
       next(error);
@@ -996,7 +1025,13 @@ function createApp(options = {}) {
       return;
     }
     try {
-      const row = await get(database, "SELECT * FROM request_posts WHERE id = ?", [postId]);
+      const row = await get(
+        database,
+        `SELECT post.*,
+          (SELECT login FROM github_users user WHERE user.github_user_id = post.github_user_id) AS owner_github_login
+         FROM request_posts post WHERE post.id = ?`,
+        [postId],
+      );
       const ownsPost = request.authUser && Number(row?.github_user_id) === request.authUser.id;
       if (!row || row.author_role !== "community" || (!ownsPost && !editTokenMatches(request, row))) {
         response.status(404).json({ error: "Post not found." });
@@ -1028,6 +1063,7 @@ function createApp(options = {}) {
         organization: request.body?.organization ?? existing.organization,
         contactEmail: request.body?.contactEmail ?? existing.contact_email,
         showAuthorPublicly: request.body?.showAuthorPublicly ?? Boolean(existing.show_author_publicly),
+        showGithubPublicly: request.body?.showGithubPublicly ?? Boolean(existing.show_github_publicly),
       });
       if (validated.error) {
         response.status(400).json({ error: validated.error });
@@ -1037,7 +1073,7 @@ function createApp(options = {}) {
       await run(
         database,
         `UPDATE request_posts SET kind = ?, body = ?, author_name = ?, organization = ?,
-         contact_email = ?, show_author_publicly = ?, moderation_status = 'pending',
+         contact_email = ?, show_author_publicly = ?, show_github_publicly = ?, moderation_status = 'pending',
          updated_at = ?, published_at = NULL, reviewed_at = NULL WHERE id = ?`,
         [
           validated.post.kind,
@@ -1046,12 +1082,54 @@ function createApp(options = {}) {
           validated.post.organization,
           validated.post.contactEmail,
           validated.post.showAuthorPublicly ? 1 : 0,
+          validated.post.showGithubPublicly && ownsPost ? 1 : 0,
           now,
           postId,
         ],
       );
-      const updated = await get(database, "SELECT * FROM request_posts WHERE id = ?", [postId]);
+      const updated = await get(
+        database,
+        `SELECT post.*,
+          (SELECT login FROM github_users user WHERE user.github_user_id = post.github_user_id) AS owner_github_login
+         FROM request_posts post WHERE post.id = ?`,
+        [postId],
+      );
       response.json({ post: mapPost(updated, true, request.authUser?.id) });
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.patch("/api/posts/:id/attribution", postSubmissionLimiter, async (request, response, next) => {
+    if (!request.authUser) {
+      response.status(401).json({ error: "Sign in with GitHub to change comment attribution." });
+      return;
+    }
+    const postId = Number.parseInt(request.params.id, 10);
+    if (!Number.isSafeInteger(postId) || postId < 1) {
+      response.status(400).json({ error: "Invalid post ID." });
+      return;
+    }
+    try {
+      const existing = await get(database, "SELECT * FROM request_posts WHERE id = ?", [postId]);
+      if (!existing || existing.author_role !== "community" || Number(existing.github_user_id) !== request.authUser.id) {
+        response.status(404).json({ error: "Post not found." });
+        return;
+      }
+      const now = new Date().toISOString();
+      await run(
+        database,
+        "UPDATE request_posts SET show_github_publicly = ?, updated_at = ? WHERE id = ?",
+        [request.body?.showGithubPublicly ? 1 : 0, now, postId],
+      );
+      const updated = await get(
+        database,
+        `SELECT post.*,
+          (SELECT login FROM github_users user WHERE user.github_user_id = post.github_user_id) AS owner_github_login
+         FROM request_posts post WHERE post.id = ?`,
+        [postId],
+      );
+      response.json({ post: mapPost(updated, true, request.authUser.id) });
     } catch (error) {
       next(error);
     }
@@ -1100,7 +1178,8 @@ function createApp(options = {}) {
         ),
         all(
           database,
-          `SELECT post.*, r.package_name AS request_package_name
+          `SELECT post.*, r.package_name AS request_package_name,
+            (SELECT login FROM github_users user WHERE user.github_user_id = post.github_user_id) AS owner_github_login
            FROM request_posts post JOIN package_requests r ON r.id = post.request_id
            WHERE post.github_user_id = ? AND post.author_role = 'community'
            ORDER BY post.created_at DESC`,
@@ -1290,14 +1369,15 @@ function createApp(options = {}) {
     try {
       const rows = await all(
         database,
-        `SELECT post.*, r.package_name AS request_package_name
+        `SELECT post.*, r.package_name AS request_package_name,
+          (SELECT login FROM github_users user WHERE user.github_user_id = post.github_user_id) AS owner_github_login
          FROM request_posts post JOIN package_requests r ON r.id = post.request_id
          ${status ? "WHERE post.moderation_status = ?" : ""}
          ORDER BY CASE post.moderation_status WHEN 'pending' THEN 0 WHEN 'published' THEN 1 ELSE 2 END,
            post.created_at DESC`,
         status ? [status] : [],
       );
-      response.json({ posts: rows.map((row) => mapPost(row, true)) });
+      response.json({ posts: rows.map(mapAdminPost) });
     } catch (error) {
       next(error);
     }
@@ -1371,6 +1451,7 @@ function createApp(options = {}) {
           organization: request.body?.organization ?? existing.organization,
           contactEmail: request.body?.contactEmail ?? existing.contact_email,
           showAuthorPublicly: request.body?.showAuthorPublicly ?? Boolean(existing.show_author_publicly),
+          showGithubPublicly: request.body?.showGithubPublicly ?? Boolean(existing.show_github_publicly),
         },
         existing.author_role,
       );
@@ -1382,7 +1463,7 @@ function createApp(options = {}) {
       await run(
         database,
         `UPDATE request_posts SET kind = ?, body = ?, author_name = ?, organization = ?,
-         contact_email = ?, show_author_publicly = ?, moderation_status = ?, updated_at = ?,
+         contact_email = ?, show_author_publicly = ?, show_github_publicly = ?, moderation_status = ?, updated_at = ?,
          published_at = CASE WHEN ? = 'published' THEN COALESCE(published_at, ?) ELSE NULL END,
          reviewed_at = CASE WHEN ? = 'pending' THEN NULL ELSE ? END WHERE id = ?`,
         [
@@ -1392,6 +1473,7 @@ function createApp(options = {}) {
           validated.post.organization,
           validated.post.contactEmail,
           validated.post.showAuthorPublicly ? 1 : 0,
+          validated.post.showGithubPublicly ? 1 : 0,
           moderationStatus,
           now,
           moderationStatus,
@@ -1401,8 +1483,14 @@ function createApp(options = {}) {
           postId,
         ],
       );
-      const updated = await get(database, "SELECT * FROM request_posts WHERE id = ?", [postId]);
-      response.json({ post: mapPost(updated, true) });
+      const updated = await get(
+        database,
+        `SELECT post.*,
+          (SELECT login FROM github_users user WHERE user.github_user_id = post.github_user_id) AS owner_github_login
+         FROM request_posts post WHERE post.id = ?`,
+        [postId],
+      );
+      response.json({ post: mapAdminPost(updated) });
     } catch (error) {
       next(error);
     }
