@@ -1337,7 +1337,7 @@ onMounted(async () => {
         </div>
       </div>
 
-      <div class="board-controls">
+      <div class="board-controls" :class="{ 'has-mine-filter': authUser }">
         <button
           v-if="authUser"
           class="mine-filter"
@@ -1689,7 +1689,7 @@ onMounted(async () => {
 .notice.success { color: #09634f; border: 1px solid #85cdbd; background: #e7f8f3; }
 .dark .notice.success { color: #a8e6d6; border-color: #275e52; background: #142d28; }
 .notice.error { color: var(--vp-c-danger-1); border: 1px solid var(--vp-c-danger-2); background: var(--vp-c-danger-soft); }
-.mine-filter { min-height: 40px; padding: 0 14px; border: 1px solid var(--vp-c-divider); border-radius: 9px; color: var(--vp-c-text-2); background: var(--vp-c-bg); font: inherit; font-size: 14px; cursor: pointer; }
+.mine-filter { min-height: 44px; padding: 0 16px; border: 1px solid var(--vp-c-divider); border-radius: 9px; color: var(--vp-c-text-2); background: var(--vp-c-bg); font: inherit; font-size: 14px; white-space: nowrap; cursor: pointer; }
 .mine-filter.active { color: white; border-color: var(--request-accent); background: var(--request-accent); }
 .request-owner-tools { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px; padding: 10px 12px; border: 1px solid color-mix(in srgb, var(--request-accent) 35%, var(--vp-c-divider)); border-radius: 10px; color: var(--request-accent); background: color-mix(in srgb, var(--request-accent) 7%, var(--vp-c-bg)); font-size: 13px; font-weight: 650; }
 .request-edit-form { display: grid; gap: 14px; margin-top: 14px; padding: 18px; border: 1px solid var(--vp-c-divider); border-radius: 12px; background: var(--vp-c-bg-soft); }
@@ -1754,10 +1754,11 @@ onMounted(async () => {
 .bulk-existing-action { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 10px 12px; margin: 12px 0 0; border-radius: 8px; color: var(--vp-c-text-2); background: var(--vp-c-bg-alt); font-size: 13px; }
 .request-board { padding: 28px; }
 .board-controls { display: grid; grid-template-columns: minmax(220px, 1fr) 170px 160px auto; gap: 12px; margin: 24px 0; }
+.board-controls.has-mine-filter { grid-template-columns: auto minmax(220px, 1fr) 170px 160px auto; }
 .search-control { position: relative; }
 .search-control svg { position: absolute; z-index: 1; width: 18px; left: 13px; top: 13px; fill: none; stroke: var(--vp-c-text-3); stroke-width: 2; stroke-linecap: round; }
 .search-control input { padding-left: 40px; }
-.sort-control { display: flex; padding: 3px; border: 1px solid var(--vp-c-divider); border-radius: 9px; background: var(--vp-c-bg-soft); }
+.sort-control { display: flex; min-height: 44px; padding: 3px; border: 1px solid var(--vp-c-divider); border-radius: 9px; background: var(--vp-c-bg-soft); }
 .sort-control button { min-width: 70px; border: 0; border-radius: 6px; color: var(--vp-c-text-2); background: transparent; font: inherit; font-size: 14px; cursor: pointer; }
 .sort-control button.active { color: var(--vp-c-text-1); background: var(--vp-c-bg); box-shadow: var(--vp-shadow-1); font-weight: 650; }
 .request-list { display: grid; gap: 12px; }
