@@ -46,6 +46,11 @@ VITE_PACKAGE_REQUESTS_API_URL=http://localhost:3100/api npm run docs:dev
 | `TRUST_PROXY` | `false` | Set to `true` behind one trusted reverse proxy so rate limiting sees client IPs |
 | `PULP_RPM_BASE_URL` | production zopen RPM repository | Override the RPM repository used by synchronization |
 | `PULP_WHEEL_BASE_URL` | production wheels repository | Override the wheel directory used by synchronization |
+| `GITHUB_OAUTH_CLIENT_ID` | none | Enables GitHub sign-in when set with the client secret and callback URL |
+| `GITHUB_OAUTH_CLIENT_SECRET` | none | Private OAuth App credential; keep outside Git |
+| `GITHUB_OAUTH_CALLBACK_URL` | none | Exact public callback registered in the GitHub OAuth App |
+| `SITE_URL` | package-request page | Browser destination after GitHub sign-in |
+| `PUBLIC_API_PATH` | `/api` | Public URL path used to scope secure session cookies |
 
 For production, use a persistent database path, set `ALLOWED_ORIGINS` to the
 exact GitHub Pages/custom-domain origin, provide a long random `ADMIN_TOKEN`, and
@@ -129,6 +134,9 @@ the root login once the initial deployment is complete.
 - `GET /api/admin/posts?status=pending|published|hidden|all` with `Authorization: Bearer <ADMIN_TOKEN>`
 - `POST /api/admin/requests/:id/posts` with `Authorization: Bearer <ADMIN_TOKEN>`
 - `PATCH` or `DELETE /api/admin/posts/:id` with `Authorization: Bearer <ADMIN_TOKEN>`
+- `GET /api/auth/config`, `GET /api/auth/me`, and `POST /api/auth/logout`
+- `GET /api/auth/github` and `GET /api/auth/github/callback`
+- `GET /api/me/submissions` and `PATCH /api/me/requests/:id` with a GitHub session
 - `GET /api/admin/pulp` with `Authorization: Bearer <ADMIN_TOKEN>`
 - `POST /api/admin/pulp/sync` with `Authorization: Bearer <ADMIN_TOKEN>`
 - `POST /api/admin/pulp/matches/:requestId/:source/approve` with `Authorization: Bearer <ADMIN_TOKEN>`
@@ -209,6 +217,43 @@ length and link count, applies per-IP submission throttling without storing IP
 addresses, and includes a honeypot field for simple bot filtering. This is a
 focused request discussion, not a general-purpose forum; the community Code of
 Conduct applies.
+
+## GitHub sign-in and submission ownership
+
+GitHub sign-in is optional. Guest package requests continue to work, and guest
+discussion posts retain their browser-held edit token. When GitHub OAuth is
+configured, a signed-in user's new package requests and discussion contributions
+are linked to GitHub's durable numeric user ID. The user can then view **My
+submissions** and edit those items from any browser where they sign in.
+
+The OAuth App requests identity only: the authorization request has no repository
+or private-email scopes. The server exchanges the short-lived authorization code,
+reads the authenticated public GitHub profile, then discards the GitHub access
+token. It creates its own random 30-day session token, stores only a SHA-256 hash,
+and sends the raw token in a `Secure`, `HttpOnly`, `SameSite=Lax` cookie. OAuth
+state is also bound to an `HttpOnly` cookie. Never place the OAuth client secret or
+session token in the GitHub Pages build.
+
+Create an organization-owned GitHub OAuth App with these production values:
+
+- Homepage URL: `https://zopen.community/PackageRequests`
+- Authorization callback URL: `https://usage.zopen.community/package-requests/api/auth/github/callback`
+- Device flow: disabled
+
+Then add the following only to `/etc/zopen-package-requests.env` on the API host:
+
+```bash
+GITHUB_OAUTH_CLIENT_ID=the-client-id
+GITHUB_OAUTH_CLIENT_SECRET=the-client-secret
+GITHUB_OAUTH_CALLBACK_URL=https://usage.zopen.community/package-requests/api/auth/github/callback
+SITE_URL=https://zopen.community/PackageRequests
+PUBLIC_API_PATH=/package-requests/api
+```
+
+Restart `zopen-package-requests` after changing the environment. GitHub sign-in
+remains hidden when any of the three OAuth variables is absent. Existing requests
+are not claimed automatically. After a user signs in once, an administrator can
+enter that user's GitHub login in the request editor to assign ownership.
 
 Status changes are appended to the `request_events` audit table. A request also
 records its first acknowledgement and availability timestamps.

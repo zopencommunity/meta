@@ -49,6 +49,9 @@ const COMMUNITY_POST_KINDS = new Set([
 const MAINTAINER_POST_KINDS = new Set(["maintainer_update", "technical_note", "question"]);
 const VALID_POST_MODERATION_STATUSES = new Set(["pending", "published", "hidden"]);
 const MAX_BULK_REQUESTS = 25;
+const AUTH_SESSION_DAYS = 30;
+const SESSION_COOKIE = "zopen_request_session";
+const OAUTH_STATE_COOKIE = "zopen_oauth_state";
 
 function openDatabase(databasePath) {
   if (databasePath !== ":memory:") {
@@ -106,6 +109,7 @@ async function initializeDatabase(database) {
       organization TEXT NOT NULL DEFAULT '',
       contact_email TEXT NOT NULL DEFAULT '',
       show_requester_publicly INTEGER NOT NULL DEFAULT 0 CHECK (show_requester_publicly IN (0, 1)),
+      github_user_id INTEGER,
       upstream_url TEXT NOT NULL,
       description TEXT NOT NULL,
       use_case TEXT NOT NULL DEFAULT '',
@@ -130,6 +134,7 @@ async function initializeDatabase(database) {
     ["organization", "TEXT NOT NULL DEFAULT ''"],
     ["contact_email", "TEXT NOT NULL DEFAULT ''"],
     ["show_requester_publicly", "INTEGER NOT NULL DEFAULT 0"],
+    ["github_user_id", "INTEGER"],
   ];
   for (const [columnName, definition] of migrations) {
     if (!columns.some((column) => column.name === columnName)) {
@@ -180,6 +185,43 @@ async function initializeDatabase(database) {
       updated_at TEXT NOT NULL,
       published_at TEXT,
       reviewed_at TEXT,
+      github_user_id INTEGER,
+      FOREIGN KEY (request_id) REFERENCES package_requests(id) ON DELETE CASCADE
+    )`,
+  );
+  const postColumns = await all(database, "PRAGMA table_info(request_posts)");
+  if (!postColumns.some((column) => column.name === "github_user_id")) {
+    await run(database, "ALTER TABLE request_posts ADD COLUMN github_user_id INTEGER");
+  }
+  await run(
+    database,
+    `CREATE TABLE IF NOT EXISTS github_users (
+      github_user_id INTEGER PRIMARY KEY,
+      login TEXT NOT NULL,
+      avatar_url TEXT NOT NULL DEFAULT '',
+      profile_url TEXT NOT NULL DEFAULT '',
+      created_at TEXT NOT NULL,
+      updated_at TEXT NOT NULL
+    )`,
+  );
+  await run(
+    database,
+    `CREATE TABLE IF NOT EXISTS auth_sessions (
+      token_hash TEXT PRIMARY KEY,
+      github_user_id INTEGER NOT NULL,
+      created_at TEXT NOT NULL,
+      expires_at TEXT NOT NULL,
+      last_seen_at TEXT NOT NULL,
+      FOREIGN KEY (github_user_id) REFERENCES github_users(github_user_id) ON DELETE CASCADE
+    )`,
+  );
+  await run(
+    database,
+    `CREATE TABLE IF NOT EXISTS request_edits (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      request_id INTEGER NOT NULL,
+      github_user_id INTEGER NOT NULL,
+      created_at TEXT NOT NULL,
       FOREIGN KEY (request_id) REFERENCES package_requests(id) ON DELETE CASCADE
     )`,
   );
@@ -244,6 +286,11 @@ async function initializeDatabase(database) {
   );
   await run(database, "CREATE INDEX IF NOT EXISTS idx_request_posts_request_id ON request_posts(request_id)");
   await run(database, "CREATE INDEX IF NOT EXISTS idx_request_posts_moderation ON request_posts(moderation_status)");
+  await run(database, "CREATE INDEX IF NOT EXISTS idx_package_requests_github_user ON package_requests(github_user_id)");
+  await run(database, "CREATE INDEX IF NOT EXISTS idx_request_posts_github_user ON request_posts(github_user_id)");
+  await run(database, "CREATE INDEX IF NOT EXISTS idx_auth_sessions_user ON auth_sessions(github_user_id)");
+  await run(database, "CREATE INDEX IF NOT EXISTS idx_auth_sessions_expiry ON auth_sessions(expires_at)");
+  await run(database, "CREATE INDEX IF NOT EXISTS idx_request_edits_request ON request_edits(request_id)");
   await run(database, "CREATE INDEX IF NOT EXISTS idx_pulp_artifacts_name ON pulp_artifacts(source, normalized_name)");
   await run(database, "CREATE INDEX IF NOT EXISTS idx_pulp_matches_status ON pulp_matches(status)");
 }
@@ -281,6 +328,71 @@ function hashEditToken(value) {
   return crypto.createHash("sha256").update(String(value || "")).digest("hex");
 }
 
+function parseCookies(request) {
+  const cookies = {};
+  for (const part of String(request.get("Cookie") || "").split(";")) {
+    const separator = part.indexOf("=");
+    if (separator < 1) continue;
+    const name = part.slice(0, separator).trim();
+    try {
+      cookies[name] = decodeURIComponent(part.slice(separator + 1).trim());
+    } catch {
+      cookies[name] = "";
+    }
+  }
+  return cookies;
+}
+
+function cookieHeader(name, value, options = {}) {
+  const parts = [`${name}=${encodeURIComponent(value)}`, `Path=${options.path || "/api"}`, "HttpOnly", "SameSite=Lax"];
+  if (options.secure) parts.push("Secure");
+  if (options.maxAge !== undefined) parts.push(`Max-Age=${Math.max(0, Math.floor(options.maxAge))}`);
+  return parts.join("; ");
+}
+
+function safeEqual(left, right) {
+  const leftValue = String(left || "");
+  const rightValue = String(right || "");
+  return Boolean(
+    leftValue &&
+      rightValue &&
+      leftValue.length === rightValue.length &&
+      crypto.timingSafeEqual(Buffer.from(leftValue), Buffer.from(rightValue)),
+  );
+}
+
+function mapGithubUser(row) {
+  return row
+    ? {
+        id: Number(row.github_user_id),
+        login: row.login,
+        avatarUrl: row.avatar_url || "",
+        profileUrl: row.profile_url || `https://github.com/${encodeURIComponent(row.login)}`,
+      }
+    : null;
+}
+
+async function authenticatedUser(database, request) {
+  const token = parseCookies(request)[SESSION_COOKIE];
+  if (!token) return null;
+  const now = new Date().toISOString();
+  const row = await get(
+    database,
+    `SELECT user.*, session.expires_at
+     FROM auth_sessions session
+     JOIN github_users user ON user.github_user_id = session.github_user_id
+     WHERE session.token_hash = ? AND session.expires_at > ?`,
+    [hashEditToken(token), now],
+  );
+  if (!row) return null;
+  await run(
+    database,
+    "UPDATE auth_sessions SET last_seen_at = ? WHERE token_hash = ?",
+    [now, hashEditToken(token)],
+  );
+  return mapGithubUser(row);
+}
+
 function editTokenMatches(request, row) {
   const suppliedHash = hashEditToken(request.get("X-Edit-Token"));
   const storedHash = String(row?.edit_token_hash || "");
@@ -313,7 +425,7 @@ function validatePost(body, role = "community") {
   return { post };
 }
 
-function mapPost(row, includePrivate = false) {
+function mapPost(row, includePrivate = false, currentGithubUserId = null) {
   const isMaintainer = row.author_role === "maintainer";
   const showAuthor = isMaintainer || Boolean(row.show_author_publicly);
   const post = {
@@ -329,6 +441,7 @@ function mapPost(row, includePrivate = false) {
     createdAt: row.created_at,
     updatedAt: row.updated_at,
     publishedAt: row.published_at || null,
+    ownedByCurrentUser: Boolean(currentGithubUserId && Number(row.github_user_id) === Number(currentGithubUserId)),
   };
   if (includePrivate) {
     post.contactEmail = row.contact_email || "";
@@ -371,15 +484,15 @@ function validateSubmission(body) {
   return { submission };
 }
 
-async function insertSubmission(database, submission) {
+async function insertSubmission(database, submission, githubUserId = null) {
   const now = new Date().toISOString();
   const result = await run(
     database,
     `INSERT INTO package_requests (
       package_name, normalized_name, ecosystem, upstream_url, description, use_case,
-      can_help_test, requester_name, organization, contact_email, show_requester_publicly,
+      can_help_test, requester_name, organization, contact_email, show_requester_publicly, github_user_id,
       status, created_at, updated_at
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'proposed', ?, ?)`,
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'proposed', ?, ?)`,
     [
       submission.packageName,
       submission.normalizedName,
@@ -392,6 +505,7 @@ async function insertSubmission(database, submission) {
       submission.organization,
       submission.contactEmail,
       submission.showRequesterPublicly ? 1 : 0,
+      githubUserId,
       now,
       now,
     ],
@@ -401,10 +515,10 @@ async function insertSubmission(database, submission) {
     "SELECT *, 0 AS vote_count, 0 AS voted FROM package_requests WHERE id = ?",
     [result.id],
   );
-  return mapRequest(row);
+  return mapRequest(row, Boolean(githubUserId), githubUserId);
 }
 
-function mapRequest(row, includePrivate = false) {
+function mapRequest(row, includePrivate = false, currentGithubUserId = null) {
   const showRequester = Boolean(row.show_requester_publicly);
   const request = {
     id: row.id,
@@ -427,11 +541,16 @@ function mapRequest(row, includePrivate = false) {
     voteCount: Number(row.vote_count || 0),
     voted: Boolean(row.voted),
     discussionCount: Number(row.discussion_count || 0),
+    ownedByCurrentUser: Boolean(currentGithubUserId && Number(row.github_user_id) === Number(currentGithubUserId)),
     pendingPostCount: includePrivate ? Number(row.pending_post_count || 0) : undefined,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };
-  if (includePrivate) request.contactEmail = row.contact_email || "";
+  if (includePrivate) {
+    request.contactEmail = row.contact_email || "";
+    request.ownerGithubId = row.github_user_id ? Number(row.github_user_id) : null;
+    request.ownerGithubLogin = row.owner_github_login || "";
+  }
   return request;
 }
 
@@ -476,6 +595,15 @@ function createApp(options = {}) {
     path.join(__dirname, "db", "package_requests.db");
   const database = options.database || openDatabase(databasePath);
   const app = express();
+  const githubClientId = options.githubClientId ?? process.env.GITHUB_OAUTH_CLIENT_ID ?? "";
+  const githubClientSecret = options.githubClientSecret ?? process.env.GITHUB_OAUTH_CLIENT_SECRET ?? "";
+  const githubCallbackUrl = options.githubCallbackUrl ?? process.env.GITHUB_OAUTH_CALLBACK_URL ?? "";
+  const siteUrl = options.siteUrl ?? process.env.SITE_URL ?? "https://zopen.community/PackageRequests";
+  const githubApiFetch = options.githubFetch || fetch;
+  const githubAuthEnabled = Boolean(githubClientId && githubClientSecret && githubCallbackUrl);
+  const callbackProtocol = githubCallbackUrl ? new URL(githubCallbackUrl).protocol : "https:";
+  const cookieSecure = options.cookieSecure ?? callbackProtocol === "https:";
+  const publicApiPath = options.publicApiPath ?? process.env.PUBLIC_API_PATH ?? "/api";
   const allowedOrigins = new Set(
     String(
       options.allowedOrigins ??
@@ -498,6 +626,7 @@ function createApp(options = {}) {
     if (origin && allowedOrigins.has(origin.replace(/\/$/, ""))) {
       response.set("Access-Control-Allow-Origin", origin);
       response.set("Vary", "Origin");
+      response.set("Access-Control-Allow-Credentials", "true");
       response.set("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Voter-ID, X-Edit-Token");
       response.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
     }
@@ -517,6 +646,8 @@ function createApp(options = {}) {
   const bulkSubmissionLimiter = createRateLimiter({ limit: 2, windowMilliseconds: 60 * 60 * 1000 });
   const postSubmissionLimiter = createRateLimiter({ limit: 5, windowMilliseconds: 60 * 60 * 1000 });
   const voteLimiter = createRateLimiter({ limit: 60, windowMilliseconds: 60 * 1000 });
+  const ownerEditLimiter = createRateLimiter({ limit: 30, windowMilliseconds: 15 * 60 * 1000 });
+  const authLimiter = createRateLimiter({ limit: 20, windowMilliseconds: 15 * 60 * 1000 });
   const adminLimiter = createRateLimiter({ limit: 120, windowMilliseconds: 15 * 60 * 1000 });
   let pulpSyncPromise = null;
   const ready = initializeDatabase(database);
@@ -524,7 +655,137 @@ function createApp(options = {}) {
   app.use(async (request, response, next) => {
     try {
       await ready;
+      request.authUser = await authenticatedUser(database, request);
       next();
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.get("/api/auth/config", (request, response) => {
+    response.json({ githubEnabled: githubAuthEnabled });
+  });
+
+  app.get("/api/auth/me", (request, response) => {
+    response.set("Cache-Control", "private, no-store");
+    response.json({ user: request.authUser });
+  });
+
+  app.get("/api/auth/github", authLimiter, async (request, response, next) => {
+    if (!githubAuthEnabled) {
+      response.status(503).json({ error: "GitHub sign-in has not been configured." });
+      return;
+    }
+    try {
+      const state = crypto.randomBytes(32).toString("base64url");
+      response.setHeader("Set-Cookie", cookieHeader(OAUTH_STATE_COOKIE, state, {
+        path: publicApiPath,
+        secure: cookieSecure,
+        maxAge: 600,
+      }));
+      const authorizeUrl = new URL("https://github.com/login/oauth/authorize");
+      authorizeUrl.searchParams.set("client_id", githubClientId);
+      authorizeUrl.searchParams.set("redirect_uri", githubCallbackUrl);
+      authorizeUrl.searchParams.set("state", state);
+      response.redirect(302, authorizeUrl.toString());
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.get("/api/auth/github/callback", authLimiter, async (request, response, next) => {
+    if (!githubAuthEnabled) {
+      response.status(503).json({ error: "GitHub sign-in has not been configured." });
+      return;
+    }
+    const state = cleanText(request.query.state, 200);
+    const code = cleanText(request.query.code, 500);
+    const stateCookie = parseCookies(request)[OAUTH_STATE_COOKIE];
+    const redirectUrl = new URL(siteUrl);
+    const clearStateCookie = cookieHeader(OAUTH_STATE_COOKIE, "", {
+      path: publicApiPath,
+      secure: cookieSecure,
+      maxAge: 0,
+    });
+    if (!code || !safeEqual(state, stateCookie)) {
+      redirectUrl.searchParams.set("auth", "error");
+      response.setHeader("Set-Cookie", clearStateCookie);
+      response.redirect(302, redirectUrl.toString());
+      return;
+    }
+    try {
+      const tokenResponse = await githubApiFetch("https://github.com/login/oauth/access_token", {
+        method: "POST",
+        headers: { Accept: "application/json", "Content-Type": "application/json" },
+        body: JSON.stringify({
+          client_id: githubClientId,
+          client_secret: githubClientSecret,
+          code,
+          redirect_uri: githubCallbackUrl,
+        }),
+      });
+      const tokenBody = await tokenResponse.json();
+      if (!tokenResponse.ok || !tokenBody.access_token) throw new Error("GitHub did not issue an access token.");
+      const userResponse = await githubApiFetch("https://api.github.com/user", {
+        headers: {
+          Accept: "application/vnd.github+json",
+          Authorization: `Bearer ${tokenBody.access_token}`,
+          "User-Agent": "zopen-package-requests",
+          "X-GitHub-Api-Version": "2022-11-28",
+        },
+      });
+      const githubUser = await userResponse.json();
+      if (!userResponse.ok || !Number.isSafeInteger(githubUser.id) || !githubUser.login) {
+        throw new Error("GitHub identity could not be verified.");
+      }
+      const now = new Date();
+      const nowIso = now.toISOString();
+      const expiresAt = new Date(now.getTime() + AUTH_SESSION_DAYS * 24 * 60 * 60 * 1000);
+      await run(
+        database,
+        `INSERT INTO github_users (github_user_id, login, avatar_url, profile_url, created_at, updated_at)
+         VALUES (?, ?, ?, ?, ?, ?)
+         ON CONFLICT(github_user_id) DO UPDATE SET
+           login = excluded.login, avatar_url = excluded.avatar_url,
+           profile_url = excluded.profile_url, updated_at = excluded.updated_at`,
+        [githubUser.id, githubUser.login, githubUser.avatar_url || "", githubUser.html_url || "", nowIso, nowIso],
+      );
+      const sessionToken = crypto.randomBytes(32).toString("base64url");
+      await run(database, "DELETE FROM auth_sessions WHERE expires_at <= ?", [nowIso]);
+      await run(
+        database,
+        `INSERT INTO auth_sessions (token_hash, github_user_id, created_at, expires_at, last_seen_at)
+         VALUES (?, ?, ?, ?, ?)`,
+        [hashEditToken(sessionToken), githubUser.id, nowIso, expiresAt.toISOString(), nowIso],
+      );
+      response.setHeader("Set-Cookie", [
+        clearStateCookie,
+        cookieHeader(SESSION_COOKIE, sessionToken, {
+          path: publicApiPath,
+          secure: cookieSecure,
+          maxAge: AUTH_SESSION_DAYS * 24 * 60 * 60,
+        }),
+      ]);
+      redirectUrl.searchParams.set("auth", "success");
+      response.redirect(302, redirectUrl.toString());
+    } catch (error) {
+      console.error("GitHub OAuth callback failed:", error.message);
+      redirectUrl.searchParams.set("auth", "error");
+      response.setHeader("Set-Cookie", clearStateCookie);
+      response.redirect(302, redirectUrl.toString());
+    }
+  });
+
+  app.post("/api/auth/logout", async (request, response, next) => {
+    try {
+      const token = parseCookies(request)[SESSION_COOKIE];
+      if (token) await run(database, "DELETE FROM auth_sessions WHERE token_hash = ?", [hashEditToken(token)]);
+      response.setHeader("Set-Cookie", cookieHeader(SESSION_COOKIE, "", {
+        path: publicApiPath,
+        secure: cookieSecure,
+        maxAge: 0,
+      }));
+      response.json({ success: true });
     } catch (error) {
       next(error);
     }
@@ -569,7 +830,7 @@ function createApp(options = {}) {
         ORDER BY ${ordering}`,
         parameters,
       );
-      response.json({ requests: rows.map((row) => mapRequest(row)) });
+      response.json({ requests: rows.map((row) => mapRequest(row, false, request.authUser?.id)) });
     } catch (error) {
       next(error);
     }
@@ -591,11 +852,16 @@ function createApp(options = {}) {
         response.status(404).json({ error: "Package request not found." });
         return;
       }
-      const [events, posts] = await Promise.all([
+      const [events, edits, posts] = await Promise.all([
         all(
           database,
           `SELECT id, from_status, to_status, maintainer_note, created_at
            FROM request_events WHERE request_id = ? ORDER BY created_at`,
+          [requestId],
+        ),
+        all(
+          database,
+          `SELECT id, created_at FROM request_edits WHERE request_id = ? ORDER BY created_at`,
           [requestId],
         ),
         all(
@@ -620,7 +886,8 @@ function createApp(options = {}) {
           note: event.maintainer_note || "",
           createdAt: event.created_at,
         })),
-        ...posts.map((post) => ({ ...mapPost(post), type: "post" })),
+        ...edits.map((edit) => ({ id: `edit-${edit.id}`, type: "edit", createdAt: edit.created_at })),
+        ...posts.map((post) => ({ ...mapPost(post, false, request.authUser?.id), type: "post" })),
       ].sort((left, right) => left.createdAt.localeCompare(right.createdAt));
       response.json({ requestId, activity });
     } catch (error) {
@@ -656,8 +923,8 @@ function createApp(options = {}) {
         `INSERT INTO request_posts (
           request_id, kind, body, author_name, organization, contact_email,
           show_author_publicly, author_role, moderation_status, edit_token_hash,
-          created_at, updated_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, 'community', 'pending', ?, ?, ?)`,
+          created_at, updated_at, github_user_id
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, 'community', 'pending', ?, ?, ?, ?)`,
         [
           requestId,
           validated.post.kind,
@@ -669,10 +936,11 @@ function createApp(options = {}) {
           hashEditToken(editToken),
           now,
           now,
+          request.authUser?.id || null,
         ],
       );
       const row = await get(database, "SELECT * FROM request_posts WHERE id = ?", [result.id]);
-      response.status(202).json({ post: mapPost(row, true), editToken });
+      response.status(202).json({ post: mapPost(row, true, request.authUser?.id), editToken });
     } catch (error) {
       next(error);
     }
@@ -686,11 +954,12 @@ function createApp(options = {}) {
     }
     try {
       const row = await get(database, "SELECT * FROM request_posts WHERE id = ?", [postId]);
-      if (!row || row.author_role !== "community" || !editTokenMatches(request, row)) {
+      const ownsPost = request.authUser && Number(row?.github_user_id) === request.authUser.id;
+      if (!row || row.author_role !== "community" || (!ownsPost && !editTokenMatches(request, row))) {
         response.status(404).json({ error: "Post not found." });
         return;
       }
-      response.json({ post: mapPost(row, true) });
+      response.json({ post: mapPost(row, true, request.authUser?.id) });
     } catch (error) {
       next(error);
     }
@@ -704,7 +973,8 @@ function createApp(options = {}) {
     }
     try {
       const existing = await get(database, "SELECT * FROM request_posts WHERE id = ?", [postId]);
-      if (!existing || existing.author_role !== "community" || !editTokenMatches(request, existing)) {
+      const ownsPost = request.authUser && Number(existing?.github_user_id) === request.authUser.id;
+      if (!existing || existing.author_role !== "community" || (!ownsPost && !editTokenMatches(request, existing))) {
         response.status(404).json({ error: "Post not found." });
         return;
       }
@@ -738,7 +1008,7 @@ function createApp(options = {}) {
         ],
       );
       const updated = await get(database, "SELECT * FROM request_posts WHERE id = ?", [postId]);
-      response.json({ post: mapPost(updated, true) });
+      response.json({ post: mapPost(updated, true, request.authUser?.id) });
     } catch (error) {
       next(error);
     }
@@ -752,13 +1022,134 @@ function createApp(options = {}) {
     }
     try {
       const existing = await get(database, "SELECT * FROM request_posts WHERE id = ?", [postId]);
-      if (!existing || existing.author_role !== "community" || !editTokenMatches(request, existing)) {
+      const ownsPost = request.authUser && Number(existing?.github_user_id) === request.authUser.id;
+      if (!existing || existing.author_role !== "community" || (!ownsPost && !editTokenMatches(request, existing))) {
         response.status(404).json({ error: "Post not found." });
         return;
       }
       await run(database, "DELETE FROM request_posts WHERE id = ?", [postId]);
       response.json({ success: true, id: postId });
     } catch (error) {
+      next(error);
+    }
+  });
+
+  app.get("/api/me/submissions", async (request, response, next) => {
+    if (!request.authUser) {
+      response.status(401).json({ error: "Sign in with GitHub to view your submissions." });
+      return;
+    }
+    try {
+      response.set("Cache-Control", "private, no-store");
+      const [requestRows, postRows] = await Promise.all([
+        all(
+          database,
+          `SELECT r.*, COUNT(v.voter_id) AS vote_count, 0 AS voted,
+            (SELECT COUNT(*) FROM request_posts post
+             WHERE post.request_id = r.id AND post.moderation_status = 'published') AS discussion_count
+           FROM package_requests r LEFT JOIN votes v ON v.request_id = r.id
+           WHERE r.github_user_id = ? GROUP BY r.id ORDER BY r.created_at DESC`,
+          [request.authUser.id],
+        ),
+        all(
+          database,
+          `SELECT post.*, r.package_name AS request_package_name
+           FROM request_posts post JOIN package_requests r ON r.id = post.request_id
+           WHERE post.github_user_id = ? AND post.author_role = 'community'
+           ORDER BY post.created_at DESC`,
+          [request.authUser.id],
+        ),
+      ]);
+      response.json({
+        requests: requestRows.map((row) => mapRequest(row, true, request.authUser.id)),
+        posts: postRows.map((row) => mapPost(row, true, request.authUser.id)),
+      });
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.patch("/api/me/requests/:id", ownerEditLimiter, async (request, response, next) => {
+    if (!request.authUser) {
+      response.status(401).json({ error: "Sign in with GitHub to edit a package request." });
+      return;
+    }
+    const requestId = Number.parseInt(request.params.id, 10);
+    if (!Number.isSafeInteger(requestId) || requestId < 1) {
+      response.status(400).json({ error: "Invalid package request ID." });
+      return;
+    }
+    try {
+      const existing = await get(database, "SELECT * FROM package_requests WHERE id = ?", [requestId]);
+      if (!existing || Number(existing.github_user_id) !== request.authUser.id) {
+        response.status(404).json({ error: "Package request not found." });
+        return;
+      }
+      const validated = validateSubmission({
+        packageName: ["proposed", "under_review"].includes(existing.status)
+          ? request.body?.packageName ?? existing.package_name
+          : existing.package_name,
+        ecosystem: ["proposed", "under_review"].includes(existing.status)
+          ? request.body?.ecosystem ?? existing.ecosystem
+          : existing.ecosystem,
+        upstreamUrl: request.body?.upstreamUrl ?? existing.upstream_url,
+        description: request.body?.description ?? existing.description,
+        useCase: request.body?.useCase ?? existing.use_case,
+        canHelpTest: request.body?.canHelpTest ?? Boolean(existing.can_help_test),
+        requesterName: request.body?.requesterName ?? existing.requester_name,
+        organization: request.body?.organization ?? existing.organization,
+        contactEmail: request.body?.contactEmail ?? existing.contact_email,
+        showRequesterPublicly: request.body?.showRequesterPublicly ?? Boolean(existing.show_requester_publicly),
+      });
+      if (validated.error) {
+        response.status(400).json({ error: validated.error });
+        return;
+      }
+      const now = new Date().toISOString();
+      await run(
+        database,
+        `UPDATE package_requests SET package_name = ?, normalized_name = ?, ecosystem = ?, upstream_url = ?,
+          description = ?, use_case = ?, can_help_test = ?, requester_name = ?, organization = ?,
+          contact_email = ?, show_requester_publicly = ?, updated_at = ?
+         WHERE id = ? AND github_user_id = ?`,
+        [
+          validated.submission.packageName,
+          validated.submission.normalizedName,
+          validated.submission.ecosystem,
+          validated.submission.upstreamUrl,
+          validated.submission.description,
+          validated.submission.useCase,
+          validated.submission.canHelpTest ? 1 : 0,
+          validated.submission.requesterName,
+          validated.submission.organization,
+          validated.submission.contactEmail,
+          validated.submission.showRequesterPublicly ? 1 : 0,
+          now,
+          requestId,
+          request.authUser.id,
+        ],
+      );
+      await run(
+        database,
+        "INSERT INTO request_edits (request_id, github_user_id, created_at) VALUES (?, ?, ?)",
+        [requestId, request.authUser.id, now],
+      );
+      const updated = await get(
+        database,
+        `SELECT r.*, COUNT(v.voter_id) AS vote_count, 0 AS voted,
+          (SELECT login FROM github_users user WHERE user.github_user_id = r.github_user_id) AS owner_github_login,
+          (SELECT COUNT(*) FROM request_posts post
+           WHERE post.request_id = r.id AND post.moderation_status = 'published') AS discussion_count
+         FROM package_requests r LEFT JOIN votes v ON v.request_id = r.id
+         WHERE r.id = ? GROUP BY r.id`,
+        [requestId],
+      );
+      response.json({ request: mapRequest(updated, true, request.authUser.id) });
+    } catch (error) {
+      if (error.code === "SQLITE_CONSTRAINT") {
+        response.status(409).json({ error: "Another request already uses that package name." });
+        return;
+      }
       next(error);
     }
   });
@@ -774,6 +1165,7 @@ function createApp(options = {}) {
       const rows = await all(
         database,
         `SELECT r.*, COUNT(v.voter_id) AS vote_count, 0 AS voted,
+          (SELECT login FROM github_users user WHERE user.github_user_id = r.github_user_id) AS owner_github_login,
           (SELECT COUNT(*) FROM request_posts post
            WHERE post.request_id = r.id AND post.moderation_status = 'published') AS discussion_count,
           (SELECT COUNT(*) FROM request_posts post
@@ -1042,7 +1434,9 @@ function createApp(options = {}) {
     }
 
     try {
-      response.status(201).json({ request: await insertSubmission(database, validated.submission) });
+      response.status(201).json({
+        request: await insertSubmission(database, validated.submission, request.authUser?.id || null),
+      });
     } catch (error) {
       if (error.code === "SQLITE_CONSTRAINT") {
         const existing = await get(
@@ -1115,7 +1509,7 @@ function createApp(options = {}) {
         seenNames.set(validated.submission.normalizedName, index);
 
         try {
-          created.push(await insertSubmission(database, validated.submission));
+          created.push(await insertSubmission(database, validated.submission, request.authUser?.id || null));
         } catch (error) {
           if (error.code !== "SQLITE_CONSTRAINT") throw error;
           const existing = await get(
@@ -1224,6 +1618,8 @@ function createApp(options = {}) {
     const showRequesterPublicly = request.body.showRequesterPublicly === undefined
       ? null
       : Boolean(request.body.showRequesterPublicly);
+    const ownerGithubLoginProvided = Object.hasOwn(request.body || {}, "ownerGithubLogin");
+    const ownerGithubLogin = ownerGithubLoginProvided ? cleanText(request.body.ownerGithubLogin, 80) : null;
     if (!Number.isSafeInteger(requestId) || requestId < 1 || !VALID_STATUSES.has(status)) {
       response.status(400).json({ error: "Invalid request status." });
       return;
@@ -1281,6 +1677,23 @@ function createApp(options = {}) {
       const effectiveOrganization = organization ?? existing.organization;
       const effectiveContactEmail = contactEmail ?? existing.contact_email;
       const effectiveShowRequesterPublicly = showRequesterPublicly ?? Boolean(existing.show_requester_publicly);
+      let effectiveGithubUserId = existing.github_user_id || null;
+      if (ownerGithubLoginProvided) {
+        if (!ownerGithubLogin) {
+          effectiveGithubUserId = null;
+        } else {
+          const githubOwner = await get(
+            database,
+            "SELECT github_user_id FROM github_users WHERE login = ? COLLATE NOCASE",
+            [ownerGithubLogin],
+          );
+          if (!githubOwner) {
+            response.status(400).json({ error: "That GitHub user must sign in once before ownership can be assigned." });
+            return;
+          }
+          effectiveGithubUserId = githubOwner.github_user_id;
+        }
+      }
       if (effectiveArtifactKind && !effectiveArtifactUrl) {
         response.status(400).json({ error: "An artifact type requires a published artifact URL." });
         return;
@@ -1304,7 +1717,7 @@ function createApp(options = {}) {
           description = ?, use_case = ?, can_help_test = ?, requester_name = ?,
           organization = ?, contact_email = ?, show_requester_publicly = ?,
           status = ?, port_repository_url = ?, artifact_kind = ?, artifact_url = ?,
-          maintainer_note = ?, acknowledged_at = ?, available_at = ?, updated_at = ?
+          maintainer_note = ?, acknowledged_at = ?, available_at = ?, github_user_id = ?, updated_at = ?
          WHERE id = ?`,
         [
           effectivePackageName,
@@ -1325,6 +1738,7 @@ function createApp(options = {}) {
           effectiveMaintainerNote,
           acknowledgedAt,
           availableAt,
+          effectiveGithubUserId,
           now,
           requestId,
         ],
@@ -1344,6 +1758,7 @@ function createApp(options = {}) {
       const updated = await get(
         database,
         `SELECT r.*, COUNT(v.voter_id) AS vote_count, 0 AS voted,
+          (SELECT login FROM github_users user WHERE user.github_user_id = r.github_user_id) AS owner_github_login,
           (SELECT COUNT(*) FROM request_posts p
            WHERE p.request_id = r.id AND p.moderation_status = 'published') AS discussion_count,
           (SELECT COUNT(*) FROM request_posts p

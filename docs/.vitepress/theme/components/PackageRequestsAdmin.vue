@@ -23,6 +23,8 @@ interface AdminRequest {
   voteCount: number;
   discussionCount: number;
   pendingPostCount: number;
+  ownerGithubId: number | null;
+  ownerGithubLogin: string;
   createdAt: string;
   acknowledgedAt: string | null;
 }
@@ -347,6 +349,7 @@ async function saveRequest(request: AdminRequest) {
         organization: request.organization,
         contactEmail: request.contactEmail,
         showRequesterPublicly: request.showRequesterPublicly,
+        ownerGithubLogin: request.ownerGithubLogin,
         status: request.status,
         portRepositoryUrl: request.portRepositoryUrl,
         artifactKind: request.artifactKind,
@@ -569,6 +572,7 @@ onMounted(async () => {
               <label><span>Organization or company</span><input v-model.trim="request.organization" maxlength="160" /></label>
               <label><span>Contact email (private)</span><input v-model.trim="request.contactEmail" type="email" maxlength="254" /></label>
               <label><span>Public requester attribution</span><select v-model="request.showRequesterPublicly"><option :value="false">Hidden</option><option :value="true">Show name and organization</option></select></label>
+              <label><span>GitHub owner login</span><input v-model.trim="request.ownerGithubLogin" maxlength="80" placeholder="Must sign in once before assignment" /></label>
               <label><span>Status</span><select v-model="request.status"><option v-for="(label, key) in statuses" :key="key" :value="key">{{ label }}</option></select></label>
               <label><span>Published artifact type</span><select v-model="request.artifactKind"><option v-for="(label, key) in artifacts" :key="key" :value="key">{{ label }}</option></select></label>
               <label><span>zopen port repository URL</span><input v-model.trim="request.portRepositoryUrl" type="url" placeholder="https://github.com/zopencommunity/exampleport" /></label>

@@ -31,12 +31,21 @@ interface PackageRequest {
   voteCount: number;
   voted: boolean;
   discussionCount: number;
+  ownedByCurrentUser: boolean;
+  contactEmail?: string;
   createdAt: string;
+}
+
+interface GithubUser {
+  id: number;
+  login: string;
+  avatarUrl: string;
+  profileUrl: string;
 }
 
 interface ActivityItem {
   id: string | number;
-  type: "created" | "status" | "post";
+  type: "created" | "status" | "edit" | "post";
   kind?: string;
   body?: string;
   authorRole?: "community" | "maintainer";
@@ -47,6 +56,7 @@ interface ActivityItem {
   note?: string;
   createdAt: string;
   updatedAt?: string;
+  ownedByCurrentUser?: boolean;
 }
 
 interface OwnPost extends ActivityItem {
@@ -91,6 +101,15 @@ const bulkFormOpen = ref(false);
 const submitting = ref(false);
 const submitError = ref("");
 const successMessage = ref("");
+const githubAuthEnabled = ref(false);
+const authUser = ref<GithubUser | null>(null);
+const authLoading = ref(true);
+const authMessage = ref("");
+const showMine = ref(false);
+const githubOwnedPosts = ref<OwnPost[]>([]);
+const editingRequestId = ref<number | null>(null);
+const requestEditBusy = ref(false);
+const requestEditError = ref("");
 const busyVotes = ref(new Set<number>());
 const expandedActivity = ref(new Set<number>());
 const activityByRequest = reactive<Record<number, ActivityItem[]>>({});
@@ -143,6 +162,19 @@ const postForm = reactive({
   website: "",
 });
 
+const requestEditForm = reactive({
+  packageName: "",
+  ecosystem: "",
+  upstreamUrl: "",
+  description: "",
+  useCase: "",
+  canHelpTest: false,
+  requesterName: "",
+  organization: "",
+  contactEmail: "",
+  showRequesterPublicly: false,
+});
+
 const statuses: Record<RequestStatus, { label: string; detail: string }> = {
   proposed: { label: "Proposed", detail: "Gathering community interest" },
   under_review: { label: "Under review", detail: "Being evaluated by maintainers" },
@@ -186,6 +218,7 @@ const postKinds: Record<string, string> = {
 const filteredRequests = computed(() => {
   const query = search.value.trim().toLowerCase();
   return requests.value.filter((request) => {
+    const matchesOwner = !showMine.value || request.ownedByCurrentUser;
     const matchesStatus = status.value === "all" || request.status === status.value;
     const matchesEcosystem = ecosystem.value === "all" || request.ecosystem === ecosystem.value;
     const matchesSearch =
@@ -193,7 +226,7 @@ const filteredRequests = computed(() => {
       request.packageName.toLowerCase().includes(query) ||
       request.description.toLowerCase().includes(query) ||
       request.useCase.toLowerCase().includes(query);
-    return matchesStatus && matchesEcosystem && matchesSearch;
+    return matchesOwner && matchesStatus && matchesEcosystem && matchesSearch;
   });
 });
 
@@ -454,7 +487,7 @@ async function apiRequest(path: string, options: RequestInit = {}) {
   const headers = new Headers(options.headers);
   headers.set("Content-Type", "application/json");
   headers.set("X-Voter-ID", getVoterId());
-  const response = await fetch(`${apiUrl.value}${path}`, { ...options, headers });
+  const response = await fetch(`${apiUrl.value}${path}`, { ...options, headers, credentials: "include" });
   const body = await response.json().catch(() => ({}));
   if (!response.ok) {
     const error = new Error(body.error || "The request could not be completed.");
@@ -464,12 +497,56 @@ async function apiRequest(path: string, options: RequestInit = {}) {
   return body;
 }
 
+function mergeOwnedRequests(ownedRequests: PackageRequest[]) {
+  const merged = new Map(requests.value.map((request) => [request.id, request]));
+  for (const request of ownedRequests) merged.set(request.id, { ...merged.get(request.id), ...request });
+  requests.value = [...merged.values()];
+}
+
+async function loadAuthentication() {
+  authLoading.value = true;
+  try {
+    const config = await apiRequest("/auth/config");
+    githubAuthEnabled.value = Boolean(config.githubEnabled);
+    if (!githubAuthEnabled.value) return;
+    const result = await apiRequest("/auth/me");
+    authUser.value = result.user || null;
+    if (authUser.value) await loadMySubmissions();
+  } catch {
+    githubAuthEnabled.value = false;
+    authUser.value = null;
+  } finally {
+    authLoading.value = false;
+  }
+}
+
+async function loadMySubmissions() {
+  if (!authUser.value) return;
+  const result = await apiRequest("/me/submissions");
+  mergeOwnedRequests(result.requests || []);
+  githubOwnedPosts.value = result.posts || [];
+}
+
+function signInWithGithub() {
+  window.location.assign(`${apiUrl.value}/auth/github`);
+}
+
+async function signOut() {
+  await apiRequest("/auth/logout", { method: "POST", body: "{}" });
+  authUser.value = null;
+  githubOwnedPosts.value = [];
+  showMine.value = false;
+  editingRequestId.value = null;
+  await loadRequests();
+}
+
 async function loadRequests() {
   loading.value = true;
   loadError.value = "";
   try {
     const result = await apiRequest(`/requests?sort=${sort.value}`);
     requests.value = result.requests;
+    if (authUser.value) await loadMySubmissions();
   } catch (error) {
     loadError.value = error instanceof Error ? error.message : "The package requests could not be loaded.";
   } finally {
@@ -501,7 +578,10 @@ async function loadOwnPosts(requestId: number) {
       // Keep the browser-held secret through temporary network or service failures.
     }
   }));
-  ownPostsByRequest[requestId] = posts.sort((left, right) => right.createdAt.localeCompare(left.createdAt));
+  const combined = new Map<number, OwnPost>();
+  for (const post of githubOwnedPosts.value.filter((item) => item.requestId === requestId)) combined.set(post.id, post);
+  for (const post of posts) combined.set(post.id, post);
+  ownPostsByRequest[requestId] = [...combined.values()].sort((left, right) => right.createdAt.localeCompare(left.createdAt));
 }
 
 async function loadActivity(requestId: number) {
@@ -573,6 +653,12 @@ async function submitCommunityPost(requestId: number) {
       result.post,
       ...(ownPostsByRequest[requestId] || []).filter((post) => post.id !== result.post.id),
     ];
+    if (authUser.value) {
+      githubOwnedPosts.value = [
+        result.post,
+        ...githubOwnedPosts.value.filter((post) => post.id !== result.post.id),
+      ];
+    }
     resetPostForm();
     postFormRequestId.value = null;
     postMessage.value = "Your contribution is awaiting maintainer review. This browser can edit or delete it.";
@@ -602,6 +688,10 @@ async function editCommunityPost(requestId: number, post: ActivityItem | OwnPost
       result.post,
       ...(ownPostsByRequest[requestId] || []).filter((item) => item.id !== post.id),
     ];
+    githubOwnedPosts.value = [
+      result.post,
+      ...githubOwnedPosts.value.filter((item) => item.id !== post.id),
+    ];
     postMessage.value = "Your edit is awaiting maintainer review.";
     await loadActivity(requestId);
   } catch (error) {
@@ -620,10 +710,47 @@ async function deleteCommunityPost(requestId: number, post: ActivityItem | OwnPo
     });
     removePostToken(post.id);
     ownPostsByRequest[requestId] = (ownPostsByRequest[requestId] || []).filter((item) => item.id !== post.id);
+    githubOwnedPosts.value = githubOwnedPosts.value.filter((item) => item.id !== post.id);
     postMessage.value = "Your contribution was deleted.";
     await loadActivity(requestId);
   } catch (error) {
     postError.value = error instanceof Error ? error.message : "The contribution could not be deleted.";
+  }
+}
+
+function startEditingRequest(request: PackageRequest) {
+  editingRequestId.value = request.id;
+  requestEditError.value = "";
+  requestEditForm.packageName = request.packageName;
+  requestEditForm.ecosystem = request.ecosystem;
+  requestEditForm.upstreamUrl = request.upstreamUrl;
+  requestEditForm.description = request.description;
+  requestEditForm.useCase = request.useCase;
+  requestEditForm.canHelpTest = request.canHelpTest;
+  requestEditForm.requesterName = request.requesterName || "";
+  requestEditForm.organization = request.organization || "";
+  requestEditForm.contactEmail = request.contactEmail || "";
+  requestEditForm.showRequesterPublicly = request.showRequesterPublicly;
+  requestAnimationFrame(() => document.querySelector<HTMLElement>(`#edit-package-request-${request.id} textarea`)?.focus());
+}
+
+async function saveRequestEdit(request: PackageRequest) {
+  requestEditBusy.value = true;
+  requestEditError.value = "";
+  try {
+    const result = await apiRequest(`/me/requests/${request.id}`, {
+      method: "PATCH",
+      body: JSON.stringify(requestEditForm),
+    });
+    const index = requests.value.findIndex((item) => item.id === request.id);
+    if (index >= 0) requests.value[index] = { ...requests.value[index], ...result.request };
+    editingRequestId.value = null;
+    successMessage.value = `${result.request.packageName} was updated.`;
+    if (expandedActivity.value.has(request.id)) await loadActivity(request.id);
+  } catch (error) {
+    requestEditError.value = error instanceof Error ? error.message : "The request could not be updated.";
+  } finally {
+    requestEditBusy.value = false;
   }
 }
 
@@ -805,16 +932,25 @@ async function submitRequest() {
   }
 }
 
-onMounted(() => {
+onMounted(async () => {
   if (!apiUrl.value && ["localhost", "127.0.0.1"].includes(window.location.hostname)) {
     apiUrl.value = "http://localhost:3100/api";
   }
-  const packageFromQuery = new URLSearchParams(window.location.search).get("package");
+  const query = new URLSearchParams(window.location.search);
+  const packageFromQuery = query.get("package");
+  if (query.get("auth") === "success") authMessage.value = "Signed in with GitHub.";
+  if (query.get("auth") === "error") authMessage.value = "GitHub sign-in could not be completed. Please try again.";
+  if (query.has("auth")) {
+    query.delete("auth");
+    const replacement = `${window.location.pathname}${query.size ? `?${query}` : ""}${window.location.hash}`;
+    window.history.replaceState({}, "", replacement);
+  }
   if (packageFromQuery) {
     form.packageName = packageFromQuery;
     formOpen.value = true;
   }
-  void Promise.all([loadRequests(), loadAvailablePackages()]);
+  await Promise.all([loadRequests(), loadAvailablePackages()]);
+  await loadAuthentication();
 });
 </script>
 
@@ -845,6 +981,30 @@ onMounted(() => {
       </div>
     </section>
 
+    <section v-if="githubAuthEnabled || authUser" class="identity-panel" aria-label="GitHub sign-in">
+      <div v-if="authUser" class="identity-user">
+        <img v-if="authUser.avatarUrl" :src="authUser.avatarUrl" alt="" />
+        <div>
+          <strong>Signed in as @{{ authUser.login }}</strong>
+          <span>Your new requests and discussion posts can be edited from any signed-in device.</span>
+        </div>
+      </div>
+      <div v-else>
+        <strong>Want to edit submissions later?</strong>
+        <span>Sign in with GitHub before submitting. Guest discussion posts still use this browser's private edit key.</span>
+      </div>
+      <div class="identity-actions">
+        <button v-if="authUser" class="secondary-button compact" type="button" @click="showMine = !showMine">
+          {{ showMine ? "Show all requests" : "My submissions" }}
+        </button>
+        <button v-if="authUser" class="secondary-button compact" type="button" @click="signOut">Sign out</button>
+        <button v-else class="primary-button compact" type="button" :disabled="authLoading" @click="signInWithGithub">
+          Sign in with GitHub
+        </button>
+      </div>
+    </section>
+    <p v-if="authMessage && !authLoading" class="notice" :class="{ success: authUser, error: !authUser }" role="status">{{ authMessage }}</p>
+
     <p class="governance-note">
       Requests and votes guide community planning; they are not delivery or support commitments.
       Ports move forward through open contribution, maintainer capacity, and the zopen governance process.
@@ -867,6 +1027,7 @@ onMounted(() => {
       </div>
 
       <form @submit.prevent="submitRequest">
+        <p v-if="authUser" class="signed-in-note">This request will belong to @{{ authUser.login }}, so you can edit it later.</p>
         <div class="form-grid">
           <label>
             <span>Package name <b aria-hidden="true">*</b></span>
@@ -1140,6 +1301,14 @@ onMounted(() => {
       </div>
 
       <div class="board-controls">
+        <button
+          v-if="authUser"
+          class="mine-filter"
+          :class="{ active: showMine }"
+          type="button"
+          :aria-pressed="showMine"
+          @click="showMine = !showMine"
+        >My submissions</button>
         <label class="search-control">
           <span class="visually-hidden">Search package requests</span>
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-4.35-4.35m2.35-5.65a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z" /></svg>
@@ -1226,6 +1395,53 @@ onMounted(() => {
               <span>Requested {{ new Date(request.createdAt).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" }) }}</span>
             </div>
 
+            <div v-if="request.ownedByCurrentUser" class="request-owner-tools">
+              <span>Owned by your GitHub account</span>
+              <button
+                class="secondary-button compact"
+                type="button"
+                @click="editingRequestId === request.id ? editingRequestId = null : startEditingRequest(request)"
+              >{{ editingRequestId === request.id ? "Cancel editing" : "Edit request" }}</button>
+            </div>
+
+            <form
+              v-if="editingRequestId === request.id"
+              :id="`edit-package-request-${request.id}`"
+              class="request-edit-form"
+              @submit.prevent="saveRequestEdit(request)"
+            >
+              <div class="form-grid">
+                <label>
+                  <span>Package name</span>
+                  <input v-model.trim="requestEditForm.packageName" maxlength="80" required :disabled="!['proposed', 'under_review'].includes(request.status)" />
+                </label>
+                <label>
+                  <span>Project ecosystem</span>
+                  <select v-model="requestEditForm.ecosystem" :disabled="!['proposed', 'under_review'].includes(request.status)">
+                    <option v-for="(label, key) in ecosystems" :key="key" :value="key">{{ label }}</option>
+                  </select>
+                </label>
+              </div>
+              <p v-if="!['proposed', 'under_review'].includes(request.status)" class="field-hint">
+                Package name and ecosystem are locked after initial review; maintainers can correct them if needed.
+              </p>
+              <label><span>Upstream project URL <small>Optional</small></span><input v-model.trim="requestEditForm.upstreamUrl" type="url" maxlength="500" /></label>
+              <label><span>Why is this package useful?</span><textarea v-model.trim="requestEditForm.description" minlength="2" maxlength="1200" required rows="3" /></label>
+              <label><span>Specific use case or version <small>Optional</small></span><textarea v-model.trim="requestEditForm.useCase" maxlength="1200" rows="3" /></label>
+              <div class="form-grid">
+                <label><span>Name or alias <small>Optional</small></span><input v-model.trim="requestEditForm.requesterName" maxlength="100" /></label>
+                <label><span>Organization <small>Optional</small></span><input v-model.trim="requestEditForm.organization" maxlength="160" /></label>
+              </div>
+              <label><span>Contact email <small>Private—maintainers only</small></span><input v-model.trim="requestEditForm.contactEmail" type="email" maxlength="254" /></label>
+              <label class="checkbox-label"><input v-model="requestEditForm.canHelpTest" type="checkbox" /><span>I may be able to help test this package.</span></label>
+              <label class="checkbox-label"><input v-model="requestEditForm.showRequesterPublicly" type="checkbox" /><span>Show my name and organization publicly.</span></label>
+              <p v-if="requestEditError" class="notice error" role="alert">{{ requestEditError }}</p>
+              <div class="form-actions">
+                <button class="secondary-button compact" type="button" @click="editingRequestId = null">Cancel</button>
+                <button class="primary-button compact" type="submit" :disabled="requestEditBusy">{{ requestEditBusy ? "Saving…" : "Save changes" }}</button>
+              </div>
+            </form>
+
             <button
               type="button"
               class="discussion-toggle"
@@ -1265,6 +1481,9 @@ onMounted(() => {
                       <span class="activity-context">from {{ statusLabel(item.fromStatus) }}</span>
                       <p v-if="item.note">{{ item.note }}</p>
                     </template>
+                    <template v-else-if="item.type === 'edit'">
+                      <strong>Request details updated</strong>
+                    </template>
                     <template v-else>
                       <div class="post-heading">
                         <span class="post-kind">{{ postKinds[item.kind || ''] || item.kind }}</span>
@@ -1279,7 +1498,7 @@ onMounted(() => {
                       <span v-if="item.authorName || item.organization" class="activity-author">
                         {{ [item.authorName, item.organization].filter(Boolean).join(" · ") }}
                       </span>
-                      <div v-if="postToken(item.id)" class="owner-actions">
+                      <div v-if="postToken(item.id) || item.ownedByCurrentUser" class="owner-actions">
                         <button type="button" @click="editCommunityPost(request.id, item)">Edit</button>
                         <button type="button" @click="deleteCommunityPost(request.id, item)">Delete</button>
                       </div>
@@ -1358,7 +1577,9 @@ onMounted(() => {
                   <input v-model="postForm.website" tabindex="-1" autocomplete="off" />
                 </label>
                 <p class="post-privacy">
-                  Your email is visible only to maintainers. An edit secret is stored in this browser so you can modify or delete your post.
+                  Your email is visible only to maintainers.
+                  <template v-if="authUser">This contribution will belong to your GitHub account.</template>
+                  <template v-else>An edit secret is stored in this browser so you can modify or delete your post.</template>
                 </p>
                 <div class="form-actions">
                   <button class="secondary-button compact" type="button" @click="postFormRequestId = null">Cancel</button>
@@ -1411,9 +1632,22 @@ onMounted(() => {
 .notice { padding: 13px 16px; border-radius: 10px; font-size: 14px; }
 .governance-note { margin: 0 0 24px; padding: 16px 18px; border-left: 4px solid var(--vp-c-brand-1); border-radius: 4px 10px 10px 4px; color: var(--vp-c-text-2); background: var(--vp-c-bg-soft); font-size: 14px; line-height: 1.6; }
 .governance-note a { font-weight: 700; }
+.identity-panel { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin: 0 0 20px; padding: 16px 18px; border: 1px solid var(--vp-c-divider); border-radius: 14px; background: var(--vp-c-bg-soft); }
+.identity-panel > div, .identity-user { display: flex; align-items: center; gap: 12px; }
+.identity-panel strong, .identity-panel span { display: block; }
+.identity-panel span { margin-top: 3px; color: var(--vp-c-text-2); font-size: 13px; }
+.identity-user img { width: 40px; height: 40px; border-radius: 50%; }
+.identity-actions { flex-shrink: 0; }
+.signed-in-note { padding: 10px 12px; border-radius: 8px; color: var(--vp-c-text-2); background: var(--vp-c-bg-soft); font-size: 14px; }
 .notice.success { color: #09634f; border: 1px solid #85cdbd; background: #e7f8f3; }
 .dark .notice.success { color: #a8e6d6; border-color: #275e52; background: #142d28; }
 .notice.error { color: var(--vp-c-danger-1); border: 1px solid var(--vp-c-danger-2); background: var(--vp-c-danger-soft); }
+.mine-filter { min-height: 40px; padding: 0 14px; border: 1px solid var(--vp-c-divider); border-radius: 9px; color: var(--vp-c-text-2); background: var(--vp-c-bg); font: inherit; font-size: 14px; cursor: pointer; }
+.mine-filter.active { color: white; border-color: var(--request-accent); background: var(--request-accent); }
+.request-owner-tools { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px; padding: 10px 12px; border: 1px solid color-mix(in srgb, var(--request-accent) 35%, var(--vp-c-divider)); border-radius: 10px; color: var(--request-accent); background: color-mix(in srgb, var(--request-accent) 7%, var(--vp-c-bg)); font-size: 13px; font-weight: 650; }
+.request-edit-form { display: grid; gap: 14px; margin-top: 14px; padding: 18px; border: 1px solid var(--vp-c-divider); border-radius: 12px; background: var(--vp-c-bg-soft); }
+.request-edit-form label > span { display: block; margin-bottom: 6px; font-size: 13px; font-weight: 650; }
+.request-edit-form input:not([type="checkbox"]), .request-edit-form select, .request-edit-form textarea { width: 100%; padding: 10px 11px; border: 1px solid var(--vp-c-divider); border-radius: 8px; color: var(--vp-c-text-1); background: var(--vp-c-bg); font: inherit; }
 .text-button { margin-left: 8px; padding: 0; color: inherit; border: 0; background: transparent; font: inherit; font-weight: 650; text-decoration: underline; cursor: pointer; }
 .request-form-panel, .request-board { margin-top: 28px; border: 1px solid var(--vp-c-divider); border-radius: 18px; background: var(--vp-c-bg); box-shadow: var(--vp-shadow-1); }
 .request-form-panel { padding: 28px; border-top: 4px solid var(--request-accent); }
@@ -1578,5 +1812,8 @@ onMounted(() => {
   .bulk-review-heading { align-items: flex-start; flex-direction: column; }
   .discussion-toggle { align-items:flex-start; flex-direction:column; gap:3px; }
   .activity-panel { padding:14px; }
+  .identity-panel, .identity-panel > div { align-items:flex-start; flex-direction:column; }
+  .identity-actions { width:100%; flex-direction:row !important; flex-wrap:wrap; }
+  .request-owner-tools { align-items:flex-start; flex-direction:column; }
 }
 </style>
