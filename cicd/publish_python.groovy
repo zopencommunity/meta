@@ -102,12 +102,20 @@ while IFS= read -r -d '' wheel; do
   # Retry transient upload failures, matching the RPM publish job. zopen-publish
   # is safe to re-run: it re-checks the index and treats an identical wheel as a
   # no-op. Exit 2 means the failure is deterministic, so stop immediately.
+  #
+  # --on-conflict build-tag: a rebuild of an already published version must not
+  # fail the pipeline. zopen-publish compares the two wheels by content, so a
+  # wheel that differs only in generated metadata is reported as already
+  # published; anything that really changed is reuploaded under the next build
+  # tag, which pip prefers. Nothing already in the index is ever replaced. A
+  # build tag claimed concurrently comes back as exit 1, so the retry below
+  # picks the next one.
   attempt=1
   max_attempts=3
   while :; do
     set +e
     ZOPEN_DONT_PROCESS_CONFIG=1 \
-      "$publisher" --whl "$wheel" --pulp-url "$PULP_URL"
+      "$publisher" --whl "$wheel" --pulp-url "$PULP_URL" --on-conflict build-tag
     publish_rc=$?
     set -e
 
