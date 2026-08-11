@@ -90,7 +90,8 @@ node('linux') {
       ]) {
         withEnv(["PULP_URL=${pulp_url}",
                  "PULP_API=${pulp_api}",
-                 "PULP_REMOTE=${pulp_remote}"]) {
+                 "PULP_REMOTE=${pulp_remote}",
+                 "PULP_INDEX=${pulp_url.replaceFirst(/legacy\/$/, 'simple/')}"]) {
           sh '''#!/bin/bash
 set -euo pipefail
 
@@ -225,6 +226,130 @@ updated = sorted(names | published) + pinned
 call(urljoin(origin, remote["pulp_href"]), method="PATCH", body={"excludes": updated})
 print(f"added to excludes: {sorted(missing)}")
 print(f"excludes now: {updated}")
+PY
+'''
+
+        // Regenerate the published constraints file.
+        //
+        // Users who point pip at PyPI plus the wheel index need every package
+        // we build pinned to the version we serve, or PyPI's newer release
+        // wins and resolves to an sdist that cannot be built here. Those pins
+        // have to track what is actually published, so they are derived from
+        // the index rather than hand-written -- a stale pin is only noticed
+        // when somebody's install starts compiling from source.
+        //
+        // The manual half (caps on third-party packages) stays in git, where
+        // it can be reviewed. This joins the two and republishes the result.
+        sh '''#!/bin/bash
+set -euo pipefail
+python3 - "$PULP_API" "$PULP_INDEX" <<'PY'
+import base64, json, os, pathlib, re, sys, urllib.request, uuid
+from urllib.parse import urljoin, urlsplit
+
+api, index = sys.argv[1], sys.argv[2]
+origin = "{0.scheme}://{0.netloc}".format(urlsplit(api))
+auth = base64.b64encode(
+    f"{os.environ['PULP_USER']}:{os.environ['PULP_PASSWORD']}".encode()).decode()
+
+def call(url, method="GET", body=None, ctype="application/json", raw=False):
+    req = urllib.request.Request(url, method=method)
+    req.add_header("Authorization", f"Basic {auth}")
+    if body is not None:
+        req.add_header("Content-Type", ctype)
+        if not raw:
+            body = json.dumps(body).encode()
+    with urllib.request.urlopen(req, body, timeout=120) as r:
+        return json.load(r) if r.status not in (204,) else None
+
+# Every name/version the wheel index currently serves. Read from the index
+# rather than from this build's wheels, so the file describes the whole index
+# and not just whatever was published last.
+# The root page lists packages with relative hrefs: <a href="mmh3/">mmh3</a>
+simple = urllib.request.urlopen(index, timeout=60).read().decode()
+names = sorted(set(re.findall(r'href="([A-Za-z0-9._-]+)/"', simple)))
+
+# Sort versions numerically where possible; "2.10" must beat "2.9", which a
+# plain string sort gets backwards.
+def vkey(v):
+    return [int(x) if x.isdigit() else x for x in re.split(r"[.]", v)]
+
+pins = {}
+for name in names:
+    page = urllib.request.urlopen(urljoin(index, name + "/"), timeout=60).read().decode()
+    versions = set()
+    for fn in re.findall(r">([^<]+[.]whl)<", page):
+        parts = fn[:-4].split("-")
+        if len(parts) >= 4:
+            versions.add(parts[1])
+    if versions:
+        try:
+            newest = sorted(versions, key=vkey)[-1]
+        except TypeError:
+            newest = sorted(versions)[-1]
+        pins[re.sub(r"[-_.]+", "-", name).lower()] = newest
+
+# A cap on a package we also publish is redundant -- the generated pin already
+# constrains it -- and becomes an unsatisfiable conflict the moment the two
+# disagree, so the pin wins and the cap is dropped with a note. The cap stays in
+# git either way, because it records why the ceiling exists.
+caps, superseded = [], []
+src = pathlib.Path("data/zopen-constraints.txt")
+for line in src.read_text().splitlines():
+    stripped = line.split("#", 1)[0].strip()
+    if not stripped:
+        continue
+    cap_name = re.sub(r"[-_.]+", "-", re.split(r"[][<>=!~ ]", stripped)[0]).lower()
+    if cap_name in pins:
+        superseded.append(f"{stripped} (pinned to {pins[cap_name]} by the index)")
+    else:
+        caps.append(stripped)
+for s in superseded:
+    print(f"  cap superseded by a published pin: {s}")
+
+body = ["# GENERATED -- do not edit.",
+        "#",
+        "# Produced by the Python publish job from data/zopen-constraints.txt in",
+        "# zopencommunity/meta plus the current contents of the wheel index.",
+        "# Edit the source file, not this one.",
+        "#",
+        '#   export PIP_EXTRA_INDEX_URL="https://repo.zopen.community/pypi/wheels/simple/"',
+        f'#   export PIP_CONSTRAINT="{origin}/pulp/content/constraints/zopen-constraints.txt"',
+        "",
+        "# --- built by zopen for z/OS (generated from the wheel index) ---"]
+body += [f"{n}=={v}" for n, v in sorted(pins.items())]
+body += ["", "# --- capped to avoid unported native dependencies (from git) ---"] + caps
+NL = chr(10)
+content = (NL.join(body) + NL).encode()
+
+# Idempotent: a file repository with autopublish, served at /constraints/.
+repos = call(f"{api}/repositories/file/file/?name=constraints")
+repo = repos["results"][0] if repos["results"] else call(
+    f"{api}/repositories/file/file/", "POST",
+    {"name": "constraints", "autopublish": True})
+dists = call(f"{api}/distributions/file/file/?name=constraints")
+if not dists["results"]:
+    call(f"{api}/distributions/file/file/", "POST",
+         {"name": "constraints", "base_path": "constraints",
+          "repository": repo["pulp_href"]})
+
+CRLF = chr(13) + chr(10)
+boundary = uuid.uuid4().hex
+def part(name, value, filename=None):
+    disp = f'form-data; name="{name}"'
+    if filename:
+        disp += f'; filename="{filename}"'
+    head = f"--{boundary}{CRLF}Content-Disposition: {disp}{CRLF}{CRLF}"
+    data = value if isinstance(value, bytes) else value.encode()
+    return head.encode() + data + CRLF.encode()
+
+payload = (part("file", content, "zopen-constraints.txt")
+           + part("relative_path", "zopen-constraints.txt")
+           + part("repository", repo["pulp_href"])
+           + f"--{boundary}--{CRLF}".encode())
+call(f"{api}/content/file/files/", "POST", payload,
+     ctype=f"multipart/form-data; boundary={boundary}", raw=True)
+print(f"published constraints: {len(pins)} pins, {len(caps)} caps")
+print(f"  {origin}/pulp/content/constraints/zopen-constraints.txt")
 PY
 '''
         }
