@@ -37,6 +37,14 @@ if (!pulp_url.endsWith('/legacy/')) {
   error "PULP_URL must be a Pulp Python legacy upload endpoint ending in '/legacy/', got '${pulp_url}'."
 }
 
+// Derived from the upload URL so an overridden PULP_URL keeps everything on one
+// server. The remote is the PyPI pull-through shared by both build lines; the
+// reconcile step is a no-op when it does not exist, so a server without the
+// proxy configured is unaffected.
+def pulp_host   = pulp_url.replaceFirst(/\/pypi\/.*$/, '')
+def pulp_api    = params.PULP_API ?: "${pulp_host}/pulp/api/v3"
+def pulp_remote = params.PULP_REMOTE ?: 'pypi-proxy'
+
 node('linux') {
   try {
     stage('Setup') {
@@ -80,7 +88,9 @@ node('linux') {
         string(credentialsId: pulp_user_credential, variable: 'PULP_USER'),
         string(credentialsId: pulp_pass_credential, variable: 'PULP_PASSWORD')
       ]) {
-        withEnv(["PULP_URL=${pulp_url}"]) {
+        withEnv(["PULP_URL=${pulp_url}",
+                 "PULP_API=${pulp_api}",
+                 "PULP_REMOTE=${pulp_remote}"]) {
           sh '''#!/bin/bash
 set -euo pipefail
 
@@ -138,6 +148,76 @@ while IFS= read -r -d '' wheel; do
     sleep 5
   done
 done < <(find wheels -type f -name '*.whl' -print0)
+'''
+
+        // Keep the PyPI pull-through from shadowing what we just published.
+        //
+        // The proxy distribution merges upstream PyPI into the index, and pip
+        // resolves by version across the merged view. Left alone, PyPI's newer
+        // release of a package we build here wins -- and for a compiled port
+        // that resolves to an sdist which cannot be built on z/OS. Excluding a
+        // name from the remote makes our copy the only one pip can see.
+        //
+        // Derived from what was actually published rather than kept by hand,
+        // because a hand-maintained list is only discovered to be stale when
+        // somebody's install starts compiling from source.
+        sh '''#!/bin/bash
+set -euo pipefail
+python3 - "$PULP_API" "$PULP_REMOTE" <<'PY'
+import json, os, sys, urllib.request, base64, pathlib, re
+from urllib.parse import urljoin, urlsplit
+
+api, remote_name = sys.argv[1], sys.argv[2]
+# pulp_href comes back as a site-absolute path, not a full URL, so PATCHing it
+# directly fails with "unknown url type". Keep the scheme and host to rejoin it.
+origin = "{0.scheme}://{0.netloc}".format(urlsplit(api))
+user, password = os.environ["PULP_USER"], os.environ["PULP_PASSWORD"]
+auth = base64.b64encode(f"{user}:{password}".encode()).decode()
+
+def call(url, method="GET", body=None):
+    req = urllib.request.Request(url, method=method)
+    req.add_header("Authorization", f"Basic {auth}")
+    if body is not None:
+        req.add_header("Content-Type", "application/json")
+        body = json.dumps(body).encode()
+    with urllib.request.urlopen(req, body, timeout=60) as r:
+        return json.load(r) if r.status != 204 else None
+
+# PEP 503 normalisation: the index compares normalised names, so "pydantic_core"
+# and "Pydantic-Core" must both land on "pydantic-core" or the exclude misses.
+def normalize(n):
+    return re.sub(r"[-_.]+", "-", n).lower()
+
+published = {normalize(p.name.split("-")[0])
+             for p in pathlib.Path("wheels").glob("*.whl")}
+if not published:
+    print("no wheels published; nothing to reconcile")
+    sys.exit(0)
+
+found = call(f"{api}/remotes/python/python/?name={remote_name}")
+if not found["results"]:
+    print(f"remote '{remote_name}' does not exist; skipping "
+          "(the pull-through proxy is not configured on this server)")
+    sys.exit(0)
+remote = found["results"][0]
+current = list(remote.get("excludes") or [])
+
+# Entries carrying a version specifier are deliberate caps on third-party
+# packages (e.g. "mcp>=1.20.0" avoids a dependency that needs Rust). They are
+# not derivable from what we publish, so preserve them untouched.
+pinned = [e for e in current if re.search(r"[<>=!~]", e)]
+names = {normalize(e) for e in current if e not in pinned}
+
+missing = published - names
+if not missing:
+    print(f"excludes already cover: {sorted(published)}")
+    sys.exit(0)
+
+updated = sorted(names | published) + pinned
+call(urljoin(origin, remote["pulp_href"]), method="PATCH", body={"excludes": updated})
+print(f"added to excludes: {sorted(missing)}")
+print(f"excludes now: {updated}")
+PY
 '''
         }
       }
