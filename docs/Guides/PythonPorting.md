@@ -284,8 +284,38 @@ pip install --extra-index-url https://repo.zopen.community/pypi/wheels/simple/ \
 `--only-binary` is load-bearing, not decoration. Without it the install fails
 exactly as if the index were not configured at all.
 
-**Or configure a PyPI pull-through** on the Pulp server so users need only
-point pip at one place. Three things make that work:
+**Or use the constraints file**, which expresses the same thing without any
+per-command flags and works against plain PyPI:
+
+```sh
+export PIP_EXTRA_INDEX_URL="https://repo.zopen.community/pypi/wheels/simple/"
+export PIP_CONSTRAINT="https://raw.githubusercontent.com/zopencommunity/meta/main/data/zopen-constraints.txt"
+
+pip install fastapi
+```
+
+A [constraints file](https://pip.pypa.io/en/stable/user_guide/#constraints-files)
+says "if this package gets installed, it must satisfy this specifier". It
+installs nothing and modifies no package's metadata, which is the honest place
+to record a platform limitation — `Requires-Dist` describes what a *package*
+needs, not what a *platform* can support. Pinning a package to the version the
+index serves leaves the zopen wheel as the only candidate, and pip prefers a
+compatible wheel over an sdist at the same version, so `--only-binary` becomes
+unnecessary. It also covers packages zopen does not publish at all, capping
+them below a release that added an unbuildable dependency.
+
+`PIP_CONSTRAINT` accepts a URL, which is worth preferring on z/OS: pip reads a
+constraints file **in binary and decodes it as UTF-8**, bypassing automatic
+conversion entirely, so a local file written by a shell heredoc is EBCDIC and
+fails with `UnicodeDecodeError: 'utf-8' codec can't decode byte 0x97`. A file
+fetched over HTTP cannot hit that. If you do keep one locally, convert it:
+`iconv -f IBM-1047 -t ISO8859-1`.
+
+**Or configure a PyPI pull-through** on the Pulp server. Note this is not
+simpler for users — they still need two settings, because the proxy excludes
+the packages zopen publishes and those still come from the wheels index. What
+it buys is enforcement for users who never set `PIP_CONSTRAINT`, plus caching.
+Three things make it work:
 
 - The proxy **merges** upstream into the same view, so the packages you publish
   must be listed in the remote's `excludes` or PyPI still shadows them.

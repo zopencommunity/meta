@@ -25,6 +25,22 @@
 #
 # Keep in step with what the wheel index actually serves:
 #   https://repo.zopen.community/pypi/wheels/simple/
+#
+# If the server also runs a PyPI pull-through, its remote carries an "excludes"
+# list encoding the same policy -- but in the inverse language, so the two
+# cannot be generated from each other and must be kept in step by hand:
+#
+#   intent                        this file            Pulp exclude
+#   ---------------------------   ------------------   ----------------
+#   keep pip below mcp 1.20       mcp<1.20.0           mcp>=1.20.0
+#   never shadow our wheel        pydantic-core==X     pydantic-core
+#
+# A Pulp exclude says "do not serve versions matching this"; a constraint says
+# "pip must choose something matching this". Writing "pydantic-core==X" as an
+# exclude would hide our own wheel and keep serving PyPI's newer ones.
+#
+# Which of the two applies depends on how a user configured pip, so a
+# disagreement between them shows up as behaviour that differs per user.
 
 # --- built by zopen for z/OS -------------------------------------------------
 confluent-kafka==2.14.0
