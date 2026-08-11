@@ -1,0 +1,42 @@
+# zopen constraints for pip on z/OS
+#
+# A pip constraints file: "if this package gets installed, it must satisfy this
+# specifier". It does not install anything and does not modify any package's
+# metadata -- it only narrows what pip may choose.
+#
+# Use it with the zopen wheel index:
+#
+#   export PIP_EXTRA_INDEX_URL="https://repo.zopen.community/pypi/wheels/simple/"
+#   export PIP_CONSTRAINT="https://raw.githubusercontent.com/zopencommunity/meta/main/data/zopen-constraints.txt"
+#   pip install <package>
+#
+# Two kinds of entry, for two different problems.
+#
+# 1. Packages zopen builds for z/OS. PyPI has no z/OS wheel for these, so a
+#    newer upstream release resolves to an sdist that cannot be compiled here
+#    (no Rust toolchain; C extensions need the zopen build environment).
+#    Pinning to the published version leaves the zopen wheel as the only
+#    candidate pip can use -- it prefers a compatible wheel over an sdist at
+#    the same version, so --only-binary is not needed.
+#
+# 2. Upstream packages that grew a native dependency. These are not built here;
+#    they are capped below the release that introduced something unbuildable,
+#    so pip picks an older version that still works.
+#
+# Keep in step with what the wheel index actually serves:
+#   https://repo.zopen.community/pypi/wheels/simple/
+
+# --- built by zopen for z/OS -------------------------------------------------
+confluent-kafka==2.14.0
+mmh3==5.2.0
+pydantic-core==2.41.5
+rpds-py==2026.6.3
+xxhash==3.7.0
+
+# --- capped to avoid unported native dependencies ----------------------------
+
+# mcp 1.20.0 added pyjwt[crypto], which pulls in cryptography (Rust).
+mcp<1.20.0
+
+# fastmcp 3.x requires watchfiles (Rust). 2.0.0 is the version ported here.
+fastmcp==2.0.0
