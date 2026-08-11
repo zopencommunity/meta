@@ -117,6 +117,7 @@ export default defineConfig({
         collapsed: false,
         items: [
           { text: "Porting Guide", link: "/Guides/Porting" },
+          { text: "Porting Python Packages", link: "/Guides/PythonPorting" },
           { text: "Leveraging the zoslib Library", link: "/Guides/Zoslib" },
           { text: "Troubleshooting", link: "/Guides/CommonSolutions" },
           {
