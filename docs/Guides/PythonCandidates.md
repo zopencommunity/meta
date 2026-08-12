@@ -19,14 +19,14 @@ is the only one that settles it, and it comes from actually installing them.
 | blocker | blocks | ported | installs on z/OS? | candidates waiting on it |
 |---|---:|---|---|---|
 | `cffi` | 8 |  | no | buildbot, msal, paramiko, poetry, pygithub, pynacl, requests-pkcs12, snowflake |
-| `cryptography` | 6 |  | no | buildbot, msal, paramiko, poetry, requests-pkcs12, snowflake |
+| `cryptography` | 6 | yes | via zopen wheel | buildbot, msal, paramiko, poetry, requests-pkcs12, snowflake |
 | `pydantic-core` | 4 | yes | via zopen wheel | fastapi, fastmcp, pydantic, snowflake |
 | `pyyaml` | 4 |  | **yes — builds from sdist** | buildbot, cookiecutter, rst2pdf, snowflake |
 | `pillow` | 4 |  | no | fpdf2, python-pptx, rst2pdf, seaborn |
 | `markupsafe` | 3 |  | **yes — builds from sdist** | buildbot, cookiecutter, rst2pdf |
 | `numpy` | 3 |  | no | PyWavelets, qiskit, seaborn |
 | `pynacl` | 2 |  | no | paramiko, pygithub |
-| `msgpack` | 2 |  | **yes — builds from sdist** | buildbot, poetry |
+| `msgpack` | 2 |  | no | buildbot, poetry |
 
 Blockers whose answer is "yes — builds from sdist" need no port at all;
 they only looked like blockers because they ship no universal wheel.
@@ -35,7 +35,7 @@ they only looked like blockers because they ship no universal wheel.
 
 | package | status | ported by zopen | native closure still missing |
 |---|---|---|---|
-| `buildbot` | fails |  | `autobahn`, `cbor2`, `cffi`, `cryptography`, `greenlet`, `markupsafe`, `msgpack`, `pyyaml`, `ujson`, `zope-interface` |
+| `buildbot` | fails |  | `autobahn`, `cbor2`, `cffi`, `greenlet`, `markupsafe`, `msgpack`, `pyyaml`, `ujson`, `zope-interface` |
 | `confluent-kafka` | works | **yes** | — |
 | `cookiecutter` | works | **yes** | `backports-zoneinfo`, `markupsafe`, `pyyaml` |
 | `django` | works | **yes** | — |
@@ -44,15 +44,15 @@ they only looked like blockers because they ship no universal wheel.
 | `fastmcp` | works | **yes** | — |
 | `fpdf2` | fails |  | `pillow` |
 | `greenlet` | fails |  | — |
-| `msal` | fails |  | `cffi`, `cryptography` |
+| `msal` | works |  | `cffi` |
 | `ninja` | fails |  | — |
 | `pamela` | installs, import fails |  | — |
-| `paramiko` | fails |  | `bcrypt`, `cffi`, `cryptography`, `pynacl` |
-| `poetry` | fails |  | `cffi`, `cryptography`, `msgpack`, `rapidfuzz`, `xattr` |
+| `paramiko` | fails |  | `bcrypt`, `cffi`, `pynacl` |
+| `poetry` | fails |  | `cffi`, `msgpack`, `rapidfuzz`, `xattr` |
 | `psutil` | fails |  | — |
 | `psycopg2` | fails |  | — |
 | `pyarrow` | fails |  | — |
-| `pycryptodome` | works |  | — |
+| `pycryptodome` | fails |  | — |
 | `pydantic` | works |  | — |
 | `pygithub` | fails |  | `cffi`, `pynacl` |
 | `pyjwt` | works |  | — |
@@ -60,20 +60,20 @@ they only looked like blockers because they ship no universal wheel.
 | `pynacl` | fails |  | `cffi` |
 | `pyodbc` | fails |  | — |
 | `pytest` | works |  | — |
-| `python-pkcs11` | works |  | — |
+| `python-pkcs11` | fails |  | — |
 | `python-pptx` | fails |  | `lxml`, `pillow` |
 | `PyWavelets` | fails |  | `numpy` |
 | `pyzfile` | works |  | — |
 | `qiskit` | fails |  | `numpy`, `rustworkx`, `scipy` |
-| `requests-pkcs12` | fails |  | `cffi`, `cryptography` |
+| `requests-pkcs12` | works |  | `cffi` |
 | `rst2pdf` | fails |  | `markupsafe`, `pillow`, `pyyaml` |
 | `seaborn` | fails |  | `contourpy`, `kiwisolver`, `matplotlib`, `numpy`, `pandas`, `pillow` |
-| `snowflake` | fails |  | `cffi`, `cryptography`, `pyyaml`, `snowflake-connector-python` |
+| `snowflake` | fails |  | `cffi`, `pyyaml`, `snowflake-connector-python` |
 | `uv` | fails |  | — |
 | `versioneer` | works | **yes** | — |
 | `xxhash` | works | **yes** | — |
 
 ## Installs cleanly today
 
-`confluent-kafka`, `cookiecutter`, `django`, `fastapi`, `fastmcp`, `pycryptodome`, `pydantic`, `pyjwt`, `pytest`, `python-pkcs11`, `pyzfile`, `versioneer`, `xxhash`
+`confluent-kafka`, `cookiecutter`, `django`, `fastapi`, `fastmcp`, `msal`, `pydantic`, `pyjwt`, `pytest`, `pyzfile`, `requests-pkcs12`, `versioneer`, `xxhash`
 
