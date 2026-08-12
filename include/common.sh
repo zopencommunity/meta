@@ -473,7 +473,7 @@ defineANSI()
   CRSRSHOW="${ESC}[?25h"
 
   # Color-type codes, needs explicit terminal settings
-  if [ ! "${_BPX_TERMPATH-x}" = "OMVS" ] && [ -z "${NO_COLOR}" ] && [ ! "${FORCE_COLOR-x}" = "0" ] && [ -t 1 ] && [ -t 2 ]; then
+  if [ ! "${_BPX_TERMPATH-x}" = "OMVS" ] && [ "${ORIGINAL_TERM}" != "dumb" ] && [ "${ORIGINAL_TERM}" != "OMVS" ] && [ -z "${NO_COLOR}" ] && [ ! "${FORCE_COLOR-x}" = "0" ] && [ -t 1 ] && [ -t 2 ]; then
     esc="${ESC}"
     BLACK="${esc}[30m"
     RED="${esc}[31m"
@@ -602,6 +602,7 @@ defineEnvironment()
   export _TAG_REDIR_OUT=txt
   export GIT_UTF8_CCSID=819
   unset _ENCODE_FILE_NEW # rely on the default tool encoding behaviour
+  export ORIGINAL_TERM="${TERM}"
   export TERM=xterm # To avoid potential issues with "FSUM6202 Unknown terminal" if using an ncurses terminal database
 
   # Required for proper operation of xlclang
