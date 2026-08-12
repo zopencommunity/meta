@@ -102,6 +102,11 @@ test("discovers exact RPM and wheel matches and requires admin review", async ()
   assert.equal(request.status, "available");
   assert.equal(request.artifactKind, "pulp_python");
   assert.match(request.artifactUrl, /confluent_kafka-2\.14\.0-cp312-none-any\.whl$/);
+  assert.equal(request.packageVersion, "2.14.0");
+  assert.equal(request.packageArchitecture, "cp312-none-any");
+  assert.match(request.installCommand, /pypi\/wheels\/simple/);
+  assert.match(request.installCommand, /zopen-constraints\.txt/);
+  assert.equal(typeof request.artifactLastSyncedAt, "string");
 
   const matchStatuses = await new Promise((resolve, reject) => {
     database.all(

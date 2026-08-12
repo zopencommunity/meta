@@ -25,7 +25,12 @@ function insertTestRequest(packageName, ecosystem = "general") {
 
 before(async () => {
   database = openDatabase(":memory:");
-  const app = createApp({ database, allowedOrigins: "http://localhost:5173", adminToken: "test-admin-token" });
+  const app = createApp({
+    database,
+    allowedOrigins: "http://localhost:5173",
+    adminToken: "test-admin-token",
+    catalogEntries: [{ packageName: "catalog-tool", version: "3.2.1", description: "Published test package", url: "https://example.com/catalog-tool" }],
+  });
   await app.locals.ready;
   await new Promise((resolve) => {
     server = app.listen(0, "127.0.0.1", resolve);
@@ -113,6 +118,31 @@ test("rejects duplicate package names including the port suffix", async () => {
     body: JSON.stringify({ packageName: "Too Short", ecosystem: "general", description: "X" }),
   });
   assert.equal(oneCharacterDescriptionResponse.status, 400);
+});
+
+test("discovers existing requests, Pulp artifacts, and catalog packages", async () => {
+  const now = new Date().toISOString();
+  await new Promise((resolve, reject) => database.run(
+    `INSERT INTO pulp_artifacts
+      (source, package_name, normalized_name, version, release, architecture, artifact_url, checksum, first_seen_at, last_seen_at)
+     VALUES ('wheel', 'wheel-tool', 'wheel-tool', '1.4.0', '', 'cp312-none-any', 'https://example.com/wheel-tool.whl', '', ?, ?)`,
+    [now, now],
+    (error) => error ? reject(error) : resolve(),
+  ));
+  const response = await fetch(`${baseUrl}/api/discovery?query=wheel_tool&ecosystem=python`);
+  assert.equal(response.status, 200);
+  const found = await response.json();
+  assert.equal(found.artifacts[0].packageName, "wheel-tool");
+  assert.equal(found.artifacts[0].match, "exact");
+
+  const bulkResponse = await fetch(`${baseUrl}/api/discovery/bulk`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ queries: [{ query: "Example Tool", ecosystem: "rust" }, { query: "catalog_tool", ecosystem: "general" }] }),
+  });
+  const bulk = await bulkResponse.json();
+  assert.equal(bulk.results[0].requests[0].match, "exact");
+  assert.equal(bulk.results[1].catalog[0].packageName, "catalog-tool");
 });
 
 test("serves dedicated request details and manages typed relationships", async () => {
@@ -344,6 +374,7 @@ test("changes status only with the admin token", async () => {
   assert.equal(available.status, 200);
   const published = await available.json();
   assert.equal(published.request.artifactKind, "pulp_python");
+  assert.match(published.request.installCommand, /PIP_EXTRA_INDEX_URL/);
   assert.equal(typeof published.request.availableAt, "string");
 
   const statusOnlyUpdate = await fetch(`${baseUrl}/api/requests/1`, {

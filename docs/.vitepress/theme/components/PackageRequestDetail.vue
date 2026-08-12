@@ -22,6 +22,14 @@ interface PackageRequest extends RequestSummary {
   portRepositoryUrl: string;
   artifactKind: string;
   artifactUrl: string;
+  installCommand: string;
+  packageVersion: string;
+  packageArchitecture: string;
+  runtimeCompatibility: string;
+  zosCompatibility: string;
+  installationNotes: string;
+  verificationCommand: string;
+  artifactLastSyncedAt: string | null;
   maintainerNote: string;
   acknowledgedAt: string | null;
   availableAt: string | null;
@@ -66,6 +74,7 @@ const error = ref("");
 const activityError = ref("");
 const voteBusy = ref(false);
 const shareMessage = ref("");
+const copiedCommand = ref<"install" | "verify" | "">("");
 const postOpen = ref(false);
 const postBusy = ref(false);
 const postMessage = ref("");
@@ -111,6 +120,12 @@ const relationSections = computed(() => [
   { key: "duplicateOf", title: "Duplicate of", description: "This request is represented by another request." },
   { key: "duplicates", title: "Duplicate requests", description: "These requests have been linked back to this one." },
 ].filter((section) => (relationships.value[section.key] || []).length));
+
+async function copyCommand(value: string, kind: "install" | "verify") {
+  await navigator.clipboard.writeText(value);
+  copiedCommand.value = kind;
+  window.setTimeout(() => { if (copiedCommand.value === kind) copiedCommand.value = ""; }, 1800);
+}
 
 function getVoterId() {
   const key = "zopen-package-request-voter-id";
@@ -340,6 +355,21 @@ onMounted(async () => {
 
         <section class="content-card delivery-card">
           <span class="section-kicker">Delivery</span><h2>{{ request.status === 'available' ? 'Package available' : 'Porting outcome' }}</h2>
+          <div v-if="request.status === 'available' && (request.packageVersion || request.packageArchitecture || request.runtimeCompatibility || request.zosCompatibility)" class="install-metadata">
+            <span v-if="request.packageVersion"><small>Version</small><strong>{{ request.packageVersion }}</strong></span>
+            <span v-if="request.packageArchitecture"><small>Architecture</small><strong>{{ request.packageArchitecture }}</strong></span>
+            <span v-if="request.runtimeCompatibility"><small>Runtime</small><strong>{{ request.runtimeCompatibility }}</strong></span>
+            <span v-if="request.zosCompatibility"><small>z/OS</small><strong>{{ request.zosCompatibility }}</strong></span>
+          </div>
+          <div v-if="request.status === 'available' && request.installCommand" class="command-block">
+            <div><strong>Install</strong><button type="button" @click="copyCommand(request.installCommand, 'install')">{{ copiedCommand === 'install' ? 'Copied' : 'Copy' }}</button></div>
+            <pre><code>{{ request.installCommand }}</code></pre>
+          </div>
+          <div v-if="request.status === 'available' && request.verificationCommand" class="command-block">
+            <div><strong>Verify</strong><button type="button" @click="copyCommand(request.verificationCommand, 'verify')">{{ copiedCommand === 'verify' ? 'Copied' : 'Copy' }}</button></div>
+            <pre><code>{{ request.verificationCommand }}</code></pre>
+          </div>
+          <p v-if="request.installationNotes" class="installation-notes">{{ request.installationNotes }}</p>
           <a v-if="request.portRepositoryUrl" :href="request.portRepositoryUrl" target="_blank" rel="noopener noreferrer">View zopen port repository ↗</a>
           <a v-if="request.artifactUrl" :href="request.artifactUrl" target="_blank" rel="noopener noreferrer">Open published package ↗</a>
           <p v-if="!request.portRepositoryUrl && !request.artifactUrl">No port repository or package artifact has been published yet.</p>
@@ -419,6 +449,7 @@ onMounted(async () => {
 .hero-actions{display:flex;min-width:150px;flex-direction:column;gap:10px}.vote-action,.primary-action,.secondary-action{display:inline-flex;align-items:center;justify-content:center;gap:7px;border-radius:9px;padding:10px 14px;font:inherit;font-weight:750;cursor:pointer;text-decoration:none}.vote-action{min-height:94px;flex-direction:column;border:1px solid var(--accent);background:var(--vp-c-bg);color:var(--accent)}.vote-action strong{font-size:25px}.vote-action.voted,.primary-action{border:1px solid var(--accent);background:var(--accent);color:#fff}.secondary-action{border:1px solid var(--vp-c-divider);background:var(--vp-c-bg);color:var(--vp-c-text-1)}button:disabled{cursor:wait;opacity:.6}.hero-actions small{text-align:center;color:var(--vp-c-text-3)}
 .progress-card,.relationships-card,.activity-card{margin-top:20px}.section-heading,.activity-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:25px}.section-heading span,.section-kicker{color:var(--accent);font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}.section-heading h2,.relationships-card h2,.activity-card h2,.content-card h2{margin:4px 0 0}.section-heading>p{max-width:480px;margin:0;color:var(--vp-c-text-2)}.status-progress{display:grid;grid-template-columns:repeat(5,1fr);padding:0;margin:28px 0 0;list-style:none}.status-progress li{position:relative;display:flex;align-items:center;gap:8px;color:var(--vp-c-text-3);font-size:12px}.status-progress li:not(:last-child)::after{position:absolute;z-index:0;top:14px;left:30px;width:calc(100% - 30px);height:2px;background:var(--vp-c-divider);content:""}.status-progress span{z-index:1;display:grid;width:28px;height:28px;place-items:center;border-radius:50%;background:var(--vp-c-bg-soft);font-weight:800}.status-progress .reached{color:var(--accent)}.status-progress .reached span,.status-progress .reached:not(:last-child)::after{background:var(--accent);color:#fff}.maintainer-note{display:flex;flex-direction:column;gap:4px;margin:24px 0 0;padding:16px;border-left:4px solid var(--accent);background:var(--accent-soft)}
 .detail-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:20px;margin-top:20px}.content-card p{color:var(--vp-c-text-2);line-height:1.65}.detail-block{margin-top:22px}.detail-block h3{margin-bottom:5px;font-size:15px}.detail-flags{margin-top:22px}.detail-flags span{color:var(--accent);font-weight:700}.delivery-card{display:flex;align-items:flex-start;flex-direction:column;gap:12px}.delivery-card h2{margin-bottom:8px}.delivery-card a{display:block;padding:11px 13px;border:1px solid var(--vp-c-divider);border-radius:9px;width:100%;text-decoration:none}
+.install-metadata{display:grid;width:100%;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.install-metadata span{display:flex;min-width:0;flex-direction:column;padding:9px 11px;border-radius:8px;background:var(--vp-c-bg-soft)}.install-metadata small{color:var(--vp-c-text-3)}.install-metadata strong{overflow-wrap:anywhere;font-size:13px}.command-block{width:100%;overflow:hidden;border:1px solid var(--vp-c-divider);border-radius:9px}.command-block>div{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:var(--vp-c-bg-soft)}.command-block button{border:0;background:transparent;color:var(--accent);font-weight:800;cursor:pointer}.command-block pre{overflow:auto;margin:0;padding:12px;font-size:12px;white-space:pre}.installation-notes{margin:0;white-space:pre-wrap}
 .relationship-sections{display:grid;gap:20px;margin-top:22px}.relationship-section{display:grid;grid-template-columns:minmax(190px,.7fr) 1.5fr;gap:24px;padding-top:20px;border-top:1px solid var(--vp-c-divider)}.relationship-section h3,.relationship-section p{margin:0}.relationship-section p{margin-top:4px;color:var(--vp-c-text-3);font-size:13px}.relationship-list{display:grid;gap:8px}.relationship-item{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:12px 14px;border:1px solid var(--vp-c-divider);border-radius:10px;color:inherit;text-decoration:none}.relationship-item:hover{border-color:var(--accent)}.relationship-item span:first-child{display:flex;flex-direction:column}.relationship-item small{color:var(--vp-c-text-3)}
 .activity-heading{align-items:center}.timeline{padding:0;margin:25px 0;list-style:none}.timeline li{position:relative;display:grid;grid-template-columns:18px 1fr;gap:12px;padding-bottom:23px}.timeline li:not(:last-child)::before{position:absolute;top:13px;bottom:0;left:5px;width:2px;background:var(--vp-c-divider);content:""}.timeline-marker{z-index:1;width:12px;height:12px;margin-top:5px;border:3px solid var(--vp-c-bg);border-radius:50%;background:var(--accent);box-shadow:0 0 0 1px var(--accent)}.timeline p{margin:7px 0;white-space:pre-wrap}.timeline time,.timeline small{display:block;margin-top:6px;color:var(--vp-c-text-3);font-size:12px}.post-labels span,.post-labels b{border-radius:999px;padding:3px 7px;background:var(--vp-c-bg-soft);font-size:11px}.post-labels b{background:var(--accent-soft);color:var(--accent)}.success-message{padding:12px;border-radius:8px;background:#e5f5e8;color:#276738}.inline-error{padding:11px;border-radius:8px;background:#f8e9e9;color:#8a3434}
 .post-form{display:grid;gap:15px;margin-top:18px;padding:22px;border:1px solid var(--vp-c-divider);border-radius:12px;background:var(--vp-c-bg-soft)}.post-form-heading{display:flex;align-items:center;justify-content:space-between}.post-form-heading h3{margin:0}.post-form-heading button{border:0;background:transparent;font-size:24px;cursor:pointer}.post-form label:not(.check):not(.honeypot){display:grid;gap:6px;font-size:13px;font-weight:700}.post-form input,.post-form select,.post-form textarea{width:100%;border:1px solid var(--vp-c-divider);border-radius:8px;padding:9px 11px;background:var(--vp-c-bg);color:var(--vp-c-text-1);font:inherit}.post-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.check{display:flex;align-items:flex-start;gap:8px;font-size:13px}.check input{width:auto;margin-top:3px}.honeypot{position:absolute;left:-10000px}.form-actions{display:flex;justify-content:flex-end;gap:10px}

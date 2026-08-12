@@ -21,6 +21,14 @@ interface AdminRequest {
   portRepositoryUrl: string;
   artifactKind: string;
   artifactUrl: string;
+  installCommand: string;
+  packageVersion: string;
+  packageArchitecture: string;
+  runtimeCompatibility: string;
+  zosCompatibility: string;
+  installationNotes: string;
+  verificationCommand: string;
+  artifactLastSyncedAt: string | null;
   maintainerNote: string;
   voteCount: number;
   discussionCount: number;
@@ -459,6 +467,13 @@ async function saveRequest(request: AdminRequest) {
         portRepositoryUrl: request.portRepositoryUrl,
         artifactKind: request.artifactKind,
         artifactUrl: request.artifactUrl,
+        installCommand: request.installCommand,
+        packageVersion: request.packageVersion,
+        packageArchitecture: request.packageArchitecture,
+        runtimeCompatibility: request.runtimeCompatibility,
+        zosCompatibility: request.zosCompatibility,
+        installationNotes: request.installationNotes,
+        verificationCommand: request.verificationCommand,
         maintainerNote: request.maintainerNote,
       }),
     });
@@ -686,6 +701,14 @@ onMounted(async () => {
               <label><span>Published artifact type</span><select v-model="request.artifactKind"><option v-for="(label, key) in artifacts" :key="key" :value="key">{{ label }}</option></select></label>
               <label><span>zopen port repository URL</span><input v-model.trim="request.portRepositoryUrl" type="url" placeholder="https://github.com/zopencommunity/exampleport" /></label>
               <label><span>Published artifact / Pulp URL</span><input v-model.trim="request.artifactUrl" type="url" placeholder="https://repo.zopen.community/pulp/content/…" /></label>
+              <label><span>Published version</span><input v-model.trim="request.packageVersion" maxlength="160" placeholder="e.g. 2.11.1" /></label>
+              <label><span>Architecture / wheel tags</span><input v-model.trim="request.packageArchitecture" maxlength="160" placeholder="e.g. cp311-cp311-zos_0_1_0_s390x" /></label>
+              <label><span>Runtime compatibility</span><input v-model.trim="request.runtimeCompatibility" maxlength="300" placeholder="e.g. Python 3.11–3.13" /></label>
+              <label><span>z/OS compatibility</span><input v-model.trim="request.zosCompatibility" maxlength="300" placeholder="e.g. z/OS 3.1, z/OS 3.2" /></label>
+              <label class="wide"><span>Installation command</span><textarea v-model.trim="request.installCommand" maxlength="4000" rows="4" placeholder="Generated automatically for Pulp packages; override when needed" /></label>
+              <label class="wide"><span>Verification command</span><textarea v-model.trim="request.verificationCommand" maxlength="2000" rows="2" placeholder="Optional smoke-test command" /></label>
+              <label class="wide"><span>Installation notes</span><textarea v-model.trim="request.installationNotes" maxlength="2000" rows="3" placeholder="Prerequisites, caveats, or additional steps" /></label>
+              <p v-if="request.artifactLastSyncedAt" class="github-owner-id">Artifact last synchronized: {{ new Date(request.artifactLastSyncedAt).toLocaleString() }}</p>
               <label class="wide"><span>Public maintainer note</span><textarea v-model.trim="request.maintainerNote" maxlength="1200" placeholder="Triage decision, current progress, or installation guidance" /></label>
               <div class="editor-actions">
                 <button class="danger" type="button" :disabled="saveStates[request.id]?.busy" @click="deleteRequest(request)">Delete permanently</button>

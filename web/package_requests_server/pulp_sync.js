@@ -303,7 +303,9 @@ async function approvePulpMatch(database, requestId, source) {
   try {
     const match = await get(
       database,
-      `SELECT pm.*, a.artifact_url, r.status AS request_status, r.maintainer_note, r.acknowledged_at
+      `SELECT pm.*, a.artifact_url, a.package_name AS artifact_package_name, a.version, a.release,
+              a.architecture, a.last_seen_at, r.package_name AS request_package_name,
+              r.status AS request_status, r.maintainer_note, r.acknowledged_at, r.install_command
        FROM pulp_matches pm
        JOIN pulp_artifacts a ON a.id = pm.artifact_id
        JOIN package_requests r ON r.id = pm.request_id
@@ -315,12 +317,17 @@ async function approvePulpMatch(database, requestId, source) {
       return null;
     }
     const artifactKind = source === "wheel" ? "pulp_python" : "pulp_zopen";
+    const installCommand = match.install_command || (source === "wheel"
+      ? `export PIP_EXTRA_INDEX_URL="https://repo.zopen.community/pypi/wheels/simple/"\nexport PIP_CONSTRAINT="https://repo.zopen.community/pulp/content/constraints/zopen-constraints.txt"\npip install ${match.request_package_name}`
+      : `zopen install ${match.request_package_name}`);
     const acknowledgedAt = match.acknowledged_at || now;
     await run(
       database,
       `UPDATE package_requests SET status = 'available', artifact_kind = ?, artifact_url = ?,
+       install_command = ?, package_version = ?, package_architecture = ?, artifact_last_synced_at = ?,
        acknowledged_at = ?, available_at = COALESCE(available_at, ?), updated_at = ? WHERE id = ?`,
-      [artifactKind, match.artifact_url, acknowledgedAt, now, now, requestId],
+      [artifactKind, match.artifact_url, installCommand, match.version || "", match.architecture || "",
+        match.last_seen_at || now, acknowledgedAt, now, now, requestId],
     );
     if (match.request_status !== "available") {
       await run(

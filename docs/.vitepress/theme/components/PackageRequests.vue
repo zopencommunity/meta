@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref } from "vue";
+import { computed, onMounted, onUnmounted, reactive, ref, watch } from "vue";
 import { withBase } from "vitepress";
 
 type RequestStatus =
@@ -88,6 +88,27 @@ interface BulkRowState {
   existingRequest?: PackageRequest;
 }
 
+interface DiscoveryItem {
+  kind: "request" | "artifact" | "catalog";
+  match: "exact" | "similar";
+  id?: number;
+  packageName: string;
+  ecosystem?: string;
+  status?: RequestStatus;
+  source?: "rpm" | "wheel";
+  version?: string;
+  architecture?: string;
+  url?: string;
+  description?: string;
+}
+
+interface DiscoveryResult {
+  query: string;
+  requests: DiscoveryItem[];
+  artifacts: DiscoveryItem[];
+  catalog: DiscoveryItem[];
+}
+
 const productionApiUrl = "https://usage.zopen.community/package-requests/api";
 const configuredApiUrl = String(
   import.meta.env.VITE_PACKAGE_REQUESTS_API_URL || (import.meta.env.PROD ? productionApiUrl : ""),
@@ -95,6 +116,10 @@ const configuredApiUrl = String(
 const apiUrl = ref(configuredApiUrl);
 const requests = ref<PackageRequest[]>([]);
 const availablePackages = ref(new Set<string>());
+const discovery = ref<DiscoveryResult | null>(null);
+const discoveryLoading = ref(false);
+const discoveryError = ref("");
+const bulkDiscovery = reactive<Record<string, DiscoveryResult>>({});
 const search = ref("");
 const sort = ref<"top" | "newest">("top");
 const status = ref("all");
@@ -133,6 +158,8 @@ const bulkSubmitting = ref(false);
 const bulkError = ref("");
 const maxBulkRequests = 25;
 let nextBulkRowKey = 1;
+let discoveryTimer: ReturnType<typeof setTimeout> | undefined;
+let discoverySequence = 0;
 
 const form = reactive({
   packageName: "",
@@ -243,8 +270,16 @@ const filteredRequests = computed(() => {
 const totalVotes = computed(() => requests.value.reduce((total, request) => total + request.voteCount, 0));
 const availableMatch = computed(() => {
   const normalized = normalizeName(form.packageName);
-  return normalized && availablePackages.value.has(normalized);
+  return normalized && (availablePackages.value.has(normalized) || Boolean(discovery.value && [
+    ...discovery.value.artifacts,
+    ...discovery.value.catalog,
+  ].some((item) => item.match === "exact")));
 });
+const discoveryItems = computed(() => discovery.value ? [
+  ...discovery.value.requests,
+  ...discovery.value.artifacts,
+  ...discovery.value.catalog,
+].slice(0, 8) : []);
 const requestsByName = computed(() => new Map(
   requests.value.map((request) => [normalizeName(request.packageName), request]),
 ));
@@ -288,7 +323,10 @@ function getBulkRowState(row: BulkRow, index: number): BulkRowState {
   if (firstIndex !== index) return { kind: "duplicate", label: `Duplicate of row ${firstIndex + 1}` };
   const existingRequest = requestsByName.value.get(normalized);
   if (existingRequest) return { kind: "existing", label: "Already requested", existingRequest };
-  if (availablePackages.value.has(normalized)) return { kind: "available", label: "Already available" };
+  const discovered = bulkDiscovery[`${normalized}:${row.ecosystem}`];
+  if (availablePackages.value.has(normalized) || discovered && [...discovered.artifacts, ...discovered.catalog].some((item) => item.match === "exact")) {
+    return { kind: "available", label: "Already available" };
+  }
   return { kind: "ready", label: "Ready" };
 }
 
@@ -367,7 +405,54 @@ function setBulkRows(rows: Omit<BulkRow, "key">[]) {
   bulkRows.value = rows.map((row) => ({ ...row, key: nextBulkRowKey++ }));
   bulkReviewing.value = true;
   bulkError.value = "";
+  void discoverBulkRows();
 }
+
+async function discoverBulkRows() {
+  const rows = bulkRows.value.filter((row) => validPackageName(row.packageName) && row.packageName.trim().length >= 2);
+  if (!rows.length) return;
+  try {
+    const result = await apiRequest("/discovery/bulk", {
+      method: "POST",
+      body: JSON.stringify({ queries: rows.map((row) => ({ query: row.packageName, ecosystem: row.ecosystem })) }),
+    });
+    (result.results || []).forEach((item: DiscoveryResult, index: number) => {
+      const row = rows[index];
+      bulkDiscovery[`${normalizeName(row.packageName)}:${row.ecosystem}`] = item;
+    });
+  } catch {
+    // Discovery is advisory; validation and submission remain available if it is temporarily offline.
+  }
+}
+
+async function loadDiscovery() {
+  const query = form.packageName.trim();
+  if (query.length < 2) {
+    discovery.value = null;
+    discoveryError.value = "";
+    return;
+  }
+  const sequence = ++discoverySequence;
+  discoveryLoading.value = true;
+  discoveryError.value = "";
+  try {
+    const parameters = new URLSearchParams({ query });
+    if (form.ecosystem) parameters.set("ecosystem", form.ecosystem);
+    const result = await apiRequest(`/discovery?${parameters}`);
+    if (sequence === discoverySequence) discovery.value = result;
+  } catch (error) {
+    if (sequence === discoverySequence) discoveryError.value = error instanceof Error ? error.message : "Package search is unavailable.";
+  } finally {
+    if (sequence === discoverySequence) discoveryLoading.value = false;
+  }
+}
+
+watch(() => [form.packageName, form.ecosystem], () => {
+  if (discoveryTimer) clearTimeout(discoveryTimer);
+  discoveryTimer = setTimeout(() => void loadDiscovery(), 300);
+});
+
+onUnmounted(() => { if (discoveryTimer) clearTimeout(discoveryTimer); });
 
 function reviewPastedPackages() {
   bulkError.value = "";
@@ -1126,6 +1211,24 @@ onMounted(async () => {
             </select>
           </label>
         </div>
+        <section v-if="form.packageName.trim().length >= 2" class="discovery-panel" aria-live="polite">
+          <div class="discovery-heading">
+            <strong>Package search</strong>
+            <span v-if="discoveryLoading">Checking requests, Pulp, and the catalog…</span>
+            <span v-else-if="discoveryError">{{ discoveryError }}</span>
+            <span v-else-if="!discoveryItems.length">No matching requests or published packages found.</span>
+            <span v-else>Review these matches before creating another request.</span>
+          </div>
+          <div v-if="discoveryItems.length" class="discovery-results">
+            <div v-for="item in discoveryItems" :key="`${item.kind}-${item.id || item.packageName}-${item.source || ''}`" class="discovery-result">
+              <span class="discovery-kind">{{ item.kind === 'request' ? 'Request' : item.kind === 'artifact' ? (item.source === 'wheel' ? 'Python wheel' : 'zopen RPM') : 'Catalog' }}</span>
+              <span><strong>{{ item.packageName }}</strong><small v-if="item.version">Version {{ item.version }}</small><small>{{ item.match === 'exact' ? 'Exact match' : 'Similar name' }}</small></span>
+              <a v-if="item.kind === 'request' && item.id" :href="requestDetailUrl({ id: item.id, packageName: item.packageName })">View and vote</a>
+              <a v-else-if="item.url" :href="item.url" target="_blank" rel="noopener noreferrer">View package ↗</a>
+              <a v-else :href="withBase('/Latest')">View catalog</a>
+            </div>
+          </div>
+        </section>
         <div class="form-grid">
           <label>
             <span>Upstream project URL <small>Optional</small></span>
@@ -1322,7 +1425,7 @@ onMounted(async () => {
                 >{{ bulkStates[index].existingRequest?.voted ? "Remove vote" : "Vote for it" }}</button>
               </div>
               <p v-else-if="bulkStates[index].kind === 'available'" class="bulk-existing-action">
-                This package is already in the <a :href="withBase('/Latest')">available-tools catalog</a>.
+                This package is already published in Pulp or the <a :href="withBase('/Latest')">available-tools catalog</a>.
               </p>
             </article>
           </div>
@@ -1798,6 +1901,15 @@ onMounted(async () => {
 .requester-section label:last-child { margin-bottom: 0; }
 .inline-warning { padding: 10px 12px; margin: -6px 0 18px; border-radius: 8px; color: #825d00; background: #fff4ce; font-size: 14px; }
 .dark .inline-warning { color: #ffe08a; background: #3b3011; }
+.discovery-panel { padding:14px; margin:0 0 18px; border:1px solid var(--vp-c-divider); border-radius:11px; background:var(--vp-c-bg-soft); }
+.discovery-heading { display:flex; flex-wrap:wrap; align-items:baseline; gap:6px 12px; }
+.discovery-heading span { color:var(--vp-c-text-3); font-size:12px; }
+.discovery-results { display:grid; gap:7px; margin-top:11px; }
+.discovery-result { display:grid; grid-template-columns:92px minmax(0,1fr) auto; align-items:center; gap:10px; padding:9px 10px; border:1px solid var(--vp-c-divider); border-radius:8px; background:var(--vp-c-bg); font-size:13px; }
+.discovery-result>span:nth-child(2) { display:flex; min-width:0; flex-wrap:wrap; align-items:baseline; gap:4px 8px; }
+.discovery-result small { color:var(--vp-c-text-3); }
+.discovery-kind { color:var(--request-accent); font-size:11px; font-weight:800; text-transform:uppercase; }
+.discovery-result a { color:var(--request-accent); font-weight:700; white-space:nowrap; }
 .form-actions { display: flex; justify-content: flex-end; gap: 10px; }
 .bulk-import-actions, .board-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
 .file-button { display: inline-flex !important; margin: 0 !important; }

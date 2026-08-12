@@ -14,6 +14,8 @@ Published zopen artifacts use the community Pulp service:
 
 - RPM repository: `https://repo.zopen.community/pulp/content/zopen/`
 - Production wheels: `https://repo.zopen.community/pulp/content/wheels/`
+- pip wheel index: `https://repo.zopen.community/pypi/wheels/simple/`
+- pip constraints: `https://repo.zopen.community/pulp/content/constraints/zopen-constraints.txt`
 - Repository root: `https://repo.zopen.community/pulp/content/`
 
 The maintainer console recognizes both Pulp zopen RPMs and Pulp Python packages
@@ -122,6 +124,8 @@ the root login once the initial deployment is complete.
 - `GET /api/health`
 - `GET /api/requests?sort=top|newest&status=proposed`
 - `GET /api/requests/:id` with public request details and grouped relationships
+- `GET /api/discovery?query=name&ecosystem=python` across requests, Pulp, and the public catalog
+- `POST /api/discovery/bulk` with up to 25 discovery queries
 - `POST /api/requests`
 - `POST /api/requests/bulk` with up to 25 requests and shared requester details
 - `PUT /api/requests/:id/vote`
@@ -164,6 +168,10 @@ For Python requests, an exact match from the production wheels repository is
 presented as the primary artifact and a zopen RPM match is retained as an
 alternative. Other ecosystems prefer the zopen RPM. Applying either reviewed
 artifact dismisses the remaining alternatives for that request.
+Approval also records the published version, architecture tags, last sync time,
+and a generated installation command. Python commands use the zopen wheel index
+and constraints file; RPM commands use `zopen install`. Maintainers can edit the
+command, compatibility details, verification command, and installation notes.
 
 Run it manually with:
 
@@ -293,8 +301,8 @@ publicly and adds per-IP request throttling without storing IP addresses. Guest
 voting remains a low-friction interest signal and cannot prevent a determined
 person from using multiple anonymous browsers, so all votes remain advisory.
 
-The bulk-request interface accepts a pasted list or CSV, validates every row,
-and checks the public catalog before submission. The bulk API independently
+The single and bulk request interfaces search existing requests, synchronized
+Pulp artifacts, and the public catalog before submission. The bulk API independently
 validates all fields and returns created, duplicate, and rejected rows. Public
 submissions are limited to 25 packages per batch and two batches per IP per
 hour. Each accepted row is stored as a normal independent request; a batch does

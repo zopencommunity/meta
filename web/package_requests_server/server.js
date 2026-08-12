@@ -104,6 +104,14 @@ async function initializeDatabase(database) {
       port_repository_url TEXT NOT NULL DEFAULT '',
       artifact_kind TEXT NOT NULL DEFAULT '',
       artifact_url TEXT NOT NULL DEFAULT '',
+      install_command TEXT NOT NULL DEFAULT '',
+      package_version TEXT NOT NULL DEFAULT '',
+      package_architecture TEXT NOT NULL DEFAULT '',
+      runtime_compatibility TEXT NOT NULL DEFAULT '',
+      zos_compatibility TEXT NOT NULL DEFAULT '',
+      installation_notes TEXT NOT NULL DEFAULT '',
+      verification_command TEXT NOT NULL DEFAULT '',
+      artifact_last_synced_at TEXT,
       maintainer_note TEXT NOT NULL DEFAULT '',
       acknowledged_at TEXT,
       available_at TEXT,
@@ -130,6 +138,14 @@ async function initializeDatabase(database) {
     ["port_repository_url", "TEXT NOT NULL DEFAULT ''"],
     ["artifact_kind", "TEXT NOT NULL DEFAULT ''"],
     ["artifact_url", "TEXT NOT NULL DEFAULT ''"],
+    ["install_command", "TEXT NOT NULL DEFAULT ''"],
+    ["package_version", "TEXT NOT NULL DEFAULT ''"],
+    ["package_architecture", "TEXT NOT NULL DEFAULT ''"],
+    ["runtime_compatibility", "TEXT NOT NULL DEFAULT ''"],
+    ["zos_compatibility", "TEXT NOT NULL DEFAULT ''"],
+    ["installation_notes", "TEXT NOT NULL DEFAULT ''"],
+    ["verification_command", "TEXT NOT NULL DEFAULT ''"],
+    ["artifact_last_synced_at", "TEXT"],
     ["maintainer_note", "TEXT NOT NULL DEFAULT ''"],
     ["acknowledged_at", "TEXT"],
     ["available_at", "TEXT"],
@@ -339,6 +355,88 @@ function normalizePackageName(value) {
     .toLowerCase()
     .replace(/\s+/g, "-")
     .replace(/-?port$/, "");
+}
+
+function discoveryKey(value) {
+  return normalizePackageName(value).replace(/[^a-z0-9]/g, "");
+}
+
+function discoveryMatch(name, query) {
+  const candidate = discoveryKey(name);
+  const needle = discoveryKey(query);
+  if (!candidate || !needle) return "";
+  if (candidate === needle) return "exact";
+  if (candidate.startsWith(needle) || needle.startsWith(candidate) || (needle.length >= 3 && candidate.includes(needle))) {
+    return "similar";
+  }
+  return "";
+}
+
+function defaultInstallCommand(packageName, artifactKind) {
+  if (["pulp_python", "python_wheel"].includes(artifactKind)) {
+    return `export PIP_EXTRA_INDEX_URL="https://repo.zopen.community/pypi/wheels/simple/"\nexport PIP_CONSTRAINT="https://repo.zopen.community/pulp/content/constraints/zopen-constraints.txt"\npip install ${packageName}`;
+  }
+  if (["zopen_package", "pulp_zopen", "pulp_rpm"].includes(artifactKind)) {
+    return `zopen install ${packageName}`;
+  }
+  return "";
+}
+
+function loadCatalogEntries(options = {}) {
+  if (Array.isArray(options.catalogEntries)) return options.catalogEntries;
+  const descriptionsPath = options.catalogDescriptionsPath || path.resolve(__dirname, "../../docs/api/zopen_releases_descriptions.json");
+  const releasesPath = options.catalogReleasesPath || path.resolve(__dirname, "../../docs/api/zopen_releases_latest.json");
+  try {
+    const descriptions = JSON.parse(fs.readFileSync(descriptionsPath, "utf8")).descriptions || {};
+    const releases = JSON.parse(fs.readFileSync(releasesPath, "utf8")).release_data || {};
+    return [...new Set([...Object.keys(descriptions), ...Object.keys(releases)])].map((packageName) => {
+      const latest = Array.isArray(releases[packageName]) ? releases[packageName][0] || {} : {};
+      const asset = Array.isArray(latest.assets) ? latest.assets[0] || {} : {};
+      return {
+        packageName,
+        description: String(descriptions[packageName] || ""),
+        version: String(asset.version || latest.version || ""),
+        url: String(asset.url || latest.url || ""),
+      };
+    });
+  } catch {
+    return [];
+  }
+}
+
+async function discoverPackages(database, query, ecosystem, catalogEntries) {
+  const score = (match) => match === "exact" ? 0 : 1;
+  const requestRows = await all(
+    database,
+    `SELECT id, package_name, ecosystem, status FROM package_requests
+     WHERE status != 'declined' ORDER BY updated_at DESC`,
+  );
+  const artifactRows = await all(
+    database,
+    `SELECT source, package_name, normalized_name, version, release, architecture, artifact_url, last_seen_at
+     FROM pulp_artifacts
+     ORDER BY normalized_name, source, COALESCE(published_at, '') DESC, version DESC, release DESC`,
+  );
+  const latestArtifacts = artifactRows.filter((row, index, rows) => index === rows.findIndex(
+    (candidate) => candidate.source === row.source && candidate.normalized_name === row.normalized_name,
+  ));
+  const mapMatches = (rows, nameOf, map) => rows
+    .map((row) => ({ row, match: discoveryMatch(nameOf(row), query) }))
+    .filter((item) => item.match)
+    .sort((left, right) => score(left.match) - score(right.match))
+    .slice(0, 8)
+    .map(({ row, match }) => ({ ...map(row), match }));
+  const artifacts = mapMatches(
+    latestArtifacts.filter((row) => !ecosystem || ecosystem === "general" || (ecosystem === "python" ? row.source === "wheel" : row.source === "rpm")),
+    (row) => row.package_name,
+    (row) => ({ kind: "artifact", source: row.source, packageName: row.package_name, version: row.version || "", release: row.release || "", architecture: row.architecture || "", url: row.artifact_url, lastSeenAt: row.last_seen_at }),
+  );
+  return {
+    query,
+    requests: mapMatches(requestRows, (row) => row.package_name, (row) => ({ kind: "request", id: row.id, packageName: row.package_name, ecosystem: row.ecosystem, status: row.status })),
+    artifacts,
+    catalog: mapMatches(catalogEntries, (row) => row.packageName, (row) => ({ kind: "catalog", packageName: row.packageName, description: row.description || "", version: row.version || "", url: row.url || "" })),
+  };
 }
 
 function cleanText(value, maximumLength) {
@@ -598,6 +696,14 @@ function mapRequest(row, includePrivate = false, currentGithubUserId = null) {
     portRepositoryUrl: row.port_repository_url || "",
     artifactKind: row.artifact_kind || "",
     artifactUrl: row.artifact_url || "",
+    installCommand: row.install_command || defaultInstallCommand(row.package_name, row.artifact_kind || ""),
+    packageVersion: row.package_version || "",
+    packageArchitecture: row.package_architecture || "",
+    runtimeCompatibility: row.runtime_compatibility || "",
+    zosCompatibility: row.zos_compatibility || "",
+    installationNotes: row.installation_notes || "",
+    verificationCommand: row.verification_command || "",
+    artifactLastSyncedAt: row.artifact_last_synced_at || null,
     maintainerNote: row.maintainer_note || "",
     acknowledgedAt: row.acknowledged_at || null,
     availableAt: row.available_at || null,
@@ -792,6 +898,8 @@ function createApp(options = {}) {
   const ownerEditLimiter = createRateLimiter({ limit: 30, windowMilliseconds: 15 * 60 * 1000 });
   const authLimiter = createRateLimiter({ limit: 20, windowMilliseconds: 15 * 60 * 1000 });
   const adminLimiter = createRateLimiter({ limit: 120, windowMilliseconds: 15 * 60 * 1000 });
+  const discoveryLimiter = createRateLimiter({ limit: 120, windowMilliseconds: 60 * 1000 });
+  const catalogEntries = loadCatalogEntries(options);
   let pulpSyncPromise = null;
   const ready = initializeDatabase(database);
 
@@ -996,6 +1104,50 @@ function createApp(options = {}) {
         parameters,
       );
       response.json({ requests: rows.map((row) => mapRequest(row, false, request.authUser?.id)) });
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.get("/api/discovery", discoveryLimiter, async (request, response, next) => {
+    const query = cleanText(request.query.query, 80);
+    const selectedEcosystem = cleanText(request.query.ecosystem, 30);
+    if (query.length < 2) {
+      response.status(400).json({ error: "Enter at least 2 characters to search for a package." });
+      return;
+    }
+    if (selectedEcosystem && !VALID_ECOSYSTEMS.has(selectedEcosystem)) {
+      response.status(400).json({ error: "Choose a valid project ecosystem." });
+      return;
+    }
+    try {
+      response.json(await discoverPackages(database, query, selectedEcosystem, catalogEntries));
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.post("/api/discovery/bulk", discoveryLimiter, async (request, response, next) => {
+    const queries = Array.isArray(request.body?.queries) ? request.body.queries.slice(0, MAX_BULK_REQUESTS) : [];
+    if (!queries.length || queries.some((item) => cleanText(item?.query, 80).length < 2)) {
+      response.status(400).json({ error: "Provide between 1 and 25 package names with at least 2 characters each." });
+      return;
+    }
+    if (queries.some((item) => item?.ecosystem && !VALID_ECOSYSTEMS.has(cleanText(item.ecosystem, 30)))) {
+      response.status(400).json({ error: "Choose a valid project ecosystem." });
+      return;
+    }
+    try {
+      const results = [];
+      for (const item of queries) {
+        results.push(await discoverPackages(
+          database,
+          cleanText(item.query, 80),
+          cleanText(item.ecosystem, 30),
+          catalogEntries,
+        ));
+      }
+      response.json({ results });
     } catch (error) {
       next(error);
     }
@@ -2069,6 +2221,13 @@ function createApp(options = {}) {
     const maintainerNote = request.body.maintainerNote === undefined
       ? null
       : cleanText(request.body.maintainerNote, 1200);
+    const installCommand = request.body.installCommand === undefined ? null : cleanText(request.body.installCommand, 4000);
+    const packageVersion = request.body.packageVersion === undefined ? null : cleanText(request.body.packageVersion, 160);
+    const packageArchitecture = request.body.packageArchitecture === undefined ? null : cleanText(request.body.packageArchitecture, 160);
+    const runtimeCompatibility = request.body.runtimeCompatibility === undefined ? null : cleanText(request.body.runtimeCompatibility, 300);
+    const zosCompatibility = request.body.zosCompatibility === undefined ? null : cleanText(request.body.zosCompatibility, 300);
+    const installationNotes = request.body.installationNotes === undefined ? null : cleanText(request.body.installationNotes, 2000);
+    const verificationCommand = request.body.verificationCommand === undefined ? null : cleanText(request.body.verificationCommand, 2000);
     const packageName = request.body.packageName === undefined ? null : cleanText(request.body.packageName, 80);
     const ecosystem = request.body.ecosystem === undefined ? null : cleanText(request.body.ecosystem, 30);
     const upstreamUrl = request.body.upstreamUrl === undefined ? null : cleanText(request.body.upstreamUrl, 500);
@@ -2144,6 +2303,14 @@ function createApp(options = {}) {
       const effectiveContactEmail = contactEmail ?? existing.contact_email;
       const effectiveShowRequesterPublicly = showRequesterPublicly ?? Boolean(existing.show_requester_publicly);
       const effectiveShowGithubPublicly = showGithubPublicly ?? Boolean(existing.show_github_publicly);
+      const effectiveInstallCommand = installCommand ?? (existing.install_command ||
+        (status === "available" ? defaultInstallCommand(effectivePackageName, effectiveArtifactKind) : ""));
+      const effectivePackageVersion = packageVersion ?? existing.package_version;
+      const effectivePackageArchitecture = packageArchitecture ?? existing.package_architecture;
+      const effectiveRuntimeCompatibility = runtimeCompatibility ?? existing.runtime_compatibility;
+      const effectiveZosCompatibility = zosCompatibility ?? existing.zos_compatibility;
+      const effectiveInstallationNotes = installationNotes ?? existing.installation_notes;
+      const effectiveVerificationCommand = verificationCommand ?? existing.verification_command;
       let effectiveGithubUserId = existing.github_user_id || null;
       if (ownerGithubLoginProvided) {
         if (!ownerGithubLogin) {
@@ -2184,6 +2351,8 @@ function createApp(options = {}) {
           description = ?, use_case = ?, can_help_test = ?, requester_name = ?,
           organization = ?, contact_email = ?, show_requester_publicly = ?, show_github_publicly = ?,
           status = ?, port_repository_url = ?, artifact_kind = ?, artifact_url = ?,
+          install_command = ?, package_version = ?, package_architecture = ?,
+          runtime_compatibility = ?, zos_compatibility = ?, installation_notes = ?, verification_command = ?,
           maintainer_note = ?, acknowledged_at = ?, available_at = ?, github_user_id = ?, updated_at = ?
          WHERE id = ?`,
         [
@@ -2203,6 +2372,13 @@ function createApp(options = {}) {
           effectivePortRepositoryUrl,
           effectiveArtifactKind,
           effectiveArtifactUrl,
+          effectiveInstallCommand,
+          effectivePackageVersion,
+          effectivePackageArchitecture,
+          effectiveRuntimeCompatibility,
+          effectiveZosCompatibility,
+          effectiveInstallationNotes,
+          effectiveVerificationCommand,
           effectiveMaintainerNote,
           acknowledgedAt,
           availableAt,
