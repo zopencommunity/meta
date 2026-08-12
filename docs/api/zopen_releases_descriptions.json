@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2026-08-11T21:21:22+00:00Z",
+  "generation_timestamp_utc": "2026-08-12T15:47:13+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -333,6 +333,8 @@
     "pydantic-core": "Core functionality for Pydantic validation and serialization (Rust extension, cross-compiled for z/OS)",
     "rpds-py": "Python bindings to Rust's persistent data structures (rpds)",
     "fastapi": "FastAPI web framework for building APIs with Python type hints",
-    "fastmcp": "FastMCP framework for building Model Context Protocol (MCP) servers in Python"
+    "fastmcp": "FastMCP framework for building Model Context Protocol (MCP) servers in Python",
+    "uv": "z/OS port of uv - An extremely fast Python package and project manager",
+    "cryptography": "z/OS port of cryptography (OpenSSL 4.0.0 backend, Python 3.12)"
   }
 }
