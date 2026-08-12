@@ -204,16 +204,21 @@ remote = found["results"][0]
 current = list(remote.get("excludes") or [])
 
 # Entries carrying a version specifier are deliberate caps on third-party
-# packages (e.g. "mcp>=1.20.0" avoids a dependency that needs Rust). They are
-# not derivable from what we publish, so preserve them untouched.
+# packages (an exclude of "foo>=2.0" avoids a dependency that needs Rust). They
+# are not derivable from what we publish, so preserve them untouched.
 #
 # They deliberately are NOT copied from data/zopen-constraints.txt, even though
 # that file encodes the same policy: the two are inverses. A Pulp exclude says
 # "do not serve versions matching this", a pip constraint says "pip must choose
-# something matching this". The same intent is "mcp>=1.20.0" here and
-# "mcp<1.20.0" there, and a pin like "pydantic-core==2.41.5" as an exclude
-# would hide our own wheel while still serving PyPI's newer ones. Keep both in
-# step by hand; there is no safe mechanical translation.
+# something matching this". The same intent is "foo>=2.0" here and "foo<2.0"
+# there, and a pin like "pydantic-core==2.41.5" as an exclude would hide our own
+# wheel while still serving PyPI's newer ones. Keep both in step by hand; there
+# is no safe mechanical translation.
+#
+# Note this reconcile only ever adds. When a port makes a cap unnecessary --
+# publishing cryptography retired the "mcp>=1.20.0" bound -- nothing here
+# removes it, so the exclude has to be deleted by hand or the proxy goes on
+# enforcing a ceiling the constraints file has already dropped.
 pinned = [e for e in current if re.search(r"[<>=!~]", e)]
 names = {normalize(e) for e in current if e not in pinned}
 

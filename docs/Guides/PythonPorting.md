@@ -352,8 +352,11 @@ Three things make it work:
   must be listed in the remote's `excludes` or PyPI still shadows them.
 - Excludes are parsed as PEP 508 requirements, so version bounds work. That is
   how you avoid an unported native dependency that only newer releases pull in
-  (`mcp>=1.20.0`, for instance, keeps pip below the release that added
-  `pyjwt[crypto]`).
+  — an exclude of `foo>=2.0` keeps the proxy serving nothing newer than the
+  release that added it. Removing such a bound later is a manual edit on both
+  sides: the publish job only ever *adds* to `excludes`, so a ceiling the
+  constraints file has dropped stays in force for proxy users until someone
+  deletes it there too.
 - Pull-through **caches into the bound repository**
   (`PULL_THROUGH_SUPPORTED = True` in pulp_python, gated on the distribution
   having a repository). Point the proxy distribution at a throwaway cache

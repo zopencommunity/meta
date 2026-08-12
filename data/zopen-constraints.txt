@@ -45,7 +45,7 @@
 #
 #   intent                        this file            Pulp exclude
 #   ---------------------------   ------------------   ----------------
-#   keep pip below mcp 1.20       mcp<1.20.0           mcp>=1.20.0
+#   keep pip below foo 2.0        foo<2.0              foo>=2.0
 #   never shadow our wheel        pydantic-core==X     pydantic-core
 #
 # A Pulp exclude says "do not serve versions matching this"; a constraint says
@@ -54,11 +54,23 @@
 #
 # Which of the two applies depends on how a user configured pip, so a
 # disagreement between them shows up as behaviour that differs per user.
+#
+# Removing a cap therefore means editing both sides. The publish job only ever
+# adds to the excludes list, so a bound it no longer needs stays there until
+# someone deletes it, and the proxy keeps enforcing a ceiling that this file
+# has already dropped.
 
 # --- capped to avoid unported native dependencies ----------------------------
 
-# mcp 1.20.0 added pyjwt[crypto], which pulls in cryptography (Rust).
-mcp<1.20.0
+# mcp was capped at <1.20.0 because 1.20.0 added pyjwt[crypto], which pulls in
+# cryptography. cryptography is now published for z/OS, so the cap is gone --
+# verified on 3.12 that mcp 2.0.0 resolves through it and works.
+#
+# On 3.13 and 3.14 mcp still fails, but not for a reason a cap can fix:
+# pydantic-core and rpds-py are published cp312-only, so pip falls through to
+# their sdists and needs Rust. Capping mcp would not have helped there; those
+# two ports need rebuilding across the interpreter matrix.
 
 # fastmcp 3.x requires watchfiles (Rust). 2.0.0 is the version ported here.
+# Unrelated to cryptography, so this one stays.
 fastmcp==2.0.0
