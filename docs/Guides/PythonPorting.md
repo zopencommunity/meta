@@ -311,6 +311,37 @@ fails with `UnicodeDecodeError: 'utf-8' codec can't decode byte 0x97`. A file
 fetched over HTTP cannot hit that. If you do keep one locally, convert it:
 `iconv -f IBM-1047 -t ISO8859-1`.
 
+### Virtual environments need `--system-site-packages`
+
+The z/OS interpreters bundle packages PyPI would normally supply — `cffi` and
+`pycparser` among them — and some of those cannot be installed from PyPI at
+all. `cffi` ships only an sdist for this platform, and building it needs libffi
+headers that are not there:
+
+```
+ERROR: Failed building wheel for cffi
+```
+
+A plain `python -m venv` hides the bundled copies, so anything depending on
+`cffi` — `cryptography`, and most packages wrapping a C library — cannot be
+installed into one, no matter which index or constraints are configured.
+Create environments so they can see what the interpreter already has:
+
+```sh
+python3 -m venv --system-site-packages .venv
+```
+
+That exposes a second problem worth knowing about. Some bundled packages are
+old: the interpreters ship `cryptography` 3.3.2, which has a long list of
+published CVEs. pip treats it as satisfying a bare `pip install cryptography`
+and does nothing, leaving you on the vulnerable version while reporting
+success. The constraints file is what corrects this — its pin is a version
+specifier the bundled copy fails, so pip upgrades to the published wheel
+instead of skipping the install. Without it, ask for the version explicitly.
+
+This is the main reason to prefer the constraints file over `--only-binary` on
+z/OS: `--only-binary` says nothing about a package that is already present.
+
 **Or configure a PyPI pull-through** on the Pulp server. Note this is not
 simpler for users — they still need two settings, because the proxy excludes
 the packages zopen publishes and those still come from the wheels index. What
