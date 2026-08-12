@@ -289,7 +289,7 @@ per-command flags and works against plain PyPI:
 
 ```sh
 export PIP_EXTRA_INDEX_URL="https://repo.zopen.community/pypi/wheels/simple/"
-export PIP_CONSTRAINT="https://raw.githubusercontent.com/zopencommunity/meta/main/data/zopen-constraints.txt"
+export PIP_CONSTRAINT="https://repo.zopen.community/pulp/content/constraints/zopen-constraints.txt"
 
 pip install fastapi
 ```

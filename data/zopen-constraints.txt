@@ -1,4 +1,8 @@
-# zopen constraints for pip on z/OS -- SOURCE FILE
+# zopen constraints for pip on z/OS -- SOURCE FILE, NOT FOR DIRECT USE
+#
+# Pointing PIP_CONSTRAINT at this file does not work: the version pins are
+# generated and live only in the published copy, so this half on its own lets
+# pip pick a newer release of a package we build and resolve it to an sdist.
 #
 # This is the hand-maintained half. The published file that users point pip at
 # is generated from this plus the current contents of the wheel index, so the

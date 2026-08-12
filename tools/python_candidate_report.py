@@ -163,13 +163,30 @@ def main():
     w("unblocks every package in its row, so this ordering matters more than the")
     w("number of times a package was requested.")
     w("")
-    w("| blocker | blocks | already ported | candidates waiting on it |")
-    w("|---|---:|---|---|")
+    w("Lacking a `py3-none-any` wheel makes something a *candidate* blocker, not a")
+    w("real one: several such packages build from their sdist on z/OS because the")
+    w("C accelerator is optional and they fall back to pure Python. The last column")
+    w("is the only one that settles it, and it comes from actually installing them.")
+    w("")
+    w("| blocker | blocks | ported | installs on z/OS? | candidates waiting on it |")
+    w("|---|---:|---|---|---|")
     for dep, count in blocks.most_common():
         if count < 2:
             continue
-        mark = "yes" if dep in ported else "no"
-        w(f"| `{dep}` | {count} | {mark} | {', '.join(sorted(blocked_by[dep]))} |")
+        mark = "yes" if dep in ported else ""
+        p = probe.get(dep)
+        if dep in ported:
+            verdict = "via zopen wheel"
+        elif not p:
+            verdict = "not probed"
+        elif p["status"] == "OK":
+            verdict = "**yes — builds from sdist**"
+        else:
+            verdict = "no"
+        w(f"| `{dep}` | {count} | {mark} | {verdict} | {', '.join(sorted(blocked_by[dep]))} |")
+    w("")
+    w("Blockers whose answer is \"yes — builds from sdist\" need no port at all;")
+    w("they only looked like blockers because they ship no universal wheel.")
     w("")
 
     if args.blockers_only:
