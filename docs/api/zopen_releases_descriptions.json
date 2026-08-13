@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2026-08-13T03:56:10+00:00Z",
+  "generation_timestamp_utc": "2026-08-13T13:42:15+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -335,6 +335,7 @@
     "fastapi": "FastAPI web framework for building APIs with Python type hints",
     "fastmcp": "FastMCP framework for building Model Context Protocol (MCP) servers in Python",
     "uv": "z/OS port of uv - An extremely fast Python package and project manager",
-    "cryptography": "z/OS port of cryptography (OpenSSL 4.0.0 backend, Python 3.12)"
+    "cryptography": "z/OS port of cryptography (OpenSSL 4.0.0 backend, Python 3.12)",
+    "watchfiles": "z/OS port of watchfiles (file-watching library with Rust core)"
   }
 }
