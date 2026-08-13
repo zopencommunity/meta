@@ -1126,11 +1126,20 @@ WHEEL_RE = re.compile(
 # METADATA, WHEEL and RECORD are the three the toolchain rewrites by itself:
 # WHEEL carries the generator version, METADATA the metadata version and the
 # fields that come with it, and RECORD is derived from the other two. Compare
-# everything else byte-for-byte, plus the dependencies out of METADATA, since a
-# change there is a real change even when no code moved.
+# everything else byte-for-byte, plus the dependencies out of METADATA and the
+# compatibility tags out of WHEEL, since a change in either is a real change
+# even when no code moved.
+#
+# The tags have to be pulled out individually rather than left to the blanket
+# skip. A wheel that was renamed to -none-any without being retagged differs
+# from a correctly retagged one *only* in WHEEL's Tag lines and the RECORD
+# derived from them, so skipping the whole file made the two compare equal and
+# the republish a no-op -- which is how a malformed wheel stayed in the index
+# after the port that produced it had been fixed.
 def fingerprint(path):
     payload = {}
     requires = set()
+    tags = set()
     generated = ('METADATA', 'WHEEL', 'RECORD')
     with zipfile.ZipFile(path) as zf:
         for name in zf.namelist():
@@ -1142,15 +1151,21 @@ def fingerprint(path):
                     msg = email.message_from_string(
                         zf.read(name).decode('utf-8', 'replace'))
                     requires = set(msg.get_all('Requires-Dist') or [])
+                elif base == 'WHEEL':
+                    msg = email.message_from_string(
+                        zf.read(name).decode('utf-8', 'replace'))
+                    tags = set(msg.get_all('Tag') or [])
                 continue
             payload[name] = hashlib.sha256(zf.read(name)).hexdigest()
-    return payload, requires
+    return payload, requires, tags
 
-local_payload, local_requires = fingerprint(local)
-published_payload, published_requires = fingerprint(published)
+local_payload, local_requires, local_tags = fingerprint(local)
+published_payload, published_requires, published_tags = fingerprint(published)
 
 values = {}
-if local_payload == published_payload and local_requires == published_requires:
+if (local_payload == published_payload
+        and local_requires == published_requires
+        and local_tags == published_tags):
     values['CONFLICT_ACTION'] = 'noop'
 else:
     match = WHEEL_RE.match(local.name)
