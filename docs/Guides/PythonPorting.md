@@ -6,6 +6,16 @@ for a Python package.
 
 ## The short version
 
+::: tip Porting with an AI assistant
+Much of what follows is encoded as a reusable skill at
+[zopencommunity/ai-porting](https://github.com/zopencommunity/ai-porting/blob/main/skills/zos-python-porting/SKILL.md).
+It carries the failure modes below in a form an assistant can act on —
+including the ones whose error messages point somewhere other than the cause.
+Worth loading before starting a port, and worth updating when you hit something
+new.
+:::
+
+
 Set one variable and `zopen-build` handles the rest:
 
 ```sh
@@ -263,110 +273,40 @@ that are easy to miss:
 
 ## Consuming wheels from the index
 
-The zopen wheel index is a PEP 503 simple index:
+Consumer setup — the index URL, the constraints file, `--system-site-packages`
+and the traps that come with them — is on its own page:
+**[Using Python packages on z/OS](/Guides/PythonPackages)**. Read it before
+publishing, because a port that is unusable by the documented consumer path is
+not finished.
 
-```
-https://repo.zopen.community/pypi/wheels/simple/
-```
+Two things a port author owns rather than a consumer:
 
-It serves only zopen-published wheels. A consumer therefore needs PyPI as well,
-and pip resolves by version **across** both — so PyPI's newer release of a
-package built here wins, and for a compiled port that resolves to an sdist
-which cannot be built on z/OS. Two ways to handle it:
+**The constraints file is generated.** Version pins come from the wheel index,
+so publishing a port adds its pin automatically. The hand-maintained half in
+`data/zopen-constraints.txt` holds only caps on third-party packages — a
+ceiling below a release that pulls in something unbuildable here.
 
-**Point pip at both, and forbid sdists for the compiled packages:**
+**A cap lives in two places that state it inversely.** If the server also runs
+a PyPI pull-through, its remote carries an `excludes` list saying the same
+thing backwards: `foo<2.0` as a constraint is `foo>=2.0` as an exclude. The
+publish job only ever *adds* to `excludes`, so a ceiling the constraints file
+has dropped stays in force for proxy users until someone deletes it there too.
 
-```sh
-pip install --extra-index-url https://repo.zopen.community/pypi/wheels/simple/ \
-            --only-binary <compiled-pkg>  <package>
-```
-
-`--only-binary` is load-bearing, not decoration. Without it the install fails
-exactly as if the index were not configured at all.
-
-**Or use the constraints file**, which expresses the same thing without any
-per-command flags and works against plain PyPI:
-
-```sh
-export PIP_EXTRA_INDEX_URL="https://repo.zopen.community/pypi/wheels/simple/"
-export PIP_CONSTRAINT="https://repo.zopen.community/pulp/content/constraints/zopen-constraints.txt"
-
-pip install fastapi
-```
-
-A [constraints file](https://pip.pypa.io/en/stable/user_guide/#constraints-files)
-says "if this package gets installed, it must satisfy this specifier". It
-installs nothing and modifies no package's metadata, which is the honest place
-to record a platform limitation — `Requires-Dist` describes what a *package*
-needs, not what a *platform* can support. Pinning a package to the version the
-index serves leaves the zopen wheel as the only candidate, and pip prefers a
-compatible wheel over an sdist at the same version, so `--only-binary` becomes
-unnecessary. It also covers packages zopen does not publish at all, capping
-them below a release that added an unbuildable dependency.
-
-`PIP_CONSTRAINT` accepts a URL, which is worth preferring on z/OS: pip reads a
-constraints file **in binary and decodes it as UTF-8**, bypassing automatic
-conversion entirely, so a local file written by a shell heredoc is EBCDIC and
-fails with `UnicodeDecodeError: 'utf-8' codec can't decode byte 0x97`. A file
-fetched over HTTP cannot hit that. If you do keep one locally, convert it:
-`iconv -f IBM-1047 -t ISO8859-1`.
-
-### Virtual environments need `--system-site-packages`
-
-The z/OS interpreters bundle packages PyPI would normally supply — `cffi` and
-`pycparser` among them — and some of those cannot be installed from PyPI at
-all. `cffi` ships only an sdist for this platform, and building it needs libffi
-headers that are not there:
-
-```
-ERROR: Failed building wheel for cffi
-```
-
-A plain `python -m venv` hides the bundled copies, so anything depending on
-`cffi` — `cryptography`, and most packages wrapping a C library — cannot be
-installed into one, no matter which index or constraints are configured.
-Create environments so they can see what the interpreter already has:
-
-```sh
-python3 -m venv --system-site-packages .venv
-```
-
-That exposes a second problem worth knowing about. Some bundled packages are
-old: the interpreters ship `cryptography` 3.3.2, which has a long list of
-published CVEs. pip treats it as satisfying a bare `pip install cryptography`
-and does nothing, leaving you on the vulnerable version while reporting
-success. The constraints file is what corrects this — its pin is a version
-specifier the bundled copy fails, so pip upgrades to the published wheel
-instead of skipping the install. Without it, ask for the version explicitly.
-
-This is the main reason to prefer the constraints file over `--only-binary` on
-z/OS: `--only-binary` says nothing about a package that is already present.
-
-**Or configure a PyPI pull-through** on the Pulp server. Note this is not
-simpler for users — they still need two settings, because the proxy excludes
-the packages zopen publishes and those still come from the wheels index. What
-it buys is enforcement for users who never set `PIP_CONSTRAINT`, plus caching.
+**Or configure a PyPI pull-through** on the Pulp server. This is not simpler
+for users — they still need both settings, because the proxy excludes the
+packages zopen publishes and those still come from the wheels index. What it
+buys is enforcement for users who never set `PIP_CONSTRAINT`, plus caching.
 Three things make it work:
 
 - The proxy **merges** upstream into the same view, so the packages you publish
   must be listed in the remote's `excludes` or PyPI still shadows them.
-- Excludes are parsed as PEP 508 requirements, so version bounds work. That is
-  how you avoid an unported native dependency that only newer releases pull in
-  — an exclude of `foo>=2.0` keeps the proxy serving nothing newer than the
-  release that added it. Removing such a bound later is a manual edit on both
-  sides: the publish job only ever *adds* to `excludes`, so a ceiling the
-  constraints file has dropped stays in force for proxy users until someone
-  deletes it there too.
+- Excludes are parsed as PEP 508 requirements, so version bounds work.
 - Pull-through **caches into the bound repository**
   (`PULL_THROUGH_SUPPORTED = True` in pulp_python, gated on the distribution
   having a repository). Point the proxy distribution at a throwaway cache
   repository, never at the curated one, or proxied PyPI content accumulates in
   it. A distribution with a remote and *no* repository does not work — the
   index renders but downloads serve the wrong artifact.
-
-The publish job reconciles the excludes automatically with the names it just
-published, so a new port is covered without anyone remembering. Version bounds
-are preserved and must still be added by hand.
 
 ## z/OS shell and environment traps
 

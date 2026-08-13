@@ -67,6 +67,7 @@ export default defineConfig({
       { text: "Home", link: "/" },
       { text: "Getting Started", link: "/Guides/QuickStart" },
       { text: "Available Tools", link: "/Latest" },
+      { text: "Python", link: "/Guides/PythonPackages" },
       { text: "Request a Package", link: "/PackageRequests" },
       { text: "Governance", link: "/Governance" },
       { text: "Reference", link: "/reference/zopen-reference" },
@@ -108,6 +109,15 @@ export default defineConfig({
         ],
       },
       {
+        text: "Python",
+        collapsed: false,
+        items: [
+          { text: "Using Python Packages", link: "/Guides/PythonPackages" },
+          { text: "Porting Python Packages", link: "/Guides/PythonPorting" },
+          { text: "Candidate Status", link: "/Guides/PythonCandidates" },
+        ],
+      },
+      {
         text: "Reference",
         collapsed: false,
         items: [{ text: "zopen", link: "/reference/zopen-reference" }],
@@ -117,8 +127,6 @@ export default defineConfig({
         collapsed: false,
         items: [
           { text: "Porting Guide", link: "/Guides/Porting" },
-          { text: "Porting Python Packages", link: "/Guides/PythonPorting" },
-          { text: "Python Candidate Status", link: "/Guides/PythonCandidates" },
           { text: "Leveraging the zoslib Library", link: "/Guides/Zoslib" },
           { text: "Troubleshooting", link: "/Guides/CommonSolutions" },
           {
