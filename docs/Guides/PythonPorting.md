@@ -307,6 +307,16 @@ Three things make it work:
   repository, never at the curated one, or proxied PyPI content accumulates in
   it. A distribution with a remote and *no* repository does not work — the
   index renders but downloads serve the wrong artifact.
+- **Excluding a name does not evict what is already cached.** The exclude stops
+  the proxy fetching from PyPI; anything pulled through earlier stays in the
+  cache repository and goes on being served. This was live: `cryptography` was
+  excluded the moment the port first published, and the proxy continued serving
+  a `cryptography-50.0.0.tar.gz` sdist cached before that — an sdist needing
+  Rust, which cannot be built on z/OS. It stayed hidden because pip prefers a
+  wheel at the same version when both indexes are configured, so nothing failed
+  loudly. The publish job now evicts as well as excludes, on every run rather
+  than only when the excludes change, because the package that went wrong was
+  already correctly excluded and only its cache was stale.
 
 ## z/OS shell and environment traps
 

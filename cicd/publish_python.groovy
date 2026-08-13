@@ -223,14 +223,49 @@ pinned = [e for e in current if re.search(r"[<>=!~]", e)]
 names = {normalize(e) for e in current if e not in pinned}
 
 missing = published - names
-if not missing:
+if missing:
+    updated = sorted(names | published) + pinned
+    call(urljoin(origin, remote["pulp_href"]), method="PATCH", body={"excludes": updated})
+    print(f"added to excludes: {sorted(missing)}")
+    print(f"excludes now: {updated}")
+else:
     print(f"excludes already cover: {sorted(published)}")
+
+# Excluding a name stops the proxy fetching it from PyPI. It does not remove
+# what the proxy pulled through before the exclude existed, and that copy goes
+# on being served.
+#
+# This is not hypothetical. cryptography was excluded the moment it was first
+# published, and the proxy kept serving a cryptography-50.0.0.tar.gz sdist it
+# had cached earlier -- an sdist that needs Rust and cannot be built on z/OS.
+# It stayed hidden because pip prefers a wheel at the same version when both
+# indexes are configured, so nothing failed loudly.
+#
+# So evict as well as exclude, and do it on every run rather than only when the
+# excludes changed: the package that went wrong was already correctly excluded,
+# and only its stale cache was wrong.
+dists = call(f"{api}/distributions/python/pypi/")
+cache_href = next((d.get("repository") for d in dists.get("results", [])
+                   if d.get("remote") == remote["pulp_href"] and d.get("repository")), None)
+if not cache_href:
+    print("pull-through has no cache repository; nothing to evict")
     sys.exit(0)
 
-updated = sorted(names | published) + pinned
-call(urljoin(origin, remote["pulp_href"]), method="PATCH", body={"excludes": updated})
-print(f"added to excludes: {sorted(missing)}")
-print(f"excludes now: {updated}")
+cache = call(urljoin(origin, cache_href))
+version = cache.get("latest_version_href")
+if not version:
+    sys.exit(0)
+
+cached = call(f"{api}/content/python/packages/?repository_version={version}&limit=1000")
+victims = [c["pulp_href"] for c in cached.get("results", [])
+           if normalize(c["name"]) in published]
+if not victims:
+    print(f"cache holds nothing for {sorted(published)}")
+    sys.exit(0)
+
+call(urljoin(origin, cache_href) + "modify/", method="POST",
+     body={"remove_content_units": victims})
+print(f"evicted {len(victims)} stale unit(s) from {cache['name']} for {sorted(published)}")
 PY
 '''
 
