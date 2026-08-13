@@ -46,6 +46,12 @@ Vote count is one input and is not the sole deciding factor. Routine request tri
 
 An **Accepted** request is considered suitable for the community backlog; it does not mean that implementation has started. **In progress** indicates that a contributor has taken responsibility for moving the port forward. Automated repository synchronization may identify possible package matches, but a maintainer must review a match before a request is marked **Available**.
 
+## Security and Artifact Integrity
+
+The project uses CodeQL-based security scanning for its z/OS codebase. Grype and Trivy may also be used to identify known vulnerabilities in dependencies, packages, container images, and other supported artifacts. Findings are reviewed, triaged, and remediated according to their severity and risk.
+
+Python wheels published to Pulp may be accompanied by cryptographically verifiable attestations that bind each artifact to its build or publishing identity. Artifact integrity can be verified before promotion or consumption.
+
 ## Package Stewardship and Responsibility
 
 Responsibility follows stewardship rather than the act of requesting or voting for a package:

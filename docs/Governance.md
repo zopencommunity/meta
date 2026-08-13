@@ -69,6 +69,12 @@ are visibly identified, and all participation is subject to the Code of Conduct.
 
 Repository synchronization may identify a possible match for a requested package, but a maintainer reviews the package identity and artifact before marking the request **Available**.
 
+## Security and artifact integrity
+
+The project uses CodeQL-based security scanning for its z/OS codebase. Grype and Trivy may also be used to identify known vulnerabilities in dependencies, packages, container images, and other supported artifacts. Findings are reviewed, triaged, and remediated according to their severity and risk.
+
+Python wheels published to Pulp may be accompanied by cryptographically verifiable attestations that bind each artifact to its build or publishing identity. Artifact integrity can be verified before promotion or consumption.
+
 ## Maintenance and support
 
 Submitting, voting for, or accepting a package request does not oblige an individual, organization, maintainer, or the TSC to deliver or support it. Maintenance depends on active contributors and project health. A package may eventually need a new maintainer or be identified as stale, deprecated, or unavailable.
