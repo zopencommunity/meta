@@ -797,9 +797,8 @@ _zopen_python_install() {
   mkdir -p "${ZOPEN_INSTALL_DIR}/lib/python"
   mkdir -p "${ZOPEN_INSTALL_DIR}/bin"
 
-  # The pax carries exactly one interpreter's build: lib/python holds a single
-  # extension, and a second interpreter's .so would sit there unused. The
-  # primary version wins; every wheel is still published below.
+  # The primary interpreter's wheel supplies the whole tree; the other
+  # interpreters contribute only their extension modules, merged in below.
   _pv_primary=$(_zopen_python_primary_version)
   _pv_venv=$(_zopen_python_venv_dir "${_pv_primary}")
   . "${_pv_venv}/bin/activate" || return 1
@@ -827,6 +826,52 @@ _zopen_python_install() {
   mkdir -p "${ZOPEN_ROOT}/install/dist"
   cp dist/*.whl "${ZOPEN_ROOT}/install/dist/"
   deactivate
+
+  # One install tree, every interpreter. A wheel is published per interpreter,
+  # but the pax has a single lib/python on PYTHONPATH, so before this it
+  # carried only the primary interpreter's extension and the port failed to
+  # import on the others -- with "No module named pkg._pkg", which reads like a
+  # packaging error rather than a wrong-interpreter one.
+  #
+  # They can share a directory because Python resolves an extension by suffix:
+  # 3.13 looks for .cpython-313.so, 3.14 for .cpython-314.so, and each ignores
+  # the others. The pure-Python half is identical across the wheels, so only
+  # the extensions need merging. A pure-Python port has none and is unchanged.
+  for _pv_other in $(_zopen_python_versions); do
+    [ "${_pv_other}" = "${_pv_primary}" ] && continue
+    _pv_otag="cp$(echo "${_pv_other}" | tr -d '.')"
+    _pv_owhl=$(_zopen_python_wheel_for_tag "${_pv_otag}")
+    if [ -z "${_pv_owhl}" ]; then
+      printSoftError "No wheel in dist/ for Python ${_pv_other}; the package will not import on it"
+      continue
+    fi
+    "$(_zopen_python_interpreter_path "${_pv_other}")" - \
+        "${_pv_owhl}" "${ZOPEN_INSTALL_DIR}/lib/python" <<'PYMERGEEOF'
+import os
+import sys
+import zipfile
+
+wheel, target = sys.argv[1], sys.argv[2]
+added = 0
+with zipfile.ZipFile(wheel) as zf:
+    for info in zf.infolist():
+        if not info.filename.endswith(".so"):
+            continue
+        dest = os.path.join(target, info.filename)
+        # An abi3 extension is shared, so the primary already installed it
+        # under the same name. Never overwrite what is there.
+        if os.path.exists(dest):
+            continue
+        os.makedirs(os.path.dirname(dest), exist_ok=True)
+        with zf.open(info) as src, open(dest, "wb") as out:
+            out.write(src.read())
+        # z/OS will not HFS-load a module without the execute bit, and fails
+        # with CEE3512S reason EF076015, which looks like a missing symbol.
+        os.chmod(dest, 0o755)
+        added += 1
+print("Merged %d extension module(s) from %s" % (added, os.path.basename(wheel)))
+PYMERGEEOF
+  done
 }
 
 # --- End Python build system functions ---
