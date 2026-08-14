@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2026-08-14T02:37:04+00:00Z",
+  "generation_timestamp_utc": "2026-08-14T03:36:30+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -340,6 +340,7 @@
     "lxml": "z/OS port of lxml - XML and XSLT processing for Python, built on libxml2 and libxslt",
     "bcrypt": "z/OS port of bcrypt (password hashing library with Rust core)",
     "libsodium": "z/OS port of libsodium - a modern, portable, easy to use crypto library (the C library behind PyNaCl)",
-    "msgpack": "z/OS port of msgpack - MessagePack serializer for Python"
+    "msgpack": "z/OS port of msgpack - MessagePack serializer for Python",
+    "regex": "z/OS port of regex - alternative regular expression module for Python"
   }
 }
