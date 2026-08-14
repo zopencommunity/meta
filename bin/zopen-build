@@ -74,6 +74,24 @@ Optional:
                         Python build system only. Set to 'false' to keep the
                         default platform tag on compiled wheels instead of
                         retagging them to cp3XY-none-any (defaults to 'true').
+  ZOPEN_PYTHON_VENV_SYSTEM_SITE
+                        Python build system only. Set to 'true' to build in a
+                        venv that can see the interpreter's own packages
+                        (defaults to 'false'). Needed for anything requiring
+                        cffi at build time, which on z/OS exists only as the
+                        copy shipped with the interpreter.
+  ZOPEN_PYTHON_BUILD_ISOLATION
+                        Python build system only. Set to 'false' to build
+                        without build isolation (defaults to 'true'), so
+                        [build-system] requires are taken from the venv rather
+                        than resolved from PyPI. Pair with
+                        ZOPEN_PYTHON_VENV_SYSTEM_SITE=true.
+  ZOPEN_PYTHON_BUILD_SKIP_DEP_CHECK
+                        Python build system only. Set to 'true' to build without
+                        checking [build-system] requires (defaults to 'false').
+                        Only for a requirement unsatisfiable on this platform at
+                        any version, once the package is known to build and work
+                        against what is present.
   ZOPEN_EXTRA_CFLAGS    C compiler flags to append to CFLAGS (defaults to '').
   ZOPEN_EXTRA_CPPFLAGS  C,C++ pre-processor flags to append to CPPFLAGS.
                         (defaults to '')
@@ -531,9 +549,36 @@ _zopen_python_ensure_venv_for() {
     fi
   fi
 
+  # Same argument for ZOPEN_PYTHON_VENV_SYSTEM_SITE: a venv built under the other
+  # setting is silently wrong rather than broken. Turning it on and reusing an
+  # isolated venv fails at build time complaining about a missing cffi, which
+  # reads as the interpreter lacking it; turning it off and reusing a permissive
+  # one builds against packages the wheel never declares. pyvenv.cfg records what
+  # the venv was actually created with.
+  if [ -f "${_pv_venv}/pyvenv.cfg" ]; then
+    _pv_syssite="false"
+    grep -q "include-system-site-packages *= *true" "${_pv_venv}/pyvenv.cfg" 2> /dev/null && _pv_syssite="true"
+    if [ "${_pv_syssite}" != "${ZOPEN_PYTHON_VENV_SYSTEM_SITE:-false}" ]; then
+      printInfo "Discarding ${_pv_venv}: system-site-packages is ${_pv_syssite}, expected ${ZOPEN_PYTHON_VENV_SYSTEM_SITE:-false}"
+      rm -rf "${_pv_venv}"
+    fi
+  fi
+
+  # ZOPEN_PYTHON_VENV_SYSTEM_SITE=true exposes the interpreter's own packages to
+  # the build. That matters for anything needing cffi at build time: cffi ships
+  # only an sdist for z/OS and building it wants libffi headers this platform
+  # does not have, so the copy bundled with the interpreter is the only one there
+  # will ever be, and a plain venv hides it. Off by default -- a build that can
+  # see site-packages can also link against something the wheel does not declare.
+  _pv_venv_opts=""
+  if [ "${ZOPEN_PYTHON_VENV_SYSTEM_SITE}" = "true" ]; then
+    _pv_venv_opts="--system-site-packages"
+  fi
+
   if [ ! -f "${_pv_venv}/bin/activate" ]; then
     printInfo "Creating Python virtual environment for ${1} in ${_pv_venv}..."
-    "$(_zopen_python_interpreter_path "$1")" -m venv "${_pv_venv}" || return 1
+    # shellcheck disable=SC2086
+    "$(_zopen_python_interpreter_path "$1")" -m venv ${_pv_venv_opts} "${_pv_venv}" || return 1
   fi
   . "${_pv_venv}/bin/activate" || return 1
   pip install setuptools build installer wheel
@@ -705,6 +750,32 @@ _zopen_python_build() {
   _zopen_python_build_rc=0
   _py_pure=false
 
+  # ZOPEN_PYTHON_BUILD_ISOLATION=false builds in the venv instead of the fresh
+  # environment 'build' would otherwise create for the backend. Isolation means
+  # resolving [build-system] requires from PyPI, which cannot succeed for a
+  # package needing cffi: there is no z/OS wheel and the sdist wants libffi. The
+  # failure surfaces as a dependency-resolution error naming cffi, giving no hint
+  # that the build could have used the interpreter's copy. Pair it with
+  # ZOPEN_PYTHON_VENV_SYSTEM_SITE=true so that copy is actually reachable.
+  _py_build_opts=""
+  if [ "${ZOPEN_PYTHON_BUILD_ISOLATION}" = "false" ]; then
+    _py_build_opts="--no-isolation"
+    printVerbose "Building without build isolation"
+  fi
+
+  # Without isolation, 'build' still refuses to start unless [build-system]
+  # requires are satisfied in the venv. That check is right in general and wrong
+  # for a requirement that cannot be satisfied on this platform at any version --
+  # a bound on cffi, say, when the interpreter's bundled copy is older and is
+  # also the only one obtainable. A port sets this after establishing that the
+  # package genuinely builds and works against what is present; it is a claim
+  # about that package, not a general relaxation, which is why it is separate
+  # from ZOPEN_PYTHON_BUILD_ISOLATION rather than implied by it.
+  if [ "${ZOPEN_PYTHON_BUILD_SKIP_DEP_CHECK}" = "true" ]; then
+    _py_build_opts="${_py_build_opts} --skip-dependency-check"
+    printVerbose "Skipping the build-requirement check"
+  fi
+
   for _pv in $(_zopen_python_versions); do
     # A pure Python wheel is identical whatever built it, and every interpreter
     # produces the same filename, so rebuilding would only overwrite it. The
@@ -720,7 +791,8 @@ _zopen_python_build() {
     printHeader "Building wheel with Python ${_pv}"
     _zopen_python_ensure_venv_for "${_pv}" || { _zopen_python_build_rc=1; break; }
 
-    python -m build --wheel
+    # shellcheck disable=SC2086
+    python -m build --wheel ${_py_build_opts}
     _zopen_python_build_rc=$?
 
     # Retag before anything downstream sees the wheel, so the check and install
