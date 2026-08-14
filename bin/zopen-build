@@ -642,6 +642,108 @@ _zopen_python_wheel_for_tag() {
 #
 # Pure Python wheels are already py3-none-any and are left untouched.
 # Set ZOPEN_PYTHON_WHEEL_RETAG=false to keep the default platform tag.
+# Record what produced a wheel, so a rebuild that changed nothing can be told
+# apart from one that did.
+#
+# zopen-publish decides whether a rebuilt wheel is a real change by comparing
+# contents, and on z/OS a compiled extension never compares equal: two builds of
+# identical source differ by around 25 bytes of embedded build timestamps. So
+# every rebuild looked like new code and earned a fresh PEP 427 build tag, and
+# the index grew without bound -- pydantic_core reached eight wheels for one
+# version, none of them differing in anything that runs.
+#
+# Comparing the binaries more loosely is not safe: a genuine one-line fix can
+# also move a handful of bytes. So record the build's inputs instead and let the
+# publisher compare those. Identical inputs mean nothing to publish; any input
+# that moved -- the port, meta, the upstream tag, the toolchain -- means a real
+# rebuild. Today's abi3 fix came from a change in meta rather than in any port,
+# which is why meta's commit is in here too.
+#
+# If the inputs cannot be determined the stamp is not written at all, and
+# zopen-publish falls back to comparing bytes as before. A missing stamp costs a
+# duplicate; a wrong one would suppress a real change.
+_zopen_python_stamp_wheel() {
+  _st_port=$(git -C "${ZOPEN_ROOT}" rev-parse --short HEAD 2> /dev/null)
+  if [ -z "${_st_port}" ]; then
+    printVerbose "No port commit available; leaving wheels unstamped"
+    return 0
+  fi
+
+  _st_meta=$(git -C "${MYDIR}/.." rev-parse --short HEAD 2> /dev/null)
+  [ -n "${_st_meta}" ] || _st_meta="unknown"
+  _st_upstream="${ZOPEN_STABLE_TAG:-${ZOPEN_DEV_TAG:-unknown}}"
+  _st_cc=$("${CC:-clang}" --version 2> /dev/null | head -1)
+  [ -n "${_st_cc}" ] || _st_cc="unknown"
+  _st_zoslib=$(basename "${ZOSLIB_HOME:-unknown}")
+  _st_py=$(python -c 'import sys; print("%d.%d.%d" % sys.version_info[:3])' 2> /dev/null)
+  [ -n "${_st_py}" ] || _st_py="unknown"
+
+  for _st_whl in dist/*.whl; do
+    [ -f "${_st_whl}" ] || continue
+    ZOPEN_ST_PORT="${_st_port}" \
+    ZOPEN_ST_META="${_st_meta}" \
+    ZOPEN_ST_UPSTREAM="${_st_upstream}" \
+    ZOPEN_ST_CC="${_st_cc}" \
+    ZOPEN_ST_ZOSLIB="${_st_zoslib}" \
+    ZOPEN_ST_PY="${_st_py}" \
+    python - "${_st_whl}" <<'STAMPPYEOF'
+import os
+import shutil
+import sys
+import zipfile
+
+path = sys.argv[1]
+STAMP = "ZOPEN-PROVENANCE"
+
+lines = [
+    "port-commit: %s" % os.environ["ZOPEN_ST_PORT"],
+    "meta-commit: %s" % os.environ["ZOPEN_ST_META"],
+    "upstream-ref: %s" % os.environ["ZOPEN_ST_UPSTREAM"],
+    "compiler: %s" % os.environ["ZOPEN_ST_CC"],
+    "zoslib: %s" % os.environ["ZOPEN_ST_ZOSLIB"],
+    "python: %s" % os.environ["ZOPEN_ST_PY"],
+]
+body = ("\n".join(lines) + "\n").encode("utf-8")
+
+with zipfile.ZipFile(path) as zf:
+    names = zf.namelist()
+    blobs = {n: zf.read(n) for n in names}
+    infos = {n: zf.getinfo(n) for n in names}
+
+dist_info = next((n.split("/")[0] for n in names if n.endswith(".dist-info/RECORD")), None)
+if dist_info is None:
+    dist_info = next((n.split("/")[0] for n in names if ".dist-info/" in n), None)
+if dist_info is None:
+    print("no .dist-info in %s; not stamping" % os.path.basename(path))
+    raise SystemExit(0)
+
+target = "%s/%s" % (dist_info, STAMP)
+if target in names:
+    raise SystemExit(0)
+
+# Deliberately not added to RECORD. RECORD is one of the generated files
+# zopen-publish already ignores when comparing, so listing the stamp there would
+# make every stamp change look like a RECORD change too; and installers tolerate
+# an unlisted file in .dist-info, while a RECORD entry whose hash is wrong makes
+# the wheel fail verification outright.
+tmp = path + ".stamp"
+with zipfile.ZipFile(tmp, "w", zipfile.ZIP_DEFLATED) as out:
+    for n in names:
+        zi = zipfile.ZipInfo(n, date_time=infos[n].date_time)
+        zi.external_attr = infos[n].external_attr
+        zi.compress_type = zipfile.ZIP_DEFLATED
+        out.writestr(zi, blobs[n])
+    zi = zipfile.ZipInfo(target, date_time=infos[names[0]].date_time)
+    zi.compress_type = zipfile.ZIP_DEFLATED
+    out.writestr(zi, body)
+shutil.move(tmp, path)
+print("stamped %s" % os.path.basename(path))
+STAMPPYEOF
+    [ $? -eq 0 ] || return 1
+  done
+  return 0
+}
+
 _zopen_python_retag_wheel() {
   if [ "${ZOPEN_PYTHON_WHEEL_RETAG}" = "false" ]; then
     printVerbose "Wheel retagging disabled; keeping the default platform tag"
@@ -799,6 +901,15 @@ _zopen_python_build() {
     # phases and the published artifact all refer to the same file.
     if [ ${_zopen_python_build_rc} -eq 0 ]; then
       _zopen_python_retag_wheel
+      _zopen_python_build_rc=$?
+    fi
+
+    # Stamp after retagging, not before: retagging runs 'python -m wheel tags',
+    # which rewrites the wheel and rejects a .dist-info file that RECORD does not
+    # list, failing with "Failed to retag" and saying nothing about the stamp.
+    # Going second also means the stamp lands in the file that actually ships.
+    if [ ${_zopen_python_build_rc} -eq 0 ]; then
+      _zopen_python_stamp_wheel
       _zopen_python_build_rc=$?
     fi
 

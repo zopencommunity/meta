@@ -1136,16 +1136,41 @@ WHEEL_RE = re.compile(
 # derived from them, so skipping the whole file made the two compare equal and
 # the republish a no-op -- which is how a malformed wheel stayed in the index
 # after the port that produced it had been fixed.
+# A compiled extension built on z/OS is never byte-identical to the last build
+# of the same source: the object carries embedded build timestamps, around 25
+# bytes of them. Comparing those bytes therefore reported new code on every
+# rebuild and earned a fresh build tag each time, which is how pydantic_core
+# accumulated eight wheels for one version that differ in nothing that runs.
+#
+# Loosening the binary comparison is not an option -- a real one-line fix moves
+# about as many bytes as a timestamp does. So when both wheels carry a
+# provenance stamp, compare the inputs that produced them instead: the port and
+# meta commits, the upstream ref, and the toolchain. Same inputs, nothing to
+# publish; any input moved, a real rebuild. Extension modules are still compared
+# by name, so one appearing or disappearing is still a change -- which is what
+# the abi3 fix looked like.
+#
+# Without a stamp on both sides this falls back to comparing every byte, the
+# behaviour that shipped before. A missing stamp costs a duplicate wheel; a
+# stamp trusted too far would hide a real change.
+STAMP = 'ZOPEN-PROVENANCE'
+BINARY_SUFFIXES = ('.so', '.dylib', '.pyd')
+
+
 def fingerprint(path):
     payload = {}
     requires = set()
     tags = set()
+    stamp = None
     generated = ('METADATA', 'WHEEL', 'RECORD')
     with zipfile.ZipFile(path) as zf:
         for name in zf.namelist():
             if name.endswith('/'):
                 continue
             base = name.rsplit('/', 1)[-1]
+            if '.dist-info/' in name and base == STAMP:
+                stamp = zf.read(name).decode('utf-8', 'replace')
+                continue
             if '.dist-info/' in name and base in generated:
                 if base == 'METADATA':
                     msg = email.message_from_string(
@@ -1157,15 +1182,28 @@ def fingerprint(path):
                     tags = set(msg.get_all('Tag') or [])
                 continue
             payload[name] = hashlib.sha256(zf.read(name)).hexdigest()
-    return payload, requires, tags
+    return payload, requires, tags, stamp
 
-local_payload, local_requires, local_tags = fingerprint(local)
-published_payload, published_requires, published_tags = fingerprint(published)
+
+local_payload, local_requires, local_tags, local_stamp = fingerprint(local)
+published_payload, published_requires, published_tags, published_stamp = \
+    fingerprint(published)
+
+stamped = local_stamp is not None and published_stamp is not None
+if stamped:
+    # Keep the names, drop the bytes: presence still counts, contents do not.
+    def elide(payload):
+        return {name: ('binary' if name.endswith(BINARY_SUFFIXES) else digest)
+                for name, digest in payload.items()}
+
+    local_payload = elide(local_payload)
+    published_payload = elide(published_payload)
 
 values = {}
 if (local_payload == published_payload
         and local_requires == published_requires
-        and local_tags == published_tags):
+        and local_tags == published_tags
+        and local_stamp == published_stamp):
     values['CONFLICT_ACTION'] = 'noop'
 else:
     match = WHEEL_RE.match(local.name)
