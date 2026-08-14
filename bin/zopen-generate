@@ -806,6 +806,7 @@ log.DEV/
 log.STABLE/
 build/
 install/
+.pip-cache/
 .zoslib_hooks/
 EOT
 printInfo "${name}port/.gitignore created"

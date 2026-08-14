@@ -1251,26 +1251,6 @@ checkEnv()
     fi
   fi
 
-  # Keep pip's cache off the home filesystem.
-  #
-  # pip defaults to $HOME/.cache/pip. Home directories on the build machines are
-  # small -- 100MB is typical -- and a few Python ports fill one, after which
-  # later builds fail somewhere unrelated to their own cause. The symptom is
-  # whatever pip happened to be doing at the time: a wheel that "failed to
-  # build", an sdist compile stopping with EDC5133I, or a truncated .so that
-  # fails to load with CEE3512S reason EF076015, which reads as a missing
-  # execute bit. None of them mention disk space.
-  #
-  # ${zopen_tmp_dir} is where the rest of the build's scratch already goes and
-  # is sized for it. Shared per user rather than per port: a cache thrown away
-  # with the build directory is not a cache. An explicit PIP_CACHE_DIR wins, so
-  # a caller can still redirect or disable it.
-  if [ -z "${PIP_CACHE_DIR}" ]; then
-    export PIP_CACHE_DIR="${zopen_tmp_dir}/zopen-pip-cache-${LOGNAME}"
-    mkdir -p "${PIP_CACHE_DIR}" 2> /dev/null
-    printVerbose "pip cache directory: ${PIP_CACHE_DIR}"
-  fi
-
   ZOPEN_INIT_CODE="zopen_init"
   ZOPEN_PRE_CHECK_CODE="zopen_pre_check"
   ZOPEN_APPEND_TO_ENV_CODE="zopen_append_to_env"
@@ -3646,6 +3626,30 @@ export ZOPEN_ROOT=$(
   cd "$(dirname "${buildEnvFile}")" || exit
   pwd
 )
+
+# Keep pip's cache inside the build directory.
+#
+# pip defaults to $HOME/.cache/pip. Home directories on the build machines are
+# 100MB, and a handful of Python ports fill one, after which later builds fail
+# somewhere unrelated to their own cause -- and never with a message about
+# disk. The symptom is whatever pip was doing at the time: a wheel that "failed
+# to build", an sdist compile stopping with EDC5133I, or a truncated .so that
+# fails to load with CEE3512S reason EF076015, which reads as a missing execute
+# bit.
+#
+# Under ZOPEN_ROOT rather than ${zopen_tmp_dir}: TMPDIR and TMP are unset on the
+# build machines, so the latter resolves to /tmp, which is outside the CI
+# workspace and never reclaimed by the pipeline's deleteDir. A cache under the
+# build directory is discarded with it, which costs reuse between builds and
+# buys a bound on how large it can get.
+#
+# An explicit PIP_CACHE_DIR still wins, so a caller that wants a shared cache
+# can point at one.
+if [ -z "${PIP_CACHE_DIR}" ]; then
+  export PIP_CACHE_DIR="${ZOPEN_ROOT}/.pip-cache"
+  mkdir -p "${PIP_CACHE_DIR}" 2> /dev/null
+  printVerbose "pip cache directory: ${PIP_CACHE_DIR}"
+fi
 
 if ! loadBuildEnv; then
   exit 4
