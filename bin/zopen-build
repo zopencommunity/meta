@@ -909,6 +909,11 @@ _zopen_python_install() {
   # 3.13 looks for .cpython-313.so, 3.14 for .cpython-314.so, and each ignores
   # the others. The pure-Python half is identical across the wheels, so only
   # the extensions need merging. A pure-Python port has none and is unchanged.
+  #
+  # Packages building against the stable ABI produce one name for every
+  # interpreter -- _sodium.abi3.so, _bcrypt.abi3.so -- so the merge below
+  # renames those per interpreter rather than letting them collide. See the
+  # comment there for why one such file cannot serve them all here.
   for _pv_other in $(_zopen_python_versions); do
     [ "${_pv_other}" = "${_pv_primary}" ] && continue
     _pv_otag="cp$(echo "${_pv_other}" | tr -d '.')"
@@ -919,19 +924,52 @@ _zopen_python_install() {
     fi
     "$(_zopen_python_interpreter_path "${_pv_other}")" - \
         "${_pv_owhl}" "${ZOPEN_INSTALL_DIR}/lib/python" <<'PYMERGEEOF'
+import importlib.machinery
 import os
 import sys
 import zipfile
 
 wheel, target = sys.argv[1], sys.argv[2]
+
+# The version-specific suffix for the interpreter running this script, e.g.
+# ".cpython-313.so". Python tries it before ".abi3.so" and ".so", so a file
+# named with it is picked up only by this interpreter.
+suffixes = importlib.machinery.EXTENSION_SUFFIXES
+tagged = next((s for s in suffixes if "cpython-" in s), None)
+
+
+def retag(name):
+    """Rename an extension so only this interpreter will load it."""
+    base = os.path.basename(name)
+    for suffix in sorted(suffixes, key=len, reverse=True):
+        if base.endswith(suffix):
+            return os.path.join(os.path.dirname(name),
+                                base[:-len(suffix)] + tagged)
+    return name
+
+
 added = 0
 with zipfile.ZipFile(wheel) as zf:
     for info in zf.infolist():
         if not info.filename.endswith(".so"):
             continue
         dest = os.path.join(target, info.filename)
-        # An abi3 extension is shared, so the primary already installed it
-        # under the same name. Never overwrite what is there.
+        # A name collision here means the extension is not version-specific --
+        # an abi3 module, which every interpreter builds as e.g. _sodium.abi3.so.
+        #
+        # Do not assume one such file serves them all. The stable ABI promises
+        # that a module built against an older Python loads on a newer one, and
+        # that promise does not hold here: a _sodium.abi3.so built by 3.12 dies
+        # under 3.13 and 3.14 inside CPython's allocator, taking the interpreter
+        # with it rather than raising ImportError. Skipping the file, as this
+        # used to, ships exactly that -- one interpreter's build serving all
+        # three, working on the one that built it and crashing on the rest.
+        #
+        # So give this interpreter's build its own version-specific name. The
+        # files then coexist the way genuinely per-interpreter ones already do,
+        # and each interpreter resolves to the build that is actually its own.
+        if os.path.exists(dest) and tagged:
+            dest = os.path.join(target, retag(info.filename))
         if os.path.exists(dest):
             continue
         os.makedirs(os.path.dirname(dest), exist_ok=True)
