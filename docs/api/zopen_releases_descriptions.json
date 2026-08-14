@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2026-08-13T17:51:03+00:00Z",
+  "generation_timestamp_utc": "2026-08-14T02:37:04+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -338,6 +338,8 @@
     "cryptography": "z/OS port of cryptography (OpenSSL 4.0.0 backend, Python 3.12)",
     "watchfiles": "z/OS port of watchfiles (file-watching library with Rust core)",
     "lxml": "z/OS port of lxml - XML and XSLT processing for Python, built on libxml2 and libxslt",
-    "bcrypt": "z/OS port of bcrypt (password hashing library with Rust core)"
+    "bcrypt": "z/OS port of bcrypt (password hashing library with Rust core)",
+    "libsodium": "z/OS port of libsodium - a modern, portable, easy to use crypto library (the C library behind PyNaCl)",
+    "msgpack": "z/OS port of msgpack - MessagePack serializer for Python"
   }
 }
