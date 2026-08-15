@@ -283,3 +283,32 @@ If a package you need is not in the index, it either has not been ported or
 cannot be. [Python candidate status](/Guides/PythonCandidates) records which,
 measured by actually attempting the install on z/OS rather than inferred from
 metadata. [Porting Python packages](/Guides/PythonPorting) covers adding one.
+
+## Reporting problems and giving feedback
+
+Report against the port rather than here. Each ported tool and each ported
+package has its own repository named `<name>port`, and its issue tracker is
+what the people maintaining that port actually watch:
+
+| what went wrong | where it goes |
+|---|---|
+| a tool misbehaves — `uv`, `pip`, an interpreter | that tool's port repo |
+| a wheel is broken, stale, or missing from the index | that package's port repo |
+| something on this page is wrong or out of date | [meta issues](https://github.com/zopencommunity/meta/issues) |
+| a question, or you cannot tell which of the above it is | [meta discussions](https://github.com/zopencommunity/meta/discussions) |
+
+So a uv problem goes to
+[uvport](https://github.com/zopencommunity/uvport/issues) and a watchfiles
+problem to
+[watchfilesport](https://github.com/zopencommunity/watchfilesport/issues) —
+`https://github.com/zopencommunity/<name>port/issues` in general.
+
+Most port repositories have Issues enabled but not Discussions, so anything
+conversational belongs in
+[meta discussions](https://github.com/zopencommunity/meta/discussions) or the
+[System Z Enthusiasts Discord](https://discord.com/invite/sze).
+
+A report is far easier to act on with the output of `zopen version`, the
+interpreter (`python3 -VV`), and the failing command with its full output — the
+z/OS-specific failures on this page tend to look like ordinary dependency
+errors, so the raw text matters.

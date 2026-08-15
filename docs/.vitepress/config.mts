@@ -67,7 +67,7 @@ export default defineConfig({
       { text: "Home", link: "/" },
       { text: "Getting Started", link: "/Guides/QuickStart" },
       { text: "Available Tools", link: "/Latest" },
-      { text: "Python", link: "/Guides/PythonPackages" },
+      { text: "Python on z/OS", link: "/Guides/PythonPackages" },
       { text: "Request a Package", link: "/PackageRequests" },
       { text: "Governance", link: "/Governance" },
       { text: "Reference", link: "/reference/zopen-reference" },
@@ -109,7 +109,7 @@ export default defineConfig({
         ],
       },
       {
-        text: "Python",
+        text: "Python on z/OS",
         collapsed: false,
         items: [
           { text: "Using Python Packages", link: "/Guides/PythonPackages" },
