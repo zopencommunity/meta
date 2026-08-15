@@ -1960,7 +1960,12 @@ checkGitVersion()
 gitClone()
 {
   gitname=$(basename "${ZOPEN_URL}")
-  sourcedir=${gitname%%.*}
+  # Strip only the .git suffix. %%.* cuts from the first dot instead, so a
+  # repository whose name contains one -- zope.interface.git, ruamel.yaml.git --
+  # clones into a directory named for the part before it. git then reports
+  # "fatal: unable to checkout working tree", which reads as a corrupt checkout
+  # or a full filesystem rather than a truncated target directory.
+  sourcedir=${gitname%.git}
   if $printSourceDir; then
     echo $sourcedir  
     exit 0
