@@ -679,7 +679,24 @@ _zopen_python_stamp_wheel() {
   # instead -- meta-main.20260707_020925.zos -- which moves with every meta
   # release and serves the same purpose. Resolve physically, since reaching it
   # through the "meta" symlink would otherwise yield a name that never changes.
-  _st_meta=$(git -C "${MYDIR}/.." rev-parse --short HEAD 2> /dev/null)
+  # The commit that last touched the build tooling, not meta's HEAD.
+  #
+  # HEAD was the obvious choice and it was wrong. meta moves about twelve times
+  # a day and roughly half of those are the automated "Updating docs/apis/
+  # reference" regeneration, which cannot affect how any wheel is built. Keying
+  # on HEAD meant every stamp was invalidated within the hour, so the comparison
+  # went on reporting a change on every rebuild and the build tags kept
+  # accumulating -- exactly what the stamp exists to stop.
+  #
+  # Observed directly: two ujson wheels, identical in port commit, upstream ref,
+  # compiler, zoslib and interpreter, differing only in meta-commit b593a00
+  # versus b874f85. The first is a real change to the clone logic; the second is
+  # a docs regeneration.
+  #
+  # Restricting it to the paths that decide what a wheel contains means the
+  # stamp moves when the build actually changes and holds still otherwise.
+  _st_meta=$(git -C "${MYDIR}/.." log -1 --format=%h \
+    -- bin/zopen-build include/ 2> /dev/null)
   if [ -z "${_st_meta}" ]; then
     _st_meta=$(basename "$(cd "${MYDIR}/.." 2> /dev/null && pwd -P)" 2> /dev/null)
     case "${_st_meta}" in
