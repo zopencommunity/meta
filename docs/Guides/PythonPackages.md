@@ -142,14 +142,13 @@ zopen install uv
 ```
 
 It reaches the wheel index and installs from it correctly, and it is
-substantially faster than pip. Two limits decide whether it is usable for a
+substantially faster than pip. One limit decides whether it is usable for a
 given job:
 
-- **Python 3.12 and 3.13 only.** uv cannot use 3.14 at all.
 - **Nothing that depends on `cffi`**, which rules out `cryptography`, `pynacl`
   and `paramiko`.
 
-Both are explained below. Where either applies, use pip.
+It is explained below. Where it applies, use pip.
 
 The settings map across:
 
@@ -204,17 +203,18 @@ trusting the exit status**. Without it the install simply leaves no
 
 Everything without a `cffi` dependency installs normally.
 
-### uv does not work with Python 3.14
+### Python 3.14 needs a recent enough uv
 
-uv reads the interpreter's platform and does not recognise the one 3.14 reports:
+Older uv builds could not use 3.14 at all, failing before the environment was
+created:
 
 ```
-$ uv venv --python /path/to/python3.14 .venv
 error: Failed to inspect Python interpreter
   Caused by: Unknown operating system: `zos`
 ```
 
-The interpreters disagree about what to call this platform:
+The interpreters disagree about what to call this platform, and uv understood
+only the older spelling:
 
 | interpreter | `sysconfig.get_platform()` |
 |---|---|
@@ -222,9 +222,9 @@ The interpreters disagree about what to call this platform:
 | 3.13 | `os390-29.00-8561` |
 | 3.14 | `zos` |
 
-uv understands the `os390` form and not the bare `zos` one, so 3.12 and 3.13
-work and 3.14 does not. It fails when the environment is created, so there is no
-risk of it half-working. Use pip on 3.14.
+The port now ships a build that recognises both, so 3.12, 3.13 and 3.14 all
+work. If you see that error, you are on an older binary — reinstall with
+`zopen install uv`.
 
 (The same split shows up in wheel filenames — 3.12 and 3.13 build
 `os390_29_00_8561` wheels while 3.14 builds `zos` ones — which is why the index
