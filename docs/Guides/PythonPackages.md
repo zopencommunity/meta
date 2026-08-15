@@ -133,6 +133,119 @@ version too, or you may be testing the bundled copy:
 python -c "import cryptography; assert cryptography.__version__ == '50.0.0'"
 ```
 
+## Using uv instead of pip
+
+`uv` is available as a port rather than from PyPI:
+
+```sh
+zopen install uv
+```
+
+It reaches the wheel index and installs from it correctly, and it is
+substantially faster than pip. Two limits decide whether it is usable for a
+given job:
+
+- **Python 3.12 and 3.13 only.** uv cannot use 3.14 at all.
+- **Nothing that depends on `cffi`**, which rules out `cryptography`, `pynacl`
+  and `paramiko`.
+
+Both are explained below. Where either applies, use pip.
+
+The settings map across:
+
+| pip | uv |
+|---|---|
+| `PIP_EXTRA_INDEX_URL` | `UV_INDEX` |
+| `PIP_CONSTRAINT` | `UV_CONSTRAINT` |
+| `PIP_CACHE_DIR` | `UV_CACHE_DIR` |
+
+```sh
+export UV_INDEX="https://repo.zopen.community/pypi/wheels/simple/"
+export UV_CONSTRAINT="https://repo.zopen.community/pulp/content/constraints/zopen-constraints.txt"
+export UV_CACHE_DIR=/tmp/uv-cache
+
+uv venv .venv
+uv pip install --python .venv/bin/python msgpack
+```
+
+`UV_INDEX` rather than `UV_EXTRA_INDEX_URL`: uv accepts the latter but reports
+it as deprecated in favour of `--index`.
+
+### uv will not use the interpreter's bundled packages
+
+This is the important difference, and it is why `cffi` is fatal here.
+
+pip treats a package already present in the environment as satisfying a
+requirement — which is what makes `--system-site-packages` work, and why the
+`cffi` that ships with the interpreter is usable at all. uv resolves against the
+index instead and installs its own copy regardless of what is already there.
+
+So `uv venv --system-site-packages` creates the environment, and uv then ignores
+the contents:
+
+```
+$ uv pip install --python .venv/bin/python cryptography
+Resolved 3 packages
+   Building cffi==2.1.1
+  × Failed to build `cffi==2.1.1`
+      _configtest.c:1:1: error: thread-local storage is not supported for the
+      current target
+  help: `cffi` (v2.1.1) was included because `cryptography` (v50.0.0) depends on it
+```
+
+uv found the zopen wheel for `cryptography` correctly — the failure is entirely
+`cffi`, which has no z/OS wheel and cannot be compiled here. Adding
+`UV_CONSTRAINT` does not change it, and neither does
+`--system-site-packages`. The environment is left with the interpreter's
+`cryptography` 3.3.2, so **check the version afterwards rather than trusting the
+exit status**.
+
+Everything without a `cffi` dependency installs normally.
+
+### uv does not work with Python 3.14
+
+uv reads the interpreter's platform and does not recognise the one 3.14 reports:
+
+```
+$ uv venv --python /path/to/python3.14 .venv
+error: Failed to inspect Python interpreter
+  Caused by: Unknown operating system: `zos`
+```
+
+The interpreters disagree about what to call this platform:
+
+| interpreter | `sysconfig.get_platform()` |
+|---|---|
+| 3.12 | `os390-29.00-8561` |
+| 3.13 | `os390-29.00-8561` |
+| 3.14 | `zos` |
+
+uv understands the `os390` form and not the bare `zos` one, so 3.12 and 3.13
+work and 3.14 does not. It fails when the environment is created, so there is no
+risk of it half-working. Use pip on 3.14.
+
+(The same split shows up in wheel filenames — 3.12 and 3.13 build
+`os390_29_00_8561` wheels while 3.14 builds `zos` ones — which is why the index
+retags them.)
+
+### uv cannot install interpreters
+
+`uv python install` fetches python-build-standalone builds, which are not
+published for this platform:
+
+```
+$ uv python install 3.12
+error: No download found for request: cpython-3.12-zos-s390x-none
+```
+
+Use the interpreters already on the system; `uv python list` finds them.
+
+### Keep the cache off a small filesystem
+
+uv defaults its cache under `$HOME`, which is often far smaller than `/tmp`
+here. The same warning as for pip applies, and for the same reason — set
+`UV_CACHE_DIR`.
+
 ## Package-specific notes
 
 ### watchfiles
