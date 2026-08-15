@@ -196,9 +196,11 @@ Resolved 3 packages
 uv found the zopen wheel for `cryptography` correctly — the failure is entirely
 `cffi`, which has no z/OS wheel and cannot be compiled here. Adding
 `UV_CONSTRAINT` does not change it, and neither does
-`--system-site-packages`. The environment is left with the interpreter's
-`cryptography` 3.3.2, so **check the version afterwards rather than trusting the
-exit status**.
+`--system-site-packages`. With that flag the environment is left holding the
+interpreter's `cryptography` 3.3.2 — the 2021 release with the
+certificate-validation CVEs — so **check the version afterwards rather than
+trusting the exit status**. Without it the install simply leaves no
+`cryptography` at all, which at least fails honestly.
 
 Everything without a `cffi` dependency installs normally.
 
