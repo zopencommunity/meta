@@ -66,11 +66,23 @@
 # cryptography. cryptography is now published for z/OS, so the cap is gone --
 # verified on 3.12 that mcp 2.0.0 resolves through it and works.
 #
-# On 3.13 and 3.14 mcp still fails, but not for a reason a cap can fix:
-# pydantic-core and rpds-py are published cp312-only, so pip falls through to
-# their sdists and needs Rust. Capping mcp would not have helped there; those
-# two ports need rebuilding across the interpreter matrix.
+# That note used to add: on 3.13 and 3.14 mcp still failed, because
+# pydantic-core and rpds-py were published cp312-only and pip fell through to
+# their sdists. Both are now built for 3.12, 3.13 and 3.14, so that no longer
+# applies either.
 
-# fastmcp 3.x requires watchfiles (Rust). 2.0.0 is the version ported here.
-# Unrelated to cryptography, so this one stays.
-fastmcp==2.0.0
+# fastmcp was capped at 2.0.0 because 3.x requires watchfiles, which is Rust.
+# watchfiles is now published for 3.12, 3.13 and 3.14, so the reason is gone and
+# the cap with it.
+#
+# It was inert in practice -- the publish job drops a cap on any package it also
+# pins from the index, and fastmcp is one -- but it was wrong, and it would have
+# started biting the moment fastmcp left the index. The rationale being stale is
+# the real problem: this file is where someone looks to find out why a version
+# is held back.
+#
+# No matching change on the Pulp side. Its "fastmcp" exclude is the bare-name
+# kind that stops the proxy shadowing our own wheel, which the publish job
+# maintains, not a ceiling paired with this cap.
+
+# (no caps currently needed)
