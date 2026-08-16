@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2026-08-15T21:59:54+00:00Z",
+  "generation_timestamp_utc": "2026-08-16T05:12:38+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -352,6 +352,8 @@
     "ujson": "Fast JSON encoder and decoder for Python",
     "zopeinterface": "Interface definitions for Python",
     "maturin": "maturin port for z/OS - Build and publish Rust-backed Python wheels",
-    "pyyaml": "PyYAML for z/OS, built against libyaml"
+    "pyyaml": "PyYAML for z/OS, built against libyaml",
+    "libjpeg-turbo": "libjpeg-turbo for z/OS: JPEG codec",
+    "pillow": "Pillow for z/OS: imaging library with JPEG and PNG"
   }
 }
