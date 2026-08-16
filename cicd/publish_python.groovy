@@ -328,6 +328,32 @@ for name in names:
             newest = sorted(versions)[-1]
         pins[re.sub(r"[-_.]+", "-", name).lower()] = newest
 
+# Packages whose version is chosen for them by a parent, which must not be
+# pinned here. A pin of our own cannot help -- the parent already names an exact
+# version -- and becomes an unsatisfiable conflict the moment the newest we
+# publish is not the one it asks for.
+#
+# pydantic-core is the case that showed this. pydantic pins it exactly:
+# pydantic 2.13.4 requires pydantic-core==2.46.4. With 2.46.4 and 2.48.0 both in
+# the index, the newest-wins rule above emitted 2.48.0, and every install
+# honouring this file stopped resolving:
+#
+#   ERROR: Could not find a version that satisfies pydantic-core==2.46.4
+#          (from versions: 0.0.1, 2.41.5, 2.48.0)
+#
+# which reads as a missing wheel rather than a constraint we imposed. fastapi
+# and fastmcp both failed on it while their own ports were fine.
+#
+# Leaving it unpinned still resolves to our wheel, because pydantic asks for
+# that precise version and the index has it -- verified by installing fastapi
+# with the constraint removed and getting pydantic_core 2.46.4 from the index,
+# not a source build from PyPI. It also survives the next pydantic release
+# without anyone having to remember this.
+EXACTLY_PINNED_BY_PARENT = {"pydantic-core"}
+for excluded in sorted(EXACTLY_PINNED_BY_PARENT & set(pins)):
+    print(f"  not pinning {excluded}: its version is set exactly by its parent")
+    del pins[excluded]
+
 # A cap on a package we also publish is redundant -- the generated pin already
 # constrains it -- and becomes an unsatisfiable conflict the moment the two
 # disagree, so the pin wins and the cap is dropped with a note. The cap stays in
