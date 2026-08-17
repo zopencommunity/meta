@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2026-08-17T02:15:16+00:00Z",
+  "generation_timestamp_utc": "2026-08-17T04:19:40+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -354,6 +354,7 @@
     "maturin": "maturin port for z/OS - Build and publish Rust-backed Python wheels",
     "pyyaml": "PyYAML for z/OS, built against libyaml",
     "libjpeg-turbo": "libjpeg-turbo for z/OS: JPEG codec",
-    "pillow": "Pillow for z/OS: imaging library with JPEG and PNG"
+    "pillow": "Pillow for z/OS: imaging library with JPEG and PNG",
+    "cffi": "Foreign function interface for calling C from Python"
   }
 }
