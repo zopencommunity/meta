@@ -3670,7 +3670,7 @@ generateZOSLIBHooks()
     printError "ZOSLIB_HOOK_OBJ must be set before calling generateZOSLIBHooks"
   fi
 
-# Background:
+  # Background:
   #  As part of the build/install process, various tools may require application specific environment variables to be set.
   #  This function generates a C hook zoslib_env_hook() that will be called by ZOSLIB before main is entered.
   #  The function's purpose is to automatically set environment variables before main.
@@ -3714,150 +3714,59 @@ generateZOSLIBHooks()
     commit=$(echo "$ZOPEN_COMMIT_SHA" | cut -c -7)
   fi
 
-  iden="\$Id: Vendor:$ZOPEN_VENDOR BuildRev:$commit $(/bin/date +"%Y-%m-%d %H:%M:%S %Z") \$";
+  iden="\$Id: Vendor:$ZOPEN_VENDOR BuildRev:$commit $(date +"%Y-%m-%d %H:%M:%S %Z") \$";
 
-  # Defines zoslib_env_hook
-  cat << zz > "${output}"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#pragma convert("IBM-1047")
-char __zopen_identifier[] = "$iden";
-#pragma convert(pop)
-
-#define PROJECT_ROOT_STR "PROJECT_ROOT"
-
-__attribute__((visibility("default"))) int zoslib_env_hook(char*) __attribute__((used));
-
-__attribute__((visibility("default"))) int zoslib_env_hook(char* root_dir) {
-char* envar_value;
-char* value_str;
-char* pos;
-long size;
-
-// Avoid setting environment variables during build time because they do not hold correct values
-// and should only be used from the installed location.
-// To avoid setting environment variables during build time, we need to guard it
-// by checking if ZOPEN_IN_ZOPEN_BUILD is set to the current build process setting.
-// But this also meant that any dependent tools that set envars via zoslib env hooks would avoid setting those environment variables, effectively breaking them.
-if ((envar_value = getenv("ZOPEN_IN_ZOPEN_BUILD")) &&
-    strcmp(envar_value, "${ZOPEN_IN_ZOPEN_BUILD}") == 0) {
-  return 0;
-}
-zz
-
-  # Process input
+  # Process input and generate rule function calls in a temporary file
+  rules_tmp="${zoslib_hooks_dir}/rules.tmp"
+  rm -f "${rules_tmp}"
+  touch "${rules_tmp}"
+  
   if [ -n "${zoslib_env}" ]; then
-  echo "${zoslib_env}" | while read line; do
-    # If its a comment, skip the line
-    if [ "${line}" != "${line#\#}" ]; then
-        continue
-    fi
-    # The line is of this form (no spaces allowed):
-    # some var|some action|some value
-    #        |set|
-    #        |overrideset|
-    if [ $(echo "${line}" | awk -F '|' '{print NF-1}') -ne 2 ]; then
-      printError "${line} must have 2 '|' seperators only"
-    fi
-    var=$(echo ${line} | cut -d '|' -f 1)
-    action=$(echo ${line} | cut -d '|' -f 2)
-    value=$(echo ${line} | cut -d '|' -f 3)
-    projectRootCount=$(echo "${value}" | awk -F "PROJECT_ROOT" '{print NF-1}')
+    echo "${zoslib_env}" | while read -r line; do
+      # If its a comment or empty, skip the line
+      case "${line}" in
+        \#*|"") continue ;;
+      esac
+      
+      # Validate format: exactly 2 separators
+      case "${line}" in
+        *\|*\|*\|*) printError "${line} must have 2 '|' separators only" ;;
+        *\|*\|*) ;;
+        *) printError "${line} must have 2 '|' separators only" ;;
+      esac
+      
+      # Parse fields using IFS
+      oldIFS="$IFS"
+      IFS='|'
+      read -r var action value <<EOF
+${line}
+EOF
+      IFS="$oldIFS"
 
-    if [ "${action}" = "unset" ]; then
-      echo "unsetenv(\"${var}\");" >> "${output}"
-    elif [ "${action}" = "set" -o "${action}" = "overrideset" ]; then
-      forceset="0"
-      if [ "${action}" = "overrideset" ]; then
-        forceset="1";
+      if [ "${action}" = "unset" ]; then
+        echo "  unsetenv(\"${var}\");" >> "${rules_tmp}"
+      elif [ "${action}" = "set" -o "${action}" = "overrideset" ]; then
+        forceset="0"
+        if [ "${action}" = "overrideset" ]; then
+          forceset="1";
+        fi
+        echo "  set_env_var(\"${var}\", \"${value}\", root_dir, ${forceset});" >> "${rules_tmp}"
+      elif [ "${action}" = "prepend" ]; then
+        echo "  prepend_env_var(\"${var}\", \"${value}\", root_dir);" >> "${rules_tmp}"
+      else
+        printError "${action} is not valid, must be one of set, unset, or prepend"
       fi
-      cat << zz >> "${output}"
-    value_str = "${value}";
-    size = PATH_MAX;
-    envar_value = (char*)malloc(size);
-    memset(envar_value, 0, size);
-
-    while (1) {
-      pos = strstr(value_str, PROJECT_ROOT_STR);
-      if (pos != NULL) {
-        size_t length_before_project_root = pos - value_str;
-        strncat(envar_value, value_str, length_before_project_root);
-        strcat(envar_value, root_dir);
-        value_str = pos + sizeof(PROJECT_ROOT_STR) - 1;
-      } else {
-        strcat(envar_value, value_str);
-        break;
-      }
-    }
-
-    if (!getenv("${var}") || ${forceset}) {
-      if (getenv("__ZOPEN_DEBUG"))
-        fprintf(stderr, "Setting variable %s=%s\n", "${var}", envar_value);
-      if (setenv("${var}", envar_value, 1) != 0) {
-        fprintf(stderr, "Error: Setting environment variable %s=%s\n", "${var}", envar_value);
-        exit(1);
-      }
-    }
-    free(envar_value);
-zz
-    elif [ "${action}" = "prepend" ]; then
-      cat << zz >> "${output}"
-{
-    value_str = "${value}";
-    char* existing = getenv("${var}");
-    size = strlen(value_str) + (existing ? strlen(existing) : 0) + strlen(root_dir) * ${projectRootCount} + 2;
-    envar_value = (char*)malloc(size);
-    memset(envar_value, 0, size);
-
-    // Substitute PROJECT_ROOT with root_dir
-    char* substituted = (char*)malloc(strlen(value_str) + strlen(root_dir) * ${projectRootCount} + 1);
-    substituted[0] = '\0';
-    char* tmp = value_str;
-    while (1) {
-      pos = strstr(tmp, PROJECT_ROOT_STR);
-      if (pos != NULL) {
-        size_t len = pos - tmp;
-        strncat(substituted, tmp, len);
-        strcat(substituted, root_dir);
-        tmp = pos + sizeof(PROJECT_ROOT_STR) - 1;
-      } else {
-        strcat(substituted, tmp);
-        break;
-      }
-    }
-
-    if (!existing || !strstr(existing, substituted)) {
-      if (existing && *existing) {
-        snprintf(envar_value, size, "%s:%s", substituted, existing);
-      } else {
-        snprintf(envar_value, size, "%s", substituted);
-      }
-
-      if (getenv("__ZOPEN_DEBUG"))
-        fprintf(stderr, "Setting ${var} (deduped): %s\n", envar_value);
-
-      if (setenv("${var}", envar_value, 1) != 0) {
-        fprintf(stderr, "Error: Setting environment variable ${var}=%s\n", envar_value);
-        exit(1);
-      }
-    }
-
-    free(substituted);
-    free(envar_value);
-}
-zz
-    else
-      printError "${action} is not valid, must be one of set, unset, or prepend"
-    fi
-
-  done
+    done
   fi
 
-  echo "" >> "${output}"
-  echo "return 0;" >> "${output}"
-  echo "}" >> "${output}"
+  # Apply sed substitutions on the template to create the final source file
+  sed -e "s|@ZOPEN_IDENTIFIER@|${iden}|g" \
+      -e "s|@ZOPEN_IN_ZOPEN_BUILD@|${ZOPEN_IN_ZOPEN_BUILD}|g" \
+      -e "/@ZOSLIB_ENV_RULES@/r ${rules_tmp}" \
+      -e "/@ZOSLIB_ENV_RULES@/d" \
+      "${MYDIR}/../data/zoslib_env_hook.c.template" > "${output}"
+
+  rm -f "${rules_tmp}"
 
   # xlclang pragma linkage does not work
   if [ "${CC}" = "xlclang" ]; then
