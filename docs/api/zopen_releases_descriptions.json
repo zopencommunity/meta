@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2026-08-18T13:07:50+00:00Z",
+  "generation_timestamp_utc": "2026-08-18T14:20:14+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -359,6 +359,7 @@
     "numpy": "Fundamental package for array computing in Python",
     "lapack": "Reference LAPACK for z/OS - dense linear algebra, built with IBM XL Fortran",
     "nlohmann-json": "JSON for Modern C++",
-    "fortran": "Fortran compiler wrappers for zopen builds on z/OS"
+    "fortran": "Fortran compiler wrappers for zopen builds on z/OS",
+    "scipy": "Fundamental algorithms for scientific computing in Python"
   }
 }
