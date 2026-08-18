@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2026-08-18T16:20:59+00:00Z",
+  "generation_timestamp_utc": "2026-08-18T17:20:50+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -360,6 +360,7 @@
     "lapack": "Reference LAPACK for z/OS - dense linear algebra, built with IBM XL Fortran",
     "nlohmann-json": "JSON for Modern C++",
     "fortran": "Fortran compiler wrappers for zopen builds on z/OS",
-    "scipy": "Fundamental algorithms for scientific computing in Python"
+    "scipy": "Fundamental algorithms for scientific computing in Python",
+    "pandas": "Powerful data structures for data analysis, time series, and statistics in Python"
   }
 }
