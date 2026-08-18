@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2026-08-17T21:19:55+00:00Z",
+  "generation_timestamp_utc": "2026-08-18T04:13:06+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -356,6 +356,8 @@
     "libjpeg-turbo": "libjpeg-turbo for z/OS: JPEG codec",
     "pillow": "Pillow for z/OS: imaging library with JPEG and PNG",
     "cffi": "Foreign function interface for calling C from Python",
-    "numpy": "Fundamental package for array computing in Python"
+    "numpy": "Fundamental package for array computing in Python",
+    "xlfortran": "IBM XL Fortran toolchain wrappers for zopen builds on z/OS",
+    "lapack": "Reference LAPACK for z/OS - dense linear algebra, built with IBM XL Fortran"
   }
 }
