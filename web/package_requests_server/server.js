@@ -2364,7 +2364,7 @@ function createApp(options = {}) {
       const effectiveContactEmail = contactEmail ?? existing.contact_email;
       const effectiveShowRequesterPublicly = showRequesterPublicly ?? Boolean(existing.show_requester_publicly);
       const effectiveShowGithubPublicly = showGithubPublicly ?? Boolean(existing.show_github_publicly);
-      const effectiveInstallCommand = installCommand ?? (existing.install_command ||
+      let effectiveInstallCommand = installCommand ?? (existing.install_command ||
         (status === "available" ? defaultInstallCommand(effectivePackageName, effectiveArtifactKind) : ""));
       const effectivePackageVersion = packageVersion ?? existing.package_version;
       const effectivePackageArchitecture = packageArchitecture ?? existing.package_architecture;
@@ -2373,6 +2373,9 @@ function createApp(options = {}) {
       const effectiveInstallationNotes = installationNotes ?? existing.installation_notes;
       const effectiveVerificationCommand = verificationCommand ?? existing.verification_command;
       const effectiveResolutionKind = resolutionKind ?? existing.resolution_kind;
+      if (!effectiveInstallCommand && effectiveResolutionKind === "upstream_compatible" && effectiveEcosystem === "python") {
+        effectiveInstallCommand = `pip install ${effectivePackageName}`;
+      }
       let effectiveGithubUserId = existing.github_user_id || null;
       if (ownerGithubLoginProvided) {
         if (!ownerGithubLogin) {
@@ -2398,8 +2401,11 @@ function createApp(options = {}) {
         response.status(400).json({ error: "Choose a type for the published artifact." });
         return;
       }
-      if (status === "available" && !effectivePortRepositoryUrl && !effectiveArtifactUrl) {
-        response.status(400).json({ error: "Available requests must include a port repository or published artifact link." });
+      if (
+        status === "available" && !effectivePortRepositoryUrl && !effectiveArtifactUrl &&
+        !(effectiveResolutionKind === "upstream_compatible" && effectiveUpstreamUrl)
+      ) {
+        response.status(400).json({ error: "Available requests must include a port repository, package artifact, or upstream URL that works directly." });
         return;
       }
       const now = new Date().toISOString();

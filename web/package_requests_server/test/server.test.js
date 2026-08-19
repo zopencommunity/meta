@@ -529,3 +529,20 @@ test("bulk creates valid requests and reports row-level duplicates and errors", 
   assert.equal(publicBody.requests.every((item) => item.requesterName === ""), true);
   assert.equal(publicBody.requests.every((item) => !Object.hasOwn(item, "contactEmail")), true);
 });
+
+test("resolves an upstream-compatible Python package without requiring a zopen artifact", async () => {
+  const upstreamOnly = await insertTestRequest("jsonschema", "python");
+  const response = await fetch(`${baseUrl}/api/requests/${upstreamOnly.id}`, {
+    method: "PATCH",
+    headers: { Authorization: "Bearer test-admin-token", "Content-Type": "application/json" },
+    body: JSON.stringify({
+      status: "available",
+      resolutionKind: "upstream_compatible",
+      upstreamUrl: "https://pypi.org/project/jsonschema/",
+    }),
+  });
+  assert.equal(response.status, 200);
+  const resolved = (await response.json()).request;
+  assert.equal(resolved.resolutionKind, "upstream_compatible");
+  assert.equal(resolved.installCommand, "pip install jsonschema");
+});
