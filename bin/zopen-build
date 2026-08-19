@@ -1012,6 +1012,75 @@ _zopen_python_check() {
   return ${_zopen_python_check_rc}
 }
 
+# Make the console scripts pip just wrote actually runnable.
+#
+# Two separate things stop them working, and a port that ships one only finds
+# out when a consumer executes it:
+#
+#   1. pip writes the shebang naming the interpreter it installed from, which
+#      for a zopen build is the venv -- deleted when the build ends. The script
+#      then points at a path that exists on no machine, and the consumer sees
+#      "binary or interpreter not executable", which reads like a corrupt
+#      binary. Rewrite it to the primary interpreter's absolute path.
+#      "/usr/bin/env python3" is not an option: a zopen environment puts no
+#      python3 on PATH.
+#
+#   2. z/OS only honours the shebang of an ASCII-tagged script when
+#      _BPXK_AUTOCVT=ON, which a consumer need not have set; the shell then
+#      runs the file as a shell script and reports "FSUM7332 syntax error".
+#      An EBCDIC-tagged script is honoured either way, and the interpreters
+#      here read such a file correctly.
+#
+# Measured, with a script whose only job was to print:
+#
+#   ASCII + ISO8859-1 tag   autocvt off: FAIL   on: OK
+#   ASCII + untagged        autocvt off: FAIL   on: FAIL
+#   EBCDIC + IBM-1047 tag   autocvt off: OK     on: OK
+_zopen_python_fix_console_scripts() {
+  _fcs_primary="$1"
+  _fcs_bin="${ZOPEN_INSTALL_DIR}/lib/python/bin"
+  [ -d "${_fcs_bin}" ] || return 0
+
+  _fcs_interp=$(_zopen_python_interpreter_path "${_fcs_primary}") || {
+    printSoftError "Could not resolve the interpreter for ${_fcs_primary}"
+    return 1
+  }
+
+  for _fcs_script in "${_fcs_bin}/"*; do
+    [ -f "${_fcs_script}" ] || continue
+
+    # Rewrite the shebang, and say whether this file had one. Anything without
+    # a shebang is left exactly as it is -- converting a data file to EBCDIC
+    # would corrupt it. Byte-level, because these scripts are ASCII and this
+    # shell is EBCDIC.
+    _fcs_rewrote=$("${_fcs_interp}" -c 'import sys
+path, interp = sys.argv[1], sys.argv[2]
+data = open(path, "rb").read()
+end = data.find(b"\n")
+if not data.startswith(b"#!") or end == -1:
+    print("no")
+    sys.exit(0)
+open(path, "wb").write(b"#!" + interp.encode() + data[end:])
+print("yes")
+' "${_fcs_script}" "${_fcs_interp}") || {
+      printSoftError "Could not rewrite the shebang in ${_fcs_script}"
+      return 1
+    }
+    [ "${_fcs_rewrote}" = "yes" ] || continue
+
+    iconv -f ISO8859-1 -t IBM-1047 "${_fcs_script}" > "${_fcs_script}.ebcdic" \
+      && mv "${_fcs_script}.ebcdic" "${_fcs_script}" || {
+      rm -f "${_fcs_script}.ebcdic"
+      printSoftError "Could not convert ${_fcs_script} for execution"
+      return 1
+    }
+    chtag -tc IBM-1047 "${_fcs_script}"
+    chmod +x "${_fcs_script}"
+    printVerbose "Fixed console script $(basename "${_fcs_script}")"
+  done
+  return 0
+}
+
 _zopen_python_install() {
   mkdir -p "${ZOPEN_INSTALL_DIR}/lib/python"
   mkdir -p "${ZOPEN_INSTALL_DIR}/bin"
@@ -1032,6 +1101,7 @@ _zopen_python_install() {
 
   # Install the built wheel to the target directory
   pip install --no-deps --target="${ZOPEN_INSTALL_DIR}/lib/python" "${_pv_wheel}"
+  _zopen_python_fix_console_scripts "${_pv_primary}" || return 1
   # Symlink any scripts into bin/ so they are on PATH
   for f in "${ZOPEN_INSTALL_DIR}/lib/python/bin/"*; do
     [ -e "$f" ] || continue
