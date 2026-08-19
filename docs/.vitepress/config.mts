@@ -113,6 +113,7 @@ export default defineConfig({
         collapsed: false,
         items: [
           { text: "Using Python Packages", link: "/Guides/PythonPackages" },
+          { text: "Contributing Python Packages", link: "/Guides/PythonContributing" },
           { text: "Porting Python Packages", link: "/Guides/PythonPorting" },
           { text: "Candidate Status", link: "/Guides/PythonCandidates" },
         ],
@@ -126,6 +127,7 @@ export default defineConfig({
         text: "Contributing",
         collapsed: false,
         items: [
+          { text: "Contributing Python Packages", link: "/Guides/PythonContributing" },
           { text: "Porting Guide", link: "/Guides/Porting" },
           { text: "Leveraging the zoslib Library", link: "/Guides/Zoslib" },
           { text: "Troubleshooting", link: "/Guides/CommonSolutions" },

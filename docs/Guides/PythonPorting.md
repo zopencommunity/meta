@@ -4,6 +4,11 @@ How `zopen-build`'s Python build system works, what it does for you, and the
 things that reliably catch people out. Read this before writing a `buildenv`
 for a Python package.
 
+For the full contribution path—from proving that a port is needed through the
+Python-specific repository request, pull request, publication, and ongoing
+maintenance—start with
+**[Contributing Python packages to z/OS](/Guides/PythonContributing)**.
+
 ## The short version
 
 ::: tip Porting with an AI assistant

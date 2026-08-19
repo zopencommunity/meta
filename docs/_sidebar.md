@@ -17,6 +17,7 @@
 - Reference
   - [zopen](/reference/zopen-reference.md)
 - Contributing
+  - [Contributing Python packages](/Guides/PythonContributing.md)
   - [Porting guide](/Guides/Porting.md)
   - [Leveraging the zoslib library](/Guides/Zoslib.md)
   - [Troubleshooting](/Guides/CommonSolutions.md)

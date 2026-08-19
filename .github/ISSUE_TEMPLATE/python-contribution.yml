@@ -1,0 +1,119 @@
+name: "Python Package Port Contribution"
+title: "[New Python Port]: <package-name>"
+description: Request a repository for a Python package you intend to make work on z/OS.
+labels: ["port-repo-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form when you intend to contribute the port. If you only need a package, use the [package request page](https://zopen.community/PackageRequests) instead.
+
+        Before opening this issue, try installing and importing the package on z/OS with the zopen wheel index and constraints. Pure-Python packages and packages with optional accelerators may already work without a zopen-specific port.
+
+        Keep the package name after the colon in the issue title. After approval, automation uses it to create `<package-name>port`.
+
+  - type: input
+    id: package-name
+    attributes:
+      label: Python package name
+      description: Use the canonical distribution name from PyPI.
+      placeholder: pydantic-core
+    validations:
+      required: true
+
+  - type: input
+    id: pypi-url
+    attributes:
+      label: PyPI project URL
+      placeholder: https://pypi.org/project/pydantic-core/
+    validations:
+      required: true
+
+  - type: input
+    id: upstream-url
+    attributes:
+      label: Upstream source repository
+      description: Link to the repository where source, tests, and licensing can be reviewed.
+      placeholder: https://github.com/example/project
+    validations:
+      required: true
+
+  - type: dropdown
+    id: implementation
+    attributes:
+      label: Package implementation
+      description: Select the most significant native component, if any.
+      options:
+        - Pure Python
+        - C or C++ extension
+        - Rust extension / maturin
+        - Cython extension
+        - Mixed or another native build
+        - Not yet known
+    validations:
+      required: true
+
+  - type: dropdown
+    id: current-result
+    attributes:
+      label: Current result on z/OS
+      options:
+        - pip install fails
+        - Installation succeeds but import fails
+        - Import succeeds but tests or required functionality fail
+        - A native or transitive dependency is unavailable
+        - A working z/OS prototype now succeeds with my changes
+    validations:
+      required: true
+
+  - type: input
+    id: python-versions
+    attributes:
+      label: Python versions tested or targeted
+      description: zopen currently builds against the installed 3.12, 3.13, and 3.14 interpreters unless a port explicitly narrows the matrix.
+      placeholder: "3.12, 3.13, 3.14"
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: z/OS test evidence
+      description: Include the install/import/test commands, the relevant error, and what you believe needs porting. Remove credentials and private system information.
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Native and Python dependencies
+      description: List compiled libraries, build tools, Python packages, and known transitive blockers. Note which are already available from zopen or IBM Python.
+
+  - type: textarea
+    id: approach
+    attributes:
+      label: Proposed contribution approach
+      description: Describe patches, build-system changes, wheel strategy, tests, or upstream work you expect to contribute.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Contributor confirmation
+      options:
+        - label: I intend to contribute and help maintain this port rather than only request the package.
+          required: true
+        - label: I checked the package request board, Python candidate status, and zopen wheel index for an existing solution.
+          required: true
+        - label: I tested the upstream package and my prototype on z/OS with the documented zopen pip configuration and included the evidence above.
+          required: true
+        - label: I reviewed the upstream license and can contribute under the zopen community contribution requirements.
+          required: true
+
+  - type: textarea
+    id: additional-information
+    attributes:
+      label: Additional information
+      description: Add related requests, upstream issues or pull requests, architecture notes, or offers of testing help.

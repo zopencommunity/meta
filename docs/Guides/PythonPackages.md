@@ -282,7 +282,9 @@ second, and it does not consult `PIP_CONSTRAINT` or the wheel index at all.
 If a package you need is not in the index, it either has not been ported or
 cannot be. [Python candidate status](/Guides/PythonCandidates) records which,
 measured by actually attempting the install on z/OS rather than inferred from
-metadata. [Porting Python packages](/Guides/PythonPorting) covers adding one.
+metadata. [Contributing Python packages](/Guides/PythonContributing) covers the
+community workflow for adding one, and
+[Porting Python packages](/Guides/PythonPorting) covers the build mechanics.
 
 ## Reporting problems and giving feedback
 
