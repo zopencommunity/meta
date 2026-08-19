@@ -66,6 +66,59 @@ Responsibility follows stewardship rather than the act of requesting or voting f
 
 A requester is not automatically responsible for implementation, although testing and contribution are encouraged. Package availability also does not guarantee indefinite maintenance. Maintenance depends on active contributors and project health, and a package may need a new maintainer or be identified as stale, deprecated, or unavailable.
 
+## Consuming and Contributing
+
+The community welcomes both people who use packages and people who contribute
+them. These are different forms of participation and carry different
+expectations.
+
+### Consuming packages
+
+Consumers may install, evaluate, use, test, document, and report problems with
+community packages without becoming responsible for their implementation or
+maintenance. A download, package request, vote, bug report, or testing result is
+not an agreement to contribute code or provide support.
+
+Consumers and participating organizations are responsible for deciding whether
+a package is appropriate for their own environment. This includes evaluating
+compatibility, licensing, provenance, security findings, operational risk, and
+the package's documented maintenance state. **Available** means that the
+community has published or identified a usable installation path; it is not a
+warranty, certification, service-level agreement, or guarantee of fitness for a
+particular purpose.
+
+Useful consumer participation includes reporting reproducible results,
+documenting use cases, identifying regressions, and offering environment-specific
+testing. Consumers should distinguish upstream defects from z/OS porting,
+packaging, or infrastructure defects so that reports reach the appropriate
+project.
+
+### Contributing packages
+
+Contributors who propose a new port are expected to provide enough technical
+evidence for review, comply with project licensing and Developer Certificate of
+Origin requirements, follow the contribution and Code of Conduct policies, and
+submit changes through the public review and testing process. Contributors should
+avoid creating a z/OS-specific port when the upstream package already works
+through the documented installation path.
+
+Once a contribution is accepted, stewardship normally includes maintaining the
+z/OS build and patches, tracking relevant upstream changes and dependencies,
+responding to reasonable technical reports as availability permits, and helping
+keep package status and limitations accurate. This is a good-faith community
+expectation, not a promise of continuous availability or a permanent personal
+obligation.
+
+A contributor may reduce or end their involvement. They should communicate the
+change where practical, document known issues, and help identify or transfer
+access to another maintainer. If no maintainer is available, the community may
+mark a package stale, deprecated, unavailable, or in need of stewardship rather
+than imply support that does not exist.
+
+Contribution does not transfer responsibility for upstream functionality to the
+zopen community, and an individual's contribution does not create a support
+commitment from their employer.
+
 ## Members
 
 The current members of the TSC are listed on the [team page](docs/team.md).

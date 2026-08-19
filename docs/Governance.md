@@ -35,6 +35,60 @@ Package-level work is shared among the people closest to it:
 
 Responsibility follows stewardship, not the act of requesting or voting for a package. A requester is not automatically responsible for implementing it, although testing and contribution are encouraged.
 
+## Consuming and contributing
+
+The community welcomes both package consumers and contributors. These are
+different forms of participation with different expectations.
+
+| Participation | What the community asks |
+| --- | --- |
+| **Consume** | Evaluate compatibility, licensing, provenance, security, operational risk, and maintenance state for your environment. Share reproducible problems or test results when practical. |
+| **Contribute** | Demonstrate that a port is needed, provide reviewable code and technical evidence, meet licensing and testing requirements, and help steward accepted z/OS-specific work. |
+
+### Consuming packages
+
+Anyone may install, evaluate, use, test, document, or report problems with a
+community package without becoming its maintainer. A download, request, vote,
+bug report, or testing result is not an agreement to contribute code or provide
+support.
+
+**Available** means the community has published or identified a usable
+installation path. It is not a warranty, certification, service-level agreement,
+or guarantee that a package is suitable for a particular production environment.
+Consumers and participating organizations remain responsible for their own
+technical, security, licensing, and operational assessment. See
+[Using Python packages on z/OS](/Guides/PythonPackages) for the documented Python
+installation and verification path.
+
+When reporting a problem, provide a reproducible command, relevant versions and
+environment information, and the observed result. Where possible, distinguish
+an upstream defect from a z/OS port, packaging, or repository issue so it reaches
+the right maintainers.
+
+### Contributing packages
+
+New-port contributors should provide enough technical evidence for review,
+comply with licensing and Developer Certificate of Origin requirements, submit
+changes through public review and testing, and avoid creating a z/OS-specific
+port when the upstream package already works through the documented installation
+path. The [general porting guide](/Guides/Porting) and
+[Python package contribution guide](/Guides/PythonContributing) describe those
+paths.
+
+Accepted contributions normally carry a good-faith stewardship expectation:
+maintain the z/OS build and patches, follow relevant upstream and dependency
+changes, respond to reasonable technical reports as availability permits, and
+keep package status and limitations accurate. This is not a promise of continuous
+availability or an irreversible lifetime obligation.
+
+Contributors may step back. They should communicate that change where practical,
+document known issues, and help transfer access or identify another maintainer.
+If stewardship is unavailable, the community may accurately mark a package
+stale, deprecated, unavailable, or in need of a maintainer rather than imply
+support that does not exist. Contribution also does not transfer upstream
+responsibility to zopen or create a support obligation for the contributor's
+employer.
+
 ## How decisions are made
 
 The TSC seeks consensus during meetings. If consensus cannot be reached, a simple-majority vote decides a motion. Outside meetings, voting takes place in the TSC's designated communication channel under the quorum requirements in the TSC charter, and a two-thirds majority is required.
@@ -62,10 +116,11 @@ Maintainers and the TSC may consider:
 Vote count is one input, not the sole deciding factor. **Accepted** means a request is suitable for the community backlog and may still be awaiting a contributor. **In progress** means someone has taken responsibility for moving the port forward.
 
 The discussion and activity timeline can provide use cases, testing offers,
-technical evidence, questions, and maintainer updates. Community contributions
-are moderated before publication and remain advisory; they do not create a
-delivery obligation or replace the project's decision process. Maintainer posts
-are visibly identified, and all participation is subject to the Code of Conduct.
+technical evidence, questions, and maintainer updates. Signed-in community
+contributions appear immediately and remain advisory; they do not create a
+delivery obligation or replace the project's decision process. Maintainers retain
+exception controls for inappropriate content, maintainer posts are visibly
+identified, and all participation is subject to the Code of Conduct.
 
 Repository synchronization may identify a possible match for a requested package, but a maintainer reviews the package identity and artifact before marking the request **Available**.
 
