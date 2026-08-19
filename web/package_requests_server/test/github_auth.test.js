@@ -61,9 +61,18 @@ test("uses GitHub identity to own and edit package requests and discussion posts
       showGithubPublicly: true,
     }),
   });
-  const guestRequest = (await guestRequestResponse.json()).request;
-  assert.equal(guestRequest.showGithubPublicly, false);
-  assert.equal(guestRequest.githubRequester, null);
+  assert.equal(guestRequestResponse.status, 401);
+  assert.match((await guestRequestResponse.json()).error, /Sign in with GitHub/);
+  const guestRequest = await new Promise((resolve, reject) => {
+    const now = new Date().toISOString();
+    database.run(
+      `INSERT INTO package_requests
+       (package_name, normalized_name, ecosystem, upstream_url, description, status, created_at, updated_at)
+       VALUES ('Guest Vote Claim', 'guest-vote-claim', 'general', '', 'Existing request for vote claiming.', 'proposed', ?, ?)`,
+      [now, now],
+      function inserted(error) { if (error) reject(error); else resolve({ id: this.lastID }); },
+    );
+  });
   const guestVoteResponse = await fetch(`${baseUrl}/api/requests/${guestRequest.id}/vote`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
@@ -155,6 +164,13 @@ test("uses GitHub identity to own and edit package requests and discussion posts
     profileUrl: "https://github.com/octo-zopen",
   });
 
+  const anonymousPostResponse = await fetch(`${baseUrl}/api/requests/${created.id}/posts`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ kind: "question", body: "Anonymous comment" }),
+  });
+  assert.equal(anonymousPostResponse.status, 401);
+
   const anonymousEdit = await fetch(`${baseUrl}/api/me/requests/${created.id}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
@@ -175,21 +191,19 @@ test("uses GitHub identity to own and edit package requests and discussion posts
     headers: { "Content-Type": "application/json", Cookie: sessionCookie },
     body: JSON.stringify({ kind: "technical_note", body: "Owned note", showGithubPublicly: true }),
   });
-  assert.equal(postResponse.status, 202);
+  assert.equal(postResponse.status, 201);
   const post = (await postResponse.json()).post;
   assert.equal(post.ownedByCurrentUser, true);
+  assert.equal(post.moderationStatus, "published");
   assert.deepEqual(post.githubAuthor, {
     login: "octo-zopen",
     profileUrl: "https://github.com/octo-zopen",
   });
 
-  const publishPostResponse = await fetch(`${baseUrl}/api/admin/posts/${post.id}`, {
-    method: "PATCH",
-    headers: { Authorization: "Bearer test-admin-token", "Content-Type": "application/json" },
-    body: JSON.stringify({ moderationStatus: "published" }),
+  const adminPostsResponse = await fetch(`${baseUrl}/api/admin/posts?status=published`, {
+    headers: { Authorization: "Bearer test-admin-token" },
   });
-  assert.equal(publishPostResponse.status, 200);
-  const adminPublishedPost = (await publishPostResponse.json()).post;
+  const adminPublishedPost = (await adminPostsResponse.json()).posts.find((item) => item.id === post.id);
   assert.equal(adminPublishedPost.ownerGithubId, 4242);
   assert.equal(adminPublishedPost.ownerGithubLogin, "octo-zopen");
   const publishedActivityResponse = await fetch(`${baseUrl}/api/requests/${created.id}/activity`);

@@ -368,12 +368,14 @@ test("changes status only with the admin token", async () => {
       portRepositoryUrl: "https://github.com/zopencommunity/example-toolport",
       artifactKind: "pulp_python",
       artifactUrl: "https://packages.example.com/pypi/example-tool/",
+      resolutionKind: "upstream_compatible",
       maintainerNote: "The port and Python wheel are now available.",
     }),
   });
   assert.equal(available.status, 200);
   const published = await available.json();
   assert.equal(published.request.artifactKind, "pulp_python");
+  assert.equal(published.request.resolutionKind, "upstream_compatible");
   assert.match(published.request.installCommand, /PIP_EXTRA_INDEX_URL/);
   assert.equal(typeof published.request.availableAt, "string");
 

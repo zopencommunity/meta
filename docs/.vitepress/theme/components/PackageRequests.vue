@@ -30,6 +30,7 @@ interface PackageRequest {
   useCase: string;
   canHelpTest: boolean;
   status: RequestStatus;
+  resolutionKind: string;
   voteCount: number;
   voted: boolean;
   discussionCount: number;
@@ -217,8 +218,19 @@ const statuses: Record<RequestStatus, { label: string; detail: string }> = {
   accepted: { label: "Accepted", detail: "Suitable for the backlog; awaiting or coordinating contributors" },
   in_progress: { label: "In progress", detail: "Someone is working on the port" },
   available: { label: "Available", detail: "The package has been released" },
-  declined: { label: "Declined", detail: "Not currently planned" },
+  declined: { label: "Not proceeding", detail: "Not currently actionable or planned; see the maintainer explanation" },
 };
+const resolutionLabels: Record<string, { label: string; detail: string }> = {
+  zopen_release: { label: "Released by zopen", detail: "A zopen package or wheel is available" },
+  upstream_compatible: { label: "Already works", detail: "The upstream package works on z/OS without a zopen-specific port" },
+  already_provided: { label: "Already provided", detail: "The capability is available through another package or supported path" },
+  duplicate: { label: "Covered elsewhere", detail: "Another request tracks the same need" },
+  not_actionable: { label: "Not currently actionable", detail: "There is not enough actionable porting work at this time" },
+};
+
+function requestStatus(request: Pick<PackageRequest, "status" | "resolutionKind">) {
+  return resolutionLabels[request.resolutionKind] || statuses[request.status];
+}
 
 const ecosystems: Record<string, string> = {
   general: "General / CLI",
@@ -641,7 +653,7 @@ async function loadMySubmissions() {
 }
 
 function signInWithGithub() {
-  window.location.assign(`${apiUrl.value}/auth/github`);
+  window.location.assign(`${apiUrl.value}/auth/github?returnTo=${encodeURIComponent(window.location.href)}`);
 }
 
 async function signOut() {
@@ -744,6 +756,10 @@ function resetPostForm() {
 }
 
 function openPostForm(requestId: number) {
+  if (!authUser.value) {
+    signInWithGithub();
+    return;
+  }
   resetPostForm();
   postFormRequestId.value = requestId;
   postFeedbackRequestId.value = requestId;
@@ -775,7 +791,7 @@ async function submitCommunityPost(requestId: number) {
     }
     resetPostForm();
     postFormRequestId.value = null;
-    postMessage.value = "Your contribution is awaiting maintainer review. This browser can edit or delete it.";
+    postMessage.value = "Your contribution is now public and belongs to your GitHub account.";
   } catch (error) {
     postError.value = error instanceof Error ? error.message : "The contribution could not be submitted.";
   } finally {
@@ -786,7 +802,7 @@ async function submitCommunityPost(requestId: number) {
 async function editCommunityPost(requestId: number, post: ActivityItem | OwnPost) {
   if (typeof post.id !== "number") return;
   const body = window.prompt(
-    "Edit your contribution. Published edits return to the moderation queue.",
+    "Edit your contribution. Signed-in edits remain public.",
     post.body || "",
   );
   if (body === null || body.trim() === post.body) return;
@@ -952,6 +968,10 @@ async function toggleVote(request: PackageRequest) {
 }
 
 function openForm() {
+  if (!authUser.value) {
+    signInWithGithub();
+    return;
+  }
   bulkFormOpen.value = false;
   formOpen.value = true;
   submitError.value = "";
@@ -965,6 +985,10 @@ function closeForm() {
 }
 
 function openBulkForm() {
+  if (!authUser.value) {
+    signInWithGithub();
+    return;
+  }
   formOpen.value = false;
   bulkFormOpen.value = true;
   bulkError.value = "";
@@ -1134,8 +1158,8 @@ onMounted(async () => {
           Request an open-source package, support the tools you need, and follow its progress.
         </p>
         <div class="hero-actions">
-          <button class="primary-button" type="button" @click="openForm">Request a package</button>
-          <button class="secondary-button" type="button" @click="openBulkForm">Request several</button>
+          <button class="primary-button" type="button" @click="openForm">{{ authUser ? "Request a package" : "Sign in to request" }}</button>
+          <button class="secondary-button" type="button" @click="openBulkForm">{{ authUser ? "Request several" : "Sign in for bulk requests" }}</button>
           <a class="secondary-button" :href="withBase('/Latest')">Browse available tools</a>
           <a
             class="secondary-button"
@@ -1160,8 +1184,8 @@ onMounted(async () => {
         </div>
       </div>
       <div v-else>
-        <strong>Want to edit submissions later?</strong>
-        <span>Sign in with GitHub before submitting. Guest discussion posts still use this browser's private edit key.</span>
+        <strong>Contribute with your GitHub identity</strong>
+        <span>Sign in once to submit and edit requests, join discussions immediately, and manage everything from any device. Browsing and voting remain open.</span>
       </div>
       <div class="identity-actions">
         <button v-if="authUser" class="secondary-button compact" type="button" @click="showMine = !showMine">
@@ -1558,8 +1582,8 @@ onMounted(async () => {
             <div class="request-card-title">
               <h3><a :href="requestDetailUrl(request)">{{ request.packageName }}</a></h3>
               <span class="ecosystem-pill">{{ ecosystems[request.ecosystem] || request.ecosystem }}</span>
-              <span class="status-pill" :class="`status-${request.status}`" :title="statuses[request.status].detail">
-                {{ statuses[request.status].label }}
+              <span class="status-pill" :class="`status-${request.status}`" :title="requestStatus(request).detail">
+                {{ requestStatus(request).label }}
               </span>
             </div>
             <p>{{ request.description }}</p>
@@ -1759,7 +1783,7 @@ onMounted(async () => {
                 @submit.prevent="submitCommunityPost(request.id)"
               >
                 <div class="post-form-heading">
-                  <div><strong>Add to the discussion</strong><span>Posts are reviewed before appearing publicly.</span></div>
+                  <div><strong>Add to the discussion</strong><span>Your signed-in contribution appears immediately.</span></div>
                   <button type="button" class="close-post-form" aria-label="Close contribution form" @click="postFormRequestId = null">×</button>
                 </div>
                 <div class="post-form-grid">
@@ -1800,13 +1824,12 @@ onMounted(async () => {
                 </label>
                 <p class="post-privacy">
                   Your email is visible only to maintainers.
-                  <template v-if="authUser">This contribution will belong to your GitHub account.</template>
-                  <template v-else>An edit secret is stored in this browser so you can modify or delete your post.</template>
+                  This contribution will belong to your GitHub account and appear immediately.
                 </p>
                 <div class="form-actions">
                   <button class="secondary-button compact" type="button" @click="postFormRequestId = null">Cancel</button>
                   <button class="primary-button compact" type="submit" :disabled="postSubmitting">
-                    {{ postSubmitting ? "Submitting…" : "Submit for review" }}
+                    {{ postSubmitting ? "Publishing…" : "Publish contribution" }}
                   </button>
                 </div>
               </form>
@@ -1815,7 +1838,7 @@ onMounted(async () => {
                 class="secondary-button compact add-contribution"
                 type="button"
                 @click="openPostForm(request.id)"
-              >Add information or offer help</button>
+              >{{ authUser ? "Add information or offer help" : "Sign in to join the discussion" }}</button>
             </section>
           </div>
         </article>

@@ -29,6 +29,7 @@ interface AdminRequest {
   installationNotes: string;
   verificationCommand: string;
   artifactLastSyncedAt: string | null;
+  resolutionKind: string;
   maintainerNote: string;
   voteCount: number;
   discussionCount: number;
@@ -150,7 +151,15 @@ const statuses: Record<RequestStatus, string> = {
   accepted: "Accepted",
   in_progress: "In progress",
   available: "Available",
-  declined: "Declined",
+  declined: "Not proceeding",
+};
+const resolutions: Record<string, string> = {
+  "": "No final outcome yet",
+  zopen_release: "Released by zopen",
+  upstream_compatible: "Already works upstream—no port needed",
+  already_provided: "Already provided another way",
+  duplicate: "Covered by another request",
+  not_actionable: "Not currently actionable",
 };
 const artifacts: Record<string, string> = {
   "": "No published artifact",
@@ -174,6 +183,14 @@ const postKinds: Record<string, string> = {
 const visibleRequests = computed(() =>
   requests.value.filter((request) => statusFilter.value === "all" || request.status === statusFilter.value),
 );
+
+function applyResolutionStatus(request: AdminRequest) {
+  if (["zopen_release", "upstream_compatible", "already_provided"].includes(request.resolutionKind)) {
+    request.status = "available";
+  } else if (["duplicate", "not_actionable"].includes(request.resolutionKind)) {
+    request.status = "declined";
+  }
+}
 const orderedPulpMatches = computed(() => [...pulpMatches.value].sort((left, right) => {
   if (left.requestId !== right.requestId) return right.requestId - left.requestId;
   return Number(isPrimaryMatch(right)) - Number(isPrimaryMatch(left));
@@ -474,6 +491,7 @@ async function saveRequest(request: AdminRequest) {
         zosCompatibility: request.zosCompatibility,
         installationNotes: request.installationNotes,
         verificationCommand: request.verificationCommand,
+        resolutionKind: request.resolutionKind,
         maintainerNote: request.maintainerNote,
       }),
     });
@@ -590,12 +608,12 @@ onMounted(async () => {
         <div class="moderation-heading">
           <div>
             <p class="eyebrow">Community discussion</p>
-            <h2>Moderation queue <span v-if="pendingPostTotal" class="pending-total">{{ pendingPostTotal }}</span></h2>
-            <p>Review community contributions before they appear in public request timelines.</p>
+            <h2>Comment controls <span v-if="pendingPostTotal" class="pending-total">{{ pendingPostTotal }}</span></h2>
+            <p>GitHub-authenticated comments publish immediately. Use these controls only to hide, restore, edit, or remove exceptional content.</p>
           </div>
           <div class="filters">
             <select v-model="moderationFilter" aria-label="Filter community posts" @change="loadModerationPosts">
-              <option value="pending">Pending review</option>
+              <option value="pending">Legacy pending posts</option>
               <option value="published">Published</option>
               <option value="hidden">Hidden</option>
               <option value="all">All posts</option>
@@ -667,7 +685,7 @@ onMounted(async () => {
               <div class="title-row">
                 <h3><a :href="requestDetailUrl(request)" target="_blank">{{ request.packageName }} ↗</a></h3>
                 <span class="pill">{{ ecosystems[request.ecosystem] || request.ecosystem }}</span>
-                <span class="pill">{{ statuses[request.status] }}</span>
+                <span class="pill">{{ resolutions[request.resolutionKind] || statuses[request.status] }}</span>
               </div>
               <p>{{ request.description }}</p>
               <div class="meta">
@@ -698,6 +716,7 @@ onMounted(async () => {
               <label><span>Public GitHub attribution</span><select v-model="request.showGithubPublicly"><option :value="false">Hidden</option><option :value="true">Show linked GitHub login</option></select></label>
               <p v-if="request.ownerGithubId" class="github-owner-id">GitHub user ID: <code>{{ request.ownerGithubId }}</code></p>
               <label><span>Status</span><select v-model="request.status"><option v-for="(label, key) in statuses" :key="key" :value="key">{{ label }}</option></select></label>
+              <label><span>Outcome / resolution</span><select v-model="request.resolutionKind" @change="applyResolutionStatus(request)"><option v-for="(label, key) in resolutions" :key="key" :value="key">{{ label }}</option></select></label>
               <label><span>Published artifact type</span><select v-model="request.artifactKind"><option v-for="(label, key) in artifacts" :key="key" :value="key">{{ label }}</option></select></label>
               <label><span>zopen port repository URL</span><input v-model.trim="request.portRepositoryUrl" type="url" placeholder="https://github.com/zopencommunity/exampleport" /></label>
               <label><span>Published artifact / Pulp URL</span><input v-model.trim="request.artifactUrl" type="url" placeholder="https://repo.zopen.community/pulp/content/…" /></label>

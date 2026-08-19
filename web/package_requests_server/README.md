@@ -1,6 +1,6 @@
 # Package requests server
 
-This service stores package requests, guest or GitHub-authenticated votes, and moderated discussion
+This service stores GitHub-owned package requests, guest or GitHub-authenticated votes, and public discussion
 contributions for the zopen community website. The VitePress site remains on
 GitHub Pages and calls this API from the browser.
 
@@ -217,20 +217,17 @@ progress, delivery links, relationships, discussion, and activity.
 
 Each package request has a public chronological timeline containing its creation,
 status changes, published community contributions, and verified maintainer posts.
-Community members can add a use case, offer testing or contribution help, share a
-technical note, or ask a question. These contributions enter a moderation queue
-and are not public until a maintainer publishes them. Maintainers can edit,
-publish, hide, or permanently delete a contribution and can post verified updates
-directly to the timeline.
+GitHub-authenticated community members can add a use case, offer testing or
+contribution help, share a technical note, or ask a question. Contributions
+publish immediately and remain attached to the durable GitHub user ID. There is
+no routine moderation queue. Maintainers retain exception controls to edit, hide,
+restore, or permanently delete content and can post verified updates directly to
+the timeline.
 
 A community contribution may include an optional name, organization, and contact
 email. Public attribution is opt-in; contact email is always private to
-maintainers. On submission, the API returns a one-time edit token and stores only
-its SHA-256 hash. The browser retains that token locally so the author can edit or
-delete the contribution without an account. Editing a published contribution
-returns it to the moderation queue. Clearing browser storage or moving to another
-browser loses this self-service access, but an administrator can still edit or
-remove the post.
+maintainers. Authors can edit or delete their contribution from any device while
+signed in with the same GitHub account, and signed-in edits remain public.
 
 Post bodies are rendered as plain text with safe HTTP(S) links. The API limits
 length and link count, applies per-IP submission throttling without storing IP
@@ -240,11 +237,10 @@ Conduct applies.
 
 ## GitHub sign-in and submission ownership
 
-GitHub sign-in is optional. Guest package requests continue to work, and guest
-discussion posts retain their browser-held edit token. When GitHub OAuth is
-configured, a signed-in user's new package requests and discussion contributions
-are linked to GitHub's durable numeric user ID. The user can then view **My
-submissions** and edit those items from any browser where they sign in.
+Browsing and guest voting remain open, but GitHub sign-in is required for new
+package requests and discussion contributions whenever OAuth is configured.
+Contributions are linked to GitHub's durable numeric user ID. The user can then
+view **My submissions** and edit those items from any browser where they sign in.
 Owners may permanently delete their own requests while they remain **Proposed**.
 After maintainer review begins, deletion is restricted to administrators so that
 community votes, discussion, and project history are not removed unexpectedly.

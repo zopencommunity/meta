@@ -12,6 +12,7 @@ interface RequestSummary {
 }
 
 interface PackageRequest extends RequestSummary {
+  resolutionKind: string;
   upstreamUrl: string;
   description: string;
   useCase: string;
@@ -95,13 +96,23 @@ const ecosystems: Record<string, string> = {
   go: "Go module", java: "Java / JVM", javascript: "JavaScript / npm", shell: "Shell", other: "Other",
 };
 const statuses: Record<RequestStatus, { label: string; detail: string }> = {
-  proposed: { label: "Proposed", detail: "Awaiting initial maintainer review" },
+  proposed: { label: "Proposed", detail: "Open for community interest, use cases, and contribution offers" },
   under_review: { label: "Under review", detail: "Maintainers are evaluating scope and feasibility" },
   accepted: { label: "Accepted", detail: "Accepted into the community backlog" },
   in_progress: { label: "In progress", detail: "Porting or packaging work is underway" },
   available: { label: "Available", detail: "A package or port is available" },
-  declined: { label: "Declined", detail: "Not currently planned" },
+  declined: { label: "Not proceeding", detail: "Not currently actionable or planned; see the maintainer explanation" },
 };
+const resolutionLabels: Record<string, { label: string; detail: string }> = {
+  zopen_release: { label: "Released by zopen", detail: "A zopen package or wheel is available" },
+  upstream_compatible: { label: "Already works", detail: "The upstream package works on z/OS without a zopen-specific port" },
+  already_provided: { label: "Already provided", detail: "The capability is available through another package or supported path" },
+  duplicate: { label: "Covered elsewhere", detail: "Another request tracks the same need" },
+  not_actionable: { label: "Not currently actionable", detail: "There is not enough actionable porting work at this time" },
+};
+const displayedStatus = computed(() => request.value
+  ? resolutionLabels[request.value.resolutionKind] || statuses[request.value.status]
+  : statuses.proposed);
 const postKinds: Record<string, string> = {
   use_case: "Use case", testing_offer: "Testing offer", contribution_offer: "Contribution offer",
   technical_note: "Technical information", question: "Question", maintainer_update: "Maintainer update",
@@ -275,7 +286,7 @@ async function submitPost() {
   try {
     const result = await api(`/requests/${request.value.id}/posts`, { method: "POST", body: JSON.stringify(postForm) });
     if (result.post?.id && result.editToken) savePostToken(result.post.id, result.editToken);
-    postMessage.value = "Your contribution is awaiting maintainer review.";
+    postMessage.value = "Your contribution is now public.";
     postForm.body = "";
     postOpen.value = false;
   } catch (caught) {
@@ -310,7 +321,7 @@ onMounted(async () => {
         <div class="hero-main">
           <div class="labels">
             <span class="ecosystem-label">{{ ecosystems[request.ecosystem] || request.ecosystem }}</span>
-            <span :class="['status-label', `status-${request.status}`]">{{ statuses[request.status].label }}</span>
+            <span :class="['status-label', `status-${request.status}`]">{{ displayedStatus.label }}</span>
           </div>
           <h1>{{ request.packageName }}</h1>
           <p class="description">{{ request.description }}</p>
@@ -332,7 +343,7 @@ onMounted(async () => {
       <p v-if="error" class="inline-error">{{ error }}</p>
 
       <section class="progress-card">
-        <div class="section-heading"><div><span>Current status</span><h2>{{ statuses[request.status].label }}</h2></div><p>{{ statuses[request.status].detail }}</p></div>
+        <div class="section-heading"><div><span>Current status</span><h2>{{ displayedStatus.label }}</h2></div><p>{{ displayedStatus.detail }}</p></div>
         <ol v-if="request.status !== 'declined'" class="status-progress">
           <li v-for="(step, index) in progressStatuses" :key="step" :class="{ reached: index <= progressStatuses.indexOf(request.status) }">
             <span>{{ index + 1 }}</span><strong>{{ statuses[step].label }}</strong>
@@ -416,7 +427,8 @@ onMounted(async () => {
         </ol>
 
         <p v-if="postMessage" class="success-message">{{ postMessage }}</p>
-        <button v-if="!postOpen" class="secondary-action" type="button" @click="postOpen = true">Add information or offer help</button>
+        <button v-if="!postOpen && authUser" class="secondary-action" type="button" @click="postOpen = true">Add information or offer help</button>
+        <button v-else-if="!postOpen" class="secondary-action" type="button" @click="signIn">Sign in to join the discussion</button>
         <form v-else class="post-form" @submit.prevent="submitPost">
           <div class="post-form-heading"><h3>Add to the discussion</h3><button type="button" aria-label="Close" @click="postOpen = false">×</button></div>
           <label><span>Contribution type</span><select v-model="postForm.kind"><option value="use_case">Additional use case</option><option value="testing_offer">Offer to test</option><option value="contribution_offer">Offer to contribute</option><option value="technical_note">Technical information</option><option value="question">Question</option></select></label>
@@ -427,13 +439,13 @@ onMounted(async () => {
           <label v-if="authUser" class="check"><input v-model="postForm.showGithubPublicly" type="checkbox" /><span>Show “Posted by @{{ authUser.login }}” with my GitHub profile.</span></label>
           <label class="honeypot" aria-hidden="true"><span>Website</span><input v-model="postForm.website" tabindex="-1" /></label>
           <p v-if="postError" class="inline-error">{{ postError }}</p>
-          <div class="form-actions"><button class="secondary-action" type="button" @click="postOpen = false">Cancel</button><button class="primary-action" type="submit" :disabled="postBusy">{{ postBusy ? "Submitting…" : "Submit for review" }}</button></div>
+          <div class="form-actions"><button class="secondary-action" type="button" @click="postOpen = false">Cancel</button><button class="primary-action" type="submit" :disabled="postBusy">{{ postBusy ? "Publishing…" : "Publish contribution" }}</button></div>
         </form>
       </section>
 
       <section v-if="githubEnabled" class="identity-footer">
         <template v-if="authUser"><span>Signed in as <strong>@{{ authUser.login }}</strong></span><a :href="`${withBase('/PackageRequests')}#package-request-${request.id}`">Manage your request and contributions</a></template>
-        <template v-else><span>Sign in to keep ownership of new contributions across devices.</span><button class="secondary-action" type="button" @click="signIn">Sign in with GitHub</button></template>
+        <template v-else><span>Sign in to publish contributions immediately and manage them across devices.</span><button class="secondary-action" type="button" @click="signIn">Sign in with GitHub</button></template>
       </section>
     </template>
   </main>

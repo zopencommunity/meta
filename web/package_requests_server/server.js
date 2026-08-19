@@ -39,6 +39,14 @@ const VALID_ARTIFACT_KINDS = new Set([
   "pulp_rpm",
   "other",
 ]);
+const VALID_RESOLUTION_KINDS = new Set([
+  "",
+  "zopen_release",
+  "upstream_compatible",
+  "already_provided",
+  "duplicate",
+  "not_actionable",
+]);
 const COMMUNITY_POST_KINDS = new Set([
   "use_case",
   "testing_offer",
@@ -112,6 +120,7 @@ async function initializeDatabase(database) {
       installation_notes TEXT NOT NULL DEFAULT '',
       verification_command TEXT NOT NULL DEFAULT '',
       artifact_last_synced_at TEXT,
+      resolution_kind TEXT NOT NULL DEFAULT '',
       maintainer_note TEXT NOT NULL DEFAULT '',
       acknowledged_at TEXT,
       available_at TEXT,
@@ -146,6 +155,7 @@ async function initializeDatabase(database) {
     ["installation_notes", "TEXT NOT NULL DEFAULT ''"],
     ["verification_command", "TEXT NOT NULL DEFAULT ''"],
     ["artifact_last_synced_at", "TEXT"],
+    ["resolution_kind", "TEXT NOT NULL DEFAULT ''"],
     ["maintainer_note", "TEXT NOT NULL DEFAULT ''"],
     ["acknowledged_at", "TEXT"],
     ["available_at", "TEXT"],
@@ -347,6 +357,20 @@ async function initializeDatabase(database) {
   await run(database, "CREATE INDEX IF NOT EXISTS idx_request_edits_request ON request_edits(request_id)");
   await run(database, "CREATE INDEX IF NOT EXISTS idx_pulp_artifacts_name ON pulp_artifacts(source, normalized_name)");
   await run(database, "CREATE INDEX IF NOT EXISTS idx_pulp_matches_status ON pulp_matches(status)");
+  const migrationTime = new Date().toISOString();
+  await run(
+    database,
+    `UPDATE request_posts SET moderation_status = 'published',
+       published_at = COALESCE(published_at, ?), reviewed_at = COALESCE(reviewed_at, ?)
+     WHERE moderation_status = 'pending' AND github_user_id IS NOT NULL`,
+    [migrationTime, migrationTime],
+  );
+  await run(
+    database,
+    `UPDATE request_posts SET moderation_status = 'hidden', reviewed_at = COALESCE(reviewed_at, ?)
+     WHERE moderation_status = 'pending' AND github_user_id IS NULL`,
+    [migrationTime],
+  );
 }
 
 function normalizePackageName(value) {
@@ -704,6 +728,7 @@ function mapRequest(row, includePrivate = false, currentGithubUserId = null) {
     installationNotes: row.installation_notes || "",
     verificationCommand: row.verification_command || "",
     artifactLastSyncedAt: row.artifact_last_synced_at || null,
+    resolutionKind: row.resolution_kind || "",
     maintainerNote: row.maintainer_note || "",
     acknowledgedAt: row.acknowledged_at || null,
     availableAt: row.available_at || null,
@@ -850,6 +875,7 @@ function createApp(options = {}) {
   const siteUrl = options.siteUrl ?? process.env.SITE_URL ?? "https://zopen.community/PackageRequests";
   const githubApiFetch = options.githubFetch || fetch;
   const githubAuthEnabled = Boolean(githubClientId && githubClientSecret && githubCallbackUrl);
+  const requireGithubContributions = options.requireGithubContributions ?? githubAuthEnabled;
   const callbackProtocol = githubCallbackUrl ? new URL(githubCallbackUrl).protocol : "https:";
   const cookieSecure = options.cookieSecure ?? callbackProtocol === "https:";
   const publicApiPath = options.publicApiPath ?? process.env.PUBLIC_API_PATH ?? "/api";
@@ -893,7 +919,7 @@ function createApp(options = {}) {
 
   const submissionLimiter = createRateLimiter({ limit: 5, windowMilliseconds: 60 * 60 * 1000 });
   const bulkSubmissionLimiter = createRateLimiter({ limit: 2, windowMilliseconds: 60 * 60 * 1000 });
-  const postSubmissionLimiter = createRateLimiter({ limit: 5, windowMilliseconds: 60 * 60 * 1000 });
+  const postSubmissionLimiter = createRateLimiter({ limit: 30, windowMilliseconds: 60 * 60 * 1000 });
   const voteLimiter = createRateLimiter({ limit: 60, windowMilliseconds: 60 * 1000 });
   const ownerEditLimiter = createRateLimiter({ limit: 30, windowMilliseconds: 15 * 60 * 1000 });
   const authLimiter = createRateLimiter({ limit: 20, windowMilliseconds: 15 * 60 * 1000 });
@@ -1258,6 +1284,10 @@ function createApp(options = {}) {
       response.status(400).json({ error: "Invalid package request ID." });
       return;
     }
+    if (requireGithubContributions && !request.authUser) {
+      response.status(401).json({ error: "Sign in with GitHub to join the discussion." });
+      return;
+    }
     if (cleanText(request.body?.website, 200)) {
       response.status(202).json({ accepted: true, moderationStatus: "pending" });
       return;
@@ -1280,8 +1310,8 @@ function createApp(options = {}) {
         `INSERT INTO request_posts (
           request_id, kind, body, author_name, organization, contact_email,
           show_author_publicly, show_github_publicly, author_role, moderation_status, edit_token_hash,
-          created_at, updated_at, github_user_id
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'community', 'pending', ?, ?, ?, ?)`,
+          created_at, updated_at, github_user_id, published_at, reviewed_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'community', ?, ?, ?, ?, ?, ?, ?)`,
         [
           requestId,
           validated.post.kind,
@@ -1291,10 +1321,13 @@ function createApp(options = {}) {
           validated.post.contactEmail,
           validated.post.showAuthorPublicly ? 1 : 0,
           validated.post.showGithubPublicly && request.authUser ? 1 : 0,
+          request.authUser ? "published" : "pending",
           hashEditToken(editToken),
           now,
           now,
           request.authUser?.id || null,
+          request.authUser ? now : null,
+          request.authUser ? now : null,
         ],
       );
       const row = await get(
@@ -1304,7 +1337,7 @@ function createApp(options = {}) {
          FROM request_posts post WHERE post.id = ?`,
         [result.id],
       );
-      response.status(202).json({ post: mapPost(row, true, request.authUser?.id), editToken });
+      response.status(request.authUser ? 201 : 202).json({ post: mapPost(row, true, request.authUser?.id), editToken });
     } catch (error) {
       next(error);
     }
@@ -1344,7 +1377,12 @@ function createApp(options = {}) {
     try {
       const existing = await get(database, "SELECT * FROM request_posts WHERE id = ?", [postId]);
       const ownsPost = request.authUser && Number(existing?.github_user_id) === request.authUser.id;
-      if (!existing || existing.author_role !== "community" || (!ownsPost && !editTokenMatches(request, existing))) {
+      const hasEditToken = existing && editTokenMatches(request, existing);
+      if (requireGithubContributions && !request.authUser) {
+        response.status(401).json({ error: "Sign in with GitHub to edit this contribution." });
+        return;
+      }
+      if (!existing || existing.author_role !== "community" || (!ownsPost && !hasEditToken)) {
         response.status(404).json({ error: "Post not found." });
         return;
       }
@@ -1362,11 +1400,15 @@ function createApp(options = {}) {
         return;
       }
       const now = new Date().toISOString();
+      const authenticatedEdit = Boolean(request.authUser && (ownsPost || hasEditToken));
+      const moderationStatus = authenticatedEdit ? "published" : "pending";
       await run(
         database,
         `UPDATE request_posts SET kind = ?, body = ?, author_name = ?, organization = ?,
-         contact_email = ?, show_author_publicly = ?, show_github_publicly = ?, moderation_status = 'pending',
-         updated_at = ?, published_at = NULL, reviewed_at = NULL WHERE id = ?`,
+         contact_email = ?, show_author_publicly = ?, show_github_publicly = ?, moderation_status = ?,
+         github_user_id = COALESCE(github_user_id, ?),
+         updated_at = ?, published_at = CASE WHEN ? = 'published' THEN COALESCE(published_at, ?) ELSE NULL END,
+         reviewed_at = CASE WHEN ? = 'published' THEN COALESCE(reviewed_at, ?) ELSE NULL END WHERE id = ?`,
         [
           validated.post.kind,
           validated.post.body,
@@ -1374,7 +1416,13 @@ function createApp(options = {}) {
           validated.post.organization,
           validated.post.contactEmail,
           validated.post.showAuthorPublicly ? 1 : 0,
-          validated.post.showGithubPublicly && ownsPost ? 1 : 0,
+          validated.post.showGithubPublicly && authenticatedEdit ? 1 : 0,
+          moderationStatus,
+          authenticatedEdit ? request.authUser.id : null,
+          now,
+          moderationStatus,
+          now,
+          moderationStatus,
           now,
           postId,
         ],
@@ -1995,6 +2043,10 @@ function createApp(options = {}) {
   });
 
   app.post("/api/requests", submissionLimiter, async (request, response, next) => {
+    if (requireGithubContributions && !request.authUser) {
+      response.status(401).json({ error: "Sign in with GitHub to submit a package request." });
+      return;
+    }
     const validated = validateSubmission(request.body);
     if (validated.error) {
       response.status(400).json({ error: validated.error });
@@ -2023,6 +2075,10 @@ function createApp(options = {}) {
   });
 
   app.post("/api/requests/bulk", bulkSubmissionLimiter, async (request, response, next) => {
+    if (requireGithubContributions && !request.authUser) {
+      response.status(401).json({ error: "Sign in with GitHub to submit package requests." });
+      return;
+    }
     const body = request.body && typeof request.body === "object" ? request.body : {};
     const items = body.requests;
     if (!Array.isArray(items) || items.length < 1) {
@@ -2228,6 +2284,7 @@ function createApp(options = {}) {
     const zosCompatibility = request.body.zosCompatibility === undefined ? null : cleanText(request.body.zosCompatibility, 300);
     const installationNotes = request.body.installationNotes === undefined ? null : cleanText(request.body.installationNotes, 2000);
     const verificationCommand = request.body.verificationCommand === undefined ? null : cleanText(request.body.verificationCommand, 2000);
+    const resolutionKind = request.body.resolutionKind === undefined ? null : cleanText(request.body.resolutionKind, 40);
     const packageName = request.body.packageName === undefined ? null : cleanText(request.body.packageName, 80);
     const ecosystem = request.body.ecosystem === undefined ? null : cleanText(request.body.ecosystem, 30);
     const upstreamUrl = request.body.upstreamUrl === undefined ? null : cleanText(request.body.upstreamUrl, 500);
@@ -2258,6 +2315,10 @@ function createApp(options = {}) {
       (artifactUrl !== null && artifactUrl && !validHttpUrl(artifactUrl))
     ) {
       response.status(400).json({ error: "Enter a valid published artifact type and URL." });
+      return;
+    }
+    if (resolutionKind !== null && !VALID_RESOLUTION_KINDS.has(resolutionKind)) {
+      response.status(400).json({ error: "Choose a valid request outcome." });
       return;
     }
     if (packageName !== null && !/^[a-zA-Z0-9][a-zA-Z0-9._+\s-]{0,79}$/.test(packageName)) {
@@ -2311,6 +2372,7 @@ function createApp(options = {}) {
       const effectiveZosCompatibility = zosCompatibility ?? existing.zos_compatibility;
       const effectiveInstallationNotes = installationNotes ?? existing.installation_notes;
       const effectiveVerificationCommand = verificationCommand ?? existing.verification_command;
+      const effectiveResolutionKind = resolutionKind ?? existing.resolution_kind;
       let effectiveGithubUserId = existing.github_user_id || null;
       if (ownerGithubLoginProvided) {
         if (!ownerGithubLogin) {
@@ -2353,7 +2415,7 @@ function createApp(options = {}) {
           status = ?, port_repository_url = ?, artifact_kind = ?, artifact_url = ?,
           install_command = ?, package_version = ?, package_architecture = ?,
           runtime_compatibility = ?, zos_compatibility = ?, installation_notes = ?, verification_command = ?,
-          maintainer_note = ?, acknowledged_at = ?, available_at = ?, github_user_id = ?, updated_at = ?
+          resolution_kind = ?, maintainer_note = ?, acknowledged_at = ?, available_at = ?, github_user_id = ?, updated_at = ?
          WHERE id = ?`,
         [
           effectivePackageName,
@@ -2379,6 +2441,7 @@ function createApp(options = {}) {
           effectiveZosCompatibility,
           effectiveInstallationNotes,
           effectiveVerificationCommand,
+          effectiveResolutionKind,
           effectiveMaintainerNote,
           acknowledgedAt,
           availableAt,

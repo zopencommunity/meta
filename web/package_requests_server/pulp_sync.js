@@ -325,6 +325,7 @@ async function approvePulpMatch(database, requestId, source) {
       database,
       `UPDATE package_requests SET status = 'available', artifact_kind = ?, artifact_url = ?,
        install_command = ?, package_version = ?, package_architecture = ?, artifact_last_synced_at = ?,
+       resolution_kind = 'zopen_release',
        acknowledged_at = ?, available_at = COALESCE(available_at, ?), updated_at = ? WHERE id = ?`,
       [artifactKind, match.artifact_url, installCommand, match.version || "", match.architecture || "",
         match.last_seen_at || now, acknowledgedAt, now, now, requestId],
