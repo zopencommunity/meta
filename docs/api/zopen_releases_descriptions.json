@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2026-08-19T22:56:40+00:00Z",
+  "generation_timestamp_utc": "2026-08-20T09:21:51+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -363,6 +363,7 @@
     "scipy": "Fundamental algorithms for scientific computing in Python",
     "pandas": "Powerful data structures for data analysis, time series, and statistics in Python",
     "pre-commit": "A framework for managing and maintaining multi-language pre-commit hooks",
+    "msgpack-c": "MessagePack implementation for C and C++",
     "jellyfish": "z/OS port of jellyfish (Python library for approximate and phonetic matching of strings)"
   }
 }
