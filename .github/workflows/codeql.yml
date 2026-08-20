@@ -122,5 +122,106 @@ jobs:
           ls -lrt
 
       - name: Perform CodeQL Analysis
+        id: codeql_analyze
         uses: github/codeql-action/analyze@v3
-        
+        with:
+          output: sarif-results
+
+      - name: Upload SARIF as artifact
+        id: upload_sarif
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: codeql-sarif-${{ matrix.language || inputs.languages }}
+          path: sarif-results/
+          if-no-files-found: warn
+
+      - name: Parse SARIF findings
+        id: parse_sarif
+        if: always()
+        run: |
+          SARIF_FILE=$(find sarif-results/ -name '*.sarif' 2>/dev/null | head -n 1)
+          if [ -z "$SARIF_FILE" ]; then
+            echo "total=0"            >> "$GITHUB_OUTPUT"
+            echo "error=0"           >> "$GITHUB_OUTPUT"
+            echo "warning=0"         >> "$GITHUB_OUTPUT"
+            echo "note=0"            >> "$GITHUB_OUTPUT"
+            echo "sarif_found=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "sarif_found=true" >> "$GITHUB_OUTPUT"
+          python3 << PYEOF
+          import json, os
+
+          sarif_path  = "$SARIF_FILE"
+          output_path = os.environ["GITHUB_OUTPUT"]
+
+          with open(sarif_path) as f:
+              sarif = json.load(f)
+
+          counts = {"error": 0, "warning": 0, "note": 0}
+          for run in sarif.get("runs", []):
+              for result in run.get("results", []):
+                  level = result.get("level", "warning")
+                  if level in counts:
+                      counts[level] += 1
+                  else:
+                      counts["warning"] += 1  # treat unknown levels as warnings
+
+          total = sum(counts.values())
+          with open(output_path, "a") as out:
+              out.write(f"total={total}\n")
+              out.write(f"error={counts['error']}\n")
+              out.write(f"warning={counts['warning']}\n")
+              out.write(f"note={counts['note']}\n")
+          PYEOF
+
+      - name: Create Job Summary
+        if: always()
+        run: |
+          LANGUAGE="${{ matrix.language || inputs.languages }}"
+          OUTCOME="${{ steps.codeql_analyze.outcome }}"
+          TOTAL="${{ steps.parse_sarif.outputs.total }}"
+          ERRORS="${{ steps.parse_sarif.outputs.error }}"
+          WARNINGS="${{ steps.parse_sarif.outputs.warning }}"
+          NOTES="${{ steps.parse_sarif.outputs.note }}"
+          SARIF_FOUND="${{ steps.parse_sarif.outputs.sarif_found }}"
+
+          if [ "$OUTCOME" = "success" ]; then
+            STATUS="SUCCESS"
+          else
+            STATUS="FAILED"
+          fi
+
+          {
+            echo "# CodeQL Analysis Results — \`${LANGUAGE}\`"
+            echo ""
+            echo "## Execution Status: ${STATUS}"
+            echo ""
+            echo "## Configuration"
+            echo ""
+            echo "| Setting  | Value |"
+            echo "|----------|-------|"
+            echo "| Language | \`${LANGUAGE}\` |"
+            echo "| Queries  | \`security-and-quality\` |"
+            echo "| Runner   | \`${{ runner.os }}-${{ runner.arch }}\` |"
+            echo "| Trigger  | \`${{ github.event_name }}\` |"
+            echo ""
+            echo "## Findings"
+            echo ""
+            if [ "$SARIF_FOUND" = "true" ]; then
+              echo "| Severity  | Count |"
+              echo "|-----------|------:|"
+              echo "| Error     | ${ERRORS} |"
+              echo "| Warning   | ${WARNINGS} |"
+              echo "| Note      | ${NOTES} |"
+              echo "| **Total** | **${TOTAL}** |"
+            else
+              echo "No SARIF results file found."
+            fi
+            echo ""
+            echo "Full SARIF results available in artifacts: \`codeql-sarif-${LANGUAGE}\`"
+            echo ""
+            echo "---"
+            echo "*Job summary generated at run-time*"
+          } >> "$GITHUB_STEP_SUMMARY"
