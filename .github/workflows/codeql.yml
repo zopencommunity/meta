@@ -160,7 +160,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: codeql-sarif-${{ matrix.language || inputs.languages }}
+          name: codeql-sarif-${{ inputs.languages || 'python' }}
           path: sarif-results/
           if-no-files-found: warn
 
@@ -207,7 +207,7 @@ jobs:
       - name: Create Job Summary
         if: always()
         run: |
-          LANGUAGE="${{ matrix.language || inputs.languages }}"
+          LANGUAGE="${{ inputs.languages || 'python' }}"
           OUTCOME="${{ steps.codeql_analyze.outcome }}"
           TOTAL="${{ steps.parse_sarif.outputs.total }}"
           ERRORS="${{ steps.parse_sarif.outputs.error }}"
