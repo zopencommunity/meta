@@ -110,15 +110,15 @@ jobs:
             - '**/tests/**'
 
           queries:
-            - uses: security
+            - uses: security-and-quality
           EOF
           echo "CodeQL config created"
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
-          languages: ${{ inputs.languages }}
-          build-mode: ${{ inputs.build-mode }}
+          languages: ${{ inputs.languages || 'python' }}
+          build-mode: ${{ inputs.build-mode || 'none' }}
           config-file: ./.github/codeql/codeql-config.yml
 
       - name: Clone tool repository
