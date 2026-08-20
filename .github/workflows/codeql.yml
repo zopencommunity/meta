@@ -1,6 +1,32 @@
 name: "CodeQL"
 
 on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+    inputs:
+      repo:
+        description: 'Repository to analyze (owner/name). Defaults to current repo.'
+        required: false
+        type: string
+        default: ""
+      branch:
+        description: 'Branch to analyze. Defaults to current branch.'
+        required: false
+        default: ""
+        type: string
+      languages:
+        description: 'CodeQL languages to analyze (e.g., python, c-cpp, javascript)'
+        required: false
+        type: string
+        default: 'python'
+      build-mode:
+        description: 'CodeQL build mode (none, manual, autobuild)'
+        required: false
+        type: string
+        default: 'none'
   workflow_call:
     inputs:
       repo:
@@ -84,18 +110,19 @@ jobs:
             - '**/tests/**'
 
           queries:
-            - uses: security
+            - uses: security-and-quality
           EOF
           echo "CodeQL config created"
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
-          languages: ${{ inputs.languages }}
-          build-mode: ${{ inputs.build-mode }}
+          languages: ${{ inputs.languages || 'python' }}
+          build-mode: ${{ inputs.build-mode || 'none' }}
           config-file: ./.github/codeql/codeql-config.yml
 
       - name: Clone tool repository
+        if: ${{ inputs.repo != '' }}
         run: |
           TARGET_REPO="${{ steps.repo-info.outputs.repo }}"
           echo "Target Repository: ${TARGET_REPO}"
@@ -109,6 +136,7 @@ jobs:
           fi
 
       - name: Build with zopen
+        if: ${{ inputs.repo != '' }}
         run: |
           export PATH="$PWD/meta/bin:$PATH"
           git config --global user.email "zopenCommunity@ibm.com"

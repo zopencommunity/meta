@@ -31,5 +31,3 @@ echo ""
 # Filter port repos
 echo "Repos ending with 'port':"
 echo "$response" | jq -r '.[].name' 2>/dev/null | grep 'port$'
-
-# Made with Bob
