@@ -11,4 +11,4 @@ paths-ignore:
   - "**/tests/**"
 
 queries:
-  - uses: security
+  - uses: security-and-quality
