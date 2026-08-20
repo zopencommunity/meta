@@ -222,7 +222,7 @@ jobs:
           fi
 
           {
-            echo "# CodeQL Analysis Results — \`${LANGUAGE}\`"
+            echo "# CodeQL Analysis Results"
             echo ""
             echo "## Execution Status: ${STATUS}"
             echo ""
