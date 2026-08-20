@@ -136,4 +136,4 @@ echo "Total processed: ${#TO_DELETE[@]}"
 echo ""
 echo "Done!"
 
-# Made with Bob
+
