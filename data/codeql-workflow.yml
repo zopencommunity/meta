@@ -18,7 +18,7 @@ on:
 
 jobs:
   codeql:
-    uses: Sanjana-Kondalwade/meta/.github/workflows/codeql.yml@main
+    uses: zopencommunity/meta/.github/workflows/codeql.yml@main
     secrets: inherit
     permissions:
       actions: read
