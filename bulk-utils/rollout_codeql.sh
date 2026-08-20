@@ -12,14 +12,13 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CODEQL_FILE="$SCRIPT_DIR/../data/codeql-workflow.yml"
 CODEQL_IN_REPO=".github/workflows/codeql.yml"
 
-# Target user account for testing. Change to ORG="zopencommunity" for real rollout.
-USER="Sanjana-Kondalwade"
+ORG="zopencommunity"
 BRANCH="add-codeql-workflow"
 PR_TITLE="Add CodeQL security scanning workflow"
 PR_BODY="This PR adds CodeQL security scanning to the repository.
 
 ## Changes
-- Adds \`.github/workflows/codeql.yml\` workflow that calls the centralized CodeQL workflow from \`Sanjana-Kondalwade/meta\`
+- Adds \`.github/workflows/codeql.yml\` workflow that calls the centralized CodeQL workflow from \`zopencommunity/meta\`
 - Adds CodeQL badge to README.md
 
 ## Benefits
@@ -30,7 +29,7 @@ PR_BODY="This PR adds CodeQL security scanning to the repository.
 The workflow uses the reusable workflow pattern, making it easy to maintain and update across all repositories."
 
 SKIP_REPOS=(
-  "Sanjana-Kondalwade/meta"
+  "zopencommunity/meta"
 )
 
 should_skip() {
@@ -41,8 +40,8 @@ should_skip() {
   return 1
 }
 
-echo "Fetching *port repos from $USER..."
-REPOS=$(gh repo list "$USER" --limit 300 --json nameWithOwner --jq '.[].nameWithOwner' | grep 'port$')
+echo "Fetching *port repos from $ORG..."
+REPOS=$(gh repo list "$ORG" --limit 300 --json nameWithOwner --jq '.[].nameWithOwner' | grep 'port$')
 echo "Repos found: $(echo "$REPOS" | wc -w)"
 echo "$REPOS"
 echo ""
