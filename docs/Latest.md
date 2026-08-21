@@ -6,7 +6,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
   <label for="category-filter">Filter by Category: </label>
   <select id="category-filter" onchange="filterTable()">
     <option value="All">All</option>
-    <option value="ai">Ai</option>
+    <option value="ai">AI</option>
     <option value="build_system">Build_System</option>
     <option value="compression">Compression</option>
     <option value="core">Core</option>
@@ -38,7 +38,7 @@ Note: to download the latest packages, use the [zopen package manager](/Guides/Q
 
 <div class="table-category" data-category="ai">
 
-## Ai 
+## AI
 
 <div class="tool-item-filterable" data-package-name="blis" data-searchable-text="blis Green 100.0% STABLE_blis_3689 BLAS-like Library Instantiation Software Framework for z/OS ai port" style="padding: 8px 0; border-bottom: 1px solid #eee;">
   <div class="tool-info-grid">

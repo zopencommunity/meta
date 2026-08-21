@@ -1,220 +1,123 @@
 <div v-pre class="man-page-content">
-
-<div class="header-with-back">
-  <div class="back-link">
-    <a href="./zopen-reference">← Back</a>
-  </div>
-</div>
-
 <h1 align="center">ZOPEN-PAX2RPM</h1>
 
 <h2>NAME</h2>
-<a name="NAME"></a>
 
 <p style="margin-left:11%; margin-top: 1em">zopen-pax2rpm
 &minus; manual page for zopen-pax2rpm 0.8.4</p>
 
 <h2>SYNOPSIS</h2>
-<a name="SYNOPSIS"></a>
 
 <p style="margin-left:11%; margin-top: 1em"><b>zopen-pax2rpm</b>
 &lt;pax_file&gt; [options]</p>
 
 <h2>DESCRIPTION</h2>
-<a name="DESCRIPTION"></a>
 
-<p style="margin-left:11%; margin-top: 1em">Generate an RPM
-spec file from a zz/#47;OS pax archive.</p>
+<p style="margin-left:11%; margin-top: 1em">Generate an RPM spec file from a z/OS pax archive.</p>
 
-<p style="margin-left:11%; margin-top: 1em"><b>Arguments:</b>
-pax_file</p>
-
-<p style="margin-left:22%;">Path to the pax file (e.g.,
-/pathh/#47;too/#47;file.pax or file.pax.Z)</p>
+<p style="margin-left:11%; margin-top: 1em"><b>Arguments:</b> pax_file &mdash; Path to the pax file (e.g., /path/to/file.pax or file.pax.Z)</p>
 
 <h2>OPTIONS</h2>
-<a name="OPTIONS"></a>
 
-<p style="margin-left:11%; margin-top: 1em"><b>&minus;&minus;name</b>
-&lt;name&gt;</p>
-
-<p style="margin-left:22%;">Override package name (default:
-extracted from filename)</p>
-
-<p style="margin-left:11%;"><b>&minus;&minus;version</b>
-&lt;version&gt;</p>
-
-<p style="margin-left:22%;">Override version (default:
-extracted from filename)</p>
-
-<table width="100%" border="0" rules="none" frame="void"
-       cellspacing="0" cellpadding="0">
-
-<tr valign="top" align="left">
-
-<td width="11%"></td>
-
-<td width="89%">
-
-<p style="margin-top: 1em"><b>&minus;&minus;pkg&minus;version</b>
-&lt;version&gt; Override version (alternative to
-<b>&minus;&minus;version</b>)</p></td>
+<table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
+<tr style="background-color:#f0f0f0;">
+<th style="text-align:left; border: 1px solid #ccc;">Option</th>
+<th style="text-align:left; border: 1px solid #ccc;">Description</th>
 </tr>
-
+<tr>
+<td style="border: 1px solid #ccc;"><code><b>&minus;&minus;name</b> &lt;name&gt;</code></td>
+<td style="border: 1px solid #ccc;">override package name (default: extracted from filename)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code><b>&minus;&minus;version</b> &lt;version&gt;</code></td>
+<td style="border: 1px solid #ccc;">override version (default: extracted from filename)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code><b>&minus;&minus;pkg&minus;version</b> &lt;version&gt;</code></td>
+<td style="border: 1px solid #ccc;">override version (alternative to <b>&minus;&minus;version</b>)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code><b>&minus;&minus;release</b> &lt;release&gt;</code></td>
+<td style="border: 1px solid #ccc;">override release number (default: 1)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code><b>&minus;&minus;license</b> &lt;license&gt;</code></td>
+<td style="border: 1px solid #ccc;">specify license (default: Proprietary)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code><b>&minus;&minus;summary</b> &lt;summary&gt;</code></td>
+<td style="border: 1px solid #ccc;">package summary (required)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code><b>&minus;&minus;description</b> &lt;desc&gt;</code></td>
+<td style="border: 1px solid #ccc;">package description (default: same as summary)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code><b>&minus;&minus;url</b> &lt;url&gt;</code></td>
+<td style="border: 1px solid #ccc;">project URL (default: none)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code><b>&minus;&minus;requires</b> &lt;deps&gt;</code></td>
+<td style="border: 1px solid #ccc;">package dependencies (e.g., &quot;oef &gt;= 1.1.0&quot;)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code><b>&minus;&minus;output</b> &lt;file&gt;</code></td>
+<td style="border: 1px solid #ccc;">output spec file (default: &lt;name&gt;.spec)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code><b>&minus;&minus;build</b></code></td>
+<td style="border: 1px solid #ccc;">build the RPM after generating spec file</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code><b>&minus;&minus;buildroot</b> &lt;dir&gt;</code></td>
+<td style="border: 1px solid #ccc;">RPM build root directory (default: ~/rpmbuild)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code><b>&minus;&minus;validate</b></code></td>
+<td style="border: 1px solid #ccc;">validate spec file after generation (checks syntax and runs rpmlint)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code><b>&minus;&minus;dry&minus;run</b></code></td>
+<td style="border: 1px solid #ccc;">show what would be done without actually doing it</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code><b>&minus;&minus;verbose</b></code></td>
+<td style="border: 1px solid #ccc;">enable verbose debug output</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code><b>&minus;&minus;help</b></code></td>
+<td style="border: 1px solid #ccc;">display this help message</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;"><code><b>&minus;&minus;version</b></code></td>
+<td style="border: 1px solid #ccc;">display tool version</td>
+</tr>
 </table>
 
-<p style="margin-left:11%;"><b>&minus;&minus;release</b> &lt;release&gt;</p>
+<h2>EXAMPLES</h2>
 
-<p style="margin-left:22%;">Override release number
-(default: 1)</p>
+<p style="margin-left:11%; margin-top: 1em">Generate an RPM spec from a pax file:</p>
 
-<p style="margin-left:11%;"><b>&minus;&minus;license</b>
-&lt;license&gt;</p>
+<pre style="margin-left:11%;">zopen-pax2rpm /path/to/HAMN110.runnable.pax.Z \
+  --summary "HAMN110 Runtime Package" \
+  --license "IBM" \
+  --url "https://www.ibm.com"</pre>
 
-<p style="margin-left:22%;">Specify license (default:
-Proprietary)</p>
+<h2>AUTHOR</h2>
 
-<p style="margin-left:11%;"><b>&minus;&minus;summary</b>
-&lt;summary&gt;</p>
+<p style="margin-left:11%; margin-top: 1em">Written by
+contributors to the zopen community.
+<a href="https://github.com/zopencommunity/meta/graphs/contributors" target="_blank">https://github.com/zopencommunity/meta/graphs/contributors</a></p>
 
-<p style="margin-left:22%;">Package summary (required)</p>
+<h2>REPORTING BUGS</h2>
 
-<p style="margin-left:11%;"><b>&minus;&minus;description</b>
-&lt;desc&gt;</p>
-
-<p style="margin-left:22%;">Package description (default:
-same as summary)</p>
-
-<p style="margin-left:11%;"><b>&minus;&minus;url</b>
-&lt;url&gt;</p>
-
-<p style="margin-left:22%;">Project URL (default: none)</p>
-
-<p style="margin-left:11%;"><b>&minus;&minus;requires</b>
-&lt;deps&gt;</p>
-
-<p style="margin-left:22%;">Package dependencies (e.g.,
-&quot;oef &gt;= 1.1.0&quot;)</p>
-
-<p style="margin-left:11%;"><b>&minus;&minus;output</b>
-&lt;file&gt;</p>
-
-<p style="margin-left:22%;">Output spec file (default:
-&lt;name&gt;.spec)</p>
-
-<p style="margin-left:11%;"><b>&minus;&minus;build</b></p>
-
-<p style="margin-left:22%;">Build the RPM after generating
-spec file</p>
-
-<p style="margin-left:11%;"><b>&minus;&minus;buildroot</b>
-&lt;dir&gt;</p>
-
-<p style="margin-left:22%;">RPM build root directory
-(default: ~~/#47;rpmbuild)</p>
-
-<p style="margin-left:11%;"><b>&minus;&minus;validate</b></p>
-
-<p style="margin-left:22%;">Validate spec file after
-generation (checks syntax and runs rpmlint)</p>
-
-<p style="margin-left:11%;"><b>&minus;&minus;dry&minus;run</b></p>
-
-<p style="margin-left:22%;">Show what would be done without
-actually doing it</p>
-
-<p style="margin-left:11%;"><b>&minus;&minus;verbose</b></p>
-
-<p style="margin-left:22%;">Enable verbose debug output</p>
-
-<table width="100%" border="0" rules="none" frame="void"
-       cellspacing="0" cellpadding="0">
-
-<tr valign="top" align="left">
-
-<td width="11%"></td>
-
-<td width="9%">
-
-<p><b>&minus;&minus;help</b></p></td>
-
-<td width="2%"></td>
-
-<td width="38%">
-
-<p>Display this help message</p></td>
-
-<td width="40%">
-</td>
-</tr>
-
-</table>
-
-<p style="margin-left:11%;"><b>&minus;&minus;version</b></p>
-
-<p style="margin-left:22%;">Display tool version</p>
-
-<p style="margin-left:11%; margin-top: 1em"><b>Example:</b></p>
-
-<p style="margin-left:22%;">>/#47;varr/#47;libb/#47;jenkinss/#47;workspacee/#47;Port&minus;Update&minus;Nightlyy/#47;meta_updatee/#47;binn/#47;zopen&minus;pax2rpm
-/nfsmntss/#47;bpidriverss/#47;oefv1r11/#47;os3900/#47;latestt/#47;HAMN110.runnable.pax.Z
-\</p>
-
-<table width="100%" border="0" rules="none" frame="void"
-       cellspacing="0" cellpadding="0">
-
-<tr valign="top" align="left">
-
-<td width="11%"></td>
-
-<td width="57%">
-
-<p style="margin-top: 1em"><b>&minus;&minus;summary</b>
-&quot;HAMN110 Runtime Package&quot; \</p></td>
-
-<td width="32%">
-</td>
-</tr>
-
-<tr valign="top" align="left">
-
-<td width="11%"></td>
-
-<td width="57%">
-
-<p style="margin-top: 1em"><b>&minus;&minus;license</b>
-&quot;IBM&quot; \</p></td>
-
-<td width="32%">
-</td>
-</tr>
-
-<tr valign="top" align="left">
-
-<td width="11%"></td>
-
-<td width="57%">
-
-<p style="margin-top: 1em"><b>&minus;&minus;url</b>
-&quot;https:///#47;www.ibm.com&quot;</p></td>
-
-<td width="32%">
-</td>
-</tr>
-
-</table>
+<p style="margin-left:11%; margin-top: 1em">Report bugs at
+<a href="https://github.com/zopencommunity/meta/issues." target="_blank">https://github.com/zopencommunity/meta/issues.</a></p>
 
 <p style="margin-left:11%; margin-top: 1em">This is free
 software: you are free to change and redistribute it under
 the terms of the Apache License, Version 2.0.
-&lt;https:///#47;www.apache.orgg/#47;licensess/#47;LICENSE&minus;2.0.html&gt;
+<a href="https://www.apache.org/licenses/LICENSE-2.0.html" target="_blank">https://www.apache.org/licenses/LICENSE-2.0.html</a>
 There is NO WARRANTY, to the extent permitted by law.</p>
-
-<h2>AUTHOR</h2>
-<a name="AUTHOR"></a>
-
-<p style="margin-left:11%; margin-top: 1em">Written by
-contributors to the zopen community.
-&lt;https:///#47;github.comm/#47;zopencommunityy/#47;metaa/#47;graphss/#47;contributors&gt;</p>
 
 </div>

@@ -4,18 +4,23 @@ The resulting markdown will be added to the zopen community docs
 """
 
 import json
-import requests
+import os
+import urllib.request
 from datetime import datetime, timedelta
 import argparse
 from collections import defaultdict
 
 def generate_markdown(data, output_file):
     release_info = defaultdict(lambda: defaultdict(list))
+    one_year_ago = datetime.utcnow() - timedelta(days=365)
 
     for tool, releases in data.items():
         for release in releases:
             # Correct format string for "YYYY-MM-DDTHH:MM:SSZ"
             release_date = datetime.strptime(release['date'], "%Y-%m-%dT%H:%M:%SZ")
+            # Skip releases older than one year
+            if release_date < one_year_ago:
+                continue
             # Calculate the start of the week for the release date (Monday as the first day of the week)
             week_start = release_date - timedelta(days=release_date.weekday())
             week_start_str = week_start.strftime('%Y-%m-%d')
@@ -46,11 +51,23 @@ def generate_markdown(data, output_file):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Generate markdown file for newly released tools.')
     parser.add_argument('--output', '-o', default='Newly_released_tools.md', help='Output markdown file path')
+    parser.add_argument('--input', '-i', default='', help='Input json file path or URL')
     args = parser.parse_args()
 
-    url = 'https://raw.githubusercontent.com/zopencommunity/meta/main/docs/api/zopen_releases.json'
-    response = requests.get(url)
-    data = response.json()['release_data']
+    local_file = 'meta/docs/api/zopen_releases.json'
+    if not os.path.exists(local_file):
+        local_file = 'docs/api/zopen_releases.json'
+
+    if args.input and os.path.exists(args.input):
+        with open(args.input, 'r') as f:
+            data = json.load(f)['release_data']
+    elif os.path.exists(local_file):
+        with open(local_file, 'r') as f:
+            data = json.load(f)['release_data']
+    else:
+        url = 'https://raw.githubusercontent.com/zopencommunity/meta/main/docs/api/zopen_releases.json'
+        req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+        with urllib.request.urlopen(req) as resp:
+            data = json.loads(resp.read().decode('utf-8'))['release_data']
 
     generate_markdown(data, args.output)
-

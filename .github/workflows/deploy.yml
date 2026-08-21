@@ -1,5 +1,6 @@
-# Sample workflow for building and deploying a VitePress site to GitHub Pages
-#
+# Builds and deploys the VitePress docs to GitHub Pages.
+# Works for both the canonical upstream repo (zopencommunity/meta, base="/")
+# and any fork (base="/<repo-name>/").
 name: Deploy VitePress site to Pages
 
 on:
@@ -47,11 +48,20 @@ jobs:
       - name: Install dependencies
         working-directory: docs
         run: npm ci
+      - name: Set BASE_PATH
+        run: |
+          if [ "${{ github.repository }}" = "zopencommunity/meta" ]; then
+            echo "BASE_PATH=/" >> $GITHUB_ENV
+          else
+            REPO_NAME="${{ github.repository }}"
+            REPO_NAME="${REPO_NAME##*/}"
+            echo "BASE_PATH=/${REPO_NAME}/" >> $GITHUB_ENV
+          fi
       - name: Build with VitePress
         working-directory: docs
         env:
           VITE_PACKAGE_REQUESTS_API_URL: ${{ vars.PACKAGE_REQUESTS_API_URL }}
-        run: npm run docs:build:prod
+        run: npm run docs:build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
