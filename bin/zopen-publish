@@ -52,6 +52,11 @@ printSyntax()
   echo "  --pulp-url URL            Pulp PyPI repository URL"
   echo "  --pulp-user USER          Pulp username, or set PULP_USER"
   echo "  --pulp-password PASS      Pulp password, or set PULP_PASSWORD"
+  echo "  --on-conflict POLICY      What to do when the same wheel filename is"
+  echo "                            already published with different content:"
+  echo "                            fail (default) or build-tag, which reuploads"
+  echo "                            under the next PEP 427 build tag. Published"
+  echo "                            wheels are never replaced."
   echo "  --version                 print version"
   echo ""
   echo "Environment Variables:"
@@ -189,6 +194,18 @@ processOptions() {
 
       "--pulp-url")
         PULP_URL_OPT="$2"
+        shift
+        ;;
+
+      "--on-conflict")
+        case "$2" in
+          fail | build-tag)
+            ON_CONFLICT="$2"
+            ;;
+          *)
+            printError "Unknown --on-conflict policy \"$2\"; expected fail or build-tag"
+            ;;
+        esac
         shift
         ;;
 
@@ -1025,6 +1042,249 @@ confirmPulpWheelVisible() {
   esac
 }
 
+# Resolve a same-filename-different-content conflict without ever replacing a
+# published artifact. Consumers pin the sha256 of a filename -- lockfiles,
+# --require-hashes, SBOMs, pip's cache -- so rewriting one silently invalidates
+# all of them, and Pulp serves from a published repository version where a
+# delete-then-add also opens a window that returns 404. Instead the wheel goes
+# back up under the next PEP 427 build tag, which pip prefers over the lower
+# tags while leaving the version string, and every older artifact, untouched.
+#
+# The conflict is usually not a real change: an unpinned build toolchain
+# rewrites .dist-info on its own schedule, so identical source yields different
+# bytes. Comparing what the wheel actually contains, rather than its digest,
+# keeps that from publishing a new build tag that carries no new code.
+#
+# Echoes nothing; results come back through the env file named by $4.
+resolvePulpWheelConflict() {
+  rc_upload_url="$1"
+  rc_filename="$2"
+  rc_dir="$3"
+  rc_env="$4"
+
+  rc_simple="${rc_upload_url%/legacy/}/simple/${PULP_WHL_NORMALIZED_NAME}/"
+  rc_index="${rc_dir}/index.json"
+  rc_published="${rc_dir}/published.whl"
+
+  if ! curl -sS --fail \
+    -u "${PULP_USER}:${PULP_PASSWORD}" \
+    -H 'Accept: application/vnd.pypi.simple.v1+json' \
+    -o "${rc_index}" \
+    "${rc_simple}" 2> /dev/null; then
+    printSoftError "Unable to re-read the package index at ${rc_simple}"
+    return 1
+  fi
+
+  rc_url=$(jq -r --arg f "${rc_filename}" \
+    '.files[]? | select(.filename == $f) | .url // empty' \
+    "${rc_index}" 2> /dev/null | head -1)
+  if [ -z "${rc_url}" ]; then
+    printSoftError "The index no longer lists ${rc_filename}; cannot compare contents."
+    return 1
+  fi
+  # PEP 691 permits a relative URL, resolved against the package page.
+  case "${rc_url}" in
+    http://* | https://*) ;;
+    *) rc_url="${rc_simple}${rc_url}" ;;
+  esac
+
+  if ! curl -sS --fail -L \
+    -u "${PULP_USER}:${PULP_PASSWORD}" \
+    -o "${rc_published}" \
+    "${rc_url}" 2> /dev/null; then
+    printSoftError "Unable to download the published ${rc_filename} for comparison."
+    return 1
+  fi
+
+  python3 - "${PULP_UPLOAD_WHL}" "${rc_published}" "${rc_index}" "${rc_env}" "${rc_dir}" <<'PY'
+import base64
+import csv
+import email
+import hashlib
+import io
+import json
+import pathlib
+import re
+import shlex
+import sys
+import zipfile
+
+local = pathlib.Path(sys.argv[1])
+published = pathlib.Path(sys.argv[2])
+index_json = pathlib.Path(sys.argv[3])
+out_env = pathlib.Path(sys.argv[4])
+work = pathlib.Path(sys.argv[5])
+
+# {name}-{version}(-{build})?-{python}-{abi}-{platform}.whl, where a build tag
+# is distinguished from the python tag only by starting with a digit.
+WHEEL_RE = re.compile(
+    r'^(?P<name>.+?)-(?P<ver>[^-]+)'
+    r'(?:-(?P<build>[0-9][^-]*))?'
+    r'-(?P<py>[^-]+)-(?P<abi>[^-]+)-(?P<plat>[^-]+)\.whl$'
+)
+
+# METADATA, WHEEL and RECORD are the three the toolchain rewrites by itself:
+# WHEEL carries the generator version, METADATA the metadata version and the
+# fields that come with it, and RECORD is derived from the other two. Compare
+# everything else byte-for-byte, plus the dependencies out of METADATA and the
+# compatibility tags out of WHEEL, since a change in either is a real change
+# even when no code moved.
+#
+# The tags have to be pulled out individually rather than left to the blanket
+# skip. A wheel that was renamed to -none-any without being retagged differs
+# from a correctly retagged one *only* in WHEEL's Tag lines and the RECORD
+# derived from them, so skipping the whole file made the two compare equal and
+# the republish a no-op -- which is how a malformed wheel stayed in the index
+# after the port that produced it had been fixed.
+# A compiled extension built on z/OS is never byte-identical to the last build
+# of the same source: the object carries embedded build timestamps, around 25
+# bytes of them. Comparing those bytes therefore reported new code on every
+# rebuild and earned a fresh build tag each time, which is how pydantic_core
+# accumulated eight wheels for one version that differ in nothing that runs.
+#
+# Loosening the binary comparison is not an option -- a real one-line fix moves
+# about as many bytes as a timestamp does. So when both wheels carry a
+# provenance stamp, compare the inputs that produced them instead: the port and
+# meta commits, the upstream ref, and the toolchain. Same inputs, nothing to
+# publish; any input moved, a real rebuild. Extension modules are still compared
+# by name, so one appearing or disappearing is still a change -- which is what
+# the abi3 fix looked like.
+#
+# Without a stamp on both sides this falls back to comparing every byte, the
+# behaviour that shipped before. A missing stamp costs a duplicate wheel; a
+# stamp trusted too far would hide a real change.
+STAMP = 'ZOPEN-PROVENANCE'
+BINARY_SUFFIXES = ('.so', '.dylib', '.pyd')
+
+
+def fingerprint(path):
+    payload = {}
+    requires = set()
+    tags = set()
+    stamp = None
+    generated = ('METADATA', 'WHEEL', 'RECORD')
+    with zipfile.ZipFile(path) as zf:
+        for name in zf.namelist():
+            if name.endswith('/'):
+                continue
+            base = name.rsplit('/', 1)[-1]
+            if '.dist-info/' in name and base == STAMP:
+                stamp = zf.read(name).decode('utf-8', 'replace')
+                continue
+            if '.dist-info/' in name and base in generated:
+                if base == 'METADATA':
+                    msg = email.message_from_string(
+                        zf.read(name).decode('utf-8', 'replace'))
+                    requires = set(msg.get_all('Requires-Dist') or [])
+                elif base == 'WHEEL':
+                    msg = email.message_from_string(
+                        zf.read(name).decode('utf-8', 'replace'))
+                    tags = set(msg.get_all('Tag') or [])
+                continue
+            payload[name] = hashlib.sha256(zf.read(name)).hexdigest()
+    return payload, requires, tags, stamp
+
+
+local_payload, local_requires, local_tags, local_stamp = fingerprint(local)
+published_payload, published_requires, published_tags, published_stamp = \
+    fingerprint(published)
+
+stamped = local_stamp is not None and published_stamp is not None
+if stamped:
+    # Keep the names, drop the bytes: presence still counts, contents do not.
+    def elide(payload):
+        return {name: ('binary' if name.endswith(BINARY_SUFFIXES) else digest)
+                for name, digest in payload.items()}
+
+    local_payload = elide(local_payload)
+    published_payload = elide(published_payload)
+
+values = {}
+if (local_payload == published_payload
+        and local_requires == published_requires
+        and local_tags == published_tags
+        and local_stamp == published_stamp):
+    values['CONFLICT_ACTION'] = 'noop'
+else:
+    match = WHEEL_RE.match(local.name)
+    if not match:
+        raise SystemExit('Cannot parse wheel filename: %s' % local.name)
+
+    identity = (match['name'], match['ver'],
+                match['py'], match['abi'], match['plat'])
+
+    # Highest build tag already published for this exact tag triple; an
+    # untagged wheel counts as 0, so the first bump lands on 1.
+    highest = 0
+    for entry in json.loads(index_json.read_text()).get('files', []):
+        other = WHEEL_RE.match(entry.get('filename', ''))
+        if not other:
+            continue
+        if (other['name'], other['ver'],
+                other['py'], other['abi'], other['plat']) != identity:
+            continue
+        digits = re.match(r'[0-9]+', other['build'] or '0')
+        highest = max(highest, int(digits.group()))
+    build = highest + 1
+
+    new_name = '%s-%s-%d-%s-%s-%s.whl' % (
+        match['name'], match['ver'], build,
+        match['py'], match['abi'], match['plat'])
+    target = work / new_name
+
+    with zipfile.ZipFile(local) as source:
+        infos = source.infolist()
+        files = {i.filename: source.read(i.filename)
+                 for i in infos if not i.is_dir()}
+
+    wheel_names = [n for n in files if n.endswith('.dist-info/WHEEL')]
+    record_names = [n for n in files if n.endswith('.dist-info/RECORD')]
+    if not wheel_names or not record_names:
+        raise SystemExit('Wheel is missing .dist-info/WHEEL or .dist-info/RECORD')
+    wheel_name = wheel_names[0]
+    record_name = record_names[0]
+
+    # PEP 427 requires the build tag in the filename to be repeated in WHEEL.
+    kept = [line for line in files[wheel_name].decode('utf-8').splitlines()
+            if not line.lower().startswith('build:')]
+    kept.append('Build: %d' % build)
+    files[wheel_name] = ('\n'.join(kept) + '\n').encode('utf-8')
+
+    rows = []
+    for filename in sorted(files):
+        if filename == record_name:
+            rows.append([filename, '', ''])
+        else:
+            data = files[filename]
+            digest = base64.urlsafe_b64encode(
+                hashlib.sha256(data).digest()).decode().rstrip('=')
+            rows.append([filename, 'sha256=' + digest, str(len(data))])
+    record = io.StringIO(newline='')
+    csv.writer(record).writerows(rows)
+    files[record_name] = record.getvalue().encode('utf-8')
+
+    # Reuse each ZipInfo so the rebuild stays reproducible, exactly as the
+    # metadata compatibility copy does.
+    with zipfile.ZipFile(target, 'w') as out:
+        for info in infos:
+            if info.is_dir():
+                out.writestr(info, b'')
+            else:
+                out.writestr(info, files[info.filename])
+
+    values['CONFLICT_ACTION'] = 'build-tag'
+    values['CONFLICT_WHL'] = str(target)
+    values['CONFLICT_FILENAME'] = new_name
+    values['CONFLICT_BUILD'] = str(build)
+    values['CONFLICT_SHA256'] = hashlib.sha256(target.read_bytes()).hexdigest()
+
+with out_env.open('w') as handle:
+    for key, value in values.items():
+        handle.write('%s=%s\n' % (key, shlex.quote(value)))
+PY
+  return $?
+}
+
 publishToPulp() {
   whl_basename=$(basename "${WHL_FILE}")
   pulp_upload_url=$(normalizePulpUploadUrl "${PULP_URL}")
@@ -1057,9 +1317,56 @@ publishToPulp() {
     1)
       ;;
     2)
-      # Same filename, different content. Deterministic -- retrying cannot help.
-      rm -rf "$tmp_dir"
-      return 2
+      # Same filename, different content. Deterministic -- retrying the same
+      # upload cannot help, so either stop or republish under a new build tag.
+      if [ "${ON_CONFLICT}" != "build-tag" ]; then
+        printSoftError "Re-run with --on-conflict build-tag to publish this as a new build."
+        rm -rf "$tmp_dir"
+        return 2
+      fi
+
+      conflict_env="${tmp_dir}/conflict.env"
+      if ! resolvePulpWheelConflict \
+        "${pulp_upload_url}" \
+        "${whl_basename}" \
+        "${tmp_dir}" \
+        "${conflict_env}"; then
+        rm -rf "$tmp_dir"
+        return 1
+      fi
+      . "${conflict_env}"
+
+      if [ "${CONFLICT_ACTION}" = "noop" ]; then
+        printInfo "Wheel ${whl_basename} differs only in generated metadata; the published wheel has the same contents and dependencies. Nothing to do."
+        rm -rf "$tmp_dir"
+        return 0
+      fi
+
+      printInfo "Republishing ${whl_basename} as ${CONFLICT_FILENAME} (build ${CONFLICT_BUILD}); the published wheel is left untouched."
+      PULP_UPLOAD_WHL="${CONFLICT_WHL}"
+      PULP_WHL_SHA256="${CONFLICT_SHA256}"
+      whl_basename="${CONFLICT_FILENAME}"
+
+      # The new filename can itself collide if another build published the same
+      # build tag first, so re-check before uploading.
+      checkPulpWheelAlreadyPublished \
+        "${pulp_upload_url}" \
+        "${whl_basename}" \
+        "${PULP_WHL_SHA256}"
+      case "$?" in
+        0)
+          printInfo "Wheel ${whl_basename} is already published with the same SHA256; nothing to do."
+          rm -rf "$tmp_dir"
+          return 0
+          ;;
+        1) ;;
+        *)
+          # Another publisher took this build tag. Retrying picks the next one.
+          printSoftError "Build tag ${CONFLICT_BUILD} was taken concurrently; retry to pick the next one."
+          rm -rf "$tmp_dir"
+          return 1
+          ;;
+      esac
       ;;
     3)
       rm -rf "$tmp_dir"
@@ -1192,6 +1499,7 @@ MAKE_LATEST_RELEASE=false
 RELEASE_TAG_OPT=""
 FORCE_OVERWRITE=false
 WHL_FILE=""
+ON_CONFLICT=fail
 PULP_URL_OPT=""
 PULP_USER_OPT=""
 PULP_PASSWORD_OPT=""

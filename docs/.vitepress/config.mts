@@ -20,28 +20,6 @@ export default defineConfig({
     [
       "link",
       {
-        rel: "preconnect",
-        href: "https://fonts.googleapis.com",
-      },
-    ],
-    [
-      "link",
-      {
-        rel: "preconnect",
-        href: "https://fonts.gstatic.com",
-        crossorigin: "",
-      },
-    ],
-    [
-      "link",
-      {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=IBM+Plex+Mono:wght@400;500;600&display=swap",
-      },
-    ],
-    [
-      "link",
-      {
         rel: "icon",
         type: "image/png",
         sizes: "32x32",
@@ -89,146 +67,132 @@ export default defineConfig({
       { text: "Home", link: "/" },
       { text: "Getting Started", link: "/Guides/QuickStart" },
       { text: "Available Tools", link: "/Latest" },
+      { text: "Python on z/OS", link: "/Guides/PythonPackages" },
+      { text: "Request a Package", link: "/PackageRequests" },
+      { text: "Governance", link: "/Governance" },
       { text: "Reference", link: "/reference/zopen-reference" },
     ],
 
     sidebar: [
-        {
-          text: "Getting Started",
-          collapsed: false,
-          items: [
-            { text: "Quick Start", link: "/Guides/QuickStart" },
-            { text: "Prerequisites", link: "/Guides/Pre-req" },
-            { text: "The Package Manager", link: "/Guides/ThePackageManager" },
-            { text: "Developing Tools", link: "/Guides/developing" },
-            { text: "Recommended Tools", link: "/Guides/recommended" },
-            { text: "Usage Analytics", link: "/Guides/Analytics" },
-            { text: "Updating the Docs", link: "/UpdateDocs" },
-          ],
-        },
-        {
-          text: "Available Tools and Libraries",
-          collapsed: false,
-          items: [
-            { text: "All Tools", link: "/Latest" },
-            { text: "Newly Released Packages", link: "/newly_released" },
-            { text: "Package Vulnerabilities", link: "/Vulnerabilities" },
-            {
-              text: "Status",
-              collapsed: true,
-              items: [
-                { text: "Overall Status", link: "/Progress" },
-                { text: "Currency", link: "/updatestatus" },
-                { text: "Upstreaming", link: "/upstreamstatus" },
-              ],
-            },
-            { text: "Usage Stats", link: "https://usage.zopen.community" },
-            { text: "CICD Pipeline", link: "/Guides/Testing" },
-          ],
-        },
-        {
-          text: "Reference",
-          collapsed: false,
-          items: [
-            { text: "zopen reference", link: "/reference/zopen-reference" },
-            { text: "zopen", link: "/reference/zopen" },
-            { text: "zopen-alt", link: "/reference/zopen-alt" },
-            { text: "zopen-audit", link: "/reference/zopen-audit" },
-            { text: "zopen-build", link: "/reference/zopen-build" },
-            { text: "zopen-clean", link: "/reference/zopen-clean" },
-            { text: "zopen-compare-versions", link: "/reference/zopen-compare-versions" },
-            { text: "zopen-compute-builddeps", link: "/reference/zopen-compute-builddeps" },
-            { text: "zopen-config-helper", link: "/reference/zopen-config-helper" },
-            { text: "zopen-create-cicd-job", link: "/reference/zopen-create-cicd-job" },
-            { text: "zopen-create-repo", link: "/reference/zopen-create-repo" },
-            { text: "zopen-diagnostics", link: "/reference/zopen-diagnostics" },
-            { text: "zopen-generate", link: "/reference/zopen-generate" },
-            { text: "zopen-help2man", link: "/reference/zopen-help2man" },
-            { text: "zopen-info", link: "/reference/zopen-info" },
-            { text: "zopen-init", link: "/reference/zopen-init" },
-            { text: "zopen-install", link: "/reference/zopen-install" },
-            { text: "zopen-md2man", link: "/reference/zopen-md2man" },
-            { text: "zopen-migrate-buildenv", link: "/reference/zopen-migrate-buildenv" },
-            { text: "zopen-migrate-groovy", link: "/reference/zopen-migrate-groovy" },
-            { text: "zopen-pax2rpm", link: "/reference/zopen-pax2rpm" },
-            { text: "zopen-promote", link: "/reference/zopen-promote" },
-            { text: "zopen-publish", link: "/reference/zopen-publish" },
-            { text: "zopen-query", link: "/reference/zopen-query" },
-            { text: "zopen-remove", link: "/reference/zopen-remove" },
-            { text: "zopen-split-patch", link: "/reference/zopen-split-patch" },
-            { text: "zopen-update-cacert", link: "/reference/zopen-update-cacert" },
-            { text: "zopen-usage", link: "/reference/zopen-usage" },
-            { text: "zopen-version", link: "/reference/zopen-version" },
-            { text: "zopen-whichproject", link: "/reference/zopen-whichproject" },
-            { text: "zopen-importenvs", link: "/reference/zopen-importenvs" },
-            { text: "zopen-versions", link: "/reference/zopen-versions" },
-          ],
-        },
-        {
-          text: "Contributing",
-          collapsed: false,
-          items: [
-            { text: "Porting Guide", link: "/Guides/Porting" },
-            { text: "Leveraging the zoslib Library", link: "/Guides/Zoslib" },
-            { text: "Troubleshooting", link: "/Guides/CommonSolutions" },
-            {
-              text: "Getting z/OS Access",
-              link: "https://community.ibm.com/zsystems/form/zos-program/",
-            },
-          ],
-        },
-        {
-          text: "Badges",
-          link: "/Badges",
-        },
-        {
-          text: "FAQ",
-          link: "/Guides/FAQ",
-        },
-        {
-          text: "Workshops",
-          collapsed: true,
-          items: [{ text: "Beginner", link: "/workshop/workshop" }],
-        },
-        {
-          text: "Resources",
-          collapsed: true,
-          items: [
-            {
-              text: "Discussions",
-              link: "https://github.com/zopencommunity/meta/discussions",
-            },
-            {
-              text: "Guild Meetings",
-              link: "https://github.com/zopencommunity/meta/discussions/categories/guild",
-            },
-            {
-              text: "Guild Meetings By Topics",
-              link: "/Guides/ToolsGuildMeetingLinks",
-            },
-            { text: "External Blogs", link: "/Guides/blogs" },
-          ],
-        },
-        {
-          text: "Articles",
-          collapsed: true,
-          items: [
-            { text: "Using GPG on z/OS", link: "/Guides/GpgOnZOS" },
-            { text: "Using Git on z/OS", link: "/Guides/GitOnZOS" },
-            { text: "Using Vim on z/OS", link: "/Guides/VimOnZOS" },
-            { text: "Using Bash on z/OS", link: "/Guides/BashOnZOS" },
-            { text: "Using Neovim on z/OS", link: "/Guides/NeovimOnZOS" },
-            { text: "Terminal Settings on z/OS", link: "/Guides/TerminalOnZOS" },
-          ],
-        },
-        {
-          text: "Meet the Team",
-          link: "/team",
-        },
-        {
-          text: "Success Stories",
-          link: "/SuccessStories",
-        },
+      {
+        text: "Getting Started",
+        collapsed: false,
+        items: [
+          { text: "Quick Start", link: "/Guides/QuickStart" },
+          { text: "Prerequisites", link: "/Guides/Pre-req" },
+          { text: "The Package Manager", link: "/Guides/ThePackageManager" },
+          { text: "Developing Tools", link: "/Guides/developing" },
+          { text: "Recommended Tools", link: "/Guides/recommended" },
+          { text: "Usage Analytics", link: "/Guides/Analytics" },
+          { text: "Updating the Docs", link: "/UpdateDocs" },
+        ],
+      },
+      {
+        text: "Available Tools and Libraries",
+        collapsed: false,
+        items: [
+          { text: "All Tools", link: "/Latest" },
+          { text: "Request a Package", link: "/PackageRequests" },
+          { text: "Newly Released Packages", link: "/newly_released" },
+          { text: "Package Vulnerabilities", link: "/Vulnerabilities" },
+          {
+            text: "Status",
+            collapsed: true,
+            items: [
+              { text: "Overall Status", link: "/Progress" },
+              { text: "Currency", link: "/updatestatus" },
+              { text: "Upstreaming", link: "/upstreamstatus" },
+            ],
+          },
+          { text: "Usage Stats", link: "https://usage.zopen.community" },
+          { text: "CICD Pipeline", link: "/Guides/Testing" },
+        ],
+      },
+      {
+        text: "Python on z/OS",
+        collapsed: false,
+        items: [
+          { text: "Using Python Packages", link: "/Guides/PythonPackages" },
+          { text: "Contributing Python Packages", link: "/Guides/PythonContributing" },
+          { text: "Porting Python Packages", link: "/Guides/PythonPorting" },
+          { text: "Candidate Status", link: "/Guides/PythonCandidates" },
+        ],
+      },
+      {
+        text: "Reference",
+        collapsed: false,
+        items: [{ text: "zopen", link: "/reference/zopen-reference" }],
+      },
+      {
+        text: "Contributing",
+        collapsed: false,
+        items: [
+          { text: "Contributing Python Packages", link: "/Guides/PythonContributing" },
+          { text: "Porting Guide", link: "/Guides/Porting" },
+          { text: "Leveraging the zoslib Library", link: "/Guides/Zoslib" },
+          { text: "Troubleshooting", link: "/Guides/CommonSolutions" },
+          {
+            text: "Getting z/OS Access",
+            link: "https://community.ibm.com/zsystems/form/zos-program/",
+          },
+        ],
+      },
+      {
+        text: "Badges",
+        link: "/Badges",
+      },
+      {
+        text: "Governance",
+        link: "/Governance",
+      },
+      {
+        text: "FAQ",
+        link: "/Guides/FAQ",
+      },
+      {
+        text: "Workshops",
+        collapsed: true,
+        items: [{ text: "Beginner", link: "/workshop/workshop" }],
+      },
+      {
+        text: "Resources",
+        collapsed: true,
+        items: [
+          {
+            text: "Discussions",
+            link: "https://github.com/zopencommunity/meta/discussions",
+          },
+          {
+            text: "Guild Meetings",
+            link: "https://github.com/zopencommunity/meta/discussions/categories/guild",
+          },
+          {
+            text: "Guild Meetings By Topics",
+            link: "/Guides/ToolsGuildMeetingLinks",
+          },
+          { text: "External Blogs", link: "/Guides/blogs" },
+        ],
+      },
+      {
+        text: "Articles",
+        collapsed: true,
+        items: [
+          { text: "Using GPG on z/OS", link: "/Guides/GpgOnZOS" },
+          { text: "Using Git on z/OS", link: "/Guides/GitOnZOS" },
+          { text: "Using Vim on z/OS", link: "/Guides/VimOnZOS" },
+          { text: "Using Bash on z/OS", link: "/Guides/BashOnZOS" },
+          { text: "Using Neovim on z/OS", link: "/Guides/NeovimOnZOS" },
+          { text: "Terminal Settings on z/OS", link: "/Guides/TerminalOnZOS" },
+        ],
+      },
+      {
+        text: "Meet the Team",
+        link: "/team",
+      },
+      {
+        text: "Success Stories",
+        link: "/SuccessStories",
+      },
     ],
 
     socialLinks: [

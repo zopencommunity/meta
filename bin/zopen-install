@@ -366,6 +366,28 @@ handlePackageInstall()
   tagname=$(/bin/printf "%s" "${releaseMetadata}" | jq -e -r ".tag_name" | sed "s/\([^_]*\)_.*/\1/")
   installedReleaseLine=$(validateReleaseLine "${tagname}")
 
+  # Say which release was picked, and how old the index that picked it is.
+  #
+  # Versions come from a release index regenerated on a schedule, not from a live
+  # query, so a package published since the last regeneration is invisible and
+  # resolution quietly falls back to the release before it. That is not a stale
+  # local cache -- this copy is revalidated by ETag on every run -- and no amount
+  # of waiting for a cache to expire fixes it.
+  #
+  # The failure is silent and looks like the fix did not take: a port rebuilt
+  # against a dependency published minutes earlier gets the previous build,
+  # carrying the bug that was just fixed. An age check alone would not catch it,
+  # because the index can be minutes old and still predate the release. Naming
+  # the resolved tag does -- the version actually used ends up in the log, next
+  # to the timestamp that explains why it was chosen.
+  resolvedTag=$(/bin/printf "%s" "${releaseMetadata}" | jq -e -r ".tag_name" 2> /dev/null)
+  indexGenerated=$(jq -r '.generation_timestamp_utc // empty' "${JSON_CACHE}" 2> /dev/null)
+  if [ -n "${indexGenerated}" ]; then
+    printInfo "- Resolved ${name} to ${resolvedTag} (release index generated ${indexGenerated})"
+  else
+    printInfo "- Resolved ${name} to ${resolvedTag}"
+  fi
+
   downloadURL=$(/bin/printf "%s" "${asset}" | jq -e -r '.url')
   metadataJSONURL="$(dirname "${downloadURL}")/metadata.json"
   expanded_size=$(/bin/printf "%s" "${asset}" | jq -e -r '.expanded_size')

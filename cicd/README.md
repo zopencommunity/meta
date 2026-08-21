@@ -142,6 +142,17 @@ Two consequences worth knowing:
 
 `Public Index Verification` installs only `*-py3-none-any.whl` wheels with pip; everything else is checked for presence in the index. That split is deliberate — pip-installing a z/OS wheel on the Linux agent would appear to succeed and then be broken.
 
+#### Rebuilding a version that is already published
+
+The job passes `--on-conflict build-tag`, so a rebuild of a version already in the index does not fail the pipeline. `zopen-publish` compares the two wheels by **content** rather than by digest — every entry except the three files the build toolchain generates for itself (`METADATA`, `WHEEL`, `RECORD`), plus `Requires-Dist`:
+
+* **Contents identical.** The difference is generated metadata only, so the wheel is reported as already published and nothing is uploaded. This is the common case: the build toolchain is unpinned, so a new setuptools rewrites `.dist-info` and identical source yields different bytes.
+* **Contents differ.** The wheel is uploaded as the next [PEP 427](https://peps.python.org/pep-0427/) build tag — `xxhash-3.7.0-1-cp312-none-any.whl`. pip prefers the highest build tag for a given version, so the rebuild wins, while the version users see stays `3.7.0`.
+
+Nothing already in the index is ever replaced. Deleting and re-uploading would break every consumer that pins a filename to a digest — lockfiles, `--require-hashes`, SBOMs, pip's cache — and Pulp serves from a published repository version, so delete-then-add also opens a window that answers 404.
+
+The real fix for the common case is pinning the build toolchain so identical source gives identical bytes; until then, the content comparison is what keeps a setuptools release from minting a build tag on every port.
+
 #### Required Pulp configuration
 
 The `/pypi/<base_path>/` endpoints used here are `pulp_python`'s **live API**: the simple index is generated on demand from the distribution's bound repository. No publication is involved, and `autopublish` is irrelevant to them — both `wheels` and `wheels-dev` run with `autopublish=false`. This is why the pipeline does not create publications, unlike the RPM path in `pulp_repo_setup.groovy`.

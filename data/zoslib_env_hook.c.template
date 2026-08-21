@@ -1,0 +1,136 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
+#pragma convert("IBM-1047")
+char __zopen_identifier[] = "@ZOPEN_IDENTIFIER@";
+#pragma convert(pop)
+
+#define PROJECT_ROOT_STR "PROJECT_ROOT"
+
+static void substitute_project_root(char* dest, const char* src, const char* root_dir, size_t dest_size) {
+  const char* pos;
+  dest[0] = '\0';
+  while (1) {
+    pos = strstr(src, PROJECT_ROOT_STR);
+    if (pos == NULL) {
+      if (strlen(dest) + strlen(src) < dest_size) {
+        strcat(dest, src);
+      }
+      break;
+    }
+    
+    size_t len_before = pos - src;
+    if (strlen(dest) + len_before < dest_size) {
+      strncat(dest, src, len_before);
+    }
+    
+    const char* rest = pos + strlen(PROJECT_ROOT_STR);
+    size_t skip_len = 0;
+    
+    if (strncmp(rest, "/../../", 7) == 0) {
+      const char* p = rest + 7;
+      const char* s1 = strchr(p, '/');
+      if (s1 != NULL) {
+        const char* s2 = strchr(s1 + 1, '/');
+        if (s2 == NULL) {
+          s2 = s1 + 1 + strlen(s1 + 1);
+        }
+        
+        if (s1 - p > 0 && s2 - (s1 + 1) > 0) {
+          char package_root[1024];
+          snprintf(package_root, sizeof(package_root), "%s/../../%.*s/%.*s", 
+                   root_dir, (int)(s1 - p), p, (int)(s2 - (s1 + 1)), s1 + 1);
+          
+          if (access(package_root, F_OK) == 0) {
+            skip_len = 0;
+          } else {
+            char path_flat[1024];
+            snprintf(path_flat, sizeof(path_flat), "%s%s", root_dir, s2);
+            if (access(path_flat, F_OK) == 0) {
+              skip_len = s2 - rest;
+            } else {
+              skip_len = 0; // Default to original hierarchical path if neither exists
+            }
+          }
+        }
+      }
+    }
+    
+    if (strlen(dest) + strlen(root_dir) < dest_size) {
+      strcat(dest, root_dir);
+    }
+    
+    src = rest + skip_len;
+  }
+}
+
+static void set_env_var(const char* var, const char* value, const char* root_dir, int force) {
+  char* envar_value = (char*)malloc(PATH_MAX);
+  substitute_project_root(envar_value, value, root_dir, PATH_MAX);
+  if (!getenv(var) || force) {
+    if (getenv("__ZOPEN_DEBUG")) {
+      fprintf(stderr, "Setting variable %s=%s\n", var, envar_value);
+    }
+    if (setenv(var, envar_value, 1) != 0) {
+      fprintf(stderr, "Error: Setting environment variable %s=%s\n", var, envar_value);
+      exit(1);
+    }
+  }
+  free(envar_value);
+}
+
+static void prepend_env_var(const char* var, const char* value, const char* root_dir) {
+  char* existing = getenv(var);
+  int projectRootCount = 0;
+  const char* tmp = value;
+  while ((tmp = strstr(tmp, PROJECT_ROOT_STR))) {
+    projectRootCount++;
+    tmp += strlen(PROJECT_ROOT_STR);
+  }
+  
+  size_t substituted_len = strlen(value) + strlen(root_dir) * projectRootCount + 1;
+  char* substituted = (char*)malloc(substituted_len);
+  substitute_project_root(substituted, value, root_dir, substituted_len);
+  
+  if (!existing || !strstr(existing, substituted)) {
+    size_t size = strlen(substituted) + (existing ? strlen(existing) : 0) + 2;
+    char* envar_value = (char*)malloc(size);
+    if (existing && *existing) {
+      snprintf(envar_value, size, "%s:%s", substituted, existing);
+    } else {
+      snprintf(envar_value, size, "%s", substituted);
+    }
+    
+    if (getenv("__ZOPEN_DEBUG")) {
+      fprintf(stderr, "Setting %s (deduped): %s\n", var, envar_value);
+    }
+    if (setenv(var, envar_value, 1) != 0) {
+      fprintf(stderr, "Error: Setting environment variable %s=%s\n", var, envar_value);
+      exit(1);
+    }
+    free(envar_value);
+  }
+  free(substituted);
+}
+
+__attribute__((visibility("default"))) int zoslib_env_hook(char*) __attribute__((used));
+
+__attribute__((visibility("default"))) int zoslib_env_hook(char* root_dir) {
+  char* envar_value;
+
+  // Avoid setting environment variables during build time because they do not hold correct values
+  // and should only be used from the installed location.
+  // To avoid setting environment variables during build time, we need to guard it
+  // by checking if ZOPEN_IN_ZOPEN_BUILD is set to the current build process setting.
+  // But this also meant that any dependent tools that set envars via zoslib env hooks would avoid setting those environment variables, effectively breaking them.
+  if ((envar_value = getenv("ZOPEN_IN_ZOPEN_BUILD")) &&
+      strcmp(envar_value, "@ZOPEN_IN_ZOPEN_BUILD@") == 0) {
+    return 0;
+  }
+
+  // @ZOSLIB_ENV_RULES@
+
+  return 0;
+}

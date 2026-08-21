@@ -37,6 +37,14 @@ if (!pulp_url.endsWith('/legacy/')) {
   error "PULP_URL must be a Pulp Python legacy upload endpoint ending in '/legacy/', got '${pulp_url}'."
 }
 
+// Derived from the upload URL so an overridden PULP_URL keeps everything on one
+// server. The remote is the PyPI pull-through shared by both build lines; the
+// reconcile step is a no-op when it does not exist, so a server without the
+// proxy configured is unaffected.
+def pulp_host   = pulp_url.replaceFirst(/\/pypi\/.*$/, '')
+def pulp_api    = params.PULP_API ?: "${pulp_host}/pulp/api/v3"
+def pulp_remote = params.PULP_REMOTE ?: 'pypi-proxy'
+
 node('linux') {
   try {
     stage('Setup') {
@@ -80,7 +88,10 @@ node('linux') {
         string(credentialsId: pulp_user_credential, variable: 'PULP_USER'),
         string(credentialsId: pulp_pass_credential, variable: 'PULP_PASSWORD')
       ]) {
-        withEnv(["PULP_URL=${pulp_url}"]) {
+        withEnv(["PULP_URL=${pulp_url}",
+                 "PULP_API=${pulp_api}",
+                 "PULP_REMOTE=${pulp_remote}",
+                 "PULP_INDEX=${pulp_url.replaceFirst(/legacy\/$/, 'simple/')}"]) {
           sh '''#!/bin/bash
 set -euo pipefail
 
@@ -102,12 +113,20 @@ while IFS= read -r -d '' wheel; do
   # Retry transient upload failures, matching the RPM publish job. zopen-publish
   # is safe to re-run: it re-checks the index and treats an identical wheel as a
   # no-op. Exit 2 means the failure is deterministic, so stop immediately.
+  #
+  # --on-conflict build-tag: a rebuild of an already published version must not
+  # fail the pipeline. zopen-publish compares the two wheels by content, so a
+  # wheel that differs only in generated metadata is reported as already
+  # published; anything that really changed is reuploaded under the next build
+  # tag, which pip prefers. Nothing already in the index is ever replaced. A
+  # build tag claimed concurrently comes back as exit 1, so the retry below
+  # picks the next one.
   attempt=1
   max_attempts=3
   while :; do
     set +e
     ZOPEN_DONT_PROCESS_CONFIG=1 \
-      "$publisher" --whl "$wheel" --pulp-url "$PULP_URL"
+      "$publisher" --whl "$wheel" --pulp-url "$PULP_URL" --on-conflict build-tag
     publish_rc=$?
     set -e
 
@@ -130,6 +149,274 @@ while IFS= read -r -d '' wheel; do
     sleep 5
   done
 done < <(find wheels -type f -name '*.whl' -print0)
+'''
+
+        // Keep the PyPI pull-through from shadowing what we just published.
+        //
+        // The proxy distribution merges upstream PyPI into the index, and pip
+        // resolves by version across the merged view. Left alone, PyPI's newer
+        // release of a package we build here wins -- and for a compiled port
+        // that resolves to an sdist which cannot be built on z/OS. Excluding a
+        // name from the remote makes our copy the only one pip can see.
+        //
+        // Derived from what was actually published rather than kept by hand,
+        // because a hand-maintained list is only discovered to be stale when
+        // somebody's install starts compiling from source.
+        sh '''#!/bin/bash
+set -euo pipefail
+python3 - "$PULP_API" "$PULP_REMOTE" <<'PY'
+import json, os, sys, urllib.request, base64, pathlib, re
+from urllib.parse import urljoin, urlsplit
+
+api, remote_name = sys.argv[1], sys.argv[2]
+# pulp_href comes back as a site-absolute path, not a full URL, so PATCHing it
+# directly fails with "unknown url type". Keep the scheme and host to rejoin it.
+origin = "{0.scheme}://{0.netloc}".format(urlsplit(api))
+user, password = os.environ["PULP_USER"], os.environ["PULP_PASSWORD"]
+auth = base64.b64encode(f"{user}:{password}".encode()).decode()
+
+def call(url, method="GET", body=None):
+    req = urllib.request.Request(url, method=method)
+    req.add_header("Authorization", f"Basic {auth}")
+    if body is not None:
+        req.add_header("Content-Type", "application/json")
+        body = json.dumps(body).encode()
+    with urllib.request.urlopen(req, body, timeout=60) as r:
+        return json.load(r) if r.status != 204 else None
+
+# PEP 503 normalisation: the index compares normalised names, so "pydantic_core"
+# and "Pydantic-Core" must both land on "pydantic-core" or the exclude misses.
+def normalize(n):
+    return re.sub(r"[-_.]+", "-", n).lower()
+
+published = {normalize(p.name.split("-")[0])
+             for p in pathlib.Path("wheels").glob("*.whl")}
+if not published:
+    print("no wheels published; nothing to reconcile")
+    sys.exit(0)
+
+found = call(f"{api}/remotes/python/python/?name={remote_name}")
+if not found["results"]:
+    print(f"remote '{remote_name}' does not exist; skipping "
+          "(the pull-through proxy is not configured on this server)")
+    sys.exit(0)
+remote = found["results"][0]
+current = list(remote.get("excludes") or [])
+
+# Entries carrying a version specifier are deliberate caps on third-party
+# packages (an exclude of "foo>=2.0" avoids a dependency that needs Rust). They
+# are not derivable from what we publish, so preserve them untouched.
+#
+# They deliberately are NOT copied from data/zopen-constraints.txt, even though
+# that file encodes the same policy: the two are inverses. A Pulp exclude says
+# "do not serve versions matching this", a pip constraint says "pip must choose
+# something matching this". The same intent is "foo>=2.0" here and "foo<2.0"
+# there, and a pin like "pydantic-core==2.41.5" as an exclude would hide our own
+# wheel while still serving PyPI's newer ones. Keep both in step by hand; there
+# is no safe mechanical translation.
+#
+# Note this reconcile only ever adds. When a port makes a cap unnecessary --
+# publishing cryptography retired the "mcp>=1.20.0" bound -- nothing here
+# removes it, so the exclude has to be deleted by hand or the proxy goes on
+# enforcing a ceiling the constraints file has already dropped.
+pinned = [e for e in current if re.search(r"[<>=!~]", e)]
+names = {normalize(e) for e in current if e not in pinned}
+
+missing = published - names
+if missing:
+    updated = sorted(names | published) + pinned
+    call(urljoin(origin, remote["pulp_href"]), method="PATCH", body={"excludes": updated})
+    print(f"added to excludes: {sorted(missing)}")
+    print(f"excludes now: {updated}")
+else:
+    print(f"excludes already cover: {sorted(published)}")
+
+# Excluding a name stops the proxy fetching it from PyPI. It does not remove
+# what the proxy pulled through before the exclude existed, and that copy goes
+# on being served.
+#
+# This is not hypothetical. cryptography was excluded the moment it was first
+# published, and the proxy kept serving a cryptography-50.0.0.tar.gz sdist it
+# had cached earlier -- an sdist that needs Rust and cannot be built on z/OS.
+# It stayed hidden because pip prefers a wheel at the same version when both
+# indexes are configured, so nothing failed loudly.
+#
+# So evict as well as exclude, and do it on every run rather than only when the
+# excludes changed: the package that went wrong was already correctly excluded,
+# and only its stale cache was wrong.
+dists = call(f"{api}/distributions/python/pypi/")
+cache_href = next((d.get("repository") for d in dists.get("results", [])
+                   if d.get("remote") == remote["pulp_href"] and d.get("repository")), None)
+if not cache_href:
+    print("pull-through has no cache repository; nothing to evict")
+    sys.exit(0)
+
+cache = call(urljoin(origin, cache_href))
+version = cache.get("latest_version_href")
+if not version:
+    sys.exit(0)
+
+cached = call(f"{api}/content/python/packages/?repository_version={version}&limit=1000")
+victims = [c["pulp_href"] for c in cached.get("results", [])
+           if normalize(c["name"]) in published]
+if not victims:
+    print(f"cache holds nothing for {sorted(published)}")
+    sys.exit(0)
+
+call(urljoin(origin, cache_href) + "modify/", method="POST",
+     body={"remove_content_units": victims})
+print(f"evicted {len(victims)} stale unit(s) from {cache['name']} for {sorted(published)}")
+PY
+'''
+
+        // Regenerate the published constraints file.
+        //
+        // Users who point pip at PyPI plus the wheel index need every package
+        // we build pinned to the version we serve, or PyPI's newer release
+        // wins and resolves to an sdist that cannot be built here. Those pins
+        // have to track what is actually published, so they are derived from
+        // the index rather than hand-written -- a stale pin is only noticed
+        // when somebody's install starts compiling from source.
+        //
+        // The manual half (caps on third-party packages) stays in git, where
+        // it can be reviewed. This joins the two and republishes the result.
+        sh '''#!/bin/bash
+set -euo pipefail
+python3 - "$PULP_API" "$PULP_INDEX" <<'PY'
+import base64, json, os, pathlib, re, sys, urllib.request, uuid
+from urllib.parse import urljoin, urlsplit
+
+api, index = sys.argv[1], sys.argv[2]
+origin = "{0.scheme}://{0.netloc}".format(urlsplit(api))
+auth = base64.b64encode(
+    f"{os.environ['PULP_USER']}:{os.environ['PULP_PASSWORD']}".encode()).decode()
+
+def call(url, method="GET", body=None, ctype="application/json", raw=False):
+    req = urllib.request.Request(url, method=method)
+    req.add_header("Authorization", f"Basic {auth}")
+    if body is not None:
+        req.add_header("Content-Type", ctype)
+        if not raw:
+            body = json.dumps(body).encode()
+    with urllib.request.urlopen(req, body, timeout=120) as r:
+        return json.load(r) if r.status not in (204,) else None
+
+# Every name/version the wheel index currently serves. Read from the index
+# rather than from this build's wheels, so the file describes the whole index
+# and not just whatever was published last.
+# The root page lists packages with relative hrefs: <a href="mmh3/">mmh3</a>
+simple = urllib.request.urlopen(index, timeout=60).read().decode()
+names = sorted(set(re.findall(r'href="([A-Za-z0-9._-]+)/"', simple)))
+
+# Sort versions numerically where possible; "2.10" must beat "2.9", which a
+# plain string sort gets backwards.
+def vkey(v):
+    return [int(x) if x.isdigit() else x for x in re.split(r"[.]", v)]
+
+pins = {}
+for name in names:
+    page = urllib.request.urlopen(urljoin(index, name + "/"), timeout=60).read().decode()
+    versions = set()
+    for fn in re.findall(r">([^<]+[.]whl)<", page):
+        parts = fn[:-4].split("-")
+        if len(parts) >= 4:
+            versions.add(parts[1])
+    if versions:
+        try:
+            newest = sorted(versions, key=vkey)[-1]
+        except TypeError:
+            newest = sorted(versions)[-1]
+        pins[re.sub(r"[-_.]+", "-", name).lower()] = newest
+
+# Packages whose version is chosen for them by a parent, which must not be
+# pinned here. A pin of our own cannot help -- the parent already names an exact
+# version -- and becomes an unsatisfiable conflict the moment the newest we
+# publish is not the one it asks for.
+#
+# pydantic-core is the case that showed this. pydantic pins it exactly:
+# pydantic 2.13.4 requires pydantic-core==2.46.4. With 2.46.4 and 2.48.0 both in
+# the index, the newest-wins rule above emitted 2.48.0, and every install
+# honouring this file stopped resolving:
+#
+#   ERROR: Could not find a version that satisfies pydantic-core==2.46.4
+#          (from versions: 0.0.1, 2.41.5, 2.48.0)
+#
+# which reads as a missing wheel rather than a constraint we imposed. fastapi
+# and fastmcp both failed on it while their own ports were fine.
+#
+# Leaving it unpinned still resolves to our wheel, because pydantic asks for
+# that precise version and the index has it -- verified by installing fastapi
+# with the constraint removed and getting pydantic_core 2.46.4 from the index,
+# not a source build from PyPI. It also survives the next pydantic release
+# without anyone having to remember this.
+EXACTLY_PINNED_BY_PARENT = {"pydantic-core"}
+for excluded in sorted(EXACTLY_PINNED_BY_PARENT & set(pins)):
+    print(f"  not pinning {excluded}: its version is set exactly by its parent")
+    del pins[excluded]
+
+# A cap on a package we also publish is redundant -- the generated pin already
+# constrains it -- and becomes an unsatisfiable conflict the moment the two
+# disagree, so the pin wins and the cap is dropped with a note. The cap stays in
+# git either way, because it records why the ceiling exists.
+caps, superseded = [], []
+src = pathlib.Path("data/zopen-constraints.txt")
+for line in src.read_text().splitlines():
+    stripped = line.split("#", 1)[0].strip()
+    if not stripped:
+        continue
+    cap_name = re.sub(r"[-_.]+", "-", re.split(r"[][<>=!~ ]", stripped)[0]).lower()
+    if cap_name in pins:
+        superseded.append(f"{stripped} (pinned to {pins[cap_name]} by the index)")
+    else:
+        caps.append(stripped)
+for s in superseded:
+    print(f"  cap superseded by a published pin: {s}")
+
+body = ["# GENERATED -- do not edit.",
+        "#",
+        "# Produced by the Python publish job from data/zopen-constraints.txt in",
+        "# zopencommunity/meta plus the current contents of the wheel index.",
+        "# Edit the source file, not this one.",
+        "#",
+        '#   export PIP_EXTRA_INDEX_URL="https://repo.zopen.community/pypi/wheels/simple/"',
+        f'#   export PIP_CONSTRAINT="{origin}/pulp/content/constraints/zopen-constraints.txt"',
+        "",
+        "# --- built by zopen for z/OS (generated from the wheel index) ---"]
+body += [f"{n}=={v}" for n, v in sorted(pins.items())]
+body += ["", "# --- capped to avoid unported native dependencies (from git) ---"] + caps
+NL = chr(10)
+content = (NL.join(body) + NL).encode()
+
+# Idempotent: a file repository with autopublish, served at /constraints/.
+repos = call(f"{api}/repositories/file/file/?name=constraints")
+repo = repos["results"][0] if repos["results"] else call(
+    f"{api}/repositories/file/file/", "POST",
+    {"name": "constraints", "autopublish": True})
+dists = call(f"{api}/distributions/file/file/?name=constraints")
+if not dists["results"]:
+    call(f"{api}/distributions/file/file/", "POST",
+         {"name": "constraints", "base_path": "constraints",
+          "repository": repo["pulp_href"]})
+
+CRLF = chr(13) + chr(10)
+boundary = uuid.uuid4().hex
+def part(name, value, filename=None):
+    disp = f'form-data; name="{name}"'
+    if filename:
+        disp += f'; filename="{filename}"'
+    head = f"--{boundary}{CRLF}Content-Disposition: {disp}{CRLF}{CRLF}"
+    data = value if isinstance(value, bytes) else value.encode()
+    return head.encode() + data + CRLF.encode()
+
+payload = (part("file", content, "zopen-constraints.txt")
+           + part("relative_path", "zopen-constraints.txt")
+           + part("repository", repo["pulp_href"])
+           + f"--{boundary}--{CRLF}".encode())
+call(f"{api}/content/file/files/", "POST", payload,
+     ctype=f"multipart/form-data; boundary={boundary}", raw=True)
+print(f"published constraints: {len(pins)} pins, {len(caps)} caps")
+print(f"  {origin}/pulp/content/constraints/zopen-constraints.txt")
+PY
 '''
         }
       }

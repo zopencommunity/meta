@@ -340,6 +340,41 @@ for docfile in README* LICENSE* COPYING* CHANGELOG* AUTHORS* INSTALL* NEWS*; do
     fi
 done
 
+# ==============================================================================
+# --- Define the replacement and flattening function ---
+# ==============================================================================
+replaceAndFlattenHardcodedPath() {
+  orig=$1
+  replaced=$2
+  f=$3
+
+  if /bin/sed -e "" "${f}" 2> /dev/null 1>&2; then
+    isWritable=true
+    if [ ! -w "$f" ]; then
+      isWritable=false
+      chmod "+w" "$f"
+    fi
+
+    cp "$f" "$f.tmp" && \
+    /bin/sed \
+      -e "s#${orig}/\([^/]*\)/\1#${replaced}#g" \
+      -e "s#${orig}#${replaced}#g" \
+      "$f.tmp" > "$f" && \
+    rm -f "$f.tmp"
+    if ! $isWritable; then
+      chmod "-w" "$f"
+    fi
+  fi
+}
+# ==============================================================================
+# --- Scan and replace placeholders under %{buildroot} ---
+# ==============================================================================
+echo "Flattening Zopen paths and replacing placeholders under %{buildroot}..."
+find "%{buildroot}" -type f | while read -r file; do
+    [ -L "$file" ] && continue
+    replaceAndFlattenHardcodedPath "ZOPEN_INSTALL_PREFIX" "%{_prefix}" "$file"
+done
+
 # Generate RPM file list — standard Fedora/RHEL approach:
 # Use find to enumerate every file installed under %{buildroot}, then
 # strip the buildroot prefix with sed to get package-relative paths.
@@ -359,14 +394,32 @@ find "${_BR}" \( -type f -o -type l \) -print | sed "s|^${_BR}||" | sort > "$_AL
 # otherwise RPM won't create them and packages relying on them will break.
 find "${_BR}" -type d -empty | sed "s|^${_BR}||" | sort > "$_EMPTYDIRS"
 
+# RPM splits every line of a -f filelist on whitespace, so a path containing a
+# space arrives as two entries and the second one is rejected outright:
+#     error: File must begin with "/": Busy.ani
+# Double quotes are RPM's escape for it. scipy is the package that found this --
+# it ships scipy/io/tests/data/Transparent Busy.ani, the only such name in the
+# whole distribution -- but nothing stops another port from shipping one.
+# Built from a variable rather than printf: a bare percent-s in a spec is macro
+# territory, and this text is expanded by rpmbuild before the shell ever sees it.
+_DQ='"'
+_TAB=$(printf '\t')
+_quote_path() {
+    case "$1" in
+        *" "*|*"$_TAB"*) echo "$_DQ$1$_DQ" ;;
+        *)               echo "$1" ;;
+    esac
+}
+
 # Split files into tagged buckets
 # Remove $_FILELIST.plain upfront in case a previous run left it behind.
 rm -f "$_FILELIST.plain"
 while IFS= read -r _f; do
+    _qf=$(_quote_path "$_f")
     case "$_f" in
-        %{_sysconfdir}/*) echo "%config(noreplace) $_f" >> "$_CFGFILES" ;;
-        %{_docdir}/*)     echo "%doc $_f"              >> "$_DOCFILES" ;;
-        *)                echo "$_f"                   >> "$_FILELIST.plain" ;;
+        %{_sysconfdir}/*) echo "%config(noreplace) $_qf" >> "$_CFGFILES" ;;
+        %{_docdir}/*)     echo "%doc $_qf"              >> "$_DOCFILES" ;;
+        *)                echo "$_qf"                   >> "$_FILELIST.plain" ;;
     esac
 done < "$_ALLFILES"
 
@@ -377,7 +430,7 @@ echo '%defattr(-,root,root,-)' > "$_FILELIST"
 [ -f "$_DOCFILES" ]       && cat "$_DOCFILES"        >> "$_FILELIST"
 # Emit empty directories with %dir so RPM owns and creates them at install time
 while IFS= read -r _d; do
-    [ -n "$_d" ] && echo "%dir $_d" >> "$_FILELIST"
+    [ -n "$_d" ] && echo "%dir $(_quote_path "$_d")" >> "$_FILELIST"
 done < "$_EMPTYDIRS"
 
 # Cleanup temp files

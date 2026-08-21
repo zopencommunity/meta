@@ -1,290 +1,205 @@
 # zopen community FAQ
 
-<div class="faq-section-label">General</div>
+## General
 
-<details>
-<summary>What is the zopen community?</summary>
+### What is the zopen community?
+The zopen community initiative, **now part of the Open Mainframe Project (OMP)**, was started to help modernize z/OS and encourage open source development on z/OS. Currently, we have over 200+ projects that we, along with the community, are porting to z/OS.  This [list of projects is available here](https://zopencommunity.github.io/meta/#/Latest) and includes popular tools like Git, Bash, Make, Ninja, CMake, and Vim.  To make these tools easily consumable, the zopen community provides the `zopen` package manager. All zopen community projects are hosted under the [Zopen Community organization on GitHub](https://github.com/zopencommunity) and are part of the OMP.
 
-The zopen community initiative, **now part of the Open Mainframe Project (OMP)**, was started to help modernize z/OS and encourage open source development on z/OS. Currently, we have over 200+ projects that we, along with the community, are porting to z/OS. This [list of projects is available here](https://zopencommunity.github.io/meta/#/Latest) and includes popular tools like Git, Bash, Make, Ninja, CMake, and Vim. To make these tools easily consumable, the zopen community provides the `zopen` package manager. All zopen community projects are hosted under the [Zopen Community organization on GitHub](https://github.com/zopencommunity) and are part of the OMP.
-
-</details>
-
-<details>
-<summary>What is the Open Mainframe Project's (OMP) relationship with zopen community?</summary>
-
+### What is the Open Mainframe Project's (OMP) relationship with zopen community?
 The zopen community is now a project hosted under the [Open Mainframe Project](https://openmainframeproject.org/projects/zopen-community/) (OMP), which is part of the Linux Foundation. Being part of the OMP provides zopen community with a neutral governance structure, broader community reach, and access to resources within the OMP ecosystem. This partnership strengthens the project's sustainability and its mission to advance open source on z/OS.
 
-</details>
-
-<details>
-<summary>Who maintains the zopen community project?</summary>
-
+### Who maintains the zopen community project?
 The zopen community project continues to be volunteer-driven and community-supported, now under the umbrella of the Open Mainframe Project. It is maintained and supported by volunteers from the community, including individuals and organizations passionate about open source on z/OS.
 
-</details>
+### Are the tools and commands provided by the zopen community project formally supported?
+The tools and commands offered by zopen community operate within a volunteer-driven and community-supported framework.  While being part of the OMP enhances the project's visibility and community, the support model remains community-based.  These tools and commands are primarily maintained and supported by volunteers. As such, the level of support may vary, and users are encouraged to engage with the community for assistance, report issues, and contribute to the project's development. The OMP affiliation does not imply formal commercial support, but it does signify a stronger community backing and potential for broader collaboration.
 
-<details>
-<summary>Are the tools and commands provided by the zopen community project formally supported?</summary>
+### Is the zopen community project affiliated with IBM?
+While some contributors are associated with IBM, and IBM has been a significant supporter, the zopen community project, as part of the Open Mainframe Project, is an independent, community-led initiative focused on open source on z/OS.  The project benefits from contributions from various individuals and organizations, fostering a vendor-neutral ecosystem.
 
-The tools and commands offered by zopen community operate within a volunteer-driven and community-supported framework. While being part of the OMP enhances the project's visibility and community, the support model remains community-based. These tools and commands are primarily maintained and supported by volunteers. As such, the level of support may vary, and users are encouraged to engage with the community for assistance, report issues, and contribute to the project's development. The OMP affiliation does not imply formal commercial support, but it does signify a stronger community backing and potential for broader collaboration.
+### What platforms and z/OS versions are supported?
+zopen community tools are designed to run on z/OS.  Compatibility is generally focused on actively supported z/OS versions.  While efforts are made to support a range of z/OS releases, it's recommended to consult individual project documentation or release notes for specific z/OS version compatibility.  Modern z/OS UNIX systems are the primary target.
 
-</details>
+### What is the current porting status?
+Overall status for the zopen community initiative is available [here](/Progress).  This page provides up-to-date information on the progress of porting various open source projects.
 
-<details>
-<summary>Is the zopen community project affiliated with IBM?</summary>
-
-While some contributors are associated with IBM, and IBM has been a significant supporter, the zopen community project, as part of the Open Mainframe Project, is an independent, community-led initiative focused on open source on z/OS. The project benefits from contributions from various individuals and organizations, fostering a vendor-neutral ecosystem.
-
-</details>
-
-<details>
-<summary>Does zopen community have IBM approval for installation on IBM-owned systems?</summary>
-
-zopen Community is a community-led open source initiative. While many contributors are IBM employees, the project itself is not an IBM product and is not formally vetted or certified by IBM. As such, we are not aware of a formal IBM-wide approval process for installing zopen Community on IBM-owned systems. Organizations should follow their own internal software governance and approval processes before adopting it.
-
-Regarding scenarios where systems are IBM-owned but hosted in a partner's data center, that would be governed by your organization's internal policies, so we are unfortunately not in a position to advise on that.
-
-</details>
-
-<details>
-<summary>Does zopen community provide IBM-certified builds?</summary>
-
-zopen Community does not currently provide IBM-certified builds or a separate IBM-managed repository.
-
-The [IBM Open Enterprise Foundation for z/OS](https://www.ibm.com/products/open-enterprise-foundation-zos) is a separate IBM offering with a curated set of packages and a different support model. The zopen Community repository has a broader catalog of community-maintained packages, which is why you may find packages there that are not currently included in OEF.
-
-</details>
-
-<details>
-<summary>Does zopen community offer a stable or long-term support (LTS) release channel?</summary>
-
-We understand the value of a stable or long-term support (LTS) release channel for enterprise environments. While we don't have a formal LTS offering to announce today, we appreciate the suggestion and will certainly take it into consideration as we continue to evolve the project.
-
-</details>
-
-<details>
-<summary>What platforms and z/OS versions are supported?</summary>
-
-zopen community tools are designed to run on z/OS. Compatibility is generally focused on actively supported z/OS versions. While efforts are made to support a range of z/OS releases, it's recommended to consult individual project documentation or release notes for specific z/OS version compatibility. Modern z/OS UNIX systems are the primary target.
-
-</details>
-
-<details>
-<summary>What is the current porting status?</summary>
-
-Overall status for the zopen community initiative is available [here](/Progress). This page provides up-to-date information on the progress of porting various open source projects.
-
-</details>
-
-<details>
-<summary>What are the z/OS Open Source Guild Meetings?</summary>
-
+### What are the z/OS Open Source Guild Meetings?
 The z/OS Open Source Guild meetings are monthly meetings where we cover highlights in z/OS Open Source and often feature updates from the zopen community. To view past recordings and slides, visit [https://github.com/zopencommunity/meta/discussions/categories/guild](https://github.com/zopencommunity/meta/discussions/categories/guild). These meetings are a great way to stay informed about the latest developments.
 
-</details>
+### How do I raise issues?
+For project-specific issues, please open an issue in the project's GitHub repository. For general issues or discussions, create a discussion in the [meta repository](https://github.com/zopencommunity/meta/discussions) or ask on the [System Z Enthusiasts discord channel](https://discord.com/invite/sze).  For general community questions, the Discord channel is often a good place to get quick answers.
 
-<details>
-<summary>How do I raise issues?</summary>
+### What is the license for zopen community tools?
+Zopen community projects generally follow open source licenses, with many using licenses like the Apache License 2.0.  Refer to the specific project's repository for the exact license details, usually found in a `LICENSE` file in the root of the repository.
 
-For project-specific issues, please open an issue in the project's GitHub repository. For general issues or discussions, create a discussion in the [meta repository](https://github.com/zopencommunity/meta/discussions) or ask on the [System Z Enthusiasts Discord channel](https://discord.com/invite/sze). For general community questions, the Discord channel is often a good place to get quick answers.
-
-</details>
-
-<details>
-<summary>What is the license for zopen community tools?</summary>
-
-zopen community projects generally follow open source licenses, with many using licenses like the Apache License 2.0. Refer to the specific project's repository for the exact license details, usually found in a `LICENSE` file in the root of the repository.
-
-</details>
-
-<details>
-<summary>How does zopen community handle compliance and licensing of distributed packages?</summary>
-
-Packages distributed through zopen Community retain the licenses provided by their upstream open source projects. At present, we do not perform a separate legal or compliance certification of those licenses. Organizations adopting zopen Community should review the upstream licenses and ensure they align with their internal open source policies.
-
-</details>
-
-<details>
-<summary>Where can I find a list of all ported tools?</summary>
-
+### Where can I find a list of all ported tools?
 A comprehensive list of ported tools and their status can be found on the zopen community website, often linked from the main `meta` repository. The [Progress page](/Progress) and the [Latest Releases](/Latest) table are good starting points to explore available tools.
 
-</details>
+## Package requests, governance, and responsibility
 
-<div class="faq-section-label">Consuming</div>
+The zopen community is an open, collaborative endeavor. [Package requests](/PackageRequests) and community votes help identify demand, but they do not create an obligation for any individual, organization, maintainer, or the Technical Steering Committee (TSC) to deliver or support a package. Work proceeds when contributors, infrastructure, technical feasibility, licensing, security considerations, and maintainer capacity align.
 
-<details>
-<summary>How do I consume zopen community tools?</summary>
+### What does submitting a package request mean?
 
-There are two main ways to consume zopen community tools: using the recommended [zopen package manager](/Guides/QuickStart), or by directly downloading tools. For most users, the package manager is the easier and more robust method as it handles dependency management for you.
+A request records community interest in having an open-source project available on z/OS. It begins a discussion and evaluation; it is not a commitment that the package will be ported or delivered within a particular timeframe.
 
-</details>
+### What does a vote mean?
 
-<details>
-<summary>What is the zopen package manager and why should I use it?</summary>
+A vote is an advisory signal of community interest. It helps maintainers understand relative demand, but it is not a governance vote and does not by itself determine priority or approval. Formal project decisions follow the [zopen governance process](/Governance).
 
+Signed-in votes are associated privately with the user's stable GitHub ID, allowing one vote per request across that user's devices. When a user first signs in, votes already made in that browser are transferred to the GitHub identity without being counted twice. Guest voting remains available, so vote totals are still a demand signal rather than a verified election or formal governance decision.
+
+### What should I add to a package discussion?
+
+Use the request's discussion and activity timeline to explain a concrete use case, offer testing or implementation help, share relevant technical information, or ask a package-specific question. GitHub sign-in is required and contributions appear immediately; maintainers retain exception controls to hide or remove inappropriate content. The timeline is not a support entitlement or a way to purchase priority; the [Code of Conduct](https://github.com/zopencommunity/meta/blob/main/CODE_OF_CONDUCT.md) applies.
+
+### Will my identity or email be public in a discussion?
+
+Public attribution is optional. New contributions default to showing **Posted by @username** with a link to your public GitHub profile, but you can turn this off before posting or hide it later without removing the contribution from the public timeline. This GitHub attribution is independent of the optional name-and-organization attribution. Your numeric GitHub ID and contact email are never shown by the public API; the email is available only to administrators for follow-up. Contributions remain attached privately to the durable GitHub ID so their author can edit or delete them from another signed-in device.
+
+### Can I edit a package request after submitting it?
+
+Yes. GitHub sign-in is required for new package requests and is used only to establish ownership; the package-request application does not request repository access or private email access. Open **My submissions** on the package-request page to edit the package description, use case, upstream URL, testing availability, requester details, and whether the request displays **Submitted by @username** with a link to your public GitHub profile. GitHub attribution is enabled by default for new signed-in submissions, but you can turn it off before or after submitting. It is independent of the name-and-organization visibility option. Your numeric GitHub ID and contact email are not exposed publicly. Package name and ecosystem become maintainer-controlled after work begins, while status, votes, maintainer notes, and published artifacts are always maintainer-controlled. Existing requests can be attached to a GitHub account by an administrator after that user has signed in once.
+
+An owner can also permanently delete their request while it remains **Proposed**. Once maintainer review has begun, ask a maintainer to withdraw or delete it so that votes, discussion, and project history are handled deliberately.
+
+### How can I recognize an official update?
+
+Updates posted through the maintainer console are labeled **Verified maintainer**. Community posts can provide valuable evidence and coordination, but they do not represent a project decision unless a maintainer or the TSC confirms that decision through the normal governance process.
+
+### How are package requests prioritized?
+
+Maintainers consider community interest, contributor availability, technical feasibility, dependencies, licensing, security, expected maintenance effort, and benefit to the broader z/OS ecosystem. Vote count is one input, not the sole deciding factor.
+
+### Who decides whether a request is accepted?
+
+Routine triage can be performed by project maintainers. Requests involving broader technical direction, infrastructure, policy, or disagreement may be referred to the zopen TSC under the project governance process. Decisions and important status changes should be explained publicly where practical.
+
+### Does "Accepted" mean someone is working on the package?
+
+No. **Accepted** means the package is considered suitable for the community backlog. It may still be waiting for a contributor or maintainer. **In progress** is used after someone has taken responsibility for the porting work.
+
+### How are dependencies and related package requests represented?
+
+Each request has a dedicated page that can show confirmed **Depends on**, **Blocks**, **Related to**, and **Duplicate of** relationships. Maintainers confirm these links so the public dependency view remains consistent. **Blocks** is calculated automatically as the reverse of **Depends on**; dependency cycles are not allowed. Community members can suggest a missing relationship in the request discussion.
+
+### Who is responsible for porting and maintaining a package?
+
+Responsibility is attached to stewardship, not to whoever requested or voted for a package.
+
+| Area | Primary responsibility |
+| --- | --- |
+| Upstream functionality | The original upstream project |
+| z/OS patches and build | Port contributors and repository maintainers |
+| Package publishing | Port maintainers and zopen infrastructure maintainers |
+| Project-wide policy and technical disputes | The zopen TSC |
+| Testing in a particular environment | Package users and participating organizations |
+
+A requester is not automatically responsible for implementation, although testing and contribution are encouraged.
+
+### Does identifying my company give the request higher priority?
+
+No. Organization information helps the community understand use cases, coordinate testing, and identify possible contributors. It does not purchase priority or give an organization control over community decisions. Requester attribution is shown publicly only when the requester opts in, and contact email remains private to administrators.
+
+### Can an organization sponsor or contribute work?
+
+Yes. Organizations may contribute engineering time, testing, infrastructure, documentation, or funding. Contributions remain subject to the same open governance, review, licensing, and technical requirements as other community work.
+
+### Does an IBM employee's involvement make a package an IBM-supported product?
+
+No. Unless a separate commercial support arrangement explicitly says otherwise, contributors participate in the open community regardless of their employer. Community packages do not become IBM-supported products merely because an IBM employee contributes to them.
+
+### What happens when repository synchronization finds a package?
+
+Automatic synchronization with the zopen Pulp repositories creates a proposed match for maintainers to review. It does not automatically declare a request complete. A maintainer verifies the package identity and artifact before marking the request **Available**.
+
+### Is an Available package guaranteed to be maintained indefinitely?
+
+No. Maintenance depends on active contributors and project health. A package may later need a new maintainer or be identified as stale, deprecated, or unavailable if it can no longer be responsibly maintained. Consult the individual port repository for current compatibility and maintenance information.
+
+### How can I help move a request forward?
+
+Requesters can provide use cases, version requirements, and test results; volunteer to test on z/OS; contribute documentation or code; help with dependencies; or become a port maintainer. A formal port contribution follows the [contribution and review process](https://github.com/zopencommunity/meta/blob/main/CONTRIBUTING.md).
+
+## Consuming
+
+### How do I consume zopen community tools?
+There are two main ways to consume zopen community tools: using the recommended [zopen package manager](/Guides/QuickStart), or by directly downloading tools.  For most users, the package manager is the easier and more robust method as it handles dependency management for you.
+
+### zopen package manager
+
+### What is the zopen package manager and why should I use it?
 The zopen package manager is the recommended way to install and manage zopen community tools. It simplifies installation, automatically handles dependencies, and makes updates easier. You can find more information and get started [here](/Guides/ThePackageManager). It's designed specifically for z/OS and the tools provided by the zopen community.
 
-</details>
+### Where can I download the zopen package manager?
+Instructions to download and install the zopen package manager can be found in the [Quick Start guide](/Guides/QuickStart).  The quick start guide provides the most direct and up-to-date installation instructions.
 
-<details>
-<summary>Where can I download the zopen package manager?</summary>
+### How do I install and manage zopen tools using the zopen package manager?
+Please refer to the [Using the Package Manager guide](/Guides/ThePackageManager) for detailed instructions on installing tools.  This guide covers basic installation, listing available packages, and more advanced usage.
 
-Instructions to download and install the zopen package manager can be found in the [Quick Start guide](/Guides/QuickStart). The quick start guide provides the most direct and up-to-date installation instructions.
+### How do I check for vulnerabilities in packages installed with the zopen package manager?
+You can use the `zopen audit` command to check for known vulnerabilities in the packages you have installed using the zopen package manager. 
 
-</details>
-
-<details>
-<summary>How do I install and manage zopen tools using the zopen package manager?</summary>
-
-Please refer to the [Using the Package Manager guide](/Guides/ThePackageManager) for detailed instructions on installing tools. This guide covers basic installation, listing available packages, and more advanced usage.
-
-</details>
-
-<details>
-<summary>How do I check for vulnerabilities in packages installed with the zopen package manager?</summary>
-
-You can use the `zopen audit` command to check for known vulnerabilities in the packages you have installed using the zopen package manager.
-
-</details>
-
-<details>
-<summary>Where do I open issues against the zopen package manager?</summary>
-
+### Where do I open issues against the zopen package manager?
 If you encounter issues with the zopen package manager itself, please open an issue in the [meta repository](https://github.com/zopencommunity/meta/issues).
 
-</details>
-
-<details>
-<summary>Does the zopen package manager require internet access?</summary>
-
+### Does the zopen package manager require internet access?
 Yes, the zopen package manager requires internet access to download packages and metadata. Ensure your z/OS system has outbound internet connectivity, or configure a proxy if necessary.
 
-</details>
+### Can I use the zopen package manager behind a proxy?
+Yes, zopen uses `curl` for downloading and supports proxies, which is common in enterprise z/OS environments. You can configure proxy settings using environment variables or a `.curlrc` file as described in the "What does zopen use for downloading the packages?" section below.
 
-<details>
-<summary>Can I use the zopen package manager behind a proxy?</summary>
-
-Yes, zopen uses `curl` for downloading and supports proxies, which is common in enterprise z/OS environments. You can configure proxy settings using environment variables or a `.curlrc` file as described in the section below.
-
-</details>
-
-<details>
-<summary>What technology does zopen use for downloading the packages?</summary>
-
-zopen utilizes `curl` for downloading, a widely used and robust command-line tool for transferring data with URLs. There is a `ZOPEN_CURL_PARAMS` environment variable that can be set to pass additional parameters to curl, providing flexibility for advanced configurations.
-
-Alternatively, you can create a `.curlrc` file in your home directory to pass persistent additional parameters to curl. This example shows a `.curlrc` file that can be used to go through an NTLM-based proxy, often encountered in corporate networks:
-
+### What technology does zopen use for downloading the packages?
+zopen utilizes curl for downloading, a widely used and robust command-line tool for transferring data with URLs. There is a `ZOPEN_CURL_PARAMS` environment variable that can be set to pass additional parameters to curl, providing flexibility for advanced configurations.
+Alternatively, you can create a `.curlrc` file in your home directory to pass persistent additional parameters to curl.
+This example shows a `.curlrc` file that can be used to go through a ntlm based proxy, often encountered in corporate networks.
 ```
 --proxy http://yourinternalproxy:8080
 --proxy-ntlm
 --proxy-user myuser:This%20is%20my%20passphrase%21
 --insecure
 
-# User agent string (optional, but can help with some proxies)
+#user agent string (optional, but can help with some proxies)
 -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36"
 ```
 
-> **Note:** Using `--insecure` disables TLS certificate verification. For a more secure configuration, consider adding your trusted CA certificates instead.
+Refer to the original FAQ for more details on proxy configuration and security considerations, including adding trusted CA certificates instead of using `--insecure`.
 
-</details>
-
-<details>
-<summary>Can I install specific versions of packages using the zopen package manager?</summary>
-
+### Can I install specific versions of packages using the zopen package manager?
 Yes, the zopen package manager supports installing specific versions of packages. Refer to the [package manager documentation](/Guides/ThePackageManager) for syntax and examples on how to specify version numbers during installation.
 
-</details>
-
-<details>
-<summary>What should I do if I get "Permission denied" errors when installing zopen using pax?</summary>
-
+### What should I do if I get "Permission denied" errors when installing zopen using pax?
 Some z/OS environments have enhanced security settings that may require additional permissions to extract the zopen pax archive. If you encounter "Permission denied" errors during `pax -rf meta-main.xxxx.zos.pax.Z`, it's likely related to security permissions or your `umask` setting.
 
-- **Check your `umask` setting:** A restrictive `umask` (e.g., `umask 500`) can prevent `pax` from creating directories and files with the necessary permissions. Ensure your `umask` setting is reasonable (e.g., `0022` is a common default). Use the `umask` command to check and adjust your setting if needed.
+* Check your `umask` setting: A restrictive `umask` (e.g., `umask 500`) can prevent `pax` from creating directories and files with the necessary permissions, leading to "Permission denied" errors.  Ensure your `umask` setting is reasonable (e.g., `0022` is a common default). Use the `umask` command to check and adjust your setting if needed.
+* BPX.CAHFS.\* Permissions (TSS Environments): In environments using **TSS (Top Secret Security)**, "Permission denied" errors during pax extraction, especially error code `EDC5111I Permission denied. (errno2=0x5BC80004)`, are often caused by missing permissions for certain **BPX.CAHFS.** facility classes. These facilities control various file system operations.
 
-- **BPX.CAHFS.\* Permissions (TSS environments):** In environments using **TSS (Top Secret Security)**, "Permission denied" errors during pax extraction — especially error code `EDC5111I Permission denied. (errno2=0x5BC80004)` — are often caused by missing permissions for certain `BPX.CAHFS.*` facility classes.
+Users in highly secured TSS environments might need to be permitted to the following TSS SAF facility classes to successfully extract the zopen pax archive and use zopen tools:
 
-  Users in highly secured TSS environments might need to be permitted to the following TSS SAF facility classes:
+* **BPX.CAHFS.CHANGE.FILE.ATTRIBUTES**
+* **BPX.CAHFS.CHANGE.FILE.FORMAT**
+* **BPX.CAHFS.CHANGE.FILE.MODE**
+* **BPX.CAHFS.CHANGE.FILE.TIME**
+* **BPX.CAHFS.CREATE.SYMBOLIC.LINK** 
 
-  | Facility class |
-  |---|
-  | `BPX.CAHFS.CHANGE.FILE.ATTRIBUTES` |
-  | `BPX.CAHFS.CHANGE.FILE.FORMAT` |
-  | `BPX.CAHFS.CHANGE.FILE.MODE` |
-  | `BPX.CAHFS.CHANGE.FILE.TIME` |
-  | `BPX.CAHFS.CREATE.SYMBOLIC.LINK` |
+If you encounter these errors in a TSS environment, contact your z/OS security team and ask them to grant you access to these BPX.CAHFS.* facilities.  
 
-  Contact your z/OS security team and ask them to grant you access to these `BPX.CAHFS.*` facilities.
+If you are using a security product other than TSS (like ACF2 or RACF), request your security team to grant you equivalent permissions that allow file attribute changes, file format changes, file mode changes, file time changes, and symbolic link creation for your user ID.
 
-- **Other security products (ACF2, RACF):** Request your security team to grant equivalent permissions for file attribute changes, file format changes, file mode changes, file time changes, and symbolic link creation for your user ID.
+## Contributing
 
-</details>
+### How do I contribute to the zopen community?
+If you are passionate about open source on z/OS, there are many ways to contribute! If you have access to a z/OS system, you can contribute by porting open source tools to z/OS. Get started with the [porting guide](/Guides/Porting), or use the dedicated [Python package contribution guide](/Guides/PythonContributing) for Python packages and wheels. If you are unsure where to begin, check out the [help wanted issues](https://github.com/zopencommunity/meta/labels/help%20wanted). If you do not have z/OS access, you can request access via the [z/OS Public Facing Program](https://community.ibm.com/zsystems/form/zos-program/). Joining the System Z Enthusiasts Discord channel is also a great way to connect with the community.
 
-<div class="faq-section-label">Security</div>
-
-<details>
-<summary>What security practices does zopen community follow for its software supply chain?</summary>
-
-Security is an important area for the project, and we continue to strengthen our software supply chain practices.
-
-**Current practices:**
-
-| Practice | Details |
-|---|---|
-| Pull request requirement | All changes require a pull request — no direct pushes to the main branch |
-| Code review | At least two reviewers must approve before changes are merged |
-| CI gating | CI must pass before any merge |
-| Release controls | Only authorized maintainers can approve and publish releases |
-| Isolated builds | Packages are built through an automated, isolated CI pipeline rather than on developer workstations |
-| Artifact signing | Release artifacts are signed using a GPG key, allowing users to verify authenticity and integrity |
-
-**In progress:**
-
-- Enabling automated static security scanning as part of our CI pipeline.
-- Continuing to evaluate additional improvements to our software supply chain security.
-
-</details>
-
-<details>
-<summary>How can I check for known vulnerabilities in installed packages?</summary>
-
-The zopen package manager provides a [`zopen audit`](/reference/zopen-audit) command to help identify known vulnerabilities in installed packages. We also publish vulnerability information on the [zopen Community Vulnerabilities page](/Vulnerabilities).
-
-Additionally, organizations can use industry-standard vulnerability scanners such as [Grype](https://github.com/anchore/grype) or [Trivy](https://github.com/aquasecurity/trivy) as part of their own security and compliance workflows.
-
-</details>
-
-<div class="faq-section-label">Contributing</div>
-
-<details>
-<summary>How do I contribute to the zopen community?</summary>
-
-If you are passionate about open source on z/OS, there are many ways to contribute! If you have access to a z/OS system, you can contribute by porting open source tools to z/OS. Get started with the [porting guide](/Guides/Porting). If you are unsure where to begin, check out the [help wanted issues](https://github.com/zopencommunity/meta/labels/help%20wanted). If you do not have z/OS access, you can request access via the [z/OS Public Facing Program](https://community.ibm.com/zsystems/form/zos-program/). Joining the System Z Enthusiasts Discord channel is also a great way to connect with the community.
-
-</details>
-
-<details>
-<summary>What kind of contributions are needed?</summary>
-
+### What kind of contributions are needed?
 The zopen community welcomes various types of contributions:
+* **Porting open source tools to z/OS:**  Bringing new open source tools to the z/OS platform.
+* **Testing ported tools on z/OS:** Ensuring tools function correctly in the z/OS environment.
+* **Improving documentation:** Clear and comprehensive documentation is essential for user adoption.
+* **Providing feedback and reporting issues:** User feedback helps identify bugs and areas for improvement.
+* **Helping with community support:** Assisting other users in the community is a valuable contribution.
+* **Developing the zopen package manager itself:** Contributions to the package manager enhance the user experience.
+* **Creating examples and tutorials:**  Helping new users get started is important for community growth.
 
-| Contribution type | Description |
-|---|---|
-| Porting open source tools | Bringing new open source tools to the z/OS platform |
-| Testing ported tools | Ensuring tools function correctly in the z/OS environment |
-| Improving documentation | Clear and comprehensive documentation is essential for user adoption |
-| Feedback and issue reporting | User feedback helps identify bugs and areas for improvement |
-| Community support | Assisting other users in the community is a valuable contribution |
-| Package manager development | Contributions to the package manager enhance the user experience |
-| Examples and tutorials | Helping new users get started is important for community growth |
-
-</details>
-
-<details>
-<summary>Where can I find the source code for zopen community projects?</summary>
-
-All zopen community project source code is hosted on GitHub under the [zopen community organization](https://github.com/zopencommunity). Each ported tool and the zopen package manager have their own repositories within this organization.
-
-</details>
+### Where can I find the source code for zopen community projects?
+All zopen community project source code is hosted on GitHub under the [zopen community organization](https://github.com/zopencommunity).  Each ported tool and the zopen package manager have their own repositories within this organization.

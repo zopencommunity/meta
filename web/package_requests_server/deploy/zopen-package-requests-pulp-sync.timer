@@ -1,0 +1,11 @@
+[Unit]
+Description=Run zopen Pulp artifact synchronization every six hours
+
+[Timer]
+OnCalendar=*-*-* 02,08,14,20:15:00
+RandomizedDelaySec=15m
+Persistent=true
+Unit=zopen-package-requests-pulp-sync.service
+
+[Install]
+WantedBy=timers.target
