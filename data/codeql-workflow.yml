@@ -1,0 +1,29 @@
+name: "CodeQL"
+
+permissions:
+  actions: read
+  contents: read
+  security-events: write
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+  schedule:
+    - cron: "0 0 * * 1"
+  workflow_dispatch:
+
+jobs:
+  codeql:
+    uses: zopencommunity/meta/.github/workflows/codeql.yml@main
+    secrets: inherit
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    with:
+      languages: "c-cpp"
+      build-mode: "none"

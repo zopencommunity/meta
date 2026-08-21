@@ -1,0 +1,255 @@
+name: "CodeQL"
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+    inputs:
+      repo:
+        description: 'Repository to analyze (owner/name). Defaults to current repo.'
+        required: false
+        type: string
+        default: ""
+      branch:
+        description: 'Branch to analyze. Defaults to current branch.'
+        required: false
+        default: ""
+        type: string
+      languages:
+        description: 'CodeQL languages to analyze (e.g., python, c-cpp, javascript)'
+        required: false
+        type: string
+        default: 'python'
+      build-mode:
+        description: 'CodeQL build mode (none, manual, autobuild)'
+        required: false
+        type: string
+        default: 'none'
+  workflow_call:
+    inputs:
+      repo:
+        required: false
+        type: string
+        default: ""
+      branch:
+        required: false
+        default: ""
+        type: string
+      languages:
+        description: 'CodeQL languages to analyze (e.g., c-cpp, python, javascript)'
+        required: false
+        type: string
+        default: 'c-cpp'
+      build-mode:
+        description: 'CodeQL build mode (none, manual, autobuild)'
+        required: false
+        type: string
+        default: 'none'
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-latest
+
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    steps:
+      - name: Determine Repository and Branch
+        id: repo-info
+        run: |
+          repo="${{ inputs.repo }}"
+          if [ -z "${repo}" ]; then
+            repo="${{ github.repository }}"
+          fi
+          branch="${{ inputs.branch }}"
+          if [ -z "${branch}" ]; then
+            if [ "${{ github.event_name }}" == "pull_request" ] || [ "${{ github.event_name }}" == "pull_request_target" ]; then
+              branch="${{ github.head_ref }}"
+            else
+              branch="${{ github.ref_name }}"
+            fi
+          fi
+          echo "repo=${repo}" >> $GITHUB_OUTPUT
+          echo "branch=${branch}" >> $GITHUB_OUTPUT
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ steps.repo-info.outputs.repo }}
+          ref: ${{ steps.repo-info.outputs.branch }}
+
+      - name: Download and setup metaport
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pax ncompress curl
+          # Clone meta to a directory outside the workspace to avoid scanning it
+          git clone https://github.com/zopencommunity/meta.git /tmp/meta
+          # Create symlink in workspace for build process
+          ln -s /tmp/meta meta
+          echo "Metaport setup completed"
+
+      - name: Create CodeQL config
+        run: |
+          mkdir -p .github/codeql
+          cat > .github/codeql/codeql-config.yml << 'EOF'
+          name: "CodeQL Config"
+
+          paths-ignore:
+            - meta/**
+            - '**/meta/**'
+            - '**/test-*.c'
+            - '**/test-*.cpp'
+            - '**/test-*.h'
+            - '**/test-*.hpp'
+            - '**/*-tests/**'
+            - '**/tests/**'
+
+          queries:
+            - uses: security-and-quality
+          EOF
+          echo "CodeQL config created"
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ inputs.languages || 'python' }}
+          build-mode: ${{ inputs.build-mode || 'none' }}
+          config-file: ./.github/codeql/codeql-config.yml
+
+      - name: Clone tool repository
+        if: ${{ inputs.repo != '' }}
+        run: |
+          TARGET_REPO="${{ steps.repo-info.outputs.repo }}"
+          echo "Target Repository: ${TARGET_REPO}"
+          TOOL_NAME=$(basename "${TARGET_REPO}")
+          echo "Tool Name: ${TOOL_NAME}"
+          if [ -d "$TOOL_NAME" ]; then
+            echo "Tool repository already exists, skipping clone"
+          else
+            git clone https://github.com/${TARGET_REPO}.git
+            echo "Tool repository cloned: $TOOL_NAME"
+          fi
+
+      - name: Build with zopen
+        if: ${{ inputs.repo != '' }}
+        run: |
+          export PATH="$PWD/meta/bin:$PATH"
+          git config --global user.email "zopenCommunity@ibm.com"
+          git config --global user.name "Zopen Community"
+
+          TARGET_REPO="${{ steps.repo-info.outputs.repo }}"
+          TOOL_NAME=$(basename "${TARGET_REPO}")
+          echo "Tool Name: ${TOOL_NAME}"
+          cd $TOOL_NAME
+          zopen build -g
+          ls -lrt
+
+      - name: Perform CodeQL Analysis
+        id: codeql_analyze
+        uses: github/codeql-action/analyze@v3
+        with:
+          output: sarif-results
+
+      - name: Upload SARIF as artifact
+        id: upload_sarif
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: codeql-sarif-${{ inputs.languages || 'python' }}
+          path: sarif-results/
+          if-no-files-found: warn
+
+      - name: Parse SARIF findings
+        id: parse_sarif
+        if: always()
+        run: |
+          SARIF_FILE=$(find sarif-results/ -name '*.sarif' 2>/dev/null | head -n 1)
+          if [ -z "$SARIF_FILE" ]; then
+            echo "total=0"            >> "$GITHUB_OUTPUT"
+            echo "error=0"           >> "$GITHUB_OUTPUT"
+            echo "warning=0"         >> "$GITHUB_OUTPUT"
+            echo "note=0"            >> "$GITHUB_OUTPUT"
+            echo "sarif_found=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "sarif_found=true" >> "$GITHUB_OUTPUT"
+          python3 << PYEOF
+          import json, os
+
+          sarif_path  = "$SARIF_FILE"
+          output_path = os.environ["GITHUB_OUTPUT"]
+
+          with open(sarif_path) as f:
+              sarif = json.load(f)
+
+          counts = {"error": 0, "warning": 0, "note": 0}
+          for run in sarif.get("runs", []):
+              for result in run.get("results", []):
+                  level = result.get("level", "warning")
+                  if level in counts:
+                      counts[level] += 1
+                  else:
+                      counts["warning"] += 1  # treat unknown levels as warnings
+
+          total = sum(counts.values())
+          with open(output_path, "a") as out:
+              out.write(f"total={total}\n")
+              out.write(f"error={counts['error']}\n")
+              out.write(f"warning={counts['warning']}\n")
+              out.write(f"note={counts['note']}\n")
+          PYEOF
+
+      - name: Create Job Summary
+        if: always()
+        run: |
+          LANGUAGE="${{ inputs.languages || 'python' }}"
+          OUTCOME="${{ steps.codeql_analyze.outcome }}"
+          TOTAL="${{ steps.parse_sarif.outputs.total }}"
+          ERRORS="${{ steps.parse_sarif.outputs.error }}"
+          WARNINGS="${{ steps.parse_sarif.outputs.warning }}"
+          NOTES="${{ steps.parse_sarif.outputs.note }}"
+          SARIF_FOUND="${{ steps.parse_sarif.outputs.sarif_found }}"
+
+          if [ "$OUTCOME" = "success" ]; then
+            STATUS="SUCCESS"
+          else
+            STATUS="FAILED"
+          fi
+
+          {
+            echo "# CodeQL Analysis Results"
+            echo ""
+            echo "## Execution Status: ${STATUS}"
+            echo ""
+            echo "## Configuration"
+            echo ""
+            echo "| Setting  | Value |"
+            echo "|----------|-------|"
+            echo "| Language | \`${LANGUAGE}\` |"
+            echo "| Queries  | \`security-and-quality\` |"
+            echo "| Runner   | \`${{ runner.os }}-${{ runner.arch }}\` |"
+            echo "| Trigger  | \`${{ github.event_name }}\` |"
+            echo ""
+            echo "## Findings"
+            echo ""
+            if [ "$SARIF_FOUND" = "true" ]; then
+              echo "| Severity  | Count |"
+              echo "|-----------|------:|"
+              echo "| Error     | ${ERRORS} |"
+              echo "| Warning   | ${WARNINGS} |"
+              echo "| Note      | ${NOTES} |"
+              echo "| **Total** | **${TOTAL}** |"
+            else
+              echo "No SARIF results file found."
+            fi
+            echo ""
+            echo "Full SARIF results available in artifacts: \`codeql-sarif-${LANGUAGE}\`"
+            echo ""
+            echo "---"
+            echo "*Job summary generated at run-time*"
+          } >> "$GITHUB_STEP_SUMMARY"
