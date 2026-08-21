@@ -48,12 +48,19 @@ jobs:
       - name: Install dependencies
         working-directory: docs
         run: npm ci
+      - name: Set BASE_PATH
+        run: |
+          if [ "${{ github.repository }}" = "zopencommunity/meta" ]; then
+            echo "BASE_PATH=/" >> $GITHUB_ENV
+          else
+            REPO_NAME="${{ github.repository }}"
+            REPO_NAME="${REPO_NAME##*/}"
+            echo "BASE_PATH=/${REPO_NAME}/" >> $GITHUB_ENV
+          fi
       - name: Build with VitePress
         working-directory: docs
         env:
           VITE_PACKAGE_REQUESTS_API_URL: ${{ vars.PACKAGE_REQUESTS_API_URL }}
-          # Use base "/" for the canonical upstream repo; "/<repo>/" for all forks.
-          BASE_PATH: ${{ github.repository == 'zopencommunity/meta' && '/' || format('/{0}/', github.event.repository.name) }}
         run: npm run docs:build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
