@@ -123,21 +123,24 @@ Selecting `Python` as the build system in `zopen-generate` writes `PUBLISH_PYTHO
 
 Pure Python ports build as `py3-none-any` and are published unchanged. They install on any Python and any z/OS level, and need nothing described below.
 
-Compiled ports are different. CPython derives the default platform tag from `uname`, producing something like `os390_29_00_8561` — the z/OS **release** and the **CPU model**. `packaging` offers exactly one platform tag on z/OS (unlike Linux, which gets the manylinux range) and pip matches it as an exact string, so such a wheel stops installing after a z/OS upgrade or on different hardware, even though the binary itself would run.
+Compiled ports are different. Through 3.13, CPython derives the default platform tag from `uname`, producing something like `os390_29_00_8561` — the z/OS **release** and the **CPU model**. `packaging` offers exactly one platform tag on z/OS (unlike Linux, which gets the manylinux range) and pip matches it as an exact string, so such a wheel stops installing after a z/OS upgrade or on different hardware, even though the binary itself would run.
 
-`zopen-build` therefore retags compiled wheels to `cp3XY-none-any`, keeping the constraint that is real and dropping the two that are not:
+`zopen-build` therefore retags those wheels to `cp3XY-none-any`, keeping the constraint that is real and dropping the two that are not:
 
 | | any z/OS release | any machine | any Python |
 | --- | --- | --- | --- |
 | `cp312-cp312-os390_29_00_8561` (default) | no | no | no |
 | `cp312-none-any` (published) | **yes** | **yes** | no — 3.12 only |
+| `cp314-cp314-zos` (3.14 default, published as-is) | **yes** | **yes** | no — 3.14 only |
 | `py3-none-any` | yes | yes | yes — **wrong for compiled code** |
 
-`py3-none-any` is not an option for a compiled port: the extension is `mmh3.cpython-312.so`, and any other CPython silently fails to load it, leaving an importable but empty namespace package. `cp3XY` is an exact interpreter match (unlike `py3XY`, which every later version also accepts), so the wheel is offered only to the interpreter that can use it. The ABI tag cannot be preserved — pip never generates a `cp3XY-cp3XY-any` combination to match against.
+Python 3.14 removed the need for any of this. Its `sysconfig` returns `zos` ahead of the `uname` logic, so the default tag already names neither a release nor a model; `zopen-build` detects such a tag and publishes the wheel as built. `cp314-cp314-zos` is pip's first choice of the 48 tags it offers there, and it keeps the true ABI tag that `none` throws away.
+
+`py3-none-any` is not an option for a compiled port: the extension is `mmh3.cpython-312.so`, and any other CPython silently fails to load it, leaving an importable but empty namespace package. `cp3XY` is an exact interpreter match (unlike `py3XY`, which every later version also accepts), so the wheel is offered only to the interpreter that can use it. The ABI tag cannot be preserved alongside `any` — pip never generates a `cp3XY-cp3XY-any` combination to match against — which is why the 3.14 form, which keeps a real platform tag, can keep the real ABI tag too.
 
 Two consequences worth knowing:
 
-* **`any` also matches non-z/OS systems.** This assumes the index is consumed from z/OS. A Linux CPython 3.12 with this index configured would install the wheel and fail at import. Set `ZOPEN_PYTHON_WHEEL_RETAG=false` to keep the honest platform tag instead.
+* **`any` also matches non-z/OS systems.** This applies to the retagged 3.12 and 3.13 wheels, and assumes the index is consumed from z/OS: a Linux CPython 3.12 with this index configured would install the wheel and fail at import. Set `ZOPEN_PYTHON_WHEEL_RETAG=false` to keep the honest platform tag instead. Wheels published as `cp3XY-cp3XY-zos` are not affected — a non-z/OS interpreter never offers that tag, so pip will not select them at all.
 * **One wheel per Python minor version.** A 3.13 build produces `cp313-none-any`, a distinct filename, so versions coexist without colliding. Covering several requires building once per interpreter.
 
 `Public Index Verification` installs only `*-py3-none-any.whl` wheels with pip; everything else is checked for presence in the index. That split is deliberate — pip-installing a z/OS wheel on the Linux agent would appear to succeed and then be broken.

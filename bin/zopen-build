@@ -72,8 +72,11 @@ Optional:
                         python3/python if either reports that version.
   ZOPEN_PYTHON_WHEEL_RETAG
                         Python build system only. Set to 'false' to keep the
-                        default platform tag on compiled wheels instead of
+                        native platform tag on compiled wheels instead of
                         retagging them to cp3XY-none-any (defaults to 'true').
+                        Only uname-derived tags are retagged either way: a
+                        wheel from an interpreter reporting a portable tag,
+                        such as zos on 3.14, always keeps it.
   ZOPEN_PYTHON_VENV_SYSTEM_SITE
                         Python build system only. Set to 'true' to build in a
                         venv that can see the interpreter's own packages
@@ -614,10 +617,12 @@ _zopen_python_pure_wheel() {
 
 # The wheel matching an interpreter tag, falling back to a pure Python wheel.
 #
-# A compiled wheel is normally retagged to cp3XY-none-any, but it keeps its
-# native {python}-{abi}-{platform} triple when ZOPEN_PYTHON_WHEEL_RETAG=false,
-# so match that shape too -- otherwise disabling retagging leaves the check and
-# install phases with no wheel they can recognise.
+# A compiled wheel is retagged to cp3XY-none-any when its platform tag pins the
+# machine that built it, and otherwise keeps its native
+# {python}-{abi}-{platform} triple -- when ZOPEN_PYTHON_WHEEL_RETAG=false, and
+# on an interpreter whose platform tag already travels, 3.14 onwards. Match that
+# shape too, or those builds leave the check and install phases with no wheel
+# they can recognise.
 _zopen_python_wheel_for_tag() {
   for _pw in dist/*-"$1"-none-any.whl; do
     [ -f "${_pw}" ] && { echo "${_pw}"; return 0; }
@@ -628,20 +633,6 @@ _zopen_python_wheel_for_tag() {
   _zopen_python_pure_wheel
 }
 
-# Retag a compiled wheel so it is not pinned to the z/OS release and machine
-# model. CPython derives the default platform tag from uname, giving something
-# like os390_29_00_8561 -- release AND CPU model -- and pip matches that string
-# exactly, so the wheel stops installing after a z/OS upgrade or on different
-# hardware, even though the binary would run fine.
-#
-# cp3XY-none-any keeps the one constraint that is real (the extension is built
-# against a specific CPython ABI) and drops the two that are not. Note that
-# 'any' also matches non-z/OS systems, so this assumes the index is consumed
-# from z/OS; the ABI tag cannot be kept, because pip never generates a
-# cp3XY-cp3XY-any combination to match against.
-#
-# Pure Python wheels are already py3-none-any and are left untouched.
-# Set ZOPEN_PYTHON_WHEEL_RETAG=false to keep the default platform tag.
 # Record what produced a wheel, so a rebuild that changed nothing can be told
 # apart from one that did.
 #
@@ -780,9 +771,50 @@ STAMPPYEOF
   return 0
 }
 
+# Platform tags CPython produces without consulting uname. They name neither a
+# z/OS release nor a machine model, so they already travel and the retag below
+# has nothing to fix. Extend this list rather than trying to recognise
+# uname-derived tags by their shape: that spelling varies with the release and
+# the model, and a wrong guess silently publishes a wheel pinned to the machine
+# that built it.
+_ZOPEN_PYTHON_STABLE_PLATFORM_TAGS="zos"
+
+_zopen_python_platform_tag_travels() {
+  for _pt in ${_ZOPEN_PYTHON_STABLE_PLATFORM_TAGS}; do
+    [ "$1" = "${_pt}" ] && return 0
+  done
+  return 1
+}
+
+# Retag a compiled wheel when its platform tag pins the machine that built it.
+#
+# Through 3.13, CPython derives the platform tag from uname on z/OS, giving
+# something like os390_29_00_8561 -- release AND CPU model -- and pip matches
+# that string exactly, so the wheel stops installing after a z/OS upgrade or on
+# different hardware, even though the binary would run fine. Rewriting those to
+# cp3XY-none-any keeps the one constraint that is real (the extension is built
+# against a specific CPython ABI) and drops the two that are not. 'any' also
+# matches non-z/OS systems, so that form assumes the index is consumed from
+# z/OS; the ABI tag cannot be kept alongside it, because pip never generates a
+# cp3XY-cp3XY-any combination to match against.
+#
+# 3.14 fixed this upstream. Its sysconfig returns 'zos' ahead of the uname
+# logic, so the tag names neither a release nor a model and there is nothing
+# left to work around -- rewriting it would only discard what it says. Such a
+# wheel keeps its native tags: cp314-cp314-zos is pip's first choice of the 48
+# tags it offers there, it preserves the real ABI, and unlike 'any' it will not
+# match a non-z/OS interpreter at all.
+#
+# Measured on z/OS 29.00: sysconfig.get_platform() reports os390-29.00-8561 on
+# 3.12.13 and 3.13.13.2, and zos on 3.14.4.2. Both forms stay installable --
+# cp314-none-any is still matched on 3.14, at priority 32 of 48 -- so this
+# decides which tag is the more truthful, not whether the wheel can be used.
+#
+# Pure Python wheels are already py3-none-any and are left untouched.
+# Set ZOPEN_PYTHON_WHEEL_RETAG=false to keep every wheel's native tags.
 _zopen_python_retag_wheel() {
   if [ "${ZOPEN_PYTHON_WHEEL_RETAG}" = "false" ]; then
-    printVerbose "Wheel retagging disabled; keeping the default platform tag"
+    printVerbose "Wheel retagging disabled; keeping native platform tags"
     return 0
   fi
 
@@ -803,6 +835,14 @@ _zopen_python_retag_wheel() {
           printVerbose "$(basename "${_whl}") is platform independent; leaving its tags unchanged"
           ;;
       esac
+      continue
+    fi
+
+    # Already portable across the estate, and strictly better than 'any': it
+    # keeps the true ABI and will not tempt a non-z/OS interpreter into
+    # installing an extension it cannot load.
+    if _zopen_python_platform_tag_travels "${_whl_plat}"; then
+      printInfo "Keeping $(basename "${_whl}") as built; ${_whl_plat} pins neither the z/OS release nor the machine"
       continue
     fi
 
