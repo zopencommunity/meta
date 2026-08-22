@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2026-08-22T03:46:13+00:00Z",
+  "generation_timestamp_utc": "2026-08-22T12:23:54+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -367,6 +367,7 @@
     "jellyfish": "z/OS port of jellyfish (Python library for approximate and phonetic matching of strings)",
     "scikit-learn": "zopen port of scikit-learn",
     "shap": "A unified approach to explain the output of any machine learning model",
-    "psutil": "z/OS port of psutil - cross-platform library for process and system utilization monitoring"
+    "psutil": "z/OS port of psutil - cross-platform library for process and system utilization monitoring",
+    "snowflake-connector-python": "zopen port of snowflake-connector-python"
   }
 }
