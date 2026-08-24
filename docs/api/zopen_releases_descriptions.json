@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2026-08-24T15:01:05+00:00Z",
+  "generation_timestamp_utc": "2026-08-24T16:21:33+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -372,6 +372,7 @@
     "greenlet": "zopen port of greenlet",
     "xsimd": "zopen port of xsimd",
     "snappy": "zopen port of snappy",
-    "utf8proc": "zopen port of utf8proc"
+    "utf8proc": "zopen port of utf8proc",
+    "arrow": "zopen port of Apache Arrow C++"
   }
 }
