@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2026-08-24T10:49:50+00:00Z",
+  "generation_timestamp_utc": "2026-08-24T13:00:51+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -369,6 +369,9 @@
     "shap": "A unified approach to explain the output of any machine learning model",
     "psutil": "z/OS port of psutil - cross-platform library for process and system utilization monitoring",
     "snowflake-connector-python": "zopen port of snowflake-connector-python",
-    "greenlet": "zopen port of greenlet"
+    "greenlet": "zopen port of greenlet",
+    "xsimd": "zopen port of xsimd",
+    "snappy": "zopen port of snappy",
+    "utf8proc": "zopen port of utf8proc"
   }
 }
