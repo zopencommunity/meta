@@ -1,0 +1,996 @@
+{
+  "generatedAt": "2026-08-24T16:37:08Z",
+  "wheelIndexUrl": "https://repo.zopen.community/pypi/wheels/simple/",
+  "supportedPythonVersions": [
+    "3.12",
+    "3.13",
+    "3.14"
+  ],
+  "packageCount": 37,
+  "wheelCount": 180,
+  "packages": [
+    {
+      "name": "bcrypt",
+      "displayName": "bcrypt",
+      "pythonVersions": [
+        "3.12",
+        "3.13",
+        "3.14"
+      ],
+      "wheelCount": 3,
+      "indexUrl": "https://repo.zopen.community/pypi/wheels/simple/bcrypt/",
+      "releaseKey": "bcrypt",
+      "version": "5.0.0",
+      "description": "z/OS port of bcrypt (password hashing library with Rust core)",
+      "categories": [
+        "development",
+        "security",
+        "library"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 24,
+      "totalTests": 24,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-18T15:20:25Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/bcryptport",
+      "releaseUrl": "https://github.com/zopencommunity/bcryptport/releases/tag/STABLE_bcryptport_184"
+    },
+    {
+      "name": "brotli",
+      "displayName": "Brotli",
+      "pythonVersions": [
+        "3.12",
+        "3.13",
+        "3.14"
+      ],
+      "wheelCount": 3,
+      "indexUrl": "https://repo.zopen.community/pypi/wheels/simple/brotli/",
+      "releaseKey": "brotli",
+      "version": "1.2.0",
+      "description": "Brotli compression for Python",
+      "categories": [
+        "development",
+        "library"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 33,
+      "totalTests": 33,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-15T05:48:51Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/brotliport",
+      "releaseUrl": "https://github.com/zopencommunity/brotliport/releases/tag/STABLE_brotliport_146"
+    },
+    {
+      "name": "cffi",
+      "displayName": "cffi",
+      "pythonVersions": [
+        "3.12",
+        "3.13",
+        "3.14"
+      ],
+      "wheelCount": 3,
+      "indexUrl": "https://repo.zopen.community/pypi/wheels/simple/cffi/",
+      "releaseKey": "cffi",
+      "version": "2.0.0",
+      "description": "Foreign function interface for calling C from Python",
+      "categories": [
+        "development",
+        "library"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 36,
+      "totalTests": 36,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-17T04:13:52Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/cffiport",
+      "releaseUrl": "https://github.com/zopencommunity/cffiport/releases/tag/STABLE_cffiport_166"
+    },
+    {
+      "name": "confluent-kafka",
+      "displayName": "confluent-kafka",
+      "pythonVersions": [
+        "3.12",
+        "3.13",
+        "3.14"
+      ],
+      "wheelCount": 4,
+      "indexUrl": "https://repo.zopen.community/pypi/wheels/simple/confluent-kafka/",
+      "releaseKey": "confluent-kafka",
+      "version": "2.14.0",
+      "description": "zopen port of confluent-kafka",
+      "categories": [
+        "development",
+        "networking"
+      ],
+      "runtimeDependencies": [
+        "curl",
+        "librdkafka",
+        "lz4",
+        "openssl",
+        "zlib",
+        "zstd"
+      ],
+      "passedTests": null,
+      "totalTests": null,
+      "verificationRate": null,
+      "publishedAt": "2026-07-30T16:15:20Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/confluent-kafkaport",
+      "releaseUrl": "https://github.com/zopencommunity/confluent-kafkaport/releases/tag/STABLE_confluent-kafkaport_59"
+    },
+    {
+      "name": "cookiecutter",
+      "displayName": "cookiecutter",
+      "pythonVersions": [
+        "3.12",
+        "3.13",
+        "3.14"
+      ],
+      "wheelCount": 1,
+      "indexUrl": "https://repo.zopen.community/pypi/wheels/simple/cookiecutter/",
+      "releaseKey": "cookiecutter",
+      "version": "2.7.0",
+      "description": "A command-line utility that creates projects from project templates, e.g. creating a Python package project from a Python package project template.",
+      "categories": [
+        "development"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 1116,
+      "totalTests": 1116,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-10T19:06:41Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/cookiecutterport",
+      "releaseUrl": "https://github.com/zopencommunity/cookiecutterport/releases/tag/STABLE_cookiecutterport_87"
+    },
+    {
+      "name": "cryptography",
+      "displayName": "cryptography",
+      "pythonVersions": [
+        "3.12",
+        "3.13",
+        "3.14"
+      ],
+      "wheelCount": 3,
+      "indexUrl": "https://repo.zopen.community/pypi/wheels/simple/cryptography/",
+      "releaseKey": "cryptography",
+      "version": "50.0.0",
+      "description": "z/OS port of cryptography (OpenSSL 4.0.0 backend, Python 3.12)",
+      "categories": [
+        "development",
+        "security",
+        "library"
+      ],
+      "runtimeDependencies": [
+        "openssl",
+        "zoslib"
+      ],
+      "passedTests": 24,
+      "totalTests": 24,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-18T15:26:41Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/cryptographyport",
+      "releaseUrl": "https://github.com/zopencommunity/cryptographyport/releases/tag/STABLE_cryptographyport_186"
+    },
+    {
+      "name": "django",
+      "displayName": "Django",
+      "pythonVersions": [
+        "3.12",
+        "3.13",
+        "3.14"
+      ],
+      "wheelCount": 1,
+      "indexUrl": "https://repo.zopen.community/pypi/wheels/simple/django/",
+      "releaseKey": "django",
+      "version": "6.0.6",
+      "description": "A high-level Python web framework that encourages rapid development and clean, pragmatic design.",
+      "categories": [
+        "networking",
+        "development"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 56130,
+      "totalTests": 56130,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-10T19:45:39Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/djangoport",
+      "releaseUrl": "https://github.com/zopencommunity/djangoport/releases/tag/STABLE_djangoport_88"
+    },
+    {
+      "name": "fastapi",
+      "displayName": "fastapi",
+      "pythonVersions": [
+        "3.12",
+        "3.13",
+        "3.14"
+      ],
+      "wheelCount": 2,
+      "indexUrl": "https://repo.zopen.community/pypi/wheels/simple/fastapi/",
+      "releaseKey": "fastapi",
+      "version": "0.141.1",
+      "description": "FastAPI web framework for building APIs with Python type hints",
+      "categories": [
+        "networking",
+        "development"
+      ],
+      "runtimeDependencies": [
+        "pydantic-core"
+      ],
+      "passedTests": 33,
+      "totalTests": 33,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-16T22:53:54Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/fastapiport",
+      "releaseUrl": "https://github.com/zopencommunity/fastapiport/releases/tag/STABLE_fastapiport_162"
+    },
+    {
+      "name": "fastmcp",
+      "displayName": "fastmcp",
+      "pythonVersions": [
+        "3.12",
+        "3.13",
+        "3.14"
+      ],
+      "wheelCount": 3,
+      "indexUrl": "https://repo.zopen.community/pypi/wheels/simple/fastmcp/",
+      "releaseKey": "fastmcp",
+      "version": "3.4.7",
+      "description": "FastMCP framework for building Model Context Protocol (MCP) servers in Python",
+      "categories": [
+        "networking",
+        "development"
+      ],
+      "runtimeDependencies": [
+        "cryptography",
+        "pydantic-core",
+        "pyyaml",
+        "rpds-py",
+        "watchfiles"
+      ],
+      "passedTests": 51,
+      "totalTests": 51,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-17T01:49:23Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/fastmcpport",
+      "releaseUrl": "https://github.com/zopencommunity/fastmcpport/releases/tag/STABLE_fastmcpport_165"
+    },
+    {
+      "name": "jellyfish",
+      "displayName": "jellyfish",
+      "pythonVersions": [
+        "3.12",
+        "3.13",
+        "3.14"
+      ],
+      "wheelCount": 3,
+      "indexUrl": "https://repo.zopen.community/pypi/wheels/simple/jellyfish/",
+      "releaseKey": "jellyfish",
+      "version": "1.2.1",
+      "description": "z/OS port of jellyfish (Python library for approximate and phonetic matching of strings)",
+      "categories": [
+        "development",
+        "library"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 78,
+      "totalTests": 78,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-20T17:23:27Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/jellyfishport",
+      "releaseUrl": "https://github.com/zopencommunity/jellyfishport/releases/tag/STABLE_jellyfishport_215"
+    },
+    {
+      "name": "lxml",
+      "displayName": "lxml",
+      "pythonVersions": [
+        "3.12",
+        "3.13",
+        "3.14"
+      ],
+      "wheelCount": 6,
+      "indexUrl": "https://repo.zopen.community/pypi/wheels/simple/lxml/",
+      "releaseKey": "lxml",
+      "version": "6.1.1",
+      "description": "z/OS port of lxml - XML and XSLT processing for Python, built on libxml2 and libxslt",
+      "categories": [
+        "development",
+        "library"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 21,
+      "totalTests": 21,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-13T16:37:35Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/lxmlport",
+      "releaseUrl": "https://github.com/zopencommunity/lxmlport/releases/tag/STABLE_lxmlport_120"
+    },
+    {
+      "name": "markupsafe",
+      "displayName": "MarkupSafe",
+      "pythonVersions": [
+        "3.12",
+        "3.13",
+        "3.14"
+      ],
+      "wheelCount": 3,
+      "indexUrl": "https://repo.zopen.community/pypi/wheels/simple/markupsafe/",
+      "releaseKey": "markupsafe",
+      "version": "3.0.3",
+      "description": "z/OS port of markupsafe - safely add untrusted strings to HTML/XML markup",
+      "categories": [
+        "development",
+        "library"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 36,
+      "totalTests": 36,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-14T12:04:30Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/markupsafeport",
+      "releaseUrl": "https://github.com/zopencommunity/markupsafeport/releases/tag/STABLE_markupsafeport_133"
+    },
+    {
+      "name": "maturin",
+      "displayName": "maturin",
+      "pythonVersions": [
+        "3.12",
+        "3.13",
+        "3.14"
+      ],
+      "wheelCount": 1,
+      "indexUrl": "https://repo.zopen.community/pypi/wheels/simple/maturin/",
+      "releaseKey": "maturin",
+      "version": "1.14.1",
+      "description": "maturin port for z/OS - Build and publish Rust-backed Python wheels",
+      "categories": [
+        "development",
+        "build_system",
+        "utilities"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 5,
+      "totalTests": 5,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-15T20:09:49Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/maturinport",
+      "releaseUrl": "https://github.com/zopencommunity/maturinport/releases/tag/STABLE_maturinport_154"
+    },
+    {
+      "name": "mmh3",
+      "displayName": "mmh3",
+      "pythonVersions": [
+        "3.12",
+        "3.13",
+        "3.14"
+      ],
+      "wheelCount": 7,
+      "indexUrl": "https://repo.zopen.community/pypi/wheels/simple/mmh3/",
+      "releaseKey": "mmh3",
+      "version": "5.2.0",
+      "description": "Python extension for MurmurHash (MurmurHash3), a set of fast and robust hash functions.",
+      "categories": [
+        "development",
+        "utilities"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 255,
+      "totalTests": 255,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-10T19:05:48Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/mmh3port",
+      "releaseUrl": "https://github.com/zopencommunity/mmh3port/releases/tag/STABLE_mmh3port_86"
+    },
+    {
+      "name": "msgpack",
+      "displayName": "msgpack",
+      "pythonVersions": [
+        "3.12",
+        "3.13",
+        "3.14"
+      ],
+      "wheelCount": 6,
+      "indexUrl": "https://repo.zopen.community/pypi/wheels/simple/msgpack/",
+      "releaseKey": "msgpack",
+      "version": "1.2.1",
+      "description": "z/OS port of msgpack - MessagePack serializer for Python",
+      "categories": [
+        "development",
+        "library"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 30,
+      "totalTests": 30,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-14T03:05:18Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/msgpackport",
+      "releaseUrl": "https://github.com/zopencommunity/msgpackport/releases/tag/STABLE_msgpackport_131"
+    },
+    {
+      "name": "numpy",
+      "displayName": "numpy",
+      "pythonVersions": [
+        "3.12",
+        "3.13",
+        "3.14"
+      ],
+      "wheelCount": 9,
+      "indexUrl": "https://repo.zopen.community/pypi/wheels/simple/numpy/",
+      "releaseKey": "numpy",
+      "version": "2.5.2",
+      "description": "Fundamental package for array computing in Python",
+      "categories": [
+        "development",
+        "library",
+        "math"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 45,
+      "totalTests": 45,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-19T01:41:16Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/numpyport",
+      "releaseUrl": "https://github.com/zopencommunity/numpyport/releases/tag/STABLE_numpyport_192"
+    },
+    {
+      "name": "pandas",
+      "displayName": "pandas",
+      "pythonVersions": [
+        "3.12",
+        "3.13",
+        "3.14"
+      ],
+      "wheelCount": 3,
+      "indexUrl": "https://repo.zopen.community/pypi/wheels/simple/pandas/",
+      "releaseKey": "pandas",
+      "version": "3.0.5",
+      "description": "Powerful data structures for data analysis, time series, and statistics in Python",
+      "categories": [
+        "development",
+        "library",
+        "math"
+      ],
+      "runtimeDependencies": [
+        "numpy"
+      ],
+      "passedTests": 33,
+      "totalTests": 33,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-18T19:21:42Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/pandasport",
+      "releaseUrl": "https://github.com/zopencommunity/pandasport/releases/tag/STABLE_pandasport_190"
+    },
+    {
+      "name": "paramiko",
+      "displayName": "paramiko",
+      "pythonVersions": [
+        "3.12",
+        "3.13",
+        "3.14"
+      ],
+      "wheelCount": 1,
+      "indexUrl": "https://repo.zopen.community/pypi/wheels/simple/paramiko/",
+      "releaseKey": "paramiko",
+      "version": "5.0.0",
+      "description": "paramiko for z/OS: SSHv2 protocol library for Python",
+      "categories": [
+        "development",
+        "security",
+        "library",
+        "networking"
+      ],
+      "runtimeDependencies": [
+        "bcrypt",
+        "cryptography",
+        "pynacl"
+      ],
+      "passedTests": 36,
+      "totalTests": 36,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-14T19:12:53Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/paramikoport",
+      "releaseUrl": "https://github.com/zopencommunity/paramikoport/releases/tag/STABLE_paramikoport_141"
+    },
+    {
+      "name": "pillow",
+      "displayName": "pillow",
+      "pythonVersions": [
+        "3.12",
+        "3.13",
+        "3.14"
+      ],
+      "wheelCount": 3,
+      "indexUrl": "https://repo.zopen.community/pypi/wheels/simple/pillow/",
+      "releaseKey": "pillow",
+      "version": "12.3.0",
+      "description": "Pillow for z/OS: imaging library with JPEG and PNG",
+      "categories": [
+        "development",
+        "library",
+        "graphics"
+      ],
+      "runtimeDependencies": [
+        "libjpeg-turbo",
+        "zlib"
+      ],
+      "passedTests": 45,
+      "totalTests": 45,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-16T05:24:43Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/pillowport",
+      "releaseUrl": "https://github.com/zopencommunity/pillowport/releases/tag/STABLE_pillowport_157"
+    },
+    {
+      "name": "psutil",
+      "displayName": "psutil",
+      "pythonVersions": [
+        "3.12",
+        "3.13",
+        "3.14"
+      ],
+      "wheelCount": 27,
+      "indexUrl": "https://repo.zopen.community/pypi/wheels/simple/psutil/",
+      "releaseKey": "psutil",
+      "version": "7.2.2",
+      "description": "z/OS port of psutil - cross-platform library for process and system utilization monitoring",
+      "categories": [
+        "development",
+        "library"
+      ],
+      "runtimeDependencies": [
+        "zoslib"
+      ],
+      "passedTests": 36,
+      "totalTests": 36,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-22T02:41:45Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/psutilport",
+      "releaseUrl": "https://github.com/zopencommunity/psutilport/releases/tag/DEV_psutilport_237"
+    },
+    {
+      "name": "pycryptodome",
+      "displayName": "pycryptodome",
+      "pythonVersions": [
+        "3.12",
+        "3.13",
+        "3.14"
+      ],
+      "wheelCount": 3,
+      "indexUrl": "https://repo.zopen.community/pypi/wheels/simple/pycryptodome/",
+      "releaseKey": "pycryptodome",
+      "version": "3.23.0",
+      "description": "pycryptodome for z/OS: self-contained cryptographic library for Python",
+      "categories": [
+        "development",
+        "security",
+        "library"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 48,
+      "totalTests": 48,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-15T05:22:59Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/pycryptodomeport",
+      "releaseUrl": "https://github.com/zopencommunity/pycryptodomeport/releases/tag/STABLE_pycryptodomeport_145"
+    },
+    {
+      "name": "pydantic-core",
+      "displayName": "pydantic_core",
+      "pythonVersions": [
+        "3.12",
+        "3.13",
+        "3.14"
+      ],
+      "wheelCount": 11,
+      "indexUrl": "https://repo.zopen.community/pypi/wheels/simple/pydantic-core/",
+      "releaseKey": "pydantic-core",
+      "version": "2.46.4",
+      "description": "Core functionality for Pydantic validation and serialization (Rust extension, cross-compiled for z/OS)",
+      "categories": [
+        "development",
+        "library"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 24,
+      "totalTests": 24,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-16T22:35:23Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/pydantic-coreport",
+      "releaseUrl": "https://github.com/zopencommunity/pydantic-coreport/releases/tag/STABLE_pydantic-coreport_161"
+    },
+    {
+      "name": "pynacl",
+      "displayName": "PyNaCl",
+      "pythonVersions": [
+        "3.12",
+        "3.13",
+        "3.14"
+      ],
+      "wheelCount": 12,
+      "indexUrl": "https://repo.zopen.community/pypi/wheels/simple/pynacl/",
+      "releaseKey": "pynacl",
+      "version": "1.6.2",
+      "description": "PyNaCl for z/OS: Python bindings to libsodium",
+      "categories": [
+        "development",
+        "security",
+        "library"
+      ],
+      "runtimeDependencies": [
+        "libsodium",
+        "zoslib"
+      ],
+      "passedTests": 42,
+      "totalTests": 42,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-14T18:03:20Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/pynaclport",
+      "releaseUrl": "https://github.com/zopencommunity/pynaclport/releases/tag/STABLE_pynaclport_139"
+    },
+    {
+      "name": "pyyaml",
+      "displayName": "PyYAML",
+      "pythonVersions": [
+        "3.12",
+        "3.13",
+        "3.14"
+      ],
+      "wheelCount": 3,
+      "indexUrl": "https://repo.zopen.community/pypi/wheels/simple/pyyaml/",
+      "releaseKey": "pyyaml",
+      "version": "6.0.3",
+      "description": "PyYAML for z/OS, built against libyaml",
+      "categories": [
+        "development",
+        "library"
+      ],
+      "runtimeDependencies": [
+        "libyaml"
+      ],
+      "passedTests": 39,
+      "totalTests": 39,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-15T06:07:41Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/pyyamlport",
+      "releaseUrl": "https://github.com/zopencommunity/pyyamlport/releases/tag/STABLE_pyyamlport_147"
+    },
+    {
+      "name": "regex",
+      "displayName": "regex",
+      "pythonVersions": [
+        "3.12",
+        "3.13",
+        "3.14"
+      ],
+      "wheelCount": 3,
+      "indexUrl": "https://repo.zopen.community/pypi/wheels/simple/regex/",
+      "releaseKey": "regex",
+      "version": "2026.8.12",
+      "description": "z/OS port of regex - alternative regular expression module for Python",
+      "categories": [
+        "development",
+        "library"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 87,
+      "totalTests": 87,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-14T02:55:58Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/regexport",
+      "releaseUrl": "https://github.com/zopencommunity/regexport/releases/tag/STABLE_regexport_130"
+    },
+    {
+      "name": "rpds-py",
+      "displayName": "rpds_py",
+      "pythonVersions": [
+        "3.12",
+        "3.13",
+        "3.14"
+      ],
+      "wheelCount": 7,
+      "indexUrl": "https://repo.zopen.community/pypi/wheels/simple/rpds-py/",
+      "releaseKey": "rpds-py",
+      "version": "2026.6.3",
+      "description": "Python bindings to Rust's persistent data structures (rpds)",
+      "categories": [
+        "development",
+        "library"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 30,
+      "totalTests": 30,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-18T15:24:14Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/rpds-pyport",
+      "releaseUrl": "https://github.com/zopencommunity/rpds-pyport/releases/tag/STABLE_rpds-pyport_185"
+    },
+    {
+      "name": "scikit-learn",
+      "displayName": "scikit-learn",
+      "pythonVersions": [
+        "3.12",
+        "3.13",
+        "3.14"
+      ],
+      "wheelCount": 6,
+      "indexUrl": "https://repo.zopen.community/pypi/wheels/simple/scikit-learn/",
+      "releaseKey": "scikit-learn",
+      "version": "1.9.0",
+      "description": "zopen port of scikit-learn",
+      "categories": [
+        "development",
+        "library",
+        "math"
+      ],
+      "runtimeDependencies": [
+        "numpy",
+        "scipy"
+      ],
+      "passedTests": 39,
+      "totalTests": 39,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-24T14:28:10Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/scikit-learnport",
+      "releaseUrl": "https://github.com/zopencommunity/scikit-learnport/releases/tag/STABLE_scikit-learnport_263"
+    },
+    {
+      "name": "scipy",
+      "displayName": "scipy",
+      "pythonVersions": [
+        "3.12",
+        "3.13",
+        "3.14"
+      ],
+      "wheelCount": 6,
+      "indexUrl": "https://repo.zopen.community/pypi/wheels/simple/scipy/",
+      "releaseKey": "scipy",
+      "version": "1.18.0",
+      "description": "Fundamental algorithms for scientific computing in Python",
+      "categories": [
+        "development",
+        "library",
+        "math"
+      ],
+      "runtimeDependencies": [
+        "numpy"
+      ],
+      "passedTests": 66,
+      "totalTests": 66,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-21T15:25:17Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/scipyport",
+      "releaseUrl": "https://github.com/zopencommunity/scipyport/releases/tag/STABLE_scipyport_220"
+    },
+    {
+      "name": "shap",
+      "displayName": "shap",
+      "pythonVersions": [
+        "3.12",
+        "3.13",
+        "3.14"
+      ],
+      "wheelCount": 3,
+      "indexUrl": "https://repo.zopen.community/pypi/wheels/simple/shap/",
+      "releaseKey": "shap",
+      "version": "0.52.1.dev42",
+      "description": "A unified approach to explain the output of any machine learning model",
+      "categories": [
+        "development",
+        "library",
+        "math"
+      ],
+      "runtimeDependencies": [
+        "numpy",
+        "pandas",
+        "scikit-learn",
+        "scipy"
+      ],
+      "passedTests": 21,
+      "totalTests": 21,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-21T21:10:49Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/shapport",
+      "releaseUrl": "https://github.com/zopencommunity/shapport/releases/tag/STABLE_shapport_223"
+    },
+    {
+      "name": "simplejson",
+      "displayName": "simplejson",
+      "pythonVersions": [
+        "3.12",
+        "3.13",
+        "3.14"
+      ],
+      "wheelCount": 3,
+      "indexUrl": "https://repo.zopen.community/pypi/wheels/simple/simplejson/",
+      "releaseKey": "simplejson",
+      "version": "4.1.1",
+      "description": "z/OS port of simplejson - extensible JSON encoder and decoder for Python",
+      "categories": [
+        "development",
+        "library"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 39,
+      "totalTests": 39,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-14T12:05:54Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/simplejsonport",
+      "releaseUrl": "https://github.com/zopencommunity/simplejsonport/releases/tag/STABLE_simplejsonport_134"
+    },
+    {
+      "name": "snowflake-connector-python",
+      "displayName": "snowflake-connector-python",
+      "pythonVersions": [
+        "3.12",
+        "3.13",
+        "3.14"
+      ],
+      "wheelCount": 3,
+      "indexUrl": "https://repo.zopen.community/pypi/wheels/simple/snowflake-connector-python/",
+      "releaseKey": "snowflake-connector-python",
+      "version": "4.7.2",
+      "description": "zopen port of snowflake-connector-python",
+      "categories": [
+        "development",
+        "library",
+        "database"
+      ],
+      "runtimeDependencies": [
+        "cryptography"
+      ],
+      "passedTests": 42,
+      "totalTests": 42,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-24T13:57:48Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/snowflake-connector-pythonport",
+      "releaseUrl": "https://github.com/zopencommunity/snowflake-connector-pythonport/releases/tag/STABLE_snowflake-connector-pythonport_256"
+    },
+    {
+      "name": "ujson",
+      "displayName": "ujson",
+      "pythonVersions": [
+        "3.12",
+        "3.13",
+        "3.14"
+      ],
+      "wheelCount": 6,
+      "indexUrl": "https://repo.zopen.community/pypi/wheels/simple/ujson/",
+      "releaseKey": "ujson",
+      "version": "5.13.0",
+      "description": "Fast JSON encoder and decoder for Python",
+      "categories": [
+        "development",
+        "library"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 36,
+      "totalTests": 36,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-15T14:56:46Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/ujsonport",
+      "releaseUrl": "https://github.com/zopencommunity/ujsonport/releases/tag/STABLE_ujsonport_151"
+    },
+    {
+      "name": "versioneer",
+      "displayName": "versioneer",
+      "pythonVersions": [
+        "3.12",
+        "3.13",
+        "3.14"
+      ],
+      "wheelCount": 1,
+      "indexUrl": "https://repo.zopen.community/pypi/wheels/simple/versioneer/",
+      "releaseKey": "versioneer",
+      "version": "0.28",
+      "description": "Easy VCS-based management of project version strings",
+      "categories": [
+        "utilities"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 282,
+      "totalTests": 282,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-10T19:03:49Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/versioneerport",
+      "releaseUrl": "https://github.com/zopencommunity/versioneerport/releases/tag/STABLE_versioneerport_85"
+    },
+    {
+      "name": "watchfiles",
+      "displayName": "watchfiles",
+      "pythonVersions": [
+        "3.12",
+        "3.13",
+        "3.14"
+      ],
+      "wheelCount": 3,
+      "indexUrl": "https://repo.zopen.community/pypi/wheels/simple/watchfiles/",
+      "releaseKey": "watchfiles",
+      "version": "1.2.0",
+      "description": "z/OS port of watchfiles (file-watching library with Rust core)",
+      "categories": [
+        "development",
+        "library"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 15,
+      "totalTests": 15,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-13T16:58:48Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/watchfilesport",
+      "releaseUrl": "https://github.com/zopencommunity/watchfilesport/releases/tag/STABLE_watchfilesport_126"
+    },
+    {
+      "name": "xxhash",
+      "displayName": "xxhash",
+      "pythonVersions": [
+        "3.12",
+        "3.13",
+        "3.14"
+      ],
+      "wheelCount": 9,
+      "indexUrl": "https://repo.zopen.community/pypi/wheels/simple/xxhash/",
+      "releaseKey": "python-xxhash",
+      "version": "3.8.1",
+      "description": "zopen port of python-xxhash",
+      "categories": [
+        "development"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 264,
+      "totalTests": 264,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-11T21:14:12Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/python-xxhashport",
+      "releaseUrl": "https://github.com/zopencommunity/python-xxhashport/releases/tag/STABLE_python-xxhashport_100"
+    },
+    {
+      "name": "zope-interface",
+      "displayName": "zope.interface",
+      "pythonVersions": [
+        "3.12",
+        "3.13",
+        "3.14"
+      ],
+      "wheelCount": 6,
+      "indexUrl": "https://repo.zopen.community/pypi/wheels/simple/zope-interface/",
+      "releaseKey": "zopeinterface",
+      "version": "8.6",
+      "description": "Interface definitions for Python",
+      "categories": [
+        "development",
+        "library"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 36,
+      "totalTests": 36,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-20T15:30:22Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/zopeinterfaceport",
+      "releaseUrl": "https://github.com/zopencommunity/zopeinterfaceport/releases/tag/STABLE_zopeinterfaceport_211"
+    },
+    {
+      "name": "zstandard",
+      "displayName": "zstandard",
+      "pythonVersions": [
+        "3.12",
+        "3.13",
+        "3.14"
+      ],
+      "wheelCount": 3,
+      "indexUrl": "https://repo.zopen.community/pypi/wheels/simple/zstandard/",
+      "releaseKey": "zstandard",
+      "version": "0.25.0",
+      "description": "z/OS port of zstandard - Python bindings to the Zstandard compression library",
+      "categories": [
+        "development",
+        "library",
+        "compression"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 36,
+      "totalTests": 36,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-14T11:42:04Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/zstandardport",
+      "releaseUrl": "https://github.com/zopencommunity/zstandardport/releases/tag/STABLE_zstandardport_132"
+    }
+  ]
+}

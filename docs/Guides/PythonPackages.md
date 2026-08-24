@@ -6,46 +6,36 @@ normal `pip install` goes wrong here.
 Everything on this page has been checked on z/OS against Python 3.12, 3.13 and
 3.14.
 
+Looking for a specific library? The [available Python packages](/PythonPackages)
+catalogue shows current versions, interpreter coverage, reported verification
+results, and installation commands.
+
 ## The short version
 
 ```sh
 export PIP_EXTRA_INDEX_URL="https://repo.zopen.community/pypi/wheels/simple/"
 export PIP_CONSTRAINT="https://repo.zopen.community/pulp/content/constraints/zopen-constraints.txt"
 
-python3 -m venv --system-site-packages .venv
+python3 -m venv .venv
 . .venv/bin/activate
 
 pip install cryptography
 ```
 
-All three lines are load-bearing. Drop any one of them and the install fails —
-or, worse, appears to succeed and gives you something else. The rest of this
-page explains each, because the failures are quiet and none of them says what
-is actually wrong.
+The index supplies z/OS wheels that PyPI does not, while the generated
+constraints keep package selection aligned with the versions currently
+published there.
 
-## Why `--system-site-packages`
+## Why a standard virtual environment now works
 
-The z/OS interpreters ship with packages that PyPI would normally supply, and
-some of those **cannot be installed from PyPI here at all**. `cffi` is the one
-that matters: it ships only an sdist for this platform, and building it needs
-libffi headers that z/OS does not have.
+The zopen index now includes z/OS wheels for native dependencies such as
+`cffi`. Packages including `cryptography`, `pynacl`, and `paramiko` can therefore
+be installed into an ordinary isolated virtual environment; they no longer
+need to inherit the interpreter's bundled packages.
 
-```
-ERROR: Failed building wheel for cffi
-```
-
-A plain `python3 -m venv` hides the interpreter's copy, so anything depending
-on `cffi` — `cryptography`, and most packages wrapping a C library — cannot be
-installed into one, whatever index or constraints you configure. Creating the
-environment with `--system-site-packages` lets it see what the interpreter
-already has.
-
-Bundled versions, for reference:
-
-| package | 3.12 | 3.13 | 3.14 |
-|---|---|---|---|
-| `cffi` | 1.17.1 | 2.0.0 | 2.0.0 |
-| `cryptography` | 3.3.2 | 3.3.2 | 3.3.2 |
+Avoid `--system-site-packages` unless you deliberately want packages from the
+base interpreter. Isolation makes it easier to confirm exactly which versions
+your application uses.
 
 ## Why `PIP_CONSTRAINT`
 
@@ -141,14 +131,9 @@ python -c "import cryptography; assert cryptography.__version__ == '50.0.0'"
 zopen install uv
 ```
 
-It reaches the wheel index and installs from it correctly, and it is
-substantially faster than pip. One limit decides whether it is usable for a
-given job:
-
-- **Nothing that depends on `cffi`**, which rules out `cryptography`, `pynacl`
-  and `paramiko`.
-
-It is explained below. Where it applies, use pip.
+It reaches the wheel index and installs from it correctly, including packages
+with published native dependencies such as `cffi`, and is substantially faster
+than pip.
 
 The settings map across:
 
@@ -164,44 +149,11 @@ export UV_CONSTRAINT="https://repo.zopen.community/pulp/content/constraints/zope
 export UV_CACHE_DIR=/tmp/uv-cache
 
 uv venv .venv
-uv pip install --python .venv/bin/python msgpack
+uv pip install --python .venv/bin/python cryptography
 ```
 
 `UV_INDEX` rather than `UV_EXTRA_INDEX_URL`: uv accepts the latter but reports
 it as deprecated in favour of `--index`.
-
-### uv will not use the interpreter's bundled packages
-
-This is the important difference, and it is why `cffi` is fatal here.
-
-pip treats a package already present in the environment as satisfying a
-requirement — which is what makes `--system-site-packages` work, and why the
-`cffi` that ships with the interpreter is usable at all. uv resolves against the
-index instead and installs its own copy regardless of what is already there.
-
-So `uv venv --system-site-packages` creates the environment, and uv then ignores
-the contents:
-
-```
-$ uv pip install --python .venv/bin/python cryptography
-Resolved 3 packages
-   Building cffi==2.1.1
-  × Failed to build `cffi==2.1.1`
-      _configtest.c:1:1: error: thread-local storage is not supported for the
-      current target
-  help: `cffi` (v2.1.1) was included because `cryptography` (v50.0.0) depends on it
-```
-
-uv found the zopen wheel for `cryptography` correctly — the failure is entirely
-`cffi`, which has no z/OS wheel and cannot be compiled here. Adding
-`UV_CONSTRAINT` does not change it, and neither does
-`--system-site-packages`. With that flag the environment is left holding the
-interpreter's `cryptography` 3.3.2 — the 2021 release with the
-certificate-validation CVEs — so **check the version afterwards rather than
-trusting the exit status**. Without it the install simply leaves no
-`cryptography` at all, which at least fails honestly.
-
-Everything without a `cffi` dependency installs normally.
 
 ### Python 3.14 needs a recent enough uv
 

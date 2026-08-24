@@ -10,6 +10,10 @@ cd meta_update
 # Generate Release cache
 python3 tools/create_release_cache.py --verbose --output-file docs/api/zopen_releases.json
 
+# Merge release verification metadata with the live wheel index for the
+# GitHub Pages-safe Python package catalogue.
+python3 tools/create_python_package_catalog.py
+
 # Generate a view of the newly released tools
 python3 tools/create_latest_release_doc.py --output docs/newly_released.md
 

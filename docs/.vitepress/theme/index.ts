@@ -5,6 +5,7 @@ import ToolFilters from './components/ToolFilters.vue'
 import PackageRequests from './components/PackageRequests.vue'
 import PackageRequestsAdmin from './components/PackageRequestsAdmin.vue'
 import PackageRequestDetail from './components/PackageRequestDetail.vue'
+import PythonPackages from './components/PythonPackages.vue'
 
 export default {
   extends: DefaultTheme,
@@ -14,6 +15,7 @@ export default {
     app.component('PackageRequests', PackageRequests)
     app.component('PackageRequestsAdmin', PackageRequestsAdmin)
     app.component('PackageRequestDetail', PackageRequestDetail)
+    app.component('PythonPackages', PythonPackages)
   }
 } satisfies Theme
 
