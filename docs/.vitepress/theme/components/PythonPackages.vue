@@ -33,7 +33,10 @@ const catalog = catalogData as {
 const search = ref("");
 const pythonVersion = ref("all");
 const verification = ref("all");
-const sort = ref<"name" | "recent" | "verification">("name");
+type SortKey = "name" | "version" | "python" | "verification" | "recent";
+type SortDirection = "asc" | "desc";
+const sort = ref<SortKey>("recent");
+const sortDirection = ref<SortDirection>("desc");
 const copied = ref("");
 
 const pipSetup = `export PIP_EXTRA_INDEX_URL="https://repo.zopen.community/pypi/wheels/simple/"
@@ -61,18 +64,51 @@ const filteredPackages = computed(() => {
       && (verification.value === "all" || verificationKind(pkg) === verification.value);
   });
   return packages.sort((left, right) => {
+    let comparison = 0;
     if (sort.value === "recent") {
-      return (right.publishedAt || "").localeCompare(left.publishedAt || "")
-        || left.name.localeCompare(right.name);
+      comparison = (left.publishedAt || "").localeCompare(right.publishedAt || "");
+    } else if (sort.value === "verification") {
+      comparison = (left.verificationRate ?? -1) - (right.verificationRate ?? -1)
+        || (left.totalTests ?? -1) - (right.totalTests ?? -1);
+    } else if (sort.value === "version") {
+      comparison = (left.version || "").localeCompare(right.version || "", undefined, { numeric: true, sensitivity: "base" });
+    } else if (sort.value === "python") {
+      comparison = left.pythonVersions.length - right.pythonVersions.length
+        || left.pythonVersions.join(".").localeCompare(right.pythonVersions.join("."), undefined, { numeric: true });
+    } else {
+      comparison = left.name.localeCompare(right.name);
     }
-    if (sort.value === "verification") {
-      return (right.verificationRate ?? -1) - (left.verificationRate ?? -1)
-        || (right.totalTests ?? -1) - (left.totalTests ?? -1)
-        || left.name.localeCompare(right.name);
-    }
-    return left.name.localeCompare(right.name);
+    return (sortDirection.value === "asc" ? comparison : -comparison)
+      || left.name.localeCompare(right.name);
   });
 });
+
+function defaultDirection(key: SortKey): SortDirection {
+  return key === "name" ? "asc" : "desc";
+}
+
+function changeSort(key: SortKey) {
+  if (sort.value === key) {
+    sortDirection.value = sortDirection.value === "asc" ? "desc" : "asc";
+    return;
+  }
+  sort.value = key;
+  sortDirection.value = defaultDirection(key);
+}
+
+function resetSortDirection() {
+  sortDirection.value = defaultDirection(sort.value);
+}
+
+function ariaSort(key: SortKey): "ascending" | "descending" | undefined {
+  if (sort.value !== key) return undefined;
+  return sortDirection.value === "asc" ? "ascending" : "descending";
+}
+
+function sortIndicator(key: SortKey) {
+  if (sort.value !== key) return "↕";
+  return sortDirection.value === "asc" ? "↑" : "↓";
+}
 
 function displayDate(value: string) {
   if (!value) return "Not reported";
@@ -161,9 +197,11 @@ async function copyText(value: string, key: string) {
       </label>
       <label>
         <span>Sort by</span>
-        <select v-model="sort">
+        <select v-model="sort" @change="resetSortDirection">
+          <option value="recent">Recent additions</option>
           <option value="name">Package name</option>
-          <option value="recent">Recently published</option>
+          <option value="version">Version</option>
+          <option value="python">Python coverage</option>
           <option value="verification">Verification result</option>
         </select>
       </label>
@@ -171,16 +209,16 @@ async function copyText(value: string, key: string) {
 
     <div class="results-heading">
       <span><strong>{{ filteredPackages.length }}</strong> of {{ catalog.packageCount }} packages</span>
-      <span>Catalogue refreshed {{ displayDate(catalog.generatedAt) }}</span>
+      <span>{{ sort === "recent" ? `${sortDirection === "desc" ? "Newest" : "Oldest"} zopen releases first` : `Catalogue refreshed ${displayDate(catalog.generatedAt)}` }}</span>
     </div>
 
     <div v-if="filteredPackages.length" class="package-table" role="table" aria-label="Available Python packages">
       <div class="package-header" role="row">
-        <span role="columnheader">Package</span>
-        <span role="columnheader">Version</span>
-        <span role="columnheader">Python</span>
-        <span role="columnheader">Port verification</span>
-        <span role="columnheader">Published</span>
+        <span role="columnheader" :aria-sort="ariaSort('name')"><button type="button" @click="changeSort('name')">Package <span aria-hidden="true">{{ sortIndicator('name') }}</span></button></span>
+        <span role="columnheader" :aria-sort="ariaSort('version')"><button type="button" @click="changeSort('version')">Version <span aria-hidden="true">{{ sortIndicator('version') }}</span></button></span>
+        <span role="columnheader" :aria-sort="ariaSort('python')"><button type="button" @click="changeSort('python')">Python <span aria-hidden="true">{{ sortIndicator('python') }}</span></button></span>
+        <span role="columnheader" :aria-sort="ariaSort('verification')"><button type="button" @click="changeSort('verification')">Port verification <span aria-hidden="true">{{ sortIndicator('verification') }}</span></button></span>
+        <span role="columnheader" :aria-sort="ariaSort('recent')"><button type="button" @click="changeSort('recent')">Latest release <span aria-hidden="true">{{ sortIndicator('recent') }}</span></button></span>
       </div>
 
       <details v-for="pkg in filteredPackages" :key="pkg.name" class="package-row">
@@ -201,7 +239,7 @@ async function copyText(value: string, key: string) {
             </template>
             <template v-else><strong>Not reported</strong><small>No check counts in latest metadata</small></template>
           </span>
-          <span class="published-value" data-label="Published">{{ displayDate(pkg.publishedAt) }}</span>
+          <span class="published-value" data-label="Latest release">{{ displayDate(pkg.publishedAt) }}</span>
         </summary>
 
         <div class="package-details">
@@ -265,6 +303,10 @@ async function copyText(value: string, key: string) {
 .package-table { overflow: hidden; border: 1px solid var(--vp-c-divider); border-radius: 12px; }
 .package-header, .package-row > summary { display: grid; grid-template-columns: minmax(230px, 2fr) minmax(95px, 0.65fr) minmax(150px, 0.9fr) minmax(175px, 1fr) minmax(110px, 0.75fr); gap: 16px; align-items: center; }
 .package-header { padding: 11px 42px 11px 16px; background: var(--vp-c-bg-soft); color: var(--vp-c-text-2); font-size: 0.72rem; font-weight: 750; letter-spacing: 0.05em; text-transform: uppercase; }
+.package-header button { display: inline-flex; gap: 5px; align-items: center; padding: 2px 0; border: 0; background: transparent; color: inherit; cursor: pointer; font: inherit; font-weight: inherit; letter-spacing: inherit; text-align: left; text-transform: inherit; }
+.package-header button:hover { color: var(--vp-c-brand-1); }
+.package-header button:focus-visible { border-radius: 3px; outline: 2px solid var(--vp-c-brand-1); outline-offset: 3px; }
+.package-header button span { color: var(--vp-c-brand-1); font-size: 0.9rem; line-height: 1; }
 .package-row { border-top: 1px solid var(--vp-c-divider); background: var(--vp-c-bg); }
 .package-row:first-of-type { border-top: 0; }
 .package-row > summary { padding: 15px 16px; cursor: pointer; list-style-position: outside; }
