@@ -1,0 +1,38 @@
+base-branch:
+  - main
+branch: from-multi-gitter
+concurrent: 5
+conflict-strategy: skip
+draft: false
+dry-run: false
+fetch-depth: 1
+fork: true
+fork-owner:
+git-type: cmd
+interactive: false
+log-file: "-"
+log-format: text
+log-level: debug
+max-reviewers: 0
+max-team-reviewers: 0
+org:
+  - zopencommunity
+output: "-"
+plain-output: false
+platform: github
+pr-title: "multi-gitter: Add GitHub workflows"
+repo-include: ".*port$"
+skip-forks: false
+skip-pr: false
+skip-repo:
+  - zopencommunity/zotsampleport
+  - zopencommunity/pythonport
+  - zopencommunity/javaport
+  - zopencommunity/check_pythonport
+  - zopencommunity/check_javaport
+  - zopencommunity/bumpport
+  - zopencommunity/toolsandtoysport
+  - zopencommunity/jrubyport
+  - zopencommunity/my_basicport
+  - zopencommunity/llamacppport
+  - zopencommunity/librdkafkaport
