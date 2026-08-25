@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2026-08-24T23:05:20+00:00Z",
+  "generation_timestamp_utc": "2026-08-25T21:53:20+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -374,6 +374,7 @@
     "snappy": "zopen port of snappy",
     "utf8proc": "zopen port of utf8proc",
     "arrow": "zopen port of Apache Arrow C++",
-    "pyarrow": "zopen port of pyarrow"
+    "pyarrow": "zopen port of pyarrow",
+    "rapidjson": "z/OS port of RapidJSON, a fast JSON parser/generator for C++"
   }
 }
