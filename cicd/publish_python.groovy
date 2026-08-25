@@ -372,14 +372,38 @@ for line in src.read_text().splitlines():
 for s in superseded:
     print(f"  cap superseded by a published pin: {s}")
 
+# A constraints file describes exactly one wheel index: its pins are the
+# versions that index serves, and they are only correct for someone installing
+# from it. So it has to be published per index.
+#
+# Both build lines used to write to the same "constraints" distribution. The
+# DEV index carries a handful of packages and the STABLE one carries dozens, so
+# a DEV publish silently replaced the file users are told to point pip at with
+# one pinning three packages -- leaving cffi and cryptography unpinned, pip
+# taking PyPI's newer cffi, and the install dying on a missing ffi.h that has
+# nothing to do with the package being installed.
+#
+# STABLE keeps the documented base path. Anything else gets its own, so a dev
+# publish is still useful to whoever is testing against the dev index and
+# cannot reach the file everyone else uses.
+index_name = [p for p in urlsplit(index).path.split("/") if p and p != "simple"][-1]
+if index_name == "wheels":
+    base_path = "constraints"
+else:
+    suffix = index_name[len("wheels-"):] if index_name.startswith("wheels-") else index_name
+    base_path = f"constraints-{suffix}"
+
 body = ["# GENERATED -- do not edit.",
         "#",
         "# Produced by the Python publish job from data/zopen-constraints.txt in",
         "# zopencommunity/meta plus the current contents of the wheel index.",
         "# Edit the source file, not this one.",
         "#",
-        '#   export PIP_EXTRA_INDEX_URL="https://repo.zopen.community/pypi/wheels/simple/"',
-        f'#   export PIP_CONSTRAINT="{origin}/pulp/content/constraints/zopen-constraints.txt"',
+        f"# Generated from {index}",
+        "# These pins are correct for that index and no other.",
+        "#",
+        f'#   export PIP_EXTRA_INDEX_URL="{index}"',
+        f'#   export PIP_CONSTRAINT="{origin}/pulp/content/{base_path}/zopen-constraints.txt"',
         "",
         "# --- built by zopen for z/OS (generated from the wheel index) ---"]
 body += [f"{n}=={v}" for n, v in sorted(pins.items())]
@@ -387,15 +411,15 @@ body += ["", "# --- capped to avoid unported native dependencies (from git) ---"
 NL = chr(10)
 content = (NL.join(body) + NL).encode()
 
-# Idempotent: a file repository with autopublish, served at /constraints/.
-repos = call(f"{api}/repositories/file/file/?name=constraints")
+# Idempotent: a file repository with autopublish, served at /<base_path>/.
+repos = call(f"{api}/repositories/file/file/?name={base_path}")
 repo = repos["results"][0] if repos["results"] else call(
     f"{api}/repositories/file/file/", "POST",
-    {"name": "constraints", "autopublish": True})
-dists = call(f"{api}/distributions/file/file/?name=constraints")
+    {"name": base_path, "autopublish": True})
+dists = call(f"{api}/distributions/file/file/?name={base_path}")
 if not dists["results"]:
     call(f"{api}/distributions/file/file/", "POST",
-         {"name": "constraints", "base_path": "constraints",
+         {"name": base_path, "base_path": base_path,
           "repository": repo["pulp_href"]})
 
 CRLF = chr(13) + chr(10)
@@ -415,7 +439,8 @@ payload = (part("file", content, "zopen-constraints.txt")
 call(f"{api}/content/file/files/", "POST", payload,
      ctype=f"multipart/form-data; boundary={boundary}", raw=True)
 print(f"published constraints: {len(pins)} pins, {len(caps)} caps")
-print(f"  {origin}/pulp/content/constraints/zopen-constraints.txt")
+print(f"  from  {index}")
+print(f"  {origin}/pulp/content/{base_path}/zopen-constraints.txt")
 PY
 '''
         }

@@ -1160,13 +1160,8 @@ onMounted(async () => {
         <div class="hero-actions">
           <button class="primary-button" type="button" @click="openForm">{{ authUser ? "Request a package" : "Sign in to request" }}</button>
           <button class="secondary-button" type="button" @click="openBulkForm">{{ authUser ? "Request several" : "Sign in for bulk requests" }}</button>
+          <a class="secondary-button" :href="withBase('/PythonPackages')">Available Python packages</a>
           <a class="secondary-button" :href="withBase('/Latest')">Browse available tools</a>
-          <a
-            class="secondary-button"
-            href="https://repo.zopen.community/pulp/content/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >Browse package repository ↗</a>
         </div>
       </div>
       <div class="request-stats" aria-label="Package request statistics">
