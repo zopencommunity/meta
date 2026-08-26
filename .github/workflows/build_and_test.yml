@@ -23,11 +23,6 @@ on:
         required: false
         default: false
         type: boolean
-    secrets:
-      JENKINS_USER:
-        required: true
-      JENKINS_API_TOKEN:
-        required: true
 jobs:
   trigger-jenkins-job:
     runs-on: ubuntu-latest
