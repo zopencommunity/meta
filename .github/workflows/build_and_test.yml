@@ -162,12 +162,28 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const pr = context.payload.pull_request;
+
+            // Skip fork PRs
+            if (pr.head.repo.fork) {
+              console.log(`⏭️  Skipping merge: PR #${pr.number} is from a fork`);
+              core.setOutput('is-bump', 'false');
+              return;
+            }
+
+            // Check branch name matches bump- pattern
+            const branch = pr.head.ref;
+            if (!branch.startsWith('bump-')) {
+              console.log(`⏭️  Skipping merge: PR #${pr.number} branch '${branch}' does not match bump-* pattern`);
+              core.setOutput('is-bump', 'false');
+              return;
+            }
+
             const { data: commits } = await github.rest.pulls.listCommits({
               owner: context.repo.owner,
               repo: context.repo.repo,
               pull_number: pr.number
             });
-            
+
             const email = commits.at(-1).commit.committer.email;
             if (email !== "bump-action@github") {
               console.log(`⏭️  Skipping merge: PR #${pr.number} not created by bump automation (committer: ${email})`);
