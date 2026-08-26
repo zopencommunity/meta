@@ -148,12 +148,15 @@ jobs:
           status: ${{ job.status }}
           context: "Build and Test"
 
-  merge-pr:
+  validate-bump:
     needs: trigger-jenkins-job
     if: ${{ success() && github.event_name == 'pull_request_target' }}
     runs-on: ubuntu-latest
+    outputs:
+      is-bump: ${{ steps.check.outputs.is-bump }}
     steps:
       - name: Validate bump automation
+        id: check
         uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -168,13 +171,17 @@ jobs:
             const email = commits.at(-1).commit.committer.email;
             if (email !== "bump-action@github") {
               console.log(`⏭️  Skipping merge: PR #${pr.number} not created by bump automation (committer: ${email})`);
-              throw new Error("Not a bump automation PR");
+              core.setOutput('is-bump', 'false');
+            } else {
+              core.setOutput('is-bump', 'true');
             }
 
-      - name: Merge PR
-        uses: ./.github/workflows/merge_pr.yml
-        with:
-          delete_branch: true
-        secrets:
-          MERGE_APP_ID: ${{ secrets.MERGE_APP_ID }}
-          MERGE_APP_PRIVATE_KEY: ${{ secrets.MERGE_APP_PRIVATE_KEY }}
+  merge-pr:
+    needs: validate-bump
+    if: ${{ needs.validate-bump.outputs['is-bump'] == 'true' }}
+    uses: ./.github/workflows/merge_pr.yml
+    with:
+      delete_branch: true
+    secrets:
+      MERGE_APP_ID: ${{ secrets.MERGE_APP_ID }}
+      MERGE_APP_PRIVATE_KEY: ${{ secrets.MERGE_APP_PRIVATE_KEY }}
