@@ -18,6 +18,13 @@ jobs:
   merge:
     runs-on: ubuntu-latest
     steps:
+      - name: Validate required secrets
+        run: |
+          if [ -z "${{ secrets.MERGE_APP_ID }}" ] || [ -z "${{ secrets.MERGE_APP_PRIVATE_KEY }}" ]; then
+            echo "::error::Required secrets MERGE_APP_ID and MERGE_APP_PRIVATE_KEY must be configured. Please install the GitHub App and add its credentials as repository/organization secrets."
+            exit 1
+          fi
+
       - name: Generate GitHub App Token
         id: app-token
         uses: actions/create-github-app-token@v1
