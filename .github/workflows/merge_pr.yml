@@ -32,8 +32,10 @@ jobs:
           github-token: ${{ steps.app-token.outputs.token }}
           script: |
             const pr = context.payload.pull_request;
-            if (!pr || pr.head.repo.fork) return;
-            
+            if (!pr) return;
+
+            // Skip cross-repository PRs (e.g., forks)
+            if (pr.head.repo.full_name !== pr.base.repo.full_name) return;
             const { owner, repo } = context.repo;
             const prNumber = pr.number;
             const branchName = pr.head.ref;
