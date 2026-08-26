@@ -33,7 +33,6 @@ jobs:
           private-key: ${{ secrets.MERGE_APP_PRIVATE_KEY }}
 
       - name: Merge Pull Request 
-        continue-on-error: true
         uses: actions/github-script@v6
         with:
           github-token: ${{ steps.app-token.outputs.token }}
