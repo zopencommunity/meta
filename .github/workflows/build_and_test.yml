@@ -83,7 +83,7 @@ jobs:
     needs: validate-bump
     if: ${{ needs.validate-bump.outputs['is-bump'] == 'true' }}
     continue-on-error: true
-    uses: ./.github/workflows/merge_pr.yml
+    uses: zopencommunity/meta/.github/workflows/merge_pr.yml@test_merge_workflow
     with:
       delete_branch: true
     secrets:
