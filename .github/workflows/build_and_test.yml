@@ -163,9 +163,9 @@ jobs:
           script: |
             const pr = context.payload.pull_request;
 
-            // Skip fork PRs
-            if (pr.head.repo.fork) {
-              console.log(`⏭️  Skipping merge: PR #${pr.number} is from a fork`);
+            // Skip cross-repository fork PRs
+            if (pr.head.repo.full_name !== pr.base.repo.full_name) {
+              console.log(`⏭️  Skipping merge: PR #${pr.number} is from a different repository fork`);
               core.setOutput('is-bump', 'false');
               return;
             }
@@ -195,8 +195,7 @@ jobs:
   merge-pr:
     needs: validate-bump
     if: ${{ needs.validate-bump.outputs['is-bump'] == 'true' }}
-    continue-on-error: true
-    uses: zopencommunity/meta/.github/workflows/merge_pr.yml@main
+    uses: ./.github/workflows/merge_pr.yml
     with:
       delete_branch: true
     secrets:
