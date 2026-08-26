@@ -154,4 +154,6 @@ jobs:
     uses: ./.github/workflows/merge_pr.yml
     with:
       delete_branch: true
-    secrets: inherit
+    secrets:
+      MERGE_APP_ID: ${{ secrets.MERGE_APP_ID }}
+      MERGE_APP_PRIVATE_KEY: ${{ secrets.MERGE_APP_PRIVATE_KEY }}
