@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-26T18:33:48Z",
+  "generatedAt": "2026-08-27T18:57:49Z",
   "wheelIndexUrl": "https://repo.zopen.community/pypi/wheels/simple/",
   "supportedPythonVersions": [
     "3.12",
@@ -7,7 +7,7 @@
     "3.14"
   ],
   "packageCount": 37,
-  "wheelCount": 180,
+  "wheelCount": 186,
   "packages": [
     {
       "name": "bcrypt",
@@ -387,10 +387,10 @@
         "3.13",
         "3.14"
       ],
-      "wheelCount": 6,
+      "wheelCount": 9,
       "indexUrl": "https://repo.zopen.community/pypi/wheels/simple/msgpack/",
       "releaseKey": "msgpack",
-      "version": "1.2.1",
+      "version": "1.2.2",
       "description": "z/OS port of msgpack - MessagePack serializer for Python",
       "categories": [
         "development",
@@ -400,9 +400,9 @@
       "passedTests": 30,
       "totalTests": 30,
       "verificationRate": 100.0,
-      "publishedAt": "2026-08-14T03:05:18Z",
+      "publishedAt": "2026-08-27T18:54:48Z",
       "portRepositoryUrl": "https://github.com/zopencommunity/msgpackport",
-      "releaseUrl": "https://github.com/zopencommunity/msgpackport/releases/tag/STABLE_msgpackport_131"
+      "releaseUrl": "https://github.com/zopencommunity/msgpackport/releases/tag/STABLE_msgpackport_281"
     },
     {
       "name": "numpy",
@@ -798,10 +798,10 @@
         "3.13",
         "3.14"
       ],
-      "wheelCount": 3,
+      "wheelCount": 6,
       "indexUrl": "https://repo.zopen.community/pypi/wheels/simple/simplejson/",
       "releaseKey": "simplejson",
-      "version": "4.1.1",
+      "version": "4.1.2",
       "description": "z/OS port of simplejson - extensible JSON encoder and decoder for Python",
       "categories": [
         "development",
@@ -811,9 +811,9 @@
       "passedTests": 39,
       "totalTests": 39,
       "verificationRate": 100.0,
-      "publishedAt": "2026-08-14T12:05:54Z",
+      "publishedAt": "2026-08-27T18:51:13Z",
       "portRepositoryUrl": "https://github.com/zopencommunity/simplejsonport",
-      "releaseUrl": "https://github.com/zopencommunity/simplejsonport/releases/tag/STABLE_simplejsonport_134"
+      "releaseUrl": "https://github.com/zopencommunity/simplejsonport/releases/tag/STABLE_simplejsonport_280"
     },
     {
       "name": "snowflake-connector-python",
