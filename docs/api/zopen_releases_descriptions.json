@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2026-08-28T20:25:23+00:00Z",
+  "generation_timestamp_utc": "2026-08-29T02:27:55+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -375,6 +375,7 @@
     "utf8proc": "zopen port of utf8proc",
     "arrow": "zopen port of Apache Arrow C++",
     "pyarrow": "zopen port of pyarrow",
-    "rapidjson": "z/OS port of RapidJSON, a fast JSON parser/generator for C++"
+    "rapidjson": "z/OS port of RapidJSON, a fast JSON parser/generator for C++",
+    "zdnn": "zopen port of the IBM zDNN library (NNPA / Telum Integrated Accelerator for AI) for z/OS"
   }
 }
