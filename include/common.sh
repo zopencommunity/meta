@@ -246,18 +246,27 @@ knv=false
 exportknv=""
 displayText=true
 unset overrideFile
-while [ \$# -gt 0 ]; do
-  case "\$1" in
-    --eknv) exportknv="export "; knv=true;;
-    --knv) knv=true;;
-    --override-zos-tools)  export ZOPEN_TOOLSET_OVERRIDE=1;;
-    --nooverride-zos-tools)  unset ZOPEN_TOOLSET_OVERRIDE;;
-    --override-zos-tools-subset) shift;  export ZOPEN_TOOLSET_OVERRIDE=1; overrideFile="\$1";;
-    --quiet) displayText=false;;
-    -?|--help) displayHelp; return 0;;
-  esac
-  shift
-done
+_zopen_config_parse_args() {
+  while [ \$# -gt 0 ]; do
+    case "\$1" in
+      --eknv) exportknv="export "; knv=true;;
+      --knv) knv=true;;
+      --override-zos-tools)  export ZOPEN_TOOLSET_OVERRIDE=1;;
+      --nooverride-zos-tools)  unset ZOPEN_TOOLSET_OVERRIDE;;
+      --override-zos-tools-subset) shift;  export ZOPEN_TOOLSET_OVERRIDE=1; overrideFile="\$1";;
+      --quiet) displayText=false;;
+      '-?'|--help) displayHelp; return 1;;
+    esac
+    shift
+  done
+  return 0
+}
+_zopen_config_parse_args "\$@"
+_zopen_config_parse_args_rc=\$?
+if [ \$_zopen_config_parse_args_rc -ne 0 ]; then
+  unset -f displayHelp sanitizeEnvVar deleteDuplicateEntries _zopen_config_parse_args 2>/dev/null
+  return 0 2>/dev/null || exit 0
+fi
 if \${knv}; then
   /bin/env | /bin/sort > /tmp/zopen-config-env-orig.\$\$
 fi
@@ -399,7 +408,7 @@ if \${knv}; then
   rm /tmp/zopen-config-env-orig.\$\$ /tmp/zopen-config-env-modded.\$\$ 2>/dev/null
 fi
 
-
+unset -f displayHelp sanitizeEnvVar deleteDuplicateEntries _zopen_config_parse_args 2>/dev/null
 EOF
 
 }
