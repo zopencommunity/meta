@@ -49,6 +49,9 @@ VERBOSE=false
 # Path to the companion build/sign script
 ZOPEN_RPMBUILD="${MYDIR}/zopen-rpmbuild"
 
+# Optional port buildenv to source for spec customization hooks (see --buildenv)
+BUILDENV_FILE=""
+
 # Function to display usage
 usage() {
 exit_code="${1:-1}"
@@ -70,6 +73,12 @@ Options:
   --description <desc>    Package description (default: same as summary)
   --url <url>             Project URL (default: none)
   --requires <deps>       Package dependencies (e.g., "oef >= 1.1.0")
+  --provides <caps>       Extra Provides: capabilities beyond the implicit
+                          package name (e.g., "gnupg gnupg2 = 2.4.3")
+  --buildenv <file>       Source <file> (typically a port's buildenv) so that any
+                          zopen_rpmspec_* hook functions it defines can customize
+                          the generated spec file. See 'Spec customization hooks'
+                          below.
   --output <file>         Output spec file (default: <name>.spec)
   --build                 Build the RPM after generating spec file (binary + source)
   --build-binary          Build binary RPM only (faster, no source RPM)
@@ -86,8 +95,93 @@ Example:
      --license "IBM" \\
      --url "https://www.ibm.com"
 
+Spec customization hooks:
+  A port's buildenv (sourced via --buildenv) may define any of the following
+  shell functions to inject custom content into the generated spec file
+  without modifying zopen-pax2rpm. Each hook's stdout is spliced verbatim
+  into the corresponding section of the spec; hooks that are not defined
+  are silently skipped.
+
+    zopen_rpmspec_header        Extra header tags (Provides, Conflicts,
+                                Obsoletes, extra BuildRequires, etc.),
+                                emitted just before %description.
+    zopen_rpmspec_prep          Extra commands appended to the end of %prep.
+    zopen_rpmspec_build         Extra commands appended to the end of %build.
+    zopen_rpmspec_pre_install   Extra commands run at the start of %install,
+                                before the generic file-distribution logic.
+    zopen_rpmspec_post_install  Extra commands run at the end of %install,
+                                after the generic file-distribution logic
+                                and before the file list is finalized.
+    zopen_rpmspec_files         Extra %files directives (%config, %doc,
+                                %ghost, %attr, etc.) appended after the
+                                generated file list.
+    zopen_rpmspec_pre           %pre scriptlet body.
+    zopen_rpmspec_post          %post scriptlet body.
+    zopen_rpmspec_preun         %preun scriptlet body.
+    zopen_rpmspec_postun        %postun scriptlet body.
+    zopen_rpmspec_changelog     Extra entries appended to %changelog.
+
+  When a hook runs, PKG_NAME, PKG_VERSION, RELEASE, SUMMARY, DESCRIPTION,
+  LICENSE, URL, REQUIRES, PROVIDES, BUILD_ARCH and PAX_FILE are all available as
+  ordinary shell variables, in addition to anything exported by buildenv
+  itself.
+
 EOF
     exit "$exit_code"
+}
+
+# Function to source a port's buildenv so its optional zopen_rpmspec_* hooks
+# become available for spec customization. This is intentionally simple:
+# buildenv is just a shell script, so we source it in-process. Any
+# ZOPEN_IN_ZOPEN_BUILD-guarded logic in buildenv is unaffected since that
+# variable is not set here.
+load_buildenv_hooks() {
+    buildenv_file="$1"
+
+    if [ -z "$buildenv_file" ]; then
+        return 0
+    fi
+
+    if [ ! -r "$buildenv_file" ]; then
+        printError "Buildenv file '${buildenv_file}' does not exist or is not readable."
+    fi
+
+    printInfo "# Sourcing buildenv for spec customization hooks: ${buildenv_file}"
+    # shellcheck disable=SC1090
+    . "$buildenv_file"
+}
+
+# Function to invoke a single optional zopen_rpmspec_* hook, if the port's
+# buildenv defined it, and emit its output. Returns 0 (with no output) when
+# the hook is not defined so callers can unconditionally splice the result
+# into the spec file.
+run_rpmspec_hook() {
+    hook_name="$1"
+
+    if command -V "$hook_name" > /dev/null 2>&1; then
+        # Diagnostics must never land on stdout here: callers capture this
+        # function's stdout verbatim and splice it into the spec file, and
+        # printVerbose/printWarning may write to stdout themselves depending
+        # on ZOPEN_STDERR_TO_STDOUT, so force them to the terminal explicitly.
+        printVerbose "Running spec customization hook: ${hook_name}" >&2
+        if ! "$hook_name"; then
+            printWarning "Hook '${hook_name}' exited with a non-zero status; its output (if any) was still included in the spec file." >&2
+        fi
+    fi
+}
+
+# Function to emit an optional %pre/%post/%preun/%postun scriptlet section.
+# The section header is only written when the port's buildenv defines the
+# corresponding hook, so undefined hooks leave the spec file untouched.
+emit_optional_scriptlet() {
+    section="$1"
+    hook_name="$2"
+
+    if command -V "$hook_name" > /dev/null 2>&1; then
+        printf '%%%s\n' "$section"
+        run_rpmspec_hook "$hook_name"
+        printf '\n'
+    fi
 }
 
 # Function to extract package name and version from filename
@@ -223,6 +317,15 @@ list_pax_contents() {
 # Distributes files into FHS-like directories under /opt/pkg/
 generate_install_commands() {
     pax_file="$1"
+
+    # Port-supplied hook: runs first, before any generic file distribution
+    # logic, so a port can e.g. pre-process the extracted tree.
+    if command -V zopen_rpmspec_pre_install > /dev/null 2>&1; then
+        echo "# --- Begin zopen_rpmspec_pre_install hook ---"
+        run_rpmspec_hook zopen_rpmspec_pre_install
+        echo "# --- End zopen_rpmspec_pre_install hook ---"
+        echo
+    fi
 
     cat << 'EOF'
 # Install files into FHS-like filesystem hierarchy under /opt/pkg/
@@ -374,6 +477,19 @@ find "%{buildroot}" -type f | while read -r file; do
     [ -L "$file" ] && continue
     replaceAndFlattenHardcodedPath "ZOPEN_INSTALL_PREFIX" "%{_prefix}" "$file"
 done
+EOF
+
+    # Port-supplied hook: runs after the generic file-distribution logic has
+    # populated %{buildroot}, but before the file list is generated, so a
+    # port can add, remove, or rewrite files that %files should then pick up.
+    if command -V zopen_rpmspec_post_install > /dev/null 2>&1; then
+        echo
+        echo "# --- Begin zopen_rpmspec_post_install hook ---"
+        run_rpmspec_hook zopen_rpmspec_post_install
+        echo "# --- End zopen_rpmspec_post_install hook ---"
+    fi
+
+    cat << 'EOF'
 
 # Generate RPM file list — standard Fedora/RHEL approach:
 # Use find to enumerate every file installed under %{buildroot}, then
@@ -488,8 +604,20 @@ Source0:        $(basename "$source_file")
 
 BuildArch:      ${BUILD_ARCH}
 ${REQUIRES:+Requires:       $REQUIRES}
-
+${PROVIDES:+Provides:       $PROVIDES}
 EOF
+
+    # Port-supplied hook: extra header tags (Provides, Conflicts, Obsoletes,
+    # additional BuildRequires, etc.), emitted just before %description.
+    if command -V zopen_rpmspec_header > /dev/null 2>&1; then
+        {
+            echo "# --- Begin zopen_rpmspec_header hook ---"
+            run_rpmspec_hook zopen_rpmspec_header
+            echo "# --- End zopen_rpmspec_header hook ---"
+        } >> "$output_file"
+    fi
+
+    echo "" >> "$output_file"
 
     if [ "$(uname -s)" = "OS/390" ]; then
         cat >> "$output_file" << EOF
@@ -527,10 +655,31 @@ EOF
             ;;
     esac
 
+    # Port-supplied hook: extra commands appended to the end of %prep.
+    if command -V zopen_rpmspec_prep > /dev/null 2>&1; then
+        {
+            echo "# --- Begin zopen_rpmspec_prep hook ---"
+            run_rpmspec_hook zopen_rpmspec_prep
+            echo "# --- End zopen_rpmspec_prep hook ---"
+        } >> "$output_file"
+    fi
+
     cat >> "$output_file" << EOF
 
 %build
 # No build step required for pre-built pax archives
+EOF
+
+    # Port-supplied hook: extra commands appended to the end of %build.
+    if command -V zopen_rpmspec_build > /dev/null 2>&1; then
+        {
+            echo "# --- Begin zopen_rpmspec_build hook ---"
+            run_rpmspec_hook zopen_rpmspec_build
+            echo "# --- End zopen_rpmspec_build hook ---"
+        } >> "$output_file"
+    fi
+
+    cat >> "$output_file" << EOF
 
 %install
 rm -rf %{buildroot}
@@ -538,12 +687,39 @@ rm -rf %{buildroot}
 $(generate_install_commands "$source_file")
 
 %files -f %{_builddir}/%{name}-%{version}/rpm_filelist.txt
+EOF
 
+    # Port-supplied hook: extra %files directives (%config, %doc, %ghost,
+    # %attr, etc.) appended after the generated file list.
+    if command -V zopen_rpmspec_files > /dev/null 2>&1; then
+        {
+            echo "# --- Begin zopen_rpmspec_files hook ---"
+            run_rpmspec_hook zopen_rpmspec_files
+            echo "# --- End zopen_rpmspec_files hook ---"
+        } >> "$output_file"
+    fi
+
+    # Port-supplied scriptlet hooks: %pre/%post/%preun/%postun. Each section
+    # is only emitted when the corresponding hook is defined.
+    {
+        echo ""
+        emit_optional_scriptlet "pre"    zopen_rpmspec_pre
+        emit_optional_scriptlet "post"   zopen_rpmspec_post
+        emit_optional_scriptlet "preun"  zopen_rpmspec_preun
+        emit_optional_scriptlet "postun" zopen_rpmspec_postun
+    } >> "$output_file"
+
+    cat >> "$output_file" << EOF
 %changelog
 * ${date} ${PACKAGER_NAME} <${PACKAGER_EMAIL}> - ${PKG_VERSION}-${RELEASE}
 - Initial RPM package created from pax archive
 - Source: $(basename "$source_file")
 EOF
+
+    # Port-supplied hook: extra entries appended to %changelog.
+    if command -V zopen_rpmspec_changelog > /dev/null 2>&1; then
+        run_rpmspec_hook zopen_rpmspec_changelog >> "$output_file"
+    fi
 
     echo "RPM spec file generated: $output_file"
     echo ""
@@ -806,6 +982,16 @@ main() {
                 REQUIRES="$2"
                 shift 2
                 ;;
+            --provides)
+                [ -n "$2" ] || { echo "Error: --provides requires a value" >&2; usage; }
+                PROVIDES="$2"
+                shift 2
+                ;;
+            --buildenv)
+                [ -n "$2" ] || { echo "Error: --buildenv requires a value" >&2; usage; }
+                BUILDENV_FILE="$2"
+                shift 2
+                ;;
             --build)
                 BUILD_RPM=true
                 shift
@@ -863,7 +1049,10 @@ main() {
     
     # Normalize version for RPM compatibility: strip optional v/V prefix and convert pre-release suffixes
     PKG_VERSION=$(normalizeRpmVersion "$PKG_VERSION")
-    
+
+    # Source the port's buildenv (if provided) so any zopen_rpmspec_* hooks
+    # it defines become available to generate_spec()/generate_install_commands().
+    load_buildenv_hooks "$BUILDENV_FILE"
 
     # Display extracted information
     echo "Package Information:"
