@@ -79,3 +79,7 @@ meta.iml
 
 docs/zopen/man1/zopen*.gz
 docs/.vitepress/cache/
+
+# Python bytecode
+__pycache__/
+*.py[cod]
