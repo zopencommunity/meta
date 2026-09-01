@@ -49,6 +49,8 @@ jobs:
         run: npm ci
       - name: Build with VitePress
         working-directory: docs
+        env:
+          VITE_PACKAGE_REQUESTS_API_URL: ${{ vars.PACKAGE_REQUESTS_API_URL }}
         run: npm run docs:build:prod
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

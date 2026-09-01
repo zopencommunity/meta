@@ -1,0 +1,175 @@
+# Jenkins CI/CD Pipelines
+
+This directory contains the Jenkins Pipeline scripts (Groovy) used to orchestrate the build, packaging, testing, and publication of **Port packages** (pax.Z format), **RPM packages**, and opt-in **Python wheels** in the zopencommunity environment.
+
+---
+
+## Port Pipelines
+
+### 1. Port Orchestrator Pipeline (`pipeline.jenkins`)
+* **Purpose**: The main orchestrator pipeline for standard port builds.
+* **Flow**:
+  1. **Build and Test**: Triggers the `Port-Build` job on a z/OS node and copies over the resulting test statuses.
+  2. **Publish (Parallel)**:
+     - **Port-Publish**: Publishes the `.pax.Z` packages as a GitHub release on the port's repository.
+     - **UpdateReleaseAPIs**: Updates the release metadata API definitions.
+     - **RPM-Publish**: Triggers `RPM-Publish` to upload generated RPMs to Pulp.
+     - **Python-Publish**: For generated Python ports, uploads wheel artifacts to the zopen Pulp Python index.
+* **Key Parameters**:
+  * `PORT_GITHUB_REPO`: Upstream GitHub repository URL of the port (e.g. `makeport`).
+  * `PORT_BRANCH`: Git branch to build (default: `main`).
+  * `BUILD_LINE`: Release line to build against (default: `stable`).
+  * `NO_PROMOTE`: Boolean flag to skip the package publication step.
+  * `PUBLISH_PYTHON_WHEEL`: Enables wheel staging and publication. `zopen-generate` sets this for Python build-system ports.
+
+### 2. Port Build Pipeline (`build.groovy`)
+* **Purpose**: Compiles, builds, and runs test suites for the target port project on the z/OS host machine.
+* **Flow**:
+  1. **Build Project**: Clones the port repository and runs `zopen-build` to compile the port.
+  2. **Artifact Packaging**: Generates `.pax.Z` and `.rpm` files and, for Python ports, stages preserved wheels under `wheels/`.
+  3. **Archive**: Archives build artifacts (metadata, packages, logs) inside Jenkins.
+* **Key Parameters**:
+  * `PORT_GITHUB_REPO`: Upstream GitHub repository URL of the port.
+  * `PORT_BRANCH`: Git branch to build (default: `main`).
+  * `FORCE_CLANG`: Enforces compiling the project with Clang rather than `xlclang`.
+  * `GENERATE_PAX_RPM`: Boolean flag to enable/disable package generation.
+  * `PUBLISH_PYTHON_WHEEL`: Requires and archives wheels produced by the native Python build path.
+
+### 3. Port Publish Pipeline (`publish.groovy`)
+* **Purpose**: Takes `.pax.Z` build artifacts and publishes them to public GitHub releases.
+* **Flow**:
+  1. **Fetch Artifacts**: Copies the generated `.pax.Z` package, version, and metadata files from the upstream `Port-Build` job.
+  2. **Draft Release**: Drafts a release on the port's GitHub repository.
+  3. **Upload Assets**: Uploads the `.pax.Z` and checksum files to the draft release.
+  4. **Publish**: Publishes the release and pushes metadata changes.
+* **Key Parameters**:
+  * `PROMOTED_JOB_NAME`: The upstream job to copy artifacts from (default: `Port-Build`).
+  * `BUILD_SELECTOR`: The build number (e.g. `63`) to copy from.
+  * `PORT_GITHUB_REPO`: GitHub repository URL of the port.
+  * `BUILD_LINE`: Target release line (e.g. `stable` or `dev`).
+
+---
+
+## RPM Pipelines
+
+### 1. Orchestrator Pipeline (`rpm_pipeline.jenkins`)
+* **Purpose**: Orchestrates the entire end-to-end RPM build and promotion lifecycle. It triggers the z/OS build, monitors it, and subsequently publishes the generated RPMs.
+* **Flow**:
+  1. **RPM Build**: Triggers the `RPM-Build` job on a z/OS build node.
+  2. **Promote**: Triggers the `RPM-Publish` job to upload the binary RPMs to the Pulp repository (skipped if `NO_PROMOTE` is enabled).
+  3. **Notification**: Sends success/failure status notifications to Slack.
+* **Key Parameters**:
+  * `PROJECT_GITHUB_REPO`: Upstream GitHub repository URL of the project to build.
+  * `PROJECT_BRANCH`: Git branch to checkout (default: `main`).
+  * `SPEC_FILE`: Path to the RPM `.spec` file relative to the repository root.
+  * `NODE_LABEL`: Jenkins node executor label for the build (default: `zos`).
+  * `NO_PROMOTE`: Boolean flag to skip the package publication step.
+
+### 2. RPM Publish Pipeline (`publish_rpm.groovy`)
+* **Purpose**: Fetches binary RPM artifacts from a completed build job and uploads them into the Pulp repository.
+* **Flow**:
+  1. **Setup**: Clears the workspace and checks out this repository.
+  2. **Fetch Artifacts**: Copies the generated `.rpm` files from the specified upstream build job using the Jenkins Copy Artifacts plugin.
+  3. **Pulp Upload**: Logins to the Pulp server, uploads the binary packages, and updates the repository version.
+* **Key Parameters**:
+  * `PROMOTED_JOB_NAME`: **Required**. The name of the Jenkins build job to copy artifacts from (e.g. `RPM-Build`, `Port-Build`).
+  * `BUILD_SELECTOR`: **Required**. The specific build number (e.g. `63`) or Copy Artifacts XML selector to fetch artifacts from.
+
+### 3. Pulp Repo Setup Pipeline (`pulp_repo_setup.groovy`)
+* **Purpose**: An administrative setup pipeline to bootstrap the Pulp repository, distribution, GPG key hosting, and client `.repo` configuration. This is typically run **once** or during maintenance.
+* **Flow**:
+  1. **GPG Key Hosting**: Configures a Pulp file repository (`keys`) distributed at the API/client-facing path `/pulp/content/keys/` to host the public key `zopen.pub`.
+  2. **RPM Repo Setup**: Bootstraps the RPM repository and base-path distribution (`zopen`).
+  3. **GPG Config**: Configures the repository signature verification parameters (`gpgcheck: 1`) and automatically generates the `.repo` client configuration file.
+* **Key Parameters**:
+  * `PULP_REPO`: Name of the target RPM repository (default: `zopen`).
+
+---
+
+## Python Wheel Pipeline
+
+> **Deployment order**: the `Python-Publish` job must exist in Jenkins before any port sets `PUBLISH_PYTHON_WHEEL=true`. `pipeline.jenkins` invokes it with `propagate: false`, which suppresses a failed *result* but not a missing job — an absent job throws and fails the whole Port-Pipeline. Create the job from `cicd/publish_python.groovy`, and provide the `PULP_USERNAME` and `PULP_PASSWORD` string credentials (or override the IDs per job), before enabling the flag.
+
+### Python Publish Pipeline (`publish_python.groovy`)
+
+* **Purpose**: Fetches wheels from an opted-in `Port-Build`, publishes them to the Pulp Python repository for the build line, and verifies the public index.
+* **Flow**:
+  1. Copies `wheels/**/*.whl` from the selected `Port-Build`.
+  2. Publishes every wheel through the legacy upload endpoint for the build line's repository.
+  3. Installs pure Python wheels from the public simple index in a clean virtual environment.
+  4. For platform-specific wheels, verifies that the exact filename is present in the public package index; installation must be tested on a compatible node.
+  5. Treats an existing filename with the same SHA-256 as a successful retry and rejects the same filename with different content.
+* **Key Parameters**:
+  * `PROMOTED_JOB_NAME`: Required source build job, normally `Port-Build`.
+  * `BUILD_SELECTOR`: Build number or Copy Artifact selector.
+  * `BUILD_LINE`: `dev` or `stable`; selects the target repository. Defaults to `stable`.
+  * `PULP_URL`: Optional upload endpoint override. Must end in `/legacy/`.
+  * `PULP_USER_CREDENTIAL` and `PULP_PASSWORD_CREDENTIAL`: Optional Jenkins credential ID overrides.
+
+#### Build lines use separate repositories
+
+| Build line | Pulp repository | Upload endpoint |
+| --- | --- | --- |
+| `stable` | `wheels` | `https://repo.zopen.community/pypi/wheels/legacy/` |
+| `dev` | `wheels-dev` | `https://repo.zopen.community/pypi/wheels-dev/legacy/` |
+
+A PyPI-style index is immutable per filename, and a wheel's filename is derived from the version the *upstream* project declares — not from the zopen build line. Because the dev line builds a branch head while stable builds a release tag, and most projects only bump their declared version at release time, both lines routinely produce the same wheel filename with different content. Publishing them into one repository would make every such dev build fail on a SHA-256 conflict.
+
+Renaming dev wheels is not a workaround. A PEP 440 local version (`1.2.0+dev.42`) sorts *above* the release, so `pip install foo` would silently prefer dev builds; a PEP 427 build tag leaves the installed version unchanged, so dev still shadows stable while two different artifacts claim one version. Separate repositories keep filenames truthful and let a consumer choose a line by pointing pip at one index or the other.
+
+Selecting `Python` as the build system in `zopen-generate` writes `PUBLISH_PYTHON_WHEEL=true` into both `cicd-stable.groovy` and `cicd-dev.groovy`. Non-Python CI/CD files use `false`, so C and C++ ports continue through their existing publication paths without publishing into the Python wheel index.
+
+#### Wheel tags
+
+Pure Python ports build as `py3-none-any` and are published unchanged. They install on any Python and any z/OS level, and need nothing described below.
+
+Compiled ports are different. Through 3.13, CPython derives the default platform tag from `uname`, producing something like `os390_29_00_8561` — the z/OS **release** and the **CPU model**. `packaging` offers exactly one platform tag on z/OS (unlike Linux, which gets the manylinux range) and pip matches it as an exact string, so such a wheel stops installing after a z/OS upgrade or on different hardware, even though the binary itself would run.
+
+`zopen-build` therefore retags those wheels to `cp3XY-none-any`, keeping the constraint that is real and dropping the two that are not:
+
+| | any z/OS release | any machine | any Python |
+| --- | --- | --- | --- |
+| `cp312-cp312-os390_29_00_8561` (default) | no | no | no |
+| `cp312-none-any` (published) | **yes** | **yes** | no — 3.12 only |
+| `cp314-cp314-zos` (3.14 default, published as-is) | **yes** | **yes** | no — 3.14 only |
+| `py3-none-any` | yes | yes | yes — **wrong for compiled code** |
+
+Python 3.14 removed the need for any of this. Its `sysconfig` returns `zos` ahead of the `uname` logic, so the default tag already names neither a release nor a model; `zopen-build` detects such a tag and publishes the wheel as built. `cp314-cp314-zos` is pip's first choice of the 48 tags it offers there, and it keeps the true ABI tag that `none` throws away.
+
+`py3-none-any` is not an option for a compiled port: the extension is `mmh3.cpython-312.so`, and any other CPython silently fails to load it, leaving an importable but empty namespace package. `cp3XY` is an exact interpreter match (unlike `py3XY`, which every later version also accepts), so the wheel is offered only to the interpreter that can use it. The ABI tag cannot be preserved alongside `any` — pip never generates a `cp3XY-cp3XY-any` combination to match against — which is why the 3.14 form, which keeps a real platform tag, can keep the real ABI tag too.
+
+Two consequences worth knowing:
+
+* **`any` also matches non-z/OS systems.** This applies to the retagged 3.12 and 3.13 wheels, and assumes the index is consumed from z/OS: a Linux CPython 3.12 with this index configured would install the wheel and fail at import. Set `ZOPEN_PYTHON_WHEEL_RETAG=false` to keep the honest platform tag instead. Wheels published as `cp3XY-cp3XY-zos` are not affected — a non-z/OS interpreter never offers that tag, so pip will not select them at all.
+* **One wheel per Python minor version.** A 3.13 build produces `cp313-none-any`, a distinct filename, so versions coexist without colliding. Covering several requires building once per interpreter.
+
+`Public Index Verification` installs only `*-py3-none-any.whl` wheels with pip; everything else is checked for presence in the index. That split is deliberate — pip-installing a z/OS wheel on the Linux agent would appear to succeed and then be broken.
+
+#### Rebuilding a version that is already published
+
+The job passes `--on-conflict build-tag`, so a rebuild of a version already in the index does not fail the pipeline. `zopen-publish` compares the two wheels by **content** rather than by digest — every entry except the three files the build toolchain generates for itself (`METADATA`, `WHEEL`, `RECORD`), plus `Requires-Dist`:
+
+* **Contents identical.** The difference is generated metadata only, so the wheel is reported as already published and nothing is uploaded. This is the common case: the build toolchain is unpinned, so a new setuptools rewrites `.dist-info` and identical source yields different bytes.
+* **Contents differ.** The wheel is uploaded as the next [PEP 427](https://peps.python.org/pep-0427/) build tag — `xxhash-3.7.0-1-cp312-none-any.whl`. pip prefers the highest build tag for a given version, so the rebuild wins, while the version users see stays `3.7.0`.
+
+Nothing already in the index is ever replaced. Deleting and re-uploading would break every consumer that pins a filename to a digest — lockfiles, `--require-hashes`, SBOMs, pip's cache — and Pulp serves from a published repository version, so delete-then-add also opens a window that answers 404.
+
+The real fix for the common case is pinning the build toolchain so identical source gives identical bytes; until then, the content comparison is what keeps a setuptools release from minting a build tag on every port.
+
+#### Required Pulp configuration
+
+The `/pypi/<base_path>/` endpoints used here are `pulp_python`'s **live API**: the simple index is generated on demand from the distribution's bound repository. No publication is involved, and `autopublish` is irrelevant to them — both `wheels` and `wheels-dev` run with `autopublish=false`. This is why the pipeline does not create publications, unlike the RPM path in `pulp_repo_setup.groovy`.
+
+What the live API does require:
+
+* The distribution must be bound to its repository (`repository=…`, `publication=null`). A distribution pinned to a fixed publication keeps accepting uploads while never serving them.
+* The simple index must be anonymously readable — `Public Index Verification` deliberately runs without credentials, because it checks what an end user actually sees.
+
+`zopen-publish` confirms each wheel on the index after publishing, so a distribution wired to the wrong target fails loudly instead of silently re-uploading on every build.
+
+Current state, both created and verified against `https://repo.zopen.community`:
+
+| Repository | `autopublish` | Distribution | Bound to |
+| --- | --- | --- | --- |
+| `wheels` | `false` | base_path `wheels` | repository |
+| `wheels-dev` | `false` | base_path `wheels-dev` | repository |

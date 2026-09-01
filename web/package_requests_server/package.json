@@ -1,0 +1,20 @@
+{
+  "name": "zopen-package-requests-server",
+  "version": "0.1.0",
+  "private": true,
+  "description": "API and SQLite store for zopen community package requests and votes",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "sync:pulp": "node pulp_sync_cli.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20.17.0"
+  },
+  "license": "Apache-2.0",
+  "dependencies": {
+    "express": "^4.21.2",
+    "sqlite3": "^6.0.1"
+  }
+}

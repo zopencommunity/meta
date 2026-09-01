@@ -1,0 +1,37 @@
+name: "RPMRelease"
+
+on:
+  workflow_call:
+    inputs:
+      repo:
+        required: false
+        type: string
+        default: ""
+      branch:
+        required: false
+        default: "main"
+        type: string
+      spec_file:
+        required: false
+        default: "build.spec"
+        type: string
+    secrets:
+      JENKINS_USER:
+        required: true
+      JENKINS_API_TOKEN:
+        required: true
+
+jobs:
+  release-run:
+    uses: ./.github/workflows/rpm_workflow.yml
+    with:
+      repo: ${{ inputs.repo }}
+      branch: ${{ inputs.branch }}
+      spec_file: ${{ inputs.spec_file }}
+      no_promote: false
+      context_name: "RPM Release and Publish"
+      github_event_name: ${{ github.event_name }}
+      pr_url: ${{ github.event.issue.pull_request.url || github.event.pull_request.url }}
+    secrets:
+      JENKINS_USER: ${{ secrets.JENKINS_USER }}
+      JENKINS_API_TOKEN: ${{ secrets.JENKINS_API_TOKEN }}

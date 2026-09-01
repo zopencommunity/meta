@@ -4,34 +4,14 @@
 
 If you're new to porting open source to z/OS, we recommend watching the following three short videos that walk through the development process:
 
-- [Part 1: Development Overview](https://ibm.box.com/s/s9s8opsmg4ktb36udyd6kd9a0ymgag4u)
-- [Part 2: Example of Porting a Project](https://ibm.box.com/s/xb4f4oc1ow3dedcz7hcfyjepo1fa5446)
-- [Part 3: Conclusion](https://ibm.box.com/s/yzg7ssuksjg1m6ws5bvcn1t3vb89nohj)
+- [Part 1: Development Overview](https://ibm.ent.box.com/file/1691209883275?s=4y3o5w1w7b5bkysg8q6e2sikpv9t1ygi)
+- [Part 2: Example of Porting a Project](https://ibm.box.com/s/01d0q82uon4gs0oy4swq9oxq00jzlnhb)
+- [Part 3: Conclusion](https://ibm.box.com/s/mjy4lwwcgjetsgwqpb6eeoc7vk8ptm0o)
 
 
 ## Getting Started
 
 Before you get started with porting open source to z/OS, read the [Getting Started Guide](Pre-req) to set up your environment. We also recommend that you read the [contributing guide](https://github.com/zopencommunity/meta/blob/main/CONTRIBUTING.md).
-
-Once you have a z/OS system set up with the required zopen directory structure and pre-requisite boot tools, you will then need to set up Git as follows:
-
-You need to configure your user.email and user.name to check in code to the repositories:
-
-```bash
-git config --global user.email "<Your E-Mail>"
-git config --global user.name "<Your Name>"
-```
-
-This assumes that you have the latest version of [Git](https://github.com/zopencommunity/gitport/releases) on your z/OS system.
-
-If you are using Vim as your editor, we recommend adding the following settings to your .vimrc file:
-
-```vim
-set expandtab        " Convert tabs to spaces  
-set shiftwidth=2     " Set the number of spaces for indentation  
-set tabstop=2        " Set the number of spaces for a tab character  
-autocmd BufNewFile,BufRead buildenv set filetype=sh  " Set file type to shell script for buildenv files
-```
 
 ### Leveraging the zopen community meta repo
 
@@ -42,12 +22,8 @@ Many tools depend on other tools to be able to build or run. You will need to pr
 (i.e. binary tools not from source), as well as _prod_ tools (i.e. _production_ level tools previously built
 from another zopen community repository).
 
-Many tools require a C or C++ compiler (or both) to build. There are a couple of options to obtain the C/C++ compiler:
-
-* You can download a web deliverable add-on feature to your XL C/C++ compiler
-[here](https://www.ibm.com/servers/resourcelink/svc00100.nsf/pages/xlCC++V241ForZOsV24).
+Many tools require a C or C++ compiler (or both) to build. 
 * You can install and manage _C/C++ for Open Enterprise Languages on z/OS_ [here](https://epwt-www.mybluemix.net/software/support/trial/cst/programwebsite.wss?siteId=1803).
-Please note that these compilers are comparable, but how you perform installation and maintenance and pricing is different.
 
 In order for zopen to be able to locate dependent tools, they need to be in well-defined locations.
 
@@ -74,6 +50,8 @@ Begin first by cloning the [meta](https://github.com/zopencommunity/meta) repo. 
 > Before cloning, make sure to configure your git tag [here](GitOnZOS.md#file-tag-verifications)
 
 ```bash
+# Configure git to tag UTF8 files as ISO8859-1
+git config --global core.utf8ccsid 819
 # Clone the required repositories (using Git from https://github.com/zopencommunity/gitport)
 git clone git@github.com:zopencommunity/meta.git && cd meta
 ```
@@ -84,7 +62,7 @@ Next, in order to use the `zopen` suite of tools, you must set your path environ
 . ./.env
 ```
 
-Ok, now you are ready to begin porting.
+Ok, now you are ready to begin porting. If you'd like to use an Agent Skill to port a tool, see https://github.com/zopencommunity/ai-porting/tree/main.
 
 Begin first by generating a port template project by entering the following command:
 

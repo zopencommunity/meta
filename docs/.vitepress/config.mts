@@ -67,6 +67,9 @@ export default defineConfig({
       { text: "Home", link: "/" },
       { text: "Getting Started", link: "/Guides/QuickStart" },
       { text: "Available Tools", link: "/Latest" },
+      { text: "Python Packages", link: "/PythonPackages" },
+      { text: "Request a Package", link: "/PackageRequests" },
+      { text: "Governance", link: "/Governance" },
       { text: "Reference", link: "/reference/zopen-reference" },
     ],
 
@@ -89,6 +92,7 @@ export default defineConfig({
         collapsed: false,
         items: [
           { text: "All Tools", link: "/Latest" },
+          { text: "Request a Package", link: "/PackageRequests" },
           { text: "Newly Released Packages", link: "/newly_released" },
           { text: "Package Vulnerabilities", link: "/Vulnerabilities" },
           {
@@ -105,6 +109,17 @@ export default defineConfig({
         ],
       },
       {
+        text: "Python on z/OS",
+        collapsed: false,
+        items: [
+          { text: "Available Python Packages", link: "/PythonPackages" },
+          { text: "Using Python Packages", link: "/Guides/PythonPackages" },
+          { text: "Contributing Python Packages", link: "/Guides/PythonContributing" },
+          { text: "Porting Python Packages", link: "/Guides/PythonPorting" },
+          { text: "Candidate Status", link: "/Guides/PythonCandidates" },
+        ],
+      },
+      {
         text: "Reference",
         collapsed: false,
         items: [{ text: "zopen", link: "/reference/zopen-reference" }],
@@ -113,6 +128,7 @@ export default defineConfig({
         text: "Contributing",
         collapsed: false,
         items: [
+          { text: "Contributing Python Packages", link: "/Guides/PythonContributing" },
           { text: "Porting Guide", link: "/Guides/Porting" },
           { text: "Leveraging the zoslib Library", link: "/Guides/Zoslib" },
           { text: "Troubleshooting", link: "/Guides/CommonSolutions" },
@@ -125,6 +141,10 @@ export default defineConfig({
       {
         text: "Badges",
         link: "/Badges",
+      },
+      {
+        text: "Governance",
+        link: "/Governance",
       },
       {
         text: "FAQ",

@@ -40,18 +40,61 @@ Required:
   ZOPEN_CATEGORIES    Specify a space-delimited list of applicable categories.
                       Valid categories:
                       ('${ZOPEN_VALID_CATEGORIES}')
-  ZOPEN_DEV_DEPS      Required IF ZOPEN_BUILD_LINE='DEV'.
+  ZOPEN_DEV_DEPS      Required IF ZOPEN_BUILD_LINE='DEV' (unless type is LOCAL).
                       Specify the dev build dependencies
-  ZOPEN_DEV_URL       Required IF ZOPEN_BUILD_LINE='DEV'. Specify the dev
-                      build URL (either git or tarball).
-  ZOPEN_STABLE_DEPS   Required IF ZOPEN_BUILD_LINE='STABLE'.
+  ZOPEN_DEV_URL       Required IF ZOPEN_BUILD_LINE='DEV' (unless type is LOCAL).
+                      Specify the dev build URL (either git or tarball).
+  ZOPEN_STABLE_DEPS   Required IF ZOPEN_BUILD_LINE='STABLE' (unless type is LOCAL).
                       Specify the stable build dependencies.
-  ZOPEN_STABLE_URL    Required IF ZOPEN_BUILD_LINE='STABLE'. Specify the
-                      stable build URL (either git or tarball).
+  ZOPEN_STABLE_URL    Required IF ZOPEN_BUILD_LINE='STABLE' (unless type is LOCAL).
+                      Specify the stable build URL (either git or tarball).
 
 Optional:
   ZOPEN_SOURCE_URL      If set, use this as ZOPEN_URL before checking
                         ZOPEN_DEV_URL or ZOPEN_STABLE_URL.
+  ZOPEN_PYTHON_VERSIONS Python build system only. Space-delimited Python minor
+                        versions to build, test and publish a wheel for, most
+                        significant first, e.g. '3.12 3.13'. The first is the
+                        primary and is what gets installed into the package;
+                        every version's wheel is published. The build fails
+                        before compiling if any cannot be located or reports a
+                        different version. Defaults to '3.12 3.13 3.14',
+                        narrowed to whichever of those are installed; if none
+                        are, the active python is used. That narrowing applies
+                        only to the default -- versions named here must all be
+                        present.
+  ZOPEN_PYTHON_<M>_<m>  Python build system only. Path to the Python <M>.<m>
+                        interpreter, e.g. ZOPEN_PYTHON_3_12, as exported by
+                        check_python. Consulted first when resolving a version
+                        in ZOPEN_PYTHON_VERSIONS, because each Python installs
+                        under its own prefix and only one ends up on PATH.
+                        Falls back to python<M>.<m> on PATH, then to
+                        python3/python if either reports that version.
+  ZOPEN_PYTHON_WHEEL_RETAG
+                        Python build system only. Set to 'false' to keep the
+                        native platform tag on compiled wheels instead of
+                        retagging them to cp3XY-none-any (defaults to 'true').
+                        Only uname-derived tags are retagged either way: a
+                        wheel from an interpreter reporting a portable tag,
+                        such as zos on 3.14, always keeps it.
+  ZOPEN_PYTHON_VENV_SYSTEM_SITE
+                        Python build system only. Set to 'true' to build in a
+                        venv that can see the interpreter's own packages
+                        (defaults to 'false'). Needed for anything requiring
+                        cffi at build time, which on z/OS exists only as the
+                        copy shipped with the interpreter.
+  ZOPEN_PYTHON_BUILD_ISOLATION
+                        Python build system only. Set to 'false' to build
+                        without build isolation (defaults to 'true'), so
+                        [build-system] requires are taken from the venv rather
+                        than resolved from PyPI. Pair with
+                        ZOPEN_PYTHON_VENV_SYSTEM_SITE=true.
+  ZOPEN_PYTHON_BUILD_SKIP_DEP_CHECK
+                        Python build system only. Set to 'true' to build without
+                        checking [build-system] requires (defaults to 'false').
+                        Only for a requirement unsatisfiable on this platform at
+                        any version, once the package is known to build and work
+                        against what is present.
   ZOPEN_EXTRA_CFLAGS    C compiler flags to append to CFLAGS (defaults to '').
   ZOPEN_EXTRA_CPPFLAGS  C,C++ pre-processor flags to append to CPPFLAGS.
                         (defaults to '')
@@ -106,6 +149,8 @@ Optional:
 Optional settings for installation:
   ZOPEN_RUNTIME_DEPS          Runtime z/OS Open Tool dependencies to be installed
                               alongside the tool.
+  ZOPEN_SETUP_NO_REPLACE      If set, do not replace hardcoded paths with
+                              placeholders.
   ZOPEN_SYSTEM_PREREQ         System prerequisites, supply the name of the prereq
                               scripts under $ZOPEN_SYSTEM_PREREQ_SCRIPT
 
@@ -159,12 +204,12 @@ Git variables:
   ZOPEN_CLONE_SUBMODULES  Set to "yes" to recursively clone submodules.
   ZOPEN_CLONE_FULL        Set to "yes" to perform a full clone as opposed to the
                           default shallow clone (depth of 1).
-
-Currently unused:
-  ZOPEN_DEV_TYPE        The type of package to download. Valid types are
-                        TARBALL, BARE and GIT.
-  ZOPEN_STABLE_TYPE     The type of package to download. Valid types are
-                        TARBALL, BARE and GIT.
+  ZOPEN_DEV_TYPE        The type of source for dev builds. Valid types are
+                        TARBALL, BARE, LOCAL and GIT. If set to LOCAL, no
+                        source is fetched and the build runs in-place.
+  ZOPEN_STABLE_TYPE     The type of source for stable builds. Valid types are
+                        TARBALL, BARE, LOCAL and GIT. If set to LOCAL, no
+                        source is fetched and the build runs in-place.
 
 Deprecated:
   ZOPEN_CC              C compiler. (default set by dependency)
@@ -184,7 +229,7 @@ Deprecated:
   ZOPEN_TARBALL_URL     The fully qualified URL that the tarball should be
                         downloaded from. (required if ZOPEN_TYPE=TARBALL)
   ZOPEN_TYPE            The type of package to download. Valid types are
-                        TARBALL, BARE and GIT.
+                        TARBALL, BARE, LOCAL and GIT.
   ZOPEN_URL             Alternate environment variable instead of
                         ZOPEN_TARBALL_URL or ZOPEN_GIT_URL.
 "
@@ -231,6 +276,17 @@ Optional:
                                     of the build is run.
   zopen_pre_check                   This function runs before the 'check' step
                                     of the build is run.
+  zopen_python_test                 Python build system only. Runs the tests for
+                                    one interpreter, and is called once for each
+                                    one being built. Its virtual environment is
+                                    already active and the wheel built for it is
+                                    already installed, so 'python' and 'pip' are
+                                    that interpreter's and dist/ does not need
+                                    to be looked at. Defaults to
+                                    'python -m pytest -v'. Prefer this over
+                                    setting ZOPEN_CHECK, which replaces the loop
+                                    over interpreters as well as the test
+                                    command.
   zopen_pre_configure               This function runs before the 'configure'
                                     step of the build is run.
   zopen_pre_install                 This function runs before the 'install'
@@ -309,56 +365,880 @@ setDefaults()
   unset ZOPEN_EXTRA_CXXFLAGS
   unset ZOPEN_EXTRA_LDFLAGS
   unset ZOPEN_EXTRA_LIBS
+  export ZOSLIB_HOOK_OBJ=""
+  export ZOPEN_INSTRUMENT=0
   return 0
 }
 
 # --- Built-in Python build system functions ---
 
-_zopen_python_ensure_venv() {
-  if [ ! -f ".venv/bin/activate" ]; then
-    printInfo "Creating Python virtual environment..."
-    python -m venv .venv
+# --- Multi-interpreter Python support ---
+#
+# A compiled extension is bound to one CPython ABI, so covering several
+# interpreters means building, testing and publishing one wheel per version.
+# ZOPEN_PYTHON_VERSIONS declares which, most significant first:
+#
+#   export ZOPEN_PYTHON_VERSIONS="3.12 3.13"
+#
+# The first entry is the primary. Its build is what gets installed into the
+# pax, because an installed tree can only carry one interpreter's extension;
+# every built wheel is published regardless.
+#
+# Left unset, everything runs against the active `python` exactly as before.
+
+# Built when a port declares nothing. Narrowed at startup to the interpreters
+# the system actually has, so this is the matrix we would like rather than one
+# every build machine is required to provide.
+ZOPEN_PYTHON_DEFAULT_VERSIONS="3.12 3.13 3.14"
+
+# Echo the declared versions, or the sentinel "default" meaning "whatever
+# python is on PATH" -- reached only when none of the default versions are
+# installed, which keeps a single-interpreter system building as before.
+_zopen_python_versions() {
+  if [ -z "${ZOPEN_PYTHON_VERSIONS}" ]; then
+    echo "default"
+  else
+    echo "${ZOPEN_PYTHON_VERSIONS}"
   fi
-  . .venv/bin/activate
+}
+
+_zopen_python_primary_version() {
+  for _pv in $(_zopen_python_versions); do
+    echo "${_pv}"
+    return 0
+  done
+}
+
+# Resolve a declared version to an interpreter. The versioned name wins, but
+# fall back to python3/python when one of those reports the version asked for:
+# a runtime may install only an unversioned binary, and refusing to pin in that
+# case would make ZOPEN_PYTHON_VERSIONS unusable on exactly the systems where
+# declaring the target version is most useful.
+_zopen_python_interpreter_path() {
+  if [ "$1" = "default" ]; then
+    for _pi_name in python python3; do
+      _pi_path=$(command -v "${_pi_name}" 2> /dev/null)
+      if [ -n "${_pi_path}" ]; then
+        echo "${_pi_path}"
+        return 0
+      fi
+    done
+    return 1
+  fi
+
+  # An explicitly located runtime wins. check_python exports one of these per
+  # installed Python, because each version lives under its own prefix and only
+  # the primary ends up on PATH -- so a PATH lookup alone cannot find the rest.
+  _pi_var="ZOPEN_PYTHON_$(echo "$1" | tr '.' '_')"
+  # Stay silent on failure: this echoes the resolved path, so any diagnostic
+  # written here would be captured as if it were one. The caller reports.
+  _pi_path=$(eval "printf '%s' \"\${${_pi_var}:-}\"")
+  if [ -n "${_pi_path}" ]; then
+    if [ -x "${_pi_path}" ]; then
+      echo "${_pi_path}"
+      return 0
+    fi
+    return 1
+  fi
+
+  _pi_path=$(command -v "python$1" 2> /dev/null)
+  if [ -n "${_pi_path}" ]; then
+    echo "${_pi_path}"
+    return 0
+  fi
+
+  for _pi_name in python3 python; do
+    _pi_path=$(command -v "${_pi_name}" 2> /dev/null)
+    [ -n "${_pi_path}" ] || continue
+    _pi_actual=$("${_pi_path}" -c 'import sys; print("%d.%d" % sys.version_info[:2])' 2> /dev/null)
+    if [ "${_pi_actual}" = "$1" ]; then
+      echo "${_pi_path}"
+      return 0
+    fi
+  done
+
+  return 1
+}
+
+# Narrow a version list to those with an interpreter that is present AND
+# reports the version asked for. Used only for the default set: a version the
+# system does not have is dropped quietly, whereas one a port names explicitly
+# is an error -- see _zopen_python_verify_interpreters. Because the survivors
+# have already been run and checked here, verification of a defaulted set can
+# never fail.
+_zopen_python_available_from() {
+  _pa_out=""
+  for _pa in $1; do
+    _pa_path=$(_zopen_python_interpreter_path "${_pa}" 2> /dev/null)
+    [ -n "${_pa_path}" ] || continue
+    _pa_ver=$("${_pa_path}" -c 'import sys; print("%d.%d" % sys.version_info[:2])' 2> /dev/null)
+    [ "${_pa_ver}" = "${_pa}" ] || continue
+    _pa_out="${_pa_out}${_pa_out:+ }${_pa}"
+  done
+  echo "${_pa_out}"
+}
+
+# Verify every declared interpreter exists and reports the version it claims,
+# before anything is compiled. Without this a node missing an interpreter would
+# quietly publish fewer wheels than intended, and nobody would find out until an
+# install failed with "no matching distribution".
+_zopen_python_verify_interpreters() {
+  _py_missing=""
+  _py_mismatch=""
+
+  for _pv in $(_zopen_python_versions); do
+    _pv_path=$(_zopen_python_interpreter_path "${_pv}")
+    if [ -z "${_pv_path}" ]; then
+      # Distinguish "nowhere to be found" from "you pointed us at something
+      # unusable", which is a different thing to go and fix.
+      _pv_var="ZOPEN_PYTHON_$(echo "${_pv}" | tr '.' '_')"
+      _pv_hint=$(eval "printf '%s' \"\${${_pv_var}:-}\"")
+      if [ -n "${_pv_hint}" ]; then
+        _py_missing="${_py_missing} ${_pv}(${_pv_var}=${_pv_hint} is not executable)"
+      else
+        _py_missing="${_py_missing} ${_pv}"
+      fi
+      continue
+    fi
+
+    [ "${_pv}" = "default" ] && continue
+
+    _pv_actual=$("${_pv_path}" -c 'import sys; print("%d.%d" % sys.version_info[:2])' 2> /dev/null)
+    if [ "${_pv_actual}" != "${_pv}" ]; then
+      _py_mismatch="${_py_mismatch} ${_pv}(reports ${_pv_actual:-unknown})"
+    fi
+  done
+
+  if [ -n "${_py_missing}" ] || [ -n "${_py_mismatch}" ]; then
+    if [ -z "${ZOPEN_PYTHON_VERSIONS}" ]; then
+      # Nothing was declared, so the only failure possible is having no
+      # interpreter at all; naming the "default" sentinel would just confuse.
+      printError "No 'python' or 'python3' found on PATH"
+    fi
+    [ -n "${_py_missing}" ] && printSoftError "Declared Python interpreter(s) not found:${_py_missing}"
+    [ -n "${_py_mismatch}" ] && printSoftError "Python interpreter(s) report a different version:${_py_mismatch}"
+    printSoftError "ZOPEN_PYTHON_VERSIONS=\"${ZOPEN_PYTHON_VERSIONS}\""
+    printError "Cannot build for every declared Python version"
+  fi
+
+  return 0
+}
+
+# The primary keeps the plain .venv name so ports that reference it directly,
+# and the existing single-interpreter layout, are unaffected.
+_zopen_python_venv_dir() {
+  if [ "$1" = "default" ] || [ "$1" = "$(_zopen_python_primary_version)" ]; then
+    echo ".venv"
+  else
+    echo ".venv-$1"
+  fi
+}
+
+_zopen_python_ensure_venv_for() {
+  _pv_venv=$(_zopen_python_venv_dir "$1")
+
+  # Which interpreter .venv holds depends on which version is primary, so a
+  # tree built before ZOPEN_PYTHON_VERSIONS was reordered has one for the wrong
+  # version. Reusing it would rebuild that version's wheel and never produce
+  # the declared one, and nothing downstream would catch it: the check phase
+  # derives its tag from whichever interpreter is active, so the wrong wheel
+  # still matches. Only declared versions can be verified -- "default" has no
+  # expected version to compare against.
+  if [ -n "$1" ] && [ "$1" != "default" ] && [ -x "${_pv_venv}/bin/python" ]; then
+    _pv_have=$("${_pv_venv}/bin/python" -c 'import sys; print("%d.%d" % sys.version_info[:2])' 2> /dev/null)
+    if [ "${_pv_have}" != "$1" ]; then
+      printInfo "Discarding ${_pv_venv}: it has Python ${_pv_have:-unknown}, not ${1}"
+      rm -rf "${_pv_venv}"
+    fi
+  fi
+
+  # Same argument for ZOPEN_PYTHON_VENV_SYSTEM_SITE: a venv built under the other
+  # setting is silently wrong rather than broken. Turning it on and reusing an
+  # isolated venv fails at build time complaining about a missing cffi, which
+  # reads as the interpreter lacking it; turning it off and reusing a permissive
+  # one builds against packages the wheel never declares. pyvenv.cfg records what
+  # the venv was actually created with.
+  if [ -f "${_pv_venv}/pyvenv.cfg" ]; then
+    _pv_syssite="false"
+    grep -q "include-system-site-packages *= *true" "${_pv_venv}/pyvenv.cfg" 2> /dev/null && _pv_syssite="true"
+    if [ "${_pv_syssite}" != "${ZOPEN_PYTHON_VENV_SYSTEM_SITE:-false}" ]; then
+      printInfo "Discarding ${_pv_venv}: system-site-packages is ${_pv_syssite}, expected ${ZOPEN_PYTHON_VENV_SYSTEM_SITE:-false}"
+      rm -rf "${_pv_venv}"
+    fi
+  fi
+
+  # ZOPEN_PYTHON_VENV_SYSTEM_SITE=true exposes the interpreter's own packages to
+  # the build. That matters for anything needing cffi at build time: cffi ships
+  # only an sdist for z/OS and building it wants libffi headers this platform
+  # does not have, so the copy bundled with the interpreter is the only one there
+  # will ever be, and a plain venv hides it. Off by default -- a build that can
+  # see site-packages can also link against something the wheel does not declare.
+  _pv_venv_opts=""
+  if [ "${ZOPEN_PYTHON_VENV_SYSTEM_SITE}" = "true" ]; then
+    _pv_venv_opts="--system-site-packages"
+  fi
+
+  if [ ! -f "${_pv_venv}/bin/activate" ]; then
+    printInfo "Creating Python virtual environment for ${1} in ${_pv_venv}..."
+    # shellcheck disable=SC2086
+    "$(_zopen_python_interpreter_path "$1")" -m venv ${_pv_venv_opts} "${_pv_venv}" || return 1
+  fi
+  . "${_pv_venv}/bin/activate" || return 1
   pip install setuptools build installer wheel
 }
 
+# Retained for ports that call it directly.
+_zopen_python_ensure_venv() {
+  _zopen_python_ensure_venv_for "$(_zopen_python_primary_version)"
+}
+
+# Interpreter tag (cp312) of the currently active python.
+_zopen_python_active_tag() {
+  python -c 'import sys; print("cp%d%d" % sys.version_info[:2])' 2> /dev/null
+}
+
+# A pure Python wheel in dist/, if there is one: platform independent, so
+# valid for every interpreter. A retagged compiled wheel also ends in
+# -none-any, so match on the python tag rather than the suffix and skip cp3XY;
+# picking one up here would hand an interpreter another version's extension.
+# Matching the tag also covers the legacy py2.py3 spelling, which a plain
+# py3-none-any glob misses because the tag set is dot-separated.
+_zopen_python_pure_wheel() {
+  for _pw in dist/*-none-any.whl; do
+    [ -f "${_pw}" ] || continue
+    case "$(basename "${_pw}" .whl | awk -F- '{print $(NF-2)}')" in
+      cp*) continue ;;
+    esac
+    echo "${_pw}"
+    return 0
+  done
+  return 1
+}
+
+# The wheel matching an interpreter tag, falling back to a pure Python wheel.
+#
+# A compiled wheel is retagged to cp3XY-none-any when its platform tag pins the
+# machine that built it, and otherwise keeps its native
+# {python}-{abi}-{platform} triple -- when ZOPEN_PYTHON_WHEEL_RETAG=false, and
+# on an interpreter whose platform tag already travels, 3.14 onwards. Match that
+# shape too, or those builds leave the check and install phases with no wheel
+# they can recognise.
+_zopen_python_wheel_for_tag() {
+  for _pw in dist/*-"$1"-none-any.whl; do
+    [ -f "${_pw}" ] && { echo "${_pw}"; return 0; }
+  done
+  for _pw in dist/*-"$1"-*-*.whl; do
+    [ -f "${_pw}" ] && { echo "${_pw}"; return 0; }
+  done
+  _zopen_python_pure_wheel
+}
+
+# Record what produced a wheel, so a rebuild that changed nothing can be told
+# apart from one that did.
+#
+# zopen-publish decides whether a rebuilt wheel is a real change by comparing
+# contents, and on z/OS a compiled extension never compares equal: two builds of
+# identical source differ by around 25 bytes of embedded build timestamps. So
+# every rebuild looked like new code and earned a fresh PEP 427 build tag, and
+# the index grew without bound -- pydantic_core reached eight wheels for one
+# version, none of them differing in anything that runs.
+#
+# Comparing the binaries more loosely is not safe: a genuine one-line fix can
+# also move a handful of bytes. So record the build's inputs instead and let the
+# publisher compare those. Identical inputs mean nothing to publish; any input
+# that moved -- the port, meta, the upstream tag, the toolchain -- means a real
+# rebuild. Today's abi3 fix came from a change in meta rather than in any port,
+# which is why meta's commit is in here too.
+#
+# If the inputs cannot be determined the stamp is not written at all, and
+# zopen-publish falls back to comparing bytes as before. A missing stamp costs a
+# duplicate; a wrong one would suppress a real change.
+_zopen_python_stamp_wheel() {
+  _st_port=$(git -C "${ZOPEN_ROOT}" rev-parse --short HEAD 2> /dev/null)
+  if [ -z "${_st_port}" ]; then
+    printVerbose "No port commit available; leaving wheels unstamped"
+    return 0
+  fi
+
+  # meta has to be identifiable or the stamp is worse than useless: the abi3
+  # extension fix lived in meta, not in any port, so a rebuild carrying it shows
+  # no other changed input. Were meta unidentifiable that rebuild would compare
+  # equal and be dropped as a no-op -- the exact case this has to publish.
+  #
+  # An installed meta is unpacked from a pax and is not a checkout, so there is
+  # usually no commit to read. Its install directory carries a build stamp
+  # instead -- meta-main.20260707_020925.zos -- which moves with every meta
+  # release and serves the same purpose. Resolve physically, since reaching it
+  # through the "meta" symlink would otherwise yield a name that never changes.
+  # The commit that last touched the build tooling, not meta's HEAD.
+  #
+  # HEAD was the obvious choice and it was wrong. meta moves about twelve times
+  # a day and roughly half of those are the automated "Updating docs/apis/
+  # reference" regeneration, which cannot affect how any wheel is built. Keying
+  # on HEAD meant every stamp was invalidated within the hour, so the comparison
+  # went on reporting a change on every rebuild and the build tags kept
+  # accumulating -- exactly what the stamp exists to stop.
+  #
+  # Observed directly: two ujson wheels, identical in port commit, upstream ref,
+  # compiler, zoslib and interpreter, differing only in meta-commit b593a00
+  # versus b874f85. The first is a real change to the clone logic; the second is
+  # a docs regeneration.
+  #
+  # Restricting it to the paths that decide what a wheel contains means the
+  # stamp moves when the build actually changes and holds still otherwise.
+  _st_meta=$(git -C "${MYDIR}/.." log -1 --format=%h \
+    -- bin/zopen-build include/ 2> /dev/null)
+  if [ -z "${_st_meta}" ]; then
+    _st_meta=$(basename "$(cd "${MYDIR}/.." 2> /dev/null && pwd -P)" 2> /dev/null)
+    case "${_st_meta}" in
+      meta) _st_meta="" ;;
+    esac
+  fi
+  if [ -z "${_st_meta}" ]; then
+    printVerbose "Cannot identify meta; leaving wheels unstamped"
+    return 0
+  fi
+  _st_upstream="${ZOPEN_STABLE_TAG:-${ZOPEN_DEV_TAG:-unknown}}"
+  _st_cc=$("${CC:-clang}" --version 2> /dev/null | head -1)
+  [ -n "${_st_cc}" ] || _st_cc="unknown"
+  _st_zoslib=$(basename "${ZOSLIB_HOME:-unknown}")
+  _st_py=$(python -c 'import sys; print("%d.%d.%d" % sys.version_info[:3])' 2> /dev/null)
+  [ -n "${_st_py}" ] || _st_py="unknown"
+
+  for _st_whl in dist/*.whl; do
+    [ -f "${_st_whl}" ] || continue
+    ZOPEN_ST_PORT="${_st_port}" \
+    ZOPEN_ST_META="${_st_meta}" \
+    ZOPEN_ST_UPSTREAM="${_st_upstream}" \
+    ZOPEN_ST_CC="${_st_cc}" \
+    ZOPEN_ST_ZOSLIB="${_st_zoslib}" \
+    ZOPEN_ST_PY="${_st_py}" \
+    python - "${_st_whl}" <<'STAMPPYEOF'
+import os
+import shutil
+import sys
+import zipfile
+
+path = sys.argv[1]
+STAMP = "ZOPEN-PROVENANCE"
+
+lines = [
+    "port-commit: %s" % os.environ["ZOPEN_ST_PORT"],
+    "meta-commit: %s" % os.environ["ZOPEN_ST_META"],
+    "upstream-ref: %s" % os.environ["ZOPEN_ST_UPSTREAM"],
+    "compiler: %s" % os.environ["ZOPEN_ST_CC"],
+    "zoslib: %s" % os.environ["ZOPEN_ST_ZOSLIB"],
+    "python: %s" % os.environ["ZOPEN_ST_PY"],
+]
+body = ("\n".join(lines) + "\n").encode("utf-8")
+
+with zipfile.ZipFile(path) as zf:
+    names = zf.namelist()
+    blobs = {n: zf.read(n) for n in names}
+    infos = {n: zf.getinfo(n) for n in names}
+
+dist_info = next((n.split("/")[0] for n in names if n.endswith(".dist-info/RECORD")), None)
+if dist_info is None:
+    dist_info = next((n.split("/")[0] for n in names if ".dist-info/" in n), None)
+if dist_info is None:
+    print("no .dist-info in %s; not stamping" % os.path.basename(path))
+    raise SystemExit(0)
+
+target = "%s/%s" % (dist_info, STAMP)
+if target in names:
+    raise SystemExit(0)
+
+# Deliberately not added to RECORD. RECORD is one of the generated files
+# zopen-publish already ignores when comparing, so listing the stamp there would
+# make every stamp change look like a RECORD change too; and installers tolerate
+# an unlisted file in .dist-info, while a RECORD entry whose hash is wrong makes
+# the wheel fail verification outright.
+tmp = path + ".stamp"
+with zipfile.ZipFile(tmp, "w", zipfile.ZIP_DEFLATED) as out:
+    for n in names:
+        zi = zipfile.ZipInfo(n, date_time=infos[n].date_time)
+        zi.external_attr = infos[n].external_attr
+        zi.compress_type = zipfile.ZIP_DEFLATED
+        out.writestr(zi, blobs[n])
+    zi = zipfile.ZipInfo(target, date_time=infos[names[0]].date_time)
+    zi.compress_type = zipfile.ZIP_DEFLATED
+    out.writestr(zi, body)
+shutil.move(tmp, path)
+print("stamped %s" % os.path.basename(path))
+STAMPPYEOF
+    [ $? -eq 0 ] || return 1
+  done
+  return 0
+}
+
+# Platform tags CPython produces without consulting uname. They name neither a
+# z/OS release nor a machine model, so they already travel and the retag below
+# has nothing to fix. Extend this list rather than trying to recognise
+# uname-derived tags by their shape: that spelling varies with the release and
+# the model, and a wrong guess silently publishes a wheel pinned to the machine
+# that built it.
+_ZOPEN_PYTHON_STABLE_PLATFORM_TAGS="zos"
+
+_zopen_python_platform_tag_travels() {
+  for _pt in ${_ZOPEN_PYTHON_STABLE_PLATFORM_TAGS}; do
+    [ "$1" = "${_pt}" ] && return 0
+  done
+  return 1
+}
+
+# Retag a compiled wheel when its platform tag pins the machine that built it.
+#
+# Through 3.13, CPython derives the platform tag from uname on z/OS, giving
+# something like os390_29_00_8561 -- release AND CPU model -- and pip matches
+# that string exactly, so the wheel stops installing after a z/OS upgrade or on
+# different hardware, even though the binary would run fine. Rewriting those to
+# cp3XY-none-any keeps the one constraint that is real (the extension is built
+# against a specific CPython ABI) and drops the two that are not. 'any' also
+# matches non-z/OS systems, so that form assumes the index is consumed from
+# z/OS; the ABI tag cannot be kept alongside it, because pip never generates a
+# cp3XY-cp3XY-any combination to match against.
+#
+# 3.14 fixed this upstream. Its sysconfig returns 'zos' ahead of the uname
+# logic, so the tag names neither a release nor a model and there is nothing
+# left to work around -- rewriting it would only discard what it says. Such a
+# wheel keeps its native tags: cp314-cp314-zos is pip's first choice of the 48
+# tags it offers there, it preserves the real ABI, and unlike 'any' it will not
+# match a non-z/OS interpreter at all.
+#
+# Measured on z/OS 29.00: sysconfig.get_platform() reports os390-29.00-8561 on
+# 3.12.13 and 3.13.13.2, and zos on 3.14.4.2. Both forms stay installable --
+# cp314-none-any is still matched on 3.14, at priority 32 of 48 -- so this
+# decides which tag is the more truthful, not whether the wheel can be used.
+#
+# Pure Python wheels are already py3-none-any and are left untouched.
+# Set ZOPEN_PYTHON_WHEEL_RETAG=false to keep every wheel's native tags.
+_zopen_python_retag_wheel() {
+  if [ "${ZOPEN_PYTHON_WHEEL_RETAG}" = "false" ]; then
+    printVerbose "Wheel retagging disabled; keeping native platform tags"
+    return 0
+  fi
+
+  for _whl in dist/*.whl; do
+    [ -f "${_whl}" ] || continue
+
+    # {name}-{version}(-{build})?-{python}-{abi}-{platform}.whl
+    _whl_base=$(basename "${_whl}" .whl)
+    _whl_plat=$(echo "${_whl_base}" | awk -F- '{print $NF}')
+    if [ "${_whl_plat}" = "any" ]; then
+      # Distinguish a genuinely portable wheel from one an earlier interpreter's
+      # pass already retagged, which is still sitting in dist/.
+      case "$(echo "${_whl_base}" | awk -F- '{print $(NF-2)}')" in
+        cp*)
+          printVerbose "$(basename "${_whl}") was already retagged; skipping"
+          ;;
+        *)
+          printVerbose "$(basename "${_whl}") is platform independent; leaving its tags unchanged"
+          ;;
+      esac
+      continue
+    fi
+
+    # Already portable across the estate, and strictly better than 'any': it
+    # keeps the true ABI and will not tempt a non-z/OS interpreter into
+    # installing an extension it cannot load.
+    if _zopen_python_platform_tag_travels "${_whl_plat}"; then
+      printInfo "Keeping $(basename "${_whl}") as built; ${_whl_plat} pins neither the z/OS release nor the machine"
+      continue
+    fi
+
+    # Take the interpreter tag from the wheel itself rather than from whichever
+    # interpreter happens to be active. The filename records what the wheel was
+    # actually compiled against, so it stays correct however this loop is
+    # reached -- on a later pass, out of order, or over a dist/ holding several
+    # versions at once. Stamping the active tag instead would relabel another
+    # version's extension, and pip would then install it on a runtime whose ABI
+    # it does not match.
+    _whl_pytag=$(echo "${_whl_base}" | awk -F- 'NF>=5 {print $(NF-2)}')
+    if [ -z "${_whl_pytag}" ]; then
+      printWarning "Could not read the interpreter tag from $(basename "${_whl}"); leaving its tags unchanged"
+      continue
+    fi
+
+    printInfo "Retagging $(basename "${_whl}") as ${_whl_pytag}-none-any"
+    if ! python -m wheel tags \
+      --python-tag "${_whl_pytag}" \
+      --abi-tag none \
+      --platform-tag any \
+      --remove "${_whl}"; then
+      printError "Failed to retag $(basename "${_whl}")"
+      return 1
+    fi
+  done
+
+  return 0
+}
+
+# Derive a stable SOURCE_DATE_EPOCH for the source tree in the current
+# directory. A wheel is a zip, and zip entries carry each file's mtime, so
+# without this two builds of identical source produce different bytes -- which
+# the publisher rejects as an immutable-filename conflict. Prefer the upstream
+# commit date; for tarball sources fall back to the mtime of the build
+# definition, which comes from the archive and survives re-extraction.
+#
+# $1 is the interpreter to stat with. This runs before any virtual environment
+# exists, so there is no activated python to inherit and a bare 'python' need
+# not be on PATH at all -- which is the whole reason interpreters are located
+# explicitly. Defaults to 'python' for ports that call this directly.
+_zopen_python_source_date_epoch() {
+  _sde_python="${1:-python}"
+
+  if git rev-parse --git-dir > /dev/null 2>&1; then
+    _sde=$(git log -1 --format=%ct 2> /dev/null)
+    if [ -n "${_sde}" ]; then
+      echo "${_sde}"
+      return 0
+    fi
+  fi
+
+  for _sde_file in pyproject.toml setup.py setup.cfg; do
+    if [ -f "${_sde_file}" ]; then
+      _sde=$("${_sde_python}" -c 'import os,sys; print(int(os.stat(sys.argv[1]).st_mtime))' "${_sde_file}" 2> /dev/null)
+      if [ -n "${_sde}" ]; then
+        echo "${_sde}"
+        return 0
+      fi
+    fi
+  done
+
+  return 1
+}
+
 _zopen_python_build() {
-  _zopen_python_ensure_venv
+  _zopen_python_verify_interpreters || return 1
   rm -rf dist
-  python -m build --wheel
-  _zopen_python_build_rc=$?
-  deactivate
+
+  # Respect an externally supplied value so a caller can pin it explicitly.
+  if [ -z "${SOURCE_DATE_EPOCH}" ]; then
+    # Verification above has already established that the primary resolves.
+    _sde_interp=$(_zopen_python_interpreter_path "$(_zopen_python_primary_version)")
+    _sde_value=$(_zopen_python_source_date_epoch "${_sde_interp}")
+    if [ -n "${_sde_value}" ]; then
+      export SOURCE_DATE_EPOCH="${_sde_value}"
+      printVerbose "Building with SOURCE_DATE_EPOCH=${SOURCE_DATE_EPOCH} for reproducible wheels"
+    else
+      printWarning "Could not determine SOURCE_DATE_EPOCH; wheel will not be reproducible"
+    fi
+  fi
+
+  _zopen_python_build_rc=0
+  _py_pure=false
+
+  # ZOPEN_PYTHON_BUILD_ISOLATION=false builds in the venv instead of the fresh
+  # environment 'build' would otherwise create for the backend. Isolation means
+  # resolving [build-system] requires from PyPI, which cannot succeed for a
+  # package needing cffi: there is no z/OS wheel and the sdist wants libffi. The
+  # failure surfaces as a dependency-resolution error naming cffi, giving no hint
+  # that the build could have used the interpreter's copy. Pair it with
+  # ZOPEN_PYTHON_VENV_SYSTEM_SITE=true so that copy is actually reachable.
+  _py_build_opts=""
+  if [ "${ZOPEN_PYTHON_BUILD_ISOLATION}" = "false" ]; then
+    _py_build_opts="--no-isolation"
+    printVerbose "Building without build isolation"
+  fi
+
+  # Without isolation, 'build' still refuses to start unless [build-system]
+  # requires are satisfied in the venv. That check is right in general and wrong
+  # for a requirement that cannot be satisfied on this platform at any version --
+  # a bound on cffi, say, when the interpreter's bundled copy is older and is
+  # also the only one obtainable. A port sets this after establishing that the
+  # package genuinely builds and works against what is present; it is a claim
+  # about that package, not a general relaxation, which is why it is separate
+  # from ZOPEN_PYTHON_BUILD_ISOLATION rather than implied by it.
+  if [ "${ZOPEN_PYTHON_BUILD_SKIP_DEP_CHECK}" = "true" ]; then
+    _py_build_opts="${_py_build_opts} --skip-dependency-check"
+    printVerbose "Skipping the build-requirement check"
+  fi
+
+  for _pv in $(_zopen_python_versions); do
+    # A pure Python wheel is identical whatever built it, and every interpreter
+    # produces the same filename, so rebuilding would only overwrite it. The
+    # venv is still created below, because the check phase needs one per
+    # interpreter even when the wheel is shared.
+    if ${_py_pure}; then
+      printInfo "Wheel is platform independent; skipping rebuild for ${_pv}"
+      _zopen_python_ensure_venv_for "${_pv}" || { _zopen_python_build_rc=1; break; }
+      deactivate
+      continue
+    fi
+
+    printHeader "Building wheel with Python ${_pv}"
+    _zopen_python_ensure_venv_for "${_pv}" || { _zopen_python_build_rc=1; break; }
+
+    # shellcheck disable=SC2086
+    python -m build --wheel ${_py_build_opts}
+    _zopen_python_build_rc=$?
+
+    # Retag before anything downstream sees the wheel, so the check and install
+    # phases and the published artifact all refer to the same file.
+    if [ ${_zopen_python_build_rc} -eq 0 ]; then
+      _zopen_python_retag_wheel
+      _zopen_python_build_rc=$?
+    fi
+
+    # Stamp after retagging, not before: retagging runs 'python -m wheel tags',
+    # which rewrites the wheel and rejects a .dist-info file that RECORD does not
+    # list, failing with "Failed to retag" and saying nothing about the stamp.
+    # Going second also means the stamp lands in the file that actually ships.
+    if [ ${_zopen_python_build_rc} -eq 0 ]; then
+      _zopen_python_stamp_wheel
+      _zopen_python_build_rc=$?
+    fi
+
+    if [ ${_zopen_python_build_rc} -eq 0 ]; then
+      _zopen_python_pure_wheel > /dev/null && _py_pure=true
+    fi
+
+    deactivate
+    [ ${_zopen_python_build_rc} -eq 0 ] || break
+  done
+
   return ${_zopen_python_build_rc}
 }
 
 _zopen_python_check() {
-  . .venv/bin/activate
-  pip install pytest
-  # Install the built wheel so C extensions (.so files) are available
-  # Use --force-reinstall to ensure the newly built wheel is used
-  pip install --force-reinstall --no-deps dist/*.whl
-  python -m pytest -v
-  _zopen_python_check_rc=$?
-  deactivate
+  _zopen_python_check_rc=0
+
+  for _pv in $(_zopen_python_versions); do
+    _pv_venv=$(_zopen_python_venv_dir "${_pv}")
+    if [ ! -f "${_pv_venv}/bin/activate" ]; then
+      printSoftError "No virtual environment at ${_pv_venv} for Python ${_pv}"
+      _zopen_python_check_rc=1
+      break
+    fi
+
+    printHeader "Running tests with Python ${_pv}"
+    . "${_pv_venv}/bin/activate"
+    pip install pytest
+
+    # Install the wheel built for *this* interpreter. Globbing dist/*.whl would
+    # hand pip every version's wheel at once, which it rightly refuses.
+    _pv_wheel=$(_zopen_python_wheel_for_tag "$(_zopen_python_active_tag)")
+    if [ -z "${_pv_wheel}" ]; then
+      printSoftError "No wheel in dist/ matches Python ${_pv}"
+      deactivate
+      _zopen_python_check_rc=1
+      break
+    fi
+
+    # --force-reinstall so the freshly built wheel wins over anything cached
+    pip install --force-reinstall --no-deps "${_pv_wheel}"
+
+    # A port that needs to run its tests differently supplies zopen_python_test
+    # and nothing else: it is called once per interpreter with that
+    # interpreter's environment already active and its wheel already installed,
+    # so `python` and `pip` are the right ones and dist/ never has to be
+    # inspected. Overriding ZOPEN_CHECK instead means reimplementing this loop,
+    # which is how ports end up testing only the primary interpreter, or
+    # passing pip every version's wheel at once.
+    if command -V zopen_python_test > /dev/null 2>&1; then
+      zopen_python_test
+    else
+      python -m pytest -v
+    fi
+    _pv_rc=$?
+
+    # Every interpreter's pytest output lands in the same check log, and
+    # zopen_check_results sums across runs, so totals aggregate on their own.
+    [ ${_pv_rc} -eq 0 ] || _zopen_python_check_rc=${_pv_rc}
+
+    deactivate
+  done
+
   return ${_zopen_python_check_rc}
+}
+
+# Make the console scripts pip just wrote actually runnable.
+#
+# Two separate things stop them working, and a port that ships one only finds
+# out when a consumer executes it:
+#
+#   1. pip writes the shebang naming the interpreter it installed from, which
+#      for a zopen build is the venv -- deleted when the build ends. The script
+#      then points at a path that exists on no machine, and the consumer sees
+#      "binary or interpreter not executable", which reads like a corrupt
+#      binary. Rewrite it to the primary interpreter's absolute path.
+#      "/usr/bin/env python3" is not an option: a zopen environment puts no
+#      python3 on PATH.
+#
+#   2. z/OS only honours the shebang of an ASCII-tagged script when
+#      _BPXK_AUTOCVT=ON, which a consumer need not have set; the shell then
+#      runs the file as a shell script and reports "FSUM7332 syntax error".
+#      An EBCDIC-tagged script is honoured either way, and the interpreters
+#      here read such a file correctly.
+#
+# Measured, with a script whose only job was to print:
+#
+#   ASCII + ISO8859-1 tag   autocvt off: FAIL   on: OK
+#   ASCII + untagged        autocvt off: FAIL   on: FAIL
+#   EBCDIC + IBM-1047 tag   autocvt off: OK     on: OK
+_zopen_python_fix_console_scripts() {
+  _fcs_primary="$1"
+  _fcs_bin="${ZOPEN_INSTALL_DIR}/lib/python/bin"
+  [ -d "${_fcs_bin}" ] || return 0
+
+  _fcs_interp=$(_zopen_python_interpreter_path "${_fcs_primary}") || {
+    printSoftError "Could not resolve the interpreter for ${_fcs_primary}"
+    return 1
+  }
+
+  for _fcs_script in "${_fcs_bin}/"*; do
+    [ -f "${_fcs_script}" ] || continue
+
+    # Rewrite the shebang, and say whether this file had one. Anything without
+    # a shebang is left exactly as it is -- converting a data file to EBCDIC
+    # would corrupt it. Byte-level, because these scripts are ASCII and this
+    # shell is EBCDIC.
+    _fcs_rewrote=$("${_fcs_interp}" -c 'import sys
+path, interp = sys.argv[1], sys.argv[2]
+data = open(path, "rb").read()
+end = data.find(b"\n")
+if not data.startswith(b"#!") or end == -1:
+    print("no")
+    sys.exit(0)
+open(path, "wb").write(b"#!" + interp.encode() + data[end:])
+print("yes")
+' "${_fcs_script}" "${_fcs_interp}") || {
+      printSoftError "Could not rewrite the shebang in ${_fcs_script}"
+      return 1
+    }
+    [ "${_fcs_rewrote}" = "yes" ] || continue
+
+    iconv -f ISO8859-1 -t IBM-1047 "${_fcs_script}" > "${_fcs_script}.ebcdic" \
+      && mv "${_fcs_script}.ebcdic" "${_fcs_script}" || {
+      rm -f "${_fcs_script}.ebcdic"
+      printSoftError "Could not convert ${_fcs_script} for execution"
+      return 1
+    }
+    chtag -tc IBM-1047 "${_fcs_script}"
+    chmod +x "${_fcs_script}"
+    printVerbose "Fixed console script $(basename "${_fcs_script}")"
+  done
+  return 0
 }
 
 _zopen_python_install() {
   mkdir -p "${ZOPEN_INSTALL_DIR}/lib/python"
   mkdir -p "${ZOPEN_INSTALL_DIR}/bin"
-  mkdir -p "${ZOPEN_INSTALL_DIR}/dist"
-  . .venv/bin/activate
+
+  # The primary interpreter's wheel supplies the whole tree; the other
+  # interpreters contribute only their extension modules, merged in below.
+  _pv_primary=$(_zopen_python_primary_version)
+  _pv_venv=$(_zopen_python_venv_dir "${_pv_primary}")
+  . "${_pv_venv}/bin/activate" || return 1
+
+  _pv_wheel=$(_zopen_python_wheel_for_tag "$(_zopen_python_active_tag)")
+  if [ -z "${_pv_wheel}" ]; then
+    printSoftError "No wheel in dist/ matches the primary interpreter (${_pv_primary})"
+    deactivate
+    return 1
+  fi
+  printInfo "Installing $(basename "${_pv_wheel}") into the package tree"
+
   # Install the built wheel to the target directory
-  pip install --no-deps --target="${ZOPEN_INSTALL_DIR}/lib/python" dist/*.whl
+  pip install --no-deps --target="${ZOPEN_INSTALL_DIR}/lib/python" "${_pv_wheel}"
+  _zopen_python_fix_console_scripts "${_pv_primary}" || return 1
   # Symlink any scripts into bin/ so they are on PATH
   for f in "${ZOPEN_INSTALL_DIR}/lib/python/bin/"*; do
     [ -e "$f" ] || continue
     ln -sf "../lib/python/bin/$(basename "$f")" "${ZOPEN_INSTALL_DIR}/bin/$(basename "$f")"
   done
-  # Preserve wheel for publishing
-  cp dist/*.whl "${ZOPEN_INSTALL_DIR}/dist/"
+  # Preserve the wheel for publishing, in the port's artifact directory next to
+  # the pax and metadata.json. It must not go under ZOPEN_INSTALL_DIR: that tree
+  # is what gets packaged, so a wheel there ships a second copy of everything
+  # already installed under lib/python -- and it is invisible to CI, which looks
+  # for build artifacts under the port's install/ directory.
+  mkdir -p "${ZOPEN_ROOT}/install/dist"
+  cp dist/*.whl "${ZOPEN_ROOT}/install/dist/"
   deactivate
+
+  # One install tree, every interpreter. A wheel is published per interpreter,
+  # but the pax has a single lib/python on PYTHONPATH, so before this it
+  # carried only the primary interpreter's extension and the port failed to
+  # import on the others -- with "No module named pkg._pkg", which reads like a
+  # packaging error rather than a wrong-interpreter one.
+  #
+  # They can share a directory because Python resolves an extension by suffix:
+  # 3.13 looks for .cpython-313.so, 3.14 for .cpython-314.so, and each ignores
+  # the others. The pure-Python half is identical across the wheels, so only
+  # the extensions need merging. A pure-Python port has none and is unchanged.
+  #
+  # Packages building against the stable ABI produce one name for every
+  # interpreter -- _sodium.abi3.so, _bcrypt.abi3.so -- so the merge below
+  # renames those per interpreter rather than letting them collide. See the
+  # comment there for why one such file cannot serve them all here.
+  for _pv_other in $(_zopen_python_versions); do
+    [ "${_pv_other}" = "${_pv_primary}" ] && continue
+    _pv_otag="cp$(echo "${_pv_other}" | tr -d '.')"
+    _pv_owhl=$(_zopen_python_wheel_for_tag "${_pv_otag}")
+    if [ -z "${_pv_owhl}" ]; then
+      printSoftError "No wheel in dist/ for Python ${_pv_other}; the package will not import on it"
+      continue
+    fi
+    "$(_zopen_python_interpreter_path "${_pv_other}")" - \
+        "${_pv_owhl}" "${ZOPEN_INSTALL_DIR}/lib/python" <<'PYMERGEEOF'
+import importlib.machinery
+import os
+import sys
+import zipfile
+
+wheel, target = sys.argv[1], sys.argv[2]
+
+# The version-specific suffix for the interpreter running this script, e.g.
+# ".cpython-313.so". Python tries it before ".abi3.so" and ".so", so a file
+# named with it is picked up only by this interpreter.
+suffixes = importlib.machinery.EXTENSION_SUFFIXES
+tagged = next((s for s in suffixes if "cpython-" in s), None)
+
+
+def retag(name):
+    """Rename an extension so only this interpreter will load it."""
+    base = os.path.basename(name)
+    for suffix in sorted(suffixes, key=len, reverse=True):
+        if base.endswith(suffix):
+            return os.path.join(os.path.dirname(name),
+                                base[:-len(suffix)] + tagged)
+    return name
+
+
+added = 0
+with zipfile.ZipFile(wheel) as zf:
+    for info in zf.infolist():
+        if not info.filename.endswith(".so"):
+            continue
+        dest = os.path.join(target, info.filename)
+        # A name collision here means the extension is not version-specific --
+        # an abi3 module, which every interpreter builds as e.g. _sodium.abi3.so.
+        #
+        # Do not assume one such file serves them all. The stable ABI promises
+        # that a module built against an older Python loads on a newer one, and
+        # that promise does not hold here: a _sodium.abi3.so built by 3.12 dies
+        # under 3.13 and 3.14 inside CPython's allocator, taking the interpreter
+        # with it rather than raising ImportError. Skipping the file, as this
+        # used to, ships exactly that -- one interpreter's build serving all
+        # three, working on the one that built it and crashing on the rest.
+        #
+        # So give this interpreter's build its own version-specific name. The
+        # files then coexist the way genuinely per-interpreter ones already do,
+        # and each interpreter resolves to the build that is actually its own.
+        if os.path.exists(dest) and tagged:
+            dest = os.path.join(target, retag(info.filename))
+        if os.path.exists(dest):
+            continue
+        os.makedirs(os.path.dirname(dest), exist_ok=True)
+        with zf.open(info) as src, open(dest, "wb") as out:
+            out.write(src.read())
+        # z/OS will not HFS-load a module without the execute bit, and fails
+        # with CEE3512S reason EF076015, which looks like a missing symbol.
+        os.chmod(dest, 0o755)
+        added += 1
+print("Merged %d extension module(s) from %s" % (added, os.path.basename(wheel)))
+PYMERGEEOF
+  done
 }
 
 # --- End Python build system functions ---
@@ -403,6 +1283,9 @@ Option:
   --sign-pax, -sp       This option signs the pax file.
 			ZOPEN_GPG_SECRET_KEY_FILE, ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE
                         and ZOPEN_GPG_PUBLIC_KEY_FILE must be set for signing the file.
+  --sign-rpm, -sr       This option signs the RPM package.
+			ZOPEN_GPG_SECRET_KEY_FILE and ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE
+                        must be set for signing the RPM.
   -v                    run in verbose mode.
   -vv                   run in very verbose mode (sets environment variables
                         V=1 and VERBOSE=1).
@@ -441,6 +1324,7 @@ processOptions()
   generateRPM=false
   setActive=true
   signPax=false
+  signRPM=false
   forcePatchApply=false
   depsPath="${ZOPEN_PKGINSTALL}"
   forceUpgradeDeps=false
@@ -448,6 +1332,7 @@ processOptions()
   instrument=false
   printSourceDir=false
   use_ccache=false
+  generate_zoslib_hooks=false
   editable=false
   depsDepth=2
   while [ $# -gt 0 ]; do
@@ -551,6 +1436,11 @@ processOptions()
       signPax=true
       generatePax=true
       ;;
+    "-sr" | "--sign-rpm")
+      signRPM=true
+      generateRPM=true
+      generatePax=true
+      ;;
     *)
       printError "Unknown option ${1} specified"
       ;;
@@ -633,14 +1523,14 @@ checkEnv()
 
   if [ ! -z "${ZOPEN_BUILD_LINE}" ]; then
     if [ "${ZOPEN_BUILD_LINE}x" = "DEVx" ]; then
-      if [ -z "${ZOPEN_DEV_DEPS}" ]; then
+      if [ -z "${ZOPEN_DEV_DEPS}" ] && [ "${ZOPEN_DEV_TYPE}" != "LOCAL" ] && [ "${ZOPEN_TYPE}" != "LOCAL" ]; then
         printError "Building from dev, but ZOPEN_DEV_DEPS not specified"
       fi
       ZOPEN_DEPS="${ZOPEN_DEV_DEPS}"
       if [ ! -z "${ZOPEN_SOURCE_URL}" ]; then
         ZOPEN_URL="${ZOPEN_SOURCE_URL}"
       else
-        if [ -z "${ZOPEN_DEV_URL}" ]; then
+        if [ -z "${ZOPEN_DEV_URL}" ] && [ "${ZOPEN_DEV_TYPE}" != "LOCAL" ] && [ "${ZOPEN_TYPE}" != "LOCAL" ]; then
           printError "Building from dev, but ZOPEN_DEV_URL not specified"
         fi
         ZOPEN_URL="${ZOPEN_DEV_URL}"
@@ -654,22 +1544,24 @@ checkEnv()
       if [ ! -z "${ZOPEN_DEV_TYPE}" ]; then
         export ZOPEN_TYPE="${ZOPEN_DEV_TYPE}"
       else
-        extension="${ZOPEN_URL##*.}"
-        if [ "${extension}" = "git" ]; then
-          ZOPEN_TYPE="GIT"
-        else
-          ZOPEN_TYPE="TARBALL"
+        if [ -n "${ZOPEN_URL}" ]; then
+          extension="${ZOPEN_URL##*.}"
+          if [ "${extension}" = "git" ]; then
+            ZOPEN_TYPE="GIT"
+          else
+            ZOPEN_TYPE="TARBALL"
+          fi
         fi
       fi
     elif [ "${ZOPEN_BUILD_LINE}x" = "STABLEx" ]; then
-      if [ -z "${ZOPEN_STABLE_DEPS}" ]; then
+      if [ -z "${ZOPEN_STABLE_DEPS}" ] && [ "${ZOPEN_STABLE_TYPE}" != "LOCAL" ] && [ "${ZOPEN_TYPE}" != "LOCAL" ]; then
         printError "Building from stable, but ZOPEN_STABLE_DEPS not specified"
       fi
       ZOPEN_DEPS="${ZOPEN_STABLE_DEPS}"
       if [ ! -z "${ZOPEN_SOURCE_URL}" ]; then
         ZOPEN_URL="${ZOPEN_SOURCE_URL}"
       else
-        if [ -z "${ZOPEN_STABLE_URL}" ]; then
+        if [ -z "${ZOPEN_STABLE_URL}" ] && [ "${ZOPEN_STABLE_TYPE}" != "LOCAL" ] && [ "${ZOPEN_TYPE}" != "LOCAL" ]; then
           printError "Building from stable, but ZOPEN_STABLE_URL not specified"
         fi
         ZOPEN_URL="${ZOPEN_STABLE_URL}"
@@ -683,11 +1575,13 @@ checkEnv()
       if [ ! -z "${ZOPEN_STABLE_TYPE}" ]; then
         export ZOPEN_TYPE="${ZOPEN_STABLE_TYPE}"
       else
-        extension="${ZOPEN_URL##*.}"
-        if [ "${extension}" = "git" ]; then
-          ZOPEN_TYPE="GIT"
-        else
-          ZOPEN_TYPE="TARBALL"
+        if [ -n "${ZOPEN_URL}" ]; then
+          extension="${ZOPEN_URL##*.}"
+          if [ "${extension}" = "git" ]; then
+            ZOPEN_TYPE="GIT"
+          else
+            ZOPEN_TYPE="TARBALL"
+          fi
         fi
       fi
     else
@@ -712,6 +1606,8 @@ checkEnv()
       printHeader "Using dev environment"
     elif [ "${ZOPEN_TYPE}x" = "BAREx" ]; then
       printHeader "Using bare environment"
+    elif [ "${ZOPEN_TYPE}x" = "LOCALx" ]; then
+      printHeader "Using local source environment"
     else
       extension="${ZOPEN_URL##*.}"
       if [ "${extension}" = "git" ]; then
@@ -744,6 +1640,30 @@ checkEnv()
   fi
 
   if [ "${ZOPEN_BUILD_SYSTEM}" = "Python" ]; then
+    # Build the whole supported matrix unless the port asked for something
+    # else, narrowed to the interpreters this system has. Declaring
+    # ZOPEN_PYTHON_VERSIONS keeps the strict contract: every version named must
+    # be present, or the build stops before compiling. Defaulting cannot make
+    # that promise -- most systems carry only one Python -- so absent versions
+    # are dropped here instead of failing every Python port that never opted in.
+    if [ -z "${ZOPEN_PYTHON_VERSIONS}" ]; then
+      _pv_have=$(_zopen_python_available_from "${ZOPEN_PYTHON_DEFAULT_VERSIONS}")
+      if [ -n "${_pv_have}" ]; then
+        export ZOPEN_PYTHON_VERSIONS="${_pv_have}"
+        printInfo "Building wheels for Python: ${ZOPEN_PYTHON_VERSIONS}"
+        _pv_skip=""
+        for _pv_d in ${ZOPEN_PYTHON_DEFAULT_VERSIONS}; do
+          case " ${_pv_have} " in
+            *" ${_pv_d} "*) ;;
+            *) _pv_skip="${_pv_skip} ${_pv_d}" ;;
+          esac
+        done
+        [ -n "${_pv_skip}" ] && printInfo "Not installed, so not built:${_pv_skip}"
+      else
+        printVerbose "None of the default Python versions are installed; using the active python"
+      fi
+    fi
+
     # Set defaults using := so user overrides from buildenv are preserved
     : "${ZOPEN_CONFIGURE:=skip}"
     : "${ZOPEN_MAKE:=_zopen_python_build}"
@@ -756,9 +1676,12 @@ checkEnv()
     if ! command -V zopen_check_results > /dev/null 2>&1; then
       zopen_check_results() {
         dir="$1"; pfx="$2"; chk="$1/$2_check.log"
-        passed=$(grep -oE "[0-9]+ passed" "${chk}" | awk '{print $1}')
-        failed=$(grep -oE "[0-9]+ failed" "${chk}" | awk '{print $1}')
-        errors=$(grep -oE "[0-9]+ error" "${chk}" | awk '{print $1}')
+        # Sum across runs: with ZOPEN_PYTHON_VERSIONS set, every interpreter's
+        # pytest output lands in this one log, so a plain match would yield
+        # several numbers where the arithmetic below expects one.
+        passed=$(grep -oE "[0-9]+ passed" "${chk}" | awk '{s+=$1} END {print s+0}')
+        failed=$(grep -oE "[0-9]+ failed" "${chk}" | awk '{s+=$1} END {print s+0}')
+        errors=$(grep -oE "[0-9]+ error" "${chk}" | awk '{s+=$1} END {print s+0}')
         passed=${passed:-0}; failed=${failed:-0}; errors=${errors:-0}
         totalTests=$((passed + failed + errors))
         echo "actualFailures:$((failed + errors))"
@@ -834,6 +1757,8 @@ PYENVEOF
     fi
     implicitDeps="${implicitDeps}"
     printVerbose "Implicitly adding git dependencies: ${implicitDeps}"
+  elif [ "${ZOPEN_TYPE}x" = "LOCALx" ]; then
+    printVerbose "Using local source (no fetch required)"
   fi
 
   if [ -z "${ZOPEN_COMP}" ]; then
@@ -850,25 +1775,39 @@ PYENVEOF
   
   if echo "${langDeps}" | grep -E "(check_clang|check_xlclang)" > /dev/null 2>&1; then
     if [ -z "${ZOPEN_DONT_ADD_ZOSLIB_DEP}" ]; then
-      # Add zoslib as an implicit library
       langDeps="${langDeps} zoslib"
+      
+      # Set ZOSLIB hook generation flag and object path
+      if [ -z "${ZOPEN_SKIP_ZOSLIB_ENV_HOOK}" ]; then
+        generate_zoslib_hooks=true
+        export ZOSLIB_HOOK_OBJ="$ZOPEN_ROOT/.zoslib_hooks/zoslib_env_hook.o"
+      fi
+
+      if ${instrument}; then
+        export ZOPEN_INSTRUMENT=1
+      fi
     fi
 
     if ${use_ccache}; then
       langDeps="${langDeps} ccache"
     fi
+  else
+    if ${instrument}; then
+      printWarning "In order to instrument your application, you must build with clang."
+    fi
+  fi
+
+  # Handle USE_CLANG_WRAPPER: replace check_clang and zoslib with clang_zos_wrapper
+  if [ -n "${USE_CLANG_WRAPPER}" ]; then
+    langDeps=$(echo "${langDeps}" | sed 's/\bcheck_clang\b//g' | sed 's/\bzoslib\b//g' | xargs)
+    ZOPEN_DEPS=$(echo "${ZOPEN_DEPS}" | sed 's/\bcheck_clang\b//g' | sed 's/\bzoslib\b//g' | xargs)
+    langDeps="${langDeps} clang_zos_wrapper"
   fi
 
   if ${getSourceOnly}; then
     ZOPEN_DEPS="${implicitDeps}"
   else
-    ZOPEN_DEPS="${implicitDeps} ${langDeps} ${ZOPEN_DEPS}"
-  fi
-
-  # Handle USE_CLANG_WRAPPER: replace check_clang and zoslib with clang_zos_wrapper
-  if [ -n "${USE_CLANG_WRAPPER}" ]; then
-    ZOPEN_DEPS=$(echo "${ZOPEN_DEPS}" | sed 's/\bcheck_clang\b//g' | sed 's/\bzoslib\b//g' | xargs)
-    ZOPEN_DEPS="${ZOPEN_DEPS} clang_zos_wrapper"
+    ZOPEN_DEPS="${langDeps} ${implicitDeps} ${ZOPEN_DEPS}"
   fi
 
   # Add meta as an implicit runtime dependency
@@ -913,14 +1852,21 @@ PYENVEOF
 
 }
 
+# setDepsEnv
+# Sources the environment of the specified dependencies.
+# Inputs: $* - list of dependencies to source
 setDepsEnv()
 {
+  if [ $# -eq 0 ]; then
+    return
+  fi
+
   if ${getSourceOnly} && [ "$(uname -s)" != "OS/390" ]; then
     printVerbose "Skipping dependency installation in --get-source mode and on non-z/OS system"
     return
   fi
 
-  deps="${ZOPEN_DEPS}"
+  deps="$*"
   orig="${PWD}"
   deps=$(normalizeDeps "${deps}")
   for dep in ${deps}; do
@@ -1003,7 +1949,7 @@ setEnv()
   fi
 
   initDefaultEnvironment
-  setDepsEnv
+  setDepsEnv ${ZOPEN_DEPS}
 
   # Add ccache support if requested and using clang
   if ${use_ccache}; then
@@ -1018,21 +1964,13 @@ setEnv()
     fi
   fi
 
-  if ${instrument}; then
-    if [[ "${CC}" == *clang* ]]; then
-      instrumentOptions="-finstrument-functions"
-    else
-      printWarning "In order to instrument your application, you must build with clang."
-    fi
-  fi
-
   # Dependencies such as libraries may add flags
   if ${editable}; then
     ZOPEN_EXTRA_LDFLAGS="${ZOPEN_EXTRA_LDFLAGS} -Wl,-bedit=yes"
   fi
   export CPPFLAGS="${ZOPEN_CPPFLAGS} ${ZOPEN_EXTRA_CPPFLAGS}"
-  export CFLAGS="${ZOPEN_CFLAGS} ${ZOPEN_EXTRA_CFLAGS} ${instrumentOptions}"
-  export CXXFLAGS="${ZOPEN_CXXFLAGS} ${ZOPEN_EXTRA_CXXFLAGS} ${instrumentOptions}"
+  export CFLAGS="${ZOPEN_CFLAGS} ${ZOPEN_EXTRA_CFLAGS}"
+  export CXXFLAGS="${ZOPEN_CXXFLAGS} ${ZOPEN_EXTRA_CXXFLAGS}"
   export LDFLAGS="${ZOPEN_LDFLAGS} ${ZOPEN_EXTRA_LDFLAGS}"
   export LIBS="${ZOPEN_LIBS} ${ZOPEN_EXTRA_LIBS}"
 
@@ -1149,7 +2087,12 @@ checkGitVersion()
 gitClone()
 {
   gitname=$(basename "${ZOPEN_URL}")
-  sourcedir=${gitname%%.*}
+  # Strip only the .git suffix. %%.* cuts from the first dot instead, so a
+  # repository whose name contains one -- zope.interface.git, ruamel.yaml.git --
+  # clones into a directory named for the part before it. git then reports
+  # "fatal: unable to checkout working tree", which reads as a corrupt checkout
+  # or a full filesystem rather than a truncated target directory.
+  sourcedir=${gitname%.git}
   if $printSourceDir; then
     echo $sourcedir  
     exit 0
@@ -1542,9 +2485,6 @@ applyPatches()
     done
   fi
 
-  # Tag updated files as ASCII (ISO8859-1)
-  (cd "${code_dir}" && git status --untracked-files -s | awk '{ $1=""; print; }' | xargs -I {} chtag -tcISO8859-1 {})
-
   if ${moved}; then
     mv "${code_dir}/.git" "${code_dir}/.git-for-patches" || exit 99
   fi
@@ -1560,7 +2500,11 @@ getCode()
   printHeader "Building ${ZOPEN_ROOT}"
   cd "${ZOPEN_ROOT}" || exit 99
 
-  if [ "${ZOPEN_TYPE}x" = "BAREx" ]; then
+  if [ "${ZOPEN_TYPE}x" = "BAREx" ] || [ "${ZOPEN_TYPE}x" = "LOCALx" ]; then
+    if $printSourceDir; then
+      echo "."
+      exit 0
+    fi
     return 0
   fi
 
@@ -1577,7 +2521,7 @@ getCode()
       return 4
     fi
   else
-    printError "ZOPEN_TYPE should be one of GIT or TARBALL"
+    printError "ZOPEN_TYPE should be one of GIT, TARBALL, BARE or LOCAL"
     return 4
   fi
 
@@ -1809,21 +2753,35 @@ replaceHardcodedPath()
   replaced=$2
   f=$3
   hasHardcodedPaths=true
-  printVerbose "Replacing ${orig} in ${f}"
+  
   # only substitute text files
   if /bin/sed -e "" "${f}" 2> /dev/null 1>&2; then
+    printVerbose "Replacing ${orig} in ${f}"
     isWritable=true
     if [ ! -w "${f}" ]; then
       isWritable=false
       chmod "+w" "${f}"
     fi
 
-    cp "${f}" "${f}.old" &&
-      sed \
-        -e "s#${orig}/\([^/]\+\)/[^/\n '\";]*#${replaced}/\1/\1#g" \
-        -e "s#${ZOSLIB_HOOK_OBJ}##g" \
-        "${f}.old" > "${f}" &&
-      rm "${f}.old"
+    if cp "${f}" "${f}.old"; then
+      if [ -n "${ZOSLIB_HOOK_OBJ}" ]; then
+        sed \
+          -e "s#${orig}/\([^/]\+\)/[^/\n '\";]*#${replaced}/\1/\1#g" \
+          -e "s#${ZOSLIB_HOOK_OBJ}##g" \
+          "${f}.old" > "${f}"
+      else
+        sed \
+          -e "s#${orig}/\([^/]\+\)/[^/\n '\";]*#${replaced}/\1/\1#g" \
+          "${f}.old" > "${f}"
+      fi
+
+      if [ $? -eq 0 ]; then
+        rm "${f}.old"
+      else
+        mv "${f}.old" "${f}"
+        printError "Failed to replace hardcoded paths in ${f}"
+      fi
+    fi
 
     if ! ${isWritable}; then
       chmod "-w" "${f}"
@@ -1833,11 +2791,14 @@ replaceHardcodedPath()
 
 replaceHardcodedPaths()
 {
+  hasHardcodedPaths=false
+  if [ -n "${ZOPEN_SETUP_NO_REPLACE}" ]; then
+    return
+  fi
   ZOPEN_INSTALL_PREFIX="${ZOPEN_INSTALL_DIR}/../../"
   ZOPEN_INSTALL_PREFIX=$(cd "${ZOPEN_INSTALL_PREFIX}" > /dev/null 2>&1 && pwd -P)
 
   printHeader "Replacing hardcoded ${ZOPEN_INSTALL_PREFIX} path"
-  hasHardcodedPaths=false
   for f in $(find ${ZOPEN_INSTALL_DIR}/ -type f | xargs grep -l "${ZOPEN_INSTALL_PREFIX}" 2> /dev/null); do
     hasHardcodedPaths=true
     replaceHardcodedPath "${ZOPEN_INSTALL_PREFIX}" "ZOPEN_INSTALL_PREFIX" "${f}"
@@ -1936,7 +2897,7 @@ SETUPDIR="\$(cd "\$(dirname "\$0")" > /dev/null 2>&1 && pwd -P)"
 echo \"Setting up ${projectName_lower}...\"
 zz
 
-  if ${hasHardcodedPaths}; then
+  if ${hasHardcodedPaths} && [ -z "${ZOPEN_SETUP_NO_REPLACE}" ]; then
     cat << zz >> "${ZOPEN_INSTALL_DIR}/setup.sh"
 if [ -f .replacedpath ]; then
   REPLACE_PREFIX_PATH="\$(cat .replacedpath | head -1)"
@@ -2095,6 +3056,32 @@ getPathSizeInBytes()
 }
 
 #
+# Extract raw version suffix from a package name string (e.g., "curl-v8.10.1" → "v8.10.1")
+# Returns empty string if no version found
+#
+extractRawVersionFromPackage()
+{
+  _erfp_package="$1"
+  _erfp_version=$(echo "$_erfp_package" | sed -E 's/.*-([vV]?[0-9].*)$/\1/')
+  if [ "$_erfp_version" != "$_erfp_package" ] && [ -n "$_erfp_version" ]; then
+    echo "$_erfp_version"
+  fi
+}
+
+#
+# Extract version from a package name string (e.g., "curl-v8.10.1" → "8.10.1")
+# Handles optional v/V prefix and returns empty string if no version found
+#
+extractVersionFromPackage()
+{
+  _evfp_package="$1"
+  _evfp_version=$(extractRawVersionFromPackage "$_evfp_package")
+  if [ -n "$_evfp_version" ]; then
+    normalizeVersion "$_evfp_version"
+  fi
+}
+
+#
 # Extract project name from package name (e.g., xcb-proto-1.17.0 -> xcb-proto)
 # Uses ZOPEN_PROJECT_NAME if set, otherwise intelligently parses package name
 #
@@ -2107,14 +3094,14 @@ getProjectName()
     return 0
   fi
 
-  # Intelligent fallback: try to extract version and derive name
-  version=$(echo "$package" | sed -E 's/.*-([0-9].*)$/\1/')
-  if [ "$version" != "$package" ] && [ -n "$version" ]; then
-    # Version was successfully extracted, remove it to get name
-    echo "${package%-${version}}"
+  # Intelligent fallback: try to extract raw version and derive name
+  rawVersion=$(extractRawVersionFromPackage "$package")
+  if [ -n "$rawVersion" ]; then
+    # Remove the raw matched suffix directly from the end using parameter expansion
+    echo "${package%-${rawVersion}}"
   else
-    # No version pattern found, fall back to old cut method
-    echo "$package" | cut -d "-" -f 1
+    # No version pattern found, return the full package name
+    echo "$package"
   fi
 }
 
@@ -2124,17 +3111,8 @@ generateMetadataJSON()
   package=${ZOPEN_NAME}
   name=$(getProjectName "$package")
 
-  # Determine version
-  if [ -n "${versionString}" ]; then
-    version="${versionString}"
-  else
-    # Try to extract version from package name (rightmost segment starting with digit)
-    version=$(echo "$package" | sed -E 's/.*-([0-9].*)$/\1/')
-    # If sed didn't find a pattern (returns whole string), fall back to old method
-    if [ "$version" = "$package" ]; then
-      version=$(echo ${package} | cut -d "-" -f 2)
-    fi
-  fi
+  # Determine version (guaranteed to be set and validated by install())
+  version="${versionString}"
 
   total_size=$(getPathSizeInBytes "${ZOPEN_INSTALL_DIR}")
 
@@ -2416,26 +3394,8 @@ install()
       printError "A zopen_get_version() function must be defined in the buildenv to extract the version contents"
     else
       versionString=$(zopen_get_version)
-      echo ${versionString} | awk -F. '{
-        if (NF < 1 || NF > 4) {
-          exit 1
-        }
-        if ($1 ~ /[^0-9]/) {
-          exit 1
-        }
-        if ($2 ~ /[^0-9]/) {
-          exit 1
-        }
-        if (NF >= 3 && $3 ~ /[^0-9A-Za-z-]+/) {
-          exit 1
-        }
-        if (NF == 4 && $4 !~ /[0-9A-Za-z-]+/) {
-          exit 1
-        }
-        exit 0
-      }'
-
-      if [ $? -ne 0 ]; then
+      versionString=$(normalizeVersion "$versionString")
+      if ! isValidVersion "${versionString}"; then
         printError "The version string \"${versionString}\" uses an invalid version format"
       fi
       asciiecho "${versionString}" "${ZOPEN_INSTALL_DIR}/.version"
@@ -2472,11 +3432,9 @@ fi
 cd \$curdir  >/dev/null 2>&1
 EOF
   printInfo "- Sourcing environment to run any setup"
-  original_dir=$(pwd)
-  cd "${ZOPEN_INSTALL_DIR}" && ./setup.sh
+  (cd "${ZOPEN_INSTALL_DIR}" && ./setup.sh)
   printVerbose "Marking this version as installed"
   touch "${ZOPEN_INSTALL_DIR}/.active"
-  cd "${original_dir}"
 }
 
 create_pax()
@@ -2508,6 +3466,9 @@ create_rpm()
     cmd="\"${MYDIR}/zopen-pax2rpm\" \"${paxFileName}\" --name \"${rpm_name}\" --version \"${rpm_version}\" --release \"${rpm_release}\" --summary \"${ZOPEN_NAME} package\" --build-binary --buildroot \"${ZOPEN_ROOT}/rpmbuild\""
     if [ -n "${rpm_deps}" ]; then
       cmd="${cmd} --requires \"${rpm_deps}\""
+    fi
+    if [ "${signRPM}" = "true" ]; then
+      cmd="${cmd} --sign"
     fi
     if ! runAndLog "${cmd}"; then
       printError "Could not generate RPM from \"${paxFileName}\""
@@ -2548,17 +3509,17 @@ package()
   if [ -n "${ZOPEN_INSTALL_CMD}" ]; then
     #TODO: Hack so that we can use coreutils md5sum without impacting builds
     ZOPEN_DEPS="coreutils jq"
-    if [ "${signPax}" = "true" ] && ( [ -z "${ZOPEN_GPG_SECRET_KEY_FILE}" ] || [ -z "${ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE}" ] || [ -z "${ZOPEN_GPG_PUBLIC_KEY_FILE}" ] || [ ! -r "${ZOPEN_GPG_SECRET_KEY_FILE}" ] || [ ! -r "${ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE}" ] || [ ! -r "${ZOPEN_GPG_PUBLIC_KEY_FILE}" ] ); then
-      printError "GPG keyring environment variables are not set! You can omit the --sign-pax option to bypass this"
-    else
+    if [ "${signPax}" = "true" ]; then
+      if ( [ -z "${ZOPEN_GPG_SECRET_KEY_FILE}" ] || [ -z "${ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE}" ] || [ ! -r "${ZOPEN_GPG_SECRET_KEY_FILE}" ] || [ ! -r "${ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE}" ] ); then
+        printError "GPG keyring environment variables are not set! You can omit the --sign-pax option to bypass this"
+      fi
+      if [ -z "${ZOPEN_GPG_PUBLIC_KEY_FILE}" ] || [ ! -r "${ZOPEN_GPG_PUBLIC_KEY_FILE}" ]; then
+        printError "ZOPEN_GPG_PUBLIC_KEY_FILE not set or not readable! Required for PAX signing."
+      fi
       ZOPEN_DEPS="${ZOPEN_DEPS} gpg"
     fi
 
-    if ${generateRPM}; then
-      ZOPEN_DEPS="${ZOPEN_DEPS} rpm"
-    fi
-
-    setDepsEnv 
+    setDepsEnv ${ZOPEN_DEPS}
     create_pax
 
     if ${generateRPM}; then
@@ -2581,19 +3542,34 @@ package()
 resolveCommands()
 {
   if [ -z "${ZOPEN_NAME}" ]; then
-    ZOPEN_NAME="${sourcedir}"
-    if [ "${ZOPEN_TYPE}x" = "GITx" ]; then
+    if [ -z "${sourcedir}" ]; then
+      # LOCAL/BARE type: derive name from the directory containing buildenv
+      ZOPEN_NAME="$(basename "${ZOPEN_ROOT}")"
+    else
+      ZOPEN_NAME="${sourcedir}"
+    fi
+    if [ -z "${ZOPEN_PROJECT_NAME}" ]; then
+      export ZOPEN_PROJECT_NAME="$(getProjectName "${ZOPEN_NAME}")"
+    fi
+    if [ "${ZOPEN_TYPE}x" = "GITx" ] || [ "${ZOPEN_TYPE}x" = "LOCALx" ]; then
       tag_name=$(git describe --tags --exact-match HEAD 2>/dev/null)
 
       if [ -n "$tag_name" ]; then
-        ZOPEN_NAME="${sourcedir}-${tag_name}"
-      elif [ "${ZOPEN_TYPE}x" = "GITx" ]; then
+        ZOPEN_NAME="${ZOPEN_NAME}-${tag_name}"
+      elif [ "${ZOPEN_TYPE}x" = "GITx" ] || [ "${ZOPEN_TYPE}x" = "LOCALx" ]; then
         branch=$(git rev-parse --abbrev-ref HEAD 2>&1 | sed "s/\//./g")
-        ZOPEN_NAME="${sourcedir}-${branch}"
+        ZOPEN_NAME="${ZOPEN_NAME}-${branch}"
       fi
     fi
   fi
   ZOPEN_PROJECT_HEAD_COMMIT_SHA="$(git rev-parse HEAD)"
+
+  # Normalize ZOPEN_NAME to remove any v/V prefix in the version portion
+  _zn_version=$(extractVersionFromPackage "${ZOPEN_NAME}")
+  if [ -n "${_zn_version}" ]; then
+    _zn_name=$(getProjectName "${ZOPEN_NAME}")
+    ZOPEN_NAME="${_zn_name}-${_zn_version}"
+  fi
 
   # Check if ZOPEN_NAME contains a "-"
   if [ -z "$(echo "${ZOPEN_NAME}" | grep '-')" ]; then
@@ -2796,8 +3772,14 @@ terminate()
   fi
 }
 
+
 generateZOSLIBHooks()
 {
+  # Fail fast if ZOSLIB_HOOK_OBJ is not set
+  if [ -z "${ZOSLIB_HOOK_OBJ}" ]; then
+    printError "ZOSLIB_HOOK_OBJ must be set before calling generateZOSLIBHooks"
+  fi
+
   # Background:
   #  As part of the build/install process, various tools may require application specific environment variables to be set.
   #  This function generates a C hook zoslib_env_hook() that will be called by ZOSLIB before main is entered.
@@ -2818,26 +3800,6 @@ generateZOSLIBHooks()
   #LIBPATH|prepend|PROJECT_ROOT/lib
   #"
 
-  if [ "${ZOPEN_TYPE}x" = "BAREx" ]; then
-    printVerbose "Skipping GenerateZOSLIBHooks for BARE build type"
-    return
-  fi
-
-  if [ -z "${CC}" ]; then
-    printVerbose "Skipping GenerateZOSLIBHooks since CC is not set"
-    return
-  fi
-
-  if [ -n "${ZOPEN_DONT_ADD_ZOSLIB_DEP}" ]; then
-    printVerbose "Skipping GenerateZOSLIBHooks since ZOPEN_DONT_ADD_ZOSLIB_DEP is set"
-    return
-  fi
-
-  if ! command -v "$(echo ${CC} | awk '{print $NF}')" > /dev/null 2>&1; then
-    printVerbose "Skipping GenerateZOSLIBHooks since CC is not a command"
-    return
-  fi
-
   if command -V "${ZOPEN_APPEND_TO_ZOSLIB_ENV_CODE}" > /dev/null 2>&1; then
     printVerbose "Appending additional environment zoslib variables..."
     zoslib_env="${zoslib_env}$(${ZOPEN_APPEND_TO_ZOSLIB_ENV_CODE})"
@@ -2846,177 +3808,87 @@ generateZOSLIBHooks()
   printHeader "Generating ZOSLIB Environment Hooks"
 
   prevpath="${PWD}"
+  
+  # Extract directory and filename from ZOSLIB_HOOK_OBJ
+  zoslib_hooks_dir=$(dirname "${ZOSLIB_HOOK_OBJ}")
+  output_obj=$(basename "${ZOSLIB_HOOK_OBJ}")
+  output_base="${output_obj%.o}"
+  output="${output_base}.c"
+  
   # Generate directories under project root dir
-  mkdir -p "$ZOPEN_ROOT/.zoslib_hooks"
-  cd "$ZOPEN_ROOT/.zoslib_hooks" || exit
-
-  output="zoslib_env_hook.c"
+  mkdir -p "${zoslib_hooks_dir}"
+  cd "${zoslib_hooks_dir}" || exit
 
   commit="local"
   if [ -n "$ZOPEN_COMMIT_SHA" ]; then
     commit=$(echo "$ZOPEN_COMMIT_SHA" | cut -c -7)
   fi
 
-  iden="\$Id: Vendor:$ZOPEN_VENDOR BuildRev:$commit $(/bin/date +"%Y-%m-%d %H:%M:%S %Z") \$";
+  iden="\$Id: Vendor:$ZOPEN_VENDOR BuildRev:$commit $(date +"%Y-%m-%d %H:%M:%S %Z") \$";
 
-  # Defines zoslib_env_hook
-  cat << zz > "${output}"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#pragma convert("IBM-1047")
-char __zopen_identifier[] = "$iden";
-#pragma convert(pop)
-
-#define PROJECT_ROOT_STR "PROJECT_ROOT"
-
-__attribute__((visibility("default"))) int zoslib_env_hook(char*) __attribute__((used));
-
-__attribute__((visibility("default"))) int zoslib_env_hook(char* root_dir) {
-char* envar_value;
-char* value_str;
-char* pos;
-long size;
-
-// Avoid setting environment variables during build time because they do not hold correct values
-// and should only be used from the installed location.
-// To avoid setting environment variables during build time, we need to guard it
-// by checking if ZOPEN_IN_ZOPEN_BUILD is set to the current build process setting.
-// But this also meant that any dependent tools that set envars via zoslib env hooks would avoid setting those environment variables, effectively breaking them.
-if ((envar_value = getenv("ZOPEN_IN_ZOPEN_BUILD")) &&
-    strcmp(envar_value, "${ZOPEN_IN_ZOPEN_BUILD}") == 0) {
-  return 0;
-}
-zz
-
-  # Process input
+  # Process input and generate rule function calls in a temporary file
+  rules_tmp="${zoslib_hooks_dir}/rules.tmp"
+  rm -f "${rules_tmp}"
+  touch "${rules_tmp}"
+  
   if [ -n "${zoslib_env}" ]; then
-  echo "${zoslib_env}" | while read line; do
-    # If its a comment, skip the line
-    if [ "${line}" != "${line#\#}" ]; then
-        continue
-    fi
-    # The line is of this form (no spaces allowed):
-    # some var|some action|some value
-    #        |set|
-    #        |overrideset|
-    if [ $(echo "${line}" | awk -F '|' '{print NF-1}') -ne 2 ]; then
-      printError "${line} must have 2 '|' seperators only"
-    fi
-    var=$(echo ${line} | cut -d '|' -f 1)
-    action=$(echo ${line} | cut -d '|' -f 2)
-    value=$(echo ${line} | cut -d '|' -f 3)
-    projectRootCount=$(echo "${value}" | awk -F "PROJECT_ROOT" '{print NF-1}')
+    echo "${zoslib_env}" | while read -r line; do
+      # If its a comment or empty, skip the line
+      case "${line}" in
+        \#*|"") continue ;;
+      esac
+      
+      # Validate format: exactly 2 separators
+      case "${line}" in
+        *\|*\|*\|*) printError "${line} must have 2 '|' separators only" ;;
+        *\|*\|*) ;;
+        *) printError "${line} must have 2 '|' separators only" ;;
+      esac
+      
+      # Parse fields using IFS
+      oldIFS="$IFS"
+      IFS='|'
+      read -r var action value <<EOF
+${line}
+EOF
+      IFS="$oldIFS"
 
-    if [ "${action}" = "unset" ]; then
-      echo "unsetenv(\"${var}\");" >> "${output}"
-    elif [ "${action}" = "set" -o "${action}" = "overrideset" ]; then
-      forceset="0"
-      if [ "${action}" = "overrideset" ]; then
-        forceset="1";
+      if [ "${action}" = "unset" ]; then
+        echo "  unsetenv(\"${var}\");" >> "${rules_tmp}"
+      elif [ "${action}" = "set" -o "${action}" = "overrideset" ]; then
+        forceset="0"
+        if [ "${action}" = "overrideset" ]; then
+          forceset="1";
+        fi
+        echo "  set_env_var(\"${var}\", \"${value}\", root_dir, ${forceset});" >> "${rules_tmp}"
+      elif [ "${action}" = "prepend" ]; then
+        echo "  prepend_env_var(\"${var}\", \"${value}\", root_dir);" >> "${rules_tmp}"
+      else
+        printError "${action} is not valid, must be one of set, unset, or prepend"
       fi
-      cat << zz >> "${output}"
-    value_str = "${value}";
-    size = PATH_MAX;
-    envar_value = (char*)malloc(size);
-    memset(envar_value, 0, size);
-
-    while (1) {
-      pos = strstr(value_str, PROJECT_ROOT_STR);
-      if (pos != NULL) {
-        size_t length_before_project_root = pos - value_str;
-        strncat(envar_value, value_str, length_before_project_root);
-        strcat(envar_value, root_dir);
-        value_str = pos + sizeof(PROJECT_ROOT_STR) - 1;
-      } else {
-        strcat(envar_value, value_str);
-        break;
-      }
-    }
-
-    if (!getenv("${var}") || ${forceset}) {
-      if (getenv("__ZOPEN_DEBUG"))
-        fprintf(stderr, "Setting variable %s=%s\n", "${var}", envar_value);
-      if (setenv("${var}", envar_value, 1) != 0) {
-        fprintf(stderr, "Error: Setting environment variable %s=%s\n", "${var}", envar_value);
-        exit(1);
-      }
-    }
-    free(envar_value);
-zz
-    elif [ "${action}" = "prepend" ]; then
-      cat << zz >> "${output}"
-{
-    value_str = "${value}";
-    char* existing = getenv("${var}");
-    size = strlen(value_str) + (existing ? strlen(existing) : 0) + strlen(root_dir) * ${projectRootCount} + 2;
-    envar_value = (char*)malloc(size);
-    memset(envar_value, 0, size);
-
-    // Substitute PROJECT_ROOT with root_dir
-    char* substituted = (char*)malloc(strlen(value_str) + strlen(root_dir) * ${projectRootCount} + 1);
-    substituted[0] = '\0';
-    char* tmp = value_str;
-    while (1) {
-      pos = strstr(tmp, PROJECT_ROOT_STR);
-      if (pos != NULL) {
-        size_t len = pos - tmp;
-        strncat(substituted, tmp, len);
-        strcat(substituted, root_dir);
-        tmp = pos + sizeof(PROJECT_ROOT_STR) - 1;
-      } else {
-        strcat(substituted, tmp);
-        break;
-      }
-    }
-
-    if (!existing || !strstr(existing, substituted)) {
-      if (existing && *existing) {
-        snprintf(envar_value, size, "%s:%s", substituted, existing);
-      } else {
-        snprintf(envar_value, size, "%s", substituted);
-      }
-
-      if (getenv("__ZOPEN_DEBUG"))
-        fprintf(stderr, "Setting ${var} (deduped): %s\n", envar_value);
-
-      if (setenv("${var}", envar_value, 1) != 0) {
-        fprintf(stderr, "Error: Setting environment variable ${var}=%s\n", envar_value);
-        exit(1);
-      }
-    }
-
-    free(substituted);
-    free(envar_value);
-}
-zz
-    else
-      printError "${action} is not valid, must be one of set, unset, or prepend"
-    fi
-
-  done
+    done
   fi
 
-  echo "" >> "${output}"
-  echo "return 0;" >> "${output}"
-  echo "}" >> "${output}"
+  # Apply sed substitutions on the template to create the final source file
+  sed -e "s|@ZOPEN_IDENTIFIER@|${iden}|g" \
+      -e "s|@ZOPEN_IN_ZOPEN_BUILD@|${ZOPEN_IN_ZOPEN_BUILD}|g" \
+      -e "/@ZOSLIB_ENV_RULES@/r ${rules_tmp}" \
+      -e "/@ZOSLIB_ENV_RULES@/d" \
+      "${MYDIR}/../data/zoslib_env_hook.c.template" > "${output}"
+
+  rm -f "${rules_tmp}"
 
   # xlclang pragma linkage does not work
   if [ "${CC}" = "xlclang" ]; then
     extraOptions="-qexportall"
   fi
 
-  if ! runAndLog "${CC} ${CFLAGS} ${CPPFLAGS} -DPATH_MAX=1024 ${extraOptions} -c ${output} -o ${output}.o"; then
+  if ! runAndLog "${CC} ${ZOPEN_CFLAGS} ${ZOPEN_CPPFLAGS} -DPATH_MAX=1024 ${extraOptions} -c ${output} -o ${output_obj}"; then
     printError "Compiler command for ${output} failed to compile"
   fi
 
-  # Apply it in both LIB envars because some ports use ZOPEN_EXTRA_LIBS directly
-  export ZOPEN_EXTRA_LIBS="${ZOPEN_EXTRA_LIBS} ${PWD}/${output}.o"
-  export LIBS="${LIBS} ${PWD}/${output}.o"
-  export ZOSLIB_HOOK_OBJ="${PWD}/${output}.o"
-
   cd "${prevpath}" || printError "Could not change back to the original path ${prevpath}"
+
 }
 
 #
@@ -3035,6 +3907,30 @@ export ZOPEN_ROOT=$(
   cd "$(dirname "${buildEnvFile}")" || exit
   pwd
 )
+
+# Keep pip's cache inside the build directory.
+#
+# pip defaults to $HOME/.cache/pip. Home directories on the build machines are
+# 100MB, and a handful of Python ports fill one, after which later builds fail
+# somewhere unrelated to their own cause -- and never with a message about
+# disk. The symptom is whatever pip was doing at the time: a wheel that "failed
+# to build", an sdist compile stopping with EDC5133I, or a truncated .so that
+# fails to load with CEE3512S reason EF076015, which reads as a missing execute
+# bit.
+#
+# Under ZOPEN_ROOT rather than ${zopen_tmp_dir}: TMPDIR and TMP are unset on the
+# build machines, so the latter resolves to /tmp, which is outside the CI
+# workspace and never reclaimed by the pipeline's deleteDir. A cache under the
+# build directory is discarded with it, which costs reuse between builds and
+# buys a bound on how large it can get.
+#
+# An explicit PIP_CACHE_DIR still wins, so a caller that wants a shared cache
+# can point at one.
+if [ -z "${PIP_CACHE_DIR}" ]; then
+  export PIP_CACHE_DIR="${ZOPEN_ROOT}/.pip-cache"
+  mkdir -p "${PIP_CACHE_DIR}" 2> /dev/null
+  printVerbose "pip cache directory: ${PIP_CACHE_DIR}"
+fi
 
 if ! loadBuildEnv; then
   exit 4
@@ -3071,7 +3967,7 @@ if [ -n "${ZOPEN_SRC_DIR}" ]; then
   cd "${ZOPEN_SRC_DIR}" || exit 99
 fi
 
-if [ -z "${ZOPEN_SKIP_ZOSLIB_ENV_HOOK}" ]; then
+if [ "${generate_zoslib_hooks}" = "true" ]; then
   generateZOSLIBHooks
 fi
 

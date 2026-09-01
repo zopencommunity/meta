@@ -1,0 +1,19 @@
+# Dedicated hostname. Point requests-api.zopen.community at the API host first.
+requests-api.zopen.community {
+	# The standalone backend console remains private. The public VitePress admin
+	# page calls the token-protected /api/admin/* and PATCH endpoints directly.
+	@private path /admin /admin/*
+	respond @private 404
+
+	reverse_proxy 127.0.0.1:3100
+}
+
+# Alternatively, add this inside an existing HTTPS site block. handle_path
+# removes /package-requests before proxying, so the backend still receives /api.
+#
+# handle_path /package-requests/* {
+#     @private path /admin /admin/*
+#     respond @private 404
+#
+#     reverse_proxy 127.0.0.1:3100
+# }

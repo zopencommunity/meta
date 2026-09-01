@@ -15,6 +15,9 @@ hero:
     - theme: alt
       text: View on GitHub
       link: https://github.com/zopencommunity
+    - theme: alt
+      text: Request a Package
+      link: /PackageRequests
 
 features:
   - icon: 🚀
@@ -35,6 +38,10 @@ features:
     title: Community Driven
     details: Join our active community of developers and contributors
     link: https://github.com/zopencommunity/meta/discussions
+  - icon: 🗳️
+    title: Shape What Comes Next
+    details: Request open-source packages and vote for the tools you need on z/OS
+    link: /PackageRequests
   - icon: 📊
     title: Track Progress
     details: Stay informed with our project status and currency tracking

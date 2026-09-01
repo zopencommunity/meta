@@ -1,0 +1,69 @@
+name: "MergePR"
+
+on:
+  workflow_call:
+    inputs:
+      delete_branch:
+        description: "Whether to delete the source branch after a successful merge."
+        type: boolean
+        required: false
+        default: true
+    secrets:
+      MERGE_APP_ID:
+        required: true
+      MERGE_APP_PRIVATE_KEY:
+        required: true
+
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate required secrets
+        run: |
+          if [ -z "${{ secrets.MERGE_APP_ID }}" ] || [ -z "${{ secrets.MERGE_APP_PRIVATE_KEY }}" ]; then
+            echo "::error::Required secrets MERGE_APP_ID and MERGE_APP_PRIVATE_KEY must be configured. Please install the GitHub App and add its credentials as repository/organization secrets."
+            exit 1
+          fi
+
+      - name: Generate GitHub App Token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.MERGE_APP_ID }}
+          private-key: ${{ secrets.MERGE_APP_PRIVATE_KEY }}
+
+      - name: Merge Pull Request 
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ steps.app-token.outputs.token }}
+          script: |
+            const pr = context.payload.pull_request;
+            if (!pr) return;
+
+            // Skip cross-repository PRs (e.g., forks)
+            if (pr.head.repo.full_name !== pr.base.repo.full_name) return;
+            const { owner, repo } = context.repo;
+            const prNumber = pr.number;
+            const branchName = pr.head.ref;
+      
+            console.log(`Merging PR #${prNumber}...`);
+            const merge = await github.rest.pulls.merge({
+              owner,
+              repo,
+              pull_number: prNumber,
+              merge_method: "merge"
+            });
+    
+            if (merge.data.merged) {
+              const shouldDelete = ${{ inputs.delete_branch }};
+              if (shouldDelete) {
+                await github.rest.git.deleteRef({
+                  owner,
+                  repo,
+                  ref: `heads/${branchName}`
+                });
+                console.log(`✅ PR #${prNumber} merged and branch '${branchName}' deleted.`);
+              } else {
+                console.log(`✅ PR #${prNumber} merged. Branch deletion skipped.`);
+              }
+            }

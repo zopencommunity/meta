@@ -23,6 +23,16 @@ If you'd like to contribute a new z/OS port, please open an issue using the foll
 
 Once the issue is created, a code owner will review your request. If approved, the issue will be labeled as "approved", and a GitHub Action will automatically create the port repository for you. If the request is not approved, the issue will be closed with an explanation.
 
+### Python package contributions
+
+Python contributors should first verify whether the upstream package already
+works on z/OS using the documented zopen wheel index and constraints. If a port
+is needed, follow [Contributing Python packages to z/OS](https://zopen.community/Guides/PythonContributing)
+and open the dedicated
+[Python Package Port Contribution](https://github.com/zopencommunity/meta/issues/new?template=python-contribution.yml&title=%5BNew+Python+Port%5D%3A+%3Cpackage-name%3E)
+issue. It uses the same approval and repository-creation process while collecting
+Python versions, native build details, dependencies, and z/OS test evidence.
+
 ## Validate your changes
 
 Verify that the project is working by running `zopen build`.

@@ -35,6 +35,92 @@ Zopen community projects generally follow open source licenses, with many using 
 ### Where can I find a list of all ported tools?
 A comprehensive list of ported tools and their status can be found on the zopen community website, often linked from the main `meta` repository. The [Progress page](/Progress) and the [Latest Releases](/Latest) table are good starting points to explore available tools.
 
+## Package requests, governance, and responsibility
+
+The zopen community is an open, collaborative endeavor. [Package requests](/PackageRequests) and community votes help identify demand, but they do not create an obligation for any individual, organization, maintainer, or the Technical Steering Committee (TSC) to deliver or support a package. Work proceeds when contributors, infrastructure, technical feasibility, licensing, security considerations, and maintainer capacity align.
+
+### What does submitting a package request mean?
+
+A request records community interest in having an open-source project available on z/OS. It begins a discussion and evaluation; it is not a commitment that the package will be ported or delivered within a particular timeframe.
+
+### What does a vote mean?
+
+A vote is an advisory signal of community interest. It helps maintainers understand relative demand, but it is not a governance vote and does not by itself determine priority or approval. Formal project decisions follow the [zopen governance process](/Governance).
+
+Signed-in votes are associated privately with the user's stable GitHub ID, allowing one vote per request across that user's devices. When a user first signs in, votes already made in that browser are transferred to the GitHub identity without being counted twice. Guest voting remains available, so vote totals are still a demand signal rather than a verified election or formal governance decision.
+
+### What should I add to a package discussion?
+
+Use the request's discussion and activity timeline to explain a concrete use case, offer testing or implementation help, share relevant technical information, or ask a package-specific question. GitHub sign-in is required and contributions appear immediately; maintainers retain exception controls to hide or remove inappropriate content. The timeline is not a support entitlement or a way to purchase priority; the [Code of Conduct](https://github.com/zopencommunity/meta/blob/main/CODE_OF_CONDUCT.md) applies.
+
+### Will my identity or email be public in a discussion?
+
+Public attribution is optional. New contributions default to showing **Posted by @username** with a link to your public GitHub profile, but you can turn this off before posting or hide it later without removing the contribution from the public timeline. This GitHub attribution is independent of the optional name-and-organization attribution. Your numeric GitHub ID and contact email are never shown by the public API; the email is available only to administrators for follow-up. Contributions remain attached privately to the durable GitHub ID so their author can edit or delete them from another signed-in device.
+
+### Can I edit a package request after submitting it?
+
+Yes. GitHub sign-in is required for new package requests and is used only to establish ownership; the package-request application does not request repository access or private email access. Open **My submissions** on the package-request page to edit the package description, use case, upstream URL, testing availability, requester details, and whether the request displays **Submitted by @username** with a link to your public GitHub profile. GitHub attribution is enabled by default for new signed-in submissions, but you can turn it off before or after submitting. It is independent of the name-and-organization visibility option. Your numeric GitHub ID and contact email are not exposed publicly. Package name and ecosystem become maintainer-controlled after work begins, while status, votes, maintainer notes, and published artifacts are always maintainer-controlled. Existing requests can be attached to a GitHub account by an administrator after that user has signed in once.
+
+An owner can also permanently delete their request while it remains **Proposed**. Once maintainer review has begun, ask a maintainer to withdraw or delete it so that votes, discussion, and project history are handled deliberately.
+
+### How can I recognize an official update?
+
+Updates posted through the maintainer console are labeled **Verified maintainer**. Community posts can provide valuable evidence and coordination, but they do not represent a project decision unless a maintainer or the TSC confirms that decision through the normal governance process.
+
+### How are package requests prioritized?
+
+Maintainers consider community interest, contributor availability, technical feasibility, dependencies, licensing, security, expected maintenance effort, and benefit to the broader z/OS ecosystem. Vote count is one input, not the sole deciding factor.
+
+### Who decides whether a request is accepted?
+
+Routine triage can be performed by project maintainers. Requests involving broader technical direction, infrastructure, policy, or disagreement may be referred to the zopen TSC under the project governance process. Decisions and important status changes should be explained publicly where practical.
+
+### Does "Accepted" mean someone is working on the package?
+
+No. **Accepted** means the package is considered suitable for the community backlog. It may still be waiting for a contributor or maintainer. **In progress** is used after someone has taken responsibility for the porting work.
+
+### How are dependencies and related package requests represented?
+
+Each request has a dedicated page that can show confirmed **Depends on**, **Blocks**, **Related to**, and **Duplicate of** relationships. Maintainers confirm these links so the public dependency view remains consistent. **Blocks** is calculated automatically as the reverse of **Depends on**; dependency cycles are not allowed. Community members can suggest a missing relationship in the request discussion.
+
+### Who is responsible for porting and maintaining a package?
+
+Responsibility is attached to stewardship, not to whoever requested or voted for a package.
+
+| Area | Primary responsibility |
+| --- | --- |
+| Upstream functionality | The original upstream project |
+| z/OS patches and build | Port contributors and repository maintainers |
+| Package publishing | Port maintainers and zopen infrastructure maintainers |
+| Project-wide policy and technical disputes | The zopen TSC |
+| Testing in a particular environment | Package users and participating organizations |
+
+A requester is not automatically responsible for implementation, although testing and contribution are encouraged.
+
+### Does identifying my company give the request higher priority?
+
+No. Organization information helps the community understand use cases, coordinate testing, and identify possible contributors. It does not purchase priority or give an organization control over community decisions. Requester attribution is shown publicly only when the requester opts in, and contact email remains private to administrators.
+
+### Can an organization sponsor or contribute work?
+
+Yes. Organizations may contribute engineering time, testing, infrastructure, documentation, or funding. Contributions remain subject to the same open governance, review, licensing, and technical requirements as other community work.
+
+### Does an IBM employee's involvement make a package an IBM-supported product?
+
+No. Unless a separate commercial support arrangement explicitly says otherwise, contributors participate in the open community regardless of their employer. Community packages do not become IBM-supported products merely because an IBM employee contributes to them.
+
+### What happens when repository synchronization finds a package?
+
+Automatic synchronization with the zopen Pulp repositories creates a proposed match for maintainers to review. It does not automatically declare a request complete. A maintainer verifies the package identity and artifact before marking the request **Available**.
+
+### Is an Available package guaranteed to be maintained indefinitely?
+
+No. Maintenance depends on active contributors and project health. A package may later need a new maintainer or be identified as stale, deprecated, or unavailable if it can no longer be responsibly maintained. Consult the individual port repository for current compatibility and maintenance information.
+
+### How can I help move a request forward?
+
+Requesters can provide use cases, version requirements, and test results; volunteer to test on z/OS; contribute documentation or code; help with dependencies; or become a port maintainer. A formal port contribution follows the [contribution and review process](https://github.com/zopencommunity/meta/blob/main/CONTRIBUTING.md).
+
 ## Consuming
 
 ### How do I consume zopen community tools?
@@ -103,7 +189,7 @@ If you are using a security product other than TSS (like ACF2 or RACF), request 
 ## Contributing
 
 ### How do I contribute to the zopen community?
-If you are passionate about open source on z/OS, there are many ways to contribute! If you have access to a z/OS system, you can contribute by porting open source tools to z/OS. Get started with the [porting guide](/Guides/Porting). If you are unsure where to begin, check out the [help wanted issues](https://github.com/zopencommunity/meta/labels/help%20wanted). If you do not have z/OS access, you can request access via the [z/OS Public Facing Program](https://community.ibm.com/zsystems/form/zos-program/). Joining the System Z Enthusiasts Discord channel is also a great way to connect with the community.
+If you are passionate about open source on z/OS, there are many ways to contribute! If you have access to a z/OS system, you can contribute by porting open source tools to z/OS. Get started with the [porting guide](/Guides/Porting), or use the dedicated [Python package contribution guide](/Guides/PythonContributing) for Python packages and wheels. If you are unsure where to begin, check out the [help wanted issues](https://github.com/zopencommunity/meta/labels/help%20wanted). If you do not have z/OS access, you can request access via the [z/OS Public Facing Program](https://community.ibm.com/zsystems/form/zos-program/). Joining the System Z Enthusiasts Discord channel is also a great way to connect with the community.
 
 ### What kind of contributions are needed?
 The zopen community welcomes various types of contributions:

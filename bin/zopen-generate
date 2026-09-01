@@ -649,7 +649,7 @@ get_version_impl='echo "1.0.0" # Modify to echo the version of your tool/library
 if [ -n "${stablePath}" ]; then
     version_block="# bump: $name-version /${version_var_name}=\"(.*)\"/ ${stablePath}|semver:*\n"
     if [ -n "$latest_tag" ]; then
-        plain_version=$(echo "${latest_tag}" | sed 's/^v//')
+        plain_version=$(normalizeVersion "${latest_tag}")
         version_block="${version_block}${version_var_name}=\"${plain_version}\""
         tag_export_for_insert="\nexport ZOPEN_STABLE_TAG=\"${latest_tag}\""
         get_version_impl="echo \"\$${version_var_name}\""
@@ -775,6 +775,10 @@ createCICD() {
   buildline=$1; touch "${name}port/cicd-${buildline}.groovy" && chtag -tc 819 "${name}port/cicd-${buildline}.groovy"
   buildlineUpper=$(echo "${buildline}" | awk '{print toupper($0)}')
   _groovy_description=$(echo "$description" | sed "s/'/\"/g")
+  publish_python_wheel=false
+  if [ "${build_system}" = "Python" ]; then
+    publish_python_wheel=true
+  fi
   cat << EOT > "${name}port/cicd-${buildline}.groovy"
 node('linux') {
   stage ('Poll') {
@@ -786,7 +790,8 @@ node('linux') {
     build job: 'Port-Pipeline', parameters: [
       string(name: 'PORT_GITHUB_REPO', value: 'https://github.com/zopencommunity/${name}port.git'),
       string(name: 'PORT_DESCRIPTION', value: '${_groovy_description}'),
-      string(name: 'BUILD_LINE', value: '${buildlineUpper}')
+      string(name: 'BUILD_LINE', value: '${buildlineUpper}'),
+      booleanParam(name: 'PUBLISH_PYTHON_WHEEL', value: ${publish_python_wheel})
     ]
   }
 }
@@ -801,6 +806,7 @@ log.DEV/
 log.STABLE/
 build/
 install/
+.pip-cache/
 .zoslib_hooks/
 EOT
 printInfo "${name}port/.gitignore created"

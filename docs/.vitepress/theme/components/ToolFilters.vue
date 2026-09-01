@@ -49,17 +49,22 @@
     </div>
 
     <div v-if="searchText && visibleCount === 0" class="no-results">
-      No tools found matching your search.
+      <span>No tools found matching your search.</span>
+      <a :href="requestUrl" class="request-package-link">Request this package</a>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { computed, ref, onMounted } from "vue";
+import { withBase } from "vitepress";
 
 const searchText = ref("");
 const selectedCategory = ref("All");
 const visibleCount = ref(0);
+const requestUrl = computed(() =>
+  `${withBase("/PackageRequests")}?package=${encodeURIComponent(searchText.value.trim())}`,
+);
 
 const applyFilters = () => {
   const filterText = searchText.value.toLowerCase().trim();
@@ -239,10 +244,25 @@ onMounted(() => {
 }
 
 .no-results {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
   margin-top: 10px;
   padding: 10px;
   color: var(--vp-c-text-2);
   font-style: italic;
+}
+
+.request-package-link {
+  padding: 6px 10px;
+  border: 1px solid var(--vp-c-brand-1);
+  border-radius: 7px;
+  color: var(--vp-c-brand-1);
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 600;
+  text-decoration: none;
 }
 
 @media (max-width: 640px) {

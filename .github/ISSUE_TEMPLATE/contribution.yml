@@ -8,6 +8,8 @@ body:
       value: |
         **Important:** Only create this request if you intend to contribute to a new port repository.
 
+        Contributing a Python package? Use the [Python Package Port Contribution form](https://github.com/zopencommunity/meta/issues/new?template=python-contribution.yml&title=%5BNew+Python+Port%5D%3A+%3Cpackage-name%3E) so Python versions, wheel requirements, dependencies, and z/OS test evidence are captured.
+
         Thank you for considering contributing to our ports collection. Please provide the necessary information below.
         The repo name chosen will be based on the name provided in the title.
 
