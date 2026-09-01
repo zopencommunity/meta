@@ -31,6 +31,8 @@ DRY_RUN=false
 VERBOSE=false
 # Extra source files to copy into SOURCES/ before building (space-separated)
 EXTRA_SOURCES=""
+# Source directory - if set, copy all files from this directory
+SOURCE_DIR=""
 
 # ──────────────────────────────────────────────────────────────────────────────
 # usage
@@ -54,6 +56,9 @@ Options:
                           May be repeated for multiple source files.
                           Omit entirely for virtual/meta packages that have
                           no sources (e.g. dependency group packages).
+  --source-dir <dir>      Directory containing source files. All files in this
+                          directory will be copied to SOURCES/ before building.
+                          Cannot be used together with --source.
   --build-binary          Build binary RPM only (no source RPM, faster)
   --buildroot <dir>       RPM build root directory (default: ~/rpmbuild)
   --sign                  GPG-sign all generated RPM packages after a
@@ -84,6 +89,9 @@ Examples:
 
   # Multiple source files
   $ME mypackage.spec --source pkg.pax.Z --source extra-data.tar.gz
+
+  # Use a source directory (all files will be copied)
+  $ME mypackage.spec --source-dir ./sources
 
 EOF
   exit "$exit_code"
@@ -256,7 +264,10 @@ perform_dry_run()
   echo "Would perform the following actions:"
   echo ""
   echo "1. Set up rpmbuild tree in:  $BUILDROOT"
-  if [ -n "$EXTRA_SOURCES" ]; then
+  if [ -n "$SOURCE_DIR" ]; then
+    echo "2. Copy all files from directory: $SOURCE_DIR -> $BUILDROOT/SOURCES/"
+    step=3
+  elif [ -n "$EXTRA_SOURCES" ]; then
     step=2
     for src in $EXTRA_SOURCES; do
       echo "$step. Copy source file:         $src -> $BUILDROOT/SOURCES/"
@@ -362,6 +373,12 @@ do_build()
 
   setup_rpmbuild "$BUILDROOT"
 
+  # Copy source directory if specified
+  if [ -n "$SOURCE_DIR" ]; then
+    printInfo "Copying all files from source directory: $SOURCE_DIR -> $BUILDROOT/SOURCES/"
+    find "$SOURCE_DIR" -maxdepth 1 -type f -exec cp {} "$BUILDROOT/SOURCES/" \;
+  fi
+
   # Copy any extra source files into SOURCES/
   for src in $EXTRA_SOURCES; do
     src_name=$(basename "$src")
@@ -454,6 +471,11 @@ main()
         fi
         shift 2
         ;;
+      --source-dir)
+        [ -n "$2" ] || { echo "Error: --source-dir requires a value" >&2; usage; }
+        SOURCE_DIR="$2"
+        shift 2
+        ;;
       --build-binary)
         BUILD_BINARY_ONLY=true
         shift
@@ -494,12 +516,11 @@ main()
     esac
   done
 
-  # Validate extra source files exist
-  for src in $EXTRA_SOURCES; do
-    if [ ! -f "$src" ]; then
-      printError "Source file not found: $src"
-    fi
-  done
+  # Check mutual exclusivity: --source and --source-dir cannot be used together
+  if [ -n "$EXTRA_SOURCES" ] && [ -n "$SOURCE_DIR" ]; then
+    echo "Error: Cannot use --source and --source-dir together" >&2
+    usage
+  fi
 
   # Dry-run — just describe what would happen and exit
   if [ "$DRY_RUN" = true ]; then

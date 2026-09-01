@@ -2,7 +2,10 @@
 //   PROJECT_GITHUB_REPO   : Github repository (e.g. https://github.com/zopencommunity/base-os.git)
 //   PROJECT_BRANCH        : (default: main)
 //   SPEC_FILE             : Path to spec file relative to project root (default: build.spec)
-//   SOURCE_FILE           : Optional source file path relative to project root (e.g. mypackage.pax.Z)
+//   SOURCE_DIR            : Optional directory containing source files (relative to project root).
+//                           Default: automatically uses 'SOURCES' if it exists
+//                           Set to custom directory name or leave empty
+//                           Example: SOURCES, rpm-sources
 //   PORT_DESCRIPTION      : Description of the project
 //   BUILD_BINARY          : Boolean - build binary RPM only, skip source RPM (default: true)
 //   SIGN_RPM              : Boolean - GPG-sign generated RPMs after build (default: true)
@@ -20,7 +23,7 @@ String getLogFromRunWrapper(RunWrapper runWrapper, int logLines) {
 def repo = params.get("PROJECT_GITHUB_REPO")
 def branch = params.get("PROJECT_BRANCH") ?: "main"
 def spec_file = params.get("SPEC_FILE") ?: "build.spec"
-def source_file = params.get("SOURCE_FILE") ?: ""
+def source_dir = params.get("SOURCE_DIR") ?: ""
 def description = params.get("PORT_DESCRIPTION")
 def buildroot = params.get("BUILDROOT") ?: ""
 def build_binary = params.get("BUILD_BINARY") != null ? params.get("BUILD_BINARY") : true
@@ -38,7 +41,7 @@ node('linux')
       string(name: 'PROJECT_GITHUB_REPO', value: "${repo}"),
       string(name: 'PROJECT_BRANCH', value: "${branch}"),
       string(name: 'SPEC_FILE', value: "${spec_file}"),
-      string(name: 'SOURCE_FILE', value: "${source_file}"),
+      string(name: 'SOURCE_DIR', value: "${source_dir}"),
       string(name: 'BUILDROOT', value: "${buildroot}"),
       booleanParam(name: 'BUILD_BINARY', value: build_binary),
       booleanParam(name: 'SIGN_RPM', value: sign_rpm),

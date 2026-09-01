@@ -7,8 +7,11 @@
 //   PROJECT_GITHUB_REPO   : GitHub repo containing build.spec (e.g. https://github.com/zopencommunity/myport.git)
 //   PROJECT_BRANCH        : Branch to checkout (default: main)
 //   SPEC_FILE             : Path to spec file relative to project root (default: build.spec)
-//   SOURCE_FILE           : Optional source file path relative to project root (e.g. mypackage.pax.Z)
-//                           Leave empty for virtual/meta packages with no sources
+//   SOURCE_DIR            : Optional directory containing source files (relative to project root).
+//                           Default: automatically uses 'SOURCES' directory if it exists
+//                           Set to empty string or specify custom directory name
+//                           Example: SOURCES, rpm-sources, etc.
+//                           Leave unspecified for automatic detection
 //   BUILD_BINARY          : Boolean - build binary RPM only, skip source RPM (default: true)
 //   SIGN_RPM              : Boolean - GPG-sign generated RPMs after build (default: true)
 //   BUILDROOT             : RPM build root directory (default: ~/rpmbuild)
@@ -20,7 +23,7 @@ def node_label     = params.NODE_LABEL           ?: "zos"
 def project_repo   = params.PROJECT_GITHUB_REPO  ?: ""
 def project_branch = params.PROJECT_BRANCH       ?: "main"
 def spec_file      = params.SPEC_FILE            ?: "build.spec"
-def source_file    = params.SOURCE_FILE          ?: ""
+def source_dir     = params.SOURCE_DIR           ?: ""
 def buildroot      = params.BUILDROOT            ?: ""
 def build_binary   = params.BUILD_BINARY != null ? params.BUILD_BINARY : true
 def sign_rpm       = params.SIGN_RPM != null     ? params.SIGN_RPM     : true
@@ -41,11 +44,8 @@ node(node_label) {
     // Set default buildroot as the cloned project repository directory inside the workspace
     def localBuildroot = buildroot ?: "${ws}/${project_name}/rpmbuild"
 
-    // Construct the zopen-rpmbuild command options
+    // Construct the zopen-rpmbuild command options (base command)
     def cmdOptions = "\"${spec_file}\" --buildroot \"${localBuildroot}\""
-    if (source_file) {
-      cmdOptions += " --source \"${source_file}\""
-    }
     if (build_binary) {
       cmdOptions += " --build-binary"
     }
@@ -72,6 +72,7 @@ node(node_label) {
         "PROJECT_BRANCH=${project_branch}",
         "PROJECT_NAME=${project_name}",
         "SPEC_FILE=${spec_file}",
+        "SOURCE_DIR=${source_dir}",
         "LOCAL_BUILDROOT=${localBuildroot}",
         "CMD_OPTIONS=${cmdOptions}"
       ]) {
@@ -100,9 +101,24 @@ node(node_label) {
             exit 1
           fi
 
-          # 4. Build
+          # 4. Determine source directory (default to 'SOURCES' if it exists)
+          EFFECTIVE_SOURCE_DIR="${SOURCE_DIR}"
+          if [ -z "${EFFECTIVE_SOURCE_DIR}" ]; then
+            if [ -d "${PROJECT_NAME}/SOURCES" ]; then
+              EFFECTIVE_SOURCE_DIR="SOURCES"
+              echo "INFO: Found default 'SOURCES' directory, will use it automatically"
+            fi
+          fi
+
+          # 5. Build command with source-dir if applicable
+          BUILD_CMD="zopen-rpmbuild ${CMD_OPTIONS}"
+          if [ -n "${EFFECTIVE_SOURCE_DIR}" ]; then
+            BUILD_CMD="${BUILD_CMD} --source-dir \"${EFFECTIVE_SOURCE_DIR}\""
+          fi
+
+          # 6. Build
           cd "${PROJECT_NAME}"
-          eval "zopen-rpmbuild ${CMD_OPTIONS}"
+          eval "${BUILD_CMD}"
 
           # 5. Copy binary and source RPMs to workspace for archiving
           mkdir -p "${WORKSPACE}/rpms"
