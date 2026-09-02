@@ -29,6 +29,7 @@ SIGN_RPM=false
 BUILDROOT="${HOME}/rpmbuild"
 DRY_RUN=false
 VERBOSE=false
+FORCE_UPGRADE_DEPS=false
 # Extra source files to copy into SOURCES/ before building (space-separated)
 EXTRA_SOURCES=""
 # Source directory - if set, copy all files from this directory
@@ -65,6 +66,8 @@ Options:
                           successful build.  Requires:
                             ZOPEN_GPG_SECRET_KEY_FILE
                             ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE
+  -u, --upgradedeps       Upgrade all dependencies (rpm, gpg) by running
+                          zopen install before building
   --dry-run               Show what would be done without doing it
   --verbose               Enable verbose/debug output (set -x)
   --help                  Display this help message
@@ -325,9 +328,21 @@ setDepsEnv()
   for _sde_dep in ${_sde_deps}; do
     _sde_name=$(parseDeps "${_sde_dep}" | cut -d'|' -f1)
 
-    # Install the dependency if not already found in depsPath
-    if ! find_dep_dir "${_sde_name}" >/dev/null; then
-      printWarning "Dependency ${_sde_name} not found. Downloading via zopen install"
+    _sde_foundDep=false
+    if [ "$FORCE_UPGRADE_DEPS" != "true" ]; then
+      # Check if dependency is already installed
+      if find_dep_dir "${_sde_name}" >/dev/null; then
+        _sde_foundDep=true
+      fi
+    fi
+
+    # Install or upgrade if not found or force upgrade is enabled
+    if [ "$_sde_foundDep" = "false" ] || [ "$FORCE_UPGRADE_DEPS" = "true" ]; then
+      if [ "$FORCE_UPGRADE_DEPS" = "true" ]; then
+        printHeader "Upgrading dependency ${_sde_name}. Installing via zopen install"
+      else
+        printWarning "Dependency ${_sde_name} not found. Downloading via zopen install"
+      fi
       if ! runAndLog "PATH=\"${ZOPEN_OLD_PATH}\" ${MYDIR}/zopen-install --install-or-upgrade ${_sde_name} -v -y"; then
         printError "zopen install command failed"
       fi
@@ -487,6 +502,10 @@ main()
         ;;
       --sign)
         SIGN_RPM=true
+        shift
+        ;;
+      -u|--upgradedeps)
+        FORCE_UPGRADE_DEPS=true
         shift
         ;;
       --dry-run)
