@@ -462,8 +462,6 @@ date=$(date "+%a %b %d %Y")
 # Source: $source_file
 # Generated: $(date)
 
-%define _rpmfilename %%{NAME}-%%{VERSION}-%%{RELEASE}.%%{ARCH}-ibm-zos.rpm
-
 Name:           ${PKG_NAME}
 Version:        ${PKG_VERSION}
 Release:        ${RELEASE}%{?dist}
