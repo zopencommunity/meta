@@ -45,6 +45,7 @@ BUILDROOT="${HOME}/rpmbuild"
 VALIDATE_SPEC=false
 DRY_RUN=false
 VERBOSE=false
+UPGRADE_DEPS=false
 
 # Path to the companion build/sign script
 ZOPEN_RPMBUILD="${MYDIR}/zopen-rpmbuild"
@@ -75,6 +76,7 @@ Options:
   --build-binary          Build binary RPM only (faster, no source RPM)
   --buildroot <dir>       RPM build root directory (default: ~/rpmbuild)
   --validate              Validate spec file after generation (checks syntax using rpmbuild -bp)
+  -u, --upgradedeps       Upgrade all dependencies (rpm, gpg) before building
   --dry-run               Show what would be done without actually doing it
   --verbose               Enable verbose debug output
   --help                  Display this help message
@@ -462,8 +464,6 @@ date=$(date "+%a %b %d %Y")
 # Source: $source_file
 # Generated: $(date)
 
-%define _rpmfilename %%{NAME}-%%{VERSION}-%%{RELEASE}.%%{ARCH}-ibm-zos.rpm
-
 Name:           ${PKG_NAME}
 Version:        ${PKG_VERSION}
 Release:        ${RELEASE}%{?dist}
@@ -704,6 +704,7 @@ Please ensure it is installed alongside zopen-pax2rpm."
     set -- "$spec_file" --source "$pax_file" --buildroot "$buildroot"
     [ "$BUILD_BINARY_ONLY" = true ] && set -- "$@" --build-binary
     [ "$SIGN_RPM"          = true ] && set -- "$@" --sign
+    [ "$UPGRADE_DEPS"      = true ] && set -- "$@" -u
     [ "$VERBOSE"           = true ] && set -- "$@" --verbose
 
     printInfo "Delegating to: ${ZOPEN_RPMBUILD} $*"
@@ -817,6 +818,10 @@ main() {
                 ;;
 	    --sign)
                 SIGN_RPM=true
+                shift
+                ;;
+            -u|--upgradedeps)
+                UPGRADE_DEPS=true
                 shift
                 ;;
             --buildroot)
