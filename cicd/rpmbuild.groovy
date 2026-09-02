@@ -8,10 +8,9 @@
 //   PROJECT_BRANCH        : Branch to checkout (default: main)
 //   SPEC_FILE             : Path to spec file relative to project root (default: build.spec)
 //   SOURCE_DIR            : Optional directory containing source files (relative to project root).
-//                           Default: automatically uses 'SOURCES' directory if it exists
-//                           Set to empty string or specify custom directory name
-//                           Example: SOURCES, rpm-sources, etc.
-//                           Leave unspecified for automatic detection
+//                           If empty, automatically uses 'SOURCES' directory if it exists.
+//                           Set to a non-empty directory name to use a custom source directory (e.g. rpm-sources).
+//                           Leave empty for virtual/meta packages with no sources
 //   BUILD_BINARY          : Boolean - build binary RPM only, skip source RPM (default: true)
 //   SIGN_RPM              : Boolean - GPG-sign generated RPMs after build (default: true)
 //   BUILDROOT             : RPM build root directory (default: ~/rpmbuild)
