@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-04T08:58:09Z",
+  "generatedAt": "2026-09-04T15:30:21Z",
   "wheelIndexUrl": "https://repo.zopen.community/pypi/wheels/simple/",
   "supportedPythonVersions": [
     "3.12",
@@ -7,7 +7,7 @@
     "3.14"
   ],
   "packageCount": 37,
-  "wheelCount": 198,
+  "wheelCount": 200,
   "packages": [
     {
       "name": "bcrypt",
@@ -851,22 +851,22 @@
         "3.13",
         "3.14"
       ],
-      "wheelCount": 6,
+      "wheelCount": 8,
       "indexUrl": "https://repo.zopen.community/pypi/wheels/simple/ujson/",
       "releaseKey": "ujson",
-      "version": "5.13.0",
+      "version": "6.0.0",
       "description": "Fast JSON encoder and decoder for Python",
       "categories": [
         "development",
         "library"
       ],
       "runtimeDependencies": [],
-      "passedTests": 36,
-      "totalTests": 36,
+      "passedTests": 24,
+      "totalTests": 24,
       "verificationRate": 100.0,
-      "publishedAt": "2026-08-15T14:56:46Z",
+      "publishedAt": "2026-09-04T15:23:55Z",
       "portRepositoryUrl": "https://github.com/zopencommunity/ujsonport",
-      "releaseUrl": "https://github.com/zopencommunity/ujsonport/releases/tag/STABLE_ujsonport_151"
+      "releaseUrl": "https://github.com/zopencommunity/ujsonport/releases/tag/STABLE_ujsonport_327"
     },
     {
       "name": "versioneer",
