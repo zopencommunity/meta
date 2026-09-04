@@ -387,23 +387,6 @@ generateFileSystem()
   [ -e "${rootfs}/var/lib/zopen" ] || mkdir -p "${rootfs}/var/lib/zopen"
   [ -e "${rootfs}/var/tmp" ] || mkdir -p "${rootfs}/var/tmp"
 
-  printVerbose "- Creating RPM configuration directories"
-  [ -e "${rootfs}/etc/rpm" ] || mkdir -p "${rootfs}/etc/rpm"
-  [ -e "${rootfs}/var/lib/rpm" ] || mkdir -p "${rootfs}/var/lib/rpm"
-
-  # Create default RPM macros file if it doesn't exist
-  if [ ! -f "${rootfs}/etc/rpm/macros.zopen" ]; then
-    printVerbose "- Creating default RPM macros configuration"
-    # Locate the template macros file in the data directory
-    macrosTemplate="$(findrev "${MYDIR}" "data/macros.zopen")"
-    if [ -f "${macrosTemplate}/data/macros.zopen" ]; then
-      cp -f "${macrosTemplate}/data/macros.zopen" "${rootfs}/etc/rpm/macros.zopen"
-      printInfo "- Created RPM configuration at ${rootfs}/etc/rpm/macros.zopen"
-    else
-      printWarning "- Could not locate RPM macros template file. RPM configuration may need manual setup."
-    fi
-  fi
-
   printVerbose "- Creating path for bootstrap files"
   [ -e "${rootfs}/boot" ] || mkdir -p "${rootfs}/boot"
 
