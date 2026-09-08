@@ -554,6 +554,10 @@
 - **meta**: [meta-main.20260508_024412.zos.pax.Z](https://github.com/zopencommunity/metaport/releases/tag/STABLE_metaport_4269) - (category: utilities)
 - **meta**: [meta-main.20260504_152555.zos.pax.Z](https://github.com/zopencommunity/metaport/releases/tag/STABLE_metaport_4255) - (category: utilities)
 - **meta**: [meta-main.20260504_112526.zos.pax.Z](https://github.com/zopencommunity/metaport/releases/tag/STABLE_metaport_4251) - (category: utilities)
+- **libksba**: [libksba-1.7.0.20260507_160029.zos.pax.Z](https://github.com/zopencommunity/libksbaport/releases/tag/STABLE_libksbaport_4266) - (category: security library)
+- **xz**: [xz-5.8.3.20260504_154259.zos.pax.Z](https://github.com/zopencommunity/xzport/releases/tag/STABLE_xzport_4256) - (category: Uncategorized)
+- **vim**: [vim-v9.2.0450.20260508_160041.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_4275) - (category: editor development)
+- **zoslib**: [zoslib-zopen2.20260508_120821.zos.pax.Z](https://github.com/zopencommunity/zoslibport/releases/tag/STABLE_zoslibport_4271) - (category: library)
 - **libgpgerror**: [libgpgerror-1.61.20260507_160929.zos.pax.Z](https://github.com/zopencommunity/libgpgerrorport/releases/tag/STABLE_libgpgerrorport_4267) - (category: security library)
 - **libgpgerror**: [libgpgerror-1.60.20260505_053704.zos.pax.Z](https://github.com/zopencommunity/libgpgerrorport/releases/tag/STABLE_libgpgerrorport_4257) - (category: security library)
 - **libdio**: [libdio-ispf_integration.20260508_160429.zos.pax.Z](https://github.com/zopencommunity/libdioport/releases/tag/DEV_libdioport_4274) - (category: development core)
@@ -641,6 +645,9 @@
 - **meta**: [meta-main.20260407_123326.zos.pax.Z](https://github.com/zopencommunity/metaport/releases/tag/STABLE_metaport_4192) - (category: utilities)
 - **meta**: [meta-main.20260407_092624.zos.pax.Z](https://github.com/zopencommunity/metaport/releases/tag/STABLE_metaport_4190) - (category: utilities)
 - **dos2unix**: [dos2unix-7.5.5.20260408_154411.zos.pax.Z](https://github.com/zopencommunity/dos2unixport/releases/tag/STABLE_dos2unixport_4196) - (category: editor development)
+- **vim**: [vim-v9.2.0300.20260406_154445.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_4189) - (category: editor development)
+- **ant**: [ant-DEV.20260411_152113.zos.pax.Z](https://github.com/zopencommunity/antport/releases/tag/STABLE_antport_4200) - (category: development)
+- **neovim**: [neovim-v0.11.7.20260408_133540.zos.pax.Z](https://github.com/zopencommunity/neovimport/releases/tag/STABLE_neovimport_4195) - (category: editor)
 - **jenkins**: [jenkins-2.558.20260408_060412.zos.pax.Z](https://github.com/zopencommunity/jenkinsport/releases/tag/STABLE_jenkinsport_4194) - (category: devops)
 - **jenkins**: [jenkins-DEV.20260407_154621.zos.pax.Z](https://github.com/zopencommunity/jenkinsport/releases/tag/STABLE_jenkinsport_4193) - (category: devops)
 - **neovim**: [neovim-v0.11.7.20260408_133540.zos.pax.Z](https://github.com/zopencommunity/neovimport/releases/tag/STABLE_neovimport_4195) - (category: editor)
@@ -2428,6 +2435,7 @@
 - **meta**: [meta-main.20241122_160415.zos.pax.Z](https://github.com/zopencommunity/metaport/releases/tag/STABLE_metaport_2750) - (category: utilities)
 - **meta**: [meta-main.20241120_034335.zos.pax.Z](https://github.com/zopencommunity/metaport/releases/tag/STABLE_metaport_2745) - (category: utilities)
 - **meta**: [meta-main.20241118_161559.zos.pax.Z](https://github.com/zopencommunity/metaport/releases/tag/STABLE_metaport_2739) - (category: utilities)
+- **vim**: [vim-heads.v9.1.0869.20241118_041149.zos.pax.Z](https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_2736) - (category: editor development)
 - **libgpgerror**: [libgpgerror-DEV.20241118_131834.zos.pax.Z](https://github.com/zopencommunity/libgpgerrorport/releases/tag/STABLE_libgpgerrorport_2738) - (category: security library)
 - **zigi**: [zigi-master.20241120_170602.zos.pax.Z](https://github.com/zopencommunity/zigiport/releases/tag/STABLE_zigiport_2747) - (category: utilities)
 - **zigi**: [zigi-master.20241120_165556.zos.pax.Z](https://github.com/zopencommunity/zigiport/releases/tag/STABLE_zigiport_2746) - (category: utilities)
@@ -3048,6 +3056,7 @@
 - **prompters**: [prompters-main.20240507_121101.zos.pax.Z](https://github.com/zopencommunity/promptersport/releases/tag/STABLE_promptersport_2246) - (category: utilities)
 - **ncurses**: [ncurses-6.5.20240507_195319.zos.pax.Z](https://github.com/zopencommunity/ncursesport/releases/tag/STABLE_ncursesport_2249) - (category: Uncategorized)
 - **gn**: [gn-main.20240506_193018.zos.pax.Z](https://github.com/zopencommunity/gnport/releases/tag/DEV_gnport_2245) - (category: development)
+- **ncurses**: [ncurses-6.5.20240507_195319.zos.pax.Z](https://github.com/zopencommunity/ncursesport/releases/tag/STABLE_ncursesport_2249) - (category: Uncategorized)
 
 </details>
 <details>
