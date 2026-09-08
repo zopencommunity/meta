@@ -7,22 +7,25 @@ Access to a z/OS UNIX machine with z/OS 2.4 and above and network connectivity t
 ## Installing the package manager
 
 If you have curl and bash on your system, you can use this one liner:
-```
+
+```bash
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/zopencommunity/meta/HEAD/tools/zopen_install.sh)"
 ```
-Otherwise, download the latest [meta pax](https://github.com/zopencommunity/metaport/releases) to z/OS
-- download the file to your desktop
-- use `sftp` to upload the pax file to z/OS.
-- On z/OS, expand the pax using the command ```pax -rvf <filename>.pax```.  
-  This will expand the pax to the current directory, listing the various included files as it does so.
 
-- Source the .env to add `zopen` to your PATH:
+Otherwise, download the latest [meta pax](https://github.com/zopencommunity/metaport/releases) to z/OS:
+
+- Download the file to your desktop.
+- Use `sftp` to upload the pax file to z/OS.
+- On z/OS, expand the pax using the command `pax -rvf <filename>.pax`. This will expand the pax to the current directory, listing the various included files as it does so.
+- Source the `.env` to add `zopen` to your PATH:
+
 ```bash
 cd meta-<version>
 . ./.env
 ```
 
 - Initialize your environment:
+
 ```bash
 zopen init
 # Make sure to source the zopen-config file as instructed
@@ -30,34 +33,40 @@ zopen init
 
 ## Using the package manager
 
-- Install any zopen community via `zopen install`, e.g.
+- Install any zopen community package via `zopen install`, e.g.
+
 ```bash
-zopen install which # Installs which 
+zopen install which # Installs which
 # Now test which
 which which
 ```
 
 - List which tools you have installed with `zopen list --installed`, e.g.
+
 ```bash
 zopen list --installed
 ```
 
-- See if any tools can be upgraded with `zopen list --upgradeable`, e.g. 
+- See if any tools can be upgraded with `zopen list --upgradeable`, e.g.
+
 ```bash
 zopen list --upgradeable # list all tools that have upgrades available
 ```
 
 - Upgrade your tools to the latest version with `zopen upgrade`, e.g.
+
 ```bash
 zopen upgrade
 ```
 
 - Set up your environment to use your installed tools by sourcing your environment, e.g.
+
 ```bash
 . <zopen_root>/etc/zopen-config
 ```
 
 - List known security vulnerabilities in installed tools with `zopen audit`, e.g.
+
 ```bash
 zopen audit
 ```
@@ -70,12 +79,10 @@ Packages such as `coreutils`, `gawk`, `sed`, `findutils`, `grep`, `diffutils`, `
 
 To ensure seamless interaction with z/OS tools under `/bin`, z/OS Open tools that collide with a z/OS UNIX tool under `<package>/bin` will be prefixed as follows:
 
-* **`g` prefix** for GNU-based tools (Coreutils, Awk, Findutils, Diffutils, Grep, Sed) . E.g., `gmake` and `gawk`.
-* **`zot` prefix** for non-GNU-based tools (Man-db, OpenSSH). E.g., `zotssh` and `zotman`
+- **`g` prefix** for GNU-based tools (Coreutils, Awk, Findutils, Diffutils, Grep, Sed). E.g., `gmake` and `gawk`.
+- **`zot` prefix** for non-GNU-based tools (Man-db, OpenSSH). E.g., `zotssh` and `zotman`.
 
-Tools that have collisions will also print out an install caveat during zopen install.
-
-The original unprefixed binaries will be placed under `<package>/altbin`.
+Tools that have collisions will also print out an install caveat during `zopen install`. The original unprefixed binaries will be placed under `<package>/altbin`.
 
 ### Using Tools without Prefix
 
@@ -85,73 +92,83 @@ If you prefer to use the tools without the prefix, you can specify the `--overri
 . <zopen_root>/etc/zopen-config --override-zos-tools
 ```
 
-Alternatively, you can add `$ZOPEN_ROOTFS/usr/local/altbin` to your $PATH.
+Alternatively, you can add `$ZOPEN_ROOTFS/usr/local/altbin` to your `$PATH`.
 
 ### Adjusting the default override mode for your zopen installation
 
-zopen init provides the following option which can adjust the default override mode.
+`zopen init` provides the following option which can adjust the default override mode:
+
 ```
-  --[no]override-zos-tools
-          Toggle default mode for overriding z/OS /bin tools
-          in the zopen-config. Default is --nooverride-zos-tools
+--[no]override-zos-tools
+        Toggle default mode for overriding z/OS /bin tools
+        in the zopen-config. Default is --nooverride-zos-tools
 ```
 
-For examples:
+For example:
+
 ```bash
 zopen init --override-zos-tools
 ```
 
-If you have a zopen fileystem already configured, you can use the `zopen config` command to set the value:
+If you have a zopen filesystem already configured, you can use the `zopen config` command to set the value:
+
 ```bash
 zopen config --set override_zos_tools true
 zopen init --refresh # to refresh the zopen-config file
 ```
 
 ### Selecting a Specific Set of Packages to Override
-If you want to override only a specific set of packages, you can create a file that lists the packages you want to override. This allows for more fine-grained control over which packages are overridden.
+
+If you want to override only a specific set of packages, you can create a file that lists the packages you want to override.
 
 **Creating the override list file**
 
-* Create a file named `zopen.subset` in your home directory ($HOME/zopen.subset). Add one tool per line to the file, without any leading or trailing whitespace. For example:
-```bash
+Create a file named `zopen.subset` in your home directory (`$HOME/zopen.subset`). Add one tool per line to the file, without any leading or trailing whitespace. For example:
+
+```
 gawk
 coreutils
 sed
 ```
-When sourcing zopen-config, use the `--override-zos-tools-subset` option followed by the path to your zopen.subset file:
-```
+
+When sourcing `zopen-config`, use the `--override-zos-tools-subset` option followed by the path to your `zopen.subset` file:
+
+```bash
 . $ZOPEN_ROOTFS/etc/zopen-config --override-zos-tools-subset $HOME/zopen.subset
 ```
-This will override only the packages listed in the zopen.subset file.
+
+This will override only the packages listed in the `zopen.subset` file.
 
 **Format of the override list file**
-* One tool per line
-* No leading or trailing whitespace
-* Names must match the package names (e.g., gawk, coreutils, sed)
 
- 
-# Upgrading the meta zopen package manager
+- One tool per line
+- No leading or trailing whitespace
+- Names must match the package names (e.g., `gawk`, `coreutils`, `sed`)
 
-The meta package, which include zopen, can be upgraded via the `zopen upgrade` command as follows:
+## Upgrading the meta zopen package manager
+
+The meta package, which includes `zopen`, can be upgraded via the `zopen upgrade` command as follows:
+
 ```bash
-> zopen upgrade meta
+zopen upgrade meta
 ```
-**Note:** If you have an older version of meta (<=0.6.3), you will need to remove the .pinned file from your zopen file system: 
+
+> **Note:** If you have an older version of meta (<=0.6.3), you will need to remove the `.pinned` file from your zopen file system:
+
 ```bash
-> find $zopen_rootfs -name ".pinned"
+find $zopen_rootfs -name ".pinned"
 # Use rm to remove .pinned entries.
 ```
 
+## Signing and verifying using zopen framework
 
+- `zopen-build` can now generate signed builds, and `zopen-install` can verify the signature before installation.
+- Signed PAX builds can be enabled using the `--sign-pax` or `-sp` option. If this option is set, it reads the `ZOPEN_GPG_SECRET_KEY_FILE` and its passphrase from `ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE` to sign the file. The public key is read from `ZOPEN_GPG_PUBLIC_KEY_FILE`.
+- Signed RPM builds can be enabled using the `--sign-rpm` or `-sr` option. If this option is set, it reads the `ZOPEN_GPG_SECRET_KEY_FILE` and its passphrase from `ZOPEN_GPG_SECRET_KEY_PASSPHRASE_FILE` to sign the RPM package.
 
-# Signing & verifying using zopen framework
-* `zopen-build` can now generate signed builds, and `zopen-install` can verify the signature before installation.
+These files are mandatory for signing a file.
 
-* We can enable signed PAX builds using the `--sign-pax` or `-sp` option. If this option is set, it reads the **ZOPEN\_GPG\_SECRET\_KEY\_FILE** and its passphrase from **ZOPEN\_GPG\_SECRET\_KEY\_PASSPHRASE_FILE** to sign the file. The public key is read from **ZOPEN_GPG\_PUBLIC\_KEY\_FILE**.
-* We can enable signed RPM builds using the `--sign-rpm` or `-sr` option. If this option is set, it reads the **ZOPEN\_GPG\_SECRET\_KEY\_FILE** and its passphrase from **ZOPEN\_GPG\_SECRET\_KEY\_PASSPHRASE_FILE** to sign the RPM package.
-<br/>These files are mandatory for signing a file.
+- The public key and the signed file details are written to `metadata.json` (this JSON is not part of the PAX).
+- During installation, the signed file will be verified against the signature and public key.
 
-* The public key and the signed file details are written to metadata.json (this JSON is not part of the PAX).
-
-
-* During installation, the signed file will be verified against the signature and public key. Not recommended:  If you prefer to bypass verification of signed PAX files, specify `--skip-verify`.
+> **Note:** If you prefer to bypass verification of signed PAX files, specify `--skip-verify`. This is not recommended.

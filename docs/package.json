@@ -19,5 +19,8 @@
     "@types/node": "^25.6.0",
     "vitepress": "^1.6.4",
     "vue": "^3.5.32"
+  },
+  "dependencies": {
+    "@carbon/icons-vue": "^10.130.0"
   }
 }

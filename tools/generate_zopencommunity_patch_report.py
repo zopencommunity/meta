@@ -630,13 +630,13 @@ def generate_loc_distribution_pie_chart(counts, labels, image_filename, images_d
          return None
 
     fig, ax = plt.subplots(figsize=(8, 8))
-    colors = plt.cm.Paired(range(len(filtered_counts))) # Use a color map
+    colors = plt.cm.Pastel1(range(len(filtered_counts))) # Use a muted pastel color map
 
     wedges, texts, autotexts = ax.pie(filtered_counts, labels=filtered_labels, autopct='%1.1f%%',
             startangle=140, colors=colors, pctdistance=0.85)
 
     # Improve label readability
-    plt.setp(autotexts, size=8, weight="bold", color="white")
+    plt.setp(autotexts, size=8, weight="bold", color="#444444")
     plt.setp(texts, size=9)
 
 
@@ -665,7 +665,7 @@ def generate_current_patch_loc_trend(repo_data, images_dir, time_points):
     filename = f"{safe_repo_name}_current_loc_trend.png"
     title = f"Repository: {repo_name}\nTrend of Current Patch LOC"
     ylabel = "Total LOC of Patches"
-    return _generate_trend_graph(x_dates, y_values, title, ylabel, filename, images_dir, color='tab:blue')
+    return _generate_trend_graph(x_dates, y_values, title, ylabel, filename, images_dir, color='#7bafd4')
 
 def generate_current_patch_count_trend(repo_data, images_dir, time_points):
     repo_name = repo_data['name']
@@ -675,7 +675,7 @@ def generate_current_patch_count_trend(repo_data, images_dir, time_points):
     filename = f"{safe_repo_name}_current_count_trend.png"
     title = f"Repository: {repo_name}\nTrend of Current Patch Count"
     ylabel = "Number of Patch Files"
-    return _generate_trend_graph(x_dates, y_values, title, ylabel, filename, images_dir, color='tab:orange', is_count=True)
+    return _generate_trend_graph(x_dates, y_values, title, ylabel, filename, images_dir, color='#f0aa6a', is_count=True)
 
 def generate_overall_current_loc_trend(repos_data, images_dir, time_points):
     print("Generating overall LOC trend graph...")
@@ -684,7 +684,7 @@ def generate_overall_current_loc_trend(repos_data, images_dir, time_points):
     filename = "overall_current_loc_trend.png"
     title = "Overall Trend of Current Patch LOC (All Projects)"
     ylabel = "Total LOC of Patches"
-    return _generate_trend_graph(x_dates, y_values, title, ylabel, filename, images_dir, color='tab:blue')
+    return _generate_trend_graph(x_dates, y_values, title, ylabel, filename, images_dir, color='#7bafd4')
 
 def generate_average_patch_loc_trend(repos_data, images_dir, time_points):
     print("Generating average LOC per project trend graph...")
@@ -693,7 +693,7 @@ def generate_average_patch_loc_trend(repos_data, images_dir, time_points):
     filename = "average_patch_loc_trend.png"
     title = "Trend of Average Patch LOC per Active Project"
     ylabel = "Average LOC of Patches"
-    return _generate_trend_graph(x_dates, y_values, title, ylabel, filename, images_dir, color='tab:green')
+    return _generate_trend_graph(x_dates, y_values, title, ylabel, filename, images_dir, color='#8ecba5')
 
 
 # --- Markdown Report Generation ---
