@@ -3470,6 +3470,9 @@ create_rpm()
     if [ "${signRPM}" = "true" ]; then
       cmd="${cmd} --sign"
     fi
+    if ${forceUpgradeDeps}; then
+      cmd="${cmd} -u"
+    fi
     if ! runAndLog "${cmd}"; then
       printError "Could not generate RPM from \"${paxFileName}\""
     fi
