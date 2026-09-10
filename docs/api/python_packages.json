@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-10T06:10:17Z",
+  "generatedAt": "2026-09-10T15:35:05Z",
   "wheelIndexUrl": "https://repo.zopen.community/pypi/wheels/simple/",
   "supportedPythonVersions": [
     "3.12",
@@ -7,7 +7,7 @@
     "3.14"
   ],
   "packageCount": 37,
-  "wheelCount": 201,
+  "wheelCount": 204,
   "packages": [
     {
       "name": "bcrypt",
@@ -660,10 +660,10 @@
         "3.13",
         "3.14"
       ],
-      "wheelCount": 9,
+      "wheelCount": 12,
       "indexUrl": "https://repo.zopen.community/pypi/wheels/simple/regex/",
       "releaseKey": "regex",
-      "version": "2026.9.3",
+      "version": "2026.9.10",
       "description": "z/OS port of regex - alternative regular expression module for Python",
       "categories": [
         "development",
@@ -673,9 +673,9 @@
       "passedTests": 87,
       "totalTests": 87,
       "verificationRate": 100.0,
-      "publishedAt": "2026-09-01T15:48:39Z",
+      "publishedAt": "2026-09-10T15:28:28Z",
       "portRepositoryUrl": "https://github.com/zopencommunity/regexport",
-      "releaseUrl": "https://github.com/zopencommunity/regexport/releases/tag/STABLE_regexport_309"
+      "releaseUrl": "https://github.com/zopencommunity/regexport/releases/tag/STABLE_regexport_345"
     },
     {
       "name": "rpds-py",
