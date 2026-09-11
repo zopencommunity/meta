@@ -120,6 +120,14 @@ export default defineConfig({
         ],
       },
       {
+        text: "RPM Packages on z/OS",
+        collapsed: false,
+        items: [
+          { text: "Overview", link: "/Guides/RpmPackages" },
+          { text: "Setup Guide", link: "/Guides/RpmSetup" },
+        ],
+      },
+      {
         text: "Reference",
         collapsed: false,
         items: [{ text: "zopen", link: "/reference/zopen-reference" }],
