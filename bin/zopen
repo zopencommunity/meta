@@ -22,8 +22,12 @@ setupMyself
 
 
 printHelp(){
+  zopen_version="unknown"
+  if [ -f "${INCDIR}/zopen_version" ]; then
+    zopen_version=$(cat "${INCDIR}/zopen_version")
+  fi
 cat << HELPDOC
-${ME} is a utility for managing a zopen community environment.
+${ME} (${zopen_version}) is a utility for managing a zopen community environment.
 
 Usage: ${ME} [COMMAND] [OPTION] [PARAMETERS]...
 
