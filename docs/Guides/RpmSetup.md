@@ -9,7 +9,33 @@ This guide explains how to configure your z/OS Unix System Services (USS) client
 
 ## Step 0: Install Package Management Tools
 
-If you do not have `dnf5` and `rpm` installed on your z/OS USS system, you can download and install them directly from the zopen community using the `zopen` package manager:
+If you do not have `dnf5` and `rpm` installed on your z/OS USS system, you can download and install them directly from the zopen community.
+
+### Option 1: Using the dnf5 Quick Install Script (Recommended)
+
+The quickest way to install dnf5 is using the one-liner install script:
+
+```bash
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/zopencommunity/meta/HEAD/tools/dnf5_install.sh)"
+```
+
+Or download and run the script:
+
+```bash
+curl -O https://raw.githubusercontent.com/zopencommunity/meta/HEAD/tools/dnf5_install.sh
+chmod +x dnf5_install.sh
+./dnf5_install.sh
+```
+
+This script will:
+- Download the latest stable dnf5 release
+- Extract and set up the package
+- Create the RPM bootstrap configuration
+- Initialize necessary directories
+
+### Option 2: Using the zopen Package Manager
+
+If you already have zopen installed, you can use it to install dnf5 and rpm:
 
 ```bash
 # Install/upgrade the RPM database manager and GPG tools
@@ -18,6 +44,8 @@ zopen upgrade rpm -y
 # Install/upgrade the DNF5 package manager
 zopen upgrade dnf5 -y
 ```
+
+### Verify Installation
 
 Once installed, verify they are in your environment by running:
 ```bash
