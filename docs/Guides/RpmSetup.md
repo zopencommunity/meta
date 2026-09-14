@@ -2,85 +2,166 @@
 
 This guide explains how to configure your z/OS Unix System Services (USS) client to consume, verify, and install RPM packages delivered by the zopen community.
 
+## System Requirements
+
 > [!IMPORTANT]
-> System package management operations (such as importing GPG signing keys and installing packages using `rpm` and `dnf5`) modify system directories and database files. You must perform this setup and run these commands **logged in directly under a user account with superuser authority (root user / UID 0)**.
+> **Authorization:**
+> - Superuser authority (UID 0) required
+> - Modifies system directories and RPM database
+> 
+> **Storage:**
+> - Minimum 1 GB free space on `/opt/pkg` filesystem
+> - Filesystem must support standard Unix permissions
+> 
+> **Software:**
+> - `dnf5` version 5.4.4.0 or higher (rpm libraries statically linked)
+> - `curl` for downloading packages
+> 
+> **Network:**
+> - Access to `http://repo.zopen.community` (or direct IP `163.74.83.190:8080`)
+> - Outbound HTTP connections required
+> 
+> **Permissions:**
+> - 755 for directories
+> - 644 for configuration files
 
 ---
 
-## Step 0: Install Package Management Tools
+## Installation Path
 
-If you do not have `dnf5` and `rpm` installed on your z/OS USS system, you can download and install them directly from the zopen community.
+Choose **ONE** of the following installation methods:
 
-### Option 1: Using the dnf5 Quick Install Script (Recommended)
+---
 
-The quickest way to install dnf5 is using the one-liner install script:
+### Path A: Automated Setup (Recommended)
+
+Use the quick install script that automatically configures everything:
 
 ```bash
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/zopencommunity/meta/HEAD/tools/dnf5_install.sh)"
 ```
 
-Or download and run the script:
+**What this script does:**
+- Downloads latest stable dnf5
+- Creates `/opt/pkg` directory structure
+- Configures RPM and DNF5
+- Syncs repository metadata
+- Installs dnf5 from repository
 
-```bash
-curl -O https://raw.githubusercontent.com/zopencommunity/meta/HEAD/tools/dnf5_install.sh
-chmod +x dnf5_install.sh
-./dnf5_install.sh
-```
-
-This script will:
-- Download the latest stable dnf5 release
-- Extract and set up the package
-- Create the RPM bootstrap configuration
-- Initialize necessary directories
-
-### Option 2: Using the zopen Package Manager
-
-If you already have zopen installed, you can use it to install dnf5 and rpm:
-
-```bash
-# Install/upgrade the RPM database manager and GPG tools
-zopen upgrade rpm -y
-
-# Install/upgrade the DNF5 package manager
-zopen upgrade dnf5 -y
-```
-
-### Verify Installation
-
-Once installed, verify they are in your environment by running:
-```bash
-rpm --version
-dnf5 --version
-```
-*   **Required minimum versions:**
-    *   `rpm` version **6.0.1** or higher
-    *   `dnf5` version **5.4.2.1** or higher
+**Next step:** [Skip to Installing and Managing Packages](#installing-and-managing-packages)
 
 ---
 
-## Step 1: Configure the Repository (Requires Superuser/Root)
+### Path B: Manual Setup
 
-Create the configuration file to tell `dnf5` where to find the package metadata and GPG keys.
+If you prefer manual configuration or already have zopen installed, follow these steps:
 
-1. Ensure you are in a terminal session logged in as a **superuser (root)**.
-2. Create the repository directory and ensure it has correct permissions (`755`):
-   ```bash
-   mkdir -p /etc/yum.repos.d
-   chmod 755 /etc/yum.repos.d
-   ```
-3. Create the configuration file `/etc/yum.repos.d/zopen.repo`:
-   ```bash
-   vim /etc/yum.repos.d/zopen.repo
-   ```
+#### Install dnf5 binaries:
 
-### Option 1: Manual Setup (Recommended)
-Paste the following configuration.
+**Option 1:** Using zopen package manager:
+```bash
+zopen upgrade dnf5 -y
+```
 
-> [!NOTE]
-> The primary domain is `http://repo.zopen.community/`. If your system is behind a firewall that cannot resolve external domains or has TLS issues, you can fall back to the direct IP endpoint `http://163.74.83.190:8080/`.
+**Option 2:** Download manually from [zopen releases](https://github.com/zopencommunity/dnf5port/releases)
 
-**Primary Configuration:**
-```ini
+#### Verify Installation:
+```bash
+dnf5 --version  # Should be 5.4.4.0 or higher
+```
+
+#### Step 1: Configure RPM and DNF5
+
+> [!IMPORTANT]
+> **Installation prefix:** `/opt/pkg`
+> 
+> **Directory structure:**
+> - `/opt/pkg/bin` - Binaries
+> - `/opt/pkg/lib` - Libraries  
+> - `/opt/pkg/etc` - Configuration
+> - `/opt/pkg/var` - Data, logs, RPM database
+> - `/opt/pkg/share` - Shared files
+
+##### Create Required Directories
+
+First, create the directory structure for RPM database, DNF cache, and configuration files:
+
+```bash
+mkdir -p /opt/pkg/var/lib/rpm
+mkdir -p /opt/pkg/var/lib/dnf
+mkdir -p /opt/pkg/var/cache/dnf
+mkdir -p /opt/pkg/var/log
+mkdir -p /opt/pkg/etc/dnf
+mkdir -p /opt/pkg/etc/yum.repos.d
+```
+
+##### Configure RPM
+
+Create the RPM configuration directory. RPM looks for configuration in `XDG_CONFIG_HOME/rpm` or `~/.config/rpm`:
+
+```bash
+mkdir -p ~/.config/rpm
+```
+
+Create the RPM macros file `~/.config/rpm/macros`:
+
+```bash
+cat > ~/.config/rpm/macros <<'EOF'
+%_dbpath /opt/pkg/var/lib/rpm
+%_db_backend sqlite
+%_keyring rpmdb
+%_dbpath_rebuild %{_dbpath}
+%_keyringpath %{_dbpath}/pubkeys/
+%_keyring_lockpath %{_dbpath}/.keyring.lock
+%_rpmlock_path %{_dbpath}/.rpm.lock
+EOF
+```
+
+Create the RPM platform configuration file `~/.config/rpm/rpmrc`:
+
+```bash
+cat > ~/.config/rpm/rpmrc <<'EOF'
+archcolor: s390x 2
+archcolor: noarch 0
+arch_canon: s390x: s390x 15
+os_canon: z/OS: zos 22
+arch_compat: s390x: noarch
+EOF
+```
+
+##### Configure DNF5
+
+Create the DNF5 main configuration file `/opt/pkg/etc/dnf/dnf.conf`:
+
+```bash
+cat > /opt/pkg/etc/dnf/dnf.conf <<'EOF'
+[main]
+keepcache=True
+debuglevel=0
+installonly_limit=3
+clean_requirements_on_remove=True
+best=True
+skip_if_unavailable=False
+reposdir=/opt/pkg/etc/yum.repos.d
+persistdir=/opt/pkg/var/lib/dnf
+cachedir=/opt/pkg/var/cache/dnf
+logdir=/opt/pkg/var/log
+varsdir=/opt/pkg/etc/dnf/vars /opt/pkg/usr/share/dnf5/vars.d
+pluginconfpath=/opt/pkg/etc/dnf/plugins
+plugin_conf_dir=/opt/pkg/etc/dnf/libdnf5-plugins /opt/pkg/usr/share/dnf5/libdnf.plugins.conf.d
+transaction_history_dir=/opt/pkg/var/lib/dnf/history
+system_cachedir=/opt/pkg/var/cache/dnf
+system_state_dir=/opt/pkg/var/lib/dnf
+pluginpath=/opt/pkg/lib/libdnf5/plugins
+EOF
+```
+
+##### Configure the zopen Repository
+
+Create the repository configuration file `/opt/pkg/etc/yum.repos.d/zopen.repo`:
+
+```bash
+cat > /opt/pkg/etc/yum.repos.d/zopen.repo <<'EOF'
 [zopen]
 name=zopen
 baseurl=http://repo.zopen.community/pulp/content/zopen/
@@ -88,137 +169,116 @@ gpgkey=http://repo.zopen.community/pulp/content/keys/zopen.pub
 gpgcheck=1
 repo_gpgcheck=0
 enabled=1
-metadata_expire=300
+EOF
 ```
 
-**Alternative (Direct IP Fallback) Configuration:**
-```ini
-[zopen]
-name=zopen
-baseurl=http://163.74.83.190:8080/pulp/content/zopen/
-gpgkey=http://163.74.83.190:8080/pulp/content/keys/zopen.pub
-gpgcheck=1
-repo_gpgcheck=0
-enabled=1
-metadata_expire=300
-```
-*(Note: The `metadata_expire=300` tells DNF5 to check for new repository updates every 5 minutes by default).*
+**Alternative (Direct IP):** Use `http://163.74.83.190:8080/pulp/content/zopen/` if DNS unavailable.
 
-Ensure the file permissions are set to `644` (read-only for non-root):
+Set permissions:
 ```bash
-chmod 644 /etc/yum.repos.d/zopen.repo
+chmod 644 /opt/pkg/etc/yum.repos.d/zopen.repo
 ```
 
-### Option 2: Download via Curl
-Alternatively, you can download the configuration file directly:
-```bash
-# Primary DNS download
-curl -o /etc/yum.repos.d/zopen.repo http://repo.zopen.community/pulp/content/zopen/config.repo
+#### Step 2: Initialize Repository
 
-# Direct IP download fallback
-# curl -o /etc/yum.repos.d/zopen.repo http://163.74.83.190:8080/pulp/content/zopen/config.repo
+Initialize the local package database cache and register dnf5 in the RPM database.
 
-chmod 644 /etc/yum.repos.d/zopen.repo
-```
+##### Storage Requirements
 
----
+**Filesystem:** `/opt/pkg` must have minimum 1 GB free space
 
-## Step 2: Import the GPG Public Key (Requires Superuser/Root)
+**Directories created:**
+- `/opt/pkg/var/lib/rpm` - RPM database
+- `/opt/pkg/var/cache/dnf` - Package metadata cache
+- `/opt/pkg/var/lib/dnf` - DNF state/history
 
-All RPM packages in the zopen repository are cryptographically signed to ensure security. Import the community public key into your system's RPM database:
+##### Initialize Repository
 
-```bash
-rpm --import http://repo.zopen.community/pulp/content/keys/zopen.pub
-```
-*(Fallback IP URL: `http://163.74.83.190:8080/pulp/content/keys/zopen.pub`)*
+Initialize the repository and complete the setup:
 
-### Verify the GPG Key Import
-To confirm that the GPG public key has been successfully imported into the RPM database, run:
-```bash
-rpm -q gpg-pubkey
-```
-Expected output should list the imported key (e.g., `gpg-pubkey-xxxxxxxx-xxxxxxxx`). To view the detailed information of the imported zopen key (such as the signer details), run:
-```bash
-rpm -qi gpg-pubkey
-```
-
----
-
-## Step 3: Clear Cache and Initialize Metadata (Requires Superuser/Root)
-
-Initialize the local package database cache. Because z/OS clients require uncompressed metadata formats, the repository serves XML layouts natively.
-
-### Directory and Storage Requirements
-This step writes to the following paths on `/var`:
-*   **`/var/lib/rpm/`**: Stores the system RPM package database.
-*   **`/var/cache/libdnf5/`**: Stores downloaded package metadata and cache.
-
-> [!IMPORTANT]
-> Ensure the filesystem hosting `/var` has at least **200 MB to 500 MB** of free space available to store the packages database and metadata cache safely.
-
-Run the synchronization command:
 ```bash
 # Clear any old cached files
-dnf5 clean all
+dnf5 --config=/opt/pkg/etc/dnf/dnf.conf clean all
 
-# Fetch the latest metadata cache for the zopen repository
-dnf5 --repo=zopen makecache
+# Fetch the latest metadata cache
+dnf5 --config=/opt/pkg/etc/dnf/dnf.conf --repo=zopen makecache
+
+# Install dnf5 from the repository
+dnf5 --config=/opt/pkg/etc/dnf/dnf.conf install --assumeyes dnf5
 ```
 
-> [!TIP]
-> If a new package has just been published to the repository but `dnf5` is not showing it, you can force the metadata cache to refresh instantly from the remote server by passing the **`--refresh`** flag:
-> ```bash
-> dnf5 --refresh --repo=zopen makecache
-> ```
+**✅ Setup complete**
 
----
-
-## Step 4: Install and Query Packages (Requires Superuser/Root to Install)
-
-Now you can list, search, and install tools from the repository.
-
-*   **List all packages in the zopen repository:**
-    ```bash
-    dnf5 list
-    ```
-*   **Search for a package (e.g. jq):**
-    ```bash
-    dnf5 search jq
-    ```
-*   **Install a package (Requires Superuser/Root):**
-    ```bash
-    dnf5 install jq
-    ```
-
-### Discover Package Installation Paths
-To discover exactly what files were installed by a package and where they were placed on your filesystem, use the `rpm` query command:
+Optional cleanup:
 ```bash
-rpm -ql jq
+rm -rf ~/.config/rpm  # Bootstrap config no longer needed
 ```
 
 ---
 
-## Package Installation Paths & Alternatives
+## Installing and Managing Packages
 
-All packages installed from the zopen RPM repository are placed under the **`/opt/pkg`** directory structure on the z/OS client system:
+All packages from the zopen RPM repository install under the **`/opt/pkg`** directory structure:
 
 *   **Binaries:** `/opt/pkg/bin`
 *   **Libraries:** `/opt/pkg/lib`
 *   **Shared Resources:** `/opt/pkg/share`
 
-To run and use the installed packages, make sure to add the binaries to your `PATH` environment variable:
+### Environment Setup
+
+Ensure `/opt/pkg/bin` is in your PATH:
+> ```bash
+> export PATH="/opt/pkg/bin:$PATH"
+> export LIBPATH="/opt/pkg/lib:$LIBPATH"
+> ```
+
+> [!TIP]
+> Make these permanent by adding to `~/.bashrc`:
+> ```bash
+> echo 'export PATH="/opt/pkg/bin:$PATH"' >> ~/.bashrc
+> echo 'export LIBPATH="/opt/pkg/lib:$LIBPATH"' >> ~/.bashrc
+> ```
+
+### Install rpm Package (Recommended)
+
+Install the rpm package to get command-line tools:
 ```bash
-export PATH="/opt/pkg/bin:$PATH"
-export LIBPATH="/opt/pkg/lib:$LIBPATH"
+dnf5 install rpm
 ```
 
-### Alternatives and zopen Integration
-For utilities where multiple versions might coexist (such as `openssl` or python), the system uses the **`alternatives`** command structure to manage symbolic links pointing to the active version:
-*   To list or switch versions of a command, use:
-    ```bash
-    alternatives --config openssl
-    ```
-*   **zopen integration:** Future updates will investigate how to integrate alternatives in general into `zopen`'s standard user-profile environment scripts to automatically register `/opt/pkg` binaries.
+> [!NOTE]
+> While dnf5 has rpm libraries statically linked, the rpm package provides useful CLI tools (`rpm -qa`, `rpm -ql`, `rpm -qi`, etc.) for querying packages, verifying installations, and managing the RPM database.
+
+### Using DNF5
+
+**List all packages in the zopen repository:**
+```bash
+dnf5 list
+```
+
+**Search for a package (e.g. jq):**
+```bash
+dnf5 search jq
+```
+
+**Install a package:**
+```bash
+dnf5 install jq
+```
+
+### Query Package Files
+
+To discover what files were installed by a package:
+```bash
+rpm -ql jq
+```
+
+Output example:
+```
+/opt/pkg/bin/jq
+/opt/pkg/lib/libjq.so
+/opt/pkg/share/man/man1/jq.1
+```
 
 ---
 
@@ -242,13 +302,13 @@ The options have the following purposes:
 * **`--use-host-config`** tells DNF5 to use the repository configuration from the active system, including:
 
   ```text
-  /etc/yum.repos.d/zopen.repo
+  /opt/pkg/etc/yum.repos.d/zopen.repo
   ```
 
 Without `--use-host-config`, DNF5 looks for repository configuration inside the staged filesystem instead:
 
 ```text
-/SERVICE/etc/yum.repos.d/zopen.repo
+/SERVICE/opt/pkg/etc/yum.repos.d/zopen.repo
 ```
 
 > [!IMPORTANT]
@@ -357,8 +417,12 @@ rpm --root /SERVICE -q ztrace
 ### 4. GPG verification failed
 *   **Cause**: The GPG key may not be properly imported or the package signature is invalid.
 *   **Fix**: 
-    * Re-import the GPG key: `rpm --import http://repo.zopen.community/pulp/content/keys/zopen.pub`
+    * The GPG key should be automatically imported on first package install. If it fails, manually import:
+      ```bash
+      rpm --import http://repo.zopen.community/pulp/content/keys/zopen.pub
+      ```
     * Verify the key is imported: `rpm -q gpg-pubkey`
+    * View key details: `rpm -qi gpg-pubkey`
     * If testing only, you can bypass GPG check (not recommended): `dnf5 install --nogpgcheck <package-name>`
 
 ---
@@ -375,7 +439,7 @@ rpm --root /SERVICE -q ztrace
    ```bash
    dnf5 clean all
    ```
-5. **Monitor disk space** - Ensure `/var` has sufficient space before operations
+5. **Monitor disk space** - Ensure `/opt/pkg` has at least 1 GB free (minimum) for database, cache, and packages
 6. **Use staged deployments** - Test package installations in a staged filesystem before deploying to production
 7. **Document configurations** - Keep track of installed packages and custom repository configurations
 
