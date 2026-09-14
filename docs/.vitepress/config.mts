@@ -68,6 +68,7 @@ export default defineConfig({
       { text: "Getting Started", link: "/Guides/QuickStart" },
       { text: "Available Tools", link: "/Latest" },
       { text: "Python Packages", link: "/PythonPackages" },
+      { text: "RPM Packages", link: "/RpmPackages" },
       { text: "Request a Package", link: "/PackageRequests" },
       { text: "Governance", link: "/Governance" },
       { text: "Reference", link: "/reference/zopen-reference" },
@@ -123,6 +124,7 @@ export default defineConfig({
         text: "RPM Packages on z/OS",
         collapsed: false,
         items: [
+          { text: "Available RPM Packages", link: "/RpmPackages" },
           { text: "Overview", link: "/Guides/RpmPackages" },
           { text: "Setup Guide", link: "/Guides/RpmSetup" },
         ],
