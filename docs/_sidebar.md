@@ -14,6 +14,10 @@
     - [Upstreaming](/upstreamstatus.md)
   - [Usage Stats](https://usage.zopen.community)
   - [CICD Pipeline](/Guides/Testing.md)
+- RPM Packages on z/OS
+  - [Available RPM Packages](/RpmPackages.md)
+  - [Overview](/Guides/RpmPackages.md)
+  - [Setup Guide](/Guides/RpmSetup.md)
 - Reference
   - [zopen](/reference/zopen-reference.md)
 - Contributing
