@@ -27,7 +27,7 @@ features:
       bash -c "$(curl -fsSL https://raw.githubusercontent.com/zopencommunity/meta/HEAD/tools/zopen_install.sh)"
       ```
   - icon: 🛠️
-    title: 200+ Open Source Projects
+    title: 400+ Open Source Projects
     details: Browse our extensive collection of ported tools and libraries for z/OS
     link: /Latest
   - icon: 📦
