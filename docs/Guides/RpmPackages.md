@@ -73,9 +73,10 @@ Both formats are fully supported and can coexist on the same system. Choose the 
 
 To start using RPM packages on z/OS:
 
-1. **Install the package management tools** - Install `rpm` and `dnf5` using the zopen package manager
+1. **Install DNF5** - Use the automated script or install manually (see [Setup Guide](./RpmSetup.md))
 2. **Configure the repository** - Set up access to the zopen RPM repository
-3. **Install packages** - Use DNF5 to search and install packages
+3. **Install rpm tools** - Recommended first package: `dnf5 install rpm`
+4. **Install other packages** - Use DNF5 to search and install additional packages
 
 See the [Setup Guide](./RpmSetup.md) for detailed step-by-step instructions.
 
