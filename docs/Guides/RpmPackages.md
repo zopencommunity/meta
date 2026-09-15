@@ -12,6 +12,30 @@ The zopen community provides RPM packages as an alternative distribution format 
 - **Transaction safety** - Atomic operations with rollback capabilities
 - **Query and verification** - Tools to inspect and validate installed software
 
+## What is DNF5?
+
+**DNF5** is the next-generation package manager that uses RPM packages. DNF (Dandified YUM) was designed to replace the older YUM package manager, and DNF5 is a complete rewrite in C++ for better performance and reliability.
+
+### Why DNF5 on z/OS?
+
+The zopen community chose DNF5 for z/OS because:
+
+- **Modern architecture** - Written in C++ with a clean API and modular design
+- **Better performance** - Significantly faster than DNF4 and YUM for dependency resolution
+- **Lower memory footprint** - More efficient resource usage, important for z/OS environments
+- **Improved CLI** - Clearer command output and more intuitive user experience
+- **Active development** - Maintained by the Fedora community with regular updates
+- **z/OS port** - Successfully ported and tested on z/OS by the zopen community
+
+### DNF5 Key Features
+
+- **Smart dependency resolution** - Automatically installs required dependencies
+- **Repository management** - Support for multiple package repositories
+- **Transaction history** - Track all package operations with undo/redo capabilities
+- **Modular content** - Support for multiple versions of the same software
+- **Plugin system** - Extensible architecture for custom functionality
+- **Fast metadata caching** - Quick package searches and queries
+
 ## Why Use RPM on z/OS?
 
 ### Benefits for System Administrators
