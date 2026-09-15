@@ -195,4 +195,4 @@ The zopen community is continuously improving the RPM package experience:
 - **Alternatives integration** - Better integration with the `alternatives` system for managing multiple versions
 - **Enhanced zopen integration** - Seamless use of both PAX and RPM packages
 
-Join the discussion and contribute to these improvements on [GitHub](https://github.com/zopencommunity/meta/discussions).
+Join the discussion and contribute to these improvements on [GitHub](https://github.com/orgs/zopencommunity/discussions/1223).
