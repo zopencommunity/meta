@@ -64,44 +64,125 @@ def compare_evr(a: dict[str, object], b: dict[str, object]) -> int:
 def compare_rpm_versions(v1: str, v2: str) -> int:
     """Compare two version strings using RPM version comparison semantics.
     
+    Implements RPM's special character ordering:
+    - Tilde (~) sorts before anything (even empty string): 1.0~rc1 < 1.0
+    - Caret (^) sorts between base and empty: 1.0 < 1.0^git < 1.0.1
+    - Regular segments follow standard RPM ordering
+    
     Returns: -1 if v1 < v2, 0 if v1 == v2, 1 if v1 > v2
     """
     if v1 == v2:
         return 0
     
-    # Split into segments (alternating alpha/numeric)
-    def split_version(v: str) -> list[tuple[bool, str]]:
-        segments = []
-        current = []
+    # Handle tilde prefix (sorts before anything)
+    if v1.startswith('~') and not v2.startswith('~'):
+        return -1
+    if v2.startswith('~') and not v1.startswith('~'):
+        return 1
+    
+    # Strip tilde prefix if both have it
+    if v1.startswith('~') and v2.startswith('~'):
+        v1 = v1[1:]
+        v2 = v2[1:]
+    
+    # Split into segments, preserving separators
+    def split_version(v: str) -> list[tuple[str, str]]:
+        """Split version into (separator, segment) pairs.
+        
+        Returns list of (sep, segment) where sep is the separator before segment.
+        First segment has empty separator.
+        """
+        if not v:
+            return [('', '')]
+        
+        result = []
+        current_seg = []
+        separator = ''
         is_digit = None
         
-        for char in v:
+        i = 0
+        while i < len(v):
+            char = v[i]
+            
+            # Check for separators (non-alnum)
+            if not char.isalnum():
+                # Save current segment if any
+                if current_seg:
+                    result.append((separator, ''.join(current_seg)))
+                    current_seg = []
+                separator = char
+                is_digit = None
+                i += 1
+                continue
+            
+            # Check for type transition (digit <-> alpha)
             char_is_digit = char.isdigit()
-            if is_digit is None:
-                is_digit = char_is_digit
-            elif is_digit != char_is_digit:
-                if current:
-                    segments.append((is_digit, ''.join(current)))
-                current = []
-                is_digit = char_is_digit
-            current.append(char)
+            if is_digit is not None and is_digit != char_is_digit:
+                # Save segment and start new one
+                if current_seg:
+                    result.append((separator, ''.join(current_seg)))
+                    current_seg = []
+                    separator = ''
+            
+            current_seg.append(char)
+            is_digit = char_is_digit
+            i += 1
         
-        if current:
-            segments.append((is_digit, ''.join(current)))
-        return segments
+        # Add final segment
+        if current_seg:
+            result.append((separator, ''.join(current_seg)))
+        
+        return result if result else [('', '')]
     
     segs1 = split_version(v1)
     segs2 = split_version(v2)
     
     # Compare segment by segment
     for i in range(max(len(segs1), len(segs2))):
+        # Handle end of version string
         if i >= len(segs1):
-            return -1  # v1 is shorter
+            # v1 ended - check if v2 continues with caret (v1 < v2)
+            if i < len(segs2) and segs2[i][0] == '^':
+                return -1
+            # Otherwise v1 < v2 (shorter loses)
+            return -1
         if i >= len(segs2):
-            return 1   # v2 is shorter
+            # v2 ended - check if v1 continues with caret (v1 > v2)
+            if segs1[i][0] == '^':
+                return 1
+            # Otherwise v1 > v2 (longer wins)
+            return 1
         
-        is_num1, val1 = segs1[i]
-        is_num2, val2 = segs2[i]
+        sep1, val1 = segs1[i]
+        sep2, val2 = segs2[i]
+        
+        # Compare separators first (special ordering)
+        # Order: ~ < (empty/other) < ^
+        def sep_order(s: str) -> int:
+            if s == '~':
+                return -1
+            elif s == '^':
+                return 1
+            else:
+                return 0
+        
+        sep_cmp = sep_order(sep1) - sep_order(sep2)
+        if sep_cmp != 0:
+            return 1 if sep_cmp > 0 else -1
+        
+        # If both segments empty, continue
+        if not val1 and not val2:
+            continue
+        
+        # Empty segment sorts before non-empty
+        if not val1:
+            return -1
+        if not val2:
+            return 1
+        
+        # Both non-empty: check types
+        is_num1 = val1[0].isdigit()
+        is_num2 = val2[0].isdigit()
         
         # If types differ, numeric > alpha
         if is_num1 and not is_num2:
@@ -150,27 +231,58 @@ def parse_repomd(repomd_xml: str, base_url: str) -> str | None:
 
 
 def parse_primary_xml(primary_xml: str) -> list[dict[str, object]]:
-    """Parse primary.xml metadata to extract package information."""
+    """Parse primary.xml metadata to extract package information.
+    
+    Supports both namespaced and unnamespaced XML formats.
+    """
     packages = []
     try:
         root = ET.fromstring(primary_xml)
-        # Define namespaces
-        ns = {
-            "common": "http://linux.duke.edu/metadata/common",
-            "rpm": "http://linux.duke.edu/metadata/rpm"
-        }
+        
+        # Detect namespace
+        ns_uri = None
+        if root.tag.startswith('{'):
+            ns_uri = root.tag[1:root.tag.index('}')]
+        
+        # Helper to find elements with or without namespace
+        def find_elem(parent, tag):
+            if ns_uri:
+                return parent.find(f"{{{ns_uri}}}{tag}")
+            else:
+                return parent.find(tag)
+        
+        def findall_elem(parent, tag):
+            if ns_uri:
+                return parent.findall(f"{{{ns_uri}}}{tag}")
+            else:
+                return parent.findall(tag)
+        
+        # RPM namespace for dependencies
+        rpm_ns = "http://linux.duke.edu/metadata/rpm" if ns_uri else None
+        
+        def find_rpm_elem(parent, tag):
+            if rpm_ns:
+                return parent.find(f"{{{rpm_ns}}}{tag}")
+            else:
+                return parent.find(tag)
+        
+        def findall_rpm_elem(parent, tag):
+            if rpm_ns:
+                return parent.findall(f"{{{rpm_ns}}}{tag}")
+            else:
+                return parent.findall(tag)
         
         # Find all package elements
-        package_elements = root.findall("{http://linux.duke.edu/metadata/common}package")
+        package_elements = findall_elem(root, "package")
         
         for pkg in package_elements:
             try:
-                name_elem = pkg.find("{http://linux.duke.edu/metadata/common}name")
-                version_elem = pkg.find("{http://linux.duke.edu/metadata/common}version")
-                arch_elem = pkg.find("{http://linux.duke.edu/metadata/common}arch")
-                summary_elem = pkg.find("{http://linux.duke.edu/metadata/common}summary")
-                description_elem = pkg.find("{http://linux.duke.edu/metadata/common}description")
-                time_elem = pkg.find("{http://linux.duke.edu/metadata/common}time")
+                name_elem = find_elem(pkg, "name")
+                version_elem = find_elem(pkg, "version")
+                arch_elem = find_elem(pkg, "arch")
+                summary_elem = find_elem(pkg, "summary")
+                description_elem = find_elem(pkg, "description")
+                time_elem = find_elem(pkg, "time")
                 
                 if name_elem is None or version_elem is None:
                     continue
@@ -185,11 +297,11 @@ def parse_primary_xml(primary_xml: str) -> list[dict[str, object]]:
                 
                 # Extract dependencies
                 dependencies = []
-                format_elem = pkg.find("{http://linux.duke.edu/metadata/common}format")
+                format_elem = find_elem(pkg, "format")
                 if format_elem is not None:
-                    requires_elem = format_elem.find("{http://linux.duke.edu/metadata/rpm}requires")
+                    requires_elem = find_rpm_elem(format_elem, "requires")
                     if requires_elem is not None:
-                        for entry in requires_elem.findall("{http://linux.duke.edu/metadata/rpm}entry"):
+                        for entry in findall_rpm_elem(requires_elem, "entry"):
                             dep_name = entry.get("name", "")
                             if dep_name and not dep_name.startswith("rpmlib(") and not dep_name.startswith("/"):
                                 dependencies.append(dep_name)
@@ -313,10 +425,12 @@ def build_catalog(
         rpms.sort(key=cmp_to_key(compare_evr), reverse=True)
         latest = rpms[0]
         
-        # Get only RPMs of the latest version
+        # Get only RPMs of the latest EVR (epoch, version, and release)
         latest_version_rpms = [
             r for r in rpms
-            if r.get("version") == latest["version"] and r.get("release") == latest["release"]
+            if (r.get("epoch") == latest["epoch"] and
+                r.get("version") == latest["version"] and
+                r.get("release") == latest["release"])
         ]
         
         details = release_details(name, releases, descriptions)
@@ -388,8 +502,14 @@ def main() -> None:
     rpm_packages = parse_primary_xml(primary_xml)
     print(f"Found {len(rpm_packages)} RPM packages")
     
+    if not rpm_packages:
+        raise ValueError("No RPM packages found in primary metadata. Check for XML parsing errors or namespace mismatches.")
+    
     print("Building catalog...")
     catalog = build_catalog(rpm_packages, release_payload, description_payload, args.repo_url)
+    
+    if catalog['packageCount'] == 0:
+        raise ValueError("Catalog contains zero packages after filtering. This indicates a data processing error.")
     
     output_path = Path(args.output)
     output_path.parent.mkdir(parents=True, exist_ok=True)

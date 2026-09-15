@@ -84,6 +84,8 @@ if [ ! -d "$dir" ]; then
   exit 1
 fi
 
+# Enable fail-fast for all setup operations
+# Repository install (later) is explicitly allowed to fail
 set -e
 
 # ----------------------------
@@ -188,6 +190,9 @@ chmod 644 /opt/pkg/etc/yum.repos.d/zopen.repo
 # ----------------------------
 echo ""
 echo "> Syncing repository metadata..."
+# Temporarily disable exit-on-error for repository operations (allowed to fail)
+set +e
+
 if dnf5 --config=/opt/pkg/etc/dnf/dnf.conf makecache; then
   echo "[OK] Metadata synced"
 else
@@ -207,6 +212,9 @@ else
   echo "       dnf5 install --assumeyes dnf5"
 fi
 echo ""
+
+# Re-enable exit-on-error
+set -e
 
 # ----------------------------
 # CLEANUP
