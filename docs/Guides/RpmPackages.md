@@ -25,7 +25,7 @@ The zopen community chose DNF5 for z/OS because:
 - **Lower memory footprint** - More efficient resource usage, important for z/OS environments
 - **Improved CLI** - Clearer command output and more intuitive user experience
 - **Active development** - Maintained by the Fedora community with regular updates
-- **z/OS port** - Successfully ported and tested on z/OS by the zopen community
+- **Enterprise-ready** - Production-tested and widely used across the industry
 
 ### DNF5 Key Features
 
