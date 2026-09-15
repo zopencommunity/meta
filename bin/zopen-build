@@ -3856,19 +3856,25 @@ ${line}
 EOF
       IFS="$oldIFS"
 
+      rule=""
       if [ "${action}" = "unset" ]; then
-        echo "  unsetenv(\"${var}\");" >> "${rules_tmp}"
+        rule="unsetenv(\"${var}\");"
       elif [ "${action}" = "set" -o "${action}" = "overrideset" ]; then
         forceset="0"
         if [ "${action}" = "overrideset" ]; then
           forceset="1";
         fi
-        echo "  set_env_var(\"${var}\", \"${value}\", root_dir, ${forceset});" >> "${rules_tmp}"
+        rule="set_env_var(\"${var}\", \"${value}\", root_dir, ${forceset});"
       elif [ "${action}" = "prepend" ]; then
-        echo "  prepend_env_var(\"${var}\", \"${value}\", root_dir);" >> "${rules_tmp}"
+        rule="prepend_env_var(\"${var}\", \"${value}\", root_dir);"
       else
         printError "${action} is not valid, must be one of set, unset, or prepend"
       fi
+
+      case "${value}" in
+        *PROJECT_ROOT*) echo "  if (!skip_project_root_rules) ${rule}" >> "${rules_tmp}" ;;
+        *)             echo "  ${rule}" >> "${rules_tmp}" ;;
+      esac
     done
   fi
 

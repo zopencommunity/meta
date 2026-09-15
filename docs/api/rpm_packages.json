@@ -1,0 +1,4140 @@
+{
+  "generatedAt": "2026-09-15T16:29:41Z",
+  "repositoryUrl": "http://163.74.83.190:8080/pulp/content/zopen/",
+  "packageCount": 140,
+  "rpmCount": 140,
+  "packages": [
+    {
+      "name": "arrow",
+      "displayName": "arrow",
+      "version": "25.0.1",
+      "release": "20260826.012232",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "arrow-25.0.1 package",
+      "description": "arrow-25.0.1 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/a/arrow-25.0.1-20260826.012232.s390x.rpm",
+      "buildTime": "2026-08-26T01:40:37Z",
+      "releaseKey": "arrow",
+      "categories": [
+        "development",
+        "library"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": null,
+      "totalTests": null,
+      "verificationRate": null,
+      "publishedAt": "2026-08-26T01:44:00Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/arrowport",
+      "releaseUrl": "https://github.com/zopencommunity/arrowport/releases/tag/STABLE_arrowport_275"
+    },
+    {
+      "name": "automake",
+      "displayName": "automake",
+      "version": "1.19",
+      "release": "20260911.160913",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "automake-1.19 package",
+      "description": "automake-1.19 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/a/automake-1.19-20260911.160913.s390x.rpm",
+      "buildTime": "2026-09-12T04:52:32Z",
+      "releaseKey": "automake",
+      "categories": [],
+      "runtimeDependencies": [],
+      "passedTests": 2046,
+      "totalTests": 2106,
+      "verificationRate": 97.2,
+      "publishedAt": "2026-09-12T04:53:39Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/automakeport",
+      "releaseUrl": "https://github.com/zopencommunity/automakeport/releases/tag/STABLE_automakeport_351"
+    },
+    {
+      "name": "base-os",
+      "displayName": "base-os",
+      "version": "1.0",
+      "release": "1783955334",
+      "epoch": "0",
+      "architectures": [
+        "noarch"
+      ],
+      "summary": "Base operating system virtual package providing /bin/sh and core OS tools",
+      "description": "Base operating system package providing the POSIX shell (/bin/sh),\ncore filesystem utilities, and essential command-line tools required\nto bootstrap a functional system environment.",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/b/base-os-1.0-1783955334.noarch.rpm",
+      "buildTime": "2026-07-13T15:08:54Z",
+      "releaseKey": "base-os",
+      "categories": [],
+      "runtimeDependencies": [],
+      "passedTests": null,
+      "totalTests": null,
+      "verificationRate": null,
+      "publishedAt": "",
+      "portRepositoryUrl": "https://github.com/zopencommunity/base-osport",
+      "releaseUrl": ""
+    },
+    {
+      "name": "bash",
+      "displayName": "bash",
+      "version": "5.3.15",
+      "release": "20260824.111425",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "bash-5.3 package",
+      "description": "bash-5.3 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/b/bash-5.3.15-20260824.111425.s390x.rpm",
+      "buildTime": "2026-08-24T11:22:25Z",
+      "releaseKey": "bash",
+      "categories": [
+        "shell"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 67,
+      "totalTests": 77,
+      "verificationRate": 87.0,
+      "publishedAt": "2026-06-22T05:10:11Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/bashport",
+      "releaseUrl": "https://github.com/zopencommunity/bashport/releases/tag/STABLE_bashport_4370"
+    },
+    {
+      "name": "bat",
+      "displayName": "bat",
+      "version": "0.26.0",
+      "release": "20260720.215140",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "bat-0.26.0 package",
+      "description": "bat-0.26.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/b/bat-0.26.0-20260720.215140.s390x.rpm",
+      "buildTime": "2026-07-20T21:52:03Z",
+      "releaseKey": "bat",
+      "categories": [
+        "utilities"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": null,
+      "totalTests": null,
+      "verificationRate": null,
+      "publishedAt": "2026-07-20T21:53:36Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/batport",
+      "releaseUrl": "https://github.com/zopencommunity/batport/releases/tag/STABLE_batport_36"
+    },
+    {
+      "name": "bcrypt",
+      "displayName": "bcrypt",
+      "version": "5.0.0",
+      "release": "20260818.151629",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "bcrypt-5.0.0 package",
+      "description": "bcrypt-5.0.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "check_python"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/b/bcrypt-5.0.0-20260818.151629.s390x.rpm",
+      "buildTime": "2026-08-18T15:17:19Z",
+      "releaseKey": "bcrypt",
+      "categories": [
+        "development",
+        "security",
+        "library"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 24,
+      "totalTests": 24,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-18T15:20:25Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/bcryptport",
+      "releaseUrl": "https://github.com/zopencommunity/bcryptport/releases/tag/STABLE_bcryptport_184"
+    },
+    {
+      "name": "blis",
+      "displayName": "blis",
+      "version": "2.0",
+      "release": "20260820.111002",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "blis-2.0 package",
+      "description": "blis-2.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/b/blis-2.0-20260820.111002.s390x.rpm",
+      "buildTime": "2026-08-20T11:16:48Z",
+      "releaseKey": "blis",
+      "categories": [
+        "ai",
+        "library",
+        "math"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 2772,
+      "totalTests": 2772,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-20T11:17:53Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/blisport",
+      "releaseUrl": "https://github.com/zopencommunity/blisport/releases/tag/STABLE_blisport_208"
+    },
+    {
+      "name": "brotli",
+      "displayName": "brotli",
+      "version": "1.2.0",
+      "release": "20260815.054523",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "brotli-1.2.0 package",
+      "description": "brotli-1.2.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "check_python"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/b/brotli-1.2.0-20260815.054523.s390x.rpm",
+      "buildTime": "2026-08-15T05:47:29Z",
+      "releaseKey": "brotli",
+      "categories": [
+        "development",
+        "library"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 33,
+      "totalTests": 33,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-15T05:48:51Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/brotliport",
+      "releaseUrl": "https://github.com/zopencommunity/brotliport/releases/tag/STABLE_brotliport_146"
+    },
+    {
+      "name": "bump",
+      "displayName": "bump",
+      "version": "1.0.0",
+      "release": "20260826.154242",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "bump-master package",
+      "description": "bump-master package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/b/bump-1.0.0-20260826.154242.s390x.rpm",
+      "buildTime": "2026-08-26T15:48:00Z",
+      "releaseKey": "bump",
+      "categories": [
+        "development"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 12,
+      "totalTests": 12,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-26T15:49:47Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/bumpport",
+      "releaseUrl": "https://github.com/zopencommunity/bumpport/releases/tag/DEV_bumpport_277"
+    },
+    {
+      "name": "bzip2",
+      "displayName": "bzip2",
+      "version": "1.0.8",
+      "release": "20260810.150955",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "bzip2-1.0.8 package",
+      "description": "bzip2-1.0.8 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/b/bzip2-1.0.8-20260810.150955.s390x.rpm",
+      "buildTime": "2026-08-10T15:10:28Z",
+      "releaseKey": "bzip2",
+      "categories": [
+        "compression"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 6,
+      "totalTests": 6,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-04-30T06:24:18Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/bzip2port",
+      "releaseUrl": "https://github.com/zopencommunity/bzip2port/releases/tag/STABLE_bzip2port_4239"
+    },
+    {
+      "name": "cffi",
+      "displayName": "cffi",
+      "version": "2.0.0",
+      "release": "20260817.041152",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "cffi-2.0.0 package",
+      "description": "cffi-2.0.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "check_python"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/c/cffi-2.0.0-20260817.041152.s390x.rpm",
+      "buildTime": "2026-08-17T04:12:40Z",
+      "releaseKey": "cffi",
+      "categories": [
+        "development",
+        "library"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 36,
+      "totalTests": 36,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-17T04:13:52Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/cffiport",
+      "releaseUrl": "https://github.com/zopencommunity/cffiport/releases/tag/STABLE_cffiport_166"
+    },
+    {
+      "name": "check_clang-DEV",
+      "displayName": "check_clang-DEV",
+      "version": "21.1.1",
+      "release": "20260721.200359",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "check_clang-DEV package",
+      "description": "check_clang-DEV package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "which"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/c/check_clang-DEV-21.1.1-20260721.200359.s390x.rpm",
+      "buildTime": "2026-07-21T20:04:17Z",
+      "releaseKey": "check_clang-DEV",
+      "categories": [],
+      "runtimeDependencies": [],
+      "passedTests": null,
+      "totalTests": null,
+      "verificationRate": null,
+      "publishedAt": "",
+      "portRepositoryUrl": "https://github.com/zopencommunity/check_clang-DEVport",
+      "releaseUrl": ""
+    },
+    {
+      "name": "check_python-DEV",
+      "displayName": "check_python-DEV",
+      "version": "3.12.13",
+      "release": "20260810.142709",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "check_python-DEV package",
+      "description": "check_python-DEV package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/c/check_python-DEV-3.12.13-20260810.142709.s390x.rpm",
+      "buildTime": "2026-08-10T14:27:27Z",
+      "releaseKey": "check_python-DEV",
+      "categories": [],
+      "runtimeDependencies": [],
+      "passedTests": null,
+      "totalTests": null,
+      "verificationRate": null,
+      "publishedAt": "",
+      "portRepositoryUrl": "https://github.com/zopencommunity/check_python-DEVport",
+      "releaseUrl": ""
+    },
+    {
+      "name": "cmake",
+      "displayName": "cmake",
+      "version": "4.4.3",
+      "release": "20260828.094458",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "cmake-4.4.3 package",
+      "description": "cmake-4.4.3 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/c/cmake-4.4.3-20260828.094458.s390x.rpm",
+      "buildTime": "2026-08-28T13:38:51Z",
+      "releaseKey": "cmake",
+      "categories": [],
+      "runtimeDependencies": [],
+      "passedTests": 550,
+      "totalTests": 658,
+      "verificationRate": 83.6,
+      "publishedAt": "2026-08-28T13:50:35Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/cmakeport",
+      "releaseUrl": "https://github.com/zopencommunity/cmakeport/releases/tag/STABLE_cmakeport_286"
+    },
+    {
+      "name": "confluent-kafka",
+      "displayName": "confluent-kafka",
+      "version": "2.14.0",
+      "release": "20260817.133839",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "confluent-kafka-2.14.0 package",
+      "description": "confluent-kafka-2.14.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "zstd",
+        "zlib",
+        "openssl",
+        "lz4",
+        "librdkafka",
+        "curl",
+        "check_python"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/c/confluent-kafka-2.14.0-20260817.133839.s390x.rpm",
+      "buildTime": "2026-08-17T13:39:52Z",
+      "releaseKey": "confluent-kafka",
+      "categories": [
+        "development",
+        "networking"
+      ],
+      "runtimeDependencies": [
+        "curl",
+        "librdkafka",
+        "lz4",
+        "openssl",
+        "zlib",
+        "zstd"
+      ],
+      "passedTests": null,
+      "totalTests": null,
+      "verificationRate": null,
+      "publishedAt": "2026-07-30T16:15:20Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/confluent-kafkaport",
+      "releaseUrl": "https://github.com/zopencommunity/confluent-kafkaport/releases/tag/STABLE_confluent-kafkaport_59"
+    },
+    {
+      "name": "cookiecutter",
+      "displayName": "cookiecutter",
+      "version": "2.7.0",
+      "release": "20260810.190325",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "cookiecutter-2.7.0 package",
+      "description": "cookiecutter-2.7.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/c/cookiecutter-2.7.0-20260810.190325.s390x.rpm",
+      "buildTime": "2026-08-10T19:05:14Z",
+      "releaseKey": "cookiecutter",
+      "categories": [
+        "development"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 1116,
+      "totalTests": 1116,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-10T19:06:41Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/cookiecutterport",
+      "releaseUrl": "https://github.com/zopencommunity/cookiecutterport/releases/tag/STABLE_cookiecutterport_87"
+    },
+    {
+      "name": "coreutils",
+      "displayName": "coreutils",
+      "version": "9.11",
+      "release": "20260714.160851",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "coreutils-9.11 package",
+      "description": "coreutils-9.11 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/c/coreutils-9.11-20260714.160851.s390x.rpm",
+      "buildTime": "2026-07-14T16:25:07Z",
+      "releaseKey": "coreutils",
+      "categories": [],
+      "runtimeDependencies": [],
+      "passedTests": 477,
+      "totalTests": 514,
+      "verificationRate": 92.8,
+      "publishedAt": "2026-04-30T08:16:17Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/coreutilsport",
+      "releaseUrl": "https://github.com/zopencommunity/coreutilsport/releases/tag/STABLE_coreutilsport_4245"
+    },
+    {
+      "name": "createrepo_c",
+      "displayName": "createrepo_c",
+      "version": "1.0.0",
+      "release": "20260913.101316",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "createrepo_c-1.2.4 package",
+      "description": "createrepo_c-1.2.4 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "rpmconfig"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/c/createrepo_c-1.0.0-20260913.101316.s390x.rpm",
+      "buildTime": "2026-09-13T10:15:34Z",
+      "releaseKey": "createrepo_c",
+      "categories": [
+        "utilities"
+      ],
+      "runtimeDependencies": [
+        "rpmconfig"
+      ],
+      "passedTests": 1,
+      "totalTests": 1,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-09-13T10:19:48Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/createrepo_cport",
+      "releaseUrl": "https://github.com/zopencommunity/createrepo_cport/releases/tag/STABLE_createrepo_cport_353"
+    },
+    {
+      "name": "cryptography",
+      "displayName": "cryptography",
+      "version": "50.0.0",
+      "release": "20260818.151900",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "cryptography-50.0.0 package",
+      "description": "cryptography-50.0.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "zoslib",
+        "openssl",
+        "check_python"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/c/cryptography-50.0.0-20260818.151900.s390x.rpm",
+      "buildTime": "2026-08-18T15:20:13Z",
+      "releaseKey": "cryptography",
+      "categories": [
+        "development",
+        "security",
+        "library"
+      ],
+      "runtimeDependencies": [
+        "openssl",
+        "zoslib"
+      ],
+      "passedTests": 24,
+      "totalTests": 24,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-18T15:26:41Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/cryptographyport",
+      "releaseUrl": "https://github.com/zopencommunity/cryptographyport/releases/tag/STABLE_cryptographyport_186"
+    },
+    {
+      "name": "curl",
+      "displayName": "curl",
+      "version": "8.22.0",
+      "release": "20260902.141721",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "curl-8.22.0 package",
+      "description": "curl-8.22.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "openssl",
+        "libssh2",
+        "libpsl"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/c/curl-8.22.0-20260902.141721.s390x.rpm",
+      "buildTime": "2026-09-02T14:42:36Z",
+      "releaseKey": "curl",
+      "categories": [],
+      "runtimeDependencies": [
+        "libpsl",
+        "libssh2",
+        "openssl"
+      ],
+      "passedTests": 1584,
+      "totalTests": 1591,
+      "verificationRate": 99.6,
+      "publishedAt": "2026-09-02T14:44:24Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/curlport",
+      "releaseUrl": "https://github.com/zopencommunity/curlport/releases/tag/STABLE_curlport_316"
+    },
+    {
+      "name": "curl-8.21.0",
+      "displayName": "curl-8.21.0",
+      "version": "8.21.0",
+      "release": "20260807.145906",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "curl-8.21.0-8.21.0 package",
+      "description": "curl-8.21.0-8.21.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "openssl",
+        "libssh2",
+        "libpsl"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/c/curl-8.21.0-8.21.0-20260807.145906.s390x.rpm",
+      "buildTime": "2026-08-07T15:24:05Z",
+      "releaseKey": "curl-8.21.0",
+      "categories": [],
+      "runtimeDependencies": [],
+      "passedTests": null,
+      "totalTests": null,
+      "verificationRate": null,
+      "publishedAt": "",
+      "portRepositoryUrl": "https://github.com/zopencommunity/curl-8.21.0port",
+      "releaseUrl": ""
+    },
+    {
+      "name": "diffutils",
+      "displayName": "diffutils",
+      "version": "3.12",
+      "release": "20260714.162114",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "diffutils-3.12 package",
+      "description": "diffutils-3.12 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/d/diffutils-3.12-20260714.162114.s390x.rpm",
+      "buildTime": "2026-07-14T16:30:41Z",
+      "releaseKey": "diffutils",
+      "categories": [
+        "utilities"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 238,
+      "totalTests": 274,
+      "verificationRate": 86.9,
+      "publishedAt": "2026-02-12T09:13:50Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/diffutilsport",
+      "releaseUrl": "https://github.com/zopencommunity/diffutilsport/releases/tag/STABLE_diffutilsport_4049"
+    },
+    {
+      "name": "django",
+      "displayName": "django",
+      "version": "6.0.6",
+      "release": "20260810.190249",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "django-6.0.6 package",
+      "description": "django-6.0.6 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/d/django-6.0.6-20260810.190249.s390x.rpm",
+      "buildTime": "2026-08-10T19:42:02Z",
+      "releaseKey": "django",
+      "categories": [
+        "networking",
+        "development"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 56130,
+      "totalTests": 56130,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-10T19:45:39Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/djangoport",
+      "releaseUrl": "https://github.com/zopencommunity/djangoport/releases/tag/STABLE_djangoport_88"
+    },
+    {
+      "name": "dnf5",
+      "displayName": "dnf5",
+      "version": "5.4.5.0",
+      "release": "20260914.162723",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "dnf5-5.4.5.0 package",
+      "description": "dnf5-5.4.5.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "rpmconfig",
+        "createrepo_c"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/d/dnf5-5.4.5.0-20260914.162723.s390x.rpm",
+      "buildTime": "2026-09-14T16:53:51Z",
+      "releaseKey": "dnf5",
+      "categories": [
+        "build_system"
+      ],
+      "runtimeDependencies": [
+        "createrepo_c",
+        "rpmconfig"
+      ],
+      "passedTests": null,
+      "totalTests": null,
+      "verificationRate": null,
+      "publishedAt": "2026-09-15T12:26:19Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/dnf5port",
+      "releaseUrl": "https://github.com/zopencommunity/dnf5port/releases/tag/test_no_plugin"
+    },
+    {
+      "name": "dos2unix",
+      "displayName": "dos2unix",
+      "version": "7.5.7",
+      "release": "20260828.191802",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "dos2unix-7.5.7 package",
+      "description": "dos2unix-7.5.7 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/d/dos2unix-7.5.7-20260828.191802.s390x.rpm",
+      "buildTime": "2026-08-28T19:18:35Z",
+      "releaseKey": "dos2unix",
+      "categories": [
+        "editor",
+        "development"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 140,
+      "totalTests": 141,
+      "verificationRate": 99.3,
+      "publishedAt": "2026-08-28T19:19:38Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/dos2unixport",
+      "releaseUrl": "https://github.com/zopencommunity/dos2unixport/releases/tag/STABLE_dos2unixport_287"
+    },
+    {
+      "name": "ed",
+      "displayName": "ed",
+      "version": "1.22.6",
+      "release": "20260821.152524",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "ed-1.22.6 package",
+      "description": "ed-1.22.6 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "bash"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/e/ed-1.22.6-20260821.152524.s390x.rpm",
+      "buildTime": "2026-08-21T15:25:53Z",
+      "releaseKey": "ed",
+      "categories": [
+        "development"
+      ],
+      "runtimeDependencies": [
+        "bash"
+      ],
+      "passedTests": 1,
+      "totalTests": 1,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-21T15:27:07Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/edport",
+      "releaseUrl": "https://github.com/zopencommunity/edport/releases/tag/STABLE_edport_221"
+    },
+    {
+      "name": "fastapi",
+      "displayName": "fastapi",
+      "version": "0.141.1",
+      "release": "20260816.225027",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "fastapi-0.141.1 package",
+      "description": "fastapi-0.141.1 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "pydantic-core",
+        "check_python"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/f/fastapi-0.141.1-20260816.225027.s390x.rpm",
+      "buildTime": "2026-08-16T22:52:14Z",
+      "releaseKey": "fastapi",
+      "categories": [
+        "networking",
+        "development"
+      ],
+      "runtimeDependencies": [
+        "pydantic-core"
+      ],
+      "passedTests": 33,
+      "totalTests": 33,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-16T22:53:54Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/fastapiport",
+      "releaseUrl": "https://github.com/zopencommunity/fastapiport/releases/tag/STABLE_fastapiport_162"
+    },
+    {
+      "name": "fastmcp",
+      "displayName": "fastmcp",
+      "version": "4.0.3",
+      "release": "20260905.152804",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "fastmcp-4.0.3 package",
+      "description": "fastmcp-4.0.3 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "watchfiles",
+        "rpds-py",
+        "pyyaml",
+        "pydantic-core",
+        "cryptography",
+        "check_python"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/f/fastmcp-4.0.3-20260905.152804.s390x.rpm",
+      "buildTime": "2026-09-05T15:35:02Z",
+      "releaseKey": "fastmcp",
+      "categories": [
+        "networking",
+        "development"
+      ],
+      "runtimeDependencies": [
+        "cryptography",
+        "pydantic-core",
+        "pyyaml",
+        "rpds-py",
+        "watchfiles"
+      ],
+      "passedTests": 51,
+      "totalTests": 51,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-09-05T15:40:54Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/fastmcpport",
+      "releaseUrl": "https://github.com/zopencommunity/fastmcpport/releases/tag/STABLE_fastmcpport_329"
+    },
+    {
+      "name": "fd",
+      "displayName": "fd",
+      "version": "10.3.0",
+      "release": "20260716.030046",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "fd-10.3.0 package",
+      "description": "fd-10.3.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/f/fd-10.3.0-20260716.030046.s390x.rpm",
+      "buildTime": "2026-07-16T03:01:03Z",
+      "releaseKey": "fd",
+      "categories": [
+        "utilities"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": null,
+      "totalTests": null,
+      "verificationRate": null,
+      "publishedAt": "2026-07-16T03:02:18Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/fdport",
+      "releaseUrl": "https://github.com/zopencommunity/fdport/releases/tag/STABLE_fdport_27"
+    },
+    {
+      "name": "file",
+      "displayName": "file",
+      "version": "5.47",
+      "release": "20260810.150754",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "file-5.47 package",
+      "description": "file-5.47 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/f/file-5.47-20260810.150754.s390x.rpm",
+      "buildTime": "2026-08-10T15:10:13Z",
+      "releaseKey": "file",
+      "categories": [
+        "utilities"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 1,
+      "totalTests": 1,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-04-30T08:27:29Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/fileport",
+      "releaseUrl": "https://github.com/zopencommunity/fileport/releases/tag/STABLE_fileport_4247"
+    },
+    {
+      "name": "findutils",
+      "displayName": "findutils",
+      "version": "4.10.0",
+      "release": "20260714.160904",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "findutils-4.10.0 package",
+      "description": "findutils-4.10.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/f/findutils-4.10.0-20260714.160904.s390x.rpm",
+      "buildTime": "2026-07-14T16:20:20Z",
+      "releaseKey": "findutils",
+      "categories": [
+        "utilities"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 277,
+      "totalTests": 325,
+      "verificationRate": 85.2,
+      "publishedAt": "2025-12-04T06:52:16Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/findutilsport",
+      "releaseUrl": "https://github.com/zopencommunity/findutilsport/releases/tag/STABLE_findutilsport_3921"
+    },
+    {
+      "name": "fortran",
+      "displayName": "fortran",
+      "version": "1.0.0",
+      "release": "20260819.161002",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "fortran-1.0.0 package",
+      "description": "fortran-1.0.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/f/fortran-1.0.0-20260819.161002.s390x.rpm",
+      "buildTime": "2026-08-19T16:10:21Z",
+      "releaseKey": "fortran",
+      "categories": [
+        "development",
+        "build_system"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 1,
+      "totalTests": 1,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-19T16:11:19Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/fortranport",
+      "releaseUrl": "https://github.com/zopencommunity/fortranport/releases/tag/STABLE_fortranport_201"
+    },
+    {
+      "name": "fq",
+      "displayName": "fq",
+      "version": "0.18.0",
+      "release": "20260826.172103",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "fq-0.18.0 package",
+      "description": "fq-0.18.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/f/fq-0.18.0-20260826.172103.s390x.rpm",
+      "buildTime": "2026-08-26T17:35:47Z",
+      "releaseKey": "fq",
+      "categories": [
+        "development"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 16,
+      "totalTests": 17,
+      "verificationRate": 94.1,
+      "publishedAt": "2026-08-26T17:38:40Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/fqport",
+      "releaseUrl": "https://github.com/zopencommunity/fqport/releases/tag/STABLE_fqport_279"
+    },
+    {
+      "name": "fzf",
+      "displayName": "fzf",
+      "version": "0.74.2",
+      "release": "20260801.153857",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "fzf-0.74.2 package",
+      "description": "fzf-0.74.2 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/f/fzf-0.74.2-20260801.153857.s390x.rpm",
+      "buildTime": "2026-08-01T15:43:09Z",
+      "releaseKey": "fzf",
+      "categories": [
+        "utilities"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 169,
+      "totalTests": 169,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-01T15:44:32Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/fzfport",
+      "releaseUrl": "https://github.com/zopencommunity/fzfport/releases/tag/STABLE_fzfport_63"
+    },
+    {
+      "name": "gawk",
+      "displayName": "gawk",
+      "version": "5.4.1",
+      "release": "20260810.150705",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "gawk-5.4.1 package",
+      "description": "gawk-5.4.1 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/g/gawk-5.4.1-20260810.150705.s390x.rpm",
+      "buildTime": "2026-08-10T15:09:17Z",
+      "releaseKey": "gawk",
+      "categories": [
+        "utilities"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 653,
+      "totalTests": 692,
+      "verificationRate": 94.4,
+      "publishedAt": "2026-07-10T16:09:25Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/gawkport",
+      "releaseUrl": "https://github.com/zopencommunity/gawkport/releases/tag/STABLE_gawkport_12"
+    },
+    {
+      "name": "gflags",
+      "displayName": "gflags",
+      "version": "1.0.0",
+      "release": "20260723.155202",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "gflags-2.3.1 package",
+      "description": "gflags-2.3.1 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "bash"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/g/gflags-1.0.0-20260723.155202.s390x.rpm",
+      "buildTime": "2026-07-23T15:53:05Z",
+      "releaseKey": "gflags",
+      "categories": [
+        "development"
+      ],
+      "runtimeDependencies": [
+        "bash"
+      ],
+      "passedTests": 1,
+      "totalTests": 1,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-07-23T15:53:48Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/gflagsport",
+      "releaseUrl": "https://github.com/zopencommunity/gflagsport/releases/tag/STABLE_gflagsport_43"
+    },
+    {
+      "name": "git",
+      "displayName": "git",
+      "version": "2.55.0",
+      "release": "20260910.054735",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "git-2.55.0 package",
+      "description": "git-2.55.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "perl",
+        "ncurses",
+        "less",
+        "bash"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/g/git-2.55.0-20260910.054735.s390x.rpm",
+      "buildTime": "2026-09-10T05:57:59Z",
+      "releaseKey": "git",
+      "categories": [
+        "development",
+        "source_control"
+      ],
+      "runtimeDependencies": [
+        "bash",
+        "less",
+        "ncurses",
+        "perl"
+      ],
+      "passedTests": 89,
+      "totalTests": 92,
+      "verificationRate": 96.7,
+      "publishedAt": "2026-09-10T06:03:46Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/gitport",
+      "releaseUrl": "https://github.com/zopencommunity/gitport/releases/tag/STABLE_gitport_344"
+    },
+    {
+      "name": "git-lfs",
+      "displayName": "git-lfs",
+      "version": "3.8.0",
+      "release": "20260828.192756",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "git-lfs-3.8.0 package",
+      "description": "git-lfs-3.8.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/g/git-lfs-3.8.0-20260828.192756.s390x.rpm",
+      "buildTime": "2026-08-28T19:40:33Z",
+      "releaseKey": "git-lfs",
+      "categories": [
+        "devops",
+        "utilities",
+        "editor"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 21,
+      "totalTests": 22,
+      "verificationRate": 95.5,
+      "publishedAt": "2026-08-28T19:42:18Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/git-lfsport",
+      "releaseUrl": "https://github.com/zopencommunity/git-lfsport/releases/tag/STABLE_git-lfsport_288"
+    },
+    {
+      "name": "gnupg",
+      "displayName": "gnupg",
+      "version": "2.5.22",
+      "release": "20260831.160941",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "gnupg-2.5.22 package",
+      "description": "gnupg-2.5.22 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "pinentry"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/g/gnupg-2.5.22-20260831.160941.s390x.rpm",
+      "buildTime": "2026-08-31T16:26:18Z",
+      "releaseKey": "gnupg",
+      "categories": [],
+      "runtimeDependencies": [],
+      "passedTests": null,
+      "totalTests": null,
+      "verificationRate": null,
+      "publishedAt": "",
+      "portRepositoryUrl": "https://github.com/zopencommunity/gnupgport",
+      "releaseUrl": ""
+    },
+    {
+      "name": "googletest",
+      "displayName": "googletest",
+      "version": "1.18.0",
+      "release": "20260819.151858",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "googletest-1.18.0 package",
+      "description": "googletest-1.18.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/g/googletest-1.18.0-20260819.151858.s390x.rpm",
+      "buildTime": "2026-08-19T15:19:42Z",
+      "releaseKey": "googletest",
+      "categories": [
+        "library"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 1,
+      "totalTests": 1,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-19T15:20:46Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/googletestport",
+      "releaseUrl": "https://github.com/zopencommunity/googletestport/releases/tag/STABLE_googletestport_200"
+    },
+    {
+      "name": "gpg",
+      "displayName": "gpg",
+      "version": "2.5.21",
+      "release": "20260824.112356",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "gnupg-2.5.21 package",
+      "description": "gnupg-2.5.21 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "pinentry"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/g/gpg-2.5.21-20260824.112356.s390x.rpm",
+      "buildTime": "2026-08-24T11:32:54Z",
+      "releaseKey": "gpg",
+      "categories": [
+        "security"
+      ],
+      "runtimeDependencies": [
+        "pinentry"
+      ],
+      "passedTests": 109,
+      "totalTests": 116,
+      "verificationRate": 94.0,
+      "publishedAt": "2026-08-31T16:32:31Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/gpgport",
+      "releaseUrl": "https://github.com/zopencommunity/gpgport/releases/tag/STABLE_gpgport_301"
+    },
+    {
+      "name": "gpgme",
+      "displayName": "gpgme",
+      "version": "2.2.0",
+      "release": "20260901.152412",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "gpgme-2.2.0 package",
+      "description": "gpgme-2.2.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/g/gpgme-2.2.0-20260901.152412.s390x.rpm",
+      "buildTime": "2026-09-01T15:31:12Z",
+      "releaseKey": "gpgme",
+      "categories": [],
+      "runtimeDependencies": [],
+      "passedTests": null,
+      "totalTests": null,
+      "verificationRate": null,
+      "publishedAt": "",
+      "portRepositoryUrl": "https://github.com/zopencommunity/gpgmeport",
+      "releaseUrl": ""
+    },
+    {
+      "name": "greenlet",
+      "displayName": "greenlet",
+      "version": "3.5.5",
+      "release": "20260824.135645",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "greenlet-3.5.5 package",
+      "description": "greenlet-3.5.5 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "check_python"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/g/greenlet-3.5.5-20260824.135645.s390x.rpm",
+      "buildTime": "2026-08-24T13:59:14Z",
+      "releaseKey": "greenlet",
+      "categories": [
+        "development",
+        "library"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 36,
+      "totalTests": 36,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-24T14:00:24Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/greenletport",
+      "releaseUrl": "https://github.com/zopencommunity/greenletport/releases/tag/STABLE_greenletport_258"
+    },
+    {
+      "name": "grep",
+      "displayName": "grep",
+      "version": "3.12",
+      "release": "20260714.160937",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "grep-3.12 package",
+      "description": "grep-3.12 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/g/grep-3.12-20260714.160937.s390x.rpm",
+      "buildTime": "2026-07-14T16:17:02Z",
+      "releaseKey": "grep",
+      "categories": [
+        "utilities"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 118,
+      "totalTests": 128,
+      "verificationRate": 92.2,
+      "publishedAt": "2026-02-12T08:21:49Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/grepport",
+      "releaseUrl": "https://github.com/zopencommunity/grepport/releases/tag/STABLE_grepport_4048"
+    },
+    {
+      "name": "groovy-DEV",
+      "displayName": "groovy-DEV",
+      "version": "5.1.2",
+      "release": "20260907.152908",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "groovy-DEV package",
+      "description": "groovy-DEV package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "check_java",
+        "bash"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/g/groovy-DEV-5.1.2-20260907.152908.s390x.rpm",
+      "buildTime": "2026-09-07T15:29:35Z",
+      "releaseKey": "groovy-DEV",
+      "categories": [],
+      "runtimeDependencies": [],
+      "passedTests": null,
+      "totalTests": null,
+      "verificationRate": null,
+      "publishedAt": "",
+      "portRepositoryUrl": "https://github.com/zopencommunity/groovy-DEVport",
+      "releaseUrl": ""
+    },
+    {
+      "name": "gzip",
+      "displayName": "gzip",
+      "version": "1.14",
+      "release": "20260715.052803",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "gzip-1.14 package",
+      "description": "gzip-1.14 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/g/gzip-1.14-20260715.052803.s390x.rpm",
+      "buildTime": "2026-07-15T05:33:12Z",
+      "releaseKey": "gzip",
+      "categories": [],
+      "runtimeDependencies": [],
+      "passedTests": 30,
+      "totalTests": 30,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-03-09T13:30:37Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/gzipport",
+      "releaseUrl": "https://github.com/zopencommunity/gzipport/releases/tag/STABLE_gzipport_4117"
+    },
+    {
+      "name": "hugo",
+      "displayName": "hugo",
+      "version": "0.165.0",
+      "release": "20260813.155452",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "hugo-0.165.0 package",
+      "description": "hugo-0.165.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/h/hugo-0.165.0-20260813.155452.s390x.rpm",
+      "buildTime": "2026-08-13T16:06:32Z",
+      "releaseKey": "hugo",
+      "categories": [
+        "webframework"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": null,
+      "totalTests": null,
+      "verificationRate": null,
+      "publishedAt": "2026-08-13T16:12:03Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/hugoport",
+      "releaseUrl": "https://github.com/zopencommunity/hugoport/releases/tag/STABLE_hugoport_118"
+    },
+    {
+      "name": "jellyfish",
+      "displayName": "jellyfish",
+      "version": "1.2.1",
+      "release": "20260820.172005",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "jellyfishport-DEV package",
+      "description": "jellyfishport-DEV package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "check_python"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/j/jellyfish-1.2.1-20260820.172005.s390x.rpm",
+      "buildTime": "2026-08-20T17:20:49Z",
+      "releaseKey": "jellyfish",
+      "categories": [
+        "development",
+        "library"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 78,
+      "totalTests": 78,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-20T17:23:27Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/jellyfishport",
+      "releaseUrl": "https://github.com/zopencommunity/jellyfishport/releases/tag/STABLE_jellyfishport_215"
+    },
+    {
+      "name": "jenkins",
+      "displayName": "jenkins",
+      "version": "2.580",
+      "release": "20260902.152038",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "jenkins-2.580 package",
+      "description": "jenkins-2.580 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "bash"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/j/jenkins-2.580-20260902.152038.s390x.rpm",
+      "buildTime": "2026-09-02T15:21:02Z",
+      "releaseKey": "jenkins",
+      "categories": [
+        "devops"
+      ],
+      "runtimeDependencies": [
+        "bash"
+      ],
+      "passedTests": null,
+      "totalTests": null,
+      "verificationRate": null,
+      "publishedAt": "2026-09-02T15:24:32Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/jenkinsport",
+      "releaseUrl": "https://github.com/zopencommunity/jenkinsport/releases/tag/STABLE_jenkinsport_317"
+    },
+    {
+      "name": "jq",
+      "displayName": "jq",
+      "version": "1.8.2",
+      "release": "20260713.150721",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "jq-1.8.2 package",
+      "description": "jq-1.8.2 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/j/jq-1.8.2-20260713.150721.s390x.rpm",
+      "buildTime": "2026-07-13T15:11:13Z",
+      "releaseKey": "jq",
+      "categories": [],
+      "runtimeDependencies": [],
+      "passedTests": 8,
+      "totalTests": 9,
+      "verificationRate": 88.9,
+      "publishedAt": "2026-07-13T15:12:38Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/jqport",
+      "releaseUrl": "https://github.com/zopencommunity/jqport/releases/tag/STABLE_jqport_18"
+    },
+    {
+      "name": "lapack",
+      "displayName": "lapack",
+      "version": "3.9.1",
+      "release": "20260821.032850",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "lapack-3.9.1 package",
+      "description": "lapack-3.9.1 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "blis"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/l/lapack-3.9.1-20260821.032850.s390x.rpm",
+      "buildTime": "2026-08-21T04:06:24Z",
+      "releaseKey": "lapack",
+      "categories": [
+        "library",
+        "math"
+      ],
+      "runtimeDependencies": [
+        "blis"
+      ],
+      "passedTests": 3,
+      "totalTests": 3,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-21T04:07:42Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/lapackport",
+      "releaseUrl": "https://github.com/zopencommunity/lapackport/releases/tag/STABLE_lapackport_218"
+    },
+    {
+      "name": "less",
+      "displayName": "less",
+      "version": "704",
+      "release": "20260713.150549",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "less-704-rel package",
+      "description": "less-704-rel package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/l/less-704-20260713.150549.s390x.rpm",
+      "buildTime": "2026-07-13T15:07:29Z",
+      "releaseKey": "less",
+      "categories": [],
+      "runtimeDependencies": [],
+      "passedTests": 1,
+      "totalTests": 1,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-07-13T15:08:36Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/lessport",
+      "releaseUrl": "https://github.com/zopencommunity/lessport/releases/tag/STABLE_lessport_17"
+    },
+    {
+      "name": "libdio",
+      "displayName": "libdio",
+      "version": "0.1.0",
+      "release": "20260824.063021",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "libdio-main package",
+      "description": "libdio-main package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "metaldio",
+        "cjson"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/l/libdio-0.1.0-20260824.063021.s390x.rpm",
+      "buildTime": "2026-08-24T06:30:46Z",
+      "releaseKey": "libdio",
+      "categories": [
+        "development",
+        "core"
+      ],
+      "runtimeDependencies": [
+        "cjson",
+        "metaldio"
+      ],
+      "passedTests": 1,
+      "totalTests": 1,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-24T06:31:37Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/libdioport",
+      "releaseUrl": "https://github.com/zopencommunity/libdioport/releases/tag/DEV_libdioport_245"
+    },
+    {
+      "name": "libgcrypt",
+      "displayName": "libgcrypt",
+      "version": "1.12.4",
+      "release": "20260911.161121",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "libgcrypt-1.12.4 package",
+      "description": "libgcrypt-1.12.4 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "libgpgerror"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/l/libgcrypt-1.12.4-20260911.161121.s390x.rpm",
+      "buildTime": "2026-09-11T16:41:30Z",
+      "releaseKey": "libgcrypt",
+      "categories": [
+        "security",
+        "library"
+      ],
+      "runtimeDependencies": [
+        "libgpgerror"
+      ],
+      "passedTests": 43,
+      "totalTests": 43,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-09-11T16:42:39Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/libgcryptport",
+      "releaseUrl": "https://github.com/zopencommunity/libgcryptport/releases/tag/STABLE_libgcryptport_350"
+    },
+    {
+      "name": "libiconv",
+      "displayName": "libiconv",
+      "version": "1.19",
+      "release": "20260820.162110",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "libiconv-master package",
+      "description": "libiconv-master package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/l/libiconv-1.19-20260820.162110.s390x.rpm",
+      "buildTime": "2026-08-20T16:36:03Z",
+      "releaseKey": "libiconv",
+      "categories": [
+        "library"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 199,
+      "totalTests": 199,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-20T16:37:04Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/libiconvport",
+      "releaseUrl": "https://github.com/zopencommunity/libiconvport/releases/tag/DEV_libiconvport_213"
+    },
+    {
+      "name": "libjpeg-turbo",
+      "displayName": "libjpeg-turbo",
+      "version": "3.2.0",
+      "release": "20260816.050255",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "libjpeg-turbo-3.2.0 package",
+      "description": "libjpeg-turbo-3.2.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/l/libjpeg-turbo-3.2.0-20260816.050255.s390x.rpm",
+      "buildTime": "2026-08-16T05:05:32Z",
+      "releaseKey": "libjpeg-turbo",
+      "categories": [
+        "library",
+        "graphics"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 4,
+      "totalTests": 4,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-16T05:06:58Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/libjpeg-turboport",
+      "releaseUrl": "https://github.com/zopencommunity/libjpeg-turboport/releases/tag/STABLE_libjpeg-turboport_156"
+    },
+    {
+      "name": "libpcre2",
+      "displayName": "libpcre2",
+      "version": "10.48",
+      "release": "20260907.114402",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "libpcre2-10.48 package",
+      "description": "libpcre2-10.48 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/l/libpcre2-10.48-20260907.114402.s390x.rpm",
+      "buildTime": "2026-09-07T11:46:39Z",
+      "releaseKey": "libpcre2",
+      "categories": [
+        "library"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 2,
+      "totalTests": 3,
+      "verificationRate": 66.7,
+      "publishedAt": "2026-09-07T11:47:50Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/libpcre2port",
+      "releaseUrl": "https://github.com/zopencommunity/libpcre2port/releases/tag/STABLE_libpcre2port_331"
+    },
+    {
+      "name": "libpsl",
+      "displayName": "libpsl",
+      "version": "1.0.0",
+      "release": "20260815.151815",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "libpsl-0.23.3 package",
+      "description": "libpsl-0.23.3 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/l/libpsl-1.0.0-20260815.151815.s390x.rpm",
+      "buildTime": "2026-08-15T15:20:23Z",
+      "releaseKey": "libpsl",
+      "categories": [
+        "networking"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 5,
+      "totalTests": 5,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-15T15:21:23Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/libpslport",
+      "releaseUrl": "https://github.com/zopencommunity/libpslport/releases/tag/STABLE_libpslport_153"
+    },
+    {
+      "name": "librepo",
+      "displayName": "librepo",
+      "version": "1.21.1",
+      "release": "20260909.152943",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "librepo-1.21.1 package",
+      "description": "librepo-1.21.1 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "openssl",
+        "libxml2",
+        "libgpgme",
+        "libgpgerror",
+        "glib",
+        "curl"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/l/librepo-1.21.1-20260909.152943.s390x.rpm",
+      "buildTime": "2026-09-09T15:31:10Z",
+      "releaseKey": "librepo",
+      "categories": [
+        "library"
+      ],
+      "runtimeDependencies": [
+        "curl",
+        "glib",
+        "libgpgerror",
+        "libgpgme",
+        "libxml2",
+        "openssl"
+      ],
+      "passedTests": 1,
+      "totalTests": 1,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-09-09T15:32:06Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/librepoport",
+      "releaseUrl": "https://github.com/zopencommunity/librepoport/releases/tag/STABLE_librepoport_342"
+    },
+    {
+      "name": "libsodium",
+      "displayName": "libsodium",
+      "version": "1.0.20",
+      "release": "20260814.132958",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "libsodium-1.0.20-RELEASE package",
+      "description": "libsodium-1.0.20-RELEASE package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "zoslib"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/l/libsodium-1.0.20-20260814.132958.s390x.rpm",
+      "buildTime": "2026-08-14T13:33:52Z",
+      "releaseKey": "libsodium",
+      "categories": [
+        "library",
+        "security"
+      ],
+      "runtimeDependencies": [
+        "zoslib"
+      ],
+      "passedTests": 11,
+      "totalTests": 11,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-14T13:34:45Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/libsodiumport",
+      "releaseUrl": "https://github.com/zopencommunity/libsodiumport/releases/tag/STABLE_libsodiumport_135"
+    },
+    {
+      "name": "libssh2",
+      "displayName": "libssh2",
+      "version": "1.11.1",
+      "release": "20260713.153503",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "libssh2-1.11.1 package",
+      "description": "libssh2-1.11.1 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/l/libssh2-1.11.1-20260713.153503.s390x.rpm",
+      "buildTime": "2026-07-13T15:39:33Z",
+      "releaseKey": "libssh2",
+      "categories": [
+        "networking",
+        "security",
+        "library"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 3,
+      "totalTests": 44,
+      "verificationRate": 6.8,
+      "publishedAt": "2026-07-13T15:40:32Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/libssh2port",
+      "releaseUrl": "https://github.com/zopencommunity/libssh2port/releases/tag/STABLE_libssh2port_21"
+    },
+    {
+      "name": "libuv",
+      "displayName": "libuv",
+      "version": "1.52.1",
+      "release": "20260810.081714",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "libuv-1.52.1 package",
+      "description": "libuv-1.52.1 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/l/libuv-1.52.1-20260810.081714.s390x.rpm",
+      "buildTime": "2026-08-10T08:26:13Z",
+      "releaseKey": "libuv",
+      "categories": [
+        "library"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 371,
+      "totalTests": 448,
+      "verificationRate": 82.8,
+      "publishedAt": "2026-08-10T08:27:09Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/libuvport",
+      "releaseUrl": "https://github.com/zopencommunity/libuvport/releases/tag/STABLE_libuvport_74"
+    },
+    {
+      "name": "llamacpp",
+      "displayName": "llamacpp",
+      "version": "10182",
+      "release": "20260909.205016",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "llamacpp-DEV package",
+      "description": "llamacpp-DEV package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "ncurses"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/l/llamacpp-10182-20260909.205016.s390x.rpm",
+      "buildTime": "2026-09-09T21:25:48Z",
+      "releaseKey": "llamacpp",
+      "categories": [
+        "ai"
+      ],
+      "runtimeDependencies": [
+        "ncurses"
+      ],
+      "passedTests": 55,
+      "totalTests": 57,
+      "verificationRate": 96.5,
+      "publishedAt": "2026-09-09T21:53:52Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/llamacppport",
+      "releaseUrl": "https://github.com/zopencommunity/llamacppport/releases/tag/STABLE_llamacppport_343"
+    },
+    {
+      "name": "llamacpp-DEV",
+      "displayName": "llamacpp-DEV",
+      "version": "10182",
+      "release": "20260908.200211",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "llamacpp-DEV package",
+      "description": "llamacpp-DEV package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "ncurses"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/l/llamacpp-DEV-10182-20260908.200211.s390x.rpm",
+      "buildTime": "2026-09-08T20:39:38Z",
+      "releaseKey": "llamacpp-DEV",
+      "categories": [],
+      "runtimeDependencies": [],
+      "passedTests": null,
+      "totalTests": null,
+      "verificationRate": null,
+      "publishedAt": "",
+      "portRepositoryUrl": "https://github.com/zopencommunity/llamacpp-DEVport",
+      "releaseUrl": ""
+    },
+    {
+      "name": "lxml",
+      "displayName": "lxml",
+      "version": "6.1.3",
+      "release": "20260902.154315",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "lxml-6.1.3 package",
+      "description": "lxml-6.1.3 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "check_python"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/l/lxml-6.1.3-20260902.154315.s390x.rpm",
+      "buildTime": "2026-09-02T15:47:38Z",
+      "releaseKey": "lxml",
+      "categories": [
+        "development",
+        "library"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 21,
+      "totalTests": 21,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-09-02T15:50:27Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/lxmlport",
+      "releaseUrl": "https://github.com/zopencommunity/lxmlport/releases/tag/STABLE_lxmlport_320"
+    },
+    {
+      "name": "lzip",
+      "displayName": "lzip",
+      "version": "1.0.0",
+      "release": "20260824.075549",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "lzip-1.25 package",
+      "description": "lzip-1.25 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/l/lzip-1.0.0-20260824.075549.s390x.rpm",
+      "buildTime": "2026-08-24T07:56:54Z",
+      "releaseKey": "lzip",
+      "categories": [
+        "compression"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 1,
+      "totalTests": 1,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-24T07:57:46Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/lzipport",
+      "releaseUrl": "https://github.com/zopencommunity/lzipport/releases/tag/STABLE_lzipport_246"
+    },
+    {
+      "name": "make",
+      "displayName": "make",
+      "version": "4.4.1",
+      "release": "20260810.151138",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "make-4.4.1 package",
+      "description": "make-4.4.1 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/m/make-4.4.1-20260810.151138.s390x.rpm",
+      "buildTime": "2026-08-10T15:13:44Z",
+      "releaseKey": "make",
+      "categories": [
+        "development",
+        "build_system"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 1415,
+      "totalTests": 1416,
+      "verificationRate": 99.9,
+      "publishedAt": "2026-02-16T10:25:03Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/makeport",
+      "releaseUrl": "https://github.com/zopencommunity/makeport/releases/tag/STABLE_makeport_4057"
+    },
+    {
+      "name": "markupsafe",
+      "displayName": "markupsafe",
+      "version": "3.0.3",
+      "release": "20260814.120232",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "markupsafe-3.0.3 package",
+      "description": "markupsafe-3.0.3 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "check_python"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/m/markupsafe-3.0.3-20260814.120232.s390x.rpm",
+      "buildTime": "2026-08-14T12:03:28Z",
+      "releaseKey": "markupsafe",
+      "categories": [
+        "development",
+        "library"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 36,
+      "totalTests": 36,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-14T12:04:30Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/markupsafeport",
+      "releaseUrl": "https://github.com/zopencommunity/markupsafeport/releases/tag/STABLE_markupsafeport_133"
+    },
+    {
+      "name": "maturin",
+      "displayName": "maturin",
+      "version": "1.14.1",
+      "release": "20260815.200603",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "maturin-1.14.1 package",
+      "description": "maturin-1.14.1 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "check_python"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/m/maturin-1.14.1-20260815.200603.s390x.rpm",
+      "buildTime": "2026-08-15T20:06:33Z",
+      "releaseKey": "maturin",
+      "categories": [
+        "development",
+        "build_system",
+        "utilities"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 5,
+      "totalTests": 5,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-15T20:09:49Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/maturinport",
+      "releaseUrl": "https://github.com/zopencommunity/maturinport/releases/tag/STABLE_maturinport_154"
+    },
+    {
+      "name": "meson",
+      "displayName": "meson",
+      "version": "1.11.2",
+      "release": "20260821.012155",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "meson-1.11.2 package",
+      "description": "meson-1.11.2 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "ninja",
+        "check_python"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/m/meson-1.11.2-20260821.012155.s390x.rpm",
+      "buildTime": "2026-08-21T01:30:27Z",
+      "releaseKey": "meson",
+      "categories": [
+        "development",
+        "build_system"
+      ],
+      "runtimeDependencies": [
+        "ninja"
+      ],
+      "passedTests": 2,
+      "totalTests": 3,
+      "verificationRate": 66.7,
+      "publishedAt": "2026-08-21T01:31:31Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/mesonport",
+      "releaseUrl": "https://github.com/zopencommunity/mesonport/releases/tag/STABLE_mesonport_216"
+    },
+    {
+      "name": "MessagePack",
+      "displayName": "MessagePack",
+      "version": "7.0.1",
+      "release": "20260820.091432",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "MessagePack-7.0.1 package",
+      "description": "MessagePack-7.0.1 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/M/MessagePack-7.0.1-20260820.091432.s390x.rpm",
+      "buildTime": "2026-08-20T09:15:03Z",
+      "releaseKey": "MessagePack",
+      "categories": [],
+      "runtimeDependencies": [],
+      "passedTests": null,
+      "totalTests": null,
+      "verificationRate": null,
+      "publishedAt": "",
+      "portRepositoryUrl": "https://github.com/zopencommunity/MessagePackport",
+      "releaseUrl": ""
+    },
+    {
+      "name": "meta",
+      "displayName": "meta",
+      "version": "0.8.6",
+      "release": "20260904.042908",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "meta-main package",
+      "description": "meta-main package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/m/meta-0.8.6-20260904.042908.s390x.rpm",
+      "buildTime": "2026-09-04T04:35:39Z",
+      "releaseKey": "meta",
+      "categories": [
+        "utilities"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 11,
+      "totalTests": 11,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-09-04T04:38:40Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/metaport",
+      "releaseUrl": "https://github.com/zopencommunity/metaport/releases/tag/STABLE_metaport_324"
+    },
+    {
+      "name": "meta-main",
+      "displayName": "meta-main",
+      "version": "0.8.5",
+      "release": "20260715.144308",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "meta-main package",
+      "description": "meta-main package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/m/meta-main-0.8.5-20260715.144308.s390x.rpm",
+      "buildTime": "2026-07-15T14:49:32Z",
+      "releaseKey": "meta-main",
+      "categories": [],
+      "runtimeDependencies": [],
+      "passedTests": null,
+      "totalTests": null,
+      "verificationRate": null,
+      "publishedAt": "",
+      "portRepositoryUrl": "https://github.com/zopencommunity/meta-mainport",
+      "releaseUrl": ""
+    },
+    {
+      "name": "metaldio",
+      "displayName": "metaldio",
+      "version": "1.0.0",
+      "release": "20260824.053705",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "metaldio-main package",
+      "description": "metaldio-main package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/m/metaldio-1.0.0-20260824.053705.s390x.rpm",
+      "buildTime": "2026-08-24T05:37:40Z",
+      "releaseKey": "metaldio",
+      "categories": [
+        "library",
+        "development",
+        "utilities"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 1,
+      "totalTests": 1,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-24T05:38:37Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/metaldioport",
+      "releaseUrl": "https://github.com/zopencommunity/metaldioport/releases/tag/STABLE_metaldioport_244"
+    },
+    {
+      "name": "mmh3",
+      "displayName": "mmh3",
+      "version": "5.2.0",
+      "release": "20260810.190331",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "mmh3-5.2.0 package",
+      "description": "mmh3-5.2.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/m/mmh3-5.2.0-20260810.190331.s390x.rpm",
+      "buildTime": "2026-08-10T19:04:51Z",
+      "releaseKey": "mmh3",
+      "categories": [
+        "development",
+        "utilities"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 255,
+      "totalTests": 255,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-10T19:05:48Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/mmh3port",
+      "releaseUrl": "https://github.com/zopencommunity/mmh3port/releases/tag/STABLE_mmh3port_86"
+    },
+    {
+      "name": "msgpack",
+      "displayName": "msgpack",
+      "version": "1.2.2",
+      "release": "20260827.185228",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "msgpack-1.2.2 package",
+      "description": "msgpack-1.2.2 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "check_python"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/m/msgpack-1.2.2-20260827.185228.s390x.rpm",
+      "buildTime": "2026-08-27T18:53:38Z",
+      "releaseKey": "msgpack",
+      "categories": [
+        "development",
+        "library"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 30,
+      "totalTests": 30,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-27T18:54:48Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/msgpackport",
+      "releaseUrl": "https://github.com/zopencommunity/msgpackport/releases/tag/STABLE_msgpackport_281"
+    },
+    {
+      "name": "msgpack-c",
+      "displayName": "msgpack-c",
+      "version": "7.0.1",
+      "release": "20260820.094309",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "msgpack-c-7.0.1 package",
+      "description": "msgpack-c-7.0.1 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/m/msgpack-c-7.0.1-20260820.094309.s390x.rpm",
+      "buildTime": "2026-08-20T09:43:41Z",
+      "releaseKey": "msgpack-c",
+      "categories": [
+        "security",
+        "development",
+        "language",
+        "ai",
+        "core",
+        "utilities",
+        "editor",
+        "source_control"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 1,
+      "totalTests": 1,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-20T09:44:38Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/msgpack-cport",
+      "releaseUrl": "https://github.com/zopencommunity/msgpack-cport/releases/tag/STABLE_msgpack-cport_207"
+    },
+    {
+      "name": "nano",
+      "displayName": "nano",
+      "version": "9.0",
+      "release": "20260715.053012",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "nano-9.0 package",
+      "description": "nano-9.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "libdio"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/n/nano-9.0-20260715.053012.s390x.rpm",
+      "buildTime": "2026-07-15T05:35:54Z",
+      "releaseKey": "nano",
+      "categories": [
+        "editor"
+      ],
+      "runtimeDependencies": [
+        "libdio"
+      ],
+      "passedTests": null,
+      "totalTests": null,
+      "verificationRate": null,
+      "publishedAt": "2026-06-09T06:39:30Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/nanoport",
+      "releaseUrl": "https://github.com/zopencommunity/nanoport/releases/tag/STABLE_nanoport_4335"
+    },
+    {
+      "name": "nats-DEV",
+      "displayName": "nats-DEV",
+      "version": "2.14.7",
+      "release": "20260915.152906",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "nats-DEV package",
+      "description": "nats-DEV package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/n/nats-DEV-2.14.7-20260915.152906.s390x.rpm",
+      "buildTime": "2026-09-15T15:34:38Z",
+      "releaseKey": "nats-DEV",
+      "categories": [],
+      "runtimeDependencies": [],
+      "passedTests": null,
+      "totalTests": null,
+      "verificationRate": null,
+      "publishedAt": "",
+      "portRepositoryUrl": "https://github.com/zopencommunity/nats-DEVport",
+      "releaseUrl": ""
+    },
+    {
+      "name": "ncurses",
+      "displayName": "ncurses",
+      "version": "6.6",
+      "release": "20260713.150655",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "ncurses-6.6 package",
+      "description": "ncurses-6.6 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/n/ncurses-6.6-20260713.150655.s390x.rpm",
+      "buildTime": "2026-07-13T15:17:17Z",
+      "releaseKey": "ncurses",
+      "categories": [],
+      "runtimeDependencies": [],
+      "passedTests": 1,
+      "totalTests": 1,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-07-13T15:20:07Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/ncursesport",
+      "releaseUrl": "https://github.com/zopencommunity/ncursesport/releases/tag/STABLE_ncursesport_19"
+    },
+    {
+      "name": "neovim",
+      "displayName": "neovim",
+      "version": "0.12.5",
+      "release": "20260824.160406",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "neovim-0.12.5 package",
+      "description": "neovim-0.12.5 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "lpeg"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/n/neovim-0.12.5-20260824.160406.s390x.rpm",
+      "buildTime": "2026-08-24T16:11:02Z",
+      "releaseKey": "neovim",
+      "categories": [
+        "editor"
+      ],
+      "runtimeDependencies": [
+        "lpeg"
+      ],
+      "passedTests": 1,
+      "totalTests": 1,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-24T16:15:17Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/neovimport",
+      "releaseUrl": "https://github.com/zopencommunity/neovimport/releases/tag/STABLE_neovimport_267"
+    },
+    {
+      "name": "nlohmann-json",
+      "displayName": "nlohmann-json",
+      "version": "3.12.0",
+      "release": "20260819.145530",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "nlohmann-json-3.12.0 package",
+      "description": "nlohmann-json-3.12.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/n/nlohmann-json-3.12.0-20260819.145530.s390x.rpm",
+      "buildTime": "2026-08-19T15:07:03Z",
+      "releaseKey": "nlohmann-json",
+      "categories": [
+        "security",
+        "development",
+        "language",
+        "ai",
+        "core",
+        "utilities",
+        "editor",
+        "source_control"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 1,
+      "totalTests": 1,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-19T15:08:03Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/nlohmann-jsonport",
+      "releaseUrl": "https://github.com/zopencommunity/nlohmann-jsonport/releases/tag/STABLE_nlohmann-jsonport_199"
+    },
+    {
+      "name": "numpy",
+      "displayName": "numpy",
+      "version": "2.5.2",
+      "release": "20260819.010755",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "numpy-2.5.2 package",
+      "description": "numpy-2.5.2 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "check_python"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/n/numpy-2.5.2-20260819.010755.s390x.rpm",
+      "buildTime": "2026-08-19T01:36:17Z",
+      "releaseKey": "numpy",
+      "categories": [
+        "development",
+        "library",
+        "math"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 45,
+      "totalTests": 45,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-19T01:41:16Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/numpyport",
+      "releaseUrl": "https://github.com/zopencommunity/numpyport/releases/tag/STABLE_numpyport_192"
+    },
+    {
+      "name": "openssl",
+      "displayName": "openssl",
+      "version": "4.0.2",
+      "release": "20260826.030625",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "openssl-4.0.2 package",
+      "description": "openssl-4.0.2 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/o/openssl-4.0.2-20260826.030625.s390x.rpm",
+      "buildTime": "2026-08-26T03:31:01Z",
+      "releaseKey": "openssl",
+      "categories": [],
+      "runtimeDependencies": [],
+      "passedTests": null,
+      "totalTests": null,
+      "verificationRate": null,
+      "publishedAt": "2026-08-26T03:37:05Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/opensslport",
+      "releaseUrl": "https://github.com/zopencommunity/opensslport/releases/tag/STABLE_opensslport_276"
+    },
+    {
+      "name": "pandas",
+      "displayName": "pandas",
+      "version": "3.0.5",
+      "release": "20260818.183742",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "pandas-3.0.5 package",
+      "description": "pandas-3.0.5 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "numpy",
+        "check_python"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/p/pandas-3.0.5-20260818.183742.s390x.rpm",
+      "buildTime": "2026-08-18T19:14:25Z",
+      "releaseKey": "pandas",
+      "categories": [
+        "development",
+        "library",
+        "math"
+      ],
+      "runtimeDependencies": [
+        "numpy"
+      ],
+      "passedTests": 33,
+      "totalTests": 33,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-18T19:21:42Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/pandasport",
+      "releaseUrl": "https://github.com/zopencommunity/pandasport/releases/tag/STABLE_pandasport_190"
+    },
+    {
+      "name": "paramiko",
+      "displayName": "paramiko",
+      "version": "5.0.0",
+      "release": "20260814.191056",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "paramiko-5.0.0 package",
+      "description": "paramiko-5.0.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "pynacl",
+        "cryptography",
+        "check_python",
+        "bcrypt"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/p/paramiko-5.0.0-20260814.191056.s390x.rpm",
+      "buildTime": "2026-08-14T19:11:52Z",
+      "releaseKey": "paramiko",
+      "categories": [
+        "development",
+        "security",
+        "library",
+        "networking"
+      ],
+      "runtimeDependencies": [
+        "bcrypt",
+        "cryptography",
+        "pynacl"
+      ],
+      "passedTests": 36,
+      "totalTests": 36,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-14T19:12:53Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/paramikoport",
+      "releaseUrl": "https://github.com/zopencommunity/paramikoport/releases/tag/STABLE_paramikoport_141"
+    },
+    {
+      "name": "patch",
+      "displayName": "patch",
+      "version": "2.8",
+      "release": "20260811.091958",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "patch-2.8 package",
+      "description": "patch-2.8 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/p/patch-2.8-20260811.091958.s390x.rpm",
+      "buildTime": "2026-08-11T09:26:23Z",
+      "releaseKey": "patch",
+      "categories": [
+        "utilities"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 48,
+      "totalTests": 49,
+      "verificationRate": 98.0,
+      "publishedAt": "2026-08-11T09:27:20Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/patchport",
+      "releaseUrl": "https://github.com/zopencommunity/patchport/releases/tag/STABLE_patchport_94"
+    },
+    {
+      "name": "pcre2",
+      "displayName": "pcre2",
+      "version": "10.48",
+      "release": "20260907.095720",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "pcre2-10.48 package",
+      "description": "pcre2-10.48 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/p/pcre2-10.48-20260907.095720.s390x.rpm",
+      "buildTime": "2026-09-07T09:59:57Z",
+      "releaseKey": "pcre2",
+      "categories": [],
+      "runtimeDependencies": [],
+      "passedTests": null,
+      "totalTests": null,
+      "verificationRate": null,
+      "publishedAt": "",
+      "portRepositoryUrl": "https://github.com/zopencommunity/pcre2port",
+      "releaseUrl": ""
+    },
+    {
+      "name": "perl",
+      "displayName": "perl",
+      "version": "5.44.0",
+      "release": "20260819.132623",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "perl-5.44.0 package",
+      "description": "perl-5.44.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/p/perl-5.44.0-20260819.132623.s390x.rpm",
+      "buildTime": "2026-08-19T14:06:56Z",
+      "releaseKey": "perl",
+      "categories": [],
+      "runtimeDependencies": [],
+      "passedTests": 2653,
+      "totalTests": 2659,
+      "verificationRate": 99.8,
+      "publishedAt": "2026-08-19T14:11:51Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/perlport",
+      "releaseUrl": "https://github.com/zopencommunity/perlport/releases/tag/STABLE_perlport_196"
+    },
+    {
+      "name": "perl5",
+      "displayName": "perl5",
+      "version": "5.44.0",
+      "release": "20260721.101131",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "perl5-5.44.0 package",
+      "description": "perl5-5.44.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/p/perl5-5.44.0-20260721.101131.s390x.rpm",
+      "buildTime": "2026-07-21T10:51:53Z",
+      "releaseKey": "perl5",
+      "categories": [],
+      "runtimeDependencies": [],
+      "passedTests": null,
+      "totalTests": null,
+      "verificationRate": null,
+      "publishedAt": "",
+      "portRepositoryUrl": "https://github.com/zopencommunity/perl5port",
+      "releaseUrl": ""
+    },
+    {
+      "name": "pillow",
+      "displayName": "pillow",
+      "version": "12.3.0",
+      "release": "20260816.051949",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "pillow-12.3.0 package",
+      "description": "pillow-12.3.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "zlib",
+        "libjpeg-turbo",
+        "check_python"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/p/pillow-12.3.0-20260816.051949.s390x.rpm",
+      "buildTime": "2026-08-16T05:22:52Z",
+      "releaseKey": "pillow",
+      "categories": [
+        "development",
+        "library",
+        "graphics"
+      ],
+      "runtimeDependencies": [
+        "libjpeg-turbo",
+        "zlib"
+      ],
+      "passedTests": 45,
+      "totalTests": 45,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-16T05:24:43Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/pillowport",
+      "releaseUrl": "https://github.com/zopencommunity/pillowport/releases/tag/STABLE_pillowport_157"
+    },
+    {
+      "name": "pinentry",
+      "displayName": "pinentry",
+      "version": "1.3.3",
+      "release": "20260824.125805",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "pinentry-1.3.3 package",
+      "description": "pinentry-1.3.3 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/p/pinentry-1.3.3-20260824.125805.s390x.rpm",
+      "buildTime": "2026-08-24T12:59:38Z",
+      "releaseKey": "pinentry",
+      "categories": [
+        "security"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 5,
+      "totalTests": 5,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-07-01T16:12:36Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/pinentryport",
+      "releaseUrl": "https://github.com/zopencommunity/pinentryport/releases/tag/STABLE_pinentryport_4397"
+    },
+    {
+      "name": "popt",
+      "displayName": "popt",
+      "version": "1.0.0",
+      "release": "20260824.094307",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "popt-master package",
+      "description": "popt-master package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/p/popt-1.0.0-20260824.094307.s390x.rpm",
+      "buildTime": "2026-08-24T09:43:47Z",
+      "releaseKey": "popt",
+      "categories": [
+        "development"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 1,
+      "totalTests": 1,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-24T09:44:40Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/poptport",
+      "releaseUrl": "https://github.com/zopencommunity/poptport/releases/tag/STABLE_poptport_249"
+    },
+    {
+      "name": "psutil",
+      "displayName": "psutil",
+      "version": "7.2.2",
+      "release": "20260822.023908",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "psutil-7.2.2 package",
+      "description": "psutil-7.2.2 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "zoslib",
+        "check_python"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/p/psutil-7.2.2-20260822.023908.s390x.rpm",
+      "buildTime": "2026-08-22T02:40:14Z",
+      "releaseKey": "psutil",
+      "categories": [
+        "development",
+        "library"
+      ],
+      "runtimeDependencies": [
+        "zoslib"
+      ],
+      "passedTests": 36,
+      "totalTests": 36,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-22T02:41:45Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/psutilport",
+      "releaseUrl": "https://github.com/zopencommunity/psutilport/releases/tag/DEV_psutilport_237"
+    },
+    {
+      "name": "pycryptodome",
+      "displayName": "pycryptodome",
+      "version": "3.23.0",
+      "release": "20260815.051707",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "pycryptodome-3.23.0 package",
+      "description": "pycryptodome-3.23.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "check_python"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/p/pycryptodome-3.23.0-20260815.051707.s390x.rpm",
+      "buildTime": "2026-08-15T05:21:09Z",
+      "releaseKey": "pycryptodome",
+      "categories": [
+        "development",
+        "security",
+        "library"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 48,
+      "totalTests": 48,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-15T05:22:59Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/pycryptodomeport",
+      "releaseUrl": "https://github.com/zopencommunity/pycryptodomeport/releases/tag/STABLE_pycryptodomeport_145"
+    },
+    {
+      "name": "pydantic-core",
+      "displayName": "pydantic-core",
+      "version": "2.48.0",
+      "release": "20260816.152157",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "pydantic-core-2.48.0 package",
+      "description": "pydantic-core-2.48.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "check_python"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/p/pydantic-core-2.48.0-20260816.152157.s390x.rpm",
+      "buildTime": "2026-08-16T15:22:51Z",
+      "releaseKey": "pydantic-core",
+      "categories": [
+        "development",
+        "library"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 24,
+      "totalTests": 24,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-16T22:35:23Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/pydantic-coreport",
+      "releaseUrl": "https://github.com/zopencommunity/pydantic-coreport/releases/tag/STABLE_pydantic-coreport_161"
+    },
+    {
+      "name": "pynacl",
+      "displayName": "pynacl",
+      "version": "1.6.2",
+      "release": "20260814.180045",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "pynacl-1.6.2 package",
+      "description": "pynacl-1.6.2 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "zoslib",
+        "libsodium",
+        "check_python"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/p/pynacl-1.6.2-20260814.180045.s390x.rpm",
+      "buildTime": "2026-08-14T18:01:52Z",
+      "releaseKey": "pynacl",
+      "categories": [
+        "development",
+        "security",
+        "library"
+      ],
+      "runtimeDependencies": [
+        "libsodium",
+        "zoslib"
+      ],
+      "passedTests": 42,
+      "totalTests": 42,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-14T18:03:20Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/pynaclport",
+      "releaseUrl": "https://github.com/zopencommunity/pynaclport/releases/tag/STABLE_pynaclport_139"
+    },
+    {
+      "name": "python-xxhash",
+      "displayName": "python-xxhash",
+      "version": "3.8.1",
+      "release": "20260811.211205",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "python-xxhash-3.8.1 package",
+      "description": "python-xxhash-3.8.1 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "check_python"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/p/python-xxhash-3.8.1-20260811.211205.s390x.rpm",
+      "buildTime": "2026-08-11T21:13:07Z",
+      "releaseKey": "python-xxhash",
+      "categories": [
+        "development"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 264,
+      "totalTests": 264,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-11T21:14:12Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/python-xxhashport",
+      "releaseUrl": "https://github.com/zopencommunity/python-xxhashport/releases/tag/STABLE_python-xxhashport_100"
+    },
+    {
+      "name": "pyyaml",
+      "displayName": "pyyaml",
+      "version": "6.0.3",
+      "release": "20260815.060505",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "pyyaml-6.0.3 package",
+      "description": "pyyaml-6.0.3 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "libyaml",
+        "check_python"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/p/pyyaml-6.0.3-20260815.060505.s390x.rpm",
+      "buildTime": "2026-08-15T06:06:17Z",
+      "releaseKey": "pyyaml",
+      "categories": [
+        "development",
+        "library"
+      ],
+      "runtimeDependencies": [
+        "libyaml"
+      ],
+      "passedTests": 39,
+      "totalTests": 39,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-15T06:07:41Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/pyyamlport",
+      "releaseUrl": "https://github.com/zopencommunity/pyyamlport/releases/tag/STABLE_pyyamlport_147"
+    },
+    {
+      "name": "quilt",
+      "displayName": "quilt",
+      "version": "0.69",
+      "release": "20260824.125207",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "quilt-0.69 package",
+      "description": "quilt-0.69 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "sed",
+        "patch",
+        "grep",
+        "diffutils",
+        "coreutils"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/q/quilt-0.69-20260824.125207.s390x.rpm",
+      "buildTime": "2026-08-24T12:53:48Z",
+      "releaseKey": "quilt",
+      "categories": [
+        "development"
+      ],
+      "runtimeDependencies": [
+        "coreutils",
+        "diffutils",
+        "grep",
+        "patch",
+        "sed"
+      ],
+      "passedTests": 1,
+      "totalTests": 1,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-24T12:54:46Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/quiltport",
+      "releaseUrl": "https://github.com/zopencommunity/quiltport/releases/tag/STABLE_quiltport_250"
+    },
+    {
+      "name": "rapidjson",
+      "displayName": "rapidjson",
+      "version": "1.1.0",
+      "release": "20260825.214603",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "rapidjson-1.1.0 package",
+      "description": "rapidjson-1.1.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/r/rapidjson-1.1.0-20260825.214603.s390x.rpm",
+      "buildTime": "2026-08-25T21:46:23Z",
+      "releaseKey": "rapidjson",
+      "categories": [
+        "development",
+        "library"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": null,
+      "totalTests": null,
+      "verificationRate": null,
+      "publishedAt": "2026-08-25T21:47:16Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/rapidjsonport",
+      "releaseUrl": "https://github.com/zopencommunity/rapidjsonport/releases/tag/STABLE_rapidjsonport_274"
+    },
+    {
+      "name": "rclone",
+      "displayName": "rclone",
+      "version": "1.74.1",
+      "release": "20260715.053347",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "rclone-DEV package",
+      "description": "rclone-DEV package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/r/rclone-1.74.1-20260715.053347.s390x.rpm",
+      "buildTime": "2026-07-15T05:54:16Z",
+      "releaseKey": "rclone",
+      "categories": [
+        "utilities",
+        "networking"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": null,
+      "totalTests": null,
+      "verificationRate": null,
+      "publishedAt": "2026-05-26T00:42:28Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/rcloneport",
+      "releaseUrl": "https://github.com/zopencommunity/rcloneport/releases/tag/STABLE_rclone_10004"
+    },
+    {
+      "name": "regex",
+      "displayName": "regex",
+      "version": "2026.9.10",
+      "release": "20260910.152603",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "regex-2026.9.10 package",
+      "description": "regex-2026.9.10 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "check_python"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/r/regex-2026.9.10-20260910.152603.s390x.rpm",
+      "buildTime": "2026-09-10T15:27:16Z",
+      "releaseKey": "regex",
+      "categories": [
+        "development",
+        "library"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 87,
+      "totalTests": 87,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-09-10T15:28:28Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/regexport",
+      "releaseUrl": "https://github.com/zopencommunity/regexport/releases/tag/STABLE_regexport_345"
+    },
+    {
+      "name": "ripgrep",
+      "displayName": "ripgrep",
+      "version": "15.1.0",
+      "release": "20260716.025955",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "ripgrep-15.1.0 package",
+      "description": "ripgrep-15.1.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/r/ripgrep-15.1.0-20260716.025955.s390x.rpm",
+      "buildTime": "2026-07-16T03:00:30Z",
+      "releaseKey": "ripgrep",
+      "categories": [
+        "utilities"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": null,
+      "totalTests": null,
+      "verificationRate": null,
+      "publishedAt": "2026-07-16T03:04:17Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/ripgrepport",
+      "releaseUrl": "https://github.com/zopencommunity/ripgrepport/releases/tag/STABLE_ripgrepport_28"
+    },
+    {
+      "name": "rpds-py",
+      "displayName": "rpds-py",
+      "version": "2026.6.3",
+      "release": "20260813.164313",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "rpds-py-2026.6.3 package",
+      "description": "rpds-py-2026.6.3 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "check_python"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/r/rpds-py-2026.6.3-20260813.164313.s390x.rpm",
+      "buildTime": "2026-08-13T16:44:01Z",
+      "releaseKey": "rpds-py",
+      "categories": [
+        "development",
+        "library"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 30,
+      "totalTests": 30,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-18T15:24:14Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/rpds-pyport",
+      "releaseUrl": "https://github.com/zopencommunity/rpds-pyport/releases/tag/STABLE_rpds-pyport_185"
+    },
+    {
+      "name": "rpm",
+      "displayName": "rpm",
+      "version": "6.1.0",
+      "release": "20260910.163258",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "rpm-6.1.0 package",
+      "description": "rpm-6.1.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "zstd",
+        "xz",
+        "unzip",
+        "tar",
+        "sed",
+        "rpmconfig",
+        "popt",
+        "lzip",
+        "gzip",
+        "grep",
+        "gpg",
+        "gawk",
+        "findutils",
+        "file",
+        "diffutils",
+        "coreutils",
+        "bzip2",
+        "bash"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/r/rpm-6.1.0-20260910.163258.s390x.rpm",
+      "buildTime": "2026-09-10T16:37:21Z",
+      "releaseKey": "rpm",
+      "categories": [
+        "core",
+        "utilities"
+      ],
+      "runtimeDependencies": [
+        "bash",
+        "bzip2",
+        "coreutils",
+        "diffutils",
+        "file",
+        "findutils",
+        "gawk",
+        "gpg",
+        "grep",
+        "gzip",
+        "lzip",
+        "popt",
+        "rpmconfig",
+        "sed",
+        "tar",
+        "unzip",
+        "xz",
+        "zstd"
+      ],
+      "passedTests": 1,
+      "totalTests": 1,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-09-10T16:42:40Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/rpmport",
+      "releaseUrl": "https://github.com/zopencommunity/rpmport/releases/tag/STABLE_rpmport_349"
+    },
+    {
+      "name": "rpmconfig",
+      "displayName": "rpmconfig",
+      "version": "6.1.0",
+      "release": "20260910.154910",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "rpmconfig-6.1.0 package",
+      "description": "rpmconfig-6.1.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/r/rpmconfig-6.1.0-20260910.154910.s390x.rpm",
+      "buildTime": "2026-09-10T15:50:21Z",
+      "releaseKey": "rpmconfig",
+      "categories": [
+        "core",
+        "utilities"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 1,
+      "totalTests": 1,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-09-10T15:51:22Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/rpmconfigport",
+      "releaseUrl": "https://github.com/zopencommunity/rpmconfigport/releases/tag/STABLE_rpmconfigport_346"
+    },
+    {
+      "name": "rsync",
+      "displayName": "rsync",
+      "version": "3.5.0~g2da17b83",
+      "release": "20260831.062656",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "rsync-3.5.0 package",
+      "description": "rsync-3.5.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/r/rsync-3.5.0~g2da17b83-20260831.062656.s390x.rpm",
+      "buildTime": "2026-08-31T06:35:55Z",
+      "releaseKey": "rsync",
+      "categories": [
+        "utilities"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 35,
+      "totalTests": 35,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-31T06:37:30Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/rsyncport",
+      "releaseUrl": "https://github.com/zopencommunity/rsyncport/releases/tag/STABLE_rsyncport_295"
+    },
+    {
+      "name": "rsync-3.4.4",
+      "displayName": "rsync-3.4.4",
+      "version": "3.4.4",
+      "release": "20260807.115024",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "rsync-3.4.4-3.4.4 package",
+      "description": "rsync-3.4.4-3.4.4 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/r/rsync-3.4.4-3.4.4-20260807.115024.s390x.rpm",
+      "buildTime": "2026-08-07T11:55:49Z",
+      "releaseKey": "rsync-3.4.4",
+      "categories": [],
+      "runtimeDependencies": [],
+      "passedTests": null,
+      "totalTests": null,
+      "verificationRate": null,
+      "publishedAt": "",
+      "portRepositoryUrl": "https://github.com/zopencommunity/rsync-3.4.4port",
+      "releaseUrl": ""
+    },
+    {
+      "name": "scikit-learn",
+      "displayName": "scikit-learn",
+      "version": "1.9.0",
+      "release": "20260824.135828",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "scikit-learn-1.9.0 package",
+      "description": "scikit-learn-1.9.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "scipy",
+        "numpy",
+        "check_python"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/s/scikit-learn-1.9.0-20260824.135828.s390x.rpm",
+      "buildTime": "2026-08-24T14:22:05Z",
+      "releaseKey": "scikit-learn",
+      "categories": [
+        "development",
+        "library",
+        "math"
+      ],
+      "runtimeDependencies": [
+        "numpy",
+        "scipy"
+      ],
+      "passedTests": 39,
+      "totalTests": 39,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-24T14:28:10Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/scikit-learnport",
+      "releaseUrl": "https://github.com/zopencommunity/scikit-learnport/releases/tag/STABLE_scikit-learnport_263"
+    },
+    {
+      "name": "scipy",
+      "displayName": "scipy",
+      "version": "1.18.0",
+      "release": "20260821.131934",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "scipy-1.18.0 package",
+      "description": "scipy-1.18.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "numpy",
+        "check_python"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/s/scipy-1.18.0-20260821.131934.s390x.rpm",
+      "buildTime": "2026-08-21T15:01:36Z",
+      "releaseKey": "scipy",
+      "categories": [
+        "development",
+        "library",
+        "math"
+      ],
+      "runtimeDependencies": [
+        "numpy"
+      ],
+      "passedTests": 66,
+      "totalTests": 66,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-21T15:25:17Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/scipyport",
+      "releaseUrl": "https://github.com/zopencommunity/scipyport/releases/tag/STABLE_scipyport_220"
+    },
+    {
+      "name": "sed",
+      "displayName": "sed",
+      "version": "4.10",
+      "release": "20260828.154825",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "sed-4.10 package",
+      "description": "sed-4.10 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/s/sed-4.10-20260828.154825.s390x.rpm",
+      "buildTime": "2026-08-28T15:56:27Z",
+      "releaseKey": "sed",
+      "categories": [
+        "utilities",
+        "core"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 60,
+      "totalTests": 65,
+      "verificationRate": 92.3,
+      "publishedAt": "2026-04-28T11:27:27Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/sedport",
+      "releaseUrl": "https://github.com/zopencommunity/sedport/releases/tag/STABLE_sedport_4236"
+    },
+    {
+      "name": "shap",
+      "displayName": "shap",
+      "version": "0.52.1~dev42",
+      "release": "20260821.210138",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "shap-HEAD package",
+      "description": "shap-HEAD package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "scipy",
+        "scikit-learn",
+        "pandas",
+        "numpy",
+        "check_python"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/s/shap-0.52.1~dev42-20260821.210138.s390x.rpm",
+      "buildTime": "2026-08-21T21:09:04Z",
+      "releaseKey": "shap",
+      "categories": [
+        "development",
+        "library",
+        "math"
+      ],
+      "runtimeDependencies": [
+        "numpy",
+        "pandas",
+        "scikit-learn",
+        "scipy"
+      ],
+      "passedTests": 21,
+      "totalTests": 21,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-21T21:10:49Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/shapport",
+      "releaseUrl": "https://github.com/zopencommunity/shapport/releases/tag/STABLE_shapport_223"
+    },
+    {
+      "name": "simplejson",
+      "displayName": "simplejson",
+      "version": "4.1.2",
+      "release": "20260827.184910",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "simplejson-4.1.2 package",
+      "description": "simplejson-4.1.2 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "check_python"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/s/simplejson-4.1.2-20260827.184910.s390x.rpm",
+      "buildTime": "2026-08-27T18:50:12Z",
+      "releaseKey": "simplejson",
+      "categories": [
+        "development",
+        "library"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 39,
+      "totalTests": 39,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-27T18:51:13Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/simplejsonport",
+      "releaseUrl": "https://github.com/zopencommunity/simplejsonport/releases/tag/STABLE_simplejsonport_280"
+    },
+    {
+      "name": "snappy",
+      "displayName": "snappy",
+      "version": "1.3.0",
+      "release": "20260915.153103",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "snappy-1.3.0 package",
+      "description": "snappy-1.3.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/s/snappy-1.3.0-20260915.153103.s390x.rpm",
+      "buildTime": "2026-09-15T15:31:51Z",
+      "releaseKey": "snappy",
+      "categories": [
+        "compression",
+        "development",
+        "library"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": null,
+      "totalTests": null,
+      "verificationRate": null,
+      "publishedAt": "2026-09-15T15:32:53Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/snappyport",
+      "releaseUrl": "https://github.com/zopencommunity/snappyport/releases/tag/STABLE_snappyport_358"
+    },
+    {
+      "name": "snowflake-connector-python",
+      "displayName": "snowflake-connector-python",
+      "version": "4.7.2",
+      "release": "20260824.134802",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "snowflake-connector-python-4.7.2 package",
+      "description": "snowflake-connector-python-4.7.2 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "cryptography",
+        "check_python"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/s/snowflake-connector-python-4.7.2-20260824.134802.s390x.rpm",
+      "buildTime": "2026-08-24T13:51:49Z",
+      "releaseKey": "snowflake-connector-python",
+      "categories": [
+        "development",
+        "library",
+        "database"
+      ],
+      "runtimeDependencies": [
+        "cryptography"
+      ],
+      "passedTests": 42,
+      "totalTests": 42,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-24T13:57:48Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/snowflake-connector-pythonport",
+      "releaseUrl": "https://github.com/zopencommunity/snowflake-connector-pythonport/releases/tag/STABLE_snowflake-connector-pythonport_256"
+    },
+    {
+      "name": "tar",
+      "displayName": "tar",
+      "version": "1.35",
+      "release": "20260828.154757",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "tar-1.35 package",
+      "description": "tar-1.35 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/t/tar-1.35-20260828.154757.s390x.rpm",
+      "buildTime": "2026-08-28T15:56:11Z",
+      "releaseKey": "tar",
+      "categories": [
+        "utilities"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 186,
+      "totalTests": 210,
+      "verificationRate": 88.6,
+      "publishedAt": "2026-02-23T16:37:06Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/tarport",
+      "releaseUrl": "https://github.com/zopencommunity/tarport/releases/tag/STABLE_tarport_4075"
+    },
+    {
+      "name": "ujson",
+      "displayName": "ujson",
+      "version": "6.0.0",
+      "release": "20260904.152105",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "ujson-6.0.0 package",
+      "description": "ujson-6.0.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "check_python"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/u/ujson-6.0.0-20260904.152105.s390x.rpm",
+      "buildTime": "2026-09-04T15:22:50Z",
+      "releaseKey": "ujson",
+      "categories": [
+        "development",
+        "library"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 24,
+      "totalTests": 24,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-09-04T15:23:55Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/ujsonport",
+      "releaseUrl": "https://github.com/zopencommunity/ujsonport/releases/tag/STABLE_ujsonport_327"
+    },
+    {
+      "name": "unzip",
+      "displayName": "unzip",
+      "version": "6.00",
+      "release": "20260811.153918",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "unzip-6.0 package",
+      "description": "unzip-6.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/u/unzip-6.00-20260811.153918.s390x.rpm",
+      "buildTime": "2026-08-11T15:40:10Z",
+      "releaseKey": "unzip",
+      "categories": [
+        "compression"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 3,
+      "totalTests": 3,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-11T15:41:21Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/unzipport",
+      "releaseUrl": "https://github.com/zopencommunity/unzipport/releases/tag/STABLE_unzipport_99"
+    },
+    {
+      "name": "utf8proc",
+      "displayName": "utf8proc",
+      "version": "2.11.3",
+      "release": "20260824.140004",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "utf8proc-master package",
+      "description": "utf8proc-master package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/u/utf8proc-2.11.3-20260824.140004.s390x.rpm",
+      "buildTime": "2026-08-24T14:00:25Z",
+      "releaseKey": "utf8proc",
+      "categories": [
+        "development",
+        "library"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": null,
+      "totalTests": null,
+      "verificationRate": null,
+      "publishedAt": "2026-08-24T14:01:21Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/utf8procport",
+      "releaseUrl": "https://github.com/zopencommunity/utf8procport/releases/tag/DEV_utf8procport_259"
+    },
+    {
+      "name": "uv",
+      "displayName": "uv",
+      "version": "0.8.13",
+      "release": "20260815.214927",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "uv-0.8.13 package",
+      "description": "uv-0.8.13 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "check_python"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/u/uv-0.8.13-20260815.214927.s390x.rpm",
+      "buildTime": "2026-08-15T21:50:03Z",
+      "releaseKey": "uv",
+      "categories": [
+        "utilities"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 6,
+      "totalTests": 6,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-15T21:54:08Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/uvport",
+      "releaseUrl": "https://github.com/zopencommunity/uvport/releases/tag/STABLE_uvport_155"
+    },
+    {
+      "name": "versioneer",
+      "displayName": "versioneer",
+      "version": "0.28",
+      "release": "20260810.190200",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "versioneer-0.28 package",
+      "description": "versioneer-0.28 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/v/versioneer-0.28-20260810.190200.s390x.rpm",
+      "buildTime": "2026-08-10T19:02:46Z",
+      "releaseKey": "versioneer",
+      "categories": [
+        "utilities"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 282,
+      "totalTests": 282,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-10T19:03:49Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/versioneerport",
+      "releaseUrl": "https://github.com/zopencommunity/versioneerport/releases/tag/STABLE_versioneerport_85"
+    },
+    {
+      "name": "vim",
+      "displayName": "vim",
+      "version": "9.2.1050",
+      "release": "20260910.161858",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "vim-9.2.1050 package",
+      "description": "vim-9.2.1050 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "ncurses"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/v/vim-9.2.1050-20260910.161858.s390x.rpm",
+      "buildTime": "2026-09-10T16:25:48Z",
+      "releaseKey": "vim",
+      "categories": [
+        "editor",
+        "development"
+      ],
+      "runtimeDependencies": [
+        "ncurses"
+      ],
+      "passedTests": null,
+      "totalTests": null,
+      "verificationRate": null,
+      "publishedAt": "2026-09-10T16:29:41Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/vimport",
+      "releaseUrl": "https://github.com/zopencommunity/vimport/releases/tag/STABLE_vimport_348"
+    },
+    {
+      "name": "watchfiles",
+      "displayName": "watchfiles",
+      "version": "1.2.0",
+      "release": "20260813.165502",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "watchfiles-1.2.0 package",
+      "description": "watchfiles-1.2.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "check_python"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/w/watchfiles-1.2.0-20260813.165502.s390x.rpm",
+      "buildTime": "2026-08-13T16:56:03Z",
+      "releaseKey": "watchfiles",
+      "categories": [
+        "development",
+        "library"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 15,
+      "totalTests": 15,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-13T16:58:48Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/watchfilesport",
+      "releaseUrl": "https://github.com/zopencommunity/watchfilesport/releases/tag/STABLE_watchfilesport_126"
+    },
+    {
+      "name": "which",
+      "displayName": "which",
+      "version": "2.25",
+      "release": "20260714.154244",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "which-2.25 package",
+      "description": "which-2.25 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/w/which-2.25-20260714.154244.s390x.rpm",
+      "buildTime": "2026-07-14T15:43:47Z",
+      "releaseKey": "which",
+      "categories": [
+        "utilities"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 3,
+      "totalTests": 3,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-07-09T17:08:16Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/whichport",
+      "releaseUrl": "https://github.com/zopencommunity/whichport/releases/tag/STABLE_whichport_4411"
+    },
+    {
+      "name": "xlfortran",
+      "displayName": "xlfortran",
+      "version": "1.0.0",
+      "release": "20260818.111756",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "xlfortran-1.0.0 package",
+      "description": "xlfortran-1.0.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/x/xlfortran-1.0.0-20260818.111756.s390x.rpm",
+      "buildTime": "2026-08-18T11:18:14Z",
+      "releaseKey": "xlfortran",
+      "categories": [],
+      "runtimeDependencies": [],
+      "passedTests": null,
+      "totalTests": null,
+      "verificationRate": null,
+      "publishedAt": "",
+      "portRepositoryUrl": "https://github.com/zopencommunity/xlfortranport",
+      "releaseUrl": ""
+    },
+    {
+      "name": "xsimd",
+      "displayName": "xsimd",
+      "version": "14.3.0",
+      "release": "20260824.201016",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "xsimd-master package",
+      "description": "xsimd-master package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/x/xsimd-14.3.0-20260824.201016.s390x.rpm",
+      "buildTime": "2026-08-24T20:10:46Z",
+      "releaseKey": "xsimd",
+      "categories": [
+        "development",
+        "library",
+        "math"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": null,
+      "totalTests": null,
+      "verificationRate": null,
+      "publishedAt": "2026-08-24T20:11:48Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/xsimdport",
+      "releaseUrl": "https://github.com/zopencommunity/xsimdport/releases/tag/DEV_xsimdport_270"
+    },
+    {
+      "name": "xz",
+      "displayName": "xz",
+      "version": "5.8.4",
+      "release": "20260910.160815",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "xz-5.8.4 package",
+      "description": "xz-5.8.4 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/x/xz-5.8.4-20260910.160815.s390x.rpm",
+      "buildTime": "2026-09-10T16:13:02Z",
+      "releaseKey": "xz",
+      "categories": [],
+      "runtimeDependencies": [],
+      "passedTests": 20,
+      "totalTests": 20,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-09-10T16:14:14Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/xzport",
+      "releaseUrl": "https://github.com/zopencommunity/xzport/releases/tag/STABLE_xzport_347"
+    },
+    {
+      "name": "yq",
+      "displayName": "yq",
+      "version": "4.53.6",
+      "release": "20260822.121111",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "yq-4.53.6 package",
+      "description": "yq-4.53.6 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/y/yq-4.53.6-20260822.121111.s390x.rpm",
+      "buildTime": "2026-08-22T12:15:38Z",
+      "releaseKey": "yq",
+      "categories": [
+        "utilities"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 113,
+      "totalTests": 117,
+      "verificationRate": 96.6,
+      "publishedAt": "2026-08-22T12:17:54Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/yqport",
+      "releaseUrl": "https://github.com/zopencommunity/yqport/releases/tag/STABLE_yqport_238"
+    },
+    {
+      "name": "z-vector-search",
+      "displayName": "z-vector-search",
+      "version": "1.0.0",
+      "release": "20260909.150815",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "z-vector-search-main package",
+      "description": "z-vector-search-main package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "zoslib",
+        "llamacpp",
+        "blis"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/z/z-vector-search-1.0.0-20260909.150815.s390x.rpm",
+      "buildTime": "2026-09-09T15:09:57Z",
+      "releaseKey": "z-vector-search",
+      "categories": [
+        "development"
+      ],
+      "runtimeDependencies": [
+        "blis",
+        "llamacpp",
+        "zoslib"
+      ],
+      "passedTests": 1,
+      "totalTests": 1,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-09-09T15:17:32Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/z-vector-searchport",
+      "releaseUrl": "https://github.com/zopencommunity/z-vector-searchport/releases/tag/STABLE_z-vector-searchport_341"
+    },
+    {
+      "name": "z3",
+      "displayName": "z3",
+      "version": "5.1.0",
+      "release": "20260816.155609",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "z3-5.1.0 package",
+      "description": "z3-5.1.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/z/z3-5.1.0-20260816.155609.s390x.rpm",
+      "buildTime": "2026-08-16T16:33:51Z",
+      "releaseKey": "z3",
+      "categories": [
+        "development",
+        "math"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": null,
+      "totalTests": null,
+      "verificationRate": null,
+      "publishedAt": "2026-08-16T16:40:50Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/z3port",
+      "releaseUrl": "https://github.com/zopencommunity/z3port/releases/tag/STABLE_z3port_159"
+    },
+    {
+      "name": "z3-Nightly",
+      "displayName": "z3-Nightly",
+      "version": "5.0.0",
+      "release": "20260717.162802",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "z3-Nightly package",
+      "description": "z3-Nightly package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/z/z3-Nightly-5.0.0-20260717.162802.s390x.rpm",
+      "buildTime": "2026-07-17T17:05:13Z",
+      "releaseKey": "z3-Nightly",
+      "categories": [],
+      "runtimeDependencies": [],
+      "passedTests": null,
+      "totalTests": null,
+      "verificationRate": null,
+      "publishedAt": "",
+      "portRepositoryUrl": "https://github.com/zopencommunity/z3-Nightlyport",
+      "releaseUrl": ""
+    },
+    {
+      "name": "zdnn",
+      "displayName": "zdnn",
+      "version": "1.1.2",
+      "release": "20260831.153120",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "zdnn-1.1.2 package",
+      "description": "zdnn-1.1.2 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/z/zdnn-1.1.2-20260831.153120.s390x.rpm",
+      "buildTime": "2026-08-31T15:32:13Z",
+      "releaseKey": "zdnn",
+      "categories": [
+        "ai"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 1,
+      "totalTests": 1,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-31T15:33:08Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/zdnnport",
+      "releaseUrl": "https://github.com/zopencommunity/zdnnport/releases/tag/STABLE_zdnnport_300"
+    },
+    {
+      "name": "zedc_ascii",
+      "displayName": "zedc_ascii",
+      "version": "1.2.11",
+      "release": "20260902.061649",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "zedc_ascii-1.2 package",
+      "description": "zedc_ascii-1.2 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/z/zedc_ascii-1.2.11-20260902.061649.s390x.rpm",
+      "buildTime": "2026-09-02T06:17:42Z",
+      "releaseKey": "zedc_ascii",
+      "categories": [
+        "library"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 3,
+      "totalTests": 3,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-07-10T13:50:32Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/zedc_asciiport",
+      "releaseUrl": "https://github.com/zopencommunity/zedc_asciiport/releases/tag/STABLE_zedc_asciiport_10"
+    },
+    {
+      "name": "zip",
+      "displayName": "zip",
+      "version": "3.0",
+      "release": "20260912.083532",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "zip-3.0 package",
+      "description": "zip-3.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/z/zip-3.0-20260912.083532.s390x.rpm",
+      "buildTime": "2026-09-12T08:36:25Z",
+      "releaseKey": "zip",
+      "categories": [
+        "compression"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 7,
+      "totalTests": 7,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-08T15:24:15Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/zipport",
+      "releaseUrl": "https://github.com/zopencommunity/zipport/releases/tag/STABLE_zipport_73"
+    },
+    {
+      "name": "zope.interface",
+      "displayName": "zope.interface",
+      "version": "8.6",
+      "release": "20260820.152808",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "zope.interface-8.6 package",
+      "description": "zope.interface-8.6 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "check_python"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/z/zope.interface-8.6-20260820.152808.s390x.rpm",
+      "buildTime": "2026-08-20T15:29:09Z",
+      "releaseKey": "zope.interface",
+      "categories": [],
+      "runtimeDependencies": [],
+      "passedTests": null,
+      "totalTests": null,
+      "verificationRate": null,
+      "publishedAt": "",
+      "portRepositoryUrl": "https://github.com/zopencommunity/zope.interfaceport",
+      "releaseUrl": ""
+    },
+    {
+      "name": "zopen-release",
+      "displayName": "zopen-release",
+      "version": "1.0",
+      "release": "1",
+      "epoch": "0",
+      "architectures": [
+        "noarch"
+      ],
+      "summary": "zopen repository and DNF configuration for /opt/pkg",
+      "description": "Provides repository definitions, DNF configurations, and creates the required\nfilesystem directory tree under /opt/pkg.",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/z/zopen-release-1.0-1.noarch.rpm",
+      "buildTime": "2026-09-02T06:58:54Z",
+      "releaseKey": "zopen-release",
+      "categories": [],
+      "runtimeDependencies": [],
+      "passedTests": null,
+      "totalTests": null,
+      "verificationRate": null,
+      "publishedAt": "",
+      "portRepositoryUrl": "https://github.com/zopencommunity/zopen-releaseport",
+      "releaseUrl": ""
+    },
+    {
+      "name": "zoslib",
+      "displayName": "zoslib",
+      "version": "4.0.6",
+      "release": "20260811.074704",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "zoslib-4.0.6 package",
+      "description": "zoslib-4.0.6 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/z/zoslib-4.0.6-20260811.074704.s390x.rpm",
+      "buildTime": "2026-08-11T07:49:23Z",
+      "releaseKey": "zoslib",
+      "categories": [
+        "library"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 76,
+      "totalTests": 76,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-11T07:50:29Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/zoslibport",
+      "releaseUrl": "https://github.com/zopencommunity/zoslibport/releases/tag/STABLE_zoslibport_93"
+    },
+    {
+      "name": "zstandard",
+      "displayName": "zstandard",
+      "version": "0.25.0",
+      "release": "20260814.113852",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "zstandard-0.25.0 package",
+      "description": "zstandard-0.25.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "check_python"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/z/zstandard-0.25.0-20260814.113852.s390x.rpm",
+      "buildTime": "2026-08-14T11:40:37Z",
+      "releaseKey": "zstandard",
+      "categories": [
+        "development",
+        "library",
+        "compression"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 36,
+      "totalTests": 36,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-14T11:42:04Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/zstandardport",
+      "releaseUrl": "https://github.com/zopencommunity/zstandardport/releases/tag/STABLE_zstandardport_132"
+    },
+    {
+      "name": "zstd",
+      "displayName": "zstd",
+      "version": "1.5.7",
+      "release": "20260810.150638",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "zstd-1.5.7 package",
+      "description": "zstd-1.5.7 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/z/zstd-1.5.7-20260810.150638.s390x.rpm",
+      "buildTime": "2026-08-10T15:08:53Z",
+      "releaseKey": "zstd",
+      "categories": [
+        "compression"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 1,
+      "totalTests": 1,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-06-25T03:55:15Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/zstdport",
+      "releaseUrl": "https://github.com/zopencommunity/zstdport/releases/tag/STABLE_zstdport_4381"
+    }
+  ]
+}

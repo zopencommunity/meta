@@ -81,6 +81,32 @@ static void set_env_var(const char* var, const char* value, const char* root_dir
   free(envar_value);
 }
 
+static int path_list_contains(const char* list, const char* entry) {
+  if (!list || !entry || !*entry) {
+    return 0;
+  }
+
+  size_t entry_len = strlen(entry);
+  const char* p = list;
+  while (*p) {
+    const char* end = strchr(p, ':');
+    if (end == NULL) {
+      end = p + strlen(p);
+    }
+
+    if ((size_t)(end - p) == entry_len && strncmp(p, entry, entry_len) == 0) {
+      return 1;
+    }
+
+    if (*end == '\0') {
+      break;
+    }
+    p = end + 1;
+  }
+
+  return 0;
+}
+
 static void prepend_env_var(const char* var, const char* value, const char* root_dir) {
   char* existing = getenv(var);
   int projectRootCount = 0;
@@ -94,7 +120,7 @@ static void prepend_env_var(const char* var, const char* value, const char* root
   char* substituted = (char*)malloc(substituted_len);
   substitute_project_root(substituted, value, root_dir, substituted_len);
   
-  if (!existing || !strstr(existing, substituted)) {
+  if (!existing || !path_list_contains(existing, substituted)) {
     size_t size = strlen(substituted) + (existing ? strlen(existing) : 0) + 2;
     char* envar_value = (char*)malloc(size);
     if (existing && *existing) {
@@ -120,15 +146,12 @@ __attribute__((visibility("default"))) int zoslib_env_hook(char*) __attribute__(
 __attribute__((visibility("default"))) int zoslib_env_hook(char* root_dir) {
   char* envar_value;
 
-  // Avoid setting environment variables during build time because they do not hold correct values
-  // and should only be used from the installed location.
-  // To avoid setting environment variables during build time, we need to guard it
-  // by checking if ZOPEN_IN_ZOPEN_BUILD is set to the current build process setting.
-  // But this also meant that any dependent tools that set envars via zoslib env hooks would avoid setting those environment variables, effectively breaking them.
-  if ((envar_value = getenv("ZOPEN_IN_ZOPEN_BUILD")) &&
-      strcmp(envar_value, "@ZOPEN_IN_ZOPEN_BUILD@") == 0) {
-    return 0;
-  }
+  // PROJECT_ROOT-derived values point at the installed package root, so they
+  // are not valid while the package itself is still being built. Absolute
+  // values do not have that problem and may be needed by build-time checks.
+  int skip_project_root_rules =
+      (envar_value = getenv("ZOPEN_IN_ZOPEN_BUILD")) &&
+      strcmp(envar_value, "@ZOPEN_IN_ZOPEN_BUILD@") == 0;
 
   // @ZOSLIB_ENV_RULES@
 
