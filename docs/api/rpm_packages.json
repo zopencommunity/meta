@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-14T10:27:54Z",
+  "generatedAt": "2026-09-15T15:30:51Z",
   "repositoryUrl": "http://163.74.83.190:8080/pulp/content/zopen/",
   "packageCount": 140,
   "rpmCount": 140,
@@ -50,12 +50,12 @@
       "releaseKey": "automake",
       "categories": [],
       "runtimeDependencies": [],
-      "passedTests": 2039,
-      "totalTests": 2100,
-      "verificationRate": 97.1,
-      "publishedAt": "2026-02-16T21:33:30Z",
+      "passedTests": 2046,
+      "totalTests": 2106,
+      "verificationRate": 97.2,
+      "publishedAt": "2026-09-12T04:53:39Z",
       "portRepositoryUrl": "https://github.com/zopencommunity/automakeport",
-      "releaseUrl": "https://github.com/zopencommunity/automakeport/releases/tag/STABLE_automakeport_4058"
+      "releaseUrl": "https://github.com/zopencommunity/automakeport/releases/tag/STABLE_automakeport_351"
     },
     {
       "name": "base-os",
@@ -504,14 +504,14 @@
         "utilities"
       ],
       "runtimeDependencies": [
-        "rpm"
+        "rpmconfig"
       ],
       "passedTests": 1,
       "totalTests": 1,
       "verificationRate": 100.0,
-      "publishedAt": "2026-09-09T10:13:41Z",
+      "publishedAt": "2026-09-13T10:19:48Z",
       "portRepositoryUrl": "https://github.com/zopencommunity/createrepo_cport",
-      "releaseUrl": "https://github.com/zopencommunity/createrepo_cport/releases/tag/STABLE_createrepo_cport_339"
+      "releaseUrl": "https://github.com/zopencommunity/createrepo_cport/releases/tag/STABLE_createrepo_cport_353"
     },
     {
       "name": "cryptography",
@@ -669,21 +669,21 @@
     {
       "name": "dnf5",
       "displayName": "dnf5",
-      "version": "5.4.4.0",
-      "release": "20260912.132731",
+      "version": "5.4.5.0",
+      "release": "20260914.162723",
       "epoch": "0",
       "architectures": [
         "s390x"
       ],
-      "summary": "dnf5-5.4.4.0 package",
-      "description": "dnf5-5.4.4.0 package",
+      "summary": "dnf5-5.4.5.0 package",
+      "description": "dnf5-5.4.5.0 package",
       "rpmCount": 1,
       "rpmDependencies": [
         "rpmconfig",
         "createrepo_c"
       ],
-      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/d/dnf5-5.4.4.0-20260912.132731.s390x.rpm",
-      "buildTime": "2026-09-12T13:52:30Z",
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/d/dnf5-5.4.5.0-20260914.162723.s390x.rpm",
+      "buildTime": "2026-09-14T16:53:51Z",
       "releaseKey": "dnf5",
       "categories": [
         "build_system"
@@ -695,9 +695,9 @@
       "passedTests": null,
       "totalTests": null,
       "verificationRate": null,
-      "publishedAt": "2026-09-10T11:32:45Z",
+      "publishedAt": "2026-09-15T12:26:19Z",
       "portRepositoryUrl": "https://github.com/zopencommunity/dnf5port",
-      "releaseUrl": "https://github.com/zopencommunity/dnf5port/releases/tag/test_dnf2"
+      "releaseUrl": "https://github.com/zopencommunity/dnf5port/releases/tag/test_no_plugin"
     },
     {
       "name": "dos2unix",
@@ -1572,9 +1572,9 @@
       "passedTests": 43,
       "totalTests": 43,
       "verificationRate": 100.0,
-      "publishedAt": "2026-08-28T10:15:08Z",
+      "publishedAt": "2026-09-11T16:42:39Z",
       "portRepositoryUrl": "https://github.com/zopencommunity/libgcryptport",
-      "releaseUrl": "https://github.com/zopencommunity/libgcryptport/releases/tag/STABLE_libgcryptport_284"
+      "releaseUrl": "https://github.com/zopencommunity/libgcryptport/releases/tag/STABLE_libgcryptport_350"
     },
     {
       "name": "libiconv",
@@ -2283,8 +2283,8 @@
     {
       "name": "nats-DEV",
       "displayName": "nats-DEV",
-      "version": "2.14.6",
-      "release": "20260827.185900",
+      "version": "2.14.7",
+      "release": "20260915.151902",
       "epoch": "0",
       "architectures": [
         "s390x"
@@ -2293,8 +2293,8 @@
       "description": "nats-DEV package",
       "rpmCount": 1,
       "rpmDependencies": [],
-      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/n/nats-DEV-2.14.6-20260827.185900.s390x.rpm",
-      "buildTime": "2026-08-27T19:02:24Z",
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/n/nats-DEV-2.14.7-20260915.151902.s390x.rpm",
+      "buildTime": "2026-09-15T15:22:22Z",
       "releaseKey": "nats-DEV",
       "categories": [],
       "runtimeDependencies": [],
@@ -3006,20 +3006,20 @@
     {
       "name": "regex",
       "displayName": "regex",
-      "version": "2026.9.3",
-      "release": "20260901.154610",
+      "version": "2026.9.10",
+      "release": "20260910.152603",
       "epoch": "0",
       "architectures": [
         "s390x"
       ],
-      "summary": "regex-2026.9.3 package",
-      "description": "regex-2026.9.3 package",
+      "summary": "regex-2026.9.10 package",
+      "description": "regex-2026.9.10 package",
       "rpmCount": 1,
       "rpmDependencies": [
         "check_python"
       ],
-      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/r/regex-2026.9.3-20260901.154610.s390x.rpm",
-      "buildTime": "2026-09-01T15:47:23Z",
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/r/regex-2026.9.10-20260910.152603.s390x.rpm",
+      "buildTime": "2026-09-10T15:27:16Z",
       "releaseKey": "regex",
       "categories": [
         "development",
@@ -3407,18 +3407,18 @@
     {
       "name": "snappy",
       "displayName": "snappy",
-      "version": "1.2.2",
-      "release": "20260824.140203",
+      "version": "1.3.0",
+      "release": "20260915.152309",
       "epoch": "0",
       "architectures": [
         "s390x"
       ],
-      "summary": "snappy-main package",
-      "description": "snappy-main package",
+      "summary": "snappy-1.3.0 package",
+      "description": "snappy-1.3.0 package",
       "rpmCount": 1,
       "rpmDependencies": [],
-      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/s/snappy-1.2.2-20260824.140203.s390x.rpm",
-      "buildTime": "2026-08-24T14:02:51Z",
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/s/snappy-1.3.0-20260915.152309.s390x.rpm",
+      "buildTime": "2026-09-15T15:23:55Z",
       "releaseKey": "snappy",
       "categories": [
         "compression",
@@ -3429,9 +3429,9 @@
       "passedTests": null,
       "totalTests": null,
       "verificationRate": null,
-      "publishedAt": "2026-08-24T14:03:41Z",
+      "publishedAt": "2026-09-15T15:24:57Z",
       "portRepositoryUrl": "https://github.com/zopencommunity/snappyport",
-      "releaseUrl": "https://github.com/zopencommunity/snappyport/releases/tag/DEV_snappyport_261"
+      "releaseUrl": "https://github.com/zopencommunity/snappyport/releases/tag/STABLE_snappyport_357"
     },
     {
       "name": "snowflake-connector-python",
@@ -3638,20 +3638,20 @@
     {
       "name": "vim",
       "displayName": "vim",
-      "version": "9.2.950",
-      "release": "20260813.132626",
+      "version": "9.2.1050",
+      "release": "20260910.161858",
       "epoch": "0",
       "architectures": [
         "s390x"
       ],
-      "summary": "vim-9.2.0950 package",
-      "description": "vim-9.2.0950 package",
+      "summary": "vim-9.2.1050 package",
+      "description": "vim-9.2.1050 package",
       "rpmCount": 1,
       "rpmDependencies": [
         "ncurses"
       ],
-      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/v/vim-9.2.950-20260813.132626.s390x.rpm",
-      "buildTime": "2026-08-13T13:32:59Z",
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/v/vim-9.2.1050-20260910.161858.s390x.rpm",
+      "buildTime": "2026-09-10T16:25:48Z",
       "releaseKey": "vim",
       "categories": [
         "editor",
