@@ -14,6 +14,7 @@ import json
 from pathlib import Path
 import urllib.request
 import xml.etree.ElementTree as ET
+from functools import cmp_to_key
 
 
 DEFAULT_REPO_URL = "http://163.74.83.190:8080/pulp/content/zopen/"
@@ -34,6 +35,92 @@ def fetch_binary(url: str) -> bytes:
     request = urllib.request.Request(url, headers={"User-Agent": "zopen-rpm-catalog/1.0"})
     with urllib.request.urlopen(request, timeout=60) as response:
         return response.read()
+
+
+def compare_evr(a: dict[str, object], b: dict[str, object]) -> int:
+    """Compare two RPM packages by Epoch-Version-Release using RPM semantics.
+    
+    Returns: -1 if a < b, 0 if a == b, 1 if a > b
+    """
+    # Compare epochs (numeric)
+    epoch_a = int(str(a.get("epoch", "0")))
+    epoch_b = int(str(b.get("epoch", "0")))
+    if epoch_a != epoch_b:
+        return 1 if epoch_a > epoch_b else -1
+    
+    # Compare versions (RPM version comparison)
+    ver_a = str(a.get("version", ""))
+    ver_b = str(b.get("version", ""))
+    ver_cmp = compare_rpm_versions(ver_a, ver_b)
+    if ver_cmp != 0:
+        return ver_cmp
+    
+    # Compare releases (RPM version comparison)
+    rel_a = str(a.get("release", ""))
+    rel_b = str(b.get("release", ""))
+    return compare_rpm_versions(rel_a, rel_b)
+
+
+def compare_rpm_versions(v1: str, v2: str) -> int:
+    """Compare two version strings using RPM version comparison semantics.
+    
+    Returns: -1 if v1 < v2, 0 if v1 == v2, 1 if v1 > v2
+    """
+    if v1 == v2:
+        return 0
+    
+    # Split into segments (alternating alpha/numeric)
+    def split_version(v: str) -> list[tuple[bool, str]]:
+        segments = []
+        current = []
+        is_digit = None
+        
+        for char in v:
+            char_is_digit = char.isdigit()
+            if is_digit is None:
+                is_digit = char_is_digit
+            elif is_digit != char_is_digit:
+                if current:
+                    segments.append((is_digit, ''.join(current)))
+                current = []
+                is_digit = char_is_digit
+            current.append(char)
+        
+        if current:
+            segments.append((is_digit, ''.join(current)))
+        return segments
+    
+    segs1 = split_version(v1)
+    segs2 = split_version(v2)
+    
+    # Compare segment by segment
+    for i in range(max(len(segs1), len(segs2))):
+        if i >= len(segs1):
+            return -1  # v1 is shorter
+        if i >= len(segs2):
+            return 1   # v2 is shorter
+        
+        is_num1, val1 = segs1[i]
+        is_num2, val2 = segs2[i]
+        
+        # If types differ, numeric > alpha
+        if is_num1 and not is_num2:
+            return 1
+        if not is_num1 and is_num2:
+            return -1
+        
+        # Both numeric: compare as integers
+        if is_num1:
+            num1 = int(val1)
+            num2 = int(val2)
+            if num1 != num2:
+                return 1 if num1 > num2 else -1
+        # Both alpha: compare lexicographically
+        else:
+            if val1 != val2:
+                return 1 if val1 > val2 else -1
+    
+    return 0
 
 
 def parse_repomd(repomd_xml: str, base_url: str) -> str | None:
@@ -222,8 +309,8 @@ def build_catalog(
     # Build catalog entries
     packages = []
     for name, rpms in package_map.items():
-        # Sort by version (latest first) - simple string comparison for now
-        rpms.sort(key=lambda r: (r.get("epoch", "0"), r.get("version", ""), r.get("release", "")), reverse=True)
+        # Sort by EVR using proper RPM comparison (latest first)
+        rpms.sort(key=cmp_to_key(compare_evr), reverse=True)
         latest = rpms[0]
         
         # Get only RPMs of the latest version

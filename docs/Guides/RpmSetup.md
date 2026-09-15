@@ -13,9 +13,14 @@ This guide explains how to configure your z/OS Unix System Services (USS) client
 > - Minimum 1 GB free space on `/opt/pkg` filesystem
 > - Filesystem must support standard Unix permissions
 > 
-> **Software:**
-> - `dnf5` version 5.4.4.0 or higher (rpm libraries statically linked)
+> **Software (all paths):**
 > - `curl` for downloading packages
+> 
+> **Software (Path A - Automated):**
+> - `jq` for parsing JSON
+> 
+> **Software (Path B - Manual):**
+> - `dnf5` version 5.4.4.0 or higher (rpm libraries statically linked)
 > 
 > **Network:**
 > - Access to `http://repo.zopen.community` (or direct IP `163.74.83.190:8080`)

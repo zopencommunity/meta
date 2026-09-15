@@ -14,6 +14,9 @@ python3 tools/create_release_cache.py --verbose --output-file docs/api/zopen_rel
 # GitHub Pages-safe Python package catalogue.
 python3 tools/create_python_package_catalog.py
 
+# Generate RPM package catalogue from Pulp repository
+python3 tools/create_rpm_package_catalog.py
+
 # Generate a view of the newly released tools
 python3 tools/create_latest_release_doc.py --output docs/newly_released.md
 

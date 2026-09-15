@@ -67,7 +67,7 @@ All packages available in the zopen community are distributed in both PAX and RP
 
 - **z/OS Version**: 2.4 or higher
 - **Root access**: Required for package installation and system configuration
-- **Disk space**: At least 200-500 MB free space on `/var` for package database and cache
+- **Disk space**: At least 1 GB free space on `/opt/pkg` for RPM database, cache, and packages
 - **Network**: Access to `repo.zopen.community` or the fallback IP address
 
 ## Package Management Commands

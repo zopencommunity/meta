@@ -2,10 +2,23 @@
 #
 # Quick Install tool for zopen's dnf5 package
 # Downloads and extracts dnf5 into the current directory
-# Requires: curl, jq (should be available from IBM Open Enterprise Foundation)
+# Requires: curl, jq
 
 if [[ $(uname) != "OS/390" ]]; then
   echo "Error: This script is only for z/OS systems."
+  exit 1
+fi
+
+# Check for required commands
+if ! command -v curl &> /dev/null; then
+  echo "Error: curl is required but not found in PATH."
+  echo "Please install curl and try again."
+  exit 1
+fi
+
+if ! command -v jq &> /dev/null; then
+  echo "Error: jq is required but not found in PATH."
+  echo "Please install jq and try again."
   exit 1
 fi
 
@@ -183,13 +196,15 @@ fi
 echo ""
 
 echo "> Installing dnf5 from repository..."
-if dnf5 --config=/opt/pkg/etc/dnf/dnf.conf install --assumeyes --setopt=gpgcheck=0 dnf5; then
-  echo "[OK] dnf5 installed from repository"
+RPM_INSTALLED=0
+if dnf5 --config=/opt/pkg/etc/dnf/dnf.conf install --assumeyes dnf5; then
+  echo "[OK] dnf5 installed from repository and registered in RPM database"
+  RPM_INSTALLED=1
 else
-  echo "[INFO] Could not install dnf5 from repository."
+  echo "[WARN] Could not install dnf5 from repository."
   echo "       Bootstrap dnf5 is still functional but not RPM-managed."
-  echo "       You can install it later after verifying repository access:"
-  echo "       dnf5 --config=/opt/pkg/etc/dnf/dnf.conf install --assumeyes --setopt=gpgcheck=0 dnf5"
+  echo "       You can register it later:"
+  echo "       dnf5 install --assumeyes dnf5"
 fi
 echo ""
 
@@ -200,12 +215,16 @@ echo "> Cleaning up extracted directory..."
 cd ..
 rm -rf "$dir"
 
-echo "> dnf5 package installed successfully (stable release)."
 echo ""
 echo "==========================================="
 echo "Installation Complete"
 echo "==========================================="
-echo "[OK] dnf5 installed to /opt/pkg/bin"
+if [ $RPM_INSTALLED -eq 1 ]; then
+  echo "[OK] dnf5 installed to /opt/pkg/bin (RPM-managed)"
+else
+  echo "[OK] dnf5 installed to /opt/pkg/bin (bootstrap only)"
+  echo "[NOTE] Run 'dnf5 install dnf5' to register in RPM database"
+fi
 echo "[OK] Configuration created"
 echo ""
 echo "Add to your PATH:"
