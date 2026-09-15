@@ -2,55 +2,90 @@
 
 The zopen community provides RPM packages as an alternative distribution format for z/OS Unix System Services (USS). This allows you to leverage industry-standard package management tools like RPM and DNF5 to install, update, and manage open-source software on z/OS.
 
-## What are RPM Packages?
+## Understanding RPM and DNF5
 
-**RPM (RPM Package Manager)** is a powerful, mature package management system originally developed by Red Hat and widely adopted across the Linux ecosystem. RPM packages provide:
+### What is RPM?
 
-- **Standardized format** - Industry-standard packaging with metadata, dependencies, and versioning
-- **Cryptographic signatures** - GPG-signed packages ensure authenticity and integrity
-- **Dependency resolution** - Automatic handling of package dependencies
-- **Transaction safety** - Atomic operations with rollback capabilities
-- **Query and verification** - Tools to inspect and validate installed software
+**RPM (RPM Package Manager)** is a **package format** and set of tools for software distribution. Think of RPM as the "container" for software.
 
-## What is DNF5?
+**RPM as a Format:**
+- `.rpm` files are archives containing compiled software, metadata, and installation scripts
+- Each RPM package includes:
+  - Software binaries and libraries
+  - Dependency information (what other packages are needed)
+  - Version and architecture details
+  - Installation/removal scripts
+  - GPG signatures for verification
 
-**DNF5** is the next-generation package manager that uses RPM packages. DNF (Dandified YUM) was designed to replace the older YUM package manager, and DNF5 is a complete rewrite in C++ for better performance and reliability.
+**RPM Command-Line Tools:**
+- `rpm` command for low-level package operations
+- Query installed packages: `rpm -qa`
+- Inspect package contents: `rpm -ql <package>`
+- Verify installations: `rpm -V <package>`
 
-### Why DNF5 on z/OS?
+**Key Point:** RPM itself does **not** handle dependency resolution automatically. Installing an RPM that requires other packages requires manual dependency management.
 
-The zopen community chose DNF5 for z/OS because:
+### What is DNF5?
 
-- **Modern architecture** - Written in C++ with a clean API and modular design
-- **Better performance** - Significantly faster than DNF4 and YUM for dependency resolution
-- **Lower memory footprint** - More efficient resource usage, important for z/OS environments
-- **Improved CLI** - Clearer command output and more intuitive user experience
-- **Active development** - Maintained by the Fedora community with regular updates
-- **Enterprise-ready** - Production-tested and widely used across the industry
+**DNF5** is a **high-level package manager** that works with RPM packages. Think of DNF5 as the "intelligent installer" that uses RPM packages.
 
-### DNF5 Key Features
+**DNF5's Role:**
+- Downloads RPM packages from repositories
+- **Automatically resolves dependencies** - figures out what other packages are needed
+- Installs multiple RPM packages in the correct order
+- Manages package updates and removals safely
+- Maintains transaction history
 
-- **Smart dependency resolution** - Automatically installs required dependencies
-- **Repository management** - Support for multiple package repositories
-- **Transaction history** - Track all package operations with undo/redo capabilities
-- **Modular content** - Support for multiple versions of the same software
-- **Plugin system** - Extensible architecture for custom functionality
-- **Fast metadata caching** - Quick package searches and queries
+**DNF5 Architecture:**
+- Written in C++ for performance
+- Uses RPM libraries internally
+- Queries repository metadata to find packages
+- Downloads and installs `.rpm` files automatically
 
-## Why Use RPM on z/OS?
+**Key Point:** DNF5 is the **recommended way** to install RPM packages because it handles all dependencies automatically.
+
+### The Relationship: RPM vs DNF5
+
+| Aspect | RPM | DNF5 |
+|--------|-----|------|
+| **Type** | Package format + low-level tools | High-level package manager |
+| **What it is** | The `.rpm` file format and `rpm` command | Tool that installs/manages RPM packages |
+| **Analogy** | Like a `.zip` file and unzip command | Like an app store that downloads and installs |
+| **Dependencies** | Manual - you must install dependencies yourself | Automatic - resolves and installs all dependencies |
+| **Repositories** | No built-in repository support | Downloads from configured repositories |
+| **Use case** | Low-level operations, scripting, verification | Daily package management |
+| **Commands** | `rpm -i package.rpm` (install one file) | `dnf5 install package` (install from repo with deps) |
+
+**Example Workflow:**
+1. You run: `dnf5 install vim`
+2. DNF5 queries the repository for vim
+3. DNF5 discovers vim needs: `ncurses`, `glibc`, `libacl`
+4. DNF5 downloads all `.rpm` files
+5. DNF5 installs them in correct order using RPM libraries
+6. Result: vim and all dependencies installed
+
+### Why Both?
+
+- **DNF5** is what you use day-to-day: `dnf5 install`, `dnf5 search`, `dnf5 upgrade`
+- **RPM tools** are useful for queries and verification: `rpm -qa`, `rpm -ql vim`, `rpm -V vim`
+- Both work together: DNF5 uses RPM format, RPM tools query what DNF5 installed
+
+## Why Use RPM and DNF5 on z/OS?
 
 ### Benefits for System Administrators
 
 - **Familiar tooling** - Use the same package management commands you know from Linux
 - **Enterprise-ready** - Battle-tested package format used by major Linux distributions
+- **Automatic dependency resolution** - DNF5 handles all dependencies automatically
 - **Centralized management** - Manage packages across multiple z/OS systems with repository servers
 - **Staged deployments** - Install and validate packages in staged filesystems before production deployment
 - **Audit trail** - Complete history of package installations, updates, and removals
 
 ### Benefits for Developers
 
-- **Quick installation** - Install tools with a single command
+- **Quick installation** - Install tools with a single command: `dnf5 install <package>`
 - **Consistent environments** - Ensure all team members have the same tool versions
-- **Dependency handling** - Automatically install required libraries and dependencies
+- **Dependency handling** - DNF5 automatically installs required libraries and dependencies
 - **Version control** - Easily switch between different package versions
 - **Integration** - Works alongside the traditional zopen package manager
 
