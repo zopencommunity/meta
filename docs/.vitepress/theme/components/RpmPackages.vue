@@ -52,8 +52,8 @@ EOF
 cat > /opt/pkg/etc/yum.repos.d/zopen.repo <<EOF
 [zopen]
 name=zopen
-baseurl=http://163.74.83.190:8080/pulp/content/zopen/
-gpgkey=http://163.74.83.190:8080/pulp/content/keys/zopen.pub
+baseurl=https://repo.zopen.community/pulp/content/zopen/
+gpgkey=https://repo.zopen.community/pulp/content/keys/zopen.pub
 gpgcheck=1
 enabled=1
 EOF`;
