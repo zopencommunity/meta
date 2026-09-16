@@ -106,7 +106,9 @@ echo "> Creating RPM configuration..."
 # Unset any RPM-related and zopen variables that might conflict
 unset RPMDIR RPM_INSTALL_PREFIX HOME RPM_ETCCONFIGDIR RPM_BUILD_ROOT 2>/dev/null || true
 unset ZOPEN_ROOTFS ZOPEN_PKGINSTALL ZOPEN_PREFIX 2>/dev/null || true
-export XDG_CONFIG_HOME=$(mktemp -d)
+TMPDIR="/tmp/dnf5-bootstrap.$$"
+mkdir -p "$TMPDIR"
+export XDG_CONFIG_HOME="$TMPDIR"
 export RPM_CONFIGDIR="$XDG_CONFIG_HOME/rpm"
 export HOME="$XDG_CONFIG_HOME"
 
