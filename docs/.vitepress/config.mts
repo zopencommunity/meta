@@ -109,6 +109,15 @@ export default defineConfig({
         ],
       },
       {
+        text: "RPM Packages on z/OS",
+        collapsed: false,
+        items: [
+          { text: "Available RPM Packages", link: "/RpmPackages" },
+          { text: "Overview", link: "/Guides/RpmPackages" },
+          { text: "Setup Guide", link: "/Guides/RpmSetup" },
+        ],
+      },
+      {
         text: "Python on z/OS",
         collapsed: false,
         items: [
