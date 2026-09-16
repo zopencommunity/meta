@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-15T16:29:41Z",
+  "generatedAt": "2026-09-16T11:20:50Z",
   "repositoryUrl": "http://163.74.83.190:8080/pulp/content/zopen/",
   "packageCount": 140,
   "rpmCount": 140,
@@ -2132,7 +2132,7 @@
       "name": "metaldio",
       "displayName": "metaldio",
       "version": "1.0.0",
-      "release": "20260824.053705",
+      "release": "20260916.111209",
       "epoch": "0",
       "architectures": [
         "s390x"
@@ -2141,8 +2141,8 @@
       "description": "metaldio-main package",
       "rpmCount": 1,
       "rpmDependencies": [],
-      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/m/metaldio-1.0.0-20260824.053705.s390x.rpm",
-      "buildTime": "2026-08-24T05:37:40Z",
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/m/metaldio-1.0.0-20260916.111209.s390x.rpm",
+      "buildTime": "2026-09-16T11:13:23Z",
       "releaseKey": "metaldio",
       "categories": [
         "library",
@@ -2153,9 +2153,9 @@
       "passedTests": 1,
       "totalTests": 1,
       "verificationRate": 100.0,
-      "publishedAt": "2026-08-24T05:38:37Z",
+      "publishedAt": "2026-09-16T11:14:30Z",
       "portRepositoryUrl": "https://github.com/zopencommunity/metaldioport",
-      "releaseUrl": "https://github.com/zopencommunity/metaldioport/releases/tag/STABLE_metaldioport_244"
+      "releaseUrl": "https://github.com/zopencommunity/metaldioport/releases/tag/STABLE_metaldioport_361"
     },
     {
       "name": "mmh3",
