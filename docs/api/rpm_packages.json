@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-16T11:20:50Z",
+  "generatedAt": "2026-09-16T12:20:34Z",
   "repositoryUrl": "http://163.74.83.190:8080/pulp/content/zopen/",
   "packageCount": 140,
   "rpmCount": 140,
@@ -670,7 +670,7 @@
       "name": "dnf5",
       "displayName": "dnf5",
       "version": "5.4.5.0",
-      "release": "20260914.162723",
+      "release": "20260916.111651",
       "epoch": "0",
       "architectures": [
         "s390x"
@@ -682,8 +682,8 @@
         "rpmconfig",
         "createrepo_c"
       ],
-      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/d/dnf5-5.4.5.0-20260914.162723.s390x.rpm",
-      "buildTime": "2026-09-14T16:53:51Z",
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/d/dnf5-5.4.5.0-20260916.111651.s390x.rpm",
+      "buildTime": "2026-09-16T12:01:38Z",
       "releaseKey": "dnf5",
       "categories": [
         "build_system"
@@ -692,12 +692,12 @@
         "createrepo_c",
         "rpmconfig"
       ],
-      "passedTests": null,
-      "totalTests": null,
-      "verificationRate": null,
-      "publishedAt": "2026-09-15T12:26:19Z",
+      "passedTests": 574,
+      "totalTests": 578,
+      "verificationRate": 99.3,
+      "publishedAt": "2026-09-16T12:09:02Z",
       "portRepositoryUrl": "https://github.com/zopencommunity/dnf5port",
-      "releaseUrl": "https://github.com/zopencommunity/dnf5port/releases/tag/test_no_plugin"
+      "releaseUrl": "https://github.com/zopencommunity/dnf5port/releases/tag/STABLE_dnf5port_362"
     },
     {
       "name": "dos2unix",
