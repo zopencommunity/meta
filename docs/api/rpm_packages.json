@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-16T15:52:06Z",
+  "generatedAt": "2026-09-16T16:51:42Z",
   "repositoryUrl": "http://163.74.83.190:8080/pulp/content/zopen/",
   "packageCount": 140,
   "rpmCount": 140,
@@ -3431,7 +3431,7 @@
       "verificationRate": null,
       "publishedAt": "2026-09-15T15:32:53Z",
       "portRepositoryUrl": "https://github.com/zopencommunity/snappyport",
-      "releaseUrl": "https://github.com/zopencommunity/snappyport/releases/tag/DEV_snappyport_359"
+      "releaseUrl": "https://github.com/zopencommunity/snappyport/releases/tag/STABLE_snappyport_358"
     },
     {
       "name": "snowflake-connector-python",
