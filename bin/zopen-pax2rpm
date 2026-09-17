@@ -390,11 +390,11 @@ _CFGFILES=$(mktemp)
 _DOCFILES=$(mktemp)
 _EMPTYDIRS=$(mktemp)
 
-find "${_BR}" \( -type f -o -type l \) -print | sed "s|^${_BR}||" | sort > "$_ALLFILES"
+find "${_BR}" \( -type f -o -type l \) -print | sed "s|^${_BR}||" | sed 's/;[0-9a-f]*$//' | sort > "$_ALLFILES"
 
 # Collect empty directories — these must be listed explicitly with %dir
 # otherwise RPM won't create them and packages relying on them will break.
-find "${_BR}" -type d -empty | sed "s|^${_BR}||" | sort > "$_EMPTYDIRS"
+find "${_BR}" -type d -empty | sed "s|^${_BR}||" | sed 's/;[0-9a-f]*$//' | sort > "$_EMPTYDIRS"
 
 # RPM splits every line of a -f filelist on whitespace, so a path containing a
 # space arrives as two entries and the second one is rejected outright:
