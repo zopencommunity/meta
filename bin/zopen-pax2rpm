@@ -377,6 +377,25 @@ find "%{buildroot}" -type f | while read -r file; do
     replaceAndFlattenHardcodedPath "ZOPEN_INSTALL_PREFIX" "%{_prefix}" "$file"
 done
 
+# ==============================================================================
+# --- Strip z/OS generation qualifiers from filenames ---
+# ==============================================================================
+echo "Stripping z/OS generation qualifiers from filenames under %{buildroot}..."
+find "%{buildroot}" -type f -name '*;*' 2>/dev/null | while IFS= read -r file; do
+    base="${file%;*}"
+    if [ "$file" != "$base" ] && [ ! -e "$base" ]; then
+           echo "  Renaming: $file -> $base"
+           mv "$file" "$base" || echo "WARNING: Failed to rename $file"
+    fi
+done
+find "%{buildroot}" -type l -name '*;*' 2>/dev/null | while IFS= read -r link; do
+    base="${link%;*}"
+    if [ "$link" != "$base" ] && [ ! -e "$base" ]; then
+           echo "  Renaming symlink: $link -> $base"
+           mv "$link" "$base" || echo "WARNING: Failed to rename $link"
+    fi
+done
+
 # Generate RPM file list — standard Fedora/RHEL approach:
 # Use find to enumerate every file installed under %{buildroot}, then
 # strip the buildroot prefix with sed to get package-relative paths.
@@ -390,11 +409,11 @@ _CFGFILES=$(mktemp)
 _DOCFILES=$(mktemp)
 _EMPTYDIRS=$(mktemp)
 
-find "${_BR}" \( -type f -o -type l \) -print | sed "s|^${_BR}||" | sort > "$_ALLFILES"
+find "${_BR}" \( -type f -o -type l \) -print | sed "s|^${_BR}||" | sed 's/;[0-9a-f]*$//' | sort > "$_ALLFILES"
 
 # Collect empty directories — these must be listed explicitly with %dir
 # otherwise RPM won't create them and packages relying on them will break.
-find "${_BR}" -type d -empty | sed "s|^${_BR}||" | sort > "$_EMPTYDIRS"
+find "${_BR}" -type d -empty | sed "s|^${_BR}||" | sed 's/;[0-9a-f]*$//' | sort > "$_EMPTYDIRS"
 
 # RPM splits every line of a -f filelist on whitespace, so a path containing a
 # space arrives as two entries and the second one is rejected outright:
