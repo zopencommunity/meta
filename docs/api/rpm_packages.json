@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-09-17T15:37:43Z",
+  "generatedAt": "2026-09-17T18:40:48Z",
   "repositoryUrl": "http://163.74.83.190:8080/pulp/content/zopen/",
-  "packageCount": 141,
-  "rpmCount": 141,
+  "packageCount": 142,
+  "rpmCount": 142,
   "packages": [
     {
       "name": "arrow",
@@ -1150,6 +1150,38 @@
       "publishedAt": "2026-08-28T19:42:18Z",
       "portRepositoryUrl": "https://github.com/zopencommunity/git-lfsport",
       "releaseUrl": "https://github.com/zopencommunity/git-lfsport/releases/tag/STABLE_git-lfsport_288"
+    },
+    {
+      "name": "githubcli",
+      "displayName": "githubcli",
+      "version": "2.97.0",
+      "release": "20260917.175753",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "githubcli-2.97.0 package",
+      "description": "githubcli-2.97.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "git"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/g/githubcli-2.97.0-20260917.175753.s390x.rpm",
+      "buildTime": "2026-09-17T18:20:01Z",
+      "releaseKey": "githubcli",
+      "categories": [
+        "development",
+        "networking"
+      ],
+      "runtimeDependencies": [
+        "git"
+      ],
+      "passedTests": null,
+      "totalTests": null,
+      "verificationRate": null,
+      "publishedAt": "2026-09-17T18:29:00Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/githubcliport",
+      "releaseUrl": "https://github.com/zopencommunity/githubcliport/releases/tag/STABLE_githubcliport_368"
     },
     {
       "name": "gnupg",
@@ -2798,14 +2830,18 @@
       "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/p/pycryptodome-3.23.0-20260815.051707.s390x.rpm",
       "buildTime": "2026-08-15T05:21:09Z",
       "releaseKey": "pycryptodome",
-      "categories": [],
+      "categories": [
+        "development",
+        "security",
+        "library"
+      ],
       "runtimeDependencies": [],
-      "passedTests": null,
-      "totalTests": null,
-      "verificationRate": null,
-      "publishedAt": "",
+      "passedTests": 48,
+      "totalTests": 48,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-15T05:22:59Z",
       "portRepositoryUrl": "https://github.com/zopencommunity/pycryptodomeport",
-      "releaseUrl": ""
+      "releaseUrl": "https://github.com/zopencommunity/pycryptodomeport/releases/tag/STABLE_pycryptodomeport_145"
     },
     {
       "name": "pydantic-core",

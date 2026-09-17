@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-17T15:37:43Z",
+  "generatedAt": "2026-09-17T18:40:48Z",
   "wheelIndexUrl": "https://repo.zopen.community/pypi/wheels/simple/",
   "supportedPythonVersions": [
     "3.12",
@@ -558,14 +558,18 @@
       "releaseKey": "pycryptodome",
       "version": "3.23.0",
       "description": "pycryptodome for z/OS: self-contained cryptographic library for Python",
-      "categories": [],
+      "categories": [
+        "development",
+        "security",
+        "library"
+      ],
       "runtimeDependencies": [],
-      "passedTests": null,
-      "totalTests": null,
-      "verificationRate": null,
-      "publishedAt": "",
+      "passedTests": 48,
+      "totalTests": 48,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-08-15T05:22:59Z",
       "portRepositoryUrl": "https://github.com/zopencommunity/pycryptodomeport",
-      "releaseUrl": ""
+      "releaseUrl": "https://github.com/zopencommunity/pycryptodomeport/releases/tag/STABLE_pycryptodomeport_145"
     },
     {
       "name": "pydantic-core",
