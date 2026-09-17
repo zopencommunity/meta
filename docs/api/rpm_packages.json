@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-09-16T16:51:42Z",
+  "generatedAt": "2026-09-17T11:40:31Z",
   "repositoryUrl": "http://163.74.83.190:8080/pulp/content/zopen/",
-  "packageCount": 140,
-  "rpmCount": 140,
+  "packageCount": 141,
+  "rpmCount": 141,
   "packages": [
     {
       "name": "arrow",
@@ -481,6 +481,37 @@
       "publishedAt": "2026-04-30T08:16:17Z",
       "portRepositoryUrl": "https://github.com/zopencommunity/coreutilsport",
       "releaseUrl": "https://github.com/zopencommunity/coreutilsport/releases/tag/STABLE_coreutilsport_4245"
+    },
+    {
+      "name": "cpio",
+      "displayName": "cpio",
+      "version": "2.15",
+      "release": "20260917.111722",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "cpio-2.15 package",
+      "description": "cpio-2.15 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "bash"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/c/cpio-2.15-20260917.111722.s390x.rpm",
+      "buildTime": "2026-09-17T11:33:03Z",
+      "releaseKey": "cpio",
+      "categories": [
+        "development"
+      ],
+      "runtimeDependencies": [
+        "bash"
+      ],
+      "passedTests": 14,
+      "totalTests": 16,
+      "verificationRate": 87.5,
+      "publishedAt": "2026-09-17T11:34:06Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/cpioport",
+      "releaseUrl": "https://github.com/zopencommunity/cpioport/releases/tag/STABLE_cpioport_365"
     },
     {
       "name": "createrepo_c",
@@ -1432,7 +1463,7 @@
       "name": "jq",
       "displayName": "jq",
       "version": "1.8.2",
-      "release": "20260713.150721",
+      "release": "20260917.090316",
       "epoch": "0",
       "architectures": [
         "s390x"
@@ -1441,8 +1472,8 @@
       "description": "jq-1.8.2 package",
       "rpmCount": 1,
       "rpmDependencies": [],
-      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/j/jq-1.8.2-20260713.150721.s390x.rpm",
-      "buildTime": "2026-07-13T15:11:13Z",
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/j/jq-1.8.2-20260917.090316.s390x.rpm",
+      "buildTime": "2026-09-17T09:06:43Z",
       "releaseKey": "jq",
       "categories": [],
       "runtimeDependencies": [],
