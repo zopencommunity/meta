@@ -19,7 +19,6 @@ PR_BODY="This PR adds CodeQL security scanning to the repository.
 
 ## Changes
 - Adds \`.github/workflows/codeql.yml\` workflow that calls the centralized CodeQL workflow from \`zopencommunity/meta\`
-- Adds CodeQL badge to README.md
 
 ## Benefits
 - Automated security vulnerability detection
@@ -113,6 +112,9 @@ for REPO in "${ORDERED_REPOS[@]}"; do
 
   cd "$REPO_DIR"
 
+  # Wire token into remote URL so git push authenticates without a TTY
+  git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${REPO}.git"
+
   # Skip if workflow already exists and is up to date
   if [ -f "$CODEQL_IN_REPO" ] && diff -q "$CODEQL_FILE" "$CODEQL_IN_REPO" > /dev/null 2>&1; then
     echo "SKIP (already up to date): $REPO"
@@ -128,15 +130,8 @@ for REPO in "${ORDERED_REPOS[@]}"; do
   mkdir -p .github/workflows
   cp "$CODEQL_FILE" "$CODEQL_IN_REPO"
 
-  # Add badge to README.md if missing
-  if [ -f README.md ] && ! grep -q "CodeQL" README.md 2>/dev/null; then
-    LINE="[![CodeQL](https://github.com/$REPO/actions/workflows/codeql.yml/badge.svg)](https://github.com/$REPO/actions/workflows/codeql.yml)"
-    printf '%s\n\n' "$LINE" | cat - README.md > tmpfile && mv tmpfile README.md
-    echo "Added CodeQL badge to README.md"
-  fi
-
   # Stage and commit
-  git add "$CODEQL_IN_REPO" README.md 2>/dev/null || git add "$CODEQL_IN_REPO"
+  git add "$CODEQL_IN_REPO"
   if ! git diff --cached --quiet; then
     git commit -m "Add CodeQL security scanning workflow"
 
