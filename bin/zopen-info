@@ -93,10 +93,14 @@ printPackageInfo() {
     community_commitsha=$(echo "${remote_data}" | jq -r '.assets[0].community_commitsha')
     runtime_dependencies=$(echo "${remote_data}" | jq -r '.assets[0].runtime_dependencies') 
     build_dependencies=$(jq -r '.product.build_dependencies | unique_by(.name) | map(.name) | join(" ")' ${metadataFile})
-
+    package_descriptions=$(jq -r --arg base_package "$base_package" '.descriptions[$base_package]' "${JSON_DESCRIPTIONS_CACHE}")
+   
     printHeader "==> ${name} (Not Installed)"
 
     printHeader "==> Package"
+    if [ -n "$package_descriptions" ]; then
+    	printf "%-20s %s\n" "Description:" "$package_descriptions"
+    fi
     printf "%-20s %s\n" "Version:" "${version}"
     printf "%-20s %s\n" "Release:" "${release}"
     printf "%-20s %s\n" "Buildline:" "${buildline}"
@@ -163,6 +167,7 @@ printPackageInfo() {
     size=$(jq -r '.product.size' "${metadata}")
     commitsha=$(jq -r '.product.commitsha' "${metadata}")
     community_commitsha=$(jq -r '.product.community_commitsha' "${metadata}")
+    package_descriptions=$(jq -r --arg package "$package"  '.descriptions[$package]' "${JSON_DESCRIPTIONS_CACHE}")
 
     # Use jq's --exit-status option to handle null values gracefully
     build_dependencies=$(jq -r '.product.build_dependencies | map(.name) | join(", ")' --exit-status "${metadata}")
@@ -191,7 +196,11 @@ printPackageInfo() {
     installed_path=$(cd "${ZOPEN_PKGINSTALL}/${package}/${package}" > /dev/null 2>&1 && pwd -P)
 
     printHeader "==> ${name}: ${buildline} ${dotversion}"
-    printf "%-20s %s\n" "Description:" "${summary}"
+    if [ -n "$package_descriptions" ]; then
+  	printf "%-20s %s\n" "Description:" "$package_descriptions"
+    else
+  	printf "%-20s %s\n" "Description:" "$summary"
+    fi
 
     printHeader "==> Package"
     printf "%-20s %s\n" "Version:" "${dotversion}"
@@ -203,7 +212,6 @@ printPackageInfo() {
     printf "%-20s %s\n" "GitHub:" "${repo}"
     printf "%-20s %s\n" "License:" "${license}"
     printf "%-20s %s\n" "zopen license:" "${zopen_license}"
-
     printHeader "==> Installation Details"
     printf "%-20s %s\n" "Installed:" "Yes"
     printf "%-20s %s\n" "Installation Path:" "${installed_path}"
