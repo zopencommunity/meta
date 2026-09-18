@@ -32,6 +32,23 @@ SKIP_REPOS=(
   "zopencommunity/meta"
 )
 
+PRIORITY_REPOS=(
+  "zopencommunity/gitport"
+  "zopencommunity/makeport"
+  "zopencommunity/curlport"
+  "zopencommunity/gpgport"
+  "zopencommunity/pinentryport"
+  "zopencommunity/perlport"
+  "zopencommunity/lessport"
+  "zopencommunity/ncursesport"
+  "zopencommunity/rpmport"
+  "zopencommunity/dnf5port"
+  "zopencommunity/vimport"
+  "zopencommunity/autoconfport"
+)
+
+MAX_REPOS=50
+
 should_skip() {
   local repo="$1"
   for skip in "${SKIP_REPOS[@]}"; do
@@ -40,10 +57,34 @@ should_skip() {
   return 1
 }
 
+is_priority() {
+  local repo="$1"
+  for p in "${PRIORITY_REPOS[@]}"; do
+    [[ "$p" == "$repo" ]] && return 0
+  done
+  return 1
+}
+
 echo "Fetching *port repos from $ORG..."
-REPOS=$(gh repo list "$ORG" --limit 300 --json nameWithOwner --jq '.[].nameWithOwner' | grep 'port$')
-echo "Repos found: $(echo "$REPOS" | wc -w)"
-echo "$REPOS"
+ALL_REPOS=$(gh repo list "$ORG" --limit 300 --json nameWithOwner --jq '.[].nameWithOwner' | grep 'port$')
+
+# Build final list: priority repos first, then fill remaining slots from the full list
+ORDERED_REPOS=()
+for repo in "${PRIORITY_REPOS[@]}"; do
+  ORDERED_REPOS+=("$repo")
+done
+REMAINING=$(( MAX_REPOS - ${#PRIORITY_REPOS[@]} ))
+COUNT=0
+for repo in $ALL_REPOS; do
+  (( COUNT >= REMAINING )) && break
+  if ! is_priority "$repo"; then
+    ORDERED_REPOS+=("$repo")
+    (( COUNT++ )) || true
+  fi
+done
+
+echo "Repos to process: ${#ORDERED_REPOS[@]}"
+printf '%s\n' "${ORDERED_REPOS[@]}"
 echo ""
 
 TMPDIR=$(mktemp -d)
@@ -53,7 +94,7 @@ SUCCESS=0
 SKIPPED=0
 FAILED=0
 
-for REPO in $REPOS; do
+for REPO in "${ORDERED_REPOS[@]}"; do
   if should_skip "$REPO"; then
     echo "SKIP (excluded): $REPO"
     (( SKIPPED++ )) || true
