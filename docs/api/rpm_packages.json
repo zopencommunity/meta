@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-18T15:27:10Z",
+  "generatedAt": "2026-09-18T16:26:43Z",
   "repositoryUrl": "http://163.74.83.190:8080/pulp/content/zopen/",
   "packageCount": 142,
   "rpmCount": 142,
@@ -825,14 +825,14 @@
     {
       "name": "fastmcp",
       "displayName": "fastmcp",
-      "version": "4.0.4",
-      "release": "20260916.153551",
+      "version": "4.0.5",
+      "release": "20260918.152757",
       "epoch": "0",
       "architectures": [
         "s390x"
       ],
-      "summary": "fastmcp-4.0.4 package",
-      "description": "fastmcp-4.0.4 package",
+      "summary": "fastmcp-4.0.5 package",
+      "description": "fastmcp-4.0.5 package",
       "rpmCount": 1,
       "rpmDependencies": [
         "watchfiles",
@@ -842,8 +842,8 @@
         "cryptography",
         "check_python"
       ],
-      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/f/fastmcp-4.0.4-20260916.153551.s390x.rpm",
-      "buildTime": "2026-09-16T15:41:34Z",
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/f/fastmcp-4.0.5-20260918.152757.s390x.rpm",
+      "buildTime": "2026-09-18T15:35:57Z",
       "releaseKey": "fastmcp",
       "categories": [
         "networking",
@@ -859,9 +859,9 @@
       "passedTests": 51,
       "totalTests": 51,
       "verificationRate": 100.0,
-      "publishedAt": "2026-09-16T15:47:57Z",
+      "publishedAt": "2026-09-18T15:45:47Z",
       "portRepositoryUrl": "https://github.com/zopencommunity/fastmcpport",
-      "releaseUrl": "https://github.com/zopencommunity/fastmcpport/releases/tag/STABLE_fastmcpport_364"
+      "releaseUrl": "https://github.com/zopencommunity/fastmcpport/releases/tag/STABLE_fastmcpport_372"
     },
     {
       "name": "fd",

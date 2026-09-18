@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-18T15:27:10Z",
+  "generatedAt": "2026-09-18T16:26:43Z",
   "wheelIndexUrl": "https://repo.zopen.community/pypi/wheels/simple/",
   "supportedPythonVersions": [
     "3.12",
@@ -7,7 +7,7 @@
     "3.14"
   ],
   "packageCount": 37,
-  "wheelCount": 205,
+  "wheelCount": 206,
   "packages": [
     {
       "name": "bcrypt",
@@ -230,10 +230,10 @@
         "3.13",
         "3.14"
       ],
-      "wheelCount": 8,
+      "wheelCount": 9,
       "indexUrl": "https://repo.zopen.community/pypi/wheels/simple/fastmcp/",
       "releaseKey": "fastmcp",
-      "version": "4.0.4",
+      "version": "4.0.5",
       "description": "FastMCP framework for building Model Context Protocol (MCP) servers in Python",
       "categories": [
         "networking",
@@ -249,9 +249,9 @@
       "passedTests": 51,
       "totalTests": 51,
       "verificationRate": 100.0,
-      "publishedAt": "2026-09-16T15:47:57Z",
+      "publishedAt": "2026-09-18T15:45:47Z",
       "portRepositoryUrl": "https://github.com/zopencommunity/fastmcpport",
-      "releaseUrl": "https://github.com/zopencommunity/fastmcpport/releases/tag/STABLE_fastmcpport_364"
+      "releaseUrl": "https://github.com/zopencommunity/fastmcpport/releases/tag/STABLE_fastmcpport_372"
     },
     {
       "name": "jellyfish",
