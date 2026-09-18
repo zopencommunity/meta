@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-18T11:12:32Z",
+  "generatedAt": "2026-09-18T15:27:10Z",
   "repositoryUrl": "http://163.74.83.190:8080/pulp/content/zopen/",
   "packageCount": 142,
   "rpmCount": 142,
@@ -3470,18 +3470,18 @@
     {
       "name": "snappy",
       "displayName": "snappy",
-      "version": "1.3.0",
-      "release": "20260915.153103",
+      "version": "1.3.1",
+      "release": "20260918.151900",
       "epoch": "0",
       "architectures": [
         "s390x"
       ],
-      "summary": "snappy-1.3.0 package",
-      "description": "snappy-1.3.0 package",
+      "summary": "snappy-1.3.1 package",
+      "description": "snappy-1.3.1 package",
       "rpmCount": 1,
       "rpmDependencies": [],
-      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/s/snappy-1.3.0-20260915.153103.s390x.rpm",
-      "buildTime": "2026-09-15T15:31:51Z",
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/s/snappy-1.3.1-20260918.151900.s390x.rpm",
+      "buildTime": "2026-09-18T15:19:49Z",
       "releaseKey": "snappy",
       "categories": [
         "compression",
@@ -3492,9 +3492,9 @@
       "passedTests": null,
       "totalTests": null,
       "verificationRate": null,
-      "publishedAt": "2026-09-15T15:32:53Z",
+      "publishedAt": "2026-09-18T15:20:51Z",
       "portRepositoryUrl": "https://github.com/zopencommunity/snappyport",
-      "releaseUrl": "https://github.com/zopencommunity/snappyport/releases/tag/STABLE_snappyport_358"
+      "releaseUrl": "https://github.com/zopencommunity/snappyport/releases/tag/STABLE_snappyport_370"
     },
     {
       "name": "snowflake-connector-python",
