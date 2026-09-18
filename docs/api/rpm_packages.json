@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-17T18:40:48Z",
+  "generatedAt": "2026-09-18T11:12:32Z",
   "repositoryUrl": "http://163.74.83.190:8080/pulp/content/zopen/",
   "packageCount": 142,
   "rpmCount": 142,
@@ -2143,7 +2143,7 @@
       "name": "meta",
       "displayName": "meta",
       "version": "0.8.6",
-      "release": "20260904.042908",
+      "release": "20260918.105127",
       "epoch": "0",
       "architectures": [
         "s390x"
@@ -2152,8 +2152,8 @@
       "description": "meta-main package",
       "rpmCount": 1,
       "rpmDependencies": [],
-      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/m/meta-0.8.6-20260904.042908.s390x.rpm",
-      "buildTime": "2026-09-04T04:35:39Z",
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/m/meta-0.8.6-20260918.105127.s390x.rpm",
+      "buildTime": "2026-09-18T11:01:40Z",
       "releaseKey": "meta",
       "categories": [
         "utilities"
@@ -2162,9 +2162,9 @@
       "passedTests": 11,
       "totalTests": 11,
       "verificationRate": 100.0,
-      "publishedAt": "2026-09-04T04:38:40Z",
+      "publishedAt": "2026-09-18T11:06:07Z",
       "portRepositoryUrl": "https://github.com/zopencommunity/metaport",
-      "releaseUrl": "https://github.com/zopencommunity/metaport/releases/tag/STABLE_metaport_324"
+      "releaseUrl": "https://github.com/zopencommunity/metaport/releases/tag/STABLE_metaport_369"
     },
     {
       "name": "meta-main",
