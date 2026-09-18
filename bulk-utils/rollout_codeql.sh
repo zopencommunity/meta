@@ -8,6 +8,10 @@
 
 set -euo pipefail
 
+# Register gh as git's credential helper so git push authenticates via GH_TOKEN
+# without embedding the token in any URL (avoids Vault Radar secret scanning blocks)
+gh auth setup-git
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CODEQL_FILE="$SCRIPT_DIR/../data/codeql-workflow.yml"
 CODEQL_IN_REPO=".github/workflows/codeql.yml"
@@ -19,7 +23,6 @@ PR_BODY="This PR adds CodeQL security scanning to the repository.
 
 ## Changes
 - Adds \`.github/workflows/codeql.yml\` workflow that calls the centralized CodeQL workflow from \`zopencommunity/meta\`
-- Adds CodeQL badge to README.md
 
 ## Benefits
 - Automated security vulnerability detection
@@ -128,19 +131,12 @@ for REPO in "${ORDERED_REPOS[@]}"; do
   mkdir -p .github/workflows
   cp "$CODEQL_FILE" "$CODEQL_IN_REPO"
 
-  # Add badge to README.md if missing
-  if [ -f README.md ] && ! grep -q "CodeQL" README.md 2>/dev/null; then
-    LINE="[![CodeQL](https://github.com/$REPO/actions/workflows/codeql.yml/badge.svg)](https://github.com/$REPO/actions/workflows/codeql.yml)"
-    printf '%s\n\n' "$LINE" | cat - README.md > tmpfile && mv tmpfile README.md
-    echo "Added CodeQL badge to README.md"
-  fi
-
   # Stage and commit
-  git add "$CODEQL_IN_REPO" README.md 2>/dev/null || git add "$CODEQL_IN_REPO"
+  git add "$CODEQL_IN_REPO"
   if ! git diff --cached --quiet; then
     git commit -m "Add CodeQL security scanning workflow"
 
-    # Push directly to the user's own repo (no fork needed for personal account)
+    # Push using gh as a credential helper — no token in URL, no Vault Radar trigger
     git push origin "$BRANCH" --force
 
     # Open PR against main
