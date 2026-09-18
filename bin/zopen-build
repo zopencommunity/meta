@@ -135,6 +135,9 @@ Optional:
   ZOPEN_INSTALL               Installation program to run. If skip is specified,
                               no installation step is performed.
                               (defaults to '${ZOPEN_INSTALLD}')
+  ZOPEN_INSTALL_MINIMAL       Installation program will not be passed CFLAGS,
+                              LDFLAGS, CPPFLAGS options but will get them from
+                              env vars.
   ZOPEN_INSTALL_OPTS          Options to pass to installation program.
                               (defaults to '${ZOPEN_INSTALL_OPTSD}')
   ZOPEN_MAKE                  Build program to run. If skip is specified,
@@ -3679,7 +3682,13 @@ resolveCommands()
       export ZOPEN_INSTALL_CMD="\"${ZOPEN_INSTALL}\" ${ZOPEN_INSTALL_OPTS}"
       ;;
     *)
-      export ZOPEN_INSTALL_CMD="\"${ZOPEN_INSTALL}\" ${ZOPEN_INSTALL_OPTS} ${verboseOpts} ${ZOPEN_EXTRA_INSTALL_CC_OPTS}"
+      if [ -z "${ZOPEN_INSTALL_MINIMAL}" ]; then
+        export ZOPEN_INSTALL_CMD="\"${ZOPEN_INSTALL}\" ${ZOPEN_INSTALL_OPTS} ${verboseOpts} ${ZOPEN_EXTRA_INSTALL_CC_OPTS}"
+        export ZOPEN_INSTALL_MINIMAL="no"
+      else
+        export ZOPEN_INSTALL_CMD="\"${ZOPEN_INSTALL}\" ${ZOPEN_INSTALL_OPTS}"
+        export ZOPEN_INSTALL_MINIMAL="yes"
+      fi
       ;;
     esac
     [[ -d ${ZOPEN_ROOT}/install ]] || mkdir -p ${ZOPEN_ROOT}/install
