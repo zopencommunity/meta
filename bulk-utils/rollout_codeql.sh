@@ -8,6 +8,10 @@
 
 set -euo pipefail
 
+# Register gh as git's credential helper so git push authenticates via GH_TOKEN
+# without embedding the token in any URL (avoids Vault Radar secret scanning blocks)
+gh auth setup-git
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CODEQL_FILE="$SCRIPT_DIR/../data/codeql-workflow.yml"
 CODEQL_IN_REPO=".github/workflows/codeql.yml"
@@ -112,9 +116,6 @@ for REPO in "${ORDERED_REPOS[@]}"; do
 
   cd "$REPO_DIR"
 
-  # Wire token into remote URL so git push authenticates without a TTY
-  git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${REPO}.git"
-
   # Skip if workflow already exists and is up to date
   if [ -f "$CODEQL_IN_REPO" ] && diff -q "$CODEQL_FILE" "$CODEQL_IN_REPO" > /dev/null 2>&1; then
     echo "SKIP (already up to date): $REPO"
@@ -135,7 +136,7 @@ for REPO in "${ORDERED_REPOS[@]}"; do
   if ! git diff --cached --quiet; then
     git commit -m "Add CodeQL security scanning workflow"
 
-    # Push directly to the user's own repo (no fork needed for personal account)
+    # Push using gh as a credential helper — no token in URL, no Vault Radar trigger
     git push origin "$BRANCH" --force
 
     # Open PR against main
