@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-21T15:52:48Z",
+  "generatedAt": "2026-09-21T16:52:28Z",
   "repositoryUrl": "http://163.74.83.190:8080/pulp/content/zopen/",
   "packageCount": 143,
   "rpmCount": 143,
@@ -1551,27 +1551,27 @@
     {
       "name": "less",
       "displayName": "less",
-      "version": "704",
-      "release": "20260713.150549",
+      "version": "710",
+      "release": "20260921.163014",
       "epoch": "0",
       "architectures": [
         "s390x"
       ],
-      "summary": "less-704-rel package",
-      "description": "less-704-rel package",
+      "summary": "less-710-rel package",
+      "description": "less-710-rel package",
       "rpmCount": 1,
       "rpmDependencies": [],
-      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/l/less-704-20260713.150549.s390x.rpm",
-      "buildTime": "2026-07-13T15:07:29Z",
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/l/less-710-20260921.163014.s390x.rpm",
+      "buildTime": "2026-09-21T16:32:02Z",
       "releaseKey": "less",
       "categories": [],
       "runtimeDependencies": [],
       "passedTests": 1,
       "totalTests": 1,
       "verificationRate": 100.0,
-      "publishedAt": "2026-07-13T15:08:36Z",
+      "publishedAt": "2026-09-21T16:32:59Z",
       "portRepositoryUrl": "https://github.com/zopencommunity/lessport",
-      "releaseUrl": "https://github.com/zopencommunity/lessport/releases/tag/STABLE_lessport_17"
+      "releaseUrl": "https://github.com/zopencommunity/lessport/releases/tag/STABLE_lessport_374"
     },
     {
       "name": "libdio",
