@@ -1,6 +1,5 @@
 # Links to external blogs on zopen community
 
-* [Porting Csmith to z/OS with zopen - July 30, 2026](https://community.ibm.com/community/user/blogs/atul-rustagi/2026/07/30/porting-csmith-to-zos-with-zopen)
 * [Installing the zopen tools for your personal use - April 24, 2025](https://dinoframe.io/tutorial/zopen-personal-filesystem)
 * [GPG on z/OS: Beyond the Basics – A Deep Dive - June 10, 2024](https://tectales.wordpress.com/2024/06/10/273/)
 * [Enhancing Vim on z/OS UNIX with Language Server Protocol (LSP) support - April 18, 2024](https://igortodorovskiibm.github.io/blog/2024/04/18/vim-autocomplete/)
@@ -17,3 +16,4 @@
 * [Enabling Open Source for z/OS: Perl - Jan 18, 2022](https://makingdeveloperslivesbetter.wordpress.com/2022/01/18/enabling-open-source-for-z-os-perl/)
 * [Modernizing z/OS Open Source Distribution with RPM and Pulp](https://community.ibm.com/community/user/blogs/tejaswini-r/2026/07/24/modernizing-zos-rpm-plup)
 * [Generating Software Bills of Materials on z/OS with Syft](https://community.ibm.com/community/user/blogs/p-sabitha/2026/08/11/generating-sbom-on-zos-with-syft)
+* [Porting Csmith to z/OS with zopen - July 30, 2026](https://community.ibm.com/community/user/blogs/atul-rustagi/2026/07/30/porting-csmith-to-zos-with-zopen)
