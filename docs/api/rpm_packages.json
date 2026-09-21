@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-09-18T16:26:43Z",
+  "generatedAt": "2026-09-21T15:52:48Z",
   "repositoryUrl": "http://163.74.83.190:8080/pulp/content/zopen/",
-  "packageCount": 142,
-  "rpmCount": 142,
+  "packageCount": 143,
+  "rpmCount": 143,
   "packages": [
     {
       "name": "arrow",
@@ -1820,6 +1820,33 @@
       "publishedAt": "2026-08-14T13:34:45Z",
       "portRepositoryUrl": "https://github.com/zopencommunity/libsodiumport",
       "releaseUrl": "https://github.com/zopencommunity/libsodiumport/releases/tag/STABLE_libsodiumport_135"
+    },
+    {
+      "name": "libsolv",
+      "displayName": "libsolv",
+      "version": "0.7.40",
+      "release": "20260921.154120",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "libsolv-0.7.40 package",
+      "description": "libsolv-0.7.40 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/l/libsolv-0.7.40-20260921.154120.s390x.rpm",
+      "buildTime": "2026-09-21T15:43:05Z",
+      "releaseKey": "libsolv",
+      "categories": [
+        "library"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 29,
+      "totalTests": 29,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-09-21T15:46:08Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/libsolvport",
+      "releaseUrl": "https://github.com/zopencommunity/libsolvport/releases/tag/STABLE_libsolvport_373"
     },
     {
       "name": "libssh2",
