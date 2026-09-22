@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-22T17:00:59Z",
+  "generatedAt": "2026-09-22T18:00:31Z",
   "repositoryUrl": "http://163.74.83.190:8080/pulp/content/zopen/",
   "packageCount": 145,
   "rpmCount": 145,
@@ -385,9 +385,9 @@
       "passedTests": 1,
       "totalTests": 1,
       "verificationRate": 100.0,
-      "publishedAt": "2026-02-08T11:55:06Z",
+      "publishedAt": "2026-09-22T16:58:55Z",
       "portRepositoryUrl": "https://github.com/zopencommunity/clang-formatport",
-      "releaseUrl": "https://github.com/zopencommunity/clang-formatport/releases/tag/STABLE_clang-formatport_3899b"
+      "releaseUrl": "https://github.com/zopencommunity/clang-formatport/releases/tag/STABLE_clang-formatport_377"
     },
     {
       "name": "cmake",
